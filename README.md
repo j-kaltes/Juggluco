@@ -25,6 +25,7 @@ Every sensor has to be initialized by the connected Android phone running Jugglu
 Juggluco for Wear OS can operate two ways:  
 - The watch receives the glucose values from a smartphone connected to the sensor;  
 - The watch is directly connected with the sensor and sends the glucose values to the phone.  
+
 Earlier a direct connection between Watch 4 and sensor was unusable with half of the Freestyle Libre 2 sensors, because of too many connection errors, but after adding the Turbo button, I had these problems with only 3 of 9 sensors. Also the connection, with the few Freestyle Libre 3 sensors I have tested, is very good. If, when directly connected with the watch, a sensor has too many connection errors, you can connect the watch with the sensor via the smartphone.  
 For more information: http://jkaltes.byethost16.com/JugglucoWearOS
 
