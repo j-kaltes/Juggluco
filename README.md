@@ -1,6 +1,7 @@
 # **AVOID ANDROID 13: LOW ENERGY BLUETOOTH IS BROKEN.**
 # Juggluco
-An app to receive via Bluetooth and display glucose values from Abbotts Freestyle Libre 2 sensors.
+An Android app display glucose values it receives via Bluetooth from Freestyle Libre 2 and 3 sensors.
+
 Abbott's Freestyle Libre 2 sensors transmit every minute the perceived glucose value to the connected reader or smartphone. Abbott's Librelink app uses this value only for low and high glucose alarms. Juggluco displays this value on the smartphone in addition to low and high glucose alarms. So you can know your current glucose value without scanning.  
 Newer versions of Juggluco can also be used with Freestyle Libre 3 sensors, but all further remarks relate to Libre 2\. See http://jkaltes.byethost16.com/libre3 for more information about the use of Libre 3.  
 Juggluco can only take over the Bluetooth connection of a sensor that is already in use, when ALL COMPETING CONNECTIONS WITH THE SENSOR ARE REMOVED by FORCE CLOSING the Libre app and turning off Freestyle reader or turning off alarms of these apps and devices. Hereafter you scan the sensor a few times with your smartphone while Juggluco is in the foreground and, when everything goes well, within 20 minutes or less Juggluco will establish a connection with the sensor and start receiving glucose values via Bluetooth.  
