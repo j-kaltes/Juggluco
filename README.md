@@ -1,6 +1,6 @@
 # **AVOID ANDROID 13: LOW ENERGY BLUETOOTH IS BROKEN.**
 # Juggluco
-An Android app to display glucose values it receives via Bluetooth from Freestyle Libre 2 and 3 sensors.
+An Android app that displays glucose values it receives via Bluetooth from Freestyle Libre 2 and 3 sensors.
 
 Abbott's Freestyle Libre 2 sensors transmit every minute the perceived glucose value to the connected reader or smartphone. Abbott's Librelink app uses this value only for low and high glucose alarms. Juggluco displays this value on the smartphone in addition to low and high glucose alarms. So you can know your current glucose value without scanning.  
 Newer versions of Juggluco can also be used with Freestyle Libre 3 sensors, but all further remarks relate to Libre 2\. See http://jkaltes.byethost16.com/libre3 for more information about the use of Libre 3.  
@@ -15,6 +15,7 @@ Juggluco can send glucose values to smartwatches in four ways:
 - via xDrip watch apps on all kinds of smartwatches;  
 - via glucose broadcasts to other Android apps that send the glucose values again to connected watches;  
 - Juggluco for WearOS.  
+
 Juggluco can use (but not start) **US** Freestyle Libre 2 sensors.
 
 # WearOS
@@ -22,8 +23,8 @@ Juggluco can use (but not start) **US** Freestyle Libre 2 sensors.
 A variant of Juggluco now runs on WearOS. It contains a watch face that shows the minutely glucose value, besides the time and four complications.  
 Every sensor has to be initialized by the connected Android phone running Juggluco.  
 Juggluco for Wear OS can operate two ways:  
-тв The watch receives the glucose values from a smartphone connected to the sensor;  
-тв The watch is directly connected with the sensor and sends the glucose values to the phone.  
+- The watch receives the glucose values from a smartphone connected to the sensor;  
+- The watch is directly connected with the sensor and sends the glucose values to the phone.  
 Earlier a direct connection between Watch 4 and sensor was unusable with half of the Freestyle Libre 2 sensors, because of too many connection errors, but after adding the Turbo button, I had these problems with only 3 of 9 sensors. Also the connection, with the few Freestyle Libre 3 sensors I have tested, is very good. If, when directly connected with the watch, a sensor has too many connection errors, you can connect the watch with the sensor via the smartphone.  
 For more information: http://jkaltes.byethost16.com/JugglucoWearOS
 
