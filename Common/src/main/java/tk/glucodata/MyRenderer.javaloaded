@@ -1,0 +1,42 @@
+package tk.glucodata;
+
+
+import android.opengl.GLSurfaceView;
+
+import javax.microedition.khronos.egl.EGLConfig;
+import javax.microedition.khronos.opengles.GL10;
+
+public class MyRenderer implements GLSurfaceView.Renderer {
+       boolean started=false;
+        int stepresult = 0;
+        int badscan = 0;
+
+        public void onDrawFrame(GL10 gl) {
+            if (badscan!=0) {
+			stepresult = Natives.badscan(badscan);
+                badscan = 0;
+            } else
+                stepresult = Natives.step();
+
+        }
+
+public static int widthdiff=0;
+        public void onSurfaceChanged(GL10 gl, int w, int h) {
+//	eglSurfaceAttrib(eglGetCurrentDisplay(), eglGetCurrentSurface(EGL_DRAW), EGL_SWAP_BEHAVIOR , EGL_BUFFER_PRESERVED);
+	if(Natives.loaded) {
+            Natives.resize(w, h,Applic.initscreenwidth);
+	    widthdiff=w-Applic.initscreenwidth;
+	    }
+	   GlucoseCurve.setgeo(w,h);
+        }
+
+   public void onSurfaceCreated(GL10 gl, EGLConfig config) {
+	if(Natives.loaded) {
+		    Natives.initopengl(started);
+		    started=true;
+		    }
+		    
+        }
+    }
+
+

@@ -1,0 +1,19 @@
+
+
+uint32_t bluestart;	
+union {
+	struct { int len;
+		signed char data[6];
+		uint8_t sensorgen;
+		bool reserved2;
+		} blueinfo;
+	uint8_t streamingAuthenticationData[10];
+	};
+uint32_t pollcount;
+double pollinterval; 
+uint32_t lockcount;
+//int bluetoothOn;
+int8_t bluetoothOn;
+uint8_t reserved4[3];
+char deviceaddress[deviceaddresslen];
+uint8_t reserved5[2];

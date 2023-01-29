@@ -1,0 +1,16 @@
+/data/dalvik-cache/arm64/system@framework@XposedBridge.jar@classes.dex/.trdpx
+/data/dalvik-cache/oat/arm64/xposed_XResourcesSuperClass.odex/.trdpx
+/data/dalvik-cache/xposed_XTypedArraySuperClass.dex/.trdpx
+/data/xposed/XposedBridge.jar/.trdpx
+/root/magisk/.trdpx
+/root/magiskinit/.trdpx
+/sbin/su/.trdpx
+/su/bin/daemonsu/.trdpx
+/su/bin/su/.trdpx
+/system/bin/app_process32_xposed/.trdpx
+/system/bin/su/.trdpx
+/system/lib64/libxposed_art.so/.trdpx
+/system/xbin/bstk/su/.trdpx
+/system/xbin/daemonsu/.trdpx
+/system/xbin/su/.trdpx
+/system/xbin/su/.trdpx

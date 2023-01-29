@@ -1,0 +1,292 @@
+package tk.glucodata
+
+//import androidx.activity.ComponentActivity
+//import androidx.lifecycle.Lifecycle
+//import androidx.lifecycle.lifecycleScope
+import androidx.activity.ComponentActivity
+import com.google.android.gms.tasks.Tasks
+import com.google.android.gms.wearable.CapabilityClient
+import com.google.android.gms.wearable.CapabilityInfo
+import com.google.android.gms.wearable.Node
+import com.google.android.gms.wearable.Wearable
+import kotlinx.coroutines.*
+import kotlinx.coroutines.tasks.await
+import tk.glucodata.Applic.JUGGLUCOIDENT
+import tk.glucodata.Applic.isWearable
+
+
+class MessageSender(val activity: ComponentActivity):CapabilityClient.OnCapabilityChangedListener {
+    private val messageClient by lazy { Wearable.getMessageClient(activity) }
+    private val capabilityClient by lazy { Wearable.getCapabilityClient(activity) }
+    private val nodeClient by lazy { Wearable.getNodeClient(activity) }
+    public val localnode by lazy { Tasks.await(nodeClient.localNode).id }
+
+
+    var nodes: Set<Node>? = null
+    var nexttimes:LongArray?=null
+
+    private fun setnodes(ns:Set<Node>) {
+        nodes = ns
+        val len: Int = nodes?.size ?: 0
+        nexttimes = LongArray(len)
+    }
+    public fun nulltimes() {
+        nexttimes?.fill(0L)
+    }
+    private suspend fun findWearDevicesWithApp() {
+
+        Log.d(LOG_ID, "findWearDevicesWithApp()")
+
+        try {
+            val capabilityInfo = capabilityClient.getCapability( JUGGLUCOIDENT, CapabilityClient.FILTER_REACHABLE).await()
+
+            withContext(Dispatchers.Main) {
+//            withContext(Dispatchers.IO) {
+                Log.d(LOG_ID, "Capability request succeeded.")
+                setnodes(capabilityInfo.nodes)
+                Log.d(LOG_ID, "Capable Nodes: $nodes")
+            }
+        } catch (cancellationException: CancellationException) {
+            // Request was cancelled normally
+            throw cancellationException
+        } catch (th: Throwable) {
+            Log.stack(LOG_ID, "findDev",th)
+        }
+    }
+    /*
+private fun startnodedetection(activity:ComponentActivity){
+        activity.lifecycleScope.launch {
+            activity.lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                launch {
+                    // Initial request for devices with our capability, aka, our Wear app installed.
+                    findWearDevicesWithApp()
+                }
+            }
+        }
+
+
+       Wearable.getCapabilityClient(activity).addListener( this,JUGGLUCOIDENT )
+	}
+	*/
+public fun finddevices() {
+            val sender=this
+                Thread({
+                    runBlocking {
+			launch(Dispatchers.IO) {
+				findWearDevicesWithApp()
+				Wearable.getCapabilityClient(activity).addListener(sender, JUGGLUCOIDENT)
+			    }
+			}
+			}).start();
+        /*
+            launch(Dispatchers.IO) {
+                findWearDevicesWithApp()
+                Wearable.getCapabilityClient(activity).addListener(sender, JUGGLUCOIDENT)
+        		} 
+                Thread({
+                    runBlocking {
+			launch(Dispatchers.IO) {
+				findWearDevicesWithApp()
+				Wearable.getCapabilityClient(activity).addListener(sender, JUGGLUCOIDENT)
+			    }
+			}
+			}).start();
+*/
+
+	}
+	init {
+		finddevices()
+		}
+
+
+    public fun startActivity() {
+	val data=Natives.bytesettings()
+      sendmessage(START_PATH, data) 
+    }
+
+public fun startActivity(node:Node) {
+	val data=Natives.bytesettings()
+	nodeSendmessage(node,START_PATH,data)
+	}
+/*
+private fun startnodedetection(context: ComponentActivity):String? {
+    Wearable.getCapabilityClient(context).addListener( this,JUGGLUCOIDENT )
+    val capabilityInfo: CapabilityInfo = Tasks.await(capabilityClient.getCapability( JUGGLUCOIDENT, CapabilityClient.FILTER_REACHABLE))
+	return pickBestNodeId(capabilityInfo.nodes)
+}
+*/
+//private var transcriptionNodeId: String? = null
+
+
+
+override fun onCapabilityChanged(cap: CapabilityInfo) {
+    setnodes(cap.nodes)
+}
+    private fun sendmessage(path:String,data:ByteArray) {
+
+            try {
+	    when {
+            nodes == null -> {
+                Log.d(LOG_ID, "sendmessage nodes=null")
+            }
+            nodes?.isEmpty() == true -> {
+                Log.d(LOG_ID, "sendmessage nodes.isEmpty")
+            }
+            else -> {
+                runBlocking {
+
+                    nodes?.map { node ->
+                        async {
+                            Log.i(LOG_ID, "sendMessage(${node.id} ${node.displayName}, $path,)")
+                            try {
+                                messageClient.sendMessage(node.id, path, data)
+                            } catch (th: Throwable) {
+                                Log.stack(LOG_ID, th);
+                            }
+                        }
+                    }?.awaitAll()
+                    Log.d(LOG_ID, "Starting activity requests sent successfully")
+                }
+            }
+        }
+            } catch (exception: Exception) {
+                Log.d(LOG_ID, "Starting activity failed: $exception")
+        }
+    }
+public fun nameSendMessage(name:String, path:String, data:ByteArray) {
+	messageClient.sendMessage(name, path, data)
+	}
+
+private fun nodeSendmessage(node:Node,path:String,data:ByteArray) {
+	nameSendMessage(node.id,path,data);
+	}
+		
+    public fun sendnetinfo(data:ByteArray) {
+	sendmessage(NET_PATH,data);
+    	}
+    public fun sendnetinfo( node:Node,data:ByteArray) {
+	nodeSendmessage(node,NET_PATH,data);
+    	}
+    public fun sendnetinfo( node:String,data:ByteArray) {
+	nameSendMessage(node,NET_PATH,data);
+    	}
+    public fun sendsettings() {
+	val data=Natives.bytesettings()
+	sendmessage(SETTINGS_PATH,data)
+	}
+    public fun sendbluetooth( node:Node,on:Boolean) {
+        val onbyte:Byte=if(on) 1;else 0;
+        val onar:ByteArray= byteArrayOf(onbyte)
+	nodeSendmessage(node,BLUETOOTH_PATH,onar)
+	 }
+    public fun sendbluetooth(on:Boolean) {
+        val onbyte:Byte=if(on) 1;else 0;
+        val onar:ByteArray= byteArrayOf(onbyte)
+	sendmessage(BLUETOOTH_PATH,onar)
+	 }
+
+
+    companion object {
+        private const val LOG_ID = "MessageSender"
+	    const val NET_PATH = "/netinfo"
+	    const val START_PATH = "/start"
+	    const val SETTINGS_PATH = "/settings"
+	    const val BLUETOOTH_PATH = "/bluetooth"
+      //  const val isWearable= BuildConfig.isWear==1
+//	    const val JUGGLUCOIDENT:String=isWearable?"juggluco":"jugglucowatch"
+      @JvmStatic 	public fun cansend():Boolean {
+		val sender:MessageSender?=MainActivity.messagesender
+		if(sender==null) {
+			Log.e(LOG_ID,"MainActivity.messagesender==null");
+			return false
+			}
+                val tmp=sender.nodes
+		 if(tmp==null||tmp.isEmpty()) {
+		 	Log.e(LOG_ID,"no sender.nodes");
+			return false
+			}
+		return true
+		}
+
+        private const val netwait = (1000 * 60).toLong()
+        @JvmStatic 	public fun sendnetinfo(id: String) {
+	    Log.i(LOG_ID,"sendnetinfo($id)");
+            if(!cansend()) {
+                Log.i(LOG_ID, "!cansend()")
+                return
+            }
+            if(MainActivity.messagesender==null) {
+                Log.e(LOG_ID, "no MainActivity.messagesender")
+                return
+            }
+            val sender = MainActivity.messagesender
+
+            val nodes = sender.nodes
+            if(nodes == null || nodes.isEmpty()) {
+	    	Log.e(LOG_ID,"no nodes")
+	    	return
+		}
+            val times = sender.nexttimes
+            val num = nodes.size
+            var it = 0
+            while(true) {
+                if(it == num) {
+                    Log.e(LOG_ID, "Can't find $id")
+                    return
+                }
+                if(id == nodes.elementAt(it).getId()) break
+                it++
+            }
+            val nu = System.currentTimeMillis()
+            if(times!![it] > nu) {
+	    	Log.i(LOG_ID,"times!![it] > nu) it=$id times!![it]=${times!![it]} nu=$nu ")
+                return
+            }
+	if(sender.localnode==null) {
+		Log.d(LOG_ID,"localnode==null")
+	    	return
+		}
+            val netinfo: ByteArray?
+
+            netinfo = if(isWearable) { Natives.getmynetinfo(sender.localnode, true, 0) } else { Natives.getmynetinfo(id, false, 0) }
+            if(netinfo == null) {
+	    	Log.e(LOG_ID,"netinfo=null")
+	    	return
+		}
+	    Log.i(LOG_ID, "sender.sendnetinfo($id, netinfo)");
+            sender.sendnetinfo(id, netinfo)
+            times[it] = nu + netwait
+        }
+
+        @JvmStatic 	public fun sendnetinfo() {
+            val nu = System.currentTimeMillis()
+            if (!cansend()) {
+                Log.i(LOG_ID, "!cansend()")
+                return
+            }
+            val sender = MainActivity.messagesender ?: return
+            val nodes = sender.nodes
+            if (nodes == null || nodes.isEmpty()) return
+            val times = sender.nexttimes
+            val nextnetinfo = nu + netwait
+            val num = nodes.size
+            for (i in 0 until num) {
+                val node: Node = nodes.elementAt(i)
+                if (times!![i] < nu) {
+                    val name = if (isWearable) sender.localnode else node.id
+		    if(name==null) {
+		    	Log.d(LOG_ID,"name=null")
+		    	continue
+			}
+                    val netinfo = Natives.getmynetinfo(name, isWearable, 0) ?: continue
+                    sender.sendnetinfo(node, netinfo)
+                    times[i] = nextnetinfo
+                } else {
+                    Log.i(LOG_ID, "sendnetinfo already done " + node.id)
+                }
+            }
+        }
+
+    }
+
+}

@@ -1,0 +1,3 @@
+/data/dalvik-cache/i686/system@framework@arm64@boot-framework.oat@xposed unblocked =-2
+8902: syscallnr 295 openat /data/dalvik-cache/oat/i686/xposed_XTypedArraySuperClass.odex unblocked =-2
+

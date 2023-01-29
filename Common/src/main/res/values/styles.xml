@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<style name="AppTheme" parent="@android:style/Theme.Holo.NoActionBar" >
+       <item name="windowActionBar">false</item>
+    <item name="android:windowActionBar">false</item>
+    <item name="android:windowContentOverlay">@null</item>
+    <item name="android:textViewStyle">@style/MyTextViewStyle</item>
+</style>
+
+
+
+<style name="MyTextViewStyle" parent="android:Widget.TextView">
+    <item name="android:paddingRight">20dp</item>
+</style>
+</resources>
+

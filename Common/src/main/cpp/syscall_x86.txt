@@ -1,0 +1,1001 @@
+
+  x86 (32-bit)
+
+   Compiled from Linux 4.14.0 headers.
+
+NR  syscall name           references %eax  arg0 (%ebx)       arg1 (%ecx)         arg2 (%edx)         arg3 (%esi)         arg4 (%edi)       arg5 (%ebp) 
+ 0  restart_syscall         man/ cs/  0x00  -                 -                   -                   -                   -                 -           
+ 1  exit                    man/ cs/  0x01  int error_code    -                   -                   -                   -                 -           
+ 2  fork                    man/ cs/  0x02  -                 -                   -                   -                   -                 -           
+ 3  read                    man/ cs/  0x03  unsigned int fd   char *buf           size_t count        -                   -                 -           
+ 4  write                   man/ cs/  0x04  unsigned int fd   const char *buf     size_t count        -                   -                 -           
+ 5  open                    man/ cs/  0x05  const char        int flags           umode_t mode        -                   -                 -           
+                                            *filename         
+ 6  close                   man/ cs/  0x06  unsigned int fd   -                   -                   -                   -                 -           
+ 7  waitpid                 man/ cs/  0x07  pid_t pid         int *stat_addr      int options         -                   -                 -           
+ 8  creat                   man/ cs/  0x08  const char        umode_t mode        -                   -                   -                 -           
+                                            *pathname         
+ 9  link                    man/ cs/  0x09  const char        const char *newname -                   -                   -                 -           
+                                            *oldname          
+10  unlink                  man/ cs/  0x0a  const char        -                   -                   -                   -                 -           
+                                            *pathname         
+11  execve                  man/ cs/  0x0b  const char        const char *const   const char *const   -                   -                 -           
+                                            *filename         *argv               *envp               
+12  chdir                   man/ cs/  0x0c  const char        -                   -                   -                   -                 -           
+                                            *filename         
+13  time                    man/ cs/  0x0d  time_t *tloc      -                   -                   -                   -                 -           
+14  mknod                   man/ cs/  0x0e  const char        umode_t mode        unsigned dev        -                   -                 -           
+                                            *filename         
+15  chmod                   man/ cs/  0x0f  const char        umode_t mode        -                   -                   -                 -           
+                                            *filename         
+16  lchown                  man/ cs/  0x10  const char        uid_t user          gid_t group         -                   -                 -           
+                                            *filename         
+17  break                   man/ cs/  0x11  ?                 ?                   ?                   ?                   ?                 ?           
+18  oldstat                 man/ cs/  0x12  ?                 ?                   ?                   ?                   ?                 ?           
+19  lseek                   man/ cs/  0x13  unsigned int fd   off_t offset        unsigned int whence -                   -                 -           
+20  getpid                  man/ cs/  0x14  -                 -                   -                   -                   -                 -           
+21  mount                   man/ cs/  0x15  char *dev_name    char *dir_name      char *type          unsigned long flags void *data        -           
+22  umount                  man/ cs/  0x16  char *name        int flags           -                   -                   -                 -           
+23  setuid                  man/ cs/  0x17  uid_t uid         -                   -                   -                   -                 -           
+24  getuid                  man/ cs/  0x18  -                 -                   -                   -                   -                 -           
+25  stime                   man/ cs/  0x19  time_t *tptr      -                   -                   -                   -                 -           
+26  ptrace                  man/ cs/  0x1a  long request      long pid            unsigned long addr  unsigned long data  -                 -           
+27  alarm                   man/ cs/  0x1b  unsigned int      -                   -                   -                   -                 -           
+                                            seconds           
+28  oldfstat                man/ cs/  0x1c  ?                 ?                   ?                   ?                   ?                 ?           
+29  pause                   man/ cs/  0x1d  -                 -                   -                   -                   -                 -           
+30  utime                   man/ cs/  0x1e  char *filename    struct utimbuf      -                   -                   -                 -           
+                                                              *times              
+31  stty                    man/ cs/  0x1f  ?                 ?                   ?                   ?                   ?                 ?           
+32  gtty                    man/ cs/  0x20  ?                 ?                   ?                   ?                   ?                 ?           
+33  access                  man/ cs/  0x21  const char        int mode            -                   -                   -                 -           
+                                            *filename         
+34  nice                    man/ cs/  0x22  int increment     -                   -                   -                   -                 -           
+35  ftime                   man/ cs/  0x23  ?                 ?                   ?                   ?                   ?                 ?           
+36  sync                    man/ cs/  0x24  -                 -                   -                   -                   -                 -           
+37  kill                    man/ cs/  0x25  pid_t pid         int sig             -                   -                   -                 -           
+38  rename                  man/ cs/  0x26  const char        const char *newname -                   -                   -                 -           
+                                            *oldname          
+39  mkdir                   man/ cs/  0x27  const char        umode_t mode        -                   -                   -                 -           
+                                            *pathname         
+40  rmdir                   man/ cs/  0x28  const char        -                   -                   -                   -                 -           
+                                            *pathname         
+41  dup                     man/ cs/  0x29  unsigned int      -                   -                   -                   -                 -           
+                                            fildes            
+42  pipe                    man/ cs/  0x2a  int *fildes       -                   -                   -                   -                 -           
+43  times                   man/ cs/  0x2b  struct tms *tbuf  -                   -                   -                   -                 -           
+44  prof                    man/ cs/  0x2c  ?                 ?                   ?                   ?                   ?                 ?           
+45  brk                     man/ cs/  0x2d  unsigned long brk -                   -                   -                   -                 -           
+46  setgid                  man/ cs/  0x2e  gid_t gid         -                   -                   -                   -                 -           
+47  getgid                  man/ cs/  0x2f  -                 -                   -                   -                   -                 -           
+48  signal                  man/ cs/  0x30  int sig           __sighandler_t      -                   -                   -                 -           
+                                                              handler             
+49  geteuid                 man/ cs/  0x31  -                 -                   -                   -                   -                 -           
+50  getegid                 man/ cs/  0x32  -                 -                   -                   -                   -                 -           
+51  acct                    man/ cs/  0x33  const char *name  -                   -                   -                   -                 -           
+52  umount2                 man/ cs/  0x34  ?                 ?                   ?                   ?                   ?                 ?           
+53  lock                    man/ cs/  0x35  ?                 ?                   ?                   ?                   ?                 ?           
+54  ioctl                   man/ cs/  0x36  unsigned int fd   unsigned int cmd    unsigned long arg   -                   -                 -           
+55  fcntl                   man/ cs/  0x37  unsigned int fd   unsigned int cmd    unsigned long arg   -                   -                 -           
+56  mpx                     man/ cs/  0x38  ?                 ?                   ?                   ?                   ?                 ?           
+57  setpgid                 man/ cs/  0x39  pid_t pid         pid_t pgid          -                   -                   -                 -           
+58  ulimit                  man/ cs/  0x3a  ?                 ?                   ?                   ?                   ?                 ?           
+59  oldolduname             man/ cs/  0x3b  ?                 ?                   ?                   ?                   ?                 ?           
+60  umask                   man/ cs/  0x3c  int mask          -                   -                   -                   -                 -           
+61  chroot                  man/ cs/  0x3d  const char        -                   -                   -                   -                 -           
+                                            *filename         
+62  ustat                   man/ cs/  0x3e  unsigned dev      struct ustat *ubuf  -                   -                   -                 -           
+63  dup2                    man/ cs/  0x3f  unsigned int      unsigned int newfd  -                   -                   -                 -           
+                                            oldfd             
+64  getppid                 man/ cs/  0x40  -                 -                   -                   -                   -                 -           
+65  getpgrp                 man/ cs/  0x41  -                 -                   -                   -                   -                 -           
+66  setsid                  man/ cs/  0x42  -                 -                   -                   -                   -                 -           
+67  sigaction               man/ cs/  0x43  int               const struct        struct              -                   -                 -           
+                                                              old_sigaction *     old_sigaction *     
+68  sgetmask                man/ cs/  0x44  -                 -                   -                   -                   -                 -           
+69  ssetmask                man/ cs/  0x45  int newmask       -                   -                   -                   -                 -           
+70  setreuid                man/ cs/  0x46  uid_t ruid        uid_t euid          -                   -                   -                 -           
+71  setregid                man/ cs/  0x47  gid_t rgid        gid_t egid          -                   -                   -                 -           
+72  sigsuspend              man/ cs/  0x48  int unused1       int unused2         old_sigset_t mask   -                   -                 -           
+73  sigpending              man/ cs/  0x49  old_sigset_t      -                   -                   -                   -                 -           
+                                            *uset             
+74  sethostname             man/ cs/  0x4a  char *name        int len             -                   -                   -                 -           
+75  setrlimit               man/ cs/  0x4b  unsigned int      struct rlimit *rlim -                   -                   -                 -           
+                                            resource          
+76  getrlimit               man/ cs/  0x4c  unsigned int      struct rlimit *rlim -                   -                   -                 -           
+                                            resource          
+77  getrusage               man/ cs/  0x4d  int who           struct rusage *ru   -                   -                   -                 -           
+78  gettimeofday            man/ cs/  0x4e  struct timeval    struct timezone *tz -                   -                   -                 -           
+                                            *tv               
+79  settimeofday            man/ cs/  0x4f  struct timeval    struct timezone *tz -                   -                   -                 -           
+                                            *tv               
+80  getgroups               man/ cs/  0x50  int gidsetsize    gid_t *grouplist    -                   -                   -                 -           
+81  setgroups               man/ cs/  0x51  int gidsetsize    gid_t *grouplist    -                   -                   -                 -           
+82  select                  man/ cs/  0x52  int n             fd_set *inp         fd_set *outp        fd_set *exp         struct timeval    -           
+                                                                                                                          *tvp              
+83  symlink                 man/ cs/  0x53  const char *old   const char *new     -                   -                   -                 -           
+84  oldlstat                man/ cs/  0x54  ?                 ?                   ?                   ?                   ?                 ?           
+85  readlink                man/ cs/  0x55  const char *path  char *buf           int bufsiz          -                   -                 -           
+86  uselib                  man/ cs/  0x56  const char        -                   -                   -                   -                 -           
+                                            *library          
+87  swapon                  man/ cs/  0x57  const char        int swap_flags      -                   -                   -                 -           
+                                            *specialfile      
+88  reboot                  man/ cs/  0x58  int magic1        int magic2          unsigned int cmd    void *arg           -                 -           
+89  readdir                 man/ cs/  0x59  ?                 ?                   ?                   ?                   ?                 ?           
+90  mmap                    man/ cs/  0x5a  ?                 ?                   ?                   ?                   ?                 ?           
+91  munmap                  man/ cs/  0x5b  unsigned long     size_t len          -                   -                   -                 -           
+                                            addr              
+92  truncate                man/ cs/  0x5c  const char *path  long length         -                   -                   -                 -           
+93  ftruncate               man/ cs/  0x5d  unsigned int fd   unsigned long       -                   -                   -                 -           
+                                                              length              
+94  fchmod                  man/ cs/  0x5e  unsigned int fd   umode_t mode        -                   -                   -                 -           
+95  fchown                  man/ cs/  0x5f  unsigned int fd   uid_t user          gid_t group         -                   -                 -           
+96  getpriority             man/ cs/  0x60  int which         int who             -                   -                   -                 -           
+97  setpriority             man/ cs/  0x61  int which         int who             int niceval         -                   -                 -           
+98  profil                  man/ cs/  0x62  ?                 ?                   ?                   ?                   ?                 ?           
+99  statfs                  man/ cs/  0x63  const char * path struct statfs *buf  -                   -                   -                 -           
+100 fstatfs                 man/ cs/  0x64  unsigned int fd   struct statfs *buf  -                   -                   -                 -           
+101 ioperm                  man/ cs/  0x65  unsigned long     unsigned long num   int on              -                   -                 -           
+                                            from              
+102 socketcall              man/ cs/  0x66  int call          unsigned long *args -                   -                   -                 -           
+103 syslog                  man/ cs/  0x67  int type          char *buf           int len             -                   -                 -           
+104 setitimer               man/ cs/  0x68  int which         struct itimerval    struct itimerval    -                   -                 -           
+                                                              *value              *ovalue             
+105 getitimer               man/ cs/  0x69  int which         struct itimerval    -                   -                   -                 -           
+                                                              *value              
+                                            const char        struct                                                                                    
+106 stat                    man/ cs/  0x6a  *filename         __old_kernel_stat   -                   -                   -                 -
+                                                              *statbuf            
+                                            const char        struct                                                                                    
+107 lstat                   man/ cs/  0x6b  *filename         __old_kernel_stat   -                   -                   -                 -
+                                                              *statbuf            
+                                                              struct                                                                                    
+108 fstat                   man/ cs/  0x6c  unsigned int fd   __old_kernel_stat   -                   -                   -                 -
+                                                              *statbuf            
+109 olduname                man/ cs/  0x6d  struct            -                   -                   -                   -                 -           
+                                            oldold_utsname *  
+110 iopl                    man/ cs/  0x6e  ?                 ?                   ?                   ?                   ?                 ?           
+111 vhangup                 man/ cs/  0x6f  -                 -                   -                   -                   -                 -           
+112 idle                    man/ cs/  0x70  ?                 ?                   ?                   ?                   ?                 ?           
+113 vm86old                 man/ cs/  0x71  ?                 ?                   ?                   ?                   ?                 ?           
+114 wait4                   man/ cs/  0x72  pid_t pid         int *stat_addr      int options         struct rusage *ru   -                 -           
+115 swapoff                 man/ cs/  0x73  const char        -                   -                   -                   -                 -           
+                                            *specialfile      
+116 sysinfo                 man/ cs/  0x74  struct sysinfo    -                   -                   -                   -                 -           
+                                            *info             
+117 ipc                     man/ cs/  0x75  unsigned int call int first           unsigned long       unsigned long third void *ptr         long fifth  
+                                                                                  second              
+118 fsync                   man/ cs/  0x76  unsigned int fd   -                   -                   -                   -                 -           
+119 sigreturn               man/ cs/  0x77  ?                 ?                   ?                   ?                   ?                 ?           
+120 clone                   man/ cs/  0x78  unsigned long     unsigned long       int *               int *               unsigned long     -           
+121 setdomainname           man/ cs/  0x79  char *name        int len             -                   -                   -                 -           
+122 uname                   man/ cs/  0x7a  struct            -                   -                   -                   -                 -           
+                                            old_utsname *     
+123 modify_ldt              man/ cs/  0x7b  ?                 ?                   ?                   ?                   ?                 ?           
+                                            struct                                                                                                      
+124 adjtimex                man/ cs/  0x7c  __kernel_timex    -                   -                   -                   -                 -
+                                            *txc_p            
+125 mprotect                man/ cs/  0x7d  unsigned long     size_t len          unsigned long prot  -                   -                 -           
+                                            start             
+126 sigprocmask             man/ cs/  0x7e  int how           old_sigset_t *set   old_sigset_t *oset  -                   -                 -           
+127 create_module           man/ cs/  0x7f  ?                 ?                   ?                   ?                   ?                 ?           
+128 init_module             man/ cs/  0x80  void *umod        unsigned long len   const char *uargs   -                   -                 -           
+129 delete_module           man/ cs/  0x81  const char        unsigned int flags  -                   -                   -                 -           
+                                            *name_user        
+130 get_kernel_syms         man/ cs/  0x82  ?                 ?                   ?                   ?                   ?                 ?           
+131 quotactl                man/ cs/  0x83  unsigned int cmd  const char *special qid_t id            void *addr          -                 -           
+132 getpgid                 man/ cs/  0x84  pid_t pid         -                   -                   -                   -                 -           
+133 fchdir                  man/ cs/  0x85  unsigned int fd   -                   -                   -                   -                 -           
+134 bdflush                 man/ cs/  0x86  int func          long data           -                   -                   -                 -           
+135 sysfs                   man/ cs/  0x87  int option        unsigned long arg1  unsigned long arg2  -                   -                 -           
+136 personality             man/ cs/  0x88  unsigned int      -                   -                   -                   -                 -           
+                                            personality       
+137 afs_syscall             man/ cs/  0x89  ?                 ?                   ?                   ?                   ?                 ?           
+138 setfsuid                man/ cs/  0x8a  uid_t uid         -                   -                   -                   -                 -           
+139 setfsgid                man/ cs/  0x8b  gid_t gid         -                   -                   -                   -                 -           
+140 _llseek                 man/ cs/  0x8c  ?                 ?                   ?                   ?                   ?                 ?           
+141 getdents                man/ cs/  0x8d  unsigned int fd   struct linux_dirent unsigned int count  -                   -                 -           
+                                                              *dirent             
+142 _newselect              man/ cs/  0x8e  ?                 ?                   ?                   ?                   ?                 ?           
+143 flock                   man/ cs/  0x8f  unsigned int fd   unsigned int cmd    -                   -                   -                 -           
+144 msync                   man/ cs/  0x90  unsigned long     size_t len          int flags           -                   -                 -           
+                                            start             
+145 readv                   man/ cs/  0x91  unsigned long fd  const struct iovec  unsigned long vlen  -                   -                 -           
+                                                              *vec                
+146 writev                  man/ cs/  0x92  unsigned long fd  const struct iovec  unsigned long vlen  -                   -                 -           
+                                                              *vec                
+147 getsid                  man/ cs/  0x93  pid_t pid         -                   -                   -                   -                 -           
+148 fdatasync               man/ cs/  0x94  unsigned int fd   -                   -                   -                   -                 -           
+149 _sysctl                 man/ cs/  0x95  ?                 ?                   ?                   ?                   ?                 ?           
+150 mlock                   man/ cs/  0x96  unsigned long     size_t len          -                   -                   -                 -           
+                                            start             
+151 munlock                 man/ cs/  0x97  unsigned long     size_t len          -                   -                   -                 -           
+                                            start             
+152 mlockall                man/ cs/  0x98  int flags         -                   -                   -                   -                 -           
+153 munlockall              man/ cs/  0x99  -                 -                   -                   -                   -                 -           
+154 sched_setparam          man/ cs/  0x9a  pid_t pid         struct sched_param  -                   -                   -                 -           
+                                                              *param              
+155 sched_getparam          man/ cs/  0x9b  pid_t pid         struct sched_param  -                   -                   -                 -           
+                                                              *param              
+156 sched_setscheduler      man/ cs/  0x9c  pid_t pid         int policy          struct sched_param  -                   -                 -           
+                                                                                  *param              
+157 sched_getscheduler      man/ cs/  0x9d  pid_t pid         -                   -                   -                   -                 -           
+158 sched_yield             man/ cs/  0x9e  -                 -                   -                   -                   -                 -           
+159 sched_get_priority_max  man/ cs/  0x9f  int policy        -                   -                   -                   -                 -           
+160 sched_get_priority_min  man/ cs/  0xa0  int policy        -                   -                   -                   -                 -           
+                                                              struct                                                                                    
+161 sched_rr_get_interval   man/ cs/  0xa1  pid_t pid         __kernel_timespec   -                   -                   -                 -
+                                                              *interval           
+                                            struct            struct                                                                                    
+162 nanosleep               man/ cs/  0xa2  __kernel_timespec __kernel_timespec   -                   -                   -                 -
+                                            *rqtp             *rmtp               
+163 mremap                  man/ cs/  0xa3  unsigned long     unsigned long       unsigned long       unsigned long flags unsigned long     -           
+                                            addr              old_len             new_len                                 new_addr          
+164 setresuid               man/ cs/  0xa4  uid_t ruid        uid_t euid          uid_t suid          -                   -                 -           
+165 getresuid               man/ cs/  0xa5  uid_t *ruid       uid_t *euid         uid_t *suid         -                   -                 -           
+166 vm86                    man/ cs/  0xa6  ?                 ?                   ?                   ?                   ?                 ?           
+167 query_module            man/ cs/  0xa7  ?                 ?                   ?                   ?                   ?                 ?           
+168 poll                    man/ cs/  0xa8  struct pollfd     unsigned int nfds   int timeout         -                   -                 -           
+                                            *ufds             
+169 nfsservctl              man/ cs/  0xa9  ?                 ?                   ?                   ?                   ?                 ?           
+170 setresgid               man/ cs/  0xaa  gid_t rgid        gid_t egid          gid_t sgid          -                   -                 -           
+171 getresgid               man/ cs/  0xab  gid_t *rgid       gid_t *egid         gid_t *sgid         -                   -                 -           
+172 prctl                   man/ cs/  0xac  int option        unsigned long arg2  unsigned long arg3  unsigned long arg4  unsigned long     -           
+                                                                                                                          arg5              
+173 rt_sigreturn            man/ cs/  0xad  ?                 ?                   ?                   ?                   ?                 ?           
+174 rt_sigaction            man/ cs/  0xae  int               const struct        struct sigaction *  size_t              -                 -           
+                                                              sigaction *         
+175 rt_sigprocmask          man/ cs/  0xaf  int how           sigset_t *set       sigset_t *oset      size_t sigsetsize   -                 -           
+176 rt_sigpending           man/ cs/  0xb0  sigset_t *set     size_t sigsetsize   -                   -                   -                 -           
+                                            const sigset_t                        const struct                                                          
+177 rt_sigtimedwait         man/ cs/  0xb1  *uthese           siginfo_t *uinfo    __kernel_timespec   size_t sigsetsize   -                 -
+                                                                                  *uts                
+178 rt_sigqueueinfo         man/ cs/  0xb2  pid_t pid         int sig             siginfo_t *uinfo    -                   -                 -           
+179 rt_sigsuspend           man/ cs/  0xb3  sigset_t *unewset size_t sigsetsize   -                   -                   -                 -           
+180 pread64                 man/ cs/  0xb4  unsigned int fd   char *buf           size_t count        loff_t pos          -                 -           
+181 pwrite64                man/ cs/  0xb5  unsigned int fd   const char *buf     size_t count        loff_t pos          -                 -           
+182 chown                   man/ cs/  0xb6  const char        uid_t user          gid_t group         -                   -                 -           
+                                            *filename         
+183 getcwd                  man/ cs/  0xb7  char *buf         unsigned long size  -                   -                   -                 -           
+184 capget                  man/ cs/  0xb8  cap_user_header_t cap_user_data_t     -                   -                   -                 -           
+                                            header            dataptr             
+                                            cap_user_header_t const                                                                                     
+185 capset                  man/ cs/  0xb9  header            cap_user_data_t     -                   -                   -                 -
+                                                              data                
+186 sigaltstack             man/ cs/  0xba  const struct      struct sigaltstack  -                   -                   -                 -           
+                                            sigaltstack *uss  *uoss               
+187 sendfile                man/ cs/  0xbb  int out_fd        int in_fd           off_t *offset       size_t count        -                 -           
+188 getpmsg                 man/ cs/  0xbc  ?                 ?                   ?                   ?                   ?                 ?           
+189 putpmsg                 man/ cs/  0xbd  ?                 ?                   ?                   ?                   ?                 ?           
+190 vfork                   man/ cs/  0xbe  -                 -                   -                   -                   -                 -           
+191 ugetrlimit              man/ cs/  0xbf  ?                 ?                   ?                   ?                   ?                 ?           
+192 mmap2                   man/ cs/  0xc0  ?                 ?                   ?                   ?                   ?                 ?           
+193 truncate64              man/ cs/  0xc1  const char *path  loff_t length       -                   -                   -                 -           
+194 ftruncate64             man/ cs/  0xc2  unsigned int fd   loff_t length       -                   -                   -                 -           
+195 stat64                  man/ cs/  0xc3  const char        struct stat64       -                   -                   -                 -           
+                                            *filename         *statbuf            
+196 lstat64                 man/ cs/  0xc4  const char        struct stat64       -                   -                   -                 -           
+                                            *filename         *statbuf            
+197 fstat64                 man/ cs/  0xc5  unsigned long fd  struct stat64       -                   -                   -                 -           
+                                                              *statbuf            
+198 lchown32                man/ cs/  0xc6  ?                 ?                   ?                   ?                   ?                 ?           
+199 getuid32                man/ cs/  0xc7  ?                 ?                   ?                   ?                   ?                 ?           
+200 getgid32                man/ cs/  0xc8  ?                 ?                   ?                   ?                   ?                 ?           
+201 geteuid32               man/ cs/  0xc9  ?                 ?                   ?                   ?                   ?                 ?           
+202 getegid32               man/ cs/  0xca  ?                 ?                   ?                   ?                   ?                 ?           
+203 setreuid32              man/ cs/  0xcb  ?                 ?                   ?                   ?                   ?                 ?           
+204 setregid32              man/ cs/  0xcc  ?                 ?                   ?                   ?                   ?                 ?           
+205 getgroups32             man/ cs/  0xcd  ?                 ?                   ?                   ?                   ?                 ?           
+206 setgroups32             man/ cs/  0xce  ?                 ?                   ?                   ?                   ?                 ?           
+207 fchown32                man/ cs/  0xcf  ?                 ?                   ?                   ?                   ?                 ?           
+208 setresuid32             man/ cs/  0xd0  ?                 ?                   ?                   ?                   ?                 ?           
+209 getresuid32             man/ cs/  0xd1  ?                 ?                   ?                   ?                   ?                 ?           
+210 setresgid32             man/ cs/  0xd2  ?                 ?                   ?                   ?                   ?                 ?           
+211 getresgid32             man/ cs/  0xd3  ?                 ?                   ?                   ?                   ?                 ?           
+212 chown32                 man/ cs/  0xd4  ?                 ?                   ?                   ?                   ?                 ?           
+213 setuid32                man/ cs/  0xd5  ?                 ?                   ?                   ?                   ?                 ?           
+214 setgid32                man/ cs/  0xd6  ?                 ?                   ?                   ?                   ?                 ?           
+215 setfsuid32              man/ cs/  0xd7  ?                 ?                   ?                   ?                   ?                 ?           
+216 setfsgid32              man/ cs/  0xd8  ?                 ?                   ?                   ?                   ?                 ?           
+217 pivot_root              man/ cs/  0xd9  const char        const char *put_old -                   -                   -                 -           
+                                            *new_root         
+218 mincore                 man/ cs/  0xda  unsigned long     size_t len          unsigned char * vec -                   -                 -           
+                                            start             
+219 madvise                 man/ cs/  0xdb  unsigned long     size_t len          int behavior        -                   -                 -           
+                                            start             
+                                                              struct                                                                                    
+220 getdents64              man/ cs/  0xdc  unsigned int fd   linux_dirent64      unsigned int count  -                   -                 -
+                                                              *dirent             
+221 fcntl64                 man/ cs/  0xdd  unsigned int fd   unsigned int cmd    unsigned long arg   -                   -                 -           
+222 not implemented                   0xde  
+223 not implemented                   0xdf  
+224 gettid                  man/ cs/  0xe0  -                 -                   -                   -                   -                 -           
+225 readahead               man/ cs/  0xe1  int fd            loff_t offset       size_t count        -                   -                 -           
+226 setxattr                man/ cs/  0xe2  const char *path  const char *name    const void *value   size_t size         int flags         -           
+227 lsetxattr               man/ cs/  0xe3  const char *path  const char *name    const void *value   size_t size         int flags         -           
+228 fsetxattr               man/ cs/  0xe4  int fd            const char *name    const void *value   size_t size         int flags         -           
+229 getxattr                man/ cs/  0xe5  const char *path  const char *name    void *value         size_t size         -                 -           
+230 lgetxattr               man/ cs/  0xe6  const char *path  const char *name    void *value         size_t size         -                 -           
+231 fgetxattr               man/ cs/  0xe7  int fd            const char *name    void *value         size_t size         -                 -           
+232 listxattr               man/ cs/  0xe8  const char *path  char *list          size_t size         -                   -                 -           
+233 llistxattr              man/ cs/  0xe9  const char *path  char *list          size_t size         -                   -                 -           
+234 flistxattr              man/ cs/  0xea  int fd            char *list          size_t size         -                   -                 -           
+235 removexattr             man/ cs/  0xeb  const char *path  const char *name    -                   -                   -                 -           
+236 lremovexattr            man/ cs/  0xec  const char *path  const char *name    -                   -                   -                 -           
+237 fremovexattr            man/ cs/  0xed  int fd            const char *name    -                   -                   -                 -           
+238 tkill                   man/ cs/  0xee  pid_t pid         int sig             -                   -                   -                 -           
+239 sendfile64              man/ cs/  0xef  int out_fd        int in_fd           loff_t *offset      size_t count        -                 -           
+                                                                                                      struct                                            
+240 futex                   man/ cs/  0xf0  u32 *uaddr        int op              u32 val             __kernel_timespec   u32 *uaddr2       u32 val3
+                                                                                                      *utime              
+241 sched_setaffinity       man/ cs/  0xf1  pid_t pid         unsigned int len    unsigned long       -                   -                 -           
+                                                                                  *user_mask_ptr      
+242 sched_getaffinity       man/ cs/  0xf2  pid_t pid         unsigned int len    unsigned long       -                   -                 -           
+                                                                                  *user_mask_ptr      
+243 set_thread_area         man/ cs/  0xf3  ?                 ?                   ?                   ?                   ?                 ?           
+244 get_thread_area         man/ cs/  0xf4  ?                 ?                   ?                   ?                   ?                 ?           
+245 io_setup                man/ cs/  0xf5  unsigned nr_reqs  aio_context_t *ctx  -                   -                   -                 -           
+246 io_destroy              man/ cs/  0xf6  aio_context_t ctx -                   -                   -                   -                 -           
+                                            aio_context_t                                             struct io_event     struct                        
+247 io_getevents            man/ cs/  0xf7  ctx_id            long min_nr         long nr             *events             __kernel_timespec -
+                                                                                                                          *timeout          
+248 io_submit               man/ cs/  0xf8  aio_context_t     long                struct iocb * *     -                   -                 -           
+249 io_cancel               man/ cs/  0xf9  aio_context_t     struct iocb *iocb   struct io_event     -                   -                 -           
+                                            ctx_id                                *result             
+250 fadvise64               man/ cs/  0xfa  int fd            loff_t offset       size_t len          int advice          -                 -           
+251 not implemented                   0xfb  
+252 exit_group              man/ cs/  0xfc  int error_code    -                   -                   -                   -                 -           
+253 lookup_dcookie          man/ cs/  0xfd  u64 cookie64      char *buf           size_t len          -                   -                 -           
+254 epoll_create            man/ cs/  0xfe  int size          -                   -                   -                   -                 -           
+255 epoll_ctl               man/ cs/  0xff  int epfd          int op              int fd              struct epoll_event  -                 -           
+                                                                                                      *event              
+256 epoll_wait              man/ cs/  0x100 int epfd          struct epoll_event  int maxevents       int timeout         -                 -           
+                                                              *events             
+257 remap_file_pages        man/ cs/  0x101 unsigned long     unsigned long size  unsigned long prot  unsigned long pgoff unsigned long     -           
+                                            start                                                                         flags             
+258 set_tid_address         man/ cs/  0x102 int *tidptr       -                   -                   -                   -                 -           
+259 timer_create            man/ cs/  0x103 clockid_t         struct sigevent     timer_t *           -                   -                 -           
+                                            which_clock       *timer_event_spec   created_timer_id    
+                                                                                  const struct        struct                                            
+260 timer_settime           man/ cs/  0x104 timer_t timer_id  int flags           __kernel_itimerspec __kernel_itimerspec -                 -
+                                                                                  *new_setting        *old_setting        
+                                                              struct                                                                                    
+261 timer_gettime           man/ cs/  0x105 timer_t timer_id  __kernel_itimerspec -                   -                   -                 -
+                                                              *setting            
+262 timer_getoverrun        man/ cs/  0x106 timer_t timer_id  -                   -                   -                   -                 -           
+263 timer_delete            man/ cs/  0x107 timer_t timer_id  -                   -                   -                   -                 -           
+                                            clockid_t         const struct                                                                              
+264 clock_settime           man/ cs/  0x108 which_clock       __kernel_timespec   -                   -                   -                 -
+                                                              *tp                 
+                                            clockid_t         struct                                                                                    
+265 clock_gettime           man/ cs/  0x109 which_clock       __kernel_timespec   -                   -                   -                 -
+                                                              *tp                 
+                                            clockid_t         struct                                                                                    
+266 clock_getres            man/ cs/  0x10a which_clock       __kernel_timespec   -                   -                   -                 -
+                                                              *tp                 
+                                            clockid_t                             const struct        struct                                            
+267 clock_nanosleep         man/ cs/  0x10b which_clock       int flags           __kernel_timespec   __kernel_timespec   -                 -
+                                                                                  *rqtp               *rmtp               
+268 statfs64                man/ cs/  0x10c const char *path  size_t sz           struct statfs64     -                   -                 -           
+                                                                                  *buf                
+269 fstatfs64               man/ cs/  0x10d unsigned int fd   size_t sz           struct statfs64     -                   -                 -           
+                                                                                  *buf                
+270 tgkill                  man/ cs/  0x10e pid_t tgid        pid_t pid           int sig             -                   -                 -           
+271 utimes                  man/ cs/  0x10f char *filename    struct timeval      -                   -                   -                 -           
+                                                              *utimes             
+272 fadvise64_64            man/ cs/  0x110 int fd            loff_t offset       loff_t len          int advice          -                 -           
+273 vserver                 man/ cs/  0x111 ?                 ?                   ?                   ?                   ?                 ?           
+274 mbind                   man/ cs/  0x112 unsigned long     unsigned long len   unsigned long mode  const unsigned long unsigned long     unsigned    
+                                            start                                                     *nmask              maxnode           flags       
+275 get_mempolicy           man/ cs/  0x113 int *policy       unsigned long       unsigned long       unsigned long addr  unsigned long     -           
+                                                              *nmask              maxnode                                 flags             
+276 set_mempolicy           man/ cs/  0x114 int mode          const unsigned long unsigned long       -                   -                 -           
+                                                              *nmask              maxnode             
+277 mq_open                 man/ cs/  0x115 const char *name  int oflag           umode_t mode        struct mq_attr      -                 -           
+                                                                                                      *attr               
+278 mq_unlink               man/ cs/  0x116 const char *name  -                   -                   -                   -                 -           
+                                                                                                      unsigned int        const struct                  
+279 mq_timedsend            man/ cs/  0x117 mqd_t mqdes       const char *msg_ptr size_t msg_len      msg_prio            __kernel_timespec -
+                                                                                                                          *abs_timeout      
+                                                                                                      unsigned int        const struct                  
+280 mq_timedreceive         man/ cs/  0x118 mqd_t mqdes       char *msg_ptr       size_t msg_len      *msg_prio           __kernel_timespec -
+                                                                                                                          *abs_timeout      
+                                                              const struct                                                                              
+281 mq_notify               man/ cs/  0x119 mqd_t mqdes       sigevent            -                   -                   -                 -
+                                                              *notification       
+282 mq_getsetattr           man/ cs/  0x11a mqd_t mqdes       const struct        struct mq_attr      -                   -                 -           
+                                                              mq_attr *mqstat     *omqstat            
+                                            unsigned long     unsigned long       struct                                                                
+283 kexec_load              man/ cs/  0x11b entry             nr_segments         kexec_segment       unsigned long flags -                 -
+                                                                                  *segments           
+284 waitid                  man/ cs/  0x11c int which         pid_t pid           struct siginfo      int options         struct rusage *ru -           
+                                                                                  *infop              
+285 not implemented                   0x11d 
+286 add_key                 man/ cs/  0x11e const char *_type const char          const void          size_t plen         key_serial_t      -           
+                                                              *_description       *_payload                               destringid        
+287 request_key             man/ cs/  0x11f const char *_type const char          const char          key_serial_t        -                 -           
+                                                              *_description       *_callout_info      destringid          
+288 keyctl                  man/ cs/  0x120 int cmd           unsigned long arg2  unsigned long arg3  unsigned long arg4  unsigned long     -           
+                                                                                                                          arg5              
+289 ioprio_set              man/ cs/  0x121 int which         int who             int ioprio          -                   -                 -           
+290 ioprio_get              man/ cs/  0x122 int which         int who             -                   -                   -                 -           
+291 inotify_init            man/ cs/  0x123 -                 -                   -                   -                   -                 -           
+292 inotify_add_watch       man/ cs/  0x124 int fd            const char *path    u32 mask            -                   -                 -           
+293 inotify_rm_watch        man/ cs/  0x125 int fd            __s32 wd            -                   -                   -                 -           
+294 migrate_pages           man/ cs/  0x126 pid_t pid         unsigned long       const unsigned long const unsigned long -                 -           
+                                                              maxnode             *from               *to                 
+295 openat                  man/ cs/  0x127 int dfd           const char          int flags           umode_t mode        -                 -           
+                                                              *filename           
+296 mkdirat                 man/ cs/  0x128 int dfd           const char *        umode_t mode        -                   -                 -           
+                                                              pathname            
+297 mknodat                 man/ cs/  0x129 int dfd           const char *        umode_t mode        unsigned dev        -                 -           
+                                                              filename            
+298 fchownat                man/ cs/  0x12a int dfd           const char          uid_t user          gid_t group         int flag          -           
+                                                              *filename           
+299 futimesat               man/ cs/  0x12b int dfd           const char          struct timeval      -                   -                 -           
+                                                              *filename           *utimes             
+300 fstatat64               man/ cs/  0x12c int dfd           const char          struct stat64       int flag            -                 -           
+                                                              *filename           *statbuf            
+301 unlinkat                man/ cs/  0x12d int dfd           const char *        int flag            -                   -                 -           
+                                                              pathname            
+302 renameat                man/ cs/  0x12e int olddfd        const char *        int newdfd          const char *        -                 -           
+                                                              oldname                                 newname             
+303 linkat                  man/ cs/  0x12f int olddfd        const char *oldname int newdfd          const char *newname int flags         -           
+304 symlinkat               man/ cs/  0x130 const char *      int newdfd          const char *        -                   -                 -           
+                                            oldname                               newname             
+305 readlinkat              man/ cs/  0x131 int dfd           const char *path    char *buf           int bufsiz          -                 -           
+306 fchmodat                man/ cs/  0x132 int dfd           const char *        umode_t mode        -                   -                 -           
+                                                              filename            
+307 faccessat               man/ cs/  0x133 int dfd           const char          int mode            -                   -                 -           
+                                                              *filename           
+                                                                                                                          struct                        
+308 pselect6                man/ cs/  0x134 int               fd_set *            fd_set *            fd_set *            __kernel_timespec void *
+                                                                                                                          *                 
+309 ppoll                   man/ cs/  0x135 struct pollfd *   unsigned int        struct              const sigset_t *    size_t            -           
+                                                                                  __kernel_timespec * 
+310 unshare                 man/ cs/  0x136 unsigned long     -                   -                   -                   -                 -           
+                                            unshare_flags     
+                                            struct                                                                                                      
+311 set_robust_list         man/ cs/  0x137 robust_list_head  size_t len          -                   -                   -                 -
+                                            *head             
+                                                              struct                                                                                    
+312 get_robust_list         man/ cs/  0x138 int pid           robust_list_head *  size_t *len_ptr     -                   -                 -
+                                                              *head_ptr           
+313 splice                  man/ cs/  0x139 int fd_in         loff_t *off_in      int fd_out          loff_t *off_out     size_t len        unsigned    
+                                                                                                                                            int flags   
+314 sync_file_range         man/ cs/  0x13a int fd            loff_t offset       loff_t nbytes       unsigned int flags  -                 -           
+315 tee                     man/ cs/  0x13b int fdin          int fdout           size_t len          unsigned int flags  -                 -           
+316 vmsplice                man/ cs/  0x13c int fd            const struct iovec  unsigned long       unsigned int flags  -                 -           
+                                                              *iov                nr_segs             
+317 move_pages              man/ cs/  0x13d pid_t pid         unsigned long       const void * *pages const int *nodes    int *status       int flags   
+                                                              nr_pages            
+318 getcpu                  man/ cs/  0x13e unsigned *cpu     unsigned *node      struct getcpu_cache -                   -                 -           
+                                                                                  *cache              
+319 epoll_pwait             man/ cs/  0x13f int epfd          struct epoll_event  int maxevents       int timeout         const sigset_t    size_t      
+                                                              *events                                                     *sigmask          sigsetsize  
+                                                              const char          struct                                                                
+320 utimensat               man/ cs/  0x140 int dfd           *filename           __kernel_timespec   int flags           -                 -
+                                                                                  *utimes             
+321 signalfd                man/ cs/  0x141 int ufd           sigset_t *user_mask size_t sizemask     -                   -                 -           
+322 timerfd_create          man/ cs/  0x142 int clockid       int flags           -                   -                   -                 -           
+323 eventfd                 man/ cs/  0x143 unsigned int      -                   -                   -                   -                 -           
+                                            count             
+324 fallocate               man/ cs/  0x144 int fd            int mode            loff_t offset       loff_t len          -                 -           
+                                                                                  const struct        struct                                            
+325 timerfd_settime         man/ cs/  0x145 int ufd           int flags           __kernel_itimerspec __kernel_itimerspec -                 -
+                                                                                  *utmr               *otmr               
+                                                              struct                                                                                    
+326 timerfd_gettime         man/ cs/  0x146 int ufd           __kernel_itimerspec -                   -                   -                 -
+                                                              *otmr               
+327 signalfd4               man/ cs/  0x147 int ufd           sigset_t *user_mask size_t sizemask     int flags           -                 -           
+328 eventfd2                man/ cs/  0x148 unsigned int      int flags           -                   -                   -                 -           
+                                            count             
+329 epoll_create1           man/ cs/  0x149 int flags         -                   -                   -                   -                 -           
+330 dup3                    man/ cs/  0x14a unsigned int      unsigned int newfd  int flags           -                   -                 -           
+                                            oldfd             
+331 pipe2                   man/ cs/  0x14b int *fildes       int flags           -                   -                   -                 -           
+332 inotify_init1           man/ cs/  0x14c int flags         -                   -                   -                   -                 -           
+333 preadv                  man/ cs/  0x14d unsigned long fd  const struct iovec  unsigned long vlen  unsigned long pos_l unsigned long     -           
+                                                              *vec                                                        pos_h             
+334 pwritev                 man/ cs/  0x14e unsigned long fd  const struct iovec  unsigned long vlen  unsigned long pos_l unsigned long     -           
+                                                              *vec                                                        pos_h             
+335 rt_tgsigqueueinfo       man/ cs/  0x14f pid_t tgid        pid_t pid           int sig             siginfo_t *uinfo    -                 -           
+                                            struct                                                                        unsigned long                 
+336 perf_event_open         man/ cs/  0x150 perf_event_attr   pid_t pid           int cpu             int group_fd        flags             -
+                                            *attr_uptr        
+                                                                                                                          struct                        
+337 recvmmsg                man/ cs/  0x151 int fd            struct mmsghdr *msg unsigned int vlen   unsigned flags      __kernel_timespec -
+                                                                                                                          *timeout          
+338 fanotify_init           man/ cs/  0x152 unsigned int      unsigned int        -                   -                   -                 -           
+                                            flags             event_f_flags       
+339 fanotify_mark           man/ cs/  0x153 int fanotify_fd   unsigned int flags  u64 mask            int fd              const char        -           
+                                                                                                                          *pathname         
+340 prlimit64               man/ cs/  0x154 pid_t pid         unsigned int        const struct        struct rlimit64     -                 -           
+                                                              resource            rlimit64 *new_rlim  *old_rlim           
+341 name_to_handle_at       man/ cs/  0x155 int dfd           const char *name    struct file_handle  int *mnt_id         int flag          -           
+                                                                                  *handle             
+342 open_by_handle_at       man/ cs/  0x156 int mountdirfd    struct file_handle  int flags           -                   -                 -           
+                                                              *handle             
+343 clock_adjtime           man/ cs/  0x157 clockid_t         struct              -                   -                   -                 -           
+                                            which_clock       __kernel_timex *tx  
+344 syncfs                  man/ cs/  0x158 int fd            -                   -                   -                   -                 -           
+345 sendmmsg                man/ cs/  0x159 int fd            struct mmsghdr *msg unsigned int vlen   unsigned flags      -                 -           
+346 setns                   man/ cs/  0x15a int fd            int nstype          -                   -                   -                 -           
+347 process_vm_readv        man/ cs/  0x15b pid_t pid         const struct iovec  unsigned long       const struct iovec  unsigned long     unsigned    
+                                                              *lvec               liovcnt             *rvec               riovcnt           long flags  
+348 process_vm_writev       man/ cs/  0x15c pid_t pid         const struct iovec  unsigned long       const struct iovec  unsigned long     unsigned    
+                                                              *lvec               liovcnt             *rvec               riovcnt           long flags  
+349 kcmp                    man/ cs/  0x15d pid_t pid1        pid_t pid2          int type            unsigned long idx1  unsigned long     -           
+                                                                                                                          idx2              
+350 finit_module            man/ cs/  0x15e int fd            const char *uargs   int flags           -                   -                 -           
+351 sched_setattr           man/ cs/  0x15f pid_t pid         struct sched_attr   unsigned int flags  -                   -                 -           
+                                                              *attr               
+352 sched_getattr           man/ cs/  0x160 pid_t pid         struct sched_attr   unsigned int size   unsigned int flags  -                 -           
+                                                              *attr               
+353 renameat2               man/ cs/  0x161 int olddfd        const char *oldname int newdfd          const char *newname unsigned int      -           
+                                                                                                                          flags             
+354 seccomp                 man/ cs/  0x162 unsigned int op   unsigned int flags  void *uargs         -                   -                 -           
+355 getrandom               man/ cs/  0x163 char *buf         size_t count        unsigned int flags  -                   -                 -           
+356 memfd_create            man/ cs/  0x164 const char        unsigned int flags  -                   -                   -                 -           
+                                            *uname_ptr        
+357 bpf                     man/ cs/  0x165 int cmd           union bpf_attr      unsigned int size   -                   -                 -           
+                                                              *attr               
+358 execveat                man/ cs/  0x166 int dfd           const char          const char *const   const char *const   int flags         -           
+                                                              *filename           *argv               *envp               
+359 socket                  man/ cs/  0x167 int               int                 int                 -                   -                 -           
+360 socketpair              man/ cs/  0x168 int               int                 int                 int *               -                 -           
+361 bind                    man/ cs/  0x169 int               struct sockaddr *   int                 -                   -                 -           
+362 connect                 man/ cs/  0x16a int               struct sockaddr *   int                 -                   -                 -           
+363 listen                  man/ cs/  0x16b int               int                 -                   -                   -                 -           
+364 accept4                 man/ cs/  0x16c int               struct sockaddr *   int *               int                 -                 -           
+365 getsockopt              man/ cs/  0x16d int fd            int level           int optname         char *optval        int *optlen       -           
+366 setsockopt              man/ cs/  0x16e int fd            int level           int optname         char *optval        int optlen        -           
+367 getsockname             man/ cs/  0x16f int               struct sockaddr *   int *               -                   -                 -           
+368 getpeername             man/ cs/  0x170 int               struct sockaddr *   int *               -                   -                 -           
+369 sendto                  man/ cs/  0x171 int               void *              size_t              unsigned            struct sockaddr * int         
+370 sendmsg                 man/ cs/  0x172 int fd            struct user_msghdr  unsigned flags      -                   -                 -           
+                                                              *msg                
+371 recvfrom                man/ cs/  0x173 int               void *              size_t              unsigned            struct sockaddr * int *       
+372 recvmsg                 man/ cs/  0x174 int fd            struct user_msghdr  unsigned flags      -                   -                 -           
+                                                              *msg                
+373 shutdown                man/ cs/  0x175 int               int                 -                   -                   -                 -           
+374 userfaultfd             man/ cs/  0x176 int flags         -                   -                   -                   -                 -           
+375 membarrier              man/ cs/  0x177 int cmd           int flags           -                   -                   -                 -           
+376 mlock2                  man/ cs/  0x178 unsigned long     size_t len          int flags           -                   -                 -           
+                                            start             
+377 copy_file_range         man/ cs/  0x179 int fd_in         loff_t *off_in      int fd_out          loff_t *off_out     size_t len        unsigned    
+                                                                                                                                            int flags   
+378 preadv2                 man/ cs/  0x17a unsigned long fd  const struct iovec  unsigned long vlen  unsigned long pos_l unsigned long     rwf_t flags 
+                                                              *vec                                                        pos_h             
+379 pwritev2                man/ cs/  0x17b unsigned long fd  const struct iovec  unsigned long vlen  unsigned long pos_l unsigned long     rwf_t flags 
+                                                              *vec                                                        pos_h             
+380 pkey_mprotect           man/ cs/  0x17c unsigned long     size_t len          unsigned long prot  int pkey            -                 -           
+                                            start             
+381 pkey_alloc              man/ cs/  0x17d unsigned long     unsigned long       -                   -                   -                 -           
+                                            flags             init_val            
+382 pkey_free               man/ cs/  0x17e int pkey          -                   -                   -                   -                 -           
+383 statx                   man/ cs/  0x17f int dfd           const char *path    unsigned flags      unsigned mask       struct statx      -           
+                                                                                                                          *buffer           
+384 arch_prctl              man/ cs/  0x180 ?                 ?                   ?                   ?                   ?                 ?           
+
+  Cross-arch Numbers
+
+   This shows the syscall numbers for (hopefully) the same syscall name
+   across architectures. Consult the Random Names section for common gotchas.
+
+   syscall name           x86_64  arm   arm64 x86 
+   ARM_breakpoint           -    983041   -    -  
+   ARM_cacheflush           -    983042   -    -  
+   ARM_set_tls              -    983045   -    -  
+   ARM_usr26                -    983043   -    -  
+   ARM_usr32                -    983044   -    -  
+   _llseek                  -     140     -   140 
+   _newselect               -     142     -   142 
+   _sysctl                 156    149     -   149 
+   accept                   43    285    202   -  
+   accept4                 288    366    242  364 
+   access                   21     33     -   33  
+   acct                    163     51    89   51  
+   add_key                 248    309    217  286 
+   adjtimex                159    124    171  124 
+   afs_syscall             183     -      -   137 
+   alarm                    37     -      -   27  
+   arch_prctl              158     -      -   384 
+   arm_fadvise64_64         -     270     -    -  
+   arm_sync_file_range      -     341     -    -  
+   bdflush                  -     134     -   134 
+   bind                     49    282    200  361 
+   bpf                     321    386    280  357 
+   break                    -      -      -   17  
+   brk                      12     45    214  45  
+   capget                  125    184    90   184 
+   capset                  126    185    91   185 
+   chdir                    80     12    49   12  
+   chmod                    90     15     -   15  
+   chown                    92    182     -   182 
+   chown32                  -     212     -   212 
+   chroot                  161     61    51   61  
+   clock_adjtime           305    372    266  343 
+   clock_getres            229    264    114  266 
+   clock_gettime           228    263    113  265 
+   clock_nanosleep         230    265    115  267 
+   clock_settime           227    262    112  264 
+   clone                    56    120    220  120 
+   close                    3      6     57    6  
+   connect                  42    283    203  362 
+   copy_file_range         326    391    285  377 
+   creat                    85     8      -    8  
+   create_module           174     -      -   127 
+   delete_module           176    129    106  129 
+   dup                      32     41    23   41  
+   dup2                     33     63     -   63  
+   dup3                    292    358    24   330 
+   epoll_create            213    250     -   254 
+   epoll_create1           291    357    20   329 
+   epoll_ctl               233    251    21   255 
+   epoll_ctl_old           214     -      -    -  
+   epoll_pwait             281    346    22   319 
+   epoll_wait              232    252     -   256 
+   epoll_wait_old          215     -      -    -  
+   eventfd                 284    351     -   323 
+   eventfd2                290    356    19   328 
+   execve                   59     11    221  11  
+   execveat                322    387    281  358 
+   exit                     60     1     93    1  
+   exit_group              231    248    94   252 
+   faccessat               269    334    48   307 
+   fadvise64               221     -     223  250 
+   fadvise64_64             -      -      -   272 
+   fallocate               285    352    47   324 
+   fanotify_init           300    367    262  338 
+   fanotify_mark           301    368    263  339 
+   fchdir                   81    133    50   133 
+   fchmod                   91     94    52   94  
+   fchmodat                268    333    53   306 
+   fchown                   93     95    55   95  
+   fchown32                 -     207     -   207 
+   fchownat                260    325    54   298 
+   fcntl                    72     55    25   55  
+   fcntl64                  -     221     -   221 
+   fdatasync                75    148    83   148 
+   fgetxattr               193    231    10   231 
+   finit_module            313    379    273  350 
+   flistxattr              196    234    13   234 
+   flock                    73    143    32   143 
+   fork                     57     2      -    2  
+   fremovexattr            199    237    16   237 
+   fsetxattr               190    228     7   228 
+   fstat                    5     108    80   108 
+   fstat64                  -     197     -   197 
+   fstatat64                -     327     -   300 
+   fstatfs                 138    100    44   100 
+   fstatfs64                -     267     -   269 
+   fsync                    74    118    82   118 
+   ftime                    -      -      -   35  
+   ftruncate                77     93    46   93  
+   ftruncate64              -     194     -   194 
+   futex                   202    240    98   240 
+   futimesat               261    326     -   299 
+   get_kernel_syms         177     -      -   130 
+   get_mempolicy           239    320    236  275 
+   get_robust_list         274    339    100  312 
+   get_thread_area         211     -      -   244 
+   getcpu                  309    345    168  318 
+   getcwd                   79    183    17   183 
+   getdents                 78    141     -   141 
+   getdents64              217    217    61   220 
+   getegid                 108     50    177  50  
+   getegid32                -     202     -   202 
+   geteuid                 107     49    175  49  
+   geteuid32                -     201     -   201 
+   getgid                  104     47    176  47  
+   getgid32                 -     200     -   200 
+   getgroups               115     80    158  80  
+   getgroups32              -     205     -   205 
+   getitimer                36    105    102  105 
+   getpeername              52    287    205  368 
+   getpgid                 121    132    155  132 
+   getpgrp                 111     65     -   65  
+   getpid                   39     20    172  20  
+   getpmsg                 181     -      -   188 
+   getppid                 110     64    173  64  
+   getpriority             140     96    141  96  
+   getrandom               318    384    278  355 
+   getresgid               120    171    150  171 
+   getresgid32              -     211     -   211 
+   getresuid               118    165    148  165 
+   getresuid32              -     209     -   209 
+   getrlimit                97     -     163  76  
+   getrusage                98     77    165  77  
+   getsid                  124    147    156  147 
+   getsockname              51    286    204  367 
+   getsockopt               55    295    209  365 
+   gettid                  186    224    178  224 
+   gettimeofday             96     78    169  78  
+   getuid                  102     24    174  24  
+   getuid32                 -     199     -   199 
+   getxattr                191    229     8   229 
+   gtty                     -      -      -   32  
+   idle                     -      -      -   112 
+   init_module             175    128    105  128 
+   inotify_add_watch       254    317    27   292 
+   inotify_init            253    316     -   291 
+   inotify_init1           294    360    26   332 
+   inotify_rm_watch        255    318    28   293 
+   io_cancel               210    247     3   249 
+   io_destroy              207    244     1   246 
+   io_getevents            208    245     4   247 
+   io_setup                206    243     0   245 
+   io_submit               209    246     2   248 
+   ioctl                    16     54    29   54  
+   ioperm                  173     -      -   101 
+   iopl                    172     -      -   110 
+   ioprio_get              252    315    31   290 
+   ioprio_set              251    314    30   289 
+   ipc                      -      -      -   117 
+   kcmp                    312    378    272  349 
+   kexec_file_load         320     -      -    -  
+   kexec_load              246    347    104  283 
+   keyctl                  250    311    219  288 
+   kill                     62     37    129  37  
+   lchown                   94     16     -   16  
+   lchown32                 -     198     -   198 
+   lgetxattr               192    230     9   230 
+   link                     86     9      -    9  
+   linkat                  265    330    37   303 
+   listen                   50    284    201  363 
+   listxattr               194    232    11   232 
+   llistxattr              195    233    12   233 
+   lock                     -      -      -   53  
+   lookup_dcookie          212    249    18   253 
+   lremovexattr            198    236    15   236 
+   lseek                    8      19    62   19  
+   lsetxattr               189    227     6   227 
+   lstat                    6     107     -   107 
+   lstat64                  -     196     -   196 
+   madvise                  28    220    233  219 
+   mbind                   237    319    235  274 
+   membarrier              324    389    283  375 
+   memfd_create            319    385    279  356 
+   migrate_pages           256     -     238  294 
+   mincore                  27    219    232  218 
+   mkdir                    83     39     -   39  
+   mkdirat                 258    323    34   296 
+   mknod                   133     14     -   14  
+   mknodat                 259    324    33   297 
+   mlock                   149    150    228  150 
+   mlock2                  325    390    284  376 
+   mlockall                151    152    230  152 
+   mmap                     9      -     222  90  
+   mmap2                    -     192     -   192 
+   modify_ldt              154     -      -   123 
+   mount                   165     21    40   21  
+   move_pages              279    344    239  317 
+   mprotect                 10    125    226  125 
+   mpx                      -      -      -   56  
+   mq_getsetattr           245    279    185  282 
+   mq_notify               244    278    184  281 
+   mq_open                 240    274    180  277 
+   mq_timedreceive         243    277    183  280 
+   mq_timedsend            242    276    182  279 
+   mq_unlink               241    275    181  278 
+   mremap                   25    163    216  163 
+   msgctl                   71    304    187   -  
+   msgget                   68    303    186   -  
+   msgrcv                   70    302    188   -  
+   msgsnd                   69    301    189   -  
+   msync                    26    144    227  144 
+   munlock                 150    151    229  151 
+   munlockall              152    153    231  153 
+   munmap                   11     91    215  91  
+   name_to_handle_at       303    370    264  341 
+   nanosleep                35    162    101  162 
+   newfstatat              262     -     79    -  
+   nfsservctl              180    169    42   169 
+   nice                     -      34     -   34  
+   oldfstat                 -      -      -   28  
+   oldlstat                 -      -      -   84  
+   oldolduname              -      -      -   59  
+   oldstat                  -      -      -   18  
+   olduname                 -      -      -   109 
+   open                     2      5      -    5  
+   open_by_handle_at       304    371    265  342 
+   openat                  257    322    56   295 
+   pause                    34     29     -   29  
+   pciconfig_iobase         -     271     -    -  
+   pciconfig_read           -     272     -    -  
+   pciconfig_write          -     273     -    -  
+   perf_event_open         298    364    241  336 
+   personality             135    136    92   136 
+   pipe                     22     42     -   42  
+   pipe2                   293    359    59   331 
+   pivot_root              155    218    41   217 
+   pkey_alloc              330    395    289  381 
+   pkey_free               331    396    290  382 
+   pkey_mprotect           329    394    288  380 
+   poll                     7     168     -   168 
+   ppoll                   271    336    73   309 
+   prctl                   157    172    167  172 
+   pread64                  17    180    67   180 
+   preadv                  295    361    69   333 
+   preadv2                 327    392    286  378 
+   prlimit64               302    369    261  340 
+   process_vm_readv        310    376    270  347 
+   process_vm_writev       311    377    271  348 
+   prof                     -      -      -   44  
+   profil                   -      -      -   98  
+   pselect6                270    335    72   308 
+   ptrace                  101     26    117  26  
+   putpmsg                 182     -      -   189 
+   pwrite64                 18    181    68   181 
+   pwritev                 296    362    70   334 
+   pwritev2                328    393    287  379 
+   query_module            178     -      -   167 
+   quotactl                179    131    60   131 
+   read                     0      3     63    3  
+   readahead               187    225    213  225 
+   readdir                  -      -      -   89  
+   readlink                 89     85     -   85  
+   readlinkat              267    332    78   305 
+   readv                    19    145    65   145 
+   reboot                  169     88    142  88  
+   recv                     -     291     -    -  
+   recvfrom                 45    292    207  371 
+   recvmmsg                299    365    243  337 
+   recvmsg                  47    297    212  372 
+   remap_file_pages        216    253    234  257 
+   removexattr             197    235    14   235 
+   rename                   82     38     -   38  
+   renameat                264    329    38   302 
+   renameat2               316    382    276  353 
+   request_key             249    310    218  287 
+   restart_syscall         219     0     128   0  
+   rmdir                    84     40     -   40  
+   rt_sigaction             13    174    134  174 
+   rt_sigpending           127    176    136  176 
+   rt_sigprocmask           14    175    135  175 
+   rt_sigqueueinfo         129    178    138  178 
+   rt_sigreturn             15    173    139  173 
+   rt_sigsuspend           130    179    133  179 
+   rt_sigtimedwait         128    177    137  177 
+   rt_tgsigqueueinfo       297    363    240  335 
+   sched_get_priority_max  146    159    125  159 
+   sched_get_priority_min  147    160    126  160 
+   sched_getaffinity       204    242    123  242 
+   sched_getattr           315    381    275  352 
+   sched_getparam          143    155    121  155 
+   sched_getscheduler      145    157    120  157 
+   sched_rr_get_interval   148    161    127  161 
+   sched_setaffinity       203    241    122  241 
+   sched_setattr           314    380    274  351 
+   sched_setparam          142    154    118  154 
+   sched_setscheduler      144    156    119  156 
+   sched_yield              24    158    124  158 
+   seccomp                 317    383    277  354 
+   security                185     -      -    -  
+   select                   23     -      -   82  
+   semctl                   66    300    191   -  
+   semget                   64    299    190   -  
+   semop                    65    298    193   -  
+   semtimedop              220    312    192   -  
+   send                     -     289     -    -  
+   sendfile                 40    187    71   187 
+   sendfile64               -     239     -   239 
+   sendmmsg                307    374    269  345 
+   sendmsg                  46    296    211  370 
+   sendto                   44    290    206  369 
+   set_mempolicy           238    321    237  276 
+   set_robust_list         273    338    99   311 
+   set_thread_area         205     -      -   243 
+   set_tid_address         218    256    96   258 
+   setdomainname           171    121    162  121 
+   setfsgid                123    139    152  139 
+   setfsgid32               -     216     -   216 
+   setfsuid                122    138    151  138 
+   setfsuid32               -     215     -   215 
+   setgid                  106     46    144  46  
+   setgid32                 -     214     -   214 
+   setgroups               116     81    159  81  
+   setgroups32              -     206     -   206 
+   sethostname             170     74    161  74  
+   setitimer                38    104    103  104 
+   setns                   308    375    268  346 
+   setpgid                 109     57    154  57  
+   setpriority             141     97    140  97  
+   setregid                114     71    143  71  
+   setregid32               -     204     -   204 
+   setresgid               119    170    149  170 
+   setresgid32              -     210     -   210 
+   setresuid               117    164    147  164 
+   setresuid32              -     208     -   208 
+   setreuid                113     70    145  70  
+   setreuid32               -     203     -   203 
+   setrlimit               160     75    164  75  
+   setsid                  112     66    157  66  
+   setsockopt               54    294    208  366 
+   settimeofday            164     79    170  79  
+   setuid                  105     23    146  23  
+   setuid32                 -     213     -   213 
+   setxattr                188    226     5   226 
+   sgetmask                 -      -      -   68  
+   shmat                    30    305    196   -  
+   shmctl                   31    308    195   -  
+   shmdt                    67    306    197   -  
+   shmget                   29    307    194   -  
+   shutdown                 48    293    210  373 
+   sigaction                -      67     -   67  
+   sigaltstack             131    186    132  186 
+   signal                   -      -      -   48  
+   signalfd                282    349     -   321 
+   signalfd4               289    355    74   327 
+   sigpending               -      73     -   73  
+   sigprocmask              -     126     -   126 
+   sigreturn                -     119     -   119 
+   sigsuspend               -      72     -   72  
+   socket                   41    281    198  359 
+   socketcall               -      -      -   102 
+   socketpair               53    288    199  360 
+   splice                  275    340    76   313 
+   ssetmask                 -      -      -   69  
+   stat                     4     106     -   106 
+   stat64                   -     195     -   195 
+   statfs                  137     99    43   99  
+   statfs64                 -     266     -   268 
+   statx                   332    397    291  383 
+   stime                    -      -      -   25  
+   stty                     -      -      -   31  
+   swapoff                 168    115    225  115 
+   swapon                  167     87    224  87  
+   symlink                  88     83     -   83  
+   symlinkat               266    331    36   304 
+   sync                    162     36    81   36  
+   sync_file_range         277     -     84   314 
+   sync_file_range2         -     341     -    -  
+   syncfs                  306    373    267  344 
+   sysfs                   139    135     -   135 
+   sysinfo                  99    116    179  116 
+   syslog                  103    103    116  103 
+   tee                     276    342    77   315 
+   tgkill                  234    268    131  270 
+   time                    201     -      -   13  
+   timer_create            222    257    107  259 
+   timer_delete            226    261    111  263 
+   timer_getoverrun        225    260    109  262 
+   timer_gettime           224    259    108  261 
+   timer_settime           223    258    110  260 
+   timerfd_create          283    350    85   322 
+   timerfd_gettime         287    354    87   326 
+   timerfd_settime         286    353    86   325 
+   times                   100     43    153  43  
+   tkill                   200    238    130  238 
+   truncate                 76     92    45   92  
+   truncate64               -     193     -   193 
+   tuxcall                 184     -      -    -  
+   ugetrlimit               -     191     -   191 
+   ulimit                   -      -      -   58  
+   umask                    95     60    166  60  
+   umount                   -      -      -   22  
+   umount2                 166     52    39   52  
+   uname                    63    122    160  122 
+   unlink                   87     10     -   10  
+   unlinkat                263    328    35   301 
+   unshare                 272    337    97   310 
+   uselib                  134     86     -   86  
+   userfaultfd             323    388    282  374 
+   ustat                   136     62     -   62  
+   utime                   132     -      -   30  
+   utimensat               280    348    88   320 
+   utimes                  235    269     -   271 
+   vfork                    58    190     -   190 
+   vhangup                 153    111    58   111 
+   vm86                     -      -      -   166 
+   vm86old                  -      -      -   113 
+   vmsplice                278    343    75   316 
+   vserver                 236    313     -   273 
+   wait4                    61    114    260  114 
+   waitid                  247    280    95   284 
+   waitpid                  -      -      -    7  
+   write                    1      4     64    4  
+   writev                   20    146    66   146 
+
+   Powered by Gitiles| Privacy

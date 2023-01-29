@@ -1,0 +1,29 @@
+<resources>
+<string name="ringtone" ></string>
+<string name="reminders" ></string>
+<string name="connectionoverview" ></string>
+<string name="addconnection" ></string>
+<string name="downloadinfo" ></string>
+<string name="locationpermission" ></string>
+<string name="introhelp" ></string>
+<string name="searchhelp" ></string>
+<string name="shortcuthelp" ></string>
+<string name="labelhelp" ></string>
+<string name="settinghelp" ></string>
+<string name="sensorhelp" ></string>
+<string name="watchhelp" ></string>
+<string name="getlib" ></string>
+<string name="newlabelhelp" ></string>
+<string name="battery" ></string>
+<string name="nutrients" ></string>
+<string name="mealhelp" ></string>
+<string name="colorhelp" ></string>
+<string name="stathelp" ></string>
+<string name="alarmhelp" ></string>
+<string name="flashpermission" ></string>
+<string name="nearbypermission" ></string>
+<string name="watchinfo" ></string>
+<string name="wearosinfo" ></string>
+<string name="about" ></string>
+<string name="disturbhelp" ></string>
+</resources>

@@ -1,0 +1,172 @@
+Remove forget and reenable, make all without location permission
+something wrong with gridlayout mobile phone version.
+Libreview uit zonder netwerk.
+Disable menu bij colorpicker.
+deintrohelp kan beter:
+- space voor []
+- benachricht-> Notify?
+
+**Sometimes no data is shown, but the sync date is OK. Later the data is present.**
+libreSolid aanpassen
+Bij halen uit verleden wordt er doorgegaan met sensor ook is er een sensor die betere resultaten heeft.
+Alternatief:
+	- doorgaan totdat de volgende sensor een waarde heeft.
+
+Naar Google Bugs kijken
+Kijken of er iets in connectie met Libre3 veranderd kan zijn
+Bij seperate notificatie worden beide notificaties worden in begin getoond.
+Notificatie soms niet getoond.
+
+Starten van Wearos versie is traag.
+Mirror Connectie gewist bij modificatie
+Nummers worden niet getoond
+Lijst inconsistente positie:
+	- Bij openen een positie;
+	- bij page back rare begin positie
+	- Daarna,vanzelf en bij pageback, goede positie met eerste nummer beginnend aan begin scherm.
+
+ZEgt sensor error, wanneer er daarna een connectie error bestaat.
+Touches in Color dialog komen in view eronder terecht.
+
+Crashes when opening mirror.
+Tag voor subhoofdjes in webpage.
+In licht display mode is notificatie onzichtbaar op lockscreen.
+Omdraaien mode, pas invloed op notificatie na restart.
+
+Network problem remark and countdown at the same time.
+
+Bij uitschakeling van WIFI worden messages some niet automatisch aangezet.
+setMaintenancealarm niet op main thread
+Zet op 100% voor upload of nieuwe release
+in Watch peer2us geeft -1
+Reinit en sync herstellen connectie niet
+
+Sneller open connectie naar naar BLuetooth
+
+sslserver:
+	blijft hangen bij http i.p.v. https of verkeerde certificaat
+
+
+Message Bluetooth soms niet doorgezonden naar horloge.
+
+
+Screen not updated when receiving new glucose value from watch.
+In mobile app. netinfo wordt niet overgezonen naar watch
+Remove reenable button
+Ook in Notification
+Update sensor screen
+
+Remove GenVersion modification
+Tijd wordt afgerond op minuten
+- Advanced?
+
+
+Als laatste invalid is, moet vorige getoond worden.
+
+
+
+Get ip from other side:
+	- More than one ip?
+	- Add ip to existing ips?
+slow:
+	-Mirror
+	-startup
+In debug release versies zijn port n ummber and garmin ids verkeerd. Moeten nooit release zijn.
+
+What with exceptions in GaTTCallBack contructor
+Niet altijd: "network problem?"
+	- kijk of er een network probleem is?
+
+Nieuwe sensor activeren met Juggluco
+
+Als er nog niets gedaan wordt, wordt ook niets over bluetooth gevraagd.
+Network errors diagnosticeren?
+
+disconnect?
+
+- rare tijden:
+	- moet na vorige
+	- moet voor die er na komt
+
+Mogelijk komt bluetooth op dood punt:
+- fouten afhandelen
+- timer zetten en afsluiten na enige tijd.
+
+
+
+Na opstarten eerst terug keren tot conditional variable and timeout voordat hij in receive blijft hangen
+
+enabling streaming?
+Na (re)enabling streaming etc resetsensors.
+
+timeout wrong in active receiver?
+
+
+veel later verschijnen er nog notifications op het scherm met een glucose waarde.
+see vaak iets op het scherm bij notificatie
+
+
+infowrong test goed?
+Mogelijkheid netwerk aan te laten staat zonder battery saver uit te zetten.
+
+
+
+Met data saver uit: Wifi valt constant weg 
+
+
+
+2022-04-22-08:53:12 31182  79: POLLERR Host is unreachable. (113)
+
+
+DeviceAddress
+
+Bij wisselen lijken nummers soms niet goed uit te komen.
+
+
+
+Notification always shows glucose value
+
+
+net gaan senden bij sock=-1
+ updatestream sock=-1 ind=1 sensindex=48
+
+
+What doen als RECEIVER faalt? All binds falen?
+- Erop testen en close optie tonen?
+- Afsluiten?
+- sleep and try again
+
+Sync data fout
+
+reset time also in watch face
+
+Bij uitzetten niet naar watch verzonden.
+Activity openen?
+
+
+Right complication goes half away in ambient mode
+Port 0 on tmplabel connection
+
+Ip6 doet het niet. Ip6 wordt gebruikt op horloge?
+wakesender in watchface gebruikt te veel stroom.
+
+Problems with setting fourth sender
+
+Show to exchange instead of the contact sensor
+Als juggluco vanuit alarm of zo gestart wordt krijg je oneindige aanwezigheids toon.
+Density bepalen
+Positie beter bepalen
+
+
+
+Mirror toont detect en updated
+Crashed na
+Wordt test op label just uitgevoerd?
+
+
+
+Bij scannen US sensor nabij eind:
+- Notificatie op to exchange data
+- Na nog eens scannen. New sensor initialized schermpje.
+V2(6520,121,0x7bae748e40,0x7bae748e44)+0x5
+

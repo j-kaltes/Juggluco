@@ -1,0 +1,46 @@
+package tk.glucodata;
+
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+
+import static tk.glucodata.Natives.getxDripTrendName;
+
+public class SendLikexDrip   {
+    public static final String ACTION = "com.eveningoutpost.dexdrip.BgEstimate";
+    private static final String EXTRA_BG_ESTIMATE = "com.eveningoutpost.dexdrip.Extras.BgEstimate";
+    private static final String EXTRA_BG_SLOPE_NAME = "com.eveningoutpost.dexdrip.Extras.BgSlopeName";
+   private static final String EXTRA_BG_SLOPE = "com.eveningoutpost.dexdrip.Extras.BgSlope";
+    private static final String EXTRA_SENSOR_BATTERY = "com.eveningoutpost.dexdrip.Extras.SensorBattery";
+    private static final String EXTRA_TIMESTAMP = "com.eveningoutpost.dexdrip.Extras.Time";
+private static final String LOG_ID="SendLikexDrip";
+
+private static Bundle mkGlucosebundle(double glucose,float rate,long timmsec) {
+      Bundle extras = new Bundle();
+	extras.putDouble(EXTRA_BG_ESTIMATE,glucose);
+        extras.putString(EXTRA_BG_SLOPE_NAME,getxDripTrendName(rate));
+	extras.putDouble(EXTRA_BG_SLOPE,(double)rate/60000.0);
+        extras.putLong(EXTRA_TIMESTAMP,timmsec);
+//        extras.putInt(EXTRA_SENSOR_BATTERY,0);
+	return extras;
+	  }
+
+
+static void broadcastglucose(double glucose,float rate,long timmsec) {
+	Log.i(LOG_ID,"broadcastglucose "+glucose);
+        final Context context=Applic.app;
+        Intent intent = new Intent(ACTION);
+	intent.putExtras(mkGlucosebundle(glucose,rate,timmsec));
+	intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+   	var receivers = context.getPackageManager().queryBroadcastReceivers(intent, 0);
+	   for(var resolveInfo : receivers) {
+	   	String name=resolveInfo.activityInfo.packageName;
+		if(name!=null) {
+			Log.i(LOG_ID,name);
+	      		intent.setPackage(name);
+		      context.sendBroadcast(intent);
+		      }
+	   	}
+	}
+	
+}

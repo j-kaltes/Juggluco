@@ -1,0 +1,17 @@
+Name:	head
+Umask:	0002
+State:	R (running)
+Tgid:	28554
+Ngid:	0
+Pid:	28554
+PPid:	5795
+TracerPid:	0
+Uid:	1000	1000	1000	1000
+Gid:	1000	1000	1000	1000
+FDSize:	256
+Groups:	4 24 27 30 46 121 131 998 1000 
+NStgid:	28554
+NSpid:	28554
+NSpgid:	28554
+NSsid:	5795
+V

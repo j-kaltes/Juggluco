@@ -1,0 +1,12 @@
+Maaltijd id
+
+
+Doen:
+Lijst met Units in 'define ingredient"
+
+
+Worden bij delete meals ook de ingredient used velden upgedate
+Mirror meals:
+	Bijhouden wat veranderd is?
+	Tegelijkertijd met num updated. Er moet altijd een verwijzing opgeslagen worden
+

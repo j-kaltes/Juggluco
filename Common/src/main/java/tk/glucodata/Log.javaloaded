@@ -1,0 +1,90 @@
+package tk.glucodata;
+
+import androidx.annotation.Keep;
+
+import static tk.glucodata.Applic.usedlocale;
+import static tk.glucodata.Applic.isRelease;
+import static tk.glucodata.Natives.showbytes;
+public class Log {
+static boolean doLog=BuildConfig.doLog==1;
+static final private String LOG_ID="Log";
+private static void log(String type,String one,String two) {
+   	if(!Natives.loaded)  {
+		android.util.Log.e(one, two);
+		return;
+		}
+
+	if(doLog) {
+	 StringBuilder sb = new StringBuilder();
+	  sb.append(type);
+	  sb.append("/");
+	  sb.append(one);
+	  sb.append(" ");
+	  sb.append(two);
+	  sb.append("\n");
+	  try {
+	  	String str=sb.toString();
+	  	Natives.log(str);
+		}
+	catch(Throwable e) {
+		android.util.Log.e(LOG_ID, android.util.Log.getStackTraceString(e));
+		android.util.Log.e(one, two);
+		}
+		}
+	  }
+public static void info(String str) {
+   	if(Natives.loaded)  {
+		Natives.log(str+'\n');
+		}
+	else
+		android.util.Log.e(LOG_ID, str);
+	}
+   public static void stack(String id,Throwable e) {
+	stack(id,"",e);
+   	}
+public static String stackline(Throwable e) {
+	String str=android.util.Log.getStackTraceString(e);
+	final int len=str.length();
+	if(len>100) {
+		int end=str.indexOf("\n");
+		if(end>=0&&end<len)
+			return str.substring(0,end);
+		}
+	return str;
+	}
+public static String stackstring(String mess,Throwable e) {
+	String str=android.util.Log.getStackTraceString(e);
+	String all=str==null?mess+" Exception":mess+" "+str;
+	return all;
+	}
+   public static void stack(String id,String mess,Throwable e) {
+	String all=Log.stackstring(mess,e);
+	if(!doLog||!Natives.loaded)
+		android.util.Log.e(id,all);
+	else
+		log("E",id,all);
+
+   	}
+public static void e(String one,String two) {
+	if(!doLog||!Natives.loaded)
+		android.util.Log.e(one,two);
+	else
+		log("E",one,two);
+		};
+public static void format(String format, Object... args) {
+	if(doLog) {
+		String form=String.format(usedlocale,format,args);
+		if(Natives.loaded) 
+			Natives.log(form);
+		else
+			android.util.Log.i(LOG_ID,form);
+		}
+	}
+//s/public static void \([a-z]\).*\(log.*\);/public static void \1(String one,String two) 	{ if(Natives.loaded) {\2 else android.util.Log.\1(one,two);};/g
+
+public static void d(String one,String two) 	{ if(Natives.loaded) {log("D",one,two);} else android.util.Log.d(one,two);};
+public static void w(String one,String two) 	{ if(Natives.loaded) {log("W",one,two);} else android.util.Log.w(one,two);};
+public static void v(String one,String two) 	{ if(Natives.loaded) {log("V",one,two);} else android.util.Log.v(one,two);};
+public static void i(String one,String two) 	{ if(Natives.loaded) {log("I",one,two);} else android.util.Log.i(one,two);};
+
+};

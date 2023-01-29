@@ -1,0 +1,736 @@
+
+#pragma once 
+#include <string_view>
+#include <condition_variable>
+#include <thread>
+//#include <pthread.h>
+#include <vector>
+#include <sys/prctl.h>
+#include <signal.h>
+#include <unistd.h>
+#include <sys/syscall.h>
+#include <setjmp.h>
+#include <sys/socket.h>
+#include <stdlib.h>
+
+#include <jni.h>
+constexpr const char defaultport[]{
+#ifdef RELEASEID
+"8795"
+#else
+"9113"
+#endif
+
+};
+
+
+#include "inout.h"
+#include "net/backup.h"
+#include "destruct.h"
+#include "net/passhost.h"
+#include "net/netstuff.h"
+#include "sensoren.h"
+
+#include "settings/settings.h"
+#ifdef WEAROS_MESSAGES
+extern bool wearmessages;
+#endif
+/*
+inline void closesock(int &sock) {
+	if(sock>=0) {
+		LOGGER("%d ",sock);
+		::shutdown(sock,SHUT_RDWR);
+		sock=-1;
+		}
+	}
+	*/
+extern bool networkpresent;
+class Backup;
+extern Backup *backup;
+extern Sensoren *sensors;
+extern Settings *settings;
+typedef pid_t tid_t;
+struct numspan {
+	int start;
+	int end;
+};
+constexpr const int maxchanged=100;
+struct changednums {
+	int len;
+	struct numspan changed[maxchanged];
+	uint32_t lastmeal;
+	senddata_t reserved[28];
+	uint32_t lastlastpos;
+	void clear() {
+		len=1;
+		changed[0]={};
+		lastmeal=0;
+		lastlastpos=0;
+		}
+	};
+int  updatenums(crypt_t *,int sock,struct changednums *nums);
+inline static constexpr const char backupdat[]="backup.dat";
+inline static constexpr const char orbackup[] ="orbackup.dat";
+constexpr int maxallhosts=8;
+extern int hostsocks[];
+extern std::vector<int> sendsocks;
+extern uint32_t lastuptodate[];
+
+//extern int tmpsocks[maxallhosts][maxip];
+extern std::vector<crypt_t *>crypts;
+struct updateone {
+//	struct sockaddr host;
+	int ind;
+	int allindex;
+	int startsensors;//vanwaaraf sensors.dat updaten
+//	char port[6];
+	uint8_t backupupdated;
+	uint32_t updatesettings;
+	int32_t firstsensor;
+	uint32_t starttime;
+	uint8_t reserved[2];
+	bool resetdevices;
+	bool dontuseopen;
+	bool sendnums;
+	bool sendstream;
+	bool sendscans;
+	bool restore;
+	uint8_t pass[16];
+	struct changednums nums[2];
+	void setindex(int index,int allin) {
+		ind=index;
+		allindex=allin;
+		}
+	void setcrypt(crypt_t *ctx)  {
+		if(crypts.size()>ind)
+			crypts[ind]=ctx;
+		}
+	
+	crypt_t *getcrypt() const; 
+		/*
+	int * gettmpsock() const {
+		return tmpsocks[allindex];
+		}
+		*/
+	int &getsock() const {
+		return sendsocks[ind];
+		}
+	void setsock(int val) const {
+		sendsocks[ind]=val;
+		}
+void	open() ;
+void close() {	
+       const int so= getsock();
+       LOGGER("updateone close(%d)\n",so);
+       if(so>=0) {
+		setsock(-1);
+		::close(so);
+		if(crypt_t *ctx=getcrypt()) {
+			ascon_aead_cleanup(ctx);
+			}
+		}
+	}
+
+//void 	setbackupstarttime(const uint32_t starttime);
+int updatenums() ;
+int updatestreamu() ;
+int updatescansu() ;
+int update(); 
+
+	};
+
+#include "maxsendtohost.h"
+struct updatedata {
+	int32_t hostnr;
+	uint32_t receive;
+	//uint32_t update;
+	char port[6];
+	bool hasrestore;
+	uint8_t sendnr;
+	passhost_t allhosts[maxallhosts];
+	updateone tosend[maxsendtohost];
+
+	void wakesender() ;
+	void wakestreamsender();
+	};
+
+class  Backup {
+
+Mmap<unsigned char> mapdata;
+public:
+struct  condvar_t {
+	uintptr_t dobackup=0;
+	std::mutex backupmutex;
+	std::condition_variable backupcond; 
+	/*
+void setkind(uintptr_t kind){
+	   if(dobackup)
+		   dobackup=kind;
+	  }
+	  */
+void wakebackuponly(uintptr_t kind){
+	      std::lock_guard<std::mutex> lck(backupmutex);
+	      dobackup=kind|(dobackup&(wakeend|wakestop));
+	    
+	    backupcond.notify_one();                        
+	  }
+void wakebackup(uintptr_t kind){
+	    {
+	      std::lock_guard<std::mutex> lck(backupmutex);
+	      auto wasdo=dobackup;
+	      dobackup=dobackup|kind;
+	    if(wasdo) {
+       			LOGGER("wakebackup %lx  no-notify\n",kind);
+			return;
+			}
+
+	    LOGGER("wakebackup %lx notify\n",kind);
+	    }
+	    backupcond.notify_one();                        
+	  }
+	};
+std::vector<condvar_t*> con_vars;
+struct updatedata* getupdatedata() {return reinterpret_cast<struct updatedata*>(mapdata.data());}
+const struct updatedata* getupdatedata() const {return reinterpret_cast<const struct updatedata*>(mapdata.data());}
+
+bool getshouldaskfordata() {
+	const int len=getupdatedata()->hostnr;
+	for(int i=0;i<len;i++) {
+		if(getupdatedata()->allhosts[i].receivefrom==3)
+			return true;
+		}
+	return false;
+	}
+ 
+bool shouldaskfordata;
+
+void startactivereceivers() {
+	const int len=getupdatedata()->hostnr;
+	for(int i=0;i<len;i++) {
+		hostsocks[i]=-1;
+		passhost_t *ph= getupdatedata()->allhosts+i;
+		if(ph->activereceive) {
+			setactivereceive(i,ph); 
+			}
+		}
+	}
+
+Backup(std::string_view base): mapdata(base,backupdat,sizeof(struct updatedata)), con_vars(getupdatedata()->sendnr) {
+
+const int len=getupdatedata()->hostnr;
+sendsocks.reserve(getupdatedata()->sendnr);
+crypts.reserve(getupdatedata()->sendnr);
+for(int i=0;i<getupdatedata()->sendnr;i++) {
+	sendsocks.push_back(-1);
+	auto &host=getupdatedata()->tosend[i];
+	if(getupdatedata()->allhosts[host.allindex].haspass())
+		crypts.push_back(new crypt_t());
+	else
+		crypts.push_back(nullptr);
+	}
+
+
+
+ startactivereceivers();
+ /*
+for(int i=0;i<len;i++) {
+	hostsocks[i]=-1;
+	passhost_t *ph= getupdatedata()->allhosts+i;
+	if(ph->activereceive) {
+		setactivereceive(i,ph); 
+		}
+	} */
+if(!getupdatedata()->port[0])
+	strcpy(getupdatedata()->port,defaultport );
+
+void	backupbase(string_view basedir);
+backupbase(globalbasedir);
+for(int i=0;i<len;i++) {
+	if(getupdatedata()->allhosts[i].passive()) {
+		startreceiver(false);
+		break;
+		}
+	}
+
+
+shouldaskfordata=getshouldaskfordata();
+
+#ifdef WEAROS_MESSAGES
+extern void startmessagereceivers(Backup*);
+if(wearmessages)
+	startmessagereceivers(this);
+#endif
+}
+
+bool sendScans() const {
+     for(int i=0;i<getupdatedata()->sendnr;i++) {
+	auto &host=getupdatedata()->tosend[i];
+	if(host.sendscans)
+		return true;
+	}
+     return false;
+  }
+const char *getmyport() const{
+	return getupdatedata()->port;
+	}
+void startreceiver(bool always=false) {
+	if(receiveractive()&&!always)
+		return;
+	::stopreceiver();
+	::startreceiver(getupdatedata()->port,getupdatedata()->allhosts,getupdatedata()->hostnr,hostsocks);
+	}
+void stopreceiver() {
+	::stopreceiver() ;
+	for(int i=0;i<getupdatedata()->hostnr;i++) {
+		if(getupdatedata()->allhosts[i].receivefrom) {
+			int sock=hostsocks[i];
+			if(sock>=0) {
+				LOGGER("shutdown %d\n",sock);
+				::shutdown(sock,SHUT_RDWR);
+				}
+			}
+		}
+
+	}
+~Backup() {
+	wakebackuponly(wakestop|wakeend);
+	}
+#include <sys/socket.h>
+#include <netdb.h>
+
+
+
+static constexpr std::array< char,17> zero{};
+const std::array<char,17> getpass(int pos) const {
+ 	if(getupdatedata()->allhosts[pos].haspass())
+		return passback(getupdatedata()->allhosts[pos].pass);
+	else
+		return zero;
+	}
+void getport(int pos,char *buf) {
+	snprintf(buf,6, "%d",ntohs(getupdatedata()->allhosts[pos].ips[0].sin6_port));
+	}
+
+void addsize() {
+	if(getupdatedata()->sendnr>=maxsendtohost) {
+		const int newsendnr= getupdatedata()->sendnr+1;
+		int newlen=sizeof(updatedata)+(newsendnr-maxsendtohost)*sizeof(struct updateone);
+		int len=mapdata.size();
+		if(newlen>len) {
+			mapdata.extend(globalbasedir,backupdat,newlen); //Goes wrong because of existing pointers to old data
+			}
+		}
+	}
+void deupdated() {
+	for(int i=0;i<getupdatedata()->sendnr;i++)
+		if(getupdatedata()->tosend[i].backupupdated==1)
+			getupdatedata()->tosend[i].backupupdated=0; 
+	}
+void deletestart(int sendindex) {
+		for(int i=0;i<(getupdatedata()->hostnr);i++) {
+			int sin=getupdatedata()->allhosts[i].index;
+			if(sin>=sendindex) {
+			       if(con_vars[sin]) {
+			       		
+				       const int sock= getupdatedata()->tosend[sin].getsock();
+				       LOGGER("call wakestop %p ",con_vars[sin]);
+					con_vars[sin]->wakebackuponly(Backup::wakestop);
+				       LOGGER(" shutdown %d\n",sock);
+					::shutdown(sock,SHUT_RDWR);
+			//		close(sock);
+
+				       }
+//			       getupdatedata()->tosend[sin].setsock(-1);
+			       }
+			}
+		if(--getupdatedata()->sendnr!=sendindex)  {
+			int fromend=getupdatedata()->sendnr-sendindex;
+			memmove( getupdatedata()->tosend+sendindex,getupdatedata()->tosend+sendindex+1,fromend*sizeof(getupdatedata()->tosend[0]));
+			delete crypts[sendindex];
+			memmove(&crypts[sendindex], &crypts[sendindex+1],fromend*sizeof(crypts[0]));
+			crypts[getupdatedata()->sendnr]=nullptr;
+			}
+		con_vars[getupdatedata()->sendnr]->wakebackuponly(Backup::wakestop|Backup::wakeend);
+//		con_vars.resize(getupdatedata()->sendnr);
+		}
+void deleteend(int sendindex) {
+		for(int i=0;i<backup->getupdatedata()->hostnr;i++) {
+			const int sin=getupdatedata()->allhosts[i].index;
+			if(sin>sendindex) {
+				--getupdatedata()->allhosts[i].index;
+		//		getupdatedata()->tosend[si].setindex(si,i);
+				}
+			}
+		}
+void setindices(int start) {
+	for(int i=start;i< backup->getupdatedata()->hostnr;i++) {
+		const int si=getupdatedata()->allhosts[i].index;
+		if(si>-1) 
+			getupdatedata()->tosend[si].setindex(si,i);
+		}
+	}
+
+void deletehost(int index) {
+	if(index>=getupdatedata()->hostnr)
+		return;
+	auto &thehost=getupdatedata()->allhosts[index];
+	if(thehost.activereceive) {
+		endactivereceive(index); 
+		}
+	if(getupdatedata()->allhosts[index].receivefrom) {
+		int sock=hostsocks[index];
+		if(sock>=0) {
+			LOGGER("%d: close(%d)\n",index,sock);
+			::shutdown(sock,SHUT_RDWR);
+			close(sock);
+			hostsocks[index]=-1;
+			}
+		}
+	bool wasnet=networkpresent;
+	 networkpresent=false;
+	const int sendindex=getupdatedata()->allhosts[index].index;
+	if(sendindex>=0) {
+		deletestart(sendindex);
+		}
+	if(--getupdatedata()->hostnr!=index)  {
+		int fromend= getupdatedata()->hostnr-index;
+		memmove( getupdatedata()->allhosts+index,getupdatedata()->allhosts+index+1,fromend*sizeof(getupdatedata()->allhosts[0]));
+		memmove(  hostsocks+index, hostsocks+index+1,fromend*sizeof(hostsocks[0]));
+		memmove(  lastuptodate+index, lastuptodate+index+1,fromend*sizeof(lastuptodate[0]));
+		}
+
+	if(sendindex>=0) 	 {
+		deupdated();
+		deleteend(sendindex);
+		}
+
+	if(getupdatedata()->hostnr==0) {
+		getupdatedata()->sendnr=0;
+		stopreceiver();
+		}
+	setindices(index);
+ 	if(!networkpresent)
+		networkpresent=wasnet;
+	}
+void clearhost(int index) {
+	updateone &host=getupdatedata()->tosend[index];
+	if(int so=host.getsock();so!=-1) {
+		LOGGER("shutdown(%d)\n",so);
+		::shutdown(so,SHUT_RDWR);
+	//	host.setsock(-1);
+		}
+
+	sensors->updateinit(index);
+	host.nums[0].clear();
+	host.nums[1].clear();
+	host.startsensors=0;
+	host.firstsensor=0;
+	host.updatesettings=0;
+	host.backupupdated=0;
+	host.starttime=0;
+	}
+void resetall()  {
+	if(getupdatedata()->sendnr>0)
+		deletestart(0);
+	getupdatedata()->receive=0;
+	getupdatedata()->port[0]='\0';
+	getupdatedata()->sendnr=0;
+	getupdatedata()->hostnr=0;
+	int lenc=crypts.size();
+	for(int i=0;i<lenc;i++) {
+		delete crypts[i];
+		crypts[i]=nullptr;
+		}
+//	fill(crypts.begin(),crypts.end(),nullptr);
+	}
+void changereceiver(int allindex,int index,const bool sendnums,const bool sendstream,const bool sendscans,const bool restore,const bool haspass,const uint32_t starttime) {
+	if(index==getupdatedata()->sendnr) {
+		addsize();
+		sendsocks.resize(getupdatedata()->sendnr+1,-1);
+//		tmpsocks.resize(getupdatedata()->sendnr+1);
+		crypts.resize(getupdatedata()->sendnr+1,nullptr);
+		clearhost(index);
+		getupdatedata()->sendnr++;
+		con_vars.resize( getupdatedata()->sendnr);
+		}
+	else
+		con_vars[index]->wakebackuponly(Backup::wakestop);
+	updateone &host=getupdatedata()->tosend[index];
+	host.setindex(index,allindex);
+//	if(starttime) host.setbackupstarttime(starttime); 
+	if(!starttime)
+		host.starttime=1;
+	else
+		host.starttime=starttime;
+	host.sendnums=sendnums;
+	host.sendstream=sendstream;
+	host.sendscans=sendscans;
+	host.restore=restore;
+	if(int so=host.getsock();so!=-1) {
+		LOGGER("shutdown(%d)\n",so);
+		::shutdown(so,SHUT_RDWR);
+	//	host.setsock(-1);
+		}
+	crypt_t *oldcrypt=host.getcrypt();
+	if(haspass)  {
+		if(!oldcrypt)
+			host.setcrypt(new crypt_t);
+		}
+	else  {
+		if(oldcrypt)
+			delete oldcrypt;
+		host.setcrypt(nullptr);
+		}
+	}
+static constexpr const std::array<uint8_t,16> remix= {0x19,0xED,0xA0,0x4A,0x94,0x9D,0x0C,0xD7,0x82,0x4A,0x74,0xA9,0x0E,0x71,0x84,0x8B};
+//,0x87,0x7F,0x0F,0xD7,0xA8,0xEE,0x8C,0xD7,0x80
+static void	setpass( std::array<uint8_t,16> &passuit,const string_view passin) {
+	const int len=passin.size();
+	if(!len) {
+		passuit={};
+		return;
+		}	
+	for(int i=0;i<len;i++) {
+		passuit[i]=passin[i]^remix[i];
+		}
+	for(int i=len;i<16;i++) 
+		passuit[i]=remix[i];
+	}
+
+static const std::array< char,17> passback(const std::array<uint8_t,16> &passin)  {
+	std::array<char,17> plain;
+	for(int i=0;i<passin.size();i++) {
+		plain[i]=passin[i]^remix[i];
+		}
+	plain[16]='\0';
+	return plain;
+	}
+
+
+void resethost(int index) {
+	if(index<getupdatedata()->hostnr&&getupdatedata()->allhosts[index].index>=0) {  //Fout??
+		int tohost=getupdatedata()->allhosts[index].index;
+		clearhost(tohost);
+		}
+	}
+
+
+int jsetips(const char *port,JNIEnv *env, const jobjectArray jar, const int len,struct sockaddr_in6 *connect ,const int lmaxip) {
+	int uselen=std::min(lmaxip,len);
+	for(int i=0;i<uselen;i++) {
+		jstring  jname=(jstring)env->GetObjectArrayElement(jar,i);
+		int namelen= env->GetStringUTFLength( jname);
+		char name[namelen+1];
+
+		jint jnamelen = env->GetStringLength( jname);
+		env->GetStringUTFRegion( jname, 0,jnamelen, name); name[namelen]='\0';
+		if(!getaddr(name,port,connect+i))
+			return  -1;
+
+		}
+	return uselen;
+	}
+int setips(const char *port, const char **names, const int len,struct sockaddr_in6 *connect ,const int lmaxip) {
+	int uselen=std::min(lmaxip,len);
+	for(int i=0;i<uselen;i++) {
+		LOGGER("setip %s\n",names[i]);
+		if(!getaddr(names[i],port,connect+i))  {
+			LOGGER("getaddr(%s,%s,...) failed\n",names[i],port);
+			return  -1;
+			}
+
+		}
+	return uselen;
+	}
+	/*
+	   case -1: mess="Port should between 1024 and 65535";break;
+                                case -2: mess="Error parsing ip";break;
+				*/
+
+void endactivereceive(int allindex) { 
+	extern std::vector<condvar_t*> active_receive;
+	passhost_t *ph=getupdatedata()->allhosts+allindex;
+	if(ph->activereceive) {
+		active_receive[ph->activereceive-1]->wakebackup(Backup::wakeend);
+		ph->activereceive=0;
+
+		LOGGER("endactivereceive(%d) shutdown(%d)\n",allindex,hostsocks[allindex]);
+		::shutdown(hostsocks[allindex],SHUT_RDWR);
+		}
+	}
+void setactivereceive(int allindex,passhost_t *ph,bool startthread=true) { 
+
+	extern std::vector<condvar_t*> active_receive;
+		active_receive.push_back(new condvar_t);
+		ph->activereceive=active_receive.size();
+		LOGGER("setactivereceive nr=%d\n",ph->activereceive);
+
+		if(startthread) {
+			void activereceivethread(int allindex,passhost_t *pass) ;
+			std::thread the(activereceivethread,allindex,ph);
+			the.detach();
+			}
+		}
+
+int changehost(int index,JNIEnv *env,jobjectArray jnames,int nr,bool detect,string_view port,const bool sendnums,const bool sendstream,const bool sendscans,const bool restore,const bool receive,const bool activeonly,string_view pass,uint32_t starttime,bool passiveonly,const char *label=nullptr,const bool testip=true,bool startthreads=true) {
+	LOGGER("changehost(%d,sendnums=%d,sendstream=%d,sendscans=%d,receive=%d,activeonly=%d,passiveonly=%d,label=%s port=%s nr=%d\n",index,sendnums,sendstream,sendscans,receive,activeonly,passiveonly,label,port.data(),nr);
+	if(index>=maxallhosts)  {
+		LOGGER("index>=maxallhosts\n");
+		return -3;
+		}
+	const bool receiveactive=receive&&activeonly;
+	if(port.data()==nullptr||port.size()==0) {
+		port={defaultport,sizeof(defaultport)-1};
+		}
+	else {
+		if(port.size()>5) {
+			LOGGER("port.size()>5)\n");
+			return -1;
+			}
+		}
+
+ 	struct oldnet {
+		bool wasnet=networkpresent;
+		oldnet() {
+			networkpresent=false;
+			}
+		~oldnet() {
+			if(!networkpresent)
+				networkpresent=wasnet;
+			};
+		};
+	struct oldnet desnet;
+
+	const bool sendto= sendnums|| sendstream|| sendscans;
+	const bool reconnect=(receive&&!passiveonly)||(sendto&&!activeonly);
+	const bool newhost=index==getupdatedata()->hostnr;
+	int tohost;
+	bool newthread=false;
+	const bool dontopen=sendto&&passiveonly;
+	int lmaxip=maxip-(label?1:0);
+	if(sendto) {
+		if(newhost||getupdatedata()->allhosts[index].index==-1) {  //Fout??
+			tohost=getupdatedata()->sendnr;
+			if(tohost>=maxsendtohost) {
+				LOGGER("tohost>=maxsendtohost\n");
+				return -4;
+				}
+			getupdatedata()->allhosts[index].index=tohost;
+			newthread=true;
+			}
+		else  {
+			tohost=getupdatedata()->allhosts[index].index;
+			}
+
+		changereceiver(index,tohost,sendnums,sendstream,sendscans,restore,pass.size(),starttime);
+		getupdatedata()->allhosts[index].sendpassive=dontopen;
+		}
+	else {
+		getupdatedata()->allhosts[index].sendpassive=false;
+		int sendindex=getupdatedata()->allhosts[index].index;
+		if(!newhost) {
+			if(sendindex>=0) {
+				deletestart(sendindex);
+				getupdatedata()->allhosts[index].index=-1;
+				deleteend(sendindex); 
+				}
+			}
+		getupdatedata()->allhosts[index].index=-1;
+		}
+
+	if(getupdatedata()->allhosts[index].activereceive)
+			endactivereceive(index) ;
+	int res=getupdatedata()->allhosts[index].nr=env?jsetips(port.data(),env, jnames, nr,getupdatedata()->allhosts[index].ips,lmaxip): setips(port.data(),(const char **)jnames, nr,getupdatedata()->allhosts[index].ips,lmaxip); 
+	int ret=index;
+	if(res<0) {
+		getupdatedata()->allhosts[index].nr=0;
+		ret=-2;
+		}
+	if(detect) {
+		if(res<lmaxip)  {
+			getupdatedata()->allhosts[index].detect=true;
+			getupdatedata()->allhosts[index].ips[res]={.sin6_family=AF_INET6,.sin6_port=htons(atoi(port.data())),.sin6_addr=noaddress};
+			}
+		else
+			getupdatedata()->allhosts[index].detect=false;
+		}
+	else {
+		if(res==0&&!(passiveonly&&!testip))   {
+			LOGGER("res==0&&!(passiveonly&&!testip))\n");
+			ret=-2;
+			}
+		getupdatedata()->allhosts[index].detect=false;
+		}
+	if(label) {
+		getupdatedata()->allhosts[index].setname(label);
+		}
+	else
+		getupdatedata()->allhosts[index].hasname=false;
+	getupdatedata()->allhosts[index].noip=!testip;
+	lastuptodate[index]=0;
+/*
+Receive	   	reconnect	receivefrom:
+true		true 	  	3
+true	  	false	  	2
+false		true 	 	1
+false	  	false	  	0
+*/
+	getupdatedata()->allhosts[index].receivefrom=receive?(reconnect?3:2):((sendto&reconnect)?1:0);
+	setpass( getupdatedata()->allhosts[index].pass,pass);
+
+	if(newhost)  {
+		++(getupdatedata()->hostnr);
+		getupdatedata()->allhosts[index].wearos=false;
+		}
+
+	deupdated(); 
+	if(startthreads) {
+		if(newthread)
+			startthread(index,tohost);
+		if(!activeonly)
+			startreceiver(false);
+		}
+	LOGGER("activereceive was=%d nu=%d\n",getupdatedata()->allhosts[index].activereceive,receiveactive);
+	if(receiveactive) {
+		setactivereceive(index,getupdatedata()->allhosts+index,startthreads);
+		}
+	else
+		getupdatedata()->allhosts[index].activereceive=0;
+		
+	shouldaskfordata=getshouldaskfordata();
+#ifdef WEAROS_MESSAGES
+extern	void clearnetworkcache();
+	clearnetworkcache();
+	#endif
+	return ret;
+	}
+bool isreceiving() const {
+	const auto nr=getupdatedata()->hostnr;
+	const passhost_t *host=getupdatedata()->allhosts;
+	bool receives=false;
+	for(int i=0;i<nr;i++) {
+		if(host[i].receivefrom&2)  {
+			auto ind=host[i].index;
+			if(ind<0||!getupdatedata()->tosend[ind].sendstream)
+				receives=true;
+			}
+		}
+	return receives;
+//	return getupdatedata()->hostnr!= getupdatedata()->sendnr;
+	}
+void notupdatedsettings() {
+
+	wakebackup(wakeall);
+	}
+struct changednums *getnums(int hostindex,int numindex) { 
+	return getupdatedata()->tosend[hostindex].nums+numindex;
+	}
+int gethostnr() const {
+	return getupdatedata()->hostnr;
+	}
+int getsendhostnr() const {
+	return getupdatedata()->sendnr;
+	}
+//int histnr=0;
+//SensorGlucoseData *backuphist=nullptr;
+//static constexpr const uintptr_t wakereopen=1;

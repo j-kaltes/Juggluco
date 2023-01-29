@@ -1,0 +1,21 @@
+Omdat eerdere nummers veranderd kunnen worden, kan niet vanaf het laatste
+punt van de vorige backup doorgegaan worden. Dus als je via via wilt backuppen,
+moeten bijgehouden worden wat veranderd is.
+Gewoon de backup.dat uploaden kan niet, want het is onbekend wat al gebackupped is en waar
+het heen gezonden wordt.
+Speciaal commando
+met volgende input:
+numdatabase (0 of 1)
+Aantal wijzigingen
+offset,Len, data  
+
+numdate->updatepos(int pos,int end) {
+wordt op elke wijziging uitgevoerd.
+
+
+uint16_t uint8_t uint8_t     
+snums 	 dbase      nr   
+
+uint32_t uint32_t Num[]
+off	 len    data
+

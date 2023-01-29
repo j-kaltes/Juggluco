@@ -1,0 +1,216 @@
+Statistics ook van history 5 en 15
+picture in watch face
+Mogelijk om met Melding aan een aparte Melding te vormen.
+
+Voorbeeld watchface met broadcast.
+
+Iphone glucose viewer.
+Wacht op meer informatioe:Probeer US Libre3 shared libraries uit.  Maak diff met German version.
+
+Make also an history and backfill broadcast.
+
+Deactivate dialogs in for example meals.
+
+Als Bluetooth aangezet wordt, wordt oldnotification niet uitgevoerd.
+
+Herschrijven documentatie:
+-Sensor Errors
+-
+Duitsevertaling
+Duitse voedsel tabel?
+
+Kijk naar scope in watchface
+Refresh screen libreview
+Add arrow to notification
+Multidata app mogelijk maken.
+dub oploaden
+Add to add watch, de mogelijkheid broadcast op te vangen en via android app of phone of direct in wearos app op te vangen.
+Write watch face on broadcast. 
+Watchface more configuratie mogelijkheden
+savepollallIDs zet datums enkel als start terug gaat.
+Removes XX from sensorname.
+Write Mirror connection guide.
+
+
+Move in glucose in Status bar
+
+Add the following lines to your proguard configuration.
+
+-renamesourcefileattribute SourceFile
+-keepattributes SourceFile,LineNumberTable
+Now your stack traces will include line numbers, and by using the retrace tool that ships with proguard (included in the Android SDK), you are able to debug like normal.
+
+Note that even if you didn't use these two configuration options, retrace still can output useful information provided you have the mappings file, albeit not totally unambiguously.
+
+Note: the file with the mappings is produced by the proguard configuration option:
+
+ -printmapping outputfile.txt
+
+Bluetooth scan naar Libre3 sensors kan enkel op device address.
+NFC text weg
+Iets met events
+
+log libre3 libreview
+Meer log messsages in Libre3 interface.
+DEBUGCLONE
+
+
+The Urgent Low Soon alert is designed to notify you when your Dexcom G6 reading is predicted to reach 55 mg/dL within 20 minutes. The Fall Rate is designed to notify you when your glucose level is falling 2 or 3 mg/dL each minute. For more information, please visit page 144 in our Dexcom G6 CGM User Guide.
+
+Calibratie
+
+Onnodige libraries eruit gooien:
+- Kotlin weg?
+
+
+
+Maak dat de "direct sensor-watch connection" CheckBox bij Watch4 niet meer getoond wordt.
+ -Wel getoond na uitvoeren bepaalde handeling die beschreven staat in text waarin ook staat 
+ dat het het niet doet in 50% van de gevallen.
+Probleem: wat doen bij mensen die die knop al aan hebben staan?
+Mogelijkheden:	
+- Verbinding omdraaien en knop verbergen. Kan alleen na sync gedaan worden;
+- Enkel bij nieuwe installaties verbergen.
+- Verbergen wanneer het uitstaat.
+Wat doen om optie wel te tonen?
+- zeven keer tikken op iets
+- lang op iets drukken
+- bepaalde code intikken.
+
+UseWifi.stopusewifi in onPause nadat waarden ontvangen zijn.
+
+Bezig /n/ojka/tmp/libre3.3.0/sensor/historymuch/processChanengeData.java
+
+Test reinstall
+	Don't disturbe access goed?
+
+Add some failure information:
+	- Libreview
+	- net
+
+Notifications:
+	- pas ook andere notificaties aan op android12: available,alarm, reminder
+	- notifications not shown on watch4
+
+
+Aanpassen Labels op commando, in plaats van tijd.
+maak plaatjes website kleiner
+save meals labels
+STRIP libg
+Maakt amount direction (watch-phone) makkelijker in te stellen.
+
+search and new amount keyboard under
+Add com.supersapiens to look for library.
+
+Services allready discovered?
+rewrite google play description:
+Meld dat bluetooth uitstaat.
+refresh screen after Forget
+Add disable mogelijk netwerk connectie
+Disable receiver als geen er gebruik van maakts
+
+Waarschuwingen aflopen
+Test Android 12
+Disable/enable librelink
+Test librelink running
+Wearos uitleg duidelijker.
+	- hotspot
+
+Waarom ging het mis met backup
+log message weg: nfc etc
+Andere opmaakt rond en vierkant:
+	- tijden hoger in vierkant
+	- ronde text?
+
+Exchange netinfo knop.
+What doet disabling service? Doe ik het fout?
+
+Device Address niet teruggezonden als gevonden. Niet streaming reenabled.
+
+aparte notification in Notify
+Wordt scaninfomatie verwijderd?
+turn off in watch Natives.getusegarmin()
+bij toevoegen US lib, root informatie toevoegen
+
+Extra notificatie met setTimeoutAfter?
+
+
+**Sync voor omdraaien richting
+
+Watch Face  settings schermpje:
+
+	- kleur letters
+	- kleur in ambient
+	- achtergrond plaatje?
+
+
+Selecteer op application ID
+Deactivate direct voor overzending.
+
+
+Geen glucose notifications op horloge
+
+Make preview image
+Make omkeer richting
+Image as background?
+Tijd loss of signal alarm better.
+add running librelink to sensor status
+test also on hostname for localhost only
+
+
+watch ip is verschilllend afhankelijk via bluetooth or wifi.
+Netwerk Informatie schermpje?
+
+
+zet network weer af als er geen is.
+xapk unzippen
+Diagnostische info voor us sensors
+	weinig bij key wrong
+Bij ontbreken auth etc, reenable streaming
+US sensor:
+	- op library versie testen: Ca,us-pre2,eu
+
+xdrip server:
+	HEAD
+	keyword?
+Opening question?
+
+Meer diagnostische informatie:
+	Port already in use
+set repeating alarm or repeatly set alarm to to sync
+- Wanneer?
+	- ontvangt via IP/TCP en niet enkel passief.
+
+Duidelijker wanneer niet op repeat gedrukt is:
+- Toast wanneer na langer tijd iets veranderd wordt
+- Duidelijker aangeven dat op repeat gedrukt is
+
+
+schrijf crashcatcher
+
+possibility to turn off garmin connection?
+
+Maximale starttijd anders.
+
+
+Horloge server 
+wearos
+
+
+communiceer met andere horloges, wearos, xdrip of nightscout of zo.
+
+Add camera permission rational
+
+Opvolgende group namen terugdraaien.
+Make wear os aanpassingen:
+
+Algemeen hulpscherm
+Change Library
+
+
+Analyse num data and add nan etc.
+
+Display more errorcodes 
+
+
+

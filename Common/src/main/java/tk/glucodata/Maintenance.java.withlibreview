@@ -1,0 +1,53 @@
+package tk.glucodata;
+import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.Application;
+import android.app.KeyguardManager;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+
+import static android.app.AlarmManager.RTC_WAKEUP;
+import static android.app.PendingIntent.getBroadcast;
+import static android.content.Context.ALARM_SERVICE;
+import static android.os.SystemClock.elapsedRealtime;
+
+public class Maintenance extends BroadcastReceiver {
+static final private String LOG_ID="Maintenance";
+        @Override
+        public void onReceive(Context context, Intent intent) {
+		 Log.i(LOG_ID,"onReceive");
+		if(Applic.initproccalled) 
+			Natives.maintenance();
+
+        }
+
+
+
+
+static    void setMaintenancealarm(Context context) {
+	 Log.i(LOG_ID,"setMaintenancealarm");
+        final int alarmrequest = 0;
+        Intent alarmintent = new Intent(context, Maintenance.class);
+
+	final int alarmflags;
+	if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+	   alarmflags = PendingIntent.FLAG_IMMUTABLE;
+	}
+	else
+	   alarmflags = 0;
+
+        PendingIntent onalarm = getBroadcast(context, alarmrequest, alarmintent, alarmflags);
+        AlarmManager manager= (AlarmManager) context.getSystemService(ALARM_SERVICE);
+	var gooff=elapsedRealtime()+1000L*60*60;
+	
+	int hours=Applic.isWearable?24:6;
+	manager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME,gooff, AlarmManager.INTERVAL_HOUR*hours, onalarm);
+
+    }
+   }

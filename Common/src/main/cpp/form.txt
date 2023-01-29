@@ -1,0 +1,58 @@
+0x7fddea6cd097-4:	32	xorpd xmm6, xmm6
+0x7fddea6cd09b-9:	32	ucomisd xmm6, qword ptr [rsp+0x170]
+0x7fddea6cd0a4-3:	32	setnp al
+0x7fddea6cd0a7-3:	32	setz cl
+0x7fddea6cd0aa-2:	32	test cl, al
+0x7fddea6cd0ac-5:	32	mov eax, 0xf
+0x7fddea6cd0b1-5:	32	mov ecx, 0x20
+0x7fddea6cd0b6-3:	32	cmovz eax, ecx
+0x7fddea6cd0b9-4:	32	ucomisd xmm0, xmm6
+0x7fddea6cd0bd-3:	32	cmovnz eax, ecx
+0x7fddea6cd0c0-3:	32	cmovp eax, ecx
+0x7fddea6cd0c3-5:	32	jmp 0x7fddea6cd497
+0x7fddea6cd4ae-5:	32	mov rax, qword ptr [rsp+0x20]
+0x7fddea6cd4b3-8:	32	mov qword ptr [rsp+0x1a8], rax	rax= 0 bfefe63e75a38e39 bfefe63e75a38e39 3fc9168bc9d21c11 bfd2e067a2629b7f
+0x7fddea6cd4bb-5:	32	mov rax, qword ptr [rsp+0x28]
+0x7fddea6cd4c0-8:	32	mov qword ptr [rsp+0x1a0], rax	rax= 0 3fc9168bc9d21c11 3ff389bf839e6f81 3ff389bf839e6f81 3ff389bf839e6f81
+0x7fddea6cd4c8-4:	32	mov ebp, dword ptr [rsp+0x38]
+0x7fddea6cd4cc-4:	32	shl rbp, 0x4
+0x7fddea6cd4d0-5:	32	mov rsi, qword ptr [rsp+0x70]
+0x7fddea6cd4d5-4:	32	movzx eax, word ptr [rsi+rbp*1]
+0x7fddea6cd4d9-5:	32	mov rcx, qword ptr [rsp+0x40]
+0x7fddea6cd4de-4:	32	mov word ptr [rcx+rbp*1], ax	rcx= 7fff88b0af70 7fff88b0af70 7fff88b0af70 7fff88b0af70 7fff88b0af70
+0x7fddea6cd4e2-9:	32	movsd xmm7, qword ptr [rsp+0x170]
+0x7fddea6cd4eb-4:	32	movapd xmm4, xmm0
+0x7fddea6cd4ef-4:	32	addsd xmm4, xmm7
+0x7fddea6cd4f3-9:	32	movsd xmm6, qword ptr [rsp+0x150]
+0x7fddea6cd4fc-4:	32	addsd xmm4, xmm6
+0x7fddea6cd500-5:	32	addsd xmm4, xmm10
+0x7fddea6cd505-4:	32	xorpd xmm5, xmm5
+0x7fddea6cd509-4:	32	ucomisd xmm4, xmm5
+0x7fddea6cd50d-6:	32	jbe 0x7fddea6cd67c
+0x7fddea6cd513-5:	32	mov rax, qword ptr [rsp+0x40]
+0x7fddea6cd518-7:	32	mov word ptr [rax+rbp*1+0x2], 0x0	rax= 7fff88b0af70 7fff88b0af70 7fff88b0af70 7fff88b0af70 7fff88b0af70
+0x7fddea6cd51f-4:	32	mulsd xmm3, xmm0
+0x7fddea6cd523-4:	32	mulsd xmm2, xmm7
+0x7fddea6cd527-4:	32	addsd xmm2, xmm3
+0x7fddea6cd52b-9:	32	movsd xmm3, qword ptr [rsp+0x140]
+0x7fddea6cd534-4:	32	mulsd xmm3, xmm6
+0x7fddea6cd538-4:	32	addsd xmm3, xmm2
+0x7fddea6cd53c-5:	32	movapd xmm2, xmm10
+0x7fddea6cd541-5:	32	mulsd xmm2, xmm8
+0x7fddea6cd546-4:	32	addsd xmm2, xmm3
+0x7fddea6cd54a-4:	32	divsd xmm2, xmm4
+0x7fddea6cd54e-6:	32	movsd qword ptr [rax+rbp*1+0x8], xmm2	rax= 7fff88b0af70 7fff88b0af70 7fff88b0af70 7fff88b0af70 7fff88b0af70
+0x7fddea6cd554-10:	32	mov rax, 0x7fefffffffffffff
+0x7fddea6cd55e-8:	32	lea r15, ptr [rsp+0x1a8]
+0x7fddea6cd566-3:	32	mov qword ptr [r15], rax	rax= 7fefffffffffffff 7fefffffffffffff 7fefffffffffffff 7fefffffffffffff 7fefffffffffffff
+0x7fddea6cd569-10:	32	mov rax, 0xffefffffffffffff
+0x7fddea6cd573-8:	32	lea rbx, ptr [rsp+0x1a0]
+0x7fddea6cd57b-3:	32	mov qword ptr [rbx], rax	rax= ffefffffffffffff ffefffffffffffff ffefffffffffffff ffefffffffffffff ffefffffffffffff
+0x7fddea6cd57e-3:	32	mov rdi, r15
+0x7fddea6cd581-3:	32	mov rsi, rbx
+0x7fddea6cd584-7:	32	movsd qword ptr [rsp+0x58], xmm10
+0x7fddea6cd58b-7:	32	movsd qword ptr [rsp+0x68], xmm8
+0x7fddea6cd592-7:	32	movsd qword ptr [rsp+0x28], xmm9
+0x7fddea6cd599-6:	32	movsd qword ptr [rsp+0x10], xmm6
+0x7fddea6cd59f-6:	32	movsd qword ptr [rsp+0x20], xmm7
+0x7fddea6cd5a5-5:	32	call 0x7fddea6cee6c

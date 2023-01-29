@@ -1,0 +1,17 @@
+Make special procedure for stream data.
+If a value is new enough, give it the same effect as directly received glucose:
+    - Alarms;
+    - Notification;
+    - Watch.
+
+
+
+In Alarm settings, also alarms without Bluetooth.
+
+Other possibility: send data in the same way, but look for alarms in render.
+
+
+
+Problems:
+	Alarm data now in MyGatt etc.
+

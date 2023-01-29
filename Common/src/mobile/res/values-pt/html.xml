@@ -1,0 +1,2169 @@
+<resources>
+<string name="about" >
+<![CDATA[
+<h1 class="western">
+Sobre</h1>
+<p>Juggluco é escrito por&nbsp;<a href="http://jkaltes.byethost16.com/Juggluco">Jaap
+Korthals Altes</a></p>
+<p>Além das bibliotecas padrão do Android, são utilizadas as
+seguintes:</p>
+<ul>
+	<li><p lang="en-US">Comandos NFC e Bluetooth&nbsp;específicos para
+	sensores Abbott FreeStyle Libre e algoritmos de interpretação
+	específicos para sensores FreeStyle Libre.&nbsp;Todos são
+	indocumentados;</p>
+	<li><p><span lang="en-US">Para se comunicar com os relógios Garmin,
+	é feito uso do&nbsp;</span><a href="https://developer.garmin.com/connect-iq/sdk">Connect
+	IQ Mobile SDK</a><span lang="en-US">&nbsp;;</span></p>
+	<li><p><span lang="en-US">Os gráficos são criados com&nbsp;</span><a href="https://github.com/memononen/nanovg">NanoVG</a><span lang="en-US">&nbsp;;</span></p>
+	<li><p>A função de espelhar usa&nbsp;<a href="https://ascon.iaik.tugraz.at/">criptografia
+	autenticada Ascon</a>&nbsp;;</p>
+	<li><p>A comunicação com sensores Libre3 usa&nbsp;<a href="https://github.com/intel/tinycrypt">TinyCrypt</a>&nbsp;;</p>
+	<li><p>O seletor de cores é uma adaptação do&nbsp;<a href="https://github.com/yukuku/ambilwarna">AmbilWarna</a>&nbsp;.</p>
+</ul>
+<p>Juggluco foi traduzido para o italiano por&nbsp;<a href="mailto:matteo.gabriele81@gmail.com">Matteo
+Gabriele</a>&nbsp;.</p>
+<p>Juggluco foi traduzido para o português por Rui Pinheiro.</p>
+<p><br/>
+<br/>
+<br/>
+
+</p>
+]]>
+</string>
+<string name="addconnection" >
+<![CDATA[
+<h1 class="western">
+Adicionar conexão</h1>
+<p>Especifique uma conexão com outra instância de
+Juggluco.&nbsp;Juggluco em um dispositivo envia via IP/TCP dados para
+um Juggluco em outro dispositivo.&nbsp;Para estabelecer uma conexão,
+um dos Juggluco deve fazer contato numa porta e o outro deve fazer
+contato com essa porta.&nbsp;A porta em que esta instância do
+Juggluco está escutando foi fornecida na tela anterior (menu do meio
+esquerdo-&gt; Espelho).&nbsp;Aqui  especifica a porta para a qual
+esta instância de Juggluco contata se ela fizer contato
+ativamente.&nbsp;Se esta instância do Juggluco não puder contatar
+numa porta, selecione &quot;&nbsp;Somente ativo&nbsp;&quot;.&nbsp;Se
+o outro lado não puder contatar numa porta, selecione &quot;&nbsp;Apenas
+passivo&nbsp;&quot;, caso contrário, deixe &quot;&nbsp;Ambos&nbsp;&quot;
+marcado.e&nbsp;Ativo somente&nbsp;se  selecionar
+aqui&nbsp;Somente&nbsp;passivo&nbsp;e&nbsp;Ambos&nbsp;se  selecionar
+aqui&nbsp;Ambos&nbsp;.</p>
+<p>Se esta instância do Juggluco entrar em contato ativamente,  deve
+especificar o(s) IP(s) com o qual ela deve entrar em contato.&nbsp;Se
+esse host tiver vários IPs, especifique mais de um;&nbsp;por
+exemplo, quando dois dispositivos às vezes são conectados por meio
+de uma rede doméstica e, às vezes, diretamente como ponto de acesso
+portátil.&nbsp;Nunca especifique os IPs de vários dispositivos,
+nesse caso cada um receberá apenas parte dos dados.</p>
+<p>Em todos os casos, exceto \'Somente ativo\',  pode selecionar
+\'&nbsp;Detectar&nbsp;\';&nbsp;neste caso Juggluco salva o primeiro IP
+contatando Juggluco como o IP do outro lado.&nbsp;Verificar se o
+dispositivo certo está fazendo contato pode ser feito de duas
+maneiras: Selecione \'&nbsp;Testar IP&nbsp;\' para testar o IP.&nbsp;Se
+ selecionar&nbsp;Rótulo de teste&nbsp;, um contato só será
+estabelecido se ambos os lados tiverem especificado o mesmo rótulo.</p>
+<p>Selecione&nbsp;receber de&nbsp;se quiser que este aplicativo
+funcione como um aplicativo espelho.</p>
+<p>Se  deseja que este dispositivo seja o&nbsp;remetente&nbsp;de
+dados,  deve especificar quais dados enviar.</p>
+<p>Quantidades&nbsp;: dados de dose, alimentos e desportos que
+especificou.</p>
+<p>Scan: dados recebidos pela varredura do sensor (scan e histórico).</p>
+<p>Stream&nbsp;: os dados recebidos por Bluetooth.</p>
+<p>Às vezes, alguns dados já estão presentes no dispositivo
+receptor.&nbsp; pode especificar até quando esses dados estão
+presentes:</p>
+<p>Iniciar:&nbsp;sem dados presentes</p>
+<p>Agora:&nbsp;todos os dados presentes</p>
+<p>Ou uma data específica determinada pela posição inicial da
+tela.</p>
+<p>Quando uma fonte de dados é adicionada a uma conexão existente,
+a data de início determina apenas a fonte de dados adicionada.&nbsp;Por
+exemplo, se Scans e Streams já foram enviados para o hospedeiro e os
+valores agora são adicionados, a data de início determina apenas os
+valores enviados.</p>
+<p>Caso dois dispositivos estejam conectados por meio de uma conexão
+insegura, os dados podem ser assinados e criptografados especificando
+a mesma&nbsp;senha&nbsp;(no máximo) de 16 caracteres em ambos os
+lados da conexão.&nbsp;Selecione&nbsp;Guardar&nbsp;para salvar o que
+ especificou.&nbsp;Excluir&nbsp;excluirá esta especificação de
+conexão.</p>
+<p>Na situação mais simples, todas as conexões pertencem à sua
+rede doméstica, portanto,  pode usar IPs locais.&nbsp; também pode
+se conectar pela internet via Wi-Fi, nesse caso  deve consultar o
+manual do seu modem sobre como encaminhar uma porta externa para um
+IP e porta na sua rede doméstica.</p>
+<p>Dois telemóveis conectados por meio de uma conexão de dados
+móveis pela Internet podem se conectar diretamente um ao outro, se
+um deles puder escutar em uma porta de rede.&nbsp;Se ambos não
+puderem (por exemplo, se nenhum tiver um IP individual), eles ainda
+poderão se comunicar por meio de um terceiro dispositivo.&nbsp;Uma
+possibilidade é executar o Juggluco em um dispositivo Android (no
+mínimo Android 4.4) em casa conectado à internet por meio de um
+modem.&nbsp;Outra possibilidade é executar um programa de linha de
+comando pertencente ao Juggluco em um computador (por exemplo, seu PC
+ou Amazon
+AWS):&nbsp;<a href="http://jkaltes.byethost16.com/Juggluco/cmdline/index.html">http://jkaltes.byethost16.com/Juggluco/cmdline/index.html</a></p>
+<p>Tutoriais de encaminhamento de porta:</p>
+<p><a href="https://portforward.com/how-to-port-forward/">https://portforward.com/how-to-port-forward/</a></p>
+<p><a href="https://stevessmarthomeguide.com/understanding-port-forwarding/">https://stevessmarthomeguide.com/understanding-port-forwarding/</a></p>
+<p>É possível receber valores de glicose via Bluetooth em um
+dispositivo sem NFC
+(consulte&nbsp;<a href="http://jkaltes.byethost16.com/Juggluco/mirror">http://jkaltes.byethost16.com/Juggluco/mirror</a>):
+Inicialize o sensor via NFC no dispositivo NFC e, em seguida, envie
+os dados de digitalização e fluxo para o dispositivo não NFC. A
+seguir, inverta a conexão para a data do fluxo e desligue a conexão
+Bluetooth no dispositivo NFC e ligue-a no sem NFC dispositivo e
+também desligue o &quot;sensor via Bluetooth&quot; no dispositivo
+NFC e ligue-o no dispositivo não NFC.&nbsp;Assim, você pode fazer
+scan com um dispositivo e obter valores de glicose via Bluetooth em
+outro dispositivo.&nbsp;Mas em todos os dispositivos todos os dados
+do sensor devem estar disponíveis.&nbsp;Se os dispositivos trocarem
+dados, eles sempre devem receber dados de varredura e
+fluxo.&nbsp;Portanto, você deve sempre enviar os dados do Stream de
+volta para o dispositivo NFC e os dados de digitalização de volta
+para o dispositivo não NFC.&nbsp;Caso contrário, os dados ficarão
+fora de sincronia, fazendo com que dados de autenticação antigos
+sejam usados ​​ou novos dados sejam substituídos por dados
+antigos.</p>
+<p>Os dados de Quantias são totalmente independentes.</p>
+<h2 class="western">problemas de rede</h2>
+<p>É necessária uma especificação complementar estrita em ambos
+os lados da conexão.&nbsp;Uma simples omissão pode impossibilitar a
+transmissão de dados.</p>
+<p>É possível que a conexão pare e precise ser redefinida ligando
+ou desligando o WIFI ou pressionando Sincronizar.&nbsp;Além disso,
+alternar uma conexão&nbsp;ativa-somente-passiva-somente&nbsp;para&nbsp;ambos&nbsp;ou
+o contrário pode fazer a diferença.</p>
+<p>Por exemplo, uma conexão relógio-telemóvel usando TCP sobre
+Bluetooth só funciona se o relógio estiver apenas ativo e o
+telemóvel apenas passivo.&nbsp;Sobre WIFI funciona em ambas as
+direções.</p>
+<p>Você também deve considerar a mudança de IPs com mudança de
+conexão.&nbsp;Por exemplo, IPs diferentes devem ser usados ​​na
+rede doméstica e em um ponto de acesso portátil.</p>
+<p><br/>
+<br/>
+
+</p>
+]]>
+</string>
+<string name="alarmhelp" >
+<![CDATA[
+<h1 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
+<font><font face="Times"><span style="background: transparent">Alarmes</span></font></font></h1>
+<h2 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-top: 0.14in; margin-bottom: 0.08in; background: transparent">
+<font><font face="Liberation Sans, sans-serif"><font size="4" style="font-size: 16pt"><span style="background: transparent">Alarmes
+de glicose:</span></font></font></font></h2>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><span style="background: transparent">Os
+valores de stream recebidos via Bluetooth podem ser usados ​​para
+definir alarmes de glicose baixa e alta.</span></font></font></font></p>
+<h3 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-top: 0.1in; margin-bottom: 0.08in; background: transparent">
+<font><font face="Liberation Sans, sans-serif"><span style="background: transparent">Alarme
+de glicose baixa:</span></font></font></h3>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><span style="background: transparent">Valor
+abaixo do qual um alarme deve disparar.</span></font></font></font></p>
+<h3 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-top: 0.1in; margin-bottom: 0.08in; background: transparent">
+<font><font face="Liberation Sans, sans-serif"><span style="background: transparent">Alarme
+de glicose alta:</span></font></font></h3>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><span style="background: transparent">Valor
+acima do qual um alarme deve disparar.</span></font></font></font></p>
+<h3 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-top: 0.1in; margin-bottom: 0.08in; background: transparent">
+<font><font face="Liberation Sans, sans-serif"><span style="background: transparent">Alarme
+de perda de sinal:</span></font></font></h3>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><span style="background: transparent">Especifique
+após quantos minutos um alarme deve alertar se nenhum valor de
+glicose for recebido via Bluetooth.</span></font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><span style="background: transparent">Os
+alarmes&nbsp;<b>pararão</b>&nbsp;quando uma das seguintes condições
+for satisfeita:</span></font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><span style="background: transparent">-
+A duração especificada expirou;</span></font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><span style="background: transparent">-
+A visualização da curva é tocada;</span></font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><span style="background: transparent">-
+A notificação Android de Juggluco é tocada (no estado
+desbloqueado);</span></font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><span style="background: transparent">-
+O botão Cancelar da notificação de alarme no Juggluco é tocado.</span></font></font></font></p>
+<h3 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-top: 0.1in; margin-bottom: 0.08in; background: transparent">
+<font><font face="Liberation Sans, sans-serif"><span style="background: transparent">Valor
+disponível:</span></font></font></h3>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><span style="background: transparent">Às
+vezes o sensor não funciona.&nbsp;Ao ativar isso,  será notificado
+se o sensor funcionar novamente após uma verificação com falha.</span></font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><span style="background: transparent">Para
+cada alarme, pode especificar qual toque tocar e por quanto tempo.</span></font></font></font></p>
+<h2 class="western" style="orphans: 2; widows: 2; margin-top: 0.14in; margin-bottom: 0.08in; background: transparent">
+<br/>
+<br/>
+
+</h2>
+<h3 class="western" style="orphans: 2; widows: 2; margin-top: 0.1in; margin-bottom: 0.08in; background: transparent">
+<br/>
+<br/>
+
+</h3>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+]]>
+</string>
+<string name="battery" >
+<![CDATA[
+<h1 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-top: 0in; margin-bottom: 0.08in">
+<font><font face="Liberation Serif, serif"><span style="background: transparent">Continue
+funcionando</span></font></font></h1>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><span style="background: transparent">Normalmente,
+quando um dispositivo Android não é usado, ele entra no modo
+suspensão para usar menos energia.&nbsp;Nesse modo, uma aplicação
+não pode usar conexões TCP para trocar dados.&nbsp;Isso significa
+que dois dispositivos Android só podem se comunicar quando ambas as
+telas estiverem ligadas.&nbsp; pode isentar uma aplicação dessa
+restrição desativando a \'&nbsp;<i>Otimização da bateria</i>&nbsp;\'
+no menu de configurações do Android.&nbsp;<i><b>Atualizar no modo
+</b></i><i><b>suspensão</b></i><b>,</b>&nbsp;mostra essa
+configuração e alterá-la abre o menu de configuração do Android,
+onde pode alterar essa configuração.&nbsp;Em alguns telemóveis,
+apenas as aplicações já isentas são mostradas e, para adicionar
+uma aplicação,  deve ir para configurações do
+Android-&gt;bateria-&gt;gerenciamento de bateria da aplicação,
+selecionar Juggluco e ativar&nbsp;<i>permitir atividade em segundo
+plano</i>&nbsp;.</span></font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><span style="background: transparent">A
+conexão Bluetooth com o sensor não é estritamente proibida pelo
+Android e normalmente também funcionará sem especificar uma
+isenção.&nbsp;Mas isso pode ser diferente para diferentes versões
+do Android e para diferentes fabricantes de dispositivos.&nbsp;Para
+ter certeza ou depois que a aplicação perder alguns valores de
+glicose no final da noite, pode desativar a economia de bateria para
+esta aplicação, mesmo que não use o TCP para a função de
+espelhar.</span></font></font></font></p>
+<p style="orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal"><span style="background: transparent">Alguns
+fabricantes de dispositivos impuseram restrições adicionais à</span></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal"><span style="background: transparent">s</span></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal"><span style="background: transparent">
+</span></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal"><span style="background: transparent">aplicações</span></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal"><span style="background: transparent">
+executados em segundo plano ou </span></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal"><span style="background: transparent">abertos</span></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal"><span style="background: transparent">
+na inicialização, consulte&nbsp;</span></span></span></span></font></font></font></span><a href="https://dontkillmyapp.com/"><span style="background: transparent">https://dontkillmyapp.com</span></a><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal"><span style="background: transparent">&nbsp;.</span></span></span></span></font></font></font></span></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><span style="background: transparent">Uma
+aplicação frequentemente em primeiro plano é desativada pelo
+Android mais tarde do que uma aplicação que não está em primeiro
+plano.&nbsp;Recebi um relato de uma pessoa com um telemóvel Samsung
+que havia desligado todas as notificações visíveis do Juggluco,
+usando apenas para enviar valores de glicose para o xDrip, que estava
+com problemas de conexão com o sensor que foram resolvidos após
+ligar novamente os sinais visíveis do Juggluco.</span></font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+]]>
+</string>
+<string name="colorhelp" >
+<![CDATA[
+<h1 class="western">
+Cores</h1>
+<p>Aqui pode alterar as cores dos números, curvas e pontos de
+scan.&nbsp;Toque em um ponto de uma curva, stream ou quantidade (para
+que as informações sobre esse ponto ou quantidade sejam
+mostradas).&nbsp;A seguir, toque em uma cor na exibição de cores.&nbsp;A
+curva, ponto do scan ou valor agora será mostrado nessa cor.</p>
+<p>Na versão WearOS, precisa de um relógio com tecla Voltar,
+deslizar para trás não funcionará.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+]]>
+</string>
+<string name="connectionoverview" >
+<![CDATA[
+<h1 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
+<font face="Times">Espelhar</font></h1>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.14in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font face="Times"><font size="4" style="font-size: 14pt"><span lang="en-US">Envie
+ou receba dados de outro dispositivo.&nbsp;Você pode se conectar a
+um dispositivo Android executando o Juggluco&nbsp;para exibir os
+dados da mesma forma que aqui.&nbsp;Depois de receber os dados de
+digitalização, o dispositivo espelho também pode entrar em contato
+com o sensor via Bluetooth.&nbsp;Para garantir que apenas um dos
+dispositivos entre em contato com o sensor, o &quot;&nbsp;</span><span lang="en-US"><i>Sensor
+via Bluetooth</i></span>&nbsp;<span lang="en-US">&quot; é desligado
+automaticamente quando os valores do Stream chegam via IP/TCP.</span></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.14in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font face="Times"><font size="4" style="font-size: 14pt">Nesta tela,
+após&nbsp;<i>wlan&nbsp;,</i>&nbsp;o IP local wlan deste dispositivo
+é mostrado, você deve especificar isso no outro dispositivo em sua
+rede doméstica que você está conectando (ou seu modem se estiver
+conectando remotamente).</font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.14in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font face="Times"><font size="4" style="font-size: 14pt">Depois&nbsp;<i>de
+Porta,</i>&nbsp;você pode alterar a porta TCP em que este aplicativo
+está escutando as conexões.</font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.14in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font face="Times"><font size="4" style="font-size: 14pt">Ao clicar
+em&nbsp;<i><b>Adicionar conexão,</b></i>&nbsp;você pode especificar
+com quais hosts se conectar e como se conectar.</font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.14in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font face="Times"><font size="4" style="font-size: 14pt">Uma conexão
+de rede confiável no Android é interrompida por todos os tipos de
+otimizações de bateria e restrições de fundo. Pressionar o&nbsp;M<b>odo
+suspensão</b>&nbsp;ajuda a mudar isso.</font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.14in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font face="Times"><font size="4" style="font-size: 14pt">Se Juggluco
+funcionar como um aplicativo Espelho (recebendo valores de glicose de
+outro dispositivo executando Juggluco), você pode
+pressionar&nbsp;<b>Alarmes</b>&nbsp;para acessar uma caixa de diálogo
+onde pode especificar alarmes de glicose baixa e alta e notificações
+relacionadas.</font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.14in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font face="Times"><font size="4" style="font-size: 14pt"><b>Não
+altere as quantidades:</b>&nbsp;se o aplicativo receber quantidades
+de dados de medicamentos, alimentos e desportos deste aplicativo
+executado em outro dispositivo, você não deve adicionar ou
+modificar essas mesmas informações aqui.&nbsp;Verificar isso torna
+isso impossível.</font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.14in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font face="Times"><font size="4" style="font-size: 14pt"><b>A
+sincronização</b>&nbsp;envia novos dados para um dispositivo
+conectado, se disponível, ou solicita novos dados.</font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.14in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font face="Times"><font size="4" style="font-size: 14pt"><b>Reinic</b>&nbsp;:
+Fecha o existente e cria uma nova conexão.</font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.14in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font face="Times"><font size="4" style="font-size: 14pt"><b>Wifi</b>&nbsp;(somente
+no WearOS): Use WIFI em vez de TCP sobre Bluetooth para a conexão
+entre o telemóvel e o relógio.&nbsp;Isso normalmente não é
+necessário quando o telemóvel possui uma conexão externa (WIFI ou
+dados móveis).&nbsp;Essa opção pode ser usada nas raras
+circunstâncias em que o telemóvel não possui uma conexão externa
+e há um ponto de acesso portátil no telemóvel ao qual o relógio
+está conectado.&nbsp;Os fabricantes do WearOS acham que ativar o
+WIFI levará a um grande aumento no uso da bateria;&nbsp;Eu não
+posso fundamentar isso.&nbsp;De qualquer forma, a conexão entre o
+telemóvel e o relógio é muito mais estável quando o telefone tem
+uma conexão externa e o WIFI do relógio está desligado.</font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.14in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font face="Times"><font size="4" style="font-size: 14pt">As conexões
+existentes são mostradas em uma lista, o rótulo, a porta IP e mês,
+dia e hora da última sincronização bem sucedida são mostrados.</font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.14in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font face="Times"><font size="4" style="font-size: 14pt">Como a
+conexão é usada é abreviado da seguinte forma:</font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.14in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font face="Times"><font size="4" style="font-size: 14pt">n: Valores
+(números)</font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.14in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font face="Times"><font size="4" style="font-size: 14pt">s: Scans</font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.14in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font face="Times"><font size="4" style="font-size: 14pt">b: Stream
+(bluetooth)</font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.14in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font face="Times"><font size="4" style="font-size: 14pt">r: receber</font></font></p>
+<p style="line-height: 0.14in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<br/>
+
+</p>
+<p style="line-height: 0.14in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<span style="font-variant: normal"><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">Para
+obter mais informações sobre conexões de espelho, leia a ajuda em
+&quot;&nbsp;</span></span></span></font></font></span><span style="font-variant: normal"><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><i><span style="font-weight: normal">Adicionar
+conexão</span></i></span></font></font></span><span style="font-variant: normal"><span style="letter-spacing: normal">&nbsp;</span></span><span style="font-variant: normal"><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">&quot;
+e consulte&nbsp;</span></span></span></font></font></span><a href="http://jkaltes.byethost16.com/Juggluco/mmol.html#mirror">http://jkaltes.byethost16.com/Juggluco/mgdL#mirror</a></p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+]]>
+</string>
+<string name="disturbhelp" >
+<![CDATA[
+<h1 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
+<font><font face="Times"><span style="background: transparent">Acesso
+&quot;&nbsp;N<i>ão </i><i>incomodar</i>&quot;</span></font></font></h1>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><span style="background: transparent">No
+Juggluco, você pode especificar para cada tipo de alarme se ele deve
+ser tocado durante &quot;&nbsp;<i>Não </i><i>incomodar</i>&nbsp;&quot;
+(em Toque do alarme específico.)&nbsp;Em alguns dispositivos, os
+alarmes durante o modo &quot;&nbsp;<i>Não </i><i>incomodar</i>&nbsp;&quot;
+só são possíveis se Juggluco tiver acesso a &quot;&nbsp;<i>Não
+</i><i>incomodar</i>&nbsp;&quot;.&nbsp;Ao pressionar OK, você será
+direcionado para uma tela de configuração do Android, onde poderá
+dar essa permissão ao Juggluco.&nbsp;Independente do que você
+responder lá, você pode especificar no Juggluco para cada alarme se
+ele deve disparar durante &quot;&nbsp;<i>Não </i><i>incomodar</i>&nbsp;&quot;
+ou não.</span></font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+]]>
+</string>
+<string name="flashpermission" >
+<![CDATA[
+<p>Às vezes, afirma-se que o uso da luz
+do Flash requer permissão da câmera em alguns telemóveis.&nbsp;Por
+causa disso Juggluco pediu essa permissão em versões
+anteriores.&nbsp;Nos telemóveis testados, essa permissão não é
+necessária e Juggluco não a solicita mais.&nbsp;Se o Flash não
+funcionar ou seu telemóveis travar ou se comportar de maneira
+estranha ao usar o Flash, pode tentar ativá-lo.</p>
+<p>Pode desativá-lo novamente nas configurações do Android para
+Juggluco.</p>
+<p><br/>
+<br/>
+<br/>
+
+</p>
+]]>
+</string>
+<string name="garminconfig" >
+<![CDATA[
+<h1 class="western">Configuração de
+Kerfstok</h1>
+<p><span lang="pt-PT">A&nbsp;fonte</span>&nbsp;<span lang="pt-PT">de
+Kerfstok pode ser baixada
+em&nbsp;<a href="http://jkaltes.byethost16.com/Kerfstok/Kerfstok-source.html">http://jkaltes.byethost16.com/Kerfstok/Kerfstok-source.html</a></span>&nbsp;<span lang="pt-PT">).&nbsp;Os
+utilizadores</span> <span lang="pt-PT">são livres para
+modificá-lo.&nbsp;Cada aplicativo de relógio tem um identificador
+exclusivo.&nbsp;Se o identificador for diferente do padrão, o
+Juggluco precisa conhecê-lo para se comunicar com o aplicativo do
+relógio.&nbsp;Para especificar um identificador diferente,
+pressione&nbsp;ID</span>&nbsp;<span lang="pt-PT">e digite a string
+hexadecimal de 32 caracteres.&nbsp;Juggluco em um dispositivo só
+pode ser conectado a um aplicativo de relógio apenas em</span> <span lang="pt-PT">um
+relógio.&nbsp;As alterações levarão à perda de dados.</span></p>
+<h2 class="western">Atalhos</h2>
+<p>Os atalhos são enviados para o aplicativo de relógio Garmin
+Kerfstok para inserir facilmente determinados valores.</p>
+<h2 class="western">Modo escuro</h2>
+<p>Especifique se Kerfstok deve ser branco sobre preto em vez de
+preto sobre branco.</p>
+<p><br/>
+<br/>
+<br/>
+
+</p>
+]]>
+</string>
+<string name="getlib" >
+<![CDATA[
+<h1 class="western">Biblioteca Libre</h1>
+<p>Juggluco&nbsp;precisa de uma biblioteca incluída na aplicação
+Libre da Abbott&nbsp;.</p>
+<p>Os sensores US Freestyle Libre 2&nbsp;e possivelmente sensores em
+outros países como o Canadá, precisam de uma biblioteca da versão
+2.5.2, 2.5.3 ou 2.7.1 do aplicativo Librelink da Abbott.</p>
+<p>Outros sensores&nbsp;também funcionam com uma biblioteca
+do&nbsp;Librelink 2.4.0, 2.4.1&nbsp;ou&nbsp;2.4,2&nbsp;.&nbsp;Versões
+após 2.4.2 pioraram em termos de uso da bateria e fornecem os mesmos
+resultados&nbsp;em sensores fora dos EUA, como Freestyle Libre 2.</p>
+<p>O código do país não faz diferença.</p>
+<p><span lang="pt-PT">O .apk contendo Librelink é distribuído pelo
+Google Play e está disponível em todos os tipos de lugares na
+web.&nbsp;Uma lista de links pode ser encontrada
+em:&nbsp;<a href="http://jkaltes.byethost16.com/Juggluco/urls.html">http://jkaltes.byethost16.com/Juggluco/urls.html</a></span></p>
+<p>Depois de baixar o APK, você pode deixar Juggluco abri-lo,
+tocando no botão&nbsp;Abrir&nbsp;.</p>
+<p>Também é possível executar o Juggluco sem acesso direto ao
+sensor Freestyle libre.&nbsp;O aplicativo pode obter os dados por
+meio de uma conexão IP/TCP de um telemóvel que obtém os dados do
+sensor.&nbsp;Sem acesso ao sensor, também é possível inserir
+informações do controlo da diabetes, como quantidades de insulina,
+carboidratos e atividade e obter esses dados do aplicativo de relógio
+Garmin Kerfstok.&nbsp;Toque em&nbsp;Sem sensor&nbsp;para restringir o
+Juggluco a esse&nbsp;modo.</p>
+<p><br/>
+<br/>
+
+</p>
+]]>
+</string>
+<string name="introhelp" >
+<![CDATA[
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.16in; orphans: 2; widows: 2; margin-bottom: 0in">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><font><font face="Cambria, serif"><b>Juggluco</b></font></font>&nbsp;é
+um applet para o controlo da glicemia por pessoas com diabetes.&nbsp;Ele
+pode digitalizar sensores Freestyle libre (1 e 2) (via NFC) e receber
+(via Bluetooth) valores de glicose de sensores<font>&nbsp;</font><font><font face="Calibri, serif"><i><b>Freestyle
+libre 2 .</b></i></font></font></font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.16in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt">Quando
+o programa é executado pela primeira vez, você pode (após a
+inicialização) escanear um sensor Freestyle Libre&nbsp;<b>2</b>&nbsp;segurando-o
+contra o sensor NFC em seu telemóvel.&nbsp;A partir de agora, o
+Juggluco tentará obter uma conexão Bluetooth com os sensores
+Freestyle Libre 2 e receberá a cada minuto um valor de glicose sem
+digitalizar.</font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.16in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt">Para
+assumir um sensor FreeStyle Libre&nbsp;<b>3</b>&nbsp;ativado ,  é
+necessário especificar as informações da conta Libreview que usou
+para ativar o sensor em definições-&gt;Libreview, pressione &quot;Obter
+ID da conta&quot; e aguarde a chegada do ID da conta antes de
+escanear.</font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.16in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><span lang="en-US">O
+programa contém quatro&nbsp;</span><font><font face="Cambria, serif"><font size="3" style="font-size: 13pt"><span lang="en-US"><b>menus</b></span></font></font></font>&nbsp;<span lang="en-US">;&nbsp;tocando
+em uma parte vazia da tela, você pode abrir um&nbsp;menu.&nbsp;Toque&nbsp;no
+quarto esquerdo&nbsp;da tela abre o menu esquerdo, o lado esquerdo da
+parte do meio abre o segundo&nbsp;menu e a parte direita do meio abre
+o terceiro&nbsp;menu&nbsp;e o quarto direito&nbsp;da tela o quarto
+menu.</span></font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-weight: normal; line-height: 0.14in; orphans: 2; widows: 2; margin-bottom: 0.08in; background: transparent">
+<font><font face="Times"><font size="3" style="font-size: 12pt"><i>Menu
+4: Movimento (à direita)</i></font></font></font></p>
+<table width="108" cellpadding="0" cellspacing="0">
+	<col width="108"/>
+
+	<tr>
+		<td width="108" valign="top" style="border: none; padding: 0in"><p style="orphans: 2; widows: 2; background: transparent">
+			15:10 106</p>
+		</td>
+	</tr>
+	<tr>
+		<td width="108" valign="top" style="border: none; padding: 0in"><p style="orphans: 2; widows: 2; background: transparent">
+			Procurar</p>
+		</td>
+	</tr>
+	<tr>
+		<td width="108" valign="top" style="border: none; padding: 0in"><p style="orphans: 2; widows: 2; background: transparent">
+			Data</p>
+		</td>
+	</tr>
+	<tr>
+		<td width="108" valign="top" style="border: none; padding: 0in"><p style="orphans: 2; widows: 2; background: transparent">
+			Dia anterior</p>
+		</td>
+	</tr>
+	<tr style="background: transparent">
+		<td width="108" valign="top" style="border: none; padding: 0in"><p style="orphans: 2; widows: 2; background: transparent">
+			Dia seguinte</p>
+		</td>
+	</tr>
+	<tr>
+		<td width="108" valign="top" style="border: none; padding: 0in"><p style="orphans: 2; widows: 2; background: transparent">
+			Semana anterior</p>
+		</td>
+	</tr>
+	<tr>
+		<td width="108" valign="top" style="border: none; padding: 0in"><p style="orphans: 2; widows: 2; background: transparent">
+			Semana seguinte</p>
+		</td>
+	</tr>
+</table>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.16in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><span lang="en-US">Ao
+mover para a esquerda e para a direita na tela, você pode mover a
+curva para a esquerda e para a direita.&nbsp;</span><span lang="en-US">T</span><span lang="en-US">ambém
+pode se mover usando o&nbsp;</span><font><font face="Cambria, serif"><span lang="en-US"><b>menu</b></span></font></font>&nbsp;<span lang="en-US">de
+movimento à direita.&nbsp;Use&nbsp;</span><font><font face="Cambria, serif"><span lang="en-US"><i><b>Data</b></i></span></font></font>&nbsp;<span lang="en-US">para
+selecionar uma data,&nbsp;</span><font><font face="Cambria, serif"><span lang="en-US"><i><b>P</b></i></span></font></font><font><font face="Cambria, serif"><span lang="en-US"><i><b>rocurar</b></i></span></font></font>&nbsp;<span lang="en-US">para
+pesquisar valores de glicose e números inseridos.&nbsp;O primeiro
+item do menu direito é a hora atual e ao selecioná-lo pula para a
+direita do gráfico (agora).</span></font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.16in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt">Se&nbsp;<i>a
+escala manual de glicose</i>&nbsp;estiver definida em Definições,
+mover para cima e para baixo na parte superior da tela altera o
+máximo do gráfico, na parte inferior da tela altera o
+mínimo.&nbsp;Se&nbsp;<i>Escalar manualmente o tempo</i>&nbsp;estiver
+definido nas definições, pode aumentar ou diminuir a quantidade de
+tempo exibida na tela alterando a distância entre dois dedos.</font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-weight: normal; line-height: 0.14in; orphans: 2; widows: 2; margin-bottom: 0.08in; background: transparent">
+<font><font face="Times"><font size="3" style="font-size: 12pt"><i>Menu
+3: Exibição</i></font></font></font></p>
+<table width="117" cellpadding="0" cellspacing="0">
+	<col width="117"/>
+
+	<tr>
+		<td width="117" valign="top" style="border: none; padding: 0in"><p style="orphans: 2; widows: 2; background: transparent">
+			Último scan</p>
+		</td>
+	</tr>
+	<tr>
+		<td width="117" valign="top" style="border: none; padding: 0in"><p style="orphans: 2; widows: 2; background: transparent">
+			Scans [x]</p>
+		</td>
+	</tr>
+	<tr>
+		<td width="117" valign="top" style="border: none; padding: 0in"><p style="orphans: 2; widows: 2; background: transparent">
+			Stream [x]</p>
+		</td>
+	</tr>
+	<tr>
+		<td width="117" valign="top" style="border: none; padding: 0in"><p style="orphans: 2; widows: 2; background: transparent">
+			Histórico [x]</p>
+		</td>
+	</tr>
+	<tr>
+		<td width="117" valign="top" style="border: none; padding: 0in"><p style="orphans: 2; widows: 2; background: transparent">
+			Valores [x]</p>
+		</td>
+	</tr>
+	<tr>
+		<td width="117" valign="top" style="border: none; padding: 0in"><p style="orphans: 2; widows: 2; background: transparent">
+			Refeições [ ]</p>
+		</td>
+	</tr>
+	<tr>
+		<td width="117" height="31" valign="top" style="border: none; padding: 0in"><p style="orphans: 2; widows: 2; background: transparent">
+			Modo escuro [ ]</p>
+		</td>
+	</tr>
+</table>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.16in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><span lang="en-US">A&nbsp;</span><font><font face="Cambria, serif"><span lang="en-US"><b>direita
+do menu do meio</b></span></font></font>&nbsp;<span lang="en-US">contém
+opções de exibição.&nbsp;Para ver </span><span lang="en-US">o</span><span lang="en-US">
+últim</span><span lang="en-US">o scan</span><span lang="en-US">,
+toque no primeiro&nbsp;item.&nbsp;</span>Uma cruz depois
+de&nbsp;<i>Scans</i>&nbsp;significa que os valores do scan são
+exibidos no gráfico.&nbsp;Um scan é o valor atual de glicose que
+você obtém ao escanear seu sensor.&nbsp;Ao fazer scan também
+transfere medições de 15 minutos das últimas 8 horas do sensor
+para o telemóvel.&nbsp;A exibição desses valores pode ser
+controlada tocando em&nbsp;<i>Histórico</i>&nbsp;.&nbsp;<i>Stream</i>&nbsp;significa
+valores de glicose enviados a cada minuto via Bluetooth de um sensor
+Freestyle libre 2 para este applet.</font></font></font></p>
+<p style="line-height: 0.16in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<br/>
+
+</p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.16in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt">Pode
+inserir todos os tipos de números (com qualquer etiqueta que
+desejar) para documentar sua insulina, carboidratos e
+atividades.&nbsp;Eles são exibidos em altura fixa no gráfico de
+glicose na hora e data especificadas.&nbsp;<span lang="en-US">Tocar
+em pontos&nbsp;no gráfico ou em um número inserido fornece
+informações sobre esse item.&nbsp;</span><span lang="en-US">P</span><span lang="en-US">ode
+editar um número digitado tocando nele longamente.&nbsp;A edição
+também é possível através da lista de números no menu central
+esquerdo&nbsp;e tocando no elemento de dados correspondente.&nbsp;</span><i>Os
+valores</i>&nbsp;determinam a exibição dos números inseridos.&nbsp;Em
+Definições, você pode especificar quais etiquetas deseja usar para
+esses números.&nbsp;Acima de um dos números, a etiqueta
+correspondente é mostrada.</font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-weight: normal; line-height: 0.14in; orphans: 2; widows: 2; margin-bottom: 0.08in; background: transparent">
+<font><font face="Times"><font size="3" style="font-size: 12pt"><i>Menu
+2: Esquerda do meio</i></font></font></font></p>
+<table width="82" cellpadding="0" cellspacing="0">
+	<col width="82"/>
+
+	<tr>
+		<td width="82" height="31" valign="top" style="border: none; padding: 0in"><p align="left" style="orphans: 2; widows: 2; background: transparent">
+			Notificar []</p>
+		</td>
+	</tr>
+	<tr>
+		<td width="82" valign="top" style="border: none; padding: 0in"><p style="orphans: 2; widows: 2; background: transparent">
+			Exportar</p>
+		</td>
+	</tr>
+	<tr>
+		<td width="82" valign="top" style="border: none; padding: 0in"><p style="orphans: 2; widows: 2; background: transparent">
+			Espelhar</p>
+		</td>
+	</tr>
+	<tr>
+		<td width="82" valign="top" style="border: none; padding: 0in"><p style="orphans: 2; widows: 2; background: transparent">
+			Novo valor</p>
+		</td>
+	</tr>
+	<tr>
+		<td width="82" valign="top" style="border: none; padding: 0in"><p style="orphans: 2; widows: 2; background: transparent">
+			Listagem</p>
+		</td>
+	</tr>
+	<tr>
+		<td width="82" valign="top" style="border: none; padding: 0in"><p style="orphans: 2; widows: 2; background: transparent">
+			Estatísticas</p>
+		</td>
+	</tr>
+</table>
+<p style="line-height: 0.16in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">P</span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">ode
+inserir esses números tocando em&nbsp;</span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><i><b>Novo
+valor</b></i></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">&nbsp;à&nbsp;</span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Cambria, serif"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="en-US"><span style="font-style: normal"><b>esquerda
+do menu do meio</b></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">&nbsp;.&nbsp;</span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Cambria, serif"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="en-US"><span style="font-style: normal"><b>Exportar</b></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">&nbsp;</span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="en-US"><span style="font-style: normal"><span style="font-weight: normal">salva
+dados no formato .tsv (valores separados por tabulações) em um
+arquivo.&nbsp;</span></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Cambria, serif"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="en-US"><span style="font-style: normal"><b>O
+</b></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Cambria, serif"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="en-US"><span style="font-style: normal"><b>Espelhar</b></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">&nbsp;</span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="en-US"><span style="font-style: normal"><span style="font-weight: normal">permite
+enviar dados via IP/TCP para este aplicativo </span></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="en-US"><span style="font-style: normal"><span style="font-weight: normal">funcionar</span></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="en-US"><span style="font-style: normal"><span style="font-weight: normal">
+em um dispositivo diferente para exibir as mesmas informações.&nbsp;Com
+o&nbsp;</span></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Cambria, serif"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="en-US"><span style="font-style: normal"><b>Notif</b></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Cambria, serif"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="en-US"><span style="font-style: normal"><b>icar</b></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">&nbsp;marcado,&nbsp;</span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="en-US"><span style="font-style: normal"><span style="font-weight: normal">cada
+valor de glicose recebido gera uma notificação </span></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="en-US"><span style="font-style: normal"><span style="font-weight: normal">n</span></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="en-US"><span style="font-style: normal"><span style="font-weight: normal">o
+Android.&nbsp;Esta notificação é enviada para alguns </span></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="en-US"><span style="font-style: normal"><span style="font-weight: normal">relógios</span></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="en-US"><span style="font-style: normal"><span style="font-weight: normal">,
+para que possa ver seu valor atual de glicose&nbsp;no relógio.&nbsp;Uma
+versão do Juggluco </span></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="en-US"><span style="font-style: normal"><span style="font-weight: normal">funciona</span></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="en-US"><span style="font-style: normal"><span style="font-weight: normal">
+em relógios WearOS.&nbsp;Para alguns </span></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="en-US"><span style="font-style: normal"><span style="font-weight: normal">relógios</span></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="en-US"><span style="font-style: normal"><span style="font-weight: normal">
+Garmin com tela sensível ao toque, há também&nbsp;um aplicativo de
+relógio&nbsp;(chamado Kerfstok,
+consulte&nbsp;</span></span></span></span></font></font></font></span><a href="https://apps.garmin.com/en-US/apps/b6348ccc-86d8-4780-8013-d9e19fed5260"><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="en-US"><span style="font-style: normal"><u><span style="font-weight: normal">https://apps.garmin.com/en-US/apps/b6348ccc-86d8-4780-8013-d9e19fed5260</span></u></span></span></span></font></font></font></span></a><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="en-US"><span style="font-style: normal"><span style="font-weight: normal">&nbsp;),
+que se comunica com o Juggluco, recebe e exibe o valor atual da
+glicose e pode ser usado para inserir&nbsp;valores.&nbsp;</span></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="en-US"><span style="font-style: normal"><b>Lista</b></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="en-US"><span style="font-style: normal"><b>gem</b></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">&nbsp;</span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="en-US"><span style="font-style: normal"><span style="font-weight: normal">fornece
+uma lista dos números inseridos.&nbsp;Se o Juggluco tiver recebido
+valores de glicose suficientes via Bluetooth, poderá ver algumas
+estatísticas tocando em&nbsp;</span></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="en-US"><span style="font-style: normal"><b>Estatísticas</b></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">&nbsp;</span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="en-US"><span style="font-style: normal"><span style="font-weight: normal">.&nbsp;Ele
+mostra a p</span></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="en-US"><span style="font-style: normal"><span style="font-weight: normal">e</span></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="en-US"><span style="font-style: normal"><span style="font-weight: normal">rcentagem
+das medições em determinados intervalos de glicose, o Indicador de
+Gestão de Glicose</span></span></span></span></font></font></font></span></p>
+<p lang="en-US" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.16in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font> <font face="Times"><font size="4" style="font-size: 14pt">(nova
+métrica que representa o nível médio de HbA1c), a variabilidade da
+glicose e um gráfico resumido mostrando o valor de glicose abaixo do
+qual 100%,95%,75%,50%,25% e 0% dos valores encontram-se em cada
+momento do dia.</font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-weight: normal; line-height: 0.14in; orphans: 2; widows: 2; margin-bottom: 0.08in; background: transparent">
+<font><font face="Times"><font size="3" style="font-size: 12pt"><i>Menu
+1: Esquerda</i></font></font></font></p>
+<table width="126" cellpadding="0" cellspacing="0">
+	<col width="126"/>
+
+	<tr>
+		<td width="126" valign="top" style="border: none; padding: 0in"><p style="orphans: 2; widows: 2; background: transparent">
+			UI do sistema [ ]</p>
+		</td>
+	</tr>
+	<tr>
+		<td width="126" valign="top" style="border: none; padding: 0in"><p style="orphans: 2; widows: 2; background: transparent">
+			Relógio</p>
+		</td>
+	</tr>
+	<tr>
+		<td width="126" valign="top" style="border: none; padding: 0in"><p style="orphans: 2; widows: 2; background: transparent">
+			Sensor</p>
+		</td>
+	</tr>
+	<tr>
+		<td width="126" height="22" valign="top" style="border: none; padding: 0in"><p style="orphans: 2; widows: 2; background: transparent">
+			Definições</p>
+		</td>
+	</tr>
+	<tr>
+		<td width="126" height="22" valign="top" style="border: none; padding: 0in"><p style="orphans: 2; widows: 2; background: transparent">
+			Sobre</p>
+		</td>
+	</tr>
+	<tr>
+		<td width="126" valign="top" style="border: none; padding: 0in"><p style="orphans: 2; widows: 2; background: transparent">
+			Fechar</p>
+		</td>
+	</tr>
+</table>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.16in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><span lang="en-US">No&nbsp;</span><font><font face="Cambria, serif"><span lang="en-US"><b>menu
+à esquerda</b></span></font></font>&nbsp;<span lang="en-US">, você
+pode encontrar&nbsp;</span><font><font face="Cambria, serif"><span lang="en-US"><b>Definições</b></span></font></font>&nbsp;<span lang="en-US">,
+para definir a unidade de glicose para mmol/L ou mg/dL,
+para&nbsp;especificar&nbsp;</span><span lang="en-US">etiquetas</span><span lang="en-US">,
+definir alarmes de glicose e lembretes de medicação&nbsp;e
+intervalos de exibição.&nbsp;A interface do </span><span lang="en-US">utilizador</span><span lang="en-US">
+do sistema determina se os control</span><span lang="en-US">o</span><span lang="en-US">s
+do Android e a barra de </span><span lang="en-US">notificações</span><span lang="en-US">
+são mostrados.&nbsp;Fechar pode ser usado para sair do&nbsp;Juggluco.</span></font></font></font></p>
+<p style="line-height: 0.16in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<br/>
+
+</p>
+]]>
+</string>
+<string name="labelhelp" >
+<![CDATA[
+<h1 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
+<font><font face="Times">Etiquetas para valores</font></font></h1>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt">Aqui
+pode criar, excluir e modificar etiquetas para quantidades
+adicionadas ao gráfico para especificar insulina, carboidrato ou
+atividade física.&nbsp;Se já guardou algumas quantidades, elas
+receberão a etiqueta correspondente à sua posição.&nbsp;Portanto,
+se você der outro nome à segunda posição, as quantidades já
+salvas especificadas com um nome anterior na segunda posição
+receberão esse nome.</font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt">Para
+modificar uma etiqueta, toque nela.</font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt">Depois&nbsp;<b>da
+refeição,</b> pode selecionar qual etiqueta representa o teor de
+carboidratos das refeições.&nbsp;Para essa etiqueta em &quot;&nbsp;<i>Nova
+quantidade</i>&nbsp;&quot; no menu central esquerdo, é adicionado um
+botão&nbsp;<b>Refeição</b>&nbsp;, pelo qual pode especificar uma
+refeição a partir de seus ingredientes.&nbsp;A soma dos hidratos de
+carbono é então guardada sob esta etiqueta e pode ver esta refeição
+mais tarde selecionando a Refeição de um valor guardado.</font></font></font></p>
+<p><br/>
+<br/>
+<br/>
+
+</p>
+]]>
+</string>
+<string name="librenumhelp" >
+<![CDATA[
+<p>Defina &quot;&nbsp;Enviar valores&nbsp;&quot;
+para enviar valores para o Libreview.&nbsp;Antes de ativar &quot;&nbsp;Enviar
+valores&nbsp;&quot;, precisa especificar para cada etiqueta como os
+valores inseridos sob essa etiqueta devem ser enviados para o
+Libreview.</p>
+]]>
+</string>
+<string name="libreview" >
+<![CDATA[
+<h1 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
+<font><font face="Times"><span style="background: transparent">Libreview</span></font></font></h1>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><span style="background: transparent">Juggluco
+pode enviar dados e quantidades de glicose para o Libreview.</span></font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><span style="background: transparent">Se
+usar o aplicativo Abbott Libre para sensores Freestyle Libre 2, o
+Libreview será baseado nos dados históricos da memória do
+sensor.&nbsp;Para isso, precisa escanear o sensor.</span></font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><span style="background: transparent">Juggluco
+usa os dados de stream recebidos via Bluetooth para criar esses
+pontos de 15 minutos calculando a média dos valores de stream em
+torno de cada ponto.&nbsp;De vez em quando, ele também envia um
+valor de stream individual da mesma forma que os valores
+digitalizados individuais são enviados para o Libreview pelo
+aplicativo Librelink da Abbott.</span></font></font></font></p>
+<p style="orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="en-US"><span style="font-style: normal"><span style="font-weight: normal"><span style="background: transparent">Para
+fazer uso deste serviço, precisa criar uma conta Libreview
+em&nbsp;</span></span></span></span></span></font></font></font></span><a href="https://libreview.com/"><span style="background: transparent">https://libreview.com</span></a><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="en-US"><span style="font-style: normal"><span style="font-weight: normal"><span style="background: transparent">&nbsp;e
+especificar seu endereço de e-mail e senha.&nbsp;Não envie dados do
+mesmo período várias vezes para a mesma conta Libreview (por
+exemplo, do aplicativo Librelink e Juggluco).&nbsp; pode excluir
+dispositivos existentes no Libreview em Configurações da
+conta-&gt;Meus dispositivos ou pode criar uma nova conta do
+Libreview.</span></span></span></span></span></font></font></font></span></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><span style="background: transparent"><span lang="en-US">Para
+ativá-lo,  também precisa marcar &quot;&nbsp;</span><span lang="en-US"><i><b>Enviar
+para libreview</b></i></span>&nbsp;<span lang="en-US"><i>&quot;</i></span>&nbsp;<span lang="en-US">.</span></span></font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><span style="background: transparent">O
+Juggluco enviará novos dados para o Libreview toda vez que  sair do
+Juggluco quando isso não tiver sido feito nos 20 minutos
+anteriores.&nbsp; Também pode enviá-lo manualmente para o Libreview
+pressionando&nbsp;<i>&quot;&nbsp;</i><i><b>Enviar agora</b></i>&nbsp;<i>&quot;</i>&nbsp;.</span></font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><span style="background: transparent">Além
+dos valores de glicose, os valores também podem ser enviados para o
+Libreview.&nbsp;Para isso precisa tocar em &quot;&nbsp;<i><b>Enviar
+valores</b></i>&nbsp;&quot; e especificar o que significa cada
+etiqueta.</span></font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><span style="background: transparent">A
+partir do Juggluco 4.1.0, os valores de glicose dos sensores
+FreeStyle Libre 3 também são enviados para o LibreView.</span></font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><span style="background: transparent"><b>Reenviar
+dados</b>&nbsp;: Comece de novo;&nbsp;reenvie os dados dos últimos
+90 dias para o Libreview.&nbsp;precisa pressionar isso ao mudar para
+uma nova conta do Libreview.</span></font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><span style="background: transparent">O
+resultado da última tentativa de envio para o Libreview é exibido
+abaixo do botão &quot;Obter ID da conta&quot;.</span></font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><span style="background: transparent">Como
+os valores enviados para o Libreview são primeiro calculados em 15
+minutos e depois analisados, pode haver pequenas diferenças entre os
+valores mostrados na tela de estatísticas do Juggluco e o
+Libreview.&nbsp;Por exemplo, o Libreview diz 100% do tempo ativo,
+enquanto a tela de estatísticas do Juggluco diz 96,0%.&nbsp;Além
+disso, alguns valores altos e baixos serão calculados, de modo que o
+Libreview forneça um&nbsp;<i>tempo um pouco mais alto no alvo</i>&nbsp;do
+que a tela de estatísticas do Juggluco.&nbsp;Como os valores reais
+do histórico são menos extremos do que a média dos valores de
+stream em torno de um valor histórico, essa diferença será maior
+quando o Libreview for baseado em valores digitalizados.</span></font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><span style="background: transparent">O
+Juggluco pode ser conetado a vários sensores ao mesmo tempo,
+enquanto o Librelink lida apenas com um sensor por vez.&nbsp;O
+Juggluco também envia dados de apenas um sensor por vez para o
+Libreview.&nbsp;Ele faz isso enviando primeiro os dados de um sensor
+e somente depois que nenhum dado estiver disponível desse sensor,
+ele envia os dados do sensor seguinte.</span></font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0.1in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><span style="background: transparent"><b>Obter
+ID da conta</b>&nbsp;: Se deseja apenas receber o ID da conta do
+LibreView, mas não enviar dados para o Libreview, preencha seu
+endereço de e-mail e senha e pressione &quot;&nbsp;<i>Obter ID da
+conta</i>&nbsp;&quot;.&nbsp;Na mesma linha antes deste botão, o ID
+da conta será mostrado (isso pode levar algum tempo e a tela não é
+atualizada automaticamente).&nbsp;A recuperação da ID da conta do
+servidor LibreView possibilita o uso de um sensor FreeStyle Libre 3
+que já foi usado com o aplicativo Abbott Libre 3 com esta conta
+LibreView.&nbsp;É relatado que iniciar o sensor com Juggluco não
+funciona.</span></font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0.1in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><span style="background: transparent"><b>AVISO</b>&nbsp;:
+O sensor Freestyle Libre 3 deve ser ativado com esta conta.&nbsp;Quando
+ mudar posteriormente para uma conta no aplicativo Libre 3, o scan do
+sensor resultará em um erro.</span></font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+]]>
+</string>
+<string name="locationpermission" >
+<![CDATA[
+<p>Anteriormente, Juggluco precisava de
+permissão de localização para encontrar o endereço do dispositivo
+Bluetooth dos sensores FreeStyle Libre 2.&nbsp;Agora Juggluco usa
+outra maneira de obter o endereço do dispositivo na maioria dos
+dispositivos e a permissão de localização não é necessária.</p>
+<p>Juggluco ainda usa o método antigo no Android 6,7 e 7.1 e a
+permissão de localização ainda é necessária para eles.</p>
+<p><br/>
+<br/>
+<br/>
+
+</p>
+]]>
+</string>
+<string name="mealhelp" >
+<![CDATA[
+<h1 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
+<font><font face="Times">Refeição</font></font></h1>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
+<font><font face="Times"><font size="4" style="font-size: 14pt">Especifique
+a quantidade de ingredientes de uma refeição.&nbsp;O conteúdo
+total de carboidratos é então calculado.&nbsp;Também é possível
+especificar a quantidade de carboidrato para a refeição completa ou
+o ingrediente, e o programa determina a quantidade necessária do
+ingrediente.&nbsp;Pressione &quot;&nbsp;<i>Adicionar item</i>&nbsp;&quot;
+para adicionar um item à refeição.&nbsp;Na caixa de diálogo
+selecionada, pode selecionar um ingrediente e especificar sua
+quantidade (ou carboidrato total da refeição ou deste item).&nbsp;Ao
+pressionar&nbsp;<i>Selecionar</i>&nbsp;ou o ingrediente já
+especificado, entra em uma lista de ingredientes já definidos.&nbsp;Pode
+definir um novo ingrediente pressionando lá em&nbsp;<i>Definir</i>&nbsp;.&nbsp;Aqui
+pode especificar o nome e o teor de carboidratos desse ingrediente na
+unidade especificada.&nbsp;Também pode pressionar Banco de&nbsp;<i>dados
+</i>para entrar em um banco de dados de composição de alimentos
+onde pode pesquisar ingredientes e ver a composição de um alimento
+e, pressionando&nbsp;<i>Selecionar</i>&nbsp;, insira o nome e o teor
+de carboidratos desse alimento em uma definição de ingrediente.</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+]]>
+</string>
+<string name="nearbypermission" >
+<![CDATA[
+<p>O Android 12 tem algumas novas
+permissões de Bluetooth que exigem que dê consentimento explícito
+para o uso do Bluetooth.&nbsp;Aplicativos antigos não param de
+funcionar imediatamente, mas agora pode usar essas novas
+permissões.&nbsp;Se não der permissão a este DISPOSITIVOS
+PRÓXIMOS, o Juggluco não poderá receber valores de glicose via
+Bluetooth dos sensores Freestyle Libre 2.&nbsp;Mas talvez as
+permissões antigas ainda funcionem.</p>
+]]>
+</string>
+<string name="newlabelhelp" >
+<![CDATA[
+<h2 class="western">Etiqueta:</h2>
+<p>Nome da etiqueta a ser usada para inserir números.&nbsp;Pode
+adicionar um número vinculado a uma determinada data e hora usando
+&quot;Novo valor&quot; no menu do meio à esquerda.&nbsp;Esses
+números podem ser exibidos no gráfico de glicose naquela posição
+de tempo ou em uma lista.</p>
+<h2 class="western">Arredondar para:</h2>
+<p>Usado no aplicativo de relógio, Kerfstok.&nbsp;Os números
+inseridos sob essa etiqueta são arredondados para esse número.</p>
+<p>0= precisão total, 0,5 = arredondar para múltiplos de 0,5 etc.</p>
+<h2 class="western">Peso:</h2>
+<p>Quando definido como 0, os números são exibidos em uma
+determinada altura no gráfico independente de seu valor.&nbsp;Se o
+peso for maior que 0, cada valor inserido sob esta etiqueta é
+multiplicado por este peso e exibido como um quadrado nas mesmas
+coordenadas do gráfico de glicose.&nbsp;Por exemplo, pode definir o
+peso como 1 para exibir as medições de glicose por picada no dedo
+da mesma forma que as medições do sensor de glicose.</p>
+<p><br/>
+<br/>
+
+</p>
+]]>
+</string>
+<string name="nutrients" >
+<![CDATA[
+<p align="center" style="font-variant: normal; letter-spacing: normal; font-style: normal; line-height: 0.14in; orphans: 2; widows: 2; margin-bottom: 0.08in">
+<font><font face="Liberation Sans, sans-serif"><font size="6" style="font-size: 28pt"><b><span style="background: transparent">Banco
+de dados de composição de alimentos</span></b></font></font></font></p>
+<p style="line-height: 0.14in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<br/>
+
+</p>
+<p style="line-height: 0.14in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="en-US"><span style="font-style: normal"><span style="font-weight: normal"><span style="background: transparent">Aqui
+pode pesquisar alimentos no conjunto de dados integrado de composição
+de alimentos 2021&nbsp;de McCance e
+Widdowson&nbsp;</span></span></span></span></span></font></font></font></span><a href="https://www.gov.uk/government/publications/composition-of-foods-integrated-dataset-cofid"><span style="background: transparent">https://www.gov.uk/government/publications/composition-of-foods-integrated-dataset-cofid</span></a></p>
+<p style="line-height: 0.14in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<br/>
+
+</p>
+<p style="line-height: 0.14in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="en-US"><span style="font-style: normal"><span style="font-weight: normal"><span style="background: transparent">P</span></span></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="en-US"><span style="font-style: normal"><span style="font-weight: normal"><span style="background: transparent">ode
+pesquisar usando expressões regulares
+(&nbsp;</span></span></span></span></span></font></font></font></span><a href="https://www.regular-expressions.info/quickstart.html"><span style="background: transparent">https://www.regular-expressions.info/quickstart.html</span></a><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="en-US"><span style="font-style: normal"><span style="font-weight: normal"><span style="background: transparent">&nbsp;).&nbsp;Por
+exemplo, pode pesquisar itens começando com&nbsp;</span></span></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="en-US"><i><span style="font-weight: normal"><span style="background: transparent">apple</span></span></i></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal"><span style="background: transparent">&nbsp;</span></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="en-US"><span style="font-style: normal"><span style="font-weight: normal"><span style="background: transparent">seguido
+da palavra&nbsp;</span></span></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="en-US"><i><span style="font-weight: normal"><span style="background: transparent">raw</span></span></i></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal"><span style="background: transparent">&nbsp;</span></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="en-US"><span style="font-style: normal"><span style="font-weight: normal"><span style="background: transparent">com:
+^apple.*\\braw\\b</span></span></span></span></span></font></font></font></span></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.14in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><span style="background: transparent">A
+pesquisa por&nbsp;<i>maçã</i>&nbsp;fornece todos os itens que
+contêm&nbsp;<i>maçã.</i></span></font></font></font></p>
+<p style="line-height: 0.14in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<br/>
+
+</p>
+<p><span style="background: transparent"><br/>
+</span><br/>
+<br/>
+
+</p>
+]]>
+</string>
+<string name="reminders" >
+<![CDATA[
+<h1 class="western">Lembretes</h1>
+<p>Os lembretes o recordam se não inseriu uma determinada quantia em
+um determinado intervalo de tempo.</p>
+<p>Ao pressionar&nbsp;NOVO&nbsp;, pode adicionar um novo lembrete.</p>
+<p>Especifique a hora inicial e final do período de tempo, dentro do
+qual deve inserir o valor especificado na etiqueta especificada.</p>
+<p>Se o horário de término for alcançado, o programa verificará
+se inseriu pelo menos esse valor com a etiqueta especificada após o
+horário de início.&nbsp;Se não se registou, uma notificação é
+exibida e um toque é reproduzido.</p>
+<p>Por exemplo, se especificar:</p>
+<p>Levemir 6.0</p>
+<p>21h30 - 23h55</p>
+<p>Será lembrado após as 23h55 se não tiver especificado pelo
+menos 6 unidades de Levemir após as 21h30 do mesmo dia.</p>
+<p>Lembretes já especificados são mostrados em uma lista.&nbsp;Toque
+para editar.</p>
+<p>Se tudo correr bem, os lembretes também funcionam após a
+reinicialização do Android sem que o utilizador precise iniciar o
+Juggluco.</p>
+<p><br/>
+<br/>
+
+</p>
+<p>Em alguns dispositivos Huawei, precisa especificar que permite que
+um programa seja iniciado na inicialização.&nbsp;Isso é feito em
+Configurações do Android -&gt; Bateria -&gt; Inicialização do
+aplicativo.&nbsp;Aqui seleciona&nbsp;Manualmente gerenciado&nbsp;para
+Juggluco para que&nbsp;Auto-Launch&nbsp;e&nbsp;Run in
+Background&nbsp;estejam ativados.&nbsp;Isso também é necessário
+para que os alarmes de perda de sinal funcionem após a
+reinicialização sem que o usuário inicie o Juggluco.</p>
+<p><br/>
+<br/>
+
+</p>
+]]>
+</string>
+<string name="ringtone" >
+<![CDATA[
+<h1 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-top: 0in; margin-bottom: 0.08in">
+<font><font face="Liberation Sans, sans-serif"><font size="5" style="font-size: 18pt">Toque</font></font></font></h1>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.14in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt">Selecione
+qual toque tocar para um alarme ou notificação e por quantos
+segundos.</font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.14in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><b>Minutos
+desativados</b>&nbsp;: Se um nível baixo ou alto de glicose
+continuar, o alarme não soará imediatamente. Pode especificar após
+quantos minutos o alarme deve ser gerado novamente se a condição
+continuar.</font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.14in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><b>Som</b>&nbsp;:
+emitir som.</font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.14in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><b>Padrão</b>&nbsp;:
+use o som padrão.</font></font></font></p>
+<p style="line-height: 0.14in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><b>Selecionar</b></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">&nbsp;:
+Selecione um toque.&nbsp;Em alguns </span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">telemóveis</span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">
+Samsung, o aplicativo seletor de toque pré-instalado falha, então
+você deve instalar um aplicativo de toque diferente que possa ser
+usado por outros aplicativos, por
+exemplo:&nbsp;</span></span></span></font></font></font></span><a href="https://play.google.com/store/apps/details?id=com.centralparkapps.ringo.ringtones">https://play.google.com/store/apps/details?id=com
+.centralparkapps.ringo.ringtones</a></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.14in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><b>Vibrar</b>&nbsp;:
+vibrar</font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.14in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><b>Perturb</b><b>ar</b>&nbsp;:
+Também gera som quando &quot;&nbsp;<i>Não </i><i>incomodar</i>&nbsp;&quot;
+está ativado.&nbsp;Se Juggluco não tiver a permissão necessária
+para isso, será direcionado para uma tela de configurações do
+Android para dar essa permissão a Juggluco.&nbsp;Ao ativar &quot;&nbsp;<i>Não
+</i><i>incomodar</i>&nbsp;&quot; e pressionar&nbsp;<i>Reproduzir,&nbsp;</i>
+pode testar se os alarmes funcionarão durante&nbsp;<i>&quot;Não
+</i><i>incomodar</i><i>&quot;.</i></font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.14in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><b>Flash</b>&nbsp;:
+Telemóveis com lanterna têm a opção de piscar pelo mesmo número
+de segundos.&nbsp;Útil caso toques não sejam permitidos e não haja
+uma política clara sobre lanternas.</font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.14in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt">Em
+sites como stackoverflow.com, às vezes, afirma-se que alguns
+telemóveis travam ao usar a luz do flash sem permissão da câmera;
+se for esse o caso, você pode ativar a permissão da câmera.</font></font></font></p>
+<p><br/>
+<br/>
+<br/>
+
+</p>
+]]>
+</string>
+<string name="searchhelp" >
+<![CDATA[
+<h1 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
+<font><font face="Times">Procurar</font></font></h1>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt">A
+pesquisa pode ser usada para encontrar valores de glicose e números
+inseridos.</font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt">Procura
+valores&nbsp;<font><font face="Cambria, serif"><font size="3" style="font-size: 13pt"><b>entre
+os números fornecidos</b></font></font></font>&nbsp;.&nbsp;Por
+exemplo: 10 – 999 para buscar valores entre 10 e 999.</font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt">Os
+valores de glicose são separados em Scan, Histórico e Stream.</font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><font><font face="Cambria, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: 0.8pt"><i>Scan</i></span></font></font></font>&nbsp;:
+valor mostrado imediatamente após a digitalização.</font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><font><font face="Cambria, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: 0.8pt"><i>Histórico</i></span></font></font></font>&nbsp;:
+Medições periódicas guardadas no sensor e transferidas para este
+aplicativo.&nbsp;Os sensores Freestyle Libre 2 guardam um valor a
+cada 15 minutos e os transferem por NFC para este
+aplicativo.&nbsp;Sensores Freestyle Libre 3, guarde a cada 5 minutos
+um valor e transfira-os via Bluetooth.</font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><font><font face="Cambria, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: 0.8pt"><i>Stream</i></span></font></font></font>&nbsp;:
+medições periódicas de 1 minuto enviadas por Bluetooth do sensor
+Freestyle libre 2 para este aplicativo.</font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt">Se
+inseriu&nbsp;dados de insulina, consumo ou atividade, pode
+pesquisá-los selecionando a&nbsp;<font><font face="Cambria, serif"><font size="3" style="font-size: 13pt"><b>etiqueta</b></font></font></font>&nbsp;correspondente
+no controlo giratório e especificar o intervalo de números de
+interesse: por exemplo, alternar entre 50 e 100.</font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt">Também
+pode especificar a&nbsp;<font><font face="Cambria, serif"><b>hora
+do dia</b></font></font>&nbsp;em que está interessado. Se estiver
+interessado em hipoglicemias entre 22:00 da noite e 07:00 da manhã,
+pressione na primeira&nbsp;exibição de hora&nbsp;(exibida 00:00 no
+início) e altere-o para 22:00 e altere a&nbsp;exibição da segunda
+hora&nbsp;para 07:00 (também deve selecionar Stream e/ou Histórico
+e especificar um intervalo de valores de 0 a 3,9 mmol/L (70 mg/dL)).</font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt">Tocar
+em uma&nbsp;<font><font face="Cambria, serif"><b>seta</b></font></font>&nbsp;inicia
+a pesquisa na direção especificada.</font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><font><font face="Cambria, serif"><font size="3" style="font-size: 13pt"><b>Re</b></font></font></font><font><font face="Cambria, serif"><font size="3" style="font-size: 13pt"><b>iniciar</b></font></font></font>&nbsp;define
+todos os valores de pesquisa para o que eram no início.</font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt">Em&nbsp;<i>Definições</i>&nbsp;,
+em&nbsp;etiquetas numéricas<i>,</i>&nbsp;pode selecionar qual
+etiqueta (por exemplo,&nbsp;<i>carboidrato</i>&nbsp;) está associado
+às refeições.&nbsp;Se selecionar esta etiqueta em&nbsp;<i>&quot;Nova
+quantidade&quot;</i>&nbsp;, um botão&nbsp;<i>&quot;Refeição&quot;</i>&nbsp;aparecerá.&nbsp;Depois
+de tocar, pode inserir uma refeição fora de seus ingredientes.&nbsp;Se
+selecionar esta etiqueta aqui no controlo giratório, uma caixa
+aparecerá na parte superior da tela onde poderá especificar um
+ingrediente para pesquisar e, opcionalmente, a quantidade mínima
+desse ingrediente.</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+]]>
+</string>
+<string name="sensorhelp" >
+<![CDATA[
+<h1 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
+<font><font face="Times">Sensor</font></font></h1>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt">O
+controlo giratório contém o nome do sensor.&nbsp;Se Juggluco
+estiver usando mais de um sensor ao mesmo tempo,  pode selecionar
+para qual sensor mostrar informações.</font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><i><b>O
+</b></i><i><b>M</b></i><i><b>odo </b></i><i><b>s</b></i><i><b>uspensão</b></i>&nbsp;leva
+a uma tela com informações sobre como desativar as otimizações de
+bateria para Juggluco, que podem impedir o funcionamento de Juggluco.</font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><i><b>Permissão</b></i>&nbsp;:
+as versões anteriores do Juggluco exigiam permissão de localização
+para encontrar o endereço do dispositivo do sensor.&nbsp;Isso não é
+mais necessário para os sensores que uso.&nbsp;Talvez ainda existam
+sensores para os quais é necessário;&nbsp;nesse caso,  pode
+ligá-lo.&nbsp;Após o primeiro contato, Juggluco guarda o endereço
+do dispositivo e a permissão de localização é sempre inútil.&nbsp;O
+endereço do dispositivo, se conhecido, é exibido após o
+identificador do sensor.&nbsp;Vermelho significa um sensor semelhante
+aos EUA.</font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt">O
+Android 12 tem uma nova permissão de dispositivos Próximos, que
+pode ser usada em vez da permissão de localização para procurar um
+endereço de dispositivo Bluetooth, mas também é necessária para
+contato posterior com dispositivos Bluetooth.</font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><i><b>Sempre
+ativo</b></i>&nbsp;: Alguns usuários do Android 13 reclamam que o
+Bluetooth para de funcionar.&nbsp;Possivelmente ativar esta opção
+os ajuda.&nbsp;No meu telemóvel não preciso e no Watch4 não faz
+diferença.&nbsp;Se funcionar, aumentará o uso da bateria.</font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><i><b>Esquecer</b></i>&nbsp;:
+Esquece o endereço do dispositivo e procura por ele procurando por
+dispositivos Bluetooth como o Librelink faz em todos os lugares,
+exceto nos EUA.&nbsp;Para isso,  precisa da permissão de localização
+no Android 6 a 11. No Android 12,  precisa da permissão de
+dispositivos próximos.&nbsp; deve pressionar este botão se
+acreditar que a Abbott estava certa em todos os lugares, exceto nos
+EUA.</font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><i><b>Reativar</b></i>&nbsp;:
+reativa o streaming.&nbsp;Novas informações de autenticação são
+criadas para se comunicar com o sensor.&nbsp;O endereço do
+dispositivo será definido.&nbsp;Entra em vigor após a varredura do
+sensor.</font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><i><b>Turbo</b></i>&nbsp;:
+Aumenta o esforço de contato com o sensor na esperança de que
+resulte em menos erros de conexão, mas pode usar mais energia da
+bateria.&nbsp;Parece ser necessário no Watch4 com sensores Freestyle
+Libre 2, mas não com sensores Freestyle Libre 3 e em nenhum dos
+telemóveis em que experimentei.</font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><i><b>Informações</b></i>&nbsp;:
+Fornece os horários de início e término e os últimos tempos de
+varredura e fluxo do sensor.</font></font></font></p>
+<p style="orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<br/>
+
+</p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt">Para
+conectar a um sensor Freestyle Libre 2 via Bluetooth de baixa
+energia, o Bluetooth deve estar ativado.&nbsp;Antes que o sensor seja
+digitalizado com sucesso por este aplicativo, nada acontecerá.&nbsp;O
+sensor não deve ser conectado ao leitor FreeStyle Libre ou outros
+applets em telemóveis.&nbsp;Os alarmes do aplicativo Abbotts
+Librelink devem ser desligados ou o aplicativo deve ser
+interrompido.&nbsp;Alguns aplicativos Librelink parecem entrar em
+contato com o sensor enquanto os alarmes estão desligados e podem
+causar problemas de conexão, então use \'&nbsp;<i>forçar para</i><i>gem</i>&nbsp;\'
+para ter certeza.&nbsp;<b>Sensor via Bluetooth/Usar Bluetooth</b>&nbsp;deve
+estar ativado.</font></font></font></p>
+<p style="orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">Se
+as condições acima forem satisfeitas, ainda pode demorar muito até
+que o aplicativo receba os valores de glicose do sensor.&nbsp;Muitas
+vezes leva um minuto, mas outras vezes leva muito mais
+tempo.&nbsp;O&nbsp;</span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><i><span style="font-weight: normal">estágio
+de conexão</span></i></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">&nbsp;oferece
+mais dificuldades.&nbsp;As mais frequentes são as falhas com
+status=133, que é o argumento de status
+de&nbsp;</span></span></span></font></font></font></span><a href="https://developer.android.com/reference/android/bluetooth/BluetoothGattCallback#onConnectionStateChange(android.bluetooth.BluetoothGatt,%20int,%20int)">onConnectionStateChange(BluetoothGatt
+bluetoothGatt, int status, int newState)</a><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">&nbsp;.&nbsp;Se
+remover a bateria de um sensor, também receberá esse erro, então
+parece ser algo como&nbsp;</span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">Aparelho
+</span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><i><span style="font-weight: normal">Bluetooth
+</span></i></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><i><span style="font-weight: normal">não
+encontrado</span></i></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">&nbsp;.&nbsp;Às
+vezes, desligar e ligar o Bluetooth parece ajudar ou reiniciar o
+telefone ou desligar a conexão Bluetooth de outros dispositivos.&nbsp;Às
+vezes, outros problemas são resolvidos ao escanear o sensor.</span></span></span></font></font></font></span></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt">Escanear
+o sensor com Juggluco (com&nbsp;<i>Sensor via Bluetooth</i>&nbsp;ativado)
+em outro telemóvel irá interromper a conexão deste telemóvel e
+pode levar algum tempo, com escaneamento no meio, para recuperá-lo
+novamente.</font></font></font></p>
+<p><br/>
+<br/>
+<br/>
+
+</p>
+]]>
+</string>
+<string name="setlibrenumtype" >
+<![CDATA[
+<p><span style="background: transparent"><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">Selecione
+como os valores em Juggluco inseridos em uma</span></span></span></font></font></font></span><span style="font-variant: normal"><font><span style="letter-spacing: normal">
+</span></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">etiqueta</span></span></span></font></font></font></span><span style="font-variant: normal"><font><span style="letter-spacing: normal">
+</span></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">específica</span></span></span></font></font></font></span><span style="font-variant: normal"><font><span style="letter-spacing: normal">
+</span></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">devem
+ser enviados para o Libreview.&nbsp;É possível enviar mais de um
+tipo de valor com a mesma etiqueta </span></span></span></font></font></font></span>Libreview<span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">.&nbsp;Por
+exemplo, se classificar alimentos com carboidratos e glicose pura em
+etiquetas</span></span></span></font></font></font></span><span style="font-variant: normal"><font><span style="letter-spacing: normal">
+</span></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">separadas
+no Juggluco, poderá especificar para ambos que eles devem ser
+enviados como&nbsp;</span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><b>carboidratos</b></span></span></font></font></font></span><span style="font-variant: normal"><font><span style="letter-spacing: normal">&nbsp;</span></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">para
+o Libreview.</span></span></span></font></font></font></span></span></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><span style="background: transparent">Para
+Carboidrato, é possível&nbsp;<b>multiplicar</b>&nbsp;a quantidade
+dada em Juggluco por um determinado número para que possa
+transformar outras unidades em gramas.&nbsp;Se contar no Juggluco
+porções de 10 gramas, pode inserir aqui 10, para que as gramas
+sejam enviadas para o Libreview.</span></font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><span style="background: transparent"><b>Comentários</b>&nbsp;significa
+que o valor é enviado para o Libreview como se você tivesse
+adicionado comentários no Librelink.&nbsp;Se especificar comentários
+aqui, a etiqueta mais o número inserido para essa etiqueta será
+enviado.&nbsp;Por exemplo: &quot;&nbsp;<i>Bicicleta 50</i>&nbsp;&quot;,
+se você tivesse uma etiqueta &quot;&nbsp;<i>Bicicleta</i>&nbsp;&quot;
+e inserisse &quot;&nbsp;<i>50</i>&nbsp;&quot; sob essa
+etiqueta.&nbsp;&quot;&nbsp;<i>Bicicleta</i> <i>50</i>&nbsp;&quot;
+será mostrado sob o gráfico do &quot; Registro&nbsp;<i>diário</i>&nbsp;&quot;
+no Libreview no horário especificado.</span></font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+]]>
+</string>
+<string name="settinghelp" >
+<![CDATA[
+<h1 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-top: 0in; margin-bottom: 0.1in">
+<font face="Liberation Serif, serif">Definições</font></h1>
+<h2 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
+<font face="Liberation Sans, sans-serif"><font size="4" style="font-size: 16pt">Unidade</font></font></h2>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font face="Times"><font size="4" style="font-size: 14pt">Selecione
+se os valores de glicose devem ser dados em mmol/L ou mg/dL.</font></font></p>
+<h2 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
+<font face="Liberation Sans, sans-serif"><font size="4" style="font-size: 16pt">Intervalo
+do gráfico: baixo-alto.</font></font></h2>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font face="Times"><font size="4" style="font-size: 14pt">Dê um
+valor baixo e alto, de modo que a parte inferior da tela corresponda
+ao mais baixo e o topo ao mais alto.&nbsp;Esses valores são usados
+​​apenas quando todos os valores de glicose exibidos na tela
+estão dentro desses limites.&nbsp;Caso contrário, os limites são
+ampliados para que todos os valores fiquem visíveis.&nbsp;Quando
+toma 3 mmol/L (54 mg/dL) e 9 mmol/L (162 mg/dL) e todos os valores no
+visor visível estão entre 5 mmol/L e 6 mmol/L, o gráfico exibe uma
+taxa de glicose eixo de 3 a 9.</font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font face="Times"><font size="4" style="font-size: 14pt">Se&nbsp;<b>a
+escala manual de glicose</b>&nbsp;estiver ativada, pode alterar isso:
+mover o dedo sobre a parte superior da tela move a metade superior do
+gráfico para cima e para baixo;&nbsp;mover sobre a parte inferior da
+tela move a metade inferior do gráfico para cima e para baixo.</font></font></p>
+<h2 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
+<font face="Liberation Sans, sans-serif"><font size="4" style="font-size: 16pt">Alcance
+alvo: baixo-alto</font></font></h2>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font face="Times"><font size="4" style="font-size: 14pt">O lado
+superior do visor tem cores diferentes para que possa ver os valores
+altos com mais facilidade.&nbsp;O mesmo vale para valores baixos.&nbsp;Uma
+linha vermelha é exibida para mostrar o lado muito baixo da tela.</font></font></p>
+<h2 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
+<font face="Liberation Sans, sans-serif"><font size="4" style="font-size: 16pt">Números
+do eixo da glicose ESQUERDA</font></font></h2>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
+<font face="Times"><font size="4" style="font-size: 14pt">Coloque os
+números do nível de glicose no gráfico à esquerda da tela.&nbsp;Útil
+se deseja colocar sua glicose atual no meio da tela, por exemplo, no
+Wear OS.</font></font></p>
+<h2 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
+<font face="Liberation Sans, sans-serif"><font size="4" style="font-size: 16pt">Inverter
+tela</font></font></h2>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font face="Times"><font size="4" style="font-size: 14pt">Vire o
+visor de cabeça para baixo.&nbsp;Ele está ativado por padrão,
+porque, caso contrário, eu toquei acidentalmente em OK ao
+digitalizar um sensor.</font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font face="Times"><font size="4" style="font-size: 14pt">Algumas
+pessoas pedem o modo retrato, mas eu o desativei, pois é totalmente
+inapropriado para a exibição do gráfico de glicose.</font></font></p>
+<h2 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
+<font face="Liberation Sans, sans-serif"><font size="4" style="font-size: 16pt">Som
+NFC</font></font></h2>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
+<font face="Times"><font size="4" style="font-size: 14pt">Emita som
+durante a digitalização, além da vibração.</font></font></p>
+<h2 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
+<font face="Liberation Sans, sans-serif"><font size="4" style="font-size: 16pt">A
+digitalização inicia o aplicativo</font></font></h2>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
+<font face="Times"><font size="4" style="font-size: 14pt">Se marcado,
+este aplicativo será iniciado quando digitalizar um sensor via NFC,
+mesmo que este aplicativo não seja exibido.&nbsp;Se vários
+aplicativos tiverem essa configuração, o Android exibirá um
+seletor para selecionar qual aplicativo deseja usar.&nbsp;De alguma
+forma, escolher um não funciona e selecionar um para ser escolhido
+na próxima vez também não.&nbsp;Portanto, neste caso, não pode
+digitalizar sem um aplicativo em primeiro plano.&nbsp;Desligá-lo
+neste aplicativo permitirá que pelo menos um aplicativo possa ser
+ativado dessa maneira.</font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
+<font face="Times"><font size="4" style="font-size: 14pt">Se tiver
+acesso root, também poderá desativar a ativação NFC do aplicativo
+Librelink da Abbott (não funciona com o Libre3):</font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
+<font face="Times"><font size="4" style="font-size: 14pt">Torne-se
+root no adb shell ou termux e digite:</font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
+<font face="Times"><font size="4" style="font-size: 14pt">pm disable
+com.freestylelibre.app.nl/com.librelink.app.ui.common.NFCScanActivity</font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
+<font face="Times"><font size="4" style="font-size: 14pt">No
+Librelink 2.7.1 e inferior, tinha que pressionar:</font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
+<font face="Times"><font size="4" style="font-size: 14pt">pm disable
+com.freestylelibre.app.nl/com.librelink.app.ui.common.ScanSensorActivity</font></font></p>
+<p lang="en-US" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
+<font face="Times"><font size="4" style="font-size: 14pt">com.freestylelibre.app.nl
+é a versão holandesa do Librelink, deve ser substituída pela
+versão que está usando.&nbsp; pode encontrar seu nome
+digitando&nbsp;(mesmo sem root):</font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
+<font face="Times"><font size="4" style="font-size: 14pt">pm list
+package freestylelibre</font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
+<font face="Times"><font size="4" style="font-size: 14pt">Posteriormente,
+ainda pode usar o Librelink para digitalização quando estiver em
+primeiro plano, mas não será iniciado.&nbsp;O Librelink 2.5.2 e
+superior travam se detetarem root.&nbsp;Mas no Magisk pode ocultar
+facilmente o root renomeando Magisk e adicionando aplicativos
+individuais à lista de proibições (Magisk 24.3) ou Magiskhide
+(Magisk 23.0).&nbsp; também deve adicionar Juggluco à lista de
+negação.&nbsp;Exceto quando usa sensores US Freestyle Libre 2,
+também pode usar uma versão mais antiga do Librelink sem
+verificação de root.</font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
+<font face="Times"><font size="4" style="font-size: 14pt">Sem root,
+no adb shell, também pode desativar todo o aplicativo:</font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
+<font face="Times"><font size="4" style="font-size: 14pt">pm
+disable-user --user 0 com.freestylelibre.app.nl</font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
+<font face="Times"><font size="4" style="font-size: 14pt">Antes de
+ligar para o atendimento ao cliente da Abbott, pode reativá-lo com:</font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
+<font face="Times"><font size="4" style="font-size: 14pt">pm enable
+com.freestylelibre.app.nl</font></font></p>
+<h2 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
+<font face="Liberation Sans, sans-serif"><font size="4" style="font-size: 16pt">Libreview</font></font></h2>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
+<font face="Times"><font size="4" style="font-size: 14pt">Conete-se
+com o Libreview para enviar os dados e valores de glicose do
+Freestyle Libre 2 e 3 para o Libreview e obter o ID da conta usado
+durante a ativação do sensor do Freestyle Libre 3.&nbsp;Toque para
+alterar as definições.</font></font></p>
+<h2 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
+<font face="Liberation Sans, sans-serif"><font size="4" style="font-size: 16pt">Enviar
+para xDrip</font></font></h2>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
+<font face="Times"><font size="4" style="font-size: 14pt">Envia os
+dados do stream de glicose Bluetooth a cada minuto para o xDrip.&nbsp;No
+xDrip, precisa definir o Libre2 (aplicativo com patch) como fonte de
+dados de hardware.&nbsp;Os valores de glicose exibidos no xDrip são
+diferentes dos valores que ele recebe.&nbsp;Por algum motivo, o xDrip
+atualiza seu valor apenas a cada 5 minutos, provavelmente porque foi
+feito para dispositivos que enviam apenas uma vez a cada 5 minutos
+(um mostrador de relógio conectado ao xDrip exibia regularmente
+valores de mais de 9 minutos). Adicionalmete, xDrip faz a sua própria
+interpretação dos valores de glicose recebidos.&nbsp;Os
+dispositivos de espelhamento também podem ser enviados para o xDrip.</font></font></p>
+<p style="orphans: 2; widows: 2; background: transparent"><span style="font-variant: normal"><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">Consulte&nbsp;</span></span></span></font></font></span><a href="https://github.com/jakobheyman/xdripJH">https://github.com/jakobheyman/xdripJH</a><span style="font-variant: normal"><span style="letter-spacing: normal">&nbsp;</span></span><span style="font-variant: normal"><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">para
+uma tentativa de atualizar o valor de glicose de xDrip a cada minuto.</span></span></span></font></font></span></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
+<font face="Times"><font size="4" style="font-size: 14pt">Juggluco
+também pode entrar em contato diretamente com aplicativos de relógio
+xDrip, para que o aplicativo de relógio exiba valores de glicose
+mais recentes.&nbsp;Para usar esse recurso, marque&nbsp;<i>&quot;xDrip
+webserver&quot;</i>&nbsp;no menu à esquerda em&nbsp;<b>Relógio</b>&nbsp;.&nbsp;Consulte
+a Ajuda no menu esquerdo-&gt;relógio para obter mais
+informações.&nbsp;Apenas um aplicativo pode escutar a porta de rede
+usada pelo servidor web xDrip, então é necessário desligar o
+&quot;&nbsp;<i>xDrip webserver</i>&nbsp;&quot; no próprio xDrip se
+quiser usar o do Juggluco.</font></font></p>
+<h2 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
+<font face="Liberation Sans, sans-serif"><font size="4" style="font-size: 16pt">Transmissão
+xDrip</font></font></h2>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
+<font face="Times"><font size="4" style="font-size: 14pt">Envie a
+mesma transmissão ativada no xDrip em &quot;&nbsp;Definições<i>-&gt;Configurações
+entre aplicações-&gt;Transmissão</i>
+<i>local&quot;</i>&nbsp;(com.eveningoutpost.dexdrip.BgEstimate).&nbsp;Aplicativos
+como o AndroidAPS o escutam.&nbsp;Aplicativos com Android 11 ou
+superior precisam adicionar o seguinte ao AndroidManifest.xml para
+que funcione:</font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
+<font face="Times"><font size="4" style="font-size: 14pt">&lt;queries&gt;<br/>
+&nbsp;&nbsp;
+&lt;package android:name=&quot;tk.glucodata&quot;/&gt;<br/>
+&lt;/queries&gt;</font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
+<font face="Times"><font size="4" style="font-size: 14pt">A cada
+minuto, o Juggluco envia um valor de glicose para todos os
+aplicativos que ouvem esta transmissão.</font></font></p>
+<h2 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
+<font face="Liberation Sans, sans-serif"><font size="4" style="font-size: 16pt">Glucodata
+broadcast</font></font></h2>
+<p style="orphans: 2; widows: 2; background: transparent"><span style="font-variant: normal"><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">Uma
+nova transmissão que tem a mesma função da transmissão xDrip.&nbsp;Um
+aplicativo de exemplo simples que grava os valores de glicose
+recebidos no logcat pode ser encontrado aqui:&nbsp;</span></span></span></font></font></span><a href="http://jkaltes.byethost16.com/Juggluco/glucosebroadcast.html">Glucose
+broadcasts</a><span style="font-variant: normal"><span style="letter-spacing: normal">&nbsp;</span></span><span style="font-variant: normal"><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">.&nbsp;Se
+especificar Juggluco como fonte de dados no G-Watch, precisará
+ativar esta transmissão.</span></span></span></font></font></span></p>
+<h2 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
+<font face="Liberation Sans, sans-serif"><font size="4" style="font-size: 16pt">Glicose
+na barra de notificações do Android</font></font></h2>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font face="Times"><font size="4" style="font-size: 14pt">Se
+definidos, os valores de glicose, transmitidos via Bluetooth, são
+exibidos silenciosamente em uma notificação e na barra de
+notificações do Android.&nbsp;Em alguns telemóveis, o valor da
+glicose só é mostrado na barra de definidos do Android após
+alterar as configurações de notificação do Android.&nbsp;No
+Realme GT 5G, por exemplo, deve ir para applist-&gt;Juggluco-&gt;gerenciar
+notificações, aba em glucose Notification e desligar
+&quot;Silenciar&quot;.&nbsp;&quot;Exibir na barra de definidos&quot;
+agora será mostrado ativado.</font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font face="Times"><font size="4" style="font-size: 14pt">Também
+pode obter uma notificação do Android selecionando&nbsp;<i>Notificar</i>&nbsp;no
+menu do meio à esquerda.&nbsp;Nesse caso a notificação será
+enviada para alguns relógios, caso esteja configurado dessa
+forma.&nbsp;Isso funciona com relógios Garmin, não sei se funciona
+com mais nada.&nbsp;Os alarmes também geram notificações.</font></font></p>
+<h2 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
+<font face="Liberation Sans, sans-serif"><font size="4" style="font-size: 16pt">Sensor
+via Bluetooth</font></font></h2>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
+<font face="Times"><font size="4" style="font-size: 14pt">Seleciona
+se este aplicativo se conecta via Bluetooth com um sensor Freestyle
+libre 2 ou 3.&nbsp;Isso é necessário para alarmes e monitoramento
+contínuo da glicose.</font></font></p>
+<h2 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; orphans: 2; widows: 2; background: transparent">
+<font face="Liberation Sans, sans-serif"><font size="4" style="font-size: 16pt"><b>Alarmes</b></font></font></h2>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
+<font face="Times"><font size="4" style="font-size: 14pt">Definir
+alarmes de glicose alta e baixa, alarme de perda de sinal e
+notificação de valor disponível.</font></font></p>
+<h2 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
+<font face="Liberation Sans, sans-serif"><font size="4" style="font-size: 16pt">Etiquetas
+Numéricas</font></font></h2>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font face="Times"><font size="4" style="font-size: 14pt">Especifique
+as etiquetas usadas ​​para valores.&nbsp;Vá para uma tela para
+determinar quais etiquetas usar para definir quantidades, como doses
+de insulina, consumo de carboidratos e horas gastas jogando
+futebol.&nbsp;Se também usar o aplicativo de relógio Garmin
+Kerfstok, essas etiquetas serão enviadas para o aplicativo de
+relógio.</font></font></p>
+<h2 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
+<font face="Liberation Sans, sans-serif"><font size="4" style="font-size: 16pt">Lembretes</font></font></h2>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font face="Times"><font size="4" style="font-size: 14pt">Especifique
+que um alarme deve disparar se não inserir uma certa quantidade de
+comida ou medicamento dentro de um determinado período de tempo.</font></font></p>
+<h2 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
+<font face="Liberation Sans, sans-serif"><font size="4" style="font-size: 16pt">Cores</font></font></h2>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font face="Times"><font size="4" style="font-size: 14pt">Altere as
+cores das curvas, scans e números.</font></font></p>
+<h2 class="western" style="orphans: 2; widows: 2; background: transparent">
+<br/>
+<br/>
+
+</h2>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+]]>
+</string>
+<string name="shortcuthelp" >
+<![CDATA[
+<p align="left" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.16in; orphans: 2; widows: 2; margin-bottom: 0.14in">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><span style="background: transparent"><font><font face="Cambria, serif"><b>Atalhos</b></font></font>&nbsp;podem
+ser usados ​​em Kerfstok.</span></font></font></font></p>
+<p align="left" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.16in; orphans: 2; widows: 2; margin-bottom: 0.14in">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><span style="background: transparent">Na
+tela de entrada de número no relógio, pode aceder à tela de
+atalhos (no meu relógio Vivoactive 3, deslizando para a
+esquerda).&nbsp;Aqui vê uma lista de etiquetas;&nbsp;pressionando um
+deles insere um valor correspondente na tela do número.&nbsp;Os
+valores podem ser números ou operadores aritméticos em combinações
+com números, por exemplo, *0,5 para multiplicar por 0,5.</span></font></font></font></p>
+<p align="left" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.16in; orphans: 2; widows: 2; margin-bottom: 0.14in">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><span style="background: transparent">Aqui
+no menu de configuração pode criar, remover e editar esses atalhos.</span></font></font></font></p>
+<p align="left" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.16in; orphans: 2; widows: 2; margin-bottom: 0.14in">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><span style="background: transparent">Uma&nbsp;<font><font face="Cambria, serif"><font size="3" style="font-size: 13pt"><b>lista</b></font></font></font><font><font face="Cambria, serif"><font size="3" style="font-size: 13pt"><b>gem</b></font></font></font>&nbsp;de
+atalhos existentes é exibida à esquerda, após tocar em um deles,
+aparece uma tela onde pode excluir o atalho ou alterar a etiqueta ou
+o valor.</span></font></font></font></p>
+<p align="left" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.16in; orphans: 2; widows: 2; margin-bottom: 0.14in">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><span style="background: transparent">Um
+novo atalho é criado com&nbsp;<font><font face="Cambria, serif"><font size="3" style="font-size: 13pt"><b>N</b></font></font></font><font><font face="Cambria, serif"><font size="3" style="font-size: 13pt"><b>ovo</b></font></font></font>&nbsp;.</span></font></font></font></p>
+<p align="left" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.16in; orphans: 2; widows: 2; margin-bottom: 0.14in">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><span style="background: transparent">As
+alterações só são salvas após pressionar o botão&nbsp;<font><font face="Cambria, serif"><font size="3" style="font-size: 13pt"><b>Guardar</b></font></font></font>&nbsp;.</span></font></font></font></p>
+<p align="left" style="line-height: 0.16in; orphans: 2; widows: 2; margin-bottom: 0.14in">
+<br/>
+<br/>
+
+</p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+]]>
+</string>
+<string name="stathelp" >
+<![CDATA[
+<h1 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-top: 0in; margin-bottom: 0.08in">
+<font><font face="Liberation Serif, serif">Estatísticas</font></font></h1>
+<p style="line-height: 0.16in; orphans: 2; widows: 2; margin-bottom: 0.1in; background: transparent">
+<span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">Algumas
+estatísticas retiradas do&nbsp;</span></span></span></font></font></font></span><a href="https://www.healthline.com/diabetesmine/ambulatory-glucose-profile">AGP</a><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">&nbsp;sem
+licença, com algumas pequenas modificações.</span></span></span></font></font></font></span></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.16in; orphans: 2; widows: 2; margin-bottom: 0.1in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt">O
+número de dias analisados ​​pode ser modificado pressionando o
+botão&nbsp;<b>Dias</b>&nbsp;.&nbsp;O período termina no momento do
+fim da posição da tela e abrange o número especificado de dias no
+passado.&nbsp;Todos os dados são baseados apenas nos valores de
+glicose recebidos a cada minuto via Bluetooth do sensor
+(chamado&nbsp;<i>stream</i>&nbsp;em Juggluco).</font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.16in; orphans: 2; widows: 2; margin-bottom: 0.1in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt">À
+esquerda da tela estão as percentagens de medições caindo em
+determinados intervalos de glicose.</font></font></font></p>
+<h3 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-top: 0.1in; margin-bottom: 0.08in; background: transparent">
+<font><font face="Liberation Serif, serif">% do tempo
+ativo</font></font></h3>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.16in; orphans: 2; widows: 2; margin-bottom: 0.1in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt">A
+percentagem de tempo que Juggluco recebeu valores de glicose do
+sensor.</font></font></font></p>
+<h3 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-top: 0.1in; margin-bottom: 0.08in; background: transparent">
+<font><font face="Liberation Serif, serif">A1C
+estimado</font></font></h3>
+<p style="line-height: 0.16in; orphans: 2; widows: 2; margin-bottom: 0.1in; background: transparent">
+<span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">Estima
+H</span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="en-US"><span style="font-style: normal"><span style="font-weight: normal">bA1c
+com uma fórmula antiga de glicose média (Nathan&nbsp;et al
+(2008)).&nbsp;Consulte&nbsp;</span></span></span></span></font></font></font></span><a href="https://professional.diabetes.org/diapro/glucose_calc">https://professional.diabetes.org/diapro/glucose_calc</a><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">&nbsp;</span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="en-US"><span style="font-style: normal"><span style="font-weight: normal">para
+obter uma calculadora.</span></span></span></span></font></font></font></span></p>
+<p lang="en-US" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.16in; orphans: 2; widows: 2; margin-bottom: 0.1in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt">Ele
+é mostrado aqui&nbsp;caso as pessoas estejam procurando o valor
+mostrado no&nbsp;aplicativo Libre 2 da Abbott.&nbsp;O GMI é um
+substituto de 2018 para este indicador.</font></font></font></p>
+<h3 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-top: 0.1in; margin-bottom: 0.08in; background: transparent">
+<font><font face="Liberation Serif, serif">Indicador
+de Gestão de Glicose (GMI)</font></font></h3>
+<p style="line-height: 0.16in; orphans: 2; widows: 2; margin-bottom: 0.1in; background: transparent">
+<span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="en-US"><span style="font-style: normal"><span style="font-weight: normal">Calculado
+a partir da glicose média com uma certa fórmula geralmente usada
+(consulte&nbsp;</span></span></span></span></font></font></font></span><a href="https://www.jaeb.org/gmi/">https://www.jaeb.org/gmi/</a><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="en-US"><span style="font-style: normal"><span style="font-weight: normal">&nbsp;).&nbsp;É
+uma previsão empiricamente determinada de HbA1c (também chamada de
+A1c), dada em p</span></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="en-US"><span style="font-style: normal"><span style="font-weight: normal">e</span></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="en-US"><span style="font-style: normal"><span style="font-weight: normal">rcentagem
+e mmol/mol.&nbsp;Para mim, pessoalmente, o A1C estimado é um
+</span></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="en-US"><span style="font-style: normal"><span style="font-weight: normal">indicador</span></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="en-US"><span style="font-style: normal"><span style="font-weight: normal">
+melhor do que o GMI, mas é usado no aplicativo Libre 3 da Abbott.</span></span></span></span></font></font></font></span></p>
+<h3 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-top: 0.1in; margin-bottom: 0.08in; background: transparent">
+<font><font face="Liberation Serif, serif">Variabilidade
+da glicose:</font></font></h3>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.16in; orphans: 2; widows: 2; margin-bottom: 0.1in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt">O
+coeficiente de variação (%CV), como medida da variabilidade da
+glicose.&nbsp;Valores mais altos significam que o nível de glicose é
+menos constante.</font></font></font></p>
+<h3 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-top: 0.1in; margin-bottom: 0.08in; background: transparent">
+<font><font face="Liberation Serif, serif">Gráfico
+de resumo</font></font></h3>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.16in; orphans: 2; widows: 2; margin-bottom: 0.1in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt">(Apenas
+presente quando pelo menos 9 dias de valores de stream de glicose
+estão disponíveis).</font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.16in; orphans: 2; widows: 2; margin-bottom: 0.1in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt">Todos
+os valores de stream de glicose neste período são usados ​​para
+desenhar um gráfico composto mostrando para cada minuto do dia como
+os valores de glicose foram distribuídos.&nbsp;A linha mediana preta
+ou branca mostra o valor de glicose abaixo do qual 50 por cento dos
+valores de glicose estão a cada minuto do dia.&nbsp;O azul mais
+claro é a área onde estão todos os valores.&nbsp;Azul um pouco
+mais escuro é a área ao redor da mediana onde estão 90% dos
+valores.&nbsp;O azul mais escuro é a área ao redor da mediana de 50
+por cento dos valores.&nbsp;Se você visualizar as bordas da área
+como linhas, também pode retratá-las da seguinte forma: Abaixo da
+linha inferior estão 0% dos valores, abaixo da segunda linha
+inferior (entre o azul mais claro e o azul escuro médio) 5% dos
+valores, abaixo da terceira linha (entre o azul mais escuro e o azul
+escuro médio) 25% dos valores, abaixo da linha preta 50% dos
+valores.&nbsp;Seguido por 75%,</font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.16in; orphans: 2; widows: 2; margin-bottom: 0.1in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt">Por
+razões estéticas, a curva é suavizada com um filtro binomial.</font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.16in; orphans: 2; widows: 2; margin-bottom: 0.1in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt">Toque
+na tela para fechar o gráfico Resumo, exceto que, ao tocar na borda
+esquerda ou direita, o gráfico se move para trás ou para frente no
+dia.&nbsp;A curva também pode ser movida para frente e para trás
+rolando.&nbsp;A escala de tempo pode ser alterada movendo dois dedos
+um para o outro ou um para o outro.</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+]]>
+</string>
+<string name="watchhelp" >
+<![CDATA[
+<h1 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-top: 0in; margin-bottom: 0.08in">
+<font><font face="Liberation Serif, serif"><span style="background: transparent">Kerfstok</span></font></font></h1>
+<p style="orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal"><span style="background: transparent">Esta
+visualização é usada para resolver problemas de conexão com
+Kerfstok
+(&nbsp;</span></span></span></span></font></font></font></span><a href="https://apps.garmin.com/en-US/apps/b6348ccc-86d8-4780-8013-d9e19fed5260"><span style="background: transparent">https://apps.garmin.com/en-US/apps/b6348ccc-86d8-4780-8013-d9e19fed5260</span></a><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal"><span style="background: transparent">&nbsp;(consulte
+também&nbsp;</span></span></span></span></font></font></font></span><a href="http://jkaltes.byethost16.com/Kerfstok/index.html"><span style="background: transparent">http://jkaltes.byethost16.com/Kerfstok
+/index.html</span></a><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal"><span style="background: transparent">&nbsp;).
+Kerfstok é um aplicativo de relógio para smartwatches Garmin
+programáveis ​​com tela sensível ao toque. Kerfstok tem os
+seguintes usos:</span></span></span></span></font></font></font></span></p>
+<ul>
+	<li><p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.14in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+	<font><font face="Times"><font size="4" style="font-size: 14pt"><span style="background: transparent">Digite
+	os números e troque-os com Juggluco;</span></font></font></font></p>
+	<li><p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.14in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+	<font><font face="Times"><font size="4" style="font-size: 14pt"><span style="background: transparent">Exibe
+	o valor do stream de glicose recebido do Juggluco;</span></font></font></font></p>
+	<li><p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.14in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+	<font><font face="Times"><font size="4" style="font-size: 14pt"><span style="background: transparent">Exibe
+	esse valor de glicose durante o desporto, além de mostrar a
+	velocidade e a distância.&nbsp;A atividade será gravada e pode ser
+	exibida no aplicativo Connect da Garmin.</span></font></font></font></p>
+</ul>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><span style="background: transparent">Este
+aplicativo de relógio pode se conectar via Bluetooth com Juggluco
+para trocar valores e exibir continuamente seu valor atual de
+glicose.</span></font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><span style="background: transparent">Quando
+surge um problema, esta tela pode ajudar a encontrar sua causa:</span></font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><span style="background: transparent">Primeiro,
+o nome do seu relógio deve ser mostrado &quot;&nbsp;<i>CONNECTED</i>&nbsp;&quot;.&nbsp;Caso
+contrário, resolva o problema no aplicativo Garmin\'s Connect.&nbsp;Em
+segundo lugar, o Kerfstok deve ser iniciado no seu relógio.</span></font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><span style="background: transparent">Às
+vezes, a conexão entre o relógio e o telemóvel é interrompida.</span></font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><span style="background: transparent">Se
+a indicação de envio for FAILURE_DURING_TRANSFER, pode fazer um ou
+todos os seguintes:</span></font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><span style="background: transparent">-
+Desligue e ligue o Bluetooth e, em seguida, pressione&nbsp;<i>Reinit</i>&nbsp;;</span></font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><span style="background: transparent">-
+Reinicie o relógio (quase sempre com sucesso, mas às vezes tem que
+ser feito várias vezes);</span></font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><span style="background: transparent">-
+Reinicie o telemóvel (última opção).</span></font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><span style="background: transparent">Para
+outros problemas, forçar a paragem do aplicativo Garmin connect,
+iniciá-lo novamente e pressionar reinit pode ser útil.</span></font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><span style="background: transparent">Se
+houver uma conexão adequada e por algum motivo os valores no relógio
+e no telefone estiverem fora de sincronia, você pode
+pressionar&nbsp;<b>Sincronizar,</b>&nbsp;para que eles enviem os
+números que ainda não enviaram, um para o outro.</span></font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><span style="background: transparent">Na
+inicialização do Juggluco, o&nbsp;<i>Sync</i>&nbsp;é chamado
+automaticamente.&nbsp;Isso significa que depois de reinstalar o
+Kerfstok, todos os números também serão removidos no Juggluco.&nbsp;A
+única maneira de manter esses números é fazer espelhar e enviá-lo
+de volta para Juggluco.&nbsp;Tenha cuidado porque o espelhar também
+é imediatamente sincronizado com o original.&nbsp;Para funcionar
+como backup, todas as conexões com o original devem ser
+interrompidas em algum momento.&nbsp;Também pode conectar o relógio
+a um dispositivo que seja um espelho (menu central
+esquerdo-&gt;Espelhar) do dispositivo no qual você inseriu os
+números.</span></font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><span style="background: transparent"><b>Atualizar</b>&nbsp;reescreve
+esta caixa de diálogo com novas informações (por exemplo, após
+Reiniciar ou Sincronizar).</span></font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><span style="background: transparent">Verificar
+&quot;&nbsp;<b>Glucose&nbsp;&quot;</b>&nbsp;determina se os valores
+de glicose são enviados para o relógio.</span></font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><span style="background: transparent">Às
+vezes, um botão chamado &quot;&nbsp;<b>Enviar Fila&nbsp;&quot;</b>&nbsp;é
+exibido;&nbsp;isso significa que existem mensagens que ainda não
+foram enviadas para o relógio.&nbsp;Normalmente eles serão enviados
+automaticamente no devido tempo, mas às vezes isso foi interrompido
+e pressionando a&nbsp;<i>fila</i>&nbsp;de envio continuará o
+envio.&nbsp;Mas se não foi enviado por causa de uma conexão
+quebrada, isso traz muito pouco benefício.&nbsp;Pressionar&nbsp;<i>Send
+Queue</i>&nbsp;durante uma transação em andamento pode interromper
+a conexão.</span></font></font></font></p>
+<p><span style="background: transparent"><br/>
+</span><br/>
+<br/>
+
+</p>
+]]>
+</string>
+<string name="watchinfo" >
+<![CDATA[
+<h1 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
+<font><font face="Times">Relógio</font></font></h1>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt">Atualmente
+Juggluco tem quatro maneiras de obter valores de glicose em seu
+relógio.</font></font></font></p>
+<h2 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
+<font><font face="Times">Notificar</font></font></h2>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt">Se
+o Notificar estiver ativado no menu central esquerdo, uma notificação
+do Android será criada toda vez que um novo valor de glicose
+chegar.&nbsp;A maioria dos&nbsp;smartwatches pode ser configurada
+para receber essas notificações.&nbsp;Funciona com relógios
+Garmin.&nbsp;Alguns aplicativos complementares de outros relógios
+não enviam essa notificação para o relógio, provavelmente porque
+é uma modificação de uma notificação que está constantemente
+presente, em vez de criar uma nova notificação.</font></font></font></p>
+<h2 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
+<font><font face="Times">Kerfstok</font></font></h2>
+<p style="orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="pt-PT"><span style="font-style: normal"><span style="font-weight: normal">Kerfstok
+é um aplicativo de relógio pelo qual pode inserir números (como
+doses de insulina)&nbsp;,&nbsp;mas&nbsp;também&nbsp;exibe o valor
+atual da glicose.&nbsp;Assim que chega um novo valor de glicose,
+Juggluco o envia para Kerfstok.&nbsp;Portanto, Kerfstok exibe sempre
+o valor de glicose mais recente.&nbsp;Kerfstok também pode registar
+todas as atividades suportadas pelo Garmin e pode exibir velocidade e
+distância.&nbsp;Veja </span></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="pt-PT"><span style="font-style: normal"><span style="font-weight: normal">Relógio</span></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="pt-PT"><span style="font-style: normal"><span style="font-weight: normal">-&gt;Kerfstok
+</span></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="pt-PT"><span style="font-style: normal"><span style="font-weight: normal">Estado</span></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="pt-PT"><span style="font-style: normal"><span style="font-weight: normal">-&gt;
+</span></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="pt-PT"><span style="font-style: normal"><span style="font-weight: normal">Ajuda</span></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="pt-PT"><span style="font-style: normal"><span style="font-weight: normal">
+&nbsp;</span></span></span></span></font></font></font></span><a href="http://jkaltes.byethost16.com/Kerfstok"><span lang="pt-PT">http://jkaltes.byethost16.com/Kerfstok</span></a></p>
+<h2 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
+<font><font face="Times">Aplicações de relógio
+xDrip</font></font></h2>
+<p style="orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="pt-PT"><span style="font-style: normal"><span style="font-weight: normal">Juggluco
+incorpora um servidor web xDrip.&nbsp;Isso possibilita o uso direto
+de aplicativos de relógio</span></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="pt-PT"><span style="font-style: normal"><span style="font-weight: normal">
+</span></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="pt-PT"><span style="font-style: normal"><span style="font-weight: normal">xDrip
+com Juggluco.&nbsp;O xDrip exibe um novo valor de glicose apenas a
+cada 5 minutos, enquanto o Juggluco exibe um novo valor de glicose a
+cada minuto.&nbsp;Juggluco também envia para os aplicativos de
+relógio xDrip o valor de glicose mais recente.&nbsp;Os valores de
+glicose são enviados apenas para os relógios se o aplicativo do
+relógio os solicitar, portanto, a idade dos valores exibidos depende
+de quando o aplicativo do relógio os solicita.&nbsp;Por exemplo,
+mostradores de relógio e campos de dados em relógios Garmin
+solicitam apenas um valor de glicose a cada 5 minutos.&nbsp;Através
+do xDrip, isso geralmente permite valores de glicose de 10
+minutos.&nbsp;Quando conectados diretamente com Juggluco, esses
+mostradores de relógio mostram valores de glicose de até 6
+minutos.&nbsp;Em&nbsp;</span></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="pt-PT"><span style="font-style: normal"><b>Garmin</b></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="pt-PT"><span style="font-style: normal"><span style="font-weight: normal">,
+se não puder usar Kerfstok, tem as seguintes opções para receber
+regularmente um valor recente de glicose.&nbsp;Um widget xDrip
+(&nbsp;</span></span></span></span></font></font></font></span><a href="https://apps.garmin.com/en-US/apps/73115e04-dc9f-4765-ad88-e7ae283ce995"><span lang="pt-PT">https://apps.garmin.com/en-US/apps/73115e04-dc9f-4765-ad88-e7ae283ce995</span></a><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="pt-PT"><span style="font-style: normal"><span style="font-weight: normal">&nbsp;)
+também pode ser usado durante a gravação de uma
+atividade.&nbsp;Portanto, se tiver uma á</span></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="pt-PT"><span style="font-style: normal"><span style="font-weight: normal">rea</span></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="pt-PT"><span style="font-style: normal"><span style="font-weight: normal">
+livre, poderá alternar para este widget xDrip enquanto grava uma
+atividade com um aplicativo </span></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="pt-PT"><span style="font-style: normal"><span style="font-weight: normal">desportivo</span></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="pt-PT"><span style="font-style: normal"><span style="font-weight: normal">
+Garmin padrão.&nbsp;Há também um aplicativo </span></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="pt-PT"><span style="font-style: normal"><span style="font-weight: normal">desportivo</span></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="pt-PT"><span style="font-style: normal"><span style="font-weight: normal">
+xDrip que atualiza seu valor de glicose
+regularmente:&nbsp;</span></span></span></span></font></font></font></span><a href="https://apps.garmin.com/en-US/apps/aaf6533b-bca1-4365-9131-9f882f6f148c"><span lang="pt-PT">https://apps.garmin.com/en-US/apps/aaf6533b-bca1-4365-9131-9f882f6f148c</span></a><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="pt-PT"><span style="font-style: normal"><span style="font-weight: normal">&nbsp;.&nbsp;</span></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="pt-PT"><span style="font-style: normal"><span style="font-weight: normal">P</span></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="pt-PT"><span style="font-style: normal"><span style="font-weight: normal">ode
+tentar iniciar em um momento, para que ele solicite um valor de
+glicose logo após estar disponível.&nbsp;Campos de dados e
+mostradores de relógio seriam a solução ideal, mas as restrições
+impostas pela Garmin os tornam de pouco valor.</span></span></span></span></font></font></font></span></p>
+<p style="orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="pt-PT"><span style="font-style: normal"><span style="font-weight: normal">De
+acordo com um </span></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="pt-PT"><span style="font-style: normal"><span style="font-weight: normal">utilizador</span></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="pt-PT"><span style="font-style: normal"><span style="font-weight: normal">,
+existe também um mostrador de relógio para relógios&nbsp;</span></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="pt-PT"><span style="font-style: normal"><b>Fitbit</b></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="pt-PT"><span style="font-style: normal"><span style="font-weight: normal">&nbsp;que
+funciona com o servidor web xDrip:&nbsp;</span></span></span></span></font></font></font></span><a href="https://glancewatchface.com/"><span lang="pt-PT">https://glancewatchface.com</span></a></p>
+<p style="orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="pt-PT"><span style="font-style: normal"><span style="font-weight: normal">Para
+obter mais informações sobre a interface do servidor da Web,
+consulte&nbsp;</span></span></span></span></font></font></font></span><a href="http://jkaltes.byethost16.com/Juggluco/addwatch.html"><span lang="pt-PT">http://jkaltes.byethost16.com/Juggluco/addwatch.html</span></a></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt"><b>apenas
+local</b>&nbsp;: aceita apenas conexões de localhost (127.0.0.1).&nbsp;Se
+desativá-lo, outros hosts também poderão aceder o servidor.&nbsp;Se
+não configurar seu firewall para redirecionar para a porta 17580,
+serão apenas hosts em sua rede doméstica.&nbsp;Este servidor usa
+apenas http.&nbsp;Também fiz uma versão https, mas parece que não
+adianta sem um certificado específico para o seu nome de host
+assinado por uma autoridade certificadora.&nbsp;Então eu deixei de
+fora.</font></font></font></p>
+<h2 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
+<font><font face="Times">Wear OS Juggluco</font></font></h2>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0.1in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt">Existe
+uma versão do Juggluco adaptada para o Wear OS.&nbsp;A exibição é
+adaptada para o ecrã menor e um mostrador de relógio é
+adicionado.&nbsp;O mostrador do relógio pode ser instalado como um
+mostrador normal do Wear OS e exibe ao lado da hora também o valor
+atual de glicose recebido via Bluetooth.</font></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+]]>
+</string>
+<string name="wearosinfo" >
+<![CDATA[
+<h1 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-top: 0in; margin-bottom: 0.08in">
+<font><font face="Liberation Serif, serif">Wear OS</font></font></h1>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0.1in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt">Uma
+versão especial do Juggluco pode ser executada diretamente em um
+relógio Wear OS.&nbsp;Ele precisa de um smartphone Android com NFC
+para digitalizar o sensor e, por meio de uma conexão TCP, esses
+dados são enviados para o relógio Wear OS.&nbsp;A partir daqui
+existem duas possibilidades:</font></font></font></p>
+<ol>
+	<li><p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0.1in; background: transparent">
+	<font><font face="Times"><font size="4" style="font-size: 14pt">O
+	sensor fica conetado com o telemóvel e o telemóvel envia cada
+	valor de glicose que recebe via Bluetooth para o relógio Wear OS
+	via TCP;</font></font></font></p>
+	<li><p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0.1in; background: transparent">
+	<font><font face="Times"><font size="4" style="font-size: 14pt">Também
+	é possível conetar diretamente o sensor com o relógio Wear
+	OS.&nbsp;Para isso, precisa de um relógio Wear OS com boa
+	conectividade Bluetooth.</font></font></font></p>
+</ol>
+<p style="orphans: 2; widows: 2; margin-bottom: 0.1in; background: transparent">
+<span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">P</span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">ode
+obter o Juggluco </span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">para</span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">
+Wear OS no Google Play </span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">no</span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">
+seu relógio.&nbsp;Algumas fotos são mostradas
+em&nbsp;</span></span></span></font></font></font></span><a href="http://jkaltes.byethost16.com/JugglucoWearOS/index.html">http://jkaltes.byethost16.com/JugglucoWearOS</a></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0.1in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt">Para
+que funcione faça o seguinte:</font></font></font></p>
+<ul>
+	<li><p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0.1in; background: transparent">
+	<font><font face="Times"><font size="4" style="font-size: 14pt">Certifique-se
+	de que o Bluetooth e o WIFI estejam funcionando no relógio e no
+	telemóvel;</font></font></font></p>
+	<li><p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0.1in; background: transparent">
+	<font><font face="Times"><font size="4" style="font-size: 14pt">Veja
+	se o relógio tem espaço de armazenamento livre suficiente e RAM
+	restante.&nbsp;É possível que o Juggluco precise ser reinstalado
+	se o dispositivo ficar sem espaço de armazenamento em um momento
+	crítico;</font></font></font></p>
+	<li><p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0.1in; background: transparent">
+	<font><font face="Times"><font size="4" style="font-size: 14pt">Faça
+	a versão para telemóvel do Juggluco funcionar com o sensor.&nbsp;Deve
+	escanear o sensor algumas vezes com o &quot;Sensor via Bluetooth&quot;
+	definido.&nbsp;Não é necessário receber valores de glicose no
+	telemóvel via Bluetooth;</font></font></font></p>
+	<li><p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0.1in; background: transparent">
+	<font><font face="Times"><font size="4" style="font-size: 14pt">Instale
+	a versão Wear OS do Juggluco no seu relógio Wear OS e inicie-o;</font></font></font></p>
+	<li><p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0.1in; background: transparent">
+	<font><font face="Times"><font size="4" style="font-size: 14pt">No
+	telemóvel, vá para o menu esquerdo-&gt;Relógio-&gt;Wear OS
+	Configuração.&nbsp;Seu relógio deve ser exibido no controlo
+	giratório.&nbsp;Pressione &quot;Iniciar aplicação de
+	monitorização&quot;;</font></font></font></p>
+	<li><p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0.1in; background: transparent">
+	<font><font face="Times"><font size="4" style="font-size: 14pt">Se
+	tudo correu bem, em ambos os Juggluco é configurada uma conexão
+	TCP e todos os dados do telemóvel são enviados para o
+	relógio.&nbsp;Isso pode levar muito tempo se estiver usando
+	Juggluco por muito tempo.&nbsp;Pode verificar se a conexão TCP está
+	configurada na caixa de diálogo Espelhar (telemóvel: menu esquerdo
+	do meio-&gt;Espelhar, observe: menu esquerdo-&gt;Espelhar).&nbsp;Uma
+	conexão com o mesmo ID mostrado no controlo giratório do seu
+	relógio deve ser mostrada.&nbsp;No relógio também deve conter o
+	IP do telemóvel.&nbsp;Se não estiverem lá ou o lado do relógio
+	não contiver um IP, pressione novamente em &quot;Iniciar aplicação
+	de monitorização&quot;.&nbsp;Se ainda não estiver lá, verifique
+	a conexão Bluetooth e o aplicativo de telemóvel responsável pela
+	conexão com seu relógio.&nbsp;(Quando o relógio já recebeu
+	dados, pressionar &quot;Iniciar aplicação de monitorização&quot;
+	tem o efeito de reenviar todos,&nbsp;então também pode reinstalar
+	a versão de relógio do Juggluco.&nbsp;Mais tarde, se o IP correto
+	não for mostrado, deve desligar e ligar a conexão externa (WIFI ou
+	dados móveis) no telemóvel.</font></font></font></p>
+	<li><p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0.1in; background: transparent">
+	<font><font face="Times"><font size="4" style="font-size: 14pt">Se
+	tudo correr bem, os mesmos dados exibidos na versão para telemóvel
+	do Juggluco são exibidos na versão para relógio do Juggluco.&nbsp;Cada
+	novo valor de glicose recebido pelo telemóvel é enviado via TCP
+	para o relógio.&nbsp;Algumas configurações, como unidade, níveis
+	de alarme de glicose e lembretes, também são transmitidas ao
+	relógio.&nbsp;Alterações posteriores devem ser feitas no próprio
+	relógio.</font></font></font></p>
+	<li><p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0.1in; background: transparent">
+	<font><font face="Times"><font size="4" style="font-size: 14pt">Se
+	possui um relógio com boa conectividade Bluetooth e gosta de
+	receber os valores de glicose no relógio sem precisar carregar o
+	telemóvel, pode conectar a versão do relógio do Juggluco
+	diretamente ao sensor.&nbsp;Depois que todos os valores forem
+	enviados para o relógio, pode verificar&nbsp;<b>&quot;Conexão
+	direta sensor-relógio&quot;</b>&nbsp;.&nbsp;Com isso, o&nbsp;<i>&quot;sensor
+	via Bluetooth&quot;</i>&nbsp;é desativado no telemóvel e ativado
+	no relógio.&nbsp;Os valores do stream agora são enviados do
+	relógio para o telemóvel, como você pode verificar na caixa de
+	diálogo Espelhar.&nbsp;Não pode alterar a &quot;Conexão direta do
+	sensor com o relógio&quot; quando o relógio e o telemóvel não
+	estiverem sincronizados.</font></font></font></p>
+	<li><p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0.1in; background: transparent">
+	<font><font face="Times"><font size="4" style="font-size: 14pt">Se
+	deseja enviar valores do relógio para o telemóvel, você mesmo
+	deve inverter a direção de envio na caixa de diálogo Espelhar,
+	desmarcando-a no telemóvel e marcando-a no relógio.&nbsp;No
+	telemóvel, &quot;&nbsp;<i>Receber de</i>&nbsp;&quot; também deve
+	ser definido.&nbsp;Se tudo não estiver definido exatamente certo,
+	não funciona.&nbsp;&quot;Não altere valores&quot; deve ser
+	alterado.&nbsp;As etiquetas de&nbsp;<i>valores</i>&nbsp;são sempre
+	enviadas com os valores.&nbsp;Se alterar a direção da transmissão
+	de valores do relógio para o telemóvel, não poderá alterar as
+	etiquetas.&nbsp;Não deve ser muito fácil;</font></font></font></p>
+</ul>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0.1in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt">Se
+o sensor tiver uma conexão Bluetooth direta com o relógio e seus
+valores forem enviados para um telemóvel, os valores digitalizados
+também devem ser enviados do telemóvel para o relógio e os valores
+do stream devem ser sincronizados antes da digitalização do sensor
+com o Juggluco (as configurações são definidas automaticamente
+desta forma.) Caso contrário, os valores antigos podem ser enviados
+de volta para o relógio ou as informações de autenticação
+modificadas não são enviadas para o relógio, o que resultará
+em&nbsp;erros de&nbsp;<i>chave de desbloqueio .</i></font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0.1in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt">Alterações
+na conexão também devem ser feitas apenas quando os dados estiverem
+sincronizados;&nbsp;os dados no telemóvel e no relógio devem ser
+cópias completas (com a exceção de que você pode deixar de
+fora&nbsp;<u>todos os</u>&nbsp;dados de quantidade).</font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0.1in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt">Na
+primeira vez, quando muitos dados precisam ser transferidos do
+smartphone para o relógio, pode conectar o relógio ao
+carregador.&nbsp;Meu relógio liga o Wi-Fi quando está conectado ao
+carregador.</font></font></font></p>
+<h5 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-top: 0.08in; margin-bottom: 0.04in; background: transparent">
+<font><font face="Liberation Serif, serif">Conexão
+do relógio-telemóvel</font></font></h5>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0.1in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt">Na
+inicialização, quando todos os dados são enviados do telemóvel
+para o relógio, precisa de uma conexão Wi-Fi entre o relógio e o
+telemóvel.&nbsp;Os dados posteriores são enviados em pequenas
+parcelas via TCP.&nbsp;No meu relógio que é redirecionado por
+Bluetooth, mas apenas quando o telemóvel possui uma conexão
+externa, por exemplo, Wi-Fi para sua rede doméstica, uma conexão de
+dados móveis ou um ponto de acesso portátil.&nbsp;Caso contrário,
+a conexão entre o telemóvel e o relógio é interrompida após
+algum tempo, porque o Wi-Fi é desligado pelo sistema para economizar
+bateria.</font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0.1in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt">O
+próprio Juggluco deteta os IPs do outro lado, então não precisa
+configurá-los.&nbsp;Se alternar de Wi-Fi para dados móveis, os IPs
+são alterados automaticamente.&nbsp;Às vezes, precisa desligar e
+ligar o Wi-Fi ou os dados móveis em seu smartphone antes de
+funcionar (Juggluco determina o IP no momento em que o Wi-Fi ou os
+dados móveis são ativados, mas às vezes o IP ainda não está
+disponível).</font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0.1in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt">A
+determinação automática do IP do outro lado é específica para a
+conexão com um relógio WearOS;&nbsp;para outras conexões Espelhar
+você ainda precisa especificar os IPs do outro lado.</font></font></font></p>
+<h5 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-top: 0.08in; margin-bottom: 0.04in; background: transparent">
+<font><font face="Liberation Serif, serif">mostrador
+do relógio</font></font></h5>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0.1in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt">O
+Juggluco para Wear OS inclui um mostrador de relógio que mostra seu
+valor atual de glicose, além da hora e até quatro
+complicações.&nbsp;Para usá-lo, deve selecionar este mostrador do
+relógio, por exemplo, no aplicativo complementar do relógio em
+&quot;baixado&quot;.&nbsp;Normalmente, você verá o último valor de
+glicose quando a tela for ativada.&nbsp;Quando o ecrã está no modo
+ambiente (sempre ligado), o valor da glicose só é atualizado quando
+o indicador dos minutos aumenta ou você pressiona um botão ou
+levanta o braço.&nbsp;Portanto, o valor exibido pode ser atrasado em
+até um minuto.</font></font></font></p>
+<p style="orphans: 2; widows: 2; margin-bottom: 0.1in; background: transparent">
+<span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">T</span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">ambém
+pode usar outro mostrador de relógio (por
+exemplo&nbsp;</span></span></span></font></font></font></span><a href="https://play.google.com/store/apps/details?id=com.ustwo.watchfaces.bits">https://play.google.com/store/apps/details?id=com.ustwo.watchfaces.bits</a><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">&nbsp;)
+e adicionar um atalho de aplicativo ao Juggluco.&nbsp;Dessa forma,
+você pode saber seu </span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">valor</span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">
+de glicose pressionando esse atalho.</span></span></span></font></font></font></span></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0.1in; background: transparent">
+<font><font face="Times"><font size="4" style="font-size: 14pt">Com
+alguma programação, você também pode criar um mostrador de
+relógio separado que exibe o valor de glicose da transmissão de
+glicose de Juggluco.</font></font></font></p>
+<p style="orphans: 2; widows: 2; margin-bottom: 0.1in; background: transparent">
+<br/>
+<br/>
+
+</p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+]]>
+</string>
+</resources>

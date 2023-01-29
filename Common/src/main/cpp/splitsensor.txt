@@ -1,0 +1,3 @@
+Hoe als Stream en Scan op verschillende devices uitgevoerd worden?
+- Enable Streaming moet uitgevoerd worden ook bij geen Sensor via bluetooth
+- Reenable streaming moet gezegd worden.

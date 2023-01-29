@@ -1,0 +1,14 @@
+2022-10-18-09:12:38 4539 start JNI_OnLoad /data/app/~~mCKxUk6X-zNczEH8j7ThKA==/com.freestylelibre3.app.de-PG4ZqyIQ3zUdfyJgJRv2Xg==/lib/arm64/liblibre3extension.so 0
+2022-10-18-09:12:38 4539 start 0x71f1c8c428 GetEnv(JavaVM*, void**env, 65542)
+2022-10-18-09:12:38 4539 Not needed 
+2022-10-18-09:12:38 4539 GetEnv(JavaVM*, void**env, 65542)=0
+2022-10-18-09:12:38 4539 got newvmn
+2022-10-18-09:12:38 4539 got next JNI_OnLoad
+2022-10-18-09:12:38 4539 start 0x71f1c8c428 GetEnv(JavaVM*, void**env, 65542)
+2022-10-18-09:12:38 4539 Not needed 
+2022-10-18-09:12:38 4539 GetEnv(JavaVM*, void**env, 65542)=0
+2022-10-18-09:12:38 4539 FindClass(com/adc/trident/app/frameworks/mobileservices/libre3/security/Libre3SKBCryptoLib)=0x6cd
+2022-10-18-09:12:38 4539 RegisterNatives com.adc.trident.app.frameworks.mobileservices.libre3.security.Libre3SKBCryptoLib
+2022-10-18-09:12:38 4539 Old func: process1 (I[B[B)I
+2022-10-18-09:12:38 4539 Old func: process2 (I[B[B)[B
+2022-10-18-09:12:38 4539 end JNI_OnLoad=65542

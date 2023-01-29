@@ -1,0 +1,73 @@
+package tk.glucodata
+
+import android.content.Intent
+import com.google.android.gms.wearable.*
+import tk.glucodata.Applic.isWearable
+import tk.glucodata.MainActivity.setbluetoothon
+//import tk.glucodata.MessageSender.Companion.messagesender
+import tk.glucodata.MessageSender.Companion.sendnetinfo
+import tk.glucodata.Natives
+
+class MessageReceiver: WearableListenerService() {
+    override fun onMessageReceived(messageEvent: MessageEvent) {
+        super.onMessageReceived(messageEvent)
+	val data= messageEvent.getData();
+        val path= messageEvent.path
+        Log.i(LOG_ID,"onMessageReceived start $path"  )
+        when(path) {
+	    MessageSender.NET_DATA   -> {
+            Natives.message(data);
+	    }
+	    MessageSender.NET_PATH   -> {
+		val sender=tk.glucodata.MessageSender.getMessageSender()
+		if(sender==null) {
+			Log.d(LOG_ID,"messagesender==null")
+			return
+			}
+	    	val sourceId= messageEvent.getSourceNodeId()
+		val name:String=(if(isWearable) sender.localnode; else sourceId)?:return
+		if(Natives.setmynetinfo(name,data)) {
+			sendnetinfo(sourceId)
+                  }
+		  }
+		MessageSender.START_PATH ->  {
+		  if(isWearable)
+			   UseWifi.usewifi()
+		   Natives.ontbytesettings(data)
+		   Notify.mkunitstr(Natives.getunit())
+		sendnetinfo(messageEvent.getSourceNodeId())
+		}
+		 MessageSender.SETTINGS_PATH   -> {
+			 Natives.ontbytesettings(data)
+        		Notify.mkunitstr(Natives.getunit())
+			}
+		 MessageSender.BLUETOOTH_PATH -> {
+		 	val context=if(MainActivity.thisone==null)Applic.app;else MainActivity.thisone;
+			val offbyte:Byte=0
+			val on:Boolean =data[0]!=offbyte
+			Log.i(LOG_ID,"set bluetooth $on  ${data[0]}");
+/*			if(on) {
+				SensorBluetooth.nullKAuth=true;
+				}*/
+			Applic.setbluetooth(context,on )
+			/*
+			if(main==null) {
+				Log.i(LOG_ID,"blue start MainActivity")
+		       		startActivity( Intent(Applic.app, MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK).putExtra(setbluetoothon,on) )
+				}
+			else {
+				Applic.setbluetooth(main,on )
+				} */
+		 	}
+	    }
+        Log.i(LOG_ID,"onMessageReceived end $path"  )
+      }
+
+    companion object {
+        private const val LOG_ID = "MessageReceiver"
+	/*
+	    private const val NET_PATH = "/netinfo"
+	    private const val START_PATH = "/start"
+	    private const val SETTINGS_PATH = "/settings" */
+       }
+   }

@@ -1,0 +1,9 @@
+git add ./Common/src/main/cpp/curve/nanovg/src/fontstash.h
+git add ./Common/src/main/cpp/curve/nanovg/src/nanovg.c
+git add ./Common/src/main/cpp/curve/nanovg/src/stb_truetype.h
+git add ./Common/src/main/cpp/curve/nanovg/src/nanovg_gl.h
+git add ./Common/src/main/cpp/curve/nanovg/src/fontstash.h.bak
+git add ./Common/src/main/cpp/curve/nanovg/src/nanovg.o
+git add ./Common/src/main/cpp/curve/nanovg/src/nanovg.h
+git add ./Common/src/main/cpp/curve/nanovg/src/stb_image.h
+git add ./Common/src/main/cpp/curve/nanovg/src/nanovg_gl_utils.h

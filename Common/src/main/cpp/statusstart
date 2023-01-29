@@ -1,0 +1,13 @@
+Name:	jnisubmain
+Umask:	0002
+State:	S (sleeping)
+Tgid:	26597
+Ngid:	0
+Pid:	26597
+PPid:	25139
+TracerPid:	0
+Uid:	1000	1000	1000	1000
+Gid:	1000	1000	1000	1000
+FDSize:	256
+Groups:	4 24 27 30 46 121 131 998 1000 
+NStgid:	

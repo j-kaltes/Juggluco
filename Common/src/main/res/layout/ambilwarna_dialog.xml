@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/ambilwarna_viewContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:clipToPadding="false"
+        android:paddingBottom="@dimen/ambilwarna_spacer"
+        android:paddingLeft="@dimen/ambilwarna_spacer"
+        android:paddingRight="@dimen/ambilwarna_spacer" >
+
+        <Button
+            android:id="@+id/helpambi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/helpname" />
+        <Button
+            android:id="@+id/closeambi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/helpambi"
+            android:text="@string/closename" />
+
+        <ImageView
+            android:id="@+id/ambilwarna_viewHue"
+           android:layout_marginTop="10dp"
+            android:layout_width="@dimen/ambilwarna_hueWidth"
+            android:layout_height="@dimen/ambilwarna_hsvHeight"
+            android:layout_marginRight="@dimen/ambilwarna_spacer"
+	    android:layout_below="@+id/closeambi"
+            android:scaleType="fitXY"
+            android:src="@drawable/ambilwarna_hue" />
+
+    <yuku.ambilwarna.AmbilWarnaSquare
+        android:id="@+id/ambilwarna_viewSatBri"
+        android:layout_width="@dimen/ambilwarna_hsvWidth"
+        android:layout_height="@dimen/ambilwarna_hsvHeight"
+        android:layout_alignRight="@+id/closeambi"
+        android:layout_below="@+id/closeambi"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@id/ambilwarna_viewHue"
+        android:layerType="software"
+        android:paddingTop="40dp" />
+
+        <ImageView
+            android:id="@+id/ambilwarna_cursor"
+            android:layout_width="9dp"
+            android:layout_height="9dp"
+            android:scaleType="matrix"
+            android:src="@drawable/ambilwarna_cursor" />
+
+        <ImageView
+            android:id="@+id/ambilwarna_target"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:scaleType="matrix"
+            android:src="@drawable/ambilwarna_target" />
+
+
+</RelativeLayout>
+

@@ -1,0 +1,886 @@
+package tk.glucodata;
+
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.app.Application;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.Service;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
+import android.os.Build;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
+import android.os.VibratorManager;
+import android.text.style.MetricAffectingSpan;
+import android.util.DisplayMetrics;
+import android.widget.RemoteViews;
+
+import java.text.DateFormat;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
+
+import static android.app.Notification.FLAG_ONGOING_EVENT;
+import static android.app.Notification.VISIBILITY_PUBLIC;
+import static android.content.Context.NOTIFICATION_SERVICE;
+import static android.content.Context.VIBRATOR_SERVICE;
+import static android.graphics.Color.BLACK;
+import static android.graphics.Color.WHITE;
+import static java.lang.Float.isNaN;
+import static tk.glucodata.Applic.TargetSDK;
+import static tk.glucodata.Applic.app;
+import static tk.glucodata.Applic.isRelease;
+import static tk.glucodata.Applic.isWearable;
+import static tk.glucodata.Applic.usedlocale;
+import static tk.glucodata.CommonCanvas.drawarrow;
+import static tk.glucodata.Natives.getalarmdisturb;
+import static tk.glucodata.Natives.getisalarm;
+import static tk.glucodata.Natives.setisalarm;
+import static tk.glucodata.R.id.arrowandvalue;
+
+//import android.app.Notification;
+//import	androidx.core.app.Notification.Builder;
+//import android.app.NotificationManagerCompat;
+//import androidx.core.app.NotificationManagerCompat;
+//import tk.glucodata.Natives;
+
+public class Notify {
+    static final private String LOG_ID="Notify";
+static Notify onenot=null;
+Application mApp;
+static void init(Application app) {
+	if(onenot==null)
+		onenot=new Notify(app);
+	}
+
+static String glucoseformat=null;
+static String pureglucoseformat=null;
+static String unitlabel=null;
+//public static int unit=0;
+static void mkunitstr(int unit) {
+	Applic.unit=unit;	
+	pureglucoseformat=unit==1?"%.1f":"%.0f";
+	if(isWearable) {
+        	glucoseformat=pureglucoseformat;
+		}
+	else  {
+        	glucoseformat=unit==1?"%.1f mmol/L":"%.0f mg/dL";
+		unitlabel=unit==1?"mmol/L":"mg/dL";
+		}
+
+	}
+@SuppressLint("NewApi")
+Ringtone setring(String uristr, int res) {
+	if(uristr==null||uristr.length()==0) {
+		uristr= "android.resource://" + mApp.getPackageName() + "/" + res;
+		}
+	Uri uri=Uri.parse(uristr);
+        Ringtone ring = RingtoneManager.getRingtone(mApp, uri);
+	if(ring==null) {
+		Log.i(LOG_ID,"ring==null default");
+		uristr= "android.resource://" + mApp.getPackageName() + "/" + res;
+		uri=Uri.parse(uristr);
+		ring = RingtoneManager.getRingtone(mApp, uri);
+		}
+	try {
+		if(Build.VERSION.SDK_INT >=23)
+			ring.setLooping(true);
+		    } catch(Exception e) {
+		    	}
+
+	return ring;
+	}
+static final private int[] defaults ={ R.raw.siren, R.raw.classic, R.raw.ghost, R.raw.nudge,R.raw.elves};
+
+public static Ringtone getring(int kind) {
+	return	mkrings(Natives.readring(kind),kind);
+//	return rings[kind];
+	}
+Ringtone mkring(String uristr,int kind) {
+	Log.i(LOG_ID,"ringtone "+kind+" "+uristr);
+	return setring(uristr,defaults[kind]);
+	}
+static public Ringtone mkrings(String uristr,int res) {
+	if(onenot!=null)
+		return onenot.mkring(uristr,res);
+	return null;
+	}
+	/*
+void setringer(int kind) {
+	rings[kind]=mkring(Natives.readring(kind),kind);
+	}
+public static void setring(int kind) {
+	if(onenot!=null)
+		onenot.setringer(kind);
+	}
+	*/
+//	content://media/internal/audio/media/101
+Bitmap glucoseBitmap;
+Canvas canvas;
+Paint glucosePaint,agePaint;
+float density;
+float glucosesize;
+float notheight;
+int xposition;
+	int notwidth;
+Notify(Application mApp) {
+	this.mApp=mApp;
+        mkunitstr(Natives.getunit());
+	notificationManager =(NotificationManager) mApp.getSystemService(NOTIFICATION_SERVICE);
+        createNotificationChannel(mApp);
+	DisplayMetrics metrics= Applic.app.getResources().getDisplayMetrics();
+	Log.i(LOG_ID,"metrics.density="+ metrics.density);
+	var notwidth=metrics.widthPixels;
+
+	glucosesize=Applic.app.headfontsize*.44f;
+	notheight=glucosesize*0.8f;	
+
+	xposition= (int)(notwidth*.12f);
+
+//	notheight=metrics.density*54;
+//	glucosesize=notheight*1.25f;
+
+	glucoseBitmap = Bitmap.createBitmap((int)notwidth, (int)notheight, Bitmap.Config.ARGB_8888);
+
+	canvas = new Canvas(glucoseBitmap);
+	Log.i(LOG_ID,"notwidth="+notwidth+" notheight="+notheight);
+	 glucosePaint=new Paint();
+	glucosePaint.setTextSize(glucosesize);
+	glucosePaint.setAntiAlias(true);
+	glucosePaint.setTextAlign(Paint.Align.LEFT);
+	glucosePaint.setColor(BLACK);
+	density= notheight/54.0f;
+	}
+
+
+	private static final String NUMALARM = "MedicationReminder";
+  private static final String GLUCOSEALARM = "glucoseAlarm";
+//  private static final String LOSSALARM = "LossofSensorAlarm";
+  private static final String GLUCOSENOTIFICATION = "glucoseNotification";
+// static Ringtone[] rings =new Ringtone[defaults.length];
+private void createNotificationChannel(Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+            String description = context.getString(R.string.numalarm_description);
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+	    NotificationChannel channel = new NotificationChannel(NUMALARM, NUMALARM, importance);
+	    channel.setSound(null, null);
+            channel.setDescription(description);
+            notificationManager.createNotificationChannel(channel);
+
+            description = context.getString(R.string.alarm_description);
+            importance = NotificationManager.IMPORTANCE_HIGH;
+	     channel = new NotificationChannel(GLUCOSEALARM,GLUCOSEALARM, importance);
+	    channel.setSound(null, null);
+            channel.setDescription(description);
+            notificationManager.createNotificationChannel(channel);
+	    
+            description = context.getString(R.string.notification_description);
+           importance = NotificationManager.IMPORTANCE_HIGH;
+	    channel = new NotificationChannel(GLUCOSENOTIFICATION, GLUCOSENOTIFICATION, importance);
+	    channel.setSound(null, null);
+            channel.setDescription(description);
+            notificationManager.createNotificationChannel(channel);
+        }
+
+    }
+
+//	    channel.setShowBadge(false);
+void lowglucose(strGlucose strgl,float gl,float rate,boolean alarm) {
+ arrowglucosealarm(0,GlucoseDraw.getgludraw(gl),String.format(usedlocale,glucoseformat, gl)+mApp.getString(isWearable?R.string.lowglucoseshort:R.string.lowglucose), strgl,GLUCOSEALARM,alarm);
+ }
+void highglucose(strGlucose strgl,float gl,float rate,boolean alarm) {
+ arrowglucosealarm(1,GlucoseDraw.getgludraw(gl),String.format(usedlocale,glucoseformat, gl)+mApp.getString(isWearable?R.string.highglucoseshort:R.string.highglucose), strgl,GLUCOSEALARM,alarm);
+
+
+ }
+static private final int glucosenotificationid=81431;
+static private final int glucosealarmid=81432;
+static boolean alertwatch=false,showalways=Natives.getshowalways();
+
+static public void glucosestatus(boolean val)  {
+ 	showalways=val;
+	Natives.setshowalways(val);
+	if(!val) {
+			if(onenot!=null)
+				onenot.novalue();
+		}
+	}
+boolean hasvalue=false;
+void normalglucose(strGlucose strgl,float gl,float rate,boolean waiting) {
+	var act=MainActivity.thisone;
+	if(act!=null)
+		act.cancelglucosedialog();
+	Log.i(LOG_ID,"normalglucose waiting="+waiting);
+	if(waiting)
+		arrowglucosealarm(2,GlucoseDraw.getgludraw(gl),String.format(usedlocale,glucoseformat, gl), strgl,GLUCOSENOTIFICATION ,true);
+	
+	else if(!isWearable){
+		//if(alertwatch) 
+		if(showalways||alertwatch) {
+			Log.i(LOG_ID,"arrowglucosenotification  alertwatch="+alertwatch);
+			arrowglucosenotification(2,GlucoseDraw.getgludraw(gl),String.format(usedlocale,glucoseformat,gl),strgl,GLUCOSENOTIFICATION ,!alertwatch);
+			}
+
+		else {
+			if(hasvalue) {
+				if(keeprunning.started)
+					novalue();
+				else
+					notificationManager.cancel(glucosenotificationid);
+					}
+				}
+		}
+	else {
+		notificationManager.cancel(glucosealarmid);
+		}
+	}
+
+
+
+NotificationManager notificationManager;
+
+//private static boolean isalarm=false;
+private  static Runnable runstopalarm=null;
+private static ScheduledFuture<?> stopschedule=null;
+static public void stopalarm() {
+	if(!getisalarm()) {
+		Log.d(LOG_ID,"stopalarm not is alarm");
+		return;
+		}
+	Log.d(LOG_ID,"stopalarm is alarm");
+	final var stopper=stopschedule;
+	if(stopper!=null) {
+		stopper.cancel(false);
+		stopschedule=null;
+		}
+	var runner=runstopalarm;
+	if(runner!=null) {
+		runner.run();
+		}
+	}
+//static int alarmnr=0;
+
+public static void playring(Ringtone ring,int duration,boolean sound,boolean flash,boolean vibrate,boolean disturb) {
+	if(onenot==null)
+		return;
+	onenot.playringhier(ring,duration,sound,flash,vibrate,disturb) ;
+	}
+	
+
+Vibrator vibrator = null;
+void vibratealarm() {
+	var context= Applic.app;
+	if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+		vibrator =  ((VibratorManager)(context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE))).getDefaultVibrator();
+	}
+	else
+		vibrator=(Vibrator) context.getSystemService(VIBRATOR_SERVICE);
+        if(android.os.Build.VERSION.SDK_INT < 26)
+	        vibrator.vibrate( new long[]  {0, 100, 10,50,50} , 1);
+	    else {
+		final long[] vibrationPatternstart = {0, 70, 50,50,50,50,50};
+		final int[] amplitude={0,  255,150,0,255,50,0};
+	       vibrator.vibrate(VibrationEffect.createWaveform (vibrationPatternstart,amplitude, 1));
+    		}
+	}
+//final static private boolean  vibrate=true;
+void stopvibratealarm() {
+	vibrator.cancel();
+	}
+private void playringhier(Ringtone ring,int duration,boolean sound,boolean flash,boolean vibrate,boolean disturb) {
+	stopalarm();
+	final int[] curfilter={-1};
+	final boolean[] doplaysound={true};
+	if(sound) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+			int filt=notificationManager.getCurrentInterruptionFilter();
+			Log.i(LOG_ID,"getCurrentInterruptionFilter()="+filt);
+
+			if(filt!=NotificationManager.INTERRUPTION_FILTER_ALL) {
+				if(disturb) {
+					if(notificationManager.isNotificationPolicyAccessGranted()) {
+						curfilter[0]=filt;
+						notificationManager.setInterruptionFilter(NotificationManager.INTERRUPTION_FILTER_ALL);
+						} 
+					}
+				else
+					doplaysound[0]=false;
+				}
+			}
+		if(!isRelease) {
+			Log.d(LOG_ID,"play "+ring.getTitle(app));
+			}
+		if(doplaysound[0])
+			ring.play();
+		}
+	if(!isWearable) {
+		if(flash) Flash.start(app);
+		}
+	if(vibrate) {
+		vibratealarm();
+		}
+	runstopalarm= () -> {
+		if(getisalarm()) {
+		     Log.d(LOG_ID,"runstopalarm  isalarm");
+		     if(sound) {
+			if(!isRelease) {
+				Log.d(LOG_ID,"stop sound "+ring.getTitle(app));
+				}
+			if(doplaysound[0])  {
+				ring.stop();
+				 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+					 if (curfilter[0] != -1) {
+						 if (notificationManager.isNotificationPolicyAccessGranted()) {
+							 notificationManager.setInterruptionFilter(curfilter[0]);
+						 }
+					 }
+				 }
+			 	}
+			 }
+
+			if(!isWearable) {
+				     if(flash) Flash.stop();
+				     }
+			if(vibrate) {
+				stopvibratealarm();
+			}
+			setisalarm(false);
+		   }
+		   else  {
+			if(!isRelease) {
+			     Log.d(LOG_ID,"runstopalarm not isalarm "+ring.getTitle(app));
+			     }
+		     }
+	        };
+         setisalarm(true);
+//	isalarm=true;
+	Log.d(LOG_ID,"schedule stop");
+	stopschedule=Applic.scheduler.schedule(runstopalarm, duration, TimeUnit.SECONDS);
+
+	}
+void mksound(int kind) {
+	final Ringtone ring=//rings[kind];
+mkring(Natives.readring(kind),kind);
+	final int duration=Natives.readalarmduration(kind);
+	final boolean flash=Natives.alarmhasflash(kind);
+	final boolean sound=Natives.alarmhassound(kind);
+	final boolean vibration=Natives.alarmhasvibration(kind);
+	final boolean dist= isWearable || getalarmdisturb(kind);
+
+	playringhier(ring,duration,sound,flash,vibration,dist);
+	 }
+	 /*
+Intent intent = new Intent("android.intent.category.LAUNCHER");
+intent.setClassName("com.your.package", "com.your.package.MainActivity");
+intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+startActivity(intent);*/
+
+private static void showpopupalarm(String message,Boolean cancel) { 
+//	var act=MainActivity.thisone;
+	var act=MainActivity.thisone;
+//	if(act==null||!act.active) {
+	if(act==null) {
+		Log.i(LOG_ID,"showpopupalarm Intent "+message);
+	//	Intent intent = new Intent(Applic.app, MainActivity.class);
+		Intent intent = new Intent("android.intent.category.LAUNCHER");
+		intent.putExtra("alarmMessage", message);
+		intent.putExtra("Cancel", cancel);
+		intent.setClassName("tk.glucodata", "tk.glucodata.MainActivity");
+		 intent.addCategory(Intent. CATEGORY_LAUNCHER ) ;
+		intent.setAction(Intent.ACTION_MAIN ) ;
+		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
+		Applic.app.startActivity(intent);
+		}
+	else {
+		Log.i(LOG_ID,"showpopupalarm direct "+message);
+		act.runOnUiThread(() -> act.showindialog( message,cancel));
+		}
+	}
+private void soundalarm(int kind,int draw,String message,String type,boolean alarm) {
+      placelargenotification(draw,message,type,!alarm);
+	if(alarm) {
+	 	Log.d(LOG_ID,"soundalarm "+kind);
+		mksound(kind);
+//		showindialog(app,message);
+		}
+   }
+
+private void arrowsoundalarm(int kind,int draw,String message,strGlucose sglucose,String type,boolean alarm) {
+      arrowplacelargenotification(kind,draw,message,sglucose,type,!alarm);
+	if(alarm) {
+	 	Log.d(LOG_ID,"arrowsoundalarm "+kind);
+		mksound(kind);
+		}
+   }
+
+private void glucosealarm(int kind,int draw,String message,String type,boolean alarm) {
+	if(alarm) {
+		if(kind!=2)
+			showpopupalarm(message,true);
+		}
+	else {
+		final var act=MainActivity.thisone;
+		if(act!=null) {
+			act.replaceDialogMessage(message);
+			}
+		}
+	if(!alarm&&alertwatch)
+			glucosenotification(draw,message,GLUCOSENOTIFICATION ,false);
+	else
+		soundalarm(kind,draw,message,type,alarm);
+	}
+private void arrowglucosealarm(int kind,int draw,String message,strGlucose strglucose,String type,boolean alarm) {
+	if(alarm) {
+		if(kind!=2)
+			showpopupalarm(message,true);
+		}
+	else {
+		final var act=MainActivity.thisone;
+		if(act!=null) {
+			act.replaceDialogMessage(message);
+			}
+		}
+	if(!alarm&&alertwatch) {
+			Log.i(LOG_ID,"arrowglucosealarm alertwatch="+alertwatch);
+			arrowglucosenotification(kind,draw,message,strglucose,GLUCOSENOTIFICATION ,false);
+			}
+	else
+		arrowsoundalarm(kind,draw,message,strglucose,type,alarm);
+	}
+
+private void canceller() {
+		notificationManager.cancel(glucosenotificationid);
+		notificationManager.cancel( numalarmid);
+		}
+static public void cancelmessages() {
+	if(onenot!=null)
+		onenot.canceller();
+
+	}
+
+
+
+Notification.Builder  GluNotBuilder=null;
+
+static final String fromnotification="FromNotification";
+final static int forcecloserequest=7812;
+static final String closename= "ForceClose";
+	final int penmutable= android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M? PendingIntent.FLAG_IMMUTABLE:0;
+RemoteViews makeremote() {
+	Intent notifyIntent = new Intent(mApp,MainActivity.class);
+	notifyIntent.putExtra(fromnotification,true);
+	 notifyIntent.addCategory(Intent. CATEGORY_LAUNCHER ) ;
+	notifyIntent.setAction(Intent. ACTION_MAIN ) ;
+	notifyIntent.setFlags(Intent. FLAG_ACTIVITY_CLEAR_TOP | Intent. FLAG_ACTIVITY_SINGLE_TOP );
+	PendingIntent notifyPendingIntent = PendingIntent.getActivity(mApp, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT|penmutable);
+	GluNotBuilder.setContentIntent(notifyPendingIntent).setOnlyAlertOnce(true);
+	if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
+		GluNotBuilder.setGroup("aa2");
+	}
+
+if(TargetSDK<31) {
+
+	Intent  closeintent=new Intent(mApp,NumAlarm.class);
+	closeintent.setAction(closename);
+	PendingIntent closepending=PendingIntent.getBroadcast(mApp, forcecloserequest, closeintent,PendingIntent.FLAG_UPDATE_CURRENT|penmutable);
+	RemoteViews rv= new RemoteViews(mApp.getPackageName(),R.layout.notification);
+	rv.setInt(R.id.nottext, "setBackgroundColor", WHITE);
+	rv.setTextColor(R.id.nottext,BLACK);
+	rv.setOnClickPendingIntent(R.id.notclose, closepending);
+	rv.setOnClickPendingIntent(R.id.juggluco, notifyPendingIntent);
+	return rv;
+	}
+else
+	return null;
+	}
+	
+RemoteViews remoteArrow() {
+	Intent notifyIntent = new Intent(mApp,MainActivity.class);
+	notifyIntent.putExtra(fromnotification,true);
+	 notifyIntent.addCategory(Intent. CATEGORY_LAUNCHER ) ;
+	notifyIntent.setAction(Intent. ACTION_MAIN ) ;
+	notifyIntent.setFlags(Intent. FLAG_ACTIVITY_CLEAR_TOP | Intent. FLAG_ACTIVITY_SINGLE_TOP );
+	PendingIntent notifyPendingIntent = PendingIntent.getActivity(mApp, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT|penmutable);
+	GluNotBuilder.setContentIntent(notifyPendingIntent).setOnlyAlertOnce(true);
+	if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
+		GluNotBuilder.setGroup("aa2");
+		}
+
+	return new RemoteViews(mApp.getPackageName(),R.layout.arrowandvalue);
+	}
+
+private Notification  makearrownotification(int kind,int draw,String message,strGlucose glucose,String type,boolean once) {
+		mkbuilder(type);
+	Log.i(LOG_ID,"makearrownotification setOnlyAlertOnce("+once+")");
+        GluNotBuilder.setSmallIcon(draw).setOnlyAlertOnce(once).setContentTitle(message);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			GluNotBuilder.setVisibility(VISIBILITY_PUBLIC);
+		}
+//	GluNotBuilder.setUsesChronometer(true);
+	RemoteViews remoteViews= remoteArrow();
+	if(!isWearable) {
+		long unixtime = System.currentTimeMillis() / 1000L;
+		var gety = canvas.getHeight() * 0.98f;
+		var getx = xposition;
+		var rate = glucose.rate;
+//		 canvas.drawColor(0);
+
+		canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+		glucosePaint.setTextSize(glucosesize);
+		if (isNaN(rate)) {
+//					getx=width*0.45f
+			getx *= 0.82f;
+		} else {
+			float weightrate = (rate > 1.6 ? -1.0f : (rate < -1.6 ? 1.0f : (rate / -1.6f)));
+			Log.i(LOG_ID, "weightrate=" + weightrate);
+			float arrowy = gety - glucosesize * .4f + (CommonCanvas.glnearnull(rate) ? 0.0f : (weightrate * glucosesize * .4f));
+			drawarrow(canvas, glucosePaint, density, rate, getx * .85f, arrowy);
+		}
+
+		canvas.drawText(glucose.value, getx, gety, glucosePaint);
+		float valwidth = glucosePaint.measureText(glucose.value, 0, glucose.value.length());
+		if (kind > 1) {
+			glucosePaint.setTextSize(glucosesize * .4f);
+			canvas.drawText(unitlabel, getx + valwidth + glucosesize * .2f, gety - glucosesize * .25f, glucosePaint);
+		} else {
+			glucosePaint.setTextSize(glucosesize * .65f);
+			canvas.drawText(" " + mApp.getString(kind == 0 ? R.string.lowglucoseshort : R.string.highglucoseshort), getx + valwidth + glucosesize * .2f, gety - glucosesize * .15f, glucosePaint);
+		}
+
+		canvas.setBitmap(glucoseBitmap);
+		remoteViews.setImageViewBitmap(arrowandvalue, glucoseBitmap);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+			remoteViews.setViewLayoutMarginDimen(arrowandvalue, RemoteViews.MARGIN_BOTTOM, 0);
+			remoteViews.setViewLayoutMarginDimen(arrowandvalue, RemoteViews.MARGIN_TOP, 0);
+			remoteViews.setViewPadding(arrowandvalue, 0, 0, 0, 0);
+
+		}
+/*
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+			GluNotBuilder.setCustomBigContentView(remoteViews);
+			}
+		else  */
+		if (Build.VERSION.SDK_INT < 31) {
+			GluNotBuilder.setStyle(new Notification.DecoratedCustomViewStyle());
+		}
+		GluNotBuilder.setShowWhen(true);
+	//	GluNotBuilder.setWhen(glucose.time*1000L);
+	//kkk	GluNotBuilder.setUsesChronometer(true);
+		GluNotBuilder.setContent(remoteViews);
+		}
+	if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+		GluNotBuilder.setTimeoutAfter(glucosetimeout);
+	}
+	if(isWearable) {GluNotBuilder.setAutoCancel(true);}
+	if(once)
+		GluNotBuilder.setPriority(Notification.PRIORITY_DEFAULT);
+	else  {
+		GluNotBuilder.setPriority(Notification.PRIORITY_MAX);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			GluNotBuilder.setCategory(Notification.CATEGORY_ALARM);
+		}
+	}
+
+	 Log.i(LOG_ID,(once?"":"not ")+"only once");
+
+	 Notification notif= GluNotBuilder.build();
+	notif.when= glucose.time*1000L;
+	 return notif;
+
+
+    }
+@SuppressWarnings({"deprecation"})
+private void mkbuilder(String type) {
+// 	if(GluNotBuilder==null) {
+ 	if(true) {
+		 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+			 GluNotBuilder = new Notification.Builder(mApp, type);
+		 }
+		 else {
+					 GluNotBuilder = new Notification.Builder(mApp);
+		 }
+		}
+	else {
+		 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+			GluNotBuilder.setChannelId(type);
+		}
+	}
+
+
+void fornotify(Notification notif) {
+	if(isWearable) {
+              notificationManager.notify(glucosealarmid,notif);
+	    }
+	else  {
+		if(keeprunning.theservice!=null)
+			keeprunning.theservice.startForeground(glucosenotificationid,notif);
+		else 
+                       notificationManager.notify(glucosenotificationid,notif);
+		}
+	}
+//static final long glucosetimeout=1000*60*5;
+static final long glucosetimeout=1000*60*3;
+	@SuppressWarnings("deprecation")
+void oldnotification(long time) {
+	mkbuilder(GLUCOSENOTIFICATION);
+	Log.i(LOG_ID,"oldnotification");
+	String message= mApp.getString(R.string.newnewvalue)+ timef.format(time);
+        GluNotBuilder.setSmallIcon(R.drawable.novalue).setPriority(Notification.PRIORITY_DEFAULT);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			GluNotBuilder.setVisibility(VISIBILITY_PUBLIC);
+		}
+	RemoteViews remoteViews=makeremote(); //also initialises rest
+	if(TargetSDK<31) {
+		if(isWearable) {
+		    GluNotBuilder.setAutoCancel(true);
+		  } 
+		 else {
+			remoteViews.setTextViewText(R.id.nottext,message);
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+				GluNotBuilder.setCustomContentView(remoteViews);              //setContent(remoteViews);
+				}
+			else
+				GluNotBuilder.setContent(remoteViews);
+		    }
+		    }
+	if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+		GluNotBuilder.setTimeoutAfter(glucosetimeout);
+		}
+	Notification notif= GluNotBuilder.build();
+	fornotify(notif);
+//	service.startForeground.notify(glucosenotificationid,notif);
+//        notificationManager.notify(glucosenotificationid,notif);
+	Log.i(LOG_ID,"end oldnotification");
+	}
+
+	@SuppressWarnings("deprecation")
+private Notification  makenotification(int draw,String message,String type,boolean once) {
+		mkbuilder(type);
+	Log.i(LOG_ID,"makenotification");
+        GluNotBuilder.setSmallIcon(draw).setOnlyAlertOnce(once).setContentTitle(message);
+//        GluNotBuilder.setSmallIcon(draw).setOnlyAlertOnce(once).setSubText(message);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			GluNotBuilder.setVisibility(VISIBILITY_PUBLIC);
+		}
+	RemoteViews remoteViews= makeremote();
+	if(TargetSDK<31) {
+		if(!isWearable) {
+			remoteViews.setTextViewText(R.id.nottext,message);
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+				GluNotBuilder.setCustomContentView(remoteViews);
+			}
+			else
+				GluNotBuilder.setContent(remoteViews);
+			}
+
+		}
+	if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+		GluNotBuilder.setTimeoutAfter(glucosetimeout);
+	}
+		if(isWearable) {GluNotBuilder.setAutoCancel(true);}
+	if(once)
+		GluNotBuilder.setPriority(Notification.PRIORITY_DEFAULT);
+	else  {
+	//	GluNotBuilder.setPriority(Notification.PRIORITY_HIGH);
+		GluNotBuilder.setPriority(Notification.PRIORITY_MAX);
+//		GluNotBuilder.setDefaults(Notification.DEFAULT_VIBRATE);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			GluNotBuilder.setCategory(Notification.CATEGORY_ALARM);
+		}
+	}
+
+	 Log.i(LOG_ID,(once?"":"not ")+"only once");
+
+	 Notification notif= GluNotBuilder.build();
+	 notif.when = System.currentTimeMillis();
+	 return notif;
+
+
+    }
+
+RemoteViews makesmallremote() {
+	RemoteViews rv= new RemoteViews(mApp.getPackageName(),R.layout.smallnotification);
+	return rv;
+	}
+
+private Notification  makesmallnotification(int draw,String message,String type,boolean once) {
+	mkbuilder(type);
+	Log.i(LOG_ID,"makesmallnotification");
+        GluNotBuilder.setSmallIcon(draw).setOnlyAlertOnce(once);//.setContentTitle(message);
+	if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+		GluNotBuilder.setVisibility(VISIBILITY_PUBLIC);
+	}
+	if(!isWearable) {
+		RemoteViews remoteViews= makesmallremote();
+//		remoteViews.setTextViewText(R.id.nottext,"");
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+			GluNotBuilder.setCustomContentView(remoteViews);
+		}
+		else
+			GluNotBuilder.setContent(remoteViews);
+		}
+	if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+		GluNotBuilder.setTimeoutAfter(glucosetimeout);
+	}
+		if(isWearable) {GluNotBuilder.setAutoCancel(true);}
+	if(once)
+		GluNotBuilder.setPriority(Notification.PRIORITY_DEFAULT);
+	else  {
+		//GluNotBuilder.setPriority(Notification.PRIORITY_HIGH);
+
+		GluNotBuilder.setPriority(Notification.PRIORITY_MAX);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			GluNotBuilder.setCategory(Notification.CATEGORY_ALARM);
+		}
+	}
+
+	 Log.i(LOG_ID,(once?"":"not ")+"only once");
+
+	 Notification notif= GluNotBuilder.build();
+	 notif.when = System.currentTimeMillis();
+	 return notif;
+    }
+
+
+
+Notification getforgroundnotification() {
+	final String mess= app.getString(SensorBluetooth.blueone!=null?R.string.connectwithsensor:R.string.exchangedata);
+	Notification not=makenotification(R.drawable.novalue,mess,GLUCOSENOTIFICATION,true);
+	not.flags|= FLAG_ONGOING_EVENT;
+	return not;
+	}
+
+private void novalue() {
+	Log.i(LOG_ID,"novalue");
+
+	fornotify(getforgroundnotification());
+//	notificationManager.notify(glucosenotificationid,getforgroundnotification());
+	}
+public void foregroundno(Service service) {
+	Notification not=getforgroundnotification();
+     	service.startForeground(glucosenotificationid, not);
+	Log.i(LOG_ID,"startforeground");
+	}
+static public void foregroundnot(Service service) {
+	Application app=service.getApplication();
+	init(app);
+	onenot.foregroundno(service);
+	}	
+ public void  placelargenotification(int draw,String message,String type,boolean once) {
+        hasvalue=true;
+//        notificationManager.notify(notid,makenotification(draw,message,type,once));
+	fornotify(makenotification(draw,message,type,once));
+
+    }
+static int testtimes=1;
+static void testnot() {
+	float gl=11.4f;
+	var timmsec= System.currentTimeMillis()-1000;
+	float rate=(float)(1.6*Math.pow(-1,testtimes));
+	--testtimes;
+	boolean waiting=false;
+	var sglucose=new strGlucose(timmsec/1000L, String.format(Applic.usedlocale,Notify.glucoseformat, gl), "Hallo", rate);
+	Notify.onenot.normalglucose(sglucose,gl, rate,waiting);
+ }
+ public void  arrowplacelargenotification(int kind,int draw,String message,strGlucose glucose,String type,boolean once) {
+        hasvalue=true;
+	fornotify(makearrownotification(kind,draw,message,glucose,type,once));
+
+    }
+ public void  glucosenotification(int draw,String message,String type,boolean once) {
+ 	Log.i(LOG_ID,"notify "+message);
+//	placelargenotification(draw,message,type,once);
+//	fornotify(Applic.TargetSDK>30?makesmallnotification(draw,message,type,once):makenotification(draw,message,type,once));
+	fornotify(makenotification(draw,message,type,once));
+//	fornotify(makenotification(draw,message,type,once));
+	}
+ public void  arrowglucosenotification(int kind,int draw,String message,strGlucose glucose,String type,boolean once) {
+ 	Log.i(LOG_ID,"notify "+message);
+	fornotify(makearrownotification( kind,draw, message, glucose, type, once)) ;
+	}
+
+final private 	int numalarmid=81432;
+
+
+static DateFormat timef = DateFormat.getTimeInstance(DateFormat.SHORT);
+
+Notification.Builder  NumNotBuilder=null;
+	@SuppressWarnings("deprecation")
+public void  notifyer(int draw,String message,String type,int notid) {
+	 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+		 NumNotBuilder = new Notification.Builder(mApp, type);
+	 }
+	 else
+		 NumNotBuilder = new Notification.Builder(mApp);
+
+//	notificationManager.cancel(glucosenotificationid);
+
+	 Intent notifyIntent = new Intent(mApp,MainActivity.class);
+	notifyIntent.putExtra(fromnotification,true);
+        notifyIntent.addCategory(Intent. CATEGORY_LAUNCHER ) ;
+        notifyIntent.setAction(Intent. ACTION_MAIN ) ;
+        notifyIntent.setFlags(Intent. FLAG_ACTIVITY_CLEAR_TOP | Intent. FLAG_ACTIVITY_SINGLE_TOP );
+	PendingIntent notifyPendingIntent = PendingIntent.getActivity(mApp, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT|penmutable);
+
+	NumNotBuilder.setAutoCancel(true).setContentIntent(notifyPendingIntent).setContentTitle(message);
+//	NumNotBuilder.setAutoCancel(true).setContentIntent(notifyPendingIntent).setSubText(message);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			NumNotBuilder.setVisibility(VISIBILITY_PUBLIC);
+			NumNotBuilder.setCategory(Notification.CATEGORY_ALARM);
+		}
+	var timemess=			timef.format(System.currentTimeMillis()) + ": " + message;
+	showpopupalarm(timemess,false);
+	if(!isWearable) {
+		RemoteViews NumRemoteViewss = new RemoteViews(mApp.getPackageName(), R.layout.numalarm);
+		NumRemoteViewss.setInt(R.id.text, "setBackgroundColor", WHITE);
+		NumRemoteViewss.setTextColor(R.id.text, BLACK);
+		NumRemoteViewss.setTextViewText(R.id.text, timemess);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+			NumNotBuilder.setCustomContentView(NumRemoteViewss);
+		} else
+			NumNotBuilder.setContent(NumRemoteViewss);
+		}
+//	NumNotBuilder.setSmallIcon(draw).setPriority(Notification.PRIORITY_HIGH);
+	NumNotBuilder.setSmallIcon(draw).setPriority(Notification.PRIORITY_MAX);
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+			NumNotBuilder.setTimeoutAfter(1000L*60*60*2);
+		}
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
+		NumNotBuilder.setGroup("aa1");
+	}
+	notificationManager.notify(notid,NumNotBuilder.build());
+	}
+ public void  amountalarm(String message) {
+ 	try {
+		mksound(3);
+		notifyer( R.drawable.numalarm ,message,NUMALARM,numalarmid);
+		}
+	catch(Throwable e) {
+		Log.stack(LOG_ID,e);
+		}
+	}
+//final private 	int lossalarmid=77332;
+ public void  lossalarm(long time) {
+ 	Log.i(LOG_ID,"lossalarm");
+	final String message= "***  "+mApp.getString(R.string.newnewvalue)+ timef.format(time)+" ***";
+
+	glucosealarm(4,R.drawable.loss ,message, GLUCOSENOTIFICATION ,true);
+	}
+	
+
+
+
+}

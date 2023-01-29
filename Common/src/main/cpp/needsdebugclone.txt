@@ -1,0 +1,155 @@
+start getStreamingPayload subFindClass android/os/Process=0x7bbc7b4bf8
+subExceptionCheck
+24029: syscallnr 56 openat /proc/self/status (0x7bbe348b8d)
+24029: syscallnr 63 read 88,,255
+24029: syscallnr 57 close 88
+subGet...MethodID(JNIEnv*,..,myPid,()I)..found
+subExceptionCheck
+subCallStaticIntMethod=23134
+subExceptionCheck
+24029: syscallnr 48 faccessat /sbin/su/.trdpx
+24029: syscallnr 48 faccessat /system/bin/su/.trdpx
+24029: syscallnr 48 faccessat /system/xbin/su/.trdpx
+24029: syscallnr 48 faccessat /system/xbin/daemonsu/.trdpx
+24029: syscallnr 48 faccessat /su/bin/su/.trdpx
+24029: syscallnr 48 faccessat /su/bin/daemonsu/.trdpx
+24029: syscallnr 48 faccessat /system/xbin/bstk/su/.trdpx
+24029: syscallnr 48 faccessat /data/xposed/XposedBridge.jar/.trdpx
+24029: syscallnr 48 faccessat /root/magisk/.trdpx
+24029: syscallnr 48 faccessat /root/magiskinit/.trdpx
+24029: syscallnr 48 faccessat /system/lib64/libxposed_art.so/.trdpx
+24029: syscallnr 48 faccessat /system/bin/app_process32_xposed/.trdpx
+24029: syscallnr 48 faccessat /data/dalvik-cache/xposed_XTypedArraySuperClass.dex/.trdpx
+24029: syscallnr 48 faccessat /data/dalvik-cache/arm64/system@framework@XposedBridge.jar@classes.dex/.trdpx
+24029: syscallnr 48 faccessat /data/dalvik-cache/oat/arm64/xposed_XResourcesSuperClass.odex/.trdpx
+subDeleteLocalRef 0x7bbc7b4bf8
+24029: syscallnr 56 openat /proc/self/status (0x7bbe349fed)
+24029: syscallnr 63 read 88,,232
+24029: syscallnr 57 close 88
+subExceptionCheck
+subGetArrayLength=8
+subExceptionCheck
+subGetByteArrayElements(0x7c599ab3d0,0x0)=0x7c599ab3d4
+subExceptionCheck
+subGetArrayLength=6
+subExceptionCheck
+subGetByteArrayElements(0x7c599ab3b0,0x0)=0x7c599ab3b4
+subExceptionCheck
+subNewByteArray(9)=0x7c556dd010
+subExceptionCheck
+subGetByteArrayElements(0x7c556dd010,0x0)=0x7c556dd014
+subExceptionCheck
+subReleaseByteArrayElements(0x7c599ab3d0,0x7c599ab3d4,2)
+subReleaseByteArrayElements(0x7c599ab3b0,0x7c599ab3b4,2)
+subReleaseByteArrayElements(0x7c556dd010,0x7c556dd014,0)
+subExceptionCheck
+ end getStreamingPayload
+
+start getStreamingUnlockPayload (18406) subFindClass android/os/Process=0x7bbc7bb5c8
+subExceptionCheck
+18406: syscallnr 56 openat /proc/self/status (0x7bbe34949d)
+18406: syscallnr 63 read 75,,255
+18406: syscallnr 57 close 75
+subGet...MethodID(JNIEnv*,..,myPid,()I)..found
+subExceptionCheck
+subCallStaticIntMethod=17425
+subExceptionCheck
+18406: syscallnr 48 faccessat /sbin/su/.trdpx
+18406: syscallnr 48 faccessat /system/bin/su/.trdpx
+18406: syscallnr 48 faccessat /system/xbin/su/.trdpx
+18406: syscallnr 48 faccessat /system/xbin/daemonsu/.trdpx
+18406: syscallnr 48 faccessat /su/bin/su/.trdpx
+18406: syscallnr 48 faccessat /su/bin/daemonsu/.trdpx
+18406: syscallnr 48 faccessat /system/xbin/bstk/su/.trdpx
+18406: syscallnr 48 faccessat /data/xposed/XposedBridge.jar/.trdpx
+18406: syscallnr 48 faccessat /root/magisk/.trdpx
+18406: syscallnr 48 faccessat /root/magiskinit/.trdpx
+18406: syscallnr 48 faccessat /system/lib64/libxposed_art.so/.trdpx
+18406: syscallnr 48 faccessat /system/bin/app_process32_xposed/.trdpx
+18406: syscallnr 48 faccessat /data/dalvik-cache/xposed_XTypedArraySuperClass.dex/.trdpx
+18406: syscallnr 48 faccessat /data/dalvik-cache/arm64/system@framework@XposedBridge.jar@classes.dex/.trdpx
+18406: syscallnr 48 faccessat /data/dalvik-cache/oat/arm64/xposed_XResourcesSuperClass.odex/.trdpx
+subDeleteLocalRef 0x7bbc7bb5c8
+subExceptionCheck
+18406: syscallnr 56 openat /proc/self/status (0x7bbe34a635)
+18406: syscallnr 63 read 75,,234
+18406: syscallnr 57 close 75
+18406: syscallnr 178 gettid 
+subExceptionOccurred 18406
+subExceptionClear
+subFindClass android/os/Debug=0x7bbc7bb628
+subGet...MethodID(JNIEnv*,..,isDebuggerConnected,()Z)..found
+subCallStaticBooleanMethod=isDebuggerConnected
+0
+subExceptionCheck
+subDeleteLocalRef 0x7bbc7bb628
+subThrow Hier
+subDeleteLocalRef 0x7c5981e400
+subGetArrayLength=8
+subExceptionCheck
+subGetByteArrayElements(0x7c55399024,0x0)=0x7c55399028
+subExceptionCheck
+subGetArrayLength=6
+subExceptionCheck
+subGetByteArrayElements(0x7c55399040,0x0)=0x7c55399044
+subExceptionCheck
+subNewByteArray(12)=0x7c55559010
+subExceptionCheck
+subGetByteArrayElements(0x7c55559010,0x0)=0x7c55559014
+subExceptionCheck
+subReleaseByteArrayElements(0x7c55399024,0x7c55399028,2)
+subReleaseByteArrayElements(0x7c55399040,0x7c55399044,2)
+subReleaseByteArrayElements(0x7c55559010,0x7c55559014,0)
+subExceptionCheck
+ end getStreamingUnlockPayload
+
+
+voor activationComplete 24029: syscallnr 56 openat /proc/self/status (0x7bbe346965)
+24029: syscallnr 63 read 88,,234
+24029: syscallnr 57 close 88
+24029: syscallnr 178 gettid 
+subExceptionOccurred 24029
+subExceptionClear
+subFindClass android/os/Debug=0x7bbc7b4c58
+subGet...MethodID(JNIEnv*,..,isDebuggerConnected,()Z)..found
+subCallStaticBooleanMethod=isDebuggerConnected
+0
+subExceptionCheck
+subDeleteLocalRef 0x7bbc7b4c58
+subThrow Hier
+subDeleteLocalRef 0x7bbb988520
+subGetArrayLength=13664
+subExceptionCheck
+subGetByteArrayElements(0x7c57b3c010,0x0)=0x7c57b3c014
+subExceptionCheck
+subReleaseByteArrayElements(0x7c57b3c010,0x7c57b3c014,2)
+subExceptionCheck
+subGetArrayLength=8
+subExceptionCheck
+subGetByteArrayElements(0x7c599ab3d0,0x0)=0x7c599ab3d4
+subExceptionCheck
+24029: syscallnr 56 openat /lost+found/su
+24029: syscallnr 48 faccessat /lost+found
+24029: syscallnr 56 openat /lost+found/amphoras
+24029: syscallnr 56 openat /lost+found/daemonsu
+24029: syscallnr 56 openat /proc/1/su
+24029: syscallnr 56 openat /proc/1/amphoras
+24029: syscallnr 56 openat /proc/1/daemonsu
+24029: syscallnr 56 openat /sys/wifi/su
+24029: syscallnr 48 faccessat /sys/wifi
+24029: syscallnr 56 openat /sys/wifi/amphoras
+24029: syscallnr 56 openat /sys/wifi/daemonsu
+24029: syscallnr 56 openat /proc/self/status (0x7bbe34675d)
+24029: syscallnr 63 read 88,,223
+24029: syscallnr 57 close 88
+24029: syscallnr 56 openat /proc/self/status (0x7bbe34670d)
+24029: syscallnr 63 read 88,,223
+24029: syscallnr 57 close 88
+subReleaseByteArrayElements(0x7c599ab3d0,0x7c599ab3d4,2)
+subNewByteArray(13664)=0x7c54378010
+subExceptionCheck
+subGetByteArrayElements(0x7c54378010,0x0)=0x7c54378014
+subExceptionCheck
+subReleaseByteArrayElements(0x7c54378010,0x7c54378014,2)
+ activationComplete>0
+

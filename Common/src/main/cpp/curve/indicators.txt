@@ -1,0 +1,16 @@
+Formula to calculate GMI:
+GMI(%) = 3.31 + 0.02392 x [mean glucose in mg/dL]
+GMI(mmol/mol) = 12.71 + 4.70587 x [mean glucose in mmol/L]
+typedef unsigned tottype;
+int levels[] {250,180,70,40};
+int counts[4];
+tottype total;
+gem;
+sd;
+ getdata( std::vector<pair<const ScanData*,const ScanData*>> polldata) {
+	for(auto [firstin,lastin]:polldata) {
+		const ScanData *start=firstvalid(firstin);
+		const ScanData *last=lastvalid(lastin-1);
+		for(;it<=last;it++) {
+			if(!it->valid()) 
+				continue;

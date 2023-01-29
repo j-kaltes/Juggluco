@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="tk.glucodata">
+
+
+
+    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.BODY_SENSORS"/>
+    <application
+    android:debuggable="true"
+
+    android:name="tk.glucodata.Applic"
+        android:allowBackup="false"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="false"
+	android:localeConfig="@xml/locales_config"
+	android:persistent="true"
+        android:extractNativeLibs="true" 
+	android:theme="@style/Theme.WatchFace"
+        tools:ignore="HardcodedDebugMode">
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <activity
+            android:name="tk.glucodata.MainActivity"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
+	    android:windowSoftInputMode="stateHidden|adjustPan"
+            android:label="@string/app_name"
+            android:launchMode="singleTask"
+	    android:autoRemoveFromRecents="false"
+	    android:excludeFromRecents="false"
+	    android:stateNotNeeded="true"
+            android:exported="true"
+	    >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+		<category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.nfc.action.TECH_DISCOVERED"
+                android:resource="@xml/nfc_tech_filter" />
+        </activity>
+        <activity-alias
+            android:name="tk.glucodata.glucodata"
+            android:enabled="true"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:targetActivity="tk.glucodata.MainActivity">
+            <intent-filter>
+                <action android:name="android.nfc.action.TECH_DISCOVERED" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <meta-data
+                android:name="android.nfc.action.TECH_DISCOVERED"
+                android:resource="@xml/nfc_tech_filter" />
+        </activity-alias>
+<receiver android:name="tk.glucodata.NumAlarm"
+            android:enabled="true"
+            android:exported="true" >
+        <intent-filter>
+            <action android:name="android.intent.action.BOOT_COMPLETED" />
+            <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+            <category android:name="android.intent.category.DEFAULT" />
+        </intent-filter>
+</receiver>
+<receiver android:name="tk.glucodata.LossOfSensorAlarm"
+            android:enabled="true"
+            android:exported="true" >
+</receiver>
+<receiver android:name="tk.glucodata.Maintenance"
+            android:enabled="true"
+            android:exported="true" >
+</receiver>
+ <service android:name="tk.glucodata.keeprunning" android:exported="true" android:enabled="true" android:foregroundServiceType="connectedDevice" />
+        <meta-data
+            android:name="com.google.android.wearable.standalone"
+            android:value="true" />
+
+        <uses-library
+            android:name="com.google.android.wearable"
+            android:required="true" />
+
+
+        <service
+            android:name="tk.glucodata.watchface.WatchFaceService"
+            android:directBootAware="true"
+            android:exported="true"
+            android:label="@string/analog_watch_face_name"
+            android:permission="android.permission.BIND_WALLPAPER">
+            <intent-filter>
+                <action android:name="android.service.wallpaper.WallpaperService" />
+                <category android:name="com.google.android.wearable.watchface.category.WATCH_FACE" />
+            </intent-filter>
+		<meta-data android:name="android.service.wallpaper.square_mode" android:value="false" />
+
+            <meta-data
+                android:name="com.google.android.wearable.watchface.preview"
+                android:resource="@drawable/watch_preview" />
+            <meta-data
+                android:name="com.google.android.wearable.watchface.preview_circular"
+                android:resource="@drawable/watch_preview" />
+            <meta-data
+                android:name="android.service.wallpaper"
+                android:resource="@xml/watch_face" />
+            <meta-data
+                android:name="com.google.android.wearable.watchface.wearableConfigurationAction"
+                android:value="androidx.wear.watchface.editor.action.WATCH_FACE_EDITOR" />
+
+            <meta-data
+                android:name="com.google.android.wearable.watchface.companionBuiltinConfigurationEnabled"
+                android:value="true" />
+        </service>
+
+        <activity
+            android:name="tk.glucodata.watchface.editor.WatchFaceConfigActivity"
+            android:exported="true"
+            android:label="@string/title_activity_watch_face_config">
+
+            <intent-filter>
+                <action android:name="androidx.wear.watchface.editor.action.WATCH_FACE_EDITOR" />
+
+                <category android:name="com.google.android.wearable.watchface.category.WEARABLE_CONFIGURATION" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+	 <service
+            android:name="tk.glucodata.MessageReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
+                <data android:host="*" android:pathPrefix="/bluetooth" android:scheme="wear" />
+                <data android:host="*" android:pathPrefix="/data" android:scheme="wear" />
+                <data android:host="*" android:pathPrefix="/netinfo" android:scheme="wear" />
+                <data android:host="*" android:pathPrefix="/settings" android:scheme="wear" />
+                <data android:host="*" android:pathPrefix="/start" android:scheme="wear" />
+                <data android:host="*" android:pathPrefix="/wake" android:scheme="wear" />
+                <data android:host="*" android:pathPrefix="/wakestream" android:scheme="wear" />
+            </intent-filter>
+         </service>
+
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            tools:node="remove" />
+
+
+    </application>
+    <uses-feature android:name="android.hardware.nfc" android:required="false" />
+    <uses-feature android:glEsVersion="0x00020000" android:required="true" />
+<!--<uses-permission-sdk-23 android:name="android.permission.ACCESS_NOTIFICATION_POLICY"/>-->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/> 
+
+
+ <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" android:maxSdkVersion="32" />
+ <uses-permission android:name="android.permission.USE_EXACT_ALARM"/>
+<uses-permission android:name="android.permission.WAKE_LOCK" /> 
+<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.NFC" />
+    <uses-permission android:name="android.permission.INTERNET" />
+ <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"   android:maxSdkVersion="30"  />
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"   android:maxSdkVersion="30"  />
+<uses-permission android:name="android.permission.BLUETOOTH"  />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <!-- Needed only if your app looks for Bluetooth devices.
+         You must add an attribute to this permission, or declare the
+         ACCESS_FINE_LOCATION permission, depending on the results when you
+         check location usage in your app. -->
+  <uses-permission android:name="android.permission.BLUETOOTH_SCAN" android:usesPermissionFlags="neverForLocation" />
+    <!-- Needed only if your app makes the device discoverable to Bluetooth
+         devices. -->
+    <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
+    <!-- Needed only if your app communicates with already-paired Bluetooth
+         devices. -->
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+
+    <queries>
+        <intent>
+            <action android:name="android.nfc.action.TECH_DISCOVERED"/>
+        </intent>
+    </queries>
+    <queries>
+        <intent>
+            <action android:name="com.eveningoutpost.dexdrip.BgEstimate"/>
+        </intent>
+    </queries>
+    <queries>
+        <intent>
+            <action android:name="glucodata.Minute"/>
+        </intent>
+    </queries>
+
+<uses-permission-sdk-23 android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+
+    <uses-feature android:name="android.hardware.bluetooth_le" android:required="false"/>
+    
+    <uses-feature android:name="android.hardware.type.watch" />
+    <uses-feature android:name="com.google.android.wearable" android:required="false" />
+    <uses-permission android:name="com.google.android.permission.PROVIDE_BACKGROUND" />
+    <uses-permission android:name="com.google.android.wearable.permission.RECEIVE_COMPLICATION_DATA" />
+    <uses-permission android:name="com.google.android.wearable.permission.RECEIVE_COMPLICATION_DATA_PRIVILEGED" />
+</manifest>

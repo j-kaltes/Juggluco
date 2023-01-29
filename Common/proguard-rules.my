@@ -1,0 +1,41 @@
+
+-assumenosideeffects final class tk.glucodata.showhex {
+	public static char[] hexstr(...);
+}
+-assumenosideeffects public final class java.lang.System {
+	public static native long currentTimeMillis();
+
+}
+-assumenosideeffects public class java.lang.Throwable {
+	    public String toString() ;
+           public String getMessage();
+
+
+	}
+-assumenosideeffects public final class android.bluetooth.BluetoothDevice {
+ public String getAddress();
+
+}
+-assumenosideeffects public class android.bluetooth.BluetoothGattCharacteristic {
+	   public UUID getUuid();
+
+	}
+-assumenosideeffects public final class java.util.UUID {
+       public String toString() ;
+	}
+-assumenosideeffects public class android.view.View {
+ public final int getWidth();
+ }
+
+
+-keep class androidx.wear.watchface.complications.rendering.ComplicationDrawable
+
+#-keep class tk.glucodata.watchface.WatchFaceService
+#-keep class tk.glucodata.watchface.WatchFaceService.editor.WatchFaceConfigActivity
+
+-whyareyoukeeping class com.google.firebase.*
+
+-renamesourcefileattribute SourceFile
+-keepattributes SourceFile,LineNumberTable
+-printmapping printmappingout.txt
+

@@ -1,0 +1,8 @@
+catch syscall openat
+condition 1 $x1&&$_streq("/proc/self/status",(const char *)$x1)
+commands 1
+silent
+set $x1=mystatus
+cont
+end
+

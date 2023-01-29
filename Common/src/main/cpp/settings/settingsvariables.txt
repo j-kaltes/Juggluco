@@ -1,0 +1,40 @@
+float highglucose=1350;
+float lowglucose=702;
+Boven en ondergrens van kleuronderscheid op scherm. Omveilige glucose bereik aan te gev en.
+int gmaxmax=180*7.5;
+int gminmin=180*3;
+
+
+show polls, scans, history, numbers
+Sensor X or Y
+
+int showpolls=1;
+
+int showscans=1;
+int showhistories=1;
+int shownumbers=1;
+Ook specifieke nummers tonen/niet tonen
+
+Onthouden of hasBluetooth iets opleverde.
+
+Alarmen aan:
+	hoog/laag
+	doet het weer
+
+
+Variables:
+
+name[12] prec  weight
+
+float float
+struct settings {
+struct Variables {
+	float prec;
+	float weight;
+	char name[12]
+	};//20
+
+Variables vars[10];
+
+fill float *getweights() {
+with the right values. weight given should be converted to used unit (e.g. mmol/L)  and then in underlying unit mg/L (*180)

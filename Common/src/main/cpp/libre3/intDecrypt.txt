@@ -1,0 +1,22 @@
+
+	byte[] olddec=intDecrypt(cryptptr,4, value);
+        Natives.saveLibre3History(this.sensorptr, olddec);
+
+private	void fast_data(byte[] encryp) {
+	byte[] decr=intDecrypt(cryptptr,5,encryp);
+        if (decr == null) {
+            info("fast_data decrypt went wrong");
+        } else {
+            Natives.saveLibre3fastData(sensorptr, decr);
+        }
+    }
+            byte[] decr = intDecrypt(cryptptr,3, oneMinuteRawData);
+            if (decr == null) {
+                return;
+            }
+            long res=Natives.saveLibre3MinuteL(this.sensorptr, decr);
+
+
+
+	byte[] decr= intDecrypt(cryptptr,2,value);
+	int res=Natives.libre3processpatchstatus(sensorptr,decr);

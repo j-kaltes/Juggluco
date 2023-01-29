@@ -1,0 +1,49 @@
+
+			if(EBADF==ern||EINVAL==ern||ern==ENOTSOCK||ern== EOPNOTSUPP) {
+
+       EAGAIN or EWOULDBLOCK
+              The socket is marked nonblocking and no connections are present to be accepted.  POSIX.1-2001 and POSIX.1-2008 allow either error to be returned for this case, and do
+              not require these constants to have the same value, so a portable application should check for both possibilities.
+
+
+       ECONNABORTED
+              A connection has been aborted.
+
+       EINTR  The system call was interrupted by a signal that was caught before a valid connection arrived; see signal(7).
+       EMFILE The per-process limit on the number of open file descriptors has been reached.
+       ENOBUFS, ENOMEM
+              Not enough free memory.  This often means that the memory allocation is limited by the socket buffer limits, not by the system memory.
+       EPERM  Firewall rules forbid connection.
+
+
+
+
+
+
+
+
+
+
+       EBADF  sockfd is not an open file descriptor.
+       EINVAL Socket is not listening for connections, or addrlen is invalid (e.g., is negative).
+       ENOTSOCK
+              The file descriptor sockfd does not refer to a socket.
+       EOPNOTSUPP
+              The referenced socket is not of type SOCK_STREAM.
+
+       EFAULT The addr argument is not in a writable part of the user address space.
+       EPROTO Protocol error.
+
+
+
+
+
+
+
+
+
+
+
+
+
+

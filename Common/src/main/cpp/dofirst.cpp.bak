@@ -1,0 +1,101 @@
+
+#include "config.h"
+#include <string_view>
+#if defined(LIBRE3)
+#include <sys/stat.h>
+#include <string.h>
+#include "inout.h"
+#define _GNU_SOURCE 1
+#include <dlfcn.h>
+#include "settings/settings.h"
+
+/*
+static const char *owerjslkdfjlsdQQ(void) {
+    Dl_info dl_info;
+    dladdr((void*)owerjslkdfjlsdQQ, &dl_info);
+    return(dl_info.dli_fname);
+} */
+extern int setenv(const char *name, const char *value, int overwrite);
+
+//const char bindir[]=FILESDIR "/bin";
+const char bindir[]=FILESDIR "/bin";
+constexpr const int lastnamelen=sizeof("libg.so")-1;
+#define SHAREDLIB
+#ifdef SHAREDLIB
+#ifndef NDEBUG
+const char pmcomstart[]=R"(export PATH=/system/bin
+date >> )" FILESDIR R"(/dates.txt
+echo pid=$$ $0 $@ >> )" FILESDIR R"(/dates.txt
+echo package:)";
+#else
+const char pmcomstart[]=R"(export PATH=/system/bin
+echo package:)";
+#endif
+constexpr const int pmstartlen=sizeof(pmcomstart)-1;
+#else
+
+#ifndef NDEBUG
+const char pmcom[]=R"(export PATH=/system/bin
+date >> )" FILESDIR R"(/dates.txt
+echo pid=$$ $0 $@ >> )" FILESDIR R"(/dates.txt
+echo package:)" FILESDIR R"(/.tmpAY8l2
+)";
+#else
+const char pmcom[]=R"(export PATH=/system/bin
+echo package:)" FILESDIR R"(/.tmpAY8l2
+)";
+#endif
+#endif
+
+void usepath(std::string_view libdirname) {
+#if defined(__aarch64__) 
+   if(settings->data()->triedasm&&!settings->data()->asmworks&& settings->data()->setpathworks) 
+#else
+   if(settings->data()->setpathworks) 
+#endif
+	{
+	LOGGER("usepath(%s) use\n",libdirname.data());
+	mkdir(FILESDIR,0755);
+	mkdir(bindir,0755);
+	LOGGER("FILESDIR=%s, bindir=%s\n",FILESDIR,bindir);
+	if(setenv("PATH", bindir, 1)) {
+		flerror("setenv(PATH,%s,1)\n",bindir);
+		}
+
+
+#ifdef SHAREDLIB
+/*	const char *thisname=owerjslkdfjlsdQQ();
+	const int pathlen=strlen(thisname)-lastnamelen;
+*/;
+	int pathlen=libdirname.size();
+	constexpr const char endname[]="/libinit.so";
+	constexpr const int endnamelen=sizeof(endname)-1;
+extern std::string_view libdirname;
+	char pmcom[pmstartlen+pathlen+endnamelen+2];
+	memcpy(pmcom,pmcomstart,pmstartlen);
+	int pos=pmstartlen;
+	memcpy(pmcom+pos,libdirname.data(),pathlen);
+	pos+=pathlen;
+	memcpy(pmcom+pos,endname,endnamelen);
+	pos+=endnamelen;
+	strcpy(pmcom+pos,"\n");
+	pos++;
+#else
+	int pos=sizeof(pmcom)-1;
+#endif	
+	pathconcat cmd(bindir,"cmd");	
+ 	writeall(cmd,pmcom,pos);
+	chmod(cmd, 0755);
+	pathconcat app(bindir,"app_process");
+
+ 	writeall(app,pmcom,pos);
+	chmod(app, 0755);
+	}
+else  {
+	LOGGER("usepath(%s) dont use \n",libdirname.data());
+	}
+	}
+#else
+void usepath(std::string_view) {
+	}
+#endif

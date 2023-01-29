@@ -1,0 +1,5 @@
+#/o/home/jka/android-studio/jre/bin/javap -s -cp /o/home/jka/src/android/Nativec/app/build/intermediates/javac/debug/classes com.abbottdiabetescare.flashglucose.sensorabstractionservice.dataprocessing.DataProcessingScanOutputs
+/o/home/jka/android-studio/jre/bin/javap -s -cp /o/home/jka/src/android/Librefree/app/build/intermediates/javac/debug/classes localhost.librefree.Librefree
+#/o/home/jka/android-studio/jre/bin/javap -s -cp /o/home/jka/src/android/Nativec/app/build/intermediates/javac/debug/classes com.abbottdiabetescare.flashglucose.sensorabstractionservice.dataprocessing.AlgorithmResults
+#/o/home/jka/android-studio/jre/bin/javap -s -cp /o/home/jka/src/android/Nativec/app/build/intermediates/javac/debug/classes com.abbottdiabetescare.flashglucose.sensorabstractionservice.dataprocessing.GlucoseValue
+#/o/home/jka/android-studio/jre/bin/javap -s -cp /o/home/jka/src/android/Nativec/app/build/intermediates/javac/debug/classes "com.abbottdiabetescare.flashglucose.sensorabstractionservice.dataprocessing.Out"

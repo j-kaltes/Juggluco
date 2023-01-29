@@ -1,0 +1,7 @@
+hallo Hallo HALLO
+bar FOO Foo:%S/bar/bar/gi
+
+bar bar Foo
+
+foo Foo FOO
+

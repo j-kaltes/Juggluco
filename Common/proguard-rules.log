@@ -1,0 +1,21 @@
+-assumenosideeffects public final class android.util.Log {
+    public static int v(...);
+    public static int w(...);
+    public static int d(...);
+    public static int i(...) ;
+     public static String getStackTraceString(...);
+}
+-whyareyoukeeping class android.util.Log 
+-assumenosideeffects public final class tk.glucodata.Log {
+   private static void log(...);
+    public static void v(...);
+    public static void w(...);
+    public static void d(...);
+    public static void e(...);
+    public static void stack(...);
+    public static void d(String,String);
+    public static void i(...) ;
+    public static void format(...) ;
+}
+
+-whyareyoukeeping class tk.glucodata.Log 

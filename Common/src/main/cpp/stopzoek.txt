@@ -1,0 +1,4 @@
+Stoppen met zoeken sensors voor periode:
+	- startdatum interval voor enddatum sensor.
+		-Probleem overlappende sensor die nog doorloopt eerder;
+	- startdatum sensor meer dan twee weken voor start periode.

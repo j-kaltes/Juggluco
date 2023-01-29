@@ -1,0 +1,1703 @@
+<resources>
+<string name="ringtone" >
+<![CDATA[
+<h1>Beltoon</h1>
+<p style="line-height: 100%; margin-bottom: 0in">Geef aan welke
+beltoon gespeeld wordt voor een alarm of melding en voor hoeveel
+seconden.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>Minuten op
+non-actief</b>: Bij laag en hoog glucose alarmen, kun je ook aangeven
+na hoelang het alarm weer af moet gaan als de toestand aanhoudt. Als
+het alarm niet voor enige tijd gedeactiveerd zou worden, zou het
+alarm de volgende minuut bij het binnenkomen van een nieuwe glucose
+waarde, die nog steeds te hoog of te laag is, onmiddellijk weer
+afgaan.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>Geluid</b>: maak
+geluid</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>Standaard</b>:
+Beltoon die je krijg als je zelf geen beltoon selecteert.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>Selecteren</b>:
+Selecteer een beltoon. Op sommige Samsung smartphones is aan
+crashende ringtone picker app gepreïnstalleerd, zodat je een andere
+ringtone picker app moet installeren, bijvoorbeeld:
+<a href="https://play.google.com/store/apps/details?id=com.centralparkapps.ringo.ringtones">https://play.google.com/store/apps/details?id=com.centralparkapps.ringo.ringtones</a></p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>Trillen</b>:
+Alarm door trilling</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>Storen</b>: Maak
+ook geluid wanneer “<i>Niet storen</i>” aan staat. Als Juggluco
+niet de benodigde toestemming hiervoor heeft, wordt je naar een
+Android instellingen schermpje geleidt waar je Juggluco deze
+toestemming kunt geven. Door op &quot;<i>Play</i>&quot; te drukken
+terwijl &quot;<i>Niet storen</i>&quot; aan staat, kun je zien of
+alarmen al of niet werken tijdens &quot;<i>Niet storen</i>&quot;.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>Flits</b>:
+Smartphones met flits zaklamp hebben de mogelijk bij het afgaan van
+alarm, voor de aangeven hoeveelheid seconden, te flitsen. Handig in
+situaties waar het afgaan van telefoons verboden is en er geen
+duidelijke regels bestaan betreffende het gebruik van flitsen.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>Toestemming</b>:
+Hoewel ik het zelf nooit meegemaakt heb, wordt in internet forums
+zoals stackoverflow.com wel beweert, dat een app zou crashen als het
+de flits gebruikt wordt zonder Camera toestemming. Als dat het geval
+is kun je Juggluco deze toestemming geven door op <i>Toestemming</i>
+te drukken.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+]]>
+</string>
+<string name="reminders" >
+<![CDATA[
+<h1>Herinneringen</h1><p style="line-height: 100%; margin-bottom: 0in"><i>Herinneringen</i>
+herinneren je eraan als je een bepaalde hoeveelheid niet ingevoerd
+hebt binnen een bepaald tijdsinterval. Door op <b>N</b><b>i</b><b>e</b><b>u</b><b>w</b>
+te drukken kun je een nieuwe herinnering toevoegen.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Geef de begin- en
+eindtijd van de periode waarin je de aangegeven hoeveelheid onder de
+aangegeven label moet invoeren. Als de eindtijd bereikt is, bekijkt
+Juggluco of je tenminste de aangegeven hoeveelheid met het aangegeven
+label hebt ingevoerd na de begin tijd. Als dat niet het geval is,
+wordt een melding getoond en wordt er een alarmtoon gespeeld.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Je specificeert
+bijvoorbeeld de volgende herinnering:</p>
+<i><p style="line-height: 100%; margin-bottom: 0in"></p>
+<p style="line-height: 100%; margin-bottom: 0in">Levemir 6.0</p>
+<p style="line-height: 100%; margin-bottom: 0in"></p>
+<p style="line-height: 100%; margin-bottom: 0in">21:30-23:55</p>
+<p style="line-height: 100%; margin-bottom: 0in"></p>
+<p style="line-height: 100%; margin-bottom: 0in"></i>Juggluco zal nu een
+alarmtoon spelen na 23:55 als je niet tenminste 6 eenheden Levemir na
+21:30 invoerde.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Druk op een al
+ingevoerde herinnering om hem te wijzigen.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Als alles goed gaat
+werken herinneringen ook na een reboot, zonder dat de gebruiker
+Juggluco op hoeft te starten. Op sommige Huawei apparaten moet je de
+Android instellingen voor een programma wijzigen voordat dat
+programma bij het booten automatisch gestart mag worden. Hiervoor
+moet je naar <i>Android instellingen&rarr;Batterij&rarr;App opstart
+beheer</i> gaan. Daar moet je voor Juggluco &ldquo;<i>Handmatig
+beheren</i>&rdquo; selecteren, zodat &ldquo;<i>Automatisch
+opstarten</i>&rdquo;, &ldquo;<i>Secundair opstarten</i>&rdquo;en
+&ldquo;<i>Actief in de achtergrond</i>&rdquo; aan staan.</p>
+]]>
+</string>
+<string name="connectionoverview" >
+<![CDATA[
+<h1>Kloon</h1>
+<p style="line-height: 100%; margin-bottom: 0in">Zendt data naar of
+ontvang data van een ander apparaat; Het is mogelijk een verbinding
+te vormen met Juggluco op een ander Android apparaat en daar de
+zelfde data weer te geven als hier. Na het ontvangen van de scan data
+kan een Kloon apparaat ook contact maken met de sensor via Bluetooth.
+Om er voor te zorgen dat slechts een apparaat contact maakt met de
+sensor, wordt “Sensor via Bluetooth” automatisch uitgezet als
+Stream waarden ontvangen worden via IP/TCP.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Na <b>wlan</b> wordt
+de lokale wlan IP van dit apparaat getoond. Bij een verbinding over
+het thuis netwerk met een ander apparaat, moet je deze IP invoeren op
+dat andere apparaat als de IP waarmee een verbinding wordt gemaakt.
+Voor een verbinding over internet moet je deze IP samen met de poort
+in je modem configuratie invoeren als de IP en poort waar input op
+een externe poort heen moet.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Na <b>poort</b> kun
+je de TCP poort veranderen waar Juggluco op dit apparaat luistert
+naar verbindingen.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Door op <b>Verbinding
+toevoegen</b> te drukken kun je aangeven waarmee en hoe verbindingen
+te vormen.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>Verander
+hoeveelheden niet</b>: Als dit apparaat hoeveelheid data van Juggluco
+op een ander apparaat ontvangt, moet dit apparaat die gegeven niet
+veranderen. Als je dit aanvinkt, is dat onmogelijk.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>Sync</b> zendt
+data naar een verbonden apparaat of vraagt om nieuwe data. Dit is
+meestal niet nodig.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>Reinit</b>:
+verbreekt de bestaande en creëert een nieuwe verbinding.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>Wifi</b>
+(specifiek voor WearOS): gebruik Wifi in plaats van TCP over
+Bluetooth voor te verbinding tussen telefoon en horloge. Normaal
+gesproken is dit niet nodig als de telefoon een externe verbinding
+heeft (Wifi of mobiele data). Het kan gebruikt worden als de telefoon
+geen externe verbinding heeft en er op de telefoon een portable
+hotspot ingericht is waarmee het horloge verbonden is. De makers van
+WearOS denken dat Wifi aanzetten het accu gebruik drastisch
+vermeerdert, wat ik niet kan bevestigen. Hoe dan ook is de verbinding
+veel beter als de telefoon een externe verbinding heeft en WIFI
+uitgezet is op het horloge.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Bestaande
+verbindingen worden weergegeven. Getoond wordt de label, IP, poort,
+wat verzonden wordt en de datum en tijd van de laatste succesvolle
+sync.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Wat verzonden wordt,
+wordt als volgt afgekort:</p>
+<p style="line-height: 100%; margin-bottom: 0in">n: hoeveelheden
+(nummers)</p>
+<p style="line-height: 100%; margin-bottom: 0in">s: scans</p>
+<p style="line-height: 100%; margin-bottom: 0in">b: stream
+(bluetooth)</p>
+<p style="line-height: 100%; margin-bottom: 0in">r: ontvangt
+(receive)</p>
+]]>
+</string>
+<string name="addconnection" >
+<![CDATA[
+<h1 class="western">Verbinding toevoegen</h1>
+<p style="line-height: 100%; margin-bottom: 0in">Specificeer een
+verbinding met een ander exemplaar van Juggluco; Juggluco op een
+apparaat zendt data via IP/TCP naar Juggluco op een ander apparaat.
+Om een verbinding te vormen moet een van de Juggluco&rsquo;s
+luisteren op een poort en het andere exemplaar van Juggluco contact
+maken met die poort. De poort van de Juggluco die je nu gebruikt
+stond in het vorige schermpje (linker midden menu&rarr; Kloon). In
+het huidige schermpje wordt de poort aangegeven waarmee deze Juggluco
+contact maakt als het zelf actief contact maakt.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Als het exemplaar
+van Juggluco dat je nu gebruikt niet kan luisteren op een poort,
+selecteer &ldquo;<b>Active Only</b>&ldquo;. Als de andere kant niet
+kan luisteren op een poort, selecteer &ldquo;<b>Passive only</b>&rdquo;,
+in andere gevallen vink &ldquo;<b>Beide</b>&rdquo; aan. De Juggluco
+aan de andere kant moet het omgekeerde aangeven: <i>Passive only</i>
+als hier <i>Active only</i> werd aangegeven, <i>Active only</i> als
+hier <i>Passive only</i> werd aangegeven en <i>Beide</i> als hier
+<i>Beide</i> werd aangegeven.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Als het huidige
+exemplaar van Juggluco actief contact maakt, moet de IP aangegeven
+worden. Als dat apparaat meerdere IPs heeft geef er dan meer aan. Het
+kan bijvoorbeeld zijn dat de verbinding thuis via het thuis netwerk
+gaat en op andere plaatsen via een persoonlijke hotspot. Geef nooit
+de IPs van meerdere apparaten; in dat geval wordt een gedeelte van de
+data verzonden naar het ene en een ander gedeelte naar het andere
+apparaat.</p>
+<p style="line-height: 100%; margin-bottom: 0in">In alle gevallen op
+&ldquo;Active only&rdquo; na, kun je Detecteer aanvinken; in dat
+geval slaat Juggluco de eerste IP op die contact maakt met Juggluco.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Op twee manieren kan
+bepaald worden wie contact maakt:</p>
+<ul>
+	<li><p style="line-height: 100%; margin-bottom: 0in">Selecteer &ldquo;<b>Test
+	IP</b>&rdquo; om te testen op de IP;</p>
+	<li><p style="line-height: 100%; margin-bottom: 0in">Selecteer &ldquo;<b>Test
+	Label</b>&rdquo; om enkel een verbinding te vormen als de andere
+	kant hetzelfde label aangegeven heeft.</p>
+</ul>
+<p style="line-height: 100%; margin-bottom: 0in">De verbinding kan
+gebruikt worden om te ontvangen of te zenden. Selecteer &ldquo;<b>Ontvang
+van</b>&rdquo; om data te ontvangen van deze verbinding. Om te zenden
+naar deze verbinding, moet je aangeven welke data verzonden wordt:</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>Hoeveelheden</b>:
+dosis, eet en sport data;</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>Scans</b>: data
+ontvangen door de sensor te scannen (scans en history);</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>Stream</b>: data
+ontvangen via Bluetooth van de sensoren.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Soms is er al data
+aanwezig op het ontvangende apparaat. Aangegeven kan worden tot welke
+datum deze data aanwezig is.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>Begin</b>: geen
+data aanwezig</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>Nu</b>: alle data
+aanwezig</p>
+<p style="line-height: 100%; margin-bottom: 0in">Een <b>specifieke
+datum</b> bepaald door de beginpositie van het scherm.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Als een data bron
+wordt toegevoegd aan een bestaande verbinding, betaald deze datum
+enkel de toegevoegde data bron. Bijvoorbeeld, als <i>Scans</i> en
+<i>Stream</i> al naar deze verbinding verzonden worden en
+<i>Hoeveelheden</i> wordt toegevoegd, bepaald deze datum enkel vanaf
+welke datum <i>Hoeveelheden</i> verzonden worden.</p>
+<p style="line-height: 100%; margin-bottom: 0in">In het geval dat
+twee apparaten verbonden zijn via een onveilige verbinding, kan de
+data versleuteld en ondertekend worden door aan beide zeiden
+hetzelfde (maximaal) 16-letterige <b>wachtwoord</b> aan te geven.</p>
+<h2 class="western">Via internet</h2>
+<p style="line-height: 100%; margin-bottom: 0in">In de eenvoudigste
+situatie horen alle verbindingen tot je thuis netwerk en kunnen
+lokale IPs gebruikt worden. Het is ook mogelijk over internet via
+Wi-Fi een verbinding te vormen. In dat geval moet je de handleiding
+van je modem nazien om uit te vinden hoe een externe poort
+doorverwezen (<span lang="en-GB">forward</span><span lang="en-GB">ed</span>)
+kan worden naar een IP en poort binnen je thuis netwerk.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Twee smartphones
+verbonden via een mobiele data verbinding over internet, kunnen
+rechtstreeks met elkaar verbonden worden, als een van hen op een
+netwerk poort kan luisteren. Als geen van beide die mogelijkheid
+bezit, kunnen ze toch met elkaar communiceren via een derde apparaat.
+Een mogelijkheid is Juggluco te draaien op een derde Android apparaat
+dat thuis via een modem met het internet verbonden is en beide
+smartphones daarmee te verbinden. Een andere mogelijkheid is een
+command line programmaatje behorende tot Juggluco op een computer te
+draaien (bijvoorbeeld je PC or Amazon AWS):
+<a href="http://jkaltes.byethost16.com/Juggluco/cmdline/index.html">http://jkaltes.byethost16.com/Juggluco/cmdline/index.html</a></p>
+<p style="line-height: 100%; margin-bottom: 0in">Voor een poort
+forwarding handleiding, zie: 
+</p>
+<p style="line-height: 100%; margin-bottom: 0in"><a href="https://portforward.com/how-to-port-forward/">https://portforward.com/how-to-port-forward/</a></p>
+<p style="line-height: 100%; margin-bottom: 0in"><a href="https://stevessmarthomeguide.com/understanding-port-forwarding/">https://stevessmarthomeguide.com/understanding-port-forwarding/</a></p>
+<h2 class="western">Bluetooth zonder NFC</h2>
+<p style="line-height: 100%; margin-bottom: 0in">Het is mogelijk
+glucose waarden via Bluetooth te ontvangen, op een apparaat zonder
+NFC, op de volgende manier:</p>
+<ul>
+	<li><p style="line-height: 100%; margin-bottom: 0in">Initialiseer de
+	sensor via NFC op een apparaat met NFC;</p>
+	<li><p style="line-height: 100%; margin-bottom: 0in">Zendt de scan
+	en stream data naar het apparaat zonder NFC;</p>
+	<li><p style="line-height: 100%; margin-bottom: 0in">Keer de
+	richting van de stream data om in de betreffende kloon verbindingen;</p>
+	<li><p style="line-height: 100%; margin-bottom: 0in">Zet &ldquo;sensor
+	via Bluetooth&rdquo; UIT in het apparaat met NFC en AAN in het
+	apparaat zonder NFC;</p>
+	<li><p style="line-height: 100%; margin-bottom: 0in">Zet Bluetooth
+	aan in het apparaat zonder NFC.</p>
+</ul>
+<p style="line-height: 100%; margin-bottom: 0in">In deze opzet scan
+je met een apparaat en ontvangt een ander apparaat glucose waarden
+via Bluetooth, maar in beide apparaten moet alle sensor data aanwezig
+zijn, dus beide apparaten moeten zowel scan als stream data
+ontvangen. Je moet altijd stream data terugzenden naar het
+NFC-apparaat en scan data naar het apparaat zonder NFC, anders kan
+oude authenticatie data gebruikt worden of nieuwe gegevens
+overschreven worden met oude.</p>
+<p style="line-height: 100%; margin-bottom: 0in">De hoeveelheden
+hoeven niet overgezonden te worden.</p>
+<h1 class="western">Netwerk problemen</h1>
+<p style="line-height: 100%; margin-bottom: 0in">De
+netwerkspecificatie aan beide zijden, moet precies aansluiten; een
+enkele afwijking kan de overdracht onmogelijk maken.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Het kan zijn dat de
+verbinding vast loopt en gereset moet worden door WIFI uit en aan te
+zetten (soms moet het meerdere keren gebeuren voordat het netwerk
+weer werkt). Ook moet weleens op Sync gedrukt worden.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Het veranderen van
+een activeonly-passiveonly verbinding naar beide of andersom kan
+uitmaken. Een horloge-smartphone verbinding over Bluetooth werkt
+bijvoorbeeld enkel als het horloge <i>activeonly</i> is en de
+smartphone <i>passsiveonly</i>. Over mijn WIFI thuis netwerk, werkt
+<i>beide</i> ook.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Er moet rekening mee
+worden gehouden dat IPs veranderen als de netwerkverbinding
+verandert.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Een verbinding via
+het thuis netwerk gebruikt andere IPs dan een verbinding via
+een persoonlijke hotspot.</p>
+]]>
+</string>
+<string name="locationpermission" >
+<![CDATA[
+<p style="line-height: 100%; margin-bottom: 0in">
+Vroeger had Juggluco locatie toestemming nodig om het Bluetooth
+device adres van Freestyle Libre 2 sensoren te vinden. Nu verkrijgt
+Juggluco het device adres op een andere manier en is locatie
+toestemming niet meer nodig. 
+</p>
+<p style="line-height: 100%; margin-bottom: 0in">Juggluco gebruikt
+nog steeds de oude methode op Android 6, 7 en 7.1 en daar is locatie
+toestemming nog steeds nodig.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+]]>
+</string>
+<string name="introhelp" >
+<![CDATA[
+<p style="line-height: 100%; margin-bottom: 0in">
+<font size="4" style="font-size: 14pt"><b>Juggluco</b></font> is een
+app voor het beheersen van bloed glucose door mensen met diabetes.
+Het kan Freestyle Libre (1 en 2) sensoren (via NFC) scannen en
+glucose waarden via Bluetooth ontvangen van Freestyle Libre 2
+sensoren.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Nadat het programma
+is opgestart, kun je een Freestyle Libre 2 sensor scannen door het
+tegen de NFC sensor in je smartphone te houden. Hierna zal Juggluco
+proberen een Bluetooth verbinding met de sensor te vormen, waarna
+glucose waarden zonder te scannen elke minuut door de sensor naar
+Juggluco gezonden worden en daar weergegeven.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Het programma heeft
+vier menu\'s; door op een leeg gedeelte van het scherm te drukken kun
+je een van de menu\'s openen. In gedachte kun je het scherm in vier
+gelijke delen opdelen en het aanraken van zo’n vierde van het
+scherm opent een van de vier menu’s: Het linker vierde van het
+scherm aanraken opent het linker menu, het scherm links van het
+midden aanraken opent het tweede menu, het scherm rechts van het
+midden aanraken opent het derde menu en het rechtste vierde aanraken
+opent het vierde menu.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+<p style="line-height: 100%; margin-top: 0.08in; margin-bottom: 0.08in; page-break-after: avoid">
+<font size="3" style="font-size: 12pt"><i>Menu 4: Verplaatsen in tijd</i></font></p>
+<table width="90" cellpadding="0" cellspacing="0" style="page-break-after: avoid; page-break-inside: avoid">
+	<col width="90"/>
+
+	<tr>
+		<td width="90" valign="top" style="border: none; padding: 0in"><p>15:46&nbsp;&nbsp;&nbsp;5.6</p>
+		</td>
+	</tr>
+	<tr>
+		<td width="90" valign="top" style="border: none; padding: 0in"><p>Zoeken</p>
+		</td>
+	</tr>
+	<tr>
+		<td width="90" valign="top" style="border: none; padding: 0in"><p>Datum</p>
+		</td>
+	</tr>
+	<tr>
+		<td width="90" valign="top" style="border: none; padding: 0in"><p>Dag
+			terug</p>
+		</td>
+	</tr>
+	<tr>
+		<td width="90" valign="top" style="border: none; padding: 0in"><p>Dag
+			later</p>
+		</td>
+	</tr>
+	<tr>
+		<td width="90" valign="top" style="border: none; padding: 0in"><p>Week
+			terug</p>
+		</td>
+	</tr>
+	<tr>
+		<td width="90" valign="top" style="border: none; padding: 0in"><p>Week
+			later</p>
+		</td>
+	</tr>
+</table>
+<p style="line-height: 100%; margin-top: 0.08in; margin-bottom: 0.08in">
+<br/>
+<br/>
+
+</p>
+<p style="line-height: 100%; margin-bottom: 0in">Door links of rechts
+te bewegen over het scherm, kun je de grafiek naar links of rechts
+bewegen. Bewegen is ook mogelijk door gebruik te maken van het
+rechtste Verplaatsings-menu. Gebruik <b>Datum</b> om naar een
+bepaalde datum te gaan, <b>Zoeken</b> <span style="font-weight: normal">om
+naar bepaalde glucose waarden of ingevoerde hoeveelheden te zoeken.
+Bovenaan in het menu staat de tijd en stream glucose waarde ontvangen
+via Bluetooth, die ook rechts van de grafiek weergegeven wordt. Er op
+drukken brengt je naar het rechter uiteinde van de grafiek.</span></p>
+<p style="line-height: 100%; margin-bottom: 0in"><span style="font-weight: normal">Als
+in de instellingen “</span><i><span style="font-weight: normal">Verander
+schaal handmatig voor Glucose</span></i>” <span style="font-weight: normal">aangevinkt
+is, verandert het maximum van de grafiek door in de bovenste helft
+van het scherm op of neer te bewegen. Het minimum</span> <span style="font-weight: normal">van
+de grafiek verandert door in de onderste helft op of neer te bewegen.</span></p>
+<p style="line-height: 100%; margin-bottom: 0in"><span style="font-weight: normal">Als
+“</span><i><span style="font-weight: normal">Verander schaal
+handmatig voor Tijd</span></i>” <span style="font-weight: normal">aangevinkt
+is, kan de hoeveelheid tijd, die weergegeven wordt op het scherm,
+veranderd worden door de afstand tussen twee vingers te veranderen.</span></p>
+<p style="line-height: 100%; margin-top: 0.08in; margin-bottom: 0.08in; page-break-after: avoid">
+<font size="3" style="font-size: 12pt"><i>Menu 3: Weergave</i></font></p>
+<table width="132" cellpadding="0" cellspacing="0" style="background: transparent">
+	<col width="132"/>
+
+	<tr style="background: transparent">
+		<td width="132" valign="top" style="border: none; padding: 0in"><p>Laatste
+			scan</p>
+		</td>
+	</tr>
+	<tr style="background: transparent">
+		<td width="138" valign="top" style="border: none; padding: 0in"><p>Scans&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[x]</p>
+		</td>
+	</tr>
+	<tr>
+		<td width="138" valign="top" style="border: none; padding: 0in"><p>Stream&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[x]</p>
+		</td>
+	</tr>
+	<tr>
+		<td width="138" valign="top" style="border: none; padding: 0in"><p>History&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[x]</p>
+		</td>
+	</tr>
+	<tr style="background: transparent">
+		<td width="132" valign="top" style="border: none; padding: 0in"><p>Hoeveelheden&nbsp;&nbsp;[x]</p>
+		</td>
+	</tr>
+	<tr style="background: transparent">
+		<td width="132" valign="top" style="border: none; padding: 0in"><p>Maaltijden&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;&nbsp;]</p>
+		</td>
+	</tr>
+	<tr style="background: transparent">
+		<td width="132" valign="top" style="border: none; padding: 0in"><p>Dark
+			mode&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[x]</p>
+		</td>
+	</tr>
+</table>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+<p style="line-height: 100%; margin-bottom: 0in"><span style="font-weight: normal">Weergave
+mogelijkheden bevinden zich in het </span><b>menu rechts van het
+midden</b><span style="font-weight: normal">. Druk op het eerste item
+om de laatste scan nog eens te zien. Een </span><b>x</b> <span style="font-weight: normal">na
+</span><i><span style="font-weight: normal">Scans</span></i> <span style="font-weight: normal">betekend
+dat scans weergegeven worden. Een Scan is de huidige glucose waarde
+die je te zien krijgt na het scannen van de sensor. Het scannen
+draagt ook een meting voor elke 15 minuten van de afgelopen 8 uur
+over van de sensor naar Juggluco. Deze waarden uit het verleden
+worden History genoemd en de weergaven daarvan wordt bepaald door
+</span><i><span style="font-weight: normal">History</span></i> <span style="font-weight: normal">aan
+te vinken. </span><i><span style="font-weight: normal">Stream</span></i>
+<span style="font-weight: normal">staat voor de glucose waarden die
+Freestyle Libre 2 sensoren elke minuut naar Juggluco</span> <span style="font-weight: normal">zenden.
+</span><i><span style="font-weight: normal">Hoeveelheden</span></i>
+<span style="font-weight: normal">bepaalt</span> <span style="font-weight: normal">de
+weergave van ingevoerde getallen. Hoeveelheden onder een willekeurig
+label kunnen ingevoerd worden en die worden vervolgens weergegeven op
+een door dat label bepaalde vaste hoogte in de grafiek (het eerste
+label boven aan, het laatste label onderaan). In de instellingen
+onder “</span><i><span style="font-weight: normal">Nummer labels</span></i>”
+<span style="font-weight: normal">kun je de labels invoeren die je
+wilt gebruiken.</span></p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+<p style="line-height: 100%; margin-top: 0.08in; margin-bottom: 0.08in; page-break-after: avoid">
+<font size="3" style="font-size: 12pt"><i>Menu 2: Links van het
+midden</i></font></p>
+<table width="96" cellpadding="0" cellspacing="0">
+	<col width="96"/>
+
+	<tr>
+		<td width="96" valign="top" style="border: none; padding: 0in"><p>Melding&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;]</p>
+		</td>
+	</tr>
+	<tr>
+		<td width="96" valign="top" style="border: none; padding: 0in"><p>Export</p>
+		</td>
+	</tr>
+	<tr>
+		<td width="96" valign="top" style="border: none; padding: 0in"><p>Kloon</p>
+		</td>
+	</tr>
+	<tr>
+		<td width="96" valign="top" style="border: none; padding: 0in"><p>Hoeveelheid</p>
+		</td>
+	</tr>
+	<tr>
+		<td width="96" valign="top" style="border: none; padding: 0in"><p>Lijst</p>
+		</td>
+	</tr>
+	<tr>
+		<td width="96" valign="top" style="border: none; padding: 0in"><p>Statistiek</p>
+		</td>
+	</tr>
+</table>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+<p style="line-height: 100%; margin-bottom: 0in"><span style="font-weight: normal">Je
+kunt een specifieke hoeveelheid invoeren door op “</span><i><b>Hoeveelheid</b></i>”
+<span style="font-weight: normal">in het </span><b>Links van het
+midden menu</b> <span style="font-weight: normal">te drukken. Door
+lang op een ingevoerd nummer te drukken kun je hem veranderen. </span>
+</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>Export</b> <span style="font-weight: normal">slaat
+data op in een TSV bestand (</span><span lang="en-US"><span style="font-weight: normal">Tab
+Separated Values</span></span><span style="font-weight: normal">, CSV
+met tabs in plaats van komma\'s). </span><b>Kloon</b> <span style="font-weight: normal">maakt
+het mogelijk data via IP/TCP te zenden naar Juggluco op een ander
+apparaat om het daar weer te geven. </span><b>Melding</b> <span style="font-weight: normal">genereert
+een Android melding voor elke stream glucose die ontvangen wordt. Op
+die manier wordt de melding naar sommige smartwatches gezonden. Er
+bestaat ook en versie van Juggluco die op WearOS horloges draait. En
+voor programmeerbare Garmin horloges met touchscreen bestaat er
+Kerfstok. Kerfstok is een watch app die communiceert met Juggluco,
+ingevoerde hoeveelheden uitwisselt, de stream glucose waarde
+weergeeft en ook de glucose waarden tijdens sporten kan weergeven,
+zie
+<a href="https://apps.garmin.com/en-US/apps/b6348ccc-86d8-4780-8013-d9e19fed5260">https://apps.garmin.com/en-US/apps/b6348ccc-86d8-4780-8013-d9e19fed5260</a>.</span></p>
+<p style="font-weight: normal; line-height: 100%; margin-bottom: 0in">
+<b>Lijst</b> vertoont een lijst van ingevoerde hoeveelheden.</p>
+<p style="font-weight: normal; line-height: 100%; margin-bottom: 0in">
+Als er voldoende stream glucose waarden verzameld zijn, kun je wat
+data-analyses zien door op <b>Statistiek</b> te drukken.</p>
+<p style="font-weight: normal; line-height: 100%; margin-top: 0.08in; margin-bottom: 0.08in; page-break-after: avoid">
+<font size="3" style="font-size: 12pt"><i>Menu 1: Links</i></font></p>
+<table width="108" cellpadding="0" cellspacing="0">
+	<col width="108"/>
+
+	<tr>
+		<td width="108" valign="top" style="border: none; padding: 0in"><p>System
+			UI&nbsp;&nbsp;&nbsp;[x]</p>
+		</td>
+	</tr>
+	<tr>
+		<td width="108" valign="top" style="border: none; padding: 0in"><p>Horloges</p>
+		</td>
+	</tr>
+	<tr>
+		<td width="108" valign="top" style="border: none; padding: 0in"><p>Sensor</p>
+		</td>
+	</tr>
+	<tr>
+		<td width="108" valign="top" style="border: none; padding: 0in"><p>Instellingen</p>
+		</td>
+	</tr>
+	<tr>
+		<td width="108" valign="top" style="border: none; padding: 0in"><p>About</p>
+		</td>
+	</tr>
+	<tr>
+		<td width="108" valign="top" style="border: none; padding: 0in"><p>Sluiten</p>
+		</td>
+	</tr>
+</table>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+<p style="font-weight: normal; line-height: 100%; margin-bottom: 0in">
+In het linker menu bevind zich <b>Instellingen</b> waar je de glucose
+eenheid (mmol/L of mg/dL) kunt aangeven, labels kunt schrijven,
+glucose alarmen en medicatie herinneringen kan aangeven en weergave
+domeinen kunt bepalen. <b>System UI</b> bepaald of Android knoppen en
+statusbalk getoond worden. <b>Horloges</b> bevat instellingen en hulp
+met betrekking tot verbonden horloges. <b>Sensor</b> geeft informatie
+over de verbinding met de sensor. <b>Sluiten</b> kan gebruikt worden
+om weg te gaan uit Juggluco.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+]]>
+</string>
+<string name="searchhelp" >
+<![CDATA[
+<h1>Zoeken</h1>
+<p style="line-height: 100%; margin-bottom: 0in">Zoeken kan gebruikt
+worden om naar glucose waarden of ingevoerde hoeveelheden te zoeken.
+Je zoekt naar waarden tussen de twee aangegeven nummers. Om naar
+waarden groter of gelijk aan 10 te zoeken, geef je bijvoorbeeld
+10-999 aan.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Glucose waarden van
+de sensor worden opgedeeld in Scan, History en Stream.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>Scan</b>: waarde
+onmiddellijk getoond na het scannen.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>History</b>:
+Glucose waarden uit het geheugen van de sensor. Freestyle Libre 2
+sensoren slaan elke 15 minuten een waarde op en zenden ze via NFC
+naar Juggluco. Freestyle Libre 3 sensoren slaan elk 5 minute een
+waarde op en verzenden ze via Bluetooth.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>Stream</b>:
+waarden elke minuut overgezonden via Bluetooth van Freestyle Libre 2
+sensoren naar Juggluco.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Als je hoeveelheden
+insuline, eten of lichaamsbeweging ingevoerd hebt, kun je er naar
+zoeken door de bijbehorende label te selecteren en het bereik van
+nummers aan te geven waarin je geïnteresseerd bent. Bijvoorbeeld:
+fietsen tussen 50 en 100.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Het is ook mogelijk
+de tijdsperiode aan te geven waarnaar je zoekt. Bijvoorbeeld, als je
+geïnteresseerd bent in hypo’s tussen 22:00 \'s avonds en 07:00 \'s
+morgens, druk je op de eerste tijd (in het begin weergegeven als
+00:00) en verander het in 22:00, daarna druk je op de tweede tijd en
+verander het in 07:00 (je moet natuurlijk ook Stream en/of History
+aangevinkt hebben en waarden tussen 0 en 3.9 mmol/L aangeven).</p>
+<p style="line-height: 100%; margin-bottom: 0in">Druk of een <b>pijl</b>
+om in de richting van de pijl te zoeken.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>Reset</b> brengt
+de zoek instellingen weer terug tot hun begin toestand.</p>
+<p style="line-height: 100%; margin-bottom: 0in">In <i>Instellingen</i>
+onder <i>Nummer labels</i>, kun je bepalen welk label (bijvoorbeeld
+<i>koolhydraat</i>) verbonden is met maaltijden. Als je dit label
+hier selecteert, verschijnt er boven in het scherm een box waarin je
+naar ingrediënten (in regex) kunt zoeken en (optioneel) de minimale
+hoeveelheid aan kunt geven.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+]]>
+</string>
+<string name="shortcuthelp" >
+<![CDATA[
+<p style="line-height: 100%; margin-bottom: 0in">
+<font size="5" style="font-size: 20pt"><b>Shortcuts</b></font> worden
+gebruikt in de Garmin watch app Kerfstok. Vanuit het nummer invoer
+schermpje van Kerfstok, kun in het Shortcut schermpje komen (op mijn
+Vivoactive 3 door naar links te vegen), bestaande uit een lijst van
+namen voor shortcuts. 
+</p>
+<p style="line-height: 100%; margin-bottom: 0in">Het indrukken van
+een shortcut leidt tot het invoegen van de verbonden waarde in het
+invoer schermpje van Kerfstok.</p>
+<p style="line-height: 100%; margin-bottom: 0in">De waarden kunnen
+nummers zijn, of rekenkundige operatoren in combinatie met nummers,
+bijvoorbeeld *0.5 om met 0.5 te vermenigvuldigen.</p>
+<p style="line-height: 100%; margin-bottom: 0in">In dit instellings
+schermpje kun je deze shortcuts maken, verwijderen of wijzigen.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Bestaande shortcuts
+worden links weergegeven. Door op een er van te drukken, kun je hem
+verwijderen, of de naam of waarde veranderen.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Een nieuwe shortcut
+kan met <b>Nieuw</b> gemaakt worden.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Wijzigingen worden
+past opgeslagen nadat op <b>Save</b> gedrukt is.</p>
+]]>
+</string>
+<string name="labelhelp" >
+<![CDATA[
+<h1>Labels voor hoeveelheden</h1><p style="line-height: 100%; margin-bottom: 0in">Hier kun je labels
+voor hoeveelheden insuline, koolhydraat of lichaamsbeweging maken,
+verwijderen en veranderen. Als je al hoeveelheden ingevoerd hebt,
+krijgen ze het label naar hun positie. Dus als je het label in de
+tweede positie veranderd, krijgen hoeveelheden die ingevoerd waren
+met het eerdere label in de tweede positie, het nieuwe label in de
+tweede positie.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Raak een label aan
+om het te veranderen.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Na <b>maaltijd</b>,
+kun je het label selecteren dat staat voor de hoeveelheid
+koolhydraten in een maaltijd. In &ldquo;<b>Hoeveelheid</b>&rdquo;
+(linker midden menu) is voor dat label een maaltijd knop toegevoegd,
+waarmee je een maaltijd kunt samenstellen uit haar samenstellende
+ingredi&euml;nten. De som van de koolhydraten van die maaltijd wordt
+dan onder dit label opgeslagen.</p>
+]]>
+</string>
+<string name="settinghelp" >
+<![CDATA[
+<h1>Instellingen</h1>
+<h2 class="western">Eenheid</h2>
+<p style="line-height: 100%; margin-bottom: 0in">Geef aan of glucose
+waarden in mmol/L of mg/dL weergegeven moeten worden.</p>
+<h2 class="western">Bereik Grafiek: Laag-Hoog</h2>
+<p>In Librelink lopen de weergegeven glucose waarden van 0 tot 21
+mmol/L (als geen waarde daarbovenuit gaat). In Juggluco kun je zelf
+de minimale en maximale waarde aangeven. Deze grenzen worden alleen
+gebruikt als alle op het scherm weergegeven glucose waarden binnen
+deze grenzen vallen. Bijvoorbeeld als het grafiek bereik 3-9 is en
+alle waarden op het scherm zich tussen 5 mmol/L en 6 mmol/L bevinden,
+loopt de glucose as van de grafiek van 3 mmol/L tot 9 mmol/L. Als een
+waarde buiten deze grenzen valt, worden de grenzen zo uitgerekt dat
+alle waarden op het scherm passen. 
+</p>
+<p style="line-height: 100%; margin-bottom: 0in">Als “<b>Verander
+schaal handmatig voor Glucose</b>” aanstaat, kun je dit veranderen.
+Door je vinger in de bovenste helft van het scherm op en neer te
+bewegen, beweegt de grootst weergegeven waarde naar beneden en
+omhoog. Je vinger in de onderste helft van het scherm op en neer
+bewegen doet hetzelfde voor de laagste waarde. Dit kan dan ook in de
+Samenvattende grafiek onder statistiek gedaan worden.</p>
+<h2 class="western">Doelbereik: laag-hoog</h2>
+<p>Het gebied buiten doelbereik wordt anders gekleurd. De laagste
+waarde wordt als een rode lijn weergegeven. In het statistiek
+schermpje wordt weergegeven welk percentage van de metingen zich
+binnen het doelbereik bevond.</p>
+<h2 class="western">Glucose-as nummers LINKS</h2>
+<p>Plaats de nummers voor het glucoseniveau links in het scherm.</p>
+<h2 class="western">Scherm omkeren</h2>
+<p>Draai het scherm om. Dit staat standaard aan, omdat ik anders per
+ongeluk OK aanraakte bij het scannen. 
+</p>
+<p>Nogal eens wordt er om portret mode gevraagd, maar portret mode is
+voor het weergeven van de grafiek volkomen ongeschikt, en heb ik
+daarom uitgezet.</p>
+<h2 class="western">NFC geluid</h2>
+<p>Maak tijdens het scannen ook geluid, naast vibratie.</p>
+<h2 class="western">Scannen start Juggluco</h2>
+<p>Als dit aangevinkt is, en je scant een sensor terwijl Juggluco
+niet in de voorgrond is, dan zal Juggluco gestart worden. Dit maakt
+het mogelijk een sensor zelfs te scannen wanneer Juggluco niet
+weergegeven wordt. Als meerdere apps deze instelling hebben geeft het
+echter problemen. Bij het scannen wordt dan een keuze schermpje
+getoond waar je kunt kiezen welke app je wilt gebruiken. Dit werkt
+echter niet goed. Door dit uit te zetten voor deze app, zorg je er
+voor dat tenminste een app kan scannen zonder dat het zich in de
+voorgrond bevind.</p>
+<p>Als je root toegang hebt op je smartphone kun hetzelfde doen met
+Abbott’s Librelink app. Hiervoor moet je root worden in adb shell
+or termux en het volgende intypen:</p>
+<p>pm disable
+com.freestylelibre.app.nl/com.librelink.app.ui.common.NFCScanActivity</p>
+<p>Voor Librelink 2.7.1 of lager moest je het volgende type:</p>
+<p>pm disable
+com.freestylelibre.app.nl/com.librelink.app.ui.common.ScanSensorActivity</p>
+<p>Hierna kun je Librelink nog steeds gebruiken wanneer het in de
+voorgrond is, maar wordt het niet meer gestart, als het niet in de
+voorgrond is.</p>
+<p>Librelink 2.5.2 en hoger crashen zichzelf als ze root ontdekken.
+Als je Magisk voor root gebruikt, kun je root verbergen voor
+Librelink via denylist (Magisk 24.3) of Magiskhide (Magisk 23.0). Je
+moet ook instellen dat Magisk zijn eigen package id veranderd. Het is
+ook mogelijk een oudere versie van Librelink te gebruiken die nog
+geen root check heeft.</p>
+<p>Een andere oplossing, waar je geen root voor nodig hebt, is de
+hele Librelink app uit te schakelen met:</p>
+<p>adb shell pm disable-user --user 0 com.freestylelibre.app.nl</p>
+<p>Voordat je Abbotts klantenservice belt, kun je het weer
+inschakelen met het volgende commando:</p>
+<p>adb shell pm enable com.freestylelibre.app.nl</p>
+<h2 class="western">Libreview</h2>
+<p style="line-height: 100%; margin-bottom: 0in">Geeft aan of stream
+Freestyle Libre 2 glucose waarden naar Libreview verzonden worden.
+Voor Freestyle Libre 3 sensoren kun je je Account Id nummer van
+Libreview laten halen. Druk er op om de instellingen te wijzigen.</p>
+<h2 class="western">Librelink broadcast</h2>
+<p>Als dit aanstaat, zendt Juggluco elke minuut een stream glucose
+waarde naar xDrip. In xDrip moet je Libre2 (patched) App als hardware
+gegevensbron aangeven. De glucose waarden die xDrip weergeeft zijn
+verschillend van die het ontvangen heeft. Om een of andere reden,
+vernieuwt het zijn glucosewaarde enkel eens in de 5 minuten;
+waarschijnlijk omdat het gemaakt is voor sensoren die slechts eens in
+de 5 minuten een glucosewaarde verzenden. Daarbij genereert xDrip
+haar eigen interpretatie van de verkregen glucosewaarden.</p>
+<p>Juggluco kloons (zie linker midden menu→kloon) kunnen ook naar
+xDrip zenden. 
+</p>
+<p>Nieuwere versies van Juggluco kunnen glucosewaarden direct naar
+xDrip horloges zenden. Om hier gebruik van te maken moet xDrip
+webserver aangevinkt worden in Linker menu→Horloge. Om conflicten
+te voorkomen moet xDrip webservice in xDrip niet ook aanstaan.</p>
+<h2 class="western">xDrip broadcast</h2>
+<p>Laat Juggluco xDrip broadcast
+<i>com.eveningoutpost.dexdrip.BgEstimate</i> nabootsen. Vanaf Android
+target versie 11, moeten ontvangende apps het volgende in hun
+AndroidManifest.xml hebben staan: 
+</p>
+<p>&lt;queries&gt; <br/>
+&nbsp;&nbsp; &lt;package
+android:name=&quot;tk.glucodata&quot;/&gt; <br/>
+&lt;/queries&gt;</p>
+<h2 class="western">Glucodata broadcast</h2>
+<p>Juggluco heeft een eigen glucose broadcast, glucodata.Minute. See
+<a href="http://jkaltes.byethost16.com/Juggluco/glucosebroadcast.html">http://jkaltes.byethost16.com/Juggluco/glucosebroadcast.html</a>
+voor meer informatie.</p>
+<p>Vink de apps aan die deze broadcast moeten ontvangen.</p>
+<h2 class="western">Glucose op Android statusbalk</h2>
+<p style="line-height: 100%; margin-bottom: 0in">Als dit aanstaat
+worden stream glucose waarden in een melding en Android statusbalk
+weergegeven. Bij sommige smartphones wordt dit alleen uitgevoerd
+wanneer ook Androids melding instellingen gewijzigd worden.
+Bijvoorbeeld door naar Juggluco app-info in Android instellingen te
+gaan, op “Meldingen beheren” te drukken, dan glucoseNotification
+aan te raken en “<i>instellen als stil</i>” uit te zetten.
+“<i>Weergeven op statusbalk</i>” zal nu aanstaand getoond worden.</p>
+<h2 class="western">Sensor via Bluetooth</h2>
+<p>Geef aan dat Juggluco via Bluetooth contact maakt met Freestyle
+Libre 2 sensoren. Dit is nodig voor de CGM en alarmen.</p>
+<h2 class="western">Alarmen</h2>
+<p>Hieronder valt alles dat afgaat in Juggluco afhankelijk van de
+stream glucose waarden ontvangen via Bluetooth: hoog en laag glucose
+alarmen, signaal verlies alarm, waarde aanwezig melding en glucose in
+statusbalk.</p>
+<h2 class="western">Nummer labels</h2>
+<p>Specificeer labels voor hoeveelheden. Als gebruikt maakt van de
+Garmin watch app Kerfstok, worden deze labels ook naar Kerfstok
+verzonden.</p>
+<h2 class="western">Herinneringen</h2>
+<p>Specificeer een alarm dat afgaat als een bepaalde hoeveelheid (bv
+eten of medicatie) niet ingevoerd is binnen een bepaalde
+tijdsperiode.</p>
+<h2 class="western">Kleuren</h2>
+<p>Verander de kleuren van de grafiek, scans en hoeveelheden.</p>
+<p><br/>
+<br/>
+
+</p>
+]]>
+</string>
+<string name="sensorhelp" >
+<![CDATA[
+<h1 class="western">Sensor</h1>
+<p style="line-height: 100%; margin-bottom: 0in">Dit schermpje geeft
+informatie over de Bluetooth connectie met sensoren en kan gebruikt
+worden om de oorzaak van connectie problemen op de sporen. 
+</p>
+<p style="line-height: 100%; margin-bottom: 0in">Bluetooth moet
+aanstaan. Juggluco kan pas contact maken met een sensor nadat de
+sensor succesvol is gescand. Het kan zijn dat een sensor onvindbaar
+is omdat het al een connectie heeft met LibreLink of Freestyle
+Reader. Om die reden moet in Freestyle Reader glucose alarmen afgezet
+worden en Librelink gestopt worden met “<i>Stop forceren</i>” in
+App-info (vooral belangrijk in het begin).</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>Sensor via
+Bluetooth/Gebruik Bluetooth</b> moet aanstaan.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Als de bovenstaande
+voorwaarden voldaan zijn, kan het nog steeds lang duren voordat
+Juggluco, glucose waarden ontvangt van de sensor. Vaak duurt het iets
+langer dan een minuut, maar op andere momenten duurt het veel langer.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Meestal bestaan er
+gedurende enige tijd connectie problemen met status=133. Dit betreft
+<a href="https://developer.android.com/reference/android/bluetooth/BluetoothGattCallback#onConnectionStateChange(android.bluetooth.BluetoothGatt,%20int,%20int)">onConnectionStateChange(BluetoothGatt
+bluetoothGatt, int status, int newState)</a>. Als je de batterij uit
+de sensor haalt krijg je ook deze fout, dus het betekent zoiets als
+“<i>Bluetooth apparaat niet gevonden</i>”. Een paar minuten
+wachten helpt meestal. Soms help Bluetooth uit en aanzetten. De
+sensor scannen helpt soms ook. In zeldzame gevallen moet de telefoon
+gereboot worden of Bluetooth even uitgezet worden in andere
+apparaten.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Als een nieuw
+geïnitialiseerde sensor wel getoond wordt, maar er na 10 minuten
+helemaal geen connectie informatie getoond wordt, kan het zijn dat er
+een minuut er voor opnieuw begonnen is door het heropstarten van
+Juggluco of het opnieuw aanzetten van Streaming. Als dat niet het
+geval is, lijkt het er op dat er helemaal geen connectie gezocht
+wordt met de sensor. Bluetooth uit- en aanzetten en/of scannen kan
+helpen. Als het om een WearOS horloge gaat, kun je het beste proberen
+de verbonden smartphone een connectie te laten vormen. Je kunt ook
+proberen of een stop forceren en herstarten van Juggluco werkt.</p>
+<p style="line-height: 100%; margin-bottom: 0in">De sensor scannen
+met Juggluco (met <i>Sensor via Bluetooth</i> aan) op een andere
+telefoon of het initialiseren van de sensor met de patched DE
+Librelink of US Libre 2 app, zorgt dat de authenticatie informatie
+nodig voor contact met de sensor verandert en de eerste Juggluco geen
+Bluetooth connectie met de sensor meer kan vormen. Door de sensor
+weer een aantal malen te scannen na zo’n mislukte connectie poging,
+kan Juggluco weer een connectie vormen met de sensor.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>Doze mode</b>
+brengt je naar een schermpje dat uitlegt hoe je kan voorkomen dat
+Androids batterij besparende maatregelen Juggluco’s functioneren
+onmogelijk maken.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>Toestemming</b>:
+Eerdere versies van Juggluco hadden een locatie machtiging nodig om
+te zoeken naar het Bluetooth device adres van sensoren. Dit is niet
+meer noodzakelijk, maar je kunt Juggluco nog steeds die toestemming
+geven en onder Android 6 en 7 werkt het nog op de oude manier.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Het device adres
+wordt getoond na de sensor naam. Rode letters betekent dat het een
+niet Europese FreeStyle Libre 2 sensor is zoals die gebruikt wordt in
+de Verenigde Staten, Canada en Australië.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Als het device adres
+bekend is, heb je niets aan een locatie machtiging.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Android 12 heeft een
+nieuwe “<i>Apparaten in de buurt</i>” machtiging, die gebruikt
+wordt in plaats van de locatie machtiging, maar ook nodig is voor
+later contact met de sensor.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><i><b>Wakelock</b></i>:
+Sommige gebruikers met Android 13 klagen over connectie problemen. 
+Misschien help dit hen. Op mijn smartphone heb ik het niet nodig en
+op Watch 4 lijkt het geen positief effect te hebben. Het Accu gebruik
+zal hierdoor toenemen.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>Vergeet</b>:
+Vergeet het device adres en zoek er naar door Bluetooth apparaten in
+de buurt te scannen zoals Librelink dat overal doet op de Libre 2 app
+in de Verenigde Staten na. Dit vergt een locatie machtiging op
+Android 6-11. Je moet op deze knop drukken als je gelooft dat Abbott
+overal behalve in de Verenigde Staten gelijk heeft.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>Reenable</b>:
+Re-enable streaming. Als je op deze knop drukt, wordt er nieuwe
+sensor authenticatie informatie gemaakt bij de volgende keer scannen.
+Het device adres wordt dan opgeslagen.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>Turbo</b>: Als
+dit aanstaat, krijgt de verbinding met de sensor een hogere voorrang.
+Dit moet leiden tot minder verbindingsfouten, maar zou meer stroom
+kunnen gebruiken. Lijkt nodig te zijn op Watch4 met Freestyle Libre 2
+sensoren, maar niet met Freestyle Libre 3 sensoren en ook niet op de
+smartphones die ik uitgeprobeerd heb.</p>
+]]>
+</string>
+<string name="watchhelp" >
+<![CDATA[
+<h1>Kerfstok</h1>
+<p style="line-height: 100%; margin-bottom: 0in">Dit schermpje dient
+om connectie problemen met Kerfstok op te lossen. Kerfstok
+(<a href="http://jkaltes.byethost16.com/Kerfstok/index.html">http://jkaltes.byethost16.com/Kerfstok/index.html</a>)
+is een horloge app voor programmeerbare Garmin smartwatches met
+touchscreen. Kerfstok heeft de volgende functies:</p>
+<ul>
+	<li><p style="line-height: 100%; margin-bottom: 0in">Je kunt nummers
+	invoeren die ook met Juggluco uitgewisseld kunnen worden;</p>
+	<li><p style="line-height: 100%; margin-bottom: 0in">Kerfstok kan
+	stream glucose waarden ontvangen van Juggluco en continue weergeven;</p>
+	<li><p style="line-height: 100%; margin-bottom: 0in">Kerfstok kan
+	tijdens het sporten, snelheid en afgelegde afstand weergeven naast
+	je huidige glucose niveau en de sport activiteit opnemen zodat ze in
+	Garmin’s connect app weergegeven kunnen worden.</p>
+</ul>
+<p style="line-height: 100%; margin-bottom: 0in">Allereerst moet het
+horloge in de linkerbovenhoek verbonden (CONNECTED) getoond worden.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Ten tweede moet
+Kerfstok opgestart zijn op je horloge.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Om glucose waarden
+te ontvangen moet Glucose aangevinkt zijn.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Als alles goed gaat,
+staat er overal <b>Yes</b> en staan er recente datums bij <b>Send</b>
+en <b>Receive</b>. De status moet <b>SUCCESS</b> zijn.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Soms is de
+verbinding tussen smartphone en horloge verstoort. Als achter status
+“<span lang="en-US"><i><b>no status information</b></i></span>”
+staat, helpt meestal het volgende:</p>
+<ul>
+	<li><p style="line-height: 100%; margin-bottom: 0in">Ga naar Android
+	<i>App-Info</i> van <i>Garmin Connect</i> en druk een aantal malen
+	op “<i>Stop forceren</i>”.</p>
+	<li><p style="line-height: 100%; margin-bottom: 0in">Start <i>Garmin
+	Connect</i>. 
+	</p>
+	<li><p style="line-height: 100%; margin-bottom: 0in">Ga terug naar
+	dit schermpje en druk op <i>Reinit</i>. 
+	</p>
+	<li><p style="line-height: 100%; margin-bottom: 0in">Wacht op de
+	volgende glucose waarde van de sensor.</p>
+</ul>
+<p style="line-height: 100%; margin-bottom: 0in">Als
+<b>FAILURE_DURING_TRANSFER</b> als status weergegeven wordt, helpt
+het soms Blutooth uit en aan te zetten en daarna op <i>Reinit</i> te
+drukken. Als dat niet help moet je meestal Kerfstok afsluiten en je
+horloge rebooten. Daarna moet je Kerfstok weer opstarten en er op
+toezien dat hier <i>Glucose</i> aangevinkt is. Soms werkte het pas na
+meerdere keren of ontstaan er ook “<i>no status information</i>”
+fouten die op de eerder beschreven manier afgehandeld moeten worden.
+In zeldzame gevallen moet je smartphone gereboot worden.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>Sync</b>:
+Hoeveelheden die nog niet verzonden zijn worden hiermee tussen
+horloge en telefoon uitgewisseld. Normaal hoeft hiervan geen gebruik
+gemaakt te worden.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>Refresh</b>:
+Ververst dit schermpje met nieuwe informatie (bijvoorbeeld na Reinit
+of Sync).</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>Glucose</b>: Het
+verzenden van glucosewaarden naar Kerfstok staat aan.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Soms wordt een “Send
+queue” knop getoond. Dit betekent dat niet alles naar het horloge
+verzonden is. Meestal wordt dat verzenden dan later nog uitgevoerd,
+maar soms is dat onderbroken en kan het weer aan de gang gebracht
+worden door op <i>Send queue</i> te drukken. Als dit probleem
+ontstond door een kapotte verbinding, zal dit ook niet helpen. Op
+<i>Send queue</i> drukken als het verzenden bezig is, kan de
+verbinding kapot maken. Zie boven.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+]]>
+</string>
+<string name="getlib" >
+<![CDATA[
+<p align="center" style="line-height: 100%; margin-top: 0.17in; margin-bottom: 0.08in; page-break-after: avoid">
+<font face="Liberation Sans, sans-serif"><font size="6" style="font-size: 28pt"><b>Libre
+Library</b></font></font></p>
+<p>Juggluco heeft een library nodig uit Abbott&rsquo;s Librelink app.
+</p>
+<p>Freestyle Libre 2 sensoren in de Verenigde Staten en mogelijk
+landen als Canada en Australi&euml;, hebben de library nodig uit
+versie 2.5.2, 2.5.3 of 2.7.1 van Abbotts Librelink of Libre 2 app.</p>
+<p>Andere Freestyle Libre 2 sensoren werken ook met een library uit
+Librelink 2.4.0, 2.4.1 of 2.4.2. Versies na 2.4.2 zijn trager
+geworden wat consequenties kan hebben voor accu gebruik en kan maken
+dat het apparaat door Android in slaap gebracht wordt voordat het
+klaar is met het verwerken van de gegevens. Dus neem 2.4.2 als je
+sensoren hebt die daarmee werken.</p>
+<p>De landsaanduiding hoeft niet je eigen te zijn.</p>
+<p>De APK met Librelink wordt verbreidt door Google Play en is op
+allerlei plaatsen op de Internet verkrijgbaar. Voor een lijst van
+links, zie: <a href="http://jkaltes.byethost16.com/Juggluco/urls.html">http://jkaltes.byethost16.com/Juggluco/urls.html</a>
+</p>
+<p>Na het downloaden van de APK, kun je Juggluco hem laten openen
+door op de <b>Open</b> knop te drukken en het APK bestand te
+selecteren.</p>
+]]>
+</string>
+<string name="newlabelhelp" >
+<![CDATA[
+<h2 class="western">Label:</h2>
+<p style="line-height: 100%; margin-bottom: 0in">Label gebruikt om
+hoeveelheden in te voeren (Een hoeveelheid verbonden aan een bepaalde
+datum en tijd kan ingevoerd worden door op <i>Hoeveelheid</i> in het
+Linker midden menu te drukken). De nummers worden op de positie van
+die tijd in de grafiek of lijst weergegeven.</p>
+<h2 class="western">Rond af op:</h2>
+<p style="line-height: 100%; margin-bottom: 0in">Gebruikt in
+Kerfstok. Rond nummers af op een bepaalde grootte.</p>
+<p style="line-height: 100%; margin-bottom: 0in">0:    volle precisie</p>
+<p style="line-height: 100%; margin-bottom: 0in">0.5:  rond af op 0.5</p>
+<h2 class="western">Gewicht:</h2>
+<p style="line-height: 100%; margin-bottom: 0in">Als dit 0 is, worden
+hoeveelheden getoond op een bepaalde hoogte in de grafiek
+onafhankelijk van hun waarde. Als gewicht groter is dan 0, worden de
+hoeveelheden met dit label vermenigvuldigd met dat gewicht en
+vervolgens als een vierkant weergegeven in de grafiek op de zo
+berekende hoogte. Bijvoorbeeld door het gewicht voor vinger prik
+glucose metingen op 1 te zetten worden ze in dezelfde co&ouml;rdinaten
+weergegeven als de sensor glucose waarden.</p>
+]]>
+</string>
+<string name="battery" >
+<![CDATA[
+<h1>Blijven functioneren</h1>
+<p style="line-height: 100%; margin-bottom: 0in">Als een Android
+apparaat niet gebruikt wordt, gaat het in “<i>doze mode</i>” om
+minder energie te gebruiken. In <i>doze mode</i> kunnen applicaties
+geen gebruikt maken van TCP verbindingen om data uit te wisselen;
+twee Android apparaten kunnen alleen communiceren als het scherm van
+beide aan staat. Een applicatie kan uitgezonderd worden van deze
+beperking, door “<i>Optimaliseer niet</i>” te selecteren in
+<i>Accuoptimalisatie</i> in Android instellingen. <b>Update in doze
+mode</b> toont deze instelling en als je het aanraakt, wordt het
+onderdeel van Android instellingen geopend waar je het kunt
+veranderen. Op sommige smartphones worden alleen apps getoond die al
+zo een uitzondering hebben en moet je voor het toevoegen van een app,
+ergens onder instellingen→batterij iets veranderen. De Bluetooth
+verbinding met de sensor waar Juggluco gebruik van maakt, is niet
+strikt verboden door Android en zal gewoonlijk ook functioneren
+zonder zo’n uitzondering. Afhankelijk van het apparaat, hoe vaak
+Juggluco in de voorgrond gebruikt wordt en voor hoelang het niet in
+de voorgrond gebruikt is en of andere apps veel systeem bronnen
+gebruiken, kan deze uitzondering soms wat uitmaken.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Sommige fabrikanten
+van Android apparaten hebben instellingen voor verdere beperkingen op
+achtergrond activiteit en het automatisch opstarten van apps. Deze
+instellingen zijn vaak te vinden onder Android Instellingen→Batterij.
+Het gaat daarbij om app specifieke instellingen als “Automatisch
+opstarten”, “Secundair opstarten”, “Actief in achtergrond”
+en “Accuverbruik optimaliseren”. 
+</p>
+<p style="line-height: 100%; margin-bottom: 0in">In een apparaat
+moest “<i>Geoptimaliseerde stand-by</i>” voor het hele apparaat
+uitgezet worden. Als het aanstond, werd het netwerk midden in de
+nacht uitgezet, zodat glucose waarden via IP/TCP niet meer verzonden
+of ontvangen werden.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Zie
+<a href="https://dontkillmyapp.com/">https://dontkillmyapp.com</a>
+voor informatie over specifieke merken smartphones.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Een app die zich
+vaak in de voorgrond bevind, wordt minder snel door Android gestopt
+dan een app dat zich alleen maar in de achtergrond bevind. Iemand met
+een Samsungtelefoon, die alle meldingen Juggluco en glucose waarde in
+de statusbalk verborgen had en Juggluco enkel gebruikte om glucose
+waarden aan xDrip te zenden, kreeg connectie problemen met de sensor,
+die volgens hem opgelost waren nadat hij die voorgrond activiteiten
+van Juggluco weer aangezet had.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+]]>
+</string>
+<string name="nutrients" >
+<![CDATA[
+<p align="center" style="line-height: 100%; margin-top: 0.17in; margin-bottom: 0.08in; page-break-after: avoid">
+<font face="Liberation Sans, sans-serif"><font size="6" style="font-size: 28pt"><b>Voedsel
+samenstelling database</b></font></font></p>
+<p>Hier kun je voedsel opzoeken in McCance and Widdowson&rsquo;s The
+Composition of Foods Integrated Dataset 2021
+<a href="https://www.gov.uk/government/publications/composition-of-foods-integrated-dataset-cofid">https://www.gov.uk/government/publications/composition-of-foods-integrated-dataset-cofid</a></p>
+<p>Je kunt bij het zoeken gebruik maken van regular expressions
+(<a href="https://www.regular-expressions.info/quickstart.html">https://www.regular-expressions.info/quickstart.html</a>).
+Je kunt bijvoorbeeld zoeken naar beschrijvingen die beginnen met
+apple en later het woord raw bevatten, door: ^apple.*\\braw\\b</p>
+<p>Als je geen regex tekentjes gebruikt, wordt er op de normale
+manier gezocht.</p>
+<p><br/>
+<br/>
+
+</p>
+]]>
+</string>
+<string name="mealhelp" >
+<![CDATA[
+<p align="center" style="line-height: 100%; margin-top: 0.17in; margin-bottom: 0.08in; page-break-after: avoid">
+<font face="Liberation Sans, sans-serif"><font size="6" style="font-size: 28pt"><b>Maaltijd</b></font></font></p>
+<p>De totale hoeveelheid koolhydraten wordt door het programma
+berekend uit de omvang van de ingredi&euml;nten. Het is ook mogelijk
+de totale hoeveelheid koolhydraten van dit ingredi&euml;nt of de
+gehele maaltijd te geven, waarna de benodigde omvang van dit
+ingredi&euml;nt bepaald wordt. Druk op &ldquo;<i>Component toevoegen</i>&rdquo;
+om een component toe te voegen aan de maaltijd. In het opgeroepen
+schermpje kun je een ingredi&euml;nt selecteren en de omvang aangeven
+(of de totale hoeveelheid koolhydraat van de gehele maaltijd of dit
+ingredi&euml;nt). Door op <b>Selecteren</b> of het al aangegeven
+ingredi&euml;nt te drukken, kom je uit in een lijst van al
+gedefinieerde ingredi&euml;nten. Je kunt een nieuw ingredi&euml;nt
+defini&euml;ren door op <b>Defini&euml;ren</b> te drukken. Dan kun je
+de naam, eenheid en koolhydraat per eenheid aangeven. Je kunt ook op
+<b>Database</b> drukken; daarmee kom je in een voedsel samenstelling
+database, waarin je naar een bepaald ingredi&euml;nt kunt zoeken en
+een gevonden ingredi&euml;nt door op S<b>electeren</b> te drukken in
+een ingredi&euml;nt definitie kan voegen (naam, eenheid en
+koolhydraat per eenheid).</p>
+<p><br/>
+<br/>
+
+</p>
+]]>
+</string>
+<string name="colorhelp" >
+<![CDATA[
+<h2 class="western">Kleuren</h2>
+<p>Hier kun je de kleur veranderen van nummers, grafiek lijnen en
+scan punten. Raak een punt van de grafiek, scan of hoeveelheid aan
+(zodat informatie over dat punt of hoeveelheid getoond wordt). Raak
+hierna een kleur aan in dit kleur-schermpje. De grafiek, scan punt of
+hoeveelheid wordt nu in die kleur weergegeven.</p>
+<p>In de WearOS versie heb je een terug toets nodig.</p>
+]]>
+</string>
+<string name="stathelp" >
+<![CDATA[
+<h1>Statistiek</h1>
+<p style="line-height: 100%; margin-bottom: 0in">Enige statistieken
+ontnomen aan <a href="https://www.healthline.com/diabetesmine/ambulatory-glucose-profile">AGP</a>,
+zonder licentie, met wat kleine wijzigingen.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Het aantal
+geanalyseerde dagen kan veranderd worden met de <b>Dagen</b> knop. De
+geanalyseerde periode eindigt met het tijdstip van de rechterkant van
+het scherm en strekt het aantal aangegeven dagen terug in de tijd.
+Enkel de Stream glucose waarden worden voor deze statistieken
+gebruikt.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Links wordt het
+percentage metingen weergegeven dat binnen bepaalde glucose bereiken
+viel.</p>
+<h2 class="western">% van de tijd actief</h2>
+<p style="line-height: 100%; margin-bottom: 0in">Het percentage van
+de mogelijke metingen dat Juggluco ontving van de sensor.</p>
+<h2 class="western">Geschatte HbA1C</h2>
+<p>Uit het gemiddelde glucose wordt het HbA1C voorspeld. Dit gebruikt
+een oudere formule (Nathan et al, 2008). Je kunt het ook hier laten
+uitrekenen: <a href="https://professional.diabetes.org/diapro/glucose_calc">https://professional.diabetes.org/diapro/glucose_calc</a>.
+GMI wordt in nieuwere apps gebruikt. 
+</p>
+<h2 class="western">Glucose Management Indicator (GMI)</h2>
+<p>Ook voorspeller van HbA1C met een algemeen gebruikte formule (zie
+<a href="https://www.jaeb.org/gmi/">https://www.jaeb.org/gmi/</a>).
+Vreemd genoeg voorspelt die oudere formule mijn HbA1C beter dan GMI. 
+</p>
+<h2 class="western">Glucose variabiliteit</h2>
+<p><span lang="en-US">Coefficient of variation</span> (%CV) als maat
+voor glucose variabiliteit. Een hogere waarde betekent, dat het bloed
+glucose minder constant is.</p>
+<h2 class="western">Samenvattende grafiek</h2>
+<p>(Er moet tenminste voor 9 dagen stream glucose waarden aanwezig
+zijn, voordat een samenvattende grafiek getoond kan worden).</p>
+<p>Alle stream waarden over de betreffende periode worden gebruikt om
+voor elke minuut van de dag te bepalen hoe de glucose waarden
+verdeeld waren. De mediaan geeft de waarde waaronder 50% van de
+waarden liggen voor elke minuut van de dag in de betreffende periode.
+Het lichtste (doorzichtige blauw) is het gebied waarin alle waarden
+liggen (100%). Iets donkerder lichtblauw is het gebied ronde de
+mediaan waar binnen 90% van de glucose waarden zich bevindt. In het
+gebied in het donkerste blauw liggen 50% van de waarden. Als je de
+grenzen van deze gebieden als lijnen ziet, kun je het zo beschrijven:
+onder de laagste lijn bevinden zich 0% van de waarden, onder de
+tweede lijn 5% van de waarden, onder de derde lijn (tussen het
+donkerste blauw en lichtblauw) liggen 25% van de waarden. Onder de
+mediaan lijn 50% van de waarden, gevolgd door 75%, 95% en 100%.</p>
+<p>Druk op het scherm om de samenvattende grafiek te sluiten, behalve
+op de rechter of linker rand die de grafiek naar links of recht
+opschuift. De grafiek kan ook naar links of rechts verschoven worden
+door een vinger links of rechts over het scherm te bewegen. Als
+<i>Verander schaal handmatig voor Tijd</i> in instellingen aanstaat,
+kun je de tijdschaal veranderen door twee vingers naar- of van elkaar
+te bewegen. Als <i>Verander schaal handmatig voor Glucose</i>
+aangevinkt is in instellingen, kun je de top van de grafiek naar
+boven en beneden bewegen door een vinger naar boven of beneden te
+bewegen in de bovenste helft van de grafiek. Hetzelfde in de beneden
+helft voor de onderkant van de grafiek.</p>
+<p><br/>
+<br/>
+
+</p>
+<p><br/>
+<br/>
+
+</p>
+<p><br/>
+<br/>
+
+</p>
+]]>
+</string>
+<string name="alarmhelp" >
+<![CDATA[
+<h1>Alarmen</h1>
+<h2 class="western">Glucose alarmen: 
+</h2>
+<p style="line-height: 100%; margin-bottom: 0in">De via Bluetooth
+ontvangen (stream) glucose waarde kan gebruikt worden om een alarm af
+te laten gaan.</p>
+<h2 class="western">Laag glucose alarm</h2>
+<p style="line-height: 100%; margin-bottom: 0in">Waarde waar onder
+het alarm af moet gaan.</p>
+<h2 class="western">Hoog glucose alarm</h2>
+<p style="line-height: 100%; margin-bottom: 0in">Waarde waar boven
+het alarm af moet gaan.</p>
+<h2 class="western">Signaal verlies alarm</h2>
+<p style="line-height: 100%; margin-bottom: 0in">Geef aan na hoeveel
+minuten geen glucose waarde via Bluetooth ontvangen moet zijn,
+voordat een alarm af gaat.</p>
+<h3>Stop alarm</h3>
+<p style="line-height: 100%; margin-bottom: 0in">Alarmen stoppen
+bij een van het volgende:</p>
+<ul>
+	<li><p style="line-height: 100%; margin-bottom: 0in">De aangegeven
+	tijdsperiode is verlopen;</p>
+	<li><p style="line-height: 100%; margin-bottom: 0in">Het grafiek
+	scherm is aangeraakt;</p>
+	<li><p style="line-height: 100%; margin-bottom: 0in">De Android
+	melding is aangeraakt;</p>
+	<li><p style="line-height: 100%; margin-bottom: 0in">Op “Annuleren”
+	in het alarm meldings-schermpje in Juggluco is gedrukt.</p>
+</ul>
+<h2 class="western">Waarde aanwezig melding</h2>
+<p style="line-height: 100%; margin-bottom: 0in">Soms werkt een
+sensor niet. Als dit aanstaat, wordt er gemeld wanneer de sensor het
+weer doet na aan mislukte scan (of na het starten van het programma).</p>
+<h2 class="western"><br/>
+<br/>
+
+</h2>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+]]>
+</string>
+<string name="flashpermission" >
+<![CDATA[
+<p align="center" style="line-height: 100%; margin-top: 0.17in; margin-bottom: 0.08in; page-break-after: avoid">
+<font face="Liberation Sans, sans-serif"><font size="6" style="font-size: 28pt"><b>Camera
+toestemming</b></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0in">Soms wordt beweert
+dat voor het gebruik van de Flits op sommige apparaten Camera
+toestemming nodig is. Op de smartphones die ik getest heb is deze
+toestemming niet nodig en Juggluco vraagt niet om deze toestemming.
+Als de flits niet werkt, crashed of vreemd gedrag veroorzaakt, kun je
+proberen of het beter gaat met deze toestemming. Je kunt de
+toestemming weer intrekken in de Android instellingen voor Juggluco.</p>
+]]>
+</string>
+<string name="nearbypermission" >
+<![CDATA[
+<p style="line-height: 100%; margin-bottom: 0in">
+Android heeft enkele nieuwe Bluetooth &ldquo;permissions&rdquo; (in
+de Nederlandse versie van Android afwisselend aangeduid met
+machtigingen, toestemmingen, rechten en mogelijkheden), die vergen
+dat je expliciet toestemming geeft voor het gebruikt van Bluetooth.
+Als je deze &ldquo;Apparaten in de buurt&rdquo; toestemming niet
+geeft, kan Juggluco geen glucose waarden ontvangen via Bluetooth van
+Freestyle Libre 2 sensoren.</p>
+]]>
+</string>
+<string name="watchinfo" >
+<![CDATA[
+<h1>Horloges</h1>
+<p style="line-height: 100%; margin-bottom: 0in">Op verschillende
+manieren kunnen stream glucose waarden van Juggluco naar horloges
+verzonden en daarop weergegeven worden.</p>
+<h2 class="western">Melding</h2>
+<p style="line-height: 100%; margin-bottom: 0in">Als <i>Melding</i>
+in het linker middel menu van Juggluco aanstaat, wordt er bij het
+binnenkomen van elke glucose waarde een Android melding gemaakt die
+naar sommige horloges wordt doorgezonden. Hiervoor moet in de app
+behorende bij het horloge ingesteld zijn dat het meldingen van
+Juggluco door moet zenden naar het horloge. Dit werkt op Garmin
+Vivoactive3, maar niet op Samsung Galaxy Watch4, waarschijnlijk omdat
+het een <span lang="en-US">ongoing notification</span> betreft.</p>
+<h2 class="western">Kerfstok</h2>
+<p style="line-height: 100%; margin-bottom: 0in">Kerfstok is een
+horloge app voor sommige Garmin horloges waarmee je nummers kunt
+invoeren (bijvoorbeeld insuline doses), maar ook de huidige stream
+glucose waarde weergeeft. Zie Watch→Kerfstok status → Help en
+<a href="http://jkaltes.byethost16.com/Kerfstok">http://jkaltes.byethost16.com/Kerfstok</a></p>
+<h2 class="western">xDrip horloge apps</h2>
+<p>Juggluco bevat een xDrip webserver. Dit maakt het mogelijk horloge
+apps voor xDrip direct met Juggluco te gebruiken. Je kunt ook de
+glucose waarden eerst naar xDrip en dan naar het horloges zenden,
+maar omdat xDrip haar glucose waarde slechts elke 5 minuten
+vernieuwt, worden dan maximaal 6 minute oude waarden naar het horloge
+gezonden, terwijl als het horloge direct met Juggluco verbonden is de
+waarden maximaal 1 minuut oud zijn (als er geen connectie problemen
+of zo optreden). Juggluco zendt altijd de recentste glucose waarden,
+maar die worden enkel naar de xDrip horloge app verzonden nadat die
+er om gevraagd heeft. Watch faces en data fields op <b>Garmin</b>
+horloges vragen elke 5 minute naar een glucose waarden omdat Garmin
+een hogere update frequentie niet toelaat. Via xDrip kon dat er toe
+leiden dat een 10 minute oude glucose waarden getoond werd. Direct
+verbonden aan Juggluco zijn die waarden maximaal 6 minuten oud (als
+alles goed gaat). Als je een programmeerbare Garmin horloge hebt
+waarop Kerfstok niet werkt omdat het geen touchscreen heeft, bestaan
+er de volgende mogelijkheden om toch een niet al te oude glucose
+waarden op je horloge te zien. Een xDrip widget
+(<a href="https://apps.garmin.com/en-US/apps/73115e04-dc9f-4765-ad88-e7ae283ce995">https://apps.garmin.com/en-US/apps/73115e04-dc9f-4765-ad88-e7ae283ce995</a>)
+vertoont direct na het opstarten altijd de meest recente waarde en
+kan ook tijdens het draaien van een sport activiteit horloge app
+gestart worden. Dus als je instaat bent tijdens het sporten even die
+widget te starten, kun je de meest recente glucose waarde zien. Een
+andere mogelijkheid is een xDrip sport app
+(<a href="https://apps.garmin.com/en-US/apps/aaf6533b-bca1-4365-9131-9f882f6f148c">https://apps.garmin.com/en-US/apps/aaf6533b-bca1-4365-9131-9f882f6f148c</a>)
+te gebruiken en die zo op te starten dat het moment waarop het de
+glucose waarden opvraagt net na het binnenkomen van een nieuwe
+glucose waarden bij Juggluco is. Volgens een gebruiker bestaat er ook
+een wijzerplaat (watch face) for <b>Fitbit</b> horloges dat werkt met
+de xDrip webserver: <a href="https://glancewatchface.com/">https://glancewatchface.com</a></p>
+<p><b>local only</b>: server accepteert enkel verbindingen van
+localhost (127.0.0.1). Als je het uitzet kunnen ook andere hosts
+gebruik maken van de server. Als de firewall van je thuis netwerk
+niet zo geconfigureerd is, dat het binnenkomende verbindingen met
+port 17580 van je smartphone verbindt, zullen enkel leden van je
+thuis netwerk een verbinding kunnen vormen.</p>
+<p>Voor meer informatie over de xDrip webserver interface, zie
+<a href="http://jkaltes.byethost16.com/Juggluco/addwatch.html">http://jkaltes.byethost16.com/Juggluco/addwatch.html</a></p>
+<h2 class="western">Juggluco voor WearOS</h2>
+<p>Er bestaat een port van Juggluco die draait op WearOS. Het is
+aangepast aan het kleinere scherm en een wijzerplaat (watch face) is
+toegevoegd, waarop de stream glucose waarde getoond wordt.</p>
+<p><br/>
+<br/>
+
+</p>
+<p><br/>
+<br/>
+
+</p>
+]]>
+</string>
+<string name="wearosinfo" >
+<![CDATA[
+<h1>WearOS</h1>
+<p style="line-height: 100%; margin-bottom: 0in">Een speciale versie
+van Juggluco draait op WearOS horloges. Elke sensor moet wel
+geïnitialiseerd worden door hem te scannen met Juggluco draaiend op
+de verbonden Android smartphone. Via een TCP-verbinding wordt de
+verkregen sensor informatie naar het WearOS horloge verzonden.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Hierna zijn er twee
+mogelijkheden:</p>
+<ol>
+	<li><p style="line-height: 100%; margin-bottom: 0in">De sensor
+	blijft verbonden met de smartphone en de smartphone zendt elke
+	glucose waarde, die het van de sensor via Bluetooth ontvangt, naar
+	het WearOS horloge;</p>
+	<li><p style="line-height: 100%; margin-bottom: 0in">Juggluco op het
+	WearOS horloge vormt een directe verbinding met de sensor. Helaas
+	werkt dit op het horloge dat door door 60% gebruikt wordt (Samsung
+	Galaxy Watch4) niet altijd goed. De helft van de sensoren heeft
+	dermate grote verbindings-problemen met het horloge dat het op deze
+	wijze onbruikbaar is, terwijl mijn smartphone geen problemen heeft
+	met deze sensoren.</p>
+</ol>
+<p style="line-height: 100%; margin-bottom: 0in">Een WearOS horloge
+met Android 8 of hoger is nodig. Juggluco voor WearOS kun je vinden
+in Google Play op dat horloge. Voor enige afbeeldingen zie:
+<a href="http://jkaltes.byethost16.com/JugglucoWearOS/index.html">http://jkaltes.byethost16.com/JugglucoWearOS</a></p>
+<p style="line-height: 100%; margin-bottom: 0in">Om Juggluco op
+WearOS aan de praat te krijgen, doe je het volgende:</p>
+<ol>
+	<li><p style="line-height: 100%; margin-bottom: 0in">Verzeker je
+	ervan dat Bluetooth en WIFI aanstaan en goed functioneren op horloge
+	en smartphone. Soms wordt de WIFI-verbinding constant verbroken. Om
+	dat tegen te gaan kun je het horloge met de lader verbinden, maar
+	dan wordt de Bluetooth verbinding met de smartphone constant
+	verbroken. Soms is het rebooten van het horloge een oplossing;</p>
+	<li><p style="line-height: 100%; margin-bottom: 0in">Zorg ervoor dat
+	op het horloge voldoende opslag ruime en RAM vrij is. Er bestaat de
+	mogelijkheid dat Juggluco geherinstalleerd moet worden als op een
+	kritiek moment de opslag helemaal volraakt;</p>
+	<li><p style="line-height: 100%; margin-bottom: 0in">Zorg dat
+	Juggluco op de verbonden smartphone werkt met de sensor. Hiervoor
+	moet je de sensor een aantal malen scannen. (“<i>Sensor via
+	Bluetoot</i>h” moet je daarbij NIET uitgezet hebben);</p>
+	<li><p style="line-height: 100%; margin-bottom: 0in">Start Juggluco
+	voor WearOS op het horloge;</p>
+	<li><p style="line-height: 100%; margin-bottom: 0in">Ga naar linker
+	menu→Horloges→WearOS Config. Het horloge hoort bovenin het
+	schermpje getoond te worden. Druk op <i>Init Horloge app</i>.</p>
+	<li><p style="line-height: 100%; margin-bottom: 0in">Als alles goed
+	gaat, wordt er in beide Juggluco’s een configuratie voor een
+	TCP-verbinding tussen hen gevormd en wordt alle data van de telefoon
+	naar het horloge verzonden. Dit kan lang duren als je Juggluco lang
+	gebruikt hebt. Je kunt controleren of een TCP-verbinding
+	geconfigureerd is door te kijken in het Kloon schermpje (Smartphone:
+	linker midden menu→Kloon, horloge: linker menu→Kloon). Een
+	connectie met als label de ID die getoond werd in het WearOS
+	schermpje moet getoond worden. Als het daar niet is, druk dan
+	opnieuw op “Init horloge app”. Als het er hierna nog niet is,
+	controleer dan de Bluetooth verbinding en de Android app horend bij
+	je horloge en verantwoordelijk voor de verbinding met je horloge;</p>
+	<li><p style="line-height: 100%; margin-bottom: 0in">Als alles goed
+	ging, wordt nu dezelfde data weergegeven in de WearOS versie van
+	Juggluco als op je smartphone. Elke nieuwe glucose waarde ontvangen
+	door de smartphone wordt via TCP doorgezonden naar het horloge.
+	Sommige instellingen als de eenheid, glucose alarm niveaus en
+	herinneringen zijn ook overgedragen naar het horloge. Latere
+	veranderingen moet je uitvoeren op het horloge zelf;</p>
+	<li><p style="line-height: 100%; margin-bottom: 0in">Als de Low
+	Energy Bluetooth van je WearOS watch nog op zelfde manier
+	functioneert als de Android waar WearOS uit voorgekomen is, kun je
+	ook het WearOS horloge een directe verbinding laten vormen met de
+	sensor. Nadat alle waarden naar het horloge verzonden zijn, kun je
+	op “<b>Directe sensor-horloge verbinding</b>” drukken. Hiermee
+	wordt “Sensor via Bluetooth” uitgezet op de telefoon en aangezet
+	op het horloge. De stream waarden worden nu van horloge naar
+	telefoon gezonden. Je kunt het controleren in het Kloon schermpje.
+	&quot;Directe sensor-horloge verbinding&quot; kan niet veranderd
+	worden als horloge en telefoon niet in sync zijn;</p>
+	<li><p style="line-height: 100%; margin-bottom: 0in">Als je de
+	hoeveelheden op je horloge in wil voeren en gezonden wil hebben naar
+	je smartphone, moet je de zendrichting in het Kloon schermpje zelf
+	veranderen, door hoeveelheden op je smartphone uit te vinken en op
+	je horloge aan te vinken. Op je telefoon moet “Ontvang van” ook
+	aangevinkt zijn. “<i>Verander hoeveelheden niet</i>” moet
+	uitgezet worden op het horloge en aan op de telefoon. Labels worden
+	altijd in de richting van hoeveelheden gezonden en kunnen alleen op
+	de smartphone veranderd worden. Dus als je een label wilt veranderen
+	moet de richting van smartphone naar horloge gaan.</p>
+</ol>
+<p style="line-height: 100%; margin-bottom: 0in">Als het horloge een
+directe Bluetooth verbinding heeft met de sensor en haar waarden naar
+de smartphone gezonden worden, moeten de gescande waarden ook naar
+het horloge gezonden worden (Dit wordt automatisch zo ingesteld als
+je de bovenstaande instructies gevolgd hebt). De stream waarden
+moeten naar de smartphone gezonden zijn, voordat gescand wordt. Als
+niet alle sensor data overgezonden zouden worden, kan oude informatie
+terug gezonden worden naar het horloge of veranderde
+authenticatie-informatie niet gezonden worden naar het horloge.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Veranderingen in een
+functionerende verbinding moeten alleen doorgevoerd worden wanneer
+alle data overgezonden is (bekijk de Sync datum in linker middle
+menu→ kloon).</p>
+<h2 class="western">Horloge-telefoon verbinding</h2>
+<p style="line-height: 100%; margin-bottom: 0in">Tijdens de
+initialisatie, wanneer alle data verzonden wordt van telefoon naar
+horloge, is een functionerende WIFI verbinding noodzakelijk. Latere
+data worden in kleine deeltjes via TCP verzonden. Op mijn horloge
+wordt WI-FI uitgezet en worden deze kleine hoeveelheden via Bluetooth
+verzonden. Maar dit gebeurd alleen wanneer de telefoon verbonden is
+met een externe verbinding (als dat niet het geval is stopt de
+verbinding na enige tijd). Dit kan een mobile data verbinding zijn of
+een Wi-Fi connectie met de modem, maar ook een Wi-Fi verbinding met
+een persoonlijke/draagbare hotspot van een Android apparaat zelfs als
+dat apparaat niet verbonden is met Internet. Je kunt dan Wi-Fi op het
+horloge uitzetten. 
+</p>
+<p style="line-height: 100%; margin-bottom: 0in">Bij een op
+bovenstaande manier gevormde horloge-telefoon verbinding, zendt
+Juggluco zelf de IP over naar de andere kant van de connectie; je
+hoeft ze niet in te vullen. Als veranderd wordt van Wi-Fi naar Mobile
+data worden de IPs automatisch bijgewerkt (soms werkt dit niet goed
+en moet eerst Wi-Fi of Mobile Data uit- en aangezet worden voordat de
+IP gedetecteerd is). Bij andere Kloon verbindingen moet de IP van de
+andere zijde wel handmatig ingevoerd worden.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Soms stokt de
+verbinding tussen horloge en telefoon. Om hem weer aan de praat te
+krijgen kan het volgende effect hebben:</p>
+<p style="line-height: 100%; margin-bottom: 0in">– Externe WiFi of
+Mobile data connectie van de smartphone uit-en aanzetten. Soms moet
+het meerdere malen gedaan worden voordat het horloge een veranderde
+IP heeft ontdekt;</p>
+<p style="line-height: 100%; margin-bottom: 0in">– Hetzelfde met
+het horloge als die het heeft;</p>
+<p style="line-height: 100%; margin-bottom: 0in">– Als de
+verbinding alleen over Bluetooth gaat kan die uit en aangezet worden.
+Wi-Fi aan en uitzetten kan ook;</p>
+<p style="line-height: 100%; margin-bottom: 0in">– Soms moet ook op
+<i>Sync</i> in Juggluco op het horloge gedrukt worden.</p>
+<h2 class="western">Wijzerplaat</h2>
+<p>Juggluco voor WearOS bevat een wijzerplaat die je huidige
+glucosewaarde toont naast de tijd en maximaal vier complicaties
+(toevoegingen aan de wijzerplaat door de gebruiker). Om er gebruik
+van te maken, moet je deze wijzerplaat instellen op je horloge of de
+Android app die bij je horloge hoort. Meestal zie je de nieuwste
+glucose waarden als het scherm ontwaakt wordt. Als het scherm in
+“Always on” mode is, wordt het scherm enkel op de minuut
+ververst, zodat een maximaal een minuut oude waarde getoond kan
+worden. Een nieuwe waarde wordt wel getoond wanneer je dezelfde
+beweging maakt die anders het scherm doet oplichten: arm optillen,
+scherm aanraken of knop indrukken.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Een andere
+mogelijkheid is de glucose broadcast van WearOS version van Juggluco
+te gebruiken om de glucose waarden in een andere watch face weer te
+geven. Bijvoorbeeld:
+<a href="https://github.com/pachi81/GlucoDataHandler/releases">https://github.com/pachi81/GlucoDataHandler/releases</a></p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+]]>
+</string>
+<string name="about" >
+<![CDATA[
+<h1>About</h1>
+<p style="line-height: 100%; margin-bottom: 0in">Juggluco werd
+geschreven door <a href="http://jkaltes.byethost16.com/Juggluco">Jaap
+Korthals Altes</a></p>
+<p style="line-height: 100%; margin-bottom: 0in">Afgezien van de
+standaard Android libraries, werd van het volgende gebruik gemaakt:</p>
+<ul>
+	<li><p style="line-height: 100%; margin-bottom: 0in">NFC en
+	Bluetooth commando’s specifiek voor Abbott’s Freestyle Libre
+	sensoren en interpretatie algoritmen specifiek voor Freestyle Libre
+	sensoren. Allemaal ongedocumenteerd;</p>
+	<li><p style="line-height: 100%; margin-bottom: 0in">Om met Garmin
+	horloges te communiceren, is gebruik gemaakt van <a href="https://developer.garmin.com/connect-iq/sdk">Connect
+	IQ Mobile SDK</a>;</p>
+	<li><p style="line-height: 100%; margin-bottom: 0in">De grafieken
+	zijn gemaakt met <a href="https://github.com/memononen/nanovg">NanoVG</a>;</p>
+	<li><p style="line-height: 100%; margin-bottom: 0in">De kloon
+	functie gebruikt <a href="https://ascon.iaik.tugraz.at/">Ascon
+	authenticated encryption</a>;</p>
+	<li><p style="line-height: 100%; margin-bottom: 0in">Communicatie
+	met Freestyle Libre3 sensors gebruikt <a href="https://github.com/intel/tinycrypt">Tinycrypt</a>;</p>
+	<li><p style="line-height: 100%; margin-bottom: 0in">De color picker
+	is een aanpassing van <a href="https://github.com/yukuku/ambilwarna">AmbilWarna</a>.</p>
+</ul>
+<p style="line-height: 100%; margin-bottom: 0in">Juggluco is naar het
+Italiaans vertaald door <a href="mailto:matteo.gabriele81@gmail.com">Matteo
+Gabriele</a>.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Juggluco is naar het
+Portugees vertaald door Rui Pinheiro.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+]]>
+</string>
+<string name="disturbhelp" >
+<![CDATA[
+<p align="center" style="line-height: 100%; margin-top: 0.17in; margin-bottom: 0.08in; page-break-after: avoid">
+<font face="Liberation Sans, sans-serif"><font size="6" style="font-size: 28pt"><b>Toegang
+tot &ldquo;<i>Niet storen</i>&rdquo;</b></font></font></p>
+<p>In Juggluco kun je voor elk alarm aangeven of het af moet gaan
+tijdens &ldquo;<i>Niet storen</i>&rdquo; (onder alarmtoon voor dat
+alarm). Op sommige apparaten zijn alarmen tijdens &ldquo;Niet storen&rdquo;
+enkel mogelijk als Juggluco toegang heeft tot &ldquo;Niet storen&rdquo;.
+Nadat op OK gedrukt is, kom je uit in een Android instelling
+schermpje waar je Juggluco deze toestemming kunt geven. Onafhankelijk
+van wat je daar aangeeft, kun je in Juggluco voor elk alarm aangeven
+of het moet afgaan tijdens &ldquo;Niet storen&rdquo; of niet.</p>
+]]>
+</string>
+<string name="libreview" >
+<![CDATA[
+<h1>Libreview</h1>
+<p style="line-height: 100%; margin-bottom: 0in">Juggluco kan glucose
+data naar Libreview zenden.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Als Abbott’s
+Librelink app glucose data van Freestyle libre 2 sensoren naar
+Libreview zendt, is dat gebaseerd op de history data. Door de sensor
+te scannen wordt het overgebracht van het geheugen van de sensor naar
+Librelink.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Om je van dit
+scannen te verlossen, creëert Juggluco deze 15 minuten punten door
+de stream waarden rond elk punt te middelen. Af en toe verzend
+Juggluco ook en enkele stream waarde op dezelfde manier als
+individuele scan waarden door Librelink naar Libreview verzonden
+worden.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Om van deze service
+gebruik te maken moet je een account maken op <a href="https://libreview.com/">https://libreview.com</a>
+en het daar gebruikte <b>E-mail adres</b> en <b>wachtwoord</b> hier
+aangeven. Zendt niet naar het zelfde Libreview Account meerdere keren
+gegevens over dezelfde tijdsperiode (bijvoorbeeld van Librelink en
+Juggluco), dit kan er toe leiden dat gegevens niet goed weergegeven
+of hoeveelheden bij elkaar opgeteld worden. Je kunt alle gegevens van
+een bron verwijderen in Libreview in Account instellingen-&gt;Mijn
+Apparaten.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+<p style="line-height: 100%; margin-bottom: 0in">Elke keer wanneer
+weggedraaid wordt van Juggluco, zendt Juggluco nieuwe data naar
+Libreview als dat de laatste 20 minuten niet al gedaan is. Je kunt
+ook handmatig zenden door op “<b>Zendt nu</b>” te drukken.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Alleen maar glucose
+waarden worden naar Libreview gezonden; geen gegevens met betrekking
+tot eten, activiteit, insuline of scanfouten. Vanaf Juggluco 4.1.0
+wordt ook glucosewaarden van FreeStyle Libre 3 sensoren naar
+Libreview gezonden.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>Herzendt data</b>:
+Zendt alle data van de laatste 90 dagen opnieuw naar Libreview. Je
+moet hier op drukken als je een nieuwe Libreview account wilt
+gebruiken.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Boven de onderste
+knoppen wordt aangegeven of de laatste keer zenden naar Libreview
+zenden succesvol was of wat er mis ging. 
+</p>
+<p style="line-height: 100%; margin-bottom: 0in">Omdat de waarden
+verzonden naar Libreview eerst gemiddeld en daarna geanalyseerd
+worden, ontstaan er kleine verschillen tussen de waarden getoond in
+Juggluco’s statistiek scherm en Libreview. Bijvoorbeeld: Libreview
+zegt 100% van de tijd actief, terwijl Juggluco’s statistiek scherm
+96.0% actief zegt. Sommige pieken en dalen zullen ook weggemiddeld
+worden, zodat Libreview een ietsje hogere <i>Tijd in doelbereik</i>
+geeft dan Juggluco’s statistiek schermpje. Aangezien de History
+waarden minder extreem zijn dan het gemiddelde van de omliggende
+waarden, zal dit verschil groter zijn als Libreview gebaseerd is op
+gescande waarden.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Juggluco kan met
+meerdere sensoren tegelijkertijd verbonden zijn, terwijl Librelink
+maximaal met <font face="Liberation Serif, serif">éé</font>n sensor
+tegelijkertijd verbonden kan zijn. Bij het zenden van data naar
+Libreview probeert Juggluco dit na te bootsen door eerst data van een
+sensor te zenden en pas wanneer van die sensor geen data meer is,
+wordt er data van de volgende sensor verzonden.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>Get</b> <b>Account
+ID</b>: 
+</p>
+<p style="line-height: 100%; margin-bottom: 0in">Als je je Libreview
+account id wil krijgen, maar geen glucose waarden naar Libreview will
+senden, kun je je E-Mail adres en wachtwoord invoeren en op &quot;Get
+Account ID&quot; drukken. Als je na een tijdje terug komt in dit
+schermpje, wordt deze account ID in plaats van de 0 getoond. Het
+ophalen van de account id maakt het mogelijk een Freestyle Libre 3
+sensor over te nemen die gestart is met de Libre 3 app. Dit is enkel
+mogelijk wanneer de Libre 3 al ingelogd was met dit E-Mail adres bij
+Libreview. Als je later probeert een Account ID aan de de Libre3 app
+te verbinden, kun je de Freestyle Libre3 sensor niet meer scannen.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+]]>
+</string>
+<string name="garminconfig" >
+<![CDATA[
+<h1>Kerfstok configuratie</h1>
+<p style="line-height: 100%; margin-bottom: 0in"><span lang="nl-NL">De
+broncode van Kerfstok kan gedownload worden van
+<a class="western" href="http://jkaltes.byethost16.com/Kerfstok/Kerfstok-source.html">http://jkaltes.byethost16.com/Kerfstok/Kerfstok-source.html</a>.
+Iemand die de broncode verandert, kan een andere </span><span lang="nl-NL"><b>ID</b></span><span lang="nl-NL">
+gebruiken. Juggluco moet die ID weten om met die veranderde Kerfstok
+te kunnen communiceren. Druk op </span><span lang="nl-NL"><b>ID</b></span><span lang="nl-NL">
+om die 32 tekens in te voeren. </span>
+</p>
+<h2 class="western">Shortcuts</h2>
+<p style="line-height: 100%; margin-bottom: 0in">Voer shortcuts in
+voor de Garmin watch app Kerfstok, om gemakkelijk bepaalde waarden in
+te voeren.</p>
+<h2 class="western">Dark mode</h2>
+<p style="line-height: 100%; margin-bottom: 0in">Geeft aan of
+Kerfstok wit op zwart weergegeven moet worden of zwart op wit.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+]]>
+</string>
+<string name="librenumhelp" >
+<![CDATA[
+<p>Vink &quot;<b>Zendt hoeveelheden</b>&quot;
+aan om hoeveelheden naar Libreview te zenden. Om &quot;<i>Zendt
+hoeveelheden</i>&quot; aan te kunnen vinken, moet je eerst voor elk
+label aangeven wat het is.</p>
+]]>
+</string>
+<string name="setlibrenumtype" >
+<![CDATA[
+<p>Selecteer hoe een hoeveelheid
+ingevoerd onder een bepaald label naar Libreview gezonden moeten
+worden. Het is mogelijk meer dan een label dezelfde Libreview
+aanduiding te geven. Als je bijvoorbeeld Dextro onder een ander label
+dan andere Koolhydraten invoert, kun je ze beiden als koolhydraten
+naar Libreview zenden.</p>
+<p>Bij <b>koolhydraten</b> is het mogelijk aan te geven dat de
+hoeveelheid in Juggluco met iets anders dan 1 vermenigvuldigd moet
+worden voordat het naar Libreview gezonden wordt. Als je bijvoorbeeld
+in Juggluco porties van 10 gram aangeeft, kun je hier 10 aangeven
+zodat het naar grammen omgerekend wordt.</p>
+<p><b>Opmerking</b> betekent dat de hoeveelheid naar Libreview wordt
+gezonden op dezelfde manier als &quot;<i>Opmerkingen</i>&quot; in
+Librelink. Van de hoeveelheid wordt dan een opmerking gemaakt die
+bestaat uit het label gevolgd door de hoeveelheid. Bijvoorbeeld
+wanneer je het label &quot;<i>Fietsen</i>&quot; had en <i>50</i>
+ingevoerd hebt, wordt de opmerking &quot;<i>Fietsen 50</i>&quot;.</p>
+]]>
+</string>
+</resources>

@@ -1,0 +1,9 @@
+
+struct updateone {
+	int startsensors;//vanwaaraf sensors.dat updaten
+	uint8_t backupupdated;
+	uint32_t updatesettings;
+	int32_t firstsensor;
+	uint32_t starttime;
+	bool resetdevices;
+	};

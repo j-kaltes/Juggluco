@@ -1,0 +1,1 @@
+ sed -i.glu 's/\<GlucoseHistory\>/SensorGlucoseData/g'   `grep -rl '\<GlucoseHistory\>'`

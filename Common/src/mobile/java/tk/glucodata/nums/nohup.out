@@ -1,0 +1,42 @@
+WARNING: Using incubator modules: jdk.incubator.vector, jdk.incubator.foreign
+org.eclipse.m2e.logback.configuration: The org.eclipse.m2e.logback.configuration bundle was activated before the state location was initialized.  Will retry after the state location is initialized.
+org.eclipse.m2e.logback.configuration: Logback config file: /n/ojka/eclipse-workspace/.metadata/.plugins/org.eclipse.m2e.logback.configuration/logback.1.16.0.20200318-1040.xml
+org.eclipse.m2e.logback.configuration: Initializing logback
+Sep 20, 2022 4:20:11 PM org.eclipse.lemminx.XMLLanguageServer initialize
+INFO: Initializing XML Language server
+LemMinX Server info:
+ - Version : 0.12.0
+ - Java : /usr/lib/jvm/java-18-jdk
+ - Git 43595c3 - [maven-release-plugin] prepare release 0.12.0
+SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+RunProcess.appStarted(7212fbfb-1f57-4bdc-8459-c04efd90a604)
+RunProcess.appTerminated(7212fbfb-1f57-4bdc-8459-c04efd90a604)
+RunProcess.appStarted(fd298af3-f2df-4ef0-9259-3db875bbf5c9)
+RunProcess.appTerminated(fd298af3-f2df-4ef0-9259-3db875bbf5c9)
+Sep 20, 2022 5:35:42 PM org.eclipse.lemminx.XMLLanguageServer initialize
+INFO: Initializing XML Language server
+LemMinX Server info:
+ - Version : 0.12.0
+ - Java : /usr/lib/jvm/java-18-jdk
+ - Git 43595c3 - [maven-release-plugin] prepare release 0.12.0
+SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+Sep 20, 2022 6:02:53 PM org.eclipse.lsp4j.jsonrpc.json.ConcurrentMessageProcessor run
+SEVERE: java.io.IOException: Stream closed
+org.eclipse.lsp4j.jsonrpc.JsonRpcException: java.io.IOException: Stream closed
+	at org.eclipse.lsp4j.jsonrpc.json.StreamMessageProducer.listen(StreamMessageProducer.java:122)
+	at org.eclipse.lsp4j.jsonrpc.json.ConcurrentMessageProcessor.run(ConcurrentMessageProcessor.java:113)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+Caused by: java.io.IOException: Stream closed
+	at java.base/java.io.BufferedInputStream.getBufIfOpen(BufferedInputStream.java:168)
+	at java.base/java.io.BufferedInputStream.read(BufferedInputStream.java:267)
+	at org.eclipse.lsp4j.jsonrpc.json.StreamMessageProducer.listen(StreamMessageProducer.java:79)
+	... 6 more
+

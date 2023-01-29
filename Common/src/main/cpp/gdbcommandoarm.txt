@@ -1,0 +1,12 @@
+
+  #  arch  syscall NR return arg0 arg1 arg2 arg3 arg4 arg5 
+  #  arm       r7       r0    r0   r1   r2   r3   r4   r5  
+#   arm64      x8       x0    x0   x1   x2   x3   x4   x5  
+catch syscall openat
+condition 1 $r1&&$_streq("/proc/self/status",(const char *)$r1)
+commands 1
+silent
+set $r1=mystatus
+cont
+end
+

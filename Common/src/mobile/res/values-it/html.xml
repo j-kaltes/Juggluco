@@ -1,0 +1,1500 @@
+<resources>
+<string name="ringtone" >
+<![CDATA[
+
+<H1 CLASS="western">Suonerie</H1>
+<P STYLE="margin-bottom: 0cm; line-height: 100%">Selezionare quale
+suoneria riprodurre per un allarme o una notifica e dopo quanti
+secondi si deve fermare o per quanto tempo si deve ripetere.</P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%">Se un valore del
+glucosio si mantiene troppo alto o troppo basso, l\'allarme non si
+attiver&agrave; una volta sola. Puoi specificare dopo quanti minuti
+l\'allarme deve generarsi di nuovo se le condizioni permangono.</P>
+<p style="line-height: 100%; margin-bottom: 0in"><b>Sound</b>: make
+sound.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>Default</b>: use
+default sound.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>Select</b>:
+Select a ringtone.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>Disturb</b>: Also
+generate sound when &quot;<i>Do not Disturb</i>&quot; is on. If
+Juggluco doesn\'t  have the required permission for this, you will be
+directed to an Android settings screen to give Juggluco this
+permission.</p>
+<P STYLE="margin-bottom: 0cm; line-height: 100%"><B>Flash</B><SPAN STYLE="font-weight: normal">:
+gli smartphone con il flash hanno l\'opzione di farlo lampeggiare per
+un certo numero di secondi. In alcuni casi la suoneria non &egrave;
+permessa, mentre per il flash non c\'&egrave; un divieto specifico.</SPAN></P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+Su dei siti come stackoverflow.com &egrave; stato riportato che
+alcuni smartphone sono crashati durante l\'uso del flash se non in
+possesso dei permessi per la fotocamera, se questo &egrave; il tuo
+caso abilita I permessi di questa.</P>
+]]>
+</string>
+<string name="reminders" >
+<![CDATA[
+
+<H1 CLASS="western">Promemoria</H1>
+<P>I promemoria ti ricordano di registrare una certa quantit&agrave;
+di qualcosa in un certo intervallo di tempo.<BR>Premendo <B>Nuovo</B>
+<SPAN STYLE="font-weight: normal">puoi inserire un nuovo promemoria.</SPAN></P>
+<P STYLE="font-weight: normal">Specifica il tempo di inizio e fine di
+un lasso di tempo, puoi anche inserire un determinato valore su una
+etichetta dedicata.<BR>Quando il tempo di fine verr&agrave; raggiunto
+il programma controller&agrave; se il valore da registrare sia stato
+registrato o meno (con la sua specifica etichetta). Se non lo &egrave;
+stato, una notifica verr&agrave; mostrata e verr&agrave; riprodotta
+una suoneria.</P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%">Per esempio tu
+potresti impostare:</P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%">Levemir 6.0</P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%">21:30 - 23:55</P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%">Alle 23:55 verrai
+avvisato nel caso che dalle 21:30 a quell\'ora tu non abbia registrato
+di aver assunto 6 unit&agrave; di Levemir.</P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%">Nella lista vedrai
+tutti I promemoria memorizzati. Toccarli per modificarli.</P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%">Se tutto va bene, I
+promemoria funzionano anche dopo il riavvio dello smartphone senza
+che l\'utente debba avviare l\'app Juggluco. Su alcuni device Huawei,
+devi configurare che il programma parta al momento dell\'avvio del
+telefono.</P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%">Questo si fa su
+Impostazioni-&gt;Batteria-&gt;Avvio App. Qui puoi selezionare in
+Juggluco la <I>Gestione manuale</I><SPAN STYLE="font-style: normal">,
+l\'</SPAN><I>avvio automatico</I> <SPAN STYLE="font-style: normal">e
+</SPAN><I>esegui in background</I><SPAN STYLE="font-style: normal">.
+Questo &egrave; necessario anche affinch&egrave; gli allarmi
+funzionino dopo Il riavvio del telefono senza necessit&agrave; che
+l\'utente apra manualmente Juggluco.</SPAN></P>
+]]>
+</string>
+<string name="connectionoverview" >
+<![CDATA[
+
+<P ALIGN=CENTER STYLE="margin-top: 0.43cm; margin-bottom: 0.2cm; line-height: 100%; page-break-after: avoid">
+<FONT FACE="Liberation Sans, sans-serif"><FONT SIZE=6 STYLE="font-size: 28pt"><B>Mirror</B></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%">Inviare o ricevere
+dati da un altro dispositivo. Tu puoi connettere un dispositivo
+android con Juggluco per visualizzare gli stessi dati un altro
+dispositivo con Juggluco. Dopo aver ricevuto I dati di scansione, il
+dispositivo Mirror pu&ograve; anche dialogare col sensore via
+Bluetooth. Per assicurarsi che solo uno dei dispositivi dialoghi con
+il sensore, &ldquo;<I>Sensore via Bluetooth</I>&rdquo; <SPAN STYLE="font-style: normal">viene
+disabilitato automaticamente quando dei valori di Flusso cominciano
+ad arrivare via IP/TCP.</SPAN></P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%"><SPAN STYLE="font-style: normal">In
+</SPAN><I>wlan</I> <SPAN STYLE="font-style: normal">va indicato l\'IP
+della rete domestica del dispositivo, devi specificare IP sull\'altro
+device al quale stai tentando la connessione.</SPAN></P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%"><SPAN STYLE="font-style: normal">In
+</SPAN><I>Porta</I><SPAN STYLE="font-style: normal">, puoi cambiare
+la porta TCP in ascolto per le connessioni.</SPAN></P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%"><SPAN STYLE="font-style: normal">Cliccando
+su </SPAN><I><B>Aggiungi connessione </B></I><SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: normal">puoi
+specificare a quale host connettersi e come connettersi.</SPAN></SPAN></P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%"><SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: normal">Un
+efficiente connessione di rete su Android sar&agrave; possibile dopo
+aver impostato correttamente le impostazioni di restrizione di uso
+dell\'app in background. Premendo </SPAN></SPAN><SPAN STYLE="font-style: normal"><B>Doze
+mode</B></SPAN> <SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: normal">si
+potr&agrave; accedere al cambio di queste impostazioni.</SPAN></SPAN></P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%"><SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: normal">Se
+la funzione di Juggluco per la Mirror App &egrave; attiva (ricevere I
+dati di glucosio da un altro dispositivo), si pu&ograve; selezionare
+</SPAN></SPAN><SPAN STYLE="font-style: normal"><B>Allarmi</B></SPAN>
+<SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: normal">per
+visualizzare una finestra di dialogo in cui poter specificare il
+valore di basso e alto glucosio per gli allarmi e le relative
+notifiche. </SPAN></SPAN>
+</P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%"><B>Non cambiare i
+valori:</B> <SPAN STYLE="font-weight: normal">se l\'app riceve anche
+dati su medicazioni, cibo e sport da un\'app su un altro dispositivo,
+sarebbe giusto che tu non possa aggiungere altri dati simili oppure
+modificarli. </SPAN>
+</P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%"><B>Sincronizza</B>
+<SPAN STYLE="font-weight: normal">invia un nuovo set di dati ai
+dispositivi connessi se ci sono disponibili, oppure ne richiede di
+nuovi se disponibili dall\'altra parte. Le connessioni esistenti sono
+visualizzate in una lista in cui comprare l\'IP e la porta nonch&egrave;
+giorno mese e orario dell\'ultima connessione riuscita. Premere su una
+voce di questa lista per modificarla.</SPAN></P>
+]]>
+</string>
+<string name="addconnection" >
+<![CDATA[
+
+<P ALIGN=CENTER STYLE="margin-top: 0.43cm; margin-bottom: 0.51cm; background: transparent; page-break-after: avoid">
+<FONT FACE="Liberation Sans, sans-serif"><FONT SIZE=6 STYLE="font-size: 28pt"><B>Aggiungere
+una connessione</B></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%">Stabilire una
+connessione con un\'altra istanza di Juggluco. Juggluco installato su
+un dispositivo pu&ograve; inviare dati via IP/TCP ad un altro
+dispositivo. Per stabilire una connessione, una delle due
+applicazioni Juggluco deve essere in ascolto su una porta e l\'altra
+deve poter contattarlo sulla stessa porta. La porta dell\'istanza in
+ascolto &egrave; mostrata nella precedente schermata (menu
+sinistra-centro &rarr; Mirror). Qui si pu&ograve; specificare la
+porta da contattare dell\'istanza di Juggluco se &egrave; attivo un
+contatto con essa. Se l\'istanza di Juggluco non riesce ad ascoltare
+su una determinata porta, selezionare &ldquo;<B>Active only</B>&rdquo;.
+Se l\'altra parte non riesce a contattare la porta, selezionare
+&ldquo;<B>Passive only</B>&rdquo;, in alternative lasciare &ldquo;<B>Entrambi</B>&rdquo;
+selezionato su entrambi. L\'istanza di Juggluco dall\'altra parte
+dovrebbe avere <SPAN STYLE="text-decoration: none"><I>Passive only</I></SPAN>
+selezionato se l\'altra istanza ha selezionato <I>Active Only</I>.
+Viceversa se un\'istanza di Juggluco ha <I>Active Only</I>, l\'altra
+dovr&agrave; avere <I>Passive Only</I>. Se una delle due ha invece
+<I>Entrambi</I>, anche l\'altra dovr&agrave; avere <I>Entrambi</I>
+selezionato.</P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%">Nell\'istanza di
+Juggluco che deve stabilire un contatto, va specificato l\'IP (o gli
+IP) da contattare. Se l\'host ha IP multipli, si pu&ograve;
+specificarne pi&ugrave; di uno; per esempio quando due dispositivi
+sono alternativamente connessi tramite una rete casalinga oppure
+tramite una connessione diretta come pu&ograve; essere un hotspot
+portatile. Mai specificare gli IP di pi&ugrave; dispositivi, in
+questo caso questi riceveranno solo una parte dei dati trasmessi.</P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%">In tutti I casi
+eccetto \'Active only\', &egrave; possibile selezionare \'<B>Rileva</B>\';
+in questo caso Juggluco salver&agrave; il primo IP da cui riceve il
+contatto del dispositivo dall\'altra parte.</P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%">Verificare se il
+dispositivo sta tentando la corretta connessione pu&ograve; essere
+fatto in due modi: Selezionare \'<B>Test IP</B>\' per provare appunto
+l\'IP. Selezionando <B>Test Label</B><SPAN STYLE="font-weight: normal">,
+il contatto verr&agrave; stabilito solo se entrambi avranno la stessa
+label.</SPAN></P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%"><SPAN STYLE="font-weight: normal">Selezionare
+</SPAN><B>ricevi da</B> <SPAN STYLE="font-weight: normal">se si vuole
+che l\'app funga da mirror app.</SPAN></P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%"><SPAN STYLE="font-weight: normal">Se
+invece si vuole che il dispositivo sia il </SPAN><B>trasmettitore</B>
+<SPAN STYLE="font-weight: normal">di dati, va specificato quali dati
+inviare:</SPAN></P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%"><B>Valori</B>: dati
+di unit&agrave;, cibo e sport specificati.</P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%"><B>Scansioni</B>: I
+dati ricevuti dalla scansione del lettore (scansione e storico).</P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%"><B>Flusso</B>: I
+dati ricevuti via Bluetooth.</P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%">Pu&ograve; capitare
+che dei dati siano gi&agrave; presenti sul dispositivo ricevitore. Si
+pu&ograve; specificare fino a quando mantenere questi dati:</P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%"><I>Inizio</I>:
+nessun dato presente</P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%"><I>Ora</I>: tutti I
+dati presenti</P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%">Oppure specificare
+una data specifica dipendentemente dalla posizione di inizio della
+schermata.</P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%">Quando una sorgente
+dati viene aggiunta ad una connessione esistente, la data di start
+determina solo la data iniziale da cui poi aggiungere dati
+successivi. Per esempio se Scansioni e Flusso sono trasmessi entrambi
+all\'host, e Valori viene aggiunta in un secondo momento, la data di
+start determina solo la finestra temporale dei dati da inviare di
+Valori.</P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%">In caso due
+dispositivi siano connessi tramite una connessione non sicura, I dati
+saranno criptati attraverso l\'uso di una <B>password</B> <SPAN STYLE="font-weight: normal">(massimo16
+caratteri).</SPAN></P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%">Selezionare <B>Salva</B>
+<SPAN STYLE="font-weight: normal">per salvare le impostazioni
+modificate. </SPAN><B>Cancella </B><SPAN STYLE="font-weight: normal">canceller&agrave;
+la connessione aperta.</SPAN></P>
+<P STYLE="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+Nella situazione pi&ugrave; semplice tutte le connessioni passano per
+la rete casalinga, cos&igrave; baster&agrave; usare gli IP locali. Si
+pu&ograve; connettere via internet tramite Wi-Fi, in questo caso si
+deve consultare il manuale del modem su come impostare il firewall
+per reindirizzare una connessione dall\'esterno ad un IP ed una porta
+all\'interno della rete casalinga.</P>
+<P STYLE="margin-bottom: 0cm; font-weight: normal; line-height: 100%">
+Due smartphone connessi via dati mobili su internet possono essere
+direttamente connessi tra loro se uno di loro pu&ograve; mettersi in
+ascolto su una porta della rete mobile. Se nessuno dei due pu&ograve;
+(per esempio non hanno IP statici) possono essere messi in ascolto
+tramite un dispositivo terzo. Una possibilit&agrave; &egrave; di
+avviare Juggluco su un vecchio dispositivo Android (minimo Android
+4.4) a casa e connesso a internet tramite il modem. Un\'altra
+possibilit&agrave; &egrave; di avviare tramite riga di comando
+Juggluco su un computer (es. Un PC su Amazon AWS):</P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%"><A HREF="http://jkaltes.byethost16.com/Juggluco/cmdline/index.html"><SPAN LANG="it-IT">http://jkaltes.byethost16.com/Juggluco/cmdline/index.html</SPAN></A></P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%">Guida sul
+reindirizzamento delle porte:</P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%"><A HREF="https://portforward.com/how-to-port-forward/"><SPAN LANG="it-IT">https://portforward.com/how-to-port-forward/</SPAN></A></P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%"><A HREF="https://stevessmarthomeguide.com/understanding-port-forwarding/"><SPAN LANG="it-IT">https://stevessmarthomeguide.com/understanding-port-forwarding/</SPAN></A></P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%">E\' possibile
+ricevere I dati del glucosiovia Bluetooth su un dispositivo senza
+NFC: inizializzare il sensore con un dispositivo con NFC e poi
+inviare Scansioni e Flusso sull\'altro senza NFC.</P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%">Da questo momento
+per invertire la connessione per dati Flusso, spegnere il Bluetooth
+nel dispositivo con NFC e attivarlo su quello senza NFC, inoltre
+sempre su quello con NFC sar&agrave; sufficiente spegnere l\'opzione
+&ldquo;sensore via Bluetooth&rdquo; e attivare la stessa opzione su
+quello senza NFC. Facendo cos&igrave; si potr&agrave; scansionare con
+un nuovo dispositivo e ricevere I valori di glucosio tramite
+Bluetooth su un altro dispositivo. Per&ograve; su tutti I dispositivi
+tutti I sensori devono essere disponibili. Quindi si devono sempre
+inviare I dati Flusso al dispositivo con NFC e I dati Scansioni a
+quello senza NFC. Altrimenti I dati rimarranno fuori dalla
+sincronizzazione mantenendo quelli vecchi che non verranno
+sovrascritti dai nuovi.</P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%">I dati di Valori
+invece sono completamente indipendenti.</P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%"><FONT FACE="Liberation Sans, sans-serif"><FONT SIZE=4>Problemi
+di rete</FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%">Una stretta e
+puntuale impostazione della connessione dei dispositivi &egrave;
+necessaria. Una singola omissione pu&ograve; rendere la trasmissione
+impossibile.</P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%">E\' possibile che la
+connessione cada, in questo caso &egrave; necessario spegnere e
+riaccendere il WIFI oppure riavviare Juggluco. Volendo, si pu&ograve;
+switchare sulle connessioni le modalit&agrave; <I>activeonly-passiveonly</I>
+<SPAN STYLE="font-style: normal">su </SPAN><I>Entrambi</I><SPAN STYLE="font-style: normal">.
+Questo potrebbe risolvere.</SPAN></P>
+<P STYLE="margin-bottom: 0cm; font-style: normal; line-height: 100%">Per
+esempio uno smartwatch connesso utilizzando una connessione TCP su
+Bluetooth pu&ograve; funzionare solo se l\'orologio &egrave; in
+modalit&agrave; activeonly e lo smartphone passiveonly. Tramite WIFI
+funzioner&agrave; in entrambi I modi.</P>
+<P STYLE="margin-bottom: 0cm; font-style: normal; line-height: 100%">Si
+deve considerare anche l\'ipotesi di cambiare l\'IP col cambio di
+connessione. Questo perch&egrave; possono essere usati IP differenti
+in una rete casalinga piuttosto che con un hostpot portatile.</P>
+]]>
+</string>
+<string name="locationpermission" >
+<![CDATA[
+
+<P STYLE="margin-bottom: 0cm; line-height: 100%">Nel passato Juggluco
+aveva bisogno dei permessi relativi alla posizione per trovare
+l\'indirizzo Bluetooh del sensore Freestyle libre 2. Ora Juggluco usa
+un altro modo per recuperare l\'indirizzo del dispositivo e su molti
+smartphone il permesso relativo alla posizione non &egrave; pi&ugrave;
+necessario. 
+</P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%">Questo perch&egrave;
+alcune guide Bluetooth dicevano che in qualche modo la ricerca dei
+dispositivi necessitava di informazioni per connettersi coi sensori e
+perch&egrave; era usata nel passato da Librelink, ed &egrave; per
+questo che per gli Android 6.7 e 7.1 I permessi sono ancora
+richiesti.</P>
+]]>
+</string>
+<string name="introhelp" >
+<![CDATA[
+
+<P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT COLOR="#365f91"><FONT FACE="Cambria, serif"><FONT SIZE=4><B>Juggluco</B></FONT></FONT></FONT>
+&egrave; un\'app per il controllo del livello di glucosio nelle
+persone con il diabete.</P>
+<P STYLE="margin-bottom: 0cm; line-height: 115%">Pu&ograve; scansiore
+il sensore Freestyle libre (1 e 2) via NFC e ricevere via Bluetooth I
+valori di glucosio dai sensori <FONT COLOR="#4f81bd"><FONT FACE="Calibri, serif"><I><B>Freestyle
+libre 2</B></I></FONT></FONT>.</P>
+<P STYLE="margin-bottom: 0cm; line-height: 115%">Puoi registrare
+tutti I dati di valori (con le etichette che preferisci) per
+documentare la tua insulina, I carboidrati e le attivit&agrave;.
+Queste saranno visualizzate sul grafico del glucosio in modo
+corrispondente all\'ora e alla data di registrazione.</P>
+<P STYLE="margin-bottom: 0cm; line-height: 115%">Al primo avvio del
+programma, puoi (dopo l\'inizializzazione) scansionare un sensore
+Freestyle Libre 2 tramite l\'NFC del tuo telefono.</P>
+<P STYLE="margin-bottom: 0cm; line-height: 115%">Questo programma
+contiene quattro <FONT COLOR="#4f81bd"><FONT FACE="Cambria, serif"><FONT SIZE=3 STYLE="font-size: 13pt"><B>menu</B></FONT></FONT></FONT>;
+toccando un punto vuoto del display aprirai I men&ugrave;. Toccando
+la parte del display a sinistra aprirai il men&ugrave; Sinistra,
+toccando a sinistra del centro dello schermo aprirai il menu
+Sinistra-Centro, toccando a destra del centro dello schermo aprirai
+il men&ugrave; Destra-Centro e infine toccando la parte destra dello
+schermo aprirai il menu Destra.</P>
+<P STYLE="margin-bottom: 0cm; line-height: 115%">Toccando I punti sul
+grafico o I numeri registrati su questo vedrai informazioni circa la
+tua selezione. Puoi anche modificare I valori registrati premendoci a
+lungo sopra. Modifica &egrave; anche possibile attraverso la lista
+dei numeri raggiungibile nel menu Sinistra-Centro.</P>
+<P STYLE="margin-top: 0.2cm; margin-bottom: 0.2cm; background: transparent; line-height: 100%; widows: 0; orphans: 0; page-break-after: avoid">
+<FONT SIZE=3><I>Menu 4: Spostamento (Destra)</I></FONT></P>
+<TABLE WIDTH=96 BORDER=0 CELLPADDING=0 CELLSPACING=0>
+	<COL WIDTH=96>
+	<TR>
+		<TD WIDTH=96 VALIGN=TOP>
+			<P STYLE="border: none; padding: 0cm">15:10 6.7</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=96 VALIGN=TOP>
+			<P STYLE="border: none; padding: 0cm">Cerca</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=96 VALIGN=TOP>
+			<P STYLE="border: none; padding: 0cm">Data</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=96 VALIGN=TOP>
+			<P STYLE="border: none; padding: 0cm">Giorno prima</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=96 VALIGN=TOP>
+			<P STYLE="border: none; padding: 0cm">Giorno dopo</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=96 VALIGN=TOP>
+			<P STYLE="border: none; padding: 0cm">Settimana prima</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=96 VALIGN=TOP>
+			<P STYLE="border: none; padding: 0cm">Settimana dopo</P>
+		</TD>
+	</TR>
+</TABLE>
+<P>Muovendo a destra e sinistra dello schermo puoi muovere la curva a
+destra e sinistra. Puoi anche usare il menu spostamento (menu
+Destra). Usa Data per selezionare una data, Cerca per cercare valori
+di glucosio oppure di dati registrati. Il primo oggetto del menu
+Destra &egrave; la data e l\'ora corrente e selezionandola potrai
+spostare il grafico istantaneamente al momento corrente.</P>
+<P>Se la <I>scala manuale del Glucosio</I> <SPAN STYLE="font-style: normal">&egrave;
+selezionata in Impostazioni scorrendo il dito in alto o in basso sul
+grafico ne cambia la scala. Se </SPAN><I>scala del tempo manuale</I>
+<SPAN STYLE="font-style: normal">&egrave; selezionata in
+impostazioni, puoi aumentare o diminuire la quantit&agrave; di tempo
+visualizzata nel grafico facendo il pinch con le dita sul grafico.</SPAN></P>
+<P STYLE="margin-bottom: 0cm; background: transparent; line-height: 115%; widows: 0; orphans: 0; page-break-after: avoid">
+<FONT SIZE=3><I>Menu 3: Display</I></FONT></P>
+<TABLE WIDTH=138 CELLPADDING=0 CELLSPACING=0>
+	<COL WIDTH=138>
+	<TR>
+		<TD WIDTH=138 VALIGN=TOP>
+			<P STYLE="border: none; padding: 0cm">Ultima scansione</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=138 VALIGN=TOP>
+			<P STYLE="border: none; padding: 0cm">Scansioni &nbsp;&nbsp;&nbsp;&nbsp;[x]</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=138 VALIGN=TOP>
+			<P STYLE="border: none; padding: 0cm">Flusso&emsp;&emsp; &nbsp;[x]</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=138 VALIGN=TOP>
+			<P STYLE="border: none; padding: 0cm">Cronologia &nbsp;&nbsp;[x]</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=138 VALIGN=TOP>
+			<P STYLE="border: none; padding: 0cm">Valori &emsp;&emsp;&ensp;&nbsp;[x]</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=138 VALIGN=TOP>
+			<P STYLE="border: none; padding: 0cm">Pasti&emsp;&emsp;&ensp;&ensp;&nbsp;
+			[&nbsp;]</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=138 HEIGHT=36 VALIGN=TOP>
+			<P STYLE="border: none; padding: 0cm">Inverti colori&nbsp;&nbsp;[&nbsp;]</P>
+		</TD>
+	</TR>
+</TABLE>
+<P STYLE="margin-bottom: 0cm; line-height: 115%">Il <FONT COLOR="#4f81bd"><FONT FACE="Cambria, serif"><B>menu
+Destra-Centro</B></FONT></FONT> contiene informazioni su cosa
+mostrare. Per vedere l\'ultima scansione, toccare la prima voce. Una
+spunta su <I>Scansioni</I> <SPAN STYLE="font-style: normal">significa
+che le scansioni saranno mostrate nel grafico. Una scansione &egrave;
+il livello corrente di glucosio che puoi acquisire scansionando il
+sensore. Ad ogni scansione vengono importati da 15 minuti a 8 ore dal
+sensore al telefono. Visualizzare questi valori pu&ograve; essere
+abilitato toccando </SPAN><I>Cronologia</I><SPAN STYLE="font-style: normal">.
+</SPAN><I>Flusso</I> <SPAN STYLE="font-style: normal">invece &egrave;
+il valore di glucosio rilevato via Bluetooth dai sensori Freestyle
+libre 2. </SPAN><I>Valori</I> <SPAN STYLE="font-style: normal">determina
+la visualizzazione dei valori registrati. In Impostazioni, puoi
+specificare quali etichette vorresti usare per questi valori da
+memorizzare, a che altezza visualizzarli e con che colore. Sotto ogni
+etichetta verr&agrave; mostrato il valore correlato.</SPAN></P>
+<P STYLE="margin-top: 0.2cm; margin-bottom: 0.2cm; background: transparent; line-height: 100%; widows: 0; orphans: 0; page-break-after: avoid">
+<FONT SIZE=3><I>Menu 2: Sinistra-Centro</I></FONT></P>
+<TABLE WIDTH=96 CELLPADDING=0 CELLSPACING=0>
+	<COL WIDTH=96>
+	<TR>
+		<TD WIDTH=96 HEIGHT=36 VALIGN=TOP>
+			<P ALIGN=LEFT STYLE="border: none; padding: 0cm">Notifica&emsp;[&nbsp;]</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=96 VALIGN=TOP>
+			<P STYLE="border: none; padding: 0cm">Esporta</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=96 VALIGN=TOP>
+			<P STYLE="border: none; padding: 0cm">Mirror</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=96 VALIGN=TOP>
+			<P STYLE="border: none; padding: 0cm">Nuovo valore</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=96 VALIGN=TOP>
+			<P STYLE="border: none; padding: 0cm">Lista</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=96 VALIGN=TOP>
+			<P STYLE="border: none; padding: 0cm">Statistiche</P>
+		</TD>
+	</TR>
+</TABLE>
+<P STYLE="margin-bottom: 0cm; line-height: 115%"><SPAN LANG="it-IT">Puoi
+registrare questi numeri toccando &ldquo;</SPAN><SPAN LANG="it-IT"><B>Nuovo
+valore&rdquo;</B></SPAN><SPAN LANG="it-IT"> </SPAN><SPAN LANG="it-IT"><SPAN STYLE="font-weight: normal">nel
+</SPAN></SPAN><FONT COLOR="#4f81bd"><FONT FACE="Cambria, serif"><SPAN LANG="it-IT"><B>menu
+Sinistra-Centro</B></SPAN></FONT></FONT><SPAN LANG="it-IT">. </SPAN><FONT COLOR="#4f81bd"><FONT FACE="Cambria, serif"><SPAN LANG="it-IT"><B>Esporta</B></SPAN></FONT></FONT><SPAN LANG="it-IT">
+salva I dati in un file in formato .tsv (tab separated values).
+</SPAN><FONT COLOR="#4f81bd"><FONT FACE="Cambria, serif"><SPAN LANG="it-IT"><B>Mirror</B></SPAN></FONT></FONT><SPAN LANG="it-IT">
+rende possibile l\'invio di dati via IP/TCP da quest\'app ad un\'altra
+per mostrare le stesse informazioni su entrambe. Con </SPAN><FONT COLOR="#4f81bd"><FONT FACE="Cambria, serif"><SPAN LANG="it-IT"><B>Notifica</B></SPAN></FONT></FONT><SPAN LANG="it-IT">
+selezionata, ogni valore di glucosio entrante generer&agrave; una
+notifica android. Questo &egrave; utile se usi uno smartwatch durante
+l\'esercizio fisico. Questa notifica verr&agrave; inviata allo
+smartwatch per essere consultata immediatamente. Per alcuni
+smartwatch Garmin con touchscreen c\'&egrave; un\'app dedicata
+(chiamata Kerfstok, vedi
+<A HREF="https://apps.garmin.com/en-US/apps/b6348ccc-86d8-4780-8013-d9e19fed5260">https://apps.garmin.com/en-US/apps/b6348ccc-86d8-4780-8013-d9e19fed5260</A>),
+che comunica con Juggluco, riceve e visualizzata il livello di
+glucosio istantaneo e pu&ograve; essere usata per registrare dati (la
+seconda voce nel menu Sinistra, restituisce informazioni circa lo
+stato corrente della connessione). </SPAN><SPAN LANG="it-IT"><B>Lista</B></SPAN><SPAN LANG="it-IT">
+</SPAN><SPAN LANG="it-IT"><SPAN STYLE="font-weight: normal">visualizza
+una lista dei valori registrati. Se Juggluco ha ricevuto sufficienti
+valori via Bluetooth, puoi vedere alune statistiche premendo su
+</SPAN></SPAN><SPAN LANG="it-IT"><B>Statistiche</B></SPAN><SPAN LANG="it-IT"><SPAN STYLE="font-weight: normal">.
+Qui troverai la percentuale delle misure nel range, il Glucose
+Management Indicator (a predictor of HbA1c), la variabilit&agrave;
+del glucosio e il grafico riassuntivo che mostra I valori rispetto il
+100%, 95%, 75%, 50%, 25% e lo 0% dei valori in ogni momento della
+giornata.</SPAN></SPAN></P>
+<P STYLE="margin-top: 0.2cm; margin-bottom: 0.2cm; background: transparent; line-height: 100%; widows: 0; orphans: 0; page-break-after: avoid">
+<FONT SIZE=3><I>Menu <SPAN STYLE="background: #c0c0c0">1</SPAN>:
+Sinistra</I></FONT></P>
+<TABLE WIDTH=118 BORDER=0 CELLPADDING=0 CELLSPACING=0>
+	<COL WIDTH=118>
+	<TR>
+		<TD WIDTH=118 VALIGN=TOP>
+			<P STYLE="border: none; padding: 0cm">UI di sistema &nbsp;[&nbsp;]</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=118 VALIGN=TOP>
+			<P STYLE="border: none; padding: 0cm">Orologio</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=118 VALIGN=TOP>
+			<P STYLE="border: none; padding: 0cm">Sensore</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=118 HEIGHT=26 VALIGN=TOP>
+			<P STYLE="border: none; padding: 0cm">Impostazioni</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=118 VALIGN=TOP>
+			<P STYLE="border: none; padding: 0cm">Chiudi</P>
+		</TD>
+	</TR>
+</TABLE>
+<P STYLE="margin-bottom: 0cm; line-height: 115%"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm; line-height: 115%">Nel <FONT COLOR="#4f81bd"><FONT FACE="Cambria, serif"><B>menu
+Sinistra</B></FONT></FONT>, puoi trovare <FONT COLOR="#4f81bd"><FONT FACE="Cambria, serif"><B>Impostazioni</B></FONT></FONT>,
+per impostare l\'unit&agrave; di misura del glucosio, mmol/L oppure
+mg/dL, per specificare etichette, impostare allarmi del glucosio, dei
+promemoria e I range di visualizzazione del grafico. UI di sistema
+determina se visualizzare o meno la barra di stato di android. Chiudi
+pu&ograve; essere usato per uscire da Juggluco.</P>
+]]>
+</string>
+<string name="searchhelp" >
+<![CDATA[
+
+<P STYLE="margin-top: 0.43cm; margin-bottom: 0.51cm; background: transparent; line-height: 100%; widows: 0; orphans: 0; page-break-after: avoid">
+<FONT FACE="Liberation Sans, sans-serif"><FONT SIZE=4>Ricerca</FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm; line-height: 115%">La ricerca pu&ograve;
+essere usata per trovare valore di glucosio e valori registrati.</P>
+<P STYLE="margin-bottom: 0cm; line-height: 115%">Puoi cercare valori
+<FONT COLOR="#4f81bd"><FONT FACE="Cambria, serif"><FONT SIZE=3 STYLE="font-size: 13pt"><B>compresi
+tra dei valori dati</B></FONT></FONT></FONT>. Per esempio: 10 &ndash;
+999 cercher&agrave; solo I valori compresi tra 10 e 999.</P>
+<P STYLE="margin-bottom: 0cm; line-height: 115%">I valori del
+glucosio sono separati in Scansioni, Cronologia e Flusso.</P>
+<P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT COLOR="#4f81bd"><FONT FACE="Cambria, serif"><FONT SIZE=3><I>Scansioni</I></FONT></FONT></FONT>:
+I valori mostrati subito dopo la ricerca.</P>
+<P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT COLOR="#4f81bd"><FONT FACE="Cambria, serif"><FONT SIZE=3><I>Cronologia</I></FONT></FONT></FONT>:
+le misurazioni periodiche di 15 minuti salvate sul sensore e
+trasferite nell\'app dopo una scansione.</P>
+<P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT COLOR="#4f81bd"><FONT FACE="Cambria, serif"><FONT SIZE=3><I>Flusso</I></FONT></FONT></FONT>:
+le misure ogni minuto inviate dal Bluetooth del Freestyle libre2
+all\'app.</P>
+<P STYLE="margin-bottom: 0cm; line-height: 115%">Se hai immesso
+valori di insulina, pasti oppure attivit&agrave;, puoi cercare tra
+questi selezionando la <FONT COLOR="#4f81bd"><FONT FACE="Cambria, serif"><FONT SIZE=3 STYLE="font-size: 13pt"><B>etichetta</B></FONT></FONT></FONT>
+corrispondente e specificando il range di numeri interessati: per
+esempio bicicletta tra 50 e 100.</P>
+<P STYLE="margin-bottom: 0cm; line-height: 115%">Puoi anche
+specificare il <FONT COLOR="#365f91"><FONT FACE="Cambria, serif"><FONT SIZE=4><B>periodo</B></FONT></FONT></FONT>
+di tuo interesse. Se sei interessato alle ipoglicemie tra le 22 e le
+7 del mattina, puoi impostare il primo orario (mostrato come start
+00:00) e cambiarlo in 22:00 e il secondo orario in 07:00 (devi anche
+selezionare Stream e/o History e specificare il valore da 0 a 3.0
+mmol/L (70 md/dL)).</P>
+<P STYLE="margin-bottom: 0cm; line-height: 115%">Premendo la <FONT COLOR="#4f81bd"><FONT FACE="Cambria, serif"><B>freccia
+</B></FONT></FONT>comincer&agrave; la ricerca con le indicazioni
+fornite.</P>
+<P STYLE="margin-bottom: 0cm; line-height: 115%"><FONT COLOR="#4f81bd"><FONT FACE="Cambria, serif"><FONT SIZE=3 STYLE="font-size: 13pt"><B>Reset</B></FONT></FONT></FONT>
+ripristiner&agrave; tutti I valori all\'impostazione di base.</P>
+<P STYLE="margin-bottom: 0cm; line-height: 115%">In <I>Impostazioni</I>
+<SPAN STYLE="font-style: normal">in </SPAN><I>etichette</I> <SPAN STYLE="font-style: normal">&egrave;
+possibile selezionare quale label specifica (es. Carboidrati) deve
+essere associati coi pasti. Se verr&agrave; selezionata questa
+etichetta in </SPAN><I>&ldquo;Nuovo valore</I><I>&rdquo;</I>
+<SPAN STYLE="font-style: normal">comparir&agrave; il bottone &ldquo;</SPAN><I>Pasti</I>&rdquo;<SPAN STYLE="font-style: normal">.
+Dopo averlo toccato potrai inserire nel pasto I suoi ingredienti.
+Selezionandolo, un pop-up comparir&agrave; in cui opzionalmente potr&agrave;
+essere specificato un ingrediente da cercare e sempre opzionalmente
+una quantit&agrave; minima di quel certo ingrediente.</SPAN></P>
+]]>
+</string>
+<string name="shortcuthelp" >
+<![CDATA[
+
+<P STYLE="margin-bottom: 0.36cm"><FONT COLOR="#365f91"><FONT FACE="Cambria, serif"><FONT SIZE=4><B>Scorciatoie</B></FONT></FONT></FONT>
+che possono essere usate in Kerfstok su alcuni smartwatch Garmin.</P>
+<P STYLE="margin-bottom: 0.36cm">Nella schermata per inserire numeri
+dell\'orologio puoi raggiungere la pagine delle scorciatoie (sul mio
+Vivoactive 3 bisogna strusciare verso sinistra). Qui si vedranno una
+lista di etichette; premendone una si pu&ograve; inserire il
+corrispondente valore nella schermata con in numeri. Il valore pu&ograve;
+essere numerico oppure con un operatore matematico in combinazione
+con I numeri. Es. *0,5 per moltiplicare per 0,5.</P>
+<P STYLE="margin-bottom: 0.36cm">Qui nel menu delle impostazioni
+potete creare, rimuovere o modificare queste scorciatoie.</P>
+<P STYLE="margin-bottom: 0.36cm">Una <FONT COLOR="#4f81bd"><FONT FACE="Cambria, serif"><FONT SIZE=3 STYLE="font-size: 13pt"><B>lista
+</B></FONT></FONT></FONT>di scorciatoie esistenti verr&agrave;
+mostrata sulla sinistra, dopo averne toccata una un display apparir&agrave;
+in cui sar&agrave; possible eliminarla, cambiarne il nome o il
+valore.</P>
+<P STYLE="margin-bottom: 0.36cm">Una nuova scorciatoia pu&ograve;
+essere creata con <FONT COLOR="#4f81bd"><FONT FACE="Cambria, serif"><FONT SIZE=3 STYLE="font-size: 13pt"><B>Nuovo</B></FONT></FONT></FONT>.</P>
+<P STYLE="margin-bottom: 0.36cm">Le modifiche saranno salvate solo se
+verr&agrave; premuto il tasto <FONT COLOR="#4f81bd"><FONT FACE="Cambria, serif"><FONT SIZE=3 STYLE="font-size: 13pt"><B>Salva</B></FONT></FONT></FONT>.</P>
+]]>
+</string>
+<string name="labelhelp" >
+<![CDATA[
+
+<P STYLE="margin-top: 0.43cm; margin-bottom: 0.51cm; background: transparent; line-height: 100%; widows: 0; orphans: 0; page-break-after: avoid">
+<FONT FACE="Liberation Sans, sans-serif"><FONT SIZE=4>Etichette per
+valori immessi</FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm; line-height: 115%">Qui &egrave;
+possibile creare, eliminare e modificare le etichette per le quantit&agrave;
+aggiunte a mano nel grafico di unit&agrave; di insulina, carboidrati
+oppure attivit&agrave; fisica. Se hai gi&agrave; inserito delle
+quantit&agrave;, queste prenderanno l\'etichetta corrispondente a
+quella scelta. Puoi creare una ulteriore etichetta. Spostando di
+posizione nella lista le etichette, le quantit&agrave; gi&agrave;
+salvate si posizioneranno di conseguenza.</P>
+<P STYLE="margin-bottom: 0cm; line-height: 115%">Per modificare una
+etichetta baster&agrave; toccarla.</P>
+<P STYLE="margin-bottom: 0cm; line-height: 115%">Dopo I <B>Pasti</B>
+<SPAN STYLE="font-weight: normal">&egrave; possibile selezionare
+l\'etichetta per il contenuto di carboidrati contenuti in questi. Ne
+menu sinistra-centro &egrave; stato aggiunto il tasto </SPAN><B>Pasti
+</B><SPAN STYLE="font-weight: normal">in cui &egrave; possibile
+specificare singolarmente gli ingredienti. I carboidrati saranno
+sommati e verranno mostrati con la loro etichetta. In un secondo
+momento sar&agrave; possibile visualizzare I dettagli di tutti I
+valori immessi dei singoli pasti.</SPAN></P>
+]]>
+</string>
+<string name="settinghelp" >
+<![CDATA[
+<h1 class="western">Impostazioni</h1>
+<h2 class="western">Unità:</h2>
+<p style="line-height: 100%; margin-bottom: 0in">Selezionare l\'unità
+di misura del glucosio tra mmol/L e dm/dL.</p>
+<h2 class="western">Range del grafico: basso-alto.</h2>
+<p style="line-height: 100%; margin-bottom: 0in">Inserire un numero
+sui valori basso e alto per impostare questi come massimo e minimo
+della visualizzazione del grafico Questi valori saranno usati fin
+quando il valore del glucosio rimarrà all\'interno di questi.
+Altrimenti, si allargheranno per permettere di mostrare anche quelli
+oltre le soglie impostate. Impostando 3 mmol/l (54 mg/dL) e 9 mmol/L
+(162 mg/dL) con tutti valori visibili tra 5 mmol/l e 6 mmol/L, il
+grafico mostrerà l\'asse del glucosio tra 3 e 9.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Se l\'opzione <b>Scala
+manuale del glucosio</b> <span style="font-weight: normal">è attiva,
+puoi cambiarlo scorrendo le dita dal basso o dall\'altro per spostare
+il centro del grafico oppure aumentare e diminuire la scala.</span></p>
+<h2 class="western">Target range: basso-alto</h2>
+<p style="line-height: 100%; margin-bottom: 0in">La parte superiore e
+quella inferiore a questi valori coloreranno diversamente le aree del
+grafico. Una linea rossa demarcherà il limite inferiore.</p>
+<h2 class="western">Asse del glucosio a SINISTRA</h2>
+<p>Imposta l\'asse dei valori del glucosio a sinistra dello schermo.
+Utile se vuoi metterlo al centro sui dispositivi Wear OS.</p>
+<h2 class="western">Scansione avvia l\'app</h2>
+<p>Se selezionata l\'app verrà avviata alla prima scansione con NFC
+anche se l\'app non è aperta. Se presenti più app con questa
+opzione, android mostrerà una finestra di scelta dove poter
+selezionare quella voluta. In qualche caso selezionarne una non
+funzionerà e servirà ripetere l\'operazione di scelta. In questo
+caso non potrai scansione con l\'app aperta. Spegnere questa opzione
+renderà possibile che almeno un\'app possa essere attivata in questo
+modo.</p>
+<p>Se hai l\'accesso root al telefono, puoi disabilitare l\'NFC all\'app
+Abbott Librelink.</p>
+<p>Diventare root in adb shell o termux, e digitare:</p>
+<p>pm disable
+com.freestylelibre.app.nl/com.librelink.app.ui.common.NFCScanActivity</p>
+<p><strike>pm disable
+com.freestylelibre.app.nl/com.librelink.app.ui.common.ScanSensorActivity</strike></p>
+<p>com.freestylelibre.app.nl è la versione Olandese di Librelink, va
+sostituita con il nome della tua verisone. Puoi trovarne il nome
+digitando (anche senza root):</p>
+<p>pm list package freestylelibre</p>
+<p>Dopo di che, potrai anche usare Librelink per scansionare quando
+in background, ma non partirà da solo. Librelink 2.5.2, 2.5.3 e
+librelink 2 2.71 (USA) crashano se rilevano il root. Però in Magisk
+puoi agilmente nascondere il root rinominando Magisk e aggiungendo
+specifiche app a denylist (Magisk 24.3) oppure Magiskhide (Magisk
+23.0). Puoi anche aggiungere Juggluco a denylist. Eccetto se usi I
+sensori Freestyle Libre 2 US, in quel caso puoi usare una versione di
+Librelink piu vecchia senza controllo del root.</p>
+<p>Senza il root, in adb shell, puoi disabilitare tutta
+l\'applicazione:</p>
+<p>pm disable-user --user 0 com.freestylelibre.app.nl</p>
+<p>Prima di chiamare l\'Abbott customer service, puoi riabilitarla
+con:</p>
+<p>pm enable com.freestylelibre.app.nl</p>
+<h2 class="western">Suono NFC</h2>
+<p>Emette un suono durante la scansione insieme a una vibrazione.</p>
+<h2 class="western">Invia a xDrip+</h2>
+<p>Invia il flusso Bluetooth di glucosio ogni minuto a xDrip+. In
+xDrip+ hai bisogno del set Libre2 (l\'app patchata) come sorgente
+dati. Il valore che verrà visualizzato in xDrip sarà differente da
+quello ricevuto. Per qualche ragione xDrip+ aggiorna ogni 5 minuti,
+probabilmente perchè è stato fatto per dispositivi che inviano dati
+solo ogni 5 minuti (una watch face regolarmente connessa con xDrip+
+mostra valori di 9 minuti più vecchi). In aggiunta xDrip+ mostra la
+sua interpretazione dei valori del glucosio. Anche I dipositivi
+mirror possono inviare dati a xDrip+.</p>
+<p>Le nuove versioni di Juggluco possono direttamente contattare le
+watch face di xDrip, così che le app degli orologi possano mostrare
+valori del glucosio più recenti. Per usare questa funzionalità
+spuntare “<i>webserver xDrip</i>” <span style="font-variant: normal"><span style="font-style: normal">nel
+menu di sinistra sotto </span></span><span style="font-variant: normal"><span style="font-style: normal"><b>Orologio</b></span></span><span style="font-variant: normal"><span style="font-style: normal"><span style="font-weight: normal">.
+Vedi la pagina di Aiuto nel menù di sinistra-&gt;orologio per
+ulteriori informazioni. Per prevenire conflittim xDrip deve essere
+disinstallato o disabilitato, oppure il webserver xDrip spento in
+xDrip.</span></span></span></p>
+<h2 class="western">Inverti schermo</h2>
+<p>Mette sottosopra lo schermo. Se per qualche ragione devi tenere lo
+smartphone in posizione verticale, puoi attivare <i>finestre mobili,
+mini finestra o dividi schermo</i> <span style="font-variant: normal"><span style="font-style: normal">nella
+pagina delle app recenti di android. Se selezioni “asse del
+glucosio a sinistra” e cambi la dimensione del font in gigante
+sulle impostazioni android, potrai vedere il valore corrente del
+glucosio in modalità verticale.</span></span></p>
+<h2 class="western">Promemoria</h2>
+<p style="font-weight: normal; line-height: 100%; margin-bottom: 0in">
+Si può specificare che un allarme suoni se non viene inserito un
+certo valore di cibo o insulina in un certo periodo di tempo.</p>
+<h2 class="western">Sensore via Bluetooth</h2>
+<p>Selezionarlo se l\'app si connette al Freestyle libre 2 via
+Bluetooth. Questo è necessario per allarmi e monitoraggio del
+glucosio in continuo.</p>
+<h2 class="western"><b>Allarmi</b></h2>
+<p style="font-weight: normal">Ipotizzando che I valori venganmo
+ricevuti via bluetooth: impostare il valore di glucosio basso e alto,
+perdita di segnale del sensore, valore di nuovo disponibile e
+glucosio nella status bar.</p>
+<h2 class="western">Etichette per valori</h2>
+<p>Specifica le etichette usate per I valori immessi. Vai nella
+sottoschermata per determinare quale etichetta viene usata, per
+esempio dose di insulina, consumo di carboidrati oppure ore spese a
+fare post. Se usi l\'app Kerstok sull\'orologio Garmin, queste
+etichette verranno inviate all\'app sull\'orologio.</p>
+<h2 class="western">Colori</h2>
+<p style="line-height: 100%; margin-bottom: 0in">Cambia il colore
+delle curve, delle scansioni e dei numeri.</p>
+<h2 class="western">Scorciatoie</h2>
+<p style="line-height: 100%; margin-bottom: 0in">Le scorciatoie
+vengono inviate all\'app Kerfstok sullo smartwatch Garmin per inserire
+facilmente I valori.</p>
+]]>
+</string>
+<string name="sensorhelp" >
+<![CDATA[
+
+<P ALIGN=CENTER STYLE="margin-top: 0.43cm; margin-bottom: 0.2cm; line-height: 100%; page-break-after: avoid">
+<FONT FACE="Liberation Sans, sans-serif"><FONT SIZE=6 STYLE="font-size: 28pt"><B>Sensore</B></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%">Per connettere il
+sensore il Freestyle Libre 2 tramite il Low Energy Bluetooth, il
+Bluetooth deve essere acceso.</P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%">Dopo aver
+scansionato il sensore con questa app, non succeder&agrave; pi&ugrave;
+nulla. Il sensore non comunicher&agrave; pi&ugrave; con il suo reader
+o con altre app sullo smartphone. Gli allarmi dell\'app Abbott
+Librelink devono essere spenti e l\'app chiusa. Alcune app Librelink
+sembrano comunicare col sensore anche con gli allarmi spenti e questo
+pu&ograve; creare problemi di connessione. Usare &ldquo;<I>Termina
+forzatamente</I>&rdquo; <SPAN STYLE="font-style: normal">per
+interromperla con certezza.</SPAN></P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%"><SPAN STYLE="font-style: normal"><B>Sensore
+via Bluetooth</B></SPAN> <SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: normal">deve
+essere selezionato.</SPAN></SPAN></P>
+<P STYLE="margin-bottom: 0cm; font-style: normal; font-weight: normal; line-height: 100%">
+Se le suddette condizioni sono soddisfatte, pu&ograve; passare un
+lungo tempo prima che l\'app riceva valori di glucosio dal sensore.
+Spesso ci impiega un minuto ma alcune volte ci pu&ograve; volere
+molto di pi&ugrave;.</P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%"><SPAN LANG="it-IT"><SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: normal">Il
+</SPAN></SPAN></SPAN><SPAN LANG="it-IT"><I><SPAN STYLE="font-weight: normal">Stato
+di connessione</SPAN></I></SPAN><SPAN LANG="it-IT"><I><SPAN STYLE="font-weight: normal">
+</SPAN></I></SPAN><SPAN LANG="it-IT"><SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: normal">mostra
+I problemi. (Il pi&ugrave; delle volte l\'errore pi&ugrave; comune &egrave;
+status=133, che &egrave; l\'argomento dello stato di
+</SPAN></SPAN></SPAN><SPAN LANG="it-IT"><A HREF="https://developer.android.com/reference/android/bluetooth/BluetoothGattCallback#onConnectionStateChange(android.bluetooth.BluetoothGatt,%20int,%20int)">onConnectionStateChange(BluetoothGatt
+bluetoothGatt, int status, int newState)</A>). Qualche volta spegnere
+e riaccendere il Bluetooth, riavviare il telefono o spegnere il
+Bluetooth sugli altri dispositivi pu&ograve; risolvere. Altre volte
+il problema pu&ograve; essere risolto scansionando il sensore.</SPAN></P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%">Scansionare il
+sensore con Juggluco (con <I>Sensore via Bluetooth</I> <SPAN STYLE="font-style: normal">abilitato)
+su un altro telefono, ruber&agrave; la connessione al telefono di
+partenza. Scansionandolo con questo torner&agrave; a lui. (uno dei
+sensori con connessione Bluletooth che ho migrato da un telefono ad
+uno smartwatch Wear Os per circa tre volte, ha dato errore di
+connessione 133 per 2 giorni e mezzo, riprendendo a funzionare dopo
+373 errori registrati).</SPAN></P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%"><I>Doze mode</I>
+<SPAN STYLE="font-style: normal">apre uno schermo in cui poter
+specificare che il risparmio energetico non deve essere applicato a
+Juggluco. Questo pu&ograve; esere necessario per permettere il
+funzionamento dell\'app quando il telefono &egrave; in standby.</SPAN></P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%"><I>Permessi</I><SPAN STYLE="font-style: normal">:
+la precedente versione di Juggluco necessitava I permessi relativi
+alla posizione per cercare l\'indirizzo del sensore. Questo non &egrave;
+pi&ugrave; necessario. Pu&ograve; essere per&ograve; che ci siano
+sensori che lo richiedano, in questo caso devi abilitarlo. Dopo il
+primo contatto Juggluco salva l\'indirizzo del dispositivo e I
+permessi della posizione saranno inutili. L\'indirizzo del
+dispositivo, se conosciuto, &egrave; mostrato vicino
+all\'identificatore del sensore. Se rosso significa che &egrave; un
+sensore US.</SPAN></P>
+<P STYLE="margin-bottom: 0cm; font-style: normal; line-height: 100%">Android
+12 ha un nuovo sistema di permessi relativi ai dispositivi nelle
+vicinanze che pu&ograve; essere usato al posto dei permessi
+precedenti per abilitare la ricerca dell\'indirizzo del dispositivo
+tramite Bluetooth.</P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%"><I>Dimentica</I><SPAN STYLE="font-style: normal">:
+dimentica l\'indirizzo del dispositivo, che andr&agrave; riabilitato
+scansionando il sensore di nuovo. Per far questo serve il permesso
+alla posizione sugli </SPAN>Android dal 6 al 11. Su Android 12 serve
+invece il permesso Dispositivi Vicini.</P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%"><I>Reinit</I>:
+Riabilita lo streaming dei valori: Una nuova autenticazione verr&agrave;
+creata per comunicare col sensore. Verr&agrave; impostato anche
+l\'indirizzo del dispositivo.</P>
+]]>
+</string>
+<string name="watchhelp" >
+<![CDATA[
+
+<H1 CLASS="western">Kerfstok</H1>
+<P STYLE="margin-bottom: 0cm; line-height: 100%">Su tutti gli orologi
+che possono ricevere le notifiche da android, puoi ricevere una
+notifica per ogni nuovo valore di glucosio. Puoi includere Juggluco
+nella lista delle quali vuoi ricevere le notifiche sul tuo orologio e
+impostare l\'opzione Notifica nel men&ugrave; sinistra-centro
+dell\'app.</P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%">Questo ha un caso
+speciale se stai usanto l\'app Kerfstok su uno smartwatch Garmin
+touchscreen:</P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%"><SPAN LANG="it-IT"><A HREF="https://apps.garmin.com/en-US/apps/b6348ccc-86d8-4780-8013-d9e19fed5260">https://apps.garmin.com/en-US/apps/b6348ccc-86d8-4780-8013-d9e19fed5260</A>
+(vedi anche <A HREF="http://jkaltes.byethost16.com/Kerfstok/index.html">http://jkaltes.byethost16.com/Kerfstok/index.html</A>)</SPAN></P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%">E\' stato scelto uno
+smartwatch Garmin perch&egrave; &egrave; possibile vedere il
+contenuto del display senza usare la retroilluminazione (per&ograve;
+molti dei nuovi modelli Garmin hanno lo stesso tipo di display degli
+altri smartwatch). C\'&egrave; un vantaggio addizionale, puoi
+agilmente aggiornare il valore corrente del glucosio ogni minuti e
+usare l\'orologio per monitorare le tue attivit&agrave; sportive tutto
+il giorno e ancora puoi caricarlo solo una volta al giorno.</P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%">Questa app per
+orologio pu&ograve; connettersi con Juggluco per scambiare dati e
+continuamente mostrare il valore del glucosio. Questa connessione &egrave;
+ben lontana dall\'essere perfetta, persino peggio della comunicazione
+col sensore. Questa guida ti aiuter&agrave; a diagnosticare un
+problema che potrebbe presentarsi.</P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%">Prima di tutto, il
+tuo orologio deve essere connesso sul telefono. Se non lo &egrave;,
+serve risolvere il problema nell\'app Garmin\'s Connect. Un\'altra app
+Kerfstok deve essere avviata sul tuo telefono. Se lo status di Send &egrave;
+FAILURE_DURING_TRANSFER oppure <I>no status information</I>, puoi
+provare una o pi&ugrave; di queste cose:</P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%">- Spegni e riaccendi
+il Bluetooth;</P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%">- Forzare lo
+spegnimento dell\'app <I>Garmin </I><SPAN STYLE="font-style: normal">Connect
+un po\' di volte </SPAN><I>(Kerfstok</I> comunica con <I>Juggluco</I>
+<SPAN STYLE="font-style: normal">via </SPAN><I>Garmin Connect</I><SPAN STYLE="font-style: normal">),
+dopo di che riavviare </SPAN><I>Garmin Connect</I><SPAN STYLE="font-style: normal">,
+subito dopo riavviare Kerfstok and/or andare nella schermata relativa
+a Juggluco e premere </SPAN><I>Reinit</I><SPAN STYLE="font-style: normal">.
+Adesso aspettare fino all\'arrivo del prossimo valore di glucosio.</SPAN></P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%">- riavviare
+l\'orologio (a volte pi&ugrave; di una volta);</P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%">- riavviare il
+telefono</P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%">Assicurati che tu
+garantisca pi&ugrave; di un riavvio al giorno all\'orologio per
+mantenerlo in funzione. Se l\'orologio dovesse andare fuori campo dal
+telefono, devi aspettare qualche minuto prima che si riconnetta.</P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%">Se &egrave; in
+essere un connessione corretta e per qualche motivo I valori
+sull\'orologio e sul telefono sono fuori sincrono, puoi premese
+<B>Sincronizza</B><SPAN STYLE="font-weight: normal">, per forzare
+l\'invio dei valori che non sono stati ancora inviati, da uno
+all\'altro.</SPAN></P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%"><SPAN STYLE="font-weight: normal">All\'avvi
+di Juggluco </SPAN><SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: normal">il
+</SPAN></SPAN><I><SPAN STYLE="font-weight: normal">Sincronizza </SPAN></I><SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: normal">viene
+avviato automaticamente. Questo vuol dire che dopo una
+reinstallazione Kerfstok, tutti I numeri verranno rimossi da
+Juggluco. Il solo modo di mantenerli &egrave; fare un mirror e
+inviarli di nuovo indietro a Juggluco. Attenzione perch&egrave; il
+mirror viene sincronizzato immediatamente con l\'originale. Per
+funzionare come backup, tutte le connessioni con l\'originale devono
+essere interrotte ad un certo punto del tempo.</SPAN></SPAN></P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%"><B>Refresh</B>
+riscrive le nuove informazioni (es. dopo Reinit o Sincronizza).</P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%">Controllare <B>Glucosio</B>
+determina se I valori di glucosio sono stati inviati all\'orologio.</P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%">Qualche volta viene
+mostrato il bottone <B>Send Queue</B><SPAN STYLE="font-weight: normal">,
+questo vuol dire che ci sono dei messaggi che non sono stai ancora
+inviati all\'orologio. Normalmente questi verranno inviati
+autonomamente in certi momenti, ma qualche volta pu&ograve; esserci
+una interruzione e premere </SPAN><I><SPAN STYLE="font-weight: normal">Send
+queue</SPAN></I> <SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: normal">continuer&agrave;
+l\'invio. Questo &egrave; un beneficio se la connessione dovesse
+essersi interrotta. Invece, lanciandolo durante una connessione
+attiva, la interrompe corrompendola.</SPAN></SPAN></P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%"><SPAN LANG="it-IT"><SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: normal">I
+</SPAN></SPAN></SPAN><SPAN LANG="it-IT"><SPAN STYLE="font-style: normal"><B>sorgenti</B></SPAN></SPAN><SPAN LANG="it-IT">
+</SPAN><SPAN LANG="it-IT"><SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: normal">di
+Kerfstok possono essere scaricati da
+</SPAN></SPAN></SPAN><SPAN LANG="it-IT"><A HREF="http://jkaltes.byethost16.com/Kerfstok/Kerfstok-source.html">http://jkaltes.byethost16.com/Kerfstok/Kerfstok-source.html</A>).
+Glu utenti sono liberi di modificarli. Ogni app per smartwatch ha un
+identificatore unico. Se l\'identificatore &egrave; differente da
+quello di default Juggluco necessita di saperlo per poter comunicare
+con l\'app dell\'orologio. Nel caso serve specificare il nuovo </SPAN><SPAN LANG="it-IT"><B>ID</B></SPAN><SPAN LANG="it-IT">
+di 32 caratteri HEX. Juggluco su un dispositivo pu&ograve; essere
+connesso solo con una sola app sull\'orologio. Cambiarla provocher&agrave;
+la perdita dei dati.</SPAN></P>
+]]>
+</string>
+<string name="getlib" >
+<![CDATA[
+
+<H1>Librarie Libre</H1>
+<P><FONT SIZE=4><B>Juggluco</B></FONT> necessita di alcune librerie
+incluse nell\'app Libre di Abbott.</P>
+<P><B>I sensori Freestyle Libre 2 </B><SPAN STYLE="font-weight: normal">US
+e anche quelli canadesi</SPAN>, necessitano delle librerie della
+versione 2.5.2, 2.5.3 o 2.7.1 dell\'app Librelink della Abbott.</P>
+<P><B>Gli altri sensori</B> funzionano con le librerie della versione
+di Librelink 2.4.0, 2.4.1 o 2.4,2. Le versioni dopo la 2.4.2 hanno
+peggiorato l\'uso della batteria ma restituisco comunque gli stessi
+valori dei sensori Freestyle Libre 2 non US.</P>
+<P>Il codice del paese non fa nessuna differenza.</P>
+<P><SPAN LANG="it-IT">Il file .apk contenente Librelink &egrave;
+distribuito da Google Play. Una lista di link dopo poterlo reperire
+si pu&ograve; trovare qui:
+<A HREF="http://jkaltes.byethost16.com/Juggluco/urls.html">http://jkaltes.byethost16.com/Juggluco/urls.html</A></SPAN></P>
+<P>Dopo aver scaricato l\'APK, si pu&ograve; aprire Juggluco cliccando
+su <B>Apri</B><SPAN STYLE="font-weight: normal">.</SPAN></P>
+<P>E\' anche possibile avviare Juggluco senza aver accesso
+direttamente al sensore Freestyle libre. L\'app pu&ograve; acquisire
+via IP/TCP da un altro smartphone che prende I dati dal sensore.</P>
+<P>Senza accesso al sensore &egrave; possibile entrare nel centro
+informazioni sul diabete, come I dati immessi di insulina,
+carboidrati e attivit&agrave;, nonch&egrave; prendere questi dati dal
+proprio Garmin con l\'app per smartwatch Kerfstok. Selezionare <B>Senza
+sensore</B> <SPAN STYLE="font-weight: normal">per usare Juggluco in
+questo modo.</SPAN></P>
+]]>
+</string>
+<string name="newlabelhelp" >
+<![CDATA[
+
+<H2 CLASS="western">Etichette:</H2>
+<P>Il nome delle etichette &egrave; usato per inserire Valori. Puoi
+inserire valori collegandoli ad una certa data e una certa ora usando
+&ldquo;Nuovo valore&rdquo; nel menu sinistra-centro. Questi numeri
+saranno visualizzati sul grafico al momento impostato, oppure in una
+tabella.</P>
+<H2 CLASS="western">Arrotondamento:</H2>
+<P>Usato nelle app per smartwatch. Arrotonda I numeri con l\'etichetta
+ad una certa cifra.</P>
+<P>0= all\'unit&agrave;, 0.5 = arrotonda a multipli di 0.5 ecc.</P>
+<H2 CLASS="western">Altezza:</H2>
+<P>Quando &egrave; impostato su 0, I numeri saranno visualizzati ad
+una certa altezza nel grafico indipendentemente dal loro valore. Se
+viene impostato un valore maggiore di 0, I numeri saranno
+visualizzati sulla curva del glucosio come punti. Per esempio,
+settandolo a 1, il valore inserito di una lettura capillare del dito
+verr&agrave; visualizzata nello stesso modo delle misurazioni del
+sensore.</P>
+]]>
+</string>
+<string name="battery" >
+<![CDATA[
+
+<H1 CLASS="western">Mantenere in attivit&agrave;</H1>
+<P STYLE="margin-bottom: 0cm; line-height: 100%">Normalmente quando
+un dispositivo android non viene utilizzato, questo in entra in
+modalit&agrave; di riposo per usare meno energia. In questo modo
+l\'applicazione non potr&agrave; usare le connessione TCP per
+scambiare dati. Questo vuol dire che due dispositivi android potranno
+solo comunicare quando entrambi I loro schermi saranno accesi. Si pu&ograve;
+per&ograve; fare una eccezione per una determinata applicazione
+disattivando l\'ottimizzazione della batteria che si trova nel menu
+delle impostazioni di Android. Attivando la funzione <B>Update in
+doze mode</B> <SPAN STYLE="font-weight: normal">verr&agrave; mostrata
+il menu suddetto direttamente per poter cambiare l\'opzione. Su alcuni
+telefoni solo le app a cui &egrave; stata gi&agrave; impostata una
+eccezione </SPAN>
+</P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%"><SPAN STYLE="font-weight: normal">vengono
+mostrate nella lista, in questo caso serve andare in
+impostazioni-&gt;batteria-&gt;gestione delle app e selezionare
+Juggluco e abilitare </SPAN><I><SPAN STYLE="font-weight: normal">permetti
+in background</SPAN></I><SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: normal">.</SPAN></SPAN></P>
+<P STYLE="margin-bottom: 0cm; font-style: normal; font-weight: normal; line-height: 100%">
+La connessione Bluetooth col sensore non &egrave; inficiata da
+Android da questo punto di vista e funzioner&agrave; normalmente
+senza necessit&agrave; di specifiche impostazioni. In realt&agrave;
+in alcuni specifici casi questa cosa pu&ograve; variare a seconda
+della versione di Android e per specifici produttori di dispositivi.
+Per essere certo di non mancare nessun valore del glucosio, meglio
+spegnere il risparmio energetico per Juggluco anche se non ci sono
+connessioni TCP attive. Questo potrebbe fare la differenza, evitando
+malfunzionamenti.</P>
+<P STYLE="margin-bottom: 0cm; font-style: normal; font-weight: normal; line-height: 100%">
+Naturalmente &egrave; utile anche disabilitare altre app che fungono
+da ottimizzatori di batteria.</P>
+<P STYLE="margin-bottom: 0cm; font-style: normal; font-weight: normal; line-height: 100%">
+Alcuni produttori di dispositivi impongono restrizioni addizionali
+alle applicazioni in background oppure che si avviino da sole al
+boot. Per vericare se il tuo smartphone sia tra questi devi esplorare
+le impostazioni di Android.</P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%"><SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: normal">Sul
+mio tablet Huawei queste impostazioni si possono trovare sotto
+</SPAN></SPAN><I><SPAN STYLE="font-weight: normal">Impostazioni-&gt;Batteria-&gt;Avvio
+App</SPAN></I><SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: normal">.
+Se non &egrave; abilitato &ldquo;</SPAN></SPAN><I><SPAN STYLE="font-weight: normal">gestisci
+manualmente</SPAN></I>&rdquo; <SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: normal">gli
+allarmi del glucosio continueranno a funzionare ma non si fermeranno
+dopo il tempo impostato (probabilmente perch&egrave; il timer che li
+gestisce non &egrave; permesso in background), inoltre Juggluco non
+partir&agrave; all\'avvio del telefono (questo serve per far si che I
+promemoria e gli allarmi funzionino dopo un riavvio).</SPAN></SPAN></P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%"><SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: normal">Realme
+GT ha due opzioni addizionali. Se non abilitate queste opzioni le
+connessioni IP/TCP si fermeranno, il che vuol dire che I valori di
+glucosio inviati via IP/TCP non verranno mostrati e gli allarmi
+inviati via IP/TCP non verranno trasmessi. Non so se influenzi
+direttamente anche I valori ricevuti via Bluetooth. Entrambe queste
+opzioni possono essere trovato sotto Impostazioni-&gt;Battery. La
+prima sotto &ldquo;</SPAN></SPAN><I><SPAN STYLE="font-weight: normal">Gestione
+della batteria per le App</SPAN></I>&rdquo; <SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: normal">(Android
+11) oppure &ldquo;</SPAN></SPAN><I><SPAN STYLE="font-weight: normal">Uso
+batteria</SPAN></I>&rdquo; <SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: normal">(Android
+12). Bisogna selezionare Juggluco e abitare &ldquo;</SPAN></SPAN><I><SPAN STYLE="font-weight: normal">Permetti
+attivit&agrave; in background</SPAN></I>&rdquo;<SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: normal">.
+(&ldquo;</SPAN></SPAN><I><SPAN STYLE="font-weight: normal">Permetti
+avvio automatico</SPAN></I>&rdquo; <SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: normal">&egrave;
+potenzialmente necessario per impostare I promemoria all\'avvio). La
+seconda impostazione &egrave; sotto &ldquo;</SPAN></SPAN><I><SPAN STYLE="font-weight: normal">Altre
+impostazioni della batteria</SPAN></I>&rdquo; <SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: normal">(Android
+11)/&rdquo;</SPAN></SPAN><I><SPAN STYLE="font-weight: normal">Impostazioni
+avanzate</SPAN></I>&rdquo; <SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: normal">(Android
+12)-&gt;</SPAN></SPAN><SPAN STYLE="font-style: normal"><B>Ottimizza
+standby</B></SPAN><SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: normal">.
+Se questo non &egrave; spento, la rete del telefono si disattiver&agrave;
+nel mezzo della notte; questo vuol dire che non arriveranno valori di
+glucosio ad un\'altra istanza di Juggluco connessa via IP/TCP.</SPAN></SPAN></P>
+<P STYLE="margin-bottom: 0cm; font-style: normal; font-weight: normal; line-height: 100%">
+La connessione Bluetooth col sensore continuer&agrave; a funzionare,
+cos&igrave; il telefono potr&agrave; continuare a ricevere valori del
+glucosio ed a generare allarmi.</P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%"><BR>
+</P>
+]]>
+</string>
+<string name="nutrients" >
+<![CDATA[
+
+<P ALIGN=CENTER STYLE="margin-top: 0.43cm; margin-bottom: 0.2cm; line-height: 100%; page-break-after: avoid">
+<FONT FACE="Liberation Sans, sans-serif"><FONT SIZE=6 STYLE="font-size: 28pt"><B>Database
+per I compositivi dei cibi</B></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%"><SPAN LANG="en-US">Puoi
+trovare informazioni in The Composition of Foods Integrated</SPAN>
+<SPAN LANG="en-US">Dataset 2021</SPAN>
+<SPAN LANG="en-US"><A CLASS="western" HREF="https://www.gov.uk/government/publications/composition-of-foods-integrated-dataset-cofid">https://www.gov.uk/government/publications/composition-of-foods-integrated-dataset-cofid</A>
+(da McCance and Widdowson).</SPAN></P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%"><SPAN LANG="en-US">Puoi
+anche cercare usando espressioni regolari
+(<A CLASS="western" HREF="https://dl.icewarp.com/online_help/203030104.htm">https://dl.icewarp.com/online_help/203030104.htm</A>).
+Per esempio, puoi cercare iniziando con </SPAN><SPAN LANG="en-US"><SPAN STYLE="font-style: normal">apple
+seguito dalla parola raw cos&igrave;: </SPAN></SPAN><SPAN LANG="en-US">^apple.*\\braw\\b</SPAN></P>
+]]>
+</string>
+<string name="mealhelp" >
+<![CDATA[
+
+<H1>Pasti</H1>
+<P>Specificare la quantit&agrave; di ingredienti dei pasti. Il totale
+dei carboidrati contenuti sar&agrave; calcolato. &Eacute; anche
+possibile specificare la quantit&agrave; di carboidrati per l\'intero
+pasto oppure gli ingredienti e il programma determiner&agrave; la
+quantit&agrave; di ingredienti per ottenere quei carboidrati. Premere
+su &ldquo;<I>Aggiungi cibo</I>&rdquo; <SPAN STYLE="font-style: normal">per
+inserire un cibo nel pasto. Nella finestra che si aprir&agrave; si
+potr&agrave; specificarne gli ingredienti e la loro quantit&agrave;
+(o il totale del carboidrati del pasto o del singolo cibo). Premendo
+su </SPAN><I>Seleziona</I> <SPAN STYLE="font-style: normal">oppure
+sugli ingredienti gi&agrave; specificati, si pu&ograve; entrare nella
+lista di questi. Da qui &egrave; possibile definire un nuovo
+ingrediente premendo </SPAN><I>Definisci</I><SPAN STYLE="font-style: normal">.
+Qui &egrave; anche possibile specificare il nome e il contenuto di
+carboidrati di questi. Premendo </SPAN><I>Database</I> <SPAN STYLE="font-style: normal">si
+entrer&agrave; in un database di comparazione dei cibi in cui poter
+cercare ingredienti e vedere la composizione di un singolo cibo,
+oppure premendo </SPAN><I>Seleziona</I> <SPAN STYLE="font-style: normal">&egrave;
+possibile inserire I nomi ai cibi e la quantit&agrave; di carboidrati
+nella definizione degli ingredienti.</SPAN></P>
+]]>
+</string>
+<string name="colorhelp" >
+<![CDATA[
+
+<H1>Colori</H1>
+<P>Qui puoi cambiare il colore dei numero, delle curve e dei punti
+che indicano una scansione. Toccando un punto sulla curva, una
+scansione o un valore immesso (quindi le informazioni di quel punto o
+I valori numerici dei valori immessi). Basta toccare un colore nella
+vista dei colori. La curva, I punti di scansione o I valori immessi
+saranno mostrati dello stesso colore.</P>
+]]>
+</string>
+<string name="stathelp" >
+<![CDATA[
+
+<H1 CLASS="western">Statistiche</H1>
+<P><SPAN LANG="it-IT">Alcune statistiche sono prese da <A HREF="https://www.healthline.com/diabetesmine/ambulatory-glucose-profile">AGP</A>
+senza licenza, con qualche piccola modifica.</SPAN></P>
+<P>Il numero di giorni analizzato pu&ograve; essere modificato
+premendo il bottone <B>Giorni</B><SPAN STYLE="font-weight: normal">.
+Il periodo terminer&agrave; con il valore di fine della posizione
+dello schermo. Tutti I dati sono basati solo sul valore di glucosio
+ricevuto ogni minuto via Bluetooth dal sensore (chiamato </SPAN><I><SPAN STYLE="font-weight: normal">Flusso</SPAN></I>
+<SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: normal">in
+Juggluco).</SPAN></SPAN></P>
+<P STYLE="font-style: normal; font-weight: normal">Sulla sinistra
+dello schermo c\'&egrave; la percentuale di misure che ricadono in un
+determinato range.</P>
+<H3 CLASS="western">% di tempo attivo</H3>
+<P>La percentuale di tempo in cui Juggluco ha ricevuto I valori dal
+sensore.</P>
+<H3 CLASS="western">A1C stimata</H3>
+<P><SPAN LANG="it-IT">Stima l\'HbA1c con una vecchia formula basata
+sulla media glicemica (Nathan et al (2008)). Vedi
+<A HREF="https://professional.diabetes.org/diapro/glucose_calc">https://professional.diabetes.org/diapro/glucose_calc</A>
+per il calcolatore.</SPAN></P>
+<P>Questo valore viene mostrato perch&egrave; c\'&egrave; chi &egrave;
+abituato ad esso nell\'app ufficiale del Libre 2. Dal 2018 il GMI ha
+rimpiazzato questo indicatore.</P>
+<H3 CLASS="western">Glucose Management Indicator (GMI)</H3>
+<P><SPAN LANG="it-IT">E\' calcolato dalla media glicemica con una
+certa formula particolare (see <A HREF="https://www.jaeb.org/gmi/">https://www.jaeb.org/gmi/</A>).
+E\' una predizione empirica dell\'HbA1c (anche chiamata A1c),
+restituita in percentuale e in mmol/mol. Personalmente credo che la
+A1C stimata sia un predittore migliore del GMI, ma tanto per dire nel
+Libre 3 verr&agrave; usato solo il GMI.</SPAN></P>
+<H3 CLASS="western">Variabilit&agrave; del glucosio:</H3>
+<P>Il coefficiente di variazione (%CV), come misura della variabilit&agrave;
+del glucosio. Alti valori significano che il livello del glucosio &egrave;
+poco costante.</P>
+<H3 CLASS="western">Grafico di sommario</H3>
+<P>Tutti I valori di Flusso del glucosio sono presi e usati per
+comporre un grafico che mostra per ogni minuto del giorno come I
+valori sono distribuiti. La linea mediana nera mostra I valori sotto
+al 50 percento dei valori di tutto il giorno. L\'area blu chiara &egrave;
+l\'area in cui si trovano tutti I valori. Da qualche parte ci sar&agrave;
+un\'area blu leggermente pi&ugrave; scura che rappresenta la mediana
+in cui trovare il 90% percento di tutti I valori. L\'area blu ancora
+pi&ugrave; scura ne rappresenta il 50%. Se vedi I bordi delle area
+come linee: sotto la la linea pi&ugrave; bassa ci sono lo 0% dei
+valori, sotto la seconda pi&ugrave; bassa (tra l\'area blu chiara e
+quella mediamente pi&ugrave; scura) il 5% dei valori, sotto la terza
+linea (tra quella mediamente scura e quella pi&ugrave; scura) il 25%,
+infine sotto alla nera il restante 50%. A seguire 75%, 95% e 100%.</P>
+<P>Per questioni estetiche le curve sono smussate usando un filtro
+binomiale.</P>
+<P>Premere sullo schermo per chiudere il grafico di sommario, eccetto
+la zona al bordo sinistro e a quello destro che permette di andare
+avanti e indietro nei giorni. La curva pu&ograve; anche muoversi
+scrollando. La scala del tempo pu&ograve; essere cambiata muovendo
+due dita una verso l\'altra.</P>
+]]>
+</string>
+<string name="alarmhelp" >
+<![CDATA[
+
+<H2 CLASS="western">Allarmi del Glucosio:</H2>
+<P STYLE="margin-bottom: 0cm; line-height: 100%">I sensori FreeStyle
+libre 2 possono inviare I valori del glucosio tramite la funzione Low
+energy del Bluetooth ad uno smartphone. Questo pu&ograve; essere
+usato per segnalare valori pericolosamente bassi oppure valori alti
+insalubri.</P>
+<H3 CLASS="western">Allarme di Glucosio basso:</H3>
+<P STYLE="margin-bottom: 0cm; line-height: 100%">Valore al di sotto
+del quale deve suonare l\'allarme.</P>
+<H3 CLASS="western">Allarme di Glucosio Alto:</H3>
+<P STYLE="margin-bottom: 0cm; line-height: 100%">Valore al di sopra
+del quale deve suonare l\'allarme. 
+</P>
+<H3 CLASS="western">Allarme di perdita di segnale:</H3>
+<P STYLE="margin-bottom: 0cm; line-height: 100%">Specifica dopo
+quanti minuti un allarme deve suonare se non si ricevono allarmi di
+glucosio via Bluetooth. 
+</P>
+<H3 CLASS="western">Valore disponibile:</H3>
+<P STYLE="margin-bottom: 0cm; line-height: 100%">Qualche volta il
+sensore non funziona. Quando questo si riccende, verrai notificato se
+il sensore riprende a funzionare dopo una scansione fallita.</P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%">Per ogni allarme si
+pu&ograve; specificare quale suoneria riprodurre e per quanto tempo.</P>
+<H2 CLASS="western">Glucosio nella status bar android</H2>
+<P STYLE="margin-bottom: 0cm; line-height: 100%">Se &egrave;
+impostata la trasmissione dei valori via Bluetooth vengono
+silenziosamente mostrati in una notifica e nella status bar di
+android. Su alcuni smartphone il valore del glucosio &egrave;
+mostrato soltato nella status bar dopo aver cambiato le impostazioni
+di notifica di Android. Sul Realme GT 5G per esempio, bisogna andare
+in applist-&gt;Juggluco-&gt;gestisci notifiche, entrare nel tab di
+glucoseNotification e settare ad off &ldquo;Set to Silent&rdquo; (o
+in italiano &ldquo;imposta su silenzioso&rdquo;). &ldquo;Display in
+status bar&rdquo; (o in italiano &ldquo;Mostra nella barra di stato&rdquo;)
+invece deve essere attivato.</P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%">Puoi anche attivare
+la notifica normale di android selezionanto <I>Notifica</I> <SPAN STYLE="font-style: normal">nel
+menu sinistra-centro. In questo caso la notifica finir&agrave; al tuo
+smartwatch, se questo &egrave; configurato per riceverla. Gli allarmi
+anche loro generano notifiche.</SPAN></P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%"><BR>
+</P>
+<H3 CLASS="western">Off Touch:</H3>
+<P STYLE="margin-bottom: 0cm; line-height: 100%">Se non attivo gli
+allarmi si fermeranno solo quando una delle seguenti condizioni sar&agrave;
+soddisfatta:</P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%">- Il tempo di durata
+dell\'allarme viene superata;</P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%">- La notifica di
+Android di Juggluco viene toccata (in modalit&agrave; sbloccata);</P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%">- &ldquo;<I>Stop
+Alarm</I>&rdquo; nel menu di sinistra viene toccato</P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%">Quando <I>Off Touch
+</I><SPAN STYLE="font-style: normal">&egrave; attivo, l\'allarme verr&agrave;
+fermato col semplice tocco della vista della curva del glucosio, ma
+questo genera il rischio di fermare gli allarmi prima ancora di
+sentirli.</SPAN></P>
+]]>
+</string>
+<string name="flashpermission" >
+<![CDATA[
+
+<P STYLE="margin-bottom: 0cm; line-height: 100%">Dipendentemente dal
+proprio smartphone il permesso per l\'uso del flash della videocamera
+va impostato. Nella versione precedente di Juggluco questo permesso
+era richiesto. Per&ograve; sugli smartphone su cui &egrave; stata
+testata la nuova versione questo permesso non era pi&ugrave;
+necessario. Motivo per cui non &egrave; pi&ugrave; richiesto
+dall\'app. Se il flash dovesse generare situazioni di crash anomale,
+si pu&ograve; provare a disattivarlo direttamente dalle impostazioni
+android per Juggluco.</P>
+]]>
+</string>
+<string name="nearbypermission" >
+<![CDATA[
+
+<P STYLE="margin-bottom: 0cm; line-height: 100%">Android 12 ha
+bisogno di nuovi permessi per il Bluetooth con uno specifico consenso
+all\'uso.</P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%">Le vecchie app non
+smettevano immediatamente di funzionare ma ora per andare hanno
+bisogno di questi nuovi permessi. Se non viene attivato il permesso
+verso I DISPOSITIVI VICINI, Juggluco non potr&agrave; ricevere I
+valori via Bluetooth dal sensore Freestyle Libre 2. In alcuni casi I
+vecchi permessi invece sono sufficienti.</P>
+]]>
+</string>
+<string name="watchinfo" >
+<![CDATA[
+
+<P ALIGN=CENTER STYLE="margin-top: 0.43cm; margin-bottom: 0.2cm; line-height: 100%; page-break-after: avoid">
+<FONT FACE="Liberation Sans, sans-serif"><FONT SIZE=6 STYLE="font-size: 28pt"><B>Orologio</B></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%">Al momento juggluco
+ha quattro modi per inviare I valori di glucosio al tuo orologio.</P>
+<P ALIGN=CENTER STYLE="margin-top: 0.1cm; margin-bottom: 0.2cm; line-height: 100%; page-break-after: avoid">
+<FONT FACE="Liberation Sans, sans-serif"><FONT SIZE=5>Notify</FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%">Se Notifica &egrave;
+attivo nel menu sinistra-centro, una notifica Android verr&agrave;
+creata ogni volta che arriver&agrave; un nuovo valore di glucosio.
+Molti smartwatch possono essere configurati per ricevere queste
+notifiche (perch&egrave; sono notifiche correnti, personalmente non
+sono riuscito con un Samsung Galaxy Watch4). Questo metodo ha lo
+svantaggio che il livello di glucosio &egrave; visibile solo per poco
+e l\'orologio vibrer&agrave; ogni minuto ad ogni arrivo un valore,
+distraendo l\'utente.</P>
+<P ALIGN=CENTER STYLE="margin-top: 0.1cm; margin-bottom: 0.2cm; line-height: 100%; page-break-after: avoid">
+<FONT FACE="Liberation Sans, sans-serif"><FONT SIZE=5>Kerfstok</FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%"><SPAN LANG="it-IT">Kerfstok
+&egrave; un\'app per orologio in cui &egrave; possibile registrare
+valori (come dosi di insulina) ma anche mostrare il valore di
+glucosio corrente. Appena arriver&agrave; un nuovo valore, Juggluco
+lo invier&agrave; a Kerfstok. In questo modo Kerfstop mostrer&agrave;
+sempre il valore pi&ugrave; recente di glucosio. Kerfstok inoltre pu&ograve;
+registrare tutte le attivit&agrave; supportate da Garmin e pu&ograve;
+mostrare anche velocit&agrave; e distanza. Vedere Orologio-&gt;Kerfstok
+Status-&gt; Aiuto e <A HREF="http://jkaltes.byethost16.com/Kerfstok">http://jkaltes.byethost16.com/Kerfstok</A></SPAN></P>
+<P ALIGN=CENTER STYLE="margin-top: 0.1cm; margin-bottom: 0.2cm; line-height: 100%; page-break-after: avoid">
+<FONT FACE="Liberation Sans, sans-serif"><FONT SIZE=5>xDrip watch app</FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%">Juggluco incorpora
+un webserver xDrip. Questo rende possibile usare direttamente le app
+per smartwatche xDrip con Juggluco. Xdrip mostra un nuovo valore di
+glucosio solo ogni 5 minuti, mentre Juggluco ogni minuto. In ogni
+caso Juggluco invia a xDrip sempre l\'ultimo valore aggiornato. Il
+valore di glucosio viene inviato solo se lo smartwatch lo richiede,
+quindi il valore mostrato dipende unicamente dall\'app usata
+sull\'orologio. Per esempio le watch face e I campi per I valori sul
+Garmin vengono richiesti ogni 5 minuti. Via xDrip questo spesso
+lascia un valore vecchio di 10 minuti. Quando invece l\'orologio &egrave;
+direttamente connesso con Juggluco il valore &egrave; di massimo 6
+minuti prima. Nel Garmin, non puoi usare Kerfstok, hai solo le
+seguenti opzioni per ricevere regolarmente il valore di glucosio.</P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%"><SPAN LANG="it-IT">Un
+widget xDrip
+(<A HREF="https://apps.garmin.com/en-US/apps/73115e04-dc9f-4765-ad88-e7ae283ce995">https://apps.garmin.com/en-US/apps/73115e04-dc9f-4765-ad88-e7ae283ce995</A>)
+pu&ograve; essere usato durante la registrazione di una attivit&agrave;.
+Se sei in grado di fare uno swipe da sinistra a destra puoi switchare
+questo widget mentre stai registrando un\'attivit&agrave; con l\'app
+standard degli sport della Garmin. C\'&egrave; anche un\'app per lo
+sport di xDrip che include il valore di glucosio:
+<A HREF="https://apps.garmin.com/en-US/apps/aaf6533b-bca1-4365-9131-9f882f6f148c">https://apps.garmin.com/en-US/apps/aaf6533b-bca1-4365-9131-9f882f6f148c</A>.
+I campi dei dati e le watch face possono essere la soluzione ideale
+ma le restrizioni imposte da Garmin ne diminuiscono il valore. Per
+altre informazioni sull\'interfaccia webserver vedere
+<A HREF="http://jkaltes.byethost16.com/Juggluco/addwatch.html">http://jkaltes.byethost16.com/Juggluco/addwatch.html</A></SPAN></P>
+<P ALIGN=CENTER STYLE="margin-top: 0.1cm; margin-bottom: 0.2cm; line-height: 100%; page-break-after: avoid">
+<FONT FACE="Liberation Sans, sans-serif"><FONT SIZE=5>Juggluco Wear</FONT></FONT></P>
+<P>Esiste una versione di Juggluco per Wear OS. Il display &egrave;
+adattato allo schermo piccolo ed &egrave; stata aggiunta una watch
+face. Questa pu&ograve; essere installata tramite Wear OS e mostra il
+valore di glucosio ricevuto via Bluetooth.</P>
+]]>
+</string>
+<string name="wearosinfo" >
+<![CDATA[
+
+<P STYLE="margin-top: 0.43cm; line-height: 100%; page-break-after: avoid">
+<FONT FACE="Liberation Sans, sans-serif"><FONT SIZE=4>Wear Os</FONT></FONT></P>
+<P>Una versione speciale di Juggluco pu&ograve; avviarsi direttamente
+sugli orologi Wear Os. Essa necessit&agrave; di una smartphone
+Android con NFC per scansionare il sensore ed inviare I dati con una
+connessione TCP direttamente all\'orologio. Ci sono due possibilit&agrave;:</P>
+<OL>
+	<LI><P>Il sensore rimane connesso con lo smartphone via Bluetooth e
+	questo invia I dati del glucosio all\'orologio con Wear Os via TCP;</P>
+	<LI><P>E\' anche possibile connettere direttamente il sensore
+	all\'orologio con Wear Os. Per questo serve un orologio con una buona
+	connettivit&agrave; Bluetooth. Il mio orologio Wear OS durante I
+	test ha ottenuto alcuni errori di connessione con il mio smartphone,
+	ma non ha avuto problemi durante l\'attivit&agrave; fisica. Quindi
+	per connettere il sensore direttamente all\'orologio con Wear Os non
+	&egrave; utile.</P>
+</OL>
+<P><SPAN LANG="it-IT">Puoi scaricare Juggluco per Wear OS da Google
+Play sul tuo orologio. Per foto di esempio vai su
+<A HREF="http://jkaltes.byethost16.com/JugglucoWearOS/index.html">http://jkaltes.byethost16.com/JugglucoWearOS</A></SPAN></P>
+<P>Per metterlo in funzione fai come di seguito:</P>
+<UL>
+	<LI><P>Assicurati che entrambi Bluetooth e WIFI funzionino sullo
+	smartwatch e sul telefono;</P>
+	<LI><P>Fai in modo che la versione di Juggluco sul telefono
+	comunichi con il sensore. Devi scansione I sensore qualche volta con
+	&ldquo;Sensore via Bluetooth&quot; impostato. Ricevere dati di
+	glucosio via Bluetooth non &egrave; necessario;</P>
+	<LI><P>Installa la versione Wear OS di Juggluco sul tuo orologio con
+	Wear Os e avvialo;</P>
+	<LI><P>Sul telefono vai in menu-sinistra-&gt;Orologio-&gt;Configurazione
+	Wear Os. Il tuo orologio dovrebbe essere visualizzato. Premere &quot;Init
+	watch app&quot;;</P>
+	<LI><P>Se &egrave; andato tutto ok e in entrambe le connessioni TCP
+	sono configurate, tutti I dati del telefono saranno trasferiti allo
+	smartwatch. Questo pu&ograve; impiegare parecchio tempo se Juggluco
+	&egrave; stato utilizzato per tanto tempo. Puoi controllare se la
+	connessione &egrave; configurata controllando nella voce Mirror
+	(telefono: menu sinistra-centro-&gt;Mirror, orologio: menu
+	sinistra-&gt;Mirror). Una connessione con lo stesso id dovrebbe
+	essere visualizzata. Se non ci fosse premere ancora su &ldquo;Init
+	watch app&rdquo;. Se ancora non c\'&egrave;, controllare la
+	connessione bluetooth e la funzionalit&agrave; dell\'app sul telefono
+	responsabile delle comunicazioni con l\'orologio;</P>
+	<LI><P>Se tutto va bene gli stessi dati saranno visualizzati sul
+	display di Juggluco sia sul display del telefono che sull\'orologio.
+	Ogni nuovo valore di glucosio ricevuto dal telefono sar&agrave;
+	inviato all\'orologio via TCP. Alcune impostazioni come unit&agrave;,
+	allarmi e promemoria saranno anche essi trasmessi. Eventuali
+	modifiche successive dovranno essere fatte direttamente
+	dall\'orologio.</P>
+	<LI><P>Se hai uno smartwatch con un buon Bluetooth puoi ricevere
+	direttamente su questo I valori di glucosio senza necessit&agrave;
+	del telefono. Dopo che tutti I valori saranno stati trasferiti
+	all\'orologio puoi attivare <B>&quot;Connessione sensore-orologio
+	diretta&quot;</B>. Con <I>&quot;sensore via Bluetooth&quot;</I>
+	spento sul telefono e acceso sull\'orologio. Il flusso di valore
+	adesso arriveranno dall\'orologio al telefono e potrai verificare
+	nella schermata Mirror;</P>
+	<LI><P>Se vuoi inviare valori immessi dall\'orologio al telefono,
+	dovresti invertire la direzione di invio in Mirror levando la spunta
+	di invio dal telefono e attivandola sull\'orologio. Sul telefono
+	&ldquo;<I>Ricevi da</I>&rdquo; <SPAN STYLE="font-style: normal">dovrebbe
+	essere attivo. Se qualcosa non risulter&agrave; corretto, non
+	funzioner&agrave;. &ldquo;Non cambiare valori&rdquo; dovr&agrave;
+	essere modificato. Le etichette dei valori immessi saranno sempre
+	inviate con I valori. Se dovessi cambiare la direzione della
+	trasmissione dei valori dall\'orologio al telefono, non potrai pi&ugrave;
+	cambiarle. Non sar&agrave; cos&igrave; semplice.</SPAN></P>
+</UL>
+<P><SPAN STYLE="font-style: normal">Se il sensore ha una connessione
+diretta Bluetooth con l\'orologio e I suoi valori sono inviati al
+telefono, I valori scansionati saranno inviati dal telefono
+all\'orologio mentre quelli di flusso saranno sincronizzati prima
+della scansione del lettore da Juggluco (le impostazioni sono
+automaticamente configurate per fare questo). In alternativa, I
+valori vecchi non potranno essere inviati all\'orologio oppure le
+informazioni modificate non potranno essere sincronizzate, con
+l\'errore </SPAN><SPAN STYLE="text-decoration: none"><I>Unlock key</I></SPAN><SPAN STYLE="text-decoration: none">
+</SPAN><SPAN STYLE="text-decoration: none"><SPAN STYLE="font-style: normal">attivo.</SPAN></SPAN></P>
+<P STYLE="font-style: normal; text-decoration: none">Cambiare la
+connessione dovrebbe essere fatto solo dopo che I dati siano stati
+sincronizzati; I dati sul telefono e sull\'orologio dovrebbero essere
+copie complete (con l\'eccezione di quello lasciato fuori
+intenzionalmente).</P>
+<P STYLE="font-style: normal; text-decoration: none">La prima vota,
+quando tanti dati devono essere trasferiti, si pu&ograve; attaccare
+l\'orologio in carica. Il mio accende il WIFI quando &egrave; sotto
+carica.</P>
+<H5 CLASS="western">Connessione Orologio-Telefono</H5>
+<P>Durante l\'inizializzazione, al trasferimento di tutti I dati dal
+telefono all\'orologio, serve una connessione Wi-Fi. Pi&ugrave; tardi
+I dati saranno inviati in piccole quantit&agrave; via TCP. Sul mio
+orologio c\'&egrave; una redirezione tramite Bluetooth, quindi la
+connessione tramite canali alternativi pu&ograve; essere disabilitata
+per tutte le app.</P>
+<P>Juggluco determina autonomamente l\'IP dell\'altra parte, quindi non
+c\'&egrave; bisogno di impostarlo. Se cambi tra WIFI e dati mobili,
+l\'IP cambier&agrave; automaticamente. Questo &egrave; specifico per
+gli orologi con WearOS; per le altre connessioni Mirror devi comunque
+specificare l\'IP dell\'altra parte.</P>
+<H5 CLASS="western">Watch face</H5>
+<P>Juggluco per Wear OS include una watch face che mostra il tuo
+livello di glucosio nel tempo. Per usarlo devi selezionare questa
+watch face sul tuo orologio oppure sull\'app di gestione dello stesso.</P>
+<P>Normalmente tu vedrai l\'ultimo valore del glucosio appena il
+display si accender&agrave;. Se &egrave; il display &egrave; sempre
+attivo, il glucosio verr&agrave; aggiornato quando l\'indicatore dei
+minuti incrementer&agrave; di uno oppure premerai un bottone oppure
+ancora alzerai il braccio. Il tempo di aggiornamento del valore &egrave;
+massimo un minuto.</P>
+]]>
+</string>
+<string name="about" >
+<![CDATA[
+<p style="line-height: 100%; margin-bottom: 0in">
+<span lang="it-IT">Juggluco è stato scritto da <a href="http://jkaltes.byethost16.com/Juggluco">Jaap
+Korthals Altes</a></span></p>
+<p style="line-height: 100%; margin-bottom: 0in">Oltre alle librerie
+standard di Android, abbiamo I seguenti:</p>
+<ul>
+	<li><p align="left" style="line-height: 100%; margin-bottom: 0in">comandi
+	NFC e Bluetooth e l\'algoritmo di interpretazione specifici della
+	Abbott per il sensore FreeStyle Libre. Tutto non documentato;</p>
+	<li><p align="left" style="line-height: 100%; margin-bottom: 0in"><span lang="it-IT">Per
+	comunicare con l\'orologio Garmin <a href="https://developer.garmin.com/connect-iq/sdk">Connect
+	IQ Mobile SDK</a>;</span></p>
+	<li><p align="left" style="line-height: 100%; margin-bottom: 0in"><span lang="it-IT">La
+	funzione Mirror da <a href="https://ascon.iaik.tugraz.at/">Ascon
+	authenticated encryption</a>;</span></p>
+	<li><p align="left" style="line-height: 100%; margin-bottom: 0in">Communication
+	with Libre3 sensors uses <a href="https://github.com/intel/tinycrypt">TinyCrypt</a>;</p>
+	<li><p align="left" style="line-height: 100%; margin-bottom: 0in"><span lang="it-IT">La
+	scelta dei colori è un adattamento di <a href="https://github.com/yukuku/ambilwarna">AmbilWarna</a>.</span></p>
+</ul>
+<p style="line-height: 100%; margin-bottom: 0in"><span lang="it-IT">Juggluco
+è stato tradotto in italiano da <a href="mailto:matteo.gabriele81@gmail.com">Matteo
+Gabriele</a>.</span></p>
+<p style="line-height: 100%; margin-bottom: 0in">Juggluco è<span lang="it-IT">
+stato </span>tradotto in portoghese da Rui Pinheiro.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+]]>
+</string>
+</resources>

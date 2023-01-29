@@ -1,0 +1,31 @@
+2022-10-18-09:24:49 6456 start JNI_OnLoad /data/app/~~mCKxUk6X-zNczEH8j7ThKA==/com.freestylelibre3.app.de-PG4ZqyIQ3zUdfyJgJRv2Xg==/lib/arm64/libcrl_dp.so 0
+2022-10-18-09:24:49 6456 start 0x71f1c8c428 GetEnv(JavaVM*, void**env, 65542)
+2022-10-18-09:24:49 6456 Not needed 
+2022-10-18-09:24:49 6456 GetEnv(JavaVM*, void**env, 65542)=0
+2022-10-18-09:24:49 6456 got newvmn
+2022-10-18-09:24:49 6456 got next JNI_OnLoad
+2022-10-18-09:24:49 6456 start 0x71f1c8c428 GetEnv(JavaVM*, void**env, 65542)
+2022-10-18-09:24:49 6456 Not needed 
+2022-10-18-09:24:49 6456 GetEnv(JavaVM*, void**env, 65542)=0
+2022-10-18-09:24:49 6456 start 0x71f1c8c428 GetEnv(JavaVM*, void**env, 65542)
+2022-10-18-09:24:49 6456 Not needed 
+2022-10-18-09:24:49 6456 GetEnv(JavaVM*, void**env, 65542)=0
+2022-10-18-09:24:49 6456 FindClass(com/adc/trident/app/frameworks/mobileservices/libre3/libre3DPCRLInterface)=0x17a9
+2022-10-18-09:24:49 6456 RegisterNatives com.adc.trident.app.frameworks.mobileservices.libre3.libre3DPCRLInterface
+2022-10-18-09:24:49 6456 Old func: DPInitialize ()I
+2022-10-18-09:24:49 6456 Old func: DPNFCActivationResponse ([BILjava/lang/Object;Ljava/lang/Object;)I
+2022-10-18-09:24:49 6456 Old func: DPBLEProcessHistoricalReading ([BI[Ljava/lang/Object;)I
+2022-10-18-09:24:49 6456 Old func: DPBLEProcessCurrentReading ([BLjava/lang/Object;Ljava/lang/Object;)I
+2022-10-18-09:24:49 6456 Old func: DPGetPatchInfo ([BIILjava/lang/Object;Ljava/lang/Object;)I
+2022-10-18-09:24:49 6456 Old func: DPGetActivationCommandData ([BJJ)I
+2022-10-18-09:24:49 6456 Old func: DPPatchControlHistoricalDataBackfillGreaterEqual (II[B)I
+2022-10-18-09:24:49 6456 Old func: DPPatchControlClinicalDataBackfillGreaterEqual (II[B)I
+2022-10-18-09:24:49 6456 Old func: DPGetEventLogCommand (I[B)I
+2022-10-18-09:24:49 6456 Old func: DPGetFactoryDataCommand ([B)I
+2022-10-18-09:24:49 6456 Old func: DPGetShutDownCommand ([B)I
+2022-10-18-09:24:49 6456 Old func: DPProcessEventLog ([B[Ljava/lang/Object;Ljava/lang/Object;)I
+2022-10-18-09:24:49 6456 Old func: DPProcessFastData ([BLjava/lang/Object;)I
+2022-10-18-09:24:49 6456 Old func: DPInventoryCompatibilityCheck ([B)Z
+2022-10-18-09:24:49 6456 Old func: DPProcessPatchStatus ([BLjava/lang/Object;)I
+2022-10-18-09:24:49 6456 Old func: DPComputeWarrantyCode (Ljava/lang/String;IJJJIZ)Ljava/lang/String;
+2022-10-18-09:24:49 6456 end JNI_OnLoad=65542

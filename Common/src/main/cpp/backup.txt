@@ -1,0 +1,23 @@
+problemen bij verwijderen.
+OPschruiven data typen:
+	socks
+	updatetime
+	
+Manier om backup te pauseren tijdens modificatie instellingen etc. kill SIGSTOP
+
+ook van cmdline wakeup
+
+Problemen:
+	is het mogelijk dat tegelijkertijd nieuwe data toegevoegd wordt die nu overschreven wordt met niets?
+	Nieuwe data wordt toegevoegd aan eind, maar endpos kan nog niet bijgewerkt zijn.
+	Horloge kan toevoegen op andere positie.
+	Oplossingen:
+		lock?
+
+
+laag 2.2	2.8 hoog
+28  10 9 8 7.5
+5
+4.9
+
+

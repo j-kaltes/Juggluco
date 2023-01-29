@@ -1,0 +1,18 @@
+For more information see:
+http://jkaltes.byethost16.com/Juggluco/cmdline/index.html
+
+Compile for debugging with:
+
+cmake -DDEBUG=ON $srcdir
+make juggluco
+
+To compile without logging and debug information (in a fresh directory):
+
+cmake $srcdir
+make juggluco
+
+
+To try out the ssl version of the xdrip server add -DSSLXDRIP=ON to cmake. For example:
+
+cmake  -DSSLXDRIP=ON $srcdir
+

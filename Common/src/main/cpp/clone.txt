@@ -1,0 +1,72 @@
+      int clone(int (*fn)(void *), void *stack, int flags, void *arg, ...  /* pid_t *parent_tid, void *tls, pid_t *child_tid */ );
+
+
+NR  syscall name           references  %x8  arg0 (%x0)        arg1 (%x1)          arg2 (%x2)          arg3 (%x3)          arg4 (%x4)        arg5 (%x5) 
+220 clone                   man/ cs/  0xdc  unsigned long     unsigned long       int *               int *               unsigned long     -          
+					    int flags,      void* child_stack, pid_t* parent_tid,    void* tls,         pid_t* child_tid,
+
+
+int clone(int (*fn)(void*), void* child_stack, int flags, void* arg, ...) {
+  int* parent_tid = NULL;
+  void* new_tls = NULL;
+  int* child_tid = NULL;
+
+  // Extract any optional parameters required by the flags.
+  va_list args;
+  va_start(args, arg);
+  if ((flags & (CLONE_PARENT_SETTID|CLONE_SETTLS|CLONE_CHILD_SETTID|CLONE_CHILD_CLEARTID)) != 0) {
+    parent_tid = va_arg(args, int*);
+  }
+  if ((flags & (CLONE_SETTLS|CLONE_CHILD_SETTID|CLONE_CHILD_CLEARTID)) != 0) {
+    new_tls = va_arg(args, void*);
+  }
+  if ((flags & (CLONE_CHILD_SETTID|CLONE_CHILD_CLEARTID)) != 0) {
+    child_tid = va_arg(args, int*);
+  }
+  va_end(args);
+
+  // Align 'child_stack' to 16 bytes.
+  uintptr_t child_stack_addr = reinterpret_cast<uintptr_t>(child_stack);
+  child_stack_addr &= ~0xf;
+  child_stack = reinterpret_cast<void*>(child_stack_addr);
+
+  // Remember the parent pid and invalidate the cached value while we clone.
+  pthread_internal_t* self = __get_thread();
+  pid_t parent_pid = self->invalidate_cached_pid();
+
+  // Actually do the clone.
+  int clone_result = __bionic_clone(flags, child_stack, parent_tid, new_tls, child_tid, fn, arg);
+
+  // We're the parent, so put our known pid back in place.
+  // We leave the child without a cached pid, but:
+  // 1. pthread_create gives its children their own pthread_internal_t with the correct pid.
+  // 2. fork makes a clone system call directly.
+  // If any other cases become important, we could use a double trampoline like __pthread_start.
+  self->set_cached_pid(parent_pid);
+  return clone_result;
+}
+#include <private/bionic_asm.h>
+// pid_t __bionic_clone(int flags, void* child_stack, pid_t* parent_tid, void* tls, pid_t* child_tid, int (*fn)(void*), void* arg);
+ENTRY(__bionic_clone)
+    # Copy 'fn' and 'arg' onto the child stack.
+    stp     x5, x6, [x1, #-16]
+    # Make the system call.
+    mov     x8, __NR_clone
+    svc     #0
+    # Are we the child?
+    cbz     x0, .L_bc_child
+    # Set errno if something went wrong.
+    cmn     x0, #(MAX_ERRNO + 1)
+    cneg    x0, x0, hi
+    b.hi    __set_errno_internal
+    ret
+.L_bc_child:
+    # We're in the child now. Set the end of the frame record chain...
+    mov     x29, xzr
+    # Setting x30 to 0 will make the unwinder stop at __start_thread
+    mov     x30, xzr
+    # ...and call __start_thread with the 'fn' and 'arg' we stored on the child stack.
+    ldp     x0, x1, [sp, #-16]
+    b       __start_thread
+END(__bionic_clone)
+.hidden __bionic_clone

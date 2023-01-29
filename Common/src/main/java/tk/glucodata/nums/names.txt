@@ -1,0 +1,44 @@
+//s/case \([A-Z]*\): return \([0-9]\+\);/case \2: settingsdataaccess\1();break;/g
+
+s/case \([A-Z]*\): return \([0-9]\+\);/static void settingsdataaccess\1() { throw new java.lang.NullPointerException("no access files: \1"); }/g
+
+        static void settingsdataaccessEACCES() { throw new java.lang.NullPointerException("no access files: EACCES"); }
+
+        static void settingsdataaccessELOOP() { throw new java.lang.NullPointerException("no access files: ELOOP"); }
+
+        static void settingsdataaccessENAMETOOLONG() { throw new java.lang.NullPointerException("no access files: ENAMETOOLONG"); }
+
+        static void settingsdataaccessENOENT() { throw new java.lang.NullPointerException("no access files: ENOENT"); }
+
+        static void settingsdataaccessENOTDIR() { throw new java.lang.NullPointerException("no access files: ENOTDIR"); }
+
+        static void settingsdataaccessEROFS() { throw new java.lang.NullPointerException("no access files: EROFS"); }
+
+        static void settingsdataaccessEBADF() { throw new java.lang.NullPointerException("no access files: EBADF"); }
+
+        static void settingsdataaccessEINVAL() { throw new java.lang.NullPointerException("no access files: EINVAL"); }
+
+        static void settingsdataaccessETXTBSY() { throw new java.lang.NullPointerException("no access files: ETXTBSY"); }
+
+
+static void settingsnoaccessdir() {
+	throw new java.lang.NullPointerException("no access files");
+	}
+        case 5: settingsdataaccessEACCES();break;
+
+        case 6: settingsdataaccessELOOP();break;
+
+        case 7: settingsdataaccessENAMETOOLONG();break;
+
+        case 8: settingsdataaccessENOENT();break;
+
+        case 9: settingsdataaccessENOTDIR();break;
+
+        case 10: settingsdataaccessEROFS();break;
+
+        case 11: settingsdataaccessEBADF();break;
+
+        case 12: settingsdataaccessEINVAL();break;
+
+        case 13: settingsdataaccessETXTBSY();break;
+

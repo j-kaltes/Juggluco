@@ -1,0 +1,252 @@
+
+static constexpr const uintptr_t wakescan=2;
+static constexpr const uintptr_t wakenums=4;
+static constexpr const uintptr_t wakeall=8;
+static constexpr const uintptr_t wakestop=16;
+static constexpr const uintptr_t wakeother=32;
+static constexpr const uintptr_t wakeend=64;
+static constexpr const uintptr_t wakesend=128;
+static constexpr const uintptr_t wakereconnect=256;
+static constexpr const uintptr_t wakestreamsend=512;
+void closeallsocks() {
+	LOGGER("closeallsocks ");
+
+	for(int i=0;i<getupdatedata()->hostnr;i++) {
+		 LOGGER("host %d shutdown(%d)\n",i,hostsocks[i]);
+		::shutdown(hostsocks[i],SHUT_RDWR);
+		}
+	for(int i=0;i<getupdatedata()->sendnr;i++) {
+		if(sendsocks[i]>0) {
+		      LOGGER("send %d shutdown(%d)\n",i,sendsocks[i]);
+			::shutdown(sendsocks[i],SHUT_RDWR);
+			}
+		else
+		   LOGGER("send %d\n",i);
+		}
+	LOGGER("\n");
+	}
+bool sendwakesender(int h) {
+	updateone &shost=getupdatedata()->tosend[h];
+	shost.close();
+	shost.open();
+	return sendbackup(shost.getcrypt(),shost.getsock());
+	}
+
+bool sendwakestreamsender(int h) {
+	updateone &shost=getupdatedata()->tosend[h];
+	shost.close();
+	shost.open();
+	extern	bool sendwakeupstream(crypt_t *pass,const int sock);
+	return sendwakeupstream(shost.getcrypt(),shost.getsock());
+	}
+int updateproc(condvar_t *varsptr,uintptr_t cond,updateone &shost,int  (updateone::*proc)( )) {
+	  if(varsptr->dobackup&wakestop)  
+	  	return 0;
+	if(cond) {
+		int res= (shost.*proc)();
+		if(!res) {
+			auto *pass=backup->getupdatedata()->allhosts+shost.allindex;
+		//	if(!pass->sendpassive)
+			shost.close();
+			if(
+#ifdef WEAROS_MESSAGES
+			(!pass->wearos||!wearmessages)&&
+#endif
+			pass->sendpassive)
+				return 0;
+			  if(varsptr->dobackup&wakestop)  
+				return 0;
+			shost.open();
+			  if(varsptr->dobackup&wakestop)   {
+				shost.close();
+				return 0;
+				}
+			res= (shost.*proc)();
+			if(!res)
+				shost.close();
+			}
+		return res;
+	   	}
+	  else
+		  return 2;
+	}
+
+
+  void	endbackupthread(int h) {
+	LOGGER("%d: end backupthread  %p\n",h,con_vars[h]);
+	getupdatedata()->tosend[h].close();
+	delete con_vars[h];
+	con_vars[h]=nullptr;
+	LOGGER("after delete\n");
+	}
+
+void		doupdates(const uintptr_t current,const int h) { 
+		int didnums=0,didstream=0,didscans=0,didupdate=0;
+		(didnums=updateproc(con_vars[h],current&wakenums,getupdatedata()->tosend[h],&updateone::updatenums))&&
+			(didstream=	updateproc(con_vars[h],current&wakestream,getupdatedata()->tosend[h],&updateone::updatestreamu))&&
+			(didscans=		updateproc(con_vars[h],current&wakescan,getupdatedata()->tosend[h],&updateone::updatescansu))&&
+			(didupdate=		updateproc(con_vars[h],current&wakeall,getupdatedata()->tosend[h],&updateone::update));
+		const uint16_t command=((didnums&1)?wakenums:0)|(didstream&1?wakestream:0)|(didscans&1?wakescan:0)|(didupdate&1?wakeall:0);
+		if(command)
+			sendrender(getupdatedata()->tosend[h].getcrypt(),getupdatedata()->tosend[h].getsock(),command);
+		}
+void lockwait(uintptr_t &current,int h) {
+	LOGGER("%d before lock\n",h)	;
+	    std::unique_lock<std::mutex> lck(con_vars[h]->backupmutex);
+	    con_vars[h]->dobackup=con_vars[h]->dobackup&~current;
+	    con_vars[h]->backupcond.wait(lck, [h] {return backup->con_vars[h]->dobackup; });   
+	    current=con_vars[h]->dobackup;
+	  LOGGER("%d after lock sock=%d\n",h,getupdatedata()->tosend[h].getsock())	;
+	}
+void backupthread(int index) {
+	LOGGER("%d backupthread %d\n", index,agettid());
+	const int h=getupdatedata()->allhosts[index].index;
+	const bool passive=getupdatedata()->allhosts[index].sendpassive;
+extern void	setreceiverversion(uint8_t version) ;
+	if(passive)
+		setreceiverversion(1);
+	{
+	constexpr int maxbuf=15;
+	char buf[maxbuf];
+	 snprintf(buf,maxbuf,"send %d",h);
+	   prctl(PR_SET_NAME, buf, 0, 0, 0);
+	   LOGGER("%s\n",buf);
+	   }
+	uintptr_t current=0;
+	   while(true) {
+		  if(con_vars[h]->dobackup&wakeend)  {
+		  	endbackupthread(h);
+			return;
+			}
+		   lockwait(current,h);
+		  if(current&wakeend)  {
+		  	endbackupthread(h);
+			return;
+			}
+		if(!passive) {
+			if(current&wakereconnect)  {
+				getupdatedata()->tosend[h].close();
+				getupdatedata()->tosend[h].open();
+				} 
+			if(current&wakesend) {
+				sendwakesender(h);
+				}
+			if(current&wakestreamsend) {
+				sendwakestreamsender(h);
+				}
+			}
+		doupdates(current,h); 
+		}
+	}
+
+//void streambackup(int index) { wakebackup(wakestream); }
+typedef std::conditional<sizeof(unsigned long) == sizeof(uintptr_t), unsigned long, uintptr_t>::type myuintptr_t; 
+//TO get rid of stupid clang++ warnings, that I shouldnt specify %lx  even if sizeof(long)==sizeof(int)
+
+void wakebackuponly(myuintptr_t kind=wakeall){
+	LOGGER("start wakebackuponly %lx ",kind);
+	int nr;
+	if(getupdatedata()->sendnr>con_vars.size()) {
+		nr=con_vars.size();
+		LOGGER("ERROR getupdatedata()->sendnr>con_vars.size() %d %d\n",getupdatedata()->sendnr,nr);
+		}
+	else
+		nr=getupdatedata()->sendnr;
+	  for(int i=0;i<nr;i++) {
+		auto *el=con_vars[i];
+	  	if(el)
+			el->wakebackuponly(kind);
+		}
+	LOGGER(" end wakebackuponly\n");
+  }
+void wakebackup(myuintptr_t kind=wakeall){
+
+if(networkpresent) {
+	LOGGER("start wakebackup %lx\n",kind);
+	int nr;
+	if(getupdatedata()->sendnr>con_vars.size()) {
+		nr=con_vars.size();
+		LOGGER("ERROR getupdatedata()->sendnr>con_vars.size() %d %d\n",getupdatedata()->sendnr,nr);
+		}
+	else
+		nr=getupdatedata()->sendnr;
+	  for(int i=0;i<nr;i++) {
+		auto *el=con_vars[i];
+	  	if(el)
+			el->wakebackup(kind);
+		}
+	LOGGER(" end wakebackup\n");
+	}
+else {
+	LOGGER("networkpresent=false\n");
+	}
+  }
+  static void startthread(int i,int index) {
+         LOGGER("in startthread %d %d\n",i,index);
+	backup->con_vars[index]=new condvar_t;
+	std::thread back(&Backup::backupthread,backup,i);
+	back.detach();
+	}
+static void startbackup(std::string_view globalbasedir) {
+	LOGGER("startbackup\n");
+	backup=new(std::nothrow) Backup(globalbasedir);
+	if(backup) {
+		const int maxsend=backup->getupdatedata()->sendnr;
+		const int hostnr= backup->getupdatedata()->hostnr;
+		for(int i=0;i<hostnr;i++) {
+			int index=backup->getupdatedata()->allhosts[i].index;
+			LOGGER("index=%d ",index);
+			if(index>=maxsend) {
+				LOGGER("allhosts[i].index %d >= %d sendnr\n",index,maxsend);
+				backup->getupdatedata()->allhosts[i].index=-1;
+				}
+			else {
+				if(index>=0) {
+					LOGGER("startthread %d %d ",i,index);
+					startthread(i,index);
+					}
+				else {
+					LOGGER(" no start ");
+					}
+				}
+			}
+		}
+	LOGGER("\n");
+	
+	}
+bool hassendnum() {
+	auto sendnr=getupdatedata()->sendnr;
+	for(int i=0;i< sendnr;i++) {
+		if(getupdatedata()->tosend[i].sendnums)
+			return true;
+		}
+	return false;
+	}
+/*void updatestream(SensorGlucoseData *hist) {
+    int nrh= getupdatedata()->hostnr;
+    if(!nrh)
+    	return;
+    for( int h=0;h<nrh;h++) {
+		if(!hist->updatestream(getupdatedata()->tosend[h].sock,h)) {
+			getupdatedata()->tosend[h].close();
+			getupdatedata()->tosend[h].sock=-1;
+      			wakebackup(wakereopen);
+			}
+	      }
+   }*/
+
+friend int updateone::update() ;
+inline std::span<passhost_t> getHosts() {
+	return { getupdatedata()->allhosts,static_cast<std::span<passhost_t>::size_type>( getupdatedata()->hostnr)};
+	}
+};
+
+//extern void wakebackup(int kind=1);
+
+
+extern void startbackup(std::string_view globalbasedir) ;
+
+
+inline std::span<passhost_t> getBackupHosts() {
+	return backup-> getHosts();
+	}

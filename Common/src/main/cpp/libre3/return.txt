@@ -1,0 +1,30 @@
+
+		static time_t savetime=nu+waittime;
+	 	sdata->setstate(newstate);
+		if(nu>savetime) {
+			savestate(sdata);
+			savetime=nu+waittime;
+			}
+		decltype(auto) gluc=algres->currentglucose();
+		const uint32_t glval= gluc.getValue();
+		const float drate=gluc.rate();
+	        auto hist=sdata->hist;
+		sensor *senso=sensors->getsensor(sdata->sensorindex);
+		senso->finished=0;
+
+		backup->wakebackup(Backup::wakestream);
+
+jlong glucoseback(uint32_t glval,float drate,SensorGlucoseData *hist) {
+		constexpr unsigned waittime=60*60;
+		sdata->hist->setbluetoothOn(1); 
+		const uint32_t val=glval*10;
+		if(!val) 
+			return 0LL;
+//		const uint32_t conv= round(gconvert(val*10.0));
+		const jlong rate=glnearnull(drate)?0LL:((long double)drate)*1000LL;
+		const jlong alarmcode= glval<glucoselowest?isLowest:(glval>glucosehighest?isHighest:(settings->highAlarm(val)?isHigh:(settings->lowAlarm(val)?isLow:(settings->availableAlarm()&&hist->waiting?isAgain:0))));
+		const jlong res= (rate&0xFFFF)<<32|alarmcode|glval;
+		LOGGER("val=%u, high=%d, low=%d res=%lld\n",val,settings->highAlarm(val),settings->lowAlarm(val),res);
+		hist->waiting=false;
+		return res;
+		}

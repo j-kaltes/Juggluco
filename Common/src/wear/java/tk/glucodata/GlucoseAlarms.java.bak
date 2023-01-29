@@ -1,0 +1,58 @@
+package tk.glucodata;
+
+import android.app.Application;
+
+import static tk.glucodata.Natives.hasalarmloss;
+
+public class GlucoseAlarms {
+    final private static String LOG_ID="GlucoseAlarms";
+public GlucoseAlarms(Application context) {
+	Notify.init();
+	}
+
+
+
+
+	static final int showtime = 3 * 60 * 1000;
+
+
+
+
+
+
+public	static long waitmmsec() {
+		final short minutes = Natives.readalarmsuspension(4);
+		final long mmsec = (minutes * 60 - 20) * 1000L;
+		return mmsec;
+	}
+
+ boolean saidloss = false;
+public	void handlealarm() {
+		final long nu = System.currentTimeMillis();
+		final long lasttime=Natives.lastglucosetime( );
+		final long nexttime=lasttime+waitmmsec();
+		if(nu>nexttime) {
+//			Notify.onenot.mksound(4);
+			if (hasalarmloss()) {
+				Notify.onenot.lossalarm(lasttime);
+				}
+			}
+	}
+
+	public  void sensorinit() {
+		if (hasalarmloss()) {
+			Notify.shownovalue();
+			saidloss = false;
+			final long nu = System.currentTimeMillis();
+			MyGattCallback.oldtime = nu + showtime;
+			LossOfSensorAlarm.setalarm(Applic.app, nu + waitmmsec());
+		} 
+	}
+
+void setagealarm(final long numsec) {
+	saidloss = false;
+	MyGattCallback.oldtime = numsec + showtime;
+	LossOfSensorAlarm.setalarm(Applic.app, numsec + waitmmsec());
+	}
+
+		}

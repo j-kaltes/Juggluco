@@ -1,0 +1,610 @@
+Exception java.lang.IllegalStateException: The content of the adapter has changed but ListView did not receive a notification. Make sure the content of your adapter is not modified from a background thread, but only from the UI thread. Make sure your adapter calls notifyDataSetChanged() when its content changes. [in ListView(-1, class android.widget.DropDownListView) with Adapter(class android.widget.Spinner$DropDownAdapter)]
+  at android.widget.ListView.layoutChildren (ListView.java:1717)
+  at android.widget.AbsListView.onTouchUp (AbsListView.java:4169)
+  at android.widget.AbsListView.onTouchEvent (AbsListView.java:3945)
+  at android.widget.DropDownListView.onTouchEvent (DropDownListView.java:116)
+  at android.view.View.dispatchTouchEvent (View.java:15111)
+  at android.view.ViewGroup.dispatchTransformedTouchEvent (ViewGroup.java:3164)
+  at android.view.ViewGroup.dispatchTouchEvent (ViewGroup.java:2832)
+  at android.view.ViewGroup.dispatchTransformedTouchEvent (ViewGroup.java:3170)
+  at android.view.ViewGroup.dispatchTouchEvent (ViewGroup.java:2846)
+  at android.view.ViewGroup.dispatchTransformedTouchEvent (ViewGroup.java:3170)
+  at android.view.ViewGroup.dispatchTouchEvent (ViewGroup.java:2846)
+  at android.widget.PopupWindow$PopupDecorView.dispatchTouchEvent (PopupWindow.java:2590)
+  at android.view.View.dispatchPointerEvent (View.java:15384)
+  at android.view.ViewRootImpl$ViewPostImeInputStage.processPointerEvent (ViewRootImpl.java:6896)
+  at android.view.ViewRootImpl$ViewPostImeInputStage.onProcess (ViewRootImpl.java:6667)
+  at android.view.ViewRootImpl$InputStage.deliver (ViewRootImpl.java:6114)
+  at android.view.ViewRootImpl$InputStage.onDeliverToNext (ViewRootImpl.java:6176)
+  at android.view.ViewRootImpl$InputStage.forward (ViewRootImpl.java:6137)
+  at android.view.ViewRootImpl$AsyncInputStage.forward (ViewRootImpl.java:6311)
+  at android.view.ViewRootImpl$InputStage.apply (ViewRootImpl.java:6145)
+  at android.view.ViewRootImpl$AsyncInputStage.apply (ViewRootImpl.java:6368)
+  at android.view.ViewRootImpl$InputStage.deliver (ViewRootImpl.java:6118)
+  at android.view.ViewRootImpl$InputStage.onDeliverToNext (ViewRootImpl.java:6176)
+  at android.view.ViewRootImpl$InputStage.forward (ViewRootImpl.java:6137)
+  at android.view.ViewRootImpl$InputStage.apply (ViewRootImpl.java:6145)
+  at android.view.ViewRootImpl$InputStage.deliver (ViewRootImpl.java:6118)
+  at android.view.ViewRootImpl.deliverInputEvent (ViewRootImpl.java:9272)
+  at android.view.ViewRootImpl.doProcessInputEvents (ViewRootImpl.java:9223)
+  at android.view.ViewRootImpl.enqueueInputEvent (ViewRootImpl.java:9172)
+  at android.view.ViewRootImpl$WindowInputEventReceiver.onInputEvent (ViewRootImpl.java:9415)
+  at android.view.InputEventReceiver.dispatchInputEvent (InputEventReceiver.java:276)
+  at android.os.MessageQueue.nativePollOnce (MessageQueue.java)
+  at android.os.MessageQueue.next (MessageQueue.java:339)
+  at android.os.Looper.loopOnce (Looper.java:186)
+  at android.os.Looper.loop (Looper.java:351)
+  at android.app.ActivityThread.main (ActivityThread.java:8355)
+  at java.lang.reflect.Method.invoke (Method.java)
+  at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run (RuntimeInit.java:584)
+  at com.android.internal.os.ZygoteInit.main (ZygoteInit.java:1013)
+
+*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
+pid: 0, tid: 0 >>> tk.glucodata <<<
+
+backtrace:
+  #00  pc 0x00000000000e4070  /data/app/~~gvqDrc1xGjEI05YmxIECFg==/tk.glucodata-JkFan4IReQHpkgWmvafpug==/lib/arm64/libg.so (SensorGlucoseData::SensorGlucoseData(std::__ndk1::basic_string_view<char, std::__ndk1::char_traits<char>>, int, std::__ndk1::basic_string_view<char, std::__ndk1::char_traits<char>>))
+  #01  pc 0x00000000000e2dac  /data/app/~~gvqDrc1xGjEI05YmxIECFg==/tk.glucodata-JkFan4IReQHpkgWmvafpug==/lib/arm64/libg.so (Sensoren::gethist(int))
+  #02  pc 0x000000000011dc78  /data/app/~~gvqDrc1xGjEI05YmxIECFg==/tk.glucodata-JkFan4IReQHpkgWmvafpug==/lib/arm64/libg.so (Java_tk_glucodata_Natives_calccurvegegs+360)
+  #03  pc 0x0000000000021c00  /data/app/~~gvqDrc1xGjEI05YmxIECFg==/tk.glucodata-JkFan4IReQHpkgWmvafpug==/oat/arm64/base.odex (art_jni_trampoline+144)
+  #04  pc 0x0000000000043ef0  /data/app/~~gvqDrc1xGjEI05YmxIECFg==/tk.glucodata-JkFan4IReQHpkgWmvafpug==/oat/arm64/base.odex (tk.glucodata.Applic.f+400)
+  #05  pc 0x0000000000044bcc  /data/app/~~gvqDrc1xGjEI05YmxIECFg==/tk.glucodata-JkFan4IReQHpkgWmvafpug==/oat/arm64/base.odex (tk.glucodata.Applic.onCreate+60)
+  #06  pc 0x0000000000330ea4  /system/framework/arm64/boot-framework.oat (android.app.Instrumentation.callApplicationOnCreate+52)
+  #07  pc 0x0000000000402320  /system/framework/arm64/boot-framework.oat (android.app.ActivityThread.handleBindApplication+7728)
+  #08  pc 0x00000000003f7278  /system/framework/arm64/boot-framework.oat (android.app.ActivityThread$H.handleMessage+6808)
+  #09  pc 0x000000000064ccd4  /system/framework/arm64/boot-framework.oat (android.os.Handler.dispatchMessage+180)
+  #10  pc 0x0000000000650340  /system/framework/arm64/boot-framework.oat (android.os.Looper.loop+1696)
+  #11  pc 0x0000000000409450  /system/framework/arm64/boot-framework.oat (android.app.ActivityThread.main+960)
+  #12  pc 0x00000000001337e8  /apex/com.android.art/lib64/libart.so (art_quick_invoke_static_stub+568)
+  #13  pc 0x00000000001a8a94  /apex/com.android.art/lib64/libart.so (art::ArtMethod::Invoke(art::Thread*, unsigned int*, unsigned int, art::JValue*, char const*)+228)
+  #14  pc 0x0000000000556640  /apex/com.android.art/lib64/libart.so (art::InvokeMethod(art::ScopedObjectAccessAlreadyRunnable const&, _jobject*, _jobject*, _jobject*, unsigned long)+1364)
+  #15  pc 0x00000000004d5ef0  /apex/com.android.art/lib64/libart.so (art::Method_invoke(_JNIEnv*, _jobject*, _jobject*, _jobjectArray*)+52)
+  #16  pc 0x00000000000896f4  /apex/com.android.art/javalib/arm64/boot.oat (art_jni_trampoline+180)
+  #17  pc 0x000000000088b358  /system/framework/arm64/boot-framework.oat (com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run+136)
+  #18  pc 0x0000000000893a98  /system/framework/arm64/boot-framework.oat (com.android.internal.os.ZygoteInit.main+2296)
+  #19  pc 0x00000000001337e8  /apex/com.android.art/lib64/libart.so (art_quick_invoke_static_stub+568)
+  #20  pc 0x00000000001a8a94  /apex/com.android.art/lib64/libart.so (art::ArtMethod::Invoke(art::Thread*, unsigned int*, unsigned int, art::JValue*, char const*)+228)
+  #21  pc 0x000000000055507c  /apex/com.android.art/lib64/libart.so (art::JValue art::InvokeWithVarArgs<art::ArtMethod*>(art::ScopedObjectAccessAlreadyRunnable const&, _jobject*, art::ArtMethod*, std::__va_list)+448)
+  #22  pc 0x0000000000555530  /apex/com.android.art/lib64/libart.so (art::JValue art::InvokeWithVarArgs<_jmethodID*>(art::ScopedObjectAccessAlreadyRunnable const&, _jobject*, _jmethodID*, std::__va_list)+92)
+  #23  pc 0x0000000000439c94  /apex/com.android.art/lib64/libart.so (art::JNI<true>::CallStaticVoidMethodV(_JNIEnv*, _jclass*, _jmethodID*, std::__va_list)+656)
+  #24  pc 0x000000000009e424  /system/lib64/libandroid_runtime.so (_JNIEnv::CallStaticVoidMethod(_jclass*, _jmethodID*, ...)+124)
+  #25  pc 0x00000000000a6364  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::start(char const*, android::Vector<android::String8> const&, bool)+916)
+  #26  pc 0x0000000000003680  /system/bin/app_process64 (main+1592)
+  #27  pc 0x0000000000085054  /apex/com.android.runtime/lib64/bionic/libc.so (__libc_init+108)
+
+backtrace:
+  #00  pc 0x00000000000df51c  /data/app/~~O6AU40tOfutd8GHgHUCtXA==/tk.glucodata-sMp2Ke4whSvhH8cv_qwVEA==/lib/arm64/libg.so (SensorGlucoseData::SensorGlucoseData(std::__ndk1::basic_string_view<char, std::__ndk1::char_traits<char>>, int, std::__ndk1::basic_string_view<char, std::__ndk1::char_traits<char>>))
+  #01  pc 0x00000000000de0b4  /data/app/~~O6AU40tOfutd8GHgHUCtXA==/tk.glucodata-sMp2Ke4whSvhH8cv_qwVEA==/lib/arm64/libg.so (Sensoren::gethist(int))
+  #02  pc 0x00000000001140bc  /data/app/~~O6AU40tOfutd8GHgHUCtXA==/tk.glucodata-sMp2Ke4whSvhH8cv_qwVEA==/lib/arm64/libg.so (Sensoren::timefirstdata())
+  #03  pc 0x000000000011422c  /data/app/~~O6AU40tOfutd8GHgHUCtXA==/tk.glucodata-sMp2Ke4whSvhH8cv_qwVEA==/lib/arm64/libg.so (begrenstijd())
+  #04  pc 0x000000000011aa08  /data/app/~~O6AU40tOfutd8GHgHUCtXA==/tk.glucodata-sMp2Ke4whSvhH8cv_qwVEA==/lib/arm64/libg.so (Java_tk_glucodata_Natives_translate+608)
+  #05  pc 0x000000000000aac0  /data/app/~~O6AU40tOfutd8GHgHUCtXA==/tk.glucodata-sMp2Ke4whSvhH8cv_qwVEA==/oat/arm64/base.odex (art_jni_trampoline+112)
+  #06  pc 0x0000000000209a9c  /apex/com.android.art/lib64/libart.so (nterp_helper+1948)
+  #07  pc 0x00000000000bde2e  /data/app/~~O6AU40tOfutd8GHgHUCtXA==/tk.glucodata-sMp2Ke4whSvhH8cv_qwVEA==/oat/arm64/base.vdex (tk.glucodata.GlucoseCurve$b.onScroll+44)
+  #08  pc 0x0000000000b6b05c  /data/misc/apexdata/com.android.art/dalvik-cache/arm64/boot.oat (android.view.GestureDetector.onTouchEvent+1788)
+  #09  pc 0x000000000020a2b0  /apex/com.android.art/lib64/libart.so (nterp_helper+4016)
+  #10  pc 0x00000000000bea3a  /data/app/~~O6AU40tOfutd8GHgHUCtXA==/tk.glucodata-sMp2Ke4whSvhH8cv_qwVEA==/oat/arm64/base.vdex (tk.glucodata.GlucoseCurve.onTouchEvent+114)
+  #11  pc 0x0000000000c3c520  /data/misc/apexdata/com.android.art/dalvik-cache/arm64/boot.oat (android.view.View.dispatchTouchEvent+528)
+  #12  pc 0x0000000000cdad08  /data/misc/apexdata/com.android.art/dalvik-cache/arm64/boot.oat (android.view.ViewGroup.dispatchTransformedTouchEvent+696)
+  #13  pc 0x0000000000ce25f0  /data/misc/apexdata/com.android.art/dalvik-cache/arm64/boot.oat (android.view.ViewGroup.dispatchTouchEvent+2288)
+  #14  pc 0x0000000000cdad08  /data/misc/apexdata/com.android.art/dalvik-cache/arm64/boot.oat (android.view.ViewGroup.dispatchTransformedTouchEvent+696)
+  #15  pc 0x0000000000ce25f0  /data/misc/apexdata/com.android.art/dalvik-cache/arm64/boot.oat (android.view.ViewGroup.dispatchTouchEvent+2288)
+  #16  pc 0x0000000000cdad08  /data/misc/apexdata/com.android.art/dalvik-cache/arm64/boot.oat (android.view.ViewGroup.dispatchTransformedTouchEvent+696)
+  #17  pc 0x0000000000ce25f0  /data/misc/apexdata/com.android.art/dalvik-cache/arm64/boot.oat (android.view.ViewGroup.dispatchTouchEvent+2288)
+  #18  pc 0x0000000000e2e4e4  /data/misc/apexdata/com.android.art/dalvik-cache/arm64/boot.oat (com.android.internal.policy.DecorView.superDispatchTouchEvent+52)
+  #19  pc 0x0000000000d957b4  /data/misc/apexdata/com.android.art/dalvik-cache/arm64/boot.oat (com.android.internal.policy.PhoneWindow.superDispatchTouchEvent+68)
+  #20  pc 0x0000000000994644  /data/misc/apexdata/com.android.art/dalvik-cache/arm64/boot.oat (android.app.Activity.dispatchTouchEvent+132)
+  #21  pc 0x0000000000e2b140  /data/misc/apexdata/com.android.art/dalvik-cache/arm64/boot.oat (com.android.internal.policy.DecorView.dispatchTouchEvent+112)
+  #22  pc 0x0000000000c62530  /data/misc/apexdata/com.android.art/dalvik-cache/arm64/boot.oat (android.view.ViewRootImpl$ViewPostImeInputStage.processPointerEvent+288)
+  #23  pc 0x0000000000c62a18  /data/misc/apexdata/com.android.art/dalvik-cache/arm64/boot.oat (android.view.ViewRootImpl$ViewPostImeInputStage.onProcess+152)
+  #24  pc 0x0000000000b81ab0  /data/misc/apexdata/com.android.art/dalvik-cache/arm64/boot.oat (android.view.ViewRootImpl$InputStage.deliver+160)
+  #25  pc 0x0000000000b81ca8  /data/misc/apexdata/com.android.art/dalvik-cache/arm64/boot.oat (android.view.ViewRootImpl$InputStage.onDeliverToNext+72)
+  #26  pc 0x0000000000c6018c  /data/misc/apexdata/com.android.art/dalvik-cache/arm64/boot.oat (android.view.ViewRootImpl$AsyncInputStage.forward+92)
+  #27  pc 0x0000000000b818c0  /data/misc/apexdata/com.android.art/dalvik-cache/arm64/boot.oat (android.view.ViewRootImpl$InputStage.apply+64)
+  #28  pc 0x0000000000c60010  /data/misc/apexdata/com.android.art/dalvik-cache/arm64/boot.oat (android.view.ViewRootImpl$AsyncInputStage.apply+96)
+  #29  pc 0x0000000000b81b50  /data/misc/apexdata/com.android.art/dalvik-cache/arm64/boot.oat (android.view.ViewRootImpl$InputStage.deliver+320)
+  #30  pc 0x0000000000b81ca8  /data/misc/apexdata/com.android.art/dalvik-cache/arm64/boot.oat (android.view.ViewRootImpl$InputStage.onDeliverToNext+72)
+  #31  pc 0x0000000000b81c34  /data/misc/apexdata/com.android.art/dalvik-cache/arm64/boot.oat (android.view.ViewRootImpl$InputStage.forward+52)
+  #32  pc 0x0000000000b818c0  /data/misc/apexdata/com.android.art/dalvik-cache/arm64/boot.oat (android.view.ViewRootImpl$InputStage.apply+64)
+  #33  pc 0x0000000000b81b50  /data/misc/apexdata/com.android.art/dalvik-cache/arm64/boot.oat (android.view.ViewRootImpl$InputStage.deliver+320)
+  #34  pc 0x0000000000c68dc4  /data/misc/apexdata/com.android.art/dalvik-cache/arm64/boot.oat (android.view.ViewRootImpl.deliverInputEvent+1764)
+  #35  pc 0x0000000000c7a240  /data/misc/apexdata/com.android.art/dalvik-cache/arm64/boot.oat (android.view.ViewRootImpl.doProcessInputEvents+288)
+  #36  pc 0x0000000000c7a904  /data/misc/apexdata/com.android.art/dalvik-cache/arm64/boot.oat (android.view.ViewRootImpl.enqueueInputEvent+1188)
+  #37  pc 0x0000000000c653a4  /data/misc/apexdata/com.android.art/dalvik-cache/arm64/boot.oat (android.view.ViewRootImpl$WindowInputEventReceiver.onInputEvent+644)
+  #38  pc 0x0000000000b6f910  /data/misc/apexdata/com.android.art/dalvik-cache/arm64/boot.oat (android.view.InputEventReceiver.dispatchInputEvent+176)
+  #39  pc 0x0000000000436b6c  /apex/com.android.art/lib64/libart.so (art_quick_invoke_stub+556)
+  #40  pc 0x00000000004cbfc4  /apex/com.android.art/lib64/libart.so (art::JValue art::InvokeVirtualOrInterfaceWithVarArgs<art::ArtMethod*>(art::ScopedObjectAccessAlreadyRunnable const&, _jobject*, art::ArtMethod*, std::__va_list)+828)
+  #41  pc 0x00000000005ddcf0  /apex/com.android.art/lib64/libart.so (art::JNI<false>::CallVoidMethodV(_JNIEnv*, _jobject*, _jmethodID*, std::__va_list)+184)
+  #42  pc 0x00000000000bb5c4  /system/lib64/libandroid_runtime.so (_JNIEnv::CallVoidMethod(_jobject*, _jmethodID*, ...)+120)
+  #43  pc 0x0000000000125ef8  /system/lib64/libandroid_runtime.so (android::NativeInputEventReceiver::consumeEvents(_JNIEnv*, bool, long, bool*)+372)
+  #44  pc 0x0000000000127634  /system/lib64/libandroid_runtime.so (android::nativeConsumeBatchedInputEvents(_JNIEnv*, _jclass*, long, long)+116)
+  #45  pc 0x00000000002d87d8  /data/misc/apexdata/com.android.art/dalvik-cache/arm64/boot.oat (art_jni_trampoline+120)
+  #46  pc 0x0000000000b814a0  /data/misc/apexdata/com.android.art/dalvik-cache/arm64/boot.oat (android.view.ViewRootImpl$ConsumeBatchedInputRunnable.run+192)
+  #47  pc 0x0000000000b5f8b0  /data/misc/apexdata/com.android.art/dalvik-cache/arm64/boot.oat (android.view.Choreographer.doCallbacks+1312)
+  #48  pc 0x0000000000b60228  /data/misc/apexdata/com.android.art/dalvik-cache/arm64/boot.oat (android.view.Choreographer.doFrame+1720)
+  #49  pc 0x0000000000c04b40  /data/misc/apexdata/com.android.art/dalvik-cache/arm64/boot.oat (android.view.Choreographer$FrameDisplayEventReceiver.run+96)
+  #50  pc 0x0000000000a17714  /data/misc/apexdata/com.android.art/dalvik-cache/arm64/boot.oat (android.os.Handler.dispatchMessage+84)
+  #51  pc 0x0000000000a1b7c8  /data/misc/apexdata/com.android.art/dalvik-cache/arm64/boot.oat (android.os.Looper.loopOnce+1032)
+  #52  pc 0x0000000000a1b28c  /data/misc/apexdata/com.android.art/dalvik-cache/arm64/boot.oat (android.os.Looper.loop+1148)
+  #53  pc 0x00000000007b4674  /data/misc/apexdata/com.android.art/dalvik-cache/arm64/boot.oat (android.app.ActivityThread.main+1364)
+  #54  pc 0x0000000000436e00  /apex/com.android.art/lib64/libart.so (art_quick_invoke_static_stub+576)
+  #55  pc 0x0000000000469534  /apex/com.android.art/lib64/libart.so (_jobject* art::InvokeMethod<(art::PointerSize)8>(art::ScopedObjectAccessAlreadyRunnable const&, _jobject*, _jobject*, _jobject*, unsigned long)+1960)
+  #56  pc 0x0000000000468d64  /apex/com.android.art/lib64/libart.so (art::Method_invoke(_JNIEnv*, _jobject*, _jobject*, _jobjectArray*) (.__uniq.165753521025965369065708152063621506277)+48)
+  #57  pc 0x00000000002d1148  /data/misc/apexdata/com.android.art/dalvik-cache/arm64/boot.oat (art_jni_trampoline+120)
+  #58  pc 0x0000000000d3fb30  /data/misc/apexdata/com.android.art/dalvik-cache/arm64/boot.oat (com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run+144)
+  #59  pc 0x0000000000d4a8d8  /data/misc/apexdata/com.android.art/dalvik-cache/arm64/boot.oat (com.android.internal.os.ZygoteInit.main+3464)
+  #60  pc 0x0000000000436e00  /apex/com.android.art/lib64/libart.so (art_quick_invoke_static_stub+576)
+  #61  pc 0x0000000000582718  /apex/com.android.art/lib64/libart.so (art::JValue art::InvokeWithVarArgs<_jmethodID*>(art::ScopedObjectAccessAlreadyRunnable const&, _jobject*, _jmethodID*, std::__va_list)+900)
+  #62  pc 0x00000000005f611c  /apex/com.android.art/lib64/libart.so (art::JNI<true>::CallStaticVoidMethodV(_JNIEnv*, _jclass*, _jmethodID*, std::__va_list)+160)
+  #63  pc 0x00000000000bcad0  /system/lib64/libandroid_runtime.so (_JNIEnv::CallStaticVoidMethod(_jclass*, _jmethodID*, ...)+120)
+  #64  pc 0x00000000000c85c4  /system/lib64/libandroid_runtime.so (android::AndroidRuntime::start(char const*, android::Vector<android::String8> const&, bool)+840)
+  #65  pc 0x0000000000002554  /system/bin/app_process64 (main+1280)
+  #66  pc 0x000000000004a0f4  /apex/com.android.runtime/lib64/bionic/libc.so (__libc_init+96)
+
+
+backtrace:
+  #00  pc 0x0000000000057b58  /data/app/~~0kHwWTb6xpsWZdQ9fyxSfA==/tk.glucodata-P48XXf5NUDD-XAUOo_kwcA==/lib/arm/libg.so (SensorGlucoseData::SensorGlucoseData(std::__ndk1::basic_string_view<char, std::__ndk1::char_traits<char>>, int, std::__ndk1::basic_string_view<char, std::__ndk1::char_traits<char>>))
+  #01  pc 0x0000000000057997  /data/app/~~0kHwWTb6xpsWZdQ9fyxSfA==/tk.glucodata-P48XXf5NUDD-XAUOo_kwcA==/lib/arm/libg.so (Sensoren::gethist(int))
+  #02  pc 0x000000000007943d  /data/app/~~0kHwWTb6xpsWZdQ9fyxSfA==/tk.glucodata-P48XXf5NUDD-XAUOo_kwcA==/lib/arm/libg.so (Java_tk_glucodata_Natives_calccurvegegs+176)
+  #03  pc 0x00000000000d8add  /apex/com.android.art/lib/libart.so (art_quick_generic_jni_trampoline+44)
+  #04  pc 0x00000000000d3fd5  /apex/com.android.art/lib/libart.so (art_quick_invoke_stub_internal+68)
+  #05  pc 0x00000000004edfa9  /apex/com.android.art/lib/libart.so (art_quick_invoke_static_stub+276)
+  #06  pc 0x000000000012d2f9  /apex/com.android.art/lib/libart.so (art::ArtMethod::Invoke(art::Thread*, unsigned int*, unsigned int, art::JValue*, char const*)+160)
+  #07  pc 0x0000000000240713  /apex/com.android.art/lib/libart.so (art::interpreter::ArtInterpreterToCompiledCodeBridge(art::Thread*, art::ArtMethod*, art::ShadowFrame*, unsigned short, art::JValue*)+254)
+  #08  pc 0x0000000000238b45  /apex/com.android.art/lib/libart.so (bool art::interpreter::DoCall<false, false>(art::ArtMethod*, art::Thread*, art::ShadowFrame&, art::Instruction const*, unsigned short, art::JValue*)+756)
+  #09  pc 0x00000000004e1f1d  /apex/com.android.art/lib/libart.so (MterpInvokeStatic+464)
+  #10  pc 0x00000000000ceb94  /apex/com.android.art/lib/libart.so (mterp_op_invoke_static+20)
+  #11  pc 0x0000000000174e2a  /data/app/~~0kHwWTb6xpsWZdQ9fyxSfA==/tk.glucodata-P48XXf5NUDD-XAUOo_kwcA==/oat/arm/base.vdex (tk.glucodata.Applic.f+114)
+  #12  pc 0x00000000004df82d  /apex/com.android.art/lib/libart.so (MterpInvokeVirtual+1368)
+  #13  pc 0x00000000000cea14  /apex/com.android.art/lib/libart.so (mterp_op_invoke_virtual+20)
+  #14  pc 0x0000000000174f9e  /data/app/~~0kHwWTb6xpsWZdQ9fyxSfA==/tk.glucodata-P48XXf5NUDD-XAUOo_kwcA==/oat/arm/base.vdex (tk.glucodata.Applic.onCreate+6)
+  #15  pc 0x0000000000231cc5  /apex/com.android.art/lib/libart.so (art::interpreter::Execute(art::Thread*, art::CodeItemDataAccessor const&, art::ShadowFrame&, art::JValue, bool, bool) (.llvm.11047664781382856169)+244)
+  #16  pc 0x00000000002382a7  /apex/com.android.art/lib/libart.so (art::interpreter::EnterInterpreterFromEntryPoint(art::Thread*, art::CodeItemDataAccessor const&, art::ShadowFrame*)+114)
+  #17  pc 0x00000000004d0de7  /apex/com.android.art/lib/libart.so (artQuickToInterpreterBridge+690)
+  #18  pc 0x00000000000d8b61  /apex/com.android.art/lib/libart.so (art_quick_to_interpreter_bridge+32)
+  #19  pc 0x000000000032b059  /system/framework/arm/boot-framework.oat (android.app.Instrumentation.callApplicationOnCreate+40)
+  #20  pc 0x000000000040edf7  /system/framework/arm/boot-framework.oat (android.app.ActivityThread.handleBindApplication+6974)
+  #21  pc 0x000000000040588d  /system/framework/arm/boot-framework.oat (android.app.ActivityThread$H.handleMessage+5748)
+  #22  pc 0x00000000005f9f09  /system/framework/arm/boot-framework.oat (android.os.Handler.dispatchMessage+136)
+  #23  pc 0x00000000005fc9b7  /system/framework/arm/boot-framework.oat (android.os.Looper.loop+1542)
+  #24  pc 0x0000000000414617  /system/framework/arm/boot-framework.oat (android.app.ActivityThread.main+822)
+  #25  pc 0x00000000000d3fd5  /apex/com.android.art/lib/libart.so (art_quick_invoke_stub_internal+68)
+  #26  pc 0x00000000004edfa9  /apex/com.android.art/lib/libart.so (art_quick_invoke_static_stub+276)
+  #27  pc 0x000000000012d2f9  /apex/com.android.art/lib/libart.so (art::ArtMethod::Invoke(art::Thread*, unsigned int*, unsigned int, art::JValue*, char const*)+160)
+  #28  pc 0x00000000003f96d1  /apex/com.android.art/lib/libart.so (art::InvokeMethod(art::ScopedObjectAccessAlreadyRunnable const&, _jobject*, _jobject*, _jobject*, unsigned int)+832)
+  #29  pc 0x0000000000397b37  /apex/com.android.art/lib/libart.so (art::Method_invoke(_JNIEnv*, _jobject*, _jobject*, _jobjectArray*)+30)
+  #30  pc 0x0000000000088637  /apex/com.android.art/javalib/arm/boot.oat (art_jni_trampoline+110)
+  #31  pc 0x00000000008057e9  /system/framework/arm/boot-framework.oat (com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run+112)
+  #32  pc 0x000000000080e1eb  /system/framework/arm/boot-framework.oat (com.android.internal.os.ZygoteInit.main+2010)
+  #33  pc 0x00000000000d3fd5  /apex/com.android.art/lib/libart.so (art_quick_invoke_stub_internal+68)
+  #34  pc 0x00000000004edfa9  /apex/com.android.art/lib/libart.so (art_quick_invoke_static_stub+276)
+  #35  pc 0x000000000012d2f9  /apex/com.android.art/lib/libart.so (art::ArtMethod::Invoke(art::Thread*, unsigned int*, unsigned int, art::JValue*, char const*)+160)
+  #36  pc 0x00000000003f8861  /apex/com.android.art/lib/libart.so (art::JValue art::InvokeWithVarArgs<art::ArtMethod*>(art::ScopedObjectAccessAlreadyRunnable const&, _jobject*, art::ArtMethod*, std::__va_list)+348)
+  #37  pc 0x00000000003f8b17  /apex/com.android.art/lib/libart.so (art::JValue art::InvokeWithVarArgs<_jmethodID*>(art::ScopedObjectAccessAlreadyRunnable const&, _jobject*, _jmethodID*, std::__va_list)+42)
+  #38  pc 0x000000000031ff3f  /apex/com.android.art/lib/libart.so (art::JNI<true>::CallStaticVoidMethodV(_JNIEnv*, _jclass*, _jmethodID*, std::__va_list)+478)
+  #39  pc 0x0000000000066f7d  /system/lib/libandroid_runtime.so (_JNIEnv::CallStaticVoidMethod(_jclass*, _jmethodID*, ...)+28)
+  #40  pc 0x000000000006d201  /system/lib/libandroid_runtime.so (android::AndroidRuntime::start(char const*, android::Vector<android::String8> const&, bool)+508)
+  #41  pc 0x0000000000002e55  /system/bin/app_process32 (main+976)
+  #42  pc 0x000000000005cdcf  /apex/com.android.runtime/lib/bionic/libc.so (__libc_init+66)
+
+
+FORTIFY: pthread_mutex_lock called on a destroyed mutex (0x95052264):
+  #00  pc 0x000000000001cd2a  /system/lib/libc.so (abort)
+  #00  pc 0x0000000000064cff  /system/lib/libc.so (__fortify_fatal(char const*, ...))
+  #00  pc 0x000000000006448d  /system/lib/libc.so (HandleUsingDestroyedMutex(pthread_mutex_t*, char const*))
+  #00  pc 0x0000000000064367  /system/lib/libc.so (pthread_mutex_lock)
+  #00  pc 0x00000000000630eb  /system/lib/libc.so (pthread_cond_wait)
+  #00  pc 0x000000000009566f  /data/app/tk.glucodata-MiX1WvCR28dzzHLvM-mEaQ==/lib/arm/libg.so (std::__ndk1::condition_variable::wait(std::__ndk1::unique_lock<std::__ndk1::mutex>&))
+  #00  pc 0x000000000005829d  /data/app/tk.glucodata-MiX1WvCR28dzzHLvM-mEaQ==/lib/arm/libg.so (Backup::backupthread(int))
+  #00  pc 0x0000000000058861  /data/app/tk.glucodata-MiX1WvCR28dzzHLvM-mEaQ==/lib/arm/libg.so (void* std::__ndk1::__thread_proxy<std::__ndk1::tuple<std::__ndk1::unique_ptr<std::__ndk1::__thread_struct, std::__ndk1::default_delete<std::__ndk1::__thread_struct>>, void (Backup::*)(int), Backup*, int>>(void*))
+  #00  pc 0x00000000000639b5  /system/lib/libc.so (__pthread_start(void*))
+  #00  pc 0x000000000001df1d  /system/lib/libc.so (__start_thread)
+
+
+
+
+Exception java.lang.NullPointerException: Attempt to invoke virtual method 'void android.media.MediaPlayer.setOnCompletionListener(android.media.MediaPlayer$OnCompletionListener)' on a null object reference
+  at android.media.Ringtone.destroyLocalPlayer (Ringtone.java:535)
+  at android.media.Ringtone.stop (Ringtone.java:516)
+  at tk.glucodata.Notify.lambda$playringhier$0 (Notify.java:1)
+  at tk.glucodata.Notify$$InternalSyntheticLambda$1$f526c216c5860ff359b2ffebd8413e8a0b662c4df95ceb816322ca923a892bac$0.run (Notify.java)
+  at tk.glucodata.Notify.stopalarm (Notify.java)
+  at tk.glucodata.MainActivity.handleIntent (MainActivity.java)
+  at tk.glucodata.MainActivity.onNewIntent (MainActivity.java)
+  at android.app.Activity.performNewIntent (Activity.java:8306)
+  at android.app.Instrumentation.callActivityOnNewIntent (Instrumentation.java:1429)
+  at android.app.Instrumentation.callActivityOnNewIntent (Instrumentation.java:1442)
+  at android.app.ActivityThread.deliverNewIntents (ActivityThread.java:4241)
+  at android.app.ActivityThread.handleNewIntent (ActivityThread.java:4248)
+  at android.app.servertransaction.NewIntentItem.execute (NewIntentItem.java:56)
+  at android.app.servertransaction.ActivityTransactionItem.execute (ActivityTransactionItem.java:45)
+  at android.app.servertransaction.TransactionExecutor.executeCallbacks (TransactionExecutor.java:135)
+  at android.app.servertransaction.TransactionExecutor.execute (TransactionExecutor.java:95)
+  at android.app.ActivityThread$H.handleMessage (ActivityThread.java:2438)
+  at android.os.Handler.dispatchMessage (Handler.java:106)
+  at android.os.Looper.loopOnce (Looper.java:226)
+  at android.os.Looper.loop (Looper.java:313)
+  at android.app.ActivityThread.main (ActivityThread.java:8669)
+  at java.lang.reflect.Method.invoke (Method.java)
+  at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run (RuntimeInit.java:571)
+  at com.android.internal.os.ZygoteInit.main (ZygoteInit.java:1135)
+
+Exception java.lang.IllegalArgumentException:
+  at androidx.wear.watchface.editor.BaseEditorSession.requireNotClosed (BaseEditorSession.java)
+  at androidx.wear.watchface.editor.OnWatchFaceEditorSessionImpl.fetchComplicationSlotsState$watchface_editor_release (OnWatchFaceEditorSessionImpl.java:2)
+  at androidx.wear.watchface.editor.BaseEditorSession.maybeUpdateComplicationSlotsState$watchface_editor_release (BaseEditorSession.java:2)
+  at androidx.wear.watchface.editor.BaseEditorSession.openComplicationDataSourceChooser$suspendImpl (BaseEditorSession.java:31)
+  at androidx.wear.watchface.editor.BaseEditorSession$openComplicationDataSourceChooser$1.invokeSuspend (BaseEditorSession.java)
+  at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith (BaseContinuationImpl.java)
+  at kotlinx.coroutines.DispatchedTaskKt.resume (DispatchedTaskKt.java)
+  at kotlinx.coroutines.DispatchedTaskKt.resumeUnconfined (DispatchedTaskKt.java:6)
+  at kotlinx.coroutines.CancellableContinuationImpl.dispatchResume (CancellableContinuationImpl.java:6)
+  at kotlinx.coroutines.CancellableContinuationImpl.cancel (CancellableContinuationImpl.java)
+  at kotlinx.coroutines.CancellableContinuationImpl.parentCancelled$kotlinx_coroutines_core (CancellableContinuationImpl.java:2)
+  at kotlinx.coroutines.ChildContinuation.invoke (ChildContinuation.java:2)
+  at kotlinx.coroutines.JobSupport.notifyCancelling (JobSupport.java)
+  at kotlinx.coroutines.JobSupport.tryMakeCancelling (JobSupport.java:6)
+  at kotlinx.coroutines.JobSupport.parentCancelled (JobSupport.java)
+  at kotlinx.coroutines.ChildHandleNode.invoke (ChildHandleNode.java)
+  at kotlinx.coroutines.JobSupport.notifyCancelling (JobSupport.java)
+  at kotlinx.coroutines.JobSupport.tryMakeCompletingSlowPath (JobSupport.java:5)
+  at kotlinx.coroutines.JobSupport.cancelMakeCompleting (JobSupport.java:1)
+  at kotlinx.coroutines.JobSupport.cancelInternal (JobSupport.java)
+  at kotlinx.coroutines.JobSupport.cancel (JobSupport.java:2)
+  at kotlinx.coroutines.JobKt__JobKt.cancel (JobKt__JobKt.java)
+  at androidx.lifecycle.LifecycleCoroutineScopeImpl.onStateChanged (LifecycleCoroutineScopeImpl.java:6)
+  at androidx.lifecycle.LifecycleRegistry$ObserverWithState.dispatchEvent (LifecycleRegistry.java)
+  at androidx.lifecycle.LifecycleRegistry.backwardPass (LifecycleRegistry.java:13)
+  at androidx.lifecycle.LifecycleRegistry.moveToState (LifecycleRegistry.java:2)
+  at androidx.lifecycle.LifecycleRegistry.handleLifecycleEvent (LifecycleRegistry.java)
+  at androidx.lifecycle.ReportFragment.dispatch (ReportFragment.java)
+  at androidx.lifecycle.ReportFragment$LifecycleCallbacks.onActivityPreDestroyed (ReportFragment.java)
+  at android.app.Activity.dispatchActivityPreDestroyed (Activity.java:1501)
+  at android.app.Activity.performDestroy (Activity.java:8294)
+  at android.app.Instrumentation.callActivityOnDestroy (Instrumentation.java:1344)
+  at android.app.ActivityThread.performDestroyActivity (ActivityThread.java:5132)
+  at android.app.ActivityThread.handleDestroyActivity (ActivityThread.java:5176)
+  at android.app.servertransaction.DestroyActivityItem.execute (DestroyActivityItem.java:44)
+  at android.app.servertransaction.TransactionExecutor.executeLifecycleState (TransactionExecutor.java:176)
+  at android.app.servertransaction.TransactionExecutor.execute (TransactionExecutor.java:97)
+  at android.app.ActivityThread$H.handleMessage (ActivityThread.java:2073)
+  at android.os.Handler.dispatchMessage (Handler.java:106)
+  at android.os.Looper.loop (Looper.java:246)
+  at android.app.ActivityThread.main (ActivityThread.java:7690)
+  at java.lang.reflect.Method.invoke (Method.java)
+  at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run (RuntimeInit.java:593)
+  at com.android.internal.os.ZygoteInit.main (ZygoteInit.java:995)
+
+
+Exception java.lang.RuntimeException:
+  at android.app.ActivityThread.performResumeActivity (ActivityThread.java:4824)
+  at android.app.ActivityThread.handleResumeActivity (ActivityThread.java:4857)
+  at android.app.servertransaction.ResumeActivityItem.execute (ResumeActivityItem.java:54)
+  at android.app.servertransaction.ActivityTransactionItem.execute (ActivityTransactionItem.java:45)
+  at android.app.servertransaction.TransactionExecutor.executeLifecycleState (TransactionExecutor.java:176)
+  at android.app.servertransaction.TransactionExecutor.execute (TransactionExecutor.java:97)
+  at android.app.ActivityThread$H.handleMessage (ActivityThread.java:2253)
+  at android.os.Handler.dispatchMessage (Handler.java:106)
+  at android.os.Looper.loopOnce (Looper.java:201)
+  at android.os.Looper.loop (Looper.java:288)
+  at android.app.ActivityThread.main (ActivityThread.java:7870)
+  at java.lang.reflect.Method.invoke (Method.java)
+  at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run (RuntimeInit.java:548)
+  at com.android.internal.os.ZygoteInit.main (ZygoteInit.java:1003)
+Caused by java.lang.RuntimeException:
+  at android.app.ActivityThread.deliverResults (ActivityThread.java:5368)
+  at android.app.ActivityThread.performResumeActivity (ActivityThread.java:4811)
+Caused by java.lang.NullPointerException: Attempt to invoke virtual method 'void android.widget.TextView.setText(int)' on a null object reference
+  at tk.glucodata.MainActivity.onActivityResult (MainActivity.java:2)
+  at android.app.Activity.dispatchActivityResult (Activity.java:8388)
+  at android.app.ActivityThread.deliverResults (ActivityThread.java:5361)
+
+
+  #00  pc 0x00000000000893f8  /data/app/tk.glucodata-jXNNDSCqu9G-syw6NQnr1A==/lib/arm/libg.so (startmeals())
+  #00  pc 0x0000000000412279  /system/lib/libart.so (art_quick_generic_jni_trampoline)
+  #00  pc 0x000000000040dd75  /system/lib/libart.so (art_quick_invoke_stub_internal)
+  #00  pc 0x00000000003e7433  /system/lib/libart.so (art_quick_invoke_static_stub)
+  #00  pc 0x00000000000a1027  /system/lib/libart.so (art::ArtMethod::Invoke(art::Thread*, unsigned int*, unsigned int, art::JValue*, char const*))
+  #00  pc 0x00000000001e5c21  /system/lib/libart.so (art::interpreter::ArtInterpreterToCompiledCodeBridge(art::Thread*, art::ArtMethod*, art::ShadowFrame*, unsigned short, art::JValue*))
+  #00  pc 0x00000000001e070f  /system/lib/libart.so (bool art::interpreter::DoCall<false, false>(art::ArtMethod*, art::Thread*, art::ShadowFrame&, art::Instruction const*, unsigned short, art::JValue*))
+  #00  pc 0x00000000003e2f67  /system/lib/libart.so (MterpInvokeStatic)
+  #00  pc 0x0000000000400c14  /system/lib/libart.so (ExecuteMterpImpl)
+  #00  pc 0x00000000001a1c56  /data/app/tk.glucodata-jXNNDSCqu9G-syw6NQnr1A==/oat/arm/base.vdex (tk.glucodata.Applic.f)
+  #00  pc 0x00000000001c4e8b  /system/lib/libart.so (art::interpreter::Execute(art::Thread*, art::CodeItemDataAccessor const&, art::ShadowFrame&, art::JValue, bool) (.llvm.4000902051))
+  #00  pc 0x00000000001c9571  /system/lib/libart.so (art::interpreter::ArtInterpreterToInterpreterBridge(art::Thread*, art::CodeItemDataAccessor const&, art::ShadowFrame*, art::JValue*))
+  #00  pc 0x00000000001e06f7  /system/lib/libart.so (bool art::interpreter::DoCall<false, false>(art::ArtMethod*, art::Thread*, art::ShadowFrame&, art::Instruction const*, unsigned short, art::JValue*))
+  #00  pc 0x00000000003e1f8b  /system/lib/libart.so (MterpInvokeVirtual)
+  #00  pc 0x0000000000400a94  /system/lib/libart.so (ExecuteMterpImpl)
+  #00  pc 0x00000000001a1df2  /data/app/tk.glucodata-jXNNDSCqu9G-syw6NQnr1A==/oat/arm/base.vdex (tk.glucodata.Applic.onCreate)
+  #00  pc 0x00000000001c4e8b  /system/lib/libart.so (art::interpreter::Execute(art::Thread*, art::CodeItemDataAccessor const&, art::ShadowFrame&, art::JValue, bool) (.llvm.4000902051))
+  #00  pc 0x00000000001c94b7  /system/lib/libart.so (art::interpreter::EnterInterpreterFromEntryPoint(art::Thread*, art::CodeItemDataAccessor const&, art::ShadowFrame*))
+  #00  pc 0x00000000003d5a71  /system/lib/libart.so (artQuickToInterpreterBridge)
+  #00  pc 0x00000000004122ff  /system/lib/libart.so (art_quick_to_interpreter_bridge)
+  #00  pc 0x000000000067af41  /system/framework/arm/boot-framework.oat (android.app.Instrumentation.callApplicationOnCreate)
+  #00  pc 0x000000000075ac6b  /system/framework/arm/boot-framework.oat (android.app.ActivityThread.handleBindApplication)
+  #00  pc 0x0000000000756be5  /system/framework/arm/boot-framework.oat (android.app.ActivityThread$H.handleMessage)
+  #00  pc 0x000000000090e661  /system/framework/arm/boot-framework.oat (android.os.Handler.dispatchMessage)
+  #00  pc 0x0000000000910d5b  /system/framework/arm/boot-framework.oat (android.os.Looper.loop)
+  #00  pc 0x000000000075fe63  /system/framework/arm/boot-framework.oat (android.app.ActivityThread.main)
+  #00  pc 0x000000000040dd75  /system/lib/libart.so (art_quick_invoke_stub_internal)
+  #00  pc 0x00000000003e7433  /system/lib/libart.so (art_quick_invoke_static_stub)
+  #00  pc 0x00000000000a1027  /system/lib/libart.so (art::ArtMethod::Invoke(art::Thread*, unsigned int*, unsigned int, art::JValue*, char const*))
+  #00  pc 0x0000000000348265  /system/lib/libart.so (art::(anonymous namespace)::InvokeWithArgArray(art::ScopedObjectAccessAlreadyRunnable const&, art::ArtMethod*, art::(anonymous namespace)::ArgArray*, art::JValue*, char const*))
+  #00  pc 0x00000000003496b5  /system/lib/libart.so (art::InvokeMethod(art::ScopedObjectAccessAlreadyRunnable const&, _jobject*, _jobject*, _jobject*, unsigned int))
+  #00  pc 0x00000000002fb869  /system/lib/libart.so (art::Method_invoke(_JNIEnv*, _jobject*, _jobject*, _jobjectArray*))
+  #00  pc 0x000000000011226f  /system/framework/arm/boot-core-oj.oat (java.lang.Class.getDeclaredMethodInternal [DEDUPED])
+  #00  pc 0x0000000000a0a70b  /system/framework/arm/boot-framework.oat (com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run)
+  #00  pc 0x0000000000a105f5  /system/framework/arm/boot-framework.oat (com.android.internal.os.ZygoteInit.main)
+  #00  pc 0x000000000040dd75  /system/lib/libart.so (art_quick_invoke_stub_internal)
+  #00  pc 0x00000000003e7433  /system/lib/libart.so (art_quick_invoke_static_stub)
+  #00  pc 0x00000000000a1027  /system/lib/libart.so (art::ArtMethod::Invoke(art::Thread*, unsigned int*, unsigned int, art::JValue*, char const*))
+  #00  pc 0x0000000000348265  /system/lib/libart.so (art::(anonymous namespace)::InvokeWithArgArray(art::ScopedObjectAccessAlreadyRunnable const&, art::ArtMethod*, art::(anonymous namespace)::ArgArray*, art::JValue*, char const*))
+  #00  pc 0x000000000034808f  /system/lib/libart.so (art::InvokeWithVarArgs(art::ScopedObjectAccessAlreadyRunnable const&, _jobject*, _jmethodID*, std::__va_list))
+  #00  pc 0x000000000028ec51  /system/lib/libart.so (art::JNI::CallStaticVoidMethodV(_JNIEnv*, _jclass*, _jmethodID*, std::__va_list))
+  #00  pc 0x000000000006cadb  /system/lib/libandroid_runtime.so (_JNIEnv::CallStaticVoidMethod(_jclass*, _jmethodID*, ...))
+  #00  pc 0x000000000006ed33  /system/lib/libandroid_runtime.so (android::AndroidRuntime::start(char const*, android::Vector<android::String8> const&, bool))
+  #00  pc 0x0000000000001989  /system/bin/app_process32 (main)
+  #00  pc 0x0000000000087e31  /system/lib/libc.so (__libc_init)
+  #00  pc 0x000000000000166f  /system/bin/app_process32 (_start_main)
+  #00  pc 0x000000000000031e 
+Exception java.lang.IndexOutOfBoundsException: setSpan (-1 ... -1) starts before 0
+  at android.text.SpannableStringInternal.checkRange (SpannableStringInternal.java:442)
+  at android.text.SpannableStringInternal.setSpan (SpannableStringInternal.java:163)
+  at android.text.SpannableStringInternal.setSpan (SpannableStringInternal.java:152)
+  at android.text.SpannableString.setSpan (SpannableString.java:46)
+  at android.text.Selection.setSelection (Selection.java:76)
+  at android.widget.Editor$SelectionModifierCursorController.resetDragAcceleratorState (Editor.java:5805)
+  at android.widget.Editor$SelectionModifierCursorController.onTouchEvent (Editor.java:5642)
+  at android.widget.Editor.onTouchEvent (Editor.java:1416)
+  at android.widget.TextView.onTouchEvent (TextView.java:9931)
+  at android.view.View.dispatchTouchEvent (View.java:11843)
+  at android.view.ViewGroup.dispatchTransformedTouchEvent (ViewGroup.java:2981)
+  at android.view.ViewGroup.dispatchTouchEvent (ViewGroup.java:2668)
+  at android.view.ViewGroup.dispatchTransformedTouchEvent (ViewGroup.java:2981)
+  at android.view.ViewGroup.dispatchTouchEvent (ViewGroup.java:2668)
+  at android.view.ViewGroup.dispatchTransformedTouchEvent (ViewGroup.java:2981)
+  at android.view.ViewGroup.dispatchTouchEvent (ViewGroup.java:2668)
+  at android.view.ViewGroup.dispatchTransformedTouchEvent (ViewGroup.java:2981)
+  at android.view.ViewGroup.dispatchTouchEvent (ViewGroup.java:2668)
+  at com.android.internal.policy.DecorView.superDispatchTouchEvent (DecorView.java:555)
+  at com.android.internal.policy.PhoneWindow.superDispatchTouchEvent (PhoneWindow.java:1894)
+  at android.app.Activity.dispatchTouchEvent (Activity.java:3508)
+  at com.android.internal.policy.DecorView.dispatchTouchEvent (DecorView.java:508)
+  at android.view.View.dispatchPointerEvent (View.java:12082)
+  at android.view.ViewRootImpl$ViewPostImeInputStage.processPointerEvent (ViewRootImpl.java:5460)
+  at android.view.ViewRootImpl$ViewPostImeInputStage.onProcess (ViewRootImpl.java:5244)
+  at android.view.ViewRootImpl$InputStage.deliver (ViewRootImpl.java:4734)
+  at android.view.ViewRootImpl$InputStage.onDeliverToNext (ViewRootImpl.java:4787)
+  at android.view.ViewRootImpl$InputStage.forward (ViewRootImpl.java:4753)
+  at android.view.ViewRootImpl$AsyncInputStage.forward (ViewRootImpl.java:4884)
+  at android.view.ViewRootImpl$InputStage.apply (ViewRootImpl.java:4761)
+  at android.view.ViewRootImpl$AsyncInputStage.apply (ViewRootImpl.java:4941)
+  at android.view.ViewRootImpl$InputStage.deliver (ViewRootImpl.java:4734)
+  at android.view.ViewRootImpl$InputStage.onDeliverToNext (ViewRootImpl.java:4787)
+  at android.view.ViewRootImpl$InputStage.forward (ViewRootImpl.java:4753)
+  at android.view.ViewRootImpl$InputStage.apply (ViewRootImpl.java:4761)
+  at android.view.ViewRootImpl$InputStage.deliver (ViewRootImpl.java:4734)
+  at android.view.ViewRootImpl.deliverInputEvent (ViewRootImpl.java:7360)
+  at android.view.ViewRootImpl.doProcessInputEvents (ViewRootImpl.java:7334)
+  at android.view.ViewRootImpl.enqueueInputEvent (ViewRootImpl.java:7292)
+  at android.view.ViewRootImpl$WindowInputEventReceiver.onInputEvent (ViewRootImpl.java:7511)
+  at android.view.InputEventReceiver.dispatchInputEvent (InputEventReceiver.java:193)
+  at android.os.MessageQueue.nativePollOnce (MessageQueue.java)
+  at android.os.MessageQueue.next (MessageQueue.java:379)
+  at android.os.Looper.loop (Looper.java:144)
+  at android.app.ActivityThread.main (ActivityThread.java:7555)
+  at java.lang.reflect.Method.invoke (Method.java)
+  at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run (RuntimeInit.java:469)
+  at com.android.internal.os.ZygoteInit.main (ZygoteInit.java:963)
+
+
+
+INTERNET:
+2021-01-05 13:24:04.295 17312-17312/delhisehai.eyecare E/AndroidRuntime: FATAL EXCEPTION: main
+    Process: delhisehai.eyecare, PID: 17312
+    android.app.RemoteServiceException: Bad notification for startForeground
+        at android.app.ActivityThread$H.handleMessage(ActivityThread.java:1760)
+        at android.os.Handler.dispatchMessage(Handler.java:106)
+        at android.os.Looper.loop(Looper.java:201)
+        at android.app.ActivityThread.main(ActivityThread.java:6823)
+        at java.lang.reflect.Method.invoke(Native Method)
+        at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:547)
+        at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:873)
+private void updateNotification() {
+        Intent intent = new Intent((Context)this, MyBroadcastReceiver.class);
+        intent.setAction("ACTION_SWTICH_FILTER");
+        PendingIntent pendingIntent = PendingIntent.getBroadcast((Context)this, (int)0, (Intent)intent, (int)0);
+        Intent intent2 = new Intent((Context)this, MyBroadcastReceiver.class);
+        intent2.setAction("ADJUST_INTENSITY");
+        intent2.putExtra("intensity", "add");
+        PendingIntent pendingIntent2 = PendingIntent.getBroadcast((Context)this, (int)1, (Intent)intent2, PendingIntent.FLAG_UPDATE_CURRENT);
+        Intent intent3 = new Intent((Context)this, MyBroadcastReceiver.class);
+        intent3.setAction("ADJUST_INTENSITY");
+        intent3.putExtra("intensity", "minus");
+        PendingIntent pendingIntent3 = PendingIntent.getBroadcast((Context)this, (int)2, (Intent)intent3, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent4 = PendingIntent.getActivity((Context)this, (int)0, (Intent)new Intent((Context)this, MainActivity.class), (int)0);
+        String string2 = getResources().getString(R.string.app_name);
+        int n = MySharedPreferences.getAlpha((Context)this);
+        RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.layout_notification);
+        remoteViews.setTextViewText(R.id.notitext1, (CharSequence)string2);
+        remoteViews.setTextViewText(R.id.notitext4, (CharSequence)((int)(100.0 * (double)n / 200.0) + "%"));
+        remoteViews.setOnClickPendingIntent(R.id.btn1, pendingIntent);
+        remoteViews.setOnClickPendingIntent(R.id.btn2, pendingIntent);
+        remoteViews.setOnClickPendingIntent(R.id.notitext3, pendingIntent2);
+        remoteViews.setOnClickPendingIntent(R.id.notitext45, pendingIntent3);
+        if (filterIsOn) {
+            remoteViews.setViewVisibility(R.id.notitext2, View.INVISIBLE);
+            remoteViews.setViewVisibility(R.id.notilayout, View.VISIBLE);
+            remoteViews.setViewVisibility(R.id.btn2, View.INVISIBLE);
+            remoteViews.setViewVisibility(R.id.btn1, View.VISIBLE);
+            remoteViews.setTextViewText(R.id.btn1, (CharSequence)this.getResources().getString(R.string.turn_on));
+        } else {
+            remoteViews.setViewVisibility(R.id.notitext2, View.VISIBLE);
+            remoteViews.setViewVisibility(R.id.notilayout, View.INVISIBLE);
+            remoteViews.setViewVisibility(R.id.btn2,  View.VISIBLE);
+            remoteViews.setViewVisibility(R.id.btn1, View.INVISIBLE);
+            remoteViews.setTextViewText(R.id.btn2, (CharSequence)this.getResources().getString(R.string.turn_off));
+        }
+        Notification notification = new NotificationCompat.Builder(getApplicationContext()).setOngoing(false).setSmallIcon(R.drawable.red1).setContentIntent(pendingIntent4).setPriority(2).setWhen(0L).setContent(remoteViews).build();
+        if (!MySharedPreferences.getShowIcon((Context)this)) {
+            notification = new NotificationCompat.Builder(getApplicationContext()).setOngoing(false).setSmallIcon(R.drawable.red1).setContentIntent(pendingIntent4).setPriority(-2).setWhen(0L).setContent(remoteViews).build();
+        }
+        startForeground(9216, notification);
+    }
+
+
+MIJN:
+Exception android.app.RemoteServiceException: Bad notification for startForeground
+  at android.app.ActivityThread$H.handleMessage (ActivityThread.java:2093)
+  at android.os.Handler.dispatchMessage (Handler.java:107)
+  at android.os.Looper.loop (Looper.java:241)
+  at android.app.ActivityThread.main (ActivityThread.java:7582)
+  at java.lang.reflect.Method.invoke (Method.java)
+  at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run (RuntimeInit.java:492)
+  at com.android.internal.os.ZygoteInit.main (ZygoteInit.java:941)
+
+
+  #00  pc 0x000000000008957a  /data/app/~~SxEKqYmecta95siSe_Ic_Q==/tk.glucodata-dU2GN20ZujC6RbGHIrPsAA==/lib/arm/libg.so (Sensoren::Sensoren(std::__ndk1::basic_string_view<char, std::__ndk1::char_traits<char>>))
+  #00  pc 0x000000000008936d  /data/app/~~SxEKqYmecta95siSe_Ic_Q==/tk.glucodata-dU2GN20ZujC6RbGHIrPsAA==/lib/arm/libg.so (startsensors())
+  #00  pc 0x0000000000011817  /data/app/~~SxEKqYmecta95siSe_Ic_Q==/tk.glucodata-dU2GN20ZujC6RbGHIrPsAA==/oat/arm/base.odex (art_jni_trampoline)
+  #00  pc 0x00000000000d3fd5  /apex/com.android.art/lib/libart.so (art_quick_invoke_stub_internal)
+  #00  pc 0x00000000004edf89  /apex/com.android.art/lib/libart.so (art_quick_invoke_static_stub)
+  #00  pc 0x000000000012d2f9  /apex/com.android.art/lib/libart.so (art::ArtMethod::Invoke(art::Thread*, unsigned int*, unsigned int, art::JValue*, char const*))
+  #00  pc 0x00000000002406f3  /apex/com.android.art/lib/libart.so (art::interpreter::ArtInterpreterToCompiledCodeBridge(art::Thread*, art::ArtMethod*, art::ShadowFrame*, unsigned short, art::JValue*))
+  #00  pc 0x0000000000238b25  /apex/com.android.art/lib/libart.so (bool art::interpreter::DoCall<false, false>(art::ArtMethod*, art::Thread*, art::ShadowFrame&, art::Instruction const*, unsigned short, art::JValue*))
+  #00  pc 0x00000000004e1efd  /apex/com.android.art/lib/libart.so (MterpInvokeStatic)
+  #00  pc 0x00000000000ceb94  /apex/com.android.art/lib/libart.so (mterp_op_invoke_static)
+  #00  pc 0x00000000001a17ac  /data/app/~~SxEKqYmecta95siSe_Ic_Q==/tk.glucodata-dU2GN20ZujC6RbGHIrPsAA==/oat/arm/base.vdex (tk.glucodata.Applic.f)
+  #00  pc 0x00000000004e55a3  /apex/com.android.art/lib/libart.so (MterpInvokeVirtualQuick)
+  #00  pc 0x00000000000d2794  /apex/com.android.art/lib/libart.so (mterp_op_invoke_virtual_quick)
+  #00  pc 0x00000000001a194e  /data/app/~~SxEKqYmecta95siSe_Ic_Q==/tk.glucodata-dU2GN20ZujC6RbGHIrPsAA==/oat/arm/base.vdex (tk.glucodata.Applic.onCreate)
+  #00  pc 0x0000000000231ca5  /apex/com.android.art/lib/libart.so (art::interpreter::Execute(art::Thread*, art::CodeItemDataAccessor const&, art::ShadowFrame&, art::JValue, bool, bool) (.llvm.10275869499687602587))
+  #00  pc 0x0000000000238287  /apex/com.android.art/lib/libart.so (art::interpreter::EnterInterpreterFromEntryPoint(art::Thread*, art::CodeItemDataAccessor const&, art::ShadowFrame*))
+  #00  pc 0x00000000004d0dc7  /apex/com.android.art/lib/libart.so (artQuickToInterpreterBridge)
+  #00  pc 0x00000000000d8b61  /apex/com.android.art/lib/libart.so (art_quick_to_interpreter_bridge)
+  #00  pc 0x0000000000329d41  /system/framework/arm/boot-framework.oat (android.app.Instrumentation.callApplicationOnCreate)
+  #00  pc 0x000000000040d8af  /system/framework/arm/boot-framework.oat (android.app.ActivityThread.handleBindApplication)
+  #00  pc 0x0000000000404345  /system/framework/arm/boot-framework.oat (android.app.ActivityThread$H.handleMessage)
+  #00  pc 0x00000000005f5fa9  /system/framework/arm/boot-framework.oat (android.os.Handler.dispatchMessage)
+  #00  pc 0x00000000005f8a57  /system/framework/arm/boot-framework.oat (android.os.Looper.loop)
+  #00  pc 0x00000000004130cf  /system/framework/arm/boot-framework.oat (android.app.ActivityThread.main)
+  #00  pc 0x00000000000d3fd5  /apex/com.android.art/lib/libart.so (art_quick_invoke_stub_internal)
+  #00  pc 0x00000000004edf89  /apex/com.android.art/lib/libart.so (art_quick_invoke_static_stub)
+  #00  pc 0x000000000012d2f9  /apex/com.android.art/lib/libart.so (art::ArtMethod::Invoke(art::Thread*, unsigned int*, unsigned int, art::JValue*, char const*))
+  #00  pc 0x00000000003f96b1  /apex/com.android.art/lib/libart.so (art::InvokeMethod(art::ScopedObjectAccessAlreadyRunnable const&, _jobject*, _jobject*, _jobject*, unsigned int))
+  #00  pc 0x0000000000397b17  /apex/com.android.art/lib/libart.so (art::Method_invoke(_JNIEnv*, _jobject*, _jobject*, _jobjectArray*))
+  #00  pc 0x0000000000088637  /apex/com.android.art/javalib/arm/boot.oat (art_jni_trampoline)
+  #00  pc 0x00000000008016f1  /system/framework/arm/boot-framework.oat (com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run)
+  #00  pc 0x000000000080a0f3  /system/framework/arm/boot-framework.oat (com.android.internal.os.ZygoteInit.main)
+  #00  pc 0x00000000000d3fd5  /apex/com.android.art/lib/libart.so (art_quick_invoke_stub_internal)
+  #00  pc 0x00000000004edf89  /apex/com.android.art/lib/libart.so (art_quick_invoke_static_stub)
+  #00  pc 0x000000000012d2f9  /apex/com.android.art/lib/libart.so (art::ArtMethod::Invoke(art::Thread*, unsigned int*, unsigned int, art::JValue*, char const*))
+  #00  pc 0x00000000003f8841  /apex/com.android.art/lib/libart.so (art::JValue art::InvokeWithVarArgs<art::ArtMethod*>(art::ScopedObjectAccessAlreadyRunnable const&, _jobject*, art::ArtMethod*, std::__va_list))
+  #00  pc 0x00000000003f8af7  /apex/com.android.art/lib/libart.so (art::JValue art::InvokeWithVarArgs<_jmethodID*>(art::ScopedObjectAccessAlreadyRunnable const&, _jobject*, _jmethodID*, std::__va_list))
+  #00  pc 0x000000000031ff1f  /apex/com.android.art/lib/libart.so (art::JNI<true>::CallStaticVoidMethodV(_JNIEnv*, _jclass*, _jmethodID*, std::__va_list))
+  #00  pc 0x0000000000066ebd  /system/lib/libandroid_runtime.so (_JNIEnv::CallStaticVoidMethod(_jclass*, _jmethodID*, ...))
+  #00  pc 0x000000000006d141  /system/lib/libandroid_runtime.so (android::AndroidRuntime::start(char const*, android::Vector<android::String8> const&, bool))
+  #00  pc 0x0000000000002e55  /system/bin/app_process32 (main)
+  #00  pc 0x000000000005cdcf  /apex/com.android.runtime/lib/bionic/libc.so (__libc_init)
+
+
+Notifications niet getoond in Watch4
+onGoing false?
+Verlengen sensor en initialisatie werken niet als sensor verbonden met watch.
+
+
+
+
+  #00  pc 0x0000000000088d0a  /data/app/~~cabVgqbjp4Ygdob4G00p2A==/tk.glucodata-KT94utV_DP-zXlNU5fp3Ag==/lib/arm/libg.so (Sensoren::Sensoren(std::__ndk1::basic_string_view<char, std::__ndk1::char_traits<char>>))
+  #00  pc 0x0000000000088afd  /data/app/~~cabVgqbjp4Ygdob4G00p2A==/tk.glucodata-KT94utV_DP-zXlNU5fp3Ag==/lib/arm/libg.so (startsensors())
+  #00  pc 0x0000000000011817  /data/app/~~cabVgqbjp4Ygdob4G00p2A==/tk.glucodata-KT94utV_DP-zXlNU5fp3Ag==/oat/arm/base.odex (art_jni_trampoline)
+
+
+
+  #00  pc 0x00000000000f92dc  /data/app/~~AvqbDWX9uQRwQWDejEO5lw==/tk.glucodata-MQA8gNfxFVmatT4GEuPE_A==/lib/arm64/libg.so (Java_tk_glucodata_Natives_nfcdata)
+  #00  pc 0x000000000001dca4  /data/app/~~AvqbDWX9uQRwQWDejEO5lw==/tk.glucodata-MQA8gNfxFVmatT4GEuPE_A==/oat/arm64/base.odex
+
+
+
+  #00  pc 0x0000000000057740  /data/app/tk.glucodata-8sYr6Lr2XEQjOw6SaoUuww==/lib/arm/libg.so (SensorGlucoseData::SensorGlucoseData(std::__ndk1::basic_string_view<char, std::__ndk1::char_traits<char>>, int, std::__ndk1::basic_string_view<char, std::__ndk1::char_traits<char>>))
+  #00  pc 0x0000000000057551  /data/app/tk.glucodata-8sYr6Lr2XEQjOw6SaoUuww==/lib/arm/libg.so (Sensoren::gethist(int))
+  #00  pc 0x000000000005d5f7  /data/app/tk.glucodata-8sYr6Lr2XEQjOw6SaoUuww==/lib/arm/libg.so (Sensoren::removeoldstates())
+  #00  pc 0x0000000000088f1b  /data/app/tk.glucodata-8sYr6Lr2XEQjOw6SaoUuww==/lib/arm/libg.so (void* std::__ndk1::__thread_proxy<std::__ndk1::tuple<std::__ndk1::unique_ptr<std::__ndk1::__thread_struct, std::__ndk1::default_delete<std::__ndk1::__thread_struct>>, void (Sensoren::*)(), Sensoren*>>(void*))
+  #00  pc 0x00000000000639b5  /system/lib/libc.so (__pthread_start(void*))
+  #00  pc 0x000000000001df1d  /system/lib/libc.so (__start_thread)
+Werkt "Resend data" in meerdere stappen?
+
+
+backtrace:
+  #00  pc 000000000006263c  /apex/com.android.runtime/lib/bionic/libc.so (abort+172)
+  #00  pc 00000000000ac863  /apex/com.android.runtime/lib/bionic/libc.so (__fortify_fatal(char const*, ...)+26)
+  #00  pc 00000000000abf45  /apex/com.android.runtime/lib/bionic/libc.so (HandleUsingDestroyedMutex(pthread_mutex_t*, char const*)+20)
+  #00  pc 00000000000abe2d  /apex/com.android.runtime/lib/bionic/libc.so (pthread_mutex_lock+132)
+  #00  pc 00000000000aabad  /apex/com.android.runtime/lib/bionic/libc.so (pthread_cond_timedwait+84)
+  #00  pc 00000000000b629b  /data/app/~~T-WpkNq9AXfHzgnqvUEQ1g==/tk.glucodata-2p-KwbkPi3Bm-r2G83yoiw==/lib/arm/libg.so (std::__ndk1::condition_variable::__do_timed_wait(std::__ndk1::unique_lock<std::__ndk1::mutex>&, std::__ndk1::chrono::time_point<std::__ndk1::chrono::system_clock, std::__ndk1::chrono::duration<long long, std::__ndk1::ratio<1ll, 1000000000ll>>>))
+  #00  pc 00000000000b36eb  /data/app/~~T-WpkNq9AXfHzgnqvUEQ1g==/tk.glucodata-2p-KwbkPi3Bm-r2G83yoiw==/lib/arm/libg.so (activereceivethread(int, passhost_t*))
+
+*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
+pid: 0, tid: 0 >>> tk.glucodata <<<
+
+backtrace:
+  #00  pc 000000000005e334  /data/app/~~xLj5hU8Ti94zUlgRP5BA9w==/tk.glucodata-J6vQe7p_FJQNXErMvntTvQ==/lib/arm/libg.so (SensorGlucoseData::SensorGlucoseData(std::__ndk1::basic_string_view<char, std::__ndk1::char_traits<char>>, int, std::__ndk1::basic_string_view<char, std::__ndk1::char_traits<char>>))
+  #00  pc 000000000005e189  /data/app/~~xLj5hU8Ti94zUlgRP5BA9w==/tk.glucodata-J6vQe7p_FJQNXErMvntTvQ==/lib/arm/libg.so (Sensoren::gethist(int))
+  #00  pc 000000000009447b  /data/app/~~xLj5hU8Ti94zUlgRP5BA9w==/tk.glucodata-J6vQe7p_FJQNXErMvntTvQ==/lib/arm/libg.so (Sensoren::timefirstdata())
+  #00  pc 00000000000946f1  /data/app/~~xLj5hU8Ti94zUlgRP5BA9w==/tk.glucodata-J6vQe7p_FJQNXErMvntTvQ==/lib/arm/libg.so (begrenstijd())
+  #00  pc 000000000009a28d  /data/app/~~xLj5hU8Ti94zUlgRP5BA9w==/tk.glucodata-J6vQe7p_FJQNXErMvntTvQ==/lib/arm/libg.so (Java_tk_glucodata_Natives_translate)
+  #00  pc 0000000000012125  /data/app/~~xLj5hU8Ti94zUlgRP5BA9w==/tk.glucodata-J6vQe7p_FJQNXErMvntTvQ==/oat/arm/base.odex (art_jni_trampoline+132)
+
+
+Crash
+brightness_1
+Mobvoi TicWatch C2
+brightness_1
+Android 9 (SDK 28)
+brightness_1
+139.aab
+brightness_1
+2 days ago
+Type
+java.lang.IllegalStateException
+java.lang.IllegalStateException:
+  at android.view.Surface.checkNotReleasedLocked (Surface.java:632)
+  at android.view.Surface.unlockCanvasAndPost (Surface.java:358)
+  at com.android.internal.view.BaseSurfaceHolder.unlockCanvasAndPost (BaseSurfaceHolder.java:226)
+  at androidx.wear.watchface.Renderer$CanvasRenderer.renderBlackFrame$watchface_release (Renderer.java)
+  at androidx.wear.watchface.WatchFaceImpl.visibility (WatchFaceImpl.java)
+  at androidx.wear.watchface.WatchFaceImpl.access$visibility (WatchFaceImpl.java)
+  at androidx.wear.watchface.WatchFaceImpl$4$invokeSuspend$$inlined$collect$1.emit (WatchFaceImpl.java)
+ 
+
+
+pid: 0, tid: 0 >>> tk.glucodata <<<
+
+backtrace:
+  #00  pc 0000000000070604  /apex/com.android.runtime/lib64/bionic/libc.so (getnameinfo+4)
+  #00  pc 00000000001528e0  /data/app/~~PKLmukm4beFeSd6HdUS0Ew==/tk.glucodata-p5CkKu0NzjfVzxJ2b8N1tQ==/lib/arm64/libg.so (opensender(passhost_t*, int&, ascon_aead_ctx_t*, char))
+  #00  pc 0000000000157ea8  /data/app/~~PKLmukm4beFeSd6HdUS0Ew==/tk.glucodata-p5CkKu0NzjfVzxJ2b8N1tQ==/lib/arm64/libg.so (updateone::open())
+  #00  pc 00000000000e52f0  /data/app/~~PKLmukm4beFeSd6HdUS0Ew==/tk.glucodata-p5CkKu0NzjfVzxJ2b8N1tQ==/lib/arm64/libg.so (Backup::sendwakesender(int))
+  #00  pc 00000000000e49d8  /data/app/~~PKLmukm4beFeSd6HdUS0Ew==/tk.glucodata-p5CkKu0NzjfVzxJ2b8N1tQ==/lib/arm64/libg.so (Backup::backupthread(int))
+  #00  pc 00000000000e5430  /data/app/~~PKLmukm4beFeSd6HdUS0Ew==/tk.glucodata-p5CkKu0NzjfVzxJ2b8N1tQ==/lib/arm64/libg.so (void* std::__ndk1::__thread_proxy<std::__ndk1::tuple<std::__ndk1::unique_ptr<std::__ndk1::__thread_struct, std::__ndk1::default_delete<std::__ndk1::__thread_struct> >, void (Backup::*)(int), Backup*, int> >(void*))
+  #00  pc 00000000000b4ad8  /apex/com.android.runtime/lib64/bionic/libc.so (__pthread_start(void*)+264)
+  #00  pc 0000000000052c08  /apex/com.android.runtime/lib64/bionic/libc.so (__start_thread+64)
+
+
+Crash
+brightness_1
+Mobvoi TicWatch C2
+brightness_1
+Android 9 (SDK 28)
+brightness_1
+139.aab
+brightness_1
+2 days ago
+Type
+java.lang.NullPointerException
+java.lang.NullPointerException: 
+  at androidx.wear.watchface.editor.EditorRequest$Companion.a (EditorRequest.java:11)
+  at androidx.wear.watchface.editor.EditorSession$Companion.createOnWatchEditorSessionImpl$watchface_editor_release (EditorSession.java)
+  at androidx.wear.watchface.editor.EditorSession$Companion.createOnWatchEditorSession (EditorSession.java)
+  at androidx.wear.watchface.editor.EditorSession$Companion$createOnWatchEditorSession$1.invokeSuspend (EditorSession.java:12)
+

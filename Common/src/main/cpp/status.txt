@@ -1,0 +1,14 @@
+
+Catchpoint 2 (call to syscall read), 0x00007ffff7930f4e in ?? () from /o/home/jka/src/android/Glucose/app/src/main/cpp/lib/x86_64/libDataProcessing.so
+1: x/i $pc
+=> 0x7ffff7930f4e:	cmp    rax,0xfffffffffffffffc
+(gdb) p $rdx
+$55 = 214
+(gdb) bt
+#0  0x00007ffff7930f4e in ?? () from /o/home/jka/src/android/Glucose/app/src/main/cpp/lib/x86_64/libDataProcessing.so
+#1  0x00007fffffffc0c0 in ?? ()
+#2  0x00007ffff7f02240 in ?? ()
+#3  0x00007ffff7f023e9 in ?? ()
+#4  0x00007ffff7f023e8 in ?? ()
+#5  0x00007ffff7fcce56 in __dl_.L.str.54 () from /system/bin/linker64
+

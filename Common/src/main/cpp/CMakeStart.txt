@@ -1,0 +1,8 @@
+option(DEBUG "compile for debugging" OFF)
+if(DEBUG)
+set(CMAKE_CXX_FLAGS "-DDEBUG=1 -DSCANLOG=1 " )
+set(CMAKE_BUILD_TYPE Debug)
+else()
+set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -DRELEASE=1 -DNORAWSTREAM=1 -DNOLOG=1 -DRELEASEID=1 -DRELEASEDIR=1 ")
+set(CMAKE_BUILD_TYPE Release)
+endif()

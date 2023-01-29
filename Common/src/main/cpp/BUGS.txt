@@ -1,0 +1,65 @@
+Variabelen gebruikt in constructor worden pas later reinitialiseerd?
+
+
+	       delete active_receive[h];
+		active_receive[h]=nullptr;
+
+OOK?:
+		delete con_vars[h];
+		con_vars[h]=nullptr;
+
+Wat als er in het midden een host verwijderd wordt? The hosts worden opgeschoven, zodat een andere de null kan krijgen?
+
+
+
+Sensor via Bluetooth moet aan en uitgezet worden bij nieuwe sensor.
+
+[ec2-user@ip-172-31-6-103 libs]$ ./once -p0 -w '&klop7Minp' -nsbP -L kazam
+Saving in directory jugglucodata
+1644932922 12290 setfilesdir jugglucodata null
+1644932922 12290 voor sensors
+1644932922 12290 na creat
+1644932922 12290 Na sensors
+1644932922 12290 startbackup
+1644932922 12290 index=-1 1644932922 12290  no start 1644932922 12290 index=0 1644932922 12290 startthread 1 0 1644932922 12290 in startthread 1 0
+1644932922 12290 
+1644932922 12290 ident=0
+1644932922 12290 ident=3323250591
+changehost failed
+
+
+
+debugclone werkt niet onder arm32. waitpid geeft
+No child processes error.
+
+cmdline netwerk staat in lock and komt er niet uit, wel met SIGUSR1
+
+
+
+Na editen passive sender, werkt eerdere receiver met encryptie niet meer
+Functioneert niet meer met nummers op 0.
+	- Check procedure maken
+	- zorgen dat het niet voorkomt
+
+Kerfstok toons niets meer voor 0, iets op maken
+
+
+
+
+
+
+
+
+
+
+Als nummers weer doorgezonden worden zijn ze modificeerbaar.
+Dit moet enkel wanneer ze teruggezonden worden. 
+
+
+
+
+Die backup moet ontvangen gaat ook backup maken
+en crashed bij ontbreken sommige files.
+
+
+

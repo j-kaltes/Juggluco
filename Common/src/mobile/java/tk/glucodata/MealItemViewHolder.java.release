@@ -1,0 +1,18 @@
+package tk.glucodata;
+
+import android.view.View;
+
+import androidx.recyclerview.widget.RecyclerView;
+
+
+public class MealItemViewHolder extends RecyclerView.ViewHolder {
+    public MealItemViewHolder(View view,Consptr itemsel) {
+	
+    super(view);
+    view.setOnClickListener(v -> {
+	itemsel.cons.accept(getAbsoluteAdapterPosition());
+	});
+    }
+
+}
+

@@ -1,0 +1,26 @@
+linker: normalize_path - invalid input: "", the input path should be absolute
+linker: Warning: unable to normalize ""
+WARNING: linker: Warning: unable to normalize ""
+linker: /o/home/jka/src/android/Glucose/app/src/main/cpp/jnisubmain: unsupported flags DT_FLAGS_1=0x8000001
+WARNING: linker: /o/home/jka/src/android/Glucose/app/src/main/cpp/jnisubmain: unsupported flags DT_FLAGS_1=0x8000001
+/sdcard/libre2/free.log open succeded
+main
+size=344
+libc: Fatal signal 11 (SIGSEGV), code 1, fault addr 0x20c60b3895 in tid 22508 (jnisubmain)
+libc: Unable to open connection to debuggerd: Connection refused
+Segmentation fault (core dumped)
+jka@i7:~/src/android/Glucose/app/sr
+
+
+linker: normalize_path - invalid input: "", the input path should be absolute
+linker: Warning: unable to normalize ""
+WARNING: linker: Warning: unable to normalize ""
+linker: /o/home/jka/src/android/Glucose/app/src/main/cpp/jnisubmain: unsupported flags DT_FLAGS_1=0x8000001
+WARNING: linker: /o/home/jka/src/android/Glucose/app/src/main/cpp/jnisubmain: unsupported flags DT_FLAGS_1=0x8000001
+open succeded
+main
+libc: Fatal signal 11 (SIGSEGV), code 1, fault addr 0x20d1bcd8d5 in tid 22610 (jnisubmain)
+libc: Unable to open connection to debuggerd: Connection refused
+Segmentation fault (core dumped)
+
+

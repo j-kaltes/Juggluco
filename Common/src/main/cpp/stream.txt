@@ -1,0 +1,6 @@
+
+JNIEXPORT jobject JNICALL Java_com_abbottdiabetescare_flashglucose_sensorabstractionservice_dataprocessing_DataProcessingNative_processStream
+  (JNIEnv *, jobject, jint, jobject, jobject, jobject, jbyteArray, jbyte, jbyteArray, jint, jint, jint, jint, jbyteArray, jbyteArray, jbyteArray, jobject, jobject, jobject, jobject, jobject, jobject, jobject, jobject);
+
+JNIEXPORT jobject JNICALL Java_com_abbottdiabetescare_flashglucose_sensorabstractionservice_dataprocessing_DataProcessingNative_processStream
+  (JNIEnv *, jobject, jint, jobject, jobject, jobject, jobject, jbyteArray, jbyte, jbyteArray, jint, jint, jint, jint, jbyteArray, jbyteArray, jbyteArray, jobject, jobject, jobject, jobject, jobject, jobject, jobject, jobject);

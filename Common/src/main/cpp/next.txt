@@ -1,0 +1,15 @@
+
+ * Signature: (I[B[B[BI)Lcom/abbottdiabetescare/flashglucose/sensorabstractionservice/dataprocessing/MemoryRegion;
+ */
+JNIEXPORT jobject JNICALL Java_com_abbottdiabetescare_flashglucose_sensorabstractionservice_dataprocessing_DataProcessingNative_getNextRegionToRead
+  (JNIEnv *, jobject, jint, jbyteArray, jbyteArray, jbyteArray, jint);
+
+ * Signature: (I[B[B[BI)Lcom/abbottdiabetescare/flashglucose/sensorabstractionservice/dataprocessing/MemoryRegion;
+ */
+JNIEXPORT jobject JNICALL Java_com_abbottdiabetescare_flashglucose_sensorabstractionservice_dataprocessing_DataProcessingNative_getNextRegionToRead
+  (JNIEnv *, jobject, jint, jbyteArray, jbyteArray, jbyteArray, jint);
+
+ * Signature: (I[B[B[BI)Lcom/abbottdiabetescare/flashglucose/sensorabstractionservice/dataprocessing/MemoryRegion;
+ */
+JNIEXPORT jobject JNICALL Java_com_abbottdiabetescare_flashglucose_sensorabstractionservice_dataprocessing_DataProcessingNative_getNextRegionToRead
+  (JNIEnv *, jobject, jint, jbyteArray, jbyteArray, jbyteArray, jint);

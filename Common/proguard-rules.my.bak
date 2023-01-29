@@ -1,0 +1,48 @@
+
+-assumenosideeffects public final class android.util.Log {
+    public static int v(...);
+    public static int w(...);
+    public static int d(...);
+    public static int i(...) ;
+     public static String getStackTraceString(...);
+}
+-whyareyoukeeping class android.util.Log 
+-assumenosideeffects public final class tk.glucodata.Log {
+   private static void log(...);
+    public static void v(...);
+    public static void w(...);
+    public static void d(...);
+    public static void stack(...);
+    public static void d(String,String);
+    public static void i(...) ;
+    public static void format(...) ;
+}
+-assumenosideeffects final class tk.glucodata.showhex {
+	public static char[] hexstr(...);
+}
+-assumenosideeffects public final class java.lang.System {
+	public static native long currentTimeMillis();
+
+}
+-assumenosideeffects public class java.lang.Throwable {
+	    public String toString() ;
+           public String getMessage();
+
+
+	}
+-assumenosideeffects public final class android.bluetooth.BluetoothDevice {
+ public String getAddress();
+
+}
+-assumenosideeffects public class android.bluetooth.BluetoothGattCharacteristic {
+	   public UUID getUuid();
+
+	}
+-assumenosideeffects public final class java.util.UUID {
+       public String toString() ;
+	}
+-assumenosideeffects public class android.view.View {
+ public final int getWidth();
+ }
+
+-whyareyoukeeping class tk.glucodata.Log 

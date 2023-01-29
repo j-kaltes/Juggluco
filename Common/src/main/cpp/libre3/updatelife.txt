@@ -1,0 +1,6 @@
+update lifecount:
+
+fastdata:
+	set to max
+minute:
+	increase when no hole
