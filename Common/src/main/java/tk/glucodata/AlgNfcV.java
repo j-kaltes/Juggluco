@@ -278,25 +278,3 @@ static    private byte[] readoncedata(NfcV nfc, byte[] uid,int start, int len) {
 
 
 
-/*
-    private byte[] readFullPatchContents(Tag tag, byte[] Uid, byte[] info) {
-        byte[] result = new byte[this.dataProcessing.getTotalMemorySize()];
-        int i = 0;
-        while (true) {
-            MemoryRegion nextRegionToRead = this.dataProcessing.getNextRegionToRead(Uid, info, result, i);
-            if (nextRegionToRead == null) {
-                return result;
-            }
-            i++;
-            int startAddress = nextRegionToRead.getStartAddress();
-            byte[] scanPatch = this.f464rf.scanPatch(tag, startAddress, nextRegionToRead.getNumberOfBytes());
-            if (scanPatch == null) {
-                return null;
-            }
-            for (int i2 = 0; i2 < scanPatch.length; i2++) {
-                result[startAddress + i2] = scanPatch[i2];
-            }
-        }
-    }
-
- */
