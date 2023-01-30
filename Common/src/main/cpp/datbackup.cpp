@@ -156,7 +156,7 @@ bool netwakeup(int sock,passhost_t *pass,crypt_t *ctx){
 					memcpy(crypt,ctx,sizeof(crypt_t));;
 					}
 				host.setsock(sock);
-//				backup->wakebackuponly(Backup::wakeall);
+				LOGGER("netwakeup senderindex=%d\n",sin);
 				backup->wakebackup(Backup::wakeall);
 				return true;
 				}
@@ -400,8 +400,10 @@ void updatedata::wakesender() {
 				}
 				}
 			else {
-				if(host.index>=0&&backup->con_vars[host.index])
+				if(host.index>=0&&backup->con_vars[host.index])  {
+					LOGGER("con_vars[%d]->wakebackup\n",host.index);
 					  backup->con_vars[host.index]->wakebackup(Backup::wakesend);
+					  }
 					  
 				}
 		}
@@ -427,8 +429,10 @@ void updatedata::wakestreamsender() {
 				wake.detach();
 				}
 			else {
-				if(host.index>=0&&backup->con_vars[host.index])
+				if(host.index>=0&&backup->con_vars[host.index]) {
+					LOGGER("host.index=%d\n",host.index);
 					  backup->con_vars[host.index]->wakebackup(Backup::wakestreamsend);
+					  }
 					  
 				}
 			}
@@ -469,7 +473,7 @@ void passivesender(int sock,passhost_t *pass)  {
 		receivetimeout(sock,60) ;
 		sendtimeout(sock,60*5);
 		host.setsock(sock); 
-		LOGGER("wakebackup\n");
+		LOGGER("wakebackup con_vars[%d]\n",h);
 		 backup->con_vars[h]->wakebackup(Backup::wakeall);
 		 }
 	}

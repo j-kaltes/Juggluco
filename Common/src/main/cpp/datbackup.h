@@ -969,8 +969,10 @@ void wakebackup(myuintptr_t kind=wakeall){
 					doe=false;
 					}
 				}
-			if(doe)
+			if(doe) {
+				LOGGER("host %d wake\n",i);
 				el->wakebackup(kind);
+				}
 			}
 		}
 	LOGGER(" end wakebackup\n");

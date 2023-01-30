@@ -375,7 +375,7 @@ private void initialize() {
 			if(sender!=null)
 				sender.nulltimes();
 		   Log.i(LOG_ID, "onLost(" + network+")");
-		   if(hasonAvailable) Natives.networkabsent();
+//		   if(hasonAvailable) Natives.networkabsent();
 		}
 	    });
 
