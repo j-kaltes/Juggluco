@@ -42,7 +42,8 @@ struct sensor {
 //	int8_t name[17];
 	char name[sensornamelen+1];
 	uint8_t present;
-	uint8_t finished;
+	uint8_t finished:7;
+	bool initialized:1;
 	uint8_t reserved[5];
 const sensorname_t *shortsensorname() const { 
 	return reinterpret_cast<const sensorname_t *>( name+5);

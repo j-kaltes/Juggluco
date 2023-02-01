@@ -76,14 +76,14 @@ android {
         wear {
           // targetSdk 26
 //           targetSdk 31
-//      ndk { abiFilters  'armeabi-v7a' }
+      ndk { abiFilters  'armeabi-v7a' }
 
             // targetSdk 30
             dimension 'wearos'
 		minSdk 26
-		versionCode 378
+		versionCode 379
 	//******  Zet op rollout op 100% ******
-		versionName '4.6.2-wear'
+		versionName '4.6.3-wear'
 		signingConfig signingConfigs.alg
 
 //            buildConfigField 'int', 'targetSDK', "$targetSdk"

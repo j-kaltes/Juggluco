@@ -238,6 +238,9 @@ static	 const int waitsig=60;
 			ret=7<<16;
 		if(enablestreaming)
 			ret|=(0x80<<16);
+
+		sensor* senso=sensors->getsensor(ab.sensorindex);
+		senso->initialized=true;
 		}
 	else {
 	if(alg){

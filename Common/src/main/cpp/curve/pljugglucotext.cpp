@@ -57,7 +57,7 @@ jugglucotext pltext {
       "sty","lut","mar","kwi","maj","cze","lip","sie","wrz","paź","lis","gru"},
 
 	.scanned="Zeskanowane",
-		.readysecEnable="Sensor gotowy za %d minut. Zeskanuj go ponownie, by umożliwić Przesył danych.",
+		.readysecEnable="Sensor gotowy za %d minut. Zeskanuj go ponownie, by umożliwić przesył danych.",
 		.readysec="Sensor gotowy za %d minut.",
 		.networkproblem="Problem z siecią?",
 		.enablebluetooth="Włącz Bluetooth",
@@ -83,9 +83,9 @@ jugglucotext pltext {
 	.duration="Czas aktywności: %.1f dni",
 	.timeactive="%.1f%% czasu aktywności",
 	.nrmeasurement="Liczba pomiarów: %d",
-	.EstimatedA1C="Szacowana HbA1C: %.1f%% (%d mmol/mol)",
+	.EstimatedA1C="Szacowana wartość HbA1C: %.1f%% (%d mmol/mol)",
 	.GMI="Wskaźnik pomiaru glukozy (GMI): %.1f%% (%d mmol/mol)",
-	.SD="SD: %.2f",
+	.SD="Odchylenie standardowe: %.2f",
 	.glucose_variability="Zmienność stęż. glukozy: %.1f%%",
      .menustr0={
 		"Integr. z sys        ",

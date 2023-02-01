@@ -655,9 +655,10 @@ public int flashpermission() {
 			}
 	}
 
-final int FLASH_PERMISSION_REQUEST_CODE=0x11224;
+static public final int SENSOR_PERMISSION_REQUEST_CODE=0x23457;
+static final int FLASH_PERMISSION_REQUEST_CODE=0x11224;
 
-final int LOCATION_PERMISSION_REQUEST_CODE=0x942365;
+static final int LOCATION_PERMISSION_REQUEST_CODE=0x942365;
 //private final int STORAGE_PERMISSION_REQUEST_CODE=0x445533;
 @Override
 public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {

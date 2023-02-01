@@ -60,6 +60,7 @@ import static android.content.Context.NOTIFICATION_SERVICE;
 import static android.content.Context.VIBRATOR_SERVICE;
 import static android.graphics.Color.BLACK;
 import static android.graphics.Color.WHITE;
+import static android.graphics.drawable.Icon.createWithAdaptiveBitmap;
 import static java.lang.Float.isNaN;
 import static java.lang.String.format;
 import static tk.glucodata.Applic.TargetSDK;
@@ -201,6 +202,18 @@ Notify() {
 //  private static final String LOSSALARM = "LossofSensorAlarm";
   private static final String GLUCOSENOTIFICATION = "glucoseNotification";
 
+private void allowbubbel(NotificationChannel  channel) {
+	if(!isWearable) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+			try {
+				channel.setAllowBubbles(true);
+			} catch (Throwable th) {
+				Log.stack(LOG_ID, th);
+			}
+		}
+	}
+	   }
+
 private void createNotificationChannel(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             String description = context.getString(R.string.numalarm_description);
@@ -208,6 +221,7 @@ private void createNotificationChannel(Context context) {
 	    NotificationChannel channel = new NotificationChannel(NUMALARM, NUMALARM, importance);
 	    channel.setSound(null, null);
             channel.setDescription(description);
+	    allowbubbel(channel);
             notificationManager.createNotificationChannel(channel);
 
             description = context.getString(R.string.alarm_description);
@@ -215,11 +229,13 @@ private void createNotificationChannel(Context context) {
 	     channel = new NotificationChannel(GLUCOSEALARM,GLUCOSEALARM, importance);
 	    channel.setSound(null, null);
             channel.setDescription(description);
+	    allowbubbel(channel);
             notificationManager.createNotificationChannel(channel);
 	    
             description = context.getString(R.string.notification_description);
            importance = NotificationManager.IMPORTANCE_HIGH;
 	    channel = new NotificationChannel(GLUCOSENOTIFICATION, GLUCOSENOTIFICATION, importance);
+	    allowbubbel(channel);
 	    channel.setSound(null, null);
             channel.setDescription(description);
             notificationManager.createNotificationChannel(channel);
@@ -519,7 +535,8 @@ static final String closename= "ForceClose";
 	
 
 private Notification  makearrownotification(int kind,int draw,String message,notGlucose glucose,String type,boolean once) {
-	var GluNotBuilder=mkbuilder(type);
+	var intent =mkpending();
+	var GluNotBuilder=mkbuilderintent(type,intent);
 	Log.i(LOG_ID,"makearrownotification setOnlyAlertOnce("+once+")");
         GluNotBuilder.setSmallIcon(draw).setOnlyAlertOnce(once).setContentTitle(message);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -572,9 +589,18 @@ private Notification  makearrownotification(int kind,int draw,String message,not
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
 				GluNotBuilder.setStyle(new Notification.DecoratedCustomViewStyle());
 			}
-		}
-		GluNotBuilder.setShowWhen(true);
+			}
 
+	if(!isWearable) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+			var height = canvas.getHeight();
+			var bubbuild = new Notification.BubbleMetadata.Builder();
+			Notification.BubbleMetadata bubdata = bubbuild.setIntent(intent).setDesiredHeight(height).setIcon(createWithAdaptiveBitmap(glucoseBitmap)).build();
+			GluNotBuilder.setBubbleMetadata(bubdata);
+		}
+	}
+		GluNotBuilder.setShowWhen(true);
+		
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
 			GluNotBuilder.setCustomContentView(remoteViews);
 		} else
@@ -604,7 +630,15 @@ private Notification  makearrownotification(int kind,int draw,String message,not
 
     }
 @SuppressWarnings({"deprecation"})
-private Notification.Builder   mkbuilder(String type) {
+private PendingIntent mkpending() {
+	Intent notifyIntent = new Intent(Applic.app,MainActivity.class);
+	notifyIntent.putExtra(fromnotification,true);
+	notifyIntent.addCategory(Intent. CATEGORY_LAUNCHER ) ;
+	notifyIntent.setAction(Intent. ACTION_MAIN ) ;
+	notifyIntent.setFlags(Intent. FLAG_ACTIVITY_CLEAR_TOP | Intent. FLAG_ACTIVITY_SINGLE_TOP );
+	return   PendingIntent.getActivity(Applic.app, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT|penmutable);
+	}
+private Notification.Builder   mkbuilderintent(String type,PendingIntent notifyPendingIntent) {
 	Notification.Builder  GluNotBuilder;
  	if(true) {
 		 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
@@ -618,17 +652,14 @@ private Notification.Builder   mkbuilder(String type) {
 		 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
 			GluNotBuilder.setChannelId(type);
 		}
-	Intent notifyIntent = new Intent(Applic.app,MainActivity.class);
-	notifyIntent.putExtra(fromnotification,true);
-	notifyIntent.addCategory(Intent. CATEGORY_LAUNCHER ) ;
-	notifyIntent.setAction(Intent. ACTION_MAIN ) ;
-	notifyIntent.setFlags(Intent. FLAG_ACTIVITY_CLEAR_TOP | Intent. FLAG_ACTIVITY_SINGLE_TOP );
-	PendingIntent notifyPendingIntent = PendingIntent.getActivity(Applic.app, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT|penmutable);
 	GluNotBuilder.setContentIntent(notifyPendingIntent).setOnlyAlertOnce(true);
 	if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
 		GluNotBuilder.setGroup("aa2");
 		}
 	return GluNotBuilder;
+	}
+private Notification.Builder   mkbuilder(String type) {
+	return   mkbuilderintent( type,mkpending()) ;
 	}
 
 

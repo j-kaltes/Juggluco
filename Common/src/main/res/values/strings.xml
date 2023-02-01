@@ -207,4 +207,6 @@
  <string name="wifi">Wifi</string>
  <string name="heartrate">Heart rate</string>
  <string name="xdripbroadcast">xDrip broadcast locally</string>
+ <string name="sensorpermission">Sensors permission needed to display heart rate</string>
+ <string name="sensorpermissionmessage">Set it in Device Settings, Apps, Permissions, Juggluco</string>
 </resources>

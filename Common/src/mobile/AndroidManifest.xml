@@ -5,7 +5,6 @@
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY"/>
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <application
-        android:debuggable="true"
         android:name="tk.glucodata.Applic"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
@@ -24,6 +23,8 @@
 	    android:excludeFromRecents="false"
 	    android:stateNotNeeded="true"
             android:exported="true"
+	      android:resizeableActivity="true" 
+	      android:allowEmbedded="true"
             android:screenOrientation="reverseLandscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -146,6 +147,13 @@
        <package android:name="com.garmin.android.apps.connectmobile"/>
     </queries>
         <uses-permission-sdk-23 android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+<supports-screens android:resizeable="true" 
+	android:smallScreens="true" 
+                  android:normalScreens="true"
+                  android:largeScreens="true" 
+                  android:xlargeScreens="true" 
+                  android:anyDensity="true" 
+                  />
 
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.FLASHLIGHT"/>

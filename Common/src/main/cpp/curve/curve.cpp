@@ -1756,7 +1756,8 @@ static void showlastsstream(const time_t nu,const float getx,std::vector<int> &u
 	static int failures=0;
 	++failures;
 	for(int i=0;i<used.size();i++) {
-		const SensorGlucoseData *hist=sensors->gethist(used[i]);
+		const int sensorindex=used[i];
+		const SensorGlucoseData *hist=sensors->gethist(sensorindex);
 		int yh=i*2+1;
 		float gety=smallsize*.5f+dtop+dheight*yh/(used.size()*2.0f);
 		const ScanData *poll=hist->lastpoll();
@@ -1794,14 +1795,16 @@ static void showlastsstream(const time_t nu,const float getx,std::vector<int> &u
 			LOGGER("wait=%lu starttime=%lu %s",wait,starttime,ctime(&starttime));
 			if(wait<(60*60)) {
 				LOGGER("wait<(60*60)\n");
-				const bool streaming=hist->deviceaddress()[0];
+			//	const bool streaming=hist->deviceaddress()[0];
+				const sensor* senso=sensors->getsensor(sensorindex);
+				const bool needsscan=senso->initialized;
 
 				float usegetx=getx-headsize/3;
 				nvgTextAlign(vg,NVG_ALIGN_LEFT|NVG_ALIGN_MIDDLE);
 				nvgFontSize(vg,headsize/6 );
 				char buf[usedtext->readysecEnable.size()+6];
 				int minutes=60-(wait/60);
-				int ends=sprintf(buf,streaming?usedtext->readysec.data():usedtext->readysecEnable.data(),minutes);
+				int ends=sprintf(buf,needsscan?usedtext->readysec.data():usedtext->readysecEnable.data(),minutes);
 				getboxwidth(usegetx);
 				nvgTextBox(vg,  usegetx, gety, getboxwidth(usegetx), buf,buf+ends);
 				}

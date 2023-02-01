@@ -123,6 +123,16 @@
     </queries>
     <queries>
         <intent>
+            <action android:name="com.librelink.app.ThirdPartyIntegration.GLUCOSE_READING"/>
+        </intent>
+    </queries>
+    <queries>
+        <intent>
+            <action android:name="com.librelink.app.ThirdPartyIntegration.SENSOR_ACTIVATE"/>
+        </intent>
+    </queries>
+    <queries>
+        <intent>
             <action android:name="com.eveningoutpost.dexdrip.BgEstimate"/>
         </intent>
     </queries>
@@ -133,9 +143,6 @@
     </queries>
     <queries>
        <package android:name="com.garmin.android.apps.connectmobile"/>
-    </queries>
-    <queries>
-       <package android:name="com.eveningoutpost.dexdrip"/>
     </queries>
         <uses-permission-sdk-23 android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 
