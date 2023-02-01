@@ -101,7 +101,8 @@ struct Tings {
 	bool triedasm:1;
 	bool asmworks:1;
 	bool nobluetooth;
-	bool nodebug;
+	bool nodebug:7;
+	bool floatglucose:1;
 	bool lowalarm,highalarm,availablealarm;
 	bool lossalarm;
 	uint8_t watchid[16];

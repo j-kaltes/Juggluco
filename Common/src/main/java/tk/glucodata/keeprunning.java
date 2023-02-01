@@ -27,6 +27,7 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.os.PowerManager;
 
+import static tk.glucodata.Applic.isWearable;
 import static tk.glucodata.Log.stack;
 import static tk.glucodata.Natives.getwakelock;
 
@@ -62,6 +63,10 @@ static PowerManager.WakeLock wakeLock =null;
   public int onStartCommand(Intent intent, int flags, int startId) {
 	if(started) return Service.START_STICKY;//NODIG?
         started=true;
+	if(!isWearable) {
+		if(Natives.getfloatglucose())
+			Notify.makefloat();
+		}
 	Applic.app.initproc();
   	try {
 		if(intent==null) {

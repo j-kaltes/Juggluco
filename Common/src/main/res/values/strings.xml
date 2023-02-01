@@ -209,4 +209,6 @@
  <string name="xdripbroadcast">xDrip broadcast locally</string>
  <string name="sensorpermission">Sensors permission needed to display heart rate</string>
  <string name="sensorpermissionmessage">Set it in Device Settings, Apps, Permissions, Juggluco</string>
+ <string name="floatglucose">Floating glucose</string>
+
 </resources>

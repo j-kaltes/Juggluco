@@ -693,7 +693,11 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 	CheckBox reverseorientation =!isWearable?new CheckBox(context):null;
 	final int diskey=!isWearable?Natives.camerakey():0;
         CheckBox showalways=isWearable?null:new CheckBox(context);
+	CheckBox floatglucose=isWearable?null:new CheckBox(context);
 	if(!isWearable) {
+		floatglucose.setText(R.string.floatglucose);
+		floatglucose.setChecked(Natives.getfloatglucose());
+		floatglucose.setOnCheckedChangeListener( (buttonView,  isChecked) -> Notify.setfloatglucose(context,isChecked) ) ;
 		showalways.setText(R.string.glucosestatusbar);
 		showalways.setChecked(Natives.getshowalways()) ;
 		showalways.setOnCheckedChangeListener( (buttonView,  isChecked) -> Notify.glucosestatus(isChecked) );
@@ -878,7 +882,7 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 		views=new View[][]{row0, row1,new View[]{scalelabel,fixatex,fixatey}, row2,new View[]{levelleft,camera,reverseorientation},
 		hasnfc?new View[]{nfcsound, globalscan}:null,
 
-		new View[]{libreview,xdrip,xdripbroadcast},new View[]{ showalways,jugglucobroadcast}, rowglu,row8,row9};
+		new View[]{libreview,xdrip,xdripbroadcast},new View[]{ showalways,floatglucose,jugglucobroadcast}, rowglu,row8,row9};
 		}
 
 	help.setFocusableInTouchMode(true);

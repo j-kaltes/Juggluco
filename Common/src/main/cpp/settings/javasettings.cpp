@@ -1077,3 +1077,10 @@ extern "C" JNIEXPORT jint  JNICALL   fromjava(getinitVersion)(JNIEnv *env, jclas
 	return settings->data()->initVersion;
 	}
 
+extern "C" JNIEXPORT void  JNICALL   fromjava(setfloatglucose)(JNIEnv *env, jclass cl,jboolean val) {
+	settings->data()->floatglucose=val;
+	}
+extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getfloatglucose)(JNIEnv *env, jclass cl) {
+	return settings->data()->floatglucose;
+	}
+

@@ -589,6 +589,8 @@ public static native void setglucodataRecepters( String[] jnames);
 public static native void setinitVersion(int val);
 public static native int getinitVersion( );
 
+public static native void setfloatglucose(boolean val);
+public static native boolean getfloatglucose( );
 
 //s/^extern.*JNIEXPORT[         ]*\([a-zA-Z]*\)[ ]*JNICALL[      ]*fromjava(\([^)]*\)) *(JNIEnv[^,]*,[^,)]*[,)]\([^){]*\)[^a-zA-Z0-9]*$/public static native \1 \2(\3);/g
 //public static native void sendxdripold();

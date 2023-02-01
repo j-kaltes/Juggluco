@@ -71,6 +71,8 @@ import static tk.glucodata.Applic.useflash;
 import static tk.glucodata.GlucoseCurve.STEPBACK;
 import static tk.glucodata.Natives.hasstreamed;
 import static tk.glucodata.Natives.wakelibreview;
+import static tk.glucodata.Notify.makefloat;
+import static tk.glucodata.Notify.setfloatglucose;
 import static tk.glucodata.help.hidekeyboard;
 import static tk.glucodata.Applic.isRelease;
 
@@ -358,6 +360,7 @@ private static int resumenr=isRelease?10:2;
 //	Notify.stopalarm();
 
  //	Notify.testnot();
+ //	Notify.test2();
     }
 long nexttime= 0L;
 void    startnfc(Tag tag) {
@@ -663,10 +666,11 @@ static final int LOCATION_PERMISSION_REQUEST_CODE=0x942365;
 @Override
 public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
 	super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+	var granted=grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED;
 	switch (requestCode) {
 	        case FLASH_PERMISSION_REQUEST_CODE: {
 			Log.i(LOG_ID,"FLASH_PERMISSION_REQUEST_CODE");
-			if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+			if (granted) {
 				useflash(true);
 			} else {
 				Log.i(LOG_ID,"Flash denied");
@@ -675,7 +679,7 @@ public void onRequestPermissionsResult(int requestCode, String[] permissions, in
 			} return;
 		case LOCATION_PERMISSION_REQUEST_CODE:
 			Log.i(LOG_ID,"LOCATION_PERMISSION_REQUEST_CODE");
-			if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+			if (granted) {
 				if(Natives.getusebluetooth())  {
 					if(Build.VERSION.SDK_INT <26||Build.VERSION.SDK_INT>30 ) 
 						useBluetooth(true);
@@ -746,6 +750,7 @@ public static final int REQUEST_RINGTONE=0x60;
 public static final int REQUEST_LIB=0x200;
 public static final int REQUEST_MASK=0xFFFFFF00;
 public static final int IGNORE_BATTERY_OPTIMIZATION_SETTINGS=0x100;
+static final int OVERLAY_PERMISSION_REQUEST_CODE=0x40;
 //public static final int REQUEST_IGNORE_BATTERY_OPTIMIZATIONS=0x300;
 Openfile openfile=null;
 @Override
@@ -753,6 +758,13 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 	super.onActivityResult(requestCode, resultCode, data);
 	Log.format("Main.onActivityResult %x\n",requestCode);
 	switch(requestCode) {
+		case OVERLAY_PERMISSION_REQUEST_CODE: {
+			Log.i(LOG_ID, "OVERLAY_PERMISSION_REQUEST_CODE ");
+			if(Notify.cannotoverlay()  ) {
+				return ;
+				}
+			setfloatglucose(this, true);
+			};break;
 		case REQUEST_NOTIFICATION: {
 			Log.i(LOG_ID,"Notification");	
 			Natives.setaskedNotify(true);

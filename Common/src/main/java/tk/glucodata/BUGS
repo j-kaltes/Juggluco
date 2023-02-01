@@ -1,4 +1,6 @@
-Remove bubbles.
+Na permission geven staat het niet aan;
+Geen notificatie of float
+Positie coordinaten moeten verschillend zijn afhankelijk van orientatie.
 Horloge constant over Bluetooth i.p.v WIFI
 Heart rate moet niet aangaan zonder permission
 Remove forget and reenable, make all without location permission
