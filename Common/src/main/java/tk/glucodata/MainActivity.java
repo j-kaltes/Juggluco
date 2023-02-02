@@ -361,6 +361,7 @@ private static int resumenr=isRelease?10:2;
 
  //	Notify.testnot();
  //	Notify.test2();
+//	Notify.testold();
     }
 long nexttime= 0L;
 void    startnfc(Tag tag) {

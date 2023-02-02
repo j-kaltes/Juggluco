@@ -67,8 +67,13 @@ import static android.app.Notification.FLAG_ONGOING_EVENT;
 import static android.app.Notification.VISIBILITY_PUBLIC;
 import static android.content.Context.NOTIFICATION_SERVICE;
 import static android.content.Context.VIBRATOR_SERVICE;
+import static android.graphics.BlendMode.COLOR;
 import static android.graphics.Color.BLACK;
+import static android.graphics.Color.BLUE;
+import static android.graphics.Color.RED;
 import static android.graphics.Color.WHITE;
+import static android.graphics.PorterDuff.Mode.DST;
+import static android.graphics.PorterDuff.Mode.DST_OVER;
 import static android.graphics.drawable.Icon.createWithAdaptiveBitmap;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static android.view.WindowManager.*;
@@ -239,6 +244,8 @@ static boolean cannotoverlay()  {
 		floatBitmap = Bitmap.createBitmap((int)notwidth, (int)notheight, Bitmap.Config.ARGB_8888);
 		floatCanvas = new Canvas(floatBitmap);
 		windowMana.addView(floatview, makeparams(screenwidth,screenheight));
+		floatCanvas.drawColor(WHITE);
+		floatPaint.setColor(BLACK);
 		return true;
 	}
 
@@ -372,9 +379,9 @@ private void allowbubbel(NotificationChannel  channel) {
 			Log.i(LOG_ID,"arrowglucosenotification  alertwatch="+alertwatch+" showalways="+showalways);
 			if(showalways||alertwatch) {
 				arrowglucosenotification(2,GlucoseDraw.getgludraw(gl), format(usedlocale,glucoseformat,gl),strgl,GLUCOSENOTIFICATION ,!alertwatch);
-			}
-
+				}
 			else {
+				floatglucose(strgl);
 				if(hasvalue) {
 					if(keeprunning.started)
 						novalue();
@@ -627,6 +634,69 @@ private void allowbubbel(NotificationChannel  channel) {
 	static final String closename= "ForceClose";
 	final int penmutable= android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M? PendingIntent.FLAG_IMMUTABLE:0;
 
+private void  floatglucose(notGlucose glucose) {
+	if(floatview!=null) {
+			var gety = floatCanvas.getHeight() * 0.98f;
+			floatCanvas.drawColor(WHITE);
+			floatPaint.setColor(BLACK);
+			Log.i(LOG_ID,"floatview.setImageBitmap");
+			var xpos=floatglucosex;
+			var rate=glucose.rate;
+			if (!isNaN(rate))  {
+				 float weightrate = (rate > 1.6 ? -1.0f : (rate < -1.6 ? 1.0f : (rate / -1.6f)));
+				 float arrowy = gety - glucosesize * .4f + (CommonCanvas.glnearnull(rate) ? 0.0f : (weightrate * glucosesize * .4f));
+				drawarrow(floatCanvas, floatPaint, density, rate, xpos*.85f, arrowy);
+			}
+			floatCanvas.drawText(glucose.value, xpos, gety, floatPaint);
+			floatCanvas.setBitmap(floatBitmap);
+			Applic.RunOnUiThread(()-> {
+				floatview.setImageBitmap(floatBitmap);
+				});
+			}
+		else {
+			Log.i(LOG_ID,"floatview==null");
+
+			}
+	}
+
+static void testold() {
+	long time = System.currentTimeMillis()-1000*60*5;
+	final String tformat= timef.format(time);
+	Notify.onenot.oldfloatmessage(tformat,false);
+	}
+private void	oldfloatmessage(String tformat,boolean alarm)  {
+	if(floatview!=null) {
+		if(alarm) {
+			floatCanvas.drawColor(BLACK);
+			floatPaint.setColor(WHITE);
+			}
+		else  {
+			floatCanvas.drawColor(WHITE);
+			floatPaint.setColor(BLACK);
+			}
+		var gety = floatCanvas.getHeight() * 0.37f;
+		floatPaint.setTextSize(glucosesize*.3f);
+		var xpos=0.2f;
+		String message=Applic.app.getString(R.string.newnewvalue);
+		floatCanvas.drawText(message, xpos, gety, floatPaint);
+		gety = floatCanvas.getHeight() * 0.88f;
+		floatCanvas.drawText(tformat, xpos, gety, floatPaint);
+		floatCanvas.setBitmap(floatBitmap);
+		Applic.RunOnUiThread(()-> {
+			floatview.setImageBitmap(floatBitmap);
+			});
+		floatPaint.setTextSize(glucosesize);
+		/*
+		if(alarm) {
+			floatCanvas.drawColor(WHITE);
+			floatPaint.setColor(BLACK);
+			} */
+		}
+	else {
+		Log.i(LOG_ID,"floatview==null");
+
+		}
+	}
 
 	private Notification  makearrownotification(int kind,int draw,String message,notGlucose glucose,String type,boolean once) {
 		var intent =mkpending();
@@ -657,11 +727,11 @@ private void allowbubbel(NotificationChannel  channel) {
 			else
 				canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
 			glucosePaint.setTextSize(glucosesize);
-			float weightrate=0.0f,arrowy;
 			if (isNaN(rate)) {
 //					getx=width*0.45f
 				getx *= 0.82f;
 			} else {
+				float weightrate=0.0f,arrowy;
 				 weightrate = (rate > 1.6 ? -1.0f : (rate < -1.6 ? 1.0f : (rate / -1.6f)));
 				Log.i(LOG_ID, "weightrate=" + weightrate);
 				 arrowy = gety - glucosesize * .4f + (CommonCanvas.glnearnull(rate) ? 0.0f : (weightrate * glucosesize * .4f));
@@ -694,29 +764,7 @@ private void allowbubbel(NotificationChannel  channel) {
 		} else
 			GluNotBuilder.setContent(remoteViews);
 
-		if(floatview!=null) {
-				floatCanvas.drawColor(WHITE);
-				floatPaint.setColor(BLACK);
-				Log.i(LOG_ID,"floatview.setImageBitmap");
-				var xpos=floatglucosex;
-				if (!isNaN(rate))  {
-		//			 weightrate = (rate > 1.6 ? -1.0f : (rate < -1.6 ? 1.0f : (rate / -1.6f)));
-					 arrowy = gety - glucosesize * .4f + (CommonCanvas.glnearnull(rate) ? 0.0f : (weightrate * glucosesize * .4f));
-					drawarrow(floatCanvas, floatPaint, density, rate, xpos*.85f, arrowy);
-				}
-				Rect bounds;
-//			floatPaint.getTextBounds(glucose.value, xpos,gety, bounds);
-				floatCanvas.drawText(glucose.value, xpos, gety, floatPaint);
-				floatCanvas.setBitmap(floatBitmap);
-				Applic.RunOnUiThread(()-> {
-					floatview.setImageBitmap(floatBitmap);
-					});
-//				translate(0.0f, dy) {
-				}
-			else {
-				Log.i(LOG_ID,"floatview==null");
-
-				}
+		floatglucose(glucose);
 		}
 	if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 		GluNotBuilder.setTimeoutAfter(glucosetimeout);
@@ -823,7 +871,9 @@ void oldnotification(long time) {
 	}
 */
 void oldnotification(long time) {
-	String message = Applic.app.getString(R.string.newnewvalue) + timef.format(time);
+	final String tformat= timef.format(time);
+	String message = Applic.app.getString(R.string.newnewvalue) + tformat;
+	oldfloatmessage(tformat,false) ;
 	 placelargenotification(R.drawable.novalue, message,GLUCOSENOTIFICATION,true);
 	}
 	@SuppressWarnings("deprecation")
@@ -1008,8 +1058,10 @@ public void  notifyer(int draw,String message,String type,int notid) {
 //final private 	int lossalarmid=77332;
  public void  lossalarm(long time) {
  	Log.i(LOG_ID,"lossalarm");
-	final String message= "***  "+Applic.app.getString(R.string.newnewvalue)+ timef.format(time)+" ***";
+	final String tformat= timef.format(time);
+	final String message= "***  "+Applic.app.getString(R.string.newnewvalue)+tformat+" ***";
 
+	oldfloatmessage(tformat, true) ;
 	glucosealarm(4,R.drawable.loss ,message, GLUCOSENOTIFICATION ,true);
 	}
 	
