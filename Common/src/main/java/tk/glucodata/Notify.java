@@ -164,7 +164,7 @@ static public Ringtone mkrings(String uristr,int res) {
 private static Bitmap glucoseBitmap,floatBitmap;
 private static Canvas canvas,floatCanvas;
 private static Paint glucosePaint,floatPaint;
-private static float density;
+private static float density,floatdensity;
 static float glucosesize;
 private static int notglucosex,floatglucosex;
 //final private static boolean whiteonblack=isRelease?true:false;
@@ -174,8 +174,25 @@ private static WindowManager windowMana;
 	private static ImageView floatview=null;
 
 	static GestureDetector mGestureDetector;
+	/*
+public static void floattransparent() {
+	floatPaint.setTypeface(PixelFormat.TRANSPARENT);
+	} */
+public static void rewritefloating(Activity context) {
+	setfloatglucose(context,false);
+	setfloatglucose(context,true);
+	}
+	public static void rewritefloating() {
+		if(floatview!=null) {
+			windowMana.removeView(floatview);
+			floatview = null;
+		}
+		makefloat();
+		}
+
 
 	public static void setfloatglucose(Activity context, boolean val) {
+	if(!isWearable)  {
 		if(val) {
 			if(!makefloat()) {
 				var settingsIntent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
@@ -187,20 +204,46 @@ private static WindowManager windowMana;
 			if(floatview!=null) {
 				windowMana.removeView(floatview);
 				floatview=null;
+			Natives.setfloatglucose(val);
 			}
 		}
-		Natives.setfloatglucose(val);
+		}
 	}
+
+	public static void removefloating() {
+		if(floatview!=null) {
+			windowMana.removeView(floatview);
+			floatview=null;
+			Natives.setfloatglucose(false);
+		}
+		}
 	static float xview=0.0f;
 	static float yview=0.0f;
+	static int transnr=0;
 	static void translate(float dx,float dy) {
-		xview -= dx * 1.3f;
-		yview -= dy*1.3f;
-		final var metrics = Applic.app.getResources().getDisplayMetrics();
-		var screenwidth = metrics.widthPixels;
-		var screenheight = metrics.heightPixels;
-		var params = makeparams(screenwidth, screenheight);
-		windowMana.updateViewLayout(floatview, params);
+//		if(transnr++%3==0) 
+		//if(transnr++%2==0) 
+		{
+			//xview -= dx * 2.2f;
+			//yview -= dy * 2.2f;
+			xview += dx ;
+			yview += dy ;
+			final var metrics = Applic.app.getResources().getDisplayMetrics();
+			var screenwidth = metrics.widthPixels;
+			var screenheight = metrics.heightPixels;
+			var maxx=screenwidth;
+			var maxy=screenheight;
+			if(xview<0)
+				xview=0;
+			if(xview>maxx)
+				xview=maxx;
+			if(yview<0)
+				yview=0;
+			if(yview>maxy)
+				yview=maxy;
+			var params = makeparams(screenwidth, screenheight);
+			windowMana.updateViewLayout(floatview, params);
+		}
 	}
 	private static LayoutParams  makeparams(int screenwidth, int screenheight){
 		var xpos= -screenwidth*.5f+xview;
@@ -211,41 +254,79 @@ private static WindowManager windowMana;
 		return params;
 	}
 static boolean cannotoverlay()  {
+	if(!isWearable)  {
 		if( Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(Applic.app)) {
 			return true;
 		}
-		return false;
 		}
+		return false;
 
+		}
+static int floatingbackground=WHITE;
+static int floatingforeground=BLACK;
+static int floatfontsize;
 	static boolean makefloat() {
-		if(cannotoverlay()) return false;
+	if(!isWearable) {
+		if (cannotoverlay()) return false;
 
 
-		windowMana = (WindowManager)Applic.app.getSystemService(Context.WINDOW_SERVICE);
-		floatview = new ImageView(Applic.app);
-		mGestureDetector =  new GestureDetector(Applic.app, new GestureListener());
+		try {
+			windowMana = (WindowManager) Applic.app.getSystemService(Context.WINDOW_SERVICE);
+			floatview = new ImageView(Applic.app);
+/*		mGestureDetector =  new GestureDetector(Applic.app, new GestureListener());
 		floatview.setOnTouchListener(new View.OnTouchListener() {
 			@Override
 			public boolean onTouch(View view, MotionEvent motionEvent) {
 				mGestureDetector.onTouchEvent(motionEvent);
 				return false;
 			}
-		});
-		var metrics=Applic.app.getResources().getDisplayMetrics();
-		int screenwidth=metrics.widthPixels;
-		int screenheight=metrics.heightPixels;
-		floatPaint=new Paint();
-		floatPaint.setTextSize(glucosesize);
-		floatPaint.setAntiAlias(true);
-		floatPaint.setTextAlign(Paint.Align.LEFT);
-		float notheight=glucosesize*0.8f;
-		var notwidth=notheight*3.40;
-		floatglucosex= (int)(notwidth*.272f);
-		floatBitmap = Bitmap.createBitmap((int)notwidth, (int)notheight, Bitmap.Config.ARGB_8888);
-		floatCanvas = new Canvas(floatBitmap);
-		windowMana.addView(floatview, makeparams(screenwidth,screenheight));
-		floatCanvas.drawColor(WHITE);
-		floatPaint.setColor(BLACK);
+		});*/
+			floatview.setOnTouchListener(new Gesture());
+			var metrics = Applic.app.getResources().getDisplayMetrics();
+			int screenwidth = metrics.widthPixels;
+			int screenheight = metrics.heightPixels;
+			floatPaint = new Paint();
+			floatfontsize = Natives.getfloatingFontsize();
+			floatingforeground=Natives.getfloatingforeground();
+			floatingbackground=Natives.getfloatingbackground();
+			Log.format(LOG_ID+" Natives.getfloatingforeground()=0x%x\n",floatingforeground);
+			Log.format(LOG_ID+" Natives.getfloatingbackground()=0x%x\n",floatingbackground);
+			//Log.i(LOG_ID,String.format("Natives.getfloatingbackground()=0x%x",floatingbackground));
+			if(floatfontsize<5||floatfontsize>(int)(screenheight*.8))
+				floatfontsize=(int)glucosesize;
+			floatPaint.setTextSize(floatfontsize);
+			floatPaint.setAntiAlias(true);
+			floatPaint.setTextAlign(Paint.Align.LEFT);
+			float notheight = floatfontsize * 0.8f;
+			var notwidth = notheight * 3.40;
+			floatglucosex = (int) (notwidth * .272f);
+			floatBitmap = Bitmap.createBitmap((int) notwidth, (int) notheight, Bitmap.Config.ARGB_8888);
+			floatCanvas = new Canvas(floatBitmap);
+			windowMana.addView(floatview, makeparams(screenwidth, screenheight));
+	//		floatingbackground=WHITE;
+	//		floatingforeground=BLACK;
+			Log.format(LOG_ID+" Natives.getfloatingforeground()=0x%x\n",floatingforeground);
+			Log.format(LOG_ID+" Natives.getfloatingbackground()=0x%x\n",floatingbackground);
+		//	floatCanvas.drawColor(floatingbackground, PorterDuff.Mode.CLEAR);
+//			floatCanvas.drawColor(floatingbackground);
+//			floatPaint.setColor(floatingforeground);
+			//	floatCanvas.drawColor(WHITE);
+			//	floatPaint.setColor(BLACK);
+
+			floatdensity = notheight / 54.0f;
+			var prev = SuperGattCallback.previousglucose;
+			if (onenot != null) {
+				if (prev != null)
+					onenot.floatglucose(prev);
+				else
+					onenot.repeadoldmessage();
+			}
+			Natives.setfloatglucose(true);
+		} catch (Throwable th) {
+			Log.stack(LOG_ID, "makefloat", th);
+			floatview = null;
+		}
+		}
 		return true;
 	}
 
@@ -635,17 +716,20 @@ private void allowbubbel(NotificationChannel  channel) {
 	final int penmutable= android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M? PendingIntent.FLAG_IMMUTABLE:0;
 
 private void  floatglucose(notGlucose glucose) {
+	if(!isWearable)  {
 	if(floatview!=null) {
 			var gety = floatCanvas.getHeight() * 0.98f;
-			floatCanvas.drawColor(WHITE);
-			floatPaint.setColor(BLACK);
+		//	floatCanvas.drawColor(floatingbackground, PorterDuff.Mode.CLEAR);
+			floatBitmap.eraseColor(floatingbackground);
+//			flaotCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+			floatPaint.setColor(floatingforeground);
 			Log.i(LOG_ID,"floatview.setImageBitmap");
 			var xpos=floatglucosex;
 			var rate=glucose.rate;
 			if (!isNaN(rate))  {
 				 float weightrate = (rate > 1.6 ? -1.0f : (rate < -1.6 ? 1.0f : (rate / -1.6f)));
-				 float arrowy = gety - glucosesize * .4f + (CommonCanvas.glnearnull(rate) ? 0.0f : (weightrate * glucosesize * .4f));
-				drawarrow(floatCanvas, floatPaint, density, rate, xpos*.85f, arrowy);
+				 float arrowy = gety - floatfontsize * .4f + (CommonCanvas.glnearnull(rate) ? 0.0f : (weightrate * floatfontsize * .4f));
+				drawarrow(floatCanvas, floatPaint, floatdensity, rate, xpos*.85f, arrowy);
 			}
 			floatCanvas.drawText(glucose.value, xpos, gety, floatPaint);
 			floatCanvas.setBitmap(floatBitmap);
@@ -657,44 +741,56 @@ private void  floatglucose(notGlucose glucose) {
 			Log.i(LOG_ID,"floatview==null");
 
 			}
+		}
 	}
-
 static void testold() {
 	long time = System.currentTimeMillis()-1000*60*5;
 	final String tformat= timef.format(time);
 	Notify.onenot.oldfloatmessage(tformat,false);
 	}
+private static String oldmessagetime=null;
+private static boolean oldmessagealarm=false;
+private void repeadoldmessage() {
+	if(oldmessagetime!=null)
+		oldfloatmessage(oldmessagetime,oldmessagealarm);
+	}
 private void	oldfloatmessage(String tformat,boolean alarm)  {
-	if(floatview!=null) {
-		if(alarm) {
-			floatCanvas.drawColor(BLACK);
-			floatPaint.setColor(WHITE);
-			}
-		else  {
-			floatCanvas.drawColor(WHITE);
-			floatPaint.setColor(BLACK);
-			}
-		var gety = floatCanvas.getHeight() * 0.37f;
-		floatPaint.setTextSize(glucosesize*.3f);
-		var xpos=0.2f;
-		String message=Applic.app.getString(R.string.newnewvalue);
-		floatCanvas.drawText(message, xpos, gety, floatPaint);
-		gety = floatCanvas.getHeight() * 0.88f;
-		floatCanvas.drawText(tformat, xpos, gety, floatPaint);
-		floatCanvas.setBitmap(floatBitmap);
-		Applic.RunOnUiThread(()-> {
-			floatview.setImageBitmap(floatBitmap);
-			});
-		floatPaint.setTextSize(glucosesize);
-		/*
-		if(alarm) {
-			floatCanvas.drawColor(WHITE);
-			floatPaint.setColor(BLACK);
-			} */
-		}
-	else {
-		Log.i(LOG_ID,"floatview==null");
+	if(!isWearable) {
+		oldmessagetime=tformat;
+		oldmessagealarm=alarm;
+		if(floatview!=null) {
 
+			if(alarm) {
+//				floatCanvas.drawColor(floatingforeground);
+				floatBitmap.eraseColor(floatingforeground);
+				floatPaint.setColor(floatingbackground);
+				}
+			else  {
+//				floatCanvas.drawColor(floatingbackground);
+
+			//	floatCanvas.drawColor(floatingbackground, PorterDuff.Mode.CLEAR);
+				floatBitmap.eraseColor(floatingbackground);
+				floatPaint.setColor(floatingforeground);
+				}
+			float fontsize= floatfontsize;
+
+			var gety = floatCanvas.getHeight() * 0.37f;
+			floatPaint.setTextSize(fontsize*.3f);
+			var xpos=0.2f;
+			String message=Applic.app.getString(R.string.newnewvalue);
+			floatCanvas.drawText(message, xpos, gety, floatPaint);
+			gety = floatCanvas.getHeight() * 0.88f;
+			floatCanvas.drawText(tformat, xpos, gety, floatPaint);
+			floatCanvas.setBitmap(floatBitmap);
+			Applic.RunOnUiThread(()-> {
+				floatview.setImageBitmap(floatBitmap);
+				});
+			floatPaint.setTextSize(fontsize);
+			}
+		else {
+			Log.i(LOG_ID,"floatview==null");
+
+			}
 		}
 	}
 

@@ -1084,3 +1084,29 @@ extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getfloatglucose)(JNIEnv *env, 
 	return settings->data()->floatglucose;
 	}
 
+
+extern "C" JNIEXPORT void  JNICALL   fromjava(setfloatingFontsize)(JNIEnv *env, jclass cl,jint val) {
+	settings->data()->floatingFontsize=val;
+	}
+extern "C" JNIEXPORT jint  JNICALL   fromjava(getfloatingFontsize)(JNIEnv *env, jclass cl) {
+	return settings->data()->floatingFontsize;
+	}
+
+extern "C" JNIEXPORT void  JNICALL   fromjava(setfloatingbackground)(JNIEnv *env, jclass cl,jint val) {
+	settings->data()->floatingbackground=val;
+	}
+extern "C" JNIEXPORT jint  JNICALL   fromjava(getfloatingbackground)(JNIEnv *env, jclass cl) {
+	return settings->data()->floatingbackground;
+	}
+
+
+
+extern "C" JNIEXPORT void  JNICALL   fromjava(setfloatingforeground)(JNIEnv *env, jclass cl,jint val) {
+	settings->data()->floatingforeground=val;
+	}
+extern "C" JNIEXPORT jint  JNICALL   fromjava(getfloatingforeground)(JNIEnv *env, jclass cl) {
+	return (settings->data()->floatingforeground|0xFF000000);
+	}
+
+
+

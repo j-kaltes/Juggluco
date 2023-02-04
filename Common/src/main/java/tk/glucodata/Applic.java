@@ -65,6 +65,8 @@ import tk.glucodata.nums.AllData;
 import tk.glucodata.nums.numio;
 import tk.glucodata.settings.Broadcasts;
 
+import static android.graphics.Color.BLACK;
+import static android.graphics.Color.WHITE;
 import static android.net.NetworkCapabilities.TRANSPORT_BLUETOOTH;
 import static android.net.NetworkCapabilities.TRANSPORT_WIFI;
 import static android.net.NetworkCapabilities.TRANSPORT_WIFI_AWARE;
@@ -492,7 +494,7 @@ public static	int stopprogram=0;
 		}
 	}
 
-static public int backgroundcolor=Color.BLACK;
+static public int backgroundcolor= BLACK;
 void setbackgroundcolor(Context context) {
     TypedValue typedValue = new TypedValue();
     if (context.getTheme().resolveAttribute(android.R.attr.windowBackground, typedValue, true) && typedValue.type >= TypedValue.TYPE_FIRST_COLOR_INT && typedValue.type <= TypedValue.TYPE_LAST_COLOR_INT) 
@@ -571,10 +573,17 @@ public static void wakemirrors() {
 	}
 
 static	void initbroadcasts() {
-	if(Natives.getinitVersion()<13) {
-		Broadcasts.updateall();
-		Natives.setinitVersion(13);
+
+	if(Natives.getinitVersion()<14) {
+		if(Natives.getinitVersion()<13) {
+			Broadcasts.updateall();
+			}
+		Natives.setfloatingFontsize((int) Notify.glucosesize);
+		Natives.setfloatingbackground(WHITE);
+		 Natives.setfloatingforeground(BLACK);
+		Natives.setinitVersion(14);
 		}
+
 	XInfuus.setlibrenames();
 	JugglucoSend.setreceivers();
 	SendLikexDrip.setreceivers();

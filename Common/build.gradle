@@ -9,6 +9,13 @@ android {
             version "3.22.1"
         }
     }
+
+//Can be defined in ~/.gradle/gradle.properties by setting for example:
+//thekeyfile=everyone.keystore
+//storePassword=IDontKnow
+//keyAlias=thealias
+//keyPassword=IDontKnow
+
     if("$thekeypassword" != "") {
 	    signingConfigs {
 		alg {
@@ -64,11 +71,12 @@ android {
     flavorDimensions 'wearos','libreVersion'
     productFlavors {
         libreOld {
+      ndk { abiFilters  'armeabi-v7a' }
 		minSdk 19 
         //	targetSdk 26
 	//******  Zet op rollout op 100% ******
 		versionCode  376
-		versionName '2.16.4'
+		versionName '2.16.6'
             	dimension 'libreVersion'
             buildConfigField 'int', 'libreVersion', '2'
 		}
@@ -78,7 +86,7 @@ android {
             dimension 'libreVersion'
 		versionCode 377
 	//******  Zet op rollout op 100% ******
-		versionName '4.6.4'
+		versionName '4.6.6'
 
            	buildConfigField 'int', 'libreVersion', '3'
 		    externalNativeBuild.cmake {
@@ -91,14 +99,14 @@ android {
         wear {
           // targetSdk 26
 //           targetSdk 31
-//      ndk { abiFilters  'armeabi-v7a' }
+      ndk { abiFilters  'armeabi-v7a' }
 
             // targetSdk 30
             dimension 'wearos'
 		minSdk 26
 		versionCode 379
 	//******  Zet op rollout op 100% ******
-		versionName '4.6.3-wear'
+		versionName '4.6.6-wear'
 		signingConfig signingConfigs.alg
 
 //            buildConfigField 'int', 'targetSDK', "$targetSdk"

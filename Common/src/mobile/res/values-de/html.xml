@@ -960,6 +960,14 @@ Benachrichtigung an einige Smartwatches gesendet, wenn dies so
 konfiguriert ist. Das funktioniert mit Garmin-Uhren, ich weiß nicht,
 ob es mit anderen funktioniert. Alarme generieren auch
 Benachrichtigungen.</span></p>
+<h2 class="western">Schwebende Glukose</h2>
+<p style="line-height: 100%; margin-bottom: 0in">Wenn Sie diese
+einschalten, wird unabhängig davon, welche App im Vordergrund ist,
+ständig ein kleines Bild mit dem aktuellen Glukosewert auf dem
+Bildschirm angezeigt. Wenn Sie es das erste Mal einschalten, werden
+Sie zu einer Liste von Apps weitergeleitet, in denen Sie Juggluco die
+Erlaubnis geben müssen, <b>über anderen Apps angezeigt</b> zu
+werden.</p>
 <h2 class="western" align="left">Sensor über Bluetooth</h2>
 <p align="left">Legt fest, ob diese App über Bluetooth mit einem
 Freestyle libre 2 oder 3 Sensor verbunden werden soll. Dies ist für
@@ -1945,6 +1953,10 @@ wurde von <a href="mailto:matteo.gabriele81@gmail.com">Matteo
 Gabriele</a>&nbsp;ins Italienische übersetzt&nbsp;.</font></font></p>
 <p><font face="Times New Roman"><font size="4" style="font-size: 14pt">Juggluco
 wurde von Rui Pinheiro ins Portugiesische übersetzt.</font></font></p>
+<p style="line-height: 100%; margin-bottom: 0in"> <font face="Times New Roman"><font size="4" style="font-size: 14pt">Juggluco
+wurde von</font></font><font face="Times New Roman"><font size="4" style="font-size: 14pt">
+</font></font><a href="mailto:adelis@translaris.pl">Arkadiusz Deliś</a>
+ins Polnische übersetzt.</p>
 <p><br/>
 <br/>
 <br/>

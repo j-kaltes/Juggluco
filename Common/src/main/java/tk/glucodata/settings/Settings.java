@@ -505,7 +505,6 @@ new View[]{isvalue},new View[]{ringisvalue,Cancel},new View[]{Save}};
 	else {
         	View[] lostrow={lossalarm,losswait,min,ringlossalarm};
 		View[] row6={isvalue, ringisvalue};
-//		View[] row7={showalways,new Space(context)};
 		View[] rowshow={help,Cancel,Save};
 		views=new View[][]{lowalarm,highalarm,lostrow,row6,rowshow};
 		}	
@@ -692,15 +691,7 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 	CheckBox camera=!isWearable?new CheckBox(context):null;
 	CheckBox reverseorientation =!isWearable?new CheckBox(context):null;
 	final int diskey=!isWearable?Natives.camerakey():0;
-        CheckBox showalways=isWearable?null:new CheckBox(context);
-	CheckBox floatglucose=isWearable?null:new CheckBox(context);
 	if(!isWearable) {
-		floatglucose.setText(R.string.floatglucose);
-		floatglucose.setChecked(Natives.getfloatglucose());
-		floatglucose.setOnCheckedChangeListener( (buttonView,  isChecked) -> Notify.setfloatglucose(context,isChecked) ) ;
-		showalways.setText(R.string.glucosestatusbar);
-		showalways.setChecked(Natives.getshowalways()) ;
-		showalways.setOnCheckedChangeListener( (buttonView,  isChecked) -> Notify.glucosestatus(isChecked) );
 
 		if(diskey>0)  {
 			camera.setText(R.string.disablecamerakey);
@@ -741,92 +732,73 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 			}
 		alarmsettings(context,settinglayout,issaved);
 		});
-/*	if(!blueused) alarmbut.setEnabled(false);
-	bluetooth.setOnCheckedChangeListener(
-                 (buttonView,  isChecked) -> {
-			if(!isChecked) {
-				alarmbut.setEnabled(false);
-				}
-			else
-				alarmbut.setEnabled(true);
-
-		}); */
-/*
-	var waitblue=new CheckBox(context);
-	waitblue.setText("Wait with enabling streaming");
-	waitblue.setChecked(Natives.getwaitwithenablestreaming());
-	*/
     ok.setOnClickListener(v->{
-    /*
-    	if( colors.isChecked()!=Natives.getInvertColors()) {
-		Natives.setInvertColors(colors.isChecked());
-		} */
-	final int wasorient=Natives.getScreenOrientation();
-	if(!isWearable) {	
-		if( reverseorientation.isChecked()==((wasorient&SCREEN_ORIENTATION_REVERSE_LANDSCAPE)==0)) {
-		//	int ori= (MainActivity.wearable?1:0)+(reverseorientation.isChecked()?SCREEN_ORIENTATION_REVERSE_LANDSCAPE:SCREEN_ORIENTATION_LANDSCAPE);
-			int ori= (reverseorientation.isChecked()?SCREEN_ORIENTATION_REVERSE_LANDSCAPE:SCREEN_ORIENTATION_LANDSCAPE);
-			Natives.setScreenOrientation(ori);
-			}
-		}
-
-	if(hasnfc)  {
-		if(scanenabled!=globalscan.isChecked())
-		    EnableIntentScanning(!scanenabled);
-		    }
-            int unit=mmolL.isChecked()?1:(mgdl.isChecked()?2:0);
-            if(unit==0) {
-                Toast.makeText(context, R.string.setunitfirst,Toast.LENGTH_SHORT).show();
-                return;
-            }
-            Natives.setsettings(unit,str2float(glow.getText().toString()), str2float(ghigh.getText().toString()), str2float(tlow.getText().toString()), str2float(thigh.getText().toString()));
-
-
-
-
-
-	    if(blueused!=bluetooth.isChecked()) {
-		      Applic.setbluetooth(activity,!blueused);
-			}
-//	   Natives.setwaitwithenablestreaming(waitblue.isChecked());
-	  Natives.setfixatex(!fixatex.isChecked());
-	  Natives.setfixatey(!fixatey.isChecked());
-
-	  if(!isWearable) {
-		  if(diskey > 0) {
-			  final int setto = camera.isChecked() ? 1 : 2;
-			  if (diskey != setto) Natives.setcamerakey(setto);
-		  }
-		if(xdrip.isChecked()!=wasxdrip)  {
-//			Natives.setxinfuus(xdrip.isChecked());	
-			if(!wasxdrip) {
-				if(!bluetooth.isChecked()&&Natives.backuphostNr( )<=0) {
-					Toast.makeText(context, R.string.blueormirror,Toast.LENGTH_LONG).show();
-					}
-
-				final var 	starttime= Natives.laststarttime();
-				if(starttime!=0L) {
-
-				 	tk.glucodata.XInfuus.sendSensorActivateBroadcast(context, Natives.lastsensorname(), starttime);
-					}
+		final int wasorient=Natives.getScreenOrientation();
+		if(!isWearable) {	
+			if( reverseorientation.isChecked()==((wasorient&SCREEN_ORIENTATION_REVERSE_LANDSCAPE)==0)) {
+			//	int ori= (MainActivity.wearable?1:0)+(reverseorientation.isChecked()?SCREEN_ORIENTATION_REVERSE_LANDSCAPE:SCREEN_ORIENTATION_LANDSCAPE);
+				int ori= (reverseorientation.isChecked()?SCREEN_ORIENTATION_REVERSE_LANDSCAPE:SCREEN_ORIENTATION_LANDSCAPE);
+				Natives.setScreenOrientation(ori);
 				}
 			}
-		  }
-	 if(hasnfc) {
-		var was=Natives.nfcsound();
-		boolean moet=nfcsound.isChecked();
-		if(moet!=Natives.nfcsound())  {
-			Natives.setnfcsound(moet);
-			context.setnfc();
-			}
-		}
-	
 
-	Natives.setlevelleft(levelleft.isChecked());
-	   context.poponback();
-	    hidekeyboard();
-	    finish();
-	    });
+		if(hasnfc)  {
+			if(scanenabled!=globalscan.isChecked())
+			    EnableIntentScanning(!scanenabled);
+			    }
+		    int unit=mmolL.isChecked()?1:(mgdl.isChecked()?2:0);
+		    if(unit==0) {
+			Toast.makeText(context, R.string.setunitfirst,Toast.LENGTH_SHORT).show();
+			return;
+		    }
+		    Natives.setsettings(unit,str2float(glow.getText().toString()), str2float(ghigh.getText().toString()), str2float(tlow.getText().toString()), str2float(thigh.getText().toString()));
+
+
+
+
+
+		    if(blueused!=bluetooth.isChecked()) {
+			      Applic.setbluetooth(activity,!blueused);
+				}
+	//	   Natives.setwaitwithenablestreaming(waitblue.isChecked());
+		  Natives.setfixatex(!fixatex.isChecked());
+		  Natives.setfixatey(!fixatey.isChecked());
+
+		  if(!isWearable) {
+			  if(diskey > 0) {
+				  final int setto = camera.isChecked() ? 1 : 2;
+				  if (diskey != setto) Natives.setcamerakey(setto);
+			  }
+			if(xdrip.isChecked()!=wasxdrip)  {
+	//			Natives.setxinfuus(xdrip.isChecked());	
+				if(!wasxdrip) {
+					if(!bluetooth.isChecked()&&Natives.backuphostNr( )<=0) {
+						Toast.makeText(context, R.string.blueormirror,Toast.LENGTH_LONG).show();
+						}
+
+					final var 	starttime= Natives.laststarttime();
+					if(starttime!=0L) {
+
+						tk.glucodata.XInfuus.sendSensorActivateBroadcast(context, Natives.lastsensorname(), starttime);
+						}
+					}
+				}
+			  }
+		 if(hasnfc) {
+			var was=Natives.nfcsound();
+			boolean moet=nfcsound.isChecked();
+			if(moet!=Natives.nfcsound())  {
+				Natives.setnfcsound(moet);
+				context.setnfc();
+				}
+			}
+		
+
+		Natives.setlevelleft(levelleft.isChecked());
+		   context.poponback();
+		    hidekeyboard();
+		    finish();
+		    });
 	    /*
 	var library=getbutton(context,"New Library");
         library.setOnClickListener(v-> {
@@ -849,25 +821,16 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 
 
 
-	View[] rowglu=isWearable?new View[]{bluetooth}:new View[]{ bluetooth,alarmbut};
 	View[][] views;
 	final String advhelp=isWearable?null:Natives.advanced();
 		Button display=isWearable?getbutton(context,context.getString(R.string.display)):null;
 	if(isWearable) {
+			View[] rowglu=new View[]{bluetooth};
 
 			View[] camornum=new View[] {alarmbut,numalarm};
 			views=new View[][]{new View[]{getlabel(context,R.string.unit)}, row0, row1,new View[]{scalelabel},new View[]{fixatex,fixatey}, row2,new View[]{levelleft},hasnfc?(new View[]{globalscan,nfcsound}):null, new View[]{xdripbroadcast},new View[]{jugglucobroadcast},camornum,rowglu,new View[]{colbut,display},new View[]{cancel,ok},new View[] {getlabel(context,BuildConfig.BUILD_TIME)},new View[]{getlabel(context,BuildConfig.VERSION_NAME)},new View[]{getlabel(context,codestr) }};;
 		}
 	else {
-/*		Button cuts=new Button(context);
-		cuts.setText(R.string.shutcuts);
-		cuts.setOnClickListener(v-> {
-			   hidekeyboard();
-			new Shortcuts().mkshortlistview(context);
-			});
-		if(!garminwatch) {
-			cuts.setVisibility(INVISIBLE);
-			} */
 		View[] row8;
 		View[] row9;
 		if(advhelp!=null) {
@@ -878,11 +841,24 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 		else {
 			row9=new View[]{help,cancel,ok};
 			}
+
+        	CheckBox showalways=new CheckBox(context);
+		showalways.setText(R.string.glucosestatusbar);
+		showalways.setChecked(Natives.getshowalways()) ;
+		showalways.setOnCheckedChangeListener( (buttonView,  isChecked) -> Notify.glucosestatus(isChecked) );
+
+	       var floatconfig=getbutton(context,"Config");
+	       floatconfig.setOnClickListener(v-> tk.glucodata.FloatingConfig.show(context));
+		CheckBox floatglucose=new CheckBox(context);
+		floatglucose.setText(R.string.floatglucose);
+		floatglucose.setChecked(Natives.getfloatglucose());
+		floatglucose.setOnCheckedChangeListener( (buttonView,  isChecked) -> Notify.setfloatglucose(context,isChecked) ) ;
+		View[] rowglu=new View[]{ bluetooth,floatglucose,floatconfig,alarmbut};
 		row8=new View[]{changelabels,numalarm,colbut};
 		views=new View[][]{row0, row1,new View[]{scalelabel,fixatex,fixatey}, row2,new View[]{levelleft,camera,reverseorientation},
 		hasnfc?new View[]{nfcsound, globalscan}:null,
 
-		new View[]{libreview,xdrip,xdripbroadcast},new View[]{ showalways,floatglucose,jugglucobroadcast}, rowglu,row8,row9};
+		new View[]{libreview,xdrip,xdripbroadcast},new View[]{ showalways,jugglucobroadcast}, rowglu,row8,row9};
 		}
 
 	help.setFocusableInTouchMode(true);

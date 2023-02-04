@@ -1,4 +1,7 @@
-Positie coordinaten moeten verschillend zijn afhankelijk van orientatie.
+Oude notificatie blijft op WearOS watch staan.
+
+Uitleg over Overlay permission.
+
 Horloge constant over Bluetooth i.p.v WIFI
 Heart rate moet niet aangaan zonder permission
 Remove forget and reenable, make all without location permission

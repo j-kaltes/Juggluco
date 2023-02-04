@@ -93,7 +93,7 @@ int updateone::update() {
 			bool nochangenum =true;
 			vect.push_back({reinterpret_cast<const senddata_t *>(&nochangenum),offsetof(Tings,nochangenum),sizeof(nochangenum)});
 			constexpr const int  sharedstart=offsetof(Tings, update);
-			constexpr const int len=offsetof(Tings, reserved4)-sharedstart;
+			constexpr const int len=offsetof(Tings,mealvar )+1-sharedstart;
 			vect.push_back({reinterpret_cast<const senddata_t *>( settings->data())+sharedstart,sharedstart,len});
 			if(!senddata(pass,getsock(),vect,settingsdat) ) 
 				return 0;

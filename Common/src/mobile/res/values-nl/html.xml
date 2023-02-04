@@ -776,6 +776,13 @@ Bijvoorbeeld door naar Juggluco app-info in Android instellingen te
 gaan, op “Meldingen beheren” te drukken, dan glucoseNotification
 aan te raken en “<i>instellen als stil</i>” uit te zetten.
 “<i>Weergeven op statusbalk</i>” zal nu aanstaand getoond worden.</p>
+<h2 class="western">Zwevende glucose</h2>
+<p style="line-height: 100%; margin-bottom: 0in">Wanneer je dit
+aanzet, wordt er continue een klein plaatje met de actuele
+glucosewaarde op het scherm getoond, ongeacht welke app zich in de
+voorgrond bevind. Als je het de eerste keer inschakelt, wordt je
+doorverwezen naar een lijst met apps waarin je Juggluco toestemming
+moet geven <b>over andere apps heen weer te geven</b>.</p>
 <h2 class="western">Sensor via Bluetooth</h2>
 <p>Geef aan dat Juggluco via Bluetooth contact maakt met Freestyle
 Libre 2 sensoren. Dit is nodig voor de CGM en alarmen.</p>
@@ -1538,6 +1545,9 @@ Italiaans vertaald door <a href="mailto:matteo.gabriele81@gmail.com">Matteo
 Gabriele</a>.</p>
 <p style="line-height: 100%; margin-bottom: 0in">Juggluco is naar het
 Portugees vertaald door Rui Pinheiro.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Juggluco is naar het
+Pools vertaald door <a href="mailto:adelis@translaris.pl">Arkadiusz
+Deliś</a>.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><br/>
 
 </p>

@@ -105,6 +105,7 @@ static	long lastfound() {
 static final int mininterval=55;
 static long nexttime=0L; //secs
 public static tk.glucodata.GlucoseAlarms glucosealarms=null;
+static notGlucose previousglucose=null;
 static void init(Application app) {
        if(glucosealarms==null) glucosealarms=new tk.glucodata.GlucoseAlarms(app);
 	}
@@ -117,6 +118,7 @@ static void init(Application app) {
 		final long tim = timmsec / 1000L;
 		boolean waiting = false;
 		var sglucose=new notGlucose(timmsec, String.format(Applic.usedlocale,Notify.pureglucoseformat, gl),  rate);
+		previousglucose=sglucose;
 
 		try {
 			switch (alarm) {

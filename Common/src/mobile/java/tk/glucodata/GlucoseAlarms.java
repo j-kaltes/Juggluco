@@ -40,6 +40,7 @@ public	void handlealarm() {
 		if(afterwait > nu) {
 			Log.i(LOG_ID, "handlealarm notify");
 			Notify.onenot.oldnotification(wastime);
+			SuperGattCallback.previousglucose=null;
 			long nexttime = (!shouldwake || (afterwait < tryagain && hasalarmloss())) ? afterwait : tryagain;
 			LossOfSensorAlarm.setalarm(Applic.app, nexttime);
 		} else {

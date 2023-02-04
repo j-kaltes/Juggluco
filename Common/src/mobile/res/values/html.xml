@@ -775,6 +775,14 @@ in the left middle menu. In that case the notification will be sent
 to some smartwatches, if it is configured that way. That works with
 Garmin watches, I don\'t know if it works with anything else. Alarms
 also generate notifications.</p>
+<h2 class="western">Floating glucose</h2>
+<p>When you turn this on, a small image with the current glucose
+value is constantly present on the screen independent of which app is
+in the foreground. If you turn it on the first time, you will be
+directed to a list of apps in which you have to give Juggluco
+permission to <b>display over other apps</b>.</p>
+<h2 class="western">Config</h2>
+<p>Specify font size and colors of <i>Floating glucose</i> value.</p>
 <h2 class="western">Sensor via Bluetooth</h2>
 <p>Selects whether this app connects via Bluetooth with a Freestyle
 libre 2 or 3 sensor. This is needed for alarms and continual glucose
@@ -1476,6 +1484,9 @@ translated into Italian by <a href="mailto:matteo.gabriele81@gmail.com">Matteo
 Gabriele</a>.</p>
 <p style="line-height: 100%; margin-bottom: 0in">Juggluco was
 translated into Portuguese by Rui Pinheiro.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Juggluco was
+translated into Polish by <a href="mailto:adelis@translaris.pl">Arkadiusz
+Deliś</a>.</p>
 <p align="left" style="line-height: 100%; margin-bottom: 0in"><br/>
 
 </p>
@@ -1641,6 +1652,22 @@ Label plus the number entered for that label is sent. For example:
 and you entered &quot;<i>50</i>&quot; under that label. &quot;<i>Bike
 50</i>&quot; will be shown under the graph of the &quot;<i>Daily log</i>&quot;
 in Libreview at the specified time.</p>
+]]>
+</string>
+<string name="floatingconfig" >
+<![CDATA[
+<h1>Floating glucose</h1>
+<p>Set font size and foreground and background color of the floating
+glucose. You can also specify <b>Transparent</b> for the background,
+making it invisible.</p>
+<p>After typing the <b>font size</b>, you have to press the <i>“Enter”
+</i><span style="font-style: normal">or</span><i> “Done”</i>
+button of the soft keyboard.</p>
+<p>You can turn on and off Floating glucose with the “<i>Floating
+glucose</i>” checkbox in settings. You can also turn off “Floating
+glucose” by <b>long pressing</b> on the floating glucose value. For
+example when you have set the font size so large that you are not
+able anymore to type a smaller font size on the soft keyboard.</p>
 ]]>
 </string>
 </resources>

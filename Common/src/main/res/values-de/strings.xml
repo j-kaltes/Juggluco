@@ -205,4 +205,5 @@
  <string name="toolarg"> ist zu lang</string>
  <string name="heartrate">Herzfrequenz</string>
  <string name="xdripbroadcast">xDrip "lokaler Broadcast"</string>
+ <string name="floatglucose">Schwebende Glukose</string>
 </resources>

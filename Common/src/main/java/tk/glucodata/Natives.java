@@ -591,8 +591,15 @@ public static native int getinitVersion( );
 
 public static native void setfloatglucose(boolean val);
 public static native boolean getfloatglucose( );
+public static native void setfloatingFontsize(int val);
+public static native int getfloatingFontsize( );
+public static native void setfloatingbackground(int val);
+public static native int getfloatingbackground( );
+public static native void setfloatingforeground(int val);
+public static native int getfloatingforeground( );
 
-//s/^extern.*JNIEXPORT[         ]*\([a-zA-Z]*\)[ ]*JNICALL[      ]*fromjava(\([^)]*\)) *(JNIEnv[^,]*,[^,)]*[,)]\([^){]*\)[^a-zA-Z0-9]*$/public static native \1 \2(\3);/g
+
+//s/^extern.*JNIEXPORT[         ]*\([a-zA-Z]*\)[ ]*JNICALL[      ]*fromava(\([^)]*\)) *(JNIEnv[^,]*,[^,)]*[,)]\([^){]*\)[^a-zA-Z0-9]*$/public static native \1 \2(\3);/g
 //public static native void sendxdripold();
 }
 

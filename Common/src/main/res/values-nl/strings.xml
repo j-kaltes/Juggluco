@@ -203,4 +203,5 @@
  <string name="deleteconnection">Verwijder verbinding?</string>
  <string name="heartrate">Hartslag</string>
  <string name="xdripbroadcast">xDrip lokale broadcast</string>
+ <string name="floatglucose">Zwevende glucose</string>
 </resources>

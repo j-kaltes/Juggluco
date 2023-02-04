@@ -210,5 +210,12 @@
  <string name="sensorpermission">Sensors permission needed to display heart rate</string>
  <string name="sensorpermissionmessage">Set it in Device Settings, Apps, Permissions, Juggluco</string>
  <string name="floatglucose">Floating glucose</string>
+ <string name="fontsize">Font size</string>
+ <string name="fonttoolarge">Font size too large: max=</string>
+ <string name="foreground">Foreground</string>
+ <string name="background">Background</string>
+ <string name="transparent">Transparent</string>
+ 
+
 
 </resources>

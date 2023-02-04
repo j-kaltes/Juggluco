@@ -117,11 +117,11 @@ struct Tings {
 	bool nochangenum;
 	bool sendlabels;
 	bool sendcuts;
-	uint32_t oldupdate;
+	int32_t floatingFontsize;
 	int32_t  alarmnr;
 	amountalarm numalarm[maxnumalarms];
-	uint8_t reserved2[4];
-	uint32_t unlinkstatestime;
+	int32_t floatingforeground;
+	int32_t floatingbackground;
 	uint32_t update;
 	struct Variables {
 		float prec;

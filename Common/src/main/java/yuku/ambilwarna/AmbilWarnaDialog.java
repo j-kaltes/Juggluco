@@ -51,8 +51,8 @@ public interface LayoutView {
 
 
 		Color.colorToHSV(color, currentColorHsv);
-		alpha = 0xFF;
-//		alpha = Color.alpha(color);
+//		alpha = 0xFF;
+		alpha = Color.alpha(color);
 
 		view = LayoutInflater.from(context).inflate(R.layout.ambilwarna_dialog, null);
 		viewHue = view.findViewById(R.id.ambilwarna_viewHue);
@@ -151,9 +151,17 @@ public interface LayoutView {
 	}
 
 
+	public void setColor(int color) {
+		Color.colorToHSV(color, currentColorHsv);
+		alpha = Color.alpha(color);
+		viewSatVal.setHue(getHue());
+
+		moveCursor();
+
+	}
 	private int getColor() {
 		final int argb = Color.HSVToColor(currentColorHsv);
-		return alpha << 24 | (argb & 0x00ffffff);
+		return 0xFFFFFFFF&(alpha << 24 | (argb & 0x00ffffff));
 	}
 
 	private float getHue() {

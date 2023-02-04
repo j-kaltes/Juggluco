@@ -19,6 +19,7 @@
 /*      Fri Jan 27 12:39:13 CET 2023                                                 */
 
 
+#ifndef WEAROS
 
 #include <cctype>
 #include <cstdint>
@@ -571,4 +572,5 @@ LibreHistEl el{1666086031,90,135};
 const  char *endstr=libre3histel(&el,histor,buf);
 puts(buf);
 }
+#endif
 #endif

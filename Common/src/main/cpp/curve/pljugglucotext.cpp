@@ -88,7 +88,7 @@ jugglucotext pltext {
 	.SD="Odchylenie standardowe: %.2f",
 	.glucose_variability="Zmienność stęż. glukozy: %.1f%%",
      .menustr0={
-		"Integr. z sys        ",
+		"Integr. z sys.        ",
 		"Zegarek",
 		"Sensor",
 		"Ustawienia",
@@ -97,14 +97,14 @@ jugglucotext pltext {
 		"Zatrzymaj alarm"
 		},
 	.menustr1={
-		"Powiadom.        ",
+		"Powiadom.",
 		"Eksport",
 		"Klonowanie",
 		pltext.newamount,
 		"Lista", 
 		"Statystyka"
 		},
-	.menustr2= {"Ostatni odczyt","Odczyty","Strumień","Histora","Wartość","Posiłki","Tryb ciemny       "},
+	.menustr2= {"Ostatni odczyt","Odczyty","Strumień","Histora","Wartość","Posiłki","Tryb ciemny        "},
 	.menustr3= {hourminstr,"Wyszukaj","Data","Dzień wstecz","Dzień później","Tydzień wstecz","Tydzień później"},
 #else
  .amount="Wartość",
