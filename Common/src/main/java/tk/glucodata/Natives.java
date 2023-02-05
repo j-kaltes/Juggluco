@@ -598,8 +598,14 @@ public static native int getfloatingbackground( );
 public static native void setfloatingforeground(int val);
 public static native int getfloatingforeground( );
 
+        
+public static native void setfloatingTouchable(boolean val);
+public static native boolean getfloatingTouchable( );
 
-//s/^extern.*JNIEXPORT[         ]*\([a-zA-Z]*\)[ ]*JNICALL[      ]*fromava(\([^)]*\)) *(JNIEnv[^,]*,[^,)]*[,)]\([^){]*\)[^a-zA-Z0-9]*$/public static native \1 \2(\3);/g
+public static native void setfloatingPos(int val);
+public static native int getfloatingPos( );
+
+//s/^extern.*JNIEXPORT[         ]*\([a-zA-Z]*\)[ ]*JNICALL[      ]*fromjava(\([^)]*\)) *(JNIEnv[^,]*,[^,)]*[,)]\([^){]*\)[^a-zA-Z0-9]*$/public static native \1 \2(\3);/g
 //public static native void sendxdripold();
 }
 

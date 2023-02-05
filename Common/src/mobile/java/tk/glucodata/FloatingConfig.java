@@ -130,6 +130,8 @@ static public void show(MainActivity act) {
 	var color=Natives.getfloatingbackground();
 	boolean transp= Color.alpha(color)!=0xFF;
 	var transparant=getcheckbox(act,R.string.transparent,transp);
+	var touch=Natives.getfloatingTouchable();
+	var touchable=getcheckbox(act,R.string.touchable,touch);
 	if(!background)
 			transparant.setVisibility(INVISIBLE);
 	else {
@@ -139,7 +141,7 @@ static public void show(MainActivity act) {
 	var close=getbutton(act,R.string.closename);
 	var Help=getbutton(act,R.string.helpname);
 	Help.setOnClickListener(v-> help.help(R.string.floatingconfig,act));
-	var leftlayout=new Layout(act,(l, w, h)-> { return new int[] {w,h}; },new View[]{sizelabel,sizeview},new View[]{transparant}, new View[]{foregroundswitch,backgroundlabel},new View[]{Help,close});
+	var leftlayout=new Layout(act,(l, w, h)-> { return new int[] {w,h}; },new View[]{sizelabel,sizeview},new View[]{touchable,transparant}, new View[]{foregroundswitch,backgroundlabel},new View[]{Help,close});
 	leftlayout.setLayoutParams( new ViewGroup.LayoutParams(WRAP_CONTENT,MATCH_PARENT));
 	view.setLayoutParams( new ViewGroup.LayoutParams(MATCH_PARENT,MATCH_PARENT));
 	var layout=new Layout(act,(l,w,h)-> { return new int[] {w,h}; }, new View[]{view,leftlayout});
@@ -151,6 +153,14 @@ static public void show(MainActivity act) {
 		act.poponback();
 		show(act);
 	});
+	touchable.setOnCheckedChangeListener( (buttonView,  isChecked) -> {
+		Natives.setfloatingTouchable(isChecked);
+		if(!isChecked) {
+			int y= (int) Notify.yview;
+			Natives.setfloatingPos(((int)Notify.xview)|(0xFFFFFFFF&(y<< 16)));
+			}
+		rewritefloating(act);
+		});
 
 	foregroundswitch.setOnCheckedChangeListener( (buttonView,  isChecked) -> {
 		background=isChecked;

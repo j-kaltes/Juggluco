@@ -583,6 +583,11 @@ static	void initbroadcasts() {
 		 Natives.setfloatingforeground(BLACK);
 		Natives.setinitVersion(14);
 		}
+	var pos=Natives.getfloatingPos( );
+	if(pos!=0) {
+		Notify.xview=pos&0xFFFF;
+		Notify.yview=pos>>16;
+		}
 
 	XInfuus.setlibrenames();
 	JugglucoSend.setreceivers();

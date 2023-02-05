@@ -1657,12 +1657,16 @@ in Libreview at the specified time.</p>
 <string name="floatingconfig" >
 <![CDATA[
 <h1>Floating glucose</h1>
-<p>Set font size and foreground and background color of the floating
-glucose. You can also specify <b>Transparent</b> for the background,
+<p>Here you can set the font size and foreground and background color
+of the floating glucose. You can also set background to <b>Transparent</b>,
 making it invisible.</p>
-<p>After typing the <b>font size</b>, you have to press the <i>“Enter”
-</i><span style="font-style: normal">or</span><i> “Done”</i>
-button of the soft keyboard.</p>
+<p><b>Touchable</b>: when set you can move the floating glucose with
+your finger and remove it by long pressing it. When touchable is
+unset, goes touch input to the window beneath the floating glucose,
+so you can use the app under the floating glucose.</p>
+<p>After typing the <b>font size</b>, you have to press the “<i>Enter”
+</i><span style="font-variant: normal"><span style="font-style: normal">or</span></span>
+“<i>Done”</i> button of the soft keyboard.</p>
 <p>You can turn on and off Floating glucose with the “<i>Floating
 glucose</i>” checkbox in settings. You can also turn off “Floating
 glucose” by <b>long pressing</b> on the floating glucose value. For

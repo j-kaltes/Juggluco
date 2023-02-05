@@ -1110,3 +1110,17 @@ extern "C" JNIEXPORT jint  JNICALL   fromjava(getfloatingforeground)(JNIEnv *env
 
 
 
+extern "C" JNIEXPORT void  JNICALL   fromjava(setfloatingTouchable)(JNIEnv *env, jclass cl,jboolean val) {
+	settings->data()->floatingNotTouchable=!val;
+	}
+extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getfloatingTouchable)(JNIEnv *env, jclass cl) {
+	return !settings->data()->floatingNotTouchable;
+	}
+
+extern "C" JNIEXPORT void  JNICALL   fromjava(setfloatingPos)(JNIEnv *env, jclass cl,jint val) {
+	settings->data()->floatingPos=val;
+	}
+extern "C" JNIEXPORT jint  JNICALL   fromjava(getfloatingPos)(JNIEnv *env, jclass cl) {
+	return settings->data()->floatingPos;
+	}
+

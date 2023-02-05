@@ -101,7 +101,8 @@ struct Tings {
 	bool triedasm:1;
 	bool asmworks:1;
 	bool nobluetooth;
-	bool nodebug:7;
+	bool nodebug:6;
+	bool floatingNotTouchable:1;
 	bool floatglucose:1;
 	bool lowalarm,highalarm,availablealarm;
 	bool lossalarm;
@@ -146,7 +147,7 @@ struct Tings {
 	char libreemail[256];
 	int8_t librepasslen;
 	char librepass[36];
-	bool libre3nums:1;//TODO: use
+	bool libre3nums:1;
 	bool sendnumbers:1;
 	bool haslibre2:1;
 	bool haslibre3:1;
@@ -159,7 +160,7 @@ struct Tings {
 	char _nullchar;
 	uint8_t empty8;
 	uint16_t startlibre3view;
-	uint32_t empty32;
+	uint32_t floatingPos;
 	uint32_t lastlibretime;
 	std::array<char,36> libreviewAccountID;
 	char _nullchar1;

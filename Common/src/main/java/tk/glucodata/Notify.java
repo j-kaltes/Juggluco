@@ -50,7 +50,6 @@ import android.os.VibratorManager;
 import android.provider.Settings;
 import android.text.style.MetricAffectingSpan;
 import android.util.DisplayMetrics;
-import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -77,6 +76,7 @@ import static android.graphics.PorterDuff.Mode.DST_OVER;
 import static android.graphics.drawable.Icon.createWithAdaptiveBitmap;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static android.view.WindowManager.*;
+import static android.view.WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
 import static java.lang.Float.isNaN;
 import static java.lang.String.format;
 import static tk.glucodata.Applic.TargetSDK;
@@ -173,7 +173,6 @@ final private static boolean whiteonblack=false;
 private static WindowManager windowMana;
 	private static ImageView floatview=null;
 
-	static GestureDetector mGestureDetector;
 	/*
 public static void floattransparent() {
 	floatPaint.setTypeface(PixelFormat.TRANSPARENT);
@@ -248,8 +247,10 @@ public static void rewritefloating(Activity context) {
 	private static LayoutParams  makeparams(int screenwidth, int screenheight){
 		var xpos= -screenwidth*.5f+xview;
 		var ypos= -screenheight*.5f+yview;
-		var type = (Build.VERSION.SDK_INT < Build.VERSION_CODES.O)? LayoutParams.TYPE_SYSTEM_OVERLAY: LayoutParams.TYPE_APPLICATION_OVERLAY;
-		var flags = LayoutParams.FLAG_NOT_FOCUSABLE;
+		var type = (Build.VERSION.SDK_INT < Build.VERSION_CODES.O)?WindowManager.LayoutParams.TYPE_SYSTEM_ALERT: LayoutParams.TYPE_APPLICATION_OVERLAY;
+//		var type = (Build.VERSION.SDK_INT < Build.VERSION_CODES.O)? LayoutParams.TYPE_SYSTEM_OVERLAY: LayoutParams.TYPE_APPLICATION_OVERLAY;
+//		var flags = LayoutParams.FLAG_NOT_FOCUSABLE|WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE;
+		var flags = FLAG_NOT_FOCUSABLE|(Natives.getfloatingTouchable()?0:WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 		var params = new WindowManager.LayoutParams( WRAP_CONTENT, WRAP_CONTENT,(int) xpos, (int)ypos, type, flags, PixelFormat.TRANSLUCENT);
 		return params;
 	}
@@ -273,14 +274,6 @@ static int floatfontsize;
 		try {
 			windowMana = (WindowManager) Applic.app.getSystemService(Context.WINDOW_SERVICE);
 			floatview = new ImageView(Applic.app);
-/*		mGestureDetector =  new GestureDetector(Applic.app, new GestureListener());
-		floatview.setOnTouchListener(new View.OnTouchListener() {
-			@Override
-			public boolean onTouch(View view, MotionEvent motionEvent) {
-				mGestureDetector.onTouchEvent(motionEvent);
-				return false;
-			}
-		});*/
 			floatview.setOnTouchListener(new Gesture());
 			var metrics = Applic.app.getResources().getDisplayMetrics();
 			int screenwidth = metrics.widthPixels;
@@ -316,9 +309,16 @@ static int floatfontsize;
 			floatdensity = notheight / 54.0f;
 			var prev = SuperGattCallback.previousglucose;
 			if (onenot != null) {
+				if(prev==null)  {
+					var last=Natives.lastglucose();
+					if(last!=null) {
+						prev=new notGlucose(last.time*1000L, last.value,  last.rate);
+						}
+					}
 				if (prev != null)
 					onenot.floatglucose(prev);
 				else
+
 					onenot.repeadoldmessage();
 			}
 			Natives.setfloatglucose(true);

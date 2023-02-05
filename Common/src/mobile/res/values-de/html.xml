@@ -1295,9 +1295,9 @@ anzuzeigen.</font></font></p>
 <string name="battery" >
 <![CDATA[
 <h1 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-top: 0in">
-<font color="#000000"><font face="Liberation Serif, serif">Doze-modus</font></font></h1>
+<font><font face="Liberation Serif, serif">Doze-modus</font></font></h1>
 <p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
-<font color="#000000"><font face="Times New Roman"><font size="4" style="font-size: 14pt">Wenn
+<font><font face="Times New Roman"><font size="4" style="font-size: 14pt">Wenn
 ein Android-Gerät nicht verwendet wird, wechselt es normalerweise in
 den Schlafmodus, um weniger Energie zu verbrauchen.&nbsp;In diesem
 Modus kann eine Anwendung keine TCP-Verbindungen zum Datenaustausch
@@ -1316,7 +1316,7 @@ und Juggluco auswählen und&nbsp;</font><font size="4" style="font-size: 14pt"><
 zulassen</i></font><font size="4" style="font-size: 14pt">&nbsp;aktivieren
 .</font></font></font></p>
 <p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
-<font color="#000000"><font face="Times New Roman"><font size="4" style="font-size: 14pt">Die
+<font><font face="Times New Roman"><font size="4" style="font-size: 14pt">Die
 Bluetooth-Verbindung mit dem Sensor wird von Android nicht streng
 verboten und funktioniert normalerweise auch ohne Angabe einer
 Ausnahme.&nbsp;Probleme können nach einiger Zeit auftreten oder wenn
@@ -1324,12 +1324,12 @@ Juggluco eine Weile nicht im Vordergrund war.&nbsp;Dies kann für
 verschiedene Android-Versionen und für verschiedene Gerätehersteller
 unterschiedlich sein.</font></font></font></p>
 <p style="orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
-<span style="font-variant: normal"><font color="#000000"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><span style="font-style: normal"><span style="font-weight: normal">Einige
+<span style="font-variant: normal"><font><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><span style="font-style: normal"><span style="font-weight: normal">Einige
 Gerätehersteller haben zusätzliche Beschränkungen für Anwendungen
 auferlegt, die im Hintergrund laufen oder beim Booten starten,
 siehe&nbsp;<a href="https://dontkillmyapp.com/">https://dontkillmyapp.com</a>&nbsp;.</span></span></span></span></font></font></font></span></p>
 <p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
-<font color="#000000"><font face="Times New Roman"><font size="4" style="font-size: 14pt">Eine
+<font><font face="Times New Roman"><font size="4" style="font-size: 14pt">Eine
 App, die sich häufig im Vordergrund befindet, wird später von
 Android deaktiviert als eine App, die sich nicht im Vordergrund
 befindet.&nbsp;Ich habe einen Bericht von jemandem mit einem
@@ -2164,6 +2164,46 @@ diesem Etikett <i>„50“</i><i> </i>eingegeben haben<i>.&nbsp;</i>„&nbsp;<i>
 50</i>&nbsp;“ wird zur angegebenen Zeit unter der Grafik des
 „&nbsp;<i>Tageslogs</i>&nbsp;“ in Libreview angezeigt.</font></font></p>
 <p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+]]>
+</string>
+<string name="floatingconfig" >
+<![CDATA[
+<h1 style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
+<font><font face="Times New Roman">Schwebende Glukose</font></font></h1>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
+<font><font face="Times New Roman"><font size="4" style="font-size: 14pt">Hier
+können Sie die Schriftgröße und die Vorder- und Hintergrundfarbe
+der </font><font size="4" style="font-size: 14pt">schwebende</font><font size="4" style="font-size: 14pt">
+Glukose einstellen.</font><font size="4" style="font-size: 14pt"> </font><font size="4" style="font-size: 14pt">Sie
+können den Hintergrund auch auf</font><font size="4" style="font-size: 14pt">
+</font><font size="4" style="font-size: 14pt"><b>Transparent</b></font><font size="4" style="font-size: 14pt"><b>
+</b></font><font size="4" style="font-size: 14pt">setzen, wodurch er
+unsichtbar wird.</font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2"><a name="__DdeLink__546_3430959450"></a>
+<font><font face="Times New Roman"><font size="4" style="font-size: 14pt"><b>Berührbar</b>:
+Wenn eingestellt, können Sie die schwebende Glukose mit dem Finger
+bewegen und durch langes Drücken entfernen. Wenn „Berührbar“
+deaktiviert ist, geht die Berührungseingabe in das Fenster unter der
+schwebenden Glukose, sodass Sie die App unter der schwebenden Glukose
+verwenden können.</font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
+<font><font face="Times New Roman"><font size="4" style="font-size: 14pt">Nachdem
+Sie die <b>Schriftgröße</b><b> </b>eingegeben haben, müssen Sie
+die „<i>Enter“-</i><i> </i>oder „<i>Fertig“</i><i> </i>-Taste
+der Soft-Tastatur drücken.</font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
+<font><font face="Times New Roman"><font size="4" style="font-size: 14pt">Sie
+können Schwebende Glukose mit dem Kontrollkästchen <i>„Schwebende
+Glu</i><i>k</i><i>ose</i>“ in den Einstellungen ein- und
+ausschalten. Sie können „Schwebende Glukose“ auch deaktivieren,
+indem Sie <b>lange</b><b> </b>auf den schwebenden Glukosewert
+<b>drücken</b>. Zum Beispiel, wenn Sie die Schriftgröße so groß
+eingestellt haben, dass Sie auf der Soft-Tastatur keine kleinere
+Schriftgröße mehr eingeben können.</font></font></font></p>
+<p style="orphans: 2; widows: 2"><br/>
+<br/>
 
 </p>
 ]]>

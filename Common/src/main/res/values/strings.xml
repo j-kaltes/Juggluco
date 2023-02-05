@@ -215,6 +215,7 @@
  <string name="foreground">Foreground</string>
  <string name="background">Background</string>
  <string name="transparent">Transparent</string>
+ <string name="touchable">Touchable</string>
  
 
 

@@ -18,6 +18,7 @@ public class Gesture implements View.OnTouchListener {
     public boolean onTouch(View view, MotionEvent event) {
         Log.i(LOG_ID,event.toString());
         switch (event.getAction() & MotionEvent.ACTION_MASK) {
+		case MotionEvent.ACTION_BUTTON_PRESS:
             case MotionEvent.ACTION_DOWN:
                 Log.i(LOG_ID,"Down");
 		startX= event.getX();
@@ -25,7 +26,16 @@ public class Gesture implements View.OnTouchListener {
                 moved =false;
 		downstart=event.getEventTime();
                 break;
-            case MotionEvent.ACTION_MOVE: {
+
+	case	MotionEvent.ACTION_BUTTON_RELEASE:
+	case MotionEvent.ACTION_POINTER_UP:
+	case MotionEvent.ACTION_UP:
+		if(!moved) {
+			if((event.getEventTime()-downstart)>mindowntime)
+			    removefloating();
+			}
+		break;
+   case MotionEvent.ACTION_MOVE: {
 		var distanceX= event.getX() - startX;
 		var distanceY= event.getY() - startY;
 	        Log.i(LOG_ID,"DRAG dx="+distanceX+" dy="+distanceY);
