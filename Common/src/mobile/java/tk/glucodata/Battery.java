@@ -129,7 +129,11 @@ if(!isWearable) {
 		context.setonback(closerun);
 		battery.setOnClickListener(v-> {
 			context.doonback();
-			context.startActivityForResult(new Intent(android.provider.Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS),IGNORE_BATTERY_OPTIMIZATION_SETTINGS);
+			try{
+				context.startActivityForResult(new Intent(android.provider.Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS),IGNORE_BATTERY_OPTIMIZATION_SETTINGS);
+				} catch(Throwable th) {
+					Log.stack(LOG_ID,"ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS",th);
+					}
 			});
 		Close.setOnClickListener(v-> context.doonback());
 	      lay.setBackgroundResource(R.drawable.dialogbackground);

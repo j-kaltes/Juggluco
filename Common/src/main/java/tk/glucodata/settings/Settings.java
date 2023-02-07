@@ -21,9 +21,11 @@
 
 package tk.glucodata.settings;
 
+import android.app.AlertDialog;
 import android.app.Application;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.text.InputType;
@@ -50,6 +52,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import tk.glucodata.Applic;
 import tk.glucodata.BuildConfig;
+import tk.glucodata.Floating;
 import tk.glucodata.GlucoseCurve;
 import tk.glucodata.LabelAdapter;
 import tk.glucodata.Layout;
@@ -66,8 +69,12 @@ import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCA
 import static android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_DISABLED;
 import static android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_ENABLED;
 import static android.content.pm.PackageManager.DONT_KILL_APP;
+import static android.view.Gravity.RIGHT;
+import static android.view.Gravity.TOP;
 import static android.view.View.GONE;
 import static android.view.View.INVISIBLE;
+import static android.view.View.LAYOUT_DIRECTION_LTR;
+import static android.view.View.LAYOUT_DIRECTION_RTL;
 import static android.view.View.VISIBLE;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
@@ -825,10 +832,33 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 	final String advhelp=isWearable?null:Natives.advanced();
 		Button display=isWearable?getbutton(context,context.getString(R.string.display)):null;
 	if(isWearable) {
+	       var floatconfig=getbutton(context,R.string.floatglucose);
+	       floatconfig.setOnClickListener(v-> tk.glucodata.FloatingConfig.show(context));
+		CheckBox floatglucose=new CheckBox(context);
+		floatglucose.setText("        " );
+
+/*
+	   floatglucose.setPadding(0,0,0,0);
+	var width=GlucoseCurve.getwidth();
+		var height=GlucoseCurve.getheight();
+	   int butwidth=(int)(width*0.33);
+	   int butheight=(int)(height*0.17);
+	   floatglucose.setMinHeight(butheight);
+	   floatglucose.setMinWidth(butwidth);
+
+	   floatglucose.setMinimumHeight(butheight);
+	   floatglucose.setMinimumWidth(butwidth); */
+
+
+
+//		floatglucose.setLayoutDirection( LAYOUT_DIRECTION_LTR);
+//		floatglucose.setForegroundGravity(RIGHT|TOP);
+		floatglucose.setChecked(Natives.getfloatglucose());
+		floatglucose.setOnCheckedChangeListener( (buttonView,  isChecked) -> Floating.setfloatglucose(context,isChecked) ) ;
 			View[] rowglu=new View[]{bluetooth};
 
 			View[] camornum=new View[] {alarmbut,numalarm};
-			views=new View[][]{new View[]{getlabel(context,R.string.unit)}, row0, row1,new View[]{scalelabel},new View[]{fixatex,fixatey}, row2,new View[]{levelleft},hasnfc?(new View[]{globalscan,nfcsound}):null, new View[]{xdripbroadcast},new View[]{jugglucobroadcast},camornum,rowglu,new View[]{colbut,display},new View[]{cancel,ok},new View[] {getlabel(context,BuildConfig.BUILD_TIME)},new View[]{getlabel(context,BuildConfig.VERSION_NAME)},new View[]{getlabel(context,codestr) }};;
+			views=new View[][]{new View[]{getlabel(context,R.string.unit)}, row0, row1,new View[]{scalelabel},new View[]{fixatex,fixatey}, row2,new View[]{levelleft},hasnfc?(new View[]{globalscan,nfcsound}):null, new View[]{xdripbroadcast},new View[]{jugglucobroadcast},new View[]{floatconfig,floatglucose},camornum,rowglu,new View[]{colbut,display},new View[]{cancel,ok},new View[] {getlabel(context,BuildConfig.BUILD_TIME)},new View[]{getlabel(context,BuildConfig.VERSION_NAME)},new View[]{getlabel(context,codestr) }};;
 		}
 	else {
 		View[] row8;
@@ -852,7 +882,7 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 		CheckBox floatglucose=new CheckBox(context);
 		floatglucose.setText(R.string.floatglucose);
 		floatglucose.setChecked(Natives.getfloatglucose());
-		floatglucose.setOnCheckedChangeListener( (buttonView,  isChecked) -> Notify.setfloatglucose(context,isChecked) ) ;
+		floatglucose.setOnCheckedChangeListener( (buttonView,  isChecked) -> Floating.setfloatglucose(context,isChecked) ) ;
 		View[] rowglu=new View[]{ bluetooth,floatglucose,floatconfig,alarmbut};
 		row8=new View[]{changelabels,numalarm,colbut};
 		views=new View[][]{row0, row1,new View[]{scalelabel,fixatex,fixatey}, row2,new View[]{levelleft,camera,reverseorientation},
@@ -955,6 +985,33 @@ Button delete=null;
 
 boolean resizer=true;
 //ViewGroup labellayout=null;
+
+
+private void	dodeletelast(Spinner spinner,	LabelAdapter<String> numspinadapt, int nr) {
+	Natives.setnrlabel(nr);
+	labels.remove(nr); //USE
+	adapt.notifyDataSetChanged();
+	numspinadapt.setarray(Natives.getLabels());
+	spinner.setAdapter(numspinadapt);
+	spinner.setSelection(Natives.getmealvar());
+	}
+
+private void	askdeletelast(Spinner spinner,	LabelAdapter<String> numspinadapt, int nr) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        builder.setTitle(R.string.deletelabel).
+	 setMessage(labels.get(nr)).
+        setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+		 		dodeletelast(spinner,numspinadapt,nr);
+                    }
+                }) .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+            }
+        }).show();
+	}
+
+
 void    mklabellayout() {
 	MainActivity context = activity;
 //    if(labellayout==null) {
@@ -1001,16 +1058,16 @@ void    mklabellayout() {
 		});
 		addnew.setText(R.string.newname);
 		delete.setText(R.string.deletelast);
+
+
+
+
+
 		delete.setOnClickListener(v -> {
 			int nr = labels.size() - 2; //USE
 			Log.d(LOG_ID, "delete " + nr);
 			if (nr >= 0) {
-				Natives.setnrlabel(nr);
-				labels.remove(nr); //USE
-				adapt.notifyDataSetChanged();
-				numspinadapt.setarray(Natives.getLabels());
-				spinner.setAdapter(numspinadapt);
-				spinner.setSelection(Natives.getmealvar());
+				askdeletelast(spinner,numspinadapt,nr);
 			}
 			if (nr <= 0)
 				delete.setVisibility(INVISIBLE);

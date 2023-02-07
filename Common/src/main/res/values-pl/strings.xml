@@ -4,7 +4,7 @@
     <string name="ok">OK</string>
     <string name="cancel">Anuluj</string>
 
-    <string name="garmin_initialization_error">&quot;Nieudana inicjalizacja Garmin connect SDK:&quot;</string>
+    <string name="garmin_initialization_error">&quot;Nieudana inicjalizacja Garmin connect SDK:&quot; </string>
 
     <string name="error_nfc_device_not_supported">Skanowanie niemożliwe, na tym urządzeniu brak NFC</string>
     <string name="error_nfc_disabled">NFC wyłączone, można je włączyć w ustawieniach.</string>
@@ -44,7 +44,7 @@
     <string name="visible">Widoczny</string>
     <string name="password">Hasło</string>
     <string name="delete">Usuń</string>
-    <string name="specifyreceiveordata">Włącz „Odbieraj dane” lub określ dane, które mają zostać wysłane do innego urządzenia</string>
+    <string name="specifyreceiveordata">Włącz opcję „Odbieraj” lub określ dane, które mają zostać wysłane do innego urządzenia</string>
     <string name="specifyip">Należy określić adres IP</string>
     <string name="portrange">Port powinien zawierać się w przedziale od 1024 do 65535</string>
     <string name="start">Początek</string>
@@ -90,7 +90,7 @@
  <string name="display">Wyświetl</string>
  <string name="shutcuts">Skróty</string>
  <string name="advanced">Zaawansowane</string>
- <string name="newname">Nowe</string>
+ <string name="newname">Nowy</string>
  <string name="deletelast">Usuń ostatni</string>
  <string name="meal">Posiłek:</string>
  <string name="ringshort">Dzwonek</string>
@@ -112,7 +112,7 @@
  <string name="dozeupdate">Aktualizacja w trybie uśpienia</string>
  <string name="refresh">Odśwież</string>
  <string name="sendqueue">Wyślij kolejkę</string>
- <string name="reinit">Ponowna inicjaliz.</string>
+ <string name="reinit">Reinicj.</string>
  <string name="watchappinstalled">Aplikacja zainstalowana na zegarku</string>
  <string name="error">Błąd</string>
  <string name="additem">Dodaj pozycję</string>
@@ -212,9 +212,12 @@
  <string name="floatglucose">Pływająca wart. gluk.</string>
  <string name="fontsize">Rozmiar czcionki</string>
  <string name="fonttoolarge">Zbyt duży rozmiar czcionki: maks =</string>
- <string name="foreground">Na pierwszym planie</string>
- <string name="background">W tle</string>
+ <string name="foreground">Pierwszy plan</string>
+ <string name="background">Tło</string>
  <string name="transparent">Przezroczysta</string>
+ <string name="touchable">Dotykowa</string>
+ <string name="overlaypermission">By udzielić uprawnienia, wpisz w adb:</string>
+ <string name="overlaypermissionmessage">adb shell pm grant tk.glucodata android.permission.SYSTEM_ALERT_WINDOW</string>
  
 
 

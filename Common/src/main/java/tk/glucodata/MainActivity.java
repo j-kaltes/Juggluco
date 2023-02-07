@@ -22,6 +22,23 @@
 package tk.glucodata;
 
 
+import static android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS;
+import static android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM;
+import static android.view.View.GONE;
+import static java.lang.System.currentTimeMillis;
+import static tk.glucodata.Applic.TargetSDK;
+import static tk.glucodata.Applic.app;
+import static tk.glucodata.Applic.isRelease;
+import static tk.glucodata.Applic.isWearable;
+import static tk.glucodata.Applic.scanpermissions;
+import static tk.glucodata.Applic.useflash;
+import static tk.glucodata.Floating.setfloatglucose;
+import static tk.glucodata.Floating.shoulduseadb;
+import static tk.glucodata.GlucoseCurve.STEPBACK;
+import static tk.glucodata.Natives.hasstreamed;
+import static tk.glucodata.Natives.wakelibreview;
+import static tk.glucodata.help.hidekeyboard;
+
 import android.Manifest;
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -47,6 +64,9 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.activity.ComponentActivity;
+import androidx.annotation.UiThread;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -54,27 +74,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Locale;
-
-import androidx.activity.ComponentActivity;
-import androidx.annotation.UiThread;
-import androidx.fragment.app.FragmentActivity;
-
-import static android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS;
-import static android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM;
-import static android.view.View.GONE;
-import static java.lang.System.currentTimeMillis;
-import static tk.glucodata.Applic.TargetSDK;
-import static tk.glucodata.Applic.app;
-import static tk.glucodata.Applic.isWearable;
-import static tk.glucodata.Applic.scanpermissions;
-import static tk.glucodata.Applic.useflash;
-import static tk.glucodata.GlucoseCurve.STEPBACK;
-import static tk.glucodata.Natives.hasstreamed;
-import static tk.glucodata.Natives.wakelibreview;
-import static tk.glucodata.Notify.makefloat;
-import static tk.glucodata.Notify.setfloatglucose;
-import static tk.glucodata.help.hidekeyboard;
-import static tk.glucodata.Applic.isRelease;
 
 ;
 
@@ -125,6 +124,9 @@ Applic app=	(Applic)getApplication();
 	if(!(unit==1||unit==2)) {
 		tk.glucodata.settings.Settings.set(this);
 		}
+
+	//setfloatglucose(this,true);
+	Log.i(LOG_ID,"setfloatglucose(this,true)");
 }
 static int openglversion=0;
 boolean glversion() {
@@ -159,9 +161,14 @@ static void alarmsExact(Context context) {
 				   }
 				else {
 				   Log.d(LOG_ID, "not canScheduleExactAlarms");
-				   Intent intent=new Intent();
-				   intent.setAction(ACTION_REQUEST_SCHEDULE_EXACT_ALARM);
-				   context.startActivity(intent);
+				   try {
+					   Intent intent=new Intent();
+					   intent.setAction(ACTION_REQUEST_SCHEDULE_EXACT_ALARM);
+					   context.startActivity(intent);
+					   } catch(Throwable th) {
+					   	Log.stack(LOG_ID,"ACTION_REQUEST_SCHEDULE_EXACT_ALARM",th);
+
+					   	}
 				   }
 		}
 	}
@@ -277,7 +284,12 @@ try {
 		if(askNFC) {
 			Toast.makeText(this, getResources().getString(R.string.error_nfc_disabled), Toast.LENGTH_LONG).show();
 			if(Natives.backuphostNr( )==0) {
+				try {
 				   startActivity(new Intent(Settings.ACTION_NFC_SETTINGS));
+				   }
+				   catch(Throwable th) {
+				   	Log.stack(LOG_ID,"Settings.ACTION_NFC_SETTINGS",th);
+				   	}
 				   }
 			askNFC=false;
 		       }
@@ -740,7 +752,12 @@ private void exportdata(int type,String name) {
 	intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
 //      ((ActivityResultLauncher<Intent>)exports[type]).launch(intent);
       	int request= REQUEST_EXPORT|type;
-	startActivityForResult(intent, request);
+	try {
+		startActivityForResult(intent, request);
+		} catch(Throwable th) {
+
+		Log.stack(LOG_ID,"ACTION_CREATE_DOCUMENT",th);
+		}
     }
 
 
@@ -761,7 +778,8 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 	switch(requestCode) {
 		case OVERLAY_PERMISSION_REQUEST_CODE: {
 			Log.i(LOG_ID, "OVERLAY_PERMISSION_REQUEST_CODE ");
-			if(Notify.cannotoverlay()  ) {
+			if(Floating.cannotoverlay()  ) {
+				shoulduseadb(this);
 				return ;
 				}
 			setfloatglucose(this, true);
@@ -919,8 +937,14 @@ public void clearonback() {
 	  }
 void tonotaccesssettings() {
 	Log.i(LOG_ID,"tonotaccesssettings()");
-	Intent intent = new Intent(ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
-	startActivityForResult(intent, REQUEST_NOTIFICATION);
+	try {
+		Intent intent = new Intent(ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
+		startActivityForResult(intent, REQUEST_NOTIFICATION);
+		}
+	catch(Throwable th) {
+		Log.stack(LOG_ID,"ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS)",th);
+
+		}
 }
 	public void asknotificationAccess() {
 	if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

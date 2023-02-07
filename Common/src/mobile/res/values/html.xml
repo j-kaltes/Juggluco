@@ -1027,33 +1027,16 @@ measurements the same way as glucose sensor measurements.</p>
 <h1 class="western">Keep functioning</h1>
 <p style="line-height: 100%; margin-bottom: 0in">Normally when an
 android device is not used, it enters doze mode to use less energy.
-In this mode an application can\'t use TCP connections to exchange
-data. This means that two android devices can only communicate when
-both screens are on. You can exempt an application from this
-restriction by disallowing \'<i>Battery optimization</i>\' in android
-settings\' menu. <i><b>Update in doze mode</b></i><b>,</b> shows this
-setting and changing it opens the android setting menu where you can
-change this setting. On some phones only apps already exempted are
-shown and to add an app you have to go to android
-settings-&gt;battery-&gt;app battery management and select Juggluco
-and turn on <i>allow background activity</i>.</p>
-<p style="line-height: 100%; margin-bottom: 0in">The Bluetooth
-connection with the sensor is not strictly forbidden by Android and
-will normally also work without specifying an exemption. Problems can
-arise after some time or when Juggluco has not been in the foreground
-for a while. This can be different for different versions of android
-and for different device manufacturers.</p>
-<p style="line-height: 100%; margin-bottom: 0in">Some device
-manufacturers have imposed additional restrictions on applications
-running in the background or starting at boot, see
+If you need to reliably receive glucose values via Bluetooth or
+TCP/IP you need to switch off battery optimizations for Juggluco and
+sometimes also the whole device to prevent that Androids switches off
+Juggluco. A lot of devices have additional battery optimization-,
+activity in the background - and start at boot settings that have to
+be changed. You can find them under Android settings-&gt;Battery. See
 <a href="https://dontkillmyapp.com/">https://dontkillmyapp.com</a>.</p>
-<p style="line-height: 100%; margin-bottom: 0in">An app frequently in
-the foreground is turned off by Android later than an app not in the
-foreground. I received a report from someone with an Samsung phone
-who had turned off all visible notifications of Juggluco, using it
-only to send glucose values to xDrip, which had connection problems
-with the sensor that were solved after turning the visible signs of
-Juggluco on again.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
 ]]>
 </string>
 <string name="nutrients" >
@@ -1656,14 +1639,15 @@ in Libreview at the specified time.</p>
 </string>
 <string name="floatingconfig" >
 <![CDATA[
-<h1>Floating glucose</h1>
+<h1 class="western">Floating glucose</h1>
 <p>Here you can set the font size and foreground and background color
 of the floating glucose. You can also set background to <b>Transparent</b>,
 making it invisible.</p>
 <p><b>Touchable</b>: when set you can move the floating glucose with
 your finger and remove it by long pressing it. When touchable is
 unset, goes touch input to the window beneath the floating glucose,
-so you can use the app under the floating glucose.</p>
+so you can use the app under the floating glucose. You can also make
+the floating glucose untouchable by <b>double tapping</b> it.</p>
 <p>After typing the <b>font size</b>, you have to press the “<i>Enter”
 </i><span style="font-variant: normal"><span style="font-style: normal">or</span></span>
 “<i>Done”</i> button of the soft keyboard.</p>
@@ -1672,6 +1656,19 @@ glucose</i>” checkbox in settings. You can also turn off “Floating
 glucose” by <b>long pressing</b> on the floating glucose value. For
 example when you have set the font size so large that you are not
 able anymore to type a smaller font size on the soft keyboard.</p>
+<p>To display over other apps Juggluco needs a special permission. On
+WearOS and also Android Automotive you need to use adb to give this
+permission:</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>adb shell pm
+grant tk.glucodata android.permission.SYSTEM_ALERT_WINDOW</b></p>
+<p style="line-height: 100%; margin-bottom: 0in; background: transparent">
+<br/>
+
+</p>
+<p style="line-height: 100%; margin-bottom: 0in; background: transparent">
+<br/>
+
+</p>
 ]]>
 </string>
 </resources>

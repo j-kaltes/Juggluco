@@ -101,7 +101,7 @@ void addrow(Context act,int index) {
 		value.setMinEms(4);
 		shortlist.addrow(new View[]{lab,value});
 		}
-private static String LOG_ID="Shortcuts";
+private static final String LOG_ID="Shortcuts";
 void mkshortlist(Context act) {
 
 	shortcuts= Natives.getShortcuts();

@@ -36,6 +36,10 @@ public	void handlealarm() {
 	final long nu = System.currentTimeMillis();
 	final long lasttime=Natives.lastglucosetime( );
 	final long nexttime=lasttime+waitmmsec();
+	var view=Floating.floatview;
+	if(view!=null) {
+		view.postInvalidate();
+		}
 	if(nu>nexttime) {
 		if (hasalarmloss()) {
 			Notify.onenot.lossalarm(lasttime);

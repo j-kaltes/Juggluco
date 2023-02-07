@@ -40,7 +40,7 @@ import static tk.glucodata.Applic.isWearable;
 public class LabelAdapter<T> implements SpinnerAdapter {
     private final LayoutInflater mInflater;
 //private Activity act;
-private static String LOG_ID="LabelAdapter";
+private static final String LOG_ID="LabelAdapter";
     private AbstractList<T> ar;
     private final int eraf;
 public void setarray(AbstractList<T> inar) {

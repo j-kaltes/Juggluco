@@ -60,7 +60,8 @@ static void keepnet(uint32_t wastime,uint32_t nu) {
 	}
 
 const SensorGlucoseData *getlaststream(const uint32_t nu) {
- 	uint32_t mintime=nu-maxwatchage;
+// 	uint32_t mintime=nu-maxwatchage;
+ 	uint32_t mintime=0;
 	const SensorGlucoseData *take=nullptr;
 	for(int i=0;i<usedsensors.size();i++) {
 		const int index=usedsensors[i];

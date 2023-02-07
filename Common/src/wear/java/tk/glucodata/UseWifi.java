@@ -67,7 +67,11 @@ private void wifinotstarted() {
 	Log.i(LOG_ID,"start network settings");
 	var main=MainActivity.thisone;
 	if( main!=null) {
+		try {
 		main.startActivity(new Intent("com.google.android.clockwork.settings.connectivity.wifi.ADD_NETWORK_SETTINGS"));
+		} catch(Throwable th) {
+			Log.stack(LOG_ID,"ADD_NETWORK_SETTINGS",th);
+			}
 		}
 	else
 		wifinotused=Applic.scheduler.schedule(()-> { wifinotstarted(); }, 4, TimeUnit.SECONDS);

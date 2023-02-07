@@ -77,7 +77,7 @@ class GarminStatus {
 	Button next;
 	Button sync;
 	Layout layout;
-	private final String LOG_ID = "GarminStatus";
+	private static final String LOG_ID = "GarminStatus";
 
 	static String displaystr(IQDevice device) {
 		IQDevice.IQDeviceStatus stat = device.getStatus();
@@ -353,9 +353,15 @@ class GarminStatus {
 			final String url = "https://apps.garmin.com/en-US/apps/b6348ccc-86d8-4780-8013-d9e19fed5260";
 			Uri uri = Uri.parse(url);
 			Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-			if (intent.resolveActivity(context.getPackageManager()) != null) {
-				context.startActivity(intent);
-			}
+			try { 
+				if (intent.resolveActivity(context.getPackageManager()) != null) {
+					context.startActivity(intent);
+					}
+				}
+			catch(Throwable th)  {
+				Log.stack(LOG_ID,"garmin",th);
+				}
+
 		});
 		var shortcuts = getbutton(context, R.string.shutcuts);
 		shortcuts.setOnClickListener(v -> {

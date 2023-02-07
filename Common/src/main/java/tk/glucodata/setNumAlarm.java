@@ -22,6 +22,8 @@
 package tk.glucodata;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.text.InputType;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -247,6 +249,42 @@ EditText value;
 Spinner spinner;
 Button startbut,alarmbut;
 Button Delete;
+
+
+void dodelete(View parok,int alarmpos) {
+		int nr=Natives.getNumAlarmCount();
+		Natives.delNumAlarm(alarmpos);
+		if(nr>0&&alarmpos<nr) { 
+			Log.i(LOG_ID,"alarmpos="+alarmpos+ " nr="+nr+" new nr="+Natives.getNumAlarmCount());
+			numadapt.notifyItemRemoved(alarmpos);
+			numadapt.notifyDataSetChanged();
+			}
+		alarmpos=-1;
+		itemlayout.setVisibility(GONE); 
+	    parok.setVisibility(VISIBLE);
+		}
+private void askdelete( View parok,int alarmpos) {
+	 Object[] alarmobj=getNumAlarm(alarmpos);
+	 float flvalue=(Float)alarmobj[0];
+	 short[] rest=(short[])alarmobj[1];
+	short type=rest[3];
+	spinner.setSelection(type);
+	var value=float2string(flvalue);
+	var label=Natives.getLabels().get(type);
+	var act=parok.getContext();
+        AlertDialog.Builder builder = new AlertDialog.Builder(act);
+        builder.setTitle(R.string.deletereminder).
+	 setMessage(label+" "+value).
+        setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+		 		dodelete(parok,alarmpos);
+                    }
+                }) .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+            }
+        }).show();
+	}
+
 void  mkitemlayout(Activity act,View parok) {
   if(itemlayout==null) {
 	//spinner=new Spinner(act);
@@ -311,22 +349,12 @@ void  mkitemlayout(Activity act,View parok) {
 		parok.setVisibility(VISIBLE);
 //		genlayout.setVisibility(VISIBLE); 
 		});
+
+
+
 	Delete.setOnClickListener(v->{ 
 		if(alarmpos>=0) {
-			int nr=Natives.getNumAlarmCount(); 
-			Natives.delNumAlarm(alarmpos);
-//			numadapt.notifyDataSetChanged();
-	//		recycle.invalidate();
-//			genlayout.invalidate();
-			if(nr>0&&alarmpos<nr) { 
-				Log.i(LOG_ID,"alarmpos="+alarmpos+ " nr="+nr+" new nr="+Natives.getNumAlarmCount());
-				numadapt.notifyItemRemoved(alarmpos);
-				numadapt.notifyDataSetChanged();
-				}
-			alarmpos=-1;
-			itemlayout.setVisibility(GONE); 
-		//	genlayout.setVisibility(VISIBLE); 
-		    parok.setVisibility(VISIBLE);
+			askdelete(parok,alarmpos);
 			}
 
     		hidekeyboard(act);

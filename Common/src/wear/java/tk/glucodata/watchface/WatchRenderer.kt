@@ -387,9 +387,8 @@ var rendertime:Long=0L
     private val agePaint = Paint().apply {
         setARGB(0xFF,0xFF,0,0xFF)
        }
-private fun	showglucose(canvas:Canvas,glucosePaint:Paint,agePaint:Paint,getxin:Float,gety:Float,density:Float,unixtime:Long,glucose:strGlucose?)  {
+private fun	showglucose(canvas:Canvas,glucosePaint:Paint,agePaint:Paint,getxin:Float,gety:Float,density:Float,unixtime:Long,glucose:strGlucose)  {
 		var getx=getxin
-                if(glucose!=null) {
 		    Log.i(LOG_ID,"glucose=${glucose.value} time=${glucose.time}")
 		     var age:Int=(unixtime-glucose.time).toInt()
 		     val oldage=(60.0f*3.0f)
@@ -421,9 +420,8 @@ private fun	showglucose(canvas:Canvas,glucosePaint:Paint,agePaint:Paint,getxin:F
 		else {
 			Log.i(LOG_ID,"age ($age) >= oldage ($oldage)")
 			}
-			}
 
-	 	}
+	}
     }
 
 

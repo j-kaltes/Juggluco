@@ -119,6 +119,9 @@ static void init(Application app) {
 		boolean waiting = false;
 		var sglucose=new notGlucose(timmsec, String.format(Applic.usedlocale,Notify.pureglucoseformat, gl),  rate);
 		previousglucose=sglucose;
+		final var fview=Floating.floatview;
+		if(fview!=null) 
+			fview.postInvalidate();
 
 		try {
 			switch (alarm) {

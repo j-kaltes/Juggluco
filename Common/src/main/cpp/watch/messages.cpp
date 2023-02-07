@@ -300,7 +300,7 @@ void tobluetooth(int hostnr,bool sender,int sock) {
 	    }
         while(!sendmessage(phonehost,phonesender,buf,inlen)) {
 		LOGGER("sendmessage failed %d %d #%d\n",phonehost,phonesender,inlen);
-		sleep(1);
+		sleep(30);
 		}
         }
     }

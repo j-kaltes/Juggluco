@@ -21,6 +21,19 @@
 
 
 package tk.glucodata;
+
+import static android.graphics.Color.BLACK;
+import static android.graphics.Color.WHITE;
+import static android.net.NetworkCapabilities.TRANSPORT_BLUETOOTH;
+import static android.net.NetworkCapabilities.TRANSPORT_WIFI;
+import static android.net.NetworkCapabilities.TRANSPORT_WIFI_AWARE;
+import static android.provider.Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS;
+import static android.view.View.INVISIBLE;
+import static java.util.Locale.US;
+import static tk.glucodata.GlucoseCurve.STEPBACK;
+import static tk.glucodata.GlucoseCurve.smallfontsize;
+import static tk.glucodata.MessageSender.initwearos;
+
 import android.Manifest;
 import android.app.Activity;
 import android.app.Application;
@@ -30,7 +43,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.LinkProperties;
 import android.net.Network;
@@ -42,43 +54,21 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.PowerManager;
 import android.text.format.DateFormat;
-import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.widget.Toast;
 
-import com.google.android.gms.wearable.Node;
+import androidx.annotation.Keep;
+import androidx.annotation.MainThread;
+import androidx.core.content.ContextCompat;
 
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
 
-import androidx.annotation.Keep;
-import androidx.annotation.MainThread;
-import androidx.annotation.UiThread;
-import androidx.core.content.ContextCompat;
-//import androidx.multidex.MultiDex;
-//import androidx.multidex.MultiDexApplication;
 import tk.glucodata.nums.AllData;
 import tk.glucodata.nums.numio;
 import tk.glucodata.settings.Broadcasts;
-
-import static android.graphics.Color.BLACK;
-import static android.graphics.Color.WHITE;
-import static android.net.NetworkCapabilities.TRANSPORT_BLUETOOTH;
-import static android.net.NetworkCapabilities.TRANSPORT_WIFI;
-import static android.net.NetworkCapabilities.TRANSPORT_WIFI_AWARE;
-import static android.provider.Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS;
-import static android.view.View.INVISIBLE;
-import static java.lang.System.currentTimeMillis;
-import static tk.glucodata.GlucoseCurve.STEPBACK;
-//import static tk.glucodata.MessageSender.Companion.messagesender;
-
-import static java.util.Locale.US;
-import static tk.glucodata.GlucoseCurve.smallfontsize;
-import static tk.glucodata.MessageSender.initwearos;
 //import static tk.glucodata.MessageSender.messagesender;
 
 public class Applic extends Application {
@@ -585,8 +575,8 @@ static	void initbroadcasts() {
 		}
 	var pos=Natives.getfloatingPos( );
 	if(pos!=0) {
-		Notify.xview=pos&0xFFFF;
-		Notify.yview=pos>>16;
+		Floating.xview=pos&0xFFFF;
+		Floating.yview=pos>>16;
 		}
 
 	XInfuus.setlibrenames();

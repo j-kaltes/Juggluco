@@ -21,10 +21,27 @@
 
 package tk.glucodata;
 
+import static android.app.Notification.FLAG_ONGOING_EVENT;
+import static android.app.Notification.VISIBILITY_PUBLIC;
+import static android.content.Context.NOTIFICATION_SERVICE;
+import static android.content.Context.VIBRATOR_SERVICE;
+import static android.graphics.Color.BLACK;
+import static android.graphics.Color.WHITE;
+import static java.lang.Float.isNaN;
+import static java.lang.String.format;
+import static tk.glucodata.Applic.TargetSDK;
+import static tk.glucodata.Applic.app;
+import static tk.glucodata.Applic.isRelease;
+import static tk.glucodata.Applic.isWearable;
+import static tk.glucodata.Applic.usedlocale;
+import static tk.glucodata.CommonCanvas.drawarrow;
+import static tk.glucodata.Natives.getalarmdisturb;
+import static tk.glucodata.Natives.getisalarm;
+import static tk.glucodata.Natives.setisalarm;
+import static tk.glucodata.R.id.arrowandvalue;
+import static tk.glucodata.ScanNfcV.vibrates;
+
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Application;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -37,61 +54,21 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.PixelFormat;
 import android.graphics.PorterDuff;
-import android.graphics.Rect;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
-import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.os.VibratorManager;
-import android.provider.Settings;
-import android.text.style.MetricAffectingSpan;
 import android.util.DisplayMetrics;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.WindowManager;
-import android.widget.ImageView;
 import android.widget.RemoteViews;
+
+import androidx.annotation.ColorInt;
 
 import java.text.DateFormat;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
-
-import androidx.annotation.ColorInt;
-
-import static android.app.Notification.FLAG_ONGOING_EVENT;
-import static android.app.Notification.VISIBILITY_PUBLIC;
-import static android.content.Context.NOTIFICATION_SERVICE;
-import static android.content.Context.VIBRATOR_SERVICE;
-import static android.graphics.BlendMode.COLOR;
-import static android.graphics.Color.BLACK;
-import static android.graphics.Color.BLUE;
-import static android.graphics.Color.RED;
-import static android.graphics.Color.WHITE;
-import static android.graphics.PorterDuff.Mode.DST;
-import static android.graphics.PorterDuff.Mode.DST_OVER;
-import static android.graphics.drawable.Icon.createWithAdaptiveBitmap;
-import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
-import static android.view.WindowManager.*;
-import static android.view.WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
-import static java.lang.Float.isNaN;
-import static java.lang.String.format;
-import static tk.glucodata.Applic.TargetSDK;
-import static tk.glucodata.Applic.app;
-import static tk.glucodata.Applic.isRelease;
-import static tk.glucodata.Applic.isWearable;
-import static tk.glucodata.Applic.usedlocale;
-import static tk.glucodata.CommonCanvas.drawarrow;
-import static tk.glucodata.MainActivity.OVERLAY_PERMISSION_REQUEST_CODE;
-import static tk.glucodata.MainActivity.screenheight;
-import static tk.glucodata.Natives.getalarmdisturb;
-import static tk.glucodata.Natives.getisalarm;
-import static tk.glucodata.Natives.setisalarm;
-import static tk.glucodata.R.id.arrowandvalue;
-import static tk.glucodata.ScanNfcV.vibrates;
 
 //import android.app.Notification;
 //import	androidx.core.app.Notification.Builder;
@@ -161,174 +138,16 @@ static public Ringtone mkrings(String uristr,int res) {
 	return null;
 	}
 
-private static Bitmap glucoseBitmap,floatBitmap;
-private static Canvas canvas,floatCanvas;
-private static Paint glucosePaint,floatPaint;
-private static float density,floatdensity;
+private static Bitmap glucoseBitmap;
+private static Canvas canvas;
+private static Paint glucosePaint;
+private static float density;
 static float glucosesize;
-private static int notglucosex,floatglucosex;
+private static int notglucosex;
+
 //final private static boolean whiteonblack=isRelease?true:false;
 final private static boolean whiteonblack=false;
 @ColorInt private static int foregroundcolor=BLACK;
-private static WindowManager windowMana;
-	private static ImageView floatview=null;
-
-	/*
-public static void floattransparent() {
-	floatPaint.setTypeface(PixelFormat.TRANSPARENT);
-	} */
-public static void rewritefloating(Activity context) {
-	setfloatglucose(context,false);
-	setfloatglucose(context,true);
-	}
-	public static void rewritefloating() {
-		if(floatview!=null) {
-			windowMana.removeView(floatview);
-			floatview = null;
-		}
-		makefloat();
-		}
-
-
-	public static void setfloatglucose(Activity context, boolean val) {
-	if(!isWearable)  {
-		if(val) {
-			if(!makefloat()) {
-				var settingsIntent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
-				context.startActivityForResult(settingsIntent, OVERLAY_PERMISSION_REQUEST_CODE);
-				return;
-			}
-		}
-		else {
-			if(floatview!=null) {
-				windowMana.removeView(floatview);
-				floatview=null;
-			Natives.setfloatglucose(val);
-			}
-		}
-		}
-	}
-
-	public static void removefloating() {
-		if(floatview!=null) {
-			windowMana.removeView(floatview);
-			floatview=null;
-			Natives.setfloatglucose(false);
-		}
-		}
-	static float xview=0.0f;
-	static float yview=0.0f;
-	static int transnr=0;
-	static void translate(float dx,float dy) {
-//		if(transnr++%3==0) 
-		//if(transnr++%2==0) 
-		{
-			//xview -= dx * 2.2f;
-			//yview -= dy * 2.2f;
-			xview += dx ;
-			yview += dy ;
-			final var metrics = Applic.app.getResources().getDisplayMetrics();
-			var screenwidth = metrics.widthPixels;
-			var screenheight = metrics.heightPixels;
-			var maxx=screenwidth;
-			var maxy=screenheight;
-			if(xview<0)
-				xview=0;
-			if(xview>maxx)
-				xview=maxx;
-			if(yview<0)
-				yview=0;
-			if(yview>maxy)
-				yview=maxy;
-			var params = makeparams(screenwidth, screenheight);
-			windowMana.updateViewLayout(floatview, params);
-		}
-	}
-	private static LayoutParams  makeparams(int screenwidth, int screenheight){
-		var xpos= -screenwidth*.5f+xview;
-		var ypos= -screenheight*.5f+yview;
-		var type = (Build.VERSION.SDK_INT < Build.VERSION_CODES.O)?WindowManager.LayoutParams.TYPE_SYSTEM_ALERT: LayoutParams.TYPE_APPLICATION_OVERLAY;
-//		var type = (Build.VERSION.SDK_INT < Build.VERSION_CODES.O)? LayoutParams.TYPE_SYSTEM_OVERLAY: LayoutParams.TYPE_APPLICATION_OVERLAY;
-//		var flags = LayoutParams.FLAG_NOT_FOCUSABLE|WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE;
-		var flags = FLAG_NOT_FOCUSABLE|(Natives.getfloatingTouchable()?0:WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-		var params = new WindowManager.LayoutParams( WRAP_CONTENT, WRAP_CONTENT,(int) xpos, (int)ypos, type, flags, PixelFormat.TRANSLUCENT);
-		return params;
-	}
-static boolean cannotoverlay()  {
-	if(!isWearable)  {
-		if( Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(Applic.app)) {
-			return true;
-		}
-		}
-		return false;
-
-		}
-static int floatingbackground=WHITE;
-static int floatingforeground=BLACK;
-static int floatfontsize;
-	static boolean makefloat() {
-	if(!isWearable) {
-		if (cannotoverlay()) return false;
-
-
-		try {
-			windowMana = (WindowManager) Applic.app.getSystemService(Context.WINDOW_SERVICE);
-			floatview = new ImageView(Applic.app);
-			floatview.setOnTouchListener(new Gesture());
-			var metrics = Applic.app.getResources().getDisplayMetrics();
-			int screenwidth = metrics.widthPixels;
-			int screenheight = metrics.heightPixels;
-			floatPaint = new Paint();
-			floatfontsize = Natives.getfloatingFontsize();
-			floatingforeground=Natives.getfloatingforeground();
-			floatingbackground=Natives.getfloatingbackground();
-			Log.format(LOG_ID+" Natives.getfloatingforeground()=0x%x\n",floatingforeground);
-			Log.format(LOG_ID+" Natives.getfloatingbackground()=0x%x\n",floatingbackground);
-			//Log.i(LOG_ID,String.format("Natives.getfloatingbackground()=0x%x",floatingbackground));
-			if(floatfontsize<5||floatfontsize>(int)(screenheight*.8))
-				floatfontsize=(int)glucosesize;
-			floatPaint.setTextSize(floatfontsize);
-			floatPaint.setAntiAlias(true);
-			floatPaint.setTextAlign(Paint.Align.LEFT);
-			float notheight = floatfontsize * 0.8f;
-			var notwidth = notheight * 3.40;
-			floatglucosex = (int) (notwidth * .272f);
-			floatBitmap = Bitmap.createBitmap((int) notwidth, (int) notheight, Bitmap.Config.ARGB_8888);
-			floatCanvas = new Canvas(floatBitmap);
-			windowMana.addView(floatview, makeparams(screenwidth, screenheight));
-	//		floatingbackground=WHITE;
-	//		floatingforeground=BLACK;
-			Log.format(LOG_ID+" Natives.getfloatingforeground()=0x%x\n",floatingforeground);
-			Log.format(LOG_ID+" Natives.getfloatingbackground()=0x%x\n",floatingbackground);
-		//	floatCanvas.drawColor(floatingbackground, PorterDuff.Mode.CLEAR);
-//			floatCanvas.drawColor(floatingbackground);
-//			floatPaint.setColor(floatingforeground);
-			//	floatCanvas.drawColor(WHITE);
-			//	floatPaint.setColor(BLACK);
-
-			floatdensity = notheight / 54.0f;
-			var prev = SuperGattCallback.previousglucose;
-			if (onenot != null) {
-				if(prev==null)  {
-					var last=Natives.lastglucose();
-					if(last!=null) {
-						prev=new notGlucose(last.time*1000L, last.value,  last.rate);
-						}
-					}
-				if (prev != null)
-					onenot.floatglucose(prev);
-				else
-
-					onenot.repeadoldmessage();
-			}
-			Natives.setfloatglucose(true);
-		} catch (Throwable th) {
-			Log.stack(LOG_ID, "makefloat", th);
-			floatview = null;
-		}
-		}
-		return true;
-	}
 
 
 	static void mkpaint() {
@@ -462,7 +281,7 @@ private void allowbubbel(NotificationChannel  channel) {
 				arrowglucosenotification(2,GlucoseDraw.getgludraw(gl), format(usedlocale,glucoseformat,gl),strgl,GLUCOSENOTIFICATION ,!alertwatch);
 				}
 			else {
-				floatglucose(strgl);
+			//	floatglucose(strgl);
 				if(hasvalue) {
 					if(keeprunning.started)
 						novalue();
@@ -472,6 +291,7 @@ private void allowbubbel(NotificationChannel  channel) {
 			}
 		}
 		else {
+			//floatglucose(strgl);
 			notificationManager.cancel(glucosealarmid);
 		}
 	}
@@ -714,85 +534,21 @@ private void allowbubbel(NotificationChannel  channel) {
 	final static int forcecloserequest=7812;
 	static final String closename= "ForceClose";
 	final int penmutable= android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M? PendingIntent.FLAG_IMMUTABLE:0;
-
-private void  floatglucose(notGlucose glucose) {
-	if(!isWearable)  {
-	if(floatview!=null) {
-			var gety = floatCanvas.getHeight() * 0.98f;
-		//	floatCanvas.drawColor(floatingbackground, PorterDuff.Mode.CLEAR);
-			floatBitmap.eraseColor(floatingbackground);
-//			flaotCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-			floatPaint.setColor(floatingforeground);
-			Log.i(LOG_ID,"floatview.setImageBitmap");
-			var xpos=floatglucosex;
-			var rate=glucose.rate;
-			if (!isNaN(rate))  {
-				 float weightrate = (rate > 1.6 ? -1.0f : (rate < -1.6 ? 1.0f : (rate / -1.6f)));
-				 float arrowy = gety - floatfontsize * .4f + (CommonCanvas.glnearnull(rate) ? 0.0f : (weightrate * floatfontsize * .4f));
-				drawarrow(floatCanvas, floatPaint, floatdensity, rate, xpos*.85f, arrowy);
-			}
-			floatCanvas.drawText(glucose.value, xpos, gety, floatPaint);
-			floatCanvas.setBitmap(floatBitmap);
-			Applic.RunOnUiThread(()-> {
-				floatview.setImageBitmap(floatBitmap);
-				});
-			}
-		else {
-			Log.i(LOG_ID,"floatview==null");
-
-			}
-		}
-	}
+/*
 static void testold() {
 	long time = System.currentTimeMillis()-1000*60*5;
 	final String tformat= timef.format(time);
 	Notify.onenot.oldfloatmessage(tformat,false);
-	}
+	} 
 private static String oldmessagetime=null;
 private static boolean oldmessagealarm=false;
+
+
 private void repeadoldmessage() {
 	if(oldmessagetime!=null)
 		oldfloatmessage(oldmessagetime,oldmessagealarm);
 	}
-private void	oldfloatmessage(String tformat,boolean alarm)  {
-	if(!isWearable) {
-		oldmessagetime=tformat;
-		oldmessagealarm=alarm;
-		if(floatview!=null) {
-
-			if(alarm) {
-//				floatCanvas.drawColor(floatingforeground);
-				floatBitmap.eraseColor(floatingforeground);
-				floatPaint.setColor(floatingbackground);
-				}
-			else  {
-//				floatCanvas.drawColor(floatingbackground);
-
-			//	floatCanvas.drawColor(floatingbackground, PorterDuff.Mode.CLEAR);
-				floatBitmap.eraseColor(floatingbackground);
-				floatPaint.setColor(floatingforeground);
-				}
-			float fontsize= floatfontsize;
-
-			var gety = floatCanvas.getHeight() * 0.37f;
-			floatPaint.setTextSize(fontsize*.3f);
-			var xpos=0.2f;
-			String message=Applic.app.getString(R.string.newnewvalue);
-			floatCanvas.drawText(message, xpos, gety, floatPaint);
-			gety = floatCanvas.getHeight() * 0.88f;
-			floatCanvas.drawText(tformat, xpos, gety, floatPaint);
-			floatCanvas.setBitmap(floatBitmap);
-			Applic.RunOnUiThread(()-> {
-				floatview.setImageBitmap(floatBitmap);
-				});
-			floatPaint.setTextSize(fontsize);
-			}
-		else {
-			Log.i(LOG_ID,"floatview==null");
-
-			}
-		}
-	}
+	*/
 
 	private Notification  makearrownotification(int kind,int draw,String message,notGlucose glucose,String type,boolean once) {
 		var intent =mkpending();
@@ -803,6 +559,8 @@ private void	oldfloatmessage(String tformat,boolean alarm)  {
 			GluNotBuilder.setVisibility(VISIBILITY_PUBLIC);
 		}
 //	GluNotBuilder.setUsesChronometer(true);
+
+		//floatglucose(glucose);
 		if(!isWearable) {
 			RemoteViews remoteViews= new RemoteViews(app.getPackageName(),R.layout.arrowandvalue);
 			if(whiteonblack) {
@@ -860,7 +618,6 @@ private void	oldfloatmessage(String tformat,boolean alarm)  {
 		} else
 			GluNotBuilder.setContent(remoteViews);
 
-		floatglucose(glucose);
 		}
 	if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 		GluNotBuilder.setTimeoutAfter(glucosetimeout);
@@ -969,7 +726,7 @@ void oldnotification(long time) {
 void oldnotification(long time) {
 	final String tformat= timef.format(time);
 	String message = Applic.app.getString(R.string.newnewvalue) + tformat;
-	oldfloatmessage(tformat,false) ;
+//	oldfloatmessage(tformat,false) ;
 	 placelargenotification(R.drawable.novalue, message,GLUCOSENOTIFICATION,true);
 	}
 	@SuppressWarnings("deprecation")
@@ -1157,7 +914,7 @@ public void  notifyer(int draw,String message,String type,int notid) {
 	final String tformat= timef.format(time);
 	final String message= "***  "+Applic.app.getString(R.string.newnewvalue)+tformat+" ***";
 
-	oldfloatmessage(tformat, true) ;
+//	oldfloatmessage(tformat, true) ;
 	glucosealarm(4,R.drawable.loss ,message, GLUCOSENOTIFICATION ,true);
 	}
 	

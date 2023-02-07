@@ -37,6 +37,10 @@ public	void handlealarm() {
 		final long afterwait = waitmmsec() + wastime;
 		boolean shouldwake = Natives.shouldwakesender();
 		final long tryagain = nu + showtime;
+		final var view=Floating.floatview;
+		if(view!=null) {
+			view.postInvalidate();
+			}
 		if(afterwait > nu) {
 			Log.i(LOG_ID, "handlealarm notify");
 			Notify.onenot.oldnotification(wastime);

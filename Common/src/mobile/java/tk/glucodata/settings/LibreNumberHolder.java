@@ -61,7 +61,7 @@ public class LibreNumberHolder extends RecyclerView.ViewHolder {
 private ViewGroup parent;
 
 	private 	View sendnumbers;
-private static String LOG_ID="LibreNumberHolder";
+private static final String LOG_ID="LibreNumberHolder";
 RadioButton mkradiobutton(Context context, String label) {
 	  var radio  = new RadioButton(context);
 	  radio.setText(label);

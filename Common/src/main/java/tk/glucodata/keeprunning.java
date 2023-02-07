@@ -63,10 +63,8 @@ static PowerManager.WakeLock wakeLock =null;
   public int onStartCommand(Intent intent, int flags, int startId) {
 	if(started) return Service.START_STICKY;//NODIG?
         started=true;
-	if(!isWearable) {
-		if(Natives.getfloatglucose())
-			Notify.makefloat();
-		}
+	if(Natives.getfloatglucose())
+		Floating.makefloat();
 	Applic.app.initproc();
   	try {
 		if(intent==null) {
