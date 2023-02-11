@@ -32,25 +32,25 @@ For more information: http://jkaltes.byethost16.com/JugglucoWearOS
 # BUILD Juggluco
 The following files need to be added to run Juggluco and can be found by unzipping a recent Juggluco apk:
 
-./Common/src/main/jniLibs/x86_64/libcalibrat2.so
-./Common/src/main/jniLibs/x86_64/libcalibrate.so
-./Common/src/main/jniLibs/armeabi-v7a/libcalibrat2.so
-./Common/src/main/jniLibs/armeabi-v7a/libcalibrate.so
-./Common/src/main/jniLibs/x86/libcalibrat2.so
-./Common/src/main/jniLibs/x86/libcalibrate.so
-./Common/src/main/jniLibs/arm64-v8a/libcalibrat2.so
-./Common/src/main/jniLibs/arm64-v8a/libcalibrate.so
-
-./Common/src/libre3/jniLibs/x86_64/libcrl_dp.so
-./Common/src/libre3/jniLibs/x86_64/liblibre3extension.so
-./Common/src/libre3/jniLibs/x86_64/libinit.so
-./Common/src/libre3/jniLibs/armeabi-v7a/libcrl_dp.so
-./Common/src/libre3/jniLibs/armeabi-v7a/liblibre3extension.so
-./Common/src/libre3/jniLibs/armeabi-v7a/libinit.so
-./Common/src/libre3/jniLibs/x86/libcrl_dp.so
-./Common/src/libre3/jniLibs/x86/liblibre3extension.so
-./Common/src/libre3/jniLibs/x86/libinit.so
-./Common/src/libre3/jniLibs/arm64-v8a/libcrl_dp.so
-./Common/src/libre3/jniLibs/arm64-v8a/liblibre3extension.so
-./Common/src/libre3/jniLibs/arm64-v8a/libinit.so
-
+./Common/src/main/jniLibs/x86_64/libcalibrat2.so  
+./Common/src/main/jniLibs/x86_64/libcalibrate.so  
+./Common/src/main/jniLibs/armeabi-v7a/libcalibrat2.so  
+./Common/src/main/jniLibs/armeabi-v7a/libcalibrate.so  
+./Common/src/main/jniLibs/x86/libcalibrat2.so  
+./Common/src/main/jniLibs/x86/libcalibrate.so  
+./Common/src/main/jniLibs/arm64-v8a/libcalibrat2.so  
+./Common/src/main/jniLibs/arm64-v8a/libcalibrate.so  
+  
+./Common/src/libre3/jniLibs/x86_64/libcrl_dp.so  
+./Common/src/libre3/jniLibs/x86_64/liblibre3extension.so  
+./Common/src/libre3/jniLibs/x86_64/libinit.so  
+./Common/src/libre3/jniLibs/armeabi-v7a/libcrl_dp.so  
+./Common/src/libre3/jniLibs/armeabi-v7a/liblibre3extension.so  
+./Common/src/libre3/jniLibs/armeabi-v7a/libinit.so  
+./Common/src/libre3/jniLibs/x86/libcrl_dp.so  
+./Common/src/libre3/jniLibs/x86/liblibre3extension.so  
+./Common/src/libre3/jniLibs/x86/libinit.so  
+./Common/src/libre3/jniLibs/arm64-v8a/libcrl_dp.so  
+./Common/src/libre3/jniLibs/arm64-v8a/liblibre3extension.so  
+./Common/src/libre3/jniLibs/arm64-v8a/libinit.so  
+  
