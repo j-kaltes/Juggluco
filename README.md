@@ -29,3 +29,28 @@ Juggluco for Wear OS can operate two ways:
 Earlier a direct connection between Watch 4 and sensor was unusable with half of the Freestyle Libre 2 sensors, because of too many connection errors, but after adding the Turbo button, I had these problems with only 3 of 9 sensors. Also the connection, with the few Freestyle Libre 3 sensors I have tested, is very good. If, when directly connected with the watch, a sensor has too many connection errors, you can connect the watch with the sensor via the smartphone.  
 For more information: http://jkaltes.byethost16.com/JugglucoWearOS
 
+# BUILD Juggluco
+The following files need to be added to run Juggluco and can be found by unzipping a recent Juggluco apk:
+
+./Common/src/main/jniLibs/x86_64/libcalibrat2.so
+./Common/src/main/jniLibs/x86_64/libcalibrate.so
+./Common/src/main/jniLibs/armeabi-v7a/libcalibrat2.so
+./Common/src/main/jniLibs/armeabi-v7a/libcalibrate.so
+./Common/src/main/jniLibs/x86/libcalibrat2.so
+./Common/src/main/jniLibs/x86/libcalibrate.so
+./Common/src/main/jniLibs/arm64-v8a/libcalibrat2.so
+./Common/src/main/jniLibs/arm64-v8a/libcalibrate.so
+
+./Common/src/libre3/jniLibs/x86_64/libcrl_dp.so
+./Common/src/libre3/jniLibs/x86_64/liblibre3extension.so
+./Common/src/libre3/jniLibs/x86_64/libinit.so
+./Common/src/libre3/jniLibs/armeabi-v7a/libcrl_dp.so
+./Common/src/libre3/jniLibs/armeabi-v7a/liblibre3extension.so
+./Common/src/libre3/jniLibs/armeabi-v7a/libinit.so
+./Common/src/libre3/jniLibs/x86/libcrl_dp.so
+./Common/src/libre3/jniLibs/x86/liblibre3extension.so
+./Common/src/libre3/jniLibs/x86/libinit.so
+./Common/src/libre3/jniLibs/arm64-v8a/libcrl_dp.so
+./Common/src/libre3/jniLibs/arm64-v8a/liblibre3extension.so
+./Common/src/libre3/jniLibs/arm64-v8a/libinit.so
+
