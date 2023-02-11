@@ -1,3 +1,24 @@
+/*      This file is part of Juggluco, an Android app to receive and display         */
+/*      glucose values from Freestyle Libre 2 and 3 sensors.                         */
+/*                                                                                   */
+/*      Copyright (C) 2021 Jaap Korthals Altes <jaapkorthalsaltes@gmail.com>         */
+/*                                                                                   */
+/*      Juggluco is free software: you can redistribute it and/or modify             */
+/*      it under the terms of the GNU General Public License as published            */
+/*      by the Free Software Foundation, either version 3 of the License, or         */
+/*      (at your option) any later version.                                          */
+/*                                                                                   */
+/*      Juggluco is distributed in the hope that it will be useful, but              */
+/*      WITHOUT ANY WARRANTY; without even the implied warranty of                   */
+/*      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                         */
+/*      See the GNU General Public License for more details.                         */
+/*                                                                                   */
+/*      You should have received a copy of the GNU General Public License            */
+/*      along with Juggluco. If not, see <https://www.gnu.org/licenses/>.            */
+/*                                                                                   */
+/*      Wed Feb 08 11:40:32 CET 2023                                                 */
+
+
 package tk.glucodata;
 import static android.graphics.Color.BLACK;
 import static android.graphics.Color.WHITE;
@@ -270,18 +291,15 @@ public static int floatfontsize;
 @Override 
 protected void onDraw(Canvas floatCanvas) {
  	super.onDraw(floatCanvas);
+	Log.i(LOG_ID,"onDraw");
 	final var glucose= Natives.lastglucose();
 	if(glucose!=null) {
 		final var now=System.currentTimeMillis()/1000L;
 		final var age=now-glucose.time;
 		if(age<oldage) {
 			var gety = floatCanvas.getHeight() * 0.98f;
-		//	floatBitmap.eraseColor(floatingbackground);
-		//	floatCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-		//	floatCanvas.drawColor(floatingbackground, PorterDuff.Mode.CLEAR);
 			floatCanvas.drawColor(floatingbackground);
 			floatPaint.setColor(floatingforeground);
-			Log.i(LOG_ID,"floatview.setImageBitmap");
 			var xpos=floatglucosex;
 			var rate=glucose.rate;
 			if (!isNaN(rate))  {
@@ -319,6 +337,7 @@ protected void onDraw(Canvas floatCanvas) {
 public void	onScreenStateChanged(int state) {
 	switch(state) { 
 		case SCREEN_STATE_ON: {
+			Log.i(LOG_ID,"onScreenStateChanged(int state)"); 
 			invalidatefloat(); 
 			}
 		};
@@ -358,7 +377,10 @@ public boolean onTouchEvent (MotionEvent event) {
 		var distanceX= event.getX() - startX;
 		var distanceY= event.getY() - startY;
 	        Log.i(LOG_ID,"DRAG dx="+distanceX+" dy="+distanceY);
-		if(distanceX!=0.0||distanceY!=0.0)  {
+		var absX=Math.abs(distanceX);
+		var absY=Math.abs(distanceY);
+//		if(distanceX!=0.0||distanceY!=0.0)  {
+		   if(absX>5.0||absY>5.0) {
 		    moved =true;
 		    translate(distanceX*.45f,distanceY*.45f);
 		    }

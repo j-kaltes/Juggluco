@@ -204,4 +204,15 @@
  <string name="heartrate">Hartslag</string>
  <string name="xdripbroadcast">xDrip lokale broadcast</string>
  <string name="floatglucose">Zwevende glucose</string>
+<string name="fontsize">Lettergrootte</string>
+  <string name="fonttoolarge">Lettergrootte te groot: max=</string>
+  <string name="foreground">Voorgrond</string>
+  <string name="background">Achtergrond</string>
+  <string name="transparent">Transparant</string>
+  <string name="touchable">Tastbaar</string>
+  <string name="overlaypermission">Toestemming geven:</string>
+  <string name="deletereminder">Herinnering verwijderen?</string>
+  <string name="deletelabel">Label verwijderen?</string>
+  <string name="finish">Beëindi</string>
+  <string name="finishsensormessage">Deze sensor niet meer gebruiken voor streaming?</string> 
 </resources>

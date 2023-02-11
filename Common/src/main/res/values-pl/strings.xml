@@ -36,8 +36,8 @@
     <string name="detect">Wykryj</string>
     <string name="testip">Sprawdzaj IP</string>
     <string name="testlabel">Sprawdzaj nazwę</string>
-    <string name="passiveonly">Tylko tr. pasywny</string>
-    <string name="activeonly">Tylko tr. aktywny</string>
+    <string name="passiveonly">Tr. pasywny</string>
+    <string name="activeonly">Tr. aktywny</string>
     <string name="both">Oba</string>
     <string name="receivefrom">Odbieraj</string>
     <string name="datapresentuntil">&quot;Dane obecne na odbiorniku do momentu:&quot;</string>

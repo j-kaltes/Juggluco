@@ -31,6 +31,7 @@ class libre3init {
 private static		final  String LOG_ID="libre3init";
 static void init() {
 /*
+Log.i(LOG_ID,"init");
 if(BuildConfig.doLog==1) {
 Log.i(LOG_ID,"testproc");
 new Thread (() -> {
@@ -41,21 +42,8 @@ for(int i=0;i<5000;i++) {
 		int res= Natives.processint(4, input, null);
 //		Log.i(LOG_ID,"Natives.processint(4, input, null)="+res);
 	 }
-	Natives.enddebug();
 	}).start();
 	}
-
-	if(tk.glucodata.ECDHCrypto.verifyinput) {
-		try {
-		       if(java.security.Security.insertProviderAt(org.conscrypt.Conscrypt.newProvider(), 1) < 0) {
-			    Log.i(LOG_ID,"Security.insertProviderAt already installed");
-			    }
-			 else
-				Log.i(LOG_ID,"Security.insertProviderAt installed");
-			} catch (Throwable th) {
-				Log.stack(LOG_ID,"insertProviderAt",th);
-			}
-		}
-*/	 
-	};
+	*/
+	}; 
 }

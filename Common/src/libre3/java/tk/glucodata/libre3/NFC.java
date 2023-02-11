@@ -50,7 +50,9 @@ public static	long   	second(byte[] nfc1,Tag tag) {
 		return 0L;
 		}
 	showbytes("After startTimeIDsum",metcrc);
-	final byte[] secstart={(byte)0x02,(byte)0xA8,(byte)0x7A};
+	final byte[] secstart={(byte)0x02,nfc1[17]==1?(byte)0xA0:(byte)0xA8,(byte)0x7A};
+//		02 A8 7A
+//activate	02 A0 7A
 	byte[] command = new byte[secstart.length + metcrc.length];
         System.arraycopy(secstart, 0, command, 0, secstart.length);
         System.arraycopy(metcrc, 0, command, secstart.length, metcrc.length);

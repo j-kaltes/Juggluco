@@ -1,17 +1,24 @@
-i.p.v. lastglucose waarden uit dowithglucose nemen
 
-Laatste glucose waarde gebruiken.
 
-Oude notificatie blijft op WearOS watch staan.
+****Notifications from Juggluco are not send to watch. But now and then a value is send to the watch and that stays there forever. ***
 
+
+In the Wearos Samsung health app, an ambient mode screen is displayed over the Floating glucose view. Should be the other way around.
+
+Battery consumption.
+
+i.p.v. lastglucose waarden uit dowithglucose nemen?
 
 Horloge constant over Bluetooth i.p.v WIFI
-Heart rate moet niet aangaan zonder permission
-Remove forget and reenable, make all without location permission
-something wrong with gridlayout mobile phone version.
+
+
+Something wrong with gridlayout mobile phone version.
+
 Libreview uit zonder netwerk.
+
 Disable menu bij colorpicker.
-deintrohelp kan beter:
+
+de introhelp kan beter:
 - space voor []
 - benachricht-> Notify?
 

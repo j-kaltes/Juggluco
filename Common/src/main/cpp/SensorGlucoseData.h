@@ -812,9 +812,9 @@ bool savepoll(time_t tim,int id,int glu,int trend,float change) {
 			}
 		uint32_t prevt=polls[count].t;		
 		uint32_t predict =prevt+(id-previd)*getinfo()->pollinterval;
-
-		if((tim-predict)>3*60)   {
-			LOGGER("GLU: oldvalue: pollinterval=%f %d prev=%d savepoll %d nu=%lu,  %d %s",getinfo()->pollinterval,previd,prevt,id,tim,glu,ctime(&tim));
+		const int verschil=tim-predict;
+		if(verschil>3*60)   {
+			LOGGER("GLU: oldvalue: pollinterval=%f %d prev=%d savepoll %d nu=%lu, %d  versch=%d %s",getinfo()->pollinterval,previd,prevt,id,tim,glu,verschil,ctime(&tim));
 			}
 		else {
 			constexpr const double weight=0.9;

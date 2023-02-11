@@ -58,8 +58,12 @@ struct nfc1 {
 			return;
 			}
 		env->GetByteArrayRegion(jnfcout, 0, lens, reinterpret_cast<jbyte*>(&nfc));
+#ifndef NOLOG
+{
 		hexstr hex((uint8_t*)&nfc,lens);
 		LOGGERN(hex.str(),hex.size());
+		}
+#endif
 	    const uint16_t start=0xa5;
 	    if(*reinterpret_cast<const uint16_t*>(nfc.start)!=start) {
 		   LOGGER("NFC: doesn't start with 0xA5,0x0\n");
@@ -199,11 +203,14 @@ extern "C" JNIEXPORT jlong JNICALL fromjava(interpret3NFC2)(JNIEnv *env, jclass 
 	char devaddress[18];
 	mkdeviceaddressstr(devaddress,nfc->deviceAddress);
 	time_t acttime= nfc->activationTime;
+	if(acttime==0) {
+		time(&acttime);
+		}
 #ifndef NOLOG	
 	hexstr pinhex((uint8_t*)&nfc->pin,4);
 	LOGGER("deviceaddres=%s pin=%s activation: %s",devaddress,pinhex.str(),ctime(&acttime));
 #endif
-	int sensindex=sensors->makelibre3sensorindex(std::string_view(first.nfc.serialnumber,9),nfc->activationTime,nfc->pin,devaddress);
+	int sensindex=sensors->makelibre3sensorindex(std::string_view(first.nfc.serialnumber,9),acttime,nfc->pin,devaddress);
 	SensorGlucoseData *sens=sensors->gethist(sensindex);
 	sendstreaming(sens); 
 	libre3stream *streamd=new libre3stream(sensindex,sens);

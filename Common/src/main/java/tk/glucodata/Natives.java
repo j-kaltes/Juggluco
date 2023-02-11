@@ -604,6 +604,7 @@ public static native boolean getfloatingTouchable( );
 
 public static native void setfloatingPos(int val);
 public static native int getfloatingPos( );
+public static native void finishSensor(long dataptr);
 
 //s/^extern.*JNIEXPORT[         ]*\([a-zA-Z]*\)[ ]*JNICALL[      ]*fromjava(\([^)]*\)) *(JNIEnv[^,]*,[^,)]*[,)]\([^){]*\)[^a-zA-Z0-9]*$/public static native \1 \2(\3);/g
 //public static native void sendxdripold();

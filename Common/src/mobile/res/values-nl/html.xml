@@ -874,21 +874,14 @@ bekend is, heb je niets aan een locatie machtiging.</p>
 nieuwe “<i>Apparaten in de buurt</i>” machtiging, die gebruikt
 wordt in plaats van de locatie machtiging, maar ook nodig is voor
 later contact met de sensor.</p>
-<p style="line-height: 100%; margin-bottom: 0in"><i><b>Wakelock</b></i>:
-Sommige gebruikers met Android 13 klagen over connectie problemen. 
+<p style="line-height: 100%; margin-bottom: 0in"><span style="font-style: normal"><b>Wakelock</b></span>:
+Sommige gebruikers met Android 13 klagen over connectie problemen.
 Misschien help dit hen. Op mijn smartphone heb ik het niet nodig en
 op Watch 4 lijkt het geen positief effect te hebben. Het Accu gebruik
 zal hierdoor toenemen.</p>
-<p style="line-height: 100%; margin-bottom: 0in"><b>Vergeet</b>:
-Vergeet het device adres en zoek er naar door Bluetooth apparaten in
-de buurt te scannen zoals Librelink dat overal doet op de Libre 2 app
-in de Verenigde Staten na. Dit vergt een locatie machtiging op
-Android 6-11. Je moet op deze knop drukken als je gelooft dat Abbott
-overal behalve in de Verenigde Staten gelijk heeft.</p>
-<p style="line-height: 100%; margin-bottom: 0in"><b>Reenable</b>:
-Re-enable streaming. Als je op deze knop drukt, wordt er nieuwe
-sensor authenticatie informatie gemaakt bij de volgende keer scannen.
-Het device adres wordt dan opgeslagen.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><span style="font-style: normal"><b>Beëindig</b></span>:
+Maak geen contact via Bluetooth meer met deze sensor. Als je deze
+sensor weer wil gebruiken, hoef je hem alleen maar te scannen.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>Turbo</b>: Als
 dit aanstaat, krijgt de verbinding met de sensor een hogere voorrang.
 Dit moet leiden tot minder verbindingsfouten, maar zou meer stroom

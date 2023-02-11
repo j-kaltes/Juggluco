@@ -708,7 +708,7 @@ con:</p>
 <p>pm enable com.freestylelibre.app.nl</p>
 <h2 class="western">Suono NFC</h2>
 <p>Emette un suono durante la scansione insieme a una vibrazione.</p>
-<h2 class="western">Invia a xDrip+</h2>
+<h2 class="western">Librelink broadcast</h2>
 <p>Invia il flusso Bluetooth di glucosio ogni minuto a xDrip+. In
 xDrip+ hai bisogno del set Libre2 (l\'app patchata) come sorgente
 dati. Il valore che verrà visualizzato in xDrip sarà differente da

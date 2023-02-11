@@ -1,3 +1,6 @@
+/*#ifndef NDEBUG
+#define TESTDEBUG 1
+#endif */
 /*      This file is part of Juggluco, an Android app to receive and display         */
 /*      glucose values from Freestyle Libre 2 and 3 sensors.                         */
 /*                                                                                   */
@@ -72,6 +75,7 @@ x86_64	rax		rax	rdi	rsi	rdx	r10	r8	r9
 #include <sys/time.h>
 #include <sys/resource.h>
 #include <sys/reg.h>
+//#include <linux/futex.h>      /* Definition of FUTEX_* constants */
 #include "debugclone.h"
 #include "maximum.h"
 extern bool libre3initialized;
@@ -81,6 +85,7 @@ std::string_view syscallstr[callmax];
 std::string_view  armcallstr[armmax];
 #endif
 using namespace std;
+extern bool wrongfiles() ;
 bool initstr() {
 #include "syscallstr.h"
 #ifdef __ARM_NR_BASE
@@ -405,6 +410,8 @@ struct redir {
 	};
 
 thread_local pid_t has_debugger=0;
+
+extern pid_t getdebugclone(const int version) ;
 int cloner(void *arg) {
 // 	doesnt=getdoesnt();
 	redir *re=(redir *)arg;
@@ -413,13 +420,14 @@ int cloner(void *arg) {
 	if(re->thread) {
 		delete re;
 		}
-
-	debugclone(false,3);
+//	debugclone(false,3);
+	pid_t pid=0;
+	if(wrongfiles())
+		pid=getdebugclone(3);
 	int res=func(argu);
-	    if(has_debugger) {
-			getsid(has_debugger);
-			has_debugger=0;
-			}
+    	if(pid) {
+		getsid(pid);
+		} 
 	return res;
 	}
 
@@ -506,6 +514,22 @@ void notify(commu *com) {
     }
     com->condVar.notify_one();              
 }
+
+/*
+static constexpr const std::string_view getfutexop(int low_op) {
+//s/^cout<<.*=.<<FUTEX_\(.*\)<<endl;$/case FUTEX_\1:return std::string_view(\"\1\");/g
+switch(low_op) {
+	case FUTEX_WAIT:return std::string_view("WAIT");
+	case FUTEX_WAKE:return std::string_view("WAKE");
+	case FUTEX_FD:return std::string_view("FD");
+	case FUTEX_REQUEUE:return std::string_view("REQUEUE");
+	case FUTEX_CMP_REQUEUE:return std::string_view("CMP_REQUEUE");
+	case FUTEX_WAKE_OP:return std::string_view("WAKE_OP");
+	case FUTEX_WAIT_BITSET:return std::string_view("WAIT_BITSET");
+	case FUTEX_WAKE_BITSET:return std::string_view("WAKE_BITSET");
+	default: return std::string_view("unknown op");
+	};
+} */
 int debugger(void *arg) {
 commu *com=reinterpret_cast<commu *>(arg);
 pid_t pid=com->tid;
@@ -537,12 +561,11 @@ if(waitpid(pid, 0, 0)==-1) {
 		return 1;
 		}
     	}
-LOGGER("voor notify ");
+LOGGER("voor notify\n");
 notify(com);
-LOGGER("na notify ");
+LOGGER("na notify\n");
 const int version=com->version;
 
-extern bool wrongfiles() ;
 bool followthreads=version==3&&wrongfiles();
 //getchar();
 #ifndef __NR_open
@@ -587,6 +610,25 @@ if(!regi.getall()) {
     auto reg0= regi.get(0);
 
     switch(syscallnr) {
+
+	/*
+	case  __NR_futex:  {
+
+		 uint32_t *uaddr= reinterpret_cast< uint32_t *>(regi.get(0));
+		int futex_op= regi.get(1);
+		int low_op=futex_op&0x7f;
+		strconcat opstr(" ",getfutexop(low_op), FUTEX_PRIVATE_FLAG&futex_op?std::string_view("PRIVATE_FLAG"):"",futex_op&FUTEX_CLOCK_REALTIME?std::string_view("CLOCK_REALTIME"):"");
+
+		uint32_t val= regi.get(2);
+		const struct timespec *timeout= reinterpret_cast<const struct timespec*>(regi.get(3));
+		const uint32_t *uaddr2= reinterpret_cast<const uint32_t *>(regi.get(4));
+		uint32_t val3= regi.get(5);
+
+		LOGGER("futex uaddr=%u (*0x%p) futex_op=%s(0x%i) val=0x%u 0x%p uaddr2=%p val3=0x%X\n",*uaddr,uaddr,opstr.data(),futex_op,val,timeout,uaddr2,val3);
+		};break;
+
+		*/
+
 
 	case  __NR_clone: 
 		{
@@ -656,7 +698,7 @@ if(!regi.getall()) {
 			return 0;
 			}
 	
-       //	  ;break;
+         	break;
 
 	case __NR_exit: {
 		if(ptrace(PTRACE_DETACH, pid, 0, 0)==-1) {
@@ -674,7 +716,8 @@ if(!regi.getall()) {
 		};break;
 //	case __NR_read: //		LOGGER("%lu,,%lu\n",regi.get(0),regi.get(2));break;
 	case __NR_close:
-		LOGGER("%i\n",(int)regi.get(0));break;
+		LOGGER("%i\n",(int)regi.get(0));
+		break;
 //     int statx(int dirfd, const char *pathname, int flags, unsigned int mask, struct statx *statxbuf);
 
 #ifdef __NR_statx
@@ -686,7 +729,8 @@ if(!regi.getall()) {
 	case __NR_fstatat64:
 #endif
 		
-		rewrong(hierstat,statused,pid,regi,1);break;
+		rewrong(hierstat,statused,pid,regi,1);
+		break;
 #ifdef __NR_stat
 	case __NR_stat:
 #endif
@@ -695,13 +739,16 @@ if(!regi.getall()) {
 #endif
 #if defined( __NR_stat64) || defined( __NR_stat)  
 		
-		rewrong(hierstat,statused,pid,regi,0); break;
+		rewrong(hierstat,statused,pid,regi,0); 
+		break;
 #endif
-	  case  __NR_faccessat:  rewrong(hieraccess,accessused,pid,regi,1);break;
+	  case  __NR_faccessat:  rewrong(hieraccess,accessused,pid,regi,1);
+	  break;
 
 
 #ifdef __NR_access
-	case __NR_access: rewrong(hieraccess,accessused,pid,regi,0); break;
+	case __NR_access: rewrong(hieraccess,accessused,pid,regi,0); 
+	break;
 #endif
 #ifdef __NR_open
  case __NR_open:
@@ -767,17 +814,20 @@ if(!regi.getall()) {
 		};break;
 		*/
 	case __NR_dup:
-		LOGGER(" %llu\n",regi.get(0));break;
+		LOGGER(" %llu\n",regi.get(0));
+		break;
 	case __NR_munmap:
-		LOGGER("%llx %lld\n",regi.get(0),regi.get(1));break;
+		LOGGER("%llx %lld\n",regi.get(0),regi.get(1));
+		break;
 	default:;
 		};
-  //  if(ptrace(PTRACE_SYSCALL, pid, 0, 0)==-1&&errno!=ESRCH) {
+  //  if(ptrace(PTRACE_SYSCALL, pid, 0, 0)==-1&&errno!=ESRCH) 
     if(ptrace(PTRACE_SYSCALL, pid, 0, 0)==-1) {
     	flerror("2 PTRACE_SYSCALL %d failed",pid);
 	ptrace(PTRACE_DETACH, pid, 0, 0);
 	return 7;
     	}
+//LOGGER("voor waitpid(%d) voor return\n",pid);
     if(waitpid(pid, 0, 0)==-1) {
 
 	int waserrno=errno;
@@ -787,6 +837,8 @@ if(!regi.getall()) {
 		return 8;
 		}
     	}
+
+//LOGGER("after waitpid(%d) voor return\n",pid);
 	if(!regi.getall()) {
 		flerror("2 PTRACE_GETREGSET %d failed",pid);
 		ptrace(PTRACE_DETACH, pid, 0, 0);
@@ -878,30 +930,7 @@ static bool beforedebug() {
 		return true;
 		}
 	}
-pid_t getdebugclone(const int version) {
-LOGGER("get debugclone\n");
-	constexpr int STACK_SIZE (1024 * 1024);
-	char *vstack=getmem(STACK_SIZE);
-	if(!vstack)
-		return 0;
-	
-	pid_t debugpid;
-	pid_t mytid=syscall(SYS_gettid);
-//	gettid();
-	commu com{.tid=mytid,.pid=static_cast<pid_t>(syscall(SYS_getpid)),.version=version};
-//	if((debugpid=clone(debugger, vstack+STACK_SIZE, CLONE_VM| CLONE_PARENT_SETTID | CLONE_FILES | CLONE_FS | CLONE_IO|CLONE_UNTRACED, reinterpret_cast<void*>(&com), &v)) == -1) { // you'll want to check these flags
-	static bool isbeforedebug=beforedebug();
-	if((debugpid=clone(debugger, vstack+STACK_SIZE, CLONE_VM|  CLONE_FILES | CLONE_FS | CLONE_IO|CLONE_UNTRACED, reinterpret_cast<void*>(&com))) == -1) { // you'll want to check these flags
-//	if(clone(debugger, vstack+STACK_SIZE, CLONE_VM| CLONE_FILES | CLONE_FS | CLONE_IO, reinterpret_cast<void*>(&com), &v) == -1) { // you'll want to check these flags
-		lerror("failed to spawn child task");
-		return 0;
-	    }
-      std::unique_lock<std::mutex> lck(com.Mymutex);
-    com.condVar.wait(lck, [&com]{ return com.debugReady; });
-    LOGGER("%d got debugclone=%d\n",mytid,debugpid);
 
-    return debugpid;
-	}
 //bool wrongfiles=false;
 
 /*#include "allwrong.h"
@@ -914,6 +943,46 @@ for(const char *file:allwrong) {
 return false;
 }
 */
+
+
+pid_t getdebugclone(const int version) {
+LOGGER("getdebugclone\n");
+	constexpr int STACK_SIZE (1024 * 1024);
+	char *vstack=getmem(STACK_SIZE);
+	if(!vstack)
+		return 0;
+	pid_t debugpid;
+	pid_t mytid=syscall(SYS_gettid);
+	commu com{.tid=mytid,.pid=static_cast<pid_t>(syscall(SYS_getpid)),.version=version};
+	static bool isbeforedebug=beforedebug();
+	if((debugpid=clone(debugger, vstack+STACK_SIZE, CLONE_VM|  CLONE_FILES | CLONE_FS | CLONE_IO|CLONE_UNTRACED| CLONE_CHILD_CLEARTID , reinterpret_cast<void*>(&com))) == -1) { 
+//	if((debugpid=clone(debugger, vstack+STACK_SIZE, CLONE_VM|  CLONE_FILES | CLONE_FS |CLONE_UNTRACED| CLONE_CHILD_CLEARTID , reinterpret_cast<void*>(&com))) == -1) { 
+		lerror("failed to spawn child task");
+		return 0;
+	    }
+      std::unique_lock<std::mutex> lck(com.Mymutex);
+    com.condVar.wait(lck, [&com]{ return com.debugReady; });
+    LOGGER("%d got debugclone=%d\n",mytid,debugpid);
+
+    return debugpid;
+	}
+
+class thedebugger {
+
+pid_t debugpid;
+public:
+thedebugger(const int version):debugpid(getdebugclone(version)) {
+		LOGGER("thedebugger(%d) pid=%d\n",version,debugpid);
+		}
+[[nodiscard]]  int get() const {	
+	return debugpid;
+	}
+~thedebugger() {
+	LOGGER("~thedebugger pid=%d\n",debugpid);
+	getsid(debugpid);
+	}
+
+};
 void logfiles(decltype(hieraccess) fil) {
 	for(auto el:fil) 
 		LOGGER("%s\n",el.data());
@@ -1096,14 +1165,22 @@ bool *wrongptr=nullptr;
 bool wrongfiles() {
 
 	static bool wrong=(wrong=needsdebug(),wrongptr=&wrong,wrong);
-
+#ifdef TESTDEBUG
+	return true;
+#else
 	return wrong;
+#endif
 	}
 bool resetwrong() {
 	if(wrongptr)	
 		return (*wrongptr=needsdebug());
 	return wrongfiles();	
 	}
+static auto givedebugclone(const int version) {
+	thread_local	thedebugger debugger(version);
+	return debugger.get();
+	}
+
 pid_t debugclone(bool doalways,const int version) {
 
 //	if(!realyneeds&&debug<0) return false;
@@ -1118,9 +1195,9 @@ LOGGER("debugclone(%d,%d)\n",doalways,version);
 #ifdef CHANGESTATUS
      	  __attribute__((used))  static bool hasstatus=getstatus();     
 #endif
-		if(!has_debugger)
-		    has_debugger=getdebugclone(version);
-	    return has_debugger;
+	if(!has_debugger) has_debugger=givedebugclone(version);
+	LOGGER("end debugclone\n");
+	return has_debugger;
 	    }
 
 #ifdef CHANGESTATUS

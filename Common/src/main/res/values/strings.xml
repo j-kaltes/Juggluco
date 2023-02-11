@@ -216,10 +216,14 @@
  <string name="background">Background</string>
  <string name="transparent">Transparent</string>
  <string name="touchable">Touchable</string>
+
  <string name="overlaypermission">To give permission:</string>
  <string name="overlaypermissionmessage">adb shell pm grant tk.glucodata android.permission.SYSTEM_ALERT_WINDOW</string>
  <string name="deletereminder">Delete reminder?</string>
  <string name="deletelabel">Delete label?</string>
+
+ <string name="finish">Terminate</string>
+ <string name="finishsensormessage">Stop using this sensor for streaming?</string>
  
 
 

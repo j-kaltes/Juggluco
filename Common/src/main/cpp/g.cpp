@@ -1,3 +1,7 @@
+
+/*#ifndef NDEBUG
+#define TESTGEN2 1
+#endif   */
 /*      This file is part of Juggluco, an Android app to receive and display         */
 /*      glucose values from Freestyle Libre 2 and 3 sensors.                         */
 /*                                                                                   */
@@ -264,6 +268,13 @@ static	 const int waitsig=60;
 							}
 						} */
 					}
+				sensor* senso=sensors->getsensor(ab.sensorindex);
+				if(senso->finished) {
+					senso->finished=0;
+					setstreaming(ab.hist); //NEEDED/
+					setusedsensors(); //NEEDED
+					return 8<<16|gluval;
+					}
 				return gluval;
 				}
 			const int min=datptr->getSensorAgeInMinutes();
@@ -320,6 +331,15 @@ extern "C" JNIEXPORT jlong JNICALL   fromjava(getsensorptr)(JNIEnv *env, jclass 
 	if(!sdata)
 		return 0LL;
 	return reinterpret_cast<jlong>(sdata->hist);
+	}
+extern "C" JNIEXPORT void JNICALL   fromjava(finishSensor)(JNIEnv *env, jclass cl,jlong dataptr) {
+	streamdata *sdata=reinterpret_cast<streamdata *>(dataptr);
+	if(!sdata)
+		return;
+	LOGGER("finishSensor %s\n",sdata->hist->showsensorname().data());
+	sensors->finishsensor(sdata->sensorindex);
+	setstreaming(sdata->hist); 
+	setusedsensors();
 	}
 extern "C" JNIEXPORT jlong JNICALL   fromjava(getdataptr)(JNIEnv *env, jclass cl,jstring jsensor) {
 	if(!sensors)
@@ -934,6 +954,9 @@ extern "C" JNIEXPORT void  JNICALL   fromjava(reenableStreaming)(JNIEnv *env, jc
 	}
 
 int lastgen=0;
+/*#ifndef NDEBUG
+#define TESTGEN2 1
+#endif */
 int getlastGen() {
 #ifdef TESTGEN2
 		 	lastgen=2;

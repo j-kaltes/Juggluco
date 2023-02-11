@@ -34,9 +34,11 @@ Last success:		Last failure:	 Fail Info
 */
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Paint;
 import android.os.Build;
 import android.view.LayoutInflater;
@@ -95,8 +97,8 @@ TextView streaming;
 TextView address;
 TextView starttimeV;
 TextView rssiview;
-Button forget;
-Button reenable;
+//Button forget;
+//Button reenable;
 Button info;
 void setrow(long[] times, TextView[]  timeviews, TextView info) {
 	for(int i=0;i<2;i++) {
@@ -142,11 +144,12 @@ void showinfo(final SuperGattCallback gatt,MainActivity act) {
 		streaming.setText(" Streaming enabled");
 	else
 		streaming.setText(" Streaming not enabled");
-	var visi=gatt.sensorgen==3?INVISIBLE:VISIBLE;
+	
+/*	var visi=gatt.sensorgen==3?INVISIBLE:VISIBLE;
 	if(!isWearable) {
 		if(reenable!=null)
 			reenable.setVisibility(visi);
-		}
+		} */
 	final int rssi=gatt.readrssi;
 	if(rssi<0) {
 		rssiview.setText("Rssi = "+rssi);
@@ -154,7 +157,7 @@ void showinfo(final SuperGattCallback gatt,MainActivity act) {
 	else
 		rssiview.setText(""); 
 		 
-	if(forget!=null)  {
+/*	if(forget!=null)  {
 		forget.setVisibility(visi);
 		if(gatt.sensorgen!=3) {
 			forget.setOnClickListener(v-> {
@@ -166,6 +169,7 @@ void showinfo(final SuperGattCallback gatt,MainActivity act) {
 				});
 			}
 		}
+		*/
 
 	address.setText(gatt.mActiveDeviceAddress == null?"Address unknown":gatt.mActiveDeviceAddress);
 	if(gatt.sensorgen == 2) {
@@ -194,6 +198,27 @@ Button locationpermission;
 TextView scanview;
 MainActivity activity;
 static private int gattselected=0;
+
+void confirmFinish(SuperGattCallback gat) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+	String serial= gat.SerialNumber;
+        builder.setTitle(serial).
+	 setMessage(R.string.finishsensormessage).
+           setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+				gat.finishSensor();
+				 SensorBluetooth.sensorEnded(serial);
+				 activity.requestRender();
+				 activity.doonback();
+				new bluediag(activity);
+
+                    		}
+                }) .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+
+            }
+        }).show();
+	}
 
 void	setadapter(Activity act,	final ArrayList<SuperGattCallback> gatts) {
 	adap = new RangeAdapter<>(gatts, act, gatt -> {
@@ -225,7 +250,7 @@ void	setadapter(Activity act,	final ArrayList<SuperGattCallback> gatts) {
 //mBluetoothAdapter =  BluetoothAdapter.getDefaultAdapter();
 	LayoutInflater flater= LayoutInflater.from(act);
 	view = flater.inflate(R.layout.bluesensor, null, false);
-	forget=view.findViewById(R.id.forget);
+//	forget=view.findViewById(R.id.forget);
 	info=view.findViewById(R.id.info);
 	info.setVisibility(INVISIBLE);
 	scanview=view.findViewById(R.id.scan);
@@ -257,10 +282,28 @@ void	setadapter(Activity act,	final ArrayList<SuperGattCallback> gatts) {
 			l.setX(x);
 		});
 
-		reenable=view.findViewById(R.id.reenable);
-		reenable.setOnClickListener(v->Natives.reenableStreaming());
+	//	reenable=view.findViewById(R.id.reenable);
+	//	reenable.setOnClickListener(v->Natives.reenableStreaming());
 	}
 		final ArrayList<SuperGattCallback> gatts=SensorBluetooth.mygatts();
+
+	Button finish=view.findViewById(R.id.finish);
+	if(gatts!=null&&gatts.size()>0) {
+		finish.setOnClickListener(v->  {
+			if(gatts!=null&&gatts.size()>0) {
+				if(gattselected>= gatts.size()) {
+					Log.i(LOG_ID,"show: gattselected="+ gattselected);
+					gattselected=0;
+					return;
+					}
+				var gat=gatts.get(gattselected);
+				confirmFinish(gat) ;
+				}
+			});
+		}
+	else {
+		finish.setVisibility(GONE);
+		}
 	contimes=new TextView[]{view.findViewById(R.id.consuccess) , view.findViewById(R.id.confail)};
 	constatus=view.findViewById(R.id.constatus);
 	constatus.setTextIsSelectable(true);
@@ -319,10 +362,11 @@ void	setadapter(Activity act,	final ArrayList<SuperGattCallback> gatts) {
 				});
 			}
 		}
+		/*
 	if(hasperm) 
 		forget.setEnabled(true);
 	else
-		forget.setEnabled(false);
+		forget.setEnabled(false); */
 	spin=view.findViewById(R.id.sensors);
 //	var tmp= gattselected;
 	boolean[] first={true};

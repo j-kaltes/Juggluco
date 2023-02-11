@@ -985,7 +985,7 @@ extern bool saveSputnik_PG2(const jniHistory &hist,time_t nutime,int nuid,const 
 			}
 		else {
 			LOGGER("senso->finished was %d, set to 0\n",senso->finished);
-			senso->finished=0;
+		//	senso->finished=0;
 			hist->saveglucose(data,newnu,gid,gl.getValue(),res->trend(),res->RateOfChange()); 
 			auto last= hist->getScandata();
 //			lastscan=&last.back();
@@ -1236,7 +1236,6 @@ bool nativeexist() {
 	return true;
 	} */
 bool userver2() {
-
 	extern int getlastGen();
 	return getlastGen()==2;
 	}
@@ -1273,12 +1272,12 @@ static int doabbottinit(bool dochmod) {
 			settings->setnodebug(false);
 			}
 		else   {
+		extern thread_local pid_t has_debugger;
 
-	extern thread_local pid_t has_debugger;
 			if(has_debugger) {
 				getsid(has_debugger);
 				has_debugger=0;
-				}
+				} 
 			settings->setnodebug(true);
 			}
 		libpath=native.getlib();
@@ -1697,9 +1696,9 @@ if(alg) {
 		const GlucoseNow & gl=alg->currentglucose();
 		const int gluc=gl.getValue();
 		const int qual=gl.getQuality();
-		LOGGER("processStream %d %.1f\n",qual,gluc/18.0);
+		int gid=gl.getId();
+		LOGGER("processStream %d %d %.1f\n",gid,qual,gluc/18.0);
 		if(!qual&&gluc) {
-			int gid=gl.getId();
 			if(hist->savepoll(nutime,gid,gluc,gl.trend(),gl.rate())) {
 				LOGGER("success\n");
 				return alg;

@@ -51,6 +51,7 @@ import static tk.glucodata.Applic.isWearable;
 import static tk.glucodata.BuildConfig.libreVersion;
 import static tk.glucodata.Gen2.getversion;
 import static tk.glucodata.Libre3.libre3NFC;
+import static tk.glucodata.Natives.showbytes;
 import static tk.glucodata.settings.Settings.removeContentView;
 import static tk.glucodata.util.getbutton;
 import static tk.glucodata.util.getlabel;
@@ -232,6 +233,9 @@ static public void scan(GlucoseCurve curve,Tag tag) {
 					curve.render.badscan =0xff;
 					curve.requestRender();
 					Log.d(LOG_ID,"Read Tag");
+					/*showbytes("uid",uid);
+					showbytes("info",info);
+					showbytes("data",data); */
 					int uit = Natives.nfcdata(uid, info, data);
 					value = uit & 0xFFFF;
 					Log.format("glucose=%.1f\n",(float)value/18.0f);

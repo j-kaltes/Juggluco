@@ -1250,21 +1250,6 @@ Bluetooth para de funcionar.&nbsp;Possivelmente ativar esta opção
 os ajuda.&nbsp;No meu telemóvel não preciso e no Watch4 não faz
 diferença.&nbsp;Se funcionar, aumentará o uso da bateria.</font></font></font></p>
 <p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
-<font><font face="Times"><font size="4" style="font-size: 14pt"><i><b>Esquecer</b></i>&nbsp;:
-Esquece o endereço do dispositivo e procura por ele procurando por
-dispositivos Bluetooth como o Librelink faz em todos os lugares,
-exceto nos EUA.&nbsp;Para isso,  precisa da permissão de localização
-no Android 6 a 11. No Android 12,  precisa da permissão de
-dispositivos próximos.&nbsp; deve pressionar este botão se
-acreditar que a Abbott estava certa em todos os lugares, exceto nos
-EUA.</font></font></font></p>
-<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
-<font><font face="Times"><font size="4" style="font-size: 14pt"><i><b>Reativar</b></i>&nbsp;:
-reativa o streaming.&nbsp;Novas informações de autenticação são
-criadas para se comunicar com o sensor.&nbsp;O endereço do
-dispositivo será definido.&nbsp;Entra em vigor após a varredura do
-sensor.</font></font></font></p>
-<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
 <font><font face="Times"><font size="4" style="font-size: 14pt"><i><b>Turbo</b></i>&nbsp;:
 Aumenta o esforço de contato com o sensor na esperança de que
 resulte em menos erros de conexão, mas pode usar mais energia da
@@ -1494,8 +1479,8 @@ Freestyle Libre 2 e 3 para o Libreview e obter o ID da conta usado
 durante a ativação do sensor do Freestyle Libre 3.&nbsp;Toque para
 alterar as definições.</font></font></p>
 <h2 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
-<font face="Liberation Sans, sans-serif"><font size="4" style="font-size: 16pt">Enviar
-para xDrip</font></font></h2>
+<font face="Liberation Sans, sans-serif"><font size="4" style="font-size: 16pt">Librelink
+broadcast</font></font></h2>
 <p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
 <font face="Times"><font size="4" style="font-size: 14pt">Envia os
 dados do stream de glicose Bluetooth a cada minuto para o xDrip.&nbsp;No

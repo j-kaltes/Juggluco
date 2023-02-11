@@ -275,14 +275,14 @@ static	const bool debug=!changelib&&!settings->data()->setpathworks;
 		settings->data()->asmworks=true;
 	return res;
 	}
-
+/*
 extern "C" JNIEXPORT void JNICALL fromjava(enddebug)(JNIEnv *env, jclass cl) {
 	LOGGER("enddebug\n");
     if(has_debugger) {
 		getsid(has_debugger);
 		has_debugger=0;
 		}
-		}
+	} */
 extern "C" JNIEXPORT jbyteArray JNICALL fromjava(processbar)(JNIEnv *env, jclass cl,jint i2, jbyteArray bArr, jbyteArray bArr2) {
 #if defined(__aarch64__) 
 	const bool changelib=settings->data()->asmworks||!settings->data()->triedasm;

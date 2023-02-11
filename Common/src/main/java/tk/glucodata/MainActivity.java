@@ -214,6 +214,7 @@ static void alarmsExact(Context context) {
 		}).start();
 	} */
        Log.i(LOG_ID,"onCreate end");
+//       if(!isRelease) test.test();
     }
 void handleIntent(Intent intent) {
 	if(intent==null)

@@ -32,38 +32,50 @@ public GlucoseAlarms(Application context) {
 	}
 
 public	void handlealarm() {
-		final long nu = System.currentTimeMillis();
-		long wastime = MyGattCallback.oldtime - showtime;
-		final long afterwait = waitmmsec() + wastime;
-		boolean shouldwake = Natives.shouldwakesender();
-		final long tryagain = nu + showtime;
 		final var view=Floating.floatview;
 		if(view!=null) {
 			view.postInvalidate();
 			}
-		if(afterwait > nu) {
-			Log.i(LOG_ID, "handlealarm notify");
+		final boolean haslossalarm=hasalarmloss();
+		long wastime = MyGattCallback.oldtime - showtime;
+		final long nu = System.currentTimeMillis();
+		boolean shouldwake = Natives.shouldwakesender();
+		final long tryagain = nu + showtime;
+		if(!haslossalarm) {
 			Notify.onenot.oldnotification(wastime);
-			SuperGattCallback.previousglucose=null;
-			long nexttime = (!shouldwake || (afterwait < tryagain && hasalarmloss())) ? afterwait : tryagain;
-			LossOfSensorAlarm.setalarm(Applic.app, nexttime);
-		} else {
-			if (shouldwake)
+			if(shouldwake) {
 				LossOfSensorAlarm.setalarm(Applic.app, tryagain);
-			if (!saidloss) {
-				Log.i(LOG_ID, "handlealarm alarm");
-				long lasttime=Natives.lastglucosetime( );
-				if(lasttime!=0L)
-					wastime=lasttime;
-				if (hasalarmloss()) {
-					Notify.onenot.lossalarm(wastime);
+				MessageSender.sendwakestream();
+				Natives.wakestreamsender();
 				}
-				saidloss = true;
+			return;
 			}
-		}
-		if (shouldwake) {
-			MessageSender.sendwakestream();
-			Natives.wakestreamsender();
+		else  {
+			final long afterwait = waitmmsec() + wastime;
+			if(!haslossalarm||afterwait > nu) {
+				Log.i(LOG_ID, "handlealarm notify");
+				Notify.onenot.oldnotification(wastime);
+				SuperGattCallback.previousglucose=null;
+				long nexttime = (!shouldwake || (afterwait < tryagain && haslossalarm)) ? afterwait : tryagain;
+				LossOfSensorAlarm.setalarm(Applic.app, nexttime);
+			} else {
+				if(shouldwake)
+					LossOfSensorAlarm.setalarm(Applic.app, tryagain);
+				if (!saidloss) {
+					Log.i(LOG_ID, "handlealarm alarm");
+					long lasttime=Natives.lastglucosetime( );
+					if(lasttime!=0L)
+						wastime=lasttime;
+					if (haslossalarm) {
+						Notify.onenot.lossalarm(wastime);
+					}
+					saidloss = true;
+				}
+			}
+			if (shouldwake) {
+				MessageSender.sendwakestream();
+				Natives.wakestreamsender();
+				}
 			}
 	}
 

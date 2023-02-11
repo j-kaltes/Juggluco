@@ -240,7 +240,9 @@ public void searchforDeviceAddress() {
 	boolean streamingEnabled() {//TODO: libre3?
 		return Natives.askstreamingEnabled(dataptr);
 		}
-
+	void finishSensor() {
+		Natives.finishSensor(dataptr);
+		}
 	public void close() {
 		Log.i(LOG_ID,"close");
 		var tmpgatt=mBluetoothGatt ;
