@@ -238,6 +238,7 @@ extern "C" JNIEXPORT void JNICALL   fromjava(setreceiveport)(JNIEnv *env, jclass
 		}
 	}
 extern "C" JNIEXPORT jstring JNICALL   fromjava(getreceiveport)(JNIEnv *env, jclass cl) {
+
 	return env->NewStringUTF(backup->getupdatedata()->port);
 	}
 /*
@@ -268,10 +269,15 @@ extern "C" JNIEXPORT jboolean JNICALL   fromjava(stringarray)(JNIEnv *env, jclas
 
 //extern "C" JNIEXPORT jint JNICALL   fromjava(changebackuphost)(JNIEnv *env, jclass cl,jint pos,jobjectArray jnames,jint nr,jboolean detect,jstring jport,jboolean nums,jboolean stream,jboolean scans,jboolean recover,jboolean receive,jboolean reconnect,jboolean accepts,jstring jpass,jlong starttime) {
 //extern bool mkwearos;
+
+#ifndef TESTMENU
 #include <mutex>
 extern std::mutex change_host_mutex;
+#endif
 extern "C" JNIEXPORT jint JNICALL   fromjava(changebackuphost)(JNIEnv *env, jclass cl,jint pos,jobjectArray jnames,jint nr,jboolean detect,jstring jport,jboolean nums,jboolean stream,jboolean scans,jboolean recover,jboolean receive,jboolean activeonly,jboolean passiveonly,jstring jpass,jlong starttime,jstring jlabel,jboolean testip) {
+#ifndef TESTMENU
   const std::lock_guard<std::mutex> lock(change_host_mutex);
+#endif
 	jint portlen= env->GetStringUTFLength( jport);
 	jint jlen = env->GetStringLength( jport);
 	char port[portlen+1]; env->GetStringUTFRegion( jport, 0,jlen, port); port[portlen]='\0';
@@ -326,7 +332,7 @@ extern "C" JNIEXPORT void JNICALL   fromjava(networkpresent)(JNIEnv *env, jclass
 		}
 	else
 		networkpresent=true;
-#ifndef WEAROS	
+#if !defined(WEAROS) && !defined(TESTMENU)
 	 wakeaftermin(0) ;
 #endif
 	}

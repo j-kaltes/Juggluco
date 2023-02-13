@@ -225,6 +225,15 @@
  <string name="finish">Terminate</string>
  <string name="finishsensormessage">Stop using this sensor for streaming?</string>
  
+ <string name="email">E-Mail:</string>
+ <string name="getaccountid">Get Account ID</string>
 
-
+ <string name="emailaddresstooshort">E-Mail address too short </string>
+ <string name="emailaddresstoolong">E-Mail address too long </string>
+ <string name="password8">Password should be at least 8 characters long </string>
+ <string name="password36">Maximal password length is 36 characters </string>
+ <string name="fromlibreview">From Libreview</string>
+ <string name="manual">Manually</string>
+<string name="noaccountidspecified">No account id specified </string>
+<string name="wrongformat">Wrong format </string>
 </resources>

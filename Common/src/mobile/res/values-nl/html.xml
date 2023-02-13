@@ -1595,13 +1595,13 @@ Apparaten.</p>
 <p style="line-height: 100%; margin-bottom: 0in">Elke keer wanneer
 weggedraaid wordt van Juggluco, zendt Juggluco nieuwe data naar
 Libreview als dat de laatste 20 minuten niet al gedaan is. Je kunt
-ook handmatig zenden door op “<b>Zendt nu</b>” te drukken.</p>
+ook handmatig zenden door op “<b>Zend nu</b>” te drukken.</p>
 <p style="line-height: 100%; margin-bottom: 0in">Alleen maar glucose
 waarden worden naar Libreview gezonden; geen gegevens met betrekking
 tot eten, activiteit, insuline of scanfouten. Vanaf Juggluco 4.1.0
 wordt ook glucosewaarden van FreeStyle Libre 3 sensoren naar
 Libreview gezonden.</p>
-<p style="line-height: 100%; margin-bottom: 0in"><b>Herzendt data</b>:
+<p style="line-height: 100%; margin-bottom: 0in"><b>Herzend data</b>:
 Zendt alle data van de laatste 90 dagen opnieuw naar Libreview. Je
 moet hier op drukken als je een nieuwe Libreview account wilt
 gebruiken.</p>
@@ -1627,8 +1627,8 @@ tegelijkertijd verbonden kan zijn. Bij het zenden van data naar
 Libreview probeert Juggluco dit na te bootsen door eerst data van een
 sensor te zenden en pas wanneer van die sensor geen data meer is,
 wordt er data van de volgende sensor verzonden.</p>
-<p style="line-height: 100%; margin-bottom: 0in"><b>Get</b> <b>Account
-ID</b>: 
+<p style="line-height: 100%; margin-bottom: 0in"><b>Account</b><b>-</b><b>ID</b><b>
+ophalen</b>: 
 </p>
 <p style="line-height: 100%; margin-bottom: 0in">Als je je Libreview
 account id wil krijgen, maar geen glucose waarden naar Libreview will
@@ -1676,8 +1676,8 @@ Kerfstok wit op zwart weergegeven moet worden of zwart op wit.</p>
 </string>
 <string name="librenumhelp" >
 <![CDATA[
-<p>Vink &quot;<b>Zendt hoeveelheden</b>&quot;
-aan om hoeveelheden naar Libreview te zenden. Om &quot;<i>Zendt
+<p>Vink &quot;<b>Zend hoeveelheden</b>&quot;
+aan om hoeveelheden naar Libreview te zenden. Om &quot;<i>Zend
 hoeveelheden</i>&quot; aan te kunnen vinken, moet je eerst voor elk
 label aangeven wat het is.</p>
 ]]>
@@ -1701,6 +1701,28 @@ Librelink. Van de hoeveelheid wordt dan een opmerking gemaakt die
 bestaat uit het label gevolgd door de hoeveelheid. Bijvoorbeeld
 wanneer je het label &quot;<i>Fietsen</i>&quot; had en <i>50</i>
 ingevoerd hebt, wordt de opmerking &quot;<i>Fietsen 50</i>&quot;.</p>
+]]>
+</string>
+<string name="getaccountidhelp" >
+<![CDATA[
+<h1 class="western">Account-ID ophalen</h1>
+<p style="line-height: 100%; margin-bottom: 0in">Hoe krijg je de
+Libreview-account-ID die nodig is voor het scannen van een Freestyle
+Libre 3-sensor via NFC? Als je &quot;<b>Handmatig</b>&quot; opgeeft,
+kun je de account-ID handmatig invoeren. Je kunt ook &quot;<i><span style="font-weight: normal">Handmatig</span></i>&quot;
+uitschakelen en op &quot;<i>Van Libreview</i>&quot; drukken om het
+e-mailadres en wachtwoord van je account te gebruiken om het van
+Libreview te ontvangen.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Het is ook mogelijk
+om het Libreview-account-ID van Libreview te ontvangen en daarna
+&quot;<i>handmatig</i>&quot; in te stellen en het e-mailadres en
+wachtwoord van het Libreview-account te wijzigen. Wanneer je daarna
+&quot;<i>Zend</i><i> naar Libreview</i>&quot; instelt en op &quot;<i>H</i><i>erzend
+data</i>&quot; drukt, worden gegevens naar dat andere
+Libreview-account verzonden, maar de vorige account-ID wordt nog
+steeds gebruikt om de sensor via NFC te scannen. Op deze manier
+stuurt Juggluco gegevens naar een ander Libreview-account dan de
+Libre 3-app van Abbotts gebruikt.</p>
 ]]>
 </string>
 </resources>

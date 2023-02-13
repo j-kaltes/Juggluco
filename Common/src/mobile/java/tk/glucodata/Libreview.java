@@ -622,6 +622,7 @@ private static void		confirmGetAccountID(Activity context) {
 	 setMessage(R.string.getaccountidmessage).
            setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+			Natives.setlibreAccountIDnumber(-1L);
 			Natives.askServerforAccountID();
                     }
                 }) .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -629,14 +630,112 @@ private static void		confirmGetAccountID(Activity context) {
             }
         }).show();
 	}
+
+
+
+private static void getAccountid(MainActivity context, 	Predicate<Boolean> getgegs,View settingsview,CheckBox sendto,boolean[] donothing) {
+	var setmanually=Natives.manualLibreAccountIDnumber()!=-1L;
+	var manual=getcheckbox(context,R.string.manual, setmanually);;
+
+	long accountidnum=Natives.getlibreAccountIDnumber();
+	var editid = new EditText(context);
+	editid.setText(accountidnum+"");
+	editid.setImeOptions(tk.glucodata.settings.Settings.editoptions);
+	editid.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+	     editid.setMinEms(5);
+	var fromlibreview=getbutton(context,R.string.fromlibreview);
+	var save=getbutton(context,R.string.save);
+	var close=getbutton(context,R.string.cancel);
+
+	var help=getbutton(context,R.string.helpname);
+
+	help.setOnClickListener(v-> help(R.string.getaccountidhelp,context));
+	Consumer<Boolean> domanual= isChecked -> {
+		if(!isChecked) {
+			fromlibreview.setVisibility(VISIBLE);
+			editid.setVisibility(INVISIBLE);
+
+		}
+		else {
+			editid.setVisibility(VISIBLE);
+			fromlibreview.setVisibility(INVISIBLE);
+		}
+	};
+	domanual.accept(setmanually);
+	manual.setOnCheckedChangeListener(
+			(buttonView,  isChecked) -> domanual.accept(isChecked)
+
+	);
+      manual.setPadding(0,0,(int)(tk.glucodata.GlucoseCurve.metrics.density*10),0);
+	final Layout layout=new Layout(context, (lay, w, h) -> {
+		var height=GlucoseCurve.getheight();
+		var width=GlucoseCurve.getwidth();
+                        if(w>=width||h>=height) {
+                                lay.setX(0);
+                                lay.setY(0);
+                                }
+                        else {
+                                lay.setX((width-w)/2); lay.setY(0);
+                                };
+                        return new int[] {w,h};}, new View[]{manual,editid,help},new View[]{fromlibreview,close,save});
+
+      layout.setBackgroundResource(R.drawable.dialogbackground);
+      int pad= (int)tk.glucodata.GlucoseCurve.metrics.density*7;
+	 layout.setPadding(pad,pad,pad,pad);
+	context.addContentView(layout, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT));
+	Runnable closerun=()-> {
+		layout.setVisibility(GONE);
+		removeContentView(layout);
+		config(context,  settingsview,sendto, donothing);
+		};
+	save.setOnClickListener(v->  {
+		if(manual.isChecked()) {
+			String idstr = editid.getText().toString();
+			try {
+				if (idstr.length() > 0) {
+					long id = Long.parseLong(idstr);
+					Natives.setlibreAccountIDnumber(id);
+
+					Toast.makeText(context, context.getString(R.string.saved)+ " "+ id, Toast.LENGTH_SHORT).show();
+				} else {
+
+					Toast.makeText(context, context.getString(R.string.noaccountidspecified), Toast.LENGTH_SHORT).show();
+					return;
+				}
+			} catch (Throwable th) {
+				Toast.makeText(context, context.getString(R.string.wrongformat) + idstr, Toast.LENGTH_SHORT).show();
+				Log.stack(LOG_ID, "parse account id", th);
+				return;
+			}
+		}
+		else {
+			Natives.setlibreAccountIDnumber(-1L);
+			}
+
+		context.doonback();
+		});
+	
+	fromlibreview.setOnClickListener(v->   {
+		if(!getgegs.test(true))
+				return;
+
+		confirmGetAccountID(context) ;
+		}
+		);
+
+	context.setonback(closerun);
+	close.setOnClickListener(v->  {
+			context.doonback();
+			});
+	}
 //		Natives.askServerforAccountID();
 public static void  config(MainActivity act, View settingsview,CheckBox sendto,boolean[] donothing) {
 	EnableControls(settingsview,false);
-	var emaillabel=getlabel(act,"E-Mail:");
+	var emaillabel=getlabel(act,R.string.email);
 	var email=getedit(act, getlibreemail());
         email.setMinEms(12);
 
-	var passlabel=getlabel(act,"Password:");
+	var passlabel=getlabel(act,act.getString(R.string.password)+":");
 	var      editpass= new EditText(act);
         editpass.setImeOptions(editoptions);
         editpass.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
@@ -665,7 +764,7 @@ public static void  config(MainActivity act, View settingsview,CheckBox sendto,b
 	sendtolibreview.setOnCheckedChangeListener( (buttonView,  isChecked) -> {
 		numbers.setVisibility(isChecked?VISIBLE:INVISIBLE);;
 		});
-	var clear=getbutton(act,"Resend data");	
+	var clear=getbutton(act,R.string.resenddata);
 	  var statusview=getlabel(act,librestatus==success?(posttime+": "+librestatus):librestatus);
 	  int statuspad=  (int)tk.glucodata.GlucoseCurve.metrics.density*7;
 	statusview.setPadding(statuspad,statuspad,statuspad,statuspad);
@@ -676,7 +775,7 @@ public static void  config(MainActivity act, View settingsview,CheckBox sendto,b
 //	  clear.setPadding(0,0,0,pad*5);
 	long accountidnum=Natives.getlibreAccountIDnumber();
 	var accountid=getlabel(act, String.valueOf(accountidnum));
-	var getaccountid=getbutton(act,"Get Account ID");
+	var getaccountid=getbutton(act,R.string.getaccountid);
 var space=getlabel(act,"        ");
 	final Layout layout=new Layout(act, (lay, w, h) -> {
 		var height=GlucoseCurve.getheight();
@@ -716,19 +815,19 @@ var space=getlabel(act,"        ");
 			String passstr=editpass.getText().toString();
 			if(use) {
 				if(emailstr.length()<3) {
-					Toast.makeText(act, "E-Mail address too short "+emailstr, Toast.LENGTH_SHORT).show();
+					Toast.makeText(act, act.getString( R.string.emailaddresstooshort)+emailstr, Toast.LENGTH_SHORT).show();
 					return false;
 					}
 				if(emailstr.length()>255) {
-					Toast.makeText(act, "E-Mail address too long "+emailstr, Toast.LENGTH_SHORT).show();
+					Toast.makeText(act,  act.getString( R.string.emailaddresstoolong)+emailstr, Toast.LENGTH_SHORT).show();
 					return false;
 					}
 				if(passstr.length()<3) {
-					Toast.makeText(act, "Password should be at least 8 characters long "+passstr, Toast.LENGTH_SHORT).show();
+					Toast.makeText(act, act.getString(R.string.password8)+passstr, Toast.LENGTH_SHORT).show();
 					return false;
 					}
 				if(passstr.length()>36) {
-					Toast.makeText(act, "Maximal password length is 36 characters "+passstr, Toast.LENGTH_SHORT).show();
+					Toast.makeText(act,  act.getString(R.string.password36)+passstr, Toast.LENGTH_SHORT).show();
 					return false;
 					}
 				}	
@@ -753,9 +852,11 @@ var space=getlabel(act,"        ");
 			donothing[0]=false;
 			});
 	getaccountid.setOnClickListener(v->  {
-		if(!getgegs.test(true))
-				return;
-		confirmGetAccountID(act);
+//		confirmGetAccountID(act);
+
+			layout.setVisibility(GONE);
+			removeContentView(layout);
+		 getAccountid(act,getgegs,  settingsview,sendto, donothing);
 //		Natives.askServerforAccountID();
 		});
 	      layout.setBackgroundResource(R.drawable.dialogbackground);

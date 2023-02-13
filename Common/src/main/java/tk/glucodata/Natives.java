@@ -496,10 +496,14 @@ public static native void setlibrepass(String pass);
 public static native String getlibrepass( );
 public static native void setlibreDeviceID(boolean l3,String DeviceID);
 public static native String getlibreDeviceID( boolean l3);
+
 public static native void setlibreAccountID(String AccountID);
 public static native void askServerforAccountID();
 public static native long getlibreAccountIDnumber();
+public static native void setlibreAccountIDnumber(long num);
+
 public static native String getlibreAccountID( );
+
 public static native void setlibreUserToken(boolean l3, String UserToken);
 public static native String getlibreUserToken(boolean l3 );
 public static native void setnewYuApiKey(boolean l3,String jpass);
@@ -517,7 +521,7 @@ public static native String getGuardianLastNameName( );
 
 
 //public static native long interpret3NFC1(byte[] b);
-public static native long interpret3NFC2(byte[] nfc1,byte[] b);
+public static native long interpret3NFC2(byte[] nfc1,byte[] b,long time);
 public static native long getLibre3secs(byte[]  nfc1ar);
 public static native long getLibre3Sensorptr(String sensorid,long starttime);
 public static native long getLibre3SensorptrPD(String sensorid,long starttime,byte[] pin,String deviceaddress);
@@ -605,6 +609,8 @@ public static native boolean getfloatingTouchable( );
 public static native void setfloatingPos(int val);
 public static native int getfloatingPos( );
 public static native void finishSensor(long dataptr);
+
+public static native long manualLibreAccountIDnumber( );
 
 //s/^extern.*JNIEXPORT[         ]*\([a-zA-Z]*\)[ ]*JNICALL[      ]*fromjava(\([^)]*\)) *(JNIEnv[^,]*,[^,)]*[,)]\([^){]*\)[^a-zA-Z0-9]*$/public static native \1 \2(\3);/g
 //public static native void sendxdripold();

@@ -175,7 +175,7 @@
  <string name="lowglucose">" Laag Glucose!"</string>
  <string name="highglucose">" Hoog Glucose!"</string>
  <string name="sendto">Zend naar</string>
- <string name="resenddata">Resend data</string>
+ <string name="resenddata">Herzend data</string>
  <string name="minimum">Minimum</string>
  <string name="minuteddeactivated">Minuten op non-actief:</string>
  <string name="duractionsec">Duur (sec):</string>
@@ -213,6 +213,21 @@
   <string name="overlaypermission">Toestemming geven:</string>
   <string name="deletereminder">Herinnering verwijderen?</string>
   <string name="deletelabel">Label verwijderen?</string>
-  <string name="finish">Beëindi</string>
+  <string name="finish">Beëindig</string>
   <string name="finishsensormessage">Deze sensor niet meer gebruiken voor streaming?</string> 
+
+
+ <string name="email">E-mail:</string>
+ <string name="getaccountid">Account-ID ophalen</string>
+
+ <string name="emailaddresstooshort">E-mailadres te kort </string>
+ <string name="emailaddresstoolong">E-mailadres te lang </string>
+ <string name="password8">Wachtwoord moet minimaal 8 tekens lang zijn </string>
+ <string name="password36">Maximale wachtwoordlengte is 36 tekens </string>
+ <string name="fromlibreview">Van Libreview</string>
+ <string name="manual">Handmatig</string>
+ <string name="noaccountidspecified">Geen account-ID opgegeven </string>
+ <string name="wrongformat">Verkeerde opmaak </string>
+
+
 </resources>

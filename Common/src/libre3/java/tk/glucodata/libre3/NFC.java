@@ -58,7 +58,7 @@ public static	long   	second(byte[] nfc1,Tag tag) {
         System.arraycopy(metcrc, 0, command, secstart.length, metcrc.length);
 	showbytes("NFC command2: ",command);
         var second= AlgNfcV.wholenfccmd(tag,command);
-	return interpret3NFC2(nfc1,second);
+	return interpret3NFC2(nfc1,second,nowsec);
 	}
 
 

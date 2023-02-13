@@ -1,5 +1,5 @@
-#DEVICE=JQE6R18402000126	
-DEVICE=1cf6c96
+DEVICE=JQE6R18402000126	
+#DEVICE=1cf6c96
 
 ADB="adb -s  $DEVICE "
 $ADB shell rm /data/local/tmp/glucose

@@ -804,6 +804,9 @@ extern "C" JNIEXPORT jstring  JNICALL   fromjava(getlibreUserToken)(JNIEnv *env,
 	}
 
 static jlong getlibreaccountidnumber() {
+	 const jlong num=settings->data()->libreaccountIDnum;
+	 if(num!=-1LL)
+	 	return num;
 	 auto &accountid=settings->data()->libreviewAccountID;
 	 uint32_t res=0;	
          for(auto el:accountid) {
@@ -819,32 +822,13 @@ static jlong getlibreaccountidnumber() {
 extern "C" JNIEXPORT jlong  JNICALL   fromjava(getlibreAccountIDnumber)(JNIEnv *env, jclass cl) {
 	 return  getlibreaccountidnumber();
 	 }
-/*
-extern "C" JNIEXPORT jint  JNICALL   fromjava(getlibreAccountIDnumber)(JNIEnv *env, jclass cl) {
-	 auto accountid=settings->data()->libreviewAccountID;
-	 const int len=accountid.size();
-	 const char *str=accountid.data();
-	 int res=0;	
-         for(int i=0;i<len;i++) {
-            res = (res * (-2128831035))^str[i];
-            }
-	 return res;
+extern "C" JNIEXPORT void  JNICALL   fromjava(setlibreAccountIDnumber)(JNIEnv *env, jclass cl,jlong num) {
+	 settings->data()->libreaccountIDnum=num;
 	 }
-
-
-static  private final int h(String str) {
-        int length = str.length();
-        int i2 = 0;
-        int i3 = 0;
-        while (i2 < length) {
-            char charAt = str.charAt(i2);
-            i2++;
-            int i4 = i3 * (-2128831035);
-            i3 = i4 ^ charAt;
-        }
-        return i3;
-    }
-
+extern "C" JNIEXPORT jlong  JNICALL   fromjava(manualLibreAccountIDnumber)(JNIEnv *env, jclass cl) {
+	 return settings->data()->libreaccountIDnum;
+	 }
+/*
 extern "C" JNIEXPORT jint  JNICALL   fromjava(getlastGen)(JNIEnv *env, jclass cl) {
 	return getlastGen();
 	}
@@ -1123,4 +1107,26 @@ extern "C" JNIEXPORT void  JNICALL   fromjava(setfloatingPos)(JNIEnv *env, jclas
 extern "C" JNIEXPORT jint  JNICALL   fromjava(getfloatingPos)(JNIEnv *env, jclass cl) {
 	return settings->data()->floatingPos;
 	}
+
+
+
+extern "C" JNIEXPORT jstring JNICALL fromjava(renewlibreaccount)(JNIEnv *env, jclass thiz,jstring jinaccount) {
+	 const jlong num=settings->data()->libreaccountIDnum;
+	 #ifndef NOLOG
+static	 constexpr const char isnull[]="null";
+      const char *id = env->GetStringUTFChars( jinaccount, NULL);
+        destruct   dest([jinaccount,id,env]() {if(id!=isnull)
+		env->ReleaseStringUTFChars(jinaccount, id);});
+	if(!id)
+		id=isnull;
+	#endif	
+	 if(num!=-1LL) {
+	 	char buf[40];
+	 	sprintf(buf,"%lld",num);
+		LOGGER("renewlibreaccount(%s) to %s\n",id,buf);
+		return env->NewStringUTF(buf);
+		}
+	LOGGER("renewlibreaccount(%s) keep old\n",id);
+	return jinaccount;
+        }
 

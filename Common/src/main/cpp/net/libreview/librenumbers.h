@@ -186,11 +186,15 @@ class Numbers: public LibreType {
 		}
 
 static float longWeight(uint32_t type) { 
+	if(type>=settings->varcount())
+		return 0.0f;
 	if(settings->data()->librenums[type].kind==2)
 		return 1.0f;
 	return 0.0f;
 	}	
 static float rapidWeight(uint32_t type) { 
+	if(type>=settings->varcount())
+		return 0.0f;
 	if(settings->data()->librenums[type].kind==1)
 		return 1.0f;
 	return 0.0f;
@@ -216,12 +220,16 @@ static std::string_view getmealtype(const Num &num) {
 	return "Snack";
 	}
 static float carboWeight(int type) { //TODO in settings
+	if(type>=settings->varcount())
+		return 0.0f;
 	if(settings->data()->librenums[type].kind==3)
 		return settings->data()->librenums[type].weight;
 	return 0.0f;
 	}
 static bool isNote(int type) { //TODO in settings
 //	return 	carboWeight(type)==0.0f&& rapidWeight(type)==0.0f&&longWeight(type)==0.0f;
+	if(type>=settings->varcount())
+		return false;
 	return settings->data()->librenums[type].kind==4;
 	}
 //s/addnum(\([^,nextlibrenr())]*\))/addnum(\1,nextlibrenr())/g
@@ -263,13 +271,24 @@ public:
 		}
 	}
 
-
+//inline static bool logall=false;
  void insulinel(char *&ptr,const Num &n,Libregeg *ids,bool del=false) {
+ /*	if(logall) {
+		time_t tim=n.time;
+		LOGGER("insulinel type=%d %.1f %d %s",n.type,n.value,tim,ctime(&tim));
+		} */
 	if(n.value!=0.0f) {
 		auto rapid=rapidWeight(n.type);
 		if(rapid!=0.0f) {
 			static constexpr const std::string_view	rapidname{"RapidActing"};
-			auto recordnum=mkid<irapid>(del?n.librenr:ids->addnum(n,nextlibrenr()));
+			int librenr;			
+			if(del) {
+				librenr=n.librenr;
+				}
+			else {
+				librenr=ids->addnum(n,nextlibrenr());
+				}
+			auto recordnum=mkid<irapid>(librenr);
 
 			int len=writeinsulin(ptr,rapidname,n.value*rapid,recordnum,n.time,del);
 			ptr+=len;
@@ -277,7 +296,15 @@ public:
 		auto ilongw=longWeight(n.type);
 		if(ilongw!=0.0f) {
 			static constexpr const std::string_view	longname{"LongActing"};
-			auto recordnum=mkid<ilong>(del?n.librenr:ids->addnum(n,nextlibrenr()));
+			int librenr;			
+			if(del) {
+				librenr=n.librenr;
+				}
+			else {
+				librenr=ids->addnum(n,nextlibrenr());
+				}
+
+			auto recordnum=mkid<ilong>(librenr);
 
 			int len=writeinsulin(ptr,longname,n.value*ilongw,recordnum,n.time,del);
 			ptr+=len;

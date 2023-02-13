@@ -35,7 +35,9 @@
 #ifdef LIBRENUMBERS
 #include "librenumbers.h"
 #endif
+constexpr const int DEBUGLEN=0;
 constexpr const int EXTRALEN=
+
 #ifdef NDEBUG
 30
 #else
@@ -497,7 +499,7 @@ afterlocalstartime.size() +afterhists.size() + afterscans.size()+ usertokenlen+ 
 time_t tim=scantime;
 	LOGGER("usertokenlen=%d histtotal=%d histelUitlen=%d senslen=%d nrscans=%u scanelsize=%d totallen=%d nu=%u scantime=%u %s",usertokenlen,histtotal,histelUitlen,senslen,nrscans,scanelsize,totallen,nu,scantime,ctime(&tim));
 #endif
-	char *uitbuf=new(std::nothrow) char[totallen+EXTRALEN*10];
+	char *uitbuf=new(std::nothrow) char[totallen+EXTRALEN*10+DEBUGLEN];
 
 	if(!uitbuf) {
 		LOGGER("libreview: new char[%d] failed\n",totallen+EXTRALEN*10);

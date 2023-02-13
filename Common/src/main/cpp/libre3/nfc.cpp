@@ -166,7 +166,7 @@ extern "C" JNIEXPORT jlong JNICALL fromjava(getLibre3secs)(JNIEnv *env, jclass t
 	}
 
 extern void	sendstreaming(SensorGlucoseData *hist);
-extern "C" JNIEXPORT jlong JNICALL fromjava(interpret3NFC2)(JNIEnv *env, jclass thiz, jbyteArray  nfc1ar,jbyteArray jnfcout) {
+extern "C" JNIEXPORT jlong JNICALL fromjava(interpret3NFC2)(JNIEnv *env, jclass thiz, jbyteArray  nfc1ar,jbyteArray jnfcout,jlong now) {
 	nfc1 first(env,nfc1ar);
 	if(first.error) {
 		return 0LL;
@@ -204,7 +204,8 @@ extern "C" JNIEXPORT jlong JNICALL fromjava(interpret3NFC2)(JNIEnv *env, jclass 
 	mkdeviceaddressstr(devaddress,nfc->deviceAddress);
 	time_t acttime= nfc->activationTime;
 	if(acttime==0) {
-		time(&acttime);
+		acttime=now;
+//		time(&acttime);
 		}
 #ifndef NOLOG	
 	hexstr pinhex((uint8_t*)&nfc->pin,4);

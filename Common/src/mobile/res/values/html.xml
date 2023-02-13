@@ -1494,16 +1494,21 @@ scan the sensor.</p>
 stream data received via Bluetooth to create these 15 minute points
 by averaging the stream values around each point. Now and then it
 also sends an individual stream value in the same way as individual
-scanned values are sent to Libreview by Abbott\'s Librelink app.</p>
+scanned values are sent to Libreview by Abbott\'s Librelink app.
+Juggluco doesn\'t need to be constantly connected to the internet for
+all data to be send to Libreview. Like the Librelnk app, it sends
+data from the last 89 days to Libreview. What is necessary is that
+Juggluco is constantly connected to a Freestyle Libre 2 sensor via
+Bluetooth. Freestyle Libre 3 sensors can be disconnection from
+Juggluco for up to two hours..</p>
 <p style="line-height: 100%; margin-bottom: 0in"><span lang="en-US">To
 make use of this service, you need to create a Libreview account at
 <a class="western" href="https://libreview.com/">https://libreview.com</a>
-and specify its E-Mail address and password here.</span><span lang="en-US">
-</span><span lang="en-US">Don\'t send data from the same period
-multiple times to the same Libreview account (for example from the
-Librelink app and Juggluco). You can delete existing devices in
-Libreview in Account Settings-&gt;My devices or you can take a new
-Libreview account.</span><span lang="en-US"> </span>
+and specify its E-Mail address and password here.</span> <span lang="en-US">Don\'t
+send data from the same period multiple times to the same Libreview
+account (for example from the Librelink app and Juggluco). You can
+delete existing devices in Libreview in Account Settings-&gt;My
+devices or you can take a new Libreview account.</span> 
 </p>
 <p style="line-height: 100%; margin-bottom: 0in"><span lang="en-US">To
 turn it on, you also need to check &quot;</span><span lang="en-US"><i><b>Send
@@ -1659,6 +1664,26 @@ grant tk.glucodata android.permission.SYSTEM_ALERT_WINDOW</b></p>
 <br/>
 
 </p>
+]]>
+</string>
+<string name="getaccountidhelp" >
+<![CDATA[
+<h1 class="western">Get Account ID</h1>
+<p style="line-height: 100%; margin-bottom: 0in">How to get the
+Libreview Account ID needed to for scanning a Freestyle Libre 3
+sensor via NFC? If you specify &quot;<strong>Manual</strong><strong>ly</strong><strong>&quot;</strong>,
+you can enter the Account ID manually. You can also unset “<i>manually</i>”
+and press on &quot;<strong>From Libreview</strong>&quot; to use you
+account e-mail address and password to receive it from Libreview.</p>
+<p style="line-height: 100%; margin-bottom: 0in">It is also possible
+to receive the Libreview Account id from Libreview and thereafter set
+&quot;<em>manual</em><em>ly</em><em>&quot;</em> and change the
+Libreview account e-mail address and password. When you thereafter
+set &quot;<i>Send to Libreview</i>&quot; and press &quot;<i>Resend
+data</i>&quot;, data will be sent to that different Libreview
+account, but the previous account ID is will still be used to scan
+the sensor via NFC. This way, Juggluco sends data to a different
+Libreview account than Abbotts Libre 3 app uses.</p>
 ]]>
 </string>
 </resources>

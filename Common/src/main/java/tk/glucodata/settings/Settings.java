@@ -835,7 +835,7 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 	       var floatconfig=getbutton(context,R.string.floatglucose);
 	       floatconfig.setOnClickListener(v-> tk.glucodata.FloatingConfig.show(context));
 		CheckBox floatglucose=new CheckBox(context);
-		floatglucose.setText("        " );
+		floatglucose.setText("  " );
 
 /*
 	   floatglucose.setPadding(0,0,0,0);

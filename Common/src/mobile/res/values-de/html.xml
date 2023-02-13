@@ -2219,4 +2219,27 @@ grant tk.glucodata android.permission.SYSTEM_ALERT_WINDOW</b></p>
 </p>
 ]]>
 </string>
+<string name="getaccountidhelp" >
+<![CDATA[
+<h1 class="western">Konto-ID erhalten</h1>
+<p style="line-height: 100%; margin-bottom: 0in">Wie erhalte ich die
+Libreview-Konto-ID, die zum Scannen eines Freestyle Libre 3-Sensors
+über NFC erforderlich ist? Wenn Sie „<b>Manuell</b>“ angeben,
+können Sie die Konto-ID manuell eingeben.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Sie können
+„<i>Manuell</i>“ auch deaktivieren und auf „Von<i> Libreview</i>“
+drücken, um die E-Mail-Adresse und das Passwort Ihres Kontos zu
+verwenden, um es von Libreview zu erhalten. 
+</p>
+<p style="line-height: 100%; margin-bottom: 0in">Es ist auch möglich,
+die Libreview-Konto-ID von Libreview zu erhalten und danach „<i>manuell</i>“
+einzustellen und die E-Mail-Adresse und das Passwort des
+Libreview-Kontos zu ändern. Wenn Sie danach „<i>An Libreview
+senden</i>“ einstellen und auf „<i>Daten erneut senden</i>“
+klicken, werden Daten an dieses andere Libreview-Konto gesendet, aber
+die vorherige Konto-ID wird weiterhin verwendet, um den Sensor über
+NFC zu scannen. Auf diese Weise sendet Juggluco Daten an ein anderes
+Libreview-Konto als das, das die Abbotts Libre 3-App verwendet.</p>
+]]>
+</string>
 </resources>

@@ -564,14 +564,16 @@ public static void wakemirrors() {
 
 static	void initbroadcasts() {
 
-	if(Natives.getinitVersion()<14) {
-		if(Natives.getinitVersion()<13) {
-			Broadcasts.updateall();
+	if(Natives.getinitVersion()<15) {
+		if(Natives.getinitVersion()<14) {
+			if(Natives.getinitVersion()<13) {
+				Broadcasts.updateall();
+				}
+			Natives.setfloatingFontsize((int) Notify.glucosesize);
+			Natives.setfloatingbackground(WHITE);
+			 Natives.setfloatingforeground(BLACK);
 			}
-		Natives.setfloatingFontsize((int) Notify.glucosesize);
-		Natives.setfloatingbackground(WHITE);
-		 Natives.setfloatingforeground(BLACK);
-		Natives.setinitVersion(14);
+		Natives.setinitVersion(15);
 		}
 	var pos=Natives.getfloatingPos( );
 	if(pos!=0) {

@@ -309,7 +309,7 @@ static void initinjuggluco(std::string_view dirfiles,const char *country) {
         networkpresent=true;
         mkdir(dirfiles.data(),0700);
 	pathconcat jugdir(dirfiles,"juggluco");
-	LOGGER("startjuggluco(%s)\n",jugdir.data());
+	LOGGER("startjuggluco(%s %s)\n",jugdir.data(),__DATE__);
         mkdir(jugdir.data(),0700);
         extern int setfilesdir(const string_view filesdir,const char *country) ;
         setfilesdir(jugdir,country);
@@ -325,4 +325,5 @@ void initjuggluco(std::string_view dirfiles) {
  	initinjuggluco(dirfiles,nullptr);
         extern void setupnetwork();
         setupnetwork();
+	settings->data()->initVersion=15;
 	}
