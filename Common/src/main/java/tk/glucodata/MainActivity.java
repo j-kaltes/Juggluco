@@ -68,6 +68,8 @@ import androidx.activity.ComponentActivity;
 import androidx.annotation.UiThread;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -732,36 +734,10 @@ public void onRequestPermissionsResult(int requestCode, String[] permissions, in
 	// permissions this app might request.
 }
 
-static	final DateFormat fname=             new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss", Locale.US);
-void algexporter(int type,String prefix,String ext) {
-	final long time=currentTimeMillis();
-	final String datestr=fname.format(time)      ;
-        final String filename = prefix+datestr+ext;
-        exportdata(type,filename);
-	}
-void exporter(int type,String prefix) {
-        algexporter(type,prefix,".tsv");
-	}
 
-
-private void exportdata(int type,String name) {
-        Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        intent.setType("*/*");
-        //intent.setType("text/tsv");
-        intent.putExtra(Intent.EXTRA_TITLE, name);
-	intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
-//      ((ActivityResultLauncher<Intent>)exports[type]).launch(intent);
-      	int request= REQUEST_EXPORT|type;
-	try {
-		startActivityForResult(intent, request);
-		} catch(Throwable th) {
-
-		Log.stack(LOG_ID,"ACTION_CREATE_DOCUMENT",th);
-		}
-    }
-
-
+static final String[] keys={"privkey.pem","fullchain.pem"};
+public static final int PRIVATE_REQUEST=0x80;
+public static final int CHAIN_REQUEST=0x81;
 private static  final int REQUEST_NOTIFICATION=0x50;
 public static final int REQUEST_EXPORT=0x70;
 //public static final int REQUEST_EXPORT=0x54e806d0;
@@ -772,6 +748,39 @@ public static final int IGNORE_BATTERY_OPTIMIZATION_SETTINGS=0x100;
 static final int OVERLAY_PERMISSION_REQUEST_CODE=0x40;
 //public static final int REQUEST_IGNORE_BATTERY_OPTIMIZATIONS=0x300;
 Openfile openfile=null;
+
+private void	savekey(FileInputStream input,String outkeystr) {
+	File outkey=new File(getFilesDir(),outkeystr);
+	byte[] buf=new byte[2*4096];
+	int total=0;
+	try(FileOutputStream out = new FileOutputStream(outkey)) {
+		while(true) {
+			int res=input.read(buf);
+			if(res<=0) {
+				 out.flush(); //TODO: remove
+				 out.getFD().sync(); //TODO: remove
+
+				return;
+				}
+			total+=res;
+			out.write(buf,0,res);
+			}
+	  	}
+	catch(Throwable th) {
+		Log.stack(LOG_ID,"savekey "+outkeystr,th);
+		}
+	finally {
+		try {
+			input.close();
+			Log.i(LOG_ID, "wrote " + total + " to " + outkeystr);
+			if (total < 50) {
+				outkey.delete();
+			}
+		} catch(Throwable th) {
+				Log.stack(LOG_ID,"savekey finally "+outkeystr,th);
+		}
+		}
+	}
 @Override
 protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 	super.onActivityResult(requestCode, resultCode, data);
@@ -798,49 +807,67 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 			if (resultCode == Activity.RESULT_OK&&openfile!=null) 
 				openfile.getlib(data,this);
 		}; return;
-	};
-	if ((requestCode &(REQUEST_MASK| REQUEST_EXPORT)) == REQUEST_EXPORT) {
-	try {
+	      case PRIVATE_REQUEST:
+		case CHAIN_REQUEST:
 		if (resultCode == Activity.RESULT_OK) {
-			int type = requestCode & 0xF;
-			Uri uri = data.getData();
-			if (uri == null) { //Nodig?
-				curve.dialogs.exportlabel.setText(R.string.nodata);
+			Uri uri; 
+			if(data==null||(uri= data.getData()) == null) { 
+				//TODO error
 				return;
-			}
-			int fd = -1;
+				}
 			try {
-				ParcelFileDescriptor parcelFileDescriptor = getContentResolver().openFileDescriptor(uri, "w");
-				if (parcelFileDescriptor != null)
-					fd = parcelFileDescriptor.detachFd();
-				else {
-					curve.dialogs.exportlabel.setText("Can't save: parcelFileDescriptor == null");
-					return;
+				var input=new FileInputStream( getContentResolver().openFileDescriptor(uri, "r").getFileDescriptor());
+				savekey(input,keys[requestCode&~PRIVATE_REQUEST]);
+				}
+			 catch(Throwable th) {
+			 	Log.stack(LOG_ID,"openFileDescriptor",th);
+			 	}
+			}
+
+	};
+	if(!isWearable) {
+		if ((requestCode & (REQUEST_MASK | REQUEST_EXPORT)) == REQUEST_EXPORT) {
+			try {
+				if (resultCode == Activity.RESULT_OK) {
+					int type = requestCode & 0xF;
+					Uri uri;
+					if (data == null || (uri = data.getData()) == null) {
+						curve.dialogs.exportlabel.setText(R.string.nodata);
+						return;
+					}
+					int fd = -1;
+					try {
+						ParcelFileDescriptor parcelFileDescriptor = getContentResolver().openFileDescriptor(uri, "w");
+						if (parcelFileDescriptor != null)
+							fd = parcelFileDescriptor.detachFd();
+						else {
+							curve.dialogs.exportlabel.setText("Can't save: parcelFileDescriptor == null");
+							return;
+						}
+
+					} catch (IOException e) {
+
+						Log.stack(LOG_ID, e);
+						curve.dialogs.exportlabel.setText(R.string.failedbyexception);
+						return;
+					}
+					if (Natives.exportdata(type, fd)) {
+						curve.dialogs.exportlabel.setText(R.string.saved);
+					} else {
+						curve.dialogs.exportlabel.setText(R.string.savefailed);
+					}
+				} else {
+
+					curve.dialogs.exportlabel.setText(R.string.notsaved);
 				}
 
-			} catch (IOException e) {
-
-				Log.stack(LOG_ID,e);
-				curve.dialogs.exportlabel.setText(R.string.failedbyexception);
-				return;
+			} catch (Throwable th) {
+				Log.stack(LOG_ID, "onActivityResult", th);
 			}
-			if (Natives.exportdata(type, fd)) {
-				curve.dialogs.exportlabel.setText(R.string.saved);
-			} else {
-				curve.dialogs.exportlabel.setText(R.string.savefailed);
-			}
-		} else {
-
-			curve.dialogs.exportlabel.setText(R.string.notsaved);
+			hidekeyboard(this);
+			return;
 		}
-
-		}
-		catch(Throwable th) {
-			Log.stack(LOG_ID, "onActivityResult",th);
-			}
-		hidekeyboard(this);
 	}
-	else {
 		if ((requestCode & (REQUEST_MASK|REQUEST_RINGTONE)) == REQUEST_RINGTONE) {
 			if (resultCode == Activity.RESULT_OK) {
 				try {
@@ -855,7 +882,6 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 				}
 			   }
 			}
-	    }
 	}
 
 @Override

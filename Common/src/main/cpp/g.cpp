@@ -270,15 +270,23 @@ static	 const int waitsig=60;
 					}
 				sensor* senso=sensors->getsensor(ab.sensorindex);
 				if(senso->finished) {
-					senso->finished=0;
+					LOGGER("was finished\n");
 					setstreaming(ab.hist); //NEEDED/
 					setusedsensors(); //NEEDED
+					senso->finished=0;
 					return 8<<16|gluval;
 					}
 				return gluval;
 				}
 			const int min=datptr->getSensorAgeInMinutes();
 			if(min<60) {
+				sensor* senso=sensors->getsensor(ab.sensorindex);
+				if(senso->finished) {
+					LOGGER("was finished\n");
+					setbluetoothon=true;
+					senso->finished=0;
+					}
+				senso->initialized=true;
 				const bool enablestreaming=setbluetoothon||(ab.hist&&!ab.hist->bluetoothOn());
 				ret=5<<16|(60-min)<<24;
 				if(enablestreaming)

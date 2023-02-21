@@ -41,7 +41,7 @@ extern bool networkpresent;
 const char intro[]=R"(Command line program to create a Juggluco backup on a desktop computer.
 Juggluco is an android applet that connects with Freestyle libre 2 sensors
 and allows one to add diabetes diary data, see:
-https://play.google.com/store/apps/details?id=tk.glucodata
+https://www.juggluco.nl/Juggluco
 Within a certain directory (-d dir) backup and connection data is saved.
 With this program, you can specify the connections the program
 should receive data from and send data to.

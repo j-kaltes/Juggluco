@@ -21,21 +21,7 @@
 
 package tk.glucodata;
 
-import java.io.IOException;
-import java.math.BigInteger;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.NoSuchAlgorithmException;
-import java.security.interfaces.ECPublicKey;
-import java.security.spec.ECFieldFp;
-import java.security.spec.ECParameterSpec;
-import java.security.spec.EllipticCurve;
-import java.security.spec.InvalidKeySpecException;
-import java.util.Arrays;
-
-import static java.lang.System.arraycopy;
-import static java.util.Arrays.copyOfRange;
 import static tk.glucodata.Log.info;
-import static tk.glucodata.Log.stack;
 import static tk.glucodata.Natives.showbytes;
 
 class ECDHCrypto {

@@ -351,10 +351,11 @@ extern "C" JNIEXPORT void JNICALL   fromjava(resetnetwork)(JNIEnv *env, jclass c
 
 extern "C" JNIEXPORT void JNICALL   fromjava(networkabsent)(JNIEnv *env, jclass cl) {
       LOGGER("networkabsent\n");
-	networkpresent=false;
+	resetnetwork();
+/*	networkpresent=false;
 	if(backup) {
 		backup->closeallsocks();
-		}
+		} */
 	}
 extern "C" JNIEXPORT void JNICALL   fromjava(wakestreamsender)(JNIEnv *env, jclass cl) {
 	if(backup) {

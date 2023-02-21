@@ -282,8 +282,38 @@ extern	bool hasnotiset();
 
 	}
 
-extern std::string_view getdeltaname(float rate);
+extern int getdeltaindex(float rate);
 #define NOT_DETERMINED ""
+int getdeltaindex(float rate) {
+	if(rate>=3.5f)
+                return 1;
+	if(rate>=2.0f)
+                return 2;
+	if(rate>=1.0f)
+                return 3;
+	if(rate>-1.0f)
+                return 4;
+	if(rate>-2.0f)
+                return 5;
+	if(rate>-3.5f)
+                return 6;
+	if(isnan(rate))
+		return 0;
+	return 7;
+	   }
+#define NOT_DETERMINED ""
+extern std::string_view getdeltanamefromindex(int index) ;
+std::string_view getdeltanamefromindex(int index) {
+	static constexpr const std::string_view deltanames[]={NOT_DETERMINED, "DoubleUp", "SingleUp","FortyFiveUp","Flat", "FortyFiveDown", "SingleDown", "DoubleDown",NOT_DETERMINED};
+	return deltanames[index];
+	}
+
+extern std::string_view getdeltaname(float rate);
+std::string_view getdeltaname(float rate) {
+	return getdeltanamefromindex(getdeltaindex(rate));
+	}
+
+/*
 std::string_view getdeltaname(float rate) {
 	if(rate>=3.5f)
                 return "DoubleUp";
@@ -302,3 +332,4 @@ std::string_view getdeltaname(float rate) {
 	return "DoubleDown";
 	   }
 
+*/

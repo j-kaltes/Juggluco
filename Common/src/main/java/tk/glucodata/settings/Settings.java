@@ -671,7 +671,7 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 	globalscan.setText(R.string.startsapp);
 //	var oldxdrip=getbutton(context,"Send old");
 
-        final CheckBox xdrip=(!isWearable)?new CheckBox(context):null;
+        final CheckBox librelinkbroadcast=(!isWearable)?new CheckBox(context):null;
         final CheckBox libreview=(!isWearable)?new CheckBox(context):null;
         final CheckBox xdripbroadcast=new CheckBox(context);
         final CheckBox jugglucobroadcast=new CheckBox(context);
@@ -686,8 +686,8 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 	if(!isWearable) {
 		libreview.setText(R.string.libreviewname);
 		libreview.setChecked(wasxdrip);
-		xdrip.setText(R.string.sendtoxdrip);
-		xdrip.setChecked(Natives.getlibrelinkused());
+		librelinkbroadcast.setText(R.string.sendtoxdrip);
+		librelinkbroadcast.setChecked(Natives.getlibrelinkused());
 //        	oldxdrip.setOnClickListener(v->{Natives.sendxdripold(); });
 		}
 	final var hasnfc=MainActivity.hasnfc;
@@ -776,8 +776,8 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 				  final int setto = camera.isChecked() ? 1 : 2;
 				  if (diskey != setto) Natives.setcamerakey(setto);
 			  }
-			if(xdrip.isChecked()!=wasxdrip)  {
-	//			Natives.setxinfuus(xdrip.isChecked());	
+			if(librelinkbroadcast.isChecked()!=wasxdrip)  {
+	//			Natives.setxinfuus(librelinkbroadcast.isChecked());	
 				if(!wasxdrip) {
 					if(!bluetooth.isChecked()&&Natives.backuphostNr( )<=0) {
 						Toast.makeText(context, R.string.blueormirror,Toast.LENGTH_LONG).show();
@@ -825,7 +825,7 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 		});
 	Button numalarm=getbutton(context,R.string.remindersname);
 	Button advanced=null;
-
+	Layout[] thelayout=new Layout[1];
 
 
 	View[][] views;
@@ -876,8 +876,10 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 		showalways.setText(R.string.glucosestatusbar);
 		showalways.setChecked(Natives.getshowalways()) ;
 		showalways.setOnCheckedChangeListener( (buttonView,  isChecked) -> Notify.glucosestatus(isChecked) );
+	       var webserver=getbutton(context,R.string.webserver);
 
-	       var floatconfig=getbutton(context,"Config");
+
+	       var floatconfig=getbutton(context,R.string.config);
 	       floatconfig.setOnClickListener(v-> tk.glucodata.FloatingConfig.show(context));
 		CheckBox floatglucose=new CheckBox(context);
 		floatglucose.setText(R.string.floatglucose);
@@ -888,7 +890,8 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 		views=new View[][]{row0, row1,new View[]{scalelabel,fixatex,fixatey}, row2,new View[]{levelleft,camera,reverseorientation},
 		hasnfc?new View[]{nfcsound, globalscan}:null,
 
-		new View[]{libreview,xdrip,xdripbroadcast},new View[]{ showalways,jugglucobroadcast}, rowglu,row8,row9};
+		new View[]{libreview,librelinkbroadcast,xdripbroadcast},new View[]{ showalways,webserver,jugglucobroadcast}, rowglu,row8,row9};
+	       webserver.setOnClickListener(v-> tk.glucodata.Nightscout.show(context,thelayout[0]));
 		}
 
 	help.setFocusableInTouchMode(true);
@@ -901,6 +904,7 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 		
 		return ret;
 		},views);
+	thelayout[0]=lay;
 	if(!isWearable) {
 		final boolean[] donothing={false};
 		libreview.setOnCheckedChangeListener(
@@ -912,12 +916,12 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 					}
 		    });
 		final boolean[] xdripdonthing={false};
-		xdrip.setOnCheckedChangeListener(
+		librelinkbroadcast.setOnCheckedChangeListener(
 		    (buttonView,  isChecked) -> {
 		    	if(!xdripdonthing[0]) {
 					xdripdonthing[0]=true;
-					xdrip.setChecked(!isChecked);
-					Broadcasts.setlibrereceivers(context,lay,xdrip,xdripdonthing);
+					librelinkbroadcast.setChecked(!isChecked);
+					Broadcasts.setlibrereceivers(context,lay,librelinkbroadcast,xdripdonthing);
 					}
 		    });
 

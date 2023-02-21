@@ -367,7 +367,8 @@ private void initialize() {
 			if(sender!=null)
 				sender.nulltimes();
 		   Log.i(LOG_ID, "onLost(" + network+")");
-//		   if(hasonAvailable) Natives.networkabsent();
+//		   if(hasonAvailable) 
+			Natives.networkabsent();
 		}
 	    });
 
@@ -564,7 +565,7 @@ public static void wakemirrors() {
 
 static	void initbroadcasts() {
 
-	if(Natives.getinitVersion()<15) {
+	if(Natives.getinitVersion()<16) {
 		if(Natives.getinitVersion()<14) {
 			if(Natives.getinitVersion()<13) {
 				Broadcasts.updateall();
@@ -573,7 +574,7 @@ static	void initbroadcasts() {
 			Natives.setfloatingbackground(WHITE);
 			 Natives.setfloatingforeground(BLACK);
 			}
-		Natives.setinitVersion(15);
+		Natives.setinitVersion(16);
 		}
 	var pos=Natives.getfloatingPos( );
 	if(pos!=0) {

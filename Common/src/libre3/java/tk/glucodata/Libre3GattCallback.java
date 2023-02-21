@@ -147,7 +147,7 @@ void free() {
 				Natives.setLibre3kAuth(sensorptr,null);
 				}
 			} 
-		 disconnected(status);
+		 realdisconnected(status);
             }
         }
 
@@ -304,10 +304,12 @@ private void challenge67() {
 	var backr2=copyOfRange(decr,0,16);
 	if(!java.util.Arrays.equals(r2,backr2)) {
 		Log.i(LOG_ID,"r2!=backr2");
+		//TODO disconnect?
 		}
 	var backr1=copyOfRange(decr,16,32);
 	if(!java.util.Arrays.equals(r1,backr1)) {
 		Log.i(LOG_ID,"r1!=backr1");
+		//TODO disconnect?
 		}
 	var kEnc=copyOfRange(decr,32,48);
 	var ivEnc=copyOfRange(decr,48,56);
@@ -350,8 +352,12 @@ private boolean sendSecurityCommand(byte b) {
 	synchronized(syncObject) {
 		isNotificationSuspended=true;
 		} */
-	mBluetoothGatt.writeCharacteristic(gattCharCommandResponse);
-	return true; //TODO: what with failure?
+	if(!mBluetoothGatt.writeCharacteristic(gattCharCommandResponse)) {
+		Log.e(LOG_ID, "writeCharacteristic(gattCharCommandResponse) failed");
+		mBluetoothGatt.disconnect(); //TODO: or try again?
+		return false;
+		}
+	return true; 
 	}
 private int commandphase=1;
 private void setCertificate140() {
@@ -369,7 +375,7 @@ private boolean	generateKAuth(byte[] input) {
 private boolean setCertificate65() {
 	Log.i(LOG_ID,"setCertificate65");
 	byte[]	patchEphemeral=rdtData;
-	if(generateKAuth(patchEphemeral))
+	if(generateKAuth(patchEphemeral)) //TODO failure?
 		return sendSecurityCommand((byte)17);
 	return false;
 	}
@@ -380,7 +386,7 @@ private void receivedCERT_DATA() {
 		default: {
 			var message="receivedCERT_DATA unknown length="+rdtLength;
 			Log.i(LOG_ID,message);
-			setfailure(message);
+			setfailure(message);  //TODO disconnect?
 			}
 		};
 	}
@@ -494,7 +500,7 @@ private boolean asknotification(BluetoothGattCharacteristic charac) {
 private	void fast_data(byte[] encryp) {
 	byte[] decr=intDecrypt(cryptptr,5,encryp);
         if (decr == null) {
-            info("fast_data decrypt went wrong");
+            info("fast_data decrypt went wrong"); //TODO: DISCONNECT?
         } else {
             Natives.saveLibre3fastData(sensorptr, decr);
         }
@@ -559,7 +565,7 @@ private void init() {
 
 //private	boolean sendEphemeralKeys=false;
 @SuppressLint("MissingPermission")
-private void disconnected(int status) {
+private void realdisconnected(int status) {
 	//sendEphemeralKeys=false;
 	Log.i(LOG_ID,"disconnected "+status);
 	/*
@@ -595,6 +601,9 @@ private void disconnected(int status) {
 	connectDevice(0);//TODO:  What if it fails?
 	}
 
+private void disconnected(int status) {
+	realdisconnected(status); //TODO remove this
+	}
 
 private  void  setsuccess(long timmsec,String str) {
 	 wrotepass[0]=timmsec;
@@ -744,8 +753,9 @@ private    void preparedata(byte[] value) {
 	   disconnected(1099);
        	return 0;
          }
-      else
-       Log.i(LOG_ID,"writedata "+ bluetoothGattCharacteristic.getUuid().toString());
+      else  {
+	      Log.i(LOG_ID,"writedata "+ bluetoothGattCharacteristic.getUuid().toString());
+	       }
         
         int length = this.wrtData.length - this.wrtOffset;
         if(length > 0) {
@@ -758,7 +768,10 @@ private    void preparedata(byte[] value) {
             this.wrtOffset += min;
             if(this.mBluetoothGatt.writeCharacteristic(bluetoothGattCharacteristic))
 		    return 1;
-		else return 0;
+	else {
+		Log.e(LOG_ID,"writeCharacteristic(bluetoothGattCharacteristic) failed");
+		return 0; //TODO disconnect?
+		}
         }
 	Log.i(LOG_ID,"writedata all written");
         return 2;
@@ -823,7 +836,7 @@ private boolean	lastphase5=false;
 					;
 					break;
 				case 2: {
-					if(sendSecurityCert(cryptolib.getAppCertificate())) {
+					if(sendSecurityCert(cryptolib.getAppCertificate())) { //TODO what with failure?
 						commandphase = 3;
 
 					}
@@ -934,6 +947,7 @@ private    void glucose_data(byte[] value) {
             this.oneMinuteReadingSize = 0;
             byte[] decr = intDecrypt(cryptptr,3, oneMinuteRawData);
             if (decr == null) {
+	       Log.e(LOG_ID,"intDecrypt(cryptptr,3, oneMinuteRawData)==null");
                 return;
             }
             long res=Natives.saveLibre3MinuteL(this.sensorptr, decr);

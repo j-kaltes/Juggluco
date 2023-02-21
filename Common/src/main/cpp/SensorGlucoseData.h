@@ -57,6 +57,7 @@ extern std::string_view globalbasedir;
 constexpr int maxminutes=22000;
 struct ScanData {uint32_t t;int32_t id;int32_t g;int32_t tr;float ch;
 const uint16_t getmgdL() const { return g;};
+const float getmmolL() const { return g/18.0f;};
 const uint16_t getsputnik() const { return g*10;};
 uint32_t gettime() const {
 	return t;
@@ -719,6 +720,11 @@ if(const ScanData *last=lastpoll()) {
 		if(!polls[start].t)
 			polls[start].t=polls[start+1].t-60;
 
+		}
+	else {
+		if(!polls[start].t) {
+			getinfo()->pollcount=std::max(start,0);
+			}
 		}
 	}
 //if(!getinfo()->msec) getinfo()->msec=rand()%1000;

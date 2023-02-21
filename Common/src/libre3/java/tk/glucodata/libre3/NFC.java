@@ -20,17 +20,16 @@
 
 
 package tk.glucodata.libre3;
+
+import static tk.glucodata.Natives.getlibreAccountIDnumber;
+import static tk.glucodata.Natives.interpret3NFC2;
+import static tk.glucodata.Natives.showbytes;
+
 import android.nfc.Tag;
-import android.nfc.tech.NfcV;
 
 import tk.glucodata.AlgNfcV;
 import tk.glucodata.Log;
 import tk.glucodata.Natives;
-
-import static tk.glucodata.BuildConfig.libreVersion;
-import static tk.glucodata.Natives.getlibreAccountIDnumber;
-import static tk.glucodata.Natives.interpret3NFC2;
-import static tk.glucodata.Natives.showbytes;
 
 
 public class NFC {
@@ -38,7 +37,7 @@ public class NFC {
 
 private static final String LOG_ID="NFC";
 public static	long   	second(byte[] nfc1,Tag tag) {
-	long nowsec=System.currentTimeMillis()/1000;
+	long nowsec=(long)Math.round(System.currentTimeMillis()/1000.0);
 //	long nowsec=Natives.getLibre3secs(nfc1);
 	if(nowsec==0L)
 		return 0L;

@@ -46,7 +46,7 @@
     <string name="delete">Delete</string>
     <string name="specifyreceiveordata">Specify \'Receive from\' or data to send to other device</string>
     <string name="specifyip">You should specify an IP</string>
-    <string name="portrange">Port should be between 1024 and 65535</string>
+    <string name="portrange">Network ports should be between 1024 and 65535</string>
     <string name="start">Start</string>
     <string name="now">Now</string>
     <string name="dontchangeamounts">Don\'t change amounts</string>
@@ -74,7 +74,7 @@
  <string name="unit">"Unit: "</string>
  <string name="glucoseaxisleft">Glucose-axis numbers LEFT</string>
  <string name="startsapp">Scanning starts app</string>
- <string name="sendtoxdrip">Librelink broadcast/<strike>Send to xDrip</strike></string>
+ <string name="sendtoxdrip">Librelink broadcast</string>
  <string name="disablecamerakey">Disable camera key</string>
  <string name="invertscreen">Invert screen</string>
  <string name="nfcsound">NFC sound</string>
@@ -234,6 +234,21 @@
  <string name="password36">Maximal password length is 36 characters </string>
  <string name="fromlibreview">From Libreview</string>
  <string name="manual">Manually</string>
-<string name="noaccountidspecified">No account id specified </string>
-<string name="wrongformat">Wrong format </string>
+<string name="noaccountidspecified">"No account id specified "</string>
+<string name="wrongformat">"Wrong format "</string>
+<string name="noapplisteningto">"No app listening to "</string>
+<string name="secret">Secret</string>
+<string name="withoutsaving">Leave without saving?</string>
+<string name="active">Active</string>
+<string name="usessl">Use SSL</string>
+<string name="fullchain">Full Chain</string>
+
+	<string name="privatekey">Private Key</string>
+<string name="localonly">Local only</string>
+<string name="toolongsecret">: api_secret too long. max=</string>
+<string name="invalidport">" invalid port number"</string>
+<string name="newsecret">"new api_secret: "</string>
+<string name="newport">"new port ="</string>
+<string name="webserver">Web server</string>
+
 </resources>

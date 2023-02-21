@@ -280,11 +280,11 @@ extern int dodebug() {
 void setupnetwork() {
         int hostnr=backup->gethostnr();
         if(hostnr==0) {
-                std::string_view libreport="7117",destport="8118";
+                std::string_view libreport="7117";
                 if(!strcmp(backup->getupdatedata()->port,"8795")) {
                         memcpy(backup->getupdatedata()->port,libreport.data(),libreport.size());
                         }
-                backup->changehost(hostnr,nullptr,nullptr,0, true,destport,false,true,true,false,false,false,"",0,false,"libre3juggluco",true,true);
+//                backup->changehost(hostnr,nullptr,nullptr,0, true,destport,false,true,true,false,false,false,"",0,false,"libre3juggluco",true,true);
                 }
 
         backup->getupdatedata()->wakesender();

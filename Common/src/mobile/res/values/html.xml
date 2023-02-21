@@ -730,6 +730,10 @@ addition, xDrip displays its own interpretation of received glucose
 values. Mirror devices can also sent to xDrip.</p>
 <p>See <a href="https://github.com/jakobheyman/xdripJH">https://github.com/jakobheyman/xdripJH</a>
 for an attempt to update the glucose value of xDrip every minute.</p>
+<p>Freestyle Libre 3 sensors send missed values after a disconnection
+period. These values are not sent with this broadcast. You will
+receive them if you turn on the Web server in Juggluco and make xDrip
+a Nightscout follower of Juggluco.</p>
 <p>Juggluco can also directly contact with xDrip watch apps, so that
 the watch app displays more recent glucose values. To use this
 feature check <i>&quot;xDrip webserver&quot;</i> in the left menu
@@ -760,15 +764,26 @@ broadcasts</a>. If you specify Juggluco as data-source in G-Watch,
 you need to turn on this broadcast.</p>
 <p>The application apps listening to this broadcast are shown. Check
 the apps you want to send this broadcast to.</p>
+<h2 class="western">Web server</h2>
+<p>Web server that can be used with xDrip watches and some Nightscout
+apps. Previously called xDrip webserver.</p>
 <h2 class="western">Glucose in android status bar</h2>
-<p style="line-height: 100%; margin-bottom: 0in">If set glucose
+<p style="line-height: 100%; margin-bottom: 0in">If set, glucose
 values streaming via Bluetooth are quietly displayed in a
-notification and the android status bar. On some smartphones, the
-glucose value is only shown in the Android status bar after changing
-Androids notification settings. On Realme GT 5G for example, you have
-to go to applist-&gt;Juggluco-&gt;manage notifications, tab on
-glucoseNotification and turn off &quot;Set to Silent&quot;. &quot;Display
-in status bar&quot; will now be shown turned on.</p>
+notification and the android status bar. If you turn it off, instead
+of a number, a dot is shown and the notification tells nothing more
+than &quot;<i>To connect to sensor</i>&quot; or &quot;<i>To exchange
+data</i>&quot;. An app that stays running in the background, is
+obliged by Android to have such visible notification (otherwise it is
+easily stopped by Android). Juggluco only turns off the notification,
+when &quot;<i>Sensor via Bluetooth</i>&quot; is turned off and there
+are no mirror connections.</p>
+<p style="line-height: 100%; margin-bottom: 0in">On some smartphones,
+the glucose value is only shown in the Android status bar after
+changing Androids notification settings. On Realme GT 5G for example,
+you have to go to applist-&gt;Juggluco-&gt;manage notifications, tab
+on glucoseNotification and turn off &quot;Set to Silent&quot;.
+&quot;Display in status bar&quot; will now be shown turned on.</p>
 <p style="font-weight: normal; line-height: 100%; margin-bottom: 0in">
 You can also get an android notification by selecting <i>Notify</i>
 in the left middle menu. In that case the notification will be sent
@@ -1499,8 +1514,8 @@ Juggluco doesn\'t need to be constantly connected to the internet for
 all data to be send to Libreview. Like the Librelnk app, it sends
 data from the last 89 days to Libreview. What is necessary is that
 Juggluco is constantly connected to a Freestyle Libre 2 sensor via
-Bluetooth. Freestyle Libre 3 sensors can be disconnection from
-Juggluco for up to two hours..</p>
+Bluetooth. For Freestyle Libre 3 sensors the 5 minutes history data
+is used, so that they all previous values are sent to Libreview.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><span lang="en-US">To
 make use of this service, you need to create a Libreview account at
 <a class="western" href="https://libreview.com/">https://libreview.com</a>
@@ -1684,6 +1699,102 @@ data</i>&quot;, data will be sent to that different Libreview
 account, but the previous account ID is will still be used to scan
 the sensor via NFC. This way, Juggluco sends data to a different
 Libreview account than Abbotts Libre 3 app uses.</p>
+]]>
+</string>
+<string name="Nightscouthelp" >
+<![CDATA[
+<h1 class="western">Web server</h1>
+<p style="line-height: 100%; margin-bottom: 0in">Juggluco
+incorporates a webserver by which other apps can receive glucose
+values from Juggluco. It can be used by xDrip watches and some
+Nightscout apps.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Using apps that are
+made to make use of the xDrip webserver is relatively easy. Just
+check active. Hereafter they can receive glucose from localhost on
+port 17580.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Also some Nightscout
+followers can make use of it. xDrip, Diabox and a <a href="https://github.com/dabear/FloatingGlucose/releases">Windows
+Floating Glucose</a> app can be used with http when &quot;local only&quot;
+is not set.</p>
+<p style="line-height: 100%; margin-bottom: 0in">If you want to
+access Juggluco over the internet, you need to forward a port from
+your modem. See <a href="https://www.juggluco.nl/Juggluco/phones/index.html">https://www.juggluco.nl/Juggluco/phones/index.html</a></p>
+<p style="line-height: 100%; margin-bottom: 0in">Other Nightscout
+followers only make use of https and that requires that Juggluco has
+an authenticated SSL key for the domain name used to access Juggluco.
+If your external IP has an associated hostname, you can get a
+certificate for free via <a href="https://certbot.eff.org/instructions">Certbot</a>
+or <a href="https://www.sslforfree.com/">ZeroSSL</a>. You can\'t make
+use of it if your external IP doesn\'t have a hostname. You can get a
+free domain name from <a href="https://www.freenom.com/">https://www.freenom.com</a>.
+I tried it, but within a few weeks without any notification they just
+took the domain away from me and when I tried to register it again it
+had a price. You can buy a hostname for a few Euro\'s a year (for
+example from <a href="https://www.strato.nl/domeinnaam">https://www.strato.nl/domeinnaam</a>).</p>
+<p style="line-height: 100%; margin-bottom: 0in">If you have received
+the key files from an SSL authority, you have to give them to
+Juggluco. The private key can be read in by pressing &quot;<em>Private
+Key</em>&quot;, the Full Chain by pressing &quot;<em>Full Chain</em>&quot;.</p>
+<p style="line-height: 100%; margin-bottom: 0in">From ZeroSSL.com I
+received three files: private.key, certificate.crt and ca_bundle.crt.</p>
+<p style="line-height: 100%; margin-bottom: 0in">private.key is the
+private key, you have to give to Juggluco by pressing &quot;<em>Private
+Key</em>&quot;.</p>
+<p style="line-height: 100%; margin-bottom: 0in">To make the full
+chain, you have to concatenate certificate.crt and ca_bundle.crt.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Linux:</p>
+<pre style="margin-bottom: 0.2in">cat certificate.crt ca_bundle.crt &gt;  fullchain.pem</pre><p style="line-height: 100%; margin-bottom: 0in">
+Windows cmd.com:</p>
+<pre style="margin-bottom: 0.2in">copy certificate.crt + ca_bundle.crt  fullchain.pem</pre><p style="line-height: 100%; margin-bottom: 0in">
+Windows Powershell:</p>
+<p>cat certificate.crt &gt;  fullchain.pem<br>
+cat ca_bundle.crt &gt;&gt; fullchain.pem</p><p style="line-height: 100%; margin-bottom: 0in">
+After using Certbot I found the Private key in
+/etc/letsencrypt/live/myhostname/privkey.pem</p>
+<p style="line-height: 100%; margin-bottom: 0in">and the full chain
+in /etc/letsencrypt/live/myhostname/fullchain.pem. &quot;<em>myhostname</em>&quot;
+is the hostname I used.</p>
+<p style="line-height: 100%; margin-bottom: 0in">If you just want to
+send glucose values from one Android to the other, you can better use
+Juggluco\'s <a href="https://www.juggluco.nl/Juggluco/mgdL/index.html#mirror">mirror</a>
+function (Left middle menu-&gt;Mirror).</p>
+<p style="line-height: 100%; margin-bottom: 0in">Android Aps and
+Nsclient don\'t work as follower of Juggluco, but you can send glucose
+values to them with the xDrip broadcast in Juggluco (left
+menu-&gt;settings-&gt;xDrip Broadcast).</p>
+<p style="line-height: 100%; margin-bottom: 0in">You need SSL for
+Diabetes:M, <a href="https://play.google.com/store/apps/details?id=se.cornixit.nightwatch">Nightwatch</a>
+and <a href="https://slingithub.github.io/CheckmateWeb">Checkmate</a>.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>Secret</b>:
+Specify that followers should set the api api_secret http header
+element to this value. Not all Nightscout apps have an option to set
+api_secret, this means that you can\'t use them with Secret set to a
+value. api_secret is different from a Nightscout token.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><strong>Visible</strong>:
+Make Secret visible.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><strong>Port</strong>:
+Specify the network port used to contact this server. The default is
+17581.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><strong>Save</strong>:
+Save modifications of Secret or Port.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><strong>Use SSL</strong>:
+use SSL (https). For SSL you need to give a Private key and Full
+chain for the host name used to contact this service.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><strong>Private Key</strong>:
+select a file containing the private key. See above.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><strong>Full Chain</strong>:
+select a file containing the Full Chain, see above.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><strong>Active</strong>:
+Web server is running.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><strong>L</strong><strong>ocal
+only</strong>: the http server can only be accessed with localhost.
+This doesn\'t apply to https.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
 ]]>
 </string>
 </resources>

@@ -41,14 +41,14 @@ class Watch {
 
 static public void show(MainActivity context) {
 	var usexdripserver=Natives.getusexdripwebserver();
-	var server=getcheckbox(context,"xDrip webserver",usexdripserver);
-
+	var server=getcheckbox(context,R.string.webserver,usexdripserver);
+/*
 	var local=getcheckbox(context,"local only",Natives.getXdripServerLocal( ));
 	local.setOnCheckedChangeListener(
 			 (buttonView,  isChecked) -> {
 				Natives.setXdripServerLocal(isChecked);
-			 });
-
+			 });*/
+	var serverconfig=getbutton(context,R.string.config);
 	var usegarmin=Natives.getusegarmin();
 	var kerfstok=getcheckbox(context,"Kerfstok",usegarmin); 
 	var status=getbutton(context,R.string.status);
@@ -66,7 +66,7 @@ static public void show(MainActivity context) {
  		Natives.networkpresent();
 		}
 
-	var wearbox=getcheckbox( context, "Wearos", useWearos);
+	var wearbox=getcheckbox( context, "WearOS", useWearos);
 	var wearossettings=getbutton(context,R.string.config);
 	wearossettings.setVisibility(useWearos?VISIBLE:INVISIBLE);
 	wearbox.setOnCheckedChangeListener(
@@ -97,7 +97,7 @@ static public void show(MainActivity context) {
 		if(height>h)
 			l.setY((height-h)/2);
 		return new int[] {w,h};
-		},new View[]{wearbox,wearossettings},new View[]{server,local},new View[]{kerfstok,status},new View[]{Help,Ok} );
+		},new View[]{wearbox,wearossettings},new View[]{server,serverconfig},new View[]{kerfstok,status},new View[]{Help,Ok} );
 	float density=GlucoseCurve.metrics.density;
 	int laypad=(int)(density*4.0);
 	layout.setPadding(laypad*2,laypad*2,laypad*2,laypad);
@@ -122,6 +122,7 @@ static public void show(MainActivity context) {
 		   if(usexdripserver!=server.isChecked()) {
 		   	Natives.setusexdripwebserver(!usexdripserver);
 		   	}
+		context.poponback();
 		removeContentView(layout);
 		context.hideSystemUI(); });
 
@@ -130,6 +131,9 @@ static public void show(MainActivity context) {
 	context.setonback(()-> { removeContentView(layout);
 		context.hideSystemUI(); });
 
+	serverconfig.setOnClickListener(v->{
+			Nightscout.show(context,layout);
+			});
 	}
 	
 

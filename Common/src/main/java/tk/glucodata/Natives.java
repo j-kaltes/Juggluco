@@ -611,6 +611,13 @@ public static native int getfloatingPos( );
 public static native void finishSensor(long dataptr);
 
 public static native long manualLibreAccountIDnumber( );
+public static native void setApiSecret(String japisecret);
+public static native String getApiSecret( );
+public static native String setuseSSL(boolean val);
+public static native boolean getuseSSL( );
+
+public static native void setsslport(int val);
+public static native int getsslport( );
 
 //s/^extern.*JNIEXPORT[         ]*\([a-zA-Z]*\)[ ]*JNICALL[      ]*fromjava(\([^)]*\)) *(JNIEnv[^,]*,[^,)]*[,)]\([^){]*\)[^a-zA-Z0-9]*$/public static native \1 \2(\3);/g
 //public static native void sendxdripold();

@@ -1,3 +1,7 @@
+
+#ifndef WEAROS
+char fullchainfileonly[]="fullchain.pem";
+char privatekey[]="privkey.pem";
 /*      This file is part of Juggluco, an Android app to receive and display         */
 /*      glucose values from Freestyle Libre 2 and 3 sensors.                         */
 /*                                                                                   */
@@ -25,7 +29,9 @@
 #ifdef __ANDROID_API__
 #include <android/dlext.h>
 #endif
+#include <string>
 #include <sys/prctl.h>
+#include <strconcat.h>
 #include "openssl/ssl.h"
 #include "openssl/err.h"
 #include "logs.h"
@@ -47,8 +53,16 @@ int logcallback(const char *str, size_t len, void *u) {
 SSL_CTX *(*SSL_CTX_newptr)(const SSL_METHOD *method);
 void (*ERR_print_errors_cbptr)(int (*cb)(const char *str, size_t len, void *u), void *u);
 
-int (*SSL_CTX_use_certificate_ASN1ptr)(SSL_CTX *ctx, int len, unsigned char *d);
-int (*SSL_CTX_use_PrivateKey_ASN1ptr)(int pk, SSL_CTX *ctx, unsigned char *d, long len);
+int (*SSL_CTX_use_certificate_chain_fileptr)(SSL_CTX *ctx, const char *file);
+
+//int (*SSL_CTX_use_certificate_ASN1ptr)(SSL_CTX *ctx, int len, unsigned char *d);
+//int (*SSL_CTX_use_PrivateKey_ASN1ptr)(int pk, SSL_CTX *ctx, unsigned char *d, long len);
+int (*SSL_CTX_use_PrivateKey_fileptr)(SSL_CTX *ctx, const char *file, int type);
+const char* (*ERR_reason_error_stringptr)(unsigned long e);
+unsigned long (*ERR_get_errorptr)(void);
+unsigned long (*ERR_peek_last_errorptr)(void);
+
+
 int (*SSL_CTX_check_private_keyptr)(const SSL_CTX *ctx);
 int (*SSL_acceptptr)(SSL *ssl);
 int (*SSL_readptr)(SSL *ssl, void *buf, int num);
@@ -178,10 +192,28 @@ return nullptr;
 
 
 
-// Access granted
 
+//char fullchainfileonly[]="bundle_chained.crt";
+//char privatekey[]="private.key";
+static pathconcat chainfilename;
+static pathconcat private_file;
+static bool getkeynames() {
+	 chainfilename=pathconcat(globalbasedir,fullchainfileonly);
+	 private_file=pathconcat(globalbasedir,privatekey);
+	 return true;
+	}
+std::string haskeyfiles() {
+static auto _hasnames=getkeynames();
+ if(access(chainfilename.data(), R_OK)!=0) {
+	return std::string("No access to ")+ std::string(chainfilename);
+	}
+ if(access(private_file.data(), R_OK)!=0) {
+	return std::string("No access to ")+ std::string(private_file);
+	}
+	return "";
+	}
+std::string loadsslfunctions() {
 
-bool loadsslfunctions() {
 
 #ifdef __ANDROID_API__
    setenv("LD_LIBRARY_PATH",globalbasedir.data(), 1);
@@ -190,24 +222,22 @@ bool loadsslfunctions() {
 const char cryptolib[]="libcrypto.so";
 void* cryptohandle;
   if(!(cryptohandle=dlopener(cryptolib, RTLD_NOW))) {
-	  LOGGER("dlopen==nullptr: %s\n",dlerror());
+	  return  std::string("dlopen==nullptr: ")+std::string(dlerror());
 //	  dlclose(cryptohandle);
-	  return false;
 	  }
 #define hgetsym(handle,name) *((void **)&name##ptr)=dlsym(handle, #name)
 #define getsym(name) hgetsym(handle,name)
-#define symtest(name) if(!(getsym(name))) { LOGGER("%s",dlerror());dlclose(handle);dlclose(cryptohandle);return false;}
+#define symtest(name) if(!(getsym(name))) { dlclose(handle);dlclose(cryptohandle);return std::string(dlerror());;}
 if(!(hgetsym(cryptohandle,ERR_print_errors_cb))) {
 	  dlclose(cryptohandle);
-	  return false;
+	  return std::string("hgetsym ERR_print_errors_cb failes");
 	}
 
 const char libssl[]="libssl.so";
 const char *libname=libssl;
   void *handle;
   if(!(handle=dlopener(libname, RTLD_NOW))) {
-	  LOGGER("dlopen==nullptr: %s\n",dlerror());
-	  return false;
+	  return std::string("dlopen==nullptr: ")+std::string(dlerror());
 	  }
   *((void **)&TheMethod)=dlsym(handle, "TLSv1_2_server_method");
  // *((void **)&TheMethod)=dlsym(handle, "TLS_method");
@@ -215,9 +245,8 @@ const char *libname=libssl;
 	  LOGGER("dlsym(TLSv1_2_server_method): %s\n",dlerror());
   	*((void **)&TheMethod)=dlsym(handle, "SSLv23_method");
   		if(!TheMethod) {
-	  		LOGGER("dlsym(SSLv23_method): %s\n",dlerror());
 			dlclose(handle);
-			return false;
+	  		return std::string("dlsym(SSLv23_method): ")+std::string(dlerror());
 			}
   	}
 
@@ -227,8 +256,10 @@ const char *libname=libssl;
    getsym(SSL_load_error_strings);
 //s/^.*([^a-zA-Z]*\([a-zA-Z_]*\)ptr.*$/symtest(\1);/g
 symtest(SSL_CTX_new);
-symtest(SSL_CTX_use_certificate_ASN1);
-symtest(SSL_CTX_use_PrivateKey_ASN1);
+symtest(SSL_CTX_use_certificate_chain_file);
+//symtest(SSL_CTX_use_certificate_ASN1);
+//symtest(SSL_CTX_use_PrivateKey_ASN1);
+symtest(SSL_CTX_use_PrivateKey_file);
 symtest(SSL_CTX_check_private_key);
 symtest(SSL_accept);
 symtest(SSL_read);
@@ -239,7 +270,12 @@ symtest(SSL_new);
 symtest(SSL_set_fd);
 symtest(SSL_CTX_free);
 
-return true;
+	 symtest(ERR_reason_error_string);
+	 symtest(ERR_get_error);
+	 symtest(ERR_peek_last_error);
+
+
+return "";
 }
 
 
@@ -249,6 +285,8 @@ extern std::string_view servererrorstr;
 void	sslservererror(SSL *ssl) {
 	SSL_writeptr(ssl,servererrorstr.data(),servererrorstr.size()) ;
 	}
+extern bool sslstopconnection;
+bool sslstopconnection=false;
 bool securewatchcommands(SSL *ssl) {
 	constexpr const int RBUFSIZE=4096;
 	char rbuf[RBUFSIZE];
@@ -259,17 +297,21 @@ bool securewatchcommands(SSL *ssl) {
 		}
 	LOGGER("securewatchcommands %d\n",len);
 	struct recdata outdata;
+	if(sslstopconnection)
+		return false;
 	bool watchcommands(char *rbuf,int len,recdata *outdata) ;
 	if(!watchcommands(rbuf, len,&outdata) ) {
 		sslservererror(ssl);
 		return false;
 		}
-	return SSL_writeptr(ssl,outdata.data(),outdata.size()) ;
+	return SSL_writeptr(ssl,outdata.data(),outdata.size())&&!sslstopconnection;
+;
 	}
 
-SSL_CTX* initsslserver(void) ;
+static SSL_CTX *globalctx=nullptr;
+
 void handlewatchsecure(int sock) {
-	static SSL_CTX *ctx=initsslserver();
+	static SSL_CTX *ctx=globalctx;
 	if(!ctx)
 		return;
       const char threadname[]="secure watchconnect";
@@ -292,39 +334,53 @@ bool	securewatchcommands(SSL *ssl);
 	close(sock);
 	}
 
+ #include <openssl/err.h>
 
-SSL_CTX* initsslserver(void) {
-	LOGGER("initsslserver\n");
-    if(SSL_library_initptr) SSL_library_initptr();
-    SSL_CTX *ctx;
-    if(OPENSSL_add_all_algorithms_noconfptr) OPENSSL_add_all_algorithms_noconfptr();
-    if(SSL_load_error_stringsptr) SSL_load_error_stringsptr();  
 
-     ctx = SSL_CTX_newptr(TheMethod());
-    if ( ctx == NULL ) {
-    	sslerror("SSL_CTX_newptr %s\n");
-		return nullptr;
+//static SSL_CTX* 
+const char *geterror() {
+	 return ERR_reason_error_stringptr(ERR_peek_last_errorptr());
+	}
+
+const std::string initsslserver(void) {
+    LOGGER("initsslserver\n");
+	if(globalctx!=nullptr)
+		SSL_CTX_freeptr(globalctx);
+	globalctx=nullptr;
+ class init{
+	 public:
+		init() {
+		    if(SSL_library_initptr) SSL_library_initptr();
+		    if(OPENSSL_add_all_algorithms_noconfptr) OPENSSL_add_all_algorithms_noconfptr();
+		    if(SSL_load_error_stringsptr) SSL_load_error_stringsptr();  
+		    } 
+	    };
+ static init _init;
+
+    SSL_CTX *ctx = SSL_CTX_newptr(TheMethod());
+    if( ctx == NULL ) {
+		const char *error=geterror();
+		return std::string("SSL_CTX_newptr ")+std::string(error);
 		}
 
-    destruct des{[ctx] {SSL_CTX_freeptr(ctx);  }}; 
-#include "servercrt.h"
-    if ( SSL_CTX_use_certificate_ASN1ptr(ctx, sizeof(servercrt), (unsigned char*)servercrt) <= 0 )
-    {
-	sslerror("SSL_CTX_use_certificate_ASN1 %s\n");
-	return nullptr;
+    destruct des{[ctx] {SSL_CTX_freeptr(ctx);  }};
+    
+if(SSL_CTX_use_certificate_chain_fileptr(ctx,chainfilename.data())<=0)  {
+	 const char *error=geterror();
+	return std::string(chainfilename.data())+std::string(" SSL_CTX_use_certificate_chain_file ")+std::string(error);
+	}
+if(SSL_CTX_use_PrivateKey_fileptr(ctx, private_file.data(), SSL_FILETYPE_PEM) <= 0) {
+	 const char *error=geterror();
+	return std::string(private_file.data())+std::string(" SSL_CTX_use_PrivateKey_file failed ")+std::string(error);
     }
-#include "serverkey.h"
-    if( SSL_CTX_use_PrivateKey_ASN1ptr(EVP_PKEY_RSA, ctx, (unsigned char *)serverkey, sizeof(serverkey))<=0)
-    {
-	sslerror("SSL_CTX_use_PrivateKey_ASN1 failed %s\n");
-	return nullptr;
+    if( !SSL_CTX_check_private_keyptr(ctx) ) {
+		const char *error=geterror();
+	return std::string("SSL_CTX_check_private_keyptr: Private key does not match the public certificate ")+std::string(error);
     }
-    if ( !SSL_CTX_check_private_keyptr(ctx) )
-    {
-        sslerror("Private key does not match the public certificate %s");
-	return nullptr;
-    }
-   des.active=false;
-    return ctx;
+    des.active=false;
+    globalctx=ctx;
+	return "";
    }
+
+#endif
 #endif

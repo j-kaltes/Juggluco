@@ -26,6 +26,7 @@ import android.app.Application;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCallback;
+import android.content.Intent;
 import android.os.Build;
 
 import java.util.UUID;

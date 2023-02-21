@@ -72,7 +72,7 @@
   <string name="unit">"Einheit: "</string>
   <string name="glucoseaxisleft">Glucose-Achsenzahlen LINKS</string>
   <string name="startsapp">Scannen startet App</string>
-  <string name="sendtoxdrip">Librelink broadcast/<strike>An xDrip senden</strike></string>
+  <string name="sendtoxdrip">Librelink broadcast</string>
   <string name="disablecamerakey">Kamerataste deaktivieren</string>
   <string name="invertscreen">Bildschirm umkehren</string>
   <string name="nfcsound">NFC-Sound</string>
@@ -222,7 +222,7 @@
  <string name="finish">Beenden</string>
  <string name="finishsensormessage">Diesen Sensor nicht mehr zum Streamen verwenden?</string>
 <string name="email">E-Mail:</string>
-  <string name="getaccountid">Hole Konto-ID</string>
+  <string name="getaccountid">Konto-ID erhalten</string>
  
   <string name="emailaddresstooshort">E-Mail-Adresse zu kurz </string>
   <string name="emailaddresstoolong">E-Mail-Adresse zu lang </string>
@@ -232,4 +232,20 @@
   <string name="manual">Manuell</string>
 <string name="noaccountidspecified">Keine Konto-ID angegeben </string>
 <string name="wrongformat">Falsches Format </string>
+
+
+<string name="secret">Geheimnis</string>
+<string name="withoutsaving">Verlassen ohne zu speichern?</string>
+<string name="active">Aktiv</string>
+<string name="usessl">SSL verwenden</string>
+<string name="fullchain">Full chain</string>
+
+         <string name="privatekey">Privater Schlüssel</string>
+<string name="localonly">Nur lokal</string>
+<string name="toolongsecret">: api_secret zu lang. max=</string>
+<string name="invalidport">" ungültige Portnummer"</string>
+<string name="newsecret">"neues api_secret: "</string>
+<string name="newport">"neuer port="</string>
+
+<string name="webserver">Webserver</string>
 </resources>

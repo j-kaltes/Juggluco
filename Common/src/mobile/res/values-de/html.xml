@@ -907,6 +907,11 @@ Auch Klongeräte können an xDrip senden.</p>
 </span><a href="https://github.com/jakobheyman/xdripJH"><span lang="de-DE"><u>https://github.com/jakobheyman/xdripJH</u></span></a>
 <span lang="de-DE">für einen Versuch, den Glukosewert von xDrip jede
 Minute zu aktualisieren.</span></p>
+<p align="left">Freestyle Libre 3-Sensoren senden fehlende Werte nach
+einer Unterbrechungszeit. Diese Werte werden mit diesem Broadcast
+nicht gesendet. Sie erhalten sie, wenn Sie den Webserver in Juggluco
+einschalten und xDrip zu einem Nightscout-Follower von Juggluco
+machen.</p>
 <p align="left">Juggluco kann auch direkt mit xDrip-Uhren-Apps in
 Kontakt treten, so dass die Uhren-App aktuellere Glukosewerte
 anzeigt. Um diese Funktion zu nutzen, wählen Sie <i>&quot;xDrip
@@ -942,6 +947,10 @@ Sie Juggluco als Datenquelle in G-Watch angeben, müssen Sie diese
 Broadcast aktivieren.</p>
 <p align="left" style="line-height: 100%; margin-bottom: 0in">Geben
 Sie die Apps an, an die diese Broadcast gesendet werden soll.</p>
+<h2 class="western">Webserver</h2>
+<p align="left" style="line-height: 100%; margin-bottom: 0in">Webserver,
+der mit xDrip-Uhren und einigen Nightscout-Apps verwendet werden
+kann. Früher xDrip-Webserver genannt.</p>
 <h2 class="western" align="left">Glukose in der Statusleiste von
 Android</h2>
 <p align="left" style="line-height: 100%; margin-bottom: 0in">Wenn
@@ -2240,6 +2249,124 @@ klicken, werden Daten an dieses andere Libreview-Konto gesendet, aber
 die vorherige Konto-ID wird weiterhin verwendet, um den Sensor über
 NFC zu scannen. Auf diese Weise sendet Juggluco Daten an ein anderes
 Libreview-Konto als das, das die Abbotts Libre 3-App verwendet.</p>
+]]>
+</string>
+<string name="Nightscouthelp" >
+<![CDATA[
+<h1>Webserver</h1>
+<p style="line-height: 100%; margin-bottom: 0in">Juggluco enthält
+einen Webserver, über den andere Apps Glukosewerte von Juggluco
+erhalten können. Es kann von xDrip-Uhren und einigen Nightscout-Apps
+verwendet werden.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Die Verwendung von
+Apps, die zur Nutzung des xDrip-Webservers erstellt wurden, ist
+relativ einfach. Aktivieren Sie einfach <i>aktiv</i>. Danach können
+sie Glukose von localhost auf Port 17580 empfangen.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><span lang="de-DE">Auch
+einige Nightscout</span><span lang="de-DE"> Apps</span><span lang="de-DE">
+können davon Gebrauch machen. xDrip, Diabox und eine
+<a href="https://github.com/dabear/FloatingGlucose/releases">Windows-Floating-Glucose-</a>
+App können mit http verwendet werden, wenn „</span><span lang="de-DE"><i>Nur
+lokal</i></span><span lang="de-DE">“ nicht eingestellt ist.</span></p>
+<p style="line-height: 100%; margin-bottom: 0in"><span lang="de-DE">Wenn
+Sie über das Internet auf Juggluco zugreifen möchten, müssen Sie
+einen Port von Ihrem Modem weiterleiten. Siehe
+<a href="https://www.juggluco.nl/Juggluco/phones/index.html">https://www.juggluco.nl/Juggluco/phones/index.html</a></span></p>
+<p style="line-height: 100%; margin-bottom: 0in"><span lang="de-DE">Andere
+Nightscout-Follower verwenden nur https und das erfordert, dass
+Juggluco über einen authentifizierten SSL-Schlüssel für den
+Domänennamen verfügt, der für den Zugriff auf Juggluco verwendet
+wird. Wenn Ihre externe IP einen zugehörigen Hostnamen hat, können
+Sie ein Zertifikat kostenlos über <a href="https://certbot.eff.org/instructions">Certbot</a>
+oder <a href="https://www.sslforfree.com/">ZeroSSL</a> erhalten. Sie
+können es nicht verwenden, wenn Ihre externe IP keinen Hostnamen
+hat. Sie können einen kostenlosen Domainnamen von
+<a href="https://www.freenom.com/">https://www.freenom.com</a>
+erhalten. Ich habe es versucht, aber innerhalb von ein paar Wochen
+haben sie mir ohne jede Benachrichtigung einfach die Domain
+weggenommen und als ich versuchte, sie erneut zu registrieren, hatte
+sie einen Preis. Sie können einen Hostnamen für ein paar Euro pro
+Jahr kaufen (zum Beispiel von <a href="https://www.strato.nl/domeinnaam">https://www.strato.nl/domeinnaam</a>).</span></p>
+<p style="line-height: 100%; margin-bottom: 0in"><span lang="de-DE">Wenn
+Sie die Schlüsseldateien von einer SSL-Autorität erhalten haben,
+müssen Sie diese an Juggluco weitergeben. Der Private Key kann durch
+Drücken von „</span><strong><span lang="de-DE"><i><span style="font-weight: normal">Privater
+Schlüssel</span></i></span></strong><span lang="de-DE">“
+eingelesen werden, die Full Chain durch Drücken von „</span><em><span lang="de-DE">Full
+Chain</span></em><span lang="de-DE">“.</span></p>
+<p style="line-height: 100%; margin-bottom: 0in">Von ZeroSSL.com habe
+ich drei Dateien erhalten: private.key, certificate.crt und
+ca_bundle.crt.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><span lang="de-DE">private.key
+ist der private Schlüssel, den Sie Juggluco geben müssen, indem Sie
+auf &quot;</span><strong><span lang="de-DE"><i><span style="font-weight: normal">Privater
+Schlüssel</span></i></span></strong><span lang="de-DE">&quot;
+drücken.</span></p>
+<p style="line-height: 100%; margin-bottom: 0in">Um die vollständige
+Kette zu erstellen, müssen Sie certificate.crt und ca_bundle.crt
+verketten.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Linux:</p>
+<pre style="margin-bottom: 0.2in">cat certificate.crt ca_bundle.crt &gt; fullchain.pem</pre><p style="line-height: 100%; margin-bottom: 0in">
+Windows-cmd.com:</p>
+<pre style="margin-bottom: 0.2in">copy certificate.crt + ca_bundle.crt fullchain.pem</pre><p style="line-height: 100%; margin-bottom: 0in">
+Windows-Powershell:</p>
+<p>
+cat certificate.crt &gt; fullchain.pem<br>
+cat ca_bundle.crt &gt;&gt; fullchain.pem</p><p style="line-height: 100%; margin-bottom: 0in">
+<span lang="de-DE">Nachdem ich Certbot verwendet hatte, fand ich den
+privaten Schlüssel in /etc/letsencrypt/live/myhostname/privkey.pem</span><span lang="de-DE">
+</span><span lang="de-DE">und die vollständige Kette in
+/etc/letsencrypt/live/myhostname/fullchain.pem. &quot;</span><em><span lang="de-DE">myhostname</span></em><span lang="de-DE">&quot;
+ist der von mir verwendete Hostname.</span></p>
+<p style="line-height: 100%; margin-bottom: 0in"><span lang="de-DE">Wenn
+Sie nur Glukosewerte von einem Android zum anderen senden möchten,
+können Sie besser die </span><a href="https://www.juggluco.nl/Juggluco/mgdL/index.html#mirror"><span lang="de-DE">Klonf</span><span lang="de-DE">unktion</span></a><span lang="de-DE">
+von Juggluco verwenden (linkes mittleres Menü -&gt; </span><span lang="de-DE">Klon</span><span lang="de-DE">).</span></p>
+<p style="line-height: 100%; margin-bottom: 0in">Android Aps und
+Nsclient funktionieren nicht als Follower von Juggluco, aber Sie
+können ihnen Glukosewerte mit der xDrip-Broadcast in Juggluco senden
+(linkes Menü-&gt; Einstellungen-&gt; xDrip Broadcast).</p>
+<p style="line-height: 100%; margin-bottom: 0in"><span lang="de-DE">Sie
+benötigen SSL für Diabetes:M, <a href="https://play.google.com/store/apps/details?id=se.cornixit.nightwatch">Nightwatch</a>
+und <a href="https://slingithub.github.io/CheckmateWeb">Checkmate</a>.</span></p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>Geheimnis:</b>
+Geben Sie an, dass Follower das http-Header-Element api api_secret
+auf diesen Wert setzen sollen. Nicht alle Nightscout-Apps haben eine
+Option zum Setzen von api_secret, das bedeutet, dass Sie sie nicht
+verwenden können, wenn Secret auf einen Wert gesetzt ist. api_secret
+unterscheidet sich von einem Nightscout-Token.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><strong><span lang="de-DE">Sichtbar</span></strong><span lang="de-DE">:
+</span><span lang="de-DE">Geheimnis</span><span lang="de-DE">
+sichtbar machen.</span></p>
+<p style="line-height: 100%; margin-bottom: 0in"><strong><span lang="de-DE">Port</span></strong><span lang="de-DE">:
+Geben Sie den Netzwerkport an, der verwendet wird, um diesen Server
+zu kontaktieren. Der Standardwert ist 17581.</span></p>
+<p style="line-height: 100%; margin-bottom: 0in"><strong><span lang="de-DE">Speichern</span></strong><span lang="de-DE">:
+Änderungen von </span><strong><span lang="de-DE"><span style="font-weight: normal">Geheimnis</span></span></strong><span lang="de-DE"><span style="font-weight: normal">
+</span></span><span lang="de-DE">oder Port speichern.</span></p>
+<p style="line-height: 100%; margin-bottom: 0in"><strong><span lang="de-DE">SSL
+verwenden</span></strong><span lang="de-DE">: Verwenden Sie SSL
+(https). Für SSL müssen Sie einen privaten Schlüssel und eine
+vollständige Kette für den Hostnamen angeben, der zum Kontaktieren
+dieses Dienstes verwendet wird.</span></p>
+<p style="line-height: 100%; margin-bottom: 0in"><strong><span lang="de-DE">Privater
+Schlüssel</span></strong><span lang="de-DE">: Wählen Sie eine Datei
+aus, die den privaten Schlüssel enthält. Siehe oben.</span></p>
+<p style="line-height: 100%; margin-bottom: 0in"><strong><span lang="de-DE"><span lang="de-DE">Full
+Ch</span></span></strong><strong><span lang="de-DE"><span lang="de-DE">ain</span></span></strong><span lang="de-DE">:
+Wählen Sie eine Datei aus, die die vollständige Kette enthält,
+siehe oben.</span></p>
+<p style="line-height: 100%; margin-bottom: 0in"><strong><span lang="de-DE">Aktiv</span></strong><span lang="de-DE">:
+Webserver läuft.</span></p>
+<p style="line-height: 100%; margin-bottom: 0in"><strong><span lang="de-DE">Nur
+lokal</span></strong><span lang="de-DE">: Auf den http-Server kann
+nur mit localhost zugegriffen werden. Dies gilt nicht für https.</span></p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
 ]]>
 </string>
 </resources>

@@ -42,6 +42,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ScrollView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -85,6 +86,13 @@ static private boolean isElement(String name,String[] strs) {
 static private void  getselected(MainActivity context, View parent,String title,String[] selected, ArrayList<String> names, Consumer<String[]> saveproc) {
 
 	int len= names.size();
+	if(len==0) {
+	//	if(!isWearable)	EnableControls(parent,true);
+		Toast.makeText(context, context.getString(R.string.noapplisteningto)+title, Toast.LENGTH_SHORT).show();
+		String[] niets=new String[0];
+		saveproc.accept(niets);
+		return;
+		}
 	var views=new View[len+2][];
 	final int startids=1;
 	final int endlen=len+startids;
@@ -170,7 +178,16 @@ static private void  getselected(MainActivity context, View parent,String title,
 static public void setlibrereceivers(MainActivity context,View settingsview,CheckBox box,boolean[] dont) {
 	var selected= Natives.librelinkRecepters();
 	var all=actionListeners(XInfuus.glucoseaction);
- 	getselected(context,settingsview,"Librelink",selected, all,newselected-> {
+	/*
+	if(all.size()==0) {
+		Toast.makeText(context, context.getString(R.string.noapplisteningto)+XInfuus.glucoseaction, Toast.LENGTH_SHORT).show();
+		Natives.setlibrelinkRecepters(null);
+		XInfuus.setlibrenames();
+		box.setChecked(false);
+		dont[0]=false;
+		return;
+		} */
+	getselected(context,settingsview,"Librelink",selected, all,newselected-> {
 			if(newselected!=null) {
 				Natives.setlibrelinkRecepters(newselected);
 				XInfuus.setlibrenames();
@@ -179,7 +196,7 @@ static public void setlibrereceivers(MainActivity context,View settingsview,Chec
 			dont[0]=false;
 			}
 		);
-	EnableControls(settingsview,false);
+	
 	}
 static public void setxdripreceivers(MainActivity context,View settingsview,CheckBox box,boolean[] dont) {
 	var selected= Natives.xdripRecepters();
@@ -196,8 +213,8 @@ static public void setxdripreceivers(MainActivity context,View settingsview,Chec
 	}
 
 static public void setglucodatareceivers(MainActivity context,View settingsview,CheckBox box,boolean[] dont) {
-	var selected= Natives.glucodataRecepters();
 	var all=actionListeners(JugglucoSend.ACTION);
+	var selected= Natives.glucodataRecepters();
  	getselected(context,settingsview,"Glucodata",selected, all,newselected-> {
 			if(newselected!=null) {
 				Natives.setglucodataRecepters(newselected);

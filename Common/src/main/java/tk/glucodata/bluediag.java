@@ -286,24 +286,25 @@ void	setadapter(Activity act,	final ArrayList<SuperGattCallback> gatts) {
 	//	reenable.setOnClickListener(v->Natives.reenableStreaming());
 	}
 		final ArrayList<SuperGattCallback> gatts=SensorBluetooth.mygatts();
-
-	Button finish=view.findViewById(R.id.finish);
-	if(gatts!=null&&gatts.size()>0) {
-		finish.setOnClickListener(v->  {
-			if(gatts!=null&&gatts.size()>0) {
-				if(gattselected>= gatts.size()) {
-					Log.i(LOG_ID,"show: gattselected="+ gattselected);
-					gattselected=0;
+if(!isWearable) {
+	Button finish = view.findViewById(R.id.finish);
+	if (gatts != null && gatts.size() > 0) {
+		finish.setOnClickListener(v -> {
+			if (gatts != null && gatts.size() > 0) {
+				if (gattselected >= gatts.size()) {
+					Log.i(LOG_ID, "show: gattselected=" + gattselected);
+					gattselected = 0;
 					return;
-					}
-				var gat=gatts.get(gattselected);
-				confirmFinish(gat) ;
 				}
-			});
-		}
+				var gat = gatts.get(gattselected);
+				confirmFinish(gat);
+			}
+		});
+	}
 	else {
 		finish.setVisibility(GONE);
-		}
+	}
+}
 	contimes=new TextView[]{view.findViewById(R.id.consuccess) , view.findViewById(R.id.confail)};
 	constatus=view.findViewById(R.id.constatus);
 	constatus.setTextIsSelectable(true);

@@ -184,12 +184,14 @@ static public void show(MainActivity context) {
 	layout.setBackgroundColor( Applic.backgroundcolor);
 	context.addContentView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
 	Ok.setOnClickListener(v -> {
-		direct=null;
-		nodeslist=null;
-		nodenum=-1;
+		direct = null;
+		nodeslist = null;
+		nodenum = -1;
+		context.poponback();
 		removeContentView(layout);
-		context.hideSystemUI(); });
-		start.setOnClickListener(v -> {
+		context.hideSystemUI(); }
+		);
+	start.setOnClickListener(v -> {
 			if(nodenum>=0) {
 				var sender=tk.glucodata.MessageSender.getMessageSender();
 
@@ -236,14 +238,6 @@ static public void show(MainActivity context) {
 static String makenodename(Node node) {
 	return node.getId();
 	}
-/*	
-static String makenodename(Node node) {
-	var id=node.getId();
-	var name=node.getDisplayName();
-	int len=Math.min(15-id.length()-1,name.length());
-	return id+'-'+name.substring(0,len);
-	}
-	*/
 
 static private void enableMessageReceiver(boolean val) {
 	try{

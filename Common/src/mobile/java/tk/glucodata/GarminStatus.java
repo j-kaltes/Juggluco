@@ -266,7 +266,7 @@ class GarminStatus {
 		reinit.setOnClickListener(v -> alldata.reinit(context));
 //		var setid = getbutton(context, "ID");
 //		setid.setOnClickListener(v -> setidview(context, alldata));
-		Button config = getbutton(context, "Config");
+		Button config = getbutton(context, R.string.config);
 		config.setOnClickListener(v -> kerfstokconfig(context,alldata,layout));
 //		restview.setPadding(0,0,0,0);
 		layout = new Layout(context, (l, w, h) -> {

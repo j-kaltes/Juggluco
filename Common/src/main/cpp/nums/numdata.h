@@ -703,7 +703,7 @@ void addmorelibrenumschanged(int ind,int nr,const Num*data) {
 		ind=getlibreSolid();
 	const Num *start= startdata();
 	for(int i=ind;i<end;i++) {
-		if(memcmp(start +i, data-i-ind,sizeof(*start))) { //TODO: CHANGE HERE instead of memcpy
+		if(memcmp(start +i, data+i-ind,sizeof(*start))) { //TODO: CHANGE HERE instead of memcpy
 			addlibrenumsdeleted(start+i,i);
 			addlibrechange(i);
 			}

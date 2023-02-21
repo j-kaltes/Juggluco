@@ -101,7 +101,8 @@ struct Tings {
 	bool triedasm:1;
 	bool asmworks:1;
 	bool nobluetooth;
-	bool nodebug:6;
+	bool nodebug:5;
+	bool useSSL:1;
 	bool floatingNotTouchable:1;
 	bool floatglucose:1;
 	bool lowalarm,highalarm,availablealarm;
@@ -113,7 +114,8 @@ struct Tings {
 		};
 	ToLibre librenums[40];
 	int64_t libreaccountIDnum;
-	uint8_t reserved3[184];
+	uint8_t apisecretlength;
+	char apisecret[183];
 	int8_t unit;
 	bool callapp;
 	bool nochangenum;
@@ -189,8 +191,8 @@ struct Tings {
 	char newYuApiKey3[41];
 	//char reserved9[7];//*
 
-
-	char reserved9[3];//*
+	char reserved9;//*
+	uint16_t sslport;
 	int32_t libre3NUMiter;
 
 	uint16_t tokensize3;
@@ -295,6 +297,7 @@ Settings(const char *settingsname,const char *base,const char *country): Mmap(se
 		return;
 		}
 
+	if(data()->initVersion<16) { // set in Applic.initbroadcasts
 	if(data()->initVersion<15) {
 		if(data()->initVersion<13) {
 			if(data()->initVersion<12) {
@@ -368,6 +371,8 @@ Settings(const char *settingsname,const char *base,const char *country): Mmap(se
 			}
 
 		data()->libreaccountIDnum=-1LL;
+	     }
+		data()->sslport=17581;
 	     }
 	setconvert(country);
 

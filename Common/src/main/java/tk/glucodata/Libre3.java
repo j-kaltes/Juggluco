@@ -25,13 +25,14 @@ package tk.glucodata;
 import android.nfc.Tag;
 
 import static tk.glucodata.BuildConfig.libreVersion;
+import static tk.glucodata.Natives.showbytes;
 
 public class  Libre3 {
 private static final String LOG_ID="Libre3";
 public static byte[] firstnfc(Tag tag) {
 	final byte[] firstcom={(byte)0x02,(byte)0xA1,(byte)0x7A};
          var res=AlgNfcV.wholenfccmd(tag,firstcom );
-//	 showbytes("NFC res: ",res);
+	 showbytes("NFC res: ",res);
 	return res;
 	 }
 

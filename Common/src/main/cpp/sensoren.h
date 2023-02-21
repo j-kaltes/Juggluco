@@ -291,6 +291,8 @@ extern void	sendKAuth(SensorGlucoseData *hist);
 	const pathconcat sensordir(inbasedir,name);
 	if(SensorGlucoseData::mkdatabase3(sensordir, starttime,pin,deviceaddress) ) {
 		const int ind=addsensor(std::string_view(name.data(),name.size()));
+		sensor *sen=getsensor(ind);
+		sen->initialized=true;
 		return ind ;
 		}
 	return -1;
@@ -359,21 +361,26 @@ SensorGlucoseData *makelibre3sensor(std::string_view shortname,uint32_t starttim
 	vector<int> inperiod(uint32_t starttime, uint32_t endtime) {
 		vector<int> out;
 		const uint32_t startend = starttime - sensorageseconds;
+		const uint32_t nothingbefore = startend - sensorageseconds;
 		const uint32_t nu = time(nullptr);
-		for (int i = last(); i >= 0; i--) {
+		for(int i = last(); i >= 0; i--) {
 			const uint32_t startsensor = sensorlist()[i].starttime;
-			if (startsensor >= endtime)
+			if(startsensor >= endtime)
 				continue;
-			if (startsensor < startend)
-				break;
+			if(startsensor < startend)  {
+				if(startsensor < nothingbefore) {
+					break;
+					}
+				continue;
+				}
 
 			auto oneend = sensorlist()[i].endtime;
-			if (sensorlist()[i].finished && oneend && oneend <= starttime) {
+			if(sensorlist()[i].finished && oneend && oneend <= starttime) {
 				continue;
 			}
 			checkinfo(i, nu);
 			oneend = sensorlist()[i].endtime;
-			if (oneend && oneend <= starttime) {
+			if(oneend && oneend <= starttime) {
 				continue;
 			}
 			out.push_back(i);

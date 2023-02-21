@@ -1794,17 +1794,16 @@ static void showlastsstream(const time_t nu,const float getx,std::vector<int> &u
 			auto wait= nu-starttime;
 			LOGGER("wait=%lu starttime=%lu %s",wait,starttime,ctime(&starttime));
 			if(wait<(60*60)) {
-				LOGGER("wait<(60*60)\n");
 			//	const bool streaming=hist->deviceaddress()[0];
-				const sensor* senso=sensors->getsensor(sensorindex);
-				const bool needsscan=senso->initialized;
+				const bool isInitialised=hist->isLibre3()||sensors->getsensor(sensorindex)->initialized;
+				LOGGER("wait<(60*60) isInitialised=%d\n",isInitialised);
 
 				float usegetx=getx-headsize/3;
 				nvgTextAlign(vg,NVG_ALIGN_LEFT|NVG_ALIGN_MIDDLE);
 				nvgFontSize(vg,headsize/6 );
 				char buf[usedtext->readysecEnable.size()+6];
 				int minutes=60-(wait/60);
-				int ends=sprintf(buf,needsscan?usedtext->readysec.data():usedtext->readysecEnable.data(),minutes);
+				int ends=sprintf(buf,isInitialised?usedtext->readysec.data():usedtext->readysecEnable.data(),minutes);
 				getboxwidth(usegetx);
 				nvgTextBox(vg,  usegetx, gety, getboxwidth(usegetx), buf,buf+ends);
 				}

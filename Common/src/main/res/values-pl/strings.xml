@@ -4,7 +4,7 @@
     <string name="ok">OK</string>
     <string name="cancel">Anuluj</string>
 
-    <string name="garmin_initialization_error">&quot;Nieudana inicjalizacja Garmin connect SDK:&quot; </string>
+    <string name="garmin_initialization_error">&quot;Włączenie Garmin connect SDK nie udało się: &quot;</string>
 
     <string name="error_nfc_device_not_supported">Skanowanie niemożliwe, na tym urządzeniu brak NFC</string>
     <string name="error_nfc_disabled">NFC wyłączone, można je włączyć w ustawieniach.</string>
@@ -40,13 +40,13 @@
     <string name="activeonly">Tr. aktywny</string>
     <string name="both">Oba</string>
     <string name="receivefrom">Odbieraj</string>
-    <string name="datapresentuntil">&quot;Dane obecne na odbiorniku do momentu:&quot;</string>
-    <string name="visible">Widoczny</string>
+    <string name="datapresentuntil">&quot;Dane obecne na odbiorniku do momentu: &quot;</string>
+    <string name="visible">Pokaż</string>
     <string name="password">Hasło</string>
     <string name="delete">Usuń</string>
     <string name="specifyreceiveordata">Włącz opcję „Odbieraj” lub określ dane, które mają zostać wysłane do innego urządzenia</string>
     <string name="specifyip">Należy określić adres IP</string>
-    <string name="portrange">Port powinien zawierać się w przedziale od 1024 do 65535</string>
+    <string name="portrange">Port powinien mieścić się w przedziale od 1024 do 65535</string>
     <string name="start">Początek</string>
     <string name="now">Teraz</string>
     <string name="dontchangeamounts">Nie zmieniaj wartości</string>
@@ -74,7 +74,7 @@
  <string name="unit">&quot;Jednostka: &quot;</string>
  <string name="glucoseaxisleft">Liczby osi glukozy po LEWEJ</string>
  <string name="startsapp">Skanowanie uruchamia aplikację</string>
- <string name="sendtoxdrip">Przesył do innych apl./<strike>(poprz. Wyślij do xDrip)</strike></string>
+ <string name="sendtoxdrip">Przesył do innych apl.</string>
  <string name="disablecamerakey">Wyłącz przycisk aparatu</string>
  <string name="invertscreen">Odwróć ekran</string>
  <string name="nfcsound">Dźwięk NFC</string>
@@ -90,8 +90,8 @@
  <string name="display">Wyświetl</string>
  <string name="shutcuts">Skróty</string>
  <string name="advanced">Zaawansowane</string>
- <string name="newname">Nowy</string>
- <string name="deletelast">Usuń ostatni</string>
+ <string name="newname">Nowa</string>
+ <string name="deletelast">Usuń ostatnią</string>
  <string name="meal">Posiłek:</string>
  <string name="ringshort">Dzwonek</string>
  <string name="days">Dni</string>
@@ -216,9 +216,26 @@
  <string name="background">Tło</string>
  <string name="transparent">Przezroczysta</string>
  <string name="touchable">Dotykowa</string>
+
  <string name="overlaypermission">By udzielić uprawnienia, wpisz w adb:</string>
  <string name="overlaypermissionmessage">adb shell pm grant tk.glucodata android.permission.SYSTEM_ALERT_WINDOW</string>
- 
+ <string name="deletereminder">Usunąć przypomnienie?</string>
+ <string name="deletelabel">Usunąć etykietę?</string>
 
+ <string name="finish">Rozłącz</string>
+ <string name="finishsensormessage">Przestać używać tego sensora do przesyłania strumieniowego?</string>
+ 
+ <string name="email">E-Mail:</string>
+ <string name="getaccountid">Uzyskaj identyfikator konta Libreview</string>
+
+ <string name="emailaddresstooshort">Adres e-mail jest zbyt krótki</string>
+ <string name="emailaddresstoolong">Adres e-mail jest zbyt długi</string>
+ <string name="password8">Hasło powinno składać się z co najmniej 8 znaków</string>
+ <string name="password36">Maksymalna długość hasła to 36 znaków</string>
+ <string name="fromlibreview">Z Libreview</string>
+ <string name="manual">Ręcznie</string>
+<string name="noaccountidspecified">&quot; Nie określono identyfikatora konta&quot;</string>
+<string name="wrongformat">&quot;Nieprawidłowy format&quot;</string>
+<string name="noapplisteningto">&quot;Żadna aplikacja nie nasłuchuje &quot;</string>
 
 </resources>

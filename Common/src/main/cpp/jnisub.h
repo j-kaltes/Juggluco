@@ -122,7 +122,7 @@ struct scanresult_t {
     } ;
 string serial;
 int sensorindex=sensors->sensorindex(serial.data());
-SensorGlucoseData *hist=sensors->gethist(sensorindex);
+SensorGlucoseData *hist=sensorindex<0?nullptr:sensors->gethist(sensorindex);
 
 private:
 pathconcat sensordir;

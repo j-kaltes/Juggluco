@@ -1130,3 +1130,40 @@ static	 constexpr const char isnull[]="null";
 	return jinaccount;
         }
 
+
+extern "C" JNIEXPORT void  JNICALL   fromjava(setApiSecret)(JNIEnv *env, jclass cl,jstring japisecret) {
+	const jint jlen = env->GetStringLength(japisecret);
+	env->GetStringUTFRegion(japisecret, 0,jlen, settings->data()->apisecret);
+	jint len = env->GetStringUTFLength( japisecret);
+	settings->data()->apisecret[len]='\0';
+	settings->data()->apisecretlength=len;
+	 }
+extern "C" JNIEXPORT jstring  JNICALL   fromjava(getApiSecret)(JNIEnv *env, jclass cl) {
+	 return env->NewStringUTF(settings->data()->apisecret);
+	}
+extern void stopsslwatchthread() ;
+extern std::string startsslwatchthread() ;
+extern "C" JNIEXPORT jstring  JNICALL   fromjava(setuseSSL)(JNIEnv *env, jclass cl,jboolean val) {
+#if defined(USE_SSL)&&!defined(WEAROS)
+ 	stopsslwatchthread();
+	if(val) {
+		auto error=startsslwatchthread() ;
+		if(error.size()) {
+	 		return env->NewStringUTF(error.data());
+			}
+		}
+	settings->data()->useSSL=val;
+#endif
+	return nullptr;
+	}
+extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getuseSSL)(JNIEnv *env, jclass cl) {
+	return settings->data()->useSSL;
+	}
+
+
+extern "C" JNIEXPORT void  JNICALL   fromjava(setsslport)(JNIEnv *env, jclass cl,jint val) {
+	settings->data()->sslport=val;
+	}
+extern "C" JNIEXPORT jint  JNICALL   fromjava(getsslport)(JNIEnv *env, jclass cl) {
+	return settings->data()->sslport;
+	}

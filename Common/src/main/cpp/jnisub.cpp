@@ -1038,7 +1038,8 @@ scanstate *Abbott::initnewsensor( scandata *data) {
 	}
 #endif
 	if(int sindex=sensors->sensorindex(serial.data());sindex>=0) {
-		 SensorGlucoseData *hist=sensors->gethist(sindex);
+		sensorindex=sindex;
+		 hist=sensors->gethist(sindex);
 		if(hist->bluetoothOn()==1)
 			hist->setbluetoothOn(0);
 		}
@@ -1055,6 +1056,7 @@ scanstate *Abbott::initnewsensor( scandata *data) {
 		SensorGlucoseData::mkdatabase(sensordir,start,(const char *)uid->data(),infodata,15,3,bluestart,nullptr) ;
 		int ind=sensors->addsensor(serial.data());
 		hist=sensors->gethist(ind);
+		sensorindex=ind;
 		}
 	constexpr const int	threeyear=94694400 ;//2013
 	constexpr const int sec_per_day=60*60*24;

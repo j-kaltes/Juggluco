@@ -638,290 +638,83 @@ Posi�ek o zapisanej warto�ci.</p>
 </string>
 <string name="settinghelp" >
 <![CDATA[
-<h1>
-Ustawienia</h1>
-<h2 class="western"><font face="Arial, sans-serif"><font size="4" style="font-size: 16pt">Jednostka</font></font></h2>
-<p style="margin-bottom: 0in">Wybierz, czy wartości glukozy mają
-być podawane w mol/L czy dm/dL.</p>
-<h2 class="western"><font face="Arial, sans-serif"><font size="4" style="font-size: 16pt">Zakres
-wykresu: wartość najniższa-najwyższa.</font></font></h2>
-<p style="margin-bottom: 0in">Podaj wartość najniższą i
-najwyższą, tak aby dół ekranu odpowiadał najniższej, a góra
-najwyższej wartości. Wartości te są wykorzystywane tylko wtedy,
-gdy wszystkie wartości glukozy wyświetlane na ekranie mieszczą się
-w tych granicach. W przeciwnym razie granice są poszerzane, aby
-wszystkie wartości były widoczne. W przypadku ustawienia 54 mg/dl
-(3 mol/L) i 162 mg/dl (9 mol/L), a wszystkie wartości na widocznym
-ekranie mieszczą się w przedziale od 90 mg/dl (5 mol/L) do 108
-mg/dl (6 mol/L), na wykresie pojawia się oś glukozy od 54 do 162.</p>
-<p style="margin-bottom: 0in">Jeśli włączona jest opcja <b>Skalowanie
-ręczne Osi stęż. glukozy</b>, można zmieniać: przesunięcie
-palcem po górnej części ekranu powoduje przesunięcie górnej
-połowy wykresu w górę i w dół; przesunięcie po dolnej części
-ekranu powoduje przesunięcie dolnej połowy wykresu w górę i w
-dół.</p>
-<h2 class="western"><font face="Arial, sans-serif"><font size="4" style="font-size: 16pt">Zakres
-docelowy: wartość najniższa– najwyższa.</font></font></h2>
-<p style="margin-bottom: 0in">Wyższa strona ekranu ma inny kolor,
-dzięki czemu łatwiej dostrzec wysokie wartości. Podobnie jest w
-przypadku niskich wartości. Czerwona linia wskazuje na ekranie
-granicę zbyt niskich wartości.</p>
-<h2 class="western"><font face="Arial, sans-serif"><font size="4" style="font-size: 16pt">Liczby
-osi glukozy po LEWEJ</font></font></h2>
-<p>Umieść liczby poziomu stęż. glukozy na wykresie po lewej
-stronie ekranu. Przydatne, jeśli chcesz umieścić aktualną glukozę
-na środku ekranu, na przykład w Wear OS.</p>
-<h2 class="western"><font face="Arial, sans-serif"><font size="4" style="font-size: 16pt">Odwróć
-ekran</font></font></h2>
-<p style="margin-bottom: 0in">Odwróć widok na ekranie spodem do
-góry. Jest ona domyślnie włączona, ponieważ w przeciwnym razie
-zdarzało mi się nieraz przypadkowo dotknąć OK podczas skanowania
-sensora.</p>
-<p style="margin-bottom: 0in">Niektórzy proszą o tryb pionowy, ale
-wyłączyłem go, bo jest zupełnie nieodpowiedni do wyświetlania
-wykresu stężenia glukozy.</p>
-<h2 class="western"><font face="Arial, sans-serif"><font size="4" style="font-size: 16pt">Dźwięk
-NFC</font></font></h2>
-<p>Podczas skanowania oprócz wibracji wydawany jest również
-dźwięk.</p>
-<h2 class="western"><font face="Arial, sans-serif"><font size="4" style="font-size: 16pt">Skanowanie
-uruchamia aplikację</font></font></h2>
-<p>Jeśli opcja jest zaznaczona, ta aplikacja będzie uruchamiana po
-zeskanowaniu sensora przez NFC, nawet jeśli aplikacja ta nie jest
-aktualnie wyświetlana na ekranie. Jeśli opcję tę ma włączonych
-wiele aplikacji, android wyświetli komunikat z możliwością
-wyboru, gdzie można wybrać aplikację, której chcesz użyć.
-Wybranie jednej jakoś nie działa, a wybranie jednej przy kolejnym
-skanowaniu też nie. Czyli w tym przypadku nie da się skanować bez
-aplikacji wyświetlonej bezpośrednio na ekranie. Wyłączenie jej w
-tej aplikacji sprawi, że przynajmniej jedna aplikacja będzie mogła
-być aktywowana w ten sposób.</p>
-<p>Jeśli masz dostęp do roota, możesz też wyłączyć aktywację
-NFC w aplikacji Librelink firmy Abbott (nie działa z Libre3):</p>
-<p>Zostań użytkownikiem rootem w wierszu poleceń adb lub termux, i
-wpisz:</p>
-<p lang="en-GB">pm disable
-com.freestylelibre.app.nl/com.librelink.app.ui.common.NFCScanActivity</p>
+<h1 class="western">Ustawienia</h1>
+<h2 class="western">Jednostka</h2>
+<p style="line-height: 100%; margin-bottom: 0in">Wybierz, czy wartości glukozy mają być podawane w mmol/L czy dm/dL.</p>
+<h2 class="western">Zakres wykresu: wartość najniższa-najwyższa.</h2>
+<p style="line-height: 100%; margin-bottom: 0in">Podaj wartość najniższą i najwyższą, tak aby d&oacute;ł ekranu odpowiadał najniższej, a g&oacute;ra najwyższej wartości. Wartości te są wykorzystywane tylko wtedy, gdy wszystkie wartości glukozy wyświetlane na ekranie mieszczą się w tych granicach. W przeciwnym razie granice są poszerzane, aby wszystkie wartości były widoczne. W przypadku ustawienia 54 mg/dl (3 mmol/L) i 162 mg/dl (9 mmol/L), a wszystkie wartości na widocznym ekranie mieszczą się w przedziale od 90 mg/dl (5 mmol/L) do 108 mg/dl (6 mmol/L), na wykresie pojawia się oś glukozy od 54 do 162.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Jeśli włączona jest opcja <b>Skalowanie ręczne Osi stęż. glukozy</b>, można zmieniać: przesunięcie palcem po g&oacute;rnej części ekranu powoduje przesunięcie g&oacute;rnej połowy wykresu w g&oacute;rę i w d&oacute;ł; przesunięcie po dolnej części ekranu powoduje przesunięcie dolnej połowy wykresu w g&oacute;rę i w d&oacute;ł.</p>
+<h2 class="western">Zakres docelowy: wartość najniższa&ndash; najwyższa.</h2>
+<p style="line-height: 100%; margin-bottom: 0in">Wyższa strona ekranu ma inny kolor, dzięki czemu łatwiej dostrzec wysokie wartości. Podobnie jest w przypadku niskich wartości. Czerwona linia wskazuje na ekranie granicę zbyt niskich wartości.</p>
+<h2 class="western">Liczby osi glukozy po LEWEJ</h2>
+<p>Umieść liczby poziomu stęż. glukozy na wykresie po lewej stronie ekranu. Przydatne, jeśli chcesz umieścić aktualną glukozę na środku ekranu, na przykład w Wear OS.</p>
+<h2 class="western">Odwr&oacute;ć ekran</h2>
+<p style="line-height: 100%; margin-bottom: 0in">Odwr&oacute;ć widok na ekranie spodem do g&oacute;ry. Jest ona domyślnie włączona, ponieważ w przeciwnym razie zdarzało mi się nieraz przypadkowo dotknąć OK podczas skanowania sensora.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Niekt&oacute;rzy proszą o tryb pionowy, ale wyłączyłem go, bo jest zupełnie nieodpowiedni do wyświetlania wykresu stężenia glukozy.</p>
+<h2 class="western">Dźwięk NFC</h2>
+<p>Podczas skanowania opr&oacute;cz wibracji wydawany jest r&oacute;wnież dźwięk.</p>
+<h2 class="western">Skanowanie uruchamia aplikację</h2>
+<p>Jeśli opcja jest zaznaczona, ta aplikacja będzie uruchamiana po zeskanowaniu sensora przez NFC, nawet jeśli aplikacja ta nie jest aktualnie wyświetlana na ekranie. Jeśli opcję tę ma włączonych wiele aplikacji, android wyświetli komunikat z możliwością wyboru, gdzie można wybrać aplikację, kt&oacute;rej chcesz użyć. Wybranie jednej jakoś nie działa, a wybranie jednej przy kolejnym skanowaniu też nie. Czyli w tym przypadku nie da się skanować bez aplikacji wyświetlonej bezpośrednio na ekranie. Wyłączenie jej w tej aplikacji sprawi, że przynajmniej jedna aplikacja będzie mogła być aktywowana w ten spos&oacute;b.</p>
+<p>Jeśli masz dostęp do roota, możesz też wyłączyć aktywację NFC w aplikacji Librelink firmy Abbott (nie działa z Libre3):</p>
+<p>Zostań użytkownikiem rootem w wierszu poleceń adb lub termux, i wpisz:</p>
+<p>pm disable com.freestylelibre.app.nl/com.librelink.app.ui.common.NFCScanActivity</p>
 <p>Na Librelink 2.7.1 i niższych trzeba było wcisnąć:</p>
-<p lang="en-GB">pm disable
-com.freestylelibre.app.nl/com.librelink.app.ui.common.ScanSensorActivity</p>
-<p>com.freestylelibre.app.nl tutaj to wersja holenderska Librelink,
-należy to zastąpić używaną wersją. Możesz znaleźć tę nazwę
-wpisując (nawet bez roota):</p>
+<p>pm disable com.freestylelibre.app.nl/com.librelink.app.ui.common.ScanSensorActivity</p>
+<p><span lang="pl-PL">com.freestylelibre.app.nl tutaj to wersja holenderska Librelink, należy to zastąpić używaną wersją. Możesz znaleźć tę nazwę wpisując</span> <span lang="pl-PL">(nawet bez roota):</span></p>
 <p>pm list package freestylelibre</p>
-<p>Następnie nadal można używać Librelink do skanowania, gdy
-aplikacja ta jest wyświetlona na ekranie, ale nie zostanie ona
-uruchomiona w inny sposób. Librelink 2.5.2 i wyższe wersje
-zawieszają się, jeśli wykryją roota. Ale w Magisk można łatwo
-ukryć roota zmieniając nazwę Magisk i dodając poszczególne
-aplikacje do denylist (Magisk 24.3) lub Magiskhide (Magisk 23.0). Do
-denylist należy dodać również Juggluco. Z wyjątkiem sytuacji,
-gdy korzystasz z amerykańskich sensorów Freestyle Libre 2, możesz
-również używać starszej wersji Librelink bez sprawdzania roota.</p>
-<p>Bez roota w wierszu poleceń adb można też wyłączyć całą
-aplikację:</p>
-<p lang="en-GB">pm disable-user --user 0 com.freestylelibre.app.nl</p>
-<p>Zanim zadzwonisz do obsługi klienta Abbott, możesz ponownie
-włączyć ją za pomocą polecenia:</p>
-<p lang="en-GB">pm enable com.freestylelibre.app.nl</p>
-<h2 class="western"><font face="Arial, sans-serif"><font size="4" style="font-size: 16pt">Libreview</font></font></h2>
-<p>Połącz się z Libreview, aby wysłać wartości stężenia
-glukozy Freestyle Libre 2 i 3 oraz wartości wpisów do Libreview
-oraz aby uzyskać identyfikator konta używany podczas aktywacji
-sensora Freestyle Libre 3. Dotknij, aby zmienić ustawienia.</p>
-<h2 class="western"><font face="Arial, sans-serif"><font size="4" style="font-size: 16pt">Nadawanie
-sygnału Librelink</font></font></h2>
-<p>Nadaje sygnał Librelink (oryginalnie wysyłany przez załataną
-niemiecką aplikację Librelink w wersji 2.3.0), aby co minutę
-wysyłać dane strumienia glukozy przez Bluetooth do xDrip. W xDrip
-musisz ustawić Libre2 (patched App) jako sprzętowe źródło
-danych. Wartości glukozy wyświetlane w xDrip są inne niż
-wartości, które otrzymuje. Z jakiegoś powodu xDrip aktualizuje
-swoją wartość tylko co 5 minut, prawdopodobnie dlatego, że został
-stworzony dla urządzeń, które wysyłają tylko raz na 5 minut.
-(Tarcza zegarka podłączona do xDrip regularnie wyświetlała stare
-wartości sprzed ponad 9 minut.) Dodatkowo xDrip wyświetla własną
-interpretację otrzymanych wartości glukozy. Urządzenia klony
-również mogą wysyłać wartości do xDrip.</p>
-<p>Zobacz <a href="https://github.com/jakobheyman/xdripJH">https://github.com/jakobheyman/xdripJH</a>,
-aby zapoznać się z próbami aktualizacji wartości glukozy w xDrip
-co minutę.</p>
-<p>Juggluco może również bezpośrednio kontaktować się z
-aplikacjami xDrip na zegarkach, dzięki czemu aplikacja zegarka
-wyświetla bardziej aktualne wartości glukozy. Aby skorzystać z tej
-funkcji zaznacz <i>&quot;xDrip webserver&quot;</i> w lewym menu w
-zakładce <b>Zegarek</b>. Więcej informacji można znaleźć w: lewe
-menu -&gt; Zegarek -&gt; Pomoc. Tylko jedna aplikacja może
-nasłuchiwać na porcie sieciowym używanym przez webserwer xDrip,
-dlatego też musisz wyłączyć <i>&quot;xDrip webservice</i>&quot; w
-samym xDrip, jeśli chcesz korzystać z tego w Juggluco.</p>
-<h2 class="western"><font face="Arial, sans-serif"><font size="4" style="font-size: 16pt">Nadawanie
-xDrip</font></font></h2>
-<p>Wyślij ten sam sygnał transmisji, który został włączony w
-xDrip w <i>&quot;Ustawienia-&gt;Ustawienia innych aplikacji-&gt;Nadawaj
-lokalnie&quot;</i> (com.eveningoutpost.dexdrip.BgEstimate).
-Nasłuchują go aplikacje takie jak AndroidAPS. Aplikacje skierowane
-na Androida 11 lub wyższą wersję muszą dodać następujące
-elementy do AndroidManifest.xml, aby działały:</p>
-<p lang="en-GB">&lt;queries&gt; <br/>
-&nbsp;&nbsp; &lt;package
-android:name=&quot;tk.glucodata&quot;/&gt; <br/>
-&lt;/queries&gt;</p>
-<p>Co minutę Juggluco wysyła wartość glukozy do wszystkich
-aplikacji słuchających tej transmisji, xDrip tylko do kilku dobrze
-znanych aplikacji, z wyjątkiem sytuacji, gdy wyraźnie określisz
-nazwę.</p>
-<h2 class="western"><font face="Arial, sans-serif"><font size="4" style="font-size: 16pt">Glucodata
-broadcast (Transmisja danych Glucodata)</font></font></h2>
-<p>Nowa transmisja, która ma taką samą funkcję jak transmisja
-xDrip. Prosty przykład aplikacji, która zapisuje otrzymane wartości
-glukozy do logcat, można znaleźć tutaj: <a href="http://jkaltes.byethost16.com/Juggluco/glucosebroadcast.html">Glucose
-broadcasts</a>. Jeśli określisz Juggluco jako źródło danych w
-G-Watch, musisz włączyć tę transmisję.</p>
-<p>Pokazane są aplikacje nasłuchujące tej transmisji. Zaznacz
-aplikacje, do których chcesz wysłać tę transmisję.</p>
-<h2 class="western"><font face="Arial, sans-serif"><font size="4" style="font-size: 16pt">Stęż.
-glukozy w pasku stanu systemu android</font></font></h2>
-<p style="margin-bottom: 0in">Jeśli opcja będzie włączona,
-wartości stęż. glukozy przesyłane strumieniowo przez Bluetooth są
-cicho wyświetlane w powiadomieniu i na pasku stanu systemu Android.
-Na niektórych smartfonach wartość stężenia glukozy jest
-wyświetlana na pasku stanu Androida dopiero po zmianie ustawień
-powiadomień Androida. Na przykład na Realme GT 5G trzeba wejść w
-listę aplikacji -&gt;Juggluco-&gt;zarządzaj powiadomieniami,
-nacisnąć na glucoseNotification i wyłączyć „Ustaw na tryb
-cichy”. &quot;Wyświetlanie w pasku stanu&quot; będzie teraz
-widoczne jako włączone.</p>
-<p style="margin-bottom: 0in">Możesz również uzyskać
-powiadomienie w systemie Androida, wybierając opcję <i>Powiadom.</i>
-w lewym środkowym menu. W takim przypadku powiadomienie zostanie
-wysłane do niektórych smartwatchów, jeśli są tak skonfigurowane.
-To działa z zegarkami Garmin, nie wiem czy działa z czymkolwiek
-innym. Alarmy również generują powiadomienia.</p>
-<h2 class="western"><font face="Arial, sans-serif"><font size="4" style="font-size: 16pt">Pływająca
-wart. gluk.</font></font></h2>
-<p>Po włączeniu tej opcji na ekranie stale obecny jest mały
-obrazek z aktualną wartością stężenia glukozy, niezależnie od
-tego, która aplikacja jest na pierwszym planie. Jeśli włączysz ją
-po raz pierwszy, zostaniesz przekierowany do listy aplikacji, w
-której musisz udzielić Juggluco uprawnienia do <b>wyświetlania na
-wierzchu innych aplikacji</b>.</p>
-<h2 class="western"><font face="Arial, sans-serif"><font size="4" style="font-size: 16pt">Konfiguracja</font></font></h2>
-<p>Określ rozmiar czcionki i kolory wartości <i>glukozy
-wyświetlanej w trybie pływającym</i>.</p>
-<h2 class="western"><font face="Arial, sans-serif"><font size="4" style="font-size: 16pt">Sensor
-przez bluetooth</font></font></h2>
-<p>Pozwala określić, czy ta aplikacja łączy się przez Bluetooth
-z czujnikiem Freestyle libre 2 lub 3. Jest to potrzebne do alarmów i
-ciągłego monitorowania glukozy.</p>
-<h2 class="western"><font face="Arial, sans-serif"><font size="4" style="font-size: 16pt">Alarmy</font></font></h2>
-<p>Ustaw alarmy dla wysokiego i niskiego poziomu stężenia glukozy,
-alarm utraty sygnału i dla powiadomienia o ponownie dostępnej
-wartości glukozy.</p>
-<h2 class="western"><font face="Arial, sans-serif"><font size="4" style="font-size: 16pt">Etykiety
-wart. liczb.</font></font></h2>
-<p style="margin-bottom: 0in">Określ etykiety używane dla wartości
-liczbowych. Przejdź do ekranu, aby określić, które etykiety użyć
-do ustalenia wartości takich jak dawki insuliny, spożycie
-węglowodanów i godziny spędzone na grze w piłkę nożną. Jeśli
-korzystasz również z aplikacji Kerfstok na zegarek Garmin, etykiety
-te są wysyłane do aplikacji na zegarek.</p>
-<h2 class="western"><font face="Arial, sans-serif"><font size="4" style="font-size: 16pt">Przypomnienia</font></font></h2>
-<p style="margin-bottom: 0in">Określ, że alarm powinien się
-włączyć, jeśli nie wprowadziłeś określonej ilości jedzenia
-lub leków w określonym czasie.</p>
-<h2 class="western"><font face="Arial, sans-serif"><font size="4" style="font-size: 16pt">Kolory</font></font></h2>
-<p style="margin-bottom: 0in">Zmień kolory krzywych, skanów i
-liczb.</p>
-<h2 class="western" style="margin-top: 0in; margin-bottom: 0.22in">&nbsp;</h2>
+<p>Następnie nadal można używać Librelink do skanowania, gdy aplikacja ta jest wyświetlona na ekranie, ale nie zostanie ona uruchomiona w inny spos&oacute;b. Librelink 2.5.2 i wyższe wersje zawieszają się, jeśli wykryją roota. Ale w Magisk można łatwo ukryć roota zmieniając nazwę Magisk i dodając poszczeg&oacute;lne aplikacje do denylist (Magisk 24.3) lub Magiskhide (Magisk 23.0). Do denylist należy dodać r&oacute;wnież Juggluco. Z wyjątkiem sytuacji, gdy korzystasz z amerykańskich sensor&oacute;w Freestyle Libre 2, możesz r&oacute;wnież używać starszej wersji Librelink bez sprawdzania roota.</p>
+<p>Bez roota w wierszu poleceń adb można też wyłączyć całą aplikację:</p>
+<p>pm disable-user --user 0 com.freestylelibre.app.nl</p>
+<p>Zanim zadzwonisz do obsługi klienta Abbott, możesz ponownie włączyć ją za pomocą polecenia:</p>
+<p>pm enable com.freestylelibre.app.nl</p>
+<h2 class="western">Libreview</h2>
+<p>Połącz się z Libreview, aby wysłać wartości stężenia glukozy Freestyle Libre 2 i 3 oraz wartości wpis&oacute;w do Libreview oraz aby uzyskać identyfikator konta używany podczas aktywacji sensora Freestyle Libre 3. Dotknij, aby zmienić ustawienia.</p>
+<h2 class="western">Nadawanie sygnału Librelink</h2>
+<p>Nadaje sygnał Librelink (oryginalnie wysyłany przez załataną niemiecką aplikację Librelink w wersji 2.3.0), aby co minutę wysyłać dane strumienia glukozy przez Bluetooth do xDrip. W xDrip musisz ustawić Libre2 (patched App) jako sprzętowe źr&oacute;dło danych. Wartości glukozy wyświetlane w xDrip są inne niż wartości, kt&oacute;re otrzymuje. Z jakiegoś powodu xDrip aktualizuje swoją wartość tylko co 5 minut, prawdopodobnie dlatego, że został stworzony dla urządzeń, kt&oacute;re wysyłają tylko raz na 5 minut. (Tarcza zegarka podłączona do xDrip regularnie wyświetlała stare wartości sprzed ponad 9 minut.) Dodatkowo xDrip wyświetla własną interpretację otrzymanych wartości glukozy. Urządzenia klony r&oacute;wnież mogą wysyłać wartości do xDrip.</p>
+<p>Zobacz <a href="https://github.com/jakobheyman/xdripJH">https://github.com/jakobheyman/xdripJH</a>, aby zapoznać się z pr&oacute;bami aktualizacji wartości glukozy w xDrip co minutę.</p>
+<p>Juggluco może r&oacute;wnież bezpośrednio kontaktować się z aplikacjami xDrip na zegarkach, dzięki czemu aplikacja zegarka wyświetla bardziej aktualne wartości glukozy. Aby skorzystać z tej funkcji zaznacz <i>&quot;xDrip webserver&quot;</i> w lewym menu w zakładce <b>Zegarek</b>. Więcej informacji można znaleźć w: lewe menu -&gt; Zegarek -&gt; Pomoc. Tylko jedna aplikacja może nasłuchiwać na porcie sieciowym używanym przez webserwer xDrip, dlatego też musisz wyłączyć <i>&quot;xDrip webservice</i>&quot; w samym xDrip, jeśli chcesz korzystać z tego w Juggluco.</p>
+<h2 class="western">Nadawanie xDrip</h2>
+<p>Wyślij ten sam sygnał transmisji, kt&oacute;ry został włączony w xDrip w <i>&quot;Ustawienia-&gt;Ustawienia innych aplikacji-&gt;Nadawaj lokalnie&quot;</i> (com.eveningoutpost.dexdrip.BgEstimate). Nasłuchują go aplikacje takie jak AndroidAPS. Aplikacje skierowane na Androida 11 lub wyższą wersję muszą dodać następujące elementy do AndroidManifest.xml, aby działały:</p>
+<p>&lt;queries&gt; <br/> &nbsp;&nbsp; &lt;package android:name=&quot;tk.glucodata&quot;/&gt; <br/> &lt;/queries&gt;</p>
+<p>Co minutę Juggluco wysyła wartość glukozy do wszystkich aplikacji słuchających tej transmisji, xDrip tylko do kilku dobrze znanych aplikacji, z wyjątkiem sytuacji, gdy wyraźnie określisz nazwę.</p>
+<h2 class="western">Glucodata broadcast (Transmisja danych Glucodata)</h2>
+<p>Nowa transmisja, kt&oacute;ra ma taką samą funkcję jak transmisja xDrip. Prosty przykład aplikacji, kt&oacute;ra zapisuje otrzymane wartości glukozy do logcat, można znaleźć tutaj: <a href="http://jkaltes.byethost16.com/Juggluco/glucosebroadcast.html">Glucose broadcasts</a>. Jeśli określisz Juggluco jako źr&oacute;dło danych w G-Watch, musisz włączyć tę transmisję.</p>
+<p>Pokazane są aplikacje nasłuchujące tej transmisji. Zaznacz aplikacje, do kt&oacute;rych chcesz wysłać tę transmisję.</p>
+<h2 class="western">Stęż. glukozy w pasku stanu systemu android</h2>
+<p style="line-height: 100%; margin-bottom: 0in">Jeśli opcja będzie włączona, wartości stęż. glukozy przesyłane strumieniowo przez Bluetooth są cicho wyświetlane w powiadomieniu i na pasku stanu systemu Android. Na niekt&oacute;rych smartfonach wartość stężenia glukozy jest wyświetlana na pasku stanu Androida dopiero po zmianie ustawień powiadomień Androida. Na przykład na Realme GT 5G trzeba wejść w listę aplikacji -&gt;Juggluco-&gt;zarządzaj powiadomieniami, nacisnąć na glucoseNotification i wyłączyć &bdquo;Ustaw na tryb cichy&rdquo;. &quot;Wyświetlanie w pasku stanu&quot; będzie teraz widoczne jako włączone.</p>
+<p style="font-weight: normal; line-height: 100%; margin-bottom: 0in">Możesz r&oacute;wnież uzyskać powiadomienie w systemie Androida, wybierając opcję <i>Powiadom.</i> w lewym środkowym menu. W takim przypadku powiadomienie zostanie wysłane do niekt&oacute;rych smartwatch&oacute;w, jeśli są tak skonfigurowane. To działa z zegarkami Garmin, nie wiem czy działa z czymkolwiek innym. Alarmy r&oacute;wnież generują powiadomienia.</p>
+<h2 class="western">Pływająca wart. gluk.</h2>
+<p>Po włączeniu tej opcji na ekranie stale obecny jest mały obrazek z aktualną wartością stężenia glukozy, niezależnie od tego, kt&oacute;ra aplikacja jest na pierwszym planie. Jeśli włączysz ją po raz pierwszy, zostaniesz przekierowany do listy aplikacji, w kt&oacute;rej musisz udzielić Juggluco uprawnienia do <b>wyświetlania na wierzchu innych aplikacji</b>.</p>
+<h2 class="western">Konfiguracja</h2>
+<p>Określ rozmiar czcionki i kolory wartości <i>glukozy wyświetlanej w trybie pływającym</i>.</p>
+<h2 class="western">Sensor przez bluetooth</h2>
+<p>Pozwala określić, czy ta aplikacja łączy się przez Bluetooth z czujnikiem Freestyle libre 2 lub 3. Jest to potrzebne do alarm&oacute;w i ciągłego monitorowania glukozy.</p>
+<h2 class="western"><b>Alarmy</b></h2>
+<p style="font-weight: normal">Ustaw alarmy dla wysokiego i niskiego poziomu stężenia glukozy, alarm utraty sygnału i dla powiadomienia o ponownie dostępnej wartości glukozy.</p>
+<h2 class="western">Etykiety wart. liczb.</h2>
+<p style="line-height: 100%; margin-bottom: 0in">Określ etykiety używane dla wartości liczbowych. Przejdź do ekranu, aby określić, kt&oacute;re etykiety użyć do ustalenia wartości takich jak dawki insuliny, spożycie węglowodan&oacute;w i godziny spędzone na grze w piłkę nożną. Jeśli korzystasz r&oacute;wnież z aplikacji Kerfstok na zegarek Garmin, etykiety te są wysyłane do aplikacji na zegarek.</p>
+<h2 class="western">Przypomnienia</h2>
+<p style="font-weight: normal; line-height: 100%; margin-bottom: 0in">Określ, że alarm powinien się włączyć, jeśli nie wprowadziłeś określonej ilości jedzenia lub lek&oacute;w w określonym czasie.</p>
+<h2 class="western">Kolory</h2>
+<p style="line-height: 100%; margin-bottom: 0in">Zmień kolory krzywych, skan&oacute;w i liczb.</p>
+<h2 class="western"><br/> <br/></h2>
 ]]>
 </string>
 <string name="sensorhelp" >
 <![CDATA[
-<h1>
-Sensor</h1>
-<p style="margin-bottom: 0in">Menu rozwijane zawiera nazwę sensora.
-Jeśli Juggluco używa więcej niż jednego sensora w tym samym
-czasie, możesz wybrać, dla którego sensora mają być wyświetlane
-informacje.</p>
-<p style="margin-bottom: 0in"><i><b>Tryb uśpienia</b></i> prowadzi
-do ekranu z informacją, jak wyłączyć optymalizacje baterii dla
-Juggluco, które mogą uniemożliwić działanie Juggluco.</p>
-<p style="margin-bottom: 0in"><i><b>Uprawnienie</b></i>: Poprzednie
-wersje Juggluco wymagały uprawnienia do dostępu do lokalizacji, aby
-odnaleźć adres sensora. W przypadku używanych przeze mnie sensorów
-nie jest to już konieczne. Być może są jeszcze sensory, dla
-których jest to konieczne; w takim przypadku możesz tę opcję
-włączyć. Po pierwszym kontakcie Juggluco zapisuje adres urządzenia
-i uprawnienie do dostępu do lokalizacji jest zawsze bezużyteczne.
-Adres urządzenia, jeśli jest znany, jest wyświetlany po
-identyfikatorze sensora. Kolor czerwony oznacza sensor podobny do
-amerykańskiego.</p>
-<p style="margin-bottom: 0in">Android 12 ma nowe uprawnienie
-Skanowanie urządzeń w pobliżu, które może być używane zamiast
-uprawnienia lokalizacji do wyszukiwania adresu urządzenia Bluetooth,
-ale jest też potrzebne do późniejszego kontaktu z urządzeniami
-Bluetooth.</p>
-<p style="margin-bottom: 0in"><i><b>Wakelock</b></i>: Niektórzy
-użytkownicy Androida 13 skarżą się, że Bluetooth przestaje
-działać. Możliwe, że włączenie tej opcji im pomaga. Na moim
-smartfonie nie jest to potrzebne, a na Watch4 nie robi różnicy.
-Jeśli działa, to zwiększy zużycie baterii.</p>
-<p style="margin-bottom: 0in"><i><b>Zapomnij</b></i>: Zapomina adres
-urządzenia i wyszukuje go poprzez skanowanie urządzeń Bluetooth,
-tak jak robi to Librelink wszędzie poza USA. Do tego potrzebne jest
-uprawnienie Lokalizacja na Androidzie od 6 do 11. W systemie Android
-12 wymagane jest pozwolenie na Skanowanie urządzeń w pobliżu.
-Powinieneś nacisnąć ten przycisk, jeśli uważasz, że Abbott miał
-rację wszędzie poza USA.</p>
-<p style="margin-bottom: 0in"><i><b>Włącz ponownie</b></i>:
-Ponownie włącz transmisję strumieniową. Do komunikacji z sensorem
-tworzone są nowe informacje uwierzytelniające. Zostanie ustawiony
-adres urządzenia. Zaczyna działać po zeskanowaniu sensora.</p>
-<p style="margin-bottom: 0in"><i><b>Turbo</b></i>: Zwiększa wysiłek
-włożony w kontakt z sensorem w nadziei, że spowoduje to mniej
-błędów w połączeniu, ale może zużywać więcej baterii. Wydaje
-się być potrzebny na Watch4 z czujnikami Freestyle Libre 2, ale nie
-z czujnikami Freestyle Libre 3 i na żadnym ze smartfonów, na
-których wypróbowałem tę opcję.</p>
-<p style="margin-bottom: 0in"><i><b>Informacje</b></i>: Podaje czas
-rozpoczęcia i zakończenia oraz czas ostatniego skanowania i
-strumienia z sensora.</p>
-<p style="margin-bottom: 0in">&nbsp;</p>
-<p style="margin-bottom: 0in">Aby połączyć się z sensorem
-Freestyle Libre 2 za pośrednictwem „Bluetooth Low Energy”,
-Bluetooth powinien być włączony. Zanim sensor zostanie pomyślnie
-zeskanowany przez tę aplikację, nic się nie stanie. Czujnika nie
-należy łączyć z czytnikiem FreeStyle Libre ani innymi apletami na
-smartfonach. Alarmy w aplikacji Abbott Librelink powinny być
-wyłączone lub cała aplikacja powinna być zatrzymana. Zdaje się,
-że niektóre aplikacje Librelink kontaktują się z sensorem, gdy
-alarmy są wyłączone, i mogą powodować problemy z połączeniem,
-więc dla pewności użyj <i>&quot;Wymuś zamknięcie&quot;</i>.
-Opcje <b>Sensor przez Bluetooth/Użyj Bluetooth</b> powinny być
-włączone.</p>
-<p style="margin-bottom: 0in">Jeśli powyższe warunki są spełnione,
-nadal może upłynąć dużo czasu, zanim aplikacja otrzyma wartości
-glukozy z sensora. Często trwa to minutę, ale innym razem znacznie
-dłużej. <i>Etap połączenia</i> sprawia najwięcej trudności.
-Najczęściej zdarzają się niepowodzenia ze statusem=133, który
-jest argumentem statusowym funkcji
-<a href="https://developer.android.com/reference/android/bluetooth/BluetoothGattCallback#onConnectionStateChange(android.bluetooth.BluetoothGatt,%20int,%20int)">onConnectionStateChange(bluetoothGatt,
-int status, int newState)</a>. Jeśli wyjmiesz baterię z czujnika,
-również otrzymasz ten błąd, więc wydaje się, że jest to coś w
-rodzaju <i>urządzenia Bluetooth nie znalezionego</i>. Czasami pomaga
-wyłączenie i włączenie Bluetooth lub ponowne uruchomienie
-telefonu albo wyłączenie połączenia Bluetooth innych urządzeń.
-Inne problemy czasami można rozwiązać przez zeskanowanie sensora.</p>
-<p style="margin-bottom: 0in">Skanowanie sensora za pomocą Juggluco
-(z włączoną opcją <i>Sensor przez Bluetooth</i>) na innym
-telefonie, spowoduje kradzież połączenia z tego telefonu i może
-zająć trochę czasu, ze skanowaniem w międzyczasie, aby odzyskać
-je z powrotem.</p>
-<p style="margin-bottom: 0in">&nbsp;</p>
-<p style="margin-bottom: 0in"><br/>
-
-</p>
+<h1>Sensor</h1>
+<p style="line-height: 100%; margin-bottom: 0in">Menu rozwijane zawiera nazwę sensora. Jeśli Juggluco używa więcej niż jednego sensora w tym samym czasie, możesz wybrać, dla kt&oacute;rego sensora mają być wyświetlane informacje.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><i><b>Tryb uśpienia</b></i> prowadzi do ekranu z informacją, jak wyłączyć optymalizacje baterii dla Juggluco, kt&oacute;re mogą uniemożliwić działanie Juggluco.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><i><b>Uprawnienie</b></i>: Poprzednie wersje Juggluco wymagały uprawnienia do dostępu do lokalizacji, aby odnaleźć adres sensora. W przypadku używanych przeze mnie sensor&oacute;w nie jest to już konieczne. Być może są jeszcze sensory, dla kt&oacute;rych jest to konieczne; w takim przypadku możesz tę opcję włączyć. Po pierwszym kontakcie Juggluco zapisuje adres urządzenia i uprawnienie do dostępu do lokalizacji jest zawsze bezużyteczne. Adres urządzenia, jeśli jest znany, jest wyświetlany po identyfikatorze sensora. Kolor czerwony oznacza sensor podobny do amerykańskiego.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Android 12 ma nowe uprawnienie Skanowanie urządzeń w pobliżu, kt&oacute;re może być używane zamiast uprawnienia lokalizacji do wyszukiwania adresu urządzenia Bluetooth, ale jest też potrzebne do p&oacute;źniejszego kontaktu z urządzeniami Bluetooth.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><i><b>Wakelock</b></i>: Niekt&oacute;rzy użytkownicy Androida 13 skarżą się, że Bluetooth przestaje działać. Możliwe, że włączenie tej opcji im pomaga. Na moim smartfonie nie jest to potrzebne, a na Watch4 nie robi r&oacute;żnicy. Jeśli działa, to zwiększy zużycie baterii.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><i><b>Rozłącz</b></i>: zakończ połączenie z tym sensorem przez Bluetooth. Jeśli p&oacute;źniej chcesz ponownie otrzymywać wartości glukozy z tego sensora, wystarczy, że ponownie go zeskanujesz.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><i><b>Turbo</b></i>: Zwiększa wysiłek włożony w kontakt z sensorem w nadziei, że spowoduje to mniej błęd&oacute;w w połączeniu, ale może zużywać więcej baterii. Wydaje się być potrzebny na Watch4 z czujnikami Freestyle Libre 2, ale nie z czujnikami Freestyle Libre 3 i na żadnym ze smartfon&oacute;w, na kt&oacute;rych wypr&oacute;bowałem tę opcję.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><i><b>Informacje</b></i>: Podaje czas rozpoczęcia i zakończenia oraz czas ostatniego skanowania i strumienia z sensora.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Aby połączyć się z sensorem Freestyle Libre 2 za pośrednictwem &bdquo;Bluetooth Low Energy&rdquo;, Bluetooth powinien być włączony. Zanim sensor zostanie pomyślnie zeskanowany przez tę aplikację, nic się nie stanie. Czujnika nie należy łączyć z czytnikiem FreeStyle Libre ani innymi apletami na smartfonach. Alarmy w aplikacji Abbott Librelink powinny być wyłączone lub cała aplikacja powinna być zatrzymana. Zdaje się, że niekt&oacute;re aplikacje Librelink kontaktują się z sensorem, gdy alarmy są wyłączone, i mogą powodować problemy z połączeniem, więc dla pewności użyj <i>&quot;Wymuś zamknięcie&quot; </i>. Opcje <b>Sensor przez Bluetooth/Użyj Bluetooth</b> powinny być włączone.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Jeśli powyższe warunki są spełnione, nadal może upłynąć dużo czasu, zanim aplikacja otrzyma wartości glukozy z sensora. Często trwa to minutę, ale innym razem znacznie dłużej. <i>Etap połączenia</i> sprawia najwięcej trudności. Najczęściej zdarzają się niepowodzenia ze statusem=133, kt&oacute;ry jest argumentem statusowym funkcji <a href="https://developer.android.com/reference/android/bluetooth/BluetoothGattCallback#onConnectionStateChange(android.bluetooth.BluetoothGatt,%20int,%20int)">onConnectionStateChange(bluetoothGatt, int status, int newState)</a>. Jeśli wyjmiesz baterię z czujnika, r&oacute;wnież otrzymasz ten błąd, więc wydaje się, że jest to coś w rodzaju <i>urządzenia Bluetooth nie znalezionego</i>. Czasami pomaga wyłączenie i włączenie Bluetooth lub ponowne uruchomienie telefonu albo wyłączenie połączenia Bluetooth innych urządzeń. Inne problemy czasami można rozwiązać przez zeskanowanie sensora.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Skanowanie sensora za pomocą Juggluco (z włączoną opcją <i>Sensor przez Bluetooth</i>) na innym telefonie, spowoduje kradzież połączenia z tego telefonu i może zająć trochę czasu, ze skanowaniem w międzyczasie, aby odzyskać je z powrotem.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/></p>
 ]]>
 </string>
 <string name="watchhelp" >
@@ -1058,42 +851,9 @@ sposobu.</p>
 </string>
 <string name="battery" >
 <![CDATA[
-<h1>
-Utrzymanie funkcjonowania</h1>
-<p style="margin-bottom: 0in">Normalnie, gdy urządzenie android nie
-jest używane, wchodzi w tryb uśpienia, aby zużywać mniej energii.
-W tym trybie aplikacja nie może używać połączeń TCP do wymiany
-danych. Oznacza to, że dwa urządzenia z androidem mogą się
-komunikować tylko wtedy, gdy oba ekrany są włączone. Możesz
-zwolnić aplikację z tego ograniczenia poprzez wyłączenie
-„<i>Optymalizacji baterii</i>&quot; w menu ustawień androida.
-<i><b>Aktualizacja w trybie &quot;uśpienia</b></i> pokazuje to
-ustawienie a jego zmiana otwiera menu ustawień androida, gdzie można
-zmienić to ustawienie. Na niektórych telefonach pokazują się
-tylko aplikacje już wyłączone, a żeby dodać aplikację trzeba
-wejść w ustawienia androida-&gt;bateria-&gt;Zarządzanie zasilaniem
-aplikacji i wybrać Juggluco i włączyć <i>Zezwól na działanie w
-tle</i>.</p>
-<p style="margin-bottom: 0in">Połączenie Bluetooth z sensorem nie
-jest ściśle zabronione przez Androida i zwykle będzie również
-działać bez określania wyjątku. Problemy mogą pojawić się po
-pewnym czasie lub gdy Juggluco nie jest na pierwszym planie przez
-jakiś czas. Może to różnie wyglądać dla różnych wersji
-androida i dla różnych producentów urządzeń.</p>
-<p style="margin-bottom: 0in">Niektórzy producenci urządzeń
-nałożyli dodatkowe ograniczenia na aplikacje działające w tle lub
-uruchamiane przy starcie, patrz <a href="https://dontkillmyapp.com/">https://dontkillmyapp.com</a>.</p>
-<p style="margin-bottom: 0in">Aplikacja często znajdująca się na
-pierwszym planie jest wyłączana przez system Android później niż
-aplikacja nieznajdująca się na pierwszym planie. Otrzymałem
-zgłoszenie od osoby z telefonem Samsung, która wyłączyła
-wszystkie widoczne powiadomienia aplikacji Juggluco, używając jej
-tylko do wysyłania wartości glukozy do xDrip, który miał problemy
-z połączeniem z sensorem. Zostały one rozwiązane po ponownym
-włączeniu widocznych znaków Juggluco.</p>
-<p style="margin-bottom: 0in"><br/>
-
-</p>
+<h1 class="western">Utrzymanie funkcjonowania</h1>
+<p style="line-height: 100%; margin-bottom: 0in">Normalnie, gdy urządzenie android nie jest używane, wchodzi w tryb uśpienia, aby zużywać mniej energii. Jeśli potrzebujesz niezawodnie odbierać wartości glukozy przez Bluetooth lub TCP/IP, musisz wyłączyć optymalizacje baterii dla Juggluco, a czasem także całego urządzenia, aby zapobiec sytuacji, w kt&oacute;rej Android wyłączy aplikację Juggluco. Sporo urządzeń ma dodatkowe ustawienia optymalizacji baterii &ndash; aktywności w tle &ndash; i startu przy włączaniu urządzenia, kt&oacute;re trzeba zmienić. Można je znaleźć w ustawieniach Androida -&gt; Bateria. Zob. <a href="https://dontkillmyapp.com/">https://dontkillmyapp.com</a>.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/></p>
 ]]>
 </string>
 <string name="nutrients" >
@@ -1559,84 +1319,21 @@ nie.</p>
 </string>
 <string name="libreview" >
 <![CDATA[
-<h1>
-Libreview</h1>
-<p style="margin-bottom: 0in">Juggluco może wysyłać dane dotyczące
-stężenia glukozy i jej wartości do Libreview.</p>
-<p style="margin-bottom: 0in">Jeśli używasz aplikacji Abbott Libre
-dla sensorów Freestyle Libre 2, Libreview opiera się na danych
-historycznych z pamięci sensora. W tym celu należy skanować
-sensor.</p>
-<p style="margin-bottom: 0in">Juggluco wykorzystuje dane strumienowe
-odbierane przez Bluetooth do tworzenia tych 15-minutowych punktów
-poprzez uśrednianie wartości strumienia wokół każdego punktu. Co
-jakiś czas wysyła również indywidualną wartość strumienia w
-taki sam sposób, w jaki poszczególne zeskanowane wartości są
-wysyłane do Libreview przez aplikację Librelink firmy Abbott.</p>
-<p style="margin-bottom: 0in">Aby skorzystać z tej usługi, należy
-założyć konto Libreview na stronie <a class="western" href="https://libreview.com/">https://libreview.com</a>
-i podać jego adres e-mail oraz hasło. Nie wysyłaj danych z tego
-samego okresu wielokrotnie na to samo konto Libreview (np. z
-aplikacji Librelink i Juggluco). Możesz usunąć istniejące
-urządzenia w Libreview w Ustawieniach konta -&gt; Moje urządzenia
-lub możesz założyć nowe konto Libreview.</p>
-<p style="margin-bottom: 0in">Aby ją włączyć, musisz również
-zaznaczyć &quot;<i><b>Wyślij do libreview</b></i><i>&quot;</i>.</p>
-<p style="margin-bottom: 0in">Juggluco będzie wysyłać nowe dane do
-Libreview za każdym razem, gdy wyjdziesz z aplikacji Juggluco, jeśli
-nie zostało to wykonane w ciągu poprzednich 20 minut. Możesz
-również ręcznie wysłać te dane do Libreview, naciskając <i>&quot;</i><i><b>Wyślij
-teraz</b></i><i>&quot;</i>.</p>
-<p style="margin-bottom: 0in">Oprócz glukozy, do Libreview mogą być
-wysyłane również wartości notatek. W tym celu należy dotknąć
-&quot;<i><b>Wyślij wartości</b></i>&quot; i określić, co oznacza
-każda etykieta.</p>
-<p style="margin-bottom: 0in">Począwszy od Juggluco 4.1.0 wartości
-glukozy z sensorów FreeStyle Libre 3 są również wysyłane do
-LibreView.</p>
-<p style="margin-bottom: 0in"><b>Ponowne prześlij dane</b>:
-Rozpocznij od nowa; wyślij ponownie dane z ostatnich 90 dni do
-Libreview. Należy nacisnąć ten przycisk podczas przełączania na
-nowe konto Libreview.</p>
-<p style="margin-bottom: 0in">Wynik ostatniej próby wysłania do
-Libreview jest wyświetlany pod przyciskiem &quot;Uzyskaj
-identyfikator konta&quot;.</p>
-<p style="margin-bottom: 0in">Ponieważ wartości wysyłane do
-Libreview są najpierw uśredniane przez 15 minut, a następnie
-analizowane, mogą występować niewielkie różnice między
-wartościami wyświetlanymi na ekranie statystyk Juggluco i
-Libreview. Na przykład w Libreview widać, że czas aktywności
-100%, podczas gdy ekran statystyk Juggluco wskazuje 96,0%. Również
-niektóre wysokie i niskie wartości zostaną uśrednione, tak że
-Libreview podaje nieco wyższy <i>czas w zakresie</i> niż ekran
-statystyk Juggluco. Ponieważ rzeczywiste wartości historyczne są
-mniej ekstremalne niż średnia wartości strumienia wokół wartości
-historycznej, różnica ta będzie większa, gdy wartości Libreview
-są oparte na wartościach skanowanych.</p>
-<p style="margin-bottom: 0in">Juggluco można połączyć z wieloma
-sensorami jednocześnie, podczas gdy Librelink obsługuje tylko jeden
-sensor na raz. Do Libreview Juggluco również przesyła dane z tylko
-jednego sensora. Robi to w ten sposób, że najpierw wysyła dane z
-jednego sensora, a dopiero po braku danych z tego sensora wysyła
-dane z kolejnego.</p>
-<p><b>Uzyskaj identyfikator konta Libreview</b>: Jeśli chcesz
-jedynie otrzymać identyfikator konta LibreView, ale nie wysyłać
-danych do Libreview, możesz wpisać swój adres e-mail i hasło, a
-następnie nacisnąć <i>&quot;Uzyskaj identyfikator konta Libreview
-</i>&quot;. W tej samej linii przed tym przyciskiem pojawi się
-Identyfikator konta (może to trochę potrwać, a ekran nie jest
-odświeżany automatycznie). Pobranie identyfikatora konta z serwera
-LibreView umożliwia użycie czujnika FreeStyle Libre 3, który był
-już używany z aplikacją Abbott Libre 3 z tym kontem LibreView.
-Uruchomienie czujnika za pomocą Juggluco podobno nie działa.</p>
-<p style="margin-bottom: 0.17in"><b>OSTRZEŻENIE</b>: Sensor
-Freestyle Libre 3 należy aktywować za pomocą tego konta. Przy
-późniejszym przełączeniu na konto w aplikacji Libre 3,
-zeskanowanie czujnika spowoduje błąd.</p>
-<p style="margin-bottom: 0.17in"><br/>
-<br/>
-
-</p>
+<h1>Libreview</h1>
+<p style="line-height: 100%; margin-bottom: 0in">Juggluco może wysyłać dane dotyczące stężenia glukozy i jej wartości do Libreview.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Jeśli używasz aplikacji Abbott Libre dla sensor&oacute;w Freestyle Libre 2, Libreview opiera się na danych historycznych z pamięci sensora. W tym celu należy skanować sensor.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Juggluco wykorzystuje dane strumienowe odbierane przez Bluetooth do tworzenia tych 15-minutowych punkt&oacute;w poprzez uśrednianie wartości strumienia wok&oacute;ł każdego punktu. Co jakiś czas wysyła r&oacute;wnież indywidualną wartość strumienia w taki sam spos&oacute;b, w jaki poszczeg&oacute;lne zeskanowane wartości są wysyłane do Libreview przez aplikację Librelink firmy Abbott. Juggluco nie musi być stale podłączone do internetu, aby wszystkie dane były przesyłane do Libreview. Podobnie jak aplikacja Librelnk, do Libreview wysyła dane z ostatnich 89 dni. To, co jest konieczne, to stałe połączenie Juggluco z sensorem Freestyle Libre 2 za pośrednictwem Bluetooth. Sensory Freestyle Libre 3 mogą być odłączone od Juggluco przez okres do dw&oacute;ch godzin.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><span lang="pl-PL">Aby skorzystać z tej usługi, należy założyć konto Libreview na stronie <a class="western" href="https://libreview.com/">https://libreview.com</a> i podać jego adres e-mail oraz hasło.</span> <span lang="pl-PL">Nie wysyłaj danych z tego samego okresu wielokrotnie na to samo konto Libreview (np. z aplikacji Librelink i Juggluco). Możesz usunąć istniejące urządzenia w Libreview w Ustawieniach konta -&gt; Moje urządzenia lub możesz założyć nowe konto Libreview.</span></p>
+<p style="line-height: 100%; margin-bottom: 0in"><span lang="pl-PL">Aby ją włączyć, musisz r&oacute;wnież zaznaczyć &quot;</span><span lang="pl-PL"><i><b>Wyślij do libreview</b></i></span><span lang="pl-PL"><i>&quot;</i></span><span lang="pl-PL">.</span></p>
+<p style="line-height: 100%; margin-bottom: 0in">Juggluco będzie wysyłać nowe dane do Libreview za każdym razem, gdy wyjdziesz z aplikacji Juggluco, jeśli nie zostało to wykonane w ciągu poprzednich 20 minut. Możesz r&oacute;wnież ręcznie wysłać te dane do Libreview, naciskając <i>&quot;</i><i><b>Wyślij teraz</b></i><i>&quot;</i>.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Opr&oacute;cz glukozy, do Libreview mogą być wysyłane r&oacute;wnież wartości notatek. W tym celu należy dotknąć &quot;<i><b>Wyślij wartości</b></i>&quot; i określić, co oznacza każda etykieta.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Począwszy od Juggluco 4.1.0 wartości glukozy z sensor&oacute;w FreeStyle Libre 3 są r&oacute;wnież wysyłane do LibreView.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>Ponowne prześlij dane</b>: Rozpocznij od nowa; wyślij ponownie dane z ostatnich 90 dni do Libreview. Należy nacisnąć ten przycisk podczas przełączania na nowe konto Libreview.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Wynik ostatniej pr&oacute;by wysłania do Libreview jest wyświetlany pod przyciskiem &quot;Uzyskaj identyfikator konta&quot;.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Ponieważ wartości wysyłane do Libreview są najpierw uśredniane przez 15 minut, a następnie analizowane, mogą występować niewielkie r&oacute;żnice między wartościami wyświetlanymi na ekranie statystyk Juggluco i Libreview. Na przykład w Libreview widać, że czas aktywności 100%, podczas gdy ekran statystyk Juggluco wskazuje 96,0%. R&oacute;wnież niekt&oacute;re wysokie i niskie wartości zostaną uśrednione, tak że Libreview podaje nieco wyższy <i>czas w zakresie</i> niż ekran statystyk Juggluco. Ponieważ rzeczywiste wartości historyczne są mniej ekstremalne niż średnia wartości strumienia wok&oacute;ł wartości historycznej, r&oacute;żnica ta będzie większa, gdy wartości Libreview są oparte na wartościach skanowanych.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Juggluco można połączyć z wieloma sensorami jednocześnie, podczas gdy Librelink obsługuje tylko jeden sensor na raz. Do Libreview Juggluco r&oacute;wnież przesyła dane z tylko jednego sensora. Robi to w ten spos&oacute;b, że najpierw wysyła dane z jednego sensora, a dopiero po braku danych z tego sensora wysyła dane z kolejnego.</p>
+<p><b>Uzyskaj identyfikator konta Libreview</b>: Jeśli chcesz jedynie otrzymać identyfikator konta LibreView, ale nie wysyłać danych do Libreview, możesz wpisać sw&oacute;j adres e-mail i hasło, a następnie nacisnąć <i>&quot;Uzyskaj identyfikator konta Libreview </i>&quot;. W tej samej linii przed tym przyciskiem pojawi się Identyfikator konta (może to trochę potrwać, a ekran nie jest odświeżany automatycznie). Pobranie identyfikatora konta z serwera LibreView umożliwia użycie czujnika FreeStyle Libre 3, kt&oacute;ry był już używany z aplikacją Abbott Libre 3 z tym kontem LibreView. Uruchomienie czujnika za pomocą Juggluco podobno nie działa.</p>
+<p><b>OSTRZEŻENIE</b>: Sensor Freestyle Libre 3 należy aktywować za pomocą tego konta. Przy p&oacute;źniejszym przełączeniu na konto w aplikacji Libre 3, zeskanowanie czujnika spowoduje błąd.<br/> <br/> <br/></p>
 ]]>
 </string>
 <string name="garminconfig" >
@@ -1652,27 +1349,8 @@ zeskanowanie czujnika spowoduje błąd.</p>
 </string>
 <string name="librenumhelp" >
 <![CDATA[
-<p>Ustaw <i>&quot;Wyślij
-wartości</i>&quot;, aby wysłać wartości do Libreview. Przed
-włączeniem opcji <i>&quot;Wyślij wartości</i>&quot; należy dla
-każdej etykiety określić, w jaki sposób wartości wpisane pod
-daną etykietą mają być wysyłane do Libreview. Same etykiety
-można tworzyć, modyfikować i usuwać w Lewym menu -&gt; Ustawienia
--&gt; &quot;Etykiety wart. liczb&quot;.</p>
-<p>Dla etykiet wysyłanych jako notatki do Libreview obowiązuje
-następujące ograniczenie: po zmianie etykiety usuwanie i zmiana
-wartości wprowadzonych pod poprzednią etykietą nie spowoduje
-modyfikacji w Libreview. Na przykład, jeśli wcześniej miałeś
-etykietę Rower i wpisałeś 20, następnie zmieniłeś Rower na
-Jazda na rowerze i zmodyfikowałeś 20 na 25, ta zmiana nie spowoduje
-zmiany w Libreview, ale zarówno Rower 20, jak i Jazda na rowerze 25
-będą obecne w Libreview. Jedyne, co można zrobić, to usunąć
-aktualne urządzenia w Libreview i nacisnąć na <i>Prześlij
-ponownie dane</i> w Juggluco.</p>
-<p><br/>
-<br/>
-
-</p>
+<p>Ustaw <i>&quot;Wyślij wartości</i>&quot;, aby wysłać wartości do Libreview. Przed włączeniem opcji <i>&quot;Wyślij wartości</i>&quot; należy dla każdej etykiety określić, w jaki spos&oacute;b wartości wpisane pod daną etykietą mają być wysyłane do Libreview. Same etykiety można tworzyć, modyfikować i usuwać w Lewym menu -&gt; Ustawienia -&gt; &quot;Etykiety wart. liczb&quot;.</p>
+<p>Dla etykiet wysyłanych jako notatki do Libreview obowiązuje następujące ograniczenie: po zmianie etykiety usuwanie i zmiana wartości wprowadzonych pod poprzednią etykietą nie spowoduje modyfikacji w Libreview. Na przykład, jeśli wcześniej miałeś etykietę Rower i wpisałeś 20, następnie zmieniłeś Rower na Jazda na rowerze i zmodyfikowałeś 20 na 25, ta zmiana nie spowoduje zmiany w Libreview, ale zar&oacute;wno Rower 20, jak i Jazda na rowerze 25 będą obecne w Libreview. Jedyne, co można zrobić, to usunąć aktualne urządzenia w Libreview i nacisnąć na <i>Prześlij ponownie dane</i> w Juggluco.</p>
 ]]>
 </string>
 <string name="setlibrenumtype" >
@@ -1705,26 +1383,22 @@ godzinie.</p>
 </string>
 <string name="floatingconfig" >
 <![CDATA[
-<u></u>
-
-
-	
-	
-	
-	
-	
-	
-
-<div lang="pl-PL" link="#000080" vlink="#800000" dir="ltr"><h1 class="m_western">Pływająca wart. gluk.</h1>
-<p>Tutaj możesz ustawić rozmiar czcionki oraz kolor pierwszego planu i tła pływającej wartości stęż. glukozy. Możesz również ustawić tło na <b>Przezroczyste</b>, dzięki czemu będzie ono niewidoczne.</p>
-<p><b>Dotykowa</b>: po włączeniu tej opcji można przesunąć palcem pływającą wartość glukozy i usunąć ją przez długie naciśnięcie. Gdy opcja „dotykowa” nie jest włączona, dotknięcie przechodzi na widok pod pływającą wartością glukozy, więc możesz używać aplikacji widocznej pod nią.</p>
-<p>Po wpisaniu <b>rozmiaru czcionki</b>, musisz nacisnąć przycisk <i>&quot;Wprowadź” </i> <span style="font-style:normal">lub</span><span style="font-variant:normal"> &quot;Gotowe</span>” klawiatury programowej.</p>
-<p>Możesz włączyć lub wyłączyć Pływającą wartość glukozy za pomocą pola wyboru <i>&quot;Pływająca wart. gluk.</i>&quot; w ustawieniach. Można również wyłączyć &quot;Pływającą wartość glukozy&quot;, <b>naciskając długo</b> na niej na ekranie. Na przykład, gdy ustawiłeś tak duży rozmiar czcionki, że nie jesteś już w stanie wpisać mniejszego jej rozmiaru na klawiaturze programowej.</p>
-<p>Aby móc wyświetlać treści na wierzchu innych aplikacji, Juggluco potrzebuje specjalnego uprawnienia. Na WearOS, a także Android Auto trzeba użyć adb, aby nadać to uprawnienie, wpisując w wierszu poleceń komendę:</p>
-<p style="line-height:100%;margin-bottom:0in"><b>adb shell pm grant tk.glucodata android.permission.SYSTEM_<wbr>ALERT_WINDOW</b></p>
-<p style="line-height:100%;margin-bottom:0in;background:transparent"><br></p>
-<p style="line-height:100%;margin-bottom:0in;background:transparent"><br></p>
-</div>
+<h1 class="western">Pływająca wart. gluk.</h1>
+<p>Tutaj możesz ustawić rozmiar czcionki oraz kolor pierwszego planu i tła pływającej wartości stęż. glukozy. Możesz r&oacute;wnież ustawić tło na <b>Przezroczyste</b>, dzięki czemu będzie ono niewidoczne.</p>
+<p><b>Dotykowa</b>: po włączeniu tej opcji można przesunąć palcem pływającą wartość glukozy i usunąć ją przez długie naciśnięcie. Gdy opcja &bdquo;dotykowa&rdquo; nie jest włączona, dotknięcie przechodzi na widok pod pływającą wartością glukozy, więc możesz używać aplikacji widocznej pod nią. Możesz r&oacute;wnież uczynić pływającą wartość glukozy niedotykalną, <b>naciskając</b> na nią <b>dwukrotnie</b>.</p>
+<p>Po wpisaniu <b>rozmiaru czcionki</b>, musisz nacisnąć przycisk <i>&quot;Wprowadź&rdquo; </i> <span style="font-style: normal">lub</span><span style="font-variant: normal"> &quot;Gotowe</span>&rdquo; klawiatury programowej.</p>
+<p>Możesz włączyć lub wyłączyć Pływającą wartość glukozy za pomocą pola wyboru <i>&quot;Pływająca wart. gluk.</i>&quot; w ustawieniach. Można r&oacute;wnież wyłączyć &quot;Pływającą wartość glukozy&quot;, <b>naciskając długo</b> na niej na ekranie. Na przykład, gdy ustawiłeś tak duży rozmiar czcionki, że nie jesteś już w stanie wpisać mniejszego jej rozmiaru na klawiaturze programowej.</p>
+<p>Aby m&oacute;c wyświetlać treści na wierzchu innych aplikacji, Juggluco potrzebuje specjalnego uprawnienia. Na WearOS, a także Android Auto trzeba użyć adb, aby nadać to uprawnienie, wpisując w wierszu poleceń komendę:</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>adb shell pm grant tk.glucodata android.permission.SYSTEM_ALERT_WINDOW</b></p>
+<p style="line-height: 100%; margin-bottom: 0in; background: transparent"><br/></p>
+<p style="line-height: 100%; margin-bottom: 0in; background: transparent"><br/></p>
+]]>
+</string>
+<string name="getaccountidhelp" >
+<![CDATA[
+<h1 class="western">Uzyskaj identyfikator konta Libreview</h1>
+<p style="line-height: 100%; margin-bottom: 0in">Jak uzyskać identyfikator konta Libreview potrzebny do zeskanowania sensora Freestyle Libre 3 przez NFC? Jeśli wybierzesz opcję <strong>&quot;</strong><strong>Ręcznie</strong><strong>&quot;</strong>, możesz wprowadzić identyfikator konta ręcznie. Możesz r&oacute;wnież odznaczyć opcję &quot;<i>Ręcznie</i>&quot; i nacisnąć na &quot;<strong>Z Libreview</strong>&quot;, aby użyć adresu e-mail i hasła do otrzymywania ich ze strony Libreview.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Możliwe jest r&oacute;wnież otrzymanie identyfikatora konta Libreview z Libreview, a następnie ustawić <em>&quot;</em><em>Ręcznie</em><em>&quot;</em> i zmienić adres e-mail i hasło do konta Libreview. Jeśli następnie ustawisz <i>&quot;Wyślij do Libreview</i>&quot; i naciśniesz <i>&quot;Prześlij ponownie dane</i>&quot;, dane zostaną wysłane do innego konta Libreview, ale poprzednie ID konta będzie nadal używane do skanowania sensora przez NFC. W ten spos&oacute;b Juggluco wysyła dane na inne konto Libreview niż to, kt&oacute;rego używa aplikacja Abbott Libre 3.</p>
 ]]>
 </string>
 </resources>

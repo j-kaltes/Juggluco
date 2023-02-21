@@ -40,21 +40,13 @@
                 android:layout_row="0"
                 android:text="@string/wakelock" />
 
-            <Button
-                android:id="@+id/finish"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_column="4"
-                android:layout_columnSpan="1"
-                android:layout_row="0"
-                android:text="@string/finish" />
 
 
             <CheckBox
                 android:id="@+id/usebluetooth"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_column="5"
+                android:layout_column="4"
                 android:layout_columnSpan="3"
                 android:layout_row="0"
                 android:text="@string/sensorviabluetooth" />
@@ -62,7 +54,7 @@
                 android:id="@+id/priority"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_column="9"
+                android:layout_column="7"
                 android:layout_columnSpan="2"
                 android:layout_row="0"
                 android:text="@string/high_priority" />
@@ -126,7 +118,7 @@
 
 
             <TextView
-                android:id="@+id/textView3"
+                android:id="@+id/finish"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_column="4"

@@ -88,7 +88,7 @@ template<typename T,typename ...Ts> char *	nconcat(int len,  T &&one,  Ts &&... 
 	return ptr;
 	}
 
-pathconcat():name(nullptr),namelen(0) {}
+pathconcat():name(nullptr),namelen(1) {}
 
 template <typename ...Ts>
 pathconcat(  Ts &&... args) {
@@ -96,7 +96,7 @@ pathconcat(  Ts &&... args) {
 	}
 pathconcat( pathconcat &&in):name(in.name),namelen(in.namelen) { 
 	in.name=nullptr;
-	in.namelen=0;
+	in.namelen=1;
 	LOGGER("pathconcat( pathconcat &&in=%s)\n",name);
 }
 pathconcat( pathconcat &in):name(new char[in.namelen]),namelen(in.namelen) { 
