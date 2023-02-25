@@ -34,6 +34,7 @@ public GlucoseAlarms(Application context) {
 
 public	void handlealarm() {
 	final long nu = System.currentTimeMillis();
+	SensorBluetooth.disconnectall();
 	final long lasttime=Natives.lastglucosetime( );
 	final long nexttime=lasttime+waitmmsec();
 	var view=Floating.floatview;
@@ -41,7 +42,7 @@ public	void handlealarm() {
 		view.postInvalidate();
 		}
 	if(nu>nexttime) {
-		if (hasalarmloss()) {
+		if(hasalarmloss()) {
 			Notify.onenot.lossalarm(lasttime);
 			}
 		}

@@ -167,7 +167,10 @@ void startwatchthread() {
 	#ifdef USE_SSL
 	if(xdripserversslsock==-1)  {
 		if(settings->data()->useSSL) {
-			startsslwatchthread();
+			const std::string error=startsslwatchthread();
+			if(error.size()) {
+				LOGGER("%s\n",error.data());
+				}
 			}
 		}
 	#endif
@@ -334,6 +337,24 @@ static	constexpr const char status[]="HTTP/1.1 200 OK\r\nContent-Type: text/html
 	const int statuslen=sizeof(status)-1;
 	outdata->allbuf=nullptr;
 	outdata->start=status;
+	outdata->len=statuslen;
+	return true;
+}
+static bool givesite(recdata *outdata) {
+static	constexpr const char webpage[]="HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\nContent-Length: 133\r\n\r\n" 
+R"(<!DOCTYPE html>
+<html>
+<head>
+   <meta http-equiv="refresh" content="0; url=http://www.juggluco.nl"/>
+</head>
+<body>
+</body>
+</html>
+)";
+
+	const int statuslen=sizeof(webpage)-1;
+	outdata->allbuf=nullptr;
+	outdata->start=webpage;
 	outdata->len=statuslen;
 	return true;
 }
@@ -544,8 +565,11 @@ Date: Sat, 18 Feb 2023 22:08:56 GMT
 Transfer-Encoding: chunked
 Via: 1.1 vegur
 */
-
+#ifdef NOTAPP
+#include "cmdline/jugglucotext.h"
+#else
 #include "curve/jugglucotext.h"
+#endif
 extern jugglucotext engtext;
 
 int formattime(char *buf, time_t tim) {
@@ -890,9 +914,10 @@ bool watchcommands(char *rbuf,int len,recdata *outdata) {
 		return false;
 		}
 	if(!toget.size()) {
-		outdata->start= servererrorstr.data();
-		outdata->len=servererrorstr.size();
-		return false;
+//		outdata->start= servererrorstr.data();
+//		outdata->len=servererrorstr.size();
+		givesite(outdata);
+		return true;
 		}
 	LOGGER("toget=%s\n",toget.data());
 std::string_view sgv="sgv.json";
@@ -932,12 +957,13 @@ std::string_view sgv="sgv.json";
 				//	return givesgvtxt(ptr+api2.size(),toget.size()-api2.size()-api.size(),behead,outdata);
 					}
 				else  {
-					if(*ptr==' '||*ptr=='?')
+					if(*ptr==' '||*ptr=='?') {
 				//		return sgvinterpret(ptr+api2.size(),toget.size()-api2.size()-api.size(),behead,outdata);
 						if(json)
 							return sgvinterpret(++ptr,toget.size()-1-api.size(),false,outdata);
 						else
 							return givesgvtxt(++ptr,toget.size()-1-api.size(),outdata,9);
+						}
 					}
 				}
 			}
@@ -988,6 +1014,13 @@ std::string_view pebble="pebble";
 	if(!strcmp(pebble.data(),toget.data())) {
 		return pebbleinterpret(toget.data()+pebble.size(),toget.size-pebble.size());
 		} */
+std::string_view index="index.html";
+const auto indexsize= index.size();
+	if(toget.data()[0]==' '||!memcmp(index.data(),toget.data(),indexsize)) {
+		return givesite(outdata);
+		}
+
+
 void wrongpath(std::string_view toget, recdata *outdata);
 	wrongpath(toget,outdata);
 	return false;
@@ -1376,7 +1409,7 @@ static time_t readtime(const char *input) {
 										}
 									lowerend=tmp/1000;
 									iter=ptr;
-									LOGGER("greater than %ld\n",lowerend);
+									LOGGER("greater than %d\n",lowerend);
 									}
 								else {
 									std::string_view smaller="find[date][$lte]=";
@@ -1388,7 +1421,7 @@ static time_t readtime(const char *input) {
 											return false;
 											}
 										higherend=tmp/1000L;
-										LOGGER("smaller than %ld\n",lowerend);
+										LOGGER("smaller than %d\n",higherend);
 										}
 									else {
 										std::string_view smaller="find[date][$lt]=";
@@ -1408,7 +1441,7 @@ static time_t readtime(const char *input) {
 										iter+=greater.length();
 										lowerend=readtime(iter);
 										iter+=10;
-										LOGGER("greater than %ld\n",lowerend);
+										LOGGER("greater than %d\n",lowerend);
 										}
 									else {
 										std::string_view smaller="find[dateString][$lte]="; //TODO smaller or equal
@@ -1417,7 +1450,7 @@ static time_t readtime(const char *input) {
 											iter+=smaller.length();
 											higherend=readtime(iter);
 											iter+=10;
-											LOGGER("smaller than %ld\n",higherend);
+											LOGGER("smaller than %d\n",higherend);
 											}
 											}
 											}
@@ -1437,7 +1470,7 @@ static bool	 sgvinterpret(const char *start,int len,bool headonly,recdata *outda
 	Sgvinterpret pret;
 	if(!pret.getargs(start,len))
 		return false;
-	LOGGER("lowerend=%ld higherend=%ld\n",pret.lowerend,pret.higherend);
+	LOGGER("lowerend=%d higherend=%d\n",pret.lowerend,pret.higherend);
 	return pret.getdata(headonly,outdata);
 	}
 

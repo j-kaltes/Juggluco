@@ -30,6 +30,7 @@ char privatekey[]="privkey.pem";
 #include <android/dlext.h>
 #endif
 #include <string>
+#include <string_view>
 #include <sys/prctl.h>
 #include <strconcat.h>
 #include "openssl/ssl.h"
@@ -58,9 +59,9 @@ int (*SSL_CTX_use_certificate_chain_fileptr)(SSL_CTX *ctx, const char *file);
 //int (*SSL_CTX_use_certificate_ASN1ptr)(SSL_CTX *ctx, int len, unsigned char *d);
 //int (*SSL_CTX_use_PrivateKey_ASN1ptr)(int pk, SSL_CTX *ctx, unsigned char *d, long len);
 int (*SSL_CTX_use_PrivateKey_fileptr)(SSL_CTX *ctx, const char *file, int type);
-const char* (*ERR_reason_error_stringptr)(unsigned long e);
-unsigned long (*ERR_get_errorptr)(void);
-unsigned long (*ERR_peek_last_errorptr)(void);
+//const char* (*ERR_reason_error_stringptr)(unsigned long e);
+//unsigned long (*ERR_get_errorptr)(void);
+//unsigned long (*ERR_peek_last_errorptr)(void);
 
 
 int (*SSL_CTX_check_private_keyptr)(const SSL_CTX *ctx);
@@ -205,10 +206,11 @@ static bool getkeynames() {
 std::string haskeyfiles() {
 static auto _hasnames=getkeynames();
  if(access(chainfilename.data(), R_OK)!=0) {
-	return std::string("No access to ")+ std::string(chainfilename);
+	return std::string(fullchainfileonly)+std::string(" missing");
 	}
  if(access(private_file.data(), R_OK)!=0) {
-	return std::string("No access to ")+ std::string(private_file);
+	return std::string(privatekey)+std::string(" missing");
+
 	}
 	return "";
 	}
@@ -269,12 +271,15 @@ symtest(SSL_free);
 symtest(SSL_new);
 symtest(SSL_set_fd);
 symtest(SSL_CTX_free);
+/*
+if(!(getsym(ERR_reason_error_string))) {
+	LOGGER("%s ",dlerror());
+	}
 
-	 symtest(ERR_reason_error_string);
-	 symtest(ERR_get_error);
-	 symtest(ERR_peek_last_error);
-
-
+if(!(getsym(ERR_peek_last_error))) {
+	LOGGER("%s ",dlerror());
+	}
+*/
 return "";
 }
 
@@ -337,10 +342,37 @@ bool	securewatchcommands(SSL *ssl);
  #include <openssl/err.h>
 
 
-//static SSL_CTX* 
-const char *geterror() {
-	 return ERR_reason_error_stringptr(ERR_peek_last_errorptr());
+struct call_data_t{
+	std::string_view start;
+	std::string back;
+	} ;
+int geterrorcallback(const char *str, size_t len, void *u) {
+	call_data_t *dptr=(call_data_t *)u;
+	int startlen =dptr->start.size();
+	int totlen=startlen+len+3;
+	dptr->back=std::string(totlen,0);
+	char *uit=dptr->back.data();
+	memcpy(uit,dptr->start.data(),startlen);
+	uit+=startlen;
+	*uit++=':';
+	*uit++=' ';
+	memcpy(uit,str,len);
+	uit[len]='\0';
+	return 0;
 	}
+std::string geterror(std::string_view start) {
+	call_data_t data;
+	data.start=start;
+	ERR_print_errors_cbptr(geterrorcallback,(void*)&data);
+	return data.back;
+	}
+//static SSL_CTX* 
+/*
+const char *geterror() {
+	if(ERR_reason_error_stringptr)
+		 return ERR_reason_error_stringptr(ERR_peek_last_errorptr());
+	else return "openSSL error";
+	} */
 
 const std::string initsslserver(void) {
     LOGGER("initsslserver\n");
@@ -359,23 +391,19 @@ const std::string initsslserver(void) {
 
     SSL_CTX *ctx = SSL_CTX_newptr(TheMethod());
     if( ctx == NULL ) {
-		const char *error=geterror();
-		return std::string("SSL_CTX_newptr ")+std::string(error);
+		return geterror("SSL_CTX_newptr");
 		}
 
     destruct des{[ctx] {SSL_CTX_freeptr(ctx);  }};
     
 if(SSL_CTX_use_certificate_chain_fileptr(ctx,chainfilename.data())<=0)  {
-	 const char *error=geterror();
-	return std::string(chainfilename.data())+std::string(" SSL_CTX_use_certificate_chain_file ")+std::string(error);
+	return geterror(chainfilename);
 	}
 if(SSL_CTX_use_PrivateKey_fileptr(ctx, private_file.data(), SSL_FILETYPE_PEM) <= 0) {
-	 const char *error=geterror();
-	return std::string(private_file.data())+std::string(" SSL_CTX_use_PrivateKey_file failed ")+std::string(error);
+	return geterror(private_file.data());
     }
     if( !SSL_CTX_check_private_keyptr(ctx) ) {
-		const char *error=geterror();
-	return std::string("SSL_CTX_check_private_keyptr: Private key does not match the public certificate ")+std::string(error);
+	return geterror("Private key does not match the public certificate");
     }
     des.active=false;
     globalctx=ctx;

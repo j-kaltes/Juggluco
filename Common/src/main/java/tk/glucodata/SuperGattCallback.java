@@ -79,6 +79,11 @@ public abstract class SuperGattCallback extends BluetoothGattCallback {
 protected	SuperGattCallback(int gen) {
 	sensorgen=gen;
 	}
+public void disconnect() {
+	final var thegatt= mBluetoothGatt;
+	if(thegatt!=null)
+		thegatt.disconnect();
+	}
 
 	long[] constatchange = {0L, 0L};
 	int constatstatus = -1;
@@ -236,7 +241,7 @@ public void searchforDeviceAddress() {
 		close();
 		Natives.freedataptr(dataptr);
 		dataptr = 0L;
-	 	sensorbluetooth=null;
+	 	//sensorbluetooth=null;
 	}
 	boolean streamingEnabled() {//TODO: libre3?
 		return Natives.askstreamingEnabled(dataptr);
@@ -305,7 +310,7 @@ public void searchforDeviceAddress() {
 							cb.mBluetoothGatt = device.connectGatt(Applic.app, autoconnect, cb);
 							}
 						}
-					setpriority();
+					setpriority(cb.mBluetoothGatt);
 				} catch (SecurityException se) {
 					var mess = se.getMessage();
 					mess = mess == null ? "" : mess;
@@ -331,12 +336,17 @@ public void searchforDeviceAddress() {
 	return true;
 	}
 	@SuppressLint("MissingPermission")
-	void setpriority() {
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-			if (Natives.getpriority())
-				mBluetoothGatt.requestConnectionPriority(use_priority);
-			else
-				mBluetoothGatt.requestConnectionPriority(CONNECTION_PRIORITY_BALANCED);
-		}
+	void setpriority(BluetoothGatt bluegatt) {
+		if(bluegatt!=null) {
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+				if (Natives.getpriority())
+					bluegatt.requestConnectionPriority(use_priority);
+				else
+					bluegatt.requestConnectionPriority(CONNECTION_PRIORITY_BALANCED);
+			}
+			}
+		else {
+			Log.e(LOG_ID,"setpriority BluetoothGatt==null");
+			}
 	}
 }

@@ -105,7 +105,9 @@ Applic app=	(Applic)getApplication();
 	curve = new GlucoseCurve(this);
 
 	setContentView(curve);
-    app.needsnatives() ;
+
+	if(Applic.Nativesloaded)
+	    app.needsnatives() ;
 
    // setSystemUI(false) ;
     try {
@@ -581,9 +583,12 @@ public void onConfigurationChanged(Configuration newConfig) {
     super.onConfigurationChanged(newConfig);
     Log.i(LOG_ID,"onConfigurationChanged height=" +newConfig.screenHeightDp+" width=" +newConfig.screenWidthDp + " sw="+newConfig.smallestScreenWidthDp);
 
-//	Notify.mkpaint();
 
 	screenwidth=0;
+	if(Applic.Nativesloaded)
+	    app.needsnatives() ;
+
+
 //	if(settings!=null) settings.invalidate();
 }
 public void requestRender() {

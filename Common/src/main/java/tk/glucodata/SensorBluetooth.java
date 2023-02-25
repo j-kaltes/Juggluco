@@ -65,7 +65,12 @@ public static void startscan() {
     private BroadcastReceiver mBluetoothAdapterReceiver =null; ;
 static    private BluetoothManager mBluetoothManager=null;
 
-
+static public void disconnectall() {
+   var wasblue=blueone;
+   if(wasblue !=null)
+        for(var cb: wasblue.gattcallbacks)    
+		cb.disconnect();
+	}
 
 
     public boolean connectToActiveDevice(long delayMillis) {

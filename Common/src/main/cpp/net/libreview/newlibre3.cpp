@@ -145,31 +145,6 @@ static int histel3_2str(const Glucose *el,const int64_t histor,char *buf) {
 	}
 
 
-/*
-static unsigned char unalf(char ch) {
-// 0123456789 A CDEFGH JKLMN PQR TUVWXYZ;
-	ch=toupper(ch);
-	if(ch=='B')
-		ch='8';
-	if(ch=='I')
-		ch='1';
-	if(ch=='O')
-		ch='0';
-	if(ch=='S')
-		ch='5';
-	if(ch<='9')	
-		return ch-'0';
-	if(ch=='A')
-		return 10;
-	if(ch<='H')
-		return ch-'A'+9;
-	if(ch<='N')
-		return ch-'A'+8;
-	if(ch<='R')
-		return ch-'A'+7;
-	return ch-'A'+6;
-	}
-	*/
 
 template<class T>
 int64_t libreviewHistorAlg(const T *sensorid,int start, int shift) {
@@ -230,8 +205,9 @@ int addsensorstart(char *buf,uint32_t nu,int mil,SensorGlucoseData *sens)  {
 		++nu;
 	auto polls=sens->getPolldata();
 	time_t start=0;
-	for(const ScanData &el:polls) {
-		if(el.current()) {
+	for(int i=0;i<polls.size();i++) {
+		const ScanData &el=polls[i];
+		if(el.current(i)) {
 			start=el.gettime();
 			break;
 			}
@@ -267,21 +243,18 @@ int sendallcurrent(uint32_t nu,SensorGlucoseData *sens,char *buf,int *lastsend) 
 	 int ends=sens->getinfo()->lastLifeCountReceived;
 	LOGGER("%s libreviewscan=%d lastLifeCountReceived=%d\n",sens->showsensorname().data(),start,ends);
 	if(ends==0) {
-		ends=sens->pollcount();
+		ends=sens->pollcount()-1;
 		}
 	*lastsend=ends;	
 	if(start<pollstart)
 		start=pollstart;
 	LOGGER("start=%d ends=%d\n",start,ends);
-
 	if(start>ends)
 		return 0;
-
 	const ScanData *startstream=sens->beginpolls();
-		
 	for(int i=ends;i>=start;i--) {
 		const ScanData *el=startstream+i;
-		if(el->current()) {
+		if(el->current(i)) {
 			int64_t histor=libreviewSensorNameID(sens);
 			int wrote=addcurrent(buf,histor,el,true);
 			return wrote;
@@ -353,6 +326,7 @@ bool sendlibre3viewdata() {
 		else {
 			if(notsendall2(startsensor)) {
 				settings->data()->haslibre2=true; 
+//				return false;
 				} 
 			}
 		}

@@ -132,6 +132,7 @@ static String[] gethostnames() {
 	String hasone=null;
     try {
             Enumeration<NetworkInterface> inter = NetworkInterface.getNetworkInterfaces();
+	    if(inter!=null) {
             while(inter.hasMoreElements()) {
                 NetworkInterface in=inter.nextElement();
                 Enumeration<InetAddress> addrs= in.getInetAddresses();
@@ -160,7 +161,7 @@ static String[] gethostnames() {
                     }
                 }
 
-
+		}
             }
         }
         catch(Throwable e) {

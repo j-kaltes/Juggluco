@@ -315,7 +315,7 @@ extern				bool updateDevices() ;
 
 		case sfileonce:
 			{
-			LOGGER("fileonce ");
+			LOGGER("fileonce\n");
 			int tolen=offsetof(fileonce_t,nr);
 			const fileonce_t *gegs=reinterpret_cast<const fileonce_t *>(data);
 			if(len>(it+tolen)) {

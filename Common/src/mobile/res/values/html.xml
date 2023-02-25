@@ -1765,7 +1765,17 @@ menu-&gt;settings-&gt;xDrip Broadcast).</p>
 <p style="line-height: 100%; margin-bottom: 0in">You need SSL for
 Diabetes:M, <a href="https://play.google.com/store/apps/details?id=se.cornixit.nightwatch">Nightwatch</a>
 and <a href="https://slingithub.github.io/CheckmateWeb">Checkmate</a>.</p>
-<p style="line-height: 100%; margin-bottom: 0in"><b>Secret</b>:
+<p style="line-height: 100%; margin-bottom: 0in">
+The web server can also be run on a Linux computer. It will receive
+its data from a <a href="https://www.juggluco.nl/Juggluco/mgdL/index.html#mirror">mirror
+connection</a> from Juggluco connected to the sensor:
+<a href="https://www.juggluco.nl/Juggluco/cmdline/index.html">https://www.juggluco.nl/Juggluco/cmdline</a>.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Another phone can
+connect to this server via a mirror connection or as Nightscout
+follower (for example on an Iphone). If there is a Nightscout app
+that doesn\'t work with this web server, please tell me. Maybe it can
+be made to work with a few changes.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>api_secret</b>:
 Specify that followers should set the api api_secret http header
 element to this value. Not all Nightscout apps have an option to set
 api_secret, this means that you can\'t use them with Secret set to a

@@ -142,18 +142,18 @@ void reconnect() {
 	@SuppressLint("MissingPermission")
 	@Override
 	public void onConnectionStateChange(BluetoothGatt bluetoothGatt, int status, int newState) {
+		long tim = System.currentTimeMillis();
 		try {
 			if (!tk.glucodata.Applic.isRelease) {
 				String[] state = {"DISCONNECTED", "CONNECTING", "CONNECTED", "DISCONNECTING"};
 				Log.i(LOG_ID, SerialNumber + " onConnectionStateChange, status:" + status + ", state: " + (newState < state.length ? state[newState] : newState));
 				}
-			long tim = System.currentTimeMillis();
 			if (newState == BluetoothProfile.STATE_CONNECTED) {
 				readrssi=9999;
 				mBluetoothGatt.readRemoteRssi();
 				bluetoothGatt.discoverServices();
 				constatchange[0] = tim;
-				setpriority();
+				setpriority(bluetoothGatt);
 			} else {
 				if(newState == BluetoothProfile.STATE_DISCONNECTED) {
 					if(status == 19) {
@@ -178,6 +178,8 @@ void reconnect() {
 			Log.stack(LOG_ID, "onConnectionStateChange", e);
 			if (Build.VERSION.SDK_INT > 30 && !Applic.mayscan())
 				Applic.Toaster("Turn on NEARBY DEVICES permission");
+			constatstatus = status;
+			constatchange[1] = tim;
 			return;
 		}
 	}

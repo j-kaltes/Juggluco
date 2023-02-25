@@ -273,7 +273,9 @@ int makelibre3sensorindex(std::string_view shortname,uint32_t starttime,const ui
 	LOGGER("makelibre3sensor(%s,%u) %s",shortname.data(),starttime,ctime(&tim));
 #endif
 
-	if(const int sensindex=sensorindex(name.data());sensindex>=0) {
+	if(sensor *sensgegs = findsensorm(name.data()) ) {
+		const int	sensindex= sensgegs - sensorlist();
+		sensgegs->finished=false;
 		SensorGlucoseData *sens=gethist(sensindex) ;
 		if(pin) {
 			sens->getinfo()->pin=pin;

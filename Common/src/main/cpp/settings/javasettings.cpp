@@ -928,10 +928,12 @@ bool	getpathworks() {
 	const char commando[]{"#!/system/bin/sh\ntrue\n"};
 	writeall(testprog,commando,sizeof(commando)-1);
 	chmod(testprog,0700);
-	setenv("PATH",globalbasedir.data(),1);
+	constexpr const char path[]="PATH";
+	const char *oldpath=getenv(path);
+	setenv(path,globalbasedir.data(),1);
 	int err=system("testprog");
 	LOGGER("testprog gives %d\n",err);
-	setenv("PATH","/system/bin",1);
+	setenv(path,oldpath,1);
 	unlink(testprog.data());
 	return !err;
 	}

@@ -239,6 +239,13 @@ Readall(Readall &&in):all(in.all),len(in.len) {
 //	std::cerr<<"Readall(&&) "<<all<<std::endl;
 	in.all=nullptr;
 	}
+void assign(const char *data,size_t lenin) {
+	len=lenin/sizeof(T);
+	delete[] all;
+	all=new T[len+1];
+	memcpy(all,data,sizeof(T)*len);
+	all[len]='\0';
+	}
 	
 //Readall(string_view base,string_view endname): Readall(pathconcat(base,endname)) {}
 ~Readall() {
@@ -296,7 +303,7 @@ void *mopen(const char *filename) {
         void *mmapbuf=mmap(NULL, len, PROT_READ |PROT_WRITE,MAP_SHARED, fp, 0);
        close(fp);
        if(mmapbuf== MAP_FAILED) {
-       		flerror("mmap(%zu,%d)",len,fp);
+       		flerror("mmap(%s len=%zu,fp=%d)",filename,len,fp);
                 return nullptr;
 		}
         return mmapbuf;

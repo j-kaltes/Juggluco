@@ -266,8 +266,8 @@ void checkhistory(std::ostream &os) {
 		if(id&&nu) {
 			auto prevtime=timeatpos(loclastpos);
 			if(prevtime) {
-				if(long times=pos-loclastpos;times!=0) {
-					uint32_t totdif=nu-(long)prevtime- times*interval;
+				if(int64_t times=pos-loclastpos;times!=0) {
+					uint32_t totdif=nu-(int64_t)prevtime- times*interval;
 					int dif= totdif/times;
 					som+=totdif;
 					if(abs(dif)>60) {
@@ -714,6 +714,7 @@ if(const ScanData *last=lastpoll()) {
 	if(last->g) {
 		lastlifecount=last->id;;
 		timelastcurrent=last->t;
+		LOGGER("lastlifecount=%d %s\n",lastlifecount,ctime(&timelastcurrent));
 		}
 	int start=getinfo()->pollstart;
 	if((start+1)<pollcount()) {
@@ -1243,7 +1244,9 @@ int updatescanalg(crypt_t *pass,int sock,int  ind,int sensorindex) {
 int lastlifecount=0;
 time_t timelastcurrent=0;
 time_t lifeCount2time(uint32_t lifecount) {
-	return timelastcurrent-60L*(lastlifecount-lifecount);
+	auto uit=timelastcurrent-60L*(lastlifecount-(int64_t)lifecount);
+	LOGGER("timelastcurrent=%zd lastlifecount=%d lifeCount2time(lifecount=%d)=%zd\n", timelastcurrent,lastlifecount,lifecount,uit);
+	return uit;
 	}
 
 bool sensorerror=false;

@@ -108,8 +108,18 @@ cout<<intro<<"Usages: "<<progname<<R"( -d dir : save data in directory dir)"<<en
  <<"        "<<progname<<R"( [-d dir] -l : list configuration data)"<<endl
  <<"        "<<progname<<R"( [-d dir] -c : clear configuration data)"<<endl
  <<"        "<<progname<<R"( -x[-+]: start xDrip watch app server or not (-x-)"<<endl
- <<"        "<<progname<<R"( -X[-+]:  the same but server can also be assesed remotely
-        )"<<progname<<R"( [-d dir] -N filename: export nums 
+ <<"        "<<progname<<R"( -X[-+]:  the same but server can also be assesed remotely)"<<endl
+ <<"        "<<progname<<R"( -g secret: use as api_secret secret
+)"
+#ifdef USE_SSL
+R"(        )"<<progname<<R"( -e[-+]:  Use xDrip server with SSL encryption)"<<endl
+ <<"        "<<progname<<R"( -o port:  use port port for the SSL server
+)"
+#else
+R"(Compile )"<<progname<<R"( yourself for SSL)
+)"
+#endif
+R"(        )"<<progname<<R"( [-d dir] -N filename: export nums 
 	)"<<progname<<R"( [-d dir] -S filename: export scans 
 	)"<<progname<<R"( [-d dir] -B filename: export stream 
 	)" << progname<<R"( [-d dir] -H filename: export history 
@@ -117,8 +127,8 @@ cout<<intro<<"Usages: "<<progname<<R"( -d dir : save data in directory dir)"<<en
 	)" << progname<<R"( [-d dir] -M : mmol/L
 	)" << progname<<R"( [-d dir] -G : mg/dL
 	)" << progname<<R"( [-d dir] -R n : remove n-th connection
+	)" << progname<<R"( [-d dir] -Z n : resend data to n-th connection
 	)" << progname<<R"( -v  : version
-
 
 	)"<< progname<<R"( [-d dir] OPTIONS IP1,IP2 ...  : Specify connection with IP(s).
 OPTIONS:
@@ -204,6 +214,8 @@ void showversion() {
 #include "version.h"
 	cout<<"Version "<<version<<endl;
 	}
+
+ Readall alldir;
 int readconfig(int argc, char **argv) {
 	bool receive=false,detect=false,signal=false,nums=false,scans=false,stream=false;
 	bool list=false,clear=false;
@@ -211,7 +223,7 @@ int readconfig(int argc, char **argv) {
 	char *dir=nullptr;
 	string_view port;
 
-	int rmindex=-1;
+	int rmindex=-1,reinitpos=-1;;
 const char * numexport=nullptr;
 const char *historyexport=nullptr;
 const char *scanexport=nullptr;
@@ -224,10 +236,11 @@ bool xremote=false,activeonly=false,passiveonly=false,testip=true
 ,showlibreview=false
 #endif
 ;
-int xdripserver=-1;
+int xdripserver=-1,use_ssl=-1;
 int changer=-1;
 int unit=0;
-           for(int opt;(opt = getopt(argc, argv, "p:d:lcX::x::ransvzibAPw:hN:S:B:H:m:GMR:L:C:")) != -1;) {
+char *api_secret=nullptr,*sslport=nullptr;
+           for(int opt;(opt = getopt(argc, argv, "Z:o:e::g:p:d:lcX::x::ransvzibAPw:hN:S:B:H:m:GMR:L:C:")) != -1;) {
                switch (opt) {
 	       	   case 'v': showversion();return 1234;
 	           case 'i': testip=false; break;
@@ -263,6 +276,10 @@ int unit=0;
 			   detect=true;
 			   break;
 		       case 'G': unit=2;break;
+		       case 'Z':
+				reinitpos=atoi(optarg); 
+				cerr<<"Reinit "<<reinitpos--<<endl;
+				break;
 		       case 'R': rmindex=atoi(optarg); 
 			cerr<<"remove "<<rmindex--<<endl;
 		       		break;
@@ -293,15 +310,43 @@ int unit=0;
 #ifndef DONT_USE_LIBREVIEW
 		       case 'z': showlibreview=true;break;
 #endif
+			case 'g': api_secret=optarg;break;  //api_secret;
+			case 'o': sslport=optarg;break;  ///sslport
+			case 'e': 
+				if(optarg) {
+					#define toshort(x) x[0]|(x[1]<<8)
+
+					cerr<<"use_ssl:"<<optarg<<':'<<endl;
+					const short arg=toshort( optarg);
+					switch(arg) {
+						case toshort("+"): use_ssl=1;;break;
+						case toshort("-"): use_ssl=0;;break;
+						default:
+							cerr<<"Unknown arg: "<<optarg<<endl;;
+							cerr<<"Argument to -e should be + or -\n";
+							return 10;
+						};
+					}
+				else {
+					cerr<<"use_ssl\n";
+					use_ssl=1;
+					}
+
+				break;
+
+
 		       default: help(argv[0]); return 4;
 		       }
            }
-	 Readall alldir;
-	char defaultname[]="jugglucodata";
+static constexpr const	char defaultname[]="jugglucodata";
+	std::string_view uitdir;
 	if(!dir) {
-		dir=alldir.fromfile(dirconf);
-		if(!dir)
-			dir=defaultname;
+		if(!alldir.fromfile(dirconf)) {
+			uitdir={defaultname,sizeof(defaultname)-1};
+			}
+		else {
+			uitdir=alldir;
+			}
 		}
 	else {
 		int dirlen=strlen(dir)-1;
@@ -310,14 +355,35 @@ int unit=0;
 		if(!writeall(dirconf,dir,dirlen+1)) {
 			cerr<<"Write to "<<dirconf<<" failed\n";
 			}
+		alldir.assign(dir,dirlen);
+		uitdir=alldir;
 		}
-	cout<<"Saving in directory "<<dir<<endl;
-	startjuggluco(dir,nullptr);
-	/*
-	if(!setfilesdir(dir,nullptr)) {
-		fprintf(stderr,"can't create files\n");
-		return 3;
-		}*/
+	cout<<"Saving in directory "<<uitdir.data()<<endl;
+	startjuggluco(uitdir,nullptr);
+	if(sslport) {
+		int port;
+		if(sscanf(sslport,"%d",&port)<=0) {
+			perror("sscanf");
+			return 10;
+			}
+		if(port<1024||port>65535) {
+			cerr<<"port should be between 1024 and 65535\n";
+			return 10;
+			}
+		settings->data()->sslport=port;
+		}
+	if(api_secret) {
+		int len=strlen(api_secret);
+		if(len>80) {
+			cerr<<"Maximal api_secret is 80 bytes\n";
+			return 10;
+			}
+		settings->data()->apisecretlength=len;
+		memcpy(settings->data()->apisecret,api_secret,len);
+		}
+	if(use_ssl>=0) {
+		settings->data()->useSSL=use_ssl;
+		}
 	if(xdripserver>=0) {
 		settings->data()->usexdripwebserver=xdripserver;
 		settings->data()->remotelyxdripserver=xremote;
@@ -339,6 +405,8 @@ int unit=0;
 		}
 	if(argc==1)
 		return 0;
+	if(reinitpos>=0)
+		backup->resethost(reinitpos) ;
 	bool sender=	nums||scans||stream;
 	int hostnr=backup->gethostnr();
 	if(!sender&&!receive) {
@@ -532,6 +600,20 @@ bool updateDevices() {
 	}
 extern bool hour24clock;
 bool hour24clock=true;
+
+struct jugglucotext {
+char daylabel[7][5];
+char monthlabel[12][5];
+};
+extern jugglucotext engtext;
+jugglucotext engtext {
+        .daylabel={"Sun","Mon","Tue","Wed","Thu","Fri","Sat"},
+        .monthlabel={
+      "Jan","Feb","Mar","Apr","May"      ,             "Jun",
+       "Jul","Aug","Sep",
+      "Oct","Nov","Dec"}
+      };
+
 /*
 extern std::string_view dRELEASE;
 extern std::string_view dMANUFACTURER;

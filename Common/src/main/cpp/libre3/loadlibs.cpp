@@ -33,12 +33,14 @@ static jclass      myFindClass(JNIEnv*, const char* name) {
 //#define cryptfunc(x) Java_tk_glucodata_ECDHCrypto_ ##x
 #define cryptfunc(x) x
 
+extern "C"  {
 typedef  jint  JNICALL   (*process1Type)(JNIEnv *env, jclass _cl,jint i2, jbyteArray bArr, jbyteArray bArr2);
 static process1Type process1=nullptr;
 typedef   jbyteArray  JNICALL   (*process2Type)(JNIEnv *env, jclass _cl,jint i2, jbyteArray bArr, jbyteArray bArr2);
 static process2Type process2=nullptr;
 typedef jint JNICALL (*DPGetActivationCommandDataType)(JNIEnv *env, jclass _cl, jbyteArray bArr, jlong, jlong);
 static DPGetActivationCommandDataType DPGetActivationCommandData=nullptr;
+};
 
 //static  jbyteArray  JNICALL   (*process2)(JNIEnv *env, jclass _cl,jint i2, jbyteArray bArr, jbyteArray bArr2);
 static jint        myRegisterNatives(JNIEnv*, jclass name, const JNINativeMethod*methods, jint nr) {
@@ -51,7 +53,7 @@ static jint        myRegisterNatives(JNIEnv*, jclass name, const JNINativeMethod
 	else {
 		LOGGER("class=%s\n",namestr);
 		if(!strcmp(namestr,"com/adc/trident/app/frameworks/mobileservices/libre3/libre3DPCRLInterface")) {
-			LOGGER("register %s\n",	methods[5].name);
+			LOGGER("register %s%s\n",	methods[5].name,methods[5].signature);
 			DPGetActivationCommandData=( DPGetActivationCommandDataType)methods[5].fnPtr;
 			}
 		}
@@ -241,7 +243,21 @@ extern "C" JNIEXPORT jint JNICALL fromjava(startTimeIDsum)(JNIEnv *env, jclass c
 //	debugclone(true);
 	loadNFC();
 	LOGGER("DPGetActivationCommandData(env,cl,bArr,%" PRId64 ",%" PRId64 ")\n",time,account);
+
+#if defined(__arm__) 
+	const jlong other=1799501362L+time;
+	jint res=DPGetActivationCommandData(env,cl,bArr,account,other); //TODO: what does time?
+	//SOMEHOW the time ended up in the account position and in the time sits something unpredictable. 
+	//By putting account in the time, you can still transfer it accross reinstalls; I can scan again with Juggluco. 
+	// The Libre3 app start counting down again. Because the activition time was said to be in 2073
+#else
+#ifndef NDEBUG
+	const jlong other=1799501362L+time;
+	jint res=DPGetActivationCommandData(env,cl,bArr,other,account);
+#else
 	jint res=DPGetActivationCommandData(env,cl,bArr,time,account);
+#endif	
+#endif
 	LOGGER("DPGetActivationCommandData(env,cl,bArr,,%" PRId64 ",%" PRId64 ")=%d\n",time,account,res);
 	return res;
 	}
@@ -259,10 +275,12 @@ LOGGER("asmworks=%d settings->data()->triedasm=%d\n", settings->data()->asmworks
 	const bool changelib=false;
 	LOGGER("not __arch64__\n");
 #endif
-static	const bool debug=!changelib&&!settings->data()->setpathworks;
+	LOGGER("setpathworks=%d libre3initialized=%d\n",globalsetpathworks,libre3initialized);
+static	const bool debug=!changelib&&!globalsetpathworks;
 
 	settings->setnodebug(false);
 	usedebug use(debug&&!libre3initialized,3);
+
 	int load=loadECDHCrypto(changelib);
 	LOGGER("%d processint(%d,%p,%p) process1==%p\n",load,i2,bArr,bArr2,process1);
 	jint res=process1(env,cl,i2,bArr,bArr2);
@@ -289,7 +307,7 @@ extern "C" JNIEXPORT jbyteArray JNICALL fromjava(processbar)(JNIEnv *env, jclass
 #else
 	const bool changelib=false;
 #endif
-static	const bool debug=!changelib&&!settings->data()->setpathworks;
+static	const bool debug=!changelib&&!globalsetpathworks;
 	LOGGER("processbar\n");
 	settings->setnodebug(false);
 	usedebug use(debug&&!libre3initialized,3);

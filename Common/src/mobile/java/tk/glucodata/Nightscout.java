@@ -158,6 +158,12 @@ public static void show(MainActivity context,View parent) {
 		
 
 	var Close=getbutton(context,R.string.closename);
+
+	var usexdripserver=Natives.getusexdripwebserver();
+	var server=getcheckbox(context,R.string.active,usexdripserver);
+	server.setOnCheckedChangeListener((buttonView, isChecked)-> {
+		  Natives.setusexdripwebserver(isChecked);
+		  });
 	boolean usessl=Natives.getuseSSL();
 	var sslbox=getcheckbox(context,R.string.usessl,usessl);
 	boolean[] enabled={true};
@@ -170,14 +176,12 @@ public static void show(MainActivity context,View parent) {
 				enabled[0]=true;
 				Toast.makeText(context, res, Toast.LENGTH_LONG).show();
 				}
+			else {
+				if(isChecked)
+					server.setChecked(true);
+				}
 			}
 		});
-
-	var usexdripserver=Natives.getusexdripwebserver();
-	var server=getcheckbox(context,R.string.active,usexdripserver);
-	server.setOnCheckedChangeListener((buttonView, isChecked)-> {
-		  Natives.setusexdripwebserver(isChecked);
-		  });
 	var layout=new Layout(context,(l,w,h)-> {
 		var width= GlucoseCurve.getwidth();
 		if(width>w)

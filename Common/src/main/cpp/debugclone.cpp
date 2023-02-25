@@ -156,6 +156,22 @@ saveone(open)
 saveone(access)
 saveone(stat)
 }
+const char *mymounts=nullptr;
+
+static bool mkmounts() {
+#include "mounts.h"
+	constexpr const char endmounts[]="/mounts";
+	constexpr const int endmountslen=sizeof(endmounts);
+	int fileslen=globalbasedir.size();
+	char *str=new char[fileslen+endmountslen];
+	memcpy(str,globalbasedir.data(),fileslen);
+	memcpy(str+fileslen,endmounts,endmountslen);
+	mymounts=str;
+	LOGGER("mymounts=%s\n",mymounts);
+	writeall(mymounts,mounts,sizeof(mounts));
+	LOGGER("after writeall\n");
+	return true;
+}
 
 #ifdef CHANGESTATUS
 extern "C" {
@@ -470,21 +486,16 @@ constexpr int binary_find(const T *start,size_t len, const T value, Compare comp
 
 //bool rewrong(span<string_view> files,char *name,pid_t pid,struct iovec *ioptr,struct user_pt_regs *regsptr) {
 bool rewrongval(span<const string_view> files,bool *useds,pid_t pid,Register &regi,char *name ,int regnr=1) {
-//	const char *name=(const char *) reg;
 	const string_view *names=files.data(); 
 	int len=files.size();
 	string_view zoek{name,0};
-//	if(binary_search(names,names+len, zoek, verg)) {
+	LOGGER("rewrongval %p \n",name);
+	LOGGER("rewrongval %s \n",name);
 	if(int pos=binary_find(names,len, zoek, verg);pos>=0) {
+		LOGGER("pos=%d\n",pos);
 		useds[pos]=true;
 		LOGGER("%s blocked\n",names[pos].data());
 		*name='\0';
-		/*
-		regi.set(regnr,(Register::type)doesnt);
-		regi.setall();
-//		ptrace(PTRACE_SETREGSET, pid, (void*)NT_PRSTATUS, ioptr);
-		LOGGER("%s blocked to %s",name,doesnt);
-*/
 		return true;
 		}
 	LOGGER("%s unblocked\n",name);
@@ -760,6 +771,11 @@ if(!regi.getall()) {
 		  	  static Register::type oldreg{};
 			char *name=(char *)reg1;
 			  if(reg1!=oldreg) {
+				  constexpr char mounts[]="/proc/self/mounts";
+				  if(change(name,mounts,mymounts,regi,openreg)) {
+				  	LOGGER("%s (%p)->%s\n",name,name,mymounts);
+					}
+				else    {
 #ifdef CHANGESTATUS
 				  constexpr char status[]="/proc/self/status";
 				  if(change(name,status,mystatus,regi,openreg)) {
@@ -773,6 +789,7 @@ if(!regi.getall()) {
 					if(rewrongval(hieropen,openused,pid,regi,name,openreg)) {
 						oldreg=(uintptr_t)name;
 						}
+				  }
 				  }
 				}
 			else {
@@ -947,15 +964,24 @@ return false;
 
 pid_t getdebugclone(const int version) {
 LOGGER("getdebugclone\n");
+#ifdef CHANGESTATUS
+     	  __attribute__((used))  static bool hasstatus=getstatus();     
+#endif
+     	  __attribute__((used))  static bool hasmounts=mkmounts();     
+
 	constexpr int STACK_SIZE (1024 * 1024);
 	char *vstack=getmem(STACK_SIZE);
-	if(!vstack)
+	if(!vstack) {
+		LOGGER("getmem(STACK_SIZE)==null\n");
 		return 0;
+		}
 	pid_t debugpid;
 	pid_t mytid=syscall(SYS_gettid);
 	commu com{.tid=mytid,.pid=static_cast<pid_t>(syscall(SYS_getpid)),.version=version};
 	static bool isbeforedebug=beforedebug();
-	if((debugpid=clone(debugger, vstack+STACK_SIZE, CLONE_VM|  CLONE_FILES | CLONE_FS | CLONE_IO|CLONE_UNTRACED| CLONE_CHILD_CLEARTID , reinterpret_cast<void*>(&com))) == -1) { 
+	LOGGER("before clone\n");
+//	if((debugpid=clone(debugger, vstack+STACK_SIZE, CLONE_VM|  CLONE_FILES | CLONE_FS | CLONE_IO|CLONE_UNTRACED| CLONE_CHILD_CLEARTID , reinterpret_cast<void*>(&com))) == -1) { 
+	if((debugpid=clone(debugger, vstack+STACK_SIZE, CLONE_VM|  CLONE_FILES | CLONE_FS | CLONE_IO|CLONE_UNTRACED , reinterpret_cast<void*>(&com))) == -1) { 
 //	if((debugpid=clone(debugger, vstack+STACK_SIZE, CLONE_VM|  CLONE_FILES | CLONE_FS |CLONE_UNTRACED| CLONE_CHILD_CLEARTID , reinterpret_cast<void*>(&com))) == -1) { 
 		lerror("failed to spawn child task");
 		return 0;
@@ -1192,18 +1218,11 @@ LOGGER("debugclone(%d,%d)\n",doalways,version);
      if(doalways||wrongfiles()) {
 	   if(doalways&&!initialized)
 		needsdebug(true);
-#ifdef CHANGESTATUS
-     	  __attribute__((used))  static bool hasstatus=getstatus();     
-#endif
 	if(!has_debugger) has_debugger=givedebugclone(version);
 	LOGGER("end debugclone\n");
 	return has_debugger;
 	    }
 
-#ifdef CHANGESTATUS
-	   else
- 		mystatus="/sdcard/mystatus";
-#endif
 	return 1;
     }
 

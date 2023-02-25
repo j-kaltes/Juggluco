@@ -177,6 +177,7 @@ public void onConfigurationChanged(Configuration newConfig) {
 		Applic.hour24 = DateFormat.is24HourFormat(this);
 		Log.i(LOG_ID,"Applic.onConfigurationChanged "+lang+" "+Applic.hour24);
 		Natives.setlocale(lang, Applic.hour24);
+//		Notify.mkpaint();
 		}
 } 
 @Override

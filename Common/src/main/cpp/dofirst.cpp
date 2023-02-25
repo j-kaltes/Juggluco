@@ -42,9 +42,9 @@ extern int setenv(const char *name, const char *value, int overwrite);
 
 void usepath(std::string_view libdirname,std::string_view filesdir) {
 #if defined(__aarch64__) 
-   if(settings->data()->triedasm&&!settings->data()->asmworks&& settings->data()->setpathworks) 
+   if(settings->data()->triedasm&&!settings->data()->asmworks&& globalsetpathworks) 
 #else
-   if(settings->data()->setpathworks) 
+   if(globalsetpathworks) 
 #endif
 	{
 	pathconcat bindir(filesdir, "bin");

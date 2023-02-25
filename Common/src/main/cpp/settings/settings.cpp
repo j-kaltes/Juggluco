@@ -302,14 +302,15 @@ void startjuggluco(std::string_view dirfiles,const char *country) {
         startsensors( );
         extern void startthreads() ;
         startthreads();
+	settings->data()->initVersion=16;
         }
 
 static void initinjuggluco(std::string_view dirfiles,const char *country) {
         extern bool networkpresent;
         networkpresent=true;
         mkdir(dirfiles.data(),0700);
-	pathconcat jugdir(dirfiles,"juggluco");
-	LOGGER("startjuggluco(%s %s)\n",jugdir.data(),__DATE__);
+	pathconcat &jugdir=*(new pathconcat(dirfiles,"juggluco"));
+	LOGGER("initjuggluco(%s %s)\n",jugdir.data(),__DATE__);
         mkdir(jugdir.data(),0700);
         extern int setfilesdir(const string_view filesdir,const char *country) ;
         setfilesdir(jugdir,country);
@@ -319,11 +320,13 @@ static void initinjuggluco(std::string_view dirfiles,const char *country) {
         startsensors( );
         extern void startthreads() ;
         startthreads();
+	settings->data()->initVersion=16;
         }
 
 void initjuggluco(std::string_view dirfiles) {
  	initinjuggluco(dirfiles,nullptr);
         extern void setupnetwork();
         setupnetwork();
-	settings->data()->initVersion=15;
 	}
+
+bool globalsetpathworks=false;

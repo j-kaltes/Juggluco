@@ -29,8 +29,15 @@
 #include "config.h"
 #include "inout.h"
 #include "countryunits.h"
+#if defined(JUGGLUCO_APP)&& !defined(WEAROS)
+#define MAKELABELS 1
+#endif
+
+#ifdef MAKELABELS
 #include "curve/jugglucotext.h"
+#endif
 #include "broadcasts.h"
+extern bool globalsetpathworks;
 extern int showui;
 struct Settings;
 extern Settings *settings;
@@ -86,7 +93,7 @@ struct Tings {
 	bool xinfuus:1;
 	bool levelleft:1;
 	bool nolog:1;
-	bool setpathworks:1;
+	bool REMOVEsetpathworks:1; //Can change, with Android upgrade or Juggluco version or compile options.
 	bool usegarmin:1;
 	bool usexdripwebserver:1;
 	bool useWearos:1;
@@ -215,9 +222,6 @@ float convertmult;
     */
 
 
-#if defined(JUGGLUCO_APP)&& !defined(WEAROS)
-#define MAKELABELS 1
-#endif
 int error=0;
 Settings(string_view base, string_view file,const char *country): Settings(pathconcat(base,file).data(),base.data(),country) {
 	}
@@ -355,8 +359,8 @@ Settings(const char *settingsname,const char *base,const char *country): Mmap(se
 				}
 				data()->triedasm=false;
 				data()->asmworks=false;
-				extern bool getpathworks();
-				data()->setpathworks=getpathworks();
+//				extern bool getpathworks();
+//				data()->setpathworks=getpathworks();
 				}
 
 				if(data()->libre2NUMiter<1) data()->libre2NUMiter=1;
@@ -377,6 +381,9 @@ Settings(const char *settingsname,const char *base,const char *country): Mmap(se
 	setconvert(country);
 
 	 showui=getui();
+
+				extern bool getpathworks();
+	globalsetpathworks=getpathworks();
 	/*
 	setnumalarm(0, .5,19*60+30,21*60);
 	setnumalarm(3, 7,21*60+30,23*60);

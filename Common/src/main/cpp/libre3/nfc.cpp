@@ -203,7 +203,7 @@ extern "C" JNIEXPORT jlong JNICALL fromjava(interpret3NFC2)(JNIEnv *env, jclass 
 	char devaddress[18];
 	mkdeviceaddressstr(devaddress,nfc->deviceAddress);
 	time_t acttime= nfc->activationTime;
-	if(acttime==0) {
+	if(acttime<=0) {
 		acttime=now;
 //		time(&acttime);
 		}

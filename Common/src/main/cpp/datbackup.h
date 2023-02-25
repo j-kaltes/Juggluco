@@ -652,6 +652,7 @@ int changehost(int index,JNIEnv *env,jobjectArray jnames,int nr,bool detect,stri
 		getupdatedata()->allhosts[index].sendpassive=dontopen;
 		}
 	else {
+		tohost=0;
 		getupdatedata()->allhosts[index].sendpassive=false;
 		int sendindex=getupdatedata()->allhosts[index].index;
 		if(!newhost) {

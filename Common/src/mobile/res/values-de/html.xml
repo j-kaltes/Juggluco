@@ -2263,11 +2263,11 @@ Apps, die zur Nutzung des xDrip-Webservers erstellt wurden, ist
 relativ einfach. Aktivieren Sie einfach <i>aktiv</i>. Danach können
 sie Glukose von localhost auf Port 17580 empfangen.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><span lang="de-DE">Auch
-einige Nightscout</span><span lang="de-DE"> Apps</span><span lang="de-DE">
-können davon Gebrauch machen. xDrip, Diabox und eine
+einige Nightscout</span> <span lang="de-DE">Apps</span> <span lang="de-DE">können
+davon Gebrauch machen. xDrip, Diabox und eine
 <a href="https://github.com/dabear/FloatingGlucose/releases">Windows-Floating-Glucose-</a>
 App können mit http verwendet werden, wenn „</span><span lang="de-DE"><i>Nur
-lokal</i></span><span lang="de-DE">“ nicht eingestellt ist.</span></p>
+lokal</i></span>“ <span lang="de-DE">nicht eingestellt ist.</span></p>
 <p style="line-height: 100%; margin-bottom: 0in"><span lang="de-DE">Wenn
 Sie über das Internet auf Juggluco zugreifen möchten, müssen Sie
 einen Port von Ihrem Modem weiterleiten. Siehe
@@ -2291,9 +2291,9 @@ Jahr kaufen (zum Beispiel von <a href="https://www.strato.nl/domeinnaam">https:/
 Sie die Schlüsseldateien von einer SSL-Autorität erhalten haben,
 müssen Sie diese an Juggluco weitergeben. Der Private Key kann durch
 Drücken von „</span><strong><span lang="de-DE"><i><span style="font-weight: normal">Privater
-Schlüssel</span></i></span></strong><span lang="de-DE">“
-eingelesen werden, die Full Chain durch Drücken von „</span><em><span lang="de-DE">Full
-Chain</span></em><span lang="de-DE">“.</span></p>
+Schlüssel</span></i></span></strong>“ <span lang="de-DE">eingelesen
+werden, die Full Chain durch Drücken von „</span><em><span lang="de-DE">Full
+Chain</span></em>“<span lang="de-DE">.</span></p>
 <p style="line-height: 100%; margin-bottom: 0in">Von ZeroSSL.com habe
 ich drei Dateien erhalten: private.key, certificate.crt und
 ca_bundle.crt.</p>
@@ -2310,18 +2310,20 @@ verketten.</p>
 Windows-cmd.com:</p>
 <pre style="margin-bottom: 0.2in">copy certificate.crt + ca_bundle.crt fullchain.pem</pre><p style="line-height: 100%; margin-bottom: 0in">
 Windows-Powershell:</p>
-<p>
-cat certificate.crt &gt; fullchain.pem<br>
-cat ca_bundle.crt &gt;&gt; fullchain.pem</p><p style="line-height: 100%; margin-bottom: 0in">
-<span lang="de-DE">Nachdem ich Certbot verwendet hatte, fand ich den
-privaten Schlüssel in /etc/letsencrypt/live/myhostname/privkey.pem</span><span lang="de-DE">
-</span><span lang="de-DE">und die vollständige Kette in
+<p>cat certificate.crt &gt; fullchain.pem<br/>
+cat ca_bundle.crt &gt;&gt;
+fullchain.pem</p>
+<p style="line-height: 100%; margin-bottom: 0in"><span lang="de-DE">Nachdem
+ich Certbot verwendet hatte, fand ich den privaten Schlüssel in
+/etc/letsencrypt/live/myhostname/privkey.pem</span> <span lang="de-DE">und
+die vollständige Kette in
 /etc/letsencrypt/live/myhostname/fullchain.pem. &quot;</span><em><span lang="de-DE">myhostname</span></em><span lang="de-DE">&quot;
 ist der von mir verwendete Hostname.</span></p>
 <p style="line-height: 100%; margin-bottom: 0in"><span lang="de-DE">Wenn
 Sie nur Glukosewerte von einem Android zum anderen senden möchten,
-können Sie besser die </span><a href="https://www.juggluco.nl/Juggluco/mgdL/index.html#mirror"><span lang="de-DE">Klonf</span><span lang="de-DE">unktion</span></a><span lang="de-DE">
-von Juggluco verwenden (linkes mittleres Menü -&gt; </span><span lang="de-DE">Klon</span><span lang="de-DE">).</span></p>
+können Sie besser die <a href="https://www.juggluco.nl/Juggluco/mgdL/index.html#mirror">Klonfunktion</a></span>
+<span lang="de-DE">von Juggluco verwenden (linkes mittleres Menü -&gt;
+Klon).</span></p>
 <p style="line-height: 100%; margin-bottom: 0in">Android Aps und
 Nsclient funktionieren nicht als Follower von Juggluco, aber Sie
 können ihnen Glukosewerte mit der xDrip-Broadcast in Juggluco senden
@@ -2329,21 +2331,29 @@ können ihnen Glukosewerte mit der xDrip-Broadcast in Juggluco senden
 <p style="line-height: 100%; margin-bottom: 0in"><span lang="de-DE">Sie
 benötigen SSL für Diabetes:M, <a href="https://play.google.com/store/apps/details?id=se.cornixit.nightwatch">Nightwatch</a>
 und <a href="https://slingithub.github.io/CheckmateWeb">Checkmate</a>.</span></p>
-<p style="line-height: 100%; margin-bottom: 0in"><b>Geheimnis:</b>
+<p style="line-height: 100%; margin-bottom: 0in">Der Webserver kann
+auch auf einem Linux-Rechner betrieben werden. Es erhält seine Daten
+von einer Klonverbindung von Juggluco, die mit dem Sensor verbunden
+ist: <a href="https://www.juggluco.nl/Juggluco/cmdline">https://www.juggluco.nl/Juggluco/cmdline</a>.
+Ein anderes Telefon kann sich über eine Klonverbindung oder als
+Nightscout-Follower (z. B. auf einem iPhone) mit diesem Server
+verbinden. Wenn es eine Nightscout-App gibt, die mit diesem Webserver
+nicht funktioniert, teilen Sie es mir bitte mit. Vielleicht kann es
+mit ein paar Änderungen zum Laufen gebracht werden.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>api_secret</b><b>:</b>
 Geben Sie an, dass Follower das http-Header-Element api api_secret
 auf diesen Wert setzen sollen. Nicht alle Nightscout-Apps haben eine
 Option zum Setzen von api_secret, das bedeutet, dass Sie sie nicht
 verwenden können, wenn Secret auf einen Wert gesetzt ist. api_secret
 unterscheidet sich von einem Nightscout-Token.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><strong><span lang="de-DE">Sichtbar</span></strong><span lang="de-DE">:
-</span><span lang="de-DE">Geheimnis</span><span lang="de-DE">
-sichtbar machen.</span></p>
+Geheimnis</span> <span lang="de-DE">sichtbar machen.</span></p>
 <p style="line-height: 100%; margin-bottom: 0in"><strong><span lang="de-DE">Port</span></strong><span lang="de-DE">:
 Geben Sie den Netzwerkport an, der verwendet wird, um diesen Server
 zu kontaktieren. Der Standardwert ist 17581.</span></p>
 <p style="line-height: 100%; margin-bottom: 0in"><strong><span lang="de-DE">Speichern</span></strong><span lang="de-DE">:
-Änderungen von </span><strong><span lang="de-DE"><span style="font-weight: normal">Geheimnis</span></span></strong><span lang="de-DE"><span style="font-weight: normal">
-</span></span><span lang="de-DE">oder Port speichern.</span></p>
+Änderungen von </span><strong><span lang="de-DE"><span style="font-weight: normal">Geheimnis</span></span></strong>
+<span lang="de-DE">oder Port speichern.</span></p>
 <p style="line-height: 100%; margin-bottom: 0in"><strong><span lang="de-DE">SSL
 verwenden</span></strong><span lang="de-DE">: Verwenden Sie SSL
 (https). Für SSL müssen Sie einen privaten Schlüssel und eine
@@ -2352,10 +2362,9 @@ dieses Dienstes verwendet wird.</span></p>
 <p style="line-height: 100%; margin-bottom: 0in"><strong><span lang="de-DE">Privater
 Schlüssel</span></strong><span lang="de-DE">: Wählen Sie eine Datei
 aus, die den privaten Schlüssel enthält. Siehe oben.</span></p>
-<p style="line-height: 100%; margin-bottom: 0in"><strong><span lang="de-DE"><span lang="de-DE">Full
-Ch</span></span></strong><strong><span lang="de-DE"><span lang="de-DE">ain</span></span></strong><span lang="de-DE">:
-Wählen Sie eine Datei aus, die die vollständige Kette enthält,
-siehe oben.</span></p>
+<p style="line-height: 100%; margin-bottom: 0in"><strong><span lang="de-DE">Full
+Chain</span></strong><span lang="de-DE">: Wählen Sie eine Datei aus,
+die die vollständige Kette enthält, siehe oben.</span></p>
 <p style="line-height: 100%; margin-bottom: 0in"><strong><span lang="de-DE">Aktiv</span></strong><span lang="de-DE">:
 Webserver läuft.</span></p>
 <p style="line-height: 100%; margin-bottom: 0in"><strong><span lang="de-DE">Nur

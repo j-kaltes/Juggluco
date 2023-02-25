@@ -50,6 +50,7 @@ import static tk.glucodata.Natives.showbytes;
 
 
 public class Libre3GattCallback extends SuperGattCallback {
+	static final private boolean doTEST=Log.doLog;
 	static private final String LOG_ID = "Libre3GattCallback";
 	private boolean shouldenablegattCharCommandResponse = false;
 	private boolean isServicesDiscovered = false;
@@ -123,13 +124,13 @@ void free() {
 	@SuppressLint("MissingPermission")
 	@Override 
 	public void onConnectionStateChange(BluetoothGatt bluetoothGatt, int status, int newState) {
-		if (!tk.glucodata.Applic.isRelease) {
+		if(tk.glucodata.Log.doLog) {
                         String[] state = {"DISCONNECTED", "CONNECTING", "CONNECTED", "DISCONNECTING"};
                         Log.i(LOG_ID, SerialNumber + " onConnectionStateChange, status:" + status + ", state: " + (newState < state.length ? state[newState] : newState));
                         }
 	     long tim = System.currentTimeMillis();
 		if(newState == STATE_CONNECTED) {
-		    setpriority();
+		    setpriority(bluetoothGatt);
 		      constatchange[0] = tim;
 			//wasConnected = true;
 			if (!isServicesDiscovered||!getservices()) {
@@ -377,6 +378,7 @@ private boolean setCertificate65() {
 	byte[]	patchEphemeral=rdtData;
 	if(generateKAuth(patchEphemeral)) //TODO failure?
 		return sendSecurityCommand((byte)17);
+	Log.e(LOG_ID, "generateKAuth(patchEphemeral) failed");
 	return false;
 	}
 private void receivedCERT_DATA() {
@@ -602,7 +604,8 @@ private void realdisconnected(int status) {
 	}
 
 private void disconnected(int status) {
-	realdisconnected(status); //TODO remove this
+	Log.i(LOG_ID,"disconnected("+status+")");
+//	realdisconnected(status); //TODO remove this
 	}
 
 private  void  setsuccess(long timmsec,String str) {
@@ -1117,13 +1120,14 @@ private void receivedpatchstatus(byte[] value) {
 		int backFillStartHistoricLifeCount= ((backFillStartLifeCount-16)/5)*5;
 		fillHistory(backFillStartHistoricLifeCount);
 		fillClinical(backFillStartLifeCount);
-		
+	if(!doTEST) {	
 		int getevent=index+1;
 		if(getevent>lastEventReceived) {
 	//		var command=new byte[7]; DPGetEventLogCommand(lastEventReceived,command);
 			byte[] command=Natives.libre3EventLogControl(lastEventReceived);
 			qsendcommand(command);
-			}
+			} 
+		}
 			/*
 		if(firstConnect) {
 			byte command[]={6,0,0,0,0,0,0};

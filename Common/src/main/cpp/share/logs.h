@@ -102,8 +102,10 @@ inline void lerror(const char *str) {
 	fprintf(stderr,"%s: %s\n",(char *)str,strerror(waser));
 	}
 inline void flerror(const char* fmt, ...){
+#ifndef NOLOG
 	int waser=errno;
-	const int maxbuf=80;
+#endif
+	const int maxbuf=160;
 	char buf[maxbuf];
         va_list args;
         va_start(args, fmt);

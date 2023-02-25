@@ -18,7 +18,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name="tk.glucodata.MainActivity"
-            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|uiMode"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|uiMode|fontScale|locale"
 	    android:windowSoftInputMode="stateHidden|adjustPan"
             android:label="@string/app_name"
             android:launchMode="singleTask"
@@ -95,7 +95,7 @@
 <!--<uses-permission-sdk-23 android:name="android.permission.ACCESS_NOTIFICATION_POLICY"/>-->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/> 
 
- <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" android:maxSdkVersion="32" />
+ <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
  <uses-permission android:name="android.permission.USE_EXACT_ALARM"/>
 
 <uses-permission android:name="android.permission.WAKE_LOCK" /> 

@@ -237,7 +237,7 @@
 <string name="noaccountidspecified">"No account id specified "</string>
 <string name="wrongformat">"Wrong format "</string>
 <string name="noapplisteningto">"No app listening to "</string>
-<string name="secret">Secret</string>
+<string name="secret">api_secret</string>
 <string name="withoutsaving">Leave without saving?</string>
 <string name="active">Active</string>
 <string name="usessl">Use SSL</string>

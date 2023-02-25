@@ -168,10 +168,10 @@ static LibreHist  librehistory(SensorGlucoseData *sensdata,uint32_t starttime,ui
 		LOGGER("no hist: streamlen=%d\n",streamlen);
 		return {.notsend=streamlen};
 		}
-
-	const ScanData *laststream=&stream[streamlen-1];
+	const int lastpos= streamlen-1;
+	const ScanData *laststream=&stream[lastpos];
 	const ScanData *firststream=&stream[notsend];
-	while(!laststream->valid()) {
+	while(!laststream->valid(lastpos)) {
 		if(--laststream<firststream) {
 			LOGGER("no hist: no data\n");
 			return {.notsend=streamlen};
@@ -693,7 +693,6 @@ static bool putsensor(bool libre3,const char *sensorid) {
 	JNIEnv *env=getenv();
 	static jmethodID  putsensor=env->GetStaticMethodID(libreviewclass,"putsensor","(Z[B)Z");
 	jbyteArray message=libre3?getlibre3puttext(env, sensorid):getlibre2puttext(env, sensorid);
-	//TODO: uncomment
 	bool res=env->CallStaticBooleanMethod(libreviewclass,putsensor,libre3,message); 
 	env->DeleteLocalRef(message);
 	return res;
