@@ -95,7 +95,6 @@ public:
 	Sensoren(string_view basedirin) : inbasedir(basedirin), mapfile{inbasedir, "sensors.dat"},
 									  map(mapfile), maxhist(map.data()?(last() + 2):100),
 									  hist(new SensorGlucoseData *[maxhist]()) {
-
 	}
 //static inline constexpr const int librekeepsecs=89*24*60*60;
 	void setlibre3nums() {

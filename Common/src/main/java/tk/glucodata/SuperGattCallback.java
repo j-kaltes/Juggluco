@@ -84,6 +84,14 @@ public void disconnect() {
 	if(thegatt!=null)
 		thegatt.disconnect();
 	}
+public void reconnect(long old) {
+	if(charcha[1]<old)  {
+		final var thegatt= mBluetoothGatt;
+		if(thegatt!=null) 
+			thegatt.disconnect();
+		connectDevice(0);
+		}
+	}
 
 	long[] constatchange = {0L, 0L};
 	int constatstatus = -1;

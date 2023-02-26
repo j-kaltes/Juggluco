@@ -1,5 +1,4 @@
-023-02-24-04:41:56 25193 E/MyGattCallback onConnectionStateChange java.lang.NullPointerException: Attempt to invoke virtual method 'void m40.f(r70)' on a null object reference
-        at pw.onConnectionStateChange(Unknown Source:61)
+Watch server gives last sensor, not last data. SOmetimes only old data is shown, although new data is available.
 
 
 

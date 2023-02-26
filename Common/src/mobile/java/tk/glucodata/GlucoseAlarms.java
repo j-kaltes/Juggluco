@@ -32,7 +32,7 @@ public GlucoseAlarms(Application context) {
 	}
 
 public	void handlealarm() {
-		SensorBluetooth.disconnectall();
+		SensorBluetooth.reconnectall();
 		final var view=Floating.floatview;
 		if(view!=null) {
 			view.postInvalidate();

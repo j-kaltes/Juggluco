@@ -65,13 +65,15 @@ public static void startscan() {
     private BroadcastReceiver mBluetoothAdapterReceiver =null; ;
 static    private BluetoothManager mBluetoothManager=null;
 
-static public void disconnectall() {
-   var wasblue=blueone;
-   if(wasblue !=null)
-        for(var cb: wasblue.gattcallbacks)    
-		cb.disconnect();
-	}
-
+static public void reconnectall() {
+   final var wasblue=blueone;
+   if(wasblue !=null) {
+   	final var old=System.currentTimeMillis()-1000L*59*3;
+        for(var cb: wasblue.gattcallbacks)     {
+		cb.reconnect(old);
+		}
+	    }
+   }
 
     public boolean connectToActiveDevice(long delayMillis) {
     Log.i(LOG_ID, "connectToActiveDevice("+delayMillis+")");

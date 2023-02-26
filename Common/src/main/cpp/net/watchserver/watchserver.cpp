@@ -370,8 +370,10 @@ static bool givestatus(recdata *outdata) {
 	auto thigh=gconvert(settings->targethigh());
 	auto tlow=gconvert(settings->targetlow());
 	auto halarm=gconvert(settings->data()->ahigh);
+
 	auto lowalarm=gconvert(settings->data()->alow);
-	int alllen=snprintf(start,len,statusformat,tmbuf.tm_year+1900,tmbuf.tm_mon+1,tmbuf.tm_mday, tmbuf.tm_hour, tmbuf.tm_min,tmbuf.tm_sec,0,tim*1000L,settings->getunitlabel().data(),halarm,thigh,tlow,lowalarm);
+	const char *unitlabel=settings->getunitlabel().data();
+	int alllen=snprintf(start,len,statusformat,tmbuf.tm_year+1900,tmbuf.tm_mon+1,tmbuf.tm_mday, tmbuf.tm_hour, tmbuf.tm_min,tmbuf.tm_sec,0,tim*1000L,unitlabel,halarm,thigh,tlow,lowalarm);
 	mkheader(start,start+alllen,false,outdata); 
 	return true;
 	}
@@ -412,13 +414,24 @@ bool getitems(char *&outiter,const int  datnr,uint32_t newer,uint32_t older,bool
 				return true;
 			return false;
 		}
-
-		const char *sensorname= sens->shortsensorname()->data();
-		LOGGER("getPollsensor(%d) %s pollcount=%d\n",sensorid,sensorname,sens->pollcount());
-		const std::span<const ScanData> gdata=sens->getPolldata();
-		const ScanData *first=&gdata.begin()[0];
+		std::span<const ScanData> gdata=sens->getPolldata();
 		const ScanData *iter=&gdata.end()[-1];
+		--sensorid;
+		if(const SensorGlucoseData *sens2=getPollsensor(sensorid)) {
+			std::span<const ScanData> gdata2=sens2->getPolldata();
+			const ScanData *last=&gdata2.end()[-1];
+			if(last->t>iter->t) {
+				sens=sens2;
+				iter=last;
+				gdata=gdata2;
+				}
+			}
+		const char *sensorname= sens->shortsensorname()->data();
+		LOGGER("getPollsensor(%d) %s pollcount=%d\n",sensorid+1,sensorname,sens->pollcount());
+		const ScanData *first=&gdata.begin()[0];
+
 		const time_t starttime= sens->getstarttime();
+
 		for(;datit<datnr;datit++,iter--) {
 			while(true) {
 				if(iter<first) {

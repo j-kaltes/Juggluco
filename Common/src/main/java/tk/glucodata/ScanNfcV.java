@@ -184,11 +184,23 @@ static public void scan(GlucoseCurve curve,Tag tag) {
 				}
 			else {
 			   if(libreVersion == 3) {
-				  	if(streamptr==1L) {
+			   	switch((int)(streamptr&0xFFFFFFF)) {
+					case 1: {
 						Log.i(LOG_ID,"streamptr==1");
 						ret=0xFB;
-					 	}
-					  else {
+					 	};break;
+					case 5: {
+						Log.i(LOG_ID,"terminated");
+						ret=13;
+						break;
+						}
+					case 6: {
+						Log.i(LOG_ID,"ended");
+						ret=4;
+						break;
+						}
+					default: {
+
 						 if(streamptr>=0L&&streamptr<4L) {
 						 	Log.i(LOG_ID,"p<streamptr<4");
 							  ret=0xFA;
@@ -209,6 +221,7 @@ static public void scan(GlucoseCurve curve,Tag tag) {
 								}
 							}
 						}
+					}
 					}
 				else {
 			 		Log.i(LOG_ID,"libreVersion!=3");
@@ -241,7 +254,6 @@ static public void scan(GlucoseCurve curve,Tag tag) {
 					Log.format("glucose=%.1f\n",(float)value/18.0f);
 					ret = uit >> 16;
 					if(newdevice!=null&& Arrays.equals(newdevice,uid)&& Applic.app.canusebluetooth() ) {
-			//		if(newdevice!=null&& Arrays.equals(newdevice,uid))
 						if(value!=0|| (ret&0xFF)==5||(ret&0xFF)==7) {
 							if(SensorBluetooth.resetDevice(Natives.getserial(uid,info)))
 								askpermission=true;

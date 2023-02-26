@@ -190,8 +190,13 @@ extern "C" JNIEXPORT jlong JNICALL fromjava(interpret3NFC2)(JNIEnv *env, jclass 
 				LOGGER("NFC: error %x\n",nfc->error);
 				if(nfc->error==0xb1)
 					return 1LL;
-				else
-					return 3LL;
+				else  {
+					switch(first.nfc.state) {
+						case 8: return 5LL;
+						case 6: return 6LL;
+						default: return 3LL;
+						}
+					}
 				}
 			LOGGER("NFC: error regn %hd instead of %hd\n",nfc->recogn,error);
 			return 0LL;	

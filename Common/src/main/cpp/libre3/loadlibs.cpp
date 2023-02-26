@@ -245,18 +245,13 @@ extern "C" JNIEXPORT jint JNICALL fromjava(startTimeIDsum)(JNIEnv *env, jclass c
 	LOGGER("DPGetActivationCommandData(env,cl,bArr,%" PRId64 ",%" PRId64 ")\n",time,account);
 
 #if defined(__arm__) 
-	const jlong other=1799501362L+time;
+	const jlong other=time;
 	jint res=DPGetActivationCommandData(env,cl,bArr,account,other); //TODO: what does time?
 	//SOMEHOW the time ended up in the account position and in the time sits something unpredictable. 
 	//By putting account in the time, you can still transfer it accross reinstalls; I can scan again with Juggluco. 
 	// The Libre3 app start counting down again. Because the activition time was said to be in 2073
 #else
-#ifndef NDEBUG
-	const jlong other=1799501362L+time;
-	jint res=DPGetActivationCommandData(env,cl,bArr,other,account);
-#else
 	jint res=DPGetActivationCommandData(env,cl,bArr,time,account);
-#endif	
 #endif
 	LOGGER("DPGetActivationCommandData(env,cl,bArr,,%" PRId64 ",%" PRId64 ")=%d\n",time,account,res);
 	return res;

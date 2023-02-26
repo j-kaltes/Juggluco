@@ -2261,7 +2261,8 @@ verwendet werden.</p>
 <p style="line-height: 100%; margin-bottom: 0in">Die Verwendung von
 Apps, die zur Nutzung des xDrip-Webservers erstellt wurden, ist
 relativ einfach. Aktivieren Sie einfach <i>aktiv</i>. Danach können
-sie Glukose von localhost auf Port 17580 empfangen.</p>
+sie Glukose von localhost auf Port 17580 empfangen.
+Nightscout-Server-URL: http://127.0.0.1:17580.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><span lang="de-DE">Auch
 einige Nightscout</span> <span lang="de-DE">Apps</span> <span lang="de-DE">können
 davon Gebrauch machen. xDrip, Diabox und eine
@@ -2330,7 +2331,16 @@ können ihnen Glukosewerte mit der xDrip-Broadcast in Juggluco senden
 (linkes Menü-&gt; Einstellungen-&gt; xDrip Broadcast).</p>
 <p style="line-height: 100%; margin-bottom: 0in"><span lang="de-DE">Sie
 benötigen SSL für Diabetes:M, <a href="https://play.google.com/store/apps/details?id=se.cornixit.nightwatch">Nightwatch</a>
-und <a href="https://slingithub.github.io/CheckmateWeb">Checkmate</a>.</span></p>
+und <a href="https://slingithub.github.io/CheckmateWeb">Checkmate</a>.
+Geben Sie als Nightscout-Server-URL an: </span>
+</p><p>
+<i>https://hostname:port</i>
+</p><p>
+<i>hostname</i></span>
+<span lang="de-DE">ist der Hostname des authentifizierten Schlüssels,
+den Sie Juggluco gegeben haben, </span><span lang="de-DE"><i>port</i></span>
+<span lang="de-DE">ist der Port, den Sie in diesem Bildschirm
+angegeben haben (Standard: 17581).</span></p>
 <p style="line-height: 100%; margin-bottom: 0in">Der Webserver kann
 auch auf einem Linux-Rechner betrieben werden. Es erhält seine Daten
 von einer Klonverbindung von Juggluco, die mit dem Sensor verbunden
@@ -2340,7 +2350,7 @@ Nightscout-Follower (z. B. auf einem iPhone) mit diesem Server
 verbinden. Wenn es eine Nightscout-App gibt, die mit diesem Webserver
 nicht funktioniert, teilen Sie es mir bitte mit. Vielleicht kann es
 mit ein paar Änderungen zum Laufen gebracht werden.</p>
-<p style="line-height: 100%; margin-bottom: 0in"><b>api_secret</b><b>:</b>
+<p style="line-height: 100%; margin-bottom: 0in"><b>api_secret:</b>
 Geben Sie an, dass Follower das http-Header-Element api api_secret
 auf diesen Wert setzen sollen. Nicht alle Nightscout-Apps haben eine
 Option zum Setzen von api_secret, das bedeutet, dass Sie sie nicht

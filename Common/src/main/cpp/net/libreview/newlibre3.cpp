@@ -370,9 +370,10 @@ constexpr const int  bytesnumbers=0;
 	if(bytesnumbers==0&&inhistory<=0) {
 		if(lastsensor==-1)
 			return true;
+			/*
 		if(!sensors->gethist(lastsensor)->isLibre3()) {
 			settings->data()->haslibre3=sendnumbers3();
-			}
+			} */
 		return true;
 		}
 	lastsensor=lastlibre3;

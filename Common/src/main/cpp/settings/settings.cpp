@@ -79,6 +79,7 @@ extern std::string_view libdirname;
 #endif
 	if(settings->data()->crashed)
 		settings->setnodebug(false);
+
 	return 0;
 	}
 int startmeals() {

@@ -444,13 +444,14 @@ constexpr const int  bytesnumbers=0;
 #endif
 	if(!histtotal&&!bytesnumbers) {
 		LOGGER("libreview not needed\n");
+		/*
 		if(sensints.size()>0) {
 			const int index=sensints[0];
 			const SensorGlucoseData *sensdata=sensors->gethist(index);
 			if(sensdata->isLibre3()) {
 				settings->data()->haslibre2=!settings->data()->libre3nums;
 				}
-			}
+			} */
 		return true;
 		}
 	if(histtotal) {
@@ -622,6 +623,7 @@ time_t tim=scantime;
 		if(histtotal) {
 			if(last>=0) {
 				SensorGlucoseData *previewsens=nullptr;
+				int lastlibre2=-1;
 				for(int i=last;i>=0;i--) {
 					const int index=sensints[i];
 					SensorGlucoseData *sensdata=sensors->gethist(index);
@@ -634,6 +636,7 @@ time_t tim=scantime;
 								}
 							}
 						previewsens=sensdata;
+						lastlibre2=i;
 						}
 					}
 					
@@ -648,8 +651,9 @@ time_t tim=scantime;
 						break;
 						}
 					}
-				const int stillused=sensints[0];
-				settings->data()->startlibreview=stillused;
+				if(lastlibre2>=0) {
+					settings->data()->startlibreview=sensints[lastlibre2];
+					}
 				}
 			}
 		}

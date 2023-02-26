@@ -41,6 +41,7 @@ x86_64	rax		rax	rdi	rsi	rdx	r10	r8	r9
 #undef _GNU_SOURCE
 #define _GNU_SOURCE
 #include <iostream>
+
 #include <sys/uio.h>
 #include <sys/ptrace.h>
 #include <sys/types.h>
@@ -158,6 +159,7 @@ saveone(stat)
 }
 const char *mymounts=nullptr;
 
+
 static bool mkmounts() {
 #include "mounts.h"
 	constexpr const char endmounts[]="/mounts";
@@ -167,9 +169,16 @@ static bool mkmounts() {
 	memcpy(str,globalbasedir.data(),fileslen);
 	memcpy(str+fileslen,endmounts,endmountslen);
 	mymounts=str;
-	LOGGER("mymounts=%s\n",mymounts);
+	{struct stat stbuf;
+	if(!stat(mymounts, &stbuf)) {
+		if(stbuf.st_size==sizeof(mounts)) {
+			LOGGER("mymounts=%s already present\n",mymounts);
+			return true;
+			}
+		}
+	}
 	writeall(mymounts,mounts,sizeof(mounts));
-	LOGGER("after writeall\n");
+	LOGGER("mymounts=%s writeall\n",mymounts);
 	return true;
 }
 
@@ -489,8 +498,7 @@ bool rewrongval(span<const string_view> files,bool *useds,pid_t pid,Register &re
 	const string_view *names=files.data(); 
 	int len=files.size();
 	string_view zoek{name,0};
-	LOGGER("rewrongval %p \n",name);
-	LOGGER("rewrongval %s \n",name);
+	LOGGER("rewrongval %p %s \n",name,name);
 	if(int pos=binary_find(names,len, zoek, verg);pos>=0) {
 		LOGGER("pos=%d\n",pos);
 		useds[pos]=true;
