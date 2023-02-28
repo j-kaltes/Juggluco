@@ -1515,7 +1515,7 @@ all data to be sent to Libreview. Like the Librelnk app, it sends
 data from the last 89 days to Libreview. What is necessary is that
 Juggluco is constantly connected to a Freestyle Libre 2 sensor via
 Bluetooth. For Freestyle Libre 3 sensors the 5 minutes history data
-is used, so that they all previous values are sent to Libreview. 
+is used, so that all previous values are sent to Libreview. 
 </p>
 <p style="line-height: 100%; margin-bottom: 0in"><span lang="en-US">To
 make use of this service, you need to create a Libreview account at
@@ -1524,8 +1524,7 @@ and specify its E-Mail address and password here.</span> <span lang="en-US">Don\
 send data from the same period multiple times to the same Libreview
 account (for example from the Librelink app and Juggluco). You can
 delete existing devices in Libreview in Account Settings-&gt;My
-devices or you can take a new Libreview account.</span> 
-</p>
+devices or you can take a new Libreview account.</span></p>
 <p style="line-height: 100%; margin-bottom: 0in"><span lang="en-US">To
 turn it on, you also need to check &quot;</span><span lang="en-US"><i><b>Send
 to libreview</b></i></span><span lang="en-US"><i>&quot;</i></span><span lang="en-US">.
@@ -1663,9 +1662,9 @@ your finger and remove it by long pressing it. When touchable is
 unset, goes touch input to the window beneath the floating glucose,
 so you can use the app under the floating glucose. You can also make
 the floating glucose untouchable by <b>double tapping</b> it.</p>
-<p>After typing the <b>font size</b>, you have to press the “<i>Enter”
-</i><span style="font-variant: normal"><span style="font-style: normal">or</span></span>
-“<i>Done”</i> button of the soft keyboard.</p>
+<p>After typing the <b>font size</b>, you have to press the “<i>Enter”,
+</i>“<i>Done”</i> or &quot;✓&quot; -button on the soft
+keyboard.</p>
 <p>You can turn on and off Floating glucose with the “<i>Floating
 glucose</i>” checkbox in settings. You can also turn off “Floating
 glucose” by <b>long pressing</b> on the floating glucose value. For

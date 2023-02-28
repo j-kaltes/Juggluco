@@ -48,9 +48,20 @@ bool iswatch=false;
 Meal *meals=nullptr;
 #endif
 
+  #include <signal.h>
 #ifndef NOLOG 
 extern bool dolog;
+void handlepipe(int sig) {
+	const int waserrno=errno;
+	LOGGER("SIGPIPE happened\n");
+	errno=waserrno;
+	}
+#else
+#define handlepipe SIG_IGN
 #endif
+void	generalsettings() {
+	signal(SIGPIPE,handlepipe);
+	}
 int setfilesdir(const string_view filesdir,const char *country) {
 	LOGGER("setfilesdir %s %s\n",filesdir.data(),country?country:"null");
 	globalbasedir=filesdir;
@@ -79,7 +90,7 @@ extern std::string_view libdirname;
 #endif
 	if(settings->data()->crashed)
 		settings->setnodebug(false);
-
+	generalsettings();
 	return 0;
 	}
 int startmeals() {
@@ -330,4 +341,3 @@ void initjuggluco(std::string_view dirfiles) {
         setupnetwork();
 	}
 
-bool globalsetpathworks=false;

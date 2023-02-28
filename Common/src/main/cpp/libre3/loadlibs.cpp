@@ -1,3 +1,4 @@
+#ifdef LIBRE3
 /*      This file is part of Juggluco, an Android app to receive and display         */
 /*      glucose values from Freestyle Libre 2 and 3 sensors.                         */
 /*                                                                                   */
@@ -17,7 +18,6 @@
 /*      along with Juggluco. If not, see <https://www.gnu.org/licenses/>.            */
 /*                                                                                   */
 /*      Fri Jan 27 15:22:01 CET 2023                                                 */
-
 
 #include <jni.h>
 #include <string.h>
@@ -260,6 +260,7 @@ extern "C" JNIEXPORT jint JNICALL fromjava(startTimeIDsum)(JNIEnv *env, jclass c
 extern thread_local pid_t has_debugger;
 extern bool libre3initialized;
 bool libre3initialized=false;
+extern bool globalsetpathworks;
 extern bool wrongfiles() ;
 extern "C" JNIEXPORT jint JNICALL fromjava(processint)(JNIEnv *env, jclass cl,jint i2, jbyteArray bArr, jbyteArray bArr2) {
 #if defined(__aarch64__) 
@@ -328,3 +329,4 @@ getchar();
   jint res=fromjava(processint)(& theenv,nullptr,4,(jbyteArray)&anar,nullptr);
   }
 */
+#endif

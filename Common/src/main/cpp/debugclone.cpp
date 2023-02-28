@@ -103,7 +103,9 @@ bool inited=initstr();
 
 #include "strconcat.h"
 extern std::string_view libdirname;
-strconcat libre3lib;
+#ifdef LIBRE3
+static strconcat libre3lib;
+#endif
 //strconcat libre3lib("",R"(package:)",libdirname,"/libinit.so\n");
 using namespace std;
 #include "logs.h"
@@ -583,16 +585,19 @@ if(waitpid(pid, 0, 0)==-1) {
 LOGGER("voor notify\n");
 notify(com);
 LOGGER("na notify\n");
+#ifdef LIBRE3
 const int version=com->version;
-
 bool followthreads=version==3&&wrongfiles();
+#endif
 //getchar();
 #ifndef __NR_open
 constexpr const
 #endif
 int openreg=1;
 Register regi(pid);
+#ifdef LIBRE3
 bool wasclone=false,waspipe=false;
+#endif
 for (;;) {
     /* Enter next system call */
 //    if(ptrace(PTRACE_SYSCALL, pid, 0, 0)==-1&&errno!=ESRCH) {
@@ -648,7 +653,7 @@ if(!regi.getall()) {
 
 		*/
 
-
+#ifdef LIBRE3
 	case  __NR_clone: 
 		{
 		unsigned long flags=regi.get(0);
@@ -662,6 +667,7 @@ if(!regi.getall()) {
 			}
 		}
 		break;
+#endif
 		/*
 #if defined(__arm__)&&!defined( __aarch64__)
 #ifndef NOLOG
@@ -872,6 +878,7 @@ if(!regi.getall()) {
 	syscallnr= regi.callnr();
 	switch(syscallnr) {
 		case  __NR_read:  
+#ifdef LIBRE3
 		    if(version==3) {
 			if(waspipe&&wasclone) {
 			char *data=(char *)regi.get(1);
@@ -892,7 +899,9 @@ if(!regi.getall()) {
 				}
 			}
 			}
+#endif
 			break;	
+#ifdef LIBRE3
 		case  __NR_clone: 
 			if(version==3) {
 			    if(!(reg0&CLONE_VM))  {
@@ -905,6 +914,7 @@ if(!regi.getall()) {
 				waspipe=true;
 				}
 			};break;
+#endif
 		case __NR_prctl:
 			if(askdump) {
 				LOGGER("give PR_GET_DUMPABLE=0, real %d\n",(int)regi.ret());
@@ -932,8 +942,10 @@ if(!regi.getall()) {
 }
 
 static bool beforedebug() {
+#ifdef LIBRE3
  libre3lib=strconcat("",R"(package:)",libdirname,"/libinit.so\n");
  LOGGER("libre3lib=%s",libre3lib.data());
+#endif
 	   if(prctl(PR_SET_DUMPABLE, 1, 0, 0, 0) < 0)  {
 		    LOGGER("could not set dumpable bit flag for pid %d: %s\n", getpid(), strerror(errno));
 		return false;

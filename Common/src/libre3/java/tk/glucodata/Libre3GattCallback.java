@@ -605,7 +605,7 @@ private void realdisconnected(int status) {
 
 private void disconnected(int status) {
 	Log.i(LOG_ID,"disconnected("+status+")");
-//	realdisconnected(status); //TODO remove this
+	realdisconnected(status); //TODO remove this
 	}
 
 private  void  setsuccess(long timmsec,String str) {

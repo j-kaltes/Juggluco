@@ -208,7 +208,7 @@
   <string name="fonttoolarge">Lettergrootte te groot: max=</string>
   <string name="foreground">Voorgrond</string>
   <string name="background">Achtergrond</string>
-  <string name="transparent">Transparant</string>
+  <string name="transparent">Doorzichtig</string>
   <string name="touchable">Tastbaar</string>
   <string name="overlaypermission">Toestemming geven:</string>
   <string name="deletereminder">Herinnering verwijderen?</string>
@@ -228,6 +228,19 @@
  <string name="manual">Handmatig</string>
  <string name="noaccountidspecified">Geen account-ID opgegeven </string>
  <string name="wrongformat">Verkeerde opmaak </string>
+<string name="noapplisteningto">"Geen app luistert naar "</string>
+<string name="secret">api_secret</string>
+<string name="withoutsaving">Weg gaan zonder op te slaan?</string>
+<string name="active">Actief</string>
+<string name="usessl">Gebruik SSL</string>
+<string name="fullchain">Full Chain</string>
 
+         <string name="privatekey">Private Key</string>
+<string name="localonly">Alleen lokaal</string>
+<string name="toolongsecret">: api_secret te lang. maximaal=</string>
+<string name="invalidport">" ongeldig poortnummer"</string>
+<string name="newsecret">"nieuwe api_secret: "</string>
+<string name="newport">"nieuwe poort ="</string>
+<string name="webserver">Webserver</string>
 
 </resources>

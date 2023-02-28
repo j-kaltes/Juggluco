@@ -38,9 +38,27 @@ static const char *owerjslkdfjlsdQQ(void) {
 } */
 extern int setenv(const char *name, const char *value, int overwrite);
 
+static bool	getpathworks() {
+extern std::string_view globalbasedir;
+	pathconcat testprog(globalbasedir,"testprog");
+	const char commando[]{"#!/system/bin/sh\ntrue\n"};
+	writeall(testprog,commando,sizeof(commando)-1);
+	chmod(testprog,0700);
+	constexpr const char path[]="PATH";
+	const char *oldpath=getenv(path);
+	setenv(path,globalbasedir.data(),1);
+	int err=system("testprog");
+	LOGGER("testprog gives %d\n",err);
+	setenv(path,oldpath,1);
+	unlink(testprog.data());
+	return !err;
+	}
 
 
+extern bool globalsetpathworks;
+bool globalsetpathworks=false;
 void usepath(std::string_view libdirname,std::string_view filesdir) {
+	globalsetpathworks=getpathworks();
 #if defined(__aarch64__) 
    if(settings->data()->triedasm&&!settings->data()->asmworks&& globalsetpathworks) 
 #else

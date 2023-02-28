@@ -1703,6 +1703,42 @@ wanneer je het label &quot;<i>Fietsen</i>&quot; had en <i>50</i>
 ingevoerd hebt, wordt de opmerking &quot;<i>Fietsen 50</i>&quot;.</p>
 ]]>
 </string>
+<string name="floatingconfig" >
+<![CDATA[
+<h1>Zwevende glucose</h1>
+<p>Hier kunt je de lettergrootte en de voor- en achtergrondkleur van
+de zwevende glucose instellen. Je kunt de achtergrond ook instellen
+op <b>Doorzichtig</b>, waardoor deze onzichtbaar wordt.</p>
+<p><b>Tastbaar</b>: ingesteld, kunt je de zwevende glucose met je
+vinger verplaatsen en verwijderen door er lang op te drukken. Wanneer
+tastbaar niet is ingesteld, gaat touch-invoer naar het venster onder
+de zwevende glucose, zodat je de app onder de zwevende glucose kunt
+gebruiken. Je kunt de zwevende glucose ook onaantastbaar maken door
+er <b>twee</b> keer op de drukken.</p>
+<p>Nadat je de <b>lettergrootte</b> hebt getypt, moet je op de
+&quot;<i>Enter&quot;-, </i>&quot;<i>Gereed&quot;-</i> of &quot;✓&quot;-
+knop van het soft-keyboard drukken.</p>
+<p>Je kunt Floating glucose in- en uitschakelen met het selectievakje
+&quot;<i>Zwevende</i> <i>glucose&quot;</i> in de instellingen. Je
+kunt zwevende glucose ook uitschakelen door <b>lang</b> op de
+zwevende glucosewaarde te drukken. Bijvoorbeeld wanneer je de
+lettergrootte zo groot hebt ingesteld dat je geen kleinere
+lettergrootte meer kunt typen op het soft-keyboard.</p>
+<p>Om weer te geven boven andere apps heeft Juggluco speciale
+toestemming nodig. Op WearOS en ook Android Automotive moet je adb
+gebruiken om deze toestemming te geven:</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>adb shell pm
+grant tk.glucodata android.permission.SYSTEM_ALERT_WINDOW</b></p>
+<p style="line-height: 100%; margin-bottom: 0in; background: transparent">
+<br/>
+
+</p>
+<p style="line-height: 100%; margin-bottom: 0in; background: transparent">
+<br/>
+
+</p>
+]]>
+</string>
 <string name="getaccountidhelp" >
 <![CDATA[
 <h1 class="western">Account-ID ophalen</h1>
@@ -1723,6 +1759,140 @@ Libreview-account verzonden, maar de vorige account-ID wordt nog
 steeds gebruikt om de sensor via NFC te scannen. Op deze manier
 stuurt Juggluco gegevens naar een ander Libreview-account dan de
 Libre 3-app van Abbotts gebruikt.</p>
+]]>
+</string>
+<string name="Nightscouthelp" >
+<![CDATA[
+<h1>Webserver</h1>
+<p style="line-height: 100%; margin-bottom: 0in">Juggluco bevat een
+webserver waarmee andere apps glucosewaarden van Juggluco kunnen
+ontvangen. Het kan worden gebruikt door xDrip-horloges en sommige
+Nightscout-apps.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Het gebruik van apps
+die gemaakt zijn om gebruik te maken van de xDrip webserver is
+relatief eenvoudig. Vink gewoon actief aan. Hierna kunnen ze glucose
+ontvangen van localhost op poort 17580. Nightscout server URL:
+http://127.0.0.1:17580 
+</p>
+<p style="line-height: 100%; margin-bottom: 0in"><span lang="nl-NL">Ook
+sommige Nightscout-volgers kunnen er gebruik van maken. xDrip, Diabox
+en een <a href="https://github.com/dabear/FloatingGlucose/releases">Windows
+Floating Glucose-</a> app kunnen worden gebruikt met http als &quot;alleen
+lokaal&quot; niet is ingesteld.</span></p>
+<p style="line-height: 100%; margin-bottom: 0in"><span lang="nl-NL">Als
+je toegang wilt tot Juggluco via internet, moet je</span> <span lang="nl-NL">een
+poort &quot;</span><span lang="nl-NL"><i>forwarden&quot;</i></span>
+<span lang="nl-NL">vanaf uw modem. Zie
+<a href="https://www.juggluco.nl/Juggluco/phones/index.html">https://www.juggluco.nl/Juggluco/phones/index.html</a></span></p>
+<p style="line-height: 100%; margin-bottom: 0in"><span lang="nl-NL">Andere
+Nightscout-volgers maken alleen gebruik van https en dat vereist dat
+Juggluco een geverifieerde SSL-sleutel heeft voor de domeinnaam die
+wordt gebruikt om toegang te krijgen tot Juggluco. Als je</span>
+<span lang="nl-NL">externe IP een bijbehorende hostnaam heeft, kunt
+je</span> <span lang="nl-NL">gratis een certificaat krijgen via
+<a href="https://certbot.eff.org/instructions">Certbot</a> of <a href="https://www.sslforfree.com/">ZeroSSL</a>
+. Je</span> <span lang="nl-NL">kunt er geen gebruik van maken als je</span>
+<span lang="nl-NL">externe IP geen hostnaam heeft. Je</span> <span lang="nl-NL">kunt
+een gratis domeinnaam krijgen van <a href="https://www.freenom.com/">https://www.freenom.com</a>
+. Ik heb het geprobeerd, maar binnen een paar weken zonder enige
+kennisgeving namen ze het domein gewoon van me af en toen ik het
+opnieuw probeerde te registreren, had het een prijs. Voor een paar
+euro per jaar koop je</span> <span lang="nl-NL">al een hostname
+(bijvoorbeeld via <a href="https://www.strato.nl/domeinnaam">https://www.strato.nl/domeinnaam</a>
+).</span></p>
+<p style="line-height: 100%; margin-bottom: 0in"><span lang="nl-NL">Als
+je</span> <span lang="nl-NL">de Key-bestanden van een SSL-autoriteit
+hebt ontvangen, moet je</span> <span lang="nl-NL">deze aan Juggluco
+geven. De private key kan worden ingelezen door op &quot;</span><em><span lang="nl-NL">Private
+Key</span></em><span lang="nl-NL">&quot; te drukken, de Full Chain
+door op &quot;</span><em><span lang="nl-NL">Full Chain</span></em><span lang="nl-NL">&quot;
+te drukken.</span></p>
+<p style="line-height: 100%; margin-bottom: 0in">Van ZeroSSL.com
+ontving ik drie bestanden: private.key, certificate.crt en
+ca_bundle.crt.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><span lang="nl-NL">private.key
+is de private sleutel, die u aan Juggluco moet geven door op &quot;</span><em><span lang="nl-NL">Private
+Key</span></em><span lang="nl-NL">&quot; te drukken.</span></p>
+<p style="line-height: 100%; margin-bottom: 0in">Om de <i>Full Chain</i>
+te maken, moet je certificate.crt en ca_bundle.crt samenvoegen.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Linux:</p>
+<pre style="margin-bottom: 0.2in">cat certificate.crt ca_bundle.crt &gt; fullchain.pem</pre><p style="line-height: 100%; margin-bottom: 0in">
+Windows cmd.com:</p>
+<pre style="margin-bottom: 0.2in">copy certificate.crt + ca_bundle.crt fullchain.pem</pre><p style="line-height: 100%; margin-bottom: 0in">
+Windows PowerShell:</p>
+<p>cat certificate.crt &gt; fullchain.pem <br/>
+cat ca_bundle.crt &gt;&gt;
+fullchain.pem</p>
+<p style="line-height: 100%; margin-bottom: 0in"><span lang="nl-NL">Nadat
+ik Certbot had gebruikt, vond ik de private key</span> <span lang="nl-NL">in
+/etc/letsencrypt/live/myhostname/privkey.pem</span> <span lang="nl-NL">en
+de</span> <span lang="nl-NL">Full Chain</span> <span lang="nl-NL">in
+/etc/letsencrypt/live/mijnhostnaam/fullchain.pem. &quot;</span><span lang="nl-NL"><i>mijn</i></span><em><span lang="nl-NL"><i>hostnaam</i></span></em><span lang="nl-NL">&quot;
+is de hostnaam die ik heb gebruikt.</span></p>
+<p style="line-height: 100%; margin-bottom: 0in"><span lang="nl-NL">Als
+je alleen glucosewaarden van de ene Android naar de andere wilt
+sturen, kun je beter de <a href="https://www.juggluco.nl/Juggluco/mgdL/index.html#mirror">Kloonfunctie</a></span>
+<span lang="nl-NL">van Juggluco gebruiken (Links midden menu-&gt;Kloon).</span></p>
+<p style="line-height: 100%; margin-bottom: 0in">Android Aps en
+Nsclient werken niet als volgeling van Juggluco, maar je kunt er wel
+glucosewaarden naar sturen met de xDrip-Broadcast in Juggluco
+(linkermenu-&gt;instellingen-&gt;xDrip Broadcast).</p>
+<p style="line-height: 100%; margin-bottom: 0in"><span lang="nl-NL">Je
+hebt SSL nodig voor Diabetes:M, <a href="https://play.google.com/store/apps/details?id=se.cornixit.nightwatch">N</a><a href="https://play.google.com/store/apps/details?id=se.cornixit.nightwatch">ightwatch</a></span>
+<span lang="nl-NL">en <a href="https://slingithub.github.io/CheckmateWeb">Checkmate</a></span>
+<span lang="nl-NL">. Specificeer als Nightscout server URL: </span>
+</p>
+<p><i>https://hostnaam:poort</i> 
+</p>
+<p><i>hostnaam</i> is de hostnaam van de geverifieerde sleutel die je
+aan Juggluco heeft gegeven, <i>poort</i> is de poort die je in dit
+scherm hebt opgegeven (standaard: 17581).</p>
+<p style="line-height: 100%; margin-bottom: 0in"><span lang="nl-NL">De
+webserver kan ook op een Linux-computer worden uitgevoerd. Het
+ontvangt zijn gegevens van een <a href="https://www.juggluco.nl/Juggluco/mgdL/index.html#mirror">Kloonverbinding</a></span>
+<span lang="nl-NL">van Juggluco die een Bluetooth verbinding met de
+sensor heeft: <a href="https://www.juggluco.nl/Juggluco/cmdline/index.html">https://www.juggluco.nl/Juggluco/cmdline</a>
+.</span></p>
+<p style="line-height: 100%; margin-bottom: 0in">Een andere telefoon
+kan verbinding maken met deze server via een kloon-verbinding of als
+Nightscout-volger (bijvoorbeeld op een Iphone). Laat het me weten als
+er een Nightscout-app is die niet werkt met deze webserver. Misschien
+kan het met een paar wijzigingen werkend worden gemaakt.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>api_secret</b> :
+Geef op dat volgers het api api_secret http-headerelement op deze
+waarde moeten instellen. Niet alle Nightscout-apps hebben een optie
+om api_secret in te stellen, dit betekent dat je ze niet kunt
+gebruiken met api_secret ingesteld op een waarde. api_secret is iets
+anders dan een Nightscout-token.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><strong><span lang="nl-NL">Tonen</span></strong><span lang="nl-NL">:
+Maak api_secret</span> <span lang="nl-NL">zichtbaar.</span></p>
+<p style="line-height: 100%; margin-bottom: 0in"><strong><span lang="nl-NL">Poort</span></strong><span lang="nl-NL">:
+geef de netwerkpoort op die wordt gebruikt om contact op te nemen met
+deze server. De standaardwaarde is 17581.</span></p>
+<p style="line-height: 100%; margin-bottom: 0in"><strong><span lang="nl-NL">Opslaan</span></strong><span lang="nl-NL">:
+Wijzigingen van api_secret</span> <span lang="nl-NL">of Poort
+opslaan.</span></p>
+<p style="line-height: 100%; margin-bottom: 0in"><strong><span lang="nl-NL">Gebruik
+SSL</span></strong><span lang="nl-NL">: gebruik SSL (https). Voor SSL
+moet je</span> <span lang="nl-NL">een</span> <span lang="nl-NL">Private
+Key</span> <span lang="nl-NL">en een Full Chain</span> <span lang="nl-NL">aan
+Juggluco geven</span> <span lang="nl-NL">voor de hostnaam die wordt
+gebruikt om contact te maken met deze service.</span></p>
+<p style="line-height: 100%; margin-bottom: 0in"><strong><span lang="nl-NL">Private
+key</span></strong><span lang="nl-NL">: selecteer een bestand met de
+privésleutel. Zie hierboven.</span></p>
+<p style="line-height: 100%; margin-bottom: 0in"><strong><span lang="nl-NL">Full
+Chain</span></strong><span lang="nl-NL">: selecteer een bestand dat
+de Full Chain bevat, zie hierboven.</span></p>
+<p style="line-height: 100%; margin-bottom: 0in"><strong><span lang="nl-NL">Actief</span></strong>
+<span lang="nl-NL">: webserver is actief.</span></p>
+<p style="line-height: 100%; margin-bottom: 0in"><strong><span lang="nl-NL">Alleen
+lokaal</span></strong> <span lang="nl-NL">: de http-server is alleen
+toegankelijk </span><span lang="nl-NL">met</span><span lang="nl-NL">
+localhost. Dit geldt niet voor https.</span></p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
 ]]>
 </string>
 </resources>

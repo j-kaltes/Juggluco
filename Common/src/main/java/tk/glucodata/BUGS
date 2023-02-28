@@ -1,6 +1,3 @@
-Watch server gives last sensor, not last data. SOmetimes only old data is shown, although new data is available.
-
-
 
 What doet libreview als netwerk uitstaat?
 More often problems with deleted items?
@@ -34,7 +31,6 @@ Bij halen uit verleden wordt er doorgegaan met sensor ook is er een sensor die b
 Alternatief:
 	- doorgaan totdat de volgende sensor een waarde heeft.
 
-Naar Google Bugs kijken
 Kijken of er iets in connectie met Libre3 veranderd kan zijn
 Bij seperate notificatie worden beide notificaties worden in begin getoond.
 Notificatie soms niet getoond.
@@ -50,8 +46,6 @@ Lijst inconsistente positie:
 ZEgt sensor error, wanneer er daarna een connectie error bestaat.
 Touches in Color dialog komen in view eronder terecht.
 
-Crashes when opening mirror.
-Tag voor subhoofdjes in webpage.
 In licht display mode is notificatie onzichtbaar op lockscreen.
 Omdraaien mode, pas invloed op notificatie na restart.
 

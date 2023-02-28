@@ -184,42 +184,43 @@ static public void scan(GlucoseCurve curve,Tag tag) {
 				}
 			else {
 			   if(libreVersion == 3) {
-			   	switch((int)(streamptr&0xFFFFFFF)) {
-					case 1: {
-						Log.i(LOG_ID,"streamptr==1");
-						ret=0xFB;
-					 	};break;
-					case 5: {
-						Log.i(LOG_ID,"terminated");
-						ret=13;
-						break;
-						}
-					case 6: {
-						Log.i(LOG_ID,"ended");
-						ret=4;
-						break;
-						}
-					default: {
-
-						 if(streamptr>=0L&&streamptr<4L) {
-						 	Log.i(LOG_ID,"p<streamptr<4");
-							  ret=0xFA;
-							  }
-						 else {
-							 var name = Natives.getSensorName(streamptr);
-							 if(name==null){
-						 		Log.i(LOG_ID,"name==null");
-							 	ret=0xFA;
-							 	}
-							 else{
-						 		Log.i(LOG_ID,"scanned "+name);
-								if(SensorBluetooth.resetDevice(streamptr, name))
-									askpermission = true;
-								ret = 0xFC;
-								value=1;
-								curve.render.badscan =calendar(main, ret, name);
-								}
+			        if(streamptr>=0L&&streamptr<7L) {
+					switch((int)(streamptr&0xFFFFFFF)) {
+						case 1: {
+							Log.i(LOG_ID,"streamptr==1");
+							ret=0xFB;
+							};break;
+						case 5: {
+							Log.i(LOG_ID,"terminated");
+							ret=13;
+							break;
 							}
+						case 6: {
+							Log.i(LOG_ID,"ended");
+							ret=4;
+							break;
+							}
+						default: {
+							 if(streamptr>=0L&&streamptr<4L) {
+								Log.i(LOG_ID,"p<streamptr<4");
+								  ret=0xFA;
+								  }
+							}
+						}
+					}
+				 else {
+					 var name = Natives.getSensorName(streamptr);
+					 if(name==null){
+						Log.i(LOG_ID,"name==null");
+						ret=0xFA;
+						}
+					 else{
+						Log.i(LOG_ID,"scanned "+name);
+						if(SensorBluetooth.resetDevice(streamptr, name))
+							askpermission = true;
+						ret = 0xFC;
+						value=1;
+						curve.render.badscan =calendar(main, ret, name);
 						}
 					}
 					}

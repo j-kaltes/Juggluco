@@ -37,7 +37,6 @@
 #include "curve/jugglucotext.h"
 #endif
 #include "broadcasts.h"
-extern bool globalsetpathworks;
 extern int showui;
 struct Settings;
 extern Settings *settings;
@@ -382,8 +381,6 @@ Settings(const char *settingsname,const char *base,const char *country): Mmap(se
 
 	 showui=getui();
 
-				extern bool getpathworks();
-	globalsetpathworks=getpathworks();
 	/*
 	setnumalarm(0, .5,19*60+30,21*60);
 	setnumalarm(3, 7,21*60+30,23*60);

@@ -922,21 +922,6 @@ extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getkerfstokblack)(JNIEnv *env,
 extern "C" JNIEXPORT void  JNICALL   fromjava(setkerfstokblack)(JNIEnv *env, jclass cl,jboolean val) {
 	settings->data()->kerfstokblack=val;
 	}
-#include "inout.h"
-bool	getpathworks() {
-	pathconcat testprog(globalbasedir,"testprog");
-	const char commando[]{"#!/system/bin/sh\ntrue\n"};
-	writeall(testprog,commando,sizeof(commando)-1);
-	chmod(testprog,0700);
-	constexpr const char path[]="PATH";
-	const char *oldpath=getenv(path);
-	setenv(path,globalbasedir.data(),1);
-	int err=system("testprog");
-	LOGGER("testprog gives %d\n",err);
-	setenv(path,oldpath,1);
-	unlink(testprog.data());
-	return !err;
-	}
 
 extern "C" JNIEXPORT void  JNICALL   fromjava(setlibrenum)(JNIEnv *env, jclass cl,jint index,jint kind, jfloat weight) {
 	if(index>=settings->getlabelcount())  {

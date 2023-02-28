@@ -2,7 +2,7 @@
 #cmake_minimum_required(VERSION 3.4.1)
 cmake_minimum_required(VERSION 3.13)
 project(Glucodata)
-set(MYCFLAGS "-gdwarf-4 -g3  -Wall -Wno-sign-compare -fvisibility=hidden")
+set(MYCFLAGS " -g -Wall -Wno-sign-compare -fvisibility=hidden")
 #set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}  -gdwarf-4 -g3  -Wall")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}  ${MYCFLAGS}" )
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}   ${MYCFLAGS} -std=c++20 -fno-rtti -fno-exceptions")
