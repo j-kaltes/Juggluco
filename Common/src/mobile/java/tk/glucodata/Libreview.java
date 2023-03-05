@@ -753,13 +753,16 @@ public static void  config(MainActivity act, View settingsview,CheckBox sendto,b
 	boolean usedlibre= getuselibreview();
 	var sendtolibreview=getcheckbox(act,R.string.uselibreview,usedlibre);
 	var numbers=getcheckbox(act,R.string.sendamounts,Natives.getSendNumbers());
-	boolean[] nochangeamounts={false};
+	int[] nochangeamounts={0};
 	numbers.setOnCheckedChangeListener( (buttonView,  isChecked) -> {
-		if(!nochangeamounts[0]) {
-			nochangeamounts[0]=true;
-			numbers.setChecked(!isChecked);
-			LibreNumbers.mklayout(act,numbers,nochangeamounts);
-			}
+		switch(nochangeamounts[0])  {
+			case 0: {
+				++nochangeamounts[0];
+				numbers.setChecked(!isChecked);
+				LibreNumbers.mklayout(act,numbers,nochangeamounts);
+				};break;
+			case  2: Natives.setSendNumbers(isChecked);break;
+			};
 		});
 	sendtolibreview.setOnCheckedChangeListener( (buttonView,  isChecked) -> {
 		numbers.setVisibility(isChecked?VISIBLE:INVISIBLE);;

@@ -637,6 +637,34 @@ int lastscanned() {
 	}
 	*/
 //uint32_t getlastpolltime() const 
+std::pair<int, uint32_t> lastused(uint32_t (SensorGlucoseData::*proc)(void) const) {
+	uint32_t lasttime;
+	uint32_t old;
+	int newst = last();
+	for(;;--newst) {
+		if(newst < 0)
+			return {-1, 0};
+		const SensorGlucoseData *hist = gethist(newst);
+		if(!hist) {
+			return {-1, 0};
+			}
+		if((lasttime = (hist->*proc)())>sensorageseconds) {
+			old = lasttime - sensorageseconds;
+			break;
+			}
+		}
+	for(int i = newst - 1; i >= 0; i--) {
+		if(sensorlist()[i].starttime < old)
+			break;
+		const SensorGlucoseData *hist = gethist(i);
+		if(const uint32_t tim = (hist->*proc)();tim > lasttime) {
+			lasttime = tim;
+			newst = i;
+		}
+	}
+	return {newst, lasttime};
+	}
+/*
 	std::pair<int, uint32_t> lastused(uint32_t (SensorGlucoseData::*proc)(void) const) {
 		int newst = last();
 		if(newst < 0)
@@ -658,6 +686,7 @@ int lastscanned() {
 		}
 		return {newst, lasttime};
 	}
+	*/
 
 	int lastscanned() {
 		auto[id, _]= lastused(&SensorGlucoseData::getlastscantime);

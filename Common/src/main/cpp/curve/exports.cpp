@@ -93,6 +93,12 @@ void tostart(NumIter<T> *numiters,int maxnum) {
 		numiters[i].iter=numiters[i].begin;
 		}
 	}
+template <class T>
+void toend(NumIter<T> *numiters,int maxnum) {
+	for(int i=0;i<maxnum;i++) {
+		numiters[i].iter=numiters[i].end;
+		}
+	}
 #ifdef NOFDOPEN
 int myprintf(int handle,const char *format, ...) {
         va_list args;

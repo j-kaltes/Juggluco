@@ -267,27 +267,6 @@ private void mknonceback() {
 	arraycopy(nonce1,0,plusnone,40,7); */
 
 	}
-//byte[] kEnc;
-//byte[] ivEnc;
-/*
-static class Libre3BCSecurityContext {
-    public static final byte[][] packetDescriptor = null;
-    private final int NONCE_COUNTER_OFFSET;
-    private final int NONCE_IV_OFFSET;
-    private final int NONCE_PACKET_DESCRIPTOR_OFFSET;
-    private byte[] iv_enc;
-    public byte[] key;
-    public byte[] nonce;
-    private int outCryptoSequence;
-
-   Libre3BCSecurityContext(byte[] key,byte[] iv) {
-   	 this.key=key;
-	 this.iv_enc=iv;
-	 nonce=new byte[13];
-	 arraycopy(iv,0,nonce,5,8);
-   	}
-    };
-    */
 //private static final UUID mCharacteristicConfigDescriptor= java.util.UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
 
 //private static               final UUID CONFIG_DESCRIPTOR= mCharacteristicConfigDescriptor;
@@ -392,7 +371,7 @@ private void receivedCERT_DATA() {
 			}
 		};
 	}
-static final private boolean notsuspended=true;
+final private boolean notsuspended=true;
   void enablegattCharCommandResponse() {
   	if(notsuspended) {
 		Log.i(LOG_ID,"enablegattCharCommandResponse");
@@ -420,67 +399,64 @@ static final private String charglucosedata= "CHAR_GLUCOSE_DATA".intern();
         @SuppressLint("MissingPermission")
 //		@Override 
 //static int final usewakelock=false;
+private  void logcharacter(UUID uuid,String str,byte[] value) {
+	    final long timmsec = System.currentTimeMillis();
+	   if(str!=charglucosedata) setsuccess(timmsec,str);
+            showbytes(LOG_ID+" onCharacteristicChanged  "+uuid.toString()+" "+str, value);
+	    }
 private void onCharacteristicChanged33(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, byte[] value) {
 	   var wakelock=	Applic.usewakelock?(((PowerManager) app.getSystemService(POWER_SERVICE)).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Juggluco::Libre3")):null;
 	   if(wakelock!=null)
 		   wakelock.acquire();
-	    long timmsec = System.currentTimeMillis();
-            String str;
             UUID uuid = characteristic.getUuid();
-            showbytes(LOG_ID+" onCharacteristicChanged Start "+uuid.toString(), value);
+//            showbytes(LOG_ID+" onCharacteristicChanged Start "+uuid.toString(), value);
             if (uuid.equals(LIBRE3_CHAR_GLUCOSE_DATA)) {
+	    	logcharacter(uuid,charglucosedata,value);
                 glucose_data(value);
-                str = charglucosedata;
             } else if (uuid.equals(LIBRE3_CHAR_PATCH_STATUS)) {
-        //        libre3BLESensor.access$700(libre3BLESensor.this, bluetoothGattCharacteristic);
+                logcharacter(uuid,"CHAR_PATCH_STATUS",value);;
 		receivedpatchstatus(value);
-                str = "CHAR_PATCH_STATUS";
             } else if (uuid.equals(LIBRE3_CHAR_HISTORIC_DATA)) {
+                logcharacter(uuid,"CHAR_HISTORIC_DATA",value);;
                 save_history(value);
-               // libre3BLESensor.access$1000(libre3blesensor, bluetoothGattCharacteristic);
-                str = "CHAR_HISTORIC_DATA";
             } else if (uuid.equals(LIBRE3_CHAR_PATCH_CONTROL)) {
-               // libre3BLESensor.access$1100(libre3BLESensor.this, bluetoothGattCharacteristic);
+                logcharacter(uuid,"CHAR_PATCH_CONTROL",value);;
 		access1100(value);
-                str = "CHAR_PATCH_CONTROL";
             } else if (uuid.equals(LIBRE3_SEC_CHAR_CERT_DATA)) {
+                logcharacter(uuid,"SEC_CHAR_CERT_DATA",value);;
                 if (getsecdata(value) <= 0) {
 		   receivedCERT_DATA();
                   //  libre3BLESensor.access$1400(libre3blesensor2, new MSLibre3CertificateReadEvent(libre3blesensor2.rdtData));
                 }
-                str = "SEC_CHAR_CERT_DATA";
             } else if (uuid.equals(LIBRE3_SEC_CHAR_CHALLENGE_DATA)) {
+                logcharacter(uuid,"SEC_CHAR_CHALLENGE_DATA",value);;
                 if (getsecdata(value) <= 0) {
 		    receivedCHALLENGE_DATA();
                   //  libre3BLESensor.access$1400(libre3blesensor3, new MSLibre3ChallengeDataReadEvent(libre3blesensor3.rdtData));
                 }
-                str = "SEC_CHAR_CHALLENGE_DATA";
             } else if (uuid.equals(LIBRE3_SEC_CHAR_COMMAND_RESPONSE)) {
+                logcharacter(uuid,"SEC_CHAR_COMMAND_RESPONSE",value);;
 		lastphase5=false;
                 preparedata(value);
-                str = "SEC_CHAR_COMMAND_RESPONSE";
             } else if (uuid.equals(LIBRE3_CHAR_EVENT_LOG)) {
-//	    libre3BLESensor.access$1600(libre3BLESensor.this, bluetoothGattCharacteristic);
+                logcharacter(uuid,"CHAR_EVENT_LOG",value);;
 		logevent(value);
-                str = "CHAR_EVENT_LOG";
             } else if (uuid.equals(LIBRE3_CHAR_FACTORY_DATA)) {
                // libre3BLESensor.access$1700(libre3BLESensor.this, bluetoothGattCharacteristic);
 		//		access1700(value) ;
-                str = "CHAR_FACTORY_DATA";
+                logcharacter(uuid,"CHAR_FACTORY_DATA",value);;
             } else if (uuid.equals(LIBRE3_CHAR_CLINICAL_DATA)) {
 //                libre3BLESensor libre3blesensor4 = libre3BLESensor.this; libre3BLESensor.access$1800(libre3blesensor4, bluetoothGattCharacteristic);
+                logcharacter(uuid,"CHAR_CLINICAL_DATA",value);;
                 fast_data(value);
-                str = "CHAR_CLINICAL_DATA";
             } else {
+                logcharacter(uuid,"Unknown",value);;
 		 mBluetoothGatt.disconnect();
 		 disconnected(1042);
-                str = "Unknown";
             }
-	   if(str!=charglucosedata)
-		    setsuccess(timmsec,str);
-            showbytes(LOG_ID+" onCharacteristicChanged end "+str, value);
 	   if(wakelock!=null)
 		wakelock.release();
+	Log.i(LOG_ID,"onCharacteristicChanged end");
         }
 
 

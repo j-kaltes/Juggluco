@@ -2193,8 +2193,10 @@ extern "C" JNIEXPORT jint JNICALL fromjava(badscan)(JNIEnv* env, jclass obj,jint
 		LOGGER("javabadscan	%d: ",kind);
 		const int scerror= kind&0xff;
 		switch(scerror) {
-			case 0xFA:
-				showerror(vg,"FreeStyle Libre 3, Scan error", "Try again");break;
+			case 0xFA: {
+				showerror(vg,"FreeStyle Libre 3, Scan error", "Try again");
+				};
+				break;
 			case 0xFB:
 				showerror(vg,"Error, wrong account ID?","Specify in Settings->Libreview the same account used to activate the sensor");break;
 		 	case 0xFC: {

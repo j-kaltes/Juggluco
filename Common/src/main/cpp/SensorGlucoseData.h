@@ -90,6 +90,7 @@ bool valid() const {
 	}
 };
 class SensorGlucoseData {
+bool haserror=false;
 string sensordir;
 //inline static  const string basedir{FILEDIR};
 inline static const int blocksize=getpagesize();
@@ -185,7 +186,6 @@ const size_t scansize;
 Mmap<ScanData> scans,polls;
 Mmap<std::array<uint16_t,16>> trends;
 //static constexpr int getinfo()->dupl=3,days=15;
-bool haserror=false;
 const int nrunits(int perhour=4)  {
 	if(!getinfo()) {
 		LOGGER("nrunits no getinfo\n");
@@ -648,10 +648,11 @@ size_t maxscansize()  {
 	return take*blocksize/sizeof(ScanData);
         }*/
 size_t maxscansize()  {
+/*
 	if(haserror) {
 		LOGGER("haserror=%d\n",haserror);
 		return 0;
-		}
+		} */
 //	if(error()) return 0;
 	const int days=	std::max((int)getinfo()->days,15);
 	const int scanblocks=ceil((40*days*sizeof(ScanData))/blocksize);
@@ -751,7 +752,7 @@ SensorGlucoseData(string_view sensin): SensorGlucoseData(sensin,globalbasedir.si
 	}
 //bool haserror=false;
 bool error() const {
-	if(!haserror&&meminfo.data()&& historydata.data()&& scans.data()&&polls.data()&& trends.data())
+	if(!haserror&&meminfo.data()&& historydata.data()&&polls.data()&& (isLibre3()||(scans.data()&& trends.data())))
 		return false;	
 	return true;
 	}
@@ -771,12 +772,22 @@ uint32_t getlastscantime() const {
 uint32_t getlastpolltime() const {
 	uint32_t last=(pollcount()>0)?lastpoll()->t:0;
 	return last;
-	}*/
+	}
 uint32_t getlastpolltime() const {
 	const auto stream=lastpoll();
 	if(!stream)
 		return 0;
 	return stream->t;
+	}
+	*/
+
+uint32_t getlastpolltime() const {
+	const ScanData* start= polls.data();
+	for(int i=pollcount()-1;i>=getinfo()->pollstart;--i) {
+		if(start[i].valid(i))
+			return start[i].t;	
+		}
+	return 0;
 	}
 uint32_t firstpolltime() const {
 	const ScanData* start= polls.data();

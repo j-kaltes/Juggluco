@@ -50,6 +50,9 @@ struct firstnfc {
 struct nfc1 {
 	firstnfc nfc;
 	bool error;
+	const std::string_view getSerialNumber() const {
+ 		return std::string_view(nfc.serialnumber,9);
+		}
 	nfc1(JNIEnv *env,  jbyteArray jnfcout) {
          	jsize lens=env->GetArrayLength(jnfcout);
 		if(lens!=sizeof(firstnfc)) {
@@ -166,6 +169,26 @@ extern "C" JNIEXPORT jlong JNICALL fromjava(getLibre3secs)(JNIEnv *env, jclass t
 	}
 
 extern void	sendstreaming(SensorGlucoseData *hist);
+
+
+static void finishsensor(const nfc1 &first) {
+	const char *name= Sensoren::namelibre3(first.getSerialNumber()).data();
+	const int sensorindex=sensors->sensorindex(name);
+	if(sensorindex>=0) {
+		sensors->finishsensor(sensorindex);
+		LOGGER("finishsensor %.16s %d\n",name,sensorindex);
+		if(SensorGlucoseData *sens=sensors->gethist(sensorindex) ) {
+extern void	setstreaming(SensorGlucoseData *hist) ;
+			setstreaming(sens); 
+extern					void setusedsensors() ;
+			setusedsensors();
+			}
+		}
+	else {
+		LOGGER("can't find %.16s sensorindex=%d\n",name,sensorindex);
+		}
+	}
+//char scannedsensorname[10]{};
 extern "C" JNIEXPORT jlong JNICALL fromjava(interpret3NFC2)(JNIEnv *env, jclass thiz, jbyteArray  nfc1ar,jbyteArray jnfcout,jlong now) {
 	nfc1 first(env,nfc1ar);
 	if(first.error) {
@@ -187,13 +210,14 @@ extern "C" JNIEXPORT jlong JNICALL fromjava(interpret3NFC2)(JNIEnv *env, jclass 
 			const nfc2error *nfc=reinterpret_cast<const nfc2error*>(nfcout);
 			const uint16_t error=0x01A5;
 			if(nfc->recogn==error) {
+		//		memcpy(scannedsensorname,first.nfc.serialnumber,9);
 				LOGGER("NFC: error %x\n",nfc->error);
 				if(nfc->error==0xb1)
 					return 1LL;
 				else  {
 					switch(first.nfc.state) {
-						case 8: return 5LL;
-						case 6: return 6LL;
+						case 8: finishsensor(first);return 5LL;
+						case 6: finishsensor(first);return 6LL;
 						default: return 3LL;
 						}
 					}

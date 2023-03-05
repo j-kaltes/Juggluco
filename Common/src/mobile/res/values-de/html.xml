@@ -911,7 +911,7 @@ Minute zu aktualisieren.</span></p>
 einer Unterbrechungszeit. Diese Werte werden mit diesem Broadcast
 nicht gesendet. Sie erhalten sie, wenn Sie den Webserver in Juggluco
 einschalten und xDrip zu einem Nightscout-Follower von Juggluco
-machen.</p>
+machen (http://127.0.0.1:17580).</p>
 <p align="left">Juggluco kann auch direkt mit xDrip-Uhren-Apps in
 Kontakt treten, so dass die Uhren-App aktuellere Glukosewerte
 anzeigt. Um diese Funktion zu nutzen, wählen Sie <i>&quot;xDrip
@@ -2339,12 +2339,11 @@ können ihnen Glukosewerte mit der xDrip-Broadcast in Juggluco senden
 benötigen SSL für Diabetes:M, <a href="https://play.google.com/store/apps/details?id=se.cornixit.nightwatch">Nightwatch</a>
 und <a href="https://slingithub.github.io/CheckmateWeb">Checkmate</a>.
 Geben Sie als Nightscout-Server-URL an: </span>
-</p><p>
-<i>https://hostname:port</i>
-</p><p>
-<i>hostname</i></span>
-<span lang="de-DE">ist der Hostname des authentifizierten Schlüssels,
-den Sie Juggluco gegeben haben, </span><span lang="de-DE"><i>port</i></span>
+</p>
+<p><i>https://hostname:port</i> 
+</p>
+<p><i>hostname</i> <span lang="de-DE">ist der Hostname des
+authentifizierten Schlüssels, den Sie Juggluco gegeben haben, </span><span lang="de-DE"><i>port</i></span>
 <span lang="de-DE">ist der Port, den Sie in diesem Bildschirm
 angegeben haben (Standard: 17581).</span></p>
 <p style="line-height: 100%; margin-bottom: 0in">Der Webserver kann
@@ -2386,9 +2385,51 @@ Webserver läuft.</span></p>
 <p style="line-height: 100%; margin-bottom: 0in"><strong><span lang="de-DE">Nur
 lokal</span></strong><span lang="de-DE">: Auf den http-Server kann
 nur mit localhost zugegriffen werden. Dies gilt nicht für https.</span></p>
-<p style="line-height: 100%; margin-bottom: 0in"><br/>
-
-</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>Mengen geben</b>:
+Ermöglichen Sie es, die eingegebenen Mengen über
+<a href="http://localhost:17580/api/v1/treatments?count=3">http://localhost:17580/api/v1/treatments?count=3</a>
+zu erhalten. (Sie müssen für jedes Etikett angeben, was damit
+geschehen soll. Dies wird auch zum Senden von Mengen an Libreview
+verwendet.) Über diese Schnittstelle kann xDrip Mengen von Juggluco
+empfangen. In xDrip können Sie dies auf zwei Arten tun:</p>
+<ol>
+	<li><p style="line-height: 100%; margin-bottom: 0in">Nehmen Sie als
+	„Datenquelle“ „Nightscout Follower“ und geben Sie als
+	„<span style="font-style: normal">Follow URL</span>“
+	http://127.0.0.1:17580 an und aktivieren Sie „<i>Behandlungen
+	herunterladen</i>“.</p>
+	<li><p style="line-height: 100%; margin-bottom: 0in">Nehmen Sie eine
+	andere <i>Datenquelle</i>, z. B. <i>Libre (gepatchte App)</i>, und
+	aktivieren Sie Einstellungen-&gt;Cloud-Upload-&gt; API Upload
+	(REST). Geben Sie als Basis URL
+	http://somekeynotused@127.0.0.1:17580/api/v1/ ein und aktivieren Sie
+	„<i>Behandlungen herunterladen</i>“. Das Hochladen auf Juggluco
+	ist nicht möglich, daher werden nur Behandlungen heruntergeladen
+	und einige Fehlermeldungen generiert.</p>
+</ol>
+<p style="line-height: 100%; margin-bottom: 0in">Wenn &quot;<i>Nur
+lokal</i>&quot; deaktiviert ist, können Sie auch die Heimnetzwerk-IP
+des Telefons verwenden, auf dem Juggluco läuft, und, wenn Sie Ihr
+Modem so konfigurieren, dass es an 17580 dieses Telefons
+weiterleitet, die externe IP Ihres Telefons. Wenn Sie Juggluco einen
+privaten Schlüssel und ein Full Chain für einen Hostnamen gegeben
+haben, über den auf das Telefon zugegriffen werden kann, und die
+Verwendung von SSL aktiviert haben, können Sie auch diesen Hostnamen
+und den hier angegebenen Port verwenden, indem Sie https anstelle von
+http verwenden.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Wenn Sie
+Behandlungen zu Diabetes:M hochladen möchten, können Sie entweder
+die Daten von Juggluco an Libreview senden und die Daten in Libreview
+mit „Glukosedaten herunterladen“ speichern und diese Daten in
+Diabetes:M mit Daten-&gt;Aus anderen Quellen importieren-&gt;Freestyle
+importieren oder erhalten Sie einen authentifizierten Schlüssel für
+den externen Hostnamen Ihres Telefons und geben Sie als Link externe
+Quelle Nightscout mit als URL https://IhrHostname:Port an, wobei
+IhrHostname der Hostname Ihres Telefons ist, auf dem Juggluco läuft,
+für das Sie einen authentifizierten Schlüssel erhalten haben und
+Port ist der Port, den Sie hier erwähnt haben. Es scheint nicht
+automatisch zu synchronisieren, also musst du in Diabetes:M selbst
+auf Sync drücken.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><br/>
 
 </p>

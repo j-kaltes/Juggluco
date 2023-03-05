@@ -619,6 +619,10 @@ public static native boolean getuseSSL( );
 public static native void setsslport(int val);
 public static native int getsslport( );
 
+public static native void setsaytreatments(boolean val);
+public static native boolean getsaytreatments( );
+
+
 //s/^extern.*JNIEXPORT[         ]*\([a-zA-Z]*\)[ ]*JNICALL[      ]*fromjava(\([^)]*\)) *(JNIEnv[^,]*,[^,)]*[,)]\([^){]*\)[^a-zA-Z0-9]*$/public static native \1 \2(\3);/g
 //public static native void sendxdripold();
 }

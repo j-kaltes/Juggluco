@@ -115,8 +115,15 @@ const T *findnewest(NumIter<T> *nums,int count,const F &notval=notvalid) {
 	int newest = ifindnewest(nums,count,notval);
 	if(newest>=0)
 		return nums[newest].next();
-//		return nums[newest].iter+1;
 	return nullptr;
+	}
+
+template <class T,typename F=bool (*)(const T *)>
+const std::pair<int,const T*> findnewestwith(NumIter<T> *nums,int count,const F &notval=notvalid) {
+	int newest = ifindnewest(nums,count,notval);
+	if(newest>=0)
+		return {newest,nums[newest].next()};
+	return {-1,nullptr};
 	}
 /*
 template <class T>

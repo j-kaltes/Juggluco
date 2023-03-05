@@ -1154,3 +1154,10 @@ extern "C" JNIEXPORT void  JNICALL   fromjava(setsslport)(JNIEnv *env, jclass cl
 extern "C" JNIEXPORT jint  JNICALL   fromjava(getsslport)(JNIEnv *env, jclass cl) {
 	return settings->data()->sslport;
 	}
+
+extern "C" JNIEXPORT void  JNICALL   fromjava(setsaytreatments)(JNIEnv *env, jclass cl,jboolean val) {
+	settings->data()->saytreatments=val;
+	}
+extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getsaytreatments)(JNIEnv *env, jclass cl) {
+	return settings->data()->saytreatments;
+	}

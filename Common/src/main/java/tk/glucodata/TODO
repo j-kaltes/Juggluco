@@ -1,3 +1,13 @@
+send to tidepool
+add libreview categories to cmdline  version
+Categories set somewhere else in app:
+	add BG category?
+
+Maak uitleg meer relevant voor Libre 3.
+
+show serialnumbers bij scan errors
+extern "C" JNIEXPORT jstring JNICALL   fromjava(getSensorName)(JNIEnv *envin, jclass cl,jlong dataptr) 
+      change  shortsensorname in showsensorname	
 
 Statistics ook van history 5 en 15
 

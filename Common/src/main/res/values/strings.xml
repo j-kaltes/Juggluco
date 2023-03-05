@@ -250,5 +250,6 @@
 <string name="newsecret">"new api_secret: "</string>
 <string name="newport">"new port ="</string>
 <string name="webserver">Web server</string>
+<string name="treatments">Give Amounts</string>
 
 </resources>

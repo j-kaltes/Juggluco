@@ -130,7 +130,7 @@ const std::string initsslserver(void);
 
 //std::string testkeyfiles() ;
 std::string startsslwatchthread() {
-std::string haskeyfiles() ;
+extern std::string haskeyfiles() ;
 	auto error=haskeyfiles();
 	if(error.size())
 		return error;
@@ -289,6 +289,10 @@ void servererror(int sock) {
 
 static bool	 sgvinterpret(const char *start,int len,bool headonly, recdata *data) ;
 
+
+static bool givetreatments(const char *args,int argslen, recdata *data) ;
+
+
 static bool sendall(int sock ,const char *buf,int buflen) {
         int itlen,left=buflen;
         LOGGER("sock=%d sendall len=%d\n",sock,buflen);
@@ -345,7 +349,7 @@ static	constexpr const char webpage[]="HTTP/1.1 200 OK\r\nContent-Type: text/htm
 R"(<!DOCTYPE html>
 <html>
 <head>
-   <meta http-equiv="refresh" content="0; url=http://www.juggluco.nl"/>
+   <meta http-equiv="refresh" content="0; url=https://www.juggluco.nl"/>
 </head>
 <body>
 </body>
@@ -922,7 +926,7 @@ bool watchcommands(char *rbuf,int len,recdata *outdata) {
 	
 	int seclen=settings->data()->apisecretlength;
 	if(seclen&&(seclen!=foundsecret.size()||memcmp(settings->data()->apisecret,foundsecret.data(),seclen))) {
-		LOGGER("%s#%d!=%s#%d \n", settings->data()->apisecret,seclen, foundsecret.data(),foundsecret.size());
+		LOGGER("%s#%d!=%s#%ld \n", settings->data()->apisecret,seclen, foundsecret.data(),foundsecret.size());
 	 	nosecret(foundsecret, outdata) ;
 		return false;
 		}
@@ -1008,7 +1012,7 @@ const auto cursize= current.size();
 std::string_view treatments="api/v1/treatments";
 const auto treatsize= treatments.size();
 	if(!memcmp(treatments.data(),toget.data(),treatsize)) {
-		return givenolist(outdata);
+		return givetreatments(toget.data()+treatsize,toget.size()-treatsize,outdata);
 		}
 
 constexpr const std::string_view pebble="pebble";
@@ -1126,12 +1130,13 @@ class Sgvinterpret {
   public:
 	int datnr=24;
 	int interval=270;
-	uint32_t lowerend=0L,higherend=UINT32_MAX;
+	uint32_t lowerend=0,higherend=UINT32_MAX;
+	const char *event=nullptr;
 	bool getargs(const char *start,int len) ;
 	bool getdata(bool headonly,recdata *outdata) const;
 
-private:
 	char *makedata(recdata *outdata ) const;
+private:
 	static char *dontbrief(char *outiter,const char *name,const ScanData *iter) ;
 	char *firstdata(char *outiter,time_t starttime,uint32_t dattime) const ;
 	char *writeitem(char *outiter,int datit, const ScanData *iter,const char *sensorname,const time_t starttime) const;
@@ -1154,7 +1159,7 @@ char *Sgvinterpret::makedata(recdata *outdata ) const {
 	return output+152;
 	}
 char *Sgvinterpret::dontbrief(char *outiter,const char *name,const ScanData *iter) {
-	outiter+=sprintf(outiter,R"("_id":"%s#%d","device":"Other App","dateString":")", name,iter->id);
+	outiter+=sprintf(outiter,R"("_id":"%s#%d","device":"Juggluco","dateString":")", name,iter->id);
 	const char *startdate=outiter;
 	int len=Tdatestring(iter->t,outiter);
 	outiter+=len;
@@ -1228,54 +1233,117 @@ bool Sgvinterpret::getitems(char *&outiter,const int  datnr) const {
 				{return writeitem(outiter, datit, iter,sensorname, starttime);});
 
 	}
-/*
-bool Sgvinterpret::getitems(char *&outiter,const int  datnr) const {
-	LOGGER("getitems %d\n",datnr);
-	int sensorid=sensors->last();
-	uint32_t timenext=UINT32_MAX;
-	int datit=0; 
-	{
-		STARTDATA:
-		const SensorGlucoseData *sens=getPollsensor(sensorid);;
-		if(!sens) {
-			if(datit)
-				return true;
-			return false;
-			}
+//{"_id":"6401c40addf76d1473eb7d02","timestamp":1677837282000,"eventType":"<none>","enteredBy":"xdrip pos:6.52","notes":"Swim → Aaps → nog meer","uuid":"6401c40addf76d1473eb7d02","created_at":"2023-03-03T09:54:42.000Z","sysTime":"2023-03-03T10:54:42.000+0100","utcOffset":0,"carbs":null,"insulin":null},
+//notes	"AndroidAPS started - realme RMX2202"
+#include "net/libreview/numcategories.h"
+#include "curve/numiter.h"
+	/*
+    "_id": "a486879b595f46f7bbc8e20b",
+    "timestamp": 1677843182779,
+    "eventType": "<none>",
+    "enteredBy": "xdrip",
+    "uuid": "a486879b-595f-46f7-bbc8-e20b11c1b9d3",
+    "carbs": 50,
+    "insulinInjections": "[]",
+    "created_at": "2023-03-03T11:33:02.000Z",
+    "sysTime": "2023-03-03T12:33:02.779+0100",
+    "utcOffset": 0,
+    "insulin": null*/
 
-		LOGGER("getPollsensor(%d)\n",sensorid);
-		const std::span<const ScanData> gdata=sens->getPolldata();
-		const ScanData *first=&gdata.begin()[0];
-		const ScanData *iter=&gdata.end()[-1];
-		const char *sensorname= sens->shortsensorname()->data();
-		const time_t starttime= sens->getstarttime();
-		for(;datit<datnr;datit++,iter--) {
-			 while(true) {
-				if(iter<first) {
-					if(alldata) {
-						--sensorid;
-						goto STARTDATA;
-						}
-					if(datit)
-						return true;
-					return false;
-					}
-					
-			 	if(iter->valid()) {
-					if(iter->t<timenext)
-						break;
-					}
-				--iter;
-					
-				}
-			timenext=iter->t-interval;
-			outiter=writeitem(outiter,datit,iter,sensorname,starttime);
+static char *writetreatment(char *outiter,const int numbase,const int pos,const Num*num) {
+	const int type=num->type;
+	if(type>=settings->varcount()||!settings->data()->librenums[type].kind)
+		return outiter;
+	const time_t tim=num->gettime();
+        struct tm tmbuf;
+        gmtime_r(&tim, &tmbuf);
+	outiter+=sprintf(outiter,R"({"_id":"num%d#%d","eventType":"<none>","insulinInjections":"[]","enteredBy":"Juggluco","created_at":"%d-%02d-%02dT%02d:%02d:%02d.000Z",)",numbase,pos,tmbuf.tm_year+1900,tmbuf.tm_mon+1,tmbuf.tm_mday, tmbuf.tm_hour, tmbuf.tm_min,tmbuf.tm_sec);
+
+	float w=0.0f;
+	 if((w=longWeight(type))!=0.0f) {
+	 	addar(outiter,R"("notes":"Long-Acting",)");
+	 	}
+	else { if((w=rapidWeight(type))!=0.0f) {
+	 	addar(outiter,R"("notes":"Rapid-Acting",)");
+	 	}
+		}
+	if(w!=0.0f) {
+		outiter+=sprintf(outiter,R"("carbs":null,"insulin":%g},)",w*num->value);
+		}
+	else {
+		if((w=carboWeight(type) )!=0.0f) {
+			outiter+=sprintf(outiter,R"("carbs":%g,"insulin":null},)",w*num->value);
 			}
+		else {
+			std::string_view typestr=settings->getlabel(type);
+			outiter+=sprintf(outiter,R"("notes":"%s %g","carbs":null,"insulin":null},)",typestr.data(),num->value);
+			}
+		}
+	return outiter;
+	}
+	extern vector<Numdata*> numdatas;
+/*
+template <class T>
+static void toend(NumIter<T> *numiters,int maxnum) {
+	for(int i=0;i<maxnum;i++) {
+		numiters[i].iter=numiters[i].end;
+		}
+	} */
+
+static bool givetreatments(const char *args,int argslen, recdata *outdata)  {
+	Sgvinterpret pret;
+	pret.datnr=100;
+	std::string_view json{".json"	};
+	
+	if(!memcmp(args,	json.data(),json.size())) {
+		args+=json.size();
+		argslen-=json.size();
 
 		}
-	return true;
+	else {
+		if(args[0]=='/') {
+			++args;
+			--argslen;
+			}
+		}
+	
+	if(!pret.getargs(args,argslen))
+		return false;
+	
+	const int basecount=numdatas.size();
+	NumIter<Num> numiters[basecount];
+	for(int i=0;i<basecount;i++) {
+		auto [low,high]= numdatas[i]->getInRange(pret.lowerend,pret.higherend); 
+		numiters[i].begin=low;
+		numiters[i].iter=numiters[i].end=high-1;
+		numiters[i].bytes=sizeof(Num);
+		}
+
+	const int count= pret.datnr;
+	char *outstart=pret.makedata(outdata ); 
+	char *outiter=outstart;
+	*outiter++='[';
+	if(settings->data()->saytreatments&&!pret.event) {
+		for(int i=0;i<count;) {
+			auto [ind,num]=findnewestwith(numiters,basecount);
+			if(!num) {
+				LOGGER("no values %d %p\n",ind,num);
+				break;
+				}
+			int pos=num-numdatas[ind]->begin();
+			char *out=writetreatment(outiter,ind,pos,num);
+			if(out!=outiter) {
+				outiter=out;
+				i++;
+				}
+			}
+		if(outiter[-1]==',') --outiter;
+		}
+	 *outiter++=']';
+	 *outiter++='\n';
+       mkheader(outstart,outiter, false,outdata);
+       return true;
 	}
-	*/
 
 bool Sgvinterpret::getdata(bool headonly,recdata *outdata) const {
 	if(!sensors)	
@@ -1287,58 +1355,6 @@ bool Sgvinterpret::getdata(bool headonly,recdata *outdata) const {
 		return false;
 	char *outiter=outstart;
 	*outiter++='[';
-
-
-
-/*
-	int sensorid=sensors->last();
-
-
-
-	uint32_t timenext=UINT32_MAX;
-
-	int datit=0; 
-	{
-		STARTDATA:
-		const SensorGlucoseData *sens;
-		for(;;sensorid--) {
-			if(sensorid<0)  {
-				if(datit)
-					goto ENDDATA;
-				return false;
-				}
-			if((sens=sensors->gethist(sensorid))) {
-				if(sens->pollcount()>0)
-					break;
-				}
-			}
-		const std::span<const ScanData> gdata=sens->getPolldata();
-		const ScanData *first=&gdata.begin()[0];
-		const ScanData *iter=&gdata.end()[-1];
-		const char *sensorname= sens->shortsensorname()->data();
-		const time_t starttime= sens->getstarttime();
-		for(;datit<datnr;datit++,iter--) {
-			 while(true) {
-			 	if(iter->valid()) {
-					if(iter->t<timenext)
-						break;
-					}
-
-				if(iter--<=first) {
-					if(alldata) {
-						--sensorid;
-						goto STARTDATA;
-						}
-					goto ENDDATA;
-					}
-					
-				}
-			timenext=iter->t-interval;
-			outiter=writeitem(outiter,datit,iter,sensorname,starttime);
-			}
-		}
-	ENDDATA:
-*/
 	if(!getitems(outiter,datnr) )
 		return false;
 	if(outiter==(outstart+1)&&noempty) {
@@ -1411,60 +1427,68 @@ static time_t readtime(const char *input) {
 								}
 							else {
 								std::string_view greater="find[date][$gte]="; //TODO greater or equal
-								std::string_view greater2="find[date][$gt]=";
+								std::string_view greater2="find[date][$gt]="; //TODO greater or equal
 								if(!memcmp(iter,greater.data(),greater.size())||(greater=greater2, !memcmp(iter,greater.data(),greater.size()))) {
 									iter+=greater.length();
 									const char *ptr;
 									long tmp;
 									if(!(ptr=readnum<long>(iter,ends,tmp))) {
-										LOGGER("find[date][$gte]= readnum failed '%s'\n",iter);
+										LOGGER("%s readnum failed '%s'\n",greater.data(),iter);
 										return false;
 										}
 									lowerend=tmp/1000;
+									if(greater==greater2) {
+										++lowerend;
+										}
 									iter=ptr;
 									LOGGER("greater than %d\n",lowerend);
 									}
 								else {
 									std::string_view smaller="find[date][$lte]=";
-									if(!memcmp(iter,smaller.data(),smaller.size())) {
+									std::string_view smaller2="find[date][$lt]=";
+									if((!memcmp(iter,smaller.data(),smaller.size()))||(smaller=smaller2,!memcmp(iter,smaller.data(),smaller.size()))) {
 										iter+=smaller.length();
 										long tmp;	
 										if(!(iter=readnum<long>(iter,ends,tmp))) {
-											LOGGER("find[date][$lte]= readnum failed\n");
+											LOGGER("%s= readnum failed\n",smaller.data());
 											return false;
 											}
 										higherend=tmp/1000L;
+										if(smaller!=smaller2) {
+											++higherend;
+											}
 										LOGGER("smaller than %d\n",higherend);
 										}
 									else {
-										std::string_view smaller="find[date][$lt]=";
-										if(!memcmp(iter,smaller.data(),smaller.size())) {
-											iter+=smaller.length();
-											long tmp;	
-											if(!(iter=readnum<long>(iter,ends,tmp))) {
-												LOGGER("find[date][$lt]= readnum failed\n");
-												return false;
-												}
-											higherend=tmp/1000L;
-											}
-										else {
 									std::string_view greater="find[dateString][$gte]="; //TODO greater or equal
 									std::string_view greater2="find[dateString][$gt]=";
-									if(!memcmp(iter,greater.data(),greater.size())||(greater=greater2, !memcmp(iter,greater.data(),greater.size()))) {
+									std::string_view greater3="find[created_at][$gte]=";
+									if(!memcmp(iter,greater.data(),greater.size())||(greater=greater2, !memcmp(iter,greater.data(),greater.size()))||(greater=greater3, !memcmp(iter,greater.data(),greater.size()))) {
 										iter+=greater.length();
 										lowerend=readtime(iter);
+										if(greater==greater2)
+											lowerend++;
 										iter+=10;
 										LOGGER("greater than %d\n",lowerend);
 										}
 									else {
 										std::string_view smaller="find[dateString][$lte]="; //TODO smaller or equal
 										std::string_view smaller2="find[dateString][$lt]=";
-										if(!memcmp(iter,smaller.data(),smaller.size())||(smaller=smaller2, !memcmp(iter,smaller.data(),smaller.size()))) {
+									std::string_view smaller3="find[created_at][$lte]=";
+									if((!memcmp(iter,smaller.data(),smaller.size()))||(smaller=smaller2,!memcmp(iter,smaller.data(),smaller.size()))|| (smaller=smaller3,!memcmp(iter,smaller.data(),smaller.size()))) {
 											iter+=smaller.length();
 											higherend=readtime(iter);
+											if(smaller!=smaller2)
+												higherend++;
 											iter+=10;
 											LOGGER("smaller than %d\n",higherend);
 											}
+										else {
+											std::string eventtype="find[eventType]=";
+											if(!memcmp(iter,eventtype.data(),eventtype.size())) {
+												iter+=eventtype.size();
+												event=iter;
+												}
 											}
 											}
 										}

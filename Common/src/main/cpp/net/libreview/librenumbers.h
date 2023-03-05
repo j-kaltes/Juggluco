@@ -184,7 +184,8 @@ class Numbers: public LibreType {
 	static int writenote(char *buf,std::string_view label,long long recordnum,uint32_t tim,bool del=false) {
 		return writeentry(buf, "type", "com.abbottdiabetescare.informatics.customnote",label,0.0f,recordnum,tim,del);
 		}
-
+#include "numcategories.h"
+/*
 static float longWeight(uint32_t type) { 
 	if(type>=settings->varcount())
 		return 0.0f;
@@ -199,6 +200,19 @@ static float rapidWeight(uint32_t type) {
 		return 1.0f;
 	return 0.0f;
 	}	
+static float carboWeight(int type) { 
+	if(type>=settings->varcount())
+		return 0.0f;
+	if(settings->data()->librenums[type].kind==3)
+		return settings->data()->librenums[type].weight;
+	return 0.0f;
+	}
+static bool isNote(int type) { 
+	if(type>=settings->varcount())
+		return false;
+	return settings->data()->librenums[type].kind==4;
+	}
+	*/
 static std::string_view getmealtype(const Num &num) {
 	if(num.value>50.0f) {
 		time_t tim=num.time;
@@ -219,20 +233,6 @@ static std::string_view getmealtype(const Num &num) {
 		}
 	return "Snack";
 	}
-static float carboWeight(int type) { //TODO in settings
-	if(type>=settings->varcount())
-		return 0.0f;
-	if(settings->data()->librenums[type].kind==3)
-		return settings->data()->librenums[type].weight;
-	return 0.0f;
-	}
-static bool isNote(int type) { //TODO in settings
-//	return 	carboWeight(type)==0.0f&& rapidWeight(type)==0.0f&&longWeight(type)==0.0f;
-	if(type>=settings->varcount())
-		return false;
-	return settings->data()->librenums[type].kind==4;
-	}
-//s/addnum(\([^,nextlibrenr())]*\))/addnum(\1,nextlibrenr())/g
 //TODO: sort to be deleted items on librenr
 public:
  void foodel(char *&ptr,const Num &n,Libregeg *ids,bool del=false) {

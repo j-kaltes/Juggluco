@@ -48,6 +48,8 @@ import android.widget.Toast;
 
 import java.io.File;
 
+import tk.glucodata.settings.LibreNumbers;
+
 public class Nightscout {
 static final private String LOG_ID="Nightscout";
 static private void openfile(MainActivity act,int requestid) {
@@ -182,13 +184,28 @@ public static void show(MainActivity context,View parent) {
 				}
 			}
 		});
+	boolean saytreatments=Natives.getsaytreatments();
+	var treatments=getcheckbox(context,R.string.treatments,saytreatments);
+	int[] nochangeamounts={0};
+
+	treatments.setOnCheckedChangeListener( (buttonView,  isChecked) -> {
+		switch(nochangeamounts[0])  {
+			case 0: {
+				++nochangeamounts[0];
+				treatments.setChecked(!isChecked);
+				LibreNumbers.mklayout(context,treatments,nochangeamounts);
+				};break;
+			case  2: Natives.setsaytreatments(isChecked);break;
+
+			};
+		});
 	var layout=new Layout(context,(l,w,h)-> {
 		var width= GlucoseCurve.getwidth();
 		if(width>w)
 			l.setX((width-w)/2);
 		l.setY(0);
 		return new int[] {w,h};
-		},new View[]{secret,editkey},new View[]{visible,labport,portview,save} , new View[]{sslbox,privkey,chain},new View[]{Help,server,local,Close} );
+		},new View[]{secret,editkey},new View[]{visible,labport,portview,save} , new View[]{sslbox,privkey,chain},new View[]{local,treatments},new View[]{Help,server,Close} );
 	float density=GlucoseCurve.metrics.density;
 	int laypad=(int)(density*4.0);
 	layout.setPadding(laypad*2,laypad,laypad*2,laypad);

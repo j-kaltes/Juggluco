@@ -42,7 +42,6 @@ import tk.glucodata.R;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static tk.glucodata.Natives.canSendNumbers;
-import static tk.glucodata.Natives.setSendNumbers;
 import static tk.glucodata.RingTones.EnableControls;
 import static tk.glucodata.help.hidekeyboard;
 import static tk.glucodata.settings.Settings.hideSystemUI;
@@ -96,7 +95,7 @@ static public class LibreNumberAdapter extends RecyclerView.Adapter<LibreNumberH
 
 
 
-public static void    mklayout(MainActivity context,CheckBox donum,boolean[] donothing) { 
+public static void    mklayout(MainActivity context,CheckBox donum,int[] donothing) { 
 	Button close = new Button(context);
 	close.setText(R.string.closename);
 	RecyclerView recycle = new RecyclerView(context);
@@ -105,7 +104,7 @@ public static void    mklayout(MainActivity context,CheckBox donum,boolean[] don
 	recycle.setLayoutManager(lin);
 	var help=getbutton(context,R.string.helpname);
 
-	var sendnumbers=getcheckbox(context,R.string.sendamounts,Natives.getSendNumbers());
+	var sendnumbers=getcheckbox(context,R.string.sendamounts,donum.isChecked());
 	if(!canSendNumbers()) {
 		//EnableControls(sendnumbers,false);
 		sendnumbers.setEnabled(false);
@@ -120,9 +119,10 @@ public static void    mklayout(MainActivity context,CheckBox donum,boolean[] don
 		hidekeyboard(context);
 		removeContentView(librenumlayout) ;
 		final var checked= sendnumbers.isChecked();
-		setSendNumbers(checked);
+	//	setSendNumbers(checked);
+		donothing[0]=2;
 		donum.setChecked(checked);
-		donothing[0]=false;
+		donothing[0]=0;
 		};
 	context.setonback(closerun);
     close.setOnClickListener(v->{
