@@ -1791,10 +1791,11 @@ follower (for example on an Iphone). If there is a Nightscout app
 that doesn\'t work with this web server, please tell me. Maybe it can
 be made to work with a few changes.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>api_secret</b>:
-Specify that followers should set the api api_secret http header
-element to this value. Not all Nightscout apps have an option to set
-api_secret, this means that you can\'t use them with Secret set to a
-value. api_secret is different from a Nightscout token.</p>
+Specify that followers should set the ap<span style="font-weight: normal">i</span><b>_</b>secret
+http header element to this value. In Juggluco 4.9.1 or higher does
+testing on this secret also work when the followers use this secret
+as Nightscout token or use the api<b>-</b>secret header with an SHA1
+encoded secret.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><strong>Visible</strong>:
 Make Secret visible.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><strong>Port</strong>:
@@ -1821,35 +1822,36 @@ xDrip can receive Amounts from Juggluco. In xDrip you can do this in
 two ways:</p>
 <ol>
 	<li><p style="line-height: 100%; margin-bottom: 0in">Take as
-	&quot;<i>Hardware Data Source&quot;</i><span style="font-style: normal">,</span><i>
-	&quot;Nightscout Follower&quot;</i><span style="font-style: normal">
-	and giving as “Follow URL”</span><i>,</i><span style="font-style: normal">
-	<a href="http://localhost:17580/api/v1/treatments?count=3">http://127.0.0.1:17580</a>
-	and check </span><i>“Download Treatments”.</i><span style="font-style: normal">
+	&quot;<i>Hardware Data Source&quot;</i><span style="font-variant: normal"><span style="font-style: normal">,</span></span>
+	<i>&quot;Nightscout Follower&quot;</i><span style="font-variant: normal">
+	</span><span style="font-variant: normal"><span style="font-style: normal">and
+	giving as “Follow URL”</span></span><i>,</i><span style="font-variant: normal">
+	</span><span style="font-variant: normal"><span style="font-style: normal"><a href="http://localhost:17580/api/v1/treatments?count=3">http://127.0.0.1:17580</a>
+	and check </span></span>“<i>Download Treatments”.</i><span style="font-variant: normal">
 	</span>
 	</p>
-	<li><p style="line-height: 100%; margin-bottom: 0in"><span style="font-style: normal">Take
-	another Hardware Data Source for example </span><i>Libre (patched
-	app)</i><span style="font-style: normal"> and turn on
-	settings-&gt;Cloud Upload-&gt;Nightscout Sync (REST-API). Enter as
-	Base API URL, http://somekeynotused@127.0.0.1:17580/api/v1/ and turn
-	on &quot;</span><i>Download treatments</i><span style="font-style: normal">&quot;.
+	<li><p style="line-height: 100%; margin-bottom: 0in"><span style="font-variant: normal"><span style="font-style: normal">Take
+	another Hardware Data Source for example </span></span><i>Libre
+	(patched app)</i><span style="font-variant: normal"> </span><span style="font-variant: normal"><span style="font-style: normal">and
+	turn on settings-&gt;Cloud Upload-&gt;Nightscout Sync (REST-API).
+	Enter as Base API URL, http://somekeynotused@127.0.0.1:17580/api/v1/
+	and turn on &quot;</span></span><i>Download treatments</i><span style="font-variant: normal"><span style="font-style: normal">&quot;.
 	Uploading to Juggluco is impossible, so this only downloads
-	treatments and generates some error messages.</span></p>
+	treatments and generates some error messages.</span></span></p>
 </ol>
-<p style="line-height: 100%; margin-bottom: 0in"><span style="font-style: normal">When
-&quot;</span><i>Local only</i><span style="font-style: normal">&quot;
+<p style="line-height: 100%; margin-bottom: 0in"><span style="font-variant: normal"><span style="font-style: normal">When
+&quot;</span></span><i>Local only</i><span style="font-variant: normal"><span style="font-style: normal">&quot;
 is unchecked, you can also use the home network IP of the phone
 Juggluco is running on and, when you configure your modem to forward
 to 17580 of that phone, the external IP of your phone. If you have
-given Juggluco  a Private Key and Full Chain for a hostname by which
-the phone can be accessed and turned on </span><i>use SSL</i><span style="font-style: normal">,
+given Juggluco a Private Key and Full Chain for a hostname by which
+the phone can be accessed and turned on </span></span><i>use SSL</i><span style="font-variant: normal"><span style="font-style: normal">,
 you can also use that hostname and the Port you specified here, using
-https instead of http.</span></p>
-<p style="line-height: 100%; margin-bottom: 0in"><span style="font-style: normal">When
+https instead of http.</span></span></p>
+<p style="line-height: 100%; margin-bottom: 0in"><span style="font-variant: normal"><span style="font-style: normal">When
 you want to upload treatments to Diabetes:M, you can either send
 Juggluco\'s data to Libreview and save the data in Libreview with
-&quot;</span><i>Download Glucose data</i><span style="font-style: normal">&quot;
+&quot;</span></span><i>Download Glucose data</i><span style="font-variant: normal"><span style="font-style: normal">&quot;
 and import this data in Diabetes:M with Data-&gt;Import from other
 sources-&gt;Freestyle or get an authenticated Key for the external
 hostname of you phone and give as Link external source, Nightscout
@@ -1857,7 +1859,7 @@ with as URL, https://yourhostname:Port, where yourhostname is the
 hostname of your phone running Juggluco for which you have received
 an authenticated key and Port is the port you mentioned here. It
 doesn\'t seem to sync automatically, so in Diabetes:M you have to
-press on Sync yourself.</span></p>
+press on Sync yourself.</span></span></p>
 <p style="line-height: 100%; margin-bottom: 0in"><strong>Active</strong>:
 Web server is running.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><br/>

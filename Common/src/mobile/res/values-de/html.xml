@@ -2355,12 +2355,13 @@ Nightscout-Follower (z. B. auf einem iPhone) mit diesem Server
 verbinden. Wenn es eine Nightscout-App gibt, die mit diesem Webserver
 nicht funktioniert, teilen Sie es mir bitte mit. Vielleicht kann es
 mit ein paar Änderungen zum Laufen gebracht werden.</p>
-<p style="line-height: 100%; margin-bottom: 0in"><b>api_secret:</b>
-Geben Sie an, dass Follower das http-Header-Element api api_secret
-auf diesen Wert setzen sollen. Nicht alle Nightscout-Apps haben eine
-Option zum Setzen von api_secret, das bedeutet, dass Sie sie nicht
-verwenden können, wenn Secret auf einen Wert gesetzt ist. api_secret
-unterscheidet sich von einem Nightscout-Token.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>api_secret</b>:
+Geben Sie an, dass Follower das HTTP-Header-Element api<b>_</b>secret
+auf diesen Wert setzen sollen. In Juggluco 4.9.1 oder höher
+funktioniert das Testen dieses Geheimnisses auch, wenn die Follower
+dieses Geheimnis als Nightscout-Token verwenden oder den
+api<font size="4" style="font-size: 14pt"><b>-</b></font>secret-Header
+mit einem SHA1-codierten Geheimnis verwenden.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><strong><span lang="de-DE">Sichtbar</span></strong><span lang="de-DE">:
 Geheimnis</span> <span lang="de-DE">sichtbar machen.</span></p>
 <p style="line-height: 100%; margin-bottom: 0in"><strong><span lang="de-DE">Port</span></strong><span lang="de-DE">:
@@ -2395,9 +2396,9 @@ empfangen. In xDrip können Sie dies auf zwei Arten tun:</p>
 <ol>
 	<li><p style="line-height: 100%; margin-bottom: 0in">Nehmen Sie als
 	„Datenquelle“ „Nightscout Follower“ und geben Sie als
-	„<span style="font-style: normal">Follow URL</span>“
-	http://127.0.0.1:17580 an und aktivieren Sie „<i>Behandlungen
-	herunterladen</i>“.</p>
+	„<span style="font-variant: normal"><span style="font-style: normal">Follow
+	URL</span></span>“ http://127.0.0.1:17580 an und aktivieren Sie
+	„<i>Behandlungen herunterladen</i>“.</p>
 	<li><p style="line-height: 100%; margin-bottom: 0in">Nehmen Sie eine
 	andere <i>Datenquelle</i>, z. B. <i>Libre (gepatchte App)</i>, und
 	aktivieren Sie Einstellungen-&gt;Cloud-Upload-&gt; API Upload

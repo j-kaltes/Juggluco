@@ -380,6 +380,8 @@ static constexpr const	char defaultname[]="jugglucodata";
 			}
 		settings->data()->apisecretlength=len;
 		memcpy(settings->data()->apisecret,api_secret,len);
+	extern void	makesha1secret();
+		makesha1secret();
 		}
 	if(use_ssl>=0) {
 		settings->data()->useSSL=use_ssl;

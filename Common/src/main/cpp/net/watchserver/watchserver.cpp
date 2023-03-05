@@ -45,7 +45,7 @@
 #include <sys/wait.h>
        #include <unistd.h>
        #include <sys/syscall.h> 
-
+#include "sha1.hpp"
 #include "../netstuff.h"
 #include "destruct.h"
 
@@ -158,10 +158,19 @@ void stopsslwatchthread() {
 	}
 #endif
 
-
+static std::string sha1secret;
+extern void makesha1secret();
+void makesha1secret() {
+	const int seclen=settings->data()->apisecretlength;
+	std::string strsecret(settings->data()->apisecret,seclen);
+	SHA1 sh1;
+	sh1.update(strsecret);
+	sha1secret=sh1.final();
+	}
 
 void startwatchthread() {
 	if(xdripserversock==-1)  {
+	 	makesha1secret();
 		std::thread watch(startwatchserver,false,17580,&xdripserversock);
 		watch.detach();
 	#ifdef USE_SSL
@@ -883,6 +892,7 @@ bool watchcommands(char *rbuf,int len,recdata *outdata) {
 	const char *ends=rbuf+len;
 	const char *nl;
 	std::string_view foundsecret={nullptr,0};
+	bool issha1=false;
 	std::string_view toget;
 	bool behead=false;
 	bool json=false;
@@ -890,8 +900,8 @@ bool watchcommands(char *rbuf,int len,recdata *outdata) {
 	const int regetlen=sizeof(reget)-1;
 	const char rehead[]= "HEAD /";
 	const int reheadlen=sizeof(rehead)-1;
-	const char apisecret[]= "api_secret: ";
-	const int	apilen=sizeof(apisecret)-1;
+	const char api_secret[]= "api_secret: ";
+	const int	api_len=sizeof(api_secret)-1;
 	while((nl= std::find(start,ends,'\n'))!=ends) {
 		if(!memcmp(start,reget,regetlen)) {
 			const char *reststart=start+regetlen;
@@ -904,12 +914,22 @@ bool watchcommands(char *rbuf,int len,recdata *outdata) {
 				behead=true;
 				}
 			else {
-				if(!memcmp(start,apisecret,apilen)) {
-					const char *keystart=start+apilen;
-					auto end=nl-1;
-					if(*end!='\r')
-						++end;
-					foundsecret={keystart,(unsigned long)(end-keystart)};
+				if(!memcmp(start,api_secret,3)) {
+					if(!memcmp(start+4,api_secret+4,api_len-4)) {
+						const char *keystart=start+api_len;
+						auto end=nl-1;
+						if(*end!='\r')
+							++end;
+						foundsecret={keystart,(unsigned long)(end-keystart)};
+						if(start[3]=='-') {
+							issha1=true;
+							}
+						else  {
+							if(start[3]!='_') { 
+								foundsecret={nullptr,0};
+								}
+							}
+						}
 					}
 				else {
 					constexpr const char jsonstr[]="Accept: application/json";
@@ -924,11 +944,39 @@ bool watchcommands(char *rbuf,int len,recdata *outdata) {
 			break;
 		}
 	
+		
 	int seclen=settings->data()->apisecretlength;
-	if(seclen&&(seclen!=foundsecret.size()||memcmp(settings->data()->apisecret,foundsecret.data(),seclen))) {
-		LOGGER("%s#%d!=%s#%ld \n", settings->data()->apisecret,seclen, foundsecret.data(),foundsecret.size());
-	 	nosecret(foundsecret, outdata) ;
-		return false;
+	if(seclen) {
+		if(foundsecret.size()==0) {
+			const char *start=toget.data();
+			const char *end=start+toget.size();
+			static constexpr const char token[]="token=";
+			static constexpr const int tokenlen=sizeof(token)-1;
+//			const char *hit=std::search(start,end,token,token+tokenlen,[](const char *one,const char *two) { return !memcmp(one,two,tokenlen);});
+			const char *hit=std::search(start,end,token,token+tokenlen);
+			if(hit!=end) {
+				hit+=tokenlen;	
+				const auto len=strcspn(hit," &");
+				foundsecret={hit,len};
+				LOGGER("has token %s#%d\n",foundsecret.data(),foundsecret.size());
+				}
+			}
+		const char *realsecret;
+		if(issha1) {
+			realsecret=sha1secret.data();
+			seclen=sha1secret.size();
+			}
+		else {
+			realsecret=settings->data()->apisecret;
+			}
+		if(seclen!=foundsecret.size()||memcmp(realsecret,foundsecret.data(),seclen)) {
+			LOGGER("%s#%d!=%s#%ld \n", realsecret,seclen, foundsecret.data(),foundsecret.size());
+			nosecret(foundsecret, outdata) ;
+			return false;
+			}
+		else {
+			LOGGER("secret matched\n");
+			}
 		}
 	if(!toget.size()) {
 //		outdata->start= servererrorstr.data();
@@ -936,7 +984,7 @@ bool watchcommands(char *rbuf,int len,recdata *outdata) {
 		givesite(outdata);
 		return true;
 		}
-	LOGGER("toget=%s\n",toget.data());
+	LOGGER("toget=%s\n",toget.data()); //to set getargs in the beginning and use everywhere
 std::string_view sgv="sgv.json";
 	if(!memcmp(sgv.data(),toget.data(),sgv.size())) {
 		return sgvinterpret(toget.data()+sgv.size(),toget.size()-sgv.size(),behead,outdata);

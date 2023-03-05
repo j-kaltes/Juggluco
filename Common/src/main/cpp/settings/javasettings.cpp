@@ -878,7 +878,7 @@ extern "C" JNIEXPORT void  JNICALL   fromjava(startsensors)(JNIEnv *env, jclass 
 extern void initjuggluco(std::string_view dirfiles) ;
 
 extern "C" JNIEXPORT void  JNICALL   fromjava(initjuggluco)(JNIEnv *env, jclass cl,jstring jfilesdir) {
-      const char *filesdir = env->GetStringUTFChars( jfilesdir, NULL);
+      const char *filesdir = env->GetStringUTFChars( jfilesdir, nullptr);
    const  std::string_view::size_type len = env->GetStringUTFLength( jfilesdir);
         if (filesdir == nullptr) return;
         destruct   dest([jfilesdir,filesdir,env]() {env->ReleaseStringUTFChars(jfilesdir, filesdir);});
@@ -1101,7 +1101,7 @@ extern "C" JNIEXPORT jstring JNICALL fromjava(renewlibreaccount)(JNIEnv *env, jc
 	 const jlong num=settings->data()->libreaccountIDnum;
 	 #ifndef NOLOG
 static	 constexpr const char isnull[]="null";
-      const char *id = env->GetStringUTFChars( jinaccount, NULL);
+      const char *id = env->GetStringUTFChars( jinaccount, nullptr);
         destruct   dest([jinaccount,id,env]() {if(id!=isnull)
 		env->ReleaseStringUTFChars(jinaccount, id);});
 	if(!id)
@@ -1109,7 +1109,7 @@ static	 constexpr const char isnull[]="null";
 	#endif	
 	 if(num!=-1LL) {
 	 	char buf[40];
-	 	sprintf(buf,"%lld",num);
+	 	sprintf(buf,"%" PRId64,num);
 		LOGGER("renewlibreaccount(%s) to %s\n",id,buf);
 		return env->NewStringUTF(buf);
 		}
@@ -1117,13 +1117,17 @@ static	 constexpr const char isnull[]="null";
 	return jinaccount;
         }
 
+extern void makesha1secret();
 
 extern "C" JNIEXPORT void  JNICALL   fromjava(setApiSecret)(JNIEnv *env, jclass cl,jstring japisecret) {
+#ifndef WEAROS
 	const jint jlen = env->GetStringLength(japisecret);
 	env->GetStringUTFRegion(japisecret, 0,jlen, settings->data()->apisecret);
 	jint len = env->GetStringUTFLength( japisecret);
 	settings->data()->apisecret[len]='\0';
 	settings->data()->apisecretlength=len;
+	makesha1secret();
+#endif
 	 }
 extern "C" JNIEXPORT jstring  JNICALL   fromjava(getApiSecret)(JNIEnv *env, jclass cl) {
 	 return env->NewStringUTF(settings->data()->apisecret);
@@ -1135,7 +1139,7 @@ extern "C" JNIEXPORT jstring  JNICALL   fromjava(setuseSSL)(JNIEnv *env, jclass 
  	stopsslwatchthread();
 	if(val) {
 		auto error=startsslwatchthread() ;
-		if(error.size()) {
+		if(!error.empty()) {
 	 		return env->NewStringUTF(error.data());
 			}
 		}
