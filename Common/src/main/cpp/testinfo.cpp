@@ -55,8 +55,8 @@ union {
 uint32_t pollcount;
 double pollinterval; 
 uint32_t lockcount;
-//int bluetoothOn;
-int8_t bluetoothOn;
+//int streamingIsEnabled;
+int8_t streamingIsEnabled;
 uint8_t reserved4[3];
 char deviceaddress[deviceaddresslen];
 uint16_t libreviewscan;
@@ -73,7 +73,7 @@ cout<<"streamingAuthenticationData: "<<offsetof(Info,streamingAuthenticationData
 cout<<"blueinfo::len: "<<offsetof(Info,blueinfo.len)<<endl;
 cout<<"blueinfo::data: "<<offsetof(Info,blueinfo.data)<<endl;
 cout<<"pollcount: "<<offsetof(Info,pollcount)<<endl;
-cout<<"bluetoothOn: "<<offsetof(Info,bluetoothOn)<<endl;
+cout<<"streamingIsEnabled: "<<offsetof(Info,streamingIsEnabled)<<endl;
 cout<<"deviceaddress: "<<offsetof(Info,deviceaddress)<<endl;
 cout<<"libreviewscan: "<<offsetof(Info,libreviewscan)<<endl;
 cout<<"libreviewid: "<<offsetof(Info,libreviewid)<<endl;

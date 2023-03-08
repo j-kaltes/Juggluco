@@ -13,7 +13,8 @@ make juggluco
 
 Juggluco server can also function as simplified Nightscout/xDrip web server.
 
-SSL doesn't work with the precompiled version.
+SSL doesn't work with the precompiled version, because statically linked programs can't use dlopen.
+
 To use the SSL version, you need an authenticated ssl key for the hostname that is used to contact with the juggluco server.
 You can get such a key for your domain name for free using certbot (https://certbot.eff.org/instructions) or 
 ZeroSSL (https://www.sslforfree.com/). 

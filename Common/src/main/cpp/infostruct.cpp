@@ -65,8 +65,8 @@ union {
 uint32_t pollcount;
 double pollinterval; 
 uint32_t lockcount;
-//int bluetoothOn;
-int8_t bluetoothOn;
+//int streamingIsEnabled;
+int8_t streamingIsEnabled;
 uint8_t reserved4[3];
 char deviceaddress[deviceaddresslen];
 uint16_t libreviewscan;

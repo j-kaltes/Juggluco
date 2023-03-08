@@ -104,7 +104,8 @@ public static void    mklayout(MainActivity context,CheckBox donum,int[] donothi
 	recycle.setLayoutManager(lin);
 	var help=getbutton(context,R.string.helpname);
 
-	var sendnumbers=getcheckbox(context,R.string.sendamounts,donum.isChecked());
+//	var sendnumbers=getcheckbox(context,R.string.sendamounts,donum.isChecked());
+	var sendnumbers=getcheckbox(context,donum.getText().toString(),donum.isChecked());
 	if(!canSendNumbers()) {
 		//EnableControls(sendnumbers,false);
 		sendnumbers.setEnabled(false);

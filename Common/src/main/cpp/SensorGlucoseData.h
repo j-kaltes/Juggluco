@@ -59,6 +59,9 @@ struct ScanData {uint32_t t;int32_t id;int32_t g;int32_t tr;float ch;
 const uint16_t getmgdL() const { return g;};
 const float getmmolL() const { return g/18.0f;};
 const uint16_t getsputnik() const { return g*10;};
+float getchange() const {
+	return ch;
+	}
 uint32_t gettime() const {
 	return t;
 	};
@@ -141,8 +144,8 @@ union {
 uint32_t pollcount;
 double pollinterval; 
 uint32_t lockcount;
-//int bluetoothOn;
-int8_t bluetoothOn;
+//int streamingIsEnabled;
+int8_t streamingIsEnabled;
 uint8_t reserved4[3];
 char deviceaddress[deviceaddresslen];
 uint16_t libreviewscan;
@@ -155,6 +158,8 @@ bool putsensor:1;
 updatestate update[std::max(maxsendtohost,8)];
 uint8_t kAuth[149];
 bool haskAuth;
+uint16_t nightiter;
+
 bool infowrong() const {
 	if(days<10||days>16)
 		return true;	
@@ -238,11 +243,11 @@ bool waiting=true;
 const int32_t maxpos() const {
 	return getinfo()->days*24*perhour();
 	}
-int bluetoothOn() const{
-	return getinfo()->bluetoothOn;
+int streamingIsEnabled() const{
+	return getinfo()->streamingIsEnabled;
 	}
 void setbluetoothOn(int val) {
-	getinfo()->bluetoothOn=val;
+	getinfo()->streamingIsEnabled=val;
 	}
 uint32_t getfirsttime() const {
 	uint32_t locfirstpos=getstarthistory()+1;
@@ -1190,10 +1195,10 @@ int updatestream(crypt_t *pass,int sock,int ind,int sensindex)  {
 		uint32_t pollcount;
 		double pollinterval; 
 		uint32_t lockcount;
-		uint8_t bluetoothOn;
+		uint8_t streamingIsEnabled;
 		} pollinfo;
 	constexpr const int off=offsetof(Info,pollcount); 
-	constexpr const int len=offsetof(Info,bluetoothOn)+sizeof(Info::bluetoothOn)-off;
+	constexpr const int len=offsetof(Info,streamingIsEnabled)+sizeof(Info::streamingIsEnabled)-off;
 	memcpy(&pollinfo,meminfo.data()+off,len);
 	const int streamend=pollinfo.pollcount;	 //TODO test earlier?
 	if(streamstart<streamend) {
@@ -1230,7 +1235,7 @@ int updatestream(crypt_t *pass,int sock,int ind,int sensindex)  {
 		}
 	else {
 		if(getinfo()->update[ind].sendbluetoothOn) {
-		      constexpr	const int offset=offsetof(Info,bluetoothOn);
+		      constexpr	const int offset=offsetof(Info,streamingIsEnabled);
 		      if(!senddata(pass,sock,offset,meminfo.data()+offset,1, infopath)) {
 				LOGGER("GLU: senddata bluetoothON info.data failed\n");
 		      		return 0;

@@ -235,7 +235,7 @@ static	 const int waitsig=60;
 	if(alg==Initialized) {
 		LOGGER("Initialized\n");
 		const int min=datptr->getSensorAgeInMinutes();
-		const bool enablestreaming=setbluetoothon||(ab.hist&&!ab.hist->bluetoothOn());
+		const bool enablestreaming=setbluetoothon||(ab.hist&&!ab.hist->streamingIsEnabled());
 		if(min<60)
 			ret=5<<16|(60-min)<<24;
 		else
@@ -255,7 +255,7 @@ static	 const int waitsig=60;
 			int gluval=alg->currentglucose().getValue();
 			if(gluval) {
 				scantoshow={ab.sensorindex,scanda};
-				if(setbluetoothon||!ab.hist->bluetoothOn())  {
+				if(setbluetoothon||!ab.hist->streamingIsEnabled())  {
 					return 8<<16|gluval;
 						/*
 					if(!waitstreaming()|| ((tim-ab.hist->beginscans()->gettime())>120)) {
@@ -287,7 +287,7 @@ static	 const int waitsig=60;
 					senso->finished=0;
 					}
 				senso->initialized=true;
-				const bool enablestreaming=setbluetoothon||(ab.hist&&!ab.hist->bluetoothOn());
+				const bool enablestreaming=setbluetoothon||(ab.hist&&!ab.hist->streamingIsEnabled());
 				ret=5<<16|(60-min)<<24;
 				if(enablestreaming)
 					ret|=(0x80<<16);
@@ -384,7 +384,7 @@ extern "C" JNIEXPORT void JNICALL   fromjava(freedataptr)(JNIEnv *envin, jclass 
 	delete sdata;
 	}
 extern "C" JNIEXPORT jboolean  JNICALL   fromjava(askstreamingEnabled)(JNIEnv *env, jclass cl,jlong dataptr) {
-	return reinterpret_cast<streamdata *>(dataptr)->hist ->bluetoothOn()==1; 
+	return reinterpret_cast<streamdata *>(dataptr)->hist ->streamingIsEnabled()==1; 
 	}
 extern "C" JNIEXPORT void JNICALL  fromjava(setDeviceAddress)(JNIEnv *env, jclass cl,jlong dataptr,jstring jdeviceAddress ) {
 	if(!dataptr)

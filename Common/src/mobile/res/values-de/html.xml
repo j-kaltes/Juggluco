@@ -2274,7 +2274,12 @@ einige Nightscout</span> <span lang="de-DE">Apps</span> <span lang="de-DE">könn
 davon Gebrauch machen. xDrip, Diabox und eine
 <a href="https://github.com/dabear/FloatingGlucose/releases">Windows-Floating-Glucose-</a>
 App können mit http verwendet werden, wenn „</span><span lang="de-DE"><i>Nur
-lokal</i></span>“ <span lang="de-DE">nicht eingestellt ist.</span></p>
+lokal</i></span>“ <span lang="de-DE">nicht eingestellt ist.</span>
+<span lang="de-DE">Unter MacOS gilt dasselbe für Nightscout Menu
+Bar, Gluco Status und Gluco Tracker (alle im Apple Store). Auf IOS
+können Sie <a href="https://github.com/someoneAnyone/Nightscouter">Nightscouter</a>
+</span><span lang="de-DE">auch </span><span lang="de-DE">mit http
+verwenden.</span></p>
 <p style="line-height: 100%; margin-bottom: 0in"><span lang="de-DE">Wenn
 Sie über das Internet auf Juggluco zugreifen möchten, müssen Sie
 einen Port von Ihrem Modem weiterleiten. Siehe
@@ -2335,10 +2340,11 @@ Klon).</span></p>
 Nsclient funktionieren nicht als Follower von Juggluco, aber Sie
 können ihnen Glukosewerte mit der xDrip-Broadcast in Juggluco senden
 (linkes Menü-&gt; Einstellungen-&gt; xDrip Broadcast).</p>
-<p style="line-height: 100%; margin-bottom: 0in"><span lang="de-DE">Sie
-benötigen SSL für Diabetes:M, <a href="https://play.google.com/store/apps/details?id=se.cornixit.nightwatch">Nightwatch</a>
-und <a href="https://slingithub.github.io/CheckmateWeb">Checkmate</a>.
-Geben Sie als Nightscout-Server-URL an: </span>
+<p style="line-height: 100%; margin-bottom: 0in">SSL benötigen Sie
+für die Android-Apps Diabetes:M, <a href="https://play.google.com/store/apps/details?id=se.cornixit.nightwatch">Nightwatch</a>
+und <a href="https://slingithub.github.io/CheckmateWeb">Checkmate</a>,
+Sugarmate (MacOS) und <a href="https://github.com/JohanDegraeve/xdripswift">Xdrip4ios</a>.
+<span lang="de-DE">Geben Sie als Nightscout-Server-URL an: </span>
 </p>
 <p><i>https://hostname:port</i> 
 </p>

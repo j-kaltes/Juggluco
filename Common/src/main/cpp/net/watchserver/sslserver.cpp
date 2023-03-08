@@ -326,6 +326,11 @@ void handlewatchsecure(int sock) {
         SSL *ssl=SSL_newptr(ctx);  
 	if(!ssl)
 		return;
+
+extern void sendtimeout(int sock,int secs);
+extern void receivetimeout(int sock,int secs) ;
+ 	receivetimeout(sock,60);
+ 	sendtimeout(sock,5*60);
         SSL_set_fdptr(ssl, sock); 
     if ( SSL_acceptptr(ssl)<0)   { 
         sslerror("SSL_accept: %s");
@@ -333,8 +338,7 @@ void handlewatchsecure(int sock) {
 	return;
 	}
 bool	securewatchcommands(SSL *ssl);
-	while(securewatchcommands(ssl))
-		;
+	securewatchcommands(ssl);
     	SSL_freeptr(ssl);  
 	close(sock);
 	}

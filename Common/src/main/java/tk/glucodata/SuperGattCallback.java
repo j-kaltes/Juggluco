@@ -304,7 +304,7 @@ public void searchforDeviceAddress() {
 				Log.d(LOG_ID, SerialNumber + " cb.mBluetoothGatt!=null");
 				return;
 			}
-				if (!isRelease) {
+				if (tk.glucodata.Log.doLog) {
 					Log.d(LOG_ID, SerialNumber + " Try connection to " + device.getAddress());
 					}
 				try {

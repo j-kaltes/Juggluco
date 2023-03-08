@@ -1040,7 +1040,7 @@ scanstate *Abbott::initnewsensor( scandata *data) {
 	if(int sindex=sensors->sensorindex(serial.data());sindex>=0) {
 		sensorindex=sindex;
 		 hist=sensors->gethist(sindex);
-		if(hist->bluetoothOn()==1)
+		if(hist->streamingIsEnabled()==1)
 			hist->setbluetoothOn(0);
 		}
 	else   {

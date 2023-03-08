@@ -54,7 +54,7 @@
 #ifndef LOGGER
 #define LOGGER(...) fprintf(stderr,__VA_ARGS__)
 #endif
-
+typedef std::conditional<sizeof(long long) == sizeof(int64_t), long long, int64_t >::type longlongtype;
 
 
 static void watchserverloop(int *sockptr,bool secure) ;
@@ -266,10 +266,13 @@ void handlewatch(int sock) {
       const char threadname[]="watchconnect";
       prctl(PR_SET_NAME, threadname, 0, 0, 0);
       LOGGER("handlewatch %d\n",sock);
+extern void sendtimeout(int sock,int secs);
+extern void receivetimeout(int sock,int secs) ;
+ 	receivetimeout(sock,60);
+ 	sendtimeout(sock,5*60);
 bool	watchcommands(int sock);
 	
-	while(watchcommands(sock))
-		;
+	watchcommands(sock);
 	close(sock);
 	}
 
@@ -386,7 +389,7 @@ static bool givestatus(recdata *outdata) {
 
 	auto lowalarm=gconvert(settings->data()->alow);
 	const char *unitlabel=settings->getunitlabel().data();
-	int alllen=snprintf(start,len,statusformat,tmbuf.tm_year+1900,tmbuf.tm_mon+1,tmbuf.tm_mday, tmbuf.tm_hour, tmbuf.tm_min,tmbuf.tm_sec,0,tim*1000L,unitlabel,halarm,thigh,tlow,lowalarm);
+	int alllen=snprintf(start,len,statusformat,tmbuf.tm_year+1900,tmbuf.tm_mon+1,tmbuf.tm_mday, tmbuf.tm_hour, tmbuf.tm_min,tmbuf.tm_sec,0,tim*1000LL,unitlabel,halarm,thigh,tlow,lowalarm);
 	mkheader(start,start+alllen,false,outdata); 
 	return true;
 	}
@@ -402,7 +405,7 @@ inline static constexpr void addar(char *&uitptr,const T (&array)[N]) {
 extern Sensoren *sensors;
 
 
-const SensorGlucoseData *getPollsensor(int &sensorid) {
+const SensorGlucoseData *getStreamSensor(int &sensorid) {
 	for(;;sensorid--) {
 		if(sensorid<0)  {
 			return nullptr;
@@ -421,7 +424,7 @@ bool getitems(char *&outiter,const int  datnr,uint32_t newer,uint32_t older,bool
 	int datit=0;
 	{
 		STARTDATA:
-		const SensorGlucoseData *sens=getPollsensor(sensorid);;
+		const SensorGlucoseData *sens=getStreamSensor(sensorid);;
 		if(!sens) {
 			if(datit)
 				return true;
@@ -430,7 +433,7 @@ bool getitems(char *&outiter,const int  datnr,uint32_t newer,uint32_t older,bool
 		std::span<const ScanData> gdata=sens->getPolldata();
 		const ScanData *iter=&gdata.end()[-1];
 		--sensorid;
-		if(const SensorGlucoseData *sens2=getPollsensor(sensorid)) {
+		if(const SensorGlucoseData *sens2=getStreamSensor(sensorid)) {
 			std::span<const ScanData> gdata2=sens2->getPolldata();
 			const ScanData *last=&gdata2.end()[-1];
 			if(last->t>iter->t) {
@@ -440,7 +443,7 @@ bool getitems(char *&outiter,const int  datnr,uint32_t newer,uint32_t older,bool
 				}
 			}
 		const char *sensorname= sens->shortsensorname()->data();
-		LOGGER("getPollsensor(%d) %s pollcount=%d\n",sensorid+1,sensorname,sens->pollcount());
+		LOGGER("getStreamSensor(%d) %s pollcount=%d\n",sensorid+1,sensorname,sens->pollcount());
 		const ScanData *first=&gdata.begin()[0];
 
 		const time_t starttime= sens->getstarttime();
@@ -482,13 +485,13 @@ extern std::string_view getdeltaname(float rate);
 char * writebucket(char *outiter,const int index,const ScanData *val,const char *sensorname) {
 	const char * changelabel=getdeltaname(val->ch).data();
 	auto mgdl=val->getmgdL();
-	long mmsec=val->gettime()*1000L;
-	long frommsec=mmsec-1000L*30;
-	long tomsec=mmsec+1000L*30;
-	return outiter+sprintf(outiter,R"({"mean":%d,"last":%d,"mills":%ld,"index":%d,"fromMills":%ld,"toMills":%ld,"sgvs":[{"_id":"%s#%d","mgdl":%d,"mills":%ld,"device":"Juggluco","direction":"%s","type":"sgv","scaled":%d}]},)",mgdl,mgdl,mmsec,index,frommsec,tomsec,sensorname,val->id,mgdl,mmsec,changelabel,mgdl);
+	longlongtype mmsec=val->gettime()*1000LL;
+	longlongtype frommsec=mmsec-1000LL*30;
+	longlongtype tomsec=mmsec+1000LL*30;
+	return outiter+sprintf(outiter,R"({"mean":%d,"last":%d,"mills":%lld,"index":%d,"fromMills":%lld,"toMills":%lld,"sgvs":[{"_id":"%s#%d","mgdl":%d,"mills":%lld,"device":"Juggluco","direction":"%s","type":"sgv","scaled":%d}]},)",mgdl,mgdl,mmsec,index,frommsec,tomsec,sensorname,val->id,mgdl,mmsec,changelabel,mgdl);
 }
 
-//https://dnarnianbg.herokuapp.com/api/v1/entries/current
+//https://api/v1/entries/current
 
 extern int Tdatestring(time_t tim,char *buf) ;
 
@@ -521,12 +524,17 @@ char *textitem(char *outiter,const ScanData *value,const char sep=9) {
         struct tm tmbuf;
 	gmtime_r(&tim, &tmbuf);
         outiter+=sprintf(outiter,R"("%d-%02d-%02dT%02d:%02d:%02d.000Z")",tmbuf.tm_year+1900,tmbuf.tm_mon+1,tmbuf.tm_mday, tmbuf.tm_hour, tmbuf.tm_min,tmbuf.tm_sec);
-	outiter+=sprintf(outiter,R"(%c%ld%c%d%c"%s"%c"Juggluco")" "\r\n",sep,tim*1000L,sep,mgdL,sep,changelabel,sep);
+	outiter+=sprintf(outiter,R"(%c%lld%c%d%c"%s"%c"Juggluco")" "\r\n",sep,tim*1000LL,sep,mgdL,sep,changelabel,sep);
 	return outiter;
+	}
+
+//[{"_id":"%s","device":"%s","uploader":{"battery":%d,"type":"PHONE"},"created_at":"2023-03-05T20:05:53.203Z"},
+static bool showdevicestatus(recdata *outdata) { //seems to be used for battery level. Unimportant.
+	return givenothing(outdata);
 	}
 static bool givecurrent(recdata *outdata) {
 	int sensorid=sensors->last();
-	const SensorGlucoseData *sens=getPollsensor(sensorid);;
+	const SensorGlucoseData *sens=getStreamSensor(sensorid);;
 	const std::span<const ScanData> gdata=sens->getPolldata();
 	const ScanData *first=&gdata.begin()[0];
 	const ScanData *iter=&gdata.end()[-1];
@@ -557,7 +565,7 @@ static	constexpr const char header[]="HTTP/1.1 200 OK\r\nContent-Type: text/plai
 	*/
 	auto len=outiter-start;
 	char lenstr[20];
-	int lenlen=sprintf(lenstr,"%ld\r\n\r\n",len);
+	int lenlen=snprintf(lenstr,20,"%lld\r\n\r\n",len);
 	char *startheader=start-lenlen-headerlen;
 	outdata->start=startheader;
 	addar(startheader,header);
@@ -567,7 +575,7 @@ static	constexpr const char header[]="HTTP/1.1 200 OK\r\nContent-Type: text/plai
 	LOGGERN(outdata->start,outdata->len);
 	return true;
 	}
-//https://dnarnianbg.herokuapp.com/api/v1/entries/sgv.txt?count=24&find[date][$gte]=1676554219000&find[date][$lt]=1676561418000
+//https:///api/v1/entries/sgv.txt?count=24&find[date][$gte]=1676554219000&find[date][$lt]=1676561418000
 /*
 
 HTTP/1.1 200 OK
@@ -629,7 +637,7 @@ bool givesgvtxt(int nr,uint32_t lowerend,uint32_t higherend,recdata *outdata,cha
 	outiter-=2;
 	auto len=outiter-start;
 	char lenstr[30];
-	int lenlen=sprintf(lenstr,"%ld\r\n\r\n",len);
+	int lenlen=sprintf(lenstr,"%lld\r\n\r\n",len);
 
 	char *startheader=start-lenlen-headerlen;
 	outdata->start=startheader;
@@ -645,12 +653,16 @@ bool givesgvtxt(int nr,uint32_t lowerend,uint32_t higherend,recdata *outdata,cha
 extern int getdeltaindex(float rate);
 extern std::string_view getdeltanamefromindex(int index) ;
 
-double deltatimes=5.0;
+static double deltatimes=5.0;
+
+double getdelta(float change) {
+	 return isnan(change)?0:change*deltatimes;
+	 }
 //{"sgv":"10.7","trend":4,"direction":"Flat","datetime":1676804318000}
 static char *pebbleitem(bool mmolL,char *outiter,const ScanData *item) {
 	int trend=getdeltaindex(item->ch);
 	float value=mmolL?item->getmmolL():item->getmgdL();
-	return outiter+=sprintf(outiter,R"({"sgv":"%.1f","trend":%d,"direction":"%s","datetime":%ld},)",value,trend,getdeltanamefromindex(trend).data(),item->gettime()*1000L);
+	return outiter+=sprintf(outiter,R"({"sgv":"%.1f","trend":%d,"direction":"%s","datetime":%lld},)",value,trend,getdeltanamefromindex(trend).data(),item->gettime()*1000LL);
 	}
 bool		 pebbleinterpret(const char *input,int inputlen,recdata *outdata) {
 	int count=1;
@@ -658,15 +670,16 @@ bool		 pebbleinterpret(const char *input,int inputlen,recdata *outdata) {
    	outdata->allbuf=new(std::nothrow) char[512+80*+count+200];
     	char *start=outdata->allbuf+150,*outiter=start;
 	auto nu=time(nullptr);
-	constexpr const char startpebble[]=R"({"status":[{"now":%ld}],"bgs":[)";
+	constexpr const char startpebble[]=R"({"status":[{"now":%lld}],"bgs":[)";
 	constexpr const char endpebble[]=R"(],"cals":[]})";
-	outiter+=sprintf(outiter,startpebble,nu*1000L);
+	outiter+=sprintf(outiter,startpebble,nu*1000LL);
 	int interval=4*61;
 	if(!getitems(outiter,count,0,UINT32_MAX,true,interval,[mmol](char *outiter,int datit, const ScanData *iter,const char *sensorname,const time_t starttime) {
 			
 		char *ptr=pebbleitem(mmol,outiter,iter);
 		if(!datit) {
-	 		double delta= isnan(iter->ch)?0:iter->ch*deltatimes;
+	 		//double delta= isnan(iter->ch)?0:iter->ch*deltatimes;
+	 		double delta= getdelta(iter->ch);
 			ptr-=2;
 			ptr+=sprintf(ptr,R"(,"bgdelta":"%.1f"},)",delta);
 			}
@@ -731,7 +744,7 @@ char * givecage(char *outiter) {
 char *getdelta(char *start) {
 	char *outiter=start;
 	int sensorid=sensors->last();
-	const SensorGlucoseData *sens=getPollsensor(sensorid);;
+	const SensorGlucoseData *sens=getStreamSensor(sensorid);;
 	const std::span<const ScanData> gdata=sens->getPolldata();
 	const ScanData *first=&gdata.begin()[0];
 	const ScanData *iter=&gdata.end()[-1];
@@ -749,12 +762,12 @@ char *getdelta(char *start) {
 		if(wastime<old) {
 			auto prevmgdl=iter->getmgdL();
 			auto diff=nuval-prevmgdl;
-			long nowmmsec=nu*1000L;
-			long prevmmsec=wastime*1000L;
+			longlongtype nowmmsec=nu*1000LL;
+			longlongtype prevmmsec=wastime*1000LL;
 			int valueid=iter->getid();
 			int elapsedMins=(nu-wastime)/60;
 			const char * changelabel=getdeltaname(iter->ch).data();
-			constexpr const char deltaformat[]=R"("delta":{"absolute":%d,"elapsedMins":%d,"interpolated":false,"mean5MinsAgo":%d,"times":{"recent":%ld,"previous":%ld},"mgdl":%d,"scaled":%d,"display":"%d","previous":{"mean":%d,"last":%d,"mills":%ld,"sgvs":[{"_id":"%s#%d","mgdl":%d,"mills":%ld,"device":"Juggluco","direction":"%s","type":"sgv","scaled":%d}]}},)";
+			constexpr const char deltaformat[]=R"("delta":{"absolute":%d,"elapsedMins":%d,"interpolated":false,"mean5MinsAgo":%d,"times":{"recent":%lld,"previous":%lld},"mgdl":%d,"scaled":%d,"display":"%d","previous":{"mean":%d,"last":%d,"mills":%lld,"sgvs":[{"_id":"%s#%d","mgdl":%d,"mills":%lld,"device":"Juggluco","direction":"%s","type":"sgv","scaled":%d}]}},)";
 			return outiter+sprintf(outiter,deltaformat,diff,elapsedMins,prevmgdl,nowmmsec,prevmmsec,diff,diff,diff,prevmgdl,prevmgdl,prevmmsec,sensorname,valueid,prevmgdl,prevmmsec,changelabel,prevmgdl);
 
 			}
@@ -769,7 +782,7 @@ char *getdelta(char *start) {
 //{"bgnow":{"mean":169,"last":169,"mills":1676751516000,"sgvs":[{"_id":"63f132b14d77ce842e5700eb","mgdl":169,"mills":1676751516000,"device":"share2","direction":"FortyFiveUp","type":"sgv","scaled":169}]}}
 static char * givebgnow(char *start) {
 	int sensorid=sensors->last();
-	const SensorGlucoseData *sens=getPollsensor(sensorid);;
+	const SensorGlucoseData *sens=getStreamSensor(sensorid);;
 	const std::span<const ScanData> gdata=sens->getPolldata();
 	const ScanData *first=&gdata.begin()[0];
 	const ScanData *iter=&gdata.end()[-1];
@@ -777,12 +790,12 @@ static char * givebgnow(char *start) {
 		if(--iter<=first)
 			return start;
 		}
-	long mmsectime=iter->gettime()*1000L;
+	longlongtype mmsectime=iter->gettime()*1000LL;
 	auto mgdl=iter->getmgdL();
 	int valueid=iter->getid();
 	const char * changelabel=getdeltaname(iter->ch).data();
 	const char *sensorname= sens->shortsensorname()->data();
-	constexpr const char bgformat[]=R"("bgnow":{"mean":%d,"last":%d,"mills":%ld,"sgvs":[{"_id":"%s#%d","mgdl":%d,"mills":%ld,"device":"Juggluco","direction":"%s","type":"sgv","scaled":%d}]},)";
+	constexpr const char bgformat[]=R"("bgnow":{"mean":%d,"last":%d,"mills":%lld,"sgvs":[{"_id":"%s#%d","mgdl":%d,"mills":%lld,"device":"Juggluco","direction":"%s","type":"sgv","scaled":%d}]},)";
 	return start+=sprintf(start,bgformat,mgdl,mgdl,mmsectime,sensorname,valueid,mgdl,mmsectime,changelabel,mgdl);
 	}
 
@@ -879,15 +892,16 @@ bool givestrange(const char *input,int inputlen,recdata *outdata) {
     return true;
     } */
 static void nosecret(std::string_view secret, recdata *outdata) {
-	constexpr const char nosecrettxt[]="HTTP/1.0 404 Not Found\r\nContent-Type: text/plain\r\nContent-Length: %d\r\n\\r\nsecret-api wrong: %s\n";
+	constexpr const char nosecrettxt[]="HTTP/1.1 403 Forbidden\r\nContent-Type: text/plain\r\nContent-Length: %d\r\n\r\nsecret_api wrong: %.*s\n";
 	constexpr const int formatlen=sizeof(nosecrettxt)-1;
-	char *nosecret=outdata->allbuf=new char[formatlen+secret.size()+20];
+	const int buflen=formatlen+secret.size()+20;
+	char *nosecret=outdata->allbuf=new char[buflen];
 	int textlen=19+secret.size();
-	outdata->len= sprintf(nosecret,nosecrettxt,textlen,secret.data());
+	outdata->len= snprintf(nosecret,buflen,nosecrettxt,textlen,secret.size(),secret.data());
 	outdata->start=nosecret;
 	}
 bool watchcommands(char *rbuf,int len,recdata *outdata) {
-	LOGGER("watchcommands len=%d %s",len,rbuf);
+	LOGGER("watchcommands len=%d %.*s",len,len,rbuf);
 	const char *start=rbuf;
 	const char *ends=rbuf+len;
 	const char *nl;
@@ -920,7 +934,7 @@ bool watchcommands(char *rbuf,int len,recdata *outdata) {
 						auto end=nl-1;
 						if(*end!='\r')
 							++end;
-						foundsecret={keystart,(unsigned long)(end-keystart)};
+						foundsecret={keystart,(size_t )(end-keystart)};
 						if(start[3]=='-') {
 							issha1=true;
 							}
@@ -958,7 +972,7 @@ bool watchcommands(char *rbuf,int len,recdata *outdata) {
 				hit+=tokenlen;	
 				const auto len=strcspn(hit," &");
 				foundsecret={hit,len};
-				LOGGER("has token %s#%d\n",foundsecret.data(),foundsecret.size());
+				LOGGER("has token %.*s#%d\n",len,foundsecret.data(),foundsecret.size());
 				}
 			}
 		const char *realsecret;
@@ -970,7 +984,7 @@ bool watchcommands(char *rbuf,int len,recdata *outdata) {
 			realsecret=settings->data()->apisecret;
 			}
 		if(seclen!=foundsecret.size()||memcmp(realsecret,foundsecret.data(),seclen)) {
-			LOGGER("%s#%d!=%s#%ld \n", realsecret,seclen, foundsecret.data(),foundsecret.size());
+			LOGGER("%s#%d!=%.*s#%lld \n", realsecret,seclen,foundsecret.size(), foundsecret.data(),foundsecret.size());
 			nosecret(foundsecret, outdata) ;
 			return false;
 			}
@@ -984,14 +998,14 @@ bool watchcommands(char *rbuf,int len,recdata *outdata) {
 		givesite(outdata);
 		return true;
 		}
-	LOGGER("toget=%s\n",toget.data()); //to set getargs in the beginning and use everywhere
+	LOGGER("toget=%.*s\n",toget.size(),toget.data()); //to set getargs in the beginning and use everywhere
 std::string_view sgv="sgv.json";
 	if(!memcmp(sgv.data(),toget.data(),sgv.size())) {
 		return sgvinterpret(toget.data()+sgv.size(),toget.size()-sgv.size(),behead,outdata);
 		}
 
 ///api/v1/entries.json
-//https://dnarnianbg.herokuapp.com/api/v1/entries?count=2
+//https:///api/v1/entries?count=2
 ///api/v1/entries/sgv.txt?c
 	std::string_view api="api/v1/entries";
 	if(!memcmp(api.data(),toget.data(),api.size())) {
@@ -1062,6 +1076,11 @@ const auto treatsize= treatments.size();
 	if(!memcmp(treatments.data(),toget.data(),treatsize)) {
 		return givetreatments(toget.data()+treatsize,toget.size()-treatsize,outdata);
 		}
+
+constexpr const std::string_view devicestatus="api/v1/devicestatus.json";
+	if(!memcmp(devicestatus.data(),toget.data(),devicestatus.size())) {
+		return showdevicestatus(outdata);
+		} 
 
 constexpr const std::string_view pebble="pebble";
 	if(!memcmp(pebble.data(),toget.data(),pebble.size())) {
@@ -1195,8 +1214,10 @@ private:
 bool givesgvtxt(const char *input,int inlen,recdata *outdata,char sep) {
 	Sgvinterpret pret;
 	pret.datnr=10;
-	if(!pret.getargs(input,inlen))
+	if(!pret.getargs(input,inlen))  {
+		wrongpath({input,(size_t)inlen},outdata);
 		return false;
+		}
 
 	return givesgvtxt(pret.datnr,pret.lowerend,pret.higherend,outdata,sep);
 	}
@@ -1246,7 +1267,6 @@ char *Sgvinterpret::firstdata(char *outiter,time_t starttime,uint32_t dattime) c
 		 }
 	return outiter;
 	}
-
 char *Sgvinterpret::writeitem(char *outiter,int datit, const ScanData *iter,const char *sensorname,const time_t starttime) const {
 	LOGGER("writeitem %d\n",datit);
 	  if(datit>0) {
@@ -1257,12 +1277,13 @@ char *Sgvinterpret::writeitem(char *outiter,int datit, const ScanData *iter,cons
 	   if(!briefmode) {
 		outiter=dontbrief(outiter,sensorname,iter);
 		}
-	 double delta= isnan(iter->ch)?0:iter->ch*deltatimes;
+	 double delta= getdelta(iter->ch);
+//	 double delta= isnan(iter->ch)?0:iter->ch*deltatimes;
 	 std::string_view name=getdeltaname(iter->ch);
 	 outiter+=sprintf(outiter,R"("date":%d000,"sgv":%d,"delta":%.3f,"direction":"%s","noise":1)",iter->t,iter->getmgdL(),delta,name.data());
 	    if (!briefmode) {
-		long mgdL1000=iter->getmgdL()*1000;
-		outiter+=sprintf(outiter,R"(,"filtered":%ld,"unfiltered":%ld,"rssi":100,"type":"sgv")",mgdL1000,mgdL1000);
+		longlongtype mgdL1000=iter->getmgdL()*1000;
+		outiter+=sprintf(outiter,R"(,"filtered":%lld,"unfiltered":%lld,"rssi":100,"type":"sgv")",mgdL1000,mgdL1000);
 		}
 	   if(datit==0) {
 		outiter=firstdata(outiter,starttime,iter->t);
@@ -1355,8 +1376,9 @@ static bool givetreatments(const char *args,int argslen, recdata *outdata)  {
 			}
 		}
 	
-	if(!pret.getargs(args,argslen))
+	if(!pret.getargs(args,argslen)) {
 		return false;
+		}
 	
 	const int basecount=numdatas.size();
 	NumIter<Num> numiters[basecount];
@@ -1429,14 +1451,15 @@ static time_t readtime(const char *input) {
 	}
 
   bool Sgvinterpret::getargs(const char *start,int len) {
-	LOGGER("sgvinterpret(%s#%d)\n",start,len);
+	LOGGER("sgvinterpret(%.*s#%d)\n",len,start,len);
 	const char *ends=start+len;
 	start++;
 	for(const char *iter=start;iter<ends;iter=std::find(iter,ends,'&')+1) {
 		std::string_view count="count=";
 		if(!memcmp(iter,count.data(),count.size())) {
 			iter+=count.length();
-			if(!(iter=readnum<int>(iter,ends,datnr))||datnr<1) {
+			if(!(iter=readnum<int>(iter,ends,datnr))||datnr<0) {
+
 				return false;
 				}
 			}
@@ -1479,8 +1502,8 @@ static time_t readtime(const char *input) {
 								if(!memcmp(iter,greater.data(),greater.size())||(greater=greater2, !memcmp(iter,greater.data(),greater.size()))) {
 									iter+=greater.length();
 									const char *ptr;
-									long tmp;
-									if(!(ptr=readnum<long>(iter,ends,tmp))) {
+									longlongtype tmp;
+									if(!(ptr=readnum<longlongtype>(iter,ends,tmp))) {
 										LOGGER("%s readnum failed '%s'\n",greater.data(),iter);
 										return false;
 										}
@@ -1496,12 +1519,12 @@ static time_t readtime(const char *input) {
 									std::string_view smaller2="find[date][$lt]=";
 									if((!memcmp(iter,smaller.data(),smaller.size()))||(smaller=smaller2,!memcmp(iter,smaller.data(),smaller.size()))) {
 										iter+=smaller.length();
-										long tmp;	
-										if(!(iter=readnum<long>(iter,ends,tmp))) {
+										longlongtype tmp;	
+										if(!(iter=readnum<longlongtype>(iter,ends,tmp))) {
 											LOGGER("%s= readnum failed\n",smaller.data());
 											return false;
 											}
-										higherend=tmp/1000L;
+										higherend=tmp/1000LL;
 										if(smaller!=smaller2) {
 											++higherend;
 											}
@@ -1511,7 +1534,8 @@ static time_t readtime(const char *input) {
 									std::string_view greater="find[dateString][$gte]="; //TODO greater or equal
 									std::string_view greater2="find[dateString][$gt]=";
 									std::string_view greater3="find[created_at][$gte]=";
-									if(!memcmp(iter,greater.data(),greater.size())||(greater=greater2, !memcmp(iter,greater.data(),greater.size()))||(greater=greater3, !memcmp(iter,greater.data(),greater.size()))) {
+									std::string_view greater4="find%5Bcreated_at%5D%5B$gte%5D="; //needed 4 xdrip4ios
+									if(!memcmp(iter,greater.data(),greater.size())||(greater=greater2, !memcmp(iter,greater.data(),greater.size()))||(greater=greater3, !memcmp(iter,greater.data(),greater.size()))||(greater=greater4, !memcmp(iter,greater.data(),greater.size()))) {
 										iter+=greater.length();
 										lowerend=readtime(iter);
 										if(greater==greater2)
@@ -1553,8 +1577,10 @@ static time_t readtime(const char *input) {
 	};
 static bool	 sgvinterpret(const char *start,int len,bool headonly,recdata *outdata) {
 	Sgvinterpret pret;
-	if(!pret.getargs(start,len))
+	if(!pret.getargs(start,len)) {
+
 		return false;
+		}
 	LOGGER("lowerend=%d higherend=%d\n",pret.lowerend,pret.higherend);
 	return pret.getdata(headonly,outdata);
 	}

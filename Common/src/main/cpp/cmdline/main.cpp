@@ -113,13 +113,22 @@ cout<<intro<<"Usages: "<<progname<<R"( -d dir : save data in directory dir)"<<en
 )"
 #ifdef USE_SSL
 R"(        )"<<progname<<R"( -e[-+]:  Use xDrip server with SSL encryption)"<<endl
- <<"        "<<progname<<R"( -o port:  use port port for the SSL server
-)"
+ <<"        "<<progname<<R"( -o port:  use port port for the SSL server)"
 #else
-R"(Compile )"<<progname<<R"( yourself for SSL)
-)"
+R"(Compile )"<<progname<<R"( yourself for SSL)"
 #endif
-R"(        )"<<progname<<R"( [-d dir] -N filename: export nums 
+R"(
+	)"<<progname<<R"( -[0123456789][RLCOD] place label 0-9 in category R,L,C,O or D:
+	R: Rapid acting Insulin
+	L: Long acting Insulin
+	C: Carbohydate
+	O: cOmments
+	D: Don't send
+	-0R means label 0 (first one) is Rapid acting insulin
+	-1C means label 1 (second) is Carbohydrate
+	-2O means give label 2 as a cOmment
+        )"<<progname<<R"( [-d dir] -t[+]: give treatments/amounts via Nightscout interface
+        )"<<progname<<R"( [-d dir] -N filename: export nums 
 	)"<<progname<<R"( [-d dir] -S filename: export scans 
 	)"<<progname<<R"( [-d dir] -B filename: export stream 
 	)" << progname<<R"( [-d dir] -H filename: export history 
@@ -172,9 +181,47 @@ Starts the program with this configuration.
 int showui;
 bool getpassive(int pos);
 bool getactive(int pos); 
+static std::string_view treatmenttype(int labelnr) {
+	if(labelnr>=settings->data()->varcount||labelnr<0) {
+		return "No label index";
+		}
+	auto *nums=settings->data()->librenums;
+	const int index=nums[labelnr].kind;
+	static const std::string_view typenames[]={"Not set","Rapid acting insulin","Long acting insulin","Carbohydrate","Comments","Don't send"};
+	if(index>=sizeof(typenames)||index<0) {
+		return "Out of Range";
+		}
+	return typenames[index];
+	}
 int   listconnections() {
+	if(settings->data()->usexdripwebserver) {
+		cout<<"xDrip/Nightscout webserver turned on (port 17580)\n";
+		if(settings->data()->remotelyxdripserver) {
+			cout<<"can also be used remotely over http\n";
+			}
+		else
+			cout<<"http only over localhost\n";
+		if(settings->data()->useSSL) 
+			cout<<"Use SSL, sslport="<<	settings->data()->sslport<<endl;
+		else
+			cout<<"Do not use SSL"<<endl;
+		Tings::Variables *varsptr=settings->data()->vars;
+		const int labnr=settings->data()->varcount;
+		for(int i=0;i<labnr;i++) {
+			cout<<left<<i<<": "<<setw(12)<<varsptr[i].name<<treatmenttype(i)<<endl;
+			}
+		cout<<"api/v1/treatments turned "<<(settings->data()->saytreatments?"on":"off")<<endl;
+		if(settings->data()->apisecretlength) {
+			cout<<"api_secret: "<<settings->data()->apisecret<<endl<<endl;
+		}else  {
+			cout<<"No api_secret\n\n";
+			}
+		}
+	else {
+		cout<<"xdrip/Nightscout webserver turned off\n\n";
+		}
 	const int hostnr=backup->gethostnr();
-	cout<<"Listen at port "<< backup->getupdatedata()->port <<endl;
+	cout<<"Mirror port "<< backup->getupdatedata()->port <<endl;
 	cout<<"unit: "<<settings->getunitlabel()<<endl;
 	cout<<"connection"<<(hostnr>1?"s:":":")<<endl;;
 	for(int h=0;h<hostnr;h++) {
@@ -215,7 +262,21 @@ void showversion() {
 	cout<<"Version "<<version<<endl;
 	}
 
+template <int N> void setlabeltype(const int (&types)[N]) {
+	auto *nums=settings->data()->librenums;
+	for(int i=0;i<N;i++) {
+		switch(toupper(types[i])) {
+			case 'R': nums[i].kind=1;nums[i].weight=1.0f;break;
+			case 'L':nums[i].kind=2;nums[i].weight=1.0f;break;
+			case 'C':nums[i].kind=3;nums[i].weight=1.0f;break;
+			case 'O': nums[i].kind=4;break;
+			case 'D': nums[i].kind=5;break;
+			}
+		}
+	}
+
  Readall alldir;
+
 int readconfig(int argc, char **argv) {
 	bool receive=false,detect=false,signal=false,nums=false,scans=false,stream=false;
 	bool list=false,clear=false;
@@ -236,11 +297,16 @@ bool xremote=false,activeonly=false,passiveonly=false,testip=true
 ,showlibreview=false
 #endif
 ;
-int xdripserver=-1,use_ssl=-1;
+int xdripserver=-1,use_ssl=-1,give_treatments=-1;
 int changer=-1;
 int unit=0;
+int labeltype[10];
 char *api_secret=nullptr,*sslport=nullptr;
-           for(int opt;(opt = getopt(argc, argv, "Z:o:e::g:p:d:lcX::x::ransvzibAPw:hN:S:B:H:m:GMR:L:C:")) != -1;) {
+           for(int opt;(opt = getopt(argc, argv, "Z:o:e::g:p:d:lcX::x::ransvzibAPw:hN:S:B:H:m:GMR:L:C:0:1:2:3:4:5:6:7:8:9:t::")) != -1;) {
+	   	if(opt>='0'&&opt<='9') {
+			labeltype[opt-'0']=optarg[0];
+			}
+		else {
                switch (opt) {
 	       	   case 'v': showversion();return 1234;
 	           case 'i': testip=false; break;
@@ -333,9 +399,32 @@ char *api_secret=nullptr,*sslport=nullptr;
 					}
 
 				break;
+			case 't': 
+				if(optarg) {
+					#define toshort(x) x[0]|(x[1]<<8)
+
+					cerr<<"treatments:"<<optarg<<':'<<endl;
+					const short arg=toshort( optarg);
+					switch(arg) {
+						case toshort("+"): give_treatments=1;;break;
+						case toshort("-"): give_treatments=0;;break;
+						default:
+							cerr<<"Unknown arg: "<<optarg<<endl;;
+							cerr<<"Argument to -t should be + or -\n";
+							return 10;
+						};
+					}
+				else {
+					cerr<<"treatments\n";
+					give_treatments=1;
+					}
+
+				break;
+
 
 
 		       default: help(argv[0]); return 4;
+		       }
 		       }
            }
 static constexpr const	char defaultname[]="jugglucodata";
@@ -360,6 +449,8 @@ static constexpr const	char defaultname[]="jugglucodata";
 		}
 	cout<<"Saving in directory "<<uitdir.data()<<endl;
 	startjuggluco(uitdir,nullptr);
+	setlabeltype(labeltype);
+
 	if(sslport) {
 		int port;
 		if(sscanf(sslport,"%d",&port)<=0) {
@@ -385,6 +476,9 @@ static constexpr const	char defaultname[]="jugglucodata";
 		}
 	if(use_ssl>=0) {
 		settings->data()->useSSL=use_ssl;
+		}
+	if(give_treatments>=0) {
+		settings->data()->saytreatments=give_treatments;
 		}
 	if(xdripserver>=0) {
 		settings->data()->usexdripwebserver=xdripserver;

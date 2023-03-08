@@ -1778,7 +1778,10 @@ http://127.0.0.1:17580
 sommige Nightscout-volgers kunnen er gebruik van maken. xDrip, Diabox
 en een <a href="https://github.com/dabear/FloatingGlucose/releases">Windows
 Floating Glucose-</a> app kunnen worden gebruikt met http als &quot;alleen
-lokaal&quot; niet is ingesteld.</span></p>
+lokaal&quot; niet is ingesteld.</span> Op MacOS geldt hetzelfde voor
+Nightscout Menu Bar, Gluco Status en Gluco Tracker (allemaal in Apple
+Store). Op IOS kun je <a href="https://github.com/someoneAnyone/Nightscouter">Nightscouter</a>
+ook met http gebruiken.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><span lang="nl-NL">Als
 je toegang wilt tot Juggluco via internet, moet je</span> <span lang="nl-NL">een
 poort &quot;</span><span lang="nl-NL"><i>forwarden&quot;</i></span>
@@ -1788,12 +1791,13 @@ poort &quot;</span><span lang="nl-NL"><i>forwarden&quot;</i></span>
 Nightscout-volgers maken alleen gebruik van https en dat vereist dat
 Juggluco een geverifieerde SSL-sleutel heeft voor de domeinnaam die
 wordt gebruikt om toegang te krijgen tot Juggluco. Als je</span>
-<span lang="nl-NL">externe IP een bijbehorende hostnaam heeft, k</span><span lang="nl-NL">an</span><span lang="nl-NL">
-je</span> <span lang="nl-NL">gratis een certificaat krijgen via
-<a href="https://certbot.eff.org/instructions">Certbot</a> of <a href="https://www.sslforfree.com/">ZeroSSL</a>
-. Je</span> <span lang="nl-NL">kunt er geen gebruik van maken als je</span>
-<span lang="nl-NL">externe IP geen hostnaam heeft. Je</span> <span lang="nl-NL">k</span><span lang="nl-NL">an</span><span lang="nl-NL">
-een gratis domeinnaam krijgen van <a href="https://www.freenom.com/">https://www.freenom.com</a>
+<span lang="nl-NL">externe IP een bijbehorende hostnaam heeft, kan</span>
+<span lang="nl-NL">je</span> <span lang="nl-NL">gratis een
+certificaat krijgen via <a href="https://certbot.eff.org/instructions">Certbot</a>
+of <a href="https://www.sslforfree.com/">ZeroSSL</a> . Je</span> <span lang="nl-NL">kunt
+er geen gebruik van maken als je</span> <span lang="nl-NL">externe IP
+geen hostnaam heeft. Je</span> <span lang="nl-NL">kan</span> <span lang="nl-NL">een
+gratis domeinnaam krijgen van <a href="https://www.freenom.com/">https://www.freenom.com</a>
 . Ik heb het geprobeerd, maar binnen een paar weken zonder enige
 kennisgeving namen ze het domein gewoon van me af en toen ik het
 opnieuw probeerde te registreren, had het een prijs. Voor een paar
@@ -1837,10 +1841,11 @@ sturen, kun je beter de <a href="https://www.juggluco.nl/Juggluco/mgdL/index.htm
 Nsclient werken niet als volgeling van Juggluco, maar je kunt er wel
 glucosewaarden naar sturen met de xDrip-Broadcast in Juggluco
 (linkermenu-&gt;instellingen-&gt;xDrip Broadcast).</p>
-<p style="line-height: 100%; margin-bottom: 0in"><span lang="nl-NL">Je
-hebt SSL nodig voor Diabetes:M, <a href="https://play.google.com/store/apps/details?id=se.cornixit.nightwatch">N</a><a href="https://play.google.com/store/apps/details?id=se.cornixit.nightwatch">ightwatch</a></span>
-<span lang="nl-NL">en <a href="https://slingithub.github.io/CheckmateWeb">Checkmate</a></span>
-<span lang="nl-NL">. Specificeer als Nightscout server URL: </span>
+<p style="line-height: 100%; margin-bottom: 0in">Je hebt SSL nodig
+voor de Android apps Diabetes:M, <a href="https://play.google.com/store/apps/details?id=se.cornixit.nightwatch">Nightwatch</a>
+en <a href="https://slingithub.github.io/CheckmateWeb">Checkmate</a>
+, Sugarmate (MacOS) en <a href="https://github.com/JohanDegraeve/xdripswift">Xdrip4ios</a>
+. <span lang="nl-NL">Specificeer als Nightscout server URL: </span>
 </p>
 <p><i>https://hostnaam:poort</i> 
 </p>
@@ -1899,20 +1904,22 @@ Libreview.) Via deze interface kan xDrip hoeveelheden ontvangen van
 Juggluco. In xDrip kun je dit op twee manieren doen:</p>
 <ol>
 	<li><p style="line-height: 100%; margin-bottom: 0in">Neem als &quot;
-	<i>Hardware </i><i>gegevensbron</i><i>&quot; </i><span style="font-variant: normal"><span style="font-style: normal">,</span></span>
+	<i>Hardware gegevensbron&quot; </i><span style="font-variant: normal"><span style="font-style: normal">,</span></span>
 	<i>&quot;Nightscout Follower&quot; </i><span style="font-variant: normal"><span style="font-style: normal">en
 	geef als “Volg URL”</span></span> <i>, </i><a href="http://localhost:17580/api/v1/treatments?count=3"><span style="font-variant: normal"><span style="font-style: normal">http://127.0.0.1:17580</span></span></a><span style="font-variant: normal">
 	</span><span style="font-variant: normal"><span style="font-style: normal">en
-	vink</span></span> “ <i>Download </i><i>behandelingen</i><i>”</i><span style="font-style: normal">
-	aan</span><i>.</i><span style="font-variant: normal"> </span>
+	vink</span></span> “ <i>Download behandelingen</i>”<span style="font-variant: normal">
+	</span><span style="font-variant: normal"><span style="font-style: normal">aan</span></span><i>.</i><span style="font-variant: normal">
+	</span>
 	</p>
 	<li><p style="line-height: 100%; margin-bottom: 0in"><span style="font-variant: normal"><span style="font-style: normal">Neem
 	een ​​andere hardware-gegevensbron, bijvoorbeeld</span></span>
-	<i>Libre (</i><i>patched</i><i> app) </i><span style="font-variant: normal"><span style="font-style: normal">en
+	<i>Libre (patched</i> <i>app) </i><span style="font-variant: normal"><span style="font-style: normal">en
 	schakel instellingen-&gt;Cloud Upload-&gt;Nightscout Sync (REST-API)
-	in. Voer als Ba</span></span><span style="font-variant: normal"><span style="font-style: normal">sis</span></span><span style="font-variant: normal"><span style="font-style: normal">
-	URL, http://somek</span></span><span style="font-variant: normal"><span style="font-style: normal">ey</span></span><span style="font-variant: normal"><span style="font-style: normal">@127.0.0.1:17580/api/v1/
-	in en schakel &quot;</span></span> <i>Download </i><i>behandelgegevens</i><span style="font-variant: normal"><span style="font-style: normal">&quot;
+	in. Voer als Basis</span></span><span style="font-variant: normal">
+	</span><span style="font-variant: normal"><span style="font-style: normal">URL,
+	http://somekey@127.0.0.1:17580/api/v1/ in en schakel &quot;</span></span>
+	<i>Download behandelgegevens</i><span style="font-variant: normal"><span style="font-style: normal">&quot;
 	in. Uploaden naar Juggluco is onmogelijk, dus dit downloadt alleen
 	behandelingen en genereert enkele foutmeldingen.</span></span><span style="font-variant: normal">
 	</span>
@@ -1920,41 +1927,45 @@ Juggluco. In xDrip kun je dit op twee manieren doen:</p>
 </ol>
 <p style="line-height: 100%; margin-bottom: 0in"><span style="font-variant: normal"><span style="font-style: normal">Als
 &quot;</span></span><i>Alleen lokaal</i><span style="font-variant: normal"><span style="font-style: normal">&quot;
-niet is aangevinkt, kun </span></span><span style="font-variant: normal"><span style="font-style: normal">je</span></span><span style="font-variant: normal"><span style="font-style: normal">
-ook </span></span><span style="font-variant: normal"><span style="font-style: normal">de</span></span><span style="font-variant: normal"><span style="font-style: normal">
-thuisnetwerk-IP gebruiken van de telefoon waarop Juggluco draait en,
-wanneer </span></span><span style="font-variant: normal"><span style="font-style: normal">je</span></span><span style="font-variant: normal"><span style="font-style: normal">
-</span></span><span style="font-variant: normal"><span style="font-style: normal">je</span></span><span style="font-variant: normal"><span style="font-style: normal">
-modem configureert om door te sturen naar 17580 van die telefoon, het
-externe IP-adres van </span></span><span style="font-variant: normal"><span style="font-style: normal">je</span></span><span style="font-variant: normal"><span style="font-style: normal">
-telefoon. Als </span></span><span style="font-variant: normal"><span style="font-style: normal">je</span></span><span style="font-variant: normal"><span style="font-style: normal">
-Juggluco een Private Key en Full Chain </span></span><span style="font-variant: normal"><span style="font-style: normal">hebt</span></span><span style="font-variant: normal"><span style="font-style: normal">
-gegeven voor een hostnaam waarmee de telefoon kan worden benaderd en</span></span>
-<i>Gebruik </i><i>SSL</i><span style="font-style: normal"> </span><span style="font-style: normal">is</span><span style="font-style: normal">
-ingeschakeld</span><i> </i><span style="font-variant: normal"><span style="font-style: normal">,
-kun</span></span><span style="font-variant: normal"><span style="font-style: normal">
-je</span></span><span style="font-variant: normal"><span style="font-style: normal">
-ook die hostnaam en de poort gebruiken die </span></span><span style="font-variant: normal"><span style="font-style: normal">je</span></span><span style="font-variant: normal"><span style="font-style: normal">
-hier hebt opgegeven, door https te gebruiken in plaats van http.</span></span></p>
+niet is aangevinkt, kun je</span></span><span style="font-variant: normal">
+</span><span style="font-variant: normal"><span style="font-style: normal">ook
+de</span></span><span style="font-variant: normal"> </span><span style="font-variant: normal"><span style="font-style: normal">thuisnetwerk-IP
+gebruiken van de telefoon waarop Juggluco draait en, wanneer je</span></span><span style="font-variant: normal">
+</span><span style="font-variant: normal"><span style="font-style: normal">je</span></span><span style="font-variant: normal">
+</span><span style="font-variant: normal"><span style="font-style: normal">modem
+configureert om door te sturen naar 17580 van die telefoon, het
+externe IP-adres van je</span></span><span style="font-variant: normal">
+</span><span style="font-variant: normal"><span style="font-style: normal">telefoon.
+Als je</span></span><span style="font-variant: normal"> </span><span style="font-variant: normal"><span style="font-style: normal">Juggluco
+een Private Key en Full Chain hebt</span></span><span style="font-variant: normal">
+</span><span style="font-variant: normal"><span style="font-style: normal">gegeven
+voor een hostnaam waarmee de telefoon kan worden benaderd en</span></span>
+<i>Gebruik SSL</i><span style="font-variant: normal"> </span><span style="font-variant: normal"><span style="font-style: normal">is</span></span><span style="font-variant: normal">
+</span><span style="font-variant: normal"><span style="font-style: normal">ingeschakeld</span></span>
+<span style="font-variant: normal"><span style="font-style: normal">,
+kun</span></span><span style="font-variant: normal"> </span><span style="font-variant: normal"><span style="font-style: normal">je</span></span><span style="font-variant: normal">
+</span><span style="font-variant: normal"><span style="font-style: normal">ook
+die hostnaam en de poort gebruiken die je</span></span><span style="font-variant: normal">
+</span><span style="font-variant: normal"><span style="font-style: normal">hier
+hebt opgegeven, door https te gebruiken in plaats van http.</span></span></p>
 <p style="line-height: 100%; margin-bottom: 0in"><span style="font-variant: normal"><span style="font-style: normal">Wanneer
-</span></span><span style="font-variant: normal"><span style="font-style: normal">je</span></span><span style="font-variant: normal"><span style="font-style: normal">
-behandelingen naar Diabetes:M wil uploaden, kun </span></span><span style="font-variant: normal"><span style="font-style: normal">je</span></span><span style="font-variant: normal"><span style="font-style: normal">
-de gegevens van Juggluco naar Libreview sturen en de gegevens in
+je</span></span><span style="font-variant: normal"> </span><span style="font-variant: normal"><span style="font-style: normal">behandelingen
+naar Diabetes:M wil uploaden, kun je</span></span><span style="font-variant: normal">
+</span><span style="font-variant: normal"><span style="font-style: normal">de
+gegevens van Juggluco naar Libreview sturen en de gegevens in
 Libreview opslaan met &quot;</span></span><i>Glucosegegevens
 downloaden</i><span style="font-variant: normal"><span style="font-style: normal">&quot;
 en deze gegevens in Diabetes:M importeren met Data-&gt;Import from
 other sources-&gt;Freestyle of verkrijg een geverifieerde sleutel
-voor de externe hostnaam van </span></span><span style="font-variant: normal"><span style="font-style: normal">je</span></span><span style="font-variant: normal"><span style="font-style: normal">
-telefoon en geef Link ext</span></span><span style="font-variant: normal"><span style="font-style: normal">ernal
-sources</span></span><span style="font-variant: normal"><span style="font-style: normal">,
-Nightscout met als URL, https://</span></span><span style="font-variant: normal"><span style="font-style: normal">je</span></span><span style="font-variant: normal"><span style="font-style: normal">hostnaam:Port,
-waarbij </span></span><span style="font-variant: normal"><span style="font-style: normal">je</span></span><span style="font-variant: normal"><span style="font-style: normal">hostnaam
-de hostnaam is van </span></span><span style="font-variant: normal"><span style="font-style: normal">je
-</span></span><span style="font-variant: normal"><span style="font-style: normal">telefoon
-met Juggluco</span></span><span style="font-variant: normal"><span style="font-style: normal">,</span></span><span style="font-variant: normal"><span style="font-style: normal">
-waarvoor </span></span><span style="font-variant: normal"><span style="font-style: normal">je</span></span><span style="font-variant: normal"><span style="font-style: normal">
-een geverifieerde sleutel hebt ontvangen en Port is de poort die je
-hier noemde. Het lijkt niet automatisch te synchroniseren, dus in
+voor de externe hostnaam van je</span></span><span style="font-variant: normal">
+</span><span style="font-variant: normal"><span style="font-style: normal">telefoon
+en geef Link external sources, Nightscout met als URL,
+https://jehostnaam:Port, waarbij jehostnaam de hostnaam is van je
+telefoon met Juggluco,</span></span><span style="font-variant: normal">
+</span><span style="font-variant: normal"><span style="font-style: normal">waarvoor
+je</span></span><span style="font-variant: normal"> </span><span style="font-variant: normal"><span style="font-style: normal">een
+geverifieerde sleutel hebt ontvangen en Port is de poort die je hier
+noemde. Het lijkt niet automatisch te synchroniseren, dus in
 Diabetes:M moet je zelf op Sync drukken.</span></span></p>
 <p style="line-height: 100%; margin-bottom: 0in"><br/>
 

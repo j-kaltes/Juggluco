@@ -148,7 +148,8 @@ struct Tings {
 	int32_t shortnr;
 	std::array<Shortcut,40> shorts;
 	uint8_t  mealvar;
-	uint8_t  reserved4[3];
+	uint8_t  reserved4;
+	uint16_t nightsensor;
 	float roundto;
 	color_t colors[maxcolors];
 	int colorscreated;

@@ -90,7 +90,7 @@ int SensorGlucoseData::updatescan(crypt_t *pass,int sock,int ind,int sensorindex
 			vect.reserve(2);
 			vect.push_back({infoptr,0,startinfolen});
 	//		constexpr const int startdev=offsetof(Info, deviceaddress);
-			constexpr const int startdev=offsetof(Info, bluetoothOn);
+			constexpr const int startdev=offsetof(Info, streamingIsEnabled);
 			constexpr const int devlen=offsetof(Info,libreviewscan)-startdev;
 			static_assert((4+deviceaddresslen)==devlen);
 			vect.push_back({((uint8_t*)meminfo.data())+startdev,startdev,devlen});
