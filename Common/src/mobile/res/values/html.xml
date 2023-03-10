@@ -768,6 +768,8 @@ the apps you want to send this broadcast to.</p>
 <h2 class="western">Web server</h2>
 <p>Web server that can be used with xDrip watches and some Nightscout
 apps. Previously called xDrip webserver.</p>
+<h2 class="western">Uploader</h2>
+<p>Upload to a Nightscout server.</p>
 <h2 class="western">Glucose in android status bar</h2>
 <p style="line-height: 100%; margin-bottom: 0in">If set, glucose
 values streaming via Bluetooth are quietly displayed in a
@@ -1875,6 +1877,37 @@ Web server is running.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><br/>
 
 </p>
+]]>
+</string>
+<string name="NightPost" >
+<![CDATA[
+<p>Upload to a Nightscout server. 
+</p>
+<p>In most cases you can also use the webserver in Juggluco or
+<a href="https://www.juggluco.nl/Juggluco/cmdline">juggluco-server</a>.
+Only AAPS and NSclient refuse to work when not connected <a href="https://github.com/nightscout/cgm-remote-monitor">cgm-remote-monitor</a>.</p>
+<p>AAPS doesn\'t work when not connected to a Nightscout server. If
+the functionality of this Artificial Pancreas is really dependent on
+a Nightscout server, they could better put the Nightscout server in
+AAPS, rather than making it dangerously dependent on an internet
+connection. If the core functionally of AAPS is not dependent on
+Nightscout, they could better remove the obligation to make use of
+this Nightscout server.</p>
+<p>All stream values are uploaded to the Nightscout server at the
+moment they arrive. When multiple sensor are used, all values of all
+sensors are uploaded. Some Garmin watch apps/faces/widgets assume
+that the values are space 5 minutes apart. When they receive glucose
+values one minute apart,  they will only show the last fifth of the
+curve. For that reason, the webserver incorporated in Juggluco spaces
+the values 5 minutes apart, except when &quot;interval=secs&quot; is
+set to a lower value.</p>
+<p><b>URL</b>: the url should be in the form of https://hostname:port
+for example, https://myname.herokuapp.com:6789</p>
+<p><b>Active</b>: Turn server on</p>
+<p><b>Resend data</b>: Upload all data again to the Nightscout server</p>
+<p><b>Send now</b>: Normally data is immediately send when it arrives
+from the sensor or a mirror connection. Press on this button when for
+some reason a previous attempt failed.</p>
 ]]>
 </string>
 </resources>

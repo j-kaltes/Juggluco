@@ -294,28 +294,30 @@ std::vector<Backup::condvar_t*> active_receive;
 #include <chrono>
 using namespace std::chrono_literals;
 void activereceivethread(int allindex,passhost_t *pass) {
-	constexpr const int maxbuf=50;
+	constexpr const int maxbuf = 50;
 	char buf[maxbuf];
-	const int h=pass->activereceive-1;
-	if(h<0) {
-		LOGGER("activereceivethread h(%d)<0\n",h);
+	const int h = pass->activereceive - 1;
+	if (h < 0) {
+		LOGGER("activereceivethread h(%d)<0\n", h);
 		return;
-		}
-	if(h>=active_receive.size()) {
-		LOGGER("activereceivethread h(%d)>=active_receive.size()(%zd)\n",h,active_receive.size());
+	}
+	if (h >= active_receive.size()) {
+		LOGGER("activereceivethread h(%d)>=active_receive.size()(%zd)\n", h, active_receive.size());
 		return;
-		}
-	if(!active_receive[h])
+	}
+	if (!active_receive[h])
 		return;
-#ifndef NOLOG
-	int slen=
-#endif
-	snprintf(buf,maxbuf, "Ractive%d",h);
-       prctl(PR_SET_NAME, buf, 0, 0, 0);
-	LOGGERN(buf,slen);
-	const bool haspas= pass->haspass();
-	crypt_t ctx,*ctxptr=haspas?&ctx:nullptr;
+	const bool haspas = pass->haspass();
+	crypt_t ctx, *ctxptr = haspas ? &ctx : nullptr;
 	decltype(active_receive[h]->dobackup) current{};
+{
+#ifndef NOLOG
+	int slen =
+#endif
+	snprintf(buf, maxbuf, "Ractive%d", h);
+	LOGGERN(buf, slen);
+	prctl(PR_SET_NAME, buf, 0, 0, 0);
+}
 	while(true) {
 		  active_receive[h]->dobackup=active_receive[h]->dobackup&(~current);
 		  if(!active_receive[h]->dobackup) {
@@ -392,6 +394,7 @@ void updatedata::wakesender() {
 			if(host.receivefrom==3&&host.index<0) {
 #ifdef WEAROS_MESSAGES
 			if(host.wearos&&wearmessages) { //TODO
+			LOGGER("wearos messages\n");
 			}  else
 #endif
 			{	

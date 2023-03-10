@@ -578,6 +578,8 @@ jlong glucoseback(uint32_t glval,float drate,SensorGlucoseData *hist) {
 		return res;
 		}
 
+
+		extern void wakeuploader();
 extern "C" JNIEXPORT jlong JNICALL   fromjava(processTooth)(JNIEnv *envin, jclass cl,jlong dataptr, jbyteArray bluetoothdata) {
 //	setbuffer(mystatus);
       prctl(PR_SET_NAME, "processTooth", 0, 0, 0);
@@ -615,6 +617,10 @@ extern "C" JNIEXPORT jlong JNICALL   fromjava(processTooth)(JNIEnv *envin, jclas
 			sdata->hist->sensorerror=false;
 			senso->finished=0;
 			backup->wakebackup(Backup::wakestream);
+			#ifndef WEAROS
+			wakeuploader();
+			#endif
+
 			return res;
 			}
 		}

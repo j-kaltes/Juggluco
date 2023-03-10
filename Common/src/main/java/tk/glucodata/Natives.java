@@ -621,6 +621,12 @@ public static native int getsslport( );
 
 public static native void setsaytreatments(boolean val);
 public static native boolean getsaytreatments( );
+public static native boolean getuseuploader( );
+public static native String getnightuploadurl( );
+public static native String getnightuploadsecret( );
+public static native void setNightUploader(String jurl,String Secret,boolean active);
+public static native void wakeuploader( );
+public static native void resetuploader( );
 
 
 //s/^extern.*JNIEXPORT[         ]*\([a-zA-Z]*\)[ ]*JNICALL[      ]*fromjava(\([^)]*\)) *(JNIEnv[^,]*,[^,)]*[,)]\([^){]*\)[^a-zA-Z0-9]*$/public static native \1 \2(\3);/g

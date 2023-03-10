@@ -66,11 +66,11 @@ void sendxdripold() {
 		return;
 extern JNIEnv *getenv();
 	
-	  prctl(PR_SET_NAME, "sendtoxdrip", 0, 0, 0);
 
 	 xdriprunning=true;
 	JNIEnv *env=getenv();
         if(const SensorGlucoseData *sens=sensors->gethist()) {
+	  		prctl(PR_SET_NAME, "sendtoxdrip", 0, 0, 0);
 			todrip(env,sens->shortsensorname()->data(),sens->getPolldata() );
 			};
 	 xdriprunning=false;

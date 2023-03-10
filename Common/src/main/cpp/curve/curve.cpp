@@ -2541,6 +2541,7 @@ bool bluetoothEnabled() {
 
 //struct ScanData {uint32_t t;int32_t id;int32_t g;int32_t tr;float ch;
 
+	extern void	wakeuploader();
 int getalarmcode(const uint32_t glval,SensorGlucoseData *hist) ;
 extern void     processglucosevalue(int sendindex,int newstart) ;
 void     processglucosevalue(int sendindex,int newstart) {
@@ -2576,6 +2577,9 @@ extern	bool hasnotiset();
 //					if(glnearnull(rate)) rate=0.0f;
 					getenv()->CallStaticVoidMethod(JNIApplic,jdoglucose,sname,poll->g,glu,rate,alarm,tim*1000LL,wasnoblue);
 					getenv()->DeleteLocalRef(sname);
+			#ifndef WEAROS
+			wakeuploader();
+			#endif
 
 					}
 				else {

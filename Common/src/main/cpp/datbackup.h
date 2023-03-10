@@ -822,8 +822,9 @@ extern void	setreceiverversion(uint8_t version) ;
 	constexpr int maxbuf=15;
 	char buf[maxbuf];
 	 snprintf(buf,maxbuf,"send %d",sendindex);
-	   prctl(PR_SET_NAME, buf, 0, 0, 0);
 	   LOGGER("%s\n",buf);
+	   prctl(PR_SET_NAME, buf, 0, 0, 0);
+//	   pthread_setname_np
 	   }
 	uintptr_t current=0;
 	   while(true) {

@@ -208,6 +208,10 @@ struct Tings {
 	BroadcastListeners<5> librelinkBroadcast;
 	BroadcastListeners<10> xdripBroadcast;
 	BroadcastListeners<10> glucodataBroadcast;
+	int nightuploadnamelen;
+	char nightuploadname[256+8];
+	char nightuploadsecret[80];
+	bool nightuploadon;
 	void setdefault() {
 		memcpy(watchid,defaultid,sizeof(watchid));
 		};

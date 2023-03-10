@@ -184,11 +184,20 @@ int loggert(const char *format, ...) {
 
 void LOGGERN(const char *buf,int len) {
 	if(dolog)	 {
-		char allbuf[len+50];
-		int start=sprintf(allbuf,"%lu %ld ",time(nullptr), syscall(SYS_gettid));
-		memcpy(allbuf+start,buf,len);
-		allbuf[start+len]='\n';
-		logwriter(allbuf,start+len+1);
+		if(len<1024) {
+			char allbuf[len+50];
+			int start=sprintf(allbuf,"%lu %ld ",time(nullptr), syscall(SYS_gettid));
+			memcpy(allbuf+start,buf,len);
+			allbuf[start+len]='\n';
+			logwriter(allbuf,start+len+1);
+			}
+		else {
+			char allbuf[50];
+			int start=sprintf(allbuf,"%lu %ld ",time(nullptr), syscall(SYS_gettid));
+			logwriter(allbuf,start);
+			logwriter(buf,len);
+			logwriter("\n",1);
+			}
 		}
 	}
 

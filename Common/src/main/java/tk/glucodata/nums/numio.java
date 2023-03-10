@@ -160,11 +160,10 @@ if(true) {
  	startsensors( );
 	startmeals();
 	Natives.startthreads();
-	Natives.calccurvegegs();
-
 	numptrs[1]=Natives.openNums("here",0L);
 	newhit=Natives.newhit();
 	numptrs[0]=Natives.openNums(datadir,-1L); //order important!!
+	Natives.calccurvegegs();
 	return true;
 	}
 	else {

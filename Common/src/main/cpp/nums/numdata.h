@@ -371,20 +371,36 @@ const int32_t getlibresend() const  {
 
 const int32_t nextlibresend(uint32_t after=time(nullptr)-librekeepsecs) const {
 	const int32_t next=getlibresend();
-	if(next==getlastpos()) {
-		LOGGER("getlibresend(%u)=%d==getlastpos()\n",after,next);
+	const auto lastpos=getlastpos();
+	if(next>=lastpos) {
+		LOGGER("getlibresend(%u)=%d==getlastpos()=%u\n",after,next,lastpos);
 		return next;
 		}
+	const auto firstpos=getfirstpos();
 	const Num* start=startdata();
-	const Num* was=start+next;
-	const uint32_t wastime=was->gettime();
-	if(wastime>after) {
-		LOGGER("getlibresend(%u<%u(wastime))=%d\n",after,wastime,next);
-		return next;
+	if(next>firstpos) {
+		const Num* was;
+		uint32_t wastime=0;
+		for(int i=next;i>=firstpos;--i) {
+			was=start+i;
+			wastime=was->gettime();
+			if(wastime) 
+				break;
+			else {
+				LOGGER("zero time %d\n",i);
+				}
+			}
+		if(wastime>after) {
+			LOGGER("getlibresend(%u<%u(wastime))=%d\n",after,wastime,next);
+			return next;
+			}
+		else {
+			LOGGER("getlibresend(%u>=%u(wastime)) \n",after,wastime);
+			}
 		}
 	const Num*prev=firstAfter(after);
 	int32_t res=prev-start;
-	LOGGER("getlibresend(%u>=%u(wastime)) take=%d time=%u\n",after,wastime,res,prev->gettime());
+	LOGGER("getlibresend take=%d time=%u\n",res,prev->gettime());
 	return res;
 	}
 int32_t &getlibrechangednr()  {

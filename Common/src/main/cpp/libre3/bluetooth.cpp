@@ -252,6 +252,8 @@ extern "C" JNIEXPORT jbyteArray JNICALL fromjava(getpin)(JNIEnv *env, jclass thi
 	env->SetByteArrayRegion(uit, 0, pinlen,pin);
 	return uit;
 	}
+
+	void wakeuploader();
 extern "C" JNIEXPORT  jlong JNICALL fromjava(saveLibre3MinuteL)(JNIEnv *env, jclass thiz, jlong sensorptr,jbyteArray jmindata) {
 	SensorGlucoseData *sens=reinterpret_cast<SensorGlucoseData *>(sensorptr);
 	if(!sens) {
@@ -281,6 +283,9 @@ extern "C" JNIEXPORT  jlong JNICALL fromjava(saveLibre3MinuteL)(JNIEnv *env, jcl
 	jlong res=save3current(sens,minptr);
 	save3history(sens,minptr);
 	backup->wakebackup(Backup::wakestream);
+	#ifndef WEAROS
+	wakeuploader();
+	#endif
 	return res;
 	}
 

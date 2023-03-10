@@ -257,11 +257,6 @@ void clearnetworkcache() {
 	}
 void tobluetooth(int hostnr,bool sender,int sock) {
    	LOGGER("tobluetooth(%d,%d,%d)\n", hostnr, sender, sock);
-	{
-	char buf[30]; 
-	int len=sprintf(buf, "tobluetooth %d %s",hostnr,sender?"S":"R");
-	prctl(PR_SET_NAME, buf, 0, 0, 0);
-	}
 
 	#ifdef WEAROS
 	int phonehost= us2peers[hostnr];
@@ -287,6 +282,11 @@ void tobluetooth(int hostnr,bool sender,int sock) {
     	}
    destruct _dest([maxbuf,buf]() { munmap(buf,maxbuf); });
 // receiversockopt(sock);
+	{
+	char buf[30]; 
+	int len=sprintf(buf, "tobluetooth %d %s",hostnr,sender?"S":"R");
+	prctl(PR_SET_NAME, buf, 0, 0, 0);
+	}
    while(true) { 
         int inlen=recvni(sock,buf,maxbuf);
        LOGGER("recvni(%d,...)=%d\n",sock,inlen);
@@ -305,25 +305,39 @@ void tobluetooth(int hostnr,bool sender,int sock) {
         }
     }
 void messagereceivecommands(passhost_t *pass) {
-	int sockpair[2];
-	if(socketpair(AF_LOCAL,SOCK_STREAM,0,sockpair)!=0) {
-		lerror("socketpair");
-		return ; 
-		}
 	const int index=pass-getBackupHosts().data();
-	{
-	char buf[20];
-	int len=sprintf(buf,"message %d",index);
-	prctl(PR_SET_NAME, buf, 0, 0, 0);
-	LOGGERN(buf,len);
-	}
-	messagereceiversockets[index]=sockpair[0];
-	std::thread th(tobluetooth,index,false, sockpair[0]); //TODO handshake?
-	th.detach();
-	bool    getcommandsnopass(int sock,passhost_t *host); //TODO password?
-extern	void receiversockopt(int new_fd);
-	receiversockopt(sockpair[1]);
-	getcommandsnopass(sockpair[1],pass);
+
+	 for(int i=0;wearmessages;i++) {
+		int sockpair[2];
+		if(socketpair(AF_LOCAL,SOCK_STREAM,0,sockpair)!=0) {
+			lerror("socketpair");
+			return ; 
+			}
+		{
+		char buf[24];
+		int len=sprintf(buf,"%d message %d",i,index);
+		prctl(PR_SET_NAME, buf, 0, 0, 0);
+		LOGGERN(buf,len);
+		}
+		messagereceiversockets[index]=sockpair[0];
+		std::thread th(tobluetooth,index,false, sockpair[0]); //TODO handshake?
+	//	th.detach();
+		bool    getcommandsnopass(int sock,passhost_t *host); //TODO password?
+	extern	void receiversockopt(int new_fd);
+		receiversockopt(sockpair[1]);
+		getcommandsnopass(sockpair[1],pass);
+		 int receivesock=messagereceiversockets[index];
+		  shutdown(receivesock,SHUT_RDWR);
+		 LOGGER("message join\n");
+		th.join();
+		  close(receivesock);
+		if(receivesock!=sockpair[0])  {
+			LOGGER("messagereceivecommands %d!=%d\n",receivesock,sockpair[0]);
+			return;
+			}
+		LOGGER("try again\n");
+		 }
+	LOGGER("wearmessages=false\n");
 	return;
 	}
 void startmessagereceivers(Backup *backup) {

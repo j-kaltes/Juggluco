@@ -463,7 +463,7 @@ template <void (Numbers::*fun)(char *&,const Num &,Libregeg *,bool)>
 				ptr+=writeindex<fun>(ptr,{changes,changenr},ids+i);
 				}
 			int32_t sendnr=ids[i].libresendnr;;
-			LOGGER("changenr=%lu lastpos=%d numdat->nextlibresend(from)=%d\n",changenr,lastpos,sendnr);
+			LOGGER("%d: changenr=%lu lastpos=%d numdat->nextlibresend(from)=%d\n",i,changenr,lastpos,sendnr);
 			const size_t nownr=lastpos-sendnr;
 			LOGGER("nownr=%lu\n",nownr);
 			if(nownr>0)  { 

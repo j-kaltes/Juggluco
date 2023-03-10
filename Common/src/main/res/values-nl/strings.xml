@@ -196,7 +196,7 @@
  <string name="longinsulin">Langwerkende insuline</string>
     <string name="comments">Opmerking</string>
  <string name="sendamounts">Zend hoeveelheden</string>
- <string name="resendquestion">Resend data?</string>
+ <string name="resendquestion">Herzend data?</string>
  <string name="resendmessage">Gebruik \"Resend data\" enkel na wisseling naar een ander Libreview account of nadat het huidige \"Apparaat\" uit Libreview verwijderd is (Account instellingen->Mijn Apparaten).</string>
  <string name="getaccountidquestion">Haal Account ID van Libreview?</string>
  <string name="getaccountidmessage">De Account ID is noodzakelijk om Libre3 sensoren te gebruiken die geactiveerd zijn door Abbott\'s Libre3 app met dit Libreview account.</string>

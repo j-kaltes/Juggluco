@@ -951,6 +951,10 @@ Sie die Apps an, an die diese Broadcast gesendet werden soll.</p>
 <p align="left" style="line-height: 100%; margin-bottom: 0in">Webserver,
 der mit xDrip-Uhren und einigen Nightscout-Apps verwendet werden
 kann. Früher xDrip-Webserver genannt.</p>
+<h2 class="western">Uploader</h2>
+<p align="left" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 100%; margin-bottom: 0in">
+<font color="#000000"><font face="Times New Roman"><font size="4" style="font-size: 14pt">Auf
+einen Nightscout-Server hochladen.</font></font></font></p>
 <h2 class="western" align="left">Glukose in der Statusleiste von
 Android</h2>
 <p align="left" style="line-height: 100%; margin-bottom: 0in">Wenn
@@ -2440,6 +2444,42 @@ auf Sync drücken.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><br/>
 
 </p>
+]]>
+</string>
+<string name="NightPost" >
+<![CDATA[
+<p>Auf einen Nightscout-Server
+hochladen. 
+</p>
+<p>In den meisten Fällen können Sie auch den Webserver in Juggluco
+oder <a href="https://www.juggluco.nl/Juggluco/cmdline">juggluco-server</a>
+verwenden. Nur AAPS und NSclient verweigern die Arbeit, wenn <a href="https://github.com/nightscout/cgm-remote-monitor">cgm-remote-monitor</a> nicht verbunden ist.</p>
+<p>AAPS funktioniert nicht, wenn keine Verbindung zu einem
+Nightscout-Server besteht. Wenn die Funktionalität dieser
+künstlichen Bauchspeicheldrüse wirklich von einem Nightscout-Server
+abhängt, könnten sie den Nightscout-Server besser in AAPS stellen,
+anstatt ihn gefährlich von einer Internetverbindung abhängig zu
+machen. Wenn die Kernfunktionen von AAPS nicht von Nightscout
+abhängig sind, könnten sie besser die Verpflichtung zur Nutzung
+dieses Nightscout-Servers aufheben.</p>
+<p>Alle Stream-Werte werden im Moment ihres Eintreffens auf den
+Nightscout-Server hochgeladen. Wenn mehrere Sensoren verwendet
+werden, werden alle Werte aller Sensoren hochgeladen. Einige Garmin
+Watch Apps/Watchface/Widgets gehen davon aus, dass die Werte 5
+Minuten auseinander liegen. Wenn sie Glukosewerte im Abstand von
+einer Minute erhalten, zeigen sie nur das letzte Fünftel der Kurve
+an. Aus diesem Grund setzt der in Juggluco eingebundene Webserver die
+Werte 5 Minuten auseinander, außer wenn &quot;interval=secs&quot;
+auf einen niedrigeren Wert eingestellt ist.</p>
+<p><b>URL</b> : Die URL sollte die Form https://hostname:port haben,
+z. B. https://myname.herokuapp.com:6789</p>
+<p><b>Aktiv</b> : Server einschalten</p>
+<p><b>Daten erneut senden</b>: Laden Sie alle Daten erneut auf den
+Nightscout-Server hoch</p>
+<p><b>Jetzt senden</b>: Normalerweise werden Daten sofort gesendet,
+wenn sie vom Sensor oder einer Klonverbindung ankommen. Drücken Sie
+auf diese Schaltfläche, wenn ein vorheriger Versuch aus irgendeinem
+Grund fehlgeschlagen ist.</p>
 ]]>
 </string>
 </resources>

@@ -323,16 +323,19 @@ extern "C" JNIEXPORT void JNICALL   fromjava(resetbackuphost)(JNIEnv *env, jclas
 	}
 extern void wakeaftermin(const int waitmin) ;
 
+	extern void wakeuploader();
 extern "C" JNIEXPORT void JNICALL   fromjava(networkpresent)(JNIEnv *env, jclass cl) {
       LOGGER("networkpresent\n");
 	if(backup) {
 		backup->getupdatedata()->wakesender();
 		networkpresent=true;
 		backup->notupdatedsettings();
+	//	backup->wakebackup();
 		}
 	else
 		networkpresent=true;
 #if !defined(WEAROS) && !defined(TESTMENU)
+	wakeuploader();
 	 wakeaftermin(0) ;
 #endif
 	}

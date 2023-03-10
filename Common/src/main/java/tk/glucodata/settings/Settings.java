@@ -877,6 +877,7 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 		showalways.setChecked(Natives.getshowalways()) ;
 		showalways.setOnCheckedChangeListener( (buttonView,  isChecked) -> Notify.glucosestatus(isChecked) );
 	       var webserver=getbutton(context,R.string.webserver);
+	       var uploader=getbutton(context,"Uploader");
 
 
 	       var floatconfig=getbutton(context,R.string.config);
@@ -890,8 +891,9 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 		views=new View[][]{row0, row1,new View[]{scalelabel,fixatex,fixatey}, row2,new View[]{levelleft,camera,reverseorientation},
 		hasnfc?new View[]{nfcsound, globalscan}:null,
 
-		new View[]{libreview,librelinkbroadcast,xdripbroadcast},new View[]{ showalways,webserver,jugglucobroadcast}, rowglu,row8,row9};
+		new View[]{libreview,librelinkbroadcast,xdripbroadcast},new View[]{ showalways,webserver,uploader,jugglucobroadcast}, rowglu,row8,row9};
 	       webserver.setOnClickListener(v-> tk.glucodata.Nightscout.show(context,thelayout[0]));
+	       uploader.setOnClickListener(v-> tk.glucodata.NightPost.config(context,thelayout[0]));
 		}
 
 	help.setFocusableInTouchMode(true);

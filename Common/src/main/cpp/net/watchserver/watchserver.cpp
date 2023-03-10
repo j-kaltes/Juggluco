@@ -160,12 +160,15 @@ void stopsslwatchthread() {
 
 static std::string sha1secret;
 extern void makesha1secret();
-void makesha1secret() {
-	const int seclen=settings->data()->apisecretlength;
-	std::string strsecret(settings->data()->apisecret,seclen);
+extern std::string sha1encode(const char *secret, int len);
+std::string sha1encode(const char *secret, int len) {
+	std::string strsecret(secret,len);
 	SHA1 sh1;
 	sh1.update(strsecret);
-	sha1secret=sh1.final();
+	return sh1.final();
+	}
+void makesha1secret() {
+	sha1secret=sha1encode(settings->data()->apisecret,settings->data()->apisecretlength);
 	}
 
 void startwatchthread() {
@@ -264,8 +267,8 @@ void handlewatchsecure(int sock) ;
 	}
 void handlewatch(int sock) {
       const char threadname[]="watchconnect";
-      prctl(PR_SET_NAME, threadname, 0, 0, 0);
       LOGGER("handlewatch %d\n",sock);
+      prctl(PR_SET_NAME, threadname, 0, 0, 0);
 extern void sendtimeout(int sock,int secs);
 extern void receivetimeout(int sock,int secs) ;
  	receivetimeout(sock,60);

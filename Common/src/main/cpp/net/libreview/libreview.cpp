@@ -673,7 +673,7 @@ void initlibreviewjni(JNIEnv *env) {
 	const char librclassstr[]="tk/glucodata/Libreview";
 	if(jclass cl=env->FindClass(librclassstr)) {
       		LOGGER("found %s\n",librclassstr);
-		libreviewclass=(jclass)getenv()->NewGlobalRef(cl);
+		libreviewclass=(jclass)env->NewGlobalRef(cl);
 	       env->DeleteLocalRef(cl);
 	       }
       else  {
@@ -715,8 +715,8 @@ void libreviewthread() {
 	LOGGER("libreinit3=%d\n", settings->data()->libreinit3);
 	libreviewrunning=true;
 	const char view[]{"VIEW"};
-       prctl(PR_SET_NAME, view, 0, 0, 0);
 	LOGGERN(view,sizeof(view)-1);
+       prctl(PR_SET_NAME, view, 0, 0, 0);
 	int waitmin=10;
 	while(true) {
 		  if(!networkpresent||!librecondition.dobackup) {

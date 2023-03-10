@@ -856,8 +856,13 @@ extern "C" JNIEXPORT jstring  JNICALL   fromjava(getnewYuApiKey)(JNIEnv *env, jc
 
 
 extern void startthreads() ;
+extern bool inituploader(JNIEnv *env);
+ 
 extern "C" JNIEXPORT void  JNICALL   fromjava(startthreads)(JNIEnv *env, jclass cl) {
 	startthreads();
+#ifndef WEAROS
+	inituploader(env);
+#endif
 	}
 
 extern int startmeals() ;
@@ -1165,3 +1170,47 @@ extern "C" JNIEXPORT void  JNICALL   fromjava(setsaytreatments)(JNIEnv *env, jcl
 extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getsaytreatments)(JNIEnv *env, jclass cl) {
 	return settings->data()->saytreatments;
 	}
+extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getuseuploader)(JNIEnv *env, jclass cl) {
+	return settings->data()->nightuploadon;
+	}
+extern "C" JNIEXPORT jstring  JNICALL   fromjava(getnightuploadurl)(JNIEnv *env, jclass cl) {
+	return env->NewStringUTF(settings->data()->nightuploadname);
+	}
+extern "C" JNIEXPORT jstring  JNICALL   fromjava(getnightuploadsecret)(JNIEnv *env, jclass cl) {
+	return env->NewStringUTF(settings->data()->nightuploadsecret);
+	}
+	extern	void enduploaderthread();
+extern "C" JNIEXPORT void  JNICALL   fromjava(setNightUploader)(JNIEnv *env, jclass cl,jstring jurl,jstring jsecret,jboolean active) {
+#ifndef WEAROS
+	if(jurl!=nullptr) {
+		int maxurllen=sizeof(settings->data()->nightuploadname)-1;
+		char *name=settings->data()->nightuploadname;
+		jint jlen = env->GetStringLength(jurl);
+		if(jlen>=maxurllen)
+			jlen=maxurllen;
+		env->GetStringUTFRegion(jurl, 0,jlen, name);
+		int len=env->GetStringUTFLength(jurl);
+		if(len>=maxurllen)
+			len=maxurllen;
+		name[len]='\0';
+		settings->data()->nightuploadnamelen=len;
+		}
+	if(jsecret!=nullptr) {
+		int maxsecretlen=sizeof(settings->data()->nightuploadsecret)-1;
+		char *name=settings->data()->nightuploadsecret;
+		jint jlen = env->GetStringLength(jsecret);
+		if(jlen>=maxsecretlen)
+			jlen=maxsecretlen;
+		env->GetStringUTFRegion(jsecret, 0,jlen, name);
+		int len=env->GetStringUTFLength(jsecret);
+		if(len>=maxsecretlen)
+			len=maxsecretlen;
+		name[len]='\0';
+		}
+	settings->data()->nightuploadon=active;
+	if(active)
+		inituploader(env);
+	else
+	 	enduploaderthread();
+#endif
+	 }
