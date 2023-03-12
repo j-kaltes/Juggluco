@@ -39,14 +39,21 @@
 #include "netstuff.h"
 constexpr const int maxip=4;
 
-
+//union { struct sockaddr_in6 ips[maxip];
+constexpr const int maxhostname=sizeof(sockaddr_in6)*(maxip-1)-sizeof(uint16_t);
+struct hostnamedata {
+	uint16_t port; //host byte order
+	char name[maxhostname];
+	};
 struct passhost_t {
 inline static constexpr const int maxnamelen=16;
 	struct sockaddr_in6 ips[maxip];
+static_assert(sizeof(ips)==(sizeof(hostnamedata)+sizeof(sockaddr_in6)));
 	int nr;
 	int index;
 	std::array<uint8_t,16>  pass;
-	uint8_t receivefrom:7; 
+	uint8_t receivefrom:6; 
+	bool hostname:1;
 	bool wearos:1;
 /*
 Receive	   	reconnect	receivefrom:
@@ -63,7 +70,25 @@ false	  	false	  	0
 	bool sendpassive:1;  // send to named host passive only
 	bool hasname:1;
 	bool noip:1;
+	bool hashostname() const {
+		return hostname;
+		}
+	const char *gethostname() const {
+		return reinterpret_cast<const hostnamedata*>(ips)->name;
+		}
+	void sethostname(std::string_view name) {
+		int len=std::min(name.size(),sizeof(hostnamedata::name)-1);
+		char *doel=reinterpret_cast<hostnamedata*>(ips)->name;
+		memcpy(doel,name.data(),len);
+		doel[len]='\0';
+		}
+	void setportwithhostname(int port)  {	
+		 reinterpret_cast<hostnamedata*>(ips)->port=port;
+		 }
 	uint16_t getport() const {	
+		if(hostname) {
+			return reinterpret_cast<const hostnamedata*>(ips)->port;
+			}
 		return ntohs(ips[0].sin6_port);
 		}
 	bool isSender() const {

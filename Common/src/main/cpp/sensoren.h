@@ -48,6 +48,11 @@ struct sensor {
 const sensorname_t *shortsensorname() const { 
 	return reinterpret_cast<const sensorname_t *>( name+5);
 	}
+const char *showsensorname() const {
+	const char *name=shortsensorname()->data();
+	if(!memcmp(name,"XX",2)) return name+2;
+	return name;
+	}
 	} __attribute__ ((packed)) __attribute__ ((aligned (4))) ; /*always 32 bytes */
 class Sensoren {
 	string inbasedir;
@@ -549,6 +554,10 @@ void finishsensor(int ind) {
 		const sensor *sens = getsensor(index);
 		return sens->shortsensorname();
 //	return reinterpret_cast<const sensorname_t *>( sens->name+5);
+	}
+	const char *showsensorname(int index) const {
+		const sensor *sens = getsensor(index);
+		return sens->showsensorname();
 	}
 
 	const sensorname_t *shortsensorname() const {

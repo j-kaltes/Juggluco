@@ -220,16 +220,57 @@ void getmyname(int sock) {
 		}
 	} 
 	*/
-static int makeconnection2(passhost_t *pass,int &sock,char stype) {
-	sock=-1;
-	const int nr=pass->nr;
-	LOGGER("makeconnection nr=%d\n",nr);
-	if(nr<=0) {
+
+static int connectone( const struct sockaddr_in6  *sin, int &sock,char stype,passhost_t *pass,struct pollfd	 *cons,int&use
+#if defined(WEAROS_MESSAGES)&&defined(WEAROS)
+		,bool &activate
+#endif
+				)  {
+	int so;
+	namehost name(sin);
+	LOGGER("%s family=%d\n", name.data(),sin->sin6_family);
+	if((so=socket(sin->sin6_family,SOCK_STREAM,0))==-1) {
+		flerror("openone  socket");
+		return -1;;
+		}
+
+	if(!unblock(so)) {
+		close(so);
 		return -1;
 		}
-	struct pollfd	 cons[nr];
-	int use=0;
+	LOGGER("try  %s sock=%d\n", name.data(),so);
+	if(connect(so,(const struct sockaddr* )sin,sizeof(*sin))==-1) {
+		if(errno == EINPROGRESS) {
+			LOGGER("%d progress\n",so);
+			cons[use++]={so,POLLOUT,0};
+			}
+		else {
+			LOGGER("close\n");
+			close(so);
+			return -1;
+			}
+		}
+	else {
+#ifdef WEAROS_MESSAGES
+#ifdef WEAROS
+		activate=false;
+#endif
+#endif
+		block(so);
+		sock=so;
+		if(int ret=shakehands(pass,sock,stype);ret>0) {
+			LOGGER("before poll %d\n",sock);
+			for(int w=0;w<use;w++) {
+				close(cons[w].fd);
+				}
+			return ret;
+			}
+		return -1;;		
+		}
+	return -1;
+	}
 
+static int makeconnection2(passhost_t *pass,int &sock,char stype) {
 #ifdef WEAROS_MESSAGES
 #ifdef WEAROS
 destruct dest([pass]() {
@@ -242,55 +283,64 @@ dest.active=false;
 bool activate=true;
 #endif
 #endif
-	for(int i=0;i<nr;i++) {
-		struct sockaddr_in6  *sin=&pass->ips[i];
-		int so;
-		namehost name(sin);
-		LOGGER("%s family=%d\n", name.data(),sin->sin6_family);
-		if((so=socket(sin->sin6_family,SOCK_STREAM,0))==-1) {
-			flerror("openone %d: socket",i);
-			continue;
-			}
+	int use=0;
 
-		if(!unblock(so)) {
-			close(so);
-			continue;
-			}
-		LOGGER("try  %s sock=%d\n", name.data(),so);
-		if(connect(so,(const struct sockaddr* )sin,sizeof(*sin))==-1) {
-			if(errno == EINPROGRESS) {
-				LOGGER("%d progress\n",so);
-				cons[use++]={so,POLLOUT,0};
-				}
-			else {
-				LOGGER("close\n");
-				close(so);
-				continue;
-				}
-			}
-		else {
-#ifdef WEAROS_MESSAGES
-#ifdef WEAROS
-			activate=false;
-#endif
-#endif
-			block(so);
-			sock=so;
-			if(int ret=shakehands(pass,sock,stype);ret>0) {
-				LOGGER("before poll %d\n",sock);
-				for(int w=0;w<use;w++) {
-					close(cons[w].fd);
-					}
+	sock=-1;
+
+	struct pollfd	 cons[10];
+	if(false) {
+//	if(pass->hashostname())  //NOT further implemented. A lot of difficulties and who needs this?
+		struct addrinfo hints{.ai_flags=AI_ADDRCONFIG,.ai_family=AF_UNSPEC,.ai_socktype=SOCK_STREAM};
+		struct addrinfo *servinfo=nullptr;
+		destruct serv([&servinfo]{ if(servinfo)freeaddrinfo(servinfo);});
+		const char *host= pass->gethostname(); 
+		char port[10];
+		sprintf(port,"%d",pass->getport());
+		if(int status=getaddrinfo(host,port,&hints,&servinfo)) {
+			for(struct addrinfo *iter=servinfo;iter!=nullptr;iter=iter->ai_next) {
+				const struct sockaddr_in6  *sin= reinterpret_cast<const struct sockaddr_in6*>(iter->ai_addr);
+					if(int ret=connectone(sin,sock, stype,pass,cons,use
+	#if defined(WEAROS_MESSAGES)&&defined(WEAROS)
+								  ,activate
+	#endif
+		)) {
+
+				LOGGER("%d: found %d\n",ret);
 				return ret;
 				}
-			continue;		
+           		}
+
 			}
-		}
+		else return -1;
+	} else {
+		const int nr=pass->nr;
+		LOGGER("makeconnection nr=%d\n",nr);
+		if(nr<=0) {
+			return -1;
+			}
+		for(int i=0;i<nr;i++) {
+			const struct sockaddr_in6  *sin=&pass->ips[i];
+			if(int ret=connectone(sin,sock, stype,pass,cons,use
+	#if defined(WEAROS_MESSAGES)&&defined(WEAROS)
+								  ,activate
+	#endif
+
+
+
+			) ;ret>=0)  {
+				LOGGER("%d: found %d\n",i,ret);
+				return ret;
+				}
+
+			LOGGER("wait %d\n",i);
+			}
+	    }
 #ifdef WEAROS_MESSAGES
 #ifdef WEAROS
 	dest.active=activate;
 #endif
 #endif
+	LOGGER("use=%d\n",use);
 	while(use) {	
 		constexpr const int	timeout= 60000;
 		int errcode=poll(cons, use, timeout);

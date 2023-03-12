@@ -26,6 +26,7 @@ import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
+import android.os.Looper;
 import android.os.PowerManager;
 
 import java.security.SecureRandom;
@@ -95,13 +96,17 @@ void free() {
 		mActiveDeviceAddress = Natives.getDeviceAddress(dataptr);
 		Log.i(LOG_ID, "new Libre3GattCallback " + SerialNumber + " " + ((mActiveDeviceAddress != null) ? mActiveDeviceAddress : "null"));
 
-		var thr=new Thread(()-> init());
-		thr.start();
-		try {
-			thr.join();
-		} catch(Throwable th) {
-			Log.stack(LOG_ID,"init",th);
-		}
+		if(Thread.currentThread().equals( Looper.getMainLooper().getThread() )) {
+			var thr=new Thread(()-> init());
+			thr.start();
+			try {
+				thr.join();
+			} catch(Throwable th) {
+				Log.stack(LOG_ID,"init",th);
+			}
+			}
+		else
+			init();
 	}
 
 	@Override 
@@ -564,24 +569,21 @@ private void realdisconnected(int status) {
 	backFillInProgress=false;
 	shouldenablegattCharCommandResponse=false;
 //	endcrypt(cryptptr); cryptptr=0L;
-	close();
 	isServicesDiscovered=false;
-	/*
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        mActiveBluetoothDevice.connectGatt(app, autoconnect, this, BluetoothDevice.TRANSPORT_LE);
-    }
-    else
-        mActiveBluetoothDevice.connectGatt(app, autoconnect, this);
-	*/
 	init();
 	wrotecharacter=false;
 	sendqueue.clear();
+	if(autoconnect&&mBluetoothGatt!=null) {
+		mBluetoothGatt.connect();
+		return;
+		}
+	close();
 	connectDevice(0);//TODO:  What if it fails?
 	}
 
 private void disconnected(int status) {
 	Log.i(LOG_ID,"disconnected("+status+")");
-	realdisconnected(status); //TODO remove this
+//	realdisconnected(status); //TODO remove this
 	}
 
 private  void  setsuccess(long timmsec,String str) {

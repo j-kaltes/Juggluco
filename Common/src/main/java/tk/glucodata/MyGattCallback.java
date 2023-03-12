@@ -166,9 +166,14 @@ void reconnect() {
 							}
 					    }
 					;
-					bluetoothGatt.close();
-					mBluetoothGatt = null;
-					sensorbluetooth.connectToActiveDevice(this, 0);
+					if(!autoconnect) {
+						bluetoothGatt.close();
+						mBluetoothGatt = null;
+						sensorbluetooth.connectToActiveDevice(this, 0);
+						}
+					else {
+						bluetoothGatt.connect();
+						}
 					conphase = 0;
 				}
 				constatstatus = status;

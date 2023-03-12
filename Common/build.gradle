@@ -62,7 +62,7 @@ android {
             }
         }
 	resourceConfigurations += ["en", "nl", "it", "de", "pl", "pt"]
-     // ndk { abiFilters  'armeabi-v7a' }
+//      ndk { abiFilters  'armeabi-v7a' }
 //       ndk { abiFilters  'arm64-v8a' }
         signingConfig signingConfigs.alg
     buildToolsVersion '33.0.0'
@@ -71,23 +71,25 @@ android {
     flavorDimensions 'wearos','libreVersion'
     productFlavors {
         libreOld {
+      ndk { abiFilters  'armeabi-v7a' }
 //      ndk { abiFilters  'armeabi-v7a' }
 		minSdk 19 
         //	targetSdk 26
 	//******  Zet op rollout op 100% ******
 		versionCode  376
-		versionName '2.20.0'
+		versionName '2.20.1'
             	dimension 'libreVersion'
             buildConfigField 'int', 'libreVersion', '2'
 		}
         libre3 {
+//       ndk { abiFilters  'arm64-v8a' }
             // targetSdk 26
 	   minSdk 26
 //	   minSdk 23
             dimension 'libreVersion'
 		versionCode 377
 	//******  Zet op rollout op 100% ******
-		versionName '4.10.0'
+		versionName '4.10.1'
 
            	buildConfigField 'int', 'libreVersion', '3'
 		    externalNativeBuild.cmake {
@@ -107,7 +109,7 @@ android {
 		minSdk 26
 		versionCode 379
 	//******  Zet op rollout op 100% ******
-		versionName '4.10.0-wear'
+		versionName '4.10.1-wear'
 		signingConfig signingConfigs.alg
 
 //            buildConfigField 'int', 'targetSDK', "$targetSdk"
@@ -125,6 +127,7 @@ android {
        mobile {
 //      ndk { abiFilters  'armeabi-v7a' }
 	//ndk { abiFilters  'arm64-v8a' }
+//       ndk { abiFilters  'arm64-v8a' }
            // targetSdk 26
              // targetSdk 31
             dimension 'wearos'

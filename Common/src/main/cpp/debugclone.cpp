@@ -31,6 +31,8 @@ x86	eax		eax	ebx	ecx	edx	esi	edi	ebp
 x86_64	rax		rax	rdi	rsi	rdx	r10	r8	r9
 */
 //#define CHANGESTATUS
+#include <sys/mman.h>
+
 #include "config.h"
 #ifdef CARRY_LIBS 
 #define USEDIN 1
@@ -555,9 +557,9 @@ int debugger(void *arg) {
 commu *com=reinterpret_cast<commu *>(arg);
 pid_t pid=com->tid;
 //debugtid=pid;
-LOGGER("pid=%ld,tid=%ld debugs %d\n",syscall(SYS_getpid),syscall(SYS_gettid),pid);
-
 const pid_t ownpid= syscall(SYS_getpid);
+LOGGER("pid=%ld,tid=%ld debugs %d\n",ownpid,syscall(SYS_gettid),pid);
+
 //    signal(SIGUSR1,sighandler);
 //ptrace(PTRACE_SEIZE, pid, 0, 0);
 if(ptrace(PTRACE_ATTACH, pid, 0, 0)==-1) {
@@ -586,7 +588,7 @@ LOGGER("voor notify\n");
 notify(com);
 LOGGER("na notify\n");
 #ifdef LIBRE3
-const int version=com->version;
+int version=com->version;
 bool followthreads=version==3&&wrongfiles();
 #endif
 //getchar();
@@ -601,89 +603,91 @@ bool wasclone=false,waspipe=false;
 for (;;) {
     /* Enter next system call */
 //    if(ptrace(PTRACE_SYSCALL, pid, 0, 0)==-1&&errno!=ESRCH) {
-    if(ptrace(PTRACE_SYSCALL, pid, 0, 0)==-1) {
-    	flerror("PTRACE_SYSCALL %d failed",pid);
-	ptrace(PTRACE_DETACH, pid, 0, 0);
-	return 5;
-    	}
-    if(waitpid(pid, 0, 0)==-1){
-	int waserrno=errno;
-    	flerror("2 waitpid %d",pid);
-	if(waserrno!= ECHILD ) {
-		ptrace(PTRACE_DETACH, pid, 0, 0);
-		return 2;
-		}
-    	}
+    if (ptrace(PTRACE_SYSCALL, pid, 0, 0) == -1) {
+        flerror("PTRACE_SYSCALL %d failed", pid);
+        ptrace(PTRACE_DETACH, pid, 0, 0);
+        return 5;
+    }
+    if (waitpid(pid, 0, 0) == -1) {
+        int waserrno = errno;
+        flerror("2 waitpid %d", pid);
+        if (waserrno != ECHILD) {
+            ptrace(PTRACE_DETACH, pid, 0, 0);
+            return 2;
+        }
+    }
 
 //    struct user_regs_struct regs;
-if(!regi.getall()) {
-        flerror("PTRACE_GETREGSET %d to get registers",pid);
-	ptrace(PTRACE_DETACH, pid, 0, 0);
+    if (!regi.getall()) {
+        flerror("PTRACE_GETREGSET %d to get registers", pid);
+        ptrace(PTRACE_DETACH, pid, 0, 0);
         return 4;
     }
 //Register::type regitype;
 //   ptrace(PTRACE_GETREGS, pid, 0, &regs);
-	int syscallnr= regi.callnr();
-	const char *callstr=syscallnr<std::size(syscallstr)?syscallstr[syscallnr].data():(
+    int syscallnr = regi.callnr();
+    const char *callstr = syscallnr < std::size(syscallstr) ? syscallstr[syscallnr].data() : (
 #ifdef __ARM_NR_BASE
-	(syscallnr>=__ARM_NR_BASE&&syscallnr<(__ARM_NR_BASE+std::size(armcallstr)))?armcallstr[syscallnr-__ARM_NR_BASE].data(): 
-#endif
-	"Unknown");
-    LOGGER("%d: syscallnr %d %s\n",pid,syscallnr,callstr);
-    bool askdump=false;
-    auto reg0= regi.get(0);
+            (syscallnr >= __ARM_NR_BASE && syscallnr < (__ARM_NR_BASE + std::size(armcallstr)))
+            ? armcallstr[syscallnr - __ARM_NR_BASE].data() :
+            #endif
+            "Unknown");
+    LOGGER("%d: syscallnr %d %s\n", pid, syscallnr, callstr);
+    bool askdump = false;
+    auto reg0 = regi.get(0);
 
-    switch(syscallnr) {
+    switch (syscallnr) {
 
-	/*
-	case  __NR_futex:  {
+        /*
+        case  __NR_futex:  {
 
-		 uint32_t *uaddr= reinterpret_cast< uint32_t *>(regi.get(0));
-		int futex_op= regi.get(1);
-		int low_op=futex_op&0x7f;
-		strconcat opstr(" ",getfutexop(low_op), FUTEX_PRIVATE_FLAG&futex_op?std::string_view("PRIVATE_FLAG"):"",futex_op&FUTEX_CLOCK_REALTIME?std::string_view("CLOCK_REALTIME"):"");
+             uint32_t *uaddr= reinterpret_cast< uint32_t *>(regi.get(0));
+            int futex_op= regi.get(1);
+            int low_op=futex_op&0x7f;
+            strconcat opstr(" ",getfutexop(low_op), FUTEX_PRIVATE_FLAG&futex_op?std::string_view("PRIVATE_FLAG"):"",futex_op&FUTEX_CLOCK_REALTIME?std::string_view("CLOCK_REALTIME"):"");
 
-		uint32_t val= regi.get(2);
-		const struct timespec *timeout= reinterpret_cast<const struct timespec*>(regi.get(3));
-		const uint32_t *uaddr2= reinterpret_cast<const uint32_t *>(regi.get(4));
-		uint32_t val3= regi.get(5);
+            uint32_t val= regi.get(2);
+            const struct timespec *timeout= reinterpret_cast<const struct timespec*>(regi.get(3));
+            const uint32_t *uaddr2= reinterpret_cast<const uint32_t *>(regi.get(4));
+            uint32_t val3= regi.get(5);
 
-		LOGGER("futex uaddr=%u (*0x%p) futex_op=%s(0x%i) val=0x%u 0x%p uaddr2=%p val3=0x%X\n",*uaddr,uaddr,opstr.data(),futex_op,val,timeout,uaddr2,val3);
-		};break;
+            LOGGER("futex uaddr=%u (*0x%p) futex_op=%s(0x%i) val=0x%u 0x%p uaddr2=%p val3=0x%X\n",*uaddr,uaddr,opstr.data(),futex_op,val,timeout,uaddr2,val3);
+            };break;
 
-		*/
+            */
 
 #ifdef LIBRE3
-	case  __NR_clone: 
-		{
-		unsigned long flags=regi.get(0);
-		if(followthreads) {
-			if(flags&CLONE_THREAD) {
-				unsigned  long **stack=(unsigned  long **)regi.get(1);
-				 redir *re=new redir {(int (*)(void *))*stack,(void *)stack[1], static_cast<bool>(flags&CLONE_THREAD) };
-				 *stack=(unsigned  long *)cloner;
-				 stack[1]= (unsigned  long *)re;
-				}; 
-			}
-		}
-		break;
+        case __NR_clone: {
+            unsigned long flags = regi.get(0);
+            LOGGER("clone flags=%x\n", flags);
+            if (followthreads) {
+                if (flags & CLONE_THREAD) {
+                    unsigned long **stack = (unsigned long **) regi.get(1);
+                    redir *re = new redir{(int (*)(void *)) *stack, (void *) stack[1],
+                                          static_cast<bool>(flags & CLONE_THREAD)};
+                    *stack = (unsigned long *) cloner;
+                    stack[1] = (unsigned long *) re;
+                };
+            }
+        }
+            break;
 #endif
-		/*
-#if defined(__arm__)&&!defined( __aarch64__)
-#ifndef NOLOG
-        case  __NR_clone: {
-		LOGGER("clone 0x%lx 0x%lx 0x%lx 0x%lx\n",regi.get(0),regi.get(1),regi.get(2),regi.get(3));
+            /*
+    #if defined(__arm__)&&!defined( __aarch64__)
+    #ifndef NOLOG
+            case  __NR_clone: {
+            LOGGER("clone 0x%lx 0x%lx 0x%lx 0x%lx\n",regi.get(0),regi.get(1),regi.get(2),regi.get(3));
 
-		if(pipehan>=0) {
-			sys_write(pipehan,package,packagelen);
-			pipehan=-1;
-			}
-               	break; 
-		};
-#endif
+            if(pipehan>=0) {
+                sys_write(pipehan,package,packagelen);
+                pipehan=-1;
+                }
+                       break;
+            };
+    #endif
 
-#endif
-*/
+    #endif
+    */
 //	case  __NR_clone: {
 
 //56  clone                   man/ cs/  0x38  unsigned long     unsigned long       int *               int *               unsigned long     -          
@@ -705,124 +709,133 @@ if(!regi.getall()) {
 	 stack[1]= (unsigned long *)1234;
 		};
 		*/
-		
-	case __NR_prctl:
-		if(regi.get(0)==PR_GET_DUMPABLE) {
-			LOGGER("ask PR_GET_DUMPABLE \n");
-			askdump=true;
-			}
-		break;
-       case __NR_getsid:
-       		if(regi.get(0)==ownpid) { 
-			LOGGER("STOPSIGNAL %d\n",pid);
-			if(istest)
-				saveused();
-			if(ptrace(PTRACE_DETACH, pid, 0, 0)==-1) {
-				flerror("PTRACE_DETACH %d failed",pid);
-				}
-			return 0;
-			}
-	
-         	break;
 
-	case __NR_exit: {
-		if(ptrace(PTRACE_DETACH, pid, 0, 0)==-1) {
-			flerror("PTRACE_DETACH %d failed",pid);
-			}
-		
-		    if(waitpid(pid, 0, 0)==-1){
-			int waserrno=errno;
-			flerror("5 waitpid %d",pid);
-			if(waserrno!= ECHILD ) {
-				return 12;
-				}
-			}
-		return 14;
-		};break;
+        case __NR_prctl:
+            if (regi.get(0) == PR_GET_DUMPABLE) {
+                LOGGER("ask PR_GET_DUMPABLE \n");
+                askdump = true;
+            }
+            break;
+        case __NR_getsid:
+            if (regi.get(0) == ownpid) {
+                LOGGER("STOPSIGNAL %d\n", pid);
+                if (istest)
+                    saveused();
+                if (ptrace(PTRACE_DETACH, pid, 0, 0) == -1) {
+                    flerror("PTRACE_DETACH %d failed", pid);
+                }
+                return 0;
+            }
+
+            break;
+
+        case __NR_exit: {
+            if (ptrace(PTRACE_DETACH, pid, 0, 0) == -1) {
+                flerror("PTRACE_DETACH %d failed", pid);
+            }
+
+            if (waitpid(pid, 0, 0) == -1) {
+                int waserrno = errno;
+                flerror("5 waitpid %d", pid);
+                if (waserrno != ECHILD) {
+                    return 12;
+                }
+            }
+            return 14;
+        };
+            break;
 //	case __NR_read: //		LOGGER("%lu,,%lu\n",regi.get(0),regi.get(2));break;
-	case __NR_close:
-		LOGGER("%i\n",(int)regi.get(0));
-		break;
+        case __NR_close:
+            LOGGER("%i\n", (int) regi.get(0));
+            break;
 //     int statx(int dirfd, const char *pathname, int flags, unsigned int mask, struct statx *statxbuf);
+#ifdef LIBRE3
+        case __NR_ioprio_get:
+            LOGGER("ioprio_get(%ld,%ld)\n", (int) regi.get(0), regi.get(1));
+            if (regi.get(1) == ownpid) {
+                version = regi.get(0);
+                followthreads = version == 3 && wrongfiles();
+            }
 
+            break;
+#endif
 #ifdef __NR_statx
-	case __NR_statx:
+        case __NR_statx:
 #endif
 #ifdef __NR_newfstatat
-	case __NR_newfstatat:
+            case __NR_newfstatat:
 #else
-	case __NR_fstatat64:
+        case __NR_fstatat64:
 #endif
-		
-		rewrong(hierstat,statused,pid,regi,1);
-		break;
+
+            rewrong(hierstat, statused, pid, regi, 1);
+            break;
 #ifdef __NR_stat
-	case __NR_stat:
+        case __NR_stat:
 #endif
 #ifdef __NR_stat64
-	case  __NR_stat64:
+        case __NR_stat64:
 #endif
-#if defined( __NR_stat64) || defined( __NR_stat)  
-		
-		rewrong(hierstat,statused,pid,regi,0); 
-		break;
+#if defined( __NR_stat64) || defined( __NR_stat)
+
+            rewrong(hierstat, statused, pid, regi, 0);
+            break;
 #endif
-	  case  __NR_faccessat:  rewrong(hieraccess,accessused,pid,regi,1);
-	  break;
+        case __NR_faccessat:
+            rewrong(hieraccess, accessused, pid, regi, 1);
+            break;
 
 
 #ifdef __NR_access
-	case __NR_access: rewrong(hieraccess,accessused,pid,regi,0); 
-	break;
+        case __NR_access:
+            rewrong(hieraccess, accessused, pid, regi, 0);
+            break;
 #endif
 #ifdef __NR_open
- case __NR_open:
- 	openreg=0;
+        case __NR_open:
+            openreg = 0;
 #endif
-	  case __NR_openat: {
-		const Register::type reg1= regi.get(openreg);
-		  if(reg1) {
-		  	  static Register::type oldreg{};
-			char *name=(char *)reg1;
-			  if(reg1!=oldreg) {
-				  constexpr char mounts[]="/proc/self/mounts";
-				  if(change(name,mounts,mymounts,regi,openreg)) {
-				  	LOGGER("%s (%p)->%s\n",name,name,mymounts);
-					}
-				else    {
+        case __NR_openat: {
+            const Register::type reg1 = regi.get(openreg);
+            if (reg1) {
+                static Register::type oldreg{};
+                char *name = (char *) reg1;
+                if (reg1 != oldreg) {
+                    constexpr char mounts[] = "/proc/self/mounts";
+                    if (change(name, mounts, mymounts, regi, openreg)) {
+                        LOGGER("%s (%p)->%s\n", name, name, mymounts);
+                    } else {
 #ifdef CHANGESTATUS
-				  constexpr char status[]="/proc/self/status";
-				  if(change(name,status,mystatus,regi,openreg)) {
-				  	LOGGER("%s (%p)->%s\n",name,name,mystatus);
-					}
-				else 
+                        constexpr char status[]="/proc/self/status";
+                        if(change(name,status,mystatus,regi,openreg)) {
+                            LOGGER("%s (%p)->%s\n",name,name,mystatus);
+                          }
+                      else
 #endif
 
-				{
+                        {
 
-					if(rewrongval(hieropen,openused,pid,regi,name,openreg)) {
-						oldreg=(uintptr_t)name;
-						}
-				  }
-				  }
-				}
-			else {
-				LOGGER("%s old regi(1)\n",name);
-				*name='\0';
+                            if (rewrongval(hieropen, openused, pid, regi, name, openreg)) {
+                                oldreg = (uintptr_t) name;
+                            }
+                        }
+                    }
+                } else {
+                    LOGGER("%s old regi(1)\n", name);
+                    *name = '\0';
 /*				regi.set(openreg,(uintptr_t)doesnt);
 				regi.setall(); */
-				//ptrace(PTRACE_SETREGSET, pid, (void*)NT_PRSTATUS, &io);
-				}
+                    //ptrace(PTRACE_SETREGSET, pid, (void*)NT_PRSTATUS, &io);
+                }
 
-			}
-		else
-			LOGGER("zero regi(1)\n");
-		};
+            } else
+                LOGGER("zero regi(1)\n");
+        };
 
 #ifdef __NR_open
-		openreg=1;
+            openreg = 1;
 #endif
-		break;
+            break;
 //	case  __NR_clone: {
 
 //56  clone                   man/ cs/  0x38  unsigned long     unsigned long       int *               int *               unsigned long     -          
@@ -844,12 +857,38 @@ if(!regi.getall()) {
 	 stack[1]= (unsigned long *)1234;
 		};break;
 		*/
-	case __NR_dup:
-		LOGGER(" %llu\n",regi.get(0));
-		break;
-	case __NR_munmap:
-		LOGGER("%llx %lld\n",regi.get(0),regi.get(1));
-		break;
+        case __NR_dup:
+            LOGGER(" %llu\n", regi.get(0));
+            break;
+#if defined(__aarch64__) 
+	case __NR_mmap: {
+		int len=regi.get(1);
+		if(len==1089536) { //Otherwise crashes in munmap, but only when it is debugged. As you probably will understand later.
+			LOGGER("mmap %llx %lld %d %d %d %d\n",regi.get(0),len,regi.get(2),regi.get(3),regi.get(4),regi.get(5));
+			if (ptrace(PTRACE_DETACH, pid, 0, 0) == -1) {
+			    flerror("PTRACE_DETACH %d failed", pid);
+			}
+			return 0;
+			}
+		}
+		break; 
+#endif
+		/*
+        case __NR_munmap: {
+	    void *addr= (void*)regi.get(0);
+            auto len = regi.get(1);
+            LOGGER("munmap %llx %lld\n", addr, len);
+            if (len == 1089536)  {
+	 //   	mprotect(addr,len,PROT_READ|PROT_WRITE);
+	//	LOGGER("after mprotect");
+	 //   	munmap(addr,len);
+	//	LOGGER("after munmap");
+                regi.set(0, 0);
+                regi.set(1, 0);
+                regi.setall(); 
+                } 
+        }; */
+        break;
 	default:;
 		};
   //  if(ptrace(PTRACE_SYSCALL, pid, 0, 0)==-1&&errno!=ESRCH) 
@@ -925,17 +964,27 @@ if(!regi.getall()) {
 
 	//	case  __NR_clone: LOGGER("clone returned\n");
 
-
+#ifndef NOLOG
+#if defined(__aarch64__)
+	case __NR_mmap: {
+			LOGGER("mmap= %p\n",regi.ret());
+			};break;
+#endif
 	#ifdef __NR_newfstatat
 		case __NR_newfstatat:
 	#else
 		case __NR_fstatat64:
 	#endif
+		case __NR_munmap:
 		case  __NR_faccessat:
 		case __NR_dup:
+#ifdef __NR_open
+		case __NR_open:
+#endif
 		case __NR_openat: 
 			LOGGER("=%lld\n",regi.ret());
 			break;
+#endif
 		};
    }
 
@@ -1000,9 +1049,8 @@ LOGGER("getdebugclone\n");
 	commu com{.tid=mytid,.pid=static_cast<pid_t>(syscall(SYS_getpid)),.version=version};
 	static bool isbeforedebug=beforedebug();
 	LOGGER("before clone\n");
-//	if((debugpid=clone(debugger, vstack+STACK_SIZE, CLONE_VM|  CLONE_FILES | CLONE_FS | CLONE_IO|CLONE_UNTRACED| CLONE_CHILD_CLEARTID , reinterpret_cast<void*>(&com))) == -1) { 
 	if((debugpid=clone(debugger, vstack+STACK_SIZE, CLONE_VM|  CLONE_FILES | CLONE_FS | CLONE_IO|CLONE_UNTRACED , reinterpret_cast<void*>(&com))) == -1) { 
-//	if((debugpid=clone(debugger, vstack+STACK_SIZE, CLONE_VM|  CLONE_FILES | CLONE_FS |CLONE_UNTRACED| CLONE_CHILD_CLEARTID , reinterpret_cast<void*>(&com))) == -1) { 
+//	if((debugpid=clone(debugger, vstack+STACK_SIZE, CLONE_VM|  CLONE_FILES | CLONE_FS | CLONE_IO|CLONE_UNTRACED| CLONE_CHILD_CLEARTID , reinterpret_cast<void*>(&com))) == -1) { 
 		lerror("failed to spawn child task");
 		return 0;
 	    }
@@ -1015,17 +1063,14 @@ LOGGER("getdebugclone\n");
 
 class thedebugger {
 
-pid_t debugpid;
 public:
-thedebugger(const int version):debugpid(getdebugclone(version)) {
-		LOGGER("thedebugger(%d) pid=%d\n",version,debugpid);
+thedebugger(){
 		}
-[[nodiscard]]  int get() const {	
-	return debugpid;
-	}
 ~thedebugger() {
-	LOGGER("~thedebugger pid=%d\n",debugpid);
-	getsid(debugpid);
+	LOGGER("~thedebugger pid=%d\n",has_debugger);
+ 	if(has_debugger)
+		getsid(has_debugger);
+	has_debugger=0;
 	}
 
 };
@@ -1222,10 +1267,6 @@ bool resetwrong() {
 		return (*wrongptr=needsdebug());
 	return wrongfiles();	
 	}
-static auto givedebugclone(const int version) {
-	thread_local	thedebugger debugger(version);
-	return debugger.get();
-	}
 
 pid_t debugclone(bool doalways,const int version) {
 
@@ -1238,7 +1279,24 @@ LOGGER("debugclone(%d,%d)\n",doalways,version);
      if(doalways||wrongfiles()) {
 	   if(doalways&&!initialized)
 		needsdebug(true);
-	if(!has_debugger) has_debugger=givedebugclone(version);
+#ifdef LIBRE3
+	static thread_local	int wasversion ;
+#endif
+	if(!has_debugger) {
+		has_debugger=getdebugclone(version);
+#ifdef LIBRE3
+		wasversion=version;
+#endif
+		}
+#ifdef LIBRE3
+         else {
+		if(version==3&&wasversion!=3) {
+			int res=syscall( __NR_ioprio_get,3,has_debugger);
+			LOGGER("ioprio_get=%d\n",res);
+			}
+		}
+#endif
+	static thread_local	thedebugger debugger;
 	LOGGER("end debugclone\n");
 	return has_debugger;
 	    }

@@ -659,6 +659,7 @@ extern "C" JNIEXPORT jobjectArray  JNICALL   fromjava(activeSensors)(JNIEnv *env
 	 for(int i=0;i<len;i++) {
 	 	 int index=usedsensors[i];
 		 const char *name=sensors->shortsensorname(index)->data();
+//		 const char *name=sensors->showsensorname(index); //gives problems in getdataptr
 		 LOGGER("%s\n",name);
 		 env->SetObjectArrayElement(sensjar,i,env->NewStringUTF(name));
 		  }

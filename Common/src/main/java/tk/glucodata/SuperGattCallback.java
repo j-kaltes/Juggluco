@@ -41,7 +41,7 @@ import static tk.glucodata.Natives.thresholdchange;
 public abstract class SuperGattCallback extends BluetoothGattCallback {
 	private static final String LOG_ID="SuperGattCallback";
 	static final private int  use_priority=CONNECTION_PRIORITY_HIGH;
-	private static final boolean autoconnect=false;
+	protected static final boolean autoconnect=true;
 		 protected static final UUID mCharacteristicConfigDescriptor = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
 
 	protected static final UUID mCharacteristicUUID_BLELogin = UUID.fromString("0000f001-0000-1000-8000-00805f9b34fb");
