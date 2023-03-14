@@ -75,7 +75,6 @@
  <string name="unit">"Eenheid: "</string>
  <string name="glucoseaxisleft">Glucose-as nummers LINKS</string>
  <string name="startsapp">Scannen start Juggluco</string>
- <string name="sendtoxdrip">Librelink broadcast</string>
  <string name="disablecamerakey">Disable camera key</string>
  <string name="invertscreen">Scherm omkeren</string>
  <string name="nfcsound">NFC geluid</string>

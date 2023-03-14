@@ -1044,7 +1044,7 @@ dieser Option.&nbsp;Auf meinem Smartphone brauche ich es nicht und
 auf Watch4 macht es keinen Unterschied.&nbsp;Wenn es funktioniert,
 erhöht es den Batterieverbrauch.</font></font></p>
 <p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
-<font face="Times New Roman"><font size="4" style="font-size: 14pt"><i><b>B</b></i><i><b>eenden</b></i>:
+<font face="Times New Roman"><font size="4" style="font-size: 14pt"><i><b>Beenden</b></i>:
 Verbindung zu diesem Sensor über Bluetooth beenden. Wenn Sie später
 wieder Stream-Glukosewerte von diesem Sensor erhalten möchten,
 müssen Sie ihn nur erneut scannen.</font></font></p>
@@ -1056,6 +1056,13 @@ Batterieleistung verbraucht. Scheint auf Watch4 mit Freestyle Libre
 2-Sensoren benötigt zu werden, aber nicht mit Freestyle Libre
 3-Sensoren und auf keinem der Smartphones, auf denen ich es
 ausprobiert habe.</font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font face="Times New Roman"><font size="4" style="font-size: 14pt"><b>Android
+13</b>: Ein Benutzer mit einem fehlerhaften Android 13-Telefon
+behauptete, dass diese Einstellungen seine
+Bluetooth-Verbindungsprobleme gelöst hätten. Zwei Benutzer mit
+Android 13, die zuvor keine Verbindungsprobleme hatten, gaben an,
+dass sie Verbindungsprobleme durch diese Einstellung hatten.</font></font></p>
 <p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
 <font face="Times New Roman"><font size="4" style="font-size: 14pt"><i><b>Info</b></i>&nbsp;:
 Gibt Start- und Endzeiten sowie die letzten Scan- und Stream-Zeiten
@@ -2282,12 +2289,16 @@ lokal</i></span>“ <span lang="de-DE">nicht eingestellt ist.</span>
 <span lang="de-DE">Unter MacOS gilt dasselbe für Nightscout Menu
 Bar, Gluco Status und Gluco Tracker (alle im Apple Store). Auf IOS
 können Sie <a href="https://github.com/someoneAnyone/Nightscouter">Nightscouter</a>
-</span><span lang="de-DE">auch </span><span lang="de-DE">mit http
-verwenden.</span></p>
+auch mit http verwenden.</span></p>
 <p style="line-height: 100%; margin-bottom: 0in"><span lang="de-DE">Wenn
 Sie über das Internet auf Juggluco zugreifen möchten, müssen Sie
-einen Port von Ihrem Modem weiterleiten. Siehe
-<a href="https://www.juggluco.nl/Juggluco/phones/index.html">https://www.juggluco.nl/Juggluco/phones/index.html</a></span></p>
+einen Port von Ihrem Modem weiterleiten. Siehe:</span></p>
+<ul>
+	<li><p style="line-height: 100%; margin-bottom: 0in"><a href="https://www.makeuseof.com/tag/what-is-port-forwarding-and-how-can-it-help-me"><span lang="de-DE">https://www.makeuseof.com/tag/what-is-port-forwarding-and-how-can-it-help-me</span></a></p>
+	<li><p style="line-height: 100%; margin-bottom: 0in"><a href="https://www.juggluco.nl/Juggluco/phones/index.html"><span lang="de-DE">https://www.juggluco.nl/Juggluco/phones/index.html</span></a></p>
+	<li><p style="line-height: 100%; margin-bottom: 0in">Linkes
+	mittleres Menü-&gt;Klon-&gt;Verbindung hinzufügen-&gt;Hilfe</p>
+</ul>
 <p style="line-height: 100%; margin-bottom: 0in"><span lang="de-DE">Andere
 Nightscout-Follower verwenden nur https und das erfordert, dass
 Juggluco über einen authentifizierten SSL-Schlüssel für den
@@ -2353,9 +2364,9 @@ Sugarmate (MacOS) und <a href="https://github.com/JohanDegraeve/xdripswift">Xdri
 <p><i>https://hostname:port</i> 
 </p>
 <p><i>hostname</i> <span lang="de-DE">ist der Hostname des
-authentifizierten Schlüssels, den Sie Juggluco gegeben haben, </span><span lang="de-DE"><i>port</i></span>
-<span lang="de-DE">ist der Port, den Sie in diesem Bildschirm
-angegeben haben (Standard: 17581).</span></p>
+authentifizierten Schlüssels, den Sie Juggluco gegeben haben,</span><span lang="de-DE">
+port ist der Port, den Sie an den hier angegebenen Port
+weitergeleitet haben (Standard: 17581).</span></p>
 <p style="line-height: 100%; margin-bottom: 0in">Der Webserver kann
 auch auf einem Linux-Rechner betrieben werden. Es erhält seine Daten
 von einer Klonverbindung von Juggluco, die mit dem Sensor verbunden

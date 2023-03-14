@@ -50,6 +50,9 @@ import static tk.glucodata.Applic.isWearable;
 import static tk.glucodata.BuildConfig.libreVersion;
 
 public class SensorBluetooth {
+static void	setAutoconnect(boolean val) {
+		SuperGattCallback.autoconnect=val;
+	}
 public static SensorBluetooth blueone=null;
 public static void startscan() {
 	if(blueone!=null)

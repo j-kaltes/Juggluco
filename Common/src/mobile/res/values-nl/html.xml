@@ -879,12 +879,12 @@ bekend is, heb je niets aan een locatie machtiging.</p>
 nieuwe “<i>Apparaten in de buurt</i>” machtiging, die gebruikt
 wordt in plaats van de locatie machtiging, maar ook nodig is voor
 later contact met de sensor.</p>
-<p style="line-height: 100%; margin-bottom: 0in"><span style="font-style: normal"><b>Wakelock</b></span>:
+<p style="line-height: 100%; margin-bottom: 0in"><span style="font-variant: normal"><span style="font-style: normal"><b>Wakelock</b></span></span>:
 Sommige gebruikers met Android 13 klagen over connectie problemen.
 Misschien help dit hen. Op mijn smartphone heb ik het niet nodig en
 op Watch 4 lijkt het geen positief effect te hebben. Het Accu gebruik
 zal hierdoor toenemen.</p>
-<p style="line-height: 100%; margin-bottom: 0in"><span style="font-style: normal"><b>Beëindig</b></span>:
+<p style="line-height: 100%; margin-bottom: 0in"><span style="font-variant: normal"><span style="font-style: normal"><b>Beëindig</b></span></span>:
 Maak geen contact via Bluetooth meer met deze sensor. Als je deze
 sensor weer wil gebruiken, hoef je hem alleen maar te scannen.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>Turbo</b>: Als
@@ -893,6 +893,12 @@ Dit moet leiden tot minder verbindingsfouten, maar zou meer stroom
 kunnen gebruiken. Lijkt nodig te zijn op Watch4 met Freestyle Libre 2
 sensoren, maar niet met Freestyle Libre 3 sensoren en ook niet op de
 smartphones die ik uitgeprobeerd heb.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>Android 13</b>:
+Een gebruiker met een Android 13-telefoon met Bluetooth problemen,
+beweerde dat deze instellingen zijn Bluetooth-verbindingsproblemen
+hadden opgelost. Twee gebruikers met Android 13 die eerder geen
+verbindingsproblemen hadden, beweerden dat ze verbindingsproblemen
+kregen door deze instelling.</p>
 ]]>
 </string>
 <string name="watchhelp" >
@@ -1790,8 +1796,14 @@ ook met http gebruiken.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><span lang="nl-NL">Als
 je toegang wilt tot Juggluco via internet, moet je</span> <span lang="nl-NL">een
 poort &quot;</span><span lang="nl-NL"><i>forwarden&quot;</i></span>
-<span lang="nl-NL">vanaf uw modem. Zie
-<a href="https://www.juggluco.nl/Juggluco/phones/index.html">https://www.juggluco.nl/Juggluco/phones/index.html</a></span></p>
+<span lang="nl-NL">vanaf uw modem. Zie</span></p>
+<ul>
+	<li><p style="line-height: 100%; margin-bottom: 0in"><a href="https://www.makeuseof.com/tag/what-is-port-forwarding-and-how-can-it-help-me">https://www.makeuseof.com/tag/what-is-port-forwarding-and-how-can-it-help-me</a></p>
+	<li><p style="line-height: 100%; margin-bottom: 0in"><a href="https://www.juggluco.nl/Juggluco/phones/index.html">https://www.juggluco.nl/Juggluco/phones/index.html</a></p>
+	<li><p style="line-height: 100%; margin-bottom: 0in"><span lang="nl-NL">Link</span><span lang="nl-NL">er</span><span lang="nl-NL">
+	midden menu-&gt;</span><span lang="nl-NL">Kloon</span><span lang="nl-NL">-&gt;Verbinding
+	toevoegen-&gt;Help</span></p>
+</ul>
 <p style="line-height: 100%; margin-bottom: 0in"><span lang="nl-NL">Andere
 Nightscout-volgers maken alleen gebruik van https en dat vereist dat
 Juggluco een geverifieerde SSL-sleutel heeft voor de domeinnaam die
@@ -1855,8 +1867,9 @@ en <a href="https://slingithub.github.io/CheckmateWeb">Checkmate</a>
 <p><i>https://hostnaam:poort</i> 
 </p>
 <p><i>hostnaam</i> is de hostnaam van de geverifieerde sleutel die je
-aan Juggluco heeft gegeven, <i>poort</i> is de poort die je in dit
-scherm hebt opgegeven (standaard: 17581).</p>
+aan Juggluco heeft gegeven, <i>poort</i> is de poort die je hebt
+&quot;<i>forwarded</i>&quot; naar de poort die je in dit scherm hebt
+opgegeven (standaard: 17581).</p>
 <p style="line-height: 100%; margin-bottom: 0in"><span lang="nl-NL">De
 webserver kan ook op een Linux-computer worden uitgevoerd. Het
 ontvangt zijn gegevens van een <a href="https://www.juggluco.nl/Juggluco/mgdL/index.html#mirror">Kloonverbinding</a></span>

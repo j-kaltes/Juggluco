@@ -864,6 +864,11 @@ in less connection errors, but can uses more battery power. Seems to
 be needed on Watch4 with Freestyle Libre 2 sensors, but not with
 Freestyle Libre 3 sensors and on none of the smartphones I tried it
 on.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>Android 13</b>:
+One user with a buggy Android 13 phone claimed that this settings
+solved his Bluetooth connection issues. Two users with Android 13 who
+previous didn\'t have connection problems claimed that they got
+connection problems from this setting.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><i><b>Info</b></i>:
 Gives start and end times and last scan and stream times of sensor.</p>
 <p style="line-height: 100%; margin-bottom: 0in">To connect to a
@@ -1729,7 +1734,13 @@ Status and Gluco Tracker (all in Apple Store). On IOS you can use
 also with http.</p>
 <p style="line-height: 100%; margin-bottom: 0in">If you want to
 access Juggluco over the internet, you need to forward a port from
-your modem. See <a href="https://www.juggluco.nl/Juggluco/phones/index.html">https://www.juggluco.nl/Juggluco/phones/index.html</a></p>
+your modem. See:</p>
+<ul>
+	<li><p style="line-height: 100%; margin-bottom: 0in"><a href="https://www.makeuseof.com/tag/what-is-port-forwarding-and-how-can-it-help-me">https://www.makeuseof.com/tag/what-is-port-forwarding-and-how-can-it-help-me</a></p>
+	<li><p style="line-height: 100%; margin-bottom: 0in"><a href="https://www.juggluco.nl/Juggluco/phones/index.html">https://www.juggluco.nl/Juggluco/phones/index.html</a></p>
+	<li><p style="line-height: 100%; margin-bottom: 0in">Left middle
+	menu-&gt;Mirror-&gt;Add Conection-&gt;Help</p>
+</ul>
 <p style="line-height: 100%; margin-bottom: 0in">Other Nightscout
 followers only make use of https and that requires that Juggluco has
 an authenticated SSL key for the domain name used to access Juggluco.
@@ -1784,8 +1795,8 @@ Specify as Nightscout server URL:
 <p><i>https://hostname:port</i> 
 </p>
 <p><i>hostname</i> is the host name of the authenticated key you have
-given to Juggluco, <i>port</i> is the port you specified in this
-screen (default: 17581).</p>
+given to Juggluco, <i>port</i> is the port you forwarded to the port
+you specified in this screen (default: 17581).</p>
 <p style="line-height: 100%; margin-bottom: 0in">The web server can
 also be run on a Linux computer. It will receive its data from a
 <a href="https://www.juggluco.nl/Juggluco/mgdL/index.html#mirror">mirror
@@ -1805,8 +1816,8 @@ encoded secret.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><strong>Visible</strong>:
 Make Secret visible.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><strong>Port</strong>:
-Specify the network port used to contact this server. The default is
-17581.</p>
+Specify the network port used to contact the https server. The
+default is 17581.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><strong>Save</strong>:
 Save modifications of Secret or Port.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><strong>Use SSL</strong>:
@@ -1884,8 +1895,9 @@ Web server is running.</p>
 <p>Upload to a Nightscout server. 
 </p>
 <p>In most cases you can also use the webserver in Juggluco or
-<a href="https://www.juggluco.nl/Juggluco/cmdline">juggluco-server</a>.
-Only AAPS and NSclient refuse to work when not connected <a href="https://github.com/nightscout/cgm-remote-monitor">cgm-remote-monitor</a>.</p>
+<a href="https://www.juggluco.nl/Juggluco/cmdline">juggluco-server</a>,
+only AAPS and NSclient refuse to work when not connected to
+<a href="https://github.com/nightscout/cgm-remote-monitor">cgm-remote-monitor</a>.</p>
 <p>AAPS doesn\'t work when not connected to a Nightscout server. If
 the functionality of this Artificial Pancreas is really dependent on
 a Nightscout server, they could better put the Nightscout server in
@@ -1897,7 +1909,7 @@ this Nightscout server.</p>
 moment they arrive. When multiple sensor are used, all values of all
 sensors are uploaded. Some Garmin watch apps/faces/widgets assume
 that the values are space 5 minutes apart. When they receive glucose
-values one minute apart,  they will only show the last fifth of the
+values one minute apart, they will only show the last fifth of the
 curve. For that reason, the webserver incorporated in Juggluco spaces
 the values 5 minutes apart, except when &quot;interval=secs&quot; is
 set to a lower value.</p>

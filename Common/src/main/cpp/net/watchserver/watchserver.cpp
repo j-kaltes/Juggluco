@@ -302,7 +302,7 @@ void servererror(int sock) {
 
 
 
-static bool	 sgvinterpret(const char *start,int len,bool headonly, recdata *data) ;
+static bool	 sgvinterpret(const char *start,int len,bool headonly, recdata *data,bool all=true) ;
 
 
 static bool givetreatments(const char *args,int argslen, recdata *data) ;
@@ -566,7 +566,7 @@ static	constexpr const char header[]="HTTP/1.1 200 OK\r\nContent-Type: text/plai
         outiter+=sprintf(outiter,R"("%d-%02d-%02dT%02d:%02d:%02d.000Z")",tmbuf.tm_year+1900,tmbuf.tm_mon+1,tmbuf.tm_mday, tmbuf.tm_hour, tmbuf.tm_min,tmbuf.tm_sec);
 	outiter+=sprintf(outiter,R"(	%ld	%d	"%s"	"Juggluco")",tim*1000L,mgdL,changelabel);
 	*/
-	auto len=outiter-start;
+	long long len=outiter-start;
 	char lenstr[20];
 	int lenlen=snprintf(lenstr,20,"%lld\r\n\r\n",len);
 	char *startheader=start-lenlen-headerlen;
@@ -638,7 +638,7 @@ bool givesgvtxt(int nr,uint32_t lowerend,uint32_t higherend,recdata *outdata,cha
 		return givenothing(outdata);
 	};
 	outiter-=2;
-	auto len=outiter-start;
+	long long len=outiter-start;
 	char lenstr[30];
 	int lenlen=sprintf(lenstr,"%lld\r\n\r\n",len);
 
@@ -900,7 +900,7 @@ static void nosecret(std::string_view secret, recdata *outdata) {
 	const int buflen=formatlen+secret.size()+20;
 	char *nosecret=outdata->allbuf=new char[buflen];
 	int textlen=19+secret.size();
-	outdata->len= snprintf(nosecret,buflen,nosecrettxt,textlen,secret.size(),secret.data());
+	outdata->len= snprintf(nosecret,buflen,nosecrettxt,textlen,(int)secret.size(),secret.data());
 	outdata->start=nosecret;
 	}
 bool watchcommands(char *rbuf,int len,recdata *outdata) {
@@ -975,7 +975,7 @@ bool watchcommands(char *rbuf,int len,recdata *outdata) {
 				hit+=tokenlen;	
 				const auto len=strcspn(hit," &");
 				foundsecret={hit,len};
-				LOGGER("has token %.*s#%d\n",len,foundsecret.data(),foundsecret.size());
+				LOGGER("has token %.*s#%zd\n",(int)len,foundsecret.data(),foundsecret.size());
 				}
 			}
 		const char *realsecret;
@@ -987,7 +987,7 @@ bool watchcommands(char *rbuf,int len,recdata *outdata) {
 			realsecret=settings->data()->apisecret;
 			}
 		if(seclen!=foundsecret.size()||memcmp(realsecret,foundsecret.data(),seclen)) {
-			LOGGER("%s#%d!=%.*s#%lld \n", realsecret,seclen,foundsecret.size(), foundsecret.data(),foundsecret.size());
+			LOGGER("%s#%d!=%.*s#%zd \n", realsecret,seclen,(int)foundsecret.size(), foundsecret.data(),foundsecret.size());
 			nosecret(foundsecret, outdata) ;
 			return false;
 			}
@@ -1001,10 +1001,10 @@ bool watchcommands(char *rbuf,int len,recdata *outdata) {
 		givesite(outdata);
 		return true;
 		}
-	LOGGER("toget=%.*s\n",toget.size(),toget.data()); //to set getargs in the beginning and use everywhere
+	LOGGER("toget=%.*s\n",(int)toget.size(),toget.data()); //to set getargs in the beginning and use everywhere
 std::string_view sgv="sgv.json";
 	if(!memcmp(sgv.data(),toget.data(),sgv.size())) {
-		return sgvinterpret(toget.data()+sgv.size(),toget.size()-sgv.size(),behead,outdata);
+		return sgvinterpret(toget.data()+sgv.size(),toget.size()-sgv.size(),behead,outdata,false);
 		}
 
 ///api/v1/entries.json
@@ -1198,9 +1198,10 @@ void mkheader(char *outstart,char *outiter,const bool headonly,recdata *outdata)
 class Sgvinterpret {
 	bool briefmode=false,sensorinfo=false,alldata=false,noempty=false;
   public:
+	Sgvinterpret(bool all=true): alldata(all) {}
 	int datnr=24;
 	int interval=270;
-	uint32_t lowerend=0,higherend=UINT32_MAX;
+	uint32_t lowerend=0,higherend=INT32_MAX;
 	const char *event=nullptr;
 	bool getargs(const char *start,int len) ;
 	bool getdata(bool headonly,recdata *outdata) const;
@@ -1452,9 +1453,44 @@ static time_t readtime(const char *input) {
 	time_t	 tim=timegm(&tmbuf);
 	return tim;
 	}
-
-  bool Sgvinterpret::getargs(const char *start,int len) {
+  
+/*[=%5B
+]=%5D
+$=%24
+=%3D */
+#define toshort(str)  (str[0]|(str[1]<<8))
+#define LOGID "watchserver "
+int rewriteperc(char *start,int len) {
+	char *ends=start+len;
+	char *iter=start;
+	char *uititer=start,*next;
+	while(true) {
+		if((next=std::find(iter,ends,'%'))==ends) {
+			if(iter!=uititer) {
+				int left=(ends-iter);
+				memcpy(uititer,iter,left);
+				return uititer+left-start;;
+				}
+			return len;
+			}
+		int bijlen=(next-iter);
+		memcpy(uititer,iter,bijlen);
+		uititer+=bijlen;
+		++next;
+		switch(toshort(next)) {
+			case toshort("5B"): *uititer++='[';break;
+			case toshort("5D"): *uititer++=']';break;
+			case toshort("24"): *uititer++='$';break;
+			case toshort("3D"): *uititer++='=';break;
+			default: LOGGER(LOGID "strange char %.3s\n",next-1); memcpy(uititer,next-1,3);uititer+=3;
+			}
+		iter=next+2;
+		}
+	}
+  bool Sgvinterpret::getargs(const char *start,int lenin) {
+	 int 	len=rewriteperc(const_cast<char *>(start),lenin);
 	LOGGER("sgvinterpret(%.*s#%d)\n",len,start,len);
+
 	const char *ends=start+len;
 	start++;
 	for(const char *iter=start;iter<ends;iter=std::find(iter,ends,'&')+1) {
@@ -1500,9 +1536,14 @@ static time_t readtime(const char *input) {
 									}
 								}
 							else {
+
+
 								std::string_view greater="find[date][$gte]="; //TODO greater or equal
-								std::string_view greater2="find[date][$gt]="; //TODO greater or equal
-								if(!memcmp(iter,greater.data(),greater.size())||(greater=greater2, !memcmp(iter,greater.data(),greater.size()))) {
+//								std::string_view greater2="find%5Bdate%5D%5B%24gte%5D=";
+								std::string_view greater3="find[date][$gt]="; //TODO greater or equal
+//								std::string_view greater4="find%5Bdate%5D%5B%24gt%5D=";
+							//	if(!memcmp(iter,greater.data(),greater.size())||(greater=greater2, !memcmp(iter,greater.data(),greater.size()))||(greater=greater3, !memcmp(iter,greater.data(),greater.size()))) {
+								if(!memcmp(iter,greater.data(),greater.size())||(greater=greater3, !memcmp(iter,greater.data(),greater.size()))) {
 									iter+=greater.length();
 									const char *ptr;
 									longlongtype tmp;
@@ -1511,7 +1552,7 @@ static time_t readtime(const char *input) {
 										return false;
 										}
 									lowerend=tmp/1000;
-									if(greater==greater2) {
+									if(greater==greater3) {
 										++lowerend;
 										}
 									iter=ptr;
@@ -1519,7 +1560,9 @@ static time_t readtime(const char *input) {
 									}
 								else {
 									std::string_view smaller="find[date][$lte]=";
+//								std::string_view smallerb="find%5Bdate%5D%5B%24lte%5D=";
 									std::string_view smaller2="find[date][$lt]=";
+//								std::string_view smaller2b="find%5Bdate%5D%5B%24lt%5D=";
 									if((!memcmp(iter,smaller.data(),smaller.size()))||(smaller=smaller2,!memcmp(iter,smaller.data(),smaller.size()))) {
 										iter+=smaller.length();
 										longlongtype tmp;	
@@ -1537,11 +1580,12 @@ static time_t readtime(const char *input) {
 									std::string_view greater="find[dateString][$gte]="; //TODO greater or equal
 									std::string_view greater2="find[dateString][$gt]=";
 									std::string_view greater3="find[created_at][$gte]=";
-									std::string_view greater4="find%5Bcreated_at%5D%5B$gte%5D="; //needed 4 xdrip4ios
+										std::string_view greater4="find[created_at][$gt]=";
+//									std::string_view greater4="find%5Bcreated_at%5D%5B$gte%5D="; //needed 4 xdrip4ios
 									if(!memcmp(iter,greater.data(),greater.size())||(greater=greater2, !memcmp(iter,greater.data(),greater.size()))||(greater=greater3, !memcmp(iter,greater.data(),greater.size()))||(greater=greater4, !memcmp(iter,greater.data(),greater.size()))) {
 										iter+=greater.length();
 										lowerend=readtime(iter);
-										if(greater==greater2)
+										if(greater==greater2||greater==greater4)
 											lowerend++;
 										iter+=10;
 										LOGGER("greater than %d\n",lowerend);
@@ -1550,10 +1594,11 @@ static time_t readtime(const char *input) {
 										std::string_view smaller="find[dateString][$lte]="; //TODO smaller or equal
 										std::string_view smaller2="find[dateString][$lt]=";
 									std::string_view smaller3="find[created_at][$lte]=";
-									if((!memcmp(iter,smaller.data(),smaller.size()))||(smaller=smaller2,!memcmp(iter,smaller.data(),smaller.size()))|| (smaller=smaller3,!memcmp(iter,smaller.data(),smaller.size()))) {
+										std::string_view smaller4="find[created_at][$lt]=";
+									if((!memcmp(iter,smaller.data(),smaller.size()))||(smaller=smaller2,!memcmp(iter,smaller.data(),smaller.size()))|| (smaller=smaller3,!memcmp(iter,smaller.data(),smaller.size()))|| (smaller=smaller4,!memcmp(iter,smaller.data(),smaller.size()))) {
 											iter+=smaller.length();
 											higherend=readtime(iter);
-											if(smaller!=smaller2)
+											if(smaller!=smaller2&&smaller!=smaller4)
 												higherend++;
 											iter+=10;
 											LOGGER("smaller than %d\n",higherend);
@@ -1578,8 +1623,8 @@ static time_t readtime(const char *input) {
 	}
 	return true;
 	};
-static bool	 sgvinterpret(const char *start,int len,bool headonly,recdata *outdata) {
-	Sgvinterpret pret;
+static bool	 sgvinterpret(const char *start,int len,bool headonly,recdata *outdata,bool all) {
+	Sgvinterpret pret(all);
 	if(!pret.getargs(start,len)) {
 
 		return false;

@@ -91,7 +91,7 @@ extern "C" JNIEXPORT  jlong JNICALL fromjava(getLibre3SensorptrPD)(JNIEnv *env, 
 
 #ifndef NOLOG
 	const time_t tim=jstarttime/1000L;
-	LOGGER("getLibre3Sensorptr(%s,%lu,%s,%s) %s",sensorid,tim,ctime(&tim),pin?hexstr((const uint8_t*)&pin,4).str():"null",address?address:"null");
+	LOGGER("getLibre3Sensorptr(%s,%lu,%.24s,%s) %s\n",sensorid,tim,ctime(&tim),pin?hexstr((const uint8_t*)&pin,4).str():"null",address?address:"null");
 #endif
 	destruct   dest([jsensorid,sensorid,jaddress,address,env]() {
 		env->ReleaseStringUTFChars(jsensorid, sensorid);

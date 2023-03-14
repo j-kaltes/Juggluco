@@ -72,7 +72,6 @@
   <string name="unit">"Einheit: "</string>
   <string name="glucoseaxisleft">Glucose-Achsenzahlen LINKS</string>
   <string name="startsapp">Scannen startet App</string>
-  <string name="sendtoxdrip">Librelink broadcast</string>
   <string name="disablecamerakey">Kamerataste deaktivieren</string>
   <string name="invertscreen">Bildschirm umkehren</string>
   <string name="nfcsound">NFC-Sound</string>

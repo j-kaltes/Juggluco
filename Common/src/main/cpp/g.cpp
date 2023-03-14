@@ -169,7 +169,7 @@ void usr2handler(int get) {
 constexpr const int usesig=SIGUSR2;
 void alarmhandler(int sig) {
         pid_t tid=syscall(SYS_gettid);
-        LOGGER("Alarm %d",tid);
+        LOGGER("Alarm %d\n",tid);
         if(nfcdatatid!=0) {
                 signal(SIGALRM,SIG_IGN);
                 pid_t grid=syscall(SYS_getpid);

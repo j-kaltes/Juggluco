@@ -74,7 +74,6 @@
  <string name="unit">&quot;Jednostka: &quot;</string>
  <string name="glucoseaxisleft">Liczby osi glukozy po LEWEJ</string>
  <string name="startsapp">Skanowanie uruchamia aplikację</string>
- <string name="sendtoxdrip">Przesył do innych apl.</string>
  <string name="disablecamerakey">Wyłącz przycisk aparatu</string>
  <string name="invertscreen">Odwróć ekran</string>
  <string name="nfcsound">Dźwięk NFC</string>

@@ -172,7 +172,9 @@ extern void	sendstreaming(SensorGlucoseData *hist);
 
 
 static void finishsensor(const nfc1 &first) {
-	const char *name= Sensoren::namelibre3(first.getSerialNumber()).data();
+	auto namesensor=Sensoren::namelibre3(first.getSerialNumber());
+
+	const char *name= namesensor.data();
 	const int sensorindex=sensors->sensorindex(name);
 	if(sensorindex>=0) {
 		sensors->finishsensor(sensorindex);

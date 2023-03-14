@@ -34,7 +34,7 @@ extern "C" JNIEXPORT void JNICALL fromjava(log)(JNIEnv *env, jclass thiz,jstring
 		jint jlen = env->GetStringLength( jmess);
 		env->GetStringUTFRegion(jmess, 0,jlen, mess);
 		mess[len]='\0';
-		LOGGER("%s",mess);
+		LOGGERN(mess,len);
 		}
 #endif
 	}

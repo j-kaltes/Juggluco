@@ -84,7 +84,7 @@ int SensorGlucoseData::updatescan(crypt_t *pass,int sock,int ind,int sensorindex
 		}
 	else {
 		dosendinfo:
-		LOGGER("GLU updatescan %s hist: %d-%d scan: %d-%d ", shortsensorname()->data(),histstart,histend,scanstart,scanend);
+		LOGGER("GLU updatescan %s hist: %d-%d scan: %d-%do\n", shortsensorname()->data(),histstart,histend,scanstart,scanend);
 		 {
 			std::vector<subdata> vect;
 			vect.reserve(2);

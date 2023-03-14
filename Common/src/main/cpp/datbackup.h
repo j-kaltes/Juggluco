@@ -927,7 +927,7 @@ typedef std::conditional<sizeof(unsigned long) == sizeof(uintptr_t), unsigned lo
 //TO get rid of stupid clang++ warnings, that I shouldnt specify %lx  even if sizeof(long)==sizeof(int)
 
 void wakebackuponly(myuintptr_t kind=wakeall){
-	LOGGER("start wakebackuponly %lx ",kind);
+	LOGGER("start wakebackuponly %lx\n",kind);
 	int nr;
 	if(getupdatedata()->sendnr>con_vars.size()) {
 		nr=con_vars.size();
@@ -993,23 +993,22 @@ static void startbackup(std::string_view globalbasedir) {
 		const int hostnr= backup->getupdatedata()->hostnr;
 		for(int i=0;i<hostnr;i++) {
 			int index=backup->getupdatedata()->allhosts[i].index;
-			LOGGER("index=%d ",index);
+			LOGGER("index=%d\n",index);
 			if(index>=maxsend) {
 				LOGGER("allhosts[i].index %d >= %d sendnr\n",index,maxsend);
 				backup->getupdatedata()->allhosts[i].index=-1;
 				}
 			else {
 				if(index>=0) {
-					LOGGER("startthread %d %d ",i,index);
+					LOGGER("startthread %d %d\n",i,index);
 					startthread(i,index);
 					}
 				else {
-					LOGGER(" no start ");
+					LOGGER(" no start\n");
 					}
 				}
 			}
 		}
-	LOGGER("\n");
 	
 	}
 bool hassendnum() {

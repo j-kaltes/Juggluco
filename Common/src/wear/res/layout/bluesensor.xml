@@ -16,7 +16,7 @@
             android:id="@+id/grid"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:columnCount="11"
+            android:columnCount="12"
             android:paddingTop="18dp"
             android:paddingBottom="30dp"
             android:paddingLeft="25dp"
@@ -47,17 +47,25 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_column="4"
-                android:layout_columnSpan="3"
+                android:layout_columnSpan="2"
                 android:layout_row="0"
-                android:text="@string/sensorviabluetooth" />
+                android:text="@string/use_bluetooth" />
             <CheckBox
                 android:id="@+id/priority"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_column="7"
+                android:layout_column="6"
                 android:layout_columnSpan="2"
                 android:layout_row="0"
                 android:text="@string/high_priority" />
+            <CheckBox
+                android:id="@+id/android13"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="8"
+                android:layout_columnSpan="2"
+                android:layout_row="0"
+                android:text="@string/android13" />
 
             <TextView
                 android:id="@+id/scan"
@@ -142,7 +150,7 @@
                 android:id="@+id/info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_column="9"
+                android:layout_column="10"
                 android:layout_columnSpan="2"
                 android:layout_row="2"
                 android:layout_rowSpan="2"
@@ -151,7 +159,7 @@
                 android:id="@+id/close"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_column="9"
+                android:layout_column="10"
                 android:layout_columnSpan="2"
                 android:layout_row="4"
                 android:layout_rowSpan="3"

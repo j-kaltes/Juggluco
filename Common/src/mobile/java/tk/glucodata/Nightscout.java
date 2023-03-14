@@ -97,7 +97,7 @@ public static void show(MainActivity context,View parent) {
                         else
                                         editkey.setTransformationMethod(new PasswordTransformationMethod());
                         });
-	 var labport=getlabel(context,R.string.port);
+	 var labport=getlabel(context,"SSL "+context.getString(R.string.port));
 	var oldport=Natives.getsslport();
   	var portview=getnumedit(context, ""+oldport);
                         
@@ -142,6 +142,10 @@ public static void show(MainActivity context,View parent) {
 		});
 
 	var local=getcheckbox(context,R.string.localonly,Natives.getXdripServerLocal( ));
+	float density=GlucoseCurve.metrics.density;
+	int laypad=(int)(density*4.0);
+	var httpport=getlabel(context,"http port=17580");
+	httpport.setPadding(laypad*3,0,0,0);
 	local.setOnCheckedChangeListener(
 			 (buttonView,  isChecked) -> {
 				Natives.setXdripServerLocal(isChecked);
@@ -205,9 +209,7 @@ public static void show(MainActivity context,View parent) {
 			l.setX((width-w)/2);
 		l.setY(0);
 		return new int[] {w,h};
-		},new View[]{secret,editkey},new View[]{visible,labport,portview,save} , new View[]{sslbox,privkey,chain},new View[]{local,treatments},new View[]{Help,server,Close} );
-	float density=GlucoseCurve.metrics.density;
-	int laypad=(int)(density*4.0);
+		},new View[]{secret,editkey},new View[]{visible,labport,portview,save} , new View[]{sslbox,privkey,chain},new View[]{local,httpport,treatments},new View[]{Help,server,Close} );
 	layout.setPadding(laypad*2,laypad,laypad*2,laypad);
 
 	layout.setBackgroundResource(R.drawable.dialogbackground);

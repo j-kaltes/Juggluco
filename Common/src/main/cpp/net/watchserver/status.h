@@ -3,7 +3,7 @@ const char statusformat[]=R"({
   "name": "nightscout",
   "version": "14.2.6",
   "serverTime": "%d-%02d-%02dT%02d:%02d:%02d.%03dZ",
-  "serverTimeEpoch": %ld,
+  "serverTimeEpoch": %lld,
   "apiEnabled": true,
   "careportalEnabled": false,
   "boluscalcEnabled": false,

@@ -41,7 +41,7 @@ void removeoldstates(const std::string_view dirin) {
 			return;
 			}
 	       time_t lastchange=st.st_mtime;
-	    	LOGGER("curstate=%s %s",curstate,ctime(&lastchange));
+	    	LOGGER("curstate=%s %s\n",curstate,ctime(&lastchange));
 		DIR *dir=opendir(dirname);
 		if(!dir) {
 			flerror("opendir %s",dirname);
@@ -62,11 +62,11 @@ void removeoldstates(const std::string_view dirin) {
 						continue;
 						}
 					if(st.st_mtime>=lastchange) {
-						LOGGER("%s newer %s",lname,ctime(&st.st_mtime));
+						LOGGER("%s newer %s\n",lname,ctime(&st.st_mtime));
 						continue;
 						}
 					if(st.st_size!=16384) {
-						LOGGER("%ld!=16384",st.st_size);
+						LOGGER("%ld!=16384\n",st.st_size);
 						continue;
 						}
 					unlink(lname);

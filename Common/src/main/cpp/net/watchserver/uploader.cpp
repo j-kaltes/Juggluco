@@ -171,7 +171,7 @@ bool upload() {
 						continue;
 						}
 					else {
-						LOGGER("nightupload failure");
+						LOGGER("nightupload failure\n");
 						return false;
 						}
 					}

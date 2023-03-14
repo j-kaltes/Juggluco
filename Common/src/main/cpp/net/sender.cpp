@@ -305,7 +305,7 @@ bool activate=true;
 	#endif
 		)) {
 
-				LOGGER("%d: found %d\n",ret);
+				LOGGER("found %d\n",ret);
 				return ret;
 				}
            		}

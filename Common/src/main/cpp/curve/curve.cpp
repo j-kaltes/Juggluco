@@ -407,7 +407,7 @@ const float maxmenu= (float)dheight/maxmenulen;
 if(menutextheight>maxmenu)
 	menutextheight=maxmenu;
 	
-LOGGER("menutextheight=%f", menutextheight);
+LOGGER("menutextheight=%f\n", menutextheight);
 
 	float facetimelen=2.0f*dwidth/3.0f;
 	LOGGER("facetimelen=%.1f\n",facetimelen);
@@ -1171,7 +1171,7 @@ pair<float,float> drawtrender(NVGcontext* vg,const std::array<uint16_t,16> &tren
 	float pos0=gety(glu0);
 	float posx= x+i*step;
 	 nvgMoveTo(vg,posx ,pos0);
-	LOGGER("%.1f (%hi) (%.0f,%.0f) ",glu0/180.0,glu0,posx,pos0);
+	LOGGER("%.1f (%hi) (%.0f,%.0f)\n",glu0/180.0,glu0,posx,pos0);
 	posx+=step;
 	float posy;
 	i++;
@@ -1179,7 +1179,7 @@ pair<float,float> drawtrender(NVGcontext* vg,const std::array<uint16_t,16> &tren
 		short glu=trend[i];
 		if(glu) {
 			posy=gety(glu);
-			LOGGER("%.1f (%hi) (%.0f,%.0f) ",glu/180.0,glu,posx,posy);
+			LOGGER("%.1f (%hi) (%.0f,%.0f)\n",glu/180.0,glu,posx,posy);
 			nvgLineTo( vg,posx ,posy);
 			}
 		}
@@ -1507,7 +1507,7 @@ template <class LT> void epochlines(uint32_t first,uint32_t last, const LT &tran
 		nvgStrokeColor(vg, *getblack());
 		for(time_t t=start;t<last;t+=(24*60*60)) {
 			float dtim=transx(t);
-			LOGGER("%ld ",t);
+			LOGGER("%ld\n",t);
 			nvgBeginPath(vg);
 			nvgMoveTo(vg,dtim ,0) ;
 			nvgLineTo( vg, dtim,dheight);
@@ -1792,7 +1792,7 @@ static void showlastsstream(const time_t nu,const float getx,std::vector<int> &u
 			LOGGER("poll==null\n");
 			time_t starttime=hist->getstarttime();
 			auto wait= nu-starttime;
-			LOGGER("wait=%lu starttime=%lu %s",wait,starttime,ctime(&starttime));
+			LOGGER("wait=%lu starttime=%lu %s\n",wait,starttime,ctime(&starttime));
 			if(wait<(60*60)) {
 			//	const bool streaming=hist->deviceaddress()[0];
 				const bool isInitialised=hist->isLibre3()||sensors->getsensor(sensorindex)->initialized;
@@ -2190,7 +2190,7 @@ static void defaulterror(NVGcontext* vg,int scerror)   {
 		}
 extern "C" JNIEXPORT jint JNICALL fromjava(badscan)(JNIEnv* env, jclass obj,jint kind) {
 	if(!showoldscan(vg)) {
-		LOGGER("javabadscan	%d: ",kind);
+		LOGGER("javabadscan	%d: \n",kind);
 		const int scerror= kind&0xff;
 		switch(scerror) {
 			case 0xFA: {
@@ -2217,7 +2217,7 @@ extern "C" JNIEXPORT jint JNICALL fromjava(badscan)(JNIEnv* env, jclass obj,jint
 				char buf[15];
 				snprintf(buf,15,error->second,kind>>8);
 				showerror(vg,error->first,buf);
-				LOGGER("%s",buf);
+				LOGGER("%s\n",buf);
 				};break;
 			case 0:
 			case 15:

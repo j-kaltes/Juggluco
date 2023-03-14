@@ -1,3 +1,6 @@
+Google Fit? Deprecated
+Health Connect? Encapsulated in Google Play and other restrictions.
+Test apps?
 make hostname option in mirror.
 send to tidepool
 Categories set somewhere else in app:
@@ -6,8 +9,6 @@ Categories set somewhere else in app:
 Maak uitleg meer relevant voor Libre 3.
 
 show serialnumbers bij scan errors
-extern "C" JNIEXPORT jstring JNICALL   fromjava(getSensorName)(JNIEnv *envin, jclass cl,jlong dataptr) 
-      change  shortsensorname in showsensorname	//NEE
 
 Statistics ook van history 5 en 15
 

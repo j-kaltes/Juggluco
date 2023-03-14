@@ -74,7 +74,7 @@
  <string name="unit">"Unit: "</string>
  <string name="glucoseaxisleft">Glucose-axis numbers LEFT</string>
  <string name="startsapp">Scanning starts app</string>
- <string name="sendtoxdrip">Librelink broadcast</string>
+ <string name="sendtoxdrip">Libre (patched) Broadcast</string>
  <string name="disablecamerakey">Disable camera key</string>
  <string name="invertscreen">Invert screen</string>
  <string name="nfcsound">NFC sound</string>
@@ -251,5 +251,6 @@
 <string name="newport">"new port ="</string>
 <string name="webserver">Web server</string>
 <string name="treatments">Give Amounts</string>
+<string name="android13">Android 13</string>
 
 </resources>

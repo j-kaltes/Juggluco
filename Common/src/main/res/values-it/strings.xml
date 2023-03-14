@@ -76,7 +76,6 @@
  <string name="unit">"Unità: "</string>
  <string name="glucoseaxisleft">Numeri dell\'asse del Glucosio a SINISTRA</string>
  <string name="startsapp">Una scansione avvia l\'app</string>
- <string name="sendtoxdrip">Librelink broadcast</string>
  <string name="disablecamerakey">Disabilita il tasto camera</string>
  <string name="invertscreen">Inverti schermo</string>
  <string name="nfcsound">Suono per NFC</string>

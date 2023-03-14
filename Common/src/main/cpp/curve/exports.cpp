@@ -174,7 +174,7 @@ bool exports(int handle, const FG& proc,const FP& print) {
 	for(int i=0;i<totsen;i++) {
 		SensorGlucoseData *hist=sensors->gethist(i);
 		if(hist) {
-			LOGGER("h%d ",i);
+			LOGGER("h%d\n",i);
 			auto scans=(hist->*(proc))();
 			const T *beg=&scans.begin()[0];
 			const T *en=&scans.end()[0];

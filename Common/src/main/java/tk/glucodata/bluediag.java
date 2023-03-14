@@ -185,6 +185,8 @@ void showinfo(final SuperGattCallback gatt,MainActivity act) {
 	keyinfo.setText(gatt.handshake);
 	setrow(gatt.wrotepass,keytimes,keyinfo);
 	setrow(gatt.charcha,glucosetimes,glucoseinfo);
+
+	Log.i(LOG_ID,"info.setVisibility(VISIBLE);");
 	info.setVisibility(VISIBLE);
 	info.setOnClickListener(v->  showsensorinfo(gatt.getinfo(),(MainActivity) info.getContext()));
 	}
@@ -247,16 +249,18 @@ void	setadapter(Activity act,	final ArrayList<SuperGattCallback> gatts) {
 		return;
 
 	   	}
-//mBluetoothAdapter =  BluetoothAdapter.getDefaultAdapter();
 	LayoutInflater flater= LayoutInflater.from(act);
 	view = flater.inflate(R.layout.bluesensor, null, false);
-//	forget=view.findViewById(R.id.forget);
-	info=view.findViewById(R.id.info);
-	info.setVisibility(INVISIBLE);
+
 	scanview=view.findViewById(R.id.scan);
 	starttimeV=view.findViewById(R.id.stage);
 	rssiview=view.findViewById(R.id.rssi);
 	rssiview.setPadding(0,0,0,0);
+	CheckBox android13=view.findViewById(R.id.android13);
+	android13.setOnCheckedChangeListener( (buttonView,  isChecked) -> { SensorBluetooth.setAutoconnect(isChecked); });
+	info=view.findViewById(R.id.info);
+	Log.i(LOG_ID,"info.setVisibility(INVISIBLE);");
+	info.setVisibility(INVISIBLE);
 
 	if(isWearable) {
        /*         int pad=(int)(tk.glucodata.GlucoseCurve.metrics.density*15.0); 
@@ -302,6 +306,8 @@ if(!isWearable) {
 		});
 	}
 	else {
+
+		Log.i(LOG_ID,"finish.setVisibility(GONE);");
 		finish.setVisibility(GONE);
 	}
 }
@@ -343,18 +349,25 @@ if(!isWearable) {
 		 }
 		 );
 		}
-	else
+	else  {
+		Log.i(LOG_ID,"priority.setVisibility(INVISIBLE);");
 	   priority.setVisibility(INVISIBLE);
+	   }
 	boolean hasperm=Build.VERSION.SDK_INT < 23||Applic.noPermissions(act).length==0;
 	if(!isWearable)  {
 		locationpermission=view.findViewById(R.id.locationpermission);
-		if(hasperm)
+		if(hasperm)   {
+			Log.i(LOG_ID,"locationpermission.setVisibility(GONE);");
 			locationpermission.setVisibility(GONE);
+			}
 		else {
 			locationpermission.setOnClickListener(v-> {
 				var noperm=Applic.noPermissions(act);
-				if(noperm.length==0)
+				if(noperm.length==0) {
+					Log.i(LOG_ID,"locationpermission.setVisibility(GONE);");
 					locationpermission.setVisibility(GONE);
+					}
+
 				else  {
 					returntoblue=true;
 					act.doonback();
@@ -410,8 +423,10 @@ if(!isWearable) {
 		if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
 			background.setOnClickListener(v-> Battery.batteryscreen(act));
 			}
-		else
+		else  {
+		Log.i(LOG_ID,"background.setVisibility(GONE);");
 		    background.setVisibility(GONE);
+		    }
 		}
 
 
@@ -516,15 +531,20 @@ Log.i(LOG_ID,"showall");
 		
 		builder.deleteCharAt(builder.length()-1);
 		scanview.setText(builder);
+		Log.i(LOG_ID,"scanview.setVisibility(VISIBLE);");
 		scanview.setVisibility(VISIBLE);
 		}
-	else
+	else  {
+			Log.i(LOG_ID,"scanview.setVisibility(GONE);");
 			scanview.setVisibility(GONE);
+			}
 	if(!isWearable) {
 		activity.setfineres(()-> {
 
-		if( Build.VERSION.SDK_INT < 23|| Applic.noPermissions(activity).length==0)
+		if( Build.VERSION.SDK_INT < 23|| Applic.noPermissions(activity).length==0) {
+			Log.i(LOG_ID,"locationpermissin.setVisibility(GONE);");
 			locationpermission.setVisibility(GONE);
+			}
 		});
 		}
 	Log.i(LOG_ID,"showall before setText");
@@ -536,8 +556,10 @@ Log.i(LOG_ID,"showall");
         priority.setChecked(Natives.getpriority());
 	Log.i(LOG_ID,"showall before noPermissions");
 	if(!isWearable) {
-		if( Build.VERSION.SDK_INT < 23|| Applic.noPermissions(activity).length==0)
+		if( Build.VERSION.SDK_INT < 23|| Applic.noPermissions(activity).length==0) {
+			Log.i(LOG_ID,"locationpermissin.setVisibility(GONE);");
 			locationpermission.setVisibility(GONE);
+			}
 		}
 	Log.i(LOG_ID,"showall end");
 	}
@@ -557,6 +579,7 @@ void show(MainActivity act) {
 			showinfo(gatts.get(gattselected),act);
 			}
 		}
+	Log.i(LOG_ID,"view.setVisibility(VISIBLE);");
 	view.setVisibility(VISIBLE);
 
 	showall();	

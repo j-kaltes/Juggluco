@@ -31,12 +31,12 @@
 #include "logs.h"
 #include "inout.h"
 //bool mute=true;
-
+/*
 void setbuffer(char * buf) {
 	syscall(511,buf);
 LOGGER("bufaddress: %p: %s",buf,buf);
 
- }
+ } */
 //extern pathconcat logbasedir; pathconcat logfile(logbasedir, LASTDIR ".log");
 
 #ifndef NOTAPP
