@@ -107,7 +107,9 @@ struct Tings {
 	bool triedasm:1;
 	bool asmworks:1;
 	bool nobluetooth;
-	bool nodebug:4;
+	bool nodebug:2;
+	bool watchdrip:1;
+	bool android13:1;
 	bool saytreatments:1;
 	bool useSSL:1;
 	bool floatingNotTouchable:1;

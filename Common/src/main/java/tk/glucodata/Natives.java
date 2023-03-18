@@ -627,6 +627,11 @@ public static native String getnightuploadsecret( );
 public static native void setNightUploader(String jurl,String Secret,boolean active);
 public static native void wakeuploader( );
 public static native void resetuploader( );
+public static native void setAndroid13(boolean val);
+public static native boolean getAndroid13( );
+public static native long[] getlastGlucose( );
+public static native void setwatchdrip(boolean val);
+public static native boolean getwatchdrip( );
 
 
 //s/^extern.*JNIEXPORT[         ]*\([a-zA-Z]*\)[ ]*JNICALL[      ]*fromjava(\([^)]*\)) *(JNIEnv[^,]*,[^,)]*[,)]\([^){]*\)[^a-zA-Z0-9]*$/public static native \1 \2(\3);/g

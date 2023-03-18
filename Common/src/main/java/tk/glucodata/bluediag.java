@@ -257,6 +257,7 @@ void	setadapter(Activity act,	final ArrayList<SuperGattCallback> gatts) {
 	rssiview=view.findViewById(R.id.rssi);
 	rssiview.setPadding(0,0,0,0);
 	CheckBox android13=view.findViewById(R.id.android13);
+	android13.setChecked( SuperGattCallback.autoconnect);
 	android13.setOnCheckedChangeListener( (buttonView,  isChecked) -> { SensorBluetooth.setAutoconnect(isChecked); });
 	info=view.findViewById(R.id.info);
 	Log.i(LOG_ID,"info.setVisibility(INVISIBLE);");

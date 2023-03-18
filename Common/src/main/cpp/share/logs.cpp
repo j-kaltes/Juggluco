@@ -180,25 +180,31 @@ int loggert(const char *format, ...) {
 
 
 
-
-
-void LOGGERN(const char *buf,int len) {
+void LOGGERNO(const char *buf,int len,bool endl) {
 	if(dolog)	 {
 		if(len<1024) {
 			char allbuf[len+50];
 			int start=sprintf(allbuf,"%lu %ld ",time(nullptr), syscall(SYS_gettid));
 			memcpy(allbuf+start,buf,len);
-			allbuf[start+len]='\n';
-			logwriter(allbuf,start+len+1);
+			if(endl)
+				allbuf[start+len++]='\n';
+			logwriter(allbuf,start+len);
 			}
 		else {
 			char allbuf[50];
 			int start=sprintf(allbuf,"%lu %ld ",time(nullptr), syscall(SYS_gettid));
 			logwriter(allbuf,start);
 			logwriter(buf,len);
-			logwriter("\n",1);
+			if(endl)
+				logwriter("\n",1);
 			}
 		}
+	}
+
+
+
+void LOGGERN(const char *buf,int len) {
+	LOGGERNO(buf,len,true);
 	}
 
 

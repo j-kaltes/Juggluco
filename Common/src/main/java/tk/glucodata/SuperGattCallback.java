@@ -39,6 +39,7 @@ import static tk.glucodata.Applic.isWearable;
 import static tk.glucodata.Natives.thresholdchange;
 
 public abstract class SuperGattCallback extends BluetoothGattCallback {
+public static boolean doWearInt=false;
 	private static final String LOG_ID="SuperGattCallback";
 	static final private int  use_priority=CONNECTION_PRIORITY_HIGH;
 	static  boolean autoconnect=false;
@@ -187,6 +188,11 @@ static void init(Application app) {
 				}
 			if(Natives.getxbroadcast())
 				SendLikexDrip.broadcastglucose(mgdl,rate,timmsec);
+			/*
+			if(!isWearable) {
+				if (doWearInt)
+					tk.glucodata.WearInt.sendglucose(mgdl, rate, alarm, timmsec);
+				} */
 			}
 
 	}

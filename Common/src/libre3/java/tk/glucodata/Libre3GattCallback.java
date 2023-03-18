@@ -290,11 +290,15 @@ private void challenge67() {
 	if(!java.util.Arrays.equals(r2,backr2)) {
 		Log.i(LOG_ID,"r2!=backr2");
 		//TODO disconnect?
+		mBluetoothGatt.disconnect(); //TODO: or try again?
+		return;
 		}
 	var backr1=copyOfRange(decr,16,32);
 	if(!java.util.Arrays.equals(r1,backr1)) {
 		Log.i(LOG_ID,"r1!=backr1");
+		mBluetoothGatt.disconnect(); //TODO: or try again?
 		//TODO disconnect?
+		return;
 		}
 	var kEnc=copyOfRange(decr,32,48);
 	var ivEnc=copyOfRange(decr,48,56);
@@ -363,6 +367,7 @@ private boolean setCertificate65() {
 	if(generateKAuth(patchEphemeral)) //TODO failure?
 		return sendSecurityCommand((byte)17);
 	Log.e(LOG_ID, "generateKAuth(patchEphemeral) failed");
+	mBluetoothGatt.disconnect(); 
 	return false;
 	}
 private void receivedCERT_DATA() {
@@ -373,6 +378,7 @@ private void receivedCERT_DATA() {
 			var message="receivedCERT_DATA unknown length="+rdtLength;
 			Log.i(LOG_ID,message);
 			setfailure(message);  //TODO disconnect?
+			mBluetoothGatt.disconnect(); 
 			}
 		};
 	}
@@ -484,6 +490,8 @@ private	void fast_data(byte[] encryp) {
 	byte[] decr=intDecrypt(cryptptr,5,encryp);
         if (decr == null) {
             info("fast_data decrypt went wrong"); //TODO: DISCONNECT?
+		mBluetoothGatt.disconnect(); 
+
         } else {
             Natives.saveLibre3fastData(sensorptr, decr);
         }
@@ -751,6 +759,7 @@ private    void preparedata(byte[] value) {
 		    return 1;
 	else {
 		Log.e(LOG_ID,"writeCharacteristic(bluetoothGattCharacteristic) failed");
+	    	mBluetoothGatt.disconnect();
 		return 0; //TODO disconnect?
 		}
         }
@@ -819,8 +828,12 @@ private boolean	lastphase5=false;
 				case 2: {
 					if(sendSecurityCert(cryptolib.getAppCertificate())) { //TODO what with failure?
 						commandphase = 3;
+						}
+					else {
+						Log.e(LOG_ID,"sendSecurityCert(cryptolib.getAppCertificate()) failed");
+						//TODO disconnect
+						}
 
-					}
 				}
 				;
 				break;
@@ -829,6 +842,10 @@ private boolean	lastphase5=false;
 				case 4: {
 					if (sendSecurityCert(generateEphemeralKeys()))
 						commandphase = 5;
+					else {
+						Log.e(LOG_ID,"sendSecurityCert(generateEphemeralKeys()))");
+						//TODO disconnect
+						}
 				}
 				;
 				break;

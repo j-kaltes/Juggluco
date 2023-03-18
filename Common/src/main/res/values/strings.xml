@@ -74,7 +74,7 @@
  <string name="unit">"Unit: "</string>
  <string name="glucoseaxisleft">Glucose-axis numbers LEFT</string>
  <string name="startsapp">Scanning starts app</string>
- <string name="sendtoxdrip">Libre (patched) Broadcast</string>
+ <string name="sendtoxdrip">Patched Libre Broadcast</string>
  <string name="disablecamerakey">Disable camera key</string>
  <string name="invertscreen">Invert screen</string>
  <string name="nfcsound">NFC sound</string>

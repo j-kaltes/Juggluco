@@ -1214,3 +1214,15 @@ extern "C" JNIEXPORT void  JNICALL   fromjava(setNightUploader)(JNIEnv *env, jcl
 	 	enduploaderthread();
 #endif
 	 }
+extern "C" JNIEXPORT void  JNICALL   fromjava(setAndroid13)(JNIEnv *env, jclass cl,jboolean val) {
+	settings->data()->android13=val;
+	}
+extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getAndroid13)(JNIEnv *env, jclass cl) {
+	return settings->data()->android13;
+	}
+extern "C" JNIEXPORT void  JNICALL   fromjava(setwatchdrip)(JNIEnv *env, jclass cl,jboolean val) {
+	settings->data()->watchdrip=val;
+	}
+extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getwatchdrip)(JNIEnv *env, jclass cl) {
+	return settings->data()->watchdrip;
+	}

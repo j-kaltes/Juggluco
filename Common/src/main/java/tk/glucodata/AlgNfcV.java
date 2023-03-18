@@ -261,14 +261,18 @@ static    private byte[] readoncedata(NfcV nfc, byte[] uid,int start, int len) {
         int lenwholeblocks = blocks * 8;
         byte[] buf = new byte[lenwholeblocks];
         int iter = 0;
-        while (iter < blocks) {
+        while(iter < blocks) {
             int curblock = startinblocks + iter;
             int min = Math.min(3, blocks - iter);
             byte[] received = issuenfc(nfc, new byte[]{2, 35, (byte) curblock, (byte) (min - 1)});
-            if (!goodnfc(received) || received.length < (min * 8) + 1) {
+            if(!goodnfc(received) || received.length < (min * 8) + 1) {
                 return null;
-            }
-            System.arraycopy(received, 1, buf, iter * 8, received.length - 1);
+            	}
+	    int destpos= iter * 8;
+//	    int copylen=Math.min(received.length - 1,lenwholeblocks-destpos);
+	    int copylen=received.length - 1;
+	    Log.i(LOG_ID,"destpos="+destpos+" len="+copylen);
+            System.arraycopy(received, 1, buf,destpos, copylen);
             iter+=min;
         }
         return Arrays.copyOfRange(buf, startblock, totlen);

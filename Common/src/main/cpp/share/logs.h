@@ -96,6 +96,7 @@ static constexpr const inline int returnzero() { return 0;}
 #define logprint( ...) donothing
 
 #define LOGGERN(buf, len) donothing
+#define LOGGERNO(buf, len,x) donothing
 #ifdef NOTAPP
 inline void lerror(const char *str) {
 	int waser=errno;
@@ -126,6 +127,7 @@ inline void flerror(const char* fmt, ...){
 #define logger(x)   LOGGER("%s\n",x)
 
 void LOGGERN(const char *buf,int len) ;
+void LOGGERNO(const char *buf,int len,bool endl) ;
 inline void lerror(const char *str) {
 	int waser=errno;
 	LOGGER("%s: %s\n",(char *)str,strerror(waser));

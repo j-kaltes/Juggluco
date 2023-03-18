@@ -63,6 +63,7 @@ import tk.glucodata.Natives;
 import tk.glucodata.Notify;
 import tk.glucodata.R;
 import tk.glucodata.SensorBluetooth;
+import tk.glucodata.SuperGattCallback;
 
 import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
 import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE;
@@ -878,8 +879,15 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 		showalways.setOnCheckedChangeListener( (buttonView,  isChecked) -> Notify.glucosestatus(isChecked) );
 	       var webserver=getbutton(context,R.string.webserver);
 	       var uploader=getbutton(context,"Uploader");
+	       /*
+	       var watchdrip=getcheckbox(context,"Watchdrip", SuperGattCallback.doWearInt);
+		watchdrip.setOnCheckedChangeListener(
+			(buttonView,  isChecked) ->  {
+				Natives.setwatchdrip(isChecked);
+				tk.glucodata.watchdrip.set(isChecked);
+				});
 
-
+*/
 	       var floatconfig=getbutton(context,R.string.config);
 	       floatconfig.setOnClickListener(v-> tk.glucodata.FloatingConfig.show(context));
 		CheckBox floatglucose=new CheckBox(context);

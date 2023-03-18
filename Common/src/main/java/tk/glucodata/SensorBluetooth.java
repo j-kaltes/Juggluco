@@ -51,7 +51,8 @@ import static tk.glucodata.BuildConfig.libreVersion;
 
 public class SensorBluetooth {
 static void	setAutoconnect(boolean val) {
-		SuperGattCallback.autoconnect=val;
+	Natives.setAndroid13(val);
+	SuperGattCallback.autoconnect=val;
 	}
 public static SensorBluetooth blueone=null;
 public static void startscan() {
@@ -701,6 +702,8 @@ static public   void goscan() {
 
     public SensorBluetooth() {
         Log.v(LOG_ID,"SensorBluetooth");
+        SuperGattCallback.autoconnect=Natives.getAndroid13();
+
         SuperGattCallback.glucosealarms.sensorinit();
     }
 
