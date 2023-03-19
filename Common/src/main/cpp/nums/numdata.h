@@ -642,8 +642,11 @@ int numremove(Num *num) {
 			memmove(num,num+1,movelen*sizeof(Num));
 			libremovesmaller(pos+1,pos,movelen);
 			}
-		setlastpos(getdeclastpos());
+		const int newlastpos= getdeclastpos();
+		setlastpos(newlastpos);
 		setlastchange(pos);
+		if(getlibresend() > newlastpos)
+			getlibresend()=newlastpos;
 		}
 	updatepos(pos,getlastpos());
 	return pos;
@@ -727,8 +730,9 @@ void addmorelibrenumschanged(int ind,int nr,const Num*data) {
 	}
 void addlibrenumsdeleted(const Num *num,int ind) { //Moet VOOR  andere libre operaties.
 #ifdef LIBRENUMBERS
-	if(ind>=getlibresend())
+	if(ind>=getlibresend())  {
 		return;
+		}
 	if(ind<getlibreSolid())
 		return;
 	const auto nrchanges=getlibrechangednr();

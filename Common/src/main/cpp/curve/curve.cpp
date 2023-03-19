@@ -2564,6 +2564,10 @@ extern	bool hasnotiset();
 				const time_t nutime=time(nullptr);
 				const int dif=nutime-tim;
 				if(dif<maxbluetoothage) {
+					if(!usedsensors.size())
+						setusedsensors(nutime);
+
+
 					const float glu= gconvert(poll->g*10);
 					const int alarm=getalarmcode(poll->g,hist);
 					
