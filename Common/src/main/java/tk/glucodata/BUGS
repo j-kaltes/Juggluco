@@ -1,7 +1,6 @@
-Na verwijderen amount is sendnr groter dan lastpos in librenummers
 Soms worden amounts niet naar horloge gezonden.
  - Soms sync all?
-Geen nieuwe waarde since ... wordt niet geheel getoond in Floatin glucose
+Geen nieuwe waarde since ... wordt niet geheel getoond in Floating glucose
 *****Some worden nummers niet van telefoon naar horloge gezonden, waardoor reminders afgaan. ****
 
 active receiver wordt niet gewaakt bij configuratie veranderingen

@@ -617,7 +617,7 @@ int formattime(char *buf, time_t tim) {
 	return sprintf(buf,"%s, %02d %s %d %02d:%02d:%02d GMT", daylabel[tmbuf.tm_wday], tmbuf.tm_mday,monthlabel[tmbuf.tm_mon] ,tmbuf.tm_year+1900, tmbuf.tm_hour, tmbuf.tm_min,tmbuf.tm_sec);
 	}
 bool givesgvtxt(const char *input,int inlen,recdata *outdata,char sep=9);
-bool givesgvtxt(int nr,uint32_t lowerend,uint32_t higherend,recdata *outdata,char sep=9) {
+bool givesgvtxt(int nr,int interval,uint32_t lowerend,uint32_t higherend,recdata *outdata,char sep=9) {
 //	static	constexpr const char header[]="HTTP/1.1 200 OK\r\nExpect-Ct: max-age=0\r\nAccess-Control-Allow-Origin: *\r\nVary: Accept, Accept-Encoding\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Length: ";
 //	static	constexpr const char header[]="HTTP/1.1 200 OK\r\nExpect-Ct: max-age=0\r\nStrict-Transport-Security: max-age=31536000\r\nServer: Cowboy\r\nConnection: keep-alive\r\nX-Dns-Prefetch-Control: off\r\nX-Download-Options: noopen\r\nX-Content-Type-Options: nosniff\r\nX-Permitted-Cross-Domain-Policies: none\r\nReferrer-Policy: no-referrer\r\nX-Xss-Protection: 0\r\nX-Powered-By: Express\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Length: ";
 	static	constexpr const char header[]="HTTP/1.1 200 OK\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Length: ";
@@ -631,7 +631,7 @@ bool givesgvtxt(int nr,uint32_t lowerend,uint32_t higherend,recdata *outdata,cha
 		return false;
 		}
     char *start=outdata->allbuf+250,*outiter=start;
-	int interval=4*61;
+//	int interval=4*61;
 	if(!getitems(outiter,nr,lowerend,higherend,true,interval,[sep](char *outiter,int datit, const ScanData *iter,const char *sensorname,const time_t starttime) {
 		return textitem(outiter,iter,sep);
 	})) {
@@ -667,6 +667,7 @@ static char *pebbleitem(bool mmolL,char *outiter,const ScanData *item) {
 	float value=mmolL?item->getmmolL():item->getmgdL();
 	return outiter+=sprintf(outiter,R"({"sgv":"%.1f","trend":%d,"direction":"%s","datetime":%lld},)",value,trend,getdeltanamefromindex(trend).data(),item->gettime()*1000LL);
 	}
+
 bool		 pebbleinterpret(const char *input,int inputlen,recdata *outdata) {
 	int count=1;
 	bool mmol=true;
@@ -1027,7 +1028,8 @@ std::string_view sgv="sgv.json";
 				if(!memcmp(api2.data(),ptr,api2.size())) {
 					ptr+=api2.size();
 					{const constexpr std::string_view ext1=".txt";
-					 if(!memcmp(ext1.data(),ptr,ext1.size())) 
+					const constexpr std::string_view ext2=".tsv";
+					 if(!memcmp(ext1.data(),ptr,ext1.size())||!memcmp(ext2.data(),ptr,ext2.size())) 
 						return givesgvtxt(ptr+ext1.size(),toget.size()-api2.size()-api.size()-ext1.size(),outdata,9);
 					 }
 					const constexpr std::string_view ext1=".csv";
@@ -1042,9 +1044,9 @@ std::string_view sgv="sgv.json";
 					if(*ptr==' '||*ptr=='?') {
 				//		return sgvinterpret(ptr+api2.size(),toget.size()-api2.size()-api.size(),behead,outdata);
 						if(json)
-							return sgvinterpret(++ptr,toget.size()-1-api.size(),false,outdata);
+							return sgvinterpret(ptr,toget.size()-api.size(),false,outdata);
 						else
-							return givesgvtxt(++ptr,toget.size()-1-api.size(),outdata,9);
+							return givesgvtxt(ptr,toget.size()-api.size(),outdata,9);
 						}
 					}
 				}
@@ -1222,8 +1224,8 @@ bool givesgvtxt(const char *input,int inlen,recdata *outdata,char sep) {
 		wrongpath({input,(size_t)inlen},outdata);
 		return false;
 		}
-
-	return givesgvtxt(pret.datnr,pret.lowerend,pret.higherend,outdata,sep);
+	LOGGER("givesgvtxt datnr=%d\n",pret.datnr);
+	return givesgvtxt(pret.datnr,pret.interval,pret.lowerend,pret.higherend,outdata,sep);
 	}
 char *Sgvinterpret::makedata(recdata *outdata ) const {
 	char *output=outdata->allbuf= new(std::nothrow) char[512+datnr*360];
@@ -1489,7 +1491,7 @@ int rewriteperc(char *start,int len) {
 	}
   bool Sgvinterpret::getargs(const char *start,int lenin) {
 	 int 	len=rewriteperc(const_cast<char *>(start),lenin);
-	LOGGER("sgvinterpret(%.*s#%d)\n",len,start,len);
+	LOGGER("Sgvinterpret::getargs(%.*s#%d)\n",len,start,len);
 
 	const char *ends=start+len;
 	start++;

@@ -1047,9 +1047,15 @@ Juggluco. A lot of devices have additional battery optimization-,
 activity in the background - and start at boot settings that have to
 be changed. You can find them under Android settings-&gt;Battery. See
 <a href="https://dontkillmyapp.com/">https://dontkillmyapp.com</a>.</p>
-<p style="line-height: 100%; margin-bottom: 0in"><br/>
-
-</p>
+<p style="line-height: 100%; margin-bottom: 0in">When using Watch 4
+or 5, you have to <i>Allow background activity</i> in the Galaxy
+Wearable companion app, Watch settings-&gt;Apps-&gt;Juggluco. For
+watches that don\'t have this setting you can use the following
+command from your computer:</p>
+<p style="line-height: 100%; margin-bottom: 0in">adb shell cmd appops
+set tk.glucodata RUN_IN_BACKGROUND allow</p>
+<p style="line-height: 100%; margin-bottom: 0in"><a href="https://www.juggluco.nl/JugglucoWearOS/install/adb.html">Information
+about adb</a></p>
 ]]>
 </string>
 <string name="nutrients" >
@@ -1302,7 +1308,7 @@ to a user there exist also a watch face for </span><span lang="en-US"><b>Fitbit<
 <a href="https://glancewatchface.com/">https://glancewatchface.com</a></span></p>
 <p style="line-height: 100%; margin-bottom: 0in"><span lang="en-US">For
 more information on the web server interface see
-<a href="http://jkaltes.byethost16.com/Juggluco/addwatch.html">http://jkaltes.byethost16.com/Juggluco/addwatch.html</a></span></p>
+<a href="http://jkaltes.byethost16.com/Juggluco/webserver.html">http://jkaltes.byethost16.com/Juggluco/webserver.html</a></span></p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>local only</b>:
 only accept connections from localhost (127.0.0.1). If you turn it
 off, also other hosts can access the server. If you don\'t configure
@@ -1882,12 +1888,9 @@ Web server is running.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><br/>
 
 </p>
-<p style="line-height: 100%; margin-bottom: 0in"><br/>
-
-</p>
-<p style="line-height: 100%; margin-bottom: 0in"><br/>
-
-</p>
+<p style="line-height: 100%; margin-bottom: 0in">For more information
+about the Nightscout/xDrip webserver commands implemented in
+Juggluco, see <a href="https://www.juggluco.nl/Juggluco/webserver.html">https://www.juggluco.nl/Juggluco/webserver.html</a></p>
 ]]>
 </string>
 <string name="NightPost" >

@@ -1072,6 +1072,15 @@ de statusbalk verborgen had en Juggluco enkel gebruikte om glucose
 waarden aan xDrip te zenden, kreeg connectie problemen met de sensor,
 die volgens hem opgelost waren nadat hij die voorgrond activiteiten
 van Juggluco weer aangezet had.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Wanneer je Watch 4
+of 5 gebruikt, moet je <i>achtergrondactiviteit toestaan</i>
+inschakelen in de Galaxy Wearable app, Instellingen
+horloge-&gt;Apps-&gt;Juggluco. Voor horloges die deze instelling niet
+hebben, kun je de volgende opdracht vanaf je computer gebruiken:</p>
+<p style="line-height: 100%; margin-bottom: 0in">adb shell cmd appops
+set tk.glucodata RUN_IN_BACKGROUND allow</p>
+<p style="line-height: 100%; margin-bottom: 0in"><a href="https://www.juggluco.nl/JugglucoWearOS/install/adb.html">Informatie
+over adb</a></p>
 <p style="line-height: 100%; margin-bottom: 0in"><br/>
 
 </p>
@@ -1339,7 +1348,7 @@ niet zo geconfigureerd is, dat het binnenkomende verbindingen met
 port 17580 van je smartphone verbindt, zullen enkel leden van je
 thuis netwerk een verbinding kunnen vormen.</p>
 <p>Voor meer informatie over de xDrip webserver interface, zie
-<a href="http://jkaltes.byethost16.com/Juggluco/addwatch.html">http://jkaltes.byethost16.com/Juggluco/addwatch.html</a></p>
+<a href="http://jkaltes.byethost16.com/Juggluco/webserver.html">http://jkaltes.byethost16.com/Juggluco/webserver.html</a></p>
 <h2 class="western">Juggluco voor WearOS</h2>
 <p>Er bestaat een port van Juggluco die draait op WearOS. Het is
 aangepast aan het kleinere scherm en een wijzerplaat (watch face) is
@@ -1985,9 +1994,12 @@ je</span></span><span style="font-variant: normal"> </span><span style="font-var
 geverifieerde sleutel hebt ontvangen en Port is de poort die je hier
 noemde. Het lijkt niet automatisch te synchroniseren, dus in
 Diabetes:M moet je zelf op Sync drukken.</span></span></p>
-<p style="line-height: 100%; margin-bottom: 0in"><br/>
-
+<p style="line-height: 100%; margin-bottom: 0in">
+Voor meer informatie over de Nightscout/xDrip webserver commando\'s geïmplementeerd in Juggluco,zie    <a href="https://www.juggluco.nl/Juggluco/webserver.html">https://www.juggluco.nl/Juggluco/webserver.html</a>
 </p>
+<p><br></p>
+<p><br></p>
+<p><br></p>
 ]]>
 </string>
 <string name="NightPost" >

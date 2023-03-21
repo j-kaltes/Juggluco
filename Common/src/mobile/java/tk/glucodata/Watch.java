@@ -42,6 +42,7 @@ class Watch {
 static public void show(MainActivity context) {
 	var usexdripserver=Natives.getusexdripwebserver();
 	var server=getcheckbox(context,R.string.webserver,usexdripserver);
+	server.setOnCheckedChangeListener( (buttonView,  isChecked) -> Natives.setusexdripwebserver(isChecked));
 /*
 	var local=getcheckbox(context,"local only",Natives.getXdripServerLocal( ));
 	local.setOnCheckedChangeListener(
@@ -118,9 +119,6 @@ static public void show(MainActivity context) {
 				Natives.sethasgarmin(false);
 				Applic.app.numdata.stop();
 				}
-		   	}
-		   if(usexdripserver!=server.isChecked()) {
-		   	Natives.setusexdripwebserver(!usexdripserver);
 		   	}
 		context.poponback();
 		removeContentView(layout);
