@@ -558,7 +558,7 @@ commu *com=reinterpret_cast<commu *>(arg);
 pid_t pid=com->tid;
 //debugtid=pid;
 const pid_t ownpid= syscall(SYS_getpid);
-LOGGER("pid=%ld,tid=%ld debugs %d\n",ownpid,syscall(SYS_gettid),pid);
+LOGGER("pid=%zd,tid=%ld debugs %d\n",ownpid,syscall(SYS_gettid),pid);
 
 //    signal(SIGUSR1,sighandler);
 //ptrace(PTRACE_SEIZE, pid, 0, 0);
@@ -864,7 +864,7 @@ for (;;) {
 	case __NR_mmap: {
 		int len=regi.get(1);
 		if(len==1089536) { //Otherwise crashes in munmap, but only when it is debugged. As you probably will understand later.
-			LOGGER("mmap %llx %lld %d %d %d %d\n",regi.get(0),len,regi.get(2),regi.get(3),regi.get(4),regi.get(5));
+			LOGGER("mmap %llx %d %lld %lld %lld %lld\n",regi.get(0),len,regi.get(2),regi.get(3),regi.get(4),regi.get(5));
 			if (ptrace(PTRACE_DETACH, pid, 0, 0) == -1) {
 			    flerror("PTRACE_DETACH %d failed", pid);
 			}

@@ -348,6 +348,7 @@ extern "C" JNIEXPORT void JNICALL   fromjava(finishSensor)(JNIEnv *env, jclass c
 	sensors->finishsensor(sdata->sensorindex);
 	setstreaming(sdata->hist); 
 	setusedsensors();
+	backup->wakebackup(Backup::wakeall);
 	}
 extern "C" JNIEXPORT jlong JNICALL   fromjava(getdataptr)(JNIEnv *env, jclass cl,jstring jsensor) {
 	if(!sensors)

@@ -5,7 +5,7 @@ import android.content.IntentFilter;
 
 class Specific {
 static void start(Application context) {
-//	watchdrip.set(Natives.getwatchdrip());
+	watchdrip.set(Natives.getwatchdrip());
 	}
 
 };

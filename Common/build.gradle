@@ -73,24 +73,24 @@ android {
     productFlavors {
         libreOld {
 //      ndk { abiFilters  'armeabi-v7a' }
-//      ndk { abiFilters  'armeabi-v7a' }
+      ndk { abiFilters  'armeabi-v7a' }
 		minSdk 19 
         //	targetSdk 26
 	//******  Zet op rollout op 100% ******
 		versionCode  376
-		versionName '2.20.7'
+		versionName '2.21.0'
             	dimension 'libreVersion'
             buildConfigField 'int', 'libreVersion', '2'
 		}
         libre3 {
-//       ndk { abiFilters  'arm64-v8a' }
+       ndk { abiFilters  'arm64-v8a' }
             // targetSdk 26
 	   minSdk 26
 //	   minSdk 23
             dimension 'libreVersion'
 		versionCode 377
 	//******  Zet op rollout op 100% ******
-		versionName '4.10.7'
+		versionName '4.11.0'
 
            	buildConfigField 'int', 'libreVersion', '3'
 		    externalNativeBuild.cmake {
@@ -110,7 +110,7 @@ android {
 		minSdk 26
 		versionCode 379
 	//******  Zet op rollout op 100% ******
-		versionName '4.10.7-wear'
+		versionName '4.11.0-wear'
 		signingConfig signingConfigs.alg
 
 //            buildConfigField 'int', 'targetSDK', "$targetSdk"
@@ -346,10 +346,10 @@ dependencies {
 //      implementation 'androidx.multidex:multidex:2.0.1'
 //    libre3Implementation 'javax.naming:jndi:1.2.1'
 //    libre3Implementation  'jndi:jndi:1.2.1'
-//	mobileCompileOnly 'org.projectlombok:lombok:1.18.26'
-//	mobileAnnotationProcessor 'org.projectlombok:lombok:1.18.26'
+	mobileCompileOnly 'org.projectlombok:lombok:1.18.26'
+	mobileAnnotationProcessor 'org.projectlombok:lombok:1.18.26'
 //	mobileImplementation 'com.github.lecho:hellocharts-android:v1.5.8'
-//	mobileImplementation 'com.github.lecho:hellocharts-library:1.5.8@aar'
+	mobileImplementation 'com.github.lecho:hellocharts-library:1.5.8@aar'
 
     implementation 'androidx.recyclerview:recyclerview:1.3.0'
     implementation "androidx.startup:startup-runtime:1.1.1"

@@ -188,11 +188,10 @@ static void init(Application app) {
 				}
 			if(Natives.getxbroadcast())
 				SendLikexDrip.broadcastglucose(mgdl,rate,timmsec);
-			/*
 			if(!isWearable) {
 				if (doWearInt)
 					tk.glucodata.WearInt.sendglucose(mgdl, rate, alarm, timmsec);
-				} */
+				} 
 			}
 
 	}

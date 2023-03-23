@@ -23,6 +23,8 @@ package tk.glucodata;
 
 
 
+import com.eveningoutpost.dexdrip.services.broadcastservice.models.GraphLine;
+
 import java.util.ArrayList;
 
 import tk.glucodata.nums.item;
@@ -633,6 +635,7 @@ public static native long[] getlastGlucose( );
 public static native void setwatchdrip(boolean val);
 public static native boolean getwatchdrip( );
 
+public static native boolean mkWearIntgraph(long start, long end, GraphLine low, GraphLine within, GraphLine high);
 
 //s/^extern.*JNIEXPORT[         ]*\([a-zA-Z]*\)[ ]*JNICALL[      ]*fromjava(\([^)]*\)) *(JNIEnv[^,]*,[^,)]*[,)]\([^){]*\)[^a-zA-Z0-9]*$/public static native \1 \2(\3);/g
 //public static native void sendxdripold();
