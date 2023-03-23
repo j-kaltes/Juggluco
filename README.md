@@ -14,7 +14,8 @@ Juggluco can send glucose values to smartwatches in four ways:
 - via watch app Kerfstok running on some Garmin watches;  
 - via xDrip watch apps on all kinds of smartwatches;  
 - via glucose broadcasts to other Android apps that send the glucose values again to connected watches;  
-- Juggluco for WearOS.  
+- Juggluco for WearOS. ;
+- by sending glucose values to Watchdrip+ (MiBand/Amazfit).
 
 Juggluco can use (but not start) **US** Freestyle Libre 2 sensors.
 
