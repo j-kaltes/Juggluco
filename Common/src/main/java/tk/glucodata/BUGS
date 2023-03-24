@@ -1,6 +1,3 @@
-
-map verschillende packages voor WearInt
-Zeer veel data uit webserver. /f/jka/log/large/trace.log.out
 Maak directe sensor-watch verbinding onmogelijk wanneer backfill nog niet klaar is.
 terminate niet verzonden naar horloge
 Soms worden amounts niet naar horloge gezonden.

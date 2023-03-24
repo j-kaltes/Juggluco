@@ -20,6 +20,8 @@
 
 
 package tk.glucodata;
+import static tk.glucodata.Log.doLog;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -31,7 +33,7 @@ import com.eveningoutpost.dexdrip.services.broadcastservice.models.Settings;
 public class watchdrip extends BroadcastReceiver {
 private static String  LOG_ID="watchdrip";
 
-static   String  tostring(Bundle bundle) {
+private static   String  tostring(Bundle bundle) {
         if(bundle==null)
             return "";
         var builder = new StringBuilder();
@@ -46,7 +48,7 @@ static   String  tostring(Bundle bundle) {
         public void onReceive(Context context, Intent intent) {
            	Log.i(LOG_ID,"onReceive ");
 		var extras=intent.getExtras();
-		var bundelstr=tostring(extras);
+		if(doLog) Natives.log(tostring(extras));
 		var function=extras.getString("FUNCTION","");
 		if("update_bg_force".equals(function)) {
 			String key=extras.getString("PACKAGE",null);
@@ -54,7 +56,6 @@ static   String  tostring(Bundle bundle) {
 				Log.e(LOG_ID,"no package");
 				return;
 				}
-			Natives.log(bundelstr);
 //			WearInt.settings  = intent.getParcelableExtra("SETTINGS");
 			Settings settings= extras.getParcelable("SETTINGS");
 			if(settings==null) {
@@ -71,7 +72,6 @@ static   String  tostring(Bundle bundle) {
 				int alarm = (int) ((res >> 48) & 0xFFL);
 				short ratein = (short) ((res >> 32) & 0xFFFFL);
 				float rate = ratein / 1000.0f;
-	//			WearInt.sendglucose(glumgdl,rate, alarm, gl[0]*1000L);
 				var newintent=WearInt.mksendglucoseintent(settings,glumgdl,rate,alarm,  gl[0]*1000L);
 				newintent.putExtra( "FUNCTION","update_bg_force");
 				newintent.setPackage(key);

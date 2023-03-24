@@ -40,6 +40,12 @@ import static tk.glucodata.util.getcheckbox;
 class Watch {
 
 static public void show(MainActivity context) {
+	       var watchdrip=getcheckbox(context,"Watchdrip", SuperGattCallback.doWearInt);
+		watchdrip.setOnCheckedChangeListener(
+			(buttonView,  isChecked) ->  {
+				Natives.setwatchdrip(isChecked);
+				tk.glucodata.watchdrip.set(isChecked);
+				});
 	var usexdripserver=Natives.getusexdripwebserver();
 	var server=getcheckbox(context,R.string.webserver,usexdripserver);
 	server.setOnCheckedChangeListener( (buttonView,  isChecked) -> Natives.setusexdripwebserver(isChecked));
@@ -98,7 +104,7 @@ static public void show(MainActivity context) {
 		if(height>h)
 			l.setY((height-h)/2);
 		return new int[] {w,h};
-		},new View[]{wearbox,wearossettings},new View[]{server,serverconfig},new View[]{kerfstok,status},new View[]{Help,Ok} );
+		},new View[]{watchdrip},new View[]{wearbox,wearossettings},new View[]{server,serverconfig},new View[]{kerfstok,status},new View[]{Help,Ok} );
 	float density=GlucoseCurve.metrics.density;
 	int laypad=(int)(density*4.0);
 	layout.setPadding(laypad*2,laypad*2,laypad*2,laypad);

@@ -1,7 +1,7 @@
 <resources>
 <string name="ringtone" >
 <![CDATA[
-<h1 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-top: 0in">
+<h1 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-top: 0in; margin-bottom: 0.1in">
 <font face="Liberation Sans, sans-serif"><font size="5" style="font-size: 18pt">Klingelton</font></font></h1>
 <p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.17in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
 <font face="Times New Roman"><font size="4" style="font-size: 14pt">Wählen
@@ -39,7 +39,10 @@ Android-Einstellungsbildschirm weitergeleitet, um Juggluco diese
 Berechtigung zu erteilen.&nbsp;Indem Sie &quot;<i>Nicht stören&quot;</i>
 einschalten und auf&nbsp;<i>Play</i>&nbsp;drücken,&nbsp;können Sie
 testen, ob die Alarme während&nbsp;<i>&quot;Nicht stören&quot;</i>
-funktionieren.</font></font></p>
+funktionieren. Diese Einstellung kann den unbeabsichtigten Effekt
+haben, dass beim Auslösen eines Alarms während einer automatischen
+„Bitte nicht stören “-Periode dieser Zustand nicht automatisch
+ausgeschaltet wird.</font></font></p>
 <p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.17in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
 <font face="Times New Roman"><font size="4" style="font-size: 14pt"><b>Blitz</b>&nbsp;:
 Smartphones mit Taschenlampe haben die Möglichkeit, für die gleiche
@@ -1665,14 +1668,18 @@ anzuzeigen.</font></font></p>
 <font face="Times New Roman">Notify</font></h2>
 <p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
 <font face="Times New Roman"><font size="4" style="font-size: 14pt">Wenn
-Notify im linken mittleren Menü aktiviert ist, wird jedes Mal
-eine Android-Benachrichtigung erstellt, wenn ein neuer Glukosewert
+Notify im linken mittleren Menü aktiviert ist, wird jedes Mal eine
+Android-Benachrichtigung erstellt, wenn ein neuer Glukosewert
 eintrifft. Die meisten Smartwatches können so konfiguriert werden,
 dass sie diese Benachrichtigungen erhalten. Es funktioniert mit
 Garmin-Uhren. Einige Begleit-Apps anderer Uhren senden diese
 Benachrichtigung nicht an die Uhr, wahrscheinlich weil es sich um
 eine Änderung einer Benachrichtigung handelt, die ständig vorhanden
 ist, anstatt eine neue Benachrichtigung zu erstellen.</font></font></p>
+<h2 class="western">Watchdrip</h2>
+<p style="line-height: 100%; margin-bottom: 0in">Durch das Einschalten sendet Juggluco Glukosewerte an <a href="https://bigdigital.home.blog/2022/06/16/watchdrip-a-new-application-for-xdrip-watch-integration">Watchdrip+</a>
+. Watchdrip+ sendet Zifferblätter mit Glukosewerten an
+MiBand/Amazfit-Uhren.</p>
 <h2 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
 <font face="Times New Roman">Kerfstok</font></h2>
 <p style="orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">

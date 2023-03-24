@@ -29,7 +29,10 @@ niet de benodigde toestemming hiervoor heeft, wordt je naar een
 Android instellingen schermpje geleidt waar je Juggluco deze
 toestemming kunt geven. Door op &quot;<i>Play</i>&quot; te drukken
 terwijl &quot;<i>Niet storen</i>&quot; aan staat, kun je zien of
-alarmen al of niet werken tijdens &quot;<i>Niet storen</i>&quot;.</p>
+alarmen al of niet werken tijdens &quot;<i>Niet storen</i>&quot;.
+Deze instelling kan het onbedoelde effect hebben dat wanneer een
+alarm afgaat tijdens een automatische &quot;Niet storen&quot;-periode,
+deze status niet automatisch wordt uitgeschakeld.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>Flits</b>:
 Smartphones met flits zaklamp hebben de mogelijk bij het afgaan van
 alarm, voor de aangeven hoeveelheid seconden, te flitsen. Handig in
@@ -1304,6 +1307,11 @@ behorende bij het horloge ingesteld zijn dat het meldingen van
 Juggluco door moet zenden naar het horloge. Dit werkt op Garmin
 Vivoactive3, maar niet op Samsung Galaxy Watch4, waarschijnlijk omdat
 het een <span lang="en-US">ongoing notification</span> betreft.</p>
+<h2 class="western">Watchdrip</h2>
+<p style="line-height: 100%; margin-bottom: 0in">Door deze aan te
+zetten, stuurt Juggluco glucosewaarden naar <a href="https://bigdigital.home.blog/2022/06/16/watchdrip-a-new-application-for-xdrip-watch-integration">Watchdrip+</a>
+. Watchdrip+ stuurt wijzerplaten met glucosewaarden naar
+MiBand/Amazfit-horloges.</p>
 <h2 class="western">Kerfstok</h2>
 <p style="line-height: 100%; margin-bottom: 0in">Kerfstok is een
 horloge app voor sommige Garmin horloges waarmee je nummers kunt

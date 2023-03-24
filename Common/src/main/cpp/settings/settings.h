@@ -384,6 +384,7 @@ Settings(const char *settingsname,const char *base,const char *country): Mmap(se
 		data()->libreaccountIDnum=-1LL;
 	     }
 		data()->sslport=17581;
+		data()->android13=true;
 	     }
 	setconvert(country);
 

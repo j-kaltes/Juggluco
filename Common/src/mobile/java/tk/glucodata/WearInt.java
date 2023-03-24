@@ -98,11 +98,11 @@ static Intent mksendglucoseintent(Settings settings,int mgdl,float rate, int ala
 private static final int FUZZER = 30000;
 static private void addgraph(Settings settings,Bundle bundle,long now) {
 	long graphStartOffset = settings.getGraphStart();
-	long graphEndOffset = settings.getGraphEnd();
 	if(graphStartOffset == 0) {
 	    graphStartOffset = 60*60*1000 * 2;
 		}
-	long end = now + graphEndOffset;
+//	long end = now +settings.getGraphEnd(); //much too large with small periods
+	long end = now + graphStartOffset/15;
 	long start = now - graphStartOffset;
 	bundle.putInt("fuzzer", FUZZER);
 	bundle.putLong("start", start);

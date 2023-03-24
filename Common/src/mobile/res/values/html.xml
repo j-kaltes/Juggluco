@@ -28,7 +28,13 @@ directed to an Android settings screen to give Juggluco this
 permission. By switching on &quot;<i>Do not Disturb</i>&quot; and
 pressing <i>Play,</i><span style="font-variant: normal"> </span><span style="font-variant: normal"><span style="font-style: normal">you
 can test whether alarms will work during </span></span><i>&quot;Do
-not Disturb&quot;.</i></p>
+not Disturb&quot;</i><span style="font-style: normal">. This setting
+can have the </span><span style="font-style: normal">unintended
+</span><span style="font-style: normal">effect that when an alarm
+went o</span><span style="font-style: normal">ff</span><span style="font-style: normal">
+during </span><span style="font-style: normal">an automatic</span><span style="font-style: normal">
+&quot;Do not Dis</span><span style="font-style: normal">turb&quot;
+period, this state will not be turned off automatically.</span></p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>Flash</b>:
 Smartphones with torch flashlight have the option to flash for the
 same number of seconds. Handy in case ringtones are not allowed and
@@ -1266,16 +1272,20 @@ notifications. It works with Garmin watches. Some companion apps of
 other watches don\'t send this notification to the watch, probably
 because it is a modification of a notification that is constantly
 present instead of creating a new notification.</span></p>
+<h2 class="western">Watchdrip</h2>
+<p style="line-height: 100%; margin-bottom: 0in">By switching this
+on, Juggluco sends glucose values to <a href="https://bigdigital.home.blog/2022/06/16/watchdrip-a-new-application-for-xdrip-watch-integration">Watchdrip+</a>.
+Watchdrip+ sends watch faces, showing glucose values, to
+MiBand/Amazfit watches.</p>
 <h2 class="western">Kerfstok</h2>
 <p style="line-height: 100%; margin-bottom: 0in"><span lang="en-US">Kerfstok
-is watch app by which you can enter numbers (like insulin doses)</span><span lang="en-US">,</span><span lang="en-US">
-but </span><span lang="en-US">it </span><span lang="en-US">also
-displays the current glucose value. Immediately as a new glucose
-value arrives, Juggluco sends it to Kerfstok. So Kerfstok displays
-always the most recent glucose value. Kerfstok can also record all
-activities supported by Garmin and can display speed and distance.
-See Watch-&gt;Kerfstok Status-&gt; Help and
-<a href="http://jkaltes.byethost16.com/Kerfstok">http://jkaltes.byethost16.com/Kerfstok</a></span></p>
+is watch app by which you can enter numbers (like insulin doses),</span>
+<span lang="en-US">but it also displays the current glucose value.
+Immediately as a new glucose value arrives, Juggluco sends it to
+Kerfstok. So Kerfstok displays always the most recent glucose value.
+Kerfstok can also record all activities supported by Garmin and can
+display speed and distance. See Watch-&gt;Kerfstok Status-&gt; Help
+and <a href="http://jkaltes.byethost16.com/Kerfstok">http://jkaltes.byethost16.com/Kerfstok</a></span></p>
 <h2 class="western">xDrip watch apps</h2>
 <p style="line-height: 100%; margin-bottom: 0in"><span lang="en-US">Juggluco
 incorporates an xDrip webserver. This makes it possible to directly
@@ -1317,7 +1327,7 @@ your home network. This server uses only http. I made also a https
 version, but that seems to be of no use without a certificate
 specific for your hostname signed by a certificate authority. So I
 left it out.</p>
-<h2 class="western">Juggluco Wear</h2>
+<h2 class="western">WearOS Juggluco</h2>
 <p>There is a version of Juggluco ported to Wear OS. The display is
 adapted to the smaller screen and a watch face is added. The watch
 face can be installed as a usual Wear OS watch face and displays

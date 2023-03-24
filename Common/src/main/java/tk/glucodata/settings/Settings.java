@@ -879,12 +879,6 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 		showalways.setOnCheckedChangeListener( (buttonView,  isChecked) -> Notify.glucosestatus(isChecked) );
 	       var webserver=getbutton(context,R.string.webserver);
 	       var uploader=getbutton(context,"Uploader");
-	       var watchdrip=getcheckbox(context,"Watchdrip", SuperGattCallback.doWearInt);
-		watchdrip.setOnCheckedChangeListener(
-			(buttonView,  isChecked) ->  {
-				Natives.setwatchdrip(isChecked);
-				tk.glucodata.watchdrip.set(isChecked);
-				});
 
 	       var floatconfig=getbutton(context,R.string.config);
 	       floatconfig.setOnClickListener(v-> tk.glucodata.FloatingConfig.show(context));
@@ -893,7 +887,7 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 		floatglucose.setChecked(Natives.getfloatglucose());
 		floatglucose.setOnCheckedChangeListener( (buttonView,  isChecked) -> Floating.setfloatglucose(context,isChecked) ) ;
 		View[] rowglu=new View[]{ bluetooth,floatglucose,floatconfig,alarmbut};
-		row8=new View[]{watchdrip,changelabels,numalarm,colbut};
+		row8=new View[]{changelabels,numalarm,colbut};
 		views=new View[][]{row0, row1,new View[]{scalelabel,fixatex,fixatey}, row2,new View[]{levelleft,camera,reverseorientation},
 		hasnfc?new View[]{nfcsound, globalscan}:null,
 
