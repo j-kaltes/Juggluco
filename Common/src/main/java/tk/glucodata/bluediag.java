@@ -548,14 +548,10 @@ Log.i(LOG_ID,"showall");
 			}
 		});
 		}
-	Log.i(LOG_ID,"showall before setText");
 	bluestate.setText( mBluetoothAdapter==null?activity.getString(R.string.nobluetooth):(mBluetoothAdapter.isEnabled()?activity.getString(R.string.bluetoothenabled): activity.getString(R.string.bluetoothdisabled)));
-	Log.i(LOG_ID,"showall before getusebluetoth");
         usebluetooth.setChecked(Natives.getusebluetooth());
-	Log.i(LOG_ID,"showall before getwakelock");
         wakelock.setChecked(Natives.getwakelock());
         priority.setChecked(Natives.getpriority());
-	Log.i(LOG_ID,"showall before noPermissions");
 	if(!isWearable) {
 		if( Build.VERSION.SDK_INT < 23|| Applic.noPermissions(activity).length==0) {
 			Log.i(LOG_ID,"locationpermissin.setVisibility(GONE);");

@@ -36,7 +36,7 @@ std::array<int,maxallhosts>		peers2us,us2peers;
 //void setall(std::array<int<maxallhosts>&ar,const int ini) {	
 
 
-extern void setBlueMessage(bool val);
+extern void setBlueMessage(int,bool val);
 extern bool getpassive(int pos) ;
 extern bool getactive(int pos) ;
 extern bool getownip(struct sockaddr_in6 *outip);
@@ -160,7 +160,7 @@ bool watchsensor(const passhost_t *wearhost) {
 0: don't change
 */
 
-extern		int getownips(struct sockaddr_in6 *outips,int max) ;
+extern		int getownips(struct sockaddr_in6 *outips,int max,bool &) ;
 
 
 
@@ -194,9 +194,8 @@ void		setsendinfo(struct netinfo1 &info,passhost_t *wearhost) {
 			}
 
 #ifdef WEAROS_MESSAGES
-#ifndef WEAROS
-uLong crcs[maxallhosts]={};
-#endif
+static uLong crcs[maxallhosts]={};
+bool wearmessages[maxallhosts]={};
 #endif
 extern "C" JNIEXPORT  jbyteArray  JNICALL   fromjava(getmynetinfo)(JNIEnv *env, jclass cl,jstring jident,jboolean create,jint watchHasSensor) {
 
@@ -230,7 +229,8 @@ extern "C" JNIEXPORT  jbyteArray  JNICALL   fromjava(getmynetinfo)(JNIEnv *env, 
 
 
 	if(usedversion) {
-		info.nr=getownips(info.ips,maxip-1);
+		bool haswlan;
+		info.nr=getownips(info.ips,maxip-1,haswlan);
 
 		LOGGER("send %d ips:\n",info.nr);
 		for(int i=0;i<info.nr;i++) {
@@ -242,20 +242,20 @@ extern "C" JNIEXPORT  jbyteArray  JNICALL   fromjava(getmynetinfo)(JNIEnv *env, 
 			}
 
 #ifdef WEAROS_MESSAGES
-#ifndef WEAROS
 	    auto newcrc=crc32(0,reinterpret_cast<const Bytef*>(info.ips),info.nr*sizeof(info.ips[0]));
 	    if(newcrc!=crcs[index]) {
 	    	LOGGER("crc different\n");
-		const bool setmess= !info.nr;
-		setBlueMessage(setmess);
+		const bool setmess=!haswlan;
+#ifndef WEAROS
+	if(setmess)
+#endif
+		setBlueMessage(index,setmess);
 		crcs[index]=newcrc;
 		}
 	else  {
 	    	LOGGER("crc the same\n");
 		}
-
-#endif
-	info.blue=wearmessages;
+	info.blue=wearmessages[index];
 #endif
 		}
 	else  {
@@ -319,6 +319,8 @@ extern "C" JNIEXPORT  jbyteArray  JNICALL   fromjava(getmynetinfo)(JNIEnv *env, 
 	env->SetByteArrayRegion(uit, 0, len, reinterpret_cast<const jbyte *>(&info));
 	return uit;
 	}
+
+
 extern "C" JNIEXPORT jboolean  JNICALL   fromjava(setmynetinfo)(JNIEnv *env, jclass cl,  jstring jident, jbyteArray jar) { 
    if(!jar) return false;
    if(!backup) return false;
@@ -372,7 +374,10 @@ extern "C" JNIEXPORT jboolean  JNICALL   fromjava(setmynetinfo)(JNIEnv *env, jcl
 
 #ifdef WEAROS_MESSAGES
 	if(usedversion>=3) {
-		setBlueMessage(info->blue);
+		#ifndef WEAROS
+			setBlueMessage(index,info->blue);
+		//if(info->blue)
+		#endif
 		}
 #endif
    	}
@@ -541,3 +546,15 @@ extern "C" JNIEXPORT jint  JNICALL   fromjava(directsensorwatch)(JNIEnv *env, jc
 		}
 	return -1;
        }
+
+bool getwearindex(JNIEnv *env, jstring jident) {
+    if(!jident) return -1;
+   const char *id = env->GetStringUTFChars( jident, NULL);
+   if (id == nullptr) return -1;
+   destruct   dest([jident,id,env]() {env->ReleaseStringUTFChars(jident, id);});
+    passhost_t *host=getwearoshost(false,id);
+    if(!host) return -1;
+   int index=host- backup->getupdatedata()->allhosts;
+   LOGGER("%s index=%d\n",id,index);
+   return index;
+   }

@@ -520,7 +520,7 @@ private boolean updateDevicers() {
 	if(devs==null) {
 		for(int i=0;i<gatnr;i++) {
 			String was= gattcallbacks.get(i).SerialNumber;
-			Log.i(LOG_ID,"can remove "+ was);
+			Log.i(LOG_ID,"null: can remove "+ was);
 			rem.add(i);	
 			}
 		if(rem.size()==0)  {
@@ -623,7 +623,7 @@ SuperGattCallback getGattCallback(String name, long dataptr) {
 	return  new MyGattCallback(this,name,dataptr);
 	}
 private boolean addDevice(String str,long dataptr) {
-	Log.d(LOG_ID,"reset add "+str);
+	Log.d(LOG_ID,"addDevice "+str);
 	int index=gattcallbacks.size();
 	if(dataptr!=0L) {
 		SuperGattCallback  cb= getGattCallback(str,dataptr);

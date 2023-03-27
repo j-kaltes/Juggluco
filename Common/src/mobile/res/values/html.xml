@@ -1745,9 +1745,10 @@ port 17580. Nightscout server URL: http://127.0.0.1:17580
 followers can make use of it. xDrip, Diabox and a <a href="https://github.com/dabear/FloatingGlucose/releases">Windows
 Floating Glucose</a> app can be used with http when &quot;local only&quot;
 is not set. On MacOS the same is true for Nightscout Menu Bar, Gluco
-Status and Gluco Tracker (all in Apple Store). On IOS you can use
-<a href="https://github.com/someoneAnyone/Nightscouter">Nightscouter</a>
-also with http.</p>
+Status and Gluco Tracker (all in Apple Store). You also only need
+http for <a href="https://github.com/someoneAnyone/Nightscouter">Nightscouter</a>
+(IOS) and <a href="https://github.com/nightscout/nightguard">Nightguard</a>
+(IOS and WatchOS).</p>
 <p style="line-height: 100%; margin-bottom: 0in">If you want to
 access Juggluco over the internet, you need to forward a port from
 your modem. See:</p>

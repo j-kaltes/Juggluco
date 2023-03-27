@@ -32,6 +32,7 @@
 #include <vector>
 #include <array>
 #include <thread>
+#include <semaphore>
 #include "destruct.h"
 #include "datbackup.h"
 #include "net/netstuff.h"
@@ -201,11 +202,11 @@ else {
                 LOGGER("GetStaticMethodID(jMessageSender,\"sendDatawithName\",\"(Ljava/lang/String;[B)Z\" failed\n");
                 return false;
                 }
-/*
-        if(!(jsendNameMessageOn=env->GetStaticMethodID(jMessageSender,"sendNameMessageOn","(Ljava/lang/String;Z)V"))) {
+
+       /* if(!(jsendNameMessageOn=env->GetStaticMethodID(jMessageSender,"sendNameMessageOn","(Ljava/lang/String;Z)V"))) {
                 LOGGER("GetStaticMethodID(jMessageSender,\"sendNameMessageOn\",\"(Ljava/lang/String;Z)V\" failed\n");
                 return false;
-                } */
+                }  */
 #endif
 
         }
@@ -213,12 +214,13 @@ else {
 }
 extern JNIEnv *getenv();
 #ifdef WEAROS
-extern void sendMessagesON(bool val);
-extern void setBlueMessage(bool val);
-void sendMessagesON(bool val) {
+extern void sendMessagesON(passhost_t *pass,bool val);
+extern void setBlueMessage(int,bool val);
+void sendMessagesON(passhost_t *pass, bool val) {
+	 const int index=pass-getBackupHosts().data();
 	auto env=getenv();
         env->CallStaticVoidMethod(jMessageSender,jsendMessageOn,val);
-	setBlueMessage(val);
+	setBlueMessage(index,val);
 	}
 #endif
 
@@ -255,14 +257,16 @@ bool	sendmessage(const int phonehostnr,bool phonesender,const uint8_t *buf,const
 void clearnetworkcache() {
 	connectionnames={};
 	}
-void tobluetooth(int hostnr,bool sender,int sock) {
+void tobluetooth(int hostnr,bool sender,int sock, std::binary_semaphore *waitstarted) {
    	LOGGER("tobluetooth(%d,%d,%d)\n", hostnr, sender, sock);
 
 	#ifdef WEAROS
 	int phonehost= us2peers[hostnr];
 	while(phonehost<0) {
+		LOGGER("sleep(5) phonehost=%d\n",phonehost);
 		sleep(5);
 		phonehost=us2peers[hostnr];
+		LOGGER(" after sleep(5) phonehost=%d\n",phonehost);
 		}
 	#else
 	const int phonehost= hostnr;
@@ -287,6 +291,8 @@ void tobluetooth(int hostnr,bool sender,int sock) {
 	int len=sprintf(buf, "tobluetooth %d %s",hostnr,sender?"S":"R");
 	prctl(PR_SET_NAME, buf, 0, 0, 0);
 	}
+	LOGGER("tobluetooth before release\n");
+	waitstarted->release();
    while(true) { 
         int inlen=recvni(sock,buf,maxbuf);
        LOGGER("recvni(%d,...)=%d\n",sock,inlen);
@@ -307,7 +313,7 @@ void tobluetooth(int hostnr,bool sender,int sock) {
 void messagereceivecommands(passhost_t *pass) {
 	const int index=pass-getBackupHosts().data();
 
-	 for(int i=0;wearmessages;i++) {
+	 for(int i=0;wearmessages[index];i++) {
 		int sockpair[2];
 		if(socketpair(AF_LOCAL,SOCK_STREAM,0,sockpair)!=0) {
 			lerror("socketpair");
@@ -320,33 +326,41 @@ void messagereceivecommands(passhost_t *pass) {
 		LOGGERN(buf,len);
 		}
 		messagereceiversockets[index]=sockpair[0];
-		std::thread th(tobluetooth,index,false, sockpair[0]); //TODO handshake?
+
+		std::binary_semaphore waitstarted(0);
+		std::thread th(tobluetooth,index,false, sockpair[0],&waitstarted); //TODO handshake?
 	//	th.detach();
+		waitstarted.acquire();
 		bool    getcommandsnopass(int sock,passhost_t *host); //TODO password?
 	extern	void receiversockopt(int new_fd);
 		receiversockopt(sockpair[1]);
 		getcommandsnopass(sockpair[1],pass);
 		 int receivesock=messagereceiversockets[index];
 		  shutdown(receivesock,SHUT_RDWR);
-		 LOGGER("message join\n");
+		 LOGGER("%d message join\n",index);
 		th.join();
 		  close(receivesock);
+		  /*
 		if(receivesock!=sockpair[0])  {
 			LOGGER("messagereceivecommands %d!=%d\n",receivesock,sockpair[0]);
 			return;
-			}
+			} */
 		LOGGER("try again\n");
 		 }
-	LOGGER("wearmessages=false\n");
+	LOGGER("wearmessages[%d]==false\n",index);
 	return;
+	}
+void startmessagereceiver(passhost_t &host) {
+	LOGGER("startmessagereceiver %s\n",host.getname());
+	std::thread th(messagereceivecommands,&host);
+	th.detach();
 	}
 void startmessagereceivers(Backup *backup) {
 	LOGGER("startmessagereceivers\n");
 	auto hspan=backup->getHosts();
 	for(passhost_t &host:hspan) {
 		if(host.wearos) {
-			std::thread th(messagereceivecommands,&host);
-			th.detach();
+			startmessagereceiver(host);
 			}
 		}
 	}
@@ -360,48 +374,72 @@ int messagemakeconnection(passhost_t *pass,bool sender,int &sock,crypt_t*ctx,cha
 	const int index=pass-getBackupHosts().data();
 	messagesendersockets[index]=sockpair[1];
 	sock=sockpair[0];
-	std::thread th(tobluetooth,index,sender, sockpair[1]); //TODO handshake?
+	std::binary_semaphore waitstarted(0);
+	std::thread th(tobluetooth,index,sender, sockpair[1],&waitstarted); //TODO handshake?
 	th.detach();
+	waitstarted.acquire();
 	LOGGER("messagemakeconnection %s sock=%d (other end=%d)\n",pass->getname(),sock,sockpair[1]);
 	return sock;
 	}
 
 
 #endif
-bool wearmessages=false;
+//bool wearmessages=false;
 
 
-extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getBlueMessage)(JNIEnv *env, jclass cl) {
-	return wearmessages;
+extern bool getwearindex(JNIEnv *env, jstring jident) ;
+extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getBlueMessage)(JNIEnv *env, jclass cl,int index) {
+	if(index<0)
+		return false;
+	LOGGER("getBluemessage(%d)=%d\n", index,wearmessages[index]);
+	return wearmessages[index];
+	}
+/*
+extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getBlueMessage)(JNIEnv *env, jclass cl,jstring jident) {
+	int index=getwearindex(env,jident);
+	if(index<0)
+		return false;
+	LOGGER("getBluemessage(%d)=%d\n", index,wearmessages[index]);
+	return wearmessages[index];
+	}
+	*/
+void closesock(int &sock) {
+	shutdown(sock,SHUT_RDWR);
+	close(sock);
+	sock=-1;
 	}
 void closesocks(std::array<int,maxallhosts>   &socks) {
 	for(auto &el:socks) {
 		if(el!=-1) {
-            		shutdown(el,SHUT_RDWR);
-			close(el);
-			el=-1;
+			closesock(el);
 			}
 		}
 	}
 extern void startmessagereceivers(Backup*);
 
+extern void startmessagereceiver(passhost_t &host);
 extern void startactivereceivers();
-void setBlueMessage(bool val) {
-	LOGGER("setBlueMessage(%d)\n",val);
-	if(wearmessages!=val ) {
-		wearmessages=val;
+void setBlueMessage(int ident,bool val) {
+      passhost_t &host= getBackupHosts()[ident];
+	LOGGER("setBlueMessage(%s(%d),%d)\n",host.getname(),ident,val);
+	if(wearmessages[ident]!=val ) {
+		wearmessages[ident]=val;
 		if(backup) {
 			backup->closeallsocks();
 			if(!val) {
-				closesocks(messagesendersockets);
-				closesocks(messagereceiversockets);
+				closesock(messagesendersockets[ident]);
+				closesock(messagereceiversockets[ident]);
 				}
 			else {
-				startmessagereceivers(backup);
+				startmessagereceiver(host);
 				}
 			}
 		}
 	}
-extern "C" JNIEXPORT void  JNICALL   fromjava(setBlueMessage)(JNIEnv *env, jclass cl,jboolean val) {
-	setBlueMessage(val);
+
+extern "C" JNIEXPORT void  JNICALL   fromjava(setBlueMessage)(JNIEnv *env, jclass cl,jstring jident, jboolean val) {
+    int index=getwearindex(env,jident);
+	if(index<0) return;
+	setBlueMessage(index,val);
+//	LOGGER("setBluemessage(%d)\n", wearmessages[index]);
 	}

@@ -41,7 +41,8 @@ add_library( g SHARED  ${BCRYPTFILES} dofirst.cpp settings/exception.cpp prunest
 target_compile_definitions(g PRIVATE  -DUSE_SSL=1 -DANDROID__APP=1  -DJUGGLUCO_APP=1)
 #add_library( g SHARED  ${ASCONFILES} backupjava.cpp glucose.cpp ${CURVEDIR}/shownums.cpp g.cpp jnisub.cpp share/hooks.cpp share/logs.cpp share/nfcdata.cpp  share/serial.cpp  statedata.cpp share/timestr.cpp share/savehistory.cpp ${NANOVG}/nanovg.c ${CURVEDIR}/curve.cpp ${CURVEDIR}/exports.cpp settings/javasettings.cpp settings/settings.cpp debugclone.cpp  ${NETDIR}/netstuff.cpp ${NETDIR}/sender.cpp ${NETDIR}/sendcommands.cpp ${NETDIR}/backup.cpp ${NETDIR}/getcommand.cpp datbackup.cpp nums/numdata.cpp nums/numjava.cpp  meal/mealjava.cpp ) # ${CURVEDIR}/rgb2hsv.cpp  ) 
 #set_source_files_properties(curve.cpp PROPERTIES COMPILE_FLAGS )
-target_include_directories(g PRIVATE ${NANOVG}  ${INCLUDESELF} ${INCLUDESELF}/share ${INCLUDESELF}/LibAscon/inc /n/ojka/src/android/frida/build/sdk-android-arm64/include ${INCLUDESELF}/bcrypt)
+#target_include_directories(g PRIVATE ${NANOVG}  ${INCLUDESELF} ${INCLUDESELF}/share ${INCLUDESELF}/LibAscon/inc /n/ojka/src/android/frida/build/sdk-android-arm64/include ${INCLUDESELF}/bcrypt)
+target_include_directories(g PRIVATE ${NANOVG}  ${INCLUDESELF} ${INCLUDESELF}/share ${INCLUDESELF}/LibAscon/inc ${INCLUDESELF}/include ${INCLUDESELF}/bcrypt)
 target_compile_definitions( g  PRIVATE  -DWEAROS_MESSAGES=1 -DDONTSCALESTROKEWIDTH  -DLIBRENUMBERS=1 )
 
 #set_target_properties(DataProcessing PROPERTIES IMPORTED_LOCATION  ${CMAKE_CURRENT_SOURCE_DIR}/lib/${ANDROID_ABI}/libDataProcessing.so)

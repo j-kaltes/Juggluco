@@ -306,11 +306,16 @@ const int perhour() const {
 	return 60/getmininterval();
 	}
 uint32_t getmaxtime() const {
+/*
 	if(isLibre3()) {
+#ifndef NDEBUG
+		return 16*24*60*60+getstarttime();
+#else
 		return (14*24 + 2)*60*60+getstarttime();
+	#endif
 		}
-	else
-		return getinfo()->days*24*60*60+getstarttime();
+	else */
+	return getinfo()->days*24*60*60+getstarttime();
 	}
 uint32_t getstarttime() const {
 	return getinfo()->starttime;

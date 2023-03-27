@@ -2308,9 +2308,10 @@ davon Gebrauch machen. xDrip, Diabox und eine
 App können mit http verwendet werden, wenn „</span><span lang="de-DE"><i>Nur
 lokal</i></span>“ <span lang="de-DE">nicht eingestellt ist.</span>
 <span lang="de-DE">Unter MacOS gilt dasselbe für Nightscout Menu
-Bar, Gluco Status und Gluco Tracker (alle im Apple Store). Auf IOS
-können Sie <a href="https://github.com/someoneAnyone/Nightscouter">Nightscouter</a>
-auch mit http verwenden.</span></p>
+Bar, Gluco Status und Gluco Tracker (alle im Apple Store).</span>
+<span lang="de-DE">Auch für <a href="https://github.com/someoneAnyone/Nightscouter">Nightscouter</a>
+(IOS) und <a href="https://github.com/nightscout/nightguard">Nightguard</a>
+(IOS und WatchOS) benötigen Sie nur http.</span></p>
 <p style="line-height: 100%; margin-bottom: 0in">Wenn Sie über das
 Internet auf Juggluco zugreifen möchten, müssen Sie einen Port von
 Ihrem Modem weiterleiten. Siehe:</p>

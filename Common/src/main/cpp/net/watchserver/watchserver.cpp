@@ -649,15 +649,7 @@ char * givebuckets(char *start) {
 */
 
 char * givecage(char *outiter) {
-	const char cage[]=R"(
-	  "cage": {
-	    "found": false,
-	    "age": 0,
-	    "treatmentDate": null,
-	    "checkForAlert": false,
-	    "level": -3,
-	    "display": "n/a "
-	  },)";
+	const char cage[]= R"("cage":{"found":false,"age":0,"treatmentDate":null,"checkForAlert":false,"level":-3,"display":"n/a"},)";
 	addar(outiter,cage);
     return outiter;
     }
@@ -729,11 +721,11 @@ static char * givebgnow(char *start) {
 bool giveproperties(const char *input,int inputlen,recdata *outdata) {
 	LOGGER("giveproperties(%s,%d,recdata *outdata) \n",input,inputlen);
 //	const char *end=input+inputlen;
-	outdata->allbuf=new(std::nothrow) char[512*inputlen];
-	char *start=outdata->allbuf+152,*outiter=start;
-	const char *endinput=input+inputlen;
-	*outiter++='{';
  	if(*input++=='/') {
+		outdata->allbuf=new(std::nothrow) char[512*inputlen];
+		char *start=outdata->allbuf+152,*outiter=start;
+		const char *endinput=input+inputlen;
+		*outiter++='{';
 		while (true) {
 			const std::string_view buckets = "buckets";
 			if (!memcmp(input, buckets.data(), buckets.size())) {
@@ -768,22 +760,25 @@ bool giveproperties(const char *input,int inputlen,recdata *outdata) {
 				mkheader(start, outiter, false, outdata);
 				return true;
 			}
-		++input;
-
+			++input;
+			}
 		}
-	}
-	/*
-		const std::string_view 	delta="delta";
-
-		const std::string_view 	delta="bgnow";
-
-	outdata->allbuf=new(std::nothrow) char[inputlen*48+512];
-    	char *start=outdata->allbuf+160;
-	int next=processproperty(
-    memcpy(start,nothing.data(),nothing.size());
-    mkheader(start,start+nothing.size(),false,outdata);
-    */
-    return givenothing(outdata);
+	else {
+		outdata->allbuf=new(std::nothrow) char[512*6];
+		if(!outdata->allbuf)
+    			return givenothing(outdata);
+		char *start=outdata->allbuf+152,*outiter=start;
+		*outiter++='{';
+		outiter = givebgnow(outiter);
+		outiter = getdelta(outiter);
+		outiter = givebuckets(outiter);
+//		outiter = givecage(outiter);
+		--outiter;
+		*outiter++ = '}';
+		mkheader(start, outiter, false, outdata);
+		return true;
+		}
+    //return givenothing(outdata);
 	}
 /*
 bool giveproperties(const char *input,int inputlen,recdata *outdata) {
@@ -1382,8 +1377,9 @@ static time_t readtime(const char *input) {
 ]=%5D
 $=%24
 =%3D */
-#define toshort(str)  (str[0]|(str[1]<<8))
 #define LOGID "watchserver "
+
+#define toshort(str)  (str[0]|(str[1]<<8))
 int rewriteperc(char *start,int len) {
 	char *ends=start+len;
 	char *iter=start;
@@ -1392,13 +1388,13 @@ int rewriteperc(char *start,int len) {
 		if((next=std::find(iter,ends,'%'))==ends) {
 			if(iter!=uititer) {
 				int left=(ends-iter);
-				memcpy(uititer,iter,left);
+				memmove(uititer,iter,left);
 				return uititer+left-start;;
 				}
 			return len;
 			}
 		int bijlen=(next-iter);
-		memcpy(uititer,iter,bijlen);
+		memmove(uititer,iter,bijlen);
 		uititer+=bijlen;
 		++next;
 		switch(toshort(next)) {
@@ -1406,14 +1402,14 @@ int rewriteperc(char *start,int len) {
 			case toshort("5D"): *uititer++=']';break;
 			case toshort("24"): *uititer++='$';break;
 			case toshort("3D"): *uititer++='=';break;
-			default: LOGGER(LOGID "strange char %.3s\n",next-1); memcpy(uititer,next-1,3);uititer+=3;
+			default: LOGGER(LOGID "strange char %.3s\n",next-1); memmove(uititer,next-1,3);uititer+=3;
 			}
 		iter=next+2;
 		}
 	}
   bool Sgvinterpret::getargs(const char *start,int lenin) {
 	 int 	len=rewriteperc(const_cast<char *>(start),lenin);
-	LOGGER("Sgvinterpret::getargs(%.*s#%d)\n",len,start,len);
+	LOGGER("after Sgvinterpret::getargs(%.*s#%d)\n",len,start,len);
 
 	const char *ends=start+len;
 	start++;

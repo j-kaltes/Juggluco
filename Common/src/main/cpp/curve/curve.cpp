@@ -447,13 +447,13 @@ LOGGER("density=%.1f, head=%.1f, small=%.1f\n",(double)density,(double)head,(dou
 ::headsize=head;
 ::midsize=head/3;
 ::mediumfont= headsize/6;
-historyStrokeWidth=1.5*density;
+historyStrokeWidth=3*density;
 numcircleStrokeWidth=5/2*density;
 lowGlucoseStrokeWidth=2.5*density;
-pollCurveStrokeWidth=2*density;
+pollCurveStrokeWidth=3*density;
 hitStrokeWidth=10*density;
 TrendStrokeWidth=15/2*density;
-glucoseLinesStrokeWidth=density/2;
+glucoseLinesStrokeWidth=1.5*density;
 timeLinesStrokeWidth=glucoseLinesStrokeWidth;
 dayEndStrokeWidth=2*density;
 nowLineStrokeWidth=density*2;

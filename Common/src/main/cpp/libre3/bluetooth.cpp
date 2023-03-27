@@ -98,7 +98,7 @@ extern "C" JNIEXPORT  jlong JNICALL fromjava(getLibre3SensorptrPD)(JNIEnv *env, 
 		if(jaddress) env->ReleaseStringUTFChars(jaddress, address);
 			});
 	jint len = env->GetStringUTFLength( jsensorid);
-	return reinterpret_cast<jlong>(sensors->makelibre3sensor(std::string_view(sensorid,len),jstarttime/1000,pin,address));
+	return reinterpret_cast<jlong>(sensors->makelibre3sensor(std::string_view(sensorid,len),jstarttime/1000,pin,address,time(nullptr)));
 	}
 
 extern "C" JNIEXPORT  jlong JNICALL fromjava(getLibre3Sensorptr)(JNIEnv *env, jclass thiz, jstring jsensorid,jlong jstarttime) {

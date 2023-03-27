@@ -1808,8 +1808,9 @@ en een <a href="https://github.com/dabear/FloatingGlucose/releases">Windows
 Floating Glucose-</a> app kunnen worden gebruikt met http als &quot;alleen
 lokaal&quot; niet is ingesteld.</span> Op MacOS geldt hetzelfde voor
 Nightscout Menu Bar, Gluco Status en Gluco Tracker (allemaal in Apple
-Store). Op IOS kun je <a href="https://github.com/someoneAnyone/Nightscouter">Nightscouter</a>
-ook met http gebruiken.</p>
+Store). Je hebt ook alleen http nodig voor <a href="https://github.com/someoneAnyone/Nightscouter">Nightscouter</a>
+(IOS) en <a href="https://github.com/nightscout/nightguard">Nightguard</a>
+(IOS en WatchOS).</p>
 <p style="line-height: 100%; margin-bottom: 0in"><span lang="nl-NL">Als
 je toegang wilt tot Juggluco via internet, moet je</span> <span lang="nl-NL">een
 poort &quot;</span><span lang="nl-NL"><i>forwarden&quot;</i></span>
@@ -1817,8 +1818,8 @@ poort &quot;</span><span lang="nl-NL"><i>forwarden&quot;</i></span>
 <ul>
 	<li><p style="line-height: 100%; margin-bottom: 0in"><a href="https://www.makeuseof.com/tag/what-is-port-forwarding-and-how-can-it-help-me">https://www.makeuseof.com/tag/what-is-port-forwarding-and-how-can-it-help-me</a></p>
 	<li><p style="line-height: 100%; margin-bottom: 0in"><a href="https://www.juggluco.nl/Juggluco/phones/index.html">https://www.juggluco.nl/Juggluco/phones/index.html</a></p>
-	<li><p style="line-height: 100%; margin-bottom: 0in"><span lang="nl-NL">Link</span><span lang="nl-NL">er</span><span lang="nl-NL">
-	midden menu-&gt;</span><span lang="nl-NL">Kloon</span><span lang="nl-NL">-&gt;Verbinding
+	<li><p style="line-height: 100%; margin-bottom: 0in"><span lang="nl-NL">Linker</span>
+	<span lang="nl-NL">midden menu-&gt;Kloon-&gt;Verbinding
 	toevoegen-&gt;Help</span></p>
 </ul>
 <p style="line-height: 100%; margin-bottom: 0in"><span lang="nl-NL">Andere
@@ -2002,12 +2003,22 @@ je</span></span><span style="font-variant: normal"> </span><span style="font-var
 geverifieerde sleutel hebt ontvangen en Port is de poort die je hier
 noemde. Het lijkt niet automatisch te synchroniseren, dus in
 Diabetes:M moet je zelf op Sync drukken.</span></span></p>
-<p style="line-height: 100%; margin-bottom: 0in">
-Voor meer informatie over de Nightscout/xDrip webserver commando\'s geïmplementeerd in Juggluco,zie    <a href="https://www.juggluco.nl/Juggluco/webserver.html">https://www.juggluco.nl/Juggluco/webserver.html</a>
+<p style="line-height: 100%; margin-bottom: 0in">Voor meer informatie
+over de Nightscout/xDrip webserver commando\'s geïmplementeerd in
+Juggluco,zie <a href="https://www.juggluco.nl/Juggluco/webserver.html">https://www.juggluco.nl/Juggluco/webserver.html</a>
 </p>
-<p><br></p>
-<p><br></p>
-<p><br></p>
+<p><br/>
+<br/>
+
+</p>
+<p><br/>
+<br/>
+
+</p>
+<p><br/>
+<br/>
+
+</p>
 ]]>
 </string>
 <string name="NightPost" >

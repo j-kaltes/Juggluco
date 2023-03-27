@@ -600,7 +600,7 @@ void changehostview(MainActivity act,final int index,String[] names,boolean dode
 			}
 		boolean iswearos=isWearOS(index);
 		Log.i(LOG_ID,(labelstr!=null?labelstr:"")+" Iswearos("+index+")="+iswearos);
-		messages[0].setVisibility((iswearos&& getBlueMessage( ) )?VISIBLE:GONE);
+		messages[0].setVisibility((iswearos&& getBlueMessage(index ) )?VISIBLE:GONE);
 		}
 	else {
 		messages[0].setVisibility(GONE);
@@ -692,7 +692,14 @@ View blpan= (thishost[2]==null)?new Space(act):getlabel(act,"bt-pan: "+thishost[
   Button Sync=getbutton(act,act.getString(R.string.sync));
    Sync.setOnClickListener(v-> Applic.wakemirrors());
   Button reinit=getbutton(act,"Reinit");
-   reinit.setOnClickListener(v-> Natives.resetnetwork());
+   reinit.setOnClickListener(v-> {
+	  Natives.resetnetwork();
+	var sender=tk.glucodata.MessageSender.getMessageSender();
+	if(sender!=null)
+		sender.nulltimes();
+	MessageSender.sendnetinfo();
+	}
+   );
   boolean[] issaved={false};
    alarms=getbutton(act,R.string.alarms);
    alarms.setOnClickListener(v-> tk.glucodata.settings.Settings.alarmsettings(act,null,issaved));

@@ -53,7 +53,7 @@ constexpr const char defaultport[]{
 
 #include "settings/settings.h"
 #ifdef WEAROS_MESSAGES
-extern bool wearmessages;
+extern bool wearmessages[];
 #endif
 /*
 inline void closesock(int &sock) {
@@ -274,12 +274,12 @@ for(int i=0;i<len;i++) {
 
 
 shouldaskfordata=getshouldaskfordata();
-
+/*
 #ifdef WEAROS_MESSAGES
 extern void startmessagereceivers(Backup*);
 if(wearmessages)
 	startmessagereceivers(this);
-#endif
+#endif */
 }
 
 bool sendScans() const {
@@ -873,7 +873,7 @@ int updateproc(condvar_t *varsptr,uintptr_t cond,updateone &shost,int  (updateon
 			shost.close();
 			if(
 #ifdef WEAROS_MESSAGES
-			(!pass->wearos||!wearmessages)&&
+			(!pass->wearos||!wearmessages[shost.allindex])&&
 #endif
 			pass->sendpassive)
 				return 0;

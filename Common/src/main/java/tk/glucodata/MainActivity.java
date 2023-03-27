@@ -77,7 +77,7 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Locale;
 
-;
+;import tk.glucodata.settings.SetColors;
 
 //import static tk.glucodata.Natives.hidescanresults;
 
@@ -892,19 +892,28 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
     Log.v(LOG_ID,"OnKeyDown");
-    if(keyCode== KeyEvent.KEYCODE_CAMERA) {
-		final int camkey=Natives.camerakey();
-		switch(camkey) {
-			case 0: Natives.setcamerakey(2);break;
-			case 1: {
-				curve.render.badscan=8;
-				curve.requestRender();
-			       Log.v(LOG_ID, "Camara");
-			     }; return true;
-			default:break;
+//    SetColors.endcolors(this);
+  if(isWearable) {
+    //doonback();
+	onBackPressed() ;
+	return true;
+    }	
+    else {
+	    if(keyCode== KeyEvent.KEYCODE_CAMERA) {
+			final int camkey=Natives.camerakey();
+			switch(camkey) {
+				case 0: Natives.setcamerakey(2);break;
+				case 1: {
+					curve.render.badscan=8;
+					curve.requestRender();
+				       Log.v(LOG_ID, "Camara");
+				     }; return true;
+				default:break;
+			}
+			 }
 		}
-		 }
         return super.onKeyDown(keyCode, event);
+
     }
     
 @Override

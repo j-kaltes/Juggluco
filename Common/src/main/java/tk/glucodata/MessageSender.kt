@@ -180,7 +180,8 @@ private fun nodeSendmessage(node:Node,path:String,data:ByteArray) {
 	sendbool(BLUETOOTH_PATH,node.id,on)
 
 	 }
-    public fun sendOnmessages( node:String,on:Boolean) {
+    private fun sendOnmessages( node:String,on:Boolean) {
+      Log.i(LOG_ID,"sendNameMessageOn($node,$on)");
 	sendbool(MESSAGES_PATH,node,on)
 	 }
 	 /*
@@ -294,7 +295,7 @@ public fun sendDatawithInt(ident: Int, data: ByteArray) {
 		return true
 		}
 
-        private const val netwait = (1000 * 60).toLong()
+        private const val netwait = (1000 * 5).toLong()
     private fun inargsendnetinfo(id: String) {
 	    Log.i(LOG_ID,"sendnetinfo($id)");
             if(!cansend()) {

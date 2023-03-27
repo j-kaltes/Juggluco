@@ -229,8 +229,9 @@ struct ifconf  {
 };
 */
 
-int oldgetownips(struct sockaddr_in6 *outips,int max) { 
+int oldgetownips(struct sockaddr_in6 *outips,int max,bool &haswlan) { 
 LOGGER("oldgetownips\n");
+haswlan=false;
   int  socketfd = socket(AF_INET, SOCK_DGRAM, 0);
   if(socketfd<0) {
   	LOGGER(" socket(AF_INET, SOCK_DGRAM, 0) failed\n");
@@ -250,6 +251,8 @@ LOGGER("oldgetownips\n");
         case AF_INET:
 	    if(!strcmp("lo",ifr->ifr_name)||!strncmp("dummy",ifr->ifr_name,5))
 		continue;
+	   if(!strncmp("wlan",ifr->ifr_name,4))
+	   	haswlan=true;
 	    putip(&ifr->ifr_addr,outips+iter++);
             break;
       	}
@@ -258,23 +261,23 @@ LOGGER("oldgetownips\n");
 }
 //#define OLDOWNIPS 1
 #ifdef OLDOWNIPS
-int getownips(struct sockaddr_in6 *outips,int max) {
-      return oldgetownips(outips,max);
+int getownips(struct sockaddr_in6 *outips,int max,bool &haswlan) {
+      return oldgetownips(outips,max,haswlan);
       }
 #else
 
-int getownips(struct sockaddr_in6 *outips,int max) {
+int getownips(struct sockaddr_in6 *outips,int max,bool &haswlan) {
    LOGGER("getownips\n");
     struct ifaddrs *ifaddr;
    typedef int (*getifaddrs_t)(struct ifaddrs **ifap);
    static int (*getifaddrs)(struct ifaddrs **ifap)=(getifaddrs_t)dlsym( RTLD_DEFAULT, "getifaddrs");
    if(!getifaddrs) {
       lerror("getifaddrs==null");
-      return oldgetownips(outips,max);
+      return oldgetownips(outips,max,haswlan);
    	}
    if(getifaddrs(&ifaddr) == -1) {
       lerror("getifaddrs");
-      return oldgetownips(outips,max);
+      return oldgetownips(outips,max,haswlan);
       }
   typedef void (*freeifaddrs_t)(struct ifaddrs *ifa);
   static freeifaddrs_t freeifaddrs=(freeifaddrs_t)dlsym( RTLD_DEFAULT, "freeifaddrs");
@@ -325,12 +328,17 @@ int getownips(struct sockaddr_in6 *outips,int max) {
 		wlanip=wlanip6;
 		}
 	}
- if(wlanip)
+ if(wlanip) {
 	   putip(wlanip->ifa_addr,outips+iter++);
-   if(iter)
+	   haswlan=true;
 	   return iter;
+	   }
+   if(iter) {
+	   haswlan=false;
+	   return iter;
+	   }
 
-    return oldgetownips(outips,max);
+    return oldgetownips(outips,max,haswlan);
    }
 #endif
 

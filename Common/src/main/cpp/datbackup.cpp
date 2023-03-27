@@ -208,7 +208,7 @@ static int saysender(const passhost_t *host) {
 	return 0;
 	}
 #ifdef WEAROS_MESSAGES
-extern bool wearmessages;
+extern bool wearmessages[];
 extern int messagemakeconnection(passhost_t *pass,bool sender,int &sock,crypt_t*ctx,char stype);
 #endif
 static int sayactivereceive(const passhost_t *host) {
@@ -220,7 +220,7 @@ static int sayactivereceive(const passhost_t *host) {
 
 	crypt_t * updateone::getcrypt() const {
 #ifdef WEAROS_MESSAGES
-		if(wearmessages) {
+		if(wearmessages[allindex]) {
 			if(backup) {
 				 const auto &host= backup->getHosts()[allindex];
 				if(host.wearos)
@@ -236,7 +236,7 @@ void	updateone::open() {
      auto *host=backup->getupdatedata()->allhosts+allindex;
      LOGGER("updateone::open %d %s\n",allindex,host->getnameif());
 #ifdef WEAROS_MESSAGES
-	if(host->wearos&&wearmessages) {
+	if(host->wearos&&wearmessages[allindex]) {
 		 messagemakeconnection(host,true,getsock(),getcrypt(),saysender(host));
 		
  	}   else 
@@ -331,7 +331,7 @@ void activereceivethread(int allindex,passhost_t *pass) {
 #endif
 ;
 #ifdef WEAROS_MESSAGES
-	if(pass->wearos&&wearmessages) {
+	if(pass->wearos&&wearmessages[allindex]) {
 		active_receive[h]->backupcond.wait(lck, [h] {return active_receive[h]->dobackup; });   
 		LOGGER("R-active after wait\n");
 	    }
@@ -354,7 +354,7 @@ void activereceivethread(int allindex,passhost_t *pass) {
 			}
 		int &sock=hostsocks[allindex];
 #ifdef WEAROS_MESSAGES
-	if(!pass->wearos||!wearmessages)  //TODO use it?
+	if(!pass->wearos||!wearmessages[allindex])  //TODO use it?
 #endif  
 	{
 		if(makeconnection(pass,sock,ctxptr,sayactivereceive(pass))<0) {
@@ -382,7 +382,7 @@ void updatedata::wakesender() {
 	passhost_t &host=allhosts[i];
 	if(
 #ifdef WEAROS_MESSAGES
-	!(wearmessages&&host.wearos)&&
+	!(wearmessages[i]&&host.wearos)&&
 #endif
 	host.activereceive) {
 		auto ind=host.activereceive-1;
@@ -393,7 +393,7 @@ void updatedata::wakesender() {
 	else {
 			if(host.receivefrom==3&&host.index<0) {
 #ifdef WEAROS_MESSAGES
-			if(host.wearos&&wearmessages) { //TODO
+			if(host.wearos&&wearmessages[i]) { //TODO
 			LOGGER("wearos messages\n");
 			}  else
 #endif
@@ -418,7 +418,7 @@ void updatedata::wakestreamsender() {
 		passhost_t &host=allhosts[i];
 	if(
 #ifdef WEAROS_MESSAGES
-	!(wearmessages&&host.wearos)&&
+	!(wearmessages[i]&&host.wearos)&&
 #endif
 	host.activereceive) {
 			auto ind=host.activereceive-1;

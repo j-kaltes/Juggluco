@@ -571,8 +571,8 @@ public static native byte[] intDecrypt(long cryptptr, int kind,byte[] encrypted)
 public static native float thresholdchange(float drate);
 //public static native void enddebug();
 public static native boolean message(byte[] data);
-public static native boolean getBlueMessage( );
-public static native void setBlueMessage(boolean val);
+public static native boolean getBlueMessage(int index);
+public static native void setBlueMessage(String name,boolean val);
                 
 public static native void setlibrenum(int index,int kind, float weight);
 public static native int getlibrenumkind(int index);

@@ -69,8 +69,15 @@ class MessageReceiver: WearableListenerService() {
         		Notify.mkunitstr(Natives.getunit())
 			}
 		 MessageSender.MESSAGES_PATH -> {
+			 val sender=tk.glucodata.MessageSender.getMessageSender()
+			 if(sender==null) {
+				 Log.d(LOG_ID,"2: messagesender==null")
+				 return
+			 }
+			 val sourceId= messageEvent.getSourceNodeId()
+			 val name:String=(if(isWearable) sender.localnode; else sourceId)?:return
 			val on=booldata(data)
-			Natives.setBlueMessage(on)
+			Natives.setBlueMessage(name,on)
 		 	}
 		 MessageSender.BLUETOOTH_PATH -> {
 		 	val context=if(MainActivity.thisone==null)Applic.app;else MainActivity.thisone;

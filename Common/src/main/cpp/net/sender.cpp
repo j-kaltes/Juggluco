@@ -275,8 +275,9 @@ static int makeconnection2(passhost_t *pass,int &sock,char stype) {
 #ifdef WEAROS
 destruct dest([pass]() {
 	if(pass->wearos) {
-		extern void sendMessagesON(bool val);
-		sendMessagesON(true);
+
+		extern void sendMessagesON(passhost_t *pass, bool val);
+		sendMessagesON(pass,true);
 		}
 	});
 dest.active=false;

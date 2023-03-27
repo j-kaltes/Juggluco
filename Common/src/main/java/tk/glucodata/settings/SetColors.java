@@ -47,7 +47,16 @@ import static tk.glucodata.settings.Settings.removeContentView;
 public class SetColors {
 private static final String LOG_ID="SetColors";
 //   AmbilWarnaDialog(Context context, int color, boolean supportsAlpha, OnAmbilWarnaListener listener)
-
+/*
+static View theview=null;
+public static void endcolors(MainActivity act) {
+	View view=theview;
+	if(view!=null) {
+		theview=null;
+		removeContentView(view);
+		act.poponback();
+		}
+	} */
 static void show(MainActivity act) {
 	int initialColor= 0xfff7f022;
 //	Natives.getlastcolor();
@@ -76,6 +85,7 @@ static void show(MainActivity act) {
         view.setBackgroundColor(Applic.backgroundcolor);
 	if(isWearable) {
 	       act.addContentView(view, new ViewGroup.LayoutParams((int)(width*0.65), (int)(height*0.65)));
+	      // theview=view;
 		}
 	else
 	       act.addContentView(view, new ViewGroup.LayoutParams(WRAP_CONTENT,WRAP_CONTENT));
@@ -89,6 +99,7 @@ static void show(MainActivity act) {
 		else	
 		{
 		close.setOnClickListener(v->{
+	       		//theview=null;
 			removeContentView(view);
 			act.poponback();
 					});
@@ -99,6 +110,7 @@ static void show(MainActivity act) {
 		}
 		else Log.e(LOG_ID,"findViewbByid failed");
 	act.setonback(()-> {
+	       //theview=null;
 		removeContentView(view);
 	});
 }
