@@ -892,10 +892,8 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
     Log.v(LOG_ID,"OnKeyDown");
-//    SetColors.endcolors(this);
   if(isWearable) {
-    //doonback();
-	onBackPressed() ;
+	if(!backinapp()) moveTaskToBack(true);
 	return true;
     }	
     else {
@@ -962,19 +960,24 @@ public void poponback() {
 public void clearonback() {
 	backrun.clear();
 	}
-	@Override
-	public	void onBackPressed() {
+boolean backinapp()  {
+	Log.d(LOG_ID,"backinapp");
 	    if(curve!=null&&(curve.render.stepresult & STEPBACK) == STEPBACK) {
-		Log.d(LOG_ID,"onBackPressed");
 		Natives.pressedback();
 		curve.render.stepresult = 0;
 		hideSystemUI();
 		curve.requestRender();
+		return true;
 		} 
 	    else {
-		if(!doonback()) 
-		  moveTaskToBack(true);
+		return doonback();
 		}
+	   }
+	@Override
+	public	void onBackPressed() {
+		Log.d(LOG_ID,"onBackPressed");
+		if(!backinapp())
+			  moveTaskToBack(true);
 	  }
 void tonotaccesssettings() {
 	Log.i(LOG_ID,"tonotaccesssettings()");

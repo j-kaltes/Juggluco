@@ -9,7 +9,7 @@ After using a sensor with Juggluco, you can still scan the sensor with Librelink
 In addition to the Bluetooth stream of glucose values, Juggluco displays the result of scanning: the current value and past 8 hours history out of the memory of the sensor. All in one detailed graph.  
 You can also add your amounts of insulin, carbohydrate and activity to the graph.  
 From the Bluetooth stream data summary statistics are generated: time in range, estimated A1c and, if enough data is gathered, a summary graph.  
-Juggluco can send glucose values to smartwatches in four ways:  
+Juggluco can send glucose values to smartwatches in six ways:  
 - by creating an Android notification that is redirected to some smartwatches (Notify);  
 - via watch app Kerfstok running on some Garmin watches;  
 - via xDrip watch apps on all kinds of smartwatches;  
