@@ -25,6 +25,7 @@ import android.content.Intent
 import com.google.android.gms.wearable.*
 import tk.glucodata.Applic.isWearable
 import tk.glucodata.MainActivity.setbluetoothon
+import tk.glucodata.MessageSender.Companion.isGalaxy
 //import tk.glucodata.MessageSender.Companion.messagesender
 import tk.glucodata.MessageSender.Companion.sendnetinfo
 import tk.glucodata.Natives
@@ -51,10 +52,32 @@ class MessageReceiver: WearableListenerService() {
 			Log.d(LOG_ID,"messagesender==null")
 			return
 			}
+			val nodes = sender.nodes
+			if(nodes == null || nodes.isEmpty()) {
+				Log.e(LOG_ID,"no nodes")
+				return
+			}
 	    	val sourceId= messageEvent.getSourceNodeId()
-		val name:String=(if(isWearable) sender.localnode; else sourceId)?:return
-		if(Natives.setmynetinfo(name,data)) {
-			sendnetinfo(sourceId)
+			var name:String
+			var galaxy:Boolean
+			if(isWearable) {
+				name=sender.localnode
+				galaxy=true;
+			}
+			else {
+				name=sourceId
+				val it= sender.findnodeid(sourceId)
+				if(it<0)
+						return
+				val node:Node=nodes.elementAt(it)
+				galaxy= isGalaxy(node)
+			}
+			if(name==null)
+				return
+
+
+			if(Natives.setmynetinfo(name,data, galaxy)) {
+				sendnetinfo(sourceId)
                   }
 		  }
 		MessageSender.START_PATH ->  {

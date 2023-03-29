@@ -2882,8 +2882,10 @@ extern "C" JNIEXPORT void JNICALL fromjava(xscale) (JNIEnv *env, jclass clazz,jf
 		return;
 
 	double rat=((midx-dleft)/dwidth);
-	uint32_t focustime=rat*duration+starttime;
-	duration/=scalex;
+	double oldduration=duration;
+	uint32_t focustime=rat*oldduration+starttime;
+	duration=(int)round(oldduration/pow(scalex,5.0));
+	LOGGER("xscale scale=%f mid=%f oldduration=%f newduration=%d\n",scalex,midx,oldduration,duration);
 	starttime=focustime-rat*duration;
 	auto maxstart= maxstarttime();
 	if(

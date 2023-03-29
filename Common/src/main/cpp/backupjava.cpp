@@ -110,8 +110,8 @@ extern "C" JNIEXPORT jboolean JNICALL   fromjava(removebylabel)(JNIEnv *env, jcl
 	} */
 
 #ifndef ABBOTT
-passhost_t * getwearoshost(const bool create,const char *label);
-bool resetbylabel(const char *label) {
+passhost_t * getwearoshost(const bool create,const char *label,bool);
+bool resetbylabel(const char *label,bool galaxy) {
 	int pos=getposbylabel(label);
 	if(pos<0)
 		return false;
@@ -121,7 +121,7 @@ bool resetbylabel(const char *label) {
 		struct sockaddr_in6 ips[host.nr];
 		memcpy(ips,host.ips,sizeof(ips));
 		backup->deletehost(pos);
-		passhost_t *newhost=getwearoshost(true,label);
+		passhost_t *newhost=getwearoshost(true,label,galaxy);
 		memcpy(newhost->ips,ips,sizeof(ips));
 		newhost->nr=nr;
 		}
@@ -131,11 +131,11 @@ bool resetbylabel(const char *label) {
 	return true;
 	}
 	
-extern "C" JNIEXPORT jboolean JNICALL   fromjava(resetbylabel)(JNIEnv *env, jclass cl,jstring jlabel) {
+extern "C" JNIEXPORT jboolean JNICALL   fromjava(resetbylabel)(JNIEnv *env, jclass cl,jstring jlabel,jboolean galaxy) {
       const char *label = env->GetStringUTFChars( jlabel, NULL);
         if(!label) return false;
         destruct   dest([jlabel,label,env]() {env->ReleaseStringUTFChars(jlabel, label);});
-	return resetbylabel(label);
+	return resetbylabel(label,galaxy);
 	}
 #endif
 const char *gethostlabel(int pos) {

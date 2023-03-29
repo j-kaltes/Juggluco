@@ -45,6 +45,7 @@ import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static tk.glucodata.Applic.isRelease;
+import static tk.glucodata.MessageSender.isGalaxy;
 import static tk.glucodata.Natives.setBlueMessage;
 import static tk.glucodata.NumberView.avoidSpinnerDropdownFocus;
 import static tk.glucodata.settings.Settings.removeContentView;
@@ -198,7 +199,7 @@ static public void show(MainActivity context) {
 				if(sender!=null) {
 					Log.i(LOG_ID,"Init watch app");
 					var nod=nodeslist.get(nodenum);
-					Natives.resetbylabel(makenodename(nod));
+					Natives.resetbylabel(makenodename(nod),isGalaxy(nod));
 					sender.startActivity(nod);
 					}
 				}
@@ -208,7 +209,7 @@ static public void show(MainActivity context) {
 			 	if(nodenum>=0) {
 					var node=nodeslist.get(nodenum);
 					var name=makenodename(node);
-					byte[] netinfo=Natives.getmynetinfo(name,true,isChecked?1:-1);
+					byte[] netinfo=Natives.getmynetinfo(name,true,isChecked?1:-1,isGalaxy(node));
 					if(netinfo!=null) {
 						var sender=tk.glucodata.MessageSender.getMessageSender();
 						if(sender!=null) {

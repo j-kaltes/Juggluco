@@ -277,7 +277,7 @@ public static native void resetbackuphost(int pos);
 
 
 public static native void deletebackuphost(int pos);
-public static native boolean resetbylabel(String label);
+public static native boolean resetbylabel(String label,boolean galaxy);
 
 public static native void setreceiveport(String port);
 public static native String getreceiveport( );
@@ -444,8 +444,8 @@ public static native int getLibreVersion(long dataptr);
 public static native void USenabledStreaming(byte[] sensorident,byte[] jauth,byte[] address);
 public static native void closedynlib( );
 public static native strGlucose lastglucose();
-public static native byte[] getmynetinfo(String name,boolean create,int watchhassensor);
-public static native boolean setmynetinfo(String name,byte[] jar);
+public static native byte[] getmynetinfo(String name,boolean create,int watchhassensor,boolean galaxy);
+public static native boolean setmynetinfo(String name,byte[] jar,boolean galaxy);
 
 public static native long lastglucosetime( );
 public static native byte[] bytesettings();
@@ -636,7 +636,7 @@ public static native void setwatchdrip(boolean val);
 public static native boolean getwatchdrip( );
 
 public static native boolean mkWearIntgraph(long start, long end, GraphLine low, GraphLine within, GraphLine high);
-
+public static native void isGalaxyWatch(boolean val);
 //s/^extern.*JNIEXPORT[         ]*\([a-zA-Z]*\)[ ]*JNICALL[      ]*fromjava(\([^)]*\)) *(JNIEnv[^,]*,[^,)]*[,)]\([^){]*\)[^a-zA-Z0-9]*$/public static native \1 \2(\3);/g
 //public static native void sendxdripold();
 }

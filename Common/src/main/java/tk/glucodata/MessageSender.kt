@@ -42,8 +42,9 @@ class MessageSender(val activity: Context):CapabilityClient.OnCapabilityChangedL
     private val messageClient by lazy { Wearable.getMessageClient(activity) }
     private val capabilityClient by lazy { Wearable.getCapabilityClient(activity) }
     private val nodeClient by lazy { Wearable.getNodeClient(activity) }
-    public val localnode by lazy { Tasks.await(nodeClient.localNode).id }
-
+    public val localnodeall by lazy { Tasks.await(nodeClient.localNode) }
+    public val localnode by lazy { localnodeall.id }
+    public val galaxywatch by lazy { isGalaxy(localnodeall) }
 
     var nodes: Set<Node>? = null
     var nexttimes:LongArray?=null
@@ -59,17 +60,22 @@ class MessageSender(val activity: Context):CapabilityClient.OnCapabilityChangedL
     }
     private suspend fun findWearDevicesWithApp() {
 
-        Log.d(LOG_ID, "findWearDevicesWithApp()")
-
-        try {
-            val capabilityInfo = capabilityClient.getCapability( JUGGLUCOIDENT, CapabilityClient.FILTER_REACHABLE).await()
-                setnodes(capabilityInfo.nodes)
-                Log.d(LOG_ID, "Capable Nodes: $nodes")
-        } catch (cancellationException: CancellationException) {
-            throw cancellationException
-        } catch (th: Throwable) {
-            Log.stack(LOG_ID, "findDev",th)
-        }
+	for(i in 0 until 10) {
+        	Log.d(LOG_ID, "$i: findWearDevicesWithApp()")
+		try {
+		    val capabilityInfo = capabilityClient.getCapability( JUGGLUCOIDENT, CapabilityClient.FILTER_REACHABLE).await()
+			setnodes(capabilityInfo.nodes)
+			Log.d(LOG_ID, "Capable Nodes: $nodes")
+			Natives.isGalaxyWatch(galaxywatch)
+			return;
+		} catch (cancellationException: CancellationException) {
+		    throw cancellationException
+		} catch (th: Throwable) {
+		    Log.stack(LOG_ID, "findDev",th)
+		}
+		delay(1000)
+		}
+	
     }
 public fun finddevices() {
             val sender=this
@@ -199,70 +205,122 @@ private fun nodeSendmessage(node:Node,path:String,data:ByteArray) {
 	nameSendMessage(nodeName,path,onar)
 	 }
 
+   public fun     findnodeid(id:String):Int {
+       val nods=nodes
+       if(nods==null)
+           return -1
+        val num = nods.size
+        var it = 0
+        while(true) {
+            if (it == num) {
+                Log.e(LOG_ID, "Can't find $id")
+                return -1;
+            }
+            var othernode = nods.elementAt(it)
+            if (id == othernode.getId()) {
+               return it;
+            }
+            it++
+        }
+    }
 
 
 companion object {
-        private const val LOG_ID = "MessageSender"
-	    const val WAKE_PATH = "/wake"
-	    const val WAKESTREAM_PATH = "/wakestream"
-	    const val NET_PATH = "/netinfo"
-	    const val START_PATH = "/start"
-	    const val SETTINGS_PATH = "/settings"
-	    const val BLUETOOTH_PATH = "/bluetooth"
-        const val DATA_PATH = "/data"
-        const val MESSAGES_PATH = "/messages"
-val scope=CoroutineScope(Dispatchers.IO)
-private var 	messagesender:MessageSender? = null
-@JvmStatic 	public fun getMessageSender():MessageSender? {
+    private const val LOG_ID = "MessageSender"
+    const val WAKE_PATH = "/wake"
+    const val WAKESTREAM_PATH = "/wakestream"
+    const val NET_PATH = "/netinfo"
+    const val START_PATH = "/start"
+    const val SETTINGS_PATH = "/settings"
+    const val BLUETOOTH_PATH = "/bluetooth"
+    const val DATA_PATH = "/data"
+    const val MESSAGES_PATH = "/messages"
+    val scope = CoroutineScope(Dispatchers.IO)
+    private var messagesender: MessageSender? = null
+    @JvmStatic
+    public fun getMessageSender(): MessageSender? {
         return messagesender
-}
-        private var nodenames: Array<String>? = null
-        fun getNodeName(ident: Int): String {
-            if (nodenames == null)
-                throw  NullPointerException("getNodeName nodenames==null")
-            else
-                return nodenames!!.get(ident)
+    }
+
+    private var nodenames: Array<String>? = null
+    fun getNodeName(ident: Int): String {
+        if (nodenames == null)
+            throw NullPointerException("getNodeName nodenames==null")
+        else
+            return nodenames!!.get(ident)
+    }
+
+    @JvmStatic
+    public fun sendwake() {
+        val sender = messagesender ?: return
+        val ar = byteArrayOf(0);
+        sender.sendmessage(WAKE_PATH, ar)
+    }
+
+    @JvmStatic
+    public fun sendwakestream() {
+        val sender = messagesender ?: return
+        val ar = byteArrayOf(0);
+        sender.sendmessage(WAKESTREAM_PATH, ar)
+    }
+
+    @Keep
+    @JvmStatic
+    public fun sendDatawithName(ident: String, data: ByteArray): Boolean {
+        val sender = messagesender ?: return false
+        return sender.nameSendMessageResult(ident, DATA_PATH, data)
+    }
+
+    @Keep
+    @JvmStatic
+    public fun sendData(data: ByteArray): Boolean {
+        val sender = messagesender
+        if (sender == null) {
+            Log.e(LOG_ID, "sendData messagesender==null")
+            return false
+        }
+        val nodes = sender.nodes
+        if (nodes == null) {
+            Log.e(LOG_ID, "sendData nodes==null")
+            return false;
+        }
+        if (nodes.isEmpty()) {
+            Log.e(LOG_ID, "sendData nodes.isEmpty()")
+            return false
+        }
+        return sender.nameSendMessageResult(nodes.elementAt(0).id, DATA_PATH, data)
+    }
+
+    @Keep
+    @JvmStatic
+    public fun sendNameMessageOn(ident: String, on: Boolean) {
+        val sender = messagesender
+        if (sender == null) {
+            Log.e(LOG_ID, "messagesender==null")
+            return
+        }
+        return sender.sendOnmessages(ident, on);
+    }
+
+    @Keep
+    @JvmStatic
+    public fun sendMessageOn(on: Boolean) {
+        val sender = messagesender
+        if (sender == null) {
+            Log.e(LOG_ID, "sendMessageOn messagesender==null")
+            return
+        }
+        val nodes = sender.nodes
+        if (nodes == null) {
+            Log.e(LOG_ID, "sendMessageOn nodes==null")
+            return
+        }
+        if (nodes.isEmpty()) {
+            Log.e(LOG_ID, "sendMessageOn nodes.isEmpty()")
+            return
         }
 
-@JvmStatic
-public fun sendwake() {
-	 val sender = messagesender ?: return
-    val ar =byteArrayOf(0);
-	sender.sendmessage(WAKE_PATH,ar)
-	}
-@JvmStatic
-public fun sendwakestream() {
-	 val sender = messagesender ?: return
-    val ar =byteArrayOf(0);
-	sender.sendmessage(WAKESTREAM_PATH,ar)
-	}
-@Keep
-@JvmStatic
-public fun sendDatawithName(ident: String, data: ByteArray):Boolean {
-	 val sender = messagesender ?: return false
-	return sender.nameSendMessageResult(ident, DATA_PATH, data)
-    }
-@Keep
-@JvmStatic
-public fun sendData(data: ByteArray):Boolean {
-    val sender = messagesender ?: return false
-    val nodes = sender.nodes
-    if (nodes == null || nodes.isEmpty()) return false
-	return sendDatawithName(nodes.elementAt(0).id,data)
-    }
-@Keep
-@JvmStatic
-public fun sendNameMessageOn(ident: String, on: Boolean) {
-	 val sender = messagesender ?: return
-	return sender.sendOnmessages( ident,on);
-    }
-@Keep
-@JvmStatic
-public fun sendMessageOn(on: Boolean) {
-    val sender = messagesender ?: return
-    val nodes = sender.nodes
-    if (nodes == null || nodes.isEmpty()) return
-	return sendNameMessageOn(nodes.elementAt(0).id,on)
+        return sendNameMessageOn(nodes.elementAt(0).id, on)
     }
 /*
 @Keep
@@ -275,31 +333,35 @@ public fun sendDatawithInt(ident: Int, data: ByteArray) {
 	    }
     } */
 
-    @JvmStatic 	public fun initwearos(app: Context) {
-	Log.i(LOG_ID,"before new MessageSender");
-	messagesender=MessageSender(app)
+    @JvmStatic
+    public fun initwearos(app: Context) {
+        Log.i(LOG_ID, "before new MessageSender");
+        messagesender = MessageSender(app)
 //	Log.i(LOG_ID,"before sendnetinfo");
 //	sendnetinfo();
-	}
-      @JvmStatic 	public fun cansend():Boolean {
-		val sender:MessageSender?=messagesender
-		if(sender==null) {
-			Log.e(LOG_ID,"messagesender==null");
-			return false
-			}
-                val tmp=sender.nodes
-		 if(tmp==null||tmp.isEmpty()) {
-		 	Log.e(LOG_ID,"no sender.nodes");
-			return false
-			}
-		return true
-		}
+    }
 
-        private const val netwait = (1000 * 5).toLong()
+    @JvmStatic
+    public fun cansend(): Boolean {
+        val sender: MessageSender? = messagesender
+        if (sender == null) {
+            Log.e(LOG_ID, "messagesender==null");
+            return false
+        }
+        val tmp = sender.nodes
+        if (tmp == null || tmp.isEmpty()) {
+            Log.e(LOG_ID, "no sender.nodes");
+            return false
+        }
+        return true
+    }
+
+    private const val netwait = (1000).toLong()
+
     private fun inargsendnetinfo(id: String) {
-	    Log.i(LOG_ID,"sendnetinfo($id)");
-            if(!cansend()) {
-                Log.i(LOG_ID, "!cansend()")
+        Log.i(LOG_ID,"sendnetinfo($id)");
+        if(!cansend()) {
+            Log.i(LOG_ID, "!cansend()")
                 return
             }
             if(messagesender==null) {
@@ -314,16 +376,8 @@ public fun sendDatawithInt(ident: Int, data: ByteArray) {
 	    	return
 		}
             val times = sender.nexttimes
-            val num = nodes.size
-            var it = 0
-            while(true) {
-                if(it == num) {
-                    Log.e(LOG_ID, "Can't find $id")
-                    return
-                }
-                if(id == nodes.elementAt(it).getId()) break
-                it++
-            }
+            var it= sender.findnodeid(id)
+             var  othernode=nodes.elementAt(it)
             val nu = System.currentTimeMillis()
             if(times!![it] > nu) {
 	    	Log.i(LOG_ID,"times!![it] > nu) it=$id times!![it]=${times!![it]} nu=$nu ")
@@ -335,7 +389,7 @@ public fun sendDatawithInt(ident: Int, data: ByteArray) {
 		}
             val netinfo: ByteArray?
 
-            netinfo = if(isWearable) { Natives.getmynetinfo(sender.localnode, true, 0) } else { Natives.getmynetinfo(id, false, 0) }
+            netinfo = if(isWearable) { Natives.getmynetinfo(sender.localnode, true, 0,true) } else { Natives.getmynetinfo(id, false, 0, isGalaxy(othernode)) }
             if(netinfo == null) {
 	    	Log.e(LOG_ID,"netinfo=null")
 	    	return
@@ -372,7 +426,7 @@ public fun sendDatawithInt(ident: Int, data: ByteArray) {
 		    	Log.d(LOG_ID,"name=null")
 		    	continue
 			}
-                    val netinfo = Natives.getmynetinfo(name, isWearable, 0) ?: continue
+                    val netinfo = Natives.getmynetinfo(name, isWearable, 0, isGalaxy(node)) ?: continue
                     sender.sendnetinfo(node, netinfo)
                     times[i] = nextnetinfo
                 } else {
@@ -385,6 +439,10 @@ public fun sendDatawithInt(ident: Int, data: ByteArray) {
         		insendnetinfo()
 			}
 		}
+     @JvmStatic 	
+     public fun isGalaxy(node:Node): Boolean {
+    	return node.getDisplayName().startsWith("Galaxy Watch") 
+	}
     }
 
 }

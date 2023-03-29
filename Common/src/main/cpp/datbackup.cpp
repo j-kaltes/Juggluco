@@ -43,6 +43,7 @@ int updateone::update() {
 	crypt_t *pass=getcrypt();
 	bool sendsensors=(sendstream||sendscans) ;
 	int ret =0;
+	LOGGER("updateone::update starttime=%d\n",starttime);
 	if(starttime) {
 		if(sendnums) {
 			if(nums[0].lastlastpos==0&&nums[1].lastlastpos==0) {
@@ -61,10 +62,13 @@ int updateone::update() {
 
 		if(starttime!=1)  {
 			if(sendsensors) {
-				if( !sensors->setbackuptime(pass, getsock(),ind,starttime)) 
+				if( !sensors->setbackuptime(pass, getsock(),ind,starttime,starttimeindex))  {
+					LOGGER("updateone::update failed\n");
 					return 0;
+					}
 				}
 			}
+		LOGGER("updateone::update set starttime=0\n");
 		starttime=0;
 		ret=1;
 	   }

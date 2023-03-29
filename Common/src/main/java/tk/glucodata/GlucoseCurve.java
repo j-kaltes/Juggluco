@@ -371,8 +371,8 @@ final    private ScaleGestureDetector.SimpleOnScaleGestureListener mScaleListene
 
         @Override
         public boolean onScale(ScaleGestureDetector detector) {
-
             float scalex = detector.getCurrentSpanX() / detector.getPreviousSpanX();
+	  Log.i(LOG_ID,"onScale SpanX="+detector.getCurrentSpanX()+" PreviousSpanX="+ detector.getPreviousSpanX()+" scalex="+scalex);
             Natives.xscale(scalex, focusx);
             requestRender();
             down = false;

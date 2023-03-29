@@ -723,12 +723,12 @@ without root check.</p>
 <p>Connect with Libreview to send Freestyle Libre 2 and 3 glucose
 values and amounts to Libreview and to get the account id used during
 Freestyle Libre 3 sensor activation. Touch to change settings.</p>
-<h2 class="western">Librelink broadcast</h2>
-<p>Use the Librelink broadcast (originally send by the patched German
-Librelink app 2.3.0), to send the Bluetooth glucose stream data every
-minute to xDrip. In xDrip you need to set Libre2 (patched App) as
-hardware data source. The glucose values displayed in xDrip are
-different from the values it receives. For some reason xDrip only
+<h2 class="western">Patched Libre broadcast</h2>
+<p>Use the Patched Libre broadcast (originally send by the patched
+German Librelink app 2.3.0), to send the Bluetooth glucose stream
+data every minute to xDrip. In xDrip you need to set Libre2 (patched
+App) as hardware data source. The glucose values displayed in xDrip
+are different from the values it receives. For some reason xDrip only
 updates its value every 5 minutes, probably because it was made for
 devices that send only once per 5 minutes (A watch face connected to
 xDrip regularly displayed more than 9 minute old values.) In
@@ -1700,13 +1700,9 @@ permission:</p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>adb shell pm
 grant tk.glucodata android.permission.SYSTEM_ALERT_WINDOW</b></p>
 <p style="line-height: 100%; margin-bottom: 0in; background: transparent">
-<br/>
-
-</p>
-<p style="line-height: 100%; margin-bottom: 0in; background: transparent">
-<br/>
-
-</p>
+On some watches (for example TicWatch Pro), you can also allow it
+with: Android settings-&gt;Apps &amp; notifications-&gt; App
+info-&gt;Juggluco-&gt;Advanced-&gt;Display over other apps.</p>
 ]]>
 </string>
 <string name="getaccountidhelp" >
@@ -1747,6 +1743,7 @@ Floating Glucose</a> app can be used with http when &quot;local only&quot;
 is not set. On MacOS the same is true for Nightscout Menu Bar, Gluco
 Status and Gluco Tracker (all in Apple Store). You also only need
 http for <a href="https://github.com/someoneAnyone/Nightscouter">Nightscouter</a>
+and <a href="https://github.com/jonfawcett/LoopFollow">LoopFollow</a>
 (IOS) and <a href="https://github.com/nightscout/nightguard">Nightguard</a>
 (IOS and WatchOS).</p>
 <p style="line-height: 100%; margin-bottom: 0in">If you want to

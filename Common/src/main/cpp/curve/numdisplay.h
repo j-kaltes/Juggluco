@@ -50,7 +50,7 @@ inline bool nearby(float dx,float dy) {
 	
 	const float gr= density*
 #ifdef WEAROS
-	20;
+	22;
 #else
 	24;
 #endif

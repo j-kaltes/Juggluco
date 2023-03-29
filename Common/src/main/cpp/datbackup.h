@@ -108,7 +108,7 @@ struct updateone {
 	uint32_t updatesettings;
 	int32_t firstsensor;
 	uint32_t starttime;
-	uint8_t reserved[2];
+	uint16_t starttimeindex;
 	bool resetdevices;
 	bool dontuseopen;
 	bool sendnums;
@@ -450,6 +450,7 @@ void clearhost(int index) {
 	host.updatesettings=0;
 	host.backupupdated=0;
 	host.starttime=0;
+	host.starttimeindex=UINT16_MAX;
 	}
 void resetall()  {
 	if(getupdatedata()->sendnr>0)
@@ -466,6 +467,7 @@ void resetall()  {
 //	fill(crypts.begin(),crypts.end(),nullptr);
 	}
 void changereceiver(int allindex,int index,const bool sendnums,const bool sendstream,const bool sendscans,const bool restore,const bool haspass,const uint32_t starttime) {
+	LOGGER("changereceiver(allindex=%d,index=%d,sendnums=%d,sendstream=%d,sendscans=%d,haspass=%d,starttime=%ul)\n",allindex,index,sendnums,sendstream,sendscans,haspass,starttime);
 	if(index==getupdatedata()->sendnr) {
 		addsize();
 		sendsocks.resize(getupdatedata()->sendnr+1,-1);
@@ -482,8 +484,10 @@ void changereceiver(int allindex,int index,const bool sendnums,const bool sendst
 //	if(starttime) host.setbackupstarttime(starttime); 
 	if(!starttime)
 		host.starttime=1;
-	else
+	else  {
 		host.starttime=starttime;
+		host.starttimeindex=UINT16_MAX;
+		}
 	host.sendnums=sendnums;
 	host.sendstream=sendstream;
 	host.sendscans=sendscans;

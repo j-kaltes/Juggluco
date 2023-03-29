@@ -739,7 +739,7 @@ inschakelen met het volgende commando:</p>
 Freestyle Libre 2 glucose waarden naar Libreview verzonden worden.
 Voor Freestyle Libre 3 sensoren kun je je Account Id nummer van
 Libreview laten halen. Druk er op om de instellingen te wijzigen.</p>
-<h2 class="western">Librelink broadcast</h2>
+<h2 class="western">Patched Libre Broadcast</h2>
 <p>Als dit aanstaat, zendt Juggluco elke minuut een stream glucose
 waarde naar xDrip. In xDrip moet je Libre2 (patched) App als hardware
 gegevensbron aangeven. De glucose waarden die xDrip weergeeft zijn
@@ -1757,6 +1757,15 @@ toestemming nodig. Op WearOS en ook Android Automotive moet je adb
 gebruiken om deze toestemming te geven:</p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>adb shell pm
 grant tk.glucodata android.permission.SYSTEM_ALERT_WINDOW</b></p>
+<ol>
+	<p style="line-height: 100%; margin-bottom: 0in; background: transparent">
+	</p>
+</ol>
+<p style="line-height: 100%; margin-bottom: 0in; background: transparent">
+Op sommige horloges (bijvoorbeeld TicWatch Pro) kunt je dit ook
+toestaan met: Android-instellingen-&gt;Apps &amp; meldingen-&gt;
+App-info-&gt;Juggluco-&gt;Geavanceerd-&gt;Weergave vóór andere
+apps.</p>
 <p style="line-height: 100%; margin-bottom: 0in; background: transparent">
 <br/>
 
@@ -1809,6 +1818,7 @@ Floating Glucose-</a> app kunnen worden gebruikt met http als &quot;alleen
 lokaal&quot; niet is ingesteld.</span> Op MacOS geldt hetzelfde voor
 Nightscout Menu Bar, Gluco Status en Gluco Tracker (allemaal in Apple
 Store). Je hebt ook alleen http nodig voor <a href="https://github.com/someoneAnyone/Nightscouter">Nightscouter</a>
+en <a href="https://github.com/jonfawcett/LoopFollow">LoopFollow</a>
 (IOS) en <a href="https://github.com/nightscout/nightguard">Nightguard</a>
 (IOS en WatchOS).</p>
 <p style="line-height: 100%; margin-bottom: 0in"><span lang="nl-NL">Als

@@ -81,21 +81,14 @@ extern		pathconcat logbasedir;
 	 else
 
 		  LOGGER("open succeeded\n");
-/*	time_t tim=time(NULL);
-	char *str=ctime(&tim);
+	time_t tim=time(NULL);
+	char *timestr=ctime(&tim);
 
-*/
 	#define startlog "Start logging: "
-	constexpr int loglen=sizeof(startlog)-1;
-	char buf[loglen+10]=startlog;
 	pid_t pid= syscall(SYS_getpid);
-#if  __NDK_MAJOR__ > 20 // 20 adds zero's
-    std::to_chars_result res=std::to_chars(buf+loglen,buf+sizeof(buf),pid);
-    int buflen=res.ptr-buf;
-#else
-int buflen=snprintf(buf+loglen,9,"%d",pid)+loglen;
-#endif
-	buf[buflen++]='\n';
+	constexpr const int maxbuf=60;
+	char buf[maxbuf];	
+	int buflen=std::snprintf(buf,maxbuf,"%.24s %zd Start logging %zd\n",timestr, syscall(SYS_gettid),pid);
 
        sys_write(handle, buf,buflen);
        return handle;

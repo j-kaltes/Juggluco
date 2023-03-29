@@ -64,11 +64,12 @@ struct netinfo1 {
 	bool blue;
 	};
 
+bool isGalaxyWatch=true;
 extern updateone &getsendto(int index);
 // bool mkwearos=false;
 #include <mutex>
 std::mutex change_host_mutex;
-passhost_t * getwearoshost(const bool create,const char *label) {
+passhost_t * getwearoshost(const bool create,const char *label,bool galaxy) {
   const std::lock_guard<std::mutex> lock(change_host_mutex);
 
     struct updatedata *update=backup->getupdatedata();
@@ -98,8 +99,17 @@ passhost_t * getwearoshost(const bool create,const char *label) {
 		sendscans=false;
 		sendnums=false;
 		receive=true;
-		activeonly=true;
-		passiveonly=false;
+
+		if(isGalaxyWatch) {  
+			LOGGER("I am Galaxy Watch\n");
+			activeonly=true;
+			passiveonly=false;
+			}
+		else {
+			LOGGER("I am No Galaxy Watch\n");
+			activeonly=false;
+			passiveonly=true;
+			}
 		}
 	else {
 		LOGGER("no watch app\n");
@@ -107,8 +117,16 @@ passhost_t * getwearoshost(const bool create,const char *label) {
 		sendscans=true;
 		sendnums=true;
 		receive=false;
-		activeonly=false;
-		passiveonly=true;
+		if(galaxy) {
+			LOGGER("connected to galaxy\n");
+			activeonly=false;
+			passiveonly=true;
+			}
+		else {
+			LOGGER("not connected to galaxy\n");
+			activeonly=true;
+			passiveonly=false;
+			}
 		}
 
         int ret=backup->changehost(nrhost,nullptr,nullptr,0,false,defaultport,sendnums, sendstream, sendscans,false, receive,activeonly ,string_view(nullptr,0),0,passiveonly,label,false,true);
@@ -197,7 +215,7 @@ void		setsendinfo(struct netinfo1 &info,passhost_t *wearhost) {
 static uLong crcs[maxallhosts]={};
 bool wearmessages[maxallhosts]={};
 #endif
-extern "C" JNIEXPORT  jbyteArray  JNICALL   fromjava(getmynetinfo)(JNIEnv *env, jclass cl,jstring jident,jboolean create,jint watchHasSensor) {
+extern "C" JNIEXPORT  jbyteArray  JNICALL   fromjava(getmynetinfo)(JNIEnv *env, jclass cl,jstring jident,jboolean create,jint watchHasSensor,jboolean galaxy) {
 
 	if(!backup) {
 		LOGGER("getmynetinfo backup=null\n");
@@ -216,7 +234,7 @@ extern "C" JNIEXPORT  jbyteArray  JNICALL   fromjava(getmynetinfo)(JNIEnv *env, 
 	struct netinfo1 info;
 	auto myport=atoi(backup->getmyport());
 	LOGGER("getmynetinfo(%s,%d,%d) port=%d\n", id,create,watchHasSensor,myport);
-	passhost_t *wearhost=getwearoshost(create,id);
+	passhost_t *wearhost=getwearoshost(create,id,galaxy);
 	if(!wearhost)  {
 		LOGGER("wearhost==null\n");
 		return nullptr;
@@ -321,7 +339,7 @@ extern "C" JNIEXPORT  jbyteArray  JNICALL   fromjava(getmynetinfo)(JNIEnv *env, 
 	}
 
 
-extern "C" JNIEXPORT jboolean  JNICALL   fromjava(setmynetinfo)(JNIEnv *env, jclass cl,  jstring jident, jbyteArray jar) { 
+extern "C" JNIEXPORT jboolean  JNICALL   fromjava(setmynetinfo)(JNIEnv *env, jclass cl,  jstring jident, jbyteArray jar,jboolean galaxy) { 
    if(!jar) return false;
    if(!backup) return false;
 	if(!jident) return false;
@@ -335,7 +353,7 @@ extern "C" JNIEXPORT jboolean  JNICALL   fromjava(setmynetinfo)(JNIEnv *env, jcl
     jbyte data[lens];
     env->GetByteArrayRegion(jar, 0, lens,data);
     const netinfo1 *info=reinterpret_cast<const netinfo1*>(data);
-    passhost_t *host=getwearoshost(true,id);
+    passhost_t *host=getwearoshost(true,id,galaxy);
     if(!host) return false;
    networkpresent=false;
    backup->closeallsocks();
@@ -536,7 +554,7 @@ extern "C" JNIEXPORT jint  JNICALL   fromjava(directsensorwatch)(JNIEnv *env, jc
         if (id == nullptr) return false;
         destruct   dest([jident,id,env]() {env->ReleaseStringUTFChars(jident, id);});
 
-	if(passhost_t *host=getwearoshost(false,id)) {
+	if(passhost_t *host=getwearoshost(false,id,true)) {
 		int index=hostindex(host);
 		uint32_t nu=time(nullptr);
 		long last=lastuptodate[index];
@@ -552,9 +570,12 @@ bool getwearindex(JNIEnv *env, jstring jident) {
    const char *id = env->GetStringUTFChars( jident, NULL);
    if (id == nullptr) return -1;
    destruct   dest([jident,id,env]() {env->ReleaseStringUTFChars(jident, id);});
-    passhost_t *host=getwearoshost(false,id);
+    passhost_t *host=getwearoshost(false,id,true);
     if(!host) return -1;
    int index=host- backup->getupdatedata()->allhosts;
    LOGGER("%s index=%d\n",id,index);
    return index;
    }
+extern "C" JNIEXPORT  void  JNICALL   fromjava(isGalaxyWatch)(JNIEnv *env, jclass cl,jboolean val) {
+	 isGalaxyWatch=val;  
+	}

@@ -895,9 +895,9 @@ and Mengen des Freestyle Libre 2 und 3 an Libreview zu senden und die
 Konto-ID zu erhalten, die bei der Aktivierung des Freestyle Libre
 3-Sensors verwendet wird. 
 </p>
-<h2 class="western" align="left">Librelink broadcast</h2>
+<h2 class="western" align="left">Patched Libre broadcast</h2>
 <p align="left">Sendet die Bluetooth-Glukose-Stream-Daten jede Minute
-an xDrip. In xDrip müssen Sie Libre2 (patched App) als
+an xDrip. In xDrip müssen Sie Libre (patched App) als
 Hardware-Datenquelle einstellen. Die in xDrip angezeigten
 Glukosewerte unterscheiden sich von den Werten, die es empfängt. Aus
 irgendeinem Grund aktualisiert xDrip seinen Wert nur alle 5 Minuten,
@@ -2245,12 +2245,11 @@ spezielle Berechtigung. Auf WearOS und auch Android Automotive müssen
 Sie adb verwenden, um diese Berechtigung zu erteilen:</font></font></p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>adb shell pm
 grant tk.glucodata android.permission.SYSTEM_ALERT_WINDOW</b></p>
-<p style="line-height: 100%; margin-bottom: 0in"><br/>
-
-</p>
-<p style="line-height: 100%; margin-bottom: 0in"><br/>
-
-</p>
+<p style="line-height: 100%; margin-bottom: 0in">Bei einigen Uhren
+(z. B. TicWatch Pro) können Sie dies auch zulassen mit:
+Android-Einstellungen-&gt;Apps &amp; Benachrichtigungen-&gt;
+App-Info-&gt;Juggluco-&gt;Erweitert-&gt;<font face="Liberation Serif, serif">Ü</font>ber
+anderen Apps einblenden.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><br/>
 
 </p>
@@ -2309,8 +2308,9 @@ App können mit http verwendet werden, wenn „</span><span lang="de-DE"><i>Nur
 lokal</i></span>“ <span lang="de-DE">nicht eingestellt ist.</span>
 <span lang="de-DE">Unter MacOS gilt dasselbe für Nightscout Menu
 Bar, Gluco Status und Gluco Tracker (alle im Apple Store).</span>
-<span lang="de-DE">Auch für <a href="https://github.com/someoneAnyone/Nightscouter">Nightscouter</a>
-(IOS) und <a href="https://github.com/nightscout/nightguard">Nightguard</a>
+<span lang="de-DE">Auch für <a href="https://github.com/someoneAnyone/Nightscouter">Nightscouter</a></span><span lang="de-DE">
+u</span><span lang="de-DE">nd <a href="https://github.com/jonfawcett/LoopFollow">LoopFollow</a>
+</span><span lang="de-DE">(IOS) und <a href="https://github.com/nightscout/nightguard">Nightguard</a>
 (IOS und WatchOS) benötigen Sie nur http.</span></p>
 <p style="line-height: 100%; margin-bottom: 0in">Wenn Sie über das
 Internet auf Juggluco zugreifen möchten, müssen Sie einen Port von
