@@ -222,7 +222,7 @@ void getmyname(int sock) {
 	*/
 
 static int connectone( const struct sockaddr_in6  *sin, int &sock,char stype,passhost_t *pass,struct pollfd	 *cons,int&use
-#if defined(WEAROS_MESSAGES)&&defined(WEAROS)
+#if defined(WEAROS_MESSAGES)
 		,bool &activate
 #endif
 				)  {
@@ -252,9 +252,7 @@ static int connectone( const struct sockaddr_in6  *sin, int &sock,char stype,pas
 		}
 	else {
 #ifdef WEAROS_MESSAGES
-#ifdef WEAROS
 		activate=false;
-#endif
 #endif
 		block(so);
 		sock=so;
@@ -272,7 +270,6 @@ static int connectone( const struct sockaddr_in6  *sin, int &sock,char stype,pas
 
 static int makeconnection2(passhost_t *pass,int &sock,char stype) {
 #ifdef WEAROS_MESSAGES
-#ifdef WEAROS
 destruct dest([pass]() {
 	if(pass->wearos) {
 
@@ -282,7 +279,6 @@ destruct dest([pass]() {
 	});
 dest.active=false;
 bool activate=true;
-#endif
 #endif
 	int use=0;
 
@@ -301,7 +297,7 @@ bool activate=true;
 			for(struct addrinfo *iter=servinfo;iter!=nullptr;iter=iter->ai_next) {
 				const struct sockaddr_in6  *sin= reinterpret_cast<const struct sockaddr_in6*>(iter->ai_addr);
 					if(int ret=connectone(sin,sock, stype,pass,cons,use
-	#if defined(WEAROS_MESSAGES)&&defined(WEAROS)
+	#if defined(WEAROS_MESSAGES)
 								  ,activate
 	#endif
 		)) {
@@ -322,7 +318,7 @@ bool activate=true;
 		for(int i=0;i<nr;i++) {
 			const struct sockaddr_in6  *sin=&pass->ips[i];
 			if(int ret=connectone(sin,sock, stype,pass,cons,use
-	#if defined(WEAROS_MESSAGES)&&defined(WEAROS)
+	#if defined(WEAROS_MESSAGES)
 								  ,activate
 	#endif
 
@@ -337,9 +333,7 @@ bool activate=true;
 			}
 	    }
 #ifdef WEAROS_MESSAGES
-#ifdef WEAROS
 	dest.active=activate;
-#endif
 #endif
 	LOGGER("use=%d\n",use);
 	while(use) {	
@@ -412,9 +406,7 @@ bool activate=true;
 						}
 					LOGGER("via poll %d\n",sock);
 #ifdef WEAROS_MESSAGES
-#ifdef WEAROS
 					dest.active=false;
-#endif
 #endif
 					return ret;	
 					}

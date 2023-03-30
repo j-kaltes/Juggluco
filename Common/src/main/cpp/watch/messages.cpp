@@ -203,28 +203,46 @@ else {
                 return false;
                 }
 
-       /* if(!(jsendNameMessageOn=env->GetStaticMethodID(jMessageSender,"sendNameMessageOn","(Ljava/lang/String;Z)V"))) {
+        if(!(jsendNameMessageOn=env->GetStaticMethodID(jMessageSender,"sendNameMessageOn","(Ljava/lang/String;Z)V"))) {
                 LOGGER("GetStaticMethodID(jMessageSender,\"sendNameMessageOn\",\"(Ljava/lang/String;Z)V\" failed\n");
                 return false;
-                }  */
+                }  
 #endif
 
         }
     return true;
 }
 extern JNIEnv *getenv();
-#ifdef WEAROS
 extern void sendMessagesON(passhost_t *pass,bool val);
 extern void setBlueMessage(int,bool val);
+std::array<jstring,maxallhosts>   connectionnames;
+jstring getconnectionname(JNIEnv *env, int phonehostnr) {
+	if(!connectionnames[phonehostnr]) {
+		const char *name=getBackupHosts()[phonehostnr].getname(); 
+		if(!name) {
+			LOGGER("sendmessage %d noname\n",phonehostnr);
+			return nullptr;
+			}
+		jstring tmpstr=	env->NewStringUTF(name);
+		connectionnames[phonehostnr]=(jstring) env->NewGlobalRef(tmpstr);
+        	env->DeleteLocalRef(tmpstr);
+		}
+	return connectionnames[phonehostnr];
+	}
 void sendMessagesON(passhost_t *pass, bool val) {
 	 const int index=pass-getBackupHosts().data();
 	auto env=getenv();
+#ifdef WEAROS
         env->CallStaticVoidMethod(jMessageSender,jsendMessageOn,val);
+#else
+	jstring jname=getconnectionname(env, index);
+	if(!jname) 
+		return;
+	env->CallStaticVoidMethod(jMessageSender,jsendNameMessageOn,jname,val);
+#endif
 	setBlueMessage(index,val);
 	}
-#endif
 
-std::array<jstring,maxallhosts>   connectionnames;
 bool	sendmessage(const int phonehostnr,bool phonesender,const uint8_t *buf,const int inlen) {
 	LOGGER("sendmessage(%d,%d,%p#%d)\n",phonehostnr,phonesender,buf,inlen);
 	auto env=getenv();
@@ -239,17 +257,8 @@ bool	sendmessage(const int phonehostnr,bool phonesender,const uint8_t *buf,const
 #ifdef WEAROS
         bool res=env->CallStaticBooleanMethod(jMessageSender,jsendData,uit);
 #else
-	if(!connectionnames[phonehostnr]) {
-		const char *name=getBackupHosts()[phonehostnr].getname(); 
-		if(!name) {
-			LOGGER("sendmessage %d noname\n",phonehostnr);
-			return false;
-			}
-		jstring tmpstr=	env->NewStringUTF(name);
-		connectionnames[phonehostnr]=(jstring) env->NewGlobalRef(tmpstr);
-        	env->DeleteLocalRef(tmpstr);
-		}
-        bool res=env->CallStaticBooleanMethod(jMessageSender,jsendDatawithName,connectionnames[phonehostnr],uit);
+	jstring  jname= getconnectionname(env,phonehostnr);
+        bool res=jname?env->CallStaticBooleanMethod(jMessageSender,jsendDatawithName,jname,uit):false;
 #endif
         env->DeleteLocalRef(uit);
 	return res;

@@ -447,8 +447,16 @@ void activateresult(boolean res) {
 
     @Override
     public void onTagDiscovered(Tag tag) {
-    Log.d(LOG_ID,"onTagDiscovered");
-        startnfc(tag);
+	var techs = tag.getTechList();
+	String all="onTagDiscovered: ";
+	for(var  t:techs) {
+		all+=t;
+		}
+	Log.i(LOG_ID,all);
+	switch(techs[0] ) {
+		case "android.nfc.tech.IsDep": Novopens.onTag(tag);break;
+		default: startnfc(tag);
+		}
     }
     @Override
     protected void onPause() {
