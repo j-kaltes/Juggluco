@@ -32,6 +32,7 @@ For more information: http://jkaltes.byethost16.com/JugglucoWearOS
 
 # BUILD Juggluco
 The following files need to be added to run Juggluco and can be found by unzipping a recent Juggluco apk:
+https://www.juggluco.nl/Juggluco/download.html
 
 ./Common/src/main/jniLibs/x86_64/libcalibrat2.so  
 ./Common/src/main/jniLibs/x86_64/libcalibrate.so  
