@@ -23,6 +23,7 @@ package tk.glucodata
 
 import android.content.Intent
 import com.google.android.gms.wearable.*
+import kotlinx.coroutines.launch
 import tk.glucodata.Applic.isWearable
 import tk.glucodata.MainActivity.setbluetoothon
 import tk.glucodata.MessageSender.Companion.isGalaxy
@@ -52,11 +53,14 @@ class MessageReceiver: WearableListenerService() {
 			Log.d(LOG_ID,"messagesender==null")
 			return
 			}
-			val nodes = sender.nodes
-			if(nodes == null || nodes.isEmpty()) {
-				Log.e(LOG_ID,"no nodes")
-				return
-			}
+		val nodes = sender.nodes
+		if(nodes == null || nodes.isEmpty()) {
+			Log.e(LOG_ID,"no nodes")
+			    MessageSender.scope.launch {
+				sender.findWearDevicesWithApp()
+				}
+			return
+		}
 	    	val sourceId= messageEvent.getSourceNodeId()
 			var name:String
 			var galaxy:Boolean

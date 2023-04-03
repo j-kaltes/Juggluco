@@ -58,25 +58,27 @@ class MessageSender(val activity: Context):CapabilityClient.OnCapabilityChangedL
     public fun nulltimes() {
         nexttimes?.fill(0L)
     }
-    private suspend fun findWearDevicesWithApp() {
-
-	for(i in 0 until 10) {
-        	Log.d(LOG_ID, "$i: findWearDevicesWithApp()")
-		try {
-		    val capabilityInfo = capabilityClient.getCapability( JUGGLUCOIDENT, CapabilityClient.FILTER_REACHABLE).await()
-			setnodes(capabilityInfo.nodes)
-			Log.d(LOG_ID, "Capable Nodes: $nodes")
-			Natives.isGalaxyWatch(galaxywatch)
-			return;
-		} catch (cancellationException: CancellationException) {
-		    throw cancellationException
-		} catch (th: Throwable) {
-		    Log.stack(LOG_ID, "findDev",th)
-		}
-		delay(1000)
-		}
-	
+var nodesbusy=false
+     suspend fun findWearDevicesWithApp() {
+	if(nodesbusy)		
+		return;
+	nodesbusy=true;
+	Log.d(LOG_ID, "findWearDevicesWithApp()")
+	try {
+	    val capabilityInfo = capabilityClient.getCapability( JUGGLUCOIDENT, CapabilityClient.FILTER_REACHABLE).await()
+		setnodes(capabilityInfo.nodes)
+		Log.d(LOG_ID, "Capable Nodes: $nodes")
+		Natives.isGalaxyWatch(galaxywatch)
+	} catch (cancellationException: CancellationException) {
+	    throw cancellationException
+	} catch (th: Throwable) {
+	    Log.stack(LOG_ID, "findDev",th)
+	}
+	finally {
+		nodesbusy=false
+	}
     }
+
 public fun finddevices() {
             val sender=this
 	    scope.launch {
@@ -121,6 +123,9 @@ override fun onCapabilityChanged(cap: CapabilityInfo) {
 	    when {
             nodes == null -> {
                 Log.d(LOG_ID, "sendmessage nodes=null")
+			    scope.launch {
+				findWearDevicesWithApp()
+				}
             }
             nodes?.isEmpty() == true -> {
                 Log.d(LOG_ID, "sendmessage nodes.isEmpty")
@@ -282,6 +287,9 @@ companion object {
         val nodes = sender.nodes
         if (nodes == null) {
             Log.e(LOG_ID, "sendData nodes==null")
+			    scope.launch {
+				sender.findWearDevicesWithApp()
+				}
             return false;
         }
         if (nodes.isEmpty()) {
@@ -313,6 +321,9 @@ companion object {
         val nodes = sender.nodes
         if (nodes == null) {
             Log.e(LOG_ID, "sendMessageOn nodes==null")
+			    scope.launch {
+				sender.findWearDevicesWithApp()
+				}
             return
         }
         if (nodes.isEmpty()) {
@@ -373,6 +384,9 @@ public fun sendDatawithInt(ident: Int, data: ByteArray) {
             val nodes = sender.nodes
             if(nodes == null || nodes.isEmpty()) {
 	    	Log.e(LOG_ID,"no nodes")
+			    scope.launch {
+				sender.findWearDevicesWithApp()
+				}
 	    	return
 		}
             val times = sender.nexttimes
@@ -414,7 +428,12 @@ public fun sendDatawithInt(ident: Int, data: ByteArray) {
             }
             val sender = messagesender ?: return
             val nodes = sender.nodes
-            if (nodes == null || nodes.isEmpty()) return
+            if (nodes == null || nodes.isEmpty())  {
+			    scope.launch {
+				sender.findWearDevicesWithApp()
+				}
+	    		return
+			}
             val times = sender.nexttimes
             val nextnetinfo = nu + netwait
             val num = nodes.size

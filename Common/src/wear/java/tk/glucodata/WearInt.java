@@ -20,4 +20,9 @@
 
 package tk.glucodata;
 
-public class  WearInt  { static void sendglucose(int mgdl,float rate, int alarm, long timmsec)  { } }
+public class  WearInt  {
+	static void sendglucose(int mgdl,float rate, int alarm, long timmsec)  { }
+
+	static void alarm(String value ) { }
+
+}

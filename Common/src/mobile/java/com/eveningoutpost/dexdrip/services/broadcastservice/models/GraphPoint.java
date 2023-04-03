@@ -5,8 +5,8 @@ import android.os.Parcelable;
 
 import androidx.annotation.Keep;
 
-import lombok.Getter;
-import lombok.Setter;
+//import lombok.Getter;
+//import lombok.Setter;
 @Keep
 public class GraphPoint implements Parcelable {
     public static final Creator<GraphPoint> CREATOR = new Creator<GraphPoint>() {
@@ -22,12 +22,12 @@ public class GraphPoint implements Parcelable {
         }
     };
 
-    @Getter
-    @Setter
+//    @Getter
+ //   @Setter
 public     float x;
 
-    @Getter
-    @Setter
+  //  @Getter
+   // @Setter
    public  float y;
 
     public GraphPoint(float x, float y) {

@@ -5,6 +5,7 @@
 <string name="addconnection" ></string>
 <string name="downloadinfo" ></string>
 <string name="locationpermission" ></string>
+<string name="notificationpermission"></string>
 <string name="introhelp" ></string>
 <string name="searchhelp" ></string>
 <string name="shortcuthelp" ></string>

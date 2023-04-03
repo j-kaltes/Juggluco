@@ -69,6 +69,11 @@ public	void handlealarm() {
 						wastime=lasttime;
 					if (haslossalarm) {
 						Notify.onenot.lossalarm(wastime);
+						 if(SuperGattCallback.doWearInt)  {
+						 	WearInt.missingalarm(nu /*SIC, that what xDrip is doing*/);
+						 	}
+
+
 					}
 					saidloss = true;
 				}

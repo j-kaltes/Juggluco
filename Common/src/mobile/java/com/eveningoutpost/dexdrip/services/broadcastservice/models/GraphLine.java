@@ -8,10 +8,8 @@ import androidx.annotation.Keep;
 import java.util.ArrayList;
 import java.util.List;
 
-import lecho.lib.hellocharts.model.Line;
-import lecho.lib.hellocharts.model.PointValue;
-import lombok.Getter;
-import lombok.Setter;
+//import lombok.Getter;
+//import lombok.Setter;
 @Keep
 public class GraphLine implements Parcelable {
     public static final Creator<GraphLine> CREATOR = new Creator<GraphLine>() {
@@ -26,20 +24,18 @@ public class GraphLine implements Parcelable {
             return new GraphLine[size];
         }
     };
-    @Getter
-    @Setter
+//    @Getter
+ //   @Setter
     public List<GraphPoint> values;
-    @Getter
-    @Setter
+  //  @Getter
+   // @Setter
     private int color;
 
     public GraphLine(int col) {
         values = new ArrayList<>();
         color = col;
     }
-    public GraphLine() {
-    	this(0);
-    }
+   // public GraphLine() { this(0); }
 @Keep
  public void add(float x,float y) {
           values.add(new GraphPoint(x,y));

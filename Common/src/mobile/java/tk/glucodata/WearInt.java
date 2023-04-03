@@ -38,7 +38,10 @@ import android.os.Parcelable;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import static tk.glucodata.Natives.getxDripTrendName;
@@ -66,7 +69,47 @@ static final Map<String, Settings> mapsettings=new HashMap<>();
         } catch (NullPointerException e) {
             return 50;
         }
-    } */
+    } 
+04-03 12:38:37.808 23511 23511 I System.out: [FUNCTION]<->[alarm]
+04-03 12:38:37.808 23511 23511 I System.out: [type]<->[bg_missed_alerts] 
+04-03 12:38:37.808 23511 23511 I System.out: [message]<->[BG Readings Missed  (@12:38)]
+04-03 12:33:44.198 23511 23511 I System.out: bundle content 
+04-03 12:33:44.198 23511 23511 I System.out: [FUNCTION]<->[alarm]
+04-03 12:33:44.198 23511 23511 I System.out: [type]<->[BG_ALERT_TYPE]
+04-03 12:33:44.198 23511 23511 I System.out: [message]<->[LOW 3,4]
+*/
+static void alarm(String value ) {
+        Intent intent = new Intent(ACTION_WATCH_COMMUNICATION_SENDER);
+	Bundle bundle=new Bundle();
+	bundle.putString("FUNCTION","alarm");
+	bundle.putString("type","BG_ALERT_TYPE");
+	bundle.putString("message",value);
+	intent.putExtras(bundle);
+        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+	mapsettings.forEach((pack, settings) -> {
+		intent.setPackage(pack);
+		Applic.app.sendBroadcast(intent);
+		});
+
+	}
+
+static void missingalarm(long timmsec)  {
+        Intent intent = new Intent(ACTION_WATCH_COMMUNICATION_SENDER);
+	Bundle bundle=new Bundle();
+	bundle.putString("FUNCTION","alarm");
+	bundle.putString("type","bg_missed_alerts");
+	SimpleDateFormat df = new SimpleDateFormat("HH:mm", Locale.US);
+	String time = df.format(new Date(timmsec));
+	bundle.putString("message","BG Readings Missed  (@"+time+")");
+	intent.putExtras(bundle);
+        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+	mapsettings.forEach((pack, settings) -> {
+		intent.setPackage(pack);
+		Applic.app.sendBroadcast(intent);
+		});
+
+    	}
+
 static Intent mksendglucoseintent(Settings settings,int mgdl,float rate, int alarm, long timmsec)  {
         Intent intent = new Intent(ACTION_WATCH_COMMUNICATION_SENDER);
 	Bundle bundle=new Bundle();

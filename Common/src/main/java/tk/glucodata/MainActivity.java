@@ -28,6 +28,7 @@ import static android.view.View.GONE;
 import static java.lang.System.currentTimeMillis;
 import static tk.glucodata.Applic.TargetSDK;
 import static tk.glucodata.Applic.app;
+import static tk.glucodata.Applic.explicit;
 import static tk.glucodata.Applic.isRelease;
 import static tk.glucodata.Applic.isWearable;
 import static tk.glucodata.Applic.scanpermissions;
@@ -66,6 +67,8 @@ import android.widget.Toast;
 
 import androidx.activity.ComponentActivity;
 import androidx.annotation.UiThread;
+import androidx.core.content.ContextCompat;
+
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -98,6 +101,24 @@ void startall() {
 		netinitstep();
 		 }
 	 }
+void askNotify() {
+        if(Build.VERSION.SDK_INT >=33)  {
+		var perm= Manifest.permission.POST_NOTIFICATIONS;
+		if(ContextCompat.checkSelfPermission(this, perm)!= PackageManager.PERMISSION_GRANTED)  {
+			var permar=new String[]{perm};
+			if(shouldShowRequestPermissionRationale(perm) ) {
+				 help.help(R.string.notificationpermission,this,l-> {
+					requestPermissions(permar, NOTIFICATION_PERMISSION_REQUEST_CODE);
+					});
+				}
+			else   {
+				requestPermissions(permar, NOTIFICATION_PERMISSION_REQUEST_CODE);
+				}
+			return;
+			}
+		}
+	explicit(this);
+	}
 void startdisplay() {
   Log.i(LOG_ID,"startdisplay");
 Applic app=	(Applic)getApplication();
@@ -209,6 +230,7 @@ static void alarmsExact(Context context) {
 //	setTheme(R.style.AppTheme);
 	showSystemUI();
 	if(!glversion()) return;
+
         startall();
 	thisone=this;
 	/*
@@ -218,7 +240,8 @@ static void alarmsExact(Context context) {
 		}).start();
 	} */
        Log.i(LOG_ID,"onCreate end");
-//       if(!isRelease) test.test();
+      // if(!isRelease) test.test();
+//       if(!isRelease) Test.test();
     }
 void handleIntent(Intent intent) {
 	if(intent==null)
@@ -454,7 +477,11 @@ void activateresult(boolean res) {
 		}
 	Log.i(LOG_ID,all);
 	switch(techs[0] ) {
-		case "android.nfc.tech.IsDep": Novopens.onTag(tag);break;
+		case "android.nfc.tech.IsDep": 
+			if(!isWearable) {
+			//	com.eveningoutpost.dexdrip.insulin.opennov.nfc.TagDispatcher.getInstance().onTagDiscovered(tag);
+				break;
+			};
 		default: startnfc(tag);
 		}
     }
@@ -691,12 +718,24 @@ static public final int SENSOR_PERMISSION_REQUEST_CODE=0x23457;
 static final int FLASH_PERMISSION_REQUEST_CODE=0x11224;
 
 static final int LOCATION_PERMISSION_REQUEST_CODE=0x942365;
+private static final int NOTIFICATION_PERMISSION_REQUEST_CODE=0x8878;
+
 //private final int STORAGE_PERMISSION_REQUEST_CODE=0x445533;
 @Override
 public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
 	super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 	var granted=grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED;
 	switch (requestCode) {
+		 case NOTIFICATION_PERMISSION_REQUEST_CODE: {
+			if (granted) {
+				Log.i(LOG_ID,"Required Notification permission");
+				}
+			else {
+				Log.i(LOG_ID,"Required NO Notification permission");
+				}
+			explicit(this);	
+		 	};break;
+
 	        case FLASH_PERMISSION_REQUEST_CODE: {
 			Log.i(LOG_ID,"FLASH_PERMISSION_REQUEST_CODE");
 			if (granted) {

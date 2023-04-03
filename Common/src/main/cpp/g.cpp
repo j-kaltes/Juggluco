@@ -636,6 +636,7 @@ extern "C" JNIEXPORT jlong JNICALL   fromjava(processTooth)(JNIEnv *envin, jclas
 		if(jlong res=glucoseback(glval,drate,sdata->hist) ) {
 			sensor *senso=sensors->getsensor(sdata->sensorindex);
 			sdata->hist->sensorerror=false;
+			LOGGER("processTooth finished=%d\n", senso->finished);
 			senso->finished=0;
 			backup->wakebackup(Backup::wakestream);
 			#ifndef WEAROS

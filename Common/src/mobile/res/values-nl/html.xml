@@ -1318,6 +1318,9 @@ horloge app voor sommige Garmin horloges waarmee je nummers kunt
 invoeren (bijvoorbeeld insuline doses), maar ook de huidige stream
 glucose waarde weergeeft. Zie Watch→Kerfstok status → Help en
 <a href="http://jkaltes.byethost16.com/Kerfstok">http://jkaltes.byethost16.com/Kerfstok</a></p>
+<h2 class="western">Broadcast</h2>
+<p>Apps kunnen glucosewaarden ontvangen van een van de glucose Broadcasts die door Juggluco worden verzonden en deze glucosewaarden naar een horloge sturen. G-Watch (<a href="https://play.google.com/store/apps/details?id=sk.trupici.g_watch">TizenOS</a> of <a href="https://play.google.com/store/apps/details?id=sk.trupici.gwatch.wear">WearOS</a>) kan bijvoorbeeld glucosewaarden ontvangen van de Glucodata
+Broadcast (zie Linker menu-&gt;Instellingen).</p>
 <h2 class="western">xDrip horloge apps</h2>
 <p>Juggluco bevat een xDrip webserver. Dit maakt het mogelijk horloge
 apps voor xDrip direct met Juggluco te gebruiken. Je kunt ook de

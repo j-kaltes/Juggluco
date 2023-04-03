@@ -250,7 +250,7 @@ boolean canusebluetooth() {
 	return usingbluetooth&&Natives.getusebluetooth();
 	}
 
-static	private void explicit(Context context) {
+static	 void explicit(Context context) {
 	if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
 		try {
 		final PowerManager pm = (PowerManager)context.getSystemService(Activity.POWER_SERVICE);
@@ -283,7 +283,7 @@ void initbluetooth(boolean usebluetooth,Context context,boolean frommain) {
 			else
 				Log.i(LOG_ID,"keeprunning not started="+keeprunning.started);
 			if(frommain)
-				explicit(context);	
+				((MainActivity)context).askNotify();
 			}
 		}
 	}

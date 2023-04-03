@@ -85,37 +85,6 @@ import static tk.glucodata.util.getlabel;
 
 public class Libreview  {
 	private static final String LOG_ID="Libreview";
-/*
-Doen:
-Repeat with setDevice True
-login and pass variable
-Culture
-get DeviceId
-get urlConnection.setRequestProperty("x-api-key", "9D8JYWU1Ja9ai3N7HKNzC5zv31Wlmp368Sf8Voar");
-from previous input
-"newYuGateway": "FSLibreLink3.Android",
-"newYuApiKey": "9D8JYWU1Ja9ai3N7HKNzC5zv31Wlmp368Sf8Voar",
-
-"newYuGateway": "FSLibreLink.Android",
-"newYuApiKey": "pwbOvCxvDE7qPIECSX7dK6uZHRGvh3q815fxep5r",
-
-"newYuUrl": "https://api-eu.libreview.io/lsl"....................................
-"newYuUrl": "https://lsl1.newyu.net",
-https://api-eu.libreview.io/lsl/api/nisperson/getauthentication
-https://lsl1.newyu.net/api/nisperson/getauthentication
-
-Data:
-usertoken
-accountid
-
-for every sensor:
-   didput sensor
-   lasthistid
-   notsend
-*/
-//static String gateway="FSLibreLink.Android";
-//static String usertoken=null;
-//static String accountid=null;
 private static String getputtext(String sensorid,String usertoken,String gateway) {
  return "{\"DomainData\":\"{\\\"activeSensor\\\":\\\""+sensorid+"\\\"}\",\"UserToken\":\""+usertoken +"\",\"Domain\":\"Libreview\",\"GatewayType\":\""+gateway+"\"}";
  }
@@ -173,43 +142,6 @@ final private static String success="Success".intern();
 final private static String nothing="Tried nothing".intern();
 
 private static String librestatus=nothing;
-/*
-@Keep
-static boolean putsensor(String sensorid) {
-	boolean libre3=false;
-	if(librestatus==nothing||librestatus==success)
-		librestatus=datestr(System.currentTimeMillis())+" start putsensor";
-	try {
-		final String gateway=getlibregateway(libre3);
-		final String baseurl=getlibrebaseurl(libre3);
-		URL url = new URL(baseurl+"/api/nisperson");
-		HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-		urlConnection.setDoOutput(true);
-	       urlConnection.setRequestMethod("PUT");
-		urlConnection.setRequestProperty("Content-Type","application/json; charset=UTF-8");
-		String usertoken=Natives.getlibreUserToken(libre3);
-		String text=getputtext(sensorid, usertoken,gateway);
-		byte[] textbytes=text.getBytes();
-		urlConnection.setRequestProperty( "Content-Length", Integer.toString( textbytes.length ));
-		OutputStream outputPost = new BufferedOutputStream(urlConnection.getOutputStream());
-		outputPost.write(textbytes);
-		outputPost.flush();
-		outputPost.close();
- 		JSONObject object = readJSONObject(urlConnection);
-		final int status=object.getInt("status");
-		if(status!=0) {
-			String reason=object.getString("reason");
-			librestatus="putsensor: status="+status+reason==null?"":(" reason="+reason);
-			}
-		return status==0;
-		}  
-	catch(Throwable th) {
-		librestatus="putsensor "+sensorid+":\n"+ stackline(th);
-		Log.e(LOG_ID,librestatus);
-		return false;
-		}
-	}
-	*/
 @Keep
 static boolean putsensor(boolean libre3,byte[] textbytes) {
 	if(librestatus==nothing||librestatus==success)
@@ -242,29 +174,11 @@ static boolean putsensor(boolean libre3,byte[] textbytes) {
 		return false;
 		}
 	}
-//{"status":20,"reason":"wrongDeviceForUser"}
 static String getlibregateway(boolean libre3) {
 	if(libre3)
 		return "FSLibreLink3.Android";
 	return "FSLibreLink.Android";
 	}
-	/*
-static String getlibreDeviceID() {
-	return "b76f19a9-d4a0-4d67-8999-56b89b0968ee";
-	}
-
-public static  String getlibreemail( ) {
-	String login="jkaltes@hotmail.nl";
-	return login;
-	}
-
-public static  String getlibrepass( ) {
-	String password="%Olp4VBlo6";
-	return password;
-	}
-public static String getnewYuApiKey() {
-	return "pwbOvCxvDE7qPIECSX7dK6uZHRGvh3q815fxep5r";
-	} */
 static private boolean gettermversion(String lang) {
 	try {
 		if(termsofuseversionurl==null) {

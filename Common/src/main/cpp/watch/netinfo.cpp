@@ -264,10 +264,10 @@ extern "C" JNIEXPORT  jbyteArray  JNICALL   fromjava(getmynetinfo)(JNIEnv *env, 
 	    if(newcrc!=crcs[index]) {
 	    	LOGGER("crc different\n");
 		const bool setmess=!haswlan;
-#ifndef WEAROS
-	if(setmess)
-#endif
-		setBlueMessage(index,setmess);
+		#ifndef WEAROS
+			if(setmess)
+		#endif
+				setBlueMessage(index,setmess);
 		crcs[index]=newcrc;
 		}
 	else  {

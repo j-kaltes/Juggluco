@@ -1677,7 +1677,8 @@ Benachrichtigung nicht an die Uhr, wahrscheinlich weil es sich um
 eine Änderung einer Benachrichtigung handelt, die ständig vorhanden
 ist, anstatt eine neue Benachrichtigung zu erstellen.</font></font></p>
 <h2 class="western">Watchdrip</h2>
-<p style="line-height: 100%; margin-bottom: 0in">Durch das Einschalten sendet Juggluco Glukosewerte an <a href="https://bigdigital.home.blog/2022/06/16/watchdrip-a-new-application-for-xdrip-watch-integration">Watchdrip+</a>
+<p style="line-height: 100%; margin-bottom: 0in">Durch das
+Einschalten sendet Juggluco Glukosewerte an <a href="https://bigdigital.home.blog/2022/06/16/watchdrip-a-new-application-for-xdrip-watch-integration">Watchdrip+</a>
 . Watchdrip+ sendet Zifferblätter mit Glukosewerten an
 MiBand/Amazfit-Uhren.</p>
 <h2 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
@@ -1692,6 +1693,14 @@ an.&nbsp;Kerfstok kann auch alle von Garmin unterstützten
 Aktivitäten aufzeichnen und kann Geschwindigkeit und Distanz
 anzeigen.&nbsp;Siehe Watch-&gt;Kerfstok Status-&gt; Help
 und&nbsp;<a href="http://jkaltes.byethost16.com/Kerfstok">http://jkaltes.byethost16.com/Kerfstok</a></span></span></span></span></font></font></span></p>
+<h2 class="western">Broadcast</h2>
+<p style="line-height: 100%; margin-bottom: 0in">Apps können
+Glukosewerte von einer der von Juggluco gesendeten Broadcasts
+empfangen und diese Glukosewerte an eine Uhr senden. Beispielsweise
+kann G-Watch (<a href="https://play.google.com/store/apps/details?id=sk.trupici.g_watch">TizenOS</a>
+oder <a href="https://play.google.com/store/apps/details?id=sk.trupici.gwatch.wear">WearOS</a>)
+Glukosewerte von Glucodata Broadcast empfangen (siehe linkes Menü -&gt;
+Einstellungen).</p>
 <h2 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
 <font face="Times New Roman">xDrip Watch-Apps</font></h2>
 <p style="orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">

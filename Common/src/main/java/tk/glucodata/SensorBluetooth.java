@@ -69,6 +69,13 @@ public static void startscan() {
     private BroadcastReceiver mBluetoothAdapterReceiver =null; ;
 static    private BluetoothManager mBluetoothManager=null;
 
+ @SuppressLint("MissingPermission")
+ void enableBluetooth() {
+           if(!mBluetoothAdapter.isEnabled()) {
+                mBluetoothAdapter.enable();
+            } 
+    }
+
 static public void reconnectall() {
    final var wasblue=blueone;
    if(wasblue !=null) {
@@ -719,18 +726,22 @@ static void start() {
 	 	blueone.connectDevices(0);
 		}
 	}
+static final boolean keepBluetooth=false;
 private void addreceiver() {
 	if(mBluetoothAdapterReceiver==null) {
 	 mBluetoothAdapterReceiver=new BroadcastReceiver() {
-		@Override 
+		@SuppressLint("MissingPermission")
+		@Override
 		public void onReceive(Context context, Intent intent) {
 		    if ("android.bluetooth.adapter.action.STATE_CHANGED".equals(intent.getAction())) {
 			int intExtra = intent.getIntExtra("android.bluetooth.adapter.extra.STATE", -1);
 			if (intExtra == BluetoothAdapter.STATE_OFF) {
 			    Log.v(LOG_ID,"BLUETOOTH switched OFF");
+
 			    SensorBluetooth.this.stopScan(false);
 			for(var cb: gattcallbacks)  
 				cb.close();
+			if(keepBluetooth) mBluetoothAdapter.enable();
 			} else if (intExtra == BluetoothAdapter.STATE_ON) {
 			    Log.v(LOG_ID,"BLUETOOTH switched ON");
 			    if(!isWearable) {

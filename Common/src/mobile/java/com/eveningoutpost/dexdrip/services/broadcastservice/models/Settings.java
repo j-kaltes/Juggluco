@@ -2,11 +2,8 @@ package com.eveningoutpost.dexdrip.services.broadcastservice.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
 import androidx.annotation.Keep;
-
-import lombok.Getter;
-import lombok.Setter;
+//import lombok.Setter;
 @Keep
 public class Settings implements Parcelable {
     public static final Creator<Settings> CREATOR = new Creator<Settings>() {
@@ -14,24 +11,15 @@ public class Settings implements Parcelable {
         public Settings createFromParcel(Parcel in) {
             return new Settings(in);
         }
-
         @Override
         public Settings[] newArray(int size) {
             return new Settings[size];
         }
     };
-
-    @Getter
-    @Setter
+//   @Setter
     private long graphStart;
-    @Getter
-    @Setter
     private long graphEnd;
-    @Getter
-    @Setter
     private String apkName;
-    @Getter
-    @Setter
     private boolean displayGraph;
 
     public Settings(Parcel in) {
@@ -42,7 +30,6 @@ public class Settings implements Parcelable {
     }
 
     public Settings() {
-
     }
 
     @Override
@@ -57,4 +44,16 @@ public class Settings implements Parcelable {
         parcel.writeLong(graphEnd);
         parcel.writeInt(displayGraph ? 1 : 0);
     }
+
+    //<editor-fold defaultstate="collapsed" desc="delombok">
+    @SuppressWarnings("all")
+    public long getGraphStart() {
+        return this.graphStart;
+    }
+
+    @SuppressWarnings("all")
+    public boolean isDisplayGraph() {
+        return this.displayGraph;
+    }
+    //</editor-fold>
 }

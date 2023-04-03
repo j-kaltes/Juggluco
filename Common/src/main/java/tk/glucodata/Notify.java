@@ -247,9 +247,19 @@ private void allowbubbel(NotificationChannel  channel) {
 	//	    channel.setShowBadge(false);
 	void lowglucose(notGlucose strgl,float gl,float rate,boolean alarm) {
 		arrowglucosealarm(0,GlucoseDraw.getgludraw(gl), format(usedlocale,glucoseformat, gl)+Applic.app.getString(isWearable?R.string.lowglucoseshort:R.string.lowglucose), strgl,GLUCOSEALARM,alarm);
+		if(!isWearable) {
+			if(alarm)  {
+				tk.glucodata.WearInt.alarm("LOW "+strgl.value);
+				}
+			}
 	}
 	void highglucose(notGlucose strgl,float gl,float rate,boolean alarm) {
 		arrowglucosealarm(1,GlucoseDraw.getgludraw(gl), format(usedlocale,glucoseformat, gl)+Applic.app.getString(isWearable?R.string.highglucoseshort:R.string.highglucose), strgl,GLUCOSEALARM,alarm);
+		if(!isWearable) {
+			if(alarm)  {
+				tk.glucodata.WearInt.alarm("HIGH "+strgl.value);
+				}
+			}
 
 
 	}

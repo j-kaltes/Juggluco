@@ -1262,7 +1262,7 @@ Libre 2 sensors. But maybe the old permissions still work.</p>
 <![CDATA[
 <h1>Watch</h1>
 <p style="line-height: 100%; margin-bottom: 0in">Currently Juggluco
-has four ways to get glucose values on your watch.</p>
+has six ways to get glucose values on your watch.</p>
 <h2 class="western">Notify</h2>
 <p style="line-height: 100%; margin-bottom: 0in"><span lang="en-US">If
 Notify is turned on in the left middle menu, an Android notification
@@ -1286,6 +1286,14 @@ Kerfstok. So Kerfstok displays always the most recent glucose value.
 Kerfstok can also record all activities supported by Garmin and can
 display speed and distance. See Watch-&gt;Kerfstok Status-&gt; Help
 and <a href="http://jkaltes.byethost16.com/Kerfstok">http://jkaltes.byethost16.com/Kerfstok</a></span></p>
+<h2 class="western">Broadcast</h2>
+<p style="line-height: 100%; margin-bottom: 0in">Apps can receive
+glucose values from one of the glucose broadcasts send by Juggluco
+and send these glucose values to a watch. For example G-Watch
+(<a href="https://play.google.com/store/apps/details?id=sk.trupici.g_watch">TizenOS</a>
+or <a href="https://play.google.com/store/apps/details?id=sk.trupici.gwatch.wear">WearOS</a>)
+can receive glucose values from the Glucodata Broadcast (see Left
+menu-&gt;Settings).</p>
 <h2 class="western">xDrip watch apps</h2>
 <p style="line-height: 100%; margin-bottom: 0in"><span lang="en-US">Juggluco
 incorporates an xDrip webserver. This makes it possible to directly
@@ -1931,6 +1939,19 @@ for example, https://myname.herokuapp.com:6789</p>
 <p><b>Send now</b>: Normally data is immediately send when it arrives
 from the sensor or a mirror connection. Press on this button when for
 some reason a previous attempt failed.</p>
+]]>
+</string>
+<string name="notificationpermission" >
+<![CDATA[
+<p>Android 13 requires that before you
+even know what kind of notifications are send, you give permissions
+for these notifications. Juggluco has notifications containing
+glucose values and requires to have a notifications in connection
+with a foreground service that is required to stay active in the
+background. For the proper function of Juggluco, you can better give
+Juggluco this permission.</p>
+<p>You can easily turn notifications on and off in Androids settings
+App-Info -&gt; Notifications for Juggluco.</p>
 ]]>
 </string>
 </resources>
