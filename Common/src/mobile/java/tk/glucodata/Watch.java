@@ -21,25 +21,29 @@
 
 package tk.glucodata;
 
-import android.content.Context;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.Space;
-
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static tk.glucodata.MessageSender.initwearos;
 import static tk.glucodata.settings.Settings.removeContentView;
-
 import static tk.glucodata.util.getbutton;
 import static tk.glucodata.util.getcheckbox;
 
-class Watch {
+import android.view.View;
+import android.view.ViewGroup;
 
+class Watch {
+static private final  String LOG_ID="Watch";
 static public void show(MainActivity context) {
+	/*
+	var pens=getbutton(context,"try Pens");
+	pens.setOnClickListener(v->{
+ 			if(addnovopen("A serial",3))
+				Log.i(LOG_ID,"Add serial succeeded");
+			else
+				Log.i(LOG_ID,"Add serial failed");;
+
+			}); */
 	       var watchdrip=getcheckbox(context,"Watchdrip", SuperGattCallback.doWearInt);
 		watchdrip.setOnCheckedChangeListener(
 			(buttonView,  isChecked) ->  {

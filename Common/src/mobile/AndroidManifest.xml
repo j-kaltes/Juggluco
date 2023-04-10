@@ -73,6 +73,7 @@
 </receiver>
  <service android:name="tk.glucodata.keeprunning" android:exported="true" android:enabled="true" android:foregroundServiceType="connectedDevice" />
 
+
   <service android:name="tk.glucodata.MessageReceiver" android:exported="true" >
             <intent-filter>
                 <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
@@ -92,6 +93,9 @@
 
 
     </application>
+
+    <uses-feature android:name="android.hardware.type.automotive" android:required="false" />
+
     <uses-feature android:name="android.hardware.nfc" android:required="false" />
     <uses-feature android:glEsVersion="0x00020000" android:required="true" />
 <!--<uses-permission-sdk-23 android:name="android.permission.ACCESS_NOTIFICATION_POLICY"/>-->

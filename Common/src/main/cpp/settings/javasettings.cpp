@@ -24,6 +24,7 @@
 #include <cstring>
 #include <cinttypes>
 #include <cmath>
+#include <algorithm>
 #include "settings.h"
 #include <jni.h>
 //#include "fromjava.h"
@@ -1225,4 +1226,232 @@ extern "C" JNIEXPORT void  JNICALL   fromjava(setwatchdrip)(JNIEnv *env, jclass 
 	}
 extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getwatchdrip)(JNIEnv *env, jclass cl) {
 	return settings->data()->watchdrip;
+	}
+
+NovoPen   *getnovopen(JNIEnv *env,jstring jserial) {
+	auto &pens=settings->data()->pens;
+	int nr=settings->data()->pensnr;
+	if(nr>=pens.size())  {
+		LOGGER("nr (%d) >=pens.size() (%zd)\n",nr,pens.size());
+		return nullptr;
+		}
+	auto *start=pens.begin();
+	auto *end=&pens[nr];
+	NovoPen zoek;
+	char *serial=zoek.serial;
+	jint jlen = env->GetStringLength(jserial);
+	env->GetStringUTFRegion(jserial, 0,jlen, serial);
+	serial[jlen]='\0';
+        constexpr const auto comp=[](const NovoPen &el,const NovoPen &se ){
+		return strcmp(el.serial,se.serial)<0;
+		};
+        auto *hit=std::upper_bound(start,end, zoek,comp); //first element larger than jserial
+	if(hit>start) {
+		auto *prehit=hit-1;	
+		if(!strcmp(prehit->serial,serial)) {
+			LOGGER("%d: old pen %s pensnr=%d\n",prehit-start,serial,settings->data()->pensnr);
+			return prehit;
+			}
+		}
+	if(hit!=end) {
+		memmove(hit+1,hit,(end-hit)*sizeof(*hit));
+		}
+
+	strcpy(hit->serial,serial);
+	hit->type=-1;
+	++settings->data()->pensnr;
+	LOGGER("%d: new pen %s pensnr=%d\n",hit-start,serial,settings->data()->pensnr);
+	return hit;
+	}
+
+struct dose_t {
+uint8_t reltime[4];
+uint16_t sign1;
+uint8_t units[2];
+uint32_t sign2;
+bool rightsign()const {
+	return sign2==8&&sign1==0x00FF;
+	}
+uint32_t getreltime() const {
+	uint32_t uit;
+	std::reverse_copy(reltime,reltime+4,reinterpret_cast<uint8_t *>(&uit));
+	return uit;
+	}
+float getvalue() const {
+	return float(units[0]<<8|units[1])*.1f;
+	}
+
+};
+
+#include "nums/numdata.h"
+int savedoses(NovoPen *pen,uint32_t reftime,uint8_t *bytes,int len) {
+	int type=pen->type;
+	auto lasttime=pen->lasttime;
+	int count=len/12;
+	auto *ptr=bytes;
+	uint32_t now=time(nullptr);
+	uint32_t old=now-100*24*60*60;
+	extern Numdata *getherenums();
+
+	Numdata *numda=getherenums();
+	int savednr=0;
+	bool used=false;
+	uint32_t nexttime=0;
+	for(int i=0;i<count;i++,ptr+=sizeof(dose_t)) {	
+		const dose_t *dose=reinterpret_cast<const dose_t *>(ptr);
+		if(!dose->rightsign()) {
+			continue;
+			}
+		auto time=reftime+dose->getreltime();	
+		if(time<=lasttime) {
+			break;
+			}
+		if(time<old||time>now) {
+			LOGGER("time=%u\n",time);
+			continue;
+			}
+		float value=dose->getvalue();
+		if(value>60) {
+			LOGGER("%.1f\n",value);
+			continue;
+			}
+		
+		if(!used)  {
+			used=true;
+			}
+		else  {
+			if(value<=2.0f&&((int64_t)nexttime-time)<60) {
+				used=false;
+				continue;
+				}
+			}
+		numda->numsave( time, value,type ,0) ;
+		nexttime=time;
+		++savednr;
+		}
+
+	return savednr;
+	}
+	/*
+extern "C" JNIEXPORT jlong  JNICALL   fromjava(lasttimenovopen)(JNIEnv *env, jclass cl,jstring jserial) {
+	NovoPen   *pen=getnovopen(env,jserial);
+	return pen->lasttime;
+	} */
+extern "C" JNIEXPORT jboolean  JNICALL   fromjava(oldnovopenvalue)(JNIEnv *env, jclass cl,jlong referencetime,jstring jserial,jbyteArray jrawdoses) {
+	NovoPen   *pen=getnovopen(env,jserial);
+	if(!pen||!pen->lasttime)  {
+		return false;
+		}
+     jsize lens=env->GetArrayLength(jrawdoses);
+       uint8_t*  bytes=reinterpret_cast<uint8_t *>(   env->GetPrimitiveArrayCritical(jrawdoses,nullptr));
+      LOGGER("jrawdoses=%p\n",bytes);
+       if(!bytes) {
+		LOGGER("GetByteArrayElements(jrawdoses,nullptr)==null\n");
+		return -1;
+       	  }
+       destruct _dest([env,bytes,jrawdoses]() {
+	  	env->ReleasePrimitiveArrayCritical(jrawdoses, bytes, JNI_ABORT);
+		});
+	
+	const dose_t *dose=reinterpret_cast<const dose_t *>(bytes+lens-sizeof(dose_t));
+	uint32_t dosetime=	referencetime+dose->getreltime();
+	return pen->lasttime>dosetime;
+	}
+extern "C" JNIEXPORT jint  JNICALL   fromjava(savenovopen)(JNIEnv *env, jclass cl,jlong referencetime,jstring jserial,jint type,jbyteArray jrawdoses,jboolean setlast) {
+	NovoPen   *pen=getnovopen(env,jserial);
+	if(!pen)  {
+		return -1;
+		}
+	pen->type=type;
+
+//	env->GetByteArrayRegion(jar, 0, lens, );
+	 jsize lens=env->GetArrayLength(jrawdoses);
+       uint8_t*  bytes=reinterpret_cast<uint8_t *>(   env->GetPrimitiveArrayCritical(jrawdoses,nullptr));
+      LOGGER("jrawdoses=%p\n",bytes);
+       if(!bytes) {
+		LOGGER("GetPrimitiveArrayCritical(jrawdoses,nullptr)==null\n");
+		return -1;
+       	  }
+       destruct _dest([env,bytes,jrawdoses]() {
+	  	env->ReleasePrimitiveArrayCritical(jrawdoses, bytes, JNI_ABORT);
+		});
+	jint ret= savedoses(pen,referencetime,bytes,lens);
+	if(setlast)
+		pen->lasttime=time(nullptr);
+	return ret;
+	}
+/*
+extern "C" JNIEXPORT jboolean  JNICALL   fromjava(addnovopen)(JNIEnv *env, jclass cl,jstring jserial,jint type) {
+	auto &pens=settings->data()->pens;
+	int nr=settings->data()->pensnr;
+	if(nr>=pens.size())
+		return false;
+	
+	auto *start=pens.begin();
+	auto *end=&pens[nr];
+	NovoPen zoek;
+	char *serial=zoek.serial;
+	jint jlen = env->GetStringLength(jserial);
+	env->GetStringUTFRegion(jserial, 0,jlen, serial);
+	serial[jlen]='\0';
+        constexpr const auto comp=[](const NovoPen &el,const NovoPen &se ){
+		return strcmp(el.serial,se.serial)<0;
+		};
+        auto *hit=std::upper_bound(start,end, zoek,comp); //first element larger than jserial
+	if(hit>start) {
+		auto *prehit=hit-1;	
+		if(!strcmp(prehit->serial,serial)) {
+			prehit->type=type;
+			return true;
+			}
+		}
+	if(hit==end) {
+		strcpy(end->serial,serial);
+		end->type=type;
+		}
+	else {
+		memmove(hit+1,hit,(end-hit)*sizeof(*hit));
+		hit->type=type;
+		strcpy(hit->serial,serial);
+		}
+	++settings->data()->pensnr;
+	return true;
+	}
+	*/
+extern "C" JNIEXPORT void  JNICALL   fromjava(setnovopenttimeandtype)(JNIEnv *env, jclass cl,jlong time,jint type,jstring jserial) {
+	NovoPen   *pen=getnovopen(env,jserial);
+	if(pen)  {
+		pen->lasttime=time/1000L;
+		pen->type=type;
+		}
+	}
+extern "C" JNIEXPORT jlong  JNICALL   fromjava(novopentype)(JNIEnv *env, jclass cl,jstring jserial) {
+	auto &pens=settings->data()->pens;
+	int nr=settings->data()->pensnr;
+	LOGGER("novopentype pensnr=%d\n",nr);
+	if(nr<=0) {
+		return -1L;
+		}
+	auto *start=pens.begin();
+	auto *end=&pens[nr];
+	NovoPen zoek;
+	char *serial=zoek.serial;
+	jint jlen = env->GetStringLength(jserial);
+	env->GetStringUTFRegion(jserial, 0,jlen, serial);
+	serial[jlen]='\0';
+        constexpr const auto comp=[](const NovoPen &el,const NovoPen &se ){
+		return strcmp(el.serial,se.serial)<0;
+		};
+        auto *hit=std::upper_bound(start,end, zoek,comp); //first element larger than jserial
+	if(hit>start) {	
+		auto *prehit=hit-1;	
+		if(!strcmp(prehit->serial,serial)) {
+			time_t lasttime= prehit->lasttime;
+			jlong uit= (((uint64_t)prehit->type<<32)|(uint64_t)(prehit->lasttime&0xFFFFFFFF));
+			LOGGER("uit=%llX   %d novopentype(%s) lasttime=%llu %s",uit,prehit-start,serial,prehit->lasttime,ctime(&lasttime));
+			return uit;
+			}
+		}
+	LOGGER("%s not found\n",serial);
+	return -1L;
 	}

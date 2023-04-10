@@ -37,6 +37,7 @@
 #include "curve/jugglucotext.h"
 #endif
 #include "broadcasts.h"
+#include "novopens.hpp"
 extern int showui;
 struct Settings;
 extern Settings *settings;
@@ -214,6 +215,8 @@ struct Tings {
 	char nightuploadname[256+8];
 	char nightuploadsecret[80];
 	bool nightuploadon;
+	int pensnr;
+	std::array<NovoPen,maxpennr>  pens;
 	void setdefault() {
 		memcpy(watchid,defaultid,sizeof(watchid));
 		};

@@ -1249,8 +1249,8 @@ static char *writetreatment(char *outiter,const int numbase,const int pos,const 
 	const time_t tim=num->gettime();
         struct tm tmbuf;
         gmtime_r(&tim, &tmbuf);
-	outiter+=sprintf(outiter,R"({"_id":"num%d#%d","eventType":"<none>","insulinInjections":"[]","enteredBy":"Juggluco","created_at":"%d-%02d-%02dT%02d:%02d:%02d.000Z",)",numbase,pos,tmbuf.tm_year+1900,tmbuf.tm_mon+1,tmbuf.tm_mday, tmbuf.tm_hour, tmbuf.tm_min,tmbuf.tm_sec);
-
+	outiter+=sprintf(outiter,R"({"_id":"num%d#%d","eventType":"<none>","enteredBy":"Juggluco","created_at":"%d-%02d-%02dT%02d:%02d:%02d.000Z",)",numbase,pos,tmbuf.tm_year+1900,tmbuf.tm_mon+1,tmbuf.tm_mday, tmbuf.tm_hour, tmbuf.tm_min,tmbuf.tm_sec);
+//what met insulinInju
 	float w=0.0f;
 	 if((w=longWeight(type))!=0.0f) {
 	 	addar(outiter,R"("notes":"Long-Acting",)");
@@ -1260,15 +1260,17 @@ static char *writetreatment(char *outiter,const int numbase,const int pos,const 
 	 	}
 		}
 	if(w!=0.0f) {
-		outiter+=sprintf(outiter,R"("carbs":null,"insulin":%g},)",w*num->value);
+		std::string_view typestr=settings->getlabel(type);
+		auto units=w*num->value;
+		outiter+=sprintf(outiter,R"("carbs":null,"insulin":%g,"insulinInjections": "[{\"insulin\":\"%s\",\"units\":%g}]"},)",units,typestr.data(),units); //"-s needed because of a bug in xDrip
 		}
 	else {
 		if((w=carboWeight(type) )!=0.0f) {
-			outiter+=sprintf(outiter,R"("carbs":%g,"insulin":null},)",w*num->value);
+			outiter+=sprintf(outiter,R"("carbs":%g,"insulin":null,"insulinInjections":"[]"},)",w*num->value);
 			}
 		else {
 			std::string_view typestr=settings->getlabel(type);
-			outiter+=sprintf(outiter,R"("notes":"%s %g","carbs":null,"insulin":null},)",typestr.data(),num->value);
+			outiter+=sprintf(outiter,R"("notes":"%s %g","carbs":null,"insulin":null,"insulinInjections":"[]"},)",typestr.data(),num->value);
 			}
 		}
 	return outiter;

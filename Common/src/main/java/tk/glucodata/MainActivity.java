@@ -25,7 +25,6 @@ package tk.glucodata;
 import static android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS;
 import static android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM;
 import static android.view.View.GONE;
-import static java.lang.System.currentTimeMillis;
 import static tk.glucodata.Applic.TargetSDK;
 import static tk.glucodata.Applic.app;
 import static tk.glucodata.Applic.explicit;
@@ -37,6 +36,7 @@ import static tk.glucodata.Floating.setfloatglucose;
 import static tk.glucodata.Floating.shoulduseadb;
 import static tk.glucodata.GlucoseCurve.STEPBACK;
 import static tk.glucodata.Natives.hasstreamed;
+import static tk.glucodata.Natives.showbytes;
 import static tk.glucodata.Natives.wakelibreview;
 import static tk.glucodata.help.hidekeyboard;
 
@@ -69,24 +69,21 @@ import androidx.activity.ComponentActivity;
 import androidx.annotation.UiThread;
 import androidx.core.content.ContextCompat;
 
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.Locale;
 
-;import tk.glucodata.settings.SetColors;
+//import com.google.android.apps.auto.sdk.CarActivity;
+;
 
 //import static tk.glucodata.Natives.hidescanresults;
 
 
 public class MainActivity extends ComponentActivity implements NfcAdapter.ReaderCallback  {
-//public class MainActivity extends WearableActivity implements NfcAdapter.ReaderCallback {
+//public class MainActivity extends CarActivity implements NfcAdapter.ReaderCallback  {
 //    boolean    hideSystem=true;
     GlucoseCurve curve=null;
 //    Button okbutton=null;
@@ -404,7 +401,7 @@ private static int resumenr=isRelease?10:2;
 //	Notify.testold();
     }
 long nexttime= 0L;
-void    startnfc(Tag tag) {
+void   startnfc(Tag tag) {
 	long nu=System.currentTimeMillis();
 	if(nu<nexttime)
 		return;
@@ -414,9 +411,9 @@ void    startnfc(Tag tag) {
 		    curve.searchaway();
 		    if(curve.numberview!=null) {
 			if(curve.numberview.datepicker!=null) 
-			curve.numberview.datepicker.setVisibility(GONE);
+				curve.numberview.datepicker.setVisibility(GONE);
 			if(curve.numberview.timepicker!=null) 
-			curve.numberview.timepicker.setVisibility(GONE);
+				curve.numberview.timepicker.setVisibility(GONE);
 			}
 
 		} }
@@ -474,12 +471,14 @@ void activateresult(boolean res) {
 	String all="onTagDiscovered: ";
 	for(var  t:techs) {
 		all+=t;
+		all+=" ";
 		}
 	Log.i(LOG_ID,all);
 	switch(techs[0] ) {
-		case "android.nfc.tech.IsDep": 
+		case "android.nfc.tech.IsoDep":
 			if(!isWearable) {
-			//	com.eveningoutpost.dexdrip.insulin.opennov.nfc.TagDispatcher.getInstance().onTagDiscovered(tag);
+				showbytes("tag", tag.getId());
+				tk.glucodata.NovoPen.Scan.onTag(this,tag);
 				break;
 			};
 		default: startnfc(tag);
@@ -979,7 +978,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 	return super.onKeyLongPress(keyCode,event);
         }
 
-NumberView getnumberview() {
+public NumberView getnumberview() {
 	return curve.numberview;
 	}
 

@@ -155,7 +155,7 @@
  <string name="nextpage">Następna strona</string>
  <string name="ips">IP:</string>
  <string name="port">Port</string>
- <string name="saved">Zapisano</string>
+ <string name="saved">"Zapisano "</string>
  <string name="savefailed">Zapisanie nie powiodło się</string>
  <string name="notsaved">Nie zapisano</string>
  <string name="failedbyexception">Błąd w drodze wyjątku</string>

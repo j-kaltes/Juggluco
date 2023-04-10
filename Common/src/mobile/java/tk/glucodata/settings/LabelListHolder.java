@@ -34,7 +34,7 @@ import static tk.glucodata.settings.Settings.float2string;
 
 public class LabelListHolder extends RecyclerView.ViewHolder {
 
-    public LabelListHolder(View view,Settings set,View ok,Runnable onsave) {
+    public LabelListHolder(View view,LabelsClass set,View ok,Runnable onsave) {
         super(view);
        view.setOnClickListener(v -> {
 		int pos=getAbsoluteAdapterPosition();

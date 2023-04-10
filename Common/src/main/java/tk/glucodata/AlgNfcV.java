@@ -152,6 +152,10 @@ public class AlgNfcV {
         log("nfccmd");
 	for(int outi=0;outi<10;outi++) {
         final NfcV nfcvTag = NfcV.get(tag);
+	if(nfcvTag == null) {
+		Log.e(LOG_ID,"NfcV.get(tag)==null");
+		return null;
+		}
         try {
 		    nfcvTag.connect();
 		    final long endReadingTime = System.currentTimeMillis() + nfcReadTimeout;

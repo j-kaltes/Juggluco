@@ -1985,17 +1985,18 @@ den Standard-Android-Bibliotheken wird Folgendes verwendet:</font></font></p>
 	<li><p align="left"><font face="Times New Roman"><font size="4" style="font-size: 14pt">Die
 	Kommunikation mit Libre3-Sensoren verwendet&nbsp;<a href="https://github.com/intel/tinycrypt">TinyCrypt</a>&nbsp;;</font></font></p>
 	<li><p align="left"><font face="Times New Roman"><font size="4" style="font-size: 14pt">Der
-	Farbwähler ist eine Adaption von&nbsp;<a href="https://github.com/yukuku/ambilwarna">AmbilWarna</a>&nbsp;.</font></font></p>
+	Farbwähler ist eine Adaption von&nbsp;<a href="https://github.com/yukuku/ambilwarna">AmbilWarna</a></font></font><font face="Times New Roman"><font size="4" style="font-size: 14pt">;</font></font></p>
+	<li><p align="left"><font face="Times New Roman"><font size="4" style="font-size: 14pt">Unterstützung
+	für NFC NovoPens ist eine Modifikation des Codes aus xDrip.</font></font></p>
 </ul>
 <p><font face="Times New Roman"><font size="4" style="font-size: 14pt">Juggluco
 wurde von <a href="mailto:matteo.gabriele81@gmail.com">Matteo
 Gabriele</a>&nbsp;ins Italienische übersetzt&nbsp;.</font></font></p>
 <p><font face="Times New Roman"><font size="4" style="font-size: 14pt">Juggluco
 wurde von Rui Pinheiro ins Portugiesische übersetzt.</font></font></p>
-<p style="line-height: 100%; margin-bottom: 0in"> <font face="Times New Roman"><font size="4" style="font-size: 14pt">Juggluco
-wurde von</font></font><font face="Times New Roman"><font size="4" style="font-size: 14pt">
-</font></font><a href="mailto:adelis@translaris.pl">Arkadiusz Deliś</a>
-ins Polnische übersetzt.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><font face="Times New Roman"><font size="4" style="font-size: 14pt">Juggluco
+wurde von</font></font> <a href="mailto:adelis@translaris.pl">Arkadiusz
+Deliś</a> ins Polnische übersetzt.</p>
 <p><br/>
 <br/>
 <br/>

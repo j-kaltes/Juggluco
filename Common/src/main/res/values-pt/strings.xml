@@ -155,7 +155,7 @@
 <string name="nextpage">Próxima página</string>
 <string name="ips">IPs:</string>
 <string name="port">Porta</string>
-<string name="saved">Guardado</string>
+<string name="saved">"Guardado "</string>
 <string name="savefailed">Falha ao guardar</string>
 <string name="notsaved">Não guardado</string>
 <string name="failedbyexception">Falha por exceção</string>

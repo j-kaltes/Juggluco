@@ -66,7 +66,7 @@ public class ScanNfcV   {
 //static int enablestreaming=0;
 static byte[] newdevice=null;
 	@SuppressWarnings("deprecation")
-static void failure(Vibrator vibrator) {
+public static void failure(Vibrator vibrator) {
 	final long[] vibrationPatternFailure = {0, 500}; // [ms]
         if(android.os.Build.VERSION.SDK_INT < 26)
 		vibrator.vibrate(vibrationPatternFailure, -1);
@@ -128,31 +128,29 @@ static void vibrates(Vibrator vibrator,final long[] vibrationPatternstart ,final
 	}
 static	boolean askpermission=false;
 	@SuppressWarnings("deprecation")
-static public void scan(GlucoseCurve curve,Tag tag) {
-	 askpermission=false;
-        MainActivity main= (MainActivity)(curve.getContext());
-	Vibrator vibrator = null;
+public static Vibrator getvibrator(Context context) {
 	if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-		vibrator =  ((VibratorManager)(curve.getContext()).getSystemService(Context.VIBRATOR_MANAGER_SERVICE)).getDefaultVibrator();
+		return ((VibratorManager)context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE)).getDefaultVibrator();
 	}
 	else
-		vibrator=(Vibrator) (curve.getContext()).getSystemService(VIBRATOR_SERVICE);
-	curve.render.stepresult=GlucoseCurve.STEPBACK;
+		return (Vibrator) context.getSystemService(VIBRATOR_SERVICE);
+
+	}
+public static void startvibration(Vibrator vibrator) {
         if(android.os.Build.VERSION.SDK_INT < 26)
 	        vibrator.vibrate( new long[]  {0, 100, 10,50,50} , 1);
 	    else {
 		final long[] vibrationPatternstart = {0, 70, 50,50,50,50,50};
 		final int[] amplitude={0,  255,150,0,255,50,0};
 		vibrates(vibrator,vibrationPatternstart,amplitude); 
-		/*
-		if( android.os.Build.VERSION.SDK_INT <33) {
-	       		vibrator.vibrate(VibrationEffect.createWaveform(vibrationPatternstart,amplitude, 1),audioattributes);
-			}
-		else {
-	       		vibrator.vibrate(VibrationEffect.createWaveform(vibrationPatternstart,amplitude, 1),vibrationattributes);
-			}
-	       */	
     		}
+	}
+static public synchronized void scan(GlucoseCurve curve,Tag tag) {
+	 askpermission=false;
+        MainActivity main= (MainActivity)(curve.getContext());
+	var vibrator=getvibrator(main);
+	startvibration(vibrator);
+	curve.render.stepresult=GlucoseCurve.STEPBACK;
         {
 	if(!Natives.gethaslibrary()) {
 		vibrator.cancel();

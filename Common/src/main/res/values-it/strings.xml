@@ -150,7 +150,7 @@
  <string name="nextpage">Prossima pagina</string>
 <string name="ips">IP:</string>
 <string name="port">Porta</string>
-<string name="saved">Salvato</string>
+<string name="saved">"Salvato "</string>
 <string name="savefailed">Salvataggio fallito</string>
 <string name="notsaved">Non salvato</string>
 <string name="failedbyexception">Fallito per una eccezione</string>

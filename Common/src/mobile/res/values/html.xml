@@ -1497,7 +1497,9 @@ Android libraries, use is made of the following:</p>
 	<li><p align="left" style="line-height: 100%; margin-bottom: 0in">Communication
 	with Libre3 sensors uses <a href="https://github.com/intel/tinycrypt">TinyCrypt</a>;</p>
 	<li><p align="left" style="line-height: 100%; margin-bottom: 0in">The
-	color picker is an adaptation of <a href="https://github.com/yukuku/ambilwarna">AmbilWarna</a>.</p>
+	color picker is an adaptation of <a href="https://github.com/yukuku/ambilwarna">AmbilWarna</a>;</p>
+	<li><p align="left" style="line-height: 100%; margin-bottom: 0in">Support
+	for NFC NovoPens is a modification of the code taken out of xDrip.</p>
 </ul>
 <p style="line-height: 100%; margin-bottom: 0in">Juggluco was
 translated into Italian by <a href="mailto:matteo.gabriele81@gmail.com">Matteo

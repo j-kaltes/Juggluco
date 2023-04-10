@@ -152,7 +152,7 @@
   <string name="nextpage">Nächste Seite</string>
   <string name="ips">IPs:</string>
   <string name="port">Port</string>
-  <string name="saved">Gespeichert</string>
+  <string name="saved">"Gespeichert"</string>
   <string name="savefailed">Speichern fehlgeschlagen</string>
   <string name="notsaved">Nicht gespeichert</string>
   <string name="failedbyexception">Durch Ausnahme fehlgeschlagen</string>
@@ -248,4 +248,12 @@
 
 <string name="webserver">Webserver</string>
 <string name="treatments">Mengen geben</string>
+
+<string name="wentwrong">Etwas ist schief gelaufen</string>
+     <string name="doses">" Dosen "</string>
+     <string name="receiveddoses">Habe Dosen gelesen von:</string>
+  <string name="penfailed">Fehler beim Lesen des Insulinpens</string>
+  <string name="changeinsulin">"Insulintyp ändern in "</string>
+     <string name="type">"Typ: "</string>
+    <string name="dosesprior">Füg nur Dosen hinzu von nach:</string>
 </resources>

@@ -104,10 +104,11 @@ static constexpr const std::string_view libreidsname="libreids.dat";
 static constexpr const std::string_view librechangedname="librechanged.dat";
 
 Numdata(const std::string_view base,identtype id,size_t len=0):newnumsfile(numfilename(base,id==0LL?0LL:-1LL)), ident(renamefile(base,id)),nums(newnumsfile.get(),len),libreids(base,libreidsname,len),librechanged(base,librechangedname,len){
-	LOGGER("ident=%lld\n",ident);
+	auto lastpos=getlastpos();
+	LOGGER("Numdata ident=%lld lastpos=%d\n",ident,lastpos);
 	if(ident!=-1LL)
 		setnewident(ident);
-	if(getlastpos()*3/2> nums.size()) {
+	if(lastpos*3/2> nums.size()) {
 		auto newsize=nums.size()*10;
 		nums.extend(newnumsfile.get(),newsize);
 		libreids.extend(base,libreidsname,newsize);
@@ -542,8 +543,7 @@ struct Num {
   */
 
 //Libreids libreids;
-void numsave( uint32_t time, float32_t value, uint32_t type,uint32_t mealptr) {
-	LOGGER("savenum %f %s mealptr=%d\n",value,settings->getlabel(type).data(),mealptr);
+void numsave( const uint32_t time, const float32_t value, const uint32_t type,const uint32_t mealptrin) {
 	Num *num=firstAfter(time);
 	const int ind=index(num);
 	const Num *endnum=end();
@@ -552,13 +552,15 @@ void numsave( uint32_t time, float32_t value, uint32_t type,uint32_t mealptr) {
 		libremovelarger(ind,ind+1,movelen);
 		memmove(num+1,num,movelen*sizeof(Num));
 		}
-	mealptr=meals->datameal()->endmeal(mealptr);
+	uint32_t mealptr=meals->datameal()->endmeal(mealptrin);
 	*num={.time=time,.mealptr=mealptr,.value=value,.type=type};
 	inclastpos();
 	inclastpolledpos();
 	setlastchange(num);
-	updatepos(ind,getlastpos());
+	const auto lastnum=getlastpos();
+	updatepos(ind,lastnum);
 	addlibrechange(ind);
+	LOGGER("newlastnum=%d numsave %f %s mealptrin=%d mealptr=%d\n",lastnum,value,settings->getlabel(type).data(),mealptrin,mealptr);
 	 }
 
 /*

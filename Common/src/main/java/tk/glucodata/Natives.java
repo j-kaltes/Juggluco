@@ -637,6 +637,16 @@ public static native boolean getwatchdrip( );
 
 public static native boolean mkWearIntgraph(long start, long end, GraphLine low, GraphLine within, GraphLine high);
 public static native void isGalaxyWatch(boolean val);
+
+public static native long novopentype(String serial);
+public static native int savenovopen(long time,String serial,int type,byte[] gegs,boolean last);
+//public static native long lasttimenovopen(String serial);
+public static native boolean oldnovopenvalue(long referencetime,String serial,byte[] rawdoses);
+
+public static native void setnovopenttimeandtype(long time,int type,String serial);
+
+
+
 //s/^extern.*JNIEXPORT[         ]*\([a-zA-Z]*\)[ ]*JNICALL[      ]*fromjava(\([^)]*\)) *(JNIEnv[^,]*,[^,)]*[,)]\([^){]*\)[^a-zA-Z0-9]*$/public static native \1 \2(\3);/g
 //public static native void sendxdripold();
 }

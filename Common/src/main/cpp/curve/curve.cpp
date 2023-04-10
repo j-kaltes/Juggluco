@@ -3057,6 +3057,11 @@ const Num *hit;
 };
 Num newnum;
 NumHit newhit={nullptr,&newnum};
+
+extern Numdata *getherenums();
+Numdata *getherenums() {
+	return newhit.numdisplay;
+	}
 template <class TX,class TY> NumHit *nearbynum(const float tapx,const float tapy,const TX &transx,  const TY &transy) {
 	 for(auto el:numdatas) 
 		if(const Num *hit=el->getnearby(transx,transy,tapx,tapy)) {

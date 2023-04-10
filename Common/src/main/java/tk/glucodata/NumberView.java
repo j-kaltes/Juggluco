@@ -523,13 +523,12 @@ Layout getdateview(MainActivity activity) {
 	}
 
 
-Layout getdateviewal(MainActivity activity,long date,Dater erdate) {
+public Layout getdateviewal(MainActivity activity, long date, Dater erdate) {
 Log.i(LOG_ID, "getdateviewal");
     dater=erdate;
     if(datepicker==null) {
 	Log.i(LOG_ID, " new");
 	datepick =new DatePicker(activity);
-//	datepick.setSpinnersShown(true);
 	datepick.setCalendarViewShown(false);
         Button cancel=new Button(activity);
         cancel.setText(R.string.cancel);
@@ -562,7 +561,6 @@ Log.i(LOG_ID, "getdateviewal");
 
 			return new int[] {w,h};
                 },new View[] {datepick},new View[] {cancel,ok});
-               // },new View[] {text},new View[] {cancel,ok});
 
 	datepicker.setBackgroundColor( ((Applic)  activity.getApplication()).backgroundcolor);
         activity.addContentView(datepicker, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
@@ -576,8 +574,6 @@ Log.i(LOG_ID, "getdateviewal");
 cal.setTimeInMillis(date);
 
 datepick.updateDate( cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
-//	((View)datepicker.getParent()).invalidate();
-// datepicker.invalidate(); 
 activity.setonback(()->{ 
 	datepicker.setVisibility(GONE);
 	if(newnumview!=null)
@@ -613,7 +609,7 @@ void gettimeview(MainActivity activity) {
 	gettimepicker(activity,h,m,numsettime);
 	}
 	@SuppressWarnings("deprecation")
-void gettimepicker(MainActivity activity,int hourin, int minin, ObjIntConsumer<Integer> timeset) {
+public void gettimepicker(MainActivity activity,int hourin, int minin, ObjIntConsumer<Integer> timeset) {
    settime=timeset;
     if(timepicker==null) {
         pick =new TimePicker(activity);
@@ -674,14 +670,10 @@ void gettimepicker(MainActivity activity,int hourin, int minin, ObjIntConsumer<I
 					return new int[]{w, h};
 				}, views);
 		layout.setBackgroundColor( Applic.backgroundcolor);
-//        activity.addContentView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
-//	pick.setLayoutParams(new ViewGroup.LayoutParams( ViewGroup.LayoutParams.WRAP_CONTENT , ViewGroup.LayoutParams.WRAP_CONTENT));
         activity.addContentView(layout,  new ViewGroup.LayoutParams(isWearable?WRAP_CONTENT:MATCH_PARENT, isWearable?WRAP_CONTENT:MATCH_PARENT));
-//        activity.addContentView(layout,   new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
         timepicker=layout;
     }
     else {
-//	timepicker.invalidate();
 	timepicker.requestLayout();
         timepicker.setVisibility(VISIBLE);
 	timepicker.bringToFront();

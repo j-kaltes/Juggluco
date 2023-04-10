@@ -40,7 +40,7 @@ import java.util.Locale;
 
 //import org.w3c.dom.Text;
 
-class Dialogs {
+public class Dialogs {
 private	final static String LOG_ID="Dialogs";
 private float density;
 private ViewGroup exportscreen=null;
@@ -104,10 +104,10 @@ void showexport(MainActivity activity,int width,int height) {
 	activity.setonback(() ->
         		exportscreen.setVisibility(View.GONE));
 	}
-static	final DateFormat fname=             new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss", Locale.US);
+static	public final DateFormat fdatename=             new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss", Locale.US);
 static void algexporter(MainActivity context,int type,String prefix,String ext) {
 	final long time=currentTimeMillis();
-	final String datestr=fname.format(time)      ;
+	final String datestr=fdatename.format(time)      ;
         final String filename = prefix+datestr+ext;
         exportdata(context,type,filename);
 	}

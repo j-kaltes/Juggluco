@@ -1562,7 +1562,10 @@ standaard Android libraries, werd van het volgende gebruik gemaakt:</p>
 	<li><p style="line-height: 100%; margin-bottom: 0in">Communicatie
 	met Freestyle Libre3 sensors gebruikt <a href="https://github.com/intel/tinycrypt">Tinycrypt</a>;</p>
 	<li><p style="line-height: 100%; margin-bottom: 0in">De color picker
-	is een aanpassing van <a href="https://github.com/yukuku/ambilwarna">AmbilWarna</a>.</p>
+	is een aanpassing van <a href="https://github.com/yukuku/ambilwarna">AmbilWarna</a>;</p>
+	<li><p style="line-height: 100%; margin-bottom: 0in">Ondersteuning
+	voor NFC NovoPens is een wijziging van de programmacode die uit
+	xDrip is gehaald.</p>
 </ul>
 <p style="line-height: 100%; margin-bottom: 0in">Juggluco is naar het
 Italiaans vertaald door <a href="mailto:matteo.gabriele81@gmail.com">Matteo

@@ -156,7 +156,7 @@
  <string name="nextpage">Volgende pagina</string>
  <string name="ips">IPs:</string>
  <string name="port">Poort</string>
- <string name="saved">Opgeslagen</string>
+ <string name="saved">"Opgeslagen "</string>
  <string name="savefailed">Opslaan mislukt</string>
  <string name="notsaved">Niet opgeslagen</string>
  <string name="failedbyexception">Mislukte door exception</string>
@@ -243,4 +243,10 @@
 <string name="webserver">Webserver</string>
 <string name="treatments">Geef hoeveelheden</string>
 
+<string name="wentwrong">Er ging iets mis</string>
+     <string name="doses">" doses "</string>
+  <string name="penfailed">Het lezen van de insulinepen is mislukt</string>
+  <string name="changeinsulin">"Verander insulinetype naar "</string>
+     <string name="type">"Type: "</string>
+    <string name="dosesprior">Voeg enkel doses toe van na:</string>
 </resources>

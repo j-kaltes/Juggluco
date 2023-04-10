@@ -93,10 +93,6 @@ import static tk.glucodata.util.getlabel;
 public class Settings  {
 private final static String LOG_ID="Settings";
 MainActivity activity;
-LabelListAdapter    adapt;
-boolean garminwatch=Natives.gethasgarmin();;
-ArrayList<String > labels;
-//            ArrayList<String > labels= new ArrayList<String>( Arrays.asList("NovoRapid","Carbohydrat","Dextro","Levemir","Fietsen","Lopen","Blood"));
 
 public static String    float2string(Float get) {
     return get.toString();
@@ -137,18 +133,10 @@ private void makesettingsin(MainActivity act) {
     	activity=act;
 
         colorwindowbackground=Applic.backgroundcolor;
-	labels=((Applic)act.getApplication()).getlabels();
 	boolean[] issaved={false};
    	mksettings(activity,issaved);
 
 	activity.setonback(() -> {
-	/*
-		if(tk.glucodata.setNumAlarm.issaved||issaved[0]) {
-			Log.i(LOG_ID,"onback issaved");
-			Applic.sendsettings();
-			}
-		else
-			Log.i(LOG_ID,"onback not saved"); */
 		hidekeyboard();
 		finish();});
 }
@@ -190,8 +178,7 @@ void finish() {
 			}
 	       Log.e(LOG_ID ,mess);
 	   }
-	if(editlabel!=null) 
-		 removeContentView(editlabel) ;
+//	if(editlabel!=null) removeContentView(editlabel) ;
 	removeContentView(settinglayout);
 	thisone=null;
 
@@ -204,111 +191,8 @@ void finish() {
 //	activity=null;
 	}
 
-   Layout editlabel=null;
-    EditText label;
-EditText labelprec;
-EditText labelweight;
 //    Button deletelabel;
-   int labelpos=-1;
-View okparent=null;
 public static	int editoptions=(isWearable?0:(EditorInfo.IME_FLAG_NO_EXTRACT_UI| EditorInfo.IME_FLAG_NO_FULLSCREEN))| EditorInfo.IME_ACTION_DONE;
-    void mkchangelabel(MainActivity context,View okpar,Runnable onsave) {
-    okpar.setVisibility(INVISIBLE);
-	okparent=okpar;	
-    if(editlabel==null) {
-        TextView labeltext = new TextView(context);
-        labeltext.setText(R.string.numlabel);
-        label = new EditText(context);
-        label.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-
-        label.setImeOptions(editoptions);
-        label.setMinEms(7);
-	View[] precview=null;
-        if(garminwatch) {
-            TextView prectext = new TextView(context);
-            prectext.setText(R.string.roundto);
-            labelprec = new EditText(context);
-            labelprec.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-            labelprec.setMinEms(3);
-	     labelprec.setImeOptions(editoptions);
-	     precview=new View[]{prectext,labelprec};
-            }
-        TextView weighttext = new TextView(context);
-        weighttext.setText(R.string.weight);
-        labelweight = new EditText(context);
-        labelweight.setInputType( InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-        labelweight.setMinEms(3);
-        labelweight.setImeOptions(editoptions);
-        Button help=new Button(context);
-        help.setText(R.string.helpname);
-        help.setOnClickListener(v->{help(R.string.newlabelhelp,(MainActivity)(v.getContext()));});
-        Button cancel=new Button(context);
-        cancel.setText(R.string.cancel);
-        cancel.setOnClickListener(v->{
-		context.doonback();
-		});
-        Button save=new Button(context);
-	if(Natives.staticnum()) {
-		save.setVisibility(INVISIBLE);
-		}
-	else {
-		save.setText(R.string.save);
-		save.setOnClickListener(v-> {
-			float pr=garminwatch?edit2float(labelprec):0;
-			float wei=edit2float(labelweight);
-			String name=label.getText().toString();
-			int pos=(labelpos>=0) ? labelpos:labels.size()-1;
-
-			if(!Natives.setlabel(pos,name,pr,wei)) {
-				Toast.makeText(context, name+context.getString(R.string.toolarg), Toast.LENGTH_SHORT).show();
-				return;
-				}
-			if(labelpos>=0) {
-			    labels.set(pos,name);
-			    }
-			else {
-			    labels.add(pos,name);
-			  if(delete!=null) {
-				    delete.setVisibility(VISIBLE);
-				    }
-
-			    }
-			hidekeyboard(); 
-		       editlabel.setVisibility(GONE);
-			adapt.notifyDataSetChanged();
-    			okparent.setVisibility(VISIBLE);
-			onsave.run();
-			context.poponback();
-			} );
-		}
-	View [][] views= garminwatch?(new View[][]{new View[]{labeltext,label}, precview,  new View[]{weighttext, labelweight} ,new View[]{help,cancel,save}}):(new View[][]{new View[]{labeltext,label},  new View[]{weighttext, labelweight} ,new View[]{help,cancel,save}});
-
-        editlabel = new Layout(context,
-                (l, w, h) -> {
-    		hideSystemUI();
-			var width=getscreenwidth(context);
-			if(width>w)
-				  l.setX(( width- w) *.6f);
-                    l.setY(0);
-			return new int[] {w,h};
-                }, views);
-	      editlabel.setBackgroundResource(R.drawable.dialogbackground);
-	   int pad=(int)(tk.glucodata.GlucoseCurve.metrics.density*5.0);
-	   editlabel.setPadding(pad,0,pad,0);
-        context.addContentView(editlabel, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
-
-    }
-    else {
-        editlabel.setVisibility(View.VISIBLE);
-        editlabel.bringToFront();
-	}
-
-	context.setonback(() -> {
-		hidekeyboard();
-		editlabel.setVisibility(GONE);
-		okparent.setVisibility(VISIBLE);
-		});
-}
 
  int colorwindowbackground;
 
@@ -320,43 +204,6 @@ static int getbackgroundcolor(Context context) {
         return Color.RED;
 }
 
-static public class LabelListAdapter extends RecyclerView.Adapter<LabelListHolder> {
-    ArrayList<String> labels=null;
-    Settings settings;
-    View ok;
-    Runnable onsave;
-    LabelListAdapter(ArrayList<String> labels,Settings set,View ok,Runnable onsave) {
-        this.labels=labels;
-	this.ok=ok;
-	this.onsave=onsave;
-        settings=set;
-    }
-
-    @NonNull
-	@Override
-    public LabelListHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-    	Button view=new Button( parent.getContext());
-
-	view.setTransformationMethod(null);
-        view.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24f);
-	view.setLayoutParams(new ViewGroup.LayoutParams(  ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-
-        return new LabelListHolder(view,settings,ok,onsave);
-
-    }
-
-	@Override
-	public void onBindViewHolder(final LabelListHolder holder, int pos) {
-		TextView text=(TextView)holder.itemView;
-		text.setText(labels.get(pos));
-	    }
-        @Override
-        public int getItemCount() {
-                return labels.size()-1;
-
-        }
-
-}
 ScrollView settinglayout=null;
     RadioButton mmolL;
     RadioButton mgdl;
@@ -816,8 +663,7 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 		changelabels.setText(R.string.numberlabels);
 		changelabels.setOnClickListener(v-> {
 			    hidekeyboard();
-				resizer=false;
-			    mklabellayout();});
+			    new LabelsClass(context).mklabellayout();});
 			  }
 	var colbut=getbutton(context,R.string.colors);
         colbut.setOnClickListener(v-> {
@@ -987,144 +833,11 @@ setvalues();
 
 
 
-Button delete=null;
 
-boolean resizer=true;
 //ViewGroup labellayout=null;
 
 
-private void	dodeletelast(Spinner spinner,	LabelAdapter<String> numspinadapt, int nr) {
-	Natives.setnrlabel(nr);
-	labels.remove(nr); //USE
-	adapt.notifyDataSetChanged();
-	numspinadapt.setarray(Natives.getLabels());
-	spinner.setAdapter(numspinadapt);
-	spinner.setSelection(Natives.getmealvar());
-	}
 
-private void	askdeletelast(Spinner spinner,	LabelAdapter<String> numspinadapt, int nr) {
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-        builder.setTitle(R.string.deletelabel).
-	 setMessage(labels.get(nr)).
-        setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-		 		dodeletelast(spinner,numspinadapt,nr);
-                    }
-                }) .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-            }
-        }).show();
-	}
-
-
-void    mklabellayout() {
-	MainActivity context = activity;
-//    if(labellayout==null) {
-	Button ok = new Button(context);
-	ok.setText(R.string.ok);
-	RecyclerView recycle = new RecyclerView(context);
-	recycle.setHasFixedSize(true);
-	LinearLayoutManager lin = new LinearLayoutManager(context);
-	recycle.setLayoutManager(lin);
-	Button addnew = new Button(context);
-
-        Spinner spinner=new Spinner(context);
-	final int minheight= GlucoseCurve.dpToPx(48);
-	spinner.setMinimumHeight(minheight);
-	avoidSpinnerDropdownFocus(spinner);
-	LabelAdapter<String> numspinadapt=new LabelAdapter<String>(context,Natives.getLabels(),1);
-        spinner.setAdapter(numspinadapt);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-		@Override
-		public  void onItemSelected (AdapterView<?> parent, View view, int position, long id) {
-			Natives.setmealvar((byte)position);
-			}
-		@Override
-		public  void onNothingSelected (AdapterView<?> parent) {
-
-		} });
-	final Runnable onsave= ()->  {
-				numspinadapt.setarray(Natives.getLabels());
-				spinner.setAdapter(numspinadapt);
-				spinner.setSelection(Natives.getmealvar());
-				};
-	adapt = new LabelListAdapter(labels, this,ok,onsave); //USE
-	recycle.setAdapter(adapt);
-
-	delete = new Button(context);
-	if (Natives.staticnum()) {
-		addnew.setVisibility(INVISIBLE);
-		delete.setVisibility(INVISIBLE);
-	} else {
-		addnew.setOnClickListener(v -> {
-			mkchangelabel(activity,ok,onsave); //USE
-			label.setText("");
-			labelpos = -1;
-		});
-		addnew.setText(R.string.newname);
-		delete.setText(R.string.deletelast);
-
-
-
-
-
-		delete.setOnClickListener(v -> {
-			int nr = labels.size() - 2; //USE
-			Log.d(LOG_ID, "delete " + nr);
-			if (nr >= 0) {
-				askdeletelast(spinner,numspinadapt,nr);
-			}
-			if (nr <= 0)
-				delete.setVisibility(INVISIBLE);
-		});
-	if (labels.size() < 2)  //USE
-		delete.setVisibility(INVISIBLE);
-
-	}
-	TextView menulabel=getlabel(context,context.getString(R.string.meal));
-	spinner.clearAnimation();
-	spinner.setSelection(Natives.getmealvar());
-        Button help=new Button(context);
-        help.setOnClickListener(v->{help(R.string.labelhelp,context); });
-        help.setText(R.string.helpname);
-	Layout butlay=new Layout(context,new View[]{menulabel,spinner},new View[] {delete},new View[]{help},new View[]{addnew},new View[]{ok});
-	butlay.setLayoutParams(new ViewGroup.LayoutParams(   ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
-		recycle.setLayoutParams(new ViewGroup.LayoutParams(   ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
-    final ViewGroup  labellayout=new Layout(context,(x,w,h)->{
-    			hideSystemUI();
-			return new int[] {w,h};
-	},new View[] {recycle,butlay});
-
-	Runnable closerun=()-> {
-		hidekeyboard();
-		Applic app=(tk.glucodata.Applic )context.getApplication();
-		if(Natives.shouldsendlabels())  {
-		    Applic.wakemirrors();
-		    app.sendlabels();
-		}
-		/*
-		if(app.curve!=null&&app.curve.search!=null) {
-			app.curve.searchspinadap.setarray(Natives.getLabels());
-			app.curve.searchspinner.setAdapter(app.curve.searchspinadap);
-			} */
-		removeContentView(labellayout) ;
-		resizer=true;
-		};
-	context.setonback(closerun);
-    ok.setOnClickListener(v->{
-	    context.poponback();
-    	closerun.run();
-    });
-
-        labellayout.setBackgroundColor(colorwindowbackground);
-        context.addContentView(labellayout, new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
-   /* }
-    else {
-        labellayout.setVisibility(VISIBLE); 
-          labellayout.bringToFront();
-	}*/
-}
 public static void   removeContentView(View view) {
     ViewGroup parent= (ViewGroup)view.getParent();
     if(parent!=null)

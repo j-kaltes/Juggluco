@@ -584,7 +584,7 @@ static void	defineingredient(MainActivity act ,IngredientViewAdapter  foodadapt,
 			@Override
 			public  void onNothingSelected (AdapterView<?> parent) {
 			} });
-		spinner.clearAnimation();
+	//	spinner.clearAnimation();
 		spinner.setSelection(usedunit);
 		}
 	else
