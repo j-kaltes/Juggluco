@@ -204,6 +204,8 @@
 <string name="deleteconnection">Excluir conexão?</string>
 <string name="wakelock">sempre ativo</string>
 <string name="wifi">Wi-Fi</string>
+    <string name="notify">Notificar</string>
+
 </resources>
 
 

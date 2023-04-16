@@ -100,7 +100,6 @@ static jugglucotext ittext {
 		"Stop Allarme"
 		},
 	.menustr1={
-		"Notifica",
 		"Esporta",
 		"Mirror",
 		ittext.newamount,

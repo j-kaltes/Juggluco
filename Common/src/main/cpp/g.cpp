@@ -1,4 +1,5 @@
 
+#define setthreadname(buf) prctl(PR_SET_NAME, buf, 0, 0, 0)
 /*#ifndef NDEBUG
 #define TESTGEN2 1
 #endif   */
@@ -178,11 +179,12 @@ void alarmhandler(int sig) {
                 }
 	}
 
+//s/setthreadname(\([^);
 extern void	setstreaming(SensorGlucoseData *hist) ;
 extern "C" JNIEXPORT jint JNICALL fromjava(nfcdata)(JNIEnv *env, jclass thiz, jbyteArray uid, jbyteArray info,jbyteArray data) {
 	nfcdatatid=syscall(SYS_gettid);
 	LOGGER("nfcdata %d\n", nfcdatatid);
-      prctl(PR_SET_NAME, "NFC", 0, 0, 0);
+      setthreadname( "NFC");
       destruct dest([](){nfcdatatid=0;
                 signal(SIGALRM,SIG_IGN);
                 signal(usesig,SIG_IGN);
@@ -460,7 +462,7 @@ extern "C" JNIEXPORT void JNICALL   fromjava(resetbluetooth)(JNIEnv *envin, jcla
 extern "C" JNIEXPORT jbyteArray JNICALL   fromjava(sensorUnlockKey)(JNIEnv *envin, jclass cl,jlong dataptr) {
 	streamdata * const streamptr=reinterpret_cast<streamdata *>(dataptr);
 	LOGGER("sensorUnlockKey %p\n",streamptr);
-      prctl(PR_SET_NAME,"sensorUnlockKey"  , 0, 0, 0);
+      setthreadname("sensorUnlockKey"  );
 	if(!dataptr)
 		return nullptr;
 	if(streamptr->libreversion!=2)
@@ -501,7 +503,7 @@ extern "C" JNIEXPORT jint JNICALL   fromjava(getsensorgen)(JNIEnv *envin, jclass
 extern "C" JNIEXPORT jbyteArray JNICALL   fromjava(getstreamingAuthenticationData)(JNIEnv *envin, jclass cl,jlong dataptr) { 
 	streamdata * const streamptr=reinterpret_cast<streamdata *>(dataptr);
 	LOGGER("getstreamingAuthenticationData %p\n",streamptr);
-        prctl(PR_SET_NAME,"getstreamingAuthenticationData"  , 0, 0, 0);
+        setthreadname("getstreamingAuthenticationData"  );
 	if(!dataptr)
 		return nullptr;
 	if(streamptr->libreversion!=2)
@@ -601,9 +603,10 @@ jlong glucoseback(uint32_t glval,float drate,SensorGlucoseData *hist) {
 
 
 		extern void wakeuploader();
+
 extern "C" JNIEXPORT jlong JNICALL   fromjava(processTooth)(JNIEnv *envin, jclass cl,jlong dataptr, jbyteArray bluetoothdata) {
 //	setbuffer(mystatus);
-      prctl(PR_SET_NAME, "processTooth", 0, 0, 0);
+      setthreadname( "processTooth");
 	LOGGER("processTooth %ld\n",syscall(SYS_gettid));
 	libre2stream *sdata=reinterpret_cast<libre2stream *>(dataptr);
 
@@ -759,7 +762,7 @@ extern "C" JNIEXPORT jstring  JNICALL   fromjava(chmod)(JNIEnv *env, jclass cl,j
 
 extern "C" JNIEXPORT void  JNICALL   fromjava(startbackup)(JNIEnv *env, jclass cl) {
 	if(backup ) {
-		prctl(PR_SET_NAME, "Backup", 0, 0, 0);
+		setthreadname( "Backup");
 		backup->backupthread();
 		}
 	}*/

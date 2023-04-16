@@ -136,7 +136,6 @@ public static   void basehelp(int res,MainActivity act,Consumer<Layout> okproc) 
            helpview.setTextColor(Color.WHITE);
            helpview.setTextIsSelectable(true);
 	    whelpview=new WeakReference<TextView>(helpview);
-	//	helpview.setAutoLinkMask(Linkify.WEB_URLS);
 		helpview.setMovementMethod(LinkMovementMethod.getInstance());
  	    helpview.setLinksClickable(true);
            helpscroll.addView(helpview);

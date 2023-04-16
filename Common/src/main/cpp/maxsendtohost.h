@@ -23,3 +23,4 @@
 #pragma once
 
 constexpr const int maxsendtohost=4;
+constexpr const int maxallhosts=8;

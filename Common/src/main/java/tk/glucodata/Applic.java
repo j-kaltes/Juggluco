@@ -138,7 +138,7 @@ private final IntentFilter mintimefilter ;
 @MainThread
 public Applic() {
 	super();
-	android.util.Log.e(LOG_ID,"start glucodata.tk");
+	android.util.Log.e(LOG_ID,"start tk.glucodata");
 	mintimefilter = new IntentFilter();
     	mintimefilter.addAction(Intent.ACTION_TIME_TICK);
        app=this;
@@ -199,10 +199,10 @@ static String[] hasPermissions(Context context, String[] perms) {
 	for(var p:perms) {
 		if(ContextCompat.checkSelfPermission(context, p)!= PackageManager.PERMISSION_GRANTED) {
 			over.add(p);
-			Log.i(LOG_ID,p+" notgranded");	
+			Log.i(LOG_ID,p+" not granted");	
 			}
 		else  {
-			Log.i(LOG_ID,p+" granded");	
+			Log.i(LOG_ID,p+" granted");	
 				}
 		}
 	var uit=new String[over.size()];
@@ -236,7 +236,7 @@ public static void updateservice(Context context,boolean usebluetooth) {
 		else
 			keeprunning.stop();
 		}
-public static void dontusebluetooth() {
+private static void dontusebluetooth() {
 	Log.i(LOG_ID,"dontusebluetooth()");
 	SensorBluetooth.destructor();
 	if(Natives.backuphostNr( )<=0) {
@@ -267,7 +267,7 @@ static	 void explicit(Context context) {
 	}
 void initbluetooth(boolean usebluetooth,Context context,boolean frommain) {
 	usingbluetooth=usebluetooth;
-	Log.i(LOG_ID,"initbluetooth");
+	Log.i(LOG_ID,"initbluetooth "+usebluetooth);
 
 	if(!isWearable) {
 	     if(Natives.getusegarmin()&&numdata.devices==null)
@@ -465,6 +465,7 @@ void initproc() {
 	}
 
 public static void setbluetooth(Context activity,boolean on) {
+	Log.i(LOG_ID,"setbluetooth(Context activity,"+on+")");
 	Natives.setusebluetooth(on);
 	if(on)  {
 		Applic.app.initbluetooth(on,activity,activity instanceof MainActivity);
@@ -534,12 +535,13 @@ static boolean bluetoothEnabled() {
 	}
 static final boolean usewakelock=false;
 @Keep
-static void doglucose(String SerialNumber, int mgdl, float gl, float rate, int alarm, long timmsec,boolean blueoff) {
+static void doglucose(String SerialNumber, int mgdl, float gl, float rate, int alarm, long timmsec,boolean wasblueoff) {
 	var wakelock=	usewakelock?(((PowerManager) app.getSystemService(POWER_SERVICE)).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Juggluco::Applic")):null;
 	if(wakelock!=null)
 		wakelock.acquire();
-	if(!blueoff)
+	if(!wasblueoff) {
 		Applic.dontusebluetooth();
+		}
 	SuperGattCallback.dowithglucose( SerialNumber,  mgdl,  gl, rate,  alarm,  timmsec);
 	if(wakelock!=null)
 		wakelock.release();

@@ -2517,8 +2517,10 @@ class attach {
 JNIEnv *env;
 public:
 attach() {
-//	vmptr->AttachCurrentThread(&env, nullptr);
+      char buf[17];
+      prctl(PR_GET_NAME, buf, 0, 0, 0);
 	vmptr->AttachCurrentThreadAsDaemon(&env, nullptr);
+        prctl(PR_SET_NAME, buf, 0, 0, 0);
 	}
 ~attach() {
 	vmptr->DetachCurrentThread();
@@ -2572,13 +2574,12 @@ extern	bool hasnotiset();
 					const int alarm=getalarmcode(poll->g,hist);
 					
 					sensor *senso=sensors->getsensor(sendindex);
-					LOGGER("processglucosevalue finished=%d,doglucose(%s,%d,%f,%f,%d,%lld)\n", senso->finished,hist->shortsensorname()->data(),poll->g,glu,poll->ch,alarm,tim*1000LL);
+				        bool wasnoblue=settings->data()->nobluetooth;
+					LOGGER("processglucosevalue finished=%d,doglucose(%s,%d,%f,%f,%d,%lld,%d)\n", senso->finished,hist->shortsensorname()->data(),poll->g,glu,poll->ch,alarm,tim*1000LL,wasnoblue);
 					senso->finished=0;
 					jstring sname= getenv()->NewStringUTF(hist->shortsensorname()->data());
-				        bool wasnoblue=settings->data()->nobluetooth;
 					settings->data()->nobluetooth=true;
 					float rate=poll->ch;
-//					if(glnearnull(rate)) rate=0.0f;
 					getenv()->CallStaticVoidMethod(JNIApplic,jdoglucose,sname,poll->g,glu,rate,alarm,tim*1000LL,wasnoblue);
 					getenv()->DeleteLocalRef(sname);
 			#ifndef WEAROS
@@ -3790,7 +3791,7 @@ void setnowmenu(time_t nu) {
 		}
 	memset(hourminstr+5,' ',hourminstrlen-6); 
 	}
-int notify=false;
+//int notify=false;
 
 #define arsizer(x) sizeof(x)/sizeof(x[0])
 
@@ -3855,7 +3856,7 @@ string_view menustr1[]= {
 */
 
 
-const int *menuopt0b[]={&notify,nullptr,nullptr,nullptr,nullptr,nullptr};
+const int *menuopt0b[]={nullptr,nullptr,nullptr,nullptr,nullptr};
 const int *menuopt1[]={nullptr,&showscans, &showstream,&showhistories, &shownumbers,&showmeals,&invertcolors};
 //const int *menuopt1[]={nullptr,&showscans, &showstream,&showhistories, &shownumbers,&showmeals, &settings->data()->invertcolors};
 const int **optionsmenu[]={menuopt0,menuopt0b,menuopt1,nullptr};
@@ -3876,11 +3877,18 @@ int getmenulen(const int menu) {
 
 static std::string_view	nothing="          ";
 void setnewamount() {
+
+	int newamountoff=
+#ifdef WEAROS
+	3;
+#else
+	2;
+#endif
 	if(settings->staticnum()) {
-		usedtext->menustr1[3]=nothing;
+		usedtext->menustr1[newamountoff]=nothing;
 		}
 	else
-		usedtext->menustr1[3]=usedtext->newamount;
+		usedtext->menustr1[newamountoff]=usedtext->newamount;
 	}
 #endif
 /*
@@ -4056,7 +4064,7 @@ static int64_t doehier(int menu,int item) {
 	switch(menu) {
 		case 0: 
 			switch(item) {
-				case 0 :  nrmenu=0;return 2LL*0x10+1;				
+				case 0 :  nrmenu=0;return 1LL*0x10+1;				
 				case 1 : nrmenu=0;return 2LL*0x10;
 				extern void setinvertcolors(bool val) ;
 				case 2: invertcolors=!invertcolors; setinvertcolors(invertcolors) ; return -1LL;
@@ -4079,15 +4087,7 @@ static int64_t doehier(int menu,int item) {
 				case 3: 
 					if(settings->staticnum()) 
 						return -1LL;
-					return  menuel(1,3);
-					/*
-				case 4:	
-					if(!numlist) {
-						void numiterinit();
-						numiterinit();
-						numlist=1;
-						}
-					return menuel(1,4); */
+					return  menuel(1,2);
 				};
 		}
 	return -1LL;
@@ -4106,12 +4106,12 @@ static int64_t doehier(int menu,int item) {
 					break;
 				};break;
 		case 1: switch(item) {
-				case 0: notify=!notify;return menu|item*0x10|(notify<<8);
-				case 3: nrmenu=0;
+//				case 0: notify=!notify;return menu|item*0x10|(notify<<8);
+				case 2: nrmenu=0;
 					if(settings->staticnum()) 
 						return -1LL;
 					break;
-				case 4:	nrmenu=0; 
+				case 3:	nrmenu=0; 
 					if(!numlist) {
 						void numiterinit();
 						numiterinit();
@@ -4120,7 +4120,7 @@ static int64_t doehier(int menu,int item) {
 					break;
 
 #ifdef PERCENTILES
-				case 5:  nrmenu=0; if(!makepercetages())
+				case 4:  nrmenu=0; if(!makepercetages())
 						return -1LL;
 					;break;
 #endif

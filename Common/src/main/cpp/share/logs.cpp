@@ -88,13 +88,12 @@ extern		pathconcat logbasedir;
 	pid_t pid= syscall(SYS_getpid);
 	constexpr const int maxbuf=60;
 	char buf[maxbuf];	
-	int buflen=std::snprintf(buf,maxbuf,"%.24s %zd Start logging %zd\n",timestr, syscall(SYS_gettid),pid);
+	int buflen=std::snprintf(buf,maxbuf,"%.24s %d Start logging %d\n",timestr, syscall(SYS_gettid),pid);
 
        sys_write(handle, buf,buflen);
        return handle;
        }
        #endif
-
 struct logging {   
 thread_local	inline static   bool log=false;
 	logging()  { log=true; };
@@ -131,7 +130,7 @@ int vloggert( const char *format, va_list args) {
 		logging now;
 		constexpr const int size=4096;
 		char str[size];
-		int start=std::sprintf(str,"%lu %ld ",time(nullptr), syscall(SYS_gettid));
+		int start=std::sprintf(str,"%lu %d ",time(nullptr), syscall(SYS_gettid));
 	       int ret= std::vsnprintf(str+start, size-start, format, args);
 	       if(ret<=0) {
 			return ret;
@@ -177,7 +176,7 @@ void LOGGERNO(const char *buf,int len,bool endl) {
 	if(dolog)	 {
 		if(len<1024) {
 			char allbuf[len+50];
-			int start=sprintf(allbuf,"%lu %ld ",time(nullptr), syscall(SYS_gettid));
+			int start=sprintf(allbuf,"%lu %d ",time(nullptr), syscall(SYS_gettid));
 			memcpy(allbuf+start,buf,len);
 			if(endl)
 				allbuf[start+len++]='\n';
@@ -185,7 +184,7 @@ void LOGGERNO(const char *buf,int len,bool endl) {
 			}
 		else {
 			char allbuf[50];
-			int start=sprintf(allbuf,"%lu %ld ",time(nullptr), syscall(SYS_gettid));
+			int start=sprintf(allbuf,"%lu %d ",time(nullptr), syscall(SYS_gettid));
 			logwriter(allbuf,start);
 			logwriter(buf,len);
 			if(endl)
@@ -201,5 +200,15 @@ void LOGGERN(const char *buf,int len) {
 	}
 
 
-
+#else
+#ifndef INCLUDE_NR
+#define INCLUDE_NR
+#include <asm-generic/unistd.h> /*Headers in this order*/
+#include <sys/syscall.h>
 #endif
+#include <unistd.h>
+#endif
+extern pid_t getTid();
+pid_t getTid() {
+	return syscall(SYS_gettid);
+	}

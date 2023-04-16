@@ -196,13 +196,15 @@ bool getownip(struct sockaddr_in6 *outip) {
 	LOGGER("%s %s fam=%d\n",ifa->ifa_name,name.data(),family);
 	const int flags= ifa->ifa_flags;
 	showflags(flags);
-	constexpr const char wlan[]="wlan";
-	if(!memcmp(ifa->ifa_name,wlan,sizeof(wlan)-1)) {
-		switch(family) {
-	       		case AF_INET: return  putip(ifa->ifa_addr,outip);;
-			case AF_INET6: wlanip6=ifa; break;
+	if(!(flags&IFF_NOARP)) {
+		constexpr const char wlan[]="wlan";
+		if(!memcmp(ifa->ifa_name,wlan,sizeof(wlan)-1)) {
+			switch(family) {
+				case AF_INET: return  putip(ifa->ifa_addr,outip);;
+				case AF_INET6: wlanip6=ifa; break;
 
-			}
+				}
+		      }
 	      }
 	  }
   if(!wlanip6)  {
@@ -215,7 +217,7 @@ bool getownip(struct sockaddr_in6 *outip) {
 
 bool usefullflags(int flags) {
  constexpr const int should=IFF_UP  | IFF_RUNNING;
- constexpr const int shouldnot= IFF_LOOPBACK ;
+ constexpr const int shouldnot= IFF_LOOPBACK |IFF_NOARP;
  return (flags&should)==should && !(flags&shouldnot);
  }
 
@@ -314,6 +316,7 @@ int getownips(struct sockaddr_in6 *outips,int max,bool &haswlan) {
 		      }
 		     else  {
 		       if(family==AF_INET) {
+		       
 		       		if(iter<max)  {
 				     LOGGER("take\n");
 				     putip(ifa->ifa_addr,outips+iter++);

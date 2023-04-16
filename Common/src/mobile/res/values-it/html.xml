@@ -227,7 +227,7 @@ avviare Juggluco su un vecchio dispositivo Android (minimo Android
 4.4) a casa e connesso a internet tramite il modem. Un\'altra
 possibilit&agrave; &egrave; di avviare tramite riga di comando
 Juggluco su un computer (es. Un PC su Amazon AWS):</P>
-<P STYLE="margin-bottom: 0cm; line-height: 100%"><A HREF="http://jkaltes.byethost16.com/Juggluco/cmdline/index.html"><SPAN LANG="it-IT">http://jkaltes.byethost16.com/Juggluco/cmdline/index.html</SPAN></A></P>
+<P STYLE="margin-bottom: 0cm; line-height: 100%"><A HREF="https://www.juggluco.nl/Juggluco/cmdline/index.html"><SPAN LANG="it-IT">https://www.juggluco.nl/Juggluco/cmdline/index.html</SPAN></A></P>
 <P STYLE="margin-bottom: 0cm; line-height: 100%">Guida sul
 reindirizzamento delle porte:</P>
 <P STYLE="margin-bottom: 0cm; line-height: 100%"><A HREF="https://portforward.com/how-to-port-forward/"><SPAN LANG="it-IT">https://portforward.com/how-to-port-forward/</SPAN></A></P>
@@ -852,7 +852,7 @@ dell\'app.</P>
 speciale se stai usanto l\'app Kerfstok su uno smartwatch Garmin
 touchscreen:</P>
 <P STYLE="margin-bottom: 0cm; line-height: 100%"><SPAN LANG="it-IT"><A HREF="https://apps.garmin.com/en-US/apps/b6348ccc-86d8-4780-8013-d9e19fed5260">https://apps.garmin.com/en-US/apps/b6348ccc-86d8-4780-8013-d9e19fed5260</A>
-(vedi anche <A HREF="http://jkaltes.byethost16.com/Kerfstok/index.html">http://jkaltes.byethost16.com/Kerfstok/index.html</A>)</SPAN></P>
+(vedi anche <A HREF="https://www.juggluco.nl/Kerfstok/index.html">https://www.juggluco.nl/Kerfstok/index.html</A>)</SPAN></P>
 <P STYLE="margin-bottom: 0cm; line-height: 100%">E\' stato scelto uno
 smartwatch Garmin perch&egrave; &egrave; possibile vedere il
 contenuto del display senza usare la retroilluminazione (per&ograve;
@@ -925,7 +925,7 @@ attiva, la interrompe corrompendola.</SPAN></SPAN></P>
 </SPAN></SPAN></SPAN><SPAN LANG="it-IT"><SPAN STYLE="font-style: normal"><B>sorgenti</B></SPAN></SPAN><SPAN LANG="it-IT">
 </SPAN><SPAN LANG="it-IT"><SPAN STYLE="font-style: normal"><SPAN STYLE="font-weight: normal">di
 Kerfstok possono essere scaricati da
-</SPAN></SPAN></SPAN><SPAN LANG="it-IT"><A HREF="http://jkaltes.byethost16.com/Kerfstok/Kerfstok-source.html">http://jkaltes.byethost16.com/Kerfstok/Kerfstok-source.html</A>).
+</SPAN></SPAN></SPAN><SPAN LANG="it-IT"><A HREF="https://www.juggluco.nl/Kerfstok/Kerfstok-source.html">https://www.juggluco.nl/Kerfstok/Kerfstok-source.html</A>).
 Glu utenti sono liberi di modificarli. Ogni app per smartwatch ha un
 identificatore unico. Se l\'identificatore &egrave; differente da
 quello di default Juggluco necessita di saperlo per poter comunicare
@@ -952,7 +952,7 @@ valori dei sensori Freestyle Libre 2 non US.</P>
 <P><SPAN LANG="it-IT">Il file .apk contenente Librelink &egrave;
 distribuito da Google Play. Una lista di link dopo poterlo reperire
 si pu&ograve; trovare qui:
-<A HREF="http://jkaltes.byethost16.com/Juggluco/urls.html">http://jkaltes.byethost16.com/Juggluco/urls.html</A></SPAN></P>
+<A HREF="https://www.juggluco.nl/Juggluco/urls.html">https://www.juggluco.nl/Juggluco/urls.html</A></SPAN></P>
 <P>Dopo aver scaricato l\'APK, si pu&ograve; aprire Juggluco cliccando
 su <B>Apri</B><SPAN STYLE="font-weight: normal">.</SPAN></P>
 <P>E\' anche possibile avviare Juggluco senza aver accesso
@@ -1312,7 +1312,7 @@ lo invier&agrave; a Kerfstok. In questo modo Kerfstop mostrer&agrave;
 sempre il valore pi&ugrave; recente di glucosio. Kerfstok inoltre pu&ograve;
 registrare tutte le attivit&agrave; supportate da Garmin e pu&ograve;
 mostrare anche velocit&agrave; e distanza. Vedere Orologio-&gt;Kerfstok
-Status-&gt; Aiuto e <A HREF="http://jkaltes.byethost16.com/Kerfstok">http://jkaltes.byethost16.com/Kerfstok</A></SPAN></P>
+Status-&gt; Aiuto e <A HREF="https://www.juggluco.nl/Kerfstok">https://www.juggluco.nl/Kerfstok</A></SPAN></P>
 <P ALIGN=CENTER STYLE="margin-top: 0.1cm; margin-bottom: 0.2cm; line-height: 100%; page-break-after: avoid">
 <FONT FACE="Liberation Sans, sans-serif"><FONT SIZE=5>xDrip watch app</FONT></FONT></P>
 <P STYLE="margin-bottom: 0cm; line-height: 100%">Juggluco incorpora
@@ -1340,7 +1340,7 @@ sport di xDrip che include il valore di glucosio:
 I campi dei dati e le watch face possono essere la soluzione ideale
 ma le restrizioni imposte da Garmin ne diminuiscono il valore. Per
 altre informazioni sull\'interfaccia webserver vedere
-<A HREF="http://jkaltes.byethost16.com/Juggluco/addwatch.html">http://jkaltes.byethost16.com/Juggluco/addwatch.html</A></SPAN></P>
+<A HREF="https://www.juggluco.nl/Juggluco/addwatch.html">https://www.juggluco.nl/Juggluco/addwatch.html</A></SPAN></P>
 <P ALIGN=CENTER STYLE="margin-top: 0.1cm; margin-bottom: 0.2cm; line-height: 100%; page-break-after: avoid">
 <FONT FACE="Liberation Sans, sans-serif"><FONT SIZE=5>Juggluco Wear</FONT></FONT></P>
 <P>Esiste una versione di Juggluco per Wear OS. Il display &egrave;
@@ -1371,7 +1371,7 @@ connessione TCP direttamente all\'orologio. Ci sono due possibilit&agrave;:</P>
 </OL>
 <P><SPAN LANG="it-IT">Puoi scaricare Juggluco per Wear OS da Google
 Play sul tuo orologio. Per foto di esempio vai su
-<A HREF="http://jkaltes.byethost16.com/JugglucoWearOS/index.html">http://jkaltes.byethost16.com/JugglucoWearOS</A></SPAN></P>
+<A HREF="https://www.juggluco.nl/JugglucoWearOS/index.html">https://www.juggluco.nl/JugglucoWearOS</A></SPAN></P>
 <P>Per metterlo in funzione fai come di seguito:</P>
 <UL>
 	<LI><P>Assicurati che entrambi Bluetooth e WIFI funzionino sullo
@@ -1468,7 +1468,7 @@ massimo un minuto.</P>
 <string name="about" >
 <![CDATA[
 <p style="line-height: 100%; margin-bottom: 0in">
-<span lang="it-IT">Juggluco è stato scritto da <a href="http://jkaltes.byethost16.com/Juggluco">Jaap
+<span lang="it-IT">Juggluco è stato scritto da <a href="https://www.juggluco.nl/Juggluco">Jaap
 Korthals Altes</a></span></p>
 <p style="line-height: 100%; margin-bottom: 0in">Oltre alle librerie
 standard di Android, abbiamo I seguenti:</p>

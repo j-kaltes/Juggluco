@@ -155,7 +155,7 @@ is used is abbreviated as follows:</p>
 </p>
 <p style="line-height: 100%; margin-bottom: 0in">For more information
 on Mirror connections read the help under &quot;<i>Add connection</i>&quot;
-and see <a class="western" href="http://jkaltes.byethost16.com/Juggluco/mmol.html#mirror">http://jkaltes.byethost16.com/Juggluco/mmol.html#mirror</a></p>
+and see <a class="western" href="https://www.juggluco.nl/Juggluco/mmol.html#mirror">https://www.juggluco.nl/Juggluco/mmol.html#mirror</a></p>
 ]]>
 </string>
 <string name="addconnection" >
@@ -239,14 +239,14 @@ is to run Juggluco on an Android device (minimal Android 4.4) at home
 connected to the internet via a modem. Another possibility is to run
 a command line program belonging to Juggluco on a computer (e.g. your
 PC or Amazon AWS):
-<a href="http://jkaltes.byethost16.com/Juggluco/cmdline/index.html">http://jkaltes.byethost16.com/Juggluco/cmdline/index.html</a></p>
+<a href="https://www.juggluco.nl/Juggluco/cmdline/index.html">https://www.juggluco.nl/Juggluco/cmdline/index.html</a></p>
 <p style="line-height: 100%; margin-bottom: 0in">Port forwarding
 tutorials:</p>
 <p style="line-height: 100%; margin-bottom: 0in"><a href="https://portforward.com/how-to-port-forward/">https://portforward.com/how-to-port-forward/</a></p>
 <p style="line-height: 100%; margin-bottom: 0in"><a href="https://stevessmarthomeguide.com/understanding-port-forwarding/">https://stevessmarthomeguide.com/understanding-port-forwarding/</a></p>
 <p style="line-height: 100%; margin-bottom: 0in">It is possible to
 receive glucose values via Bluetooth on a device without NFC (see
-<a href="http://jkaltes.byethost16.com/Juggluco/mirror">http://jkaltes.byethost16.com/Juggluco/mirror</a>):
+<a href="https://www.juggluco.nl/Juggluco/mirror">https://www.juggluco.nl/Juggluco/mirror</a>):
 Initialize the sensor via NFC on the NFC device and then send the
 Scan and Stream data to the non-NFC device.Hereafter reverse the
 connection for Stream date and turn off the Bluetooth connection in
@@ -766,7 +766,7 @@ except when you explicitly specify the name.</p>
 <h2 class="western">Glucodata broadcast</h2>
 <p>A new broadcast that has the same function as the xDrip broadcast.
 A simple example app that writes received glucose values to logcat
-you can find here: <a href="http://jkaltes.byethost16.com/Juggluco/glucosebroadcast.html">Glucose
+you can find here: <a href="https://www.juggluco.nl/Juggluco/glucosebroadcast.html">Glucose
 broadcasts</a>. If you specify Juggluco as data-source in G-Watch,
 you need to turn on this broadcast.</p>
 <p>The application apps listening to this broadcast are shown. Check
@@ -914,7 +914,7 @@ some time, with scanning in between, to get it back again.</p>
 <p style="line-height: 100%; margin-bottom: 0in">This view is used to
 solve connection problems with Kerfstok
 (<a href="https://apps.garmin.com/en-US/apps/b6348ccc-86d8-4780-8013-d9e19fed5260">https://apps.garmin.com/en-US/apps/b6348ccc-86d8-4780-8013-d9e19fed5260</a>
-(see also <a href="http://jkaltes.byethost16.com/Kerfstok/index.html">http://jkaltes.byethost16.com/Kerfstok/index.html</a>).
+(see also <a href="https://www.juggluco.nl/Kerfstok/index.html">https://www.juggluco.nl/Kerfstok/index.html</a>).
 Kerfstok is a watch app for programmable Garmin smartwatches with
 touchscreen. Kerfstok has the following uses:</p>
 <ul>
@@ -1006,7 +1006,7 @@ same results</span><span lang="en-US"> in non US like Freestyle Libre
 <p><span lang="en-US">The .apk containing Librelink is distributed by
 Google Play and on all kind of places it is available on the web. A
 list of links can be found at:
-</span><a href="http://jkaltes.byethost16.com/Juggluco/urls.html">http://jkaltes.byethost16.com/Juggluco/urls.html</a></p>
+</span><a href="https://www.juggluco.nl/Juggluco/urls.html">https://www.juggluco.nl/Juggluco/urls.html</a></p>
 <p><span lang="en-US">After you have downloaded the APK, you can let
 Juggluco open it, by touching the </span><span lang="en-US"><b>Open</b></span>
 <span lang="en-US">button.</span> 
@@ -1261,17 +1261,17 @@ Libre 2 sensors. But maybe the old permissions still work.</p>
 <string name="watchinfo" >
 <![CDATA[
 <h1>Watch</h1>
-<p style="line-height: 100%; margin-bottom: 0in">Currently Juggluco
+<p style="line-height: 100%; margin-bottom: 0in">Currently, Juggluco
 has six ways to get glucose values on your watch.</p>
 <h2 class="western">Notify</h2>
-<p style="line-height: 100%; margin-bottom: 0in"><span lang="en-US">If
-Notify is turned on in the left middle menu, an Android notification
-is created every time a new glucose value arrives. Most</span>
-<span lang="en-US">smartwatches can be configured to receive these
-notifications. It works with Garmin watches. Some companion apps of
-other watches don\'t send this notification to the watch, probably
-because it is a modification of a notification that is constantly
-present instead of creating a new notification.</span></p>
+<p style="line-height: 100%; margin-bottom: 0in"><span lang="en-US">When
+</span><span lang="en-US"><i>Notify</i></span><span lang="en-US"> is
+turned on, an Android notification is created every time a new
+glucose value arrives. On some watches notifications are only send to
+the watch when a new notification is created, for them you have to
+turn on </span><span lang="en-US"><i><b>Separate</b></i></span><span lang="en-US">.
+For these watches you also have to switch on </span><span lang="en-US"><i>Separate</i></span>
+<span lang="en-US">to receive alarm notifications on the watch.</span></p>
 <h2 class="western">Watchdrip</h2>
 <p style="line-height: 100%; margin-bottom: 0in">By switching this
 on, Juggluco sends glucose values to <a href="https://bigdigital.home.blog/2022/06/16/watchdrip-a-new-application-for-xdrip-watch-integration">Watchdrip+</a>.
@@ -1285,7 +1285,7 @@ Immediately as a new glucose value arrives, Juggluco sends it to
 Kerfstok. So Kerfstok displays always the most recent glucose value.
 Kerfstok can also record all activities supported by Garmin and can
 display speed and distance. See Watch-&gt;Kerfstok Status-&gt; Help
-and <a href="http://jkaltes.byethost16.com/Kerfstok">http://jkaltes.byethost16.com/Kerfstok</a></span></p>
+and <a href="https://www.juggluco.nl/Kerfstok">https://www.juggluco.nl/Kerfstok</a></span></p>
 <h2 class="western">Broadcast</h2>
 <p style="line-height: 100%; margin-bottom: 0in">Apps can receive
 glucose values from one of the glucose broadcasts send by Juggluco
@@ -1326,7 +1326,7 @@ to a user there exist also a watch face for </span><span lang="en-US"><b>Fitbit<
 <a href="https://glancewatchface.com/">https://glancewatchface.com</a></span></p>
 <p style="line-height: 100%; margin-bottom: 0in"><span lang="en-US">For
 more information on the web server interface see
-<a href="http://jkaltes.byethost16.com/Juggluco/webserver.html">http://jkaltes.byethost16.com/Juggluco/webserver.html</a></span></p>
+<a href="https://www.juggluco.nl/Juggluco/webserver.html">https://www.juggluco.nl/Juggluco/webserver.html</a></span></p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>local only</b>:
 only accept connections from localhost (127.0.0.1). If you turn it
 off, also other hosts can access the server. If you don\'t configure
@@ -1346,6 +1346,21 @@ Bluetooth.</p>
 <string name="wearosinfo" >
 <![CDATA[
 <h1 class="western">Wear Os</h1>
+<p><b>Direct sensor-watch connection</b>: This determines whether the
+watch should be directly connected with the sensor. This can only be
+changed when watch and phone are in sync. Use Mirror-&gt;Sync and
+Reinit on phone and watch, to sync phone and watch.</p>
+<p><b>Init watch app</b>: This should be pressed once after Juggluco
+is installed on the WearOS watch and is running. 
+</p>
+<p><b>Defaults</b>: This sets the connection settings to it defaults
+values. This consists of the settings that can be changed in Left
+menu-&gt;Mirror on the watch and left middle menu-&gt;Mirror on the
+phone. It consists of settings like &quot;Active only&quot; and
+&quot;Scans\'. This button can be pressed when the settings have
+changed accidentally by water of the shower or during sleep. If you
+reset by reinstalling the watch version or clearing data, then you
+also need to remove the mirror connection on the phone.</p>
 <p>A special version of Juggluco can run directly on a Wear Os watch.
 It needs an Android smartphone with NFC to scan the sensor and via a
 TCP connection this data is sent to the Wear OS watch. Hereafter
@@ -1360,8 +1375,7 @@ there are two possibilities:</p>
 	</p>
 </ol>
 <p>You can get Juggluco for Wear OS from Google Play on your watch.
-Some pictures are shown at
-<a href="http://jkaltes.byethost16.com/JugglucoWearOS/index.html">http://jkaltes.byethost16.com/JugglucoWearOS</a></p>
+Some pictures are shown at <a href="https://www.juggluco.nl/JugglucoWearOS/index.html">https://www.juggluco.nl/JugglucoWearOS</a></p>
 <p>To get it working do the following:</p>
 <ul>
 	<li><p>Ensure that both Bluetooth and WIFI are working on watch and
@@ -1476,7 +1490,7 @@ that accepts the complication:
 <![CDATA[
 <h1>About</h1>
 <p style="line-height: 100%; margin-bottom: 0in">Juggluco is written
-by <a href="http://jkaltes.byethost16.com/Juggluco">Jaap Korthals
+by <a href="https://www.juggluco.nl/Juggluco">Jaap Korthals
 Altes</a></p>
 <p style="line-height: 100%; margin-bottom: 0in">Besides the standard
 Android libraries, use is made of the following:</p>
@@ -1534,7 +1548,8 @@ not.</p>
 <![CDATA[
 <h1>Libreview</h1>
 <p style="line-height: 100%; margin-bottom: 0in">Juggluco can send
-glucose data and amounts to Libreview.</p>
+glucose data and amounts to Libreview (Librelinkup is something else
+and not usable with Juggluco).</p>
 <p style="line-height: 100%; margin-bottom: 0in">If you use Abbotts
 Libre app for Freestyle Libre 2 sensors, Libreview is based on the
 history data out of the memory of the sensor. For this you need to
@@ -1613,8 +1628,7 @@ makes it possible to use a FreeStyle Libre 3 sensor that was already
 used with Abbotts Libre 3 app with this LibreView account. Starting
 the sensor with Juggluco is reported not to work.</p>
 <p><b>WARNING</b>: The Freestyle Libre 3 sensor should be activated
-with this account.</p>
-<p><br/>
+with this account.<br/>
 <br/>
 <br/>
 
@@ -1626,7 +1640,7 @@ with this account.</p>
 <h1>Kerfstok configuration</h1>
 <p style="line-height: 100%; margin-bottom: 0in">The <b>source</b> of
 Kerfstok can be downloaded from
-<a href="http://jkaltes.byethost16.com/Kerfstok/Kerfstok-source.html">http://jkaltes.byethost16.com/Kerfstok/Kerfstok-source.html</a>).
+<a href="https://www.juggluco.nl/Kerfstok/Kerfstok-source.html">https://www.juggluco.nl/Kerfstok/Kerfstok-source.html</a>).
 Users are free to modify it. Each watch app has a unique identifier.
 If the identifier is different from the default, Juggluco needs to
 know it to communicate with the watch app. To specify a different

@@ -194,6 +194,7 @@ TextView[] keytimes; TextView keyinfo;
 TextView[] glucosetimes; TextView glucoseinfo;
 TextView bluestate;
 private BluetoothAdapter mBluetoothAdapter=null;
+boolean setwakelock=false;
 CheckBox usebluetooth,wakelock;
 CheckBox priority;
 Button locationpermission;
@@ -291,6 +292,7 @@ void	setadapter(Activity act,	final ArrayList<SuperGattCallback> gatts) {
 	//	reenable.setOnClickListener(v->Natives.reenableStreaming());
 	}
 		final ArrayList<SuperGattCallback> gatts=SensorBluetooth.mygatts();
+	priority=view.findViewById(R.id.priority);
 if(!isWearable) {
 	Button finish = view.findViewById(R.id.finish);
 	if (gatts != null && gatts.size() > 0) {
@@ -309,6 +311,7 @@ if(!isWearable) {
 	else {
 
 		Log.i(LOG_ID,"finish.setVisibility(GONE);");
+		priority.setVisibility(GONE);
 		finish.setVisibility(GONE);
 	}
 }
@@ -325,11 +328,14 @@ if(!isWearable) {
 	wakelock=view.findViewById(R.id.wakelock);
 	wakelock.setOnCheckedChangeListener(
 		 (buttonView,  isChecked) -> {
-		 	keeprunning.setWakelock(isChecked);
-		 }
+		 	if(!setwakelock) {
+				keeprunning.setWakelock(isChecked);
+				}
+		 	}
 		 );
 	usebluetooth.setOnCheckedChangeListener(
 		 (buttonView,  isChecked) -> {
+		 	Log.i(LOG_ID,"usebluetooth "+isChecked);
 			 final boolean blueused = Natives.getusebluetooth();
 			 if (blueused != usebluetooth.isChecked()) {
 				 act.setbluetoothmain( !blueused);
@@ -339,7 +345,6 @@ if(!isWearable) {
 			 }
 		 }
 		 );
-	priority=view.findViewById(R.id.priority);
      if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 	priority.setOnCheckedChangeListener(
                  (buttonView,  isChecked) -> {
@@ -550,7 +555,9 @@ Log.i(LOG_ID,"showall");
 		}
 	bluestate.setText( mBluetoothAdapter==null?activity.getString(R.string.nobluetooth):(mBluetoothAdapter.isEnabled()?activity.getString(R.string.bluetoothenabled): activity.getString(R.string.bluetoothdisabled)));
         usebluetooth.setChecked(Natives.getusebluetooth());
+	setwakelock=true;
         wakelock.setChecked(Natives.getwakelock());
+	setwakelock=false;
         priority.setChecked(Natives.getpriority());
 	if(!isWearable) {
 		if( Build.VERSION.SDK_INT < 23|| Applic.noPermissions(activity).length==0) {

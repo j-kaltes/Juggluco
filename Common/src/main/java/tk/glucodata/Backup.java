@@ -69,6 +69,8 @@ import static tk.glucodata.Applic.isWearable;
 import static tk.glucodata.Natives.getBlueMessage;
 import static tk.glucodata.Natives.getWifi;
 import static tk.glucodata.Natives.isWearOS;
+import static tk.glucodata.Natives.mirrorStatus;
+import static tk.glucodata.RingTones.EnableControls;
 import static tk.glucodata.UseWifi.usewifi;
 import static tk.glucodata.help.hidekeyboard;
 import static tk.glucodata.Applic.isRelease;
@@ -77,6 +79,7 @@ import static tk.glucodata.util.getbutton;
 import static tk.glucodata.util.getcheckbox;
 import static tk.glucodata.util.getlabel;
 import static tk.glucodata.settings.Settings.editoptions;
+import static tk.glucodata.util.sethtml;
 
 //import org.w3c.dom.Text;
 
@@ -95,18 +98,6 @@ static class changer implements TextWatcher {
 		view.setVisibility(VISIBLE);
 		}
 	}
-	/*
-static class makevis implements View.OnClickListener {
-View view;
-makevis(View v) {
-	view=v;
-	}
-public  void onClick (View v) {
-		view.setVisibility(VISIBLE);
-	}
-
-};
-*/
 static void hideSystemUI(Context cnt) {}
 static public  EditText getedit(Context act, String text) {
 	EditText label=new EditText(act);
@@ -185,7 +176,6 @@ boolean[] sendchecked;
 	private CheckBox Stream =null,receive=null,detect=null;
 	private RadioButton activeonly=null,passiveonly=null,both=null;
 	private final EditText[] hostname={null,null,null,null};
-	private View[] messages=null;
 	private EditText editpass=null;
 	private EditText portedit=null;
 	private ScrollView hostview=null;
@@ -197,7 +187,6 @@ private RadioButton[] sendfrom;
 private View[] fromrow;
 
  private CheckBox   visible;
-//	private Layout layout=null;
 	int hostindex=-1;
 
 	static void setradio(RadioButton[] radios) {
@@ -308,11 +297,8 @@ void makehostview(MainActivity act) {
 
         label.setImeOptions(editoptions);
         label.setMinEms(10);
-//	label.setBackgroundColor(0x25212b);
-//label.getBackground().mutate().setColorFilter(agetColor(act,android.R.color.holo_red_light), PorterDuff.Mode.SRC_ATOP);
 
 	setColorFilter(label.getBackground().mutate(),agetColor(act,android.R.color.holo_red_light));
-//	label.setBackgroundColor(YELLOW);
 	haslabel.setOnCheckedChangeListener( (buttonView,  isChecked)-> {
 			final int vis=isChecked?VISIBLE:INVISIBLE;
 			label.setVisibility(vis);
@@ -360,28 +346,18 @@ void makehostview(MainActivity act) {
 		});
 	receive = new CheckBox(act);
 	receive.setText(R.string.receivefrom);
-	/*
-	receive.setOnCheckedChangeListener( (buttonView,  isChecked)-> {
-			if(!isChecked)  {
-				detect.setChecked(false);
-				}
-			final int vis=isChecked?VISIBLE:INVISIBLE;
-			detect.setVisibility(vis);
-			}); */
 
 	TextView Sendlabel=getlabel(act,R.string.sendto);
 
 	   Amounts = new CheckBox(act); Amounts.setText(R.string.amountsname);
 	   Scans = new CheckBox(act); Scans.setText(R.string.scansname);
 	   Stream = new CheckBox(act); Stream.setText(R.string.streamname);
-//	   TextView startlabel=getlabel(act,"Send
 	RadioButton fromnow=new RadioButton(act);
  	RadioButton alldata=new RadioButton(act);
  	RadioButton screenpos=new RadioButton(act);
    TextView startlabel=getlabel(act,act.getString(R.string.datapresentuntil));
     	alldata.setText(R.string.start);
     	fromnow.setText(R.string.now);
-//	screenpos.setText("From Screen position");
 	sendfrom=new RadioButton[]{alldata,fromnow,screenpos};
 	 fromrow=new View[]{startlabel, alldata,fromnow,screenpos};
 
@@ -514,14 +490,13 @@ void makehostview(MainActivity act) {
         hostview=new ScrollView(act);
 
 	Layout layout;
-	messages=new View[]{getlabel(act,"Messages")};
 	if(isWearable) {
 		layout=new Layout(act, (l, w, h) -> {
 			hideSystemUI(act);
 			final int[] ret={w,h};
 			return ret;
 		}, new View[]{ Portlabel},new View[] {portedit},new View[]{new Space(act),Hostlabel,detect,new Space(act)}, Arrays.copyOfRange(hostname,0,hostname.length/2),Arrays.copyOfRange(hostname,hostname.length/2,hostname.length) ,new View[] {testip,haslabel},new View[]{label},
-				new View[]{passiveonly,activeonly},new View[]{both,receive},new View[] {Sendlabel,Amounts},new View[]{Scans,Stream},new View[]{startlabel},new View[]{alldata,fromnow},new View[]{screenpos} ,new View[]{Password,visible },new View[]{editpass},new View[]{delete,Close},new View[] {reset},new View[]{save}, messages);
+				new View[]{passiveonly},new View[]{activeonly},new View[]{both},new View[] {receive},new View[] {Sendlabel,Amounts},new View[]{Scans,Stream},new View[]{startlabel},new View[]{alldata,fromnow},new View[]{screenpos} ,new View[]{Password,visible },new View[]{editpass},new View[]{delete,Close},new View[] {reset},new View[]{save});
 		}
 	else {
 		layout = new Layout(act, (l, w, h) -> {
@@ -529,7 +504,7 @@ void makehostview(MainActivity act) {
 			final int[] ret = {w, h};
 			return ret;
 		}, new View[]{Portlabel, portedit, Hostlabel, detect}, hostname, new View[]{testip, haslabel, label},
-				new View[]{passiveonly, activeonly, both}, new View[]{receive, Sendlabel, Amounts, Scans, Stream, restore}, fromrow, new View[]{Password, editpass, visible}, new View[]{delete, Close, reset, Help, save},messages);
+				new View[]{passiveonly, activeonly, both}, new View[]{receive, Sendlabel, Amounts, Scans, Stream, restore}, fromrow, new View[]{Password, editpass, visible}, new View[]{delete, Close, reset, Help, save});
 		}
 	Close.setOnClickListener(v-> act.doonback());
 	hostview.addView(layout);
@@ -561,7 +536,6 @@ void changehostview(MainActivity act,final int index,String[] names,boolean dode
 		int recnum=Natives.getbackuphostreceive(index);
 		boolean doreceive= (recnum&2)!=0;
 	       receive.setChecked(doreceive);
-//	        passiveonly.setChecked(doreceive&&(recnum&1)==0);
 		final boolean dotestip=Natives.getbackuptestip(index);
 		final boolean ispassive=Natives.getbackuphostpassive(index);
 		testip.setChecked(dotestip);
@@ -600,10 +574,8 @@ void changehostview(MainActivity act,final int index,String[] names,boolean dode
 			}
 		boolean iswearos=isWearOS(index);
 		Log.i(LOG_ID,(labelstr!=null?labelstr:"")+" Iswearos("+index+")="+iswearos);
-		messages[0].setVisibility((iswearos&& getBlueMessage(index ) )?VISIBLE:GONE);
 		}
 	else {
-		messages[0].setVisibility(GONE);
 		 stream=false;scans=false;amounts=false;
 
 	       receive.setChecked(false);
@@ -657,8 +629,49 @@ void changehostview(MainActivity act,int index) {
 	String pass= Natives.getbackuppassword(index);
 	changehostview(act,index,names,Natives.detectIP(index),port,pass) ;
 	}
+
+void		showhostinfo(final MainActivity act,final View parview,int pos) {
+if(!isWearable)
+		EnableControls(parview,false);
+	var close=getbutton(act,R.string.closename);
+	var modify=getbutton(act,R.string.modify);
+
+   	modify.setOnClickListener(v-> 	changehostview(act,pos));
+//  	var help=getbutton(act,R.string.helpname);
+	var info=new TextView(act);
+     int pad=(int)(GlucoseCurve.metrics.density*7.0);
+   info.setPadding(pad,0,pad,0);
+
+	sethtml(info, mirrorStatus(pos));
+	Layout layout=isWearable?(new Layout(act,new View[]{modify}, new View[]{info},new View[]{close})):new Layout(act, (l, w, h) -> {
+		int width=GlucoseCurve.getwidth();
+		l.setX(width-w);
+		l.setY(0);
+		final int[] lret={w,h};
+		return lret;
+	},new View[]{modify,close} , new View[]{info});
+	if(isWearable)
+		layout.setBackgroundColor(Applic.backgroundcolor);
+	else {
+	    // info.setPadding(pad,0,pad,0);
+	      layout.setBackgroundResource(R.drawable.dialogbackground);
+//	      layout.setRotation(90);
+	      }
+	final var lpar=isWearable?MATCH_PARENT:ViewGroup.LayoutParams.WRAP_CONTENT;
+	act.addContentView(layout, new ViewGroup.LayoutParams(lpar,lpar));
+	Runnable closerun= ()-> {
+		removeContentView(layout);
+
+if(!isWearable)
+		EnableControls(parview,true);
+		};
+	act.setonback(closerun);	
+	close.setOnClickListener(v->  {
+		act.poponback();	
+		closerun.run();
+		});
+	}
 void addhostview(MainActivity act) {
-//	int hostnr=Natives.backuphostNr( );
 	changehostview(act,-1,null,false,defaultport,"") ;
 	}
 
@@ -716,9 +729,6 @@ View blpan= (thishost[2]==null)?new Space(act):getlabel(act,"bt-pan: "+thishost[
 	RecyclerView recycle = new RecyclerView(act);
 	LinearLayoutManager lin = new LinearLayoutManager(act);
 	recycle.setLayoutManager(lin);
- hostadapt = new HostViewAdapter(); //USE
-	recycle.setAdapter(hostadapt);
-	recycle.setLayoutParams(new ViewGroup.LayoutParams(  MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
         CheckBox staticnum = new CheckBox(act);
 	staticnum.setOnCheckedChangeListener( (buttonView,  isChecked)-> Natives.setstaticnum(isChecked));
@@ -728,11 +738,6 @@ View blpan= (thishost[2]==null)?new Space(act):getlabel(act,"bt-pan: "+thishost[
 
 	recycle.setMinimumHeight(lineheight*6);
 	View lay;
-/*	var wifion=getbutton(act,"WifiOn");
-	wifion.setOnClickListener(v-> 
-		{
-		new UseWifi().usewifi();
-		});*/
 
 	if(isWearable) {
 		CheckBox wifi=getcheckbox(act,act.getString(R.string.wifi),getWifi());
@@ -759,19 +764,14 @@ View blpan= (thishost[2]==null)?new Space(act):getlabel(act,"bt-pan: "+thishost[
 		lay=new Layout(act, new View[]{ip,blpan,p2p,labport,portview,Save},new View[]{recycle},new View[] {battery,Help,alarms,staticnum},new View[]{Sync,reinit,hosts,Cancel});
 		}
 	Save.setOnClickListener(v->  {
-	/*
-		if(issaved[0]) {
-			Applic.sendsettings();
-			} */
 		Natives.setreceiveport(portview.getText().toString());
 		Save.setVisibility(GONE);
 		hidekeyboard(act);
 	});
+ 	hostadapt = new HostViewAdapter(lay); //USE
+	recycle.setAdapter(hostadapt);
+	recycle.setLayoutParams(new ViewGroup.LayoutParams(  MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 	Runnable closerun= ()-> {
-	/*(
-		if(issaved[0]) {
-			Applic.sendsettings();
-			} */
 		if(hostview!=null)
 			removeContentView(hostview);
 		hidekeyboard(act);
@@ -802,19 +802,22 @@ View blpan= (thishost[2]==null)?new Space(act):getlabel(act,"bt-pan: "+thishost[
 
 
   class HostViewHolder extends RecyclerView.ViewHolder {
-    public HostViewHolder(View view) {
+    public HostViewHolder(View view,View parent) {
         super(view);
        view.setOnClickListener(v -> {
 		int pos=getAbsoluteAdapterPosition();
-//		int pos=getAdapterPosition();
-		changehostview((MainActivity)(v.getContext()),pos);
+		showhostinfo((MainActivity)(v.getContext()),parent,pos);
+//		changehostview((MainActivity)(v.getContext()),pos);
 		});
 
     }
 
 }
  public class HostViewAdapter extends RecyclerView.Adapter<HostViewHolder> {
-    	
+	View pview;
+    	HostViewAdapter(View parent) {
+		this.pview=parent;
+		}
 
     @NonNull
 	@Override
@@ -823,7 +826,7 @@ View blpan= (thishost[2]==null)?new Space(act):getlabel(act,"bt-pan: "+thishost[
         view.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24f);
 	view.setLayoutParams(new ViewGroup.LayoutParams(  ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
        view.setGravity(Gravity.LEFT);
-        return new HostViewHolder(view);
+        return new HostViewHolder(view,pview);
 
     }
 

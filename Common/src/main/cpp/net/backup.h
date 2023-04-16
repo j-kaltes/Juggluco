@@ -24,7 +24,7 @@
 #include <vector>
 #include <memory>
  #include <sys/types.h> 
- #include "comtypes.h"
+ #include "comtypes.hpp"
  #include "passhost.h"
  #include "crypt.h"
 extern bool senddata(crypt_t *pass,const int sock,const int offset,const senddata_t *data,const int datalen,const std::string_view naar,uint16_t dowith=0,const uint8_t *extra=nullptr,int extralen=0) ;

@@ -52,6 +52,8 @@ constexpr const char defaultport[]{
 #include "sensoren.h"
 
 #include "settings/settings.h"
+
+#include "mirrorstatus.hpp"
 #ifdef WEAROS_MESSAGES
 extern bool wearmessages[];
 #endif
@@ -91,7 +93,6 @@ struct changednums {
 int  updatenums(crypt_t *,int sock,struct changednums *nums);
 inline static constexpr const char backupdat[]="backup.dat";
 inline static constexpr const char orbackup[] ="orbackup.dat";
-constexpr int maxallhosts=8;
 extern int hostsocks[];
 extern std::vector<int> sendsocks;
 extern uint32_t lastuptodate[];
@@ -143,6 +144,7 @@ void close() {
        const int so= getsock();
        LOGGER("updateone close(%d)\n",so);
        if(so>=0) {
+//		mirrorstatus[allindex].sensor.hassocket=false;
 		setsock(-1);
 		::close(so);
 		if(crypt_t *ctx=getcrypt()) {
@@ -604,7 +606,7 @@ int changehost(int index,JNIEnv *env,jobjectArray jnames,int nr,bool detect,stri
 	if(index<0) 
 		index=hostnr;
 	if(index>=maxallhosts)  {
-		LOGGER("index>=maxallhosts\n");
+		LOGGER("changehost: index>=maxallhosts\n");
 		return -3;
 		}
 	const bool receiveactive=receive&&activeonly;
@@ -613,7 +615,7 @@ int changehost(int index,JNIEnv *env,jobjectArray jnames,int nr,bool detect,stri
 		}
 	else {
 		if(port.size()>5) {
-			LOGGER("port.size()>5)\n");
+			LOGGER("changehost: port.size()>5)\n");
 			return -1;
 			}
 		}
@@ -642,7 +644,7 @@ int changehost(int index,JNIEnv *env,jobjectArray jnames,int nr,bool detect,stri
 		if(newhost||getupdatedata()->allhosts[index].index==-1) {  //Fout??
 			tohost=getupdatedata()->sendnr;
 			if(tohost>=maxsendtohost) {
-				LOGGER("tohost>=maxsendtohost\n");
+				LOGGER("changehost: tohost>=maxsendtohost\n");
 				return -4;
 				}
 			getupdatedata()->allhosts[index].index=tohost;
@@ -737,6 +739,7 @@ false	  	false	  	0
 extern	void clearnetworkcache();
 	clearnetworkcache();
 	#endif
+	LOGGER("changehost=%d\n",res);
 	return ret;
 	}
 bool isreceiving() const {
@@ -822,20 +825,23 @@ void backupthread(int allindex,int sendindex) {
 extern void	setreceiverversion(uint8_t version) ;
 	if(passive)
 		setreceiverversion(1);
+	auto &status=mirrorstatus[allindex].sender;
+	status.start();
+	destruct _dest([&status]{ status.stop();});
 	{
 	constexpr int maxbuf=15;
 	char buf[maxbuf];
 	 snprintf(buf,maxbuf,"send %d",sendindex);
 	   LOGGER("%s\n",buf);
 	   prctl(PR_SET_NAME, buf, 0, 0, 0);
-//	   pthread_setname_np
 	   }
 	uintptr_t current=0;
 	   while(true) {
 	   	if(doend(sendindex))
 			return;
-
+		status.locked=true;
 		 lockwait(current,sendindex);
+		status.locked=false;
 
 	   	if(doend(sendindex))
 			return;
@@ -1050,4 +1056,7 @@ extern void startbackup(std::string_view globalbasedir) ;
 
 inline std::span<passhost_t> getBackupHosts() {
 	return backup-> getHosts();
+	}
+inline int gethostindex(passhost_t *host) {
+	return host-getBackupHosts().data();
 	}

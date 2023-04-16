@@ -34,7 +34,7 @@
 
 #ifndef _WIN32
 #undef _GNU_SOURCE
-#define _GNU_SOURCE
+#define _GNU_SOURCE 1
 #ifndef INCLUDE_NR
 #define INCLUDE_NR
 #include <asm-generic/unistd.h> /*Headers in this order*/

@@ -196,6 +196,7 @@ static void uploaderthread() {
 	const char view[]{"UPLOADER"};
 	LOGGERN(view,sizeof(view)-1);
        prctl(PR_SET_NAME, view, 0, 0, 0);
+
 	while(true) {
 		  if(!networkpresent||!uploadercondition.dobackup) {
 			if(!networkpresent) {

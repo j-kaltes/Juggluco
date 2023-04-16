@@ -126,7 +126,7 @@ skrócie przedstawia się następująco:</p>
 <p style="margin-bottom: 0in">Aby uzyskać więcej informacji na
 temat połączeń w trybie Klonowania przeczytaj pomoc w menu <i>&quot;Dodaj
 połączenie</i>&quot; i zobacz
-<a class="western" href="http://jkaltes.byethost16.com/Juggluco/mmol.html#mirror">http://jkaltes.byethost16.com/Juggluco/mmol.html#mirror</a></p>
+<a class="western" href="https://www.juggluco.nl/Juggluco/mmol.html#mirror">https://www.juggluco.nl/Juggluco/mmol.html#mirror</a></p>
 <p style="margin-bottom: 0in"><br/>
 
 </p>
@@ -214,13 +214,13 @@ uruchomienie Juggluco na urządzeniu z systemem Android (co najmniej
 Android 4.4) w domu podłączonym do Internetu przez modem. Inną
 możliwością jest uruchomienie na komputerze (np. Twoim PC lub
 Amazon AWS) programu z linii poleceń należącego do Juggluco:
-<a href="http://jkaltes.byethost16.com/Juggluco/cmdline/index.html">http://jkaltes.byethost16.com/Juggluco/cmdline/index.html</a></p>
+<a href="https://www.juggluco.nl/Juggluco/cmdline/index.html">https://www.juggluco.nl/Juggluco/cmdline/index.html</a></p>
 <p style="margin-bottom: 0in">Instrukcje przekierowania portów:</p>
 <p style="margin-bottom: 0in"><a href="https://portforward.com/how-to-port-forward/">https://portforward.com/how-to-port-forward/</a></p>
 <p style="margin-bottom: 0in"><a href="https://stevessmarthomeguide.com/understanding-port-forwarding/">https://stevessmarthomeguide.com/understanding-port-forwarding/</a></p>
 <p style="margin-bottom: 0in">Istnieje możliwość odbioru wartości
 stężenia glukozy przez Bluetooth na urządzeniu bez NFC (patrz
-<a href="http://jkaltes.byethost16.com/Juggluco/mirror">http://jkaltes.byethost16.com/Juggluco/mirror)</a>:
+<a href="https://www.juggluco.nl/Juggluco/mirror">https://www.juggluco.nl/Juggluco/mirror)</a>:
 Zainicjuj sensor przez NFC w urządzeniu z NFC, a następnie wyślij
 dane Skanów i Strumienia do urządzenia bez NFC. Następnie odwróć
 połączenie dla danych Strumienia i wyłącz połączenie Bluetooth
@@ -678,7 +678,7 @@ Posi�ek o zapisanej warto�ci.</p>
 <p>&lt;queries&gt; <br/> &nbsp;&nbsp; &lt;package android:name=&quot;tk.glucodata&quot;/&gt; <br/> &lt;/queries&gt;</p>
 <p>Co minutę Juggluco wysyła wartość glukozy do wszystkich aplikacji słuchających tej transmisji, xDrip tylko do kilku dobrze znanych aplikacji, z wyjątkiem sytuacji, gdy wyraźnie określisz nazwę.</p>
 <h2 class="western">Glucodata broadcast (Transmisja danych Glucodata)</h2>
-<p>Nowa transmisja, kt&oacute;ra ma taką samą funkcję jak transmisja xDrip. Prosty przykład aplikacji, kt&oacute;ra zapisuje otrzymane wartości glukozy do logcat, można znaleźć tutaj: <a href="http://jkaltes.byethost16.com/Juggluco/glucosebroadcast.html">Glucose broadcasts</a>. Jeśli określisz Juggluco jako źr&oacute;dło danych w G-Watch, musisz włączyć tę transmisję.</p>
+<p>Nowa transmisja, kt&oacute;ra ma taką samą funkcję jak transmisja xDrip. Prosty przykład aplikacji, kt&oacute;ra zapisuje otrzymane wartości glukozy do logcat, można znaleźć tutaj: <a href="https://www.juggluco.nl/Juggluco/glucosebroadcast.html">Glucose broadcasts</a>. Jeśli określisz Juggluco jako źr&oacute;dło danych w G-Watch, musisz włączyć tę transmisję.</p>
 <p>Pokazane są aplikacje nasłuchujące tej transmisji. Zaznacz aplikacje, do kt&oacute;rych chcesz wysłać tę transmisję.</p>
 <h2 class="western">Stęż. glukozy w pasku stanu systemu android</h2>
 <p style="line-height: 100%; margin-bottom: 0in">Jeśli opcja będzie włączona, wartości stęż. glukozy przesyłane strumieniowo przez Bluetooth są cicho wyświetlane w powiadomieniu i na pasku stanu systemu Android. Na niekt&oacute;rych smartfonach wartość stężenia glukozy jest wyświetlana na pasku stanu Androida dopiero po zmianie ustawień powiadomień Androida. Na przykład na Realme GT 5G trzeba wejść w listę aplikacji -&gt;Juggluco-&gt;zarządzaj powiadomieniami, nacisnąć na glucoseNotification i wyłączyć &bdquo;Ustaw na tryb cichy&rdquo;. &quot;Wyświetlanie w pasku stanu&quot; będzie teraz widoczne jako włączone.</p>
@@ -724,7 +724,7 @@ Kerfstok</h1>
 <p style="margin-bottom: 0in">Ten widok służy do rozwiązywania
 problemów z połączeniem z aplikacją Kerfstok
 <a href="https://apps.garmin.com/pl-PL/apps/b6348ccc-86d8-4780-8013-d9e19fed5260">(https://apps.garmin.com/pl-PL/apps/b6348ccc-86d8-4780-8013-d9e19fed5260</a>
-(zobacz również <a href="http://jkaltes.byethost16.com/Kerfstok/index.html">http://jkaltes.byethost16.com/Kerfstok/index.html)</a>.
+(zobacz również <a href="https://www.juggluco.nl/Kerfstok/index.html">https://www.juggluco.nl/Kerfstok/index.html)</a>.
 Kerfstok to aplikacja do zegarków przeznaczona do programowanych
 smartwatchy Garmin z ekranem dotykowym. Kerfstok ma następujące
 zastosowania:</p>
@@ -821,7 +821,7 @@ takie same wyniki jak w nieameryka�skich sensorach Freestyle Libre 2.</p>
 
 <p>Plik .apk zawieraj�cy Librelink jest dystrybuowany przez Google Play i na
 wszystkich miejscach, kt�re s� dost�pne w sieci. Lista link�w znajduje si� na: <a
-href="http://jkaltes.byethost16.com/Juggluco/urls.html">http://jkaltes.byethost16.com/Juggluco/urls.html</a></p>
+href="https://www.juggluco.nl/Juggluco/urls.html">https://www.juggluco.nl/Juggluco/urls.html</a></p>
 
 <p>Po pobraniu pliku APK, mo�esz pozwoli� Juggluco otworzy� go, dotykaj�c
 przycisku <b>Otw�rz</b>.</p>
@@ -1039,7 +1039,7 @@ ją do Kerfstok. Kerfstok wyświetla więc zawsze najbardziej
 aktualną wartość glukozy. Kerfstok może również rejestrować
 wszystkie aktywności obsługiwane przez firmę Garmin oraz może
 wyświetlać prędkość i dystans. Patrz Zegarek -&gt; Status
-Kerfstok -&gt; Pomoc i <a href="http://jkaltes.byethost16.com/Kerfstok">http://jkaltes.byethost16.com/Kerfstok</a></p>
+Kerfstok -&gt; Pomoc i <a href="https://www.juggluco.nl/Kerfstok">https://www.juggluco.nl/Kerfstok</a></p>
 <h2 class="western">Aplikacje dla zegarków xDrip</h2>
 <p style="margin-bottom: 0in">Juggluco zawiera serwer internetowy
 (webserver) xDrip. Dzięki temu możliwe jest bezpośrednie
@@ -1072,8 +1072,8 @@ przez Garmina sprawiają, że są one mało wartościowe.</p>
 istnieje również tarcza zegarka dla zegarków <b>Fitbit</b>, która
 działa z serwerem internetowym xDrip: <a href="https://glancewatchface.com/">https://glancewatchface.com</a></p>
 <p style="margin-bottom: 0in">Więcej informacji na temat interfejsu
-serwera internetowego (webserver) można znaleźć na <a href="http://jkaltes.byethost16.com/Juggluco/addwatch.html">stronie
-http://jkaltes.byethost16.com/Juggluco/addwatch.html</a></p>
+serwera internetowego (webserver) można znaleźć na <a href="https://www.juggluco.nl/Juggluco/addwatch.html">stronie
+https://www.juggluco.nl/Juggluco/addwatch.html</a></p>
 <p style="margin-bottom: 0in"><b>Tylko lokalne</b>: akceptuje tylko
 połączenia z hosta lokalnego (127.0.0.1). Jeśli wyłączysz tę
 opcję, również inne hosty będą mogły uzyskać dostęp do
@@ -1111,9 +1111,9 @@ systemem Wear OS i dobrą łącznością Bluetooth.</p>
 <p>Aplikację Juggluco dla systemu Wear OS możecie pobrać z Google
 Play na swój zegarek [uwaga tłumacza: opcja już niemożliwa;
 instrukcja instalacji znajduje się pod adresem:
-http://jkaltes.byethost16.com/JugglucoWearOS/install/adb.html].
+https://www.juggluco.nl/JugglucoWearOS/install/adb.html].
 Niektóre obrazy pokazane są na stronie
-<a href="http://jkaltes.byethost16.com/JugglucoWearOS/index.html">http://jkaltes.byethost16.com/JugglucoWearOS</a></p>
+<a href="https://www.juggluco.nl/JugglucoWearOS/index.html">https://www.juggluco.nl/JugglucoWearOS</a></p>
 <p>Aby ją uruchomić wykonaj następujące czynności:</p>
 <p style="margin-left: 0.5in; text-indent: -0.25in"><font face="Symbol"><font size="2" style="font-size: 10pt">·</font></font><span style="font-variant: normal"><font face="Symbol"><font size="2" style="font-size: 10pt">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </font></font></span>Upewnij się, że zarówno Bluetooth jak i WIFI
@@ -1249,7 +1249,7 @@ zegarka, która akceptuje tę komplikację:
 <![CDATA[
 <h1>
 Informacje</h1>
-<p style="margin-bottom: 0in">Aplikację Juggluco stworzył <a href="http://jkaltes.byethost16.com/Juggluco">Jaap
+<p style="margin-bottom: 0in">Aplikację Juggluco stworzył <a href="https://www.juggluco.nl/Juggluco">Jaap
 Korthals Altes</a></p>
 <p style="margin-bottom: 0in">Poza standardowymi bibliotekami
 Androida wykorzystywane są m.in:</p>
@@ -1339,7 +1339,7 @@ nie.</p>
 <string name="garminconfig" >
 <![CDATA[
 <h1>Konfiguracja Kerfstok</h1>
-<p style="line-height: 100%; margin-bottom: 0in">Kod <b>źr&oacute;dłowy</b> Kerfstok można pobrać ze strony <a href="http://jkaltes.byethost16.com/Kerfstok/Kerfstok-source.html">http://jkaltes.byethost16.com/Kerfstok/Kerfstok-source.html)</a>. Użytkownicy mogą go dowolnie modyfikować. Każda aplikacja na zegarek ma unikalny identyfikator. Jeśli identyfikator jest inny niż domyślny, Juggluco musi go znać, aby komunikować się z aplikacją zegarka. Aby określić inny identyfikator naciśnij <b>ID</b> i wpisz 32 znakowy ciąg heksadecymalny. Juggluco na jednym urządzeniu może być połączone tylko z jedną aplikacją na jednym zegarku. Zmiany doprowadzą do utraty danych.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Kod <b>źr&oacute;dłowy</b> Kerfstok można pobrać ze strony <a href="https://www.juggluco.nl/Kerfstok/Kerfstok-source.html">https://www.juggluco.nl/Kerfstok/Kerfstok-source.html)</a>. Użytkownicy mogą go dowolnie modyfikować. Każda aplikacja na zegarek ma unikalny identyfikator. Jeśli identyfikator jest inny niż domyślny, Juggluco musi go znać, aby komunikować się z aplikacją zegarka. Aby określić inny identyfikator naciśnij <b>ID</b> i wpisz 32 znakowy ciąg heksadecymalny. Juggluco na jednym urządzeniu może być połączone tylko z jedną aplikacją na jednym zegarku. Zmiany doprowadzą do utraty danych.</p>
 <h2 class="western">Skr&oacute;ty</h2>
 <p style="line-height: 100%; margin-bottom: 0in">Skr&oacute;ty są wysyłane do aplikacji Kerfstok w zegarku Garmin, aby łatwo wstawić określone wartości.</p>
 <h2 class="western">Tryb ciemny</h2>

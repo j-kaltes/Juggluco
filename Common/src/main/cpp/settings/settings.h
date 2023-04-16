@@ -78,7 +78,8 @@ constexpr static const int maxalarms=5;
 struct Tings {
 	uint32_t glow,ghigh,tlow,thigh,alow,ahigh;
 	int32_t duration;
-	uint8_t  camerakey:3;
+	uint8_t  camerakey:2;
+	bool separatenotify:1;
 	bool heartrate:1;
 	bool crashed:1;
 	bool wakelock:1;

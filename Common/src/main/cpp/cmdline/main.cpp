@@ -107,15 +107,15 @@ cout<<intro<<"Usages: "<<progname<<R"( -d dir : save data in directory dir)"<<en
  <<"        "<<progname<<R"( [-d dir] -p port : listen on port port)"<<endl
  <<"        "<<progname<<R"( [-d dir] -l : list configuration data)"<<endl
  <<"        "<<progname<<R"( [-d dir] -c : clear configuration data)"<<endl
- <<"        "<<progname<<R"( -x[-+]: start xDrip watch app server or not (-x-)"<<endl
- <<"        "<<progname<<R"( -X[-+]:  the same but server can also be assesed remotely)"<<endl
+ <<"        "<<progname<<R"( -x[-+]: start xDrip watch app / Nightscout server or not (-x-))"<<endl
+ <<"        "<<progname<<R"( -X[-+]:  the same but server can also be assessed remotely)"<<endl
  <<"        "<<progname<<R"( -g secret: use as api_secret secret
 )"
 #ifdef USE_SSL
-R"(        )"<<progname<<R"( -e[-+]:  Use xDrip server with SSL encryption)"<<endl
- <<"        "<<progname<<R"( -o port:  use port port for the SSL server)"
+R"(        )"<<progname<<R"( -e[-+]:  Use xDrip/Nightscout server with SSL encryption)"<<endl
+ <<"        "<<progname<<R"( -o port:  use port for the SSL server)"
 #else
-R"(Compile )"<<progname<<R"( yourself for SSL)"
+R"(Compile a dynamically linked version of )"<<progname<<R"( for SSL)"
 #endif
 R"(
 	)"<<progname<<R"( -[0123456789][RLCOD] place label 0-9 in category R,L,C,O or D:
@@ -164,7 +164,7 @@ example:
 
 Receive data from host 192.168.1.64 (an ip shown in backup screen android app)
 In the juggluco android applet you can in "backup, add connection"
-specfiy send to amounts, scans and stream and specify port 8795 and
+specify send to amounts, scans and stream and specify port 8795 and
 an ip of this computer (e.g )"<<hostip<<")\n\n"<<progname<<R"( -d mydir -nsb  192.168.1.69
 
 Send the amounts, scans and stream data to 192.168.1.69 on the default port (8795)
@@ -201,10 +201,15 @@ int   listconnections() {
 			}
 		else
 			cout<<"http only over localhost\n";
+
+#ifdef USE_SSL
 		if(settings->data()->useSSL) 
 			cout<<"Use SSL, sslport="<<	settings->data()->sslport<<endl;
 		else
 			cout<<"Do not use SSL"<<endl;
+#else
+			cout<<"Compile a dynamically linked version of juggluco server for SSL"<<endl;
+#endif
 		Tings::Variables *varsptr=settings->data()->vars;
 		const int labnr=settings->data()->varcount;
 		for(int i=0;i<labnr;i++) {

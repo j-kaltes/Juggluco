@@ -37,44 +37,17 @@ import android.widget.Toast;
 
 //import com.judemanutd.autostarter.AutoStartPermissionHelper;
 
-import static android.text.Html.TO_HTML_PARAGRAPH_LINES_CONSECUTIVE;
-import static android.text.Html.fromHtml;
 import static android.view.View.GONE;
 import static tk.glucodata.Applic.isWearable;
 import static tk.glucodata.MainActivity.IGNORE_BATTERY_OPTIMIZATION_SETTINGS;
 import static tk.glucodata.settings.Settings.removeContentView;
 import static tk.glucodata.util.getbutton;
+import static tk.glucodata.util.sethtml;
 
 class Battery {
 static private final String LOG_ID="Battery";
-	@SuppressWarnings("deprecation")
-static void sethtml(TextView view, String text) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-        view.setText(fromHtml(text,TO_HTML_PARAGRAPH_LINES_CONSECUTIVE));
-    }
-    else view.setText(fromHtml(text));
-      view.setTextIsSelectable(true);
-           view.setTextColor(Color.WHITE);
 
 
-	view.setLinksClickable(true);
-	view.setMovementMethod(LinkMovementMethod.getInstance());
-    }
-
-static void sethtml(TextView view,int res) {
-	sethtml(view,view.getContext().getString(res));
-	}
-
-
-/*
-static void askdevicespecific(Context context) {
-		final PowerManager pm = (PowerManager)context.getSystemService(Activity.POWER_SERVICE);
-		var name=context.getPackageName();
-		if(pm.isIgnoringBatteryOptimizations(name)) {
-			} 
-		AutoStartPermissionHelper.Companion.getInstance().getAutoStartPermission(context,true,true);
-		}
-		*/
 static void batteryscreen(MainActivity context ) {
 if(!isWearable) {
 	if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
@@ -82,36 +55,8 @@ if(!isWearable) {
 		TextView info=new TextView(context);
 
 		  final CheckBox battery = new CheckBox(context);
-		  /*
-		  Button dspecific = new Button(context);
-		  try {
-			  if( AutoStartPermissionHelper.Companion.getInstance().isAutoStartPermissionAvailable(context, false)) {
-				 dspecific.setText(R.string.devicespecific);
-				 dspecific.setOnClickListener( v-> {
-				 		try {
-							AutoStartPermissionHelper.Companion.getInstance().getAutoStartPermission(context,true,true);
-							}
-
-						 catch(Throwable e) {
-							Log.stack(LOG_ID,e);
-							Toast.makeText(context, "AutoStartPermissionHelper generated exception", Toast.LENGTH_LONG).show();
-						  }
-
-						});
-				}
-			else {
-		//		deviceinfo.setVisibility(GONE);
-				dspecific.setVisibility(GONE);
-				}
-		} catch(Throwable e) {
-			Log.stack(LOG_ID,e);
-	//		deviceinfo.setVisibility(GONE);
-			dspecific.setVisibility(GONE);
-		  }
-		  */
 
 		   int pad=(int)(GlucoseCurve.metrics.density*7.0);
-		  // info.setPadding(pad,pad,pad,pad);
 		   info.setPadding(pad,0,pad,0);
 
 		sethtml(info, R.string.battery);
@@ -137,7 +82,6 @@ if(!isWearable) {
 			});
 		Close.setOnClickListener(v-> context.doonback());
 	      lay.setBackgroundResource(R.drawable.dialogbackground);
-		//context.addContentView(lay, new ViewGroup.LayoutParams((int)(GlucoseCurve.width*.6),ViewGroup.LayoutParams.WRAP_CONTENT));
 		ScrollView scroll=new ScrollView(context);
 	  	scroll.setFillViewport(true);
 

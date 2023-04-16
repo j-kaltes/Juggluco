@@ -463,23 +463,21 @@ void startlibrelink(String lang) {
                             break;
 		     case 1: {
 			switch(item&0xF) {
-			       case 0:
-					((Applic) ((Activity) getContext()).getApplication()).setnotify(((item >> 4)&0xF)!=0);
+//			       case 0:
+//					((Applic) ((Activity) getContext()).getApplication()).setnotify(((item >> 4)&0xF)!=0);
 //					((Applic) ((Activity) getContext()).getApplication()).setnotify(((item >> 8)&0xF)!=0);
-					break;
-                                case 1: dialogs.showexport(( MainActivity)getContext(),getWidth(),getHeight()); break;
-//                                case 1: (( MainActivity)getContext()).messagesender.nameSendMessage("Hallo","/netinfo",new byte[]{1,2,3,4});break;
+//					break;
+                                case 0: dialogs.showexport(( MainActivity)getContext(),getWidth(),getHeight()); break;
 
 
-   				case 2: (new Backup()).mkbackupview(( MainActivity)getContext());break;
-				case 3: {
+   				case 1: (new Backup()).mkbackupview(( MainActivity)getContext());break;
+				case 2: {
 					       MainActivity activity = (MainActivity) getContext();
 						numberview.addnumberview(activity);
 						showkeyboard(activity);
 						}; break;
-//				case 4: getnumcontrol((MainActivity) getContext(),getWidth(),getHeight());return true;
-				case 4: getnumcontrol((MainActivity) getContext());return true;
-				case 5: Stats.mkstats((MainActivity) getContext());break;
+				case 3: getnumcontrol((MainActivity) getContext());return true;
+				case 4: Stats.mkstats((MainActivity) getContext());break;
 				};
 				};break;
 		    case 3:

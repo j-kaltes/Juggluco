@@ -285,6 +285,7 @@ extern "C" JNIEXPORT void  JNICALL   fromjava(setnrshortcuts)(JNIEnv *env, jclas
 
 
 extern "C" JNIEXPORT void  JNICALL   fromjava(setnodebug)(JNIEnv *env, jclass cl,jboolean val) {
+	LOGGER("setnodebug(%d)\n",val);
 	settings->setnodebug(val);
 	settings->data()->nobluetooth=false;
 	}
@@ -491,7 +492,7 @@ extern "C" JNIEXPORT jboolean  JNICALL   fromjava(alarmhassound)(JNIEnv *env, jc
 extern "C" JNIEXPORT jboolean  JNICALL   fromjava(alarmhasflash)(JNIEnv *env, jclass cl,jint type) {
 	return settings->data()->alarms[type].flash;
 	}
-extern "C" JNIEXPORT jshort  JNICALL   fromjava(readalarmduration)(JNIEnv *env, jclass cl,jint type) {
+extern "C" JNIEXPORT jint  JNICALL   fromjava(readalarmduration)(JNIEnv *env, jclass cl,jint type) {
 	return settings->data()->alarms[type].duration;
 	}
 
@@ -501,7 +502,7 @@ extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getalarmdisturb)(JNIEnv *env, 
 extern "C" JNIEXPORT void  JNICALL   fromjava(setalarmdisturb)(JNIEnv *env, jclass cl,jint type,jboolean dist) {
 	settings->data()->alarms[type].disturb=dist;
 	}
-extern "C" JNIEXPORT void  JNICALL   fromjava(writealarmduration)(JNIEnv *env, jclass cl,jint type,jshort dur) {
+extern "C" JNIEXPORT void  JNICALL   fromjava(writealarmduration)(JNIEnv *env, jclass cl,jint type,jint dur) {
 	settings->data()->alarms[type].duration=dur;
 	}
 extern "C" JNIEXPORT jshort  JNICALL   fromjava(readalarmsuspension)(JNIEnv *env, jclass cl,jint type) {
@@ -1454,4 +1455,11 @@ extern "C" JNIEXPORT jlong  JNICALL   fromjava(novopentype)(JNIEnv *env, jclass 
 		}
 	LOGGER("%s not found\n",serial);
 	return -1L;
+	}
+
+extern "C" JNIEXPORT void  JNICALL   fromjava(setSeparate)(JNIEnv *env, jclass cl,jboolean val) {
+	settings->data()->separatenotify=val;
+	}
+extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getSeparate)(JNIEnv *env, jclass cl) {
+	return settings->data()->separatenotify;
 	}

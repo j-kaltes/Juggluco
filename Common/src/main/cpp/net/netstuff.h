@@ -38,7 +38,6 @@ namehost(const struct sockaddr_in6  *in) {
 		inet_ntop(AF_INET ,in->sin6_addr.in6_u.u6_addr32+3,name, sizeof name);
 		}
 #else
-//s/\.\([a-z]\+6\)/.__\1/g
 	if(!memcmp(in->sin6_addr.__in6_u.__u6_addr8,zeros,10)) {
 		inet_ntop(AF_INET ,in->sin6_addr.__in6_u.__u6_addr32+3,name, sizeof name);
 		}
@@ -61,8 +60,11 @@ namehost() {
 operator const char*() const {
 	return name;
 	}
-const char *data() {
+const char *data() const {
 	return name;
+	}
+ char *data()  {
+		return name;
 	}
 int size() const {
 	return strlen(name);

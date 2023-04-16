@@ -141,8 +141,68 @@ passhost_t * getwearoshost(const bool create,const char *label,bool galaxy) {
     	}
     return found;
     }
+static void setdefaults(const char *infolabel,bool galaxy) {
+   passhost_t *host=getwearoshost(false,infolabel,galaxy);
+   if(host) {
+   	 LOGGER("setdefaults(%s,%d)\n",infolabel,galaxy);
+        	struct updatedata *update=backup->getupdatedata();
+		int index=host-update->allhosts;
+    		const uint16_t port=host->getport();
+		char portstr[7];
+		snprintf(portstr,6,"%d",port); 
+		const int ipsnr=host->nr;
+		const char *names[ipsnr];
+		namehost hostnames[ipsnr];
+		for(int i=0;i<ipsnr;i++) {
+			hostnames[i]=namehost(host->ips+i);
+			names[i]=hostnames[i].data();
+			LOGGER("host: %s\n",names[i]);
+			}
+		auto [_id,lasttime]=sensors->lastpolltime();
+		bool activeonly;
+		bool passiveonly;
+		bool sendnums;
+		bool sendstream;
+		bool sendscans;
+		bool receive;
+	    if constexpr(iswatchapp()) {
+			LOGGER("is watch\n");
+			sendnums=false;
+			sendstream=false;
+			sendscans=false;
+			receive=true;
+			if(isGalaxyWatch) {  
+				LOGGER("I am Galaxy Watch\n");
+				activeonly=true;
+				passiveonly=false;
+				}
+			else {
+				LOGGER("I am No Galaxy Watch\n");
+				activeonly=false;
+				passiveonly=true;
+				}
+			}
+		else  {
+			LOGGER("no watch app\n");
+			sendstream=true;
+			sendscans=true;
+			sendnums=true;
+			receive=false;
+			if(galaxy) {
+				LOGGER("connected to galaxy\n");
+				activeonly=false;
+				passiveonly=true;
+				}
+			else {
+				LOGGER("not connected to galaxy\n");
+				activeonly=true;
+				passiveonly=false;
+				}
+			}
 
-
+		backup->changehost(index,nullptr,(jobjectArray)names,ipsnr,true,portstr,sendnums, sendstream, sendscans,false, receive,activeonly ,string_view(nullptr,0),lasttime,passiveonly,infolabel,false,true);
+		}
+	}
 
 
 updateone &getsendto(const passhost_t *host);
@@ -579,3 +639,17 @@ bool getwearindex(JNIEnv *env, jstring jident) {
 extern "C" JNIEXPORT  void  JNICALL   fromjava(isGalaxyWatch)(JNIEnv *env, jclass cl,jboolean val) {
 	 isGalaxyWatch=val;  
 	}
+
+extern "C" JNIEXPORT  void  JNICALL   fromjava(setWearosdefaults)(JNIEnv *env, jclass cl,jstring jident,jboolean galaxy) {
+    if(!jident) {
+    	LOGGER("setWearosdefaults(null,%d)\n",galaxy);
+    	return;
+	}
+   const char *id = env->GetStringUTFChars( jident, NULL);
+   if (id == nullptr) {
+    	LOGGER("setWearosdefaults(null=env->GetStringUTFChars() ,%d)\n",galaxy);
+   	return;
+	}
+   setdefaults(id,galaxy);
+   env->ReleaseStringUTFChars(jident, id);
+   }

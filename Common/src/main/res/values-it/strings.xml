@@ -181,4 +181,5 @@
  <string name="highglucoseshort">" IPER!"</string>
  <string name="notentered">" non inserito"</string>
 <string name="spacedand">" e "</string>
+    <string name="notify">Notifica</string>
 </resources>

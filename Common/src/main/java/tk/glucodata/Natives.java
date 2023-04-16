@@ -324,9 +324,9 @@ public static native boolean getalarmdisturb(int type);
 public static native void setalarmdisturb(int type,boolean dist);
 
 
-public static native short readalarmduration(int type);
+public static native int readalarmduration(int type);
 
-public static native void writealarmduration(int type,short dur);
+public static native void writealarmduration(int type,int dur);
 public static native short readalarmsuspension(int type);
 
 public static native void writealarmsuspension(int type,short sus);
@@ -645,6 +645,10 @@ public static native boolean oldnovopenvalue(long referencetime,String serial,by
 
 public static native void setnovopenttimeandtype(long time,int type,String serial);
 
+public static native String mirrorStatus(int allindex);
+public static native void setWearosdefaults(String jident,boolean galaxy);
+public static native void setSeparate(boolean val);
+public static native boolean getSeparate( );
 
 
 //s/^extern.*JNIEXPORT[         ]*\([a-zA-Z]*\)[ ]*JNICALL[      ]*fromjava(\([^)]*\)) *(JNIEnv[^,]*,[^,)]*[,)]\([^){]*\)[^a-zA-Z0-9]*$/public static native \1 \2(\3);/g

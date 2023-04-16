@@ -232,7 +232,7 @@ dat thuis via een modem met het internet verbonden is en beide
 smartphones daarmee te verbinden. Een andere mogelijkheid is een
 command line programmaatje behorende tot Juggluco op een computer te
 draaien (bijvoorbeeld je PC or Amazon AWS):
-<a href="http://jkaltes.byethost16.com/Juggluco/cmdline/index.html">http://jkaltes.byethost16.com/Juggluco/cmdline/index.html</a></p>
+<a href="https://www.juggluco.nl/Juggluco/cmdline/index.html">https://www.juggluco.nl/Juggluco/cmdline/index.html</a></p>
 <p style="line-height: 100%; margin-bottom: 0in">Voor een poort
 forwarding handleiding, zie: 
 </p>
@@ -767,7 +767,7 @@ android:name=&quot;tk.glucodata&quot;/&gt; <br/>
 &lt;/queries&gt;</p>
 <h2 class="western">Glucodata broadcast</h2>
 <p>Juggluco heeft een eigen glucose broadcast, glucodata.Minute. See
-<a href="http://jkaltes.byethost16.com/Juggluco/glucosebroadcast.html">http://jkaltes.byethost16.com/Juggluco/glucosebroadcast.html</a>
+<a href="https://www.juggluco.nl/Juggluco/glucosebroadcast.html">https://www.juggluco.nl/Juggluco/glucosebroadcast.html</a>
 voor meer informatie.</p>
 <p>Vink de apps aan die deze broadcast moeten ontvangen.</p>
 <h2 class="western">Webserver</h2>
@@ -909,7 +909,7 @@ kregen door deze instelling.</p>
 <h1>Kerfstok</h1>
 <p style="line-height: 100%; margin-bottom: 0in">Dit schermpje dient
 om connectie problemen met Kerfstok op te lossen. Kerfstok
-(<a href="http://jkaltes.byethost16.com/Kerfstok/index.html">http://jkaltes.byethost16.com/Kerfstok/index.html</a>)
+(<a href="https://www.juggluco.nl/Kerfstok/index.html">https://www.juggluco.nl/Kerfstok/index.html</a>)
 is een horloge app voor programmeerbare Garmin smartwatches met
 touchscreen. Kerfstok heeft de volgende functies:</p>
 <ul>
@@ -998,7 +998,7 @@ sensoren hebt die daarmee werken.</p>
 <p>De landsaanduiding hoeft niet je eigen te zijn.</p>
 <p>De APK met Librelink wordt verbreidt door Google Play en is op
 allerlei plaatsen op de Internet verkrijgbaar. Voor een lijst van
-links, zie: <a href="http://jkaltes.byethost16.com/Juggluco/urls.html">http://jkaltes.byethost16.com/Juggluco/urls.html</a>
+links, zie: <a href="https://www.juggluco.nl/Juggluco/urls.html">https://www.juggluco.nl/Juggluco/urls.html</a>
 </p>
 <p>Na het downloaden van de APK, kun je Juggluco hem laten openen
 door op de <b>Open</b> knop te drukken en het APK bestand te
@@ -1299,39 +1299,44 @@ Freestyle Libre 2 sensoren.</p>
 manieren kunnen stream glucose waarden van Juggluco naar horloges
 verzonden en daarop weergegeven worden.</p>
 <h2 class="western">Melding</h2>
-<p style="line-height: 100%; margin-bottom: 0in">Als <i>Melding</i>
-in het linker middel menu van Juggluco aanstaat, wordt er bij het
-binnenkomen van elke glucose waarde een Android melding gemaakt die
-naar sommige horloges wordt doorgezonden. Hiervoor moet in de app
-behorende bij het horloge ingesteld zijn dat het meldingen van
-Juggluco door moet zenden naar het horloge. Dit werkt op Garmin
-Vivoactive3, maar niet op Samsung Galaxy Watch4, waarschijnlijk omdat
-het een <span lang="en-US">ongoing notification</span> betreft.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Als <i>Meld</i><i>ing</i>
+is ingeschakeld, wordt er een Android-melding gemaakt telkens wanneer
+er een nieuwe glucosewaarde binnenkomt. Op sommige horloges worden
+notificaties alleen naar het horloge gestuurd als er een nieuwe
+notificatie wordt aangemaakt, hiervoor moet je <i><b>Apart</b></i>
+aanzetten .<span style="font-style: normal"> Bij deze horloges moet
+je ook </span><i>Apart</i><span style="font-style: normal">
+inschakelen om alarmmeldingen op het horloge te ontvangen</span>.</p>
 <h2 class="western">Watchdrip</h2>
-<p style="line-height: 100%; margin-bottom: 0in">Door deze aan te
-zetten, stuurt Juggluco glucosewaarden naar <a href="https://bigdigital.home.blog/2022/06/16/watchdrip-a-new-application-for-xdrip-watch-integration">Watchdrip+</a>
+<p style="line-height: 100%; margin-bottom: 0in"><span lang="nl-NL">Door
+deze aan te zetten, stuurt Juggluco glucosewaarden naar <a class="western" href="https://bigdigital.home.blog/2022/06/16/watchdrip-a-new-application-for-xdrip-watch-integration">Watchdrip+</a>
 . Watchdrip+ stuurt wijzerplaten met glucosewaarden naar
-MiBand/Amazfit-horloges.</p>
+MiBand/Amazfit-horloges.</span></p>
 <h2 class="western">Kerfstok</h2>
-<p style="line-height: 100%; margin-bottom: 0in">Kerfstok is een
-horloge app voor sommige Garmin horloges waarmee je nummers kunt
-invoeren (bijvoorbeeld insuline doses), maar ook de huidige stream
-glucose waarde weergeeft. Zie Watch→Kerfstok status → Help en
-<a href="http://jkaltes.byethost16.com/Kerfstok">http://jkaltes.byethost16.com/Kerfstok</a></p>
+<p style="line-height: 100%; margin-bottom: 0in"><span lang="nl-NL">Kerfstok
+is een horloge app voor sommige Garmin horloges waarmee je nummers
+kunt invoeren (bijvoorbeeld insuline doses), maar ook de huidige
+stream glucose waarde weergeeft. Zie Watch→Kerfstok status → Help
+en <a class="western" href="https://www.juggluco.nl/Kerfstok">https://www.juggluco.nl/Kerfstok</a></span></p>
 <h2 class="western">Broadcast</h2>
-<p>Apps kunnen glucosewaarden ontvangen van een van de glucose Broadcasts die door Juggluco worden verzonden en deze glucosewaarden naar een horloge sturen. G-Watch (<a href="https://play.google.com/store/apps/details?id=sk.trupici.g_watch">TizenOS</a> of <a href="https://play.google.com/store/apps/details?id=sk.trupici.gwatch.wear">WearOS</a>) kan bijvoorbeeld glucosewaarden ontvangen van de Glucodata
-Broadcast (zie Linker menu-&gt;Instellingen).</p>
+<p><span lang="nl-NL">Apps kunnen glucosewaarden ontvangen van een
+van de glucose Broadcasts die door Juggluco worden verzonden en deze
+glucosewaarden naar een horloge sturen. G-Watch (<a class="western" href="https://play.google.com/store/apps/details?id=sk.trupici.g_watch">TizenOS</a>
+of <a class="western" href="https://play.google.com/store/apps/details?id=sk.trupici.gwatch.wear">WearOS</a>)
+kan bijvoorbeeld glucosewaarden ontvangen van de Glucodata Broadcast
+(zie Linker menu-&gt;Instellingen).</span></p>
 <h2 class="western">xDrip horloge apps</h2>
-<p>Juggluco bevat een xDrip webserver. Dit maakt het mogelijk horloge
-apps voor xDrip direct met Juggluco te gebruiken. Je kunt ook de
-glucose waarden eerst naar xDrip en dan naar het horloges zenden,
-maar omdat xDrip haar glucose waarde slechts elke 5 minuten
-vernieuwt, worden dan maximaal 6 minute oude waarden naar het horloge
-gezonden, terwijl als het horloge direct met Juggluco verbonden is de
-waarden maximaal 1 minuut oud zijn (als er geen connectie problemen
-of zo optreden). Juggluco zendt altijd de recentste glucose waarden,
-maar die worden enkel naar de xDrip horloge app verzonden nadat die
-er om gevraagd heeft. Watch faces en data fields op <b>Garmin</b>
+<p><span lang="nl-NL">Juggluco bevat een xDrip webserver. Dit maakt
+het mogelijk horloge apps voor xDrip direct met Juggluco te
+gebruiken. Je kunt ook de glucose waarden eerst naar xDrip en dan
+naar het horloges zenden, maar omdat xDrip haar glucose waarde
+slechts elke 5 minuten vernieuwt, worden dan maximaal 6 minute oude
+waarden naar het horloge gezonden, terwijl als het horloge direct met
+Juggluco verbonden is de waarden maximaal 1 minuut oud zijn (als er
+geen connectie problemen of zo optreden). Juggluco zendt altijd de
+recentste glucose waarden, maar die worden enkel naar de xDrip
+horloge app verzonden nadat die er om gevraagd heeft. Watch faces en
+data fields op </span><span lang="nl-NL"><b>Garmin</b></span><span lang="nl-NL">
 horloges vragen elke 5 minute naar een glucose waarden omdat Garmin
 een hogere update frequentie niet toelaat. Via xDrip kon dat er toe
 leiden dat een 10 minute oude glucose waarden getoond werd. Direct
@@ -1340,26 +1345,27 @@ alles goed gaat). Als je een programmeerbare Garmin horloge hebt
 waarop Kerfstok niet werkt omdat het geen touchscreen heeft, bestaan
 er de volgende mogelijkheden om toch een niet al te oude glucose
 waarden op je horloge te zien. Een xDrip widget
-(<a href="https://apps.garmin.com/en-US/apps/73115e04-dc9f-4765-ad88-e7ae283ce995">https://apps.garmin.com/en-US/apps/73115e04-dc9f-4765-ad88-e7ae283ce995</a>)
+(<a class="western" href="https://apps.garmin.com/en-US/apps/73115e04-dc9f-4765-ad88-e7ae283ce995">https://apps.garmin.com/en-US/apps/73115e04-dc9f-4765-ad88-e7ae283ce995</a>)
 vertoont direct na het opstarten altijd de meest recente waarde en
 kan ook tijdens het draaien van een sport activiteit horloge app
 gestart worden. Dus als je instaat bent tijdens het sporten even die
 widget te starten, kun je de meest recente glucose waarde zien. Een
 andere mogelijkheid is een xDrip sport app
-(<a href="https://apps.garmin.com/en-US/apps/aaf6533b-bca1-4365-9131-9f882f6f148c">https://apps.garmin.com/en-US/apps/aaf6533b-bca1-4365-9131-9f882f6f148c</a>)
+(<a class="western" href="https://apps.garmin.com/en-US/apps/aaf6533b-bca1-4365-9131-9f882f6f148c">https://apps.garmin.com/en-US/apps/aaf6533b-bca1-4365-9131-9f882f6f148c</a>)
 te gebruiken en die zo op te starten dat het moment waarop het de
 glucose waarden opvraagt net na het binnenkomen van een nieuwe
 glucose waarden bij Juggluco is. Volgens een gebruiker bestaat er ook
-een wijzerplaat (watch face) for <b>Fitbit</b> horloges dat werkt met
-de xDrip webserver: <a href="https://glancewatchface.com/">https://glancewatchface.com</a></p>
+een wijzerplaat (watch face) for </span><span lang="nl-NL"><b>Fitbit</b></span><span lang="nl-NL">
+horloges dat werkt met de xDrip webserver:
+<a class="western" href="https://glancewatchface.com/">https://glancewatchface.com</a></span></p>
 <p><b>local only</b>: server accepteert enkel verbindingen van
 localhost (127.0.0.1). Als je het uitzet kunnen ook andere hosts
 gebruik maken van de server. Als de firewall van je thuis netwerk
 niet zo geconfigureerd is, dat het binnenkomende verbindingen met
 port 17580 van je smartphone verbindt, zullen enkel leden van je
 thuis netwerk een verbinding kunnen vormen.</p>
-<p>Voor meer informatie over de xDrip webserver interface, zie
-<a href="http://jkaltes.byethost16.com/Juggluco/webserver.html">http://jkaltes.byethost16.com/Juggluco/webserver.html</a></p>
+<p><span lang="nl-NL">Voor meer informatie over de xDrip webserver
+interface, zie <a class="western" href="https://www.juggluco.nl/Juggluco/webserver.html">https://www.juggluco.nl/Juggluco/webserver.html</a></span></p>
 <h2 class="western">Juggluco voor WearOS</h2>
 <p>Er bestaat een port van Juggluco die draait op WearOS. Het is
 aangepast aan het kleinere scherm en een wijzerplaat (watch face) is
@@ -1377,6 +1383,28 @@ toegevoegd, waarop de stream glucose waarde getoond wordt.</p>
 <string name="wearosinfo" >
 <![CDATA[
 <h1>WearOS</h1>
+<p><b>Directe sensor-horloge-verbinding</b>: hiermee wordt bepaald of
+het horloge rechtstreeks met de sensor moet worden verbonden. Dit kan
+alleen worden gewijzigd als horloge en telefoon zijn
+gesynchroniseerd. Gebruik Kloon-&gt;Sync en Reinit op telefoon en
+horloge om telefoon en horloge te synchroniseren.</p>
+<p><b>Init </b><b>horloge </b><b>app</b>: hierop moet één keer
+worden gedrukt nadat Juggluco op het WearOS-horloge is geïnstalleerd
+en draait. 
+</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>Standaardwaarden</b>:
+hiermee worden de verbindingsinstellingen ingesteld op de
+standaardwaarden. Dit bestaat uit de instellingen die kunnen worden
+gewijzigd in het linkermenu-&gt;Kloon op het horloge en het
+linkermiddenmenu-&gt;Kloon op de telefoon. Het bestaat uit
+instellingen zoals \'Active only en \'Scans\'. Deze knop kan worden
+ingedrukt wanneer de instellingen per ongeluk zijn gewijzigd door
+water van de douche of tijdens het slapen. Als je reset door de
+horlogeversie opnieuw te installeren of gegevens te wissen, dan moet
+je ook de Kloon-verbinding op de telefoon verwijderen.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
 <p style="line-height: 100%; margin-bottom: 0in">Een speciale versie
 van Juggluco draait op WearOS horloges. Elke sensor moet wel
 geïnitialiseerd worden door hem te scannen met Juggluco draaiend op
@@ -1400,7 +1428,7 @@ mogelijkheden:</p>
 <p style="line-height: 100%; margin-bottom: 0in">Een WearOS horloge
 met Android 8 of hoger is nodig. Juggluco voor WearOS kun je vinden
 in Google Play op dat horloge. Voor enige afbeeldingen zie:
-<a href="http://jkaltes.byethost16.com/JugglucoWearOS/index.html">http://jkaltes.byethost16.com/JugglucoWearOS</a></p>
+<a href="https://www.juggluco.nl/JugglucoWearOS/index.html">https://www.juggluco.nl/JugglucoWearOS</a></p>
 <p style="line-height: 100%; margin-bottom: 0in">Om Juggluco op
 WearOS aan de praat te krijgen, doe je het volgende:</p>
 <ol>
@@ -1542,7 +1570,7 @@ geven. Bijvoorbeeld:
 <![CDATA[
 <h1>About</h1>
 <p style="line-height: 100%; margin-bottom: 0in">Juggluco werd
-geschreven door <a href="http://jkaltes.byethost16.com/Juggluco">Jaap
+geschreven door <a href="https://www.juggluco.nl/Juggluco">Jaap
 Korthals Altes</a></p>
 <p style="line-height: 100%; margin-bottom: 0in">Afgezien van de
 standaard Android libraries, werd van het volgende gebruik gemaakt:</p>
@@ -1602,7 +1630,8 @@ of het moet afgaan tijdens &ldquo;Niet storen&rdquo; of niet.</p>
 <![CDATA[
 <h1>Libreview</h1>
 <p style="line-height: 100%; margin-bottom: 0in">Juggluco kan glucose
-data naar Libreview zenden.</p>
+data naar Libreview zenden (Librelinkup is iets anders en niet
+bruikbaar met Juggluco.)</p>
 <p style="line-height: 100%; margin-bottom: 0in">Als Abbott’s
 Librelink app glucose data van Freestyle libre 2 sensoren naar
 Libreview zendt, is dat gebaseerd op de history data. Door de sensor
@@ -1661,8 +1690,8 @@ tegelijkertijd verbonden kan zijn. Bij het zenden van data naar
 Libreview probeert Juggluco dit na te bootsen door eerst data van een
 sensor te zenden en pas wanneer van die sensor geen data meer is,
 wordt er data van de volgende sensor verzonden.</p>
-<p style="line-height: 100%; margin-bottom: 0in"><b>Account</b><b>-</b><b>ID</b><b>
-ophalen</b>: 
+<p style="line-height: 100%; margin-bottom: 0in"><b>Account-ID</b>
+<b>ophalen</b>: 
 </p>
 <p style="line-height: 100%; margin-bottom: 0in">Als je je Libreview
 account id wil krijgen, maar geen glucose waarden naar Libreview will
@@ -1684,7 +1713,7 @@ te verbinden, kun je de Freestyle Libre3 sensor niet meer scannen.</p>
 <h1>Kerfstok configuratie</h1>
 <p style="line-height: 100%; margin-bottom: 0in"><span lang="nl-NL">De
 broncode van Kerfstok kan gedownload worden van
-<a class="western" href="http://jkaltes.byethost16.com/Kerfstok/Kerfstok-source.html">http://jkaltes.byethost16.com/Kerfstok/Kerfstok-source.html</a>.
+<a class="western" href="https://www.juggluco.nl/Kerfstok/Kerfstok-source.html">https://www.juggluco.nl/Kerfstok/Kerfstok-source.html</a>.
 Iemand die de broncode verandert, kan een andere </span><span lang="nl-NL"><b>ID</b></span><span lang="nl-NL">
 gebruiken. Juggluco moet die ID weten om met die veranderde Kerfstok
 te kunnen communiceren. Druk op </span><span lang="nl-NL"><b>ID</b></span><span lang="nl-NL">

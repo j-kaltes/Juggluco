@@ -97,7 +97,6 @@ jugglucotext pltext {
 		"Zatrzymaj alarm"
 		},
 	.menustr1={
-		"Powiadom.",
 		"Eksport",
 		"Klonowanie",
 		pltext.newamount,

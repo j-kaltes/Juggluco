@@ -59,7 +59,7 @@ typedef std::conditional<sizeof(long long) == sizeof(int64_t), long long, int64_
 
 static void watchserverloop(int *sockptr,bool secure) ;
 static bool startwatchserver(bool secure,int port,int *sockptr) {
-	const char *servername=secure?"SECUREWATCHSERVER":"WATCHSERVER";
+	const char *servername=secure?"SSL WATCHSERVER":"WATCHSERVER";
 	LOGGER("%s\n",servername);
 	constexpr const int maxport=20;
 	char watchserverport[maxport];
@@ -1249,8 +1249,8 @@ static char *writetreatment(char *outiter,const int numbase,const int pos,const 
 	const time_t tim=num->gettime();
         struct tm tmbuf;
         gmtime_r(&tim, &tmbuf);
-	outiter+=sprintf(outiter,R"({"_id":"num%d#%d","eventType":"<none>","enteredBy":"Juggluco","created_at":"%d-%02d-%02dT%02d:%02d:%02d.000Z",)",numbase,pos,tmbuf.tm_year+1900,tmbuf.tm_mon+1,tmbuf.tm_mday, tmbuf.tm_hour, tmbuf.tm_min,tmbuf.tm_sec);
-//what met insulinInju
+	outiter+=sprintf(outiter,R"({"_id":"num%d#%d","eventType":"<none>","insulinInjections":"[]","enteredBy":"Juggluco","created_at":"%d-%02d-%02dT%02d:%02d:%02d.000Z",)",numbase,pos,tmbuf.tm_year+1900,tmbuf.tm_mon+1,tmbuf.tm_mday, tmbuf.tm_hour, tmbuf.tm_min,tmbuf.tm_sec);
+
 	float w=0.0f;
 	 if((w=longWeight(type))!=0.0f) {
 	 	addar(outiter,R"("notes":"Long-Acting",)");
@@ -1260,17 +1260,15 @@ static char *writetreatment(char *outiter,const int numbase,const int pos,const 
 	 	}
 		}
 	if(w!=0.0f) {
-		std::string_view typestr=settings->getlabel(type);
-		auto units=w*num->value;
-		outiter+=sprintf(outiter,R"("carbs":null,"insulin":%g,"insulinInjections": "[{\"insulin\":\"%s\",\"units\":%g}]"},)",units,typestr.data(),units); //"-s needed because of a bug in xDrip
+		outiter+=sprintf(outiter,R"("carbs":null,"insulin":%g},)",w*num->value);
 		}
 	else {
 		if((w=carboWeight(type) )!=0.0f) {
-			outiter+=sprintf(outiter,R"("carbs":%g,"insulin":null,"insulinInjections":"[]"},)",w*num->value);
+			outiter+=sprintf(outiter,R"("carbs":%g,"insulin":null},)",w*num->value);
 			}
 		else {
 			std::string_view typestr=settings->getlabel(type);
-			outiter+=sprintf(outiter,R"("notes":"%s %g","carbs":null,"insulin":null,"insulinInjections":"[]"},)",typestr.data(),num->value);
+			outiter+=sprintf(outiter,R"("notes":"%s %g","carbs":null,"insulin":null},)",typestr.data(),num->value);
 			}
 		}
 	return outiter;

@@ -469,20 +469,28 @@ void activateresult(boolean res) {
     public void onTagDiscovered(Tag tag) {
 	var techs = tag.getTechList();
 	String all="onTagDiscovered: ";
-	for(var  t:techs) {
-		all+=t;
-		all+=" ";
+
+	if(techs!=null) {
+		for(var  t:techs) {
+			all+=t;
+			all+=" ";
+			}
+		Log.i(LOG_ID,all);
+
+		if(!isWearable) {
+			if(techs.length>0) {
+				switch(techs[0] ) {
+					case "android.nfc.tech.IsoDep":
+							showbytes("tag", tag.getId());
+							tk.glucodata.NovoPen.Scan.onTag(this,tag);
+							return;
+					}
+				}
+			}
 		}
-	Log.i(LOG_ID,all);
-	switch(techs[0] ) {
-		case "android.nfc.tech.IsoDep":
-			if(!isWearable) {
-				showbytes("tag", tag.getId());
-				tk.glucodata.NovoPen.Scan.onTag(this,tag);
-				break;
-			};
-		default: startnfc(tag);
-		}
+	else
+		Log.i(LOG_ID,all);
+	startnfc(tag);
     }
     @Override
     protected void onPause() {

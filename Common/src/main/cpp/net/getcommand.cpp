@@ -23,8 +23,7 @@
 #include <sys/socket.h>
 #include <string.h>
        #include <unistd.h>
-       #include <sys/syscall.h> 
-#include "comtypes.h"
+#include "comtypes.hpp"
 #include "receive.h"
 #include "passhost.h"
 #include "makerandom.h"
@@ -39,7 +38,7 @@ extern void		processglucosevalue(int sendindex,int newstart=-1);
 getdata filedata;
 
 
-bool sendcrypt(int sock,crypt_t *ctx,uint8_t *data,int datalen) {
+static bool sendcrypt(int sock,crypt_t *ctx,uint8_t *data,int datalen) {
 	constexpr int taglen=16;
 	const int alllen=taglen+datalen;
 	uint8_t buf[alllen];
@@ -54,7 +53,7 @@ bool sendcrypt(int sock,crypt_t *ctx,uint8_t *data,int datalen) {
 	return true;
 	}
 
-bool openfile(int sock,crypt_t *ctx,const char *name) {
+static bool openfile(int sock,crypt_t *ctx,const char *name) {
 	int fp=filedata.open(name);
 	LOGGER("open(%s)=%d\n",name,fp);
 	int16_t sfp=(int16_t)fp;
@@ -99,9 +98,11 @@ int alignadd(int was,int bij) {
 //s/it+=comlen/it=alignadd(it,comlen)/g
 extern bool receivelastpos(const lastpos_t *data) ;
 
+static			bool savefileonce(const struct fileonce_t *gegs);
 
-std::pair<int,int> interpret(int sock,passhost_t *host,crypt_t *ctx,senddata_t *datain,int len) {
-LOGGER("interpret %d \n",len);
+static std::pair<int,int> interpret(int sock,passhost_t *host,crypt_t *ctx,senddata_t *datain,int len) {
+
+LOGGER("interpret len=%d \n",len);
 for(int it=0;it<len;) {
 	senddata_t *data=datain+it;
 	uint16_t *us=reinterpret_cast<uint16_t*>(data),command=*us;
@@ -110,7 +111,7 @@ for(int it=0;it<len;) {
 	bool ret=false;
 	int comlen;
 	if(!(host->receivefrom&2)&&command!=sbackupstop&&command!=swakeupstream&&command!=sbackup&&command!=sack)  {
-		LOGGER("Don't receive from  this host\n");
+		LOGGER("interpret: I don't receive from  this host\n");
 		return {-1,0};
 		}
 		
@@ -187,7 +188,6 @@ for(int it=0;it<len;) {
 				return {it,comlen};
 				}
 			ret= filedata.close(us[1]);
-//			if(!command>>4)
 			break;
 		case sglucose:
 		    {comlen=4;
@@ -235,28 +235,6 @@ extern				bool updateDevices() ;
 			ret=updateDevices();
 			LOGGER("updateDevices=%d\n",ret);
 			};break;
-			/*
-		case snewnums: comlen=4;
-			addlen(it,comlen);
-			if(it>len) {
-				return {it,comlen};
-				}
-			render();
-			extern void updatesizeall() ;
-			updatesizeall();
-			backup->wakebackup();
-			ret=true;
-			break; */
-			/*
-		case srenum: comlen=4;
-			addlen(it,comlen);
-			if(it>len) {
-				return {it,comlen};
-				}
-			extern void remakenums(); 
-			remakenums();
-			ret=true;
-			break; */
 		case sbackup: 
 			ret=true;
 		case sbackupstop: 
@@ -330,7 +308,6 @@ extern				bool updateDevices() ;
 				return {it,comlen};
 				}
 
-			bool savefileonce(const struct fileonce_t *gegs);
 			ret=savefileonce(gegs);
 			} break;
 		default:;
@@ -354,6 +331,11 @@ struct senddata_deleter { // deleter
 };
  
 bool	getcommandsnopass(int sock,passhost_t *host) {
+	int allindex=gethostindex(host);
+	auto &status=mirrorstatus[allindex].receive;
+	status.running(true);
+	destruct _dest([&status]{status.running(false);});
+
 	LOGGER("getcommandsnopass\n");
 	int start=0;
 	int maxcom =1024*1024;
@@ -380,7 +362,9 @@ bool	getcommandsnopass(int sock,passhost_t *host) {
 				}
 			default:
 				int totlen=start+len;
+				status.ininterpret=true;
 				auto [last,comlen]=interpret(sock,host,nullptr,com,totlen);
+				status.ininterpret=false;
 				LOGGER("[%d,%d]=interpret\n",last,comlen);
 				if(last) {
 					if(last<0) {
@@ -416,7 +400,7 @@ bool	getcommandsnopass(int sock,passhost_t *host) {
 #include "crypt.h"
 
 
-int interpretcommands(int sock,passhost_t *host,crypt_t *ctx,senddata_t *com,int totlen) {
+static int interpretcommands(int sock,passhost_t *host,crypt_t *ctx,senddata_t *com,int totlen) {
 	auto [last,comlen]=interpret(sock,host,ctx,com,totlen);
 	if(last<0) {
 		if(comlen==0)
@@ -430,7 +414,14 @@ int interpretcommands(int sock,passhost_t *host,crypt_t *ctx,senddata_t *com,int
 	return 0;
 	}
 constexpr int MAXDATA=1024*1024*256;
-bool getcom(int sock, passhost_t *host,ascon_aead_ctx_t *ctx) {
+static bool getcom(int sock, passhost_t *host,ascon_aead_ctx_t *ctx) {
+	int allindex=gethostindex(host);
+	auto &status=mirrorstatus[allindex].receive;
+	status.running(true);
+	destruct _dest([&status]{status.running(false);});
+
+
+
 	while(true) {
 		LOGGER("getcom\n");
 		constexpr const int taglen=16;
@@ -520,17 +511,19 @@ bool getcom(int sock, passhost_t *host,ascon_aead_ctx_t *ctx) {
 			}
 		else
 			LOGGER("ascon_aead128a_decrypt_final valid\n");
+		status.ininterpret=true;
 		if(int res=interpretcommands(sock,host,ctx,uit+intlen,datlen)) {
 			if(res==1)
 				return true;
 			return false;
 			}
+		status.ininterpret=false;
 		}	
 	}
 template <int nr>
 using unique_al= std::unique_ptr<uint8_t[],ardeleter<nr,uint8_t>> ;
 //std::unique_ptr<uint8_t[],ardeleter<4,uint8_t>>  receivedatanopass(int sock,const int totlen) {
-unique_al<4> receivedatanopass(int sock,const int totlen) {
+static unique_al<4> receivedatanopass(int sock,const int totlen) {
 	LOGGER("receivedatanopass(%d,%d)\n",sock,totlen);
 	uint8_t *buf=new(std::align_val_t(4),std::nothrow) uint8_t[totlen];
 	if(!buf) {
@@ -632,7 +625,7 @@ bool	receivepassinit(int sock,passhost_t *host,ascon_aead_ctx_t *ctx) {
 
 
 
-bool	getcommandspassinit(int sock,passhost_t *host) {
+static bool	getcommandspassinit(int sock,passhost_t *host) {
 	ascon_aead_ctx_t ctx;
 	if(!receivepassinit(sock,host,&ctx)) 
 		return false;  //NO cleanup, because no init
@@ -641,6 +634,7 @@ bool	getcommandspassinit(int sock,passhost_t *host) {
 	return ret;
 	}
 bool	getcommands(int sock,passhost_t *host) {
+      LOGGER("getcommands(%d)\n",sock);
 	if(host->haspass())
 		return getcommandspassinit(sock,host);
 	else {
@@ -666,7 +660,7 @@ static std::pair<int,int> getstartinfo(const struct fileonce_t *gegs,const uint8
 	return {sendindex,startpos};
 	}	
 void sethistorystart(int,int);
-bool savefileonce(const struct fileonce_t *gegs) {
+static bool savefileonce(const struct fileonce_t *gegs) {
 	const int nr=gegs->nr;
 	const uint8_t *start=reinterpret_cast<const uint8_t*>(&gegs->gegs[nr]);
 	const char *name=reinterpret_cast<const char *>(start);
@@ -696,7 +690,7 @@ bool savefileonce(const struct fileonce_t *gegs) {
 	LOGGER("savedata success\n");
 	return true;
 	}
-
+/*
 bool turnreceiver(int sock,passhost_t *hostptr,crypt_t *ctxptr) {
 	if(ctxptr) {
 		bool ret=getcom(sock, hostptr,ctxptr);
@@ -709,6 +703,7 @@ bool turnreceiver(int sock,passhost_t *hostptr,crypt_t *ctxptr) {
 		}
 	return false;
 	}
+	*/
 #ifdef MAIN
 void render() {}
 void remakenums() {}

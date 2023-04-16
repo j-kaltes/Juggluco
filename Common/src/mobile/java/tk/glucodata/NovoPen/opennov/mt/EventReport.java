@@ -40,11 +40,13 @@ public class EventReport extends BaseMessage {
 
         var handle = getUnsignedShort(buffer);
         var relativeTime = getUnsignedInt(buffer);
-        var er = new EventReport();
-        long referencetime=(System.currentTimeMillis()/1000L)-relativeTime;
         var eventType = getUnsignedShort(buffer);
         var len = getUnsignedShort(buffer);
+
         log("EventReport: handle: " + handle + " rt: " + relativeTime + " " + eventType);
+
+        long referencetime=(System.currentTimeMillis()/1000L)-relativeTime;
+        var er = new EventReport();
         er.handle = handle;
 
         switch (eventType) {

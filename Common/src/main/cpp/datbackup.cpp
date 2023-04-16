@@ -147,28 +147,6 @@ int updateone::updatescansu() {
 bool netwakeup(int sock,passhost_t *pass,crypt_t *ctx){
 	if(backup) {
 		LOGGER("netwakeup %d\n",sock);
-#ifdef REVERSECONNECT
-		int sin=pass->index;
-		if(sin>=0) {
-		       updateone &host=backup->getupdatedata()->tosend[sin];
-		       if(host.getsock()<0) {
-				LOGGER("use sock\n");
-				if(ctx) {
-					crypt_t *crypt=host.getcrypt();
-					if(!crypt)
-						return false;
-					memcpy(crypt,ctx,sizeof(crypt_t));;
-					}
-				host.setsock(sock);
-				LOGGER("netwakeup senderindex=%d\n",sin);
-				backup->wakebackup(Backup::wakeall);
-				return true;
-				}
-			else
-				LOGGER("old sock=%d\n",host.getsock());
-			}
-#endif
-		//backup->wakebackuponly(Backup::wakeall|Backup::wakereconnect);
 		backup->wakebackup(Backup::wakeall|Backup::wakereconnect);
 		}
 	return false;
@@ -213,7 +191,7 @@ static int saysender(const passhost_t *host) {
 	}
 #ifdef WEAROS_MESSAGES
 extern bool wearmessages[];
-extern int messagemakeconnection(passhost_t *pass,bool sender,int &sock,crypt_t*ctx,char stype);
+extern int messagemakeconnection(passhost_t *pass,int &sock,crypt_t*ctx,char stype);
 #endif
 static int sayactivereceive(const passhost_t *host) {
 	if(host->index>=0) {
@@ -241,7 +219,7 @@ void	updateone::open() {
      LOGGER("updateone::open %d %s\n",allindex,host->getnameif());
 #ifdef WEAROS_MESSAGES
 	if(host->wearos&&wearmessages[allindex]) {
-		 messagemakeconnection(host,true,getsock(),getcrypt(),saysender(host));
+		 messagemakeconnection(host,getsock(),getcrypt(),saysender(host));
 		
  	}   else 
 #endif
@@ -249,8 +227,10 @@ void	updateone::open() {
 		if(host->sendpassive) 
 			return;
 		makeconnection(host,getsock(),getcrypt(),saysender(host));
+
 	}
 	if(getsock()>=0) {
+//		mirrorstatus[allindex].sendor.hassocket=true;
 		receivetimeout(getsock(),60);
 		sendtimeout(getsock(),60*5);
 		}
@@ -273,18 +253,6 @@ static void sendup(passhost_t *hostptr) {
 		if(sendbackup(ctxptr,sock)) {
 
 			LOGGER("sendup success %d\n",sock);	
-#ifdef REVERSECONNECT
-//			int ind=hostptr-backup->getupdatedata()->allhosts;
-			if(hostsocks[ind]==-1) {
-				hostsocks[ind]=sock;
-				LOGGER("turnreceiver\n");
-				if(turnreceiver(sock,hostptr,ctxptr))
-					return;
-				}
-			else {
-				LOGGER("sendup hostsocks[ind]=%d\n",hostsocks[ind]);
-				}
-#endif
 			}
 		else
 			LOGGER("%d: failure %d\n",agettid(),sock);	
@@ -298,23 +266,28 @@ std::vector<Backup::condvar_t*> active_receive;
 #include <chrono>
 using namespace std::chrono_literals;
 void activereceivethread(int allindex,passhost_t *pass) {
-	constexpr const int maxbuf = 50;
-	char buf[maxbuf];
+	auto &status=mirrorstatus[allindex].receive;
+	status.activereceivethread=true;
+	destruct _dest([&status](){ status.activereceivethread=false;});
 	const int h = pass->activereceive - 1;
-	if (h < 0) {
+	if(h < 0) {
 		LOGGER("activereceivethread h(%d)<0\n", h);
 		return;
 	}
-	if (h >= active_receive.size()) {
+	if(h >= active_receive.size()) {
 		LOGGER("activereceivethread h(%d)>=active_receive.size()(%zd)\n", h, active_receive.size());
 		return;
 	}
-	if (!active_receive[h])
+	if(!active_receive[h]) {
+		LOGGER("activereceivethread !active_receive[%d]\n",h);
 		return;
+		}
 	const bool haspas = pass->haspass();
 	crypt_t ctx, *ctxptr = haspas ? &ctx : nullptr;
 	decltype(active_receive[h]->dobackup) current{};
 {
+	constexpr const int maxbuf = 50;
+	char buf[maxbuf];
 #ifndef NOLOG
 	int slen =
 #endif
@@ -364,6 +337,7 @@ void activereceivethread(int allindex,passhost_t *pass) {
 		if(makeconnection(pass,sock,ctxptr,sayactivereceive(pass))<0) {
 			continue;
 			}
+//		status.hassocket=true;
 		void	receiversockopt(int sock) ;
 		receiversockopt(sock) ;
 		bool	activegetcommands(int sock,passhost_t *host,crypt_t *ctx) ;
@@ -371,6 +345,7 @@ void activereceivethread(int allindex,passhost_t *pass) {
 		activegetcommands(sock,pass,ctxptr); 
 		LOGGER("after activegetcommands\n");
 		close(sock);
+//		status.hassocket=false;
 		sock=-1;
 	}
 //		if(ctxptr) ascon_aead_cleanup(ctxptr);
@@ -480,6 +455,7 @@ void passivesender(int sock,passhost_t *pass)  {
 		receivetimeout(sock,60) ;
 		sendtimeout(sock,60*5);
 		host.setsock(sock); 
+//		mirrorstatus[host.allindex].sendor.hassocket=true;
 		LOGGER("wakebackup con_vars[%d]\n",h);
 		 backup->con_vars[h]->wakebackup(Backup::wakeall);
 		 }
@@ -537,3 +513,4 @@ bool sendall(const passhost_t *host) {
   return (sender.sendnums&&sender.sendstream&&sender.sendscans);
   }
 
+mirrorstatus_t mirrorstatus[maxallhosts];

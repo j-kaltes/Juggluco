@@ -437,7 +437,8 @@ private void removeDevice(String str) {
 		}	
 	Log.i(LOG_ID,"removeDevice: didn't remove"+ str);
 	}
-public void removeDevices() {
+private void removeDevices() {
+	Log.i(LOG_ID,"removeDevices()");
 	for(int i=0;i<gattcallbacks.size();i++) {
 		gattcallbacks.get(i).free();
 		}
@@ -517,6 +518,7 @@ public boolean connectDevices(long delayMillis) {
 private boolean updateDevicers() {
 	if(!Natives.getusebluetooth()) {
 		Log.d(LOG_ID,"updateDevicers !getusebluetooth()");
+		removeDevices();
 		return false;
 		}
 	Log.i(LOG_ID,"updateDevicers");

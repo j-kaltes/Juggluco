@@ -93,7 +93,6 @@ static jugglucotext nltext {
 		"Stop Alarm"
 		},
 	.menustr1={
-		"Melding",
 		"Export",
 		"Kloon",
 		nltext.newamount,
@@ -124,7 +123,7 @@ static jugglucotext nltext {
 		{"Nieuwe sensor geïnitialiseed","Scan nog eens om hem te gebruiken"},
 		{"","Reageert niet op aanraking tijdens scannen"},
 		{"",""},
-		{"Library initialization error","Force reinstall by removing library"},
+		{"Library initialization error","Are shared libraries missing?"},
 		{"Class initalization error","Do something"},
 		{"Procedure takes too long","I kill program"},
 		{"365: Vervang sensor","Uw sensor werkt niet. Verwijder uw sensor en start een nieuwe sensor."},

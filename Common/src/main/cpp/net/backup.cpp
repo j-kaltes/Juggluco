@@ -230,6 +230,24 @@ extern void sendtimeout(int sock,int secs);
 extern void receivetimeout(int sock,int secs) ;
 	 receivetimeout(new_fd,0);
 	 }
+
+static void receiverthread(int sock,passhost_t *host,const int allindex) {
+      char buf[17];
+      snprintf(buf,17,"receiver %d",allindex);
+      prctl(PR_SET_NAME, buf, 0, 0, 0);
+
+
+	LOGGER("receiverthread %d %s\n",sock,buf);
+	bool	getcommands(int,passhost_t *);
+	if(getcommands(sock,host)) {
+		LOGGER("open return receiverthread %d\n",sock);
+		return;
+		}
+	LOGGER("shutdown(%d)\n",sock);
+	shutdown(sock,SHUT_RDWR);
+	}
+
+
 bool serverloop(int serversock, passhost_t *hosts,int &hostlen,int *socks)  {
 globalsocket=serversock;
 	while(true) {  // main accept() loop
@@ -302,7 +320,8 @@ globalsocket=serversock;
 				}
 			if(hasname) {
 				char name[passhost_t::maxnamelen];
-				if(recvni(new_fd,name,passhost_t::maxnamelen)==passhost_t::maxnamelen) {
+				int rlen;
+				if((rlen=recvni(new_fd,name,passhost_t::maxnamelen))==passhost_t::maxnamelen) {
 					LOGGER("hostlabel=%s\n",name);
 					for(int h=0;h<hostlen;h++) {
 						passhost_t& host=hosts[h];
@@ -318,6 +337,12 @@ globalsocket=serversock;
 							}
 						}
 					}
+				else {
+					const int ind= rlen>0?(rlen>passhost_t::maxnamelen?(passhost_t::maxnamelen-1):rlen):0;
+					name[ind]='\0';
+					LOGGER("recvni(%d,%s)==%d!=%d\n",new_fd,name,rlen,passhost_t::maxnamelen);
+					}
+
 				}
 			LOGGER("Wrong host\n");
 			close(new_fd);
@@ -364,43 +389,20 @@ globalsocket=serversock;
 			shutdown(oldsock,SHUT_RDWR);
 			close(oldsock);
 			}
+/*
 		int len=name.size();
-		char *ptr=new char[len+3];
-		strcpy(ptr,name);
-		strcpy(ptr+len,"-r");
-	void handleconnection(int sock,passhost_t *,char *ptr) ;
+		char *ptr=new char[17];
+		const char *wasname=name.data();
+		if(len>15)
+			strcpy(ptr,wasname+len-15);
+		else
+			strcpy(ptr,wasname); */
 		socks[pos]=new_fd;
-		std::thread  handlecon(handleconnection,new_fd,hit,ptr);
+		std::thread  handlecon(receiverthread,new_fd,hit,pos);
 		handlecon.detach();
 		}
 	    }
 	}
-void handleconnection(int sock,passhost_t *host,char *ptr) {
-      prctl(PR_SET_NAME, ptr, 0, 0, 0);
-      delete[] ptr;
-  /* Set the option active */
-/*	#ifndef NOTIMEOUT
-		struct timeval tv;
-		tv.tv_usec = 0;
-//		tv.tv_sec = 60*15; setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv, sizeof tv);
-		tv.tv_sec = 5*60; 
-		setsockopt(sock, SOL_SOCKET, SO_SNDTIMEO , (const char*)&tv, sizeof tv);
-	#endif */
-	/*const int minimumsize = 1;
-	setsockopt(sock, SOL_SOCKET, SO_RCVLOWAT, &minimumsize, sizeof minimumsize);
-	setsockopt(sock, SOL_SOCKET, SO_SNDLOWAT, &minimumsize, sizeof minimumsize); */
-
-	LOGGER("handleconnection %d\n",sock);
-	bool	getcommands(int,passhost_t *);
-	if(getcommands(sock,host)) {
-		LOGGER("open return handleconnection %d\n",sock);
-		return;
-		}
-	LOGGER("shutdown(%d)\n",sock);
-	shutdown(sock,SHUT_RDWR);
-//	close(sock);
-	}
-
 void startreceiver(const char *port,passhost_t *hosts,int &hostlen,int *socks) {
 	globalsocket=-1;
 	int len=strlen(port)+1;

@@ -198,7 +198,7 @@ empfangen (receive)</p>
 <p align="left" style="line-height: 100%; margin-bottom: 0in"><span lang="de-DE">Weitere
 Informationen zu Mirror-Verbindungen finden Sie in der Hilfe unter
 &quot;</span><span lang="de-DE"><i>Verbindung hinzufügen</i></span><span lang="de-DE">&quot;
-und unter </span><a class="western" href="http://jkaltes.byethost16.com/Juggluco/mmol.html#mirror"><font><span lang="de-DE"><u>http://jkaltes.byethost16.com/Juggluco/mmol.html#mirror</u></span></font></a></p>
+und unter </span><a class="western" href="https://www.juggluco.nl/Juggluco/mmol.html#mirror"><font><span lang="de-DE"><u>https://www.juggluco.nl/Juggluco/mmol.html#mirror</u></span></font></a></p>
 ]]>
 </string>
 <string name="addconnection" >
@@ -296,7 +296,7 @@ Android 4.4) zu Hause auszuführen, das über ein Modem mit dem
 Internet verbunden ist. Eine andere Möglichkeit ist, ein zu Juggluco
 gehörendes Kommandozeilenprogramm auf einem Computer (z.B. Ihrem PC
 oder Amazon AWS) auszuführen:
-</span><a href="http://jkaltes.byethost16.com/Juggluco/cmdline/index.html"><span lang="de-DE"><u>http://jkaltes.byethost16.com/Juggluco/cmdline/index.html</u></span></a></p>
+</span><a href="https://www.juggluco.nl/Juggluco/cmdline/index.html"><span lang="de-DE"><u>https://www.juggluco.nl/Juggluco/cmdline/index.html</u></span></a></p>
 <p align="left" style="line-height: 100%; margin-bottom: 0in">Tutorials
 zur Portweiterleitung:</p>
 <p align="left" style="line-height: 100%; margin-bottom: 0in"><a href="https://www.netzwelt.de/anleitung/185682-fritzbox-andere-router-portweiterleitung-einrichtenso-gehts.html">https://www.netzwelt.de/anleitung/185682-fritzbox-andere-router-portweiterleitung-einrichtenso-gehts.html</a></p>
@@ -305,7 +305,7 @@ zur Portweiterleitung:</p>
 <p align="left" style="line-height: 100%; margin-bottom: 0in">Es ist
 möglich, Glukosewerte über Bluetooth auf einem Gerät ohne NFC zu
 empfangen (<span lang="de-DE">siehe:</span>
-<a href="http://jkaltes.byethost16.com/Juggluco/mirror"><span lang="de-DE">http://jkaltes.byethost16.com/Juggluco/mirror</span></a>):
+<a href="https://www.juggluco.nl/Juggluco/mirror"><span lang="de-DE">https://www.juggluco.nl/Juggluco/mirror</span></a>):
 Initialisieren Sie den Sensor über NFC auf dem NFC-Gerät und senden
 Sie dann die Scan- und Stream-Daten an das Nicht-NFC-Gerät. Danach
 kehren Sie die Verbindung für das Stream-Datum um und schalten die
@@ -943,7 +943,7 @@ Anwendungen, die ihn abhören.</p>
 <p align="left" style="line-height: 100%; margin-bottom: 0in">Eine
 neue Broadcast, die dieselbe Funktion wie die xDrip Broadcast hat.
 <span lang="de-DE">Eine einfache Beispielanwendung, die empfangene
-Glukosewerte in logcat schreibt, finden Sie hier:</span> <span lang="de-DE"><a href="http://jkaltes.byethost16.com/Juggluco/glucosebroadcast.html">Glucose
+Glukosewerte in logcat schreibt, finden Sie hier:</span> <span lang="de-DE"><a href="https://www.juggluco.nl/Juggluco/glucosebroadcast.html">Glucose
 broadcasts</a>.</span></p>
 <p align="left" style="line-height: 100%; margin-bottom: 0in">Wenn
 Sie Juggluco als Datenquelle in G-Watch angeben, müssen Sie diese
@@ -1127,7 +1127,7 @@ zwischendurch wiederhergestellt ist.</font></font></p>
 <span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">Diese
 Ansicht wird verwendet, um Verbindungsprobleme mit Kerfstok zu lösen
 (&nbsp;<a href="https://apps.garmin.com/de-DE/apps/b6348ccc-86d8-4780-8013-d9e19fed5260">https://apps.garmin.com/de-DE/apps/b6348ccc-86d8-4780-8013-d9e19fed5260</a>&nbsp;(siehe
-auch&nbsp;<a href="http://jkaltes.byethost16.com/Kerfstok/index.html">http://jkaltes.byethost16.com/Kerfsto</a></span></span></span></font></font></span><a href="http://jkaltes.byethost16.com/Kerfstok/index.html"><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">k</span></span></span></font></font></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">/index.html</span></font></font></span></span></span></a><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">&nbsp;).
+auch&nbsp;<a href="https://www.juggluco.nl/Kerfstok/index.html">https://www.juggluco.nl/Kerfsto</a></span></span></span></font></font></span><a href="https://www.juggluco.nl/Kerfstok/index.html"><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">k</span></span></span></font></font></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">/index.html</span></font></font></span></span></span></a><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">&nbsp;).
 Kerfstok ist eine Uhren-App für programmierbare Garmin-Smartwatches
 mit Touchscreen. Kerfstok hat folgende Verwendungszwecke:</span></span></span></font></font></span></p>
 <ul>
@@ -1246,7 +1246,7 @@ Ländercode spielt keine Rolle.</font></font></p>
 <span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><span style="font-style: normal"><span style="font-weight: normal">Die
 .apk-Datei mit Librelink wird von Google Play vertrieben und ist an
 allen möglichen Orten im Internet verfügbar.&nbsp;Eine Linkliste
-finden Sie unter:&nbsp;<a href="http://jkaltes.byethost16.com/Juggluco/urls.html">http://jkaltes.byethost16.com/Juggluco/urls.html</a></span></span></span></span></font></font></span></p>
+finden Sie unter:&nbsp;<a href="https://www.juggluco.nl/Juggluco/urls.html">https://www.juggluco.nl/Juggluco/urls.html</a></span></span></span></span></font></font></span></p>
 <p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.19in; orphans: 2; widows: 2; margin-bottom: 0.1in; background: transparent">
 <font face="Times New Roman"><font size="4" style="font-size: 14pt">Nachdem
 Sie das APK heruntergeladen haben, können Sie Juggluco es öffnen
@@ -1664,23 +1664,20 @@ empfangen.</font></font></p>
 <font face="Times New Roman"><font size="4" style="font-size: 14pt">Derzeit
 bietet Juggluco vier Möglichkeiten, um Glukosewerte auf Ihrer Uhr
 anzuzeigen.</font></font></p>
-<h2 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
-<font face="Times New Roman">Notify</font></h2>
-<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
-<font face="Times New Roman"><font size="4" style="font-size: 14pt">Wenn
-Notify im linken mittleren Menü aktiviert ist, wird jedes Mal eine
+<h2 class="western">Benachrichtigen</h2>
+<p style="font-style: normal; line-height: 100%; margin-bottom: 0in">Wenn
+<i>Benachrichtigen</i> aktiviert ist, wird jedes Mal eine
 Android-Benachrichtigung erstellt, wenn ein neuer Glukosewert
-eintrifft. Die meisten Smartwatches können so konfiguriert werden,
-dass sie diese Benachrichtigungen erhalten. Es funktioniert mit
-Garmin-Uhren. Einige Begleit-Apps anderer Uhren senden diese
-Benachrichtigung nicht an die Uhr, wahrscheinlich weil es sich um
-eine Änderung einer Benachrichtigung handelt, die ständig vorhanden
-ist, anstatt eine neue Benachrichtigung zu erstellen.</font></font></p>
+eintrifft. <span style="font-weight: normal">Bei einigen Uhren werden
+Benachrichtigungen nur an die Uhr gesendet, wenn eine neue
+Benachrichtigung erstellt wird, für sie müssen Sie </span><i><b>Separat</b></i><span style="font-weight: normal">
+aktivieren</span> . Für diese Uhren müssen Sie auch <i>Separat</i>
+einschalten, um Alarmbenachrichtigungen auf der Uhr zu erhalten.</p>
 <h2 class="western">Watchdrip</h2>
-<p style="line-height: 100%; margin-bottom: 0in">Durch das
-Einschalten sendet Juggluco Glukosewerte an <a href="https://bigdigital.home.blog/2022/06/16/watchdrip-a-new-application-for-xdrip-watch-integration">Watchdrip+</a>
+<p style="line-height: 100%; margin-bottom: 0in"><span lang="de-DE">Durch
+das Einschalten sendet Juggluco Glukosewerte an <a href="https://bigdigital.home.blog/2022/06/16/watchdrip-a-new-application-for-xdrip-watch-integration">Watchdrip+</a>
 . Watchdrip+ sendet Zifferblätter mit Glukosewerten an
-MiBand/Amazfit-Uhren.</p>
+MiBand/Amazfit-Uhren.</span></p>
 <h2 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
 <font face="Times New Roman">Kerfstok</font></h2>
 <p style="orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
@@ -1692,15 +1689,15 @@ Kerfstok.&nbsp;So zeigt Kerfstok immer den aktuellsten Glukosewert
 an.&nbsp;Kerfstok kann auch alle von Garmin unterstützten
 Aktivitäten aufzeichnen und kann Geschwindigkeit und Distanz
 anzeigen.&nbsp;Siehe Watch-&gt;Kerfstok Status-&gt; Help
-und&nbsp;<a href="http://jkaltes.byethost16.com/Kerfstok">http://jkaltes.byethost16.com/Kerfstok</a></span></span></span></span></font></font></span></p>
+und&nbsp;<a href="https://www.juggluco.nl/Kerfstok">https://www.juggluco.nl/Kerfstok</a></span></span></span></span></font></font></span></p>
 <h2 class="western">Broadcast</h2>
-<p style="line-height: 100%; margin-bottom: 0in">Apps können
-Glukosewerte von einer der von Juggluco gesendeten Broadcasts
+<p style="line-height: 100%; margin-bottom: 0in"><span lang="de-DE">Apps
+können Glukosewerte von einer der von Juggluco gesendeten Broadcasts
 empfangen und diese Glukosewerte an eine Uhr senden. Beispielsweise
 kann G-Watch (<a href="https://play.google.com/store/apps/details?id=sk.trupici.g_watch">TizenOS</a>
 oder <a href="https://play.google.com/store/apps/details?id=sk.trupici.gwatch.wear">WearOS</a>)
 Glukosewerte von Glucodata Broadcast empfangen (siehe linkes Menü -&gt;
-Einstellungen).</p>
+Einstellungen).</span></p>
 <h2 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
 <font face="Times New Roman">xDrip Watch-Apps</font></h2>
 <p style="orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
@@ -1734,12 +1731,12 @@ und Zifferblätter wären die ideale Lösung, aber die von Garmin
 auferlegten Einschränkungen machen sie wenig wert.</span></span></span></span></font></font></span></p>
 <p style="orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
 <span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><span style="font-style: normal"><span style="font-weight: normal">Laut
-einem Benutzer gibt es auch ein Watchface für&nbsp;</span></span></span></span></font></font></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><span style="font-style: normal"><b>Fitbit-</b></span></span></span></font></font></span><span style="font-variant: normal"><span style="letter-spacing: normal">&nbsp;</span></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><span style="font-style: normal"><span style="font-weight: normal">Uhren,
+einem Benutzer gibt es auch ein Watchface für&nbsp;</span></span></span></span></font></font></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><span style="font-style: normal"><b>Fitbit-</b></span></span></span></font></font></span><span style="font-variant: normal"><span style="letter-spacing: normal"><span lang="de-DE">&nbsp;</span></span></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><span style="font-style: normal"><span style="font-weight: normal">Uhren,
 das mit dem xDrip-Webserver funktioniert:&nbsp;<a href="https://glancewatchface.com/">https://glancewatchface.com</a></span></span></span></span></font></font></span></p>
 <p style="orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
 <span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><span style="font-style: normal"><span style="font-weight: normal">Weitere
 Informationen zur Webserver-Schnittstelle finden Sie
-unter&nbsp;<a href="http://jkaltes.byethost16.com/Juggluco/webserver.html">http://jkaltes.byethost16.com/Juggluco/webserver.html</a></span></span></span></span></font></font></span></p>
+unter&nbsp;<a href="https://www.juggluco.nl/Juggluco/webserver.html">https://www.juggluco.nl/Juggluco/webserver.html</a></span></span></span></span></font></font></span></p>
 <p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
 <font face="Times New Roman"><font size="4" style="font-size: 14pt"><b>local
 only</b>&nbsp;: akzeptiert nur Verbindungen von localhost
@@ -1768,13 +1765,31 @@ per Bluetooth empfangenen aktuellen Glukosewert an.</font></font></p>
 <![CDATA[
 <h1 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-top: 0in; margin-bottom: 0.1in">
 <font face="Liberation Serif, serif">Wear OS</font></h1>
+<p><b>Direkte Sensor-Uhr-Verbindung</b>: Legt fest, ob die Uhr direkt
+mit dem Sensor verbunden werden soll. Dies kann nur geändert werden,
+wenn Uhr und Telefon synchronisiert sind. Verwenden Sie Klon-&gt;Sync
+und Reinit auf Telefon und Uhr, um Telefon und Uhr zu
+synchronisieren.</p>
+<p><b>Init watch app</b>: Dies sollte einmal gedrückt werden,
+nachdem Juggluco auf der WearOS-Uhr installiert wurde und läuft.</p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
+<font face="Times New Roman"><font size="4" style="font-size: 14pt"><b>Standardwerte</b>:
+Dies setzt die Verbindungseinstellungen auf die Standardwerte. Dies
+besteht aus den Einstellungen, die geändert werden können Linkes
+Menü -&gt; Klon auf der Uhr und linkes mittleres Menü -&gt; Kon auf
+dem Telefon. Sie besteht aus Einstellungen wie „Nur aktiv“ und
+„Scans“. Diese Schaltfläche kann gedrückt werden, wenn sich die
+Einstellungen versehentlich durch Wasser in der Dusche oder während
+des Schlafens geändert haben. Wenn Sie auf die Standardeinstellungen
+zurücksetzen, indem Sie die Watch-Version neu installieren oder
+Daten löschen, müssen Sie auch die Mirror-Verbindung auf dem
+Telefon entfernen.</font></font></p>
 <p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
 <font face="Times New Roman"><font size="4" style="font-size: 14pt">Eine
 spezielle Version von Juggluco kann direkt auf einer Wear OS-Uhr
-ausgeführt werden.&nbsp;Es benötigt ein Android-Smartphone mit NFC,
-um den Sensor zu scannen und über eine TCP-Verbindung werden diese
-Daten an die Wear OS-Uhr gesendet.&nbsp;Danach gibt es zwei
-Möglichkeiten:</font></font></p>
+ausgeführt werden. Es benötigt ein Android-Smartphone mit NFC, um
+den Sensor zu scannen und über eine TCP-Verbindung werden diese
+Daten an die Wear OS-Uhr gesendet. Danach gibt es zwei Möglichkeiten:</font></font></p>
 <ol>
 	<li><p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
 	<font face="Times New Roman"><font size="4" style="font-size: 14pt">Der
@@ -1784,21 +1799,23 @@ Möglichkeiten:</font></font></p>
 	<li><p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
 	<font face="Times New Roman"><font size="4" style="font-size: 14pt">Es
 	ist auch möglich, den Sensor direkt mit der Wear OS-Uhr zu
-	verbinden.&nbsp;Dazu benötigen Sie eine Wear OS-Uhr mit guter
+	verbinden. Dazu benötigen Sie eine Wear OS-Uhr mit guter
 	Bluetooth-Konnektivität.</font></font></p>
 </ol>
 <p style="orphans: 2; widows: 2; background: transparent"><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><span style="font-style: normal"><span style="font-weight: normal">Sie
 können Juggluco für Wear OS von Google Play auf Ihre Uhr
-herunterladen.&nbsp;Einige Bilder werden hier gezeigt:</span></span></span></span></font></font></span><span style="font-variant: normal"><span style="letter-spacing: normal">
-</span></span><a href="http://jkaltes.byethost16.com/JugglucoWearOS/index.html"><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><span style="font-style: normal"><span style="font-weight: normal">http://jkaltes.byethost16.com/JugglucoWearOS</span></span></span></span></font></font></span></a></p>
+herunterladen.</span></span></span></span></font></font></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><span style="font-style: normal"><span style="font-weight: normal">
+</span></span></span></span></font></font></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><span style="font-style: normal"><span style="font-weight: normal">Einige
+Bilder werden hier gezeigt:</span></span></span></span></font></font></span><span style="font-variant: normal"><span style="letter-spacing: normal">
+</span></span><a href="https://www.juggluco.nl/JugglucoWearOS/index.html"><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><span style="font-style: normal"><span style="font-weight: normal">https://www.juggluco.nl/JugglucoWearOS</span></span></span></span></font></font></span></a></p>
 <p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
 <font face="Times New Roman"><font size="4" style="font-size: 14pt">Damit
 es funktioniert, gehen Sie wie folgt vor:</font></font></p>
 <ul>
-	<li><p align="left" style="orphans: 2; widows: 2; background: transparent">
-	<span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">Stellen
+	<li><p align="left" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
+	<font face="Times New Roman"><font size="4" style="font-size: 14pt">Stellen
 	Sie sicher, dass sowohl Bluetooth als auch WIFI auf Uhr und Telefon
-	funktionieren;</span></span></span></font></font></span></p>
+	funktionieren;</font></font></p>
 	<li><p align="left" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
 	<font face="Times New Roman"><font size="4" style="font-size: 14pt">Stellen
 	Sie sicher, dass die Uhr über genügend freien Speicherplatz und
@@ -1964,7 +1981,7 @@ anzeigt.</font></font></p>
 <![CDATA[
 <h1><font face="Times New Roman">About</font></h1>
 <p><font face="Times New Roman"><font size="4" style="font-size: 14pt">Juggluco
-wurde von&nbsp;<a href="http://jkaltes.byethost16.com/Juggluco">Jaap
+wurde von&nbsp;<a href="https://www.juggluco.nl/Juggluco">Jaap
 Korthals Altes</a> geschrieben.</font></font></p>
 <p><font face="Times New Roman"><font size="4" style="font-size: 14pt">Neben
 den Standard-Android-Bibliotheken wird Folgendes verwendet:</font></font></p>
@@ -2026,64 +2043,65 @@ gehen soll oder nicht.</font></font></p>
 <string name="libreview" >
 <![CDATA[
 <h1 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
-<font><font face="Times New Roman"><span style="background: transparent">Libreview</span></font></font></h1>
+<font face="Times New Roman"><span style="background: transparent">Libreview</span></font></h1>
 <p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.17in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
-<font><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="background: transparent">Juggluco
-kann Glukosedaten und Mengen an Libreview senden.</span></font></font></font></p>
+<font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="background: transparent">Juggluco
+kann Glukosedaten und Mengen an Libreview senden (Librelinkup ist
+etwas anderes und mit Juggluco nicht nutzbar).</span></font></font></p>
 <p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.17in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
-<font><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="background: transparent">Wenn
+<font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="background: transparent">Wenn
 Sie die Abbotts Libre-App für Freestyle Libre 2-Sensoren verwenden,
 basiert Libreview auf den Historydaten aus dem Speicher des
-Sensors.&nbsp;Dazu müssen Sie den Sensor scannen.</span></font></font></font></p>
+Sensors.&nbsp;Dazu müssen Sie den Sensor scannen.</span></font></font></p>
 <p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.17in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
-<font><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="background: transparent">Juggluco
+<font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="background: transparent">Juggluco
 verwendet die über Bluetooth empfangenen Stream-Daten, um diese
 15-Minuten-Punkte zu erstellen, indem es die Stream-Werte um jeden
 Punkt herum mittelt.&nbsp;Hin und wieder sendet es auch einen
 einzelnen Stream-Wert, so wie einzelne gescannte Werte von der
-Librelink-App von Abbott an Libreview gesendet werden.</span></font></font></font></p>
+Librelink-App von Abbott an Libreview gesendet werden.</span></font></font></p>
 <p style="line-height: 0.17in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
-<span style="font-variant: normal"><font><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><span style="font-style: normal"><span style="font-weight: normal"><span style="background: transparent">Um
+<span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><span style="font-style: normal"><span style="font-weight: normal"><span style="background: transparent">Um
 diesen Dienst nutzen zu können, müssen Sie ein Libreview-Konto
 auf&nbsp;<a href="https://libreview.com/">https://libreview.com</a>&nbsp;erstellen
-und hier seine E-Mail-Adresse und sein Passwort angeben.</span></span></span></span></span></font></font></font></span><span style="font-variant: normal"><font><span style="letter-spacing: normal"><span style="background: transparent">
-</span></span></font></span><span style="font-variant: normal"><font><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><span style="font-style: normal"><span style="font-weight: normal"><span style="background: transparent">Senden
+und hier seine E-Mail-Adresse und sein Passwort angeben.</span></span></span></span></span></font></font></span><span style="font-variant: normal"><span style="letter-spacing: normal"><span style="background: transparent">
+</span></span></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><span style="font-style: normal"><span style="font-weight: normal"><span style="background: transparent">Senden
 Sie Daten aus demselben Zeitraum nicht mehrmals an dasselbe
 Libreview-Konto (z. B. von der Librelink-App und Juggluco). Sie
 können vorhandene Geräte in Libreview unter
 Kontoeinstellungen-&gt;Meine Geräte löschen oder ein neues
-Libreview-Konto erstellen.</span></span></span></span></span></font></font></font></span></p>
+Libreview-Konto erstellen.</span></span></span></span></span></font></font></span></p>
 <p style="line-height: 0.17in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
-<span style="font-variant: normal"><font><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><span style="font-style: normal"><span style="font-weight: normal"><span style="background: transparent">Um
-es einzuschalten, müssen Sie auch &quot;</span></span></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><i><b><span style="background: transparent">An
-libreview senden</span></b></i></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><i><span style="font-weight: normal"><span style="background: transparent">&quot;</span></span></i></span></span></font></font></font></span><span style="font-variant: normal"><font><span style="letter-spacing: normal"><span style="background: transparent">&nbsp;</span></span></font></span><span style="font-variant: normal"><font><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="en-US"><span style="font-style: normal"><span style="font-weight: normal"><span style="background: transparent">aktivieren
-.</span></span></span></span></span></font></font></font></span></p>
+<span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><span style="font-style: normal"><span style="font-weight: normal"><span style="background: transparent">Um
+es einzuschalten, müssen Sie auch &quot;</span></span></span></span></span></font></font></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><i><b><span style="background: transparent">An
+libreview senden</span></b></i></span></span></font></font></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><i><span style="font-weight: normal"><span style="background: transparent">&quot;</span></span></i></span></span></font></font></span><span style="font-variant: normal"><span style="letter-spacing: normal"><span style="background: transparent">&nbsp;</span></span></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="en-US"><span style="font-style: normal"><span style="font-weight: normal"><span style="background: transparent">aktivieren
+.</span></span></span></span></span></font></font></span></p>
 <p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.17in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
-<font><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="background: transparent">Juggluco
+<font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="background: transparent">Juggluco
 sendet jedes Mal neue Daten an Libreview, wenn Sie Juggluco
 verlassen, wenn dies in den letzten 20 Minuten nicht geschehen
 ist.&nbsp;Sie können es auch manuell an Libreview senden, indem Sie
-auf&nbsp;„&nbsp;<i><b>Jetzt senden</b></i>&nbsp;“&nbsp;klicken .</span></font></font></font></p>
+auf&nbsp;„&nbsp;<i><b>Jetzt senden</b></i>&nbsp;“&nbsp;klicken .</span></font></font></p>
 <p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.17in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
-<font><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="background: transparent">Neben
+<font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="background: transparent">Neben
 Glukosewerten können auch Mengen an Libreview gesendet werden.&nbsp;Dazu
 müssen Sie auf &quot;<i><b>Mengen</b></i> <i><b>senden&nbsp;</b></i>&quot;
-tippen und angeben, was jedes Etikett bedeutet.</span></font></font></font></p>
+tippen und angeben, was jedes Etikett bedeutet.</span></font></font></p>
 <p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.17in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
-<font><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="background: transparent">Ab
+<font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="background: transparent">Ab
 Juggluco 4.1.0 werden auch Glukosewerte von FreeStyle Libre
-3-Sensoren an LibreView gesendet.</span></font></font></font></p>
+3-Sensoren an LibreView gesendet.</span></font></font></p>
 <p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.17in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
-<font><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="background: transparent"><b>Resend
+<font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="background: transparent"><b>Resend
 data</b>: Neu starten;&nbsp;Daten der letzten 90 Tage erneut an
 Libreview senden.&nbsp;Sie müssen dies drücken, wenn Sie zu einem
-neuen Libreview-Konto wechseln.</span></font></font></font></p>
+neuen Libreview-Konto wechseln.</span></font></font></p>
 <p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.17in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
-<font><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="background: transparent">Das
+<font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="background: transparent">Das
 Ergebnis des letzten Sendeversuchs an Libreview wird unter der
-Schaltfläche „Get Account ID“ angezeigt.</span></font></font></font></p>
+Schaltfläche „Get Account ID“ angezeigt.</span></font></font></p>
 <p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.17in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
-<font><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="background: transparent">Da
+<font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="background: transparent">Da
 die an Libreview gesendeten Werte zunächst über 15 Minuten
 gemittelt und dann analysiert werden, kann es zu kleinen Abweichungen
 zwischen den im Statistikbildschirm von Juggluco angezeigten Werten
@@ -2094,17 +2112,17 @@ weggemittelt, so dass Libreview eine etwas höhere&nbsp;<i>Zielzeit</i>&nbsp;ang
 als der Statistikbildschirm von Juggluco.&nbsp;Da die realen
 Historywerte weniger extrem sind als der Durchschnitt der
 Stream-Werte um einen Historywert herum, ist dieser Unterschied
-größer, wenn Libreview auf gescannten Werten basiert.</span></font></font></font></p>
+größer, wenn Libreview auf gescannten Werten basiert.</span></font></font></p>
 <p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.17in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
-<font><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="background: transparent">Juggluco
+<font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="background: transparent">Juggluco
 kann gleichzeitig mit mehreren Sensoren verbunden werden, während
 Librelink jeweils nur einen Sensor verwaltet.&nbsp;Juggluco sendet
 auch Daten von jeweils nur einem Sensor an Libreview.&nbsp;Dazu
 sendet es zuerst die Daten von einem Sensor und erst wenn keine Daten
 von diesem Sensor verfügbar sind, sendet es die Daten vom folgenden
-Sensor.</span></font></font></font></p>
+Sensor.</span></font></font></p>
 <p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.19in; orphans: 2; widows: 2; background: transparent">
-<font><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="background: transparent"><b>Get
+<font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="background: transparent"><b>Get
 Account ID</b>: Wenn Sie nur die LibreView-Konto-ID erhalten, aber
 keine Daten an Libreview senden möchten, können Sie Ihre
 E-Mail-Adresse und Ihr Passwort eingeben und auf „<i>Get Account
@@ -2114,12 +2132,12 @@ Bildschirm wird nicht automatisch aktualisiert).&nbsp;Das Abrufen der
 Konto-ID vom LibreView-Server ermöglicht die Verwendung eines
 FreeStyle Libre 3-Sensors, der bereits mit der Abbotts Libre 3-App
 mit diesem LibreView-Konto verwendet wurde.&nbsp;Es wird berichtet,
-dass das Starten des Sensors mit Juggluco nicht funktioniert.</span></font></font></font></p>
+dass das Starten des Sensors mit Juggluco nicht funktioniert.</span></font></font></p>
 <p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.19in; orphans: 2; widows: 2; background: transparent">
-<font><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="background: transparent"><b>WARNUNG</b>&nbsp;:
+<font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="background: transparent"><b>WARNUNG</b>&nbsp;:
 Der Freestyle Libre 3-Sensor sollte mit diesem Konto aktiviert
 werden.&nbsp;Wenn Sie später zu einem Konto in der Libre 3-App
-wechseln, führt das Scannen des Sensors zu einem Fehler.</span></font></font></font></p>
+wechseln, führt das Scannen des Sensors zu einem Fehler.</span></font></font></p>
 <p style="line-height: 100%; margin-bottom: 0in"><br/>
 
 </p>
@@ -2131,7 +2149,7 @@ wechseln, führt das Scannen des Sensors zu einem Fehler.</span></font></font></
 <font face="Times New Roman">Kerfstok-Konfiguration</font></h1>
 <p style="orphans: 2; widows: 2"><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><span style="font-style: normal"><span style="font-weight: normal">Die&nbsp;</span></span></span></span></font></font></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><span style="font-style: normal"><b>Quelle</b></span></span></span></font></font></span><span style="font-variant: normal"><span style="letter-spacing: normal"><span lang="de-DE">&nbsp;</span></span></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><span style="font-style: normal"><span style="font-weight: normal">von
 Kerfstok kann
-von&nbsp;<a href="http://jkaltes.byethost16.com/Kerfstok/Kerfstok-source.html">http://jkaltes.byethost16.com/Kerfstok/Kerfstok-source.html</a>&nbsp;heruntergeladen
+von&nbsp;<a href="https://www.juggluco.nl/Kerfstok/Kerfstok-source.html">https://www.juggluco.nl/Kerfstok/Kerfstok-source.html</a>&nbsp;heruntergeladen
 werden.&nbsp;Benutzer können es frei ändern.&nbsp;Jede Uhren-App
 hat eine eindeutige Kennung.&nbsp;Wenn die Kennung von der
 Standardeinstellung abweicht, muss Juggluco sie kennen, um mit der

@@ -1,4 +1,5 @@
-grep -s "$@"  $w/*.java $w/*/*java $w/*.kt $m/*.java $m/*/*java $m/*.kt $g/*.java $g/*/*java $g/*.kt $w/*/*.kt $w/*/*/*.kt  $l3/*.java $l3/*/*.java
+grep -s "$@"  $w/*.java $w/*/*java $w/*.kt $m/*.java $m/*/*java $m/*.kt $g/*.java $g/*/*java $g/*.kt $w/*/*.kt $w/*/*/*.kt  $l3/*.java $l3/*/*.java $m/*/*/*.java $m/*/*/*/*.java
+
 
 #*.java */*java *.kt
 

@@ -50,7 +50,7 @@
     <string name="portrange">Poort moet een nummer zijn tussen 1024 en 65535</string>
     <string name="start">Begin</string>
     <string name="now">Nu</string>
-    <string name="dontchangeamounts">Verander hoeveelheden niet</string>
+    <string name="dontchangeamounts">Hoeveelheden komen van kloon</string>
     <string name="thishost">Deze:</string>
     <string name="dozemode">Doze mode?</string>
     <string name="sync">Sync</string>
@@ -156,7 +156,7 @@
  <string name="nextpage">Volgende pagina</string>
  <string name="ips">IPs:</string>
  <string name="port">Poort</string>
- <string name="saved">"Opgeslagen "</string>
+ <string name="saved">"opgeslagen"</string>
  <string name="savefailed">Opslaan mislukt</string>
  <string name="notsaved">Niet opgeslagen</string>
  <string name="failedbyexception">Mislukte door exception</string>
@@ -244,9 +244,15 @@
 <string name="treatments">Geef hoeveelheden</string>
 
 <string name="wentwrong">Er ging iets mis</string>
+     <string name="dosis">" dosis "</string>
      <string name="doses">" doses "</string>
   <string name="penfailed">Het lezen van de insulinepen is mislukt</string>
   <string name="changeinsulin">"Verander insulinetype naar "</string>
      <string name="type">"Type: "</string>
     <string name="dosesprior">Voeg enkel doses toe van na:</string>
+<string name="notsynced">Niet gesynchroniseerd</string>
+  <string name="lossdata">Instellen op standaardwaarden kan leiden tot gegevensverlies.</string>
+  <string name="defaults">Standaardwaarden</string>
+    <string name="notify">Melding</string>
+ <string name="separate">Apart</string>
 </resources>

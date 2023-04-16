@@ -1,3 +1,5 @@
+
+#define setthreadname(buf) prctl(PR_SET_NAME, buf, 0, 0, 0)
 /*      This file is part of Juggluco, an Android app to receive and display         */
 /*      glucose values from Freestyle Libre 2 and 3 sensors.                         */
 /*                                                                                   */
@@ -1735,7 +1737,7 @@ JNIEnv *hiersubenv=(JNIEnv *) &hierjnidata;
 	}
 extern "C" JNIEXPORT jbyteArray  JNICALL fromjava(bluetoothOnKey)(JNIEnv *envin, jclass cl,jbyteArray sensorident, jbyteArray patchinfo) {
 
-      prctl(PR_SET_NAME, "bluetoothOnKey", 0, 0, 0);
+      setthreadname( "bluetoothOnKey");
 	abbottinit();
 	int fam= abbottcall(getProductFamily)(envin, cl, parsertype, patchinfo);
 
@@ -1836,7 +1838,7 @@ bool  setDeviceAddressB(JNIEnv *env,SensorGlucoseData *hist,jbyteArray jaddress 
 extern void	sendstreaming(SensorGlucoseData *hist) ;
 extern "C" JNIEXPORT void JNICALL   fromjava(enabledStreaming)(JNIEnv *envin, jclass cl,jbyteArray sensorident,jbyteArray patchinfo,jint val,jbyteArray address) {
 	LOGGER("enabledStreaming(%d)\n",val);
-      prctl(PR_SET_NAME, "enabledStreaming", 0, 0, 0);
+      setthreadname( "enabledStreaming");
 	if(abbottinit())
 		return ;
 	int fam= abbottcall(getProductFamily)(envin, cl, parsertype, patchinfo);
@@ -1852,7 +1854,7 @@ extern "C" JNIEXPORT void JNICALL   fromjava(enabledStreaming)(JNIEnv *envin, jc
 	}
 extern "C" JNIEXPORT void JNICALL   fromjava(USenabledStreaming)(JNIEnv *envin, jclass cl,jbyteArray sensorident,jbyteArray jauth,jbyteArray address) {
 	const char uslog[]="USenabledStreaming\n";
-        prctl(PR_SET_NAME,uslog , 0, 0, 0);
+        setthreadname(uslog );
 	LOGGER(uslog);
 	const int fam=3;
 	const data_t *uid=fromjbyteArray(envin,sensorident);

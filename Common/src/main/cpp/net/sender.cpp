@@ -94,7 +94,7 @@ bool block(int sock) {
 
 
 #include "sendmagic.h"
-auto getsendmagic() {
+static auto getsendmagic() {
 	std::array<unsigned char,sizeof(sendmagic)> back=sendmagicinit;
 	makerandom(end(back)-4,4);
 	return back;
@@ -102,7 +102,7 @@ auto getsendmagic() {
 std::array<unsigned char,sizeof(sendmagic)>  sendmagicspec=getsendmagic();
 
 
-bool testsendmagic(int sock) {
+static bool testsendmagic(int sock) {
 	#include "receivemagic.h"
 
 	if(sendni(sock,sendmagicspec.data(),sendmagicspec.size())!=sendmagicspec.size()) {
@@ -198,7 +198,6 @@ Specify the receiving or sending timeouts until reporting an error. The argument
 		sendtype(sock,stype);
 		}
 		
-//	if(ctx) sendpassinit(sock,pass,ctx);
 
 	closer.active=false;
 	LOGGER("sock=%d\n",sock);

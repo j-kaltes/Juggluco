@@ -30,6 +30,7 @@ import tk.glucodata.MessageSender.Companion.isGalaxy
 //import tk.glucodata.MessageSender.Companion.messagesender
 import tk.glucodata.MessageSender.Companion.sendnetinfo
 import tk.glucodata.Natives
+import tk.glucodata.Natives.setWearosdefaults
 
 class MessageReceiver: WearableListenerService() {
     override fun onMessageReceived(messageEvent: MessageEvent) {
@@ -38,6 +39,16 @@ class MessageReceiver: WearableListenerService() {
         val path= messageEvent.path
         Log.i(LOG_ID,"onMessageReceived start $path"  )
         when(path) {
+	    MessageSender.DEFAULTS_PATH ->  {
+		val sender = tk.glucodata.MessageSender.getMessageSender()
+		if (sender == null) {
+			Log.d(LOG_ID, "messagesender==null")
+			return
+			}
+		var source=  sender.localnode
+		  Log.i(LOG_ID,"path==MessageSender.DEFAULTS_PATH "+source );
+		  setWearosdefaults(source,true);
+		 }
 	    MessageSender.WAKE_PATH -> {
 		Natives.wakehereonly()
 	    	}
@@ -48,42 +59,41 @@ class MessageReceiver: WearableListenerService() {
             Natives.message(data);
 	    }
 	    MessageSender.NET_PATH   -> {
-		val sender=tk.glucodata.MessageSender.getMessageSender()
-		if(sender==null) {
-			Log.d(LOG_ID,"messagesender==null")
-			return
+			val sender = tk.glucodata.MessageSender.getMessageSender()
+			if (sender == null) {
+				Log.d(LOG_ID, "messagesender==null")
+				return
 			}
-		val nodes = sender.nodes
-		if(nodes == null || nodes.isEmpty()) {
-			Log.e(LOG_ID,"no nodes")
-			    MessageSender.scope.launch {
-				sender.findWearDevicesWithApp()
+			val nodes = sender.nodes
+			if (nodes == null || nodes.isEmpty()) {
+				Log.e(LOG_ID, "no nodes")
+				MessageSender.scope.launch {
+					sender.findWearDevicesWithApp()
 				}
-			return
-		}
-	    	val sourceId= messageEvent.getSourceNodeId()
-			var name:String
-			var galaxy:Boolean
-			if(isWearable) {
-				name=sender.localnode
-				galaxy=true;
+				return
 			}
-			else {
-				name=sourceId
-				val it= sender.findnodeid(sourceId)
-				if(it<0)
-						return
-				val node:Node=nodes.elementAt(it)
-				galaxy= isGalaxy(node)
+			val sourceId = messageEvent.getSourceNodeId()
+			var name: String
+			var galaxy: Boolean
+			if (isWearable) {
+				name = sender.localnode
+				galaxy = true;
+			} else {
+				name = sourceId
+				val it = sender.findnodeid(sourceId)
+				if (it < 0)
+					return
+				val node: Node = nodes.elementAt(it)
+				galaxy = isGalaxy(node)
 			}
-			if(name==null)
+			if (name == null)
 				return
 
 
-			if(Natives.setmynetinfo(name,data, galaxy)) {
+			if (Natives.setmynetinfo(name, data, galaxy)) {
 				sendnetinfo(sourceId)
-                  }
-		  }
+			}
+		}
 		MessageSender.START_PATH ->  {
 		  if(isWearable)
 			   UseWifi.usewifi()

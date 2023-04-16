@@ -21,9 +21,11 @@
 
 package tk.glucodata;
 
+import android.app.AlertDialog;
 import android.app.Application;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.view.View;
 import android.view.ViewGroup;
@@ -131,6 +133,8 @@ static	ArrayList<Node> nodeslist=null;
 static CheckBox direct=null;
 static Button start=null;
 
+static boolean[] directactive={true};
+
 static void remake() {
 	int dirval;
 	if(nodenum<0) {
@@ -145,6 +149,7 @@ static void remake() {
 		}
 	else  {
 		direct.setEnabled(true);
+		directactive[0]=false;
 		direct.setChecked(dirval!=0);
 		}
 	if(dirval==1) {
@@ -153,9 +158,26 @@ static void remake() {
 	else
 		start.setEnabled(true);
 	}
+
+private static void confirmunsynced(MainActivity act,Runnable save) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(act);
+        builder.setTitle(R.string.notsynced).
+	setMessage(R.string.lossdata).
+           setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+			   @Override
+			   public void onClick(DialogInterface dialog, int which) {
+				   save.run();
+			   }
+	}).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+            }
+        }).show();
+	}
 static public void show(MainActivity context) {
 	nodenum=-1;
 	start=getbutton(context,R.string.initwatchapp);
+	var defaults=getbutton(context,context.getString(R.string.defaults));
+
 	direct=getcheckbox(context, context.getString(R.string.directconnection),false);
 	var Ok=getbutton(context,R.string.closename);
 	var Help=getbutton(context,R.string.helpname);
@@ -178,7 +200,7 @@ static public void show(MainActivity context) {
 		if(height>h)
 			l.setY((height-h)/2);
 		return new int[] {w,h};
-		}, new View[]{spin},new View[]{direct},new View[]{start},new View[]{Help,Ok} );
+		}, new View[]{spin},new View[]{direct},new View[]{start,defaults},new View[]{Help,Ok} );
 	int laypad=(int)(density*4.0);
 	layout.setPadding(laypad*2,laypad*2,laypad*2,laypad);
 
@@ -192,6 +214,26 @@ static public void show(MainActivity context) {
 		removeContentView(layout);
 		context.hideSystemUI(); }
 		);
+
+	defaults.setOnClickListener(v -> {
+			if(nodenum>=0) {
+				var sender=tk.glucodata.MessageSender.getMessageSender();
+				if(sender!=null) {
+					var nod=nodeslist.get(nodenum);
+					String name=makenodename(nod);
+					Runnable setdef=()-> {
+						Log.i(LOG_ID,"set to default "+name);
+						Natives.setWearosdefaults(name,isGalaxy(nod));
+						sender.toDefaults(nod);
+						};
+					if(Natives.directsensorwatch(name)<0) {
+						confirmunsynced(context,setdef);
+						}
+					else
+						setdef.run();
+					}
+				}
+		 });
 	start.setOnClickListener(v -> {
 			if(nodenum>=0) {
 				var sender=tk.glucodata.MessageSender.getMessageSender();
@@ -206,24 +248,28 @@ static public void show(MainActivity context) {
 		 });
 	direct.setOnCheckedChangeListener(
 			 (buttonView,  isChecked) -> {
-			 	if(nodenum>=0) {
-					var node=nodeslist.get(nodenum);
-					var name=makenodename(node);
-					byte[] netinfo=Natives.getmynetinfo(name,true,isChecked?1:-1,isGalaxy(node));
-					if(netinfo!=null) {
-						var sender=tk.glucodata.MessageSender.getMessageSender();
-						if(sender!=null) {
-							sender.sendnetinfo(node,netinfo);
-							sender.sendbluetooth(node,isChecked);
-							var main=MainActivity.thisone;
-							boolean here= !isChecked;
-//							if(here) SensorBluetooth.nullKAuth=true;
-							Applic.setbluetooth(main==null?Applic.app:main,here);
-							return;
+			 	if(directactive[0]) {
+					if(nodenum>=0) {
+						var node=nodeslist.get(nodenum);
+						var name=makenodename(node);
+						Log.i(LOG_ID,"Direct sensor watch connection "+name+" "+isChecked);
+						byte[] netinfo=Natives.getmynetinfo(name,true,isChecked?1:-1,isGalaxy(node));
+						if(netinfo!=null) {
+							var sender=tk.glucodata.MessageSender.getMessageSender();
+							if(sender!=null) {
+								sender.sendnetinfo(node,netinfo);
+								sender.sendbluetooth(node,isChecked);
+								var main=MainActivity.thisone;
+								boolean here= !isChecked;
+								Applic.setbluetooth(main==null?Applic.app:main,here);
+								return;
+								}
 							}
 						}
+			 		directactive[0]=false;
+					direct.setChecked(!isChecked);
+			 		directactive[0]=true;
 					}
-				direct.setChecked(!isChecked);
 				return;
 				}
 			 );

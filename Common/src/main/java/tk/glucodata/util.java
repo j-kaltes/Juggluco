@@ -22,12 +22,18 @@
 package tk.glucodata;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.os.Build;
+import android.text.method.LinkMovementMethod;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
 import java.text.DateFormat;
 import java.util.Date;
+
+import static android.text.Html.TO_HTML_PARAGRAPH_LINES_CONSECUTIVE;
+import static android.text.Html.fromHtml;
 
 public class util {
 private	static DateFormat dformat = DateFormat.getDateTimeInstance(DateFormat.DEFAULT,DateFormat.DEFAULT);
@@ -62,6 +68,23 @@ public static Button getbutton(Context act, String text) {
 public static Button getbutton(Context act, int res) {
 	return getbutton(act,act.getString(res));
 
+	}
+	@SuppressWarnings("deprecation")
+static void sethtml(TextView view, String text) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        view.setText(fromHtml(text,TO_HTML_PARAGRAPH_LINES_CONSECUTIVE));
+    }
+    else view.setText(fromHtml(text));
+      view.setTextIsSelectable(true);
+           view.setTextColor(Color.WHITE);
+
+
+	view.setLinksClickable(true);
+	view.setMovementMethod(LinkMovementMethod.getInstance());
+    }
+
+static void sethtml(TextView view,int res) {
+	sethtml(view,view.getContext().getString(res));
 	}
 
 }

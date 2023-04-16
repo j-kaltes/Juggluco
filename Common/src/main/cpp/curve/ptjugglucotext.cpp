@@ -101,7 +101,6 @@ jugglucotext pttext {
                 "Parar Alarme"
                 },
         .menustr1={
-                "Notificar",
                 "Exportar",
                 "Espelhar",
                 pttext.newamount,

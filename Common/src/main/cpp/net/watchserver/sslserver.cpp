@@ -121,10 +121,12 @@ extern std::string_view globalbasedir;
 	#endif
 #else
 	#if defined(__x86_64__) 
-	const char *systembase[]={"/usr/lib/x86_64-linux-gnu","/usr/lib64"};
+	const char *systembase[]={"/usr/lib/x86_64-linux-gnu","/usr/lib64","/usr/lib"};
 
+	#elif defined(__i386__)
+	const char *systembase[]="/usr/lib/i386-linux-gnu","/usr/lib32","/usr/lib"};
 	#else
-	const char *systembase[]="/usr/lib/i386-linux-gnu","/usr/lib32"};
+	const char *systembase[]="/usr/lib"};
 	#endif
 #endif
 void * dlopener(std::string_view filename,int flags) {
@@ -232,7 +234,7 @@ void* cryptohandle;
 #define symtest(name) if(!(getsym(name))) { dlclose(handle);dlclose(cryptohandle);return std::string(dlerror());;}
 if(!(hgetsym(cryptohandle,ERR_print_errors_cb))) {
 	  dlclose(cryptohandle);
-	  return std::string("hgetsym ERR_print_errors_cb failes");
+	  return std::string("hgetsym ERR_print_errors_cb fails");
 	}
 
 const char libssl[]="libssl.so";
@@ -319,7 +321,7 @@ void handlewatchsecure(int sock) {
 	static SSL_CTX *ctx=globalctx;
 	if(!ctx)
 		return;
-      const char threadname[]="secure watchconnect";
+      const char threadname[17]="ssl watchconnect";
       prctl(PR_SET_NAME, threadname, 0, 0, 0);
       LOGGER("handlewatchsecure %d\n",sock);
 

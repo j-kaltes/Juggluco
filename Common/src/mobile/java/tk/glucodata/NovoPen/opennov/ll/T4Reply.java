@@ -47,7 +47,7 @@ static final String TAG="OpenNov";
         if (r == null) {
             r = new T4Reply();
         }
-        r.lastShort = ((0xFFFF & (bytes[blen] << 8))) | (0xFF & bytes[blen + 1]);
+        r.lastShort = ((0xFFFF & ((bytes[blen]&0xFF) << 8))) | (0xFF & bytes[blen + 1]);
         if(!r.isOkay())
                 return r;
         if (blen > 0) {

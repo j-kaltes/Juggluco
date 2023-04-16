@@ -91,15 +91,19 @@ public fun finddevices() {
 		finddevices()
 		}
 
-
+/*
     public fun startActivity() {
 	val data=Natives.bytesettings()
       sendmessage(START_PATH, data) 
-    }
+    } */
 
 public fun startActivity(node:Node) {
 	val data=Natives.bytesettings()
 	nodeSendmessage(node,START_PATH,data)
+	}
+public fun toDefaults(node:Node) {
+    val nodata:ByteArray=byteArrayOf(0)
+	nodeSendmessage(node,DEFAULTS_PATH,nodata)
 	}
 /*
 private fun startnodedetection(context: Context):String? {
@@ -164,7 +168,7 @@ private fun nameSendMessageResult(name:String, path:String, data:ByteArray):Bool
 		return true
 		}
 	    catch (th: Throwable) {
-            Log.stack(LOG_ID, th)
+                Log.stack(LOG_ID, th)
 	    	return false
 		}
 
@@ -236,6 +240,7 @@ companion object {
     const val WAKESTREAM_PATH = "/wakestream"
     const val NET_PATH = "/netinfo"
     const val START_PATH = "/start"
+    const val DEFAULTS_PATH = "/defaults"
     const val SETTINGS_PATH = "/settings"
     const val BLUETOOTH_PATH = "/bluetooth"
     const val DATA_PATH = "/data"

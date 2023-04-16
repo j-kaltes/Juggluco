@@ -140,6 +140,7 @@
                 <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
                 <data android:host="*" android:pathPrefix="/bluetooth" android:scheme="wear" />
                 <data android:host="*" android:pathPrefix="/data" android:scheme="wear" />
+                <data android:host="*" android:pathPrefix="/defaults" android:scheme="wear" />
                 <data android:host="*" android:pathPrefix="/netinfo" android:scheme="wear" />
                 <data android:host="*" android:pathPrefix="/settings" android:scheme="wear" />
                 <data android:host="*" android:pathPrefix="/start" android:scheme="wear" />

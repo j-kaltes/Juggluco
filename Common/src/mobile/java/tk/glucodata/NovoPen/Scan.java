@@ -93,6 +93,26 @@ private static void changeTypeconfirmation(MainActivity act,String type,Runnable
 static  public final DateFormat fhourmin=             new SimpleDateFormat("HH:mm", Locale.US);
 
 static void setInsulin(MainActivity context, OpContext op) {
+	if(op.specification==null) {
+		Log.e(LOG_ID,"op.specification==null");
+		final var failread=context.getString(R.string.penfailed);
+		Applic.Toaster(failread);
+		return;
+		}
+	if(op.eventReport==null) {
+		Log.e(LOG_ID,"op.eventReport==null");
+		final var failread=context.getString(R.string.penfailed);
+		Applic.Toaster(failread);
+		return;
+		}
+	if(op.eventReport.doses==null){
+		Log.e(LOG_ID,"op.eventReport.doses==null");
+		final var failread=context.getString(R.string.penfailed);
+
+		Applic.Toaster(failread);
+		return;
+		}
+
 	String serial=op.specification.getSerial();
 	final long typetime =novopentype(serial);
 	int type;
@@ -181,10 +201,10 @@ final	var datebutton=getbutton(context, DateFormat.getDateInstance(DateFormat.DE
 			   });});
 //	var date= main.getnumberview().
     	var  layout=new Layout(context,(x,w,h)->{
-			var height=GlucoseCurve.getheight();
+//			var height=GlucoseCurve.getheight();
 			var width=GlucoseCurve.getwidth();
 			x.setX((width-w)/2);
-			x.setY((height-h)/3);
+			x.setY(0);
 			return new int[] {w,h};
 	},new View[]{label},new View[]{after},new View[]{datebutton,timebutton},new View[]{typestr,spinner},new View[]{ok,cancel});
         layout.setBackgroundColor(Applic.backgroundcolor);
@@ -207,7 +227,7 @@ final	var datebutton=getbutton(context, DateFormat.getDateInstance(DateFormat.DE
 					else
 						nr+=back;
 					}
-				Applic.Toaster(nr+context.getString(R.string.doses)+context.getString(R.string.saved));
+				Applic.Toaster(nr+(nr==1?context.getString(R.string.dosis):context.getString(R.string.doses))+context.getString(R.string.saved));
 				if(nr>0) context.requestRender();
 				context.doonback();
 				};

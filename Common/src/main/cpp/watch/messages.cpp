@@ -107,23 +107,6 @@ bool receivemessage(wearmessage *pWearmessage) {
        LOGGER("type.phonehostnr=%d type.phonesender=%d %p#%d\n",pWearmessage->type.phonehostnr,pWearmessage->type.phonesender,(char *)pWearmessage->data,pWearmessage->len);
        return(sendni(toreceiversocket(pWearmessage),pWearmessage->data,pWearmessage->len)>=0);
     }
-    /*
-bool initmessages(const int hostnr) {
-      passhost_t &host= getBackupHosts()[hostnr];
-      if(!host.wearos) {
-      	LOGGER("initmessage hostnr=%d %s no wearos\n",hostnr,host.getnameif());
-	return false;
-	}
-     if(host.receivefrom) {
-      	LOGGER("initmessage %s receivefrom\n",host.getnameif());
-     	}
-   const int sendindex=host.index;
-    if(sendindex>=0) {
-    	LOGGER("initmessage %s\n",host.getnameif());
-    	}
-return true;
-    }
-*/
 extern "C"
 JNIEXPORT jboolean JNICALL fromjava(message)(JNIEnv *env, jclass thiz, jbyteArray data) {
         if(!data)
@@ -140,46 +123,14 @@ JNIEXPORT jboolean JNICALL fromjava(message)(JNIEnv *env, jclass thiz, jbyteArra
         mess->len=datlen;
         return receivemessage(mess);
 	}
-	/*
-#include <cerrno>
-#include <cstdarg>
-int  flerror(const char *format,...) {
-    char buf[1024];
-    const char *errstr=strerror(errno);
-    va_list ap;
-    va_start(ap,format);
-    int end=vsprintf(buf,format,ap);
-    va_end(ap);
-    buf[end++]=':';
-    buf[end++]=' ';
-    strcpy(buf+end,errstr);
-    return __android_log_write(1,"Message",buf);
-    }
-
-#define lerror(x) flerror("%s\n",x);
-#include <unistd.h>
-       #include <sys/mman.h>
-inline ssize_t  recvni(int sockfd, void *buf, size_t len) {
-        int waslen;
-        int inter=0;    
-        while((waslen=recv(sockfd,buf,len,0))==-1) {
-                int erwas=errno;
-                flerror("recv(%d,buf,%zd)",sockfd,len);
-                if(erwas!=EINTR||inter>20)
-                        return -1;
-                ++inter;
-                }
-        return waslen;
-        }
-*/
 jclass jMessageSender =nullptr;
-jmethodID jsendDatawithName=nullptr;
-jmethodID jsendData=nullptr;
-jmethodID jsendNameMessageOn=nullptr;
-jmethodID jsendMessageOn=nullptr;
-constexpr const char classname[]="tk/glucodata/MessageSender";
+//jmethodID jsendDatawithName=nullptr;
+//jmethodID jsendData=nullptr;
+//jmethodID jsendNameMessageOn=nullptr;
+//jmethodID jsendMessageOn=nullptr;
 extern JavaVM* vmptr;
 bool jinitmessages(JNIEnv* env) {
+	constexpr const char classname[]="tk/glucodata/MessageSender";
     jclass cl=env->FindClass(classname);
 if(!cl) {
         LOGGER("Can't find %s\n",classname);
@@ -188,15 +139,16 @@ if(!cl) {
 else {
         jMessageSender = (jclass)env->NewGlobalRef(cl);
         env->DeleteLocalRef(cl);
+	/*
 #ifdef WEAROS
-        if(!(jsendData=env->GetStaticMethodID(jMessageSender,"sendData","([B)Z"))) {
+       if(!(jsendData=env->GetStaticMethodID(jMessageSender,"sendData","([B)Z"))) {
                 LOGGER("GetStaticMethodID(jMessageSender,\"sendData\",\"([B)Z\" failed\n");
                 return false;
-                }
+                } 
         if(!(jsendMessageOn=env->GetStaticMethodID(jMessageSender,"sendMessageOn","(Z)V"))) {
                 LOGGER("GetStaticMethodID(jMessageSender,\"sendMessageOn\",\"(Z)V\" failed\n");
                 return false;
-                }
+                } 
 #else	
         if(!(jsendDatawithName=env->GetStaticMethodID(jMessageSender,"sendDatawithName","(Ljava/lang/String;[B)Z"))) {
                 LOGGER("GetStaticMethodID(jMessageSender,\"sendDatawithName\",\"(Ljava/lang/String;[B)Z\" failed\n");
@@ -208,7 +160,7 @@ else {
                 return false;
                 }  
 #endif
-
+*/
         }
     return true;
 }
@@ -233,11 +185,15 @@ void sendMessagesON(passhost_t *pass, bool val) {
 	 const int index=pass-getBackupHosts().data();
 	auto env=getenv();
 #ifdef WEAROS
+
+        static auto jsendMessageOn=env->GetStaticMethodID(jMessageSender,"sendMessageOn","(Z)V");
         env->CallStaticVoidMethod(jMessageSender,jsendMessageOn,val);
 #else
 	jstring jname=getconnectionname(env, index);
 	if(!jname) 
 		return;
+
+        static auto jsendNameMessageOn=env->GetStaticMethodID(jMessageSender,"sendNameMessageOn","(Ljava/lang/String;Z)V");
 	env->CallStaticVoidMethod(jMessageSender,jsendNameMessageOn,jname,val);
 #endif
 	setBlueMessage(index,val);
@@ -255,9 +211,12 @@ bool	sendmessage(const int phonehostnr,bool phonesender,const uint8_t *buf,const
         env->SetByteArrayRegion(uit, 0, sizeof(wearmessagetype),(const jbyte *)&type);
         env->SetByteArrayRegion(uit, offdata-start, inlen,(const jbyte *)buf);
 #ifdef WEAROS
+	static auto jsendData=env->GetStaticMethodID(jMessageSender,"sendData","([B)Z");
         bool res=env->CallStaticBooleanMethod(jMessageSender,jsendData,uit);
 #else
 	jstring  jname= getconnectionname(env,phonehostnr);
+
+        static auto jsendDatawithName=env->GetStaticMethodID(jMessageSender,"sendDatawithName","(Ljava/lang/String;[B)Z");
         bool res=jname?env->CallStaticBooleanMethod(jMessageSender,jsendDatawithName,jname,uit):false;
 #endif
         env->DeleteLocalRef(uit);
@@ -266,7 +225,8 @@ bool	sendmessage(const int phonehostnr,bool phonesender,const uint8_t *buf,const
 void clearnetworkcache() {
 	connectionnames={};
 	}
-void tobluetooth(int hostnr,bool sender,int sock, std::binary_semaphore *waitstarted) {
+void tobluetooth(int hostnr,bool sender,int *sockin, int *sockother,std::binary_semaphore *waitstarted) {
+	const int sock=*sockin;
    	LOGGER("tobluetooth(%d,%d,%d)\n", hostnr, sender, sock);
 
 	#ifdef WEAROS
@@ -294,7 +254,6 @@ void tobluetooth(int hostnr,bool sender,int sock, std::binary_semaphore *waitsta
 	    return;
     	}
    destruct _dest([maxbuf,buf]() { munmap(buf,maxbuf); });
-// receiversockopt(sock);
 	{
 	char buf[30]; 
 	int len=sprintf(buf, "tobluetooth %d %s",hostnr,sender?"S":"R");
@@ -302,26 +261,41 @@ void tobluetooth(int hostnr,bool sender,int sock, std::binary_semaphore *waitsta
 	}
 	LOGGER("tobluetooth before release\n");
 	waitstarted->release();
+  auto &status=mirrorstatus[hostnr].toblue[sender];
+  status.running(true);
    while(true) { 
         int inlen=recvni(sock,buf,maxbuf);
-       LOGGER("recvni(%d,...)=%d\n",sock,inlen);
+       LOGGER("tobluetooth recvni(%d,...)=%d\n",sock,inlen);
         if(inlen<=0)  {
-            if(messagesendersockets[hostnr]==sock) {
-		  messagesendersockets[hostnr]=-1;
-		  shutdown(sock,SHUT_RDWR);
-		  close(sock);
-	    	}
+	   if(*sockother!=-1) {
+	   	shutdown(*sockother,SHUT_RDWR);
+		}
+	   *sockin=-1;
+	   shutdown(sock,SHUT_RDWR);
+	   close(sock);
+	   status.running(false);
             return;
 	    }
-        while(!sendmessage(phonehost,phonesender,buf,inlen)) {
+	status.recv=true;
+        while(!(status.sendmessage=sendmessage(phonehost,phonesender,buf,inlen))) {
 		LOGGER("sendmessage failed %d %d #%d\n",phonehost,phonesender,inlen);
-		sleep(30);
+		sleep(20);
 		}
         }
     }
+void closesock(int &sock) {
+	int tmpsock=sock;
+	if(tmpsock!=-1) {
+		sock=-1;
+		shutdown(tmpsock,SHUT_RDWR);
+		close(tmpsock);
+		}
+}
 void messagereceivecommands(passhost_t *pass) {
 	const int index=pass-getBackupHosts().data();
-
+	LOGGER("messagereceivecommands %d start\n",index);
+	if(messagereceiversockets[index]!=-1)
+		 shutdown(messagereceiversockets[index],SHUT_RDWR);
 	 for(int i=0;wearmessages[index];i++) {
 		int sockpair[2];
 		if(socketpair(AF_LOCAL,SOCK_STREAM,0,sockpair)!=0) {
@@ -337,26 +311,28 @@ void messagereceivecommands(passhost_t *pass) {
 		messagereceiversockets[index]=sockpair[0];
 
 		std::binary_semaphore waitstarted(0);
-		std::thread th(tobluetooth,index,false, sockpair[0],&waitstarted); //TODO handshake?
-	//	th.detach();
+		std::thread th(tobluetooth,index,false,	&messagereceiversockets[index],hostsocks+index,&waitstarted); //TODO handshake?
 		waitstarted.acquire();
-		bool    getcommandsnopass(int sock,passhost_t *host); //TODO password?
-	extern	void receiversockopt(int new_fd);
-		receiversockopt(sockpair[1]);
-		getcommandsnopass(sockpair[1],pass);
-		 int receivesock=messagereceiversockets[index];
-		  shutdown(receivesock,SHUT_RDWR);
+extern	bool    getcommandsnopass(int sock,passhost_t *host); //TODO password?
+extern	void receiversockopt(int new_fd);
+
+  		int &recsock=hostsocks[index];
+		if(recsock!=-1)
+			closesock(recsock);
+
+		recsock= sockpair[1];
+		receiversockopt(recsock);
+
+		getcommandsnopass(recsock,pass);
+
 		 LOGGER("%d message join\n",index);
+		 shutdown(messagereceiversockets[index],SHUT_RDWR);
 		th.join();
-		  close(receivesock);
-		  /*
-		if(receivesock!=sockpair[0])  {
-			LOGGER("messagereceivecommands %d!=%d\n",receivesock,sockpair[0]);
-			return;
-			} */
+		if(recsock!=-1)
+			closesock(recsock);
 		LOGGER("try again\n");
 		 }
-	LOGGER("wearmessages[%d]==false\n",index);
+	LOGGER("messagereceivecommands wearmessages[%d]==false\n",index);
 	return;
 	}
 void startmessagereceiver(passhost_t &host) {
@@ -373,18 +349,22 @@ void startmessagereceivers(Backup *backup) {
 			}
 		}
 	}
-int messagemakeconnection(passhost_t *pass,bool sender,int &sock,crypt_t*ctx,char stype) {
+
+int messagemakeconnection(passhost_t *pass,int &sock,crypt_t*ctx,char stype) {
+	const int index=pass-getBackupHosts().data();
+	if(messagesendersockets[index]!=-1) {
+		shutdown(messagesendersockets[index],SHUT_RDWR);
+		}
 	int sockpair[2];
 	if(socketpair(AF_LOCAL,SOCK_STREAM,0,sockpair)!=0) {
 		lerror("messagemakeconnection socketpair");
 		sock=-1;
 		return -1;
 		}
-	const int index=pass-getBackupHosts().data();
 	messagesendersockets[index]=sockpair[1];
 	sock=sockpair[0];
 	std::binary_semaphore waitstarted(0);
-	std::thread th(tobluetooth,index,sender, sockpair[1],&waitstarted); //TODO handshake?
+	std::thread th(tobluetooth,index,true,&messagesendersockets[index] ,&sock,&waitstarted); //TODO handshake?
 	th.detach();
 	waitstarted.acquire();
 	LOGGER("messagemakeconnection %s sock=%d (other end=%d)\n",pass->getname(),sock,sockpair[1]);
@@ -411,12 +391,7 @@ extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getBlueMessage)(JNIEnv *env, j
 	LOGGER("getBluemessage(%d)=%d\n", index,wearmessages[index]);
 	return wearmessages[index];
 	}
-	*/
-void closesock(int &sock) {
-	shutdown(sock,SHUT_RDWR);
-	close(sock);
-	sock=-1;
-	}
+	*
 void closesocks(std::array<int,maxallhosts>   &socks) {
 	for(auto &el:socks) {
 		if(el!=-1) {
@@ -424,6 +399,7 @@ void closesocks(std::array<int,maxallhosts>   &socks) {
 			}
 		}
 	}
+	*/
 extern void startmessagereceivers(Backup*);
 
 extern void startmessagereceiver(passhost_t &host);
@@ -436,8 +412,8 @@ void setBlueMessage(int ident,bool val) {
 		if(backup) {
 			backup->closeallsocks();
 			if(!val) {
-				closesock(messagesendersockets[ident]);
-				closesock(messagereceiversockets[ident]);
+				shutdown(messagesendersockets[ident],SHUT_RDWR);
+				shutdown(messagereceiversockets[ident],SHUT_RDWR);
 				}
 			else {
 				startmessagereceiver(host);

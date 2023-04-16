@@ -342,7 +342,15 @@ View[] durviews;
 			try {
 			String str=duredit.getText().toString();
 			if(str!=null) {
-				short durs=Short.parseShort(str);
+				int durs=Integer.parseInt(str);
+				if(durs<0) {
+					Toast.makeText(context, "Duration can't be negative: "+durs, Toast.LENGTH_SHORT).show();
+					return;
+					}
+				if(durs>65535) {
+					Toast.makeText(context, durs+" too large, maximum=65535, ", Toast.LENGTH_SHORT).show();
+					return;
+					}
 				Natives.writealarmduration(kind,durs);
 				}
 			if(kind<2) {

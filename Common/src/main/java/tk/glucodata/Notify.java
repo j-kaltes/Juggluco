@@ -190,6 +190,7 @@ final private static boolean whiteonblack=false;
 	Notify() {
 		Log.i(LOG_ID,"showalways="+showalways);
 		showalways=Natives.getshowalways();
+		alertseparate=Natives.getSeparate( );
 		mkunitstr(Natives.getunit());
 		notificationManager =(NotificationManager) Applic.app.getSystemService(NOTIFICATION_SERVICE);
 		createNotificationChannel(Applic.app);
@@ -202,18 +203,6 @@ final private static boolean whiteonblack=false;
 	//  private static final String LOSSALARM = "LossofSensorAlarm";
 	private static final String GLUCOSENOTIFICATION = "glucoseNotification";
 
-/*
-private void allowbubbel(NotificationChannel  channel) {
-	if(!isWearable) {
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-			try {
-				channel.setAllowBubbles(true);
-			} catch (Throwable th) {
-				Log.stack(LOG_ID, th);
-			}
-		}
-	}
-	   }*/
 
 	private void createNotificationChannel(Context context) {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -288,7 +277,11 @@ private void allowbubbel(NotificationChannel  channel) {
 		else if(!isWearable){
 			Log.i(LOG_ID,"arrowglucosenotification  alertwatch="+alertwatch+" showalways="+showalways);
 			if(showalways||alertwatch) {
-				arrowglucosenotification(2,GlucoseDraw.getgludraw(gl), format(usedlocale,glucoseformat,gl),strgl,GLUCOSENOTIFICATION ,!alertwatch);
+				var draw= GlucoseDraw.getgludraw(gl);
+				var message= format(usedlocale,glucoseformat,gl);
+				if(alertwatch)
+					makeseparatenotification(draw,message, strgl,GLUCOSENOTIFICATION);
+				arrowglucosenotification(2,draw, message,strgl,GLUCOSENOTIFICATION ,!alertwatch);
 				}
 			else {
 			//	floatglucose(strgl);
@@ -486,6 +479,7 @@ private void allowbubbel(NotificationChannel  channel) {
 	private void arrowsoundalarm(int kind,int draw,String message,notGlucose sglucose,String type,boolean alarm) {
 		arrowplacelargenotification(kind,draw,message,sglucose,type,!alarm);
 		if(alarm) {
+			makeseparatenotification(draw,message, sglucose,type);
 			Log.d(LOG_ID,"arrowsoundalarm "+kind);
 			mksound(kind);
 		}
@@ -559,8 +553,36 @@ private void repeadoldmessage() {
 		oldfloatmessage(oldmessagetime,oldmessagealarm);
 	}
 	*/
+private void  makeseparatenotification(int draw,String message,notGlucose glucose,String type) {
+	if(!isWearable) {
+		if(alertseparate) {
+			notificationManager.cancel(glucosealarmid);
+			var intent =mkpending();
+			var GluNotBuilder=mkbuilderintent(type,intent);
+			Log.i(LOG_ID,"makeseparatenotification "+glucose.value);
+			GluNotBuilder.setSmallIcon(draw).setContentTitle(message);
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+				GluNotBuilder.setVisibility(VISIBILITY_PUBLIC);
+				}
+			GluNotBuilder.setShowWhen(true);
+			if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+				GluNotBuilder.setTimeoutAfter(1000*60);
+				}
+			GluNotBuilder.setAutoCancel(true);
+			GluNotBuilder.setPriority(Notification.PRIORITY_HIGH);
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+				GluNotBuilder.setCategory(Notification.CATEGORY_ALARM);
+				}
+			 Notification notif= GluNotBuilder.build();
+			notif.when= glucose.time;
+			notificationManager.notify(glucosealarmid,notif);
+			}
+		}
+    }
 
+static public boolean alertseparate=false;
 	private Notification  makearrownotification(int kind,int draw,String message,notGlucose glucose,String type,boolean once) {
+
 		var intent =mkpending();
 		var GluNotBuilder=mkbuilderintent(type,intent);
 		Log.i(LOG_ID,"makearrownotification setOnlyAlertOnce("+once+") "+glucose.value);
@@ -632,7 +654,7 @@ private void repeadoldmessage() {
 	if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 		GluNotBuilder.setTimeoutAfter(glucosetimeout);
 	}
-	if(isWearable||alertseperate) {GluNotBuilder.setAutoCancel(true);}
+	if(isWearable) {GluNotBuilder.setAutoCancel(true);}
 	if(once)
 		GluNotBuilder.setPriority(Notification.PRIORITY_DEFAULT);
 	else  {
@@ -649,7 +671,6 @@ private void repeadoldmessage() {
 	 Notification notif= GluNotBuilder.build();
 	notif.when= glucose.time;
 	 return notif;
-
 
     }
 @SuppressWarnings({"deprecation"})
@@ -686,18 +707,16 @@ private Notification.Builder   mkbuilder(String type) {
 	}
 
 
-static final private boolean  alertseperate=false;
+static final private boolean  alertseperate=true;
+
+
 void fornotify(Notification notif) {
 	Log.i(LOG_ID, "fornotify ");
 	if(isWearable) {
               notificationManager.notify(glucosealarmid,notif);
 	    }
 	else  {
-		if(alertseperate)  {
-			notificationManager.cancel(glucosealarmid);
-			notificationManager.notify(glucosealarmid,notif);
-			}
-		else {
+		 {
 			notificationManager.cancel(glucosenotificationid);
 			if(keeprunning.theservice!=null) {
 				keeprunning.theservice.startForeground(glucosenotificationid,notif);

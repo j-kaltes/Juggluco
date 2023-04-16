@@ -93,7 +93,6 @@ jugglucotext detext {
 "Alarm stoppen"
 },
 .menustr1={
-"Benachr.       ",
 "Export",
 "Klon",
 detext.newamount,

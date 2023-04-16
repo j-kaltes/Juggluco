@@ -98,7 +98,6 @@ jugglucotext engtext {
 		"Stop Alarm"
 		},
 	.menustr1={
-		"Notify",
 		"Export",
 		"Mirror",
 		engtext.newamount,
@@ -130,7 +129,7 @@ jugglucotext engtext {
 		{"New Sensor initialized","Scan again to use it"},
 		{"","Blocks touch during scanning"},
 		{"",""},
-		{"Library initialization error","Force reinstall by removing library"},
+		{"Library initialization error","Are shared libraries missing?"},
 		{"Class initalization error","Do something"},
 		{"Procedure takes too long","I kill program"},
 		{"365: Replace Sensor","Your Sensor is not working. Please remove your Sensor and start a new one."},

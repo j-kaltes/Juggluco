@@ -44,6 +44,20 @@ static public void show(MainActivity context) {
 				Log.i(LOG_ID,"Add serial failed");;
 
 			}); */
+       var notify=getcheckbox(context,context.getString(R.string.notify), Notify.alertwatch);
+	
+	notify.setOnCheckedChangeListener(
+		(buttonView,  isChecked) ->  {
+			Applic.app.setnotify(isChecked);
+			});
+
+       var separate=getcheckbox(context,context.getString(R.string.separate), Notify.alertseparate);
+	separate.setOnCheckedChangeListener(
+		(buttonView,  isChecked) ->  {
+			Notify.alertseparate=isChecked;
+			Natives.setSeparate(isChecked);
+			});
+
 	       var watchdrip=getcheckbox(context,"Watchdrip", SuperGattCallback.doWearInt);
 		watchdrip.setOnCheckedChangeListener(
 			(buttonView,  isChecked) ->  {
@@ -104,11 +118,8 @@ static public void show(MainActivity context) {
 		var width= GlucoseCurve.getwidth();
 		if(width>w)
 			l.setX((width-w)/2);
-		var height= GlucoseCurve.getheight();
-		if(height>h)
-			l.setY((height-h)/2);
 		return new int[] {w,h};
-		},new View[]{watchdrip},new View[]{wearbox,wearossettings},new View[]{server,serverconfig},new View[]{kerfstok,status},new View[]{Help,Ok} );
+		},new View[]{watchdrip},new View[] {notify,separate},new View[]{wearbox,wearossettings},new View[]{server,serverconfig},new View[]{kerfstok,status},new View[]{Help,Ok} );
 	float density=GlucoseCurve.metrics.density;
 	int laypad=(int)(density*4.0);
 	layout.setPadding(laypad*2,laypad*2,laypad*2,laypad);

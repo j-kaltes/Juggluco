@@ -49,7 +49,7 @@
     <string name="portrange">Network ports should be between 1024 and 65535</string>
     <string name="start">Start</string>
     <string name="now">Now</string>
-    <string name="dontchangeamounts">Don\'t change amounts</string>
+    <string name="dontchangeamounts">Amounts received from mirror</string>
     <string name="thishost">This host:</string>
     <string name="dozemode">Doze mode?</string>
     <string name="sync">Sync</string>
@@ -156,7 +156,7 @@
  <string name="nextpage">Next page</string>
  <string name="ips">IPs:</string>
  <string name="port">Port</string>
- <string name="saved">"Saved "</string>
+ <string name="saved">"saved"</string>
  <string name="savefailed">Save failed</string>
  <string name="notsaved">Not saved</string>
  <string name="failedbyexception">Failed by exception</string>
@@ -253,10 +253,17 @@
 <string name="treatments">Give Amounts</string>
 <string name="android13">Android 13</string>
     <string name="wentwrong">Something went wrong</string>
+    <string name="dosis">" dose "</string>
     <string name="doses">" doses "</string>
  <string name="penfailed">Reading insulin pen failed</string>
  <string name="changeinsulin">"Change insulin type to "</string>
     <string name="type">"Type: "</string>
     <string name="dosesprior">Only add doses from after:</string>
+    <string name="modify">Modify</string>
+    <string name="notsynced">Not synced</string>
+ <string name="lossdata">Setting to defaults can result in loss of data.</string>
+ <string name="defaults">Defaults</string>
+    <string name="notify">Notify</string>
+ <string name="separate">Separate</string>
 
 </resources>

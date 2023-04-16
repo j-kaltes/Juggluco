@@ -3,7 +3,7 @@
 <![CDATA[
 <h1 class="western">
 Sobre</h1>
-<p>Juggluco é escrito por&nbsp;<a href="http://jkaltes.byethost16.com/Juggluco">Jaap
+<p>Juggluco é escrito por&nbsp;<a href="https://www.juggluco.nl/Juggluco">Jaap
 Korthals Altes</a></p>
 <p>Além das bibliotecas padrão do Android, são utilizadas as
 seguintes:</p>
@@ -105,13 +105,13 @@ mínimo Android 4.4) em casa conectado à internet por meio de um
 modem.&nbsp;Outra possibilidade é executar um programa de linha de
 comando pertencente ao Juggluco em um computador (por exemplo, seu PC
 ou Amazon
-AWS):&nbsp;<a href="http://jkaltes.byethost16.com/Juggluco/cmdline/index.html">http://jkaltes.byethost16.com/Juggluco/cmdline/index.html</a></p>
+AWS):&nbsp;<a href="https://www.juggluco.nl/Juggluco/cmdline/index.html">https://www.juggluco.nl/Juggluco/cmdline/index.html</a></p>
 <p>Tutoriais de encaminhamento de porta:</p>
 <p><a href="https://portforward.com/how-to-port-forward/">https://portforward.com/how-to-port-forward/</a></p>
 <p><a href="https://stevessmarthomeguide.com/understanding-port-forwarding/">https://stevessmarthomeguide.com/understanding-port-forwarding/</a></p>
 <p>É possível receber valores de glicose via Bluetooth em um
 dispositivo sem NFC
-(consulte&nbsp;<a href="http://jkaltes.byethost16.com/Juggluco/mirror">http://jkaltes.byethost16.com/Juggluco/mirror</a>):
+(consulte&nbsp;<a href="https://www.juggluco.nl/Juggluco/mirror">https://www.juggluco.nl/Juggluco/mirror</a>):
 Inicialize o sensor via NFC no dispositivo NFC e, em seguida, envie
 os dados de digitalização e fluxo para o dispositivo não NFC. A
 seguir, inverta a conexão para a data do fluxo e desligue a conexão
@@ -383,7 +383,7 @@ conexão é usada é abreviado da seguinte forma:</font></font></p>
 obter mais informações sobre conexões de espelho, leia a ajuda em
 &quot;&nbsp;</span></span></span></font></font></span><span style="font-variant: normal"><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><i><span style="font-weight: normal">Adicionar
 conexão</span></i></span></font></font></span><span style="font-variant: normal"><span style="letter-spacing: normal">&nbsp;</span></span><span style="font-variant: normal"><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">&quot;
-e consulte&nbsp;</span></span></span></font></font></span><a href="http://jkaltes.byethost16.com/Juggluco/mmol.html#mirror">http://jkaltes.byethost16.com/Juggluco/mgdL#mirror</a></p>
+e consulte&nbsp;</span></span></span></font></font></span><a href="https://www.juggluco.nl/Juggluco/mmol.html#mirror">https://www.juggluco.nl/Juggluco/mgdL#mirror</a></p>
 <p style="line-height: 100%; margin-bottom: 0in"><br/>
 
 </p>
@@ -436,7 +436,7 @@ Juggluco.</p>
 Kerfstok</h1>
 <p><span lang="pt-PT">A&nbsp;fonte</span>&nbsp;<span lang="pt-PT">de
 Kerfstok pode ser baixada
-em&nbsp;<a href="http://jkaltes.byethost16.com/Kerfstok/Kerfstok-source.html">http://jkaltes.byethost16.com/Kerfstok/Kerfstok-source.html</a></span>&nbsp;<span lang="pt-PT">).&nbsp;Os
+em&nbsp;<a href="https://www.juggluco.nl/Kerfstok/Kerfstok-source.html">https://www.juggluco.nl/Kerfstok/Kerfstok-source.html</a></span>&nbsp;<span lang="pt-PT">).&nbsp;Os
 utilizadores</span> <span lang="pt-PT">são livres para
 modificá-lo.&nbsp;Cada aplicativo de relógio tem um identificador
 exclusivo.&nbsp;Se o identificador for diferente do padrão, o
@@ -475,7 +475,7 @@ resultados&nbsp;em sensores fora dos EUA, como Freestyle Libre 2.</p>
 <p><span lang="pt-PT">O .apk contendo Librelink é distribuído pelo
 Google Play e está disponível em todos os tipos de lugares na
 web.&nbsp;Uma lista de links pode ser encontrada
-em:&nbsp;<a href="http://jkaltes.byethost16.com/Juggluco/urls.html">http://jkaltes.byethost16.com/Juggluco/urls.html</a></span></p>
+em:&nbsp;<a href="https://www.juggluco.nl/Juggluco/urls.html">https://www.juggluco.nl/Juggluco/urls.html</a></span></p>
 <p>Depois de baixar o APK, você pode deixar Juggluco abri-lo,
 tocando no botão&nbsp;Abrir&nbsp;.</p>
 <p>Também é possível executar o Juggluco sem acesso direto ao
@@ -1532,7 +1532,7 @@ broadcast</font></font></h2>
 <p style="orphans: 2; widows: 2; background: transparent"><span style="font-variant: normal"><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">Uma
 nova transmissão que tem a mesma função da transmissão xDrip.&nbsp;Um
 aplicativo de exemplo simples que grava os valores de glicose
-recebidos no logcat pode ser encontrado aqui:&nbsp;</span></span></span></font></font></span><a href="http://jkaltes.byethost16.com/Juggluco/glucosebroadcast.html">Glucose
+recebidos no logcat pode ser encontrado aqui:&nbsp;</span></span></span></font></font></span><a href="https://www.juggluco.nl/Juggluco/glucosebroadcast.html">Glucose
 broadcasts</a><span style="font-variant: normal"><span style="letter-spacing: normal">&nbsp;</span></span><span style="font-variant: normal"><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">.&nbsp;Se
 especificar Juggluco como fonte de dados no G-Watch, precisará
 ativar esta transmissão.</span></span></span></font></font></span></p>
@@ -1749,7 +1749,7 @@ um para o outro ou um para o outro.</font></font></font></p>
 visualização é usada para resolver problemas de conexão com
 Kerfstok
 (&nbsp;</span></span></span></span></font></font></font></span><a href="https://apps.garmin.com/en-US/apps/b6348ccc-86d8-4780-8013-d9e19fed5260"><span style="background: transparent">https://apps.garmin.com/en-US/apps/b6348ccc-86d8-4780-8013-d9e19fed5260</span></a><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal"><span style="background: transparent">&nbsp;(consulte
-também&nbsp;</span></span></span></span></font></font></font></span><a href="http://jkaltes.byethost16.com/Kerfstok/index.html"><span style="background: transparent">http://jkaltes.byethost16.com/Kerfstok
+também&nbsp;</span></span></span></span></font></font></font></span><a href="https://www.juggluco.nl/Kerfstok/index.html"><span style="background: transparent">https://www.juggluco.nl/Kerfstok
 /index.html</span></a><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal"><span style="background: transparent">&nbsp;).
 Kerfstok é um aplicativo de relógio para smartwatches Garmin
 programáveis ​​com tela sensível ao toque. Kerfstok tem os
@@ -1879,7 +1879,7 @@ todas as atividades suportadas pelo Garmin e pode exibir velocidade e
 distância.&nbsp;Veja </span></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="pt-PT"><span style="font-style: normal"><span style="font-weight: normal">Relógio</span></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="pt-PT"><span style="font-style: normal"><span style="font-weight: normal">-&gt;Kerfstok
 </span></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="pt-PT"><span style="font-style: normal"><span style="font-weight: normal">Estado</span></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="pt-PT"><span style="font-style: normal"><span style="font-weight: normal">-&gt;
 </span></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="pt-PT"><span style="font-style: normal"><span style="font-weight: normal">Ajuda</span></span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="pt-PT"><span style="font-style: normal"><span style="font-weight: normal">
-&nbsp;</span></span></span></span></font></font></font></span><a href="http://jkaltes.byethost16.com/Kerfstok"><span lang="pt-PT">http://jkaltes.byethost16.com/Kerfstok</span></a></p>
+&nbsp;</span></span></span></span></font></font></font></span><a href="https://www.juggluco.nl/Kerfstok"><span lang="pt-PT">https://www.juggluco.nl/Kerfstok</span></a></p>
 <h2 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
 <font><font face="Times">Aplicações de relógio
 xDrip</font></font></h2>
@@ -1923,7 +1923,7 @@ funciona com o servidor web xDrip:&nbsp;</span></span></span></span></font></fon
 <p style="orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
 <span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="pt-PT"><span style="font-style: normal"><span style="font-weight: normal">Para
 obter mais informações sobre a interface do servidor da Web,
-consulte&nbsp;</span></span></span></span></font></font></font></span><a href="http://jkaltes.byethost16.com/Juggluco/addwatch.html"><span lang="pt-PT">http://jkaltes.byethost16.com/Juggluco/addwatch.html</span></a></p>
+consulte&nbsp;</span></span></span></span></font></font></font></span><a href="https://www.juggluco.nl/Juggluco/addwatch.html"><span lang="pt-PT">https://www.juggluco.nl/Juggluco/addwatch.html</span></a></p>
 <p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
 <font><font face="Times"><font size="4" style="font-size: 14pt"><b>apenas
 local</b>&nbsp;: aceita apenas conexões de localhost (127.0.0.1).&nbsp;Se
@@ -1976,7 +1976,7 @@ existem duas possibilidades:</font></font></font></p>
 obter o Juggluco </span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">para</span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">
 Wear OS no Google Play </span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">no</span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">
 seu relógio.&nbsp;Algumas fotos são mostradas
-em&nbsp;</span></span></span></font></font></font></span><a href="http://jkaltes.byethost16.com/JugglucoWearOS/index.html">http://jkaltes.byethost16.com/JugglucoWearOS</a></p>
+em&nbsp;</span></span></span></font></font></font></span><a href="https://www.juggluco.nl/JugglucoWearOS/index.html">https://www.juggluco.nl/JugglucoWearOS</a></p>
 <p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0.1in; background: transparent">
 <font><font face="Times"><font size="4" style="font-size: 14pt">Para
 que funcione faça o seguinte:</font></font></font></p>
