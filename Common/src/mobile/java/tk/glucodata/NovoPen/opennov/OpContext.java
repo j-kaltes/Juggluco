@@ -1,5 +1,8 @@
 package tk.glucodata.NovoPen.opennov;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import tk.glucodata.NovoPen.opennov.mt.ARequest;
 import tk.glucodata.NovoPen.opennov.mt.Apdu;
 import tk.glucodata.NovoPen.opennov.mt.Configuration;
@@ -28,6 +31,16 @@ public class OpContext {
     public Apdu apdu;
     public int invokeId = -1;
 
+    static final public class Doses {
+        public long referencetime;
+        public byte[] rawdoses;
+
+        public Doses(long referencetime, byte[] rawdoses) {
+            this.referencetime=referencetime;
+            this.rawdoses=rawdoses;
+        }
+    }
+    public final List<Doses> doses=new ArrayList<>();
     public Configuration getConfiguration() {
         if (configuration != null) {
             return configuration;

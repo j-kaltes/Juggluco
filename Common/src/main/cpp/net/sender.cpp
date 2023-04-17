@@ -44,6 +44,11 @@
 #include "passhost.h"
 #include "crypt.h"
 #include "makerandom.h"
+
+#define lerrortag(...) lerror("sender: " __VA_ARGS__)
+#define LOGGERTAG(...) LOGGER("sender: " __VA_ARGS__)
+#define flerrortag(...) flerror("sender: " __VA_ARGS__)
+
 using namespace std;
 
 void	sendpassinit(int sock,passhost_t *host,crypt_t *ctx) {
@@ -53,27 +58,28 @@ void	sendpassinit(int sock,passhost_t *host,crypt_t *ctx) {
 	uint8_t *takestart=nonce+makelen;
        makerandom(nonce, makelen);
 	if(sendni(sock,nonce,makelen)!=makelen) {
-		lerror("sendpassinit send");
+		lerrortag("sendpassinit send");
 		return;
 		}
 	int len=recvni(sock,takestart,takelen);
 	if(len!=takelen) {
-		lerror("recv");
+		lerrortag("recv");
 		return;
 		}
-        ascon_aead128a_init(ctx, host->pass.data(),nonce);	LOGGER("end sendpassinit\n");
+        ascon_aead128a_init(ctx, host->pass.data(),nonce);	
+	LOGGERTAG("end sendpassinit\n");
 	}
 bool unblock(int sock) {
   if( int val = fcntl(sock, F_GETFL, NULL);val >=0) {
 	  val|=O_NONBLOCK;
 	  if( fcntl(sock, F_SETFL,val) < 0) {
-     		flerror("fcntl(%d, F_SETFL,%d)",sock,val);
+     		flerrortag("fcntl(%d, F_SETFL,%d)",sock,val);
      		return false;
 		} 
 	return true;
 	} 
   else {
-	     flerror("fcntl(%d, F_GETFL)",sock);
+	     flerrortag("fcntl(%d, F_GETFL)",sock);
 	     return false;
 	     }
      }
@@ -81,13 +87,13 @@ bool block(int sock) {
   if( int val = fcntl(sock, F_GETFL, NULL);val >=0) {
 	  val&=(~O_NONBLOCK);
 	  if( fcntl(sock, F_SETFL,val) < 0) {
-     		flerror("fcntl(%d, F_SETFL,%d)",sock,val);
+     		flerrortag("fcntl(%d, F_SETFL,%d)",sock,val);
      		return false;
 		} 
 	return true;
 	} 
   else {
-	     flerror("fcntl(%d, F_GETFL)",sock);
+	     flerrortag("fcntl(%d, F_GETFL)",sock);
 	     return false;
 	     }
      }
@@ -106,38 +112,38 @@ static bool testsendmagic(int sock) {
 	#include "receivemagic.h"
 
 	if(sendni(sock,sendmagicspec.data(),sendmagicspec.size())!=sendmagicspec.size()) {
-		lerror("send magic failed\n");
+		lerrortag("send magic failed\n");
 		return false;
 		}
 //	constexpr int buflen=1024;
 constexpr const int recsize=sizeof(receivemagic);
 	char buf[recsize];
-	LOGGER("before recv magic\n");
+	LOGGERTAG("before recv magic\n");
 	int gotlen;
 	if((gotlen=recvni(sock,buf,recsize))!=recsize) {
-		flerror("recv()=%d!=%d\n",gotlen,(int)recsize);
+		flerrortag("recv()=%d!=%d\n",gotlen,(int)recsize);
 		return false;
 		}
-	LOGGER("after recv magic\n");
+	LOGGERTAG("after recv magic\n");
 	if(memcmp(buf,receivemagic,recsize-4)) {//4 less for version info
-		LOGGER("Wrong magic\n");
+		LOGGERTAG("Wrong magic\n");
 		return false;
 		}
-	LOGGER("testsendmagic %d success\n",sock);
+	LOGGERTAG("testsendmagic %d success\n",sock);
 extern void	setreceiverversion(uint8_t version) ;
 	setreceiverversion(buf[recsize-1]);
 	return true;
 	}
 
 void receivetimeout(int sock,int secs) {
-	LOGGER("receivetimeout(%d,%d)\n",sock,secs);
+	LOGGERTAG("receivetimeout(%d,%d)\n",sock,secs);
 	struct timeval tv;
 	tv.tv_usec = 0;
 	tv.tv_sec = secs;
 	setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv, sizeof tv);
 	}
 void sendtimeout(int sock,int secs) {
-	LOGGER("sendtimeout(%d,%d)\n",sock,secs);
+	LOGGERTAG("sendtimeout(%d,%d)\n",sock,secs);
 	struct timeval tv;
 	tv.tv_usec = 0;
 	tv.tv_sec = secs;
@@ -147,7 +153,7 @@ void sendtimeout(int sock,int secs) {
 
 
 bool sendtype(int sock,char type) {
-	LOGGER("sendtype(%d,%d)\n",sock,type);
+	LOGGERTAG("sendtype(%d,%d)\n",sock,type);
 	char ant=type;
 	if(sendni(sock,&ant,1)!=1) {
 		return false;
@@ -156,7 +162,7 @@ bool sendtype(int sock,char type) {
         }
 
 int shakehands(passhost_t *pass,int &sock,char stype) {
-	LOGGER("shakehands connection %d\n",sock);
+	LOGGERTAG("shakehands connection %d\n",sock);
 	//getmyname(sock);
 	
 	destruct closer([&sock]()->void{
@@ -185,9 +191,9 @@ Specify the receiving or sending timeouts until reporting an error. The argument
 	setsockopt(sock, SOL_SOCKET, SO_SNDTIMEO , (const char*)&tv, sizeof tv);
 	if(pass->hasname) {
 		const char *name= pass->getname();
-		LOGGER("sendni(%d,%s,)\n",sock,name);
+		LOGGERTAG("sendni(%d,%s,)\n",sock,name);
 		if(sendni(sock,name,pass->maxnamelen)!=pass->maxnamelen) {
-			lerror("send name");
+			lerrortag("send name");
 			return -1;
 			}
 		
@@ -200,7 +206,7 @@ Specify the receiving or sending timeouts until reporting an error. The argument
 		
 
 	closer.active=false;
-	LOGGER("sock=%d\n",sock);
+	LOGGERTAG("sock=%d\n",sock);
 	return sock;
 	}
 /*
@@ -210,12 +216,12 @@ bool nameset=false;
 void getmyname(int sock) {
 	 socklen_t  namelen= sizeof(myname);
 	if(getsockname(sock,  &myname,&namelen )==-1) {
-		lerror("getsockname");
+		lerrortag("getsockname");
 		}
 	else {
 		nameset=true;
 		namehost mname(&myname);
-		LOGGER("getsockname returned %s\n",mname.data());
+		LOGGERTAG("getsockname returned %s\n",mname.data());
 		}
 	} 
 	*/
@@ -227,9 +233,9 @@ static int connectone( const struct sockaddr_in6  *sin, int &sock,char stype,pas
 				)  {
 	int so;
 	namehost name(sin);
-	LOGGER("%s family=%d\n", name.data(),sin->sin6_family);
+	LOGGERTAG("%s family=%d\n", name.data(),sin->sin6_family);
 	if((so=socket(sin->sin6_family,SOCK_STREAM,0))==-1) {
-		flerror("openone  socket");
+		flerrortag("openone  socket");
 		return -1;;
 		}
 
@@ -237,14 +243,14 @@ static int connectone( const struct sockaddr_in6  *sin, int &sock,char stype,pas
 		close(so);
 		return -1;
 		}
-	LOGGER("try  %s sock=%d\n", name.data(),so);
+	LOGGERTAG("try  %s sock=%d\n", name.data(),so);
 	if(connect(so,(const struct sockaddr* )sin,sizeof(*sin))==-1) {
 		if(errno == EINPROGRESS) {
-			LOGGER("%d progress\n",so);
+			LOGGERTAG("%d progress\n",so);
 			cons[use++]={so,POLLOUT,0};
 			}
 		else {
-			LOGGER("close\n");
+			LOGGERTAG("close\n");
 			close(so);
 			return -1;
 			}
@@ -256,7 +262,7 @@ static int connectone( const struct sockaddr_in6  *sin, int &sock,char stype,pas
 		block(so);
 		sock=so;
 		if(int ret=shakehands(pass,sock,stype);ret>0) {
-			LOGGER("before poll %d\n",sock);
+			LOGGERTAG("before poll %d\n",sock);
 			for(int w=0;w<use;w++) {
 				close(cons[w].fd);
 				}
@@ -301,7 +307,7 @@ bool activate=true;
 	#endif
 		)) {
 
-				LOGGER("found %d\n",ret);
+				LOGGERTAG("found %d\n",ret);
 				return ret;
 				}
            		}
@@ -310,7 +316,7 @@ bool activate=true;
 		else return -1;
 	} else {
 		const int nr=pass->nr;
-		LOGGER("makeconnection nr=%d\n",nr);
+		LOGGERTAG("makeconnection nr=%d\n",nr);
 		if(nr<=0) {
 			return -1;
 			}
@@ -324,36 +330,36 @@ bool activate=true;
 
 
 			) ;ret>=0)  {
-				LOGGER("%d: found %d\n",i,ret);
+				LOGGERTAG("%d: found %d\n",i,ret);
 				return ret;
 				}
 
-			LOGGER("wait %d\n",i);
+			LOGGERTAG("wait %d\n",i);
 			}
 	    }
 #ifdef WEAROS_MESSAGES
 	dest.active=activate;
 #endif
-	LOGGER("use=%d\n",use);
+	LOGGERTAG("use=%d\n",use);
 	while(use) {	
 		constexpr const int	timeout= 60000;
 		int errcode=poll(cons, use, timeout);
 		switch(errcode) {
 			case -1: {
 				int er=errno;
-				lerror("poll");
+				lerrortag("poll");
 				if(er== EINTR)
 					continue;
 				return -1;
 				};
-			case 0: {LOGGER("poll timeout\n");
+			case 0: {LOGGERTAG("poll timeout\n");
 				return -1;
 				}
 			};
 		int newuse=0;
 		for(int i=0;i<use;i++) {
 			if(cons[i].revents & POLLRDHUP){
-				LOGGER(" %d: POLLRDHUP\n",cons[i].fd);
+				LOGGERTAG(" %d: POLLRDHUP\n",cons[i].fd);
 				close(cons[i].fd); 
 				continue;
 				}
@@ -361,7 +367,7 @@ bool activate=true;
 				int error = 0;
 				socklen_t errlen = sizeof(error);
 				if(getsockopt(cons[i].fd, SOL_SOCKET, SO_ERROR, (void *)&error, &errlen)==-1)
-					lerror("getsockopt");
+					lerrortag("getsockopt");
 //s/^[ 	]*\(E[A-Z]*\)[ 	]*\(.*\)$/case \1: errstr=\"\2\";break;
 				const char *errstr="";
 				switch(error) {
@@ -379,17 +385,17 @@ bool activate=true;
 					case ETIMEDOUT: errstr="Timeout while attempting connection.";break;
 
 					};
-				LOGGER(" %d: POLLERR %s (%d)\n",cons[i].fd,errstr,error);
+				LOGGERTAG(" %d: POLLERR %s (%d)\n",cons[i].fd,errstr,error);
 				close(cons[i].fd); 
 				continue;
 				}
 			if(cons[i].revents &POLLHUP){
-				LOGGER(" %d: POLLHUP\n",cons[i].fd);
+				LOGGERTAG(" %d: POLLHUP\n",cons[i].fd);
 				close(cons[i].fd);
 				continue;
 				}
 			if(cons[i].revents &POLLNVAL){
-				LOGGER(" %d: POLLNVAL\n",cons[i].fd);
+				LOGGERTAG(" %d: POLLNVAL\n",cons[i].fd);
 				close(cons[i].fd);
 				continue;
 				}
@@ -403,7 +409,7 @@ bool activate=true;
 					for(int w=i+1;w<use;w++) {
 						close(cons[w].fd);
 						}
-					LOGGER("via poll %d\n",sock);
+					LOGGERTAG("via poll %d\n",sock);
 #ifdef WEAROS_MESSAGES
 					dest.active=false;
 #endif
@@ -412,13 +418,13 @@ bool activate=true;
 				continue;
 				}
 			else  {
-				LOGGER("poll again %d\n",cons[i].fd);
+				LOGGERTAG("poll again %d\n",cons[i].fd);
 				cons[newuse++]={cons[i].fd,POLLOUT,0};
 				}
 			}
 		use=newuse;
 		}
-	LOGGER("no one\n");
+	LOGGERTAG("no one\n");
 	return -1;
 	}
 

@@ -1,7 +1,10 @@
 package tk.glucodata.NovoPen.opennov.mt;
 
 
+import static tk.glucodata.Natives.showbytes;
+
 import tk.glucodata.NovoPen.opennov.BaseMessage;
+import tk.glucodata.NovoPen.opennov.OpContext;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -24,19 +27,9 @@ public class EventReport extends BaseMessage {
     public long index = -1;
     public int count = -1;
     public Configuration configuration;
-    static final public class Doses {
-        public long referencetime;
-        public byte[] rawdoses;
-
-        public Doses(long referencetime, byte[] rawdoses) {
-            this.referencetime=referencetime;
-            this.rawdoses=rawdoses;
-        }
-    }
-    public final List<Doses> doses=new ArrayList<>();
 
 
-    public static EventReport parse(final ByteBuffer buffer) {
+    public static EventReport parse(final ByteBuffer buffer, List<OpContext.Doses> doses) {
 
         var handle = getUnsignedShort(buffer);
         var relativeTime = getUnsignedInt(buffer);
@@ -65,7 +58,9 @@ public class EventReport extends BaseMessage {
                 final int totmem=12*er.count;
                 byte[] rawdoses=new byte[totmem];
                 buffer.get(rawdoses,0,totmem);
-                er.doses.add(new Doses(referencetime,rawdoses));
+                int doseslen=doses.size();
+                showbytes("dose"+doseslen,rawdoses);
+                doses.add(new OpContext.Doses(referencetime,rawdoses));
 
                 return er;
 

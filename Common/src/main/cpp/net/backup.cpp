@@ -49,6 +49,9 @@
 #endif
 
 
+#define lerrortag(...) lerror("backup: " __VA_ARGS__)
+#define LOGGERTAG(...) LOGGER("backup: " __VA_ARGS__)
+#define flerrortag(...) flerror("backup: " __VA_ARGS__)
 using namespace std;
 
 //#include <memory>
@@ -73,7 +76,7 @@ static bool startserver(char *port, passhost_t *hosts,int *hostlen,int *socks,bo
 	{
 	destruct wweg([port]{delete[] port;});
 	if(int status=getaddrinfo(nullptr,port,&hints,&servinfo)) {
-		LOGGER("getaddrinfo: %s\n",gai_strerror(status));
+		LOGGERTAG("getaddrinfo: %s\n",gai_strerror(status));
 		return false;
 		}
 	}
@@ -81,9 +84,9 @@ static bool startserver(char *port, passhost_t *hosts,int *hostlen,int *socks,bo
 	int sock;
 	for(struct addrinfo *ips=servinfo;;ips=ips->ai_next) {
 		if(!ips) {
-			LOGGER("no addresses to bind left\n");
+			LOGGERTAG("no addresses to bind left\n");
 			if(*shutdownreceiver) {
-				LOGGER("shutdownreceiver return\n");
+				LOGGERTAG("shutdownreceiver return\n");
 				return false;
 				}
 			sleep(1);
@@ -92,17 +95,17 @@ static bool startserver(char *port, passhost_t *hosts,int *hostlen,int *socks,bo
 			}
 		sock=socket(ips->ai_family,ips->ai_socktype,ips->ai_protocol);
 		if(sock==-1) {
-			lerror("socket");
+			lerrortag("socket");
 			continue;
 			}
 		const int  yes=1;	
 		if(setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) == -1) {
-			flerror("setsockopt close(%d)",sock);
+			flerrortag("setsockopt close(%d)",sock);
 			close(sock);
 			return false;
 			}
 		if(bind(sock,ips->ai_addr,ips->ai_addrlen)==-1) {
-			flerror("bind close(%d)",sock);
+			flerrortag("bind close(%d)",sock);
 			close(sock);
 			continue;
 			}
@@ -111,16 +114,16 @@ static bool startserver(char *port, passhost_t *hosts,int *hostlen,int *socks,bo
 	constexpr int const BACKLOG=5;
 	if(listen(sock, BACKLOG) == -1) {
 		if(*shutdownreceiver) {
-			lerror("listen");
+			lerrortag("listen");
 			return false;
 			}
 		}
 	serverloop(sock,hosts,*hostlen,socks);
 	if(*shutdownreceiver) {
-		LOGGER("stop server\n");
+		LOGGERTAG("stop server\n");
 		return true;
 		}
-	LOGGER("restart serverloop\n");
+	LOGGERTAG("restart serverloop\n");
 	sleep(1);
 	goto RESTART;
 	}
@@ -135,13 +138,13 @@ bool receiveractive() {
 	return globalsocket!=-1;
 	}
 void stopreceiver() {
-	LOGGER("stopreceiver %d\n",globalsocket);
+	LOGGERTAG("stopreceiver %d\n",globalsocket);
 	if(shutdownreceiver) {
-		LOGGER("ask for shutdown receiver\n");
+		LOGGERTAG("ask for shutdown receiver\n");
 		*shutdownreceiver=true;
 		}
 	if(globalsocket>=0) {
-		LOGGER("shutdown globalsocket %d\n",globalsocket);
+		LOGGERTAG("shutdown globalsocket %d\n",globalsocket);
 		shutdown(globalsocket,SHUT_RDWR);
 		}
 	}
@@ -186,44 +189,44 @@ static bool testreceivemagic(int sock) {
 	if((res =recvni(sock,buf,buflen))==sendmagicspec.size()) {
 		if(!memcmp(buf,sendmagicspec.data(),sendmagicspec.size()-4)) { 
 			if(!memcmp(buf+sendmagicspec.size()-4,sendmagicspec.end()-4,4)) {
-				LOGGER("I don't connect with myself\n");
+				LOGGERTAG("I don't connect with myself\n");
 				}
 			else {
 				constexpr int reclen=sizeof(receivemagic);
 				if(sendni(sock,receivemagic,reclen)==reclen) {
-					LOGGER("receivemagic success\n");
+					LOGGERTAG("receivemagic success\n");
 					return true;
 					}
 				else
-					flerror("sendmagic %d",sock);
+					flerrortag("sendmagic %d",sock);
 				}
 			}
 		else
-			LOGGER("wrong  magic %d",sock);
+			LOGGERTAG("wrong  magic %d",sock);
 		}
 	else	
-		LOGGER("testreceivemagic recvni(%d..)=%d\n",sock,res);
+		LOGGERTAG("testreceivemagic recvni(%d..)=%d\n",sock,res);
 	return false;
 	}
 extern bool networkpresent;
 
 void receiversockopt(int new_fd) {
-	LOGGER("receiversockopt(%d)\n",new_fd);
+	LOGGERTAG("receiversockopt(%d)\n",new_fd);
 	   const int keepalive = 1;
 	   if(setsockopt(new_fd, SOL_SOCKET, SO_KEEPALIVE, &keepalive, sizeof(keepalive)) < 0) {
-		flerror("setsockopt(%d,SO_KEEPALIVE, ) failed",new_fd);
+		flerrortag("setsockopt(%d,SO_KEEPALIVE, ) failed",new_fd);
 		 }
 	   const int keepcnt = 1;
 	if(setsockopt(new_fd, IPPROTO_TCP, TCP_KEEPCNT, &keepcnt, sizeof keepcnt)<0) {
-		flerror("setsockopt(%d,TCP_KEEPCNT ) failed",new_fd);
+		flerrortag("setsockopt(%d,TCP_KEEPCNT ) failed",new_fd);
 	    }
 	   const int keepidle = 60;
 	   if(setsockopt(new_fd, IPPROTO_TCP, TCP_KEEPIDLE, &keepidle, sizeof(keepidle)) < 0) {
-		flerror("setsockopt(%d,TCP_KEEPIDLE, ) failed",new_fd);
+		flerrortag("setsockopt(%d,TCP_KEEPIDLE, ) failed",new_fd);
 		 }
 	   const int keepintvl = 60;
 	   if(setsockopt(new_fd, IPPROTO_TCP, TCP_KEEPINTVL, &keepintvl, sizeof(keepintvl)) < 0) {
-		flerror("setsockopt(%d,TCP_KEEPINTVL, ) failed",new_fd);
+		flerrortag("setsockopt(%d,TCP_KEEPINTVL, ) failed",new_fd);
 		 }
 extern void sendtimeout(int sock,int secs);
 	 sendtimeout(new_fd,60);
@@ -237,13 +240,13 @@ static void receiverthread(int sock,passhost_t *host,const int allindex) {
       prctl(PR_SET_NAME, buf, 0, 0, 0);
 
 
-	LOGGER("receiverthread %d %s\n",sock,buf);
+	LOGGERTAG("receiverthread %d %s\n",sock,buf);
 	bool	getcommands(int,passhost_t *);
 	if(getcommands(sock,host)) {
-		LOGGER("open return receiverthread %d\n",sock);
+		LOGGERTAG("open return receiverthread %d\n",sock);
 		return;
 		}
-	LOGGER("shutdown(%d)\n",sock);
+	LOGGERTAG("shutdown(%d)\n",sock);
 	shutdown(sock,SHUT_RDWR);
 	}
 
@@ -256,12 +259,12 @@ globalsocket=serversock;
 
 		struct sockaddr *addrptr= (struct sockaddr *)&their_addr;
 		socklen_t sin_size = sizeof(their_addr) ;
-		LOGGER("accept(%d,%p,%d)\n",serversock,addrptr,sin_size);
+		LOGGERTAG("accept(%d,%p,%d)\n",serversock,addrptr,sin_size);
 		int new_fd = accept(serversock, addrptr, &sin_size);
-		LOGGER("na accept(serversock=%d)=%d\n",serversock,new_fd);
+		LOGGERTAG("na accept(serversock=%d)=%d\n",serversock,new_fd);
 		if (new_fd == -1) {
 			int ern=errno;
-			flerror("accept %d",ern);
+			flerrortag("accept %d",ern);
 			switch(ern) {
 				case EFAULT: 
 				case EPROTO:
@@ -277,7 +280,7 @@ globalsocket=serversock;
 			continue;
 			}
 		if(!networkpresent) {
-			LOGGER("serverloop !networkpresent close %d\n",new_fd);
+			LOGGERTAG("serverloop !networkpresent close %d\n",new_fd);
 			close(new_fd);
 			continue;
 			}
@@ -305,7 +308,7 @@ globalsocket=serversock;
 				return false;
 				});
 		const namehost name(addrptr);
-		LOGGER("server: got connection from %s sock=%d\n" ,(const char *)name ,new_fd);
+		LOGGERTAG("server: got connection from %s sock=%d\n" ,(const char *)name ,new_fd);
 		if(hit==endhost) {
 			for(int h=0;h<hostlen;h++) {
 				passhost_t& host=hosts[h];
@@ -313,7 +316,7 @@ globalsocket=serversock;
 					if(!host.addiphasfamport(addrptr)) {
 						continue;
 						}
-					LOGGER("detected\n");		
+					LOGGERTAG("detected\n");		
 					hit=&host;
 					goto RIGHTHOST;
 				 	}
@@ -322,16 +325,16 @@ globalsocket=serversock;
 				char name[passhost_t::maxnamelen];
 				int rlen;
 				if((rlen=recvni(new_fd,name,passhost_t::maxnamelen))==passhost_t::maxnamelen) {
-					LOGGER("hostlabel=%s\n",name);
+					LOGGERTAG("hostlabel=%s\n",name);
 					for(int h=0;h<hostlen;h++) {
 						passhost_t& host=hosts[h];
 						if((host.passive())&&host.hasname&&!memcmp(host.getname(),name,passhost_t::maxnamelen)) { 
 							bool nothostreg=!host.hasip(addrptr)&&(!host.detect||!host.addiphasfamport(addrptr));
 							if(!host.noip&&nothostreg) {
-								LOGGER("wrong ip\n");
+								LOGGERTAG("wrong ip\n");
 								continue;
 								}
-							LOGGER("take \n");
+							LOGGERTAG("take \n");
 							hit=&host;
 							goto RIGHTHOST;
 							}
@@ -340,11 +343,11 @@ globalsocket=serversock;
 				else {
 					const int ind= rlen>0?(rlen>passhost_t::maxnamelen?(passhost_t::maxnamelen-1):rlen):0;
 					name[ind]='\0';
-					LOGGER("recvni(%d,%s)==%d!=%d\n",new_fd,name,rlen,passhost_t::maxnamelen);
+					LOGGERTAG("recvni(%d,%s)==%d!=%d\n",new_fd,name,rlen,passhost_t::maxnamelen);
 					}
 
 				}
-			LOGGER("Wrong host\n");
+			LOGGERTAG("Wrong host\n");
 			close(new_fd);
 			continue;
 			}
@@ -361,15 +364,15 @@ globalsocket=serversock;
 
 //extern void getmyname(int sock); getmyname(new_fd);
 		if(hit->sendpassive) {
-			LOGGER("sendpassive\n");
+			LOGGERTAG("sendpassive\n");
 			char ant=SENDPASSIVE;
 			extern bool sendall(const passhost_t *host);
 			if(hit->receivedatafrom()&&!sendall(hit)) {
 				if(recvni(new_fd, &ant, 1)!=1) {
-				  	LOGGER("No send/recv distinction\n");
+				  	LOGGERTAG("No send/recv distinction\n");
 				  	}
 				else {
-					LOGGER("also receivefrom ant=%d\n",ant);
+					LOGGERTAG("also receivefrom ant=%d\n",ant);
 					}
 				}
 			if(ant==SENDPASSIVE) {
@@ -385,7 +388,7 @@ globalsocket=serversock;
 		int oldsock=socks[pos];
 		if(oldsock>=0&&oldsock!=new_fd) {
 			socks[pos]=-1;
-			LOGGER("%d close(%d) prev\n",pos, oldsock);
+			LOGGERTAG("%d close(%d) prev\n",pos, oldsock);
 			shutdown(oldsock,SHUT_RDWR);
 			close(oldsock);
 			}
@@ -414,13 +417,13 @@ void startreceiver(const char *port,passhost_t *hosts,int &hostlen,int *socks) {
 #ifdef MAIN
 
 void netwakeup() {
-	LOGGER("wakeup\n");
+	LOGGERTAG("wakeup\n");
 	}
 //s/\([A-Z]\+\)/printf(\"\1=%d\\n\",\1);/g
 int main(int argc, char **argv) {
  printf("EBADF=%d\n",EBADF); printf("EINVAL=%d\n",EINVAL); printf("ENOTSOCK=%d\n",ENOTSOCK); printf("EOPNOTSUPP=%d\n",EOPNOTSUPP); 
 	if(argc!=3) {
-		LOGGER("Usage: %s port basedir\n",argv[0]);
+		LOGGERTAG("Usage: %s port basedir\n",argv[0]);
 		exit(2);
 		}
 

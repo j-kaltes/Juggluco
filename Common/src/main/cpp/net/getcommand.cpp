@@ -31,6 +31,11 @@
 #include "netstuff.h"
 #include "datbackup.h"
 #include "aligner.h"
+
+#define lerrortag(...) lerror("getcommands: " __VA_ARGS__)
+#define LOGGERTAG(...) LOGGER("getcommands: " __VA_ARGS__)
+#define flerrortag(...) flerror("getcommands: " __VA_ARGS__)
+
 extern Backup *backup;
 extern void		processglucosevalue(int sendindex,int newstart=-1);
 
@@ -46,7 +51,7 @@ static bool sendcrypt(int sock,crypt_t *ctx,uint8_t *data,int datalen) {
 	size_t wrote= ascon_aead128a_encrypt_update(ctx, start,data ,datalen);
 	ascon_aead128a_encrypt_final(ctx, start + wrote, buf, taglen);
 	if(sendni(sock,buf,sizeof(buf))!=sizeof(buf)) {
-		flerror("sendcrypt send shutdown %d",sock);
+		flerrortag("sendcrypt send shutdown %d",sock);
 		::shutdown(sock,SHUT_RDWR);
 		return false;
 		}
@@ -55,13 +60,13 @@ static bool sendcrypt(int sock,crypt_t *ctx,uint8_t *data,int datalen) {
 
 static bool openfile(int sock,crypt_t *ctx,const char *name) {
 	int fp=filedata.open(name);
-	LOGGER("open(%s)=%d\n",name,fp);
+	LOGGERTAG("open(%s)=%d\n",name,fp);
 	int16_t sfp=(int16_t)fp;
 	int16_t sendfp[2]={sfp,static_cast<int16_t>(((uint16_t)0xFFFF)&(~sfp))};
 	if(ctx) {
 		if(!sendcrypt(sock,ctx, reinterpret_cast<uint8_t*>(sendfp),sizeof(sendfp)))  {
 			filedata.close(fp); 
-			LOGGER("openfile shutdown %d\n",sock);
+			LOGGERTAG("openfile shutdown %d\n",sock);
 			::shutdown(sock,SHUT_RDWR);
 			return false;
 			}
@@ -69,7 +74,7 @@ static bool openfile(int sock,crypt_t *ctx,const char *name) {
 		}
 	else  {
 		if(sendni(sock,sendfp,sizeof(sendfp))!=sizeof(sendfp)) {
-			lerror("openfile send +shutdown %d\n");
+			lerrortag("openfile send +shutdown %d\n");
 			filedata.close(fp); 
 			::shutdown(sock,SHUT_RDWR);
 			return false;
@@ -102,16 +107,16 @@ static			bool savefileonce(const struct fileonce_t *gegs);
 
 static std::pair<int,int> interpret(int sock,passhost_t *host,crypt_t *ctx,senddata_t *datain,int len) {
 
-LOGGER("interpret len=%d \n",len);
+LOGGERTAG("interpret len=%d \n",len);
 for(int it=0;it<len;) {
 	senddata_t *data=datain+it;
 	uint16_t *us=reinterpret_cast<uint16_t*>(data),command=*us;
-	LOGGER("%d com=%d %d\n",sock,command,it);
+	LOGGERTAG("%d com=%d %d\n",sock,command,it);
  
 	bool ret=false;
 	int comlen;
 	if(!(host->receivefrom&2)&&command!=sbackupstop&&command!=swakeupstream&&command!=sbackup&&command!=sack)  {
-		LOGGER("interpret: I don't receive from  this host\n");
+		LOGGERTAG("interpret: I don't receive from  this host\n");
 		return {-1,0};
 		}
 		
@@ -124,7 +129,7 @@ for(int it=0;it<len;) {
 				}
 			if(sendni(sock,&ackres,sizeof(ackres))!=sizeof(ackres)) 
 				return {-1,0};
-			LOGGER("ack send\n");
+			LOGGERTAG("ack send\n");
 			ret=true;
 			};break;
 		case sopen: 
@@ -179,7 +184,7 @@ for(int it=0;it<len;) {
 			if(it>len) {
 				return {it,comlen};
 				}
-			LOGGER("swrite\n");
+			LOGGERTAG("swrite\n");
 			ret= filedata.savedata(wcom->han,wcom->off,wcom->len,wcom->data);
 			};break;
 		case sclose: comlen=4;
@@ -233,7 +238,7 @@ for(int it=0;it<len;) {
 				}
 extern				bool updateDevices() ;
 			ret=updateDevices();
-			LOGGER("updateDevices=%d\n",ret);
+			LOGGERTAG("updateDevices=%d\n",ret);
 			};break;
 		case sbackup: 
 			ret=true;
@@ -293,7 +298,7 @@ extern				bool updateDevices() ;
 
 		case sfileonce:
 			{
-			LOGGER("fileonce\n");
+			LOGGERTAG("fileonce\n");
 			int tolen=offsetof(fileonce_t,nr);
 			const fileonce_t *gegs=reinterpret_cast<const fileonce_t *>(data);
 			if(len>(it+tolen)) {
@@ -336,7 +341,7 @@ bool	getcommandsnopass(int sock,passhost_t *host) {
 	status.running(true);
 	destruct _dest([&status]{status.running(false);});
 
-	LOGGER("getcommandsnopass\n");
+	LOGGERTAG("getcommandsnopass\n");
 	int start=0;
 	int maxcom =1024*1024;
 	std::unique_ptr<senddata_t[],senddata_deleter> ptr(new (maxalign,std::nothrow) senddata_t [maxcom],senddata_deleter());
@@ -348,16 +353,16 @@ bool	getcommandsnopass(int sock,passhost_t *host) {
 		}
 
 	while(true) {
-		LOGGER("voor recv\n");
+		LOGGERTAG("voor recv\n");
 		int len=recvni(sock,com+start,maxcom-start);
-		LOGGER("%d=recv\n",len);
+		LOGGERTAG("%d=recv\n",len);
 		switch(len) { 
 			case 0: {
-				LOGGER("closed\n");
+				LOGGERTAG("closed\n");
 				return false;
 				};
 			case -1: {
-				lerror("recv");
+				lerrortag("recv");
 				return false;
 				}
 			default:
@@ -365,7 +370,7 @@ bool	getcommandsnopass(int sock,passhost_t *host) {
 				status.ininterpret=true;
 				auto [last,comlen]=interpret(sock,host,nullptr,com,totlen);
 				status.ininterpret=false;
-				LOGGER("[%d,%d]=interpret\n",last,comlen);
+				LOGGERTAG("[%d,%d]=interpret\n",last,comlen);
 				if(last) {
 					if(last<0) {
 						if(comlen==0)
@@ -408,7 +413,7 @@ static int interpretcommands(int sock,passhost_t *host,crypt_t *ctx,senddata_t *
 		return 1;
 		}
 	if(last>0) {
-		LOGGER("Strange error last>0 %d\n",last);
+		LOGGERTAG("Strange error last>0 %d\n",last);
 		return 2;
 		}
 	return 0;
@@ -423,24 +428,24 @@ static bool getcom(int sock, passhost_t *host,ascon_aead_ctx_t *ctx) {
 
 
 	while(true) {
-		LOGGER("getcom\n");
+		LOGGERTAG("getcom\n");
 		constexpr const int taglen=16;
 		uint8_t tag[taglen];
 		if(int getlen=recvni(sock,tag,taglen);getlen!=taglen) {
-			LOGGER("recv tag %d\n",getlen);
+			LOGGERTAG("recv tag %d\n",getlen);
 			return false;
 			}
-		LOGGER("got tag\n");
+		LOGGERTAG("got tag\n");
 		constexpr int testlen=16;
 		senddata_t start[testlen];
 		const int len1=recvni(sock,start,testlen);
 		switch(len1) {
 			case 0: {
-			LOGGER("recv==0\n");
+			LOGGERTAG("recv==0\n");
 			return false;
 			};
 			case -1: {
-				flerror("error recv, shutdown %d\n",sock);
+				flerrortag("error recv, shutdown %d\n",sock);
 				::shutdown(sock,SHUT_RDWR);
 				return false;
 				}
@@ -455,13 +460,13 @@ static bool getcom(int sock, passhost_t *host,ascon_aead_ctx_t *ctx) {
 		int res= ascon_aead128a_decrypt_update(ctx, uit, start, testlen);
 		constexpr int intlen=sizeof(int);
 		if(res<intlen)  {
-			LOGGER("ascon_aead128a_decrypt_update(...%d)=%d\n",len1,res);
+			LOGGERTAG("ascon_aead128a_decrypt_update(...%d)=%d\n",len1,res);
 			return false;
 			}
 		const int datlen=*reinterpret_cast<int *>(uit);
-		LOGGER("datlen=%d\n",datlen);
+		LOGGERTAG("datlen=%d\n",datlen);
 		if(datlen<0||datlen>MAXDATA) {
-			LOGGER("strange datasize=%d\n",datlen);
+			LOGGERTAG("strange datasize=%d\n",datlen);
 			return false;
 			}
 		const int intdatlen=datlen+sizeof(int);
@@ -485,32 +490,32 @@ static bool getcom(int sock, passhost_t *host,ascon_aead_ctx_t *ctx) {
 		
 		std::unique_ptr<uint8_t[] > deltoo(incrypt);
 		int len=0;
-		LOGGER("voor recv\n");
+		LOGGERTAG("voor recv\n");
 		for(;len<bijlen;) {
 			int bij=recvni(sock,incrypt+len,bijlen-len);
 			switch(bij) {
 				case 0: {
-				LOGGER("2: recv==0\n");
+				LOGGERTAG("2: recv==0\n");
 				return false;
 				};
 				case -1: {
-					lerror("2: recv");
+					lerrortag("2: recv");
 					return false;
 					}
 				}
 			len+=bij;
 			}
-		LOGGER("voor ascon_aead128a_decrypt_update\n");
+		LOGGERTAG("voor ascon_aead128a_decrypt_update\n");
 		if(totlen>testlen)
 			res+= ascon_aead128a_decrypt_update(ctx, uit+res, incrypt, bijlen);
 		bool is_tag_valid;
 		res += ascon_aead128a_decrypt_final( ctx,uit+res, &is_tag_valid, tag, taglen);
 		if(!is_tag_valid) {		
-			LOGGER("ascon_aead128a_decrypt_final returns invalid\n");
+			LOGGERTAG("ascon_aead128a_decrypt_final returns invalid\n");
 			return false;
 			}
 		else
-			LOGGER("ascon_aead128a_decrypt_final valid\n");
+			LOGGERTAG("ascon_aead128a_decrypt_final valid\n");
 		status.ininterpret=true;
 		if(int res=interpretcommands(sock,host,ctx,uit+intlen,datlen)) {
 			if(res==1)
@@ -524,7 +529,7 @@ template <int nr>
 using unique_al= std::unique_ptr<uint8_t[],ardeleter<nr,uint8_t>> ;
 //std::unique_ptr<uint8_t[],ardeleter<4,uint8_t>>  receivedatanopass(int sock,const int totlen) {
 static unique_al<4> receivedatanopass(int sock,const int totlen) {
-	LOGGER("receivedatanopass(%d,%d)\n",sock,totlen);
+	LOGGERTAG("receivedatanopass(%d,%d)\n",sock,totlen);
 	uint8_t *buf=new(std::align_val_t(4),std::nothrow) uint8_t[totlen];
 	if(!buf) {
 		sleep(1);
@@ -534,8 +539,8 @@ static unique_al<4> receivedatanopass(int sock,const int totlen) {
 	for(int took=0,bij;took<totlen;took+=bij) {
 		bij=recvni(sock,buf+took,totlen-took);
 		switch(bij) {
-			case -1:lerror("recv");return unique_al<4>(nullptr);
-			case 0:LOGGER("recv==0\n"); return unique_al<4>(nullptr);
+			case -1:lerrortag("recv");return unique_al<4>(nullptr);
+			case 0:LOGGERTAG("recv==0\n"); return unique_al<4>(nullptr);
 
 
 			};
@@ -564,7 +569,7 @@ unique_al<4>  receivedatapass(int sock,crypt_t *ctx,int messlen) {
 	unique_al<4> destructptr(buf,ardeleter<4,uint8_t>());
 	uint8_t *start=buf+taglen;
 	if(int len=recvni(sock,buf,totlen);len!=totlen) {
-		flerror("recv(%d,,%d)!=%d",sock,totlen,len);
+		flerrortag("recv(%d,,%d)!=%d",sock,totlen,len);
 		return unique_al<4>(nullptr);
 		}
 	uint8_t *tmpbuf=new(std::align_val_t(4),std::nothrow) uint8_t[takelen];
@@ -577,7 +582,7 @@ unique_al<4>  receivedatapass(int sock,crypt_t *ctx,int messlen) {
 	bool is_tag_valid;
 	res += ascon_aead128a_decrypt_final( ctx,tmpbuf+res, &is_tag_valid, buf, taglen);
 	if(!is_tag_valid) {		
-		LOGGER("ascon_aead128a_decrypt_final returns invalid tag\n");
+		LOGGERTAG("ascon_aead128a_decrypt_final returns invalid tag\n");
 		return unique_al<4>(nullptr);
 		}
 
@@ -608,7 +613,7 @@ bool	receivepassinit(int sock,passhost_t *host,ascon_aead_ctx_t *ctx) {
 	uint8_t nonce[ASCON_AEAD_NONCE_LEN];
 	int len=recvni(sock,nonce,takelen);
 	if(len!=takelen) {
-		lerror("recv");
+		lerrortag("recv");
 		return false;
 		}
 	
@@ -616,7 +621,7 @@ bool	receivepassinit(int sock,passhost_t *host,ascon_aead_ctx_t *ctx) {
 	uint8_t *makestart=nonce+takelen;
        makerandom(makestart, makelen);	
        if(sendni(sock,makestart,makelen)!=makelen) {
-		lerror("receivepassinit send");
+		lerrortag("receivepassinit send");
 		return false;
 		}
         ascon_aead128a_init(ctx, host->pass.data(),nonce);	
@@ -634,7 +639,7 @@ static bool	getcommandspassinit(int sock,passhost_t *host) {
 	return ret;
 	}
 bool	getcommands(int sock,passhost_t *host) {
-      LOGGER("getcommands(%d)\n",sock);
+      LOGGERTAG("getcommands(%d)\n",sock);
 	if(host->haspass())
 		return getcommandspassinit(sock,host);
 	else {
@@ -656,7 +661,7 @@ static std::pair<int,int> getstartinfo(const struct fileonce_t *gegs,const uint8
 	int over=gegs->totlen-tothier;
 	int startpos=over==sizeof(int)?*reinterpret_cast<const int *>(buf+tothier):-1;
 	int sendindex=gegs->dowith&0x3FFF;
-	LOGGER("tothier=%d totlen=%d startpos=%d sendindex=%d\n",tothier,gegs->totlen,startpos,sendindex);
+	LOGGERTAG("tothier=%d totlen=%d startpos=%d sendindex=%d\n",tothier,gegs->totlen,startpos,sendindex);
 	return {sendindex,startpos};
 	}	
 void sethistorystart(int,int);
@@ -665,14 +670,14 @@ static bool savefileonce(const struct fileonce_t *gegs) {
 	const uint8_t *start=reinterpret_cast<const uint8_t*>(&gegs->gegs[nr]);
 	const char *name=reinterpret_cast<const char *>(start);
 	int fp=filedata.open(name);
-	LOGGER("savefileonce %s %d show=%d\n",name,nr, (gegs->dowith&streamupdatebit));
+	LOGGERTAG("savefileonce %s %d show=%d\n",name,nr, (gegs->dowith&streamupdatebit));
 	if(fp<0)
 		return false;
 	destruct des([fp](){filedata.close(fp);});
 	start+=(gegs->namelen);
 	for(int i=0;i<nr;i++) {
 		if(!filedata.savedata(fp,gegs->gegs[i].off,gegs->gegs[i].len,start)) {
-			LOGGER("savedata failed\n");
+			LOGGERTAG("savedata failed\n");
 			return false;
 			}
 		start+=gegs->gegs[i].len;
@@ -687,7 +692,7 @@ static bool savefileonce(const struct fileonce_t *gegs) {
 			sethistorystart(sendindex,startpos);
 			}
 		}
-	LOGGER("savedata success\n");
+	LOGGERTAG("savedata success\n");
 	return true;
 	}
 /*

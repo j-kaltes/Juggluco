@@ -573,7 +573,7 @@ private void  makeseparatenotification(int draw,String message,notGlucose glucos
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 				GluNotBuilder.setCategory(Notification.CATEGORY_ALARM);
 				}
-			 Notification notif= GluNotBuilder.build();
+			Notification notif= GluNotBuilder.build();
 			notif.when= glucose.time;
 			notificationManager.notify(glucosealarmid,notif);
 			}

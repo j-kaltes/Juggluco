@@ -1,3 +1,24 @@
+/*      This file is part of Juggluco, an Android app to receive and display         */
+/*      glucose values from Freestyle Libre 2 and 3 sensors.                         */
+/*                                                                                   */
+/*      Copyright (C) 2021 Jaap Korthals Altes <jaapkorthalsaltes@gmail.com>         */
+/*                                                                                   */
+/*      Juggluco is free software: you can redistribute it and/or modify             */
+/*      it under the terms of the GNU General Public License as published            */
+/*      by the Free Software Foundation, either version 3 of the License, or         */
+/*      (at your option) any later version.                                          */
+/*                                                                                   */
+/*      Juggluco is distributed in the hope that it will be useful, but              */
+/*      WITHOUT ANY WARRANTY; without even the implied warranty of                   */
+/*      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                         */
+/*      See the GNU General Public License for more details.                         */
+/*                                                                                   */
+/*      You should have received a copy of the GNU General Public License            */
+/*      along with Juggluco. If not, see <https://www.gnu.org/licenses/>.            */
+/*                                                                                   */
+/*      Sun Apr 16 20:56:20 CEST 2023                                                 */
+
+
 package tk.glucodata.NovoPen;
 
 import static android.graphics.Typeface.BOLD;
@@ -47,30 +68,34 @@ import tk.glucodata.R;
 
 public class Scan {
 	static final private String LOG_ID="Scan";
-	private static long nexttime=0L;
 	static public void onTag(MainActivity act, Tag tag) {
 		showbytes("onTag", tag.getId());
-		var now = System.currentTimeMillis();
-		if (now > nexttime) {
-			var vibrator= getvibrator(act);
-		 	startvibration(vibrator);
-			nexttime = now + 4000;
-			var openNov = new OpenNov();
-			var res = openNov.processTag(tag);
-			vibrator.cancel();
-			if (res == null) {
-				failure(vibrator);
-				final var failread=act.getString(R.string.penfailed);
-				Log.d(LOG_ID, failread);
-				nexttime = 0L;
-				Applic.Toaster(failread);
+		var vibrator = getvibrator(act);
+		startvibration(vibrator);
+		var openNov = new OpenNov();
+		var op = openNov.processTag(tag);
+		vibrator.cancel();
+		if (op == null) {
+			failure(vibrator);
+			final var failread = act.getString(R.string.penfailed);
+			Log.e(LOG_ID, "processTag failed");
+		} else {
+			if (op.specification == null) {
+				Log.e(LOG_ID, "op.specification==null");
 			} else {
-				Applic.RunOnUiThread(()->setInsulin(act,res));
+					if (op.doses == null) {
+						Log.e(LOG_ID, "op.eventReport.doses==null");
+					} else {
+						Applic.RunOnUiThread(() -> setInsulin(act, op));
+						return;
+				}
 			}
 		}
-	}
 
-private static void earlytimeconfirmation(MainActivity act) {
+		final var failread =act.getString(R.string.penfailed);
+		Applic.Toaster(failread);
+	}
+	private static void earlytimeconfirmation(MainActivity act) {
         AlertDialog.Builder builder = new AlertDialog.Builder(act);
         builder.setTitle("To get older values you have to scan again").
            setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
@@ -93,25 +118,6 @@ private static void changeTypeconfirmation(MainActivity act,String type,Runnable
 static  public final DateFormat fhourmin=             new SimpleDateFormat("HH:mm", Locale.US);
 
 static void setInsulin(MainActivity context, OpContext op) {
-	if(op.specification==null) {
-		Log.e(LOG_ID,"op.specification==null");
-		final var failread=context.getString(R.string.penfailed);
-		Applic.Toaster(failread);
-		return;
-		}
-	if(op.eventReport==null) {
-		Log.e(LOG_ID,"op.eventReport==null");
-		final var failread=context.getString(R.string.penfailed);
-		Applic.Toaster(failread);
-		return;
-		}
-	if(op.eventReport.doses==null){
-		Log.e(LOG_ID,"op.eventReport.doses==null");
-		final var failread=context.getString(R.string.penfailed);
-
-		Applic.Toaster(failread);
-		return;
-		}
 
 	String serial=op.specification.getSerial();
 	final long typetime =novopentype(serial);
@@ -213,7 +219,7 @@ final	var datebutton=getbutton(context, DateFormat.getDateInstance(DateFormat.DE
 
 	context.setonback(() -> removeContentView(layout) );
 	ok.setOnClickListener(v -> {
-			var doses=op.eventReport.doses;
+			var doses=op.doses;
 			int ty=selected[0];
 			Runnable saveall=()-> {
 				int nr=0;

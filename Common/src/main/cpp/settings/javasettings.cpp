@@ -1271,7 +1271,14 @@ uint16_t sign1;
 uint8_t units[2];
 uint32_t sign2;
 bool rightsign()const {
-	return sign2==8&&sign1==0x00FF;
+	if(sign2!=8) {
+		LOGGER("sign2=%d!=8\n",sign2);
+		return false;
+		}
+	if(sign1==0x00FF)
+		return true;
+	LOGGER("sign1==%X!=0xFF",sign1);
+	return false;
 	}
 uint32_t getreltime() const {
 	uint32_t uit;
@@ -1304,14 +1311,19 @@ int savedoses(NovoPen *pen,uint32_t reftime,uint8_t *bytes,int len) {
 			continue;
 			}
 		auto time=reftime+dose->getreltime();	
+		float value=dose->getvalue();
+		#ifndef NOLOG
+		time_t tim=time;
+		LOGGER("dose: %.1f %s",value,ctime(&tim));
+		#endif
 		if(time<=lasttime) {
+			LOGGER("time %u <=lasttime %u\n",time,lasttime);
 			break;
 			}
 		if(time<old||time>now) {
 			LOGGER("time=%u\n",time);
 			continue;
 			}
-		float value=dose->getvalue();
 		if(value>60) {
 			LOGGER("%.1f\n",value);
 			continue;
@@ -1322,6 +1334,7 @@ int savedoses(NovoPen *pen,uint32_t reftime,uint8_t *bytes,int len) {
 			}
 		else  {
 			if(value<=2.0f&&((int64_t)nexttime-time)<60) {
+				LOGGER("prime\n");
 				used=false;
 				continue;
 				}
@@ -1333,11 +1346,6 @@ int savedoses(NovoPen *pen,uint32_t reftime,uint8_t *bytes,int len) {
 
 	return savednr;
 	}
-	/*
-extern "C" JNIEXPORT jlong  JNICALL   fromjava(lasttimenovopen)(JNIEnv *env, jclass cl,jstring jserial) {
-	NovoPen   *pen=getnovopen(env,jserial);
-	return pen->lasttime;
-	} */
 extern "C" JNIEXPORT jboolean  JNICALL   fromjava(oldnovopenvalue)(JNIEnv *env, jclass cl,jlong referencetime,jstring jserial,jbyteArray jrawdoses) {
 	NovoPen   *pen=getnovopen(env,jserial);
 	if(!pen||!pen->lasttime)  {
@@ -1368,7 +1376,7 @@ extern "C" JNIEXPORT jint  JNICALL   fromjava(savenovopen)(JNIEnv *env, jclass c
 //	env->GetByteArrayRegion(jar, 0, lens, );
 	 jsize lens=env->GetArrayLength(jrawdoses);
        uint8_t*  bytes=reinterpret_cast<uint8_t *>(   env->GetPrimitiveArrayCritical(jrawdoses,nullptr));
-      LOGGER("jrawdoses=%p\n",bytes);
+      LOGGER("jrawdoses=%p#%d\n",bytes,lens);
        if(!bytes) {
 		LOGGER("GetPrimitiveArrayCritical(jrawdoses,nullptr)==null\n");
 		return -1;
@@ -1381,44 +1389,6 @@ extern "C" JNIEXPORT jint  JNICALL   fromjava(savenovopen)(JNIEnv *env, jclass c
 		pen->lasttime=time(nullptr);
 	return ret;
 	}
-/*
-extern "C" JNIEXPORT jboolean  JNICALL   fromjava(addnovopen)(JNIEnv *env, jclass cl,jstring jserial,jint type) {
-	auto &pens=settings->data()->pens;
-	int nr=settings->data()->pensnr;
-	if(nr>=pens.size())
-		return false;
-	
-	auto *start=pens.begin();
-	auto *end=&pens[nr];
-	NovoPen zoek;
-	char *serial=zoek.serial;
-	jint jlen = env->GetStringLength(jserial);
-	env->GetStringUTFRegion(jserial, 0,jlen, serial);
-	serial[jlen]='\0';
-        constexpr const auto comp=[](const NovoPen &el,const NovoPen &se ){
-		return strcmp(el.serial,se.serial)<0;
-		};
-        auto *hit=std::upper_bound(start,end, zoek,comp); //first element larger than jserial
-	if(hit>start) {
-		auto *prehit=hit-1;	
-		if(!strcmp(prehit->serial,serial)) {
-			prehit->type=type;
-			return true;
-			}
-		}
-	if(hit==end) {
-		strcpy(end->serial,serial);
-		end->type=type;
-		}
-	else {
-		memmove(hit+1,hit,(end-hit)*sizeof(*hit));
-		hit->type=type;
-		strcpy(hit->serial,serial);
-		}
-	++settings->data()->pensnr;
-	return true;
-	}
-	*/
 extern "C" JNIEXPORT void  JNICALL   fromjava(setnovopenttimeandtype)(JNIEnv *env, jclass cl,jlong time,jint type,jstring jserial) {
 	NovoPen   *pen=getnovopen(env,jserial);
 	if(pen)  {

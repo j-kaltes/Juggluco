@@ -401,11 +401,13 @@ private static int resumenr=isRelease?10:2;
 //	Notify.testold();
     }
 long nexttime= 0L;
-void   startnfc(Tag tag) {
+
+synchronized void   startnfc(Tag tag) {
 	long nu=System.currentTimeMillis();
 	if(nu<nexttime)
 		return;
 	nexttime=nu+1000*5;
+
 	    runOnUiThread( ()-> {
 		if (curve != null) {
 		    curve.searchaway();
@@ -419,16 +421,36 @@ void   startnfc(Tag tag) {
 		} }
 
 	    );
-	//    if(activate) new Thread(new NfcVactivate(tag)).start(); else
+	var techs = tag.getTechList();
+	String all="onTagDiscovered: ";
+
+	if(techs!=null) {
+		for(var  t:techs) {
+			all+=t;
+			all+=" ";
+			}
+		Log.i(LOG_ID,all);
+
+		if(!isWearable) {
+			if(techs.length>0) {
+				switch(techs[0] ) {
+					case "android.nfc.tech.IsoDep":
+							showbytes("tag", tag.getId());
+							tk.glucodata.NovoPen.Scan.onTag(this,tag);
+							return;
+					}
+				}
+			}
+		}
+	else
+		Log.i(LOG_ID,all);
 	if(Thread.currentThread().equals( Looper.getMainLooper().getThread() )) {
-		//Happens on android 6.0 arm while starting app by scanning
 		new Thread(()->
 				ScanNfcV.scan(curve,tag)
 			).start();
 		}
 	else
 		ScanNfcV.scan(curve,tag);
-//	startbackup();
 	}
 
 private void outofStorageSpace() {
@@ -466,30 +488,7 @@ void activateresult(boolean res) {
 }
 
     @Override
-    public void onTagDiscovered(Tag tag) {
-	var techs = tag.getTechList();
-	String all="onTagDiscovered: ";
-
-	if(techs!=null) {
-		for(var  t:techs) {
-			all+=t;
-			all+=" ";
-			}
-		Log.i(LOG_ID,all);
-
-		if(!isWearable) {
-			if(techs.length>0) {
-				switch(techs[0] ) {
-					case "android.nfc.tech.IsoDep":
-							showbytes("tag", tag.getId());
-							tk.glucodata.NovoPen.Scan.onTag(this,tag);
-							return;
-					}
-				}
-			}
-		}
-	else
-		Log.i(LOG_ID,all);
+    public  void onTagDiscovered(Tag tag) {
 	startnfc(tag);
     }
     @Override

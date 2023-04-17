@@ -216,7 +216,8 @@ static int sayactivereceive(const passhost_t *host) {
 		}
 void	updateone::open() {
      auto *host=backup->getupdatedata()->allhosts+allindex;
-     LOGGER("updateone::open %d %s\n",allindex,host->getnameif());
+     LOGGER("updateone::open %d %s  receivefrom=%d sendpassive=%d activereceive=%d\n",allindex,host->getnameif(),host->receivefrom,host->sendpassive,host->activereceive);
+
 #ifdef WEAROS_MESSAGES
 	if(host->wearos&&wearmessages[allindex]) {
 		 messagemakeconnection(host,getsock(),getcrypt(),saysender(host));
@@ -481,7 +482,7 @@ bool getpassive(int pos) {
 bool getactive(int pos) {
 	if(pos<backup->getupdatedata()->hostnr)  {
 		const auto &host=backup->getupdatedata()->allhosts[pos];
-		LOGGER("receivefrom=%d sendpassive=%d\n",host.receivefrom,host.sendpassive);
+		LOGGER("receivefrom=%d sendpassive=%d activereceive=%d\n",host.receivefrom,host.sendpassive,host.activereceive);
 		if(host.index>=0) {
 			if(host.sendpassive) 
 				return false;

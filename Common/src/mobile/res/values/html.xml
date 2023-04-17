@@ -100,9 +100,9 @@ Bluetooth. To make sure that only one of the devices contacts with
 the sensor, &quot;</span><span lang="en-US"><i>Sensor via Bluetooth</i></span><span lang="en-US">&quot;
 is turned off automatically when Stream values arrive via IP/TCP.</span></p>
 <p style="line-height: 100%; margin-bottom: 0in">On this screen,
-after <i>wlan</i><i>,</i> the local wlan IP of this device is shown,
-you should specify this on the other device on you home network you
-are connecting to (or your modem if connecting remotely).</p>
+after <i>wlan,</i> the local wlan IP of this device is shown, you
+should specify this on the other device on you home network you are
+connecting to (or your modem if connecting remotely).</p>
 <p style="line-height: 100%; margin-bottom: 0in">After <i>Port,</i>
 you can change the TCP port this app is listening on for connections.</p>
 <p style="line-height: 100%; margin-bottom: 0in">By clicking <i><b>Add
@@ -117,11 +117,11 @@ functions as a Mirror app (receiving glucose values from another
 device running Juggluco), you can press <b>Alarms</b> to get to a
 dialog where you can specify low and high glucose alarms and related
 notifications.</p>
-<p style="line-height: 100%; margin-bottom: 0in"><b>Don\'t change
-amounts: </b>If the app receives amounts of medication, food and
-sport data from this app running on another device, you shouldn\'t add
-or modify these same information here. Checking this makes it
-impossible. 
+<p style="line-height: 100%; margin-bottom: 0in"><b>Amounts received
+from mirror</b><b>: </b>If the app receives amounts of medication,
+food and sport data from this app running on another device, you
+shouldn\'t add or modify these same information here. Checking this
+makes it impossible. 
 </p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>Sync</b> sends
 new data to a connected device if available or asks for new data. 
@@ -129,16 +129,13 @@ new data to a connected device if available or asks for new data.
 <p style="line-height: 100%; margin-bottom: 0in"><b>Reinit</b>:
 Closes existing and creates a new connection.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>Wifi</b> (only on
-WearOS): Use WIFI instead of TCP over Bluetooth for the connection
-between phone and watch. This is normally not needed when the phone
-has an external connection (WIFI or Mobile Data). This option can be
-used in the rare circumstance that the phone doesn\'t have an external
-connection and there is a portable hotspot on the phone to which the
-watch is connected. The makers of WearOS think that turning on WIFI
-will lead to large increases in battery usage; I can not substantiate
-this. Anyway, the connection between phone and watch is much more
-stable when the phone has an external connection and WIFI on the
-watch is turned off.</p>
+WearOS): When not set WIFI is turned off automatically after some
+time by WearOS to preserve battery life and Juggluco switches to the
+use of Bluetooth for the connection between phone and watch. When it
+is turned on, WearOS is asked to keep WIFI on and it will take longer
+before it is turned off, but that can still happen. Setting this
+option is normally not needed and the makers of WearOS think that
+turning WIFI on will lead to large increases in battery usage.</p>
 <p style="line-height: 100%; margin-bottom: 0in">Existing connections
 are shown in a list, the label, the IP port and month, day and time
 of the last successful sync are shown. 
@@ -1265,7 +1262,7 @@ Libre 2 sensors. But maybe the old permissions still work.</p>
 has six ways to get glucose values on your watch.</p>
 <h2 class="western">Notify</h2>
 <p style="line-height: 100%; margin-bottom: 0in"><span lang="en-US">When
-</span><span lang="en-US"><i>Notify</i></span><span lang="en-US"> is
+</span><span lang="en-US"><i>Notify</i></span> <span lang="en-US">is
 turned on, an Android notification is created every time a new
 glucose value arrives. On some watches notifications are only send to
 the watch when a new notification is created, for them you have to
@@ -1296,17 +1293,18 @@ can receive glucose values from the Glucodata Broadcast (see Left
 menu-&gt;Settings).</p>
 <h2 class="western">xDrip watch apps</h2>
 <p style="line-height: 100%; margin-bottom: 0in"><span lang="en-US">Juggluco
-incorporates an xDrip webserver. This makes it possible to directly
-use xDrip watch apps with Juggluco. xDrip displays a new glucose
-value only every 5 minutes, while Juggluco displays a new glucose
-value every minute. Juggluco also sends to the xDrip watch apps the
-most recent glucose value. The glucose values are only send to the
-watches if the watch app asks for them, thus how old the displayed
-values are depends on when the watch app asks for them. For example
-watch faces and data fields on Garmin watches only ask for a glucose
-value every 5 minutes. Via xDrip this often let to 10 minute old
-glucose values. When directly connected with Juggluco, these watch
-faces show up to 6 minute old glucose values. Under </span><span lang="en-US"><b>Garmin</b></span><span lang="en-US">,
+incorporates an xDrip</span><span lang="en-US">/Nightscout</span><span lang="en-US">
+webserver. This makes it possible to directly use xDrip watch apps
+with Juggluco. xDrip displays a new glucose value only every 5
+minutes, while Juggluco displays a new glucose value every minute.
+Juggluco also sends to the xDrip watch apps the most recent glucose
+value. The glucose values are only send to the watches if the watch
+app asks for them, thus how old the displayed values are depends on
+when the watch app asks for them. For example watch faces and data
+fields on Garmin watches only ask for a glucose value every 5
+minutes. Via xDrip this often let to 10 minute old glucose values.
+When directly connected with Juggluco, these watch faces show up to 6
+minute old glucose values. Under </span><span lang="en-US"><b>Garmin</b></span><span lang="en-US">,
 if you can\'t use Kerfstok, you have the following options to
 regularly receive a recent glucose value. An xDrip widget
 (<a href="https://apps.garmin.com/en-US/apps/73115e04-dc9f-4765-ad88-e7ae283ce995">https://apps.garmin.com/en-US/apps/73115e04-dc9f-4765-ad88-e7ae283ce995</a>)
@@ -1329,12 +1327,10 @@ more information on the web server interface see
 <a href="https://www.juggluco.nl/Juggluco/webserver.html">https://www.juggluco.nl/Juggluco/webserver.html</a></span></p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>local only</b>:
 only accept connections from localhost (127.0.0.1). If you turn it
-off, also other hosts can access the server. If you don\'t configure
-your firewall to redirect to port 17580, this will be only hosts on
-your home network. This server uses only http. I made also a https
-version, but that seems to be of no use without a certificate
-specific for your hostname signed by a certificate authority. So I
-left it out.</p>
+off, also other hosts can access the server. This only applies to
+http, https is always possible. If you don\'t configure your firewall
+to redirect to port 17580, this will be only hosts on your home
+network.</p>
 <h2 class="western">WearOS Juggluco</h2>
 <p>There is a version of Juggluco ported to Wear OS. The display is
 adapted to the smaller screen and a watch face is added. The watch
@@ -1353,7 +1349,7 @@ Reinit on phone and watch, to sync phone and watch.</p>
 <p><b>Init watch app</b>: This should be pressed once after Juggluco
 is installed on the WearOS watch and is running. 
 </p>
-<p><b>Defaults</b>: This sets the connection settings to it defaults
+<p><b>Defaults</b>: This sets the connection settings to its default
 values. This consists of the settings that can be changed in Left
 menu-&gt;Mirror on the watch and left middle menu-&gt;Mirror on the
 phone. It consists of settings like &quot;Active only&quot; and

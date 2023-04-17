@@ -36,6 +36,9 @@
 #include <dlfcn.h>
 #include <linux/if.h>
 
+#define lerrortag(...) lerror("netstuff: " __VA_ARGS__)
+#define LOGGERTAG(...) LOGGER("netstuff: " __VA_ARGS__)
+#define flerrortag(...) flerror("netstuff: " __VA_ARGS__)
 
 
 bool  getaddr(const struct sockaddr *sa, struct sockaddr_in6  *uit) {
@@ -54,7 +57,7 @@ bool   getaddr(const char *host, const char *port, struct sockaddr_in6  *uit) {
 	struct addrinfo *servinfo=nullptr;
 	destruct serv([&servinfo]{ if(servinfo)freeaddrinfo(servinfo);});
 	if(int status=getaddrinfo(host,port,&hints,&servinfo)) {
-		LOGGER("getaddrinfo: %s:%s %s\n",host,port,gai_strerror(status));
+		LOGGERTAG("getaddrinfo: %s:%s %s\n",host,port,gai_strerror(status));
 		return false; 
 		}
 	return getaddr(servinfo->ai_addr,uit);
@@ -105,7 +108,8 @@ struct in6_addr
  * NOTE: Be aware the IN6ADDR_* constants and in6addr_* externals are defined
  * in network byte order, not in host byte order as are the IPv4 equivalents
  */
-#define logstring(x) LOGGERN(x,sizeof(x)-1)
+#define logstringtag(tag,x) LOGGERN(tag x,sizeof(tag)+sizeof(x)-2)
+#define logstring(x) logstringtag("netstuff: ",x)
 void showflags(int flags) {
 	if(flags&IFF_UP) logstring("IFF_UP            Interface is running.");
 	if(flags&IFF_BROADCAST) logstring("IFF_BROADCAST     Valid broadcast address set.");
@@ -139,19 +143,21 @@ extern bool getownip(struct sockaddr_in6 *outip);
 bool oldgetownip(struct sockaddr_in6 *outip) { 
   int  socketfd = socket(AF_INET, SOCK_DGRAM, 0);
   if(socketfd<0) {
-  	LOGGER(" socket(AF_INET, SOCK_DGRAM, 0) failed\n");
+  	LOGGERTAG(" socket(AF_INET, SOCK_DGRAM, 0) failed\n");
  	return false; 	
 	}
   destruct _des([socketfd] {close(socketfd);});
   struct ifreq ifrbuf[20];
   struct ifconf conf{.ifc_len = sizeof(ifrbuf), .ifc_ifcu{.ifcu_req = ifrbuf}};
     if (ioctl(socketfd,SIOCGIFCONF,&conf) < 0) {
-      lerror("ioctl");
+      lerrortag("ioctl");
       return false;
     }
     const char *endifr=(char *)&ifrbuf[10];
    const struct ifreq *wlanip6=nullptr;
     for(struct ifreq *ifr=ifrbuf;(char*)ifr < endifr; ifr = (struct ifreq*)((char*)ifr +_SIZEOF_ADDR_IFREQ(*ifr))) {
+    	//auto flags=ifr->ifr_flags;
+
 	constexpr const char wlan[]="wlan";
 	if(!memcmp(ifr->ifr_name,wlan,sizeof(wlan)-1)) {
 	      switch (ifr->ifr_addr.sa_family) {
@@ -163,23 +169,23 @@ bool oldgetownip(struct sockaddr_in6 *outip) {
       	}
 
     if(!wlanip6)  {
-	LOGGER("No wlan\n");
+	LOGGERTAG("No wlan\n");
 	return false;
 	}
    return putip(&wlanip6->ifr_addr,outip);
    }
 
 bool getownip(struct sockaddr_in6 *outip) {
-   LOGGER("getownip\n");
+   LOGGERTAG("getownip\n");
     struct ifaddrs *ifaddr;
    typedef int (*getifaddrs_t)(struct ifaddrs **ifap);
    static int (*getifaddrs)(struct ifaddrs **ifap)=(getifaddrs_t)dlsym( RTLD_DEFAULT, "getifaddrs");
    if(!getifaddrs) {
-      lerror("getifaddrs==null");
+      lerrortag("getifaddrs==null");
       return false;
    	}
    if(getifaddrs(&ifaddr) == -1) {
-      lerror("getifaddrs");
+      lerrortag("getifaddrs");
       return false;
       }
   typedef void (*freeifaddrs_t)(struct ifaddrs *ifa);
@@ -193,7 +199,7 @@ bool getownip(struct sockaddr_in6 *outip) {
             continue;
        const int family = ifa->ifa_addr->sa_family;
 	namehost name(ifa->ifa_addr);
-	LOGGER("%s %s fam=%d\n",ifa->ifa_name,name.data(),family);
+	LOGGERTAG("%s %s fam=%d\n",ifa->ifa_name,name.data(),family);
 	const int flags= ifa->ifa_flags;
 	showflags(flags);
 	if(!(flags&IFF_NOARP)) {
@@ -208,7 +214,7 @@ bool getownip(struct sockaddr_in6 *outip) {
 	      }
 	  }
   if(!wlanip6)  {
-	LOGGER("No wlan\n");
+	LOGGERTAG("No wlan\n");
 	return false;
 	}
    return putip(wlanip6->ifa_addr,outip);
@@ -232,32 +238,33 @@ struct ifconf  {
 */
 
 int oldgetownips(struct sockaddr_in6 *outips,int max,bool &haswlan) { 
-LOGGER("oldgetownips\n");
+LOGGERTAG("oldgetownips\n");
 haswlan=false;
   int  socketfd = socket(AF_INET, SOCK_DGRAM, 0);
   if(socketfd<0) {
-  	LOGGER(" socket(AF_INET, SOCK_DGRAM, 0) failed\n");
+  	LOGGERTAG(" socket(AF_INET, SOCK_DGRAM, 0) failed\n");
  	return 0; 	
 	}
   destruct _des([socketfd] {close(socketfd);});
   struct ifreq ifrbuf[20];
   struct ifconf conf{.ifc_len = sizeof(ifrbuf), .ifc_ifcu{.ifcu_req = ifrbuf}};
     if (ioctl(socketfd,SIOCGIFCONF,&conf) < 0) {
-      lerror("ioctl");
+      lerrortag("ioctl");
       return 0;
     }
     const char *endifr=(char *)&ifrbuf[10];
     int iter = 0;
     for(struct ifreq *ifr=ifrbuf;(char*)ifr < endifr; ifr = (struct ifreq*)((char*)ifr +_SIZEOF_ADDR_IFREQ(*ifr))) {
-      switch (ifr->ifr_addr.sa_family) {
-        case AF_INET:
-	    if(!strcmp("lo",ifr->ifr_name)||!strncmp("dummy",ifr->ifr_name,5))
-		continue;
-	   if(!strncmp("wlan",ifr->ifr_name,4))
-	   	haswlan=true;
-	    putip(&ifr->ifr_addr,outips+iter++);
-            break;
-      	}
+//    	auto flags=ifr->ifr_flags;
+	      switch (ifr->ifr_addr.sa_family) {
+		case AF_INET:
+		    if(!strcmp("lo",ifr->ifr_name)||!strncmp("dummy",ifr->ifr_name,5))
+			continue;
+		   if(!strncmp("wlan",ifr->ifr_name,4))
+			haswlan=true;
+		    putip(&ifr->ifr_addr,outips+iter++);
+		    break;
+	}
     }
   return iter;
 }
@@ -269,16 +276,16 @@ int getownips(struct sockaddr_in6 *outips,int max,bool &haswlan) {
 #else
 
 int getownips(struct sockaddr_in6 *outips,int max,bool &haswlan) {
-   LOGGER("getownips\n");
+   LOGGERTAG("getownips\n");
     struct ifaddrs *ifaddr;
    typedef int (*getifaddrs_t)(struct ifaddrs **ifap);
    static int (*getifaddrs)(struct ifaddrs **ifap)=(getifaddrs_t)dlsym( RTLD_DEFAULT, "getifaddrs");
    if(!getifaddrs) {
-      lerror("getifaddrs==null");
+      lerrortag("getifaddrs==null");
       return oldgetownips(outips,max,haswlan);
    	}
    if(getifaddrs(&ifaddr) == -1) {
-      lerror("getifaddrs");
+      lerrortag("getifaddrs");
       return oldgetownips(outips,max,haswlan);
       }
   typedef void (*freeifaddrs_t)(struct ifaddrs *ifa);
@@ -294,14 +301,14 @@ int getownips(struct sockaddr_in6 *outips,int max,bool &haswlan) {
         if (ifa->ifa_addr == NULL) {
 #ifndef NOLOG
 			if(ifa->ifa_name)
-				LOGGER("skip %s\n",ifa->ifa_name);
+				LOGGERTAG("skip %s\n",ifa->ifa_name);
 #endif
             continue;
 		}
 	const int flags= ifa->ifa_flags;
        const int family = ifa->ifa_addr->sa_family;
 	namehost name(ifa->ifa_addr);
-	LOGGER("%s %s fam=%d\n",ifa->ifa_name,name.data(),family);
+	LOGGERTAG("%s %s fam=%d\n",ifa->ifa_name,name.data(),family);
 	showflags(flags);
 	if(usefullflags(flags)) {
 		 const char wlan[]="wlan";
@@ -318,7 +325,7 @@ int getownips(struct sockaddr_in6 *outips,int max,bool &haswlan) {
 		       if(family==AF_INET) {
 		       
 		       		if(iter<max)  {
-				     LOGGER("take\n");
+				     LOGGERTAG("take\n");
 				     putip(ifa->ifa_addr,outips+iter++);
 				     }
 		       		}
@@ -327,7 +334,7 @@ int getownips(struct sockaddr_in6 *outips,int max,bool &haswlan) {
 	}
     if(!wlanip) {
     	if(wlanip6)  {
-		LOGGER("using ip6 \n");
+		LOGGERTAG("using ip6 \n");
 		wlanip=wlanip6;
 		}
 	}
@@ -336,12 +343,10 @@ int getownips(struct sockaddr_in6 *outips,int max,bool &haswlan) {
 	   haswlan=true;
 	   return iter;
 	   }
-   if(iter) {
-	   haswlan=false;
-	   return iter;
-	   }
+   haswlan=false;
+   return iter;
 
-    return oldgetownips(outips,max,haswlan);
+ //   return oldgetownips(outips,max,haswlan);
    }
 #endif
 

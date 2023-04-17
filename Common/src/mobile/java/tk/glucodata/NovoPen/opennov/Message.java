@@ -102,7 +102,7 @@ public class Message extends BaseMessage {
                 }
                 break;
             case CONFIRMED_EVENT_REPORT_CHOSEN: 
-                var er = EventReport.parse(buffer);
+                var er = EventReport.parse(buffer,context.doses);
                 if (er != null) {
 /*                    for (var ds : er.doses) {
                         if (d) log("dose: " + ds.toJson() + " " + tk.glucodata.util.timestring(ds.absoluteTime) + " valid: " + ds.isValid());

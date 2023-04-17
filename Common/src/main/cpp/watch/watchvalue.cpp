@@ -28,6 +28,8 @@
 #include "share/fromjava.h"
 #include "datbackup.h"
 #include "gluconfig.h"
+
+#define LOGGERTAG(...) LOGGER("watchvalue: " __VA_ARGS__)
 extern Sensoren *sensors;
 extern std::vector<int> usedsensors;
 const int maxwatchage=60*3;
@@ -97,7 +99,7 @@ extern "C" JNIEXPORT jobject  JNICALL   fromjava(lastglucose)(JNIEnv *env, jclas
 	const uint32_t nu=time(nullptr);	
 	const auto *hist=getlaststream(nu);
 	if(!hist)  {
-		LOGGER("getlaststream(nu)=null\n");
+		LOGGERTAG("getlaststream(nu)=null\n");
 		return nullptr;
 		}
 	const ScanData *poll=hist->lastpoll();
@@ -107,7 +109,7 @@ extern "C" JNIEXPORT jobject  JNICALL   fromjava(lastglucose)(JNIEnv *env, jclas
 
 	const auto nonconvert= poll->g;
 	if(!nonconvert)  {
-		LOGGER("glucose = 0\n");
+		LOGGERTAG("glucose = 0\n");
 		return nullptr;
 		}
 	const int maxbuf=20;
@@ -118,18 +120,18 @@ extern "C" JNIEXPORT jobject  JNICALL   fromjava(lastglucose)(JNIEnv *env, jclas
 	const char glucoseclass[]= javapackage "strGlucose";
 	static  jclass  item=  (jclass) env->NewGlobalRef(env->FindClass(glucoseclass));
 	if(!item) {
-		LOGGER("FindClass(%s) failed\n",glucoseclass);
+		LOGGERTAG("FindClass(%s) failed\n",glucoseclass);
 		return nullptr;
 		}
 	const char glsig[]= "(JLjava/lang/String;Ljava/lang/String;F)V";
 	static jmethodID iconstruct = env->GetMethodID(item,"<init>",glsig);
 	if(!iconstruct) {
-		LOGGER("GetMethodID(item,<init>,%s) failed\n", glsig);
+		LOGGERTAG("GetMethodID(item,<init>,%s) failed\n", glsig);
 		return nullptr;
 		}
 	const jlong tim=poll->gettime();
 	const char *sensorid=hist->shortsensorname()->data();
-	LOGGER("strGlucose(%lld,%s,%s,%.1f)\n",(long long)tim,buf,sensorid,poll->ch);
+	LOGGERTAG("strGlucose(%lld,%s,%s,%.1f)\n",(long long)tim,buf,sensorid,poll->ch);
 	const float rateofchange=( nonconvert<glucoselowest||nonconvert>glucosehighest)?NAN:poll->ch;
 	return env->NewObject(item,iconstruct,tim,env->NewStringUTF(buf),env->NewStringUTF(sensorid),rateofchange);
        }
@@ -149,7 +151,7 @@ struct glucose  {
 const char LOG_ID[]="Natives";
 const int pri=3;
 
-#define LOGGER(...) __android_log_print(pri,LOG_ID,__VA_ARGS__)
+#define LOGGERTAG(...) __android_log_print(pri,LOG_ID,__VA_ARGS__)
 */
 
 /*
@@ -162,7 +164,7 @@ extern "C" JNIEXPORT jobject  JNICALL   fromjava(bytearray2glucose)(JNIEnv *env,
     const char sig[]= "(JFF)V";
     static jmethodID iconstruct = env->GetMethodID(jglucoseclass,"<init>",sig);
     if(!iconstruct) {
-        LOGGER("GetMethodID(jglucoseclass,<init>,%s) failed\n",sig);
+        LOGGERTAG("GetMethodID(jglucoseclass,<init>,%s) failed\n",sig);
         return nullptr;
         }
     return env->NewObject(jglucoseclass,iconstruct,(jlong)gl->time,gl->value,gl->rate);
@@ -171,7 +173,7 @@ bool loadglucoseclass(JNIEnv *env) {
 	const char glucosestr[]= javapackage "Glucose";
     jglucoseclass=  (jclass) env->NewGlobalRef(env->FindClass(glucosestr));
     if(!jglucoseclass) {
-        LOGGER(R"(FindClass()" "%s" R"() failed)" "\n",glucosestr);
+        LOGGERTAG(R"(FindClass()" "%s" R"() failed)" "\n",glucosestr);
         return false;
         }
     return true;

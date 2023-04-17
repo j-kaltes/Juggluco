@@ -120,8 +120,9 @@ public class Machine {
             var er = opcontext.eventReport;
         {
             String serial;
-            EventReport.Doses dose;
-            if(opcontext.specification != null && (serial = opcontext.specification.getSerial())!= null && serial.length() > 3 && (er.count == 0 || (er.doses.size()>0&&(dose=er.doses.get(er.doses.size()-1))!=null&&oldnovopenvalue(dose.referencetime,serial,dose.rawdoses)))) {
+            var  doses=opcontext.doses;
+            OpContext.Doses dose;
+            if(opcontext.specification != null && (serial = opcontext.specification.getSerial())!= null && serial.length() > 3 && (er.count == 0 || (doses.size()>0&&(dose=doses.get(doses.size()-1))!=null&&oldnovopenvalue(dose.referencetime,serial,dose.rawdoses)))) {
                 Log.d(TAG, "No new data so requesting close");
                 setLastReadSuccess(true); // completed receiving data
                 return doCloseDown(msg);
