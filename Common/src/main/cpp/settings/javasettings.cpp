@@ -121,6 +121,8 @@ extern "C" JNIEXPORT jboolean  JNICALL   fromjava(toCalendarApp)(JNIEnv *env, jc
 
 extern void mkheights();
 extern "C" JNIEXPORT jboolean  JNICALL   fromjava(setlabel)(JNIEnv *env, jclass cl,jint index,jstring jlabel, jfloat prec,jfloat weight) {
+	if(index>=maxvarnr)
+		return false;
 	jint len = env->GetStringUTFLength( jlabel);
 	if(len>11)
 		return false;

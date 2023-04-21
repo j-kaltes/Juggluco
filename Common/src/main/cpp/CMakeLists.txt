@@ -1,4 +1,14 @@
-
+if(${CMAKE_BUILD_TYPE})
+else()
+option(DEBUG "compile for debugging" OFF)
+if(DEBUG)
+set(CMAKE_CXX_FLAGS "-DDEBUG=1 -DSCANLOG=1 " )
+set(CMAKE_BUILD_TYPE Debug)
+else()
+set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -DRELEASE=1 -DNORAWSTREAM=1 -DNOLOG=1 -DRELEASEID=1 -DRELEASEDIR=1 ")
+set(CMAKE_BUILD_TYPE Release)
+endif()
+endif()
 #cmake_minimum_required(VERSION 3.4.1)
 cmake_minimum_required(VERSION 3.13)
 project(Glucodata)
@@ -115,15 +125,3 @@ add_custom_target(juggluco-dep echo -n doel:>juggluco-dep\;g++  ${jugglucodef} -
 add_custom_target(cmdlinesrc.tar make -f ${CMAKE_CURRENT_BINARY_DIR}/juggluco-dep doel DEPENDS juggluco-dep)
 endif()
 
-#set_target_properties(DataProcessing PROPERTIES IMPORTED_LOCATION  ${CMAKE_CURRENT_SOURCE_DIR}/lib/${ANDROID_ABI}/libDataProcessing.so)
-#set_target_properties(c++_shared PROPERTIES IMPORTED_LOCATION /home/jka/Android/Sdk/ndk/22.0.6917172/sources/cxx-stl/llvm-libc++/libs/${ANDROID_ABI}/libc++_shared.so)
-#target_compile_options(juggluco  PUBLIC  ${CMAKE_CXX_FLAGS}   )
-#target_link_options(juggluco  PUBLIC ${CMAKE_CXX_FLAGS}  )
-
-#if(WEAROS)
-
-#set(LIBDIR /n/ojka/src/android/libre2.5.3-CA/app/src/main/lib)
-#set(ORLIBNAME ${LIBDIR}/${ANDROID_ABI}/libDataProcessing.so )
-#add_custom_target( libcalibrate.so  ALL  COMMAND java -cp /home/jka/prog/java unzip /home/jka/Downloads/us2.7.1/com.freestylelibre2.app.us.apk ${ORLIBNAME}  "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/libcalibrate.so"   )
-
-#endif()

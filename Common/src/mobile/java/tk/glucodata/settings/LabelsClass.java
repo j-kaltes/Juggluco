@@ -173,23 +173,30 @@ void mkchangelabel(MainActivity context,View okpar,Runnable onsave) {
 		});
 }
 
-private void	dodeletelast(Spinner spinner,	LabelAdapter<String> numspinadapt, int nr) {
+private void	dodeletelast(Spinner spinner,	LabelAdapter<String> numspinadapt,Button addnew, int nr) {
 	Natives.setnrlabel(nr);
+	Log.i(LOG_ID,"voor remove labels.size()="+labels.size());
 	labels.remove(nr); //USE
+	Log.i(LOG_ID,"na remove labels.size()="+labels.size());
 	adapt.notifyDataSetChanged();
 	numspinadapt.setarray(Natives.getLabels());
 	spinner.setAdapter(numspinadapt);
 	spinner.setSelection(Natives.getmealvar());
+
+	if((labels.size()-1)<40) {
+		Log.i(LOG_ID,"addnew.setVisibility(VISIBLE)");
+		addnew.setVisibility(VISIBLE);
+		}
 	}
 
-private void	askdeletelast(Spinner spinner,	LabelAdapter<String> numspinadapt, int nr) {
+private void	askdeletelast(Spinner spinner,	LabelAdapter<String> numspinadapt, Button addnew,int nr) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setTitle(R.string.deletelabel).
 	 setMessage(labels.get(nr)).
         setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-		 		dodeletelast(spinner,numspinadapt,nr);
+		 		dodeletelast(spinner,numspinadapt,addnew,nr);
                     }
                 }) .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
@@ -228,6 +235,8 @@ void    mklabellayout( ) {
 				numspinadapt.setarray(Natives.getLabels());
 				spinner.setAdapter(numspinadapt);
 				spinner.setSelection(Natives.getmealvar());
+				if((labels.size()-1)>=40)
+					addnew.setVisibility(INVISIBLE);
 				};
 	adapt = new LabelListAdapter(labels, this,ok,onsave); //USE
 	recycle.setAdapter(adapt);
@@ -246,15 +255,16 @@ void    mklabellayout( ) {
 		delete.setText(R.string.deletelast);
 
 
-
+		if((labels.size()-1)>=40)
+			addnew.setVisibility(INVISIBLE);
 
 
 		delete.setOnClickListener(v -> {
 			int nr = labels.size() - 2; //USE
 			Log.d(LOG_ID, "delete " + nr);
 			if (nr >= 0) {
-				askdeletelast(spinner,numspinadapt,nr);
-			}
+				askdeletelast(spinner,numspinadapt,addnew, nr);
+				}
 			if (nr <= 0)
 				delete.setVisibility(INVISIBLE);
 		});

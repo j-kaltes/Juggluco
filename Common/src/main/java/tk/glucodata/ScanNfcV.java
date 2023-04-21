@@ -114,7 +114,7 @@ private static boolean righttag(byte[] id) {
 
 static 	AudioAttributes audioattributes;
 static {
-        if(android.os.Build.VERSION.SDK_INT >= 26)
+        if(android.os.Build.VERSION.SDK_INT >= 21)
  		audioattributes=new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_ALARM) .build();
 	};
 static	VibrationAttributes vibrationattributes=android.os.Build.VERSION.SDK_INT <33?null:new VibrationAttributes.Builder().setUsage(VibrationAttributes.USAGE_ALARM) .build();

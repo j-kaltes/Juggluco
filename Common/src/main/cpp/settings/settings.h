@@ -53,6 +53,8 @@ constexpr const	uint8_t defaultid[]= {
 
 #endif
 };
+inline constexpr const int maxvarnr=40;
+
 extern const char *gformat;
 extern int gludecimal;
 struct amountalarm {
@@ -123,7 +125,7 @@ struct Tings {
 		int32_t  kind;
 		float weight;
 		};
-	ToLibre librenums[40];
+	ToLibre librenums[maxvarnr];
 	int64_t libreaccountIDnum;
 	uint8_t apisecretlength;
 	char apisecret[183];
@@ -144,13 +146,13 @@ struct Tings {
 		char name[12];
 		};//20
 	int32_t varcount;
-	Variables vars[40];
+	Variables vars[maxvarnr];
 	struct Shortcut {
 		char name[12];
 		char value[12];	
 		};
 	int32_t shortnr;
-	std::array<Shortcut,40> shorts;
+	std::array<Shortcut,maxvarnr> shorts;
 	uint8_t  mealvar;
 	uint8_t  reserved4;
 	uint16_t nightsensor;

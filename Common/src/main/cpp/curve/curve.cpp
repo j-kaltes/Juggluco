@@ -79,39 +79,6 @@ NVGcolor *allcolors[]
 //extern NVGcolor invertcolor(const NVGcolor *colin) ;
 
 	
-/*
-extern bool doinvertcolors(bool val);
-bool doinvertcolors(bool val) {
-	struct init {
-		NVGcolor col[std::size(allcolors)]; 
-		init() {
-			for(int i=0;i<std::size(col);i++)
-				col[i]=*allcolors[i];
-			}
-		};
-	static init cols;
-	if(val) {
-		lightred= nvgRGBA(65, 65, 65, 255); 
-		gray= {{{1.0f,1.0f,1.0f,.4f}}}; dooryellow=nvgRGBAf(0.9,0.9,0.1,0.3);
-// white={{{0,0,0,1.0}}}; black=nvgRGBAf(1.0,1.0,1.0,1.0);
-	 darkgray= nvgRGBAf(.8,.8,.8,.8);
-
-		for(int i=0;i<std::size(cols.col);i++)  {
-			*allcolors[i]=invertcolor(cols.col+i);;
-			}
-		}
-	else {
-// white=nvgRGBAf(1.0,1.0,1.0,1.0); black={{{0,0,0,1.0}}};
-	      darkgray= nvgRGBAf(0,0,0,0.4);
-		dooryellow=nvgRGBAf(0.9,0.9,0.1,0.3); 
-lightred= nvgRGBAf(1, 0.95, 0.95, 1); 
-gray= nvgRGBAf2(0,0,0,0.1);
-		for(int i=0;i<std::size(cols.col);i++)
-			*allcolors[i]=cols.col[i];
-		}
-	return true;
-	}
-*/	
 void cpcolors(NVGcolor *foreground) {
 	int wholes=nrcolors/oldnrcolors;
 	for(int i=1;i<wholes;i++) 

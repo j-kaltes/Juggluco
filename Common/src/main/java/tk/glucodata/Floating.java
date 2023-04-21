@@ -39,6 +39,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PixelFormat;
 import android.graphics.PorterDuff;
+import android.graphics.Rect;
 import android.os.Build;
 import android.provider.Settings;
 import android.view.Gravity;
@@ -93,12 +94,7 @@ public static void invalidatefloat() {
 		view.postInvalidate();
 	}
 
-	/*
-public static void floattransparent() {
-	floatPaint.setTypeface(PixelFormat.TRANSPARENT);
-	} */
 public static void rewritefloating(Activity context) {
-//	setfloatglucose(context,false);
 	setfloatglucose(context,true);
 	}
 	public static void rewritefloating() {
@@ -128,7 +124,8 @@ public static void rewritefloating(Activity context) {
 				if(isWearable) {
 					shoulduseadb(context);
 					}
-				else {
+				else 
+				{
 				try {
 					var settingsIntent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
 					context.startActivityForResult(settingsIntent, OVERLAY_PERMISSION_REQUEST_CODE); 
@@ -177,7 +174,7 @@ public static void rewritefloating(Activity context) {
 				yview=0;
 			if(yview>maxy)
 				yview=maxy;
-			var params = makeparams(screenwidth, screenheight);
+			var params = makeparams(screenwidth, (int)(screenheight));
 			windowMana.updateViewLayout(floatview, params);
 		}
 	}
@@ -189,7 +186,7 @@ public static void rewritefloating(Activity context) {
 //		var flags = LayoutParams.FLAG_NOT_FOCUSABLE|WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE;
 		var flags = FLAG_NOT_FOCUSABLE|(Natives.getfloatingTouchable()?0:WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 //		var format= ((floatingbackground&0xFF000000)==0)? PixelFormat.TRANSLUCENT:PixelFormat.OPAQUE;
-		return	 new WindowManager.LayoutParams( floatingwidth,floatingheight,(int) xpos, (int)ypos, type, flags, PixelFormat.TRANSLUCENT);
+		return	 new WindowManager.LayoutParams( floatingwidth,(int)(floatingheight),(int) xpos, (int)ypos, type, flags, PixelFormat.TRANSLUCENT);
 //		var params = new WindowManager.LayoutParams( WRAP_CONTENT, WRAP_CONTENT,(int) xpos, (int)ypos, type, flags);
 	}
 static boolean cannotoverlay()  {
@@ -218,7 +215,6 @@ public static int floatfontsize;
 		try {
 			windowMana = (WindowManager) Applic.app.getSystemService(Context.WINDOW_SERVICE);
 			floatview = new Floating(Applic.app);
-//			floatview.setOnTouchListener(new Gesture());
 			var metrics = Applic.app.getResources().getDisplayMetrics();
 			int screenwidth = metrics.widthPixels;
 			int screenheight = metrics.heightPixels;
@@ -228,7 +224,6 @@ public static int floatfontsize;
 			floatingbackground=Natives.getfloatingbackground();
 			Log.format(LOG_ID+" Natives.getfloatingforeground()=0x%x\n",floatingforeground);
 			Log.format(LOG_ID+" Natives.getfloatingbackground()=0x%x\n",floatingbackground);
-			//Log.i(LOG_ID,String.format("Natives.getfloatingbackground()=0x%x",floatingbackground));
 			if(floatfontsize<5||floatfontsize>(int)(screenheight*.8))
 				floatfontsize=(int)glucosesize;
 			floatPaint.setTextSize(floatfontsize);
@@ -238,28 +233,11 @@ public static int floatfontsize;
 			var notwidth = notheight * 3.40;
 			floatglucosex = (int) (notwidth * .272f);
 			floatingwidth=(int)notwidth;
-			floatingheight=(int)notheight;
-//			var floatBitmap = Bitmap.createBitmap((int) notwidth, (int) notheight, Bitmap.Config.ARGB_8888);
-//			floatview.setImageBitmap(floatBitmap);
+			floatingheight=(int)(notheight);
 
-			windowMana.addView(floatview, makeparams(screenwidth, screenheight));
+			windowMana.addView(floatview, makeparams(screenwidth, (int)(screenheight)));
 
 			floatdensity = notheight / 54.0f;
-			/*
-			var prev = SuperGattCallback.previousglucose;
-			if (onenot != null) {
-				if(prev==null)  {
-					var last=Natives.lastglucose();
-					if(last!=null) {
-						prev=new notGlucose(last.time*1000L, last.value,  last.rate);
-						}
-					}
-				if (prev != null)
-					onenot.floatglucose(prev);
-				else
-
-					onenot.repeadoldmessage();
-			} */
 			Natives.setfloatglucose(true);
 		} catch (Throwable th) {
 			Log.stack(LOG_ID, "makefloat", th);
@@ -297,9 +275,13 @@ protected void onDraw(Canvas floatCanvas) {
 		final var now=System.currentTimeMillis()/1000L;
 		final var age=now-glucose.time;
 		if(age<oldage) {
-			var gety = floatCanvas.getHeight() * 0.98f;
 			floatCanvas.drawColor(floatingbackground);
 			floatPaint.setColor(floatingforeground);
+/*			var valuebounds=new Rect();
+			floatPaint.getTextBounds(glucose.value, 0, glucose.value.length(), valuebounds);
+			var h=valuebounds.height();
+			var gety = floatCanvas.getHeight() * 0.98f-.3f*h; */
+			var gety = floatCanvas.getHeight() * 0.98f;
 			var xpos=floatglucosex;
 			var rate=glucose.rate;
 			if (!isNaN(rate))  {
@@ -308,6 +290,10 @@ protected void onDraw(Canvas floatCanvas) {
 				drawarrow(floatCanvas, floatPaint, floatdensity, rate, xpos*.85f, arrowy);
 				}
 			floatCanvas.drawText(glucose.value, xpos, gety, floatPaint);
+/*			var w=valuebounds.width();
+			var y=gety+h*.1f;
+			var x= valuebounds.left;
+			floatCanvas.drawRect( xpos,y,xpos +age*w/oldage,y+h*.1f ,floatPaint); */
 			
 			}
 		else

@@ -116,9 +116,10 @@ Ringtone setring(String uristr, int res) {
 		ring = RingtoneManager.getRingtone(Applic.app, uri);
 		}
 	try {
-		if(Build.VERSION.SDK_INT >=23)
-			ring.setLooping(true);
-		    } catch(Exception e) {
+		if(Build.VERSION.SDK_INT >=23) ring.setLooping(true);
+
+		    } catch(Throwable e) {
+		       Log.stack(LOG_ID,"setring",e);
 		    	}
 
 	return ring;
@@ -130,11 +131,23 @@ public static Ringtone getring(int kind) {
 	}
 Ringtone mkring(String uristr,int kind) {
 	Log.i(LOG_ID,"ringtone "+kind+" "+uristr);
-	return setring(uristr,defaults[kind]);
+	var ring=setring(uristr,defaults[kind]);
+	if(kind!=2)  {
+		if(android.os.Build.VERSION.SDK_INT >= 21)  {
+			try {
+				ring.setAudioAttributes(ScanNfcV.audioattributes);
+			} 
+			catch(Throwable e) {
+		       		Log.stack(LOG_ID,"mkring",e);
+		    		}
+
+			}
+		}
+	return ring;
 	}
-static public Ringtone mkrings(String uristr,int res) {
+static public Ringtone mkrings(String uristr,int kind) {
 	if(onenot!=null)
-		return onenot.mkring(uristr,res);
+		return onenot.mkring(uristr,kind);
 	return null;
 	}
 

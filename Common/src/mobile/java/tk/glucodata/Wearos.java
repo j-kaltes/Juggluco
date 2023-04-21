@@ -151,6 +151,7 @@ static void remake() {
 		direct.setEnabled(true);
 		directactive[0]=false;
 		direct.setChecked(dirval!=0);
+		directactive[0]=true;
 		}
 	if(dirval==1) {
 		start.setEnabled(false);
@@ -266,9 +267,15 @@ static public void show(MainActivity context) {
 								}
 							}
 						}
-			 		directactive[0]=false;
+					else {
+						Log.i(LOG_ID,"nodenum="+nodenum);
+						}
+					directactive[0]=false;
 					direct.setChecked(!isChecked);
-			 		directactive[0]=true;
+					directactive[0]=true;
+					}
+				else {
+					Log.i(LOG_ID,"directactive[0]=false");
 					}
 				return;
 				}
