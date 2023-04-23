@@ -367,8 +367,9 @@ void updatedata::wakesender() {
 	host.activereceive) {
 		auto ind=host.activereceive-1;
 		LOGGER("active %d\n",ind);
-		if(active_receive[ind])
+		if(active_receive[ind])  {
 			active_receive[ind]->wakebackup(Backup::wakeall);
+			}
 		}
 	else {
 			if(host.receivefrom==3&&host.index<0) {

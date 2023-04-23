@@ -1,10 +1,8 @@
-Test op label count?
 new socket formed every time Mirror is opened.
 Met messages on maakt open connectie ook als passiveonly.
 opened ook connectie wannneer er al eentje is.
 Rare lastpos na scan
 Soms usebluetooth uit, maar wel contact.
-insulinInjections needs quotes?
 
 Password Nightscout etc less obvious?
 sometimes no nodes

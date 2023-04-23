@@ -207,7 +207,7 @@ static void setdefaults(const char *infolabel,bool galaxy) {
 
 
 updateone &getsendto(const passhost_t *host);
-bool watchsensor(const passhost_t *wearhost) {
+static bool watchsensor(const passhost_t *wearhost) {
 	if(!wearhost)
 		return false;
        if constexpr(iswatchapp()) {
@@ -353,6 +353,10 @@ extern "C" JNIEXPORT  jbyteArray  JNICALL   fromjava(getmynetinfo)(JNIEnv *env, 
 			info.watchsensor=watchHasSensor>0;
 			bool receive;
 			if(watchHasSensor>0) {
+				if(!wearhost->activereceive) {
+						if(!galaxy) 
+							backup->setactivereceive(index,wearhost,true);
+						}
 				if(wearhost->index>=0) {
 					updateone &updat= getsendto(index);
 					updat.sendstream=false;

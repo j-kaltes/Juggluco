@@ -94,16 +94,19 @@ template <typename ...Ts>
 pathconcat(  Ts &&... args) {
 	name=nconcat(0,args ...);
 	}
-pathconcat( pathconcat &&in):name(in.name),namelen(in.namelen) { 
+pathconcat(pathconcat &&in):name(in.name),namelen(in.namelen) { 
 	in.name=nullptr;
 	in.namelen=1;
 	LOGGER("pathconcat( pathconcat &&in=%s)\n",name);
 }
+
+pathconcat(const pathconcat &&in):pathconcat(std::move(const_cast<pathconcat &&>(in))) { 
+	}
 pathconcat( pathconcat &in):name(new char[in.namelen]),namelen(in.namelen) { 
 	memcpy(name,in.name,in.namelen);
 	LOGGER("pathconcat( pathconcat &in=%s)\n",name);
 }
-pathconcat &operator=(pathconcat &&in) {
+pathconcat &operator=( pathconcat &&in) {
 	LOGGER("pathconcat &operator=(pathconcat &&in %s) {\n",in.name);
 	std::swap(name,in.name);
 	std::swap(namelen,in.namelen);
@@ -238,6 +241,8 @@ Readall(const char *name) {
 Readall(Readall &&in):all(in.all),len(in.len) {
 //	std::cerr<<"Readall(&&) "<<all<<std::endl;
 	in.all=nullptr;
+	}
+Readall(const Readall &&in):Readall(std::move(const_cast<Readall &&>(in))) {
 	}
 void assign(const char *data,size_t lenin) {
 	len=lenin/sizeof(T);

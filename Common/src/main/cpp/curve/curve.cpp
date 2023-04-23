@@ -3006,7 +3006,7 @@ extern "C" JNIEXPORT jlong JNICALL fromjava(tap) (JNIEnv *env, jclass clazz,jflo
 extern bool showsummarygraph;
 		if(showsummarygraph) {
 			showsummarygraph=false;
-			return 1+5*0x10;
+			return 1+4*0x10;
 			}
 		}
 	else
