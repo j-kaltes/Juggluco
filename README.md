@@ -2,7 +2,7 @@
 An Android app that displays glucose values it receives via Bluetooth from Freestyle Libre 2 and 3 sensors.
 
 Abbott's Freestyle Libre 2 sensors transmit every minute the perceived glucose value to the connected reader or smartphone. Abbott's Librelink app uses this value only for low and high glucose alarms. Juggluco displays this value on the smartphone in addition to low and high glucose alarms. So you can know your current glucose value without scanning.  
-Newer versions of Juggluco can also be used with Freestyle Libre 3 sensors, but all further remarks relate to Libre 2\. See http://jkaltes.byethost16.com/libre3 for more information about the use of Libre 3.  
+Newer versions of Juggluco can also be used with Freestyle Libre 3 sensors, but all further remarks relate to Libre 2. See https://www.juggluco.nl/libre3 for more information about the use of Libre 3.  
 Juggluco can only take over the Bluetooth connection of a sensor that is already in use, when ALL COMPETING CONNECTIONS WITH THE SENSOR ARE REMOVED by FORCE CLOSING the Libre app and turning off Freestyle reader or turning off alarms of these apps and devices. Hereafter you scan the sensor a few times with your smartphone while Juggluco is in the foreground and, when everything goes well, within 20 minutes or less Juggluco will establish a connection with the sensor and start receiving glucose values via Bluetooth.  
 After using a sensor with Juggluco, you can still scan the sensor with Librelink or Freestyle Reader, but their alarms will never work again (Patched versions of the Libre 2 or Librelink app can take over the Bluetooth connection when the sensor is new for them (with the result that sensor doesn't work with Juggluco anymore)).  
 In addition to the Bluetooth stream of glucose values, Juggluco displays the result of scanning: the current value and past 8 hours history out of the memory of the sensor. All in one detailed graph.  
@@ -27,7 +27,7 @@ Juggluco for Wear OS can operate two ways:
 - The watch is directly connected with the sensor and sends the glucose values to the phone.  
 
 A direct connection between Watch 4 and sensor is unusable with nearly half of the Freestyle Libre 2 sensors and a fifth of the Freestyle Libre 3 sensors. If, when directly connected with the watch, a sensor has too many connection errors, you can connect the watch with the sensor via the smartphone.  
-For more information: http://jkaltes.byethost16.com/JugglucoWearOS
+For more information: https://www.juggluco.nl/JugglucoWearOS
 
 # BUILD Juggluco
 The following files need to be added to run Juggluco and can be found by unzipping a recent Juggluco apk:
