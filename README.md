@@ -1,4 +1,3 @@
-# **AVOID ANDROID 13: LOW ENERGY BLUETOOTH IS BROKEN.**
 # Juggluco
 An Android app that displays glucose values it receives via Bluetooth from Freestyle Libre 2 and 3 sensors.
 
