@@ -55,10 +55,13 @@ template <typename ...Ts>
 strconcat(string_view sep,  Ts &&... args) {
 	name=nstrconcat(0,sep,args ...);
 	}
-strconcat(strconcat &&in):name(in.name),namelen(in.namelen) { 
+strconcat(strconcat &&in) noexcept :name(in.name),namelen(in.namelen) { 
 	in.name=nullptr;
 	in.namelen=0;
 	LOGGER("strconcat( strconcat &&in=%s)\n",name);
+}
+strconcat(const strconcat &&in) noexcept:strconcat( std::move(const_cast<strconcat &&>(in))) { 
+	LOGGER("strconcat( const strconcat &&in=%s)\n",name);
 }
 strconcat( strconcat &in):name(new char[in.namelen]),namelen(in.namelen) { 
 	memcpy(name,in.name,in.namelen);
@@ -69,6 +72,9 @@ strconcat &operator=(strconcat &&in) {
 	std::swap(name,in.name);
 	std::swap(namelen,in.namelen);
 	return *this;
+	}
+strconcat &operator=(const strconcat &&in) {
+	return operator=(std::move(const_cast<strconcat &&>(in)));
 	}
 strconcat &operator=(strconcat &in) {
 	LOGGER("strconcat &operator=(strconcat &in %s) {\n",in.name);

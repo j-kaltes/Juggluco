@@ -196,6 +196,8 @@ inline const NVGcolor *getthreehour() {
 	}
 
 #include "jugglucotext.h"
+extern NVGcontext* genVG;
+
 inline int datestr(const time_t tim,char *buf) {
 	struct tm tmbuf;
 	 struct tm *stm=localtime_r(&tim,&tmbuf);
@@ -212,4 +214,6 @@ constcol NVGcolor backgroundlightred=   blackbean;
 #define unsavecolor (startincolors?backgroundlightred:foregroundlightred)
 
 constcol NVGcolor dooryellow=nvgRGBAf2(0.9,0.9,0.1,0.3); 
+//extern int whitefont,blackfont;
+
 

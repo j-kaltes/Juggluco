@@ -109,16 +109,22 @@ static std::pair<int,int> interpret(int sock,passhost_t *host,crypt_t *ctx,sendd
 
 LOGGERTAG("interpret len=%d \n",len);
 for(int it=0;it<len;) {
+	int comlen;
+	if((len-it)<2) {
+		comlen=sizeof(sendack);
+		addlen(it,comlen);
+		return {it,comlen};
+		}
 	senddata_t *data=datain+it;
 	uint16_t *us=reinterpret_cast<uint16_t*>(data),command=*us;
 	LOGGERTAG("%d com=%d %d\n",sock,command,it);
  
 	bool ret=false;
-	int comlen;
 	if(!(host->receivefrom&2)&&command!=sbackupstop&&command!=swakeupstream&&command!=sbackup&&command!=sack)  {
 		LOGGERTAG("interpret: I don't receive from  this host\n");
 		return {-1,0};
 		}
+
 		
 	switch(command) {
 		case sack: {

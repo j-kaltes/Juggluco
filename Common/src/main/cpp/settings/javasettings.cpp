@@ -864,9 +864,7 @@ extern bool inituploader(JNIEnv *env);
  
 extern "C" JNIEXPORT void  JNICALL   fromjava(startthreads)(JNIEnv *env, jclass cl) {
 	startthreads();
-#ifndef WEAROS
 	inituploader(env);
-#endif
 	}
 
 extern int startmeals() ;
@@ -1185,7 +1183,6 @@ extern "C" JNIEXPORT jstring  JNICALL   fromjava(getnightuploadsecret)(JNIEnv *e
 	}
 	extern	void enduploaderthread();
 extern "C" JNIEXPORT void  JNICALL   fromjava(setNightUploader)(JNIEnv *env, jclass cl,jstring jurl,jstring jsecret,jboolean active) {
-#ifndef WEAROS
 	if(jurl!=nullptr) {
 		int maxurllen=sizeof(settings->data()->nightuploadname)-1;
 		char *name=settings->data()->nightuploadname;
@@ -1216,7 +1213,6 @@ extern "C" JNIEXPORT void  JNICALL   fromjava(setNightUploader)(JNIEnv *env, jcl
 		inituploader(env);
 	else
 	 	enduploaderthread();
-#endif
 	 }
 extern "C" JNIEXPORT void  JNICALL   fromjava(setAndroid13)(JNIEnv *env, jclass cl,jboolean val) {
 	settings->data()->android13=val;

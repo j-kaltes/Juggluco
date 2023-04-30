@@ -52,7 +52,8 @@ static_assert(sizeof(ips)==(sizeof(hostnamedata)+sizeof(sockaddr_in6)));
 	int nr;
 	int index;
 	std::array<uint8_t,16>  pass;
-	uint8_t receivefrom:6; 
+	uint8_t receivefrom:5; 
+	bool newconnection:1;
 	bool hostname:1;
 	bool wearos:1;
 /*

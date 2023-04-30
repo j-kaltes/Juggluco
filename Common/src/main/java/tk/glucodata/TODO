@@ -1,3 +1,4 @@
+Separate android from rest in cpp
 Maak het makkelijker mirror connectie tussen smartphones te vormen.
 Analyse Libre 3 PatchEvents and scans to generate error messages:  replace sensor, sensor ended etc.
 
@@ -7,7 +8,9 @@ watchdrip:
 Send freestyle Libre 3 data earlier to Libreview?
 Oudheids indicator toevoegen aan zwevende glucose. Mogelijkheden:
 - Zelfde als op andere plaatsen
-- Enkel kleuring
+- Enkel kleuring. 
+	Nadeel: meestal enkel klein puntje. 
+	Voordeel: Idem
 - Kleuring en uiteinden
 - Kleuring en omheining ruimte de gevuld wordt
 

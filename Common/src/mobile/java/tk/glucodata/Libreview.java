@@ -82,6 +82,7 @@ import static tk.glucodata.settings.Settings.removeContentView;
 import static tk.glucodata.util.getbutton;
 import static tk.glucodata.util.getcheckbox;
 import static tk.glucodata.util.getlabel;
+import static tk.glucodata.NightPost.getstring;
 
 public class Libreview  {
 	private static final String LOG_ID="Libreview";
@@ -120,19 +121,6 @@ static JSONObject  readJSONObject(HttpURLConnection urlConnection)  throws IOExc
  	return new JSONObject(ant);
 	}*/
 
-static String getstring(HttpURLConnection con)  throws IOException{
-	try(BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
-		StringBuffer response = new StringBuffer();
-		String inputLine;
-		while ((inputLine = in.readLine()) != null) {
-			response.append(inputLine);
-			}
-		return response.toString();
-		}
-	finally {
-		con.disconnect();
-		}
-	}
 static JSONObject  readJSONObject(HttpURLConnection urlConnection)  throws IOException, JSONException {
 	String ant=getstring(urlConnection);
 	Log.format("%s: readJSONObject len=%d %s",LOG_ID,ant.length(),ant);

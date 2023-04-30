@@ -56,14 +56,8 @@ public class Libre3GattCallback extends SuperGattCallback {
 	private boolean shouldenablegattCharCommandResponse = false;
 	private boolean isServicesDiscovered = false;
 	private final long sensorptr;
-//	Queue<byte[]> sendqueue = new ArrayDeque<byte[]>();
 private final Queue<byte[]> sendqueue = new ConcurrentLinkedQueue<byte[]>();
-//	int currentControlCommand=0;
 private int    lastEventReceived=0;
-//	public BluetoothGattService gattServiceADC = null;
-//	private BluetoothGattService gattServiceDeviceInfo = null;
-//	private BluetoothGattService gattServiceSecurity = null;
-//	private BluetoothGattService gattServiceDebug = null;
 	private BluetoothGattCharacteristic gattCharPatchDataControl = null;
 	private BluetoothGattCharacteristic gattCharPatchStatus = null;
 	private BluetoothGattCharacteristic gattCharEventLog = null; //TODO:remove?
@@ -74,7 +68,6 @@ private int    lastEventReceived=0;
 	private BluetoothGattCharacteristic gattCharCommandResponse = null;
 	private BluetoothGattCharacteristic gattCharChallengeData = null;
 	private BluetoothGattCharacteristic gattCharCertificateData = null;
-//	static private final boolean exportNULL=false;
 private void info(String in) {
 	Log.i(LOG_ID,in);
 	}
@@ -266,18 +259,8 @@ private void mknonceback() {
 	wrtOffset=0;
 	writedata(gattCharChallengeData);
 
-/*	 NOTUSED:
- 	var plusnone=new byte[47];
-	arraycopy(encrypted,0,plusnone,0,40);
-	arraycopy(nonce1,0,plusnone,40,7); */
 
 	}
-//private static final UUID mCharacteristicConfigDescriptor= java.util.UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
-
-//private static               final UUID CONFIG_DESCRIPTOR= mCharacteristicConfigDescriptor;
-//Libre3SKBCryptoLib
-
-//BCrypt securityContext=null;
 private long cryptptr=0L;
 private void challenge67() {
 	Log.i(LOG_ID,"challenge67()");
@@ -395,8 +378,6 @@ final private boolean notsuspended=true;
 
 
 
-//public static native byte[] intEncrypt(long cryptptr, int kind,byte[] plain);
-//public static native byte[] intDecrypt(long cryptptr, int kind,byte[] encrypted);
 
 private    void save_history(byte[] value) {
 	byte[] olddec=intDecrypt(cryptptr,4, value);
@@ -769,10 +750,6 @@ private    void preparedata(byte[] value) {
 private int getcomphase() {
 	return commandphase;
 	}
-/*
-static byte[]		generateEphemeralKeysorig() {
-	return com.adc.trident.app.frameworks.mobileservices.libre3.security.Libre3SKBCryptoLib.generateEphemeralKeys();
-	} */
 private static byte[]           generateEphemeralKeys() {
 
 	var evikeys=Natives.processbar(5,null,null);

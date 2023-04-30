@@ -134,14 +134,37 @@ verbindingen worden weergegeven. Getoond wordt de label, IP, poort,
 wat verzonden wordt en de datum en tijd van de laatste succesvolle
 sync.</p>
 <p style="line-height: 100%; margin-bottom: 0in">Wat verzonden wordt,
-wordt als volgt afgekort:</p>
-<p style="line-height: 100%; margin-bottom: 0in">n: hoeveelheden
-(nummers)</p>
-<p style="line-height: 100%; margin-bottom: 0in">s: scans</p>
-<p style="line-height: 100%; margin-bottom: 0in">b: stream
-(bluetooth)</p>
-<p style="line-height: 100%; margin-bottom: 0in">r: ontvangt
-(receive)</p>
+wordt als volgt afgekort: 
+</p>
+<ul>
+	<li><p style="margin-bottom: 0in">n: hoeveelheden (nummers) 
+	</p>
+</ul>
+<ul>
+	<li><p style="margin-bottom: 0in">s: scans 
+	</p>
+</ul>
+<ul>
+	<li><p style="margin-bottom: 0in">b: stream (bluetooth) 
+	</p>
+</ul>
+<ul>
+	<li><p>r: ontvangt (receive) 
+	</p>
+</ul>
+<p style="line-height: 100%; margin-bottom: 0in">Lees voor meer
+informatie over Kloon-verbindingen de help onder &quot;<i>Verbinding
+toevoegen</i>&quot; en zie
+<a href="https://www.juggluco.nl/Juggluco/mmol.html#mirror">https://www.juggluco.nl/Juggluco/mmol.html#mirror</a></p>
+<h1>Desktop computer</h1>
+<p style="line-height: 100%; margin-bottom: 0in">Je kan de Android
+Juggluco-app uitvoeren op een Windows-, Macintosh- of Linux-computer
+met behulp van een Android-emulator (bijvoorbeeld <a href="https://www.genymotion.com/">Genymotion</a>).
+De Juggluco op de emulator ontvangt de gegevens via een
+Kloon-verbinding van een Android-telefoon die op de sensor is
+aangesloten. Knijpbewegingen (twee vingers naar of van elkaar
+bewegen) kunnen worden gesimuleerd door een toets in te drukken
+(Control in Genymotion) terwijl de muis wordt bewogen.</p>
 ]]>
 </string>
 <string name="addconnection" >
@@ -1792,13 +1815,9 @@ toestemming nodig. Op WearOS en ook Android Automotive moet je adb
 gebruiken om deze toestemming te geven:</p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>adb shell pm
 grant tk.glucodata android.permission.SYSTEM_ALERT_WINDOW</b></p>
-<ol>
-	<p style="line-height: 100%; margin-bottom: 0in; background: transparent">
-	</p>
-</ol>
 <p style="line-height: 100%; margin-bottom: 0in; background: transparent">
 Op sommige horloges (bijvoorbeeld TicWatch Pro) kunt je dit ook
-toestaan met: Android-instellingen-&gt;Apps &amp; meldingen-&gt;
+toestaan met: Android/WearOS-instellingen-&gt;Apps &amp; meldingen-&gt;
 App-info-&gt;Juggluco-&gt;Geavanceerd-&gt;Weergave vóór andere
 apps.</p>
 <p style="line-height: 100%; margin-bottom: 0in; background: transparent">
@@ -1895,7 +1914,8 @@ te drukken.</span></p>
 ontving ik drie bestanden: private.key, certificate.crt en
 ca_bundle.crt.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><span lang="nl-NL">private.key
-is de private sleutel, die u aan Juggluco moet geven door op &quot;</span><em><span lang="nl-NL">Private
+is de private sleutel, die </span><span lang="nl-NL">je</span><span lang="nl-NL">
+aan Juggluco moet geven door op &quot;</span><em><span lang="nl-NL">Private
 Key</span></em><span lang="nl-NL">&quot; te drukken.</span></p>
 <p style="line-height: 100%; margin-bottom: 0in">Om de <i>Full Chain</i>
 te maken, moet je certificate.crt en ca_bundle.crt samenvoegen.</p>
@@ -1924,8 +1944,9 @@ glucosewaarden naar sturen met de xDrip-Broadcast in Juggluco
 <p style="line-height: 100%; margin-bottom: 0in">Je hebt SSL nodig
 voor de Android apps Diabetes:M, <a href="https://play.google.com/store/apps/details?id=se.cornixit.nightwatch">Nightwatch</a>
 en <a href="https://slingithub.github.io/CheckmateWeb">Checkmate</a>
-, Sugarmate (MacOS) en <a href="https://github.com/JohanDegraeve/xdripswift">Xdrip4ios</a>
-. <span lang="nl-NL">Specificeer als Nightscout server URL: </span>
+, Sugarmate (MacOS en IOS) en <a href="https://github.com/JohanDegraeve/xdripswift">Xdrip4ios</a>,
+Shuggah en Cockpit (IOS). <span lang="nl-NL">Specificeer als
+Nightscout server URL: </span>
 </p>
 <p><i>https://hostnaam:poort</i> 
 </p>
@@ -1943,7 +1964,11 @@ sensor heeft: <a href="https://www.juggluco.nl/Juggluco/cmdline/index.html">http
 kan verbinding maken met deze server via een kloon-verbinding of als
 Nightscout-volger (bijvoorbeeld op een Iphone). Laat het me weten als
 er een Nightscout-app is die niet werkt met deze webserver. Misschien
-kan het met een paar wijzigingen werkend worden gemaakt.</p>
+kan het met een paar wijzigingen werkend worden gemaakt. (De IOS-apps
+Nightscout en Nightscout X en de Android-app NSClient zijn specifiek
+voor één bepaald Nightscout-serverprogramma en werken niet met
+Juggluco.) 
+</p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>api_secret</b>:
 Geef op dat volgers het api<b>_</b>secret http-header-element op deze
 waarde moeten instellen. In Juggluco 4.9.1 of hoger werkt het testen
@@ -2070,19 +2095,14 @@ Juggluco,zie <a href="https://www.juggluco.nl/Juggluco/webserver.html">https://w
 <![CDATA[
 <p>Uploaden naar een Nightscout-server. 
 </p>
-<p>In de meeste gevallen kunt u ook de webserver in Juggluco of
+<p>In de meeste gevallen kun je ook de webserver in Juggluco of
 <a href="https://www.juggluco.nl/Juggluco/cmdline">juggluco-server</a>
 gebruiken. Alleen AAPS en NSclient weigeren te werken zonder
-verbinding met <a href="https://github.com/nightscout/cgm-remote-monitor">cgm-remote-monitor</a>. 
-</p>
-<p>AAPS werkt alleen maar als er een verbinding is met een
-Nightscout-server. Als de functionaliteit van deze Artificial
-Pancreas echt afhankelijk is van een Nightscout-server, kunnen ze de
-Nightscout-server beter in AAPS zetten, dan het gevaarlijk
-afhankelijk te maken van een internetverbinding. Als de kern
-functionaliteit van AAPS niet afhankelijk is van Nightscout, kunnen
-ze beter de verplichting om gebruik te maken van deze
-Nightscout-server wegnemen.</p>
+verbinding met <a href="https://github.com/nightscout/cgm-remote-monitor">cgm-remote-monitor</a>.
+De webserver in Juggluco geeft ook hoeveelheden door in de vorm van
+Nightscout behandelingen (
+<a href="https://www.juggluco.nl/Juggluco/webserver.html">https://www.juggluco.nl/Juggluco/webserver.html</a>
+), de uploader uploadt alleen glucose waarden.</p>
 <p>Alle streamwaarden worden geüpload naar de Nightscout-server op
 het moment dat ze binnenkomen. Bij gebruik van meerdere sensoren
 worden alle waarden van alle sensoren geüpload. Sommige Garmin
@@ -2102,6 +2122,13 @@ Nightscout-server</p>
 verzonden wanneer deze binnenkomen van de sensor of een
 kloonverbinding. Druk op deze knop als een eerdere poging om de een
 of andere reden mislukt is.</p>
+<p>De WearOS-versie Juggluco 4.15.0 en later kunnen ook
+glucosewaarden uploaden naar Nightscout. In bijna alle gevallen kun
+je ze beter versturen via een Juggluco-versie op een telefoon of
+tablet of via de Juggluco-server op een computer. Het zal de batterij
+leegmaken, vooral als het geen contact kan maken met de
+Nightscout-server, dus je kunt <i>Active</i> beter uitschakelen als
+er geen betrouwbare verbinding is.</p>
 ]]>
 </string>
 </resources>

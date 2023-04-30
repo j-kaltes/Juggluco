@@ -679,33 +679,21 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 	final String advhelp=isWearable?null:Natives.advanced();
 		Button display=isWearable?getbutton(context,context.getString(R.string.display)):null;
 	if(isWearable) {
+
+	       var uploader=getbutton(context,"Uploader");
 	       var floatconfig=getbutton(context,R.string.floatglucose);
 	       floatconfig.setOnClickListener(v-> tk.glucodata.FloatingConfig.show(context));
 		CheckBox floatglucose=new CheckBox(context);
 		floatglucose.setText("  " );
 
-/*
-	   floatglucose.setPadding(0,0,0,0);
-	var width=GlucoseCurve.getwidth();
-		var height=GlucoseCurve.getheight();
-	   int butwidth=(int)(width*0.33);
-	   int butheight=(int)(height*0.17);
-	   floatglucose.setMinHeight(butheight);
-	   floatglucose.setMinWidth(butwidth);
 
-	   floatglucose.setMinimumHeight(butheight);
-	   floatglucose.setMinimumWidth(butwidth); */
-
-
-
-//		floatglucose.setLayoutDirection( LAYOUT_DIRECTION_LTR);
-//		floatglucose.setForegroundGravity(RIGHT|TOP);
 		floatglucose.setChecked(Natives.getfloatglucose());
 		floatglucose.setOnCheckedChangeListener( (buttonView,  isChecked) -> Floating.setfloatglucose(context,isChecked) ) ;
 			View[] rowglu=new View[]{bluetooth};
 
 			View[] camornum=new View[] {alarmbut,numalarm};
-			views=new View[][]{new View[]{getlabel(context,R.string.unit)}, row0, row1,new View[]{scalelabel},new View[]{fixatex,fixatey}, row2,new View[]{levelleft},hasnfc?(new View[]{globalscan,nfcsound}):null, new View[]{xdripbroadcast},new View[]{jugglucobroadcast},new View[]{floatconfig,floatglucose},camornum,rowglu,new View[]{colbut,display},new View[]{cancel,ok},new View[] {getlabel(context,BuildConfig.BUILD_TIME)},new View[]{getlabel(context,BuildConfig.VERSION_NAME)},new View[]{getlabel(context,codestr) }};;
+			views=new View[][]{new View[]{getlabel(context,R.string.unit)}, row0, row1,new View[]{scalelabel},new View[]{fixatex,fixatey}, row2,new View[]{levelleft},hasnfc?(new View[]{globalscan,nfcsound}):null, new View[]{xdripbroadcast},new View[]{jugglucobroadcast},new View[]{uploader},new View[]{floatconfig,floatglucose},camornum,rowglu,new View[]{colbut,display},new View[]{cancel,ok},new View[] {getlabel(context,BuildConfig.BUILD_TIME)},new View[]{getlabel(context,BuildConfig.VERSION_NAME)},new View[]{getlabel(context,codestr) }};;
+	       uploader.setOnClickListener(v-> tk.glucodata.NightPost.config(context,thelayout[0]));
 		}
 	else {
 		View[] row8;

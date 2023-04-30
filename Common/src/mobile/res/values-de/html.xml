@@ -196,9 +196,22 @@ empfangen (receive)</p>
 
 </p>
 <p align="left" style="line-height: 100%; margin-bottom: 0in"><span lang="de-DE">Weitere
-Informationen zu Mirror-Verbindungen finden Sie in der Hilfe unter
-&quot;</span><span lang="de-DE"><i>Verbindung hinzufügen</i></span><span lang="de-DE">&quot;
-und unter </span><a class="western" href="https://www.juggluco.nl/Juggluco/mmol.html#mirror"><font><span lang="de-DE"><u>https://www.juggluco.nl/Juggluco/mmol.html#mirror</u></span></font></a></p>
+Informationen zu </span><span lang="de-DE">Klon</span><span lang="de-DE">-Verbindungen
+finden Sie in der Hilfe unter &quot;</span><span lang="de-DE"><i>Verbindung
+hinzufügen</i></span><span lang="de-DE">&quot; und unter
+</span><a class="western" href="https://www.juggluco.nl/Juggluco/mgdL#mirror"><span lang="de-DE"><u>https://www.juggluco.nl/Juggluco/</u></span><span lang="de-DE"><u>mgdL</u></span><span lang="de-DE"><u>#mirror</u></span></a></p>
+<h1>Desktop-Computer</h1>
+<p align="left" style="line-height: 100%; margin-bottom: 0in"><span lang="de-DE"><span style="text-decoration: none">Sie
+können die Android Juggluco-App mit Hilfe eines Android-Emulators
+(z. B. <a class="western" href="https://www.genymotion.com/">Genymotion</a>)
+auf einem Windows-, Macintosh- oder Linux-Computer ausführen. Der
+Juggluco auf dem Emulator erhält die Daten über eine
+</span></span><span lang="de-DE"><span style="text-decoration: none">Klon</span></span><span lang="de-DE"><span style="text-decoration: none">-Verbindung
+von einem mit dem Sensor verbundenen Android-Telefon.
+Pinch-Bewegungen (Bewegen zweier Finger zueinander oder voneinander
+weg) können durch Drücken einer Taste (Control in
+Genymotion),während der Maus bewegt wird</span></span><span lang="de-DE"><span style="text-decoration: none">,</span></span><span lang="de-DE"><span style="text-decoration: none">
+simuliert werden.</span></span></p>
 ]]>
 </string>
 <string name="addconnection" >
@@ -2275,7 +2288,7 @@ Sie adb verwenden, um diese Berechtigung zu erteilen:</font></font></p>
 grant tk.glucodata android.permission.SYSTEM_ALERT_WINDOW</b></p>
 <p style="line-height: 100%; margin-bottom: 0in">Bei einigen Uhren
 (z. B. TicWatch Pro) können Sie dies auch zulassen mit:
-Android-Einstellungen-&gt;Apps &amp; Benachrichtigungen-&gt;
+Android/WearOS-Einstellungen-&gt;Apps &amp; Benachrichtigungen-&gt;
 App-Info-&gt;Juggluco-&gt;Erweitert-&gt;<font face="Liberation Serif, serif">Ü</font>ber
 anderen Apps einblenden.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><br/>
@@ -2336,9 +2349,9 @@ App können mit http verwendet werden, wenn „</span><span lang="de-DE"><i>Nur
 lokal</i></span>“ <span lang="de-DE">nicht eingestellt ist.</span>
 <span lang="de-DE">Unter MacOS gilt dasselbe für Nightscout Menu
 Bar, Gluco Status und Gluco Tracker (alle im Apple Store).</span>
-<span lang="de-DE">Auch für <a href="https://github.com/someoneAnyone/Nightscouter">Nightscouter</a></span><span lang="de-DE">
-u</span><span lang="de-DE">nd <a href="https://github.com/jonfawcett/LoopFollow">LoopFollow</a>
-</span><span lang="de-DE">(IOS) und <a href="https://github.com/nightscout/nightguard">Nightguard</a>
+<span lang="de-DE">Auch für <a href="https://github.com/someoneAnyone/Nightscouter">Nightscouter</a></span>
+<span lang="de-DE">und <a href="https://github.com/jonfawcett/LoopFollow">LoopFollow</a>
+(IOS) und <a href="https://github.com/nightscout/nightguard">Nightguard</a>
 (IOS und WatchOS) benötigen Sie nur http.</span></p>
 <p style="line-height: 100%; margin-bottom: 0in">Wenn Sie über das
 Internet auf Juggluco zugreifen möchten, müssen Sie einen Port von
@@ -2408,8 +2421,10 @@ können ihnen Glukosewerte mit der xDrip-Broadcast in Juggluco senden
 <p style="line-height: 100%; margin-bottom: 0in">SSL benötigen Sie
 für die Android-Apps Diabetes:M, <a href="https://play.google.com/store/apps/details?id=se.cornixit.nightwatch">Nightwatch</a>
 und <a href="https://slingithub.github.io/CheckmateWeb">Checkmate</a>,
-Sugarmate (MacOS) und <a href="https://github.com/JohanDegraeve/xdripswift">Xdrip4ios</a>.
-<span lang="de-DE">Geben Sie als Nightscout-Server-URL an: </span>
+Sugarmate (MacOS und IOS) und <a href="https://github.com/JohanDegraeve/xdripswift">Xdrip4ios</a>,
+Shuggah und Cockpit (IOS).</p>
+<p style="line-height: 100%; margin-bottom: 0in">Geben Sie als
+Nightscout-Server-URL an: 
 </p>
 <p><i>https://hostname:port</i> 
 </p>
@@ -2425,7 +2440,11 @@ Ein anderes Telefon kann sich über eine Klonverbindung oder als
 Nightscout-Follower (z. B. auf einem iPhone) mit diesem Server
 verbinden. Wenn es eine Nightscout-App gibt, die mit diesem Webserver
 nicht funktioniert, teilen Sie es mir bitte mit. Vielleicht kann es
-mit ein paar Änderungen zum Laufen gebracht werden.</p>
+mit ein paar Änderungen zum Laufen gebracht werden. (Die IOS-Apps
+Nightscout und Nightscout X und die Android-App NSClient sind
+spezifisch für ein bestimmtes Nightscout-Serverprogramm und
+funktionieren nicht mit Juggluco.) 
+</p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>api_secret</b>:
 Geben Sie an, dass Follower das HTTP-Header-Element api<b>_</b>secret
 auf diesen Wert setzen sollen. In Juggluco 4.9.1 oder höher
@@ -2515,15 +2534,12 @@ hochladen.
 </p>
 <p>In den meisten Fällen können Sie auch den Webserver in Juggluco
 oder <a href="https://www.juggluco.nl/Juggluco/cmdline">juggluco-server</a>
-verwenden. Nur AAPS und NSclient verweigern die Arbeit, wenn <a href="https://github.com/nightscout/cgm-remote-monitor">cgm-remote-monitor</a> nicht verbunden ist.</p>
-<p>AAPS funktioniert nicht, wenn keine Verbindung zu einem
-Nightscout-Server besteht. Wenn die Funktionalität dieser
-künstlichen Bauchspeicheldrüse wirklich von einem Nightscout-Server
-abhängt, könnten sie den Nightscout-Server besser in AAPS stellen,
-anstatt ihn gefährlich von einer Internetverbindung abhängig zu
-machen. Wenn die Kernfunktionen von AAPS nicht von Nightscout
-abhängig sind, könnten sie besser die Verpflichtung zur Nutzung
-dieses Nightscout-Servers aufheben.</p>
+verwenden. Nur AAPS und NSclient verweigern die Arbeit, wenn
+<a href="https://github.com/nightscout/cgm-remote-monitor">cgm-remote-monitor</a>
+nicht verbunden ist. Der Webserver in Juggluco gibt auch Mengen in
+Form von Nightscout-Behandlungen aus (
+<a href="https://www.juggluco.nl/Juggluco/webserver.html">https://www.juggluco.nl/Juggluco/webserver.html</a>),
+der Uploader lädt nur Glukosewerte hoch.</p>
 <p>Alle Stream-Werte werden im Moment ihres Eintreffens auf den
 Nightscout-Server hochgeladen. Wenn mehrere Sensoren verwendet
 werden, werden alle Werte aller Sensoren hochgeladen. Einige Garmin
@@ -2542,6 +2558,14 @@ Nightscout-Server hoch</p>
 wenn sie vom Sensor oder einer Klonverbindung ankommen. Drücken Sie
 auf diese Schaltfläche, wenn ein vorheriger Versuch aus irgendeinem
 Grund fehlgeschlagen ist.</p>
+<p>Die WearOS-Version Juggluco 4.15.0 und höher kann auch
+Glukosewerte auf Nightscout hochladen. In fast allen Fällen können
+Sie sie besser über eine Juggluco-Version auf einem Telefon oder
+Tablet oder über einen Juggluco-Server auf einem Computer senden.
+Dadurch wird der Akku entladen, insbesondere wenn keine Verbindung
+zum Nightscout-Server hergestellt werden kann, sodass Sie <i>Active</i>
+besser ausschalten können, wenn keine zuverlässige Verbindung
+besteht.</p>
 ]]>
 </string>
 </resources>

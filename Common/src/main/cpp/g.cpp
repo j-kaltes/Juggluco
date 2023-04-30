@@ -642,9 +642,7 @@ extern "C" JNIEXPORT jlong JNICALL   fromjava(processTooth)(JNIEnv *envin, jclas
 			LOGGER("processTooth finished=%d\n", senso->finished);
 			senso->finished=0;
 			backup->wakebackup(Backup::wakestream);
-			#ifndef WEAROS
 			wakeuploader();
-			#endif
 
 			return res;
 			}

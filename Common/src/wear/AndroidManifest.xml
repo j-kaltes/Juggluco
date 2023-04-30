@@ -13,6 +13,7 @@
     <uses-permission android:name="android.permission.BODY_SENSORS"/>
     <uses-permission android:name="android.permission.BODY_SENSORS_BACKGROUND "/>
     <application
+     android:usesCleartextTraffic="true"
     android:debuggable="true"
 
     android:name="tk.glucodata.Applic"

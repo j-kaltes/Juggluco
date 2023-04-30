@@ -21,7 +21,7 @@
 
 #define PERCENTILES 1
 
-#include <jni.h>
+//#include <jni.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -36,7 +36,6 @@
 
 
 
-#include "fromjava.h"
 #include "curve.h"
 #include "nanovg_gl.h"
 #include "nanovg_gl_utils.h"
@@ -88,7 +87,6 @@ void cpcolors(NVGcolor *foreground) {
 		}
 	}
 
-static float screenwidthcm=0;
 
 void createcolors() {
 	NVGcolor *foreground=settings->data()->colors;
@@ -134,16 +132,9 @@ void createcolors() {
 		}
 	}
 
-// white={{{0,0,0,1.0}}}; black=nvgRGBAf(1.0,1.0,1.0,1.0);
-// ----------------------------------------------------------------------------
-
-//#define fromjava(x) Java_none_libre_glucosecurve_GLES3JNILib_  ##x
-
-//JNIEXPORT void JNICALL Java_tk_glucodata_Glucose_nfcdata(JNIEnv *env, jobject thiz, jbyteArray uid, jbyteArray info,jbyteArray data) {
-//s/Java_com_android_gles3jni_GLES3JNILib_\([a-zA-Z]*\)(/fromjava(\1)(/g
 
 
-NVGcontext* vg=nullptr;
+NVGcontext* genVG=nullptr;
 	int font=0,menufont=0,monofont=0,whitefont=-1,blackfont=0;
 float headheight;
 //Numdata *numdata=nullptr;
@@ -177,15 +168,6 @@ float smallerlen;
 
 int duration=8*60*60;
 extern bool fixatex,fixatey;
-
-extern "C" JNIEXPORT jint JNICALL fromjava(openglversion)(JNIEnv* env, jclass obj) {
-#ifdef NANOVG_GLES2_IMPLEMENTATION
-	return 2;
-#else
-	return 3;
-#endif
-}
-
 int showstream=1;
 int showscans=1;
 int showhistories=1;
@@ -197,7 +179,7 @@ float valuesize=0;
 
 float facetimefontsize,facetimey;
 void resetcurvestate();
-extern "C" JNIEXPORT void JNICALL fromjava(initopengl)(JNIEnv* env, jclass obj,jboolean started) {
+void	initopengl(int started)  {
 	if(!started) {
 	    resetcurvestate();
 	    }
@@ -208,9 +190,7 @@ extern "C" JNIEXPORT void JNICALL fromjava(initopengl)(JNIEnv* env, jclass obj,j
     printGlString("Renderer", GL_RENDERER);
     printGlString("Extensions", GL_EXTENSIONS);
 
-//    const char* versionStr = (const char*)glGetString(GL_VERSION); if (strstr(versionStr, "OpenGL ES 3.")) 
-//	vg = (version==2?nvgCreateGLES2:nvgCreateGLES3)(NVG_ANTIALIAS | NVG_STENCIL_STROKES
-	vg = 
+   decltype(::genVG)	genVG = 
 
 #ifdef NANOVG_GLES2_IMPLEMENTATION
 	nvgCreateGLES2
@@ -226,10 +206,12 @@ extern "C" JNIEXPORT void JNICALL fromjava(initopengl)(JNIEnv* env, jclass obj,j
 
 	);
 
-	if (vg == nullptr) {
+	if (genVG == nullptr) {
 		LOGGER("Could not init nanovg.");
 		return ;
 		}
+	::genVG=genVG;
+	
 
 const char standardfonts[][41]= {
 "/system/fonts/Roboto-Black.ttf",
@@ -250,14 +232,14 @@ const char menufonts[][41]={
 "/system/fonts/DroidSans.ttf"};
 
 	for(const char *name:standardfonts)  {
-		if((blackfont = nvgCreateFont(vg, "dance-bold", name))!=-1)
+		if((blackfont = nvgCreateFont(genVG, "dance-bold", name))!=-1)
 			break;
 		}
-	if((whitefont= nvgCreateFont(vg, "dance-bold", "/system/fonts/Roboto-Regular.ttf"))==-1)
+	if((whitefont= nvgCreateFont(genVG, "dance-bold", "/system/fonts/Roboto-Regular.ttf"))==-1)
 		whitefont=blackfont;
 
 	for(const char *name:menufonts)  {
-		if((menufont = nvgCreateFont(vg, "regular", name))!=-1)
+		if((menufont = nvgCreateFont(genVG, "regular", name))!=-1)
 			break;
 		}
 	if(invertcolors)
@@ -265,34 +247,34 @@ const char menufonts[][41]={
 	else
 		font=blackfont;
 
-	nvgFontFaceId(vg,font);
-	nvgFontSize(vg, headsize);
+	nvgFontFaceId(genVG,font);
+	nvgFontSize(genVG, headsize);
 	constexpr const char smaller[]="<";
 	bounds_t bounds;
-	nvgTextBounds(vg, 0,  0, smaller,smaller+sizeof(smaller)-1, bounds.array);
+	nvgTextBounds(genVG, 0,  0, smaller,smaller+sizeof(smaller)-1, bounds.array);
 	smallerlen=bounds.xmax-bounds.xmin;
 
-	nvgTextMetrics(vg, nullptr,nullptr, &headheight);
+	nvgTextMetrics(genVG, nullptr,nullptr, &headheight);
 	headheight*=0.7;
-	nvgFontSize(vg, smallsize);
-	nvgTextMetrics(vg, nullptr,nullptr, &smallfontlineheight);
+	nvgFontSize(genVG, smallsize);
+	nvgTextMetrics(genVG, nullptr,nullptr, &smallfontlineheight);
 	constexpr const char timestring[]="29:59";
-	nvgTextBounds(vg, 0,  0, timestring,timestring+sizeof(timestring)-1, bounds.array);
+	nvgTextBounds(genVG, 0,  0, timestring,timestring+sizeof(timestring)-1, bounds.array);
 	timelen=bounds.xmax-bounds.xmin;
 
 
 
 
 	const char listitem[]="39-08-2028 09-59 RRRRRRRRRRR 999.9";     
-	nvgTextBounds(vg, 0,  0, listitem,listitem+sizeof(listitem)-1, bounds.array);
+	nvgTextBounds(genVG, 0,  0, listitem,listitem+sizeof(listitem)-1, bounds.array);
 	listitemlen=bounds.xmax-bounds.xmin+smallsize;
 
 	constexpr const char exampl[]="0M0063KNUJ0";
 	float xhalf=dwidth/2;
 	float yhalf=dheight/2;
-	nvgFontSize(vg, mediumfont);
-	nvgTextAlign(vg,NVG_ALIGN_LEFT|NVG_ALIGN_TOP);
-	 nvgTextBounds(vg, xhalf,  yhalf,exampl, exampl+sizeof(exampl)-1,(float *)&sensorbounds);
+	nvgFontSize(genVG, mediumfont);
+	nvgTextAlign(genVG,NVG_ALIGN_LEFT|NVG_ALIGN_TOP);
+	 nvgTextBounds(genVG, xhalf,  yhalf,exampl, exampl+sizeof(exampl)-1,(float *)&sensorbounds);
 	 sensorbounds.right-=sensorbounds.left;
 	 sensorbounds.bottom-=sensorbounds.top;
 	 sensorbounds.left-=xhalf;
@@ -306,75 +288,29 @@ const char menufonts[][41]={
 	createcolors();
 	invertcolors=settings->data()->invertcolors;
          startincolors=startbackground*invertcolors;
-    }
+	 }
 
 
 bool alarmongoing=false;
-extern "C" JNIEXPORT jboolean JNICALL fromjava(getisalarm)(JNIEnv* env, jclass obj) {
-	return alarmongoing;
-	}
-extern "C" JNIEXPORT void JNICALL fromjava(setisalarm)(JNIEnv* env, jclass obj,jboolean val) {
-	alarmongoing=val;
-	}
-	/*
-extern "C" JNIEXPORT jboolean JNICALL fromjava(gettoucheverywhere)(JNIEnv* env, jclass obj) {
-	return! settings->data()->specificstopalarm;
-	}
-extern "C" JNIEXPORT void JNICALL fromjava(settoucheverywhere)(JNIEnv* env, jclass obj,jboolean val) {
-	settings->data()->specificstopalarm=!val;
-	}*/
-extern "C" JNIEXPORT jboolean JNICALL fromjava(turnoffalarm)(JNIEnv* env, jclass obj) {
-//	return alarmongoing&&!settings->data()->specificstopalarm;
-	return alarmongoing;
-	}
 
 
-//float rotation=	-NVG_PI/2.0;
-extern "C" JNIEXPORT void JNICALL fromjava(resize)(JNIEnv* env, jclass obj, jint widthin, jint heightin,jint initscreenwidth) {
-/*
-LOGGER("resizein(%d,%d)\n",widthin,heightin);
-if(widthin<heightin)  {
-	width=heightin;
-	height=widthin;
- 	rotation=-NVG_PI/2.0;
-	}
-else {
+void resizescreen(int widthin, int heightin,int initscreenwidth) {
 	width=widthin;
 	height=heightin;
- 	rotation=0.0;
-	} */
-width=widthin;
-height=heightin;
-LOGGER("resize(%d,%d)\n",width,height);
-//::width=width;
-//::height=height;
-dheight=height-dtop-dbottom,dwidth=width-dleft-dright; //Display area for graph in pixels
+	LOGGER("resize(%d,%d)\n",width,height);
+	dheight=height-dtop-dbottom,dwidth=width-dleft-dright; //Display area for graph in pixels
 
-textheight=density*48;
-int times=ceil(height/textheight);
-textheight=height/times;
-/*
-struct init {
-init(int initscreenwidth, int width) {
-	if(initscreenwidth>=width) {
-		menustr0[0]={"",0};
-		menuopt0[0]=nullptr;
-		}
-	 showui=settings->getui();
-	  }
+	textheight=density*48;
+	int times=ceil(height/textheight);
+	textheight=height/times;
+	menutextheight=density*48;
 
-	 };
-static struct init once(initscreenwidth,width);	
-*/
-
-menutextheight=density*48;
-
-extern const int maxmenulen;
-const float maxmenu= (float)dheight/maxmenulen;
-if(menutextheight>maxmenu)
-	menutextheight=maxmenu;
-	
-LOGGER("menutextheight=%f\n", menutextheight);
+	extern const int maxmenulen;
+	const float maxmenu= (float)dheight/maxmenulen;
+	if(menutextheight>maxmenu)
+		menutextheight=maxmenu;
+		
+	LOGGER("menutextheight=%f\n", menutextheight);
 
 	float facetimelen=2.0f*dwidth/3.0f;
 	LOGGER("facetimelen=%.1f\n",facetimelen);
@@ -401,7 +337,7 @@ static float dayEndStrokeWidth;
 static float nowLineStrokeWidth;
 static float pointRadius;
 float foundPointRadius,arrowstrokewidth;
-extern "C" JNIEXPORT void JNICALL fromjava(setfontsize)(JNIEnv* env, jclass obj, jfloat small,jfloat menu,jfloat density,jfloat headin) {
+void setfontsize(float small,float menu,float density,float headin) {
 float head=headin
 #ifdef WEAROS
 *0.7
@@ -565,10 +501,10 @@ getminmax(
 daylabel:
 	char buf[128];
 	auto endstr=daystr(hist.timeatpos((1+lastpos+firstpos)/2),buf);
-	nvgFillColor(vg, datecolor);
-	nvgTextAlign(vg,NVG_ALIGN_CENTER|NVG_ALIGN_MIDDLE);
-	nvgFontSize(vg, headsize);
-	nvgText(vg, dwidth/2+dleft,dtop+dheight/2, buf, buf+endstr);
+	nvgFillColor(genVG, datecolor);
+	nvgTextAlign(genVG,NVG_ALIGN_CENTER|NVG_ALIGN_MIDDLE);
+	nvgFontSize(genVG, headsize);
+	nvgText(genVG, dwidth/2+dleft,dtop+dheight/2, buf, buf+endstr);
 
 		*/
 
@@ -674,8 +610,8 @@ static void		sidenum(const float posx,const float posy,const char *buf,const int
 			align|=NVG_ALIGN_LEFT;
 			valx+=smallsize*afw;
 			}
-		nvgTextAlign(vg,align);
-		nvgText(vg, valx,posy, buf, buf+len);
+		nvgTextAlign(genVG,align);
+		nvgText(genVG, valx,posy, buf, buf+len);
 		}
 
 static uint32_t getmaxlabel() { return settings->getlabelcount(); }
@@ -688,8 +624,10 @@ int shownlabels;
 //x=(y-A)/D;
 jfloat tapx=-700,tapy;
 bool selshown=false;
-#include "numdisplay.h"
+//#include "numdisplay.h"
 //vector<NumDisplay*> numdatas;
+
+#include "numdisplayfuncs.h"
 extern vector<NumDisplay*> numdatas;
 /*
 bool updatenums(int sock,struct changednums *nums) {
@@ -714,33 +652,16 @@ int typeatheight(const float h) {
 	return -1;	
 	}
 
-/*
-int numheighttype(cont float h) {
 
-	float schuif=smallfontlineheight*3;
-	int volg=round((shownlabels-1)*(h-(dtop+schuif))/(dheight-schuif-smallfontlineheight/2));
-	for(int i=0;i<shownlabels;i++) 
-		if(numheight[i]==volg)
-			return volg;
-	}
-	*/
-
-extern "C" JNIEXPORT jfloat JNICALL fromjava(freey) (JNIEnv *env, jclass clazz) {
+float getfreey() {
 	const int nrlabs=getmaxlabel();
 	static const int mid=nrlabs/2-1;
 	static const float midh=numtypeheight(mid);
-//	const float dmid=dtop+dheight/2.0f;
-//	if(abs(dmid-mid)>(smallsize*2)) return dmid;
 	static  float boven=numtypeheight(mid+1);
 	return (boven+midh)/2.0f;
 	}
 
 
-//	float labelweight[7]={[6]=180.0f};
-//template <class TX,class TY> void showNums(NVGcontext* vg,const Num *low,const Num *high,  TX &&transx,  TY &&transy) {
-
-
-//time_t showtime=0;
 static bool glucosepointinfo(time_t tim,uint32_t value,   float posx, float posy) {
 	if((!selshown&&nearby(posx-tapx,posy-tapy))) {
 		constexpr int maxbuf=50;
@@ -749,14 +670,14 @@ static bool glucosepointinfo(time_t tim,uint32_t value,   float posx, float posy
 		 struct tm *tms=localtime_r(&tim,&tmbuf);
 
 		int len=snprintf(buf,maxbuf,"%02d:%02d", tms->tm_hour,mktmmin(tms));
-		nvgFontSize(vg, smallsize);
-		nvgTextAlign(vg,NVG_ALIGN_CENTER|NVG_ALIGN_MIDDLE);
+		nvgFontSize(genVG, smallsize);
+		nvgTextAlign(genVG,NVG_ALIGN_CENTER|NVG_ALIGN_MIDDLE);
 		float cor=((posy-dtop)<(dheight/2))?smallsize:-smallsize;
-		nvgText(vg, posx,posy+cor*.92, buf, buf+len);
+		nvgText(genVG, posx,posy+cor*.92, buf, buf+len);
 	 	len=snprintf(buf,maxbuf,gformat, gconvert(value));
 		sidenum(posx,posy,buf,len,false);
 		
-	//	nvgText(vg, posx,posy+cor*.92*2, buf, buf+len);
+	//	nvgText(genVG, posx,posy+cor*.92*2, buf, buf+len);
 
 		selshown=true;
 		return true;
@@ -764,7 +685,7 @@ static bool glucosepointinfo(time_t tim,uint32_t value,   float posx, float posy
 	return false;
 	}
 static bool glucosepoint(time_t tim,uint32_t value,   float posx, float posy) {
-	nvgCircle(vg, posx,posy,pointRadius);
+	nvgCircle(genVG, posx,posy,pointRadius);
 	return glucosepointinfo(tim,value,posx,posy);
 	}
 constexpr const int nfclen=344;
@@ -789,10 +710,10 @@ nfc(const string &base, const sensor *sens,const time_t d):nfcdata(new uint8_t[n
 
 static void endstep() ;
 static bool emptytap=false;
-template <class TX,class TY> bool showScan(NVGcontext* vg,const ScanData *low,const ScanData *high,  const TX &transx,  const TY &transy,const int colorindex) {
+template <class TX,class TY> bool showScan(NVGcontext* genVG,const ScanData *low,const ScanData *high,  const TX &transx,  const TY &transy,const int colorindex) {
 
-	nvgFillColor(vg,*getcolor(colorindex));
-	nvgBeginPath(vg);
+	nvgFillColor(genVG,*getcolor(colorindex));
+	nvgBeginPath(genVG);
 	bool search=scansearchtype==(scansearchtype&searchdata.type);
 	for(const ScanData *it=low;it!=high;it++) {
 		if(it->valid()) {
@@ -800,33 +721,33 @@ template <class TX,class TY> bool showScan(NVGcontext* vg,const ScanData *low,co
 			const auto glu=it->g*10;
 			const auto posx= transx(tim),posy=transy(glu);
 			if(search&&searchdata(it)) 
-				nvgCircle(vg, posx,posy,foundPointRadius);
+				nvgCircle(genVG, posx,posy,foundPointRadius);
 			else {
 				if(glucosepoint(tim,glu,posx,posy))
 					lasttouchedcolor=colorindex;
 				}
 			}
 		}
-	nvgFill(vg);
+	nvgFill(genVG);
 	return true;
 	}
-	//			nvgCircle(vg, posx,posy,;
+	//			nvgCircle(genVG, posx,posy,;
 	
 
 static void makecircle(float posx,float posy) {
-	nvgBeginPath(vg);
-	nvgCircle(vg, posx,posy,pointRadius);
-	nvgFill(vg);
+	nvgBeginPath(genVG);
+	nvgCircle(genVG, posx,posy,pointRadius);
+	nvgFill(genVG);
 
 	}
 
-template <class TX,class TY> void showlineScan(NVGcontext* vg,const ScanData *low,const ScanData *high,  const TX &transx,  const TY &transy,const int colorindex) {
+template <class TX,class TY> void showlineScan(NVGcontext* genVG,const ScanData *low,const ScanData *high,  const TX &transx,  const TY &transy,const int colorindex) {
 	bool search=streamsearchtype==(streamsearchtype&searchdata.type);
 	if(search) {
-		nvgBeginPath(vg);
-//		nvgStrokeColor(vg, yellow); nvgFillColor(vg, yellow);
-		nvgStrokeColor(vg, *getyellow()); nvgFillColor(vg, *getyellow());
-		nvgStrokeWidth(vg, hitStrokeWidth);
+		nvgBeginPath(genVG);
+//		nvgStrokeColor(genVG, yellow); nvgFillColor(genVG, yellow);
+		nvgStrokeColor(genVG, *getyellow()); nvgFillColor(genVG, *getyellow());
+		nvgStrokeWidth(genVG, hitStrokeWidth);
 		bool restart=true,first;
 		uint32_t late=0,dif=pollgapdist;
 		bool washit=false;
@@ -838,7 +759,7 @@ template <class TX,class TY> void showlineScan(NVGcontext* vg,const ScanData *lo
 					const auto posx= transx(tim),posy=transy(glu);
 					if(washit) {
 						if(!restart&&tim>late) {
-							nvgStroke(vg);
+							nvgStroke(genVG);
 							if(first)
 								makecircle(prevx,prevy);
 							restart=true;
@@ -849,14 +770,14 @@ template <class TX,class TY> void showlineScan(NVGcontext* vg,const ScanData *lo
 						restart=true;
 						}
 					if(restart) {
-						nvgBeginPath(vg);
-						 nvgMoveTo(vg, posx,posy);
+						nvgBeginPath(genVG);
+						 nvgMoveTo(genVG, posx,posy);
 						 restart=false;
 						 first=true;
 						 }
 					else {
 						first=false;
-						nvgLineTo( vg,posx,posy);
+						nvgLineTo( genVG,posx,posy);
 						}
 					late=tim+dif;
 					prevx=posx;
@@ -864,7 +785,7 @@ template <class TX,class TY> void showlineScan(NVGcontext* vg,const ScanData *lo
 					}
 			else {
 				if(washit&&!restart) {
-					nvgStroke(vg);
+					nvgStroke(genVG);
 					if(first)
 						makecircle(prevx,prevy);
 					}
@@ -875,17 +796,17 @@ template <class TX,class TY> void showlineScan(NVGcontext* vg,const ScanData *lo
 			}
 		if(washit) {	
 			if(!restart)
-				nvgStroke(vg);
+				nvgStroke(genVG);
 			if(first)
 				makecircle(prevx,prevy);
 			}
 		}
 	bool restart=true;
-	nvgBeginPath(vg);
+	nvgBeginPath(genVG);
 	const NVGcolor *col=getcolor(colorindex);
-	nvgStrokeColor(vg, *col);
-	nvgFillColor(vg,*col);
-	nvgStrokeWidth(vg, pollCurveStrokeWidth);
+	nvgStrokeColor(genVG, *col);
+	nvgFillColor(genVG,*col);
+	nvgStrokeWidth(genVG, pollCurveStrokeWidth);
 	uint32_t late=0,dif=5*60;
 	float startx=-1000,starty=-1000;
 	for(const ScanData *it=low;it!=high;it++) {
@@ -895,52 +816,52 @@ template <class TX,class TY> void showlineScan(NVGcontext* vg,const ScanData *lo
 				const auto posx= transx(tim),posy=transy(glu);
 
 				if(!restart&&tim>late) {
-					nvgStroke(vg);
+					nvgStroke(genVG);
 					if(startx>=0) {
-						nvgBeginPath(vg);
-						nvgCircle(vg, startx,starty,pollCurveStrokeWidth);
-						nvgFill(vg);
+						nvgBeginPath(genVG);
+						nvgCircle(genVG, startx,starty,pollCurveStrokeWidth);
+						nvgFill(genVG);
 						 }
 					restart=true;
 					}
 				if(restart) {
-					nvgBeginPath(vg);
-					 nvgMoveTo(vg, posx,posy);
+					nvgBeginPath(genVG);
+					 nvgMoveTo(genVG, posx,posy);
 					 startx=posx,starty=posy;
 					 restart=false;
 					 }
 				else {
 					 startx=starty=-1000.0f;
-					nvgLineTo( vg,posx,posy);
+					nvgLineTo( genVG,posx,posy);
 					}
 
 				late=tim+dif;
 
 				if(glucosepointinfo(tim,glu, posx, posy) ) {
-					nvgLineTo( vg,posx,posy);
-					nvgStroke(vg);
-					nvgBeginPath(vg);
-					nvgCircle(vg, posx,posy,pointRadius*1.3);
-					nvgFill(vg);
-					nvgBeginPath(vg);
-					nvgMoveTo(vg, posx,posy);
+					nvgLineTo( genVG,posx,posy);
+					nvgStroke(genVG);
+					nvgBeginPath(genVG);
+					nvgCircle(genVG, posx,posy,pointRadius*1.3);
+					nvgFill(genVG);
+					nvgBeginPath(genVG);
+					nvgMoveTo(genVG, posx,posy);
 					lasttouchedcolor=colorindex;
 					}
 				}
 			else {
 				/*
 				if(!restart) {
-					nvgStroke(vg);
+					nvgStroke(genVG);
 					restart=true;
 					} */
 				}
 		}
 
-		nvgStroke(vg);
+		nvgStroke(genVG);
 		if(startx>=0) {
-			nvgBeginPath(vg);
-			nvgCircle(vg, startx,starty,pollCurveStrokeWidth);
-			nvgFill(vg);
+			nvgBeginPath(genVG);
+			nvgCircle(genVG, startx,starty,pollCurveStrokeWidth);
+			nvgFill(genVG);
 			 }
 		}
 
@@ -974,10 +895,10 @@ pair<int32_t,int32_t> histPositions(const SensorGlucoseData  * hist, const uint3
 	return {firstpos,lastpos};
 	}
 
-template <class TX,class TY> void histcurve(NVGcontext* vg,const SensorGlucoseData  * hist, const int32_t firstpos, const int32_t lastpos,const TX &xtrans,const TY &ytrans,const int colorindex) {
+template <class TX,class TY> void histcurve(NVGcontext* genVG,const SensorGlucoseData  * hist, const int32_t firstpos, const int32_t lastpos,const TX &xtrans,const TY &ytrans,const int colorindex) {
 	const NVGcolor *col=getcolor(colorindex);
-	nvgStrokeColor(vg, *col);
-	nvgFillColor(vg,*col);
+	nvgStrokeColor(genVG, *col);
+	nvgFillColor(genVG,*col);
 	 bool restart=true;
 	for(auto pos=firstpos;pos<=lastpos;pos++) {
 		const Glucose *histglu=hist->getglucose(pos);
@@ -987,24 +908,24 @@ template <class TX,class TY> void histcurve(NVGcontext* vg,const SensorGlucoseDa
 			bool oncurve=glucosepointinfo(tim,glu, posx, posy);
 			if(restart) {
 				if(oncurve) {
-					nvgBeginPath(vg);
-					nvgCircle(vg, posx,posy,pointRadius*1.3);
-					nvgFill(vg);
+					nvgBeginPath(genVG);
+					nvgCircle(genVG, posx,posy,pointRadius*1.3);
+					nvgFill(genVG);
 					lasttouchedcolor=colorindex;
 					}
-				nvgBeginPath(vg);
-				 nvgMoveTo(vg, posx,posy);
+				nvgBeginPath(genVG);
+				 nvgMoveTo(genVG, posx,posy);
 				 restart=false;
 				 }
 			else {
-				nvgLineTo( vg, posx,posy);
+				nvgLineTo( genVG, posx,posy);
 				if(oncurve) {
-					nvgStroke(vg);
-					nvgBeginPath(vg);
-					nvgCircle(vg, posx,posy,pointRadius*1.3);
-					nvgFill(vg);
-					nvgBeginPath(vg);
-					nvgMoveTo(vg, posx,posy);
+					nvgStroke(genVG);
+					nvgBeginPath(genVG);
+					nvgCircle(genVG, posx,posy,pointRadius*1.3);
+					nvgFill(genVG);
+					nvgBeginPath(genVG);
+					nvgMoveTo(genVG, posx,posy);
 					lasttouchedcolor=colorindex;
 					}
 				}
@@ -1012,15 +933,15 @@ template <class TX,class TY> void histcurve(NVGcontext* vg,const SensorGlucoseDa
 			}
 		else {
 			if(!restart) {
-				nvgStroke(vg);
+				nvgStroke(genVG);
 				restart=true;
 				}
 			}
 		}
 	if(!restart)
-		nvgStroke(vg);
+		nvgStroke(genVG);
 	if((searchdata.type&historysearchtype)==historysearchtype) {
-		nvgBeginPath(vg);
+		nvgBeginPath(genVG);
 		for(auto pos=firstpos;pos<=lastpos;pos++) {
 			const Glucose *glu=hist->getglucose(pos);
 			if(searchdata(glu)) {
@@ -1029,12 +950,12 @@ template <class TX,class TY> void histcurve(NVGcontext* vg,const SensorGlucoseDa
 					const auto sput=glu->getsputnik();
 					auto xc=xtrans(tim);
 					auto yc= ytrans(sput);
-					nvgCircle(vg,xc,yc,foundPointRadius);
+					nvgCircle(genVG,xc,yc,foundPointRadius);
 					}
-//				nvgCircle(vg, xtrans(glu->time),ytrans(glu->getsputnik()),foundPointRadius); //Bus Error in release arm32
+//				nvgCircle(genVG, xtrans(glu->time),ytrans(glu->getsputnik()),foundPointRadius); //Bus Error in release arm32
 				}
 			}
-		nvgFill(vg);
+		nvgFill(genVG);
 		}
 	}
 
@@ -1111,7 +1032,7 @@ void begrenstijd() {
 uint32_t settime=0;
 uint32_t setend=0;
 
-pair<float,float> drawtrender(NVGcontext* vg,const std::array<uint16_t,16> &trend,const float x,const float y,const float w,const float h) {
+pair<float,float> drawtrender(NVGcontext* genVG,const std::array<uint16_t,16> &trend,const float x,const float y,const float w,const float h) {
 	auto minel=std::min_element(trend.begin(),trend.end());
 	auto maxel=std::max_element(trend.begin(),trend.end());
 	 const int low=minel-trend.begin();
@@ -1126,10 +1047,10 @@ pair<float,float> drawtrender(NVGcontext* vg,const std::array<uint16_t,16> &tren
 	constexpr float hglurange=2*180;
 	const auto gety=[y,h,mid](const short val)->float  { return y+h/2.0-(((val-mid)/hglurange)*h);};
 	const int step=w/(trend::num-1);
-	nvgBeginPath(vg);
-	 nvgStrokeWidth(vg, TrendStrokeWidth);
-//	nvgStrokeColor(vg, white);
-	nvgStrokeColor(vg, *getblack());
+	nvgBeginPath(genVG);
+	 nvgStrokeWidth(genVG, TrendStrokeWidth);
+//	nvgStrokeColor(genVG, white);
+	nvgStrokeColor(genVG, *getblack());
 	int i=0;
 	unsigned short glu0;
 	for(;!(glu0=trend[i]);i++)
@@ -1137,7 +1058,7 @@ pair<float,float> drawtrender(NVGcontext* vg,const std::array<uint16_t,16> &tren
 			return {0,dtop+dheight/2};
 	float pos0=gety(glu0);
 	float posx= x+i*step;
-	 nvgMoveTo(vg,posx ,pos0);
+	 nvgMoveTo(genVG,posx ,pos0);
 	LOGGER("%.1f (%hi) (%.0f,%.0f)\n",glu0/180.0,glu0,posx,pos0);
 	posx+=step;
 	float posy;
@@ -1147,11 +1068,11 @@ pair<float,float> drawtrender(NVGcontext* vg,const std::array<uint16_t,16> &tren
 		if(glu) {
 			posy=gety(glu);
 			LOGGER("%.1f (%hi) (%.0f,%.0f)\n",glu/180.0,glu,posx,posy);
-			nvgLineTo( vg,posx ,posy);
+			nvgLineTo( genVG,posx ,posy);
 			}
 		}
 	LOGGER("\n");
-	nvgStroke(vg);
+	nvgStroke(genVG);
 	return std::pair<float,float>({pos0,posy});
 	}
 
@@ -1160,44 +1081,44 @@ struct {
 float left,top,right,bottom;
 } menupos;
 void showok(bool good,bool up) {
-	nvgFontSize(vg,headsize/4 );
-	nvgTextAlign(vg,NVG_ALIGN_RIGHT|(up?NVG_ALIGN_TOP:NVG_ALIGN_BOTTOM));
+	nvgFontSize(genVG,headsize/4 );
+	nvgTextAlign(genVG,NVG_ALIGN_RIGHT|(up?NVG_ALIGN_TOP:NVG_ALIGN_BOTTOM));
 	const float fromtop= mediumfont*2.0f;
 	float ypos=dtop+(up?fromtop:(dheight-fromtop));
 	float xpos=dwidth+dleft-mediumfont*3.0f;
 
 	const char *ok=good?"OK":"ESC";
 	const int oklen=good?2:3;
-	nvgTextBounds(vg, xpos,ypos ,ok , ok+oklen, (float *)&menupos);
-	nvgText(vg, xpos,ypos,ok,ok+oklen);
+	nvgTextBounds(genVG, xpos,ypos ,ok , ok+oklen, (float *)&menupos);
+	nvgText(genVG, xpos,ypos,ok,ok+oklen);
 	menupos.left-=mediumfont;
 	menupos.right+=mediumfont;
 	menupos.bottom+=mediumfont;
 	menupos.top-=mediumfont;
 	}
-static bool		showerror(NVGcontext* vg,const string_view str1,const string_view str2) {
+static bool		showerror(NVGcontext* genVG,const string_view str1,const string_view str2) {
 	startstep(*getyellow());
-	nvgFontSize(vg, midsize);
-	nvgFillColor(vg, *getblack());
-	nvgTextAlign(vg,NVG_ALIGN_LEFT|NVG_ALIGN_BOTTOM);
-	nvgText(vg, dleft+dwidth/10,dtop+dheight/3, str1.begin(), str1.end());
-	nvgFontSize(vg, midsize*.8);
-	nvgTextAlign(vg,NVG_ALIGN_LEFT|NVG_ALIGN_MIDDLE);
-//	nvgText(vg, dleft+dwidth/2,dtop+dheight/2, str2.begin(), str2.end());
+	nvgFontSize(genVG, midsize);
+	nvgFillColor(genVG, *getblack());
+	nvgTextAlign(genVG,NVG_ALIGN_LEFT|NVG_ALIGN_BOTTOM);
+	nvgText(genVG, dleft+dwidth/10,dtop+dheight/3, str1.begin(), str1.end());
+	nvgFontSize(genVG, midsize*.8);
+	nvgTextAlign(genVG,NVG_ALIGN_LEFT|NVG_ALIGN_MIDDLE);
+//	nvgText(genVG, dleft+dwidth/2,dtop+dheight/2, str2.begin(), str2.end());
 //	void nvgTextBox(NVGcontext* ctx, float x, float y, float breakRowWidth, const char* string, const char* end);
-	nvgTextBox( vg, dleft+dwidth/10, dtop+dheight/2, dwidth*8/10, str2.begin(), str2.end());
+	nvgTextBox( genVG, dleft+dwidth/10, dtop+dheight/2, dwidth*8/10, str2.begin(), str2.end());
 
 	showok(true,false);
 	return true;
 	}
-static void		scanwait(NVGcontext* vg) {
+static void		scanwait(NVGcontext* genVG) {
 	startstep(*getwhite());
-	nvgFontSize(vg, headsize);
-	nvgFillColor(vg, *getblack());
-	nvgTextAlign(vg,NVG_ALIGN_CENTER|NVG_ALIGN_MIDDLE);
+	nvgFontSize(genVG, headsize);
+	nvgFillColor(genVG, *getblack());
+	nvgTextAlign(genVG,NVG_ALIGN_CENTER|NVG_ALIGN_MIDDLE);
 //	std::string_view str1="Scanned";
 	const std::string_view str1=usedtext->scanned;
-	nvgText(vg, dleft+dwidth/2,dtop+dheight/2, str1.begin(), str1.end());
+	nvgText(genVG, dleft+dwidth/2,dtop+dheight/2, str1.begin(), str1.end());
 	endstep();
 	}
 #include "gluconfig.h"
@@ -1223,7 +1144,7 @@ int getglucosestr(uint32_t nonconvert,char *glucosestr,int maxglucosestr) {
 	}
 
 constexpr int maxbluetoothage=3*60;
-static void	showscanner(NVGcontext* vg,const SensorGlucoseData *hist,int scanident) {
+static void	showscanner(NVGcontext* genVG,const SensorGlucoseData *hist,int scanident) {
 	time_t nu=time(nullptr);
 	const ScanData &last=*hist->getscan(scanident);
 	startstep((nu-last.t)< maxbluetoothage?*getwhite():getoldcolor());
@@ -1253,11 +1174,11 @@ static void	showscanner(NVGcontext* vg,const SensorGlucoseData *hist,int scanide
 		}
 
 	float bounds[4];
-	nvgTextAlign(vg,NVG_ALIGN_RIGHT|NVG_ALIGN_MIDDLE);
-	nvgFontSize(vg, headsize);
-	nvgTextBounds(vg, x,dtop+dheight/2 , buf1, buf1+len1, bounds);
-	nvgFillColor(vg, *getblack());
-	auto [first,y]=drawtrender( vg,hist->gettrendsbuf(scanident),dleft,dtop,bounds[0]-dleft,dheight);
+	nvgTextAlign(genVG,NVG_ALIGN_RIGHT|NVG_ALIGN_MIDDLE);
+	nvgFontSize(genVG, headsize);
+	nvgTextBounds(genVG, x,dtop+dheight/2 , buf1, buf1+len1, bounds);
+	nvgFillColor(genVG, *getblack());
+	auto [first,y]=drawtrender( genVG,hist->gettrendsbuf(scanident),dleft,dtop,bounds[0]-dleft,dheight);
 	float th=(bounds[3]-bounds[1])/2.0;
 	if(y<th) 
 		y=th;
@@ -1265,38 +1186,38 @@ static void	showscanner(NVGcontext* vg,const SensorGlucoseData *hist,int scanide
 		if((dheight-(y-dtop))<th)
 			y=dheight-th;
 
-	nvgText(vg, x,y, buf1, buf1+len1);
+	nvgText(genVG, x,y, buf1, buf1+len1);
 	char buf[maxbuf];
 	time_t tim=last.t;
 	struct tm tmbuf;
 	 struct tm *tms=localtime_r(&tim,&tmbuf);
 	int len=snprintf(buf,maxbuf,"%02d:%02d", tms->tm_hour,mktmmin(tms));
-//	nvgFontSize(vg,smallfont );
+//	nvgFontSize(genVG,smallfont );
 	const float yunder=y+((y>(dheight/2))?-1:1)*headsize/2.0;
-	nvgFontSize(vg,mediumfont );
-	nvgText(vg, endtime,yunder, buf, buf+len);
+	nvgFontSize(genVG,mediumfont );
+	nvgText(genVG, endtime,yunder, buf, buf+len);
 	const sensorname_t *sensorname=hist->shortsensorname();
-	nvgFontSize(vg,smallsize );
-	nvgTextAlign(vg,NVG_ALIGN_LEFT|NVG_ALIGN_MIDDLE);
-	nvgText(vg,bounds[0] -sensleft,yunder, sensorname->begin(), sensorname->end());
+	nvgFontSize(genVG,smallsize );
+	nvgTextAlign(genVG,NVG_ALIGN_LEFT|NVG_ALIGN_MIDDLE);
+	nvgText(genVG,bounds[0] -sensleft,yunder, sensorname->begin(), sensorname->end());
 
 	showok( (last.g>70&&last.g<=140), ((y-dtop)<(dheight/2))?false:true);
 	}
 	/*
-static void	showscanner(NVGcontext* vg,int sensorident,int scanident) {
+static void	showscanner(NVGcontext* genVG,int sensorident,int scanident) {
 	const SensorGlucoseData *hist=sensors->gethist(sensorident);
-	showscanner(vg,hist, scanident) ;
+	showscanner(genVG,hist, scanident) ;
 
 	}
 	*/
 	/*
-static bool	showlastscan(NVGcontext* vg,const ScanData *last) {
+static bool	showlastscan(NVGcontext* genVG,const ScanData *last) {
 	if(!last)
 		return false;
 	if(!last->g) {
-		return showerror(vg,"Data unclear, wait", "for things to get better");
+		return showerror(genVG,"Data unclear, wait", "for things to get better");
 		}
-	showscan(vg,*last,lastnfcdata,nullptr);
+	showscan(genVG,*last,lastnfcdata,nullptr);
 	return true;
 	}*/
 //int gmaxmax=180*7.5;
@@ -1346,8 +1267,8 @@ static pair<int,int> getextremes(const vector<int> &hists, const pair<const Scan
 	return {gmin,gmax};
 	}
 template <class LT> void glucoselines(const float last,const float smallfontlineheight,const int gmax,const LT &transy) {
-	nvgStrokeWidth(vg, glucoseLinesStrokeWidth);
-	nvgStrokeColor(vg, *getgray());
+	nvgStrokeWidth(genVG, glucoseLinesStrokeWidth);
+	nvgStrokeColor(genVG, *getgray());
 	const double yscale=transy(1)-transy(0);
 	const float mindisunit=smallsize*1.5;
 	const float minst=abs(mindisunit/yscale);
@@ -1356,7 +1277,7 @@ template <class LT> void glucoselines(const float last,const float smallfontline
 
 	uint32_t step=minst<=unit?unit:ceilf(minst/unit2)*unit2;
 	float startld;
-	nvgTextAlign(vg,NVG_ALIGN_CENTER|NVG_ALIGN_MIDDLE);
+	nvgTextAlign(genVG,NVG_ALIGN_CENTER|NVG_ALIGN_MIDDLE);
 
 	if(settings->data()->levelleft) {
 		startld = timelen*.4;
@@ -1372,10 +1293,10 @@ template <class LT> void glucoselines(const float last,const float smallfontline
 	const float endline=last;
 	for(auto y=startl+step;y<gmax;y+=step) {
 		float dy=transy(y);
-		nvgBeginPath(vg);
-	 	nvgMoveTo(vg,dleft ,dy) ;
-		nvgLineTo( vg, endline,dy);
-		nvgStroke(vg);
+		nvgBeginPath(genVG);
+	 	nvgMoveTo(genVG,dleft ,dy) ;
+		nvgLineTo( genVG, endline,dy);
+		nvgStroke(genVG);
 		if(dy>smallfontlineheight) {
 			constexpr const int  bufsize=50;
 			char buf[bufsize];
@@ -1383,7 +1304,7 @@ template <class LT> void glucoselines(const float last,const float smallfontline
 			int len=snprintf(buf,bufsize,"%g",gconvert(y));
 			if(len>bufsize)
 				len=bufsize;
-			nvgText(vg, startld,dy, buf, buf+len);
+			nvgText(genVG, startld,dy, buf, buf+len);
 			}
 
 		}
@@ -1414,8 +1335,8 @@ void timelines(const displaytime *disp, const LT &transx ,uint32_t nu) {
 	#ifdef WEAROS
 	const uint32_t numlast= (disp->last>nu)?(disp->last-tstep):disp->last;
 	#endif
-	nvgFillColor(vg, *getblack());
-	nvgTextAlign(vg,NVG_ALIGN_CENTER|NVG_ALIGN_TOP);
+	nvgFillColor(genVG, *getblack());
+	nvgTextAlign(genVG,NVG_ALIGN_CENTER|NVG_ALIGN_TOP);
 	const float timehight=
 	#ifdef WEAROS
 		smallfontlineheight*1.6
@@ -1432,29 +1353,29 @@ void timelines(const displaytime *disp, const LT &transx ,uint32_t nu) {
 
 	 	if(stm->tm_hour||stm->tm_min) {
 			if(stm->tm_min||stm->tm_hour%3) {
-				nvgStrokeWidth(vg, timeLinesStrokeWidth);
-				nvgStrokeColor(vg, *getgray());
+				nvgStrokeWidth(genVG, timeLinesStrokeWidth);
+				nvgStrokeColor(genVG, *getgray());
 				}
 			else {
-				nvgStrokeWidth(vg, timeLinesStrokeWidth);
-				nvgStrokeColor(vg, *getthreehour());
+				nvgStrokeWidth(genVG, timeLinesStrokeWidth);
+				nvgStrokeColor(genVG, *getthreehour());
 				}
 			}
 		else {
-			nvgStrokeWidth(vg, dayEndStrokeWidth);
-			nvgStrokeColor(vg, *getblack());
+			nvgStrokeWidth(genVG, dayEndStrokeWidth);
+			nvgStrokeColor(genVG, *getblack());
 			}
 	#ifdef WEAROS
 		 if(tim<=numlast)  
 	#endif
 		 {
 		 	snprintf(buf,6,"%02d:%02d",stm->tm_hour,mktmmin(stm));
-			nvgText(vg, dtim,timehight, buf, buf+5);
+			nvgText(genVG, dtim,timehight, buf, buf+5);
 			}
-		nvgBeginPath(vg);
-		nvgMoveTo(vg,dtim ,0) ;
-		nvgLineTo( vg, dtim,dheight);
-		nvgStroke(vg);
+		nvgBeginPath(genVG);
+		nvgMoveTo(genVG,dtim ,0) ;
+		nvgLineTo( genVG, dtim,dheight);
+		nvgStroke(genVG);
 		}
 	}
 
@@ -1470,27 +1391,27 @@ template <class LT> void epochlines(uint32_t first,uint32_t last, const LT &tran
 			}
 		
 		time_t start=startin+(24-hour)*60*60;
-		nvgStrokeWidth(vg, dayEndStrokeWidth);
-		nvgStrokeColor(vg, *getblack());
+		nvgStrokeWidth(genVG, dayEndStrokeWidth);
+		nvgStrokeColor(genVG, *getblack());
 		for(time_t t=start;t<last;t+=(24*60*60)) {
 			float dtim=transx(t);
 			LOGGER("%ld\n",t);
-			nvgBeginPath(vg);
-			nvgMoveTo(vg,dtim ,0) ;
-			nvgLineTo( vg, dtim,dheight);
-			nvgStroke(vg);
+			nvgBeginPath(genVG);
+			nvgMoveTo(genVG,dtim ,0) ;
+			nvgLineTo( genVG, dtim,dheight);
+			nvgStroke(genVG);
 			}
-		nvgStrokeWidth(vg, timeLinesStrokeWidth);
-		nvgStrokeColor(vg, *getthreehour());
+		nvgStrokeWidth(genVG, timeLinesStrokeWidth);
+		nvgStrokeColor(genVG, *getthreehour());
 		const int inthree=hour%3;
 		start=startin+(inthree?((3-inthree)*60*60):0);
 		LOGGER("startin=%ld start=%ld last=%d inthree=%d\n",startin,start,last, inthree);
 		for(time_t t=start;t<last;t+=(3*60*60)) {
 			float dtim=transx(t);
-			nvgBeginPath(vg);
-			nvgMoveTo(vg,dtim ,0) ;
-			nvgLineTo( vg, dtim,dheight);
-			nvgStroke(vg);
+			nvgBeginPath(genVG);
+			nvgMoveTo(genVG,dtim ,0) ;
+			nvgLineTo( genVG, dtim,dheight);
+			nvgStroke(genVG);
 			}
 	}
 extern std::vector<int> usedsensors;
@@ -1500,7 +1421,6 @@ extern void setusedsensors(uint32_t nu) ;
 //std::span<streamdat>  laststream{},oldstream{new streamdat[1](),1};
 void setmaxsensors(size_t sensornr) {
 	setusedsensors();
-//	str={new streamdat[sensornr],sensornr};
 	}
 
 /*
@@ -1537,9 +1457,6 @@ startnow(T fun) {
 startnow oldinit([]{setmaxsensors(oldstream,1);});
 
 	*/
-extern "C" JNIEXPORT void JNICALL fromjava(setmaxsensors) (JNIEnv *env, jclass clazz,jint nr) {
-	setmaxsensors(nr);
-	}
 
 //float highglucose=1350;
 //float lowglucose=702;
@@ -1554,7 +1471,7 @@ uint32_t lastsensorends() {
 		}
 //void	showbluevalue(const float dlast,const time_t nu,const int xpos) {
 
-void drawarrow(NVGcontext* vg, float rate,float getx,float gety) {
+void drawarrow(NVGcontext* genVG, float rate,float getx,float gety) {
 		if(!isnan(rate)) {
 			if(glnearnull(rate))
 				rate=.0f;
@@ -1583,31 +1500,31 @@ void drawarrow(NVGcontext* vg, float rate,float getx,float gety) {
 			double sy1=ty1+l*hy;
 			double sx2=tx1-l*hx;
 			double sy2=ty1-l*hy;
-			nvgBeginPath(vg);
-			nvgStrokeColor(vg, *getblack());
-			nvgStrokeWidth(vg, arrowstrokewidth);
-			nvgMoveTo(vg,x1,y1) ;
-			nvgLineTo( vg, xtus,ytus);
-			nvgStroke(vg);
-			nvgBeginPath(vg);
-			nvgFillColor(vg, *getblack());
-			nvgMoveTo(vg,sx1,sy1) ;
-			nvgLineTo( vg, getx,gety);
-			nvgLineTo( vg, sx2,sy2);
-			nvgLineTo( vg, xtus,ytus);
-			nvgClosePath(vg);
-			nvgFill(vg);
+			nvgBeginPath(genVG);
+			nvgStrokeColor(genVG, *getblack());
+			nvgStrokeWidth(genVG, arrowstrokewidth);
+			nvgMoveTo(genVG,x1,y1) ;
+			nvgLineTo( genVG, xtus,ytus);
+			nvgStroke(genVG);
+			nvgBeginPath(genVG);
+			nvgFillColor(genVG, *getblack());
+			nvgMoveTo(genVG,sx1,sy1) ;
+			nvgLineTo( genVG, getx,gety);
+			nvgLineTo( genVG, sx2,sy2);
+			nvgLineTo( genVG, xtus,ytus);
+			nvgClosePath(genVG);
+			nvgFill(genVG);
 
 			}
 	}
 void showvalue(const ScanData *poll,const sensorname_t *sensorname, float getx,float gety) {
 	LOGGER("showvalue %s\n",sensorname->data());
 			float sensory= gety+headsize/3.1;
-			nvgFillColor(vg, *getblack());
-			nvgFontSize(vg,mediumfont );
-			nvgTextAlign(vg,NVG_ALIGN_LEFT|NVG_ALIGN_TOP);
-			nvgText(vg, getx,sensory, sensorname->begin(), sensorname->end());
-			nvgTextAlign(vg,NVG_ALIGN_LEFT|NVG_ALIGN_MIDDLE);
+			nvgFillColor(genVG, *getblack());
+			nvgFontSize(genVG,mediumfont );
+			nvgTextAlign(genVG,NVG_ALIGN_LEFT|NVG_ALIGN_TOP);
+			nvgText(genVG, getx,sensory, sensorname->begin(), sensorname->end());
+			nvgTextAlign(genVG,NVG_ALIGN_LEFT|NVG_ALIGN_MIDDLE);
 			constexpr const int maxhead=11;
 			char head[maxhead];
 //#if defined(NDEBUG) 
@@ -1616,20 +1533,20 @@ void showvalue(const ScanData *poll,const sensorname_t *sensorname, float getx,f
 #else
 			const uint32_t nonconvert= 40;
 #endif
-			nvgFontSize(vg, headsize*.8);
+			nvgFontSize(genVG, headsize*.8);
 			if(nonconvert<glucoselowest) {
 const				float valuex=getx;
 //				int gllen=snprintf(head,maxhead,"%.*f>",gludecimal,gconvert(glucoselowest*10));
 
 				 int gllen=mkshowlow(head, maxhead) ;
-				nvgText(vg,valuex,gety, head, head+gllen);
+				nvgText(genVG,valuex,gety, head, head+gllen);
 				}
 			else {
 				if(nonconvert>glucosehighest) {
 				float valuex=getx-density*14.0f;
 				//	int gllen=snprintf(head,maxhead,"%.*f<",gludecimal,gconvert(glucosehighest*10));
 				 int gllen=mkshowhigh(head, maxhead) ;
-					nvgText(vg,valuex ,gety, head, head+gllen);
+					nvgText(genVG,valuex ,gety, head, head+gllen);
 					}
 				else {
 #if 0
@@ -1639,9 +1556,9 @@ const				float valuex=getx;
 #endif
 					float valuex=getx-(convglucose>=10.0f?density*20.0f:0.0f);
 					int gllen=snprintf(head,maxhead,gformat,convglucose);
-					nvgText(vg,valuex ,gety, head, head+gllen);
+					nvgText(genVG,valuex ,gety, head, head+gllen);
 					float rate=poll->ch;
-					drawarrow(vg,rate,valuex-10*density,gety);
+					drawarrow(genVG,rate,valuex-10*density,gety);
 					}
 				}
 
@@ -1656,21 +1573,21 @@ float				getboxwidth(const float x) {
 
 //#define DOTEST 1
 static int showerrorvalue(const SensorGlucoseData *sens,const time_t nu,float getx,float gety) {
-	//nvgTextAlign(vg,NVG_ALIGN_LEFT|NVG_ALIGN_TOP);
+	//nvgTextAlign(genVG,NVG_ALIGN_LEFT|NVG_ALIGN_TOP);
 	getx-=headsize/3;
-	nvgTextAlign(vg,NVG_ALIGN_LEFT|NVG_ALIGN_MIDDLE);
-	//nvgFontSize(vg,headsize/4 );
-	nvgFontSize(vg,headsize/6 );
+	nvgTextAlign(genVG,NVG_ALIGN_LEFT|NVG_ALIGN_MIDDLE);
+	//nvgFontSize(genVG,headsize/4 );
+	nvgFontSize(genVG,headsize/6 );
 	if(settings->data()->nobluetooth) {
 		extern bool hasnetwork();
 		if(hasnetwork()) {
 			return 1;
 		//	static	constexpr const std::string_view network="Network problem?";
-		//	nvgText(vg,getx ,gety, network.begin(), network.end());
+		//	nvgText(genVG,getx ,gety, network.begin(), network.end());
 			}
 		else {
 //			static	constexpr const std::string_view useblue="'Use Bluetooth' off";
-//			nvgText(vg,getx ,gety, useblue.begin(), useblue.end());
+//			nvgText(genVG,getx ,gety, useblue.begin(), useblue.end());
 			return 2;
 			}
 		}
@@ -1684,14 +1601,14 @@ static int showerrorvalue(const SensorGlucoseData *sens,const time_t nu,float ge
 			char buf[sizeof(format)+5+16];
 			int minutes=wait/60;
 			int ends=sprintf(buf,format,sens->showsensorname(),minutes);
-			nvgTextBox(vg,  getx, gety, 0.4*dwidth, buf,buf+ends);
+			nvgTextBox(genVG,  getx, gety, 0.4*dwidth, buf,buf+ends);
 			return 0;
 			}
 		else*/ {
 			if(!bluetoothEnabled()) {
 				return 3;
 			//	static	constexpr const std::string_view enablebluetooth="Enable Bluetooth";
-			//	nvgText(vg,getx ,gety, enablebluetooth.begin(), enablebluetooth.end());
+			//	nvgText(genVG,getx ,gety, enablebluetooth.begin(), enablebluetooth.end());
 				} 
 			else {
 				if(sens->sensorerror) {
@@ -1700,15 +1617,15 @@ static int showerrorvalue(const SensorGlucoseData *sens,const time_t nu,float ge
 					int senslen= sens->showsensorname().size();
 					memcpy(buf,sens->showsensorname().data(),senslen);
 					memcpy(buf+senslen,sensorerror.data(), sensorerror.size());
-					nvgTextBox(vg,  getx, gety, getboxwidth(getx), buf, buf+sensorerror.size()+senslen);
+					nvgTextBox(genVG,  getx, gety, getboxwidth(getx), buf, buf+sensorerror.size()+senslen);
 					}
 				else {
-				//	nvgText(vg,getx ,gety, connectionerror.begin(), connectionerror.end());
+				//	nvgText(genVG,getx ,gety, connectionerror.begin(), connectionerror.end());
 					char buf[usedtext->noconnectionerror.size()+17];
 					int senslen= sens->showsensorname().size();
 					memcpy(buf,sens->showsensorname().data(),senslen);
 					memcpy(buf+senslen,usedtext->noconnectionerror.data(), usedtext->noconnectionerror.size());
-					nvgTextBox(vg,  getx, gety, getboxwidth(getx),buf, buf+usedtext->noconnectionerror.size()+senslen);
+					nvgTextBox(genVG,  getx, gety, getboxwidth(getx),buf, buf+usedtext->noconnectionerror.size()+senslen);
 					}
 				return 0;
 				}
@@ -1736,12 +1653,12 @@ static void showlastsstream(const time_t nu,const float getx,std::vector<int> &u
 				if(!poll->valid())
 					return;
 				failures=0;
-				nvgBeginPath(vg);
-				 nvgFillColor(vg,getoldcolor());
+				nvgBeginPath(genVG);
+				 nvgFillColor(genVG,getoldcolor());
 				float relage=(float)age/(float)maxbluetoothage;
 				float sensory= gety+headsize/3.1f;
-				nvgRect(vg, getx+sensorbounds.left, sensorbounds.top+sensory, relage*sensorbounds.width, sensorbounds.height);
-				nvgFill(vg);
+				nvgRect(genVG, getx+sensorbounds.left, sensorbounds.top+sensory, relage*sensorbounds.width, sensorbounds.height);
+				nvgFill(genVG);
 				showvalue(poll,hist->shortsensorname(),getx,gety);
 				success=true;
 				}
@@ -1766,13 +1683,13 @@ static void showlastsstream(const time_t nu,const float getx,std::vector<int> &u
 				LOGGER("wait<(60*60) isInitialised=%d\n",isInitialised);
 
 				float usegetx=getx-headsize/3;
-				nvgTextAlign(vg,NVG_ALIGN_LEFT|NVG_ALIGN_MIDDLE);
-				nvgFontSize(vg,headsize/6 );
+				nvgTextAlign(genVG,NVG_ALIGN_LEFT|NVG_ALIGN_MIDDLE);
+				nvgFontSize(genVG,headsize/6 );
 				char buf[usedtext->readysecEnable.size()+6];
 				int minutes=60-(wait/60);
 				int ends=sprintf(buf,isInitialised?usedtext->readysec.data():usedtext->readysecEnable.data(),minutes);
 				getboxwidth(usegetx);
-				nvgTextBox(vg,  usegetx, gety, getboxwidth(usegetx), buf,buf+ends);
+				nvgTextBox(genVG,  usegetx, gety, getboxwidth(usegetx), buf,buf+ends);
 				}
 			else
 				LOGGER("wait>=(60*60)\n");
@@ -1781,18 +1698,18 @@ static void showlastsstream(const time_t nu,const float getx,std::vector<int> &u
 		}
 	if(!success&&!otherproblem) {
 		int newgetx=getx-headsize/3;
-		nvgTextAlign(vg,NVG_ALIGN_LEFT|NVG_ALIGN_MIDDLE);
-		nvgFontSize(vg,headsize/4 );
+		nvgTextAlign(genVG,NVG_ALIGN_LEFT|NVG_ALIGN_MIDDLE);
+		nvgFontSize(genVG,headsize/4 );
 		float gety=smallsize*.5f+dtop+dheight/2.0f;
 		if(neterror) {
-			nvgText(vg,newgetx ,gety, usedtext->networkproblem.begin(), usedtext->networkproblem.end());
+			nvgText(genVG,newgetx ,gety, usedtext->networkproblem.begin(), usedtext->networkproblem.end());
 			}
 		else { if(usebluetoothoff) {
-		   nvgText(vg,newgetx ,gety, usedtext->useBluetoothOff.begin(), usedtext->useBluetoothOff.end());
+		   nvgText(genVG,newgetx ,gety, usedtext->useBluetoothOff.begin(), usedtext->useBluetoothOff.end());
 		   }
 		   else {
 		   	if(bluetoothoff) {
-				nvgText(vg,newgetx ,gety, usedtext->enablebluetooth.begin(), usedtext->enablebluetooth.end());
+				nvgText(genVG,newgetx ,gety, usedtext->enablebluetooth.begin(), usedtext->enablebluetooth.end());
 				}
 				}
 				}
@@ -1812,22 +1729,22 @@ static void showlastsstream(const time_t nu,const float getx,std::vector<int> &u
 
 void	showbluevalue(const time_t nu,const int xpos,std::vector<int> &used) {
 LOGGER("showbluevalue %zd\n",used.size());
-		nvgFontSize(vg, smallsize);
-		nvgFillColor(vg, *getblack());
+		nvgFontSize(genVG, smallsize);
+		nvgFillColor(genVG, *getblack());
 
-		nvgBeginPath(vg);
-		nvgStrokeColor(vg, dooryellow);
-		nvgStrokeWidth(vg, nowLineStrokeWidth);
-		nvgMoveTo(vg,xpos ,dtop) ;
-		nvgLineTo( vg, xpos,dheight+dtop);
-		nvgStroke(vg);
+		nvgBeginPath(genVG);
+		nvgStrokeColor(genVG, dooryellow);
+		nvgStrokeWidth(genVG, nowLineStrokeWidth);
+		nvgMoveTo(genVG,xpos ,dtop) ;
+		nvgLineTo( genVG, xpos,dheight+dtop);
+		nvgStroke(genVG);
 		#ifndef WEAROS
 		{
 		float down=0;
 
 		const float timex=xpos+nowLineStrokeWidth;
-		nvgTranslate(vg, timex,down);
-		nvgRotate(vg,-NVG_PI/2.0);
+		nvgTranslate(genVG, timex,down);
+		nvgRotate(genVG,-NVG_PI/2.0);
 		constexpr int maxhead=54;
 		char head[maxhead];
 		memcpy(head,usedtext->sensorends.data(),usedtext->sensorends.size());
@@ -1836,17 +1753,17 @@ LOGGER("showbluevalue %zd\n",used.size());
 		const int tstart=usedtext->sensorends.size();
 			char *endstr=head+tstart;
 			int end= datestr(enddate,endstr); 
-			nvgTextAlign(vg,NVG_ALIGN_CENTER|NVG_ALIGN_BOTTOM);
-			nvgText(vg, -dheight/2+down-smallfontlineheight,dwidth-timex, std::begin(head), head+end+tstart);
+			nvgTextAlign(genVG,NVG_ALIGN_CENTER|NVG_ALIGN_BOTTOM);
+			nvgText(genVG, -dheight/2+down-smallfontlineheight,dwidth-timex, std::begin(head), head+end+tstart);
 			}
-		nvgResetTransform(vg);
+		nvgResetTransform(genVG);
 		}
 		#endif
 		const float getx= xpos+headsize*.9f+8*dwidth/headsize;
 
 		const float datehigh=smallfontlineheight*.72;
 		
-		nvgTextAlign(vg,NVG_ALIGN_LEFT|NVG_ALIGN_TOP);
+		nvgTextAlign(genVG,NVG_ALIGN_LEFT|NVG_ALIGN_TOP);
 		{
 		constexpr int maxbuf=80;
 		char tbuf[maxbuf];
@@ -1857,31 +1774,31 @@ LOGGER("showbluevalue %zd\n",used.size());
 			-timelen
 		#endif
 		;
-		nvgText(vg, timex,datehigh, tbuf, NULL);
+		nvgText(genVG, timex,datehigh, tbuf, NULL);
 		LOGGER("xpos=%d dwidth=%.1f headsize=%.1f density=%.1f getx=%.1f timex=%.1f\n",xpos,dwidth,headsize, density,getx,timex);
 		}
 	showlastsstream(nu, getx,used) ;
 		}
 
 void	showsavedomain(const float last, const float dlow,const float dhigh) {
-	nvgBeginPath(vg);
-	nvgFillColor(vg, unsavecolor);
-	nvgRect(vg, dleft, dtop, last-dleft, dhigh);
-	nvgFill(vg);
+	nvgBeginPath(genVG);
+	nvgFillColor(genVG, unsavecolor);
+	nvgRect(genVG, dleft, dtop, last-dleft, dhigh);
+	nvgFill(genVG);
 
-	nvgBeginPath(vg);
-	nvgFillColor(vg, unsavecolor);
-	nvgRect(vg, dleft, dlow, last-dleft, dheight+dtop);
-	nvgFill(vg);
+	nvgBeginPath(genVG);
+	nvgFillColor(genVG, unsavecolor);
+	nvgRect(genVG, dleft, dlow, last-dleft, dheight+dtop);
+	nvgFill(genVG);
 	}
 void showunsaveredline(const float last,const float dlow) {
-	nvgBeginPath(vg);
-	nvgStrokeWidth(vg, lowGlucoseStrokeWidth);
+	nvgBeginPath(genVG);
+	nvgStrokeWidth(genVG, lowGlucoseStrokeWidth);
 
-	nvgStrokeColor(vg, lowlinecolor);
-	nvgMoveTo(vg, dleft,dlow) ;
-	nvgLineTo( vg,last ,dlow);
-	nvgStroke(vg);
+	nvgStrokeColor(genVG, lowlinecolor);
+	nvgMoveTo(genVG, dleft,dlow) ;
+	nvgLineTo( genVG,last ,dlow);
+	nvgStroke(genVG);
 	}
 void	showsaverange(const float last, const float dlow,const float dhigh) {
 	showsavedomain(last,dlow,dhigh) ;
@@ -1918,7 +1835,7 @@ uint32_t showtime=
 	;
 
 		daystr(showtime,tbuf);
-		nvgFillColor(vg, *
+		nvgFillColor(genVG, *
 		#ifdef WEAROS
 		getdarkgray()
 		#else
@@ -1928,19 +1845,19 @@ uint32_t showtime=
 	float xpos;
 	#ifdef WEAROS
 		xpos= dwidth/2+dleft;
-		nvgTextAlign(vg,NVG_ALIGN_CENTER|NVG_ALIGN_TOP);
+		nvgTextAlign(genVG,NVG_ALIGN_CENTER|NVG_ALIGN_TOP);
 	#else
 		xpos= settings->data()->levelleft?timelen*.75:0;
-		nvgTextAlign(vg,NVG_ALIGN_LEFT|NVG_ALIGN_TOP);
+		nvgTextAlign(genVG,NVG_ALIGN_LEFT|NVG_ALIGN_TOP);
 	#endif
 
 		LOGGER("displaytime %s\n",tbuf);
-		nvgText(vg,xpos ,datehigh, tbuf, NULL);
+		nvgText(genVG,xpos ,datehigh, tbuf, NULL);
 #ifndef WEAROS
 		if(nu>=endtime) {
 			daystr(endtime,tbuf);
-			nvgTextAlign(vg,NVG_ALIGN_RIGHT|NVG_ALIGN_TOP);
-			nvgText(vg, dwidth+dleft,datehigh, tbuf, NULL);
+			nvgTextAlign(genVG,NVG_ALIGN_RIGHT|NVG_ALIGN_TOP);
+			nvgText(genVG, dwidth+dleft,datehigh, tbuf, NULL);
 			}
 #endif
 		}
@@ -1973,12 +1890,12 @@ void showlines(int gm,int gmax) {
 		glucoselines(dlast,smallfontlineheight,gmax,transy) ;
 		showunsaveredline(dlast,transy(settings->targetlow()));
 		int yhigh=transy(settings->targethigh());
-		nvgBeginPath(vg);
-		nvgStrokeWidth(vg, lowGlucoseStrokeWidth);
-		nvgStrokeColor(vg, dooryellow);
-		nvgMoveTo(vg, dleft,yhigh) ;
-		nvgLineTo( vg,dwidth,yhigh);
-		nvgStroke(vg);
+		nvgBeginPath(genVG);
+		nvgStrokeWidth(genVG, lowGlucoseStrokeWidth);
+		nvgStrokeColor(genVG, dooryellow);
+		nvgMoveTo(genVG, dleft,yhigh) ;
+		nvgLineTo( genVG,dwidth,yhigh);
+		nvgStroke(genVG);
 		}
 		
 
@@ -1988,8 +1905,7 @@ pair<int32_t,int32_t> *histpositions=nullptr;
 int histlen=0;
 vector<int> hists;
 
-extern bool iswatch;
-int displaycurve(NVGcontext* vg,time_t nu,uint32_t starttime,uint32_t endtime) {
+int displaycurve(NVGcontext* genVG,time_t nu,uint32_t starttime,uint32_t endtime) {
 //	if(iswatch) { return showwatchface(nu); }
 
 	mealpos.clear();
@@ -2048,14 +1964,14 @@ displaytime disp=getdisplaytime(nu,starttime,endtime, transx);
 	LOGGER("before showsaverange\n");
 	showsaverange(dlast,transy(settings->targetlow()),transy(settings->targethigh()));
 
-	nvgFontSize(vg, smallsize);
+	nvgFontSize(genVG, smallsize);
 	LOGGER("before showNums\n");
 	if(shownumbers||showmeals)  {
 		const int catnr=settings->getlabelcount()+1;
 		bool was[catnr-1];
 		memset(was,0,sizeof(was));
 		for(auto el:numdatas) 
-			el->showNums(vg, transx,  transy,was) ;
+			el->showNums(genVG, transx,  transy,was) ;
 		}
 
 	showdates(nu,starttime,endtime) ;
@@ -2066,25 +1982,25 @@ displaytime disp=getdisplaytime(nu,starttime,endtime, transx);
 		epochlines(starttime,endtime<nu?endtime:disp.last,transx);
 	glucoselines(dlast,smallfontlineheight,gmax,transy) ;
 
-//		nvgCircle(vg, posx,posy,foundPointRadius);
+//		nvgCircle(genVG, posx,posy,foundPointRadius);
 
 	LOGGER("before showhistories\n");
 	if(showhistories) {
-		nvgStrokeWidth(vg, historyStrokeWidth);
+		nvgStrokeWidth(genVG, historyStrokeWidth);
 		for(int i=histlen-1;i>=0;i--) {
 			int index= hists[i];
 			int colorindex= (index+nrcolors*3/4)%nrcolors;
-			 histcurve(vg,sensors->gethist(index), histpositions[i].first, histpositions[i].second,transx,transy,colorindex); 
+			 histcurve(genVG,sensors->gethist(index), histpositions[i].first, histpositions[i].second,transx,transy,colorindex); 
 			 }
 		}
 	LOGGER("before showstream\n");
 	if(showstream)   {
-		nvgStrokeWidth(vg, pollCurveStrokeWidth);
+		nvgStrokeWidth(genVG, pollCurveStrokeWidth);
 		for(int i=histlen-1;i>=0;i--) {
 			const int index= hists[i];
 		//	decltype(auto) col=*colors[(index+nrcolors/4)%nrcolors];
 			int  colorindex=(index+nrcolors/4)%nrcolors;
-			showlineScan(vg,pollranges[i].first,pollranges[i].second,transx,transy,colorindex);
+			showlineScan(genVG,pollranges[i].first,pollranges[i].second,transx,transy,colorindex);
 			 }
 		}
 	LOGGER("before showscans\n");
@@ -2092,7 +2008,7 @@ displaytime disp=getdisplaytime(nu,starttime,endtime, transx);
 		for(int i=histlen-1;i>=0;i--) {
 			const int index=hists[i];
 			const int colorindex=(index+nrcolors*2/4)%nrcolors;
-			 if(!showScan(vg,scanranges[i].first,scanranges[i].second,transx,transy,colorindex))
+			 if(!showScan(genVG,scanranges[i].first,scanranges[i].second,transx,transy,colorindex))
 				return 1;
 			 }
 		 }
@@ -2104,16 +2020,6 @@ displaytime disp=getdisplaytime(nu,starttime,endtime, transx);
 		}
  return 0;
 }
-/*
-extern "C" JNIEXPORT void JNICALL fromjava(setglucose) (JNIEnv *env, jclass clazz,jlong time,jfloat glu,jstring jsensor,jint index) {
-	if(index<sensornr) {
-		env->GetStringUTFRegion( jsensor, 0, shortsensorlen,sensorname[index]);
-		sensorname[index][shortsensorlen]='\0';
-		glucosetime[index]=time;	
-		glucose[index]=glu;
-		}
-	}
-	*/
 
 static void startstep(const NVGcolor &col) {
 		glViewport(0, 0, width, height);
@@ -2123,105 +2029,90 @@ static void startstep(const NVGcolor &col) {
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glEnable(GL_CULL_FACE);
 		glDisable(GL_DEPTH_TEST);
-		nvgBeginFrame(vg, width, height, 1.0);
+		nvgBeginFrame(genVG, width, height, 1.0);
 		if(invertcolors)
 			font=whitefont;
 		else
 			font=blackfont;
-		nvgFontFaceId(vg,font);
-		nvgLineCap(vg, NVG_ROUND);
- 		nvgLineJoin(vg, NVG_ROUND);
+		nvgFontFaceId(genVG,font);
+		nvgLineCap(genVG, NVG_ROUND);
+ 		nvgLineJoin(genVG, NVG_ROUND);
 		}
 static void endstep() {
-    nvgEndFrame(vg);
+    nvgEndFrame(genVG);
     glEnable(GL_DEPTH_TEST);
 }
-/*
-static bool doclear=false;
-extern "C" JNIEXPORT void JNICALL fromjava(clear)(JNIEnv* env, jclass obj) {
-	doclear=true;
-	}
-	*/
 
-extern "C" JNIEXPORT jlong JNICALL fromjava(sensorends)(JNIEnv* env, jclass obj) {
-	return  lastsensorends() ;
-	}
 bool restart=false;
-static bool showoldscan(NVGcontext* vg) ;
+static bool showoldscan(NVGcontext* genVG) ;
 
-static void defaulterror(NVGcontext* vg,int scerror)   {
+static void defaulterror(NVGcontext* genVG,int scerror)   {
 		char buf[50];
 		errortype *error=usedtext->scanerrors;
 		snprintf(buf,50,error->first,scerror);
-		showerror(vg,error->second,buf);
+		showerror(genVG,error->second,buf);
 		}
-extern "C" JNIEXPORT jint JNICALL fromjava(badscan)(JNIEnv* env, jclass obj,jint kind) {
-	if(!showoldscan(vg)) {
+int badscanMessage(int kind) {
+	if(!showoldscan(genVG)) {
 		LOGGER("javabadscan	%d: \n",kind);
 		const int scerror= kind&0xff;
 		switch(scerror) {
 			case 0xFA: {
-				showerror(vg,"FreeStyle Libre 3, Scan error", "Try again");
+				showerror(genVG,"FreeStyle Libre 3, Scan error", "Try again");
 				};
 				break;
 			case 0xFB:
-				showerror(vg,"Error, wrong account ID?","Specify in Settings->Libreview the same account used to activate the sensor");break;
+				showerror(genVG,"Error, wrong account ID?","Specify in Settings->Libreview the same account used to activate the sensor");break;
 		 	case 0xFC: {
-				showerror(vg,"FreeStyle Libre 3 sensor", "Glucose values will now be received by Juggluco");
+				showerror(genVG,"FreeStyle Libre 3 sensor", "Glucose values will now be received by Juggluco");
 				};break;
 			case 0xFD: {
-				showerror(vg,"Unrecognized NFC scan Error", "Try again");
+				showerror(genVG,"Unrecognized NFC scan Error", "Try again");
 				};break;
 			case 0xFE: {
-				showerror(vg,"FreeStyle Libre 3 sensor","Not supported by this version of Juggluco"  );
+				showerror(genVG,"FreeStyle Libre 3 sensor","Not supported by this version of Juggluco"  );
 				};break;
 			case 0xff: {
-				scanwait(vg); 	
+				scanwait(genVG); 	
 				return 2;
 				};
 			case 5: {
 				errortype *error=usedtext->scanerrors+scerror;
 				char buf[15];
 				snprintf(buf,15,error->second,kind>>8);
-				showerror(vg,error->first,buf);
+				showerror(genVG,error->first,buf);
 				LOGGER("%s\n",buf);
 				};break;
 			case 0:
 			case 15:
-			case 9: defaulterror(vg,scerror);
+			case 9: defaulterror(genVG,scerror);
 				break;
 			case 12: restart=true;
 			default: 
 			 if(scerror>0x10) {
-				defaulterror(vg,scerror);
+				defaulterror(genVG,scerror);
 				}
 			else {
 				errortype *error=usedtext->scanerrors+scerror;
-				showerror(vg,error->first,error->second);
+				showerror(genVG,error->first,error->second);
 				}
 			}
 		}
 	endstep();	
 	return 1;
 	}
-	/*
-extern "C" JNIEXPORT void JNICALL fromjava(showlast)(JNIEnv* env, jclass obj) {
-	if(showoldscan(vg))
-		endstep();	
-}
-*/
 static int nrmenu=0,selmenu=0;
 
-static void showtext(NVGcontext* vg ,time_t nu,int tapx) ;
+static void showtext(NVGcontext* genVG ,time_t nu,int tapx) ;
 
 
 struct lastscan_t scantoshow={-1,nullptr}; 
 
-static bool showoldscan(NVGcontext* vg) {
+static bool showoldscan(NVGcontext* genVG) {
 	if(scantoshow.scan) {
 		numlist=0;
 	      const SensorGlucoseData *hist=sensors->gethist(scantoshow.sensorindex);
-	      showscanner(vg,hist,scantoshow.scan-hist->beginscans()) ;
+	      showscanner(genVG,hist,scantoshow.scan-hist->beginscans()) ;
 	      return true;
 		}
 	return false;
@@ -2253,9 +2144,9 @@ void	updateusedsensors(uint32_t nu) {
 //#define WEAROS
 #ifndef WEAROS
 extern bool showpers;
-extern void showpercentiles(NVGcontext* vg) ;
+extern void showpercentiles(NVGcontext* genVG) ;
 #endif
-extern "C" JNIEXPORT void JNICALL fromjava(calccurvegegs)(JNIEnv *env, jclass clazz);
+void  calccurvegegs();
 void resetcurvestate() {
    displayer.reset();
   scantoshow={-1,nullptr}; 
@@ -2268,19 +2159,19 @@ nrmenu=0;
  selmenu=0;
  emptytap=false;
  nrmenu=0,selmenu=0;
-  fromjava(calccurvegegs)(nullptr, nullptr);
+  calccurvegegs();
     }
-void withredisplay(NVGcontext* vg,uint32_t nu,uint32_t endtime)  {
+void withredisplay(NVGcontext* genVG,uint32_t nu,uint32_t endtime)  {
 /*
 if(rotation!=0.0) {
 	LOGGER("rotate %f\n",rotation);
-	nvgTranslate(vg, dheight/2.0f,dwidth/2.0f);
-	nvgRotate(vg,rotation);
+	nvgTranslate(genVG, dheight/2.0f,dwidth/2.0f);
+	nvgRotate(genVG,rotation);
 	} */
     startstep(*getwhite());
 #ifndef WEAROS
     if(showpers) {
-		showpercentiles(vg);
+		showpercentiles(genVG);
 		}
 	else 
 #endif
@@ -2290,36 +2181,35 @@ if(rotation!=0.0) {
 int oldtapx=tapx;
 tapx=-8000;
 #endif
-	    if( !displaycurve(vg,nu,starttime, endtime)&&( ((tapx
+	    if( !displaycurve(genVG,nu,starttime, endtime)&&( ((tapx
 #ifdef WEAROSx
 
 	    =oldtapx
 #endif
 	    		)>=0&&!selshown&&(selmenu=getmenu(tapx),true))||nrmenu)) {
-		  showtext( vg ,nu,selmenu) ;
+		  showtext( genVG ,nu,selmenu) ;
 		   }
 		}
 	tapx=-8000;
 
 }
 /*
-void withoutredisplay(NVGcontext* vg,uint32_t nu,uint32_t endtime)  {
+void withoutredisplay(NVGcontext* genVG,uint32_t nu,uint32_t endtime)  {
 
 	    if( (tapx>=0&&!selshown&&(selmenu=getmenu(tapx),true))||nrmenu) 
-			  showtext( vg ,nu,selmenu) ;
+			  showtext( genVG ,nu,selmenu) ;
 	 else  {
 		    startstep(*getwhite());
 		    if(showpers) {
-				showpercentiles(vg);
+				showpercentiles(genVG);
 				}
 		else
-			displaycurve(vg,nu,starttime, endtime);
+			displaycurve(genVG,nu,starttime, endtime);
 		}
 	tapx=-8000;
 } */
-static jint onestep() {
+int onestep() {
 	LOGGER("onestop\n");
-//	if(skipdisplay) return 0;
 	time_t nu=time(nullptr);
 	updateusedsensors(nu);
 	uint32_t endtime=starttime+duration;
@@ -2328,7 +2218,7 @@ static jint onestep() {
 	emptytap=false;
 
 	void		shownumlist();
-	if(showoldscan(vg)) {
+	if(showoldscan(genVG)) {
 		ret=1;
 		}
 	else {
@@ -2336,7 +2226,7 @@ static jint onestep() {
 			shownumlist();
 			}
 		else {
-			withredisplay(vg,nu,endtime);
+			withredisplay(genVG,nu,endtime);
 		}
 	}
 	if(displayer)
@@ -2347,168 +2237,6 @@ static jint onestep() {
 
 extern void render() ;
 
-jobject glucosecurve=0;
-/*
-void requestRender() {
-	if(glucosecurve!=0) {
-		env->CallVoidMethod(glucosecurve,requestRendermeth);
-		}
-	}
-
-	jmethodID requestRendermeth=env->GetMethodId(env->FindClass("android/opengl/GLSurfaceView"),"requestRender" "()V");
-	env->CallVoidMethod(glsurface,requestRender);
-	}
-NewGlobalRef
-*/
-extern "C" JNIEXPORT void  JNICALL   fromjava(setpaused)(JNIEnv *env, jclass cl,jobject val) {
-	if(glucosecurve)
-		env->DeleteGlobalRef(glucosecurve);
-	if(val)
-		glucosecurve=env->NewGlobalRef(val);
-	else
-		glucosecurve=nullptr;
-	}
-#ifndef NOJAVA
-JavaVM *vmptr;
-static jmethodID summaryready=nullptr;
-
-	#ifdef  WEAROS
-static jmethodID showsensorinfo=nullptr;
-#endif
-jmethodID  jdoglucose=nullptr, jupdateDevices=nullptr, jbluetoothEnabled=nullptr;
-jclass JNIApplic;
-#ifdef OLDXDRIP
-#ifndef  WEAROS
-jclass XInfuus;
-jmethodID  sendGlucoseBroadcast=nullptr;
-#endif
-#endif
-
-extern void initlibreviewjni(JNIEnv *env);
-
-extern bool jinitmessages(JNIEnv* env);
-
-JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* reserved) {
-	LOGGER("JNI_OnLoad\n");
-	vmptr=vm;
-	   JNIEnv* env;
-    if (vm->GetEnv(reinterpret_cast<void**>(&env), JNI_VERSION_1_6) != JNI_OK) {
-        return JNI_ERR;
-      }
-
-{
-const jclass cl=env->FindClass("tk/glucodata/GlucoseCurve");
-if(!cl) {
-	summaryready=nullptr;
-	LOGGER("Can't find GlucoseCurve\n");
-	}
-else {
-	LOGGER("found GlucoseCurve\n");
-	summaryready=env->GetMethodID(cl,"summaryready","()V");
-	#ifdef  WEAROS
-	showsensorinfo=env->GetMethodID(cl,"showsensorinfo","(Ljava/lang/String;)V");
-	#endif
-	env->DeleteLocalRef(cl);
-	}
-
-}
-
-{
-const static jclass cl=env->FindClass("tk/glucodata/Applic");
-if(cl) {
-	JNIApplic = (jclass)env->NewGlobalRef(cl);
-	env->DeleteLocalRef(cl);
-	if(!(jdoglucose=env->GetStaticMethodID(JNIApplic,"doglucose","(Ljava/lang/String;IFFIJZ)V"))) {
-		LOGGER(R"(GetStaticMethodID(JNIApplic,"doglucose","(Ljava/lang/String;IFFIJZ)V"))) failed)" "\n");
-		}
-	if(!(jupdateDevices=env->GetStaticMethodID(JNIApplic,"updateDevices","()Z"))) {
-		LOGGER(R"(jupdateDevices=env->GetStaticMethodID(JNIApplic,"updateDevices","()Z") failed)" "\n");
-		}
-	if(!(jbluetoothEnabled=env->GetStaticMethodID(JNIApplic,"bluetoothEnabled","()Z"))) {
-		LOGGER(R"(jbluetoothEnabled=env->GetStaticMethodID(JNIApplic,"bluetoothEnabled","()Z") failed)" "\n");
-		}
-	}
-else {
-	LOGGER(R"(FindClass("tk/glucodata/Applic") failed)" "\n");
-	}
-}
-
-
-#ifdef OLDXDRIP
-#ifndef  WEAROS
-{
-const static jclass cl=env->FindClass("tk/glucodata/XInfuus");
-if(cl) {
-
-	XInfuus = (jclass)env->NewGlobalRef(cl);
-	env->DeleteLocalRef(cl);
-	if(!(sendGlucoseBroadcast=env->GetStaticMethodID(XInfuus,"sendGlucoseBroadcast","(Ljava/lang/String;DFJ)V"))) {
-		LOGGER(R"(GetStaticMethodID(XInfuus,"sendGlucoseBroadcast","(Ljava/lang/String;DFJ)V()) failed)" "\n");
-		}
-	}
-else {
-	LOGGER(R"(FindClass("tk/glucodata/XInfuus") failed)" "\n");
-	}
-	}
-#endif
-#endif
-	/*
-const static jclass clappl=env->FindClass("tk/glucodata/Applic");
-jclass Applic=nullptr;
-jmethodID jupdatescreen=nullptr;
-if(clappl) {
-	Applic= (jclass)env->NewGlobalRef(clappl);
-	env->DeleteLocalRef(clappl);
-	jupdatescreen=env->GetStaticMethodID(Applic,"updatescreen","()V");
-	}
-bool loadglucoseclass(JNIEnv *env);
-if(loadglucoseclass(env)) {
-	LOGGER("end JNI_OnLoad\n");
-	 return JNI_VERSION_1_6;
-	 }
-return JNI_ERR;
-*/
-#ifndef WEAROS
-initlibreviewjni(env);
-#endif
-
-
-#ifdef WEAROS_MESSAGES
-jinitmessages(env) ;
-#endif
-
-	LOGGER("end JNI_OnLoad\n");
-	 return JNI_VERSION_1_6;
-}
-class attach {
-JNIEnv *env;
-public:
-attach() {
-      char buf[17];
-      prctl(PR_GET_NAME, buf, 0, 0, 0);
-	vmptr->AttachCurrentThreadAsDaemon(&env, nullptr);
-        prctl(PR_SET_NAME, buf, 0, 0, 0);
-	}
-~attach() {
-	vmptr->DetachCurrentThread();
-	}
-[[nodiscard]]   JNIEnv *get() const {
-	return env;
-	}
-};
-
-
-
-JNIEnv *getenv() {
-	const thread_local static attach  env;
-	return env.get();
-	}
-bool bluetoothEnabled() {
-    return   getenv()->CallStaticBooleanMethod(JNIApplic,jbluetoothEnabled);
-    }
-//static void     doglucose(String SerialNumber,float gl,float rate,int alarm,long timmsec) {
-
-//struct ScanData {uint32_t t;int32_t id;int32_t g;int32_t tr;float ch;
 
 	extern void	wakeuploader();
 int getalarmcode(const uint32_t glval,SensorGlucoseData *hist) ;
@@ -2544,14 +2272,12 @@ extern	bool hasnotiset();
 				        bool wasnoblue=settings->data()->nobluetooth;
 					LOGGER("processglucosevalue finished=%d,doglucose(%s,%d,%f,%f,%d,%lld,%d)\n", senso->finished,hist->shortsensorname()->data(),poll->g,glu,poll->ch,alarm,tim*1000LL,wasnoblue);
 					senso->finished=0;
-					jstring sname= getenv()->NewStringUTF(hist->shortsensorname()->data());
 					settings->data()->nobluetooth=true;
 					float rate=poll->ch;
-					getenv()->CallStaticVoidMethod(JNIApplic,jdoglucose,sname,poll->g,glu,rate,alarm,tim*1000LL,wasnoblue);
-					getenv()->DeleteLocalRef(sname);
-			#ifndef WEAROS
+extern void telldoglucose(const char *name,int32_t mgdl,float glu,float rate,int alarm,int64_t mmsec,bool wasnoblue) ;
+					telldoglucose(hist->shortsensorname()->data(),poll->g,glu,rate,alarm,tim*1000LL,wasnoblue);
+
 			wakeuploader();
-			#endif
 
 					}
 				else {
@@ -2567,60 +2293,6 @@ extern	bool hasnotiset();
 
 	}
 
-bool updateDevices() {
-    if(!jupdateDevices)  {
-    	LOGGER("jupdateDevices==null\n");
-
-    		return false;
-		}
-    return   getenv()->CallStaticBooleanMethod(JNIApplic,jupdateDevices);
-    }
-void visiblebutton() {
-	if(glucosecurve) {
-		if(summaryready)  {
-			JNIEnv *env =getenv(); 
-			LOGGER("call summaryready\n");
-			env->CallVoidMethod(glucosecurve,summaryready);
-			}
-		else
-			LOGGER("didn't find GlucoseCurve\n");
-		}
-	}
-	#ifdef  WEAROS
-void callshowsensorinfo(const char *text) {
-	if(glucosecurve) {
-		if(showsensorinfo)  {
-			JNIEnv *env =getenv(); 
-			LOGGER("call showsensorinfo\n");
-			env->CallVoidMethod(glucosecurve,showsensorinfo,env->NewStringUTF(text));
-			}
-		else
-			LOGGER("didn't find GlucoseCurve\n");
-		}
-	}
-#endif
-
-void render() {
-	LOGGER("Render\n");
-	if(glucosecurve) {
-		struct method {
-		   jmethodID requestRendermeth;
-		   method(JNIEnv *env) {	
-		        jclass	cl=env->FindClass("android/opengl/GLSurfaceView");
-		        requestRendermeth=env->GetMethodID(cl,"requestRender","()V");
-			env->DeleteLocalRef(cl);
-		   	};
-		};
-		static method meth(getenv());
-//		static jmethodID requestRendermeth=getenv()->GetMethodID(getenv()->FindClass("android/opengl/GLSurfaceView"),"requestRender","()V");
-		getenv()->CallVoidMethod(glucosecurve,meth.requestRendermeth);
-		}
-//	onestep();
-	}
-#endif
-extern "C" JNIEXPORT jint JNICALL fromjava(step)(JNIEnv* env, jclass obj) {
-	return onestep();
-	}
 
        #include <unistd.h>
           #include <sys/types.h>
@@ -2631,7 +2303,6 @@ extern "C" JNIEXPORT jint JNICALL fromjava(step)(JNIEnv* env, jclass obj) {
 //extern string_view filesdir;
 
 extern std::string_view globalbasedir;
-extern pathconcat numbasedir;
 extern pathconcat sensorbasedir;
 extern pathconcat logbasedir;
 
@@ -2665,7 +2336,6 @@ extern void setusepl();
 extern void setusede();
 extern void setusept() ;
 extern void setuseeng() ;
-extern int setfilesdir(const string_view filesdir,const char *country) ;
 extern std::string_view localestr;
 extern bool hour24clock;
 char localestrbuf[10];
@@ -2673,69 +2343,39 @@ std::string_view localestr;
 bool hour24clock=true;
 
 #define mklanguagenum2(a,b) a|b<<8
-//#define mklanguagenum(lang) *reinterpret_cast<const int16_t *>(lang)
 #define mklanguagenum(lang) mklanguagenum2(lang[0],lang[1])
-extern "C" JNIEXPORT void JNICALL fromjava(setlocale)(JNIEnv *env, jclass clazz,jstring jlocalestr,jboolean hour24) {
-	hour24clock=hour24;
-	if(jlocalestr) {
-		size_t len=env->GetStringLength(jlocalestr);
-		env->GetStringUTFRegion( jlocalestr, 0,len, localestrbuf);
-		localestrbuf[len]='\0';
-		LOGGER("locale=%s\n",localestrbuf);
-		localestr={localestrbuf,len};
-		const int16_t lannum=mklanguagenum(localestrbuf);
-//		const int16_t lannum=*reinterpret_cast<const int16_t *>(localestrbuf);
-		switch(lannum) {
-			case mklanguagenum("DE"):
-			case mklanguagenum("de"):
-				setusede();
-				break;
-			case mklanguagenum("IT"):
-			case mklanguagenum("it"):
-				setuseit();
-				break;
-			case mklanguagenum("NL"):
-			case mklanguagenum("nl"):
-				setusenl();
-				break;
-			case mklanguagenum("PT"):
-			case mklanguagenum("pt"):
-				setusept();
-				break;
-			case mklanguagenum("PL"):
-			case mklanguagenum("pl"):
-				setusepl();
-				break;
-			default: setuseeng();
-			};
-		}
+
+void  setlocale(const char *localestrbuf,const size_t len) {
+	LOGGER("locale=%s\n",localestrbuf);
+	localestr={localestrbuf,len};
+	const int16_t lannum=mklanguagenum(localestrbuf);
+	switch(lannum) {
+		case mklanguagenum("DE"):
+		case mklanguagenum("de"):
+			setusede();
+			break;
+		case mklanguagenum("IT"):
+		case mklanguagenum("it"):
+			setuseit();
+			break;
+		case mklanguagenum("NL"):
+		case mklanguagenum("nl"):
+			setusenl();
+			break;
+		case mklanguagenum("PT"):
+		case mklanguagenum("pt"):
+			setusept();
+			break;
+		case mklanguagenum("PL"):
+		case mklanguagenum("pl"):
+			setusepl();
+			break;
+		default: setuseeng();
+		};
 
 	}
 
-extern std::string_view libdirname;
-extern "C" JNIEXPORT int JNICALL fromjava(setfilesdir)(JNIEnv *env, jclass clazz, jstring dir,jstring jcountry,jstring nativedir) {
-	{
-	size_t nativedirlen= env->GetStringUTFLength( nativedir);
-	char *nativebuf=new char[nativedirlen+1];
-	env->GetStringUTFRegion( nativedir, 0,nativedirlen,nativebuf);
-	nativebuf[nativedirlen]='\0';
-	libdirname={nativebuf,nativedirlen};
-	}
-	size_t filesdirlen= env->GetStringUTFLength( dir);
-	jint jdirlen = env->GetStringLength( dir);
-	char *filesdirbuf=new char[filesdirlen+1];
-	env->GetStringUTFRegion( dir, 0,jdirlen, filesdirbuf);
-	filesdirbuf[filesdirlen]='\0';
-	char country[3];
-	if(jcountry&& env->GetStringLength(jcountry)>=2) {
-		env->GetStringUTFRegion( jcountry, 0,2, country);
-		country[2]='\0';
-		}
-	else
-		country[0]='\0';
-	return setfilesdir({filesdirbuf,filesdirlen},country);
-	}
-extern "C" JNIEXPORT void JNICALL fromjava(calccurvegegs)(JNIEnv *env, jclass clazz) {
+void  calccurvegegs() {
 	LOGGER("start calccurvegegs\n");
 	mkheights(); 
 	starttime=maxtime()-4*duration/5;
@@ -2744,7 +2384,7 @@ extern "C" JNIEXPORT void JNICALL fromjava(calccurvegegs)(JNIEnv *env, jclass cl
 	}
 
 void		numendbegin() ;
-extern "C" JNIEXPORT void JNICALL fromjava(flingX) (JNIEnv *env, jclass clazz,jfloat vol) {
+void flingX(float vol) {
 	if(numlist)  {
 		LOGGER("flingX\n");
 		if(vol<0) {
@@ -2765,7 +2405,7 @@ bool				numpageforward() ;
 
 
 bool numpagepast() ;
-extern "C" JNIEXPORT jint JNICALL fromjava(translate) (JNIEnv *env, jclass clazz,jfloat dx,jfloat dy,jfloat yold,jfloat y) {
+int translate(float dx,float dy,float yold,float y) {
 static bool ybezig=false;
 	auto absdy=fabsf(dy);
 	if(fabsf(dx)>absdy) {	
@@ -2790,7 +2430,6 @@ static bool ybezig=false;
 			}
 		else  {
 			ybezig=false;
-//			starttime+=(dx/(10.0*24.0*4.0))*duration;
 			starttime+=1.2*(dx/dwidth)*duration;
 			#ifndef WEAROS
 			if(!showpers)
@@ -2810,7 +2449,6 @@ static bool ybezig=false;
 			float grens=dheight/2.0;
 
 			if(y<grens&&yold<grens) {
-//				grange*=(1+dy*3/dheight);
 				grange*=dheight/(dheight-dy*1.4);
 				settime=starttime;
 				setend=starttime+duration;
@@ -2819,12 +2457,6 @@ static bool ybezig=false;
 				int gmax=gmin+grange;
 				grange*=dheight/(dheight+dy*1.4);
 				gmin=gmax-grange;
-				/*
-					float wasgmin=gmin;
-					gmin+=(dy*1.5/dheight)*grange;
-					if(gmin<0)
-						gmin=0;
-					grange+=(wasgmin-gmin); */
 					settime=starttime;
 					setend=starttime+duration;
 					}
@@ -2836,16 +2468,7 @@ static bool ybezig=false;
 		}
 	return 0;
 	}
-	/*
-void xscale(jfloat scalex, jfloat midx) {
-	double rat=((midx-dleft)/dwidth);
-	uint32_t focustime=rat*wasduration+wasstarttime;
-	duration=wasduration/scalex;
-	starttime=focustime-rat*duration;
-	setend=0;
-	}*/
-extern "C" JNIEXPORT void JNICALL fromjava(xscale) (JNIEnv *env, jclass clazz,jfloat scalex,jfloat midx) {
-	//xscale(scalex,midx);
+void xscaleGesture(float scalex,float midx) {
 	if(fixatex)
 		return;
 
@@ -2869,13 +2492,13 @@ extern "C" JNIEXPORT void JNICALL fromjava(xscale) (JNIEnv *env, jclass clazz,jf
 	}
 
 
-extern "C" JNIEXPORT void JNICALL fromjava(prevscr)(JNIEnv* env, jclass obj) {
+void prevscr() {
 	starttime-=duration;
 	auto minstart= minstarttime();
 	if(starttime<minstart)
 		starttime=minstart;
 	}
-extern "C" JNIEXPORT void JNICALL fromjava(nextscr)(JNIEnv* env, jclass obj) {
+void  nextscr() {
 	starttime+=duration;
 #ifndef WEAROS
 	if(!showpers) 
@@ -2898,12 +2521,12 @@ struct {
 
 
 
-extern "C" JNIEXPORT void JNICALL fromjava(pressedback) (JNIEnv *env, jclass clazz) {
+void pressedback() {
 	scantoshow={-1,nullptr}; 
 	LOGGER("true\n");
 	displayer.reset();
 	}
-extern "C" JNIEXPORT jboolean JNICALL fromjava(isbutton) (JNIEnv *env, jclass clazz,jfloat x,jfloat y) {
+bool isbutton(float x,float y) {
 	LOGGER("isbutton ");
 	if(!inbutton(x,y)) {
 		LOGGER("false\n");
@@ -2950,7 +2573,7 @@ void lognum(const Num *num) {
 int numfrompos(const float x,const float y) ;
 vector<mealposition> mealpos;
 
-extern "C" JNIEXPORT jlong JNICALL fromjava(tap) (JNIEnv *env, jclass clazz,jfloat x,jfloat y) {
+int64_t screentap(float x,float y) {
 
 #ifndef WEAROS
 	if(!showpers ) 
@@ -2991,13 +2614,13 @@ extern "C" JNIEXPORT jlong JNICALL fromjava(tap) (JNIEnv *env, jclass clazz,jflo
 	const float rgrens=dwidth-wgrens;
 
 	if(x<wgrens)  {
-			fromjava(prevscr)(0,0);
+			prevscr();
 			return -1LL;
 			}
 		
 	else 
 	    if (x > rgrens)  {
-		fromjava(nextscr)(0,0);
+		nextscr();
 		return -1LL;
 		}
 	    
@@ -3014,18 +2637,24 @@ extern bool showsummarygraph;
 	{
 		tapx=x;tapy=y;
 		}
-//	highlight=nullptr;
-//	lastscan=nullptr;
 	return -1LL;
 	}
 
-struct NumHit{
-NumDisplay *numdisplay;
-const Num *hit;
-};
 Num newnum;
+#include "numhit.h"
 NumHit newhit={nullptr,&newnum};
 
+int  hitremove(int64_t ptr) {
+	NumHit *num=reinterpret_cast<NumHit *>(ptr);
+	 jint res=num->numdisplay->numremove(const_cast<Num*>(num->hit));
+	 if(numlist) {
+	 	for(int i=0;i<basecount;i++) {
+			numiters[i].end=numdatas[i]->end()-1;
+			}
+	 	}
+
+	 return res;
+	}
 extern Numdata *getherenums();
 Numdata *getherenums() {
 	return newhit.numdisplay;
@@ -3053,13 +2682,13 @@ template <class TX,class TY> const ScanData * nearbyscan(const float tapx,const 
 	}
 #include "strconcat.h"
 void showOK(float xpos,float ypos) {
-	nvgFontSize(vg,headsize/4 );
+	nvgFontSize(genVG,headsize/4 );
 
 	const char ok[]="OK";
 	const int oklen=sizeof(ok)-1;
-	nvgTextBounds(vg, xpos,ypos ,ok , ok+oklen, (float *)&menupos);
+	nvgTextBounds(genVG, xpos,ypos ,ok , ok+oklen, (float *)&menupos);
 
-	nvgText(vg, xpos,ypos,ok,ok+oklen);
+	nvgText(genVG, xpos,ypos,ok,ok+oklen);
 	menupos.left-=mediumfont;
 	menupos.right+=mediumfont;
 	menupos.bottom+=mediumfont;
@@ -3068,29 +2697,29 @@ void showOK(float xpos,float ypos) {
 template <typename  TI,typename TE>
 void textbox(const TI &title,const TE &text) {
 	float w=dwidth*0.6;
-// 	nvgRoundedRect(vg,  x,  y,  w,  h,  r);
+// 	nvgRoundedRect(genVG,  x,  y,  w,  h,  r);
 //	x+=smallsize;
-	nvgFontFaceId(vg,font);
+	nvgFontFaceId(genVG,font);
 	bounds_t bounds;
-	nvgTextAlign(vg,NVG_ALIGN_LEFT|NVG_ALIGN_TOP);
-	nvgFontSize(vg, smallsize);
-	nvgTextLineHeight(vg, 1.7);
-	 nvgTextBoxBounds(vg, 0,  0, w,begin(text), end(text), bounds.array);
-	nvgBeginPath(vg);
+	nvgTextAlign(genVG,NVG_ALIGN_LEFT|NVG_ALIGN_TOP);
+	nvgFontSize(genVG, smallsize);
+	nvgTextLineHeight(genVG, 1.7);
+	 nvgTextBoxBounds(genVG, 0,  0, w,begin(text), end(text), bounds.array);
+	nvgBeginPath(genVG);
 	float width= bounds.xmax-bounds.xmin+ smallsize;
 	float height= bounds.ymax-bounds.ymin+sensorbounds.height*2;
 	float x=(dwidth-width)/2;
 	float y=(dheight-height)/2;
-	nvgFillColor(vg, red);
- 	nvgRoundedRect(vg,  x-smallsize, y-smallsize,  width+2*smallsize, height+2*smallsize, dwidth/60 );
-	nvgFill(vg);
-	nvgFillColor(vg, *getblack());
-	nvgTextBox(vg,  x,  y+sensorbounds.height+smallsize, width, begin(text),end(text));
-	nvgFontSize(vg, mediumfont);
+	nvgFillColor(genVG, red);
+ 	nvgRoundedRect(genVG,  x-smallsize, y-smallsize,  width+2*smallsize, height+2*smallsize, dwidth/60 );
+	nvgFill(genVG);
+	nvgFillColor(genVG, *getblack());
+	nvgTextBox(genVG,  x,  y+sensorbounds.height+smallsize, width, begin(text),end(text));
+	nvgFontSize(genVG, mediumfont);
 
-	nvgTextAlign(vg,NVG_ALIGN_LEFT|NVG_ALIGN_TOP);
-	nvgText(vg, x,y, begin(title),end(title));
-	nvgTextAlign(vg,NVG_ALIGN_RIGHT|NVG_ALIGN_TOP);
+	nvgTextAlign(genVG,NVG_ALIGN_LEFT|NVG_ALIGN_TOP);
+	nvgText(genVG, x,y, begin(title),end(title));
+	nvgTextAlign(genVG,NVG_ALIGN_RIGHT|NVG_ALIGN_TOP);
 	showOK(x+width,y);
 	}
 class histgegs:public Displayer {
@@ -3154,6 +2783,8 @@ bool nearbyhistory( const float tapx,const float tapy,  const TX &transx,  const
 					if(nearby(posx-tapx,posy-tapy)) {
 #ifdef WEAROS
 						histgegs gegs(hist);
+
+extern void callshowsensorinfo(const char *text);
 						callshowsensorinfo(gegs.getsensorhelp("","<h1>","</h1>","<br><br>","<br>").data());
 #else
 						::prevtouch.x=tapx;
@@ -3172,7 +2803,7 @@ bool nearbyhistory( const float tapx,const float tapy,  const TX &transx,  const
 
 static bool  inmenu(float x,float y) ;
 
-extern "C" JNIEXPORT jlong JNICALL fromjava(longpress) (JNIEnv *env, jclass clazz,jfloat x,jfloat y) {
+int64_t longpress(float x,float y) {
 	LOGGER("longpress\n");
 	if(numlist
 #ifndef WEAROS
@@ -3204,8 +2835,6 @@ extern "C" JNIEXPORT jlong JNICALL fromjava(longpress) (JNIEnv *env, jclass claz
 		for(int i=histlen-1;i>=0;i--) {
 			if(const ScanData *poll=nearbyscan(x,y,pollranges[i].first,pollranges[i].second,transx,transy)) {
 				LOGGER("longpress poll %.1f\n",poll->g/18.0);
-			//	oldstream
-		//		oldstream[0]={poll, sensors->gethist(hists[i])->shortsensorname() };
 				return 0LL;
 				}
 			 }
@@ -3218,84 +2847,9 @@ extern "C" JNIEXPORT jlong JNICALL fromjava(longpress) (JNIEnv *env, jclass claz
 		newnum.value=NAN;
 		return reinterpret_cast<jlong>(&newhit);
 		}
-/*	tapx=x;tapy=y;
-	selshown=true;
-	longpress=true;*/
 	return 0LL;
 	}
 
-extern "C" JNIEXPORT jlong JNICALL fromjava(newhit) (JNIEnv *env, jclass clazz) {
-		return reinterpret_cast<jlong>(&newhit);
-		}
-extern "C" JNIEXPORT jlong JNICALL fromjava(hittime) (JNIEnv *env, jclass clazz,jlong ptr) {
-	NumHit *num=reinterpret_cast<NumHit *>(ptr);
-	return num->hit->time;
-	}
-
-extern "C" JNIEXPORT jfloat JNICALL fromjava(hitvalue) (JNIEnv *env, jclass clazz,jlong ptr) {
-	NumHit *num=reinterpret_cast<NumHit *>(ptr);
-	return num->hit->value;
-	}
-extern "C" JNIEXPORT jint JNICALL fromjava(hittype) (JNIEnv *env, jclass clazz,jlong ptr) {
-	NumHit *num=reinterpret_cast<NumHit *>(ptr);
-	return num->hit->type;
-	}
-extern "C" JNIEXPORT jint JNICALL fromjava(hitmeal) (JNIEnv *env, jclass clazz,jlong ptr) {
-	NumHit *num=reinterpret_cast<NumHit *>(ptr);
-	return num->hit->mealptr;
-	}
-extern "C" JNIEXPORT jint JNICALL fromjava(hitremove) (JNIEnv *env, jclass clazz,jlong ptr) {
-	NumHit *num=reinterpret_cast<NumHit *>(ptr);
-	 jint res=num->numdisplay->numremove(const_cast<Num*>(num->hit));
-	 if(numlist) {
-	 	for(int i=0;i<basecount;i++) {
-			numiters[i].end=numdatas[i]->end()-1;
-			}
-	 	}
-
-	 return res;
-	}
-	/*
-extern "C" JNIEXPORT jboolean JNICALL fromjava(hitneedsync) (JNIEnv *env, jclass clazz,jlong ptr) {
-	NumHit *num=reinterpret_cast<NumHit *>(ptr);
-	return num->numdisplay->needsync();
-}*/
-extern "C" JNIEXPORT jint JNICALL fromjava(gethitindex) (JNIEnv *env, jclass clazz,jlong ptr) {
-	NumHit *num=reinterpret_cast<NumHit *>(ptr);
-	const NumDisplay *dis=num->numdisplay;
-	if(!dis)
-		return 1;
-	return dis->getindex();
-}
-
-extern "C" JNIEXPORT void JNICALL fromjava(hitchange)(JNIEnv *env, jclass thiz,jlong ptr,jlong time,jfloat value,int type,int mealptr) {
-	NumHit *num=reinterpret_cast<NumHit *>(ptr);
-	num->numdisplay->numchange(num->hit,time,value,type,mealptr);
-	}
-extern "C" JNIEXPORT void JNICALL fromjava(hitsetmealptr)(JNIEnv *env, jclass thiz,jlong ptr,jint mealptr) {
-	NumHit *num=reinterpret_cast<NumHit *>(ptr);
-	num->numdisplay->setmealptr(const_cast<Num *>(num->hit),mealptr);
-	}
-/*
-struct NumHit{
-    NumDisplay *numdisplay;
-    const Num *hit;
-};
- */
-extern "C" JNIEXPORT jlong JNICALL fromjava(mkhitptr) (JNIEnv *env, jclass clazz,jlong ptr,jint pos) {
-	NumDisplay *dis=reinterpret_cast<NumDisplay*>(ptr);
-	NumHit *num=new NumHit({dis,dis->startdata()+pos});
-	return reinterpret_cast<jlong>(num);
-	}
-extern "C" JNIEXPORT void JNICALL fromjava(freehitptr)(JNIEnv *env, jclass thiz,jlong ptr) {
-	delete reinterpret_cast<NumHit *>(ptr);
-	}
-extern "C" JNIEXPORT jlong JNICALL fromjava(getstarttime) (JNIEnv *env, jclass clazz) {
-	return static_cast<jlong>(starttime)*1000l;
-	};
-extern "C" JNIEXPORT jlong JNICALL fromjava(getendtime) (JNIEnv *env, jclass clazz) {
-	return (static_cast<jlong>(starttime)+duration)*1000l;
-	};
 
 static uint32_t timeend() {
 	return starttime+duration;	
@@ -3382,14 +2936,8 @@ int nextforward() {
 		}
 	return 1;			
 	}
-extern "C" JNIEXPORT void JNICALL fromjava(stopsearch) (JNIEnv *env, jclass clazz) {
+void stopsearch() {
 	searchdata.type=nosearchtype;
-	}
-extern "C" JNIEXPORT jint JNICALL fromjava(latersearch) (JNIEnv *env, jclass clazz) {
-	return nextforward();
-	}
-extern "C" JNIEXPORT jint JNICALL fromjava(earliersearch) (JNIEnv *env, jclass clazz) {
-	return nextpast();
 	}
 static const ScanData * findScan(const ScanData *start,const ScanData *en) {
 	for(const ScanData *it=en-1;it>=start;--it) {
@@ -3656,9 +3204,8 @@ static uint32_t glucoseforwardsearch(uint32_t starttime,uint32_t endtime) {
 	glucosesel(res);
 	return 0;
 	}
-extern "C" JNIEXPORT jint JNICALL fromjava(search) (JNIEnv *env, jclass clazz,jint type, jfloat under,jfloat above,jint frommin,jint tomin,jboolean forward,jstring jregingr,jfloat amount) {
+int searchcommando(int type, float under,float above,int frommin,int tomin,bool forward,const char *regingr,float amount) {
 if(type&glucosetype) {
-//	searchdata={type ,float(under*180.0), float(above*180.0), frommin, tomin,0};
 	searchdata={type ,backconvert(under), backconvert(above), frommin, tomin,0};
 	return forward?glucoseforwardsearch(starttime, std::numeric_limits<uint32_t>::max()):glucosesearch(0,starttime+duration);
 	}
@@ -3666,14 +3213,8 @@ auto maxlab=getmaxlabel();
 if(type>=maxlab)
 	type=0x80000000;
 searchdata={ type, under, above, frommin, tomin,maxlab};
-if(jregingr!=nullptr&&type==carbotype) {
-        const char *regingr = env->GetStringUTFChars( jregingr, nullptr);
-        if(regingr == nullptr) {
-		searchdata.type=nosearchtype;
-		return 3;
-		}
+if(regingr!=nullptr&&type==carbotype) {
 	meals->datameal()->searchingredients(regingr,searchdata.ingredients);
-        env->ReleaseStringUTFChars(jregingr, regingr);
 	if(searchdata.ingredients.size()==0) {
 		searchdata.type=nosearchtype;
 		return 4;
@@ -3690,17 +3231,6 @@ searchdata.type=nosearchtype;
 return 1;
 }
 
-extern "C" JNIEXPORT void JNICALL fromjava(movedate) (JNIEnv *env, jclass clazz,jlong milli,jint year,jint month,jint day) {
-	time_t tim=milli/1000l;
-	struct tm		stm{};
-	localtime_r(&tim,&stm);
-	stm.tm_year=year-1900;
-	stm.tm_mon=month;
-	stm.tm_mday=day;
-	time_t timto=mktime(&stm);
-	starttime+=uint32_t((int64_t)timto-(int64_t)tim);
-	begrenstijd() ;
-	};
 static constexpr const int day=60*60*24;
 void prevdays(int nr) {
 	//starttime=starttimefromtime(starttime-nr*day);
@@ -3709,10 +3239,7 @@ void prevdays(int nr) {
 	if(starttime<minstart)
 		starttime=minstart;
 	}
-extern "C" JNIEXPORT void JNICALL fromjava(prevday)(JNIEnv* env, jclass obj) {
-	prevdays(1);
-	}
-static void nextdays(int nr) {
+void nextdays(int nr) {
 	//starttime=starttimefromtime(starttime+day*nr);
 	starttime+=day*nr;
 #ifndef WEAROS
@@ -3721,15 +3248,6 @@ static void nextdays(int nr) {
 	{
 		auto maxstart= maxstarttime(); if(starttime>maxstart) starttime=maxstart;
 		}
-	}
-extern "C" JNIEXPORT void JNICALL fromjava(nextday)(JNIEnv* env, jclass obj) {
-	nextdays(1);
-/*
-	starttime+=day;
-	auto maxstart= maxstarttime();
-	if(starttime>maxstart)
-		starttime=maxstart;
-		*/
 	}
 
 //constexpr int hourminstrlen=20;
@@ -3880,11 +3398,11 @@ int getmenu(int tapx) {
 	return tapx*maxmenu/dwidth;
 	}
 
-static const float  getsetlen(NVGcontext* vg,float x, float  y,const char * set,const char *setend,bounds_t &bounds) {
-	 	nvgTextBounds(vg, x,  y, set,setend, bounds.array);
+static const float  getsetlen(NVGcontext* genVG,float x, float  y,const char * set,const char *setend,bounds_t &bounds) {
+	 	nvgTextBounds(genVG, x,  y, set,setend, bounds.array);
 		return bounds.xmax-bounds.xmin;
 		}
-static void showtext(NVGcontext* vg ,time_t nu,int menu) {
+static void showtext(NVGcontext* genVG ,time_t nu,int menu) {
 #ifdef WEAROS
 	if(menu==1) {
 		setnowmenu(nu);
@@ -3911,19 +3429,19 @@ static void showtext(NVGcontext* vg ,time_t nu,int menu) {
 	float menuplace= dwidth/ maxmenu;
 	float x=xrand+menu*menuplace,starty=yrand,y=starty;
 
-	nvgTextAlign(vg,NVG_ALIGN_LEFT|NVG_ALIGN_TOP);
+	nvgTextAlign(genVG,NVG_ALIGN_LEFT|NVG_ALIGN_TOP);
 
 	bounds_t bounds;
 
-	nvgFontFaceId(vg,menufont);
-	nvgFontSize(vg, menusize);
-	 nvgTextBounds(vg, x,  y, menuitem[0].data(),menuitem[0].data()+menuitem[0].size(), bounds.array);
-//	nvgText(vg, x,y, menuitem[0].data(), menuitem[0].data()+menuitem[0].size());
+	nvgFontFaceId(genVG,menufont);
+	nvgFontSize(genVG, menusize);
+	 nvgTextBounds(genVG, x,  y, menuitem[0].data(),menuitem[0].data()+menuitem[0].size(), bounds.array);
+//	nvgText(genVG, x,y, menuitem[0].data(), menuitem[0].data()+menuitem[0].size());
 	 float maxx=bounds.xmax;
 	 float maxwidth=bounds.xmax-bounds.xmin;
 	 for(int i=1;i<nrmenu;i++) {
 		y+=menutextheight;
-	 	nvgTextBounds(vg, x,  y, menuitem[i].data(),menuitem[i].data()+menuitem[i].size(), bounds.array);
+	 	nvgTextBounds(genVG, x,  y, menuitem[i].data(),menuitem[i].data()+menuitem[i].size(), bounds.array);
 	 	if(maxx<bounds.xmax)
 			maxx=bounds.xmax;
 		 float maxwidthone=bounds.xmax-bounds.xmin;
@@ -3931,9 +3449,9 @@ static void showtext(NVGcontext* vg ,time_t nu,int menu) {
 		 	maxwidth=maxwidthone;
 		}
 	float height=y+bounds.ymax-bounds.ymin;
-	nvgBeginPath(vg);
-	 nvgFillColor(vg, *getmenucolor());
-//	 nvgFillColor(vg, white);
+	nvgBeginPath(genVG);
+	 nvgFillColor(genVG, *getmenucolor());
+//	 nvgFillColor(genVG, white);
 	 float mwidth=maxx-x+2*xrand;
 //	 float minmenu=128*density;
 	 float minmenu=
@@ -3956,11 +3474,11 @@ static void showtext(NVGcontext* vg ,time_t nu,int menu) {
 		 x+=xrand;
 	 #endif
 	 menupos={ x-xrand, starty-yrand,x-xrand+ mwidth, height+yrand};
-	 nvgRect(vg, x-xrand, starty-yrand, mwidth, height-starty+2*yrand);
-	nvgFill(vg);
+	 nvgRect(genVG, x-xrand, starty-yrand, mwidth, height-starty+2*yrand);
+	nvgFill(genVG);
 #ifdef WEAROS
 if(menu==0) {
-	nvgTextAlign(vg,NVG_ALIGN_RIGHT|NVG_ALIGN_TOP);
+	nvgTextAlign(genVG,NVG_ALIGN_RIGHT|NVG_ALIGN_TOP);
 	x+=maxwidth;
 	}
 #endif
@@ -3968,11 +3486,11 @@ if(menu==0) {
 
 
 	y=starty;
-//	 nvgFillColor(vg, *getwhite());
-	 nvgFillColor(vg, *getmenuforegroundcolor());
-//	 nvgFillColor(vg, black);
+//	 nvgFillColor(genVG, *getwhite());
+	 nvgFillColor(genVG, *getmenuforegroundcolor());
+//	 nvgFillColor(genVG, black);
 	 for(int i=0;i<nrmenu;i++) {
-		nvgText(vg, x,y, menuitem[i].data(), menuitem[i].data()+menuitem[i].size());
+		nvgText(genVG, x,y, menuitem[i].data(), menuitem[i].data()+menuitem[i].size());
 		y+=menutextheight;
 		}
 
@@ -3989,13 +3507,13 @@ if(menu==0) {
 		else 
 #endif
 		{
-		static const float  dlen=getsetlen(vg, x,  y, set,set+len, bounds);
+		static const float  dlen=getsetlen(genVG, x,  y, set,set+len, bounds);
 		 xpos=x-2*xrand+mwidth-dlen;
 		 }
 		 for(int i=0;i<nrmenu;i++) {
 		 	if(const int *optr=options[i]) {
 				const char *op=*optr?set:unset;
-				nvgText(vg, xpos ,y,op ,op+len );
+				nvgText(genVG, xpos ,y,op ,op+len );
 				}
 			y+=menutextheight;
 			}
@@ -4175,15 +3693,6 @@ static int64_t menutap(float x,float y) {
 	}
 
 
-extern "C" JNIEXPORT jlong JNICALL fromjava(lastpoll)(JNIEnv *env, jclass thiz) {
-	const SensorGlucoseData *hist=sensors->gethist(); 
-	const ScanData *glu=hist->lastpoll() ;
-	if(glu)
-		return (((jlong)glu->g)<<32)|(jlong)glu->t;
-	else
-		return 0LL;
-//	return (((jlong)glu->g)<<32);
-	}
 
 
 
@@ -4265,7 +3774,7 @@ int numsize() {
 }
 void showfromend() {
 	settoend() ;
-	shownumsback(vg, numiters,basecount);
+	shownumsback(genVG, numiters,basecount);
        setitertobottom(numiters,basecount);
 	}
 void showfromstart() {
@@ -4277,7 +3786,7 @@ void showfromstart() {
 			numiters[i].iter=getpageoldest(i);
 			}
 		}
-	 shownums(vg, numiters, basecount);
+	 shownums(genVG, numiters, basecount);
 	for(int i=0;i<basecount;i++) {
 		setpagenewest(i,numiters[i].iter);
 		}
@@ -4375,36 +3884,14 @@ void shownumiters() {
 		}
 	LOGGER("\n");
 	}
-/*
-void scrollnum() {
-	settoend() ;
-	int res=ifindnewest(numiters,basecount);
-	const Num *num=numiters[res].iter+1;
-	lognum(num);
-	for(int i=0;i<basecount;i++) {
-		numiters[i].end=numiters[i].iter;
-		}
-	}
-extern "C" JNIEXPORT void JNICALL fromjava(logtid)(JNIEnv *env, jclass thiz,jstring jmess) {
 
-	jint len = env->GetStringUTFLength( jmess);
-	char mess[len+1];
-	env->GetStringUTFRegion(jmess, 0,len, mess);
-	mess[len]='\0';
-	LOGGER("tid=%ld %s\n",syscall(SYS_gettid),mess);
-	}
-	*/
-
-extern "C" JNIEXPORT void JNICALL fromjava(firstpage)(JNIEnv *env, jclass thiz) {
+void numfirstpage() {
 	for(int i=0;i<basecount;i++)
 		setpageoldest(i,numiters[i].begin);
 	}
 
-extern "C" JNIEXPORT void JNICALL fromjava(lastpage)(JNIEnv *env, jclass thiz) {
-	numpagenum(maxtime());
-	}
 
-extern "C" JNIEXPORT void JNICALL fromjava(endnumlist)(JNIEnv *env, jclass thiz) {
+void endnumlist() {
 	numlist=0;
 
 	uint32_t first=UINT32_MAX,second=0;
@@ -4443,87 +3930,22 @@ char buf[80];
 	starttime=starttimefromtime((first+second)/2);
 	return;
 	}
-/*
-extern "C" JNIEXPORT void JNICALL fromjava(systemUI)(JNIEnv *env, jclass thiz,jboolean val) {
-	showui=val;
-	} */
-extern "C" JNIEXPORT jboolean JNICALL fromjava(getsystemUI)(JNIEnv *env, jclass thiz) {
-	return showui;
-	}
+
 //#include <stdio.h>
        #include <sys/types.h>
        #include <sys/stat.h>
        #include <fcntl.h>
 
-/*
-extern "C" JNIEXPORT void JNICALL fromjava(tryfopen)(JNIEnv *env, jclass thiz) {
-	char file[]="/system/fonts/Roboto-Black.ttf";
-	LOGGER("tryfopen\n");
-	int fp=open(file,O_RDONLY);
-	
-//	FILE *fp=fopen(file,"rb");
-	if(fp) {
-		LOGGER("opened %s\n",file);
-		close(fp);
-		}
-	else
-		LOGGER("opened %s failed\n",file);
-	}*/
-extern "C" JNIEXPORT jlong JNICALL fromjava(openNums)(JNIEnv *env, jclass thiz,jstring jbase,jlong ident) {
 
-	jint len = env->GetStringUTFLength( jbase);
-	int blen=numbasedir.length();
-	int alllen=len+blen+1;
-	char base[alllen+1];
-	memcpy(base,numbasedir.data(),blen);
-	base[blen++]='/';
-	jint jlen = env->GetStringLength( jbase);
-	env->GetStringUTFRegion(jbase, 0,jlen, base+blen);
-	base[alllen]='\0';
-	 NumDisplay* numdata=NumDisplay::getnumdisplay( string_view(base,alllen),ident,nummmaplen);
+int64_t openNums(std::string_view numpath,int64_t ident) {
+	 NumDisplay* numdata=NumDisplay::getnumdisplay( numpath,ident,nummmaplen);
 	 if(numdata) {
 		numdatas.push_back(numdata);
 		if(ident==0LL)
 			newhit.numdisplay=numdata;
 		}
 	
-	LOGGER("numdir=%s ptr=%p\n",base,numdata);
-	return reinterpret_cast<jlong>(numdata);
+	LOGGER("numdir=%s ptr=%p\n",numpath,numdata);
+	return reinterpret_cast<int64_t>(numdata);
 	}
-/*
-extern "C" JNIEXPORT jboolean JNICALL fromjava(usemeal)(JNIEnv *env, jclass thiz) {
-	#ifdef USE_MEAL
-		return true;
-	#else
-		return false;
-	#endif
-	} */
-extern "C" JNIEXPORT void JNICALL fromjava(setlastcolor)(JNIEnv *env, jclass thiz,jint color) {
-	LOGGER("lasttouchedcolor=%d color=%x\n",lasttouchedcolor,color);
-	if(lasttouchedcolor<0)
-		return;
-	setcolor(lasttouchedcolor, hexcoloralpha((uint32_t)color));
-	}
-extern "C" JNIEXPORT jint JNICALL fromjava(getlastcolor)(JNIEnv *env, jclass thiz) {
-	if(lasttouchedcolor<0)
-		return 0xFFFFFFFF;
-	return  fromNVGcolor(getcolor(lasttouchedcolor));
-	}
-extern "C" JNIEXPORT void JNICALL fromjava(setscreenwidthcm)(JNIEnv *env, jclass thiz,jfloat wcm) {
-	screenwidthcm=wcm;
-	iswatch=(wcm<5.8f);
-	}
-
-#define defdisplay(kind)\
-extern "C" JNIEXPORT jboolean JNICALL fromjava(getshow##kind)(JNIEnv *env, jclass thiz) {\
-	return show##kind;\
-	}\
-extern "C" JNIEXPORT void JNICALL fromjava(setshow##kind)(JNIEnv *env, jclass thiz,jboolean val) {\
-	show##kind=val;\
-	}
-
-defdisplay(scans)
-defdisplay(histories)
-defdisplay(stream)
-defdisplay(numbers)
 

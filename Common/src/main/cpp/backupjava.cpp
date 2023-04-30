@@ -334,8 +334,8 @@ extern "C" JNIEXPORT void JNICALL   fromjava(networkpresent)(JNIEnv *env, jclass
 		}
 	else
 		networkpresent=true;
-#if !defined(WEAROS) && !defined(TESTMENU)
 	wakeuploader();
+#if !defined(WEAROS) && !defined(TESTMENU)
 	 wakeaftermin(0) ;
 #endif
 	}

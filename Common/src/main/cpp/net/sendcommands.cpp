@@ -425,11 +425,6 @@ bool senddata(crypt_t *pass,const int sock,const std::vector<subdata>&data,const
 	return newsenddata(pass,sock,data,naar,dowith,extra,extralen) ;
 	}
 //static thread_local uint8_t receiverversion=0;
-extern void	setreceiverversion(uint8_t version) ;
-void	setreceiverversion(uint8_t version) {
-	LOGGERTAG("receiverversion=%d\n",version);
-//	receiverversion=version;
-	}
 bool senddata(crypt_t *pass,const int sock,const int offset,const senddata_t *data,const int datalen,const string_view naar,uint16_t dowith,const uint8_t *extra,int extralen) {
 		return newsenddata(pass,sock,offset,data,datalen,naar,dowith,extra,extralen) ;
 	}

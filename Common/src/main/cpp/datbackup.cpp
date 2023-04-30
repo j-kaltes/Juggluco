@@ -516,3 +516,7 @@ bool sendall(const passhost_t *host) {
   }
 
 mirrorstatus_t mirrorstatus[maxallhosts];
+extern void resethost(passhost_t &host) ;
+void resethost(passhost_t &host) {
+	backup->resethost(host);
+	}

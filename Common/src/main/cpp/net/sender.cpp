@@ -34,7 +34,7 @@
 #include <algorithm>
 //#include <latch>
 #include <poll.h>
-
+#include <alloca.h>
        #include <sys/prctl.h>
 
 #include "destruct.h"
@@ -102,16 +102,29 @@ bool block(int sock) {
 #include "sendmagic.h"
 static auto getsendmagic() {
 	std::array<unsigned char,sizeof(sendmagic)> back=sendmagicinit;
-	makerandom(end(back)-4,4);
+	uint8_t lastrand;
+	do {
+		makerandom(end(back)-4,4);
+		lastrand=back.back();
+		} while(!lastrand);
 	return back;
 	}
 std::array<unsigned char,sizeof(sendmagic)>  sendmagicspec=getsendmagic();
 
 
-static bool testsendmagic(int sock) {
+static bool testsendmagic(passhost_t *pass,int sock) {
 	#include "receivemagic.h"
+	decltype(sendmagicspec) *magicptr;
 
-	if(sendni(sock,sendmagicspec.data(),sendmagicspec.size())!=sendmagicspec.size()) {
+	if(pass->receivedatafrom()&&pass->newconnection) {
+		magicptr=(decltype(sendmagicspec) *)alloca(sizeof(sendmagicspec));
+		*magicptr=sendmagicspec;	
+		magicptr->back()=0;
+		LOGGERTAG("testsendmagic newconnection %s\n",pass->getnameif());
+		}
+	else
+		magicptr=&sendmagicspec;
+	if(sendni(sock,magicptr->data(),magicptr->size())!=magicptr->size()) {
 		lerrortag("send magic failed\n");
 		return false;
 		}
@@ -130,8 +143,13 @@ constexpr const int recsize=sizeof(receivemagic);
 		return false;
 		}
 	LOGGERTAG("testsendmagic %d success\n",sock);
-extern void	setreceiverversion(uint8_t version) ;
-	setreceiverversion(buf[recsize-1]);
+//extern void	setreceiverversion(uint8_t version) ;
+//	setreceiverversion(buf[recsize-1]);
+	if(!buf[recsize-1]) {
+		extern void resethost(passhost_t &host) ;
+		resethost(*pass);
+		}
+	pass->newconnection=false;
 	return true;
 	}
 
@@ -198,7 +216,7 @@ Specify the receiving or sending timeouts until reporting an error. The argument
 			}
 		
 		}
-	if(!testsendmagic(sock)) 
+	if(!testsendmagic(pass,sock)) 
 		return -1;
 	if(stype) {
 		sendtype(sock,stype);

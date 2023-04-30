@@ -135,14 +135,6 @@ static inline float trend2rate(const int trend) {
 static bool validglucosevalue(uint16_t value) {
 	return value>=39&&value<=501;
 	}
-/*
-static void savehistonpos(SensorGlucoseData *save,int pos, int lifeCount, uint16_t mgL) {
-	const auto wastime=save->lifeCount2time(lifeCount);
-	LOGGER("savehistonpos(%d,%d,%.1f) %s",pos,lifeCount,mgL/180.0f,ctime(&wastime));
-        save->saveel(pos,wastime,lifeCount, {0,mgL});
-	}
-s/savehistonpos(\([^,]\+\),/\1->savenewhistory(/g
-	*/
 static bool saveLibre3Historyel(SensorGlucoseData *save,int lifeCount, uint16_t historicMgDl) {
 	const int idpos=int(round(lifeCount/(double)save->getmininterval()));
 	const uint16_t mgL=10*historicMgDl;
@@ -155,34 +147,6 @@ static bool saveLibre3Historyel(SensorGlucoseData *save,int lifeCount, uint16_t 
 		}
 	return false;
         }
-/*
-static void saveLibre3History(SensorGlucoseData *save,int lifeCount, uint16_t historicMgDl) {
-	const int idpos=int(round(lifeCount/(double)save->getmininterval()));
-	const Glucose *was=save->getglucose(idpos);
-	const uint16_t mgL=10*historicMgDl;
-	auto spu=was->getsputnik(); 
-	if(!spu) {
-		save->savenewhistory(idpos,  lifeCount, mgL);
-		const int newend=idpos+1;
-		if(newend>save->getendhistory())
-			save->setendhistory(newend);
-		save->backhistory(idpos);
-		}
-#ifndef NOLOG
-	else {
-		if(spu!=mgL) {
-			LOGGER("saveLibre3History %d %d!=%d\n",lifeCount,mgL,spu);
-			}
-
-		
-		}
-#endif
-        }
-*/
-
-//const Glucose * getglucose(int pos) const {
-//uint32_t sputnikglucose(int pos)const  {
-
 static void save3history(SensorGlucoseData *sens, const oneminute *minptr) {
 	auto histval= minptr->historicalReading;
 	if(!validglucosevalue(histval)) 
@@ -283,9 +247,7 @@ extern "C" JNIEXPORT  jlong JNICALL fromjava(saveLibre3MinuteL)(JNIEnv *env, jcl
 	jlong res=save3current(sens,minptr);
 	save3history(sens,minptr);
 	backup->wakebackup(Backup::wakestream);
-	#ifndef WEAROS
 	wakeuploader();
-	#endif
 	return res;
 	}
 
@@ -438,29 +400,6 @@ extern "C" JNIEXPORT  jboolean JNICALL fromjava(saveLibre3History)(JNIEnv *env, 
 	destruct _dest([env,jhistory,history](){env->ReleasePrimitiveArrayCritical(jhistory,history, 0);});
 	return  saveLibre3History(sens, history,len);
 	}
-/*
-extern "C" JNIEXPORT  jboolean JNICALL fromjava(saveLibre3Historydec)(JNIEnv *env, jclass thiz, jlong sensorptr,jlong cryptptr,jbyteArray jhistory) {
-	SensorGlucoseData *sens=reinterpret_cast<SensorGlucoseData *>(sensorptr);
-	byte[] olddec=intDecrypt(cryptptr,4, value);
-        Natives.saveLibre3History(this.sensorptr, olddec);
-	} */
-
-/*
-
-zie patchstatus.bedda
-
-bed-datatype:
-
-Composed(12,12,0,8,[
-  Digit(2,2,10,"",[],"LifeCount",1,1),
-  Repeat(2,2,10,2,[Digit(1,1,10,"",[],"",1,1)],"",[],"",1,1),
-  Digit(2,2,10,"",[],"EventData",1,1),
-  Digit(1,1,10,"",[],"Index",1,1),
-  Digit(1,1,10,"",[],"patchState",1,1),
-  Digit(2,2,10,"",[],"CurrentLifeCount",1,1),
-  Digit(1,1,10,"",[],"DisconnectReason",1,1),
-  Digit(1,1,10,"",[],"appDisconnectReason",1,1)],"",[],"",1,1);
-  */
 
 struct Patchstatus  {
 	int16_t lifeCount;	
@@ -554,21 +493,6 @@ struct ControlHistory:RequestData {
 struct ClinicalControl:RequestData {
 	ClinicalControl(int8_t arg,int32_t from): RequestData({{1,1},arg,from}) {}
         };
-//com.adc.trident.app.frameworks.mobileservices.libre3.libre3DPCRLInterface::DPPatchControlHistoricalDataBackfillGreaterEqual
-
-
-/*
-int historyControl(int arg,int from,uint8_t *command) {
-	*reinterpret_cast<RequestData*>(command)={.kind={1,0},.arg=static_cast<int8_t>(arg),.from=from};
-	return 0;
-	}
-	*/
-/*
-int clinicalControl(int arg,int from,uint8_t *command) {
-	*reinterpret_cast<RequestData*>(command)={.kind={1,1},.arg=static_cast<int8_t>(arg),.from=from};
-	return 0;
-	}*/
-//	04 01 00 00 00 00 00
 
 static jbyteArray comtojbyteArray(JNIEnv *env, const struct RequestData &con) {
 	int conlen=sizeof(con);

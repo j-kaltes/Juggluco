@@ -94,23 +94,26 @@ template <typename ...Ts>
 pathconcat(  Ts &&... args) {
 	name=nconcat(0,args ...);
 	}
-pathconcat(pathconcat &&in):name(in.name),namelen(in.namelen) { 
+pathconcat(pathconcat &&in)  noexcept :name(in.name),namelen(in.namelen) { 
 	in.name=nullptr;
 	in.namelen=1;
 	LOGGER("pathconcat( pathconcat &&in=%s)\n",name);
 }
 
-pathconcat(const pathconcat &&in):pathconcat(std::move(const_cast<pathconcat &&>(in))) { 
+pathconcat(const pathconcat &&in)    noexcept    :pathconcat(std::move(const_cast<pathconcat &&>(in))) { 
 	}
 pathconcat( pathconcat &in):name(new char[in.namelen]),namelen(in.namelen) { 
 	memcpy(name,in.name,in.namelen);
 	LOGGER("pathconcat( pathconcat &in=%s)\n",name);
 }
-pathconcat &operator=( pathconcat &&in) {
+pathconcat &operator=( pathconcat &&in)   noexcept {
 	LOGGER("pathconcat &operator=(pathconcat &&in %s) {\n",in.name);
 	std::swap(name,in.name);
 	std::swap(namelen,in.namelen);
 	return *this;
+	}
+pathconcat &operator=(const pathconcat &&in)   noexcept {
+	return operator=(std::move(const_cast<pathconcat &&>(in))) ;
 	}
 pathconcat &operator=(pathconcat &in) {
 	LOGGER("pathconcat &operator=(pathconcat &in %s) {\n",in.name);

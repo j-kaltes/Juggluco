@@ -1,3 +1,9 @@
+Beter bestand tegen ontbrekende data. Niet direct problemen wanneer files missen.
+Iets met oude patched libre3
+
+Na uitzetten wearos zitten er nog threads.
+
+With two sensors after switch to watch, second sensor seems to make no bluetooth contact before opening sensor menu.
 new socket formed every time Mirror is opened.
 Met messages on maakt open connectie ook als passiveonly.
 opened ook connectie wannneer er al eentje is.

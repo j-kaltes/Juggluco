@@ -75,7 +75,7 @@ public static native void startsensors( );
 	public static native void setlocale(String loc,boolean hour24);
      public static native int step();
     public static native int badscan(int kind);
-    public static native long lastpoll();
+//    public static native long lastpoll();
     //    public static native void clear();
     public static native void prevscr();
      public static native void nextscr();

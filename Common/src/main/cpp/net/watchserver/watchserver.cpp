@@ -45,12 +45,13 @@
 #include <sys/wait.h>
        #include <unistd.h>
        #include <sys/syscall.h> 
-#include "sha1.hpp"
 #include "../netstuff.h"
 #include "destruct.h"
 
 #include "logs.h"
 #include "watchserver.h"
+
+#include "datestring.h"
 #ifndef LOGGER
 #define LOGGER(...) fprintf(stderr,__VA_ARGS__)
 #endif
@@ -113,7 +114,7 @@ static bool startwatchserver(bool secure,int port,int *sockptr) {
 #include <thread>
 #include <algorithm>
 #include "sensoren.h"
-#define _GNU_SOURCE
+#define _GNU_SOURCE 1
 #include <sched.h>
 
 int xdripserversock=-1;
@@ -161,13 +162,6 @@ void stopsslwatchthread() {
 
 static std::string sha1secret;
 extern void makesha1secret();
-extern std::string sha1encode(const char *secret, int len);
-std::string sha1encode(const char *secret, int len) {
-	std::string strsecret(secret,len);
-	SHA1 sh1;
-	sh1.update(strsecret);
-	return sh1.final();
-	}
 void makesha1secret() {
 	sha1secret=sha1encode(settings->data()->apisecret,settings->data()->apisecretlength);
 	}
@@ -578,11 +572,7 @@ bool givesgvtxt(int nr,int interval,uint32_t lowerend,uint32_t higherend,recdata
 extern int getdeltaindex(float rate);
 extern std::string_view getdeltanamefromindex(int index) ;
 
-static double deltatimes=5.0;
 
-double getdelta(float change) {
-	 return isnan(change)?0:change*deltatimes;
-	 }
 //{"sgv":"10.7","trend":4,"direction":"Flat","datetime":1676804318000}
 static char *pebbleitem(bool mmolL,char *outiter,const ScanData *item) {
 	int trend=getdeltaindex(item->ch);
@@ -1063,15 +1053,6 @@ void wrongpath(std::string_view toget, recdata *outdata) {
 
 
 
-int Tdatestring(time_t tim,char *buf) {
-         struct tm tmbuf;
-        int seczone=timegm(localtime_r(&tim,&tmbuf)) - tim;
-	int m=seczone/60;
-	int h=m/60;	
-	int minleft=m%60;
-	return sprintf(buf,R"(%d-%02d-%02dT%02d:%02d:%02d.000%+03d:%02d)",tmbuf.tm_year+1900,tmbuf.tm_mon+1,tmbuf.tm_mday,tmbuf.tm_hour,tmbuf.tm_min,tmbuf.tm_sec,h,minleft);
-	}
-
 template <typename Num> static const char *readnum(const char *start,const char *ends,Num &num) {
 	auto [ptr, ec]=std::from_chars(start, ends, num);
 	switch(ec)  {
@@ -1122,6 +1103,8 @@ class Sgvinterpret {
 	int interval=270;
 	uint32_t lowerend=0,higherend=INT32_MAX;
 	const char *event=nullptr;
+	bool carb=false;
+	bool insulin=false;
 	bool getargs(const char *start,int len) ;
 	bool getdata(bool headonly,recdata *outdata) const;
 
@@ -1304,24 +1287,44 @@ static bool givetreatments(const char *args,int argslen, recdata *outdata)  {
 		}
 	
 	const int basecount=numdatas.size();
+	LOGGER("givetreatments:\n");
 	NumIter<Num> numiters[basecount];
 	for(int i=0;i<basecount;i++) {
 		auto [low,high]= numdatas[i]->getInRange(pret.lowerend,pret.higherend); 
+
 		numiters[i].begin=low;
 		numiters[i].iter=numiters[i].end=high-1;
 		numiters[i].bytes=sizeof(Num);
+		/*
+		if(low!=high) {
+			time_t tim=low->time;
+			LOGGER("low=%d %s",tim,ctime(&tim));
+			tim=(high-1)->time;
+			LOGGER("high=%d %s",tim,ctime(&tim));
+			} */
 		}
 
-	const int count= pret.datnr;
+	int count= pret.datnr;
 	char *outstart=pret.makedata(outdata ); 
 	char *outiter=outstart;
 	*outiter++='[';
+	bool carb=pret.carb;
+	bool insulin=pret.insulin;
 	if(settings->data()->saytreatments&&!pret.event) {
 		for(int i=0;i<count;) {
 			auto [ind,num]=findnewestwith(numiters,basecount);
 			if(!num) {
 				LOGGER("no values %d %p\n",ind,num);
 				break;
+				}
+			if(carb) {
+				if(carboWeight(num->type) ==0.0f) 
+					continue;
+				}
+			if(insulin) {
+				const int type=num->type;
+				 if(longWeight(type)==0.0f&&rapidWeight(type)==0.0f) 
+				 	continue;
 				}
 			int pos=num-numdatas[ind]->begin();
 			char *out=writetreatment(outiter,ind,pos,num);
@@ -1407,6 +1410,13 @@ int rewriteperc(char *start,int len) {
 		iter=next+2;
 		}
 	}
+bool setitervar(const char *&iter,std::string_view cond,bool &var) {
+	if(memcmp(iter,cond.data(),cond.size()))
+		return false;
+	var=true;
+	iter+=cond.size();
+	return true;
+	}
   bool Sgvinterpret::getargs(const char *start,int lenin) {
 	 int 	len=rewriteperc(const_cast<char *>(start),lenin);
 	LOGGER("after Sgvinterpret::getargs(%.*s#%d)\n",len,start,len);
@@ -1424,123 +1434,152 @@ int rewriteperc(char *start,int len) {
 			}
 		else {
 			std::string_view brief="brief_mode=";
-			if(!memcmp(iter,brief.data(),brief.size())) {
-				briefmode=true;
-				iter+=brief.length();
-				}
-			else {
-				std::string_view sensor="sensor=";
-				if(!memcmp(iter,sensor.data(),sensor.size())) {
-					sensorinfo=true;
-					iter+=sensor.length();
+			if(setitervar(iter,brief,briefmode)) 
+				continue;
+			std::string_view sensor="sensor=";
+			if(setitervar(iter,sensor,sensorinfo))	 
+				continue;
+			std::string_view all_data="all_data=";
+			if(setitervar(iter,all_data,alldata))
+				continue;
+			std::string_view no_empty="no_empty=";
+			if(setitervar(iter,no_empty,noempty)) 
+				continue;
+			std::string_view intervalstr="interval=";
+			if(!memcmp(iter,intervalstr.data(),intervalstr.size())) {
+				iter+=intervalstr.length();
+				if(!(iter=readnum<int>(iter,ends,interval))) {
+					return false;
 					}
-				else {
-					std::string_view all_data="all_data=";
-					if(!memcmp(iter,all_data.data(),all_data.size())) {
-						alldata=true;
-						iter+=all_data.length();
+				continue;
+				}
+		 std::string_view findstr="find[";
+		 if(!memcmp(iter,findstr.data(),findstr.size())) {
+			iter+=findstr.size();
+			std::string_view datestr="date";
+			if(!memcmp(iter,datestr.data(),datestr.size())) {
+				iter+=datestr.size();
+				if(!memcmp(iter,"][$",2)) {
+					iter+=3;
+					std::string_view greater="gte]=";
+					std::string_view greater3="gt]=";
+					if(!memcmp(iter,greater.data(),greater.size())||(greater=greater3, !memcmp(iter,greater.data(),greater.size()))) {
+						iter+=greater.length();
+						const char *ptr;
+						longlongtype tmp;
+						if(!(ptr=readnum<longlongtype>(iter,ends,tmp))) {
+							LOGGER("%s readnum failed '%s'\n",greater.data(),iter);
+							return false;
+							}
+						lowerend=tmp/1000;
+						if(greater==greater3) {
+							++lowerend;
+							}
+						iter=ptr;
+						LOGGER("greater than %d\n",lowerend);
 						}
 					else {
-						std::string_view no_empty="no_empty=";
-						if(!memcmp(iter,no_empty.data(),no_empty.size())) {
-							noempty=true;
-							iter+=no_empty.length();
-							}
-
-						else {
-							std::string_view intervalstr="interval=";
-							if(!memcmp(iter,intervalstr.data(),intervalstr.size())) {
-								iter+=intervalstr.length();
-								if(!(iter=readnum<int>(iter,ends,interval))) {
-									return false;
-									}
+						std::string_view smaller="lte]=";
+						std::string_view smaller2="lt]=";
+						if((!memcmp(iter,smaller.data(),smaller.size()))||(smaller=smaller2,!memcmp(iter,smaller.data(),smaller.size()))) {
+							iter+=smaller.length();
+							longlongtype tmp;	
+							if(!(iter=readnum<longlongtype>(iter,ends,tmp))) {
+								LOGGER("%s= readnum failed\n",smaller.data());
+								return false;
 								}
-							else {
-
-
-								std::string_view greater="find[date][$gte]="; //TODO greater or equal
-//								std::string_view greater2="find%5Bdate%5D%5B%24gte%5D=";
-								std::string_view greater3="find[date][$gt]="; //TODO greater or equal
-//								std::string_view greater4="find%5Bdate%5D%5B%24gt%5D=";
-							//	if(!memcmp(iter,greater.data(),greater.size())||(greater=greater2, !memcmp(iter,greater.data(),greater.size()))||(greater=greater3, !memcmp(iter,greater.data(),greater.size()))) {
-								if(!memcmp(iter,greater.data(),greater.size())||(greater=greater3, !memcmp(iter,greater.data(),greater.size()))) {
-									iter+=greater.length();
-									const char *ptr;
-									longlongtype tmp;
-									if(!(ptr=readnum<longlongtype>(iter,ends,tmp))) {
-										LOGGER("%s readnum failed '%s'\n",greater.data(),iter);
-										return false;
-										}
-									lowerend=tmp/1000;
-									if(greater==greater3) {
-										++lowerend;
-										}
-									iter=ptr;
-									LOGGER("greater than %d\n",lowerend);
-									}
-								else {
-									std::string_view smaller="find[date][$lte]=";
-//								std::string_view smallerb="find%5Bdate%5D%5B%24lte%5D=";
-									std::string_view smaller2="find[date][$lt]=";
-//								std::string_view smaller2b="find%5Bdate%5D%5B%24lt%5D=";
-									if((!memcmp(iter,smaller.data(),smaller.size()))||(smaller=smaller2,!memcmp(iter,smaller.data(),smaller.size()))) {
-										iter+=smaller.length();
-										longlongtype tmp;	
-										if(!(iter=readnum<longlongtype>(iter,ends,tmp))) {
-											LOGGER("%s= readnum failed\n",smaller.data());
-											return false;
-											}
-										higherend=tmp/1000LL;
-										if(smaller!=smaller2) {
-											++higherend;
-											}
-										LOGGER("smaller than %d\n",higherend);
-										}
-									else {
-									std::string_view greater="find[dateString][$gte]="; //TODO greater or equal
-									std::string_view greater2="find[dateString][$gt]=";
-									std::string_view greater3="find[created_at][$gte]=";
-										std::string_view greater4="find[created_at][$gt]=";
-//									std::string_view greater4="find%5Bcreated_at%5D%5B$gte%5D="; //needed 4 xdrip4ios
-									if(!memcmp(iter,greater.data(),greater.size())||(greater=greater2, !memcmp(iter,greater.data(),greater.size()))||(greater=greater3, !memcmp(iter,greater.data(),greater.size()))||(greater=greater4, !memcmp(iter,greater.data(),greater.size()))) {
-										iter+=greater.length();
-										lowerend=readtime(iter);
-										if(greater==greater2||greater==greater4)
-											lowerend++;
-										iter+=10;
-										LOGGER("greater than %d\n",lowerend);
-										}
-									else {
-										std::string_view smaller="find[dateString][$lte]="; //TODO smaller or equal
-										std::string_view smaller2="find[dateString][$lt]=";
-									std::string_view smaller3="find[created_at][$lte]=";
-										std::string_view smaller4="find[created_at][$lt]=";
-									if((!memcmp(iter,smaller.data(),smaller.size()))||(smaller=smaller2,!memcmp(iter,smaller.data(),smaller.size()))|| (smaller=smaller3,!memcmp(iter,smaller.data(),smaller.size()))|| (smaller=smaller4,!memcmp(iter,smaller.data(),smaller.size()))) {
-											iter+=smaller.length();
-											higherend=readtime(iter);
-											if(smaller!=smaller2&&smaller!=smaller4)
-												higherend++;
-											iter+=10;
-											LOGGER("smaller than %d\n",higherend);
-											}
-										else {
-											std::string eventtype="find[eventType]=";
-											if(!memcmp(iter,eventtype.data(),eventtype.size())) {
-												iter+=eventtype.size();
-												event=iter;
-												}
-											}
-											}
-										}
-									}
+							higherend=tmp/1000LL;
+							if(smaller!=smaller2) {
+								++higherend;
 								}
+							LOGGER("smaller than %d\n",higherend);
 							}
 						}
 					}
+					else {
+					std::string_view strdate="String][$";
+					if(!memcmp(iter,strdate.data(),strdate.size())) {
+
+					iter+=strdate.size();
+					std::string_view greater="gte]="; //TODO greater or equal
+					std::string_view greater2="gt]=";
+					if(!memcmp(iter,greater.data(),greater.size())||(greater=greater2, !memcmp(iter,greater.data(),greater.size()))) {
+						iter+=greater.length();
+						lowerend=readtime(iter);
+//											if(greater==greater2||greater==greater4)
+						if(greater==greater2)
+							lowerend++;
+						iter+=10;
+						LOGGER("greater than %d\n",lowerend);
+						}
+					else {
+						std::string_view smaller="lte]="; //TODO smaller or equal
+						std::string_view smaller2="lt]=";
+					if((!memcmp(iter,smaller.data(),smaller.size()))||(smaller=smaller2,!memcmp(iter,smaller.data(),smaller.size()))) {
+							iter+=smaller.length();
+							higherend=readtime(iter);
+							if(smaller!=smaller2)
+								higherend++;
+							iter+=10;
+							LOGGER("smaller than %d\n",higherend);
+							}
+					}
+					}
+					}
+				continue;
 				}
+			std::string eventtype="eventType]=";
+			if(!memcmp(iter,eventtype.data(),eventtype.size())) {
+				iter+=eventtype.size();
+				event=iter;
+				continue;
+				}
+			std::string_view created="created_at][$";
+			if(!memcmp(iter,created.data(),created.size())) {
+				iter+=created.size();
+				std::string_view greater="gte]=";
+				std::string_view greater2="gt]=";
+				if(!memcmp(iter,greater.data(),greater.size())||(greater=greater2, !memcmp(iter,greater.data(),greater.size()))) {
+						iter+=greater.length();
+						lowerend=readtime(iter);
+						if(greater==greater2)
+							lowerend++;
+						iter+=10;
+						LOGGER("greater than %d\n",lowerend);
+						continue;
+						}
+				std::string_view smaller="lte]=";
+				std::string_view smaller2="lt]=";
+				if((!memcmp(iter,smaller.data(),smaller.size()))||(smaller=smaller2,!memcmp(iter,smaller.data(),smaller.size()))) {
+						iter+=smaller.length();
+						higherend=readtime(iter);
+						if(smaller!=smaller2)
+							higherend++;
+						iter+=10;
+						LOGGER("smaller than %d\n",higherend);
+						continue;
+						}
+				continue;
+				}
+			std::string_view carbstr=R"(carbs][$exists])";
+			if(!memcmp(iter,carbstr.data(),carbstr.size())) {
+				carb=true;
+				continue;
+				}
+			std::string_view insulinstr=R"(insulin][$exists])";
+			if(!memcmp(iter,insulinstr.data(),insulinstr.size())) {
+				insulin=true;
+				continue;
+				}
+			}
 			}
 		
 	}
+	if(!datnr) {
+		if(lowerend|| higherend!=INT32_MAX) //needed for Cockpit
+			datnr=100000;
+
+		}
 	return true;
 	};
 static bool	 sgvinterpret(const char *start,int len,bool headonly,recdata *outdata,bool all) {

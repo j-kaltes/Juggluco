@@ -31,6 +31,7 @@
        #include <netinet/in.h>
        #include <netinet/tcp.h>
 #include <sys/prctl.h>
+#include <alloca.h>
  
 #include <string.h>
 #include <stdio.h>
@@ -180,22 +181,41 @@ bool sameaddress(const  struct sockaddr *addr, const struct sockaddr_in6  *known
 	}
 //&hosts[hostlen-1]
 
-static bool testreceivemagic(int sock) {
+static bool testreceivemagic(passhost_t *pass,int sock) {
 #include "receivemagic.h"
 #include "sendmagic.h"
 	constexpr int buflen=1024;
 	char buf[buflen];
 	int res;
 	if((res =recvni(sock,buf,buflen))==sendmagicspec.size()) {
-		if(!memcmp(buf,sendmagicspec.data(),sendmagicspec.size()-4)) { 
-			if(!memcmp(buf+sendmagicspec.size()-4,sendmagicspec.end()-4,4)) {
+		const int testlen=sendmagicspec.size()-4;
+		if(!memcmp(buf,sendmagicspec.data(),testlen)) { 
+			if(!memcmp(buf+testlen,sendmagicspec.end()-4,3)) {
 				LOGGERTAG("I don't connect with myself\n");
 				}
 			else {
 				constexpr int reclen=sizeof(receivemagic);
-				if(sendni(sock,receivemagic,reclen)==reclen) {
+				unsigned char *magicptr;
+				if(pass->receivedatafrom()&&pass->newconnection) {
+					LOGGERTAG("new connection %s\n",pass->getnameif());
+					magicptr=(unsigned char *)alloca(reclen);
+					memcpy(magicptr,receivemagic,reclen-1);
+					magicptr[reclen-1]=0;
+					}
+				else {
+					magicptr=receivemagic;
+					}
+				if(sendni(sock,magicptr,reclen)==reclen) {
 					LOGGERTAG("receivemagic success\n");
+					if(!buf[sendmagicspec.size()-1]) {
+						LOGGERTAG("testreceivemagic zerolast %s\n",pass->getnameif());
+
+						extern void resethost(passhost_t &host) ;
+						resethost(*pass);
+						}
+					pass->newconnection=false;
 					return true;
+
 					}
 				else
 					flerrortag("sendmagic %d",sock);
@@ -355,7 +375,7 @@ globalsocket=serversock;
 	 	{
 //		   const int keepidle = 10*60;
 
-		if(!testreceivemagic(new_fd)) {
+		if(!testreceivemagic(hit,new_fd)) {
 			close(new_fd);
 			continue;
 			}

@@ -437,6 +437,7 @@ void deletehost(int index) {
 		networkpresent=wasnet;
 	}
 void clearhost(int index) {
+	LOGGER("clearhost(%d)\n",index);
 	updateone &host=getupdatedata()->tosend[index];
 	if(int so=host.getsock();so!=-1) {
 		LOGGER("shutdown(%d)\n",so);
@@ -534,13 +535,25 @@ static const std::array< char,17> passback(const std::array<uint8_t,16> &passin)
 	return plain;
 	}
 
-
+void resethost(passhost_t &ph) {
+	LOGGER("resethost(%s)\n",ph.getnameif());
+	if(ph.index>=0) {  
+		int tohost=ph.index;
+		clearhost(tohost);
+		}
+	}
+void resethost(int index) {
+	if(index<getupdatedata()->hostnr) {
+		resethost(getupdatedata()->allhosts[index]);
+		}
+	} 
+/*
 void resethost(int index) {
 	if(index<getupdatedata()->hostnr&&getupdatedata()->allhosts[index].index>=0) {  //Fout??
 		int tohost=getupdatedata()->allhosts[index].index;
 		clearhost(tohost);
 		}
-	}
+	} */
 
 
 int jsetips(const char *port,JNIEnv *env, const jobjectArray jar, const int len,struct sockaddr_in6 *connect ,const int lmaxip) {
@@ -715,6 +728,8 @@ false	  	false	  	0
 		++(getupdatedata()->hostnr);
 		getupdatedata()->allhosts[index].wearos=false;
 		LOGGER("new host ++hostnr\n");
+		getupdatedata()->allhosts[index].newconnection=true;
+
 		}
 	else {
 		LOGGER("wearos(%d)=%d\n", index,getupdatedata()->allhosts[index].wearos);
@@ -822,9 +837,7 @@ void backupthread(int allindex,int sendindex) {
 	LOGGER("%d backupthread, wearos=%d\n", allindex,getupdatedata()->allhosts[allindex].wearos);
 //	const int sendindex=getupdatedata()->allhosts[allindex].index;
 	const bool passive=getupdatedata()->allhosts[allindex].sendpassive;
-extern void	setreceiverversion(uint8_t version) ;
-	if(passive)
-		setreceiverversion(1);
+
 	auto &status=mirrorstatus[allindex].sender;
 	status.start();
 	destruct _dest([&status]{ status.stop();});

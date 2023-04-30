@@ -1,4 +1,5 @@
-#ifndef WEAROS
+#if 1
+//#ifndef WEAROS
 #include <jni.h>
 #include <ctime>
 #include <memory>
@@ -98,7 +99,8 @@ bool nightupload(const char *data,int len) {
 
 
 
-extern int Tdatestring(time_t tim,char *buf) ;
+//extern int Tdatestring(time_t tim,char *buf) ;
+#include "datestring.h"
 extern double getdelta(float change);
 extern std::string_view getdeltaname(float change);
 template <class T> int mkuploaditem(char *buf,const char *sensorname,const T &item) {
