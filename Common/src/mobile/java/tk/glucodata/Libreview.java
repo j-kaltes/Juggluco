@@ -654,8 +654,13 @@ public static void  config(MainActivity act, View settingsview,CheckBox sendto,b
 	help.setOnClickListener(v-> help(R.string.libreview,act));
 	boolean usedlibre= getuselibreview();
 	var sendtolibreview=getcheckbox(act,R.string.uselibreview,usedlibre);
-	var numbers=getcheckbox(act,R.string.sendamounts,Natives.getSendNumbers());
+	var librecurrent=getcheckbox(act,R.string.librecurrent,Natives.getLibreCurrent());
+	librecurrent.setOnCheckedChangeListener( (buttonView,  isChecked) -> {
+		Natives.setLibreCurrent(isChecked);
+		});
+
 	int[] nochangeamounts={0};
+	var numbers=getcheckbox(act,R.string.sendamounts,Natives.getSendNumbers());
 	numbers.setOnCheckedChangeListener( (buttonView,  isChecked) -> {
 		switch(nochangeamounts[0])  {
 			case 0: {
@@ -692,7 +697,7 @@ var space=getlabel(act,"        ");
                         else {
                                 lay.setX((width-w)/2); lay.setY(0);
                                 };
-                        return new int[] {w,h};}, new View[]{emaillabel,email},new View[]{passlabel,editpass},new View[]{clear,accountid,getaccountid},new View[]{statusview},new View[]{sendtolibreview,numbers},new View[]{send,help,cancel,ok});
+                        return new int[] {w,h};}, new View[]{emaillabel,email},new View[]{passlabel,editpass},new View[]{clear,accountid,getaccountid},new View[]{statusview},new View[]{sendtolibreview,librecurrent,numbers},new View[]{send,help,cancel,ok});
 	if(usedlibre) {
 		send.setOnClickListener(v-> wakelibreview(0));
 		}

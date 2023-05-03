@@ -235,6 +235,40 @@ int addcurrent(char *buf,int64_t histor,const ScanData *el,const bool viewed) {
 	}
 //uint16_t lastLifeCountReceived;
 
+bool hasNewCurrent(const SensorGlucoseData *sens) { 
+	if(!sens) {
+		LOGGER("sens==nullptr\n");
+		return false;
+		}
+	 int start=sens->getinfo()->libreviewscan;
+	int pollstart= sens->getinfo()->pollstart;
+	int ends=sens->getinfo()->lastLifeCountReceived;
+	if(ends==0) {
+		ends=sens->pollcount()-1;
+		}
+	if(start<pollstart)
+		start=pollstart;
+	if(start>ends) {
+		LOGGER("hasNewCurrent no new last\n");
+		return false;
+		}
+	LOGGER("hasNewCurrent true\n");
+	return true;
+	}
+
+bool askhasnewcurrent() {
+	if(!settings->data()->LibreCurrentOnly) { 
+		LOGGER("LibreCurrentOnly==false\n");
+		return false;
+		}
+	const auto *lastsensor=sensors->gethist(-1);
+	if(!lastsensor->isLibre3())  {
+		LOGGER("not Libre3\n");
+		return false;
+		}
+	return hasNewCurrent(lastsensor);
+	}
+
 int sendallcurrent(uint32_t nu,SensorGlucoseData *sens,char *buf,int *lastsend) { 
 	if(!sens)
 		return 0;
@@ -256,7 +290,7 @@ int sendallcurrent(uint32_t nu,SensorGlucoseData *sens,char *buf,int *lastsend) 
 		const ScanData *el=startstream+i;
 		if(el->current(i)) {
 			int64_t histor=libreviewSensorNameID(sens);
-			int wrote=addcurrent(buf,histor,el,true);
+			int wrote=addcurrent(buf,histor,el,false);
 			return wrote;
 			}
 		}
@@ -307,7 +341,7 @@ extern Sensoren *sensors;
 bool sendnumbers3() {
 	return settings->data()->sendnumbers&&settings->data()->libre3nums;
 	}
-bool sendlibre3viewdata() {
+bool sendlibre3viewdata(bool hasnewcurrent) {
 	const   uint32_t nu=time(nullptr);
 	const uint32_t oldtimer=nu-Sensoren::sensorageseconds;
 	int startsensor=settings->data()->startlibre3view;
@@ -326,12 +360,11 @@ bool sendlibre3viewdata() {
 		else {
 			if(notsendall2(startsensor)) {
 				settings->data()->haslibre2=true; 
-//				return false;
 				} 
 			}
 		}
 	
-int lastlibre3=-1;
+	int lastlibre3=-1;
 	for(int i=startsensor;i<=lastsensor;i++) {
 		SensorGlucoseData *sensdata=sensors->gethist(i);
 		if(sensdata->isLibre3()) {
@@ -367,25 +400,18 @@ LOGGER("numbers.spaceneeded()=%d\n",bytesnumbers);
 #else
 constexpr const int  bytesnumbers=0;
 #endif
-	if(bytesnumbers==0&&inhistory<=0) {
-		if(lastsensor==-1)
-			return true;
-			/*
-		if(!sensors->gethist(lastsensor)->isLibre3()) {
-			settings->data()->haslibre3=sendnumbers3();
-			} */
-		return true;
-		}
 	lastsensor=lastlibre3;
-//	startsensor=lastsensor-1;
 LOGGER("startsensor=%d lastsensor=%d\n",startsensor,lastsensor);
-SensorGlucoseData *lastsensdata=(lastsensor<0)?nullptr:sensors->gethist(lastsensor);
+SensorGlucoseData *lastsensdata=(lastsensor<0)?nullptr:sensors->gethist(lastsensor); //TODO later?
+
+	if(bytesnumbers==0&&inhistory<=0) {
+		if(!hasnewcurrent)
+			return true;
+		}
 if(lastsensor>=0) {
 	if(!putwhenneeded(true,lastsensdata)) 
 		return false;
 	}
-//auto laststream=lastsensdata->getPolldata();
-//int incurrent=laststream.size();
 int incurrent=1;
 constexpr int onecurrentsize=420;
 constexpr int onehistorysize=342;
@@ -394,13 +420,11 @@ const int usertokenlen= settings->data()->tokensize3;
 constexpr int restsize=2300;
 
 int totalsize= bytesnumbers+restsize+usertokenlen+incurrent*onecurrentsize+inhistory*onehistorysize+1;
-#ifdef LIBRENUMBERS
 
-//Numbers<libre3> numbers;
-#endif
 LOGGER("inhistory=%d incurrent=%d totalsize=%d\n",inhistory,incurrent,totalsize);
 char *buf= new(std::nothrow)  char[totalsize];
 if(!buf) {
+	LOGGER("libreview3: new failed\n");
 	return false;
 	}
 std::unique_ptr<char[]> deleter(buf);
@@ -432,7 +456,7 @@ addarray(afteridentifier);
 constexpr const char newline[]="\n     ";
 int laststreamsend;
 
-int wrotecurrent=(inhistory>0)?sendallcurrent(nu,lastsensdata,uitptr,&laststreamsend):0;
+int wrotecurrent=(hasnewcurrent||inhistory>0)?sendallcurrent(nu,lastsensdata,uitptr,&laststreamsend):0;
 if(wrotecurrent>0) {
 	uitptr+=wrotecurrent;
 	addarray(newline);

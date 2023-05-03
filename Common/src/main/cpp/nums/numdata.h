@@ -592,6 +592,9 @@ void numsavepos(int pos, uint32_t time, float32_t value, uint32_t type,uint32_t 
 		if(pos>=getlibreSolid()) {
 			addlibrechange(pos);
 			}
+		else {
+			LOGGER("%d older than getlibreSolid()=%d\n",pos, getlibreSolid());
+			}
 		receivedbackup()=false;
 		}
 	 }
@@ -824,6 +827,7 @@ void	libremovelarger(int from,int to,int movelen) { //to>from
 public:
 void numchange(const Num *hit, uint32_t time, float32_t value, uint32_t type,uint32_t mealptr) {
 	const int oldpos=hit-startdata();
+	LOGGER("Start numchange oldpos=%d\n",oldpos);
 	addlibrenumsdeleted(hit,oldpos);
 	if(mealptr==0)
 		mealptr=hit->mealptr;
@@ -833,6 +837,7 @@ void numchange(const Num *hit, uint32_t time, float32_t value, uint32_t type,uin
 	if(hit->time!=time) {
 		num=firstAfter(time);
 		if(num<hit) {
+			LOGGER("numchange num<hit\n");
 			int movelen= (hit-num);
 			memmove(num+1,num,movelen*sizeof(Num));
 			setlastchange(num);
@@ -842,6 +847,7 @@ void numchange(const Num *hit, uint32_t time, float32_t value, uint32_t type,uin
 			}
 		else {
 			if(num>(hit+1)) {
+				LOGGER("if(num>(hit+1))\n" );
 				num--;
 				Num *modhit=const_cast<Num *>(hit);
 				int movelen= (num-modhit);
@@ -852,6 +858,7 @@ void numchange(const Num *hit, uint32_t time, float32_t value, uint32_t type,uin
 				libremovesmaller(pos+1,pos,movelen);
 				}
 			else  {
+				LOGGER("if(num<=(hit+1))\n" );
 				num=const_cast<Num *>(hit);
 				setonechange(hit);
 				pos=num-startdata();
@@ -861,6 +868,7 @@ void numchange(const Num *hit, uint32_t time, float32_t value, uint32_t type,uin
 			}
 		}
 	else {
+		LOGGER("hit->time==time)\n"); 
 		num=const_cast<Num *>(hit);
 		setonechange(hit);
 		pos=num-startdata();
@@ -874,6 +882,9 @@ void numchange(const Num *hit, uint32_t time, float32_t value, uint32_t type,uin
 
 	if(newpos>=getlibreSolid()) {
 		addlibrechange(newpos);
+		}
+	else  {
+		LOGGER("%d older than getlibreSolid()=%d\n",newpos, getlibreSolid());
 		}
 	updatepos(pos,lastupdate);
 	}

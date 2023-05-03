@@ -444,14 +444,6 @@ constexpr const int  bytesnumbers=0;
 #endif
 	if(!histtotal&&!bytesnumbers) {
 		LOGGER("libreview not needed\n");
-		/*
-		if(sensints.size()>0) {
-			const int index=sensints[0];
-			const SensorGlucoseData *sensdata=sensors->gethist(index);
-			if(sensdata->isLibre3()) {
-				settings->data()->haslibre2=!settings->data()->libre3nums;
-				}
-			} */
 		return true;
 		}
 	if(histtotal) {
@@ -729,63 +721,71 @@ void libreviewthread() {
 			auto status=librecondition.backupcond.wait_until(lck, now + std::chrono::minutes(waitmin));
 			LOGGER("VIEW after lock %stimeout\n",(status==std::cv_status::no_timeout)?"no-":"");
 			}
+		if(!librecondition.dobackup)
+			continue;
 		if(librecondition.dobackup&Backup::wakeend) {
 			librecondition.dobackup=0;
 			libreviewrunning=false;
 			LOGGER("end libreviewthread\n");
 			return;
 			}
-		librecondition.dobackup=0;
-		if(askforaccount||settings->data()->haslibre3) {
-			LOGGER("Libreview: haslibre3\n");
-			if((!settings->data()->libreinit3)){
-				if(!(settings->data()->libreinit3=initlibreconfig(true,alwaysnewstatus3))) {
+extern bool askhasnewcurrent();
+		bool hasnewcurrent=askhasnewcurrent();
+		if((librecondition.dobackup&Backup::wakeall)||(hasnewcurrent&&(librecondition.dobackup&Backup::wakestream))) {
+			librecondition.dobackup=0;
+			if(askforaccount||settings->data()->haslibre3) {
+				LOGGER("Libreview: haslibre3\n");
+				if((!settings->data()->libreinit3)){
+					if(!(settings->data()->libreinit3=initlibreconfig(true,alwaysnewstatus3))) {
+						alwaysnewstatus3=false;
+						LOGGER("initlibreconfig failed\n");
+						continue;
+						}
+					LOGGER("initlibreconfig success %d\n",settings->data()->libreinit3);
 					alwaysnewstatus3=false;
-					LOGGER("initlibreconfig failed\n");
-					continue;
 					}
-				LOGGER("initlibreconfig success %d\n",settings->data()->libreinit3);
-				alwaysnewstatus3=false;
+				if(!settings->data()->sendtolibreview) {
+					askforaccount=false;
+					settings->data()->uselibre=false;
+					libreviewrunning=false;
+					LOGGER("end libreview thread, account id only\n");
+					return;
+					}
+				if(sendlibre3viewdata(hasnewcurrent)) {
+					waitmin=5*60;
+					}
+				else {
+					waitmin=15;
+					}
 				}
-			if(!settings->data()->sendtolibreview) {
-				askforaccount=false;
-				settings->data()->uselibre=false;
-				libreviewrunning=false;
-				LOGGER("end libreview thread, account id only\n");
-				return;
-				}
-			if(sendlibre3viewdata()) {
-				waitmin=5*60;
-				}
-			else {
-				waitmin=15;
-				}
-			}
-		if(settings->data()->haslibre2) {
-			LOGGER("Libreview: haslibre2\n");
-			if(!settings->data()->libreinit){
-				if(!(settings->data()->libreinit=initlibreconfig(false,alwaysnewstatus))) {
+			if(settings->data()->haslibre2) {
+				LOGGER("Libreview: haslibre2\n");
+				if(!settings->data()->libreinit){
+					if(!(settings->data()->libreinit=initlibreconfig(false,alwaysnewstatus))) {
+						alwaysnewstatus=false;
+						LOGGER("initlibreconfig failed\n");
+						continue;
+						}
 					alwaysnewstatus=false;
-					LOGGER("initlibreconfig failed\n");
+					}
+				if(!settings->data()->sendtolibreview) {
+					askforaccount=false;
+					settings->data()->uselibre=false;
+					libreviewrunning=false;
+					LOGGER("end libreview thread, account id only\n");
+					return;
+					}
+				if(sendlibreviewdata()) {
+					waitmin=5*60;
+					}
+				else {
+					waitmin=15;
 					continue;
 					}
-				alwaysnewstatus=false;
-				}
-			if(!settings->data()->sendtolibreview) {
-				askforaccount=false;
-				settings->data()->uselibre=false;
-				libreviewrunning=false;
-				LOGGER("end libreview thread, account id only\n");
-				return;
-				}
-			if(sendlibreviewdata()) {
-				waitmin=5*60;
-				}
-			else {
-				waitmin=15;
-				continue;
 				}
 			}
+		else
+			librecondition.dobackup=0;
 		}
 	}
 
@@ -803,7 +803,13 @@ void wakeaftermin(const int waitmin) {
 	else
 		librecondition.dobackup=Backup::wakeall;
  }
-
+void wakelibrecurrent() {
+	if(libreviewrunning) {
+		librecondition.wakebackup(Backup::wakestream);
+		}
+	else
+		librecondition.dobackup=Backup::wakestream;
+	}
 void clearlibregegs() {
 	settings->data()->libreinit=false;
 	settings->data()->libreinit3=false;

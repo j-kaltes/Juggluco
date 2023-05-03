@@ -95,8 +95,9 @@ public tk.glucodata.nums.AllData numdata=null;
 public GlucoseCurve curve=null;
 	public static int unit=0;
 public void redraw() {
-	if(curve!=null)
-		curve.requestRender();
+	var tmpcurve=curve;
+	if(tmpcurve!=null)
+		tmpcurve.requestRender();
 	}
 
 final private Handler mHandler;
@@ -473,6 +474,7 @@ public static void setbluetooth(Context activity,boolean on) {
 	else {
 		Applic.dontusebluetooth();
 		}
+	app.redraw();
 	}
 public static	int stopprogram=0;
     @Override

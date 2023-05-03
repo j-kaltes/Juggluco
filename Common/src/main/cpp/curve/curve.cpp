@@ -2238,7 +2238,6 @@ int onestep() {
 extern void render() ;
 
 
-	extern void	wakeuploader();
 int getalarmcode(const uint32_t glval,SensorGlucoseData *hist) ;
 extern void     processglucosevalue(int sendindex,int newstart) ;
 void     processglucosevalue(int sendindex,int newstart) {
@@ -2277,7 +2276,9 @@ extern	bool hasnotiset();
 extern void telldoglucose(const char *name,int32_t mgdl,float glu,float rate,int alarm,int64_t mmsec,bool wasnoblue) ;
 					telldoglucose(hist->shortsensorname()->data(),poll->g,glu,rate,alarm,tim*1000LL,wasnoblue);
 
-			wakeuploader();
+				//	wakeuploader();
+extern				void wakewithcurrent();
+					wakewithcurrent();
 
 					}
 				else {

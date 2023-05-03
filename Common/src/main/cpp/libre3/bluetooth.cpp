@@ -217,7 +217,8 @@ extern "C" JNIEXPORT jbyteArray JNICALL fromjava(getpin)(JNIEnv *env, jclass thi
 	return uit;
 	}
 
-	void wakeuploader();
+
+extern				void wakewithcurrent();
 extern "C" JNIEXPORT  jlong JNICALL fromjava(saveLibre3MinuteL)(JNIEnv *env, jclass thiz, jlong sensorptr,jbyteArray jmindata) {
 	SensorGlucoseData *sens=reinterpret_cast<SensorGlucoseData *>(sensorptr);
 	if(!sens) {
@@ -246,8 +247,10 @@ extern "C" JNIEXPORT  jlong JNICALL fromjava(saveLibre3MinuteL)(JNIEnv *env, jcl
 	const oneminute *minptr=reinterpret_cast<oneminute*>(mindata);
 	jlong res=save3current(sens,minptr);
 	save3history(sens,minptr);
+
 	backup->wakebackup(Backup::wakestream);
-	wakeuploader();
+					wakewithcurrent();
+
 	return res;
 	}
 

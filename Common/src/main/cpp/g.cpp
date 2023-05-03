@@ -604,6 +604,16 @@ jlong glucoseback(uint32_t glval,float drate,SensorGlucoseData *hist) {
 
 		extern void wakeuploader();
 
+
+extern void wakeuploader();
+extern void wakelibrecurrent() ;
+void wakewithcurrent() {
+	wakeuploader();
+#if !defined(WEAROS) && !defined(TESTMENU)
+	if(settings->data()->LibreCurrentOnly)
+		 wakelibrecurrent() ;
+#endif
+	}
 extern "C" JNIEXPORT jlong JNICALL   fromjava(processTooth)(JNIEnv *envin, jclass cl,jlong dataptr, jbyteArray bluetoothdata) {
 //	setbuffer(mystatus);
       setthreadname( "processTooth");
@@ -641,8 +651,9 @@ extern "C" JNIEXPORT jlong JNICALL   fromjava(processTooth)(JNIEnv *envin, jclas
 			sdata->hist->sensorerror=false;
 			LOGGER("processTooth finished=%d\n", senso->finished);
 			senso->finished=0;
+
 			backup->wakebackup(Backup::wakestream);
-			wakeuploader();
+			wakewithcurrent();
 
 			return res;
 			}

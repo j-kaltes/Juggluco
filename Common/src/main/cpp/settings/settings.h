@@ -175,7 +175,7 @@ struct Tings {
 	uint16_t startlibreview;
 	std::array<char,36> libreviewDeviceID;
 	char _nullchar;
-	uint8_t empty8;
+	bool LibreCurrentOnly;
 	uint16_t startlibre3view;
 	uint32_t floatingPos;
 	uint32_t lastlibretime;
@@ -183,8 +183,6 @@ struct Tings {
 	char _nullchar1;
 	uint8_t empty1[11];//**
 	char newYuApiKey[41];
-//	char reserved7[7];//*
-
 	char reserved7;//*
 	uint16_t libredeletednr;
 	int32_t libre2NUMiter;
@@ -418,15 +416,15 @@ void		setdisturbs() {
 		al[i].uri[0]='\0';
 		al[i].wait=20;
 		}
-	al[0].duration=6;
+	al[0].duration=0xFFFF; //Low glucose alarm
 
-	al[1].duration=6;
+	al[1].duration=0xFFFF; //High glucose alarm
 
-	al[2].duration=3;
+	al[2].duration=3; //Availability notification
 
-	al[3].duration=6;
+	al[3].duration=0xFFFF; //amount alarm
 
-	al[4].duration=4;
+	al[4].duration=0xFFFF; //Loss of sensor alarm
 	}
 void setnodebug(bool val) {
 	data()->nodebug=val;

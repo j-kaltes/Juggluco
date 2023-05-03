@@ -1675,9 +1675,6 @@ Juggluco), dit kan er toe leiden dat gegevens niet goed weergegeven
 of hoeveelheden bij elkaar opgeteld worden. Je kunt alle gegevens van
 een bron verwijderen in Libreview in Account instellingen-&gt;Mijn
 Apparaten.</p>
-<p style="line-height: 100%; margin-bottom: 0in"><br/>
-
-</p>
 <p style="line-height: 100%; margin-bottom: 0in">Elke keer wanneer
 weggedraaid wordt van Juggluco, zendt Juggluco nieuwe data naar
 Libreview als dat de laatste 20 minuten niet al gedaan is. Je kunt
@@ -1687,6 +1684,16 @@ waarden worden naar Libreview gezonden; geen gegevens met betrekking
 tot eten, activiteit, insuline of scanfouten. Vanaf Juggluco 4.1.0
 wordt ook glucosewaarden van FreeStyle Libre 3 sensoren naar
 Libreview gezonden.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>Libre3 </b><b>direct</b>:
+stuur glucosewaarden onmiddellijk naar Libreview wanneer ze
+binnenkomen van Libre 3-sensoren. Dit is alleen handig in combinatie
+met LibreLinkUp. Om er gebruik van te maken, moet je een
+LibrelinkUp-verbinding toevoegen aan dit Libreview-account in een van
+de Libre-apps van Abbott. Soms is de waarde niet direct zichtbaar,
+omdat LibreLinkUp het scherm niet onmiddelijk herschrijft.
+LibreLinkUp kan niet worden gebruikt met Libre 2-sensoren: je kunt
+niet aannemelijk maken dat je de hele dag elke minuut scant. Maak in
+plaats daarvan gebruik van een Kloon verbinding of Nightscout.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>Herzend data</b>:
 Zendt alle data van de laatste 90 dagen opnieuw naar Libreview. Je
 moet hier op drukken als je een nieuwe Libreview account wilt

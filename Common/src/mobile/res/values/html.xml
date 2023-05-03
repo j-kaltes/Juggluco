@@ -1556,8 +1556,7 @@ not.</p>
 <![CDATA[
 <h1>Libreview</h1>
 <p style="line-height: 100%; margin-bottom: 0in">Juggluco can send
-glucose data and amounts to Libreview (Librelinkup is something else
-and not usable with Juggluco).</p>
+glucose data and amounts to Libreview.</p>
 <p style="line-height: 100%; margin-bottom: 0in">If you use Abbotts
 Libre app for Freestyle Libre 2 sensors, Libreview is based on the
 history data out of the memory of the sensor. For this you need to
@@ -1598,6 +1597,15 @@ label means.</p>
 <p style="line-height: 100%; margin-bottom: 0in">Starting with
 Juggluco 4.1.0 glucose values from FreeStyle Libre 3 sensors are also
 send to LibreView.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>Libre3 immediate</b>:
+Send glucose values to Libreview immediately when they arrive from
+Libre 3 sensors. This is only useful in combination with LibreLinkUp.
+To make use of it you need to add a LibrelinkUp connection to this
+Libreview account in one of Abbott\'s Libre apps. Sometimes the value
+is not immediately visible, because display of <span style="font-weight: normal">LibreLinkUp</span>
+isn\'t redrawn automatically. LibreLinkUp can not be used with Libre 2
+sensors: one cannot plausibly claim to scan every minute the whole
+day long. Instead, make use of a mirror connection or Nightscout.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>Resend data</b>:
 Start anew; resend data of the last 90 days to Libreview. You need to
 press this when switching to a new Libreview account.</p>

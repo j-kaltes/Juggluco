@@ -650,6 +650,9 @@ public static native void setWearosdefaults(String jident,boolean galaxy);
 public static native void setSeparate(boolean val);
 public static native boolean getSeparate( );
 
+public static native void setLibreCurrent(boolean val);
+public static native boolean getLibreCurrent( );
+
 
 //s/^extern.*JNIEXPORT[         ]*\([a-zA-Z]*\)[ ]*JNICALL[      ]*fromjava(\([^)]*\)) *(JNIEnv[^,]*,[^,)]*[,)]\([^){]*\)[^a-zA-Z0-9]*$/public static native \1 \2(\3);/g
 //public static native void sendxdripold();

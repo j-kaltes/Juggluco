@@ -858,7 +858,7 @@ for (;;) {
 		};break;
 		*/
         case __NR_dup:
-            LOGGER(" %llu\n", regi.get(0));
+            LOGGER(" %lu\n", regi.get(0));
             break;
 #if defined(__aarch64__) 
 	case __NR_mmap: {
@@ -982,7 +982,7 @@ for (;;) {
 		case __NR_open:
 #endif
 		case __NR_openat: 
-			LOGGER("=%lld\n",regi.ret());
+			LOGGER("=%ld\n",regi.ret());
 			break;
 #endif
 		};
@@ -1200,9 +1200,9 @@ static bool needsdebug(bool realyneeds=false) {
 	if(totaal) {
 		std::vector<std::string_view> tmp;
 		std::set_union(hieraccess.begin(),hieraccess.end(),hieropen.begin(),hieropen.end(),std::back_inserter(tmp));
-		LOGGER("tmp.size=%lu\n",tmp.size());
+		LOGGER("tmp.size=%zu\n",tmp.size());
 		std::set_union(hierstat.begin(),hierstat.end(),tmp.begin(),tmp.end(),std::back_inserter(usedfiles));
-		LOGGER("usedfiles.size=%lu\n",usedfiles.size());
+		LOGGER("usedfiles.size=%zu\n",usedfiles.size());
 		accessused=new bool[hieraccess.size()]();
 		openused=new bool[hieropen.size()]();
 		statused=new bool[hierstat.size()]();

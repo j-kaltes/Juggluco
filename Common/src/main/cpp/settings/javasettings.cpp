@@ -1431,3 +1431,10 @@ extern "C" JNIEXPORT void  JNICALL   fromjava(setSeparate)(JNIEnv *env, jclass c
 extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getSeparate)(JNIEnv *env, jclass cl) {
 	return settings->data()->separatenotify;
 	}
+
+extern "C" JNIEXPORT void  JNICALL   fromjava(setLibreCurrent)(JNIEnv *env, jclass cl,jboolean val) {
+	settings->data()->LibreCurrentOnly=val;
+	}
+extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getLibreCurrent)(JNIEnv *env, jclass cl) {
+	return settings->data()->LibreCurrentOnly;
+	}

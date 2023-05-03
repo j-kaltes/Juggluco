@@ -1265,8 +1265,8 @@ int updatescanalg(crypt_t *pass,int sock,int  ind,int sensorindex) {
 int lastlifecount=0;
 time_t timelastcurrent=0;
 time_t lifeCount2time(uint32_t lifecount) {
-	auto uit=timelastcurrent-60L*(lastlifecount-(int64_t)lifecount);
-	LOGGER("timelastcurrent=%zd lastlifecount=%d lifeCount2time(lifecount=%d)=%zd\n", timelastcurrent,lastlifecount,lifecount,uit);
+	auto uit=timelastcurrent-60LL*(lastlifecount-(int64_t)lifecount);
+	LOGGER("timelastcurrent=%ld lastlifecount=%d lifeCount2time(lifecount=%d)=%lld\n", timelastcurrent,lastlifecount,lifecount,uit);
 	return uit;
 	}
 

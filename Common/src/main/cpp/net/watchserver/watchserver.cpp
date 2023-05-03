@@ -1459,7 +1459,7 @@ bool setitervar(const char *&iter,std::string_view cond,bool &var) {
 			std::string_view datestr="date";
 			if(!memcmp(iter,datestr.data(),datestr.size())) {
 				iter+=datestr.size();
-				if(!memcmp(iter,"][$",2)) {
+				if(!memcmp(iter,"][$",3)) {
 					iter+=3;
 					std::string_view greater="gte]=";
 					std::string_view greater3="gt]=";
