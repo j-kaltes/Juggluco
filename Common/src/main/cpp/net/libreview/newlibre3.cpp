@@ -242,14 +242,12 @@ bool hasNewCurrent(const SensorGlucoseData *sens) {
 		}
 	 int start=sens->getinfo()->libreviewscan;
 	int pollstart= sens->getinfo()->pollstart;
-	int ends=sens->getinfo()->lastLifeCountReceived;
-	if(ends==0) {
-		ends=sens->pollcount()-1;
-		}
+//	int ends=sens->getinfo()->lastLifeCountReceived;
+int		ends=sens->pollcount()-1;
 	if(start<pollstart)
 		start=pollstart;
 	if(start>ends) {
-		LOGGER("hasNewCurrent no new last\n");
+		LOGGER("%s pollstart=%d hasNewCurrent no new last start=%d ends=%d\n",sens->showsensorname().data(),pollstart,start,ends);
 		return false;
 		}
 	LOGGER("hasNewCurrent true\n");
@@ -274,11 +272,11 @@ int sendallcurrent(uint32_t nu,SensorGlucoseData *sens,char *buf,int *lastsend) 
 		return 0;
 	 int start=sens->getinfo()->libreviewscan;
 	int pollstart= sens->getinfo()->pollstart;
-	 int ends=sens->getinfo()->lastLifeCountReceived;
-	LOGGER("%s libreviewscan=%d lastLifeCountReceived=%d\n",sens->showsensorname().data(),start,ends);
-	if(ends==0) {
-		ends=sens->pollcount()-1;
-		}
+//	 int ends=sens->getinfo()->lastLifeCountReceived;
+	int		ends=sens->pollcount()-1;
+	LOGGER("%s pollstart=%d libreviewscan=%d ends=%d\n",sens->showsensorname().data(),pollstart,start,ends);
+//	if(ends==0) {
+//		}
 	*lastsend=ends;	
 	if(start<pollstart)
 		start=pollstart;
