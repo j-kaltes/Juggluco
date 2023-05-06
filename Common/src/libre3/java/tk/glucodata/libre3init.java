@@ -27,9 +27,46 @@ import static tk.glucodata.Natives.getlibreAccountIDnumber;
 import static tk.glucodata.Natives.processbar;
 import static tk.glucodata.Natives.processint;
 
+import java.security.SecureRandom;
+
 class libre3init {
 private static		final  String LOG_ID="libre3init";
 static void init() {
+if(false) {
+	if(BuildConfig.doLog==1) {
+	new Thread (() -> {
+		int resp1=Natives.processint(1,null,null);
+		final ECDHCrypto cryptolib=new ECDHCrypto();
+		cryptolib.initECDH(null ,1);
+		var rdtData= new byte[140];
+		(new SecureRandom()).nextBytes(rdtData);
+		cryptolib.setPatchCertificate(rdtData);
+		 var evikeys=Natives.processbar(5,null,null);
+
+		var data6= new byte[64];
+
+		(new SecureRandom()).nextBytes(data6);
+
+	  	Natives.processint(6,data6,null);
+	   final byte[] nonce1=new byte[7];
+		(new SecureRandom()).nextBytes(nonce1);
+		  byte[] uit=new byte[36];
+		(new SecureRandom()).nextBytes(uit);
+		var encrypted= Natives.processbar(7,nonce1,uit);
+	byte[] first=new byte[60];
+	byte[] nonce=new byte[7];
+		(new SecureRandom()).nextBytes(first);
+		(new SecureRandom()).nextBytes(nonce);
+	byte[] decr=Natives.processbar(8,nonce,first);
+	byte[] AuthKey=Natives.processbar(9,null,null);
+
+
+		Log.i(LOG_ID, "end test");
+		}).start();
+		}; 
+		}
+	};
+
 /*
 Log.i(LOG_ID,"init");
 if(BuildConfig.doLog==1) {
@@ -45,5 +82,4 @@ for(int i=0;i<5000;i++) {
 	}).start();
 	}
 	*/
-	}; 
 }

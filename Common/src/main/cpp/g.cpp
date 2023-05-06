@@ -754,6 +754,9 @@ extern "C" JNIEXPORT jboolean JNICALL   fromjava(iswaiting)(JNIEnv *envin, jclas
 extern "C" JNIEXPORT jstring  JNICALL   fromjava(getLibraryName)(JNIEnv *env, jclass cl) {
 	return env->NewStringUTF("lib/" archstring "/libDataProcessing.so");
 	}
+extern "C" JNIEXPORT jstring  JNICALL   fromjava(getCPUarch)(JNIEnv *env, jclass cl) {
+	return env->NewStringUTF(archstring);
+	}
 
 /*
 #include "destruct.h"

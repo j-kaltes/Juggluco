@@ -1603,9 +1603,13 @@ Libre 3 sensors. This is only useful in combination with LibreLinkUp.
 To make use of it you need to add a LibrelinkUp connection to this
 Libreview account in one of Abbott\'s Libre apps. Sometimes the value
 is not immediately visible, because display of <span style="font-weight: normal">LibreLinkUp</span>
-isn\'t redrawn automatically. LibreLinkUp can not be used with Libre 2
-sensors: one cannot plausibly claim to scan every minute the whole
-day long. Instead, make use of a mirror connection or Nightscout.</p>
+isn\'t redrawn automatically. Using LibreLinkup is quite dangerous if
+you don\'t look closely, because when you touch the graph, it shows an
+old value instead of the current glucose value.</p>
+<p style="line-height: 100%; margin-bottom: 0in">LibreLinkUp can not
+be used with Libre 2 sensors: one cannot plausibly claim to scan
+every minute the whole day long. Instead, make use of a mirror
+connection or Nightscout.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>Resend data</b>:
 Start anew; resend data of the last 90 days to Libreview. You need to
 press this when switching to a new Libreview account.</p>

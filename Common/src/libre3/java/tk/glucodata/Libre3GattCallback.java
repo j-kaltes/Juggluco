@@ -146,7 +146,8 @@ void free() {
 				Natives.setLibre3kAuth(sensorptr,null);
 				}
 			} 
-		 realdisconnected(status);
+		if(!stop)
+			 realdisconnected(status);
             }
         }
 
@@ -562,7 +563,7 @@ private void realdisconnected(int status) {
 	init();
 	wrotecharacter=false;
 	sendqueue.clear();
-	if(autoconnect&&mBluetoothGatt!=null) {
+	if(autoconnect&&status!=19&&mBluetoothGatt!=null) {
 		mBluetoothGatt.connect();
 		return;
 		}

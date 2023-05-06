@@ -1073,7 +1073,7 @@ public void onResume() {
 
 void	doabout(MainActivity activity) {
 	String about=activity.getString(R.string.about)+"<p>Version Code: "+ BuildConfig.VERSION_CODE+"<br>Version Name: "+ 
-    	BuildConfig.VERSION_NAME +"<br>Build time: "+ BuildConfig.BUILD_TIME +"</p>";
+    	BuildConfig.VERSION_NAME +"<br>"+Natives.getCPUarch()+"<br>Build time: "+ BuildConfig.BUILD_TIME +"</p>";
 	
 	help.help(about, activity);
 	}

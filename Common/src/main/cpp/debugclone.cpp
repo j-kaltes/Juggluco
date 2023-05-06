@@ -347,10 +347,6 @@ Register(pid_t pid): pid(pid) {}
 bool getall() {
    return  ptrace(PTRACE_GETREGS, pid, 0, &regs) != -1||errno==ESRCH;
     }
-    /*
-type &operator()(int of) {
-	return regs.uregs[of];	
-	}*/
 void set(int of,const type val) {
 	regs.uregs[of]=val;
 	}
@@ -361,8 +357,27 @@ type lr() const {
 	return regs.ARM_lr;
 	}
 bool setall() {
-	return ptrace(PTRACE_SETREGS, pid, 0,&regs)!=-1||errno==ESRCH;
-
+	bool success=ptrace(PTRACE_SETREGS, pid, 0,&regs)!=-1||errno==ESRCH;
+	return success;
+	/*
+	if(!success)
+		return false;
+    if(ptrace(PTRACE_SYSCALL, pid, 0, 0)==-1) {
+		flerror("2 PTRACE_SYSCALL %d failed",pid);
+		ptrace(PTRACE_DETACH, pid, 0, 0);
+		return false;
+		}
+    if(waitpid(pid, 0, 0)==-1) {
+		int waserrno=errno;
+		flerror("waitpid %d",pid);
+		if(waserrno!= ECHILD ) {
+			ptrace(PTRACE_DETACH, pid, 0, 0);
+			return false;;
+			}
+		}
+	return true;
+	}
+	*/
 	}
 type  callnr() const {
 	return regs.uregs[7];
@@ -625,6 +640,9 @@ for (;;) {
     }
 //Register::type regitype;
 //   ptrace(PTRACE_GETREGS, pid, 0, &regs);
+#ifdef __arm__
+    LOGGER("r0=%ld orig0=%ld\n",regi.get(0),regi.get(17));
+#endif
     int syscallnr = regi.callnr();
     const char *callstr = syscallnr < std::size(syscallstr) ? syscallstr[syscallnr].data() : (
 #ifdef __ARM_NR_BASE
@@ -637,6 +655,13 @@ for (;;) {
     auto reg0 = regi.get(0);
 
     switch (syscallnr) {
+    #ifdef  __NR_mmap2
+	case __NR_mmap2: {
+		int len=regi.get(1);
+		LOGGER("mmap2(0x%lx %d %ld %ld %ld %ld)\n",regi.get(0),len,regi.get(2),regi.get(3),regi.get(4),regi.get(5));
+		break;
+		}
+#endif
 
         /*
         case  __NR_futex:  {
@@ -659,7 +684,7 @@ for (;;) {
 #ifdef LIBRE3
         case __NR_clone: {
             unsigned long flags = regi.get(0);
-            LOGGER("clone flags=%x\n", flags);
+            LOGGER("clone flags=%lx\n", flags);
             if (followthreads) {
                 if (flags & CLONE_THREAD) {
                     unsigned long **stack = (unsigned long **) regi.get(1);
@@ -716,18 +741,20 @@ for (;;) {
                 askdump = true;
             }
             break;
-        case __NR_getsid:
-            if (regi.get(0) == ownpid) {
-                LOGGER("STOPSIGNAL %d\n", pid);
-                if (istest)
-                    saveused();
-                if (ptrace(PTRACE_DETACH, pid, 0, 0) == -1) {
-                    flerror("PTRACE_DETACH %d failed", pid);
-                }
-                return 0;
-            }
+        case __NR_getsid: {
+			pid_t thepid = reg0;
+			LOGGER("getsid(%d) ownpid=%d\n", thepid, ownpid);
+			if(!thepid||thepid == ownpid) {
+				LOGGER("STOPSIGNAL %d\n", pid);
+				if (istest)
+					saveused();
+				if (ptrace(PTRACE_DETACH, pid, 0, 0) == -1) {
+					flerror("PTRACE_DETACH %d failed", pid);
+				}
+				return 0;
+			}
+		};break;
 
-            break;
 
         case __NR_exit: {
             if (ptrace(PTRACE_DETACH, pid, 0, 0) == -1) {
@@ -751,7 +778,7 @@ for (;;) {
 //     int statx(int dirfd, const char *pathname, int flags, unsigned int mask, struct statx *statxbuf);
 #ifdef LIBRE3
         case __NR_ioprio_get:
-            LOGGER("ioprio_get(%ld,%ld)\n", (int) regi.get(0), regi.get(1));
+            LOGGER("ioprio_get(%d,%ld)\n", (int) regi.get(0), regi.get(1));
             if (regi.get(1) == ownpid) {
                 version = regi.get(0);
                 followthreads = version == 3 && wrongfiles();
@@ -870,14 +897,14 @@ for (;;) {
 			}
 			return 0;
 			}
-		}
 		break; 
+		};
 #endif
-		/*
         case __NR_munmap: {
 	    void *addr= (void*)regi.get(0);
             auto len = regi.get(1);
-            LOGGER("munmap %llx %lld\n", addr, len);
+            LOGGER("munmap %p %ld\n", addr, len);
+	    /*
             if (len == 1089536)  {
 	 //   	mprotect(addr,len,PROT_READ|PROT_WRITE);
 	//	LOGGER("after mprotect");
@@ -887,7 +914,8 @@ for (;;) {
                 regi.set(1, 0);
                 regi.setall(); 
                 } 
-        }; */
+		*/
+        }; 
         break;
 	default:;
 		};
@@ -914,7 +942,6 @@ for (;;) {
 		ptrace(PTRACE_DETACH, pid, 0, 0);
 		return 6;
 	    }
-	syscallnr= regi.callnr();
 	switch(syscallnr) {
 		case  __NR_read:  
 #ifdef LIBRE3
@@ -935,6 +962,10 @@ for (;;) {
 				regi.setret(packagelen);
 				regi.setall();
 				libre3initialized=true;
+				if (ptrace(PTRACE_DETACH, pid, 0, 0) == -1) {
+					flerror("PTRACE_DETACH %d failed", pid);
+					}
+				return 0;
 				}
 			}
 			}
@@ -970,6 +1001,12 @@ for (;;) {
 			LOGGER("mmap= %p\n",regi.ret());
 			};break;
 #endif
+    #ifdef  __NR_mmap2
+	case __NR_mmap2: {
+			LOGGER("mmap2= %p\n",regi.ret());
+			break;
+			};
+	#endif
 	#ifdef __NR_newfstatat
 		case __NR_newfstatat:
 	#else
@@ -982,7 +1019,7 @@ for (;;) {
 		case __NR_open:
 #endif
 		case __NR_openat: 
-			LOGGER("=%ld\n",regi.ret());
+			LOGGER("%s =%ld\n",callstr,regi.ret());
 			break;
 #endif
 		};
@@ -1067,9 +1104,11 @@ public:
 thedebugger(){
 		}
 ~thedebugger() {
-	LOGGER("~thedebugger pid=%d\n",has_debugger);
- 	if(has_debugger)
-		getsid(has_debugger);
+	const pid_t pid=has_debugger;
+	LOGGER("~thedebugger pid=%d\n",pid);
+ 	if(pid) {
+		syscall(SYS_getsid,pid);
+		}
 	has_debugger=0;
 	}
 

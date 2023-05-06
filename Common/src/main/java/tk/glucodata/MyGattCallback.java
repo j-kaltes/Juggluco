@@ -169,10 +169,12 @@ void reconnect() {
 					if(!autoconnect) {
 						bluetoothGatt.close();
 						mBluetoothGatt = null;
-						sensorbluetooth.connectToActiveDevice(this, 0);
+						if(!stop)
+							sensorbluetooth.connectToActiveDevice(this, 0);
 						}
 					else {
-						bluetoothGatt.connect();
+						if(!stop)
+							bluetoothGatt.connect();
 						}
 					conphase = 0;
 				}

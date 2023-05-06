@@ -39,6 +39,7 @@ import static tk.glucodata.Applic.isWearable;
 import static tk.glucodata.Natives.thresholdchange;
 
 public abstract class SuperGattCallback extends BluetoothGattCallback {
+volatile protected	boolean stop=false;
 public static boolean doWearInt=false;
 	private static final String LOG_ID="SuperGattCallback";
 	static final private int  use_priority=CONNECTION_PRIORITY_HIGH;
@@ -266,6 +267,7 @@ public void searchforDeviceAddress() {
 	public void close() {
 		Log.i(LOG_ID,"close");
 		var tmpgatt=mBluetoothGatt ;
+		stop=true;
 		if (tmpgatt != null) {
 			try {
 				tmpgatt.disconnect();
@@ -314,6 +316,7 @@ public void searchforDeviceAddress() {
 					Log.d(LOG_ID, SerialNumber + " Try connection to " + device.getAddress());
 					}
 				try {
+					stop=false;
 					if(isWearable)  {
 						cb.mBluetoothGatt = device.connectGatt(Applic.app, autoconnect, cb, BluetoothDevice.TRANSPORT_LE);
 						}
