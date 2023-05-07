@@ -1,3 +1,5 @@
+
+#define SYSGOOD 1
 /*#ifndef NDEBUG
 #define TESTDEBUG 1
 #endif */
@@ -115,6 +117,15 @@ using namespace std;
 #include "access.h"
 #include "stat.h"
 
+void uit(string_view el) {
+	LOGGER("%s\n",el.data());
+//	const char nl[]="\n"; write(STDOUT_FILENO,el.data(),el.size()); write(STDOUT_FILENO,nl,size(nl)-1);
+	}
+template <int nr>
+void uit(const char (&name)[nr]) {
+	LOGGER("%s\n",name);
+//	write(STDOUT_FILENO,name,nr-1);
+	}
 
 //#undef LOGGER
 //#define LOGGER(...) fprintf(stderr,__VA_ARGS__)
@@ -124,7 +135,11 @@ static span<const string_view> accessable(const string_view *names,const int *us
 	for(int i=0;i<usedlen;i++) {
 		int pos=used[i];
 		if(!func(names[pos])) {
+			LOGGER("have %s\n", names[pos]);
 			ind.push_back(pos);
+			}
+		else {
+			LOGGER("don't have %s\n", names[pos]);
 			}
 		}
 	auto len=ind.size();
@@ -568,6 +583,42 @@ switch(low_op) {
 	default: return std::string_view("unknown op");
 	};
 } */
+int syscallwait(pid_t pid) {
+    while(true) {
+	    if(ptrace(PTRACE_SYSCALL, pid, 0, 0) == -1) {
+		flerror("PTRACE_SYSCALL %d failed", pid);
+		ptrace(PTRACE_DETACH, pid, 0, 0);
+		return 5;
+	    }
+	    int status;
+	    if(waitpid(pid, &status, 0) == -1) {
+		int waserrno = errno;
+		flerror("waitpid %d", pid);
+		if (waserrno != ECHILD) {
+		    ptrace(PTRACE_DETACH, pid, 0, 0);
+		    return 2;
+		}
+		}
+	const auto sign=WSTOPSIG(status);
+	const bool stopped=WIFSTOPPED(status) ;
+#ifdef SYSGOOD 
+        if(stopped && (sign & 0x80))
+            return 0;
+        if(WIFEXITED(status)) {
+	   LOGGER("WIFEXITED(status)) \n");
+            return 1;
+	    }
+#else
+	return 0;
+#endif
+        LOGGER("stopped status=%x %d %d\n", status, stopped, sign);
+/*	if(stopped&&sign==11) {
+	    ptrace(PTRACE_DETACH, pid, 0, 0);
+	    return 11;
+	  } */
+    }
+}
+
 int debugger(void *arg) {
 commu *com=reinterpret_cast<commu *>(arg);
 pid_t pid=com->tid;
@@ -592,13 +643,15 @@ if(waitpid(pid, 0, 0)==-1) {
 	if(waserrno!= ECHILD ) {
 		ptrace(PTRACE_DETACH, pid, 0, 0);
 		notify(com);
-	//	kill(SIGCONT,pid);
 		tgkill(com->pid, pid, SIGCONT);
 
-	//	kill(SIGCONT,com->pid);
 		return 1;
 		}
     	}
+#ifdef SYSGOOD 
+ptrace(PTRACE_SETOPTIONS, pid, 0, PTRACE_O_TRACESYSGOOD);
+#endif
+
 LOGGER("voor notify\n");
 notify(com);
 LOGGER("na notify\n");
@@ -618,19 +671,11 @@ bool wasclone=false,waspipe=false;
 for (;;) {
     /* Enter next system call */
 //    if(ptrace(PTRACE_SYSCALL, pid, 0, 0)==-1&&errno!=ESRCH) {
-    if (ptrace(PTRACE_SYSCALL, pid, 0, 0) == -1) {
-        flerror("PTRACE_SYSCALL %d failed", pid);
-        ptrace(PTRACE_DETACH, pid, 0, 0);
-        return 5;
-    }
-    if (waitpid(pid, 0, 0) == -1) {
-        int waserrno = errno;
-        flerror("2 waitpid %d", pid);
-        if (waserrno != ECHILD) {
-            ptrace(PTRACE_DETACH, pid, 0, 0);
-            return 2;
-        }
-    }
+   {int syserr;
+   if((syserr=syscallwait(pid))) {
+   	return syserr;
+   	}
+  }
 
 //    struct user_regs_struct regs;
     if (!regi.getall()) {
@@ -744,7 +789,7 @@ for (;;) {
         case __NR_getsid: {
 			pid_t thepid = reg0;
 			LOGGER("getsid(%d) ownpid=%d\n", thepid, ownpid);
-			if(!thepid||thepid == ownpid) {
+			if(thepid == ownpid) {
 				LOGGER("STOPSIGNAL %d\n", pid);
 				if (istest)
 					saveused();
@@ -842,7 +887,7 @@ for (;;) {
 
                         {
 
-                            if (rewrongval(hieropen, openused, pid, regi, name, openreg)) {
+                            if(rewrongval(hieropen, openused, pid, regi, name, openreg)) {
                                 oldreg = (uintptr_t) name;
                             }
                         }
@@ -920,22 +965,12 @@ for (;;) {
 	default:;
 		};
   //  if(ptrace(PTRACE_SYSCALL, pid, 0, 0)==-1&&errno!=ESRCH) 
-    if(ptrace(PTRACE_SYSCALL, pid, 0, 0)==-1) {
-    	flerror("2 PTRACE_SYSCALL %d failed",pid);
-	ptrace(PTRACE_DETACH, pid, 0, 0);
-	return 7;
-    	}
-//LOGGER("voor waitpid(%d) voor return\n",pid);
-    if(waitpid(pid, 0, 0)==-1) {
 
-	int waserrno=errno;
-	flerror("waitpid %d",pid);
-	if(waserrno!= ECHILD ) {
-		ptrace(PTRACE_DETACH, pid, 0, 0);
-		return 8;
-		}
-    	}
-
+   {int syserr;
+   if((syserr=syscallwait(pid))) {
+   	return syserr;
+   	}
+	}
 //LOGGER("after waitpid(%d) voor return\n",pid);
 	if(!regi.getall()) {
 		flerror("2 PTRACE_GETREGSET %d failed",pid);
@@ -962,10 +997,11 @@ for (;;) {
 				regi.setret(packagelen);
 				regi.setall();
 				libre3initialized=true;
+				/*
 				if (ptrace(PTRACE_DETACH, pid, 0, 0) == -1) {
 					flerror("PTRACE_DETACH %d failed", pid);
-					}
-				return 0;
+					}  
+				return 0;  */
 				}
 			}
 			}
@@ -1117,15 +1153,6 @@ void logfiles(decltype(hieraccess) fil) {
 	for(auto el:fil) 
 		LOGGER("%s\n",el.data());
 	}
-void uit(string_view el) {
-	LOGGER("%s\n",el.data());
-//	const char nl[]="\n"; write(STDOUT_FILENO,el.data(),el.size()); write(STDOUT_FILENO,nl,size(nl)-1);
-	}
-template <int nr>
-void uit(const char (&name)[nr]) {
-	LOGGER("%s\n",name);
-//	write(STDOUT_FILENO,name,nr-1);
-	}
 #ifndef USEDIN
 Readall<int> reusestat;
 Readall<int> reuseopen;
@@ -1159,6 +1186,7 @@ static bool needsdebug(bool realyneeds=false) {
 		hieropen={opennames,std::size(opennames)};
 	}
 	else {
+	LOGGER("Access:\n");
   hieraccess=accessable(accessnames,
 #ifndef USEDIN
 	  reuseaccess.fromfile(pathconcat(globalbasedir,"accessused")),reuseaccess.size()
@@ -1182,6 +1210,7 @@ static bool needsdebug(bool realyneeds=false) {
 		return -1;
 		});
 		;
+		LOGGER("Stat: \n");
 	 hierstat=accessable(statnames,
 
 #ifndef USEDIN
@@ -1191,13 +1220,24 @@ static bool needsdebug(bool realyneeds=false) {
 	reusestat->data(),reusestat->size()
 
 #endif
-	 ,[](const string_view name){struct stat st;
-		if(!stat(name.data(),&st)) {
+	 ,[](const string_view view){struct stat st;
+		const char *name=view.data();
+		if(!stat(name,&st)) {
 			return 0;
 			};
+		const char ends[]="/.trdpx";
+		const int len=view.size();
+		char buf[sizeof(ends)+ len];
+		memcpy(buf,name,len);
+		memcpy(buf+len,ends,sizeof(ends));
+		if(!stat(buf,&st)) {
+			return 0;
+			};
+		if(errno==ENOTDIR)
+			return 0;
 		return -1;
 		});
-		
+	LOGGER("Open:\n");	
 	 hieropen=accessable(opennames,
 
 #ifndef USEDIN
@@ -1207,18 +1247,56 @@ static bool needsdebug(bool realyneeds=false) {
 
 #endif
 
-	 ,[](const string_view name){
-		int han= open(name.data(),O_RDONLY);
+	 ,[](const string_view view){
+		const char *name=view.data();
+		int han= open(name,O_RDONLY);
 		if(han>=0) {
 			close(han);
 			return 0;
 			}
-	//	if(errno!=ENOENT) return 0;
+		if(name!=opennames[3].data()) {
+			const char ends[]="/.trdpx";
+			const int len=view.size();
+			char buf[sizeof(ends)+ len];
+			memcpy(buf,name,len);
+			memcpy(buf+len,ends,sizeof(ends));
+			han= open(buf,O_RDONLY);
+			if(han>=0) {
+				close(han);
+				return 0;
+				}
+			if(errno==ENOTDIR)
+				return 0;
+			}
 		return -1;
 	});
+	/*{
+
+	std::string_view procunix=opennames[3];
+	int han= open(procunix.data(),O_RDONLY);
+	if(han>=0) {
+		LOGGER("Can open %s\n",	procunix.data());
+		close(han);
+		auto oldlen=hieropen.size();
+		auto newlen=oldlen+1;
+		std::string_view *newhieropen=new std::string_view[newlen];
+		auto *data= hieropen.data();
+		memcpy(newhieropen,data,oldlen*sizeof(newhieropen[0]));
+		delete[] data;
+		newhieropen[oldlen]=procunix;
+		hieropen={newhieropen,newlen};
+		}
+	else
+		LOGGER("can't open %s\n",	procunix.data());
+	} */
 	if(hieraccess.size()){
 		uit("access:" );
 		for(auto el:hieraccess)  
+			uit(el);
+		}
+	if(hierstat.size()) {
+		uit("stat:");
+		for(auto el:hierstat) 
 			uit(el);
 		}
 	if(hieropen.size())  {
@@ -1226,11 +1304,6 @@ static bool needsdebug(bool realyneeds=false) {
 		for(auto el:hieropen) 
 			uit(el);
 		}
-	if(hierstat.size()) {
-		uit("stat:");
-		for(auto el:hierstat) 
-			uit(el);
-	}
 	}
 	int totaal=hieraccess.size()+hieropen.size()+hierstat.size();
 
