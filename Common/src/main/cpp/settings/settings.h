@@ -91,12 +91,11 @@ struct Tings {
 	bool invertcolors:1;
 	bool dontshowalways:1;
 	bool fixatex:1,fixatey:1,systemUI:1,flash:1,waitwithstreaming:1,nfcsound:1;
-//	unsigned char reserved1:2;
 	bool havelibrary:1;
 	bool xinfuus:1;
 	bool levelleft:1;
 	bool nolog:1;
-	bool REMOVEsetpathworks:1; //Can change, with Android upgrade or Juggluco version or compile options.
+	bool reservedpath:1; 
 	bool usegarmin:1;
 	bool usexdripwebserver:1;
 	bool useWearos:1;
@@ -111,7 +110,8 @@ struct Tings {
 	bool triedasm:1;
 	bool asmworks:1;
 	bool nobluetooth;
-	bool nodebug:2;
+	bool nodebug:1;
+	bool USE_ALARMoff:1;
 	bool watchdrip:1;
 	bool android13:1;
 	bool saytreatments:1;

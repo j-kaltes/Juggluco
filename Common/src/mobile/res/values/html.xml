@@ -1226,14 +1226,21 @@ notification of Juggluco is touched (in unlocked state);</p>
 touched of the alarm notification in Juggluco.</p>
 <h3 class="western">Value available:</h3>
 <p style="line-height: 100%; margin-bottom: 0in">Sometimes the sensor
-doesn’t work. When you turn this on, you will be notified if the
-sensor works again after a failed scan.</p>
+doesn’t work. When you turn this on, you will be notified when the
+sensor works again, but only when you have seen that the value is
+missing in the Juggluco app itself. When you only know that the value
+was missing because of Juggluco\'s notification or its watch face,
+will the value available notification not be evoked.</p>
 <p style="line-height: 100%; margin-bottom: 0in">For each alarm you
 can specify which Ringtone to play and for how long.</p>
-<h2 class="western"><br/>
-<br/>
-
-</h2>
+<h3 class="western">Alarm is alarm:</h3>
+<p>When set, is the ringtone played for low, high and loss of signal
+alarms given the Android Alarms category. This means that in Android
+settings it\'s volume is managed with the Alarms volume level and it
+is not silenced when sound of the whole phone is turned off or set to
+vibration. When <i>Alarm is alarm</i> is not set, the ringtone volume
+level is used. This is always the case for the value available
+notification.</p>
 <h3 class="western"><br/>
 <br/>
 

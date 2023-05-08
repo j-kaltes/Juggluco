@@ -1620,19 +1620,34 @@ Juggluco berührt.</font></font></p>
 <h3 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-top: 0.1in; margin-bottom: 0.08in; background: transparent">
 <font face="Liberation Sans, sans-serif">Verfügbarer Wert:</font></h3>
 <p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
-<font face="Times New Roman"><font size="4" style="font-size: 14pt">Manchmal
-funktioniert der Sensor nicht.&nbsp;Wenn Sie dies aktivieren, werden
-Sie benachrichtigt, wenn der Sensor nach einem fehlgeschlagenen Scan
-wieder funktioniert.</font></font></p>
+<font face="Times New Roman"><font size="4" style="font-size: 14pt"><font color="#000000">Manchmal
+funktioniert der Sensor nicht.</font><font color="#000000"> </font><font color="#000000">Wenn
+Sie dies einschalten, werden Sie benachrichtigt, wenn der Sensor
+wieder funktioniert, aber nur, wenn Sie in der Juggluco-App selbst
+gesehen haben, dass der Wert fehlt.</font><font color="#000000"> </font><font color="#000000">Wenn
+Sie nur wissen, dass der Wert aufgrund der Benachrichtigung von
+Juggluco oder seines Zifferblatts gefehlt hat, wird die
+Benachrichtigung über den verfügbaren Wert nicht aufgerufen.</font></font></font></p>
 <p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
-<font face="Times New Roman"><font size="4" style="font-size: 14pt">Für
+<font color="#000000"><font face="Times New Roman"><font size="4" style="font-size: 14pt">Für
 jeden Alarm können Sie festlegen, welcher Klingelton wie lange
-abgespielt werden soll.</font></font></p>
-<h2 class="western" style="orphans: 2; widows: 2; margin-top: 0.14in; margin-bottom: 0.08in; background: transparent">
-<br/>
-<br/>
-
-</h2>
+abgespielt werden soll.</font></font></font></p>
+<h3 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal">
+<font face="Times New Roman"><font size="4" style="font-size: 14pt">Alarm
+ist alarm</font></font></h3>
+<p style="orphans: 2; widows: 2"><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">Wenn
+eingestellt, erhält der Klingelton, der für niedriger, hoher</span></span></span></font></font></span><span style="font-variant: normal"><span style="letter-spacing: normal">
+</span></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">und
+Signalverlustalarme abgespielt wird, die Kategorie „</span></span></span></font></font></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><i><span style="font-weight: normal">Alarme</span></i></span></font></font></span><span style="font-variant: normal"><span style="letter-spacing: normal">“
+</span></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">in
+Android. Dies bedeutet, dass in den Android-Einstellungen die
+Lautstärke mit dem Lautstärkeregler namens Alarms gesteuert wird
+und die Alarme nicht stummgeschaltet werden, wenn das gesamte Telefon
+stummgeschaltet oder auf Vibration eingestellt ist. Wenn &quot;</span></span></span></font></font></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><i><span style="font-weight: normal">Alarm
+ist alarm</span></i></span></font></font></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">&quot;
+nicht eingestellt ist, wird Klingelton verwendet. Bei der</span></span></span></font></font></span><span style="font-variant: normal"><span style="letter-spacing: normal">
+</span></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">Verfügbarer
+Wert Benachrichtigung ist dies immer der Fall.</span></span></span></font></font></span></p>
 ]]>
 </string>
 <string name="flashpermission" >

@@ -266,5 +266,6 @@
     <string name="notify">Notify</string>
  <string name="separate">Separate</string>
     <string name="librecurrent">Libre3 immediate</string>
+    <string name="USE_ALARM">Alarm is alarm</string>
 
 </resources>

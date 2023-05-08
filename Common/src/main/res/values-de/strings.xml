@@ -262,4 +262,5 @@
     <string name="notify">Benachrichtigen</string>
  <string name="separate">Separat</string>
     <string name="librecurrent">Libre3 sofort</string>
+    <string name="USE_ALARM">Alarm ist alarm</string>
 </resources>

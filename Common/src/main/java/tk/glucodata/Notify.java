@@ -35,6 +35,7 @@ import static tk.glucodata.Applic.isRelease;
 import static tk.glucodata.Applic.isWearable;
 import static tk.glucodata.Applic.usedlocale;
 import static tk.glucodata.CommonCanvas.drawarrow;
+import static tk.glucodata.Natives.getUSEALARM;
 import static tk.glucodata.Natives.getalarmdisturb;
 import static tk.glucodata.Natives.getisalarm;
 import static tk.glucodata.Natives.setisalarm;
@@ -132,15 +133,18 @@ public static Ringtone getring(int kind) {
 Ringtone mkring(String uristr,int kind) {
 	Log.i(LOG_ID,"ringtone "+kind+" "+uristr);
 	var ring=setring(uristr,defaults[kind]);
-	if(kind!=2)  {
-		if(android.os.Build.VERSION.SDK_INT >= 21)  {
-			try {
-				ring.setAudioAttributes(ScanNfcV.audioattributes);
-			} 
-			catch(Throwable e) {
-		       		Log.stack(LOG_ID,"mkring",e);
-		    		}
 
+	if(kind!=2)  {
+		if(getUSEALARM()) {	
+			if(android.os.Build.VERSION.SDK_INT >= 21)  {
+				try {
+					ring.setAudioAttributes(ScanNfcV.audioattributes);
+				} 
+				catch(Throwable e) {
+					Log.stack(LOG_ID,"mkring",e);
+					}
+
+				}
 			}
 		}
 	return ring;

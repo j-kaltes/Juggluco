@@ -306,6 +306,13 @@ static public void alarmsettings(MainActivity context,View parview,boolean[] iss
 			    }
 			});
 
+
+	var usealarm=getcheckbox(context, R.string.USE_ALARM, Natives.getUSEALARM());
+	usealarm.setOnCheckedChangeListener(
+			 (buttonView,  isChecked) -> {
+				Natives.setUSEALARM(isChecked);
+			    }
+			);
 	final boolean alarmloss= Natives.hasalarmloss();
 		CheckBox lossalarm = new CheckBox(context);
 		lossalarm.setChecked(alarmloss); //Value
@@ -354,12 +361,12 @@ static public void alarmsettings(MainActivity context,View parview,boolean[] iss
    		ala.setPadding(pad,pad,pad,pad);
 		views=new View[][]{new View[]{ala},new View[]{lowalarm[0]},new View[]{lowalarm[1],lowalarm[2]}, new View[]{highalarm[0]},new View[]{highalarm[1],highalarm[2]},
 new View[]{lossalarm},new View[]{losswait,min,ringlossalarm},
-new View[]{isvalue},new View[]{ringisvalue,Cancel},new View[]{Save}};
+new View[]{isvalue},new View[]{ringisvalue,Cancel},new View[]{usealarm},new View[]{Save}};
 //new View[]{isvalue},new View[]{ringisvalue},new View[]{Cancel,Save}, new View[] {toucheverywhere}};
 		}
 	else {
         	View[] lostrow={lossalarm,losswait,min,ringlossalarm};
-		View[] row6={isvalue, ringisvalue};
+		View[] row6={usealarm,isvalue, ringisvalue};
 		View[] rowshow={help,Cancel,Save};
 		views=new View[][]{lowalarm,highalarm,lostrow,row6,rowshow};
 		}	

@@ -118,7 +118,7 @@ using namespace std;
 #include "stat.h"
 
 void uit(string_view el) {
-	LOGGER("%s\n",el.data());
+	LOGGER("%s#%d\n",el.data(),el.size());
 //	const char nl[]="\n"; write(STDOUT_FILENO,el.data(),el.size()); write(STDOUT_FILENO,nl,size(nl)-1);
 	}
 template <int nr>
@@ -1175,9 +1175,8 @@ std::vector<std::string_view> usedfiles;
 	
 extern int dodebug(); 
 static bool initialized=false;
-static bool needsdebug(bool realyneeds=false) {
+static bool needsdebug() {
 	const int debug=dodebug();
-//	if(!realyneeds&&debug<0) return false;
 	LOGGER("dodebug()=%d\n",debug);
 	if(debug>0) {
 		istest=true;
@@ -1310,10 +1309,14 @@ static bool needsdebug(bool realyneeds=false) {
 
 	initialized=true;
 	if(totaal) {
-		std::vector<std::string_view> tmp;
-		std::set_union(hieraccess.begin(),hieraccess.end(),hieropen.begin(),hieropen.end(),std::back_inserter(tmp));
-		LOGGER("tmp.size=%zu\n",tmp.size());
-		std::set_union(hierstat.begin(),hierstat.end(),tmp.begin(),tmp.end(),std::back_inserter(usedfiles));
+
+		int firstlen=hieraccess.size()+hieropen.size();
+		std::string_view tmp[firstlen];
+
+		auto *endtmp=std::set_union(hieraccess.begin(),hieraccess.end(),hieropen.begin(),hieropen.end(),tmp);
+		LOGGER("tmp size=%zu\n",endtmp-tmp);
+		usedfiles.clear();
+		std::set_union(hierstat.begin(),hierstat.end(),tmp,endtmp,std::back_inserter(usedfiles));
 		LOGGER("usedfiles.size=%zu\n",usedfiles.size());
 		accessused=new bool[hieraccess.size()]();
 		openused=new bool[hieropen.size()]();
@@ -1388,9 +1391,7 @@ pid_t debugclone(bool doalways,const int version) {
    	return 1;
 	}
 LOGGER("debugclone(%d,%d)\n",doalways,version);
-     if(doalways||wrongfiles()) {
-	   if(doalways&&!initialized)
-		needsdebug(true);
+     if(wrongfiles()||doalways) {
 #ifdef LIBRE3
 	static thread_local	int wasversion ;
 #endif

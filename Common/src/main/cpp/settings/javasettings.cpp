@@ -1438,3 +1438,10 @@ extern "C" JNIEXPORT void  JNICALL   fromjava(setLibreCurrent)(JNIEnv *env, jcla
 extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getLibreCurrent)(JNIEnv *env, jclass cl) {
 	return settings->data()->LibreCurrentOnly;
 	}
+
+extern "C" JNIEXPORT void  JNICALL   fromjava(setUSEALARM)(JNIEnv *env, jclass cl,jboolean val) {
+	settings->data()->USE_ALARMoff=!val;
+	}
+extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getUSEALARM)(JNIEnv *env, jclass cl) {
+	return !settings->data()->USE_ALARMoff;
+	}

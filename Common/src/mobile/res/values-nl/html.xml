@@ -1263,9 +1263,9 @@ het alarm af moet gaan.</p>
 <p style="line-height: 100%; margin-bottom: 0in">Geef aan na hoeveel
 minuten geen glucose waarde via Bluetooth ontvangen moet zijn,
 voordat een alarm af gaat.</p>
-<h3>Stop alarm</h3>
-<p style="line-height: 100%; margin-bottom: 0in">Alarmen stoppen
-bij een van het volgende:</p>
+<h3 class="western">Stop alarm</h3>
+<p style="line-height: 100%; margin-bottom: 0in">Alarmen stoppen bij
+een van het volgende:</p>
 <ul>
 	<li><p style="line-height: 100%; margin-bottom: 0in">De aangegeven
 	tijdsperiode is verlopen;</p>
@@ -1277,16 +1277,26 @@ bij een van het volgende:</p>
 	in het alarm meldings-schermpje in Juggluco is gedrukt.</p>
 </ul>
 <h2 class="western">Waarde aanwezig melding</h2>
-<p style="line-height: 100%; margin-bottom: 0in">Soms werkt een
-sensor niet. Als dit aanstaat, wordt er gemeld wanneer de sensor het
-weer doet na aan mislukte scan (of na het starten van het programma).</p>
-<h2 class="western"><br/>
-<br/>
-
-</h2>
-<p style="line-height: 100%; margin-bottom: 0in"><br/>
-
-</p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
+<font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">Soms
+werkt de sensor niet. Als deze optie aanstaat, krijg je een melding
+als de sensor weer werkt, maar pas als je hebt gezien dat de waarde
+ontbreekt in de Juggluco-app zelf. Als je alleen weet dat de waarde
+ontbrak vanwege de melding van Juggluco of de wijzerplaat, wordt de
+waarde aanwezig melding niet opgeroepen.</font></font></font></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
+<font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">Voor
+elk alarm kun je aangeven welke beltoon moet worden afgespeeld en
+voor hoe lang.</font></font></font></p>
+<h2 class="western">Alarm is alarm:</h2>
+<p style="line-height: 100%; margin-bottom: 0in">Indien ingesteld,
+krijgt de beltoon afgespeeld voor laag, hoog en verlies van
+signaalalarmen de categorie Alarmen in Android. Dit betekent dat in
+Android-instellingen het volume wordt beheerd met het volume controle
+met de naam Alarmen en de alarmen niet worden gedempt wanneer het
+geluid van de hele telefoon wordt uitgeschakeld of op trillen wordt
+gezet. Als <i>Alarm is alarm</i> niet is ingesteld, wordt Beltoon
+gebruikt. Dit is altijd het geval voor de waarde aanwezig melding.</p>
 ]]>
 </string>
 <string name="flashpermission" >
