@@ -108,7 +108,7 @@ VISIBLE extern "C" int execv(const char *pathname, char *const argv[])  {
 	for(char *const *ptr=argv;*ptr;ptr++ ) {
 		LOGGER("%s,",*ptr);
 		}
-	LOGGER("})\n");
+	LOGSTRING("})\n");
 	#ifndef	USE_ECHO
 //	const char package[]="package:/sdcard/libre/base.apk\n";
 	sys_write(STDOUT_FILENO,package,packagelen);
@@ -344,7 +344,7 @@ extern "C" pid_t VISIBLE Waitpid(pid_t pid, int *wstatus, int options) {
 #ifdef NOFORK
 	if(pid==childpid)  { 
 		
-		LOGGER("waitpid\n");
+		LOGSTRING("waitpid\n");
 		if(wstatus)
 			*wstatus=0;
 		return childpid;
@@ -377,11 +377,11 @@ VISIBLE extern "C" pid_t  fork(void) {
 //static int *checkpipe=nullptr;
 #ifdef NOFORK
 extern "C" pid_t  VISIBLE fork(void) {
-	LOGGER("nepfork()\n");
+	LOGSTRING("nepfork()\n");
 	return childpid;
 	}
 extern "C" pid_t  VISIBLE Fork(void) {
-	LOGGER("nepfork()\n");
+	LOGSTRING("nepfork()\n");
 	return childpid;
 	}
 

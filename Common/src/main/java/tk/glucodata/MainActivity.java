@@ -36,7 +36,7 @@ import static tk.glucodata.Floating.setfloatglucose;
 import static tk.glucodata.Floating.shoulduseadb;
 import static tk.glucodata.GlucoseCurve.STEPBACK;
 import static tk.glucodata.Natives.hasstreamed;
-import static tk.glucodata.Natives.showbytes;
+import static tk.glucodata.Log.showbytes;
 import static tk.glucodata.Natives.wakelibreview;
 import static tk.glucodata.help.hidekeyboard;
 

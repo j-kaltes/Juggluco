@@ -64,6 +64,13 @@ static public void show(MainActivity context) {
 				Natives.setwatchdrip(isChecked);
 				tk.glucodata.watchdrip.set(isChecked);
 				});
+       var gadget=getcheckbox(context,"GadgetBridge", SuperGattCallback.doGadgetbridge);
+		gadget.setOnCheckedChangeListener(
+			(buttonView,  isChecked) ->  {
+				Natives.setgadgetbridge(isChecked);
+				SuperGattCallback.doGadgetbridge=isChecked;
+				});
+
 	var usexdripserver=Natives.getusexdripwebserver();
 	var server=getcheckbox(context,R.string.webserver,usexdripserver);
 	server.setOnCheckedChangeListener( (buttonView,  isChecked) -> Natives.setusexdripwebserver(isChecked));
@@ -119,7 +126,7 @@ static public void show(MainActivity context) {
 		if(width>w)
 			l.setX((width-w)/2);
 		return new int[] {w,h};
-		},new View[]{watchdrip},new View[] {notify,separate},new View[]{wearbox,wearossettings},new View[]{server,serverconfig},new View[]{kerfstok,status},new View[]{Help,Ok} );
+		},new View[]{watchdrip,gadget},new View[] {notify,separate},new View[]{wearbox,wearossettings},new View[]{server,serverconfig},new View[]{kerfstok,status},new View[]{Help,Ok} );
 	float density=GlucoseCurve.metrics.density;
 	int laypad=(int)(density*4.0);
 	layout.setPadding(laypad*2,laypad*2,laypad*2,laypad);

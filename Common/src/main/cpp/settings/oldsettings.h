@@ -418,7 +418,7 @@ void mkshorts() {
 	}
 
 void mklabels() {
-	LOGGER("mklabels\n");
+	LOGSTRING("mklabels\n");
 	Tings::Variables *varsptr=data()->vars;
 	varsptr[0].prec=.5f;
 	varsptr[1].prec=1.0f;

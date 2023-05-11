@@ -1,5 +1,6 @@
 Separate android from rest in cpp
-Maak het makkelijker mirror connectie tussen smartphones te vormen.
+Maak het makkelijker mirror connectie tussen smartphones te vormen:
+	- script om cloud server in te richten?
 Analyse Libre 3 PatchEvents and scans to generate error messages:  replace sensor, sensor ended etc.
 
 watchdrip:

@@ -52,6 +52,7 @@
 
 #define lerrortag(...) lerror("backup: " __VA_ARGS__)
 #define LOGGERTAG(...) LOGGER("backup: " __VA_ARGS__)
+#define LOGSTRINGTAG(...) LOGSTRING("backup: " __VA_ARGS__)
 #define flerrortag(...) flerror("backup: " __VA_ARGS__)
 using namespace std;
 
@@ -85,9 +86,9 @@ static bool startserver(char *port, passhost_t *hosts,int *hostlen,int *socks,bo
 	int sock;
 	for(struct addrinfo *ips=servinfo;;ips=ips->ai_next) {
 		if(!ips) {
-			LOGGERTAG("no addresses to bind left\n");
+			LOGSTRINGTAG("no addresses to bind left\n");
 			if(*shutdownreceiver) {
-				LOGGERTAG("shutdownreceiver return\n");
+				LOGSTRINGTAG("shutdownreceiver return\n");
 				return false;
 				}
 			sleep(1);
@@ -121,10 +122,10 @@ static bool startserver(char *port, passhost_t *hosts,int *hostlen,int *socks,bo
 		}
 	serverloop(sock,hosts,*hostlen,socks);
 	if(*shutdownreceiver) {
-		LOGGERTAG("stop server\n");
+		LOGSTRINGTAG("stop server\n");
 		return true;
 		}
-	LOGGERTAG("restart serverloop\n");
+	LOGSTRINGTAG("restart serverloop\n");
 	sleep(1);
 	goto RESTART;
 	}
@@ -141,7 +142,7 @@ bool receiveractive() {
 void stopreceiver() {
 	LOGGERTAG("stopreceiver %d\n",globalsocket);
 	if(shutdownreceiver) {
-		LOGGERTAG("ask for shutdown receiver\n");
+		LOGSTRINGTAG("ask for shutdown receiver\n");
 		*shutdownreceiver=true;
 		}
 	if(globalsocket>=0) {
@@ -191,7 +192,7 @@ static bool testreceivemagic(passhost_t *pass,int sock) {
 		const int testlen=sendmagicspec.size()-4;
 		if(!memcmp(buf,sendmagicspec.data(),testlen)) { 
 			if(!memcmp(buf+testlen,sendmagicspec.end()-4,3)) {
-				LOGGERTAG("I don't connect with myself\n");
+				LOGSTRINGTAG("I don't connect with myself\n");
 				}
 			else {
 				constexpr int reclen=sizeof(receivemagic);
@@ -206,7 +207,7 @@ static bool testreceivemagic(passhost_t *pass,int sock) {
 					magicptr=receivemagic;
 					}
 				if(sendni(sock,magicptr,reclen)==reclen) {
-					LOGGERTAG("receivemagic success\n");
+					LOGSTRINGTAG("receivemagic success\n");
 					if(!buf[sendmagicspec.size()-1]) {
 						LOGGERTAG("testreceivemagic zerolast %s\n",pass->getnameif());
 
@@ -336,7 +337,7 @@ globalsocket=serversock;
 					if(!host.addiphasfamport(addrptr)) {
 						continue;
 						}
-					LOGGERTAG("detected\n");		
+					LOGSTRINGTAG("detected\n");		
 					hit=&host;
 					goto RIGHTHOST;
 				 	}
@@ -351,10 +352,10 @@ globalsocket=serversock;
 						if((host.passive())&&host.hasname&&!memcmp(host.getname(),name,passhost_t::maxnamelen)) { 
 							bool nothostreg=!host.hasip(addrptr)&&(!host.detect||!host.addiphasfamport(addrptr));
 							if(!host.noip&&nothostreg) {
-								LOGGERTAG("wrong ip\n");
+								LOGSTRINGTAG("wrong ip\n");
 								continue;
 								}
-							LOGGERTAG("take \n");
+							LOGSTRINGTAG("take \n");
 							hit=&host;
 							goto RIGHTHOST;
 							}
@@ -367,7 +368,7 @@ globalsocket=serversock;
 					}
 
 				}
-			LOGGERTAG("Wrong host\n");
+			LOGSTRINGTAG("Wrong host\n");
 			close(new_fd);
 			continue;
 			}
@@ -384,12 +385,12 @@ globalsocket=serversock;
 
 //extern void getmyname(int sock); getmyname(new_fd);
 		if(hit->sendpassive) {
-			LOGGERTAG("sendpassive\n");
+			LOGSTRINGTAG("sendpassive\n");
 			char ant=SENDPASSIVE;
 			extern bool sendall(const passhost_t *host);
 			if(hit->receivedatafrom()&&!sendall(hit)) {
 				if(recvni(new_fd, &ant, 1)!=1) {
-				  	LOGGERTAG("No send/recv distinction\n");
+				  	LOGSTRINGTAG("No send/recv distinction\n");
 				  	}
 				else {
 					LOGGERTAG("also receivefrom ant=%d\n",ant);
@@ -437,7 +438,7 @@ void startreceiver(const char *port,passhost_t *hosts,int &hostlen,int *socks) {
 #ifdef MAIN
 
 void netwakeup() {
-	LOGGERTAG("wakeup\n");
+	LOGSTRINGTAG("wakeup\n");
 	}
 //s/\([A-Z]\+\)/printf(\"\1=%d\\n\",\1);/g
 int main(int argc, char **argv) {

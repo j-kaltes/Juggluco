@@ -207,7 +207,7 @@ void	initopengl(int started)  {
 	);
 
 	if (genVG == nullptr) {
-		LOGGER("Could not init nanovg.");
+		LOGSTRING("Could not init nanovg.");
 		return ;
 		}
 	::genVG=genVG;
@@ -531,7 +531,7 @@ std::vector<pair<const ScanData*,const ScanData*>> getsensorranges(uint32_t star
 	vector<pair<const ScanData*,const ScanData*>> polldata;
 	polldata.reserve(hists.size());
 	uint32_t timeiter=start;
-	LOGGER("getsensorranges: \n");
+	LOGSTRING("getsensorranges: \n");
 	for(int i=hists.size()-1;i>=0&&timeiter<endt;i--)  {
 		auto his=sensors->gethist(hists[i]);
 		std::span<const ScanData> 	poll=his->getPolldata();
@@ -1071,7 +1071,7 @@ pair<float,float> drawtrender(NVGcontext* genVG,const std::array<uint16_t,16> &t
 			nvgLineTo( genVG,posx ,posy);
 			}
 		}
-	LOGGER("\n");
+	LOGSTRING("\n");
 	nvgStroke(genVG);
 	return std::pair<float,float>({pos0,posy});
 	}
@@ -1519,50 +1519,50 @@ void drawarrow(NVGcontext* genVG, float rate,float getx,float gety) {
 	}
 void showvalue(const ScanData *poll,const sensorname_t *sensorname, float getx,float gety) {
 	LOGGER("showvalue %s\n",sensorname->data());
-			float sensory= gety+headsize/3.1;
-			nvgFillColor(genVG, *getblack());
-			nvgFontSize(genVG,mediumfont );
-			nvgTextAlign(genVG,NVG_ALIGN_LEFT|NVG_ALIGN_TOP);
-			nvgText(genVG, getx,sensory, sensorname->begin(), sensorname->end());
-			nvgTextAlign(genVG,NVG_ALIGN_LEFT|NVG_ALIGN_MIDDLE);
-			constexpr const int maxhead=11;
-			char head[maxhead];
+	float sensory= gety+headsize/3.1;
+	nvgFillColor(genVG, *getblack());
+	nvgFontSize(genVG,mediumfont );
+	nvgTextAlign(genVG,NVG_ALIGN_LEFT|NVG_ALIGN_TOP);
+	nvgText(genVG, getx,sensory, sensorname->begin(), sensorname->end());
+	nvgTextAlign(genVG,NVG_ALIGN_LEFT|NVG_ALIGN_MIDDLE);
+	constexpr const int maxhead=11;
+	char head[maxhead];
 //#if defined(NDEBUG) 
 #if 1
-			const auto nonconvert= poll->g;
+	const auto nonconvert= poll->g;
 #else
-			const uint32_t nonconvert= 40;
+	const uint32_t nonconvert= 40;
 #endif
-			nvgFontSize(genVG, headsize*.8);
-			if(nonconvert<glucoselowest) {
+	nvgFontSize(genVG, headsize*.8);
+	if(nonconvert<glucoselowest) {
 const				float valuex=getx;
 //				int gllen=snprintf(head,maxhead,"%.*f>",gludecimal,gconvert(glucoselowest*10));
 
-				 int gllen=mkshowlow(head, maxhead) ;
-				nvgText(genVG,valuex,gety, head, head+gllen);
-				}
-			else {
-				if(nonconvert>glucosehighest) {
-				float valuex=getx-density*14.0f;
-				//	int gllen=snprintf(head,maxhead,"%.*f<",gludecimal,gconvert(glucosehighest*10));
-				 int gllen=mkshowhigh(head, maxhead) ;
-					nvgText(genVG,valuex ,gety, head, head+gllen);
-					}
-				else {
-#if 0
-					const float convglucose= 27.8f;
-#else
-					const float convglucose= gconvert(nonconvert*10);
-#endif
-					float valuex=getx-(convglucose>=10.0f?density*20.0f:0.0f);
-					int gllen=snprintf(head,maxhead,gformat,convglucose);
-					nvgText(genVG,valuex ,gety, head, head+gllen);
-					float rate=poll->ch;
-					drawarrow(genVG,rate,valuex-10*density,gety);
-					}
-				}
-
+		 int gllen=mkshowlow(head, maxhead) ;
+		nvgText(genVG,valuex,gety, head, head+gllen);
+		}
+	else {
+		if(nonconvert>glucosehighest) {
+		float valuex=getx-density*14.0f;
+		//	int gllen=snprintf(head,maxhead,"%.*f<",gludecimal,gconvert(glucosehighest*10));
+		 int gllen=mkshowhigh(head, maxhead) ;
+			nvgText(genVG,valuex ,gety, head, head+gllen);
 			}
+		else {
+#if 0
+			const float convglucose= 27.8f;
+#else
+			const float convglucose= gconvert(nonconvert*10);
+#endif
+			float valuex=getx-(convglucose>=10.0f?density*20.0f:0.0f);
+			int gllen=snprintf(head,maxhead,gformat,convglucose);
+			nvgText(genVG,valuex ,gety, head, head+gllen);
+			float rate=poll->ch;
+			drawarrow(genVG,rate,valuex-10*density,gety);
+			}
+		}
+
+	}
 
 	
 //static bool	streamvalueshown=false;
@@ -1646,10 +1646,10 @@ static void showlastsstream(const time_t nu,const float getx,std::vector<int> &u
 		float gety=smallsize*.5f+dtop+dheight*yh/(used.size()*2.0f);
 		const ScanData *poll=hist->lastpoll();
 		if(poll) {
-			LOGGER("poll!=null\n");
+			LOGSTRING("poll!=null\n");
 			int age=nu-poll->t;
 			if(age<maxbluetoothage) {
-				LOGGER("age<maxbluetoothage\n");
+				LOGSTRING("age<maxbluetoothage\n");
 				if(!poll->valid())
 					return;
 				failures=0;
@@ -1663,7 +1663,7 @@ static void showlastsstream(const time_t nu,const float getx,std::vector<int> &u
 				success=true;
 				}
 			else {
-				LOGGER("age>=maxbluetoothage\n");
+				LOGSTRING("age>=maxbluetoothage\n");
 				switch(showerrorvalue(hist,nu,getx,gety)) {
 					case 1: neterror=true;break;
 					case 2: usebluetoothoff=true;break;
@@ -1673,7 +1673,7 @@ static void showlastsstream(const time_t nu,const float getx,std::vector<int> &u
 				}
 			}
 		else {
-			LOGGER("poll==null\n");
+			LOGSTRING("poll==null\n");
 			time_t starttime=hist->getstarttime();
 			auto wait= nu-starttime;
 			LOGGER("wait=%lu starttime=%lu %s\n",wait,starttime,ctime(&starttime));
@@ -1692,7 +1692,7 @@ static void showlastsstream(const time_t nu,const float getx,std::vector<int> &u
 				nvgTextBox(genVG,  usegetx, gety, getboxwidth(usegetx), buf,buf+ends);
 				}
 			else
-				LOGGER("wait>=(60*60)\n");
+				LOGSTRING("wait>=(60*60)\n");
 			}
 
 		}
@@ -1717,7 +1717,7 @@ static void showlastsstream(const time_t nu,const float getx,std::vector<int> &u
 	if(failures>3) {
 		for(int i=0;i<used.size();i++) {
 			if(SensorGlucoseData *hist=sensors->gethist(used[i])) {
-				LOGGER("set waiting=true\n");
+				LOGSTRING("set waiting=true\n");
                 		hist->waiting=true;
 				}
 			}
@@ -1909,7 +1909,7 @@ int displaycurve(NVGcontext* genVG,time_t nu,uint32_t starttime,uint32_t endtime
 //	if(iswatch) { return showwatchface(nu); }
 
 	mealpos.clear();
-	LOGGER("display\n");
+	LOGSTRING("display\n");
 	hists= sensors->inperiod(starttime,endtime) ;
 	histlen=hists.size();
 	delete[] scanranges;
@@ -1920,11 +1920,11 @@ int displaycurve(NVGcontext* genVG,time_t nu,uint32_t starttime,uint32_t endtime
 //	pair<const ScanData *,const ScanData*> pollranges[histlen];
 	delete[] histpositions;
 	histpositions=new std::remove_reference_t<decltype(histpositions[0])>[histlen];
-	LOGGER("before getranges\n");
+	LOGSTRING("before getranges\n");
 	for(int i=histlen-1;i>=0;--i) {
 		auto his=sensors->gethist(hists[i]);
 		if(!his)  {
-			LOGGER("gethist==null\n");
+			LOGSTRING("gethist==null\n");
 			sleep(1);
 			return 0;
 			}
@@ -1947,7 +1947,7 @@ int displaycurve(NVGcontext* genVG,time_t nu,uint32_t starttime,uint32_t endtime
 	for(int i=0;i< numdatas.size();i++) 
 		numdatas[i]->extrum=numdatas[i]->getInRange(starttime, endtime) ;
 	const pair<const ScanData *,const ScanData*> *scanpoll[]= {scanranges,pollranges};
-	LOGGER("Before getextremes\n");
+	LOGSTRING("Before getextremes\n");
 	if((setend<starttime||settime>=endtime)) {
 	   auto extr=getextremes(hists,scanpoll,2,histpositions);
 	   for(int i=0;i<numdatas.size();i++)  {
@@ -1956,16 +1956,16 @@ int displaycurve(NVGcontext* genVG,time_t nu,uint32_t starttime,uint32_t endtime
 			}
 	   setextremes(extr) ;
 	   }
-	LOGGER("before gettrans\n");
+	LOGSTRING("before gettrans\n");
 	int  gmax = gmin+grange;
 	const auto [transx,transy]= gettrans(starttime, endtime);
 displaytime disp=getdisplaytime(nu,starttime,endtime, transx);
 	const float dlast=nu<endtime?transx(disp.last):dleft+dwidth;
-	LOGGER("before showsaverange\n");
+	LOGSTRING("before showsaverange\n");
 	showsaverange(dlast,transy(settings->targetlow()),transy(settings->targethigh()));
 
 	nvgFontSize(genVG, smallsize);
-	LOGGER("before showNums\n");
+	LOGSTRING("before showNums\n");
 	if(shownumbers||showmeals)  {
 		const int catnr=settings->getlabelcount()+1;
 		bool was[catnr-1];
@@ -1984,7 +1984,7 @@ displaytime disp=getdisplaytime(nu,starttime,endtime, transx);
 
 //		nvgCircle(genVG, posx,posy,foundPointRadius);
 
-	LOGGER("before showhistories\n");
+	LOGSTRING("before showhistories\n");
 	if(showhistories) {
 		nvgStrokeWidth(genVG, historyStrokeWidth);
 		for(int i=histlen-1;i>=0;i--) {
@@ -1993,7 +1993,7 @@ displaytime disp=getdisplaytime(nu,starttime,endtime, transx);
 			 histcurve(genVG,sensors->gethist(index), histpositions[i].first, histpositions[i].second,transx,transy,colorindex); 
 			 }
 		}
-	LOGGER("before showstream\n");
+	LOGSTRING("before showstream\n");
 	if(showstream)   {
 		nvgStrokeWidth(genVG, pollCurveStrokeWidth);
 		for(int i=histlen-1;i>=0;i--) {
@@ -2003,7 +2003,7 @@ displaytime disp=getdisplaytime(nu,starttime,endtime, transx);
 			showlineScan(genVG,pollranges[i].first,pollranges[i].second,transx,transy,colorindex);
 			 }
 		}
-	LOGGER("before showscans\n");
+	LOGSTRING("before showscans\n");
 	if(showscans) {
 		for(int i=histlen-1;i>=0;i--) {
 			const int index=hists[i];
@@ -2127,7 +2127,7 @@ void	updateusedsensors(uint32_t nu) {
 	static int32_t waslast=-1;
 	int newlast=sensors->last();
 	if(waslast!=newlast||!wait) {
-		LOGGER("updateusedsensors\n");
+		LOGSTRING("updateusedsensors\n");
 		waslast=newlast;
 		setusedsensors(nu);
 		wait=100;
@@ -2209,7 +2209,7 @@ void withoutredisplay(NVGcontext* genVG,uint32_t nu,uint32_t endtime)  {
 	tapx=-8000;
 } */
 int onestep() {
-	LOGGER("onestop\n");
+	LOGSTRING("onestop\n");
 	time_t nu=time(nullptr);
 	updateusedsensors(nu);
 	uint32_t endtime=starttime+duration;
@@ -2314,7 +2314,7 @@ extern int  abbottinit();
 void mkheights() {
 	if(!settings)
 		return;
-	LOGGER("mkheights() \n");
+	LOGSTRING("mkheights() \n");
 	const int maxl= settings->getlabelcount();
 	numheights=new int[maxl];
 	int nr=0;
@@ -2377,17 +2377,17 @@ void  setlocale(const char *localestrbuf,const size_t len) {
 	}
 
 void  calccurvegegs() {
-	LOGGER("start calccurvegegs\n");
+	LOGSTRING("start calccurvegegs\n");
 	mkheights(); 
 	starttime=maxtime()-4*duration/5;
 	setusedsensors();
-	LOGGER("end calccurvegegs\n");
+	LOGSTRING("end calccurvegegs\n");
 	}
 
 void		numendbegin() ;
 void flingX(float vol) {
 	if(numlist)  {
-		LOGGER("flingX\n");
+		LOGSTRING("flingX\n");
 		if(vol<0) {
 			numlist=1;
  			numendbegin() ;
@@ -2524,17 +2524,17 @@ struct {
 
 void pressedback() {
 	scantoshow={-1,nullptr}; 
-	LOGGER("true\n");
+	LOGSTRING("true\n");
 	displayer.reset();
 	}
 bool isbutton(float x,float y) {
-	LOGGER("isbutton ");
+	LOGSTRING("isbutton ");
 	if(!inbutton(x,y)) {
-		LOGGER("false\n");
+		LOGSTRING("false\n");
 		return false;
 		}
 	if(restart) {
-		LOGGER("restart\n");
+		LOGSTRING("restart\n");
 		exit(1);	
 		}
 	if(inbutton(prevtouch.x,prevtouch.y)) {
@@ -2543,7 +2543,7 @@ bool isbutton(float x,float y) {
 				return true;
 			}
 	scantoshow={-1,nullptr}; 
-	LOGGER("true\n");
+	LOGSTRING("true\n");
 	displayer.reset();
 //	lastscan=nullptr;
 	return true;
@@ -2805,7 +2805,7 @@ extern void callshowsensorinfo(const char *text);
 static bool  inmenu(float x,float y) ;
 
 int64_t longpress(float x,float y) {
-	LOGGER("longpress\n");
+	LOGSTRING("longpress\n");
 	if(numlist
 #ifndef WEAROS
 	||showpers
@@ -3062,14 +3062,14 @@ static uint32_t glucosesearch(uint32_t starttime,uint32_t endtime) {
 	uint32_t res;
 	if(!histhit)	{
 		if(!scanhit)  {
-			LOGGER("no hist and no scanhit\n");
+			LOGSTRING("no hist and no scanhit\n");
 			return 1;
 			}
-		LOGGER("no scan hist and but scanhit\n");
+		LOGSTRING("no scan hist and but scanhit\n");
 		res=scanhit->t;
 		}
 	else {
-		LOGGER("hist hit\n");
+		LOGSTRING("hist hit\n");
 		if(!scanhit||histhit->time>scanhit->t)
 			res=histhit->time;
 		else
@@ -3282,31 +3282,13 @@ void setnowmenu(time_t nu) {
 #define arsizer(x) sizeof(x)/sizeof(x[0])
 
 #ifdef WEAROS
-#if 0
-string_view menustr0[]= {
-	"Mirror",
-	"Sensor",
-	"Dark mode     ",
-        "Settings",
-	"Stop Alarm"
-};
-
-const char	nothing[]="      ";
-const char    newamount[]="Amount";
-char amountstr[]="Amount";
-//string_view menustr2[]= {"Date","Search",hourminstr,"Day back","Day later"};
-string_view menustr2[]= {"Date",hourminstr,"Day back",amountstr};
-#endif
 
 const int *menuopt0[]={nullptr,nullptr,&invertcolors, nullptr,nullptr};
 const int **optionsmenu[]={menuopt0,nullptr};
-//string_view *menustr[]={menustr0,menustr2};
 constexpr const int menulen[]={arsizer(jugglucotext::menustr0),arsizer(jugglucotext::menustr2)};
-//constexpr const int maxmenulen= std::max(std::size(menustr0),std::size(menustr2));
 int getmenulen(const int menu) {
 	int len=menulen[menu];
-	if(menu==1&&settings->staticnum()) 
-		return len-1;
+//	if(menu==1&&settings->staticnum()) return len-1;
 	if(!menu&&!alarmongoing)
 		return len-1;
 		
@@ -3314,44 +3296,12 @@ int getmenulen(const int menu) {
 	}
 
 #else
-/*
-const char newamount[]="New Amount";
-char amountstr[]="New Amount";
-
-string_view menustr0[]={
-        "System UI     ",
-	"Watch",
-	"Sensor",
-	 "Settings",
-        "Close",
-	"Stop Alarm"
-
-	}; */
 const int *menuopt0[]={&showui, nullptr,nullptr,nullptr,nullptr,nullptr,nullptr};
-/*
-string_view menustr1[]= {
-	"Notify",
-        "Export",
-	"Mirror",
-	 amountstr,
-	"List"
-#ifdef PERCENTILES
-	, "Statistics"
-#endif
-};
-*/
 
 
 const int *menuopt0b[]={nullptr,nullptr,nullptr,nullptr,nullptr};
 const int *menuopt1[]={nullptr,&showscans, &showstream,&showhistories, &shownumbers,&showmeals,&invertcolors};
-//const int *menuopt1[]={nullptr,&showscans, &showstream,&showhistories, &shownumbers,&showmeals, &settings->data()->invertcolors};
 const int **optionsmenu[]={menuopt0,menuopt0b,menuopt1,nullptr};
-/*
-string_view menustr2[]= {"Last Scan","Scans","Stream","History","Amounts","Meals","Dark mode       "};
-//int nomenuop;
-string_view menustr3[]= {hourminstr,"Search","Date","Day back","Day later","Week back","Week later"}; 
-string_view *menustr[]={menustr0,menustr1,menustr2,menustr3}; */
-//int menustr[]={menustr0,menustr2,menustr3};
 #define arsizer(x) sizeof(x)/sizeof(x[0])
 constexpr const int menulen[]={arsizer(jugglucotext::menustr0),arsizer(jugglucotext::menustr1),arsizer(jugglucotext::menustr2),arsizer(jugglucotext::menustr3)};
 int getmenulen(const int menu) {
@@ -3370,22 +3320,15 @@ void setnewamount() {
 #else
 	2;
 #endif
+/*
 	if(settings->staticnum()) {
 		usedtext->menustr1[newamountoff]=nothing;
 		}
 	else
 		usedtext->menustr1[newamountoff]=usedtext->newamount;
+		*/
 	}
 #endif
-/*
-void setnewamount() {
-	if(settings->staticnum()) {
-		memcpy(amountstr,nothing,sizeof(amountstr)-1);
-		}
-	else
-		memcpy(amountstr,newamount,sizeof(amountstr)-1);
-	}
-*/
 
 
 constexpr const int maxmenulen= *std::max_element(std::begin(menulen),std::end(menulen));
@@ -3530,7 +3473,7 @@ extern		void			testbackup();
 void testbackup() {
  	int ind=backup->newupdate("192.168.1.71","12345");
 	if(ind<0) {
-	     LOGGER("no room for other host\n");
+	     LOGSTRING("no room for other host\n");
 	     return;
 	     }
 //	     int ind=0;
@@ -3571,8 +3514,7 @@ static int64_t doehier(int menu,int item) {
 					}
 				case 2: prevdays(1); return -1LL;
 				case 3: 
-					if(settings->staticnum()) 
-						return -1LL;
+//					if(settings->staticnum()) return -1LL;
 					return  menuel(1,2);
 				};
 		}
@@ -3594,8 +3536,7 @@ static int64_t doehier(int menu,int item) {
 		case 1: switch(item) {
 //				case 0: notify=!notify;return menu|item*0x10|(notify<<8);
 				case 2: nrmenu=0;
-					if(settings->staticnum()) 
-						return -1LL;
+//					if(settings->staticnum()) return -1LL;
 					break;
 				case 3:	nrmenu=0; 
 					if(!numlist) {
@@ -3743,7 +3684,7 @@ bool numpageforward() {
 		return false;
 	if(numdatas.size()<basecount)
 		return false;
-	LOGGER("Page forward\n");
+	LOGSTRING("Page forward\n");
 	bool noend=false;
 	for(int i=0;i<basecount;i++) {
 	    const Num*newst=getpagenewest(i);
@@ -3879,11 +3820,11 @@ int numfrompos(float x) {
 	}
 	*/
 void shownumiters() {
-	LOGGER("Iters:\n");
+	LOGSTRING("Iters:\n");
 	for(int i=0;i<basecount;i++) {
 		lognum(numiters[i].iter);
 		}
-	LOGGER("\n");
+	LOGSTRING("\n");
 	}
 
 void numfirstpage() {

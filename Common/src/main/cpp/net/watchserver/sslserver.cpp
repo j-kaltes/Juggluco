@@ -47,7 +47,7 @@ void (*SSL_load_error_stringsptr)(void)=NULL;
 
 int logcallback(const char *str, size_t len, void *u) {
 	const char *format=(const char *)u;
-	LOGGER(format,str);
+	loggert(format,str);
 	return 0;
 	}
 
@@ -167,7 +167,7 @@ if(android_create_namespace) {
 			LOGGER("android_dlopen_ext %s\n",dlerror());
 		}
 	else {
-		LOGGER("android_create_namespace failed\n");
+		LOGSTRING("android_create_namespace failed\n");
 		}
 	}
 else {
@@ -381,7 +381,7 @@ const char *geterror() {
 	} */
 
 const std::string initsslserver(void) {
-    LOGGER("initsslserver\n");
+    LOGSTRING("initsslserver\n");
 	if(globalctx!=nullptr)
 		SSL_CTX_freeptr(globalctx);
 	globalctx=nullptr;

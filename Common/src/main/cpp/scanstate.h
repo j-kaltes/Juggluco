@@ -95,7 +95,7 @@ class scanstate: public multimmap {
 
 	data_t *fromfile(const char *filename) ;
 	scanstate(TimeFile,string_view datafile):multimmap(4,datafile.data(),4*4096),filename(datafile) {
-		LOGGER("scanstate\n");
+		LOGSTRING("scanstate\n");
 		}
 	public:
 //static	string_view getprevious(string_view basedir ) ;

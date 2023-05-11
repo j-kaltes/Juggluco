@@ -130,7 +130,7 @@ struct Tings {
 	uint8_t apisecretlength;
 	char apisecret[183];
 	int8_t unit;
-	bool callapp;
+	bool gadgetbridge;
 	bool nochangenum;
 	bool sendlabels;
 	bool sendcuts;
@@ -274,7 +274,7 @@ void mkshorts() {
 	LOGGER("shorts=%d\n",data()->shortnr);
 	}
 void mklabels() {
-	LOGGER("mklabels\n");
+	LOGSTRING("mklabels\n");
 	Tings::Variables *varsptr=data()->vars;
 	varsptr[0].prec=.5f;
 	varsptr[1].prec=1.0f;

@@ -172,7 +172,7 @@ public:
 		constexpr int starthist = 5;
 		if (dat->markold < starthist)
 			dat[0] = {-1, -1, starthist, 0};
-		LOGGER("Sensoren::create success\n");
+		LOGSTRING("Sensoren::create success\n");
 		return true;
 	}
 
@@ -465,7 +465,7 @@ vector<SensorGlucoseData *> inperiod(uint32_t starttime,uint32_t endtime) {
 		if (ind < 0) {
 			ind = last();
 			if (ind < 0) {
-				LOGGER("gethist last()<0\n");
+				LOGSTRING("gethist last()<0\n");
 				return nullptr;
 			}
 		}
@@ -483,13 +483,13 @@ vector<SensorGlucoseData *> inperiod(uint32_t starttime,uint32_t endtime) {
 			if(!error) {
 				if(hist[ind]->infowrong()) {
 					infoblockptr()->last = ind - 1;
-					LOGGER("infoblock wrong\n");
+					LOGSTRING("infoblock wrong\n");
 					goto INFOWRONGERROR;
 				}
 				}
 			else {
 				INFOWRONGERROR:
-				LOGGER("hist[ind]->error()\n");
+				LOGSTRING("hist[ind]->error()\n");
 				SensorGlucoseData *tmp = hist[ind];
 				hist[ind] = nullptr;
 				delete tmp;
@@ -499,7 +499,7 @@ vector<SensorGlucoseData *> inperiod(uint32_t starttime,uint32_t endtime) {
 			sensorlist()[ind].starttime = hist[ind]->getstarttime();
 			return hist[ind];
 		}
-		LOGGER("gethist new SensorGlucoseData(...)=NULL\n");
+		LOGSTRING("gethist new SensorGlucoseData(...)=NULL\n");
 		return nullptr;
 	}
 
@@ -600,7 +600,7 @@ vector<int> usedsince(uint32_t tim,uint32_t nu) {
 	return out;
 	} */
 	vector<int> bluetoothactive(uint32_t tim, uint32_t nu) {
-		LOGGER("bluetoothactive\n");
+		LOGSTRING("bluetoothactive\n");
 		vector<int> out;
 		uint32_t old = nu - sensorageseconds;
 //		uint32_t established = nu - 2*60*60;
@@ -616,7 +616,7 @@ vector<int> usedsince(uint32_t tim,uint32_t nu) {
 				}
 			const SensorGlucoseData *hist = gethist(i);
 			if (!hist) {
-				LOGGER("hist==null\n");
+				LOGSTRING("hist==null\n");
 				continue;
 				}
 			const auto lasttime=hist->lastused() ;

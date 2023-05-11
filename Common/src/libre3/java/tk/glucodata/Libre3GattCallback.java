@@ -47,7 +47,7 @@ import static tk.glucodata.Natives.endcrypt;
 import static tk.glucodata.Natives.initcrypt;
 import static tk.glucodata.Natives.intDecrypt;
 import static tk.glucodata.Natives.intEncrypt;
-import static tk.glucodata.Natives.showbytes;
+import static tk.glucodata.Log.showbytes;
 
 
 public class Libre3GattCallback extends SuperGattCallback {

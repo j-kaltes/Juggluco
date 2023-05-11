@@ -34,7 +34,7 @@ extern void	sendKAuth(SensorGlucoseData *hist);
 extern "C" JNIEXPORT  void JNICALL fromjava(setLibre3kAuth)(JNIEnv *env, jclass thiz, jlong sensorptr,jbyteArray kauthin) {
 	SensorGlucoseData *sens=reinterpret_cast<SensorGlucoseData *>(sensorptr);
 	if(!sens) {
-		LOGGER("setLibre3kAuth sensorptr==null\n");
+		LOGSTRING("setLibre3kAuth sensorptr==null\n");
 		return;
 		}
 	if(kauthin==nullptr) {
@@ -56,11 +56,11 @@ extern "C" JNIEXPORT  void JNICALL fromjava(setLibre3kAuth)(JNIEnv *env, jclass 
 extern "C" JNIEXPORT  jbyteArray JNICALL fromjava(getLibre3kAuth)(JNIEnv *env, jclass thiz, jlong sensorptr) {
 	SensorGlucoseData *sens=reinterpret_cast<SensorGlucoseData *>(sensorptr);
 	if(!sens) {
-		LOGGER("getLibre3kAuth sensorptr==null\n");
+		LOGSTRING("getLibre3kAuth sensorptr==null\n");
 		return nullptr;
 		}
 	if(!sens->getinfo()->haskAuth) {
-		LOGGER("getLibre3kAuth !haskAuth\n");
+		LOGSTRING("getLibre3kAuth !haskAuth\n");
 		return nullptr;
 		}
 	int kauthlen=149;
@@ -70,16 +70,16 @@ extern "C" JNIEXPORT  jbyteArray JNICALL fromjava(getLibre3kAuth)(JNIEnv *env, j
 	}
 extern "C" JNIEXPORT  jlong JNICALL fromjava(getLibre3SensorptrPD)(JNIEnv *env, jclass thiz, jstring jsensorid,jlong jstarttime,jbyteArray jpin,jstring jaddress) {
 	if(!sensors)   {
-		LOGGER("getLibre3Sensorptr: sensors=null\n");
+		LOGSTRING("getLibre3Sensorptr: sensors=null\n");
 		return 0LL;
 		}
 	if(!jsensorid) {
-		LOGGER("getLibre3Sensorptr: jsensorid=null\n");
+		LOGSTRING("getLibre3Sensorptr: jsensorid=null\n");
 		return 0LL;
 		}
 	const char *sensorid = env->GetStringUTFChars(jsensorid, NULL);
 	if(sensorid == nullptr) {
-		LOGGER("getLibre3Sensorptr: env->GetStringUTFChars(jsensorid, NULL)==null\n");
+		LOGSTRING("getLibre3Sensorptr: env->GetStringUTFChars(jsensorid, NULL)==null\n");
 		return 0LL;
 		}
 	uint32_t pin;
@@ -207,7 +207,7 @@ extern "C" JNIEXPORT jint JNICALL fromjava(getlastHistoricLifeCountReceived)(JNI
 extern "C" JNIEXPORT jbyteArray JNICALL fromjava(getpin)(JNIEnv *env, jclass thiz,jlong sensorptr) {
 	SensorGlucoseData *sens=reinterpret_cast<SensorGlucoseData *>(sensorptr);
 	if(!sens) {
-		LOGGER("getpin sensorptr==null\n");
+		LOGSTRING("getpin sensorptr==null\n");
 		return nullptr;
 		}
 	const jbyte *pin=reinterpret_cast<const jbyte *>(&sens->getinfo()->pin);
@@ -222,26 +222,26 @@ extern				void wakewithcurrent();
 extern "C" JNIEXPORT  jlong JNICALL fromjava(saveLibre3MinuteL)(JNIEnv *env, jclass thiz, jlong sensorptr,jbyteArray jmindata) {
 	SensorGlucoseData *sens=reinterpret_cast<SensorGlucoseData *>(sensorptr);
 	if(!sens) {
-		LOGGER("saveLibre3Minute sensorptr==null\n");
+		LOGSTRING("saveLibre3Minute sensorptr==null\n");
 		return 0LL;
 		}
 	if(!jmindata)	{
-		LOGGER("saveLibre3Minute jmindata==null\n");
+		LOGSTRING("saveLibre3Minute jmindata==null\n");
 		return 0LL;
 		}
 
 	const jint len = env->GetArrayLength(jmindata);
 	if(len!=sizeof(oneminute)) {
-		LOGGER("saveLibre3Minute length jmindata =0\n");
+		LOGSTRING("saveLibre3Minute length jmindata =0\n");
 		return 0LL;
 		}
         jbyte *mindata = (jbyte*)env->GetPrimitiveArrayCritical(jmindata, nullptr);
         if(!mindata) {
-		LOGGER("saveLibre3Minute mindata =null\n");
+		LOGSTRING("saveLibre3Minute mindata =null\n");
 		return 0LL;
 		}
 
-	LOGGER("saveLibre3Minute\n");
+	LOGSTRING("saveLibre3Minute\n");
 	destruct _dest([env,jmindata,mindata](){env->ReleasePrimitiveArrayCritical(jmindata,mindata, 0);});
 
 	const oneminute *minptr=reinterpret_cast<oneminute*>(mindata);
@@ -270,22 +270,22 @@ static_assert(sizeof(fastData)==14);
 extern "C" JNIEXPORT  jboolean JNICALL fromjava(saveLibre3fastData)(JNIEnv *env, jclass thiz, jlong sensorptr,jbyteArray jfastdata) {
 	SensorGlucoseData *sens=reinterpret_cast<SensorGlucoseData *>(sensorptr);
 	if(!sens)  {
-		LOGGER("saveLibre3fastData sensorptr=null\n");
+		LOGSTRING("saveLibre3fastData sensorptr=null\n");
 		return false;
 		}
 		
 	if(!jfastdata) {
-		LOGGER("saveLibre3fastData jfastdata==null\n");
+		LOGSTRING("saveLibre3fastData jfastdata==null\n");
 		return false;
 		}
 	const jint len = env->GetArrayLength(jfastdata);
 	if(len!=sizeof(fastData)) {
-		LOGGER("saveLibre3fastData len!=sizeof(fastData)\n");
+		LOGSTRING("saveLibre3fastData len!=sizeof(fastData)\n");
 		return false;
 		}
         jbyte *fastdata = (jbyte*)env->GetPrimitiveArrayCritical(jfastdata, nullptr);
         if(!fastdata) {
-		LOGGER("saveLibre3fastData fastdata=null\n");
+		LOGSTRING("saveLibre3fastData fastdata=null\n");
 		return false;
 		}
 	destruct _dest([env,jfastdata,fastdata](){env->ReleasePrimitiveArrayCritical(jfastdata,fastdata, 0);});
@@ -323,7 +323,7 @@ extern "C" JNIEXPORT  jboolean JNICALL fromjava(saveLibre3fastData)(JNIEnv *env,
 					LOGGER("low time %s",ctime(&wastime));
 					return false;
 					}
-				LOGGER("save fastdata\n");
+				LOGSTRING("save fastdata\n");
 				sens->savepollallIDs(wastime,lifecount,curval,0,NAN);
 				sens->backstream(lifecount);
 				if(lifecount>=(sens->pollcount()-2))
@@ -383,11 +383,11 @@ static bool saveLibre3History(SensorGlucoseData *sens, const jbyte *history,cons
 extern "C" JNIEXPORT  jboolean JNICALL fromjava(saveLibre3History)(JNIEnv *env, jclass thiz, jlong sensorptr,jbyteArray jhistory) {
 	SensorGlucoseData *sens=reinterpret_cast<SensorGlucoseData *>(sensorptr);
 	if(!sens)  {
-		LOGGER("saveLibre3History sensorptr=null\n");
+		LOGSTRING("saveLibre3History sensorptr=null\n");
 		return false;
 		}
 	if(!jhistory) {
-		LOGGER("saveLibre3History jhistory=null\n");
+		LOGSTRING("saveLibre3History jhistory=null\n");
 		return false;
 		}
 	const jint len = env->GetArrayLength(jhistory);
@@ -397,7 +397,7 @@ extern "C" JNIEXPORT  jboolean JNICALL fromjava(saveLibre3History)(JNIEnv *env, 
 		}
     jbyte *history = (jbyte*)env->GetPrimitiveArrayCritical(jhistory, nullptr);
     if(!history) {
-		LOGGER("saveLibre3History (jbyte*)env->GetPrimitiveArrayCritical(jhistory, nullptr)=null\n");
+		LOGSTRING("saveLibre3History (jbyte*)env->GetPrimitiveArrayCritical(jhistory, nullptr)=null\n");
 		return false;
 		}
 	destruct _dest([env,jhistory,history](){env->ReleasePrimitiveArrayCritical(jhistory,history, 0);});
@@ -425,7 +425,7 @@ struct Patchstatus  {
 
 extern "C" JNIEXPORT  jint JNICALL  fromjava(libre3processpatchstatus)(JNIEnv *env, jclass thiz, jlong sensorptr,jbyteArray jstatus) {
 	if(!jstatus) {
-		LOGGER("libre3processpatchstatus jstatus==null\n");
+		LOGSTRING("libre3processpatchstatus jstatus==null\n");
 		return -1;
 		}	
 	const jint len = env->GetArrayLength(jstatus);
@@ -435,11 +435,11 @@ extern "C" JNIEXPORT  jint JNICALL  fromjava(libre3processpatchstatus)(JNIEnv *e
 		}
         jbyte *status = (jbyte*)env->GetPrimitiveArrayCritical(jstatus, nullptr);
         if(!status) {
-		LOGGER("libre3processpatchstatus status =null\n");
+		LOGSTRING("libre3processpatchstatus status =null\n");
 		return -1;
 		}
 	destruct _dest([env,jstatus,status](){env->ReleasePrimitiveArrayCritical(jstatus,status, 0);});
-	LOGGER("libre3processpatchstatus\n");
+	LOGSTRING("libre3processpatchstatus\n");
 	const Patchstatus *pstatus=reinterpret_cast<const Patchstatus *>(status);
 	LOGGER("patchState=%d, totalEvents=%d, lifeCount=%d, errorData=%d, eventData=%d, index=%d, currentLifeCount=%d, stackDisconnectReason=%d, appDisconnectReason=%d\n", pstatus->patchState, pstatus->totalEvents(), pstatus->lifeCount, pstatus->errorData, pstatus->getEventData(), pstatus->index, pstatus->currentLifeCount, pstatus->stackDisconnectReason, pstatus->appDisconnectReason);
 //s/\<\([a-zA-Z]*\)=%d/pstatus->\1/g
@@ -456,15 +456,15 @@ struct EventLog {
 extern "C" JNIEXPORT  int JNICALL  fromjava(libre3EventLog)(JNIEnv *env, jclass thiz, jlong sensorptr,jbyteArray jlogdata) {
 #ifndef NOLOG
 	if(!jlogdata) {
-		LOGGER("libre3EventLog jlogdata =null\n");
+		LOGSTRING("libre3EventLog jlogdata =null\n");
 		return -1;
 		}	
         jbyte *logdata = (jbyte*)env->GetPrimitiveArrayCritical(jlogdata, nullptr);
         if(!logdata) {
-		LOGGER("libre3EventLog logdata =null\n");
+		LOGSTRING("libre3EventLog logdata =null\n");
 		return -1;
 		}
-	LOGGER("libre3EventLog\n");
+	LOGSTRING("libre3EventLog\n");
 	destruct _dest([env,jlogdata,logdata](){env->ReleasePrimitiveArrayCritical(jlogdata,logdata, 0);});
 	const jint len = env->GetArrayLength(jlogdata);
 	int units=len/7;

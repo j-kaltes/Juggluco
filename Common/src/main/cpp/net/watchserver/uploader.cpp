@@ -120,7 +120,7 @@ template <class T> int mkuploaditem(char *buf,const char *sensorname,const T &it
 	}
 
 bool upload() {
-	LOGGER("upload\n");
+	LOGSTRING("upload\n");
 	int last=sensors->last();
 	if(last<0)
 		return false;
@@ -173,7 +173,7 @@ bool upload() {
 						continue;
 						}
 					else {
-						LOGGER("nightupload failure\n");
+						LOGSTRING("nightupload failure\n");
 						return false;
 						}
 					}
@@ -213,7 +213,7 @@ static void uploaderthread() {
 		if(uploadercondition.dobackup&Backup::wakeend) {
 			uploadercondition.dobackup=0;
 			uploaderrunning=false;
-			LOGGER("end uploaderthread\n");
+			LOGSTRING("end uploaderthread\n");
 			return;
 			}
 		uploadercondition.dobackup=0;

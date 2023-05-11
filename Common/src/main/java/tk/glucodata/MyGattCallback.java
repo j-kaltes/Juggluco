@@ -118,7 +118,7 @@ public class MyGattCallback extends SuperGattCallback {
 	}
 static void showCharacter(String label, BluetoothGattCharacteristic characteristic) {
 	byte[] value=characteristic.getValue();
-	Natives.showbytes("onDescriptorWrite",value);
+	Log.showbytes("onDescriptorWrite",value);
     }
 @Override // android.bluetooth.BluetoothGattCallback
 	public void onDescriptorWrite(BluetoothGatt bluetoothGatt, BluetoothGattDescriptor bluetoothGattDescriptor, int i) {

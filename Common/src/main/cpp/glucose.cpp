@@ -62,7 +62,7 @@ int SensorGlucoseData::sendhistoryinfo(crypt_t *pass,int sock,int sensorindex,ui
 	vect.push_back({reinterpret_cast<const senddata_t*>(&getinfo()->lastLifeCountReceived),lastLifeCountReceivedoff,u32len});
 	const uint16_t historystartcmd=starthistoryupdate|sensorindex;
 	 if(!senddata(pass,sock,vect, infopath,historystartcmd, reinterpret_cast<const uint8_t *>(&histstart),sizeof(histstart))) {
-		LOGGER("GLU: senddata info.data failed\n");
+		LOGSTRING("GLU: senddata info.data failed\n");
 		return 0;
 		 }
 	return 1;
@@ -75,7 +75,7 @@ int SensorGlucoseData::sendhistory(crypt_t *pass,int sock,int ind,int sensorinde
 		if(histstart>0)
 			histstart--;//TODO? Last in history contains only raw value, so should be overwritten
 		if(!senddata(pass,sock,histstart*getelsize(),elstart(histstart),(histend+1-histstart)*getelsize(), histpath)) {
-			LOGGER("GLU: senddata data.data failed\n");
+			LOGSTRING("GLU: senddata data.data failed\n");
 			return 0;
 			}
 		LOGGER("sendhistory %d-%d\n",histstart,histend);
@@ -95,10 +95,10 @@ int SensorGlucoseData::updateKAuth(crypt_t *pass,int sock,int ind)  {
 		constexpr const int  endoff=offsetof(Info,haskAuth)+1;
 		const int len=endoff-off;
 		if(!senddata(pass,sock,off,reinterpret_cast<const senddata_t *>(getinfo())+off,len, infopath)) {
-			LOGGER("GLU: updateKAuth failed\n");
+			LOGSTRING("GLU: updateKAuth failed\n");
 			return 0;
 			}
-		LOGGER("GLU: updateKAuth send\n");
+		LOGSTRING("GLU: updateKAuth send\n");
 		getinfo()->update[ind].sendKAuth=false;
 		return 1;
 		}
@@ -124,14 +124,14 @@ int SensorGlucoseData::updatescan(crypt_t *pass,int sock,int ind,int sensorindex
 	if(scanend>scanstart) {
 		if(!did)
 			memcpy(infoptr,meminfo.data(),startinfolen);
-		LOGGER("GLU: updatescan\n");
+		LOGSTRING("GLU: updatescan\n");
 		if(const struct ScanData *startscans=scans.data()) {
 			if(scanpath) {
 				if(senddata(pass,sock,scanstart,startscans+scanstart,startscans+scanend,scanpath)) {
 					if(const std::array<uint16_t,16> *starttrends=trends.data()) {
 						if(trendspath) {
 							if(!senddata(pass,sock,scanstart,starttrends+scanstart,starttrends+scanend,trendspath)) {
-								LOGGER("GLU: senddata trends.dat failed");
+								LOGSTRING("GLU: senddata trends.dat failed");
 								return 0;
 								}
 							getinfo()->update[ind].scanstart=scanend;
@@ -139,7 +139,7 @@ int SensorGlucoseData::updatescan(crypt_t *pass,int sock,int ind,int sensorindex
 						}
 					}
 				else  {
-					LOGGER("GLU: senddata current.dat failed\n");
+					LOGSTRING("GLU: senddata current.dat failed\n");
 					return 0;
 					}
 				did=true;
@@ -165,7 +165,7 @@ int SensorGlucoseData::updatescan(crypt_t *pass,int sock,int ind,int sensorindex
 			static_assert((4+deviceaddresslen)==devlen);
 			vect.push_back({((uint8_t*)meminfo.data())+startdev,startdev,devlen});
 			 if(!senddata(pass,sock,vect, infopath)) {
-				LOGGER("GLU: senddata info.data failed\n");
+				LOGSTRING("GLU: senddata info.data failed\n");
 				return 0;
 				 }
 				  	

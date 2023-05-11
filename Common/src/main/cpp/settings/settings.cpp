@@ -53,7 +53,7 @@ Meal *meals=nullptr;
 extern bool dolog;
 void handlepipe(int sig) {
 	const int waserrno=errno;
-	LOGGER("SIGPIPE happened\n");
+	LOGSTRING("SIGPIPE happened\n");
 	errno=waserrno;
 	}
 #else
@@ -112,14 +112,14 @@ int startmeals() {
 	}
 void startsensors() {
 	if(!sensors) {
-		LOGGER("voor sensors\n");
+		LOGSTRING("voor sensors\n");
 		Sensoren::create(sensorbasedir);
-		LOGGER("na creat\n");
+		LOGSTRING("na creat\n");
 		sensors= new(std::nothrow) Sensoren(sensorbasedir);
 		if(!sensors)
 			return ;
 		destructsensors.reset(sensors);
-		LOGGER("Na sensors\n");
+		LOGSTRING("Na sensors\n");
 		/*
 		if(settings->data()->initVersion<11) {
 			sensors->setversions();
@@ -222,7 +222,7 @@ std::vector<int> Settings::numAlarmEvents()const  {
 
 			}
 		else  {
-			LOGGER("not in interval\n");
+			LOGSTRING("not in interval\n");
 			continue;
 			}
 extern bool happened(uint32_t stime,int type,float value)  ;

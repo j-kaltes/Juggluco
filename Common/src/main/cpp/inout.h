@@ -323,11 +323,11 @@ void *mopen(const std::string_view base,const std::string_view endname) {
 public:
 typedef T unittype;
 Mmap(Mmap && ander):len(ander.len),buf(ander.buf) {
-//	LOGGER(" Mmap(Mmap && ander)\n");
+//	LOGSTRING(" Mmap(Mmap && ander)\n");
 	ander.buf=nullptr;
 	}
 Mmap& operator=(Mmap&& ander) {
-//	LOGGER("Mmap& operator=(Mmap&& ander) {");
+//	LOGSTRING("Mmap& operator=(Mmap&& ander) {");
 	this->~Mmap() ;
 	buf=ander.buf;
 	len=ander.len;
@@ -335,7 +335,7 @@ Mmap& operator=(Mmap&& ander) {
 	return *this;
 	}
 Mmap(size_t count):len(count*sizeof(T)),buf(mmap(NULL,len, PROT_READ |PROT_WRITE,MAP_ANONYMOUS|MAP_PRIVATE,-1,0)) {
-//	LOGGER(" Mmap(size_t)\n");
+//	LOGSTRING(" Mmap(size_t)\n");
 if(MAP_FAILED==buf)
 	buf=nullptr;
 

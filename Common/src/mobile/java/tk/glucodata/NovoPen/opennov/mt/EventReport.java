@@ -1,7 +1,7 @@
 package tk.glucodata.NovoPen.opennov.mt;
 
 
-import static tk.glucodata.Natives.showbytes;
+import static tk.glucodata.Log.showbytes;
 
 import tk.glucodata.NovoPen.opennov.BaseMessage;
 import tk.glucodata.NovoPen.opennov.OpContext;

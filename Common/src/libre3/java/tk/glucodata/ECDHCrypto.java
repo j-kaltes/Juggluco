@@ -22,7 +22,7 @@
 package tk.glucodata;
 
 import static tk.glucodata.Log.info;
-import static tk.glucodata.Natives.showbytes;
+import static tk.glucodata.Log.showbytes;
 
 class ECDHCrypto {
 final private static byte[][] LIBRE3_APP_CERTIFICATES_B={{

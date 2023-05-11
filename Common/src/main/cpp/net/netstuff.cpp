@@ -38,6 +38,7 @@
 
 #define lerrortag(...) lerror("netstuff: " __VA_ARGS__)
 #define LOGGERTAG(...) LOGGER("netstuff: " __VA_ARGS__)
+#define LOGSTRINGTAG(...) LOGSTRING("netstuff: " __VA_ARGS__)
 #define flerrortag(...) flerror("netstuff: " __VA_ARGS__)
 
 
@@ -143,7 +144,7 @@ extern bool getownip(struct sockaddr_in6 *outip);
 bool oldgetownip(struct sockaddr_in6 *outip) { 
   int  socketfd = socket(AF_INET, SOCK_DGRAM, 0);
   if(socketfd<0) {
-  	LOGGERTAG(" socket(AF_INET, SOCK_DGRAM, 0) failed\n");
+  	LOGSTRINGTAG(" socket(AF_INET, SOCK_DGRAM, 0) failed\n");
  	return false; 	
 	}
   destruct _des([socketfd] {close(socketfd);});
@@ -169,14 +170,14 @@ bool oldgetownip(struct sockaddr_in6 *outip) {
       	}
 
     if(!wlanip6)  {
-	LOGGERTAG("No wlan\n");
+	LOGSTRINGTAG("No wlan\n");
 	return false;
 	}
    return putip(&wlanip6->ifr_addr,outip);
    }
 
 bool getownip(struct sockaddr_in6 *outip) {
-   LOGGERTAG("getownip\n");
+   LOGSTRINGTAG("getownip\n");
     struct ifaddrs *ifaddr;
    typedef int (*getifaddrs_t)(struct ifaddrs **ifap);
    static int (*getifaddrs)(struct ifaddrs **ifap)=(getifaddrs_t)dlsym( RTLD_DEFAULT, "getifaddrs");
@@ -214,7 +215,7 @@ bool getownip(struct sockaddr_in6 *outip) {
 	      }
 	  }
   if(!wlanip6)  {
-	LOGGERTAG("No wlan\n");
+	LOGSTRINGTAG("No wlan\n");
 	return false;
 	}
    return putip(wlanip6->ifa_addr,outip);
@@ -238,11 +239,11 @@ struct ifconf  {
 */
 
 int oldgetownips(struct sockaddr_in6 *outips,int max,bool &haswlan) { 
-LOGGERTAG("oldgetownips\n");
+LOGSTRINGTAG("oldgetownips\n");
 haswlan=false;
   int  socketfd = socket(AF_INET, SOCK_DGRAM, 0);
   if(socketfd<0) {
-  	LOGGERTAG(" socket(AF_INET, SOCK_DGRAM, 0) failed\n");
+  	LOGSTRINGTAG(" socket(AF_INET, SOCK_DGRAM, 0) failed\n");
  	return 0; 	
 	}
   destruct _des([socketfd] {close(socketfd);});
@@ -276,7 +277,7 @@ int getownips(struct sockaddr_in6 *outips,int max,bool &haswlan) {
 #else
 
 int getownips(struct sockaddr_in6 *outips,int max,bool &haswlan) {
-   LOGGERTAG("getownips\n");
+   LOGSTRINGTAG("getownips\n");
     struct ifaddrs *ifaddr;
    typedef int (*getifaddrs_t)(struct ifaddrs **ifap);
    static int (*getifaddrs)(struct ifaddrs **ifap)=(getifaddrs_t)dlsym( RTLD_DEFAULT, "getifaddrs");
@@ -325,7 +326,7 @@ int getownips(struct sockaddr_in6 *outips,int max,bool &haswlan) {
 		       if(family==AF_INET) {
 		       
 		       		if(iter<max)  {
-				     LOGGERTAG("take\n");
+				     LOGSTRINGTAG("take\n");
 				     putip(ifa->ifa_addr,outips+iter++);
 				     }
 		       		}
@@ -334,7 +335,7 @@ int getownips(struct sockaddr_in6 *outips,int max,bool &haswlan) {
 	}
     if(!wlanip) {
     	if(wlanip6)  {
-		LOGGERTAG("using ip6 \n");
+		LOGSTRINGTAG("using ip6 \n");
 		wlanip=wlanip6;
 		}
 	}

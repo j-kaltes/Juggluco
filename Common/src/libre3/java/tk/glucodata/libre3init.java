@@ -33,7 +33,8 @@ class libre3init {
 private static		final  String LOG_ID="libre3init";
 static void init() {
 if(true) {
-	if(BuildConfig.doLog==1) {
+	if(BuildConfig.doLog==1) 
+	{
 	new Thread (() -> {
 		int resp1=Natives.processint(1,null,null);
 		final ECDHCrypto cryptolib=new ECDHCrypto();

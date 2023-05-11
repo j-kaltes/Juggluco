@@ -78,9 +78,6 @@ extern		pathconcat logbasedir;
 	 if(handle<0) {
 		  return STDERR_FILENO;
 		  }
-	 else
-
-		  LOGGER("open succeeded\n");
 	time_t tim=time(NULL);
 	char *timestr=ctime(&tim);
 
@@ -130,7 +127,7 @@ int vloggert( const char *format, va_list args) {
 		logging now;
 		constexpr const int size=4096;
 		char str[size];
-		int start=std::sprintf(str,"%lu %d ",time(nullptr), syscall(SYS_gettid));
+		int start=std::sprintf(str,"%lu %ld ",time(nullptr), (long)syscall(SYS_gettid));
 	       int ret= std::vsnprintf(str+start, size-start, format, args);
 	       if(ret<=0) {
 			return ret;
@@ -143,8 +140,26 @@ int vloggert( const char *format, va_list args) {
 	else
 		return 0;
         }
-int logprint(const char *format, ...) {
+	/*
+int timetidlogprint(const char *format, ...) {
 	if(dolog)	 {
+		constexpr const int size=4096;
+		char str[size];
+		va_list args;
+		va_start(args, format);
+	       int ret= vsnprintf(str, size, format, args);
+		va_end(args); 
+		logwriter(str,std::min(ret,size));
+		return ret;
+		}
+	else
+		return 0;
+	} */
+int logprint(const char *format, ...) {
+	if(dolog) {
+		if(logging::log	)
+			return -1;
+		logging now;
 		constexpr const int size=4096;
 		char str[size];
 		va_list args;
@@ -170,13 +185,32 @@ int loggert(const char *format, ...) {
 		return 0;
 	}
 
+void flerror(const char* fmt, ...){
+	if(logging::log	)
+		return ;
+	logging now;
+	int waser=errno;
+	const int maxbuf=100;
+	char buf[maxbuf];
+        va_list args;
+        va_start(args, fmt);
+	vsnprintf(buf,maxbuf, fmt, args);
+	va_end(args);
+	constexpr const int maxuitbuf=200;
+	char uitbuf[maxuitbuf];
+	int len=snprintf(uitbuf,maxuitbuf,"%lu %ld %s: %s\n",::time(nullptr), syscall(SYS_gettid), buf,strerror(waser));
+	logwriter(uitbuf,len);
+	}
 
 
 void LOGGERNO(const char *buf,int len,bool endl) {
 	if(dolog)	 {
+		if(logging::log	)
+			return ;
+		logging now;
 		if(len<1024) {
 			char allbuf[len+50];
-			int start=sprintf(allbuf,"%lu %d ",time(nullptr), syscall(SYS_gettid));
+			int start=sprintf(allbuf,"%lu %ld ",time(nullptr), (long)syscall(SYS_gettid));
 			memcpy(allbuf+start,buf,len);
 			if(endl)
 				allbuf[start+len++]='\n';
@@ -184,7 +218,7 @@ void LOGGERNO(const char *buf,int len,bool endl) {
 			}
 		else {
 			char allbuf[50];
-			int start=sprintf(allbuf,"%lu %d ",time(nullptr), syscall(SYS_gettid));
+			int start=sprintf(allbuf,"%lu %ld ",time(nullptr), (long)syscall(SYS_gettid));
 			logwriter(allbuf,start);
 			logwriter(buf,len);
 			if(endl)

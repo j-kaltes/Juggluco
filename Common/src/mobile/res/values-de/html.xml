@@ -969,8 +969,7 @@ der mit xDrip-Uhren und einigen Nightscout-Apps verwendet werden
 kann. Früher xDrip-Webserver genannt.</p>
 <h2 class="western">Uploader</h2>
 <p align="left" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 100%; margin-bottom: 0in">
-<font color="#000000"><font face="Times New Roman"><font size="4" style="font-size: 14pt">Auf
-einen Nightscout-Server hochladen.</font></font></font></p>
+Auf einen Nightscout-Server hochladen.</p>
 <h2 class="western" align="left">Glukose in der Statusleiste von
 Android</h2>
 <p align="left" style="line-height: 100%; margin-bottom: 0in">Wenn
@@ -1620,18 +1619,15 @@ Juggluco berührt.</font></font></p>
 <h3 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-top: 0.1in; margin-bottom: 0.08in; background: transparent">
 <font face="Liberation Sans, sans-serif">Verfügbarer Wert:</font></h3>
 <p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
-<font face="Times New Roman"><font size="4" style="font-size: 14pt"><font color="#000000">Manchmal
-funktioniert der Sensor nicht.</font><font color="#000000"> </font><font color="#000000">Wenn
-Sie dies einschalten, werden Sie benachrichtigt, wenn der Sensor
+Manchmal funktioniert der Sensor nicht. Wenn Sie dies einschalten, werden Sie benachrichtigt, wenn der Sensor
 wieder funktioniert, aber nur, wenn Sie in der Juggluco-App selbst
-gesehen haben, dass der Wert fehlt.</font><font color="#000000"> </font><font color="#000000">Wenn
+gesehen haben, dass der Wert fehlt. Wenn
 Sie nur wissen, dass der Wert aufgrund der Benachrichtigung von
 Juggluco oder seines Zifferblatts gefehlt hat, wird die
-Benachrichtigung über den verfügbaren Wert nicht aufgerufen.</font></font></font></p>
+Benachrichtigung über den verfügbaren Wert nicht aufgerufe</p>
 <p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
-<font color="#000000"><font face="Times New Roman"><font size="4" style="font-size: 14pt">Für
-jeden Alarm können Sie festlegen, welcher Klingelton wie lange
-abgespielt werden soll.</font></font></font></p>
+Für jeden Alarm können Sie festlegen, welcher Klingelton wie lange
+abgespielt werden soll.</p>
 <h3 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal">
 <font face="Times New Roman"><font size="4" style="font-size: 14pt">Alarm
 ist alarm</font></font></h3>
@@ -1693,21 +1689,38 @@ empfangen.</font></font></p>
 bietet Juggluco vier Möglichkeiten, um Glukosewerte auf Ihrer Uhr
 anzuzeigen.</font></font></p>
 <h2 class="western">Benachrichtigen</h2>
-<p style="font-style: normal; line-height: 100%; margin-bottom: 0in">Wenn
-<i>Benachrichtigen</i> aktiviert ist, wird jedes Mal eine
+<p style="font-variant: normal; font-style: normal; line-height: 100%; margin-bottom: 0in">
+Wenn <i>Benachrichtigen</i> aktiviert ist, wird jedes Mal eine
 Android-Benachrichtigung erstellt, wenn ein neuer Glukosewert
 eintrifft. <span style="font-weight: normal">Bei einigen Uhren werden
 Benachrichtigungen nur an die Uhr gesendet, wenn eine neue
-Benachrichtigung erstellt wird, für sie müssen Sie </span><i><b>Separat</b></i><span style="font-weight: normal">
-aktivieren</span> . Für diese Uhren müssen Sie auch <i>Separat</i>
-einschalten, um Alarmbenachrichtigungen auf der Uhr zu erhalten.</p>
+Benachrichtigung erstellt wird, für sie müssen Sie </span><i><b>Separat</b></i>
+<span style="font-weight: normal">aktivieren</span> . Für diese
+Uhren müssen Sie auch <i>Separat</i> einschalten, um
+Alarmbenachrichtigungen auf der Uhr zu erhalten.</p>
 <h2 class="western">Watchdrip</h2>
 <p style="line-height: 100%; margin-bottom: 0in"><span lang="de-DE">Durch
 das Einschalten sendet Juggluco Glukosewerte an <a href="https://bigdigital.home.blog/2022/06/16/watchdrip-a-new-application-for-xdrip-watch-integration">Watchdrip+</a>
 . Watchdrip+ sendet Zifferblätter mit Glukosewerten an
 MiBand/Amazfit-Uhren.</span></p>
-<h2 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
-<font face="Times New Roman">Kerfstok</font></h2>
+<h2 class="western">GadgetBridge</h2>
+<p>GadgetBridge (<a href="https://codeberg.org/Freeyourgadget/Gadgetbridge/wiki">Wiki</a>)
+ermöglicht die Anzeige von Wetterinformationen auf
+MiBand/Amazfit-Uhren. Wenn die Gadgetbridge-Option aktiviert ist,
+sendet Juggluco Glukosewerte unter dem Vorwand, dass es sich um
+Wetterinformationen handelt, an GadgetBridge. Dies hatte gegenüber
+Watchdrip den Vorteil, dass es deutlich schneller ist, hat aber den
+Nachteil, dass weniger Informationen angezeigt werden. Juggluco trägt
+den Glukosewert und einen Richtungspfeil in den Wetterort ein. Dieser
+Ort wird auf der Uhr unter Wetter angezeigt. Ich habe kein
+Zifferblatt gefunden, das diesen Ort anzeigt. Der gerundete
+Glukosewert wird in die aktuelle Temperatur übernommen. Für
+diejenigen, die mmol verwenden, wird der Wert vor dem Punkt in die
+maximale Temperatur und der Wert nach dem Punkt in die minimale
+Temperatur eingetragen. Die Richtung der Änderung bestimmt das
+Wettersymbol: Schnee bedeutet fallende Glukose, Regen bedeutet
+steigende Glukose.</p>
+<h2 class="western">Kerfstok</h2>
 <p style="orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
 <span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><span style="font-style: normal"><span style="font-weight: normal">Kerfstok
 ist eine Uhren-App, mit der Sie Zahlen (wie Insulindosen) eingeben
@@ -1759,7 +1772,7 @@ und Zifferblätter wären die ideale Lösung, aber die von Garmin
 auferlegten Einschränkungen machen sie wenig wert.</span></span></span></span></font></font></span></p>
 <p style="orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
 <span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><span style="font-style: normal"><span style="font-weight: normal">Laut
-einem Benutzer gibt es auch ein Watchface für&nbsp;</span></span></span></span></font></font></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><span style="font-style: normal"><b>Fitbit-</b></span></span></span></font></font></span><span style="font-variant: normal"><span style="letter-spacing: normal"><span lang="de-DE">&nbsp;</span></span></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><span style="font-style: normal"><span style="font-weight: normal">Uhren,
+einem Benutzer gibt es auch ein Watchface für&nbsp;</span></span></span></span></font></font></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><span style="font-style: normal"><b>Fitbit-</b></span></span></span></font></font></span><span style="font-variant: normal"><span style="letter-spacing: normal">&nbsp;</span></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><span style="font-style: normal"><span style="font-weight: normal">Uhren,
 das mit dem xDrip-Webserver funktioniert:&nbsp;<a href="https://glancewatchface.com/">https://glancewatchface.com</a></span></span></span></span></font></font></span></p>
 <p style="orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
 <span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><span style="font-style: normal"><span style="font-weight: normal">Weitere
@@ -2599,6 +2612,38 @@ Dadurch wird der Akku entladen, insbesondere wenn keine Verbindung
 zum Nightscout-Server hergestellt werden kann, sodass Sie <i>Active</i>
 besser ausschalten können, wenn keine zuverlässige Verbindung
 besteht.</p>
+]]>
+</string>
+<string name="notificationpermission" >
+<![CDATA[
+<p>Android 13 erfordert, dass Sie
+Berechtigungen für diese Benachrichtigungen erteilen, bevor Sie
+überhaupt wissen, welche Art von Benachrichtigungen gesendet werden.
+Juggluco verfügt über Benachrichtigungen, die Glukosewerte
+enthalten, und benötigt Benachrichtigungen in Verbindung mit einem
+Foreground Service, der erforderlich ist, um im Hintergrund aktiv zu
+bleiben. Für die ordnungsgemäße Funktion von Juggluco sollten Sie
+Juggluco besser diese Erlaubnis erteilen.</p>
+<p>Sie können Benachrichtigungen ganz einfach in den
+Android-Einstellungen „App-Info“ -&gt;„Benachrichtigungen
+verwalten“ f<font face="Liberation Serif, serif">ü</font>r
+Juggluco ein- und ausschalten.</p>
+]]>
+</string>
+<string name="staticnum" >
+<![CDATA[
+<h1 align="center">Blocked</h1>
+<p style="line-height: 100%; margin-bottom: 0in"><span lang="de-DE"><b>Das
+Menü links in der Mitte -&gt; </b></span><span lang="de-DE"><b>Klon</b></span><span lang="de-DE"><b>
+-&gt; „</b></span><span lang="de-DE"><b>Mengen erhalten vom Klon</b></span><span lang="de-DE">“
+ist  eingestellt, </span><span lang="de-DE">so</span><span lang="de-DE">dass
+die Eingabe von </span><span lang="de-DE">Mengen</span><span lang="de-DE">
+in dieser App verhindert wird, da diese durch von der </span><span lang="de-DE">Klon</span><span lang="de-DE">verbindung
+empfangene </span><span lang="de-DE">Mengen</span><span lang="de-DE">
+überschrieben werden.</span></p>
+<p style="line-height: 100%; margin-bottom: 0in">Wenn diese App keine
+Mengen von einer Klonverbindung empfängt, deaktivieren Sie diese
+Option.</p>
 ]]>
 </string>
 </resources>

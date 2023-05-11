@@ -462,6 +462,7 @@ void initproc() {
 		initbroadcasts();
 		initproccalled=true;
 		MessageSender.sendnetinfo();
+		Specific.start(this);
 		}
 	}
 
@@ -487,7 +488,6 @@ public static	int stopprogram=0;
 		android.util.Log.e(LOG_ID,"Stop program");
 		stopprogram=1;
 		}
-	Specific.start(this);
 	}
 
 static public int backgroundcolor= BLACK;

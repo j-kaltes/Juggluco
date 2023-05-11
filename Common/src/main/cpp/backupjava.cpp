@@ -43,7 +43,7 @@ extern "C" JNIEXPORT jboolean  JNICALL   fromjava(detectIP)(JNIEnv *envin, jclas
 	}
 extern "C" JNIEXPORT jobjectArray  JNICALL   fromjava(getbackuphostnames)(JNIEnv *env, jclass cl,jint pos) {
 	if(!backup)  {
-		LOGGER("backup==null\n");
+		LOGSTRING("backup==null\n");
 		return nullptr;
 		}
 	const auto hostnr=backup->gethostnr();
@@ -245,7 +245,7 @@ extern "C" JNIEXPORT jstring JNICALL   fromjava(getreceiveport)(JNIEnv *env, jcl
 extern "C" JNIEXPORT jboolean JNICALL   fromjava(stringarray)(JNIEnv *env, jclass cl,jobjectArray jar ) {
 	constexpr const int maxad=4;	
 	int len=env->GetArrayLength(jar);
-	LOGGER("stringarray ");
+	LOGSTRING("stringarray ");
 	const char port[]="8795";
 	struct sockaddr_in6 	connect[maxad];
 	int uselen=std::min(maxad,len);
@@ -258,11 +258,11 @@ extern "C" JNIEXPORT jboolean JNICALL   fromjava(stringarray)(JNIEnv *env, jclas
 		if(!getaddr(name,port,connect+i))
 			return  false;
 		}
-	LOGGER("\nips: ");
+	LOGSTRING("\nips: ");
 	for(int i=0;i<uselen;i++) {
 		LOGGER("%s ",namehost(connect+i));
 		}
-	LOGGER("\n");
+	LOGSTRING("\n");
 	return true;
 	}
 	*/
@@ -325,7 +325,7 @@ extern void wakeaftermin(const int waitmin) ;
 extern void wakeuploader();
 
 extern "C" JNIEXPORT void JNICALL   fromjava(networkpresent)(JNIEnv *env, jclass cl) {
-      LOGGER("networkpresent\n");
+      LOGSTRING("networkpresent\n");
 	if(backup) {
 		backup->getupdatedata()->wakesender();
 		networkpresent=true;
@@ -341,7 +341,7 @@ extern "C" JNIEXPORT void JNICALL   fromjava(networkpresent)(JNIEnv *env, jclass
 #endif
 	}
 void resetnetwork() {
-	LOGGER("resetnetwork\n");
+	LOGSTRING("resetnetwork\n");
 	if(backup) {
 		backup->closeallsocks();
 		backup->getupdatedata()->wakesender();
@@ -354,7 +354,7 @@ extern "C" JNIEXPORT void JNICALL   fromjava(resetnetwork)(JNIEnv *env, jclass c
 	}
 
 extern "C" JNIEXPORT void JNICALL   fromjava(networkabsent)(JNIEnv *env, jclass cl) {
-      LOGGER("networkabsent\n");
+      LOGSTRING("networkabsent\n");
 	resetnetwork();
 /*	networkpresent=false;
 	if(backup) {

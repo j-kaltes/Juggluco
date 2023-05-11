@@ -472,10 +472,15 @@ void startlibrelink(String lang) {
 
    				case 1: (new Backup()).mkbackupview(( MainActivity)getContext());break;
 				case 2: {
-					       MainActivity activity = (MainActivity) getContext();
+				       MainActivity activity = (MainActivity) getContext();
+					if(Natives.staticnum()) {
+        					help.help(R.string.staticnum,activity);
+						}
+					else {
 						numberview.addnumberview(activity);
 						showkeyboard(activity);
-						}; break;
+						}
+					}; break;
 				case 3: getnumcontrol((MainActivity) getContext());return true;
 				case 4: Stats.mkstats((MainActivity) getContext());break;
 				};

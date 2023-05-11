@@ -47,6 +47,7 @@ struct wearmessage {
 */
 
 #define LOGGERTAG(...) LOGGER("messages: " __VA_ARGS__)
+#define LOGSTRINGTAG(...) LOGSTRING("messages: " __VA_ARGS__)
 struct wearmessagetype{
    int16_t phonehostnr;
    bool phonesender;
@@ -144,21 +145,21 @@ else {
 	/*
 #ifdef WEAROS
        if(!(jsendData=env->GetStaticMethodID(jMessageSender,"sendData","([B)Z"))) {
-                LOGGERTAG("GetStaticMethodID(jMessageSender,\"sendData\",\"([B)Z\" failed\n");
+                LOGSTRINGTAG("GetStaticMethodID(jMessageSender,\"sendData\",\"([B)Z\" failed\n");
                 return false;
                 } 
         if(!(jsendMessageOn=env->GetStaticMethodID(jMessageSender,"sendMessageOn","(Z)V"))) {
-                LOGGERTAG("GetStaticMethodID(jMessageSender,\"sendMessageOn\",\"(Z)V\" failed\n");
+                LOGSTRINGTAG("GetStaticMethodID(jMessageSender,\"sendMessageOn\",\"(Z)V\" failed\n");
                 return false;
                 } 
 #else	
         if(!(jsendDatawithName=env->GetStaticMethodID(jMessageSender,"sendDatawithName","(Ljava/lang/String;[B)Z"))) {
-                LOGGERTAG("GetStaticMethodID(jMessageSender,\"sendDatawithName\",\"(Ljava/lang/String;[B)Z\" failed\n");
+                LOGSTRINGTAG("GetStaticMethodID(jMessageSender,\"sendDatawithName\",\"(Ljava/lang/String;[B)Z\" failed\n");
                 return false;
                 }
 
         if(!(jsendNameMessageOn=env->GetStaticMethodID(jMessageSender,"sendNameMessageOn","(Ljava/lang/String;Z)V"))) {
-                LOGGERTAG("GetStaticMethodID(jMessageSender,\"sendNameMessageOn\",\"(Ljava/lang/String;Z)V\" failed\n");
+                LOGSTRINGTAG("GetStaticMethodID(jMessageSender,\"sendNameMessageOn\",\"(Ljava/lang/String;Z)V\" failed\n");
                 return false;
                 }  
 #endif
@@ -261,7 +262,7 @@ void tobluetooth(int hostnr,bool sender,int *sockin, int *sockother,std::binary_
 	int len=sprintf(buf, "tobluetooth %d %s",hostnr,sender?"S":"R");
 	prctl(PR_SET_NAME, buf, 0, 0, 0);
 	}
-	LOGGERTAG("tobluetooth before release\n");
+	LOGSTRINGTAG("tobluetooth before release\n");
 	waitstarted->release();
   auto &status=mirrorstatus[hostnr].toblue[sender];
   status.running(true);
@@ -332,7 +333,7 @@ extern	void receiversockopt(int new_fd);
 		th.join();
 		if(recsock!=-1)
 			closesock(recsock);
-		LOGGERTAG("try again\n");
+		LOGSTRINGTAG("try again\n");
 		 }
 	LOGGERTAG("messagereceivecommands wearmessages[%d]==false\n",index);
 	return;
@@ -343,7 +344,7 @@ void startmessagereceiver(passhost_t &host) {
 	th.detach();
 	}
 void startmessagereceivers(Backup *backup) {
-	LOGGERTAG("startmessagereceivers\n");
+	LOGSTRINGTAG("startmessagereceivers\n");
 	auto hspan=backup->getHosts();
 	for(passhost_t &host:hspan) {
 		if(host.wearos) {

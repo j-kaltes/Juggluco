@@ -1332,7 +1332,7 @@ int savedoses(NovoPen *pen,uint32_t reftime,uint8_t *bytes,int len) {
 			}
 		else  {
 			if(value<=2.0f&&((int64_t)nexttime-time)<60) {
-				LOGGER("prime\n");
+				LOGSTRING("prime\n");
 				used=false;
 				continue;
 				}
@@ -1353,7 +1353,7 @@ extern "C" JNIEXPORT jboolean  JNICALL   fromjava(oldnovopenvalue)(JNIEnv *env, 
        uint8_t*  bytes=reinterpret_cast<uint8_t *>(   env->GetPrimitiveArrayCritical(jrawdoses,nullptr));
       LOGGER("jrawdoses=%p\n",bytes);
        if(!bytes) {
-		LOGGER("GetByteArrayElements(jrawdoses,nullptr)==null\n");
+		LOGSTRING("GetByteArrayElements(jrawdoses,nullptr)==null\n");
 		return -1;
        	  }
        destruct _dest([env,bytes,jrawdoses]() {
@@ -1376,7 +1376,7 @@ extern "C" JNIEXPORT jint  JNICALL   fromjava(savenovopen)(JNIEnv *env, jclass c
        uint8_t*  bytes=reinterpret_cast<uint8_t *>(   env->GetPrimitiveArrayCritical(jrawdoses,nullptr));
       LOGGER("jrawdoses=%p#%d\n",bytes,lens);
        if(!bytes) {
-		LOGGER("GetPrimitiveArrayCritical(jrawdoses,nullptr)==null\n");
+		LOGSTRING("GetPrimitiveArrayCritical(jrawdoses,nullptr)==null\n");
 		return -1;
        	  }
        destruct _dest([env,bytes,jrawdoses]() {
@@ -1444,4 +1444,11 @@ extern "C" JNIEXPORT void  JNICALL   fromjava(setUSEALARM)(JNIEnv *env, jclass c
 	}
 extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getUSEALARM)(JNIEnv *env, jclass cl) {
 	return !settings->data()->USE_ALARMoff;
+	}
+
+extern "C" JNIEXPORT void  JNICALL   fromjava(setgadgetbridge)(JNIEnv *env, jclass cl,jboolean val) {
+	settings->data()->gadgetbridge=val;
+	}
+extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getgadgetbridge)(JNIEnv *env, jclass cl) {
+	return settings->data()->gadgetbridge;
 	}

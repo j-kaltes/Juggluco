@@ -326,7 +326,7 @@ template <void (Numbers::*fun)(char *&,const Num &,Libregeg *,bool)>
 template <void (Numbers::*fun)(char *&,const Num &,Libregeg *,bool)>
 //template <void Numbers::fun(char *&,const Num &,Libregeg *,bool)>
  int writeindex(char *buf,std::span<int32_t> indices,Libregeg *ids) {
- 	LOGGER("writeindex\n");
+ 	LOGSTRING("writeindex\n");
 	char *ptr=buf;
 	for(auto index:indices) {
 		if(index>=0) {
@@ -403,7 +403,7 @@ bool didsend() {
 void onSuccess() { 
 	if(dontSendNumbers())
 		return;
-	LOGGER("Numbers::onSuccess\n");	
+	LOGSTRING("Numbers::onSuccess\n");	
 	settings->data()->libredeletednr=0;
 	const int nnr=numdatas.size();
 	for(int i=0;i<nnr;i++) {
@@ -451,7 +451,7 @@ template <void (Numbers::*fun)(char *&,const Num &,Libregeg *,bool)>
 		ptr+=writespan<fun>(ptr,{deleted,nrdeleted},nullptr,true);
 		}
 	const int nnr=numdatas.size();
-	LOGGER("write all\n");
+	LOGSTRING("write all\n");
 	for(int i=0;i<nnr;i++) {
 		const auto lastpos=ids[i].lastpos;
 		if(lastpos>0) {

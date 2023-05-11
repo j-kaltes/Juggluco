@@ -28,7 +28,7 @@ import static tk.glucodata.Dialogs.fdatename;
 import static tk.glucodata.Natives.novopentype;
 import static tk.glucodata.Natives.savenovopen;
 import static tk.glucodata.Natives.setnovopenttimeandtype;
-import static tk.glucodata.Natives.showbytes;
+import static tk.glucodata.Log.showbytes;
 import static tk.glucodata.NumberView.avoidSpinnerDropdownFocus;
 import static tk.glucodata.ScanNfcV.failure;
 import static tk.glucodata.ScanNfcV.getvibrator;

@@ -65,13 +65,13 @@ struct nonce_t {
 	tc_aes128_set_encrypt_key(&sched, key);
 	int result = tc_ccm_config(&c, &sched, nonce, noncelen, taglen);
 	if(result == 0) {
-		LOGGER("tc_ccm_config failed\n");
+		LOGSTRING("tc_ccm_config failed\n");
 		return false;
 		}
 	int encrlen=inputlen+4;
 	result = tc_ccm_generation_encryption(encrypted,encrlen ,nullptr, 0, input, inputlen, &c);
 	if(result == 0) {
-		LOGGER("tc_ccm_generation_encryption failed\n");
+		LOGSTRING("tc_ccm_generation_encryption failed\n");
 		return false;
 		}
 	return true;
@@ -96,13 +96,13 @@ struct nonce_t {
 	tc_aes128_set_encrypt_key(&sched, key);
 	int result = tc_ccm_config(&c, &sched, nonce, noncelen, taglen);
 	if(result == 0) {
-		LOGGER("tc_ccm_config failed\n");
+		LOGSTRING("tc_ccm_config failed\n");
 		return false;
 		}
 	const int decryptlen=encryplen-4;
 	result = tc_ccm_decryption_verification(plain,decryptlen , nullptr, 0, encrypted, encryplen, &c);
 	if(result == 0) {
-		LOGGER("tc_ccm_decryption_verification failed\n");
+		LOGSTRING("tc_ccm_decryption_verification failed\n");
 		return false;
 		}
 	return true;	

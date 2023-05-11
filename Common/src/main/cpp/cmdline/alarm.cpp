@@ -5,11 +5,11 @@
 
 static void onalarm(int sig) {
 	if(settings&&sensors) {
-		LOGGER("onalarm do it\n");
+		LOGSTRING("onalarm do it\n");
 		sensors->removeoldstates();
 		}
 	else
-		LOGGER("onalarm no init\n");
+		LOGSTRING("onalarm no init\n");
 	}
 
 static void setalarm() {

@@ -8,7 +8,7 @@ import static tk.glucodata.NovoPen.opennov.mt.Apdu.ApduType.RlreApdu;
 import static tk.glucodata.NovoPen.opennov.mt.Apdu.ApduType.RlrqApdu;
 import static tk.glucodata.NovoPen.opennov.mt.EventReport.MDC_NOTI_CONFIG;
 import static tk.glucodata.NovoPen.opennov.mt.EventReport.MDC_NOTI_SEGMENT_DATA;
-import static tk.glucodata.Natives.showbytes;
+import static tk.glucodata.Log.showbytes;
 import tk.glucodata.NovoPen.opennov.HexDump;
 import tk.glucodata.NovoPen.opennov.mt.ARequest;
 import tk.glucodata.NovoPen.opennov.mt.AResponse;

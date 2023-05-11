@@ -47,6 +47,7 @@
 
 #define lerrortag(...) lerror("sender: " __VA_ARGS__)
 #define LOGGERTAG(...) LOGGER("sender: " __VA_ARGS__)
+#define LOGSTRINGTAG(...) LOGSTRING("sender: " __VA_ARGS__)
 #define flerrortag(...) flerror("sender: " __VA_ARGS__)
 
 using namespace std;
@@ -67,7 +68,7 @@ void	sendpassinit(int sock,passhost_t *host,crypt_t *ctx) {
 		return;
 		}
         ascon_aead128a_init(ctx, host->pass.data(),nonce);	
-	LOGGERTAG("end sendpassinit\n");
+	LOGSTRINGTAG("end sendpassinit\n");
 	}
 bool unblock(int sock) {
   if( int val = fcntl(sock, F_GETFL, NULL);val >=0) {
@@ -112,7 +113,7 @@ static auto getsendmagic() {
 std::array<unsigned char,sizeof(sendmagic)>  sendmagicspec=getsendmagic();
 
 
-static bool testsendmagic(passhost_t *pass,int sock) {
+static int testsendmagic(passhost_t *pass,int sock) {
 	#include "receivemagic.h"
 	decltype(sendmagicspec) *magicptr;
 
@@ -126,21 +127,21 @@ static bool testsendmagic(passhost_t *pass,int sock) {
 		magicptr=&sendmagicspec;
 	if(sendni(sock,magicptr->data(),magicptr->size())!=magicptr->size()) {
 		lerrortag("send magic failed\n");
-		return false;
+		return 1;
 		}
 //	constexpr int buflen=1024;
 constexpr const int recsize=sizeof(receivemagic);
 	char buf[recsize];
-	LOGGERTAG("before recv magic\n");
+	LOGSTRINGTAG("before recv magic\n");
 	int gotlen;
 	if((gotlen=recvni(sock,buf,recsize))!=recsize) {
 		flerrortag("recv()=%d!=%d\n",gotlen,(int)recsize);
-		return false;
+		return 2;
 		}
-	LOGGERTAG("after recv magic\n");
+	LOGSTRINGTAG("after recv magic\n");
 	if(memcmp(buf,receivemagic,recsize-4)) {//4 less for version info
-		LOGGERTAG("Wrong magic\n");
-		return false;
+		LOGSTRINGTAG("Wrong magic\n");
+		return 3;
 		}
 	LOGGERTAG("testsendmagic %d success\n",sock);
 //extern void	setreceiverversion(uint8_t version) ;
@@ -150,7 +151,7 @@ constexpr const int recsize=sizeof(receivemagic);
 		resethost(*pass);
 		}
 	pass->newconnection=false;
-	return true;
+	return 0;
 	}
 
 void receivetimeout(int sock,int secs) {
@@ -181,27 +182,12 @@ bool sendtype(int sock,char type) {
 
 int shakehands(passhost_t *pass,int &sock,char stype) {
 	LOGGERTAG("shakehands connection %d\n",sock);
-	//getmyname(sock);
 	
 	destruct closer([&sock]()->void{
 		int so=sock;
 		sock=-1;
 		close(so);; });
 	
-/*SO_RCVTIMEO and SO_SNDTIMEO
-Specify the receiving or sending timeouts until reporting an error. The argument is a struct timeval. If an input or output function blocks for this period of time, and data has been sent or received, the return value of that function will be the amount of data transferred; if no data has been transferred and the timeout has been reached then -1 is returned with errno set to EAGAIN or EWOULDBLOCK, or EINPROGRESS (for connect(2)) just as if the socket was specified to be nonblocking. If the timeout is set to zero (the default) then the operation will never timeout. Timeouts only have effect for system calls that perform socket I/O (e.g., read(2), recvmsg(2), send(2), sendmsg(2)); timeouts have no effect for select(2), poll(2), epoll_wait(2), and so on.*/
-/*
-#ifndef NOTIMEOUT
-	struct timeval tv;
-	tv.tv_usec = 0;
-	tv.tv_sec = 60*4;
-	setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv, sizeof tv);
-	tv.tv_sec = 60*20; 
-	setsockopt(sock, SOL_SOCKET, SO_SNDTIMEO , (const char*)&tv, sizeof tv);
-#endif */
-/*	const int minimumsize = 1;
-	setsockopt(sock, SOL_SOCKET, SO_RCVLOWAT, &minimumsize, sizeof minimumsize);
-	setsockopt(sock, SOL_SOCKET, SO_SNDLOWAT, &minimumsize, sizeof minimumsize); */
 	struct timeval tv;
 	tv.tv_usec = 0;
 	tv.tv_sec = 60*3;
@@ -216,13 +202,16 @@ Specify the receiving or sending timeouts until reporting an error. The argument
 			}
 		
 		}
-	if(!testsendmagic(pass,sock)) 
+	int magret;
+	if((magret=testsendmagic(pass,sock)))  {
+		if(magret==2)
+			return -2;
 		return -1;
+		}
 	if(stype) {
 		sendtype(sock,stype);
 		}
 		
-
 	closer.active=false;
 	LOGGERTAG("sock=%d\n",sock);
 	return sock;
@@ -268,7 +257,7 @@ static int connectone( const struct sockaddr_in6  *sin, int &sock,char stype,pas
 			cons[use++]={so,POLLOUT,0};
 			}
 		else {
-			LOGGERTAG("close\n");
+			LOGSTRINGTAG("close\n");
 			close(so);
 			return -1;
 			}
@@ -279,7 +268,7 @@ static int connectone( const struct sockaddr_in6  *sin, int &sock,char stype,pas
 #endif
 		block(so);
 		sock=so;
-		if(int ret=shakehands(pass,sock,stype);ret>0) {
+		if(int ret=shakehands(pass,sock,stype);ret>=0) {
 			LOGGERTAG("before poll %d\n",sock);
 			for(int w=0;w<use;w++) {
 				close(cons[w].fd);
@@ -370,7 +359,7 @@ bool activate=true;
 					continue;
 				return -1;
 				};
-			case 0: {LOGGERTAG("poll timeout\n");
+			case 0: {LOGSTRINGTAG("poll timeout\n");
 				return -1;
 				}
 			};
@@ -386,7 +375,6 @@ bool activate=true;
 				socklen_t errlen = sizeof(error);
 				if(getsockopt(cons[i].fd, SOL_SOCKET, SO_ERROR, (void *)&error, &errlen)==-1)
 					lerrortag("getsockopt");
-//s/^[ 	]*\(E[A-Z]*\)[ 	]*\(.*\)$/case \1: errstr=\"\2\";break;
 				const char *errstr="";
 				switch(error) {
 					case EINTR: errstr="The system call was interrupted by a signal that was caught; see signal(7).";break;
@@ -420,7 +408,8 @@ bool activate=true;
 			if(cons[i].revents & POLLOUT){
 				sock=cons[i].fd;
 				block(sock);
-				if(int ret=shakehands(pass,sock,stype);ret>0) {
+				int ret;
+				if((ret=shakehands(pass,sock,stype))>=0) {
 					for(int w=0;w<newuse;w++) {
 						close(cons[w].fd);
 						}
@@ -433,6 +422,13 @@ bool activate=true;
 #endif
 					return ret;	
 					}
+				if(ret==-2) {
+#ifdef WEAROS_MESSAGES
+					dest.active=false;
+#endif
+					
+					return -1;
+					}
 				continue;
 				}
 			else  {
@@ -442,7 +438,7 @@ bool activate=true;
 			}
 		use=newuse;
 		}
-	LOGGERTAG("no one\n");
+	LOGSTRINGTAG("no one\n");
 	return -1;
 	}
 

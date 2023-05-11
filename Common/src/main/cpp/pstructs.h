@@ -72,7 +72,7 @@ struct p2struct:pstruct {
 	virtual bool test(JNIEnv *env) override {	
 		data_t *dar1=ar1.size()?data_t::newex(ar1):nullptr;
 		data_t *dar2=ar2.size()?data_t::newex(ar2):nullptr;
-		LOGGER("before call\n");
+		LOGSTRING("before call\n");
 		data_t *nores=reinterpret_cast<data_t*>(abbottcall(P2)(env,nullptr,i1,i2,reinterpret_cast<jbyteArray>(dar1),reinterpret_cast<jbyteArray>(dar2)));
 		fprintf(stderr,"nores len=%d\n",nores->size());
 		unsigned char *data=(unsigned char *)nores->data();

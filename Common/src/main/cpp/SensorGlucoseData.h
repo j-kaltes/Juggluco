@@ -193,11 +193,11 @@ Mmap<std::array<uint16_t,16>> trends;
 //static constexpr int getinfo()->dupl=3,days=15;
 const int nrunits(int perhour=4)  {
 	if(!getinfo()) {
-		LOGGER("nrunits no getinfo\n");
+		LOGSTRING("nrunits no getinfo\n");
 		haserror=true;
 		return 0;
 		}
-	LOGGER("nrunits\n");
+	LOGSTRING("nrunits\n");
 //	if(error()) return 0;
 	const auto elsize=getelsize();
 	const auto days=getinfo()->days;
@@ -638,32 +638,7 @@ bool bluetoothback() {
 
 
 private:
-/*
 size_t maxscansize()  {
-//	if(error()) return 0;
-	const int days=	(haserror||((int)getinfo()->days<15))?15:(int)getinfo()->days;
-	const int scanblocks=ceil((40*days*sizeof(ScanData))/blocksize);
-	int used,past;
-	if(haserror||( used=getinfo()->scancount*sizeof(ScanData),used<0)||(past= getinfo()->endhistory-getinfo()->starthistory,past<0)) {
-		haserror=true;
-//		return scanblocks*blocksize/sizeof(ScanData);
-		}
-	int take;
-	int maxp=maxpos();
-	if(maxp<past)
-		maxp+=24*perhour();
-        if(used<=0||past<=0||(take =ceil((maxp+(maxp-past)*.2)*used/((double)past*blocksize)))<scanblocks)
-		take=scanblocks;
-	LOGGER("blocksize=%d take=%d used=%d maxp=%d\n",blocksize,take,used,maxp);
-	return take*blocksize/sizeof(ScanData);
-        }*/
-size_t maxscansize()  {
-/*
-	if(haserror) {
-		LOGGER("haserror=%d\n",haserror);
-		return 0;
-		} */
-//	if(error()) return 0;
 	const int days=	std::max((int)getinfo()->days,15);
 	const int scanblocks=ceil((40*days*sizeof(ScanData))/blocksize);
         int used=getinfo()->scancount*sizeof(ScanData);
@@ -718,7 +693,7 @@ specstart(spec),
  trendspath(baseuit, trendsdat)
 {
 if(error()) {
-	LOGGER("SensorGlucoseData Error\n");
+	LOGSTRING("SensorGlucoseData Error\n");
 	return;
 	}
 if(const ScanData *last=lastpoll()) {
@@ -863,17 +838,26 @@ bool hasStreamID(const int id) const {
 int savepollallIDsonly(time_t tim,const int id,int glu,int trend,float change) {
 	int count=getinfo()->pollcount;
 	if(count<id) {
-		uint32_t timiter=tim-(id-count)*60;
-		for(;count<id;++count)  {
+		LOGGER("savepollallIDsonly count=%d<id=%d\n",count,id);
+		const uint32_t startiter=tim-(id-count)*60;
+		if(!count) {
+			LOGAR("savepollallIDsonly !count");
+			const auto starttime=getinfo()->starttime;
+			if(starttime>startiter||(startiter-starttime)>60*60) {
+				const uint32_t newstart=startiter-80;
+				getinfo()->starttime=newstart;
+				LOGGER("new start=%d\n",newstart);
+				}
+			}
+		for(uint32_t timiter=startiter;count<id;++count,timiter+=60)  {
 			if(!polls[count].t||polls[count].id!=count)
 				polls[count]={timiter,count,0,0,0.0};
-			timiter+=60;
 			}
 		if(!count) {
 			getinfo()->pollstart=id;	
 			}
 		}
-	LOGGER("savepollallIDsonly(%lu,%d,%.1f,%d,%.1f) %s",tim,id,glu/18.0,trend,change,ctime(&tim));
+	LOGGER("count=%d savepollallIDsonly(%lu,%d,%.1f,%d,%.1f) %s",count,tim,id,glu/18.0,trend,change,ctime(&tim));
 	polls[id]={static_cast<uint32_t>(tim),id,glu,trend,change};
 	return count;
 	}
@@ -1037,7 +1021,7 @@ static const ScanData *firstnotless(std::span<const ScanData> dat,const uint32_t
 
 
 dataonlyptr  getfromfile(crypt_t *pass,int sock, std::string_view filename,int offset,int asklen) {
-	LOGGER("GLU: getfromfile\n");
+	LOGSTRING("GLU: getfromfile\n");
 	const int pathlen=filename.size()+1;
 	constexpr const int ali=alignof(struct askfile);
 	const int comlen=((sizeof(askfile)+(pathlen+ali-1))/ali)*ali;
@@ -1050,7 +1034,7 @@ dataonlyptr  getfromfile(crypt_t *pass,int sock, std::string_view filename,int o
 	ask->namelen=pathlen;
 	memcpy(ask->name,filename.data(),pathlen);
 	if(!noacksendcommand(pass,sock,buf,comlen) ) {
-		LOGGER("GLU:  !noacksendcommand\n");
+		LOGSTRING("GLU:  !noacksendcommand\n");
 		return dataonlyptr(nullptr); 
 		}
 	return receivedataonly(sock,pass, asklen);
@@ -1111,11 +1095,11 @@ uint32_t getbackuptimehistory(uint32_t starttime)  {
 			pos=endpos;
 		else {
 			while(pos>first&&timeatpos(pos)>starttime) {
-				LOGGER("GLU:  > ");
+				LOGSTRING("GLU:  > \n");
 				pos--;
 				}
 			while(pos<endpos&&timeatpos(pos)<starttime) {
-				LOGGER("GLU:  < ");
+				LOGSTRING("GLU:  < \n");
 				pos++;
 				}
 			}
@@ -1141,7 +1125,7 @@ bool setbackuptime(crypt_t *pass,int sock,int ind,uint32_t starttime) {
 	auto dontdestroy=getfromfile(pass,sock,infopath, 0,asklen);
        dataonly *dat=dontdestroy.get();
 	if(dat==nullptr) {
-		LOGGER("GLU: ==nullptr\n");
+		LOGSTRING("GLU: ==nullptr\n");
 		return false;
 		}
 
@@ -1216,11 +1200,11 @@ int updatestream(crypt_t *pass,int sock,int ind,int sensindex)  {
 #endif
 
 		if(!senddata(pass,sock,streamstart,startstreambuf+streamstart,startstreambuf+streamend,polluit)) {
-			LOGGER("GLU: senddata polls.dat failed\n");
+			LOGSTRING("GLU: senddata polls.dat failed\n");
 			return 0;
 			}
 		if(!senddata(pass,sock,off,reinterpret_cast<uint8_t*>(&pollinfo),len, infopath,cmd,reinterpret_cast<const uint8_t *>(&streamstart),sizeof(streamstart))) {
-			LOGGER("GLU: senddata info.data failed\n");
+			LOGSTRING("GLU: senddata info.data failed\n");
 			return 0;
 			}
 
@@ -1229,7 +1213,7 @@ int updatestream(crypt_t *pass,int sock,int ind,int sensindex)  {
 			getinfo()->update[ind].streamstart=streamend;
 			}
 		else  {
-			LOGGER("startchanged\n");
+			LOGSTRING("startchanged\n");
 			}
 		if(isLibre3()) {
 			if(sendhistory(pass,sock,ind,sensindex,true))
@@ -1242,7 +1226,7 @@ int updatestream(crypt_t *pass,int sock,int ind,int sensindex)  {
 		if(getinfo()->update[ind].sendbluetoothOn) {
 		      constexpr	const int offset=offsetof(Info,streamingIsEnabled);
 		      if(!senddata(pass,sock,offset,meminfo.data()+offset,1, infopath)) {
-				LOGGER("GLU: senddata bluetoothON info.data failed\n");
+				LOGSTRING("GLU: senddata bluetoothON info.data failed\n");
 		      		return 0;
 		   		}
 			getinfo()->update[ind].sendbluetoothOn=false;

@@ -25,7 +25,7 @@ package tk.glucodata;
 import android.nfc.Tag;
 
 import static tk.glucodata.BuildConfig.libreVersion;
-import static tk.glucodata.Natives.showbytes;
+import static tk.glucodata.Log.showbytes;
 
 public class  Libre3 {
 private static final String LOG_ID="Libre3";

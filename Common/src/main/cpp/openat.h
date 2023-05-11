@@ -28,7 +28,6 @@ R"(/data/dalvik-cache/oat/)" archname R"(/xposed_XTypedArraySuperClass.odex)",
 R"(/data/dalvik-cache/)" archname R"(/system@framework@" archname "@boot-framework.oat@xposed)",
 #endif
 "/data/dalvik-cache/xposed_XResourcesSuperClass.dex",
-R"(/proc/net/unix)",
 R"(/root/magisk)",
 R"(/sbin/amphoras)",
 R"(/sbin/daemonsu)",

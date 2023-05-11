@@ -21,11 +21,7 @@
 
 package tk.glucodata;
 
-import androidx.annotation.Keep;
-
 import static tk.glucodata.Applic.usedlocale;
-import static tk.glucodata.Applic.isRelease;
-import static tk.glucodata.Natives.showbytes;
 public class Log {
 static boolean doLog=BuildConfig.doLog==1;
 static final private String LOG_ID="Log";
@@ -54,11 +50,13 @@ private static void log(String type,String one,String two) {
 		}
 	  }
 public static void info(String str) {
-   	if(Applic.Nativesloaded)  {
-		Natives.log(str+'\n');
+	if(doLog) {
+		if(Applic.Nativesloaded)  {
+			Natives.log(str+'\n');
+			}
+		else
+			android.util.Log.e(LOG_ID, str);
 		}
-	else
-		android.util.Log.e(LOG_ID, str);
 	}
    public static void stack(String id,Throwable e) {
 	stack(id,"",e);
@@ -103,9 +101,12 @@ public static void format(String format, Object... args) {
 	}
 //s/public static void \([a-z]\).*\(log.*\);/public static void \1(String one,String two) 	{ if(Applic.Nativesloaded) {\2 else android.util.Log.\1(one,two);};/g
 
-public static void d(String one,String two) 	{ if(Applic.Nativesloaded) {log("D",one,two);} else android.util.Log.d(one,two);};
-public static void w(String one,String two) 	{ if(Applic.Nativesloaded) {log("W",one,two);} else android.util.Log.w(one,two);};
-public static void v(String one,String two) 	{ if(Applic.Nativesloaded) {log("V",one,two);} else android.util.Log.v(one,two);};
-public static void i(String one,String two) 	{ if(Applic.Nativesloaded) {log("I",one,two);} else android.util.Log.i(one,two);};
-
+public static void d(String one,String two) 	{ if(doLog) {if(Applic.Nativesloaded) {log("D",one,two);} else android.util.Log.d(one,two);}};
+public static void w(String one,String two) 	{ if(doLog) {if(Applic.Nativesloaded) {log("W",one,two);} else android.util.Log.w(one,two);}};
+public static void v(String one,String two) 	{ if(doLog) {if(Applic.Nativesloaded) {log("V",one,two);} else android.util.Log.v(one,two);}};
+public static void i(String one,String two) 	{ if(doLog) {if(Applic.Nativesloaded) {log("I",one,two);} else android.util.Log.i(one,two);}};
+public static void  showbytes(String mess,byte[] ar) {
+	if(doLog)
+		Natives.showbytes(mess,ar);
+	}
 };

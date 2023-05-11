@@ -21,1315 +21,1315 @@
 
     jint        (*GetVersion)(JNIEnv *);
     jint         MyGetVersiondeclarefunc() {
-   LOGGER("GetVersion\n");
+   LOGSTRING("GetVersion\n");
    return GetVersioncallfunc();
    }
 
     jclass      (*DefineClass)(JNIEnv*, const char*, jobject, const jbyte*,jsize);
     jclass       MyDefineClassdeclarefunc( const char*, jobject, const jbyte*,jsize) {
-   LOGGER("DefineClass\n");
+   LOGSTRING("DefineClass\n");
    return DefineClasscallfunc( const char*, jobject, const jbyte*,jsize);
    }
 
     jmethodID   (*FromReflectedMethod)(JNIEnv*, jobject);
     jmethodID    MyFromReflectedMethoddeclarefunc( jobject) {
-   LOGGER("FromReflectedMethod\n");
+   LOGSTRING("FromReflectedMethod\n");
    return FromReflectedMethodcallfunc( jobject);
    }
 
     jfieldID    (*FromReflectedField)(JNIEnv*, jobject);
     jfieldID     MyFromReflectedFielddeclarefunc( jobject) {
-   LOGGER("FromReflectedField\n");
+   LOGSTRING("FromReflectedField\n");
    return FromReflectedFieldcallfunc( jobject);
    }
 
     jobject     (*ToReflectedMethod)(JNIEnv*, jclass, jmethodID, jboolean);
     jobject      MyToReflectedMethoddeclarefunc( jclass, jmethodID, jboolean) {
-   LOGGER("ToReflectedMethod\n");
+   LOGSTRING("ToReflectedMethod\n");
    return ToReflectedMethodcallfunc( jclass, jmethodID, jboolean);
    }
 
     jclass      (*GetSuperclass)(JNIEnv*, jclass);
     jclass       MyGetSuperclassdeclarefunc( jclass) {
-   LOGGER("GetSuperclass\n");
+   LOGSTRING("GetSuperclass\n");
    return GetSuperclasscallfunc( jclass);
    }
 
     jboolean    (*IsAssignableFrom)(JNIEnv*, jclass, jclass);
     jboolean     MyIsAssignableFromdeclarefunc( jclass, jclass) {
-   LOGGER("IsAssignableFrom\n");
+   LOGSTRING("IsAssignableFrom\n");
    return IsAssignableFromcallfunc( jclass, jclass);
    }
 
     jobject     (*ToReflectedField)(JNIEnv*, jclass, jfieldID, jboolean);
     jobject      MyToReflectedFielddeclarefunc( jclass, jfieldID, jboolean) {
-   LOGGER("ToReflectedField\n");
+   LOGSTRING("ToReflectedField\n");
    return ToReflectedFieldcallfunc( jclass, jfieldID, jboolean);
    }
 
     jint        (*Throw)(JNIEnv*, jthrowable);
     jint         MyThrowdeclarefunc( jthrowable) {
-   LOGGER("Throw\n");
+   LOGSTRING("Throw\n");
    return Throwcallfunc( jthrowable);
    }
 
     jint        (*ThrowNew)(JNIEnv *, jclass, const char *);
     jint         MyThrowNewdeclarefunc( jclass, const char *) {
-   LOGGER("ThrowNew\n");
+   LOGSTRING("ThrowNew\n");
    return ThrowNewcallfunc( jclass, const char *);
    }
 
     jthrowable  (*ExceptionOccurred)(JNIEnv*);
     jthrowable   MyExceptionOccurreddeclarefunc() {
-   LOGGER("ExceptionOccurred\n");
+   LOGSTRING("ExceptionOccurred\n");
    return ExceptionOccurredcallfunc();
    }
 
     void        (*ExceptionDescribe)(JNIEnv*);
     void         MyExceptionDescribedeclarefunc() {
-   LOGGER("ExceptionDescribe\n");
+   LOGSTRING("ExceptionDescribe\n");
    return ExceptionDescribecallfunc();
    }
 
     void        (*ExceptionClear)(JNIEnv*);
     void         MyExceptionCleardeclarefunc() {
-   LOGGER("ExceptionClear\n");
+   LOGSTRING("ExceptionClear\n");
    return ExceptionClearcallfunc();
    }
 
     void        (*FatalError)(JNIEnv*, const char*);
     void         MyFatalErrordeclarefunc( const char*) {
-   LOGGER("FatalError\n");
+   LOGSTRING("FatalError\n");
    return FatalErrorcallfunc( const char*);
    }
 
     jint        (*PushLocalFrame)(JNIEnv*, jint);
     jint         MyPushLocalFramedeclarefunc( jint) {
-   LOGGER("PushLocalFrame\n");
+   LOGSTRING("PushLocalFrame\n");
    return PushLocalFramecallfunc( jint);
    }
 
     jobject     (*PopLocalFrame)(JNIEnv*, jobject);
     jobject      MyPopLocalFramedeclarefunc( jobject) {
-   LOGGER("PopLocalFrame\n");
+   LOGSTRING("PopLocalFrame\n");
    return PopLocalFramecallfunc( jobject);
    }
 
     jobject     (*NewGlobalRef)(JNIEnv*, jobject);
     jobject      MyNewGlobalRefdeclarefunc( jobject) {
-   LOGGER("NewGlobalRef\n");
+   LOGSTRING("NewGlobalRef\n");
    return NewGlobalRefcallfunc( jobject);
    }
 
     void        (*DeleteGlobalRef)(JNIEnv*, jobject);
     void         MyDeleteGlobalRefdeclarefunc( jobject) {
-   LOGGER("DeleteGlobalRef\n");
+   LOGSTRING("DeleteGlobalRef\n");
    return DeleteGlobalRefcallfunc( jobject);
    }
 
     jboolean    (*IsSameObject)(JNIEnv*, jobject, jobject);
     jboolean     MyIsSameObjectdeclarefunc( jobject, jobject) {
-   LOGGER("IsSameObject\n");
+   LOGSTRING("IsSameObject\n");
    return IsSameObjectcallfunc( jobject, jobject);
    }
 
     jobject     (*NewLocalRef)(JNIEnv*, jobject);
     jobject      MyNewLocalRefdeclarefunc( jobject) {
-   LOGGER("NewLocalRef\n");
+   LOGSTRING("NewLocalRef\n");
    return NewLocalRefcallfunc( jobject);
    }
 
     jint        (*EnsureLocalCapacity)(JNIEnv*, jint);
     jint         MyEnsureLocalCapacitydeclarefunc( jint) {
-   LOGGER("EnsureLocalCapacity\n");
+   LOGSTRING("EnsureLocalCapacity\n");
    return EnsureLocalCapacitycallfunc( jint);
    }
 
     jobject     (*AllocObject)(JNIEnv*, jclass);
     jobject      MyAllocObjectdeclarefunc( jclass) {
-   LOGGER("AllocObject\n");
+   LOGSTRING("AllocObject\n");
    return AllocObjectcallfunc( jclass);
    }
 
     jobject     (*NewObject)(JNIEnv*, jclass, jmethodID, ...);
     jobject      MyNewObjectdeclarefunc( jclass, jmethodID, ...) {
-   LOGGER("NewObject\n");
+   LOGSTRING("NewObject\n");
    return NewObjectcallfunc( jclass, jmethodID, ...);
    }
 
     jobject     (*NewObjectV)(JNIEnv*, jclass, jmethodID, va_list);
     jobject      MyNewObjectVdeclarefunc( jclass, jmethodID, va_list) {
-   LOGGER("NewObjectV\n");
+   LOGSTRING("NewObjectV\n");
    return NewObjectVcallfunc( jclass, jmethodID, va_list);
    }
 
     jobject     (*NewObjectA)(JNIEnv*, jclass, jmethodID, const jvalue*);
     jobject      MyNewObjectAdeclarefunc( jclass, jmethodID, const jvalue*) {
-   LOGGER("NewObjectA\n");
+   LOGSTRING("NewObjectA\n");
    return NewObjectAcallfunc( jclass, jmethodID, const jvalue*);
    }
 
     jboolean    (*IsInstanceOf)(JNIEnv*, jobject, jclass);
     jboolean     MyIsInstanceOfdeclarefunc( jobject, jclass) {
-   LOGGER("IsInstanceOf\n");
+   LOGSTRING("IsInstanceOf\n");
    return IsInstanceOfcallfunc( jobject, jclass);
    }
 
     jmethodID   (*GetMethodID)(JNIEnv*, jclass, const char*, const char*);
     jmethodID    MyGetMethodIDdeclarefunc( jclass, const char*, const char*) {
-   LOGGER("GetMethodID\n");
+   LOGSTRING("GetMethodID\n");
    return GetMethodIDcallfunc( jclass, const char*, const char*);
    }
 
     jobject     (*CallObjectMethod)(JNIEnv*, jobject, jmethodID, ...);
     jobject      MyCallObjectMethoddeclarefunc( jobject, jmethodID, ...) {
-   LOGGER("CallObjectMethod\n");
+   LOGSTRING("CallObjectMethod\n");
    return CallObjectMethodcallfunc( jobject, jmethodID, ...);
    }
 
     jobject     (*CallObjectMethodV)(JNIEnv*, jobject, jmethodID, va_list);
     jobject      MyCallObjectMethodVdeclarefunc( jobject, jmethodID, va_list) {
-   LOGGER("CallObjectMethodV\n");
+   LOGSTRING("CallObjectMethodV\n");
    return CallObjectMethodVcallfunc( jobject, jmethodID, va_list);
    }
 
     jobject     (*CallObjectMethodA)(JNIEnv*, jobject, jmethodID, const jvalue*);
     jobject      MyCallObjectMethodAdeclarefunc( jobject, jmethodID, const jvalue*) {
-   LOGGER("CallObjectMethodA\n");
+   LOGSTRING("CallObjectMethodA\n");
    return CallObjectMethodAcallfunc( jobject, jmethodID, const jvalue*);
    }
 
     jboolean    (*CallBooleanMethodV)(JNIEnv*, jobject, jmethodID, va_list);
     jboolean     MyCallBooleanMethodVdeclarefunc( jobject, jmethodID, va_list) {
-   LOGGER("CallBooleanMethodV\n");
+   LOGSTRING("CallBooleanMethodV\n");
    return CallBooleanMethodVcallfunc( jobject, jmethodID, va_list);
    }
 
     jboolean    (*CallBooleanMethodA)(JNIEnv*, jobject, jmethodID, const jvalue*);
     jboolean     MyCallBooleanMethodAdeclarefunc( jobject, jmethodID, const jvalue*) {
-   LOGGER("CallBooleanMethodA\n");
+   LOGSTRING("CallBooleanMethodA\n");
    return CallBooleanMethodAcallfunc( jobject, jmethodID, const jvalue*);
    }
 
     jbyte       (*CallByteMethod)(JNIEnv*, jobject, jmethodID, ...);
     jbyte        MyCallByteMethoddeclarefunc( jobject, jmethodID, ...) {
-   LOGGER("CallByteMethod\n");
+   LOGSTRING("CallByteMethod\n");
    return CallByteMethodcallfunc( jobject, jmethodID, ...);
    }
 
     jbyte       (*CallByteMethodV)(JNIEnv*, jobject, jmethodID, va_list);
     jbyte        MyCallByteMethodVdeclarefunc( jobject, jmethodID, va_list) {
-   LOGGER("CallByteMethodV\n");
+   LOGSTRING("CallByteMethodV\n");
    return CallByteMethodVcallfunc( jobject, jmethodID, va_list);
    }
 
     jbyte       (*CallByteMethodA)(JNIEnv*, jobject, jmethodID, const jvalue*);
     jbyte        MyCallByteMethodAdeclarefunc( jobject, jmethodID, const jvalue*) {
-   LOGGER("CallByteMethodA\n");
+   LOGSTRING("CallByteMethodA\n");
    return CallByteMethodAcallfunc( jobject, jmethodID, const jvalue*);
    }
 
     jchar       (*CallCharMethod)(JNIEnv*, jobject, jmethodID, ...);
     jchar        MyCallCharMethoddeclarefunc( jobject, jmethodID, ...) {
-   LOGGER("CallCharMethod\n");
+   LOGSTRING("CallCharMethod\n");
    return CallCharMethodcallfunc( jobject, jmethodID, ...);
    }
 
     jchar       (*CallCharMethodV)(JNIEnv*, jobject, jmethodID, va_list);
     jchar        MyCallCharMethodVdeclarefunc( jobject, jmethodID, va_list) {
-   LOGGER("CallCharMethodV\n");
+   LOGSTRING("CallCharMethodV\n");
    return CallCharMethodVcallfunc( jobject, jmethodID, va_list);
    }
 
     jchar       (*CallCharMethodA)(JNIEnv*, jobject, jmethodID, const jvalue*);
     jchar        MyCallCharMethodAdeclarefunc( jobject, jmethodID, const jvalue*) {
-   LOGGER("CallCharMethodA\n");
+   LOGSTRING("CallCharMethodA\n");
    return CallCharMethodAcallfunc( jobject, jmethodID, const jvalue*);
    }
 
     jshort      (*CallShortMethod)(JNIEnv*, jobject, jmethodID, ...);
     jshort       MyCallShortMethoddeclarefunc( jobject, jmethodID, ...) {
-   LOGGER("CallShortMethod\n");
+   LOGSTRING("CallShortMethod\n");
    return CallShortMethodcallfunc( jobject, jmethodID, ...);
    }
 
     jshort      (*CallShortMethodV)(JNIEnv*, jobject, jmethodID, va_list);
     jshort       MyCallShortMethodVdeclarefunc( jobject, jmethodID, va_list) {
-   LOGGER("CallShortMethodV\n");
+   LOGSTRING("CallShortMethodV\n");
    return CallShortMethodVcallfunc( jobject, jmethodID, va_list);
    }
 
     jshort      (*CallShortMethodA)(JNIEnv*, jobject, jmethodID, const jvalue*);
     jshort       MyCallShortMethodAdeclarefunc( jobject, jmethodID, const jvalue*) {
-   LOGGER("CallShortMethodA\n");
+   LOGSTRING("CallShortMethodA\n");
    return CallShortMethodAcallfunc( jobject, jmethodID, const jvalue*);
    }
 
     jint        (*CallIntMethod)(JNIEnv*, jobject, jmethodID, ...);
     jint         MyCallIntMethoddeclarefunc( jobject, jmethodID, ...) {
-   LOGGER("CallIntMethod\n");
+   LOGSTRING("CallIntMethod\n");
    return CallIntMethodcallfunc( jobject, jmethodID, ...);
    }
 
     jint        (*CallIntMethodV)(JNIEnv*, jobject, jmethodID, va_list);
     jint         MyCallIntMethodVdeclarefunc( jobject, jmethodID, va_list) {
-   LOGGER("CallIntMethodV\n");
+   LOGSTRING("CallIntMethodV\n");
    return CallIntMethodVcallfunc( jobject, jmethodID, va_list);
    }
 
     jint        (*CallIntMethodA)(JNIEnv*, jobject, jmethodID, const jvalue*);
     jint         MyCallIntMethodAdeclarefunc( jobject, jmethodID, const jvalue*) {
-   LOGGER("CallIntMethodA\n");
+   LOGSTRING("CallIntMethodA\n");
    return CallIntMethodAcallfunc( jobject, jmethodID, const jvalue*);
    }
 
     jlong       (*CallLongMethod)(JNIEnv*, jobject, jmethodID, ...);
     jlong        MyCallLongMethoddeclarefunc( jobject, jmethodID, ...) {
-   LOGGER("CallLongMethod\n");
+   LOGSTRING("CallLongMethod\n");
    return CallLongMethodcallfunc( jobject, jmethodID, ...);
    }
 
     jlong       (*CallLongMethodV)(JNIEnv*, jobject, jmethodID, va_list);
     jlong        MyCallLongMethodVdeclarefunc( jobject, jmethodID, va_list) {
-   LOGGER("CallLongMethodV\n");
+   LOGSTRING("CallLongMethodV\n");
    return CallLongMethodVcallfunc( jobject, jmethodID, va_list);
    }
 
     jlong       (*CallLongMethodA)(JNIEnv*, jobject, jmethodID, const jvalue*);
     jlong        MyCallLongMethodAdeclarefunc( jobject, jmethodID, const jvalue*) {
-   LOGGER("CallLongMethodA\n");
+   LOGSTRING("CallLongMethodA\n");
    return CallLongMethodAcallfunc( jobject, jmethodID, const jvalue*);
    }
 
     jfloat      (*CallFloatMethod)(JNIEnv*, jobject, jmethodID, ...);
     jfloat       MyCallFloatMethoddeclarefunc( jobject, jmethodID, ...) {
-   LOGGER("CallFloatMethod\n");
+   LOGSTRING("CallFloatMethod\n");
    return CallFloatMethodcallfunc( jobject, jmethodID, ...);
    }
 
     jfloat      (*CallFloatMethodV)(JNIEnv*, jobject, jmethodID, va_list);
     jfloat       MyCallFloatMethodVdeclarefunc( jobject, jmethodID, va_list) {
-   LOGGER("CallFloatMethodV\n");
+   LOGSTRING("CallFloatMethodV\n");
    return CallFloatMethodVcallfunc( jobject, jmethodID, va_list);
    }
 
     jfloat      (*CallFloatMethodA)(JNIEnv*, jobject, jmethodID, const jvalue*);
     jfloat       MyCallFloatMethodAdeclarefunc( jobject, jmethodID, const jvalue*) {
-   LOGGER("CallFloatMethodA\n");
+   LOGSTRING("CallFloatMethodA\n");
    return CallFloatMethodAcallfunc( jobject, jmethodID, const jvalue*);
    }
 
     jdouble     (*CallDoubleMethod)(JNIEnv*, jobject, jmethodID, ...);
     jdouble      MyCallDoubleMethoddeclarefunc( jobject, jmethodID, ...) {
-   LOGGER("CallDoubleMethod\n");
+   LOGSTRING("CallDoubleMethod\n");
    return CallDoubleMethodcallfunc( jobject, jmethodID, ...);
    }
 
     jdouble     (*CallDoubleMethodV)(JNIEnv*, jobject, jmethodID, va_list);
     jdouble      MyCallDoubleMethodVdeclarefunc( jobject, jmethodID, va_list) {
-   LOGGER("CallDoubleMethodV\n");
+   LOGSTRING("CallDoubleMethodV\n");
    return CallDoubleMethodVcallfunc( jobject, jmethodID, va_list);
    }
 
     jdouble     (*CallDoubleMethodA)(JNIEnv*, jobject, jmethodID, const jvalue*);
     jdouble      MyCallDoubleMethodAdeclarefunc( jobject, jmethodID, const jvalue*) {
-   LOGGER("CallDoubleMethodA\n");
+   LOGSTRING("CallDoubleMethodA\n");
    return CallDoubleMethodAcallfunc( jobject, jmethodID, const jvalue*);
    }
 
     void        (*CallVoidMethod)(JNIEnv*, jobject, jmethodID, ...);
     void         MyCallVoidMethoddeclarefunc( jobject, jmethodID, ...) {
-   LOGGER("CallVoidMethod\n");
+   LOGSTRING("CallVoidMethod\n");
    return CallVoidMethodcallfunc( jobject, jmethodID, ...);
    }
 
     void        (*CallVoidMethodV)(JNIEnv*, jobject, jmethodID, va_list);
     void         MyCallVoidMethodVdeclarefunc( jobject, jmethodID, va_list) {
-   LOGGER("CallVoidMethodV\n");
+   LOGSTRING("CallVoidMethodV\n");
    return CallVoidMethodVcallfunc( jobject, jmethodID, va_list);
    }
 
     void        (*CallVoidMethodA)(JNIEnv*, jobject, jmethodID, const jvalue*);
     void         MyCallVoidMethodAdeclarefunc( jobject, jmethodID, const jvalue*) {
-   LOGGER("CallVoidMethodA\n");
+   LOGSTRING("CallVoidMethodA\n");
    return CallVoidMethodAcallfunc( jobject, jmethodID, const jvalue*);
    }
 
     jobject     (*CallNonvirtualObjectMethod)(JNIEnv*, jobject, jclass,jmethodID, ...);
     jobject      MyCallNonvirtualObjectMethoddeclarefunc( jobject, jclass,jmethodID, ...) {
-   LOGGER("CallNonvirtualObjectMethod\n");
+   LOGSTRING("CallNonvirtualObjectMethod\n");
    return CallNonvirtualObjectMethodcallfunc( jobject, jclass,jmethodID, ...);
    }
 
     jobject     (*CallNonvirtualObjectMethodV)(JNIEnv*, jobject, jclass,jmethodID, va_list);
     jobject      MyCallNonvirtualObjectMethodVdeclarefunc( jobject, jclass,jmethodID, va_list) {
-   LOGGER("CallNonvirtualObjectMethodV\n");
+   LOGSTRING("CallNonvirtualObjectMethodV\n");
    return CallNonvirtualObjectMethodVcallfunc( jobject, jclass,jmethodID, va_list);
    }
 
     jobject     (*CallNonvirtualObjectMethodA)(JNIEnv*, jobject, jclass,jmethodID, const jvalue*);
     jobject      MyCallNonvirtualObjectMethodAdeclarefunc( jobject, jclass,jmethodID, const jvalue*) {
-   LOGGER("CallNonvirtualObjectMethodA\n");
+   LOGSTRING("CallNonvirtualObjectMethodA\n");
    return CallNonvirtualObjectMethodAcallfunc( jobject, jclass,jmethodID, const jvalue*);
    }
 
     jboolean    (*CallNonvirtualBooleanMethod)(JNIEnv*, jobject, jclass,jmethodID, ...);
     jboolean     MyCallNonvirtualBooleanMethoddeclarefunc( jobject, jclass,jmethodID, ...) {
-   LOGGER("CallNonvirtualBooleanMethod\n");
+   LOGSTRING("CallNonvirtualBooleanMethod\n");
    return CallNonvirtualBooleanMethodcallfunc( jobject, jclass,jmethodID, ...);
    }
 
     jboolean    (*CallNonvirtualBooleanMethodV)(JNIEnv*, jobject, jclass,jmethodID, va_list);
     jboolean     MyCallNonvirtualBooleanMethodVdeclarefunc( jobject, jclass,jmethodID, va_list) {
-   LOGGER("CallNonvirtualBooleanMethodV\n");
+   LOGSTRING("CallNonvirtualBooleanMethodV\n");
    return CallNonvirtualBooleanMethodVcallfunc( jobject, jclass,jmethodID, va_list);
    }
 
     jboolean    (*CallNonvirtualBooleanMethodA)(JNIEnv*, jobject, jclass,jmethodID, const jvalue*);
     jboolean     MyCallNonvirtualBooleanMethodAdeclarefunc( jobject, jclass,jmethodID, const jvalue*) {
-   LOGGER("CallNonvirtualBooleanMethodA\n");
+   LOGSTRING("CallNonvirtualBooleanMethodA\n");
    return CallNonvirtualBooleanMethodAcallfunc( jobject, jclass,jmethodID, const jvalue*);
    }
 
     jbyte       (*CallNonvirtualByteMethod)(JNIEnv*, jobject, jclass,jmethodID, ...);
     jbyte        MyCallNonvirtualByteMethoddeclarefunc( jobject, jclass,jmethodID, ...) {
-   LOGGER("CallNonvirtualByteMethod\n");
+   LOGSTRING("CallNonvirtualByteMethod\n");
    return CallNonvirtualByteMethodcallfunc( jobject, jclass,jmethodID, ...);
    }
 
     jbyte       (*CallNonvirtualByteMethodV)(JNIEnv*, jobject, jclass,jmethodID, va_list);
     jbyte        MyCallNonvirtualByteMethodVdeclarefunc( jobject, jclass,jmethodID, va_list) {
-   LOGGER("CallNonvirtualByteMethodV\n");
+   LOGSTRING("CallNonvirtualByteMethodV\n");
    return CallNonvirtualByteMethodVcallfunc( jobject, jclass,jmethodID, va_list);
    }
 
     jbyte       (*CallNonvirtualByteMethodA)(JNIEnv*, jobject, jclass,jmethodID, const jvalue*);
     jbyte        MyCallNonvirtualByteMethodAdeclarefunc( jobject, jclass,jmethodID, const jvalue*) {
-   LOGGER("CallNonvirtualByteMethodA\n");
+   LOGSTRING("CallNonvirtualByteMethodA\n");
    return CallNonvirtualByteMethodAcallfunc( jobject, jclass,jmethodID, const jvalue*);
    }
 
     jchar       (*CallNonvirtualCharMethod)(JNIEnv*, jobject, jclass,jmethodID, ...);
     jchar        MyCallNonvirtualCharMethoddeclarefunc( jobject, jclass,jmethodID, ...) {
-   LOGGER("CallNonvirtualCharMethod\n");
+   LOGSTRING("CallNonvirtualCharMethod\n");
    return CallNonvirtualCharMethodcallfunc( jobject, jclass,jmethodID, ...);
    }
 
     jchar       (*CallNonvirtualCharMethodV)(JNIEnv*, jobject, jclass,jmethodID, va_list);
     jchar        MyCallNonvirtualCharMethodVdeclarefunc( jobject, jclass,jmethodID, va_list) {
-   LOGGER("CallNonvirtualCharMethodV\n");
+   LOGSTRING("CallNonvirtualCharMethodV\n");
    return CallNonvirtualCharMethodVcallfunc( jobject, jclass,jmethodID, va_list);
    }
 
     jchar       (*CallNonvirtualCharMethodA)(JNIEnv*, jobject, jclass,jmethodID, const jvalue*);
     jchar        MyCallNonvirtualCharMethodAdeclarefunc( jobject, jclass,jmethodID, const jvalue*) {
-   LOGGER("CallNonvirtualCharMethodA\n");
+   LOGSTRING("CallNonvirtualCharMethodA\n");
    return CallNonvirtualCharMethodAcallfunc( jobject, jclass,jmethodID, const jvalue*);
    }
 
     jshort      (*CallNonvirtualShortMethod)(JNIEnv*, jobject, jclass,jmethodID, ...);
     jshort       MyCallNonvirtualShortMethoddeclarefunc( jobject, jclass,jmethodID, ...) {
-   LOGGER("CallNonvirtualShortMethod\n");
+   LOGSTRING("CallNonvirtualShortMethod\n");
    return CallNonvirtualShortMethodcallfunc( jobject, jclass,jmethodID, ...);
    }
 
     jshort      (*CallNonvirtualShortMethodV)(JNIEnv*, jobject, jclass,jmethodID, va_list);
     jshort       MyCallNonvirtualShortMethodVdeclarefunc( jobject, jclass,jmethodID, va_list) {
-   LOGGER("CallNonvirtualShortMethodV\n");
+   LOGSTRING("CallNonvirtualShortMethodV\n");
    return CallNonvirtualShortMethodVcallfunc( jobject, jclass,jmethodID, va_list);
    }
 
     jshort      (*CallNonvirtualShortMethodA)(JNIEnv*, jobject, jclass,jmethodID, const jvalue*);
     jshort       MyCallNonvirtualShortMethodAdeclarefunc( jobject, jclass,jmethodID, const jvalue*) {
-   LOGGER("CallNonvirtualShortMethodA\n");
+   LOGSTRING("CallNonvirtualShortMethodA\n");
    return CallNonvirtualShortMethodAcallfunc( jobject, jclass,jmethodID, const jvalue*);
    }
 
     jint        (*CallNonvirtualIntMethod)(JNIEnv*, jobject, jclass,jmethodID, ...);
     jint         MyCallNonvirtualIntMethoddeclarefunc( jobject, jclass,jmethodID, ...) {
-   LOGGER("CallNonvirtualIntMethod\n");
+   LOGSTRING("CallNonvirtualIntMethod\n");
    return CallNonvirtualIntMethodcallfunc( jobject, jclass,jmethodID, ...);
    }
 
     jint        (*CallNonvirtualIntMethodV)(JNIEnv*, jobject, jclass,jmethodID, va_list);
     jint         MyCallNonvirtualIntMethodVdeclarefunc( jobject, jclass,jmethodID, va_list) {
-   LOGGER("CallNonvirtualIntMethodV\n");
+   LOGSTRING("CallNonvirtualIntMethodV\n");
    return CallNonvirtualIntMethodVcallfunc( jobject, jclass,jmethodID, va_list);
    }
 
     jint        (*CallNonvirtualIntMethodA)(JNIEnv*, jobject, jclass,jmethodID, const jvalue*);
     jint         MyCallNonvirtualIntMethodAdeclarefunc( jobject, jclass,jmethodID, const jvalue*) {
-   LOGGER("CallNonvirtualIntMethodA\n");
+   LOGSTRING("CallNonvirtualIntMethodA\n");
    return CallNonvirtualIntMethodAcallfunc( jobject, jclass,jmethodID, const jvalue*);
    }
 
     jlong       (*CallNonvirtualLongMethod)(JNIEnv*, jobject, jclass,jmethodID, ...);
     jlong        MyCallNonvirtualLongMethoddeclarefunc( jobject, jclass,jmethodID, ...) {
-   LOGGER("CallNonvirtualLongMethod\n");
+   LOGSTRING("CallNonvirtualLongMethod\n");
    return CallNonvirtualLongMethodcallfunc( jobject, jclass,jmethodID, ...);
    }
 
     jlong       (*CallNonvirtualLongMethodV)(JNIEnv*, jobject, jclass,jmethodID, va_list);
     jlong        MyCallNonvirtualLongMethodVdeclarefunc( jobject, jclass,jmethodID, va_list) {
-   LOGGER("CallNonvirtualLongMethodV\n");
+   LOGSTRING("CallNonvirtualLongMethodV\n");
    return CallNonvirtualLongMethodVcallfunc( jobject, jclass,jmethodID, va_list);
    }
 
     jlong       (*CallNonvirtualLongMethodA)(JNIEnv*, jobject, jclass,jmethodID, const jvalue*);
     jlong        MyCallNonvirtualLongMethodAdeclarefunc( jobject, jclass,jmethodID, const jvalue*) {
-   LOGGER("CallNonvirtualLongMethodA\n");
+   LOGSTRING("CallNonvirtualLongMethodA\n");
    return CallNonvirtualLongMethodAcallfunc( jobject, jclass,jmethodID, const jvalue*);
    }
 
     jfloat      (*CallNonvirtualFloatMethod)(JNIEnv*, jobject, jclass,jmethodID, ...);
     jfloat       MyCallNonvirtualFloatMethoddeclarefunc( jobject, jclass,jmethodID, ...) {
-   LOGGER("CallNonvirtualFloatMethod\n");
+   LOGSTRING("CallNonvirtualFloatMethod\n");
    return CallNonvirtualFloatMethodcallfunc( jobject, jclass,jmethodID, ...);
    }
 
     jfloat      (*CallNonvirtualFloatMethodV)(JNIEnv*, jobject, jclass,jmethodID, va_list);
     jfloat       MyCallNonvirtualFloatMethodVdeclarefunc( jobject, jclass,jmethodID, va_list) {
-   LOGGER("CallNonvirtualFloatMethodV\n");
+   LOGSTRING("CallNonvirtualFloatMethodV\n");
    return CallNonvirtualFloatMethodVcallfunc( jobject, jclass,jmethodID, va_list);
    }
 
     jfloat      (*CallNonvirtualFloatMethodA)(JNIEnv*, jobject, jclass,jmethodID, const jvalue*);
     jfloat       MyCallNonvirtualFloatMethodAdeclarefunc( jobject, jclass,jmethodID, const jvalue*) {
-   LOGGER("CallNonvirtualFloatMethodA\n");
+   LOGSTRING("CallNonvirtualFloatMethodA\n");
    return CallNonvirtualFloatMethodAcallfunc( jobject, jclass,jmethodID, const jvalue*);
    }
 
     jdouble     (*CallNonvirtualDoubleMethod)(JNIEnv*, jobject, jclass,jmethodID, ...);
     jdouble      MyCallNonvirtualDoubleMethoddeclarefunc( jobject, jclass,jmethodID, ...) {
-   LOGGER("CallNonvirtualDoubleMethod\n");
+   LOGSTRING("CallNonvirtualDoubleMethod\n");
    return CallNonvirtualDoubleMethodcallfunc( jobject, jclass,jmethodID, ...);
    }
 
     jdouble     (*CallNonvirtualDoubleMethodV)(JNIEnv*, jobject, jclass,jmethodID, va_list);
     jdouble      MyCallNonvirtualDoubleMethodVdeclarefunc( jobject, jclass,jmethodID, va_list) {
-   LOGGER("CallNonvirtualDoubleMethodV\n");
+   LOGSTRING("CallNonvirtualDoubleMethodV\n");
    return CallNonvirtualDoubleMethodVcallfunc( jobject, jclass,jmethodID, va_list);
    }
 
     jdouble     (*CallNonvirtualDoubleMethodA)(JNIEnv*, jobject, jclass,jmethodID, const jvalue*);
     jdouble      MyCallNonvirtualDoubleMethodAdeclarefunc( jobject, jclass,jmethodID, const jvalue*) {
-   LOGGER("CallNonvirtualDoubleMethodA\n");
+   LOGSTRING("CallNonvirtualDoubleMethodA\n");
    return CallNonvirtualDoubleMethodAcallfunc( jobject, jclass,jmethodID, const jvalue*);
    }
 
     void        (*CallNonvirtualVoidMethod)(JNIEnv*, jobject, jclass,jmethodID, ...);
     void         MyCallNonvirtualVoidMethoddeclarefunc( jobject, jclass,jmethodID, ...) {
-   LOGGER("CallNonvirtualVoidMethod\n");
+   LOGSTRING("CallNonvirtualVoidMethod\n");
    return CallNonvirtualVoidMethodcallfunc( jobject, jclass,jmethodID, ...);
    }
 
     void        (*CallNonvirtualVoidMethodV)(JNIEnv*, jobject, jclass,jmethodID, va_list);
     void         MyCallNonvirtualVoidMethodVdeclarefunc( jobject, jclass,jmethodID, va_list) {
-   LOGGER("CallNonvirtualVoidMethodV\n");
+   LOGSTRING("CallNonvirtualVoidMethodV\n");
    return CallNonvirtualVoidMethodVcallfunc( jobject, jclass,jmethodID, va_list);
    }
 
     void        (*CallNonvirtualVoidMethodA)(JNIEnv*, jobject, jclass,jmethodID, const jvalue*);
     void         MyCallNonvirtualVoidMethodAdeclarefunc( jobject, jclass,jmethodID, const jvalue*) {
-   LOGGER("CallNonvirtualVoidMethodA\n");
+   LOGSTRING("CallNonvirtualVoidMethodA\n");
    return CallNonvirtualVoidMethodAcallfunc( jobject, jclass,jmethodID, const jvalue*);
    }
 
     jfieldID    (*GetFieldID)(JNIEnv*, jclass, const char*, const char*);
     jfieldID     MyGetFieldIDdeclarefunc( jclass, const char*, const char*) {
-   LOGGER("GetFieldID\n");
+   LOGSTRING("GetFieldID\n");
    return GetFieldIDcallfunc( jclass, const char*, const char*);
    }
 
     jobject     (*GetObjectField)(JNIEnv*, jobject, jfieldID);
     jobject      MyGetObjectFielddeclarefunc( jobject, jfieldID) {
-   LOGGER("GetObjectField\n");
+   LOGSTRING("GetObjectField\n");
    return GetObjectFieldcallfunc( jobject, jfieldID);
    }
 
     jboolean    (*GetBooleanField)(JNIEnv*, jobject, jfieldID);
     jboolean     MyGetBooleanFielddeclarefunc( jobject, jfieldID) {
-   LOGGER("GetBooleanField\n");
+   LOGSTRING("GetBooleanField\n");
    return GetBooleanFieldcallfunc( jobject, jfieldID);
    }
 
     jbyte       (*GetByteField)(JNIEnv*, jobject, jfieldID);
     jbyte        MyGetByteFielddeclarefunc( jobject, jfieldID) {
-   LOGGER("GetByteField\n");
+   LOGSTRING("GetByteField\n");
    return GetByteFieldcallfunc( jobject, jfieldID);
    }
 
     jchar       (*GetCharField)(JNIEnv*, jobject, jfieldID);
     jchar        MyGetCharFielddeclarefunc( jobject, jfieldID) {
-   LOGGER("GetCharField\n");
+   LOGSTRING("GetCharField\n");
    return GetCharFieldcallfunc( jobject, jfieldID);
    }
 
     jshort      (*GetShortField)(JNIEnv*, jobject, jfieldID);
     jshort       MyGetShortFielddeclarefunc( jobject, jfieldID) {
-   LOGGER("GetShortField\n");
+   LOGSTRING("GetShortField\n");
    return GetShortFieldcallfunc( jobject, jfieldID);
    }
 
     jint        (*GetIntField)(JNIEnv*, jobject, jfieldID);
     jint         MyGetIntFielddeclarefunc( jobject, jfieldID) {
-   LOGGER("GetIntField\n");
+   LOGSTRING("GetIntField\n");
    return GetIntFieldcallfunc( jobject, jfieldID);
    }
 
     jlong       (*GetLongField)(JNIEnv*, jobject, jfieldID);
     jlong        MyGetLongFielddeclarefunc( jobject, jfieldID) {
-   LOGGER("GetLongField\n");
+   LOGSTRING("GetLongField\n");
    return GetLongFieldcallfunc( jobject, jfieldID);
    }
 
     jfloat      (*GetFloatField)(JNIEnv*, jobject, jfieldID);
     jfloat       MyGetFloatFielddeclarefunc( jobject, jfieldID) {
-   LOGGER("GetFloatField\n");
+   LOGSTRING("GetFloatField\n");
    return GetFloatFieldcallfunc( jobject, jfieldID);
    }
 
     jdouble     (*GetDoubleField)(JNIEnv*, jobject, jfieldID);
     jdouble      MyGetDoubleFielddeclarefunc( jobject, jfieldID) {
-   LOGGER("GetDoubleField\n");
+   LOGSTRING("GetDoubleField\n");
    return GetDoubleFieldcallfunc( jobject, jfieldID);
    }
 
     void        (*SetObjectField)(JNIEnv*, jobject, jfieldID, jobject);
     void         MySetObjectFielddeclarefunc( jobject, jfieldID, jobject) {
-   LOGGER("SetObjectField\n");
+   LOGSTRING("SetObjectField\n");
    return SetObjectFieldcallfunc( jobject, jfieldID, jobject);
    }
 
     void        (*SetBooleanField)(JNIEnv*, jobject, jfieldID, jboolean);
     void         MySetBooleanFielddeclarefunc( jobject, jfieldID, jboolean) {
-   LOGGER("SetBooleanField\n");
+   LOGSTRING("SetBooleanField\n");
    return SetBooleanFieldcallfunc( jobject, jfieldID, jboolean);
    }
 
     void        (*SetByteField)(JNIEnv*, jobject, jfieldID, jbyte);
     void         MySetByteFielddeclarefunc( jobject, jfieldID, jbyte) {
-   LOGGER("SetByteField\n");
+   LOGSTRING("SetByteField\n");
    return SetByteFieldcallfunc( jobject, jfieldID, jbyte);
    }
 
     void        (*SetCharField)(JNIEnv*, jobject, jfieldID, jchar);
     void         MySetCharFielddeclarefunc( jobject, jfieldID, jchar) {
-   LOGGER("SetCharField\n");
+   LOGSTRING("SetCharField\n");
    return SetCharFieldcallfunc( jobject, jfieldID, jchar);
    }
 
     void        (*SetShortField)(JNIEnv*, jobject, jfieldID, jshort);
     void         MySetShortFielddeclarefunc( jobject, jfieldID, jshort) {
-   LOGGER("SetShortField\n");
+   LOGSTRING("SetShortField\n");
    return SetShortFieldcallfunc( jobject, jfieldID, jshort);
    }
 
     void        (*SetIntField)(JNIEnv*, jobject, jfieldID, jint);
     void         MySetIntFielddeclarefunc( jobject, jfieldID, jint) {
-   LOGGER("SetIntField\n");
+   LOGSTRING("SetIntField\n");
    return SetIntFieldcallfunc( jobject, jfieldID, jint);
    }
 
     void        (*SetLongField)(JNIEnv*, jobject, jfieldID, jlong);
     void         MySetLongFielddeclarefunc( jobject, jfieldID, jlong) {
-   LOGGER("SetLongField\n");
+   LOGSTRING("SetLongField\n");
    return SetLongFieldcallfunc( jobject, jfieldID, jlong);
    }
 
     void        (*SetFloatField)(JNIEnv*, jobject, jfieldID, jfloat);
     void         MySetFloatFielddeclarefunc( jobject, jfieldID, jfloat) {
-   LOGGER("SetFloatField\n");
+   LOGSTRING("SetFloatField\n");
    return SetFloatFieldcallfunc( jobject, jfieldID, jfloat);
    }
 
     void        (*SetDoubleField)(JNIEnv*, jobject, jfieldID, jdouble);
     void         MySetDoubleFielddeclarefunc( jobject, jfieldID, jdouble) {
-   LOGGER("SetDoubleField\n");
+   LOGSTRING("SetDoubleField\n");
    return SetDoubleFieldcallfunc( jobject, jfieldID, jdouble);
    }
 
     jmethodID   (*GetStaticMethodID)(JNIEnv*, jclass, const char*, const char*);
     jmethodID    MyGetStaticMethodIDdeclarefunc( jclass, const char*, const char*) {
-   LOGGER("GetStaticMethodID\n");
+   LOGSTRING("GetStaticMethodID\n");
    return GetStaticMethodIDcallfunc( jclass, const char*, const char*);
    }
 
     jobject     (*CallStaticObjectMethodV)(JNIEnv*, jclass, jmethodID, va_list);
     jobject      MyCallStaticObjectMethodVdeclarefunc( jclass, jmethodID, va_list) {
-   LOGGER("CallStaticObjectMethodV\n");
+   LOGSTRING("CallStaticObjectMethodV\n");
    return CallStaticObjectMethodVcallfunc( jclass, jmethodID, va_list);
    }
 
     jobject     (*CallStaticObjectMethodA)(JNIEnv*, jclass, jmethodID, const jvalue*);
     jobject      MyCallStaticObjectMethodAdeclarefunc( jclass, jmethodID, const jvalue*) {
-   LOGGER("CallStaticObjectMethodA\n");
+   LOGSTRING("CallStaticObjectMethodA\n");
    return CallStaticObjectMethodAcallfunc( jclass, jmethodID, const jvalue*);
    }
 
     jboolean    (*CallStaticBooleanMethod)(JNIEnv*, jclass, jmethodID, ...);
     jboolean     MyCallStaticBooleanMethoddeclarefunc( jclass, jmethodID, ...) {
-   LOGGER("CallStaticBooleanMethod\n");
+   LOGSTRING("CallStaticBooleanMethod\n");
    return CallStaticBooleanMethodcallfunc( jclass, jmethodID, ...);
    }
 
     jboolean    (*CallStaticBooleanMethodV)(JNIEnv*, jclass, jmethodID,va_list);
     jboolean     MyCallStaticBooleanMethodVdeclarefunc( jclass, jmethodID,va_list) {
-   LOGGER("CallStaticBooleanMethodV\n");
+   LOGSTRING("CallStaticBooleanMethodV\n");
    return CallStaticBooleanMethodVcallfunc( jclass, jmethodID,va_list);
    }
 
     jboolean    (*CallStaticBooleanMethodA)(JNIEnv*, jclass, jmethodID, const jvalue*);
     jboolean     MyCallStaticBooleanMethodAdeclarefunc( jclass, jmethodID, const jvalue*) {
-   LOGGER("CallStaticBooleanMethodA\n");
+   LOGSTRING("CallStaticBooleanMethodA\n");
    return CallStaticBooleanMethodAcallfunc( jclass, jmethodID, const jvalue*);
    }
 
     jbyte       (*CallStaticByteMethod)(JNIEnv*, jclass, jmethodID, ...);
     jbyte        MyCallStaticByteMethoddeclarefunc( jclass, jmethodID, ...) {
-   LOGGER("CallStaticByteMethod\n");
+   LOGSTRING("CallStaticByteMethod\n");
    return CallStaticByteMethodcallfunc( jclass, jmethodID, ...);
    }
 
     jbyte       (*CallStaticByteMethodV)(JNIEnv*, jclass, jmethodID, va_list);
     jbyte        MyCallStaticByteMethodVdeclarefunc( jclass, jmethodID, va_list) {
-   LOGGER("CallStaticByteMethodV\n");
+   LOGSTRING("CallStaticByteMethodV\n");
    return CallStaticByteMethodVcallfunc( jclass, jmethodID, va_list);
    }
 
     jbyte       (*CallStaticByteMethodA)(JNIEnv*, jclass, jmethodID, const jvalue*);
     jbyte        MyCallStaticByteMethodAdeclarefunc( jclass, jmethodID, const jvalue*) {
-   LOGGER("CallStaticByteMethodA\n");
+   LOGSTRING("CallStaticByteMethodA\n");
    return CallStaticByteMethodAcallfunc( jclass, jmethodID, const jvalue*);
    }
 
     jchar       (*CallStaticCharMethod)(JNIEnv*, jclass, jmethodID, ...);
     jchar        MyCallStaticCharMethoddeclarefunc( jclass, jmethodID, ...) {
-   LOGGER("CallStaticCharMethod\n");
+   LOGSTRING("CallStaticCharMethod\n");
    return CallStaticCharMethodcallfunc( jclass, jmethodID, ...);
    }
 
     jchar       (*CallStaticCharMethodV)(JNIEnv*, jclass, jmethodID, va_list);
     jchar        MyCallStaticCharMethodVdeclarefunc( jclass, jmethodID, va_list) {
-   LOGGER("CallStaticCharMethodV\n");
+   LOGSTRING("CallStaticCharMethodV\n");
    return CallStaticCharMethodVcallfunc( jclass, jmethodID, va_list);
    }
 
     jchar       (*CallStaticCharMethodA)(JNIEnv*, jclass, jmethodID, const jvalue*);
     jchar        MyCallStaticCharMethodAdeclarefunc( jclass, jmethodID, const jvalue*) {
-   LOGGER("CallStaticCharMethodA\n");
+   LOGSTRING("CallStaticCharMethodA\n");
    return CallStaticCharMethodAcallfunc( jclass, jmethodID, const jvalue*);
    }
 
     jshort      (*CallStaticShortMethod)(JNIEnv*, jclass, jmethodID, ...);
     jshort       MyCallStaticShortMethoddeclarefunc( jclass, jmethodID, ...) {
-   LOGGER("CallStaticShortMethod\n");
+   LOGSTRING("CallStaticShortMethod\n");
    return CallStaticShortMethodcallfunc( jclass, jmethodID, ...);
    }
 
     jshort      (*CallStaticShortMethodV)(JNIEnv*, jclass, jmethodID, va_list);
     jshort       MyCallStaticShortMethodVdeclarefunc( jclass, jmethodID, va_list) {
-   LOGGER("CallStaticShortMethodV\n");
+   LOGSTRING("CallStaticShortMethodV\n");
    return CallStaticShortMethodVcallfunc( jclass, jmethodID, va_list);
    }
 
     jshort      (*CallStaticShortMethodA)(JNIEnv*, jclass, jmethodID, const jvalue*);
     jshort       MyCallStaticShortMethodAdeclarefunc( jclass, jmethodID, const jvalue*) {
-   LOGGER("CallStaticShortMethodA\n");
+   LOGSTRING("CallStaticShortMethodA\n");
    return CallStaticShortMethodAcallfunc( jclass, jmethodID, const jvalue*);
    }
 
     jint        (*CallStaticIntMethodV)(JNIEnv*, jclass, jmethodID, va_list);
     jint         MyCallStaticIntMethodVdeclarefunc( jclass, jmethodID, va_list) {
-   LOGGER("CallStaticIntMethodV\n");
+   LOGSTRING("CallStaticIntMethodV\n");
    return CallStaticIntMethodVcallfunc( jclass, jmethodID, va_list);
    }
 
     jint        (*CallStaticIntMethodA)(JNIEnv*, jclass, jmethodID, const jvalue*);
     jint         MyCallStaticIntMethodAdeclarefunc( jclass, jmethodID, const jvalue*) {
-   LOGGER("CallStaticIntMethodA\n");
+   LOGSTRING("CallStaticIntMethodA\n");
    return CallStaticIntMethodAcallfunc( jclass, jmethodID, const jvalue*);
    }
 
     jlong       (*CallStaticLongMethod)(JNIEnv*, jclass, jmethodID, ...);
     jlong        MyCallStaticLongMethoddeclarefunc( jclass, jmethodID, ...) {
-   LOGGER("CallStaticLongMethod\n");
+   LOGSTRING("CallStaticLongMethod\n");
    return CallStaticLongMethodcallfunc( jclass, jmethodID, ...);
    }
 
     jlong       (*CallStaticLongMethodV)(JNIEnv*, jclass, jmethodID, va_list);
     jlong        MyCallStaticLongMethodVdeclarefunc( jclass, jmethodID, va_list) {
-   LOGGER("CallStaticLongMethodV\n");
+   LOGSTRING("CallStaticLongMethodV\n");
    return CallStaticLongMethodVcallfunc( jclass, jmethodID, va_list);
    }
 
     jlong       (*CallStaticLongMethodA)(JNIEnv*, jclass, jmethodID, const jvalue*);
     jlong        MyCallStaticLongMethodAdeclarefunc( jclass, jmethodID, const jvalue*) {
-   LOGGER("CallStaticLongMethodA\n");
+   LOGSTRING("CallStaticLongMethodA\n");
    return CallStaticLongMethodAcallfunc( jclass, jmethodID, const jvalue*);
    }
 
     jfloat      (*CallStaticFloatMethod)(JNIEnv*, jclass, jmethodID, ...);
     jfloat       MyCallStaticFloatMethoddeclarefunc( jclass, jmethodID, ...) {
-   LOGGER("CallStaticFloatMethod\n");
+   LOGSTRING("CallStaticFloatMethod\n");
    return CallStaticFloatMethodcallfunc( jclass, jmethodID, ...);
    }
 
     jfloat      (*CallStaticFloatMethodV)(JNIEnv*, jclass, jmethodID, va_list);
     jfloat       MyCallStaticFloatMethodVdeclarefunc( jclass, jmethodID, va_list) {
-   LOGGER("CallStaticFloatMethodV\n");
+   LOGSTRING("CallStaticFloatMethodV\n");
    return CallStaticFloatMethodVcallfunc( jclass, jmethodID, va_list);
    }
 
     jfloat      (*CallStaticFloatMethodA)(JNIEnv*, jclass, jmethodID, const jvalue*);
     jfloat       MyCallStaticFloatMethodAdeclarefunc( jclass, jmethodID, const jvalue*) {
-   LOGGER("CallStaticFloatMethodA\n");
+   LOGSTRING("CallStaticFloatMethodA\n");
    return CallStaticFloatMethodAcallfunc( jclass, jmethodID, const jvalue*);
    }
 
     jdouble     (*CallStaticDoubleMethod)(JNIEnv*, jclass, jmethodID, ...);
     jdouble      MyCallStaticDoubleMethoddeclarefunc( jclass, jmethodID, ...) {
-   LOGGER("CallStaticDoubleMethod\n");
+   LOGSTRING("CallStaticDoubleMethod\n");
    return CallStaticDoubleMethodcallfunc( jclass, jmethodID, ...);
    }
 
     jdouble     (*CallStaticDoubleMethodV)(JNIEnv*, jclass, jmethodID, va_list);
     jdouble      MyCallStaticDoubleMethodVdeclarefunc( jclass, jmethodID, va_list) {
-   LOGGER("CallStaticDoubleMethodV\n");
+   LOGSTRING("CallStaticDoubleMethodV\n");
    return CallStaticDoubleMethodVcallfunc( jclass, jmethodID, va_list);
    }
 
     jdouble     (*CallStaticDoubleMethodA)(JNIEnv*, jclass, jmethodID, const jvalue*);
     jdouble      MyCallStaticDoubleMethodAdeclarefunc( jclass, jmethodID, const jvalue*) {
-   LOGGER("CallStaticDoubleMethodA\n");
+   LOGSTRING("CallStaticDoubleMethodA\n");
    return CallStaticDoubleMethodAcallfunc( jclass, jmethodID, const jvalue*);
    }
 
     void        (*CallStaticVoidMethod)(JNIEnv*, jclass, jmethodID, ...);
     void         MyCallStaticVoidMethoddeclarefunc( jclass, jmethodID, ...) {
-   LOGGER("CallStaticVoidMethod\n");
+   LOGSTRING("CallStaticVoidMethod\n");
    return CallStaticVoidMethodcallfunc( jclass, jmethodID, ...);
    }
 
     void        (*CallStaticVoidMethodV)(JNIEnv*, jclass, jmethodID, va_list);
     void         MyCallStaticVoidMethodVdeclarefunc( jclass, jmethodID, va_list) {
-   LOGGER("CallStaticVoidMethodV\n");
+   LOGSTRING("CallStaticVoidMethodV\n");
    return CallStaticVoidMethodVcallfunc( jclass, jmethodID, va_list);
    }
 
     void        (*CallStaticVoidMethodA)(JNIEnv*, jclass, jmethodID, const jvalue*);
     void         MyCallStaticVoidMethodAdeclarefunc( jclass, jmethodID, const jvalue*) {
-   LOGGER("CallStaticVoidMethodA\n");
+   LOGSTRING("CallStaticVoidMethodA\n");
    return CallStaticVoidMethodAcallfunc( jclass, jmethodID, const jvalue*);
    }
 
     jfieldID    (*GetStaticFieldID)(JNIEnv*, jclass, const char*,const char*);
     jfieldID     MyGetStaticFieldIDdeclarefunc( jclass, const char*,const char*) {
-   LOGGER("GetStaticFieldID\n");
+   LOGSTRING("GetStaticFieldID\n");
    return GetStaticFieldIDcallfunc( jclass, const char*,const char*);
    }
 
     jobject     (*GetStaticObjectField)(JNIEnv*, jclass, jfieldID);
     jobject      MyGetStaticObjectFielddeclarefunc( jclass, jfieldID) {
-   LOGGER("GetStaticObjectField\n");
+   LOGSTRING("GetStaticObjectField\n");
    return GetStaticObjectFieldcallfunc( jclass, jfieldID);
    }
 
     jboolean    (*GetStaticBooleanField)(JNIEnv*, jclass, jfieldID);
     jboolean     MyGetStaticBooleanFielddeclarefunc( jclass, jfieldID) {
-   LOGGER("GetStaticBooleanField\n");
+   LOGSTRING("GetStaticBooleanField\n");
    return GetStaticBooleanFieldcallfunc( jclass, jfieldID);
    }
 
     jbyte       (*GetStaticByteField)(JNIEnv*, jclass, jfieldID);
     jbyte        MyGetStaticByteFielddeclarefunc( jclass, jfieldID) {
-   LOGGER("GetStaticByteField\n");
+   LOGSTRING("GetStaticByteField\n");
    return GetStaticByteFieldcallfunc( jclass, jfieldID);
    }
 
     jchar       (*GetStaticCharField)(JNIEnv*, jclass, jfieldID);
     jchar        MyGetStaticCharFielddeclarefunc( jclass, jfieldID) {
-   LOGGER("GetStaticCharField\n");
+   LOGSTRING("GetStaticCharField\n");
    return GetStaticCharFieldcallfunc( jclass, jfieldID);
    }
 
     jshort      (*GetStaticShortField)(JNIEnv*, jclass, jfieldID);
     jshort       MyGetStaticShortFielddeclarefunc( jclass, jfieldID) {
-   LOGGER("GetStaticShortField\n");
+   LOGSTRING("GetStaticShortField\n");
    return GetStaticShortFieldcallfunc( jclass, jfieldID);
    }
 
     jint        (*GetStaticIntField)(JNIEnv*, jclass, jfieldID);
     jint         MyGetStaticIntFielddeclarefunc( jclass, jfieldID) {
-   LOGGER("GetStaticIntField\n");
+   LOGSTRING("GetStaticIntField\n");
    return GetStaticIntFieldcallfunc( jclass, jfieldID);
    }
 
     jlong       (*GetStaticLongField)(JNIEnv*, jclass, jfieldID);
     jlong        MyGetStaticLongFielddeclarefunc( jclass, jfieldID) {
-   LOGGER("GetStaticLongField\n");
+   LOGSTRING("GetStaticLongField\n");
    return GetStaticLongFieldcallfunc( jclass, jfieldID);
    }
 
     jfloat      (*GetStaticFloatField)(JNIEnv*, jclass, jfieldID);
     jfloat       MyGetStaticFloatFielddeclarefunc( jclass, jfieldID) {
-   LOGGER("GetStaticFloatField\n");
+   LOGSTRING("GetStaticFloatField\n");
    return GetStaticFloatFieldcallfunc( jclass, jfieldID);
    }
 
     jdouble     (*GetStaticDoubleField)(JNIEnv*, jclass, jfieldID);
     jdouble      MyGetStaticDoubleFielddeclarefunc( jclass, jfieldID) {
-   LOGGER("GetStaticDoubleField\n");
+   LOGSTRING("GetStaticDoubleField\n");
    return GetStaticDoubleFieldcallfunc( jclass, jfieldID);
    }
 
     void        (*SetStaticObjectField)(JNIEnv*, jclass, jfieldID, jobject);
     void         MySetStaticObjectFielddeclarefunc( jclass, jfieldID, jobject) {
-   LOGGER("SetStaticObjectField\n");
+   LOGSTRING("SetStaticObjectField\n");
    return SetStaticObjectFieldcallfunc( jclass, jfieldID, jobject);
    }
 
     void        (*SetStaticBooleanField)(JNIEnv*, jclass, jfieldID, jboolean);
     void         MySetStaticBooleanFielddeclarefunc( jclass, jfieldID, jboolean) {
-   LOGGER("SetStaticBooleanField\n");
+   LOGSTRING("SetStaticBooleanField\n");
    return SetStaticBooleanFieldcallfunc( jclass, jfieldID, jboolean);
    }
 
     void        (*SetStaticByteField)(JNIEnv*, jclass, jfieldID, jbyte);
     void         MySetStaticByteFielddeclarefunc( jclass, jfieldID, jbyte) {
-   LOGGER("SetStaticByteField\n");
+   LOGSTRING("SetStaticByteField\n");
    return SetStaticByteFieldcallfunc( jclass, jfieldID, jbyte);
    }
 
     void        (*SetStaticCharField)(JNIEnv*, jclass, jfieldID, jchar);
     void         MySetStaticCharFielddeclarefunc( jclass, jfieldID, jchar) {
-   LOGGER("SetStaticCharField\n");
+   LOGSTRING("SetStaticCharField\n");
    return SetStaticCharFieldcallfunc( jclass, jfieldID, jchar);
    }
 
     void        (*SetStaticShortField)(JNIEnv*, jclass, jfieldID, jshort);
     void         MySetStaticShortFielddeclarefunc( jclass, jfieldID, jshort) {
-   LOGGER("SetStaticShortField\n");
+   LOGSTRING("SetStaticShortField\n");
    return SetStaticShortFieldcallfunc( jclass, jfieldID, jshort);
    }
 
     void        (*SetStaticIntField)(JNIEnv*, jclass, jfieldID, jint);
     void         MySetStaticIntFielddeclarefunc( jclass, jfieldID, jint) {
-   LOGGER("SetStaticIntField\n");
+   LOGSTRING("SetStaticIntField\n");
    return SetStaticIntFieldcallfunc( jclass, jfieldID, jint);
    }
 
     void        (*SetStaticLongField)(JNIEnv*, jclass, jfieldID, jlong);
     void         MySetStaticLongFielddeclarefunc( jclass, jfieldID, jlong) {
-   LOGGER("SetStaticLongField\n");
+   LOGSTRING("SetStaticLongField\n");
    return SetStaticLongFieldcallfunc( jclass, jfieldID, jlong);
    }
 
     void        (*SetStaticFloatField)(JNIEnv*, jclass, jfieldID, jfloat);
     void         MySetStaticFloatFielddeclarefunc( jclass, jfieldID, jfloat) {
-   LOGGER("SetStaticFloatField\n");
+   LOGSTRING("SetStaticFloatField\n");
    return SetStaticFloatFieldcallfunc( jclass, jfieldID, jfloat);
    }
 
     void        (*SetStaticDoubleField)(JNIEnv*, jclass, jfieldID, jdouble);
     void         MySetStaticDoubleFielddeclarefunc( jclass, jfieldID, jdouble) {
-   LOGGER("SetStaticDoubleField\n");
+   LOGSTRING("SetStaticDoubleField\n");
    return SetStaticDoubleFieldcallfunc( jclass, jfieldID, jdouble);
    }
 
     jstring     (*NewString)(JNIEnv*, const jchar*, jsize);
     jstring      MyNewStringdeclarefunc( const jchar*, jsize) {
-   LOGGER("NewString\n");
+   LOGSTRING("NewString\n");
    return NewStringcallfunc( const jchar*, jsize);
    }
 
     jsize       (*GetStringLength)(JNIEnv*, jstring);
     jsize        MyGetStringLengthdeclarefunc( jstring) {
-   LOGGER("GetStringLength\n");
+   LOGSTRING("GetStringLength\n");
    return GetStringLengthcallfunc( jstring);
    }
 
     const jchar* (*GetStringChars)(JNIEnv*, jstring, jboolean*);
     const jchar*  MyGetStringCharsdeclarefunc( jstring, jboolean*) {
-   LOGGER("GetStringChars\n");
+   LOGSTRING("GetStringChars\n");
    return GetStringCharscallfunc( jstring, jboolean*);
    }
 
     void        (*ReleaseStringChars)(JNIEnv*, jstring, const jchar*);
     void         MyReleaseStringCharsdeclarefunc( jstring, const jchar*) {
-   LOGGER("ReleaseStringChars\n");
+   LOGSTRING("ReleaseStringChars\n");
    return ReleaseStringCharscallfunc( jstring, const jchar*);
    }
 
     jstring     (*NewStringUTF)(JNIEnv*, const char*);
     jstring      MyNewStringUTFdeclarefunc( const char*) {
-   LOGGER("NewStringUTF\n");
+   LOGSTRING("NewStringUTF\n");
    return NewStringUTFcallfunc( const char*);
    }
 
     jsize       (*GetStringUTFLength)(JNIEnv*, jstring);
     jsize        MyGetStringUTFLengthdeclarefunc( jstring) {
-   LOGGER("GetStringUTFLength\n");
+   LOGSTRING("GetStringUTFLength\n");
    return GetStringUTFLengthcallfunc( jstring);
    }
 
     const char* (*GetStringUTFChars)(JNIEnv*, jstring, jboolean*);
     const char*  MyGetStringUTFCharsdeclarefunc( jstring, jboolean*) {
-   LOGGER("GetStringUTFChars\n");
+   LOGSTRING("GetStringUTFChars\n");
    return GetStringUTFCharscallfunc( jstring, jboolean*);
    }
 
     void        (*ReleaseStringUTFChars)(JNIEnv*, jstring, const char*);
     void         MyReleaseStringUTFCharsdeclarefunc( jstring, const char*) {
-   LOGGER("ReleaseStringUTFChars\n");
+   LOGSTRING("ReleaseStringUTFChars\n");
    return ReleaseStringUTFCharscallfunc( jstring, const char*);
    }
 
     jobjectArray (*NewObjectArray)(JNIEnv*, jsize, jclass, jobject);
     jobjectArray  MyNewObjectArraydeclarefunc( jsize, jclass, jobject) {
-   LOGGER("NewObjectArray\n");
+   LOGSTRING("NewObjectArray\n");
    return NewObjectArraycallfunc( jsize, jclass, jobject);
    }
 
     jobject     (*GetObjectArrayElement)(JNIEnv*, jobjectArray, jsize);
     jobject      MyGetObjectArrayElementdeclarefunc( jobjectArray, jsize) {
-   LOGGER("GetObjectArrayElement\n");
+   LOGSTRING("GetObjectArrayElement\n");
    return GetObjectArrayElementcallfunc( jobjectArray, jsize);
    }
 
     void        (*SetObjectArrayElement)(JNIEnv*, jobjectArray, jsize, jobject);
     void         MySetObjectArrayElementdeclarefunc( jobjectArray, jsize, jobject) {
-   LOGGER("SetObjectArrayElement\n");
+   LOGSTRING("SetObjectArrayElement\n");
    return SetObjectArrayElementcallfunc( jobjectArray, jsize, jobject);
    }
 
     jbooleanArray (*NewBooleanArray)(JNIEnv*, jsize);
     jbooleanArray  MyNewBooleanArraydeclarefunc( jsize) {
-   LOGGER("NewBooleanArray\n");
+   LOGSTRING("NewBooleanArray\n");
    return NewBooleanArraycallfunc( jsize);
    }
 
     jcharArray    (*NewCharArray)(JNIEnv*, jsize);
     jcharArray     MyNewCharArraydeclarefunc( jsize) {
-   LOGGER("NewCharArray\n");
+   LOGSTRING("NewCharArray\n");
    return NewCharArraycallfunc( jsize);
    }
 
     jshortArray   (*NewShortArray)(JNIEnv*, jsize);
     jshortArray    MyNewShortArraydeclarefunc( jsize) {
-   LOGGER("NewShortArray\n");
+   LOGSTRING("NewShortArray\n");
    return NewShortArraycallfunc( jsize);
    }
 
     jintArray     (*NewIntArray)(JNIEnv*, jsize);
     jintArray      MyNewIntArraydeclarefunc( jsize) {
-   LOGGER("NewIntArray\n");
+   LOGSTRING("NewIntArray\n");
    return NewIntArraycallfunc( jsize);
    }
 
     jlongArray    (*NewLongArray)(JNIEnv*, jsize);
     jlongArray     MyNewLongArraydeclarefunc( jsize) {
-   LOGGER("NewLongArray\n");
+   LOGSTRING("NewLongArray\n");
    return NewLongArraycallfunc( jsize);
    }
 
     jfloatArray   (*NewFloatArray)(JNIEnv*, jsize);
     jfloatArray    MyNewFloatArraydeclarefunc( jsize) {
-   LOGGER("NewFloatArray\n");
+   LOGSTRING("NewFloatArray\n");
    return NewFloatArraycallfunc( jsize);
    }
 
     jdoubleArray  (*NewDoubleArray)(JNIEnv*, jsize);
     jdoubleArray   MyNewDoubleArraydeclarefunc( jsize) {
-   LOGGER("NewDoubleArray\n");
+   LOGSTRING("NewDoubleArray\n");
    return NewDoubleArraycallfunc( jsize);
    }
 
     jboolean*   (*GetBooleanArrayElements)(JNIEnv*, jbooleanArray, jboolean*);
     jboolean*    MyGetBooleanArrayElementsdeclarefunc( jbooleanArray, jboolean*) {
-   LOGGER("GetBooleanArrayElements\n");
+   LOGSTRING("GetBooleanArrayElements\n");
    return GetBooleanArrayElementscallfunc( jbooleanArray, jboolean*);
    }
 
     jchar*      (*GetCharArrayElements)(JNIEnv*, jcharArray, jboolean*);
     jchar*       MyGetCharArrayElementsdeclarefunc( jcharArray, jboolean*) {
-   LOGGER("GetCharArrayElements\n");
+   LOGSTRING("GetCharArrayElements\n");
    return GetCharArrayElementscallfunc( jcharArray, jboolean*);
    }
 
     jshort*     (*GetShortArrayElements)(JNIEnv*, jshortArray, jboolean*);
     jshort*      MyGetShortArrayElementsdeclarefunc( jshortArray, jboolean*) {
-   LOGGER("GetShortArrayElements\n");
+   LOGSTRING("GetShortArrayElements\n");
    return GetShortArrayElementscallfunc( jshortArray, jboolean*);
    }
 
     jint*       (*GetIntArrayElements)(JNIEnv*, jintArray, jboolean*);
     jint*        MyGetIntArrayElementsdeclarefunc( jintArray, jboolean*) {
-   LOGGER("GetIntArrayElements\n");
+   LOGSTRING("GetIntArrayElements\n");
    return GetIntArrayElementscallfunc( jintArray, jboolean*);
    }
 
     jlong*      (*GetLongArrayElements)(JNIEnv*, jlongArray, jboolean*);
     jlong*       MyGetLongArrayElementsdeclarefunc( jlongArray, jboolean*) {
-   LOGGER("GetLongArrayElements\n");
+   LOGSTRING("GetLongArrayElements\n");
    return GetLongArrayElementscallfunc( jlongArray, jboolean*);
    }
 
     jfloat*     (*GetFloatArrayElements)(JNIEnv*, jfloatArray, jboolean*);
     jfloat*      MyGetFloatArrayElementsdeclarefunc( jfloatArray, jboolean*) {
-   LOGGER("GetFloatArrayElements\n");
+   LOGSTRING("GetFloatArrayElements\n");
    return GetFloatArrayElementscallfunc( jfloatArray, jboolean*);
    }
 
     jdouble*    (*GetDoubleArrayElements)(JNIEnv*, jdoubleArray, jboolean*);
     jdouble*     MyGetDoubleArrayElementsdeclarefunc( jdoubleArray, jboolean*) {
-   LOGGER("GetDoubleArrayElements\n");
+   LOGSTRING("GetDoubleArrayElements\n");
    return GetDoubleArrayElementscallfunc( jdoubleArray, jboolean*);
    }
 
     void        (*ReleaseBooleanArrayElements)(JNIEnv*, jbooleanArray,jboolean*, jint);
     void         MyReleaseBooleanArrayElementsdeclarefunc( jbooleanArray,jboolean*, jint) {
-   LOGGER("ReleaseBooleanArrayElements\n");
+   LOGSTRING("ReleaseBooleanArrayElements\n");
    return ReleaseBooleanArrayElementscallfunc( jbooleanArray,jboolean*, jint);
    }
 
     void        (*ReleaseCharArrayElements)(JNIEnv*, jcharArray,jchar*, jint);
     void         MyReleaseCharArrayElementsdeclarefunc( jcharArray,jchar*, jint) {
-   LOGGER("ReleaseCharArrayElements\n");
+   LOGSTRING("ReleaseCharArrayElements\n");
    return ReleaseCharArrayElementscallfunc( jcharArray,jchar*, jint);
    }
 
     void        (*ReleaseShortArrayElements)(JNIEnv*, jshortArray,jshort*, jint);
     void         MyReleaseShortArrayElementsdeclarefunc( jshortArray,jshort*, jint) {
-   LOGGER("ReleaseShortArrayElements\n");
+   LOGSTRING("ReleaseShortArrayElements\n");
    return ReleaseShortArrayElementscallfunc( jshortArray,jshort*, jint);
    }
 
     void        (*ReleaseIntArrayElements)(JNIEnv*, jintArray,jint*, jint);
     void         MyReleaseIntArrayElementsdeclarefunc( jintArray,jint*, jint) {
-   LOGGER("ReleaseIntArrayElements\n");
+   LOGSTRING("ReleaseIntArrayElements\n");
    return ReleaseIntArrayElementscallfunc( jintArray,jint*, jint);
    }
 
     void        (*ReleaseLongArrayElements)(JNIEnv*, jlongArray,jlong*, jint);
     void         MyReleaseLongArrayElementsdeclarefunc( jlongArray,jlong*, jint) {
-   LOGGER("ReleaseLongArrayElements\n");
+   LOGSTRING("ReleaseLongArrayElements\n");
    return ReleaseLongArrayElementscallfunc( jlongArray,jlong*, jint);
    }
 
     void        (*ReleaseFloatArrayElements)(JNIEnv*, jfloatArray,jfloat*, jint);
     void         MyReleaseFloatArrayElementsdeclarefunc( jfloatArray,jfloat*, jint) {
-   LOGGER("ReleaseFloatArrayElements\n");
+   LOGSTRING("ReleaseFloatArrayElements\n");
    return ReleaseFloatArrayElementscallfunc( jfloatArray,jfloat*, jint);
    }
 
     void        (*ReleaseDoubleArrayElements)(JNIEnv*, jdoubleArray,jdouble*, jint);
     void         MyReleaseDoubleArrayElementsdeclarefunc( jdoubleArray,jdouble*, jint) {
-   LOGGER("ReleaseDoubleArrayElements\n");
+   LOGSTRING("ReleaseDoubleArrayElements\n");
    return ReleaseDoubleArrayElementscallfunc( jdoubleArray,jdouble*, jint);
    }
 
     void        (*GetBooleanArrayRegion)(JNIEnv*, jbooleanArray,jsize, jsize, jboolean*);
     void         MyGetBooleanArrayRegiondeclarefunc( jbooleanArray,jsize, jsize, jboolean*) {
-   LOGGER("GetBooleanArrayRegion\n");
+   LOGSTRING("GetBooleanArrayRegion\n");
    return GetBooleanArrayRegioncallfunc( jbooleanArray,jsize, jsize, jboolean*);
    }
 
     void        (*GetByteArrayRegion)(JNIEnv*, jbyteArray,jsize, jsize, jbyte*);
     void         MyGetByteArrayRegiondeclarefunc( jbyteArray,jsize, jsize, jbyte*) {
-   LOGGER("GetByteArrayRegion\n");
+   LOGSTRING("GetByteArrayRegion\n");
    return GetByteArrayRegioncallfunc( jbyteArray,jsize, jsize, jbyte*);
    }
 
     void        (*GetCharArrayRegion)(JNIEnv*, jcharArray,jsize, jsize, jchar*);
     void         MyGetCharArrayRegiondeclarefunc( jcharArray,jsize, jsize, jchar*) {
-   LOGGER("GetCharArrayRegion\n");
+   LOGSTRING("GetCharArrayRegion\n");
    return GetCharArrayRegioncallfunc( jcharArray,jsize, jsize, jchar*);
    }
 
     void        (*GetShortArrayRegion)(JNIEnv*, jshortArray,jsize, jsize, jshort*);
     void         MyGetShortArrayRegiondeclarefunc( jshortArray,jsize, jsize, jshort*) {
-   LOGGER("GetShortArrayRegion\n");
+   LOGSTRING("GetShortArrayRegion\n");
    return GetShortArrayRegioncallfunc( jshortArray,jsize, jsize, jshort*);
    }
 
     void        (*GetIntArrayRegion)(JNIEnv*, jintArray,jsize, jsize, jint*);
     void         MyGetIntArrayRegiondeclarefunc( jintArray,jsize, jsize, jint*) {
-   LOGGER("GetIntArrayRegion\n");
+   LOGSTRING("GetIntArrayRegion\n");
    return GetIntArrayRegioncallfunc( jintArray,jsize, jsize, jint*);
    }
 
     void        (*GetLongArrayRegion)(JNIEnv*, jlongArray,jsize, jsize, jlong*);
     void         MyGetLongArrayRegiondeclarefunc( jlongArray,jsize, jsize, jlong*) {
-   LOGGER("GetLongArrayRegion\n");
+   LOGSTRING("GetLongArrayRegion\n");
    return GetLongArrayRegioncallfunc( jlongArray,jsize, jsize, jlong*);
    }
 
     void        (*GetFloatArrayRegion)(JNIEnv*, jfloatArray,jsize, jsize, jfloat*);
     void         MyGetFloatArrayRegiondeclarefunc( jfloatArray,jsize, jsize, jfloat*) {
-   LOGGER("GetFloatArrayRegion\n");
+   LOGSTRING("GetFloatArrayRegion\n");
    return GetFloatArrayRegioncallfunc( jfloatArray,jsize, jsize, jfloat*);
    }
 
     void        (*GetDoubleArrayRegion)(JNIEnv*, jdoubleArray,jsize, jsize, jdouble*);
     void         MyGetDoubleArrayRegiondeclarefunc( jdoubleArray,jsize, jsize, jdouble*) {
-   LOGGER("GetDoubleArrayRegion\n");
+   LOGSTRING("GetDoubleArrayRegion\n");
    return GetDoubleArrayRegioncallfunc( jdoubleArray,jsize, jsize, jdouble*);
    }
 
     void        (*SetBooleanArrayRegion)(JNIEnv*, jbooleanArray,jsize, jsize, const jboolean*);
     void         MySetBooleanArrayRegiondeclarefunc( jbooleanArray,jsize, jsize, const jboolean*) {
-   LOGGER("SetBooleanArrayRegion\n");
+   LOGSTRING("SetBooleanArrayRegion\n");
    return SetBooleanArrayRegioncallfunc( jbooleanArray,jsize, jsize, const jboolean*);
    }
 
     void        (*SetByteArrayRegion)(JNIEnv*, jbyteArray,jsize, jsize, const jbyte*);
     void         MySetByteArrayRegiondeclarefunc( jbyteArray,jsize, jsize, const jbyte*) {
-   LOGGER("SetByteArrayRegion\n");
+   LOGSTRING("SetByteArrayRegion\n");
    return SetByteArrayRegioncallfunc( jbyteArray,jsize, jsize, const jbyte*);
    }
 
     void        (*SetCharArrayRegion)(JNIEnv*, jcharArray,jsize, jsize, const jchar*);
     void         MySetCharArrayRegiondeclarefunc( jcharArray,jsize, jsize, const jchar*) {
-   LOGGER("SetCharArrayRegion\n");
+   LOGSTRING("SetCharArrayRegion\n");
    return SetCharArrayRegioncallfunc( jcharArray,jsize, jsize, const jchar*);
    }
 
     void        (*SetShortArrayRegion)(JNIEnv*, jshortArray,jsize, jsize, const jshort*);
     void         MySetShortArrayRegiondeclarefunc( jshortArray,jsize, jsize, const jshort*) {
-   LOGGER("SetShortArrayRegion\n");
+   LOGSTRING("SetShortArrayRegion\n");
    return SetShortArrayRegioncallfunc( jshortArray,jsize, jsize, const jshort*);
    }
 
     void        (*SetIntArrayRegion)(JNIEnv*, jintArray,jsize, jsize, const jint*);
     void         MySetIntArrayRegiondeclarefunc( jintArray,jsize, jsize, const jint*) {
-   LOGGER("SetIntArrayRegion\n");
+   LOGSTRING("SetIntArrayRegion\n");
    return SetIntArrayRegioncallfunc( jintArray,jsize, jsize, const jint*);
    }
 
     void        (*SetLongArrayRegion)(JNIEnv*, jlongArray,jsize, jsize, const jlong*);
     void         MySetLongArrayRegiondeclarefunc( jlongArray,jsize, jsize, const jlong*) {
-   LOGGER("SetLongArrayRegion\n");
+   LOGSTRING("SetLongArrayRegion\n");
    return SetLongArrayRegioncallfunc( jlongArray,jsize, jsize, const jlong*);
    }
 
     void        (*SetFloatArrayRegion)(JNIEnv*, jfloatArray,jsize, jsize, const jfloat*);
     void         MySetFloatArrayRegiondeclarefunc( jfloatArray,jsize, jsize, const jfloat*) {
-   LOGGER("SetFloatArrayRegion\n");
+   LOGSTRING("SetFloatArrayRegion\n");
    return SetFloatArrayRegioncallfunc( jfloatArray,jsize, jsize, const jfloat*);
    }
 
     void        (*SetDoubleArrayRegion)(JNIEnv*, jdoubleArray,jsize, jsize, const jdouble*);
     void         MySetDoubleArrayRegiondeclarefunc( jdoubleArray,jsize, jsize, const jdouble*) {
-   LOGGER("SetDoubleArrayRegion\n");
+   LOGSTRING("SetDoubleArrayRegion\n");
    return SetDoubleArrayRegioncallfunc( jdoubleArray,jsize, jsize, const jdouble*);
    }
 
     jint        (*RegisterNatives)(JNIEnv*, jclass, const JNINativeMethod*,jint);
     jint         MyRegisterNativesdeclarefunc( jclass, const JNINativeMethod*,jint) {
-   LOGGER("RegisterNatives\n");
+   LOGSTRING("RegisterNatives\n");
    return RegisterNativescallfunc( jclass, const JNINativeMethod*,jint);
    }
 
     jint        (*UnregisterNatives)(JNIEnv*, jclass);
     jint         MyUnregisterNativesdeclarefunc( jclass) {
-   LOGGER("UnregisterNatives\n");
+   LOGSTRING("UnregisterNatives\n");
    return UnregisterNativescallfunc( jclass);
    }
 
     jint        (*MonitorEnter)(JNIEnv*, jobject);
     jint         MyMonitorEnterdeclarefunc( jobject) {
-   LOGGER("MonitorEnter\n");
+   LOGSTRING("MonitorEnter\n");
    return MonitorEntercallfunc( jobject);
    }
 
     jint        (*MonitorExit)(JNIEnv*, jobject);
     jint         MyMonitorExitdeclarefunc( jobject) {
-   LOGGER("MonitorExit\n");
+   LOGSTRING("MonitorExit\n");
    return MonitorExitcallfunc( jobject);
    }
 
     jint        (*GetJavaVM)(JNIEnv*, JavaVM**);
     jint         MyGetJavaVMdeclarefunc( JavaVM**) {
-   LOGGER("GetJavaVM\n");
+   LOGSTRING("GetJavaVM\n");
    return GetJavaVMcallfunc( JavaVM**);
    }
 
     void        (*GetStringRegion)(JNIEnv*, jstring, jsize, jsize, jchar*);
     void         MyGetStringRegiondeclarefunc( jstring, jsize, jsize, jchar*) {
-   LOGGER("GetStringRegion\n");
+   LOGSTRING("GetStringRegion\n");
    return GetStringRegioncallfunc( jstring, jsize, jsize, jchar*);
    }
 
     void        (*GetStringUTFRegion)(JNIEnv*, jstring, jsize, jsize, char*);
     void         MyGetStringUTFRegiondeclarefunc( jstring, jsize, jsize, char*) {
-   LOGGER("GetStringUTFRegion\n");
+   LOGSTRING("GetStringUTFRegion\n");
    return GetStringUTFRegioncallfunc( jstring, jsize, jsize, char*);
    }
 
     void*       (*GetPrimitiveArrayCritical)(JNIEnv*, jarray, jboolean*);
     void*        MyGetPrimitiveArrayCriticaldeclarefunc( jarray, jboolean*) {
-   LOGGER("GetPrimitiveArrayCritical\n");
+   LOGSTRING("GetPrimitiveArrayCritical\n");
    return GetPrimitiveArrayCriticalcallfunc( jarray, jboolean*);
    }
 
     void        (*ReleasePrimitiveArrayCritical)(JNIEnv*, jarray, void*, jint);
     void         MyReleasePrimitiveArrayCriticaldeclarefunc( jarray, void*, jint) {
-   LOGGER("ReleasePrimitiveArrayCritical\n");
+   LOGSTRING("ReleasePrimitiveArrayCritical\n");
    return ReleasePrimitiveArrayCriticalcallfunc( jarray, void*, jint);
    }
 
     const jchar* (*GetStringCritical)(JNIEnv*, jstring, jboolean*);
     const jchar*  MyGetStringCriticaldeclarefunc( jstring, jboolean*) {
-   LOGGER("GetStringCritical\n");
+   LOGSTRING("GetStringCritical\n");
    return GetStringCriticalcallfunc( jstring, jboolean*);
    }
 
     void        (*ReleaseStringCritical)(JNIEnv*, jstring, const jchar*);
     void         MyReleaseStringCriticaldeclarefunc( jstring, const jchar*) {
-   LOGGER("ReleaseStringCritical\n");
+   LOGSTRING("ReleaseStringCritical\n");
    return ReleaseStringCriticalcallfunc( jstring, const jchar*);
    }
 
     jweak       (*NewWeakGlobalRef)(JNIEnv*, jobject);
     jweak        MyNewWeakGlobalRefdeclarefunc( jobject) {
-   LOGGER("NewWeakGlobalRef\n");
+   LOGSTRING("NewWeakGlobalRef\n");
    return NewWeakGlobalRefcallfunc( jobject);
    }
 
     void        (*DeleteWeakGlobalRef)(JNIEnv*, jweak);
     void         MyDeleteWeakGlobalRefdeclarefunc( jweak) {
-   LOGGER("DeleteWeakGlobalRef\n");
+   LOGSTRING("DeleteWeakGlobalRef\n");
    return DeleteWeakGlobalRefcallfunc( jweak);
    }
 
     jboolean    (*ExceptionCheck)(JNIEnv*);
     jboolean     MyExceptionCheckdeclarefunc() {
-   LOGGER("ExceptionCheck\n");
+   LOGSTRING("ExceptionCheck\n");
    return ExceptionCheckcallfunc();
    }
 
     jobject     (*NewDirectByteBuffer)(JNIEnv*, void*, jlong);
     jobject      MyNewDirectByteBufferdeclarefunc( void*, jlong) {
-   LOGGER("NewDirectByteBuffer\n");
+   LOGSTRING("NewDirectByteBuffer\n");
    return NewDirectByteBuffercallfunc( void*, jlong);
    }
 
     void*       (*GetDirectBufferAddress)(JNIEnv*, jobject);
     void*        MyGetDirectBufferAddressdeclarefunc( jobject) {
-   LOGGER("GetDirectBufferAddress\n");
+   LOGSTRING("GetDirectBufferAddress\n");
    return GetDirectBufferAddresscallfunc( jobject);
    }
 
     jlong       (*GetDirectBufferCapacity)(JNIEnv*, jobject);
     jlong        MyGetDirectBufferCapacitydeclarefunc( jobject) {
-   LOGGER("GetDirectBufferCapacity\n");
+   LOGSTRING("GetDirectBufferCapacity\n");
    return GetDirectBufferCapacitycallfunc( jobject);
    }
 
     jobjectRefType (*GetObjectRefType)(JNIEnv*, jobject);
     jobjectRefType  MyGetObjectRefTypedeclarefunc( jobject) {
-   LOGGER("GetObjectRefType\n");
+   LOGSTRING("GetObjectRefType\n");
    return GetObjectRefTypecallfunc( jobject);
    }
 

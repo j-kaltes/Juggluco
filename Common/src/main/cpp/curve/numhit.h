@@ -1,6 +1,6 @@
 #pragma once
 class NumDisplay;
-class Num;
+struct Num;
 struct NumHit{
 	NumDisplay *numdisplay;
 	const Num *hit;

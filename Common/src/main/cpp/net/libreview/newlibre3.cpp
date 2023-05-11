@@ -237,7 +237,7 @@ int addcurrent(char *buf,int64_t histor,const ScanData *el,const bool viewed) {
 
 bool hasNewCurrent(const SensorGlucoseData *sens) { 
 	if(!sens) {
-		LOGGER("sens==nullptr\n");
+		LOGSTRING("sens==nullptr\n");
 		return false;
 		}
 	 int start=sens->getinfo()->libreviewscan;
@@ -250,18 +250,18 @@ int		ends=sens->pollcount()-1;
 		LOGGER("%s pollstart=%d hasNewCurrent no new last start=%d ends=%d\n",sens->showsensorname().data(),pollstart,start,ends);
 		return false;
 		}
-	LOGGER("hasNewCurrent true\n");
+	LOGSTRING("hasNewCurrent true\n");
 	return true;
 	}
 
 bool askhasnewcurrent() {
 	if(!settings->data()->LibreCurrentOnly) { 
-		LOGGER("LibreCurrentOnly==false\n");
+		LOGSTRING("LibreCurrentOnly==false\n");
 		return false;
 		}
 	const auto *lastsensor=sensors->gethist(-1);
 	if(!lastsensor->isLibre3())  {
-		LOGGER("not Libre3\n");
+		LOGSTRING("not Libre3\n");
 		return false;
 		}
 	return hasNewCurrent(lastsensor);
@@ -422,7 +422,7 @@ int totalsize= bytesnumbers+restsize+usertokenlen+incurrent*onecurrentsize+inhis
 LOGGER("inhistory=%d incurrent=%d totalsize=%d\n",inhistory,incurrent,totalsize);
 char *buf= new(std::nothrow)  char[totalsize];
 if(!buf) {
-	LOGGER("libreview3: new failed\n");
+	LOGSTRING("libreview3: new failed\n");
 	return false;
 	}
 std::unique_ptr<char[]> deleter(buf);
@@ -522,14 +522,14 @@ buf[uitlen]='\n';
 logwriter(buf,uitlen+1);
 int nextsensor=(wrotecurrent>0)?lastsensor:lastwrote;
 if(nextsensor<0) {
-	LOGGER("nextsensor<0\n");
+	LOGSTRING("nextsensor<0\n");
 	if(!numbers.didsend())
 		return true;
 	}
 #ifndef NOREALSEND
 bool datasend=libresendmeasurements(true,buf,uitlen);
 if(datasend) {
-	LOGGER("libresendmeasurements libre3 success\n");
+	LOGSTRING("libresendmeasurements libre3 success\n");
 	numbers.onSuccess();
 //	int nextsensor=(wrotecurrent>0)?lastsensor:lastwrote;
 	if(nextsensor>=0) {
@@ -545,9 +545,9 @@ if(datasend) {
 		}
 	return true;
 	} 
-LOGGER("libresendmeasurements libre3 failed\n");
+LOGSTRING("libresendmeasurements libre3 failed\n");
 #else
-LOGGER("libresendmeasurements libre3 NOREALSEND\n");
+LOGSTRING("libresendmeasurements libre3 NOREALSEND\n");
 #endif
 return false;
 	}

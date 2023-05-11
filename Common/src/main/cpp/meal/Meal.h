@@ -363,7 +363,7 @@ int shouldextend() const {
 		}
 		
 	else {
-		LOGGER("should not extend\n");
+		LOGSTRING("should not extend\n");
 		return 0;
 		}
 	}

@@ -68,7 +68,7 @@ bool getitems(char *&outiter,const int  datnr,uint32_t newer,uint32_t older,bool
 						break;
 				}
 				else
-					LOGGER("invalid\n");
+					LOGSTRING("invalid\n");
 				--iter;
 
 			}

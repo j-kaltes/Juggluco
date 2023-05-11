@@ -27,6 +27,7 @@ import android.content.IntentFilter;
 class Specific {
 static void start(Application context) {
 	watchdrip.set(Natives.getwatchdrip());
+	SuperGattCallback.doGadgetbridge=Natives.getgadgetbridge();
 	}
 
 };

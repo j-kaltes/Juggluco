@@ -30,6 +30,7 @@
 #include "gluconfig.h"
 
 #define LOGGERTAG(...) LOGGER("watchvalue: " __VA_ARGS__)
+#define LOGSTRINGTAG(...) LOGSTRING("watchvalue: " __VA_ARGS__)
 extern Sensoren *sensors;
 extern std::vector<int> usedsensors;
 const int maxwatchage=60*3;
@@ -99,7 +100,7 @@ extern "C" JNIEXPORT jobject  JNICALL   fromjava(lastglucose)(JNIEnv *env, jclas
 	const uint32_t nu=time(nullptr);	
 	const auto *hist=getlaststream(nu);
 	if(!hist)  {
-		LOGGERTAG("getlaststream(nu)=null\n");
+		LOGSTRINGTAG("getlaststream(nu)=null\n");
 		return nullptr;
 		}
 	const ScanData *poll=hist->lastpoll();
@@ -109,7 +110,7 @@ extern "C" JNIEXPORT jobject  JNICALL   fromjava(lastglucose)(JNIEnv *env, jclas
 
 	const auto nonconvert= poll->g;
 	if(!nonconvert)  {
-		LOGGERTAG("glucose = 0\n");
+		LOGSTRINGTAG("glucose = 0\n");
 		return nullptr;
 		}
 	const int maxbuf=20;

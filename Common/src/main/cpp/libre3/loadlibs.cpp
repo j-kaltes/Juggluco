@@ -44,7 +44,7 @@ static DPGetActivationCommandDataType DPGetActivationCommandData=nullptr;
 
 //static  jbyteArray  JNICALL   (*process2)(JNIEnv *env, jclass _cl,jint i2, jbyteArray bArr, jbyteArray bArr2);
 static jint        myRegisterNatives(JNIEnv*, jclass name, const JNINativeMethod*methods, jint nr) {
-	LOGGER("myRegisterNatives\n");
+	LOGSTRING("myRegisterNatives\n");
     const char *namestr=reinterpret_cast<const char *>(name);
 	if(!strcmp(namestr,"com/adc/trident/app/frameworks/mobileservices/libre3/security/Libre3SKBCryptoLib")) {
         	process1=(process1Type)methods[0].fnPtr;
@@ -57,7 +57,7 @@ static jint        myRegisterNatives(JNIEnv*, jclass name, const JNINativeMethod
 			DPGetActivationCommandData=( DPGetActivationCommandDataType)methods[5].fnPtr;
 			}
 		}
-	LOGGER("end myRegisterNatives\n");
+	LOGSTRING("end myRegisterNatives\n");
 	return 0;
 	}
 	
@@ -150,7 +150,7 @@ static bool doOnLoad(std::string_view libname,bool change) {
 	 	LOGGER("dlsym %s failed\n",name);
 		return false;
 	 	}
-	LOGGER("found OnLoad\n");
+	LOGSTRING("found OnLoad\n");
 
 #if defined(__aarch64__) 
 	if(change) {
@@ -159,7 +159,7 @@ static bool doOnLoad(std::string_view libname,bool change) {
 #endif
 	JavaVM vmptr{.functions=&myvm};
 	OnLoad(&vmptr,nullptr);
-	LOGGER("after OnLoad\n");
+	LOGSTRING("after OnLoad\n");
 if(change)
 	LOGGER("process1-OnLoad %ld\n",(uint8_t*)process1-(uint8_t*)OnLoad);
 	return true;
@@ -201,10 +201,10 @@ static bool loadECDHCrypto(const bool changelib) {
 	int rc=env->RegisterNatives(cl, funcs, 2);
    	env->DeleteLocalRef(cl);
 	    if (rc != JNI_OK)  {
-		    LOGGER("RegisterNatives failed\n");
+		    LOGSTRING("RegisterNatives failed\n");
 		    return false;
 		    }
-	    LOGGER("RegisterNatives  OK\n"); 
+	    LOGSTRING("RegisterNatives  OK\n"); 
 	return true;	
 	*/
 	}
@@ -212,10 +212,10 @@ static bool loadECDHCrypto(const bool changelib) {
 static bool loadNFC() {
 	if(DPGetActivationCommandData)
 		return true;
-	LOGGER("loadNFC\n");
+	LOGSTRING("loadNFC\n");
 	return doOnLoad("/libcrl_dp.so",false);
 	/*
-	LOGGER(	"after OnLoad\n");
+	LOGSTRING(	"after OnLoad\n");
 	const char classname[]="tk/glucodata/libre3/NFC";
 	jclass cl=env->FindClass(classname);
 	if(!cl) {
@@ -225,7 +225,7 @@ static bool loadNFC() {
 	LOGGER("found %s\n",classname);
 	const JNINativeMethod  funcs[]{{ "DPGetActivationCommandData", "([BJJ)I",(void*) DPGetActivationCommandData}};
 	int rc=env->RegisterNatives(cl, funcs, std::size(funcs));
-	LOGGER("after RegisterNatives\n");
+	LOGSTRING("after RegisterNatives\n");
    	env->DeleteLocalRef(cl);
 	  if (rc != JNI_OK)  {
 		    LOGGER("RegisterNatives %s failed\n",classname);
@@ -238,7 +238,7 @@ static bool loadNFC() {
 extern "C" JNIEXPORT jint JNICALL fromjava(startTimeIDsum)(JNIEnv *env, jclass cl, jbyteArray bArr, jlong time, jlong account) {
 
 	settings->setnodebug(false);
-	LOGGER("startTimeIDsum\n");
+	LOGSTRING("startTimeIDsum\n");
 	usedebug use(false,3);
 //	debugclone(true);
 	loadNFC();
@@ -269,7 +269,7 @@ LOGGER("asmworks=%d settings->data()->triedasm=%d\n", settings->data()->asmworks
 
 #else
 	const bool changelib=false;
-	LOGGER("not __arch64__\n");
+	LOGSTRING("not __arch64__\n");
 #endif
 	LOGGER("setpathworks=%d libre3initialized=%d\n",globalsetpathworks,libre3initialized);
 static	const bool debug=!changelib&&!globalsetpathworks;
@@ -291,7 +291,7 @@ static	const bool debug=!changelib&&!globalsetpathworks;
 	}
 /*
 extern "C" JNIEXPORT void JNICALL fromjava(enddebug)(JNIEnv *env, jclass cl) {
-	LOGGER("enddebug\n");
+	LOGSTRING("enddebug\n");
     if(has_debugger) {
 		getsid(has_debugger);
 		has_debugger=0;
@@ -304,7 +304,7 @@ extern "C" JNIEXPORT jbyteArray JNICALL fromjava(processbar)(JNIEnv *env, jclass
 	const bool changelib=false;
 #endif
 static	const bool debug=!changelib&&!globalsetpathworks;
-	LOGGER("processbar\n");
+	LOGSTRING("processbar\n");
 	settings->setnodebug(false);
 	usedebug use(debug&&!libre3initialized,3);
 	loadECDHCrypto(changelib);

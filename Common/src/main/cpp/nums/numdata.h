@@ -203,7 +203,7 @@ bool trymagic() const {
 static bool writelabels(const char *name)  {
 	Create file(name);
 	if(file==-1) {
-		LOGGER("writelabels Open ");
+		LOGSTRING("writelabels Open ");
 		lerror(name);
 		return false;
 		}
@@ -235,7 +235,7 @@ static bool mknumdata(const string_view base,identtype ident)   {
 		}
 	if(ident>=0LL) {
 		if(!writeident(base,ident)) {
-			LOGGER("writeident failed\n");
+			LOGSTRING("writeident failed\n");
 			return false;
 			}
 		}
@@ -257,12 +257,12 @@ Numdata* createnew(const string_view base,identtype ident,size_t len)  const {
 		}
 		/*
 	if(!writelabels(base,ident)) {
-		LOGGER("Writelabels failed\n");
+		LOGSTRING("Writelabels failed\n");
 		return nullptr;
 		}
 		*/
 	if(!writeident(base,ident)) {
-		LOGGER("writeident failed\n");
+		LOGSTRING("writeident failed\n");
 		}
 	Numdata *numdata=new Numdata(base,ident,len);
 	numdata->addmagic();
@@ -837,7 +837,7 @@ void numchange(const Num *hit, uint32_t time, float32_t value, uint32_t type,uin
 	if(hit->time!=time) {
 		num=firstAfter(time);
 		if(num<hit) {
-			LOGGER("numchange num<hit\n");
+			LOGSTRING("numchange num<hit\n");
 			int movelen= (hit-num);
 			memmove(num+1,num,movelen*sizeof(Num));
 			setlastchange(num);
@@ -847,7 +847,7 @@ void numchange(const Num *hit, uint32_t time, float32_t value, uint32_t type,uin
 			}
 		else {
 			if(num>(hit+1)) {
-				LOGGER("if(num>(hit+1))\n" );
+				LOGSTRING("if(num>(hit+1))\n" );
 				num--;
 				Num *modhit=const_cast<Num *>(hit);
 				int movelen= (num-modhit);
@@ -858,7 +858,7 @@ void numchange(const Num *hit, uint32_t time, float32_t value, uint32_t type,uin
 				libremovesmaller(pos+1,pos,movelen);
 				}
 			else  {
-				LOGGER("if(num<=(hit+1))\n" );
+				LOGSTRING("if(num<=(hit+1))\n" );
 				num=const_cast<Num *>(hit);
 				setonechange(hit);
 				pos=num-startdata();
@@ -868,7 +868,7 @@ void numchange(const Num *hit, uint32_t time, float32_t value, uint32_t type,uin
 			}
 		}
 	else {
-		LOGGER("hit->time==time)\n"); 
+		LOGSTRING("hit->time==time)\n"); 
 		num=const_cast<Num *>(hit);
 		setonechange(hit);
 		pos=num-startdata();
@@ -1052,7 +1052,7 @@ static bool	sendlastpos(crypt_t*pass,int sock,uint16_t dbase,uint32_t lastpos) {
 //std::unique_ptr<char[]> newnumsfile;
 //static void renamefromident(std::string_view base,identtype ident) {
 bool numbackupinit(const numinit *nums) {
-	LOGGER("numbackupinit\n");
+	LOGSTRING("numbackupinit\n");
 	const identtype  newident=nums->ident;
 	if(ident!=newident) {
 		extern pathconcat numbasedir;
@@ -1090,10 +1090,10 @@ bool sendbackupinit(crypt_t*pass,int sock,struct changednums *nuall) {
 	nu->len=1;
 	numinit gegs{.first=static_cast<uint32_t>(getfirstpos()),.ident=ident};
 	 if(!sendcommand(pass, sock ,reinterpret_cast<uint8_t*>(&gegs),sizeof(gegs))) {
-		LOGGER("NUM: sendbackupinit failure\n");
+		LOGSTRING("NUM: sendbackupinit failure\n");
 		return false;
 		}
-	LOGGER("NUM: sendbackupinit success\n");
+	LOGSTRING("NUM: sendbackupinit success\n");
 //	nuall->init=false;
 	return true;
 	}
@@ -1104,13 +1104,13 @@ bool backupsendinit(crypt_t*pass,int sock,struct changednums *nuall,uint32_t sta
 	if(starttime&&(getfirstpos()!=getlastpos()))  {
 		asklastnum ask{.dbase=(bool)ident};
 		 if(!noacksendcommand(pass,sock,reinterpret_cast<uint8_t*>(&ask),sizeof(ask))) {
-		 	LOGGER("NUM: noacksendcommand asklastnum failed\n");
+		 	LOGSTRING("NUM: noacksendcommand asklastnum failed\n");
 			return false;
 			}
 		auto ret=receivedata(sock, pass,sizeof(int));
 		int *posptr=reinterpret_cast<int*>(ret.get());
 		if(!posptr) {
-			LOGGER("NUM: receivedata==null\n");
+			LOGSTRING("NUM: receivedata==null\n");
 			return false;
 			}
 		int pos=*posptr;
@@ -1130,14 +1130,14 @@ bool backupsendinit(crypt_t*pass,int sock,struct changednums *nuall,uint32_t sta
 		return true;
 		}
 	STARTOVER:
-	LOGGER("NUM: zero start\n");
+	LOGSTRING("NUM: zero start\n");
 	return sendbackupinit(pass,sock,nuall);
 	}
 
 static inline constexpr const int intinnum=(sizeof(Num)/sizeof(uint32_t));
 int update(crypt_t*pass,int sock,struct changednums *nuall) {
 	struct changednums *nu=nuall+getindex();	
-LOGGER("Num: update\n");
+LOGSTRING("Num: update\n");
 	struct numspan *ch=nu->changed;
 	int endpos=getlastpos();
 

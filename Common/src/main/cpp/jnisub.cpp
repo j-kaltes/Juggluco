@@ -66,7 +66,7 @@ extern "C" int execv(const char *pathname, char *const argv[]) {
 	for(char *const *ptr=argv;*ptr;ptr++ ) {
 		LOGGER("%s,",*ptr);
 		}
-	LOGGER("})\n");
+	LOGSTRING("})\n");
 	puts("package:/o/home/jka/src/android/Librefree/app/src/main/cpp/base.apk");
 	fflush(stdout);
 	exit(0);
@@ -125,6 +125,7 @@ jclasser(const char name[], std::vector<Method> &&funcs): funcs(std::move(funcs)
 };
 std::unordered_map<string,jclasser*> jclasser::classid(20);
 #define subLOGGER(...)
+#define subLOGSTRING(...)
 extern "C" jsize       subGetArrayLength(JNIEnv* env, jarray jar) {
     	 data_t *ar=	reinterpret_cast<data_t *>(jar);
 	 jint len= ar->length();
@@ -175,7 +176,7 @@ extern "C"  jbyteArray    subNewByteArray(JNIEnv*subenv, jsize len) {
 
 typedef jint (*staticintmethod)(va_list);
 extern "C" jint     subCallStaticIntMethod(JNIEnv*env, jclass cl, jmethodID meth, ...) {
- 	subLOGGER("subCallStaticIntMethod=");
+ 	subLOGSTRING("subCallStaticIntMethod=");
 	va_list args;
 	va_start(args, meth);
 	jint out= ((staticintmethod)meth)(args);
@@ -185,7 +186,7 @@ extern "C" jint     subCallStaticIntMethod(JNIEnv*env, jclass cl, jmethodID meth
 }
 typedef jboolean (*staticbooleanmethod)(va_list);
 extern "C" jboolean     subCallStaticBooleanMethod(JNIEnv*env, jclass cl, jmethodID meth, ...) {
- 	subLOGGER("subCallStaticBooleanMethod=");
+ 	subLOGSTRING("subCallStaticBooleanMethod=");
 	va_list args;
 	va_start(args, meth);
 	jboolean out= ((staticbooleanmethod)meth)(args);
@@ -196,7 +197,7 @@ extern "C" jboolean     subCallStaticBooleanMethod(JNIEnv*env, jclass cl, jmetho
 
 typedef jobject (*staticObjmethod)(va_list);
 extern "C" jobject     subCallStaticObjectMethod(JNIEnv*env, jclass cl, jmethodID meth, ...) {
-subLOGGER("subCallStaticObjectMethod\n");
+subLOGSTRING("subCallStaticObjectMethod\n");
 	va_list args;
 	va_start(args, meth);
 	jobject out= ((staticObjmethod)meth)(args);
@@ -205,7 +206,7 @@ subLOGGER("subCallStaticObjectMethod\n");
 }
 /*
 jboolean    subCallBooleanMethod(JNIEnv* env, jobject obj, jmethodID meth, ...) {
-subLOGGER("subCallBooleanMethod\n");
+subLOGSTRING("subCallBooleanMethod\n");
 	va_list args;
 	va_start(args, meth);
 	jboolean out= (( jboolean (*)(jobject,  va_list) )meth)(obj,args);
@@ -216,7 +217,7 @@ subLOGGER("subCallBooleanMethod\n");
 template <typename T>
  T    subCallMethod(JNIEnv* env, jobject obj, jmethodID meth, ...) {
 //	subLOGGER("subCall-%s-Method\n",typeid(T).name());
-	subLOGGER("subCall--Method\n");
+	subLOGSTRING("subCall--Method\n");
 	va_list args;
 	va_start(args, meth);
 	 T out= (( T (*)(jobject,  va_list) )meth)(obj,args);
@@ -228,7 +229,7 @@ constexpr auto subCallIntMethod=subCallMethod<jint>;
 constexpr auto subCallDoubleMethod=subCallMethod<jdouble>;
 //s/\<LOGGER(\"sub/subLOGGER(\"sub/g
 extern "C"    void         subCallVoidMethod(JNIEnv* env, jobject obj, jmethodID meth, ...) {
-   	subLOGGER("subCallVoidMethod\n");
+   	subLOGSTRING("subCallVoidMethod\n");
 	va_list args;
 	va_start(args, meth);
 	 (( void (*)(jobject,  va_list) )meth)(obj,args);
@@ -257,7 +258,7 @@ class thrower: public _jthrowable {
 
 jboolean except=0;
 extern "C"    jboolean     subExceptionCheck(JNIEnv*env)  {
-   subLOGGER("subExceptionCheck\n");
+   subLOGSTRING("subExceptionCheck\n");
 /*	if(except)
 		return except;
 		*/
@@ -265,7 +266,7 @@ extern "C"    jboolean     subExceptionCheck(JNIEnv*env)  {
    }
 
    extern "C" void        subExceptionClear(JNIEnv*) {
-   subLOGGER("subExceptionClear\n");
+   subLOGSTRING("subExceptionClear\n");
 
    	except=0;
    	}
@@ -277,7 +278,7 @@ extern "C"    jthrowable subExceptionOccurred(JNIEnv*env) {
 
     	}	
 extern "C" jobject     nothingproc(va_list) {
-	LOGGER("no function found!!!\n");
+	LOGSTRING("no function found!!!\n");
 	return nullptr;
 	}
 static jmethodID nothing=(jmethodID) nothingproc;
@@ -288,12 +289,12 @@ jmethodID   subGetStaticMethodID(JNIEnv* , jclass cl, const char*name, const cha
 	auto funcs=cla->funcs;
 	auto it = std::find_if (funcs.begin(), funcs.end(), [name,sig](Method &me){ return !(strcmp(me.name.data(),name)||strcmp(me.pat.data(),sig));});
 	if(it!=funcs.end()) {
-		subLOGGER("found\n");
+		subLOGSTRING("found\n");
 /*		jmethodID med= (jmethodID)it->func;
 		return med;*/
 		return (jmethodID)it->func;
 		}
-	subLOGGER("Not found\n");
+	subLOGSTRING("Not found\n");
 	return  nothing;
 	}
 struct algobj {
@@ -314,7 +315,7 @@ intptr_t toint() {
 	}
 };
 extern "C" jclass      subGetObjectClass(JNIEnv*, jobject ob) {
-	subLOGGER("subGetObjectClass\n");
+	subLOGSTRING("subGetObjectClass\n");
 	algobj *co=(algobj *)ob;
 	return  (jclass)co->cl;
 	}
@@ -393,7 +394,7 @@ jobject newarraylist(va_list) {
 	}
 //s/\<jniHistory\>/jniHistory/g
 jboolean addtohist(jobject obj,  va_list args) {
-	subLOGGER("addtohist\n");
+	subLOGSTRING("addtohist\n");
 	jniHistory *vec=reinterpret_cast<jniHistory *>(obj);
 	vec->push_back( va_arg(args, GlucoseValue *));
 	return 1;
@@ -520,7 +521,7 @@ jint	getHighGlucoseAlarmThreshold(jobject obj,  va_list args) {
 	}
 
 jboolean  isDebuggerConnected(va_list args) {
-	LOGGER("isDebuggerConnected\n");
+	LOGSTRING("isDebuggerConnected\n");
 	return 0;
 	}
 jboolean	getIsEnabled(jobject obj,  va_list args) {
@@ -741,7 +742,7 @@ bool linklib(const char *filename) {
 debugclone();
 LOGGER("linklib %s %p\n",filename,dynlibhandle);
 if(dynlibhandle) dlclose(dynlibhandle);
-LOGGER("closed\n");;
+LOGSTRING("closed\n");;
 if((dynlibhandle=dlopen(filename,RTLD_LAZY))) {
 	LOGGER("opened %p\n",dynlibhandle);
    	if(getdynsym(initialize)
@@ -759,7 +760,7 @@ if((dynlibhandle=dlopen(filename,RTLD_LAZY))) {
 		  ){
 		if(getdynsym(P1)) {
 			if(getdynsym(P2)) {
-				LOGGER("have P2\n");
+				LOGSTRING("have P2\n");
 				}
 			else {
 				LOGGER("no P2 %s\n",dlerror());
@@ -768,7 +769,7 @@ if((dynlibhandle=dlopen(filename,RTLD_LAZY))) {
 		else {
 		      oldprocessStream= (oldprocessStream_t)  processStream;
 			}
-		LOGGER("success\n");
+		LOGSTRING("success\n");
 		return true;
 		}
 	LOGGER("linklib: %s\n",dlerror());
@@ -840,7 +841,7 @@ data_t *fromjbyteArray(JNIEnv *env,jbyteArray jar,jint len) {
 Abbott::Abbott(JNIEnv *env,string_view basedir,jbyteArray juid, jbyteArray info): Abbott(basedir,fromjbyteArray(env,juid),abbottcall(getProductFamily)(env,nullptr, parsertype, info)) {
 	}
 AlgorithmResults *callAbbottAlg(data_t *uid,int startsincebase,scanstate *oldstate,scandata *data,scanstate *newstate,outobj *starttime,outobj *endtime,jobject person) {
-	LOGGER("start callAbbottAlg/3\n");
+	LOGSTRING("start callAbbottAlg/3\n");
 	const time_t nutime=data->gettime();
 	const int lastsincebase=nutime-basesecs;
 	const int timeoffset=1000*gettimezoneoffset(&nutime);
@@ -853,10 +854,10 @@ jnidata_t  hierjnidata={&envbuf,newstate};
 JNIEnv *hiersubenv=(JNIEnv *) &hierjnidata;
 //	 reinterpret_cast<jnidata_t*>(subenv)->map=newstate;
 debugclone();
-LOGGER("start processScan ");
+LOGSTRING("start processScan ");
 	jobject result= abbottcall(processScan)(hiersubenv,nullptr, parsertype, alarm, nonAction, range, attenconf, (jbyteArray)uid, (jbyteArray) data->info,(jbyteArray)data->data ,startsincebase,lastsincebase,warmup,wear, timeoffset
 		, (jbyteArray)oldstate->get(COMP), (jbyteArray)oldstate->get(ATTE), (jbyteArray)oldstate->get(MESS), (jobject)starttime, (jobject)endtime, confinsert, removed, compo, attenu, messstate, outalgres,OutListPatchEvent, person);
-	LOGGER(" end processScan\n");
+	LOGSTRING(" end processScan\n");
 	intptr_t res=reinterpret_cast<intptr_t>(result);
 	LOGGER("person=%ld\n",reinterpret_cast<outobj *>(person)->toint());
 	if( vector<PatchEvent *> *patch= (vector<PatchEvent *> *)OutListPatchEvent.ptr) {
@@ -952,7 +953,7 @@ Abbott::scanresult_t Abbott::callAbbottAlg(scandata *data) {
 	LOGGER("timelast=%d endsensorsecs=%d\n",timelast,endsensorsecs);
 	if(timelast>=endsensorsecs&&timelast<days15) {
 		if(!state->datpos(FAKE)) {
-		    LOGGER("new Fake\n");
+		    LOGSTRING("new Fake\n");
 		   setbluetoothon=true;
 		    delete newstate;
 		    delete state;
@@ -1022,7 +1023,7 @@ Abbott::scanresult_t Abbott::ProcessOne(scandata *data) {
 //scanstate is a bad idea, I should change it to malloc e.d.
 const data_t*  getStreamingPayload(scanstate *stateptr,const data_t * sensorident, const data_t * patchinfo, uint32_t tim) ;
 scanstate *Abbott::initnewsensor( scandata *data) {
-	LOGGER("initnewsensor ");
+	LOGSTRING("initnewsensor ");
 	jbyteArray juid =(jbyteArray) uid; 
 	scanstate inp,newstate(4);
 	outobj person,endtime,starttime;
@@ -1073,12 +1074,12 @@ const int timelast=data->gettime()-start;
 //constexpr const int endsensorsecs=  1195800;
 if(timelast>=endsensorsecs&&timelast<days15) {
 	startminbase+=daysecs;
-	LOGGER("Tijdelijk erbij\n");
+	LOGSTRING("Tijdelijk erbij\n");
 	}
-	LOGGER("voor activationComplete ");
+	LOGSTRING("voor activationComplete ");
 	debugclone();//Al gedaan
 	if( (messuit=reinterpret_cast<data_t *>( abbottcall(activationComplete)(hiersubenv,nullptr,juid, (startminbase > threeyear ? startminbase - threeyear : 0) / sec_per_day, startminbase, (jbyteArray)newstate.get(MESS))))&&messuit->length()>0) {
-			LOGGER(" activationComplete>0\n");
+			LOGSTRING(" activationComplete>0\n");
 		newstateptr->makenull(COMP);	//NODIG?
 		newstateptr->makenull(ATTE);	
 //		newstateptr->makenull(FAKE);	
@@ -1205,7 +1206,7 @@ int ver2pos;
 	return *this;
    	}
 void make2()  {
-	LOGGER("Use gen 2 lib\n");
+	LOGSTRING("Use gen 2 lib\n");
 	package[ver2pos]='2';
   	}
   const char *getlib() const {
@@ -1302,23 +1303,23 @@ static int doabbottinit(bool dochmod) {
 //	package[packagelen-1]='\n'; package[packagelen]='\0';
 		LOGGER("Before initialize %s\n",package);
 		abbottcall(initialize)(env,thiz, thiz);
-		LOGGER("After initialize\n");
+		LOGSTRING("After initialize\n");
 		abbottcall(dpSetMaxAlgorithmVersion)(env,thiz, 3);
-		LOGGER("After dpSetMaxAlgorithmVersion\n");
+		LOGSTRING("After dpSetMaxAlgorithmVersion\n");
       		settings->data()->crashed=false;
 	//	abbottcall(dpEnableDebugLogging)(env,thiz);
 	#define DYNLINK3
 	#ifdef DYNLINK3
 		if(P1) {
 			rootcheck=true;
-			LOGGER("Try P1(0,0,nullptr,nullptr)\n");
+			LOGSTRING("Try P1(0,0,nullptr,nullptr)\n");
 			int res=abbottcall(P1)(env,thiz,0,0,nullptr,nullptr);
 			LOGGER("P1(0,0,nullptr,nullptr)=%d\n",res);
 			}
 		else {
 			settings->setnodebug(true);
 			rootcheck=false;
-			LOGGER("No P1\n");
+			LOGSTRING("No P1\n");
 		}
 	#endif
 		return 0;
@@ -1390,14 +1391,14 @@ dontdebug=nodebug?-1:1;
 		LOGGER("getActivationPayload=%d\n",payload?payload->length():-1);
 		}
 	else {
-		LOGGER("getActivationPayload failed");
+		LOGSTRING("getActivationPayload failed");
 		return 12;
 		}
 	int fam= abbottcall(getProductFamily)(hiersubenv2, nullptr, parsertype,  (jbyteArray)  infoptr);
 	LOGGER("Family=%d\n",fam);
 	auto [warm,wear]= patchtimevalues(infoptr);
 	if(warm==-1) {
-		LOGGER("patchtimefailure\n");
+		LOGSTRING("patchtimefailure\n");
 		return 12;
 		}
 	LOGGER("warm=%d wear=%d\n",warm,wear);
@@ -1411,7 +1412,7 @@ dontdebug=nodebug?-1:1;
 			}
 		}
 	else {
-       		LOGGER("getStreamingPayload failed\n");
+       		LOGSTRING("getStreamingPayload failed\n");
 		return 12;
        		}
 
@@ -1419,16 +1420,16 @@ dontdebug=nodebug?-1:1;
 	{scanstate state(4);
 jnidata_t  hierjnidata3={&envbuf,&state};
 	JNIEnv *hiersubenv=(JNIEnv *) &hierjnidata3;
-	LOGGER("Before ptests\n");
+	LOGSTRING("Before ptests\n");
 	bool error=false;
 	for(auto el:ptests) {
 		el->print(stderr);
 		if(!el->test( hiersubenv)) {
-			LOGGER("test failed\n");
+			LOGSTRING("test failed\n");
 			error=true;
 			}
 		}
-	LOGGER("After ptests\n");
+	LOGSTRING("After ptests\n");
 	}
 
 #endif
@@ -1446,13 +1447,13 @@ JNIEnv *hiersubenv=(JNIEnv *) &hierjnidata;
 			return 12;
 		}
 	else {
-		LOGGER("getStreamingUnlockPayload==null\n");
+		LOGSTRING("getStreamingUnlockPayload==null\n");
 		return 12;
 		}
 
 	scanstate *newstateptr=new scanstate(4);
 	if(scanstate *state=testinitsensor( &data,uidptr,newstateptr)) {
-		LOGGER("Initsensor succeeded\n");
+		LOGSTRING("Initsensor succeeded\n");
 		scanstate newstate(4);
 
 AlgorithmResults *res=processBlue(bluetooth, 0, uidptr,
@@ -1462,7 +1463,7 @@ initinfo,
 state,
 &newstate,startsincebase,bluetime) ;
 		if(!res) {
-			LOGGER("processStream failed\n");
+			LOGSTRING("processStream failed\n");
 			return 12;
 			}
 		else {
@@ -1485,7 +1486,7 @@ state,
 					return 12;;
 				}
 			else {
-				LOGGER("processScan failed\n");
+				LOGSTRING("processScan failed\n");
 				return 12;
 				}
 			}
@@ -1504,7 +1505,7 @@ extern bool askswrongfiles;
 int *initptr=nullptr;
 int  abbottinit() {
 if(settings&&!settings->data()->havelibrary) {//settings==null for abbotttest 
-	LOGGER("No library\n");
+	LOGSTRING("No library\n");
 	return -4;
 	}
 static int init=(init=doabbottinit(false),initptr=&init,init);
@@ -1525,19 +1526,19 @@ timevalues     patchtimevalues(const data_t *info) {
         return {-1,-1}; 
     }
 jbyte  getactivationcommand(const data_t *info) {
-	LOGGER("start getActivationCommand ");
+	LOGSTRING("start getActivationCommand ");
         jbyte res= abbottcall(getActivationCommand)(subenv,nullptr, parsertype, (jbyteArray) info);
-	LOGGER(" end getActivationCommand\n");
+	LOGSTRING(" end getActivationCommand\n");
         return res;
         }
 /*
 data_t  * getactivationpayload(scanstate *state,const data_t * patchid, const data_t * info, jbyte person) {
 	 reinterpret_cast<jnidata_t*>(subenv)->map=state;
 	
-	LOGGER("start getActivationPayload ");
+	LOGSTRING("start getActivationPayload ");
 	debugclone();
 	data_t  * res=(data_t *)   abbottcall(getActivationPayload)(subenv, nullptr,  parsertype, (jbyteArray) patchid, (jbyteArray) info, person) ;
-	LOGGER("end getActivationPayload\n");
+	LOGSTRING("end getActivationPayload\n");
          return res;
         }
 	*/
@@ -1545,9 +1546,9 @@ data_t  * getactivationpayload(scanstate *state,const data_t * patchid, const da
 bool getneedsreaderinfoforactivation()   {
 	abbottinit();
 	debugclone();
-	LOGGER("start getNeedsReaderInfoForActivation ");
+	LOGSTRING("start getNeedsReaderInfoForActivation ");
 	bool res=   abbottcall(getNeedsReaderInfoForActivation)(subenv, nullptr, parsertype) ;
-	LOGGER(" end getNeedsReaderInfoForActivation\n");
+	LOGSTRING(" end getNeedsReaderInfoForActivation\n");
 	return res;
 	}
 	*/
@@ -1557,17 +1558,17 @@ extern "C" JNIEXPORT jboolean JNICALL fromjava(hasRootcheck)(JNIEnv* env, jclass
 extern "C" JNIEXPORT jbyte JNICALL fromjava(activationcommand)(JNIEnv* env, jclass obj,jbyteArray info) {
 	abbottinit();
 	debugclone(); //Nodig?
-	LOGGER("start getActivationCommand ");
+	LOGSTRING("start getActivationCommand ");
        	jbyte res=  abbottcall(getActivationCommand)(env,obj, parsertype, info);
-	LOGGER(" end getActivationCommand\n");
+	LOGSTRING(" end getActivationCommand\n");
 	return res;
 	}
 extern "C" JNIEXPORT jbyteArray  JNICALL fromjava(activationpayload)(JNIEnv *env, jclass obj,  jbyteArray patchid, jbyteArray info, jbyte person)  {
 	abbottinit();
 	debugclone(); //Nodig?
-	LOGGER("start getActivationPayload ");
+	LOGSTRING("start getActivationPayload ");
 	jbyteArray res=   abbottcall(getActivationPayload)(env, obj,  parsertype,  patchid,  info, person) ;
-	LOGGER("end getActivationPayload\n");
+	LOGSTRING("end getActivationPayload\n");
 	return res;
         }
 
@@ -1598,10 +1599,10 @@ jnidata_t  hierjnidata={&envbuf,stateptr};
 JNIEnv *hiersubenv=(JNIEnv *) &hierjnidata;
 	if(abbottinit())
 		return nullptr;
-	LOGGER("start getStreamingUnlockPayload\n");
+	LOGSTRING("start getStreamingUnlockPayload\n");
 	debugclone();
 	data_t *res= reinterpret_cast<data_t *>(abbottcall(getStreamingUnlockPayload)(hiersubenv,nullptr, parsertype, (jbyteArray)usedhist->getsensorident(), (jbyteArray)info, person, startsincebase, usedhist->nextlock()));
-	LOGGER(" end getStreamingUnlockPayload\n");
+	LOGSTRING(" end getStreamingUnlockPayload\n");
 	/*
 #ifdef MODTIME
 	return reinterpret_cast<data_t *>(getStreamingUnlockPayload(subenv,nullptr, parsertype, (jbyteArray)usedhist->getsensorident(), (jbyteArray)info, person, startsincebase, usedhist->nextlock()));
@@ -1630,7 +1631,7 @@ scanstate *newstate,uint32_t startsincebase,uint32_t nutime) {
 jnidata_t  hierjnidata={&envbuf,newstate};
 JNIEnv *hiersubenv=(JNIEnv *) &hierjnidata;
 abbottinit();
-LOGGER("start processStream\n");
+LOGSTRING("start processStream\n");
 debugclone();
 intptr_t  res=
 (oldprocessStream?
@@ -1704,7 +1705,7 @@ if(alg) {
 		LOGGER("processStream %d %d %.1f\n",gid,qual,gluc/18.0);
 		if(!qual&&gluc) {
 			if(hist->savepoll(nutime,gid,gluc,gl.trend(),gl.rate())) {
-				LOGGER("success\n");
+				LOGSTRING("success\n");
 				return alg;
 				}
 			else {
@@ -1713,7 +1714,7 @@ if(alg) {
 				}
 			}
 		else {
-			LOGGER("bad quality\n");
+			LOGSTRING("bad quality\n");
 			}
 		}
 return nullptr;
@@ -1730,9 +1731,9 @@ JNIEnv *hiersubenv=(JNIEnv *) &hierjnidata;
 //	basismap.reset(); reinterpret_cast<jnidata_t *>(subenv)->map=&basismap;
 	abbottinit();
 	debugclone(); //Nodig?
-	LOGGER("start getStreamingPayload ");
+	LOGSTRING("start getStreamingPayload ");
 	const data_t *pay= reinterpret_cast<data_t *>(abbottcall(getEnableStreamingPayload)(hiersubenv,nullptr, parsertype, (jbyteArray)sensorident, (jbyteArray)patchinfo, person, timeminbase));
-	LOGGER(" end getStreamingPayload\n");
+	LOGSTRING(" end getStreamingPayload\n");
 	return pay;
 	}
 extern "C" JNIEXPORT jbyteArray  JNICALL fromjava(bluetoothOnKey)(JNIEnv *envin, jclass cl,jbyteArray sensorident, jbyteArray patchinfo) {
@@ -1749,7 +1750,7 @@ extern "C" JNIEXPORT jbyteArray  JNICALL fromjava(bluetoothOnKey)(JNIEnv *envin,
 
 	LOGGER("bluetoothOnKey %s\n",serial.data());
 	if(SensorGlucoseData *hist=sensors->gethist(serial.data())) {
-		LOGGER("Old history\n");	
+		LOGSTRING("Old history\n");	
 		if(!hist->setbluetooth(starttime,info->data()))
 			return nullptr;
 		}
@@ -1760,7 +1761,7 @@ extern "C" JNIEXPORT jbyteArray  JNICALL fromjava(bluetoothOnKey)(JNIEnv *envin,
 	scanstate astate;
 	const data_t* pay=getStreamingPayload(&astate,uid, info, starttime); 
 	if(pay) {
-	 	LOGGER("getStreamingPayload returned something\n");
+	 	LOGSTRING("getStreamingPayload returned something\n");
 		jint uitlen=pay->size();
 		jbyteArray uit=envin->NewByteArray(uitlen);
 		envin->SetByteArrayRegion(uit, 0, uitlen, pay->data());
@@ -1773,7 +1774,7 @@ extern "C" JNIEXPORT jbyteArray  JNICALL fromjava(bluetoothOnKey)(JNIEnv *envin,
 //			hist->bluetoothback();
 			}
 		
-	 	LOGGER("getStreamingPayload returned null\n");
+	 	LOGSTRING("getStreamingPayload returned null\n");
 		}
 	return nullptr;
 	}
@@ -1802,17 +1803,17 @@ extern "C" JNIEXPORT void  JNICALL fromjava(bluetoothback)(JNIEnv *envin, jclass
 extern "C" JNIEXPORT jboolean  JNICALL fromjava(hasBluetooth)(JNIEnv *envin, jclass cl,jbyteArray sensorident,jbyteArray patchinfo) {
 	abbottinit();
 	const jint timeminbase= time(NULL)-basesecs;
-	LOGGER("start getStreamingPayload ");
+	LOGSTRING("start getStreamingPayload ");
 	debugclone();
 	jbyteArray res=abbottcall(getEnableStreamingPayload)(envin,cl, parsertype, sensorident, patchinfo, 0, timeminbase);
-	LOGGER("end getStreamingPayload\n");
+	LOGSTRING("end getStreamingPayload\n");
 	return res!=nullptr;
 	}
 
 #include "hex.h"
 bool  setDeviceAddressB(JNIEnv *env,SensorGlucoseData *hist,jbyteArray jaddress ) {
 	if(jaddress==nullptr) {
-		LOGGER("setDeviceAddressB(null)\n");
+		LOGSTRING("setDeviceAddressB(null)\n");
 		return false;
 		}
 	 jsize len=env->GetArrayLength(jaddress);
@@ -1855,7 +1856,7 @@ extern "C" JNIEXPORT void JNICALL   fromjava(enabledStreaming)(JNIEnv *envin, jc
 extern "C" JNIEXPORT void JNICALL   fromjava(USenabledStreaming)(JNIEnv *envin, jclass cl,jbyteArray sensorident,jbyteArray jauth,jbyteArray address) {
 	const char uslog[]="USenabledStreaming\n";
         setthreadname(uslog );
-	LOGGER(uslog);
+	LOGGERN(uslog,sizeof(uslog)-1);
 	const int fam=3;
 	const data_t *uid=fromjbyteArray(envin,sensorident);
 	string serial=getserial(fam,reinterpret_cast<const unsigned char *>(uid->data()));
@@ -1874,7 +1875,7 @@ scanstate * testinitsensor( scandata *data,data_t *uid,scanstate *newstateptr) {
 	outobj person,endtime,starttime;
 	AlgorithmResults * alg=callAbbottAlg(uid,0,&inp,data,&newstate,&starttime,&endtime,person);
 	if(!alg) {
-		LOGGER("first callAbbottAlg failed\n");
+		LOGSTRING("first callAbbottAlg failed\n");
 		return nullptr;
 		}
 	jbyteArray juid =(jbyteArray) uid; 
@@ -1889,7 +1890,7 @@ JNIEnv *hiersubenv=(JNIEnv *) &hierjnidata;
 	data_t *messuit;
 
 	if((messuit=reinterpret_cast<data_t *>( abbottcall(activationComplete)(hiersubenv,nullptr,juid, (startminbase > threeyear ? startminbase - threeyear : 0) / sec_per_day, startminbase, (jbyteArray)newstate.get(MESS))))&&messuit->length()>0) {
-			LOGGER(" activationComplete>0\n");
+			LOGSTRING(" activationComplete>0\n");
 		newstateptr->makenull(COMP);	//NODIG?
 		newstateptr->makenull(ATTE);	
 		}
@@ -1923,7 +1924,7 @@ int NfcMemory::nextspan() {
 		LOGGER("iter=%d nextspan start=%d len=%d %d\n",iter-1,start,len,res);
 		return res;
 		}
-	LOGGER("nextspan -1\n");
+	LOGSTRING("nextspan -1\n");
 	return -1;
 	}
 
@@ -1933,7 +1934,7 @@ void NfcMemory::add(data_t *dat) {
 	}
 #endif
 void closedynlib(void) {
-	LOGGER("closedynlib\n");
+	LOGSTRING("closedynlib\n");
 	if(dynlibhandle)
 		dlclose(dynlibhandle);
 	dynlibhandle=nullptr;

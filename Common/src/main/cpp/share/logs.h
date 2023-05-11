@@ -31,6 +31,7 @@
 #include <fcntl.h>
 #include <errno.h>
 #include <string.h>
+#include <ctime>
 
 #ifndef _WIN32
 #undef _GNU_SOURCE
@@ -80,7 +81,12 @@ extern  int logprint(const char *format, ...) ;
 #ifdef __cplusplus
 }
 #endif
-#define LOGGER  loggert
+//#define LOGGER  loggert
+
+extern pid_t getTid();
+#define LOGGER(pformat,...) logprint("%lu %d " pformat ,::time(nullptr), getTid(), __VA_ARGS__ )
+#define LOGSTRING(pformat) logprint("%lu %d " pformat ,::time(nullptr), getTid())
+
 
 #ifdef NOLOG
 #define donothing do { if (0) ((void)0); } while (0)
@@ -105,7 +111,6 @@ inline void lerror(const char *str) {
 inline void flerror(const char* fmt, ...){
 #ifndef NOLOG
 	int waser=errno;
-#endif
 	const int maxbuf=160;
 	char buf[maxbuf];
         va_list args;
@@ -113,6 +118,7 @@ inline void flerror(const char* fmt, ...){
 	vsnprintf(buf,maxbuf, fmt, args);
 	va_end(args);
 	LOGGER("%s: %s\n",buf,strerror(waser));
+#endif
 	}
 #else
 #define lerror( ...) donothing
@@ -123,9 +129,10 @@ inline void flerror(const char* fmt, ...){
 
 
 #else
-#define LOGGER  loggert
-#define logger(x)   LOGGER("%s\n",x)
+//#define LOGGER  loggert
 
+//#define LOGGER(pformat,...) logprint("%lu %d " pformat ,time(nullptr), getTid(),__VA_ARGS__)
+#define logger(x)   LOGGER("%s\n",x)
 void LOGGERN(const char *buf,int len) ;
 void LOGGERNO(const char *buf,int len,bool endl) ;
 inline void lerror(const char *str) {
@@ -136,17 +143,7 @@ inline void lerror(const char *str) {
 #ifdef __cplusplus
 extern "C" {
 #endif
-inline void flerror(const char* fmt, ...) __attribute__((format(printf, 1, 2)))   ;
-inline void flerror(const char* fmt, ...){
-	int waser=errno;
-	const int maxbuf=80;
-	char buf[maxbuf];
-        va_list args;
-        va_start(args, fmt);
-	vsnprintf(buf,maxbuf, fmt, args);
-	va_end(args);
-	LOGGER("%s: %s\n",buf,strerror(waser));
-	}
+void flerror(const char* fmt, ...) __attribute__((format(printf, 1, 2)))   ;
 #ifdef __cplusplus
 };
 #endif
@@ -159,4 +156,8 @@ extern void logwriter(const char *buf,const int len);
 
 
 #endif
+template <class T, std::size_t N>
+constexpr void LOGAR(const T (&array)[N])  {
+	LOGGERN(array,N-1);
+	}
 #endif

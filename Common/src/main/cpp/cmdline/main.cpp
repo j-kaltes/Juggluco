@@ -696,7 +696,7 @@ bool getpathworks() {
 	return false;
 	}
 bool updateDevices() {
-	LOGGER("updateDevices() called\n");
+	LOGSTRING("updateDevices() called\n");
 	return true;
 	}
 extern bool hour24clock;

@@ -164,7 +164,7 @@ void usr2handler(int get) {
                 signal(get,SIG_IGN);
                 longjmp( jumpenv, tid);
                 }
-        LOGGER("no jump\n");
+        LOGSTRING("no jump\n");
 }
 
 constexpr const int usesig=SIGUSR2;
@@ -194,18 +194,18 @@ extern "C" JNIEXPORT jint JNICALL fromjava(nfcdata)(JNIEnv *env, jclass thiz, jb
 static	 const int waitsig=60;
 	alarm(waitsig);
 	if(setjmp(jumpenv)==nfcdatatid)  {
-		LOGGER("after jump");
+		LOGSTRING("after jump");
 			return 12<<16;
 			}
          jumpenvset=true;
 
 	if(abbottinit())
 		return 10<<16;
-	LOGGER("voor Abbott:Abbott\n");
+	LOGSTRING("voor Abbott:Abbott\n");
 	Abbott ab(env,sensorbasedir,uid, info);
-	LOGGER("Na Abbott:Abbott\n");
+	LOGSTRING("Na Abbott:Abbott\n");
 	if(ab.error()) {
-		LOGGER("Error in Abbott::Abbott\n");
+		LOGSTRING("Error in Abbott::Abbott\n");
 		return 11<<16;
 		}
 	time_t tim=time(nullptr);
@@ -227,15 +227,15 @@ static	 const int waitsig=60;
 	auto [alg,scanda]=ab.ProcessOne(datptr); 
 //Abbott::scanresult_t 
 //	const AlgorithmResults *alg; const ScanData *scanda;
-	LOGGER("after ab.ProcessOne\n");
+	LOGSTRING("after ab.ProcessOne\n");
 	if(logscan) {
 		logs.lastdata(); 
 		}
-	LOGGER("after lastdata()\n");
+	LOGSTRING("after lastdata()\n");
 	destruct _back([](){ backup->wakebackup(Backup::wakeall);});
 	int ret=2<<16;
 	if(alg==Initialized) {
-		LOGGER("Initialized\n");
+		LOGSTRING("Initialized\n");
 		const int min=datptr->getSensorAgeInMinutes();
 		const bool enablestreaming=setbluetoothon||(ab.hist&&!ab.hist->streamingIsEnabled());
 		if(min<60)
@@ -250,9 +250,9 @@ static	 const int waitsig=60;
 		}
 	else {
 	if(alg){
-		LOGGER("alg!=null ");
+		LOGSTRING("alg!=null ");
 		if(scanda) {
-			LOGGER("scanda\n");
+			LOGSTRING("scanda\n");
 			logscanresult(alg);
 			int gluval=alg->currentglucose().getValue();
 			if(gluval) {
@@ -272,7 +272,7 @@ static	 const int waitsig=60;
 					}
 				sensor* senso=sensors->getsensor(ab.sensorindex);
 				if(senso->finished) {
-					LOGGER("was finished\n");
+					LOGSTRING("was finished\n");
 					setstreaming(ab.hist); //NEEDED/
 					setusedsensors(); //NEEDED
 					senso->finished=0;
@@ -284,7 +284,7 @@ static	 const int waitsig=60;
 			if(min<60) {
 				sensor* senso=sensors->getsensor(ab.sensorindex);
 				if(senso->finished) {
-					LOGGER("was finished\n");
+					LOGSTRING("was finished\n");
 					setbluetoothon=true;
 					senso->finished=0;
 					}
@@ -318,7 +318,7 @@ static	 const int waitsig=60;
 		ret=4<<16;
 		}
 	else {
-		LOGGER("alg==null ");
+		LOGSTRING("alg==null ");
 		if(datptr->getSensorAgeInMinutes()==0)
 			ret=3<<16;
 		}
@@ -378,7 +378,7 @@ extern "C" JNIEXPORT jlong JNICALL   fromjava(getdataptr)(JNIEnv *env, jclass cl
 		}
 	if(data->good())
 		return reinterpret_cast<jlong>(data);
-	LOGGER("getdataptr(): !data->good()\n");
+	LOGSTRING("getdataptr(): !data->good()\n");
 	delete data;
 	return 0LL;
 	}
@@ -702,7 +702,7 @@ extern "C" JNIEXPORT jobjectArray  JNICALL   fromjava(activeSensors)(JNIEnv *env
 	} 
 #else
 extern "C" JNIEXPORT jobjectArray  JNICALL   fromjava(activeSensors)(JNIEnv *env, jclass cl) {
-	LOGGER("activeSensors oldlibre\n");
+	LOGSTRING("activeSensors oldlibre\n");
 	setusedsensors();
 	const int len= usedsensors.size();
 	const char *names[len];
@@ -806,7 +806,7 @@ extern "C" JNIEXPORT jint  JNICALL   fromjava(nfcadd)(JNIEnv *env, jclass _cl,jl
 	return mem->nextspan();
 	};
 extern "C" JNIEXPORT jbyteArray  JNICALL   fromjava(nfcgetresults)(JNIEnv *env, jclass _cl,jlong ptr) {
-	LOGGER("nfcgetresults\n");
+	LOGSTRING("nfcgetresults\n");
 	NfcMemory *mem=reinterpret_cast<NfcMemory *>(ptr);
 	int len= mem->len;
 	jbyteArray uit=env->NewByteArray(len);
@@ -908,7 +908,7 @@ bool registernatives(JNIEnv* env) {
 
 const char nativesclass[]= "tk/glucodata/Natives";
     jclass c = env->FindClass(nativesclass);
-    LOGGER("after FindClass \n");
+    LOGSTRING("after FindClass \n");
 #ifndef NDEBUG
 extern string_view filesdir;
     pathconcat funcfile(filesdir,"funcs.h");
@@ -929,10 +929,10 @@ extern string_view filesdir;
 
    env->DeleteLocalRef(c);
     if (rc != JNI_OK)  {
-	    LOGGER("RegisterNatives failed\n");
+	    LOGSTRING("RegisterNatives failed\n");
 	    return false;
 	    }
-	    LOGGER("RegisterNatives  OK\n");
+	    LOGSTRING("RegisterNatives  OK\n");
    return true;
   }
 static bool *registeredptr=nullptr;
@@ -952,7 +952,7 @@ static void reinitabbotter(std::promise<bool> * prom) {
 	}
 extern bool reinitabbott() ;
 bool reinitabbott() {
-	LOGGER("abbottreinit\n");
+	LOGSTRING("abbottreinit\n");
 	pid_t pid= syscall(SYS_getpid);
 	pid_t tid = syscall(SYS_gettid);
 	if(tid==pid) {
@@ -974,7 +974,7 @@ extern "C" JNIEXPORT jboolean  JNICALL   fromjava(abbottreinit)(JNIEnv *env, jcl
 	}
 
 void	setstreaming(SensorGlucoseData *hist) {
-		LOGGER("setstreaming(SensorGlucoseData)\n");
+		LOGSTRING("setstreaming(SensorGlucoseData)\n");
 		if(!backup)
 			return;
 		int maxint=backup->getupdatedata()->sendnr;
@@ -986,7 +986,7 @@ void	setstreaming(SensorGlucoseData *hist) {
 			hist->setsendstreaming( maxint) ;
 		}
 void	sendKAuth(SensorGlucoseData *hist) {
-		LOGGER("setsendKauth(SensorGlucoseData)\n");
+		LOGSTRING("setsendKauth(SensorGlucoseData)\n");
 		if(!backup)
 			return;
 		int maxint=backup->getupdatedata()->sendnr;

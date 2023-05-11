@@ -490,7 +490,7 @@ static struct persgegs *matchedminutes( std::vector<pair<const ScanData*,const S
 		prevsaidid=-1;
 		for(;it<=last;it++) {
 			if(!it->valid()) {
-				LOGGER("invalid\n");
+				LOGSTRING("invalid\n");
 				continue;
 				}
 			const int saidid=it->getid();
@@ -534,7 +534,7 @@ static struct persgegs *matchedminutes( std::vector<pair<const ScanData*,const S
 	int count= std::reduce( lens, lens+ ++maxid);
 	if(count<11000)
 		return nullptr;
-	LOGGER("end matchedminutes\n");
+	LOGSTRING("end matchedminutes\n");
 	return new persgegs(uitdata,lens,days,maxid);
 	}
 
@@ -557,7 +557,7 @@ static struct persgegs * sortedmatched( std::vector<pair<const ScanData*,const S
 	datastruct.mkfracs();
 	datastruct.mkextreme();
 
-	LOGGER("end sortedmatched\n");
+	LOGSTRING("end sortedmatched\n");
 	return datastructptr;
 	}
 
@@ -575,7 +575,7 @@ void makesummarygraph(std::vector<pair<const ScanData*,const ScanData*>> *pollda
 		return;
 	startday=::starttime-getminutes(::starttime)*60;
 	endday=startday+seconds_in_day;
-	LOGGER("end makesummarygraph\n");
+	LOGSTRING("end makesummarygraph\n");
 	setend=0;
 	visiblebutton() ;
 	return;

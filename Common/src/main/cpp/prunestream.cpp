@@ -34,7 +34,7 @@ void SensorGlucoseData::prunestream() {
 			LOGGER("%d's wrong stream wrong: id=%d %.1f %s",i,pollsdata[i].id,pollsdata[i].g/18.0f,ctime(&tim));
 			if(i<scount&&scansdata[i].t==0&&scansdata[i].id==0) {
 				if((i==(scount-1)||pollsdata[i].t<scansdata[i+1].t)&&(i==0||pollsdata[i].t>scansdata[i-1].t)) {
-					LOGGER("move to scans\n");
+					LOGSTRING("move to scans\n");
 					scansdata[i]=pollsdata[i];
 					}
 				}
@@ -65,7 +65,7 @@ void SensorGlucoseData::prunescansonly() {
 	for(int i=scountmin;i>=0;i--) {
 		if(!scansdata[i].t) {
 			if(pollsdata[i].valid()&&(i==scountmin||pollsdata[i].t<scansdata[i+1].t)&&(i==0||pollsdata[i].t>scansdata[i-1].t)) {
-				LOGGER("move to scans\n");
+				LOGSTRING("move to scans\n");
 				scansdata[i]=pollsdata[i];
 				}
 			else {

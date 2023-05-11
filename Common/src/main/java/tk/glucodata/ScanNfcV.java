@@ -51,7 +51,7 @@ import static tk.glucodata.Applic.isWearable;
 import static tk.glucodata.BuildConfig.libreVersion;
 import static tk.glucodata.Gen2.getversion;
 import static tk.glucodata.Libre3.libre3NFC;
-import static tk.glucodata.Natives.showbytes;
+import static tk.glucodata.Log.showbytes;
 import static tk.glucodata.settings.Settings.removeContentView;
 import static tk.glucodata.util.getbutton;
 import static tk.glucodata.util.getlabel;

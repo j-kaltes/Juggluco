@@ -125,7 +125,7 @@ myfilep fp=myopen(handle);
 	
 /*	FILE *fp=fdopen(handle,"w");
 	if(fp==NULL) {
-		LOGGER("exportnums fdopen failed");
+		LOGSTRING("exportnums fdopen failed");
 		close(handle);
 		return false;
 		}
@@ -170,7 +170,7 @@ template <class T,class FG,class FP>
 bool exports(int handle, const FG& proc,const FP& print) {	
 	int totsen=sensors->last()+1;
 	NumIter<T> *iters=new NumIter<T>[totsen];
-	LOGGER("exports: ");
+	LOGSTRING("exports: ");
 	for(int i=0;i<totsen;i++) {
 		SensorGlucoseData *hist=sensors->gethist(i);
 		if(hist) {

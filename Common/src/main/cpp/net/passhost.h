@@ -132,10 +132,10 @@ bool hasip(const struct sockaddr *addrptr) const {
 	};
 bool addiphasfamport(const struct sockaddr *addrptr) {
 	if(!::putiphasfamport( addrptr,ips+nr)) {
-		LOGGER("addiphasfamport returns false\n");
+		LOGSTRING("addiphasfamport returns false\n");
 		return false;
 		}
-	LOGGER("addiphasfamport returns true\n");
+	LOGSTRING("addiphasfamport returns true\n");
 	++nr;
 	detect=false;
 	return true;
@@ -153,7 +153,7 @@ void putips(const sockaddr_in6  *addrptr,int nrin) {
 	}
 bool putip(const struct sockaddr *addrptr) {
 	if(!::putip( addrptr,ips)) {
-		LOGGER("passhost_t::putip failed\n");
+		LOGSTRING("passhost_t::putip failed\n");
 		return false;
 		}
 	if(!nr) nr++;

@@ -69,7 +69,7 @@ struct nfc1 {
 #endif
 	    const uint16_t start=0xa5;
 	    if(*reinterpret_cast<const uint16_t*>(nfc.start)!=start) {
-		   LOGGER("NFC: doesn't start with 0xA5,0x0\n");
+		   LOGSTRING("NFC: doesn't start with 0xA5,0x0\n");
 		   error=true; ;
 		   }
 		   error=false;
@@ -88,7 +88,7 @@ static_assert(sizeof(firstnfc)==29);
 /*
 extern "C" JNIEXPORT  jlong JNICALL fromjava(interpret3NFC1)(JNIEnv *env, jclass thiz, jbyteArray jnfcout) {
 	if(!jnfcout)  {
-		LOGGER("interpret3NFC1(null)\n");
+		LOGSTRING("interpret3NFC1(null)\n");
 		return nullptr;
 		}
          jsize lens=env->GetArrayLength(jnfcout);
@@ -104,7 +104,7 @@ extern "C" JNIEXPORT  jlong JNICALL fromjava(interpret3NFC1)(JNIEnv *env, jclass
 	firstnfc *nfc=reinterpret_cast<firstnfc*>(nfcout);
     const uint16_t start=0xa5;
     if(*reinterpret_cast<const uint16_t*>(nfc->start)!=start) {
-            LOGGER("NFC: doesn't start with 0xA5,0x0\n");
+            LOGSTRING("NFC: doesn't start with 0xA5,0x0\n");
 	   delete[] nfcout;
            return nullptr;
     	}
@@ -197,7 +197,7 @@ extern "C" JNIEXPORT jlong JNICALL fromjava(interpret3NFC2)(JNIEnv *env, jclass 
 		return 0LL;
 		}
 	if(!jnfcout)  {
-		LOGGER("interpret3NFC2(null)\n");
+		LOGSTRING("interpret3NFC2(null)\n");
 		return 0LL;
 		}
         jsize lens=env->GetArrayLength(jnfcout);

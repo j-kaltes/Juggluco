@@ -308,11 +308,12 @@ static public void alarmsettings(MainActivity context,View parview,boolean[] iss
 
 
 	var usealarm=getcheckbox(context, R.string.USE_ALARM, Natives.getUSEALARM());
+	/*
 	usealarm.setOnCheckedChangeListener(
 			 (buttonView,  isChecked) -> {
 				Natives.setUSEALARM(isChecked);
 			    }
-			);
+			); */
 	final boolean alarmloss= Natives.hasalarmloss();
 		CheckBox lossalarm = new CheckBox(context);
 		lossalarm.setChecked(alarmloss); //Value
@@ -430,8 +431,7 @@ new View[]{isvalue},new View[]{ringisvalue,Cancel},new View[]{usealarm},new View
            Natives.setalarms(str2float(((EditText)lowalarm[1]).getText().toString()),
                     str2float(((EditText)highalarm[1]).getText().toString()),
                      haslow, hashigh, isvalue.isChecked(),hasloss);
-
-//	Natives.settoucheverywhere(toucheverywhere.isChecked());
+	Natives.setUSEALARM(usealarm.isChecked());
 	   context.poponback();
 		tk.glucodata.help.hidekeyboard(context);
 		removeContentView(lay) ;

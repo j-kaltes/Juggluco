@@ -95,7 +95,7 @@ extern void initlibreviewjni(JNIEnv *env);
 extern bool jinitmessages(JNIEnv* env);
 
 JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* reserved) {
-	LOGGER("JNI_OnLoad\n");
+	LOGSTRING("JNI_OnLoad\n");
 	vmptr=vm;
 	   JNIEnv* env;
     if (vm->GetEnv(reinterpret_cast<void**>(&env), JNI_VERSION_1_6) != JNI_OK) {
@@ -106,10 +106,10 @@ JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* reserved) {
 const jclass cl=env->FindClass("tk/glucodata/GlucoseCurve");
 if(!cl) {
 	summaryready=nullptr;
-	LOGGER("Can't find GlucoseCurve\n");
+	LOGSTRING("Can't find GlucoseCurve\n");
 	}
 else {
-	LOGGER("found GlucoseCurve\n");
+	LOGSTRING("found GlucoseCurve\n");
 	summaryready=env->GetMethodID(cl,"summaryready","()V");
 	#ifdef  WEAROS
 	showsensorinfo=env->GetMethodID(cl,"showsensorinfo","(Ljava/lang/String;)V");
@@ -125,17 +125,17 @@ if(cl) {
 	JNIApplic = (jclass)env->NewGlobalRef(cl);
 	env->DeleteLocalRef(cl);
 	if(!(jdoglucose=env->GetStaticMethodID(JNIApplic,"doglucose","(Ljava/lang/String;IFFIJZ)V"))) {
-		LOGGER(R"(GetStaticMethodID(JNIApplic,"doglucose","(Ljava/lang/String;IFFIJZ)V"))) failed)" "\n");
+		LOGSTRING(R"(GetStaticMethodID(JNIApplic,"doglucose","(Ljava/lang/String;IFFIJZ)V"))) failed)" "\n");
 		}
 	if(!(jupdateDevices=env->GetStaticMethodID(JNIApplic,"updateDevices","()Z"))) {
-		LOGGER(R"(jupdateDevices=env->GetStaticMethodID(JNIApplic,"updateDevices","()Z") failed)" "\n");
+		LOGSTRING(R"(jupdateDevices=env->GetStaticMethodID(JNIApplic,"updateDevices","()Z") failed)" "\n");
 		}
 	if(!(jbluetoothEnabled=env->GetStaticMethodID(JNIApplic,"bluetoothEnabled","()Z"))) {
-		LOGGER(R"(jbluetoothEnabled=env->GetStaticMethodID(JNIApplic,"bluetoothEnabled","()Z") failed)" "\n");
+		LOGSTRING(R"(jbluetoothEnabled=env->GetStaticMethodID(JNIApplic,"bluetoothEnabled","()Z") failed)" "\n");
 		}
 	}
 else {
-	LOGGER(R"(FindClass("tk/glucodata/Applic") failed)" "\n");
+	LOGSTRING(R"(FindClass("tk/glucodata/Applic") failed)" "\n");
 	}
 }
 
@@ -149,11 +149,11 @@ if(cl) {
 	XInfuus = (jclass)env->NewGlobalRef(cl);
 	env->DeleteLocalRef(cl);
 	if(!(sendGlucoseBroadcast=env->GetStaticMethodID(XInfuus,"sendGlucoseBroadcast","(Ljava/lang/String;DFJ)V"))) {
-		LOGGER(R"(GetStaticMethodID(XInfuus,"sendGlucoseBroadcast","(Ljava/lang/String;DFJ)V()) failed)" "\n");
+		LOGSTRING(R"(GetStaticMethodID(XInfuus,"sendGlucoseBroadcast","(Ljava/lang/String;DFJ)V()) failed)" "\n");
 		}
 	}
 else {
-	LOGGER(R"(FindClass("tk/glucodata/XInfuus") failed)" "\n");
+	LOGSTRING(R"(FindClass("tk/glucodata/XInfuus") failed)" "\n");
 	}
 	}
 #endif
@@ -169,7 +169,7 @@ if(clappl) {
 	}
 bool loadglucoseclass(JNIEnv *env);
 if(loadglucoseclass(env)) {
-	LOGGER("end JNI_OnLoad\n");
+	LOGSTRING("end JNI_OnLoad\n");
 	 return JNI_VERSION_1_6;
 	 }
 return JNI_ERR;
@@ -183,7 +183,7 @@ initlibreviewjni(env);
 jinitmessages(env) ;
 #endif
 
-	LOGGER("end JNI_OnLoad\n");
+	LOGSTRING("end JNI_OnLoad\n");
 	 return JNI_VERSION_1_6;
 }
 class attach {
@@ -220,7 +220,7 @@ void telldoglucose(const char *name,int32_t mgdl,float glu,float rate,int alarm,
 
 bool updateDevices() {
     if(!jupdateDevices)  {
-    	LOGGER("jupdateDevices==null\n");
+    	LOGSTRING("jupdateDevices==null\n");
 
     		return false;
 		}
@@ -230,11 +230,11 @@ void visiblebutton() {
 	if(glucosecurve) {
 		if(summaryready)  {
 			JNIEnv *env =getenv(); 
-			LOGGER("call summaryready\n");
+			LOGSTRING("call summaryready\n");
 			env->CallVoidMethod(glucosecurve,summaryready);
 			}
 		else
-			LOGGER("didn't find GlucoseCurve\n");
+			LOGSTRING("didn't find GlucoseCurve\n");
 		}
 	}
 
@@ -243,17 +243,17 @@ void callshowsensorinfo(const char *text) {
 	if(glucosecurve) {
 		if(showsensorinfo)  {
 			JNIEnv *env =getenv(); 
-			LOGGER("call showsensorinfo\n");
+			LOGSTRING("call showsensorinfo\n");
 			env->CallVoidMethod(glucosecurve,showsensorinfo,env->NewStringUTF(text));
 			}
 		else
-			LOGGER("didn't find GlucoseCurve\n");
+			LOGSTRING("didn't find GlucoseCurve\n");
 		}
 	}
 #endif
 
 void render() {
-	LOGGER("Render\n");
+	LOGSTRING("Render\n");
 	if(glucosecurve) {
 		struct method {
 		   jmethodID requestRendermeth;

@@ -173,7 +173,7 @@ static LibreHist  librehistory(SensorGlucoseData *sensdata,uint32_t starttime,ui
 	const ScanData *firststream=&stream[notsend];
 	while(!laststream->valid(lastpos)) {
 		if(--laststream<firststream) {
-			LOGGER("no hist: no data\n");
+			LOGSTRING("no hist: no data\n");
 			return {.notsend=streamlen};
 			}
 		}
@@ -188,7 +188,7 @@ static LibreHist  librehistory(SensorGlucoseData *sensdata,uint32_t starttime,ui
 		while(true) {
 			--laststream;
 			if(laststream<firststream) {
-				LOGGER("no librehist no whole period\n");
+				LOGSTRING("no librehist no whole period\n");
 				return {.notsend=static_cast<uint32_t>(notsend)};
 				}
 			if(laststream->valid()) {
@@ -380,7 +380,7 @@ bool putwhenneeded(bool libre3,SensorGlucoseData *sensdata) {
 			}
 		}
 	else {
-		LOGGER("putsensor already done\n");
+		LOGSTRING("putsensor already done\n");
 		return true;
 		}
 	}
@@ -388,7 +388,7 @@ bool sendlibreviewdata() {
 #ifdef  LIBRE3ONLY
 return true;
 #endif
-LOGGER("start sendlibreviewdata()\n");
+LOGSTRING("start sendlibreviewdata()\n");
  const   uint32_t nu=time(nullptr);
 //	int period= 30*24*60*60;
 //	int period= 90*24*60*60;
@@ -443,7 +443,7 @@ LOGGER("numbers.spaceneeded()=%d\n",bytesnumbers);
 constexpr const int  bytesnumbers=0;
 #endif
 	if(!histtotal&&!bytesnumbers) {
-		LOGGER("libreview not needed\n");
+		LOGSTRING("libreview not needed\n");
 		return true;
 		}
 	if(histtotal) {
@@ -531,9 +531,9 @@ time_t tim=scantime;
 	if(uitptr!=startptr)
 		--uitptr;
 	addstrview(uitptr,afterlocalstartime);
-	LOGGER("before numbers.writeallinsulin(uitptr)\n");
+	LOGSTRING("before numbers.writeallinsulin(uitptr)\n");
 	uitptr+=numbers.writeallinsulin(uitptr);
-	LOGGER("after numbers.writeallinsulin(uitptr)\n");
+	LOGSTRING("after numbers.writeallinsulin(uitptr)\n");
 	addstrview(uitptr,afterinsulin);
 
 	if(histtotal) {
@@ -606,11 +606,11 @@ time_t tim=scantime;
 //#define  NOREALSEND 1
 #ifdef NOREALSEND
 	bool datasend=false;
-	LOGGER("libresendmeasurements not send\n");
+	LOGSTRING("libresendmeasurements not send\n");
 #else
 	bool datasend=libresendmeasurements(false,uitbuf,uitlen);
 	if(datasend) {
-		LOGGER("libresendmeasurements success\n");
+		LOGSTRING("libresendmeasurements success\n");
 		numbers.onSuccess();
 		if(histtotal) {
 			if(last>=0) {
@@ -650,7 +650,7 @@ time_t tim=scantime;
 			}
 		}
 	else
-		LOGGER("libresendmeasurements failure\n");
+		LOGSTRING("libresendmeasurements failure\n");
 #endif	
 	return datasend;
 	}
@@ -726,7 +726,7 @@ void libreviewthread() {
 		if(librecondition.dobackup&Backup::wakeend) {
 			librecondition.dobackup=0;
 			libreviewrunning=false;
-			LOGGER("end libreviewthread\n");
+			LOGSTRING("end libreviewthread\n");
 			return;
 			}
 extern bool askhasnewcurrent();
@@ -734,11 +734,11 @@ extern bool askhasnewcurrent();
 		if((librecondition.dobackup&Backup::wakeall)||(hasnewcurrent&&(librecondition.dobackup&Backup::wakestream))) {
 			librecondition.dobackup=0;
 			if(askforaccount||settings->data()->haslibre3) {
-				LOGGER("Libreview: haslibre3\n");
+				LOGSTRING("Libreview: haslibre3\n");
 				if((!settings->data()->libreinit3)){
 					if(!(settings->data()->libreinit3=initlibreconfig(true,alwaysnewstatus3))) {
 						alwaysnewstatus3=false;
-						LOGGER("initlibreconfig failed\n");
+						LOGSTRING("initlibreconfig failed\n");
 						continue;
 						}
 					LOGGER("initlibreconfig success %d\n",settings->data()->libreinit3);
@@ -748,7 +748,7 @@ extern bool askhasnewcurrent();
 					askforaccount=false;
 					settings->data()->uselibre=false;
 					libreviewrunning=false;
-					LOGGER("end libreview thread, account id only\n");
+					LOGSTRING("end libreview thread, account id only\n");
 					return;
 					}
 				if(sendlibre3viewdata(hasnewcurrent)) {
@@ -759,11 +759,11 @@ extern bool askhasnewcurrent();
 					}
 				}
 			if(settings->data()->haslibre2) {
-				LOGGER("Libreview: haslibre2\n");
+				LOGSTRING("Libreview: haslibre2\n");
 				if(!settings->data()->libreinit){
 					if(!(settings->data()->libreinit=initlibreconfig(false,alwaysnewstatus))) {
 						alwaysnewstatus=false;
-						LOGGER("initlibreconfig failed\n");
+						LOGSTRING("initlibreconfig failed\n");
 						continue;
 						}
 					alwaysnewstatus=false;
@@ -772,7 +772,7 @@ extern bool askhasnewcurrent();
 					askforaccount=false;
 					settings->data()->uselibre=false;
 					libreviewrunning=false;
-					LOGGER("end libreview thread, account id only\n");
+					LOGSTRING("end libreview thread, account id only\n");
 					return;
 					}
 				if(sendlibreviewdata()) {

@@ -495,7 +495,7 @@ void makehostview(MainActivity act) {
 			hideSystemUI(act);
 			final int[] ret={w,h};
 			return ret;
-		}, new View[]{ Portlabel},new View[] {portedit},new View[]{new Space(act),Hostlabel,detect,new Space(act)}, Arrays.copyOfRange(hostname,0,hostname.length/2),Arrays.copyOfRange(hostname,hostname.length/2,hostname.length) ,new View[] {testip,haslabel},new View[]{label},
+		}, new View[]{ Portlabel},new View[] {portedit},new View[]{new Space(act),Hostlabel,detect,new Space(act)}, Arrays.copyOfRange(hostname,0,hostname.length/2),Arrays.copyOfRange(hostname,hostname.length/2,hostname.length) ,new View[] {testip},new View[] {haslabel},new View[]{label},
 				new View[]{passiveonly},new View[]{activeonly},new View[]{both},new View[] {receive},new View[] {Sendlabel,Amounts},new View[]{Scans,Stream},new View[]{startlabel},new View[]{alldata,fromnow},new View[]{screenpos} ,new View[]{Password,visible },new View[]{editpass},new View[]{delete,Close},new View[] {reset},new View[]{save});
 		}
 	else {
@@ -681,7 +681,8 @@ Button alarms;
 public  void mkbackupview(MainActivity act) {
 	act.showui=true;
 	act.showSystemUI();
-	Applic.app.getHandler().postDelayed( ()-> realmkbackupview(act),1);
+	realmkbackupview(act);
+//	Applic.app.getHandler().postDelayed( ()-> realmkbackupview(act),1); //for what was it needed?
 	}
 private  void realmkbackupview(MainActivity act) {
 configchanged=false;

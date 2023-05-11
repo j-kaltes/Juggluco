@@ -273,7 +273,9 @@ final private static boolean whiteonblack=false;
 	static private final int glucosealarmid=81432;
 	static boolean alertwatch=false;
 	static private boolean showalways=Natives.getshowalways();
-
+static public String glucosestr(float gl) {
+	return format(usedlocale,glucoseformat, gl);
+	}
 	static public void glucosestatus(boolean val)  {
 		showalways=val;
 		Natives.setshowalways(val);

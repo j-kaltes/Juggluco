@@ -107,7 +107,7 @@ struct outobj;
 
 template <class B,class M,class ...Ts>
 B * locknew(M &mu,Ts && ... args) {
-	LOGGER("locknew\n");
+	LOGSTRING("locknew\n");
         std::lock_guard<M> lock(mu);
         return new B(std::forward<Ts>(args)...);
         }
@@ -134,7 +134,7 @@ int errorcode=0;
 //Abbott(string_view basedir,string &&sensor,data_t *uidin): serial(std::move(sensor)),sensordir(basedir,serial),uid(uidin),state(hist?(hist->mutex.lock(),new scanstate(sensordir)):nullptr) {
 Abbott(string_view basedir,string &&sensor,data_t *uidin): serial(std::move(sensor)),sensordir(basedir,serial),uid(uidin),state(hist?locknew<scanstate>(hist->mutex,sensordir):nullptr) {
 //	if(hist) hist->mutex.unlock();
-	LOGGER("Abbott(string_view basedir,string &&sensor,data_t *uidin)\n");
+	LOGSTRING("Abbott(string_view basedir,string &&sensor,data_t *uidin)\n");
 	std::filesystem::path dir( sensordir.cbegin(),sensordir.cend());
 	 if(!((is_directory(dir)||std::filesystem::create_directories(dir) )&&!access(sensordir.data(), W_OK|R_OK|X_OK))) {
 		lerror(sensordir.data());

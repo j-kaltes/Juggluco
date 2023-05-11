@@ -66,6 +66,10 @@ inline void closesock(int &sock) {
 		}
 	}
 	*/
+#ifndef TESTMENU
+#include <mutex>
+extern std::mutex change_host_mutex;
+#endif
 extern bool networkpresent;
 class Backup;
 extern Backup *backup;
@@ -619,7 +623,7 @@ int changehost(int index,JNIEnv *env,jobjectArray jnames,int nr,bool detect,stri
 	if(index<0) 
 		index=hostnr;
 	if(index>=maxallhosts)  {
-		LOGGER("changehost: index>=maxallhosts\n");
+		LOGSTRING("changehost: index>=maxallhosts\n");
 		return -3;
 		}
 	const bool receiveactive=receive&&activeonly;
@@ -628,7 +632,7 @@ int changehost(int index,JNIEnv *env,jobjectArray jnames,int nr,bool detect,stri
 		}
 	else {
 		if(port.size()>5) {
-			LOGGER("changehost: port.size()>5)\n");
+			LOGSTRING("changehost: port.size()>5)\n");
 			return -1;
 			}
 		}
@@ -657,7 +661,7 @@ int changehost(int index,JNIEnv *env,jobjectArray jnames,int nr,bool detect,stri
 		if(newhost||getupdatedata()->allhosts[index].index==-1) {  //Fout??
 			tohost=getupdatedata()->sendnr;
 			if(tohost>=maxsendtohost) {
-				LOGGER("changehost: tohost>=maxsendtohost\n");
+				LOGSTRING("changehost: tohost>=maxsendtohost\n");
 				return -4;
 				}
 			getupdatedata()->allhosts[index].index=tohost;
@@ -702,7 +706,7 @@ int changehost(int index,JNIEnv *env,jobjectArray jnames,int nr,bool detect,stri
 		}
 	else {
 		if(res==0&&!(passiveonly&&!testip))   {
-			LOGGER("res==0&&!(passiveonly&&!testip))\n");
+			LOGSTRING("res==0&&!(passiveonly&&!testip))\n");
 			ret=-2;
 			}
 		getupdatedata()->allhosts[index].detect=false;
@@ -727,7 +731,7 @@ false	  	false	  	0
 	if(newhost)  {
 		++(getupdatedata()->hostnr);
 		getupdatedata()->allhosts[index].wearos=false;
-		LOGGER("new host ++hostnr\n");
+		LOGSTRING("new host ++hostnr\n");
 		getupdatedata()->allhosts[index].newconnection=true;
 
 		}
@@ -798,7 +802,7 @@ static constexpr const uintptr_t wakesend=128;
 static constexpr const uintptr_t wakereconnect=256;
 static constexpr const uintptr_t wakestreamsend=512;
 void closeallsocks() {
-	LOGGER("closeallsocks\n");
+	LOGSTRING("closeallsocks\n");
 	for(int i=0;i<getupdatedata()->hostnr;i++) {
 		 LOGGER("host %d shutdown(%d)\n",i,hostsocks[i]);
 		::shutdown(hostsocks[i],SHUT_RDWR);
@@ -919,11 +923,15 @@ int updateproc(condvar_t *varsptr,uintptr_t cond,updateone &shost,int  (updateon
 
 
   void	endbackupthread(int h) {
+#ifndef TESTMENU
+  	const std::lock_guard<std::mutex> lock(change_host_mutex);
+#endif
+
 	LOGGER("%d: end backupthread  %p\n",h,con_vars[h]);
 	getupdatedata()->tosend[h].close();
 	delete con_vars[h];
 	con_vars[h]=nullptr;
-	LOGGER("after delete con_vars[h]\n");
+	LOGSTRING("after delete con_vars[h]\n");
 	}
 
 void		doupdates(const uintptr_t current,const int h) { 
@@ -963,7 +971,7 @@ void wakebackuponly(myuintptr_t kind=wakeall){
 	  	if(el)
 			el->wakebackuponly(kind);
 		}
-	LOGGER(" end wakebackuponly\n");
+	LOGSTRING(" end wakebackuponly\n");
   }
 void wakebackup(myuintptr_t kind=wakeall){
 	LOGGER("start wakebackup %lx\n",kind);
@@ -986,11 +994,11 @@ void wakebackup(myuintptr_t kind=wakeall){
 				const int index=here.allindex;
 				const auto &host=getupdatedata()->allhosts[index];
 				if(host.wearos) {
-					LOGGER("networkabsent wearos->wake\n");
+					LOGSTRING("networkabsent wearos->wake\n");
 					doe=true;
 					}
 				else {
-					LOGGER("networkabsent !wearos\n");
+					LOGSTRING("networkabsent !wearos\n");
 					doe=false;
 					}
 				}
@@ -1000,7 +1008,7 @@ void wakebackup(myuintptr_t kind=wakeall){
 				}
 			}
 		}
-	LOGGER(" end wakebackup\n");
+	LOGSTRING(" end wakebackup\n");
   }
   static void startthread(int allindex,int sendindex) {
          LOGGER("in startthread %d %d\n",allindex,sendindex);
@@ -1009,7 +1017,7 @@ void wakebackup(myuintptr_t kind=wakeall){
 	back.detach();
 	}
 static void startbackup(std::string_view globalbasedir) {
-	LOGGER("startbackup\n");
+	LOGSTRING("startbackup\n");
 	backup=new(std::nothrow) Backup(globalbasedir);
 	if(backup) {
 		const int maxsend=backup->getupdatedata()->sendnr;
@@ -1027,7 +1035,7 @@ static void startbackup(std::string_view globalbasedir) {
 					startthread(i,index);
 					}
 				else {
-					LOGGER(" no start\n");
+					LOGSTRING(" no start\n");
 					}
 				}
 			}

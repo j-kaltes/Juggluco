@@ -1278,16 +1278,14 @@ een van het volgende:</p>
 </ul>
 <h2 class="western">Waarde aanwezig melding</h2>
 <p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
-<font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">Soms
-werkt de sensor niet. Als deze optie aanstaat, krijg je een melding
+Soms werkt de sensor niet. Als deze optie aanstaat, krijg je een melding
 als de sensor weer werkt, maar pas als je hebt gezien dat de waarde
 ontbreekt in de Juggluco-app zelf. Als je alleen weet dat de waarde
 ontbrak vanwege de melding van Juggluco of de wijzerplaat, wordt de
-waarde aanwezig melding niet opgeroepen.</font></font></font></p>
+waarde aanwezig melding niet opgeroepen.</p>
 <p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
-<font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">Voor
-elk alarm kun je aangeven welke beltoon moet worden afgespeeld en
-voor hoe lang.</font></font></font></p>
+Voor elk alarm kun je aangeven welke beltoon moet worden afgespeeld en
+voor hoe lang.</p>
 <h2 class="western">Alarm is alarm:</h2>
 <p style="line-height: 100%; margin-bottom: 0in">Indien ingesteld,
 krijgt de beltoon afgespeeld voor laag, hoog en verlies van
@@ -1332,19 +1330,35 @@ Freestyle Libre 2 sensoren.</p>
 manieren kunnen stream glucose waarden van Juggluco naar horloges
 verzonden en daarop weergegeven worden.</p>
 <h2 class="western">Melding</h2>
-<p style="line-height: 100%; margin-bottom: 0in">Als <i>Meld</i><i>ing</i>
+<p style="line-height: 100%; margin-bottom: 0in">Als <i>Melding</i>
 is ingeschakeld, wordt er een Android-melding gemaakt telkens wanneer
 er een nieuwe glucosewaarde binnenkomt. Op sommige horloges worden
 notificaties alleen naar het horloge gestuurd als er een nieuwe
 notificatie wordt aangemaakt, hiervoor moet je <i><b>Apart</b></i>
-aanzetten .<span style="font-style: normal"> Bij deze horloges moet
-je ook </span><i>Apart</i><span style="font-style: normal">
-inschakelen om alarmmeldingen op het horloge te ontvangen</span>.</p>
+aanzetten .<span style="font-variant: normal"> </span><span style="font-variant: normal"><span style="font-style: normal">Bij
+deze horloges moet je ook </span></span><i>Apart</i><span style="font-variant: normal">
+</span><span style="font-variant: normal"><span style="font-style: normal">inschakelen
+om alarmmeldingen op het horloge te ontvangen</span></span>.</p>
 <h2 class="western">Watchdrip</h2>
 <p style="line-height: 100%; margin-bottom: 0in"><span lang="nl-NL">Door
 deze aan te zetten, stuurt Juggluco glucosewaarden naar <a class="western" href="https://bigdigital.home.blog/2022/06/16/watchdrip-a-new-application-for-xdrip-watch-integration">Watchdrip+</a>
 . Watchdrip+ stuurt wijzerplaten met glucosewaarden naar
 MiBand/Amazfit-horloges.</span></p>
+<h2 class="western">GadgetBridge</h2>
+<p style="line-height: 100%; margin-bottom: 0in">GadgetBridge (<a class="western" href="https://codeberg.org/Freeyourgadget/Gadgetbridge/wiki">Wiki</a>)
+maakt het mogelijk om weersinformatie weer te geven op
+MiBand/Amazfit-horloges. Met de Gadgetbridge-optie ingeschakeld, zal
+Juggluco glucosewaarden naar GadgetBridge sturen onder het
+voorwendsel dat het weersinformatie is. Dit heeft boven Watchdrip als
+voordeel dat het veel sneller is, maar heeft als nadeel dat er minder
+informatie wordt weergegeven. Juggluco zet de glucosewaarde en een
+richtingspijl in de locatie van het weer. Deze locatie wordt
+weergegeven onder Weer op het horloge. Ik heb geen wijzerplaat
+gevonden die deze locatie weergeeft. De afgeronde glucosewaarde,
+wordt als de huidige temperatuur overgezonen, de waarde voor de komma
+wordt als de maximale temperatuur en de waarde na de komma als de
+minimale temperatuur. De richting van verandering bepaalt het
+weerpictogram: sneeuw is dalende glucose, regen is stijgende glucose.</p>
 <h2 class="western">Kerfstok</h2>
 <p style="line-height: 100%; margin-bottom: 0in"><span lang="nl-NL">Kerfstok
 is een horloge app voor sommige Garmin horloges waarmee je nummers
@@ -1369,15 +1383,16 @@ Juggluco verbonden is de waarden maximaal 1 minuut oud zijn (als er
 geen connectie problemen of zo optreden). Juggluco zendt altijd de
 recentste glucose waarden, maar die worden enkel naar de xDrip
 horloge app verzonden nadat die er om gevraagd heeft. Watch faces en
-data fields op </span><span lang="nl-NL"><b>Garmin</b></span><span lang="nl-NL">
-horloges vragen elke 5 minute naar een glucose waarden omdat Garmin
-een hogere update frequentie niet toelaat. Via xDrip kon dat er toe
-leiden dat een 10 minute oude glucose waarden getoond werd. Direct
-verbonden aan Juggluco zijn die waarden maximaal 6 minuten oud (als
-alles goed gaat). Als je een programmeerbare Garmin horloge hebt
-waarop Kerfstok niet werkt omdat het geen touchscreen heeft, bestaan
-er de volgende mogelijkheden om toch een niet al te oude glucose
-waarden op je horloge te zien. Een xDrip widget
+data fields op </span><span lang="nl-NL"><b>Garmin</b></span>
+<span lang="nl-NL">horloges vragen elke 5 minute naar een glucose
+waarden omdat Garmin een hogere update frequentie niet toelaat. Via
+xDrip kon dat er toe leiden dat een 10 minute oude glucose waarden
+getoond werd. Direct verbonden aan Juggluco zijn die waarden maximaal
+6 minuten oud (als alles goed gaat). Als je een programmeerbare
+Garmin horloge hebt waarop Kerfstok niet werkt omdat het geen
+touchscreen heeft, bestaan er de volgende mogelijkheden om toch een
+niet al te oude glucose waarden op je horloge te zien. Een xDrip
+widget
 (<a class="western" href="https://apps.garmin.com/en-US/apps/73115e04-dc9f-4765-ad88-e7ae283ce995">https://apps.garmin.com/en-US/apps/73115e04-dc9f-4765-ad88-e7ae283ce995</a>)
 vertoont direct na het opstarten altijd de meest recente waarde en
 kan ook tijdens het draaien van een sport activiteit horloge app
@@ -1388,8 +1403,8 @@ andere mogelijkheid is een xDrip sport app
 te gebruiken en die zo op te starten dat het moment waarop het de
 glucose waarden opvraagt net na het binnenkomen van een nieuwe
 glucose waarden bij Juggluco is. Volgens een gebruiker bestaat er ook
-een wijzerplaat (watch face) for </span><span lang="nl-NL"><b>Fitbit</b></span><span lang="nl-NL">
-horloges dat werkt met de xDrip webserver:
+een wijzerplaat (watch face) for </span><span lang="nl-NL"><b>Fitbit</b></span>
+<span lang="nl-NL">horloges dat werkt met de xDrip webserver:
 <a class="western" href="https://glancewatchface.com/">https://glancewatchface.com</a></span></p>
 <p><b>local only</b>: server accepteert enkel verbindingen van
 localhost (127.0.0.1). Als je het uitzet kunnen ook andere hosts
@@ -2150,6 +2165,34 @@ tablet of via de Juggluco-server op een computer. Het zal de batterij
 leegmaken, vooral als het geen contact kan maken met de
 Nightscout-server, dus je kunt <i>Active</i> beter uitschakelen als
 er geen betrouwbare verbinding is.</p>
+]]>
+</string>
+<string name="notificationpermission" >
+<![CDATA[
+<p>Android 13 vereist dat voordat je
+weet wat voor soort meldingen worden verzonden, je toestemming geeft
+voor deze meldingen. Juggluco heeft notificaties met glucosewaarden
+en vereist notificaties in verband met een Foreground Service die
+nodig is om op de achtergrond actief te blijven. Voor een goede
+werking van Juggluco kun je beter Juggluco deze toestemming geven.</p>
+<p>Meldingen kun je eenvoudig in- en uitschakelen in de
+Android-instellingen &quot;<i>App-Info -&gt; Meldingen </i><i>beheren</i>&quot;
+voor Juggluco.</p>
+]]>
+</string>
+<string name="staticnum" >
+<![CDATA[
+<h1 align="center">Geblokkeerd</h1>
+<p style="line-height: 100%; margin-bottom: 0in"><span lang="nl-NL"><b>Menu
+links in het midden -&gt;</b></span><span lang="nl-NL"><b>Kloon</b></span><span lang="nl-NL"><b>
+-&gt; &quot;</b></span><em><span lang="nl-NL"><b>Hoeveelheden komen
+van kloon</b></span></em><span lang="nl-NL"><b>&quot;</b></span><span lang="nl-NL">
+is ingesteld om te voorkomen dat </span><span lang="nl-NL">hoeveelheden</span><span lang="nl-NL">
+in deze app worden ingevoerd, omdat deze worden overschreven door
+</span><span lang="nl-NL">hoeveelheden</span><span lang="nl-NL"> die
+worden ontvangen van de </span><span lang="nl-NL">kloon</span><span lang="nl-NL">verbinding.</span></p>
+<p style="line-height: 100%; margin-bottom: 0in">Schakel deze optie
+uit als deze app geen hoeveelheden ontvangt van een kloon-verbinding.</p>
 ]]>
 </string>
 </resources>

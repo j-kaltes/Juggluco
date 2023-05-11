@@ -219,7 +219,7 @@ static void watchserverloop(int *sockptr,bool secure)  {
 				if(*sockptr==serversock)
 					*sockptr=-1;
 				close(serversock);
-				LOGGER("exit\n"); return;
+				LOGSTRING("exit\n"); return;
 				} 
 			continue;
 			}
@@ -320,7 +320,7 @@ static bool sendall(int sock ,const char *buf,int buflen) {
                 it+=itlen;
                 left-=itlen;
                 }
-        LOGGER("success sendall\n");
+        LOGSTRING("success sendall\n");
         return true;
         }
 bool watchcommands(char *rbuf,int len,recdata *outdata) ;
@@ -333,7 +333,7 @@ bool watchcommands(int sock) {
 		return false;
 		}
 	if(len==0) {
-		LOGGER("shutdown\n");
+		LOGSTRING("shutdown\n");
 		return false;
 		}
 	struct recdata outdata;
@@ -417,7 +417,7 @@ extern int Tdatestring(time_t tim,char *buf) ;
 
 //		return givetreatments(outdata);
 bool givenolist(recdata *outdata) {
-	LOGGER("givenothing\n");
+	LOGSTRING("givenothing\n");
 	const std::string_view nothing="[]";
 	outdata->allbuf=new(std::nothrow) char[nothing.size()+512];
 	char *start=outdata->allbuf+152;
@@ -426,7 +426,7 @@ bool givenolist(recdata *outdata) {
 	return true;
 }
 bool givenothing(recdata *outdata) {
-	LOGGER("givenothing\n");
+	LOGSTRING("givenothing\n");
 	const std::string_view nothing="{}\n";
 	outdata->allbuf=new(std::nothrow) char[nothing.size()+512];
 	char *start=outdata->allbuf+152;
@@ -560,9 +560,9 @@ bool givesgvtxt(int nr,int interval,uint32_t lowerend,uint32_t higherend,recdata
 
 	char *startheader=start-lenlen-headerlen;
 	outdata->start=startheader;
-	LOGGER("Before add header\n");
+	LOGSTRING("Before add header\n");
 	addar(startheader,header);
-	LOGGER("Before add lenstr\n");
+	LOGSTRING("Before add lenstr\n");
 	memcpy(startheader,lenstr,lenlen);
 	startheader+=lenlen;
 	outdata->len=outiter-outdata->start;
@@ -719,7 +719,7 @@ bool giveproperties(const char *input,int inputlen,recdata *outdata) {
 		while (true) {
 			const std::string_view buckets = "buckets";
 			if (!memcmp(input, buckets.data(), buckets.size())) {
-				LOGGER("givebuckets\n");
+				LOGSTRING("givebuckets\n");
 				outiter = givebuckets(outiter);
 				input += buckets.size();
 			} else {
@@ -900,7 +900,7 @@ bool watchcommands(char *rbuf,int len,recdata *outdata) {
 			return false;
 			}
 		else {
-			LOGGER("secret matched\n");
+			LOGSTRING("secret matched\n");
 			}
 		}
 	if(!toget.size()) {
@@ -1058,9 +1058,9 @@ template <typename Num> static const char *readnum(const char *start,const char 
 	switch(ec)  {
 		 case std::errc():break;
 		 case std::errc::invalid_argument:
-			LOGGER("That isn't a number. ");
+			LOGSTRING("That isn't a number. ");
 		case  std::errc::result_out_of_range:
-			LOGGER( "This number is larger than an int. ");
+			LOGSTRING("This number is larger than an int. ");
 		default: 
 			LOGGER("Error %d\n",ec);
 			return nullptr;
@@ -1089,7 +1089,7 @@ void mkheader(char *outstart,char *outiter,const bool headonly,recdata *outdata)
 		}
 	else
 		 totlen=outiter-startheader;
-	LOGGER("All:\n");
+	LOGSTRING("All:\n");
 	logwriter(startheader,totlen);
 	outdata->start=startheader;
 	outdata->len=totlen;
@@ -1287,7 +1287,7 @@ static bool givetreatments(const char *args,int argslen, recdata *outdata)  {
 		}
 	
 	const int basecount=numdatas.size();
-	LOGGER("givetreatments:\n");
+	LOGSTRING("givetreatments:\n");
 	NumIter<Num> numiters[basecount];
 	for(int i=0;i<basecount;i++) {
 		auto [low,high]= numdatas[i]->getInRange(pret.lowerend,pret.higherend); 

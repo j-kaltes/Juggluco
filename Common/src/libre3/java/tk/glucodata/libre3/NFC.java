@@ -23,7 +23,7 @@ package tk.glucodata.libre3;
 
 import static tk.glucodata.Natives.getlibreAccountIDnumber;
 import static tk.glucodata.Natives.interpret3NFC2;
-import static tk.glucodata.Natives.showbytes;
+import static tk.glucodata.Log.showbytes;
 
 import android.nfc.Tag;
 
