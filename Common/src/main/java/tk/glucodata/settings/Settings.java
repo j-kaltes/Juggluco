@@ -517,7 +517,7 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 		    hidekeyboard();
 		finish();});
        Button ok =new Button(context);
-        ok.setText(R.string.ok);
+        ok.setText(R.string.save);
 	CheckBox levelleft= new CheckBox(context);
 	levelleft.setText(R.string.glucoseaxisleft);
 	levelleft.setChecked(Natives.getlevelleft());

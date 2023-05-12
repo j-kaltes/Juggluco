@@ -763,6 +763,8 @@ var space=getlabel(act,"        ");
 			});
 	getaccountid.setOnClickListener(v->  {
 //		confirmGetAccountID(act);
+			boolean turnonlibre=sendtolibreview.isChecked();
+			getgegs.test(false);
 
 			layout.setVisibility(GONE);
 			removeContentView(layout);
