@@ -1,3 +1,4 @@
+
 Libreview:
 	- Als librelink naar Libre3 gegaan worden nummers ook met de andere app ingevoerd. Dit kan tot gevolg hebben dat een oude
 	waarde met een andere app gewijzigd wordt. Die oude waarde wordt daardoor niet verwijderd en enkel toegevoegd.

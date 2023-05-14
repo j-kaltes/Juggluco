@@ -732,7 +732,7 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 		views=new View[][]{row0, row1,new View[]{scalelabel,fixatex,fixatey}, row2,new View[]{levelleft,camera,reverseorientation},
 		hasnfc?new View[]{nfcsound, globalscan}:null,
 
-		new View[]{libreview,librelinkbroadcast,xdripbroadcast},new View[]{ showalways,webserver,uploader,jugglucobroadcast}, rowglu,row8,row9};
+		new View[]{showalways,libreview,librelinkbroadcast},new View[]{xdripbroadcast ,jugglucobroadcast ,webserver,uploader }, rowglu,row8,row9};
 	       webserver.setOnClickListener(v-> tk.glucodata.Nightscout.show(context,thelayout[0]));
 	       uploader.setOnClickListener(v-> tk.glucodata.NightPost.config(context,thelayout[0]));
 		}
