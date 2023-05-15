@@ -49,7 +49,7 @@
     <string name="portrange">Network ports should be between 1024 and 65535</string>
     <string name="start">Start</string>
     <string name="now">Now</string>
-    <string name="dontchangeamounts">Amounts received from mirror</string>
+    <string name="dontchangeamounts">Mirror sends amounts</string>
     <string name="thishost">This host:</string>
     <string name="dozemode">Doze mode?</string>
     <string name="sync">Sync</string>

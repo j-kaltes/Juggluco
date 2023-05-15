@@ -59,6 +59,7 @@ private static     int librecode(float rate) {
 //private static final String[] librenames={"Undetermined","Falling_Quickly","Falling","Steady","Rising","Rising_Quickly"};
 private static final String[] librearrows={" ","\u2193", "\u2198","\u2192", "\u2197", "\u2191"};
 private static final int[] libreweather=  {701,			602,		600,	800,	    500,	502};
+//private static final int[] libreweather=  {603,			603,		603,	603,	    603,	603};
 //					   mist		heavy snow	snow	clear	rain heavy rain
 
 /*

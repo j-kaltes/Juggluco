@@ -48,7 +48,7 @@
      <string name="portrange">Port sollte zwischen 1024 und 65535 liegen</string>
      <string name="start">Start</string>
      <string name="now">Jetzt</string>
-     <string name="dontchangeamounts">Mengen erhalten vom Klon</string>
+     <string name="dontchangeamounts">Klon sendet Mengen</string>
      <string name="thishost">Dieser Host:</string>
      <string name="dozemode">Doze-modus</string>
      <string name="sync">Sync</string>

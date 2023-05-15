@@ -117,10 +117,10 @@ functions as a Mirror app (receiving glucose values from another
 device running Juggluco), you can press <b>Alarms</b> to get to a
 dialog where you can specify low and high glucose alarms and related
 notifications.</p>
-<p style="line-height: 100%; margin-bottom: 0in"><b>Amounts received
-from mirror: </b>If the app receives amounts of medication, food and
-sport data from this app running on another device, you shouldn\'t add
-or modify these same information here. Checking this makes it
+<p style="line-height: 100%; margin-bottom: 0in"><b>Mirror sends
+a</b><b>mounts: </b>If the app receives amounts of medication, food
+and sport data from this app running on another device, you shouldn\'t
+add or modify these same information here. Checking this makes it
 impossible. 
 </p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>Sync</b> sends
@@ -1990,7 +1990,7 @@ the values 5 minutes apart, except when &quot;interval=secs&quot; is
 set to a lower value.</p>
 <p><b>URL</b>: the url should be in the form of https://hostname:port
 for example, https://myname.herokuapp.com:6789</p>
-<p><b>Active</b>: Turn server on</p>
+<p><b>Active</b>: Turn on uploader</p>
 <p><b>Resend data</b>: Upload all data again to the Nightscout server</p>
 <p><b>Send now</b>: Normally data is immediately send when it arrives
 from the sensor or a mirror connection. Press on this button when for
@@ -2020,7 +2020,7 @@ App-Info -&gt; Notifications for Juggluco.</p>
 <![CDATA[
 <h1 align="center">Blocked</h1>
 <p style="line-height: 100%; margin-bottom: 0in"><b>Left middle
-menu-&gt;Mirror-&gt;&quot;</b><em><b>Amounts received from mirror</b></em><b>&quot;</b>
+menu-&gt;Mirror-&gt;&quot;</b><em><b>Mirror sends Amounts</b></em><b>&quot;</b>
 is set to prevent entering amounts in this app, because they will be
 overridden by amounts received from the mirror connection.</p>
 <p style="line-height: 100%; margin-bottom: 0in">If this app doesn\'t

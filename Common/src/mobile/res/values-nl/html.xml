@@ -109,9 +109,9 @@ naar verbindingen.</p>
 <p style="line-height: 100%; margin-bottom: 0in">Door op <b>Verbinding
 toevoegen</b> te drukken kun je aangeven waarmee en hoe verbindingen
 te vormen.</p>
-<p style="line-height: 100%; margin-bottom: 0in"><b>Verander
-hoeveelheden niet</b>: Als dit apparaat hoeveelheid data van Juggluco
-op een ander apparaat ontvangt, moet dit apparaat die gegeven niet
+<p style="line-height: 100%; margin-bottom: 0in"><b>Kloon stuurt
+hoeveelheden</b>: Als dit apparaat hoeveelheid data van Juggluco op
+een ander apparaat ontvangt, moet dit apparaat die gegeven niet
 veranderen. Als je dit aanvinkt, is dat onmogelijk.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>Sync</b> zendt
 data naar een verbonden apparaat of vraagt om nieuwe data. Dit is
@@ -2185,8 +2185,7 @@ voor Juggluco.</p>
 <h1 align="center">Geblokkeerd</h1>
 <p style="line-height: 100%; margin-bottom: 0in"><span lang="nl-NL"><b>Menu
 links in het midden -&gt;</b></span><span lang="nl-NL"><b>Kloon</b></span><span lang="nl-NL"><b>
--&gt; &quot;</b></span><em><span lang="nl-NL"><b>Hoeveelheden komen
-van kloon</b></span></em><span lang="nl-NL"><b>&quot;</b></span><span lang="nl-NL">
+-&gt; &quot;</b></span><em><span lang="nl-NL"><b>Kloon stuurt hoeveelheden</b></span></em><span lang="nl-NL"><b>&quot;</b></span><span lang="nl-NL">
 is ingesteld om te voorkomen dat </span><span lang="nl-NL">hoeveelheden</span><span lang="nl-NL">
 in deze app worden ingevoerd, omdat deze worden overschreven door
 </span><span lang="nl-NL">hoeveelheden</span><span lang="nl-NL"> die

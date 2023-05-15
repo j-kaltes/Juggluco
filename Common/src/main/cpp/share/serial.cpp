@@ -83,22 +83,22 @@ string  encodeStatusCode(int64_t  code) {
 
 //array<unsigned char,8> unserial(string_view str) {
 array<unsigned char,8> unserial(const char * const str) {
-array<unsigned char,8> bytuit;
-constexpr int len=11;
-unsigned char bytin[len];
-const char *serial=str+5;
-for(int i=0;i<len;i++)
-	bytin[i]=unalf(serial[i]);
+	array<unsigned char,8> bytuit;
+	constexpr int len=11;
+	unsigned char bytin[len];
+	const char *serial=str+5;
+	for(int i=0;i<len;i++)
+		bytin[i]=unalf(serial[i]);
 
-bytuit[7]=hexnum(str[0],str[1]);
-bytuit[6]=hexnum(str[2],str[3]);
-bytuit[5]=bytin[1]<<3|((bytin[2]>>2)&7);
-bytuit[4]=bytin[3]<<1|bytin[2]<<6|((bytin[4]>>4)&1);
-bytuit[3]= ((bytin[4]&0xF)<<4)|((bytin[5]>>1)&0xF);
-bytuit[2]=bytin[5]<<7| (bytin[6]&31)<<2| ((bytin[7]>>3)&3);
-bytuit[1]=(bytin[7]&7)<<5| bytin[8];
-bytuit[0]=bytin[9]<<3| bytin[10]>>2;
-return bytuit;
+	bytuit[7]=hexnum(str[0],str[1]);
+	bytuit[6]=hexnum(str[2],str[3]);
+	bytuit[5]=bytin[1]<<3|((bytin[2]>>2)&7);
+	bytuit[4]=bytin[3]<<1|bytin[2]<<6|((bytin[4]>>4)&1);
+	bytuit[3]= ((bytin[4]&0xF)<<4)|((bytin[5]>>1)&0xF);
+	bytuit[2]=bytin[5]<<7| (bytin[6]&31)<<2| ((bytin[7]>>3)&3);
+	bytuit[1]=(bytin[7]&7)<<5| bytin[8];
+	bytuit[0]=bytin[9]<<3| bytin[10]>>2;
+	return bytuit;
 	}
 
 //#define MAIN

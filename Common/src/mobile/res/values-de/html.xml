@@ -152,8 +152,8 @@ Juggluco als Klon-App funktioniert (d. h. Glukosewerte von einem
 anderen Gerät empfängt, auf dem Juggluco läuft), können Sie auf
 <b>Alarme </b>drücken, um ein Dialogfeld aufzurufen, in dem Sie
 Alarme für niedrige und hohe Glukosewerte festlegen können.</p>
-<p align="left" style="line-height: 100%; margin-bottom: 0in"><b>Ändern
-Sie keine Mengen: </b>Wenn die App die Mengen an Medikamenten,
+<p align="left" style="line-height: 100%; margin-bottom: 0in"><b>Klon
+sendet Mengen</b><b>: </b>Wenn die App die Mengen an Medikamenten,
 Nahrungsmitteln und Sportdaten von dieser App auf einem anderen Gerät
 erhält, sollten Sie diese Informationen hier nicht hinzufügen oder
 ändern. Wenn Sie dies markieren, wird es unmöglich. 
@@ -196,22 +196,21 @@ empfangen (receive)</p>
 
 </p>
 <p align="left" style="line-height: 100%; margin-bottom: 0in"><span lang="de-DE">Weitere
-Informationen zu </span><span lang="de-DE">Klon</span><span lang="de-DE">-Verbindungen
-finden Sie in der Hilfe unter &quot;</span><span lang="de-DE"><i>Verbindung
-hinzufügen</i></span><span lang="de-DE">&quot; und unter
-</span><a class="western" href="https://www.juggluco.nl/Juggluco/mgdL#mirror"><span lang="de-DE"><u>https://www.juggluco.nl/Juggluco/</u></span><span lang="de-DE"><u>mgdL</u></span><span lang="de-DE"><u>#mirror</u></span></a></p>
+Informationen zu Klon-Verbindungen finden Sie in der Hilfe unter
+&quot;</span><span lang="de-DE"><i>Verbindung hinzufügen</i></span><span lang="de-DE">&quot;
+und unter </span><a class="western" href="https://www.juggluco.nl/Juggluco/mgdL#mirror"><span lang="de-DE"><u>https://www.juggluco.nl/Juggluco/mgdL#mirror</u></span></a></p>
 <h1>Desktop-Computer</h1>
-<p align="left" style="line-height: 100%; margin-bottom: 0in"><span lang="de-DE"><span style="text-decoration: none">Sie
+<p align="left" style="line-height: 100%; margin-bottom: 0in"><span style="text-decoration: none"><span lang="de-DE">Sie
 können die Android Juggluco-App mit Hilfe eines Android-Emulators
 (z. B. <a class="western" href="https://www.genymotion.com/">Genymotion</a>)
 auf einem Windows-, Macintosh- oder Linux-Computer ausführen. Der
 Juggluco auf dem Emulator erhält die Daten über eine
-</span></span><span lang="de-DE"><span style="text-decoration: none">Klon</span></span><span lang="de-DE"><span style="text-decoration: none">-Verbindung
-von einem mit dem Sensor verbundenen Android-Telefon.
+Klon-Verbindung von einem mit dem Sensor verbundenen Android-Telefon.
 Pinch-Bewegungen (Bewegen zweier Finger zueinander oder voneinander
 weg) können durch Drücken einer Taste (Control in
-Genymotion),während der Maus bewegt wird</span></span><span lang="de-DE"><span style="text-decoration: none">,</span></span><span lang="de-DE"><span style="text-decoration: none">
-simuliert werden.</span></span></p>
+Genymotion),während der Maus bewegt wird,</span></span><span style="text-decoration: none">
+</span><span style="text-decoration: none"><span lang="de-DE">simuliert
+werden.</span></span></p>
 ]]>
 </string>
 <string name="addconnection" >
@@ -2635,7 +2634,7 @@ Juggluco ein- und ausschalten.</p>
 <h1 align="center">Blocked</h1>
 <p style="line-height: 100%; margin-bottom: 0in"><span lang="de-DE"><b>Das
 Menü links in der Mitte -&gt; </b></span><span lang="de-DE"><b>Klon</b></span><span lang="de-DE"><b>
--&gt; „</b></span><span lang="de-DE"><b>Mengen erhalten vom Klon</b></span><span lang="de-DE">“
+-&gt; „</b></span><span lang="de-DE"><b>Klon sendet Mengen</b></span><span lang="de-DE">“
 ist  eingestellt, </span><span lang="de-DE">so</span><span lang="de-DE">dass
 die Eingabe von </span><span lang="de-DE">Mengen</span><span lang="de-DE">
 in dieser App verhindert wird, da diese durch von der </span><span lang="de-DE">Klon</span><span lang="de-DE">verbindung

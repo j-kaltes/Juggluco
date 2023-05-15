@@ -50,7 +50,7 @@
     <string name="portrange">Poort moet een nummer zijn tussen 1024 en 65535</string>
     <string name="start">Begin</string>
     <string name="now">Nu</string>
-    <string name="dontchangeamounts">Hoeveelheden komen van kloon</string>
+    <string name="dontchangeamounts">Kloon stuurt hoeveelheden</string>
     <string name="thishost">Deze:</string>
     <string name="dozemode">Doze mode?</string>
     <string name="sync">Sync</string>

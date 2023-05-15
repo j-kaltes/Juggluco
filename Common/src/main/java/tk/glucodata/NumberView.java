@@ -71,6 +71,7 @@ import static tk.glucodata.RingTones.EnableControls;
 import static tk.glucodata.settings.Settings.editoptions;
 import static tk.glucodata.settings.Settings.removeContentView;
 import static tk.glucodata.util.getbutton;
+import static tk.glucodata.util.getlabel;
 
 public class NumberView {
 final private static String LOG_ID="NumberView";
@@ -114,12 +115,12 @@ public void  addnumberview(MainActivity activity, long hitptr) {
 		if(!Natives.staticnum())
 			deletebutton.setVisibility(VISIBLE);
 		else
-			deletebutton.setVisibility(INVISIBLE);
+			deletebutton.setVisibility(GONE);
 		currentnum = hitptr;
 		setmealbutton(type,bron, Natives.hitmeal(hitptr)) ;
 		}
 	else {
-		deletebutton.setVisibility(INVISIBLE);
+		deletebutton.setVisibility(GONE);
 		setmealbutton(type,bron, 0) ;
 		currentnum=0L;
 		}
@@ -139,6 +140,7 @@ float roundto(float get,float ro) {
 final private int[] newmealptr={0};
 final private Layout[] mealview={null};
 private long lasttime=0L;
+private TextView messagetext;
 public   View addnumberview(MainActivity context,final int bron,final long time,final float value,final int type,final int tmpmealptr) {
     if(newnumview==null) {
         datebutton = new Button(context);
@@ -155,7 +157,10 @@ public   View addnumberview(MainActivity context,final int bron,final long time,
         timeview=timebutton;
 	mealbutton=getbutton(context,R.string.mealname);
 	source.setMinWidth(mealbutton.getMinWidth());
-	
+	messagetext=getlabel(context,R.string.dontchangeamounts);
+	int pads=(int)(GlucoseCurve.metrics.density*8);
+        messagetext.setPadding(pads,0,0,0);
+	//messagetext.setVisibility(GONE);
 	mealbutton.setVisibility(GONE);
 	if(isWearable) {
 		valueedit=geteditwearos(context);
@@ -174,7 +179,8 @@ public   View addnumberview(MainActivity context,final int bron,final long time,
         savebutton = new Button(context);
         savebutton.setText(R.string.save);
 
-        Layout layout = isWearable?new Layout(context,new View[] {source},new View[]{datebutton,timebutton} , row1, new View[]{cancel,savebutton},new View[]{deletebutton}):new Layout(context, (lay, w, h) -> {
+
+        Layout layout = isWearable?new Layout(context,new View[] {source},new View[]{datebutton,timebutton} , row1, new View[]{messagetext,deletebutton,savebutton},new View[]{cancel}):new Layout(context, (lay, w, h) -> {
 		int hei=GlucoseCurve.getheight();
 		int wid=GlucoseCurve.getwidth();
 		   if(wid>hei) {
@@ -204,7 +210,7 @@ public   View addnumberview(MainActivity context,final int bron,final long time,
 
 			}
 
-			return new int[] {w,h}; }, new View[]{datebutton, mealbutton,source,timebutton}, row1,new View[]{deletebutton, cancel, savebutton});
+			return new int[] {w,h}; }, new View[]{datebutton, mealbutton,source,timebutton}, row1,new View[]{messagetext,deletebutton, cancel, savebutton});
 
 
 	layout.setBackgroundColor( Applic.backgroundcolor);
@@ -306,10 +312,14 @@ public   View addnumberview(MainActivity context,final int bron,final long time,
 	int pads=(int)(GlucoseCurve.metrics.density*10);
         source.setPadding(0,pads,0,pads);
 //	source.setPadding(0,0,0,0);
-	if(!Natives.staticnum())
+	if(!Natives.staticnum()) {
+		messagetext.setVisibility(GONE);
 		savebutton.setVisibility(VISIBLE);
-	else
+		}
+	else  {
 		savebutton.setVisibility(GONE);
+		messagetext.setVisibility(VISIBLE);
+		}
 	 context.setonback(() -> {
 		    	if(newmealptr[0]!=0) {
 				if(currentnum!=0&&(currentnum!=numio.newhit)) {
@@ -426,7 +436,7 @@ public void addnumberwithmenu(MainActivity context,int mealptr) {
 	var type=Natives.getmealvar();
 	 addnumberview(context,1,currentTimeMillis(),Float.MAX_VALUE,type,mealptr);
 	setmealbutton(type,1, 0) ;
-        deletebutton.setVisibility(INVISIBLE);
+        deletebutton.setVisibility(GONE);
 	thetime=-1;
 	thedate=0L;
 	}
@@ -439,7 +449,7 @@ public View addnumberview(MainActivity context) {
 	View lay=  addnumberview(context,1,currentTimeMillis(),Float.MAX_VALUE,0,-1);
 	setmealbutton(0,1, 0) ;
 	spinner.performClick();
-        deletebutton.setVisibility(INVISIBLE);
+        deletebutton.setVisibility(GONE);
 	thetime=-1;
 	thedate=0L;
     return lay;
