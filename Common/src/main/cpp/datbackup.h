@@ -608,7 +608,7 @@ void setactivereceive(int allindex,passhost_t *ph,bool startthread=true) {
 	extern std::vector<condvar_t*> active_receive;
 		active_receive.push_back(new condvar_t);
 		ph->activereceive=active_receive.size();
-		LOGGER("setactivereceive nr=%d\n",ph->activereceive);
+		LOGGER("setactivereceive allindex=%d nr=%d\n",allindex,ph->activereceive);
 
 		if(startthread) {
 			void activereceivethread(int allindex,passhost_t *pass) ;

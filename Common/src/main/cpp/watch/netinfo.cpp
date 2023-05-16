@@ -380,8 +380,10 @@ extern "C" JNIEXPORT  jbyteArray  JNICALL   fromjava(getmynetinfo)(JNIEnv *env, 
 					info.sendnums=updat.sendnums;
 					info.sendscans=updat.sendscans;
 					}
-				if(updat.sendnums)
+				if(updat.sendnums) {
 					receive=false;
+					backup->endactivereceive(index);
+					}
 				else
 					receive=true;
 				}

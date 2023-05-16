@@ -292,7 +292,7 @@ void activereceivethread(int allindex,passhost_t *pass) {
 #ifndef NOLOG
 	int slen =
 #endif
-	snprintf(buf, maxbuf, "Ractive%d", h);
+	snprintf(buf, maxbuf, "Ractive%d_%d", allindex,h);
 	LOGGERN(buf, slen);
 	prctl(PR_SET_NAME, buf, 0, 0, 0);
 }
