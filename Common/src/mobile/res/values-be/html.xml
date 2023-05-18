@@ -850,11 +850,11 @@ Vivoactive 3, правёўшы пальцам улева). Тут вы
 <![CDATA[
 <h1 class="western">Налады</h1>
 <h2 class="western">Адзінка</h2>
-<p style="line-height: 100%; margin-bottom: 0cm">Выберыце, ці
+<p style="line-height: 100%; margin-bottom: 0in">Выберыце, ці
 трэба даваць значэнні глюкозы ў ммоль/л
 або дм/дл.</p>
 <h2 class="western">Дыяпазон графіка: нізкі-высокі.</h2>
-<p style="line-height: 100%; margin-bottom: 0cm">Задайце
+<p style="line-height: 100%; margin-bottom: 0in">Задайце
 нізкае і высокае значэнне, каб ніжняя
 частка экрана адпавядала самаму нізкаму,
 а верхняя - самаму высокаму. Гэтыя
@@ -868,7 +868,7 @@ Vivoactive 3, правёўшы пальцам улева). Тут вы
 дысплеі знаходзяцца ў межах ад 5 ммоль/л
 да 6 ммоль/л, графік адлюстроўвае ўзровень
 глюкозы ад 3 да 9.</p>
-<p style="line-height: 100%; margin-bottom: 0cm">Калі <b>ўключана
+<p style="line-height: 100%; margin-bottom: 0in">Калі <b>ўключана
 магчымасць маштабавання</b> глюкозы
 ўручную, вы можаце змяніць гэта: рухаючы
 пальцам па верхняй частцы экрана,
@@ -877,7 +877,7 @@ Vivoactive 3, правёўшы пальцам улева). Тут вы
 перамяшчае ніжнюю палову графіка ўверх
 і ўніз.</p>
 <h2 class="western">Мэтавы дыяпазон: нізкі-высокі</h2>
-<p style="line-height: 100%; margin-bottom: 0cm">Верхні бок
+<p style="line-height: 100%; margin-bottom: 0in">Верхні бок
 дысплея афарбаваны па-іншаму, каб вам
 было лягчэй бачыць высокія значэнні.
 Тое ж самае справядліва і для нізкіх
@@ -890,7 +890,7 @@ Vivoactive 3, правёўшы пальцам улева). Тут вы
 глюкозы ў сярэдзіне экрана, напрыклад,
 у Wear OS.</p>
 <h2 class="western">Інвертаваць экран</h2>
-<p style="line-height: 100%; margin-bottom: 0cm">Перавярніце
+<p style="line-height: 100%; margin-bottom: 0in">Перавярніце
 дысплей дагары нагамі. Ён уключаны па
 змаўчанні, таму што ў адваротным выпадку
 я час ад часу выпадкова націскаў OK падчас
@@ -932,7 +932,7 @@ com.freestylelibre.app.nl/com.librelink.app.ui.common.ScanSensorActivity</p>
 Librelink, яе трэба замяніць версіяй, якую
 вы выкарыстоўваеце. Вы можаце знайсці
 яго імя, увёўшы (нават без root):</p>
-<p>pm list пакет freestylelibre</p>
+<p>pm list package freestylelibre</p>
 <p>Пасля гэтага вы можаце выкарыстоўваць
 Librelink для сканавання, калі ён знаходзіцца
 на пярэднім плане, але ў адваротным
@@ -1032,10 +1032,10 @@ android:name=&quot;tk.glucodata&quot;/&gt; <br/>
 тыя ж функцыі, што і трансляцыя xDrip.
 Просты прыклад прыкладання, якое запісвае
 атрыманыя значэнні глюкозы ў logcat, можна
-знайсці тут: </span><a href="https://www.juggluco.nl/Juggluco/glucosebroadcast.html"><span lang="be-BY">Т</span><span lang="be-BY">рансляцыі
-глюкозы</span></a><span lang="be-BY">. Калі вы пазначылі
-Juggluco як крыніцу даных у G-Watch, вам трэба
-ўключыць гэту трансляцыю.</span></p>
+знайсці тут: <a href="https://www.juggluco.nl/Juggluco/glucosebroadcast.html">Трансляцыі
+глюкозы</a>. Калі вы пазначылі Juggluco як
+крыніцу даных у G-Watch, вам трэба ўключыць
+гэту трансляцыю.</span></p>
 <p>Паказваюцца прыкладанні, якія слухаюць
 гэтую трансляцыю. Праверце праграмы, у
 якія вы хочаце адправіць гэтую трансляцыю</p>
@@ -1046,7 +1046,7 @@ Nightscout. Раней называўся вэб-сервер xDrip.</p>
 <h2 class="western">Загрузнік</h2>
 <p>Загрузіць на сервер Nightscout.</p>
 <h2 class="western">Глюкоза ў радку стану андроіда</h2>
-<p style="line-height: 100%; margin-bottom: 0cm">Калі
+<p style="line-height: 100%; margin-bottom: 0in">Калі
 ўстаноўлена, значэнні глюкозы, якія
 перадаюцца праз Bluetooth, ціха адлюстроўваюцца
 ў апавяшчэннях і ў радку стану Android. Калі
@@ -1105,7 +1105,7 @@ Garmin, я не ведаю, ці працуе гэта з чымсьці
 глюкозы, сігнал трывогі страты сігналу
 і апавяшчэнне аб даступным значэнні.</p>
 <h2 class="western">Нумарныя этыкеткі</h2>
-<p style="line-height: 100%; margin-bottom: 0cm">Укажыце
+<p style="line-height: 100%; margin-bottom: 0in">Укажыце
 меткі, якія выкарыстоўваюцца для сум.
 Перайдзіце на экран, каб вызначыць, якія
 этыкеткі выкарыстоўваць для ўстанаўлення
@@ -1116,13 +1116,13 @@ Garmin, я не ведаю, ці працуе гэта з чымсьці
 для гадзіннікаў Garmin Kerfstok, гэтыя цэтлікі
 адпраўляюцца ў праграму для гадзіннікаў.</p>
 <h2 class="western">Напаміны</h2>
-<p style="font-weight: normal; line-height: 100%; margin-bottom: 0cm">
+<p style="font-weight: normal; line-height: 100%; margin-bottom: 0in">
 Укажыце, што сігналізацыя павінна
 спрацаваць, калі вы не ўвялі пэўную
 колькасць ежы або лекаў на працягу
 пэўнага перыяду часу.</p>
 <h2 class="western">Колеры</h2>
-<p style="line-height: 100%; margin-bottom: 0cm">Мяняйце
+<p style="line-height: 100%; margin-bottom: 0in">Мяняйце
 колеры крывых, сканаў і лічбаў.</p>
 <h2 class="western"><br/>
 <br/>
@@ -1427,7 +1427,7 @@ Garmin Kerfstok. Націсніце <b>Без датчыка</b>, каб
 <![CDATA[
 <h1 class="western"><font face="Liberation Serif, serif"><font size="6" style="font-size: 24pt"><b>Заўсёды
 працаваць</b></font></font></h1>
-<p style="line-height: 100%; margin-bottom: 0cm"><span lang="be-BY">Звычайна,
+<p style="line-height: 100%; margin-bottom: 0in"><span lang="be-BY">Звычайна,
 калі прылада Android не выкарыстоўваецца,
 яно пераходзіць у спячы рэжым, каб
 спажываць менш энергіі. Калі вам трэба
@@ -1441,7 +1441,7 @@ Android не адключыў Juggluco. Многія прылады
 пры загрузцы, якія неабходна змяніць.
 Вы можаце знайсці іх у наладах Android-&gt;
 Акумулятар. Глядзіце <a href="https://dontkillmyapp.com/">https://dontkillmyapp.com</a>.</span></p>
-<p style="line-height: 100%; margin-bottom: 0cm">Пры выкарыстанні
+<p style="line-height: 100%; margin-bottom: 0in">Пры выкарыстанні
 Watch 4 або 5 неабходна дазволіць фонавую
 актыўнасць у дадатку-кампаньёне Galaxy
 Wearable, выбраўшы &quot;Налады гадзін&quot; -&gt;
@@ -1449,9 +1449,9 @@ Wearable, выбраўшы &quot;Налады гадзін&quot; -&gt;
 у якіх няма гэтай налады, вы можаце
 выкарыстоўваць наступную каманду са
 свайго кампутара:</p>
-<p style="line-height: 100%; margin-bottom: 0cm">adb shell cmd appops
-set tk.glucodata RUN_IN_BACKGROUND дазволіць</p>
-<p style="line-height: 100%; margin-bottom: 0cm"><a href="https://www.juggluco.nl/JugglucoWearOS/install/adb.html"><font color="#800000"><span lang="be-BY"><u>Інфармацыя
+<p style="line-height: 100%; margin-bottom: 0in">adb shell cmd appops
+set tk.glucodata RUN_IN_BACKGROUND allow</p>
+<p style="line-height: 100%; margin-bottom: 0in"><a href="https://www.juggluco.nl/JugglucoWearOS/install/adb.html"><font color="#800000"><span lang="be-BY"><u>Інфармацыя
 аб adb</u></span></font></a></p>
 ]]>
 </string>
@@ -2090,50 +2090,50 @@ WearOS для адлюстравання значэння глюкозы
 <h1><font face="Noto Sans"><font size="6" style="font-size: 24pt"><b>Пра
 Juggluco</b></font></font> 
 </h1>
-<p style="line-height: 100%; margin-bottom: 0cm">Juggluco напісаў
+<p style="line-height: 100%; margin-bottom: 0in">Juggluco напісаў
 <a href="https://www.juggluco.nl/Juggluco">Jaap Korthals Altes</a></p>
-<p style="line-height: 100%; margin-bottom: 0cm">Акрамя
+<p style="line-height: 100%; margin-bottom: 0in">Акрамя
 стандартных бібліятэк Android, выкарыстоўваюцца
 наступныя элементы: 
 </p>
 <ul>
-	<li><p align="left" style="line-height: 100%; margin-bottom: 0cm">NFC
+	<li><p align="left" style="line-height: 100%; margin-bottom: 0in">NFC
 	і Bluetooth каманды, якія спецыфічныя для
 	сэнсараў Abbott FreeStyle Libre, і алгарытмы
 	інтэрпрэтацыі, якія спецыфічны для
 	FreeStyle Libre сэнсараў. Усе яны неадакументаваны;</p>
-	<li><p align="left" style="line-height: 100%; margin-bottom: 0cm">Для
+	<li><p align="left" style="line-height: 100%; margin-bottom: 0in">Для
 	злучэння з гаджэтамі Garmin выкарыстоўваецца<a href="https://developer.garmin.com/connect-iq/sdk">
 	Connect IQ Mobile SDK</a>;</p>
-	<li><p align="left" style="line-height: 100%; margin-bottom: 0cm">Графікі
+	<li><p align="left" style="line-height: 100%; margin-bottom: 0in">Графікі
 	ствараюцца з дапамогай <a href="https://github.com/memononen/nanovg">NanoVG</a>;</p>
-	<li><p align="left" style="line-height: 100%; margin-bottom: 0cm">Функцыя
+	<li><p align="left" style="line-height: 100%; margin-bottom: 0in">Функцыя
 	дзеркала выкарыстоўвае аўтэнтыфікаванае
 	шыфраванне <a href="https://ascon.iaik.tugraz.at/">Ascon
 	authenticated encryption</a>;</p>
-	<li><p align="left" style="line-height: 100%; margin-bottom: 0cm">Камунікацыя
+	<li><p align="left" style="line-height: 100%; margin-bottom: 0in">Камунікацыя
 	з сэнсарамі Libre3 выкарыстоўвае <a href="https://github.com/intel/tinycrypt">TinyCrypt</a>;</p>
-	<li><p align="left" style="line-height: 100%; margin-bottom: 0cm">Выбар
+	<li><p align="left" style="line-height: 100%; margin-bottom: 0in">Выбар
 	колераў з\'яўляецца адаптацыяй <a href="https://github.com/yukuku/ambilwarna">AmbilWarna</a>;</p>
-	<li><p align="left" style="line-height: 100%; margin-bottom: 0cm">Падтрымка
+	<li><p align="left" style="line-height: 100%; margin-bottom: 0in">Падтрымка
 	NFC NovoPens з\'яўляецца змяненнем коду,
 	забранага з xDrip.</p>
 </ul>
-<p style="line-height: 100%; margin-bottom: 0cm">Juggluco быў
+<p style="line-height: 100%; margin-bottom: 0in">Juggluco быў
 перакладзены на італьянскую мову <a href="mailto:matteo.gabriele81@gmail.com">Matteo
 Gabriele</a>.</p>
-<p style="line-height: 100%; margin-bottom: 0cm">Juggluco быў
+<p style="line-height: 100%; margin-bottom: 0in">Juggluco быў
 перакладзены на партугальскую мову Rui
 Pinheiro.</p>
-<p style="line-height: 100%; margin-bottom: 0cm">Juggluco быў
+<p style="line-height: 100%; margin-bottom: 0in">Juggluco быў
 перакладзены на польскую мову <a href="mailto:adelis@translaris.pl">Arkadiusz
 Deliś</a>.</p>
-<p style="line-height: 100%; margin-bottom: 0cm">Juggluco быў
+<p style="line-height: 100%; margin-bottom: 0in">Juggluco быў
 перакладзены на беларускую мов<span lang="ru-RU">у</span>
 <a href="mailto:3477734n@gmail.com">Находкін Яўген</a></p>
-<p style="line-height: 100%; margin-bottom: 0cm">Juggluco быў
-перакладзены на ўкраінскую мовы  <a href="mailto:3477734n@gmail.com">Находкін
-Яўген</a> і<span lang="ru-RU"><span lang="en-US"> </span></span><a href="mailto:moydiabet@gmail.com">Дзіма
+<p style="line-height: 100%; margin-bottom: 0in">Juggluco быў
+перакладзены на ўкраінскую мовы <a href="mailto:3477734n@gmail.com">Находкін
+Яўген</a> і <a href="mailto:moydiabet@gmail.com">Дзіма
 Дыябетык</a></p>
 ]]>
 </string>
