@@ -67,6 +67,8 @@ jugglucotext engtext {
 .noconnectionerror=": No Connection",
 .stsensorerror=": Sensor Error",
 .streplacesensor=": Replace Sensor?",
+.endedformat="%s stopped working. patchState=%d",
+.notreadyformat="%s not ready. patchState=%d",
 #ifndef WEAROS
 	.median="Median",
 	.middle="Middle",

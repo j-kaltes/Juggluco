@@ -158,8 +158,8 @@ public   View addnumberview(MainActivity context,final int bron,final long time,
 	mealbutton=getbutton(context,R.string.mealname);
 	source.setMinWidth(mealbutton.getMinWidth());
 	messagetext=getlabel(context,R.string.dontchangeamounts);
-	int pads=(int)(GlucoseCurve.metrics.density*8);
-        messagetext.setPadding(pads,0,0,0);
+	//int pads=(int)(GlucoseCurve.metrics.density*8);
+        //messagetext.setPadding(pads,0,0,0);
 	//messagetext.setVisibility(GONE);
 	mealbutton.setVisibility(GONE);
 	if(isWearable) {
@@ -180,7 +180,7 @@ public   View addnumberview(MainActivity context,final int bron,final long time,
         savebutton.setText(R.string.save);
 
 
-        Layout layout = isWearable?new Layout(context,new View[] {source},new View[]{datebutton,timebutton} , row1, new View[]{messagetext,deletebutton,savebutton},new View[]{cancel}):new Layout(context, (lay, w, h) -> {
+        Layout layout = isWearable?new Layout(context,new View[] {source},new View[]{datebutton,timebutton} , row1, new View[]{messagetext,savebutton,deletebutton},new View[]{cancel}):new Layout(context, (lay, w, h) -> {
 		int hei=GlucoseCurve.getheight();
 		int wid=GlucoseCurve.getwidth();
 		   if(wid>hei) {
@@ -210,7 +210,7 @@ public   View addnumberview(MainActivity context,final int bron,final long time,
 
 			}
 
-			return new int[] {w,h}; }, new View[]{datebutton, mealbutton,source,timebutton}, row1,new View[]{messagetext,deletebutton, cancel, savebutton});
+			return new int[] {w,h}; }, new View[]{datebutton, mealbutton,source,timebutton}, row1,new View[]{cancel,messagetext,deletebutton, savebutton});
 
 
 	layout.setBackgroundColor( Applic.backgroundcolor);

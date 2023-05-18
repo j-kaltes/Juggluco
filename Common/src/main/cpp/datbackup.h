@@ -726,6 +726,7 @@ false		true 	 	1
 false	  	false	  	0
 */
 	getupdatedata()->allhosts[index].receivefrom=receive?(reconnect?3:2):((sendto&reconnect)?1:0);
+	LOGGER("receivefrom=%d\n", getupdatedata()->allhosts[index].receivefrom);
 	setpass( getupdatedata()->allhosts[index].pass,pass);
 
 	if(newhost)  {

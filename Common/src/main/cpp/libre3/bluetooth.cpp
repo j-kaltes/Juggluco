@@ -442,6 +442,8 @@ extern "C" JNIEXPORT  jint JNICALL  fromjava(libre3processpatchstatus)(JNIEnv *e
 	LOGSTRING("libre3processpatchstatus\n");
 	const Patchstatus *pstatus=reinterpret_cast<const Patchstatus *>(status);
 	LOGGER("patchState=%d, totalEvents=%d, lifeCount=%d, errorData=%d, eventData=%d, index=%d, currentLifeCount=%d, stackDisconnectReason=%d, appDisconnectReason=%d\n", pstatus->patchState, pstatus->totalEvents(), pstatus->lifeCount, pstatus->errorData, pstatus->getEventData(), pstatus->index, pstatus->currentLifeCount, pstatus->stackDisconnectReason, pstatus->appDisconnectReason);
+	SensorGlucoseData *sens=reinterpret_cast<SensorGlucoseData *>(sensorptr);
+	sens->getinfo()->patchState=pstatus->patchState;
 //s/\<\([a-zA-Z]*\)=%d/pstatus->\1/g
 	return pstatus->currentLifeCount|pstatus->index<<16;
 	}

@@ -144,9 +144,9 @@ union {
 uint32_t pollcount;
 double pollinterval; 
 uint32_t lockcount;
-//int streamingIsEnabled;
 int8_t streamingIsEnabled;
-uint8_t reserved4[3];
+int8_t patchState;
+uint8_t reserved4[2];
 char deviceaddress[deviceaddresslen];
 uint16_t libreviewscan;
 uint16_t oldmsec:14;

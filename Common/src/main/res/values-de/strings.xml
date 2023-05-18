@@ -232,6 +232,7 @@
 <string name="noaccountidspecified">Keine Konto-ID angegeben </string>
 <string name="wrongformat">Falsches Format </string>
 
+<string name="noapplisteningto">"Keine App hört "</string>
 
 <string name="secret">api_secret</string>
 <string name="withoutsaving">Verlassen ohne zu speichern?</string>

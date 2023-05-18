@@ -60,6 +60,8 @@ static jugglucotext nltext {
 .noconnectionerror=": geen verbinding",
 .stsensorerror=": Sensorfout",
 .streplacesensor=": vervang sensor?",
+.endedformat="Sensor %s not working anymore. patchState=%d",
+.notreadyformat="Sensor %s not ready. patchState=%d",
 #ifndef WEAROS
 	.median="Mediaan",
 	.middle="Midden",

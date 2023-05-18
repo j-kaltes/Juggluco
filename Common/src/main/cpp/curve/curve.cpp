@@ -404,6 +404,7 @@ bool hourmin(const time_t tim,char buf[6]) {
 	return true;
 	}
 int largedaystr(const time_t tim,char *buf) {
+        LOGAR("largedaystr");
 	struct tm stmbuf;
 	localtime_r(&tim,&stmbuf);
  	return sprintf(buf,"%02d:%02d %s %02d %s %d",stmbuf.tm_hour,mktmmin(&stmbuf),usedtext->daylabel[stmbuf.tm_wday],stmbuf.tm_mday,usedtext->monthlabel[stmbuf.tm_mon],1900+stmbuf.tm_year);
@@ -1573,42 +1574,24 @@ float				getboxwidth(const float x) {
 
 //#define DOTEST 1
 static int showerrorvalue(const SensorGlucoseData *sens,const time_t nu,float getx,float gety) {
-	//nvgTextAlign(genVG,NVG_ALIGN_LEFT|NVG_ALIGN_TOP);
 	getx-=headsize/3;
 	nvgTextAlign(genVG,NVG_ALIGN_LEFT|NVG_ALIGN_MIDDLE);
-	//nvgFontSize(genVG,headsize/4 );
 	nvgFontSize(genVG,headsize/6 );
 	if(settings->data()->nobluetooth) {
+		LOGAR("nobluetooth");
 		extern bool hasnetwork();
 		if(hasnetwork()) {
 			return 1;
-		//	static	constexpr const std::string_view network="Network problem?";
-		//	nvgText(genVG,getx ,gety, network.begin(), network.end());
 			}
 		else {
-//			static	constexpr const std::string_view useblue="'Use Bluetooth' off";
-//			nvgText(genVG,getx ,gety, useblue.begin(), useblue.end());
 			return 2;
 			}
 		}
 	else {
-		/*(
-		time_t starttime=sens->getstarttime();
-		auto wait= nu-starttime;
-		LOGGER("wait=%u starttime=%" PRId64 " %s",wait,starttime,ctime(&starttime));
-		if(wait<(60*60)) {
-			const char format[]="%s: Sensor ready in %d minutes";
-			char buf[sizeof(format)+5+16];
-			int minutes=wait/60;
-			int ends=sprintf(buf,format,sens->showsensorname(),minutes);
-			nvgTextBox(genVG,  getx, gety, 0.4*dwidth, buf,buf+ends);
-			return 0;
-			}
-		else*/ {
+		LOGAR("!nobluetooth");
+		{
 			if(!bluetoothEnabled()) {
 				return 3;
-			//	static	constexpr const std::string_view enablebluetooth="Enable Bluetooth";
-			//	nvgText(genVG,getx ,gety, enablebluetooth.begin(), enablebluetooth.end());
 				} 
 			else {
 				if(sens->sensorerror) {
@@ -1620,12 +1603,20 @@ static int showerrorvalue(const SensorGlucoseData *sens,const time_t nu,float ge
 					nvgTextBox(genVG,  getx, gety, getboxwidth(getx), buf, buf+sensorerror.size()+senslen);
 					}
 				else {
-				//	nvgText(genVG,getx ,gety, connectionerror.begin(), connectionerror.end());
+				   int state=sens->getinfo()->patchState;
+				if(state&&state!=4){
+					auto format= state>4?usedtext->endedformat:usedtext->notreadyformat;
+					char buf[format.size()+17+10];
+					int len=snprintf(buf,sizeof(buf)-1,format.data(),sens->showsensorname().data(),state);
+					nvgTextBox(genVG,  getx, gety, getboxwidth(getx),buf, buf+len);
+					} 
+				else {
 					char buf[usedtext->noconnectionerror.size()+17];
 					int senslen= sens->showsensorname().size();
 					memcpy(buf,sens->showsensorname().data(),senslen);
 					memcpy(buf+senslen,usedtext->noconnectionerror.data(), usedtext->noconnectionerror.size());
 					nvgTextBox(genVG,  getx, gety, getboxwidth(getx),buf, buf+usedtext->noconnectionerror.size()+senslen);
+					}
 					}
 				return 0;
 				}
@@ -1663,13 +1654,14 @@ static void showlastsstream(const time_t nu,const float getx,std::vector<int> &u
 				success=true;
 				}
 			else {
-				LOGSTRING("age>=maxbluetoothage\n");
+				LOGAR("age>=maxbluetoothage");
 				switch(showerrorvalue(hist,nu,getx,gety)) {
 					case 1: neterror=true;break;
 					case 2: usebluetoothoff=true;break;
 					case 3: bluetoothoff=true;break;
 					default: otherproblem=true;
 					};
+				LOGAR("AFgter showerrorvalue(hist,nu,getx,gety)) ");
 				}
 			}
 		else {
@@ -1697,6 +1689,7 @@ static void showlastsstream(const time_t nu,const float getx,std::vector<int> &u
 
 		}
 	if(!success&&!otherproblem) {
+		LOGAR("!success&&!otherproblem) ");
 		int newgetx=getx-headsize/3;
 		nvgTextAlign(genVG,NVG_ALIGN_LEFT|NVG_ALIGN_MIDDLE);
 		nvgFontSize(genVG,headsize/4 );
@@ -1715,6 +1708,7 @@ static void showlastsstream(const time_t nu,const float getx,std::vector<int> &u
 				}
 		}
 	if(failures>3) {
+		LOGAR("failures>3" );
 		for(int i=0;i<used.size();i++) {
 			if(SensorGlucoseData *hist=sensors->gethist(used[i])) {
 				LOGSTRING("set waiting=true\n");
@@ -1723,6 +1717,8 @@ static void showlastsstream(const time_t nu,const float getx,std::vector<int> &u
 			}
 		}
 
+
+	LOGAR(" end showlastsstream");
 	}
 
 
@@ -1745,7 +1741,8 @@ LOGGER("showbluevalue %zd\n",used.size());
 		const float timex=xpos+nowLineStrokeWidth;
 		nvgTranslate(genVG, timex,down);
 		nvgRotate(genVG,-NVG_PI/2.0);
-		constexpr int maxhead=54;
+//		constexpr int maxhead=54;
+		constexpr int maxhead=80;
 		char head[maxhead];
 		memcpy(head,usedtext->sensorends.data(),usedtext->sensorends.size());
 
@@ -1765,7 +1762,7 @@ LOGGER("showbluevalue %zd\n",used.size());
 		
 		nvgTextAlign(genVG,NVG_ALIGN_LEFT|NVG_ALIGN_TOP);
 		{
-		constexpr int maxbuf=80;
+		constexpr int maxbuf=100;
 		char tbuf[maxbuf];
            largedaystr(nu,tbuf) ;
 		const float timex =
@@ -2016,6 +2013,7 @@ displaytime disp=getdisplaytime(nu,starttime,endtime, transx);
 	if(nu<endtime) {
 		if((dwidth-smallfontlineheight)>nupos) {
 			showbluevalue(nu, nupos,usedsensors);
+			LOGAR("end display curve");
 			}
 		}
  return 0;
@@ -2192,6 +2190,8 @@ tapx=-8000;
 		}
 	tapx=-8000;
 
+
+LOGAR("end withredisplay");
 }
 /*
 void withoutredisplay(NVGcontext* genVG,uint32_t nu,uint32_t endtime)  {
@@ -2335,6 +2335,10 @@ extern void setusenl();
 
 extern void setusepl();
 extern void setusede();
+
+extern void setusebe();
+extern void setusefr();
+
 extern void setusept() ;
 extern void setuseeng() ;
 extern std::string_view localestr;
@@ -2355,6 +2359,10 @@ void  setlocale(const char *localestrbuf,const size_t len) {
 		case mklanguagenum("de"):
 			setusede();
 			break;
+		case mklanguagenum("FR"):
+		case mklanguagenum("fr"):
+			setusefr();
+			break;
 		case mklanguagenum("IT"):
 		case mklanguagenum("it"):
 			setuseit();
@@ -2370,6 +2378,10 @@ void  setlocale(const char *localestrbuf,const size_t len) {
 		case mklanguagenum("PL"):
 		case mklanguagenum("pl"):
 			setusepl();
+			break;
+		case mklanguagenum("BE"):
+		case mklanguagenum("be"):
+			setusebe();
 			break;
 		default: setuseeng();
 		};
@@ -3347,6 +3359,7 @@ static const float  getsetlen(NVGcontext* genVG,float x, float  y,const char * s
 		return bounds.xmax-bounds.xmin;
 		}
 static void showtext(NVGcontext* genVG ,time_t nu,int menu) {
+LOGAR("showtext");
 #ifdef WEAROS
 	if(menu==1) {
 		setnowmenu(nu);
@@ -3462,6 +3475,8 @@ if(menu==0) {
 			y+=menutextheight;
 			}
 		}
+
+	LOGAR("end showtext");
 	}
 
 
