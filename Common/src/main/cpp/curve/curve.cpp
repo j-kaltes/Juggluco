@@ -2746,22 +2746,6 @@ public:
 	 prevtouch.time = chrono::steady_clock::now();
 	LOGGER("histgegs %s",ctime(&nu));
 	} 
-	/*
-virtual int display() override {
-	const char title[]="History";
-	char starts[50],ends[50];
-	time_t stime=hist->getstarttime(),etime= stime+(14*24)*60*60;
-	char lastscanbuf[50],lastpollbuf[50];
-	time_t lastscan=hist->getlastscantime();
-	time_t lastpolltime=hist->getlastpolltime();
-	strconcat text(string_view(""), "Once per 15 minutes, remembered for 8 hours.\nScanning transfers them to this program.\nSensor: ",hist->shortsensorname(),"\nSensor started:  ",string_view(starts, datestr(stime,starts)),"\nLast scanned:     ",string_view(lastscanbuf,datestr(lastscan,lastscanbuf)),lastpolltime>0?"\nLast stream:        ":"",lastpolltime>0?string_view(lastpollbuf,datestr(lastpolltime,lastpollbuf)):"",nu<etime?"\nSensor ends:      ":"",
-nu<etime?string_view(ends, datestr(etime,ends)):string_view("",0));
-
-	textbox(title,text);
-
-	return 1;
-	}
-*/
 strconcat  getsensorhelp(string_view starttext,string_view name1,string_view name2,string_view sep1,string_view sep2) {
 	char starts[50],ends[50];
 	time_t stime=hist->getstarttime(),etime= stime+(14*24)*60*60;
@@ -3311,7 +3295,7 @@ int getmenulen(const int menu) {
 const int *menuopt0[]={&showui, nullptr,nullptr,nullptr,nullptr,nullptr,nullptr};
 
 
-const int *menuopt0b[]={nullptr,nullptr,nullptr,nullptr,nullptr};
+const int *menuopt0b[]={nullptr,nullptr,nullptr,nullptr,nullptr,nullptr};
 const int *menuopt1[]={nullptr,&showscans, &showstream,&showhistories, &shownumbers,&showmeals,&invertcolors};
 const int **optionsmenu[]={menuopt0,menuopt0b,menuopt1,nullptr};
 #define arsizer(x) sizeof(x)/sizeof(x[0])

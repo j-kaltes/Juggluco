@@ -90,6 +90,7 @@ if(true) {
 	var loc=Locale.getDefault();
        String country=loc.getCountry();
 	var locstr=loc.toString();
+	Applic.curlang=locstr;
         Natives.setlocale(locstr,(tk.glucodata.Applic.hour24=android.text.format.DateFormat.is24HourFormat(con)));
         File files=con.getFilesDir();
 	String filespath=files.getAbsolutePath();
@@ -160,16 +161,19 @@ if(true) {
  	startsensors( );
 	startmeals();
 	Natives.startthreads();
+	Log.i(LOG_ID,"after startthreads");
 	numptrs[1]=Natives.openNums("here",0L);
 	newhit=Natives.newhit();
 	numptrs[0]=Natives.openNums(datadir,-1L); //order important!!
 	Natives.calccurvegegs();
+	Log.i(LOG_ID,"end setlibrary");
 	return true;
 	}
 	else {
 		Applic.stopprogram=2;
 		return false;
 		}
+	
 	}
 
 public static long getident() {

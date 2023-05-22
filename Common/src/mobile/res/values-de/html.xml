@@ -1703,7 +1703,8 @@ das Einschalten sendet Juggluco Glukosewerte an <a href="https://bigdigital.home
 . Watchdrip+ sendet Zifferblätter mit Glukosewerten an
 MiBand/Amazfit-Uhren.</span></p>
 <h2 class="western">GadgetBridge</h2>
-<p>GadgetBridge (<a href="https://codeberg.org/Freeyourgadget/Gadgetbridge/wiki">Wiki</a>)
+<p><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">GadgetBridge
+(<a href="https://codeberg.org/Freeyourgadget/Gadgetbridge/wiki">Wiki</a>)
 ermöglicht die Anzeige von Wetterinformationen auf
 MiBand/Amazfit-Uhren. Wenn die Gadgetbridge-Option aktiviert ist,
 sendet Juggluco Glukosewerte unter dem Vorwand, dass es sich um
@@ -1713,12 +1714,25 @@ Nachteil, dass weniger Informationen angezeigt werden. Juggluco trägt
 den Glukosewert und einen Richtungspfeil in den Wetterort ein. Dieser
 Ort wird auf der Uhr unter Wetter angezeigt. Ich habe kein
 Zifferblatt gefunden, das diesen Ort anzeigt. Der gerundete
-Glukosewert wird in die aktuelle Temperatur übernommen. Für
-diejenigen, die mmol verwenden, wird der Wert vor dem Punkt in die
-maximale Temperatur und der Wert nach dem Punkt in die minimale
-Temperatur eingetragen. Die Richtung der Änderung bestimmt das
-Wettersymbol: Schnee bedeutet fallende Glukose, Regen bedeutet
-steigende Glukose.</p>
+Glukosewert wird in die aktuelle Temperatur übernommen. </font></font><span style="font-variant: normal"><font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">Nur
+für&nbsp;</span></span></span></font></font></font></span><span style="font-variant: normal"><font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: normal"><span style="font-style: normal"><b>mmol/L</b></span></span></font></font></font></span><span style="font-variant: normal"><font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">:
+Der Wert vor dem Punkt wird in die maximale Temperatur eingetragen
+und der Wert nach dem Punkt in die minimale Temperatur.&nbsp;Die
+Werte von&nbsp;</span></span></span></font></font></font></span><span style="font-variant: normal"><font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: normal"><span style="font-style: normal"><b>mg/dL</b></span></span></font></font></font></span><span style="font-variant: normal"><font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: normal"><span style="font-style: normal"><b>
+</b></span></span></font></font></font></span><span style="font-variant: normal"><font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">sind
+für Temperaturen zu groß, deshalb wird die letzte Ziffer bei der
+Minimaltemperatur und die Zahlen vor der letzten Ziffer bei der
+Maximaltemperatur eingetragen.</span></span></span></font></font></font></span><span style="font-variant: normal"><font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">
+</span></span></span></font></font></font></span><span style="font-variant: normal"><font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">Somit
+ergibt sich aus 106 mg/dL: maximale Temperatur 10, minimale
+Temperatur 6.</span></span></span></font></font></font></span></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
+<font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">Die
+Richtung der Änderung bestimmt das Wettersymbol: Schnee bedeutet
+fallende Glukose, Regen bedeutet steigende Glukose. Es wird auch mit
+die aktuelle Temperatur eingegeben.&nbsp;Größer als Null bedeutet
+steigender Glukosewert, kleiner als Null bedeutet fallender
+Glukosewert.</font></font></font></p>
 <h2 class="western">Kerfstok</h2>
 <p style="orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
 <span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><span style="font-style: normal"><span style="font-weight: normal">Kerfstok
@@ -2634,7 +2648,7 @@ Juggluco ein- und ausschalten.</p>
 <h1 align="center">Blocked</h1>
 <p style="line-height: 100%; margin-bottom: 0in"><span lang="de-DE"><b>Das
 Menü links in der Mitte -&gt; </b></span><span lang="de-DE"><b>Klon</b></span><span lang="de-DE"><b>
--&gt; „</b></span><span lang="de-DE"><b>Klon sendet Mengen</b></span><span lang="de-DE">“
+-&gt; „</b></span><span lang="de-DE"><b>Mengen erhalten vom Klon</b></span><span lang="de-DE">“
 ist  eingestellt, </span><span lang="de-DE">so</span><span lang="de-DE">dass
 die Eingabe von </span><span lang="de-DE">Mengen</span><span lang="de-DE">
 in dieser App verhindert wird, da diese durch von der </span><span lang="de-DE">Klon</span><span lang="de-DE">verbindung

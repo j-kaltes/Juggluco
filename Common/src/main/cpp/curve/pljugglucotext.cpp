@@ -103,7 +103,8 @@ jugglucotext pltext {
 		"Klonowanie",
 		pltext.newamount,
 		"Lista", 
-		"Statystyka"
+		"Statystyka",
+		"Talk"
 		},
 	.menustr2= {"Ostatni odczyt","Odczyty","Strumień","Histora","Wartość","Posiłki","Tryb ciemny        "},
 	.menustr3= {hourminstr,"Wyszukaj","Data","Dzień wstecz","Dzień później","Tydzień wstecz","Tydzień później"},

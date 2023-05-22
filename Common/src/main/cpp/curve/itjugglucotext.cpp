@@ -106,7 +106,8 @@ static jugglucotext ittext {
 		"Mirror",
 		ittext.newamount,
 		"Lista", 
-		"Statistiche"
+		"Statistiche",
+		"Talk"
 		},
 	.menustr2= {"Ultima scansione","Scansioni","Flusso","Cronologia","Valori","Pasti","Modalità scura       "}, 
 	.menustr3= {hourminstr,"Cerca","Data","Giorno prima","Giorno dopo","Settimana prima","Settimana dopo"}, 

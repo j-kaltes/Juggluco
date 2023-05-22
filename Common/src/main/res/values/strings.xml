@@ -267,5 +267,10 @@
  <string name="separate">Separate</string>
     <string name="librecurrent">Libre3 immediate</string>
     <string name="USE_ALARM">Alarm is alarm</string>
+    <string name="speed">Speed</string>
+ <string name="pitch">Pitch</string>
+ <string name="talker">Voice</string>
+ <string name="secondsbetween">Seconds between</string>
+ <string name="test">Test</string>
 
 </resources>

@@ -99,7 +99,8 @@ jugglucotext detext {
 "Klon",
 detext.newamount,
 "Liste",
-"Statistiken"
+"Statistiken",
+"Sprechen"
 },
 .menustr2= {"Letzter Scan","Scans","Stream","History","Mengen","Mahlzeiten","Dunkelmodus       "},
 .menustr3= {hourminstr,"Suche", "Datum", "Vortag", "Tag später", "Woche zurück", "Woche später"},

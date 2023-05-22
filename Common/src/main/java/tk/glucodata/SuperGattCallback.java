@@ -126,7 +126,32 @@ public static tk.glucodata.GlucoseAlarms glucosealarms=null;
 static notGlucose previousglucose=null;
 static void init(Application app) {
        if(glucosealarms==null) glucosealarms=new tk.glucodata.GlucoseAlarms(app);
+	if(!isWearable) {
+		Talker.getvalues();
+		newtalker();
+		}
 	}
+
+static Talker talker;
+static boolean dotalk=false;
+static void newtalker() {
+	if(!isWearable) {
+		if (talker != null)
+			talker.destruct();
+		talker = new Talker();
+	}
+	}
+static void endtalk() {
+	if(!isWearable) {
+		dotalk = false;
+		if (talker != null) {
+			talker.destruct();
+			talker = null;
+		}
+	}
+	}
+
+
 	static void dowithglucose(String SerialNumber, int mgdl, float gl, float rate, int alarm, long timmsec) {
 		if(gl==0.0)
 			return;
@@ -136,6 +161,9 @@ static void init(Application app) {
 		final long tim = timmsec / 1000L;
 		boolean waiting = false;
 		var sglucose=new notGlucose(timmsec, String.format(Applic.usedlocale,Notify.pureglucoseformat, gl),  rate);
+		if(!isWearable) {
+			if (dotalk) talker.selspeak(sglucose.value);
+		}
 		previousglucose=sglucose;
 		final var fview=Floating.floatview;
 		if(fview!=null) 

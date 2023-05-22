@@ -1452,3 +1452,27 @@ extern "C" JNIEXPORT void  JNICALL   fromjava(setgadgetbridge)(JNIEnv *env, jcla
 extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getgadgetbridge)(JNIEnv *env, jclass cl) {
 	return settings->data()->gadgetbridge;
 	}
+
+extern "C" JNIEXPORT void  JNICALL   fromjava(saveVoice)(JNIEnv *env, jclass cl,jfloat speed,jfloat pitch,jint voicesep,jint voice,jboolean active) {
+	settings->data()->voicespeed=speed;
+	settings->data()->voicepitch=pitch;
+	settings->data()->voicesep=voicesep;
+	settings->data()->voicespeaker=voice;
+	settings->data()->voiceactive=active;
+	}
+extern "C" JNIEXPORT jint  JNICALL   fromjava(getVoiceTalker)(JNIEnv *env, jclass cl) {
+	return settings->data()->voicespeaker;
+	}
+extern "C" JNIEXPORT jint  JNICALL   fromjava(getVoiceSeparation)(JNIEnv *env, jclass cl) {
+	return settings->data()->voicesep;
+	}
+extern "C" JNIEXPORT jfloat  JNICALL   fromjava(getVoiceSpeed)(JNIEnv *env, jclass cl) {
+	return settings->data()->voicespeed;
+	}
+extern "C" JNIEXPORT jfloat  JNICALL   fromjava(getVoicePitch)(JNIEnv *env, jclass cl) {
+	return settings->data()->voicepitch;
+	}
+
+extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getVoiceActive)(JNIEnv *env, jclass cl) {
+	return settings->data()->voiceactive;
+	}

@@ -2,14 +2,22 @@ package tk.glucodata;
 
 import android.content.Intent;
 
+import java.util.Calendar;
+
 import nodomain.freeyourgadget.gadgetbridge.model.WeatherSpec;
 
 public class Gadgetbridge {
+    private static final String LOG_ID="Gadgetbridge";
 
     public final static String WEATHER_EXTRA="WeatherSpec";
     public final static String WEATHER_ACTION="de.kaffeemitkoffein.broadcast.WEATHERDATA";
-
-
+/*
+private static float kelvin(float input) {
+	return ((input-32f)*5f)/9f+273.15f;
+	} */
+private static float kelvin(float input) {
+	return input+273.15f;
+	}
    static void sendglucose(String glstr,int mgdl,float gl,float rate,long timmsec)  {
     	 WeatherSpec weatherSpec = new WeatherSpec();
 	 final int code=librecode(rate);
@@ -17,11 +25,29 @@ public class Gadgetbridge {
 	    weatherSpec.timestamp            = (int) (timmsec/1000L);
 	   weatherSpec.currentCondition=weatherSpec.location;
 	weatherSpec.currentConditionCode=libreweather[code];
-	   weatherSpec.windSpeed=0;
-    	weatherSpec.currentTemp=(int)Math.round(gl)+273;
-	int trunc=(int)gl;
-    	weatherSpec.todayMaxTemp= trunc+273;
-       weatherSpec.todayMinTemp=((int)Math.round(gl*10))%10+273;
+	   weatherSpec.windSpeed=rate;
+	   var cal = Calendar.getInstance();
+          cal.setTimeInMillis(timmsec);
+	weatherSpec.currentHumidity= cal.get(Calendar.HOUR_OF_DAY);
+	weatherSpec.windDirection=cal.get(Calendar.MINUTE);
+	    
+		
+   	weatherSpec.currentTemp=(int)kelvin(Math.round(rate*10));
+	if(Applic.unit==1) {
+		float trunc=(float)Math.floor(gl);
+		if((gl-trunc)>=.95f) {
+			weatherSpec.todayMaxTemp= (int)kelvin((float)Math.ceil(gl));
+			weatherSpec.todayMinTemp=273;
+			}
+		else   {
+		    weatherSpec.todayMaxTemp= (int)kelvin(trunc);
+		       weatherSpec.todayMinTemp=(int)kelvin(Math.round((gl*10)%10));
+		       }
+		 }
+	   else  {
+		weatherSpec.todayMaxTemp= (int)kelvin((float)Math.floor(gl/10.0f));
+		weatherSpec.todayMinTemp=(int)kelvin(gl%10);
+	   	}
 
             Intent intent = new Intent();
             intent.putExtra(WEATHER_EXTRA,weatherSpec);

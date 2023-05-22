@@ -1345,7 +1345,8 @@ deze aan te zetten, stuurt Juggluco glucosewaarden naar <a class="western" href=
 . Watchdrip+ stuurt wijzerplaten met glucosewaarden naar
 MiBand/Amazfit-horloges.</span></p>
 <h2 class="western">GadgetBridge</h2>
-<p style="line-height: 100%; margin-bottom: 0in">GadgetBridge (<a class="western" href="https://codeberg.org/Freeyourgadget/Gadgetbridge/wiki">Wiki</a>)
+<p style="line-height: 100%; margin-bottom: 0in"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">GadgetBridge
+(<a class="western" href="https://codeberg.org/Freeyourgadget/Gadgetbridge/wiki">Wiki</a>)
 maakt het mogelijk om weersinformatie weer te geven op
 MiBand/Amazfit-horloges. Met de Gadgetbridge-optie ingeschakeld, zal
 Juggluco glucosewaarden naar GadgetBridge sturen onder het
@@ -1354,11 +1355,21 @@ voordeel dat het veel sneller is, maar heeft als nadeel dat er minder
 informatie wordt weergegeven. Juggluco zet de glucosewaarde en een
 richtingspijl in de locatie van het weer. Deze locatie wordt
 weergegeven onder Weer op het horloge. Ik heb geen wijzerplaat
-gevonden die deze locatie weergeeft. De afgeronde glucosewaarde,
-wordt als de huidige temperatuur overgezonen, de waarde voor de komma
-wordt als de maximale temperatuur en de waarde na de komma als de
-minimale temperatuur. De richting van verandering bepaalt het
-weerpictogram: sneeuw is dalende glucose, regen is stijgende glucose.</p>
+gevonden die deze locatie weergeeft. </font></font><span style="font-variant: normal"><font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">Alleen
+voor</span></span></span></font></font></font></span><span style="font-variant: normal"><font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: normal">
+</span></font></font></font></span><span style="font-variant: normal"><font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: normal"><span style="font-style: normal"><b>mmol/L</b></span></span></font></font></font></span><span style="font-variant: normal"><font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">:
+de afgeronde glucosewaarde wordt in de huidige temperatuur gestops,
+de waarde voor de punt in</span></span></span></font></font></font></span><span style="font-variant: normal"><font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: normal">
+</span></font></font></font></span><span style="font-variant: normal"><font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">de
+maximale temperatuur en de waarde na de punt in</span></span></span></font></font></font></span><span style="font-variant: normal"><font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: normal">
+</span></font></font></font></span><span style="font-variant: normal"><font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">de
+minimale temperatuur.</span></span></span></font></font></font></span><span style="font-variant: normal"><font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: normal">
+</span></font></font></font></span><span style="font-variant: normal"><font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: normal">
+</span></font></font></font></span><span style="font-variant: normal"><font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">De
+richting van verandering bepaalt het weerpictogram: sneeuw is dalende
+glucose, regen is stijgende glucose.&nbsp;Het wordt ook in de huidige
+temperatuur gezet.&nbsp;Groter dan nul betekent stijgende glucose,
+lager dan nul betekent dalende glucose.</span></span></span></font></font></font></span></p>
 <h2 class="western">Kerfstok</h2>
 <p style="line-height: 100%; margin-bottom: 0in"><span lang="nl-NL">Kerfstok
 is een horloge app voor sommige Garmin horloges waarmee je nummers
@@ -2185,7 +2196,8 @@ voor Juggluco.</p>
 <h1 align="center">Geblokkeerd</h1>
 <p style="line-height: 100%; margin-bottom: 0in"><span lang="nl-NL"><b>Menu
 links in het midden -&gt;</b></span><span lang="nl-NL"><b>Kloon</b></span><span lang="nl-NL"><b>
--&gt; &quot;</b></span><em><span lang="nl-NL"><b>Kloon stuurt hoeveelheden</b></span></em><span lang="nl-NL"><b>&quot;</b></span><span lang="nl-NL">
+-&gt; &quot;</b></span><em><span lang="nl-NL"><b>Hoeveelheden komen
+van kloon</b></span></em><span lang="nl-NL"><b>&quot;</b></span><span lang="nl-NL">
 is ingesteld om te voorkomen dat </span><span lang="nl-NL">hoeveelheden</span><span lang="nl-NL">
 in deze app worden ingevoerd, omdat deze worden overschreven door
 </span><span lang="nl-NL">hoeveelheden</span><span lang="nl-NL"> die

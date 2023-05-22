@@ -256,4 +256,8 @@
     <string name="notify">Melding</string>
  <string name="separate">Apart</string>
     <string name="librecurrent">Libre3 direct</string>
+    <string name="pitch">Pitch</string>
+  <string name="talker">Spreker</string>
+  <string name="secondsbetween">Seconden er tussen</string>
+  <string name="test">Testen</string>
 </resources>

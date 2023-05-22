@@ -50,11 +50,11 @@
     <string name="start">Пачаць</string>
     <string name="now">Зараз</string>
     <string name="dontchangeamounts">Сумы, атрыманыя ад люстэрка</string>
-    <string name="thishost">Гэты хост (host):</string>
+    <string name="thishost">Гэты хост:</string>
     <string name="dozemode">Рэжым дрымоты?</string>
     <string name="sync">Сінхранізацыя</string>
     <string name="alarms">Трывогі</string>
-    <string name="save">Захаваць(Save)</string>
+    <string name="save">Захаваць</string>
  <string name="addconnectionbutton">Дадаць злучэнне</string>
  <string name="offtouch">Выкл</string>
  <string name="glucosestatusbar">Глюкоза ў радку стану android</string>
@@ -191,7 +191,7 @@
     <string name="blueormirror">"Датчык праз Bluetooth" павінен быць уключаны або гэта павінна быць настроена як люстэрка</string>
     <string name="vibrationname">Вібрацыя</string>
     <string name="high_priority">Турба</string>
-    <string name="darkmode">Цёмны рэжым</string>
+    <string name="darkmode">Dark mode</string>
     <string name="multiply">Памножыць с:</string>
     <string name="rapidinsulin">Інсулін хуткага дзеяння</string>
  <string name="longinsulin">Інсулін працяглага дзеяння</string>

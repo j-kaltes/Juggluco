@@ -50,6 +50,7 @@ import static tk.glucodata.Applic.isRelease;
 import static tk.glucodata.MessageSender.isGalaxy;
 import static tk.glucodata.Natives.setBlueMessage;
 import static tk.glucodata.NumberView.avoidSpinnerDropdownFocus;
+import static tk.glucodata.RingTones.EnableControls;
 import static tk.glucodata.settings.Settings.removeContentView;
 import static tk.glucodata.util.getbutton;
 import static tk.glucodata.util.getcheckbox;
@@ -174,7 +175,8 @@ private static void confirmunsynced(MainActivity act,Runnable save) {
             }
         }).show();
 	}
-static public void show(MainActivity context) {
+static public void show(MainActivity context,View parent) {
+   	EnableControls(parent,false);
 	nodenum=-1;
 	start=getbutton(context,R.string.initwatchapp);
 	var defaults=getbutton(context,context.getString(R.string.defaults));
@@ -205,13 +207,14 @@ static public void show(MainActivity context) {
 	int laypad=(int)(density*4.0);
 	layout.setPadding(laypad*2,laypad*2,laypad*2,laypad);
 
-	layout.setBackgroundColor( Applic.backgroundcolor);
+	layout.setBackgroundResource(R.drawable.dialogbackground);
 	context.addContentView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
 	Ok.setOnClickListener(v -> {
 		direct = null;
 		nodeslist = null;
 		nodenum = -1;
 		context.poponback();
+   		EnableControls(parent,true);
 		removeContentView(layout);
 		context.hideSystemUI(); }
 		);

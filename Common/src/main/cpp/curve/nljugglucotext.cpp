@@ -99,7 +99,8 @@ static jugglucotext nltext {
 		"Kloon",
 		nltext.newamount,
 		"Lijst", 
-		"Statistiek"
+		"Statistiek",
+		"Praat"
 		},
 	.menustr2= {"Laatste scan","Scans","Stream","History","Hoeveelheden        ","Maaltijden","Dark mode"},
 	.menustr3= {hourminstr,"Zoeken","Datum","Dag terug","Dag later","Week terug","Week later"},

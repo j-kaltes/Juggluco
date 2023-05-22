@@ -33,6 +33,7 @@ import static java.util.Locale.US;
 import static tk.glucodata.GlucoseCurve.STEPBACK;
 import static tk.glucodata.GlucoseCurve.smallfontsize;
 import static tk.glucodata.MessageSender.initwearos;
+import static tk.glucodata.SuperGattCallback.endtalk;
 
 import android.Manifest;
 import android.app.Activity;
@@ -169,16 +170,26 @@ void setcurve(GlucoseCurve curve) {
 	this.curve=curve;
 	}
 //void savestate() { if(blue!=null) blue.savestate(); }
-
+public static String curlang=null;
 @Override
 public void onConfigurationChanged(Configuration newConfig) {
 	super.onConfigurationChanged(newConfig);
    	if(Nativesloaded)  {
 		var lang=Locale.getDefault().toString();
-		Applic.hour24 = DateFormat.is24HourFormat(this);
+		var new24 = DateFormat.is24HourFormat(this);
 		Log.i(LOG_ID,"Applic.onConfigurationChanged "+lang+" "+Applic.hour24);
-		Natives.setlocale(lang, Applic.hour24);
-//		Notify.mkpaint();
+		if(!lang.equals(curlang)) {
+			SuperGattCallback.newtalker();
+			curlang=lang;
+			}
+		else  {
+			if(Applic.hour24 ==new24)
+				return;
+			}
+
+		Applic.hour24=new24;
+		Natives.setlocale(lang, new24);
+
 		}
 } 
 @Override

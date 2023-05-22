@@ -24,6 +24,7 @@ package tk.glucodata;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
+import static tk.glucodata.Log.doLog;
 import static tk.glucodata.MessageSender.initwearos;
 import static tk.glucodata.settings.Settings.removeContentView;
 import static tk.glucodata.util.getbutton;
@@ -33,6 +34,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 class Watch {
+static private final boolean TestBridge=doLog;
+static private float glucose=80f;
+static private float trend=-5.2f;
 static private final  String LOG_ID="Watch";
 static public void show(MainActivity context) {
 	/*
@@ -70,7 +74,37 @@ static public void show(MainActivity context) {
 				Natives.setgadgetbridge(isChecked);
 				SuperGattCallback.doGadgetbridge=isChecked;
 				});
+	var test=TestBridge?getbutton(context,"Test"):null;
+	View[] mibandrow;
+	if(TestBridge) {
+		test.setOnClickListener(v-> {
+			int mgdl;
+			trend += 0.6f;
+			if (trend > 5f)
+				trend = -5f;
+			if(Applic.unit==1) {
+				glucose += 0.6f;
+				if (glucose > 28f)
+					glucose = 2.2f;
 
+			mgdl=(int)Math.round(glucose*18);
+			}
+			else {
+				glucose += 13f;
+				if (glucose > 500f)
+					glucose = 40f;
+				mgdl=(int)glucose;
+
+			}
+				
+				Gadgetbridge.sendglucose(""+glucose,mgdl,glucose,trend, System.currentTimeMillis());
+				});
+
+		mibandrow=new View[]{watchdrip,gadget,test};
+		}
+	else  {
+		mibandrow=new View[]{watchdrip,gadget};
+		}
 	var usexdripserver=Natives.getusexdripwebserver();
 	var server=getcheckbox(context,R.string.webserver,usexdripserver);
 	server.setOnCheckedChangeListener( (buttonView,  isChecked) -> Natives.setusexdripwebserver(isChecked));
@@ -121,12 +155,13 @@ static public void show(MainActivity context) {
 	var Ok=getbutton(context,R.string.ok);
 	var Help=getbutton(context,R.string.helpname);
 	Help.setOnClickListener(v-> help.help(R.string.watchinfo,context));
+
 	var layout=new Layout(context,(l,w,h)-> {
 		var width= GlucoseCurve.getwidth();
 		if(width>w)
 			l.setX((width-w)/2);
 		return new int[] {w,h};
-		},new View[]{watchdrip,gadget},new View[] {notify,separate},new View[]{wearbox,wearossettings},new View[]{server,serverconfig},new View[]{kerfstok,status},new View[]{Help,Ok} );
+		},mibandrow,new View[] {notify,separate},new View[]{wearbox,wearossettings},new View[]{server,serverconfig},new View[]{kerfstok,status},new View[]{Help,Ok} );
 	float density=GlucoseCurve.metrics.density;
 	int laypad=(int)(density*4.0);
 	layout.setPadding(laypad*2,laypad*2,laypad*2,laypad);
@@ -134,10 +169,10 @@ static public void show(MainActivity context) {
 	layout.setBackgroundColor( Applic.backgroundcolor);
 	context.addContentView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
 	status.setOnClickListener(v->{
-			new GarminStatus(context,Applic.app.numdata);
+			new GarminStatus(context,Applic.app.numdata,layout);
 			});
 	wearossettings.setOnClickListener(v->{
-			Wearos.show(context);
+			Wearos.show(context,layout);
 			});
 	Ok.setOnClickListener(
 		v -> {

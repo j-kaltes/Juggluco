@@ -515,6 +515,7 @@ int64_t openNums(std::string_view numpath,int64_t ident);
 
 extern pathconcat numbasedir;
 extern "C" JNIEXPORT jlong JNICALL fromjava(openNums)(JNIEnv *env, jclass thiz,jstring jbase,jlong ident) {
+	LOGAR("start openNums");
 	jint len = env->GetStringUTFLength( jbase);
 	int blen=numbasedir.length();
 	int alllen=len+blen+1;
@@ -524,7 +525,9 @@ extern "C" JNIEXPORT jlong JNICALL fromjava(openNums)(JNIEnv *env, jclass thiz,j
 	jint jlen = env->GetStringLength( jbase);
 	env->GetStringUTFRegion(jbase, 0,jlen, base+blen);
 	base[alllen]='\0';
-	 return openNums( string_view(base,alllen),ident);
+	const auto res= openNums( string_view(base,alllen),ident);
+	LOGAR("end openNums");
+	return res;
 	}
 #include "curve.h"
 extern "C" JNIEXPORT void JNICALL fromjava(setlastcolor)(JNIEnv *env, jclass thiz,jint color) {

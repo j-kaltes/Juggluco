@@ -264,4 +264,8 @@
  <string name="separate">Separat</string>
     <string name="librecurrent">Libre3 sofort</string>
     <string name="USE_ALARM">Alarm ist alarm</string>
+    <string name="pitch">Pitch</string>
+  <string name="talker">Sprecher</string>
+  <string name="secondsbetween">Sekunden dazwischen</string>
+  <string name="test">Test</string>
 </resources>

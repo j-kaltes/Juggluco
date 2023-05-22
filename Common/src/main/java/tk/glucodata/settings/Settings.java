@@ -220,7 +220,7 @@ static View[] mkalarm(MainActivity context,String label1,boolean show,Float valu
 	alow.setImeOptions(editoptions);
     alow.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
 //    alow.setImeOptions(editoptions);
-    alow.setMinEms(3);
+    alow.setMinEms(2);
     Button ring=getbutton(context,R.string.ringtonename);
 
 
@@ -323,7 +323,7 @@ static public void alarmsettings(MainActivity context,View parview,boolean[] iss
 		losswait.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
 //    losswait.setImeOptions(editoptions);
 		losswait.setImeOptions(editoptions);
-		losswait.setMinEms(3);
+		losswait.setMinEms(2);
 		int waitloss=Natives.readalarmsuspension(4);
 		losswait.setText(waitloss+"");
 
@@ -478,7 +478,7 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
         glow.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
 
         glow.setImeOptions(editoptions);
-        glow.setMinEms(3);
+        glow.setMinEms(2);
 
 
         TextView line = new TextView(context);
@@ -487,7 +487,7 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 
         ghigh.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         ghigh.setImeOptions(editoptions);
-        ghigh.setMinEms(3);
+        ghigh.setMinEms(2);
         View[] row1 = {graphlabel, glow, line, ghigh};
 
         TextView targetlabel = new TextView(context);
@@ -496,13 +496,13 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 
 
         tlow.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-        tlow.setMinEms(3);
+        tlow.setMinEms(2);
         tlow.setImeOptions(editoptions);
         TextView line2=new TextView(context); line2.setText("-");
         thigh = new EditText(context);
 
         thigh.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-        thigh.setMinEms(3);
+        thigh.setMinEms(2);
         thigh.setImeOptions(editoptions);
         View[] row2 = {targetlabel, tlow, line2, thigh};
         Button changelabels=new Button(context);
@@ -524,7 +524,6 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 	CheckBox bluetooth= new CheckBox(context);
         CheckBox globalscan = new CheckBox(context);
 	globalscan.setText(R.string.startsapp);
-//	var oldxdrip=getbutton(context,"Send old");
 
         final CheckBox librelinkbroadcast=(!isWearable)?new CheckBox(context):null;
         final CheckBox libreview=(!isWearable)?new CheckBox(context):null;
@@ -543,7 +542,6 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 		libreview.setChecked(wasxdrip);
 		librelinkbroadcast.setText(R.string.sendtoxdrip);
 		librelinkbroadcast.setChecked(Natives.getlibrelinkused());
-//        	oldxdrip.setOnClickListener(v->{Natives.sendxdripold(); });
 		}
 	final var hasnfc=MainActivity.hasnfc;
 	if(hasnfc)  {
@@ -598,7 +596,6 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 		final int wasorient=Natives.getScreenOrientation();
 		if(!isWearable) {	
 			if( reverseorientation.isChecked()==((wasorient&SCREEN_ORIENTATION_REVERSE_LANDSCAPE)==0)) {
-			//	int ori= (MainActivity.wearable?1:0)+(reverseorientation.isChecked()?SCREEN_ORIENTATION_REVERSE_LANDSCAPE:SCREEN_ORIENTATION_LANDSCAPE);
 				int ori= (reverseorientation.isChecked()?SCREEN_ORIENTATION_REVERSE_LANDSCAPE:SCREEN_ORIENTATION_LANDSCAPE);
 				Natives.setScreenOrientation(ori);
 				}
@@ -632,7 +629,6 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 				  if (diskey != setto) Natives.setcamerakey(setto);
 			  }
 			if(librelinkbroadcast.isChecked()!=wasxdrip)  {
-	//			Natives.setxinfuus(librelinkbroadcast.isChecked());	
 				if(!wasxdrip) {
 					if(!bluetooth.isChecked()&&Natives.backuphostNr( )<=0) {
 						Toast.makeText(context, R.string.blueormirror,Toast.LENGTH_LONG).show();
@@ -727,6 +723,8 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 		floatglucose.setText(R.string.floatglucose);
 		floatglucose.setChecked(Natives.getfloatglucose());
 		floatglucose.setOnCheckedChangeListener( (buttonView,  isChecked) -> Floating.setfloatglucose(context,isChecked) ) ;
+	//	var talk=getbutton(context,"Talk");
+	 //      talk.setOnClickListener(v-> tk.glucodata.Talker.config(context,thelayout[0]));
 		View[] rowglu=new View[]{ bluetooth,floatglucose,floatconfig,alarmbut};
 		row8=new View[]{changelabels,numalarm,colbut};
 		views=new View[][]{row0, row1,new View[]{scalelabel,fixatex,fixatey}, row2,new View[]{levelleft,camera,reverseorientation},

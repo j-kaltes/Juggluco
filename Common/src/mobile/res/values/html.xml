@@ -1303,11 +1303,17 @@ faster, but has the disadvantage that less information is displayed.
 Juggluco puts the glucose value and a direction arrow in the location
 of the weather. This location is displayed under Weather on the
 watch. I haven\'t found any watch face that displayed this location.
-The rounded glucose value is put in the current temperature. For
-those who use mmol, the value before the point is put in the maximal
-temperature and the value after the point in the minimal temperature.
-The direction of change determines the weather icon: snow is falling
-glucose, rain is rising glucose.</p>
+Only for <b>mmol/L</b>: the value before the point is put in the
+maximal temperature and the value after the point in the minimal
+temperature. The values of <b>mg/dL</b> are too large for
+temperatures, for that reason the last digit is put in minimal
+temperature and the numbers before the last digit in the maximal
+temperature. Thus 106 mg/dL becomes: maximal temperature 10, minimal
+temperature 6.</p>
+<p>The direction of change determines the weather icon: snow is
+falling glucose, rain is rising glucose. It is also put in the
+current temperature. Larger than zero means rising glucose, lower
+than zero means falling glucose.</p>
 <h2 class="western">Kerfstok</h2>
 <p style="line-height: 100%; margin-bottom: 0in"><span lang="en-US">Kerfstok
 is watch app by which you can enter numbers (like insulin doses),</span>
@@ -2027,6 +2033,26 @@ is set to prevent entering amounts in this app, because they will be
 overridden by amounts received from the mirror connection.</p>
 <p style="line-height: 100%; margin-bottom: 0in">If this app doesn\'t
 receive amounts from a mirror connection, unset this option.</p>
+]]>
+</string>
+<string name="talkhelp" >
+<![CDATA[
+<h1>Talk</h1>
+<p>Let Juggluco talk out glucose values when they arrive.</p>
+<p><b>Seconds between</b>: specify how many seconds Juggluco should
+wait before saying the next glucose value. Glucose values are always
+spoken immediately when they arrive. Setting this to a high value
+means that Juggluco will skip glucose values that arrive before this
+time period has elapsed.</p>
+<p><b>Active</b>: Turn it on</p>
+<p><b>Voice</b>: select a speaker out of a list of possible speakers.</p>
+<p><b>Speed</b>: a higher number means faster talking.</p>
+<p><b>Pitch</b>: a higher number means a higher pitch.</p>
+<p><b>Test</b>: Speak out the last glucose value.</p>
+<p><br/>
+<br/>
+
+</p>
 ]]>
 </string>
 </resources>
