@@ -2659,4 +2659,26 @@ Mengen von einer Klonverbindung empfängt, deaktivieren Sie diese
 Option.</p>
 ]]>
 </string>
+<string name="talkhelp" >
+<![CDATA[
+<h1>Sprechen</h1>
+<p>Sagt Glukosewerte, wenn sie eintreffen.</p>
+<p><b>Sekunden zwischen</b> : Gibt an, wie viele Sekunden Juggluco
+warten soll, bevor der nächste Glukosewert angezeigt wird.
+Glukosewerte werden immer sofort angesagt, wenn sie eintreffen. Wenn
+ein großer Wert angegeben wird, überspringt Juggluco Glukosewerte,
+die vor Ablauf dieses Zeitraums eintreffen.</p>
+<p><b>Aktiv</b>: Einschalten</p>
+<p><b>Sprecher</b>: Wählt einen Sprecher aus einer Liste möglicher
+Sprecher aus.</p>
+<p><b>Geschwindigkeit</b>: Eine höhere Zahl bedeutet schnelleres
+Sprechen.</p>
+<p><b>Tonhöhe</b>: Eine höhere Zahl bedeutet eine höhere Tonhöhe.</p>
+<p><b>Test</b>: sagt den letzten Glukosewert aus.</p>
+<p><br/>
+<br/>
+
+</p>
+]]>
+</string>
 </resources>

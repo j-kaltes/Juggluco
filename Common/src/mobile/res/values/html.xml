@@ -767,11 +767,7 @@ to AndroidManifest.xml for it to work:
 <p>&lt;queries&gt; <br/>
 &nbsp;&nbsp; &lt;package
 android:name=&quot;tk.glucodata&quot;/&gt; <br/>
-&lt;/queries&gt; 
-</p>
-<p>Every minute Juggluco sends a glucose value to all apps listening
-to this broadcast, xDrip only to a few well known applications,
-except when you explicitly specify the name.</p>
+&lt;/queries&gt;</p>
 <h2 class="western">Glucodata broadcast</h2>
 <p>A new broadcast that has the same function as the xDrip broadcast.
 A simple example app that writes received glucose values to logcat
@@ -2038,17 +2034,18 @@ receive amounts from a mirror connection, unset this option.</p>
 <string name="talkhelp" >
 <![CDATA[
 <h1>Talk</h1>
-<p>Let Juggluco talk out glucose values when they arrive.</p>
-<p><b>Seconds between</b>: specify how many seconds Juggluco should
+<p>Speaks glucose values when they arrive.</p>
+<p><b>Seconds between</b>: Specifies how many seconds Juggluco should
 wait before saying the next glucose value. Glucose values are always
-spoken immediately when they arrive. Setting this to a high value
-means that Juggluco will skip glucose values that arrive before this
-time period has elapsed.</p>
+spoken immediately when they arrive. When a large value is specified,
+Juggluco will skip glucose values that arrive before this time period
+has elapsed.</p>
 <p><b>Active</b>: Turn it on</p>
-<p><b>Voice</b>: select a speaker out of a list of possible speakers.</p>
+<p><b>Voice</b>: Selects a speaker out of a list of possible
+speakers.</p>
 <p><b>Speed</b>: a higher number means faster talking.</p>
 <p><b>Pitch</b>: a higher number means a higher pitch.</p>
-<p><b>Test</b>: Speak out the last glucose value.</p>
+<p><b>Test</b>: speaks out the last glucose value.</p>
 <p><br/>
 <br/>
 

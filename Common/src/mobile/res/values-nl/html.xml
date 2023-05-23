@@ -2206,4 +2206,26 @@ worden ontvangen van de </span><span lang="nl-NL">kloon</span><span lang="nl-NL"
 uit als deze app geen hoeveelheden ontvangt van een kloon-verbinding.</p>
 ]]>
 </string>
+<string name="talkhelp" >
+<![CDATA[
+<h1>Praat</h1>
+<p>Spreekt glucosewaarden uit als ze binnenkomen.</p>
+<p><b>Seconden </b><b>er </b><b>tussen</b>: Geeft aan hoeveel
+seconden Juggluco moet wachten voordat de volgende glucosewaarde
+wordt uitgesproken. Glucosewaarden worden altijd direct uitgesproken
+als ze binnenkomen. Wanneer een grote waarde wordt gespecificeerd,
+zal Juggluco glucosewaarden overslaan die binnenkomen voordat deze
+tijdsperiode is verstreken.</p>
+<p><b>Actief</b>: schakel het in</p>
+<p><b>S</b><b>preker</b>: Selecteert een spreker uit een lijst met
+mogelijke sprekers.</p>
+<p><b>Snelheid</b>: een hoger getal betekent sneller praten.</p>
+<p><b>Toonhoogte</b>: een hoger getal betekent een hogere toonhoogte.</p>
+<p><b>Test</b>: spreekt de laatste glucosewaarde uit.</p>
+<p><br/>
+<br/>
+
+</p>
+]]>
+</string>
 </resources>
