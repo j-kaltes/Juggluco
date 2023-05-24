@@ -69,6 +69,8 @@ static jugglucotext ittext {
 .noconnectionerror=": No Connection",
 .stsensorerror=": Sensor Error",
 .streplacesensor=": Replace Sensor?",
+.endedformat="Sensor %s not working anymore. patchState=%d",
+.notreadyformat="Sensor %s not ready. patchState=%d",
 #ifndef WEAROS
 	.median="Mediana",
 	.middle="Centro",
@@ -104,7 +106,8 @@ static jugglucotext ittext {
 		"Mirror",
 		ittext.newamount,
 		"Lista", 
-		"Statistiche"
+		"Statistiche",
+		"Talk"
 		},
 	.menustr2= {"Ultima scansione","Scansioni","Flusso","Cronologia","Valori","Pasti","Modalità scura       "}, 
 	.menustr3= {hourminstr,"Cerca","Data","Giorno prima","Giorno dopo","Settimana prima","Settimana dopo"}, 

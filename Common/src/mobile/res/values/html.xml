@@ -117,10 +117,10 @@ functions as a Mirror app (receiving glucose values from another
 device running Juggluco), you can press <b>Alarms</b> to get to a
 dialog where you can specify low and high glucose alarms and related
 notifications.</p>
-<p style="line-height: 100%; margin-bottom: 0in"><b>Amounts received
-from mirror: </b>If the app receives amounts of medication, food and
-sport data from this app running on another device, you shouldn\'t add
-or modify these same information here. Checking this makes it
+<p style="line-height: 100%; margin-bottom: 0in"><b>Mirror sends
+a</b><b>mounts: </b>If the app receives amounts of medication, food
+and sport data from this app running on another device, you shouldn\'t
+add or modify these same information here. Checking this makes it
 impossible. 
 </p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>Sync</b> sends
@@ -767,11 +767,7 @@ to AndroidManifest.xml for it to work:
 <p>&lt;queries&gt; <br/>
 &nbsp;&nbsp; &lt;package
 android:name=&quot;tk.glucodata&quot;/&gt; <br/>
-&lt;/queries&gt; 
-</p>
-<p>Every minute Juggluco sends a glucose value to all apps listening
-to this broadcast, xDrip only to a few well known applications,
-except when you explicitly specify the name.</p>
+&lt;/queries&gt;</p>
 <h2 class="western">Glucodata broadcast</h2>
 <p>A new broadcast that has the same function as the xDrip broadcast.
 A simple example app that writes received glucose values to logcat
@@ -1303,11 +1299,17 @@ faster, but has the disadvantage that less information is displayed.
 Juggluco puts the glucose value and a direction arrow in the location
 of the weather. This location is displayed under Weather on the
 watch. I haven\'t found any watch face that displayed this location.
-The rounded glucose value is put in the current temperature. For
-those who use mmol, the value before the point is put in the maximal
-temperature and the value after the point in the minimal temperature.
-The direction of change determines the weather icon: snow is falling
-glucose, rain is rising glucose.</p>
+Only for <b>mmol/L</b>: the value before the point is put in the
+maximal temperature and the value after the point in the minimal
+temperature. The values of <b>mg/dL</b> are too large for
+temperatures, for that reason the last digit is put in minimal
+temperature and the numbers before the last digit in the maximal
+temperature. Thus 106 mg/dL becomes: maximal temperature 10, minimal
+temperature 6.</p>
+<p>The direction of change determines the weather icon: snow is
+falling glucose, rain is rising glucose. It is also put in the
+current temperature. Larger than zero means rising glucose, lower
+than zero means falling glucose.</p>
 <h2 class="western">Kerfstok</h2>
 <p style="line-height: 100%; margin-bottom: 0in"><span lang="en-US">Kerfstok
 is watch app by which you can enter numbers (like insulin doses),</span>
@@ -1519,41 +1521,43 @@ that accepts the complication:
 <string name="about" >
 <![CDATA[
 <h1>About</h1>
-<p style="line-height: 100%; margin-bottom: 0in">Juggluco is written
-by <a href="https://www.juggluco.nl/Juggluco">Jaap Korthals
-Altes</a></p>
+<p style="line-height: 100%; margin-bottom: 0in"><span lang="en-US">Juggluco
+is written by <a href="https://www.juggluco.nl/Juggluco">Jaap
+Korthals Altes</a></span></p>
 <p style="line-height: 100%; margin-bottom: 0in">Besides the standard
 Android libraries, use is made of the following:</p>
 <ul>
-	<li><p align="left" style="line-height: 100%; margin-bottom: 0in"><span lang="en-US">NFC
-	and Bluetooth commands</span> <span lang="en-US">specific to Abbott
-	FreeStyle Libre sensors and interpretation algorithms specific to
-	FreeStyle Libre sensors.</span> <span lang="en-US">All are
-	undocumented;</span></p>
+	<li><p align="left" style="line-height: 100%; margin-bottom: 0in">NFC
+	and Bluetooth commands specific to Abbott FreeStyle Libre sensors
+	and interpretation algorithms specific to FreeStyle Libre sensors.
+	All are undocumented;</p>
 	<li><p align="left" style="line-height: 100%; margin-bottom: 0in"><span lang="en-US">To
 	communicate with Garmin watches use is made of<a href="https://developer.garmin.com/connect-iq/sdk">
 	Connect IQ Mobile SDK</a>;</span></p>
 	<li><p align="left" style="line-height: 100%; margin-bottom: 0in"><span lang="en-US">The
 	graphs are created with <a href="https://github.com/memononen/nanovg">NanoVG</a>;</span></p>
-	<li><p align="left" style="line-height: 100%; margin-bottom: 0in">The
+	<li><p align="left" style="line-height: 100%; margin-bottom: 0in"><span lang="en-US">The
 	mirror function uses <a href="https://ascon.iaik.tugraz.at/">Ascon
-	authenticated encryption</a>;</p>
-	<li><p align="left" style="line-height: 100%; margin-bottom: 0in">Communication
-	with Libre3 sensors uses <a href="https://github.com/intel/tinycrypt">TinyCrypt</a>;</p>
-	<li><p align="left" style="line-height: 100%; margin-bottom: 0in">The
-	color picker is an adaptation of <a href="https://github.com/yukuku/ambilwarna">AmbilWarna</a>;</p>
+	authenticated encryption</a>;</span></p>
+	<li><p align="left" style="line-height: 100%; margin-bottom: 0in"><span lang="en-US">Communication
+	with Libre3 sensors uses <a href="https://github.com/intel/tinycrypt">TinyCrypt</a>;</span></p>
+	<li><p align="left" style="line-height: 100%; margin-bottom: 0in"><span lang="en-US">The
+	color picker is an adaptation of <a href="https://github.com/yukuku/ambilwarna">AmbilWarna</a>;</span></p>
 	<li><p align="left" style="line-height: 100%; margin-bottom: 0in">Support
 	for NFC NovoPens is a modification of the code taken out of xDrip.</p>
 </ul>
-<p style="line-height: 100%; margin-bottom: 0in">Juggluco was
-translated into Italian by <a href="mailto:matteo.gabriele81@gmail.com">Matteo
-Gabriele</a>.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><span lang="en-US">Juggluco
+was translated into Italian by <a href="mailto:matteo.gabriele81@gmail.com">Matteo
+Gabriele</a>.</span></p>
 <p style="line-height: 100%; margin-bottom: 0in">Juggluco was
 translated into Portuguese by Rui Pinheiro.</p>
-<p style="line-height: 100%; margin-bottom: 0in">Juggluco was
-translated into Polish by <a href="mailto:adelis@translaris.pl">Arkadiusz
-Deliś</a>.</p>
-<p align="left" style="line-height: 100%; margin-bottom: 0in"><br/>
+<p style="line-height: 100%; margin-bottom: 0in"><span lang="en-US">Juggluco
+was translated into Polish by <a href="mailto:adelis@translaris.pl">Arkadiusz
+Deliś</a>.</span></p>
+<p style="line-height: 100%; margin-bottom: 0in"><span lang="en-US">Juggluco
+</span><span lang="en-US">was translated into Belarusian by</span><span lang="en-US">
+<a href="mailto:3477734n@gmail.com">Находкін Яўген</a></span></p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
 
 </p>
 ]]>
@@ -1990,7 +1994,7 @@ the values 5 minutes apart, except when &quot;interval=secs&quot; is
 set to a lower value.</p>
 <p><b>URL</b>: the url should be in the form of https://hostname:port
 for example, https://myname.herokuapp.com:6789</p>
-<p><b>Active</b>: Turn server on</p>
+<p><b>Active</b>: Turn on uploader</p>
 <p><b>Resend data</b>: Upload all data again to the Nightscout server</p>
 <p><b>Send now</b>: Normally data is immediately send when it arrives
 from the sensor or a mirror connection. Press on this button when for
@@ -2025,6 +2029,27 @@ is set to prevent entering amounts in this app, because they will be
 overridden by amounts received from the mirror connection.</p>
 <p style="line-height: 100%; margin-bottom: 0in">If this app doesn\'t
 receive amounts from a mirror connection, unset this option.</p>
+]]>
+</string>
+<string name="talkhelp" >
+<![CDATA[
+<h1>Talk</h1>
+<p>Speaks glucose values when they arrive.</p>
+<p><b>Seconds between</b>: Specifies how many seconds Juggluco should
+wait before saying the next glucose value. Glucose values are always
+spoken immediately when they arrive. When a large value is specified,
+Juggluco will skip glucose values that arrive before this time period
+has elapsed.</p>
+<p><b>Active</b>: Turn it on</p>
+<p><b>Voice</b>: Selects a speaker out of a list of possible
+speakers.</p>
+<p><b>Speed</b>: a higher number means faster talking.</p>
+<p><b>Pitch</b>: a higher number means a higher pitch.</p>
+<p><b>Test</b>: speaks out the last glucose value.</p>
+<p><br/>
+<br/>
+
+</p>
 ]]>
 </string>
 </resources>

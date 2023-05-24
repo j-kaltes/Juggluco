@@ -244,7 +244,7 @@ extern		int getownips(struct sockaddr_in6 *outips,int max,bool &) ;
 
 
 
-static int getreceivefrom(int index,bool receive) {
+static int getreceivefrom(int index,bool receive,bool activeonly,bool passiveonly) {
 	bool sendto;
 	if(index<0) {
 		sendto=false;
@@ -253,11 +253,9 @@ static int getreceivefrom(int index,bool receive) {
 		updateone &updat= getsendto(index);
 		sendto=updat.sendnums||updat.sendstream||updat.sendscans;
 		}
-	const bool		activeonly=getactive(index);
-	const bool		passiveonly=getpassive(index);
 	const bool reconnect=(receive&&!passiveonly)||(sendto&&!activeonly);
 	int res=receive?(reconnect?3:2):((sendto&&reconnect)?1:0);
-	LOGGER("getreceivefrom(%d,%d)=%d\n",index,receive,res);
+	LOGGER("passiveonly=%d activeonly=%d reconnect=%d getreceivefrom(%d,%d)=%d\n",passiveonly,activeonly,reconnect,index,receive,res);
 	return res;
 	}
 
@@ -349,6 +347,9 @@ extern "C" JNIEXPORT  jbyteArray  JNICALL   fromjava(getmynetinfo)(JNIEnv *env, 
 		}
 	if constexpr(!iswatchapp()) {
 		if(watchHasSensor) { 
+
+		const bool		activeonly=getactive(index);
+		const bool		passiveonly=getpassive(index);
 		//Als phone helemaal niets zend gaat het mis.
 		//Receive onbekend. Nums kunnen helemaal niet overgezonden worden.
 			info.watchsensor=watchHasSensor>0;
@@ -361,6 +362,7 @@ extern "C" JNIEXPORT  jbyteArray  JNICALL   fromjava(getmynetinfo)(JNIEnv *env, 
 				if(wearhost->index>=0) {
 					updateone &updat= getsendto(index);
 					updat.sendstream=false;
+					LOGGER("sendstream=%d\n",updat.sendstream);
 					if(usedversion) {
 						info.sendnums=updat.sendnums;
 						info.sendscans=updat.sendscans;
@@ -376,16 +378,19 @@ extern "C" JNIEXPORT  jbyteArray  JNICALL   fromjava(getmynetinfo)(JNIEnv *env, 
 			else {
 				updateone &updat= getsendto(index);
 				updat.sendstream=true;
+				LOGGER("sendstream=%d\n",updat.sendstream);
 				if(usedversion) {
 					info.sendnums=updat.sendnums;
 					info.sendscans=updat.sendscans;
 					}
-				if(updat.sendnums)
+				if(updat.sendnums) {
 					receive=false;
+					backup->endactivereceive(index);
+					}
 				else
 					receive=true;
 				}
-			wearhost->receivefrom=getreceivefrom(index,receive);
+			wearhost->receivefrom=getreceivefrom(index,receive,activeonly,passiveonly);
 			}
 		else {
 			info.watchsensor=watchsensor(wearhost);
@@ -520,14 +525,12 @@ extern "C" JNIEXPORT jboolean  JNICALL   fromjava(setmynetinfo)(JNIEnv *env, jcl
 		}
 	}
     else { 
-    	LOGSTRINGTAG("is no watch\n");
+    	LOGGER("is no watch watchsensor=%d sendstream=%d\n",info->watchsensor, getsendto(index).sendstream);
     	if(info->watchsensor) {
 		settings->data()->nobluetooth=true;
 		getsendto(index).sendstream=false;
-		}
-	else {
-//		getsendto(index).sendstream=true;
-		LOGSTRINGTAG("set stream on?\n");
+
+		LOGGER("sendstream(%d)=false\n",index);
 		}
     	}
     networkpresent=true;

@@ -1,0 +1,15 @@
+<resources>
+<string name="staticnum" >
+<![CDATA[
+<h1 align="center">&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bloqué</h1>
+<p>&nbsp;&nbsp;&nbsp;&nbsp<b>Le menu de gauche</b><b> </b><b>-&gt; Miroir -&gt; &quot; </b><em><i><b>Qtés.</b></i></em><em><b>
+reçu</b></em><em><b>e</b></em><em><b>s du miroir</b></em><b>&quot;</b>
+est configuré pour empêcher la saisie de quantités dans cette
+application, car ils seront remplacés par les quantités reçues de
+la connexion miroir.</p>
+<p>Si cette application
+ne reçoit pas de quantités d\'une connexion miroir, désactivez
+cette option.</p>
+]]>
+</string>
+</resources>

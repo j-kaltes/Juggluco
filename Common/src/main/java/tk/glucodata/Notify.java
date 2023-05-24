@@ -86,7 +86,6 @@ static void init() {
 
 		}
 	}
-
 static String glucoseformat=null;
 static String pureglucoseformat=null;
 static String unitlabel=null;
@@ -204,6 +203,7 @@ final private static boolean whiteonblack=false;
 			}
 		}
 	}
+
 	Notify() {
 		Log.i(LOG_ID,"showalways="+showalways);
 		showalways=Natives.getshowalways();
@@ -303,7 +303,6 @@ static public String glucosestr(float gl) {
 				arrowglucosenotification(2,draw, message,strgl,GLUCOSENOTIFICATION ,!alertwatch);
 				}
 			else {
-			//	floatglucose(strgl);
 				if(hasvalue) {
 					if(keeprunning.started)
 						novalue();
@@ -313,7 +312,6 @@ static public String glucosestr(float gl) {
 			}
 		}
 		else {
-			//floatglucose(strgl);
 			notificationManager.cancel(glucosealarmid);
 		}
 	}

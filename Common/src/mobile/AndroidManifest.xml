@@ -126,7 +126,12 @@
     <!-- Needed only if your app communicates with already-paired Bluetooth
          devices. -->
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
-
+	 <queries>
+	  <intent>
+	      <action android:name="android.intent.action.TTS_SERVICE" />
+	  </intent>
+	 </queries>
+ 
     <queries>
         <intent>
             <action android:name="android.nfc.action.TECH_DISCOVERED"/>

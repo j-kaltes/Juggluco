@@ -73,6 +73,7 @@ bool inituploader(JNIEnv *env) {
 	makeuploadurl(env);
 extern void startuploaderthread();
 	startuploaderthread();
+	LOGAR("end inituploader");
 	return true;
        }
 

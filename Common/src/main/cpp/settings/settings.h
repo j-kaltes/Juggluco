@@ -199,7 +199,15 @@ struct Tings {
 	char libre3baseurl[128];
 	std::array<char,36> libre3viewDeviceID;
 	char _nullchar2;
-	uint8_t empty2[11];//**
+
+
+	uint8_t voicespeaker;
+	uint16_t voicesep:15;
+	bool voiceactive:1;
+	float voicespeed;
+	float voicepitch;
+
+//	uint8_t empty2[11];//**
 	char newYuApiKey3[41];
 	//char reserved9[7];//*
 

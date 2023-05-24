@@ -22,7 +22,8 @@
 
 #include "jugglucotext.h"
 #ifndef WEAROS
-constexpr static std::string_view belabels[]={ "Хуткі інсулін", "Вугляводы", "Дэкстроза", "Доўгі інсулін", "Ровар", "Прагулка", "Кроў"};
+//constexpr static std::string_view belabels[]={ "Хуткі інсулін", "Вугляводы", "Дэкстроза", "Доўгі інсулін", "Ровар", "Прагулка", "Кроў"};
+constexpr static std::string_view belabels[]={ "Хуткі", "Вугляв", "Дэкстр", "Доўгі", "Ровар", "Прагул", "Кроў"};
 constexpr static Shortcut_t  beshortinit[]= { {"Bread",
         .48},
         {"Currantbun1",
@@ -49,7 +50,6 @@ constexpr static Shortcut_t  beshortinit[]= { {"Bread",
         .07300000f}};
 #endif
 
-extern jugglucotext betext;
 jugglucotext betext {
 .daylabel={"Нд","Пн","Аў","Ср","Чц","Пт","Сб"},
 .monthlabel={ "Студз", "Лют", "Сак",  "Крас", "Май", "Чэрв", "Ліп", "Жн", "Верас", "Кастр", "Лістап", "Снеж"},
@@ -84,7 +84,7 @@ jugglucotext betext {
 	.SD="SD: %.2f",
 	.glucose_variability="Варыябельнасць глюкозы: %.1f%%",
      .menustr0={
-		"Інтэрфейс сістэмы        ",
+		"System UI      ",
 		"Глядзець",
 		"Датчык",
 		"Налады",
@@ -94,22 +94,23 @@ jugglucotext betext {
 		},
 	.menustr1={
 		"Экспарт",
-		"Люстэрка",
-		engtext.newamount,
+        "Клон",
+		betext.newamount,
 		"Спіс",
-		"Статыстыка"
+		"Статыстыка",
+		"Talk"
 		},
-	.menustr2= {"Апошняе сканаванне","Сканы","Паток","Гісторыя","Сумы","Ежа","Цёмны рэжым        "},
+	.menustr2= {"Апошняе скан.","Сканы","Паток","Гісторыя","Сумы","Ежа","Dark mode        "},
 	.menustr3= {hourminstr,"Пошук","Дата","Дзень назад","Праз дзень","Тыдзень таму","Праз тыдзень"},
 #else
  .amount="Сума",
  .menustr0= {
-	"Люстэрка",
+	"Клон",
 	"Датчык",
-	"Цёмны рэжым     ",
+	"Dark mode     ",
         "Налады",
 	"Спыніць трывогу" },
-.menustr2= {"Дата",hourminstr,"Дзень назад",engtext.amount},
+.menustr2= {"Дата",hourminstr,"Дзень назад",betext.amount},
 #endif
 
 	.scanerrors={
@@ -150,6 +151,7 @@ jugglucotext betext {
 		;
 
 
+extern void setusebe();
 void setusebe() {
  usedtext= &betext;
  }

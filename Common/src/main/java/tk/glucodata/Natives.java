@@ -658,6 +658,13 @@ public static native void setUSEALARM(boolean val);
 public static native boolean getUSEALARM( );
 public static native void setgadgetbridge(boolean val);
 public static native boolean getgadgetbridge( );
+public static native void saveVoice(float speed,float pitch,int voicesep,int voice,boolean active);
+public static native int getVoiceTalker( );
+public static native int getVoiceSeparation( );
+public static native float getVoiceSpeed( );
+public static native float getVoicePitch( );
+public static native boolean getVoiceActive( );
+
 
 //s/^extern.*JNIEXPORT[         ]*\([a-zA-Z]*\)[ ]*JNICALL[      ]*fromjava(\([^)]*\)) *(JNIEnv[^,]*,[^,)]*[,)]\([^){]*\)[^a-zA-Z0-9]*$/public static native \1 \2(\3);/g
 //public static native void sendxdripold();

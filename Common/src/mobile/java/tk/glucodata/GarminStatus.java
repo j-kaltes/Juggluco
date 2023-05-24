@@ -85,7 +85,7 @@ class GarminStatus {
 		return ((friendly == null) ? device.getDeviceIdentifier() : friendly) + " - " + stat.name();
 	}
 
-	static private void setidview(MainActivity context, AllData alldata,View parent) {
+	static private void setidview(MainActivity context, AllData alldata,View parent,View parentlayout) {
 		EnableControls(parent,false);
 		var idlabel = getlabel(context, "Garmin Watch app ID:");
 
@@ -155,7 +155,8 @@ class GarminStatus {
 		int laypad = (int) (density * 4.0);
 		layout.setPadding(laypad * 2, laypad * 2, laypad * 2, laypad);
 
-		layout.setBackgroundColor(Applic.backgroundcolor);
+
+	layout.setBackgroundResource(R.drawable.dialogbackground);
 		context.addContentView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
 		context.setonback(() -> {
 			EnableControls(parent,true);
@@ -193,14 +194,14 @@ class GarminStatus {
 					context.doonback();
 					context.doonback();
 					context.doonback();
-					new GarminStatus(context, alldata);
+					new GarminStatus(context, alldata,parentlayout);
 
 				});
 
 	}
 
-
-	public GarminStatus(MainActivity context, AllData alldata) {
+	public GarminStatus(MainActivity context, AllData alldata,View parentlayout) {
+   		EnableControls(parentlayout,false);
 		this.alldata = alldata;
 		spinner = new Spinner(context);
 		spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -267,7 +268,7 @@ class GarminStatus {
 //		var setid = getbutton(context, "ID");
 //		setid.setOnClickListener(v -> setidview(context, alldata));
 		Button config = getbutton(context, R.string.config);
-		config.setOnClickListener(v -> kerfstokconfig(context,alldata,layout));
+		config.setOnClickListener(v -> kerfstokconfig(context,alldata,layout,parentlayout));
 //		restview.setPadding(0,0,0,0);
 		layout = new Layout(context, (l, w, h) -> {
 			var width = GlucoseCurve.getwidth();
@@ -279,13 +280,17 @@ class GarminStatus {
 			return new int[]{w, h};
 		}, new View[]{spinner, refresh}, new View[]{sdkreadyview, registeredview,help}, new View[]{restview,glucose}, new View[]{sync, next, reinit, config, ok}
 		);
-		layout.setBackgroundColor(Applic.backgroundcolor);
+	layout.setBackgroundResource(R.drawable.dialogbackground);
 		int laypad = (int) (density * 4.0);
 		layout.setPadding(laypad * 2, laypad * 2, laypad * 2, laypad*2);
 		context.addContentView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
 
 		ok.setOnClickListener(
-				v -> context.doonback());
+				v -> {
+   				EnableControls(parentlayout,true);
+				 context.doonback();
+				}
+			);
 		context.setonback(() -> removeContentView(layout));
 		show();
 	}
@@ -344,7 +349,7 @@ class GarminStatus {
 
 	}
 
-	static private void kerfstokconfig(MainActivity context,AllData alldata,View parent) {
+	static private void kerfstokconfig(MainActivity context,AllData alldata,View parent,View parentlayout) {
 		EnableControls(parent,false);
 		var setid = getbutton(context, "ID");
 
@@ -389,7 +394,8 @@ class GarminStatus {
 		float density = GlucoseCurve.metrics.density;
 		int laypad = (int) (density * 4.0);
 		layout.setPadding(laypad * 2, laypad * 2, laypad * 2, laypad);
-		setid.setOnClickListener(v -> setidview(context, alldata,layout));
+		setid.setOnClickListener(v -> setidview(context, alldata,layout,parentlayout));
+
 		layout.setBackgroundColor(Applic.backgroundcolor);
 		context.addContentView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
 		context.setonback(() -> {

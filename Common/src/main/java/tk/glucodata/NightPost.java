@@ -173,7 +173,7 @@ public static void  config(MainActivity act, View settingsview) {
                         else
                                         editsecret.setTransformationMethod(new PasswordTransformationMethod());
                         });
-	final Layout layout=isWearable?new Layout(act, (lay, w, h) -> { return new int[] {w,h};}, new View[]{secretlabel},new View[]{visible},new View[]{editsecret},new View[]{urllabel},new View[]{url},new View[]{clear},new View[]{activebox},new View[]{wake,cancel},new View[]{save}):new Layout(act, (lay, w, h) -> {
+	final Layout layout=isWearable?new Layout(act, (lay, w, h) -> { return new int[] {w,h};}, new View[]{secretlabel},new View[]{visible},new View[]{editsecret},new View[]{urllabel},new View[]{url},new View[]{clear},new View[]{wake},new View[]{activebox,cancel},new View[]{save}):new Layout(act, (lay, w, h) -> {
 		var height=GlucoseCurve.getheight();
 		var width=GlucoseCurve.getwidth();
                         if(w>=width||h>=height) {

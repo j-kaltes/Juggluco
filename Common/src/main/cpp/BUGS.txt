@@ -1,3 +1,4 @@
+
 Variabelen gebruikt in constructor worden pas later reinitialiseerd?
 
 

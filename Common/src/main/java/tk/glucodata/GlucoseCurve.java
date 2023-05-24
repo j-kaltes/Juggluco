@@ -483,6 +483,7 @@ void startlibrelink(String lang) {
 					}; break;
 				case 3: getnumcontrol((MainActivity) getContext());return true;
 				case 4: Stats.mkstats((MainActivity) getContext());break;
+				case 5: tk.glucodata.Talker.config((MainActivity) getContext());break;
 				};
 				};break;
 		    case 3:

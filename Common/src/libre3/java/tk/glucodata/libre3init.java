@@ -32,7 +32,7 @@ import java.security.SecureRandom;
 class libre3init {
 private static		final  String LOG_ID="libre3init";
 static void init() {
-if(true) {
+if(false) {
 	if(BuildConfig.doLog==1) 
 	{
 	new Thread (() -> {

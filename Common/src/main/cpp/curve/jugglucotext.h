@@ -33,7 +33,7 @@ typedef const char *charptr_t;
 typedef std::pair<const char*,const char *> errortype;
 struct jugglucotext {
 char daylabel[7][5];
-char monthlabel[12][5];
+char monthlabel[12][13];
 std::string_view scanned;
 std::string_view readysecEnable;
 std::string_view readysec;
@@ -43,6 +43,8 @@ std::string_view useBluetoothOff;
 std::string_view noconnectionerror;
 std::string_view stsensorerror;
 std::string_view streplacesensor;
+std::string_view endedformat;
+std::string_view notreadyformat;
 
 #ifndef WEAROS
 std::string_view median,middle;
@@ -64,7 +66,7 @@ charptr_t
 	GMI,
 	SD,
 	glucose_variability;
-std::string_view menustr0[7], menustr1[5], menustr2[7], menustr3[7];
+std::string_view menustr0[7], menustr1[6], menustr2[7], menustr3[7];
 std::string_view *menustr[4]={menustr0,menustr1,menustr2,menustr3};
 #else
 ;

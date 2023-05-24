@@ -152,8 +152,8 @@ Juggluco als Klon-App funktioniert (d. h. Glukosewerte von einem
 anderen Gerät empfängt, auf dem Juggluco läuft), können Sie auf
 <b>Alarme </b>drücken, um ein Dialogfeld aufzurufen, in dem Sie
 Alarme für niedrige und hohe Glukosewerte festlegen können.</p>
-<p align="left" style="line-height: 100%; margin-bottom: 0in"><b>Ändern
-Sie keine Mengen: </b>Wenn die App die Mengen an Medikamenten,
+<p align="left" style="line-height: 100%; margin-bottom: 0in"><b>Klon
+sendet Mengen</b><b>: </b>Wenn die App die Mengen an Medikamenten,
 Nahrungsmitteln und Sportdaten von dieser App auf einem anderen Gerät
 erhält, sollten Sie diese Informationen hier nicht hinzufügen oder
 ändern. Wenn Sie dies markieren, wird es unmöglich. 
@@ -196,22 +196,21 @@ empfangen (receive)</p>
 
 </p>
 <p align="left" style="line-height: 100%; margin-bottom: 0in"><span lang="de-DE">Weitere
-Informationen zu </span><span lang="de-DE">Klon</span><span lang="de-DE">-Verbindungen
-finden Sie in der Hilfe unter &quot;</span><span lang="de-DE"><i>Verbindung
-hinzufügen</i></span><span lang="de-DE">&quot; und unter
-</span><a class="western" href="https://www.juggluco.nl/Juggluco/mgdL#mirror"><span lang="de-DE"><u>https://www.juggluco.nl/Juggluco/</u></span><span lang="de-DE"><u>mgdL</u></span><span lang="de-DE"><u>#mirror</u></span></a></p>
+Informationen zu Klon-Verbindungen finden Sie in der Hilfe unter
+&quot;</span><span lang="de-DE"><i>Verbindung hinzufügen</i></span><span lang="de-DE">&quot;
+und unter </span><a class="western" href="https://www.juggluco.nl/Juggluco/mgdL#mirror"><span lang="de-DE"><u>https://www.juggluco.nl/Juggluco/mgdL#mirror</u></span></a></p>
 <h1>Desktop-Computer</h1>
-<p align="left" style="line-height: 100%; margin-bottom: 0in"><span lang="de-DE"><span style="text-decoration: none">Sie
+<p align="left" style="line-height: 100%; margin-bottom: 0in"><span style="text-decoration: none"><span lang="de-DE">Sie
 können die Android Juggluco-App mit Hilfe eines Android-Emulators
 (z. B. <a class="western" href="https://www.genymotion.com/">Genymotion</a>)
 auf einem Windows-, Macintosh- oder Linux-Computer ausführen. Der
 Juggluco auf dem Emulator erhält die Daten über eine
-</span></span><span lang="de-DE"><span style="text-decoration: none">Klon</span></span><span lang="de-DE"><span style="text-decoration: none">-Verbindung
-von einem mit dem Sensor verbundenen Android-Telefon.
+Klon-Verbindung von einem mit dem Sensor verbundenen Android-Telefon.
 Pinch-Bewegungen (Bewegen zweier Finger zueinander oder voneinander
 weg) können durch Drücken einer Taste (Control in
-Genymotion),während der Maus bewegt wird</span></span><span lang="de-DE"><span style="text-decoration: none">,</span></span><span lang="de-DE"><span style="text-decoration: none">
-simuliert werden.</span></span></p>
+Genymotion),während der Maus bewegt wird,</span></span><span style="text-decoration: none">
+</span><span style="text-decoration: none"><span lang="de-DE">simuliert
+werden.</span></span></p>
 ]]>
 </string>
 <string name="addconnection" >
@@ -1704,7 +1703,8 @@ das Einschalten sendet Juggluco Glukosewerte an <a href="https://bigdigital.home
 . Watchdrip+ sendet Zifferblätter mit Glukosewerten an
 MiBand/Amazfit-Uhren.</span></p>
 <h2 class="western">GadgetBridge</h2>
-<p>GadgetBridge (<a href="https://codeberg.org/Freeyourgadget/Gadgetbridge/wiki">Wiki</a>)
+<p><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">GadgetBridge
+(<a href="https://codeberg.org/Freeyourgadget/Gadgetbridge/wiki">Wiki</a>)
 ermöglicht die Anzeige von Wetterinformationen auf
 MiBand/Amazfit-Uhren. Wenn die Gadgetbridge-Option aktiviert ist,
 sendet Juggluco Glukosewerte unter dem Vorwand, dass es sich um
@@ -1714,12 +1714,25 @@ Nachteil, dass weniger Informationen angezeigt werden. Juggluco trägt
 den Glukosewert und einen Richtungspfeil in den Wetterort ein. Dieser
 Ort wird auf der Uhr unter Wetter angezeigt. Ich habe kein
 Zifferblatt gefunden, das diesen Ort anzeigt. Der gerundete
-Glukosewert wird in die aktuelle Temperatur übernommen. Für
-diejenigen, die mmol verwenden, wird der Wert vor dem Punkt in die
-maximale Temperatur und der Wert nach dem Punkt in die minimale
-Temperatur eingetragen. Die Richtung der Änderung bestimmt das
-Wettersymbol: Schnee bedeutet fallende Glukose, Regen bedeutet
-steigende Glukose.</p>
+Glukosewert wird in die aktuelle Temperatur übernommen. </font></font><span style="font-variant: normal"><font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">Nur
+für&nbsp;</span></span></span></font></font></font></span><span style="font-variant: normal"><font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: normal"><span style="font-style: normal"><b>mmol/L</b></span></span></font></font></font></span><span style="font-variant: normal"><font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">:
+Der Wert vor dem Punkt wird in die maximale Temperatur eingetragen
+und der Wert nach dem Punkt in die minimale Temperatur.&nbsp;Die
+Werte von&nbsp;</span></span></span></font></font></font></span><span style="font-variant: normal"><font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: normal"><span style="font-style: normal"><b>mg/dL</b></span></span></font></font></font></span><span style="font-variant: normal"><font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: normal"><span style="font-style: normal"><b>
+</b></span></span></font></font></font></span><span style="font-variant: normal"><font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">sind
+für Temperaturen zu groß, deshalb wird die letzte Ziffer bei der
+Minimaltemperatur und die Zahlen vor der letzten Ziffer bei der
+Maximaltemperatur eingetragen.</span></span></span></font></font></font></span><span style="font-variant: normal"><font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">
+</span></span></span></font></font></font></span><span style="font-variant: normal"><font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">Somit
+ergibt sich aus 106 mg/dL: maximale Temperatur 10, minimale
+Temperatur 6.</span></span></span></font></font></font></span></p>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
+<font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">Die
+Richtung der Änderung bestimmt das Wettersymbol: Schnee bedeutet
+fallende Glukose, Regen bedeutet steigende Glukose. Es wird auch mit
+die aktuelle Temperatur eingegeben.&nbsp;Größer als Null bedeutet
+steigender Glukosewert, kleiner als Null bedeutet fallender
+Glukosewert.</font></font></font></p>
 <h2 class="western">Kerfstok</h2>
 <p style="orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
 <span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><span style="font-style: normal"><span style="font-weight: normal">Kerfstok
@@ -2644,6 +2657,28 @@ empfangene </span><span lang="de-DE">Mengen</span><span lang="de-DE">
 <p style="line-height: 100%; margin-bottom: 0in">Wenn diese App keine
 Mengen von einer Klonverbindung empfängt, deaktivieren Sie diese
 Option.</p>
+]]>
+</string>
+<string name="talkhelp" >
+<![CDATA[
+<h1>Sprechen</h1>
+<p>Sagt Glukosewerte, wenn sie eintreffen.</p>
+<p><b>Sekunden zwischen</b> : Gibt an, wie viele Sekunden Juggluco
+warten soll, bevor der nächste Glukosewert angezeigt wird.
+Glukosewerte werden immer sofort angesagt, wenn sie eintreffen. Wenn
+ein großer Wert angegeben wird, überspringt Juggluco Glukosewerte,
+die vor Ablauf dieses Zeitraums eintreffen.</p>
+<p><b>Aktiv</b>: Einschalten</p>
+<p><b>Sprecher</b>: Wählt einen Sprecher aus einer Liste möglicher
+Sprecher aus.</p>
+<p><b>Geschwindigkeit</b>: Eine höhere Zahl bedeutet schnelleres
+Sprechen.</p>
+<p><b>Tonhöhe</b>: Eine höhere Zahl bedeutet eine höhere Tonhöhe.</p>
+<p><b>Test</b>: sagt den letzten Glukosewert aus.</p>
+<p><br/>
+<br/>
+
+</p>
 ]]>
 </string>
 </resources>

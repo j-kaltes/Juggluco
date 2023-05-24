@@ -1,0 +1,15 @@
+<resources>
+<string name="staticnum" >
+<![CDATA[
+<h1 align="center">&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;заблакаваны</h1>
+<p>&nbsp;&nbsp;&nbsp;<b>Меню злева-&gt;Люстэрка-&gt; &quot;Сумы,
+атрыманыя з люстэрка&quot;</b> настроены
+на тое, каб забараніць увод сум у гэта
+дадатак, таму што яны будуць перавызначаны
+сумамі, атрыманымі з люстэрка.</p>
+<p style="line-height: 100%; margin-bottom: 0cm">Калі гэтая
+праграма не атрымлівае сумы ад люстранога
+злучэння, адключыце гэты параметр.</p>
+]]>
+</string>
+</resources>

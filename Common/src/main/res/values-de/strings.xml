@@ -48,7 +48,7 @@
      <string name="portrange">Port sollte zwischen 1024 und 65535 liegen</string>
      <string name="start">Start</string>
      <string name="now">Jetzt</string>
-     <string name="dontchangeamounts">Mengen erhalten vom Klon</string>
+     <string name="dontchangeamounts">Klon sendet Mengen</string>
      <string name="thishost">Dieser Host:</string>
      <string name="dozemode">Doze-modus</string>
      <string name="sync">Sync</string>
@@ -232,6 +232,7 @@
 <string name="noaccountidspecified">Keine Konto-ID angegeben </string>
 <string name="wrongformat">Falsches Format </string>
 
+<string name="noapplisteningto">"Keine App hört "</string>
 
 <string name="secret">api_secret</string>
 <string name="withoutsaving">Verlassen ohne zu speichern?</string>
@@ -263,4 +264,9 @@
  <string name="separate">Separat</string>
     <string name="librecurrent">Libre3 sofort</string>
     <string name="USE_ALARM">Alarm ist alarm</string>
+    <string name="speed">Geschwindigkeit</string>
+    <string name="pitch">Tonhöhe</string>
+  <string name="talker">Sprecher</string>
+  <string name="secondsbetween">Sekunden dazwischen</string>
+  <string name="test">Test</string>
 </resources>

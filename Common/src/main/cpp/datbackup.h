@@ -608,7 +608,7 @@ void setactivereceive(int allindex,passhost_t *ph,bool startthread=true) {
 	extern std::vector<condvar_t*> active_receive;
 		active_receive.push_back(new condvar_t);
 		ph->activereceive=active_receive.size();
-		LOGGER("setactivereceive nr=%d\n",ph->activereceive);
+		LOGGER("setactivereceive allindex=%d nr=%d\n",allindex,ph->activereceive);
 
 		if(startthread) {
 			void activereceivethread(int allindex,passhost_t *pass) ;
@@ -726,6 +726,7 @@ false		true 	 	1
 false	  	false	  	0
 */
 	getupdatedata()->allhosts[index].receivefrom=receive?(reconnect?3:2):((sendto&reconnect)?1:0);
+	LOGGER("receivefrom=%d\n", getupdatedata()->allhosts[index].receivefrom);
 	setpass( getupdatedata()->allhosts[index].pass,pass);
 
 	if(newhost)  {

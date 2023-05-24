@@ -153,31 +153,25 @@ public static void rewritefloating(Activity context) {
 	static float xview=0.0f;
 	static float yview=0.0f;
 	static int transnr=0;
-	static void translate(float dx,float dy) {
-//		if(transnr++%3==0) 
-		//if(transnr++%2==0) 
-		{
-			//xview -= dx * 2.2f;
-			//yview -= dy * 2.2f;
-			xview += dx ;
-			yview += dy ;
-			final var metrics = Applic.app.getResources().getDisplayMetrics();
-			var screenwidth = metrics.widthPixels;
-			var screenheight = metrics.heightPixels;
-			var maxx=screenwidth;
-			var maxy=screenheight;
-			if(xview<0)
-				xview=0;
-			if(xview>maxx)
-				xview=maxx;
-			if(yview<0)
-				yview=0;
-			if(yview>maxy)
-				yview=maxy;
-			var params = makeparams(screenwidth, (int)(screenheight));
-			windowMana.updateViewLayout(floatview, params);
+static void translate(float dx,float dy) {
+		xview += dx ;
+		yview += dy ;
+		final var metrics = Applic.app.getResources().getDisplayMetrics();
+		var screenwidth = metrics.widthPixels;
+		var screenheight = metrics.heightPixels;
+		var maxx=screenwidth;
+		var maxy=screenheight;
+		if(xview<0)
+			xview=0;
+		if(xview>maxx)
+			xview=maxx;
+		if(yview<0)
+			yview=0;
+		if(yview>maxy)
+			yview=maxy;
+		var params = makeparams(screenwidth, (int)(screenheight));
+		windowMana.updateViewLayout(floatview, params);
 		}
-	}
 	private static WindowManager.LayoutParams makeparams(int screenwidth, int screenheight){
 		var xpos= -screenwidth*.5f+xview;
 		var ypos= -screenheight*.5f+yview;
@@ -330,7 +324,7 @@ public void	onScreenStateChanged(int state) {
 
 	
 	}
-
+private static final float movethreshold=6.0f;
 public boolean onTouchEvent (MotionEvent event) {
 	if(Natives.turnoffalarm()) Notify.stopalarm();
         Log.i(LOG_ID,event.toString());
@@ -365,8 +359,7 @@ public boolean onTouchEvent (MotionEvent event) {
 	        Log.i(LOG_ID,"DRAG dx="+distanceX+" dy="+distanceY);
 		var absX=Math.abs(distanceX);
 		var absY=Math.abs(distanceY);
-//		if(distanceX!=0.0||distanceY!=0.0)  {
-		   if(absX>5.0||absY>5.0) {
+		if(absX>movethreshold||absY>movethreshold) {
 		    moved =true;
 		    translate(distanceX*.45f,distanceY*.45f);
 		    }

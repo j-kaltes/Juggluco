@@ -1,0 +1,338 @@
+package tk.glucodata;
+
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
+import static tk.glucodata.Natives.getVoicePitch;
+import static tk.glucodata.Natives.getVoiceSeparation;
+import static tk.glucodata.Natives.getVoiceSpeed;
+import static tk.glucodata.Natives.getVoiceTalker;
+import static tk.glucodata.Natives.lastglucose;
+import static tk.glucodata.NumberView.avoidSpinnerDropdownFocus;
+import static tk.glucodata.RingTones.EnableControls;
+import static tk.glucodata.settings.Settings.editoptions;
+import static tk.glucodata.settings.Settings.removeContentView;
+import static tk.glucodata.settings.Settings.str2float;
+import static tk.glucodata.util.getbutton;
+import static tk.glucodata.util.getcheckbox;
+import static tk.glucodata.util.getlabel;
+
+import android.app.Activity;
+import android.os.Build;
+import android.speech.tts.TextToSpeech;
+import android.speech.tts.Voice;
+import android.text.Editable;
+import android.text.InputType;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
+import android.widget.EditText;
+import android.widget.SeekBar;
+import android.widget.Space;
+import android.widget.Spinner;
+import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.Locale;
+import java.util.Set;
+
+public class Talker {
+static public final String LOG_ID="Talker";
+	private TextToSpeech engine;
+
+static    private float curpitch=1.0f;
+static  private float curspeed=1.0f;
+static private	long   cursep=50*1000L;
+static private int voicepos=-1;
+static private String playstring=null;
+
+static void getvalues() {
+	float speed=getVoiceSpeed( );
+	if(speed!=0.0f) {
+		voicepos=getVoiceTalker( );
+		cursep=getVoiceSeparation( )*1000L;
+		curspeed=speed;
+		curpitch=getVoicePitch( );
+		SuperGattCallback.dotalk= Natives.getVoiceActive();
+		}
+	}
+
+static private ArrayList<Voice> voiceChoice=new ArrayList();
+void destruct() {
+	if(engine!=null)
+		engine.shutdown();
+	voiceChoice.clear();
+	}
+	Talker() {
+	    engine=new TextToSpeech(Applic.app, new TextToSpeech.OnInitListener() {
+		 @Override
+		 public void onInit(int status) {
+		    if(status != TextToSpeech.ERROR) {
+			var loc=Locale.getDefault();
+		    	var lang=loc.getLanguage();
+		       engine.setLanguage(loc);
+		       engine.setPitch( curpitch);
+		      engine.setSpeechRate( curspeed);
+				if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+					Set<Voice> voices=engine.getVoices();
+					if(voices!=null) {
+						voiceChoice.clear();
+						for(var voice:voices) {
+							if(lang.equals(voice.getLocale().getLanguage())) {
+								voiceChoice.add(voice);
+								}
+							}
+						}
+					}
+			Log.i(LOG_ID,"after addvoices");
+			if(voicepos>=0&& voicepos<voiceChoice.size()) {
+				engine.setVoice(voiceChoice.get(voicepos));
+				Log.i(LOG_ID,"after set voices");
+				}
+			else {
+				voicepos=0;
+				}
+			if(playstring!=null) {
+				speak(playstring);
+				playstring=null;
+				}
+			  }
+		 else {
+		 	Log.e(LOG_ID,"getVoices()==null");
+		 	}
+		Log.i(LOG_ID,"after onInit");
+		    }
+	      });
+}
+
+
+	void speak(String message) {
+		engine.speak(message, TextToSpeech.QUEUE_FLUSH, null);
+		}
+static long nexttime=0L;
+void selspeak(String message) {
+	var now=System.currentTimeMillis();	
+	if(now>nexttime) {
+		speak(message);
+		nexttime=now+cursep;
+		}
+	}
+static private double base2=Math.log(2);
+static private double multiplyer=10000.0/base2;
+static int ratio2progress(float ratio) {
+	if(ratio<0.18)
+		return -25000;
+        return (int)Math.round(Math.log(ratio)*multiplyer);
+        }
+static float progress2ratio(int progress) {
+        return (float)Math.exp((double)progress/multiplyer);
+        }
+
+private static View[] slider(MainActivity context,float init) {
+	var speed=new SeekBar(context);
+	speed.setMin(-25000);
+	speed.setMax(25000);
+	speed.setProgress(ratio2progress(init));
+	var displayspeed=new EditText(context);
+//	displayspeed.setPadding(0,0,0,0);
+        displayspeed.setImeOptions(editoptions);
+    displayspeed.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+    displayspeed.setMinEms(3);
+	String formstr=String.format(Locale.US, "%.2f",init);
+	speed.setLayoutParams(new ViewGroup.LayoutParams(  MATCH_PARENT, WRAP_CONTENT));
+	displayspeed.setText( formstr);
+	speed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+		@Override
+		public  void onProgressChanged (SeekBar seekBar, int progress, boolean fromUser) {
+			float num=progress2ratio(progress);
+			String form=String.format(Locale.US, "%.2f",num);
+			displayspeed.setText( form);
+			Log.i(LOG_ID,"onProgressChanged "+form);
+			}
+		@Override
+		public void onStartTrackingTouch(SeekBar seekBar) {
+			Log.i(LOG_ID,"onStartTrackingTouch");
+			}
+		@Override
+		public void onStopTrackingTouch(SeekBar seekBar) {
+			Log.i(LOG_ID,"onStopTrackingTouch");
+			}
+		});
+
+		displayspeed.setOnEditorActionListener( new TextView.OnEditorActionListener() {
+		    @Override
+		    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+		    if (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER || actionId == EditorInfo.IME_ACTION_DONE) {
+				 Log.i(LOG_ID,"onEditorAction");
+				var speedstr=v.getText().toString();
+				if(speedstr != null) {
+					float	curspeed = str2float(speedstr);
+					speed.setProgress(ratio2progress(curspeed));
+					Log.i(LOG_ID,"onEditorAction: "+speedstr+" "+curspeed);
+				 	tk.glucodata.help.hidekeyboard(context);
+					}
+				return true;
+			   }
+		    return false;
+		    }});
+		/*
+        displayspeed.addTextChangedListener( new TextWatcher() {
+                   public void afterTextChanged(Editable ed) {
+			var speedstr=ed.toString();
+			if(speedstr != null) {
+				float	curspeed = str2float(speedstr);
+				speed.setProgress(ratio2progress(curspeed));
+				Log.i(LOG_ID,"afterTextChanged: "+speedstr+" "+curspeed);
+				}
+
+                   	}
+                   public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+                   public void onTextChanged(CharSequence s, int start, int before, int count) { }
+                  });
+*/
+	return new View[] {speed,displayspeed};
+	}
+public static void config(MainActivity context) {
+// 	SuperGattCallback.newtalker();
+//	EnableControls(parent,false);
+	var separation=new EditText(context);
+   // separation.setMinimumHeight(minheight);
+        separation.setImeOptions(editoptions);
+    separation.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+    separation.setMinEms(3);
+	int sep=(int)(cursep/1000L);
+	separation.setText(sep+"");
+	var seplabel=getlabel(context,context.getString(R.string.secondsbetween));
+	float density=GlucoseCurve.metrics.density;
+	int pad=(int)(density*3);
+	seplabel.setPadding(pad*3,0,0,0);
+	var speeds=slider(context,curspeed);
+
+	var pitchs=slider(context,curpitch);
+	var cancel=getbutton(context,R.string.cancel);
+	var helpview=getbutton(context,R.string.helpname);
+	helpview.setOnClickListener(v-> help.help(R.string.talkhelp,context));
+
+	var save=getbutton(context,R.string.save);
+	var width= GlucoseCurve.getwidth();
+	var speedlabel=getlabel(context,context.getString(R.string.speed));
+	speedlabel.setPadding(0,0,0,0);
+	var pitchlabel=getlabel(context,context.getString(R.string.pitch));
+	pitchlabel.setPadding(0,pad*5,0,0);
+	var voicelabel=getlabel(context,context.getString(R.string.talker));
+//	var space=new Space(context);
+//	space.setMinimumWidth((int)(width*0.4));
+       var active=getcheckbox(context,R.string.active, SuperGattCallback.dotalk);
+	active.setPadding(0,0,pad*3,0);
+
+	var test=getbutton(context,context.getString(R.string.test));
+/*        active.setOnCheckedChangeListener(
+                (buttonView,  isChecked) ->  {
+			Notify.dotalk=isChecked;
+			
+                        }); */
+	
+	var spin=new Spinner(context);
+	int[] spinpos={-1};
+
+
+	spin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+		@Override
+		public  void onItemSelected (AdapterView<?> parent, View view, int position, long id) {
+			Log.i(LOG_ID,"onItemSelected "+position);
+			
+			spinpos[0]=position;
+			}
+		@Override
+		public  void onNothingSelected (AdapterView<?> parent) {
+
+		} });
+	avoidSpinnerDropdownFocus(spin);
+	var adap = new RangeAdapter<Voice>(voiceChoice, context, voice -> {
+			return voice.getName();
+			});
+	spin.setAdapter(adap);
+	Log.i(LOG_ID,"voicepos="+voicepos);
+	if(voicepos>=0&&voicepos<voiceChoice.size())
+		spin.setSelection(voicepos);
+
+	spinpos[0]=-1;
+	var layout=new Layout(context,(l,w,h)-> {
+		if(width>w)
+			l.setX((width-w)/2);
+		return new int[] {w,h};
+		},new View[]{seplabel,separation,voicelabel,spin,active},new View[]{speedlabel},new View[]{speeds[1]}, new View[]{speeds[0]},new View[]{pitchlabel},new View[]{pitchs[1]}, new View[]{pitchs[0]}, new View[]{cancel,helpview,test,save});
+
+      layout.setBackgroundResource(R.drawable.dialogbackground);
+	context.setonback(()-> { 
+		tk.glucodata.help.hidekeyboard(context);
+//		EnableControls(parent,true);
+		removeContentView(layout); });
+	cancel.setOnClickListener(v->  {
+		context.doonback();
+		});
+	Runnable getvalues=()-> {
+		try {
+			int pos=spinpos[0];
+			if(pos>=0) {
+				voicepos=pos;
+				}
+			 var str = separation.getText().toString();
+			if(str != null) {
+				cursep = Integer.parseInt(str)*1000L;
+				}
+			var speedstr=((EditText)speeds[1]).getText().toString();
+			if(speedstr != null) {
+				curspeed = str2float(speedstr);
+				Log.i(LOG_ID,"speedstr: "+speedstr+" "+curspeed);
+				}
+			var pitchstr=((EditText)pitchs[1]).getText().toString();
+			if(pitchstr != null) {
+				curpitch = str2float(pitchstr);
+				Log.i(LOG_ID,"pitchstr: "+pitchstr+" "+curpitch);
+				}
+;
+			} catch(Throwable th) {
+				Log.stack(LOG_ID,"parseInt",th);
+				}
+
+		if(active.isChecked()) {
+			SuperGattCallback.newtalker();
+			SuperGattCallback.dotalk=true;
+			}
+		else {
+			SuperGattCallback.endtalk();
+			}
+		 };
+	save.setOnClickListener(v->  {
+		getvalues.run();
+		Natives.saveVoice(curspeed,curpitch,(int)(cursep/1000L),voicepos,SuperGattCallback.dotalk);
+
+		context.doonback();
+		});
+	test.setOnClickListener(v->  {
+		var gl=lastglucose();
+		if(gl!=null&&gl.value!=null)
+			playstring=gl.value;
+		else
+			playstring="8.7";
+		getvalues.run();
+		if(!SuperGattCallback.dotalk)
+			SuperGattCallback.newtalker();
+//		talk.destruct();
+		});
+
+	context.addContentView(layout, new ViewGroup.LayoutParams(MATCH_PARENT, WRAP_CONTENT));
+
+	}
+}
+/*
+TODO
+van EditText naar Slider
+Hoe met test?
+Probleem: veranderingen moeten eerst uitgevoerd zijn voordat test mogelijk is.
+Mogelijkheden:
+- 
+*/
