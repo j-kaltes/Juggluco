@@ -91,7 +91,6 @@
             android:authorities="${applicationId}.androidx-startup"
             tools:node="remove" />
 
-
     </application>
 
     <uses-feature android:name="android.hardware.type.automotive" android:required="false" />

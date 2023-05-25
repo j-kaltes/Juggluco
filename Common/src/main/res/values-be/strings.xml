@@ -267,5 +267,9 @@
  <string name="separate">Раздзяліць</string>
     <string name="librecurrent">Libre3 неадкладна</string>
     <string name="USE_ALARM">Трывога ёсць трывога</string>
-
+ <string name="speed">Хуткасць</string>
+ <string name="pitch">Вышыня</string>
+ <string name="talker">Голас</string>
+ <string name="secondsbetween">Секунд паміж</string>
+ <string name="test">Тэст</string>
 </resources>
