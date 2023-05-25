@@ -30,7 +30,8 @@ constexpr int hourminstrlen=20;
 extern char hourminstr[hourminstrlen];
 typedef const char *charptr_t;
 //typedef std::string_view  *string_viewar;
-typedef std::pair<const char*,const char *> errortype;
+//typedef std::pair<const char*,const char *> errortype;
+typedef std::pair<std::string_view,std::string_view> errortype;
 struct jugglucotext {
 char daylabel[7][5];
 char monthlabel[12][13];
@@ -75,6 +76,12 @@ std::string_view menustr0[5], menustr2[4];
 std::string_view *menustr[2]={menustr0,menustr2};
 #endif
 errortype scanerrors[0x11];
+
+errortype libre3scanerror;
+errortype libre3wrongID;
+errortype libre3scansuccess;
+errortype unknownNFC;
+errortype nolibre3;
 #ifndef WEAROS
 std::string_view advancedstart;
 bool add_s;

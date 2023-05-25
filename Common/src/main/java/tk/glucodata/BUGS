@@ -1,20 +1,10 @@
-Slider doesn't work on xa1 plus
-Libreview saved in Local time. Goes wrong after a time zone change. Should be said explicitely.
+Libreview saved in Local time. Goes wrong after a time zone change. Librelink has the same problem.
 
-19 mei verschillen data in Libreview
-
-amount blocked on watch?
 
 Terminated sensor wordt doorgegeven aan direct verbonden kloon, maar niet verder.
-Telefoon ontvangt waarden, maar wordt de hele tijd uitgezet. Syncen watch4 gaat niet. geen laatste glucose waarden in Watch4 getoond.
-Netwerk verbinding phone-watch4 lijkt verkeerd te zijn. 
-Phone: stream uit, maar receive from ook uit
-watch4 stream aan.
-of zo
-
 
 bike 8888 in Libreview
-Franse Sensor error message wordt getoond 
+
 Also in Galaxy something with active receive?
 Libreview:
 	- Als librelink naar Libre3 gegaan worden nummers ook met de andere app ingevoerd. Dit kan tot gevolg hebben dat een oude

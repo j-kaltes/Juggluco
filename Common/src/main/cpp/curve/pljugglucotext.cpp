@@ -139,6 +139,11 @@ jugglucotext pltext {
 		{"",""},
 		{"Błąd odczytu","Spróbuj ponownie"}},
 
+.libre3scanerror={"FreeStyle Libre 3, Scan error", "Try again"},
+.libre3wrongID={"Error, wrong account ID?","Specify in Settings->Libreview the same account used to activate the sensor"},
+.libre3scansuccess= {"FreeStyle Libre 3 sensor", "Glucose values will now be received by Juggluco"},
+.unknownNFC={"Unrecognized NFC scan Error", "Try again"},
+.nolibre3={"FreeStyle Libre 3 sensor","Not supported by this version of Juggluco"},
 #ifndef WEAROS
 	.advancedstart= R"(<h1>Zmodyfikowane urządzenie</h1>
 <p>Jedna z bibliotek używanych przez tę aplikację ma BŁĄD, który powoduje, że się zawiesza, jeśli wykryje pewne pliki. Twoje urządzenie zawiera niektóre z tych plików. Ten program zawiera sposób na obejście tego błędu, ale prawdopodobnie lepiej jest zrobić, pliki te były niewykrywalne w inny sposób. Na przykład Magisk ma opcję ukrycia roota dla niektórych aplikacji (Magiskhide lub Denylist) i zmiany własnej nazwy, oba są potrzebne. W twoim przypadku ma problemy z następującym plikiem)",

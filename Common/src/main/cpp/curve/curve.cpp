@@ -1112,6 +1112,9 @@ static bool		showerror(NVGcontext* genVG,const string_view str1,const string_vie
 	showok(true,false);
 	return true;
 	}
+	/*
+static bool		showerror(NVGcontext* genVG,const string_view str1,const string_view str2) {
+	}*/
 static void		scanwait(NVGcontext* genVG) {
 	startstep(*getwhite());
 	nvgFontSize(genVG, headsize);
@@ -1595,7 +1598,7 @@ static int showerrorvalue(const SensorGlucoseData *sens,const time_t nu,float ge
 				} 
 			else {
 				if(sens->sensorerror) {
-					static	const std::string_view sensorerror= sens->replacesensor?usedtext->streplacesensor: usedtext->stsensorerror;
+					const std::string_view sensorerror= sens->replacesensor?usedtext->streplacesensor: usedtext->stsensorerror;
 					char buf[sensorerror.size()+17];
 					int senslen= sens->showsensorname().size();
 					memcpy(buf,sens->showsensorname().data(),senslen);
@@ -2047,28 +2050,36 @@ static bool showoldscan(NVGcontext* genVG) ;
 static void defaulterror(NVGcontext* genVG,int scerror)   {
 		char buf[50];
 		errortype *error=usedtext->scanerrors;
-		snprintf(buf,50,error->first,scerror);
-		showerror(genVG,error->second,buf);
+		size_t len=snprintf(buf,50,error->first.data(),scerror);
+		showerror(genVG,error->second,{buf,len});
 		}
+static bool errorpair(const errortype &error) {
+	return showerror(genVG,error.first,error.second);
+	}
 int badscanMessage(int kind) {
 	if(!showoldscan(genVG)) {
 		LOGGER("javabadscan	%d: \n",kind);
 		const int scerror= kind&0xff;
 		switch(scerror) {
 			case 0xFA: {
-				showerror(genVG,"FreeStyle Libre 3, Scan error", "Try again");
+//				showerror(genVG,"FreeStyle Libre 3, Scan error", "Try again");
+				errorpair(usedtext->libre3scanerror);
 				};
 				break;
 			case 0xFB:
-				showerror(genVG,"Error, wrong account ID?","Specify in Settings->Libreview the same account used to activate the sensor");break;
+				errorpair(usedtext->libre3wrongID);
+//				showerror(genVG,"Error, wrong account ID?","Specify in Settings->Libreview the same account used to activate the sensor");break;
 		 	case 0xFC: {
-				showerror(genVG,"FreeStyle Libre 3 sensor", "Glucose values will now be received by Juggluco");
+				errorpair(usedtext->libre3scansuccess);
+//				showerror(genVG,"FreeStyle Libre 3 sensor", "Glucose values will now be received by Juggluco");
 				};break;
 			case 0xFD: {
-				showerror(genVG,"Unrecognized NFC scan Error", "Try again");
+				errorpair(usedtext->unknownNFC);
+//				showerror(genVG,"Unrecognized NFC scan Error", "Try again");
 				};break;
 			case 0xFE: {
-				showerror(genVG,"FreeStyle Libre 3 sensor","Not supported by this version of Juggluco"  );
+				errorpair(usedtext->nolibre3);
+//				showerror(genVG,"FreeStyle Libre 3 sensor","Not supported by this version of Juggluco"  );
 				};break;
 			case 0xff: {
 				scanwait(genVG); 	
@@ -2076,9 +2087,10 @@ int badscanMessage(int kind) {
 				};
 			case 5: {
 				errortype *error=usedtext->scanerrors+scerror;
-				char buf[15];
-				snprintf(buf,15,error->second,kind>>8);
-				showerror(genVG,error->first,buf);
+				const int bufsize=error->second.size()+5;
+				char buf[bufsize];
+				size_t len=snprintf(buf,bufsize,error->second.data(),kind>>8);
+				showerror(genVG,error->first,{buf,len});
 				LOGGER("%s\n",buf);
 				};break;
 			case 0:
@@ -2091,8 +2103,8 @@ int badscanMessage(int kind) {
 				defaulterror(genVG,scerror);
 				}
 			else {
-				errortype *error=usedtext->scanerrors+scerror;
-				showerror(genVG,error->first,error->second);
+				errorpair(usedtext->scanerrors[scerror]);
+//				errortype *error=usedtext->scanerrors+scerror; showerror(genVG,error->first,error->second);
 				}
 			}
 		}
