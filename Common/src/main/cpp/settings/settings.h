@@ -226,6 +226,7 @@ struct Tings {
 	bool nightuploadon;
 	int pensnr;
 	std::array<NovoPen,maxpennr>  pens;
+	ToLibre Nightnums[maxvarnr];
 	void setdefault() {
 		memcpy(watchid,defaultid,sizeof(watchid));
 		};

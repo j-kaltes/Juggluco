@@ -2549,22 +2549,22 @@ cette option.</p>
 <string name="talkhelp" >
 <![CDATA[
 <h1>Parler</h1>
-<p>Juggluco peut énoncer les valeurs de glucose lorsqu’elles
-arrivent.</p>
+<p>Juggluco peut énoncer les valeurs de glucose via le haut parleur
+de l’appareil lorsqu’elles arrivent.</p>
 <p><b>Intervalle (sec)</b>: spécifie combien de secondes Juggluco
 doit attendre avant d’énoncer la valeur de glucose suivante. Les
 valeurs de glucose sont toujours énoncées dès leur arrivée.
 Régler ce paramètre à une valeur élevée a pour effet que
 Juggluco ne va pas énoncer les valeurs qui arrivent avant la fin de
-ce délai en secondes.</p>
-<p><b>Acti</b><b>f</b>: active la fonction</p>
-<p><b>Haut-parleur</b>: sélectionne un haut parleur dans la liste de
-ceux disponibles</p>
-<p><b>Vitesse</b>: un nombre plus élevé signifie une vitesse plus
-grande.</p>
-<p><b>Tonalité</b>: un nombre plus élevé rend la tonalité plus
-élevée.</p>
-<p><b>Test</b>: énonce la dernière valeur du glucose.</p>
+ce délai (en secondes).</p>
+<p><b>Actif</b>: active la fonction</p>
+<p><b>Voix</b>: sélectionne une voix dans la liste de celles
+disponibles sur le téléphone</p>
+<p><b>Vitesse</b>: un nombre plus élevé signifie une vitesse
+d’élocution plus grande</p>
+<p><b>Tonalité</b>: permet de régler la tonalité de la voix (une
+valeur plus grande la rend plus aiguë)</p>
+<p><b>Test</b>: énonce la dernière valeur du glucose</p>
 <p><br/>
 <br/>
 

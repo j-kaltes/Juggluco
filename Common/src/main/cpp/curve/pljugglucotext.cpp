@@ -104,7 +104,7 @@ jugglucotext pltext {
 		pltext.newamount,
 		"Lista", 
 		"Statystyka",
-		"Talk"
+		"Na głos"
 		},
 	.menustr2= {"Ostatni odczyt","Odczyty","Strumień","Histora","Wartość","Posiłki","Tryb ciemny        "},
 	.menustr3= {hourminstr,"Wyszukaj","Data","Dzień wstecz","Dzień później","Tydzień wstecz","Tydzień później"},
@@ -124,7 +124,7 @@ jugglucotext pltext {
 		{"Błąd instalacji","?"},
 		{"Błąd przetwarzania danych","Spróbuj ponownie"},
 		{"Aktywacja sensora",""},
-		{"Sensor ostatecznie zakończył działanie",""},
+		{"Sensor zakończył działanie",""},
 
 		{"Sensor gotowy za","%d minut"},
 		{"373: Błąd sensora","Nie kontaktuj się od razu z obsługą klienta firmy Abbott; odczyty glukozy mogą być dostępne za 10 minut."},

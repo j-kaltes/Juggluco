@@ -1,29 +1,41 @@
 <resources>
 <string name="about" >
 <![CDATA[
-<h1 class="western">
-Sobre</h1>
-<p>Juggluco é escrito por&nbsp;<a href="https://www.juggluco.nl/Juggluco">Jaap
-Korthals Altes</a></p>
+<h1 class="western">Sobre</h1>
+<p><span lang="pt-PT">Juggluco é escrito por&nbsp;<a href="https://www.juggluco.nl/Juggluco">Jaap
+Korthals Altes</a></span></p>
 <p>Além das bibliotecas padrão do Android, são utilizadas as
 seguintes:</p>
 <ul>
-	<li><p lang="en-US">Comandos NFC e Bluetooth&nbsp;específicos para
-	sensores Abbott FreeStyle Libre e algoritmos de interpretação
-	específicos para sensores FreeStyle Libre.&nbsp;Todos são
-	indocumentados;</p>
-	<li><p><span lang="en-US">Para se comunicar com os relógios Garmin,
-	é feito uso do&nbsp;</span><a href="https://developer.garmin.com/connect-iq/sdk">Connect
-	IQ Mobile SDK</a><span lang="en-US">&nbsp;;</span></p>
-	<li><p><span lang="en-US">Os gráficos são criados com&nbsp;</span><a href="https://github.com/memononen/nanovg">NanoVG</a><span lang="en-US">&nbsp;;</span></p>
-	<li><p>A função de espelhar usa&nbsp;<a href="https://ascon.iaik.tugraz.at/">criptografia
-	autenticada Ascon</a>&nbsp;;</p>
-	<li><p>A comunicação com sensores Libre3 usa&nbsp;<a href="https://github.com/intel/tinycrypt">TinyCrypt</a>&nbsp;;</p>
-	<li><p>O seletor de cores é uma adaptação do&nbsp;<a href="https://github.com/yukuku/ambilwarna">AmbilWarna</a>&nbsp;.</p>
+	<li><p>Comandos NFC e Bluetooth&nbsp;específicos para sensores
+	Abbott FreeStyle Libre e algoritmos de interpretação específicos
+	para sensores FreeStyle Libre.&nbsp;Todos são indocumentados;</p>
+	<li><p><span lang="pt-PT">Para se comunicar com os relógios Garmin,
+	é feito uso do&nbsp;<a href="https://developer.garmin.com/connect-iq/sdk">Connect
+	IQ Mobile SDK</a>&nbsp;;</span></p>
+	<li><p><span lang="pt-PT">Os gráficos são criados com&nbsp;<a href="https://github.com/memononen/nanovg">NanoVG</a>&nbsp;;</span></p>
+	<li><p><span lang="pt-PT">A função de espelhar usa&nbsp;<a href="https://ascon.iaik.tugraz.at/">criptografia
+	autenticada Ascon</a>&nbsp;;</span></p>
+	<li><p><span lang="pt-PT">A comunicação com sensores Libre3
+	usa&nbsp;<a href="https://github.com/intel/tinycrypt">TinyCrypt</a>&nbsp;;</span></p>
+	<li><p><span lang="pt-PT">O seletor de cores é uma adaptação
+	do&nbsp;<a href="https://github.com/yukuku/ambilwarna">AmbilWarna</a>&nbsp;.</span></p>
 </ul>
-<p>Juggluco foi traduzido para o italiano por&nbsp;<a href="mailto:matteo.gabriele81@gmail.com">Matteo
-Gabriele</a>&nbsp;.</p>
+<p><span lang="pt-PT">Juggluco foi traduzido para o italiano
+por&nbsp;<a href="mailto:matteo.gabriele81@gmail.com">Matteo
+Gabriele</a>&nbsp;.</span></p>
 <p>Juggluco foi traduzido para o português por Rui Pinheiro.</p>
+<p><span lang="pt-PT">Juggluco foi traduzido para o polonês po
+<a href="mailto:adelis@translaris.pl">Arkadiusz Deliś</a>.</span></p>
+<p style="line-height: 100%; margin-bottom: 0in"><span lang="pt-PT">Juggluco
+foi traduzido para o bielorrusso por <a href="mailto:3477734n@gmail.com">Находкін
+Яўген</a>.</span></p>
+<p style="line-height: 100%; margin-bottom: 0in"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">Juggluco
+foi traduzido para o francês por <span style="font-variant: normal"><font><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">Fabrice
+Delfosse.</span></span></span></font></span></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
 <p><br/>
 <br/>
 <br/>

@@ -29,7 +29,7 @@ static final private float[] speeds= {2, 6, 12, 20, 29, 39, 50, 62, 75, 89, 103,
 	   var cal = Calendar.getInstance();
           cal.setTimeInMillis(timmsec);
 	weatherSpec.currentHumidity= cal.get(Calendar.MINUTE);
-	   weatherSpec.windSpeed=speeds[cal.get(Calendar.HOUR)];
+	   weatherSpec.windSpeed=speeds[cal.get(Calendar.HOUR_OF_DAY)%12];
 //	weatherSpec.windDirection=cal.get(Calendar.MINUTE);
 	    
 		

@@ -1345,7 +1345,7 @@ deze aan te zetten, stuurt Juggluco glucosewaarden naar <a class="western" href=
 . Watchdrip+ stuurt wijzerplaten met glucosewaarden naar
 MiBand/Amazfit-horloges.</span></p>
 <h2 class="western">GadgetBridge</h2>
-<p style="line-height: 100%; margin-bottom: 0in"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">GadgetBridge
+<p style="line-height: 100%; margin-bottom: 0in"><font size="3" style="font-size: 12pt">GadgetBridge
 (<a class="western" href="https://codeberg.org/Freeyourgadget/Gadgetbridge/wiki">Wiki</a>)
 maakt het mogelijk om weersinformatie weer te geven op
 MiBand/Amazfit-horloges. Met de Gadgetbridge-optie ingeschakeld, zal
@@ -1355,55 +1355,53 @@ voordeel dat het veel sneller is, maar heeft als nadeel dat er minder
 informatie wordt weergegeven. Juggluco zet de glucosewaarde en een
 richtingspijl in de locatie van het weer. Deze locatie wordt
 weergegeven onder Weer op het horloge. Ik heb geen wijzerplaat
-gevonden die deze locatie weergeeft. </font></font><span style="font-variant: normal"><font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">Alleen
-voor</span></span></span></font></font></font></span><span style="font-variant: normal"><font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: normal">
-</span></font></font></font></span><span style="font-variant: normal"><font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: normal"><span style="font-style: normal"><b>mmol/L</b></span></span></font></font></font></span><span style="font-variant: normal"><font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">:
-de afgeronde glucosewaarde wordt in de huidige temperatuur gestops,
-de waarde voor de punt in</span></span></span></font></font></font></span><span style="font-variant: normal"><font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: normal">
-</span></font></font></font></span><span style="font-variant: normal"><font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">de
-maximale temperatuur en de waarde na de punt in</span></span></span></font></font></font></span><span style="font-variant: normal"><font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: normal">
-</span></font></font></font></span><span style="font-variant: normal"><font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">de
-minimale temperatuur.</span></span></span></font></font></font></span><span style="font-variant: normal"><font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: normal">
-</span></font></font></font></span><span style="font-variant: normal"><font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: normal">
-</span></font></font></font></span><span style="font-variant: normal"><font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">De
-richting van verandering bepaalt het weerpictogram: sneeuw is dalende
-glucose, regen is stijgende glucose.&nbsp;Het wordt ook in de huidige
-temperatuur gezet.&nbsp;Groter dan nul betekent stijgende glucose,
-lager dan nul betekent dalende glucose.</span></span></span></font></font></font></span></p>
-<h2 class="western">Kerfstok</h2>
-<p style="line-height: 100%; margin-bottom: 0in"><span lang="nl-NL">Kerfstok
+gevonden die deze locatie weergeeft. Alleen voor </font><font size="3" style="font-size: 12pt"><b>mmol/L</b></font><font size="3" style="font-size: 12pt">:
+ de waarde voor de punt in de maximale temperatuur </font><font size="3" style="font-size: 12pt">gestopt
+</font><font size="3" style="font-size: 12pt">en de waarde na de punt
+in de minimale temperatuur. De waarden van </font><font size="3" style="font-size: 12pt"><b>mg/dL</b></font><font size="3" style="font-size: 12pt">
+zijn te groot voor temperaturen, daarom wordt het laatste cijfer bij
+de minimale temperatuur gezet en de cijfers voor het laatste cijfer
+bij de maximale temperatuur. Zo wordt 106 mg/dL: maximale temperatuur
+10, minimale temperatuur 6. De richting van verandering bepaalt het
+weerpictogram: sneeuw is dalende glucose, regen is stijgende glucose.
+Het wordt ook in de huidige temperatuur gezet. Groter dan nul
+betekent stijgende glucose, lager dan nul betekent dalende glucose.</font></p>
+<h2 class="western"><font size="3" style="font-size: 12pt">Kerfstok</font></h2>
+<p style="line-height: 100%; margin-bottom: 0in"><font size="3" style="font-size: 12pt"><span lang="nl-NL">Kerfstok
 is een horloge app voor sommige Garmin horloges waarmee je nummers
 kunt invoeren (bijvoorbeeld insuline doses), maar ook de huidige
 stream glucose waarde weergeeft. Zie Watch→Kerfstok status → Help
-en <a class="western" href="https://www.juggluco.nl/Kerfstok">https://www.juggluco.nl/Kerfstok</a></span></p>
-<h2 class="western">Broadcast</h2>
-<p><span lang="nl-NL">Apps kunnen glucosewaarden ontvangen van een
-van de glucose Broadcasts die door Juggluco worden verzonden en deze
-glucosewaarden naar een horloge sturen. G-Watch (<a class="western" href="https://play.google.com/store/apps/details?id=sk.trupici.g_watch">TizenOS</a>
+en <a class="western" href="https://www.juggluco.nl/Kerfstok">https://www.juggluco.nl/Kerfstok</a></span></font></p>
+<h2 class="western"><font size="3" style="font-size: 12pt">Broadcast</font></h2>
+<p><font size="3" style="font-size: 12pt"><span lang="nl-NL">Apps
+kunnen glucosewaarden ontvangen van een van de glucose Broadcasts die
+door Juggluco worden verzonden en deze glucosewaarden naar een
+horloge sturen. G-Watch (<a class="western" href="https://play.google.com/store/apps/details?id=sk.trupici.g_watch">TizenOS</a>
 of <a class="western" href="https://play.google.com/store/apps/details?id=sk.trupici.gwatch.wear">WearOS</a>)
 kan bijvoorbeeld glucosewaarden ontvangen van de Glucodata Broadcast
-(zie Linker menu-&gt;Instellingen).</span></p>
-<h2 class="western">xDrip horloge apps</h2>
-<p><span lang="nl-NL">Juggluco bevat een xDrip webserver. Dit maakt
-het mogelijk horloge apps voor xDrip direct met Juggluco te
-gebruiken. Je kunt ook de glucose waarden eerst naar xDrip en dan
-naar het horloges zenden, maar omdat xDrip haar glucose waarde
-slechts elke 5 minuten vernieuwt, worden dan maximaal 6 minute oude
-waarden naar het horloge gezonden, terwijl als het horloge direct met
-Juggluco verbonden is de waarden maximaal 1 minuut oud zijn (als er
-geen connectie problemen of zo optreden). Juggluco zendt altijd de
-recentste glucose waarden, maar die worden enkel naar de xDrip
-horloge app verzonden nadat die er om gevraagd heeft. Watch faces en
-data fields op </span><span lang="nl-NL"><b>Garmin</b></span>
-<span lang="nl-NL">horloges vragen elke 5 minute naar een glucose
-waarden omdat Garmin een hogere update frequentie niet toelaat. Via
-xDrip kon dat er toe leiden dat een 10 minute oude glucose waarden
-getoond werd. Direct verbonden aan Juggluco zijn die waarden maximaal
-6 minuten oud (als alles goed gaat). Als je een programmeerbare
-Garmin horloge hebt waarop Kerfstok niet werkt omdat het geen
-touchscreen heeft, bestaan er de volgende mogelijkheden om toch een
-niet al te oude glucose waarden op je horloge te zien. Een xDrip
-widget
+(zie Linker menu-&gt;Instellingen).</span></font></p>
+<h2 class="western"><font size="3" style="font-size: 12pt">xDrip
+horloge apps</font></h2>
+<p><font size="3" style="font-size: 12pt"><span lang="nl-NL">Juggluco
+bevat een xDrip webserver. Dit maakt het mogelijk horloge apps voor
+xDrip direct met Juggluco te gebruiken. Je kunt ook de glucose
+waarden eerst naar xDrip en dan naar het horloges zenden, maar omdat
+xDrip haar glucose waarde slechts elke 5 minuten vernieuwt, worden
+dan maximaal 6 minute oude waarden naar het horloge gezonden, terwijl
+als het horloge direct met Juggluco verbonden is de waarden maximaal
+1 minuut oud zijn (als er geen connectie problemen of zo optreden).
+Juggluco zendt altijd de recentste glucose waarden, maar die worden
+enkel naar de xDrip horloge app verzonden nadat die er om gevraagd
+heeft. Watch faces en data fields op </span></font><font size="3" style="font-size: 12pt"><span lang="nl-NL"><b>Garmin</b></span></font><font size="3" style="font-size: 12pt">
+</font><font size="3" style="font-size: 12pt"><span lang="nl-NL">horloges
+vragen elke 5 minute naar een glucose waarden omdat Garmin een hogere
+update frequentie niet toelaat. Via xDrip kon dat er toe leiden dat
+een 10 minute oude glucose waarden getoond werd. Direct verbonden aan
+Juggluco zijn die waarden maximaal 6 minuten oud (als alles goed
+gaat). Als je een programmeerbare Garmin horloge hebt waarop Kerfstok
+niet werkt omdat het geen touchscreen heeft, bestaan er de volgende
+mogelijkheden om toch een niet al te oude glucose waarden op je
+horloge te zien. Een xDrip widget
 (<a class="western" href="https://apps.garmin.com/en-US/apps/73115e04-dc9f-4765-ad88-e7ae283ce995">https://apps.garmin.com/en-US/apps/73115e04-dc9f-4765-ad88-e7ae283ce995</a>)
 vertoont direct na het opstarten altijd de meest recente waarde en
 kan ook tijdens het draaien van een sport activiteit horloge app
@@ -1414,21 +1412,24 @@ andere mogelijkheid is een xDrip sport app
 te gebruiken en die zo op te starten dat het moment waarop het de
 glucose waarden opvraagt net na het binnenkomen van een nieuwe
 glucose waarden bij Juggluco is. Volgens een gebruiker bestaat er ook
-een wijzerplaat (watch face) for </span><span lang="nl-NL"><b>Fitbit</b></span>
-<span lang="nl-NL">horloges dat werkt met de xDrip webserver:
-<a class="western" href="https://glancewatchface.com/">https://glancewatchface.com</a></span></p>
-<p><b>local only</b>: server accepteert enkel verbindingen van
-localhost (127.0.0.1). Als je het uitzet kunnen ook andere hosts
-gebruik maken van de server. Als de firewall van je thuis netwerk
-niet zo geconfigureerd is, dat het binnenkomende verbindingen met
-port 17580 van je smartphone verbindt, zullen enkel leden van je
-thuis netwerk een verbinding kunnen vormen.</p>
-<p><span lang="nl-NL">Voor meer informatie over de xDrip webserver
-interface, zie <a class="western" href="https://www.juggluco.nl/Juggluco/webserver.html">https://www.juggluco.nl/Juggluco/webserver.html</a></span></p>
-<h2 class="western">Juggluco voor WearOS</h2>
-<p>Er bestaat een port van Juggluco die draait op WearOS. Het is
-aangepast aan het kleinere scherm en een wijzerplaat (watch face) is
-toegevoegd, waarop de stream glucose waarde getoond wordt.</p>
+een wijzerplaat (watch face) for </span></font><font size="3" style="font-size: 12pt"><span lang="nl-NL"><b>Fitbit</b></span></font><font size="3" style="font-size: 12pt">
+</font><font size="3" style="font-size: 12pt"><span lang="nl-NL">horloges
+dat werkt met de xDrip webserver: <a class="western" href="https://glancewatchface.com/">https://glancewatchface.com</a></span></font></p>
+<p><font size="3" style="font-size: 12pt"><b>local only</b>: server
+accepteert enkel verbindingen van localhost (127.0.0.1). Als je het
+uitzet kunnen ook andere hosts gebruik maken van de server. Als de
+firewall van je thuis netwerk niet zo geconfigureerd is, dat het
+binnenkomende verbindingen met port 17580 van je smartphone verbindt,
+zullen enkel leden van je thuis netwerk een verbinding kunnen vormen.</font></p>
+<p><font size="3" style="font-size: 12pt"><span lang="nl-NL">Voor
+meer informatie over de xDrip webserver interface, zie
+<a class="western" href="https://www.juggluco.nl/Juggluco/webserver.html">https://www.juggluco.nl/Juggluco/webserver.html</a></span></font></p>
+<h2 class="western"><font size="3" style="font-size: 12pt">Juggluco
+voor WearOS</font></h2>
+<p><font size="3" style="font-size: 12pt">Er bestaat een port van
+Juggluco die draait op WearOS. Het is aangepast aan het kleinere
+scherm en een wijzerplaat (watch face) is toegevoegd, waarop de
+stream glucose waarde getoond wordt.</font></p>
 <p><br/>
 <br/>
 
@@ -1628,9 +1629,9 @@ geven. Bijvoorbeeld:
 <string name="about" >
 <![CDATA[
 <h1>About</h1>
-<p style="line-height: 100%; margin-bottom: 0in">Juggluco werd
-geschreven door <a href="https://www.juggluco.nl/Juggluco">Jaap
-Korthals Altes</a></p>
+<p style="line-height: 100%; margin-bottom: 0in"><span lang="nl-NL">Juggluco
+werd geschreven door <a href="https://www.juggluco.nl/Juggluco">Jaap
+Korthals Altes</a></span></p>
 <p style="line-height: 100%; margin-bottom: 0in">Afgezien van de
 standaard Android libraries, werd van het volgende gebruik gemaakt:</p>
 <ul>
@@ -1638,30 +1639,35 @@ standaard Android libraries, werd van het volgende gebruik gemaakt:</p>
 	Bluetooth commando’s specifiek voor Abbott’s Freestyle Libre
 	sensoren en interpretatie algoritmen specifiek voor Freestyle Libre
 	sensoren. Allemaal ongedocumenteerd;</p>
-	<li><p style="line-height: 100%; margin-bottom: 0in">Om met Garmin
-	horloges te communiceren, is gebruik gemaakt van <a href="https://developer.garmin.com/connect-iq/sdk">Connect
-	IQ Mobile SDK</a>;</p>
-	<li><p style="line-height: 100%; margin-bottom: 0in">De grafieken
-	zijn gemaakt met <a href="https://github.com/memononen/nanovg">NanoVG</a>;</p>
-	<li><p style="line-height: 100%; margin-bottom: 0in">De kloon
-	functie gebruikt <a href="https://ascon.iaik.tugraz.at/">Ascon
-	authenticated encryption</a>;</p>
-	<li><p style="line-height: 100%; margin-bottom: 0in">Communicatie
-	met Freestyle Libre3 sensors gebruikt <a href="https://github.com/intel/tinycrypt">Tinycrypt</a>;</p>
-	<li><p style="line-height: 100%; margin-bottom: 0in">De color picker
-	is een aanpassing van <a href="https://github.com/yukuku/ambilwarna">AmbilWarna</a>;</p>
+	<li><p style="line-height: 100%; margin-bottom: 0in"><span lang="nl-NL">Om
+	met Garmin horloges te communiceren, is gebruik gemaakt van <a href="https://developer.garmin.com/connect-iq/sdk">Connect
+	IQ Mobile SDK</a>;</span></p>
+	<li><p style="line-height: 100%; margin-bottom: 0in"><span lang="nl-NL">De
+	grafieken zijn gemaakt met <a href="https://github.com/memononen/nanovg">NanoVG</a>;</span></p>
+	<li><p style="line-height: 100%; margin-bottom: 0in"><span lang="nl-NL">De
+	kloon functie gebruikt <a href="https://ascon.iaik.tugraz.at/">Ascon
+	authenticated encryption</a>;</span></p>
+	<li><p style="line-height: 100%; margin-bottom: 0in"><span lang="nl-NL">Communicatie
+	met Freestyle Libre3 sensors gebruikt <a href="https://github.com/intel/tinycrypt">Tinycrypt</a>;</span></p>
+	<li><p style="line-height: 100%; margin-bottom: 0in"><span lang="nl-NL">De
+	color picker is een aanpassing van <a href="https://github.com/yukuku/ambilwarna">AmbilWarna</a>;</span></p>
 	<li><p style="line-height: 100%; margin-bottom: 0in">Ondersteuning
 	voor NFC NovoPens is een wijziging van de programmacode die uit
 	xDrip is gehaald.</p>
 </ul>
-<p style="line-height: 100%; margin-bottom: 0in">Juggluco is naar het
-Italiaans vertaald door <a href="mailto:matteo.gabriele81@gmail.com">Matteo
-Gabriele</a>.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><span lang="nl-NL">Juggluco
+is naar het Italiaans vertaald door <a href="mailto:matteo.gabriele81@gmail.com">Matteo
+Gabriele</a>.</span></p>
 <p style="line-height: 100%; margin-bottom: 0in">Juggluco is naar het
 Portugees vertaald door Rui Pinheiro.</p>
-<p style="line-height: 100%; margin-bottom: 0in">Juggluco is naar het
-Pools vertaald door <a href="mailto:adelis@translaris.pl">Arkadiusz
-Deliś</a>.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><span lang="nl-NL">Juggluco
+is naar het Pools vertaald door <a href="mailto:adelis@translaris.pl">Arkadiusz
+Deliś</a>.</span></p>
+<p style="line-height: 100%; margin-bottom: 0in">Juggluco is naar het Wit-Russisch vertaald door <a href="mailto:3477734n@gmail.com">Находкін Яўген</a>.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Juggluco is naar het Frans vertaald door Fabrice Delfosse.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
 <p style="line-height: 100%; margin-bottom: 0in"><br/>
 
 </p>
