@@ -520,3 +520,6 @@ extern void resethost(passhost_t &host) ;
 void resethost(passhost_t &host) {
 	backup->resethost(host);
 	}
+
+#include <mutex>
+std::mutex change_host_mutex;

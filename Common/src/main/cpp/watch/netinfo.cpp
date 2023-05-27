@@ -70,7 +70,7 @@ bool isGalaxyWatch=true;
 extern updateone &getsendto(int index);
 // bool mkwearos=false;
 #include <mutex>
-std::mutex change_host_mutex;
+extern std::mutex change_host_mutex;
 passhost_t * getwearoshost(const bool create,const char *label,bool galaxy) {
   const std::lock_guard<std::mutex> lock(change_host_mutex);
 

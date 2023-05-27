@@ -185,7 +185,7 @@ static std::string_view treatmenttype(int labelnr) {
 	if(labelnr>=settings->data()->varcount||labelnr<0) {
 		return "No label index";
 		}
-	auto *nums=settings->data()->librenums;
+	auto *nums=settings->data()->Nightnums;
 	const int index=nums[labelnr].kind;
 	static const std::string_view typenames[]={"Not set","Rapid acting insulin","Long acting insulin","Carbohydrate","Comments","Don't send"};
 	if(index>=sizeof(typenames)||index<0) {
@@ -268,7 +268,7 @@ void showversion() {
 	}
 
 template <int N> void setlabeltype(const int (&types)[N]) {
-	auto *nums=settings->data()->librenums;
+	auto *nums=settings->data()->Nightnums;
 	for(int i=0;i<N;i++) {
 		switch(toupper(types[i])) {
 			case 'R': nums[i].kind=1;nums[i].weight=1.0f;break;
