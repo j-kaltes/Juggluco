@@ -209,9 +209,10 @@ data to send.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>Amounts</b>:
 dose, food and sport data you have specified.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>Scans</b>: data
-received by scanning the sensor (scans and history).</p>
+received by scanning the sensor (scans and history under Libre2,
+under Libre3 only data needed to access the sensor via Bluetooth).</p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>Stream</b>: the
-data received by Bluetooth.</p>
+data received by Bluetooth. Under Libre3 this includes history data.</p>
 <p style="line-height: 100%; margin-bottom: 0in">Sometimes some data
 is already present on the receiving device. You can specify until
 when this data is present:</p>
@@ -279,9 +280,6 @@ transmission impossible.</p>
 turning WIFI on or off or pressing Sync. Also, switching an
 <i>activeonly-passiveonly</i> connection to <i>both</i> or the other
 way around can make a difference.</p>
-<p>For example a watch-phone connection using TCP over Bluetooth only
-works if the watch is activeonly and the phone passiveonly. Over WIFI
-it works in both directions.</p>
 <p>You should also consider change of IPs with change of connection.
 For example different IPs have to be used on the home network than
 over a portable hotspot.</p>
@@ -1512,6 +1510,12 @@ your arm. So the displayed value can be up to one minute delayed.</p>
 the WearOS version to display the glucose value in every watch face
 that accepts the complication:
 <a href="https://github.com/pachi81/GlucoDataHandler/releases">https://github.com/pachi81/GlucoDataHandler/releases</a></p>
+<p>A third option in to turn on <i>Floating Glucose</i> in Juggluco\'s
+settings on the watch. When Juggluco has the right permissions, a
+glucose value is displayed over other apps. This way you can see your
+current glucose value while using arbitrary watch faces or apps that
+monitor your activity. For more information see, in the phone version
+of Juggluco, left menu -&gt; Settings -&gt; Config -&gt; Help.</p>
 <p><br/>
 <br/>
 
@@ -1554,13 +1558,8 @@ translated into Portuguese by Rui Pinheiro.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><span lang="en-US">Juggluco
 was translated into Polish by <a href="mailto:adelis@translaris.pl">Arkadiusz
 Deliś</a>.</span></p>
-<p style="line-height: 100%; margin-bottom: 0in"><span lang="en-US">Juggluco
-was translated into Belarusian by</span> <a href="mailto:3477734n@gmail.com"><span lang="en-US">Находкін
-Яўген</span></a><span lang="en-US">.</span></p>
-<p style="line-height: 100%; margin-bottom: 0in"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><span lang="en-US">Juggluco
-was translated into French by </span><span style="font-variant: normal"><font color="#000000"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">Fabrice
-Delfosse</span></span></span></font></span><span style="font-variant: normal"><font color="#000000"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">.</span></span></span></font></span></font></font></p>
-<p style="line-height: 100%; margin-bottom: 0in"><br/>
+<p>Juggluco was translated into Belarusian by <a href="mailto:3477734n@gmail.com">Находкін Яўген.</p>
+<p>Juggluco was translated into French by Fabrice Delfosse</p>
 
 </p>
 ]]>
@@ -1729,12 +1728,15 @@ Data</i> in Juggluco.</p>
 </string>
 <string name="setlibrenumtype" >
 <![CDATA[
-<p>Select how the Amounts in Juggluco
-entered under a particular label should be sent to Libreview. It is
-possible to send more than one type of amount with the same Libreview
-label. For example if you score Carbohydrate and pure Glucose food
-under separate labels in Juggluco, you can specify for both that they
-should be sent as <b>Carbohydrate</b> to Libreview.</p>
+<p>The same way as for Libreview, you
+can also specify how to represent amounts via the Nightscout server
+in Juggluco.</p>
+<p>Select how the Amounts in Juggluco entered under a particular
+label should be sent to Libreview. It is possible to send more than
+one type of amount with the same Libreview label. For example if you
+score Carbohydrate and pure Glucose food under separate labels in
+Juggluco, you can specify for both that they should be sent as
+<b>Carbohydrate</b> to Libreview.</p>
 <p>For Carbohydrate, it is possible to <b>multiply</b> the amount
 given in Juggluco with a certain number so that you can transform
 other units into grams. If you count in Juggluco servings of 10 gram,
@@ -1746,6 +1748,10 @@ Label plus the number entered for that label is sent. For example:
 and you entered &quot;<i>50</i>&quot; under that label. &quot;<i>Bike
 50</i>&quot; will be shown under the graph of the &quot;<i>Daily log</i>&quot;
 in Libreview at the specified time.</p>
+<p><br/>
+<br/>
+
+</p>
 ]]>
 </string>
 <string name="floatingconfig" >
@@ -1922,10 +1928,11 @@ apply to https.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>Give Amounts</b>:
 make it possible to receive the entered amounts using
 <a href="http://localhost:17580/api/v1/treatments?count=3">http://localhost:17580/api/v1/treatments?count=3</a>.
-(You have to specify for each label what has to be done with it. This
-is also used for sending amounts to Libreview.) Via this interface
-xDrip can receive Amounts from Juggluco. In xDrip you can do this in
-two ways:</p>
+(You have to specify for each label what has to be done with it.
+Previously this was the same as for Libreview, after version 4.18.0
+you can place the labels in different categories for Libreview and
+this webserver.) Via this interface xDrip can receive Amounts from
+Juggluco. In xDrip you can do this in two ways:</p>
 <ol>
 	<li><p style="line-height: 100%; margin-bottom: 0in">Take as
 	&quot;<i>Hardware Data Source&quot;</i><span style="font-variant: normal"><span style="font-style: normal">,</span></span>
@@ -2049,6 +2056,31 @@ speakers.</p>
 <p><b>Speed</b>: a higher number means faster talking.</p>
 <p><b>Pitch</b>: a higher number means a higher pitch.</p>
 <p><b>Test</b>: speaks out the last glucose value.</p>
+<p>On some phones the Android settings for text-to-speech have to be
+changed for it to work. Sometimes the data of a language has to be
+installed or the configuration changed. On Samsung phones &quot;<i>Google
+text-to-speech</i>&quot; has to be set instead of &quot;<i>Samsung
+text-to-speech engine</i>&quot; in order to choice from different
+voices. These options can be found by searching for <i>text-to-speech</i>
+in Android settings or going to <i>Language and input
+(-&gt;Advanced)-&gt;Text-to-Speech</i>. Here you can select &quot;<i>Speech
+Services by Google</i>&quot; and install voice data. In other phones
+it is under <i>System settings-&gt;Accessibility-&gt;Vision-&gt;Text-to-Speech
+settings</i>.</p>
+<p><br/>
+<br/>
+
+</p>
+]]>
+</string>
+<string name="nightnumhelp" >
+<![CDATA[
+<p>Set &quot;Give <i>amounts</i>&quot;
+to make amounts accessible via the Nightscout webserver in Juggluco.
+Before you can switch on &quot;Give <i>amounts</i>&quot;, you need to
+specify for every label how the amounts entered under that label
+should be given. The labels themselves can be created, modified and
+deleted in Left menu-&gt;Settings-&gt;&quot;Number Labels&quot;.</p>
 <p><br/>
 <br/>
 

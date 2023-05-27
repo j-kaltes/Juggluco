@@ -574,12 +574,6 @@ public static native boolean message(byte[] data);
 public static native boolean getBlueMessage(int index);
 public static native void setBlueMessage(String name,boolean val);
                 
-public static native void setlibrenum(int index,int kind, float weight);
-public static native int getlibrenumkind(int index);
-public static native float getlibrefoodweight(int index);
-public static native boolean getSendNumbers( );
-public static native boolean canSendNumbers( );
-public static native void setSendNumbers(boolean val);
 public static native void setwakelock(boolean val);
 public static native boolean getwakelock( );
 public static native boolean hasRootcheck( );
@@ -664,6 +658,14 @@ public static native int getVoiceSeparation( );
 public static native float getVoiceSpeed( );
 public static native float getVoicePitch( );
 public static native boolean getVoiceActive( );
+
+public static native boolean getSendNumbers();
+public static native void setSendNumbers(boolean val);
+
+public static native void setlibrenum(int night,int index,int kind, float weight);
+public static native int getlibrenumkind(int night,int index);
+public static native float getlibrefoodweight(int night,int index);
+public static native boolean canSendNumbers(int night);
 
 
 //s/^extern.*JNIEXPORT[         ]*\([a-zA-Z]*\)[ ]*JNICALL[      ]*fromjava(\([^)]*\)) *(JNIEnv[^,]*,[^,)]*[,)]\([^){]*\)[^a-zA-Z0-9]*$/public static native \1 \2(\3);/g

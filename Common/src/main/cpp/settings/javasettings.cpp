@@ -930,36 +930,43 @@ extern "C" JNIEXPORT void  JNICALL   fromjava(setkerfstokblack)(JNIEnv *env, jcl
 	settings->data()->kerfstokblack=val;
 	}
 
-extern "C" JNIEXPORT void  JNICALL   fromjava(setlibrenum)(JNIEnv *env, jclass cl,jint index,jint kind, jfloat weight) {
+extern "C" JNIEXPORT void  JNICALL   fromjava(setlibrenum)(JNIEnv *env, jclass cl,jint night,jint index,jint kind, jfloat weight) {
 	if(index>=settings->getlabelcount())  {
 		return ;
 		}
-	settings->data()->librenums[index]={kind,weight};
+	(night?settings->data()->Nightnums:settings->data()->librenums)[index]={kind,weight};
 	return ;
 	}
-extern "C" JNIEXPORT jint  JNICALL   fromjava(getlibrenumkind)(JNIEnv *env, jclass cl,jint index) {
+extern "C" JNIEXPORT jint  JNICALL   fromjava(getlibrenumkind)(JNIEnv *env, jclass cl,jint night,jint index) {
 	if(index>=settings->getlabelcount())  {
 		return 0;
 		}
-	return settings->data()->librenums[index].kind;
+	return (night?settings->data()->Nightnums:settings->data()->librenums)[index].kind;
 	}
-extern "C" JNIEXPORT jfloat  JNICALL   fromjava(getlibrefoodweight)(JNIEnv *env, jclass cl,jint index) {
+extern "C" JNIEXPORT jfloat  JNICALL   fromjava(getlibrefoodweight)(JNIEnv *env, jclass cl,jint night,jint index) {
 	if(index>=settings->getlabelcount())  {
 		return 0.0f;
 		}
-	return settings->data()->librenums[index].weight;
+	return (night?settings->data()->Nightnums:settings->data()->librenums)[index].weight;
+	}
+extern "C" JNIEXPORT void  JNICALL   fromjava(setsaytreatments)(JNIEnv *env, jclass cl,jboolean val) {
+	settings->data()->saytreatments=val;
+	}
+extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getsaytreatments)(JNIEnv *env, jclass cl) {
+	return settings->data()->saytreatments;
 	}
 
 extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getSendNumbers)(JNIEnv *env, jclass cl) {
 	return settings->data()->sendnumbers;
 	}
-extern "C" JNIEXPORT jboolean  JNICALL   fromjava(canSendNumbers)(JNIEnv *env, jclass cl) {
-	if(settings->data()->sendnumbers)
+extern "C" JNIEXPORT jboolean  JNICALL   fromjava(canSendNumbers)(JNIEnv *env, jclass cl,jint night) {
+	if(!night&&settings->data()->sendnumbers)
 		return true;
-	const auto *nums= settings->data()->librenums;
+	if(night&&settings->data()->saytreatments)
+		return true;
+	const auto *nums=night?settings->data()->Nightnums:settings->data()->librenums;
 	for(int i=0;i<settings->getlabelcount();++i) {
 		if(!nums[i].kind) {
-			settings->data()->sendnumbers=false;
 			return false;
 			}
 		}
@@ -1166,12 +1173,6 @@ extern "C" JNIEXPORT jint  JNICALL   fromjava(getsslport)(JNIEnv *env, jclass cl
 	return settings->data()->sslport;
 	}
 
-extern "C" JNIEXPORT void  JNICALL   fromjava(setsaytreatments)(JNIEnv *env, jclass cl,jboolean val) {
-	settings->data()->saytreatments=val;
-	}
-extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getsaytreatments)(JNIEnv *env, jclass cl) {
-	return settings->data()->saytreatments;
-	}
 extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getuseuploader)(JNIEnv *env, jclass cl) {
 	return settings->data()->nightuploadon;
 	}

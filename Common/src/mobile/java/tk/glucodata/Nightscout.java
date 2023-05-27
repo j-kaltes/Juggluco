@@ -197,7 +197,7 @@ public static void show(MainActivity context,View parent) {
 			case 0: {
 				++nochangeamounts[0];
 				treatments.setChecked(!isChecked);
-				LibreNumbers.mklayout(context,treatments,nochangeamounts);
+				LibreNumbers.mklayout(context,1,treatments,nochangeamounts);
 				};break;
 			case  2: Natives.setsaytreatments(isChecked);break;
 

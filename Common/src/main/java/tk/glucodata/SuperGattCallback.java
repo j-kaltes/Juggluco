@@ -144,10 +144,11 @@ static void newtalker() {
 static void endtalk() {
 	if(!isWearable) {
 		dotalk = false;
-		if (talker != null) {
+/*		if (talker != null) {
 			talker.destruct();
 			talker = null;
-		}
+		} 
+		*/
 	}
 	}
 

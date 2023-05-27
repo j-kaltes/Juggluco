@@ -1823,12 +1823,14 @@ label aangeven wat het is.</p>
 </string>
 <string name="setlibrenumtype" >
 <![CDATA[
-<p>Selecteer hoe een hoeveelheid
-ingevoerd onder een bepaald label naar Libreview gezonden moeten
-worden. Het is mogelijk meer dan een label dezelfde Libreview
-aanduiding te geven. Als je bijvoorbeeld Dextro onder een ander label
-dan andere Koolhydraten invoert, kun je ze beiden als koolhydraten
-naar Libreview zenden.</p>
+<p>Op dezelfde manier als voor
+Libreview, kan wat er met hoeveelheden gedaan moet worden ook
+aangegeven worden voor de Nightscout-server in Juggluco.</p>
+<p>Selecteer hoe een hoeveelheid ingevoerd onder een bepaald label
+naar Libreview gezonden moeten worden. Het is mogelijk meer dan een
+label dezelfde Libreview aanduiding te geven. Als je bijvoorbeeld
+Dextro onder een ander label dan andere Koolhydraten invoert, kun je
+ze beiden als koolhydraten naar Libreview zenden.</p>
 <p>Bij <b>koolhydraten</b> is het mogelijk aan te geven dat de
 hoeveelheid in Juggluco met iets anders dan 1 vermenigvuldigd moet
 worden voordat het naar Libreview gezonden wordt. Als je bijvoorbeeld
@@ -2216,18 +2218,44 @@ uit als deze app geen hoeveelheden ontvangt van een kloon-verbinding.</p>
 <![CDATA[
 <h1>Praat</h1>
 <p>Spreekt glucosewaarden uit als ze binnenkomen.</p>
-<p><b>Seconden </b><b>er </b><b>tussen</b>: Geeft aan hoeveel
-seconden Juggluco moet wachten voordat de volgende glucosewaarde
-wordt uitgesproken. Glucosewaarden worden altijd direct uitgesproken
-als ze binnenkomen. Wanneer een grote waarde wordt gespecificeerd,
-zal Juggluco glucosewaarden overslaan die binnenkomen voordat deze
-tijdsperiode is verstreken.</p>
+<p><b>Seconden er tussen</b>: Geeft aan hoeveel seconden Juggluco
+moet wachten voordat de volgende glucosewaarde wordt uitgesproken.
+Glucosewaarden worden altijd direct uitgesproken als ze binnenkomen.
+Wanneer een grote waarde wordt gespecificeerd, zal Juggluco
+glucosewaarden overslaan die binnenkomen voordat deze tijdsperiode is
+verstreken.</p>
 <p><b>Actief</b>: schakel het in</p>
-<p><b>S</b><b>preker</b>: Selecteert een spreker uit een lijst met
-mogelijke sprekers.</p>
+<p><b>Spreker</b>: Selecteert een spreker uit een lijst met mogelijke
+sprekers.</p>
 <p><b>Snelheid</b>: een hoger getal betekent sneller praten.</p>
 <p><b>Toonhoogte</b>: een hoger getal betekent een hogere toonhoogte.</p>
 <p><b>Test</b>: spreekt de laatste glucosewaarde uit.</p>
+<p>Op sommige telefoons moeten de Android instellingen voor
+tekst-naar-spraak worden gewijzigd. Soms moeten spraakgegevens worden
+geïnstalleerd of moet de configuratie worden gewijzigd. Op een
+Samsung-telefoon moet &quot;Spraakservices van Google&quot; worden
+ingesteld in plaats van &quot;Samsung tekst naar spraak-engine&quot;
+om uit verschillende stemmen te kunnen kiezen. Deze opties zijn te
+vinden door te zoeken naar <i>tekst-naar-spraak</i> of <i>spraakuitvoer</i>
+in Android-instellingen of door naar <i>Taal en invoer -&gt;Tekst</i><i>
+</i><i>naar</i><i> </i><i>spraak</i><i>/Geavanceerd-&gt;Spraakuitvoer</i>
+ te gaan. Hier kunt u &quot;<i>S</i><i>praakservices van</i><i>
+Google</i>&quot;/&quot;<i>Google text-naar-spraak engine</i>&quot;
+selecteren en spraakgegevens installeren. Op andere telefoons staat
+dit onder <i>Systeeminstellingen-&gt;Toegankelijkheid&gt;</i><i>Zicht</i><i>-&gt;Tekst</i><i>
+</i><i>naar</i><i> </i><i>spraak-instellingen</i>.</p>
+]]>
+</string>
+<string name="nightnumhelp" >
+<![CDATA[
+<p>Stel &quot;<i>Geef </i><i>hoeveelheden</i>&quot;
+in om hoeveelheden toegankelijk te maken via de Nightscout web<span style="font-style: normal">server
+in Juggluco. Voordat</span><span style="font-style: normal"> je</span><span style="font-style: normal">
+</span><i>&quot;Geef </i><i>hoeveelheden</i>&quot; kunt aanzetten ,
+moet je voor elk label aangeven hoe de onder dat label ingevoerde
+hoeveelheden moeten worden weergegeven. De labels zelf kunnen worden
+gemaakt, gewijzigd en verwijderd in het
+linkermenu-&gt;Instellingen-&gt;&quot;Nummerlabels&quot;.</p>
 <p><br/>
 <br/>
 

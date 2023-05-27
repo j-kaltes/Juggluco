@@ -47,7 +47,8 @@ static  private float curspeed=1.0f;
 static private	long   cursep=50*1000L;
 static private int voicepos=-1;
 static private String playstring=null;
-static final private int minandroid=24; //21
+//static final private int minandroid=24; //21
+static final private int minandroid=21; //21
 
 static void getvalues() {
 	float speed=getVoiceSpeed( );
@@ -140,7 +141,7 @@ private static View[] slider(MainActivity context,float init) {
 //	displayspeed.setPadding(0,0,0,0);
         displayspeed.setImeOptions(editoptions);
     displayspeed.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-    displayspeed.setMinEms(3);
+    displayspeed.setMinEms(2);
 	String formstr=String.format(Locale.US, "%.2f",init);
 	speed.setLayoutParams(new ViewGroup.LayoutParams(  MATCH_PARENT, WRAP_CONTENT));
 	displayspeed.setText( formstr);
@@ -204,7 +205,7 @@ public static void config(MainActivity context) {
    // separation.setMinimumHeight(minheight);
         separation.setImeOptions(editoptions);
     separation.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-    separation.setMinEms(3);
+    separation.setMinEms(2);
 	int sep=(int)(cursep/1000L);
 	separation.setText(sep+"");
 	var seplabel=getlabel(context,context.getString(R.string.secondsbetween));
@@ -275,7 +276,8 @@ public static void config(MainActivity context) {
 		return new int[] {w,h};
 		},firstrow,new View[]{speedlabel},new View[]{speeds[1]}, new View[]{speeds[0]},new View[]{pitchlabel},new View[]{pitchs[1]}, new View[]{pitchs[0]}, new View[]{cancel,helpview,test,save});
 
-      layout.setBackgroundResource(R.drawable.dialogbackground);
+      //layout.setBackgroundResource(R.drawable.dialogbackground);
+	layout.setBackgroundColor( Applic.backgroundcolor);
 	context.setonback(()-> { 
 		tk.glucodata.help.hidekeyboard(context);
 //		EnableControls(parent,true);

@@ -1210,7 +1210,7 @@ bool Sgvinterpret::getitems(char *&outiter,const int  datnr) const {
 	}
 //{"_id":"6401c40addf76d1473eb7d02","timestamp":1677837282000,"eventType":"<none>","enteredBy":"xdrip pos:6.52","notes":"Swim → Aaps → nog meer","uuid":"6401c40addf76d1473eb7d02","created_at":"2023-03-03T09:54:42.000Z","sysTime":"2023-03-03T10:54:42.000+0100","utcOffset":0,"carbs":null,"insulin":null},
 //notes	"AndroidAPS started - realme RMX2202"
-#include "net/libreview/numcategories.h"
+#include "nightnumcategories.h"
 #include "curve/numiter.h"
 	/*
     "_id": "a486879b595f46f7bbc8e20b",
@@ -1227,7 +1227,7 @@ bool Sgvinterpret::getitems(char *&outiter,const int  datnr) const {
 
 static char *writetreatment(char *outiter,const int numbase,const int pos,const Num*num) {
 	const int type=num->type;
-	if(type>=settings->varcount()||!settings->data()->librenums[type].kind)
+	if(type>=settings->varcount()||!settings->data()->Nightnums[type].kind)
 		return outiter;
 	const time_t tim=num->gettime();
         struct tm tmbuf;
@@ -1235,10 +1235,10 @@ static char *writetreatment(char *outiter,const int numbase,const int pos,const 
 	outiter+=sprintf(outiter,R"({"_id":"num%d#%d","eventType":"<none>","insulinInjections":"[]","enteredBy":"Juggluco","created_at":"%d-%02d-%02dT%02d:%02d:%02d.000Z",)",numbase,pos,tmbuf.tm_year+1900,tmbuf.tm_mon+1,tmbuf.tm_mday, tmbuf.tm_hour, tmbuf.tm_min,tmbuf.tm_sec);
 
 	float w=0.0f;
-	 if((w=longWeight(type))!=0.0f) {
+	 if((w=longNightWeight(type))!=0.0f) {
 	 	addar(outiter,R"("notes":"Long-Acting",)");
 	 	}
-	else { if((w=rapidWeight(type))!=0.0f) {
+	else { if((w=rapidNightWeight(type))!=0.0f) {
 	 	addar(outiter,R"("notes":"Rapid-Acting",)");
 	 	}
 		}
@@ -1246,7 +1246,7 @@ static char *writetreatment(char *outiter,const int numbase,const int pos,const 
 		outiter+=sprintf(outiter,R"("carbs":null,"insulin":%g},)",w*num->value);
 		}
 	else {
-		if((w=carboWeight(type) )!=0.0f) {
+		if((w=carboNightWeight(type) )!=0.0f) {
 			outiter+=sprintf(outiter,R"("carbs":%g,"insulin":null},)",w*num->value);
 			}
 		else {
@@ -1318,12 +1318,12 @@ static bool givetreatments(const char *args,int argslen, recdata *outdata)  {
 				break;
 				}
 			if(carb) {
-				if(carboWeight(num->type) ==0.0f) 
+				if(carboNightWeight(num->type) ==0.0f) 
 					continue;
 				}
 			if(insulin) {
 				const int type=num->type;
-				 if(longWeight(type)==0.0f&&rapidWeight(type)==0.0f) 
+				 if(longNightWeight(type)==0.0f&&rapidNightWeight(type)==0.0f) 
 				 	continue;
 				}
 			int pos=num-numdatas[ind]->begin();

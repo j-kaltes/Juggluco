@@ -2272,6 +2272,8 @@ werden sollen.</span></span></span></font></font></span></p>
 </string>
 <string name="setlibrenumtype" >
 <![CDATA[
+<p>Ebenso wie bei Libreview können Sie auch in Juggluco festlegen, wie Mengen
+über den Nightscout-Server dargestellt werden sollen</p>
 <p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
 <font face="Times New Roman"><font size="4" style="font-size: 14pt">Wählen
 Sie aus, wie die unter einem bestimmten Etikett eingegebenen Mengen
@@ -2295,7 +2297,7 @@ Librelink hinzugefügt hätten.&nbsp;Wenn Sie hier Kommentare
 angeben, wird das Etikett plus die für dieses Etikett eingegebene
 Nummer gesendet.&nbsp;Beispiel: „&nbsp;<i>Fahrrad 50</i>&nbsp;“,
 wenn Sie ein Etikett „<i>Fahrrad</i>“ hatten und&nbsp;unter
-diesem Etikett <i>„50“</i><i> </i>eingegeben haben<i>.&nbsp;</i>„&nbsp;<i>Bike
+diesem Etikett „<i>50“</i> eingegeben haben<i>.&nbsp;</i>„&nbsp;<i>Bike
 50</i>&nbsp;“ wird zur angegebenen Zeit unter der Grafik des
 „&nbsp;<i>Tageslogs</i>&nbsp;“ in Libreview angezeigt.</font></font></p>
 <p style="line-height: 100%; margin-bottom: 0in"><br/>
@@ -2680,6 +2682,34 @@ Sprecher aus.</p>
 Sprechen.</p>
 <p><b>Tonhöhe</b>: Eine höhere Zahl bedeutet eine höhere Tonhöhe.</p>
 <p><b>Test</b>: sagt den letzten Glukosewert aus.</p>
+<p>Auf einigen Telefonen müssen die Android-Einstellungen für
+Text-zu-Sprache geändert werden, damit es funktioniert. Manchmal
+müssen die Daten einer Sprache installiert oder die Konfiguration
+geändert werden. Auf Samsung-Handys muss „<i>Speech Services by
+Google</i>“ anstelle von „<i>Samsung Text-</i><i>zu-Sprache</i><i>
+Engine</i>“ eingestellt werden, um zwischen verschiedenen Stimmen
+wählen zu können. Diese Optionen finden Sie, indem Sie in den
+Android-Einstellungen nach Text-to-Speech suchen oder zu <i>Sprache
+und Eingabe -&gt;</i><i> </i><i>Text-</i><i>zu-Sprache</i> or S<i>ystem
+-&gt; Sprache und Eingabe -&gt; Sprachausgabe</i> gehen. Hier können
+Sie &quot;<i>Google Sprachausgabe</i>&quot; oder „<i>Speech
+services by</i><i> Google</i>“ auswählen und Sprachdaten
+installieren. Bei anderen Telefonen befindet es sich unter
+<i>Systemeinstellungen</i><i> </i><i>-&gt;</i><i> Bedienungs</i><i>hilfen</i><i>
+</i><i>-&gt;</i><i> Sehen </i><i>-&gt;</i><i>
+</i><i>Text-</i><i>in-Sprache</i><i>-Einstellungen</i>.</p>
+]]>
+</string>
+<string name="nightnumhelp" >
+<![CDATA[
+<p>Stellen Sie „<i>Mengen</i><i>
+geben</i>“ ein, um Mengen über den Nightscout-Webserver in
+Juggluco zugänglich zu mach<span style="font-style: normal">en.
+Bevor Sie </span><i>„</i><i>Mengen </i><i>geben</i>“ einschalten
+können , müssen Sie für jedes Etikett festlegen, wie die unter
+diesem Etikett eingegebenen Mengen ausgegeben werden sollen. Die
+Etiketten selbst können im linken Menü -&gt; Einstellungen -&gt;
+&quot;Zahlenetiketten“ erstellt, geändert und gelöscht werden.</p>
 <p><br/>
 <br/>
 

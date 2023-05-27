@@ -58,9 +58,9 @@ import static tk.glucodata.settings.Settings.removeContentView;
 
 
 public class LibreNumberHolder extends RecyclerView.ViewHolder {
-private ViewGroup parent;
-
+	private ViewGroup parent;
 	private 	View sendnumbers;
+	private int night;
 private static final String LOG_ID="LibreNumberHolder";
 RadioButton mkradiobutton(Context context, String label) {
 	  var radio  = new RadioButton(context);
@@ -122,10 +122,10 @@ void sendoptions(View labelview,int pos) {
 		 final int dontid=getid(layout,R.id.dont);
 		 kindids=new int[]{-1,rapidactingid,longactingid,foodid,noteid,dontid};
 		 }
-	final int wasid=kindids[Natives.getlibrenumkind(pos)];
+	final int wasid=kindids[Natives.getlibrenumkind(night,pos)];
 	group.check(wasid);
 	if(wasid==foodid) {
-		float wasweight=Natives.getlibrefoodweight(pos);
+		float wasweight=Natives.getlibrefoodweight(night,pos);
 		weight.setText(float2string(wasweight));
 		}
 	else {
@@ -154,7 +154,7 @@ void sendoptions(View labelview,int pos) {
 		EnableControls(parent,true);
 		hidekeyboard((Activity) context);
 		removeContentView(layout) ;
-		if(!canSendNumbers()) {
+		if(!canSendNumbers(night)) {
 			EnableControls(sendnumbers,false);
 			}
 		};
@@ -165,7 +165,7 @@ void sendoptions(View labelview,int pos) {
 		if(theid!=wasid||wasid==foodid) {
 			final float weightf=(theid==foodid)?edit2float(weight):0.0f;
 			final int kind=kindfromid(theid);
-			setlibrenum(pos,kind, weightf);
+			setlibrenum(night,pos,kind, weightf);
 			}
 		context.doonback();
 	});
@@ -174,10 +174,11 @@ void sendoptions(View labelview,int pos) {
 }
 
 
-	public LibreNumberHolder(View labelview,ViewGroup parent,View sendnumbers) {
+public LibreNumberHolder(View labelview,ViewGroup parent,View sendnumbers,int night) {
         super(labelview);
 	this.parent=parent;
 	this.sendnumbers=sendnumbers;
+	this.night=night;
        labelview.setOnClickListener(v -> {
 		int pos=getAbsoluteAdapterPosition();
 		sendoptions(v,pos);
