@@ -135,6 +135,13 @@ detext.newamount,
 {"",""},
 {"Scanfehler","Versuchen Sie es erneut"}},
 
+
+.libre3scanerror={"FreeStyle Libre 3, Scanfehler", "Versuchen Sie es erneut"},
+.libre3wrongID={"Fehler, falsche Konto-ID?","Geben Sie in Einstellungen->Libreview dasselbe Konto an, das zum Aktivieren des Sensors verwendet wurde"},
+.libre3scansuccess= {"FreeStyle Libre 3-Sensor", "Glukosewerte werden jetzt von Juggluco empfangen"},
+.unknownNFC={"Unerkannter NFC-Scanfehler", "Versuchen Sie es erneut"},
+
+.nolibre3={"FreeStyle Libre 3 Sensor","Von dieser Version von Juggluco nicht unterstützt"},
 #ifndef WEAROS
 .advancedstart= R"(<h1>Geändertes Gerät</h1>
 <p>Eine der von dieser Anwendung verwendeten Bibliotheken hat einen BUG, der sie zum Absturz bringt, wenn sie bestimmte Dateien erkennt. Ihr Gerät enthält einige dieser Dateien. Dieses Programm enthält einen Hack, um diesen BUG zu umgehen, aber es ist wahrscheinlich besser, diese Dateien auf andere Weise unauffindbar zu machen. Magisk hat beispielsweise die Möglichkeit, Root für bestimmte Anwendungen zu verbergen (Magiskhide oder Denylist) und den eigenen Namen zu ändern, beides wird benötigt. In Ihrem Fall hat es Probleme mit der folgenden Datei)",

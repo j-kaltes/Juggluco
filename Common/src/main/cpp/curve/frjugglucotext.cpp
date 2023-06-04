@@ -138,6 +138,11 @@ jugglucotext frtext {
 		{"",""},
 		{"Erreur de scan","Réessayez"}},
 
+.libre3scanerror={"FreeStyle Libre 3, Scan error", "Try again"},
+.libre3wrongID={"Error, wrong account ID?","Specify in Settings->Libreview the same account used to activate the sensor"},
+.libre3scansuccess= {"FreeStyle Libre 3 sensor", "Glucose values will now be received by Juggluco"},
+.unknownNFC={"Unrecognized NFC scan Error", "Try again"},
+.nolibre3={"FreeStyle Libre 3 sensor","Not supported by this version of Juggluco"},
 #ifndef WEAROS
 	.advancedstart= R"(<h1>Appareil modifié</h1>
 <p>Une des librairies utilisées par cette appli a un bug qui la fait

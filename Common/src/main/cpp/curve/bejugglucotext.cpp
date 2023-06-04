@@ -98,7 +98,7 @@ jugglucotext betext {
 		betext.newamount,
 		"Спіс",
 		"Статыстыка",
-		"Talk"
+		"Размаўляць"
 		},
 	.menustr2= {"Апошняе скан.","Сканы","Паток","Гісторыя","Сумы","Ежа","Dark mode        "},
 	.menustr3= {hourminstr,"Пошук","Дата","Дзень назад","Праз дзень","Тыдзень таму","Праз тыдзень"},
@@ -133,6 +133,11 @@ jugglucotext betext {
 		{"",""},
 		{"Памылка сканавання","Паспрабуй яшчэ"}},
 
+.libre3scanerror={"FreeStyle Libre 3, Scan error", "Try again"},
+.libre3wrongID={"Error, wrong account ID?","Specify in Settings->Libreview the same account used to activate the sensor"},
+.libre3scansuccess= {"FreeStyle Libre 3 sensor", "Glucose values will now be received by Juggluco"},
+.unknownNFC={"Unrecognized NFC scan Error", "Try again"},
+.nolibre3={"FreeStyle Libre 3 sensor","Not supported by this version of Juggluco"},
 #ifndef WEAROS
 	.advancedstart= R"(<h1>Мадыфікаванае прылада</h1>
 <p>У адной з бібліятэк, якія выкарыстоўваюцца гэтым дадаткам, ёсць ПАМЫЛКА, і

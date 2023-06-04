@@ -88,17 +88,17 @@ if(genlayout==null) {
 	recycle.setLayoutParams(new ViewGroup.LayoutParams(  MATCH_PARENT, isWearable?MATCH_PARENT:ViewGroup.LayoutParams.WRAP_CONTENT));
 	View[][] views;
 	if(isWearable) {
-	   ring.setPadding(0,0,0,0);
-	   newone.setPadding(0,0,0,0);
-	   ok.setPadding(0,0,0,0);
 	var width=GlucoseCurve.getwidth();
 		var height=GlucoseCurve.getheight();
+	   ring.setPadding((int)(width*0.05),0,0,0);
+	   newone.setPadding(0,0,0,0);
+	   ok.setPadding(0,0,0,0);
 	   int butwidth=(int)(width*0.33);
 	   int butheight=(int)(height*0.17);
 //	   var butwidth=0;
 //	   var butheight=0;
 	   ring.setMinHeight(butheight);
-	   ring.setMinWidth(butwidth);
+	   ring.setMinWidth((int)(width*0.38));
 	   ok.setMinHeight(butheight);
 	   ok.setMinWidth(butwidth);
 	   newone.setMinHeight(butheight);

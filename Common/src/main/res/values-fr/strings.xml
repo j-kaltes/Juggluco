@@ -267,10 +267,9 @@
 <string name="separate">Séparer</string>
 <string name="librecurrent">Libre3 immédiat</string>
 <string name="USE_ALARM">Alarme est alarme</string>
- <string name="speed">Vitesse</string>
+    <string name="speed">Vitesse</string>
  <string name="pitch">Tonalité</string>
- <string name="talker">Haut parleur</string>
+ <string name="talker">Voix</string>
  <string name="secondsbetween">Intervalle (sec)</string>
  <string name="test">Test</string>
-
 </resources>

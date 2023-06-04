@@ -18,6 +18,7 @@ private static float kelvin(float input) {
 private static float kelvin(float input) {
 	return input+273.15f;
 	}
+static final private float[] speeds= {2, 6, 12, 20, 29, 39, 50, 62, 75, 89, 103, 118,150};
    static void sendglucose(String glstr,int mgdl,float gl,float rate,long timmsec)  {
     	 WeatherSpec weatherSpec = new WeatherSpec();
 	 final int code=librecode(rate);
@@ -25,11 +26,11 @@ private static float kelvin(float input) {
 	    weatherSpec.timestamp            = (int) (timmsec/1000L);
 	   weatherSpec.currentCondition=weatherSpec.location;
 	weatherSpec.currentConditionCode=libreweather[code];
-	   weatherSpec.windSpeed=rate;
 	   var cal = Calendar.getInstance();
           cal.setTimeInMillis(timmsec);
-	weatherSpec.currentHumidity= cal.get(Calendar.HOUR_OF_DAY);
-	weatherSpec.windDirection=cal.get(Calendar.MINUTE);
+	weatherSpec.currentHumidity= cal.get(Calendar.MINUTE);
+	   weatherSpec.windSpeed=speeds[cal.get(Calendar.HOUR_OF_DAY)%12];
+//	weatherSpec.windDirection=cal.get(Calendar.MINUTE);
 	    
 		
    	weatherSpec.currentTemp=(int)kelvin(Math.round(rate*10));

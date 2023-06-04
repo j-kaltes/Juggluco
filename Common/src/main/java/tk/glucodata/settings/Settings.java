@@ -21,40 +21,44 @@
 
 package tk.glucodata.settings;
 
-import android.app.AlertDialog;
+import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE;
+import static android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_DISABLED;
+import static android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_ENABLED;
+import static android.content.pm.PackageManager.DONT_KILL_APP;
+import static android.view.View.GONE;
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+import static tk.glucodata.Applic.isWearable;
+import static tk.glucodata.help.help;
+import static tk.glucodata.util.getbutton;
+import static tk.glucodata.util.getcheckbox;
+import static tk.glucodata.util.getlabel;
+
 import android.app.Application;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.text.InputType;
 import android.util.TypedValue;
-import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.ScrollView;
 import android.widget.Space;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import tk.glucodata.Applic;
 import tk.glucodata.BuildConfig;
 import tk.glucodata.Floating;
 import tk.glucodata.GlucoseCurve;
-import tk.glucodata.LabelAdapter;
 import tk.glucodata.Layout;
 import tk.glucodata.Libreview;
 import tk.glucodata.Log;
@@ -62,33 +66,6 @@ import tk.glucodata.MainActivity;
 import tk.glucodata.Natives;
 import tk.glucodata.Notify;
 import tk.glucodata.R;
-import tk.glucodata.SensorBluetooth;
-import tk.glucodata.SuperGattCallback;
-
-import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
-import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE;
-import static android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_DISABLED;
-import static android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_ENABLED;
-import static android.content.pm.PackageManager.DONT_KILL_APP;
-import static android.view.Gravity.RIGHT;
-import static android.view.Gravity.TOP;
-import static android.view.View.GONE;
-import static android.view.View.INVISIBLE;
-import static android.view.View.LAYOUT_DIRECTION_LTR;
-import static android.view.View.LAYOUT_DIRECTION_RTL;
-import static android.view.View.VISIBLE;
-import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
-import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
-import static tk.glucodata.Applic.isRelease;
-import static tk.glucodata.Applic.isWearable;
-import static tk.glucodata.MainActivity.getscreenwidth;
-import static tk.glucodata.Natives.setBlueMessage;
-import static tk.glucodata.Natives.setuselibreview;
-import static tk.glucodata.NumberView.avoidSpinnerDropdownFocus;
-import static tk.glucodata.help.help;
-import static tk.glucodata.util.getbutton;
-import static tk.glucodata.util.getcheckbox;
-import static tk.glucodata.util.getlabel;
 
 public class Settings  {
 private final static String LOG_ID="Settings";
@@ -662,6 +639,12 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
         library.setOnClickListener(v-> {
 		getlibrary.openlibrary(context) ;
 		});*/
+		/*
+	var setnl=getbutton(context,"nl"); 
+        setnl.setOnClickListener(v-> { //DOESN"T work:w
+	
+ 			AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags("nl-NL"));
+			});*/
 	if(!isWearable) {
 		changelabels.setText(R.string.numberlabels);
 		changelabels.setOnClickListener(v-> {

@@ -666,7 +666,7 @@ public static void  config(MainActivity act, View settingsview,CheckBox sendto,b
 			case 0: {
 				++nochangeamounts[0];
 				numbers.setChecked(!isChecked);
-				LibreNumbers.mklayout(act,numbers,nochangeamounts);
+				LibreNumbers.mklayout(act,0,numbers,nochangeamounts);
 				};break;
 			case  2: Natives.setSendNumbers(isChecked);break;
 			};

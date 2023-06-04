@@ -58,10 +58,12 @@ static public class LibreNumberAdapter extends RecyclerView.Adapter<LibreNumberH
 
 	ViewGroup layout;
 	View sendnumbers;
+	int night;
 
-    LibreNumberAdapter(ViewGroup layout,View sendnumbers) {
+    LibreNumberAdapter(ViewGroup layout,View sendnumbers,int night) {
     	this.layout=layout;
     	this.sendnumbers=sendnumbers;
+    	this.night=night;
 
     	}
 
@@ -74,7 +76,7 @@ static public class LibreNumberAdapter extends RecyclerView.Adapter<LibreNumberH
         view.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24f);
 	view.setLayoutParams(new ViewGroup.LayoutParams(  ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
-        return new LibreNumberHolder(view,layout,sendnumbers);
+        return new LibreNumberHolder(view,layout,sendnumbers,night);
 
     }
 
@@ -95,7 +97,7 @@ static public class LibreNumberAdapter extends RecyclerView.Adapter<LibreNumberH
 
 
 
-public static void    mklayout(MainActivity context,CheckBox donum,int[] donothing) { 
+public static void    mklayout(MainActivity context,int night,CheckBox donum,int[] donothing) { 
 	Button close = new Button(context);
 	close.setText(R.string.closename);
 	RecyclerView recycle = new RecyclerView(context);
@@ -106,14 +108,14 @@ public static void    mklayout(MainActivity context,CheckBox donum,int[] donothi
 
 //	var sendnumbers=getcheckbox(context,R.string.sendamounts,donum.isChecked());
 	var sendnumbers=getcheckbox(context,donum.getText().toString(),donum.isChecked());
-	if(!canSendNumbers()) {
+	if(!canSendNumbers(night)) {
 		//EnableControls(sendnumbers,false);
 		sendnumbers.setEnabled(false);
 		}
 
 	recycle.setLayoutParams(new ViewGroup.LayoutParams(   ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
     final ViewGroup  librenumlayout=new Layout(context,(x,w,h)->{ hideSystemUI(); return new int[] {w,h}; },new View[] {recycle},new View[]{help,sendnumbers,close});
-	var adapt = new LibreNumberAdapter(librenumlayout,sendnumbers);
+	var adapt = new LibreNumberAdapter(librenumlayout,sendnumbers,night);
 	recycle.setAdapter(adapt);
 
 	Runnable closerun=()-> {
@@ -135,10 +137,10 @@ public static void    mklayout(MainActivity context,CheckBox donum,int[] donothi
         context.addContentView(librenumlayout, new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
 	help.setOnClickListener(v->{
 		EnableControls(librenumlayout,false);
-		tk.glucodata.help.help(context.getString(R.string.librenumhelp),context,l-> { 
+		tk.glucodata.help.help(context.getString(night==1?R.string.nightnumhelp:R.string.librenumhelp),context,l-> {
 			Log.i(LOG_ID,"librenumhelp callback");	
 			EnableControls(librenumlayout,true); 
-			if(!canSendNumbers()) { 
+			if(!canSendNumbers(night)) { 
 				sendnumbers.setEnabled(false);
 				}
 			} );

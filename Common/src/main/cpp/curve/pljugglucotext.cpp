@@ -65,8 +65,8 @@ jugglucotext pltext {
 		.noconnectionerror=": Brak połączenia",
 		.stsensorerror=": Błąd sensora",
 		.streplacesensor=": Wymienić sensor?",
-.endedformat="Sensor %s not working anymore. patchState=%d",
-.notreadyformat="Sensor %s not ready. patchState=%d",
+.endedformat="Sensor %s już nie działa. patchState=%d",
+.notreadyformat="Sensor %s niej est gotowy. patchState=%d",
 
 #ifndef WEAROS
 	.median="Mediana",
@@ -104,7 +104,7 @@ jugglucotext pltext {
 		pltext.newamount,
 		"Lista", 
 		"Statystyka",
-		"Talk"
+		"Na głos"
 		},
 	.menustr2= {"Ostatni odczyt","Odczyty","Strumień","Histora","Wartość","Posiłki","Tryb ciemny        "},
 	.menustr3= {hourminstr,"Wyszukaj","Data","Dzień wstecz","Dzień później","Tydzień wstecz","Tydzień później"},
@@ -124,7 +124,7 @@ jugglucotext pltext {
 		{"Błąd instalacji","?"},
 		{"Błąd przetwarzania danych","Spróbuj ponownie"},
 		{"Aktywacja sensora",""},
-		{"Sensor ostatecznie zakończył działanie",""},
+		{"Sensor zakończył działanie",""},
 
 		{"Sensor gotowy za","%d minut"},
 		{"373: Błąd sensora","Nie kontaktuj się od razu z obsługą klienta firmy Abbott; odczyty glukozy mogą być dostępne za 10 minut."},
@@ -138,6 +138,13 @@ jugglucotext pltext {
 		{"368: Wymień sensor","Twój sensor nie działa. Proszę usunąć sensor i założyć nowy."},
 		{"",""},
 		{"Błąd odczytu","Spróbuj ponownie"}},
+
+
+.libre3scanerror={"Błąd skanu FreeStyle Libre 3", "Spróbuj ponownie"},
+.libre3wrongID={"Błąd, niepoprawny nr ID konta?","W Ustawienia - >Libreview określ to samo konto, które zostało użyte do aktywacji sensora"},
+.libre3scansuccess= {"Sensor FreeStyle Libre 3", "Wartości stężenia glukozy będą teraz odbierane przez Juggluco"},
+.unknownNFC={"Nierozpoznany błąd skanowania NFC", "Spróbuj ponownie"},
+.nolibre3={"Sensor FreeStyle Libre 3","Nie jest obsługiwany przez tę wersję Juggluco"},
 
 #ifndef WEAROS
 	.advancedstart= R"(<h1>Zmodyfikowane urządzenie</h1>

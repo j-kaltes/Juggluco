@@ -47,6 +47,8 @@ static  private float curspeed=1.0f;
 static private	long   cursep=50*1000L;
 static private int voicepos=-1;
 static private String playstring=null;
+//static final private int minandroid=24; //21
+static final private int minandroid=21; //21
 
 static void getvalues() {
 	float speed=getVoiceSpeed( );
@@ -75,7 +77,7 @@ void destruct() {
 		       engine.setLanguage(loc);
 		       engine.setPitch( curpitch);
 		      engine.setSpeechRate( curspeed);
-				if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+				if (android.os.Build.VERSION.SDK_INT >= minandroid) {
 					Set<Voice> voices=engine.getVoices();
 					if(voices!=null) {
 						voiceChoice.clear();
@@ -85,14 +87,14 @@ void destruct() {
 								}
 							}
 						}
-					}
-			Log.i(LOG_ID,"after addvoices");
-			if(voicepos>=0&& voicepos<voiceChoice.size()) {
-				engine.setVoice(voiceChoice.get(voicepos));
-				Log.i(LOG_ID,"after set voices");
-				}
-			else {
-				voicepos=0;
+					Log.i(LOG_ID,"after addvoices");
+					if(voicepos>=0&& voicepos<voiceChoice.size()) {
+						engine.setVoice(voiceChoice.get(voicepos));
+						Log.i(LOG_ID,"after set voices");
+						}
+					else {
+						voicepos=0;
+						}
 				}
 			if(playstring!=null) {
 				speak(playstring);
@@ -123,26 +125,28 @@ static private double base2=Math.log(2);
 static private double multiplyer=10000.0/base2;
 static int ratio2progress(float ratio) {
 	if(ratio<0.18)
-		return -25000;
-        return (int)Math.round(Math.log(ratio)*multiplyer);
+		return 0;
+        return (int)Math.round(Math.log(ratio)*multiplyer)+25000;
         }
 static float progress2ratio(int progress) {
-        return (float)Math.exp((double)progress/multiplyer);
+        return (float)Math.exp((double)(progress-25000)/multiplyer);
         }
 
 private static View[] slider(MainActivity context,float init) {
 	var speed=new SeekBar(context);
-	speed.setMin(-25000);
-	speed.setMax(25000);
+//	speed.setMin(-25000);
+	speed.setMax(50000);
 	speed.setProgress(ratio2progress(init));
 	var displayspeed=new EditText(context);
 //	displayspeed.setPadding(0,0,0,0);
         displayspeed.setImeOptions(editoptions);
     displayspeed.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-    displayspeed.setMinEms(3);
+    displayspeed.setMinEms(2);
 	String formstr=String.format(Locale.US, "%.2f",init);
 	speed.setLayoutParams(new ViewGroup.LayoutParams(  MATCH_PARENT, WRAP_CONTENT));
 	displayspeed.setText( formstr);
+
+		
 	speed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 		@Override
 		public  void onProgressChanged (SeekBar seekBar, int progress, boolean fromUser) {
@@ -177,7 +181,7 @@ private static View[] slider(MainActivity context,float init) {
 			   }
 		    return false;
 		    }});
-		/*
+		    /*
         displayspeed.addTextChangedListener( new TextWatcher() {
                    public void afterTextChanged(Editable ed) {
 			var speedstr=ed.toString();
@@ -190,8 +194,8 @@ private static View[] slider(MainActivity context,float init) {
                    	}
                    public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
                    public void onTextChanged(CharSequence s, int start, int before, int count) { }
-                  });
-*/
+                  });*/
+
 	return new View[] {speed,displayspeed};
 	}
 public static void config(MainActivity context) {
@@ -201,7 +205,7 @@ public static void config(MainActivity context) {
    // separation.setMinimumHeight(minheight);
         separation.setImeOptions(editoptions);
     separation.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-    separation.setMinEms(3);
+    separation.setMinEms(2);
 	int sep=(int)(cursep/1000L);
 	separation.setText(sep+"");
 	var seplabel=getlabel(context,context.getString(R.string.secondsbetween));
@@ -234,38 +238,46 @@ public static void config(MainActivity context) {
 			
                         }); */
 	
-	var spin=new Spinner(context);
+	var spin= (android.os.Build.VERSION.SDK_INT >= minandroid)? new Spinner(context):null;
+
 	int[] spinpos={-1};
+	View[]  firstrow;
+	if(android.os.Build.VERSION.SDK_INT >= minandroid) { 
+		spin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+			@Override
+			public  void onItemSelected (AdapterView<?> parent, View view, int position, long id) {
+				Log.i(LOG_ID,"onItemSelected "+position);
+				
+				spinpos[0]=position;
+				}
+			@Override
+			public  void onNothingSelected (AdapterView<?> parent) {
 
-
-	spin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-		@Override
-		public  void onItemSelected (AdapterView<?> parent, View view, int position, long id) {
-			Log.i(LOG_ID,"onItemSelected "+position);
-			
-			spinpos[0]=position;
-			}
-		@Override
-		public  void onNothingSelected (AdapterView<?> parent) {
-
-		} });
-	avoidSpinnerDropdownFocus(spin);
-	var adap = new RangeAdapter<Voice>(voiceChoice, context, voice -> {
-			return voice.getName();
-			});
-	spin.setAdapter(adap);
-	Log.i(LOG_ID,"voicepos="+voicepos);
-	if(voicepos>=0&&voicepos<voiceChoice.size())
-		spin.setSelection(voicepos);
-
-	spinpos[0]=-1;
+			} });
+		avoidSpinnerDropdownFocus(spin);
+		var adap = new RangeAdapter<Voice>(voiceChoice, context, voice -> {
+				return voice.getName();
+				});
+		spin.setAdapter(adap);
+		Log.i(LOG_ID,"voicepos="+voicepos);
+		if(voicepos>=0&&voicepos<voiceChoice.size())
+			spin.setSelection(voicepos);
+		spinpos[0]=-1;
+		 firstrow=new View[]{seplabel,separation,voicelabel,spin,active};
+		}
+	else {
+		var space=new Space(context);
+		space.setMinimumWidth((int)(width*0.4));
+		 firstrow=new View[]{seplabel,separation,space,active};
+		 }
 	var layout=new Layout(context,(l,w,h)-> {
 		if(width>w)
 			l.setX((width-w)/2);
 		return new int[] {w,h};
-		},new View[]{seplabel,separation,voicelabel,spin,active},new View[]{speedlabel},new View[]{speeds[1]}, new View[]{speeds[0]},new View[]{pitchlabel},new View[]{pitchs[1]}, new View[]{pitchs[0]}, new View[]{cancel,helpview,test,save});
+		},firstrow,new View[]{speedlabel},new View[]{speeds[1]}, new View[]{speeds[0]},new View[]{pitchlabel},new View[]{pitchs[1]}, new View[]{pitchs[0]}, new View[]{cancel,helpview,test,save});
 
-      layout.setBackgroundResource(R.drawable.dialogbackground);
+      //layout.setBackgroundResource(R.drawable.dialogbackground);
+	layout.setBackgroundColor( Applic.backgroundcolor);
 	context.setonback(()-> { 
 		tk.glucodata.help.hidekeyboard(context);
 //		EnableControls(parent,true);
@@ -275,10 +287,12 @@ public static void config(MainActivity context) {
 		});
 	Runnable getvalues=()-> {
 		try {
-			int pos=spinpos[0];
-			if(pos>=0) {
-				voicepos=pos;
-				}
+			if (android.os.Build.VERSION.SDK_INT >= minandroid) {
+				int pos=spinpos[0];
+				if(pos>=0) {
+					voicepos=pos;
+					}
+				  }
 			 var str = separation.getText().toString();
 			if(str != null) {
 				cursep = Integer.parseInt(str)*1000L;

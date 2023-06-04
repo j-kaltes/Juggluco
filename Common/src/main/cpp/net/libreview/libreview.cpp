@@ -221,7 +221,6 @@ static LibreHist  librehistory(SensorGlucoseData *sensdata,uint32_t starttime,ui
 	if(!startid)
 		startid=found->id;
 	int histnum=(startid + periodright-1)/periodmin;
-//	int histnum=(found->id + periodright-1)/periodmin;
 	int previd= histnum*periodmin;
 	int id=previd+periodmin;
 	int firstid=previd+periodright+1;
@@ -282,7 +281,6 @@ static LibreHist  librehistory(SensorGlucoseData *sensdata,uint32_t starttime,ui
 	const int64_t histor=libreviewHistor(sensdata->shortsensorname());
 	uint32_t newnotsend=useddata-stream.data()+1;
 	LOGGER("send %d data notsend=%d\n",datuit,newnotsend);
-//	return {.histor=histor,.list=list,.size=datuit,.starttime=sensdata->getstarttime(),.msec=sensdata->getinfo()->msec,.notsend=newnotsend};
 	return {.histor=histor,.list=list,.size=datuit,.starttime=sensdata->getstarttime(),.msec=0,.notsend=newnotsend};
 	}
 /*
@@ -487,7 +485,8 @@ afterlow.size()+10+
 afterhigh.size()+4+
 aftertimeformat.size()+6+timeuitlen+aftercurrenttime.size()+deviceidlen+afterident.size()+deviceidlen+ afterident2.size()+timeuitlen+
 afterlocalstartime.size() +afterhists.size() + afterscans.size()+ usertokenlen+ aftertoken.size()+nrscans*scanelsize+ afterfood.size()+ afterinsulin.size();
-#ifndef NDEBUG
+
+#ifndef NOLOG
 
 time_t tim=scantime;
 	LOGGER("usertokenlen=%d histtotal=%d histelUitlen=%d senslen=%d nrscans=%u scanelsize=%d totallen=%d nu=%u scantime=%u %s",usertokenlen,histtotal,histelUitlen,senslen,nrscans,scanelsize,totallen,nu,scantime,ctime(&tim));
@@ -636,7 +635,8 @@ time_t tim=scantime;
 					if(lists[i].size) {
 						int lastitem=lists[i].size-1;
 						settings->data()->lastlibretime=lists[i].list[lastitem].ti;
-						#ifndef NDEBUG
+
+						#ifndef NOLOG
 						time_t tim=settings->data()->lastlibretime;
 						LOGGER("last item was %s",ctime(&tim));
 						#endif

@@ -243,9 +243,10 @@ bool hasNewCurrent(const SensorGlucoseData *sens) {
 	 int start=sens->getinfo()->libreviewscan;
 	int pollstart= sens->getinfo()->pollstart;
 //	int ends=sens->getinfo()->lastLifeCountReceived;
-int		ends=sens->pollcount()-1;
 	if(start<pollstart)
 		start=pollstart;
+
+const int		ends=sens->pollcount()-1;
 	if(start>ends) {
 		LOGGER("%s pollstart=%d hasNewCurrent no new last start=%d ends=%d\n",sens->showsensorname().data(),pollstart,start,ends);
 		return false;
@@ -260,7 +261,7 @@ bool askhasnewcurrent() {
 		return false;
 		}
 	const auto *lastsensor=sensors->gethist(-1);
-	if(!lastsensor->isLibre3())  {
+	if(!lastsensor||!lastsensor->isLibre3())  {
 		LOGSTRING("not Libre3\n");
 		return false;
 		}

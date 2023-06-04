@@ -140,6 +140,12 @@ static jugglucotext ittext {
 		{"368: Sostituire sensore","Il tuo sensore non funziona. Rimuovilo e avviane un altro."},
 		{"",""},
 		{"Errore di scansione","Riprova"}},
+
+.libre3scanerror={"FreeStyle Libre 3, Scan error", "Try again"},
+.libre3wrongID={"Error, wrong account ID?","Specify in Settings->Libreview the same account used to activate the sensor"},
+.libre3scansuccess= {"FreeStyle Libre 3 sensor", "Glucose values will now be received by Juggluco"},
+.unknownNFC={"Unrecognized NFC scan Error", "Try again"},
+.nolibre3={"FreeStyle Libre 3 sensor","Not supported by this version of Juggluco"},
 #ifndef WEAROS
 	.advancedstart=R"(<H1>Dispositivi modificati</H1>
 <P>Una delle librerie usate dall'applicazione Juggluco ha un BUG che

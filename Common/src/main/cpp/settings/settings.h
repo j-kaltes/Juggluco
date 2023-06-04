@@ -226,6 +226,7 @@ struct Tings {
 	bool nightuploadon;
 	int pensnr;
 	std::array<NovoPen,maxpennr>  pens;
+	ToLibre Nightnums[maxvarnr];
 	void setdefault() {
 		memcpy(watchid,defaultid,sizeof(watchid));
 		};
@@ -320,83 +321,84 @@ Settings(const char *settingsname,const char *base,const char *country): Mmap(se
 		return;
 		}
 
-	if(data()->initVersion<16) { // set in Applic.initbroadcasts
-	if(data()->initVersion<15) {
-		if(data()->initVersion<13) {
-			if(data()->initVersion<12) {
-			if(data()->initVersion<10) {
-			if(data()->initVersion<9) {
-				data()->sendtolibreview=data()->uselibre;
-				if(data()->initVersion<8) {
-					LOGGER("initVersion=%d\n",data()->initVersion);
-					if(data()->initVersion<7) { 
-						if(data()->initVersion<6) {
-							if(data()->initVersion<4) {
-								if(data()->varcount==0) {
-									data()->roundto=1.0f;
+	if(data()->initVersion<17) { // set in Applic.initbroadcasts
+	     memcpy(data()->Nightnums,data()->librenums, sizeof(Tings::ToLibre)*data()->varcount);
+		if(data()->initVersion<16) { // set in Applic.initbroadcasts
+		if(data()->initVersion<15) {
+			if(data()->initVersion<13) {
+				if(data()->initVersion<12) {
+				if(data()->initVersion<10) {
+				if(data()->initVersion<9) {
+					data()->sendtolibreview=data()->uselibre;
+					if(data()->initVersion<8) {
+						LOGGER("initVersion=%d\n",data()->initVersion);
+						if(data()->initVersion<7) { 
+							if(data()->initVersion<6) {
+								if(data()->initVersion<4) {
+									if(data()->varcount==0) {
+										data()->roundto=1.0f;
 
 
-									mklabels();
-									mkalarms();
-									/*
-									extern bool iswatch;
-									if(iswatch) {
+										mklabels();
+										mkalarms();
+										/*
+										extern bool iswatch;
+										if(iswatch) {
+											data()->orientation=1;
+											data()->invertcolors=true;
+											}
+										else {
+											data()->orientation=8;
+											}*/
+					#ifdef WEAROS
 										data()->orientation=1;
-										data()->invertcolors=true;
-										}
-									else {
+					#else
 										data()->orientation=8;
-										}*/
-				#ifdef WEAROS
-									data()->orientation=1;
-				#else
-									data()->orientation=8;
-				#endif
+					#endif
 
-									data()->fixatey=true;
-									data()->systemUI=true;
-									}
-								data()->setdefault();
-								};
-							data()->flash=false;
+										data()->fixatey=true;
+										data()->systemUI=true;
+										}
+									data()->setdefault();
+									};
+								data()->flash=false;
+								}
+							data()->usexdripwebserver=false;
+					#ifdef CARRY_LIBS
+							data()->havelibrary=true;
+					#endif
+					#ifdef WEAROS
+							data()->invertcolors=true;
+							data()->usegarmin=false;
+					#else
+							data()->usegarmin=true;
+					#endif
 							}
-						data()->usexdripwebserver=false;
-				#ifdef CARRY_LIBS
-						data()->havelibrary=true;
-				#endif
-				#ifdef WEAROS
-						data()->invertcolors=true;
-						data()->usegarmin=false;
-				#else
-						data()->usegarmin=true;
-				#endif
+
+						setdisturbs();
+						data()->balanced_priority=true;
 						}
-
-					setdisturbs();
-					data()->balanced_priority=true;
 					}
-				}
-				data()->triedasm=false;
-				data()->asmworks=false;
-//				extern bool getpathworks();
-//				data()->setpathworks=getpathworks();
+					data()->triedasm=false;
+					data()->asmworks=false;
+					}
+
+					if(data()->libre2NUMiter<1) data()->libre2NUMiter=1;
+					if(data()->libre3NUMiter<1) data()->libre3NUMiter=1;
+					}
+				if(data()->xinfuus) {
+					strcpy(data()->librelinkBroadcast.name[0], "com.eveningoutpost.dexdrip");
+					data()->librelinkBroadcast.nr=1;
+					}
+				data()->xdripBroadcast.nr=data()->xdripbroadcast;
+				data()->glucodataBroadcast.nr=data()->jugglucobroadcast;
 				}
 
-				if(data()->libre2NUMiter<1) data()->libre2NUMiter=1;
-				if(data()->libre3NUMiter<1) data()->libre3NUMiter=1;
-				}
-			if(data()->xinfuus) {
-				strcpy(data()->librelinkBroadcast.name[0], "com.eveningoutpost.dexdrip");
-				data()->librelinkBroadcast.nr=1;
-				}
-			data()->xdripBroadcast.nr=data()->xdripbroadcast;
-			data()->glucodataBroadcast.nr=data()->jugglucobroadcast;
-			}
-
-		data()->libreaccountIDnum=-1LL;
-	     }
-		data()->sslport=17581;
-	     }
+			data()->libreaccountIDnum=-1LL;
+		     }
+			data()->sslport=17581;
+		     }
+		   }
 	setconvert(country);
 
 	 showui=getui();
