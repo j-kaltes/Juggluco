@@ -47,6 +47,7 @@ static  private float curspeed=1.0f;
 static private	long   cursep=50*1000L;
 static private int voicepos=-1;
 static private String playstring=null;
+static private Spinner spinner=null;
 //static final private int minandroid=24; //21
 static final private int minandroid=21; //21
 
@@ -62,9 +63,32 @@ static void getvalues() {
 	}
 
 static private ArrayList<Voice> voiceChoice=new ArrayList();
+void setvalues() {
+	if(engine!=null) {
+		var loc=Locale.getDefault();
+		engine.setLanguage(loc);
+	       engine.setPitch( curpitch);
+	      engine.setSpeechRate( curspeed);
+	      }
+	}
+void setvoice() {
+	if(engine==null)
+		return;
+	if(voicepos>=0&& voicepos<voiceChoice.size()) {
+		var vo= voiceChoice.get(voicepos);
+		engine.setVoice(voiceChoice.get(voicepos));
+		Log.i(LOG_ID,"after setVoice "+vo.getName());
+		}
+	else {
+	    Log.i(LOG_ID,"setVoice out of range");
+		voicepos=0;
+		}
+	}
 void destruct() {
-	if(engine!=null)
+	if(engine!=null) {
 		engine.shutdown();
+		engine=null;
+		}
 	voiceChoice.clear();
 	}
 	Talker() {
@@ -72,30 +96,29 @@ void destruct() {
 		 @Override
 		 public void onInit(int status) {
 		    if(status != TextToSpeech.ERROR) {
-			var loc=Locale.getDefault();
-		    	var lang=loc.getLanguage();
-		       engine.setLanguage(loc);
-		       engine.setPitch( curpitch);
-		      engine.setSpeechRate( curspeed);
-				if (android.os.Build.VERSION.SDK_INT >= minandroid) {
-					Set<Voice> voices=engine.getVoices();
-					if(voices!=null) {
-						voiceChoice.clear();
-						for(var voice:voices) {
-							if(lang.equals(voice.getLocale().getLanguage())) {
-								voiceChoice.add(voice);
-								}
+		       setvalues();
+			if (android.os.Build.VERSION.SDK_INT >= minandroid) {
+				Set<Voice> voices=engine.getVoices();
+				if(voices!=null) {
+					var loc=Locale.getDefault();
+					var lang=loc.getLanguage();
+					voiceChoice.clear();
+					for(var voice:voices) {
+						if(lang.equals(voice.getLocale().getLanguage())) {
+							voiceChoice.add(voice);
 							}
 						}
-					Log.i(LOG_ID,"after addvoices");
-					if(voicepos>=0&& voicepos<voiceChoice.size()) {
-						engine.setVoice(voiceChoice.get(voicepos));
-						Log.i(LOG_ID,"after set voices");
+					var spin=spinner;
+					if(spin!=null) {
+						spin.setAdapter(new RangeAdapter<Voice>(voiceChoice, Applic.app, voice -> {
+								return voice.getName();
+								})); 
+						if(voicepos>=0&&voicepos<voiceChoice.size())
+							spin.setSelection(voicepos);
 						}
-					else {
-						voicepos=0;
-						}
-				}
+					}
+				setvoice();
+			}
 			if(playstring!=null) {
 				speak(playstring);
 				playstring=null;
@@ -199,10 +222,10 @@ private static View[] slider(MainActivity context,float init) {
 	return new View[] {speed,displayspeed};
 	}
 public static void config(MainActivity context) {
-// 	SuperGattCallback.newtalker();
-//	EnableControls(parent,false);
+	if(!SuperGattCallback.dotalk) {
+	 	SuperGattCallback.newtalker();
+		}
 	var separation=new EditText(context);
-   // separation.setMinimumHeight(minheight);
         separation.setImeOptions(editoptions);
     separation.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
     separation.setMinEms(2);
@@ -239,6 +262,7 @@ public static void config(MainActivity context) {
                         }); */
 	
 	var spin= (android.os.Build.VERSION.SDK_INT >= minandroid)? new Spinner(context):null;
+	spinner=spin;
 
 	int[] spinpos={-1};
 	View[]  firstrow;
@@ -255,10 +279,9 @@ public static void config(MainActivity context) {
 
 			} });
 		avoidSpinnerDropdownFocus(spin);
-		var adap = new RangeAdapter<Voice>(voiceChoice, context, voice -> {
+		spin.setAdapter(new RangeAdapter<Voice>(voiceChoice, context, voice -> {
 				return voice.getName();
-				});
-		spin.setAdapter(adap);
+				}));
 		Log.i(LOG_ID,"voicepos="+voicepos);
 		if(voicepos>=0&&voicepos<voiceChoice.size())
 			spin.setSelection(voicepos);
@@ -280,8 +303,9 @@ public static void config(MainActivity context) {
 	layout.setBackgroundColor( Applic.backgroundcolor);
 	context.setonback(()-> { 
 		tk.glucodata.help.hidekeyboard(context);
-//		EnableControls(parent,true);
-		removeContentView(layout); });
+		removeContentView(layout); 
+		spinner=null;
+		});
 	cancel.setOnClickListener(v->  {
 		context.doonback();
 		});
@@ -312,30 +336,46 @@ public static void config(MainActivity context) {
 				Log.stack(LOG_ID,"parseInt",th);
 				}
 
+		 };
+	save.setOnClickListener(v->  {
+		getvalues.run();
 		if(active.isChecked()) {
-			SuperGattCallback.newtalker();
-			SuperGattCallback.dotalk=true;
+				SuperGattCallback.newtalker();
+				SuperGattCallback.dotalk=true;
+				/*
+			if(!SuperGattCallback.dotalk) {
+				SuperGattCallback.newtalker();
+				SuperGattCallback.dotalk=true;
+				}
+			else  {
+				SuperGattCallback.talker.setvoice();
+				SuperGattCallback.talker.setvalues();
+				} */
 			}
 		else {
 			SuperGattCallback.endtalk();
 			}
-		 };
-	save.setOnClickListener(v->  {
-		getvalues.run();
 		Natives.saveVoice(curspeed,curpitch,(int)(cursep/1000L),voicepos,SuperGattCallback.dotalk);
 
 		context.doonback();
 		});
 	test.setOnClickListener(v->  {
 		var gl=lastglucose();
-		if(gl!=null&&gl.value!=null)
-			playstring=gl.value;
-		else
-			playstring="8.7";
+		var say=(gl!=null&&gl.value!=null)?gl.value:"8.7";
 		getvalues.run();
-		if(!SuperGattCallback.dotalk)
+		playstring=say;
+		SuperGattCallback.newtalker();
+		/*
+		if(SuperGattCallback.talker==null) {
+			playstring=say;
 			SuperGattCallback.newtalker();
-//		talk.destruct();
+			}
+		else {
+			SuperGattCallback.talker.setvoice();
+			SuperGattCallback.talker.setvalues();
+
+			SuperGattCallback.talker.speak(say);
+			} */
 		});
 
 	context.addContentView(layout, new ViewGroup.LayoutParams(MATCH_PARENT, WRAP_CONTENT));

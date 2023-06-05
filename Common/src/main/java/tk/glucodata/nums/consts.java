@@ -57,6 +57,8 @@ public class consts {
  public static final int DIDSETENDNUM=228;
  public static final int GOTGLUCOSE=229;
  public static final int COLORBLACK=230;
+ public static final int STOPALARM=231;
+ public static final int GOTSTOPALARM=232;
  public static final int NUMS=0;
 //  static public boolean isRelease= BuildConfig.isRelease==1;
    

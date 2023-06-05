@@ -52,7 +52,7 @@ constexpr static Shortcut_t  beshortinit[]= { {"Bread",
 
 jugglucotext betext {
 .daylabel={"Нд","Пн","Аў","Ср","Чц","Пт","Сб"},
-.monthlabel={ "Студз", "Лют", "Сак",  "Крас", "Май", "Чэрв", "Ліп", "Жн", "Верас", "Кастр", "Лістап", "Снеж"},
+.monthlabel={ "Сту", "Лют", "Сак",  "Кра", "Май", "Чэр", "Ліп", "Жні", "Вер", "Кас", "Ліс", "Сне"},
 .scanned="Адсканаваць",
 .readysecEnable="Датчык гатовы праз %d хвілін. Праскануйце яшчэ раз, каб уключыць струменевую перадачу.",
 .readysec="Датчык гатовы праз %d хвілін.",
@@ -62,6 +62,8 @@ jugglucotext betext {
 .noconnectionerror=": Няма сувязі",
 .stsensorerror=": Памылка датчыка",
 .streplacesensor=": Замяніць датчык?",
+.endedformat="Sensor %s not working anymore. state=%d",
+.notreadyformat="Sensor %s not ready. state=%d",
 #ifndef WEAROS
 	.median="Медыяна",
 	.middle="Сярэдні",

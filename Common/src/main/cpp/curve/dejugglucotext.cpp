@@ -61,8 +61,8 @@ jugglucotext detext {
 .noconnectionerror=": Keine Verbindung",
 .stsensorerror=": Sensorfehler",
 .streplacesensor=": Sensor ersetzen?",
-.endedformat="Sensor %s not working anymore. patchState=%d",
-.notreadyformat="Sensor %s not ready. patchState=%d",
+.endedformat="Sensor %s not working anymore. state=%d",
+.notreadyformat="Sensor %s not ready. state=%d",
 #ifndef WEAROS
 .median="Median",
 .middle="mittlere",

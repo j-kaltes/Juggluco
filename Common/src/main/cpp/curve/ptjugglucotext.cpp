@@ -70,8 +70,8 @@ jugglucotext pttext {
 .noconnectionerror=": No Connection",
 .stsensorerror=": Sensor Error",
 .streplacesensor=": Replace Sensor?",
-.endedformat="Sensor %s not working anymore. patchState=%d",
-.notreadyformat="Sensor %s not ready. patchState=%d",
+.endedformat="Sensor %s not working anymore. state=%d",
+.notreadyformat="Sensor %s not ready. state=%d",
 
 #ifndef WEAROS
         .median="Mediana",

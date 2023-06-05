@@ -61,7 +61,7 @@
 <string name="lowglucosealarm">Alarme glucose bas</string>
 <string name="numlabel">"Etiquette: "</string>
 <string name="roundto">"Arrondir à: "</string>
-<string name="weight">"Coéfficient: "</string>
+<string name="weight">"Coefficient: "</string>
 <string name="ringtonename">Sonnerie</string>
 <string name="highglucosealarm">Alarme glucose haut</string>
 <string name="valueavailablenotification">Notification de valeurs disponibles</string>
@@ -101,7 +101,7 @@
 <string name="reenable">Réactiver</string>
 <string name="failure_info">Info</string>
 <string name="last_failure">Dernier échec</string>
-<string name="last_success">Derner succès</string>
+<string name="last_success">Dernier succès</string>
 <string name="stage">Etape</string>
 <string name="use_bluetooth">Utiliser Bluetooth</string>
 <string name="connection">Connexion</string>
@@ -114,7 +114,7 @@
 <string name="sendqueue">Envoyer données en attente</string>
 <string name="reinit">Réinit</string>
 <string name="watchappinstalled">Appli montre installée sur la montre</string>
-<string name="error">Ereur</string>
+<string name="error">Erreur</string>
 <string name="additem">Ajouter entrée</string>
 <string name="round">"Arrondi "</string>
 <string name="repeat">Répéter</string>
@@ -208,7 +208,7 @@
 <string name="heartrate">Rythme cardiaque</string>
 <string name="xdripbroadcast">Broadcast xDrip local</string>
 <string name="sensorpermission">Permission du capteur requise pour afficher le rythme cardiaque</string>
-<string name="sensorpermissionmessage">Réglez-là dans les paramètres, Apps, Permissions, Juggluco</string>
+<string name="sensorpermissionmessage">Réglez-là dans les paramètres, Apps, Autorisations, Juggluco</string>
 <string name="floatglucose">Glucose flottant</string>
 <string name="fontsize">Taille de police</string>
 <string name="fonttoolarge">Police trop grande: max=</string>

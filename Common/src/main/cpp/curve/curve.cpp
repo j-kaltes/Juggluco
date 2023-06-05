@@ -2348,6 +2348,7 @@ extern void setusenl();
 extern void setusepl();
 extern void setusede();
 
+extern void setuseuk() ;
 extern void setusebe();
 extern void setusefr();
 
@@ -2394,6 +2395,10 @@ void  setlocale(const char *localestrbuf,const size_t len) {
 		case mklanguagenum("BE"):
 		case mklanguagenum("be"):
 			setusebe();
+			break;
+		case mklanguagenum("UK"):
+		case mklanguagenum("uk"):
+			setuseuk();
 			break;
 		default: setuseeng();
 		};
