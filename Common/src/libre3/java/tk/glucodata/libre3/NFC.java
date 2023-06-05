@@ -39,8 +39,7 @@ private static final String LOG_ID="NFC";
 public static	long   	second(byte[] nfc1,Tag tag) {
 	long nowsec=(long)Math.round(System.currentTimeMillis()/1000.0);
 //	long nowsec=Natives.getLibre3secs(nfc1);
-	if(nowsec==0L)
-		return 0L;
+//	if(nowsec==0L) return 0L;
 	long accountId=getlibreAccountIDnumber();
 	Log.i(LOG_ID,"accountId="+accountId);
 	byte[] metcrc=new byte[10];// 8C 42 86 62 8D 6D 41 1F BC 93

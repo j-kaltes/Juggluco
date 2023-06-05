@@ -294,7 +294,7 @@ void closesock(int &sock) {
 		close(tmpsock);
 		}
 }
-void messagereceivecommands(passhost_t *pass) {
+static void messagereceivecommands(passhost_t *pass) {
 	const int index=pass-getBackupHosts().data();
 	LOGGERTAG("messagereceivecommands %d start\n",index);
 	if(messagereceiversockets[index]!=-1)
@@ -421,6 +421,7 @@ void setBlueMessage(int ident,bool val) {
 			else {
 				startmessagereceiver(host);
 				}
+			 backup->getupdatedata()->wakesender();	
 			}
 		}
 	}

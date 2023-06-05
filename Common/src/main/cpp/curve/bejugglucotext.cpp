@@ -62,6 +62,8 @@ jugglucotext betext {
 .noconnectionerror=": Няма сувязі",
 .stsensorerror=": Памылка датчыка",
 .streplacesensor=": Замяніць датчык?",
+.endedformat="Sensor %s not working anymore. state=%d",
+.notreadyformat="Sensor %s not ready. state=%d",
 #ifndef WEAROS
 	.median="Медыяна",
 	.middle="Сярэдні",

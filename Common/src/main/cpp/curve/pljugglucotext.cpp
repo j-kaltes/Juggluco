@@ -65,8 +65,8 @@ jugglucotext pltext {
 		.noconnectionerror=": Brak połączenia",
 		.stsensorerror=": Błąd sensora",
 		.streplacesensor=": Wymienić sensor?",
-.endedformat="Sensor %s już nie działa. patchState=%d",
-.notreadyformat="Sensor %s niej est gotowy. patchState=%d",
+.endedformat="Sensor %s już nie działa. state=%d",
+.notreadyformat="Sensor %s niej est gotowy. state=%d",
 
 #ifndef WEAROS
 	.median="Mediana",

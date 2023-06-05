@@ -128,7 +128,8 @@ static void init(Application app) {
        if(glucosealarms==null) glucosealarms=new tk.glucodata.GlucoseAlarms(app);
 	if(!isWearable) {
 		Talker.getvalues();
-		newtalker();
+		if(dotalk)
+			newtalker();
 		}
 	}
 
@@ -144,12 +145,11 @@ static void newtalker() {
 static void endtalk() {
 	if(!isWearable) {
 		dotalk = false;
-/*		if (talker != null) {
+		if (talker != null) {
 			talker.destruct();
 			talker = null;
 		} 
-		*/
-	}
+		}
 	}
 
 
@@ -210,7 +210,7 @@ static void endtalk() {
 		if(Natives.getJugglucobroadcast())
 			JugglucoSend.broadcastglucose(SerialNumber,mgdl,gl,rate,alarm,timmsec);
 		if(!isWearable) {
-			app.numdata.sendglucose(SerialNumber, tim, gl, thresholdchange(rate), alarm);
+			app.numdata.sendglucose(SerialNumber, tim, gl, thresholdchange(rate), alarm|0x10);
 			}
 		if(tim>nexttime) {
 			nexttime=tim+mininterval;

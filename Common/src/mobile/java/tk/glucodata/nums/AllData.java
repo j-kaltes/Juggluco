@@ -42,6 +42,8 @@ import com.garmin.android.connectiq.exception.ServiceUnavailableException;
 
 import static consts.consts.COLORBLACK;
 import static consts.consts.GOTGLUCOSE;
+import static consts.consts.GOTSTOPALARM;
+import static consts.consts.STOPALARM;
 import static tk.glucodata.Applic.isRelease;
 
 import java.util.ArrayList;
@@ -57,6 +59,7 @@ import tk.glucodata.Applic;
 import tk.glucodata.BuildConfig;
 import tk.glucodata.Log;
 import tk.glucodata.Natives;
+import tk.glucodata.Notify;
 
 import static consts.consts.DELETE;
 import static consts.consts.DELETED;
@@ -319,6 +322,7 @@ public void onMessageReceived(IQDevice device, IQApp app, List<Object> message, 
     	case 1:
 	case 2:
 	    switch(kind) {
+	    	case GOTSTOPALARM:
 	    	case COLORBLACK:break;
 	        case RECEIVEDPRECISION:Natives.havesendlabels();break;
 	        case DIDSETENDNUM:break;
@@ -337,6 +341,7 @@ public void onMessageReceived(IQDevice device, IQApp app, List<Object> message, 
 	    	case STOP: stopglucose();break;
 		case STRING: infostr = (String) li.get(1); break;
 		case SENDERROR:senderror((Integer) li.get(1));break;
+		case STOPALARM: Notify.stopalarmnotsend(false);break;
 		};break;
 
 	case 3: {
@@ -771,7 +776,6 @@ public boolean realsendmessage(Object message) {
 		   }
 		return false;
     }
-
 public void sendshortcuts(ArrayList<ArrayList<Object>> shortcuts) {
 	if(!usewatch)
 		return;
@@ -843,6 +847,10 @@ void realgetnums(int base) {
     }
 
 */
+public void stopalarm() {
+	Log.i(LOG_ID,"send stopalarm");
+	 sendmessage(Arrays.asList(STOPALARM ));
+	 }
 void		testapppresent() {
 	sendmessage(Arrays.asList(START));
 	}

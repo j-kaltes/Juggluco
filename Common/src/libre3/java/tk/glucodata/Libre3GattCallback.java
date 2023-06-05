@@ -326,7 +326,9 @@ private boolean sendSecurityCommand(byte b) {
 		isNotificationSuspended=true;
 		} */
 	if(!mBluetoothGatt.writeCharacteristic(gattCharCommandResponse)) {
-		Log.e(LOG_ID, "writeCharacteristic(gattCharCommandResponse) failed");
+		var message="writeCharacteristic(gattCharCommandResponse) failed "+b;
+		Log.e(LOG_ID, message);
+		setfailure(message);  
 		mBluetoothGatt.disconnect(); //TODO: or try again?
 		return false;
 		}
@@ -350,7 +352,9 @@ private boolean setCertificate65() {
 	byte[]	patchEphemeral=rdtData;
 	if(generateKAuth(patchEphemeral)) //TODO failure?
 		return sendSecurityCommand((byte)17);
-	Log.e(LOG_ID, "generateKAuth(patchEphemeral) failed");
+	var message= "generateKAuth(patchEphemeral) failed";
+	Log.e(LOG_ID, message);
+	setfailure(message);  
 	mBluetoothGatt.disconnect(); 
 	return false;
 	}
@@ -361,7 +365,7 @@ private void receivedCERT_DATA() {
 		default: {
 			var message="receivedCERT_DATA unknown length="+rdtLength;
 			Log.i(LOG_ID,message);
-			setfailure(message);  //TODO disconnect?
+			setfailure(message);  
 			mBluetoothGatt.disconnect(); 
 			}
 		};

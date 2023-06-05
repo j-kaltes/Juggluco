@@ -62,8 +62,8 @@ jugglucotext uktext {
 .noconnectionerror=": Немає з'єднання",
 .stsensorerror=": Помилка датчика",
 .streplacesensor=": Замінити датчик?",
-.endedformat="%s припинив працювати. patchState=%d",
-.notreadyformat="%s не готовий. patchState=%d",
+.endedformat="%s припинив працювати. state=%d",
+.notreadyformat="%s не готовий. state=%d",
 #ifndef WEAROS
 	.median="Медіана",
 	.middle="Середній",

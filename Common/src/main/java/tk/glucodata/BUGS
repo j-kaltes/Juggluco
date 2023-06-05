@@ -1,3 +1,12 @@
+Ereader doesn't respect Landscape mode, but Juggluco does assume it does. Dialogs don't wrong.
+Small (time and glucose) lines not good visible on ereader
+	
+
+Does not always stop after press in watch.
+adb commands are translated in translation.
+
+
+Crash libre3 app after new sensor.
 
 Libreview saved in Local time. Goes wrong after a time zone change. Librelink has the same problem.
 

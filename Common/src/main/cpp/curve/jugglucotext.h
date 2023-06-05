@@ -33,7 +33,7 @@ typedef const char *charptr_t;
 //typedef std::pair<const char*,const char *> errortype;
 typedef std::pair<std::string_view,std::string_view> errortype;
 struct jugglucotext {
-char daylabel[7][5];
+char daylabel[7][7];
 char monthlabel[12][13];
 std::string_view scanned;
 std::string_view readysecEnable;

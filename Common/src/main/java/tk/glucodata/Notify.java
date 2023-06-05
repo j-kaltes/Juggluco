@@ -324,6 +324,9 @@ static public String glucosestr(float gl) {
 	private  static Runnable runstopalarm=null;
 	private static ScheduledFuture<?> stopschedule=null;
 	static public void stopalarm() {
+		stopalarmnotsend(true);
+		}
+	static public void stopalarmnotsend(boolean send) {
 		if(!getisalarm()) {
 			Log.d(LOG_ID,"stopalarm not is alarm");
 			return;
@@ -336,6 +339,8 @@ static public String glucosestr(float gl) {
 		}
 		var runner=runstopalarm;
 		if(runner!=null) {
+			if(send)
+				Applic.app.numdata.stopalarm();
 			runner.run();
 		}
 	}
