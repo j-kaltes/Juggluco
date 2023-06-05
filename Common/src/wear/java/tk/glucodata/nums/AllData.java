@@ -54,4 +54,7 @@ public void changedback(int base) {
 
 	public void sync() {
 	}
+	public void stopalarm() {
+	}
+
 }
