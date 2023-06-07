@@ -287,7 +287,7 @@ public void searchforDeviceAddress() {
 		Natives.setDeviceAddress(dataptr, address);
 	}
 	void free() {
-		Log.i(LOG_ID,"free");
+		Log.i(LOG_ID,"free "+SerialNumber);
 		close();
 		Natives.freedataptr(dataptr);
 		dataptr = 0L;
@@ -300,7 +300,7 @@ public void searchforDeviceAddress() {
 		Natives.finishSensor(dataptr);
 		}
 	public void close() {
-		Log.i(LOG_ID,"close");
+		Log.i(LOG_ID,"close "+SerialNumber);
 		var tmpgatt=mBluetoothGatt ;
 		stop=true;
 		if (tmpgatt != null) {

@@ -111,7 +111,7 @@ android {
 		minSdk 26
 		versionCode 408
 	//******  Zet op rollout op 100% ******
-		versionName '4.19.0-wear'
+		versionName '4.19.1-wear'
 		signingConfig signingConfigs.alg
 
 //            buildConfigField 'int', 'targetSDK', "$targetSdk"
