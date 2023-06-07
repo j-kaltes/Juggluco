@@ -78,6 +78,9 @@ int setfilesdir(const string_view filesdir,const char *country) {
 	if(!settings->data()) {
 		return settings->error;
 		}
+extern	void setfloatptr();
+	setfloatptr();
+
 #ifdef LIBRE3
 extern	void usepath(std::string_view,std::string_view );
 extern std::string_view libdirname;

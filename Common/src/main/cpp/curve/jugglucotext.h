@@ -67,7 +67,7 @@ charptr_t
 	GMI,
 	SD,
 	glucose_variability;
-std::string_view menustr0[7], menustr1[6], menustr2[7], menustr3[7];
+std::string_view menustr0[7], menustr1[7], menustr2[7], menustr3[7];
 std::string_view *menustr[4]={menustr0,menustr1,menustr2,menustr3};
 #else
 ;

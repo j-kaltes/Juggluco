@@ -823,6 +823,10 @@ used for amounts. Go to a screen to determine which labels to use to
 set amounts, like insulin doses, carbohydrate consumption and hours
 spend playing football. If you also use the Garmin watch app
 Kerfstok, these labels are sent to the watch app.</p>
+<h2 class="western">Language</h2>
+<p style="line-height: 100%; margin-bottom: 0in">Juggluco is
+displayed in the chosen language. When no language code is selected,
+the system language is used.</p>
 <h2 class="western">Reminders</h2>
 <p style="font-weight: normal; line-height: 100%; margin-bottom: 0in">
 Specify that an alarm should go of if you didn\'t enter a certain

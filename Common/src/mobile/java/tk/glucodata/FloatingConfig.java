@@ -43,6 +43,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
@@ -134,6 +135,10 @@ static public void show(MainActivity act) {
 	CompoundButton foregroundswitch;
 
 	Layout layout;
+	CheckBox floatglucose=new CheckBox(act);
+	floatglucose.setText(R.string.active);
+	floatglucose.setChecked(Natives.getfloatglucose());
+	floatglucose.setOnCheckedChangeListener( (buttonView,  isChecked) -> Floating.setfloatglucose(act,isChecked) ) ;
 	var Help=getbutton(act,R.string.helpname);
 	Help.setOnClickListener(v-> help.help(R.string.floatingconfig,act));
 	foregroundswitch=new Switch(act);
@@ -142,7 +147,7 @@ static public void show(MainActivity act) {
 	var  backgroundlabel=getlabel(act,R.string.background);
 	backgroundlabel.setTextColor(WHITE);
 	foregroundswitch.setTextColor(WHITE);
-	var leftlayout=new Layout(act,(l, w, h)-> { return new int[] {w,h}; },new View[]{sizelabel,sizeview},new View[]{touchable,transparant}, new View[]{foregroundswitch,backgroundlabel},new View[]{Help,close});
+	var leftlayout=new Layout(act,(l, w, h)-> { return new int[] {w,h}; },new View[]{sizelabel,sizeview},new View[]{touchable,transparant}, new View[]{foregroundswitch,backgroundlabel},new View[]{floatglucose},new View[]{Help,close});
 	leftlayout.setLayoutParams( new ViewGroup.LayoutParams(WRAP_CONTENT,MATCH_PARENT));
 	view.setLayoutParams( new ViewGroup.LayoutParams(MATCH_PARENT,MATCH_PARENT));
 	 layout=new Layout(act,(l,w,h)-> { return new int[] {w,h}; }, new View[]{view,leftlayout});

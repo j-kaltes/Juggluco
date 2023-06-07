@@ -187,7 +187,7 @@ static public void setlibrereceivers(MainActivity context,View settingsview,Chec
 		dont[0]=false;
 		return;
 		} */
-	getselected(context,settingsview,"Librelink",selected, all,newselected-> {
+	getselected(context,settingsview,"Patched Libre",selected, all,newselected-> {
 			if(newselected!=null) {
 				Natives.setlibrelinkRecepters(newselected);
 				XInfuus.setlibrenames();

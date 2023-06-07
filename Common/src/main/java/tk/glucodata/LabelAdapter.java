@@ -31,7 +31,7 @@ import android.view.ViewGroup;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
-import java.util.AbstractList;
+import java.util.List;
 
 import static android.graphics.Color.BLUE;
 import static android.graphics.Color.RED;
@@ -39,19 +39,16 @@ import static tk.glucodata.Applic.isWearable;
 
 public class LabelAdapter<T> implements SpinnerAdapter {
     private final LayoutInflater mInflater;
-//private Activity act;
 private static final String LOG_ID="LabelAdapter";
-    private AbstractList<T> ar;
+    private List<T> ar;
     private final int eraf;
-public void setarray(AbstractList<T> inar) {
+public void setarray(List<T> inar) {
 	ar=inar;
 	}
-public AbstractList<T>  getarray() {
+public List<T>  getarray() {
 	return ar;
 	}
-    public LabelAdapter(Context context, AbstractList<T> ar,final int eraf) {
-    	////Log.i(LOG_ID,"LabelAdapter");
-//	act=context;
+    public LabelAdapter(Context context, List<T> ar,final int eraf) {
         this.ar=ar;
 	this.eraf=eraf;
         mInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

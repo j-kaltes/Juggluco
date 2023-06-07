@@ -1,4 +1,7 @@
 <resources>
+    <string name="language">de</string>
+    <string name="languagename">Sprache</string>
+
      <string name="app_name">Juggluco</string>
      <string name="ok">OK</string>
      <string name="cancel">Abbrechen</string>

@@ -30,11 +30,16 @@ import static android.view.View.GONE;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+import static android.widget.Spinner.MODE_DIALOG;
+import static android.widget.Spinner.MODE_DROPDOWN;
+import static androidx.core.os.LocaleListCompat.getEmptyLocaleList;
 import static tk.glucodata.Applic.isWearable;
+import static tk.glucodata.NumberView.avoidSpinnerDropdownFocus;
 import static tk.glucodata.help.help;
 import static tk.glucodata.util.getbutton;
 import static tk.glucodata.util.getcheckbox;
 import static tk.glucodata.util.getlabel;
+import static tk.glucodata.util.getlocale;
 
 import android.app.Application;
 import android.content.ComponentName;
@@ -46,19 +51,28 @@ import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.ScrollView;
 import android.widget.Space;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.os.LocaleListCompat;
+
+import java.util.Arrays;
+import java.util.List;
 
 import tk.glucodata.Applic;
 import tk.glucodata.BuildConfig;
 import tk.glucodata.Floating;
 import tk.glucodata.GlucoseCurve;
+import tk.glucodata.LabelAdapter;
 import tk.glucodata.Layout;
 import tk.glucodata.Libreview;
 import tk.glucodata.Log;
@@ -426,6 +440,37 @@ new View[]{isvalue},new View[]{ringisvalue,Cancel},new View[]{usealarm},new View
 final private static String  codestr=String.valueOf(BuildConfig.VERSION_CODE);
 
 
+static private final List<String> supportedlanguages= Arrays.asList("Language","be","de","en","fr","it","nl","pl","pt","uk");
+//static private final List<String> supportedlanguages= Arrays.asList(Applic.app.,"en","be","de","fr","it","nl","pl","pt","uk");
+static private Spinner languagespinner(MainActivity context, int[] spinpos) {
+	var spin=  new Spinner(context,isWearable?MODE_DIALOG: MODE_DROPDOWN);
+
+
+	spin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+		@Override
+		public  void onItemSelected (AdapterView<?> parent, View view, int position, long id) {
+			spinpos[0]=position;
+			}
+		@Override
+		public  void onNothingSelected (AdapterView<?> parent) {
+
+		} });
+
+	avoidSpinnerDropdownFocus(spin);
+	supportedlanguages.set(0,context.getString(R.string.languagename));
+	spin.setAdapter(new LabelAdapter<String>(context,supportedlanguages,0));
+	var locales=AppCompatDelegate.getApplicationLocales();
+	int pos;
+	if(locales.isEmpty()||(pos=supportedlanguages.indexOf(locales.get(0).getLanguage()))<1)
+		pos=0;
+	
+//	var pos=supportedlanguages.indexOf(getlocale().getLanguage()); if(pos<0) pos=0;
+	spin.setSelection(pos);
+
+//	   spin.setPadding(0,0,0,0);
+	return spin;
+	}
+
 private	void mksettings(MainActivity context,boolean[] issaved) {
 
     if(settinglayout==null) {
@@ -569,6 +614,10 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 			}
 		alarmsettings(context,settinglayout,issaved);
 		});
+
+	int[] spinpos={0};
+	var langspin=languagespinner(context,spinpos);
+	spinpos[0]=-1;
     ok.setOnClickListener(v->{
 		final int wasorient=Natives.getScreenOrientation();
 		if(!isWearable) {	
@@ -633,18 +682,22 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 		   context.poponback();
 		    hidekeyboard();
 		    finish();
+		if(spinpos[0]!=-1) {
+			var newlocale=(spinpos[0]==0)?getEmptyLocaleList():LocaleListCompat.forLanguageTags(supportedlanguages.get(spinpos[0]));
+			AppCompatDelegate.setApplicationLocales(newlocale);
+			}
 		    });
 	    /*
 	var library=getbutton(context,"New Library");
         library.setOnClickListener(v-> {
 		getlibrary.openlibrary(context) ;
 		});*/
-		/*
-	var setnl=getbutton(context,"nl"); 
+/*	var setnl=getbutton(context,"nl"); 
         setnl.setOnClickListener(v-> { //DOESN"T work:w
 	
- 			AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags("nl-NL"));
-			});*/
+ //			AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags("nl-NL"));
+ 			AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags("nl"));
+			}); */
 	if(!isWearable) {
 		changelabels.setText(R.string.numberlabels);
 		changelabels.setOnClickListener(v-> {
@@ -678,7 +731,7 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 			View[] rowglu=new View[]{bluetooth};
 
 			View[] camornum=new View[] {alarmbut,numalarm};
-			views=new View[][]{new View[]{getlabel(context,R.string.unit)}, row0, row1,new View[]{scalelabel},new View[]{fixatex,fixatey}, row2,new View[]{levelleft},hasnfc?(new View[]{globalscan,nfcsound}):null, new View[]{xdripbroadcast},new View[]{jugglucobroadcast},new View[]{uploader},new View[]{floatconfig,floatglucose},camornum,rowglu,new View[]{colbut,display},new View[]{cancel,ok},new View[] {getlabel(context,BuildConfig.BUILD_TIME)},new View[]{getlabel(context,BuildConfig.VERSION_NAME)},new View[]{getlabel(context,codestr) }};;
+			views=new View[][]{new View[]{getlabel(context,R.string.unit)}, row0, row1,new View[]{scalelabel},new View[]{fixatex,fixatey}, row2,new View[]{levelleft},hasnfc?(new View[]{globalscan,nfcsound}):null, new View[]{xdripbroadcast},new View[]{jugglucobroadcast},new View[]{uploader},new View[]{floatconfig,floatglucose},camornum,rowglu,new View[]{colbut,display},new View[]{langspin},new View[]{cancel,ok},new View[] {getlabel(context,BuildConfig.BUILD_TIME)},new View[]{getlabel(context,BuildConfig.VERSION_NAME)},new View[]{getlabel(context,codestr) }};;
 	       uploader.setOnClickListener(v-> tk.glucodata.NightPost.config(context,thelayout[0]));
 		}
 	else {
@@ -700,16 +753,10 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 	       var webserver=getbutton(context,R.string.webserver);
 	       var uploader=getbutton(context,"Uploader");
 
-	       var floatconfig=getbutton(context,R.string.config);
+	       var floatconfig=getbutton(context,R.string.floatglucose);
 	       floatconfig.setOnClickListener(v-> tk.glucodata.FloatingConfig.show(context));
-		CheckBox floatglucose=new CheckBox(context);
-		floatglucose.setText(R.string.floatglucose);
-		floatglucose.setChecked(Natives.getfloatglucose());
-		floatglucose.setOnCheckedChangeListener( (buttonView,  isChecked) -> Floating.setfloatglucose(context,isChecked) ) ;
-	//	var talk=getbutton(context,"Talk");
-	 //      talk.setOnClickListener(v-> tk.glucodata.Talker.config(context,thelayout[0]));
-		View[] rowglu=new View[]{ bluetooth,floatglucose,floatconfig,alarmbut};
-		row8=new View[]{changelabels,numalarm,colbut};
+		View[] rowglu=new View[]{ bluetooth,floatconfig,alarmbut};
+		row8=new View[]{changelabels,langspin,numalarm,colbut};
 		views=new View[][]{row0, row1,new View[]{scalelabel,fixatex,fixatey}, row2,new View[]{levelleft,camera,reverseorientation},
 		hasnfc?new View[]{nfcsound, globalscan}:null,
 

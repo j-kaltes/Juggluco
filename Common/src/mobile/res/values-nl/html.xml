@@ -826,6 +826,11 @@ statusbalk.</p>
 <p>Specificeer labels voor hoeveelheden. Als gebruikt maakt van de
 Garmin watch app Kerfstok, worden deze labels ook naar Kerfstok
 verzonden.</p>
+<h2 class="western">Taal</h2>
+<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
+<font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">Juggluco
+wordt weergegeven in de gekozen taal. Als er geen taalcode is
+geselecteerd, wordt de systeemtaal gebruikt.</font></font></font></p>
 <h2 class="western">Herinneringen</h2>
 <p>Specificeer een alarm dat afgaat als een bepaalde hoeveelheid (bv
 eten of medicatie) niet ingevoerd is binnen een bepaalde

@@ -117,7 +117,7 @@ struct Tings {
 	bool saytreatments:1;
 	bool useSSL:1;
 	bool floatingNotTouchable:1;
-	bool floatglucose:1;
+	bool OLDfloatglucose:1;
 	bool lowalarm,highalarm,availablealarm;
 	bool lossalarm;
 	uint8_t watchid[16];
@@ -181,7 +181,11 @@ struct Tings {
 	uint32_t lastlibretime;
 	std::array<char,36> libreviewAccountID;
 	char _nullchar1;
-	uint8_t empty1[11];//**
+	int8_t empty1;
+	int16_t empty2;
+	int32_t empty3;
+	int32_t floatglucose;
+
 	char newYuApiKey[41];
 	char reserved7;//*
 	uint16_t libredeletednr;

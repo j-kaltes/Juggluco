@@ -34,6 +34,7 @@ import static tk.glucodata.GlucoseCurve.STEPBACK;
 import static tk.glucodata.GlucoseCurve.smallfontsize;
 import static tk.glucodata.MessageSender.initwearos;
 import static tk.glucodata.SuperGattCallback.endtalk;
+import static tk.glucodata.util.getlocale;
 
 import android.Manifest;
 import android.app.Activity;
@@ -175,7 +176,10 @@ public static String curlang=null;
 public void onConfigurationChanged(Configuration newConfig) {
 	super.onConfigurationChanged(newConfig);
    	if(Nativesloaded)  {
-		var lang=Locale.getDefault().toString();
+//		var lang=getlocale().getLanguage();
+		var lang=getlocale().getLanguage();
+//		var lang=getlanguage(this);
+
 		var new24 = DateFormat.is24HourFormat(this);
 		Log.i(LOG_ID,"Applic.onConfigurationChanged "+lang+" "+Applic.hour24);
 		if(!lang.equals(curlang)) {

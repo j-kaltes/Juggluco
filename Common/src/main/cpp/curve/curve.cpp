@@ -3308,11 +3308,13 @@ int getmenulen(const int menu) {
 	return len;	
 	}
 
+void setfloatptr() {
+	}
 #else
 const int *menuopt0[]={&showui, nullptr,nullptr,nullptr,nullptr,nullptr,nullptr};
 
 
-const int *menuopt0b[]={nullptr,nullptr,nullptr,nullptr,nullptr,nullptr};
+const int *menuopt0b[]={nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr};
 const int *menuopt1[]={nullptr,&showscans, &showstream,&showhistories, &shownumbers,&showmeals,&invertcolors};
 const int **optionsmenu[]={menuopt0,menuopt0b,menuopt1,nullptr};
 #define arsizer(x) sizeof(x)/sizeof(x[0])
@@ -3322,6 +3324,9 @@ int getmenulen(const int menu) {
 	if(!menu&&!alarmongoing)
 		return len-1;
 	return len;	
+	}
+void setfloatptr() {
+	menuopt0b[6]=&settings->data()->floatglucose;
 	}
 
 static std::string_view	nothing="          ";

@@ -27,4 +27,15 @@
 
     <style name="Widget.WatchFace.Button" parent="Widget.MaterialComponents.Button">
     </style>
+
+
+<style name="AppTheme" parent="@android:style/Theme.Holo.NoActionBar" >
+       <item name="windowActionBar">false</item>
+    <item name="android:windowActionBar">false</item>
+    <item name="android:windowContentOverlay">@null</item>
+</style>
+
+
+
+
 </resources>

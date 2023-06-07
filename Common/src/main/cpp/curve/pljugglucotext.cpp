@@ -104,7 +104,8 @@ jugglucotext pltext {
 		pltext.newamount,
 		"Lista", 
 		"Statystyka",
-		"Na głos"
+		"Na głos",
+		"Pływająca        "
 		},
 	.menustr2= {"Ostatni odczyt","Odczyty","Strumień","Histora","Wartość","Posiłki","Tryb ciemny        "},
 	.menustr3= {hourminstr,"Wyszukaj","Data","Dzień wstecz","Dzień później","Tydzień wstecz","Tydzień później"},

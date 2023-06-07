@@ -31,9 +31,12 @@ import android.widget.TextView;
 
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import static android.text.Html.TO_HTML_PARAGRAPH_LINES_CONSECUTIVE;
 import static android.text.Html.fromHtml;
+
+import androidx.appcompat.app.AppCompatDelegate;
 
 public class util {
 private	static DateFormat dformat = DateFormat.getDateTimeInstance(DateFormat.DEFAULT,DateFormat.DEFAULT);
@@ -87,4 +90,14 @@ static void sethtml(TextView view,int res) {
 	sethtml(view,view.getContext().getString(res));
 	}
 
+static public Locale getlocale() {
+	var locales= AppCompatDelegate.getApplicationLocales();
+	if(locales.isEmpty())
+		return Locale.getDefault();
+	return locales.get(0);
+	}
+	/*
+static public String getlanguage(Context context) {
+	return context.getString(R.string.language);
+	} */
 }

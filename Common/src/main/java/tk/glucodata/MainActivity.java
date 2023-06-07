@@ -67,6 +67,8 @@ import android.widget.Toast;
 
 import androidx.activity.ComponentActivity;
 import androidx.annotation.UiThread;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.ContextCompat;
 
 import java.io.File;
@@ -82,7 +84,11 @@ import java.util.Deque;
 //import static tk.glucodata.Natives.hidescanresults;
 
 
-public class MainActivity extends ComponentActivity implements NfcAdapter.ReaderCallback  {
+//public class MainActivity extends ComponentActivity implements NfcAdapter.ReaderCallback  {
+public class MainActivity extends AppCompatActivity implements NfcAdapter.ReaderCallback  {
+// Extending from AppCompatActivity requires to use an AppCompat theme for the Activity.
+// In the manifest, for the activity, use android:theme="@style/Theme.AppCompat"
+
 //public class MainActivity extends CarActivity implements NfcAdapter.ReaderCallback  {
 //    boolean    hideSystem=true;
     GlucoseCurve curve=null;
@@ -127,6 +133,7 @@ Applic app=	(Applic)getApplication();
 	if(Applic.Nativesloaded)
 	    app.needsnatives() ;
 
+
    // setSystemUI(false) ;
     try {
 	setRequestedOrientation(Natives.getScreenOrientation( ));
@@ -147,8 +154,12 @@ Applic app=	(Applic)getApplication();
 		tk.glucodata.settings.Settings.set(this);
 		}
 
-	//setfloatglucose(this,true);
-	Log.i(LOG_ID,"setfloatglucose(this,true)");
+	var lang=getString(R.string.language);
+	Log.i(LOG_ID,"curlang="+Applic.curlang+" newlang="+lang+" locale="+util.getlocale().getLanguage());
+	if(!lang.equals(Applic.curlang)) {
+		Natives.setlocale(lang,(tk.glucodata.Applic.hour24=android.text.format.DateFormat.is24HourFormat(Applic.app)));
+		Applic.curlang=lang;
+		}
 }
 static int openglversion=0;
 boolean glversion() {

@@ -1009,6 +1009,9 @@ von Mengen verwendet werden, z. B. Insulindosen,
 Kohlenhydratverbrauch und Stunden, die Sie mit Fußballspielen
 verbringen. Wenn Sie auch die Garmin-Uhren-App Kerfstok verwenden,
 werden diese Etiketten an die Uhren-App gesendet.</p>
+<h2 class="western">Sprache</h2>
+<p>Juggluco wird in der gewählten Sprache angezeigt. Wenn kein
+Sprachcode ausgewählt ist, wird die Systemsprache verwendet.</p>
 <h2 class="western" align="left">Erinnerungen</h2>
 <p align="left" style="font-weight: normal; line-height: 100%; margin-bottom: 0in">
 Legen Sie fest, dass ein Alarm ausgelöst werden soll, wenn Sie eine

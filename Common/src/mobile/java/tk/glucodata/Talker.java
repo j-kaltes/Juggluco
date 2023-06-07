@@ -15,6 +15,7 @@ import static tk.glucodata.settings.Settings.str2float;
 import static tk.glucodata.util.getbutton;
 import static tk.glucodata.util.getcheckbox;
 import static tk.glucodata.util.getlabel;
+import static tk.glucodata.util.getlocale;
 
 import android.app.Activity;
 import android.os.Build;
@@ -65,7 +66,7 @@ static void getvalues() {
 static private ArrayList<Voice> voiceChoice=new ArrayList();
 void setvalues() {
 	if(engine!=null) {
-		var loc=Locale.getDefault();
+		var loc=getlocale();
 		engine.setLanguage(loc);
 	       engine.setPitch( curpitch);
 	      engine.setSpeechRate( curspeed);
@@ -100,7 +101,7 @@ void destruct() {
 			if (android.os.Build.VERSION.SDK_INT >= minandroid) {
 				Set<Voice> voices=engine.getVoices();
 				if(voices!=null) {
-					var loc=Locale.getDefault();
+					var loc=getlocale();
 					var lang=loc.getLanguage();
 					voiceChoice.clear();
 					for(var voice:voices) {

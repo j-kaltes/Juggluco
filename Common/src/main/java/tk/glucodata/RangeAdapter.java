@@ -34,20 +34,10 @@ import java.util.List;
 
 public class RangeAdapter<T> implements SpinnerAdapter {
 private final String LOG_ID="RangeAdapter";
-//Function<T,R> R apply(T t)
-/*
-    public interface Displayer<T> {
-        String displayer(T string);
-    }
-*/
-
     private final LayoutInflater mInflater;
-//private Displayer<T> dist;
 final private Function<T,String> dist;
-//private Activity act;
     private List<T> ar;
     public RangeAdapter(List<T> ar,Context context, Function<T,String> dist) {
-//	act=context;
         this.ar=ar;
        	mInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     this.dist=dist;
@@ -66,13 +56,6 @@ public void	setarray(List<T> arin)  {
 		T str=ar.get(position);
 		((TextView)(convertView.findViewById(android.R.id.text1))).setText(dist.apply(str));
 		}
-	/*
-	 Display display = act.getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        int _width = size.x;
-        convertView.setMaximumWidth(50);
-	*/
         return convertView;
 
     }
@@ -118,7 +101,6 @@ public void	setarray(List<T> arin)  {
 		  T str=ar.get(position);
 		TextView thetext=convertView.findViewById(android.R.id.text1);
 		thetext.setText(dist.apply(str));
-	//        ((TextView)(convertView.findViewById(android.R.id.text1))).setText(str.toString());
 		}
 
 

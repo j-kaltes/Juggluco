@@ -83,6 +83,7 @@ import static tk.glucodata.util.getbutton;
 import static tk.glucodata.util.getcheckbox;
 import static tk.glucodata.util.getlabel;
 import static tk.glucodata.NightPost.getstring;
+import static tk.glucodata.util.getlocale;
 
 public class Libreview  {
 	private static final String LOG_ID="Libreview";
@@ -322,6 +323,7 @@ static boolean postmeasurements(boolean libre3,byte[] measurementdata) {
 			urlConnection.setRequestProperty("Platform","Android");
 			urlConnection.setRequestProperty("Version","3.3.0");
 			urlConnection.setRequestProperty("Abbott-ADC-App-Platform","Android/"+((Object) Build.VERSION.RELEASE) +"/FSL3/3.3.0.9092");
+ 
 			var loc= Locale.getDefault();
 			String language=loc.getLanguage()+'-'+loc.getCountry();
 			urlConnection.setRequestProperty("Accept-Language",language);

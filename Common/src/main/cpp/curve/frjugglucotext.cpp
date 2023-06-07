@@ -103,7 +103,8 @@ jugglucotext frtext {
 		frtext.newamount,
 		"Liste", 
 		"Statistiques",
-		"Parler"
+		"Parler",
+		"Flotter        "
 		},
 	.menustr2= {"Dernier scan","Scans","Flux","Historique","Quantités","Repas","Mode sombre        "},
 	.menustr3= {hourminstr,"Rechercher","Date","Jour avant","Jour après","Semaine avant","Semaine après"},

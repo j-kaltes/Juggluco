@@ -105,7 +105,8 @@ jugglucotext engtext {
 		engtext.newamount,
 		"List", 
 		"Statistics",
-		"Talk"
+		"Talk",
+		"Float        "
 		},
 	.menustr2= {"Last Scan","Scans","Stream","History","Amounts","Meals","Dark mode        "},
 	.menustr3= {hourminstr,"Search","Date","Day back","Day later","Week back","Week later"},

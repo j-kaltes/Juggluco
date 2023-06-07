@@ -176,12 +176,8 @@ static void translate(float dx,float dy) {
 		var xpos= -screenwidth*.5f+xview;
 		var ypos= -screenheight*.5f+yview;
 		var type = (Build.VERSION.SDK_INT < Build.VERSION_CODES.O)?WindowManager.LayoutParams.TYPE_SYSTEM_ALERT: WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
-//		var type = (Build.VERSION.SDK_INT < Build.VERSION_CODES.O)? LayoutParams.TYPE_SYSTEM_OVERLAY: LayoutParams.TYPE_APPLICATION_OVERLAY;
-//		var flags = LayoutParams.FLAG_NOT_FOCUSABLE|WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE;
 		var flags = FLAG_NOT_FOCUSABLE|(Natives.getfloatingTouchable()?0:WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-//		var format= ((floatingbackground&0xFF000000)==0)? PixelFormat.TRANSLUCENT:PixelFormat.OPAQUE;
 		return	 new WindowManager.LayoutParams( floatingwidth,(int)(floatingheight),(int) xpos, (int)ypos, type, flags, PixelFormat.TRANSLUCENT);
-//		var params = new WindowManager.LayoutParams( WRAP_CONTENT, WRAP_CONTENT,(int) xpos, (int)ypos, type, flags);
 	}
 static boolean cannotoverlay()  {
 		if( Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(Applic.app)) {
@@ -271,10 +267,6 @@ protected void onDraw(Canvas floatCanvas) {
 		if(age<oldage) {
 			floatCanvas.drawColor(floatingbackground);
 			floatPaint.setColor(floatingforeground);
-/*			var valuebounds=new Rect();
-			floatPaint.getTextBounds(glucose.value, 0, glucose.value.length(), valuebounds);
-			var h=valuebounds.height();
-			var gety = floatCanvas.getHeight() * 0.98f-.3f*h; */
 			var gety = floatCanvas.getHeight() * 0.98f;
 			var xpos=floatglucosex;
 			var rate=glucose.rate;
@@ -283,11 +275,7 @@ protected void onDraw(Canvas floatCanvas) {
 				 float arrowy = gety - floatfontsize * .4f + (CommonCanvas.glnearnull(rate) ? 0.0f : (weightrate * floatfontsize * .4f));
 				drawarrow(floatCanvas, floatPaint, floatdensity, rate, xpos*.85f, arrowy);
 				}
-			floatCanvas.drawText(glucose.value, xpos, gety, floatPaint);
-/*			var w=valuebounds.width();
-			var y=gety+h*.1f;
-			var x= valuebounds.left;
-			floatCanvas.drawRect( xpos,y,xpos +age*w/oldage,y+h*.1f ,floatPaint); */
+			floatCanvas.drawText(glucose.value, xpos, gety*.9659f, floatPaint);
 			
 			}
 		else

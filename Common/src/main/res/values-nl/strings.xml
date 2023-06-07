@@ -1,4 +1,7 @@
 <resources>
+    <string name="language">nl</string>
+    <string name="languagename">Taal</string>
+
     <string name="app_name">Juggluco</string>
 
     <string name="ok">OK</string>

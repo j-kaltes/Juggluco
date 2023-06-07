@@ -86,7 +86,7 @@ jugglucotext detext {
 .SD="SD: %.2f",
 .glucose_variability="Glukosevariabilität: %.1f%%",
       .menustr0={
-"System UI",
+"System UI       ",
 "Uhren",
 "Sensor",
 "Einstellungen",
@@ -100,7 +100,8 @@ jugglucotext detext {
 detext.newamount,
 "Liste",
 "Statistiken",
-"Sprechen"
+"Sprechen",
+"Schweben       "
 },
 .menustr2= {"Letzter Scan","Scans","Stream","History","Mengen","Mahlzeiten","Dunkelmodus       "},
 .menustr3= {hourminstr,"Suche", "Datum", "Vortag", "Tag später", "Woche zurück", "Woche später"},

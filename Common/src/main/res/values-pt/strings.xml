@@ -1,4 +1,8 @@
 <resources>
+
+    <string name="language">pt</string>
+
+    <string name="languagename">Linguagem</string>
 <string name="app_name">Juggluco</string>
 
 <string name="ok">OK</string>

@@ -31,6 +31,7 @@ import java.util.Locale;
 import tk.glucodata.Applic;
 import tk.glucodata.Log;
 import tk.glucodata.Natives;
+import tk.glucodata.R;
 
 import static android.os.Build.VERSION.RELEASE;
 import static java.lang.System.exit;
@@ -89,7 +90,9 @@ static public boolean setlibrary(Applic con) {
 if(true) {
 	var loc=Locale.getDefault();
        String country=loc.getCountry();
-	var locstr=loc.toString();
+//	var locstr=con.getString(R.string.language);
+	var locstr=loc.getLanguage();
+//	var locstr=getlanguage(con);
 	Applic.curlang=locstr;
         Natives.setlocale(locstr,(tk.glucodata.Applic.hour24=android.text.format.DateFormat.is24HourFormat(con)));
         File files=con.getFilesDir();
@@ -98,8 +101,6 @@ if(true) {
 		if(!files.mkdirs()) {
 			Applic.stopprogram=2;
 			return false;
-//			makefilesfailed();
-//			throw new RuntimeException("Can't access "+filespath);
 			}
 		}
 	int ret=130;
