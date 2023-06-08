@@ -146,8 +146,11 @@ void free() {
 				Natives.setLibre3kAuth(sensorptr,null);
 				}
 			} 
-		if(!stop)
+		if(!stop)  {
+			if(!autoconnect)
+				stop=true;
 			 realdisconnected(status);
+			 }
             }
         }
 

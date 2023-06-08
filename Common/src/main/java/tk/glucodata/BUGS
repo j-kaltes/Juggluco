@@ -1,3 +1,7 @@
+Complaints of US Libre 2 sensor not working amymore with Juggluco.
+
+Some how sometime two overlapping connections to sensor  tried, resulting in none succeeding.
+do now and then a full sync
 Ereader doesn't respect Landscape mode, but Juggluco does assume it does. Dialogs don't wrong.
 Small (time and glucose) lines not good visible on ereader
 	

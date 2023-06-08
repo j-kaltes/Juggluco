@@ -300,9 +300,9 @@ public void searchforDeviceAddress() {
 		Natives.finishSensor(dataptr);
 		}
 	public void close() {
+		stop=true;
 		Log.i(LOG_ID,"close "+SerialNumber);
 		var tmpgatt=mBluetoothGatt ;
-		stop=true;
 		if (tmpgatt != null) {
 			try {
 				tmpgatt.disconnect();
@@ -343,10 +343,11 @@ public void searchforDeviceAddress() {
 				Log.e(LOG_ID,"device==null");
 				return;
 				}
+		
 			if (cb.mBluetoothGatt != null) {
 				Log.d(LOG_ID, SerialNumber + " cb.mBluetoothGatt!=null");
 				return;
-			}
+				} 
 				if (tk.glucodata.Log.doLog) {
 					Log.d(LOG_ID, SerialNumber + " Try connection to " + device.getAddress());
 					}

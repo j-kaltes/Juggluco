@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-<style name="AppTheme" parent="@android:style/Theme.Holo.NoActionBar" >
+<style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
        <item name="windowActionBar">false</item>
     <item name="android:windowActionBar">false</item>
     <item name="android:windowContentOverlay">@null</item>
     <item name="android:textViewStyle">@style/MyTextViewStyle</item>
+     <item name="android:textAppearanceButton">@style/textAppearanceButton</item>
+      <item name="android:spinnerStyle">@android:style/Widget.Holo.Spinner</item>
 </style>
 
+ <style name="textAppearanceButton" parent="@android:style/TextAppearance.Material.Widget.Button">
+        <item name="android:textAllCaps">false</item>
+    </style>
 
 
 <style name="MyTextViewStyle" parent="android:Widget.TextView">

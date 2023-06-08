@@ -79,7 +79,7 @@ android {
         //	targetSdk 26
 	//******  Zet op rollout op 100% ******
 		versionCode  406
-		versionName '2.29.0'
+		versionName '2.29.1'
             	dimension 'libreVersion'
             buildConfigField 'int', 'libreVersion', '2'
 		}
