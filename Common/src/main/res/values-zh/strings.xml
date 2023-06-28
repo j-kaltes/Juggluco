@@ -172,7 +172,7 @@
 <string name="sendto">发送至</string>
 <string name="resenddata">重新发送数据</string>
 <string name="minimum">最小值</string>
-<string name="minuteddeactivated"">停用分钟数：</string>
+<string name="minuteddeactivated">停用分钟数：</string>
 <string name="duractionsec">持续时间（秒）：</string>
 <string name="duraction">持续时间：</string>
 <string name="sec">秒</string>
