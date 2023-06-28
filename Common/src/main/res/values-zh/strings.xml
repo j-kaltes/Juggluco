@@ -21,7 +21,7 @@
 <string name="streamname">流</string>
 <string name="resetname">重置</string>
 <string name="helpname">帮助</string>
-<string name="searchtoast">搜索过去</string>
+<string name="searchtopast">搜索过去</string>
 <string name="nobluetooth">没有蓝牙</string>
 <string name="bluetoothenabled">蓝牙已启用</string>
 <string name="bluetoothdisabled">蓝牙已禁用</string>
@@ -45,7 +45,7 @@
 <string name="portrange">网络端口应介于 1024 和 65535 之间</string>
 <string name="start">开始</string>
 <string name="now">现在</string>
-<string name="dontchangemounts">镜像发送金额</string>
+<string name="dontchangeamounts">镜像发送金额</string>
 <string name="thishost">该主机：</string>
 <string name="dozemode">打瞌睡模式？ </string>
 <string name="sync">同步</string>
@@ -172,7 +172,7 @@
 <string name="sendto">发送至</string>
 <string name="resenddata">重新发送数据</string>
 <string name="minimum">最小值</string>
-<string name="mineddeactivated">停用分钟数：</string>
+<string name="minuteddeactivated"">停用分钟数：</string>
 <string name="duractionsec">持续时间（秒）：</string>
 <string name="duraction">持续时间：</string>
 <string name="sec">秒</string>
