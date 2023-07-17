@@ -30,28 +30,20 @@ A direct connection between Watch 4 and sensor is unusable with nearly half of t
 For more information: https://www.juggluco.nl/JugglucoWearOS
 
 # BUILD Juggluco
-The following files need to be added to run Juggluco and can be found by unzipping a recent Juggluco apk:
+The following files need to be added to run Juggluco and can be found by unzipping a recent (>=5.1.3) Juggluco apk:
 https://www.juggluco.nl/Juggluco/download.html
 
-./Common/src/main/jniLibs/x86_64/libcalibrat2.so  
-./Common/src/main/jniLibs/x86_64/libcalibrate.so  
-./Common/src/main/jniLibs/armeabi-v7a/libcalibrat2.so  
-./Common/src/main/jniLibs/armeabi-v7a/libcalibrate.so  
-./Common/src/main/jniLibs/x86/libcalibrat2.so  
-./Common/src/main/jniLibs/x86/libcalibrate.so  
-./Common/src/main/jniLibs/arm64-v8a/libcalibrat2.so  
-./Common/src/main/jniLibs/arm64-v8a/libcalibrate.so  
-  
-./Common/src/libre3/jniLibs/x86_64/libcrl_dp.so  
-./Common/src/libre3/jniLibs/x86_64/liblibre3extension.so  
-./Common/src/libre3/jniLibs/x86_64/libinit.so  
-./Common/src/libre3/jniLibs/armeabi-v7a/libcrl_dp.so  
-./Common/src/libre3/jniLibs/armeabi-v7a/liblibre3extension.so  
-./Common/src/libre3/jniLibs/armeabi-v7a/libinit.so  
-./Common/src/libre3/jniLibs/x86/libcrl_dp.so  
-./Common/src/libre3/jniLibs/x86/liblibre3extension.so  
-./Common/src/libre3/jniLibs/x86/libinit.so  
-./Common/src/libre3/jniLibs/arm64-v8a/libcrl_dp.so  
-./Common/src/libre3/jniLibs/arm64-v8a/liblibre3extension.so  
-./Common/src/libre3/jniLibs/arm64-v8a/libinit.so  
-  
+
+libcalibrat2.so  libcalibrate.so  and libus.so in lib/* of the APK should be put in the corresponding directories in:
+
+./Common/src/main/jniLibs/x86_64/
+./Common/src/main/jniLibs/armeabi-v7a/
+./Common/src/main/jniLibs/x86/
+./Common/src/main/jniLibs/arm64-v8a/
+
+libcrl_dp.so  liblibre3extension.so  and libinit.so  in the corresponding directories of:
+./Common/src/libre3/jniLibs/x86_64/
+./Common/src/libre3/jniLibs/armeabi-v7a/
+./Common/src/libre3/jniLibs/x86/
+./Common/src/libre3/jniLibs/arm64-v8a/
+
