@@ -17,10 +17,10 @@
 /*      along with Juggluco. If not, see <https://www.gnu.org/licenses/>.            */
 /*                                                                                   */
 /*      Fri Jan 27 12:35:09 CET 2023                                                 */
-
-
+///data/dalvik-cache/i386/system@framework@XposedBridge.jar@classes.dex/.trdpx
+///data/dalvik-cache/i386/system@framework@arm64@boot.oat@xposed
 constexpr const std::string_view statnames[] = {
-#if defined(__aarch64__) ||  defined(__arm__) || defined(__i386__)
+#if defined(__aarch64__) ||  defined(__i386__)
 	"/data/dalvik-cache/" archname "/system@framework@" archname "@boot.oat@xposed",
 	"/data/dalvik-cache/oat/" archname "/xposed_XTypedArraySuperClass.odex",
 #else
@@ -43,7 +43,9 @@ constexpr const std::string_view statnames[] = {
 	"/su/bin/su",
 	"/system/bin/app_process64_xposed",
 	"/system/bin/su",
-	"/system/lib/libxposed_art.so",
+	R"(/system/lib/libriruloader.so)",
+	R"(/system/lib/libxposed_art.so)",
+	R"(/system/lib64/libriruloader.so)",
 	"/system/xbin/bstk/su",
 	"/system/xbin/daemonsu",
 	"/system/xbin/su"};

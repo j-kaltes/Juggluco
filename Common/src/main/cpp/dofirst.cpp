@@ -18,14 +18,25 @@
 /*                                                                                   */
 /*      Fri Jan 27 12:35:35 CET 2023                                                 */
 
+extern bool globalsetpathworks;
+bool globalsetpathworks=false;
 
 
 #include "config.h"
 #include <string_view>
-#if defined(LIBRE3)
+
+#include "inout.h"
+
+#if ! defined(NEEDSPATH)
+pathconcat mkbindir(std::string_view subdir,std::string_view libname ) {
+	return "";
+	}
+
+void usepath(std::string_view libdirname,std::string_view filesdir) {
+	}
+#else
 #include <sys/stat.h>
 #include <string.h>
-#include "inout.h"
 #define _GNU_SOURCE 1
 #include <dlfcn.h>
 #include "settings/settings.h"
@@ -38,8 +49,8 @@ static const char *owerjslkdfjlsdQQ(void) {
 } */
 extern int setenv(const char *name, const char *value, int overwrite);
 
-static bool	getpathworks() {
 extern std::string_view globalbasedir;
+static bool	getpathworks() {
 	pathconcat testprog(globalbasedir,"testprog");
 	const char commando[]{"#!/system/bin/sh\ntrue\n"};
 	writeall(testprog,commando,sizeof(commando)-1);
@@ -55,27 +66,20 @@ extern std::string_view globalbasedir;
 	}
 
 
-extern bool globalsetpathworks;
-bool globalsetpathworks=false;
-void usepath(std::string_view libdirname,std::string_view filesdir) {
-	globalsetpathworks=getpathworks();
-#if defined(__aarch64__) 
-   if(settings->data()->triedasm&&!settings->data()->asmworks&& globalsetpathworks) 
-#else
-   if(globalsetpathworks) 
-#endif
-	{
-	pathconcat bindir(filesdir, "bin");
-	const char *bindirstr=bindir.data();
-	LOGGER("usepath(%s) use\n",libdirname.data());
-	mkdir(filesdir.data(),0700);
-
-	mkdir(bindirstr,0700);
-	LOGGER("FILESDIR=%s, bindir=%s\n",filesdir.data(),bindirstr);
+/*
 	if(setenv("PATH", bindirstr, 1)) {
 		flerror("setenv(PATH,%s,1)\n",bindirstr);
-		}
+		} */
 
+extern std::string_view libdirname;
+pathconcat mkbindir(std::string_view subdir,std::string_view libname ) {
+
+	pathconcat bindir(globalbasedir, subdir);
+	const char *bindirstr=bindir.data();
+	LOGGER("usepath(%s) use\n",libdirname.data());
+
+	mkdir(bindirstr,0700);
+	LOGGER("FILESDIR=%s, bindir=%s\n",globalbasedir.data(),bindirstr);
 
 const char pmcomstart[]=R"(export PATH=/system/bin
 echo package:)";
@@ -86,14 +90,15 @@ echo package:)";
 
 
 	int pathlen=libdirname.size();
-	constexpr const char endname[]="/libinit.so";
-	constexpr const int endnamelen=sizeof(endname)-1;
-extern std::string_view libdirname;
-	char pmcom[pmstartlen+pathlen+endnamelen+2];
+//	constexpr const char endname[]="/libinit.so";
+	 const char *endname=libname.data();
+	 const int endnamelen=libname.size();
+	char pmcom[pmstartlen+pathlen+endnamelen+3];
 	memcpy(pmcom,pmcomstart,pmstartlen);
 	int pos=pmstartlen;
 	memcpy(pmcom+pos,libdirname.data(),pathlen);
 	pos+=pathlen;
+	pmcom[pos++]='/';
 	memcpy(pmcom+pos,endname,endnamelen);
 	pos+=endnamelen;
 	strcpy(pmcom+pos,"\n");
@@ -106,12 +111,24 @@ extern std::string_view libdirname;
 
  	writeall(app,pmcom,pos);
 	chmod(app, 0755);
+	return bindir;
+	}
+
+
+pathconcat libre3path;
+void usepath(std::string_view libdirname,std::string_view filesdir) {
+LOGAR("usepath");
+	globalsetpathworks=getpathworks();
+#if defined(__aarch64__) 
+   if(settings->data()->triedasm&&!settings->data()->asmworks&& globalsetpathworks) 
+#else 
+   if(globalsetpathworks) 
+#endif 
+	{
+	LOGGER("usepath(%s) use \n",libdirname.data());
 	}
 else  {
 	LOGGER("usepath(%s) dont use \n",libdirname.data());
 	}
-	}
-#else
-void usepath(std::string_view) {
 	}
 #endif

@@ -448,11 +448,13 @@ void startlibrelink(String lang) {
 					};break;
 
                                 case 4: {
-									MainActivity activity = (MainActivity) getContext();
-									doabout(activity);
+ 					{
+					MainActivity activity = (MainActivity) getContext();
+					doabout(activity);
+					}
 
 
-									break;
+					break;
 					}
                                 case 5: //((Activity) getContext()).finish(); break;
 				      ((Activity) getContext()).moveTaskToBack(true);break; //keeps current state 

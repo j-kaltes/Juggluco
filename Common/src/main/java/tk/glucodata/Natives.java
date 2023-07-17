@@ -666,7 +666,7 @@ public static native void setlibrenum(int night,int index,int kind, float weight
 public static native int getlibrenumkind(int night,int index);
 public static native float getlibrefoodweight(int night,int index);
 public static native boolean canSendNumbers(int night);
-
+public static native int getinfogen(byte[] info);
 
 //s/^extern.*JNIEXPORT[         ]*\([a-zA-Z]*\)[ ]*JNICALL[      ]*fromjava(\([^)]*\)) *(JNIEnv[^,]*,[^,)]*[,)]\([^){]*\)[^a-zA-Z0-9]*$/public static native \1 \2(\3);/g
 //public static native void sendxdripold();

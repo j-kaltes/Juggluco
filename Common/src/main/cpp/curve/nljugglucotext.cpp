@@ -123,7 +123,7 @@ static jugglucotext nltext {
 		{"Sensor activeren",""},
 		{"Sensor is volledig opgebruikt",""},
 		{"Sensor klaar in","%d minuten"},
-		{"373: Sensorfout","Bel nou niet onmiddelijk Abbott's klantenservice; misschien werkt hij wel weer in 10 minuten."},
+		{"373: Sensorfout","Probeer het later nog eens"},
 		{"Nieuwe sensor geïnitialiseed","Scan nog eens om hem te gebruiken"},
 		{"","Reageert niet op aanraking tijdens scannen"},
 		{"",""},

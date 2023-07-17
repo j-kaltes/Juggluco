@@ -192,3 +192,13 @@ int main(int argc,char **argv) {
 	}
 
 #endif
+//#define UNSERIAL
+#ifdef UNSERIAL
+int main(int argc,char **argv) {
+	auto uid=unserial(argv[1]);
+	for(auto el:uid) {
+		printf("%02X ",el);
+		}
+	puts("");
+	}
+#endif

@@ -110,8 +110,9 @@ extern "C" JNIEXPORT jboolean JNICALL   fromjava(removebylabel)(JNIEnv *env, jcl
 	} */
 
 #ifndef ABBOTT
-passhost_t * getwearoshost(const bool create,const char *label,bool);
+passhost_t * getwearoshost(const bool create,const char *label,bool,bool=false);
 bool resetbylabel(const char *label,bool galaxy) {
+	
 	int pos=getposbylabel(label);
 	if(pos<0)
 		return false;
@@ -120,8 +121,9 @@ bool resetbylabel(const char *label,bool galaxy) {
 	if(nr>0) {
 		struct sockaddr_in6 ips[host.nr];
 		memcpy(ips,host.ips,sizeof(ips));
-		backup->deletehost(pos);
-		passhost_t *newhost=getwearoshost(true,label,galaxy);
+//		backup->deletehost(pos);
+
+		passhost_t *newhost=getwearoshost(true,label,galaxy,true);
 		memcpy(newhost->ips,ips,sizeof(ips));
 		newhost->nr=nr;
 		}
@@ -134,6 +136,7 @@ bool resetbylabel(const char *label,bool galaxy) {
 extern "C" JNIEXPORT jboolean JNICALL   fromjava(resetbylabel)(JNIEnv *env, jclass cl,jstring jlabel,jboolean galaxy) {
       const char *label = env->GetStringUTFChars( jlabel, NULL);
         if(!label) return false;
+	LOGGER("resetbylabel(%s,%d)\n",label,galaxy);
         destruct   dest([jlabel,label,env]() {env->ReleaseStringUTFChars(jlabel, label);});
 	return resetbylabel(label,galaxy);
 	}
@@ -276,6 +279,7 @@ extern std::mutex change_host_mutex;
 #endif
 extern "C" JNIEXPORT jint JNICALL   fromjava(changebackuphost)(JNIEnv *env, jclass cl,jint pos,jobjectArray jnames,jint nr,jboolean detect,jstring jport,jboolean nums,jboolean stream,jboolean scans,jboolean recover,jboolean receive,jboolean activeonly,jboolean passiveonly,jstring jpass,jlong starttime,jstring jlabel,jboolean testip) {
 #ifndef TESTMENU
+	LOGAR("changebackuphost const std::lock_guard<std::mutex> lock(change_host_mutex)");
   const std::lock_guard<std::mutex> lock(change_host_mutex);
 #endif
 	jint portlen= env->GetStringUTFLength( jport);

@@ -932,8 +932,8 @@
 
 
     jstring      subNewStringUTF(JNIEnv*env,const char * const1) {
-   LOGSTRING("NewStringUTF\n");
-
+   LOGGER("NewStringUTF(%s)\n",const1);
+   return nullptr;
    }
 
 
@@ -1186,11 +1186,6 @@
 
    }
 
-
-    jint         subRegisterNatives(JNIEnv*env,jclass  jclass1,const JNINativeMethod * const2,jint  jint3) {
-   LOGSTRING("RegisterNatives\n");
-
-   }
 
 
     jint         subUnregisterNatives(JNIEnv*env,jclass  jclass1) {

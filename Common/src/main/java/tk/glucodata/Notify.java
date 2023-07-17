@@ -31,10 +31,10 @@ import static java.lang.Float.isNaN;
 import static java.lang.String.format;
 import static tk.glucodata.Applic.TargetSDK;
 import static tk.glucodata.Applic.app;
-import static tk.glucodata.Applic.isRelease;
 import static tk.glucodata.Applic.isWearable;
 import static tk.glucodata.Applic.usedlocale;
 import static tk.glucodata.CommonCanvas.drawarrow;
+import static tk.glucodata.Log.doLog;
 import static tk.glucodata.Natives.getUSEALARM;
 import static tk.glucodata.Natives.getalarmdisturb;
 import static tk.glucodata.Natives.getisalarm;
@@ -161,7 +161,6 @@ private static float density;
 static float glucosesize;
 private static int notglucosex;
 
-//final private static boolean whiteonblack=isRelease?true:false;
 final private static boolean whiteonblack=false;
 @ColorInt private static int foregroundcolor=BLACK;
 
@@ -409,7 +408,7 @@ static public String glucosestr(float gl) {
 						doplaysound[0]=false;
 				}
 			}
-			if(!isRelease) {
+			if(doLog) {
 				Log.d(LOG_ID,"play "+ring.getTitle(app));
 			}
 			if(doplaysound[0])
@@ -426,7 +425,7 @@ static public String glucosestr(float gl) {
 				Log.d(LOG_ID,"runstopalarm  isalarm");
 				if(sound) {
 					if(doplaysound[0])  {
-						if(!isRelease) {
+						if(doLog) {
 							Log.d(LOG_ID,"stop sound "+ring.getTitle(app));
 						}
 						ring.stop();
@@ -449,7 +448,7 @@ static public String glucosestr(float gl) {
 				setisalarm(false);
 			}
 			else  {
-				if(!isRelease) {
+				if(doLog) {
 					Log.d(LOG_ID,"runstopalarm not isalarm "+ring.getTitle(app));
 				}
 			}

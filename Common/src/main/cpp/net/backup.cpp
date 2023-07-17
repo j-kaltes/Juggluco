@@ -241,11 +241,11 @@ void receiversockopt(int new_fd) {
 	if(setsockopt(new_fd, IPPROTO_TCP, TCP_KEEPCNT, &keepcnt, sizeof keepcnt)<0) {
 		flerrortag("setsockopt(%d,TCP_KEEPCNT ) failed",new_fd);
 	    }
-	   const int keepidle = 60;
+	   const int keepidle = 50;
 	   if(setsockopt(new_fd, IPPROTO_TCP, TCP_KEEPIDLE, &keepidle, sizeof(keepidle)) < 0) {
 		flerrortag("setsockopt(%d,TCP_KEEPIDLE, ) failed",new_fd);
 		 }
-	   const int keepintvl = 60;
+	   const int keepintvl = 45;
 	   if(setsockopt(new_fd, IPPROTO_TCP, TCP_KEEPINTVL, &keepintvl, sizeof(keepintvl)) < 0) {
 		flerrortag("setsockopt(%d,TCP_KEEPINTVL, ) failed",new_fd);
 		 }

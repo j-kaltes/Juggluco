@@ -105,7 +105,7 @@ static jugglucotext zhtext {
 	"深色模式",
         "设置",
 	"停止闹钟"},
-.menustr2= {"日期",hourminstr,"日后",engtext.amount},
+.menustr2= {"日期",hourminstr,"日后",zhtext.amount},
 #endif
 
 	.scanerrors={

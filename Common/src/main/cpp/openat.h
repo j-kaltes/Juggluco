@@ -18,16 +18,16 @@
 /*                                                                                   */
 /*      Fri Jan 27 12:35:09 CET 2023                                                 */
 
-
+//R"(/data/dalvik-cache/)" archname R"(/system@framework@)" archname R"(@boot-framework.oat@xposed)"
 constexpr const std::string_view opennames[] = { 
-#if defined(__aarch64__) ||  defined(__arm__) || defined(__i386__)
-R"(/data/dalvik-cache/)" archname R"(/system@framework@" archname "@boot-framework.oat@xposed)",
+#if defined(__aarch64__)  || defined(__i386__)
+R"(/data/dalvik-cache/)" archname R"(/system@framework@)" archname R"(@boot-framework.oat@xposed)",
 R"(/data/dalvik-cache/oat/)" archname R"(/xposed_XTypedArraySuperClass.odex)",
 #else
 R"(/data/dalvik-cache/oat/)" archname R"(/xposed_XTypedArraySuperClass.odex)",
 R"(/data/dalvik-cache/)" archname R"(/system@framework@" archname "@boot-framework.oat@xposed)",
 #endif
-"/data/dalvik-cache/xposed_XResourcesSuperClass.dex",
+R"(/data/dalvik-cache/xposed_XResourcesSuperClass.dex)",
 R"(/root/magisk)",
 R"(/sbin/amphoras)",
 R"(/sbin/daemonsu)",
@@ -38,6 +38,8 @@ R"(/system/bin/amphoras)",
 R"(/system/bin/daemonsu)",
 R"(/system/bin/su)",
 R"(/system/framework/XposedBridge.jar)",
+R"(/system/lib/libriruloader.so)",
+R"(/system/lib64/libriruloader.so)",
 R"(/system/sbin/amphoras)",
 R"(/system/sbin/daemonsu)",
 R"(/system/sbin/su)",

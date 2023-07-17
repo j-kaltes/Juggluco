@@ -883,6 +883,7 @@ void		notpassive(uintptr_t current,int sendindex) {
 			}
 	}
 bool doend(int sendindex) {
+	LOGGER("doend: con_vars=%p\n",con_vars[sendindex]);
 	  if(con_vars[sendindex]->dobackup&wakeend)  {
 		endbackupthread(sendindex);
 		return true;
@@ -924,11 +925,11 @@ int updateproc(condvar_t *varsptr,uintptr_t cond,updateone &shost,int  (updateon
 
 
   void	endbackupthread(int h) {
+	LOGGER("%d: end backupthread  %p\n",h,con_vars[h]);
 #ifndef TESTMENU
   	const std::lock_guard<std::mutex> lock(change_host_mutex);
 #endif
 
-	LOGGER("%d: end backupthread  %p\n",h,con_vars[h]);
 	getupdatedata()->tosend[h].close();
 	delete con_vars[h];
 	con_vars[h]=nullptr;

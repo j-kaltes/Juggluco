@@ -9,7 +9,8 @@
 
     <application
      android:usesCleartextTraffic="true"
-        android:debuggable="true"
+
+
         android:name="tk.glucodata.Applic"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
@@ -17,7 +18,8 @@
 	android:persistent="true"
         android:extractNativeLibs="true" 
 	android:localeConfig="@xml/locales_config"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:ignore="HardcodedDebugMode">
         <activity
             android:name="tk.glucodata.MainActivity"
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|uiMode|fontScale|locale"

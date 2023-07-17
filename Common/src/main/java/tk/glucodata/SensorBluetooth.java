@@ -48,6 +48,7 @@ import androidx.annotation.RequiresApi;
 import static android.bluetooth.BluetoothProfile.GATT;
 import static tk.glucodata.Applic.isWearable;
 import static tk.glucodata.BuildConfig.libreVersion;
+import static tk.glucodata.Log.doLog;
 
 public class SensorBluetooth {
 static void	setAutoconnect(boolean val) {
@@ -224,7 +225,7 @@ final	private ScanSettings mScanSettings;
 
 		@Override 
 		public void onScanFailed(int errorCode) {
-   		   if(!tk.glucodata.Applic.isRelease) {
+   		   if(doLog) {
 			    final String[] scanerror={"SCAN_0",
 				    "SCAN_FAILED_ALREADY_STARTED",
 				    "SCAN_FAILED_APPLICATION_REGISTRATION_FAILED",

@@ -177,9 +177,9 @@ static jlong save3current(SensorGlucoseData *sens, const oneminute *minptr) {
 		}
 	else {
 		sens->savepollallIDsonly(now,minptr->lifeCount,0,0,NAN);
-		if(curval==32800) {
+/*		if(curval==32800) {
 			sens->replacesensor=true;
-			}
+			}*/
 		sens->sensorerror=true;
 		LOGGER("save3current %d invalid value=%d\n",minptr->lifeCount,curval);
 		}

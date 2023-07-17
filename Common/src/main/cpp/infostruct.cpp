@@ -41,16 +41,18 @@ int32_t endhistory;  //In reality one past last pos. Previously said wrong.
 uint32_t scancount;
 uint16_t startid;
 uint16_t interval;
-uint16_t reserved;
+uint16_t pollstart;
 uint8_t dupl;
 uint8_t days;
 //uint32_t reserved2[2];
-uint32_t pollcountwas;
-uint32_t lockcountwas;
+uint32_t pin;
+uint16_t lastLifeCountReceived;
+uint16_t lastHistoricLifeCountReceivedPos;
 struct { int len;
 	signed char data[8];
 	} ident;
-struct { int len;
+struct { 
+	int len;
 	signed char data[6];
 	} info;
 uint32_t bluestart;	
@@ -60,26 +62,42 @@ union {
 		uint8_t sensorgen;
 		bool reserved2;
 		} blueinfo;
-	uint8_t streamingAuthenticationData[10];
+	uint8_t streamingAuthenticationData[12];
 	};
 uint32_t pollcount;
 double pollinterval; 
 uint32_t lockcount;
-//int streamingIsEnabled;
 int8_t streamingIsEnabled;
-uint8_t reserved4[3];
+int8_t patchState;
+uint8_t reserved4[2];
 char deviceaddress[deviceaddresslen];
 uint16_t libreviewscan;
-//bool libresendall:1;
-uint16_t libreviewid;
+uint8_t authlen;
+uint8_t reserved:6;
+bool sendsensorstart:1;
+bool libreviewsendall:1;
 uint16_t libreviewnotsend:14;
 bool prunedstream:1;
 bool putsensor:1;
-updatestate update[maxsendtohost];
+updatestate update[std::max(maxsendtohost,8)];
+uint8_t kAuth[149];
+bool haskAuth;
+uint16_t nightiter;
+
+
 
 } ;
 
 
+
+
+#define poff(var) printf(#var " %zd\n",offsetof(Info,var));
 int main() {
-	cout<<offsetof(Info,libreviewid)<<endl;
+	poff(bluestart);
+	poff(blueinfo.len);
+	poff(streamingAuthenticationData);
+	poff(pollcount);
+	poff(libreviewscan);
+	poff(authlen);
+	poff(update);
 	}

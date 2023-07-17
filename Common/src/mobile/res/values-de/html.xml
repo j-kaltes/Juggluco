@@ -938,19 +938,11 @@ xDrip selbst deaktivieren, wenn Sie den in Juggluco verwenden
 möchten.</p>
 <h2 class="western" align="left">xDrip Broadcast</h2>
 <p align="left" style="line-height: 100%; margin-bottom: 0in">Senden
-Sie dieselbe Broadcast, die in xDrip aktiviert ist mit
-„<span lang="de-DE"><i>Einstellungen-&gt;Inter-App
-Einstellingen-&gt;Lokaler Broadcast</i></span>“
-(com.eveningoutpost.dexdrip.BgEstimate). Apps wie AndroidAPS hören
-darauf. Apps, die auf Android 11 oder höher abzielen, müssen
-AndroidManifest.xml Folgendes hinzufügen, damit sie funktionieren:</p>
-<p>&lt;queries&gt; <br/>
-&nbsp;&nbsp; &lt;package
-android:name=&quot;tk.glucodata&quot;/&gt; <br/>
-&lt;/queries&gt; 
-</p>
-<p align="left">Jede Minute sendet Juggluco einen Glukosewert an alle
-Anwendungen, die ihn abhören.</p>
+Sie die gleiche Broadcast, die in xDrip mit
+„Einstellungen-&gt;Inter-App-Einstellungen-&gt;Lokaler Broadcast“
+aktiviert wurde. Apps wie AndroidAPS hören es sich an. Im Gegensatz
+zur ursprünglichen xDrip-Broadcast, die alle 5 Minuten ausgestrahlt
+wurde, sendet Juggluco diese Broadcast jede Minute.</p>
 <h2 class="western" align="left">Glucodata Broadcast</h2>
 <p align="left" style="line-height: 100%; margin-bottom: 0in">Eine
 neue Broadcast, die dieselbe Funktion wie die xDrip Broadcast hat.

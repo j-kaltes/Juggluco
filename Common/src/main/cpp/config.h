@@ -21,11 +21,17 @@
 
 #ifndef CONFIG_H
 #define CONFIG_H
-#define HASP1
+
+#ifndef NOLOG
 #ifdef WEAROS
-#define CARRY_LIBS 1
+#define LOGCAT 1
 #endif
+#endif
+
+#define HASP1 1
 #define CARRY_LIBS 1
+#define NEWUS 1
+
 #endif
 #ifndef APPSUFFIX
 #define APPSUFFIX ""
@@ -44,8 +50,18 @@
 	#endif
 	#endif
 #endif
-#endif
 
 #define FILESDIR BASEDIR
 //#define CHANGECODE=1
 #define REALPATH 1
+
+#endif
+
+#if defined(NEWUS) 
+#ifdef ALWAYSPATH 
+#define NEEDSPATH 1
+#endif
+#endif
+#if defined(LIBRE3)
+#define NEEDSPATH 1
+#endif

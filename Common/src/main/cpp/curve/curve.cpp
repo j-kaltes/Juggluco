@@ -179,6 +179,102 @@ float valuesize=0;
 
 float facetimefontsize,facetimey;
 void resetcurvestate();
+static bool chfontset=false;
+
+bool chinese();
+static void initfont() { 
+LOGAR("initfont");
+if(!genVG) {
+	LOGAR("genVG==null");
+	return;
+	}
+if(chinese()) {
+	font=whitefont=blackfont = nvgCreateFont(genVG, "dance-bold","/system/fonts/NotoSansCJK-Regular.ttc");
+
+	menufont = nvgCreateFont(genVG, "regular", "/system/fonts/NotoSerifCJK-Regular.ttc");
+//TODO free font ???
+	chfontset=true;
+	}
+	else  {
+	chfontset=false;
+
+constexpr const char standardfonts[][41]= {
+"/system/fonts/Roboto-Black.ttf",
+"/system/fonts/SourceSansPro-Bold.ttf",
+"/system/fonts/NotoSerif-Bold.ttf",
+"/system/fonts/DroidSans-Bold.ttf",
+"/system/fonts/SourceSansPro-SemiBold.ttf",
+"/system/fonts/Roboto-Regular.ttf",
+};
+
+
+
+constexpr const char menufonts[][41]={
+"/system/fonts/Roboto-Medium.ttf",
+"/system/fonts/SourceSansPro-SemiBold.ttf",
+"/system/fonts/NotoSerif.ttf",
+"/system/fonts/SourceSansPro-Regular.ttf",
+"/system/fonts/Roboto-Regular.ttf",
+"/system/fonts/DroidSans.ttf"};
+
+	for(const char *name:standardfonts)  {
+		if((blackfont = nvgCreateFont(genVG, "dance-bold", name))!=-1)
+			break;
+		}
+	if((whitefont= nvgCreateFont(genVG, "dance-bold", "/system/fonts/Roboto-Regular.ttf"))==-1)
+		whitefont=blackfont;
+
+	for(const char *name:menufonts)  {
+		if((menufont = nvgCreateFont(genVG, "regular", name))!=-1)
+			break;
+		}
+	if(invertcolors)
+		font=whitefont;
+	else
+		font=blackfont;
+		}
+
+	nvgFontFaceId(genVG,font);
+	nvgFontSize(genVG, headsize);
+	constexpr const char smaller[]="<";
+	bounds_t bounds;
+	nvgTextBounds(genVG, 0,  0, smaller,smaller+sizeof(smaller)-1, bounds.array);
+	smallerlen=bounds.xmax-bounds.xmin;
+
+	nvgTextMetrics(genVG, nullptr,nullptr, &headheight);
+	headheight*=0.7;
+	nvgFontSize(genVG, smallsize);
+	nvgTextMetrics(genVG, nullptr,nullptr, &smallfontlineheight);
+	constexpr const char timestring[]="29:59";
+	nvgTextBounds(genVG, 0,  0, timestring,timestring+sizeof(timestring)-1, bounds.array);
+	timelen=bounds.xmax-bounds.xmin;
+
+	const char listitem[]="39-08-2028 09-59 RRRRRRRRRRR 999.9";     
+	nvgTextBounds(genVG, 0,  0, listitem,listitem+sizeof(listitem)-1, bounds.array);
+	listitemlen=bounds.xmax-bounds.xmin+smallsize;
+
+	constexpr const char exampl[]="0M0063KNUJ0";
+	float xhalf=dwidth/2;
+	float yhalf=dheight/2;
+	nvgFontSize(genVG, mediumfont);
+	nvgTextAlign(genVG,NVG_ALIGN_LEFT|NVG_ALIGN_TOP);
+	 nvgTextBounds(genVG, xhalf,  yhalf,exampl, exampl+sizeof(exampl)-1,(float *)&sensorbounds);
+	 sensorbounds.right-=sensorbounds.left;
+	 sensorbounds.bottom-=sensorbounds.top;
+	 sensorbounds.left-=xhalf;
+	 sensorbounds.top-=yhalf;
+	 LOGGER("sensorbounds.left=%.1f\n",sensorbounds.left);
+	valuesize=sensorbounds.right*2;
+	 fixatex=settings->data()->fixatex;
+	 fixatey=settings->data()->fixatey;
+	 if(fixatex)
+	 	duration=settings->data()->duration;
+	createcolors();
+	invertcolors=settings->data()->invertcolors;
+         startincolors=startbackground*invertcolors;
+	 }
+
+
 void	initopengl(int started)  {
 	if(!started) {
 	    resetcurvestate();
@@ -211,83 +307,7 @@ void	initopengl(int started)  {
 		return ;
 		}
 	::genVG=genVG;
-	
-
-const char standardfonts[][41]= {
-"/system/fonts/Roboto-Black.ttf",
-"/system/fonts/SourceSansPro-Bold.ttf",
-"/system/fonts/NotoSerif-Bold.ttf",
-"/system/fonts/DroidSans-Bold.ttf",
-"/system/fonts/SourceSansPro-SemiBold.ttf",
-"/system/fonts/Roboto-Regular.ttf",
-};
-
-
-const char menufonts[][41]={
-"/system/fonts/Roboto-Medium.ttf",
-"/system/fonts/SourceSansPro-SemiBold.ttf",
-"/system/fonts/NotoSerif.ttf",
-"/system/fonts/SourceSansPro-Regular.ttf",
-"/system/fonts/Roboto-Regular.ttf",
-"/system/fonts/DroidSans.ttf"};
-
-	for(const char *name:standardfonts)  {
-		if((blackfont = nvgCreateFont(genVG, "dance-bold", name))!=-1)
-			break;
-		}
-	if((whitefont= nvgCreateFont(genVG, "dance-bold", "/system/fonts/Roboto-Regular.ttf"))==-1)
-		whitefont=blackfont;
-
-	for(const char *name:menufonts)  {
-		if((menufont = nvgCreateFont(genVG, "regular", name))!=-1)
-			break;
-		}
-	if(invertcolors)
-		font=whitefont;
-	else
-		font=blackfont;
-
-	nvgFontFaceId(genVG,font);
-	nvgFontSize(genVG, headsize);
-	constexpr const char smaller[]="<";
-	bounds_t bounds;
-	nvgTextBounds(genVG, 0,  0, smaller,smaller+sizeof(smaller)-1, bounds.array);
-	smallerlen=bounds.xmax-bounds.xmin;
-
-	nvgTextMetrics(genVG, nullptr,nullptr, &headheight);
-	headheight*=0.7;
-	nvgFontSize(genVG, smallsize);
-	nvgTextMetrics(genVG, nullptr,nullptr, &smallfontlineheight);
-	constexpr const char timestring[]="29:59";
-	nvgTextBounds(genVG, 0,  0, timestring,timestring+sizeof(timestring)-1, bounds.array);
-	timelen=bounds.xmax-bounds.xmin;
-
-
-
-
-	const char listitem[]="39-08-2028 09-59 RRRRRRRRRRR 999.9";     
-	nvgTextBounds(genVG, 0,  0, listitem,listitem+sizeof(listitem)-1, bounds.array);
-	listitemlen=bounds.xmax-bounds.xmin+smallsize;
-
-	constexpr const char exampl[]="0M0063KNUJ0";
-	float xhalf=dwidth/2;
-	float yhalf=dheight/2;
-	nvgFontSize(genVG, mediumfont);
-	nvgTextAlign(genVG,NVG_ALIGN_LEFT|NVG_ALIGN_TOP);
-	 nvgTextBounds(genVG, xhalf,  yhalf,exampl, exampl+sizeof(exampl)-1,(float *)&sensorbounds);
-	 sensorbounds.right-=sensorbounds.left;
-	 sensorbounds.bottom-=sensorbounds.top;
-	 sensorbounds.left-=xhalf;
-	 sensorbounds.top-=yhalf;
-	 LOGGER("sensorbounds.left=%.1f\n",sensorbounds.left);
-	valuesize=sensorbounds.right*2;
-	 fixatex=settings->data()->fixatex;
-	 fixatey=settings->data()->fixatey;
-	 if(fixatex)
-	 	duration=settings->data()->duration;
-	createcolors();
-	invertcolors=settings->data()->invertcolors;
-         startincolors=startbackground*invertcolors;
+   	initfont();	
 	 }
 
 
@@ -1045,7 +1065,7 @@ pair<float,float> drawtrender(NVGcontext* genVG,const std::array<uint16_t,16> &t
 	const float mid=(lowval+highval)/2.0;
 	LOGGER("width=%.0f, height=%.0f\n",w,h);
 	LOGGER("low=%.0f,high=%.0f,mid=%.0f\n",lowval,highval,mid);
-	constexpr float hglurange=2*180;
+	constexpr float hglurange=2*convfactor;
 	const auto gety=[y,h,mid](const short val)->float  { return y+h/2.0-(((val-mid)/hglurange)*h);};
 	const int step=w/(trend::num-1);
 	nvgBeginPath(genVG);
@@ -1060,7 +1080,7 @@ pair<float,float> drawtrender(NVGcontext* genVG,const std::array<uint16_t,16> &t
 	float pos0=gety(glu0);
 	float posx= x+i*step;
 	 nvgMoveTo(genVG,posx ,pos0);
-	LOGGER("%.1f (%hi) (%.0f,%.0f)\n",glu0/180.0,glu0,posx,pos0);
+	LOGGER("%.1f (%hi) (%.0f,%.0f)\n",glu0/convfactor,glu0,posx,pos0);
 	posx+=step;
 	float posy;
 	i++;
@@ -1068,7 +1088,7 @@ pair<float,float> drawtrender(NVGcontext* genVG,const std::array<uint16_t,16> &t
 		short glu=trend[i];
 		if(glu) {
 			posy=gety(glu);
-			LOGGER("%.1f (%hi) (%.0f,%.0f)\n",glu/180.0,glu,posx,posy);
+			LOGGER("%.1f (%hi) (%.0f,%.0f)\n",glu/convfactor,glu,posx,posy);
 			nvgLineTo( genVG,posx ,posy);
 			}
 		}
@@ -1276,8 +1296,9 @@ template <class LT> void glucoselines(const float last,const float smallfontline
 	const double yscale=transy(1)-transy(0);
 	const float mindisunit=smallsize*1.5;
 	const float minst=abs(mindisunit/yscale);
-	const float unit=settings->usemmolL()?0.5*180.0:100;
-	const float unit2=unit*2;
+	bool ismmolL=settings->usemmolL();
+	const double unit=ismmolL?0.5*convfactor:100;
+	const double unit2=unit*2;
 
 	uint32_t step=minst<=unit?unit:ceilf(minst/unit2)*unit2;
 	float startld;
@@ -1295,6 +1316,7 @@ template <class LT> void glucoselines(const float last,const float smallfontline
 	uint32_t startl=keer*step;
 //	const float endline=(dleft+dwidth)>nupos?nupos:(dwidth+dleft);
 	const float endline=last;
+	LOGGER("glucoselines: unit=%f unit2=%f step=%d (%g) startl=%d (%g)\n",unit,unit2,step,gconvert(step),startl,gconvert(startl));
 	for(auto y=startl+step;y<gmax;y+=step) {
 		float dy=transy(y);
 		nvgBeginPath(genVG);
@@ -1304,8 +1326,17 @@ template <class LT> void glucoselines(const float last,const float smallfontline
 		if(dy>smallfontlineheight) {
 			constexpr const int  bufsize=50;
 			char buf[bufsize];
-//			int len=snprintf(buf,bufsize,"%g",y/180.0);
+//			int len=snprintf(buf,bufsize,"%g",y/convfactor);
+//			int len=snprintf(buf,bufsize,"%g",gconvert(y));
+#ifdef CONV18
 			int len=snprintf(buf,bufsize,"%g",gconvert(y));
+#else
+			int len=snprintf(buf,bufsize,gformat,gconvert(y));
+			if(ismmolL)  {
+				if(buf[len-1]=='0') 
+					len-=2;
+				}
+#endif
 			if(len>bufsize)
 				len=bufsize;
 			nvgText(genVG, startld,dy, buf, buf+len);
@@ -1710,7 +1741,7 @@ static void showlastsstream(const time_t nu,const float getx,std::vector<int> &u
 				}
 				}
 		}
-	if(failures>3) {
+	if(failures>2) {
 		LOGAR("failures>3" );
 		for(int i=0;i<used.size();i++) {
 			if(SensorGlucoseData *hist=sensors->gethist(used[i])) {
@@ -2068,6 +2099,7 @@ int badscanMessage(int kind) {
 				break;
 			case 0xFB:
 				errorpair(usedtext->libre3wrongID);
+				break;
 //				showerror(genVG,"Error, wrong account ID?","Specify in Settings->Libreview the same account used to activate the sensor");break;
 		 	case 0xFC: {
 				errorpair(usedtext->libre3scansuccess);
@@ -2348,6 +2380,7 @@ extern void setusenl();
 extern void setusepl();
 extern void setusede();
 
+extern void setusezh() ;
 extern void setuseuk() ;
 extern void setusebe();
 extern void setusefr();
@@ -2362,6 +2395,17 @@ bool hour24clock=true;
 
 #define mklanguagenum2(a,b) a|b<<8
 #define mklanguagenum(lang) mklanguagenum2(lang[0],lang[1])
+
+bool chinese() {
+	const int16_t lannum=mklanguagenum(localestrbuf);
+	switch(lannum) {
+		case mklanguagenum("ZH"):
+		case mklanguagenum("zh"):
+		return true;
+		}
+	return false;
+	}
+
 
 void  setlocale(const char *localestrbuf,const size_t len) {
 	LOGGER("locale=%s\n",localestrbuf);
@@ -2400,8 +2444,19 @@ void  setlocale(const char *localestrbuf,const size_t len) {
 		case mklanguagenum("uk"):
 			setuseuk();
 			break;
+			/*
+		case mklanguagenum("ZH"):
+		case mklanguagenum("zh"):
+			setusezh();
+			if(!chfontset) {
+				initfont();
+				}
+			return; */
 		default: setuseeng();
 		};
+/*	if(chfontset) {
+		initfont();
+	 	} */
 
 	}
 
@@ -2473,7 +2528,7 @@ static bool ybezig=false;
 		{
 		if(fixatey)
 			return 0;
-		if(ybezig||(dheight/absdy)<180) {
+		if(ybezig||(dheight/absdy)<convfactor) {
 			ybezig=true;
 			dy*=-1;
 			float grens=dheight/2.0;
@@ -3908,7 +3963,7 @@ int64_t openNums(std::string_view numpath,int64_t ident) {
 			newhit.numdisplay=numdata;
 		}
 	
-	LOGGER("numdir=%s ptr=%p\n",numpath,numdata);
+	LOGGER("numdir=%s ptr=%p\n",numpath.data(),numdata);
 	return reinterpret_cast<int64_t>(numdata);
 	}
 

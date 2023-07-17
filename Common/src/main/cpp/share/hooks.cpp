@@ -19,7 +19,7 @@
 /*      Fri Jan 27 12:37:55 CET 2023                                                 */
 
 
-
+#include "config.h"
     #undef  _GNU_SOURCE
     #define _GNU_SOURCE
        #include <link.h>
@@ -31,7 +31,10 @@
 	   #include <string.h>
        #include <sys/types.h>
        #include <sys/stat.h>
-       #include <fcntl.h>
+#include <sys/types.h>
+#include <dirent.h>
+#include <stdio.h>
+     #include <fcntl.h>
        #ifdef __ANDROID__
 #include <android/log.h>
 #endif
@@ -48,274 +51,19 @@
 #define useddlvsym(handle,symbol,x) dlsym(handle,symbol)
 #define usedlsym(handle,name) dlsym(handle,name)
 #endif
-
+#include <string_view>
 //#define loggert printf
 #define VISIBLE __attribute__((__visibility__("default")))
-extern "C" int  VISIBLE dl_iterate_phdr( int (*callback) (struct dl_phdr_info *info, size_t size, void *data), void *data) ;
-struct dl_data { 
-	int (*callback) (struct dl_phdr_info *info, size_t size, void *data);
-	void *data;
-	};
-/*
-static int callbackhook(struct dl_phdr_info *info, size_t size, void *data) {
-	struct dl_data *gegs= (struct dl_data *)data;
-	if(info->dlpi_name)
-		loggert("lib: %s\n",info->dlpi_name);
-	else
-		loggert("lib: null\n");
-
-	if(!info->dlpi_name||!strstr(info->dlpi_name,"jnisub")) {
-		return gegs->callback(info,size,data);
-		}
-	return 0;
-	}
-*/
-/*79  newfstatat              man/ cs/  0x4f  int dfd           const char          struct stat         int flag            -                 -          
-                                                              *filename           *statbuf            
-                                                              struct                                                                                   */
-/*int stat(const char *pathname, struct stat *statbuf) {
-//	typedef   size_t (*stattype)(const char *pathname, struct stat *statbuf) ;
-//	static stattype realstat=(stattype)useddlvsym(RTLD_NEXT, "stat",nullptr);
-	int ret= sys_stat(pathname,statbuf);
-//	int ret= realstat(pathname,statbuf);
-	loggert("stat(%s)=%d\n",pathname,ret);
-	return ret;
-	}
-extern "C" int VISIBLE dl_iterate_phdr( int (*callback) (struct dl_phdr_info *info, size_t size, void *data), void *data) {
-	typedef int (*dl_iterate_phdrtype)( int (*callback) (struct dl_phdr_info *info, size_t size, void *data), void *data);
-	static dl_iterate_phdrtype realdl_iterate_phdr=NULL;
-	if(!realdl_iterate_phdr)
-		realdl_iterate_phdr=(dl_iterate_phdrtype)useddlvsym(RTLD_NEXT, "dl_iterate_phdr",nullptr);
-	
-	if(!realdl_iterate_phdr) {
-		loggert("dlsym(RTLD_NEXT, dl_iterate_phdr) failed\n");
-		return -1;
-		}
-	struct dl_data *gegs=(struct dl_data *)malloc(sizeof(struct dl_data));
-	gegs->callback=callback;
-	gegs->data=data;
-	return realdl_iterate_phdr(callbackhook,gegs);
-	}
-	
-*/
-	
 extern const char *package;
 extern int packagelen;
-/*
-VISIBLE extern "C" int execv(const char *pathname, char *const argv[])  {
-
-	LOGGER("%d %d no execv(%s, {",getpid(),gettid(),pathname);
-	for(char *const *ptr=argv;*ptr;ptr++ ) {
-		LOGGER("%s,",*ptr);
-		}
-	LOGSTRING("})\n");
-	#ifndef	USE_ECHO
-//	const char package[]="package:/sdcard/libre/base.apk\n";
-	sys_write(STDOUT_FILENO,package,packagelen);
-//	puts("package:/sdcard/libre/base.apk");
-//	fflush(stdout);
-	sys_exit(0);
-	return 0;
-	#else
-  	const char prog[]="/system/bin/echo";
-        return execl(prog, prog, "package:/sdcard/libre/base.apk",NULL); //werkt
-	#endif
-	}
-	
-VISIBLE extern "C" double Pow(double x, double y) {
-       double res= pow(x,y);
-       logM("pow(%lf,%lf)=%lf\n",x,y,res);
-       return res;
-       }
-
-VISIBLE extern "C" double Ldexp(double x, int exp) {
-       double res= ldexp(x,exp);
-       logM("ldexp(%lf,%d)=%lf\n",x,exp,res);
-       return res;
-       }
-VISIBLE extern "C" long int Lround(double x) {
-	long int res=lround(x);
-	logM("lround(%lf)=%ld\n",x,res);
-	return res;
-	}
-VISIBLE extern "C" char *Strdup(const char *s) {
-
-#ifdef SAVE_MEMCPY
-	filenr=0;
-	#endif
-	LOGGER("strdup(%s)\n",s);
-	return strdup(s);
-	}
-
-VISIBLE extern "C" double Log(double x) {
-	double res=log(x);
-	logM("log(%lf)=%lf\n",x,res);
-	return res;
-	}
-VISIBLE extern "C" int Memcmp(const void *s1, const void *s2, size_t n) {
-#ifdef SHOW_MEMCMP
-	static int iter=0;
-	static size_t nwas=-1;
-	static int grens=20;
-	if(n==nwas) {
-	  
-	   if(
-
-#ifdef SAVE_MEMCPY
-	   filenr<10||
-	   #endif
-	   iter<2||(iter%grens)==0) {
-		unsigned short *els=(unsigned short *)s1;
-//		LOGGER("memcmp(%hx%hx%hx,%zd)\n",els[0],els[1],els[2],n);
-		LOGGER("memcmp(%.*s,%zd)\n",(int)n,(const char *)s1,n);
-		grens*=2;
-		}
-		iter++;
-		}
-	else {
-		nwas=n;
-		iter=1;
-		grens=20;
-		LOGGER("memcmp(%.*s,%zd)\n",(int)n,(const char *)s1,n);
-		}
-#endif
-	return memcmp(s1,s2,n);
-	}
-*/
-/*
-extern "C"  FILE VISIBLE * fopen(const char *pathname, const char *mode) {
-	typedef   FILE *(*fopentype)(const char *pathname, const char *mode) ;
-	static  fopentype realfopen= (fopentype)useddlvsym(RTLD_NEXT, "fopen",nullptr);
-	 auto ret=realfopen(pathname,mode);	
-	LOGGER("fopen(%s,%s)=%p\n",pathname,mode,ret);
-	return ret;
-	}
-	
-extern "C" void VISIBLE syslog(int priority, const char *format, ...) {
-        va_list args;
-        va_start(args, format);
-//	vsyslog(priority, format, args);
-	loggert("syslog: ");
-	vloggert(format,args);
-        va_end(args);
-	}
-
-
-extern "C"     size_t VISIBLE fwrite(const void *ptr, size_t size, size_t nmemb, FILE *stream) {
-	typedef   size_t (*fwritetype)(const void *ptr, size_t size, size_t nmemb, FILE *stream) ;
-	static fwritetype realfwrite= (fwritetype)useddlvsym(RTLD_NEXT, "fwrite",nullptr);
-	size_t ret=realfwrite(ptr, size, nmemb, stream) ;
-	LOGGER("fwrite(%zd,%zd,%p)=%zd\n",size, nmemb, stream,ret) ;
-	return ret;
-	}
-	
-VISIBLE extern "C" int open(const char* __path, int __flags, ...) {
-#define realopen sys_opener
-	if(O_RDONLY&& __flags) {
-		int ret=realopen(__path,__flags);
-		LOGGER("open(%s,%x)=%d\n", __path,  __flags, ret);
-		return ret;
-		}
-        va_list args;
-        va_start(args, __flags);
-	mode_t mode=va_arg(args,int);
-        va_end(args);
-	int ret=realopen(__path,__flags,mode);
-	LOGGER("open(%s,%x,%x)=%d\n", __path,  __flags, mode,ret);
-	return ret;
-	}
-extern "C"     size_t VISIBLE fread(void *ptr, size_t size, size_t nmemb, FILE *stream) {
-	typedef   size_t (*freadtype)(void *ptr, size_t size, size_t nmemb, FILE *stream) ;
-	static freadtype realfread= (freadtype)useddlvsym(RTLD_NEXT, "fread",nullptr);
-	size_t ret=realfread(ptr, size, nmemb, stream) ;
-	constexpr const int pos=20;
-	char *chp=((char *)ptr)+pos;
-	char tmp=*chp;
-	*chp='\0';
-	LOGGER("fread(%s,%zd,%zd,%p)=%zd\n",(char *)ptr, size, nmemb, stream,ret) ;
-	*chp=tmp;
-	return ret;
-	}
-
-extern "C"       ssize_t VISIBLE read(int fd, void *buf, size_t count) {
-	auto ret=sys_read(fd,buf,count);
-	constexpr const int pos=20;
-	char *chp=((char *)buf)+pos;
-	char tmp=*chp;
-	*chp='\0';
-	LOGGER("read(%d,%s,%zd)=%zd\n",fd,(char *)buf,count,ret);
-	*chp=tmp;
-	return ret;
-	}
-
-void syslogger( const char* fmt, ...) {
-        va_list args;
-        va_start(args, fmt);
-    	vsyslog(LOG_USER, fmt, args);
-        va_end(args);
-	}
-*/
-#if __ANDROID_API__ >= 24
- extern "C" void  VISIBLE *dlsym(void *handle, const char *symbol) {
-  	void *ret=useddlvsym(handle,symbol,nullptr);
-	loggert( "dlsym(%p,%s)=%p\n",handle,symbol,ret );
-	return ret;
-  	}
-#endif
-	
-	/*
-  VISIBLE extern "C" void *dlsym(void *handle, const char *symbol) {
-  static int fp=-1;
-  static int iter=0;
-  if(fp==-1) {
-  	  const char start[]="start\n";
-	  fp=sys_opener( "/sdcard/newlog.txt",O_APPEND|O_CREAT|O_WRONLY, S_IRUSR |S_IWUSR);
-		sys_write(fp,start,sizeof(start)-1);
-		}
-	iter++;
-  	void *ret=useddlvsym(handle,symbol,nullptr);
-	loggert( "dlsym(%p,%s)=%p\n",handle,symbol,ret );
-	
-	if(fp!=-1) {
-		const char nl[]="\n";
-		sys_write(fp,symbol,strlen(symbol));
-		sys_write(fp,nl,sizeof(nl)-1);
-		}
-	return ret;
-  	}
-VISIBLE extern "C" void *Memcpy(void *dest, const void *src, size_t n) {
-#ifdef SAVE_MEMCPY
-  	if(filenr<10) { 
-//	if(filenr<10) {
-		#define BUGSTART FILEDIR "data"
-		char base[256]=BUGSTART;
-		sprintf(base+sizeof(BUGSTART)-1,"%d",filenr++);
-		int file=creat(base,0644);
-
-//		int file=    open(filename,O_WRONLY|O_CREAT, S_IRUSR | S_IWUSR );
-		LOGGER("save to %s: ",base);
-		if(file<0) {
-			LOGGER("Can't create %s\n",base);
-				}
-		else {
-			write(file,src,n);
-			close(file);	
-			}
-		}
-	LOGGER("memcpy(,%.*s,%zd)\n",(int)n,src,n);
-#endif
-	return memcpy(dest,src,n);
-	}
-*/
-//TODO uncomment
 
 extern "C" int VISIBLE __android_log_print(int prio, const char* tag, const char* fmt, ...) __attribute__((__format__(printf, 3, 4)));
 extern "C" int VISIBLE __android_log_write(int prio, const char* tag, const char* text) ;
 
+#if !defined(NOLOG) && !defined(LOGCAT)
 extern "C" int VISIBLE __android_log_write(int prio, const char* tag, const char* text) {
 	return loggert("#%s: %s\n",tag,text);
 	}
-//int get= __android_log_print(ANDROID_LOG_INFO,"Glucose","Hooks startup");
 extern "C" int VISIBLE __android_log_print(int prio, const char* tag, const char* fmt, ...) {
         va_list args;
 	int res=loggert("#%s: ",tag);
@@ -326,17 +74,11 @@ extern "C" int VISIBLE __android_log_print(int prio, const char* tag, const char
         va_end(args);
 	return res;
 	}
+#endif 
 
-
-/*
-VISIBLE extern "C" pid_t waitpid(pid_t pid, int *wstatus, int options) {
-  	static waitpid_t wp=(waitpid_t)useddlvsym(RTLD_NEXT,"waitpid",nullptr);
-	pid_t ret=wp(pid,wstatus,options);
-	LOGGER("waitpid(%d,%d,%d)=%d\n",pid,wstatus?*wstatus:-1,options,ret);
-	return ret;
-	}
-*/
+#ifndef NOFORKHOOK
 #define NOFORK
+#endif
 #ifdef NOFORK
 static constexpr const pid_t childpid=9815123;
 #endif
@@ -396,14 +138,282 @@ extern "C" int  VISIBLE pipe(int pipefd[2]) {
 	return  Pipe(pipefd);
 	}
 
+#endif
 
+#ifdef NEWUS
+extern "C" VISIBLE int  getTimeofday(struct timeval * tv, struct timezone *  tz) {
+	LOGAR("gettimeofday");
+//        int ret=gettimeofday(tv, tz);
+        tv->tv_sec=0L;
+        tv->tv_usec=0;
+	if(tz) {
+               tz->tz_minuteswest=0;
+               tz->tz_dsttime=0;
+	       }
+        return 0;
+        } 
+#ifdef FINDHANDLE
+struct pthread_arg {
+        void *(*start_routine)(void *);
+        void * origarg;
+        };
+#include <destruct.h>
+static int copyfd=0;
+
+static char *pmcom;
+static int pmcomlen=0;
+
+
+#include "destruct.h"
+static bool endroutine=false;
+static int giveuslibre2(const char *dirname) {
+	int fp=open(dirname, O_DIRECTORY|O_RDONLY);
+	if(fp<0) {
+		lerror("open failed");
+		return 3;
+		}
+	DIR *dir=fdopendir(fp);
+	if(!dir) {
+		close(fp);
+		lerror("opendir");
+		return 4;
+		}
+	destruct _des([dir,fp]{
+			closedir(dir);
+			close(fp);});
+	struct dirent *ent;
+	do {
+	while((ent=readdir(dir))) {
+		if(ent->d_type==DT_LNK)  {
+			const char *name= ent->d_name;
+			if(name[1]&&(name[0]>'3'||name[2])) {
+				int maxbuf=256;
+				char buf[maxbuf];
+				int len;
+				if((len=readlinkat(fp,name , buf,maxbuf))>0)  {
+					buf[len]='\0';
+					constexpr const char pipe[]="pipe:";
+					constexpr const int pipelen=sizeof(pipe)-1;
+					if(!memcmp(pipe,buf,pipelen)) {
+						int get=atoi(name);
+						copyfd=dup(get);
+						close(get);
+						int pipefd[2];
+						int ret=sys_pipe2(pipefd,0);
+						write(pipefd[1],pmcom,pmcomlen);
+						close(pipefd[1]);
+						LOGGER("%s: %s new %d %d %s\n",name,buf,pipefd[0],pipefd[1],pmcom); 
+//						LOGGER("%s: %s\n",name,buf);
+						return 0;
+
+						}
+					}
+				}
+
+			}
+		}
+		rewinddir(dir);
+		}while(!endroutine);
+	return 1;
+}
 /*
-VISIBLE extern "C" int dup2(int oldfd, int newfd) {
-	typedef	 int (*dup2_t)(int oldfd, int newfd);
-  	static dup2_t du=(dup2_t)useddlvsym(RTLD_NEXT,"dup2",nullptr);
-	int ret=du(oldfd,newfd);
-	LOGGER("dup2(%d,%d)=%d\n",oldfd,newfd,ret);
-	return ret;
+static int giveuslibre2(const char *dirname) {
+	int fp=open(dirname, O_DIRECTORY|O_RDONLY);
+	if(fp<0) {
+		lerror("open failed");
+		return 3;
+		}
+	destruct _des([fp]{
+			close(fp);});
+	int end=fp+40;
+	LOGGER("giveuslibre2 %d\n",fp);
+	do {
+		for(int handle=fp+1;handle<end;handle++) {
+			char name[10];
+			sprintf(name,"%d",handle);
+			int len;
+			int maxbuf=50;
+			char buf[maxbuf];
+			if((len=readlinkat(fp,name , buf,maxbuf))>0)  {
+				buf[len]='\0';
+				constexpr const char pipe[]="pipe:";
+				constexpr const int pipelen=sizeof(pipe)-1;
+				if(!memcmp(pipe,buf,pipelen)) {
+					copyfd=dup(handle);
+					close(handle);
+					int pipefd[2];
+					int ret=sys_pipe2(pipefd,0);
+					write(pipefd[1],pmcom,pmcomlen);
+					close(pipefd[1]);
+					LOGGER("%s: %s new %d %d %s\n",name,buf,pipefd[0],pipefd[1],pmcom); 
+	//						LOGGER("%s: %s\n",name,buf);
+					return 0;
+
+					}
+				}
+			}
+
+	 	LOGAR("NEXT");
+		} while(!endroutine);
+	return 1;
 	}
-	*/
+ */
+
+
+
+static void uslibre2fds() {
+	pid_t pid=getpid();
+	const char format[]="/proc/%d/fd";
+	char procpid[50];
+	snprintf(procpid,50,format,pid);
+	giveuslibre2(procpid); 
+	}
+#include <sys/prctl.h>
+#include <signal.h>
+void ioreadyhandler(int sig) {
+	pid_t pid= syscall(SYS_getpid);
+	char buf[80];
+	prctl(PR_GET_NAME, buf, 0, 0, 0);
+	LOGGER("SIGCHLD pid=%d %s\n",pid,buf);
+	}
+void *pstart_routine( void * arg) {
+	signal(SIGCHLD,ioreadyhandler);
+        LOGAR("pstart_routine");
+        pthread_arg *myarg=reinterpret_cast<pthread_arg *>(arg);
+        void *res=myarg->start_routine(myarg->origarg);
+	endroutine=true;
+        LOGAR("after start_routine");
+	if(copyfd)
+		close(copyfd);
+        delete myarg;
+        return res ;
+        }
+#include <pthread.h>
+#include <spawn.h>
+
+  #include <sched.h>
+extern "C" VISIBLE   int pthread_Create(pthread_t * thread, const pthread_attr_t * attr, void *(*start_routine)(void *), void * arg) {
+extern std::string_view libdirname;
+			const char pmcomstart[]=R"(package:)";
+		constexpr const int pmstartlen=sizeof(pmcomstart)-1;
+	int pathlen=libdirname.size();
+	constexpr const char endname[]="/libcalibrate.so";
+	constexpr const int endnamelen=sizeof(endname)-1;
+	pmcom=new char[pmstartlen+pathlen+endnamelen+2];
+	memcpy(pmcom,pmcomstart,pmstartlen);
+	int pos=pmstartlen;
+	memcpy(pmcom+pos,libdirname.data(),pathlen);
+	pos+=pathlen;
+	memcpy(pmcom+pos,endname,endnamelen);
+	pos+=endnamelen;
+	strcpy(pmcom+pos,"\n");
+	pos++;
+	pmcomlen=pos;
+        LOGAR("pthread_create");
+        auto *newarg=new pthread_arg{start_routine,arg};
+        int res=pthread_create(thread, attr, pstart_routine,  newarg);
+        LOGAR("after pthread_create");
+        return res;
+        }
+extern "C" VISIBLE  int pthread_Detach(pthread_t thread) {
+	LOGAR("pthread_detach");
+	int res=  pthread_detach(thread);
+	uslibre2fds();
+	LOGAR("after pthread_detach");
+	return res;
+	}
+#endif
+#endif
+#if 0
+extern "C" VISIBLE    FILE *FOpen(const char *pathname, const char *mode) {
+	#define urandom "/dev/urandom"
+	if(!memcmp(urandom,pathname,sizeof( urandom))) {
+	//	pathname="/proc/self/mountinfo";
+		pathname="/dev/zero";
+		} 
+	FILE *res=fopen(pathname,mode);
+	LOGGER("fopen(%s,%s)=%p\n",pathname,mode,res);
+	return res;
+	}
+extern "C" VISIBLE 
+int myexecve(const char *pathname, char *const argv[], char *const envp[]) {
+	constexpr const int maxbuf=1024;
+	char buf[maxbuf];
+	int start=strlen(pathname);
+	memcpy(buf,pathname,start);
+	for(char *const *ptr=argv;*ptr;ptr++) {
+		buf[start++]=' ';
+		int len=strlen(*ptr);
+		memcpy(buf+start,*ptr,len);
+		start+=len;
+		}
+	buf[start]='\0';
+	LOGGER("myexecve(%s)",buf);		
+	return execve(pathname,argv,envp);
+	}
+extern "C" VISIBLE  int myfstatat(int dirfd, const char *pathname, struct stat *statbuf, int flags) {
+	int res=fstatat(dirfd, pathname, statbuf, flags);
+	LOGGER("fstatat(%d, %s, statbuf, %d)=%d\n",dirfd,pathname,flags,res);
+	return res;
+	}
+extern "C" VISIBLE    VISIBLE  int Strncasecmp(const char *s1, const char *s2, size_t n) {
+	int res=strncasecmp(s1, s2, n) ;
+	logwriter(".",1);
+//	LOGGER("strncasecmp(%s, %s, %zu)=%d\n",s1,s2,n,res);
+	return res;
+	}
+
+extern "C" VISIBLE  int (*posix_spawn)(pid_t *pid, const char *path, const posix_spawn_file_actions_t *file_actions, const posix_spawnattr_t *attrp, char *const argv[], char *const envp[]);
+int (*posix_spawn)(pid_t *pid, const char *path, const posix_spawn_file_actions_t *file_actions, const posix_spawnattr_t *attrp, char *const argv[], char *const envp[]);
+extern "C" VISIBLE  int myposix_spawn(pid_t *pid, const char *path, const posix_spawn_file_actions_t *file_actions, const posix_spawnattr_t *attrp, char *const argv[], char *const envp[]) {
+	int res=posix_spawn(pid, path, file_actions, attrp, argv,  envp);
+	LOGGER("posix_spawn(%d,%s,,%s)=%d\n",*pid,path,*argv?*argv:"null",res);
+	return res;
+	}
+extern "C" VISIBLE void *d1sym(void *handle, const char *symbol) {
+	static const constexpr	std::pair<std::string_view,void *> funcs[]= {
+		{"execve",(void*)myexecve},
+		{"fopen",(void*)FOpen},
+		{"fstatat", (void*) myfstatat},
+//		{"open",(void*)Open},
+//		{"opendir",(void*)myopendir},
+//		{"read",(void*)Read},
+//		{"signal",(void*)mysignal},
+//		{"strcpy",(void*)mystrcpy},
+//		{"strlen",(void*)mystrlen}
+	};
+
+	static const constexpr	std::pair<std::string_view,void *> * endfunc=funcs+std::size(funcs);
+
+	const auto symlen=strlen(symbol);
+	const std::pair<std::string_view,void *>  value={{symbol,symlen},nullptr};
+        auto * res=std::lower_bound(funcs,endfunc,value,
+[](const std::pair<std::string_view,void *> &one,const std::pair<std::string_view,void *> &two) {
+		return one.first<two.first;
+		});
+	if(res==endfunc||memcmp(res->first.data(),symbol,symlen)) {
+		auto fun=dlsym(handle,symbol);
+		if(!fun||strcmp("posix_spawn",symbol)) {
+			LOGGER("dlsym(%s)=%p original\n",symbol,fun);
+			return fun;
+			}
+		LOGAR("dlsym(posix_spawn) give mine");
+		*((void **)&posix_spawn)=fun;
+		return (void *)myposix_spawn;
+		}
+	LOGGER("dlsym(%s) give mine\n",symbol);
+	return res->second;
+ 	}
+
+extern "C" VISIBLE     int Close(int fd) {
+	int res= close(fd);
+	LOGGER("close(%d)=%d\n",fd,res);
+	return res;
+	}
+extern "C" VISIBLE  int FClose(FILE *stream) {
+	int fn=fileno(stream);
+	int res= fclose(stream);
+	LOGGER("fclose(%d)=%d\n",fn,res);
+	return res;
+	}
 #endif

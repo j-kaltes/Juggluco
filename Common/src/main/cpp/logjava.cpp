@@ -38,10 +38,11 @@ extern "C" JNIEXPORT void JNICALL fromjava(log)(JNIEnv *env, jclass thiz,jstring
 		}
 #endif
 	}
-
 extern "C"  JNIEXPORT void JNICALL fromjava(dolog)(JNIEnv *envin, jclass thiz,jboolean val) {
 #ifndef NOLOG 
-	settings->data()->nolog=!val;
+	if(settings) {
+		settings->data()->nolog=!val;
+		}
 	dolog=val;
 #endif
 	}

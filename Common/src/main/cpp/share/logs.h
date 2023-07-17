@@ -18,9 +18,8 @@
 /*                                                                                   */
 /*      Fri Jan 27 12:37:55 CET 2023                                                 */
 
+#pragma once
 
-#ifndef LOGS_H
-#define LOGS_H
 #include "config.h"
 //#define LOGGER(...)  { fprintf(errorlogfile,__VA_ARGS__); fflush(errorlogfile); }
 
@@ -31,16 +30,17 @@
 #include <fcntl.h>
 #include <errno.h>
 #include <string.h>
-#include <ctime>
+#include <time.h>
+#include <android/log.h>
 
 #ifndef _WIN32
 #undef _GNU_SOURCE
 #define _GNU_SOURCE 1
 #ifndef INCLUDE_NR
-#define INCLUDE_NR
-#include <asm-generic/unistd.h> /*Headers in this order*/
-#include <sys/syscall.h>
-#endif
+	#define INCLUDE_NR
+	#include <asm-generic/unistd.h> /*Headers in this order*/
+	#include <sys/syscall.h>
+#endif // INCLUDE_NR
 #include <unistd.h>
 
 #define sys_opener(...) syscall(__NR_openat,AT_FDCWD, __VA_ARGS__)
@@ -52,19 +52,17 @@
 #define sys_wait4(...) syscall(__NR_wait4, __VA_ARGS__)
 #define sys_pipe2(...) syscall(__NR_pipe2, __VA_ARGS__)
 #ifdef __NR_newfstatat
-#define sys_stat(f,st) syscall(__NR_newfstatat, AT_FDCWD,f,st,0)
+	#define sys_stat(f,st) syscall(__NR_newfstatat, AT_FDCWD,f,st,0)
 #else
-#ifdef __NR_stat
-#define sys_stat(f,st) syscall(__NR_stat, f,st) wrong
-#endif
-#endif
+	#ifdef __NR_stat
+	#define sys_stat(f,st) syscall(__NR_stat, f,st) wrong
+	#endif
+#endif // __NR_newfstatat
 
-#endif
+#endif //__WIN32
 
 //#define sys_creat(...) syscall(__NR_creat,__VA_ARGS__)
 #ifdef __cplusplus
-//#include <string_view>
-//#define BASEDIR "/sdcard/glucodata"
 extern "C" {
 #else
 typedef char bool;
@@ -81,22 +79,70 @@ extern  int logprint(const char *format, ...) ;
 #ifdef __cplusplus
 }
 #endif
-//#define LOGGER  loggert
+extern 
+#ifdef __cplusplus
+"C" 
+#endif
+pid_t getTid();
+#ifdef LOGCAT
 
-extern pid_t getTid();
+#define donothing do { if (0) ((void)0); } while (0)
+#define loggert(...) __android_log_print(ANDROID_LOG_INFO,"cpp",__VA_ARGS__)
+
+#define LOGGER(...) loggert(__VA_ARGS__)
+#define LOGSTRING(pformat)  __android_log_write(ANDROID_LOG_INFO,"cpp",pformat)
+#define LOGAR(x) LOGGER("%s\n",x)
+
+#define logger(x)   LOGAR(x)
+
+//#define logwriter(buf, len)  __android_log_print(ANDROID_LOG_INFO,"write","%.*s",len>120?120:len,buf)
+#define logwriter(buf, len)  donothing
+
+#define logprint( ...)  __android_log_print(ANDROID_LOG_INFO,"print",__VA_ARGS__)
+
+
+#define LOGGERN(buf, len)  __android_log_print(ANDROID_LOG_INFO,"logn","%.*s",len>120?120:len,buf)
+
+#define LOGGERNO(buf, len,x) __android_log_print(ANDROID_LOG_INFO,"logno","%.*s",len>120?120:len,buf)
+
+
+
+inline void lerror(const char *str) {
+	int waser=errno;
+	__android_log_print(ANDROID_LOG_INFO,"error","%s: %s\n",(char *)str,strerror(waser));
+	}
+inline void flerror(const char* fmt, ...){
+	int waser=errno;
+	const int maxbuf=160;
+	char buf[maxbuf];
+        va_list args;
+        va_start(args, fmt);
+	vsnprintf(buf,maxbuf, fmt, args);
+	va_end(args);
+	LOGGER("%s: %s\n",buf,strerror(waser));
+	}
+
+
+#else
+#ifdef __cplusplus
 #define LOGGER(pformat,...) logprint("%lu %d " pformat ,::time(nullptr), getTid(), __VA_ARGS__ )
 #define LOGSTRING(pformat) logprint("%lu %d " pformat ,::time(nullptr), getTid())
+#else
+#define LOGGER(pformat,...) logprint("%lu %d " pformat ,time(NULL), getTid(), __VA_ARGS__ )
+#define LOGSTRING(pformat) logprint("%lu %d " pformat ,time(NULL), getTid())
+#endif
 
 
 #ifdef NOLOG
 #define donothing do { if (0) ((void)0); } while (0)
 #define logger(x)   donothing
-static constexpr const inline int returnzero() { return 0;}
+static 
+#ifdef __cplusplus
+constexpr 
+#endif
+const inline int returnzero() { return 0;}
 #define  loggert( ...)   returnzero()
 #define  vloggert(...)  returnzero()
-//constexpr const inline int loggert(...)  { return 0;}
-
-//constexpr const inline int vloggert(...)  { return 0;}
 
 #define logwriter( ...) donothing
 #define logprint( ...) donothing
@@ -109,7 +155,36 @@ inline void lerror(const char *str) {
 	fprintf(stderr,"%s: %s\n",(char *)str,strerror(waser));
 	}
 inline void flerror(const char* fmt, ...){
-#ifndef NOLOG
+	}
+#else //NOTAPP
+#define lerror( ...) donothing
+#define flerror( ...) donothing
+#endif //NOTAPP
+
+
+
+	#define LOGAR(arg)   
+
+
+#else //!NOLOG
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+void LOGGERN(const char *buf,int len) ;
+void LOGGERNO(const char *buf,int len,bool endl) ;
+
+
+inline void lerror(const char *str) {
+	int waser=errno;
+#ifdef NOTAPP
+	fprintf(stderr,"%s: %s\n",(char *)str,strerror(waser));
+#else
+	LOGGER("%s: %s\n",(char *)str,strerror(waser));
+#endif
+	}
+#ifdef NOTAPP
+inline void flerror(const char* fmt, ...){
 	int waser=errno;
 	const int maxbuf=160;
 	char buf[maxbuf];
@@ -118,32 +193,10 @@ inline void flerror(const char* fmt, ...){
 	vsnprintf(buf,maxbuf, fmt, args);
 	va_end(args);
 	LOGGER("%s: %s\n",buf,strerror(waser));
-#endif
 	}
-#else
-#define lerror( ...) donothing
-#define flerror( ...) donothing
-#endif
-
-
-
-
-#else
-//#define LOGGER  loggert
-
-//#define LOGGER(pformat,...) logprint("%lu %d " pformat ,time(nullptr), getTid(),__VA_ARGS__)
-#define logger(x)   LOGGER("%s\n",x)
-void LOGGERN(const char *buf,int len) ;
-void LOGGERNO(const char *buf,int len,bool endl) ;
-inline void lerror(const char *str) {
-	int waser=errno;
-	LOGGER("%s: %s\n",(char *)str,strerror(waser));
-	}
-
-#ifdef __cplusplus
-extern "C" {
-#endif
+#else //!NOTAPP
 void flerror(const char* fmt, ...) __attribute__((format(printf, 1, 2)))   ;
+#endif
 #ifdef __cplusplus
 };
 #endif
@@ -152,12 +205,15 @@ extern void logwriter(const char *buf,const int len);
 
 
 
-
-
-
-#endif
-template <class T, std::size_t N>
+#ifdef __cplusplus
+template <class T, size_t N>
 constexpr void LOGAR(const T (&array)[N])  {
 	LOGGERN(array,N-1);
 	}
+#else
+#define LOGAR(arg)   LOGGERN(arg,sizeof(arg)-1)
 #endif
+
+#define logger(x)   LOGAR(x)
+#endif //NOLOG
+#endif //LOGCAT

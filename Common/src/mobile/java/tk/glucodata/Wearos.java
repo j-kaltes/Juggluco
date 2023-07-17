@@ -46,7 +46,6 @@ import static android.content.pm.PackageManager.DONT_KILL_APP;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
-import static tk.glucodata.Applic.isRelease;
 import static tk.glucodata.MessageSender.isGalaxy;
 import static tk.glucodata.Natives.setBlueMessage;
 import static tk.glucodata.NumberView.avoidSpinnerDropdownFocus;

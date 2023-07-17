@@ -57,7 +57,7 @@ extern std::string_view globalbasedir;
 constexpr int maxminutes=22000;
 struct ScanData {uint32_t t;int32_t id;int32_t g;int32_t tr;float ch;
 const uint16_t getmgdL() const { return g;};
-const float getmmolL() const { return g/18.0f;};
+const float getmmolL() const { return g/convfactordL;};
 const uint16_t getsputnik() const { return g*10;};
 float getchange() const {
 	return ch;
@@ -119,8 +119,10 @@ uint32_t scancount;
 uint16_t startid;
 uint16_t interval;
 uint16_t pollstart;
-uint8_t dupl;
-uint8_t days;
+uint8_t dupl:7;
+bool uselater:1;
+uint8_t days:7;
+bool auth12removed:1;
 //uint32_t reserved2[2];
 uint32_t pin;
 uint16_t lastLifeCountReceived;
@@ -136,20 +138,24 @@ uint32_t bluestart;
 union {
 	struct { int len;
 		signed char data[6];
-		uint8_t sensorgen;
+		uint8_t sensorgenDONTUSE;
 		bool reserved2;
 		} blueinfo;
-	uint8_t streamingAuthenticationData[10];
+	uint8_t streamingAuthenticationData[12];
 	};
 uint32_t pollcount;
 double pollinterval; 
 uint32_t lockcount;
 int8_t streamingIsEnabled;
 int8_t patchState;
-uint8_t reserved4[2];
+uint16_t reserved4:15;
+bool auth12:1;
 char deviceaddress[deviceaddresslen];
 uint16_t libreviewscan;
-uint16_t oldmsec:14;
+uint8_t authlendontuse;
+
+uint8_t reserved:6;
+
 bool sendsensorstart:1;
 bool libreviewsendall:1;
 uint16_t libreviewnotsend:14;
@@ -171,11 +177,16 @@ bool infowrong() const {
 	}
 
 
-void setauth(uint8_t *authin) {
-	memcpy(streamingAuthenticationData,authin,10);
+void setauth(const uint8_t *authin,int len) {
+	int newlen=std::min(len,12);
+	memcpy(streamingAuthenticationData,authin,newlen);
+	if(newlen==12)
+		auth12=true;
+	else
+		auth12=false;
 	}
-const uint8_t *getauth() const {
-	return streamingAuthenticationData;
+std::span<const uint8_t> getauth() const {
+	return {streamingAuthenticationData,static_cast<size_t>((auth12?12:10))};
 	}
 } ;
 
@@ -223,12 +234,15 @@ bool resetdevice=false;
 
 std::mutex mutex;
 int getsensorgen() const {
-	return getinfo()->blueinfo.sensorgen;
+//	return getinfo()->blueinfo.sensorgen;
+	const data_t *info=getpatchinfo();
+	return getgeneration((const char *)info->data());
 	}
 void setsensorgen() {
-	extern void setlastGen(int gen);
+/*	extern void setlastGen(int gen);
 	const data_t *info=getpatchinfo();
-	getinfo()->blueinfo.sensorgen=getgeneration((const char *)info->data());
+	getinfo()->blueinfo.sensorgen=getgeneration((const char *)info->data()); */
+
 	}
 char *deviceaddress() {
 	return getinfo()->deviceaddress;
@@ -448,8 +462,9 @@ uint16_t &glucose(int pos,int kind) {
 	uint16_t *glus=(uint16_t *)(historydata+pos*getelsize()+glinel);
 	return glus[kind];
 	}
+
 float tommolL(uint16_t raw) {
-	return (float)raw/180.0;
+	return (float)raw/convfactor;
 	}
 void dumpdata(std::ostream &os,uint32_t locfirstpos,uint32_t loclastpos) {
    	os<< std::fixed<< std::setprecision(1);
@@ -495,6 +510,10 @@ std::string_view showsensorname() const {
 	else
 		return std::string_view(shortsensorname()->data(),11);
 	}
+	/*
+static int getgeneration(const char *info) {
+	return 2;
+	} */
 static int getgeneration(const char *info) {
     int i = info[2] >> 4;
     int i2 = info[2] & 0xF;
@@ -510,7 +529,7 @@ static int getgeneration(const char *info) {
 	return 2;
     }
     return 0;
-    }
+    } 
 
 
 
@@ -539,7 +558,7 @@ static bool mkdatabase(string_view sensordir,time_t start,const  char *uid,const
 
 
 	inf.bluestart=bluestart?bluestart:start;	
-	inf.blueinfo.sensorgen=gen;
+//	inf.blueinfo.sensorgen=gen;
 	if(gen!=2) {
 		inf.blueinfo.len=6;
 		if(blueinfo) 

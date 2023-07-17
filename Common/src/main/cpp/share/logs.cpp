@@ -18,8 +18,8 @@
 /*                                                                                   */
 /*      Fri Jan 27 12:37:55 CET 2023                                                 */
 
-
-#ifndef NOLOG 
+#include "config.h"
+#if !defined(NOLOG )&&!defined(LOGCAT)
 //#if 1 
 #undef _GNU_SOURCE
 #define _GNU_SOURCE
@@ -235,14 +235,18 @@ void LOGGERN(const char *buf,int len) {
 
 
 #else
+
 #ifndef INCLUDE_NR
 #define INCLUDE_NR
 #include <asm-generic/unistd.h> /*Headers in this order*/
 #include <sys/syscall.h>
 #endif
+
 #include <unistd.h>
+extern bool dolog;
+bool dolog=false;
+extern "C" pid_t getTid();
 #endif
-extern pid_t getTid();
 pid_t getTid() {
 	return syscall(SYS_gettid);
 	}

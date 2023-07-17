@@ -269,7 +269,9 @@ void tobluetooth(int hostnr,bool sender,int *sockin, int *sockother,std::binary_
    while(true) { 
         int inlen=recvni(sock,buf,maxbuf);
        LOGGERTAG("tobluetooth recvni(%d,...)=%d\n",sock,inlen);
-        if(inlen<=0)  {
+        if(inlen<=0||(status.recv=true&&!(status.sendmessage=sendmessage(phonehost,phonesender,buf,inlen))))  {
+	   if(inlen>0)
+		   LOGGERTAG("sendmessage failed %d %d #%d\n",phonehost,phonesender,inlen);
 	   if(*sockother!=-1) {
 	   	shutdown(*sockother,SHUT_RDWR);
 		}
@@ -277,13 +279,14 @@ void tobluetooth(int hostnr,bool sender,int *sockin, int *sockother,std::binary_
 	   shutdown(sock,SHUT_RDWR);
 	   close(sock);
 	   status.running(false);
+			LOGSTRINGTAG("Return from thread\n");
             return;
 	    }
-	status.recv=true;
+	/*
         while(!(status.sendmessage=sendmessage(phonehost,phonesender,buf,inlen))) {
 		LOGGERTAG("sendmessage failed %d %d #%d\n",phonehost,phonesender,inlen);
 		sleep(20);
-		}
+		} */
         }
     }
 void closesock(int &sock) {

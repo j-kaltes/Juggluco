@@ -17,10 +17,9 @@
 /*      along with Juggluco. If not, see <https://www.gnu.org/licenses/>.            */
 /*                                                                                   */
 /*      Fri Jan 27 12:35:09 CET 2023                                                 */
-
-
+///data/dalvik-cache/thumbv7a/system@framework@XposedBridge.jar@classes.dex/.trdpx 
 constexpr const std::string_view accessnames[] = {
-#if defined(__aarch64__) ||  defined(__arm__) || defined(__i386__)
+#if defined(__aarch64__) || defined(__i386__)
 R"(/data/dalvik-cache/)" archname R"(/system@framework@XposedBridge.jar@classes.dex)",
 R"(/data/dalvik-cache/oat/)" archname R"(/xposed_XResourcesSuperClass.odex)",
 #else
@@ -36,7 +35,13 @@ R"(/su/bin/daemonsu)",
 R"(/su/bin/su)",
 R"(/system/bin/app_process32_xposed)",
 R"(/system/bin/su)",
+
+R"(/system/lib/libriruloader.so)",
+R"(/system/lib64/libriruloader.so)",
+
 R"(/system/lib64/libxposed_art.so)",
 R"(/system/xbin/bstk/su)",
 R"(/system/xbin/daemonsu)",
 R"(/system/xbin/su)"};
+
+

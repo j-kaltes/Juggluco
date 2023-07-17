@@ -35,7 +35,6 @@ import tk.glucodata.R;
 
 import static android.os.Build.VERSION.RELEASE;
 import static java.lang.System.exit;
-import static tk.glucodata.Applic.isRelease;
 import static tk.glucodata.Applic.isWearable;
 import static tk.glucodata.Natives.setDevice;
 import static tk.glucodata.Natives.startmeals;

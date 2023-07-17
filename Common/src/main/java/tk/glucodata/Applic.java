@@ -181,10 +181,14 @@ public void onConfigurationChanged(Configuration newConfig) {
 //		var lang=getlanguage(this);
 
 		var new24 = DateFormat.is24HourFormat(this);
-		Log.i(LOG_ID,"Applic.onConfigurationChanged "+lang+" "+Applic.hour24);
+		Log.i(LOG_ID,"Applic.onConfigurationChanged new="+lang+" cur="+curlang+ (Applic.hour24?" 24uur":" 12uur"));
 		if(!lang.equals(curlang)) {
-			SuperGattCallback.newtalker();
+		//	if(SuperGattCallback.dotalk) ??
+		//	SuperGattCallback.newtalker();
+
 			curlang=lang;
+			if(SuperGattCallback.dotalk)	
+				SuperGattCallback.newtalker(null);
 			}
 		else  {
 			if(Applic.hour24 ==new24)
@@ -227,7 +231,7 @@ static String[] hasPermissions(Context context, String[] perms) {
 	}
 static String[] noPermissions(Context context) {
 	String[] noperms=  hasPermissions(context, scanpermissions) ;
-	if(!isRelease) {
+	if(Log.doLog) {
 		Log.i(LOG_ID,"nopermissions:");
 		for(var el:noperms) {
 			Log.i(LOG_ID,el);

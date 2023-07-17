@@ -26,6 +26,7 @@ import android.app.Application;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCallback;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 
@@ -34,7 +35,6 @@ import java.util.UUID;
 import static android.bluetooth.BluetoothGatt.CONNECTION_PRIORITY_BALANCED;
 import static android.bluetooth.BluetoothGatt.CONNECTION_PRIORITY_HIGH;
 import static tk.glucodata.Applic.app;
-import static tk.glucodata.Applic.isRelease;
 import static tk.glucodata.Applic.isWearable;
 import static tk.glucodata.Natives.thresholdchange;
 
@@ -129,17 +129,17 @@ static void init(Application app) {
 	if(!isWearable) {
 		Talker.getvalues();
 		if(dotalk)
-			newtalker();
+			newtalker(null);
 		}
 	}
 
 static Talker talker;
 static boolean dotalk=false;
-static void newtalker() {
+static void newtalker(Context context) {
 	if(!isWearable) {
 		if (talker != null)
 			talker.destruct();
-		talker = new Talker();
+		talker = new Talker(context);
 	}
 	}
 static void endtalk() {

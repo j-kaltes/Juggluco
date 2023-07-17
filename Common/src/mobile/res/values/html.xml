@@ -757,15 +757,10 @@ xDrip webserver, so you need to turn off &quot;<i>xDrip webservice</i>&quot;
 in xDrip itself if you want to make use of the one in Juggluco.</p>
 <h2 class="western">xDrip broadcast</h2>
 <p>Send the same broadcast as turned on in xDrip with
-&quot;<i>Settings-&gt;Inter-app settings-&gt;Broadcast locally&quot;</i>
-(com.eveningoutpost.dexdrip.BgEstimate). Apps like AndroidAPS listen
-to it. Apps targeting Android 11 or higher need to add the following
-to AndroidManifest.xml for it to work: 
-</p>
-<p>&lt;queries&gt; <br/>
-&nbsp;&nbsp; &lt;package
-android:name=&quot;tk.glucodata&quot;/&gt; <br/>
-&lt;/queries&gt;</p>
+&quot;<i>Settings-&gt;Inter-app settings-&gt;Broadcast locally&quot;</i>.
+Apps like AndroidAPS listen to it. Unlike the original xDrip
+broadcast which was broadcast every 5 minutes, Juggluco broadcasts
+this broadcast every minute.</p>
 <h2 class="western">Glucodata broadcast</h2>
 <p>A new broadcast that has the same function as the xDrip broadcast.
 A simple example app that writes received glucose values to logcat

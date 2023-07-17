@@ -20,6 +20,14 @@
 
 
 #pragma once
+#define CONV18 1
+#ifdef CONV18
+static constexpr const double convfactor=180.0;
+#else
+static constexpr const double convfactor=180.182;
+#endif
+//static constexpr const float convfactor=180.0f;
+static constexpr const double convfactordL=convfactor*0.1;
 #include <array>
 #ifdef  JUGGLUCO_APP
 #include "appcolor.h"
@@ -237,7 +245,7 @@ struct Tings {
 	};
 
 struct Settings:Mmap<Tings> {
-float convertmult;
+double convertmult;
 /*
     public static final int SCREEN_ORIENTATION_LANDSCAPE = 0;
     public static final int SCREEN_ORIENTATION_PORTRAIT = 1;
@@ -480,12 +488,12 @@ bool usemmolL() const {
 	}
 void setunit(int unit) {
 	if((data()->unit=unit)==1) {
-		convertmult=1.0f/180.0f;
+		convertmult=1.0/convfactor;
 		gformat="%.1f";
 		gludecimal=1;
 		}
 	else  {
-		convertmult=1.0f/10.0f;
+		convertmult=1.0/10.0;
 		gformat="%3.0f";
 		gludecimal=0;
 		}

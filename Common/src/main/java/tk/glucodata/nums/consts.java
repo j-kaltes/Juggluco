@@ -60,8 +60,5 @@ public class consts {
  public static final int STOPALARM=231;
  public static final int GOTSTOPALARM=232;
  public static final int NUMS=0;
-//  static public boolean isRelease= BuildConfig.isRelease==1;
-   
-// public static final int maxstorage= AllData.isRelease?256:32;
  public static final int maxstorage=256;
 }

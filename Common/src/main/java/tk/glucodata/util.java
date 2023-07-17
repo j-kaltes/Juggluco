@@ -91,10 +91,16 @@ static void sethtml(TextView view,int res) {
 	}
 
 static public Locale getlocale() {
-	var locales= AppCompatDelegate.getApplicationLocales();
-	if(locales.isEmpty())
-		return Locale.getDefault();
-	return locales.get(0);
+	final var locales= AppCompatDelegate.getApplicationLocales();
+	if(locales.isEmpty())  {
+		final var lang=Locale.getDefault();
+		Log.i("getlocale","Locale.getDefault()="+lang);
+		return lang;
+		}
+	final var lang2=locales.get(0);
+	Log.i("getlocale" ,"getApplicationLocales()="+lang2);
+	return lang2;
+
 	}
 	/*
 static public String getlanguage(Context context) {

@@ -179,7 +179,7 @@ scanstate *initnewsensor( scandata *data) ;
 
 //extern scanstate *initnewsensor( scandata *data, ByteArray *uid) ;
 //int  abbottinit(std::string_view filesdir,JNIEnv *env=nullptr,jobject thiz=nullptr);
-extern int  abbottinit();
+extern int  abbottinit(bool doch=false);
 
 bool linklib(const char *filename) ;
 

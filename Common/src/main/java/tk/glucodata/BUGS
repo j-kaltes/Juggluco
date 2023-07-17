@@ -1,4 +1,24 @@
-Complaints of US Libre 2 sensor not working amymore with Juggluco.
+CONV18
+Make run-as possible.
+Too small margins around notification.
+No logcat in release
+Bluetooth op horloge maakt connectie ook na switch naar horloge
+remove key out of constructor Gatt
+reenable streaming bij status=14
+Value available notification after no value notification.
+Bluetooth connectie wordt misschien niet altijd disconnected bij een fout.
+
+Library schermpje niet goed
+
+
+Creeer settings.dat met abbotttest?
+Employing PR_SET_PTRACER with arg2 set to 0 clears the caller's "ptracer process ID". If arg2 is PR_SET_PTRACER_ANY, t
+Iets met key uit ~/.gradle
+
+Glucose Dialog staat er nog bij wisseling taal.
+
+Set getgeneration back to normal
+
 
 Some how sometime two overlapping connections to sensor  tried, resulting in none succeeding.
 do now and then a full sync

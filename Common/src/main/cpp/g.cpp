@@ -56,6 +56,7 @@
 #define abbottdec(x) Java_com_abbottdiabetescare_flashglucose_sensorabstractionservice_dataprocessing_DataProcessingNative_##x
 #define abbottcall(x) Java_com_abbottdiabetescare_flashglucose_sensorabstractionservice_dataprocessing_DataProcessingNative_##x
 #endif
+extern jbyteArray getjtoken(JNIEnv *env);
 extern "C" JNIEXPORT jlong JNICALL   abbottdec(getStatusCode)(JNIEnv *env, jobject obj, jstring serial, jint elapsed1, jint elapsed2, jint jint4, jboolean endedearly) ;
 
 //extern string getstatus(JNIEnv *env, jobject thiz, const char *serial,time_t start,time_t lastread,time_t nu,bool endedearly) ;
@@ -178,7 +179,6 @@ void alarmhandler(int sig) {
                         lerror("tgkill");
                 }
 	}
-
 //s/setthreadname(\([^);
 extern void	setstreaming(SensorGlucoseData *hist) ;
 extern "C" JNIEXPORT jint JNICALL fromjava(nfcdata)(JNIEnv *env, jclass thiz, jbyteArray uid, jbyteArray info,jbyteArray data) {
@@ -199,8 +199,10 @@ static	 const int waitsig=60;
 			}
          jumpenvset=true;
 
-	if(abbottinit())
+	if(abbottinit()<0) {
+		LOGAR("abbottinit failed");
 		return 10<<16;
+		}
 	LOGSTRING("voor Abbott:Abbott\n");
 	Abbott ab(env,sensorbasedir,uid, info);
 	LOGSTRING("Na Abbott:Abbott\n");
@@ -338,8 +340,10 @@ extern data_t * unlockKeySensor(SensorGlucoseData *usedhist,scanstate *stateptr)
 //int  nusensornr=0,maxsens=4;; SensorGlucoseData ** nusensors=new SensorGlucoseData *[maxsens];
 extern "C" JNIEXPORT jlong JNICALL   fromjava(getsensorptr)(JNIEnv *env, jclass cl,jlong dataptr) {
 	streamdata *sdata=reinterpret_cast<streamdata *>(dataptr);
-	if(!sdata)
+	if(!sdata) {
+		
 		return 0LL;
+		}
 	return reinterpret_cast<jlong>(sdata->hist);
 	}
 extern "C" JNIEXPORT void JNICALL   fromjava(finishSensor)(JNIEnv *env, jclass cl,jlong dataptr) {
@@ -463,10 +467,13 @@ extern "C" JNIEXPORT jbyteArray JNICALL   fromjava(sensorUnlockKey)(JNIEnv *envi
 	streamdata * const streamptr=reinterpret_cast<streamdata *>(dataptr);
 	LOGGER("sensorUnlockKey %p\n",streamptr);
       setthreadname("sensorUnlockKey"  );
-	if(!dataptr)
+	if(!dataptr) {
 		return nullptr;
-	if(streamptr->libreversion!=2)
+		}
+	if(streamptr->libreversion!=2) {
+		LOGGER("libreversion=%d\n",streamptr->libreversion);
 		return nullptr;
+		}
 	scanstate state;
 	if(data_t * key=unlockKeySensor(streamptr->hist,&state)) {
 		const int uitlen= key->size();
@@ -475,6 +482,7 @@ extern "C" JNIEXPORT jbyteArray JNICALL   fromjava(sensorUnlockKey)(JNIEnv *envi
 //		data_t::deleteex(key);
 		return uit;
 		}
+	LOGAR("unlockKeySensor==null");
 	return nullptr;
 	}
 extern "C" JNIEXPORT jbyteArray JNICALL   fromjava(getsensorident)(JNIEnv *envin, jclass cl,jlong dataptr) { 
@@ -511,8 +519,10 @@ extern "C" JNIEXPORT jbyteArray JNICALL   fromjava(getstreamingAuthenticationDat
 	const SensorGlucoseData *usedhist=streamptr->hist ; 
 	if(!usedhist)
 		return nullptr;
-	jbyteArray uit=envin->NewByteArray(10);
-	envin->SetByteArrayRegion(uit, 0, 10,(const jbyte *)usedhist->getinfo()->getauth() );
+	const auto auth=usedhist->getinfo()->getauth();
+	const auto authlen=auth.size();
+	jbyteArray uit=envin->NewByteArray(authlen);
+	envin->SetByteArrayRegion(uit, 0, authlen,(const jbyte *)auth.data());
 	return uit;
 	}
 /*
@@ -556,9 +566,16 @@ static void savestate(libre2stream *sdata) {
 	unlink(old);
 	delete[] old;
 	}
-int getalarmcode(const uint32_t glval,SensorGlucoseData *hist) {
+
+
+static jlong getalarmonly(const uint32_t glval,const SensorGlucoseData *hist) {
 	const uint32_t val=glval*10;
-	int res= (glval<glucoselowest?isLowest:(glval>glucosehighest?isHighest:(settings->highAlarm(val)?isHigh:(settings->lowAlarm(val)?isLow:(settings->availableAlarm()&&hist->waiting?isAgain:0)))))>>48;
+	auto res=(glval<glucoselowest?isLowest:(glval>glucosehighest?isHighest:(settings->highAlarm(val)?isHigh:(settings->lowAlarm(val)?isLow:(settings->availableAlarm()&&hist->waiting?isAgain:0)))));
+	LOGGER("val=%u, high=%d, low=%d res=%" PRId64 "\n",val,settings->highAlarm(val),settings->lowAlarm(val),res);
+	return res;
+	}
+int getalarmcode(const uint32_t glval,SensorGlucoseData *hist) {
+	int res= getalarmonly(glval,hist)>>48;
 	hist->waiting=false;
 	return res;
 	}
@@ -569,13 +586,14 @@ extern "C" JNIEXPORT jfloat JNICALL   fromjava(thresholdchange)(JNIEnv *envin, j
 	return threshold(drate);
 	}
 jlong glucoselong(uint32_t glval,float drate,const SensorGlucoseData *hist) {
-		const uint32_t val=glval*10;
-		if(!val) 
+		if(!glval) 
 			return 0LL;
 		const jlong rate=roundl(((long double)drate)*1000LL);
-		const jlong alarmcode= glval<glucoselowest?isLowest:(glval>glucosehighest?isHighest:(settings->highAlarm(val)?isHigh:(settings->lowAlarm(val)?isLow:(settings->availableAlarm()&&hist->waiting?isAgain:0))));
+
+//		const jlong alarmcode= glval<glucoselowest?isLowest:(glval>glucosehighest?isHighest:(settings->highAlarm(val)?isHigh:(settings->lowAlarm(val)?isLow:(settings->availableAlarm()&&hist->waiting?isAgain:0))));
+		const jlong alarmcode= getalarmonly(glval,hist);
 		const jlong res= (rate&0xFFFF)<<32|alarmcode|glval;
-		LOGGER("val=%u, high=%d, low=%d res=%" PRId64 " rate=%" PRId64 "\n",val,settings->highAlarm(val),settings->lowAlarm(val),res,rate);
+		LOGGER("glucoselong=%" PRId64 "\n",res);
 		return res;
 		}
 extern const SensorGlucoseData * getlaststream(const uint32_t);
@@ -597,8 +615,9 @@ extern "C" JNIEXPORT jlongArray JNICALL   fromjava(getlastGlucose)(JNIEnv *env, 
 jlong glucoseback(uint32_t glval,float drate,SensorGlucoseData *hist) {
 		if(!glval) return 0LL;
 		hist->setbluetoothOn(1);
+		auto res= glucoselong(glval,drate,hist);
 		hist->waiting=false;
-		return glucoselong(glval,drate,hist);
+		return res;
 		}
 
 
@@ -628,7 +647,7 @@ extern "C" JNIEXPORT jlong JNICALL   fromjava(processTooth)(JNIEnv *envin, jclas
 	write(sdata->blueuit,bluedata->data(),bluedata->size());
 #endif
 //	scanstate *newstate=new scanstate(sdata->hist->getsensordir(),nu);
-	scanstate *newstate=new scanstate(4);
+	scanstate *newstate=new scanstate(defaultscanstate);
 	const AlgorithmResults *algres=sdata->processTooth(bluedata,newstate,nu);
 //	delete newstate;
 	if(algres==ALGDUP_VALUE ) {
@@ -817,8 +836,8 @@ extern "C" JNIEXPORT jbyteArray  JNICALL   fromjava(nfcgetresults)(JNIEnv *env, 
 #endif		
 #define abbottdec(x) (*x)
 #define abbottcall(x) x
-extern "C"  jint JNICALL   abbottdec(P1)(JNIEnv *envin, jobject obj, jint i, jint i2,jbyteArray  bArr,jbyteArray  bArr2) ;
-extern "C"  jbyteArray JNICALL abbottdec(P2)(JNIEnv *, jobject, jint, jint, jbyteArray, jbyteArray);
+extern "C"  jint JNICALL   abbottdec(P1)(JNIEnv *envin, jobject obj, jint i, jint i2,jbyteArray  bArr,jbyteArray  bArr2,jbyteArray token72) ;
+extern "C"  jbyteArray JNICALL abbottdec(P2)(JNIEnv *, jobject, jint, jint, jbyteArray, jbyteArray,jbyteArray token72);
 /*
 extern "C"  jint JNICALL   fromjava(V1)(JNIEnv *envin, jobject obj, jint i, jint i2,jbyteArray  bArr,jbyteArray  bArr2)  {
 	return  abbottcall(P1)(envin, obj, i, i2, bArr, bArr2)  ;
@@ -826,6 +845,19 @@ extern "C"  jint JNICALL   fromjava(V1)(JNIEnv *envin, jobject obj, jint i, jint
 extern "C"  jbyteArray JNICALL fromjava(V2)(JNIEnv *env, jobject obj, jint i1, jint i2, jbyteArray ar1, jbyteArray ar2) {
 	return  abbottcall(P2)(env,obj,i1,i2,ar1,ar2);
 	}*/
+
+int  abbottreinit();
+bool resetwrong();
+bool setgen2() {
+	debugclone();
+	if(!P1) {
+		resetwrong();
+		return abbottreinit()>=0;
+	}
+	else {
+		return abbottinit() >=0;
+	}
+}
 #ifdef  SAVEPS
 /*
 struct p1struct {
@@ -860,9 +892,8 @@ static void writearray(JNIEnv *env,jbyteArray  jar,FILE *fp) {
 int p1funcit=0;
 FILE *funcfp;
 extern "C"   JNIEXPORT jint JNICALL   fromjava(V1)(JNIEnv *env, jobject obj, jint i, jint i2,jbyteArray  bArr,jbyteArray  bArr2) {
-	debugclone();
-	 abbottinit() ;
-	jint res=abbottcall(P1)(env,obj,i,i2,bArr,bArr2);
+	setgen2();
+	jint res=abbottcall(P1)(env,obj,i,i2,bArr,bArr2,getjtoken(env));
 	fprintf(funcfp,"p1struct p1_%d={%d,%d", p1funcit++,i,i2);
 	writearray(env,bArr,funcfp);
 	writearray(env,bArr2,funcfp);
@@ -872,9 +903,8 @@ extern "C"   JNIEXPORT jint JNICALL   fromjava(V1)(JNIEnv *env, jobject obj, jin
 	}
 int p2funcit=0;
 extern "C"  JNIEXPORT  jbyteArray JNICALL fromjava(V2) (JNIEnv *env, jobject obj, jint i1, jint i2, jbyteArray jar1, jbyteArray jar2) {
-	debugclone();
-	 abbottinit() ;
-	jbyteArray jres=abbottcall(P2)(env, obj,  i1,  i2, jar1,  jar2) ;
+	setgen2();
+	jbyteArray jres=abbottcall(P2)(env, obj,  i1,  i2, jar1,  jar2,getjtoken(env)) ;
 	fprintf(funcfp,"p2struct p2_%d={%d,%d",p2funcit++,i1,i2);
 	writearray(env,jar1,funcfp);
 	writearray(env,jar2,funcfp);
@@ -886,17 +916,15 @@ extern "C"  JNIEXPORT  jbyteArray JNICALL fromjava(V2) (JNIEnv *env, jobject obj
 #else
 
 extern "C"  JNIEXPORT  jint JNICALL   fromjava(V1)(JNIEnv *env, jclass obj, jint i, jint i2,jbyteArray  bArr,jbyteArray  bArr2) {
-	debugclone();
-	 abbottinit() ;
-	jint res=abbottcall(P1)(env,obj,i,i2,bArr,bArr2);
+	setgen2();
+	jint res=abbottcall(P1)(env,obj,i,i2,bArr,bArr2,getjtoken(env));
 	 LOGGER("V1(%i,%i,%p,%p)=%i\n",i,i2,bArr,bArr2,res);
 	return res;
 	}
 int p2funcit=0;
 extern "C"  JNIEXPORT  jbyteArray JNICALL fromjava(V2) (JNIEnv *env, jclass obj, jint i1, jint i2, jbyteArray jar1, jbyteArray jar2) {
-	debugclone();
-	abbottinit() ;
-	jbyteArray jres=abbottcall(P2)(env, obj,  i1,  i2, jar1,  jar2) ;
+	setgen2();
+	jbyteArray jres=abbottcall(P2)(env, obj,  i1,  i2, jar1,  jar2,getjtoken(env)) ;
 	LOGGER("V2(%d,%d,%p,%p)=%p\n",i1,i2,jar1,jar2,jres);
 	return jres;
 	}
@@ -938,13 +966,11 @@ extern string_view filesdir;
 static bool *registeredptr=nullptr;
 */
 extern "C" JNIEXPORT jboolean  JNICALL   fromjava(abbottinit)(JNIEnv *env, jclass _cl) {
-	if(abbottinit()<0)
+	if(abbottinit(false)<0)
 		return false;
 	return P1!=nullptr;
 }
 
-int  abbottreinit();
-bool resetwrong(); 
 
 static void reinitabbotter(std::promise<bool> * prom) {
  	resetwrong(); 
@@ -1006,28 +1032,29 @@ extern "C" JNIEXPORT void  JNICALL   fromjava(reenableStreaming)(JNIEnv *env, jc
 	}
 
 int lastgen=0;
+bool hasGen2=false,hasGen1=false;
 /*#ifndef NDEBUG
 #define TESTGEN2 1
 #endif */
 int getlastGen() {
-#ifdef TESTGEN2
-		 	lastgen=2;
-		 	return 2;
-#else
-	if(lastgen)
-		return lastgen;
+//	if(lastgen) return lastgen;
 extern	void setusedsensors() ;
 extern std::vector<int> usedsensors;
 	 setusedsensors() ;
+	 bool has2=false,has1=false;
 	 for(int index:usedsensors) {
 		 auto sens=sensors->gethist(index);
 		 if(sens->getsensorgen()==2) {
-		 	lastgen=2;
-		 	return 2;
+		 	has2=true;
+			}
+		else {
+			has1=true;
 			}
 		 }
-	return 0;
-#endif
+	hasGen1=has1;
+	hasGen2=has2;
+	lastgen=has2?2:1;
+	return lastgen;	
 	}
 
 
@@ -1046,7 +1073,7 @@ extern "C" JNIEXPORT jboolean  JNICALL   fromjava(switchgen2)(JNIEnv *env, jclas
 			return false;
 			}
 		#else
-		return !P1;
+		return P1;
 		#endif
 		}
 	return true;
@@ -1062,3 +1089,26 @@ extern std::string_view getdeltaname(float rate);
 extern "C" JNIEXPORT jstring JNICALL   fromjava(getxDripTrendName)(JNIEnv *envin, jclass cl,jfloat rate) {
 	return envin->NewStringUTF(getdeltaname(rate).data());
 	}
+extern "C" JNIEXPORT jint JNICALL   fromjava(getinfogen)(JNIEnv *env, jclass _cl, jbyteArray jinfo) {
+	jsize lens=env->GetArrayLength(jinfo);
+	char info[lens];
+	env->GetByteArrayRegion(jinfo, 0, lens, reinterpret_cast<jbyte *>(info));
+	int gen= SensorGlucoseData::getgeneration(info);
+
+	#ifndef NOLOG
+	const char label[]="getinfogen ";
+	auto labellen=sizeof(label)-1;
+	int totlen=labellen+lens*3+3;
+	char mess[totlen];
+	memcpy(mess,label,labellen);
+	int pos=labellen;
+	for(int i=0;i<lens;i++) {
+		pos+=sprintf(mess+pos,"%02X ",info[i]);
+		}
+	pos+=sprintf(mess+pos,"%d",gen);
+	LOGGERN(mess,pos);
+	#endif
+
+	return gen;
+	}
+

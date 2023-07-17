@@ -28,7 +28,7 @@
 #ifndef NVG_NO_STB
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
-#endif 
+#endif
 
 #ifdef _MSC_VER
 #pragma warning(disable: 4100)  // unreferenced formal parameter
@@ -45,7 +45,10 @@
 #define NVG_INIT_POINTS_SIZE 128
 #define NVG_INIT_PATHS_SIZE 16
 #define NVG_INIT_VERTS_SIZE 256
+
+#ifndef NVG_MAX_STATES
 #define NVG_MAX_STATES 32
+#endif
 
 #define NVG_KAPPA90 0.5522847493f	// Length proportional to radius of a cubic bezier handle for 90deg arcs.
 
@@ -396,6 +399,7 @@ void nvgEndFrame(NVGcontext* ctx)
 	ctx->params.renderFlush(ctx->params.userPtr);
 	if (ctx->fontImageIdx != 0) {
 		int fontImage = ctx->fontImages[ctx->fontImageIdx];
+		ctx->fontImages[ctx->fontImageIdx] = 0;
 		int i, j, iw, ih;
 		// delete images that smaller than current one
 		if (fontImage == 0)
@@ -404,20 +408,19 @@ void nvgEndFrame(NVGcontext* ctx)
 		for (i = j = 0; i < ctx->fontImageIdx; i++) {
 			if (ctx->fontImages[i] != 0) {
 				int nw, nh;
-				nvgImageSize(ctx, ctx->fontImages[i], &nw, &nh);
+				int image = ctx->fontImages[i];
+				ctx->fontImages[i] = 0;
+				nvgImageSize(ctx, image, &nw, &nh);
 				if (nw < iw || nh < ih)
-					nvgDeleteImage(ctx, ctx->fontImages[i]);
+					nvgDeleteImage(ctx, image);
 				else
-					ctx->fontImages[j++] = ctx->fontImages[i];
+					ctx->fontImages[j++] = image;
 			}
 		}
 		// make current font image to first
-		ctx->fontImages[j++] = ctx->fontImages[0];
+		ctx->fontImages[j] = ctx->fontImages[0];
 		ctx->fontImages[0] = fontImage;
 		ctx->fontImageIdx = 0;
-		// clear all images after j
-		for (i = j; i < NVG_MAX_FONTIMAGES; i++)
-			ctx->fontImages[i] = 0;
 	}
 }
 
@@ -698,19 +701,6 @@ void nvgLineJoin(NVGcontext* ctx, int join)
 	NVGstate* state = nvg__getState(ctx);
 	state->lineJoin = join;
 }
-/*
-int nvgGetLineJoin(NVGcontext* ctx)
-{
-	NVGstate* state = nvg__getState(ctx);
-	return state->lineJoin ;
-}
-int nvgGetLineCap(NVGcontext* ctx)
-{
-	NVGstate* state = nvg__getState(ctx);
-	return state->lineCap ;
-}
-*/
-
 
 void nvgGlobalAlpha(NVGcontext* ctx, float alpha)
 {
@@ -2266,12 +2256,8 @@ void nvgFill(NVGcontext* ctx)
 void nvgStroke(NVGcontext* ctx)
 {
 	NVGstate* state = nvg__getState(ctx);
-#ifdef DONTSCALESTROKEWIDTH
-	float strokeWidth = nvg__clampf(state->strokeWidth , 0.0f, 200.0f);
-#else
 	float scale = nvg__getAverageScale(state->xform);
 	float strokeWidth = nvg__clampf(state->strokeWidth * scale, 0.0f, 200.0f);
-#endif
 	NVGpaint strokePaint = state->stroke;
 	const NVGpath* path;
 	int i;
@@ -2471,6 +2457,12 @@ static void nvg__renderText(NVGcontext* ctx, NVGvertex* verts, int nverts)
 	ctx->textTriCount += nverts/3;
 }
 
+static int nvg__isTransformFlipped(const float *xform)
+{
+	float det = xform[0] * xform[3] - xform[2] * xform[1];
+	return( det < 0);
+}
+
 float nvgText(NVGcontext* ctx, float x, float y, const char* string, const char* end)
 {
 	NVGstate* state = nvg__getState(ctx);
@@ -2481,6 +2473,8 @@ float nvgText(NVGcontext* ctx, float x, float y, const char* string, const char*
 	float invscale = 1.0f / scale;
 	int cverts = 0;
 	int nverts = 0;
+	int isFlipped = nvg__isTransformFlipped(state->xform);
+
 	if (end == NULL)
 		end = string + strlen(string);
 
@@ -2513,6 +2507,12 @@ float nvgText(NVGcontext* ctx, float x, float y, const char* string, const char*
 				break;
 		}
 		prevIter = iter;
+		if(isFlipped) {
+			float tmp;
+
+			tmp = q.y0; q.y0 = q.y1; q.y1 = tmp;
+			tmp = q.t0; q.t0 = q.t1; q.t1 = tmp;
+		}
 		// Transform corners.
 		nvgTransformPoint(&c[0],&c[1], state->xform, q.x0*invscale, q.y0*invscale);
 		nvgTransformPoint(&c[2],&c[3], state->xform, q.x1*invscale, q.y0*invscale);

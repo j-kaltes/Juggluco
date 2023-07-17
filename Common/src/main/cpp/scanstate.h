@@ -87,6 +87,7 @@ void setpos(int datnr,data_t *dat) {
 
 	class SavedApart {};
 string_view getpreviousstate(string_view sbasedir ) ; // delete[] should be called on result
+constexpr const int defaultscanstate=4; //Also at other places
 class scanstate: public multimmap {
 	class TimeFile {};
 	public:

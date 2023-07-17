@@ -43,6 +43,7 @@
 #include "SensorGlucoseData.h"
 #include "debugclone.h"
 #include "settings/settings.h"
+#include "hexstr.h"
 #define VISIBLE __attribute__((__visibility__("default")))
 using namespace std;
 //#define DYNLINK
@@ -55,6 +56,23 @@ using namespace std;
 #define abbottcall(x) Java_com_abbottdiabetescare_flashglucose_sensorabstractionservice_dataprocessing_DataProcessingNative_##x
 #endif
 #include "fromjava.h"
+
+static constexpr const unsigned char tokenar[]={0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x27,0x2B,0xCD,0x3B,0xF3,0xCC,0xA0,0xB8,0x56,0xCE,0x96,0x1F,0xDB,0xA5,0x6B,0xB6,0x17,0xB2,0x1B,0xD6,0x57,0x0D,0xF3,0x5F,0x00,0x6D,0x4C,0xD4,0x62,0x66,0x26,0x54,0x1F,0xF9,0x5C,0x87,0xAE,0x63,0xD9,0x7F,0x53,0x6E,0xB6,0x80,0xE7,0x71,0x2E,0x59,0xCF,0xE4,0x50,0xC0,0xC8,0x53,0x1A,0x33,0x61,0xE2,0xDB,0x32,0xF2,0x2A,0xC1,0xB6};
+auto token= (const data_t*)gegs<unsigned char>::newex(tokenar);
+jbyteArray casttoken=(jbyteArray)token;
+static jbyteArray genjtoken(JNIEnv *env) {
+	const int len=std::size(tokenar);
+	jbyteArray loc=env->NewByteArray(len);
+	env->SetByteArrayRegion(loc, 0, len, (jbyte*)tokenar);
+    	auto gl=    (jbyteArray) env->NewGlobalRef(loc);
+    	env->DeleteLocalRef(loc);
+	return gl;
+	}
+jbyteArray getjtoken(JNIEnv *env) {
+	const static jbyteArray tok=genjtoken(env);
+	return tok;
+	}
+
 //#define fromjava(x) Java_tk_glucodata_Natives_ ##x
 //FILE *errorlogfile=stderr;
 //#define LOGGER(...) {fprintf(stderr,__VA_ARGS__) ;fflush(stderr);}
@@ -124,14 +142,20 @@ jclasser(const char name[], std::vector<Method> &&funcs): funcs(std::move(funcs)
 	}
 };
 std::unordered_map<string,jclasser*> jclasser::classid(20);
-#define subLOGGER(...)
-#define subLOGSTRING(...)
+#define subLOGGER(...) LOGGER(__VA_ARGS__)
+#define subLOGSTRING(...) LOGSTRING(__VA_ARGS__)
+
 extern "C" jsize       subGetArrayLength(JNIEnv* env, jarray jar) {
+	subLOGGER("subGetArrayLength(%p)\n",jar);
+	if(!jar)
+		return 0;
     	 data_t *ar=	reinterpret_cast<data_t *>(jar);
 	 jint len= ar->length();
 	subLOGGER("subGetArrayLength=%d\n",len);
 	return len;
 	 }
+
+
 
 
 extern "C" void         subGetByteArrayRegion(JNIEnv*env,jbyteArray  jar,jsize  start,jsize  len,jbyte * jbyte4) {
@@ -238,6 +262,7 @@ extern "C"    void         subCallVoidMethod(JNIEnv* env, jobject obj, jmethodID
 
 
 extern "C" jclass      subFindClass(JNIEnv*env, const char* clname) {
+	subLOGGER("start subFindClass %s\n",clname);
 	const char *end=strrchr(clname,'/')+1;
 	jclass cl= (jclass)jclasser::classid[end];
 	subLOGGER("subFindClass %s=%p\n",clname,cl);
@@ -569,6 +594,8 @@ boolfun(isLsaDetectionEnabled,JNI_TRUE)
 boolfun(isEsaCorrectionEnabled,JNI_TRUE)
 boolfun(isLsaCorrectionEnabled,JNI_TRUE)
 //#include "statedata.cpp"
+
+extern "C" jint         subRegisterNatives(JNIEnv*, jclass name, const JNINativeMethod*methods, jint nr);
 #include "subtrace.c"
 struct JNINativeInterface envbuf ={
 #include "subtrace.h"
@@ -618,7 +645,7 @@ jclasser attconf{"AttenuationConfiguration",{
 {"isLsaCorrectionEnabled","()Z",function(isLsaCorrectionEnabled)},
 {"isLsaDetectionEnabled","()Z",function(isLsaDetectionEnabled)}}};
 
-
+jclasser DataProcessingNative{"DataProcessingNative",{}};
 //typedef void *jobject;
 
 void setout(jobject obj,  va_list args) {
@@ -634,35 +661,37 @@ outobj(): algobj(&out) {}
 };
 #define WAS_JNIEXPORT 
 extern "C" {
-WAS_JNIEXPORT jint JNICALL abbottdec(getTotalMemorySize)(JNIEnv *env, jobject thiz, jint get) ;
-WAS_JNIEXPORT void JNICALL abbottdec(initialize)(JNIEnv *, jobject, jobject);
-WAS_JNIEXPORT void JNICALL abbottdec(dpSetMaxAlgorithmVersion)(JNIEnv *, jobject, jint);
-WAS_JNIEXPORT jint JNICALL   abbottdec(P1)(JNIEnv *envin, jobject obj, jint i, jint i2,jbyteArray  bArr,jbyteArray  bArr2) ;
-WAS_JNIEXPORT jbyteArray JNICALL abbottdec(P2)(JNIEnv *, jobject, jint, jint, jbyteArray, jbyteArray);
+WAS_JNIEXPORT jint JNICALL abbottdec(getTotalMemorySize)(JNIEnv *env, jobject thiz, jint get,  jbyteArray) =nullptr;
+WAS_JNIEXPORT void JNICALL abbottdec(initialize)(JNIEnv *, jobject, jobject)=nullptr;
+WAS_JNIEXPORT void JNICALL abbottdec(dpSetMaxAlgorithmVersion)(JNIEnv *, jobject, jint, jbyteArray)=nullptr;
+WAS_JNIEXPORT void JNICALL abbottdec(dpSetMaxAlgorithmVersiongen2)(JNIEnv *, jobject, jint, jbyteArray)=nullptr;
+WAS_JNIEXPORT jint JNICALL   abbottdec(P1)(JNIEnv *envin, jobject obj, jint i, jint i2,jbyteArray  bArr,jbyteArray  bArr2,jbyteArray token72)=nullptr;
+WAS_JNIEXPORT jbyteArray JNICALL abbottdec(P2)(JNIEnv *, jobject, jint, jint, jbyteArray, jbyteArray,jbyteArray token72)=nullptr;
 
 
+WAS_JNIEXPORT void JNICALL abbottdec(initializeNative)(JNIEnv *, jobject, jobject, jbyteArray)=nullptr;
 
 
 //WAS_JNIEXPORT void JNICALL abbottdec(dpEnableDebugLogging) (JNIEnv *, jobject);
-WAS_JNIEXPORT jobject JNICALL abbottdec(processScan) (JNIEnv *, jobject, jint, jobject, jobject, jobject, jobject, jbyteArray, jbyteArray, jbyteArray, jint, jint, jint, jint, jint, jbyteArray, jbyteArray, jbyteArray, jobject, jobject, jobject, jobject, jobject, jobject, jobject, jobject, jobject, jobject);
+WAS_JNIEXPORT jobject JNICALL abbottdec(processScan) (JNIEnv *, jobject, jint, jobject, jobject, jobject, jobject, jbyteArray, jbyteArray, jbyteArray, jint, jint, jint, jint, jint, jbyteArray, jbyteArray, jbyteArray, jobject, jobject, jobject, jobject, jobject, jobject, jobject, jobject, jobject, jobject,jbyteArray token72)=nullptr;
 //JNIEXPORT jobject JNICALL Java_com_abbottdiabetescare_flashglucose_sensorabstractionservice_dataprocessing_DataProcessingNative_processScan JNIEnv *, jobject, jint, jobject, jobject, jobject, jobject, jbyteArray, jbyteArray, jbyteArray,  jint, jint, jint, jint, jint, jbyteArray, jbyteArray, jbyteArray, jobject, jobject, jobject, jobject, jobject, jobject, jobject, jobject, jobject, jobject);
-WAS_JNIEXPORT jbyteArray JNICALL abbottdec(getEnableStreamingPayload)(JNIEnv *, jobject, jint, jbyteArray, jbyteArray, jbyte, jint);
-WAS_JNIEXPORT jbyteArray JNICALL abbottdec(activationComplete)(JNIEnv *, jobject, jbyteArray, jint, jint, jbyteArray);
-WAS_JNIEXPORT jint JNICALL abbottdec(getProductFamily)(JNIEnv *, jobject, jint, jbyteArray);
+WAS_JNIEXPORT jbyteArray JNICALL abbottdec(getEnableStreamingPayload)(JNIEnv *, jobject, jint, jbyteArray, jbyteArray, jbyte, jint,jbyteArray token72)=nullptr;
+WAS_JNIEXPORT jbyteArray JNICALL abbottdec(activationComplete)(JNIEnv *, jobject, jbyteArray, jint, jint, jbyteArray,jbyteArray token72)=nullptr;
+WAS_JNIEXPORT jint JNICALL abbottdec(getProductFamily)(JNIEnv *, jobject, jint, jbyteArray,jbyteArray token72)=nullptr;
 
 //WAS_JNIEXPORT jlong JNICALL   abbottdec(getStatusCode) (JNIEnv *env, jobject obj, jstring serial, jint startminbase, jint lastestreadingminbase, jint numinbase, jboolean endedearly) ;
 
 //JNIEXPORT jlong JNICALL Java_com_abbottdiabetescare_flashglucose_sensorabstractionservice_dataprocessing_DataProcessingNative_getStatusCode (JNIEnv *, jobject, jstring, 		  jint, jint, jint, jboolean); 
-WAS_JNIEXPORT jboolean JNICALL abbottdec(getPatchTimeValues)(JNIEnv *, jobject, jint, jbyteArray, jobject, jobject);
-WAS_JNIEXPORT jbyte JNICALL   abbottdec(getActivationCommand)(JNIEnv *env, jobject obj, jint parsertype, jbyteArray info) ;
+WAS_JNIEXPORT jboolean JNICALL abbottdec(getPatchTimeValues)(JNIEnv *, jobject, jint, jbyteArray, jobject, jobject,jbyteArray token72)=nullptr;
+WAS_JNIEXPORT jbyte JNICALL   abbottdec(getActivationCommand)(JNIEnv *env, jobject obj, jint parsertype, jbyteArray info,jbyteArray token72)=nullptr;
 
-WAS_JNIEXPORT jbyteArray JNICALL  abbottdec( getActivationPayload)(JNIEnv *env, jobject obj, jint parsertype, jbyteArray patchid, jbyteArray info, jbyte person) ;
+WAS_JNIEXPORT jbyteArray JNICALL  abbottdec( getActivationPayload)(JNIEnv *env, jobject obj, jint parsertype, jbyteArray patchid, jbyteArray info, jbyte person,jbyteArray token72)=nullptr;
 
 //WAS_JNIEXPORT jboolean JNICALL   abbottdec(getNeedsReaderInfoForActivation)(JNIEnv *env, jobject obj, jint parsertype) ;
 
-WAS_JNIEXPORT jbyteArray JNICALL  abbottdec(getStreamingUnlockPayload) (JNIEnv *envin, jobject obj, jint parsertype, jbyteArray sensorident, jbyteArray patchinfo, jbyte person, jint timestamp, jint unlockcount) ;
+WAS_JNIEXPORT jbyteArray JNICALL  abbottdec(getStreamingUnlockPayload) (JNIEnv *envin, jobject obj, jint parsertype, jbyteArray sensorident, jbyteArray patchinfo, jbyte person, jint timestamp, jint unlockcount,jbyteArray token72)=nullptr;
 
-WAS_JNIEXPORT jobject JNICALL abbottdec(getNextRegionToRead)(JNIEnv *, jobject, jint, jbyteArray, jbyteArray, jbyteArray, jint);
+WAS_JNIEXPORT jobject JNICALL abbottdec(getNextRegionToRead)(JNIEnv *, jobject, jint, jbyteArray, jbyteArray, jbyteArray, jint,jbyteArray token72)=nullptr;
 
 //JNIEXPORT jbyteArray JNICALL Java_com_abbottdiabetescare_flashglucose_sensorabstractionservice_dataprocessing_DataProcessingNative_getStreamingUnlockPayload (JNIEnv *, jobject, 	    jint,              jbyteArray,           jbyteArray, jbyte, jint, jint);
 WAS_JNIEXPORT jobject JNICALL   abbottdec(processStream)(JNIEnv *envin, jobject obj, 
@@ -675,7 +704,7 @@ jint startsincebase,jint nusincebase,jint warmup,jint wear,
 jbyteArray compostate, jbyteArray attenustate, jbyteArray measurestate,
 jobject outstarttime, jobject endtime, jobject confinsert, jobject removed, 
 jobject compo, jobject attenu, jobject messstate, 
- jobject algorithresults) ;
+ jobject algorithresults,jbyteArray token72) =nullptr;
 typedef WAS_JNIEXPORT jobject JNICALL   (*oldprocessStream_t)(JNIEnv *envin, jobject obj, 
 jint parsertype, jobject alarmconf, jobject nonaction, jobject glrange, jobject attenuatinconfig, jbyteArray sensorident, 
 jbyte person, jbyteArray bluetoothdata, 
@@ -683,7 +712,7 @@ jint startsincebase,jint nusincebase,jint warmup,jint wear,
 jbyteArray compostate, jbyteArray attenustate, jbyteArray measurestate,
 jobject outstarttime, jobject endtime, jobject confinsert, jobject removed, 
 jobject compo, jobject attenu, jobject messstate, 
- jobject algorithresults) ;
+ jobject algorithresults);
 oldprocessStream_t  oldprocessStream=nullptr;
 /*
 typedef WAS_JNIEXPORT jobject JNICALL   (*processStream230_t)(JNIEnv *envin, jobject obj, 
@@ -726,6 +755,54 @@ JNIEXPORT jobject JNICALL Java_com_abbottdiabetescare_flashglucose_sensorabstrac
   (JNIEnv *, jobject, jint, jobject, jobject, jobject, jobject, jbyteArray, jbyteArray, jbyteArray, jint, jint, jint, jint, jint, jbyteArray, jbyteArray, jbyteArray, jobject, jobject, jobject, jobject, jobject, jobject, jobject, jobject, jobject, jobject);
 }
 */
+#ifdef NDEBUG
+#define setfunc(nam)    {*(void **) (&nam)= methods[it++].fnPtr;}
+#else
+#define setfunc(nam)   {if(strcmp(#nam,methods[it].name)) LOGGER("%s!=%s\n",#nam,methods[it].name); *(void **) (&nam)= methods[it++].fnPtr;;++it;;}
+#endif
+#ifdef NDEBUG
+#define setfuncneed(nam)    {if(!nam) {*(void **) (&nam)= methods[it].fnPtr;};++it;}
+#else
+#define setfuncneed(nam)   {if(strcmp(#nam,methods[it].name)) LOGGER("%s!=%s\n",#nam,methods[it].name); {if(!nam) {*(void **) (&nam)= methods[it].fnPtr;};++it;};}
+#endif
+jint         subRegisterNatives(JNIEnv*, jclass name, const JNINativeMethod*methods, jint nr) {
+	if(nr!=20) {
+		LOGGER("RegisterNatives %d\n",nr);
+		return 0;
+		}
+	int it=0;
+	setfunc(initializeNative);
+//	setfunc(isPatchSupported);
+	++it;
+	setfunc(getPatchTimeValues);
+	setfunc(getProductFamily);
+	setfunc(getActivationCommand);
+	setfunc(getActivationPayload);
+	setfunc(getEnableStreamingPayload);
+	setfuncneed(getStreamingUnlockPayload); //Use version without rootcheck instead. This one is so slow that the sensor hangs up (status=19) on slow devices (e.g.  WearOS watch).
+//	setfunc(getNeedsReaderInfoForActivation);
+	++it;
+	setfunc(getTotalMemorySize);
+#ifdef NFCMEM
+	setfunc(getNextRegionToRead);
+#else
+	++it;
+#endif
+	setfunc(processScan);
+	setfunc(processStream);
+	//setfunc(getStatusCodeNative);
+	++it;
+	setfunc(activationComplete);
+//	setfunc(dpSetReaderCodeSimMode);
+	++it;
+	setfunc(dpSetMaxAlgorithmVersiongen2);
+//	setfunc(dpEnableDebugLogging);
+	++it;
+	setfunc(P1);
+	setfunc(P2);
+        LOGGER("end myRegisterNatives %d\n",it);
+        return 0;
+        }
 
 #if __ANDROID_API__ >= 24
 #define usedlsym(han,name) dlvsym(han,name,nullptr)
@@ -734,43 +811,149 @@ JNIEXPORT jobject JNICALL Java_com_abbottdiabetescare_flashglucose_sensorabstrac
 #endif
 #ifdef DYNLINK
 //#define usedlsym dlsym
+/*
+    jint        (*origDestroyJavaVM)(JavaVM*);
+    jint        (*origAttachCurrentThread)(JavaVM*, JNIEnv**, void*);
+    jint        (*origDetachCurrentThread)(JavaVM*);
+    jint        (*origGetEnv)(JavaVM*, void**, jint)=nullptr;
+    jint        (*origAttachCurrentThreadAsDaemon)(JavaVM*, JNIEnv**, void*);
+    jclass      (*origFindClass)(JNIEnv*, const char*);
+jint        (*origRegisterNatives)(JNIEnv*, jclass, const JNINativeMethod*, jint);
+JNIEnv *origenv;
+*/
+
+
+/*
+#include "libre3/unprotect.h"
+static jint        libre2getenv(JavaVM* vm, void**envptr, jint arg) {
+        JNIEnv **env=reinterpret_cast<JNIEnv**>(envptr);
+	LOGGER("libre2getenv(%p,%d) origGetEnv=%p\n",env,arg,origGetEnv);
+    	auto res=origGetEnv(vm, envptr, arg);
+	LOGAR("libre2getenv afgter origGetEnv");
+	origenv=*env;
+	origRegisterNatives=origenv->functions->RegisterNatives;
+	origFindClass=origenv->functions->FindClass;
+	 Unprotect _prot((struct JNINativeInterface*)origenv->functions,sizeof(*origenv->functions));
+	((struct JNINativeInterface*)(origenv->functions))->RegisterNatives= subRegisterNatives;
+	((struct JNINativeInterface*)(origenv->functions))->FindClass= subFindClass;
+	LOGAR("end libre2getenv");
+//        *env=subenv;
+        return res;
+        }*/
+static jint        libre2getenv(JavaVM* vm, void**envptr, jint arg) {
+        JNIEnv **env=reinterpret_cast<JNIEnv**>(envptr);
+	LOGGER("libre2getenv(%p,%d) \n",env,arg);
+        *env=subenv;
+        return 0;
+        }
+static  JNIInvokeInterface libre2vm {
+        .DestroyJavaVM=[](JavaVM*vm)-> jint {
+                LOGAR("DestroyJavaVM(JavaVM*)");
+                return 0;
+                },
+        .AttachCurrentThread=[](JavaVM*vm, JNIEnv**p_env, void*thr_args)  {
+                LOGGER("AttachCurrentThread(%p, env, %p)\n",vm,thr_args);
+		*p_env=subenv;
+//    		return origAttachCurrentThread(vm, p_env, thr_args);
+		return 0;
+                },
+        .DetachCurrentThread=[](JavaVM*vm)-> jint {
+                LOGAR("DetachCurrentThread(JavaVM*)");
+//                return origDetachCurrentThread(vm);
+		return 0;
+                },
+
+       .GetEnv=libre2getenv,
+        .AttachCurrentThreadAsDaemon=[](JavaVM*vm, JNIEnv**p_env, void*thr_args)  {
+                LOGAR("AttachCurrentThreadAsDaemon(vm, env, rest)");
+//    		return origAttachCurrentThreadAsDaemon(vm, p_env, thr_args);
+		return 0;
+                }
+	};
+
+static JavaVM hiervmptr{.functions=&libre2vm};
+//extern JavaVM *vmptr;
+JavaVM *getnewvm() {
+/*
+    origDestroyJavaVM=vmptr->functions->DestroyJavaVM;
+    origAttachCurrentThread=vmptr->functions->AttachCurrentThread;
+    origDetachCurrentThread=vmptr->functions->DetachCurrentThread;
+    origGetEnv=vmptr->functions->GetEnv;
+    origAttachCurrentThreadAsDaemon=vmptr->functions->AttachCurrentThreadAsDaemon;
+   *(( (void **)(&hiervmptr.functions->reserved0)))=vmptr->functions->reserved0;
+	*(( (void **)(&hiervmptr.functions->reserved1)))=vmptr->functions->reserved1;
+	*(( (void **)(&hiervmptr.functions->reserved2)))=vmptr->functions->reserved2; */
+	return &hiervmptr;
+	
+	}
+
+typedef struct JNINativeInterface * JNIEnvC;
+extern JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* reserved) ;
 
 #define getdynsym(name)  ( *(void **) (&name)=usedlsym(dynlibhandle, "Java_com_abbottdiabetescare_flashglucose_sensorabstractionservice_dataprocessing_DataProcessingNative_" #name))
 #define ds(name) && getdynsym(name)
 static void *dynlibhandle=nullptr;
 bool linklib(const char *filename) {
-debugclone();
 LOGGER("linklib %s %p\n",filename,dynlibhandle);
-if(dynlibhandle) dlclose(dynlibhandle);
-LOGSTRING("closed\n");;
+debugclone();
+/*
+if(dynlibhandle) {
+	dlclose(dynlibhandle);
+LOGSTRING("closed oldlib\n");;
+	} */
+oldprocessStream=nullptr;
+//P1=nullptr;
+//initializeNative=nullptr;
 if((dynlibhandle=dlopen(filename,RTLD_LAZY))) {
+//if((dynlibhandle=dlopen(filename,RTLD_NOW))) {
 	LOGGER("opened %p\n",dynlibhandle);
-   	if(getdynsym(initialize)
-		&& getdynsym(getTotalMemorySize)
-		&& getdynsym(processScan)&&	getdynsym(getEnableStreamingPayload)&& getdynsym(getProductFamily) 
-		 &&getdynsym(getPatchTimeValues)
-		ds(getActivationCommand)
-		ds(getActivationPayload)
-//		 ds(getNeedsReaderInfoForActivation)
-		ds(getStreamingUnlockPayload)
-		ds(processStream)
-		 ds(dpSetMaxAlgorithmVersion)
-		ds(activationComplete)
-	        ds(getNextRegionToRead)
-		  ){
-		if(getdynsym(P1)) {
-			if(getdynsym(P2)) {
-				LOGSTRING("have P2\n");
-				}
+	LOGGER("PATH=%s\n",getenv("PATH"));
+	if(getdynsym(initialize)
+			&& getdynsym(getTotalMemorySize)
+			&& getdynsym(processScan)&&	getdynsym(getEnableStreamingPayload)&& getdynsym(getProductFamily) 
+			 &&getdynsym(getPatchTimeValues)
+			ds(getActivationCommand)
+			ds(getActivationPayload)
+	//		 ds(getNeedsReaderInfoForActivation)
+			ds(getStreamingUnlockPayload)
+			ds(processStream)
+			 ds(dpSetMaxAlgorithmVersion)
+			ds(activationComplete)
+	#ifdef NFCMEM
+			ds(getNextRegionToRead)
+	#endif
+			  ){
+			if(getdynsym(P1)) {
+				if(getdynsym(P2)) {
+					LOGSTRING("have P2\n");
+					}
+				else {
+					LOGGER("no P2 %s\n",dlerror());
+					}
+				} 
 			else {
-				LOGGER("no P2 %s\n",dlerror());
+			      oldprocessStream= (oldprocessStream_t)  processStream;
 				}
-			} 
-		else {
-		      oldprocessStream= (oldprocessStream_t)  processStream;
+			LOGSTRING("success\n");
+			return true;
 			}
-		LOGSTRING("success\n");
-		return true;
+		else {
+		typedef   jint (*OnLoadtype)(JavaVM* vm, void* reserved) ;
+		OnLoadtype OnLoad=(OnLoadtype)usedlsym(dynlibhandle,"JNI_OnLoad");
+		if(OnLoad!=JNI_OnLoad) {
+		     LOGAR("OnLoad exists");
+			extern bool globalsetpathworks;
+			if(globalsetpathworks) {
+				extern pathconcat mkbindir(std::string_view subdir,std::string_view libname );
+				const static pathconcat libre2dir=mkbindir("xbin","libus.so");
+				setenv("PATH", libre2dir.data(), 1);
+				}
+		     jint res=OnLoad(getnewvm(),nullptr);
+		     LOGGER("OnLoad returns %d\n",res);
+			if(P1)
+			     return true;
+			  LOGAR("no P1");
+			}
 		}
 	LOGGER("linklib: %s\n",dlerror());
 	dlclose(dynlibhandle);
@@ -838,7 +1021,8 @@ data_t *fromjbyteArray(JNIEnv *env,jbyteArray jar,jint len) {
 	}
 //Abbott(string_view basedir,data_t *uidin,int fam=0): sensordir(basedir,getserial(fam,reinterpret_cast<unsigned char *>(uidin->data()))), uid(uidin) {}
 
-Abbott::Abbott(JNIEnv *env,string_view basedir,jbyteArray juid, jbyteArray info): Abbott(basedir,fromjbyteArray(env,juid),abbottcall(getProductFamily)(env,nullptr, parsertype, info)) {
+
+Abbott::Abbott(JNIEnv *env,string_view basedir,jbyteArray juid, jbyteArray info): Abbott(basedir,fromjbyteArray(env,juid),abbottcall(getProductFamily)(env,nullptr, parsertype, info,getjtoken(env))) {
 	}
 AlgorithmResults *callAbbottAlg(data_t *uid,int startsincebase,scanstate *oldstate,scandata *data,scanstate *newstate,outobj *starttime,outobj *endtime,jobject person) {
 	LOGSTRING("start callAbbottAlg/3\n");
@@ -854,10 +1038,10 @@ jnidata_t  hierjnidata={&envbuf,newstate};
 JNIEnv *hiersubenv=(JNIEnv *) &hierjnidata;
 //	 reinterpret_cast<jnidata_t*>(subenv)->map=newstate;
 debugclone();
-LOGSTRING("start processScan ");
+LOGAR("start processScan ");
 	jobject result= abbottcall(processScan)(hiersubenv,nullptr, parsertype, alarm, nonAction, range, attenconf, (jbyteArray)uid, (jbyteArray) data->info,(jbyteArray)data->data ,startsincebase,lastsincebase,warmup,wear, timeoffset
-		, (jbyteArray)oldstate->get(COMP), (jbyteArray)oldstate->get(ATTE), (jbyteArray)oldstate->get(MESS), (jobject)starttime, (jobject)endtime, confinsert, removed, compo, attenu, messstate, outalgres,OutListPatchEvent, person);
-	LOGSTRING(" end processScan\n");
+		, (jbyteArray)oldstate->get(COMP), (jbyteArray)oldstate->get(ATTE), (jbyteArray)oldstate->get(MESS), (jobject)starttime, (jobject)endtime, confinsert, removed, compo, attenu, messstate, outalgres,OutListPatchEvent, person,casttoken);
+	LOGAR(" end processScan");
 	intptr_t res=reinterpret_cast<intptr_t>(result);
 	LOGGER("person=%ld\n",reinterpret_cast<outobj *>(person)->toint());
 	if( vector<PatchEvent *> *patch= (vector<PatchEvent *> *)OutListPatchEvent.ptr) {
@@ -1078,7 +1262,7 @@ if(timelast>=endsensorsecs&&timelast<days15) {
 	}
 	LOGSTRING("voor activationComplete ");
 	debugclone();//Al gedaan
-	if( (messuit=reinterpret_cast<data_t *>( abbottcall(activationComplete)(hiersubenv,nullptr,juid, (startminbase > threeyear ? startminbase - threeyear : 0) / sec_per_day, startminbase, (jbyteArray)newstate.get(MESS))))&&messuit->length()>0) {
+	if( (messuit=reinterpret_cast<data_t *>( abbottcall(activationComplete)(hiersubenv,nullptr,juid, (startminbase > threeyear ? startminbase - threeyear : 0) / sec_per_day, startminbase, (jbyteArray)newstate.get(MESS),casttoken)))&&messuit->length()>0) {
 			LOGSTRING(" activationComplete>0\n");
 		newstateptr->makenull(COMP);	//NODIG?
 		newstateptr->makenull(ATTE);	
@@ -1117,7 +1301,6 @@ int packagelen;
 
 
 extern std::string_view libdirname;
-#ifdef NOTAPP 
 static std::string_view thislibname(void) {
     Dl_info dl_info;
     dladdr((void*)thislibname, &dl_info);
@@ -1139,6 +1322,7 @@ static std::string_view thislibname(void) {
        LOGGER("libpathname=%s\n",uit.data());
       return uit;
    } 
+#ifdef NOTAPP 
 std::string_view libdirname=thislibname();
 #else
 std::string_view libdirname;
@@ -1170,6 +1354,7 @@ int ver2pos;
   packagepath() {
   	}
   packagepath(std::string_view base) {
+  	LOGGER("packagepath %s\n",base.data());
 	const int filesdirlen=base.length();
 	packagelen=sizeof(lib)+filesdirlen+packstartlen;
 	package= new char[packagelen+1];
@@ -1247,6 +1432,7 @@ bool userver2() {
 //bool	norootchecklib=false;
 bool rootcheck=false;
 static int doabbottinit(bool dochmod) {
+LOGAR("doabbottinit");
       settings->data()->crashed=true;
 
 //	norootchecklib=false;
@@ -1261,6 +1447,7 @@ static int doabbottinit(bool dochmod) {
 	const char *libpath=pak.getlib();
 	bool haslib=(access(libpath,R_OK)==0);
 	if(haslib) {
+		LOGAR("haslib");
 		if(dochmod) {
 			if(chmod(libpath,0400)!=0)
 				flerror("chmod(%s,0400)\n",libpath);
@@ -1269,30 +1456,47 @@ static int doabbottinit(bool dochmod) {
 		}
 	if(!haslib) {
 		LOGGER("linking failed %s\n",libpath);
-#ifdef CARRY_LIBS
+#ifndef CARRY_LIBS
+		LOGAR("doesn't carry libs");
+		return -1;	
+#else
+	bool gen2=userver2();
+	bool firstsuccess=false;
+	extern bool hasGen1;
 	  LOGGER("libdirname=%s\n",libdirname.data());
-		nativelibpath  native(libdirname);
-		if(userver2()) {
-			native.make2();
-			settings->setnodebug(false);
-			}
-		else   {
-		extern thread_local pid_t has_debugger;
-
+	nativelibpath  native(libdirname);
+	if(hasGen1||!gen2) {
+		if(!gen2) {
+			extern thread_local pid_t has_debugger;
 			if(has_debugger) {
 				getsid(has_debugger);
 				has_debugger=0;
 				} 
 			settings->setnodebug(true);
 			}
+		if(!oldprocessStream) {
+			libpath=native.getlib();
+			firstsuccess=linklib(libpath) ;
+			if(firstsuccess) {
+				packager=native;
+				packager.addend();
+				abbottcall(initialize)(env,thiz, thiz);
+				abbottcall(dpSetMaxAlgorithmVersion)(env,thiz, 3,casttoken);
+				}
+			}
+		}
+
+	if(!firstsuccess||gen2) {
+		LOGAR("native.make2()");
+		native.make2();
+		settings->setnodebug(false);
 		libpath=native.getlib();
 		if(!linklib(libpath)) {
 			LOGGER("linking failed %s\n",libpath);
 			return -1;	
 			}
 		packager=native;
-#else
-			return -1;	
+		}
 #endif
 		}
 	else  {
@@ -1300,20 +1504,27 @@ static int doabbottinit(bool dochmod) {
 		}
 	#endif
 	packager.addend();
-//	package[packagelen-1]='\n'; package[packagelen]='\0';
+	if(initializeNative) {
+		LOGGER("Before initializeNative %s\n",package);
+		abbottcall(initializeNative)(env,thiz, thiz,nullptr);
+		abbottcall(dpSetMaxAlgorithmVersiongen2)(env,thiz, 3,casttoken);
+		LOGSTRING("After dpSetMaxAlgorithmVersiongen2\n");
+		}
+	else  {
 		LOGGER("Before initialize %s\n",package);
 		abbottcall(initialize)(env,thiz, thiz);
 		LOGSTRING("After initialize\n");
-		abbottcall(dpSetMaxAlgorithmVersion)(env,thiz, 3);
+		abbottcall(dpSetMaxAlgorithmVersion)(env,thiz, 3,casttoken);
 		LOGSTRING("After dpSetMaxAlgorithmVersion\n");
-      		settings->data()->crashed=false;
+		}
+	settings->data()->crashed=false;
 	//	abbottcall(dpEnableDebugLogging)(env,thiz);
 	#define DYNLINK3
 	#ifdef DYNLINK3
 		if(P1) {
 			rootcheck=true;
 			LOGSTRING("Try P1(0,0,nullptr,nullptr)\n");
-			int res=abbottcall(P1)(env,thiz,0,0,nullptr,nullptr);
+			int res=abbottcall(P1)(env,thiz,0,0,nullptr,nullptr,casttoken);
 			LOGGER("P1(0,0,nullptr,nullptr)=%d\n",res);
 			}
 		else {
@@ -1343,11 +1554,15 @@ bool nearbymgdl(int get,int crit) {
 #ifdef TESTPS
 #include "pstructs.h"
 #endif
+
+extern void usepath(std::string_view libdirname,std::string_view filesdir) ;
 VISIBLE  int abbotttest(string_view dir,scandata &data,scandata &data2,data_t *uidptr,data_t *initinfo,data_t *bluetooth,uint32_t starttijd,uint32_t bluetime,const unsigned char *decr,bool nodebug
 #ifdef TESTPS
 ,std::vector<pstruct*> &ptests
 #endif
 ) {
+LOGAR("abbotttest");
+libdirname=thislibname();
 
 extern int dontdebug;
 dontdebug=nodebug?-1:1;
@@ -1370,8 +1585,11 @@ dontdebug=nodebug?-1:1;
 	memcpy(name,dir.data(),dir.size());
 	name[dir.size()]='\0';
 	globalbasedir={name,dir.size()};
+settings= new(std::nothrow) Settings(globalbasedir,settingsdat,"NL");
+	usepath(libdirname,globalbasedir);
+
 	pid_t debugpid=nodebug?0:debugclone();
-	if(doabbottinit(true)<0)  {
+	if(abbottinit(true)<0)  {
 		fprintf(stderr,"Init failed\n");
 		return 12;
 		}
@@ -1383,7 +1601,7 @@ dontdebug=nodebug?-1:1;
 	scanstate astate(4);
 	jnidata_t  hierjnidata2={&envbuf,&astate};
 	JNIEnv *hiersubenv2=(JNIEnv *) &hierjnidata2;
-	if(data_t *payload = reinterpret_cast<data_t *>(  abbottcall(getActivationPayload)(hiersubenv2, nullptr,  parsertype, (jbyteArray) uidptr, (jbyteArray)  infoptr, 0) )) {
+	if(data_t *payload = reinterpret_cast<data_t *>(  abbottcall(getActivationPayload)(hiersubenv2, nullptr,  parsertype, (jbyteArray) uidptr, (jbyteArray)  infoptr, 0,casttoken) )) {
 //		pathconcat uit(dir,"getActivationPayload"); writeall(uit.data(),payload->data(),payload->length());
 		#include "getActivationPayload.h"
 		if(memcmp(payload->data(),getActivationPayload,payload->size()))
@@ -1394,7 +1612,7 @@ dontdebug=nodebug?-1:1;
 		LOGSTRING("getActivationPayload failed");
 		return 12;
 		}
-	int fam= abbottcall(getProductFamily)(hiersubenv2, nullptr, parsertype,  (jbyteArray)  infoptr);
+	int fam= abbottcall(getProductFamily)(hiersubenv2, nullptr, parsertype,  (jbyteArray)  infoptr,casttoken);
 	LOGGER("Family=%d\n",fam);
 	auto [warm,wear]= patchtimevalues(infoptr);
 	if(warm==-1) {
@@ -1438,7 +1656,7 @@ jnidata_t  hierjnidata3={&envbuf,&state};
 	int startsincebase=starttijd-basesecs;
 jnidata_t  hierjnidata={&envbuf,&state};
 JNIEnv *hiersubenv=(JNIEnv *) &hierjnidata;
-	if(data_t *res= reinterpret_cast<data_t *>(abbottcall(getStreamingUnlockPayload)(hiersubenv,nullptr,parsertype,(jbyteArray)uidptr,(jbyteArray)infoptr,person,startsincebase,lockcount))) {
+	if(data_t *res= reinterpret_cast<data_t *>(abbottcall(getStreamingUnlockPayload)(hiersubenv,nullptr,parsertype,(jbyteArray)uidptr,(jbyteArray)infoptr,person,startsincebase,lockcount,casttoken))) {
 		const int uitlen= res->size();
 //		pathconcat unluit(dir,"getStreamingUnlockPayload"); writeall(unluit.data(),res->data(),res->length());
 		LOGGER(" getStreamingUnlockPayload len=%d\n",uitlen);
@@ -1451,7 +1669,7 @@ JNIEnv *hiersubenv=(JNIEnv *) &hierjnidata;
 		return 12;
 		}
 
-	scanstate *newstateptr=new scanstate(4);
+	scanstate *newstateptr=new scanstate(defaultscanstate);
 	if(scanstate *state=testinitsensor( &data,uidptr,newstateptr)) {
 		LOGSTRING("Initsensor succeeded\n");
 		scanstate newstate(4);
@@ -1503,16 +1721,20 @@ extern bool askswrongfiles;
 	}
 
 int *initptr=nullptr;
-int  abbottinit() {
+int  abbottinit(bool doch) {
+
+
+#ifndef CARRY_LIBS
 if(settings&&!settings->data()->havelibrary) {//settings==null for abbotttest 
 	LOGSTRING("No library\n");
 	return -4;
 	}
-static int init=(init=doabbottinit(false),initptr=&init,init);
+#endif
+static int init=(init=doabbottinit(doch),initptr=&init,init);
 return init;
 }
 int  abbottreinit() {
-	if(!initptr) return  abbottinit();
+	if(!initptr) return  abbottinit(false);
 	return (*initptr=doabbottinit(false));
 	}
 
@@ -1520,14 +1742,14 @@ timevalues     patchtimevalues(const data_t *info) {
 	outobj warmup, wear;
 	abbottinit();
 	debugclone();
-        if (abbottcall(getPatchTimeValues)(subenv,nullptr,parsertype, (jbyteArray) info, warmup, wear)) {
+        if (abbottcall(getPatchTimeValues)(subenv,nullptr,parsertype, (jbyteArray) info, warmup, wear,casttoken)) {
 		return  {(int)warmup.toint(), (int)wear.toint()};
         	}
         return {-1,-1}; 
     }
 jbyte  getactivationcommand(const data_t *info) {
 	LOGSTRING("start getActivationCommand ");
-        jbyte res= abbottcall(getActivationCommand)(subenv,nullptr, parsertype, (jbyteArray) info);
+        jbyte res= abbottcall(getActivationCommand)(subenv,nullptr, parsertype, (jbyteArray) info,casttoken);
 	LOGSTRING(" end getActivationCommand\n");
         return res;
         }
@@ -1559,7 +1781,7 @@ extern "C" JNIEXPORT jbyte JNICALL fromjava(activationcommand)(JNIEnv* env, jcla
 	abbottinit();
 	debugclone(); //Nodig?
 	LOGSTRING("start getActivationCommand ");
-       	jbyte res=  abbottcall(getActivationCommand)(env,obj, parsertype, info);
+       	jbyte res=  abbottcall(getActivationCommand)(env,obj, parsertype, info,getjtoken(env));
 	LOGSTRING(" end getActivationCommand\n");
 	return res;
 	}
@@ -1567,7 +1789,7 @@ extern "C" JNIEXPORT jbyteArray  JNICALL fromjava(activationpayload)(JNIEnv *env
 	abbottinit();
 	debugclone(); //Nodig?
 	LOGSTRING("start getActivationPayload ");
-	jbyteArray res=   abbottcall(getActivationPayload)(env, obj,  parsertype,  patchid,  info, person) ;
+	jbyteArray res=   abbottcall(getActivationPayload)(env, obj,  parsertype,  patchid,  info, person,getjtoken(env)) ;
 	LOGSTRING("end getActivationPayload\n");
 	return res;
         }
@@ -1577,40 +1799,21 @@ extern "C" JNIEXPORT jbyteArray  JNICALL fromjava(activationpayload)(JNIEnv *env
 //info and startsincebase should be the same as used by getEnableStreamingPayload
 #define MODTIME
 data_t * unlockKeySensor( SensorGlucoseData *usedhist,scanstate *stateptr) {
-//	static scanstate basismap;
 	jbyte person=0;
 const auto [bluestart,info]= usedhist->getbluedata();
 
 	jint startsincebase= bluestart-basesecs; 
-/*
-#ifdef MODTIME
-	jint startsincebase= 1612084345-basesecs; 
-#else
-	jint startsincebase= usedhist->getstarttime()-basesecs; 
-#endif
-//jint tijd=1612084345;
-	unsigned char infos[]={0x9D,0x08,0x30,0x01,0xD6,0x1C};
-	data_t  *info= data_t::newex(6); 
-	memcpy(info->data(),infos,6);
-*/
-//	 basismap.reset();
-//	reinterpret_cast<jnidata_t *>(subenv)->map=&basismap;
 jnidata_t  hierjnidata={&envbuf,stateptr};
 JNIEnv *hiersubenv=(JNIEnv *) &hierjnidata;
-	if(abbottinit())
+	if(abbottinit())  {
+		LOGAR("abbottinit()");
 		return nullptr;
-	LOGSTRING("start getStreamingUnlockPayload\n");
+		}
 	debugclone();
-	data_t *res= reinterpret_cast<data_t *>(abbottcall(getStreamingUnlockPayload)(hiersubenv,nullptr, parsertype, (jbyteArray)usedhist->getsensorident(), (jbyteArray)info, person, startsincebase, usedhist->nextlock()));
-	LOGSTRING(" end getStreamingUnlockPayload\n");
-	/*
-#ifdef MODTIME
-	return reinterpret_cast<data_t *>(getStreamingUnlockPayload(subenv,nullptr, parsertype, (jbyteArray)usedhist->getsensorident(), (jbyteArray)info, person, startsincebase, usedhist->nextlock()));
-#else
-	return reinterpret_cast<data_t *>(getStreamingUnlockPayload(subenv,nullptr, parsertype, (jbyteArray)usedhist->getsensorident(), (jbyteArray)usedhist->getpatchinfo(), person, startsincebase, usedhist->nextlock()));
-#endif
-//	return reinterpret_cast<data_t *>(getStreamingUnlockPayload(subenv,nullptr, parsertype, (jbyteArray)usedhist->getsensorident(), (jbyteArray)info, person, startsincebase, usedhist->nextlock()));
-*/
+	auto lock= usedhist->nextlock();
+	LOGGER("start getStreamingUnlockPayload(env,null,%d,%s,%s,%d,%d,%d,token)\n",parsertype,hexstr(usedhist->getsensorident()).str(),hexstr(info).str(),person,startsincebase,lock);
+	data_t *res= reinterpret_cast<data_t *>(abbottcall(getStreamingUnlockPayload)(hiersubenv,nullptr, parsertype, (jbyteArray)usedhist->getsensorident(), (jbyteArray)info, person, startsincebase, lock,casttoken));
+	LOGAR(" end getStreamingUnlockPayload");
 	return res;
 	}
 
@@ -1631,8 +1834,9 @@ scanstate *newstate,uint32_t startsincebase,uint32_t nutime) {
 jnidata_t  hierjnidata={&envbuf,newstate};
 JNIEnv *hiersubenv=(JNIEnv *) &hierjnidata;
 abbottinit();
-LOGSTRING("start processStream\n");
-debugclone();
+LOGAR("start processStream");
+auto _deb=debugclone();
+LOGGER("before proc oldprocessStream=%p\n",oldprocessStream);
 intptr_t  res=
 (oldprocessStream?
 reinterpret_cast<intptr_t>(abbottcall(oldprocessStream)(hiersubenv,nullptr, parsertype, alarm, nonAction, range, attenconf, (jbyteArray)ident, 
@@ -1658,7 +1862,7 @@ outalgres)): reinterpret_cast<intptr_t>(abbottcall(processStream)(hiersubenv,nul
 
 
  compo,  attenu,  messstate, 
-outalgres)));
+outalgres,casttoken)));
 #ifndef NOLOG
 int isremoved=reinterpret_cast<intptr_t>(removed.ptr);
 int isinserted=reinterpret_cast<intptr_t>(confinsert.ptr);
@@ -1732,7 +1936,7 @@ JNIEnv *hiersubenv=(JNIEnv *) &hierjnidata;
 	abbottinit();
 	debugclone(); //Nodig?
 	LOGSTRING("start getStreamingPayload ");
-	const data_t *pay= reinterpret_cast<data_t *>(abbottcall(getEnableStreamingPayload)(hiersubenv,nullptr, parsertype, (jbyteArray)sensorident, (jbyteArray)patchinfo, person, timeminbase));
+	const data_t *pay= reinterpret_cast<data_t *>(abbottcall(getEnableStreamingPayload)(hiersubenv,nullptr, parsertype, (jbyteArray)sensorident, (jbyteArray)patchinfo, person, timeminbase,casttoken));
 	LOGSTRING(" end getStreamingPayload\n");
 	return pay;
 	}
@@ -1740,7 +1944,7 @@ extern "C" JNIEXPORT jbyteArray  JNICALL fromjava(bluetoothOnKey)(JNIEnv *envin,
 
       setthreadname( "bluetoothOnKey");
 	abbottinit();
-	int fam= abbottcall(getProductFamily)(envin, cl, parsertype, patchinfo);
+	int fam= abbottcall(getProductFamily)(envin, cl, parsertype, patchinfo, getjtoken(envin));
 
 	const data_t *uid=fromjbyteArray(envin,sensorident);
 	string serial=getserial(fam,reinterpret_cast<const unsigned char *>(uid->data()));
@@ -1784,12 +1988,14 @@ extern "C" JNIEXPORT jbyteArray  JNICALL fromjava(bluetoothOnKey)(JNIEnv *envin,
 
 string getserial(JNIEnv *envin, jclass cl,jbyteArray sensorident,jbyteArray patchinfo) {
 	abbottinit();
-	int fam= abbottcall(getProductFamily)(envin, cl, parsertype, patchinfo);
+	LOGAR("getserial");
+	int fam= abbottcall(getProductFamily)(envin, cl, parsertype, patchinfo,getjtoken(envin));
 	const data_t *uid=fromjbyteArray(envin,sensorident);
 	return getserial(fam,reinterpret_cast<const unsigned char *>(uid->data()));
 	}
 
 extern "C" JNIEXPORT jstring  JNICALL fromjava(getserial)(JNIEnv *envin, jclass cl,jbyteArray sensorident,jbyteArray patchinfo) {
+	LOGAR("jgetserial");
 	return envin->NewStringUTF(getserial(envin,cl,sensorident,patchinfo).data()+5);
 	}
 extern "C" JNIEXPORT void  JNICALL fromjava(bluetoothback)(JNIEnv *envin, jclass cl,jbyteArray sensorident,jbyteArray patchinfo) {
@@ -1803,9 +2009,9 @@ extern "C" JNIEXPORT void  JNICALL fromjava(bluetoothback)(JNIEnv *envin, jclass
 extern "C" JNIEXPORT jboolean  JNICALL fromjava(hasBluetooth)(JNIEnv *envin, jclass cl,jbyteArray sensorident,jbyteArray patchinfo) {
 	abbottinit();
 	const jint timeminbase= time(NULL)-basesecs;
-	LOGSTRING("start getStreamingPayload ");
+	LOGAR("start getStreamingPayload");
 	debugclone();
-	jbyteArray res=abbottcall(getEnableStreamingPayload)(envin,cl, parsertype, sensorident, patchinfo, 0, timeminbase);
+	jbyteArray res=abbottcall(getEnableStreamingPayload)(envin,cl, parsertype, sensorident, patchinfo, 0, timeminbase,getjtoken(envin));
 	LOGSTRING("end getStreamingPayload\n");
 	return res!=nullptr;
 	}
@@ -1842,7 +2048,7 @@ extern "C" JNIEXPORT void JNICALL   fromjava(enabledStreaming)(JNIEnv *envin, jc
       setthreadname( "enabledStreaming");
 	if(abbottinit())
 		return ;
-	int fam= abbottcall(getProductFamily)(envin, cl, parsertype, patchinfo);
+	int fam= abbottcall(getProductFamily)(envin, cl, parsertype, patchinfo,getjtoken(envin));
 	const data_t *uid=fromjbyteArray(envin,sensorident);
 	string serial=getserial(fam,reinterpret_cast<const unsigned char *>(uid->data()));
 	if(SensorGlucoseData *hist=sensors->gethist(serial.data())) {
@@ -1864,8 +2070,13 @@ extern "C" JNIEXPORT void JNICALL   fromjava(USenabledStreaming)(JNIEnv *envin, 
 		hist->setbluetoothOn( 1); 
 		setDeviceAddressB(envin,hist,address);
 		hist->setsensorgen();
-		if(hist->getsensorgen()==2)
-			envin->GetByteArrayRegion(jauth, 0, 10, (jbyte *)hist->getinfo()->streamingAuthenticationData);
+		if(hist->getsensorgen()==2) {
+			jsize authlen=envin->GetArrayLength(jauth);
+			if(authlen<=12) {
+				envin->GetByteArrayRegion(jauth, 0, authlen, (jbyte *)hist->getinfo()->streamingAuthenticationData);
+				hist->getinfo()->auth12=authlen==12;
+				}
+			}
 		setbluetoothon=false;
 		sendstreaming(hist);
 		}
@@ -1889,7 +2100,7 @@ JNIEnv *hiersubenv=(JNIEnv *) &hierjnidata;
 
 	data_t *messuit;
 
-	if((messuit=reinterpret_cast<data_t *>( abbottcall(activationComplete)(hiersubenv,nullptr,juid, (startminbase > threeyear ? startminbase - threeyear : 0) / sec_per_day, startminbase, (jbyteArray)newstate.get(MESS))))&&messuit->length()>0) {
+	if((messuit=reinterpret_cast<data_t *>( abbottcall(activationComplete)(hiersubenv,nullptr,juid, (startminbase > threeyear ? startminbase - threeyear : 0) / sec_per_day, startminbase, (jbyteArray)newstate.get(MESS),casttoken)))&&messuit->length()>0) {
 			LOGSTRING(" activationComplete>0\n");
 		newstateptr->makenull(COMP);	//NODIG?
 		newstateptr->makenull(ATTE);	
@@ -1915,7 +2126,7 @@ int NfcMemory::nextspan() {
 	jbyteArray juid =(jbyteArray) uid; 
 	jbyteArray jinfo =(jbyteArray) info; 
 	jbyteArray jresults =(jbyteArray) results; 
-        MemoryRegion *span = (MemoryRegion*)abbottcall(getNextRegionToRead)(subenv,nullptr,parsertype,juid, jinfo, jresults, iter++);
+        MemoryRegion *span = (MemoryRegion*)abbottcall(getNextRegionToRead)(subenv,nullptr,parsertype,juid, jinfo, jresults, iter++,casttoken);
 	if(span) {
 		prevspan=span;
 		int start= span->getStart();
@@ -1934,12 +2145,15 @@ void NfcMemory::add(data_t *dat) {
 	}
 #endif
 void closedynlib(void) {
-	LOGSTRING("closedynlib\n");
+	LOGSTRING("doesn't closedynlib");
+	/*
 	if(dynlibhandle)
 		dlclose(dynlibhandle);
-	dynlibhandle=nullptr;
+	dynlibhandle=nullptr; */
 	}
 
 extern "C" JNIEXPORT void  JNICALL   fromjava(closedynlib)(JNIEnv *env, jclass _cl) {
 	 closedynlib() ;
 	}
+
+

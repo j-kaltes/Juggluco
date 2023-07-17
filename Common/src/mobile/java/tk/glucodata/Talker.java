@@ -18,6 +18,7 @@ import static tk.glucodata.util.getlabel;
 import static tk.glucodata.util.getlocale;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Build;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.Voice;
@@ -92,7 +93,7 @@ void destruct() {
 		}
 	voiceChoice.clear();
 	}
-	Talker() {
+	Talker(Context context) {
 	    engine=new TextToSpeech(Applic.app, new TextToSpeech.OnInitListener() {
 		 @Override
 		 public void onInit(int status) {
@@ -102,7 +103,9 @@ void destruct() {
 				Set<Voice> voices=engine.getVoices();
 				if(voices!=null) {
 					var loc=getlocale();
-					var lang=loc.getLanguage();
+					var lang=(context!=null)?context.getString(R.string.language):loc.getLanguage();
+					Log.i(LOG_ID,"lang="+lang);
+
 					voiceChoice.clear();
 					for(var voice:voices) {
 						if(lang.equals(voice.getLocale().getLanguage())) {
@@ -224,7 +227,7 @@ private static View[] slider(MainActivity context,float init) {
 	}
 public static void config(MainActivity context) {
 	if(!SuperGattCallback.dotalk) {
-	 	SuperGattCallback.newtalker();
+	 	SuperGattCallback.newtalker(context);
 		}
 	var separation=new EditText(context);
         separation.setImeOptions(editoptions);
@@ -295,8 +298,7 @@ public static void config(MainActivity context) {
 		 firstrow=new View[]{seplabel,separation,space,active};
 		 }
 	var layout=new Layout(context,(l,w,h)-> {
-		if(width>w)
-			l.setX((width-w)/2);
+//		if(width>w) l.setX((width-w)/2);
 		return new int[] {w,h};
 		},firstrow,new View[]{speedlabel},new View[]{speeds[1]}, new View[]{speeds[0]},new View[]{pitchlabel},new View[]{pitchs[1]}, new View[]{pitchs[0]}, new View[]{cancel,helpview,test,save});
 
@@ -341,7 +343,7 @@ public static void config(MainActivity context) {
 	save.setOnClickListener(v->  {
 		getvalues.run();
 		if(active.isChecked()) {
-				SuperGattCallback.newtalker();
+				SuperGattCallback.newtalker(context);
 				SuperGattCallback.dotalk=true;
 				/*
 			if(!SuperGattCallback.dotalk) {
@@ -365,7 +367,7 @@ public static void config(MainActivity context) {
 		var say=(gl!=null&&gl.value!=null)?gl.value:"8.7";
 		getvalues.run();
 		playstring=say;
-		SuperGattCallback.newtalker();
+		SuperGattCallback.newtalker(context);
 		/*
 		if(SuperGattCallback.talker==null) {
 			playstring=say;

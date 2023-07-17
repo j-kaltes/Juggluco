@@ -451,6 +451,13 @@ static gegs * newex( const std::array<Typ,N> &ar) {
 	memcpy(ptr->buf,ar.data(),N*sizeof(T));
 	return ptr;
 	}
+
+template <typename Typ,  std::size_t  N> 
+static gegs * newex(const Typ (&array)[N]) {
+	gegs<T> *ptr=gegs<T>::newex(N);
+	memcpy(ptr->buf,array,N*sizeof(T));
+	return ptr;
+	}
 template <typename Typ> 
 static gegs * newex( const std::vector<Typ> &ar) {
        static_assert(sizeof(T)==sizeof(Typ), "Elements should be the same size");

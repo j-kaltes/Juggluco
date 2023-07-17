@@ -66,6 +66,7 @@ import static android.view.View.VISIBLE;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static tk.glucodata.Applic.backgroundcolor;
 import static tk.glucodata.Applic.isWearable;
+import static tk.glucodata.BuildConfig.isReleaseID;
 import static tk.glucodata.Natives.getBlueMessage;
 import static tk.glucodata.Natives.getWifi;
 import static tk.glucodata.Natives.isWearOS;
@@ -170,7 +171,7 @@ static String[] gethostnames() {
 boolean isasender=false;
 boolean[] sendchecked;
 
-	private static final String defaultport=isRelease?"8795":"9113";
+	private static final String defaultport= isReleaseID==1?"8795":"9113";
 	private	CheckBox Amounts =null;
 	private CheckBox Scans =null;
 	private CheckBox Stream =null,receive=null,detect=null;

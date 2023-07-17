@@ -139,11 +139,11 @@ static span<const string_view> accessable(const string_view *names,const int *us
 	for(int i=0;i<usedlen;i++) {
 		int pos=used[i];
 		if(!func(names[pos])) {
-			LOGGER("have %s\n", names[pos]);
+			LOGGER("have %s\n", names[pos].data());
 			ind.push_back(pos);
 			}
 		else {
-			LOGGER("don't have %s\n", names[pos]);
+			LOGGER("don't have %s\n", names[pos].data());
 			}
 		}
 	auto len=ind.size();
@@ -1336,7 +1336,7 @@ LOGGER("debugclone(%d,%d)\n",doalways,version);
 		}
 #endif
 	static thread_local	thedebugger debugger;
-	LOGSTRING("end debugclone\n");
+	LOGAR("end debugclone");
 	return has_debugger;
 	    }
 

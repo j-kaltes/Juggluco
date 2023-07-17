@@ -61,8 +61,8 @@ jugglucotext detext {
 .noconnectionerror=": Keine Verbindung",
 .stsensorerror=": Sensorfehler",
 .streplacesensor=": Sensor ersetzen?",
-.endedformat="Sensor %s not working anymore. state=%d",
-.notreadyformat="Sensor %s not ready. state=%d",
+.endedformat="Sensor %s funktioniert nicht mehr. state=%d",
+.notreadyformat="Sensor %s nicht bereit. state=%d",
 #ifndef WEAROS
 .median="Median",
 .middle="mittlere",
@@ -124,7 +124,7 @@ detext.newamount,
 {"Sensor wird aktiviert",""},
 {"Sensor ist definitiv beendet",""},
 {"Sensor bereit in","%d Minuten"},
-{"373: Sensorfehler","Bitte kontaktieren Sie nicht sofort den Kundendienst von Abbott; möglicherweise sind Glukosewerte in 1 Minuten verfügbar."},
+{"373: Sensorfehler","Versuchen Sie es später erneut"},
 {"Neuer Sensor initialisiert","Zur Verwendung erneut scannen"},
 {"","Blockiert Berührungen während des Scannens"},
 {"",""},
@@ -138,7 +138,7 @@ detext.newamount,
 
 
 .libre3scanerror={"FreeStyle Libre 3, Scanfehler", "Versuchen Sie es erneut"},
-.libre3wrongID={"Fehler, falsche Konto-ID?","Geben Sie in Einstellungen->Libreview dasselbe Konto an, das zum Aktivieren des Sensors verwendet wurde"},
+.libre3wrongID={"Falsche Konto-ID?","Verwenden Sie dasselbe Libreview-Konto, mit dem Sie den Sensor aktiviert haben"},
 .libre3scansuccess= {"FreeStyle Libre 3-Sensor", "Glukosewerte werden jetzt von Juggluco empfangen"},
 .unknownNFC={"Unerkannter NFC-Scanfehler", "Versuchen Sie es erneut"},
 

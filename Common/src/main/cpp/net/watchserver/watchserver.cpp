@@ -649,7 +649,7 @@ char * givecage(char *outiter) {
 			//  {"delta":{"absolute":-2,"elapsedMins":5,"interpolated":false,"mean5MinsAgo":137,"times":{"recent":1676718516000,"previous":1676718216000},"mgdl":-2,"scaled":-2,"display":"-2","previous":{"mean":137,"last":137,"mills":1676718216000,"sgvs":[{"_id":"63f0b09d4d77ce842e333f3d","mgdl":137,"mills":1676718216000,"device":"loop://iPhone","direction":"Flat","type":"sgv","scaled":137}]}}}
 
 
-char *getdelta(char *start) {
+char *getdeltastr(char *start) {
 	char *outiter=start;
 	int sensorid=sensors->last();
 	const SensorGlucoseData *sens=getStreamSensor(sensorid);;
@@ -731,7 +731,7 @@ bool giveproperties(const char *input,int inputlen,recdata *outdata) {
 				else {
 					const std::string_view delta = "delta";
 					if (!memcmp(input, delta.data(), delta.size())) {
-						outiter = getdelta(outiter);
+						outiter = getdeltastr(outiter);
 						input += delta.size();
 						}
 					else  {
@@ -760,7 +760,7 @@ bool giveproperties(const char *input,int inputlen,recdata *outdata) {
 		char *start=outdata->allbuf+152,*outiter=start;
 		*outiter++='{';
 		outiter = givebgnow(outiter);
-		outiter = getdelta(outiter);
+		outiter = getdeltastr(outiter);
 		outiter = givebuckets(outiter);
 //		outiter = givecage(outiter);
 		--outiter;

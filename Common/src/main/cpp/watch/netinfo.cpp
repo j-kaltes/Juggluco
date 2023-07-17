@@ -71,7 +71,8 @@ extern updateone &getsendto(int index);
 // bool mkwearos=false;
 #include <mutex>
 extern std::mutex change_host_mutex;
-passhost_t * getwearoshost(const bool create,const char *label,bool galaxy) {
+passhost_t * getwearoshost(const bool create,const char *label,bool galaxy,bool remake=false) {
+ LOGGER("getwearoshost(%d,%s,%d)\n",create,label,galaxy);
   const std::lock_guard<std::mutex> lock(change_host_mutex);
 
     struct updatedata *update=backup->getupdatedata();
@@ -88,11 +89,16 @@ passhost_t * getwearoshost(const bool create,const char *label,bool galaxy) {
 		LOGSTRINGTAG("!create\n");
 		return nullptr;
 		}
-	
     	if(nrhost==maxallhosts) {
 		LOGGERTAG("nrhost==maxallhosts==%d\n",nrhost);
 		--nrhost;
 		}
+	  }
+else {
+	if(!remake)
+		return found;
+	nrhost=found-hosts;
+	}
 	bool sendstream, sendscans, receive,sendnums,activeonly,passiveonly;
 
 	if constexpr( iswatchapp()) {
@@ -140,7 +146,6 @@ passhost_t * getwearoshost(const bool create,const char *label,bool galaxy) {
 	found=backup->getupdatedata()->allhosts+nrhost; //extend?
 	found->wearos=true;
 	LOGGERTAG("getwearoshost new(%d)\n",nrhost);
-    	}
     return found;
     }
 static void setdefaults(const char *infolabel,bool galaxy) {

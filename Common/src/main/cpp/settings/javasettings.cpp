@@ -1113,7 +1113,7 @@ extern "C" JNIEXPORT jint  JNICALL   fromjava(getfloatingPos)(JNIEnv *env, jclas
 
 extern "C" JNIEXPORT jstring JNICALL fromjava(renewlibreaccount)(JNIEnv *env, jclass thiz,jstring jinaccount) {
 	 const jlong num=settings->data()->libreaccountIDnum;
-	 #ifndef NOLOG
+	 #if !defined(NOLOG)||defined(LOGCAT)
 static	 constexpr const char isnull[]="null";
       const char *id = env->GetStringUTFChars( jinaccount, nullptr);
         destruct   dest([jinaccount,id,env]() {if(id!=isnull)

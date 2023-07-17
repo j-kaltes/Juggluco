@@ -46,11 +46,11 @@ import tk.glucodata.settings.Settings;
 import static android.content.Context.VIBRATOR_SERVICE;
 import static android.view.View.GONE;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
-import static tk.glucodata.Applic.isRelease;
 import static tk.glucodata.Applic.isWearable;
 import static tk.glucodata.BuildConfig.libreVersion;
 import static tk.glucodata.Gen2.getversion;
 import static tk.glucodata.Libre3.libre3NFC;
+import static tk.glucodata.Log.doLog;
 import static tk.glucodata.Log.showbytes;
 import static tk.glucodata.settings.Settings.removeContentView;
 import static tk.glucodata.util.getbutton;
@@ -106,10 +106,10 @@ static			boolean mayEnablestreaming(Tag tag,byte[] uid,byte[] info) {
 	return true;
 	}
 
-
+/*
 private static boolean righttag(byte[] id) {
          return (id.length == 8 && id[7] == -32 && id[6] == 7) ;
-        }
+        } */
 
 
 static 	AudioAttributes audioattributes;
@@ -163,14 +163,13 @@ static public synchronized void scan(GlucoseCurve curve,Tag tag) {
             int ret = 0x100000;
 	    try {
 		   byte[] uid=tag.getId();
-		    if(!isRelease) {
+		    if(doLog) {
 				String sensid="";
 				for(var e:uid) {
 					sensid=String.format("%02X",(0xFF&e))+sensid;
+					}
+				Log.i(LOG_ID,"TAG::sensid="+sensid);
 				}
-			Log.i(LOG_ID,"TAG::sensid="+sensid);
-			}
-
 
 		if(uid.length==8&&uid[6]!=7) {
 			long streamptr;

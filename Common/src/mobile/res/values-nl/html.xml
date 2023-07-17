@@ -779,15 +779,11 @@ xDrip horloges zenden. Om hier gebruik van te maken moet xDrip
 webserver aangevinkt worden in Linker menu→Horloge. Om conflicten
 te voorkomen moet xDrip webservice in xDrip niet ook aanstaan.</p>
 <h2 class="western">xDrip broadcast</h2>
-<p>Laat Juggluco xDrip broadcast
-<i>com.eveningoutpost.dexdrip.BgEstimate</i> nabootsen. Vanaf Android
-target versie 11, moeten ontvangende apps het volgende in hun
-AndroidManifest.xml hebben staan: 
-</p>
-<p>&lt;queries&gt; <br/>
-&nbsp;&nbsp; &lt;package
-android:name=&quot;tk.glucodata&quot;/&gt; <br/>
-&lt;/queries&gt;</p>
+<p>Stuur dezelfde broadcast als ingeschakeld in xDrip met
+&quot;Settings-&gt;Inter-app-settings-&gt;Broadcast locally&quot;.
+Apps zoals AndroidAPS luisteren ernaar. In tegenstelling tot de
+originele xDrip Broadcast die elke 5 minuten werd uitgezonden, zendt
+Juggluco deze broadcast elke minuut uit.</p>
 <h2 class="western">Glucodata broadcast</h2>
 <p>Juggluco heeft een eigen glucose broadcast, glucodata.Minute. See
 <a href="https://www.juggluco.nl/Juggluco/glucosebroadcast.html">https://www.juggluco.nl/Juggluco/glucosebroadcast.html</a>

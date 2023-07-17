@@ -62,6 +62,12 @@ void handlepipe(int sig) {
 void	generalsettings() {
 	signal(SIGPIPE,handlepipe);
 	}
+#include <sys/prctl.h>
+void namehandler(int sig) {
+	const char buf[]="XXXXXXX";
+	 prctl(PR_SET_NAME, buf, 0, 0, 0);
+	//signal(SIGUSR2,SIG_IGN);
+	}
 int setfilesdir(const string_view filesdir,const char *country) {
 	LOGGER("setfilesdir %s %s\n",filesdir.data(),country?country:"null");
 	globalbasedir=filesdir;
@@ -81,10 +87,14 @@ int setfilesdir(const string_view filesdir,const char *country) {
 extern	void setfloatptr();
 	setfloatptr();
 
-#ifdef LIBRE3
+//#ifdef LIBRE3 //TODO putback
+#ifdef NEEDSPATH 
+LOGAR("NEEDSPATH");
 extern	void usepath(std::string_view,std::string_view );
 extern std::string_view libdirname;
 	usepath(libdirname,filesdir);
+#else
+LOGAR("no NEEDSPATH");
 #endif
 	LOGGER("PATH=%s\n",getenv("PATH"));
 #ifdef LIBRENUMBERS
@@ -94,6 +104,7 @@ extern std::string_view libdirname;
 	if(settings->data()->crashed)
 		settings->setnodebug(false);
 	generalsettings();
+	signal(SIGUSR2,namehandler);
 	return 0;
 	}
 int startmeals() {

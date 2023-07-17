@@ -206,8 +206,6 @@ static     Flasher flash=null;
 static    ScheduledFuture<?> flashschedule=null;
 static void start(Context context) {
 
-//	flash =new oldflash(context);
-//	if (tk.glucodata.Applic.isRelease&&android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
 	if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
 	    flash = new flash23(context);
 	    }

@@ -1,3 +1,5 @@
+change_host_mutex goed?
+Nieuwe thread moet wachten op endbackupthread.
 
 Variabelen gebruikt in constructor worden pas later reinitialiseerd?
 

@@ -129,7 +129,7 @@ jugglucotext engtext {
 		{"Sensor has definitely ended",""},
 
 		{"Sensor ready in","%d minutes"},
-		{"373: Sensor Error","Don't immediately contact Abbott customer service; possibly glucose readings are available in 10 minutes."},
+		{"373: Sensor Error","Try again later"},
 		{"New Sensor initialized","Scan again to use it"},
 		{"","Blocks touch during scanning"},
 		{"",""},

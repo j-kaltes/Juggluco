@@ -714,6 +714,8 @@ jugglucotext engtext {
        "Jul","Aug","Sep",
       "Oct","Nov","Dec"}
       };
+void setfloatptr() {
+        }
 
 /*
 extern std::string_view dRELEASE;

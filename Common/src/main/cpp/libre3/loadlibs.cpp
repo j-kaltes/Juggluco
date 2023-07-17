@@ -127,8 +127,19 @@ else {
 #endif
 #define EXTRA 100
 
+extern bool globalsetpathworks;
 extern bool rootcheck;
 static bool doOnLoad(std::string_view libname,bool change) {
+#if defined(__aarch64__) 
+   if(settings->data()->triedasm&&!settings->data()->asmworks&& globalsetpathworks) 
+#else
+	if(globalsetpathworks)  
+#endif	
+	{
+		extern pathconcat mkbindir(std::string_view subdir,std::string_view libname );
+		const static pathconcat libre3dir=mkbindir("bin","libinit.so");
+		setenv("PATH", libre3dir.data(), 1);
+		}
 	rootcheck=true;
 
 	int libnamelen=libname.size()+1;
@@ -260,7 +271,6 @@ extern "C" JNIEXPORT jint JNICALL fromjava(startTimeIDsum)(JNIEnv *env, jclass c
 extern thread_local pid_t has_debugger;
 extern bool libre3initialized;
 bool libre3initialized=false;
-extern bool globalsetpathworks;
 extern bool wrongfiles() ;
 extern "C" JNIEXPORT jint JNICALL fromjava(processint)(JNIEnv *env, jclass cl,jint i2, jbyteArray bArr, jbyteArray bArr2) {
 #if defined(__aarch64__) 
