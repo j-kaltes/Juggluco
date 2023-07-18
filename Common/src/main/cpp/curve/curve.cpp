@@ -2314,7 +2314,10 @@ extern	bool hasnotiset();
 					sensor *senso=sensors->getsensor(sendindex);
 				        bool wasnoblue=settings->data()->nobluetooth;
 					LOGGER("processglucosevalue finished=%d,doglucose(%s,%d,%f,%f,%d,%lld,%d)\n", senso->finished,hist->shortsensorname()->data(),poll->g,glu,poll->ch,alarm,tim*1000LL,wasnoblue);
-					senso->finished=0;
+					if(senso->finished) {
+						senso->finished=0;
+						backup->definished(sendindex);
+						}
 					settings->data()->nobluetooth=true;
 					float rate=poll->ch;
 extern void telldoglucose(const char *name,int32_t mgdl,float glu,float rate,int alarm,int64_t mmsec,bool wasnoblue) ;

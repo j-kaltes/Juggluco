@@ -288,6 +288,18 @@ if(wearmessages)
 #endif */
 }
 
+void definished(int sensor)  {
+     if(sensor<0) {
+     	LOGGER("definished(%d)\n",sensor);
+	return;
+     	}
+     for(int i=0;i<getupdatedata()->sendnr;i++) {
+	auto &host=getupdatedata()->tosend[i];
+	if(host.firstsensor>sensor)
+		host.firstsensor=sensor;
+	}
+  };
+
 bool sendScans() const {
      for(int i=0;i<getupdatedata()->sendnr;i++) {
 	auto &host=getupdatedata()->tosend[i];

@@ -278,6 +278,7 @@ static	 const int waitsig=60;
 					setstreaming(ab.hist); //NEEDED/
 					setusedsensors(); //NEEDED
 					senso->finished=0;
+					backup->definished(ab.sensorindex);
 					return 8<<16|gluval;
 					}
 				return gluval;
@@ -289,6 +290,7 @@ static	 const int waitsig=60;
 					LOGSTRING("was finished\n");
 					setbluetoothon=true;
 					senso->finished=0;
+					backup->definished(ab.sensorindex);
 					}
 				senso->initialized=true;
 				const bool enablestreaming=setbluetoothon||(ab.hist&&!ab.hist->streamingIsEnabled());
@@ -668,8 +670,11 @@ extern "C" JNIEXPORT jlong JNICALL   fromjava(processTooth)(JNIEnv *envin, jclas
 		if(jlong res=glucoseback(glval,drate,sdata->hist) ) {
 			sensor *senso=sensors->getsensor(sdata->sensorindex);
 			sdata->hist->sensorerror=false;
-			LOGGER("processTooth finished=%d\n", senso->finished);
-			senso->finished=0;
+			if(senso->finished) {
+				LOGGER("processTooth finished=%d\n", senso->finished);
+				senso->finished=0;
+				backup->definished(sdata->sensorindex);
+				}
 
 			backup->wakebackup(Backup::wakestream);
 			wakewithcurrent();

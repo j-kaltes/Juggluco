@@ -293,7 +293,12 @@ int makelibre3sensorindex(std::string_view shortname,uint32_t starttime,const ui
 extern void	sendKAuth(SensorGlucoseData *hist);
 		sendKAuth(sens);
 		sensgegs->finished=0;
+
 		sens->getinfo()->lastscantime=now;
+		int sensorindex=sensgegs - sensorlist();
+
+	void definished(int sensorindex) ;
+		definished(sensorindex);
 		return sensindex;
 		}
 	const pathconcat sensordir(inbasedir,name);

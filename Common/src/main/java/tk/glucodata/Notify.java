@@ -784,11 +784,12 @@ void oldnotification(long time) {
 	@SuppressWarnings("deprecation")
 private Notification  makenotification(int draw,String message,String type,boolean once) {
 	var GluNotBuilder=mkbuilder(type);
-	if (Build.VERSION.SDK_INT < 31) {
+
+	if(TargetSDK<31||Build.VERSION.SDK_INT < 31) {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
 			GluNotBuilder.setStyle(new Notification.DecoratedCustomViewStyle());
 		}
-	}
+		}
 	Log.i(LOG_ID,"makenotification "+message);
         //GluNotBuilder.setSmallIcon(draw).setOnlyAlertOnce(once).setContentTitle(message);
         GluNotBuilder.setSmallIcon(draw).setOnlyAlertOnce(once).setContentTitle(message).setShowWhen(true);

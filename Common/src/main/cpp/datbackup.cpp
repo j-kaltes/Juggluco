@@ -523,3 +523,6 @@ void resethost(passhost_t &host) {
 
 #include <mutex>
 std::mutex change_host_mutex;
+void definished(int sensorindex) {
+	backup->definished(sensorindex);	
+	}
