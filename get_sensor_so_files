@@ -1,0 +1,32 @@
+#!/bin/bash
+
+set -o errexit
+trap 'echo; echo Aborting.' ERR
+
+
+download_large_file_from_google_drive()
+{
+    file_id="$1"
+    pathname="$2"
+
+    confirm_string=`curl -c /tmp/cookie$$ -s -L "https://drive.google.com/uc?export=download&id=$file_id" | grep -o "confirm=[a-zA-Z0-9_-]*"`
+    curl -Lb /tmp/cookie$$ "https://drive.google.com/uc?export=download&$confirm_string&id=$file_id" -o "$pathname"
+
+    rm /tmp/cookie$$
+}
+
+
+apk_pathname=/tmp/Juggluco5.1.5.apk
+download_large_file_from_google_drive "1_tEfBtvIli5qd72kGQp9-_WYg9cksq9g" "$apk_pathname"
+
+for platform in arm64-v8a armeabi-v7a x86_64 x86; do
+    mkdir -p Common/src/main/jniLibs/$platform
+    unzip -joq "$apk_pathname" -d Common/src/main/jniLibs/$platform \
+            lib/$platform/libcalibrate.so lib/$platform/libcalibrat2.so lib/$platform/libus.so
+
+    mkdir -p Common/src/libre3/jniLibs/$platform
+    unzip -joq "$apk_pathname" -d Common/src/libre3/jniLibs/$platform \
+            lib/$platform/libcrl_dp.so lib/$platform/liblibre3extension.so lib/$platform/libinit.so
+done
+
+rm "$apk_pathname"

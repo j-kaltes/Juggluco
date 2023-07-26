@@ -30,6 +30,11 @@ A direct connection between Watch 4 and sensor is unusable with nearly half of t
 For more information: https://www.juggluco.nl/JugglucoWearOS
 
 # BUILD Juggluco
+## Get .so files for reading sensors
+### Linux and maxOS
+Run the ./get_sensor_so_files script.
+
+### Other platforms
 The following files need to be added to run Juggluco and can be found by unzipping a recent (>=5.1.3) Juggluco apk:
 https://www.juggluco.nl/Juggluco/download.html
 

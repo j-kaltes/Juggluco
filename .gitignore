@@ -1,0 +1,7 @@
+# .so files for reading sensors
+libcalibrat2.so
+libcalibrate.so
+libus.so
+libcrl_dp.so
+liblibre3extension.so
+libinit.so
