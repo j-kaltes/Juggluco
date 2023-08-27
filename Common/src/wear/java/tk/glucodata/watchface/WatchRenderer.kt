@@ -134,7 +134,8 @@ val updater:Runnable= object: Runnable{
 
         }
         override fun onSensorChanged(event: SensorEvent) {
-            if(event.accuracy==SENSOR_STATUS_ACCURACY_MEDIUM||event.accuracy==SENSOR_STATUS_ACCURACY_HIGH) {
+            if(event.accuracy>=SENSOR_STATUS_ACCURACY_LOW){
+//            if(event.accuracy==SENSOR_STATUS_ACCURACY_MEDIUM||event.accuracy==SENSOR_STATUS_ACCURACY_HIGH) 
                 heartrate= event.values[0]
                 Log.i( LOG_ID, "onSensorChanged accuracy=" + event.accuracy + " HR=" + heartrate);
             }

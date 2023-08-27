@@ -1,8 +1,8 @@
 
 #define setthreadname(buf) prctl(PR_SET_NAME, buf, 0, 0, 0)
-/*#ifndef NDEBUG
+/*#ifndef NOLOG
 #define TESTGEN2 1
-#endif   */
+#endif     */
 /*      This file is part of Juggluco, an Android app to receive and display         */
 /*      glucose values from Freestyle Libre 2 and 3 sensors.                         */
 /*                                                                                   */
@@ -252,6 +252,7 @@ static	 const int waitsig=60;
 		}
 	else {
 	if(alg){
+		destruct _desalg([alg=alg]{delete alg;}); //[alg] also works with g++ 13.1.1 , but not with clang++ version 14.0.7 
 		LOGSTRING("alg!=null ");
 		if(scanda) {
 			LOGSTRING("scanda\n");
@@ -481,7 +482,7 @@ extern "C" JNIEXPORT jbyteArray JNICALL   fromjava(sensorUnlockKey)(JNIEnv *envi
 		const int uitlen= key->size();
 		jbyteArray uit=envin->NewByteArray(uitlen);
 		envin->SetByteArrayRegion(uit, 0, uitlen, key->data());
-//		data_t::deleteex(key);
+//		data_t::deleteex(key); //IN map don't delete
 		return uit;
 		}
 	LOGAR("unlockKeySensor==null");
@@ -651,12 +652,15 @@ extern "C" JNIEXPORT jlong JNICALL   fromjava(processTooth)(JNIEnv *envin, jclas
 //	scanstate *newstate=new scanstate(sdata->hist->getsensordir(),nu);
 	scanstate *newstate=new scanstate(defaultscanstate);
 	const AlgorithmResults *algres=sdata->processTooth(bluedata,newstate,nu);
+
+	data_t::deleteex(bluedata);
 //	delete newstate;
 	if(algres==ALGDUP_VALUE ) {
 		delete newstate;
 		return 1LL;
 		}
 	if(algres) {
+		destruct _algdes([algres]{delete algres;});
 		constexpr unsigned waittime=60*60;
 		static time_t savetime=nu+waittime;
 	 	sdata->setstate(newstate);
@@ -891,6 +895,7 @@ static void writearray(JNIEnv *env,jbyteArray  jar,FILE *fp) {
 		const int len= ar->size();
 		for(int i=0;i<len;i++)
 			fprintf(fp,"0x%x,",dat[i]);
+		data_t::deleteex(ar);
 		};
 	fprintf(fp,"}");
 	}
@@ -1041,6 +1046,18 @@ bool hasGen2=false,hasGen1=false;
 /*#ifndef NDEBUG
 #define TESTGEN2 1
 #endif */
+#ifdef TESTGEN2 
+int getlastGen() {
+extern	void setusedsensors() ;
+extern std::vector<int> usedsensors;
+	 setusedsensors() ;
+	 bool has2=true,has1=true;
+	hasGen1=has1;
+	hasGen2=has2;
+	lastgen=has2?2:1;
+	return lastgen;	
+	}
+#else
 int getlastGen() {
 //	if(lastgen) return lastgen;
 extern	void setusedsensors() ;
@@ -1061,7 +1078,7 @@ extern std::vector<int> usedsensors;
 	lastgen=has2?2:1;
 	return lastgen;	
 	}
-
+#endif
 
 extern	void closedynlib();
 extern "C" JNIEXPORT jboolean  JNICALL   fromjava(switchgen2)(JNIEnv *env, jclass cl) {

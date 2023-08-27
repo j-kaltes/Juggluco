@@ -22,11 +22,8 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#ifndef NOLOG
-#ifdef WEAROS
-#define LOGCAT 1
-#endif
-#endif
+//#define DATALIB 1
+
 
 #define HASP1 1
 #define CARRY_LIBS 1

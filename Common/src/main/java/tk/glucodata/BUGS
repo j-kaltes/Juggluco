@@ -1,8 +1,13 @@
-CONV18
-Make run-as possible.
-No logcat in release
-Bluetooth op horloge maakt connectie ook na switch naar horloge
+turn off TESTGEN2
+Kleurverschil te klein in niet reverse screen.
 
+Do something with missing data error: Data for sensor are missing because of reuse of mirror connection?
+- Message?
+
+
+CONV18
+No logcat in release
+Bluetooth op telefoon maakt connectie ook na switch naar horloge
 
 Value available notification after no value notification.
 Bluetooth connectie wordt misschien niet altijd disconnected bij een fout.

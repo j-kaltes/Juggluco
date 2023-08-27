@@ -133,7 +133,7 @@ private static	void askclearupload(Context context) {
                 }) .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
             }
-        }).show();
+        }).show().setCanceledOnTouchOutside(false);
 	}
 
 public static void  config(MainActivity act, View settingsview) {

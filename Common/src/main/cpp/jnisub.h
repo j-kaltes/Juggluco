@@ -146,7 +146,7 @@ Abbott(string_view basedir,data_t *uidin,int fam=0): sensordir(basedir,getserial
 	init();
 	}
 	*/
-Abbott(string_view basedir,data_t *uidin,int fam=0): Abbott(basedir,getserial(fam,reinterpret_cast<unsigned char *>(uidin->data())), uidin) {
+Abbott(string_view basedir,data_t *uidin,int fam): Abbott(basedir,getserial(fam,reinterpret_cast<unsigned char *>(uidin->data())), uidin) {
 	}
 public:
 const string_view getsensordir() const {return sensordir;};
@@ -249,9 +249,8 @@ public:
 #ifndef NORAWSTREAM
 	close(blueuit);
 #endif
-#ifndef NDEBUG
+	LOGAR("~libre2stream()"); 
      delete state;
-#endif
 	}
 bool good() const override {
 	return state&&state->good();

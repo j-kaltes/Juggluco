@@ -201,7 +201,7 @@ private void	askdeletelast(Spinner spinner,	LabelAdapter<String> numspinadapt, B
                 }) .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
             }
-        }).show();
+        }).show().setCanceledOnTouchOutside(false);
 	}
 
 void    mklabellayout( ) {

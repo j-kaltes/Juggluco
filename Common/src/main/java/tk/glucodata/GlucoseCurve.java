@@ -448,10 +448,10 @@ void startlibrelink(String lang) {
 					};break;
 
                                 case 4: {
- 					{
-					MainActivity activity = (MainActivity) getContext();
-					doabout(activity);
-					}
+					if(!isWearable) {
+						MainActivity activity = (MainActivity) getContext();
+						doabout(activity);
+						}
 
 
 					break;
@@ -1081,9 +1081,11 @@ public void onResume() {
     }
 
 void	doabout(MainActivity activity) {
+if(!isWearable) {
 	String about=activity.getString(R.string.about)+"<p>Version Code: "+ BuildConfig.VERSION_CODE+"<br>Version Name: "+ 
     	BuildConfig.VERSION_NAME +"<br>"+Natives.getCPUarch()+"<br>Build time: "+ BuildConfig.BUILD_TIME +"</p>";
 	
 	help.help(about, activity);
+	}
 	}
 }

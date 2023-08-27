@@ -220,7 +220,7 @@ void confirmFinish(SuperGattCallback gat) {
             public void onClick(DialogInterface dialog, int id) {
 
             }
-        }).show();
+        }).show().setCanceledOnTouchOutside(false);
 	}
 
 void	setadapter(Activity act,	final ArrayList<SuperGattCallback> gatts) {

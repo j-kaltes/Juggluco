@@ -282,7 +282,7 @@ private void askdelete( View parok,int alarmpos) {
                 }) .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
             }
-        }).show();
+        }).show().setCanceledOnTouchOutside(false);
 	}
 
 void  mkitemlayout(Activity act,View parok) {

@@ -295,11 +295,14 @@ extern "C"    jboolean     subExceptionCheck(JNIEnv*env)  {
 
    	except=0;
    	}
+
 extern "C"    jthrowable subExceptionOccurred(JNIEnv*env) {
+	static thrower athrow("Hier");
    	subLOGGER("subExceptionOccurred %d\n", syscall(SYS_gettid));
 
 
-	return new thrower("Hier");
+//	return new thrower("Hier");
+	return &athrow;
 
     	}	
 extern "C" jobject     nothingproc(va_list) {
@@ -755,15 +758,15 @@ JNIEXPORT jobject JNICALL Java_com_abbottdiabetescare_flashglucose_sensorabstrac
   (JNIEnv *, jobject, jint, jobject, jobject, jobject, jobject, jbyteArray, jbyteArray, jbyteArray, jint, jint, jint, jint, jint, jbyteArray, jbyteArray, jbyteArray, jobject, jobject, jobject, jobject, jobject, jobject, jobject, jobject, jobject, jobject);
 }
 */
-#ifdef NDEBUG
+#ifdef NOLOG 
 #define setfunc(nam)    {*(void **) (&nam)= methods[it++].fnPtr;}
 #else
-#define setfunc(nam)   {if(strcmp(#nam,methods[it].name)) LOGGER("%s!=%s\n",#nam,methods[it].name); *(void **) (&nam)= methods[it++].fnPtr;;++it;;}
+#define setfunc(nam)   {if(strcmp(#nam,methods[it].name)) {LOGGER("%s!=%s\n",#nam,methods[it].name);} *(void **) (&nam)= methods[it++].fnPtr;}
 #endif
-#ifdef NDEBUG
+#ifdef NOLOG 
 #define setfuncneed(nam)    {if(!nam) {*(void **) (&nam)= methods[it].fnPtr;};++it;}
 #else
-#define setfuncneed(nam)   {if(strcmp(#nam,methods[it].name)) LOGGER("%s!=%s\n",#nam,methods[it].name); {if(!nam) {*(void **) (&nam)= methods[it].fnPtr;};++it;};}
+#define setfuncneed(nam)   {if(strcmp(#nam,methods[it].name)) {LOGGER("%s!=%s\n",#nam,methods[it].name);} {if(!nam) {*(void **) (&nam)= methods[it].fnPtr;};++it;};}
 #endif
 jint         subRegisterNatives(JNIEnv*, jclass name, const JNINativeMethod*methods, jint nr) {
 	if(nr!=20) {
@@ -1020,9 +1023,17 @@ data_t *fromjbyteArray(JNIEnv *env,jbyteArray jar,jint len) {
 	return dat;
 	}
 //Abbott(string_view basedir,data_t *uidin,int fam=0): sensordir(basedir,getserial(fam,reinterpret_cast<unsigned char *>(uidin->data()))), uid(uidin) {}
+static jint getFamily(JNIEnv *env,jbyteArray info) {
+	jint fam=abbottcall(getProductFamily)(env,nullptr, parsertype, info,getjtoken(env));
+	LOGGER("getProductFamily()=%d\n", fam);
+	if(!fam) {
+		fam=abbottcall(getProductFamily)(env,nullptr, parsertype, info,getjtoken(env));
+		LOGGER("getProductFamily()=%d\n", fam);
+		}
+	return fam;
+	}
 
-
-Abbott::Abbott(JNIEnv *env,string_view basedir,jbyteArray juid, jbyteArray info): Abbott(basedir,fromjbyteArray(env,juid),abbottcall(getProductFamily)(env,nullptr, parsertype, info,getjtoken(env))) {
+Abbott::Abbott(JNIEnv *env,string_view basedir,jbyteArray juid, jbyteArray info): Abbott(basedir,fromjbyteArray(env,juid),getFamily(env,info)) {
 	}
 AlgorithmResults *callAbbottAlg(data_t *uid,int startsincebase,scanstate *oldstate,scandata *data,scanstate *newstate,outobj *starttime,outobj *endtime,jobject person) {
 	LOGSTRING("start callAbbottAlg/3\n");
@@ -1085,6 +1096,7 @@ AlgorithmResults *alg=(AlgorithmResults *)outalgres.ptr;
 		char buf[50];
 		LOGGER("processScan returned %zd %s ",res,ctime_r(&nutime,buf));
 #endif
+		delete alg;
 		return nullptr;
 		}
 	}
@@ -1442,9 +1454,10 @@ LOGAR("doabbottinit");
 	JNIEnv *env=subenv;
 	jobject thiz=nullptr;
 	environ=envptrs;
-	#ifdef DYNLINK
-	packagepath pak(globalbasedir);
-	const char *libpath=pak.getlib();
+#ifdef DYNLINK
+packagepath pak(globalbasedir);
+const char *libpath=pak.getlib();
+#ifdef DATALIB
 	bool haslib=(access(libpath,R_OK)==0);
 	if(haslib) {
 		LOGAR("haslib");
@@ -1454,8 +1467,15 @@ LOGAR("doabbottinit");
 			}
 		haslib=linklib(libpath);
 		}
-	if(!haslib) {
+	if(haslib)  {
+		packager=pak;
+		}
+	else {
 		LOGGER("linking failed %s\n",libpath);
+#else
+unlink(libpath);
+ {
+#endif
 #ifndef CARRY_LIBS
 		LOGAR("doesn't carry libs");
 		return -1;	
@@ -1498,9 +1518,6 @@ LOGAR("doabbottinit");
 		packager=native;
 		}
 #endif
-		}
-	else  {
-		packager=pak;
 		}
 	#endif
 	packager.addend();
@@ -1913,11 +1930,13 @@ if(alg) {
 				return alg;
 				}
 			else {
+				delete alg;
 				return ALGDUP_VALUE;
 
 				}
 			}
 		else {
+			delete alg;
 			LOGSTRING("bad quality\n");
 			}
 		}
@@ -1947,10 +1966,12 @@ extern "C" JNIEXPORT jbyteArray  JNICALL fromjava(bluetoothOnKey)(JNIEnv *envin,
 	int fam= abbottcall(getProductFamily)(envin, cl, parsertype, patchinfo, getjtoken(envin));
 
 	const data_t *uid=fromjbyteArray(envin,sensorident);
+	destruct _destuid([uid]{data_t::deleteex(uid);});
 	string serial=getserial(fam,reinterpret_cast<const unsigned char *>(uid->data()));
 
 	time_t starttime=time(NULL);
 	const data_t *info=fromjbyteArray(envin,patchinfo);
+	destruct _destinfo([info]{data_t::deleteex(info);});
 
 	LOGGER("bluetoothOnKey %s\n",serial.data());
 	if(SensorGlucoseData *hist=sensors->gethist(serial.data())) {
@@ -1991,6 +2012,7 @@ string getserial(JNIEnv *envin, jclass cl,jbyteArray sensorident,jbyteArray patc
 	LOGAR("getserial");
 	int fam= abbottcall(getProductFamily)(envin, cl, parsertype, patchinfo,getjtoken(envin));
 	const data_t *uid=fromjbyteArray(envin,sensorident);
+	destruct _dest([uid] {data_t::deleteex(uid);});
 	return getserial(fam,reinterpret_cast<const unsigned char *>(uid->data()));
 	}
 
@@ -2050,6 +2072,7 @@ extern "C" JNIEXPORT void JNICALL   fromjava(enabledStreaming)(JNIEnv *envin, jc
 		return ;
 	int fam= abbottcall(getProductFamily)(envin, cl, parsertype, patchinfo,getjtoken(envin));
 	const data_t *uid=fromjbyteArray(envin,sensorident);
+	destruct _dest([uid] {data_t::deleteex(uid);});
 	string serial=getserial(fam,reinterpret_cast<const unsigned char *>(uid->data()));
 	if(SensorGlucoseData *hist=sensors->gethist(serial.data())) {
 		hist->setbluetoothOn( val); 
@@ -2065,6 +2088,7 @@ extern "C" JNIEXPORT void JNICALL   fromjava(USenabledStreaming)(JNIEnv *envin, 
 	LOGGERN(uslog,sizeof(uslog)-1);
 	const int fam=3;
 	const data_t *uid=fromjbyteArray(envin,sensorident);
+	destruct _dest([uid] {data_t::deleteex(uid);});
 	string serial=getserial(fam,reinterpret_cast<const unsigned char *>(uid->data()));
 	if(SensorGlucoseData *hist=sensors->gethist(serial.data())) {
 		hist->setbluetoothOn( 1); 

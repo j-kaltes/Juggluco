@@ -507,7 +507,7 @@ public static boolean libreconfig(boolean libre3,boolean restart){
 
 private static	void askclearlibreview(Context context) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle(R.string.resendquestion).
+        var dialog=builder.setTitle(R.string.resendquestion).
 	 setMessage(R.string.resendmessage).
            setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
@@ -517,12 +517,14 @@ private static	void askclearlibreview(Context context) {
                 }) .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
             }
-        }).show();
+        }).create();
+	dialog.setCanceledOnTouchOutside(false);
+	dialog.show();
 	}
 
 private static void		confirmGetAccountID(Activity context) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle(R.string.getaccountidquestion).
+       var dialog=builder.setTitle(R.string.getaccountidquestion).
 	 setMessage(R.string.getaccountidmessage).
            setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
@@ -532,7 +534,9 @@ private static void		confirmGetAccountID(Activity context) {
                 }) .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
             }
-        }).show();
+        }).create();
+	dialog.setCanceledOnTouchOutside(false);
+	dialog.show();
 	}
 
 

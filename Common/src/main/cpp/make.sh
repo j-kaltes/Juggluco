@@ -17,7 +17,11 @@ export OUTPUTDIR=$APPDIR/Common/build/mij/$ABI/$btype
 #	sh cmakemake.sh $btype $ABI $ANVERSION
 if test ! -d $OUTPUTDIR
 then
-	sh cmakemake.sh $btype $ABI $ANVERSION
+	sh cmakemake.sh $btype $ABI $ANVERSION phone $OUTPUTDIR
+
+else
+	sh cmakemake.sh $btype $ABI $ANVERSION phone $OUTPUTDIR
+
 fi
 
 cd $OUTPUTDIR

@@ -1124,17 +1124,30 @@ static bool needsdebug() {
 #endif
 	    ,[](const  string_view view){
 		const char *name=view.data();
-		if(!access(name,F_OK))
+		if(!access(name,F_OK)) {
+			LOGGER("access: %s\n",name);
 			return 0;
+			}
+			/*
+		int ern=errno;
+		if(ern==EACCES)  {
+			LOGGER("access: %s: EACCES\n",name);
+			return 0;
+			} */
 		const char ends[]="/.trdpx";
 		const int len=view.size();
 		char buf[sizeof(ends)+ len];
 		memcpy(buf,name,len);
 		memcpy(buf+len,ends,sizeof(ends));
-		if(!access(buf,F_OK))
+		if(!access(buf,F_OK)) {
+			LOGGER("access: %s\n",buf);
 			return 0;
-		if(errno==ENOTDIR)
+			}
+//		if(errno==EACCES||errno==ENOTDIR)
+		if(errno==ENOTDIR) {
+			LOGGER("access: %s: ENOTDIR\n",buf);
 			return 0;
+			}
 		return -1;
 		});
 		;
@@ -1151,18 +1164,34 @@ static bool needsdebug() {
 	 ,[](const string_view view){struct stat st;
 		const char *name=view.data();
 		if(!stat(name,&st)) {
+			LOGGER("stat %s\n",name);
 			return 0;
 			};
+		if(errno==EACCES) {
+			if(!memcmp(name,"/data/",6)) {
+				LOGGER("stat %s EACCES\n",name);
+				return 0;
+				}
+			} 
+		else {
+			if(errno==ENOTDIR) {
+				LOGGER("stat %s ENOTDIR\n",name);
+				return 0;
+				}
+			}
 		const char ends[]="/.trdpx";
 		const int len=view.size();
 		char buf[sizeof(ends)+ len];
 		memcpy(buf,name,len);
 		memcpy(buf+len,ends,sizeof(ends));
 		if(!stat(buf,&st)) {
+			LOGGER("stat %s\n",buf);
 			return 0;
 			};
-		if(errno==ENOTDIR)
+		if(errno==ENOTDIR) {
+			LOGGER("stat %s ENOTDIR\n",buf);
 			return 0;
+			}
 		return -1;
 		});
 	LOGSTRING("Open:\n");	
@@ -1179,6 +1208,7 @@ static bool needsdebug() {
 		const char *name=view.data();
 		int han= open(name,O_RDONLY);
 		if(han>=0) {
+			LOGGER("open %s\n",name);
 			close(han);
 			return 0;
 			}
@@ -1194,11 +1224,14 @@ static bool needsdebug() {
 			memcpy(buf+len,ends,sizeof(ends));
 			han= open(buf,O_RDONLY);
 			if(han>=0) {
+				LOGGER("open %s\n",buf);
 				close(han);
 				return 0;
 				}
-			if(errno==ENOTDIR)
+			if(errno==ENOTDIR) {
+				LOGGER("open %s ENOTDIR\n",buf);
 				return 0;
+				}
 			}
 		return -1;
 	});

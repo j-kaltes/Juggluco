@@ -78,7 +78,7 @@ public class MyConnectIQListener implements ConnectIQ.ConnectIQListener {
             dialog.setTitle(errStatus.name());
             dialog.setMessage(message);
             dialog.setPositiveButton(android.R.string.ok, null);
-            dialog.create().show();
+            dialog.show().setCanceledOnTouchOutside(false);
         }
 	void setdata() {
 		tk.glucodata.Applic app=(tk.glucodata.Applic)context.getApplicationContext();

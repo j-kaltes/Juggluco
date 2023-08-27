@@ -104,10 +104,10 @@ public static void rewritefloating(Activity context) {
  static void shoulduseadb(Context context) {
 	    final var builder = new AlertDialog.Builder(context);
 	    builder.setTitle(R.string.overlaypermission);
-	    var dialog=builder.setMessage(R.string.overlaypermissionmessage)
-	    .setPositiveButton(R.string.ok, (dia, id) -> {
+	    var dialog=builder.setMessage(R.string.overlaypermissionmessage).setPositiveButton(R.string.ok, (dia, id) -> {
 			Log.i(LOG_ID,"now ask overlay permission");
 		}) .show();
+                dialog.setCanceledOnTouchOutside(false);
 	    TextView messageText = (TextView)dialog.findViewById(android.R.id.message);
 		final var metrics = Applic.app.getResources().getDisplayMetrics();
 		var screenwidth = metrics.widthPixels;

@@ -279,6 +279,15 @@ void	initopengl(int started)  {
 	if(!started) {
 	    resetcurvestate();
 	    }
+	if(::genVG) { //Why should it be recreated?
+#ifdef NANOVG_GLES2_IMPLEMENTATION
+ nvgDeleteGLES2
+#else 
+ nvgDeleteGLES3
+#endif
+	(::genVG); 
+	::genVG=nullptr;
+	}
 
 
     printGlString("Version", GL_VERSION);
@@ -638,7 +647,7 @@ static void		sidenum(const float posx,const float posy,const char *buf,const int
 static uint32_t getmaxlabel() { return settings->getlabelcount(); }
 
 
-int *numheights;
+static int *numheights=nullptr;
 int shownlabels;
 
 //y=A+x*D
@@ -709,25 +718,6 @@ static bool glucosepoint(time_t tim,uint32_t value,   float posx, float posy) {
 	nvgCircle(genVG, posx,posy,pointRadius);
 	return glucosepointinfo(tim,value,posx,posy);
 	}
-constexpr const int nfclen=344;
-extern int    timestr(char *buf,time_t tim) ;
-class nfc: public nfcdata {
-public:
-nfc(const string &base, const sensor *sens,const time_t d):nfcdata(new uint8_t[nfclen],d) {
-	constexpr const int tmplen=20;
-	char tmp[tmplen];
-	int len=timestr(tmp,d); 
-	assert(len<tmplen);
-	pathconcat  rawfile(base,string_view(sens->name,sensornamelen),string_view(tmp,len),"raw.dat");
-	if(readfile(rawfile,databuf,nfclen)!=nfclen) {
-		this->~nfc();
-		databuf=nullptr;
-		}
-	}
-~nfc() {
-	delete[] reinterpret_cast<uint8_t *>(databuf);
-	}
-};
 
 static void endstep() ;
 static bool emptytap=false;
@@ -1453,45 +1443,10 @@ extern std::vector<int> usedsensors;
 extern void setusedsensors() ;
 extern void setusedsensors(uint32_t nu) ;
 //extern std::span<streamdat> laststream;
-//std::span<streamdat>  laststream{},oldstream{new streamdat[1](),1};
 void setmaxsensors(size_t sensornr) {
 	setusedsensors();
 	}
 
-/*
-void setmaxsensors(struct streams_t *str,int sensornr) {
-	delete[] str->glucosetime;
-	delete[] str->glucose;
-	delete[] str->sensorname;
-	delete[] str->glucoserate;
-	str->sensornr=sensornr;
-	str->glucosetime=new time_t[sensornr]();
-	str->glucose=new uint32_t[sensornr];
-	str->glucoserate=new float[sensornr];
-	str->sensorname=new constcharptr_t[sensornr];
-	}
-
-void setmaxsensors(int nr) {
-	delete[] glucosetime;
-	delete[] glucose;
-	delete[] sensorname;
-	delete[] glucoserate;
-	sensornr=nr;
-	glucosetime=new time_t[sensornr]();
-	glucose=new uint32_t[sensornr];
-	glucoserate=new float[sensornr];
-	sensorname=new constcharptr_t[sensornr];
-	}
-class startnow { 
-public:
-template <typename T>
-startnow(T fun) {
-	fun();
-	}
-	};
-startnow oldinit([]{setmaxsensors(oldstream,1);});
-
-	*/
 
 //float highglucose=1350;
 //float lowglucose=702;
@@ -2363,6 +2318,7 @@ void mkheights() {
 		return;
 	LOGSTRING("mkheights() \n");
 	const int maxl= settings->getlabelcount();
+	delete[] numheights;
 	numheights=new int[maxl];
 	int nr=0;
 	for(int i=0;i<maxl;i++) {

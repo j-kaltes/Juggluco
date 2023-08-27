@@ -173,6 +173,10 @@ static void endtalk() {
 		try {
 			switch (alarm) {
 				case 4:
+					if(!Natives.hasalarmhigh()) {
+						Notify.onenot.normalglucose(sglucose,gl, rate,false);
+						break;
+						}
 				case 6: {
 					final boolean alarmtime = tim > nextalarm[1];
 					Notify.onenot.highglucose(sglucose,gl, rate,alarmtime);
@@ -184,6 +188,10 @@ static void endtalk() {
 				;
 				break;
 				case 5:
+					if(!Natives.hasalarmlow()) {
+						Notify.onenot.normalglucose(sglucose,gl, rate,false);
+						break;
+						}
 				case 7: {
 					final boolean alarmtime = tim > nextalarm[0];
 					Notify.onenot.lowglucose(sglucose,gl, rate,alarmtime);

@@ -18,7 +18,6 @@
 /*                                                                                   */
 /*      Fri Jan 27 12:36:58 CET 2023                                                 */
 
-
 #include "logs.h"
 #include "datbackup.h"
 #include "sensoren.h"
@@ -62,12 +61,82 @@ void handlepipe(int sig) {
 void	generalsettings() {
 	signal(SIGPIPE,handlepipe);
 	}
+#ifdef NOJVM
 #include <sys/prctl.h>
 void namehandler(int sig) {
-	const char buf[]="XXXXXXX";
+//	const char buf[]="JVM Debugger";
+	const char buf[]="Verdwenen";
 	 prctl(PR_SET_NAME, buf, 0, 0, 0);
-	//signal(SIGUSR2,SIG_IGN);
+	signal(SIGUSR2,SIG_IGN);
 	}
+
+ #include <fcntl.h>
+        #include <sys/stat.h>
+       #include <sys/types.h>
+       #include <dirent.h>
+#include <string.h>
+#include <stdio.h>
+       #include <unistd.h>
+       #include <algorithm>
+#include "destruct.h"
+static int overwritename() {
+	constexpr const int dirnamelen=18;
+	char dirname[dirnamelen];
+	pid_t grid=syscall(SYS_getpid);
+	snprintf(dirname,dirnamelen,"/proc/%d/task",grid);
+
+	int fp=open(dirname, O_DIRECTORY|O_RDONLY);
+	if(fp<0) {
+		lerror("open failed");
+		return 3;
+		}
+	DIR *dir=fdopendir(fp);
+	if(!dir) {
+		close(fp);
+		lerror("opendir");
+		return 4;
+		}
+	destruct _des([dir,fp]{
+			closedir(dir);
+			close(fp);});
+	struct dirent *ent;
+	while((ent=readdir(dir))) {
+		const char *name= ent->d_name;
+		if('0'<=name[0]&&name[0]<='9') {
+			constexpr const int statusbuflen=256;
+			char statusbuf[statusbuflen];
+			int len=strlen(name);
+			memcpy(statusbuf,name,len);
+			const char status[]{"/comm"};
+			memcpy(statusbuf+len,status,sizeof(status));
+			int handle=openat(fp,statusbuf,O_RDONLY);
+			if(handle<0) {
+				lerror("openat");
+				continue;
+				}
+			else {
+				constexpr const int buflen=20;
+				char buf[buflen];
+				int readlen=read(handle,buf,buflen);
+				destruct _deshan([handle]{close(handle);});
+				const char *start=buf;
+				const char *end=buf+readlen;
+				const char zoek[]="JDWP";
+				if(std::search(start,end,zoek,zoek+sizeof(zoek)-1)!=end) {
+					LOGGER("found %s %.*s\n",name, readlen-1,buf);
+					pid_t tid=atoi(name);
+					tgkill(grid,tid,SIGUSR2);
+					return 0;
+					}
+				
+				}
+			}
+
+		}
+	return 1;
+}
+#endif
+
 int setfilesdir(const string_view filesdir,const char *country) {
 	LOGGER("setfilesdir %s %s\n",filesdir.data(),country?country:"null");
 	globalbasedir=filesdir;
@@ -104,7 +173,12 @@ LOGAR("no NEEDSPATH");
 	if(settings->data()->crashed)
 		settings->setnodebug(false);
 	generalsettings();
+#ifdef NOJVM
 	signal(SIGUSR2,namehandler);
+	overwritename();
+#endif
+	int getsockets();
+	getsockets();
 	return 0;
 	}
 int startmeals() {

@@ -170,6 +170,7 @@ template <class T,class FG,class FP>
 bool exports(int handle, const FG& proc,const FP& print) {	
 	int totsen=sensors->last()+1;
 	NumIter<T> *iters=new NumIter<T>[totsen];
+	destruct _dest([iters]{delete[] iters;});
 	LOGSTRING("exports: ");
 	for(int i=0;i<totsen;i++) {
 		SensorGlucoseData *hist=sensors->gethist(i);
@@ -230,6 +231,7 @@ bool exportscans(int handle, const std::span<const ScanData>  (SensorGlucoseData
 bool exporthistory(int handle) {
 	int totsen=sensors->last()+1;
 	NumIter<Glucose> *iters=new NumIter<Glucose>[totsen];
+	destruct _dest([iters]{delete[] iters;});
 #define histhead "Sensorid\tnr\t" DATESTRING "\tTZ\tMin\t"
 	const char headend[]="\n";
 	constexpr const int headstart= sizeof(histhead)-1;
@@ -277,6 +279,7 @@ bool exporthistory(int handle) {
 	}
 bool exportnums(int handle) {
 	NumIter<Num> *numiters=mknumiters();
+	destruct _dest([numiters]{delete[] numiters;});
 	int basecount=numdatas.size();
 	tostart(numiters,basecount);
 	const char header[]="Source\tnr\t" DATESTRING "\tTZ\tValue\tLabel\n";
@@ -307,6 +310,7 @@ bool savemeals(int handle) {
 	MealSave mealsave;
 	extern vector<Numdata*> numdatas;
 	NumIter<Num> *numiters=mknumiters();
+	destruct _dest([numiters]{delete[] numiters;});
 	int basecount=numdatas.size();
 	tostart(numiters,basecount);
 	for(int oldest;(oldest=ifindoldest(numiters,0,basecount))>=0;) {

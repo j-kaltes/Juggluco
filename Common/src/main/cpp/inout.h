@@ -470,8 +470,8 @@ static gegs * newex( const gegs *in) {
 	memcpy(ptr->buf,in->buf,in->length()*sizeof(T));
 	return ptr;
 	}
-static void deleteex( gegs *geg) {
-	operator delete[] (reinterpret_cast<unsigned char *>(geg), std::align_val_t(alignof(struct gegs)));
+static void deleteex( const gegs *geg) {
+	operator delete[] (reinterpret_cast<unsigned char *>(const_cast<gegs*>(geg)), std::align_val_t(alignof(struct gegs)));
 	}
 };
 //typedef gegs<unsigned char> data_t;

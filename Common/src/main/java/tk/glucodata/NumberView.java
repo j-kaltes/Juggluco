@@ -425,7 +425,7 @@ void deletedialog(View v,int[] mealptr) {
 		 newnumview.setVisibility(View.GONE);
 		 keyboard.setVisibility(View.GONE);*/
             }
-        }).show();
+        }).show().setCanceledOnTouchOutside(false);
     }
 public void addnumberwithmenu(MainActivity context,int mealptr) {
 	if(currentnum!=0L)  {

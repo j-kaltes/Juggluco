@@ -16,6 +16,6 @@ static public void	ask(Context context, String title, String mess, Runnable okpr
                 }) .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
             }
-        }).show();
+        }).show().setCanceledOnTouchOutside(false);
 	}
 }

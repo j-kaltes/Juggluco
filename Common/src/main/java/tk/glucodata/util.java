@@ -89,11 +89,19 @@ static void sethtml(TextView view, String text) {
 static void sethtml(TextView view,int res) {
 	sethtml(view,view.getContext().getString(res));
 	}
-
+static  Locale getReslocale() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
+            return Applic.app.getResources().getConfiguration().getLocales().get(0);
+        } else{
+            //noinspection deprecation
+            return Applic.app.getResources().getConfiguration().locale;
+        }
+    }
 static public Locale getlocale() {
 	final var locales= AppCompatDelegate.getApplicationLocales();
 	if(locales.isEmpty())  {
-		final var lang=Locale.getDefault();
+//		final var lang=Locale.getDefault();
+		final var lang=getReslocale();
 		Log.i("getlocale","Locale.getDefault()="+lang);
 		return lang;
 		}

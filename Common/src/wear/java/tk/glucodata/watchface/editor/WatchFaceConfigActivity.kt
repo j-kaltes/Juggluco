@@ -190,7 +190,7 @@ private val requestPermissionLauncher = registerForActivityResult(ActivityResult
 							Log.i(LOG_ID,"now ask permission")
 //							    heartratebox = box askpermission(bodies)
 
-						    }} .show()
+						    }} .show().setCanceledOnTouchOutside(false)
                         }
 				else {
 				     askpermission(bodies)

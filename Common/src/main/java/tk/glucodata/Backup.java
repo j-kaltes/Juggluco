@@ -250,7 +250,7 @@ private void deleteconfirmation(MainActivity act) {
                 }) .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
             }
-        }).show();
+        }).show().setCanceledOnTouchOutside(false);
 	}
 private void resentconfirmation(MainActivity act,int hostindex) {
         AlertDialog.Builder builder = new AlertDialog.Builder(act);
@@ -264,7 +264,7 @@ private void resentconfirmation(MainActivity act,int hostindex) {
                 }) .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
             }
-        }).show();
+        }).show().setCanceledOnTouchOutside(false);
 	}
 void makehostview(MainActivity act) {
 	for(int i=0;i<hostname.length;i++) {

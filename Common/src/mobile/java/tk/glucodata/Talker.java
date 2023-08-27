@@ -103,7 +103,8 @@ void destruct() {
 				Set<Voice> voices=engine.getVoices();
 				if(voices!=null) {
 					var loc=getlocale();
-					var lang=(context!=null)?context.getString(R.string.language):loc.getLanguage();
+//					var lang=(context!=null)?context.getString(R.string.language):loc.getLanguage();
+					var lang=loc.getLanguage();
 					Log.i(LOG_ID,"lang="+lang);
 
 					voiceChoice.clear();
@@ -114,11 +115,13 @@ void destruct() {
 						}
 					var spin=spinner;
 					if(spin!=null) {
-						spin.setAdapter(new RangeAdapter<Voice>(voiceChoice, Applic.app, voice -> {
-								return voice.getName();
-								})); 
-						if(voicepos>=0&&voicepos<voiceChoice.size())
-							spin.setSelection(voicepos);
+					      Applic.RunOnUiThread(() -> {
+							spin.setAdapter(new RangeAdapter<Voice>(voiceChoice, Applic.app, voice -> {
+									return voice.getName();
+									})); 
+							if(voicepos>=0&&voicepos<voiceChoice.size())
+								spin.setSelection(voicepos);
+							});
 						}
 					}
 				setvoice();
@@ -253,20 +256,12 @@ public static void config(MainActivity context) {
 	var pitchlabel=getlabel(context,context.getString(R.string.pitch));
 	pitchlabel.setPadding(0,pad*5,0,0);
 	var voicelabel=getlabel(context,context.getString(R.string.talker));
-//	var space=new Space(context);
-//	space.setMinimumWidth((int)(width*0.4));
        var active=getcheckbox(context,R.string.active, SuperGattCallback.dotalk);
 	active.setPadding(0,0,pad*3,0);
 
 	var test=getbutton(context,context.getString(R.string.test));
-/*        active.setOnCheckedChangeListener(
-                (buttonView,  isChecked) ->  {
-			Notify.dotalk=isChecked;
 			
-                        }); */
-	
-	var spin= (android.os.Build.VERSION.SDK_INT >= minandroid)? new Spinner(context):null;
-	spinner=spin;
+	var spin= spinner!=null?spinner:((android.os.Build.VERSION.SDK_INT >= minandroid)? (spinner=new Spinner(context)):null);
 
 	int[] spinpos={-1};
 	View[]  firstrow;
@@ -345,15 +340,6 @@ public static void config(MainActivity context) {
 		if(active.isChecked()) {
 				SuperGattCallback.newtalker(context);
 				SuperGattCallback.dotalk=true;
-				/*
-			if(!SuperGattCallback.dotalk) {
-				SuperGattCallback.newtalker();
-				SuperGattCallback.dotalk=true;
-				}
-			else  {
-				SuperGattCallback.talker.setvoice();
-				SuperGattCallback.talker.setvalues();
-				} */
 			}
 		else {
 			SuperGattCallback.endtalk();
@@ -368,17 +354,6 @@ public static void config(MainActivity context) {
 		getvalues.run();
 		playstring=say;
 		SuperGattCallback.newtalker(context);
-		/*
-		if(SuperGattCallback.talker==null) {
-			playstring=say;
-			SuperGattCallback.newtalker();
-			}
-		else {
-			SuperGattCallback.talker.setvoice();
-			SuperGattCallback.talker.setvalues();
-
-			SuperGattCallback.talker.speak(say);
-			} */
 		});
 
 	context.addContentView(layout, new ViewGroup.LayoutParams(MATCH_PARENT, WRAP_CONTENT));

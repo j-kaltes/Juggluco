@@ -474,7 +474,7 @@ private void outofStorageSpace() {
     	finish();	
 	keeprunning.stop();
 	System.exit(7);
-	}).setTitle("Juggluco has to exit").setMessage(message).show();
+	}).setTitle("Juggluco has to exit").setMessage(message).show().setCanceledOnTouchOutside(false);
    
    }
 private void makefilesfailed() {
@@ -487,7 +487,7 @@ private void makefilesfailed() {
     	finish();	
 	keeprunning.stop();
 	System.exit(8);
-	}).setTitle("Juggluco has to exit").setMessage(message).show();
+	}).setTitle("Juggluco has to exit").setMessage(message).show().setCanceledOnTouchOutside(false);
    
    }
 
@@ -497,7 +497,7 @@ void activateresult(boolean res) {
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
     builder.setNegativeButton(R.string.ok, (dialog, id) -> { // User cancelled the dialog
 	requestRender();
-	}).setMessage(message).show();
+	}).setMessage(message).show().setCanceledOnTouchOutside(false);
 }
 
     @Override
@@ -1103,7 +1103,9 @@ void showindialog(String message,boolean cancel) {
 			shownglucosealert=null;
 			}
 		   Notify.stopalarm() ;
-	    }).setMessage(message).show();
+	    }).setMessage(message).create();;
+	   dialog.setCanceledOnTouchOutside(false);
+	    dialog.show();
 
 	if(cancel) shownglucosealert=dialog;
 	}

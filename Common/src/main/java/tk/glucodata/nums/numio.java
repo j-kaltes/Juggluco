@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Locale;
 
 import tk.glucodata.Applic;
+import tk.glucodata.BuildConfig;
 import tk.glucodata.Log;
 import tk.glucodata.Natives;
 import tk.glucodata.R;
@@ -103,8 +104,10 @@ if(true) {
 			}
 		}
 	int ret=130;
-	String nativedir=con.getApplicationInfo().nativeLibraryDir;
-        Log.i(LOG_ID,locstr+" before setfilesdir country="+country+" nativeDir="+nativedir);
+	final String nativedir=con.getApplicationInfo().nativeLibraryDir;
+	 final String version= BuildConfig.VERSION_CODE+" "+ BuildConfig.VERSION_NAME +" "+ BuildConfig.BUILD_TIME+"\n";
+
+        Log.i(LOG_ID,version+locstr+" "+country+" nativeDir="+nativedir);
 	switch (ret=Natives.setfilesdir(filespath, country,nativedir)) {
 		case 1:
 			settingsnull();

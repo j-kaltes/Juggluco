@@ -101,7 +101,7 @@ public class Scan {
            setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                     }
-                }) .show();
+                }) .show().setCanceledOnTouchOutside(false);
 	}
 private static void changeTypeconfirmation(MainActivity act,String type,Runnable save) {
         AlertDialog.Builder builder = new AlertDialog.Builder(act);
@@ -113,7 +113,7 @@ private static void changeTypeconfirmation(MainActivity act,String type,Runnable
                 }) .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
             }
-        }).show();
+        }).show().setCanceledOnTouchOutside(false);
 	}
 static  public final DateFormat fhourmin=             new SimpleDateFormat("HH:mm", Locale.US);
 
