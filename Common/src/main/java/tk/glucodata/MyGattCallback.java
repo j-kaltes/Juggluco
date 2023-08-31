@@ -591,6 +591,11 @@ private	void oldonCharacteristicChanged(byte[] value) {
 					Applic.app.getHandler().postDelayed(mBLELoginHandler, 100);
 					++BLELoginposted;
 					}
+				else {
+					var gatt = mBluetoothGatt;
+					if(gatt != null)
+						gatt.disconnect();
+					}
 				return;
 				}
 			if(BLELoginposted>0) {
@@ -733,6 +738,7 @@ private void endBLEHandler() {
 		}
 @Override
 	public void close() {
+		Log.i(LOG_ID,"close");
 		endBLEHandler();
 		super.close();
 		}
