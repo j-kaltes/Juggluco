@@ -204,7 +204,7 @@ public   View addnumberview(MainActivity context,final int bron,final long time,
         savebutton.setText(R.string.save);
 
 
-        Layout layout = isWearable?new Layout(context,new View[] {source},row1,new View[]{datebutton,timebutton} , new View[]{messagetext,savebutton,deletebutton},new View[]{cancel}):new Layout(context, (lay, w, h) -> {
+        Layout layout = isWearable?new Layout(context,new View[] {source},new View[]{datebutton,timebutton} ,row1, new View[]{messagetext,savebutton,deletebutton},new View[]{cancel}):new Layout(context, (lay, w, h) -> {
 		int wid=GlucoseCurve.getwidth();
 		if(!smallScreen) {
 			Log.i(LOG_ID,"no smallScreen");

@@ -577,9 +577,12 @@ private	void oldonCharacteristicChanged(byte[] value) {
 		}
 		try {
 			byte[] a = authenticateStream(value);
-			if(a==null)
+			if(a==null)  {
+				var gatt = mBluetoothGatt;
+				if (gatt != null)
+					gatt.disconnect();
 				return;
-			conphase = 3;
+				}
 //            this.f14472dGb = new byte[25];
 			BLELogincharacteristic.setValue(a);
 			if(!mBluetoothGatt.writeCharacteristic(BLELogincharacteristic)) {
@@ -598,6 +601,7 @@ private	void oldonCharacteristicChanged(byte[] value) {
 					}
 				return;
 				}
+			conphase = 3;
 			if(BLELoginposted>0) {
 				BLELoginposted=0;
 				mBLELoginHandler=null;
@@ -715,15 +719,17 @@ public void onCharacteristicChanged(BluetoothGatt bluetoothGatt, BluetoothGattCh
 		}
 		}
 	else {
-		mBLELoginHandler = () -> {
-			if (conphase == 2) {
+		if(conphase == 2) {
+			mBLELoginHandler = () -> {
 				phase2(value);
-				}
-			else if (conphase == 3) {
+				};
+			mBLELoginHandler.run();
+			}
+		else  {
+			if(conphase == 3) {
 				phase3(value);
 				}
 			}; 
-		mBLELoginHandler.run();
 	//	Applic.app.getHandler().postDelayed(mBLELoginHandler, 100);
 		}
 	}
