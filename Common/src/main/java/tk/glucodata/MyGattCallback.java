@@ -659,7 +659,8 @@ private final boolean enableNotification(BluetoothGattCharacteristic bluetoothGa
 			Log.i(LOG_ID, "Gen2 session " + i);
 			conphase = 4;
 			if (!enableNotification(CompositeRawDatacharacteristic)) {
-				handshake= "Enable failed";
+				handshake= "enable CompositeRawDatacharacteristic failed";
+				Log.e(LOG_ID,handshake);
 				wrotepass[1] = System.currentTimeMillis();
 				conphase = 0;
 				mBluetoothGatt.disconnect();
