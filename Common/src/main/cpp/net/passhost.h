@@ -21,6 +21,7 @@
 
 #pragma once
 #include <array>
+#include <string_view>
 #include <sys/types.h>
 #include <arpa/inet.h>
 #if 0

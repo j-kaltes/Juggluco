@@ -114,7 +114,7 @@ jugglucotext pltext {
  .menustr0= {
 	"Klon",
 	"Sensor",
-	"Tr. ciemny      ",
+	"   Tr. ciemny      ",
     "Ustawienia",
 	"Zatrzymaj alarm" },
 .menustr2= {"Data",hourminstr,"1 d. wstecz",pltext.amount},

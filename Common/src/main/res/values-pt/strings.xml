@@ -76,7 +76,7 @@
 <string name="targetrange">"Intervalo-alvo: "</string>
 <string name="graphrange">"Intervalo do gráfico: "</string>
 <string name="unit">"Unidade: "</string>
-<string name="glucoseaxisleft">Números do eixo da glicose À ESQUERDA</string>
+<string name="glucoseaxisleft">Eixo da glicose à esquerda</string>
 <string name="startsapp">A digitalização inicia a aplicação</string>
 <string name="disablecamerakey">Desativar tecla da câmera</string>
 <string name="invertscreen">Inverter tela</string>

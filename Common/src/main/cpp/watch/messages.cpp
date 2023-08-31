@@ -203,7 +203,7 @@ void sendMessagesON(passhost_t *pass, bool val) {
 	}
 
 bool	sendmessage(const int phonehostnr,bool phonesender,const uint8_t *buf,const int inlen) {
-	LOGGERTAG("sendmessage(%d,%d,%p#%d)\n",phonehostnr,phonesender,buf,inlen);
+	LOGGERTAG("start sendmessage(%d,%d,%p#%d)\n",phonehostnr,phonesender,buf,inlen);
 	auto env=getenv();
    	int totlen=inlen+sizeof(wearmessage)-sizeof(wearmessage::len);
 	jbyteArray uit=env->NewByteArray(totlen);
@@ -223,6 +223,7 @@ bool	sendmessage(const int phonehostnr,bool phonesender,const uint8_t *buf,const
         bool res=jname?env->CallStaticBooleanMethod(jMessageSender,jsendDatawithName,jname,uit):false;
 #endif
         env->DeleteLocalRef(uit);
+	LOGGER("end sendmessage res=%d",res);
 	return res;
 	}
 void clearnetworkcache() {
@@ -261,8 +262,9 @@ void tobluetooth(int hostnr,bool sender,int *sockin, int *sockother,std::binary_
 	char buf[30]; 
 	int len=sprintf(buf, "tobluetooth %d %s",hostnr,sender?"S":"R");
 	prctl(PR_SET_NAME, buf, 0, 0, 0);
+	LOGGERN(buf,len);
 	}
-	LOGSTRINGTAG("tobluetooth before release\n");
+//	LOGSTRINGTAG("tobluetooth before release\n");
 	waitstarted->release();
   auto &status=mirrorstatus[hostnr].toblue[sender];
   status.running(true);
@@ -279,7 +281,7 @@ void tobluetooth(int hostnr,bool sender,int *sockin, int *sockother,std::binary_
 	   shutdown(sock,SHUT_RDWR);
 	   close(sock);
 	   status.running(false);
-			LOGSTRINGTAG("Return from thread\n");
+	  LOGGERTAG("%d %d Return from thread\n",hostnr,sender);
             return;
 	    }
 	/*

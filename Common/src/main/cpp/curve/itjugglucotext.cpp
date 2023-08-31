@@ -117,7 +117,7 @@ static jugglucotext ittext {
  .menustr0= {
 	"Mirror",
 	"Sensore",
-	"Dark mode     ",
+	"    Darkmode      ",
 	"Impostazione",
 	"Stop Allarme"
 	 },

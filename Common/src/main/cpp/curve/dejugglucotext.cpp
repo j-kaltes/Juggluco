@@ -111,10 +111,10 @@ detext.newamount,
   .menustr0= {
 "Klon",
 "Sensor",
-	"Dark mode     ",
-         "Einstellungen",
-"Alarm stoppen" },
-.menustr2= {"Datum",hourminstr,"Vortag",detext.amount},
+	"    Darkmode      ",
+         "Einstellen",
+"Stop Alarm" },
+.menustr2= {"Datum      ",hourminstr,"Vortag     ",detext.amount},
 #endif
 
 .scanerrors={

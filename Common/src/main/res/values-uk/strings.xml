@@ -214,6 +214,8 @@
  <string name="sensorpermission">Для відображення пульсу потрібен дозвіл датчиків</string>
  <string name="sensorpermissionmessage">Налаштуйте це в Налаштуваннях пристрою, Програмах, Дозволах, Juggluco</string>
  <string name="floatglucose">Плаваюча глюкоза</string>
+ <string name="floatglucoseshort">Плавати</string>
+
  <string name="fontsize">Розмір шрифту</string>
  <string name="fonttoolarge">Завеликий розмір шрифту: max=</string>
  <string name="foreground">Передній план</string>

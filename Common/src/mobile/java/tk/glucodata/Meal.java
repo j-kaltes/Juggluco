@@ -56,6 +56,8 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static tk.glucodata.NumberView.avoidSpinnerDropdownFocus;
 import static tk.glucodata.NumberView.geteditview;
 
+import static tk.glucodata.NumberView.geteditwearos;
+import static tk.glucodata.NumberView.smallScreen;
 import static tk.glucodata.help.hidekeyboard;
 import static tk.glucodata.settings.Settings.edit2float;
 import static tk.glucodata.settings.Settings.editoptions;
@@ -130,6 +132,8 @@ static void askround(MainActivity act,Runnable runner ) {
 		l.setY(0);
 		if(width>w)
 			l.setX((width-w)/2);
+		else
+			l.setX(0);
 
 		return new int[]{w,h};},new View[]{label,edit}	,new View[]{Cancel,Save});
 	   int pad=(int)(tk.glucodata.GlucoseCurve.metrics.density*5.0);
@@ -180,7 +184,7 @@ static Layout menuview(final NumberView numb, MainActivity act, int mealptr, Obj
 		int height=GlucoseCurve.getheight();
 
 	Layout lay=new Layout(act,(l,w,h)-> {
-		if(width>w) {
+		if(!smallScreen&&width>w) {
 			if(numb.noroom)
 				l.setX(width-w);
 			else {
@@ -189,16 +193,18 @@ static Layout menuview(final NumberView numb, MainActivity act, int mealptr, Obj
 				l.setX(half+bij);
 				}
 			   }
+	 	else
+			l.setX(0);
 
-			if(h>=0.9f*height)
-				l.setY(0);
-			else
-				l.setY((height-h)/2);
+		if(h>=0.9f*height)
+			l.setY(0);
+		else
+			l.setY((height-h)/2);
 
 		return new int[]{w,h};
 		},new View[]{roundlabel,repeat},new View[]{recycle},new View[] {add,Help,close});
     	lay.setBackgroundColor(Applic.backgroundcolor);
-	act.addContentView(lay, new ViewGroup.LayoutParams(width/2, height));
+	act.addContentView(lay, smallScreen?new ViewGroup.LayoutParams(  MATCH_PARENT, MATCH_PARENT):new ViewGroup.LayoutParams(width/2, height));
 	repeat.setOnClickListener(v->{
 	     removeContentView(lay);
 	     act.hideSystemUI();
@@ -233,7 +239,7 @@ static Layout menuview(final NumberView numb, MainActivity act, int mealptr, Obj
 		};
 	IntConsumer hiercons=i-> {
 		lay.setVisibility(GONE);
-		numb.showkeyboard(act);
+		numshowkeyboard(numb,act);
 		menuitem(act,numb,mealptrar[0],i,onsave,carbar[0]);
 		};
 	consar.cons=hiercons;
@@ -241,11 +247,24 @@ static Layout menuview(final NumberView numb, MainActivity act, int mealptr, Obj
 
 	add.setOnClickListener(v-> {
 		lay.setVisibility(GONE);
-		numb.showkeyboard(act);
+		numshowkeyboard(numb,act);
 		menuitem(act,numb,mealptrar[0],-1,onsave,carbar[0]);
 		});
 	
 	return lay;
+	}
+
+static void  numhidekeyboard(NumberView numb,MainActivity act) {
+	if(!smallScreen)
+	        numb.hidekeyboard();
+	else
+		help.hidekeyboard(act);
+	}
+static void  numshowkeyboard(NumberView numb,MainActivity act) {
+	if(!smallScreen)
+		numb.showkeyboard(act);
+	else
+		help.showkeyboard(act,numb.valueedit);
 	}
 public static String ondecimal(final float fl,final float nr) {
 	return Float.toString(Math.round(fl*nr)/nr);
@@ -263,13 +282,14 @@ static void menuitem(MainActivity act, NumberView numb, int mealptr, int pos, In
 
 	TextView totallabel=getlabel(act,R.string.total);
 	editfocus focushere=new editfocus();
-	EditText total=geteditview(act,focushere);
+	EditText total=smallScreen?geteditwearos(act):geteditview(act,focushere);
 	total.setMinEms(5);
 	TextView mealtotallabel=getlabel(act,R.string.mealtotal);
-	EditText mealtotal=geteditview(act,focushere);
+	EditText mealtotal=smallScreen?geteditwearos(act):geteditview(act,focushere);
 	mealtotal.setMinEms(5);
 	TextView amountlabel=getlabel(act,R.string.quantity);
-	EditText amount	= geteditview(act,focushere);
+	EditText amount	= smallScreen?geteditwearos(act):geteditview(act,focushere);
+
 
 	amount.requestFocus();
 
@@ -347,10 +367,19 @@ static void menuitem(MainActivity act, NumberView numb, int mealptr, int pos, In
 	Layout lay=new Layout(act,(l,w,h)-> {
 		int width=GlucoseCurve.getwidth();
 		int hei=GlucoseCurve.getheight();
-		if(width>w)
-			l.setX(width/2-w);
-		if(hei>h)
+		if(smallScreen) {
+			l.setX((width-w)/2);
+			}
+		else {
+			if(width>w)
+				l.setX(width/2-w);
+			else
+				l.setX(0);
+			}
+		if(!smallScreen&&hei>h)
 			l.setY((hei-h)/2);
+		else
+			l.setY(0);
 		return new int[]{w,h};
 		},new View[]{amountlabel,amount},new View[]{ingrlabel,Ingredient},new View[]{carblabel,carbos},new View[]{totallabel,total}, new View[]{mealtotallabel,mealtotal},
 			new View[] {Delete,Cancel,Save});
@@ -364,7 +393,7 @@ static void menuitem(MainActivity act, NumberView numb, int mealptr, int pos, In
 		int newmealptr=Natives.deletefrommeal(mealptr,pos);
 		give.accept(newmealptr);
 		removeContentView(lay);
-	        numb.hidekeyboard();
+	        numhidekeyboard(numb,act);
 		act.hideSystemUI();
 		act.poponback();
 		});
@@ -373,7 +402,7 @@ static void menuitem(MainActivity act, NumberView numb, int mealptr, int pos, In
 		lay.setVisibility(GONE);
 		give.accept(-1);
 		removeContentView(lay);
-	        numb.hidekeyboard();
+	        numhidekeyboard(numb,act);
 		act.hideSystemUI();
 	 	});
 	Ingredient.setOnClickListener(v-> selectingredient(act, i->{
@@ -409,7 +438,7 @@ static void menuitem(MainActivity act, NumberView numb, int mealptr, int pos, In
 		int newmealptr=Natives.changemealitem(mealptr,pos,ingred[0],am);
 		lay.setVisibility(GONE);
 		removeContentView(lay);
-	        numb.hidekeyboard();
+	        numhidekeyboard(numb,act);
 		act.hideSystemUI();
 		give.accept(newmealptr);
 		act.poponback();
@@ -594,6 +623,8 @@ static void	defineingredient(MainActivity act ,IngredientViewAdapter  foodadapt,
 		int width=GlucoseCurve.getwidth();
 		if(width>w)
 			l.setX((width-w)/2);
+		else
+			l.setX(0);
 		l.setY(0);
 		return new int[]{w,h};
 		},new View[]{namelabel,name},new View[] {unitlabel,unit,spinner},new View[]{carblabel,carb},new View[] {Cancel,Database,Delete,Save});
@@ -715,6 +746,8 @@ static Layout  fooddatabase(MainActivity act, TriConsumer<String,Float,String> g
 		l.setY(0);
 		if(width>w)
 			l.setX((width-w)/2);
+		else
+			l.setX(0);
 		return new int[]{w,h};},new View[]{Help,searchstr,searchbutton,Close,}	,new View[]{recycle});
 	   int pad=(int)(tk.glucodata.GlucoseCurve.metrics.density*5.0);
 	   lay.setPadding(pad,0,pad,0);
@@ -817,8 +850,13 @@ static void	shownutrients(MainActivity act,int id,boolean showzero,TriConsumer<S
 		int width=GlucoseCurve.getwidth();
 		if(width>w)
 			scroll.setX((width-w)/2);
-		if(height>h)
+		else
+			scroll.setX(0);
+		if(!smallScreen&&height>h)
 			scroll.setY((height-h)/2);
+		else
+			scroll.setY(0);
+
     		});
 	Button Select=getbutton(act,R.string.select);
 	grid.addView(Select);

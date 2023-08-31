@@ -208,7 +208,7 @@
 <string name="wakelock">Wakelock</string>
 <string name="wifi">Wifi</string>
 <string name="heartrate">Rythme cardiaque</string>
-<string name="xdripbroadcast">Broadcast xDrip local</string>
+<string name="xdripbroadcast">Broadcast xDrip</string>
 <string name="sensorpermission">Permission du capteur requise pour afficher le rythme cardiaque</string>
 <string name="sensorpermissionmessage">Réglez-là dans les paramètres, Apps, Autorisations, Juggluco</string>
 <string name="floatglucose">Glucose flottant</string>

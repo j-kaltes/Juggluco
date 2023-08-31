@@ -143,7 +143,7 @@ public class MyGattCallback extends SuperGattCallback {
 	}
 static void showCharacter(String label, BluetoothGattCharacteristic characteristic) {
 	byte[] value=characteristic.getValue();
-	Log.showbytes("onDescriptorWrite",value);
+	Log.showbytes(label,value);
     }
 @Override // android.bluetooth.BluetoothGattCallback
 	public void onDescriptorWrite(BluetoothGatt bluetoothGatt, BluetoothGattDescriptor bluetoothGattDescriptor, int i) {
@@ -167,6 +167,7 @@ void reconnect() {
 	@SuppressLint("MissingPermission")
 	@Override
 	public void onConnectionStateChange(BluetoothGatt bluetoothGatt, int status, int newState) {
+		endBLEHandler();
 		long tim = System.currentTimeMillis();
 		try {
 			if (doLog) {
@@ -264,8 +265,8 @@ void reconnect() {
 					if (sensorgen == 2) {
 						Log.i(LOG_ID, "Using security generation 2");
 						conphase = 1;
-						enableNotification(BLELogincharacteristic);
-						Log.i(LOG_ID, "Enabled Security notification");
+						boolean isEnabled = enableNotification(BLELogincharacteristic);
+						Log.i(LOG_ID, "Enabled Security notification: " + isEnabled);
 						return true;
 					}
 					Log.i(LOG_ID, "Using security generation 1");
@@ -351,6 +352,7 @@ status	int: The result of the write operation BluetoothGatt#GATT_SUCCESS if the 
 
 	@Override
 	public void onCharacteristicWrite(BluetoothGatt bluetoothGatt, BluetoothGattCharacteristic bluetoothGattCharacteristic, int status) {
+		Log.d(LOG_ID, bluetoothGatt.getDevice().getAddress() + " onCharacteristicWrite, status:" + status + " UUID:" + bluetoothGattCharacteristic.getUuid().toString());
 		if (sensorgen == 2)
 			return;
 		try {
@@ -358,7 +360,6 @@ status	int: The result of the write operation BluetoothGatt#GATT_SUCCESS if the 
 			BluetoothGattCharacteristic characteristic;
 			BluetoothGattDescriptor descriptor;
 			//noinspection MissingPermission
-			Log.d(LOG_ID, bluetoothGatt.getDevice().getName() + " onCharacteristicWrite, status:" + status);
 			boolean success = true;
 			long tim = System.currentTimeMillis();
 			justenablednotification = true;
@@ -581,7 +582,21 @@ private	void oldonCharacteristicChanged(byte[] value) {
 			conphase = 3;
 //            this.f14472dGb = new byte[25];
 			BLELogincharacteristic.setValue(a);
-			mBluetoothGatt.writeCharacteristic(BLELogincharacteristic);
+			if(!mBluetoothGatt.writeCharacteristic(BLELogincharacteristic)) {
+				var mess = "phase2 writeCharacteristic(BLELogincharacteristic)";
+				Log.e(LOG_ID, mess);
+				handshake = mess;
+				wrotepass[1] = System.currentTimeMillis();
+				if(BLELoginposted<5) {
+					Applic.app.getHandler().postDelayed(mBLELoginHandler, 100);
+					++BLELoginposted;
+					}
+				return;
+				}
+			if(BLELoginposted>0) {
+				BLELoginposted=0;
+				mBLELoginHandler=null;
+				}
 			justenablednotification = true;
 		} catch (Exception e) {
 			handshake = "streamingUnlock failed";
@@ -693,13 +708,34 @@ public void onCharacteristicChanged(BluetoothGatt bluetoothGatt, BluetoothGattCh
 		if (uuid.equals(mCharacteristicUUID_CompositeRawData) && conphase == 4) {
 			oldonCharacteristicChanged(value);
 		}
-		} 
-	else if (conphase == 2) {
-		phase2(value); } 
-	else if (conphase == 3) {
-		phase3(value);
+		}
+	else {
+		mBLELoginHandler = () -> {
+			if (conphase == 2) {
+				phase2(value);
+				}
+			else if (conphase == 3) {
+				phase3(value);
+				}
+			}; 
+		mBLELoginHandler.run();
+	//	Applic.app.getHandler().postDelayed(mBLELoginHandler, 100);
 		}
 	}
+private int BLELoginposted=0;
+private Runnable		mBLELoginHandler=null; 
+private void endBLEHandler() {
+		if(BLELoginposted>0) {
+			Applic.app.getHandler().removeCallbacks(mBLELoginHandler);
+			mBLELoginHandler=null;
+			BLELoginposted=0;
+			}
+		}
+@Override
+	public void close() {
+		endBLEHandler();
+		super.close();
+		}
 @Override
 public void onReadRemoteRssi(BluetoothGatt gatt, int rssi, int status)  {
 	Log.i(LOG_ID,"onReadRemoteRssi(BluetoothGatt,"+ rssi+","+status+(status==GATT_SUCCESS?" SUCCESS":" FAILURE"));

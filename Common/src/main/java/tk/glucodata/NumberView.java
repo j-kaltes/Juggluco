@@ -47,6 +47,7 @@ import android.widget.TimePicker;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -66,6 +67,7 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static android.widget.Spinner.MODE_DIALOG;
 import static android.widget.Spinner.MODE_DROPDOWN;
 import static java.lang.System.currentTimeMillis;
+//import static tk.glucodata.Applic.smallScreen;
 import static tk.glucodata.Applic.isWearable;
 import static tk.glucodata.RingTones.EnableControls;
 import static tk.glucodata.settings.Settings.editoptions;
@@ -74,6 +76,7 @@ import static tk.glucodata.util.getbutton;
 import static tk.glucodata.util.getlabel;
 
 public class NumberView {
+public static  boolean smallScreen=false;
 final private static String LOG_ID="NumberView";
 Calendar cal = Calendar.getInstance();
 Layout datepicker=null;
@@ -86,6 +89,27 @@ Spinner spinner;
 EditText valueedit;
 TextView source=null;
 Button timebutton,datebutton;
+void deleteviews() {
+	closenumview();
+	spinner=null;
+	if(newnumview!=null) {
+		removeContentView(newnumview);
+		newnumview=null;
+		}
+	if(datepicker!=null) {
+		removeContentView(datepicker);
+		datepicker=null;
+		}
+	if(timepicker!=null) {
+		removeContentView(timepicker);
+		timepicker=null;
+		}
+	if(keyboard!=null) {
+		removeContentView(keyboard);
+		keyboard=null;
+		}
+	}
+/*
 /*
 void rotatekey(float deg) {
 	keyboard.setRotation(deg);
@@ -162,7 +186,7 @@ public   View addnumberview(MainActivity context,final int bron,final long time,
         //messagetext.setPadding(pads,0,0,0);
 	//messagetext.setVisibility(GONE);
 	mealbutton.setVisibility(GONE);
-	if(isWearable) {
+	if(smallScreen) {
 		valueedit=geteditwearos(context);
 		}
 	else  {
@@ -180,37 +204,55 @@ public   View addnumberview(MainActivity context,final int bron,final long time,
         savebutton.setText(R.string.save);
 
 
-        Layout layout = isWearable?new Layout(context,new View[] {source},new View[]{datebutton,timebutton} , row1, new View[]{messagetext,savebutton,deletebutton},new View[]{cancel}):new Layout(context, (lay, w, h) -> {
-		int hei=GlucoseCurve.getheight();
+        Layout layout = isWearable?new Layout(context,new View[] {source},row1,new View[]{datebutton,timebutton} , new View[]{messagetext,savebutton,deletebutton},new View[]{cancel}):new Layout(context, (lay, w, h) -> {
 		int wid=GlucoseCurve.getwidth();
-		   if(wid>hei) {
-		   	if(hei>h)
-			    lay.setY((hei - h) / 2);
-			 if(wid>w) {
-			       int half= wid / 2;
-			       int af=(half-w)/4;
-				    int posx=half - w-af;
-				    if(posx<0) {
-					posx=0;
-					noroom=true;
-					}
-				     else
-					noroom=false;
-				    lay.setX(posx);
-				  }
-			    }
+		if(!smallScreen) {
+			Log.i(LOG_ID,"no smallScreen");
+			int hei=GlucoseCurve.getheight();
+			   if(wid>hei) {
+				if(hei>h)
+				    lay.setY((hei - h) / 2);
+				   else
+				    lay.setY(0);
+				 if(wid>w) {
+				       int half= wid / 2;
+				       int af=(half-w)/4;
+					    int posx=half - w-af;
+					    if(posx<0) {
+						posx=0;
+						noroom=true;
+						}
+					     else
+						noroom=false;
+					    lay.setX(posx);
+					  }
+					else
+					    lay.setX(0);
+				    }
 			else {
+				if(wid>w)
+				    lay.setX((wid - w)/2);
+				  else {
+				    lay.setX(0);
+				  	}
+				 if(hei>h) {
+				    int half=hei/2;
+				    int af=(half-h)/4;
+				    lay.setY(half - h-af);
+				    }
+				   else
+				    lay.setY(0);
+
+				}
+			}
+		else {
+			Log.i(LOG_ID,"smallScreen");
 			if(wid>w)
 			    lay.setX((wid - w)/2);
-			 if(hei>h) {
-			    int half=hei/2;
-			    int af=(half-h)/4;
-			    lay.setY(half - h-af);
-			    }
-
+		    lay.setY(0);
 			}
 
-			return new int[] {w,h}; }, new View[]{datebutton, mealbutton,source,timebutton}, row1,new View[]{cancel,messagetext,deletebutton, savebutton});
+			return new int[] {w,h}; }, row1,new View[]{datebutton, mealbutton,source,timebutton},new View[]{cancel,messagetext,deletebutton, savebutton});
 
 
 	layout.setBackgroundColor( Applic.backgroundcolor);
@@ -254,6 +296,9 @@ public   View addnumberview(MainActivity context,final int bron,final long time,
 			newnumview.setVisibility(GONE);
 			if(!isWearable)
 				hidekeyboard();
+			if(smallScreen)
+				help.hidekeyboard(act);
+				
 			((Applic) act.getApplication()). redraw();
 		      act.poponback();
 		    } 
@@ -274,6 +319,8 @@ public   View addnumberview(MainActivity context,final int bron,final long time,
 		if(!isWearable) {
 			hidekeyboard();
 		if(mealview[0]==null) {
+			EnableControls(newnumview,false);
+//			newnumview.setVisibility(GONE);
 			int mptr=newmealptr[0]==0?((currentnum!=0L)?Natives.hitmeal(currentnum):0):newmealptr[0];
 			if(mptr==0)
 				mptr=Natives.getnewmealptr();
@@ -285,10 +332,13 @@ public   View addnumberview(MainActivity context,final int bron,final long time,
 					valueedit.setText(Float.toString(carb));
 				newmealptr[0]=mealptr;
 			},()->{
-				if(!isWearable) {
+				if(!smallScreen) {
 					showkeyboard(context);
 					editfocus.setedittext(valueedit);
 					}
+
+			//	newnumview.setVisibility(VISIBLE);
+			EnableControls(newnumview,true);
 				mealview[0]=null;
 
 				}	);
@@ -345,6 +395,8 @@ public   View addnumberview(MainActivity context,final int bron,final long time,
 		   newnumview.setVisibility(GONE);
 		   if(!isWearable)
 			   hidekeyboard();
+			if(smallScreen)
+				help.hidekeyboard(context);
 		    });
 
 	if(tmpmealptr>=0) {
@@ -623,6 +675,9 @@ public void gettimepicker(MainActivity activity,int hourin, int minin, ObjIntCon
    settime=timeset;
     if(timepicker==null) {
         pick =new TimePicker(activity);
+/*(	if(smallScreen)
+		setMode(pick, 1);
+	Log.i(LOG_ID,"mMode="+pick.getMode());*/
         pick.setIs24HourView( android.text.format.DateFormat.is24HourFormat(activity));
         Button cancel=new Button(activity);
         cancel.setText(R.string.cancel);
@@ -648,7 +703,7 @@ public void gettimepicker(MainActivity activity,int hourin, int minin, ObjIntCon
 
         });
 	View[][] views;
-	if(isWearable) {
+	if(smallScreen) {
 		views=new View[][]{new View[]{pick},new View[]{cancel,ok}};
 		}
 	else {
@@ -657,7 +712,7 @@ public void gettimepicker(MainActivity activity,int hourin, int minin, ObjIntCon
 		 views=new View[][] {new View[] {pick,buttonlay}};
 	 };
 //		buttonlay.setBackgroundColor( RED);
-	pick.setLayoutParams(new ViewGroup.LayoutParams( MATCH_PARENT , ViewGroup.LayoutParams.WRAP_CONTENT));
+	pick.setLayoutParams(new ViewGroup.LayoutParams(smallScreen?WRAP_CONTENT:MATCH_PARENT , ViewGroup.LayoutParams.WRAP_CONTENT));
         Layout layout=new Layout(activity,
 				(lay, w, h)-> {
 					activity.hideSystemUI();
@@ -680,7 +735,7 @@ public void gettimepicker(MainActivity activity,int hourin, int minin, ObjIntCon
 					return new int[]{w, h};
 				}, views);
 		layout.setBackgroundColor( Applic.backgroundcolor);
-        activity.addContentView(layout,  new ViewGroup.LayoutParams(isWearable?WRAP_CONTENT:MATCH_PARENT, isWearable?WRAP_CONTENT:MATCH_PARENT));
+        activity.addContentView(layout,  new ViewGroup.LayoutParams(smallScreen?WRAP_CONTENT:MATCH_PARENT, smallScreen?WRAP_CONTENT:MATCH_PARENT));
         timepicker=layout;
     }
     else {
@@ -927,6 +982,20 @@ if(!isWearable) {
 	    keyboard.setVisibility(GONE);
 	    }
     }
+    /*
+private static void setMode(TimePicker timepicker,int mode) {
+	    try {
+		Field mModeField = timepicker.getClass().getDeclaredField("mMode");
+//		Field mModeField = timepicker.getClass().getField("mMode");
+		mModeField.setAccessible(true);
+	      Field modifiersField = Field.class.getDeclaredField("modifiers");
+	      modifiersField.setAccessible(true);
+	      modifiersField.setInt(mModeField, mModeField.getModifiers() & ~Modifier.FINAL);
+		mModeField.setInt(timepicker, mode);
+	    } catch (Throwable e) {
+		Log.stack(LOG_ID,e);
+	    }
+	 } */
 
 public static void avoidSpinnerDropdownFocus(Spinner spinner) {
     try {

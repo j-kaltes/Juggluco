@@ -719,7 +719,8 @@ private Notification.Builder   mkbuilderintent(String type,PendingIntent notifyP
 		 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
 			GluNotBuilder.setChannelId(type);
 		}
-	GluNotBuilder.setContentIntent(notifyPendingIntent).setOnlyAlertOnce(true);
+	Log.i(LOG_ID, "setDeleteIntent");
+	GluNotBuilder.setContentIntent(notifyPendingIntent).setOnlyAlertOnce(true).setDeleteIntent(notifyPendingIntent);
 	if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
 		GluNotBuilder.setGroup("aa2");
 		}
@@ -922,7 +923,7 @@ public void  notifyer(int draw,String message,String type,int notid) {
         notifyIntent.setFlags(Intent. FLAG_ACTIVITY_CLEAR_TOP | Intent. FLAG_ACTIVITY_SINGLE_TOP );
 	PendingIntent notifyPendingIntent = PendingIntent.getActivity(Applic.app, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT|penmutable);
 
-	NumNotBuilder.setAutoCancel(true).setContentIntent(notifyPendingIntent).setContentTitle(message);
+	NumNotBuilder.setAutoCancel(true).setContentIntent(notifyPendingIntent).setDeleteIntent(notifyPendingIntent).setContentTitle(message);
 //	NumNotBuilder.setAutoCancel(true).setContentIntent(notifyPendingIntent).setSubText(message);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 			NumNotBuilder.setVisibility(VISIBILITY_PUBLIC);

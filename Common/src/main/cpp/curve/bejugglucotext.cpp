@@ -110,7 +110,7 @@ jugglucotext betext {
  .menustr0= {
 	"Клон",
 	"Датчык",
-	"Dark mode     ",
+	"    Darkmode      ",
         "Налады",
 	"Спыніць трывогу" },
 .menustr2= {"Дата",hourminstr,"Дзень назад",betext.amount},

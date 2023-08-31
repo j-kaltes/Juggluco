@@ -542,13 +542,14 @@ extern "C" JNIEXPORT jint JNICALL fromjava(getlastcolor)(JNIEnv *env, jclass thi
 	return  fromNVGcolor(getcolor(lasttouchedcolor));
 	}
 
+/*
 static float screenwidthcm=0;
-extern bool iswatch;
+//extern bool iswatch;
 extern "C" JNIEXPORT void JNICALL fromjava(setscreenwidthcm)(JNIEnv *env, jclass thiz,jfloat wcm) {
 	screenwidthcm=wcm;
-	iswatch=(wcm<5.8f);
+//	iswatch=(wcm<5.8f);
 	}
-
+*/
 extern int showstream;
 extern int showscans;
 extern int showhistories;

@@ -86,7 +86,7 @@ private static final DateFormat fname=             new SimpleDateFormat("MM-dd H
 public static String datestr(long tim) {
 	return fname.format(tim);
 	}
-View view ;
+//View view ;
 //int selected=0;
 
 RangeAdapter<SuperGattCallback> adap;
@@ -234,7 +234,7 @@ void	setadapter(Activity act,	final ArrayList<SuperGattCallback> gatts) {
 
 
 
-	bluediag(MainActivity act) {
+bluediag(MainActivity act) {
 	activity=act;
 	BluetoothManager mBluetoothManager = (BluetoothManager) act.getSystemService(Context.BLUETOOTH_SERVICE);
         if(mBluetoothManager  != null) {
@@ -251,7 +251,7 @@ void	setadapter(Activity act,	final ArrayList<SuperGattCallback> gatts) {
 
 	   	}
 	LayoutInflater flater= LayoutInflater.from(act);
-	view = flater.inflate(R.layout.bluesensor, null, false);
+	View view = flater.inflate(R.layout.bluesensor, null, false);
 
 	scanview=view.findViewById(R.id.scan);
 	starttimeV=view.findViewById(R.id.stage);
@@ -263,12 +263,9 @@ void	setadapter(Activity act,	final ArrayList<SuperGattCallback> gatts) {
 	info=view.findViewById(R.id.info);
 	Log.i(LOG_ID,"info.setVisibility(INVISIBLE);");
 	info.setVisibility(INVISIBLE);
-
+	int width2=GlucoseCurve.getwidth();
+	HorizontalScrollView addscroll2=null;
 	if(isWearable) {
-       /*         int pad=(int)(tk.glucodata.GlucoseCurve.metrics.density*15.0); 
-		View grid=view.findViewById(R.id.grid);
-		var rest=(int)(5*tk.glucodata.GlucoseCurve.metrics.density);
-		grid.setPadding(pad,rest,(int)(5*tk.glucodata.GlucoseCurve.metrics.density),rest);*/
 		HorizontalScrollView scroll= view.findViewById(R.id.background);
 		scroll.setSmoothScrollingEnabled(false);
               scroll.setVerticalScrollBarEnabled(false);
@@ -279,18 +276,27 @@ void	setadapter(Activity act,	final ArrayList<SuperGattCallback> gatts) {
 		}
 	else {
 		measuredgrid grid=view.findViewById(R.id.grid);
+		final var addscroll= new HorizontalScrollView(act);
+		addscroll.addView(grid);
+		addscroll.setSmoothScrollingEnabled(false);
+	      addscroll.setVerticalScrollBarEnabled(false);
+		addscroll.setHorizontalScrollBarEnabled(false);
+		int heightU=GlucoseCurve.getheight();
+		addscroll.setMinimumHeight(heightU);
 		grid.setmeasure((l,w,h)-> {
 			int height=GlucoseCurve.getheight();
 			int width=GlucoseCurve.getwidth();
 			int y= height>h?((height-h)/2):0;
-			l.setY(y);
+			addscroll.setY(y);
 			int x=(width>w)?((width-w)/2):0;
-			l.setX(x);
-		});
+			addscroll.setX(x);
+		}); 
+		addscroll2=addscroll;
 
-	//	reenable=view.findViewById(R.id.reenable);
-	//	reenable.setOnClickListener(v->Natives.reenableStreaming());
 	}
+
+	View showview=addscroll2!=null?addscroll2:view;
+
 		final ArrayList<SuperGattCallback> gatts=SensorBluetooth.mygatts();
 	priority=view.findViewById(R.id.priority);
 if(!isWearable) {
@@ -382,13 +388,7 @@ if(!isWearable) {
 				});
 			}
 		}
-		/*
-	if(hasperm) 
-		forget.setEnabled(true);
-	else
-		forget.setEnabled(false); */
 	spin=view.findViewById(R.id.sensors);
-//	var tmp= gattselected;
 	boolean[] first={true};
 	spin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 		@Override
@@ -436,18 +436,12 @@ if(!isWearable) {
 		}
 
 
-//	spin.setSelection(tmp);
-//	Log.i(LOG_ID,"spin.setSelection("+tmp+")");
 	 Button close=view.findViewById(R.id.close);
-	 /*
-	 if(isWearable)
-		 close.setRotation(-90);
-		 */
 	 close.setOnClickListener(v-> act.doonback());
 
       view.setBackgroundColor( Applic.backgroundcolor);
-	show(act);
-	act.addContentView(view, new ViewGroup.LayoutParams( WRAP_CONTENT, WRAP_CONTENT));
+	show(act,showview);
+	act.addContentView(showview, new ViewGroup.LayoutParams( WRAP_CONTENT, WRAP_CONTENT));
 	var scheduled=Applic.scheduler.scheduleAtFixedRate( ()-> {Log.i(LOG_ID,"scheduled");
 
 	    act.runOnUiThread( ()-> { 
@@ -464,10 +458,9 @@ if(!isWearable) {
 		   Log.i(LOG_ID,"onback");
 			scheduled.cancel(false);
 			act.setfineres(null);
-			removeContentView(view);});
+			removeContentView(showview);});
 
 
-//	act.addContentView(view, new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
     }
 
 final static class Pair{
@@ -569,7 +562,7 @@ Log.i(LOG_ID,"showall");
 	}
 
 	
-void show(MainActivity act) {
+private void show(MainActivity act,View view) {
 	if(spin!=null) {
 		SensorBluetooth.updateDevices() ;
 		final ArrayList<SuperGattCallback> gatts=SensorBluetooth.mygatts();

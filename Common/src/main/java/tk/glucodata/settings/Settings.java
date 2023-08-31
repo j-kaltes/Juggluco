@@ -55,6 +55,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.HorizontalScrollView;
 import android.widget.RadioButton;
 import android.widget.ScrollView;
 import android.widget.Space;
@@ -64,6 +65,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.os.LocaleListCompat;
+import androidx.core.widget.NestedScrollView;
 
 import java.util.Arrays;
 import java.util.List;
@@ -195,7 +197,7 @@ static int getbackgroundcolor(Context context) {
         return Color.RED;
 }
 
-ScrollView settinglayout=null;
+HorizontalScrollView settinglayout=null;
     RadioButton mmolL;
     RadioButton mgdl;
 
@@ -721,7 +723,8 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 	if(isWearable) {
 
 	       var uploader=getbutton(context,"Uploader");
-	       var floatconfig=getbutton(context,R.string.floatglucose);
+	       var floatconfig=getbutton(context,R.string.floatglucoseshort);
+
 	       floatconfig.setOnClickListener(v-> tk.glucodata.FloatingConfig.show(context));
 		CheckBox floatglucose=new CheckBox(context);
 		floatglucose.setText("  " );
@@ -825,11 +828,22 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 			);
 
         lay.setBackgroundColor(colorwindowbackground);
-        settinglayout=new ScrollView(context);
-	settinglayout.addView(lay);
-	settinglayout.setFillViewport(true);
+	NestedScrollView scroller=new NestedScrollView(context);
+	scroller.addView(lay);
+	scroller.setSmoothScrollingEnabled(false);
+        scroller.setVerticalScrollBarEnabled(false);
+	int width=GlucoseCurve.getwidth();
+	int heightU=GlucoseCurve.getheight();
+	//scroller.setMinimumWidth(width);
+	scroller.setFillViewport(true);
+	settinglayout= new HorizontalScrollView(context);
+	settinglayout.addView(scroller);
 	settinglayout.setSmoothScrollingEnabled(false);
-        settinglayout.setVerticalScrollBarEnabled(false);
+      settinglayout.setVerticalScrollBarEnabled(false);
+	settinglayout.setHorizontalScrollBarEnabled(false);
+	//settinglayout.setMinimumHeight(heightU);
+	settinglayout.setFillViewport(true);
+
 	final	int laywidth=MATCH_PARENT;
 	final   int pad=(int)(tk.glucodata.GlucoseCurve.metrics.density*7.0);
 	   lay.setPadding(pad,pad*2,pad,pad);

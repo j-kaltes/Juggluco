@@ -127,8 +127,12 @@ struct updateone {
 		allindex=allin;
 		}
 	void setcrypt(crypt_t *ctx)  {
-		if(crypts.size()>ind)
+		if(crypts.size()>ind) {
 			crypts[ind]=ctx;
+			}
+		else {
+			LOGGER("setcrypt ind (%d) <=crypts.size() (%d)\n",ind,crypts.size());
+			}
 		}
 	
 	crypt_t *getcrypt() const; 
@@ -249,10 +253,14 @@ crypts.reserve(getupdatedata()->sendnr);
 for(int i=0;i<getupdatedata()->sendnr;i++) {
 	sendsocks.push_back(-1);
 	auto &host=getupdatedata()->tosend[i];
-	if(getupdatedata()->allhosts[host.allindex].haspass())
+	if(getupdatedata()->allhosts[host.allindex].haspass()) {
+		LOGGER("crypts[%d]=new crypt_t()\n",i);
 		crypts.push_back(new crypt_t());
-	else
+		}
+	else  {
+		LOGGER("crypts[%d]=nullptr\n",i);
 		crypts.push_back(nullptr);
+		}
 	}
 
 
@@ -387,6 +395,7 @@ void deletestart(int sendindex) {
 			delete crypts[sendindex];
 			memmove(&crypts[sendindex], &crypts[sendindex+1],fromend*sizeof(crypts[0]));
 			crypts[getupdatedata()->sendnr]=nullptr;
+			LOGGER("crypts[%d]=nullptr\n", getupdatedata()->sendnr);
 			}
 		con_vars[getupdatedata()->sendnr]->wakebackuponly(Backup::wakestop|Backup::wakeend);
 //		con_vars.resize(getupdatedata()->sendnr);
@@ -480,6 +489,7 @@ void resetall()  {
 	getupdatedata()->hostnr=0;
 	int lenc=crypts.size();
 	for(int i=0;i<lenc;i++) {
+		LOGGER("crypts[%d]=nullptr\n",i);
 		delete crypts[i];
 		crypts[i]=nullptr;
 		}
@@ -518,13 +528,17 @@ void changereceiver(int allindex,int index,const bool sendnums,const bool sendst
 		}
 	crypt_t *oldcrypt=host.getcrypt();
 	if(haspass)  {
-		if(!oldcrypt)
+		if(!oldcrypt)  {
+			LOGGER("crypts[%d]=new crypt\n",index);
 			host.setcrypt(new crypt_t);
+			}
 		}
 	else  {
 		if(oldcrypt)
 			delete oldcrypt;
 		host.setcrypt(nullptr);
+		LOGGER("crypts[%d]=nullptr\n",index);
+
 		}
 	}
 static constexpr const std::array<uint8_t,16> remix= {0x19,0xED,0xA0,0x4A,0x94,0x9D,0x0C,0xD7,0x82,0x4A,0x74,0xA9,0x0E,0x71,0x84,0x8B};

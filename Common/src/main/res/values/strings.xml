@@ -32,6 +32,7 @@
     <string name="bluetoothenabled">Bluetooth Enabled</string>
     <string name="bluetoothdisabled">Bluetooth Disabled</string>
     <string name="amountsname">Amounts</string>
+    <string name="amountshort">@string/amountsname</string>
     <string name="mealsname">Meals</string>
     <string name="closename">Close</string>
     <string name="exporthelp">Meals saved in html\nRest in .tsv (tab-separated values)</string>
@@ -74,7 +75,7 @@
  <string name="targetrange">"Target range: "</string>
  <string name="graphrange">"Graph range: "</string>
  <string name="unit">"Unit: "</string>
- <string name="glucoseaxisleft">Glucose-axis numbers LEFT</string>
+ <string name="glucoseaxisleft">Glucose-axis LEFT</string>
  <string name="startsapp">Scanning starts app</string>
  <string name="sendtoxdrip">Patched Libre Broadcast</string>
  <string name="disablecamerakey">Disable camera key</string>
@@ -208,14 +209,18 @@
  <string name="wakelock">Wakelock</string>
  <string name="wifi">Wifi</string>
  <string name="heartrate">Heart rate</string>
- <string name="xdripbroadcast">xDrip broadcast locally</string>
+ <string name="xdripbroadcast">xDrip broadcast</string>
  <string name="sensorpermission">Sensors permission needed to display heart rate</string>
  <string name="sensorpermissionmessage">Set it in Device Settings, Apps, Permissions, Juggluco</string>
  <string name="floatglucose">Floating glucose</string>
+ <string name="floatglucoseshort">@string/floatglucose</string>
+
  <string name="fontsize">Font size</string>
  <string name="fonttoolarge">Font size too large: max=</string>
  <string name="foreground">Foreground</string>
  <string name="background">Background</string>
+ <string name="backgroundshort">Back-</string>
+
  <string name="transparent">Transparent</string>
  <string name="touchable">Touchable</string>
 

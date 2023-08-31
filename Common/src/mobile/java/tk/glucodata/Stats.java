@@ -31,40 +31,62 @@ import static android.view.View.INVISIBLE;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static tk.glucodata.Log.stack;
 import static tk.glucodata.NumberView.geteditview;
+import static tk.glucodata.NumberView.geteditwearos;
+import static tk.glucodata.NumberView.smallScreen;
 import static tk.glucodata.settings.Settings.removeContentView;
 import static tk.glucodata.util.getbutton;
 import static tk.glucodata.util.getlabel;
 
 class Stats {
 private static final String LOG_ID="Stats";
-static void askdays(MainActivity act) {
+static private void askdays(MainActivity act) {
 	var label=getlabel(act,act.getString(R.string.days));
 
-     label.setPadding((int)tk.glucodata.GlucoseCurve.metrics.density*8,0,0,0);
+	int pad= (int)(tk.glucodata.GlucoseCurve.metrics.density*8);
+//     label.setPadding((int)tk.glucodata.GlucoseCurve.metrics.density*8,0,0,0);
+     	label.setPadding(pad,pad,pad,pad);
 	Button Ok = getbutton(act, R.string.ok);
 	Button Cancel = getbutton(act, R.string.cancel);
-       EditText days= geteditview(act,new editfocus()) ;
+       EditText days= smallScreen?geteditwearos(act):geteditview(act,new editfocus()) ;
 	days.setMinEms(4);
 	Layout layout = new Layout(act, (l, w, h) -> {
-		int hei = GlucoseCurve.getheight();
 		int wid = GlucoseCurve.getwidth();
-		if(hei>h&&wid>w) {
-		       int half= wid / 2;
-		       int af=(half-w)/4;
-		    l.setX(half - w-af);
-		    l.setY((hei - h) / 2);
-		    }
+		if(!smallScreen) {
+			int hei = GlucoseCurve.getheight();
+			if(hei>h&&wid>w) {
+			       int half= wid / 2;
+			       int af=(half-w)/4;
+			    l.setX(half - w-af);
+			    l.setY((hei - h) / 2);
+			    }
+			   else {
+			    l.setX(0);
+			    l.setY(0);
+			   	}
+			   }
+		else {
+			    l.setX((wid-w)/2);
+			    l.setY(0);
+			}
 		return new int[]{w, h};
 		},new View[]{label,days},new View[]{Cancel,Ok});
-	int pad= (int)tk.glucodata.GlucoseCurve.metrics.density*8;
      	layout.setPadding(pad,pad,pad,pad);
 	act.addContentView(layout,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         layout.setBackgroundResource(R.drawable.dialogbackground);
 	days.requestFocus();
-	act.curve.numberview.showkeyboard(act);
+	if(!smallScreen) {
+		act.curve.numberview.showkeyboard(act);
+		}
+	else  {
+		help.showkeyboard(act,days);
+		}
 final Runnable closeonback=()-> {
 		removeContentView(layout);
-		act.curve.numberview.hidekeyboard() ;
+		if(smallScreen) {
+			help.hidekeyboard(act);
+			}
+		else
+			act.curve.numberview.hidekeyboard() ;
 		mkstats(act);
 		};
 	Cancel.setOnClickListener(v -> {
@@ -89,7 +111,11 @@ final Runnable closeonback=()-> {
 		act.curve.summarybutton=null;
 		Natives.analysedays(get);
 		removeContentView(layout);
-		act.curve.numberview.hidekeyboard() ;
+		if(smallScreen) {
+			help.hidekeyboard(act);
+			}
+		else
+			act.curve.numberview.hidekeyboard() ;
 		act.requestRender();
 		mkstats(act);
 		});
@@ -111,7 +137,6 @@ final Runnable closeonback=()-> {
 				l.setY((height - h));
 			return new int[]{w, h};
 		}, new View[]{Days, Help, Close, Curve});
-	//	layout.setBackgroundColor(((Applic) act.getApplication()).backgroundcolor);
 		if(!act.curve.statspresent)
 			Curve.setVisibility(INVISIBLE);
 		act.curve.summarybutton=Curve;
@@ -145,7 +170,6 @@ act.setonback(closeonback);
 			removeContentView(layout);
 			act.requestRender();
 		});
-//public static native void analysedays(int days);
 
 	}
 }

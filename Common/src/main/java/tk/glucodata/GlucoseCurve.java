@@ -60,6 +60,8 @@ import static tk.glucodata.Applic.isWearable;
 import static tk.glucodata.Applic.usedlocale;
 import static tk.glucodata.Natives.turnoffalarm;
 import static tk.glucodata.NumberView.geteditview;
+import static tk.glucodata.NumberView.geteditwearos;
+import static tk.glucodata.NumberView.smallScreen;
 import static tk.glucodata.settings.Settings.editoptions;
 import static tk.glucodata.util.getlabel;
 
@@ -127,7 +129,8 @@ void startsearch() {
          if(labelsel==Natives.getmealvar())
 	 	mkmealsearch(activity);
     }
-    showkeyboard(activity);
+    if(!smallScreen)
+	    showkeyboard(activity);
 
     activity.setonback(()-> {
 		activity.showui=false;
@@ -324,7 +327,7 @@ public static int getwidth() {
 	return width;
 	}
 static void setgeo(int w,int h) {
- 	if(isWearable||w>=h) {
+ 	if(smallScreen||w>=h) {
 		width=w;
 		height=h;
 		}
@@ -480,7 +483,8 @@ void startlibrelink(String lang) {
 						}
 					else {
 						numberview.addnumberview(activity);
-						showkeyboard(activity);
+						if(!smallScreen)
+							showkeyboard(activity);
 						}
 					}; break;
 				case 3: getnumcontrol((MainActivity) getContext());return true;
@@ -507,8 +511,10 @@ void startlibrelink(String lang) {
                             Log.i(LOG_ID,"tap pos="+pos+" base="+base);
 			    if(numcontrol!=null) hidesave(numcontrol);
 			    numberview.addnumberview(act, base, pos) ;
-			    if(!Natives.staticnum())
-				    numberview.showkeyboard(act);
+			    if(!Natives.staticnum()) {
+					if(!smallScreen)
+					    numberview.showkeyboard(act);
+				    }
 			    };
 			    return true;
                         default:
@@ -561,8 +567,11 @@ void startlibrelink(String lang) {
 			else {
 			    MainActivity activity = (MainActivity) getContext();
 			    numberview.addnumberview(activity,hitptr);
-			    if(!Natives.staticnum())
-			    	showkeyboard(activity);
+			    if(!Natives.staticnum()) {
+				    if(!smallScreen) {
+						showkeyboard(activity);
+						}
+					}
 			    }
 			    }
                 	}
@@ -686,6 +695,9 @@ int labelsel=-1;
 //    void search(View view) {
     void search(boolean forward) {
 ((MainActivity)getContext()).hideSystemUI();
+if(smallScreen) {
+	help.hidekeyboard((MainActivity)getContext());
+	}
     float funder=0.0f;
 	try {
      		funder= Float.parseFloat(under.getText().toString());
@@ -914,7 +926,17 @@ void mkmealsearch(MainActivity act) {
 //		mealingredient.setMinEms(10);
 		ViewGroup.LayoutParams params= new ViewGroup.LayoutParams(  MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 		mealingredient.setLayoutParams(params);
-		mealquantity=geteditview(act,new editclosefocus());
+		if(smallScreen) {
+			mealquantity=geteditwearos(act);
+			}
+		else
+			mealquantity=geteditview(act,new editclosefocus());
+		mealquantity.setMinEms(3);
+		int pad= (int)(tk.glucodata.GlucoseCurve.metrics.density*5);
+     		inglabel.setPadding(pad,0,0,0);
+		qualabel.setPadding(pad,0,0,0);
+
+//		mealquantity.setPadding(0,0,0,(int)metrics.density*8);
 //		mealquantity.setMinEms(2);
 //		mealingredient.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI| EditorInfo.IME_FLAG_NO_FULLSCREEN| EditorInfo.IME_ACTION_SEARCH);
 //		mealquantity.setOnEditorActionListener(actlist);
@@ -939,13 +961,22 @@ void mkmealsearch(MainActivity act) {
 
 private Layout getsearchlayout(MainActivity context) {
     editfocus focus=new editfocus();
-    under= geteditview(context,focus);
+		if(smallScreen) {
+			under=geteditwearos(context);
+			}
+		else
+    			under= geteditview(context,focus);
  int editwidth=(int)( metrics.density*48.0);
 	under.setMinWidth(editwidth);
 
 
     TextView line=new TextView(context);line.setText("-");;
-    above= geteditview(context,focus);
+
+	if(smallScreen) {
+			above=geteditwearos(context);
+			}
+		else
+		    above= geteditview(context,focus);
 	above.setMinWidth(editwidth);
     scansearch=new CheckBox(context); scansearch.setText(R.string.scanname);
      historysearch=new CheckBox(context); historysearch.setText(R.string.historyname);
@@ -996,14 +1027,9 @@ private Layout getsearchlayout(MainActivity context) {
 	View[] goline={backward,cancel,helpbut, forward};
 
 	Layout layout=new Layout(context,(lay, w, h)->{
-//		int width=getWidth();
-//		int height=getHeight();
-//		int width=getWidth();
-//		int height=getHeight();
-//s/MainActivity.getscreenheight(.*);$/GlucoseCurve.getheight();/g
-//s/MainActivity.getscreenwidth(.*);$/GlucoseCurve.getwidth();/g
-	int height=GlucoseCurve.getheight();
 	int width=GlucoseCurve.getwidth();
+if(!smallScreen) {
+	int height=GlucoseCurve.getheight();
 	if(height>h&&width>w) {
 		   if(width>height) {
 			    lay.setY((height - h) / 2);
@@ -1015,8 +1041,8 @@ private Layout getsearchlayout(MainActivity context) {
 			    	posx=0;
 				numberview.noroom=true;
 				}
-			else
-					numberview.noroom=false;
+			    else
+				numberview.noroom=false;
  
 			    lay.setX(posx);
 			    }
@@ -1031,10 +1057,20 @@ private Layout getsearchlayout(MainActivity context) {
 		}
 	else {
 		w=width;h=height;
+		    lay.setX(0);
+		    lay.setY(0);
+		}
+		}
+	else {
+		lay.setY((int)((width-w)/2.5f));
+		if(width>w) {
+			    lay.setX((width - w)/2);
+			}
+		else
+			    lay.setX(0);
 		}
 		return new int[] {w,h};
-		},
-		timeline,buttonline,glucoseline,goline);
+		},buttonline,glucoseline, timeline,goline);
     	layout.setBackgroundColor(Applic.backgroundcolor);
 
             

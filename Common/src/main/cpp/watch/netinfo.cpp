@@ -406,7 +406,7 @@ extern "C" JNIEXPORT  jbyteArray  JNICALL   fromjava(getmynetinfo)(JNIEnv *env, 
 		info.watchsensor=watchsensor(wearhost);
 		setsendinfo(info,wearhost);
 		}
-
+	LOGGER("getmynetinfo info.watchsensor=%d\n",info.watchsensor);
 	info.version=info.watchsensor?thisversion:usedversion;
 	char *infolabel=usedversion?info.newlabel:reinterpret_cast<netinfo *>(&info)->label;
 	strcpy(infolabel, wearhost->getname()); 
@@ -478,9 +478,10 @@ extern "C" JNIEXPORT jboolean  JNICALL   fromjava(setmynetinfo)(JNIEnv *env, jcl
 #endif
    	}
     const uint16_t port=host->getport();
-    LOGGERTAG("setmynetinfo port=%d nr=%d\n",port,host->nr);
+    LOGGERTAG("setmynetinfo port=%d nr=%d watchsensor=%d\n",port,host->nr,info->watchsensor);
     if constexpr(iswatchapp()) {
-    	LOGSTRINGTAG("is watch\n");
+    	LOGAR("is watch");
+	
     	if(info->watchsensor) {
 		settings->data()->nobluetooth=false;
 		bool sendnums=false;

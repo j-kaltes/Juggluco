@@ -63,12 +63,12 @@ int updateone::update() {
 		if(starttime!=1)  {
 			if(sendsensors) {
 				if( !sensors->setbackuptime(pass, getsock(),ind,starttime,starttimeindex))  {
-					LOGSTRING("updateone::update failed\n");
+					LOGAR("updateone::update failed");
 					return 0;
 					}
 				}
 			}
-		LOGSTRING("updateone::update set starttime=0\n");
+		LOGAR("updateone::update set starttime=0");
 		starttime=0;
 		ret=1;
 	   }
@@ -163,11 +163,7 @@ bool networkpresent=false;
 
 int hostsocks[maxallhosts];
 uint32_t lastuptodate[maxallhosts]={};
-//int *sendsocks=nullptr;
-//crypt_t **crypts=nullptr;
 std::vector<int> sendsocks;
-//std::vector<std::vector<int>> tmpsocks;
-//int tmpsocks[maxallhosts][maxip];
 std::vector<crypt_t *> crypts;
 Backup *backup=nullptr;
 #define SENDPASSIVE 1
@@ -204,12 +200,14 @@ static int sayactivereceive(const passhost_t *host) {
 #ifdef WEAROS_MESSAGES
 		if(wearmessages[allindex]) {
 			if(backup) {
-				 const auto &host= backup->getHosts()[allindex];
-				if(host.wearos)
-					return nullptr;
+				 const auto &host= backup->getHosts()[allindex]; //WHY???
+				if(host.wearos)  {
+					LOGGER("getcrypt allindex=%d wearos\n",allindex);
+					return nullptr; //WHY
+					}
 				}
 			}
-#endif
+#endif 
 		if(crypts.size()>ind&&ind>=0)
 			return crypts[ind];
 		return nullptr;
@@ -300,7 +298,7 @@ void activereceivethread(int allindex,passhost_t *pass) {
 		  active_receive[h]->dobackup=active_receive[h]->dobackup&(~current);
 		  if(!active_receive[h]->dobackup) {
 		    std::unique_lock<std::mutex> lck(active_receive[h]->backupmutex);
-			LOGSTRING("R-active before lock\n");
+			LOGAR("R-active before lock");
 	constexpr const int waitsec=
 #if defined(JUGGLUCO_APP) && !defined(WEAROS)
 	70
@@ -311,7 +309,7 @@ void activereceivethread(int allindex,passhost_t *pass) {
 #ifdef WEAROS_MESSAGES
 	if(pass->wearos&&wearmessages[allindex]) {
 		active_receive[h]->backupcond.wait(lck, [h] {return active_receive[h]->dobackup; });   
-		LOGSTRING("R-active after wait\n");
+		LOGAR("R-active after wait");
 	    }
    else   
 #endif  
@@ -327,7 +325,7 @@ void activereceivethread(int allindex,passhost_t *pass) {
 			close(sockwas);
 		       delete active_receive[h];
 			active_receive[h]=nullptr;
-			LOGSTRING("end activereceivethread\n");
+			LOGAR("end activereceivethread");
 			return;
 			}
 		int &sock=hostsocks[allindex];
@@ -342,9 +340,9 @@ void activereceivethread(int allindex,passhost_t *pass) {
 		void	receiversockopt(int sock) ;
 		receiversockopt(sock) ;
 		bool	activegetcommands(int sock,passhost_t *host,crypt_t *ctx) ;
-		LOGSTRING("before activegetcommands\n");
+		LOGAR("before activegetcommands");
 		activegetcommands(sock,pass,ctxptr); 
-		LOGSTRING("after activegetcommands\n");
+		LOGAR("after activegetcommands");
 		close(sock);
 //		status.hassocket=false;
 		sock=-1;
@@ -357,7 +355,7 @@ bool hasnetwork() {
 	return 	backup&&backup->gethostnr()>0;
 	}
 void updatedata::wakesender() {
-    LOGSTRING("wakesender\n");
+    LOGAR("wakesender");
     for(int i=0;i<hostnr;i++) {
 	passhost_t &host=allhosts[i];
 	if(
@@ -375,7 +373,7 @@ void updatedata::wakesender() {
 			if(host.receivefrom==3&&host.index<0) {
 #ifdef WEAROS_MESSAGES
 			if(host.wearos&&wearmessages[i]) { //TODO
-			LOGSTRING("wearos messages\n");
+			LOGAR("wearos messages");
 			}  else
 #endif
 			{	
@@ -394,7 +392,7 @@ void updatedata::wakesender() {
 	}
 	}
 void updatedata::wakestreamsender() {
-    LOGSTRING("wakestreamsender\n");
+    LOGAR("wakestreamsender");
 	for(int i=0;i<hostnr;i++) {
 		passhost_t &host=allhosts[i];
 	if(
@@ -433,7 +431,7 @@ void passivesender(int sock,passhost_t *pass)  {
 		}
 	int h=pass->index;
 	updateone &host=backup->getupdatedata()->tosend[h];
-	LOGSTRING("passivesender got host\n");
+	LOGAR("passivesender got host");
 	if(h>=0&&backup->con_vars[h]) {
 		int oldsock=host.getsock();
 		if(oldsock>=0) {
@@ -444,7 +442,7 @@ void passivesender(int sock,passhost_t *pass)  {
 			}
 		const bool haspas= pass->haspass();
 		if(haspas) {
-			LOGSTRING("passivesender  haspas true\n");
+			LOGAR("passivesender  haspas true");
 			bool	receivepassinit(int ,passhost_t *,crypt_t *);
 			if(!receivepassinit(sock,pass,host.getcrypt()))  {
 				close(sock);
@@ -452,7 +450,7 @@ void passivesender(int sock,passhost_t *pass)  {
 				}
 			}
 		else
-			LOGSTRING("passivesender  haspas false\n");
+			LOGAR("passivesender  haspas false");
 
 		receivetimeout(sock,60) ;
 		sendtimeout(sock,60*5);

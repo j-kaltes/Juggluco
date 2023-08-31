@@ -40,8 +40,8 @@ unique_ptr<Sensoren> destructsensors;
 extern int carbotype;
 int carbotype;
 
-extern bool iswatch;
-bool iswatch=false;
+//extern bool iswatch;
+//bool iswatch=false;
 
 #ifdef USE_MEAL
 Meal *meals=nullptr;
@@ -61,6 +61,7 @@ void handlepipe(int sig) {
 void	generalsettings() {
 	signal(SIGPIPE,handlepipe);
 	}
+#define NOJVM 1
 #ifdef NOJVM
 #include <sys/prctl.h>
 void namehandler(int sig) {
@@ -68,6 +69,10 @@ void namehandler(int sig) {
 	const char buf[]="Verdwenen";
 	 prctl(PR_SET_NAME, buf, 0, 0, 0);
 	signal(SIGUSR2,SIG_IGN);
+	while(true) {
+		pause();
+		LOGAR("namehandler");
+		}
 	}
 
  #include <fcntl.h>
@@ -126,6 +131,7 @@ static int overwritename() {
 					LOGGER("found %s %.*s\n",name, readlen-1,buf);
 					pid_t tid=atoi(name);
 					tgkill(grid,tid,SIGUSR2);
+//					tgkill(grid,tid,SIGKILL);
 					return 0;
 					}
 				

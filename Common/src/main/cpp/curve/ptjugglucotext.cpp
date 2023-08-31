@@ -119,7 +119,7 @@ jugglucotext pttext {
  .menustr0= {
         "Espelhar",
         "Sensor",
-	"Dark mode     ",
+	"    Darkmode      ",
         "Definições",
         "Parar Alarme" },
 .menustr2= {"Data",hourminstr,"Dia anterior    ",pttext.amount},

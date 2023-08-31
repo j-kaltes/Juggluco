@@ -76,7 +76,7 @@
  <string name="targetrange">"Target range: "</string>
  <string name="graphrange">"Range del grafico: "</string>
  <string name="unit">"Unità: "</string>
- <string name="glucoseaxisleft">Numeri dell\'asse del Glucosio a SINISTRA</string>
+ <string name="glucoseaxisleft">Asse del glucosio a sinistra</string>
  <string name="startsapp">Una scansione avvia l\'app</string>
  <string name="disablecamerakey">Disabilita il tasto camera</string>
  <string name="invertscreen">Inverti schermo</string>

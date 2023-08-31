@@ -209,10 +209,9 @@
  <string name="wakelock">Wakelock</string>
  <string name="wifi">Wifi</string>
  <string name="heartrate">Tętno</string>
- <string name="xdripbroadcast">xDrip - Nadawaj lokalnie</string>
  <string name="sensorpermission">Uprawnienie do dostępu do czujników potrzebne do wyświetlania tętna.</string>
  <string name="sensorpermissionmessage">Ustaw je w Ustawieniach urządzenia, Aplikacje, Uprawnienia, Juggluco</string>
- <string name="floatglucose">Pływająca wart. gluk.</string>
+ <string name="floatglucose">Pływająca wart.</string>
  <string name="fontsize">Rozmiar czcionki</string>
  <string name="fonttoolarge">Zbyt duży rozmiar czcionki: maks =</string>
  <string name="foreground">Pierwszy plan</string>

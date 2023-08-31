@@ -216,6 +216,7 @@
  <string name="fonttoolarge">Памер шрыфта занадта вялікі: max=</string>
  <string name="foreground">Пярэдні план</string>
  <string name="background">Задні план</string>
+ <string name="backgroundshort">фон</string> 
  <string name="transparent">Празрысты</string>
  <string name="touchable">Дакранальны</string>
 

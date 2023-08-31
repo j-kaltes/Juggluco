@@ -39,6 +39,7 @@ import static tk.glucodata.Natives.hasstreamed;
 import static tk.glucodata.Log.showbytes;
 import static tk.glucodata.Natives.wakelibreview;
 import static tk.glucodata.help.hidekeyboard;
+import static tk.glucodata.settings.Settings.removeContentView;
 
 import android.Manifest;
 import android.app.Activity;
@@ -126,12 +127,12 @@ void startdisplay() {
   Log.i(LOG_ID,"startdisplay");
 Applic app=	(Applic)getApplication();
 	app.setbackgroundcolor(this) ;
+	if(Applic.Nativesloaded)
+	    app.needsnatives() ;
 	curve = new GlucoseCurve(this);
 
 	setContentView(curve);
 
-	if(Applic.Nativesloaded)
-	    app.needsnatives() ;
 
 
    // setSystemUI(false) ;
@@ -185,7 +186,7 @@ boolean glversion() {
 	}
 //static int initscreenwidth;
 //FragmentManager fragmentManager = getSupportFragmentManager();
-public static boolean wearable=false;
+//public static boolean wearable=false;
 static MainActivity thisone=null;
 static void alarmsExact(Context context) {
 	if(TargetSDK>30) {
@@ -223,9 +224,9 @@ static void alarmsExact(Context context) {
 	DisplayMetrics metrics= this.getResources().getDisplayMetrics();
 	screenheight= metrics.heightPixels;
 	screenwidth= metrics.widthPixels;
-	float xcm =2.54f*screenwidth/metrics.xdpi;
-	Natives.setscreenwidthcm(xcm);
-	wearable=xcm<5.8f;
+//	float xcm =2.54f*screenwidth/metrics.xdpi;
+	//Natives.setscreenwidthcm(xcm);
+//	wearable=xcm<5.8f;
 
 
 //	hideSystemUI(); initscreenwidth=getscreenwidth(this);
@@ -640,7 +641,22 @@ public void onConfigurationChanged(Configuration newConfig) {
 
 	screenwidth=0;
 	if(Applic.Nativesloaded)
-	    app.needsnatives() ;
+	    if(app.needsnatives() ) {
+	    	if(curve!=null) {
+			while(doonback() )
+				;
+			curve.numberview.deleteviews();	
+			curve.searchspinner=null;
+			if(curve.search!=null) {
+				removeContentView(curve.search);
+				curve.search=null;
+				}
+			if(curve.searchcontrol!=null) {
+				removeContentView(curve.searchcontrol);
+				curve.searchcontrol=null;
+				}
+			}
+	    	}
 
 
 //	if(settings!=null) settings.invalidate();
@@ -676,7 +692,7 @@ boolean finepermission() {
 				gaverational=true;
 			    help.help(Build.VERSION.SDK_INT>30?R.string.nearbypermission:R.string.locationpermission,act,l-> {
 				if(help.whelplayout!=null&&help.whelplayout.get()!=null) {
-					tk.glucodata.settings.Settings.removeContentView(help.whelplayout.get()); //setContentView makes view inaccessable
+					removeContentView(help.whelplayout.get()); //setContentView makes view inaccessable
 					help.whelplayout=null;
 					}
 				requestPermissions(noperm, LOCATION_PERMISSION_REQUEST_CODE);
@@ -713,7 +729,7 @@ public int flashpermission() {
 			if(shouldShowRequestPermissionRationale(flashperm)) {
 			    help.help(R.string.flashpermission,this,l-> {
 				if(help.whelplayout!=null&&help.whelplayout.get()!=null) {
-					tk.glucodata.settings.Settings.removeContentView(help.whelplayout.get()); //setContentView makes view inaccessable
+					removeContentView(help.whelplayout.get()); //setContentView makes view inaccessable
 					help.whelplayout=null;
 					}
 					requestPermissions(noperm, FLASH_PERMISSION_REQUEST_CODE);

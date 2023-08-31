@@ -16,30 +16,13 @@
 /*      You should have received a copy of the GNU General Public License            */
 /*      along with Juggluco. If not, see <https://www.gnu.org/licenses/>.            */
 /*                                                                                   */
-/*      Fri Jan 27 15:25:03 CET 2023                                                 */
+/*      Fri Jan 27 15:31:05 CET 2023                                                 */
 
 
-
-#ifndef LOGGER
-       #include <errno.h>
-       #include <stdarg.h>
-       #include <string.h>
-#include <stdio.h>
-#define LOGGER(...)   fprintf(stderr,__VA_ARGS__)
-#define LOGSTRING(...)   fprintf(stderr,__VA_ARGS__)
-inline void lerror(const char *str) {
-        LOGGER("%s: %s\n",(char *)str,strerror(errno));
-        }
-inline void flerror(const char* fmt, ...) {
-	constexpr const int maxbuf=80;
-	char buf[maxbuf];
-        va_list args;
-        va_start(args, fmt);
-	vsnprintf(buf,maxbuf, fmt, args);
-	va_end(args);
-	LOGGER("%s: %s\n",buf,strerror(errno));
-	}
-#endif
+package tk.glucodata;
 
 
+class Stats {
 
+	static void mkstats(MainActivity act) { }
+}

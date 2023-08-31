@@ -30,6 +30,7 @@ import tk.glucodata.Layout;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
+import static tk.glucodata.Applic.isWearable;
 import static tk.glucodata.Natives.getshowhistories;
 import static tk.glucodata.Natives.getshownumbers;
 import static tk.glucodata.Natives.getshowscans;
@@ -46,7 +47,7 @@ public static void display(MainActivity act,View parent) {
  	var Scans=getcheckbox(act,R.string.scansname,getshowscans()) ;
  	var History=getcheckbox(act,R.string.historyname,getshowhistories()) ;
  	var Stream=getcheckbox(act,R.string.streamname,getshowstream()) ;
- 	var Amounts=getcheckbox(act,R.string.amountsname,getshownumbers()) ;
+ 	var Amounts=getcheckbox(act,isWearable?R.string.amountshort:R.string.amountsname,getshownumbers()) ;
 
 Scans.setOnCheckedChangeListener( (buttonView,  isChecked) -> { Natives.setshowscans(isChecked); });
 	History.setOnCheckedChangeListener( (buttonView,  isChecked) -> { Natives.setshowhistories(isChecked); });

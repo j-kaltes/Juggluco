@@ -616,6 +616,7 @@ inline void show(uint8_t *dat,int len) {
 	*/
 
 bool	receivepassinit(int sock,passhost_t *host,ascon_aead_ctx_t *ctx) {
+	LOGGERTAG("sock=%d receivepassinit %s\n",sock,host->getnameif());
 	constexpr int takelen=8;
 	uint8_t nonce[ASCON_AEAD_NONCE_LEN];
 	int len=recvni(sock,nonce,takelen);
@@ -631,7 +632,13 @@ bool	receivepassinit(int sock,passhost_t *host,ascon_aead_ctx_t *ctx) {
 		lerrortag("receivepassinit send");
 		return false;
 		}
-        ascon_aead128a_init(ctx, host->pass.data(),nonce);	
+	if(ctx) {
+		ascon_aead128a_init(ctx, host->pass.data(),nonce);	
+		}
+	else {
+		LOGAR("ctx==null");
+		}
+	LOGGERTAG("end sock=%d receivepassinit\n",sock);
 	return true;
 	}
 

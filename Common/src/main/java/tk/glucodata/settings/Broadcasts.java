@@ -28,7 +28,6 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static tk.glucodata.Applic.isWearable;
 import static tk.glucodata.MainActivity.getscreenheight;
 import static tk.glucodata.MainActivity.getscreenwidth;
-import static tk.glucodata.MainActivity.wearable;
 import static tk.glucodata.Natives.getJugglucobroadcast;
 import static tk.glucodata.RingTones.EnableControls;
 import static tk.glucodata.settings.Settings.removeContentView;

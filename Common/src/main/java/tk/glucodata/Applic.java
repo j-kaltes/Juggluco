@@ -535,7 +535,8 @@ static void updatescreen() {
 	updaters.clear();
 	}
 static float headfontsize;
-void needsnatives() {
+
+boolean needsnatives() {
        Log.i(LOG_ID,"needsnatives");
 	var res=getResources();
         headfontsize = res.getDimension(R.dimen.abc_text_size_display_4_material);
@@ -546,8 +547,19 @@ void needsnatives() {
         GlucoseCurve.metrics= res.getDisplayMetrics();
 	initscreenwidth= GlucoseCurve.metrics.widthPixels;
         Natives.setfontsize(smallfontsize, menufontsize, GlucoseCurve.metrics.density, headfontsize);
+	boolean smallsize=((initscreenwidth/smallfontsize)<44.69);
+	boolean ret;
+	if(smallsize!= NumberView.smallScreen) {
+		NumberView.smallScreen=smallsize;
+		ret=true;
+		}
+	else
+		ret=false;
+
+		
 
 	Notify.mkpaint();
+	return ret;
 	}
 
 @Keep

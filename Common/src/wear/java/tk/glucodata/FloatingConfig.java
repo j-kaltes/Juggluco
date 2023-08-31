@@ -82,6 +82,7 @@ static public void show(MainActivity act) {
 
 	int fontsize=Natives.getfloatingFontsize();
 	sizeview.setText(fontsize+"");
+	sizeview.setPadding(pad,0,0,0);
         TextView.OnEditorActionListener  actlist= new TextView.OnEditorActionListener() {
                     @Override
                     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -118,7 +119,7 @@ static public void show(MainActivity act) {
 	var color=Natives.getfloatingbackground();
 	boolean transp= Color.alpha(color)!=0xFF;
 	var transparentview=getcheckbox(act,R.string.transparent,transp);
-	var backgroundview=getbutton(act,R.string.background);
+	var backgroundview=getbutton(act,R.string.backgroundshort);
 
 	if (transp) backgroundview.setVisibility(INVISIBLE);
 

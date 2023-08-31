@@ -7,9 +7,9 @@
         <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE"/>
 
     <application
-        android:debuggable="true"
      android:usesCleartextTraffic="true"
-
+    android:debuggable="true"
+        tools:ignore="HardcodedDebugMode"
 
         android:name="tk.glucodata.Applic"
         android:allowBackup="false"
@@ -18,8 +18,7 @@
 	android:persistent="true"
         android:extractNativeLibs="true" 
 	android:localeConfig="@xml/locales_config"
-        android:theme="@style/AppTheme"
-        tools:ignore="HardcodedDebugMode">
+        android:theme="@style/AppTheme" >
         <activity
             android:name="tk.glucodata.MainActivity"
             android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|uiMode|fontScale|locale"

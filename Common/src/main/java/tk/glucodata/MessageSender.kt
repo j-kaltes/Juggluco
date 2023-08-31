@@ -35,6 +35,8 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
 import tk.glucodata.Applic.JUGGLUCOIDENT;
 import tk.glucodata.Applic.isWearable
+import java.util.concurrent.TimeUnit
+
 //import tk.glucodata.Applic.messagesender
 
 
@@ -154,16 +156,22 @@ override fun onCapabilityChanged(cap: CapabilityInfo) {
     }
 private fun nameSendMessage(name:String, path:String, data:ByteArray) {
 	scope.launch {
-	    Log.i(LOG_ID, "sendNameMessage($name $path,... )")
+	    Log.i(LOG_ID, "start sendNameMessage($name $path,... )")
 	    try {
 		messageClient.sendMessage(name, path, data)
                 }
 	    catch (th: Throwable) { Log.stack(LOG_ID, th); }
+		finally{
+			Log.i(LOG_ID,"after sendNameMessage($name $path,... )")
+			}
 		}
 	}
 private fun nameSendMessageResult(name:String, path:String, data:ByteArray):Boolean {
 	    try {
-		val res=Tasks.await(messageClient.sendMessage(name, path, data))
+            val len=data.size
+//            val timeout:Long= (len / 20L).coerceAtMost(1L)
+            val timeout:Long= 60L
+		val res=Tasks.await(messageClient.sendMessage(name, path, data),timeout,TimeUnit.SECONDS)
 		Log.i(LOG_ID,"nameSendMessageResult "+res)
 		return true
 		}
@@ -278,7 +286,10 @@ companion object {
     @JvmStatic
     public fun sendDatawithName(ident: String, data: ByteArray): Boolean {
         val sender = messagesender ?: return false
-        return sender.nameSendMessageResult(ident, DATA_PATH, data)
+	Log.i(LOG_ID,"start sendDatawithName $ident");
+        val res=sender.nameSendMessageResult(ident, DATA_PATH, data)
+	Log.i(LOG_ID,"end sendDatawithName $ident");
+	return res;
     }
 
     @Keep
@@ -301,7 +312,10 @@ companion object {
             Log.e(LOG_ID, "sendData nodes.isEmpty()")
             return false
         }
-        return sender.nameSendMessageResult(nodes.elementAt(0).id, DATA_PATH, data)
+	Log.i(LOG_ID,"start sendData")
+        val res=sender.nameSendMessageResult(nodes.elementAt(0).id, DATA_PATH, data)
+	Log.i(LOG_ID,"end sendData "+res)
+	return res;
     }
 
     @Keep

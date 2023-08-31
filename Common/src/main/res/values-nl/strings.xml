@@ -34,6 +34,7 @@
     <string name="bluetoothenabled">Bluetooth Aan</string>
     <string name="bluetoothdisabled">Bluetooth Uit</string>
     <string name="amountsname">Hoeveelheden</string>
+    <string name="amountshort">Hoeveel</string>
     <string name="mealsname">Maaltijden</string>
     <string name="closename">Sluiten</string>
     <string name="exporthelp"> Maaltijden opgeslagen in html\nRest in .tsv (tab-separated values)</string>
@@ -76,7 +77,7 @@
  <string name="targetrange">"Doelbereik: "</string>
  <string name="graphrange">"Bereik grafiek: "</string>
  <string name="unit">"Eenheid: "</string>
- <string name="glucoseaxisleft">Glucose-as nummers LINKS</string>
+ <string name="glucoseaxisleft">Glucose-as links</string>
  <string name="startsapp">Scannen start Juggluco</string>
  <string name="disablecamerakey">Disable camera key</string>
  <string name="invertscreen">Scherm omkeren</string>
@@ -89,7 +90,7 @@
  <string name="setunitfirst">Zet eerst eenheid</string>
  <string name="numberlabels">Nummer Labels</string>
  <string name="colors">Kleuren</string>
- <string name="remindersname">Herinneringen</string>
+ <string name="remindersname">Herinneren</string>
  <string name="display">Tonen</string>
  <string name="shutcuts">Shortcuts</string>
  <string name="advanced">Gevorderd</string>
@@ -179,7 +180,7 @@
  <string name="sendto">Zend naar</string>
  <string name="resenddata">Herzend data</string>
  <string name="minimum">Minimum</string>
- <string name="minuteddeactivated">Minuten op non-actief:</string>
+ <string name="minuteddeactivated">Minuten non-actief:</string>
  <string name="duractionsec">Duur (sec):</string>
  <string name="duraction">Duur:</string>
  <string name="sec">sec</string>
@@ -204,7 +205,7 @@
  <string name="getaccountidmessage">De Account ID is noodzakelijk om Libre3 sensoren te gebruiken die geactiveerd zijn door Abbott\'s Libre3 app met dit Libreview account.</string>
  <string name="deleteconnection">Verwijder verbinding?</string>
  <string name="heartrate">Hartslag</string>
- <string name="xdripbroadcast">xDrip lokale broadcast</string>
+ <string name="xdripbroadcast">xDrip broadcast</string>
  <string name="floatglucose">Zwevende glucose</string>
 <string name="fontsize">Lettergrootte</string>
   <string name="fonttoolarge">Lettergrootte te groot: max=</string>

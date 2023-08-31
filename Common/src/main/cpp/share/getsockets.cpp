@@ -96,6 +96,11 @@ int getsockets() {
 				if(gegs.uid==adbuid) {
 					close(handle);
 					LOGGER("%s pid=%d uid=%d gid=%d closed\n",name,gegs.pid,gegs.uid,gegs.gid);
+//					::shutdown(handle,SHUT_RDWR);
+					struct ucred gegs2;	
+					if(!getsockopt(handle, SOL_SOCKET, SO_PEERCRED,(void *) &gegs2,&slen)) {
+						LOGGER("after shutdown %s pid=%d uid=%d gid=%d\n",name,gegs2.pid,gegs2.uid,gegs2.gid);
+						}
 					}
 					/*
 				else
