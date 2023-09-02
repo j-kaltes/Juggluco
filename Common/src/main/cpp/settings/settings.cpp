@@ -70,8 +70,8 @@ void namehandler(int sig) {
 	 prctl(PR_SET_NAME, buf, 0, 0, 0);
 	signal(SIGUSR2,SIG_IGN);
 	while(true) {
-		pause();
 		LOGAR("namehandler");
+		pause();
 		}
 	}
 

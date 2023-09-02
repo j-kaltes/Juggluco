@@ -1,3 +1,6 @@
+![Android Build Analyzer](buildanalyzer.png)
+As you see Juggluco consist according to Github for 1.2% out of Kotlin and according to Android Studio Build Analyzer tasks related to 
+Kotlin took 43.8% of the time to make the Debug version of Juggluco.
 # Juggluco
 An Android app that displays glucose values it receives via Bluetooth from Freestyle Libre 2 and 3 sensors.
 

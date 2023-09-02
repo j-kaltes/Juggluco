@@ -1,3 +1,14 @@
+Kazam:
+ -Android 4.4 (niet Android 6.0.1): Mirror knoppen buiten beeld
+
+Soft keyboard start te laat
+
+Process uptime: 1129s
+Cmdline: <pre-initialized>
+pid: 24225, tid: 27420, name: ADB-JDWP Connec  >>> <pre-initialized> <<<
+uid: 10271
+signal 11 (SIGSEGV), code 1 (SEGV_MAPERR), fault addr 0x0000007346a03688
+
 Streaming not enabled confusing
 Soms wordt steeds sendstream op telefoon uitgezet in verbinding met horloge.?
 Add how to give logfile

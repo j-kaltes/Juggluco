@@ -57,17 +57,12 @@ import static tk.glucodata.Natives.getstreamingAuthenticationData;
 import static tk.glucodata.Natives.hasalarmloss;
 import static tk.glucodata.Natives.processTooth;
 
-//s/\<log\([a-z]\)(/Log.\1(LOG_ID,/g
 
 public class MyGattCallback extends SuperGattCallback {
-//	private static final boolean autoconnect=true;
 	private int conphase = 0;
 
 	static private final String LOG_ID = "MyGattCallback";
 
-	//    private static final    long  MIN_BACKOFF_MILLIS=10000L;
-	//String SerialNumber;
-//	public String mActiveDeviceAddress;
 	public MyGattCallback(SensorBluetooth sensorbluetooth, String SerialNumber, long dataptr) {
 		super(Natives.getsensorgen(dataptr));
 		Log.d(LOG_ID, "MyGattCallback(..)");
@@ -76,34 +71,13 @@ public class MyGattCallback extends SuperGattCallback {
 		this.dataptr = dataptr;
 		mActiveDeviceAddress = Natives.getDeviceAddress(dataptr);
 		Log.i(LOG_ID, "new MyGattCallback " + SerialNumber + " " + ((mActiveDeviceAddress != null) ? mActiveDeviceAddress : "null"));
-//		if(sensorgen==2) abbottinit();
-
-	//	byte[] key = Natives.sensorUnlockKey(dataptr);
-	//	android.util.Log.v(LOG_ID, SerialNumber + " writeCharacteristic passcode: " + (key==null?"null":new String(showhex.hexstr(key, 0, key.length))));
 		
 	}
-
-	//void savestate() { Natives.saveState(dataptr); }
-//    void setdataptr(long ptr) { dataptr=ptr; }
-
-
-
 
 
 	boolean pack1 = false, pack2 = false;
 	final byte[] packet = new byte[46];
 
-//static boolean backuprunning=false;
-
-	/*@BinderThread
-	static	void startbackup() {
-			if(!backuprunning) {
-				backuprunning=true;
-				Natives.startbackup();
-				}
-
-			}
-			*/
 
 	@SuppressLint("MissingPermission")
 	final void writeBLELogin() {
@@ -149,7 +123,8 @@ static void showCharacter(String label, BluetoothGattCharacteristic characterist
 	public void onDescriptorWrite(BluetoothGatt bluetoothGatt, BluetoothGattDescriptor bluetoothGattDescriptor, int i) {
 		super.onDescriptorWrite(bluetoothGatt, bluetoothGattDescriptor, i);
 		BluetoothGattCharacteristic characteristic = bluetoothGattDescriptor.getCharacteristic();
-		showCharacter("onDescriptorWrite", characteristic);
+		if(doLog)
+			showCharacter("onDescriptorWrite", characteristic);
 		if (sensorgen == 2 && conphase == 1) {
 			writeBLELogin();
 		}
@@ -176,7 +151,9 @@ void reconnect() {
 				}
 			if (newState == BluetoothProfile.STATE_CONNECTED) {
 //				readrssi=9999; mBluetoothGatt.readRemoteRssi();
-				bluetoothGatt.discoverServices();
+				if(!bluetoothGatt.discoverServices()) {
+					Log.e(LOG_ID,"bluetoothGatt.discoverServices()  failed");
+					}
 				constatchange[0] = tim;
 				setpriority(bluetoothGatt);
 			} else {
@@ -223,36 +200,6 @@ void reconnect() {
 
 	BluetoothGattCharacteristic BLELogincharacteristic;
 	BluetoothGattCharacteristic CompositeRawDatacharacteristic;
-
-	/*
-	@Override // android.bluetooth.BluetoothGattCallback
-        public void onServicesDiscovered(BluetoothGatt bluetoothGatt, int status) {
-			try {
-				BluetoothGattService service;
-				BluetoothGattCharacteristic characteristic;
-				Log.d(LOG_ID, SerialNumber + " onServicesDiscovered, status: " + status);
-				if (status == GATT_SUCCESS && (service = bluetoothGatt.getService(sensorbluetooth.mADCCustomServiceUUID)) != null && (characteristic = service.getCharacteristic(mCharacteristicUUID_BLELogin)) != null) {
-					long tim = System.currentTimeMillis();
-					byte[] key = Natives.sensorUnlockKey(dataptr);
-					if (key != null) {
-						characteristic.setValue(key);
-						Log.v(LOG_ID, SerialNumber + " writeCharacteristic passcode: " + new String(showhex.hexstr(key, 0, key.length)));
-						//noinspection MissingPermission
-						bluetoothGatt.writeCharacteristic(characteristic);
-					} else {
-						wrotepass[1] = tim;
-						//testage(tim);
-						handshake = 0;
-					}
-				}
-			} catch (Throwable e) {
-				Log.stack(LOG_ID, "onServicesDiscovered", e);
-				if (Build.VERSION.SDK_INT > 30 && !Applic.mayscan())
-					Applic.Toaster("Turn on NEARBY DEVICES permission");
-				return;
-			}
-		}
-*/
 
 
 	private  boolean m2831x() {
@@ -370,7 +317,9 @@ status	int: The result of the write operation BluetoothGatt#GATT_SUCCESS if the 
 					bluetoothGatt.setCharacteristicNotification(characteristic, true) &&
 					(descriptor = characteristic.getDescriptor(mCharacteristicConfigDescriptor)) != null) {
 
-				descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+				if(!descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE)) {
+					Log.e(LOG_ID,"descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE)  failed");
+					}
 				//noinspection MissingPermission
 				success = bluetoothGatt.writeDescriptor(descriptor);
 
@@ -694,20 +643,7 @@ private final boolean enableNotification(BluetoothGattCharacteristic bluetoothGa
 		}
 		}
 	}
-	/*
-	android13:
-public void onCharacteristicChanged (BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, byte[] value) {
-	} */
 
-
-/*
-static void logcharist(BluetoothGattCharacteristic bluetoothGattCharacteristic)   {
-	byte[] value = bluetoothGattCharacteristic.getValue();
-	var uuid=bluetoothGattCharacteristic.getUuid();
-	var uuidstr=uuid.toString();
-	Log.showbyte(uuidstr,value);
-	}
-	*/
 @Override // android.bluetooth.BluetoothGattCallback
 public void onCharacteristicChanged(BluetoothGatt bluetoothGatt, BluetoothGattCharacteristic bluetoothGattCharacteristic) {
 	byte[] value = bluetoothGattCharacteristic.getValue();
@@ -769,17 +705,5 @@ public void onReadRemoteRssi(BluetoothGatt gatt, int rssi, int status)  {
 		readrssi=rssi;
 		}
 	}
-	/*
-private boolean askedphy=false;
-@Override
-	public void onPhyRead(BluetoothGatt gatt, int txPhy, int rxPhy, int status) {
-		if(status==GATT_SUCCESS) {
-				Log.i(LOG_ID,"onPhyRead(,"+rxPhy+","+rxPhy+","+status+") success");
-				askedphy=true;
-				}
-		else
-			Log.i(LOG_ID,"onPhyRead(,"+rxPhy+","+rxPhy+","+status+") failed");
-	}
-	*/
 }
 
