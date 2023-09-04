@@ -117,7 +117,7 @@ jugglucotext pltext {
 	"   Tr. ciemny      ",
     "Ustawienia",
 	"Zatrzymaj alarm" },
-.menustr2= {"Data",hourminstr,"1 d. wstecz",pltext.amount},
+.menustr2= {"Data",hourminstr,"1 d. wstecz      ",pltext.amount},
 #endif
 
 	.scanerrors={

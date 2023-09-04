@@ -55,7 +55,7 @@ jugglucotext detext {
 .scanned="Gescannt",
 	.readysecEnable="Sensor in %d Minuten bereit. Erneut scannen, um Streaming zu aktivieren.",
          .readysec="Sensor bereit in %d Minuten.",
-.networkproblem="Netzwerkproblem?",
+.networkproblem="Keine Glukose vom Klon",
 .enablebluetooth="Bluetooth aktivieren",
 .useBluetoothOff="'Bluetooth nutzen' aus",
 .noconnectionerror=": Keine Verbindung",
@@ -114,7 +114,7 @@ detext.newamount,
 	"    Darkmode      ",
          "Einstellen",
 "Stop Alarm" },
-.menustr2= {"Datum      ",hourminstr,"Vortag     ",detext.amount},
+.menustr2= {"Datum      ",hourminstr,"Vortag          ",detext.amount},
 #endif
 
 .scanerrors={

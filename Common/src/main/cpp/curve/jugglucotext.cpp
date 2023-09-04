@@ -61,7 +61,7 @@ jugglucotext engtext {
 	.scanned="Scanned",
 	.readysecEnable="Sensor ready in %d minutes. Scan again to enable Streaming.",
 	.readysec="Sensor ready in %d minutes.",
-.networkproblem="Network problem?",
+.networkproblem="No glucose from mirror",
 .enablebluetooth="Enable Bluetooth",
 .useBluetoothOff="'Use Bluetooth' off",
 .noconnectionerror=": No Connection",
@@ -118,7 +118,7 @@ jugglucotext engtext {
 	"    Darkmode      ",
         "Settings",
 	"Stop Alarm" },
-.menustr2= {"Date  ",hourminstr,"Day back",engtext.amount},
+.menustr2= {"Date  ",hourminstr,"Day back           ",engtext.amount},
 #endif
 
 	.scanerrors={

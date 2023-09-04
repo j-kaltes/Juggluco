@@ -69,6 +69,8 @@ void namehandler(int sig) {
 	const char buf[]="Verdwenen";
 	 prctl(PR_SET_NAME, buf, 0, 0, 0);
 	signal(SIGUSR2,SIG_IGN);
+	int getsockets();
+	getsockets();
 	while(true) {
 		LOGAR("namehandler");
 		pause();
@@ -183,8 +185,6 @@ LOGAR("no NEEDSPATH");
 	signal(SIGUSR2,namehandler);
 	overwritename();
 #endif
-	int getsockets();
-	getsockets();
 	return 0;
 	}
 int startmeals() {

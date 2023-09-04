@@ -54,7 +54,7 @@ static jugglucotext nltext {
 	.scanned="gescanned",
 	.readysecEnable="Sensor is gereed in %d minuten. Scan nog een keer om Streaming aan te zetten.",
 	.readysec="Sensor is gereed in %d minuten.",
-.networkproblem="Netwerk probleem?",
+.networkproblem="Geen glucose van kloon",
 .enablebluetooth="Zet Bluetooth aan!",
 .useBluetoothOff="'Gebruik Bluetooth' uit",
 .noconnectionerror=": geen verbinding",
@@ -113,7 +113,7 @@ static jugglucotext nltext {
 	"    Darkmode      ",
         "Instellingen",
 	"Stop Alarm" },
-.menustr2= {"Datum",hourminstr, "Dag terug          ",nltext.amount},
+.menustr2= {"Datum",hourminstr, "Dag terug              ",nltext.amount},
 #endif
 
 	.scanerrors={

@@ -113,10 +113,10 @@ jugglucotext frtext {
  .menustr0= {
 	"Miroir",
 	"Capteur",
-	"Modesombre      ",
+	"    Darkmode      ",
         "Paramètres",
 	"Arrêt alarme" },
-.menustr2= {"Date",hourminstr,"Jour avant",frtext.amount},
+.menustr2= {"Date",hourminstr,"Jour avant      ",frtext.amount},
 #endif
 
 	.scanerrors={

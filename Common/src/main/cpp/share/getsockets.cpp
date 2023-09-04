@@ -29,6 +29,8 @@
        #include <sys/stat.h>
        #include <fcntl.h>
        #include <string.h>
+        #include <dlfcn.h>
+
 #include "destruct.h"
 
 //#define MAIN
@@ -94,8 +96,22 @@ int getsockets() {
 			socklen_t slen=sizeof(gegs);
 			if(!getsockopt(handle, SOL_SOCKET, SO_PEERCRED,(void *) &gegs,&slen)) {
 				if(gegs.uid==adbuid) {
-					close(handle);
-					LOGGER("%s pid=%d uid=%d gid=%d closed\n",name,gegs.pid,gegs.uid,gegs.gid);
+					typedef uint64_t (*android_fdsan_get_owner_tag_t)(int fd); android_fdsan_get_owner_tag_t android_fdsan_get_owner_tag;
+					typedef uint64_t (*android_fdsan_close_with_tag_t)(int fd, uint64_t tag); android_fdsan_close_with_tag_t android_fdsan_close_with_tag;
+
+					if(android_get_device_api_level()>=29&& 
+					(android_fdsan_get_owner_tag= (android_fdsan_get_owner_tag_t)dlsym(RTLD_DEFAULT,"android_fdsan_get_owner_tag")) && 
+					(android_fdsan_close_with_tag= (android_fdsan_close_with_tag_t)dlsym(RTLD_DEFAULT,"android_fdsan_close_with_tag"))) {
+
+						uint64_t tag=android_fdsan_get_owner_tag(handle);
+						LOGGER("pid=%d uid=%d gid=%d closed fp=%d tag=%llx\n",gegs.pid,gegs.uid,gegs.gid,handle,tag);
+						android_fdsan_close_with_tag(handle,tag);
+						}
+					else {
+						LOGGER("nofdsan: pid=%d uid=%d gid=%d closed fp=%d\n",gegs.pid,gegs.uid,gegs.gid,handle);
+						close(handle);
+
+						}
 //					::shutdown(handle,SHUT_RDWR);
 					struct ucred gegs2;	
 					if(!getsockopt(handle, SOL_SOCKET, SO_PEERCRED,(void *) &gegs2,&slen)) {
