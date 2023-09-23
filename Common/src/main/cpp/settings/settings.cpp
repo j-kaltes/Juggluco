@@ -61,20 +61,36 @@ void handlepipe(int sig) {
 void	generalsettings() {
 	signal(SIGPIPE,handlepipe);
 	}
-#define NOJVM 1
-#ifdef NOJVM
+#ifndef NONOJVM
 #include <sys/prctl.h>
+
 void namehandler(int sig) {
+      LOGAR("namehandler");
 //	const char buf[]="JVM Debugger";
 	const char buf[]="Verdwenen";
 	 prctl(PR_SET_NAME, buf, 0, 0, 0);
 	signal(SIGUSR2,SIG_IGN);
 	int getsockets();
 	getsockets();
+
+      #include <sys/syscall.h>    
+       #include <unistd.h>
+	
+//       syscall(SYS_set_tid_address, nullptr);
+
+      syscall(SYS_set_tid_address, 0);
+      LOGAR("namehandler SYS_set_tid_address");
+      for (;;) {
+      	syscall(SYS_exit, 0);
+	LOGAR("Exited");
+	}
+//	int ret=0;
+//	pthread_exit(&ret); 
+/*
 	while(true) {
 		LOGAR("namehandler");
 		pause();
-		}
+		} */
 	}
 
  #include <fcntl.h>
@@ -133,7 +149,6 @@ static int overwritename() {
 					LOGGER("found %s %.*s\n",name, readlen-1,buf);
 					pid_t tid=atoi(name);
 					tgkill(grid,tid,SIGUSR2);
-//					tgkill(grid,tid,SIGKILL);
 					return 0;
 					}
 				
@@ -181,7 +196,7 @@ LOGAR("no NEEDSPATH");
 	if(settings->data()->crashed)
 		settings->setnodebug(false);
 	generalsettings();
-#ifdef NOJVM
+#ifndef NONOJVM
 	signal(SIGUSR2,namehandler);
 	overwritename();
 #endif
@@ -408,7 +423,7 @@ void startjuggluco(std::string_view dirfiles,const char *country) {
         startsensors( );
         extern void startthreads() ;
         startthreads();
-	settings->data()->initVersion=17;
+	settings->data()->initVersion=18;
         }
 
 static void initinjuggluco(std::string_view dirfiles,const char *country) {
@@ -426,7 +441,7 @@ static void initinjuggluco(std::string_view dirfiles,const char *country) {
         startsensors( );
         extern void startthreads() ;
         startthreads();
-	settings->data()->initVersion=17;
+	settings->data()->initVersion=18;
         }
 
 void initjuggluco(std::string_view dirfiles) {

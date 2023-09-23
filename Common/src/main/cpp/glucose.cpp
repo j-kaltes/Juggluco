@@ -54,7 +54,8 @@ string_view getpreviousstate(string_view sbasedir ) ; // delete[] should be call
 
 int SensorGlucoseData::sendhistoryinfo(crypt_t *pass,int sock,int sensorindex,uint32_t histstart,uint32_t endhistory) {
 	constexpr const int endhistoryoff=offsetof(Info,endhistory); 
-	constexpr const int lastLifeCountReceivedoff=offsetof(Info, lastLifeCountReceived); 
+	constexpr const int lastLifeCountReceivedoff=offsetof(Info, lastLifeCountReceived);  
+	//WHY send over lastLifeCountReceived in relation to history info??
 	constexpr const int u32len= sizeof(uint32_t);
 	std::vector<subdata> vect;
 	vect.reserve(2);
@@ -67,8 +68,7 @@ int SensorGlucoseData::sendhistoryinfo(crypt_t *pass,int sock,int sensorindex,ui
 		 }
 	return 1;
 	}
-int SensorGlucoseData::sendhistory(crypt_t *pass,int sock,int ind,int sensorindex,bool sendinfo) {
-	int histend=getendhistory(); 
+int SensorGlucoseData::oldsendhistory(crypt_t *pass,int sock,int ind,int sensorindex,bool sendinfo,int histend) {
 	getinfo()->update[ind].changedhistorystart=false;
 	int histstart=getinfo()->update[ind].histstart;
 	if(histstart<histend) {
@@ -89,6 +89,49 @@ int SensorGlucoseData::sendhistory(crypt_t *pass,int sock,int ind,int sensorinde
 		}
 	return 2;
 	}
+int SensorGlucoseData::newsendhistory(crypt_t *pass,int sock,int ind,int sensorindex,bool sendStream,int histend) {
+	int histstart=getinfo()->update[ind].histstart;
+	getinfo()->update[ind].changedhistorystart=false;
+	LOGGER("newsendhistory sensorindex=%d sendStream=%d histstart=%d histsend=%d\n",sensorindex,sendStream,histstart,histend);
+	if(histstart<histend) {
+		int histrealend;
+		if(!sendStream) {
+			if(histstart>0) histstart--;
+			histrealend=histend+1;
+			}
+		else
+			histrealend=histend;
+
+		std::vector<subdata> vect;
+		int tusstart=histstart;
+		int pos=histstart;
+		for(;pos<histrealend;pos++) {
+			const Glucose *gl=getglucose(pos);
+			if(gl->isStreamed()!=sendStream) {
+				if(pos>tusstart) {
+					vect.push_back({elstart(tusstart),tusstart*getelsize(),(pos-tusstart)*getelsize()});
+					}
+				tusstart=pos+1;
+				}
+			}
+		if(pos>tusstart) {
+			vect.push_back({elstart(tusstart),tusstart*getelsize(),(pos-tusstart)*getelsize()});
+			}
+		if(vect.size()) {
+			if(!senddata(pass,sock,vect,histpath)) {//TODO: add command
+				LOGSTRING("GLU: senddata data.data failed\n");
+				return 0;
+				}
+			LOGGER("sendhistory %d-%d\n",histstart,histend);
+			}
+		if(!getinfo()->update[ind].changedhistorystart) {
+			getinfo()->update[ind].histstart=histend;
+			return 1;
+			}
+
+		}
+	return 2;
+	}
 int SensorGlucoseData::updateKAuth(crypt_t *pass,int sock,int ind)  {
 	if(getinfo()->update[ind].sendKAuth) {
 		const int off=getinfo()->haskAuth?offsetof(Info,kAuth):offsetof(Info,haskAuth);
@@ -104,14 +147,25 @@ int SensorGlucoseData::updateKAuth(crypt_t *pass,int sock,int ind)  {
 		}
 	return 2;
 	}
-int SensorGlucoseData::updatescan(crypt_t *pass,int sock,int ind,int sensorindex,bool dotoch)  {
+//	int histend=sendStream?getStreamendhistory():getendhistory(); 
+int SensorGlucoseData::updatescan(crypt_t *pass,int sock,int ind,int sensorindex,bool dotoch,int sendstream)  {
 	bool did=false;
 	constexpr const int startinfolen=offsetof(Info, pollcount);
 	alignas(alignof(Info)) uint8_t infoptr[startinfolen];
+
+	int streamhistend=-1;
+	int wrotehistory=2;
 	if(!isLibre3()) {
-		switch(sendhistory(pass,sock,ind,sensorindex,false)) {
+		if(sendstream) {
+			streamhistend=getStreamendhistory();
+			wrotehistory=oldsendhistory(pass,sock,ind,sensorindex,false,std::max(streamhistend,getScanendhistory()));
+			}
+		else
+			wrotehistory=newsendhistory(pass,sock,ind,sensorindex,false,false);
+		switch(wrotehistory) {
 			case 0:return 0;
-			case 1: memcpy(infoptr,meminfo.data(),startinfolen);did=true;
+			case 1: memcpy(infoptr,meminfo.data(),startinfolen);
+				did=true;
 			};
 		}
 	else {
@@ -146,8 +200,15 @@ int SensorGlucoseData::updatescan(crypt_t *pass,int sock,int ind,int sensorindex
 				}
 			}
 		}
+	bool wassendstreaming=getinfo()->update[ind].sendstreaming;
+	getinfo()->update[ind].sendstreaming=false;
+	destruct streamsend([this,ind,&wassendstreaming] {
+				if(wassendstreaming)
+					getinfo()->update[ind].sendstreaming=wassendstreaming;
+				});
+
 	if(!did) {
-		if(getinfo()->update[ind].sendstreaming||dotoch) {
+		if(wassendstreaming||dotoch) {
 			memcpy(infoptr,meminfo.data(),startinfolen);
 			goto dosendinfo;
 			}
@@ -157,19 +218,24 @@ int SensorGlucoseData::updatescan(crypt_t *pass,int sock,int ind,int sensorindex
 		LOGGER("GLU updatescan %s  scan: %d-%d\n", shortsensorname()->data(),scanstart,scanend);
 		 {
 			std::vector<subdata> vect;
-			vect.reserve(2);
+			vect.reserve(3);
 			vect.push_back({infoptr,0,startinfolen});
 	//		constexpr const int startdev=offsetof(Info, deviceaddress);
 			constexpr const int startdev=offsetof(Info, streamingIsEnabled);
-			constexpr const int devlen=offsetof(Info,libreviewscan)-startdev;
+			constexpr const int devlen=offsetof(Info,libreviewScan)-startdev;
 			static_assert((4+deviceaddresslen)==devlen);
+		         LOGGER("before send device address %p %p %s\n", ((char*)meminfo.data())+startdev+4,getinfo()->deviceaddress,getinfo()->deviceaddress);
 			vect.push_back({((uint8_t*)meminfo.data())+startdev,startdev,devlen});
+			if(sendstream&&wrotehistory==1) {
+
+				vect.push_back({reinterpret_cast<const senddata_t *>(&streamhistend),offsetof(Info,endStreamhistory),sizeof(Info::endStreamhistory)});
+				}
 			 if(!senddata(pass,sock,vect, infopath)) {
 				LOGSTRING("GLU: senddata info.data failed\n");
 				return 0;
 				 }
 				  	
-		         LOGGER("send device address %p %p %s\n", ((char*)meminfo.data())+startdev+4,getinfo()->deviceaddress,getinfo()->deviceaddress);
+		         LOGGER("after send device address %p %p %s\n", ((char*)meminfo.data())+startdev+4,getinfo()->deviceaddress,getinfo()->deviceaddress);
 			}
 
 		if(string_view state=getpreviousstate(sensordir);state.data()) {
@@ -191,8 +257,8 @@ int SensorGlucoseData::updatescan(crypt_t *pass,int sock,int ind,int sensorindex
 				}
 			delete[] state.data();	
 			}
-		  if(getinfo()->update[ind].sendstreaming) {
-			getinfo()->update[ind].sendstreaming=false;
+		  streamsend.active=false;
+		  if(wassendstreaming) {
 			return 5;
 			}
 		return 1;
@@ -255,7 +321,7 @@ void Sensoren::removeoldstates()  {
 		return;
 		} */
 	for(int i=0;i<=last();i++) {
-		if(SensorGlucoseData *hist=gethist(i))
+		if(SensorGlucoseData *hist=getSensorData(i))
 			hist->removeoldstates(); 
 		}
 //	constexpr const uint32_t period=60*60*24;
@@ -272,7 +338,7 @@ extern	bool hasnotiset();
 		return;
 	if(newstart<0) 
 		return;
-	if(SensorGlucoseData *hist=sensors->gethist(sendindex)) {
+	if(SensorGlucoseData *hist=sensors->getSensorData(sendindex)) {
 		LOGGER("sethistorystart(%d,%d)\n",sendindex,newstart);
 		hist->backhistory(newstart);
 		}

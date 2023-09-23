@@ -31,8 +31,9 @@
 #include <errno.h>
 #include <string.h>
 #include <time.h>
+#ifdef __ANDROID__
 #include <android/log.h>
-
+#endif
 #ifndef _WIN32
 #undef _GNU_SOURCE
 #define _GNU_SOURCE 1

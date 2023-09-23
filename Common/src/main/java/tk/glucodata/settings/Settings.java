@@ -756,7 +756,8 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 		showalways.setOnCheckedChangeListener( (buttonView,  isChecked) -> Notify.glucosestatus(isChecked) );
 	       var webserver=getbutton(context,R.string.webserver);
 	       var uploader=getbutton(context,"Uploader");
-
+/*		var streamhistory=getcheckbox(context,R.string.streamhistory,Natives.getStreamHistory( ));
+		streamhistory.setOnCheckedChangeListener( (buttonView,  isChecked) -> Natives.setStreamHistory(isChecked) );*/
 	       var floatconfig=getbutton(context,R.string.floatglucose);
 	       floatconfig.setOnClickListener(v-> tk.glucodata.FloatingConfig.show(context));
 		View[] rowglu=new View[]{ bluetooth,floatconfig,alarmbut};

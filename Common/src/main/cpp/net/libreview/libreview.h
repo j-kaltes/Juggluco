@@ -106,6 +106,6 @@ extern jbyteArray getlibre2puttext(JNIEnv *env, const char *sensorname) ;
 extern bool putwhenneeded(bool libre3,SensorGlucoseData *sensdata) ;
 extern bool	libresendmeasurements(bool libre3,const char *measurements,const int len);
 
-extern bool sendlibre3viewdata(bool);
+extern bool sendlibre3viewdata(bool,uint32_t);
 #include "settings/mixpass.h"
 

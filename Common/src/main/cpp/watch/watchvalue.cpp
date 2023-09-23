@@ -68,7 +68,7 @@ const SensorGlucoseData *getlaststream(const uint32_t nu) {
 	const SensorGlucoseData *take=nullptr;
 	for(int i=0;i<usedsensors.size();i++) {
 		const int index=usedsensors[i];
-		const SensorGlucoseData *hist=sensors->gethist(index);
+		const SensorGlucoseData *hist=sensors->getSensorData(index);
 		const ScanData *poll=hist->lastpoll();
 		if(poll) {
 			uint32_t then=poll->t;

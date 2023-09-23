@@ -386,32 +386,3 @@ extern "C" JNIEXPORT void JNICALL   fromjava(wakehereonly)(JNIEnv *env, jclass c
 		backup->wakebackup();
 		}
 	}
-/*
-extern "C" JNIEXPORT jobjectArray  JNICALL   fromjava(activeSensors)(JNIEnv *env, jclass cl) {
-	setusedsensors();
-	const int len= usedsensors.size();
-	jobjectArray  sensjar = env->NewObjectArray(len,env->FindClass("java/lang/String"),nullptr);
-	 for(int i=0;i<len;i++) {
-	 	 int index=usedsensors[i];	
-		 env->SetObjectArrayElement(sensjar,i,env->NewStringUTF(sensors->shortsensorname(index)->data()));
-		  }
-
-	return sensjar;
-	}
-
-*/
-/*
-#ifndef NOWATCHSERVER
-void startwatchthread() ;
-
-extern "C" JNIEXPORT void JNICALL   fromjava(startwatchserver)(JNIEnv *env, jclass cl) {
-	 startwatchthread() ;
-	 }
-extern void stopwatchthread() ;
-
-extern "C" JNIEXPORT void JNICALL   fromjava(stopwatchserver)(JNIEnv *env, jclass cl) {
-
-	 stopwatchthread() ;
-	 }
-#endif
-*/

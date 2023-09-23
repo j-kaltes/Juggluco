@@ -837,7 +837,109 @@ curves, scans and numbers.</p>
 </string>
 <string name="sensorhelp" >
 <![CDATA[
-<p style="margin-top:25.000000000000004pt;margin-bottom:25.000000000000004pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'basic sans\';font-size:18pt;color:#000000;mso-style-textfill-fill-color:#000000"><b>Sensor</b></span></p><p style="margin-top:1.5000000000000002pt;margin-bottom:1.5000000000000002pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'basic roman\';font-size:10pt;color:#000000;mso-style-textfill-fill-color:#000000">The spinner contains the name of the sensor. If Juggluco is using more than one sensor at the same time, you can select for which sensor to show information.</span></p><p style="margin-top:1.5000000000000002pt;margin-bottom:1.5000000000000002pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'basic roman\';font-size:10pt;color:#000000;mso-style-textfill-fill-color:#000000"><i><b>Doze mode</b></i></span><span style="font-family:\'basic roman\';font-size:10pt;color:#000000;mso-style-textfill-fill-color:#000000"> leads you to a screen with information on how to disable battery optimizations for Juggluco, that can prevent Juggluco from functioning.</span></p><p style="margin-top:1.5000000000000002pt;margin-bottom:1.5000000000000002pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'basic roman\';font-size:10pt;color:#000000;mso-style-textfill-fill-color:#000000"><i><b>Permission</b></i></span><span style="font-family:\'basic roman\';font-size:10pt;color:#000000;mso-style-textfill-fill-color:#000000">: Previous versions of Juggluco required location permission to find the device address of the sensor. This is no longer necessary for the sensors I use. Maybe there are still sensors out there for </span><span style="font-family:\'basic roman\';font-size:10pt;color:#000000;mso-style-textfill-fill-color:#000000">which it is necessary; in that case you can turn it on. After the first contact Juggluco saves the device address and location permission is always useless. The device address, if known, is displayed after the sensor identifier. Red means a US-like sensor.</span></p><p style="margin-top:1.5000000000000002pt;margin-bottom:1.5000000000000002pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'basic roman\';font-size:10pt;color:#000000;mso-style-textfill-fill-color:#000000">Android 12 has a new Nearby devices permission, which can be used instead of location permission for searching for a Bluetooth device address, but it is also needed for later contact with Bluetooth devices.</span></p><p style="margin-top:1.5000000000000002pt;margin-bottom:1.5000000000000002pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'basic roman\';font-size:10pt;color:#000000;mso-style-textfill-fill-color:#000000"><i><b>Wakelock</b></i></span><span style="font-family:\'basic roman\';font-size:10pt;color:#000000;mso-style-textfill-fill-color:#000000">: Some users of Android 13 complain that Bluetooth stops functioning. Possibly turning this option on helps them. On my smartphone I don&apos;t need it and on Watch4 it doesn&apos;t make a difference. If it works, it will increase battery usage.</span></p><p style="margin-top:1.5000000000000002pt;margin-bottom:1.5000000000000002pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'basic roman\';font-size:10pt;color:#000000;mso-style-textfill-fill-color:#000000"><i><b>Terminate</b></i></span><span style="font-family:\'basic roman\';font-size:10pt;color:#000000;mso-style-textfill-fill-color:#000000">: stop connecting to this sensor via Bluetooth. If later you want again receive stream glucose values from this sensor, you only have to scan it again.</span></p><p style="margin-top:1.5000000000000002pt;margin-bottom:1.5000000000000002pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'basic roman\';font-size:10pt;color:#000000;mso-style-textfill-fill-color:#000000"><i><b>Turbo</b></i></span><span style="font-family:\'basic roman\';font-size:10pt;color:#000000;mso-style-textfill-fill-color:#000000">: Increases effort </span><span style="font-family:\'basic roman\';font-size:10pt;color:#000000;mso-style-textfill-fill-color:#000000">to contact with sensor in the hope that it results in less connection errors, but can uses more battery power. Seems to be needed on Watch4 with Freestyle Libre 2 sensors, but not with Freestyle Libre 3 sensors and on none of the smartphones I tried it on.</span></p><p style="margin-top:1.5000000000000002pt;margin-bottom:1.5000000000000002pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'basic roman\';font-size:10pt;color:#000000;mso-style-textfill-fill-color:#000000"><b>Android 13</b></span><span style="font-family:\'basic roman\';font-size:10pt;color:#000000;mso-style-textfill-fill-color:#000000">: Two users with a buggy Android 13 phone claimed that this setting solved their Bluetooth connection issues. Two users with Android 13 who previous didn&apos;t have connection problems claimed that they got connection problems from this setting.</span></p><p style="margin-top:1.5000000000000002pt;margin-bottom:1.5000000000000002pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'basic roman\';font-size:10pt;color:#000000;mso-style-textfill-fill-color:#000000"><i><b>Info</b></i></span><span style="font-family:\'basic roman\';font-size:10pt;color:#000000;mso-style-textfill-fill-color:#000000">: Gives start and end times and last scan and stream times of sensor.</span></p><p style="margin-top:1.5000000000000002pt;margin-bottom:1.5000000000000002pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'basic roman\';font-size:10pt;color:#000000;mso-style-textfill-fill-color:#000000">To connect to a Freestyle Libre 2 sensor via Low Energy Bluetooth, Bluetooth should be turned on. Before the sensor is scanned successfully by this app, nothing will happen. The sensor shouldn&apos;t be conne</span><span style="font-family:\'basic roman\';font-size:10pt;color:#000000;mso-style-textfill-fill-color:#000000">cted with FreeStyle reader or other applets on smartphones. Abbotts Librelink app&apos;s alarms should be turned off or the app stopped. Some Librelink apps seem to contact the sensor while alarms are turned off and can cause connection problems, so use &apos;</span><span style="font-family:\'basic roman\';font-size:10pt;color:#000000;mso-style-textfill-fill-color:#000000"><i>force stop</i></span><span style="font-family:\'basic roman\';font-size:10pt;color:#000000;mso-style-textfill-fill-color:#000000">&apos; to be certain. If you have started the sensor with Freestyle Reader and you can’t turn it off, you can prevent it from getting into contact with the sensor by putting the reader in a </span><a href="https://www.offgridweb.com/preparation/faraday-bags-testing-commercial-and-diy-wireless-signal-blockers/amp" title="https://www.offgridweb.com/preparation/faraday-bags-testing-commercial-and-diy-wireless-signal-blockers/amp"><span style="font-family:\'arial\';font-size:11pt;color:#0563c1;mso-style-textfill-fill-color:#0563c1"><u>Faraday cage</u></span></a><span style="font-family:\'basic roman\';font-size:10pt;color:#000000;mso-style-textfill-fill-color:#000000">.</span></p><p style="margin-top:1.5000000000000002pt;margin-bottom:1.5000000000000002pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'basic roman\';font-size:10pt;color:#000000;mso-style-textfill-fill-color:#000000"> </span><span style="font-family:\'basic roman\';font-size:10pt;color:#000000;mso-style-textfill-fill-color:#000000"><b>Sensor via Bluetooth/Use Bluetooth</b></span><span style="font-family:\'basic roman\';font-size:10pt;color:#000000;mso-style-textfill-fill-color:#000000"> should be turned on.</span></p><p style="margin-top:1.5000000000000002pt;margin-bottom:1.5000000000000002pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'basic roman\';font-size:10pt;color:#000000;mso-style-textfill-fill-color:#000000">If the above conditions are satisfied, it can still take a long time before the app receives glucose values from the sensor. Often it takes a minute, but at other times it takes much longer. The </span><span style="font-family:\'basic roman\';font-size:10pt;color:#000000;mso-style-textfill-fill-color:#000000"><i>Connection stage</i></span><span style="font-family:\'basic roman\';font-size:10pt;color:#000000;mso-style-textfill-fill-color:#000000"> gives the most difficulties. The most frequent are failures with status=133, which is the status argument of </span><a href="#onConnectionStateChange_android_bluetooth_BluetoothGatt__20int__20int_" title="Current Document"><span style="font-family:\'basic roman\';font-size:10pt;color:#000000;mso-style-textfill-fill-color:#000000"><u>onConnectionStateChange(BluetoothGatt bluetoothGatt, int status, int newState)</u></span></a><span style="font-family:\'basic roman\';font-size:10pt;color:#000000;mso-style-textfill-fill-color:#000000">. It means </span><span style="font-family:\'basic roman\';font-size:10pt;color:#000000;mso-style-textfill-fill-color:#000000"><i>Bluetooth device not found</i></span><span style="font-family:\'basic roman\';font-size:10pt;color:#000000;mso-style-textfill-fill-color:#000000">. Nearly always it just takes some time before the device is found. It is also possible that the sensor is connected to another device, temperary not functioning well, other devices a</span><span style="font-family:\'basic roman\';font-size:10pt;color:#000000;mso-style-textfill-fill-color:#000000">re interfering or the Bluetooth of Android doesn’t function. Sometimes turning Bluetooth off and on seems to help or rebooting the phone or turning off the Bluetooth connection of other devices. Other problems are sometimes resolved by scanning the sensor.</span></p><p style="margin-top:1.5000000000000002pt;margin-bottom:1.5000000000000002pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'basic roman\';font-size:10pt;color:#000000;mso-style-textfill-fill-color:#000000">Scanning the sensor with Juggluco (with </span><span style="font-family:\'basic roman\';font-size:10pt;color:#000000;mso-style-textfill-fill-color:#000000"><i>Sensor via Bluetooth</i></span><span style="font-family:\'basic roman\';font-size:10pt;color:#000000;mso-style-textfill-fill-color:#000000"> enabled) on another phone, will steal the connection away from this phone and it can take some time, with scanning in between, to get it back again.</span></p><p style="margin-top:3.0000000000000004pt;margin-bottom:3.0000000000000004pt;border:none;border-left:none;border-top:none;border-right:none;border-bottom:none;mso-border-between:none"><span style="font-family:\'basic roman\';font-size:10pt;color:#000000;mso-style-textfill-fill-color:#000000"> </span></p>]]>
+<p style="margin-top: 0.35in; margin-bottom: 0.35in; border: none; padding: 0in">
+<font face="basic sans"><font size="5" style="font-size: 18pt"><b>Sensor</b></font></font></p>
+<p style="margin-top: 0.02in; margin-bottom: 0.02in; border: none; padding: 0in">
+<font face="basic roman"><font size="2" style="font-size: 10pt">T<font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">he
+spinner contains the name of the sensor. If Juggluco is using more
+than one sensor at the same time, you can select for which sensor to
+show information.</font></font></font></font></p>
+<p style="margin-top: 0.02in; margin-bottom: 0.02in; border: none; padding: 0in">
+<font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><i><b>Doze
+mode</b></i> leads you to a screen with information on how to disable
+battery optimizations for Juggluco, that can prevent Juggluco from
+functioning.</font></font></p>
+<p style="margin-top: 0.02in; margin-bottom: 0.02in; border: none; padding: 0in">
+<font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><i><b>Stream
+history</b></i>: On Libre 0 and 2, history are values of the past in
+15 minute interval. Previously they were only received by scanning.
+When you turn this option on, the History values are also received
+via Bluetooth. Also other things will work differently. To Libreview
+will be sent the history values, instead of averages of the stream
+values. The disadvantage is that it is slower. This can be an issue
+on WearOS watches.</font></font></p>
+<p style="margin-top: 0.02in; margin-bottom: 0.02in; border: none; padding: 0in">
+<font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">This
+option is always turned on for Libre 3 sensors and US Libre 2
+sensors.</font></font></p>
+<p style="margin-top: 0.02in; margin-bottom: 0.02in; border: none; padding: 0in">
+<font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><i><b>Permission</b></i>:
+Previous versions of Juggluco required location permission to find
+the device address of the sensor. This is no longer necessary for the
+sensors I use. Maybe there are still sensors out there for which it
+is necessary; in that case you can turn it on. After the first
+contact Juggluco saves the device address and location permission is
+always useless. The device address, if known, is displayed after the
+sensor identifier. Red means a US-like sensor.</font></font></p>
+<p style="margin-top: 0.02in; margin-bottom: 0.02in; border: none; padding: 0in">
+<font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">Android
+12 has a new Nearby devices permission, which can be used instead of
+location permission for searching for a Bluetooth device address, but
+it is also needed for later contact with Bluetooth devices.</font></font></p>
+<p style="margin-top: 0.02in; margin-bottom: 0.02in; border: none; padding: 0in">
+<font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><i><b>Terminate</b></i>:
+stop connecting to this sensor via Bluetooth. If later you want again
+receive stream glucose values from this sensor, you only have to scan
+it again.</font></font></p>
+<p style="margin-top: 0.02in; margin-bottom: 0.02in; border: none; padding: 0in">
+<font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><i><b>Turbo</b></i>:
+Increases effort to contact with sensor in the hope that it results
+in less connection errors, but can uses more battery power. Seems to
+be needed on Watch4 with Freestyle Libre 2 sensors, but not with
+Freestyle Libre 3 sensors and on none of the smartphones I tried it
+on.</font></font></p>
+<p style="margin-top: 0.02in; margin-bottom: 0.02in; border: none; padding: 0in">
+<font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><b>Android</b>:
+Let Android instead of Juggluco make the connection with the sensor.</font></font></p>
+<p style="margin-top: 0.02in; margin-bottom: 0.02in; border: none; padding: 0in">
+<font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><i><b>Info</b></i>:
+Gives start and end times and last scan and stream times of sensor.</font></font></p>
+<p style="margin-top: 0.02in; margin-bottom: 0.02in; border: none; padding: 0in">
+<font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">To
+connect to a Freestyle Libre 2 sensor via Low Energy Bluetooth,
+Bluetooth should be turned on. Before the sensor is scanned
+successfully by this app, nothing will happen. The sensor shouldn\'t
+be connected with FreeStyle reader or other applets on smartphones.
+Abbotts Librelink app\'s alarms should be turned off or the app
+stopped. Some Librelink apps seem to contact the sensor while alarms
+are turned off and can cause connection problems, so use \'</font></font><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><i>force
+stop</i></font></font><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">\'
+to be certain. If you have started the sensor with Freestyle Reader
+and you can’t turn it off, you can prevent it from getting into
+contact with the sensor by putting the reader in a </font></font><a href="https://www.offgridweb.com/preparation/faraday-bags-testing-commercial-and-diy-wireless-signal-blockers/amp"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><u>Faraday
+cage</u></font></font></a><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">.</font></font></p>
+<p style="margin-top: 0.02in; margin-bottom: 0.02in; border: none; padding: 0in">
+&nbsp;<font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><b>Sensor
+via Bluetooth/Use Bluetooth</b> should be turned on.</font></font></p>
+<p style="margin-top: 0.02in; margin-bottom: 0.02in; border: none; padding: 0in">
+<font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">If
+the above conditions are satisfied, it can still take a long time
+before the app receives glucose values from the sensor. Often it
+takes a minute, but at other times it takes much longer. The
+</font></font><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><i>Connection
+stage</i></font></font><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">
+gives the most difficulties. The most frequent are failures with
+status=133, which is the status argument of
+</font></font><a href="#onConnectionStateChange_android_bluetooth_BluetoothGatt__20int__20int_"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><u>onConnectionStateChange(BluetoothGatt
+bluetoothGatt, int status, int newState)</u></font></font></a><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">.
+It means </font></font><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><i>Bluetooth
+device not found</i></font></font><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">.
+Nearly always it just takes some time before the device is found. It
+is also possible that the sensor is connected to another device,
+temperary not functioning well, other devices are interfering or the
+Bluetooth of Android doesn’t function. Sometimes turning Bluetooth
+off and on seems to help or rebooting the phone or turning off the
+Bluetooth connection of other devices. Other problems are sometimes
+resolved by scanning the sensor.</font></font></p>
+<p style="margin-top: 0.02in; margin-bottom: 0.02in; border: none; padding: 0in">
+<font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">Scanning
+the sensor with Juggluco (with <i>Sensor via Bluetooth</i> enabled)
+on another phone, will steal the connection away from this phone and
+it can take some time, with scanning in between, to get it back
+again.</font></font></p>
+<p style="margin-top: 0.04in; margin-bottom: 0.04in; border: none; padding: 0in">
+&nbsp;</p>
+]]>
 </string>
 <string name="watchhelp" >
 <![CDATA[
@@ -1371,23 +1473,20 @@ not.</p>
 <![CDATA[
 <h1>Libreview</h1>
 <p style="line-height: 100%; margin-bottom: 0in">Juggluco can send
-glucose data and amounts to Libreview.</p>
-<p style="line-height: 100%; margin-bottom: 0in">If you use Abbotts
-Libre app for Freestyle Libre 2 sensors, Libreview is based on the
-history data out of the memory of the sensor. For this you need to
-scan the sensor.</p>
-<p style="line-height: 100%; margin-bottom: 0in">Juggluco uses the
-stream data received via Bluetooth to create these 15 minute points
-by averaging the stream values around each point. Now and then it
-also sends an individual stream value in the same way as individual
-scanned values are sent to Libreview by Abbott\'s Librelink app.
-Juggluco doesn\'t need to be constantly connected to the internet for
-all data to be sent to Libreview. Like the Librelnk app, it sends
-data from the last 89 days to Libreview. What is necessary is that
-Juggluco is constantly connected to a Freestyle Libre 2 sensor via
-Bluetooth. For Freestyle Libre 3 sensors the 5 minutes history data
-is used, so that all previous values are sent to Libreview. 
-</p>
+glucose data and amounts to Libreview. Juggluco uses the stream data
+received via Bluetooth to create these 15 minute points by averaging
+the stream values around each point. Now and then it also sends an
+individual stream value in the same way as individual scanned values
+are sent to Libreview by Abbott\'s Librelink app. Juggluco doesn\'t
+need to be constantly connected to the internet for all data to be
+sent to Libreview. Like the Librelnk app, it sends data from the last
+89 days to Libreview. What is necessary is that Juggluco is
+constantly connected to a Freestyle Libre 2 sensor via Bluetooth. For
+Freestyle Libre 3 sensors the 5 minutes history data is used, so that
+all previous values are sent to Libreview. From Juggluco 6.0.0 on
+history values will also be used when &quot;<i>Stream history</i>&quot;
+is enabled in Left menu-&gt;Sensor or with US/CA/AU Libre 2 sensors
+and Libre 0 sensors.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><span lang="en-US">To
 make use of this service, you need to create a Libreview account at
 <a class="western" href="https://libreview.com/">https://libreview.com</a>
@@ -1412,19 +1511,16 @@ label means.</p>
 <p style="line-height: 100%; margin-bottom: 0in">Starting with
 Juggluco 4.1.0 glucose values from FreeStyle Libre 3 sensors are also
 send to LibreView.</p>
-<p style="line-height: 100%; margin-bottom: 0in"><b>Libre3 immediate</b>:
+<p style="line-height: 100%; margin-bottom: 0in"><b>Immediate</b>:
 Send glucose values to Libreview immediately when they arrive from
-Libre 3 sensors. This is only useful in combination with LibreLinkUp.
-To make use of it you need to add a LibrelinkUp connection to this
-Libreview account in one of Abbott\'s Libre apps. Sometimes the value
-is not immediately visible, because display of <span style="font-weight: normal">LibreLinkUp</span>
-isn\'t redrawn automatically. Using LibreLinkup is quite dangerous if
-you don\'t look closely, because when you touch the graph, it shows an
-old value instead of the current glucose value.</p>
-<p style="line-height: 100%; margin-bottom: 0in">LibreLinkUp can not
-be used with Libre 2 sensors: one cannot plausibly claim to scan
-every minute the whole day long. Instead, make use of a mirror
-connection or Nightscout.</p>
+Libre 2 or 3 sensors. This is only useful in combination with
+LibreLinkUp. To make use of it you need to add a LibrelinkUp
+connection to this Libreview account in one of Abbott\'s Libre apps.
+Sometimes the value is not immediately visible, because display of
+<span style="font-weight: normal">LibreLinkUp</span> isn\'t redrawn
+automatically. Using LibreLinkup is quite dangerous if you don\'t look
+closely, because when you touch the graph, it shows an old value
+instead of the current glucose value.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>Resend data</b>:
 Start anew; resend data of the last 90 days to Libreview. You need to
 press this when switching to a new Libreview account.</p>

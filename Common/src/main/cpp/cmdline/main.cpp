@@ -644,7 +644,7 @@ void     processglucosevalue(int sendindex,int newstart) {
 	if(!sensors)
 		return;
 	LOGGER("processglucosevalue %d %d\n", sendindex,newstart);
-	if(SensorGlucoseData *hist=sensors->gethist(sendindex)) {
+	if(SensorGlucoseData *hist=sensors->getSensorData(sendindex)) {
 		if(newstart>=0) {
 			LOGGER("newstart=%d\n",newstart);
 			hist->backstream(newstart);

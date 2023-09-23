@@ -56,16 +56,16 @@ extern std::string_view globalbasedir;
 //string basedir(FILEDIR);
 constexpr int maxminutes=22000;
 struct ScanData {uint32_t t;int32_t id;int32_t g;int32_t tr;float ch;
-const uint16_t getmgdL() const { return g;};
-const float getmmolL() const { return g/convfactordL;};
-const uint16_t getsputnik() const { return g*10;};
+ uint16_t getmgdL() const { return g;};
+ float getmmolL() const { return g/convfactordL;};
+ uint16_t getsputnik() const { return g*10;};
 float getchange() const {
 	return ch;
 	}
 uint32_t gettime() const {
 	return t;
 	};
-const uint32_t getid() const {return id;};
+ uint32_t getid() const {return id;};
 bool valid(int pos=1) const {
 	if(pos&&!t) {
 		ScanData *ht=const_cast<ScanData*>(this);
@@ -83,11 +83,28 @@ struct Glucose {
 uint32_t time;
 uint16_t id;
 uint16_t glu[];
-const uint16_t getraw() const { return glu[0];};
-const uint16_t getsputnik() const { return glu[1];};
-const uint16_t getmgdL() const { return glu[1]/10;};
-const uint32_t gettime() const {return time;};
-const uint32_t getid() const {return id;};
+uint16_t getraw() const { return glu[0];};
+uint16_t getsputnik() const { return glu[1];};
+uint16_t getmgdL() const { return glu[1]/10;};
+uint32_t gettime() const {return time;};
+uint32_t getid() const {return id;};
+bool isStreamed() const {
+	return glu[2]&0x4000;
+	}
+void setStreamed()  {
+	glu[2]|=0x4000;
+	}
+	/*
+bool isLibreSend() const {
+	return glu[2]&0x8000;
+	}
+void setLibreSend()  {
+	glu[2]|=0x8000;
+	}
+void unSetLibreSend() {
+	glu[2]&=~0x8000;
+	}
+	*/
 bool valid() const {
 	return glu[1]&&glu[1]>380&&glu[1]<5020&&id>=0&&id<maxminutes&&time>1598911200u&&time<2145909600u;
 	}
@@ -151,10 +168,12 @@ int8_t patchState;
 uint16_t reserved4:15;
 bool auth12:1;
 char deviceaddress[deviceaddresslen];
-uint16_t libreviewscan;
+uint16_t libreviewScan;
 uint8_t authlendontuse;
 
-uint8_t reserved:6;
+uint8_t reserved:4;
+bool realHistory:1;
+bool newscan:1;
 
 bool sendsensorstart:1;
 bool libreviewsendall:1;
@@ -165,6 +184,24 @@ updatestate update[std::max(maxsendtohost,8)];
 uint8_t kAuth[149];
 bool haskAuth;
 uint16_t nightiter;
+uint32_t libreCurrentIter;
+int16_t scanoff;
+uint16_t endStreamhistory; 
+uint16_t startedwithStreamhistory; 
+uint16_t libreviewnotsendHistory;
+bool sendLibre[15*24*4];
+void clearLibreSend(int end) {
+	bzero(sendLibre,sizeof(sendLibre));
+	}
+bool isLibreSend(int pos ) const {
+	return sendLibre[pos];
+	}
+void setLibreSend(int pos)  {
+	sendLibre[pos]=true;
+	}
+void unSetLibreSend(int pos) {
+	sendLibre[pos]=false;
+	}
 
 bool infowrong() const {
 	if(days<10||days>16)
@@ -189,7 +226,6 @@ std::span<const uint8_t> getauth() const {
 	return {streamingAuthenticationData,static_cast<size_t>((auth12?12:10))};
 	}
 } ;
-
 //pathconcat sensordir;
 //pathconcat scanfile;
 Mmap<unsigned char>  meminfo;
@@ -265,7 +301,7 @@ void setbluetoothOn(int val) {
 	}
 uint32_t getfirsttime() const {
 	uint32_t locfirstpos=getstarthistory()+1;
-	for(int pos=locfirstpos,end=std::min(getendhistory(),maxpos());pos<end;pos++) {
+	for(int pos=locfirstpos,end=std::min(getAllendhistory(),maxpos());pos<end;pos++) {
 		int16_t id =getid(pos);
 		uint32_t tim=timeatpos(pos);
 		if(id&&tim)
@@ -279,7 +315,7 @@ void checkhistory(std::ostream &os) {
 	int minhistinterval=interval/60;
 	uint32_t locfirstpos=getstarthistory()+1;
 	int som=0;
-	for(int pos=locfirstpos,end=std::min(getendhistory(),maxpos()),loclastpos=locfirstpos;pos<end;pos++) {
+	for(int pos=locfirstpos,end=std::min(getAllendhistory(),maxpos()),loclastpos=locfirstpos;pos<end;pos++) {
 		int16_t id =getid(pos);
 		uint32_t nu=timeatpos(pos);
 		if(id&&nu) {
@@ -340,11 +376,21 @@ int32_t getstarthistory() const {
 inline void setstarthistory(int pos)  {
 	getinfo()->starthistory=pos;
 	}
+	/*
 int32_t getendhistory() const {
 	return getinfo()->endhistory;
+	} */
+int32_t getAllendhistory() const {
+	return std::max(getStreamendhistory(), getScanendhistory());
+	}
+int getStreamendhistory() const { 
+	return getinfo()->endStreamhistory; 
+	}
+int getScanendhistory() const { 
+	return getinfo()->endhistory; 
 	}
 uint32_t getlasttime() const {
-	return timeatpos(getendhistory()-1);
+	return timeatpos(getAllendhistory()-1);
 	}
 inline int getlastpos(int pos) {
 	if(pos<getinfo()->starthistory)
@@ -354,6 +400,13 @@ inline int getlastpos(int pos) {
 inline void setendhistory(int pos)  {
 	getinfo()->endhistory=pos;
 	}
+inline void setendStreamhistory(int pos)  {
+	getinfo()->endStreamhistory=pos;
+	}
+inline void setendScanhistory(int pos)  {
+	getinfo()->endhistory=pos;
+	}
+
 inline const uint8_t *elstart(int pos) const {
 	return &historydata[pos*getelsize()];
 	}
@@ -368,30 +421,7 @@ Glucose * getglucose(int pos)  {
 const Glucose * getglucose(int pos) const {
 	return reinterpret_cast<const Glucose *>( &historydata[pos*getelsize()]);
 	};
-/*
-Wrong Glucose has variable size
-const std::span<const Glucose> getHistoryData() const {
-	const auto first=getstarthistory();
-	const size_t count=getendhistory()-first+1;
-	return std::span<const Glucose>(getglucose(first),count);
-	}
-template<int N>
-void saveel(int pos,time_t tin,uint16_t id, uint16_t const (&glu)[N]) {
-	assert(N<=getinfo()->dupl);
-	int idpos=int(round(id/(double)getmininterval()));
-	if(pos!=idpos) {
-		LOGGER("GLU: saveel %d!=%d\n",pos,idpos);
-		return;
-		}
-	uint32_t time=static_cast<uint32_t>(tin);
-	uint8_t *memstart=elstart(pos);
-	memcpy(memstart,&time,sizeof(time));
-	memstart+=sizeof(time);
-	memcpy(memstart,&id,sizeof(id));
-	memstart+=sizeof(id);
-	memcpy(memstart,glu,N*sizeof(*glu));
-	}
-	*/
+
 template<int N>
 void saveel(int pos,time_t tin,uint16_t id, uint16_t const (&glu)[N]) {
 	int idpos=int(round(id/(double)getmininterval()));
@@ -474,7 +504,7 @@ void dumpdata(std::ostream &os,uint32_t locfirstpos,uint32_t loclastpos) {
 	}
 void exporttsv(const char * file) {
 	std::ofstream uit(file);
-	dumpdata(uit,getstarthistory(),getendhistory());
+	dumpdata(uit,getstarthistory(),getAllendhistory());
 	uit.close();
 	}
 
@@ -590,9 +620,10 @@ E07A-000T3YL1R50
  bool isLibre3() const {
 	return getinfo()->interval==interval5;
 	}
+	/*
  bool libreviewable() const {
 	return !isLibre3()&&pollcount();
-	}
+	} */
 static	constexpr uint16_t interval5=5*60;
 static bool mkdatabase3(string_view sensordir,time_t start,uint32_t pin,const char *address) {
      LOGGER("mkdatabase3(%s,%s)",sensordir.data(),ctime(&start));
@@ -661,7 +692,7 @@ size_t maxscansize()  {
 	const int days=	std::max((int)getinfo()->days,15);
 	const int scanblocks=ceil((40*days*sizeof(ScanData))/blocksize);
         int used=getinfo()->scancount*sizeof(ScanData);
-        int past= getinfo()->endhistory-getinfo()->starthistory;
+        int past= getAllendhistory()-getinfo()->starthistory;
 	if(past<0||used<0) {
 		LOGGER("past=%d used=%d\n",past,used);
 		haserror=true;
@@ -891,11 +922,9 @@ bool savepollallIDs(time_t tim,const int id,int glu,int trend,float change) {
 	return true;
 	}
 
-//uint16_t lastLifeCountReceived;
-//uint16_t lastHistoricLifeCountReceived;
 
 
-//struct ScanData uint32_t t;int32_t id;int32_t g;int32_t tr;float ch;
+
 void consecutivelifecount() {
 	int pos=getinfo()->lastLifeCountReceived;
 	int count=getinfo()->pollcount;
@@ -919,7 +948,7 @@ void fastupdatelifecount(int fastcount) {
 	}
 void consecutivehistorylifecount() {
 	const int pos=getinfo()->lastHistoricLifeCountReceivedPos;
-	const int count=getendhistory();
+	const int count=getScanendhistory();
 #ifndef NOLOG
 	destruct _des([pos,count,this]{
 	LOGGER("consecutivehistorylifecount() lastHistoricLifeCountReceivedPos=%d getendhistory=%d  new lastHistoricLifeCountReceivedPos=%d\n",pos,count,getinfo()->lastHistoricLifeCountReceivedPos); });
@@ -1024,9 +1053,7 @@ void updateinit(const int ind) {
 		}
 	getinfo()->update[ind]={};	
 	}
-static constexpr auto datelen=sizeof("2021-04-21-13:38:34")-1;
 
-inline static constexpr const auto norawstream=std::numeric_limits<decltype(updatestate::rawstreamstart)>::max();
 
 
 static const ScanData *firstnotless(std::span<const ScanData> dat,const uint32_t start) {
@@ -1061,14 +1088,23 @@ dataonlyptr  getfromfile(crypt_t *pass,int sock, std::string_view filename,int o
 	};
 
 int posearlier(int pos,uint32_t starttime) {
+#ifndef NOLOG
+	time_t timt=starttime;
+	LOGGER("postearlier %d %s",pos,ctime(&timt));
+#endif
 	for(int	i=pos-1;i>=0;i--) { //CHANGED
 		if(uint32_t tim=timeatpos(i)) {
-			if(tim<=starttime)
+			if(tim<=starttime) {
+				LOGGER("pos=%d\n",i+1);
 				return i+1; 	
-			else
+				}
+			else  {
+				LOGAR("pos=-1?");
 				return -1;
+				}
 			}
 		}
+	LOGAR("pos=0");
 	return 0;
 	}
 
@@ -1105,7 +1141,7 @@ bool setbackuptimes(crypt_t *pass,int sock,int ind,uint32_t starttime) {
 	} */
 uint32_t getbackuptimehistory(uint32_t starttime)  {
 	int pos=gettimepos(starttime);
-	const int endpos=getendhistory();
+	const int endpos=getAllendhistory();
 	const int first=getstarthistory();
 	if(pos<first)
 		pos=first;
@@ -1123,7 +1159,10 @@ uint32_t getbackuptimehistory(uint32_t starttime)  {
 				}
 			}
 		}
-	LOGGER("GLU: setbackuptimehistory pos=%d\n",pos);
+#ifndef NOLOG
+	time_t tim=starttime;
+	LOGGER("GLU: setbackuptimehistory pos=%d %s",pos,ctime(&tim));
+#endif
 	return pos;
 	}
 	/*
@@ -1138,8 +1177,8 @@ void backstream(int pos) ;
 
 bool setbackuptime(crypt_t *pass,int sock,int ind,uint32_t starttime) {
 	
-	const int asklen= offsetof(Info,pollinterval);
-	const int minlen= offsetof(Info,pollcount);
+	constexpr const int asklen= offsetof(Info,pollinterval);
+	constexpr const int minlen= offsetof(Info,pollcount);
 	LOGGER("GLU: %s setbackuptime %u asklen=%d\n",shortsensorname()->data(),starttime,asklen);
 	auto dontdestroy=getfromfile(pass,sock,infopath, 0,asklen);
        dataonly *dat=dontdestroy.get();
@@ -1152,20 +1191,34 @@ bool setbackuptime(crypt_t *pass,int sock,int ind,uint32_t starttime) {
 
 	if(dat->len>=minlen) {
 		const Info *infothere=reinterpret_cast<const Info*>(dat->data);
-
-		if(getinfo()->update[ind].scanstart==0&&getinfo()->update[ind].histstart==0) {
-			uint32_t histend=infothere->endhistory;
+		if(getinfo()->update[ind].scanstart==0) {
 			uint32_t scantime= infothere->lastscantime;
-			int histpos;
-			uint32_t histstart=getinfo()->update[ind].histstart= (scantime<starttime&&(histpos=posearlier(histend,starttime))>=0)?histpos:getbackuptimehistory(starttime);
 			uint32_t scanend=infothere->scancount;
 			uint32_t scanstart=getinfo()->update[ind].scanstart=(scantime<starttime)?scanend:getbackuptimescan(starttime);
-			LOGGER("GLU: hist start=%d endhistory=%d, scanstart=%d scancount=%d\n",histstart,histend,scanstart,scanend);
+			LOGGER("GLU: scanstart=%d scancount=%d\n",scanstart,scanend);
+			}
+		else {
+			LOGGER("GLU scanstart=%d\n",getinfo()->update[ind].scanstart);
+			}
+		if(getinfo()->update[ind].histstart==0) { //TODO why only when it is zero?
+		//Why not just the from the position with that time here?
+		//Why get it when it is not used?
+			uint32_t histend=infothere->endhistory;
+			int histpos;
+			uint32_t histstart=getinfo()->update[ind].histstart= (histpos=posearlier(histend,starttime)>=0)?histpos:getbackuptimehistory(starttime);
+
+			LOGGER("GLU: hist start=%d endhistory=%d\n",histstart,histend);
+			}
+		else {
+			LOGGER("GLU histstart=%d\n",getinfo()->update[ind].histstart);
 			}
 		if(getinfo()->update[ind].streamstart==0) {
 			uint32_t streamend=(dat->len<asklen)?0:infothere->pollcount;
 			uint32_t streamstart=getinfo()->update[ind].streamstart=getbackuptimestream(starttime);
 			LOGGER("GLU: streamstart=%d streamend=%d\n", streamstart,streamend);
+			}
+		else {
+			LOGGER("GLU streamstart=%d\n",getinfo()->update[ind].streamstart);
 			}
 		}
 	return true;
@@ -1175,12 +1228,24 @@ bool setbackuptime(crypt_t *pass,int sock,int ind,uint32_t starttime) {
 static uint16_t streamupdatecmd(int sensindex) {
 	return sensindex<0?0:(streamupdatebit|sensindex);
 	}
+
+void setupdatechange(int maxind,uint32_t updatestate::*member,uint32_t value ) {
+	updatestate  *up= getinfo()->update;
+	for(int i=0;i<maxind;i++) {
+		if(up[i].*member>value)
+			up[i].*member=value;
+			
+		}
+	}
+void setstarthistback(int maxint,uint32_t histchange) {
+	setupdatechange(maxint,&updatestate::histstart,histchange);
+	}
 void setsendstreaming(int maxind) {
 	updatestate  *up= getinfo()->update;
 	for(int i=0;i<maxind;i++) {
 		up[i].sendstreaming=true;
 		}
-	}
+	} 
 void setsendKAuth(int maxind) {
 	updatestate  *up= getinfo()->update;
 	for(int i=0;i<maxind;i++) {
@@ -1195,10 +1260,16 @@ void sendbluetoothOn(int maxind) {
 		up[i].sendbluetoothOn=true;
 		}
 	}
-int updatestream(crypt_t *pass,int sock,int ind,int sensindex)  {
+/*
+sendscan:	
+0: don't send history
+1: also via stream
+2: also via scan
+*/
+int updatestream(crypt_t *pass,int sock,int ind,int sensindex,int sendscan)  {
 	getinfo()->update[ind].changedstreamstart=false;
 	int streamstart=getinfo()->update[ind].streamstart;
-	LOGGER("updatestream sock=%d ind=%d sensindex=%d streamstart=%d\n",sock,ind,sensindex,streamstart);
+	LOGGER("updatestream sock=%d ind=%d sensindex=%d streamstart=%d sendscan=%d\n",sock,ind,sensindex,streamstart,sendscan);
 	struct {
 		uint32_t pollcount;
 		double pollinterval; 
@@ -1222,7 +1293,43 @@ int updatestream(crypt_t *pass,int sock,int ind,int sensindex)  {
 			LOGSTRING("GLU: senddata polls.dat failed\n");
 			return 0;
 			}
-		if(!senddata(pass,sock,off,reinterpret_cast<uint8_t*>(&pollinfo),len, infopath,cmd,reinterpret_cast<const uint8_t *>(&streamstart),sizeof(streamstart))) {
+
+//		int histend=-1;
+	  struct {
+	  	uint16_t endStreamhistory; 
+		uint16_t startedwithStreamhistory; 
+		} endinfo;
+		std::vector<subdata> vect;
+		switch(sendscan) {
+			case 1: {
+				memcpy(&endinfo,&getinfo()->endStreamhistory,sizeof(endinfo));
+//				histend=getStreamendhistory();
+				int res=newsendhistory(pass,sock,ind,sensindex, true,endinfo.endStreamhistory) ;
+				if(!res) {
+					return 0;
+					}
+				vect.reserve(2);
+				};break;
+			case 2: {
+				memcpy(&endinfo,&getinfo()->endStreamhistory,sizeof(endinfo));
+			//	histend=getStreamendhistory();
+				int res=oldsendhistory(pass,sock,ind, sensindex,false,endinfo.endStreamhistory) ;
+				if(!res) {
+					return 0;
+					}
+				vect.reserve(2);
+				break;
+				}
+			default: 
+				vect.reserve(1);
+				break;
+			};
+		vect.push_back({reinterpret_cast<uint8_t*>(&pollinfo),off,len});
+		if(sendscan) {
+			vect.push_back({reinterpret_cast<const senddata_t *>(&endinfo),offsetof(Info,endStreamhistory),sizeof(endinfo)});
+			}
+
+		 if(!senddata(pass,sock,vect, infopath,cmd,reinterpret_cast<const uint8_t *>(&streamstart),sizeof(streamstart))) {
 			LOGSTRING("GLU: senddata info.data failed\n");
 			return 0;
 			}
@@ -1235,10 +1342,12 @@ int updatestream(crypt_t *pass,int sock,int ind,int sensindex)  {
 			LOGSTRING("startchanged\n");
 			}
 		if(isLibre3()) {
-			if(sendhistory(pass,sock,ind,sensindex,true))
+			int endhistory=getScanendhistory();	
+			if(oldsendhistory(pass,sock,ind,sensindex,true,endhistory))
 				return 1;
 			return 0;
 			}
+
 		return 1;
 		}
 	else {
@@ -1259,11 +1368,14 @@ private:
 
 
 int sendhistoryinfo(crypt_t *pass,int sock,int sensorindex,uint32_t histstart,uint32_t endhistory) ;
-int sendhistory(crypt_t *pass,int sock,int ind,int sendindex,bool) ;
+//int sendhistory(crypt_t *pass,int sock,int ind,int sendindex,bool) ;
+int oldsendhistory(crypt_t *pass,int sock,int ind,int sensorindex,bool sendinfo,int histend) ;
+int newsendhistory(crypt_t *pass,int sock,int ind,int sensorindex,bool sendStream,int histend) ;
+
 public:
-int updatescan(crypt_t *pass,int sock,int  ind,int sensorindex,bool=false); 
-int updatescanalg(crypt_t *pass,int sock,int  ind,int sensorindex) { 
-	return updatescan(pass,sock,ind,sensorindex,false)&3; 
+int updatescan(crypt_t *pass,int sock,int  ind,int sensorindex,bool,int sendstream); 
+int updatescanalg(crypt_t *pass,int sock,int  ind,int sensorindex,int alsostream) { 
+	return updatescan(pass,sock,ind,sensorindex,false,alsostream)&3; 
 	}
 int lastlifecount=0;
 time_t timelastcurrent=0;

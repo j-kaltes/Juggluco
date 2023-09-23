@@ -258,7 +258,7 @@
 <string name="newport">"new port ="</string>
 <string name="webserver">Web server</string>
 <string name="treatments">Give Amounts</string>
-<string name="android13">Android 13</string>
+<string name="android13">Android</string>
     <string name="wentwrong">Something went wrong</string>
     <string name="dosis">" dose "</string>
     <string name="doses">" doses "</string>
@@ -272,12 +272,13 @@
  <string name="defaults">Defaults</string>
     <string name="notify">Notify</string>
  <string name="separate">Separate</string>
-    <string name="librecurrent">Libre3 immediate</string>
+    <string name="librecurrent">Immediate</string>
     <string name="USE_ALARM">Alarm is alarm</string>
     <string name="speed">Speed</string>
  <string name="pitch">Pitch</string>
  <string name="talker">Voice</string>
  <string name="secondsbetween">Seconds between</string>
  <string name="test">Test</string>
+ <string name="streamhistory">Stream history</string>
 
 </resources>

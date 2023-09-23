@@ -179,7 +179,7 @@ static void finishsensor(const nfc1 &first) {
 	if(sensorindex>=0) {
 		sensors->finishsensor(sensorindex);
 		LOGGER("finishsensor %.16s %d\n",name,sensorindex);
-		if(SensorGlucoseData *sens=sensors->gethist(sensorindex) ) {
+		if(SensorGlucoseData *sens=sensors->getSensorData(sensorindex) ) {
 extern void	setstreaming(SensorGlucoseData *hist) ;
 			setstreaming(sens); 
 extern					void setusedsensors() ;
@@ -243,7 +243,7 @@ extern "C" JNIEXPORT jlong JNICALL fromjava(interpret3NFC2)(JNIEnv *env, jclass 
 	LOGGER("deviceaddress=%s pin=%s activation: %s",devaddress,pinhex.str(),ctime(&acttime));
 #endif
 	int sensindex=sensors->makelibre3sensorindex(std::string_view(first.nfc.serialnumber,9),acttime,nfc->pin,devaddress,now);
-	SensorGlucoseData *sens=sensors->gethist(sensindex);
+	SensorGlucoseData *sens=sensors->getSensorData(sensindex);
 	sendstreaming(sens); 
 	libre3stream *streamd=new libre3stream(sensindex,sens);
 	return reinterpret_cast<jlong>(streamd);

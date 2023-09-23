@@ -90,11 +90,8 @@ static public boolean setlibrary(Applic con) {
 if(true) {
 	var loc=Locale.getDefault();
        String country=loc.getCountry();
-//	var locstr=con.getString(R.string.language);
 	var locstr=loc.getLanguage();
-//	var locstr=getlanguage(con);
 	Applic.curlang=locstr;
-        Natives.setlocale(locstr,(tk.glucodata.Applic.hour24=android.text.format.DateFormat.is24HourFormat(con)));
         File files=con.getFilesDir();
 	String filespath=files.getAbsolutePath();
 	if(!files.isDirectory())  {
@@ -158,6 +155,8 @@ if(true) {
 			break;
 		default:
 	}
+
+        Natives.setlocale(locstr,(tk.glucodata.Applic.hour24=android.text.format.DateFormat.is24HourFormat(con)));
 	if(!isWearable)
 		setDevice(android.os.Build.MANUFACTURER, android.os.Build.MODEL, RELEASE);
 

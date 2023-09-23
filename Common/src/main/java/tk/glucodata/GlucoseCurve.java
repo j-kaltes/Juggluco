@@ -933,8 +933,8 @@ void mkmealsearch(MainActivity act) {
 			mealquantity=geteditview(act,new editclosefocus());
 		mealquantity.setMinEms(3);
 		int pad= (int)(tk.glucodata.GlucoseCurve.metrics.density*5);
-     		inglabel.setPadding(pad,0,0,0);
-		qualabel.setPadding(pad,0,0,0);
+     		inglabel.setPadding(pad,0,pad,0);
+		qualabel.setPadding(pad,0,pad,0);
 
 //		mealquantity.setPadding(0,0,0,(int)metrics.density*8);
 //		mealquantity.setMinEms(2);

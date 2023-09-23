@@ -57,6 +57,18 @@ inline  int LOGGER( const char* fmt, ...) {
         va_end(args);
 	return res;
 	}
+#define lerror perror
+inline void flerror(const char* fmt, ...){
+	int waser=errno;
+	const int maxbuf=160;
+	char buf[maxbuf];
+        va_list args;
+        va_start(args, fmt);
+	vsnprintf(buf,maxbuf, fmt, args);
+	va_end(args);
+	LOGGER("%s: %s\n",buf,strerror(waser));
+	}
+
 #endif
 
 #include "sizear.h"

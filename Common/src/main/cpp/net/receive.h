@@ -80,13 +80,14 @@ char showhex(int get) {
 	return (get>10?(get-10)+'A':get+'0');
 	}
 auto loghex(const unsigned char *data, int len) {
-	std::array<char,9> back;
-	int take=std::min(len,4);
+constexpr const int maxbytes=16;
+	std::array<char,maxbytes*2+1> back;
+	int take=std::min(len,maxbytes);
 	for(int i=0;i<take;i++) {
 		back[i*2]=showhex(data[i]>>4);
 		back[i*2+1]=showhex(data[i]&0xf);
 		}
-	back[8]='\0';
+	back[maxbytes*2]='\0';
 	return back;
 	}
 

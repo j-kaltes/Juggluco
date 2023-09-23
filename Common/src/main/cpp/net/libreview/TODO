@@ -1,5 +1,13 @@
 Ook overzenden wanneer er nieuwe amounts zijn?
 Bij veranderen number settings, moet uselibre3 etc aangepast worden
 
+RealHistory aanzetten?
+Terugzetten librenotsend
+
+Probleem: als realhistory aanstaat in Libreview zender, moet het ook aanstaan in Juggluco verbonden met sensor.
+
+Mogelijkheden:
+- Setting van device verbonden aan sensor overnemen;
+- Setting terugzenden. Stream zender vraagt er om. Moet ook via via gebeuren. Mogelijk zijn ze niet op het zelfde moment actief.
 
 

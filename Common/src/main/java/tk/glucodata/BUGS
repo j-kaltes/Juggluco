@@ -1,15 +1,45 @@
+startedwithStreamhistory moet bij nieuwe sensoren gezet worden.
+Afhankelijk waarvan?
+	Zelfde plaats als nu bij nieuwe sensors?
+	In constructor?
+	In initialize sensor? Wat als geinitialiseerd op telefoon met andere instelling als horloge?
+Hoe bepaal ik of history of stream data gezonden worden?
+Hoe staat het na clear?
+
+Verwijderen van de verkeerde notificatie? Deleteverwijdered Foreground service notification.
+Starthistory? Moet niet al verkregen data terugzenden. 
+- Gelijk zetten met Stream vanaf zelfde tijd.
+- Ook zetten bij wisseling watch.
+- wordt history doorgezonden?
+See setbackuptime
+
+Moet mirror streamhistory setting overnemen?
+
+History wordt niet naar horloge gezonden?
+
+
+US sensors only work from Android 8. only add library to Libre3 version.
+EReader: Some floating glucose niet updated doordat alarm niet afgaat.
+	- alarm wordt niet uitgevoerd;
+	- onDraw wordt niet uitgevoerd
+Test of oude libcalibrate versie het nog doet.
+
+
+SetAlarmClock ?
+Mirror:
+	-active ontvanger only naar passive onderbreekt regelmatig
+
+loghttps:
+	Log alle elementen header
+
+Beperkingen op zoom bereik?
 Kazam:
  -Android 4.4 (niet Android 6.0.1): Mirror knoppen buiten beeld
 
 Soft keyboard start te laat
 
-Process uptime: 1129s
-Cmdline: <pre-initialized>
-pid: 24225, tid: 27420, name: ADB-JDWP Connec  >>> <pre-initialized> <<<
-uid: 10271
-signal 11 (SIGSEGV), code 1 (SEGV_MAPERR), fault addr 0x0000007346a03688
 
-Streaming not enabled confusing
+"Streaming not enabled" confusing
 Soms wordt steeds sendstream op telefoon uitgezet in verbinding met horloge.?
 Add how to give logfile
 Juggluco can only be used with one Garmin device running Kerfstok at a time and can not be easily changed to a new Garmin Watch.

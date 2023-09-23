@@ -259,6 +259,7 @@ void handleIntent(Intent intent) {
 		return;
 	final Bundle extras = intent.getExtras();
 	if(extras!=null)  {
+		Log.i(LOG_ID,"fromnotification");
 		if(extras.getBoolean(Notify.fromnotification, false)) {
 			Notify.stopalarm();
 			return;
@@ -359,6 +360,16 @@ try {
 }
 
 boolean active=false;
+/*
+static final class ShowMessage {
+	public String mess;
+	public boolean cancel;
+	};*/
+static Deque<String>  shownummessage=new ArrayDeque<>(); 
+static  String showmessage=null;
+
+
+
 private static int resumenr=isRelease?10:2;
     @Override
     protected void onResume() {
@@ -406,7 +417,14 @@ private static int resumenr=isRelease?10:2;
 				 Log.i(LOG_ID,"Natives.getaskedNotify( )");
 			 }
 		}
-
+	for(var el:shownummessage) {
+		showindialog(el,false);
+		}
+	shownummessage.clear();
+	final var mess=showmessage;
+		if(mess!=null) {
+			showindialog(mess,true);
+		}
 //	if(!isRelease) Notify.testnot();
 //	Notify.stopalarm();
 
@@ -414,6 +432,7 @@ private static int resumenr=isRelease?10:2;
 //	Notify.test2();
 //	Notify.testold();
     }
+
 long nexttime= 0L;
 
 synchronized void   startnfc(Tag tag) {
@@ -1097,6 +1116,7 @@ void tonotaccesssettings() {
 	}
 AlertDialog shownglucosealert=null;
 void  cancelglucosedialog() {
+	showmessage=null;
 	if(shownglucosealert!=null) {
 		shownglucosealert.dismiss();
 		shownglucosealert=null;
@@ -1107,6 +1127,7 @@ void replaceDialogMessage(String message) {
 		shownglucosealert.setMessage(message);
 		}
 	}
+
 void showindialog(String message,boolean cancel) {
 	Log.i(LOG_ID,"showindialog "+message);
 	var cont=this;

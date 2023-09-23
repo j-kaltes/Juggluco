@@ -183,7 +183,12 @@ struct Tings {
 	uint16_t startlibreview;
 	std::array<char,36> libreviewDeviceID;
 	char _nullchar;
-	bool LibreCurrentOnly;
+	bool LibreCurrentOnly:1;
+	bool reserved5:3;
+	bool streamHistory:1;
+	bool streamHistLib:1;
+
+	uint8_t  libreunit:2;
 	uint16_t startlibre3view;
 	uint32_t floatingPos;
 	uint32_t lastlibretime;
@@ -242,6 +247,10 @@ struct Tings {
 	void setdefault() {
 		memcpy(watchid,defaultid,sizeof(watchid));
 		};
+	bool isLibreMmolL() {
+		if(!libreunit) libreunit=unit==1?1:2;
+		return unit==1;
+		}
 	};
 
 struct Settings:Mmap<Tings> {
@@ -333,9 +342,10 @@ Settings(const char *settingsname,const char *base,const char *country): Mmap(se
 		return;
 		}
 
-	if(data()->initVersion<17) { // set in Applic.initbroadcasts
+	if(data()->initVersion<18) { // set in Applic.initbroadcasts, startjuggluco and initinjuggluco 
+	if(data()->initVersion<17) { 
 	     memcpy(data()->Nightnums,data()->librenums, sizeof(Tings::ToLibre)*data()->varcount);
-		if(data()->initVersion<16) { // set in Applic.initbroadcasts
+		if(data()->initVersion<16) { 
 		if(data()->initVersion<15) {
 			if(data()->initVersion<13) {
 				if(data()->initVersion<12) {
@@ -410,6 +420,8 @@ Settings(const char *settingsname,const char *base,const char *country): Mmap(se
 		     }
 			data()->sslport=17581;
 		     }
+		   }
+		   data()->libreinit=0; //reinit during switch to 2.10.1
 		   }
 	setconvert(country);
 
@@ -694,5 +706,8 @@ inline bool waitstreaming() {
 inline uint16_t &getlibrenumsdeletednr() {
 	return settings->data()->libredeletednr;
 	}
-
+#ifdef NDK_DEBUG
+constexpr const int librekeepsecs=3000*24*60*60;
+#else
 constexpr const int librekeepsecs=89*24*60*60;
+#endif

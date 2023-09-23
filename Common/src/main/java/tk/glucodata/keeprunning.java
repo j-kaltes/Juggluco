@@ -29,23 +29,25 @@ import android.os.PowerManager;
 
 import static tk.glucodata.Applic.isWearable;
 import static tk.glucodata.Log.stack;
-import static tk.glucodata.Natives.getwakelock;
+//import static tk.glucodata.Natives.getwakelock;
 
 public class keeprunning extends Service {
 static boolean started=false;
 static keeprunning theservice=null;
 static final String LOG_ID="keeprunning";
+/*
 static void turnonwakelock() {
 	PowerManager powerManager = (PowerManager) Applic.app.getSystemService(POWER_SERVICE);
 	wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Juggluco::keeprunning");
 	wakeLock.acquire();
-	}
+	} 
 static void	turnoffwakelock() {
 	if(wakeLock!=null) {
 		wakeLock.release();
 		wakeLock=null;
 		}
 	}
+
 
 public static void setWakelock(boolean isChecked) {
 	 final boolean wakened = Natives.getwakelock();
@@ -56,7 +58,7 @@ public static void setWakelock(boolean isChecked) {
 		else
 			keeprunning.turnoffwakelock();
 		}
-	}
+	} */
 
 static PowerManager.WakeLock wakeLock =null;
  @Override
@@ -78,7 +80,7 @@ static PowerManager.WakeLock wakeLock =null;
 			}
 		theservice=this;
 		Notify.foregroundnot(this);
-		if(getwakelock()) turnonwakelock();
+//		if(getwakelock()) turnonwakelock();
 
 	      return Service.START_STICKY;
 	     } catch(Throwable e) {
@@ -109,7 +111,7 @@ static boolean start(Context context) {
 void stopper() {
 	stopForeground(true);
 	stopSelf();
-	turnoffwakelock();
+//	turnoffwakelock();
 	Log.i(LOG_ID,"Stopped");
 	}
 static void stop() {

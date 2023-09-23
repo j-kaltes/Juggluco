@@ -563,7 +563,7 @@ std::vector<pair<const ScanData*,const ScanData*>> getsensorranges(uint32_t star
 	uint32_t timeiter=start;
 	LOGSTRING("getsensorranges: \n");
 	for(int i=hists.size()-1;i>=0&&timeiter<endt;i--)  {
-		auto his=sensors->gethist(hists[i]);
+		auto his=sensors->getSensorData(hists[i]);
 		std::span<const ScanData> 	poll=his->getPolldata();
 #ifndef NDEBUG
 		auto wastimeiter=timeiter;
@@ -878,7 +878,7 @@ template <class TX,class TY> void showlineScan(NVGcontext* genVG,const ScanData 
 
 pair<int32_t,int32_t> histPositions(const SensorGlucoseData  * hist, const uint32_t starttime, const uint32_t endtime) {
 	int32_t firstmog=hist->getstarthistory();
-	int32_t lastmog= hist->getendhistory()-1;
+	int32_t lastmog= hist->getAllendhistory()-1;
 	LOGGER("histPositions first=%u last=%u\n",firstmog,lastmog);
 	if(firstmog>=lastmog)
 		return {firstmog,lastmog};
@@ -1219,7 +1219,7 @@ static void	showscanner(NVGcontext* genVG,const SensorGlucoseData *hist,int scan
 	}
 	/*
 static void	showscanner(NVGcontext* genVG,int sensorident,int scanident) {
-	const SensorGlucoseData *hist=sensors->gethist(sensorident);
+	const SensorGlucoseData *hist=sensors->getSensorData(sensorident);
 	showscanner(genVG,hist, scanident) ;
 
 	}
@@ -1256,7 +1256,7 @@ static pair<int,int> getextremes(const vector<int> &hists, const pair<const Scan
 	for(int i=0;i<histlen;i++) {
 		if(1||showhistories) {
 			for(auto pos=histpositions[i].first,last=histpositions[i].second;pos<=last;pos++) {
-				int glu=sensors->gethist(hists[i])->sputnikglucose(pos);
+				int glu=sensors->getSensorData(hists[i])->sputnikglucose(pos);
 				if(glu) {
 					if(glu>gmax)
 					     gmax=glu;
@@ -1621,7 +1621,7 @@ static void showlastsstream(const time_t nu,const float getx,std::vector<int> &u
 	++failures;
 	for(int i=0;i<used.size();i++) {
 		const int sensorindex=used[i];
-		const SensorGlucoseData *hist=sensors->gethist(sensorindex);
+		const SensorGlucoseData *hist=sensors->getSensorData(sensorindex);
 		int yh=i*2+1;
 		float gety=smallsize*.5f+dtop+dheight*yh/(used.size()*2.0f);
 		const ScanData *poll=hist->lastpoll();
@@ -1684,7 +1684,9 @@ static void showlastsstream(const time_t nu,const float getx,std::vector<int> &u
 		nvgFontSize(genVG,headsize/4 );
 		float gety=smallsize*.5f+dtop+dheight/2.0f;
 		if(neterror) {
-			nvgText(genVG,newgetx ,gety, usedtext->networkproblem.begin(), usedtext->networkproblem.end());
+//			nvgText(genVG,newgetx ,gety, usedtext->networkproblem.begin(), usedtext->networkproblem.end());
+			nvgTextBox(genVG,  newgetx, gety, getboxwidth(newgetx), usedtext->networkproblem.begin(), usedtext->networkproblem.end());
+
 			}
 		else { if(usebluetoothoff) {
 		   nvgText(genVG,newgetx ,gety, usedtext->useBluetoothOff.begin(), usedtext->useBluetoothOff.end());
@@ -1699,7 +1701,7 @@ static void showlastsstream(const time_t nu,const float getx,std::vector<int> &u
 	if(failures>2) {
 		LOGAR("failures>3" );
 		for(int i=0;i<used.size();i++) {
-			if(SensorGlucoseData *hist=sensors->gethist(used[i])) {
+			if(SensorGlucoseData *hist=sensors->getSensorData(used[i])) {
 				LOGSTRING("set waiting=true\n");
                 		hist->waiting=true;
 				}
@@ -1908,9 +1910,9 @@ int displaycurve(NVGcontext* genVG,time_t nu,uint32_t starttime,uint32_t endtime
 	histpositions=new std::remove_reference_t<decltype(histpositions[0])>[histlen];
 	LOGSTRING("before getranges\n");
 	for(int i=histlen-1;i>=0;--i) {
-		auto his=sensors->gethist(hists[i]);
+		auto his=sensors->getSensorData(hists[i]);
 		if(!his)  {
-			LOGSTRING("gethist==null\n");
+			LOGSTRING("getSensorData==null\n");
 			sleep(1);
 			return 0;
 			}
@@ -1976,7 +1978,7 @@ displaytime disp=getdisplaytime(nu,starttime,endtime, transx);
 		for(int i=histlen-1;i>=0;i--) {
 			int index= hists[i];
 			int colorindex= (index+nrcolors*3/4)%nrcolors;
-			 histcurve(genVG,sensors->gethist(index), histpositions[i].first, histpositions[i].second,transx,transy,colorindex); 
+			 histcurve(genVG,sensors->getSensorData(index), histpositions[i].first, histpositions[i].second,transx,transy,colorindex); 
 			 }
 		}
 	LOGSTRING("before showstream\n");
@@ -2108,7 +2110,7 @@ struct lastscan_t scantoshow={-1,nullptr};
 static bool showoldscan(NVGcontext* genVG) {
 	if(scantoshow.scan) {
 		numlist=0;
-	      const SensorGlucoseData *hist=sensors->gethist(scantoshow.sensorindex);
+	      const SensorGlucoseData *hist=sensors->getSensorData(scantoshow.sensorindex);
 	      showscanner(genVG,hist,scantoshow.scan-hist->beginscans()) ;
 	      return true;
 		}
@@ -2245,7 +2247,7 @@ extern	bool hasnotiset();
 	if(settings) {
 		if(!sensors)
 			return;
-		if(SensorGlucoseData *hist=sensors->gethist(sendindex)) {
+		if(SensorGlucoseData *hist=sensors->getSensorData(sendindex)) {
 			if(newstart>=0) {
 				LOGGER("newstart=%d\n",newstart);
 				hist->backstream(newstart);
@@ -2673,6 +2675,7 @@ int64_t screentap(float x,float y) {
 extern bool showsummarygraph;
 		if(showsummarygraph) {
 			showsummarygraph=false;
+	      		fixatey=settings->data()->fixatey;
 			return 1+4*0x10;
 			}
 		}
@@ -2802,7 +2805,7 @@ strconcat getsensortext(const SensorGlucoseData *hist) {
 template <class TX,class TY> 
 bool nearbyhistory( const float tapx,const float tapy,  const TX &transx,  const TY &transy) {
 	for(int i=histlen-1;i>=0;i--) {
-		const SensorGlucoseData *hist=sensors->gethist(hists[i]);
+		const SensorGlucoseData *hist=sensors->getSensorData(hists[i]);
 		const auto [firstpos,lastpos]=histpositions[i];
 			for(auto pos=firstpos;pos<=lastpos;pos++) {
 				uint32_t tim,glu;
@@ -3013,8 +3016,8 @@ static uint32_t glucosesearch(uint32_t starttime,uint32_t endtime) {
 			continue;
 		if(sen->endtime&&sen->endtime<starttime)
 			break;
-		if(auto his=sensors->gethist(it)) {
-			int32_t lastpos= his->getendhistory()-1;
+		if(auto his=sensors->getSensorData(it)) {
+			int32_t lastpos= his->getAllendhistory()-1;
 			uint32_t tim=0;
 			int32_t firstpos = his->getstarthistory();
 			if(lastpos<firstpos) {
@@ -3135,8 +3138,8 @@ static uint32_t glucoseforwardsearch(uint32_t starttime,uint32_t endtime) {
 			break;
 		if(sen->endtime<starttime)
 			continue;
-		auto his=sensors->gethist(it);
-		int32_t lastpos= his->getendhistory()-1;
+		auto his=sensors->getSensorData(it);
+		int32_t lastpos= his->getAllendhistory()-1;
 		int32_t firstpos= his->getstarthistory();
 		uint32_t tim=0;
 		if(lastpos<firstpos) {
@@ -3289,9 +3292,9 @@ void setnowmenu(time_t nu) {
 	const int ulen=usedsensors.size();
 	if(ulen>0) {
 		for(int i=0;i<ulen;) {
-			if(const auto *lastin=sensors->gethist(usedsensors[i++])->lastpoll()) {
+			if(const auto *lastin=sensors->getSensorData(usedsensors[i++])->lastpoll()) {
 				for(;i<ulen;i++) {
-					if(const auto *lastsen=sensors->gethist(usedsensors[i])->lastpoll();lastsen&&(lastsen->t>lastin->t)) {
+					if(const auto *lastsen=sensors->getSensorData(usedsensors[i])->lastpoll();lastsen&&(lastsen->t>lastin->t)) {
 						lastin=lastsen;
 						}
 					}
@@ -3586,6 +3589,7 @@ static int64_t doehier(int menu,int item) {
 						return -1LL;
 					;break;
 #endif
+				case 6:break;
 				default:
 					nrmenu=0;
 					break;
@@ -3596,7 +3600,7 @@ static int64_t doehier(int menu,int item) {
 					nrmenu=0;
 					int lastsensor=sensors->lastscanned();
 					if(lastsensor>=0) {
-						const SensorGlucoseData *hist=sensors->gethist(lastsensor);
+						const SensorGlucoseData *hist=sensors->getSensorData(lastsensor);
 						if(hist) {
 							const ScanData *scan= hist->lastscan();
 							if(scan&&scan->valid()&&((time(nullptr)-scan->t)<(60*60*5)))

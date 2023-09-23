@@ -253,7 +253,7 @@
 <string name="newport">"nouveau port ="</string>
 <string name="webserver">Serveur Web</string>
 <string name="treatments">Transmettre les quantités</string>
-<string name="android13">Android 13</string>
+<string name="android13">Android</string>
 <string name="wentwrong">Une erreur est survenue</string>
 <string name="dosis">" dose "</string>
 <string name="doses">" doses "</string>
@@ -267,7 +267,7 @@
 <string name="defaults">Défauts</string>
 <string name="notify">Notifier</string>
 <string name="separate">Séparer</string>
-<string name="librecurrent">Libre3 immédiat</string>
+<string name="librecurrent">Immédiat</string>
 <string name="USE_ALARM">Alarme est alarme</string>
     <string name="speed">Vitesse</string>
  <string name="pitch">Tonalité</string>

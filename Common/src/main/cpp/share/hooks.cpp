@@ -52,6 +52,8 @@
 #define usedlsym(handle,name) dlsym(handle,name)
 #endif
 #include <string_view>
+#include <linux/prctl.h>
+#include <sys/prctl.h>
 //#define loggert printf
 #define VISIBLE __attribute__((__visibility__("default")))
 extern const char *package;
@@ -59,6 +61,7 @@ extern int packagelen;
 
 extern "C" int VISIBLE __android_log_print(int prio, const char* tag, const char* fmt, ...) __attribute__((__format__(printf, 3, 4)));
 extern "C" int VISIBLE __android_log_write(int prio, const char* tag, const char* text) ;
+
 
 #if !defined(NOLOG) && !defined(LOGCAT)
 extern "C" int VISIBLE __android_log_write(int prio, const char* tag, const char* text) {
@@ -151,12 +154,19 @@ extern "C" VISIBLE int  getTimeofday(struct timeval * tv, struct timezone *  tz)
                tz->tz_dsttime=0;
 	       }
         return 0;
-        } 
-#ifdef FINDHANDLE
+        }
 struct pthread_arg {
-        void *(*start_routine)(void *);
-        void * origarg;
-        };
+	void *(*start_routine)(void *);
+	void * origarg;
+};
+static void ioreadyhandler(int sig) {
+	pid_t pid= syscall(SYS_getpid);
+	pid_t tid= syscall(SYS_gettid);
+	char buf[80];
+	prctl(PR_GET_NAME, buf, 0, 0, 0);
+	LOGGER("SIGCHLD pid=%d tid=%d %s\n",pid,tid,buf);
+}
+#ifdef FINDHANDLE
 #include <destruct.h>
 static int copyfd=0;
 
@@ -216,48 +226,6 @@ static int giveuslibre2(const char *dirname) {
 		}while(!endroutine);
 	return 1;
 }
-/*
-static int giveuslibre2(const char *dirname) {
-	int fp=open(dirname, O_DIRECTORY|O_RDONLY);
-	if(fp<0) {
-		lerror("open failed");
-		return 3;
-		}
-	destruct _des([fp]{
-			close(fp);});
-	int end=fp+40;
-	LOGGER("giveuslibre2 %d\n",fp);
-	do {
-		for(int handle=fp+1;handle<end;handle++) {
-			char name[10];
-			sprintf(name,"%d",handle);
-			int len;
-			int maxbuf=50;
-			char buf[maxbuf];
-			if((len=readlinkat(fp,name , buf,maxbuf))>0)  {
-				buf[len]='\0';
-				constexpr const char pipe[]="pipe:";
-				constexpr const int pipelen=sizeof(pipe)-1;
-				if(!memcmp(pipe,buf,pipelen)) {
-					copyfd=dup(handle);
-					close(handle);
-					int pipefd[2];
-					int ret=sys_pipe2(pipefd,0);
-					write(pipefd[1],pmcom,pmcomlen);
-					close(pipefd[1]);
-					LOGGER("%s: %s new %d %d %s\n",name,buf,pipefd[0],pipefd[1],pmcom); 
-	//						LOGGER("%s: %s\n",name,buf);
-					return 0;
-
-					}
-				}
-			}
-
-	 	LOGAR("NEXT");
-		} while(!endroutine);
-	return 1;
-	}
- */
 
 
 
@@ -268,26 +236,24 @@ static void uslibre2fds() {
 	snprintf(procpid,50,format,pid);
 	giveuslibre2(procpid); 
 	}
-#include <sys/prctl.h>
-#include <signal.h>
-void ioreadyhandler(int sig) {
-	pid_t pid= syscall(SYS_getpid);
-	char buf[80];
-	prctl(PR_GET_NAME, buf, 0, 0, 0);
-	LOGGER("SIGCHLD pid=%d %s\n",pid,buf);
+extern "C" VISIBLE  int pthread_Detach(pthread_t thread) {
+	LOGAR("pthread_detach");
+	int res=  pthread_detach(thread);
+	uslibre2fds();
+	LOGAR("after pthread_detach");
+	return res;
 	}
 void *pstart_routine( void * arg) {
 	signal(SIGCHLD,ioreadyhandler);
-        LOGAR("pstart_routine");
-        pthread_arg *myarg=reinterpret_cast<pthread_arg *>(arg);
-        void *res=myarg->start_routine(myarg->origarg);
+	LOGAR("pstart_routine");
+	pthread_arg *myarg=reinterpret_cast<pthread_arg *>(arg);
+	void *res=myarg->start_routine(myarg->origarg);
 	endroutine=true;
-        LOGAR("after start_routine");
-	if(copyfd)
-		close(copyfd);
-        delete myarg;
-        return res ;
-        }
+	LOGAR("after start_routine");
+	if(copyfd) close(copyfd);
+	delete myarg;
+	return res ;
+}
 #include <pthread.h>
 #include <spawn.h>
 
@@ -315,14 +281,47 @@ extern std::string_view libdirname;
         LOGAR("after pthread_create");
         return res;
         }
+#else
+extern bool doinitnative;
 extern "C" VISIBLE  int pthread_Detach(pthread_t thread) {
 	LOGAR("pthread_detach");
-	int res=  pthread_detach(thread);
-	uslibre2fds();
-	LOGAR("after pthread_detach");
+	int res;
+
+	if(doinitnative) {
+		doinitnative=false;
+		res=  pthread_join(thread,nullptr);
+		LOGAR("after pthread_join");
+		}
+	else {
+		res=  pthread_detach(thread);
+		LOGAR("after pthread_detach");
+		}
 	return res;
 	}
 #endif
+#include <sys/prctl.h>
+#include <signal.h>
+void *pstart_routine( void * arg) {
+	signal(SIGCHLD, ioreadyhandler);
+	LOGAR("pstart_routine");
+	pthread_arg *myarg = reinterpret_cast<pthread_arg *>(arg);
+	void *res = myarg->start_routine(myarg->origarg);
+	LOGAR("after start_routine");
+	delete myarg;
+	return res; 
+	return 0;
+}
+
+extern "C" VISIBLE   int pthread_Create(pthread_t * thread, const pthread_attr_t * attr, void *(*start_routine)(void *), void * arg) {
+        LOGAR("pthread_create");
+        auto *newarg=new pthread_arg{start_routine,arg};
+        int res=pthread_create(thread, attr, pstart_routine,  newarg);
+        LOGAR("after pthread_create");
+        return res;
+        }
+
+
+
 #endif
 #if 0
 extern "C" VISIBLE    FILE *FOpen(const char *pathname, const char *mode) {

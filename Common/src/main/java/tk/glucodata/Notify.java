@@ -204,8 +204,8 @@ final private static boolean whiteonblack=false;
 	}
 
 	Notify() {
-		Log.i(LOG_ID,"showalways="+showalways);
 		showalways=Natives.getshowalways();
+		Log.i(LOG_ID,"showalways="+showalways);
 		alertseparate=Natives.getSeparate( );
 		mkunitstr(Natives.getunit());
 		notificationManager =(NotificationManager) Applic.app.getSystemService(NOTIFICATION_SERVICE);
@@ -298,7 +298,7 @@ static public String glucosestr(float gl) {
 				var draw= GlucoseDraw.getgludraw(gl);
 				var message= format(usedlocale,glucoseformat,gl);
 				if(alertwatch)
-					makeseparatenotification(draw,message, strgl,GLUCOSENOTIFICATION);
+					makeseparatenotification(draw,message, strgl,GLUCOSENOTIFICATION);  
 				arrowglucosenotification(2,draw, message,strgl,GLUCOSENOTIFICATION ,!alertwatch);
 				}
 			else {
@@ -473,23 +473,17 @@ static public String glucosestr(float gl) {
 
 	private static void showpopupalarm(String message,Boolean cancel) {
 		var act=MainActivity.thisone;
-//	if(act==null||!act.active) {
-		if(act==null) {
-			Log.i(LOG_ID,"showpopupalarm Intent "+message);
-			//	Intent intent = new Intent(Applic.app, MainActivity.class);
-			Intent intent = new Intent("android.intent.category.LAUNCHER");
-			intent.putExtra("alarmMessage", message);
-			intent.putExtra("Cancel", cancel);
-			intent.setClassName("tk.glucodata", "tk.glucodata.MainActivity");
-			intent.addCategory(Intent. CATEGORY_LAUNCHER ) ;
-			intent.setAction(Intent.ACTION_MAIN ) ;
-			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
-			Applic.app.startActivity(intent);
-		}
-		else {
+		if(act!=null&&act.active) {
 			Log.i(LOG_ID,"showpopupalarm direct "+message);
 			act.runOnUiThread(() -> act.showindialog( message,cancel));
-		}
+			}
+		else {
+			if(cancel)
+				MainActivity.showmessage=message;
+			else {
+				MainActivity.shownummessage.push(message);
+				}
+			}
 	}
 	private void soundalarm(int kind,int draw,String message,String type,boolean alarm) {
 		placelargenotification(draw,message,type,!alarm);
@@ -560,7 +554,7 @@ static public String glucosestr(float gl) {
 	static final String fromnotification="FromNotification";
 	final static int forcecloserequest=7812;
 	static final String closename= "ForceClose";
-	final int penmutable= android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M? PendingIntent.FLAG_IMMUTABLE:0;
+	final static int penmutable= android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M? PendingIntent.FLAG_IMMUTABLE:0;
 /*
 static void testold() {
 	long time = System.currentTimeMillis()-1000*60*5;
@@ -582,20 +576,25 @@ private void  makeseparatenotification(int draw,String message,notGlucose glucos
 			notificationManager.cancel(glucosealarmid);
 			var intent =mkpending();
 			var GluNotBuilder=mkbuilderintent(type,intent);
+			GluNotBuilder.setDeleteIntent(DeleteReceiver.getDeleteIntent());
 			Log.i(LOG_ID,"makeseparatenotification "+glucose.value);
+			
 			GluNotBuilder.setSmallIcon(draw).setContentTitle(message);
+			
+			GluNotBuilder.setShowWhen(true);
+			if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//				final int timeout= Build.VERSION.SDK_INT >= 30? 60*1500:60*3000;  
+				final int timeout= 800*60;//Build.VERSION.SDK_INT >= 30? 60*1500:60*3000;  
+				GluNotBuilder.setTimeoutAfter(timeout);
+				}
+			GluNotBuilder.setAutoCancel(true);
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 				GluNotBuilder.setVisibility(VISIBILITY_PUBLIC);
 				}
-			GluNotBuilder.setShowWhen(true);
-			if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-				GluNotBuilder.setTimeoutAfter(1000*60);
-				}
-			GluNotBuilder.setAutoCancel(true);
 			GluNotBuilder.setPriority(Notification.PRIORITY_HIGH);
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 				GluNotBuilder.setCategory(Notification.CATEGORY_ALARM);
-				}
+				} 
 			Notification notif= GluNotBuilder.build();
 			notif.when= glucose.time;
 			notificationManager.notify(glucosealarmid,notif);
@@ -608,6 +607,9 @@ static public boolean alertseparate=false;
 
 		var intent =mkpending();
 		var GluNotBuilder=mkbuilderintent(type,intent);
+		if(!alertseparate) {
+			GluNotBuilder.setDeleteIntent(DeleteReceiver.getDeleteIntent());
+			}
 		Log.i(LOG_ID,"makearrownotification setOnlyAlertOnce("+once+") "+glucose.value);
 		GluNotBuilder.setSmallIcon(draw).setOnlyAlertOnce(once).setContentTitle(message);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -719,16 +721,22 @@ private Notification.Builder   mkbuilderintent(String type,PendingIntent notifyP
 		 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
 			GluNotBuilder.setChannelId(type);
 		}
-	Log.i(LOG_ID, "setDeleteIntent");
-	GluNotBuilder.setContentIntent(notifyPendingIntent).setOnlyAlertOnce(true).setDeleteIntent(notifyPendingIntent);
+	GluNotBuilder.setContentIntent(notifyPendingIntent).setOnlyAlertOnce(true);
+	if (Build.VERSION.SDK_INT >= 20) {
+		GluNotBuilder.setLocalOnly(false);
+		}
 	if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
 		GluNotBuilder.setGroup("aa2");
 		}
 	return GluNotBuilder;
 	}
 private Notification.Builder   mkbuilder(String type) {
-	return   mkbuilderintent( type,mkpending()) ;
+	var build=   mkbuilderintent( type,mkpending()) ;
+		build.setDeleteIntent(DeleteReceiver.getDeleteIntent());
+		return build;
 	}
+
+
 
 
 static final private boolean  alertseperate=true;
@@ -923,7 +931,8 @@ public void  notifyer(int draw,String message,String type,int notid) {
         notifyIntent.setFlags(Intent. FLAG_ACTIVITY_CLEAR_TOP | Intent. FLAG_ACTIVITY_SINGLE_TOP );
 	PendingIntent notifyPendingIntent = PendingIntent.getActivity(Applic.app, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT|penmutable);
 
-	NumNotBuilder.setAutoCancel(true).setContentIntent(notifyPendingIntent).setDeleteIntent(notifyPendingIntent).setContentTitle(message);
+	NumNotBuilder.setAutoCancel(true).setContentIntent(notifyPendingIntent).
+setDeleteIntent(DeleteReceiver.getDeleteIntent()) .setContentTitle(message);
 //	NumNotBuilder.setAutoCancel(true).setContentIntent(notifyPendingIntent).setSubText(message);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 			NumNotBuilder.setVisibility(VISIBILITY_PUBLIC);

@@ -81,11 +81,24 @@ extern		pathconcat logbasedir;
 	time_t tim=time(NULL);
 	char *timestr=ctime(&tim);
 
-	#define startlog "Start logging: "
 	pid_t pid= syscall(SYS_getpid);
-	constexpr const int maxbuf=60;
+	constexpr const int maxbuf=120;
 	char buf[maxbuf];	
-	int buflen=std::snprintf(buf,maxbuf,"%.24s %d Start logging %d\n",timestr, syscall(SYS_gettid),pid);
+	int buflen=std::snprintf(buf,maxbuf,"%.24s %d Start logging %d "
+#ifdef NDEBUG
+""
+#else
+"not"
+#endif
+
+" NDEBUG "
+
+#ifdef NDK_DEBUG
+""
+#else
+"not"
+#endif
+" NDK_DEBUG\n" ,timestr, syscall(SYS_gettid),pid);
 
        sys_write(handle, buf,buflen);
        return handle;

@@ -82,7 +82,7 @@ static void reset() {
 	const int last=sensors->last();
 	settings->data()->nightsensor=0;
 	for(int sensorid=0;sensorid<=last;sensorid++) {
-		if(SensorGlucoseData *sens=sensors->gethist(sensorid)) {
+		if(SensorGlucoseData *sens=sensors->getSensorData(sensorid)) {
 			sens->getinfo()->nightiter=0;
 			}
 		}
@@ -138,7 +138,7 @@ bool upload() {
 
 	int newstartsensor=startsensor;
 	for(int sensorid=last;sensorid>=startsensor;--sensorid) {
-		if(SensorGlucoseData *sens=sensors->gethist(sensorid)) {
+		if(SensorGlucoseData *sens=sensors->getSensorData(sensorid)) {
 			std::span<const ScanData> gdata=sens->getPolldata();
 			const char *sensorname=sens->showsensorname().data();
 			int len=gdata.size();

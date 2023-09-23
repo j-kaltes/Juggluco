@@ -27,6 +27,9 @@ struct GlucoseValue {
     int getId() const {return id;}
     int getQuality() const {return dataQuality;}
     int getValue() const {return value;}
+    bool valid() {
+    	return !(getId()%15)&&!getQuality() && getValue()>38 && getValue()<502;
+    	}
     };
 
 struct GlucoseNow:GlucoseValue {

@@ -26,6 +26,7 @@ import static tk.glucodata.Backup.getedit;
 import static tk.glucodata.Backup.getnumedit;
 import static tk.glucodata.MainActivity.CHAIN_REQUEST;
 import static tk.glucodata.MainActivity.PRIVATE_REQUEST;
+import static tk.glucodata.Natives.getreceiveport;
 import static tk.glucodata.RingTones.EnableControls;
 import static tk.glucodata.help.hidekeyboard;
 import static tk.glucodata.settings.Settings.editoptions;
@@ -101,7 +102,7 @@ public static void show(MainActivity context,View parent) {
 	var oldport=Natives.getsslport();
   	var portview=getnumedit(context, ""+oldport);
                         
-
+   
 	save.setOnClickListener(
 		v -> {
 		 var newkey=editkey.getText().toString();
@@ -119,6 +120,14 @@ public static void show(MainActivity context,View parent) {
 			Toast.makeText(context,portstr+context.getString(R.string.invalidport), Toast.LENGTH_LONG).show();
 			return;
                         };
+		if(portstr.equals(getreceiveport())) {
+			Toast.makeText(context,"The port number should be different from the mirror port",Toast.LENGTH_LONG).show();
+			return;
+			}
+		if(portnum==17580) {
+			Toast.makeText(context,"The port number should be different from the http port",Toast.LENGTH_LONG).show();
+			return;
+			}	
 		if(portnum<1024||portnum> 65535) {
 			Toast.makeText(context,R.string.portrange,Toast.LENGTH_LONG).show();
 			return;
@@ -134,6 +143,7 @@ public static void show(MainActivity context,View parent) {
 			if(Natives.getuseSSL())
 				Natives.setuseSSL(true);
 			}
+		tk.glucodata.help.hidekeyboard(context);
 		});
 	var chain=getbutton(context,R.string.fullchain);
 	chain.setOnClickListener(

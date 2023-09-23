@@ -140,7 +140,7 @@ static bool saveLibre3Historyel(SensorGlucoseData *save,int lifeCount, uint16_t 
 	const uint16_t mgL=10*historicMgDl;
 	if(save->savenewhistory(idpos,  lifeCount, mgL)) {
 		const int newend=idpos+1;
-		if(newend>save->getendhistory())
+		if(newend>save->getScanendhistory())
 			save->setendhistory(newend);
 		save->backhistory(idpos);
 		return true;
@@ -374,7 +374,7 @@ static bool saveLibre3History(SensorGlucoseData *sens, const jbyte *history,cons
 		 }
 
 	sens->updateHistsorylifecount(lastsave);
-	if(++lastsave>sens->getendhistory())
+	if(++lastsave>sens->getScanendhistory())
 		sens->setendhistory(lastsave);
 //	backup->wakebackup(Backup::wakescan);
 	return true;

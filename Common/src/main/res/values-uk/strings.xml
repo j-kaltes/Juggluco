@@ -257,7 +257,7 @@
 <string name="newport">"новий port ="</string>
 <string name="webserver">Web server</string>
 <string name="treatments">Надайте суми</string>
-<string name="android13">Android 13</string>
+<string name="android13">Android</string>
     <string name="wentwrong">Щось пішло не так</string>
     <string name="dosis">" доза "</string>
     <string name="doses">" дози "</string>
@@ -271,7 +271,7 @@
  <string name="defaults">За замовчуванням</string>
     <string name="notify">Повідомити</string>
  <string name="separate">Окремий</string>
-    <string name="librecurrent">Libre3 негайно</string>
+    <string name="librecurrent">негайно</string>
     <string name="USE_ALARM">Сигнал є тривога</string>
     <string name="speed">Швидкість</string>
  <string name="pitch">Висота</string>

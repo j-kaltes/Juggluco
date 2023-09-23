@@ -743,8 +743,17 @@ void showstats(NVGcontext* vg,stats *stat) {
 }
 
 #include "fromjava.h"
+extern bool fixatey;
+
 extern "C" JNIEXPORT void JNICALL fromjava(summarygraph) (JNIEnv *env, jclass clazz,jboolean val) {
 	 showsummarygraph=val;
+	 if(val) {
+		 fixatey=false;
+		 }
+	else {
+	      fixatey=settings->data()->fixatey;
+
+		}
 	}
 extern "C" JNIEXPORT void JNICALL fromjava(analysedays) (JNIEnv *env, jclass clazz,jint days) {
 	daystoanalyse=days;

@@ -18,6 +18,10 @@
 /*                                                                                   */
 /*      Fri Jan 27 12:37:55 CET 2023                                                 */
 
+//#define TESThistor
+#ifdef TESThistor
+#define NOLOGS_H 1
+#endif
 
 #include <iostream>
 #include <string.h>
@@ -170,8 +174,28 @@ int64_t libreviewHistor(const sensorname_t *sensorid) {
         return  (uit << 14);
     }
 */
-//#define TESThistor
 #ifdef TESThistor
+#include <cinttypes>
+typedef std::array<char,11>  sensorname_t;
+template<class T>
+int64_t libreviewHistorAlg(const T *sensorid,int start, int shift) {
+        int64_t  uit = 0;
+        const char *str=sensorid->data();
+        const int len= sensorid->size();
+        for(int it = start; it <len ; it++) {
+           uit = (uit << 5) | unalf(str[it]);
+           }
+        return  (uit << shift);
+    }
+template<class T>
+int64_t libreviewHistor3(const T *sensorid) {
+        return libreviewHistorAlg(sensorid,0,19) ;
+        }
+
+int64_t libreviewHistor(const sensorname_t *sensorid) {
+        return libreviewHistorAlg(sensorid,1,14) ;
+    }
+
 int64_t createUniqueReadingIdentifier(const sensorname_t *sensorid,int id) {
 	return  libreviewHistor(sensorid)|id ;
 	}

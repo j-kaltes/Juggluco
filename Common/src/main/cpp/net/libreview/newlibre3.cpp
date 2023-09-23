@@ -235,47 +235,16 @@ int addcurrent(char *buf,int64_t histor,const ScanData *el,const bool viewed) {
 	}
 //uint16_t lastLifeCountReceived;
 
-bool hasNewCurrent(const SensorGlucoseData *sens) { 
-	if(!sens) {
-		LOGSTRING("sens==nullptr\n");
-		return false;
-		}
-	 int start=sens->getinfo()->libreviewscan;
-	int pollstart= sens->getinfo()->pollstart;
-//	int ends=sens->getinfo()->lastLifeCountReceived;
-	if(start<pollstart)
-		start=pollstart;
 
-const int		ends=sens->pollcount()-1;
-	if(start>ends) {
-		LOGGER("%s pollstart=%d hasNewCurrent no new last start=%d ends=%d\n",sens->showsensorname().data(),pollstart,start,ends);
-		return false;
-		}
-	LOGSTRING("hasNewCurrent true\n");
-	return true;
-	}
-
-bool askhasnewcurrent() {
-	if(!settings->data()->LibreCurrentOnly) { 
-		LOGSTRING("LibreCurrentOnly==false\n");
-		return false;
-		}
-	const auto *lastsensor=sensors->gethist(-1);
-	if(!lastsensor||!lastsensor->isLibre3())  {
-		LOGSTRING("not Libre3\n");
-		return false;
-		}
-	return hasNewCurrent(lastsensor);
-	}
 
 int sendallcurrent(uint32_t nu,SensorGlucoseData *sens,char *buf,int *lastsend) { 
 	if(!sens)
 		return 0;
-	 int start=sens->getinfo()->libreviewscan;
+	 int start=sens->getinfo()->libreviewScan;
 	int pollstart= sens->getinfo()->pollstart;
 //	 int ends=sens->getinfo()->lastLifeCountReceived;
 	int		ends=sens->pollcount()-1;
-	LOGGER("%s pollstart=%d libreviewscan=%d ends=%d\n",sens->showsensorname().data(),pollstart,start,ends);
+	LOGGER("%s pollstart=%d libreviewScan=%d ends=%d\n",sens->showsensorname().data(),pollstart,start,ends);
 //	if(ends==0) {
 //		}
 	*lastsend=ends;	
@@ -340,9 +309,7 @@ extern Sensoren *sensors;
 bool sendnumbers3() {
 	return settings->data()->sendnumbers&&settings->data()->libre3nums;
 	}
-bool sendlibre3viewdata(bool hasnewcurrent) {
-	const   uint32_t nu=time(nullptr);
-	const uint32_t oldtimer=nu-Sensoren::sensorageseconds;
+bool sendlibre3viewdata(bool hasnewcurrent,uint32_t nu) {
 	int startsensor=settings->data()->startlibre3view;
 	int lastsensor=sensors->last();
 	int inhistory=0;
@@ -353,7 +320,7 @@ bool sendlibre3viewdata(bool hasnewcurrent) {
 			return true;
 		}
 	for(;startsensor<=lastsensor;startsensor++) {
-		SensorGlucoseData *sensdata=sensors->gethist(startsensor);
+		SensorGlucoseData *sensdata=sensors->getSensorData(startsensor);
 		if(sensdata->isLibre3()) 
 			break;
 		else {
@@ -364,10 +331,11 @@ bool sendlibre3viewdata(bool hasnewcurrent) {
 		}
 	
 	int lastlibre3=-1;
+	const uint32_t oldtimer=nu-Sensoren::sensorageseconds;
 	for(int i=startsensor;i<=lastsensor;i++) {
-		SensorGlucoseData *sensdata=sensors->gethist(i);
+		SensorGlucoseData *sensdata=sensors->getSensorData(i);
 		if(sensdata->isLibre3()) {
-			auto add=(sensdata->getendhistory()-sensdata->getinfo()->libreviewnotsend);
+			auto add=(sensdata->getScanendhistory()-sensdata->getinfo()->libreviewnotsend);
 			lastlibre3=i;
 			if(add<=0) {
 				if(sensdata->getstarttime()<oldtimer) {
@@ -401,7 +369,7 @@ constexpr const int  bytesnumbers=0;
 #endif
 	lastsensor=lastlibre3;
 LOGGER("startsensor=%d lastsensor=%d\n",startsensor,lastsensor);
-SensorGlucoseData *lastsensdata=(lastsensor<0)?nullptr:sensors->gethist(lastsensor); //TODO later?
+SensorGlucoseData *lastsensdata=(lastsensor<0)?nullptr:sensors->getSensorData(lastsensor); //TODO later?
 
 	if(bytesnumbers==0&&inhistory<=0) {
 		if(!hasnewcurrent)
@@ -498,7 +466,7 @@ uint32_t lasthisttime=0;
 int nextnum=0,lastwrote=-1;
 if(inhistory>0) { 
 	for(int i=startsensor;i<=lastsensor;i++) {
-		SensorGlucoseData *sens=sensors->gethist(i);
+		SensorGlucoseData *sens=sensors->getSensorData(i);
 		if(sens->isLibre3()) {
 			int wrote=allhistory(sens,uitptr,&lasthisttime,&nextnum);
 			if(wrote) {
@@ -536,11 +504,11 @@ if(datasend) {
 	if(nextsensor>=0) {
 		settings->data()->startlibre3view=nextsensor;
 		if(lastwrote>=0) {
-			SensorGlucoseData *sens=sensors->gethist(lastwrote);
+			SensorGlucoseData *sens=sensors->getSensorData(lastwrote);
 			sens->getinfo()->libreviewnotsend=nextnum;
 			}
 		if(wrotecurrent>0) {
-			lastsensdata->getinfo()->libreviewscan=laststreamsend+1;
+			lastsensdata->getinfo()->libreviewScan=laststreamsend+1;
 			lastsensdata->getinfo()->sendsensorstart=true;
 			}
 		}

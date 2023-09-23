@@ -673,12 +673,6 @@ for (;;) {
         ptrace(PTRACE_DETACH, pid, 0, 0);
         return 4;
     }
-#ifdef __arm__
-{
-slog log;
-    log<<"r0="<<regi.get(0)<<" origr0="<<regi.get(17)<<endl;
-    }
-#endif
     int syscallnr = regi.callnr();
     const char *callstr = syscallnr < std::size(syscallstr) ? syscallstr[syscallnr].data() : (
 #ifdef __ARM_NR_BASE
@@ -736,7 +730,7 @@ slog log;
 				slog log;
 				log<<"STOPSIGNAL "<<pid<<endl;
 				}
-				if (istest)
+				if(istest)
 					saveused();
 				if (ptrace(PTRACE_DETACH, pid, 0, 0) == -1) {
 					slog log;
@@ -1268,15 +1262,21 @@ static bool needsdebug() {
 		else  {
 			LOGGER("can not open %s\n",	netunix);
 			}
-
-		int firstlen=hieraccess.size()+hieropen.size();
-		std::string_view tmp[firstlen];
-
-		auto *endtmp=std::set_union(hieraccess.begin(),hieraccess.end(),hieropen.begin(),hieropen.end(),tmp);
-		LOGGER("tmp size=%zu\n",endtmp-tmp);
-		usedfiles.clear();
-		std::set_union(hierstat.begin(),hierstat.end(),tmp,endtmp,std::back_inserter(usedfiles));
-		LOGGER("usedfiles.size=%zu\n",usedfiles.size());
+		if(!istest) {
+			int firstlen=hieraccess.size()+hieropen.size();
+			std::string_view tmp[firstlen];
+			auto *endtmp=std::set_union(hieraccess.begin(),hieraccess.end(),hieropen.begin(),hieropen.end(),tmp);
+			LOGGER("tmp size=%zu\n",endtmp-tmp);
+			usedfiles.clear();
+			std::set_union(hierstat.begin(),hierstat.end(),tmp,endtmp,std::back_inserter(usedfiles));
+			LOGGER("usedfiles.size=%zu\n",usedfiles.size());
+			constexpr const bool blockall=true;
+			if(blockall) { //block all files to be certain
+				hieraccess={accessnames,std::size(accessnames)};
+				hierstat={statnames,std::size(statnames)};
+				hieropen={opennames,std::size(opennames)};
+				}
+			}
 		accessused=new bool[hieraccess.size()]();
 		openused=new bool[hieropen.size()]();
 		statused=new bool[hierstat.size()]();

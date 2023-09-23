@@ -602,7 +602,7 @@ public static void wakemirrors() {
 
 static	void initbroadcasts() {
 
-	if(Natives.getinitVersion()<17) {
+	if(Natives.getinitVersion()<18) {
 		if(Natives.getinitVersion()<14) {
 			if(Natives.getinitVersion()<13) {
 				Broadcasts.updateall();
@@ -611,7 +611,7 @@ static	void initbroadcasts() {
 			Natives.setfloatingbackground(WHITE);
 			 Natives.setfloatingforeground(BLACK);
 			}
-		Natives.setinitVersion(17);
+		Natives.setinitVersion(18);
 		}
 	var pos=Natives.getfloatingPos( );
 	if(pos!=0) {

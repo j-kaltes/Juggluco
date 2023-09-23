@@ -44,7 +44,7 @@ android {
 
 
     defaultConfig {
-        targetSdk 28
+        targetSdk 33
 //       	targetSdk 26
             buildConfigField 'int', 'targetSDK', "$targetSdk"
         minSdk 19
@@ -64,7 +64,7 @@ android {
             }
         }
 //	resourceConfigurations += ["en", "nl", "fr","it", "de", "pl", "pt","be","uk"]
-    ndk { abiFilters  'armeabi-v7a' }
+    //ndk { abiFilters  'armeabi-v7a' }
      //  ndk { abiFilters  'arm64-v8a' }
         signingConfig signingConfigs.alg
     buildToolsVersion '33.0.0'
@@ -75,24 +75,21 @@ android {
         libreOld {
             minSdk 19
 
-//      ndk { abiFilters  'armeabi-v7a' }
-//      ndk { abiFilters  'armeabi-v7a' }
             //	targetSdk 26
 	//******  Zet op rollout op 100% ******
-		versionCode  412
-		versionName '5.1.13-no3'
+		versionCode  413
+		versionName '6.0.0-no3'
             	dimension 'libreVersion'
             buildConfigField 'int', 'libreVersion', '2'
 		}
         libre3 {
-//       ndk { abiFilters  'arm64-v8a' }
             // targetSdk 26
 	   minSdk 26
 //	   minSdk 23
             dimension 'libreVersion'
-		versionCode 412
+		versionCode 413
 	//******  Zet op rollout op 100% ******
-		versionName '5.1.13'
+		versionName '6.0.0'
 
            	buildConfigField 'int', 'libreVersion', '3'
 		    externalNativeBuild.cmake {
@@ -105,14 +102,13 @@ android {
         wear {
           // targetSdk 26
 //           targetSdk 31
-//      ndk { abiFilters  'armeabi-v7a' }
 
             // targetSdk 30
             dimension 'wearos'
 		minSdk 26
-		versionCode 413
+		versionCode 414
 	//******  Zet op rollout op 100% ******
-		versionName '5.1.13-wear'
+		versionName '6.0.0-wear'
 		signingConfig signingConfigs.alg
 
 //            buildConfigField 'int', 'targetSDK', "$targetSdk"
@@ -128,9 +124,6 @@ android {
 	    }
         }
        mobile {
-//      ndk { abiFilters  'armeabi-v7a' }
-	//ndk { abiFilters  'arm64-v8a' }
-//       ndk { abiFilters  'arm64-v8a' }
            // targetSdk 26
              // targetSdk 31
             dimension 'wearos'
@@ -265,7 +258,8 @@ buildTypes {
 
             signingConfig signingConfigs.alg
             externalNativeBuild.cmake {
-                cppFlags "-std=c++20", "-DDEBUG=1", "-DSCANLOG=1", "-DAPPSUFFIX=\\\"$applicationIdSuffix\\\""
+                cppFlags "-std=c++20", "-DDEBUG=1", "-DSCANLOG=1", "-DAPPSUFFIX=\\\"$applicationIdSuffix\\\"","-DNDK_DEBUG=1","-UNDEBUG"
+
 
             }
             minifyEnabled  false
@@ -309,7 +303,7 @@ buildTypes {
             buildConfigField 'int', 'isReleaseID', '1'
         buildConfigField 'int', 'doLog', '1'
             externalNativeBuild.cmake {
-                cppFlags "-std=c++20","-DRELEASEID=1","-DDEBUG=1", "-DSCANLOG=1", "-DRELEASEDIR=1"
+                cppFlags "-std=c++20","-DRELEASEID=1","-DDEBUG=1", "-DSCANLOG=1", "-DRELEASEDIR=1","-DNDK_DEBUG=1","-UNDEBUG"
 		}
 
             versionNameSuffix 'DEBUGRELEASE'
@@ -409,7 +403,7 @@ dependencies {
 
     compileOnly 'com.google.android.wearable:wearable:2.9.0'
 
-    implementation 'com.google.android.gms:play-services-wearable:18.0.0'
+    implementation 'com.google.android.gms:play-services-wearable:18.1.0'
 
 
 

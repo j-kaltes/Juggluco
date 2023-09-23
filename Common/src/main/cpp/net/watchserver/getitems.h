@@ -8,7 +8,7 @@ inline const SensorGlucoseData *getStreamSensor(int &sensorid) {
 		if(sensorid<0)  {
 			return nullptr;
 		}
-		if(const SensorGlucoseData *sens=sensors->gethist(sensorid)) {
+		if(const SensorGlucoseData *sens=sensors->getSensorData(sensorid)) {
 			if(sens->pollcount()>0)
 				return sens;
 		}

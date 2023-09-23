@@ -23,9 +23,11 @@ constexpr const std::string_view opennames[] = {
 #if defined(__aarch64__)  || defined(__i386__)
 R"(/data/dalvik-cache/)" archname R"(/system@framework@)" archname R"(@boot-framework.oat@xposed)",
 R"(/data/dalvik-cache/oat/)" archname R"(/xposed_XTypedArraySuperClass.odex)",
+
 #else
 R"(/data/dalvik-cache/oat/)" archname R"(/xposed_XTypedArraySuperClass.odex)",
-R"(/data/dalvik-cache/)" archname R"(/system@framework@" archname "@boot-framework.oat@xposed)",
+R"(/data/dalvik-cache/)" archname R"(/system@framework@)" archname R"(@boot-framework.oat@xposed)",
+///data/dalvik-cache/thumbv7a/system@framework@arm64@boot-framework.oat@xposed
 #endif
 R"(/data/dalvik-cache/xposed_XResourcesSuperClass.dex)",
 R"(/root/magisk)",

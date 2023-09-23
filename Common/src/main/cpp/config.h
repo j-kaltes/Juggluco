@@ -21,6 +21,11 @@
 
 #ifndef CONFIG_H
 #define CONFIG_H
+#undef NDEBUG
+#ifndef NDK_DEBUG
+#define NDEBUG 1
+#endif
+
 
 //#define DATALIB 1
 

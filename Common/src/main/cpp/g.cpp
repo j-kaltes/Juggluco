@@ -2,7 +2,7 @@
 #define setthreadname(buf) prctl(PR_SET_NAME, buf, 0, 0, 0)
 /*#ifndef NOLOG
 #define TESTGEN2 1
-#endif     */
+#endif       */
 /*      This file is part of Juggluco, an Android app to receive and display         */
 /*      glucose values from Freestyle Libre 2 and 3 sensors.                         */
 /*                                                                                   */
@@ -181,6 +181,7 @@ void alarmhandler(int sig) {
 	}
 //s/setthreadname(\([^);
 extern void	setstreaming(SensorGlucoseData *hist) ;
+extern void wakeaftermin(const int waitmin);
 extern "C" JNIEXPORT jint JNICALL fromjava(nfcdata)(JNIEnv *env, jclass thiz, jbyteArray uid, jbyteArray info,jbyteArray data) {
 	nfcdatatid=syscall(SYS_gettid);
 	LOGGER("nfcdata %d\n", nfcdatatid);
@@ -260,6 +261,7 @@ static	 const int waitsig=60;
 			int gluval=alg->currentglucose().getValue();
 			if(gluval) {
 				scantoshow={ab.sensorindex,scanda};
+				wakeaftermin(0);
 				if(setbluetoothon||!ab.hist->streamingIsEnabled())  {
 					return 8<<16|gluval;
 						/*
@@ -374,7 +376,7 @@ extern "C" JNIEXPORT jlong JNICALL   fromjava(getdataptr)(JNIEnv *env, jclass cl
 	int sensorindex=sensors->sensorindexshort(sensor);
 	if(sensorindex<0)
 		return 0LL;
-	SensorGlucoseData *sens= sensors->gethist(sensorindex);
+	SensorGlucoseData *sens= sensors->getSensorData(sensorindex);
 	sens->sensorerror=false;
 	streamdata *data;
 	if(sens->isLibre3()) {
@@ -632,8 +634,13 @@ extern void wakelibrecurrent() ;
 void wakewithcurrent() {
 	wakeuploader();
 #if !defined(WEAROS) && !defined(TESTMENU)
-	if(settings->data()->LibreCurrentOnly)
+	if(settings->data()->LibreCurrentOnly) {
+		LOGAR("wakelibrecurrent()");
 		 wakelibrecurrent() ;
+		 }
+	else {
+		LOGAR("!LibreCurrentOnly");
+		}
 #endif
 	}
 extern "C" JNIEXPORT jlong JNICALL   fromjava(processTooth)(JNIEnv *envin, jclass cl,jlong dataptr, jbyteArray bluetoothdata) {
@@ -737,7 +744,7 @@ extern "C" JNIEXPORT jobjectArray  JNICALL   fromjava(activeSensors)(JNIEnv *env
 	int uitlen=0;
 	 for(int i=0;i<len;i++) {
 	 	 int index=usedsensors[i];
-		  const SensorGlucoseData *sens=sensors->gethist(index );
+		  const SensorGlucoseData *sens=sensors->getSensorData(index );
 		  if(sens&&!sens->isLibre3())
 		  	names[uitlen++]=sensors->shortsensorname(index)->data();
 		  }
@@ -1041,7 +1048,7 @@ extern "C" JNIEXPORT void  JNICALL   fromjava(reenableStreaming)(JNIEnv *env, jc
 	setbluetoothon=true;
 	}
 
-int lastgen=0;
+static int lastgen=0;
 bool hasGen2=false,hasGen1=false;
 /*#ifndef NDEBUG
 #define TESTGEN2 1
@@ -1054,18 +1061,18 @@ extern std::vector<int> usedsensors;
 	 bool has2=true,has1=true;
 	hasGen1=has1;
 	hasGen2=has2;
-	lastgen=has2?2:1;
-	return lastgen;	
+//	lastgen=has2?2:1;
+	return has2?2:1;
 	}
 #else
 int getlastGen() {
-//	if(lastgen) return lastgen;
+	if(lastgen) return lastgen;
 extern	void setusedsensors() ;
 extern std::vector<int> usedsensors;
 	 setusedsensors() ;
 	 bool has2=false,has1=false;
 	 for(int index:usedsensors) {
-		 auto sens=sensors->gethist(index);
+		 auto sens=sensors->getSensorData(index);
 		 if(sens->getsensorgen()==2) {
 		 	has2=true;
 			}
@@ -1075,12 +1082,27 @@ extern std::vector<int> usedsensors;
 		 }
 	hasGen1=has1;
 	hasGen2=has2;
-	lastgen=has2?2:1;
-	return lastgen;	
+//	lastgen=has2?2:1;
+//	return lastgen;	
+	return has2?2:1;
 	}
 #endif
 
 extern	void closedynlib();
+extern bool switchgen2();
+extern oldprocessStream_t  oldprocessStream;
+bool switchgen2() {
+	if( !P1 ) {
+		lastgen=2;
+		if(oldprocessStream) {
+			closedynlib();
+			if(abbottreinit()>=0&&P1)
+					return true;
+			return false;
+			}
+		}
+	return true;
+	}
 extern "C" JNIEXPORT jboolean  JNICALL   fromjava(switchgen2)(JNIEnv *env, jclass cl) {
 
 	if( P1==nullptr) {

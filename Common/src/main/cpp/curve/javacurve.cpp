@@ -1,6 +1,7 @@
 #include <sys/prctl.h>
 #include <jni.h>
 #include <string_view>
+#include <string>
 #include "share/logs.h"
 #include "fromjava.h"
 //#include "curve.h"
@@ -275,7 +276,9 @@ extern "C" JNIEXPORT jint JNICALL fromjava(step)(JNIEnv* env, jclass obj) {
 	}
 
 extern bool hour24clock;
-extern char localestrbuf[10];
+extern char localestrbuf[15];
+
+std::string thiscountry;
 
 
 void  setlocale(const char *localestrbuf,const size_t len) ;
@@ -284,8 +287,12 @@ extern "C" JNIEXPORT void JNICALL fromjava(setlocale)(JNIEnv *env, jclass clazz,
 	if(jlocalestr) {
 		size_t len=env->GetStringLength(jlocalestr);
 		env->GetStringUTFRegion( jlocalestr, 0,len, localestrbuf);
+		localestrbuf[len++]='_';
+		memcpy(localestrbuf+len,thiscountry.data(),thiscountry.size());
+		len+=thiscountry.size();
 		localestrbuf[len]='\0';
 		setlocale(localestrbuf,len);
+
 		}
 	}
 
@@ -308,9 +315,12 @@ extern "C" JNIEXPORT int JNICALL fromjava(setfilesdir)(JNIEnv *env, jclass clazz
 	if(jcountry&& env->GetStringLength(jcountry)>=2) {
 		env->GetStringUTFRegion( jcountry, 0,2, country);
 		country[2]='\0';
+		thiscountry=country;
 		}
-	else
+	else {
 		country[0]='\0';
+		thiscountry="UK";
+		}
 	return setfilesdir({filesdirbuf,filesdirlen},country);
 	}
 void calccurvegegs();
@@ -482,7 +492,7 @@ extern "C" JNIEXPORT void JNICALL fromjava(nextday)(JNIEnv* env, jclass obj) {
 	}
 /*
 extern "C" JNIEXPORT jlong JNICALL fromjava(lastpoll)(JNIEnv *env, jclass thiz) {
-	const SensorGlucoseData *hist=sensors->gethist(); 
+	const SensorGlucoseData *hist=sensors->getSensorData(); 
 	const ScanData *glu=hist->lastpoll() ;
 	if(glu)
 		return (((jlong)glu->g)<<32)|(jlong)glu->t;

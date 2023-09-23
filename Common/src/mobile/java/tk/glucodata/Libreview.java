@@ -216,8 +216,10 @@ static boolean postgetauth(boolean libre3) {
 		HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 		urlConnection.setRequestMethod("POST");
 		urlConnection.setDoOutput(true);
-		urlConnection.setRequestProperty("Content-Type", "application/json");
+		String getauthtext;
 		if(libre3) {
+
+			urlConnection.setRequestProperty("Content-Type", "application/json");
 			urlConnection.setRequestProperty("Platform","Android");
 			urlConnection.setRequestProperty("Version","3.3.0");
 			urlConnection.setRequestProperty("Abbott-ADC-App-Platform","Android/"+((Object) Build.VERSION.RELEASE) +"/FSL3/3.3.0.9092");
@@ -225,16 +227,25 @@ static boolean postgetauth(boolean libre3) {
 			final String newYuApiKey=getnewYuApiKey(libre3);
 			urlConnection.setRequestProperty("x-api-key", newYuApiKey);
 			urlConnection.setRequestProperty("x-newyu-token",""); 
+			getauthtext="{\n"+
+			"  \"Culture\": \""+culture+"\",\n"+
+			"  \"DeviceId\": \""+one+"\",\n"+
+			"  \"Password\": \""+password+"\",\n"+
+			"  \"SetDevice\": "+setdevice+",\n"+
+			"  \"UserName\": \""+login+"\",\n"+
+			"  \"Domain\": \"Libreview\",\n"+
+			"  \"GatewayType\": \""+ gateway+ "\"\n"+
+			"}\n";
 			}
-		String getauthtext="{\n"+
-		"  \"Culture\": \""+culture+"\",\n"+
-		"  \"DeviceId\": \""+one+"\",\n"+
-		"  \"Password\": \""+password+"\",\n"+
-		"  \"SetDevice\": "+setdevice+",\n"+
-		"  \"UserName\": \""+login+"\",\n"+
-		"  \"Domain\": \"Libreview\",\n"+
-		"  \"GatewayType\": \""+ gateway+ "\"\n"+
-		"}\n";
+		else {
+			urlConnection.setRequestProperty("Abbott-ADC-App-Platform", "Android/"+((Object) Build.VERSION.RELEASE)+"/FSLL/2.10.1.10406");
+
+
+			urlConnection.setRequestProperty("Accept-Language",language+", "+loc.getLanguage()+";q=0.8");
+			urlConnection.setRequestProperty("Content-Type", "application/json; charset=utf-8");
+			getauthtext="{\"Culture\":\""+culture+"\",\"DeviceId\":\""+one+"\",\"Password\":\""+password+"\",\"SetDevice\":"+setdevice+",\"UserName\":\""+login+"\",\"Domain\":\"Libreview\",\"GatewayType\":\""+ gateway+ "\""+ "}";
+
+			}
 		byte[] textbytes=getauthtext.getBytes();
 		Log.i(LOG_ID,"postauth: "+getauthtext);
 	       urlConnection.setRequestProperty( "Content-Length", Integer.toString( textbytes.length ));
@@ -280,6 +291,29 @@ static boolean postgetauth(boolean libre3) {
 				savelibrerubbish(FirstName,LastName,dat,GuardianFirstName,GuardianLastName);
 				String UiLanguage=result.getString("UiLanguage");
 				gettermversion(UiLanguage);
+				}
+			else {
+				URL url2 = new URL(baseurl+"/api/nisperson/getAccountInfo"); //IS this really needed?
+				HttpURLConnection urlConnection2 = (HttpURLConnection) url2.openConnection();
+				urlConnection2.setRequestMethod("POST");
+				urlConnection2.setDoOutput(true);
+
+				urlConnection2.setRequestProperty("Abbott-ADC-App-Platform", "Android/"+((Object) Build.VERSION.RELEASE)+"/FSLL/2.10.1.10406");
+				urlConnection2.setRequestProperty("Accept-Language",language+", "+loc.getLanguage()+";q=0.8");
+				urlConnection2.setRequestProperty("Content-Type", "application/json; charset=utf-8");
+				String notneeded="{\"UserToken\":\""+usertoken+"\",\"Domain\":\"Libreview\",\"GatewayType\":\"FSLibreLink.Android\"}";
+				byte[] notneedbytes=notneeded.getBytes();
+				Log.i(LOG_ID,"postauth: "+notneeded);
+			       urlConnection2.setRequestProperty( "Content-Length", Integer.toString( notneedbytes.length ));
+				OutputStream outputPost2 = new BufferedOutputStream(urlConnection2.getOutputStream());
+				outputPost2.write(notneedbytes);
+				outputPost2.flush();
+				outputPost2.close();
+				final int code2=urlConnection2.getResponseCode();
+				Log.i(LOG_ID,"ResponseCode="+code2);
+				if(code2!=HTTP_OK) {
+						librestatus="getAccountInfo: getResponseCode()="+code2;
+						}
 				}
 			return true;
 			}
@@ -347,8 +381,11 @@ static boolean postmeasurements(boolean libre3,byte[] measurementdata) {
 					if("wrongDeviceInToken".equals(reason)) {
 						switch(i) {
 							case 0:{
-								if(!postgetauth(libre3))
-									return false;
+								if(!postgetauth(libre3)) {
+									if(!libreconfig(libre3,false))
+										return false;
+									i=1;
+									}
 								};break;
 							case 1: {
 								if(!libreconfig(libre3,false))
@@ -408,20 +445,23 @@ private static String  libre3getconfigURL() {
 			   termsofuseversionurl=object.getString( "TermsOfUseVersion");
 			 }
 			 catch(Throwable th) {
-				Log.stack(LOG_ID,"libre3getconfigURL",th);
+				librestatus="libre3getconfigURL 1:\n"+stackline(th);
+				Log.e(LOG_ID,librestatus);
 				}
 			finally {
 				return conurl;
 				} 
 			}
 		else {
-			Log.e(LOG_ID,"libre3getconfigURL code="+code);
+			librestatus="libre3getconfigURL failed code="+code;
+			Log.e(LOG_ID,librestatus);
 			return null;
 			}
 
 		}
 	catch(Throwable th) {
-		Log.stack(LOG_ID,"libre3getconfigURL",th);
+		librestatus="libre3getconfigURL:\n"+(th==null?"Network error ":th.getMessage());
+		Log.e(LOG_ID,librestatus);
 		return null;
 		}
 	}
@@ -445,41 +485,28 @@ public static boolean libreconfig(boolean libre3,boolean restart){
 		  }
 
 //	final String libre23url= "https://www.google.com";
-	final String libre23url= "https://fsll.freestyleserver.com/Payloads/Mobile/Android/FSLibreLink/Config/FreeStyleLibreLink_Android_2.3_DE_config.json";
-//final String libre33url="https://fsll3.freestyleserver.com/Payloads/Mobile/FSLibre3/Android/Config/FSLibre3_Android_3.3_DE_config_production.json";
+//	final String libre23url= "https://fsll.freestyleserver.com/Payloads/Mobile/Android/FSLibreLink/Config/FreeStyleLibreLink_Android_2.3_DE_config.json";
+final String libre210url=Natives.isLibreMmol()?
+"https://fsll.freestyleserver.com/Payloads/Mobile/FSLibreLink/Android/Config/FSLibreLink_Android_2.10_GB_config.json":
+"https://fsll.freestyleserver.com/Payloads/Mobile/FSLibreLink/Android/Config/FSLibreLink_Android_2.10_FR_config.json";
 
-	final String libre33url=(libre3)?libre3getconfigURL():null;
-	try {
-		URL url = new URL(libre3?libre33url:libre23url);
-		if(url==null)
+//final String libre33url="https://fsll3.freestyleserver.com/Payloads/Mobile/FSLibre3/Android/Config/FSLibre3_Android_3.3_DE_config_production.json";
+	String urlstring;
+	if(libre3) {
+		urlstring=libre3getconfigURL();
+		if(urlstring==null) {
 			return false;
+			}
+		}
+	else
+		urlstring=libre210url;
+
+	try {
+		URL url = new URL(urlstring);
+		if(url==null)  {
+			return false;
+			}
 		HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-	/*	
-		  if(android.os.Build.VERSION.SDK_INT < 20) {
-			  TrustManager[] trustAllCerts = new TrustManager[]{
-			    new X509TrustManager() {
-				public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-				    return null;
-				}
-				public void checkClientTrusted(
-				    java.security.cert.X509Certificate[] certs, String authType) {
-				}
-				public void checkServerTrusted(
-				    java.security.cert.X509Certificate[] certs, String authType) {
-				}
-			    }
-			};
-		  	try {
-				  SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
-	//			  SSLContext sslContext = SSLContext.getInstance("TLS");
-			//	  sslContext.init(null, null, null);
-				  sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
-				  urlConnection.setSSLSocketFactory(sslContext.getSocketFactory());
-				} catch (Exception e) {
-					librestatus="libreconfig:\n"+stackline(e);
-					Log.e(LOG_ID,librestatus);
-					}
-			  } */
 		urlConnection.setRequestMethod("GET");
 
 		final int code=urlConnection.getResponseCode();
@@ -487,7 +514,12 @@ public static boolean libreconfig(boolean libre3,boolean restart){
 			JSONObject object =  readJSONObject(urlConnection) ;
 			final String baseurl=object.getString( "newYuUrl");
 			setlibrebaseurl(libre3,baseurl);
-			setnewYuApiKey(libre3,object.getString("newYuApiKey"));
+			final var jobj = object.opt("newYuApiKey");
+
+			if(jobj!=null)  {
+				String value=jobj instanceof String?(String)jobj: String.valueOf(jobj);
+				setnewYuApiKey(libre3,value);
+			}
 			return postgetauth(libre3);
 			}
 		else {
@@ -522,7 +554,7 @@ private static	void askclearlibreview(Context context) {
 	dialog.show();
 	}
 
-private static void		confirmGetAccountID(Activity context) {
+private static void		confirmGetAccountID(MainActivity context) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
        var dialog=builder.setTitle(R.string.getaccountidquestion).
 	 setMessage(R.string.getaccountidmessage).
@@ -553,7 +585,7 @@ private static void getAccountid(MainActivity context, 	Predicate<Boolean> getge
 	     editid.setMinEms(5);
 	var fromlibreview=getbutton(context,R.string.fromlibreview);
 	var save=getbutton(context,R.string.save);
-	var close=getbutton(context,R.string.cancel);
+	var close=getbutton(context,R.string.closename);
 
 	var help=getbutton(context,R.string.helpname);
 
@@ -562,16 +594,20 @@ private static void getAccountid(MainActivity context, 	Predicate<Boolean> getge
 		if(!isChecked) {
 			fromlibreview.setVisibility(VISIBLE);
 			editid.setVisibility(INVISIBLE);
+			save.setVisibility(INVISIBLE);
 
 		}
 		else {
 			editid.setVisibility(VISIBLE);
 			fromlibreview.setVisibility(INVISIBLE);
+			save.setVisibility(VISIBLE);
 		}
 	};
 	domanual.accept(setmanually);
 	manual.setOnCheckedChangeListener(
-			(buttonView,  isChecked) -> domanual.accept(isChecked)
+			(buttonView,  isChecked) ->
+				domanual.accept(isChecked)
+
 
 	);
       manual.setPadding(0,0,(int)(tk.glucodata.GlucoseCurve.metrics.density*10),0);

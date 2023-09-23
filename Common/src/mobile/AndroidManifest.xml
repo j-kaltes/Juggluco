@@ -64,6 +64,8 @@
             <category android:name="android.intent.category.DEFAULT" />
         </intent-filter>
 </receiver>
+<receiver android:name="tk.glucodata.DeleteReceiver" android:enabled="true" android:exported="true" > </receiver>
+
 <receiver android:name="tk.glucodata.LossOfSensorAlarm"
             android:enabled="true"
             android:exported="true" >

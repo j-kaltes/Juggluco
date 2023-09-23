@@ -259,7 +259,7 @@
   <string name="defaults">Standaardwaarden</string>
     <string name="notify">Melding</string>
  <string name="separate">Apart</string>
-    <string name="librecurrent">Libre3 direct</string>
+    <string name="librecurrent">Direct</string>
     <string name="speed">Snelheid</string>
     <string name="pitch">Toonhoogte</string>
   <string name="talker">Spreker</string>

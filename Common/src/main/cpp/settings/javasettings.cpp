@@ -846,6 +846,8 @@ extern "C" JNIEXPORT void  JNICALL   fromjava(setlastGen)(JNIEnv *env, jclass cl
 
 
 extern "C" JNIEXPORT void  JNICALL   fromjava(setnewYuApiKey)(JNIEnv *env, jclass cl,jboolean libre3,jstring jpass) {
+	if(!jpass)
+		return;
 	char *YuKey=libre3?settings->data()->newYuApiKey3:settings->data()->newYuApiKey;
 	const jint jlen = env->GetStringLength(jpass);
 	env->GetStringUTFRegion(jpass, 0,jlen, YuKey);
@@ -1476,4 +1478,21 @@ extern "C" JNIEXPORT jfloat  JNICALL   fromjava(getVoicePitch)(JNIEnv *env, jcla
 
 extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getVoiceActive)(JNIEnv *env, jclass cl) {
 	return settings->data()->voiceactive;
+	}
+
+extern "C" JNIEXPORT jboolean  JNICALL   fromjava(isLibreMmol)(JNIEnv *env, jclass cl) {
+	return settings->data()->isLibreMmolL();
+	}
+
+
+extern bool switchgen2();
+extern "C" JNIEXPORT void  JNICALL   fromjava(setStreamHistory)(JNIEnv *env, jclass cl,jboolean val) {
+	if(val!= settings->data()->streamHistory) {
+		settings->data()->streamHistory=val;
+		if(val)
+			switchgen2();
+		}
+	}
+extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getStreamHistory)(JNIEnv *env, jclass cl) {
+	return settings->data()->streamHistory;
 	}

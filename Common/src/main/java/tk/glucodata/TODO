@@ -1,6 +1,19 @@
+Toon glucose waarde op webpagina als nightscout url opgevraagd wordt.
+- pijljes
+- glucose waarde
+- tijd/age
+
+Make installing the wearos version easier:
+	- install it from the phone version.
+	Update automatically on both phone and WearOS watch (via adb interface).
+
+Use end thread ook in Libre3
+
+Add pictures to github
+Write frequently asked questions.
 Use fdsan.h 
 Log all failures in Libre3
-Calibrate?
+Calibrate? Problem: 
 
 
 Do something with webpages:

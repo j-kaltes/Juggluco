@@ -778,8 +778,10 @@ View blpan= (thishost[2]==null)?new Space(act):getlabel(act,"bt-pan: "+thishost[
 			removeContentView(hostview);
 		hidekeyboard(act);
 		removeContentView(lay);
-		if(configchanged)
+		if(configchanged)  {
+	  		Natives.resetnetwork();
 			Applic.wakemirrors();
+			}
 		Applic.updateservice(act,Natives.getusebluetooth());
 		act.showui=false;
 		Applic.app.getHandler().postDelayed(act::hideSystemUI,1);

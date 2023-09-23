@@ -159,7 +159,7 @@ class Numbers: public LibreType {
 			addar(ptr,R"("deleted")");
 	    		}
 		next(ptr);
-		addar(ptr,R"(},)");
+		addar(ptr,R"(,"linkedGlucoseRecordNumber":"0"},)");
 		next(ptr);
 		addar(ptr,R"("recordNumber":)");
 		space(ptr);

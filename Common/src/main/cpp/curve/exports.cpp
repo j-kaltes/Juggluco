@@ -149,7 +149,7 @@ bool exportscans(int handle, const std::span<const ScanData>  (SensorGlucoseData
 	int totsen=sensors->last()+1;
 	NumIter<ScanData> *iters=new NumIter<ScanData>[totsen];
 	for(int i=0;i<totsen;i++) {
-		SensorGlucoseData *hist=sensors->gethist(i);
+		SensorGlucoseData *hist=sensors->getSensorData(i);
 		if(hist) {
 			auto scans=(hist->*(proc))();
 			const ScanData *beg=&scans.begin()[0];
@@ -173,7 +173,7 @@ bool exports(int handle, const FG& proc,const FP& print) {
 	destruct _dest([iters]{delete[] iters;});
 	LOGSTRING("exports: ");
 	for(int i=0;i<totsen;i++) {
-		SensorGlucoseData *hist=sensors->gethist(i);
+		SensorGlucoseData *hist=sensors->getSensorData(i);
 		if(hist) {
 			LOGGER("h%d\n",i);
 			auto scans=(hist->*(proc))();
@@ -248,10 +248,10 @@ bool exporthistory(int handle) {
 		}
 	int start=0;
 	for(int i=start;i<totsen;i++) {
-		SensorGlucoseData *hist=sensors->gethist(i);
+		SensorGlucoseData *hist=sensors->getSensorData(i);
 		if(hist) {
 			const int begp=hist->getstarthistory();
-			const int endp=hist->getendhistory()-1;
+			const int endp=hist->getAllendhistory()-1;
 			const Glucose *beg= hist->getglucose(begp);
 			const Glucose *en= hist->getglucose(endp);
 			

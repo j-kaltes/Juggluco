@@ -135,14 +135,14 @@ int  updateone::updatestreamu() {
 		return 2;
 	if(getsock()<0)
 		return 0;
-	return sensors->updatestreams(getcrypt(),getsock(),ind,firstsensor);
+	return sensors->updatestreams(getcrypt(),getsock(),ind,firstsensor,sendscans?2:1);
  	} 
 int updateone::updatescansu() {
 	if(!sendscans)
 		return 2;
 	if(getsock()<0)
 		return 0;
-	return sensors->updatescanss(getcrypt(),getsock(),ind,firstsensor);
+	return sensors->updatescanss(getcrypt(),getsock(),ind,firstsensor,sendstream);
  	} 
 bool netwakeup(int sock,passhost_t *pass,crypt_t *ctx){
 	if(backup) {
@@ -325,7 +325,7 @@ void activereceivethread(int allindex,passhost_t *pass) {
 			close(sockwas);
 		       delete active_receive[h];
 			active_receive[h]=nullptr;
-			LOGAR("end activereceivethread");
+			LOGGER("end activereceivethread close(%d)\n",sockwas);
 			return;
 			}
 		int &sock=hostsocks[allindex];
@@ -342,7 +342,7 @@ void activereceivethread(int allindex,passhost_t *pass) {
 		bool	activegetcommands(int sock,passhost_t *host,crypt_t *ctx) ;
 		LOGAR("before activegetcommands");
 		activegetcommands(sock,pass,ctxptr); 
-		LOGAR("after activegetcommands");
+		LOGGER("after activegetcommands close(%d)\n",sock);
 		close(sock);
 //		status.hassocket=false;
 		sock=-1;
@@ -445,6 +445,7 @@ void passivesender(int sock,passhost_t *pass)  {
 			LOGAR("passivesender  haspas true");
 			bool	receivepassinit(int ,passhost_t *,crypt_t *);
 			if(!receivepassinit(sock,pass,host.getcrypt()))  {
+				LOGGER("close(%d)\n",sock);
 				close(sock);
 				return ;
 				}

@@ -348,7 +348,7 @@ bool	getcommandsnopass(int sock,passhost_t *host) {
 	status.running(true);
 	destruct _dest([&status]{status.running(false);});
 
-	LOGSTRINGTAG("getcommandsnopass\n");
+	LOGGER("getcommandsnopass sock=%d\n",sock);
 	int start=0;
 	int maxcom =1024*1024;
 	std::unique_ptr<senddata_t[],senddata_deleter> ptr(new (maxalign,std::nothrow) senddata_t [maxcom],senddata_deleter());

@@ -67,6 +67,7 @@ static int32_t getadbuid() {
 	}
 
 int getsockets() {
+   LOGAR("getsockets()");
 	const auto adbuid=getadbuid();
 	
       pid_t pid=getpid();

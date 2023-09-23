@@ -122,7 +122,7 @@ struct scanresult_t {
     } ;
 string serial;
 int sensorindex=sensors->sensorindex(serial.data());
-SensorGlucoseData *hist=sensorindex<0?nullptr:sensors->gethist(sensorindex);
+SensorGlucoseData *hist=sensorindex<0?nullptr:sensors->getSensorData(sensorindex);
 
 private:
 pathconcat sensordir;
@@ -206,7 +206,7 @@ struct streamdata {
 	int sensorindex;
 	SensorGlucoseData *hist;
 	streamdata(int libreversion,int sensorindex,SensorGlucoseData *sens):libreversion(libreversion),sensorindex(sensorindex),hist(sens) {}
-	streamdata(int libreversion,int sensorindex):streamdata(libreversion,sensorindex,sensors->gethist(sensorindex)) {}
+	streamdata(int libreversion,int sensorindex):streamdata(libreversion,sensorindex,sensors->getSensorData(sensorindex)) {}
 	streamdata(int libreversion,const char *sensorname):streamdata(libreversion,sensors->sensorindex(sensorname)) {}
 	virtual bool good() const {
 		return true;
@@ -297,4 +297,14 @@ void add(data_t *dat) ;
 	};
 };
 #endif
+
+#define WAS_JNIEXPORT 
+typedef WAS_JNIEXPORT jobject JNICALL   (*oldprocessStream_t)(JNIEnv *envin, jobject obj, 
+jint parsertype, jobject alarmconf, jobject nonaction, jobject glrange, jobject attenuatinconfig, jbyteArray sensorident, 
+jbyte person, jbyteArray bluetoothdata, 
+jint startsincebase,jint nusincebase,jint warmup,jint wear,
+jbyteArray compostate, jbyteArray attenustate, jbyteArray measurestate,
+jobject outstarttime, jobject endtime, jobject confinsert, jobject removed, 
+jobject compo, jobject attenu, jobject messstate, 
+ jobject algorithresults);
 #endif
