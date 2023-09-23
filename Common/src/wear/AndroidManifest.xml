@@ -76,6 +76,8 @@
             android:enabled="true"
             android:exported="true" >
 </receiver>
+
+<receiver android:name="tk.glucodata.DeleteReceiver" android:enabled="true" android:exported="true" > </receiver>
 <receiver android:name="tk.glucodata.Maintenance"
             android:enabled="true"
             android:exported="true" >
