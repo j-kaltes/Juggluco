@@ -33,11 +33,11 @@ A direct connection between Watch 4 and sensor is unusable with nearly half of t
 For more information: https://www.juggluco.nl/JugglucoWearOS
 
 # BUILD Juggluco
-The following files need to be added to run Juggluco and can be found by unzipping a recent (>=5.1.3) Juggluco apk:
+The following files need to be added to run Juggluco and can be found by unzipping a recent (>=5.1.14) Juggluco apk:
 https://www.juggluco.nl/Juggluco/download.html
 
 
-libcalibrat2.so  libcalibrate.so  and libus.so in lib/* of the APK should be put in the corresponding directories in:
+libcalibrat2.so and libcalibrate.so in lib/* of the APK should be put in the corresponding directories in:
 
 ./Common/src/main/jniLibs/x86_64/    
 ./Common/src/main/jniLibs/armeabi-v7a/   
