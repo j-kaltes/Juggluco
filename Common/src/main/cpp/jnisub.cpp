@@ -1293,6 +1293,11 @@ scanstate *Abbott::initnewsensor( scandata *data) {
 		int ind=sensors->addsensor(serial.data());
 		hist=sensors->getSensorData(ind);
 		sensorindex=ind;
+extern bool streamHistory() ;
+
+		void setstartedwithStreamhistory();
+		if(streamHistory()) 
+			setstartedwithStreamhistory();
 		}
 	constexpr const int	threeyear=94694400 ;//2013
 	constexpr const int sec_per_day=60*60*24;

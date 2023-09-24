@@ -134,7 +134,7 @@ extern bool addStreamHistory(const jniHistory &hist,time_t nutime,int nuid, Sens
 bool addStreamHistory(const jniHistory &hist,time_t nutime,int nuid, SensorGlucoseData &save) { 
 	jint len=hist.size();
 	LOGGER("addStreamHistory size=%d\n",len);
-	if(len<32)  {
+	if(len<2)  {
 		return false;
 		}
 	int endhist=save.getAllendhistory();

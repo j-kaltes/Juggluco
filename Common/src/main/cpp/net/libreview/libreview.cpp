@@ -52,7 +52,8 @@ constexpr const int startsensorlen=sizeof(R"({"type":"com.abbottdiabetescare.inf
 //constexpr const  std::string_view datastart=R"({"DeviceData":{"deviceSettings":{"factoryConfig":{"UOM":")"; 
 constexpr const  std::string_view datastart=R"({"DeviceData":{"connectedDevices":{"insulinDevices":[]},"deviceSettings":{"factoryConfig":{"UOM":")"; 
 //s/char\(.*\)\[\]=R\(.*\)$/constexpr  std::string_view \1=R\2/g
-constexpr const  std::string_view afterunit= R"("},"firmwareVersion":"2.10.1","miscellaneous":{"isStreaming":true,"selectedLanguage":")";
+constexpr const  std::string_view afterunit= R"("},"firmwareVersion":"2.10.1","miscellaneous":{"isStreaming":)";
+constexpr const  std::string_view afterstreaming= R"(,"selectedLanguage":")";
 constexpr const  std::string_view afterlocale=R"(","valueGlucoseTargetRangeLowInMgPerDl":)";
 constexpr const  std::string_view afterlow=R"(,"valueGlucoseTargetRangeHighInMgPerDl":)";
 constexpr const  std::string_view afterhigh=R"(,"selectedTimeFormat":")";
@@ -584,6 +585,7 @@ constexpr const int unitlen=6;
 
 	int totallen=bytesnumbers+histtotal*histelUitlen+ startsensorlen*senslen+datastart.size()+unitlen+
 afterunit.size()+
+afterstreaming.size()+
 afterlocale.size()+
 afterlow.size()+10+
 afterhigh.size()+4+
@@ -624,6 +626,14 @@ static  constexpr const char unitlabel[][7]={"mg/dL","mmol/L"};
 	addstrview(uitptr,datastart);
 	addstrview(uitptr,unitlabel[mmolL]);
 	addstrview(uitptr,afterunit);
+	SensorGlucoseData *currentsensor=sensors->getSensorData(newcurrent);
+	if(!currentsensor||!currentsensor->pollcount()) {
+		addar(uitptr,"false");
+		}
+	else {
+		addar(uitptr,"true");
+		}
+	addstrview(uitptr,afterstreaming);
 	addstrview(uitptr,localestr);
 //iscellaneous.addProperty("selectedLanguage", Locale.getDefault().getLanguage() + '_' + ((Object) Locale.getDefault().getCountry()));
 	addstrview(uitptr,afterlocale);
@@ -652,7 +662,6 @@ static  constexpr const char unitlabel[][7]={"mg/dL","mmol/L"};
 	int devicelen=uitptr-devicestart+2;
 	addstrview(uitptr,afterident);
 
-	SensorGlucoseData *currentsensor=sensors->getSensorData(newcurrent);
 	int currentsend=addcurrents(uitptr,nu,currentsensor);
 	addstrview(uitptr, aftercurrents);
 
