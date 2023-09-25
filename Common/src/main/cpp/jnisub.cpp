@@ -930,11 +930,11 @@ static void *dynlibhandle=nullptr;
 bool linklib(const char *filename) {
 LOGGER("linklib %s %p\n",filename,dynlibhandle);
 debugclone();
-/*
+
 if(dynlibhandle) {
 	dlclose(dynlibhandle);
-LOGSTRING("closed oldlib\n");;
-	} */
+	LOGSTRING("closed oldlib\n");;
+	} 
 oldprocessStream=nullptr;
 //P1=nullptr;
 //initializeNative=nullptr;
@@ -2241,11 +2241,10 @@ void NfcMemory::add(data_t *dat) {
 	}
 #endif
 void closedynlib(void) {
-	LOGSTRING("doesn't closedynlib");
-	/*
+	LOGAR("closedynlib");
 	if(dynlibhandle)
 		dlclose(dynlibhandle);
-	dynlibhandle=nullptr; */
+	dynlibhandle=nullptr; 
 	}
 
 extern "C" JNIEXPORT void  JNICALL   fromjava(closedynlib)(JNIEnv *env, jclass _cl) {

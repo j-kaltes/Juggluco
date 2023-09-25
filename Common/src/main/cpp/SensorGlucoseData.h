@@ -171,7 +171,10 @@ char deviceaddress[deviceaddresslen];
 uint16_t libreviewScan;
 uint8_t authlendontuse;
 
-uint8_t reserved:4;
+uint8_t reserved:3;
+
+bool streamHistoryDONtuse:1;
+
 bool realHistory:1;
 bool newscan:1;
 

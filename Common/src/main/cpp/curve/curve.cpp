@@ -821,51 +821,51 @@ template <class TX,class TY> void showlineScan(NVGcontext* genVG,const ScanData 
 	uint32_t late=0,dif=5*60;
 	float startx=-1000,starty=-1000;
 	for(const ScanData *it=low;it!=high;it++) {
-			if(it->valid()) {
-				const uint32_t tim= it->t;
-				const auto glu=it->g*10;
-				const auto posx= transx(tim),posy=transy(glu);
+		if(it->valid()) {
+			const uint32_t tim= it->t;
+			const auto glu=it->g*10;
+			const auto posx= transx(tim),posy=transy(glu);
 
-				if(!restart&&tim>late) {
-					nvgStroke(genVG);
-					if(startx>=0) {
-						nvgBeginPath(genVG);
-						nvgCircle(genVG, startx,starty,pollCurveStrokeWidth);
-						nvgFill(genVG);
-						 }
-					restart=true;
-					}
-				if(restart) {
+			if(!restart&&tim>late) {
+				nvgStroke(genVG);
+				if(startx>=0) {
 					nvgBeginPath(genVG);
-					 nvgMoveTo(genVG, posx,posy);
-					 startx=posx,starty=posy;
-					 restart=false;
-					 }
-				else {
-					 startx=starty=-1000.0f;
-					nvgLineTo( genVG,posx,posy);
-					}
-
-				late=tim+dif;
-
-				if(glucosepointinfo(tim,glu, posx, posy) ) {
-					nvgLineTo( genVG,posx,posy);
-					nvgStroke(genVG);
-					nvgBeginPath(genVG);
-					nvgCircle(genVG, posx,posy,pointRadius*1.3);
+					nvgCircle(genVG, startx,starty,pollCurveStrokeWidth);
 					nvgFill(genVG);
-					nvgBeginPath(genVG);
-					nvgMoveTo(genVG, posx,posy);
-					lasttouchedcolor=colorindex;
-					}
+					 }
+				restart=true;
 				}
+			if(restart) {
+				nvgBeginPath(genVG);
+				 nvgMoveTo(genVG, posx,posy);
+				 startx=posx,starty=posy;
+				 restart=false;
+				 }
 			else {
-				/*
-				if(!restart) {
-					nvgStroke(genVG);
-					restart=true;
-					} */
+				 startx=starty=-1000.0f;
+				nvgLineTo( genVG,posx,posy);
 				}
+
+			late=tim+dif;
+
+			if(glucosepointinfo(tim,glu, posx, posy) ) {
+				nvgLineTo( genVG,posx,posy);
+				nvgStroke(genVG);
+				nvgBeginPath(genVG);
+				nvgCircle(genVG, posx,posy,pointRadius*1.3);
+				nvgFill(genVG);
+				nvgBeginPath(genVG);
+				nvgMoveTo(genVG, posx,posy);
+				lasttouchedcolor=colorindex;
+				}
+			}
+		else {
+			/*
+			if(!restart) {
+				nvgStroke(genVG);
+				restart=true;
+				} */
+			}
 		}
 
 		nvgStroke(genVG);
@@ -911,6 +911,7 @@ template <class TX,class TY> void histcurve(NVGcontext* genVG,const SensorGlucos
 	nvgStrokeColor(genVG, *col);
 	nvgFillColor(genVG,*col);
 	 bool restart=true;
+	 float startx=-3000.0f,starty=-3000.0f;
 	for(auto pos=firstpos;pos<=lastpos;pos++) {
 		const Glucose *histglu=hist->getglucose(pos);
 		if(histglu->valid()) {
@@ -926,10 +927,12 @@ template <class TX,class TY> void histcurve(NVGcontext* genVG,const SensorGlucos
 					}
 				nvgBeginPath(genVG);
 				 nvgMoveTo(genVG, posx,posy);
+				 startx=posx,starty=posy;
 				 restart=false;
 				 }
 			else {
 				nvgLineTo( genVG, posx,posy);
+				 startx=-3000.0f,starty=-3000.0f;
 				if(oncurve) {
 					nvgStroke(genVG);
 					nvgBeginPath(genVG);
@@ -945,12 +948,23 @@ template <class TX,class TY> void histcurve(NVGcontext* genVG,const SensorGlucos
 		else {
 			if(!restart) {
 				nvgStroke(genVG);
+				if(startx>=0.0f) {
+					nvgBeginPath(genVG);
+					nvgCircle(genVG, startx,starty,historyStrokeWidth);
+					nvgFill(genVG);
+					}
 				restart=true;
 				}
 			}
 		}
-	if(!restart)
+	if(!restart) {
 		nvgStroke(genVG);
+		if(startx>=0.0f) {
+			nvgBeginPath(genVG);
+			nvgCircle(genVG, startx,starty,historyStrokeWidth);
+			nvgFill(genVG);
+			}
+		}
 	if((searchdata.type&historysearchtype)==historysearchtype) {
 		nvgBeginPath(genVG);
 		for(auto pos=firstpos;pos<=lastpos;pos++) {
@@ -963,7 +977,6 @@ template <class TX,class TY> void histcurve(NVGcontext* genVG,const SensorGlucos
 					auto yc= ytrans(sput);
 					nvgCircle(genVG,xc,yc,foundPointRadius);
 					}
-//				nvgCircle(genVG, xtrans(glu->time),ytrans(glu->getsputnik()),foundPointRadius); //Bus Error in release arm32
 				}
 			}
 		nvgFill(genVG);

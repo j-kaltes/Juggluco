@@ -322,8 +322,10 @@ if(!isWearable) {
 	}
 }
 	if (gatts == null || gatts.size()== 0) {
-		streamhistory.setVisibility(GONE);
 		priority.setVisibility(GONE);
+		}
+	if(!Natives.getusebluetooth()) {
+		streamhistory.setVisibility(GONE);
 		}
 	contimes=new TextView[]{view.findViewById(R.id.consuccess) , view.findViewById(R.id.confail)};
 	constatus=view.findViewById(R.id.constatus);

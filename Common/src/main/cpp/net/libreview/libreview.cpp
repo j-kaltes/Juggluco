@@ -244,8 +244,10 @@ static LibreHist  librehistory(SensorGlucoseData *sensdata,uint32_t starttime,ui
 			}
 		}
 	while(true) {
-		if(found>laststream)
+		if(found>laststream)  {
+			LOGGER("found>laststream .notsend=%d\n",streamlen);
 			return {.notsend=streamlen};
+			}
 		if(found->valid()) 
 			break;
 		++found;
@@ -474,7 +476,7 @@ return true;
 
 #ifndef NOLOG
 	time_t tim=starttime;
-	LOGGER("start %d sensors sendlibreviewdata librekeepsecs=%d from %s ",senslen,librekeepsecs,ctime(&tim));
+	LOGGER("start %d sensors sendlibreviewdata librekeepsecs=%d from %s",senslen,librekeepsecs,ctime(&tim));
 #endif
 
 	if(senslen<=0) {
@@ -500,8 +502,7 @@ int startsensor=0;
 		auto *info=sensdata->getinfo();
 		if(!info->libreviewsendall) {
 			if(!sensdata->isLibre3()) {
-				const bool userealhistory=  (info->startedwithStreamhistory&&
-							info->libreviewnotsendHistory>= info->startedwithStreamhistory)
+				const bool userealhistory=  (info->startedwithStreamhistory&&( info->libreviewnotsendHistory>= info->startedwithStreamhistory||info->startedwithStreamhistory==1))
 						||!sensdata->pollcount();
 				switchrealhistory(sensdata,userealhistory);
 				const auto el=lists[i]=(userealhistory?libreRealHistory:librehistory)(sensdata,starttimeiter,nu);
@@ -747,7 +748,8 @@ static  constexpr const char unitlabel[][7]={"mg/dL","mmol/L"};
 		   currentsensor->getinfo()->libreCurrentIter=currentsend+1;
 			currentsensor->getinfo()->sendsensorstart=true;
 		   }
-		if(histtotal) {
+		//if(histtotal) 
+		{
 			if(last>=startsensor) {
 				SensorGlucoseData *previewsens=nullptr;
 				int lastlibre2=-1;
