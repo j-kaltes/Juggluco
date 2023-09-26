@@ -184,7 +184,8 @@ struct Tings {
 	std::array<char,36> libreviewDeviceID;
 	char _nullchar;
 	bool LibreCurrentOnly:1;
-	bool reserved5:3;
+	bool reserved5:2;
+	bool libreIsViewed:1;
 	bool streamHistory:1;
 	bool streamHistLib:1;
 

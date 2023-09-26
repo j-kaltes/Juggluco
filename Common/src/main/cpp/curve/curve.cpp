@@ -2222,9 +2222,11 @@ void withoutredisplay(NVGcontext* genVG,uint32_t nu,uint32_t endtime)  {
 		}
 	tapx=-8000;
 } */
+time_t lastviewtime=0;
 int onestep() {
-	LOGSTRING("onestop\n");
+	LOGAR("onestep");
 	time_t nu=time(nullptr);
+	lastviewtime=nu;
 	updateusedsensors(nu);
 	uint32_t endtime=starttime+duration;
 	selshown=false;

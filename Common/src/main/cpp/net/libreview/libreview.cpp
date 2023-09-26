@@ -419,15 +419,36 @@ bool putwhenneeded(bool libre3,SensorGlucoseData *sensdata) {
 		return true;
 		}
 	}
-
+extern time_t lastviewtime;
+bool getisviewed(time_t wastime) {
+	static time_t newtime=wastime+60
+#ifndef NOLOG
+	*10;
+#else
+	;
+#endif
+	bool viewed;
+	if(settings->data()->libreIsViewed&&wastime>newtime) {
+		int diff=((long long)wastime-lastviewtime);
+		viewed=abs(diff)<60;
+		LOGGER("diff=%d viewed=%d\n",diff,viewed);
+		if(viewed) {
+			newtime=wastime+60*45;
+			return true;
+			}
+		}
+	return false;
+	}
 static char *onecurrent(const ScanData &scanel,const int  nr,char *ptr) {
 	const auto mgdL= scanel.getmgdL();
 	valuestart(ptr, (float)mgdL);
 	int mil=getmmsec();
-	ptr+=TdatestringGMT(scanel.gettime(),mil,ptr);
+	auto wastime= scanel.gettime();
+	
+	ptr+=TdatestringGMT(wastime,mil,ptr);
 	const char currentformat[]=R"(","isViewed":"%s","lowOutOfRange":"%s","highOutOfRange":"%s","trendArrow":"%s","isActionable":"true","isFirstAfterTimeChange":"false"},"recordNumber":%d,"timestamp":")";
 	const int id=nr*256;
-	ptr+=sprintf(ptr,currentformat,"false",mgdL<40?"true":"false", mgdL>500?"true":"false", trendName[scanel.tr],id);
+	ptr+=sprintf(ptr,currentformat,getisviewed(wastime)?"true":"false",mgdL<40?"true":"false", mgdL>500?"true":"false", trendName[scanel.tr],id);
 	ptr+=Tdatestringlocal(scanel.gettime(),mil,ptr);
 	addar(ptr,R"("})");
 	return ptr;
@@ -886,6 +907,7 @@ void libreviewthread() {
 	while(true) {
 		  if(!networkpresent||!librecondition.dobackup) {
 			if(!networkpresent) {
+				librecondition.dobackup=0;
 				waitmin=60;
 				}
 		        std::unique_lock<std::mutex> lck(librecondition.backupmutex);
@@ -970,13 +992,18 @@ void wakeaftermin(const int waitmin) {
 		if(waitmin) {
 			 uint32_t now=time(nullptr);
 			 uint32_t prevwake=settings->data()->lastlibretime;
-			 if((now-prevwake)<60*waitmin)
+			 if((now-prevwake)<60*waitmin) {
+				LOGGER("wakeaftermin(%d) too early\n",waitmin);
 			 	return;
+				}
 			 }
+		LOGGER("wakeaftermin(%d)\n",waitmin);
 		librecondition.wakebackup(Backup::wakeall);
 		}
-	else
+	else {
+		LOGAR("wakeaftermin: no thread running");
 		librecondition.dobackup=Backup::wakeall;
+		}
  }
 void wakelibrecurrent() {
 	if(libreviewrunning) {
@@ -1028,6 +1055,9 @@ extern "C" JNIEXPORT void JNICALL fromjava(clearlibreview) (JNIEnv *env, jclass 
 extern "C" JNIEXPORT void JNICALL fromjava(wakelibreview) (JNIEnv *env, jclass clazz,int minutes) {
 	if(networkpresent)
 		wakeaftermin(minutes) ;
+	else {
+		LOGAR("wakelibreview netwerkpresent==false");
+		}
 	}
 /*
 static bool started() {

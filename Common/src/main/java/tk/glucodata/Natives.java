@@ -670,6 +670,8 @@ public static native int getinfogen(byte[] info);
 public static native boolean isLibreMmol( );
 public static native void setStreamHistory(boolean val);
 public static native boolean getStreamHistory( );
+public static native void setLibreIsViewed(boolean val);
+public static native boolean getLibreIsViewed( );
 
 //s/^extern.*JNIEXPORT[         ]*\([a-zA-Z]*\)[ ]*JNICALL[      ]*fromjava(\([^)]*\)) *(JNIEnv[^,]*,[^,)]*[,)]\([^){]*\)[^a-zA-Z0-9]*$/public static native \1 \2(\3);/g
 //public static native void sendxdripold();

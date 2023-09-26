@@ -222,7 +222,9 @@ int addsensorstart(char *buf,uint32_t nu,int mil,SensorGlucoseData *sens)  {
 	return sprintf(buf,onesensorstart,startGMT,histor,nowtimestr);
 	}
 
-int addcurrent(char *buf,int64_t histor,const ScanData *el,const bool viewed) {
+
+extern bool getisviewed(time_t wastime) ;
+int addcurrent(char *buf,int64_t histor,const ScanData *el) {
 	char gmttime[25+EXTRATIME];
 	auto tim=el->gettime();
 	int mil=getmmsec();
@@ -230,6 +232,7 @@ int addcurrent(char *buf,int64_t histor,const ScanData *el,const bool viewed) {
 	char timestr[30+EXTRATIME];
 	Tdatestringlocal(tim,mil,timestr);
 	int64_t recordnum=mkhistrecord(histor,el->getid());
+	const bool viewed=getisviewed(tim) ;
 	const char *isviewed=viewed?"true":"false";
 	return sprintf(buf,onecurrent, trendName[el->tr],isviewed,gmttime,recordnum,timestr,(float)el->getmgdL());
 	}
@@ -258,7 +261,7 @@ int sendallcurrent(uint32_t nu,SensorGlucoseData *sens,char *buf,int *lastsend) 
 		const ScanData *el=startstream+i;
 		if(el->current(i)) {
 			int64_t histor=libreviewSensorNameID(sens);
-			int wrote=addcurrent(buf,histor,el,false);
+			int wrote=addcurrent(buf,histor,el);
 			return wrote;
 			}
 		}

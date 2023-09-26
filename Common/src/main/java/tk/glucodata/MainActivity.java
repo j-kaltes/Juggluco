@@ -401,6 +401,7 @@ private static int resumenr=isRelease?10:2;
 		openfile.showchoice(this,true);
 //		if(Applic.messagesender!=null) Applic.messagesender.finddevices();
 		}
+		/*
 	else   {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 			 if(!Natives.getaskedNotify( )) {
@@ -416,7 +417,7 @@ private static int resumenr=isRelease?10:2;
 			 else
 				 Log.i(LOG_ID,"Natives.getaskedNotify( )");
 			 }
-		}
+		} */
 	for(var el:shownummessage) {
 		showindialog(el,false);
 		}

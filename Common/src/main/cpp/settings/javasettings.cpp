@@ -1496,3 +1496,12 @@ extern "C" JNIEXPORT void  JNICALL   fromjava(setStreamHistory)(JNIEnv *env, jcl
 extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getStreamHistory)(JNIEnv *env, jclass cl) {
 	return settings->data()->streamHistory;
 	}
+
+extern "C" JNIEXPORT void  JNICALL   fromjava(setLibreIsViewed)(JNIEnv *env, jclass cl,jboolean val) {
+	settings->data()->libreIsViewed=val;
+	}
+extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getLibreIsViewed)(JNIEnv *env, jclass cl) {
+	return settings->data()->libreIsViewed;
+	}
+
+

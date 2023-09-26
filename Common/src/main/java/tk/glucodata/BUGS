@@ -1,4 +1,7 @@
-
+Reinit sync maakt dat WearOS weer glucose waarden ontvangt. Kan dat niet automatisch gebeuren?
+- In onDraw of floating glucose?
+- Timers in app.
+- redraw of app.
 startedwithStreamhistory moet bij nieuwe sensoren gezet worden.
 Afhankelijk waarvan?
 	Zelfde plaats als nu bij nieuwe sensors?

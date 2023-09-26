@@ -1582,9 +1582,9 @@ dat Juggluco via Bluetooth voortdurend verbonden is met een Freestyle
 Libre 2-sensor. Voor Freestyle Libre 3-sensoren worden de 5 minuten
 History gegevens gebruikt, zodat alle eerdere waarden naar Libreview
 worden verzonden. Vanaf Juggluco 6.0.0 zullen History waarden ook
-worden gebruikt als &quot;<i>S</i><i>treamhistory</i>&quot; is
-ingeschakeld in het linkermenu -&gt; Sensor of bij US/CA/AU Libre
-2-sensoren en Libre 0-sensoren.</p>
+worden gebruikt als &quot;<i>Streamhistory</i>&quot; is ingeschakeld
+in het linkermenu -&gt; Sensor of bij US/CA/AU Libre 2-sensoren en
+Libre 0-sensoren.</p>
 <p style="line-height: 100%; margin-bottom: 0in">Om van deze service
 gebruik te maken moet je een account maken op <a href="https://libreview.com/">https://libreview.com</a>
 en het daar gebruikte <b>E-mail adres</b> en <b>wachtwoord</b> hier
@@ -1603,16 +1603,22 @@ waarden worden naar Libreview gezonden; geen gegevens met betrekking
 tot eten, activiteit, insuline of scanfouten. Vanaf Juggluco 4.1.0
 wordt ook glucosewaarden van FreeStyle Libre 3 sensoren naar
 Libreview gezonden.</p>
-<p style="line-height: 100%; margin-bottom: 0in"><b>D</b><b>irect</b>:
-stuur glucosewaarden onmiddellijk naar Libreview wanneer ze
-binnenkomen van Libre 3-sensoren. Dit is alleen handig in combinatie
-met LibreLinkUp. Om er gebruik van te maken, moet je een
-LibrelinkUp-verbinding toevoegen aan dit Libreview-account in een van
-de Libre-apps van Abbott. Soms is de waarde niet direct zichtbaar,
-omdat LibreLinkUp het scherm niet onmiddelijk herschrijft. Het
-gebruik van LibreLinkup is behoorlijk gevaarlijk als je niet goed
-kijkt, want als je de grafiek aanraakt, toont het een oude waarde in
-plaats van de huidige glucosewaarde.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>Direct</b>: stuur
+glucosewaarden onmiddellijk naar Libreview wanneer ze binnenkomen van
+Libre 3-sensoren. Dit is alleen handig in combinatie met LibreLinkUp.
+Om er gebruik van te maken, moet je een LibrelinkUp-verbinding
+toevoegen aan dit Libreview-account in een van de Libre-apps van
+Abbott. Soms is de waarde niet direct zichtbaar, omdat LibreLinkUp
+het scherm niet onmiddelijk herschrijft. Het gebruik van LibreLinkup
+is behoorlijk gevaarlijk als je niet goed kijkt, want als je de
+grafiek aanraakt, toont het een oude waarde in plaats van de huidige
+glucosewaarde.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>Spy Views</b>:
+Wanneer <i>Direct</i> ook is ingeschakeld, stuurt Juggluco naar
+Libreview of een waarde bekeken is of niet (met enige beperkingen om
+de weergave van te veel cirkels te voorkomen). Wanneer deze optie
+uitgeschakeld is, zal Juggluco altijd zeggen dat deze niet bekeken
+is.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>Herzend data</b>:
 Zendt alle data van de laatste 90 dagen opnieuw naar Libreview. Je
 moet hier op drukken als je een nieuwe Libreview account wilt

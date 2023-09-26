@@ -828,7 +828,8 @@ Specify that an alarm should go of if you didn\'t enter a certain
 amount of food or medication within a certain time period.</p>
 <h2 class="western">Colors</h2>
 <p style="line-height: 100%; margin-bottom: 0in">Change colors of
-curves, scans and numbers.</p>
+curves, scans and numbers. To switch <i>Dark mode</i>, use right
+middle menu-&gt;Dark mode.</p>
 <h2 class="western"><br/>
 <br/>
 
@@ -1521,6 +1522,11 @@ Sometimes the value is not immediately visible, because display of
 automatically. Using LibreLinkup is quite dangerous if you don\'t look
 closely, because when you touch the graph, it shows an old value
 instead of the current glucose value.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>Spy Views</b>:
+When <i>immediate</i> is also turned on Juggluco, will send to
+Libreview whether a value is viewed or not (with some restrictions to
+prevent the display of too many circles). When this option is turned
+off, Juggluco will always say that it is not viewed.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>Resend data</b>:
 Start anew; resend data of the last 90 days to Libreview. You need to
 press this when switching to a new Libreview account.</p>

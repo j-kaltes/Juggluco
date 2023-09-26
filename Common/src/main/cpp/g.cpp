@@ -1091,13 +1091,17 @@ extern std::vector<int> usedsensors;
 extern	void closedynlib();
 extern bool switchgen2();
 extern oldprocessStream_t  oldprocessStream;
+
+extern bool reinitabbott() ;
 bool switchgen2() {
 	if( !P1 ) {
 		lastgen=2;
 		if(oldprocessStream) {
 			closedynlib();
+			return reinitabbott()&&P1;
+			/*
 			if(abbottreinit()>=0&&P1)
-					return true;
+					return true; */
 			return false;
 			}
 		}
