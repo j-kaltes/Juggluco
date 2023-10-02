@@ -672,6 +672,8 @@ public static native void setStreamHistory(boolean val);
 public static native boolean getStreamHistory( );
 public static native void setLibreIsViewed(boolean val);
 public static native boolean getLibreIsViewed( );
+public static native void setRTL(boolean val);
+public static native boolean getRTL( );
 
 //s/^extern.*JNIEXPORT[         ]*\([a-zA-Z]*\)[ ]*JNICALL[      ]*fromjava(\([^)]*\)) *(JNIEnv[^,]*,[^,)]*[,)]\([^){]*\)[^a-zA-Z0-9]*$/public static native \1 \2(\3);/g
 //public static native void sendxdripold();

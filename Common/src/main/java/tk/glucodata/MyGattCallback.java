@@ -63,10 +63,9 @@ public class MyGattCallback extends SuperGattCallback {
 
 	static private final String LOG_ID = "MyGattCallback";
 
-	public MyGattCallback(SensorBluetooth sensorbluetooth, String SerialNumber, long dataptr) {
+	public MyGattCallback(String SerialNumber, long dataptr) {
 		super(Natives.getsensorgen(dataptr));
 		Log.d(LOG_ID, "MyGattCallback(..)");
-		this.sensorbluetooth = sensorbluetooth;
 		this.SerialNumber = SerialNumber;
 		this.dataptr = dataptr;
 		mActiveDeviceAddress = Natives.getDeviceAddress(dataptr);
@@ -137,12 +136,18 @@ void reconnect() {
 		gatt.close();
 		mBluetoothGatt = null;
 		}
-	sensorbluetooth.connectToActiveDevice(this, 0);
+	var sensorbluetooth=SensorBluetooth.blueone;
+	if(sensorbluetooth!=null)
+		sensorbluetooth.connectToActiveDevice(this, 0);
 	}	
 	@SuppressLint("MissingPermission")
 	@Override
 	public void onConnectionStateChange(BluetoothGatt bluetoothGatt, int status, int newState) {
 		endBLEHandler();
+		if(stop) {
+			Log.i(LOG_ID,"onConnectionStateChange stop==true");
+			return;
+			}
 		long tim = System.currentTimeMillis();
 		try {
 			if (doLog) {
@@ -172,8 +177,9 @@ void reconnect() {
 						bluetoothGatt.close();
 						mBluetoothGatt = null;
 						if(!stop) {
-							stop=true;
-							sensorbluetooth.connectToActiveDevice(this, 0);
+							var sensorbluetooth=SensorBluetooth.blueone;
+							if(sensorbluetooth!=null)
+								sensorbluetooth.connectToActiveDevice(this, 0);
 							}
 						}
 					else {
@@ -204,6 +210,9 @@ void reconnect() {
 
 	private  boolean m2831x() {
 		try {
+			var sensorbluetooth=SensorBluetooth.blueone;
+			if(sensorbluetooth==null)
+				return false;
 			BluetoothGattService service = mBluetoothGatt.getService(sensorbluetooth.mADCCustomServiceUUID);
 			if (service != null) {
 				BLELogincharacteristic = service.getCharacteristic(mCharacteristicUUID_BLELogin);
@@ -303,6 +312,11 @@ status	int: The result of the write operation BluetoothGatt#GATT_SUCCESS if the 
 		if (sensorgen == 2)
 			return;
 		try {
+			var sensorbluetooth=SensorBluetooth.blueone;
+			if(sensorbluetooth==null) {
+				Log.i(LOG_ID, "onCharacteristicWrite sensorbluetooth==null");
+				return ;
+				}
 			BluetoothGattService service;
 			BluetoothGattCharacteristic characteristic;
 			BluetoothGattDescriptor descriptor;

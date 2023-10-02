@@ -13,7 +13,7 @@ endif()
 #cmake_minimum_required(VERSION 3.4.1)
 cmake_minimum_required(VERSION 3.13)
 project(Glucodata)
-set(MYCFLAGS " -g -Wall -Wno-sign-compare -fvisibility=hidden")
+set(MYCFLAGS " -g -Wall -Wno-sign-compare -fvisibility=hidden ")
 #set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}  -gdwarf-4 -g3  -Wall")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}  ${MYCFLAGS}" )
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}   ${MYCFLAGS} -std=c++20 -fno-rtti -fno-exceptions")
@@ -48,7 +48,7 @@ set(ASCONFILES ${LIBASCON}/src/ascon_permutations.c ${LIBASCON}/src/ascon_buffer
 add_definitions(-DANDROID_STL=c++_static -DDYNLINK -DUSE_MEAL -DNOTIMEOUT  )
 #add_definitions(-DANDROID_STL=c++_static -DDYNLINK -DUSE_MEAL -DNOTIMEOUT)
 #add_definitions(-DANDROID__APP -DANDROID_STL=c++_static -DDYNLINK -DINJUGGLUCO=1 )
-add_library( g SHARED  ${BCRYPTFILES} dofirst.cpp settings/exception.cpp prunestream.cpp ${EXTRAVIEW} watch/messages.cpp watch/netinfo.cpp watch/watchvalue.cpp removeoldstates.cpp   ${CURVEDIR}/ukjugglucotext.cpp  ${CURVEDIR}/bejugglucotext.cpp ${CURVEDIR}/frjugglucotext.cpp ${CURVEDIR}/pljugglucotext.cpp ${CURVEDIR}/ptjugglucotext.cpp ${CURVEDIR}/nljugglucotext.cpp ${CURVEDIR}/dejugglucotext.cpp  ${CURVEDIR}/jugglucotext.cpp  ${CURVEDIR}/itjugglucotext.cpp ${CURVEDIR}/percentile.cpp foods/javabase.cpp ${ASCONFILES} backupjava.cpp glucose.cpp ${CURVEDIR}/shownums.cpp g.cpp jnisub.cpp share/getsockets.cpp share/hooks.cpp wearInt.cpp logjava.cpp share/logs.cpp share/nfcdata.cpp  share/serial.cpp scanstate.cpp statedata.cpp share/timestr.cpp share/savehistory.cpp ${NANOVG}/nanovg.c ${CURVEDIR}/curve.cpp ${CURVEDIR}/javacurve.cpp ${CURVEDIR}/exports.cpp settings/javasettings.cpp settings/settings.cpp debugclone.cpp ${NETDIR}/watchserver/uploader.cpp     ${NETDIR}/watchserver/sslserver.cpp    ${NETDIR}/watchserver/watchserver.cpp ${NETDIR}/netstuff.cpp ${NETDIR}/sender.cpp ${NETDIR}/sendcommands.cpp ${NETDIR}/backup.cpp ${NETDIR}/getcommand.cpp mirrorstatus.cpp datbackup.cpp nums/numdata.cpp nums/numjava.cpp  meal/mealjava.cpp meal/savemeals.cpp  ${LIBRE3FILES} libre3/loadlibs.cpp  ) # ${CURVEDIR}/rgb2hsv.cpp  ) 
+add_library( g SHARED  ${BCRYPTFILES} dofirst.cpp settings/exception.cpp prunestream.cpp ${EXTRAVIEW} watch/messages.cpp watch/netinfo.cpp watch/watchvalue.cpp removeoldstates.cpp   ${CURVEDIR}/ukjugglucotext.cpp  ${CURVEDIR}/bejugglucotext.cpp ${CURVEDIR}/frjugglucotext.cpp ${CURVEDIR}/pljugglucotext.cpp ${CURVEDIR}/ptjugglucotext.cpp ${CURVEDIR}/nljugglucotext.cpp ${CURVEDIR}/dejugglucotext.cpp  ${CURVEDIR}/jugglucotext.cpp  ${CURVEDIR}/itjugglucotext.cpp ${CURVEDIR}/percentile.cpp foods/javabase.cpp ${ASCONFILES} backupjava.cpp glucose.cpp ${CURVEDIR}/shownums.cpp g.cpp jnisub.cpp share/getsockets.cpp share/hooks.cpp wearInt.cpp logjava.cpp share/logs.cpp share/nfcdata.cpp  share/serial.cpp scanstate.cpp statedata.cpp share/timestr.cpp share/savehistory.cpp ${NANOVG}/nanovg.c ${CURVEDIR}/curve.cpp ${CURVEDIR}/javacurve.cpp ${CURVEDIR}/exports.cpp settings/javasettings.cpp settings/settings.cpp debugclone.cpp ${NETDIR}/watchserver/uploader.cpp     ${NETDIR}/watchserver/sslserver.cpp    ${NETDIR}/watchserver/watchserver.cpp ${NETDIR}/netstuff.cpp ${NETDIR}/sender.cpp ${NETDIR}/sendcommands.cpp ${NETDIR}/backup.cpp ${NETDIR}/getcommand.cpp mirrorstatus.cpp datbackup.cpp nums/numdata.cpp nums/numjava.cpp  meal/mealjava.cpp meal/savemeals.cpp  ${LIBRE3FILES} libre3/loadlibs.cpp  ) #  ${CURVEDIR}/iwjugglucotext.cpp 
 target_compile_definitions(g PRIVATE  -DUSE_SSL=1 -DANDROID__APP=1  -DJUGGLUCO_APP=1)
 #add_library( g SHARED  ${ASCONFILES} backupjava.cpp glucose.cpp ${CURVEDIR}/shownums.cpp g.cpp jnisub.cpp share/hooks.cpp share/logs.cpp share/nfcdata.cpp  share/serial.cpp  statedata.cpp share/timestr.cpp share/savehistory.cpp ${NANOVG}/nanovg.c ${CURVEDIR}/curve.cpp ${CURVEDIR}/exports.cpp settings/javasettings.cpp settings/settings.cpp debugclone.cpp  ${NETDIR}/netstuff.cpp ${NETDIR}/sender.cpp ${NETDIR}/sendcommands.cpp ${NETDIR}/backup.cpp ${NETDIR}/getcommand.cpp datbackup.cpp nums/numdata.cpp nums/numjava.cpp  meal/mealjava.cpp ) # ${CURVEDIR}/rgb2hsv.cpp  ) 
 #set_source_files_properties(curve.cpp PROPERTIES COMPILE_FLAGS )
@@ -63,7 +63,7 @@ target_compile_definitions( g  PRIVATE  -DWEAROS_MESSAGES=1 -DDONTSCALESTROKEWID
 
 #add_custom_command(TARGET g POST_BUILD COMMAND ${INCLUDESELF}/patchelf/src/patchelf --remove-needed libc++_shared.so  $<TARGET_FILE:g>)
 
-add_link_options(-g)
+add_link_options(-g  )
 
 
 #find_library(log-lib              log )
@@ -98,7 +98,7 @@ target_compile_options(juggluco PUBLIC -static   -pthread  )
 #target_link_libraries( juggluco     m pthread dl  )
 target_link_libraries( juggluco     m dl z )
 #target_link_options(juggluco  PUBLIC -static  -Wl,--whole-archive -lpthread -lrt -Wl,--no-whole-archive  )
-target_link_options(juggluco  PUBLIC -static  -Wl,--whole-archive -lpthread  -Wl,--no-whole-archive  )
+target_link_options(juggluco  PUBLIC -static  -Wl,--whole-archive -lpthread  -Wl,--no-whole-archive )
 target_compile_options(readlog PUBLIC  -fopenmp -static)
 target_link_options(readlog  PUBLIC   -fopenmp -static )
 set(extradefs -DJUSTATIC=1 )

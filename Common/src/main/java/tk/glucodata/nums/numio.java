@@ -102,9 +102,7 @@ if(true) {
 		}
 	int ret=130;
 	final String nativedir=con.getApplicationInfo().nativeLibraryDir;
-	 final String version= BuildConfig.VERSION_CODE+" "+ BuildConfig.VERSION_NAME +" "+ BuildConfig.BUILD_TIME+"\n";
-
-        Log.i(LOG_ID,version+locstr+" "+country+" nativeDir="+nativedir);
+        Natives.setlocale(locstr,(tk.glucodata.Applic.hour24=android.text.format.DateFormat.is24HourFormat(con)));
 	switch (ret=Natives.setfilesdir(filespath, country,nativedir)) {
 		case 1:
 			settingsnull();
@@ -156,7 +154,10 @@ if(true) {
 		default:
 	}
 
-        Natives.setlocale(locstr,(tk.glucodata.Applic.hour24=android.text.format.DateFormat.is24HourFormat(con)));
+	 final String version= BuildConfig.VERSION_CODE+" "+ BuildConfig.VERSION_NAME +" "+ BuildConfig.BUILD_TIME+"\n";
+
+        Log.i(LOG_ID,version+locstr+" "+country+" nativeDir="+nativedir);
+
 	if(!isWearable)
 		setDevice(android.os.Build.MANUFACTURER, android.os.Build.MODEL, RELEASE);
 

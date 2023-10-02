@@ -35,6 +35,7 @@ import static tk.glucodata.Applic.useflash;
 import static tk.glucodata.Floating.setfloatglucose;
 import static tk.glucodata.Floating.shoulduseadb;
 import static tk.glucodata.GlucoseCurve.STEPBACK;
+import static tk.glucodata.Natives.getRTL;
 import static tk.glucodata.Natives.hasstreamed;
 import static tk.glucodata.Log.showbytes;
 import static tk.glucodata.Natives.wakelibreview;
@@ -52,6 +53,7 @@ import android.content.Intent;
 import android.content.pm.ConfigurationInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.nfc.NfcAdapter;
@@ -78,6 +80,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.Locale;
 
 //import com.google.android.apps.auto.sdk.CarActivity;
 ;
@@ -209,9 +212,28 @@ static void alarmsExact(Context context) {
 		}
 	}
 	}
+/*
+void setDirection(Locale locale) {
+	Resources resources =getResources();
+	Configuration config = resources.getConfiguration();
+   	config.setLayoutDirection(locale);
+	resources.updateConfiguration(config, resources.getDisplayMetrics());
+}
+private void supportLTR() {
+	setDirection(Locale.US);
+	}
+private void supportRTL() {
+	setDirection(new Locale("iw"));
+	} */
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+	/*
+	if(getRTL())
+		supportRTL();
+	else
+		supportLTR(); */
 	if(Applic.app.stopprogram>0){
 		android.util.Log.e(LOG_ID,"Stop program");
 		if(Applic.app.stopprogram==1)

@@ -1,27 +1,12 @@
-/*      This file is part of Juggluco, an Android app to receive and display         */
-/*      glucose values from Freestyle Libre 2 and 3 sensors.                         */
-/*                                                                                   */
-/*      Copyright (C) 2021 Jaap Korthals Altes <jaapkorthalsaltes@gmail.com>         */
-/*                                                                                   */
-/*      Juggluco is free software: you can redistribute it and/or modify             */
-/*      it under the terms of the GNU General Public License as published            */
-/*      by the Free Software Foundation, either version 3 of the License, or         */
-/*      (at your option) any later version.                                          */
-/*                                                                                   */
-/*      Juggluco is distributed in the hope that it will be useful, but              */
-/*      WITHOUT ANY WARRANTY; without even the implied warranty of                   */
-/*      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                         */
-/*      See the GNU General Public License for more details.                         */
-/*                                                                                   */
-/*      You should have received a copy of the GNU General Public License            */
-/*      along with Juggluco. If not, see <https://www.gnu.org/licenses/>.            */
-/*                                                                                   */
-/*      Fri Jan 27 15:20:04 CET 2023                                                 */
-
-
 #include "jugglucotext.h"
 #ifndef WEAROS
-constexpr static std::string_view labels[]={"Fast Insuli","Carbohydra","Dextro","Long Insuli","Bike","Walk","Blood"};
+constexpr static std::string_view labels[]={"Fast Insuli",
+"Carbohydra",
+"Dextro",
+"Long Insuli",
+"Bike",
+"Walk",
+"Blood"};
 constexpr static Shortcut_t  shortinit[]= { {"Bread",
         .48},
         {"Currantbun1",
@@ -52,11 +37,26 @@ constexpr static Shortcut_t  shortinit[]= { {"Bread",
 
 extern jugglucotext engtext;
 jugglucotext engtext {
-	.daylabel={"Sun","Mon","Tue","Wed","Thu","Fri","Sat"},
+	.daylabel={"Sun",
+	"Mon",
+	"Tue",
+	"Wed",
+	"Thu",
+	"Fri",
+	"Sat"},
 	.monthlabel={
-      "Jan","Feb","Mar","Apr","May"      ,             "Jun",
-       "Jul","Aug","Sep",
-      "Oct","Nov","Dec"},
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May"      ,             
+      "Jun",
+       "Jul",
+       "Aug",
+       "Sep",
+      "Oct",
+      "Nov",
+      "Dec"},
 
 	.scanned="Scanned",
 	.readysecEnable="Sensor ready in %d minutes. Scan again to enable Streaming.",
@@ -108,8 +108,20 @@ jugglucotext engtext {
 		"Talk",
 		"Float        "
 		},
-	.menustr2= {"Last Scan","Scans","Stream","History","Amounts","Meals","Dark mode        "},
-	.menustr3= {hourminstr,"Search","Date","Day back","Day later","Week back","Week later"},
+	.menustr2= {"Last Scan",
+	"Scans",
+	"Stream",
+	"History",
+	"Amounts",
+	"Meals",
+	"Dark mode        "},
+	.menustr3= {hourminstr,
+	"Search",
+	"Date",
+	"Day back",
+	"Day later",
+	"Week back",
+	"Week later"},
 #else
  .amount="Amount",
  .menustr0= {
@@ -118,34 +130,59 @@ jugglucotext engtext {
 	"    Darkmode      ",
         "Settings",
 	"Stop Alarm" },
-.menustr2= {"Date  ",hourminstr,"Day back           ",engtext.amount},
+.menustr2= {"Date  ",
+hourminstr,
+"Day back           ",
+engtext.amount},
 #endif
 
 	.scanerrors={
-		{"Scan Error (%d)","Try again"},
-		{"Installation Error","?"},
-		{"Data processing Error","Try again"},
-		{"Activating Sensor",""},
-		{"Sensor has definitely ended",""},
+		{"Scan Error (%d)",
+			"Try again"},
+		{"Installation Error",
+			"?"},
+		{"Data processing Error",
+			"Try again"},
+		{"Activating Sensor",
+			""},
+		{"Sensor has definitely ended",
+			""},
 
-		{"Sensor ready in","%d minutes"},
-		{"373: Sensor Error","Try again later"},
-		{"New Sensor initialized","Scan again to use it"},
-		{"","Blocks touch during scanning"},
-		{"",""},
-		{"Library initialization error","Are shared libraries missing?"},
-		{"Class initalization error","Do something"},
-		{"Procedure takes too long","I kill program"},
-		{"365: Replace Sensor","Your Sensor is not working. Please remove your Sensor and start a new one."},
-		{"368: Replace Sensor","Your Sensor is not working. Please remove your Sensor and start a new one."},
-		{"",""},
-		{"Scan Error","Try again"}},
+		{"Sensor ready in",
+			"%d minutes"},
+		{"373: Sensor Error",
+			"Try again later"},
+		{"New Sensor initialized",
+			"Scan again to use it"},
+		{"",
+			"Blocks touch during scanning"},
+		{"",
+			""},
+		{"Library initialization error",
+			"Are shared libraries missing?"},
+		{"Class initalization error",
+			"Do something"},
+		{"Procedure takes too long",
+			"I kill program"},
+		{"365: Replace Sensor",
+			"Your Sensor is not working. Please remove your Sensor and start a new one."},
+		{"368: Replace Sensor",
+			"Your Sensor is not working. Please remove your Sensor and start a new one."},
+		{"",
+			""},
+		{"Scan Error",
+			"Try again"}},
 
-.libre3scanerror={"FreeStyle Libre 3, Scan error", "Try again"},
-.libre3wrongID={"Error, wrong account ID?","Specify in Settings->Libreview the same account used to activate the sensor"},
-.libre3scansuccess= {"FreeStyle Libre 3 sensor", "Glucose values will now be received by Juggluco"},
-.unknownNFC={"Unrecognized NFC scan Error", "Try again"},
-.nolibre3={"FreeStyle Libre 3 sensor","Not supported by this version of Juggluco"},
+.libre3scanerror={"FreeStyle Libre 3, Scan error", 
+	"Try again"},
+.libre3wrongID={"Error, wrong account ID?",
+	"Specify in Settings->Libreview the same account used to activate the sensor"},
+.libre3scansuccess= {"FreeStyle Libre 3 sensor", 
+	"Glucose values will now be received by Juggluco"},
+.unknownNFC={"Unrecognized NFC scan Error", 
+	"Try again"},
+.nolibre3={"FreeStyle Libre 3 sensor",
+	"Not supported by this version of Juggluco"},
 #ifndef WEAROS
 	.advancedstart= R"(<h1>Modified device</h1>
 <p>One of the libraries used by this application has a BUG that makes

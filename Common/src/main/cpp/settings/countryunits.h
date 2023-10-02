@@ -102,8 +102,8 @@ constexpr const units_t countryunits[]= {
 {"PA",2},
 {"PE",2},
 {"PH",2},
-{"PL",2},
 {"PK",2},
+{"PL",2},
 {"PT",2},
 {"QA",2},
 {"RO",2},
@@ -135,8 +135,11 @@ inline int getunit(const char code[2]) {
 	const units_t el({{code[0],code[1]},0});
 //	const units_t el(code,0);
 	const units_t *ends= std::end(countryunits);
-	 if(const units_t *found= std::lower_bound( std::begin(countryunits),ends , el, [](const units_t &one,const units_t &two) {return strncasecmp(one.code,two.code,2)<0;} );found!=ends&&!strncasecmp(found->code,code,2))
+	 if(const units_t *found= std::lower_bound( std::begin(countryunits),ends , el, [](const units_t &one,const units_t &two) {return strncasecmp(one.code,two.code,2)<0;} );found!=ends&&!strncasecmp(found->code,code,2)) {
+			LOGGER("getunit(%s)=%d\n",code,found->type);
 		 	return found->type;
+			}
 		
+	LOGGER("getunit(%s) not found\n",code);
 	return 0;	
 	}

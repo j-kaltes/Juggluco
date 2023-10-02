@@ -38,6 +38,13 @@
 #include <limits>
 #include <mutex>
 #include <algorithm>
+#include <unistd.h>
+
+/*
+inline int getpagesize(void) {
+  return sysconf(_SC_PAGESIZE);
+} */
+
 
 #include "inout.h"
 
@@ -448,7 +455,7 @@ bool savenewhistory(int pos, int lifeCount, uint16_t mgL) {
 
 #ifndef NOLOG
 		const auto wastime=lifeCount2time(lifeCount);
-		LOGGER("savenewhistory(%d,%d,%.1f) %s known\n",pos,lifeCount,mgL/180.0f,ctime(&wastime));
+		LOGGER("savenewhistory(%d,%d,%.1f) known %s",pos,lifeCount,mgL/180.0f,ctime(&wastime));
 	#endif
 		return false;
 		}
@@ -568,7 +575,7 @@ static int getgeneration(const char *info) {
 
 
 static bool mkdatabase(string_view sensordir,time_t start,const  char *uid,const  char *infodat,uint8_t days=15,uint8_t dupl=3,uint32_t bluestart=0,const char *blueinfo=nullptr,uint16_t secinterval=defaultinterval) {
-     LOGGER("mkdatabase(%s,%s)",sensordir.data(),ctime(&start));
+     LOGGER("mkdatabase %s,%s",sensordir.data(),ctime(&start));
        int gen=getgeneration(infodat);
 //	pathconcat  sensordir{basedir,sensorid};
 	mkdir(sensordir.data(),0700);
@@ -629,7 +636,7 @@ E07A-000T3YL1R50
 	} */
 static	constexpr uint16_t interval5=5*60;
 static bool mkdatabase3(string_view sensordir,time_t start,uint32_t pin,const char *address) {
-     LOGGER("mkdatabase3(%s,%s)",sensordir.data(),ctime(&start));
+     LOGGER("mkdatabase3 %s,%s",sensordir.data(),ctime(&start));
 	mkdir(sensordir.data(),0700);
 	pathconcat infoname(sensordir,infopdat);
 	if(access(infoname,F_OK)!=-1)  {
@@ -753,7 +760,7 @@ if(const ScanData *last=lastpoll()) {
 	if(last->g) {
 		lastlifecount=last->id;;
 		timelastcurrent=last->t;
-		LOGGER("lastlifecount=%d %s\n",lastlifecount,ctime(&timelastcurrent));
+		LOGGER("lastlifecount=%d %s",lastlifecount,ctime(&timelastcurrent));
 		}
 	int start=getinfo()->pollstart;
 	if((start+1)<pollcount()) {
@@ -1390,6 +1397,7 @@ time_t lifeCount2time(uint32_t lifecount) {
 
 bool sensorerror=false;
 bool replacesensor=false;
+std::vector<int>viewed;
 };
 
 struct lastscan_t {

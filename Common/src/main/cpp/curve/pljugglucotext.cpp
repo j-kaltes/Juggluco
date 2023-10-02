@@ -55,26 +55,27 @@ jugglucotext pltext {
 	.daylabel={"nie","pon","wto","śro","czw","pią","sob"},
 	.monthlabel={
       "sty","lut","mar","kwi","maj","cze","lip","sie","wrz","paź","lis","gru"},
+       
+      
 
-	.scanned="Zeskanowane",
-		.readysecEnable="Sensor gotowy za %d minut. Zeskanuj go ponownie, by umożliwić przesył danych.",
-		.readysec="Sensor gotowy za %d minut.",
-		.networkproblem="Problem z siecią?",
-		.enablebluetooth="Włącz Bluetooth",
-		.useBluetoothOff="'Użyj Bluetooth' wył.",
-		.noconnectionerror=": Brak połączenia",
-		.stsensorerror=": Błąd sensora",
-		.streplacesensor=": Wymienić sensor?",
-.endedformat="Sensor %s już nie działa. state=%d",
-.notreadyformat="Sensor %s niej est gotowy. state=%d",
-
+	.scanned="Zeskanowano",
+	.readysecEnable="Sensor gotowy za %d minut(y). Zeskanuj go ponownie, by włączyć przesył danych co 1 min.",
+	.readysec="Sensor gotowy za %d minut(y).",
+.networkproblem="Brak danych ze źródła",
+.enablebluetooth="Włącz Bluetooth",
+.useBluetoothOff="'Użyj Bluetooth' wył.",
+.noconnectionerror=": Brak połączenia",
+.stsensorerror=": Błąd sensora",
+.streplacesensor=": Wymienić sensor?",
+.endedformat="Sensor %s przestał działać. patchState=%d",
+.notreadyformat="%s nie jest jeszcze gotowy. state=%d",
 #ifndef WEAROS
 	.median="Mediana",
-	.middle="Średnia",
+	.middle=" Średnia",
 #endif
 	.history="Historia",
-	.historyinfo="Raz na 15 minut.\nZapamiętana na sensorze przez 8 godzin.\nSkanowanie przesyła je do aplikacji.\nSensor: ",
-	.history3info="Raz na 5 minut.\nZapamiętana na sensorze przez 14 dni.\nPrzesyłana przez Bluetooth do tej aplikacji.\nSensor: ",
+	.historyinfo="Raz na 15 minut.\nSensor zapamiętuje wartości przez 8 godzin.\nSkanowanie przesyła je do aplikacji.\nSensor: ",
+	.history3info="Raz na 5 minut.\nSensor zapamiętuje wartości przez 14 dni.\nSą one przesyłane przez Bluetooth do tej aplikacji.\nSensor: ",
 	.sensorstarted= "Początek sensora:",
 	.lastscanned="Ostatni odczyt:",
 	.laststream="Ostatni strumień:",
@@ -82,11 +83,11 @@ jugglucotext pltext {
 #ifndef WEAROS
 	.newamount="Nowa wartość",
 	.averageglucose="Średnie stęż. glukozy: ",
-	.duration="Czas aktywności: %.1f dni",
+	.duration="Okres aktywności: %.1f dni",
 	.timeactive="%.1f%% czasu aktywności",
 	.nrmeasurement="Liczba pomiarów: %d",
 	.EstimatedA1C="Szacowana wartość HbA1C: %.1f%% (%d mmol/mol)",
-	.GMI="Wskaźnik pomiaru glukozy (GMI): %.1f%% (%d mmol/mol)",
+	.GMI=" Wskaźnik zarządzania poziomem glukozy (GMI): %.1f%% (%d mmol/mol)",
 	.SD="Odchylenie standardowe: %.2f",
 	.glucose_variability="Zmienność stęż. glukozy: %.1f%%",
      .menustr0={
@@ -105,9 +106,9 @@ jugglucotext pltext {
 		"Lista", 
 		"Statystyka",
 		"Na głos",
-		"Pływająca        "
+		"Pływ. wart.        "
 		},
-	.menustr2= {"Ostatni odczyt","Odczyty","Strumień","Histora","Wartość","Posiłki","Tryb ciemny        "},
+	.menustr2= {"Ostatni odczyt","Skany","Strumień","Historia","Wartości","Posiłki","Tryb ciemny        "},
 	.menustr3= {hourminstr,"Wyszukaj","Data","Dzień wstecz","Dzień później","Tydzień wstecz","Tydzień później"},
 #else
  .amount="Wartość",
@@ -115,41 +116,45 @@ jugglucotext pltext {
 	"Klon",
 	"Sensor",
 	"   Tr. ciemny      ",
-    "Ustawienia",
-	"Zatrzymaj alarm" },
+        "Ustawienia",
+	"Zatrzym. alarm"},
 .menustr2= {"Data",hourminstr,"1 d. wstecz      ",pltext.amount},
 #endif
 
 	.scanerrors={
-		{"Błąd odczytu(%d)","Spróbuj ponownie"},
+		{"Błąd skanowania (%d)","Spróbuj ponownie"},
 		{"Błąd instalacji","?"},
 		{"Błąd przetwarzania danych","Spróbuj ponownie"},
 		{"Aktywacja sensora",""},
 		{"Sensor zakończył działanie",""},
 
-		{"Sensor gotowy za","%d minut"},
-		{"373: Błąd sensora","Nie kontaktuj się od razu z obsługą klienta firmy Abbott; odczyty glukozy mogą być dostępne za 10 minut."},
+		{"Sensor gotowy za","%d minut(y)"},
+		{"373: Błąd sensora","Poczekaj spokojnie i spróbuj ponownie później"},
 		{"Nowy sensor uruchomiony","Zeskanuj go ponownie, by z niego korzystać"},
-		{"","Blokuje dotyk w czasie skanowania"},
+		{"","Blokuje funkcje dotykowe w czasie skanowania"},
 		{"",""},
-		{"Błąd instalacji biblioteki","Wymuś reinstalację poprzez usunięcie biblioteki"},
-		{"Błąd inicjalizacji klasy", "Zrób coś"},
+		{"Błąd podczas ładowania biblioteki", "Czy brakuje bibliotek współdzielonych?"},
+		{"Błąd podczas ładowania klasy", "Zrób coś"},
 		{"Procedura trwa zbyt długo","Zamykam program"},
-		{"365: Wymień sensor","Twój sensor nie działa. Proszę usunąć sensor i założyć nowy."},
-		{"368: Wymień sensor","Twój sensor nie działa. Proszę usunąć sensor i założyć nowy."},
+		{"365: Wymień sensor","Twój sensor nie działa. Usuń ten sensor i aktywuj nowy."},
+		{"368: Wymień sensor","Twój sensor nie działa. Usuń ten sensor i aktywuj nowy."},
 		{"",""},
-		{"Błąd odczytu","Spróbuj ponownie"}},
+		{"Błąd skanowania", "Spróbuj ponownie"}},
 
-
-.libre3scanerror={"Błąd skanu FreeStyle Libre 3", "Spróbuj ponownie"},
-.libre3wrongID={"Błąd, niepoprawny nr ID konta?","W Ustawienia - >Libreview określ to samo konto, które zostało użyte do aktywacji sensora"},
+.libre3scanerror={"FreeStyle Libre 3, Błąd skanowania", "Spróbuj ponownie"},
+.libre3wrongID={"Błąd, niepoprawny nr ID konta?","W menu Ustawienia ->Libreview wpisz to samo konto, które zostało użyte do aktywacji sensora"},
 .libre3scansuccess= {"Sensor FreeStyle Libre 3", "Wartości stężenia glukozy będą teraz odbierane przez Juggluco"},
-.unknownNFC={"Nierozpoznany błąd skanowania NFC", "Spróbuj ponownie"},
+.unknownNFC={"Nieznany błąd skanowania NFC", "Spróbuj ponownie"},
 .nolibre3={"Sensor FreeStyle Libre 3","Nie jest obsługiwany przez tę wersję Juggluco"},
-
 #ifndef WEAROS
-	.advancedstart= R"(<h1>Zmodyfikowane urządzenie</h1>
-<p>Jedna z bibliotek używanych przez tę aplikację ma BŁĄD, który powoduje, że się zawiesza, jeśli wykryje pewne pliki. Twoje urządzenie zawiera niektóre z tych plików. Ten program zawiera sposób na obejście tego błędu, ale prawdopodobnie lepiej jest zrobić, pliki te były niewykrywalne w inny sposób. Na przykład Magisk ma opcję ukrycia roota dla niektórych aplikacji (Magiskhide lub Denylist) i zmiany własnej nazwy, oba są potrzebne. W twoim przypadku ma problemy z następującym plikiem)",
+	.advancedstart= R"(<h1>Urządzenie zmodyfikowane</h1>
+<p>Jedna z bibliotek używanych przez tę aplikację ma BŁĄD, który powoduje, że się zawiesza, jeśli wykryje pewne pliki.
+ Twoje urządzenie zawiera niektóre z tych plików.
+ Ten program zawiera sposób na obejście tego błędu, ale pewnie lepiej jest zrobić, by pliki te były niewykrywalne w inny sposób.
+
+ Na przykład Magisk ma opcję ukrycia roota dla niektórych aplikacji (Magiskhide lub Denylist) i zmiany własnej nazwy, oba są potrzebne.
+ 
+ W twoim przypadku ma problemy z następującym plikiem)",
 	.add_s=true,
 .shortinit=plshortinit,
 .labels=pllabels

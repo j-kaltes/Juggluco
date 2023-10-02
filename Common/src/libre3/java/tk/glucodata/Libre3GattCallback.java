@@ -79,10 +79,9 @@ void free() {
 	cryptptr=0L;
 	endcrypt(tmp);
 	}
-	public Libre3GattCallback(SensorBluetooth sensorbluetooth, String SerialNumber, long dataptr)  {
+	public Libre3GattCallback(String SerialNumber, long dataptr)  {
 		super(3);
 		Log.d(LOG_ID, "Libre3GattCallback(..)");
-		this.sensorbluetooth = sensorbluetooth;
 		this.SerialNumber = SerialNumber;
 		this.dataptr = dataptr;
 		sensorptr = Natives.getsensorptr(dataptr);
@@ -122,6 +121,10 @@ void free() {
 	@SuppressLint("MissingPermission")
 	@Override 
 	public void onConnectionStateChange(BluetoothGatt bluetoothGatt, int status, int newState) {
+		if(stop) {
+			Log.i(LOG_ID,"onConnectionStateChange stop==true");
+			return;
+			}
 		if(tk.glucodata.Log.doLog) {
                         String[] state = {"DISCONNECTED", "CONNECTING", "CONNECTED", "DISCONNECTING"};
                         Log.i(LOG_ID, SerialNumber + " onConnectionStateChange, status:" + status + ", state: " + (newState < state.length ? state[newState] : newState));
@@ -147,8 +150,6 @@ void free() {
 				}
 			} 
 		if(!stop)  {
-			if(!autoconnect)
-				stop=true;
 			 realdisconnected(status);
 			 }
             }

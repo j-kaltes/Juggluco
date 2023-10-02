@@ -184,7 +184,10 @@ struct Tings {
 	std::array<char,36> libreviewDeviceID;
 	char _nullchar;
 	bool LibreCurrentOnly:1;
-	bool reserved5:2;
+	bool reserved5:1;
+
+	bool RTL:1;
+
 	bool libreIsViewed:1;
 	bool streamHistory:1;
 	bool streamHistLib:1;
@@ -473,6 +476,7 @@ bool getnodebug() const {
 	}
 void setconvert(const char *country) {
 	int unit=data()->unit;
+
 	if(unit==0) {
 		if(country&&*country)
 			unit=getunit(country);
@@ -480,6 +484,9 @@ void setconvert(const char *country) {
 			unit=3;
 		setalarms(39*18,13*180,true,true,true,true);
 		setranges(3*180,12*180,39*18,10*180);
+		}
+	else {
+		LOGGER("setconvert was unit=%d\n",unit);
 		}
 	setunit(unit);
 	}

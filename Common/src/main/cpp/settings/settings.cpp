@@ -17,6 +17,11 @@
 /*      along with Juggluco. If not, see <https://www.gnu.org/licenses/>.            */
 /*                                                                                   */
 /*      Fri Jan 27 12:36:58 CET 2023                                                 */
+/*
+#ifndef NOLOG
+#define NONOJVM 1
+#endif
+*/
 
 #include "logs.h"
 #include "datbackup.h"

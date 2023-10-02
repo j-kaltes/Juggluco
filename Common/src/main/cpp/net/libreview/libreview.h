@@ -37,7 +37,7 @@
 //#define  NOREALSEND 1
 #endif
 constexpr const char *const trendName[]{"Undetermined", "FallingQuickly", "Falling", "Stable", "Rising", "RisingQuickly"};
-constexpr inline void	addstrview(char *&uitptr,const std::string_view indata) {
+inline void	addstrview(char *&uitptr,const std::string_view indata) {
 	memcpy(uitptr,indata.data(),indata.size());
 	uitptr+=indata.size();
 	}

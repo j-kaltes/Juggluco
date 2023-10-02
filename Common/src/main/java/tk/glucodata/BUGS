@@ -1,14 +1,12 @@
+Libreview text, Libre 0 streaming DE,NL
+
+mg/dl etc translated?
+
 Reinit sync maakt dat WearOS weer glucose waarden ontvangt. Kan dat niet automatisch gebeuren?
 - In onDraw of floating glucose?
 - Timers in app.
 - redraw of app.
-startedwithStreamhistory moet bij nieuwe sensoren gezet worden.
-Afhankelijk waarvan?
-	Zelfde plaats als nu bij nieuwe sensors?
-	In constructor?
-	In initialize sensor? Wat als geinitialiseerd op telefoon met andere instelling als horloge?
-Hoe bepaal ik of history of stream data gezonden worden?
-Hoe staat het na clear?
+
 
 Verwijderen van de verkeerde notificatie? Deleteverwijdered Foreground service notification.
 Starthistory? Moet niet al verkregen data terugzenden. 

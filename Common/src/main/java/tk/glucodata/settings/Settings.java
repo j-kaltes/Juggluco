@@ -34,6 +34,7 @@ import static android.widget.Spinner.MODE_DIALOG;
 import static android.widget.Spinner.MODE_DROPDOWN;
 import static androidx.core.os.LocaleListCompat.getEmptyLocaleList;
 import static tk.glucodata.Applic.isWearable;
+import static tk.glucodata.Natives.getRTL;
 import static tk.glucodata.NumberView.avoidSpinnerDropdownFocus;
 import static tk.glucodata.help.help;
 import static tk.glucodata.util.getbutton;
@@ -44,6 +45,7 @@ import static tk.glucodata.util.getlocale;
 import android.app.Application;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.text.InputType;
@@ -443,8 +445,8 @@ final private static String  codestr=String.valueOf(BuildConfig.VERSION_CODE);
 
 
 //static private final List<String> supportedlanguages= Arrays.asList("Language","be","de","en","fr","it","nl","pl","pt","uk","zh");
-static private final List<String> supportedlanguages= Arrays.asList("Language","be","de","en","fr","it","nl","pl","pt","uk");
-//static private final List<String> supportedlanguages= Arrays.asList(Applic.app.,"en","be","de","fr","it","nl","pl","pt","uk");
+  static private final List<String> supportedlanguages= Arrays.asList("Language","be","de","en","fr","it","nl","pl","pt","uk");
+//static private final List<String> supportedlanguages= Arrays.asList("Language","be","de","en","fr","it","iw","nl","pl","pt","uk");
 static private Spinner languagespinner(MainActivity context, int[] spinpos) {
 	var spin=  new Spinner(context,isWearable?MODE_DIALOG: MODE_DROPDOWN);
 
@@ -471,6 +473,7 @@ static private Spinner languagespinner(MainActivity context, int[] spinpos) {
 	spin.setSelection(pos);
 
 //	   spin.setPadding(0,0,0,0);
+	spinpos[0]=pos;
 	return spin;
 	}
 
@@ -620,7 +623,11 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 
 	int[] spinpos={0};
 	var langspin=languagespinner(context,spinpos);
-	spinpos[0]=-1;
+	var startspinpos=spinpos[0];
+	Log.i(LOG_ID,"startspinpos="+startspinpos);
+/*	final var pastRTL= getRTL();
+	var checkRTL=getcheckbox(context, "RTL", pastRTL);
+	*/
     ok.setOnClickListener(v->{
 		final int wasorient=Natives.getScreenOrientation();
 		if(!isWearable) {	
@@ -685,22 +692,25 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 		   context.poponback();
 		    hidekeyboard();
 		    finish();
-		if(spinpos[0]!=-1) {
+//		var rtl=checkRTL.isChecked();
+		if(spinpos[0]!=startspinpos) {
+/*			Log.i(LOG_ID,"setpinpos[0]="+spinpos[0]+" getRTL()=="+pastRTL+" checked="+rtl);
+			Natives.setRTL(rtl);  */
+
 			var newlocale=(spinpos[0]==0)?getEmptyLocaleList():LocaleListCompat.forLanguageTags(supportedlanguages.get(spinpos[0]));
 			AppCompatDelegate.setApplicationLocales(newlocale);
 			}
-		    });
-	    /*
-	var library=getbutton(context,"New Library");
-        library.setOnClickListener(v-> {
-		getlibrary.openlibrary(context) ;
-		});*/
-/*	var setnl=getbutton(context,"nl"); 
-        setnl.setOnClickListener(v-> { //DOESN"T work:w
-	
- //			AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags("nl-NL"));
- 			AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags("nl"));
-			}); */
+/*		else {
+			Log.i(LOG_ID,"getRTL()=="+pastRTL+" checked="+rtl);
+			if(rtl!=pastRTL) {
+				Natives.setRTL(rtl); 
+				Intent intent = context.getIntent();
+				context.finish();
+				context.startActivity(intent);
+				}
+			} */
+			});
+
 	if(!isWearable) {
 		changelabels.setText(R.string.numberlabels);
 		changelabels.setOnClickListener(v-> {
@@ -759,6 +769,8 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 /*		var streamhistory=getcheckbox(context,R.string.streamhistory,Natives.getStreamHistory( ));
 		streamhistory.setOnCheckedChangeListener( (buttonView,  isChecked) -> Natives.setStreamHistory(isChecked) );*/
 	       var floatconfig=getbutton(context,R.string.floatglucose);
+
+
 	       floatconfig.setOnClickListener(v-> tk.glucodata.FloatingConfig.show(context));
 		View[] rowglu=new View[]{ bluetooth,floatconfig,alarmbut};
 		row8=new View[]{changelabels,langspin,numalarm,colbut};

@@ -224,7 +224,7 @@ int addsensorstart(char *buf,uint32_t nu,int mil,SensorGlucoseData *sens)  {
 
 
 extern bool getisviewed(time_t wastime) ;
-int addcurrent(char *buf,int64_t histor,const ScanData *el) {
+static int addcurrent(char *buf,int64_t histor,const ScanData *el,bool &viewed) {
 	char gmttime[25+EXTRATIME];
 	auto tim=el->gettime();
 	int mil=getmmsec();
@@ -232,7 +232,7 @@ int addcurrent(char *buf,int64_t histor,const ScanData *el) {
 	char timestr[30+EXTRATIME];
 	Tdatestringlocal(tim,mil,timestr);
 	int64_t recordnum=mkhistrecord(histor,el->getid());
-	const bool viewed=getisviewed(tim) ;
+	viewed=getisviewed(tim) ;
 	const char *isviewed=viewed?"true":"false";
 	return sprintf(buf,onecurrent, trendName[el->tr],isviewed,gmttime,recordnum,timestr,(float)el->getmgdL());
 	}
@@ -240,7 +240,7 @@ int addcurrent(char *buf,int64_t histor,const ScanData *el) {
 
 
 
-int sendallcurrent(uint32_t nu,SensorGlucoseData *sens,char *buf,int *lastsend) { 
+static int sendallcurrent(uint32_t nu,SensorGlucoseData *sens,char *buf,int *lastsend,bool &viewed) { 
 	if(!sens)
 		return 0;
 	 int start=sens->getinfo()->libreviewScan;
@@ -261,7 +261,7 @@ int sendallcurrent(uint32_t nu,SensorGlucoseData *sens,char *buf,int *lastsend) 
 		const ScanData *el=startstream+i;
 		if(el->current(i)) {
 			int64_t histor=libreviewSensorNameID(sens);
-			int wrote=addcurrent(buf,histor,el);
+			int wrote=addcurrent(buf,histor,el,viewed);
 			return wrote;
 			}
 		}
@@ -425,8 +425,8 @@ addstrcont(uitptr,deviceID);
 addarray(afteridentifier);
 constexpr const char newline[]="\n     ";
 int laststreamsend;
-
-int wrotecurrent=(hasnewcurrent||inhistory>0)?sendallcurrent(nu,lastsensdata,uitptr,&laststreamsend):0;
+bool viewed=false;
+int wrotecurrent=(hasnewcurrent||inhistory>0)?sendallcurrent(nu,lastsensdata,uitptr,&laststreamsend,viewed):0;
 if(wrotecurrent>0) {
 	uitptr+=wrotecurrent;
 	addarray(newline);
@@ -511,6 +511,9 @@ if(datasend) {
 			sens->getinfo()->libreviewnotsend=nextnum;
 			}
 		if(wrotecurrent>0) {
+			extern time_t nexttimeviewed;
+			extern int betweenviews;
+			nexttimeviewed=nu+betweenviews;
 			lastsensdata->getinfo()->libreviewScan=laststreamsend+1;
 			lastsensdata->getinfo()->sendsensorstart=true;
 			}

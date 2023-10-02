@@ -179,9 +179,15 @@ float valuesize=0;
 
 float facetimefontsize,facetimey;
 void resetcurvestate();
-static bool chfontset=false;
+static enum FontType {
+	CHINESE,
+	HEBREW,
+	REST
+	} chfontset=REST;
+//static bool chfontset=false;
 
 bool chinese();
+bool hebrew() ;
 static void initfont() { 
 LOGAR("initfont");
 if(!genVG) {
@@ -193,10 +199,33 @@ if(chinese()) {
 
 	menufont = nvgCreateFont(genVG, "regular", "/system/fonts/NotoSerifCJK-Regular.ttc");
 //TODO free font ???
-	chfontset=true;
+	chfontset=CHINESE;
 	}
+
 	else  {
-	chfontset=false;
+
+#ifdef USE_HEBREW
+if(hebrew())  {
+	auto fallback = nvgCreateFont(genVG, "dance-bold","/system/fonts/DroidSans.ttf");
+
+
+	font=whitefont=blackfont = nvgCreateFont(genVG, "dance-bold","/system/fonts/NotoSansHebrew-Regular.ttf");
+	nvgAddFallbackFontId(genVG, font,fallback);
+
+//	auto menufallback = nvgCreateFont(genVG, "regular","/system/fonts/NotoSerif.ttf");
+
+	menufont = nvgCreateFont(genVG, "regular", "/system/fonts/NotoSerifHebrew-Regular.ttf");
+	nvgAddFallbackFontId(genVG,menufont, fallback);
+
+
+
+	chfontset=HEBREW;
+}
+
+else  
+#endif
+{
+	chfontset=REST;
 
 constexpr const char standardfonts[][41]= {
 "/system/fonts/Roboto-Black.ttf",
@@ -232,6 +261,7 @@ constexpr const char menufonts[][41]={
 		font=whitefont;
 	else
 		font=blackfont;
+		}
 		}
 
 	nvgFontFaceId(genVG,font);
@@ -273,6 +303,7 @@ constexpr const char menufonts[][41]={
 	invertcolors=settings->data()->invertcolors;
          startincolors=startbackground*invertcolors;
 	 }
+
 
 
 void	initopengl(int started)  {
@@ -1626,6 +1657,8 @@ static int showerrorvalue(const SensorGlucoseData *sens,const time_t nu,float ge
 	
 		}
 	}
+int betweenviews=60*30;
+time_t nexttimeviewed=0;
 static void showlastsstream(const time_t nu,const float getx,std::vector<int> &used ) {
 //LOGGER("showlaststream %d\n",used.size());
 	int success=false;
@@ -1634,7 +1667,7 @@ static void showlastsstream(const time_t nu,const float getx,std::vector<int> &u
 	++failures;
 	for(int i=0;i<used.size();i++) {
 		const int sensorindex=used[i];
-		const SensorGlucoseData *hist=sensors->getSensorData(sensorindex);
+		SensorGlucoseData *hist=sensors->getSensorData(sensorindex);
 		int yh=i*2+1;
 		float gety=smallsize*.5f+dtop+dheight*yh/(used.size()*2.0f);
 		const ScanData *poll=hist->lastpoll();
@@ -1654,6 +1687,16 @@ static void showlastsstream(const time_t nu,const float getx,std::vector<int> &u
 				nvgFill(genVG);
 				showvalue(poll,hist->shortsensorname(),getx,gety);
 				success=true;
+				if(!hist->isLibre3()) {
+					 if(settings->data()->libreIsViewed) {
+						if(poll->t>nexttimeviewed) {
+							const int addnum= hist->pollcount()-1;
+							hist->viewed.push_back(addnum);
+							nexttimeviewed=poll->t+betweenviews;
+							LOGGER("add %d nextime=%s",addnum,ctime(&nexttimeviewed));
+							}
+						}
+					}
 				}
 			else {
 				LOGAR("age>=maxbluetoothage");
@@ -1670,7 +1713,7 @@ static void showlastsstream(const time_t nu,const float getx,std::vector<int> &u
 			LOGSTRING("poll==null\n");
 			time_t starttime=hist->getstarttime();
 			auto wait= nu-starttime;
-			LOGGER("wait=%lu starttime=%lu %s\n",wait,starttime,ctime(&starttime));
+			LOGGER("wait=%lu starttime=%lu %s",wait,starttime,ctime(&starttime));
 			if(wait<(60*60)) {
 			//	const bool streaming=hist->deviceaddress()[0];
 				const bool isInitialised=hist->isLibre3()||sensors->getsensor(sensorindex)->initialized;
@@ -2362,6 +2405,7 @@ extern void setusebe();
 extern void setusefr();
 
 extern void setusept() ;
+extern void setuseiw() ;
 extern void setuseeng() ;
 extern std::string_view localestr;
 extern bool hour24clock;
@@ -2381,6 +2425,18 @@ bool chinese() {
 		}
 	return false;
 	}
+
+#ifdef USE_HEBREW
+bool hebrew() {
+	const int16_t lannum=mklanguagenum(localestrbuf);
+	switch(lannum) {
+		case mklanguagenum("IW"):
+		case mklanguagenum("iw"):
+		return true;
+		}
+	return false;
+	}
+#endif
 
 
 void  setlocale(const char *localestrbuf,const size_t len) {
@@ -2420,19 +2476,29 @@ void  setlocale(const char *localestrbuf,const size_t len) {
 		case mklanguagenum("uk"):
 			setuseuk();
 			break;
+
+#ifdef USE_HEBREW
+		case mklanguagenum("IW"):
+		case mklanguagenum("iw"):
+			setuseiw();
+			if(chfontset!=HEBREW) {
+				initfont();
+				}
+			break;
+			#endif
 			/*
 		case mklanguagenum("ZH"):
 		case mklanguagenum("zh"):
 			setusezh();
-			if(!chfontset) {
+			if(chfontset!=CHINESE) {
 				initfont();
 				}
 			return; */
 		default: setuseeng();
 		};
-/*	if(chfontset) {
+	if(chfontset!=REST) {
 		initfont();
-	 	} */
+	 	} 
 
 	}
 

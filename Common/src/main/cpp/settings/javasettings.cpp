@@ -1505,3 +1505,10 @@ extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getLibreIsViewed)(JNIEnv *env,
 	}
 
 
+extern "C" JNIEXPORT void  JNICALL   fromjava(setRTL)(JNIEnv *env, jclass cl,jboolean val) {
+	settings->data()->RTL=val;
+	}
+extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getRTL)(JNIEnv *env, jclass cl) {
+	return settings->data()->RTL;
+	}
+

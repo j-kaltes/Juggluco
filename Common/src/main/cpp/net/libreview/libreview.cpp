@@ -420,26 +420,22 @@ bool putwhenneeded(bool libre3,SensorGlucoseData *sensdata) {
 		}
 	}
 extern time_t lastviewtime;
+extern time_t nexttimeviewed;
+extern int betweenviews;
 bool getisviewed(time_t wastime) {
-	static time_t newtime=wastime+60
-#ifndef NOLOG
-	*10;
-#else
-	;
-#endif
 	bool viewed;
-	if(settings->data()->libreIsViewed&&wastime>newtime) {
+	if(settings->data()->libreIsViewed&&wastime>nexttimeviewed) {
 		int diff=((long long)wastime-lastviewtime);
 		viewed=abs(diff)<60;
 		LOGGER("diff=%d viewed=%d\n",diff,viewed);
 		if(viewed) {
-			newtime=wastime+60*45;
+//			nexttimeviewed=wastime+betweenviews;
 			return true;
 			}
 		}
 	return false;
 	}
-static char *onecurrent(const ScanData &scanel,const int  nr,char *ptr) {
+static char *onecurrent(const ScanData &scanel,const int  nr,char *ptr,bool isviewed) {
 	const auto mgdL= scanel.getmgdL();
 	valuestart(ptr, (float)mgdL);
 	int mil=getmmsec();
@@ -448,11 +444,25 @@ static char *onecurrent(const ScanData &scanel,const int  nr,char *ptr) {
 	ptr+=TdatestringGMT(wastime,mil,ptr);
 	const char currentformat[]=R"(","isViewed":"%s","lowOutOfRange":"%s","highOutOfRange":"%s","trendArrow":"%s","isActionable":"true","isFirstAfterTimeChange":"false"},"recordNumber":%d,"timestamp":")";
 	const int id=nr*256;
-	ptr+=sprintf(ptr,currentformat,getisviewed(wastime)?"true":"false",mgdL<40?"true":"false", mgdL>500?"true":"false", trendName[scanel.tr],id);
+	ptr+=sprintf(ptr,currentformat,isviewed?"true":"false",mgdL<40?"true":"false", mgdL>500?"true":"false", trendName[scanel.tr],id);
 	ptr+=Tdatestringlocal(scanel.gettime(),mil,ptr);
 	addar(ptr,R"("})");
 	return ptr;
 	};
+
+static void addoldcurrents(char *&uitptr,const SensorGlucoseData *sens,int start,int current) { 
+	if(!settings->data()->libreIsViewed)
+		return;
+	const auto &viewed=sens->viewed;
+	const ScanData *startstream=sens->beginpolls();
+	for(int i:viewed) {
+		if(i>=start&&i<current) {
+			const ScanData *el=startstream+i;
+			uitptr=onecurrent(*el,i,uitptr,true);
+			*uitptr++=',';
+			}
+		}
+	}
 static int addcurrents(char *&uitptr,time_t nu,const SensorGlucoseData *sens) { 
 	if(!sens)  {
 		LOGAR("addcurrents: SensorGlucoseData==null");
@@ -474,12 +484,33 @@ static int addcurrents(char *&uitptr,time_t nu,const SensorGlucoseData *sens) {
 	for(int i=ends;i>=start;i--) {
 		const ScanData *el=startstream+i;
 		if(el->current(i)) {
-			if(el->gettime()<old)
+			auto wastime= el->gettime();
+			if(wastime<old)
 				return 0;
-			uitptr=onecurrent(*el,i,uitptr);
+			const auto &viewed=sens->viewed;
+			bool isViewed=false;
+			int id=i;
+			if(settings->data()->libreIsViewed) {
+				if(!viewed.empty()) {
+					int previd=viewed.back();
+					const ScanData *prev=startstream+previd;
+					if(((long long)wastime-prev->gettime())<betweenviews) {
+						LOGGER("previd=%d near %d\n",previd,i);
+						isViewed=true;
+						id=previd;
+						}
+					else {
+						LOGGER("previd=%d %x near %d %x\n",previd,prev->gettime(),i,wastime);
+						}
+					}
+				}
+			uitptr=onecurrent(*el,i,uitptr,isViewed);
+			*uitptr++=',';
+			addoldcurrents(uitptr,sens,start,id);
 			return ends;
 			}
 		}
+	addoldcurrents(uitptr,sens,start,INT_MAX);
 	return ends;
 	}
  extern bool streamHistory();
@@ -683,8 +714,10 @@ static  constexpr const char unitlabel[][7]={"mg/dL","mmol/L"};
 	addstrcont(uitptr,deviceID);
 	int devicelen=uitptr-devicestart+2;
 	addstrview(uitptr,afterident);
-
+	auto *startuitptr=uitptr;
 	int currentsend=addcurrents(uitptr,nu,currentsensor);
+	if(uitptr!=startuitptr)
+		--uitptr;
 	addstrview(uitptr, aftercurrents);
 
 	memcpy(uitptr,devicestart,devicelen);
@@ -779,6 +812,7 @@ static  constexpr const char unitlabel[][7]={"mg/dL","mmol/L"};
 					SensorGlucoseData *sensdata=sensors->getSensorData(index);
 
 					if(!sensdata->isLibre3()) {
+						sensdata->viewed.clear();
 						if(newcurrent==i||sensdata->getinfo()->libreviewScan!=scanids[i]||lists[i].size) { 
 							sensdata->getinfo()->sendsensorstart=true;
 							if(previewsens) {

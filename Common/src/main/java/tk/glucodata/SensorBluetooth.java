@@ -627,10 +627,10 @@ SuperGattCallback getGattCallback(String name, long dataptr) {
 	if(libreVersion==3) {
 		int vers = Natives.getLibreVersion(dataptr);
 		if (vers == 3) {
-			return new Libre3GattCallback(this, name, dataptr);
+			return new Libre3GattCallback(name, dataptr);
 			}
 		}
-	return  new MyGattCallback(this,name,dataptr);
+	return  new MyGattCallback(name,dataptr);
 	}
 private boolean addDevice(String str,long dataptr) {
 	Log.d(LOG_ID,"addDevice "+str);

@@ -68,7 +68,6 @@ public static boolean doGadgetbridge=false;
 	//    private final UUID mCharacteristicUUID_ManufacturerNameString = UUID.fromString("00002a29-0000-1000-8000-00805f9b34fb");
 //    private final UUID mCharacteristicUUID_SerialNumberString = UUID.fromString("00002a25-0000-1000-8000-00805f9b34fb");
 //    private final UUID mSIGDeviceInfoServiceUUID = UUID.fromString("0000180a-0000-1000-8000-00805f9b34fb");
-	SensorBluetooth sensorbluetooth;
 	long starttime = System.currentTimeMillis();
 	String SerialNumber;
 	public String mActiveDeviceAddress;
@@ -295,6 +294,7 @@ public void searchforDeviceAddress() {
 		Natives.setDeviceAddress(dataptr, address);
 	}
 	void free() {
+		stop=true;
 		Log.i(LOG_ID,"free "+SerialNumber);
 		close();
 		Natives.freedataptr(dataptr);
@@ -308,7 +308,6 @@ public void searchforDeviceAddress() {
 		Natives.finishSensor(dataptr);
 		}
 	public void close() {
-		stop=true;
 		Log.i(LOG_ID,"close "+SerialNumber);
 		var tmpgatt=mBluetoothGatt ;
 		if (tmpgatt != null) {
@@ -339,6 +338,7 @@ public void searchforDeviceAddress() {
 		return () -> {
 			Log.i(LOG_ID,"getConnectDevice Runnable "+ SerialNumber);
 			var device= cb.mActiveBluetoothDevice;
+			var sensorbluetooth=SensorBluetooth.blueone;
 			if(sensorbluetooth==null) {
 				Log.e(LOG_ID,"sensorbluetooth==null");
 				return;
@@ -360,7 +360,6 @@ public void searchforDeviceAddress() {
 					Log.d(LOG_ID, SerialNumber + " Try connection to " + device.getAddress());
 					}
 				try {
-					stop=false;
 					if(isWearable)  {
 						cb.mBluetoothGatt = device.connectGatt(Applic.app, autoconnect, cb, BluetoothDevice.TRANSPORT_LE);
 						}

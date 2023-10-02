@@ -23,6 +23,8 @@
 package tk.glucodata;
 
 import static android.graphics.Color.BLACK;
+import static android.graphics.Color.RED;
+import static android.graphics.Color.BLUE;
 import static android.graphics.Color.WHITE;
 import static android.net.NetworkCapabilities.TRANSPORT_BLUETOOTH;
 import static android.net.NetworkCapabilities.TRANSPORT_WIFI;
@@ -350,6 +352,7 @@ private void initialize() {
 		       if(useWearos()) {
 				Natives.networkpresent();
 				MessageSender.sendnetinfo();
+   		 		Applic.wakemirrors();
 				}
 		       else {
 			  if(hasip()) {
@@ -390,6 +393,9 @@ private void initialize() {
 		   Log.i(LOG_ID, "onLost(" + network+")");
 //		   if(hasonAvailable) 
 			Natives.networkabsent();
+		       if(useWearos()) {
+   		 	Applic.wakemirrors();
+			}
 		}
 	    });
 
@@ -509,11 +515,14 @@ public static	int stopprogram=0;
 		}
 	}
 
-static public int backgroundcolor= BLACK;
+//static public int backgroundcolor= BLACK;
+static public int backgroundcolor= RED;
 void setbackgroundcolor(Context context) {
-    TypedValue typedValue = new TypedValue();
-    if (context.getTheme().resolveAttribute(android.R.attr.windowBackground, typedValue, true) && typedValue.type >= TypedValue.TYPE_FIRST_COLOR_INT && typedValue.type <= TypedValue.TYPE_LAST_COLOR_INT) 
-	backgroundcolor= typedValue.data;
+   if(Build.VERSION.SDK_INT >= 21) {
+	    TypedValue typedValue = new TypedValue();
+	    if(context.getTheme().resolveAttribute(android.R.attr.windowBackground, typedValue, true) && typedValue.type >= TypedValue.TYPE_FIRST_COLOR_INT && typedValue.type <= TypedValue.TYPE_LAST_COLOR_INT) 
+		backgroundcolor= typedValue.data;
+		}
      	
     }
 

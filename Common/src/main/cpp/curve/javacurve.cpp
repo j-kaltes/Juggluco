@@ -96,9 +96,9 @@ extern void initlibreviewjni(JNIEnv *env);
 extern bool jinitmessages(JNIEnv* env);
 
 JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* reserved) {
-	LOGSTRING("JNI_OnLoad\n");
 	vmptr=vm;
-	   JNIEnv* env;
+	   JNIEnv* env=nullptr;
+	LOGAR("JNI_OnLoad");
     if (vm->GetEnv(reinterpret_cast<void**>(&env), JNI_VERSION_1_6) != JNI_OK) {
         return JNI_ERR;
       }
@@ -278,7 +278,6 @@ extern "C" JNIEXPORT jint JNICALL fromjava(step)(JNIEnv* env, jclass obj) {
 extern bool hour24clock;
 extern char localestrbuf[15];
 
-std::string thiscountry;
 
 
 void  setlocale(const char *localestrbuf,const size_t len) ;
@@ -287,11 +286,8 @@ extern "C" JNIEXPORT void JNICALL fromjava(setlocale)(JNIEnv *env, jclass clazz,
 	if(jlocalestr) {
 		size_t len=env->GetStringLength(jlocalestr);
 		env->GetStringUTFRegion( jlocalestr, 0,len, localestrbuf);
-		localestrbuf[len++]='_';
-		memcpy(localestrbuf+len,thiscountry.data(),thiscountry.size());
-		len+=thiscountry.size();
-		localestrbuf[len]='\0';
-		setlocale(localestrbuf,len);
+		localestrbuf[2]='_';
+		setlocale(localestrbuf,5);
 
 		}
 	}
@@ -311,15 +307,16 @@ extern "C" JNIEXPORT int JNICALL fromjava(setfilesdir)(JNIEnv *env, jclass clazz
 	char *filesdirbuf=new char[filesdirlen+1];
 	env->GetStringUTFRegion( dir, 0,jdirlen, filesdirbuf);
 	filesdirbuf[filesdirlen]='\0';
-	char country[3];
+	char *country= localestrbuf+3;
 	if(jcountry&& env->GetStringLength(jcountry)>=2) {
-		env->GetStringUTFRegion( jcountry, 0,2, country);
+		env->GetStringUTFRegion( jcountry, 0,2,country );
 		country[2]='\0';
-		thiscountry=country;
+		LOGGER("country=%s\n",country);
 		}
 	else {
-		country[0]='\0';
-		thiscountry="UK";
+		LOGAR("country=null\n");
+		strcpy( country,"UK");
+		country=(char *)"\0";
 		}
 	return setfilesdir({filesdirbuf,filesdirlen},country);
 	}

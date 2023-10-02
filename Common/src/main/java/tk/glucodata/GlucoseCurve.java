@@ -118,7 +118,6 @@ void startsearch() {
 	}
     if (search == null) {
 	search = getsearchlayout(activity);
-	activity.addContentView(search, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
     } else {
 	var labels=Natives.getLabels();
 	if(!searchspinadap.getarray().equals(labels))  {
@@ -1004,6 +1003,7 @@ private Layout getsearchlayout(MainActivity context) {
 
 	helpbut.setContentDescription(getContext().getString(R.string.helpname));
         helpbut.setOnClickListener(v-> { help.help(R.string.searchhelp,context); });
+
     Button cancel=new Button(context);cancel.setText(R.string.cancel);
     View[] buttonline={getsearchspinner(context),under,line,above};
 
@@ -1018,6 +1018,7 @@ private Layout getsearchlayout(MainActivity context) {
 		search(false);} );
 
         ImageButton forward=new ImageButton(context);
+
 	forward.setContentDescription("Search forward");
 
         forward.setImageResource( R.drawable.baseline_navigate_next_white_36);
@@ -1030,6 +1031,7 @@ private Layout getsearchlayout(MainActivity context) {
 	int width=GlucoseCurve.getwidth();
 if(!smallScreen) {
 	int height=GlucoseCurve.getheight();
+//	boolean rtl=Natives.getRTL();
 	if(height>h&&width>w) {
 		   if(width>height) {
 			    lay.setY((height - h) / 2);
@@ -1043,8 +1045,8 @@ if(!smallScreen) {
 				}
 			    else
 				numberview.noroom=false;
- 
 			    lay.setX(posx);
+			   Log.i(LOG_ID,"search h="+h+" height="+height+" w="+w+" width="+width+" posx="+posx);
 			    }
 			else {
 
@@ -1071,18 +1073,18 @@ if(!smallScreen) {
 		}
 		return new int[] {w,h};
 		},buttonline,glucoseline, timeline,goline);
+
+	context.addContentView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
     	layout.setBackgroundColor(Applic.backgroundcolor);
 
             
-//        cancel.setOnClickListener(v -> { layout.setVisibility(View.GONE); hidekeyboard(); ((MainActivity)getContext()).hideSystemUI();} );
         cancel.setOnClickListener(v -> {
 		context.doonback();
-//		context.clearonback(); layout.setVisibility(View.GONE); hidekeyboard(); reopener();
 		} );
 	
     clear.setOnClickListener(this::clearsearch );
     clearsearch(clear);
-//       editfocus.setedit(under.getText());
+//       editfocus.setedittext(under);
 
     return layout;
 }

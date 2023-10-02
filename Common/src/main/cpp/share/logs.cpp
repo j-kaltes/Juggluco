@@ -78,6 +78,12 @@ extern		pathconcat logbasedir;
 	 if(handle<0) {
 		  return STDERR_FILENO;
 		  }
+         if(dup2(handle,STDERR_FILENO)<0) {
+		LOGAR("dup2(handle,STDERR_FILENO) failed");
+		}
+         if(dup2(handle,STDOUT_FILENO)<0) {
+		LOGAR("dup2(handle,STDOUT_FILENO) failed");
+		}
 	time_t tim=time(NULL);
 	char *timestr=ctime(&tim);
 
@@ -98,7 +104,7 @@ extern		pathconcat logbasedir;
 #else
 "not"
 #endif
-" NDK_DEBUG\n" ,timestr, syscall(SYS_gettid),pid);
+" NDK_DEBUG\n" ,timestr, (int)syscall(SYS_gettid),pid);
 
        sys_write(handle, buf,buflen);
        return handle;

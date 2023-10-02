@@ -53,6 +53,7 @@ static int[]  noneplacer(Layout l,int w,int h) {
 	 return new int[] {w,h};
 	};
 void init(Context context,Placer placer,int nr) {
+//	setLayoutDirection(LAYOUT_DIRECTION_LTR);
         this.placer=placer;
 	reserve(nr);
      	TextView prob=new TextView(context);

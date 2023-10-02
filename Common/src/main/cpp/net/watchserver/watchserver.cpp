@@ -918,6 +918,7 @@ std::string_view sgv="sgv.json";
 ///api/v1/entries.json
 //https:///api/v1/entries?count=2
 ///api/v1/entries/sgv.txt?c
+//https://dnarnianbg.herokuapp.com/api/v1/entries/sgv?count=4
 	std::string_view api="api/v1/entries";
 	if(!memcmp(api.data(),toget.data(),api.size())) {
 		const char *ptr=toget.data()+api.size();;
@@ -943,6 +944,13 @@ std::string_view sgv="sgv.json";
 					 if(!memcmp(ext1.data(),ptr,ext1.size())) 
 						return givesgvtxt(ptr+ext1.size(),toget.size()-api2.size()-api.size()-ext1.size(),outdata,',');
 
+					if(*ptr==' '||*ptr=='?') {
+						int sizeleft=toget.size()-api2.size()-api.size();
+						if(json)
+							return sgvinterpret(ptr,sizeleft,false,outdata);
+						else
+							return givesgvtxt(ptr,sizeleft,outdata,9);
+						}
 
 
 				//	return givesgvtxt(ptr+api2.size(),toget.size()-api2.size()-api.size(),behead,outdata);

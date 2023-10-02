@@ -852,10 +852,10 @@ battery optimizations for Juggluco, that can prevent Juggluco from
 functioning.</font></font></p>
 <p style="margin-top: 0.02in; margin-bottom: 0.02in; border: none; padding: 0in">
 <font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><i><b>Stream
-history</b></i>: On Libre 0 and 2, history are values of the past in
-15 minute interval. Previously they were only received by scanning.
+history</b></i>: On Libre 2, history are values of the past in 15
+minute intervals. Previously they were only received by scanning.
 When you turn this option on, the History values are also received
-via Bluetooth. Also other things will work differently. To Libreview
+via Bluetooth. Also, other things will work differently. To Libreview
 will be sent the history values, instead of averages of the stream
 values. The disadvantage is that it is slower. This can be an issue
 on WearOS watches.</font></font></p>
@@ -911,15 +911,16 @@ contact with the sensor by putting the reader in a </font></font><a href="https:
 cage</u></font></font></a><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">.</font></font></p>
 <p style="margin-top: 0.02in; margin-bottom: 0.02in; border: none; padding: 0in">
 &nbsp;<font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><b>Sensor
-via Bluetooth/Use Bluetooth</b> should be turned on.</font></font></p>
+via Bluetooth/Use Bluetooth</b></font></font><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">
+should be turned on.</font></font></p>
 <p style="margin-top: 0.02in; margin-bottom: 0.02in; border: none; padding: 0in">
 <font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">If
 the above conditions are satisfied, it can still take a long time
 before the app receives glucose values from the sensor. Often it
 takes a minute, but at other times it takes much longer. The
 </font></font><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><i>Connection
-stage</i></font></font><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">
-gives the most difficulties. The most frequent are failures with
+stage</i></font></font> <font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">gives
+the most difficulties. The most frequent are failures with
 status=133, which is the status argument of
 </font></font><a href="#onConnectionStateChange_android_bluetooth_BluetoothGatt__20int__20int_"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><u>onConnectionStateChange(BluetoothGatt
 bluetoothGatt, int status, int newState)</u></font></font></a><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">.
@@ -1523,10 +1524,14 @@ automatically. Using LibreLinkup is quite dangerous if you don\'t look
 closely, because when you touch the graph, it shows an old value
 instead of the current glucose value.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>Spy Views</b>:
-When <i>immediate</i> is also turned on Juggluco, will send to
-Libreview whether a value is viewed or not (with some restrictions to
-prevent the display of too many circles). When this option is turned
-off, Juggluco will always say that it is not viewed.</p>
+When this option is set, Juggluco will send to Libreview whether a
+value is viewed or not (with some restrictions to prevent the display
+of too many circles). When this option is turned off, Juggluco will
+always say that it is not viewed. This option will only reliably send
+this information to Libreview when also Immediate is turned on.
+Juggluco should be constantly connected to the internet to catch all
+views from Libre 3, Libre 2 remembers them all as long as it is not
+killed.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>Resend data</b>:
 Start anew; resend data of the last 90 days to Libreview. You need to
 press this when switching to a new Libreview account.</p>
@@ -1534,16 +1539,18 @@ press this when switching to a new Libreview account.</p>
 time trying to send to Libreview is displayed below the &quot;Get
 Account ID&quot; button.</p>
 <p style="line-height: 100%; margin-bottom: 0in">Because the values
-sent to Libreview are first averaged over 15 minutes and then
-analyzed, there can be small differences between the values shown in
-Juggluco\'s statistics screen and Libreview. For example Libreview
-says 100% of the time active, while Juggluco\'s statistics screen says
-96.0%. Also some high and low values will be averaged away, so that
-Libreview gives a somewhat higher <i>time in target </i>than the
-statistics screen of Juggluco. Because the real history values are
-less extreme than the average of the stream values around a history
-value, this difference will be larger when Libreview is based on
-scanned values.</p>
+sent to Libreview are first transformed to one data point in every 15
+minutes and then analyzed, there can be small differences between the
+values shown in Juggluco\'s statistics screen and Libreview. For
+example Libreview says 100% of the time active, while Juggluco\'s
+statistics screen says 96.0%. Also some high and low values will be
+averaged away, so that Libreview gives a somewhat higher <i>time in
+target </i>than the statistics screen of Juggluco. Because the
+history values created on the sensors are less extreme than the
+average of the stream values around a history value, this difference
+will be larger when Libreview is based on the <i>history</i> values
+as when &quot;Stream History&quot; is enabled in Juggluco or
+Librelink is used.</p>
 <p style="line-height: 100%; margin-bottom: 0in">Juggluco can be
 connected with multiple sensors at the same time, while Librelink
 only handles one sensor at a time. Juggluco also sends data from only

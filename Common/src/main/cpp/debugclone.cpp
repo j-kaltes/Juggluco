@@ -869,13 +869,19 @@ for (;;) {
 	case __NR_mmap: {
 		int len=regi.get(1);
 		if(len==1089536) { //Otherwise crashes in munmap, but only when it is debugged. As you probably will understand later.
-		//	LOGGER("mmap %llx %d %lld %lld %lld %lld\n",regi.get(0),len,regi.get(2),regi.get(3),regi.get(4),regi.get(5));
-			if (ptrace(PTRACE_DETACH, pid, 0, 0) == -1) {
-				int waserrno=errno;
-				slog log;
-				log<<"PTRACE_DETACH "<<pid<<" failed "<<strerror(waserrno)<<endl;
+			LOGGER("mmap %llx len=%d %lld %lld %lld %lld\n",regi.get(0),len,regi.get(2),regi.get(3),regi.get(4),regi.get(5));
+			if(version==3) {
+				if (ptrace(PTRACE_DETACH, pid, 0, 0) == -1) {
+					int waserrno=errno;
+					slog log;
+					log<<"PTRACE_DETACH "<<pid<<" failed "<<strerror(waserrno)<<endl;
+					}
+				else {
+					slog log;
+					log<<"PTRACE_DETACH "<<endl;
+					}
+				return 0;
 				}
-			return 0;
 			}
 		break; 
 		};

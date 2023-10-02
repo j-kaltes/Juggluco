@@ -1,3 +1,5 @@
+Also Spy views when not connected to the internet for Libre3?
+meerdere fallback fonts proberen
 Toon glucose waarde op webpagina als nightscout url opgevraagd wordt.
 - pijljes
 - glucose waarde
@@ -13,14 +15,12 @@ Add pictures to github
 Write frequently asked questions.
 Use fdsan.h 
 Log all failures in Libre3
-Calibrate? Problem: 
+Calibrate? Problem: it can make it much worse. 
 
 
 Do something with webpages:
 	- more about Libre 3
 
-
-Libreview like Librelink 2.10.1
 
 Make accessible for the blind:
 	Search control buttons unlabeled.

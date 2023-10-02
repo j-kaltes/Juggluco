@@ -1,7 +1,6 @@
 <resources>
     <string name="language">pl</string>
     <string name="languagename">Język</string>
-
     <string name="app_name">Juggluco</string>
 
     <string name="ok">OK</string>
@@ -33,9 +32,10 @@
     <string name="bluetoothenabled">Bluetooth włączony</string>
     <string name="bluetoothdisabled">Bluetooth wyłączony</string>
     <string name="amountsname">Wartości</string>
+    <string name="amountshort">@string/amountsname</string>
     <string name="mealsname">Posiłki</string>
     <string name="closename">Zamknij</string>
-    <string name="exporthelp">Posiłki zapisane w html\nRest w .tsv (wartości rozdzielane tabulatorami)</string>
+    <string name="exporthelp">Posiłki zapisane w html\nReszta w .tsv (wartości rozdzielane tabami)</string>
     <string name="detect">Wykryj</string>
     <string name="testip">Sprawdzaj IP</string>
     <string name="testlabel">Sprawdzaj nazwę</string>
@@ -55,18 +55,35 @@
     <string name="dontchangeamounts">Klon wysyła wartości</string>
     <string name="thishost">Ten host:</string>
     <string name="dozemode">Tryb uśpienia?</string>
-    <string name="sync">Synchronizacja</string>
+    <string name="sync">Synchr.</string>
     <string name="alarms">Alarmy</string>
     <string name="save">Zapisz</string>
  <string name="addconnectionbutton">Dodaj połączenie</string>
  <string name="offtouch">Wył. dotyk</string>
  <string name="glucosestatusbar">Stęż. glukozy w pasku stanu</string>
- <string name="lowglucosealarm">Alarm niskiego stęż. glukozy</string>
+
+<string name="lowglucosealarm">Alarm dla hipoglikemii</string>
+
+<string name="highglucosealarm">Alarm dla hiperglikemii</string>
+
+ 
+
+<string name="lowglucose">&quot; Hipoglikemia! &quot;</string>
+
+<string name="highglucose">&quot; Hiperglikemia!&quot;</string>
+
+ 
+
+<string name="lowglucoseshort">" Hipoglikemia!"</string>
+
+<string name="highglucoseshort">" Hiperglikemia!"</string>
+
+
+
  <string name="numlabel">&quot;Etykieta: &quot;</string>
  <string name="roundto">Zaokrąglaj do: &quot;</string>
  <string name="weight">&quot;Waga: &quot;</string>
  <string name="ringtonename">Dzwonek</string>
- <string name="highglucosealarm">Alarm wysokiego stęż. glukozy</string>
  <string name="valueavailablenotification">Powiadomienie o ponownie dostępnej wartości glukozy</string>
  <string name="lossofsignalalarm">Alarm utraty sygnału po</string>
  <string name="cantsetminutes">&quot;Nie można ustawić minut na &quot;</string>
@@ -75,7 +92,7 @@
  <string name="targetrange">&quot;Zakres docelowy: &quot;</string>
  <string name="graphrange">&quot;Zakres wykresu: &quot;</string>
  <string name="unit">&quot;Jednostka: &quot;</string>
- <string name="glucoseaxisleft">Liczby osi glukozy po LEWEJ</string>
+ <string name="glucoseaxisleft">Oś glukozy po LEWEJ</string>
  <string name="startsapp">Skanowanie uruchamia aplikację</string>
  <string name="sendtoxdrip">Patched Libre Broadcast</string>
  <string name="disablecamerakey">Wyłącz przycisk aparatu</string>
@@ -136,7 +153,7 @@
  <string name="name">Nazwa:</string>
  <string name="carbperunit">Węglowodany/jedn.:</string>
  <string name="database">Baza danych</string>
- <string name="search">Wyszukaj</string>
+ <string name="search">Szukaj</string>
  <string name="trace">Ślad</string>
  <string name="unknown">Nieznany</string>
  <string name="showzero">Pokaż zero</string>
@@ -164,8 +181,8 @@
  <string name="notsaved">Nie zapisano</string>
  <string name="failedbyexception">Błąd w drodze wyjątku</string>
  <string name="nodata">Brak danych</string>
- <string name="addsensorenddate">Dodaj datę zakończenia działania sensora do aplikacji kalendarza</string>
- <string name="enddatesensor">&quot;Data zakończenia działania sensora&quot;</string>
+ <string name="addsensorenddate">Dodaj termin zakończenia działania sensora do kalendarza</string>
+ <string name="enddatesensor">&quot;Koniec działania sensora &quot;</string>
  <string name="open">Otwórz</string>
  <string name="withoutsensor">Bez sensora</string>
  <string name="wronglibrary">Biblioteka nie działa prawidłowo, spróbuj innej</string>
@@ -174,17 +191,13 @@
  <string name="connectwithsensor">Naciśnij, by połączyć się z sensorem</string>
  <string name="exchangedata">Naciśnij, by zacząć przesył danych</string>
  <string name="newnewvalue">&quot;Brak nowej wartości od &quot;</string>
- <string name="lowglucose">&quot;Niskie stęż. glukozy! &quot;</string>
- <string name="highglucose">&quot;Wysokie stęż. glukozy!&quot;</string>
  <string name="sendto">Wysyłaj</string>
- <string name="resenddata">Ponowne prześlij dane</string>
+ <string name="resenddata">Prześlij dane ponownie</string>
  <string name="minimum">Minimum</string>
  <string name="minuteddeactivated">Minut(y) wyłączenia:</string>
  <string name="duractionsec">Czas trwania (sek):</string>
  <string name="duraction">Czas trwania:</string>
  <string name="sec">sek</string>
- <string name="lowglucoseshort">&quot;Niskie stęż. glukozy! &quot;</string>
- <string name="highglucoseshort">&quot;Wysokie stęż. glukozy!&quot;</string>
  <string name="notentered">&quot; nie wpisano&quot;</string>
  <string name="spacedand">&quot; i &quot;</string>
     <string name="disturb">N. przeszk</string>
@@ -201,21 +214,26 @@
     <string name="comments">Notatki</string>
  <string name="dontsend">Nie wysyłaj</string>
  <string name="sendamounts">Wyślij wartości</string>
- <string name="resendquestion">Ponowne przesłać dane?</string>
- <string name="resendmessage">Użyj opcji &quot;Ponowne prześlij dane&quot; tylko po zalogowaniu się na inne konto Libreview lub po wcześniejszym usunięciu już używanego urządzenia z Libreview (Ustawienia konta-&gt;Moje urządzenia).</string>
+ <string name="resendquestion">Przesłać dane ponownie?</string>
+ <string name="resendmessage">Użyj opcji &quot;Prześlij dane ponownie&quot; tylko po zalogowaniu się na inne konto Libreview lub po wcześniejszym usunięciu już używanego urządzenia z Libreview (Ustawienia konta-&gt;Moje urządzenia).</string>
  <string name="getaccountidquestion">Uzyskać identyfikator konta Libreview?</string>
  <string name="getaccountidmessage">Identyfikator konta jest potrzebny do używania sensorów Libre3, które są aktywowane za pomocą aplikacji Abbott Libre3 z tym kontem Libreview.</string>
  <string name="deleteconnection">Usunąć połączenie?</string>
  <string name="wakelock">Wakelock</string>
  <string name="wifi">Wifi</string>
  <string name="heartrate">Tętno</string>
+ <string name="xdripbroadcast">Nadawanie xDrip</string>
  <string name="sensorpermission">Uprawnienie do dostępu do czujników potrzebne do wyświetlania tętna.</string>
  <string name="sensorpermissionmessage">Ustaw je w Ustawieniach urządzenia, Aplikacje, Uprawnienia, Juggluco</string>
- <string name="floatglucose">Pływająca wart.</string>
+ <string name="floatglucose">Pływająca wart. gluk.</string>
+ <string name="floatglucoseshort">Pływ. gluk.</string>
+
  <string name="fontsize">Rozmiar czcionki</string>
  <string name="fonttoolarge">Zbyt duży rozmiar czcionki: maks =</string>
  <string name="foreground">Pierwszy plan</string>
  <string name="background">Tło</string>
+ <string name="backgroundshort">Tło-</string>
+
  <string name="transparent">Przezroczysta</string>
  <string name="touchable">Dotykowa</string>
 
@@ -228,7 +246,7 @@
  <string name="finishsensormessage">Przestać używać tego sensora do przesyłania strumieniowego?</string>
  
  <string name="email">E-Mail:</string>
- <string name="getaccountid">Uzyskaj identyfikator konta Libreview</string>
+ <string name="getaccountid">Uzyskać nr ID konta Libreview?</string>
 
  <string name="emailaddresstooshort">Adres e-mail jest zbyt krótki</string>
  <string name="emailaddresstoolong">Adres e-mail jest zbyt długi</string>
@@ -241,7 +259,7 @@
 <string name="noapplisteningto">&quot;Żadna aplikacja nie nasłuchuje &quot;</string>
 <string name="secret">api_secret</string>
 <string name="withoutsaving">Wyjść bez zapisania?</string>
-<string name="active">Aktywny</string>
+<string name="active">Aktywuj</string>
 <string name="usessl">Używaj SSL</string>
 <string name="fullchain">Pełny łańcuch</string>
 
@@ -256,11 +274,11 @@
 <string name="android13">Android</string>
     <string name="wentwrong">Coś poszło nie tak</string>
     <string name="dosis">&quot; dawka &quot;</string>
-    <string name="doses">&quot; dawki &quot;</string>
+    <string name="doses">&quot; dawki/-ek &quot;</string>
  <string name="penfailed">Odczyt pena do insuliny nie powiódł się</string>
  <string name="changeinsulin">&quot;Zmień typ insuliny na &quot;</string>
     <string name="type">&quot;Typ: &quot;</string>
-    <string name="dosesprior">Dodawaj dawki dopiero po terminie:</string>
+    <string name="dosesprior">Dodaj dawki tylko po:</string>
     <string name="modify">Zmień</string>
     <string name="notsynced">Nie zsynchronizowano</string>
  <string name="lossdata">Przywrócenie ustawień domyślnych może spowodować utratę danych.</string>
@@ -274,5 +292,7 @@
  <string name="talker">Głos</string>
  <string name="secondsbetween">Sekund(y) pomiędzy</string>
  <string name="test">Test</string>
+ <string name="streamhistory">Historia strumienia</string>
+ <string name="libreisviewed">Podgl. ekr.</string>
 
 </resources>
