@@ -513,7 +513,9 @@ if(datasend) {
 		if(wrotecurrent>0) {
 			extern time_t nexttimeviewed;
 			extern int betweenviews;
-			nexttimeviewed=nu+betweenviews;
+			if(viewed) {
+					nexttimeviewed=nu+betweenviews;
+					}
 			lastsensdata->getinfo()->libreviewScan=laststreamsend+1;
 			lastsensdata->getinfo()->sendsensorstart=true;
 			}
