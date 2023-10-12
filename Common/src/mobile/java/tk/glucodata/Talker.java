@@ -7,6 +7,7 @@ import static tk.glucodata.Natives.getVoiceSeparation;
 import static tk.glucodata.Natives.getVoiceSpeed;
 import static tk.glucodata.Natives.getVoiceTalker;
 import static tk.glucodata.Natives.lastglucose;
+import static tk.glucodata.Natives.settouchtalk;
 import static tk.glucodata.NumberView.avoidSpinnerDropdownFocus;
 import static tk.glucodata.RingTones.EnableControls;
 import static tk.glucodata.settings.Settings.editoptions;
@@ -139,10 +140,9 @@ void destruct() {
 	      });
 }
 
-
-	void speak(String message) {
-		engine.speak(message, TextToSpeech.QUEUE_FLUSH, null);
-		}
+public void speak(String message) {
+	engine.speak(message, TextToSpeech.QUEUE_FLUSH, null);
+	}
 static long nexttime=0L;
 void selspeak(String message) {
 	var now=System.currentTimeMillis();	
@@ -292,10 +292,12 @@ public static void config(MainActivity context) {
 		space.setMinimumWidth((int)(width*0.4));
 		 firstrow=new View[]{seplabel,separation,space,active};
 		 }
+	var touchtalk= getcheckbox(context,context.getString(R.string.talk_touch), Natives.gettouchtalk());
+	var secondrow=new View[]{touchtalk};
 	var layout=new Layout(context,(l,w,h)-> {
 //		if(width>w) l.setX((width-w)/2);
 		return new int[] {w,h};
-		},firstrow,new View[]{speedlabel},new View[]{speeds[1]}, new View[]{speeds[0]},new View[]{pitchlabel},new View[]{pitchs[1]}, new View[]{pitchs[0]}, new View[]{cancel,helpview,test,save});
+		},firstrow,secondrow,new View[]{speedlabel},new View[]{speeds[1]}, new View[]{speeds[0]},new View[]{pitchlabel},new View[]{pitchs[1]}, new View[]{pitchs[0]}, new View[]{cancel,helpview,test,save});
 
       //layout.setBackgroundResource(R.drawable.dialogbackground);
 	layout.setBackgroundColor( Applic.backgroundcolor);
@@ -303,6 +305,8 @@ public static void config(MainActivity context) {
 		tk.glucodata.help.hidekeyboard(context);
 		removeContentView(layout); 
 		spinner=null;
+		if(Menus.on)
+			Menus.show(context);
 		});
 	cancel.setOnClickListener(v->  {
 		context.doonback();
@@ -337,11 +341,20 @@ public static void config(MainActivity context) {
 		 };
 	save.setOnClickListener(v->  {
 		getvalues.run();
-		if(active.isChecked()) {
-				SuperGattCallback.newtalker(context);
+		if(active.isChecked()||touchtalk.isChecked()) {
+			SuperGattCallback.newtalker(context);
+			if(active.isChecked())
 				SuperGattCallback.dotalk=true;
+			else
+				SuperGattCallback.dotalk=false;
+			if(touchtalk.isChecked()) {
+				settouchtalk(true);
+				}
+			else
+				settouchtalk(false);
 			}
 		else {
+			settouchtalk(false);
 			SuperGattCallback.endtalk();
 			}
 		Natives.saveVoice(curspeed,curpitch,(int)(cursep/1000L),voicepos,SuperGattCallback.dotalk);

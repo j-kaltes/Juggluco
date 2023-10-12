@@ -865,7 +865,7 @@ for (;;) {
 		log<<regi.get(0);
 		}
             break;
-#if defined(__aarch64__) 
+#if defined(__aarch64__) && defined(LIBRE3)
 	case __NR_mmap: {
 		int len=regi.get(1);
 		if(len==1089536) { //Otherwise crashes in munmap, but only when it is debugged. As you probably will understand later.

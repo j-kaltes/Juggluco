@@ -53,6 +53,7 @@ import static tk.glucodata.Applic.isWearable;
 import static tk.glucodata.Applic.usedlocale;
 import static tk.glucodata.Natives.getNumAlarm;
 import static tk.glucodata.NumberView.avoidSpinnerDropdownFocus;
+import static tk.glucodata.RingTones.EnableControls;
 import static tk.glucodata.help.help;
 import static tk.glucodata.help.hidekeyboard;
 import static tk.glucodata.settings.Settings.editoptions;
@@ -75,15 +76,10 @@ if(genlayout==null) {
 	LinearLayoutManager lin = new LinearLayoutManager(act);
 	recycle.setLayoutManager(lin);
 	Button ok=getbutton(act,R.string.closename);
-	numadapt = new NumAlarmAdapter(ok); //USE
-	recycle.setAdapter(numadapt);
 	Button newone=getbutton(act,R.string.newname);
         Button help=new Button(act);
         help.setText(R.string.helpname);
     	Button ring=getbutton(act,isWearable?R.string.ringshort:R.string.ringtonename);
-	ring.setOnClickListener(v->{
-		new tk.glucodata.RingTones(3).mkviews(act,null,null);
-		});
 //	recycle.setLayoutParams(new ViewGroup.LayoutParams(  MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 	recycle.setLayoutParams(new ViewGroup.LayoutParams(  MATCH_PARENT, isWearable?MATCH_PARENT:ViewGroup.LayoutParams.WRAP_CONTENT));
 	View[][] views;
@@ -127,6 +123,11 @@ if(genlayout==null) {
 		int[] ret={w,h};
 		return ret;
 		},views);
+	ring.setOnClickListener(v->{
+		new tk.glucodata.RingTones(3).mkviews(act,null,genlayout);
+		});
+	numadapt = new NumAlarmAdapter(genlayout); //USE
+	recycle.setAdapter(numadapt);
 	ok.setOnClickListener(v->{ 
 		act.doonback();
 		});
@@ -134,8 +135,7 @@ if(genlayout==null) {
 		help(R.string.reminders,act);	
 		});
 	newone.setOnClickListener(v->{
-//		genlayout.setVisibility(GONE);
-		mkitemlayout(act,ok);
+		mkitemlayout(act,genlayout);
 		emptyitemlayout();
 		});
 //        act.addContentView(genlayout, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT));
@@ -226,10 +226,11 @@ void settime(TextView but,int min) {
 	but.setText(String.format(usedlocale,"%02d:%02d",min/60,min%60));
 	}
 int[] minutes=new int[2];
-Button gettimeview(Activity act,int ind) {
+Button gettimeview(Activity act,int ind,View[] parent) {
 	Button but=new Button(act);
         but.setOnClickListener(
                 v->  {
+			parent[0].setVisibility(INVISIBLE);
     			hidekeyboard(act);
     			MainActivity main=(MainActivity) act;
 			main.getnumberview().gettimepicker(main,minutes[ind]/60, minutes[ind]%60,
@@ -237,7 +238,7 @@ Button gettimeview(Activity act,int ind) {
 				minutes[ind]=hour*60+min;
 
 				but.setText(String.format(Locale.US,"%02d:%02d",hour,min));
-			   }); 
+			   },()-> parent[0].setVisibility(VISIBLE));
 		});
 	return but;
 	}
@@ -251,7 +252,7 @@ Button startbut,alarmbut;
 Button Delete;
 
 
-void dodelete(View parok,int alarmpos) {
+void dodelete(View parent,int alarmpos) {
 		int nr=Natives.getNumAlarmCount();
 		Natives.delNumAlarm(alarmpos);
 		if(nr>0&&alarmpos<nr) { 
@@ -261,9 +262,10 @@ void dodelete(View parok,int alarmpos) {
 			}
 		alarmpos=-1;
 		itemlayout.setVisibility(GONE); 
-	    parok.setVisibility(VISIBLE);
+//	    parok.setVisibility(VISIBLE);
+		EnableControls(parent,true);
 		}
-private void askdelete( View parok,int alarmpos) {
+private void askdelete( View parent,int alarmpos) {
 	 Object[] alarmobj=getNumAlarm(alarmpos);
 	 float flvalue=(Float)alarmobj[0];
 	 short[] rest=(short[])alarmobj[1];
@@ -271,13 +273,13 @@ private void askdelete( View parok,int alarmpos) {
 	spinner.setSelection(type);
 	var value=float2string(flvalue);
 	var label=Natives.getLabels().get(type);
-	var act=parok.getContext();
+	var act=parent.getContext();
         AlertDialog.Builder builder = new AlertDialog.Builder(act);
         builder.setTitle(R.string.deletereminder).
 	 setMessage(label+" "+value).
         setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-		 		dodelete(parok,alarmpos);
+		 		dodelete(parent,alarmpos);
                     }
                 }) .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
@@ -285,7 +287,7 @@ private void askdelete( View parok,int alarmpos) {
         }).show().setCanceledOnTouchOutside(false);
 	}
 
-void  mkitemlayout(Activity act,View parok) {
+void  mkitemlayout(Activity act,View parent) {
   if(itemlayout==null) {
 	//spinner=new Spinner(act);
         spinner=new Spinner(act,isWearable?MODE_DIALOG: MODE_DROPDOWN);
@@ -314,9 +316,9 @@ void  mkitemlayout(Activity act,View parok) {
 	value.setInputType( InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
 	value.setMinEms(2);
 	value.setImeOptions(editoptions);
-
-	startbut=gettimeview(act,0);
-	alarmbut=gettimeview(act,1);
+	View[] layoutar=new View[1];
+	startbut=gettimeview(act,0,layoutar);
+	alarmbut=gettimeview(act,1,layoutar);
 	Delete=getbutton(act,R.string.delete);
 	Button Cancel=getbutton(act,R.string.cancel);
 	Button Save=getbutton(act,R.string.save);
@@ -338,7 +340,7 @@ void  mkitemlayout(Activity act,View parok) {
 		int[] ret={w,h};
 		return ret;
 		}, views);
-
+	layoutar[0]=itemlayout;
         //itemlayout.setBackgroundColor(Applic.backgroundcolor);
         itemlayout.setBackgroundResource(R.drawable.dialogbackground);
 	   int pad=(int)(tk.glucodata.GlucoseCurve.metrics.density*4.5);
@@ -346,7 +348,8 @@ void  mkitemlayout(Activity act,View parok) {
 	Cancel.setOnClickListener(v->{ 
     		hidekeyboard(act);
 		itemlayout.setVisibility(GONE); 
-		parok.setVisibility(VISIBLE);
+//		parok.setVisibility(VISIBLE);
+   		EnableControls(parent,true);
 //		genlayout.setVisibility(VISIBLE); 
 		});
 
@@ -354,7 +357,7 @@ void  mkitemlayout(Activity act,View parok) {
 
 	Delete.setOnClickListener(v->{ 
 		if(alarmpos>=0) {
-			askdelete(parok,alarmpos);
+			askdelete(parent,alarmpos);
 			}
 
     		hidekeyboard(act);
@@ -389,7 +392,8 @@ void  mkitemlayout(Activity act,View parok) {
 	numadapt.notifyDataSetChanged();
 	itemlayout.setVisibility(GONE); 
 //	genlayout.setVisibility(VISIBLE); 
-	    parok.setVisibility(VISIBLE);
+//	    parok.setVisibility(VISIBLE);
+		EnableControls(parent,true);
 	}
 
 
@@ -401,7 +405,9 @@ else  {
 	itemlayout.bringToFront();
 	}
 
-parok.setVisibility(INVISIBLE);
+//	parok.setVisibility(INVISIBLE);
+
+	EnableControls(parent,false);
 	}	
 
 String tstring(int min) {

@@ -101,8 +101,12 @@ void showexport(MainActivity activity,int width,int height) {
         	exportscreen.setVisibility(VISIBLE);
 		}
 	exportlabel.setText(R.string.exporthelp);
-	activity.setonback(() ->
-        		exportscreen.setVisibility(View.GONE));
+	activity.setonback(() -> {
+        		exportscreen.setVisibility(View.GONE);
+			if(Menus.on)
+				Menus.show(activity);
+			}
+			);
 	}
 static	public final DateFormat fdatename=             new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss", Locale.US);
 static void algexporter(MainActivity context,int type,String prefix,String ext) {

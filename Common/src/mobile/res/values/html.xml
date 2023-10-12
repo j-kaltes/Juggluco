@@ -1963,6 +1963,21 @@ in Android settings or going to <i>Language and input
 Services by Google</i>&quot; and install voice data. In other phones
 it is under <i>System settings-&gt;Accessibility-&gt;Vision-&gt;Text-to-Speech
 settings</i>.</p>
+<body ><h2 >Talk touch</h2>
+<p>When <em>talk touch</em> is switched on, touching at certain
+places creates talk:</p>
+<ul>
+	<li><p>Touching the current glucose;</p>
+	<li><p>Touching points of the graphs and scan points;</p>
+	<li><p>Touching amounts;</p>
+	<li><p>The date of that point of the graph is said, when the upper
+	left and right corners are touched;</p>
+	<li><p>Long pressing a menu item;</p>
+	<li><p>Long pressing an amount in the list of amounts (left middle
+	menu-&gt;list).</p>
+</ul>
+<p><br/>
+
 <p><br/>
 <br/>
 

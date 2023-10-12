@@ -178,15 +178,11 @@ public static String curlang=null;
 public void onConfigurationChanged(Configuration newConfig) {
 	super.onConfigurationChanged(newConfig);
    	if(Nativesloaded)  {
-//		var lang=getlocale().getLanguage();
 		var lang=getlocale().getLanguage();
-//		var lang=getlanguage(this);
 
 		var new24 = DateFormat.is24HourFormat(this);
 		Log.i(LOG_ID,"Applic.onConfigurationChanged new="+lang+" cur="+curlang+ (Applic.hour24?" 24uur":" 12uur"));
 		if(!lang.equals(curlang)) {
-		//	if(SuperGattCallback.dotalk) ??
-		//	SuperGattCallback.newtalker();
 
 			curlang=lang;
 			if(SuperGattCallback.dotalk)	
@@ -550,6 +546,8 @@ boolean needsnatives() {
 	var res=getResources();
         headfontsize = res.getDimension(R.dimen.abc_text_size_display_4_material);
 	Notify.glucosesize=Applic.app.headfontsize*.35f;
+		
+
 
         final float menufontsize = res.getDimension(R.dimen.abc_text_size_menu_material);
         smallfontsize = res.getDimension(R.dimen.abc_text_size_small_material);
@@ -616,7 +614,8 @@ static	void initbroadcasts() {
 			if(Natives.getinitVersion()<13) {
 				Broadcasts.updateall();
 				}
-			Natives.setfloatingFontsize((int) Notify.glucosesize);
+			if(Notify.arrowNotify!=null)
+				Natives.setfloatingFontsize((int) Notify.glucosesize);
 			Natives.setfloatingbackground(WHITE);
 			 Natives.setfloatingforeground(BLACK);
 			}
@@ -633,6 +632,25 @@ static	void initbroadcasts() {
 	SendLikexDrip.setreceivers();
         }
 
-	
+static public  boolean	talkbackrunning=false;
+static	void		talkbackon(Context cont) {
+	SuperGattCallback.newtalker(cont);
+	talkbackrunning=true;
+
+	Natives.settouchtalk(true);
+	}
+
+static	void		talkbackoff() {
+	talkbackrunning=false;
+	}
+@Keep
+static public void speak(String message) {
+	var talker=SuperGattCallback.talker;
+	if(talker==null) {
+		SuperGattCallback.newtalker(null);
+		talker=SuperGattCallback.talker;
+		}
+	talker.speak(message);
+	}
 }
 

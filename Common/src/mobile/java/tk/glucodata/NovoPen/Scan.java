@@ -23,6 +23,7 @@ package tk.glucodata.NovoPen;
 
 import static android.graphics.Typeface.BOLD;
 import static android.graphics.Typeface.DEFAULT_BOLD;
+import static android.view.View.INVISIBLE;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static tk.glucodata.Dialogs.fdatename;
 import static tk.glucodata.Natives.novopentype;
@@ -196,15 +197,6 @@ final	var datebutton=getbutton(context, DateFormat.getDateInstance(DateFormat.DE
 	int[]  min={cal.get(Calendar.MINUTE)};
 	var timebutton=getbutton(context,  String.format(Locale.US,"%02d:%02d",hour[0],min[0] ));
 
-	timebutton.setOnClickListener(v-> {
-			context.getnumberview().gettimepicker(context,hour[0], min[0], (h,m) -> {
-				hour[0]=h;
-				min[0]=m;
-				cal.set(Calendar.HOUR_OF_DAY,h);
-				cal.set(Calendar.MINUTE,m);
-			         newtime[0]= cal.getTimeInMillis();
-				timebutton.setText(String.format(Locale.US,"%02d:%02d",h,m));
-			   });});
 //	var date= main.getnumberview().
     	var  layout=new Layout(context,(x,w,h)->{
 //			var height=GlucoseCurve.getheight();
@@ -213,6 +205,16 @@ final	var datebutton=getbutton(context, DateFormat.getDateInstance(DateFormat.DE
 			x.setY(0);
 			return new int[] {w,h};
 	},new View[]{label},new View[]{after},new View[]{datebutton,timebutton},new View[]{typestr,spinner},new View[]{ok,cancel});
+	timebutton.setOnClickListener(v-> {
+		layout.setVisibility(INVISIBLE);
+			context.getnumberview().gettimepicker(context,hour[0], min[0], (h,m) -> {
+				hour[0]=h;
+				min[0]=m;
+				cal.set(Calendar.HOUR_OF_DAY,h);
+				cal.set(Calendar.MINUTE,m);
+			         newtime[0]= cal.getTimeInMillis();
+				timebutton.setText(String.format(Locale.US,"%02d:%02d",h,m));
+			   },()-> layout.setVisibility(View.VISIBLE));});
         layout.setBackgroundColor(Applic.backgroundcolor);
 	int pad=(int)(10.0*density);
 	layout.setPadding(pad,pad,pad,(int)(density*14.0));

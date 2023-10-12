@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:description="@string/app_widget_description"
+    android:initialKeyguardLayout="@layout/glucose_widget"
+    android:initialLayout="@layout/glucose_widget"
+    android:minWidth="30dp"
+    android:minHeight="5dp"
+    android:previewImage="@drawable/widget"
+    android:previewLayout="@layout/glucose_widget"
+    android:resizeMode="horizontal|vertical"
+    android:targetCellWidth="2"
+    android:targetCellHeight="1"
+    android:updatePeriodMillis="200000"
+    android:widgetCategory="home_screen" />

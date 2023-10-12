@@ -69,7 +69,8 @@ static public int	getcolor() {
 
 
 
-static public void show(MainActivity act) {
+static public void show(MainActivity act,View parent) {
+	parent.setVisibility(INVISIBLE);
 	int initialColor= getcolor();
 
 
@@ -158,7 +159,7 @@ static public void show(MainActivity act) {
 		Floating.invalidatefloat();
 		removeContentView(layout);
 		act.poponback();
-		show(act);
+		show(act,parent);
 	});
 	touchable.setOnCheckedChangeListener( (buttonView,  isChecked) -> {
 		Floating.setTouchable(isChecked);
@@ -168,7 +169,7 @@ static public void show(MainActivity act) {
 		background=isChecked;
 		removeContentView(layout);
 		act.poponback();
-		show(act);
+		show(act,parent);
 
 //		dialog.setColor(getcolor());
 //		view.invalidate();
@@ -183,7 +184,9 @@ static public void show(MainActivity act) {
 		nohelp.setText("");
 		nohelp.setVisibility(GONE);
 	  }
-	act.setonback(()-> { removeContentView(layout); });
+	act.setonback(()-> { 
+		parent.setVisibility(VISIBLE);
+		removeContentView(layout); });
 	close.setOnClickListener(v->{
 		act.doonback();
 	});

@@ -92,6 +92,7 @@ jugglucotext engtext {
 	.glucose_variability="Glucose variability: %.1f%%",
      .menustr0={
 		"System UI        ",
+		"Menus",
 		"Watch",
 		"Sensor",
 		"Settings",
@@ -194,8 +195,17 @@ applications (Magiskhide or Denylist) and change its own name, both
 are needed. In your case it has problems with the following file)",
 	.add_s=true,
 .shortinit=shortinit,
-.labels=labels
+.labels=labels,
+.checked="checked",
+.unchecked="not checked",
+.Undetermined="",
+.FallingQuickly="Falling quickly",
+.Falling="Falling",
+.Stable="Changing slowly",
+.Rising="Rising",
+.RisingQuickly="Rising quickly"
 #endif
+
 		}
 
 

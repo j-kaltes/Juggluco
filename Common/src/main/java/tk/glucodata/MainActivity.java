@@ -31,6 +31,8 @@ import static tk.glucodata.Applic.explicit;
 import static tk.glucodata.Applic.isRelease;
 import static tk.glucodata.Applic.isWearable;
 import static tk.glucodata.Applic.scanpermissions;
+import static tk.glucodata.Applic.talkbackoff;
+import static tk.glucodata.Applic.talkbackon;
 import static tk.glucodata.Applic.useflash;
 import static tk.glucodata.Floating.setfloatglucose;
 import static tk.glucodata.Floating.shoulduseadb;
@@ -43,6 +45,7 @@ import static tk.glucodata.help.hidekeyboard;
 import static tk.glucodata.settings.Settings.removeContentView;
 
 import android.Manifest;
+import android.accessibilityservice.AccessibilityServiceInfo;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.AlarmManager;
@@ -66,6 +69,7 @@ import android.provider.Settings;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.accessibility.AccessibilityManager;
 import android.widget.Toast;
 
 import androidx.activity.ComponentActivity;
@@ -80,6 +84,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.List;
 import java.util.Locale;
 
 //import com.google.android.apps.auto.sdk.CarActivity;
@@ -275,6 +280,8 @@ private void supportRTL() {
        Log.i(LOG_ID,"onCreate end");
       // if(!isRelease) test.test();
 //       if(!isRelease) Test.test();
+	if(Menus.on)
+		Menus.show(this);
     }
 void handleIntent(Intent intent) {
 	if(intent==null)
@@ -448,12 +455,16 @@ private static int resumenr=isRelease?10:2;
 		if(mess!=null) {
 			showindialog(mess,true);
 		}
-//	if(!isRelease) Notify.testnot();
-//	Notify.stopalarm();
-
- //	Notify.testnot();
-//	Notify.test2();
-//	Notify.testold();
+	var am = (AccessibilityManager) getSystemService(ACCESSIBILITY_SERVICE);
+	List list;
+	if(am.isEnabled()&&am.isTouchExplorationEnabled()&&(list=am.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_SPOKEN))!=null&&!list.isEmpty()) {
+			talkbackon(this);
+			if(!Menus.on)
+				Menus.show(this);
+		}
+	else {
+			talkbackoff();
+		}
     }
 
 long nexttime= 0L;
@@ -929,7 +940,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 			};break;
 		case IGNORE_BATTERY_OPTIMIZATION_SETTINGS: {
 		if(!isWearable) {
-			Battery.batteryscreen(this);
+			Battery.batteryscreen(this,null);
 			}
 			} ; return;
 		case REQUEST_LIB: {
@@ -1090,7 +1101,10 @@ boolean backinapp()  {
 		Natives.pressedback();
 		curve.render.stepresult = 0;
 		hideSystemUI();
-		curve.requestRender();
+		if(Menus.on)
+			Menus.show(this);
+		else
+			curve.requestRender();
 		return true;
 		} 
 	    else {

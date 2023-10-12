@@ -437,7 +437,7 @@ if(!isWearable) {
 		help.setOnClickListener(v-> help(R.string.sensorhelp,act));
 		 Button background=view.findViewById(R.id.background);
 		if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-			background.setOnClickListener(v-> Battery.batteryscreen(act));
+			background.setOnClickListener(v-> Battery.batteryscreen(act,showview));
 			}
 		else  {
 		Log.i(LOG_ID,"background.setVisibility(GONE);");
@@ -468,7 +468,13 @@ if(!isWearable) {
 		   Log.i(LOG_ID,"onback");
 			scheduled.cancel(false);
 			act.setfineres(null);
-			removeContentView(showview);});
+			removeContentView(showview);
+			 if(Menus.on) {
+				Menus.show(act);
+				}
+
+
+			});
 
 
     }

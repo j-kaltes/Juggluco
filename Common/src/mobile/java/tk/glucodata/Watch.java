@@ -185,7 +185,11 @@ static public void show(MainActivity context) {
 		   	}
 		context.poponback();
 		removeContentView(layout);
-		context.hideSystemUI(); });
+		context.hideSystemUI(); 
+		if(Menus.on) {
+			Menus.show(context);
+			}
+		});
 
 
 

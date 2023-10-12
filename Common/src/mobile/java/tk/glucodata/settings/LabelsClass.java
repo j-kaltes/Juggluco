@@ -28,6 +28,7 @@ import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static tk.glucodata.MainActivity.getscreenwidth;
 import static tk.glucodata.NumberView.avoidSpinnerDropdownFocus;
+import static tk.glucodata.RingTones.EnableControls;
 import static tk.glucodata.help.help;
 import static tk.glucodata.settings.Settings.edit2float;
 import static tk.glucodata.settings.Settings.editoptions;
@@ -78,9 +79,8 @@ EditText labelweight;
 Button delete=null;
    int labelpos=-1;
 LabelListAdapter    adapt;
-void mkchangelabel(MainActivity context,View okpar,Runnable onsave) {
-    okpar.setVisibility(INVISIBLE);
-	final View okparent=okpar;
+void mkchangelabel(MainActivity context,Runnable onsave,View parent) {
+    	EnableControls(parent,false);
         TextView labeltext = new TextView(context);
         labeltext.setText(R.string.numlabel);
         label = new EditText(context);
@@ -153,7 +153,7 @@ void mkchangelabel(MainActivity context,View okpar,Runnable onsave) {
 
 		       editlabel.setVisibility(GONE);
 			adapt.notifyDataSetChanged();
-    			okparent.setVisibility(VISIBLE);
+    			EnableControls(parent,true);
 			onsave.run();
 			context.poponback();
 			} );
@@ -168,7 +168,7 @@ void mkchangelabel(MainActivity context,View okpar,Runnable onsave) {
 	context.setonback(() -> {
  		tk.glucodata.help.hidekeyboard(activity) ;
 		editlabel.setVisibility(GONE);
-		okparent.setVisibility(VISIBLE);
+		EnableControls(parent,true);
 		if(editlabel!=null) removeContentView(editlabel) ;
 		});
 }
@@ -204,7 +204,8 @@ private void	askdeletelast(Spinner spinner,	LabelAdapter<String> numspinadapt, B
         }).show().setCanceledOnTouchOutside(false);
 	}
 
-void    mklabellayout( ) {
+void    mklabellayout(View parent ) {
+	parent.setVisibility(INVISIBLE);
 	labels=Applic.app.getlabels();
 	MainActivity context = activity;
 //    if(labellayout==null) {
@@ -238,16 +239,31 @@ void    mklabellayout( ) {
 				if((labels.size()-1)>=40)
 					addnew.setVisibility(INVISIBLE);
 				};
-	adapt = new LabelListAdapter(labels, this,ok,onsave); //USE
-	recycle.setAdapter(adapt);
 
 	delete = new Button(context);
+	TextView menulabel=getlabel(context,context.getString(R.string.meal));
+//	spinner.clearAnimation();
+	spinner.setSelection(Natives.getmealvar());
+        Button help=new Button(context);
+        help.setOnClickListener(v->{help(R.string.labelhelp,context); });
+        help.setText(R.string.helpname);
+	Layout butlay=new Layout(context,new View[]{menulabel,spinner},new View[] {delete},new View[]{help},new View[]{addnew},new View[]{ok});
+	butlay.setLayoutParams(new ViewGroup.LayoutParams(   ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
+		recycle.setLayoutParams(new ViewGroup.LayoutParams(   ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
+    final ViewGroup  labellayout=new Layout(context,(x,w,h)->{
+    			hideSystemUI();
+			return new int[] {w,h};
+	},new View[] {recycle,butlay});
+
+	adapt = new LabelListAdapter(labels, this,onsave,labellayout); //USE
+	recycle.setAdapter(adapt);
+
 	if (Natives.staticnum()) {
 		addnew.setVisibility(INVISIBLE);
 		delete.setVisibility(INVISIBLE);
 	} else {
 		addnew.setOnClickListener(v -> {
-			mkchangelabel(activity,ok,onsave); //USE
+			mkchangelabel(activity,onsave,labellayout); //USE
 			label.setText("");
 			labelpos = -1;
 		});
@@ -272,21 +288,9 @@ void    mklabellayout( ) {
 		delete.setVisibility(INVISIBLE);
 
 	}
-	TextView menulabel=getlabel(context,context.getString(R.string.meal));
-//	spinner.clearAnimation();
-	spinner.setSelection(Natives.getmealvar());
-        Button help=new Button(context);
-        help.setOnClickListener(v->{help(R.string.labelhelp,context); });
-        help.setText(R.string.helpname);
-	Layout butlay=new Layout(context,new View[]{menulabel,spinner},new View[] {delete},new View[]{help},new View[]{addnew},new View[]{ok});
-	butlay.setLayoutParams(new ViewGroup.LayoutParams(   ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
-		recycle.setLayoutParams(new ViewGroup.LayoutParams(   ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
-    final ViewGroup  labellayout=new Layout(context,(x,w,h)->{
-    			hideSystemUI();
-			return new int[] {w,h};
-	},new View[] {recycle,butlay});
 
 	Runnable closerun=()-> {
+		parent.setVisibility(VISIBLE);
  		tk.glucodata.help.hidekeyboard(activity) ;
 		Applic app=(tk.glucodata.Applic )context.getApplication();
 		if(Natives.shouldsendlabels())  {
@@ -317,11 +321,11 @@ void    mklabellayout( ) {
 static public class LabelListAdapter extends RecyclerView.Adapter<LabelListHolder> {
     ArrayList<String> labels=null;
     LabelsClass settings;
-    View ok;
+    View parlayout;
     Runnable onsave;
-    LabelListAdapter(ArrayList<String> labels,LabelsClass set,View ok,Runnable onsave) {
+    LabelListAdapter(ArrayList<String> labels,LabelsClass set,Runnable onsave,View parlayout) {
         this.labels=labels;
-	this.ok=ok;
+	this.parlayout=parlayout;
 	this.onsave=onsave;
         settings=set;
     }
@@ -335,7 +339,7 @@ static public class LabelListAdapter extends RecyclerView.Adapter<LabelListHolde
         view.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24f);
 	view.setLayoutParams(new ViewGroup.LayoutParams(  ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
-        return new LabelListHolder(view,settings,ok,onsave);
+        return new LabelListHolder(view,settings,onsave,this.parlayout);
 
     }
 

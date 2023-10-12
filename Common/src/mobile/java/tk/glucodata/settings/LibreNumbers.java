@@ -40,6 +40,8 @@ import tk.glucodata.MainActivity;
 import tk.glucodata.Natives;
 import tk.glucodata.R;
 
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static tk.glucodata.Natives.canSendNumbers;
 import static tk.glucodata.RingTones.EnableControls;
@@ -97,7 +99,8 @@ static public class LibreNumberAdapter extends RecyclerView.Adapter<LibreNumberH
 
 
 
-public static void    mklayout(MainActivity context,int night,CheckBox donum,int[] donothing) { 
+public static void    mklayout(MainActivity context,int night,CheckBox donum,int[] donothing,View parent) { 
+	parent.setVisibility(INVISIBLE);
 	Button close = new Button(context);
 	close.setText(R.string.closename);
 	RecyclerView recycle = new RecyclerView(context);
@@ -123,6 +126,7 @@ public static void    mklayout(MainActivity context,int night,CheckBox donum,int
 		removeContentView(librenumlayout) ;
 		final var checked= sendnumbers.isChecked();
 	//	setSendNumbers(checked);
+		parent.setVisibility(VISIBLE);
 		donothing[0]=2;
 		donum.setChecked(checked);
 		donothing[0]=0;

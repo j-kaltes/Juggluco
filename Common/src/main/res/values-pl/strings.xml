@@ -295,4 +295,22 @@
  <string name="streamhistory">Historia strumienia</string>
  <string name="libreisviewed">Podgl. ekr.</string>
 
+<string name="system_ui">Integr. z sys.        </string>
+<string name="watch">Zegarek</string>
+<string name="sensor">Sensor</string>
+<string name="settings">Ustawienia</string>
+<string name="aboutname">Informacje</string>
+<string name="export">Eksport</string>
+<string name="mirror">Klonowanie</string>
+<string name="new_amount">Nowa wartość</string>
+<string name="list">Lista</string>
+<string name="statistics">Statystyka</string>
+<string name="talk">Na głos</string>
+<string name="floatname">Pływ. wart.        </string>
+<string name="last_scan">Ostatni odczyt</string>
+<string name="date">Data</string>
+<string name="day_back">Dzień wstecz</string>
+<string name="day_later">Dzień później</string>
+<string name="week_back">Tydzień wstecz</string>
+<string name="week_later">Tydzień później</string>
 </resources>

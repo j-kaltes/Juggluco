@@ -94,6 +94,7 @@ static jugglucotext ittext {
 	.glucose_variability="Variabilità glicemica: %.1f%%",
      .menustr0={
 		"UI di sistema       ",
+		"Menus",
 		"Orologio",
 		"Sensore",
 		"Impostazione",
@@ -161,7 +162,14 @@ sono necessaire.<BR>Nel tuo caso c'&egrave; un problema con i
 seguenti file)",
 	.add_s=false,
 .shortinit=itshortinit,
-.labels=itlabels
+.labels=itlabels,
+.checked="checked",
+.unchecked="not checked",
+.FallingQuickly="In rapida diminuzione",
+.Falling="In diminuzione",
+.Stable="In lenta modifica",
+.Rising="In aumento",
+.RisingQuickly="In rapido aumento",
 #endif
 }
 		;

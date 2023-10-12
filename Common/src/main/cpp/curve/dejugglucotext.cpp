@@ -87,6 +87,7 @@ jugglucotext detext {
 .glucose_variability="Glukosevariabilität: %.1f%%",
       .menustr0={
 "System UI       ",
+"Menus",
 "Uhren",
 "Sensor",
 "Einstellungen",
@@ -148,7 +149,16 @@ detext.newamount,
 <p>Eine der von dieser Anwendung verwendeten Bibliotheken hat einen BUG, der sie zum Absturz bringt, wenn sie bestimmte Dateien erkennt. Ihr Gerät enthält einige dieser Dateien. Dieses Programm enthält einen Hack, um diesen BUG zu umgehen, aber es ist wahrscheinlich besser, diese Dateien auf andere Weise unauffindbar zu machen. Magisk hat beispielsweise die Möglichkeit, Root für bestimmte Anwendungen zu verbergen (Magiskhide oder Denylist) und den eigenen Namen zu ändern, beides wird benötigt. In Ihrem Fall hat es Probleme mit der folgenden Datei)",
 	.add_s=false,
 .shortinit=deshortinit,
-.labels=delabels
+.labels=delabels,
+.checked="aktiviert",
+.unchecked="deaktiviert",
+.Undetermined="",
+.FallingQuickly="Fällt rasch",
+.Falling="Fällt",
+.Stable="Ändert sich langsam",
+.Rising="Steigt",
+.RisingQuickly="Steigt rasch"
+
 #endif
 		}
 

@@ -16,38 +16,22 @@
 /*      You should have received a copy of the GNU General Public License            */
 /*      along with Juggluco. If not, see <https://www.gnu.org/licenses/>.            */
 /*                                                                                   */
-/*      Fri Jan 27 15:31:32 CET 2023                                                 */
+/*      Sun Oct 08 20:48:20 CEST 2023                                                */
 
 
-package tk.glucodata.settings;
 
-import android.app.Activity;
-import android.view.View;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.recyclerview.widget.RecyclerView;
-import tk.glucodata.MainActivity;
-import tk.glucodata.Natives;
 
-import static tk.glucodata.settings.Settings.float2string;
+package tk.glucodata;
 
-public class LabelListHolder extends RecyclerView.ViewHolder {
 
-    public LabelListHolder(View view,LabelsClass set,Runnable onsave,View parent) {
-        super(view);
-       view.setOnClickListener(v -> {
-		int pos=getAbsoluteAdapterPosition();
-
-		set.mkchangelabel((MainActivity) v.getContext(),onsave,parent); //USE
-		set.label.setText(set.labels.get(pos));
-		if(set.garminwatch)
-			set.labelprec.setText(float2string(Natives.getprec(pos)));
-		set.labelweight.setText(float2string(Natives.getweight(pos)));
-		   set.labelpos=pos;
-		});
-
+public class Menus {
+static public final boolean on=false;
+static public final void show(Object act) {
     }
 
-}
+
+};
+
+
 

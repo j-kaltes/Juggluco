@@ -707,16 +707,6 @@ public static void  config(MainActivity act, View settingsview,CheckBox sendto,b
 
 	int[] nochangeamounts={0};
 	var numbers=getcheckbox(act,R.string.sendamounts,Natives.getSendNumbers());
-	numbers.setOnCheckedChangeListener( (buttonView,  isChecked) -> {
-		switch(nochangeamounts[0])  {
-			case 0: {
-				++nochangeamounts[0];
-				numbers.setChecked(!isChecked);
-				LibreNumbers.mklayout(act,0,numbers,nochangeamounts);
-				};break;
-			case  2: Natives.setSendNumbers(isChecked);break;
-			};
-		});
 	sendtolibreview.setOnCheckedChangeListener( (buttonView,  isChecked) -> {
 		numbers.setVisibility(isChecked?VISIBLE:INVISIBLE);;
 		});
@@ -752,6 +742,16 @@ var space=getlabel(act,"        ");
 		send.setVisibility(INVISIBLE);
 		}
 
+	numbers.setOnCheckedChangeListener( (buttonView,  isChecked) -> {
+		switch(nochangeamounts[0])  {
+			case 0: {
+				++nochangeamounts[0];
+				numbers.setChecked(!isChecked);
+				LibreNumbers.mklayout(act,0,numbers,nochangeamounts,layout);
+				};break;
+			case  2: Natives.setSendNumbers(isChecked);break;
+			};
+		});
      
 
 	Runnable closerun=()-> {

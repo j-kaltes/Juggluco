@@ -30,6 +30,8 @@ import android.os.Build;
 import android.text.InputType;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.accessibility.AccessibilityEvent;
+import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -41,17 +43,23 @@ import tk.glucodata.settings.Settings;
 
 import static android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS;
 import static android.view.View.GONE;
+import static android.view.View.IMPORTANT_FOR_ACCESSIBILITY_AUTO;
+import static android.view.View.IMPORTANT_FOR_ACCESSIBILITY_NO;
+import static android.view.View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static tk.glucodata.Applic.isWearable;
+import static tk.glucodata.Applic.talkbackrunning;
 import static tk.glucodata.Natives.getalarmdisturb;
 import static tk.glucodata.help.help;
 import static tk.glucodata.help.hidekeyboard;
 import static tk.glucodata.settings.Settings.editoptions;
 import static tk.glucodata.util.getbutton;
 import static tk.glucodata.util.getlabel;
+
+import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
 
 public class RingTones {
  int kind;
@@ -95,13 +103,33 @@ void setringer(int ki,String uristr) {
 			}
 		}
 	}
-
 static public void EnableControls(View view,boolean enable){
+	if(talkbackrunning)
+		view.setVisibility(enable?VISIBLE:GONE);
+	else
+		subEnableControls(view,enable);
+	}
+	/*
+static private	View.AccessibilityDelegate  accessDeli=
+	new View.AccessibilityDelegate () {
+		@Override
+		public void onInitializeAccessibilityNodeInfo( View host,
+													  AccessibilityNodeInfo info) {
+
+			Log.i(LOG_ID,"onInitializeAccessibilityNodeInfo");
+		}
+
+
+	};
+*/
+
+static private void subEnableControls(View view,boolean enable){
 	view.setEnabled(enable);
+	//view.setAccessibilityDelegate(enable?null:accessDeli);
 	if (view instanceof ViewGroup) {
 		ViewGroup vg = (ViewGroup) view;
 		for (int i = 0; i < vg.getChildCount(); i++) {
-			EnableControls(vg.getChildAt(i), enable);
+			subEnableControls(vg.getChildAt(i), enable);
 		}
 	}
 }

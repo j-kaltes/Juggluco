@@ -27,7 +27,6 @@ import static java.lang.Float.isNaN;
 import static tk.glucodata.Applic.isWearable;
 import static tk.glucodata.CommonCanvas.drawarrow;
 import static tk.glucodata.MainActivity.OVERLAY_PERMISSION_REQUEST_CODE;
-import static tk.glucodata.Notify.glucosesize;
 import static tk.glucodata.Notify.timef;
 
 import android.app.Activity;
@@ -214,8 +213,8 @@ public static int floatfontsize;
 			floatingbackground=Natives.getfloatingbackground();
 			Log.format(LOG_ID+" Natives.getfloatingforeground()=0x%x\n",floatingforeground);
 			Log.format(LOG_ID+" Natives.getfloatingbackground()=0x%x\n",floatingbackground);
-			if(floatfontsize<5||floatfontsize>(int)(screenheight*.8))
-				floatfontsize=(int)glucosesize;
+			if(floatfontsize<5||floatfontsize>(int)(screenheight*.8)) {
+				floatfontsize=(int)Notify.glucosesize; }
 			floatPaint.setTextSize(floatfontsize);
 			floatPaint.setAntiAlias(true);
 			floatPaint.setTextAlign(Paint.Align.LEFT);
@@ -289,7 +288,7 @@ protected void onDraw(Canvas floatCanvas) {
 		floatCanvas.drawColor(floatingbackground);
 		floatPaint.setColor(floatingforeground);
 		floatPaint.setTextSize(fontsize*.68f);
-		floatCanvas.drawText("No value", xpos, gety, floatPaint);
+		floatCanvas.drawText(Applic.app.getString(R.string.novalue), xpos, gety, floatPaint);
 		floatPaint.setTextSize(fontsize);
 		}
 	

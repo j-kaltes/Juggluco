@@ -97,6 +97,7 @@ jugglucotext iwtext {
 .glucose_variability="שונות גלוקוז: %.1f%%",
       .menustr0={
 		"System UI        ",
+		"Menus",
 "שעון",
 "חיישן",
 "הגדרות",

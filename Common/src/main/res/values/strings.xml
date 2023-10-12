@@ -281,5 +281,26 @@
  <string name="test">Test</string>
  <string name="streamhistory">Stream history</string>
  <string name="libreisviewed">Spy views</string>
+ <string name="novalue">No value</string>
+ <string name="talk">Talk</string>
+    <string name="watch">Watch</string>
+ <string name="menus">Menus</string>
+ <string name="system_ui">System UI</string>
+ <string name="sensor">Sensor</string>
+ <string name="settings">Settings</string>
+ <string name="aboutname">About</string>
+ <string name="export">Export</string>
+ <string name="mirror">Mirror</string>
+ <string name="new_amount">New Amount</string>
+ <string name="list">List</string>
+ <string name="statistics">Statistics</string>
+ <string name="floatname">Float</string>
+ <string name="last_scan">Last Scan</string>
+    <string name="date">Date</string>
+ <string name="day_back">Day back</string>
+ <string name="day_later">Day later</string>
+ <string name="week_back">Week back</string>
+ <string name="week_later">Week later</string>
+ <string name="talk_touch">Talk touch</string>
 
 </resources>

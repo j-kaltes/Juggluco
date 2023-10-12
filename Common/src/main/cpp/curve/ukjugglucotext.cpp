@@ -87,6 +87,7 @@ jugglucotext uktext {
 	.glucose_variability="Варіабельність глюкози: %.1f%%",
      .menustr0={
 		"System UI        ",
+		"Menus",
 		"Дивитися",
 		"Датчик",
 		"Налашт.",
@@ -154,7 +155,9 @@ jugglucotext uktext {
 власну назву, обидва необхідні. У вашому випадку є проблеми з наступним файлом)",
 	.add_s=true,
 .shortinit=ukshortinit,
-.labels=uklabels
+.labels=uklabels,
+.checked="checked",
+.unchecked="not checked"
 #endif
 		}
 

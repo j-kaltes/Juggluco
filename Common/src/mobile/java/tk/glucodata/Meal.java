@@ -58,6 +58,7 @@ import static tk.glucodata.NumberView.geteditview;
 
 import static tk.glucodata.NumberView.geteditwearos;
 import static tk.glucodata.NumberView.smallScreen;
+import static tk.glucodata.RingTones.EnableControls;
 import static tk.glucodata.help.hidekeyboard;
 import static tk.glucodata.settings.Settings.edit2float;
 import static tk.glucodata.settings.Settings.editoptions;
@@ -118,7 +119,8 @@ static public class MealItemViewAdapter extends RecyclerView.Adapter<MealItemVie
         	}
 
 }
-static void askround(MainActivity act,Runnable runner ) {
+static void askround(MainActivity act,Runnable runner ,View parent) {
+	EnableControls(parent,false);
 	TextView label=getlabel(act,R.string.roundto);
 	EditText edit=new EditText(act);edit.setText(Float.toString(Natives.getroundto()));
 	edit.setInputType(InputType.TYPE_CLASS_NUMBER |InputType.TYPE_NUMBER_FLAG_DECIMAL);//| InputType.IME_FLAG_NO_FULLSCREEN);
@@ -141,13 +143,17 @@ static void askround(MainActivity act,Runnable runner ) {
 	   lay.setPadding(pad,0,pad,0);
     	lay.setBackgroundColor(Applic.backgroundcolor);
 	act.addContentView(lay, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
-	Cancel.setOnClickListener(v-> {
+	act.setonback(() -> {
 		removeContentView(lay);
+		help.hidekeyboard(act);
+		EnableControls(parent,true);
 		act.hideSystemUI();
 		});
+	Cancel.setOnClickListener(v-> {
+		act.doonback();
+		});
 	Save.setOnClickListener(v-> {
-		removeContentView(lay);
-		act.hideSystemUI();
+		act.doonback();
 		float round=edit2float(edit);
 		Natives.setroundto(round);
 		runner.run();
@@ -176,10 +182,6 @@ static Layout menuview(final NumberView numb, MainActivity act, int mealptr, Obj
 	give.accept(carb,mealptr);
 	float[] carbar={carb};
 	int[] mealptrar={mealptr};
-	roundlabel.setOnClickListener(v-> askround(act,()->{
-		give.accept(carbar[0],mealptrar[0]);
-		roundlabel.setText(act.getString(R.string.round)+Natives.getroundto());
-		}));
 		int width=GlucoseCurve.getwidth();
 		int height=GlucoseCurve.getheight();
 
@@ -203,6 +205,11 @@ static Layout menuview(final NumberView numb, MainActivity act, int mealptr, Obj
 
 		return new int[]{w,h};
 		},new View[]{roundlabel,repeat},new View[]{recycle},new View[] {add,Help,close});
+	roundlabel.setOnClickListener(v-> 
+		askround(act,()->{
+		give.accept(carbar[0],mealptrar[0]);
+		roundlabel.setText(act.getString(R.string.round)+Natives.getroundto());
+		},lay));
     	lay.setBackgroundColor(Applic.backgroundcolor);
 	act.addContentView(lay, smallScreen?new ViewGroup.LayoutParams(  MATCH_PARENT, MATCH_PARENT):new ViewGroup.LayoutParams(width/2, height));
 	repeat.setOnClickListener(v->{
@@ -405,7 +412,9 @@ static void menuitem(MainActivity act, NumberView numb, int mealptr, int pos, In
 	        numhidekeyboard(numb,act);
 		act.hideSystemUI();
 	 	});
-	Ingredient.setOnClickListener(v-> selectingredient(act, i->{
+	Ingredient.setOnClickListener(v-> {
+		
+		selectingredient(act,numb, i->{
 	if(i<0) {
 		if(ingred[0]>=0&&i==(-ingred[0]-1)) {
 			ingred[0]=-1;
@@ -424,7 +433,7 @@ static void menuitem(MainActivity act, NumberView numb, int mealptr, int pos, In
 		total.setText(ondecimal(tot, 10));
 	}
 		editfocus.getedittext().requestFocus();
-		}));
+		});});
 	Save.setOnClickListener(v-> {
 		if(ingred[0]==-1) {
 			Toast.makeText(act, R.string.specifyingredient, Toast.LENGTH_SHORT).show();
@@ -478,7 +487,8 @@ static public class IngredientViewAdapter extends RecyclerView.Adapter<Ingredien
 
 }
 
-static void selectingredient(MainActivity act,IntConsumer setindex) {
+static void selectingredient(MainActivity act,NumberView numb,IntConsumer setindex) {
+	numhidekeyboard(numb,act);
 	RecyclerView recycle = new RecyclerView(act);
 	LinearLayoutManager lin = new LinearLayoutManager(act);
 	recycle.setLayoutManager(lin);
@@ -500,9 +510,9 @@ static void selectingredient(MainActivity act,IntConsumer setindex) {
 	lay.setX(xpos);
 	lay.setY(ypos);
 	IntConsumer hiercons=i-> {
-		lay.setVisibility(GONE);
-		removeContentView(lay);
-		act.poponback();
+		/*lay.setVisibility(GONE);
+		removeContentView(lay);*/
+		act.doonback();
 		setindex.accept(i);
 		};
 	Consptr consar=new Consptr(hiercons);
@@ -513,7 +523,7 @@ static void selectingredient(MainActivity act,IntConsumer setindex) {
 		if(isChecked) {
 			consar.cons=i-> {
 				edit.setChecked(false);
-				defineingredient(act,foodadapt,recycle,i,setindex);
+				defineingredient(act,foodadapt,recycle,i,setindex,lay);
 				};
 			}
 		else
@@ -528,14 +538,18 @@ static void selectingredient(MainActivity act,IntConsumer setindex) {
 	lay.bringToFront();
 	close.setOnClickListener(v-> act.doonback());
 	act.setonback(() -> {
+	        numshowkeyboard(numb,act);
 		lay.setVisibility(GONE);
 		removeContentView(lay);
 		act.hideSystemUI();
 		});
-	add.setOnClickListener(v-> defineingredient(act,foodadapt,recycle,-1,setindex));
+	add.setOnClickListener(v-> defineingredient(act,foodadapt,recycle,-1,setindex,lay));
 	
 	}
-static void	defineingredient(MainActivity act ,IngredientViewAdapter  foodadapt,RecyclerView recycle,int pos, IntConsumer  setindex) {
+static void	defineingredient(MainActivity act ,IngredientViewAdapter  foodadapt,RecyclerView recycle,int pos, IntConsumer  setindex,View parent) {
+
+	EnableControls(parent,false);
+	recycle.suppressLayout(true);
 	act.showSystemUI();
 	act.showui=true;
 	TextView.OnEditorActionListener	 actlist= new TextView.OnEditorActionListener() {
@@ -642,6 +656,8 @@ static void	defineingredient(MainActivity act ,IngredientViewAdapter  foodadapt,
 		foodadapt.notifyDataSetChanged();
 		lay.setVisibility(GONE);
 		removeContentView(lay);
+		recycle.suppressLayout(false);
+		EnableControls(parent,true);
 		act.showui=false;
 		act.hideSystemUI();
 		act.poponback();
@@ -651,6 +667,8 @@ static void	defineingredient(MainActivity act ,IngredientViewAdapter  foodadapt,
 	Runnable endproc= ()-> {
 		lay.setVisibility(GONE);
 		removeContentView(lay);
+		recycle.suppressLayout(false);
+		EnableControls(parent,true);
 		act.showui=false;
 		act.hideSystemUI();
 		};

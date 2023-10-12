@@ -99,9 +99,10 @@ static void show(MainActivity act) {
 		else	
 		{
 		close.setOnClickListener(v->{
-	       		//theview=null;
 			removeContentView(view);
 			act.poponback();
+			if(tk.glucodata.Menus.on)
+				tk.glucodata.Menus.show(act);
 					});
 		help.setOnClickListener(v->{
 			tk.glucodata.help.help(R.string.colorhelp,act);
@@ -112,6 +113,9 @@ static void show(MainActivity act) {
 	act.setonback(()-> {
 	       //theview=null;
 		removeContentView(view);
+		if(tk.glucodata.Menus.on)
+			tk.glucodata.Menus.show(act);
+			
 	});
 }
 

@@ -275,4 +275,23 @@
  <string name="talker">Голас</string>
  <string name="secondsbetween">Секунд паміж</string>
  <string name="test">Тэст</string>
+
+<string name="system_ui">System UI</string>
+<string name="watch">Глядзець</string>
+<string name="sensor">Датчык</string>
+<string name="settings">Налады</string>
+<string name="aboutname">Аб Juggluco</string>
+<string name="export">Экспарт</string>
+<string name="mirror">Клон</string>
+<string name="new_amount">Новая сума</string>
+<string name="list">Спіс</string>
+<string name="statistics">Статыстыка</string>
+<string name="talk">Размаўляць</string>
+<string name="floatname">Парыць      </string>
+<string name="last_scan">Апошняе скан.</string>
+<string name="date">Дата</string>
+<string name="day_back">Дзень назад</string>
+<string name="day_later">Праз дзень</string>
+<string name="week_back">Тыдзень таму</string>
+<string name="week_later">Праз тыдзень</string>
 </resources>

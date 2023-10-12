@@ -218,6 +218,7 @@ static void endtalk() {
 			JugglucoSend.broadcastglucose(SerialNumber,mgdl,gl,rate,alarm,timmsec);
 		if(!isWearable) {
 			app.numdata.sendglucose(SerialNumber, tim, gl, thresholdchange(rate), alarm|0x10);
+			GlucoseWidget.update();
 			}
 		if(tim>nexttime) {
 			nexttime=tim+mininterval;

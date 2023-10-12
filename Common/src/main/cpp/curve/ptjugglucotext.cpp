@@ -96,6 +96,7 @@ jugglucotext pttext {
         .glucose_variability="Variabilidade da glicose: %.1f%%",
      .menustr0={
                 "UI do Sistema        ",
+		"Menus",
                 "Relógio",
                 "Sensor",
                 "Definições",
@@ -159,7 +160,15 @@ aplicações (Magiskhide ou Denylist) e mudar o seu próprio nome, ambos
 são necessárias. No seu caso, tem problemas com o seguinte ficheiro)",
         .add_s=true,
 .shortinit=ptshortinit,
-.labels=ptlabels
+.labels=ptlabels,
+
+.checked="checked",
+.unchecked="not checked",
+.FallingQuickly="A descer rapidamente",
+.Falling="A descer",
+.Stable="Em alteração lenta",
+.Rising="A subir",
+.RisingQuickly="A subir rapidamente"
 #endif
                 }
 

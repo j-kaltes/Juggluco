@@ -184,4 +184,23 @@
  <string name="notentered">" non inserito"</string>
 <string name="spacedand">" e "</string>
     <string name="notify">Notifica</string>
+
+<string name="system_ui">UI di sistema</string>
+<string name="watch">Orologio</string>
+<string name="sensor">Sensore</string>
+<string name="settings">Impostazione</string>
+<string name="aboutname">About</string>
+<string name="export">Esporta</string>
+<string name="mirror">Mirror</string>
+<string name="new_amount">Nuovo valore</string>
+<string name="list">Lista</string>
+<string name="statistics">Statistiche</string>
+<string name="talk">Talk</string>
+<string name="floatname">Float</string>
+<string name="last_scan">Ultima scansione</string>
+<string name="date">Data</string>
+<string name="day_back">Giorno prima</string>
+<string name="day_later">Giorno dopo</string>
+<string name="week_back">Settimana prima</string>
+<string name="week_later">Settimana dopo</string>
 </resources>

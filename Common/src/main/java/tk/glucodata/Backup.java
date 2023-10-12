@@ -453,8 +453,8 @@ void makehostview(MainActivity act) {
 		    }
 		   else
 			hostadapt.notifyItemChanged(pos);
-		 hostview.setVisibility(GONE);
-		 act.poponback();
+//		 hostview.setVisibility(GONE);
+		 act.doonback();
 	  	//alarms.setEnabled( Natives.isreceiving( ));
 		}); 
 	delete.setOnClickListener(v->{ 
@@ -517,7 +517,8 @@ void makehostview(MainActivity act) {
         hostview.setBackgroundColor(backgroundcolor);
 
 	}
-void changehostview(MainActivity act,final int index,String[] names,boolean dodetect,String port,String pass) {
+void changehostview(MainActivity act,final int index,String[] names,boolean dodetect,String port,String pass,View parent) {
+		parent.setVisibility(INVISIBLE);
 	if(hostview==null)
 		makehostview(act);
 	else {
@@ -526,6 +527,7 @@ void changehostview(MainActivity act,final int index,String[] names,boolean dode
 		visible.setChecked(false);
 		}
 	act.setonback(() -> {
+			parent.setVisibility(VISIBLE);
 			hidekeyboard(act);
 			hostview.setVisibility(GONE);
 			});
@@ -624,11 +626,11 @@ void changehostview(MainActivity act,final int index,String[] names,boolean dode
 		}
        hostindex=index;
 	}
-void changehostview(MainActivity act,int index) {
+void changehostview(MainActivity act,int index,View parent) {
 	String[] names=Natives.getbackuphostnames(index);
 	String port=Natives.getbackuphostport(index);
 	String pass= Natives.getbackuppassword(index);
-	changehostview(act,index,names,Natives.detectIP(index),port,pass) ;
+	changehostview(act,index,names,Natives.detectIP(index),port,pass, parent) ;
 	}
 
 void		showhostinfo(final MainActivity act,final View parview,int pos) {
@@ -637,7 +639,6 @@ if(!isWearable)
 	var close=getbutton(act,R.string.closename);
 	var modify=getbutton(act,R.string.modify);
 
-   	modify.setOnClickListener(v-> 	changehostview(act,pos));
 //  	var help=getbutton(act,R.string.helpname);
 	var info=new TextView(act);
      int pad=(int)(GlucoseCurve.metrics.density*7.0);
@@ -658,6 +659,8 @@ if(!isWearable)
 	      layout.setBackgroundResource(R.drawable.dialogbackground);
 //	      layout.setRotation(90);
 	      }
+
+   	modify.setOnClickListener(v-> 	changehostview(act,pos,layout));
 	final var lpar=isWearable?MATCH_PARENT:ViewGroup.LayoutParams.WRAP_CONTENT;
 	act.addContentView(layout, new ViewGroup.LayoutParams(lpar,lpar));
 	Runnable closerun= ()-> {
@@ -672,8 +675,8 @@ if(!isWearable)
 		closerun.run();
 		});
 	}
-void addhostview(MainActivity act) {
-	changehostview(act,-1,null,false,defaultport,"") ;
+void addhostview(MainActivity act,View parent) {
+	changehostview(act,-1,null,false,defaultport,"",parent) ;
 	}
 
 
@@ -699,7 +702,6 @@ View blpan= (thishost[2]==null)?new Space(act):getlabel(act,"bt-pan: "+thishost[
   EditText portview=getnumedit(act, port);
 
   Button hosts=getbutton(act,R.string.addconnectionbutton);
-   hosts.setOnClickListener(v-> addhostview(act));
   Button Help=getbutton(act,R.string.helpname);
    Help.setOnClickListener(v->
    	help.help(R.string.connectionoverview,act) );
@@ -717,7 +719,6 @@ View blpan= (thishost[2]==null)?new Space(act):getlabel(act,"bt-pan: "+thishost[
    );
   boolean[] issaved={false};
    alarms=getbutton(act,R.string.alarms);
-   alarms.setOnClickListener(v-> tk.glucodata.settings.Settings.alarmsettings(act,null,issaved));
 //      if(!Natives.isreceiving( )) { alarms.setEnabled(false); }
 
   final Button battery = new Button(act);
@@ -770,6 +771,9 @@ View blpan= (thishost[2]==null)?new Space(act):getlabel(act,"bt-pan: "+thishost[
 		Save.setVisibility(GONE);
 		hidekeyboard(act);
 	});
+
+   	alarms.setOnClickListener(v-> tk.glucodata.settings.Settings.alarmsettings(act,lay,issaved));
+	   hosts.setOnClickListener(v-> addhostview(act,lay));
  	hostadapt = new HostViewAdapter(lay); //USE
 	recycle.setAdapter(hostadapt);
 	recycle.setLayoutParams(new ViewGroup.LayoutParams(  MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -785,6 +789,8 @@ View blpan= (thishost[2]==null)?new Space(act):getlabel(act,"bt-pan: "+thishost[
 		Applic.updateservice(act,Natives.getusebluetooth());
 		act.showui=false;
 		Applic.app.getHandler().postDelayed(act::hideSystemUI,1);
+		if(Menus.on)
+			Menus.show(act);
 
 		};
 	act.setonback(closerun);	
@@ -795,7 +801,7 @@ View blpan= (thishost[2]==null)?new Space(act):getlabel(act,"bt-pan: "+thishost[
 
 	if(!isWearable&&android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
 		battery.setText(R.string.dozemode);
-		battery.setOnClickListener(v-> Battery.batteryscreen(act));
+		battery.setOnClickListener(v-> Battery.batteryscreen(act,lay));
 		}
 	else {
 		battery.setVisibility(GONE);
@@ -827,6 +833,8 @@ View blpan= (thishost[2]==null)?new Space(act):getlabel(act,"bt-pan: "+thishost[
 	@Override
     public HostViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     	TextView view=new Button( parent.getContext());
+
+	    view.setAccessibilityDelegate(tk.glucodata.Layout.accessDeli);
         view.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24f);
 	view.setLayoutParams(new ViewGroup.LayoutParams(  ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
        view.setGravity(Gravity.LEFT);
@@ -876,6 +884,7 @@ View blpan= (thishost[2]==null)?new Space(act):getlabel(act,"bt-pan: "+thishost[
 			sb.append("   \u21CB ").append(str);
 			}
 		text.setText(sb);
+
 	    }
         @Override
         public int getItemCount() {

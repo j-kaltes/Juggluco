@@ -314,7 +314,9 @@ extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getInvertColors)(JNIEnv *env, 
 extern int startincolors;
 
 extern void setinvertcolors(bool val) ;
+extern int	invertcolors;
 void setinvertcolors(bool val) {
+	invertcolors=val;
 	settings->data()->invertcolors=val;
 	 startincolors=val*startbackground;
 	 }

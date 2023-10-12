@@ -173,10 +173,6 @@ public   View addnumberview(MainActivity context,final int bron,final long time,
 	source=new TextView(context);
         dateview=datebutton;
         timebutton = new Button(context);
-        timebutton.setOnClickListener(
-                v -> {
-                    gettimeview(context);
-                });
 
         timeview=timebutton;
 	mealbutton=getbutton(context,R.string.mealname);
@@ -254,6 +250,15 @@ public   View addnumberview(MainActivity context,final int bron,final long time,
 
 			return new int[] {w,h}; }, row1,new View[]{datebutton, mealbutton,source,timebutton},new View[]{cancel,messagetext,deletebutton, savebutton});
 
+        timebutton.setOnClickListener(
+                v -> {
+			layout.setVisibility(INVISIBLE);
+                    gettimeview(context,()-> {
+						layout.setVisibility(VISIBLE);
+						if(keyboard!=null)
+							keyboard.setVisibility(VISIBLE);
+					});
+                });
 
 	layout.setBackgroundColor( Applic.backgroundcolor);
 
@@ -301,6 +306,12 @@ public   View addnumberview(MainActivity context,final int bron,final long time,
 				
 			((Applic) act.getApplication()). redraw();
 		      act.poponback();
+
+			 if(Menus.on) {
+				if(deletebutton.getVisibility()==GONE) {
+						Menus.show(context);
+						}
+				}
 		    } 
 		    //		    act.clearonback();
         });
@@ -390,13 +401,19 @@ public   View addnumberview(MainActivity context,final int bron,final long time,
 
 			currentnum=0L;
 			}
+		else {
+			 if(Menus.on) {
+				Menus.show(context);
+				}
+			}
 
 		    GlucoseCurve.reopener();
 		   newnumview.setVisibility(GONE);
-		   if(!isWearable)
+		   if(!isWearable)  {
 			   hidekeyboard();
 			if(smallScreen)
 				help.hidekeyboard(context);
+			  }
 		    });
 
 	if(tmpmealptr>=0) {
@@ -459,6 +476,12 @@ void deletedialog(View v,int[] mealptr) {
 					  }
 				currentnum=0L;
 				}
+				/*
+			else  {
+			 if(Menus.on) {
+				Menus.show(context);
+				}
+				} */
 		 newnumview.setVisibility(GONE);
 
 		   hidekeyboard();
@@ -600,7 +623,11 @@ Log.i(LOG_ID, "getdateviewal");
         Button ok=new Button(activity);
         ok.setText(R.string.ok);
         ok.setOnClickListener(vi -> {
-		activity.doonback();
+	//	activity.doonback();
+		if(keyboard!=null)
+			EnableControls(keyboard,true);
+		datepicker.setVisibility(GONE);
+		if(newnumview!=null) EnableControls(newnumview,true);
               // datepicker.setVisibility(GONE);
 		int day=datepick.getDayOfMonth();
 		int month=datepick.getMonth();
@@ -637,13 +664,22 @@ cal.setTimeInMillis(date);
 
 datepick.updateDate( cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
 activity.setonback(()->{ 
+	if(keyboard!=null)
+		EnableControls(keyboard,true);
 	datepicker.setVisibility(GONE);
+
 	if(newnumview!=null)
 		EnableControls(newnumview,true);
+	else {
+		if(Menus.on)
+					Menus.show(activity);
+		}
 		});
 
 if(newnumview!=null)
 	EnableControls(newnumview,false);
+if(keyboard!=null)
+	EnableControls(keyboard,false);
 return datepicker;
 }
 
@@ -656,7 +692,7 @@ ObjIntConsumer<Integer>  numsettime=(hour,min)-> {
 	thetime= hour*60+min;
         timeview.setText(String.format(Locale.US,"%02d:%02d",hour,min ));
 	};
-void gettimeview(MainActivity activity) {
+void gettimeview(MainActivity activity,Runnable parent) {
 	int id=thetime; 
 	int h,m;
 	if(id>=0)  {
@@ -668,10 +704,13 @@ void gettimeview(MainActivity activity) {
 		 h=cal.get(Calendar.HOUR_OF_DAY);
 		 m=cal.get(Calendar.MINUTE);
 		}
-	gettimepicker(activity,h,m,numsettime);
+	if(keyboard!=null) {
+	    keyboard.setVisibility(INVISIBLE);
+	    }
+	gettimepicker(activity,h,m,numsettime,parent);
 	}
 	@SuppressWarnings("deprecation")
-public void gettimepicker(MainActivity activity,int hourin, int minin, ObjIntConsumer<Integer> timeset) {
+public void gettimepicker(MainActivity activity,int hourin, int minin, ObjIntConsumer<Integer> timeset,Runnable onclose) {
    settime=timeset;
     if(timepicker==null) {
         pick =new TimePicker(activity);
@@ -745,6 +784,7 @@ public void gettimepicker(MainActivity activity,int hourin, int minin, ObjIntCon
 	}
 activity.setonback(
 		() -> {
+			onclose.run();
 			activity.hideSystemUI();
 			timepicker.setVisibility(INVISIBLE);
 			if(newnumview!=null)

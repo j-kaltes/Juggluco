@@ -119,6 +119,12 @@ void	NumDisplay::mealdisplay(float x,float y,const Num *num) const {
 static inline int mktmmin(const struct tm *tmptr) {
 	return tmptr->tm_min;
 	} */
+
+#ifdef WEAROS
+const
+#endif
+bool speakout=false;
+extern void speak(const char *message) ;
 template <class TX,class TY> void NumDisplay::showNums(NVGcontext* vg, const TX &transx,  const TY &transy,bool *was) const {
 	auto [low,high]=extrum; 
 	const Numdata *numdata=this;
@@ -162,20 +168,30 @@ template <class TX,class TY> void NumDisplay::showNums(NVGcontext* vg, const TX 
 						{
 					if(selshown)
 						continue;
+					 constexpr int maxbuf=50;
+					 char buf[maxbuf];
 					 const time_t tim= it->time;
 					 struct tm *tms=localtime(&tim);
-					 constexpr int maxbuf=7;
-					 char buf[maxbuf];
 					lasttouchedcolor=colorindex;
 					buflen=snprintf(buf,maxbuf,"%02d:%02d", tms->tm_hour, mktmmin(tms));
+					char *buf2=buf+buflen;
 					if(settings->getlabelweightmgperL(it->type))  {
+						constexpr const int maxbuf2=10;
 						nvgText(vg, xpos,ypos+(((ypos-dtop)<(dheight/2))?1:-1)*(hit?2.4:2)*smallsize, buf, buf+buflen);
-						const int len=snprintf(buf,maxbuf,"%.1f", it->value);
-						sidenum(xpos,ypos,buf,len,hit);
+						const int len=snprintf(buf2,maxbuf2,"%.1f", it->value);
+						sidenum(xpos,ypos,buf2,len,hit);
 						nvgTextAlign(vg,NVG_ALIGN_CENTER|NVG_ALIGN_MIDDLE);
 						}
 					else
 						nvgText(vg, xpos,ypos-(hit?2.4:2)*smallsize, buf, buf+buflen);
+
+#ifndef WEAROS
+					if(speakout) {
+						sprintf(buf2,"\n%s\n%g",settings->getlabel(it->type).data(),it->value);
+						speak(buf);
+						}
+#endif
+
 					}
 				selshown=true;
 				}

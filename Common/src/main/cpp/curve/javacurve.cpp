@@ -82,7 +82,7 @@ static jmethodID summaryready=nullptr;
 	#ifdef  WEAROS
 static jmethodID showsensorinfo=nullptr;
 #endif
-jmethodID  jdoglucose=nullptr, jupdateDevices=nullptr, jbluetoothEnabled=nullptr;
+jmethodID  jdoglucose=nullptr, jupdateDevices=nullptr, jbluetoothEnabled=nullptr,jspeak=nullptr;
 jclass JNIApplic;
 #ifdef OLDXDRIP
 #ifndef  WEAROS
@@ -133,6 +133,9 @@ if(cl) {
 		}
 	if(!(jbluetoothEnabled=env->GetStaticMethodID(JNIApplic,"bluetoothEnabled","()Z"))) {
 		LOGSTRING(R"(jbluetoothEnabled=env->GetStaticMethodID(JNIApplic,"bluetoothEnabled","()Z") failed)" "\n");
+		}
+	if(!(jspeak=env->GetStaticMethodID(JNIApplic,"speak","(Ljava/lang/String;)V"))) {
+		LOGSTRING(R"(jspeak=env->GetStaticMethodID(JNIApplic,"speak","(Ljava/lang/String;)V") failed)" "\n");
 		}
 	}
 else {
@@ -203,7 +206,6 @@ attach() {
 	return env;
 	}
 };
-
 
 
 JNIEnv *getenv() {
@@ -479,13 +481,13 @@ extern "C" JNIEXPORT void JNICALL fromjava(movedate) (JNIEnv *env, jclass clazz,
 	begrenstijd() ;
 	};
 void prevdays(int nr);
-extern "C" JNIEXPORT void JNICALL fromjava(prevday)(JNIEnv* env, jclass obj) {
-	prevdays(1);
+extern "C" JNIEXPORT void JNICALL fromjava(prevday)(JNIEnv* env, jclass obj,jint val) {
+	prevdays(val);
 	}
 
 void nextdays(int nr) ;
-extern "C" JNIEXPORT void JNICALL fromjava(nextday)(JNIEnv* env, jclass obj) {
-	nextdays(1);
+extern "C" JNIEXPORT void JNICALL fromjava(nextday)(JNIEnv* env, jclass obj,jint val) {
+	nextdays(val);
 	}
 /*
 extern "C" JNIEXPORT jlong JNICALL fromjava(lastpoll)(JNIEnv *env, jclass thiz) {
@@ -548,7 +550,20 @@ extern "C" JNIEXPORT jint JNICALL fromjava(getlastcolor)(JNIEnv *env, jclass thi
 		return 0xFFFFFFFF;
 	return  fromNVGcolor(getcolor(lasttouchedcolor));
 	}
-
+#ifndef WEAROS
+extern bool makepercetages() ;
+extern "C" JNIEXPORT jboolean JNICALL fromjava(makepercentages)(JNIEnv *env, jclass thiz) {
+	return makepercetages();
+	}
+#endif
+extern int numlist;
+				extern void numiterinit();
+extern "C" JNIEXPORT void JNICALL fromjava(makenumbers)(JNIEnv *env, jclass thiz) {
+			if(!numlist) {
+				numiterinit();
+				numlist=1;
+				}
+			}
 /*
 static float screenwidthcm=0;
 //extern bool iswatch;
@@ -561,6 +576,7 @@ extern int showstream;
 extern int showscans;
 extern int showhistories;
 extern int shownumbers;
+extern int showmeals;
 #define defdisplay(kind)\
 extern "C" JNIEXPORT jboolean JNICALL fromjava(getshow##kind)(JNIEnv *env, jclass thiz) {\
 	return show##kind;\
@@ -570,9 +586,54 @@ extern "C" JNIEXPORT void JNICALL fromjava(setshow##kind)(JNIEnv *env, jclass th
 	}
 
 defdisplay(scans)
+defdisplay(meals)
 defdisplay(histories)
 defdisplay(stream)
 defdisplay(numbers)
 
+void speak(const char *message) {
+	getenv()->CallStaticVoidMethod(JNIApplic,jspeak,getenv()->NewStringUTF(message));
+	}
 
+#ifndef WEAROS
+extern bool speakout;
+extern "C" JNIEXPORT void JNICALL fromjava(settouchtalk)(JNIEnv *env, jclass thiz,jboolean val) {
+	speakout=val;
+	}
 
+extern "C" JNIEXPORT jboolean JNICALL fromjava(gettouchtalk)(JNIEnv *env, jclass thiz) {
+	return speakout;
+	}
+
+extern "C" JNIEXPORT jboolean JNICALL fromjava(getsystemui)(JNIEnv *env, jclass thiz) {
+	return showui;
+	}
+extern "C" JNIEXPORT void JNICALL fromjava(setsystemui)(JNIEnv *env, jclass thiz,jboolean val) {
+	showui=val;
+	settings->setui(showui);
+	}
+
+extern "C" JNIEXPORT void JNICALL fromjava(settonow)(JNIEnv *env, jclass thiz) {
+	auto max=time(nullptr);
+	starttime=max-duration*3/5;
+	}
+
+#include "sensoren.h"
+
+extern struct lastscan_t scantoshow;
+extern "C" JNIEXPORT jboolean JNICALL fromjava(showlastscan)(JNIEnv *env, jclass thiz) {
+	int lastsensor=sensors->lastscanned();
+	if(lastsensor>=0) {
+		const SensorGlucoseData *hist=sensors->getSensorData(lastsensor);
+		if(hist) {
+			const ScanData *scan= hist->lastscan();
+			if(scan&&scan->valid()&&((time(nullptr)-scan->t)<(60*60*5))) {
+				scantoshow={lastsensor,scan};
+				return true;
+				}
+			}
+		}
+	return false;
+	}
+
+#endif

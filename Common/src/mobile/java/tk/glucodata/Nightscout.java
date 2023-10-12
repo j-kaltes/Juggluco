@@ -202,17 +202,6 @@ public static void show(MainActivity context,View parent) {
 	var treatments=getcheckbox(context,R.string.treatments,saytreatments);
 	int[] nochangeamounts={0};
 
-	treatments.setOnCheckedChangeListener( (buttonView,  isChecked) -> {
-		switch(nochangeamounts[0])  {
-			case 0: {
-				++nochangeamounts[0];
-				treatments.setChecked(!isChecked);
-				LibreNumbers.mklayout(context,1,treatments,nochangeamounts);
-				};break;
-			case  2: Natives.setsaytreatments(isChecked);break;
-
-			};
-		});
 	var layout=new Layout(context,(l,w,h)-> {
 		var width= GlucoseCurve.getwidth();
 		if(width>w)
@@ -220,6 +209,17 @@ public static void show(MainActivity context,View parent) {
 		l.setY(0);
 		return new int[] {w,h};
 		},new View[]{secret,editkey},new View[]{visible,labport,portview,save} , new View[]{sslbox,privkey,chain},new View[]{local,httpport,treatments},new View[]{Help,server,Close} );
+	treatments.setOnCheckedChangeListener( (buttonView,  isChecked) -> {
+		switch(nochangeamounts[0])  {
+			case 0: {
+				++nochangeamounts[0];
+				treatments.setChecked(!isChecked);
+				LibreNumbers.mklayout(context,1,treatments,nochangeamounts,layout);
+				};break;
+			case  2: Natives.setsaytreatments(isChecked);break;
+
+			};
+		});
 	layout.setPadding(laypad*2,laypad,laypad*2,laypad);
 
 	layout.setBackgroundResource(R.drawable.dialogbackground);

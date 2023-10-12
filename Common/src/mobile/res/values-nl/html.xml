@@ -2116,13 +2116,30 @@ Samsung-telefoon moet &quot;Spraakservices van Google&quot; worden
 ingesteld in plaats van &quot;Samsung tekst naar spraak-engine&quot;
 om uit verschillende stemmen te kunnen kiezen. Deze opties zijn te
 vinden door te zoeken naar <i>tekst-naar-spraak</i> of <i>spraakuitvoer</i>
-in Android-instellingen of door naar <i>Taal en invoer -&gt;Tekst</i><i>
-</i><i>naar</i><i> </i><i>spraak</i><i>/Geavanceerd-&gt;Spraakuitvoer</i>
- te gaan. Hier kunt u &quot;<i>S</i><i>praakservices van</i><i>
-Google</i>&quot;/&quot;<i>Google text-naar-spraak engine</i>&quot;
-selecteren en spraakgegevens installeren. Op andere telefoons staat
-dit onder <i>Systeeminstellingen-&gt;Toegankelijkheid&gt;</i><i>Zicht</i><i>-&gt;Tekst</i><i>
-</i><i>naar</i><i> </i><i>spraak-instellingen</i>.</p>
+in Android-instellingen of door naar <i>Taal en invoer -&gt;Tekst</i>
+<i>naar</i> <i>spraak/Geavanceerd-&gt;Spraakuitvoer</i> te gaan. Hier
+kunt u &quot;<i>Spraakservices van</i> <i>Google</i>&quot;/&quot;<i>Google
+text-naar-spraak engine</i>&quot; selecteren en spraakgegevens
+installeren. Op andere telefoons staat dit onder
+<i>Systeeminstellingen-&gt;Toegankelijkheid&gt;Zicht-&gt;Tekst</i>
+<i>naar</i> <i>spraak-instellingen</i>.</p>
+<h2 class="western">Talk touch</h2>
+<p>Als <em>Talk Touch</em> is ingeschakeld, zorgt aanraking op
+bepaalde plaatsen voor praten:</p>
+<ul>
+	<li><p>Het aanraken van de huidige glucose;</p>
+	<li><p>Aanraken van grafiek- en scanpunten;</p>
+	<li><p>Hoeveelheden aanraken;</p>
+	<li><p>De datum van dat punt van de grafiek wordt gezegd wanneer de
+	linker- en rechterbovenhoek worden aangeraakt;</p>
+	<li><p>Lang drukken op een menu-item;</p>
+	<li><p>Lang indrukken van een hoeveelheid in de lijst met
+	hoeveelheden (links midden menu-&gt;lijst).</p>
+</ul>
+<p><br/>
+<br/>
+
+</p>
 ]]>
 </string>
 <string name="nightnumhelp" >

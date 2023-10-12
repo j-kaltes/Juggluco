@@ -46,9 +46,8 @@ constexpr static Shortcut_t  nlshortinit[]= { {"Meer. Brood",
         {"SportPowder",
         .873f}};
 #endif
-
 static jugglucotext nltext {
-	.daylabel={"zon","maa","din","woe","don","vri","zat"},
+	.daylabel={"zo","ma","di","wo","do","vr","za"},
 	.monthlabel={"jan","feb","maa","apr","mei","jun","jul","aug","sep", "okt","nov","dec"},
 
 	.scanned="gescanned",
@@ -87,6 +86,7 @@ static jugglucotext nltext {
 
      .menustr0={
 		"System UI        ",
+		"Menus",
 		"Horloges",
 		"Sensor",
 		"Instellingen",
@@ -154,7 +154,15 @@ veranderen. Beide zijn nodig. In het huidige geval betreft het de
 volgende file)",
 	.add_s=true,
 .shortinit=nlshortinit,
-.labels=nllabels
+.labels=nllabels,
+.checked="aangevinkt",
+.unchecked="niet aangevinkt",
+.Undetermined="",
+.FallingQuickly="Daalt snel",
+.Falling="Daalt",
+.Stable="Verandert langzaam",
+.Rising="Stijgt",
+.RisingQuickly="Stijgt snel"
 #endif
 		}
 

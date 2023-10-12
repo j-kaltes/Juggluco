@@ -23,14 +23,34 @@ package tk.glucodata;
 
 import android.content.Context;
 import android.graphics.Paint;
+import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.TextView;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
 public class Layout extends ViewGroup {
+static View.AccessibilityDelegate  accessDeli=
+	new View.AccessibilityDelegate () {
+		@Override
+		public void onInitializeAccessibilityNodeInfo( View host, AccessibilityNodeInfo info) {
+			String message=(host  instanceof TextView)? ((TextView)host).getText().toString() :host.toString();
+
+			if(host.isEnabled()&&host.getVisibility()==View.VISIBLE) {
+				Log.i(LOG_ID,"SHOW onInitializeAccessibilityNodeInfo "+message);
+				super.onInitializeAccessibilityNodeInfo(host, info);
+				}
+			else {
+				Log.i(LOG_ID,"HIDE onInitializeAccessibilityNodeInfo "+message);
+				}
+		}
+
+
+
+	};
 //    public Layout(Context context) { super(context); } public Layout(Context context, AttributeSet attrs) { super(context, attrs); } public Layout(Context context, AttributeSet attrs, int defStyle) { super(context, attrs, defStyle); } 
 private static final String LOG_ID="Layout";
 
@@ -75,6 +95,7 @@ void init(Context context,Placer placer,int nr) {
 	  if(rows[i]!=null) {
 	    for(View el:rows[i]) {
 		if(el!=null) {
+		    el.setAccessibilityDelegate(accessDeli);
 		    addView(el);
 		    el.setTag(R.id.layoutrow,i);
 		    }
@@ -131,6 +152,7 @@ public int addrow(View [] row) {
 		}
 	for(View el:row) {
 		if(el!=null) {
+		    el.setAccessibilityDelegate(accessDeli);
 		    addView(el);
 		    el.setTag(R.id.layoutrow,prevnr);
 		    }

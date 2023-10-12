@@ -279,4 +279,22 @@
  <string name="secondsbetween">Секунди між</string>
  <string name="test">Тест</string>
 
+<string name="system_ui">System UI</string>
+<string name="watch">Дивитися</string>
+<string name="sensor">Датчик</string>
+<string name="settings">Налашт.</string>
+<string name="aboutname">Аб Juggluco</string>
+<string name="export">Експорт</string>
+<string name="mirror">Клон</string>
+<string name="new_amount">Нова сума</string>
+<string name="list">Список</string>
+<string name="statistics">Статистика</string>
+<string name="talk">Говорити</string>
+<string name="floatname">Плавати</string>
+<string name="last_scan">Останнє скан.</string>
+<string name="date">Дата</string>
+<string name="day_back">День назад</string>
+<string name="day_later">Через день</string>
+<string name="week_back">Тиждень тому</string>
+<string name="week_later">Тиждень пізн</string>
 </resources>

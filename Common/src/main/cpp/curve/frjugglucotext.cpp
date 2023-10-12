@@ -90,6 +90,7 @@ jugglucotext frtext {
 	.glucose_variability="Variabilité glycémique: %.1f%%",
      	.menustr0={
 		"Intf. système        ",
+		"Menus",
 		"Montre",
 		"Capteur",
 		"Paramètres",
@@ -155,7 +156,15 @@ applications (Magiskhide ou Denylist) et changer son propre nom, les deux sont
 requis. Dans votre cas le fichier suivant pose problème )",
 	.add_s=true,
 .shortinit=shortinit,
-.labels=labels
+.labels=labels,
+
+.checked="checked",
+.unchecked="not checked",
+.FallingQuickly="Baisse rapide",
+.Falling="Baisse",
+.Stable="Modification lente",
+.Rising="Augmentation",
+.RisingQuickly="Augmentation rapide"
 #endif
 		}
 

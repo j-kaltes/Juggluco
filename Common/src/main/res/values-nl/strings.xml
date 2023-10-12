@@ -265,4 +265,26 @@
   <string name="talker">Spreker</string>
   <string name="secondsbetween">Seconden er tussen</string>
   <string name="test">Test</string>
+ <string name="novalue">No value</string>
+
+ <string name="menus">Menus</string>
+
+<string name="system_ui">System UI        </string>
+<string name="watch">Horloges</string>
+<string name="sensor">Sensor</string>
+<string name="settings">Instellingen</string>
+<string name="aboutname">About</string>
+<string name="export">Export</string>
+<string name="mirror">Kloon</string>
+<string name="new_amount">Hoeveelheid</string>
+<string name="list">Lijst</string>
+<string name="statistics">Statistiek</string>
+<string name="talk">Praat</string>
+<string name="floatname">Zweef        </string>
+<string name="last_scan">Laatste scan</string>
+<string name="date">Datum</string>
+<string name="day_back">Dag terug</string>
+<string name="day_later">Dag later</string>
+<string name="week_back">Week terug</string>
+<string name="week_later">Week later</string>
 </resources>

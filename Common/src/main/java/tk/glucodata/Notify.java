@@ -27,13 +27,11 @@ import static android.content.Context.NOTIFICATION_SERVICE;
 import static android.content.Context.VIBRATOR_SERVICE;
 import static android.graphics.Color.BLACK;
 import static android.graphics.Color.WHITE;
-import static java.lang.Float.isNaN;
 import static java.lang.String.format;
 import static tk.glucodata.Applic.TargetSDK;
 import static tk.glucodata.Applic.app;
 import static tk.glucodata.Applic.isWearable;
 import static tk.glucodata.Applic.usedlocale;
-import static tk.glucodata.CommonCanvas.drawarrow;
 import static tk.glucodata.Log.doLog;
 import static tk.glucodata.Natives.getUSEALARM;
 import static tk.glucodata.Natives.getalarmdisturb;
@@ -50,12 +48,6 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.TypedArray;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.PorterDuff;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -154,52 +146,18 @@ static public Ringtone mkrings(String uristr,int kind) {
 	return null;
 	}
 
-private static Bitmap glucoseBitmap;
-private static Canvas canvas;
-private static Paint glucosePaint;
-private static float density;
+
+final  static boolean whiteonblack=false;
+@ColorInt  static int foregroundcolor=BLACK;
 static float glucosesize;
-private static int notglucosex;
-
-final private static boolean whiteonblack=false;
-@ColorInt private static int foregroundcolor=BLACK;
-
+static RemoteGlucose arrowNotify;
 
 	static void mkpaint() {
 		if(!isWearable) {
-			glucosePaint=new Paint();
-			glucosePaint.setTextSize(glucosesize);
-			glucosePaint.setAntiAlias(true);
-			glucosePaint.setTextAlign(Paint.Align.LEFT);
 			DisplayMetrics metrics= Applic.app.getResources().getDisplayMetrics();
 			Log.i(LOG_ID,"metrics.density="+ metrics.density+ " width="+metrics.widthPixels+" height="+metrics.heightPixels);
 			var notwidth=Math.min(metrics.widthPixels,metrics.heightPixels);
-			float notheight=glucosesize*0.8f;
-			notglucosex= (int)(notwidth*.12f);
-			glucoseBitmap = Bitmap.createBitmap((int)notwidth, (int)notheight, Bitmap.Config.ARGB_8888);
-			canvas = new Canvas(glucoseBitmap);
-
-			Log.i(LOG_ID,"glucosesize="+glucosesize+"notwidth="+notwidth+" notheight="+notheight+"color="+ format("%x",glucosePaint.getColor()));
-			density= notheight/54.0f;
-			if(whiteonblack)
-				glucosePaint.setColor(WHITE);
-			else {
-				var style = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) ? android.R.style.TextAppearance_Material_Notification_Title : android.R.style.TextAppearance_StatusBar_EventContent;
-				int resultColor;
-				int[] attrs = {android.R.attr.textColor};
-				try {
-					@SuppressLint("ResourceType") TypedArray ta = Applic.app.obtainStyledAttributes(style, attrs);
-					if(ta != null) {
-						int col = ta.getColor(0, Color.TRANSPARENT);
-						glucosePaint.setColor(col);
-						foregroundcolor=col;
-						ta.recycle();
-					}
-				}
-				catch(Throwable e) {
-					Log.stack(LOG_ID,"obtainStyledAttributes",e);
-				}
-			}
+			arrowNotify=new RemoteGlucose(glucosesize,notwidth,0.12f,whiteonblack?1:0);
 		}
 	}
 
@@ -380,11 +338,8 @@ static public String glucosestr(float gl) {
 				vibrates(vibrator,vibrationPatternstart,amplitude);
 			}
 
-			// vibrator.vibrate(VibrationEffect.createWaveform (vibrationPatternstart,amplitude, 1));
-//		vibrates(vibrator,vibrationPatternstart,amplitude); 
 		}
-	}
-	//final static private boolean  vibrate=true;
+		}
 	void stopvibratealarm() {
 		vibrator.cancel();
 	}
@@ -549,27 +504,12 @@ static public String glucosestr(float gl) {
 
 
 
-//Notification.Builder  GluNotBuilder=null;
 
 	static final String fromnotification="FromNotification";
 	final static int forcecloserequest=7812;
 	static final String closename= "ForceClose";
 	final static int penmutable= android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M? PendingIntent.FLAG_IMMUTABLE:0;
-/*
-static void testold() {
-	long time = System.currentTimeMillis()-1000*60*5;
-	final String tformat= timef.format(time);
-	Notify.onenot.oldfloatmessage(tformat,false);
-	} 
-private static String oldmessagetime=null;
-private static boolean oldmessagealarm=false;
 
-
-private void repeadoldmessage() {
-	if(oldmessagetime!=null)
-		oldfloatmessage(oldmessagetime,oldmessagealarm);
-	}
-	*/
 private void  makeseparatenotification(int draw,String message,notGlucose glucose,String type) {
 	if(!isWearable) {
 		if(alertseparate) {
@@ -601,7 +541,6 @@ private void  makeseparatenotification(int draw,String message,notGlucose glucos
 			}
 		}
     }
-
 static public boolean alertseparate=false;
 	private Notification  makearrownotification(int kind,int draw,String message,notGlucose glucose,String type,boolean once) {
 
@@ -615,67 +554,27 @@ static public boolean alertseparate=false;
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 			GluNotBuilder.setVisibility(VISIBILITY_PUBLIC);
 		}
-//	GluNotBuilder.setUsesChronometer(true);
-
-		//floatglucose(glucose);
 		if(!isWearable) {
-			RemoteViews remoteViews= new RemoteViews(app.getPackageName(),R.layout.arrowandvalue);
+			if(TargetSDK<31||Build.VERSION.SDK_INT < 31) {
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+					GluNotBuilder.setStyle(new Notification.DecoratedCustomViewStyle());
+					}
+				}
+			GluNotBuilder.setShowWhen(true);
+			RemoteViews remoteViews=arrowNotify.arrowremote(kind,glucose);
 			if(whiteonblack) {
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+				if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 					GluNotBuilder.setColorized(true);
 					GluNotBuilder.setColor(BLACK);
-				}
+					}
 				else
 					remoteViews.setInt(arrowandvalue, "setBackgroundColor", BLACK);
-			}
-			long unixtime = System.currentTimeMillis() / 1000L;
-			var gety = canvas.getHeight() * 0.98f;
-			var getx = notglucosex;
-			var rate = glucose.rate;
-//		 canvas.drawColor(0);
-			if(whiteonblack)
-				canvas.drawColor(BLACK);
-			else
-				canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-			glucosePaint.setTextSize(glucosesize);
-			if (isNaN(rate)) {
-//					getx=width*0.45f
-				getx *= 0.82f;
-			} else {
-				float weightrate=0.0f,arrowy;
-				 weightrate = (rate > 1.6 ? -1.0f : (rate < -1.6 ? 1.0f : (rate / -1.6f)));
-				Log.i(LOG_ID, "weightrate=" + weightrate);
-				 arrowy = gety - glucosesize * .4f + (CommonCanvas.glnearnull(rate) ? 0.0f : (weightrate * glucosesize * .4f));
-				drawarrow(canvas, glucosePaint, density, rate, getx * .85f, arrowy);
-			}
-
-			canvas.drawText(glucose.value, getx, gety, glucosePaint);
-			float valwidth = glucosePaint.measureText(glucose.value, 0, glucose.value.length());
-			if (kind > 1) {
-				glucosePaint.setTextSize(glucosesize * .4f);
-				canvas.drawText(unitlabel, getx + valwidth + glucosesize * .2f, gety - glucosesize * .25f, glucosePaint);
-			} else {
-				glucosePaint.setTextSize(glucosesize * .65f);
-				canvas.drawText(" " + app.getString(kind == 0 ? R.string.lowglucoseshort : R.string.highglucoseshort), getx + valwidth + glucosesize * .2f, gety - glucosesize * .15f, glucosePaint);
-			}
-
-			canvas.setBitmap(glucoseBitmap);
-		remoteViews.setImageViewBitmap(arrowandvalue, glucoseBitmap);
-		if(TargetSDK<31||Build.VERSION.SDK_INT < 31) {
+				}
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-				GluNotBuilder.setStyle(new Notification.DecoratedCustomViewStyle());
+				GluNotBuilder.setCustomContentView(remoteViews);
+			} else
+				GluNotBuilder.setContent(remoteViews);
 			}
-			}
-
-
-		GluNotBuilder.setShowWhen(true);
-		
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-			GluNotBuilder.setCustomContentView(remoteViews);
-		} else
-			GluNotBuilder.setContent(remoteViews);
-
-		}
 	if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 		GluNotBuilder.setTimeoutAfter(glucosetimeout);
 	}
@@ -787,7 +686,6 @@ void oldnotification(long time) {
 void oldnotification(long time) {
 	final String tformat= timef.format(time);
 	String message = Applic.app.getString(R.string.newnewvalue) + tformat;
-//	oldfloatmessage(tformat,false) ;
 	 placelargenotification(R.drawable.novalue, message,GLUCOSENOTIFICATION,true);
 	}
 	@SuppressWarnings("deprecation")
@@ -800,20 +698,18 @@ private Notification  makenotification(int draw,String message,String type,boole
 		}
 		}
 	Log.i(LOG_ID,"makenotification "+message);
-        //GluNotBuilder.setSmallIcon(draw).setOnlyAlertOnce(once).setContentTitle(message);
         GluNotBuilder.setSmallIcon(draw).setOnlyAlertOnce(once).setContentTitle(message).setShowWhen(true);
 
 	if(!isWearable) {
 		RemoteViews remoteViews = new RemoteViews(app.getPackageName(), R.layout.text);
-//		remoteViews.setInt(R.id.content, "setBackgroundColor", WHITE);
 		remoteViews.setTextColor(R.id.content, foregroundcolor);
 		remoteViews.setTextViewText(R.id.content, message);
-//	RemoteViews remoteViews=null;
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
 			GluNotBuilder.setCustomContentView(remoteViews);
-		} else
+			} 
+		else
 			GluNotBuilder.setContent(remoteViews);
-	}
+		}
 	if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 		GluNotBuilder.setVisibility(VISIBILITY_PUBLIC);
 	}

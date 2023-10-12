@@ -79,8 +79,8 @@ public static native void startsensors( );
     //    public static native void clear();
     public static native void prevscr();
      public static native void nextscr();
-     public static native void prevday();
-     public static native void nextday();
+     public static native void prevday(int day);
+     public static native void nextday(int day);
 //       public static native void savestate();
     public static native int translate(float dx,float dy,float yold,float y);
     public static native void flingX(float vol);
@@ -455,6 +455,10 @@ public static native boolean getshowscans();
 public static native boolean getshowhistories();
 public static native boolean getshowstream();
 public static native boolean getshownumbers();
+
+public static native boolean getshowmeals();
+public static native void setshowmeals(boolean val);
+
 public static native void setshowscans(boolean val);
 public static native void setshowhistories(boolean val);
 public static native void setshowstream(boolean val);
@@ -674,6 +678,15 @@ public static native void setLibreIsViewed(boolean val);
 public static native boolean getLibreIsViewed( );
 public static native void setRTL(boolean val);
 public static native boolean getRTL( );
+public static native boolean makepercentages( );
+public static native void makenumbers();
+public static native void settouchtalk(boolean val);
+public static native boolean gettouchtalk( );
+public static native boolean getsystemui( );
+public static native void setsystemui(boolean val);
+public static native void settonow();
+public static native boolean showlastscan( );
+
 
 //s/^extern.*JNIEXPORT[         ]*\([a-zA-Z]*\)[ ]*JNICALL[      ]*fromjava(\([^)]*\)) *(JNIEnv[^,]*,[^,)]*[,)]\([^){]*\)[^a-zA-Z0-9]*$/public static native \1 \2(\3);/g
 //public static native void sendxdripold();

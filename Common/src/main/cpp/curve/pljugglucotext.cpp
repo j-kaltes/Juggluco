@@ -92,6 +92,7 @@ jugglucotext pltext {
 	.glucose_variability="Zmienność stęż. glukozy: %.1f%%",
      .menustr0={
 		"Integr. z sys.        ",
+		"Menus",
 		"Zegarek",
 		"Sensor",
 		"Ustawienia",
@@ -157,7 +158,15 @@ jugglucotext pltext {
  W twoim przypadku ma problemy z następującym plikiem)",
 	.add_s=true,
 .shortinit=plshortinit,
-.labels=pllabels
+.labels=pllabels,
+
+.checked="checked",
+.unchecked="not checked",
+.FallingQuickly="Szybki spadek",
+.Falling="Spadek",
+.Stable="Powolna zmiana",
+.Rising="Wzrost",
+.RisingQuickly="Szybki wzrost"
 #endif
 		}
 

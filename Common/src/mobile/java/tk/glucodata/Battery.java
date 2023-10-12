@@ -38,6 +38,8 @@ import android.widget.Toast;
 //import com.judemanutd.autostarter.AutoStartPermissionHelper;
 
 import static android.view.View.GONE;
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
 import static tk.glucodata.Applic.isWearable;
 import static tk.glucodata.MainActivity.IGNORE_BATTERY_OPTIMIZATION_SETTINGS;
 import static tk.glucodata.settings.Settings.removeContentView;
@@ -48,7 +50,9 @@ class Battery {
 static private final String LOG_ID="Battery";
 
 
-static void batteryscreen(MainActivity context ) {
+static void batteryscreen(MainActivity context,View parent ) {
+	if(parent!=null)
+		parent.setVisibility(INVISIBLE);
 if(!isWearable) {
 	if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
 		Button Close=getbutton(context,R.string.closename);
@@ -68,6 +72,8 @@ if(!isWearable) {
 		battery.setChecked(isIgnoringBatteryOptimizations);
 		final Layout lay=new Layout(context, (l, w, h) -> new int[] {w,h}, new View[]{info},isWearable?new View[]{Close}:new View[]{battery,Close});
 		Runnable closerun=()-> {
+			if(parent!=null)
+				parent.setVisibility(VISIBLE);
 			lay.setVisibility(GONE);
 			removeContentView(lay); 
 			};

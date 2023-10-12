@@ -87,6 +87,7 @@ jugglucotext betext {
 	.glucose_variability="Варыябельнасць глюкозы: %.1f%%",
      .menustr0={
 		"System UI      ",
+		"Menus",
 		"Глядзець",
 		"Датчык",
 		"Налады",
@@ -151,7 +152,9 @@ jugglucotext betext {
    і змяніць сваё імя, як неабходнае. У вашым выпадку ёсць праблемы з наступным файлам)",
 	.add_s=true,
 .shortinit=beshortinit,
-.labels=belabels
+.labels=belabels,
+.checked="checked",
+.unchecked="not checked"
 #endif
 		}
 

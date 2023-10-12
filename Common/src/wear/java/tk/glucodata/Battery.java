@@ -22,5 +22,5 @@
 package tk.glucodata;
 
 class Battery {
-static void batteryscreen(MainActivity context ) { }
+static void batteryscreen(MainActivity context ,Object ob) { }
 }	

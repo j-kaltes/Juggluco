@@ -274,4 +274,23 @@
  <string name="talker">Voix</string>
  <string name="secondsbetween">Intervalle (sec)</string>
  <string name="test">Test</string>
+
+<string name="system_ui">Intf. systèm</string>
+<string name="watch">Montre</string>
+<string name="sensor">Capteur</string>
+<string name="settings">Paramètres</string>
+<string name="aboutname">A propos</string>
+<string name="export">Exporter</string>
+<string name="mirror">Miroir</string>
+<string name="new_amount">Nouvelle quantité</string>
+<string name="list">Liste</string>
+<string name="statistics">Statistiques</string>
+<string name="talk">Parler</string>
+<string name="floatname">Flotter</string>
+<string name="last_scan">Dernier scan</string>
+<string name="date">Date</string>
+<string name="day_back">Jour avant</string>
+<string name="day_later">Jour après</string>
+<string name="week_back">Semaine avant</string>
+<string name="week_later">Semaine après</string>
 </resources>

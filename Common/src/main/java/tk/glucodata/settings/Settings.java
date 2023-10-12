@@ -81,6 +81,7 @@ import tk.glucodata.Layout;
 import tk.glucodata.Libreview;
 import tk.glucodata.Log;
 import tk.glucodata.MainActivity;
+import tk.glucodata.Menus;
 import tk.glucodata.Natives;
 import tk.glucodata.Notify;
 import tk.glucodata.R;
@@ -132,8 +133,13 @@ private void makesettingsin(MainActivity act) {
    	mksettings(activity,issaved);
 
 	activity.setonback(() -> {
+
 		hidekeyboard();
-		finish();});
+		finish();
+		if(tk.glucodata.Menus.on)
+			tk.glucodata.Menus.show(activity);
+
+		});
 }
 private void makesettings(MainActivity act) {
 	Applic.app.getHandler().postDelayed( ()->{
@@ -181,7 +187,7 @@ void finish() {
 	Applic.app.getHandler().postDelayed( ()->{
 				activity.hideSystemUI();
 				},1);
-	activity.requestRender();
+		activity.requestRender();
 //	Applic.wakemirrors();
 //	activity=null;
 	}
@@ -276,6 +282,7 @@ void setvalues() {
 
 
 static public void alarmsettings(MainActivity context,View parview,boolean[] issaved) {
+	parview.setVisibility(INVISIBLE);
 	TextView alarmlow,alarmhigh;
         View[] lowalarm= mkalarm(context,context.getString(R.string.lowglucosealarm),Natives.hasalarmlow(),Natives.alarmlow(),0);
         View[] highalarm=mkalarm(context,context.getString(R.string.highglucosealarm),Natives.hasalarmhigh(),Natives.alarmhigh(),1);
@@ -395,11 +402,13 @@ new View[]{isvalue},new View[]{ringisvalue,Cancel},new View[]{usealarm},new View
 		});
 
 	context.setonback(() -> {
+		parview.setVisibility(VISIBLE);
 		tk.glucodata.help.hidekeyboard(context);
 		removeContentView(lay) ;
 		});
 	Cancel.setOnClickListener(
 		v->{
+		parview.setVisibility(VISIBLE);
 	   	context.poponback();
 			tk.glucodata.help.hidekeyboard(context);
 		removeContentView(lay) ;
@@ -428,6 +437,7 @@ new View[]{isvalue},new View[]{ringisvalue,Cancel},new View[]{usealarm},new View
                      haslow, hashigh, isvalue.isChecked(),hasloss);
 	Natives.setUSEALARM(usealarm.isChecked());
 	   context.poponback();
+		parview.setVisibility(VISIBLE);
 		tk.glucodata.help.hidekeyboard(context);
 		removeContentView(lay) ;
 		issaved[0]=true;
@@ -542,8 +552,12 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 	cancel.setOnClickListener(
 		v->{
 	   	context.poponback();
-		    hidekeyboard();
-		finish();});
+	       hidekeyboard();
+		finish();
+		if(tk.glucodata.Menus.on)
+			tk.glucodata.Menus.show(context);
+
+		});
        Button ok =new Button(context);
         ok.setText(R.string.save);
 	CheckBox levelleft= new CheckBox(context);
@@ -693,6 +707,8 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 		    hidekeyboard();
 		    finish();
 //		var rtl=checkRTL.isChecked();
+		if(tk.glucodata.Menus.on)
+			tk.glucodata.Menus.show(context);
 		if(spinpos[0]!=startspinpos) {
 /*			Log.i(LOG_ID,"setpinpos[0]="+spinpos[0]+" getRTL()=="+pastRTL+" checked="+rtl);
 			Natives.setRTL(rtl);  */
@@ -711,20 +727,21 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 			} */
 			});
 
+	Layout[] thelayout=new Layout[1];
 	if(!isWearable) {
 		changelabels.setText(R.string.numberlabels);
 		changelabels.setOnClickListener(v-> {
 			    hidekeyboard();
-			    new LabelsClass(context).mklabellayout();});
+			    new LabelsClass(context).mklabellayout(thelayout[0]);});
 			  }
 	var colbut=getbutton(context,R.string.colors);
         colbut.setOnClickListener(v-> {
-		context.doonback();
+		hidekeyboard();
+		finish();
 		SetColors.show(context);
 		});
 	Button numalarm=getbutton(context,R.string.remindersname);
 	Button advanced=null;
-	Layout[] thelayout=new Layout[1];
 
 
 	View[][] views;
@@ -735,7 +752,7 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 	       var uploader=getbutton(context,"Uploader");
 	       var floatconfig=getbutton(context,R.string.floatglucoseshort);
 
-	       floatconfig.setOnClickListener(v-> tk.glucodata.FloatingConfig.show(context));
+	       floatconfig.setOnClickListener(v-> tk.glucodata.FloatingConfig.show(context,thelayout[0]));
 		CheckBox floatglucose=new CheckBox(context);
 		floatglucose.setText("  " );
 
@@ -771,7 +788,7 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 	       var floatconfig=getbutton(context,R.string.floatglucose);
 
 
-	       floatconfig.setOnClickListener(v-> tk.glucodata.FloatingConfig.show(context));
+	       floatconfig.setOnClickListener(v-> tk.glucodata.FloatingConfig.show(context,thelayout[0]));
 		View[] rowglu=new View[]{ bluetooth,floatconfig,alarmbut};
 		row8=new View[]{changelabels,langspin,numalarm,colbut};
 		views=new View[][]{row0, row1,new View[]{scalelabel,fixatex,fixatey}, row2,new View[]{levelleft,camera,reverseorientation},

@@ -79,6 +79,7 @@ static jugglucotext zhtext {
 	.glucose_variability="血糖变异性：%.1f%%",
      .menustr0={
 		"系统用户界面       ",
+		"Menus",
 		"手表",
 		"传感器",
 		"设置",

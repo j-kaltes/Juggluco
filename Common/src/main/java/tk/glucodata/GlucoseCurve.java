@@ -62,6 +62,7 @@ import static tk.glucodata.Natives.turnoffalarm;
 import static tk.glucodata.NumberView.geteditview;
 import static tk.glucodata.NumberView.geteditwearos;
 import static tk.glucodata.NumberView.smallScreen;
+import static tk.glucodata.RingTones.EnableControls;
 import static tk.glucodata.settings.Settings.editoptions;
 import static tk.glucodata.util.getlabel;
 
@@ -138,7 +139,11 @@ void startsearch() {
 	search.setVisibility(View.GONE); 
         hidemealsearch();
 
-	hidekeyboard(); reopener();} );
+	hidekeyboard(); reopener();
+	if(Menus.on)
+		Menus.show(activity);
+
+	} );
     }
 
 
@@ -259,7 +264,11 @@ void getnumcontrol(MainActivity activity) {
 	activity.setonback(()-> {
 		numcontrol.setVisibility(GONE);
 		Natives.endnumlist();
-            	 requestRender();
+		 if(Menus.on) {
+		 	Menus.show(activity);
+		 	}
+		else
+			 requestRender();
 		 });
 	}
 
@@ -286,9 +295,10 @@ void getnumcontrol(MainActivity activity) {
     };*/
 static public DisplayMetrics metrics;
 static public float getDensity() {
-	if(metrics!=null)
-		return metrics.density;
-	return 1.0f;
+	if(metrics==null) {
+		metrics= Applic.app.getResources().getDisplayMetrics();
+		}
+	return metrics.density;
 	}
     public GlucoseCurve(MainActivity context) {
         super(context);
@@ -341,7 +351,10 @@ long multitime=0L;
             final float y = event.getY();
 	
             if(Natives.isbutton(x, y)) {
-                requestRender();
+	    	if(Menus.on)
+			Menus.show((MainActivity)getContext());
+		else
+			requestRender();
             }
             return false;
         }
@@ -382,6 +395,15 @@ final    private ScaleGestureDetector.SimpleOnScaleGestureListener mScaleListene
         }
     };
 
+	long reldate;
+	 void startdatepick(long tim) {
+		reldate=tim;
+		numberview.getdateviewal((MainActivity)getContext(),tim,	(year,month,day)-> {
+			Natives.movedate(reldate, year, month, day);
+			requestRender();
+		});
+
+	}
 class GestureListener implements GestureDetector.OnGestureListener {
         @Override
         public boolean onDown(MotionEvent e) {
@@ -394,16 +416,7 @@ class GestureListener implements GestureDetector.OnGestureListener {
 
         }
 
-        long reldate;
 
-private void startdatepick(long tim) {
-	reldate=tim;
-	numberview.getdateviewal((MainActivity)getContext(),tim,	(year,month,day)-> {
-		    Natives.movedate(reldate, year, month, day);
-		    requestRender();
-		});
-
-	  }
 	  /*
 void startlibrelink(String lang) {
     Activity act = (Activity) getContext();
@@ -435,21 +448,21 @@ void startlibrelink(String lang) {
                         case 0:
                             switch (item) {
 			    	case 0: ((MainActivity) getContext()).selectionSystemUI(); break;
-				case 1: {
+				case 1: Menus.show((MainActivity) getContext());break;
+				case 2: {
 				if(!isWearable) {
 					MainActivity activity = (MainActivity) getContext();
 					tk.glucodata.Watch.show(activity);
 					}
-//					new GarminStatus(activity,((Applic)activity.getApplication()).numdata);
 					}
 					break;
-			      case 2: new bluediag((MainActivity)getContext()); break;
-			        case 3: {
+			      case 3: new bluediag((MainActivity)getContext()); break;
+			        case 4: {
 					MainActivity activity = (MainActivity) getContext(); 
 					Settings.set(activity);
 					};break;
 
-                                case 4: {
+                                case 5: {
 					if(!isWearable) {
 						MainActivity activity = (MainActivity) getContext();
 						doabout(activity);
@@ -458,19 +471,14 @@ void startlibrelink(String lang) {
 
 					break;
 					}
-                                case 5: //((Activity) getContext()).finish(); break;
-				      ((Activity) getContext()).moveTaskToBack(true);break; //keeps current state 
-                                case 6:  Notify.stopalarm();break;
+                                case 6: ((Activity) getContext()).moveTaskToBack(true);break; //keeps current state 
+                                case 7:  Notify.stopalarm();break;
                                 default:
                             }
 
                             break;
 		     case 1: {
 			switch(item&0xF) {
-//			       case 0:
-//					((Applic) ((Activity) getContext()).getApplication()).setnotify(((item >> 4)&0xF)!=0);
-//					((Applic) ((Activity) getContext()).getApplication()).setnotify(((item >> 8)&0xF)!=0);
-//					break;
                                 case 0: dialogs.showexport(( MainActivity)getContext(),getWidth(),getHeight()); break;
 
 
@@ -551,11 +559,11 @@ void startlibrelink(String lang) {
                 final float x=event.getX();
                 final float y=event.getY();
             if(x<wgrens) {
-                Natives.prevday();
+                Natives.prevday(1);
                 }
             else {
                 if(x>rgrens) {
-                    Natives.nextday();
+                    Natives.nextday(1);
                     }
                 else {
                     long hitptr=Natives.longpress(x, y);
@@ -616,9 +624,14 @@ void startlibrelink(String lang) {
 
 private int[] minutes={-1,-1};
 
-private void mktimedialog( Button but,final int num ) {
+private void mktimedialog( Button but,final int num ,View parent) {
         but.setOnClickListener(
                 v->  {
+		parent.setVisibility(INVISIBLE);
+		var keys=numberview.keyboard;
+		if(keys!=null) {
+		    keys.setVisibility(INVISIBLE);
+		    }
 		int starthour,startmin;
 		if(minutes[num]>=0) {
 			starthour=minutes[num]/60;
@@ -629,7 +642,7 @@ private void mktimedialog( Button but,final int num ) {
 			 starthour=cal.get(Calendar.HOUR_OF_DAY);
 			 startmin=cal.get(Calendar.MINUTE);
 			 }
-		numberview. gettimepicker((MainActivity)getContext(),starthour, startmin,
+		numberview.gettimepicker((MainActivity)getContext(),starthour, startmin,
 		(hour,min) -> {
 			TextView text=((TextView) v);
             text.setText(String.format(usedlocale,"%02d:%02d", hour, min));
@@ -638,7 +651,14 @@ private void mktimedialog( Button but,final int num ) {
 			text.setTypeface( null,Typeface.BOLD);
 			text.setTextSize(COMPLEX_UNIT_PX,oldsize*1.5f);
                           minutes[num] = hour * 60 + min;
-		   }); 
+		   },()-> {
+			parent.setVisibility(VISIBLE);
+						if(keys!=null) {
+							keys.setVisibility(VISIBLE);
+						}
+
+
+					});
 		});
 	}
 
@@ -987,13 +1007,11 @@ private Layout getsearchlayout(MainActivity context) {
 
     View[] glucoseline={scansearch,historysearch,streamsearch};
     fromtime =new Button(context); //fromtime.setText("00:00");
-     mktimedialog( fromtime,0 );
 	TextView gline=new TextView(context);gline.setText(" - ");
 
       totime=new Button(context); //totime.setText("23:59"); 
       oldColors=totime.getTextColors();
       oldsize=totime.getTextSize();
-    mktimedialog( totime,1 );
         Button clear=new Button(context);clear.setText(R.string.resetname);
 
     View[] timeline={clear,fromtime,totime};
@@ -1074,6 +1092,8 @@ if(!smallScreen) {
 		return new int[] {w,h};
 		},buttonline,glucoseline, timeline,goline);
 
+     	mktimedialog( fromtime,0 ,layout);
+      mktimedialog( totime,1 ,layout);
 	context.addContentView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
     	layout.setBackgroundColor(Applic.backgroundcolor);
 

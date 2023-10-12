@@ -69,7 +69,8 @@ static public int	getcolor() {
 		return background?Natives.getfloatingbackground( ):Natives.getfloatingforeground( );
 		}
 
-static public void show(MainActivity act) {
+static public void show(MainActivity act,View view) {
+	view.setVisibility(INVISIBLE);
 	int height=GlucoseCurve.getheight();
 	int width=GlucoseCurve.getwidth();
 	var  sizelabel=getlabel(act,R.string.fontsize);
@@ -156,7 +157,9 @@ static public void show(MainActivity act) {
 
 
 	       act.addContentView(layout, new ViewGroup.LayoutParams(MATCH_PARENT,MATCH_PARENT));
-	act.setonback(()-> { removeContentView(layout); });
+	act.setonback(()-> {
+		view.setVisibility(VISIBLE);
+		removeContentView(layout); });
 	close.setOnClickListener(v->{
 		act.doonback();
 	});

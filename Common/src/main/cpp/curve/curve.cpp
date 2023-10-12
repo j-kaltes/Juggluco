@@ -112,22 +112,12 @@ void createcolors() {
 		foreground[threehouroffset]=  nvgRGBAf2(1.0,0,1,0.5);
 		background[threehouroffset]=  nvgRGBAf2(1.0,0,1,1);
 		}
-		/*
-	if(settings->data()->colorscreated<4) {
-		for(int i=redoffset+1;i<std::size(allcolors);i++)  {
-			background[i]=invertcolor(foreground+i);
-			}
-		settings->data()->colorscreated=4;
-		}
-		*/
 	if(settings->data()->colorscreated<5) {
 		cpcolors(foreground);
 		cpcolors(background);
 		}
 	if(settings->data()->colorscreated<15) {
 		background[lightredoffset]=   blackbean; 
-//		background[lightredoffset]=   hexcolor( 0x191C20);
-//		background[lightredoffset]=   hexcolor( 0x0E0C01);
 		settings->data()->colorscreated=15;
 		}
 	}
@@ -725,7 +715,7 @@ float getfreey() {
 
 static bool glucosepointinfo(time_t tim,uint32_t value,   float posx, float posy) {
 	if((!selshown&&nearby(posx-tapx,posy-tapy))) {
-		constexpr int maxbuf=50;
+		constexpr int maxbuf=60;
 		char buf[maxbuf];
 		struct tm tmbuf;
 		 struct tm *tms=localtime_r(&tim,&tmbuf);
@@ -735,10 +725,17 @@ static bool glucosepointinfo(time_t tim,uint32_t value,   float posx, float posy
 		nvgTextAlign(genVG,NVG_ALIGN_CENTER|NVG_ALIGN_MIDDLE);
 		float cor=((posy-dtop)<(dheight/2))?smallsize:-smallsize;
 		nvgText(genVG, posx,posy+cor*.92, buf, buf+len);
-	 	len=snprintf(buf,maxbuf,gformat, gconvert(value));
-		sidenum(posx,posy,buf,len,false);
+		char *buf2=buf+len;
+		*buf2++='\n';
+	 	len=snprintf(buf2,maxbuf-len-1,gformat, gconvert(value));
+		sidenum(posx,posy,buf2,len,false);
 		
 	//	nvgText(genVG, posx,posy+cor*.92*2, buf, buf+len);
+#ifndef WEAROS
+		if(speakout) {
+			speak(buf);
+			}
+#endif
 
 		selshown=true;
 		return true;
@@ -1208,7 +1205,13 @@ static void	showscanner(NVGcontext* genVG,const SensorGlucoseData *hist,int scan
 	startstep((nu-last.t)< maxbluetoothage?*getwhite():getoldcolor());
 	float x= dwidth+dleft;
 	constexpr int maxbuf=50;
-	char buf1[maxbuf];
+	char buf[maxbuf*2];
+	time_t tim=last.t;
+	struct tm tmbuf;
+	 struct tm *tms=localtime_r(&tim,&tmbuf);
+	int len=snprintf(buf,maxbuf,"%02d:%02d ", tms->tm_hour,mktmmin(tms));
+	char *buf1=buf+len;
+	--len;
 	const int32_t gluval=last.g;
 //	const int32_t gluval=501;
 	int len1;
@@ -1245,12 +1248,6 @@ static void	showscanner(NVGcontext* genVG,const SensorGlucoseData *hist,int scan
 			y=dheight-th;
 
 	nvgText(genVG, x,y, buf1, buf1+len1);
-	char buf[maxbuf];
-	time_t tim=last.t;
-	struct tm tmbuf;
-	 struct tm *tms=localtime_r(&tim,&tmbuf);
-	int len=snprintf(buf,maxbuf,"%02d:%02d", tms->tm_hour,mktmmin(tms));
-//	nvgFontSize(genVG,smallfont );
 	const float yunder=y+((y>(dheight/2))?-1:1)*headsize/2.0;
 	nvgFontSize(genVG,mediumfont );
 	nvgText(genVG, endtime,yunder, buf, buf+len);
@@ -1258,28 +1255,30 @@ static void	showscanner(NVGcontext* genVG,const SensorGlucoseData *hist,int scan
 	nvgFontSize(genVG,smallsize );
 	nvgTextAlign(genVG,NVG_ALIGN_LEFT|NVG_ALIGN_MIDDLE);
 	nvgText(genVG,bounds[0] -sensleft,yunder, sensorname->begin(), sensorname->end());
+#ifndef WEAROS
+	if(speakout) {
+		char value[256];
+		char *ptr;
+		if((nu-tim)>=3*60) {
+			memcpy(value,buf,len);
+			ptr=value+len;
+			*ptr++='\n';
+			}
+		else {
+			ptr=value;
+			}
+		auto trend=usedtext->trends[last.tr];
+		memcpy(ptr,trend.data(),trend.size());
+		ptr+=trend.size();
+		*ptr++='\n';
+		memcpy(ptr,buf1,len1+1);
+		speak(value);
+		}
+#endif
 
 	showok( (last.g>70&&last.g<=140), ((y-dtop)<(dheight/2))?false:true);
 	}
-	/*
-static void	showscanner(NVGcontext* genVG,int sensorident,int scanident) {
-	const SensorGlucoseData *hist=sensors->getSensorData(sensorident);
-	showscanner(genVG,hist, scanident) ;
 
-	}
-	*/
-	/*
-static bool	showlastscan(NVGcontext* genVG,const ScanData *last) {
-	if(!last)
-		return false;
-	if(!last->g) {
-		return showerror(genVG,"Data unclear, wait", "for things to get better");
-		}
-	showscan(genVG,*last,lastnfcdata,nullptr);
-	return true;
-	}*/
-//int gmaxmax=180*7.5;
-//int gminmin=180*3;
 void setextremes(pair<int,int> extr) {
 	auto [gminin,gmaxin]=extr;
 	setend=0;
@@ -1551,6 +1550,9 @@ void drawarrow(NVGcontext* genVG, float rate,float getx,float gety) {
 
 			}
 	}
+float glucosevaluex=-1,glucosevaluey=-1,glucosevalue;
+int glucosetrend=0;
+
 void showvalue(const ScanData *poll,const sensorname_t *sensorname, float getx,float gety) {
 	LOGGER("showvalue %s\n",sensorname->data());
 	float sensory= gety+headsize/3.1;
@@ -1561,16 +1563,16 @@ void showvalue(const ScanData *poll,const sensorname_t *sensorname, float getx,f
 	nvgTextAlign(genVG,NVG_ALIGN_LEFT|NVG_ALIGN_MIDDLE);
 	constexpr const int maxhead=11;
 	char head[maxhead];
-//#if defined(NDEBUG) 
 #if 1
 	const auto nonconvert= poll->g;
 #else
 	const uint32_t nonconvert= 40;
 #endif
 	nvgFontSize(genVG, headsize*.8);
+	glucosevaluex=getx;
+	glucosevaluey=sensory;
 	if(nonconvert<glucoselowest) {
 const				float valuex=getx;
-//				int gllen=snprintf(head,maxhead,"%.*f>",gludecimal,gconvert(glucoselowest*10));
 
 		 int gllen=mkshowlow(head, maxhead) ;
 		nvgText(genVG,valuex,gety, head, head+gllen);
@@ -1578,7 +1580,6 @@ const				float valuex=getx;
 	else {
 		if(nonconvert>glucosehighest) {
 		float valuex=getx-density*14.0f;
-		//	int gllen=snprintf(head,maxhead,"%.*f<",gludecimal,gconvert(glucosehighest*10));
 		 int gllen=mkshowhigh(head, maxhead) ;
 			nvgText(genVG,valuex ,gety, head, head+gllen);
 			}
@@ -1588,6 +1589,9 @@ const				float valuex=getx;
 #else
 			const float convglucose= gconvert(nonconvert*10);
 #endif
+	glucosevalue=convglucose;
+	glucosetrend=poll->tr;
+
 			float valuex=getx-(convglucose>=10.0f?density*20.0f:0.0f);
 			int gllen=snprintf(head,maxhead,gformat,convglucose);
 			nvgText(genVG,valuex ,gety, head, head+gllen);
@@ -2499,8 +2503,46 @@ void  setlocale(const char *localestrbuf,const size_t len) {
 	if(chfontset!=REST) {
 		initfont();
 	 	} 
-
+#ifndef NOLOG
+extern	void logstrings(const string_view lang) ;
+//	logstrings(localestr);
+#endif
 	}
+
+#include "strconcat.h"
+#if 0
+void logstrings(const string_view lang) {
+extern		pathconcat logbasedir;
+	strconcat file(string_view(""),logbasedir,"/","strings.",lang);
+	FILE *fp=fopen(file.data(),"w");
+	if(!fp)  {
+		LOGGER("open %s failed\n",file.data());
+		return;
+		}
+	fprintf(fp, R"(<string name="system_ui">%s</string>)" "\n", usedtext->menustr0[0].data());
+    	fprintf(fp,R"(<string name="watch">%s</string>)" "\n", usedtext->menustr0[2].data());
+    	fprintf(fp,R"(<string name="sensor">%s</string>)" "\n", usedtext->menustr0[3].data());
+    	fprintf(fp,R"(<string name="settings">%s</string>)" "\n", usedtext->menustr0[4].data());
+    	fprintf(fp,R"(<string name="aboutname">%s</string>)" "\n", usedtext->menustr0[5].data());
+    	fprintf(fp,R"(<string name="export">%s</string>)" "\n", usedtext->menustr1[0].data());
+    	fprintf(fp,R"(<string name="mirror">%s</string>)" "\n", usedtext->menustr1[1].data());
+    	fprintf(fp,R"(<string name="new_amount">%s</string>)" "\n", usedtext->menustr1[2].data());
+    	fprintf(fp,R"(<string name="list">%s</string>)" "\n", usedtext->menustr1[3].data());
+    	fprintf(fp,R"(<string name="statistics">%s</string>)" "\n", usedtext->menustr1[4].data());
+    	fprintf(fp,R"(<string name="talk">%s</string>)" "\n", usedtext->menustr1[5].data());
+    	fprintf(fp,R"(<string name="floatname">%s</string>)" "\n", usedtext->menustr1[6].data());
+
+    	fprintf(fp,R"(<string name="last_scan">%s</string>)" "\n", usedtext->menustr2[0].data());
+
+    	fprintf(fp,R"(<string name="date">%s</string>)" "\n", usedtext->menustr3[2].data());
+
+    	fprintf(fp,R"(<string name="day_back">%s</string>)" "\n", usedtext->menustr3[3].data());
+    	fprintf(fp,R"(<string name="day_later">%s</string>)" "\n", usedtext->menustr3[4].data());
+    	fprintf(fp,R"(<string name="week_back">%s</string>)" "\n", usedtext->menustr3[5].data());
+    	fprintf(fp,R"(<string name="week_later">%s</string>)" "\n", usedtext->menustr3[6].data());
+	fclose(fp);
+}
+#endif
 
 void  calccurvegegs() {
 	LOGSTRING("start calccurvegegs\n");
@@ -2532,6 +2574,7 @@ bool				numpageforward() ;
 
 
 bool numpagepast() ;
+
 int translate(float dx,float dy,float yold,float y) {
 static bool ybezig=false;
 	auto absdy=fabsf(dy);
@@ -2679,6 +2722,7 @@ bool isbutton(float x,float y) {
 NumIter<Num> *numiters=nullptr;
 int basecount;
 
+extern void speak(const char *message) ;
 #ifndef NDEBUG
 #define lognum(x)
 #else
@@ -2700,16 +2744,23 @@ void lognum(const Num *num) {
 int numfrompos(const float x,const float y) ;
 vector<mealposition> mealpos;
 
+void speakdate(time_t tim) {
+	struct tm tmbuf;
+	struct tm *stm=localtime_r(&tim,&tmbuf);
+	char buf[100];
+	sprintf(buf,"%s\n%02d %s %d",usedtext->daylabel[stm->tm_wday],stm->tm_mday,usedtext->monthlabel[stm->tm_mon],1900+stm->tm_year);
+	speak(buf);
+	}
 int64_t screentap(float x,float y) {
 
 #ifndef WEAROS
 	if(!showpers ) 
 #endif
 	{
-		if(numlist)  {
-	//		if(x<(dwidth/10))	{ numpagepast(); return -1l; }
 
-			if(int index=numfrompos(x,y);index>=0) {;
+		if(numlist)  {
+
+			if(int index=numfrompos(x,y);index>=0) {
 				const Num *num=numiters[index].prev();
 				if(!numdatas[index]->valid(num))
 					return -2LL;
@@ -2735,8 +2786,45 @@ int64_t screentap(float x,float y) {
 				}
 
 			}
+#ifndef WEAROS
+		if(speakout) {
+			LOGGER("x=%f [%f,%f] y=%f [%f,%f] trend=%d\n",x, glucosevaluex,(glucosevaluex+headsize), y,(glucosevaluey-headsize),glucosevaluey,glucosetrend);
+			if(glucosevaluex>0&&x>glucosevaluex&&x<(glucosevaluex+headsize)&&y<glucosevaluey&&y>(glucosevaluey-headsize)) {	
+				constexpr const int maxvalue=60;
+				char value[maxvalue];
+				auto trend=usedtext->trends[glucosetrend];
+				memcpy(value,trend.data(),trend.size());
+				char *ptr=value+trend.size();
+				*ptr++='\n';
+				snprintf(ptr,maxvalue,gformat,glucosevalue);
+				speak(value);
+				return -1LL;
+				}
+			}
+#endif
 		}
 #ifndef WEAROS
+	if(speakout) {
+		const float hgrens=dheight/6;
+		if(y<hgrens) {
+			const float wgrens=dwidth/8;;
+			if(x<wgrens) {
+				speakdate(starttime);
+				return -1LL;
+				}
+			else {
+			 	if(x>(dwidth-wgrens)){
+					const time_t endtime=starttime+duration;
+					const time_t nu=time(nullptr); 
+					if(endtime>nu)
+						speakdate(nu);
+					else
+						speakdate(endtime);
+					return -1LL;
+					}
+				}
+			}
+		}
 	const float wgrens=density*10;
 	const float rgrens=dwidth-wgrens;
 
@@ -2808,7 +2896,6 @@ template <class TX,class TY> const ScanData * nearbyscan(const float tapx,const 
 		}
 	return nullptr;
 	}
-#include "strconcat.h"
 void showOK(float xpos,float ypos) {
 	nvgFontSize(genVG,headsize/4 );
 
@@ -2915,16 +3002,58 @@ extern void callshowsensorinfo(const char *text);
 
 static bool  inmenu(float x,float y) ;
 
+
+	static bool speakmenutap(float x,float y) ;
+
+int largepausedaystr(const time_t tim,char *buf) {
+        LOGAR("largedaystr");
+	struct tm stmbuf;
+	localtime_r(&tim,&stmbuf);
+ 	return sprintf(buf,"%02d:%02d\n%s %02d %s %d",stmbuf.tm_hour,mktmmin(&stmbuf),usedtext->daylabel[stmbuf.tm_wday],stmbuf.tm_mday,usedtext->monthlabel[stmbuf.tm_mon],1900+stmbuf.tm_year);
+	}
+void speaknum(const Num *num) {
+	char buf[256];
+	char *ptr=buf;
+	auto label=settings->getlabel(num->type);
+	memcpy(ptr,label.data(),label.size());
+	ptr+= label.size();
+	*ptr++=' ';
+	ptr+=sprintf(ptr,"%g",num->value);
+	*ptr++='\n';
+	*ptr++='\n';
+	int len=largepausedaystr(num->gettime(),ptr);
+	LOGGERN(buf,ptr-buf+len);
+	speak(buf);
+	}
 int64_t longpress(float x,float y) {
 	LOGSTRING("longpress\n");
-	if(numlist
 #ifndef WEAROS
-	||showpers
+	if(showpers)
+		return 0LL;
+	if(numlist)  {
+		if(speakout) {
+			if(int index=numfrompos(x,y);index>=0) {
+				const Num *num=numiters[index].prev();
+				if(numdatas[index]->valid(num)) {
+					speaknum(num);
+					}
+				}
+			}
+		return 0LL;
+		}
 #endif
-	)
-		return 0LL;
-	if(inmenu(x,y))
-		return 0LL;
+#ifndef WEAROS
+	if(speakout) {
+		if(speakmenutap(x,y))
+			return 0LL;
+		}
+	else
+#endif
+	{
+		if(inmenu(x,y)) {
+			return 0LL;
+			}
+	  	}
 	const uint32_t endtime=starttime+duration;
 	const auto [transx,transy]= gettrans(starttime, endtime);
 	if(shownumbers)
@@ -3409,7 +3538,8 @@ int getmenulen(const int menu) {
 void setfloatptr() {
 	}
 #else
-const int *menuopt0[]={&showui, nullptr,nullptr,nullptr,nullptr,nullptr,nullptr};
+int menus=0;
+const int *menuopt0[]={&showui,&menus,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr};
 
 
 const int *menuopt0b[]={nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr};
@@ -3457,7 +3587,36 @@ static_assert(maxmenu==4);
 int getmenu(int tapx) {
 	return tapx*maxmenu/dwidth;
 	}
-
+#ifndef WEAROS
+static bool speakmenutap(float x,float y) {
+	if(x<menupos.left||x>=menupos.right) {
+		return false;
+		}
+	float dist=(menupos.bottom-menupos.top)/nrmenu;
+	int item=(y-menupos.top)/dist;
+	if(item>=0&&item<nrmenu) {
+		LOGGER("menuitem %d\n",item);
+		auto options=optionsmenu[selmenu];
+		auto label=usedtext->menustr[selmenu][item];
+		if(!options||!options[item]) 
+			speak(label.data());
+		else {
+			constexpr const int maxbuf=256;
+			char buf[maxbuf];
+			memcpy(buf,label.data(),label.size());
+			char *ptr=buf+label.size();
+			*ptr++= '\n';
+			if(*options[item])
+				strcpy(ptr,usedtext->checked);
+			else
+				strcpy(ptr,usedtext->unchecked);
+			speak(buf);
+			}
+		return true;
+		}
+	return false;	
+	}
+#endif
 static const float  getsetlen(NVGcontext* genVG,float x, float  y,const char * set,const char *setend,bounds_t &bounds) {
 	 	nvgTextBounds(genVG, x,  y, set,setend, bounds.array);
 		return bounds.xmax-bounds.xmin;
@@ -3613,12 +3772,12 @@ static int64_t doehier(int menu,int item) {
 		case 0: 
 			switch(item) {
 				case 0 :  nrmenu=0;return 1LL*0x10+1;				
-				case 1 : nrmenu=0;return 2LL*0x10;
+				case 1 : nrmenu=0;return 3LL*0x10;
 				extern void setinvertcolors(bool val) ;
 				case 2: invertcolors=!invertcolors; setinvertcolors(invertcolors) ; return -1LL;
 					break;
-				case 3: nrmenu=0; return 3LL*0x10;
-				case 4: nrmenu=0; return menuel(0,5);
+				case 3: nrmenu=0; return 4LL*0x10;
+				case 4: nrmenu=0; return menuel(0,7);
 
 				};break;
 		case 1: 

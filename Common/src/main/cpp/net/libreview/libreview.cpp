@@ -715,9 +715,14 @@ static  constexpr const char unitlabel[][7]={"mg/dL","mmol/L"};
 	int devicelen=uitptr-devicestart+2;
 	addstrview(uitptr,afterident);
 	auto *startuitptr=uitptr;
-	int currentsend=addcurrents(uitptr,nu,currentsensor);
-	if(uitptr!=startuitptr)
+	addcurrents(uitptr,nu,currentsensor);
+	bool currentsend;
+	if(uitptr!=startuitptr) {
 		--uitptr;
+		currentsend=true;
+		}
+	else
+		currentsend=false;
 	addstrview(uitptr, aftercurrents);
 
 	memcpy(uitptr,devicestart,devicelen);
@@ -798,7 +803,7 @@ static  constexpr const char unitlabel[][7]={"mg/dL","mmol/L"};
 	if(datasend) {
 		LOGAR("libresendmeasurements success");
 		numbers.onSuccess();
-		if(currentsend>=0) {
+		if(currentsend) {
 		   currentsensor->getinfo()->libreCurrentIter=currentsend+1;
 			currentsensor->getinfo()->sendsensorstart=true;
 		   }
@@ -906,12 +911,12 @@ extern bool networkpresent;
 int askhasnewcurrent(time_t nu) {
 	if(!settings->data()->LibreCurrentOnly) { 
 		LOGSTRING("LibreCurrentOnly==false\n");
-		return false;
+		return -1;
 		}
 	const auto *lastsensor=sensors->getSensorData(-1);
 	if(!lastsensor)  {
 		LOGAR("no sensor");
-		return false;
+		return -1;
 		}
 	auto oldtime=nu-15*24*60*60;
 	int last=sensors->last();

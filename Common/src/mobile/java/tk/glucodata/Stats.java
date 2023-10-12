@@ -43,7 +43,6 @@ static private void askdays(MainActivity act) {
 	var label=getlabel(act,act.getString(R.string.days));
 
 	int pad= (int)(tk.glucodata.GlucoseCurve.metrics.density*8);
-//     label.setPadding((int)tk.glucodata.GlucoseCurve.metrics.density*8,0,0,0);
      	label.setPadding(pad,pad,pad,pad);
 	Button Ok = getbutton(act, R.string.ok);
 	Button Cancel = getbutton(act, R.string.cancel);
@@ -123,7 +122,7 @@ final Runnable closeonback=()-> {
 	}
 
 	static void mkstats(MainActivity act) {
-	act.clearonback();
+		act.clearonback();
 		Button Help = getbutton(act, R.string.helpname);
 		Button Close = getbutton(act, R.string.closename);
 		Button Days = getbutton(act, R.string.days);
@@ -146,7 +145,13 @@ final Runnable closeonback=()-> {
 			act.curve.summarybutton=null;
 			removeContentView(layout);
 			Natives.endstats();
-			act.requestRender();
+			Log.i(LOG_ID,"closeonback");
+
+			if(Menus.on)  {
+				Menus.show(act);
+				}
+			else
+				act.requestRender();
 			};
 Close.setOnClickListener(v -> {
 	act.poponback();

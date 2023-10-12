@@ -2700,18 +2700,34 @@ Sprechen.</p>
 Text-zu-Sprache geändert werden, damit es funktioniert. Manchmal
 müssen die Daten einer Sprache installiert oder die Konfiguration
 geändert werden. Auf Samsung-Handys muss „<i>Speech Services by
-Google</i>“ anstelle von „<i>Samsung Text-</i><i>zu-Sprache</i><i>
-Engine</i>“ eingestellt werden, um zwischen verschiedenen Stimmen
-wählen zu können. Diese Optionen finden Sie, indem Sie in den
+Google</i>“ anstelle von „<i>Samsung Text-zu-Sprache</i> <i>Engine</i>“
+eingestellt werden, um zwischen verschiedenen Stimmen wählen zu
+können. Diese Optionen finden Sie, indem Sie in den
 Android-Einstellungen nach Text-to-Speech suchen oder zu <i>Sprache
-und Eingabe -&gt;</i><i> </i><i>Text-</i><i>zu-Sprache</i> or S<i>ystem
--&gt; Sprache und Eingabe -&gt; Sprachausgabe</i> gehen. Hier können
-Sie &quot;<i>Google Sprachausgabe</i>&quot; oder „<i>Speech
-services by</i><i> Google</i>“ auswählen und Sprachdaten
-installieren. Bei anderen Telefonen befindet es sich unter
-<i>Systemeinstellungen</i><i> </i><i>-&gt;</i><i> Bedienungs</i><i>hilfen</i><i>
-</i><i>-&gt;</i><i> Sehen </i><i>-&gt;</i><i>
-</i><i>Text-</i><i>in-Sprache</i><i>-Einstellungen</i>.</p>
+und Eingabe -&gt;</i> <i>Text-zu-Sprache</i> or S<i>ystem -&gt;
+Sprache und Eingabe -&gt; Sprachausgabe</i> gehen. Hier können Sie
+&quot;<i>Google Sprachausgabe</i>&quot; oder „<i>Speech services by</i>
+<i>Google</i>“ auswählen und Sprachdaten installieren. Bei anderen
+Telefonen befindet es sich unter <i>Systemeinstellungen</i> <i>-&gt;</i>
+<i>Bedienungshilfen</i> <i>-&gt;</i> <i>Sehen -&gt;</i>
+<i>Text-in-Sprache-Einstellungen</i>.</p>
+<h2 class="western">Talk touch</h2>
+<p>Wenn <em>Talk touch</em> eingeschaltet ist, wird durch das
+Berühren bestimmter Stellen Sprechen erzeugt:</p>
+<ul>
+	<li><p>Berühren der aktuellen Glukose;</p>
+	<li><p>Berühren von Diagramm- und Scanpunkten;</p>
+	<li><p>Berührte „Mengen“ werden ausgesprochen;</p>
+	<li><p>Das Datum dieses Punkts der Grafik wird angegeben, wenn die
+	obere linke und rechte Ecke berührt wird;</p>
+	<li><p>Langes Drücken eines Menüpunkts;</p>
+	<li><p>Langes Drücken auf eine Menge in der Mengenliste (linkes
+	mittleres Menü -&gt; Liste).</p>
+</ul>
+<p><br/>
+<br/>
+
+</p>
 ]]>
 </string>
 <string name="nightnumhelp" >
