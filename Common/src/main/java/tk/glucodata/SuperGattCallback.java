@@ -162,8 +162,13 @@ static void endtalk() {
 		boolean waiting = false;
 		var sglucose=new notGlucose(timmsec, String.format(Applic.usedlocale,Notify.pureglucoseformat, gl),  rate);
 		if(!isWearable) {
-			if (dotalk) talker.selspeak(sglucose.value);
-		}
+			if (dotalk)  {
+			      if(alarm==6||alarm==5)
+					talker.speak(sglucose.value);
+			    else
+				talker.selspeak(sglucose.value);
+				}
+			}
 		previousglucose=sglucose;
 		final var fview=Floating.floatview;
 		if(fview!=null) 

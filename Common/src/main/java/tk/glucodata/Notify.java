@@ -384,6 +384,8 @@ static public String glucosestr(float gl) {
 							Log.d(LOG_ID,"stop sound "+ring.getTitle(app));
 						}
 						ring.stop();
+						if(SuperGattCallback.dotalk)
+							SuperGattCallback.talker.speak(SuperGattCallback.previousglucose.value);
 						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 							if (curfilter[0] != -1) {
 								if (notificationManager.isNotificationPolicyAccessGranted()) {
