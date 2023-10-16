@@ -455,15 +455,17 @@ private static int resumenr=isRelease?10:2;
 		if(mess!=null) {
 			showindialog(mess,true);
 		}
-	var am = (AccessibilityManager) getSystemService(ACCESSIBILITY_SERVICE);
-	List list;
-	if(am.isEnabled()&&am.isTouchExplorationEnabled()&&(list=am.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_SPOKEN))!=null&&!list.isEmpty()) {
-			talkbackon(this);
-			if(!Menus.on)
-				Menus.show(this);
-		}
-	else {
-			talkbackoff();
+	if(!isWearable) {
+		var am = (AccessibilityManager) getSystemService(ACCESSIBILITY_SERVICE);
+		List list;
+		if(am.isEnabled()&&am.isTouchExplorationEnabled()&&(list=am.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_SPOKEN))!=null&&!list.isEmpty()) {
+				talkbackon(this);
+				if(!Menus.on)
+					Menus.show(this);
+			}
+		else {
+				talkbackoff();
+			}
 		}
     }
 
@@ -1161,6 +1163,7 @@ void  cancelglucosedialog() {
 	}
 void replaceDialogMessage(String message) {
 	if(shownglucosealert!=null) {
+		showmessage=null;
 		shownglucosealert.setMessage(message);
 		}
 	}
@@ -1176,7 +1179,10 @@ void showindialog(String message,boolean cancel) {
 		if(cancel) {
 			shownglucosealert=null;
 			}
-		   Notify.stopalarm() ;
+		Notify.stopalarmnotsend(false);
+		if(!isWearable) {
+			Applic.app.numdata.stopalarm();
+			}
 	    }).setMessage(message).create();;
 	   dialog.setCanceledOnTouchOutside(false);
 	    dialog.show();

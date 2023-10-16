@@ -44,6 +44,7 @@ jugglucotext engtext {
 	"Thu",
 	"Fri",
 	"Sat"},
+.speakdaylabel={ "Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"},
 	.monthlabel={
       "Jan",
       "Feb",
@@ -133,7 +134,7 @@ jugglucotext engtext {
 	"Stop Alarm" },
 .menustr2= {"Date  ",
 hourminstr,
-"Day back           ",
+"Day back                ",
 engtext.amount},
 #endif
 

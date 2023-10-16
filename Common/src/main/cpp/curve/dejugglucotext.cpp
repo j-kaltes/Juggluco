@@ -51,6 +51,14 @@ constexpr static Shortcut_t  deshortinit[]= { {"Bread",
 //DIT IS EEN NIEUWE FILE
 jugglucotext detext {
 .daylabel={"So","Mo","Di","Mi","Do","Fr","Sa"},
+
+.speakdaylabel={"Sonntag",
+"Montag",
+"Dienstag",
+"Mittwoch",
+"Donnerstag",
+"Freitag",
+"Samstag"},
 .monthlabel={ "Jan", "Feb", "Mär",  "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"},
 .scanned="Gescannt",
 	.readysecEnable="Sensor in %d Minuten bereit. Erneut scannen, um Streaming zu aktivieren.",

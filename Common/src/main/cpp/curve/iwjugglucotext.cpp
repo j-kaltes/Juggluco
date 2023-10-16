@@ -1,3 +1,5 @@
+#include "config.h"
+#ifdef USE_HEBREW
 #include "jugglucotext.h"
 #ifndef WEAROS
 //Just some examples
@@ -96,7 +98,7 @@ jugglucotext iwtext {
 .SD="SD: %.2f",
 .glucose_variability="שונות גלוקוז: %.1f%%",
       .menustr0={
-		"System UI        ",
+		"System UI           ",
 		"Menus",
 "שעון",
 "חיישן",
@@ -202,7 +204,15 @@ iwtext.newamount,
 דרושים. במקרה שלך יש לו בעיות עם הקובץ הבא)",
 .add_s=true,
 .shortinit=shortinit,
-.labels=iwlabels
+.labels=iwlabels,
+.checked="checked",
+.unchecked="not checked",
+.Undetermined="",
+.FallingQuickly="Falling quickly",
+.Falling="Falling",
+.Stable="Changing slowly",
+.Rising="Rising",
+.RisingQuickly="Rising quickly"
 #endif
 }
 
@@ -213,3 +223,4 @@ iwtext.newamount,
 void setuseiw() {
   usedtext= &iwtext;
   }
+  #endif

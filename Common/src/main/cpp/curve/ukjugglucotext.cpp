@@ -52,6 +52,16 @@ constexpr static Shortcut_t  ukshortinit[]= { {"Bread",
 
 jugglucotext uktext {
 .daylabel={"Ндл","Пнд","Втр","Срд","Чтв","Птн","Сбт"},
+
+.speakdaylabel={
+"неділя",
+"понеділок",
+"вівторок",
+"середа",
+"четвер",
+"п'ятниця",
+"субота"
+},
 .monthlabel={"Сiч","Лют","Бер","Квi","Тра","Чер","Лип","Сер","Вер","Жов","Лис","Гру"},
 .scanned="Сканувати",
 .readysecEnable="Датчик готовий через %d хвилин. Скануйте знову, щоб увімкнути потокове передавання.",
@@ -157,7 +167,13 @@ jugglucotext uktext {
 .shortinit=ukshortinit,
 .labels=uklabels,
 .checked="checked",
-.unchecked="not checked"
+.unchecked="not checked",
+.Undetermined="",
+.FallingQuickly="Falling quickly",
+.Falling="Falling",
+.Stable="Changing slowly",
+.Rising="Rising",
+.RisingQuickly="Rising quickly"
 #endif
 		}
 

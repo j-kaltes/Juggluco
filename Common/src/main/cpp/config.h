@@ -1,3 +1,4 @@
+#pragma once
 /*      This file is part of Juggluco, an Android app to receive and display         */
 /*      glucose values from Freestyle Libre 2 and 3 sensors.                         */
 /*                                                                                   */
@@ -19,8 +20,8 @@
 /*      Fri Jan 27 12:35:09 CET 2023                                                 */
 
 
-#ifndef CONFIG_H
-#define CONFIG_H
+//#define USE_HEBREW 1
+//#define USE_RUSSIAN 1
 #undef NDEBUG
 #ifndef NDK_DEBUG
 #define NDEBUG 1
@@ -34,36 +35,36 @@
 #define CARRY_LIBS 1
 #define NEWUS 1
 
-#endif
 #ifndef APPSUFFIX
 #define APPSUFFIX ""
 #endif
+
 #ifdef APPID 
-#define BASEDIR "/data/data/" APPID APPSUFFIX "/files"
+	#define BASEDIR "/data/data/" APPID APPSUFFIX "/files"
 #else
-#ifndef BASEDIR
-	#if RELEASEDIR==1
-	#define BASEDIR "/data/data/tk.glucodata/files"
-	#else
-	#ifdef INSDCARD
-	#define BASEDIR "/sdcard/glucodata/"
-	#else
-	#define BASEDIR "/data/data/tk.glucodata.debug/files"
-	#endif
+	#ifndef BASEDIR
+		#if RELEASEDIR==1
+			#define BASEDIR "/data/data/tk.glucodata/files"
+		#else
+			#ifdef INSDCARD
+			#define BASEDIR "/sdcard/glucodata/"
+			#else
+			#define BASEDIR "/data/data/tk.glucodata.debug/files"
+			#endif
+		#endif
 	#endif
 #endif
-
 #define FILESDIR BASEDIR
 //#define CHANGECODE=1
 #define REALPATH 1
 
-#endif
 
 #if defined(NEWUS) 
-#ifdef ALWAYSPATH 
-#define NEEDSPATH 1
+	#ifdef ALWAYSPATH 
+	#define NEEDSPATH 1
+	#endif
 #endif
-#endif
+
 #if defined(LIBRE3)
 #define NEEDSPATH 1
 #endif

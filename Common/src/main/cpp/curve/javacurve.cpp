@@ -598,11 +598,43 @@ void speak(const char *message) {
 #ifndef WEAROS
 extern bool speakout;
 extern "C" JNIEXPORT void JNICALL fromjava(settouchtalk)(JNIEnv *env, jclass thiz,jboolean val) {
+
+	settings->data()->talktouch=val;
 	speakout=val;
 	}
 
 extern "C" JNIEXPORT jboolean JNICALL fromjava(gettouchtalk)(JNIEnv *env, jclass thiz) {
 	return speakout;
+	}
+extern	const SensorGlucoseData *getlaststream(const uint32_t nu);
+extern "C" JNIEXPORT void JNICALL fromjava(saylastglucose)(JNIEnv *env, jclass thiz) {
+	if(speakout) {
+		const uint32_t nu=time(nullptr);        
+		const auto *hist=getlaststream(nu);
+		if(!hist)  {
+			LOGAR("getlaststream(nu)=null");
+			return;
+			}
+		const ScanData *poll=hist->lastpoll();
+		if(!poll||!poll->valid()) {
+			return;
+			}
+		const auto nonconvert= poll->g;
+		if(!nonconvert)  {
+			LOGAR("glucose = 0");
+			return;
+			}
+		constexpr const int maxvalue=120;
+		char value[maxvalue];
+		auto trend=usedtext->trends[poll->tr];
+		memcpy(value,trend.data(),trend.size());
+		char *ptr=value+trend.size();
+		*ptr++='\n';
+		const float glucosevalue= gconvert(nonconvert*10);
+		snprintf(ptr,maxvalue,gformat,glucosevalue);
+		LOGGER("saylastglucose %s\n",value);
+		speak(value);
+		}
 	}
 
 extern "C" JNIEXPORT jboolean JNICALL fromjava(getsystemui)(JNIEnv *env, jclass thiz) {

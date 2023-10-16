@@ -115,8 +115,6 @@ extern "C" JNIEXPORT jobject  JNICALL   fromjava(lastglucose)(JNIEnv *env, jclas
 		}
 	const int maxbuf=20;
 	char buf[maxbuf];
-//	const float convglucose= gconvert(nonconvert*10);
-//	snprintf(buf,maxbuf,gformat, convglucose);
 	int len=getglucosestr(nonconvert,buf,maxbuf);
 	const char glucoseclass[]= javapackage "strGlucose";
 	static  jclass  item=  (jclass) env->NewGlobalRef(env->FindClass(glucoseclass));

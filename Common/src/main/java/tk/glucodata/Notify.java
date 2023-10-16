@@ -243,6 +243,7 @@ static public String glucosestr(float gl) {
 	}
 	boolean hasvalue=false;
 	void normalglucose(notGlucose strgl,float gl,float rate,boolean waiting) {
+		MainActivity.showmessage=null;
 		var act=MainActivity.thisone;
 		if(act!=null)
 			act.cancelglucosedialog();
@@ -431,12 +432,16 @@ static public String glucosestr(float gl) {
 	private static void showpopupalarm(String message,Boolean cancel) {
 		var act=MainActivity.thisone;
 		if(act!=null&&act.active) {
+			if(cancel)
+				MainActivity.showmessage=null;
 			Log.i(LOG_ID,"showpopupalarm direct "+message);
 			act.runOnUiThread(() -> act.showindialog( message,cancel));
 			}
 		else {
-			if(cancel)
+			if(cancel) {
+				Log.i(LOG_ID,"showpopalarm "+message);
 				MainActivity.showmessage=message;
+				}
 			else {
 				MainActivity.shownummessage.push(message);
 				}
@@ -460,6 +465,7 @@ static public String glucosestr(float gl) {
 	}
 
 	private void glucosealarm(int kind,int draw,String message,String type,boolean alarm) {
+		Log.i(LOG_ID,"glucose alarm kind="+kind+" "+message+" alarm="+alarm);
 		if(alarm) {
 			if(kind!=2)
 				showpopupalarm(message,true);
@@ -467,25 +473,35 @@ static public String glucosestr(float gl) {
 		else {
 			final var act=MainActivity.thisone;
 			if(act!=null) {
+				Log.i(LOG_ID,"act!=null");
 				act.replaceDialogMessage(message);
+				}
+			Log.i(LOG_ID,"act==null");
+			if(MainActivity.showmessage!=null)
+				MainActivity.showmessage=message;
 			}
-		}
 		if(!alarm&&alertwatch)
 			glucosenotification(draw,message,GLUCOSENOTIFICATION ,false);
 		else
 			soundalarm(kind,draw,message,type,alarm);
 	}
 	private void arrowglucosealarm(int kind,int draw,String message,notGlucose strglucose,String type,boolean alarm) {
+		Log.i(LOG_ID,"arrowglucosealarm kind="+kind+" "+ message+" alarm="+alarm);
 		if(alarm) {
 			if(kind!=2)
 				showpopupalarm(message,true);
-		}
+			}
 		else {
 			final var act=MainActivity.thisone;
 			if(act!=null) {
+				Log.i(LOG_ID,"act!=null");
 				act.replaceDialogMessage(message);
+				}
+			if(MainActivity.showmessage!=null) {
+				Log.i(LOG_ID,"MainActivity.showmessage="+message);
+				MainActivity.showmessage=message;
+				}
 			}
-		}
 		if(!alarm&&alertwatch) {
 			Log.i(LOG_ID,"arrowglucosealarm alertwatch="+alertwatch);
 			arrowglucosenotification(kind,draw,message,strglucose,GLUCOSENOTIFICATION ,false);

@@ -53,6 +53,15 @@ constexpr static Shortcut_t  ptshortinit[]= { {"Pão",
 
 jugglucotext pttext {
         .daylabel={"Dom","Seg","Ter","Qua","Qui","Sex","Sáb"},
+
+.speakdaylabel={
+	"Domingo",
+"Segunda-feira",
+"Terça-feira",
+"Quarta-feira",
+"Quinta-feira",
+"Sexta-feira",
+"Sábado"},
         .monthlabel={
       "Jan","Feb","Mar","Abr","Mai"      ,             "Jun",
        "Jul","Ago","Set",

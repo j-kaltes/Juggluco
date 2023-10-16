@@ -127,7 +127,7 @@ static void init(Application app) {
        if(glucosealarms==null) glucosealarms=new tk.glucodata.GlucoseAlarms(app);
 	if(!isWearable) {
 		Talker.getvalues();
-		if(dotalk)
+		if(dotalk||Natives.gettouchtalk())
 			newtalker(null);
 		}
 	}
@@ -161,16 +161,9 @@ static void endtalk() {
 		final long tim = timmsec / 1000L;
 		boolean waiting = false;
 		var sglucose=new notGlucose(timmsec, String.format(Applic.usedlocale,Notify.pureglucoseformat, gl),  rate);
-		if(!isWearable) {
-			if (dotalk)  {
-			      if(alarm==6||alarm==5)
-					talker.speak(sglucose.value);
-			    else
-				talker.selspeak(sglucose.value);
-				}
-			}
 		previousglucose=sglucose;
 		final var fview=Floating.floatview;
+//		MainActivity.showmessage=null;
 		if(fview!=null) 
 			fview.postInvalidate();
 
@@ -187,6 +180,9 @@ static void endtalk() {
 					if (alarmtime) {
 						nextalarm[1] = tim + Natives.readalarmsuspension(1) * 60;
 						alarm |= 8;
+						if(!isWearable) {
+							if (dotalk) talker.nexttime = 0L;
+						}
 					}
 				}
 				;
@@ -202,6 +198,10 @@ static void endtalk() {
 					if (alarmtime) {
 						nextalarm[0] = tim + Natives.readalarmsuspension(0) * 60;
 						alarm |= 8;
+						if(!isWearable) {
+							if (dotalk)
+								talker.nexttime = 0L;
+						}
 					}
 				}
 				;
@@ -217,6 +217,12 @@ static void endtalk() {
 		}
 		Log.v(LOG_ID, SerialNumber + " "+tim+" glucose=" + gl + " " + rate);
 		Applic.updatescreen();
+
+		if(!isWearable) {
+			if (dotalk)  {
+				talker.selspeak(sglucose.value);
+				}
+			}
 
 
 		if(Natives.getJugglucobroadcast())

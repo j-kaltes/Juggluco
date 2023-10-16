@@ -52,6 +52,14 @@ constexpr static Shortcut_t  shortinit[]= { {"Pain blanc",
 
 jugglucotext frtext {
 	.daylabel={"Dim","Lun","Mar","Mer","Jeu","Ven","Sam"},
+.speakdaylabel={
+"Dimanche",
+"Lundi",
+"Mardi",
+"Mercredi",
+"Jeudi",
+"Vendredi",
+"Samedi"},
 //	.monthlabel={ "Janv","Fevr","Mars","Avril","Mai"      ,             "Juin", "Juil","Août","Sept", "Oct","Nov","Déc"},
 	.monthlabel={
       "Jan","Fev","Mar","Avr","Mai"      ,             "Jun",

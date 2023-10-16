@@ -341,6 +341,7 @@ public static void config(MainActivity context) {
 		 };
 	save.setOnClickListener(v->  {
 		getvalues.run();
+		
 		if(active.isChecked()||touchtalk.isChecked()) {
 			SuperGattCallback.newtalker(context);
 			if(active.isChecked())

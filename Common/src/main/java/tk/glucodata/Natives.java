@@ -686,7 +686,7 @@ public static native boolean getsystemui( );
 public static native void setsystemui(boolean val);
 public static native void settonow();
 public static native boolean showlastscan( );
-
+public static native void saylastglucose();
 
 //s/^extern.*JNIEXPORT[         ]*\([a-zA-Z]*\)[ ]*JNICALL[      ]*fromjava(\([^)]*\)) *(JNIEnv[^,]*,[^,)]*[,)]\([^){]*\)[^a-zA-Z0-9]*$/public static native \1 \2(\3);/g
 //public static native void sendxdripold();

@@ -336,6 +336,9 @@ public boolean onTouchEvent (MotionEvent event) {
 			    removefloating();
 			    downstart=0;
 			  	} 
+			else {
+				Natives.saylastglucose();
+				}
 			}
 		else 
 			 downstart=0;

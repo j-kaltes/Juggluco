@@ -205,6 +205,10 @@ LOGAR("no NEEDSPATH");
 	signal(SIGUSR2,namehandler);
 	overwritename();
 #endif
+#ifndef WEAROS
+extern bool speakout;
+	speakout=settings->data()->talktouch;
+#endif
 	return 0;
 	}
 int startmeals() {

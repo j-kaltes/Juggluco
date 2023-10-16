@@ -228,11 +228,10 @@ struct Tings {
 	float voicespeed;
 	float voicepitch;
 
-//	uint8_t empty2[11];//**
 	char newYuApiKey3[41];
-	//char reserved9[7];//*
 
-	char reserved9;//*
+	bool reserved9:7;//*
+	bool talktouch:1;//*
 	uint16_t sslport;
 	int32_t libre3NUMiter;
 

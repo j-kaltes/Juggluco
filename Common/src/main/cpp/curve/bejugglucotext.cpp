@@ -52,6 +52,16 @@ constexpr static Shortcut_t  beshortinit[]= { {"Bread",
 
 jugglucotext betext {
 .daylabel={"Нд","Пн","Аў","Ср","Чц","Пт","Сб"},
+
+.speakdaylabel={
+"нядзеля",
+"панядзелак",
+"аўторак",
+"серада",
+"чацвер",
+"Пятніца",
+"субота"
+},
 .monthlabel={ "Сту", "Лют", "Сак",  "Кра", "Май", "Чэр", "Ліп", "Жні", "Вер", "Кас", "Ліс", "Сне"},
 .scanned="Адсканаваць",
 .readysecEnable="Датчык гатовы праз %d хвілін. Праскануйце яшчэ раз, каб уключыць струменевую перадачу.",
@@ -154,7 +164,13 @@ jugglucotext betext {
 .shortinit=beshortinit,
 .labels=belabels,
 .checked="checked",
-.unchecked="not checked"
+.unchecked="not checked",
+.Undetermined="",
+.FallingQuickly="Falling quickly",
+.Falling="Falling",
+.Stable="Changing slowly",
+.Rising="Rising",
+.RisingQuickly="Rising quickly"
 #endif
 		}
 

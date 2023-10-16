@@ -21,12 +21,13 @@
 
 //	s/^.*showerror(vg, *\("[^"]*"\), *\("[^"]*"\).*/{\1,\2},/g
 #pragma once
+#include "config.h"
 #include  <utility>
 #include <string_view>
 #include <span>
 
 struct Shortcut_t {const char name[12];const float value;} ;
-constexpr int hourminstrlen=20;
+constexpr int hourminstrlen=25;
 extern char hourminstr[hourminstrlen];
 typedef const char *charptr_t;
 //typedef std::string_view  *string_viewar;
@@ -34,6 +35,7 @@ typedef const char *charptr_t;
 typedef std::pair<std::string_view,std::string_view> errortype;
 struct jugglucotext {
 char daylabel[7][12];
+const char speakdaylabel[7][24];
 char monthlabel[12][15];
 std::string_view scanned;
 std::string_view readysecEnable;

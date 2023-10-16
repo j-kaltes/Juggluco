@@ -59,6 +59,15 @@ constexpr static Shortcut_t  itshortinit[]= { {"Muffin", .54f},
 #endif
 static jugglucotext ittext {
 	.daylabel={"dom","lun","mar","mer","gio","ven","sab"},
+
+.speakdaylabel={
+"Domenica",
+"Lunedi",
+"Martedì",
+"Mercoledì",
+"Giovedì",
+"Venerdì",
+"Sabato"},
 	.monthlabel={"gen", "feb", "mar", "apr", "mag", "giu", "lug", "ago", "set", "ott", "nov", "dic"}, 
 	.scanned="Scansione",
 	.readysecEnable="Sensor ready in %d minutes. Scan again to enable Streaming.",

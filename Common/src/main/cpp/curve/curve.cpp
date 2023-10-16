@@ -19,6 +19,7 @@
 /*      Fri Jan 27 15:20:04 CET 2023                                                 */
 
 
+#define MENUARROWS 1
 #define PERCENTILES 1
 
 //#include <jni.h>
@@ -123,7 +124,10 @@ void createcolors() {
 	}
 
 
-
+#ifdef MENUARROWS
+// pyftsubset <font-file> --unicodes=  --output-file=<path>
+#include "fonts.h"
+#endif
 NVGcontext* genVG=nullptr;
 	int font=0,menufont=0,monofont=0,whitefont=-1,blackfont=0;
 float headheight;
@@ -199,13 +203,18 @@ if(hebrew())  {
 	auto fallback = nvgCreateFont(genVG, "dance-bold","/system/fonts/DroidSans.ttf");
 
 
+
 	font=whitefont=blackfont = nvgCreateFont(genVG, "dance-bold","/system/fonts/NotoSansHebrew-Regular.ttf");
 	nvgAddFallbackFontId(genVG, font,fallback);
+
 
 //	auto menufallback = nvgCreateFont(genVG, "regular","/system/fonts/NotoSerif.ttf");
 
 	menufont = nvgCreateFont(genVG, "regular", "/system/fonts/NotoSerifHebrew-Regular.ttf");
 	nvgAddFallbackFontId(genVG,menufont, fallback);
+	nvgAddFallbackFontId(genVG, menufont,fallback);
+	int fallback2=nvgCreateFontMem(genVG, "dance-bold", (unsigned char *)fontfile, sizeof(fontfile), 0);
+	nvgAddFallbackFontId(genVG, menufont,fallback2);
 
 
 
@@ -247,6 +256,14 @@ constexpr const char menufonts[][41]={
 		if((menufont = nvgCreateFont(genVG, "regular", name))!=-1)
 			break;
 		}
+#ifdef MENUARROWS
+	int fallback=nvgCreateFontMem(genVG, "regular", (unsigned char *)fontfile, sizeof(fontfile), 0);
+	nvgAddFallbackFontId(genVG,menufont, fallback);
+#endif
+		/*
+
+//int nvgCreateFontMem(NVGcontext* ctx, const char* name, unsigned char* data, int ndata, int freeData);
+	*/
 	if(invertcolors)
 		font=whitefont;
 	else
@@ -1156,9 +1173,19 @@ static bool		showerror(NVGcontext* genVG,const string_view str1,const string_vie
 	nvgText(genVG, dleft+dwidth/10,dtop+dheight/3, str1.begin(), str1.end());
 	nvgFontSize(genVG, midsize*.8);
 	nvgTextAlign(genVG,NVG_ALIGN_LEFT|NVG_ALIGN_MIDDLE);
-//	nvgText(genVG, dleft+dwidth/2,dtop+dheight/2, str2.begin(), str2.end());
-//	void nvgTextBox(NVGcontext* ctx, float x, float y, float breakRowWidth, const char* string, const char* end);
 	nvgTextBox( genVG, dleft+dwidth/10, dtop+dheight/2, dwidth*8/10, str2.begin(), str2.end());
+
+	if(speakout) {
+		char buf[str1.size()+str2.size()+2+10];
+		memcpy(buf,str1.data(),str1.size());
+		char *ptr=buf+str1.size();
+		*ptr++='\n';
+		memcpy(ptr,str2.data(),str2.size());
+		ptr[str2.size()]='\0';
+		LOGGER("speak %s\n",buf);
+		speak(buf);
+
+		}
 
 	showok(true,false);
 	return true;
@@ -1610,8 +1637,12 @@ float				getboxwidth(const float x) {
 					}
 
 //#define DOTEST 1
+const char *errortext=nullptr;
 static int showerrorvalue(const SensorGlucoseData *sens,const time_t nu,float getx,float gety) {
+	glucosevalue=0;
 	getx-=headsize/3;
+       glucosevaluex=getx;
+       glucosevaluey=gety+headsize*.5;
 	nvgTextAlign(genVG,NVG_ALIGN_LEFT|NVG_ALIGN_MIDDLE);
 	nvgFontSize(genVG,headsize/6 );
 	if(settings->data()->nobluetooth) {
@@ -1637,15 +1668,18 @@ static int showerrorvalue(const SensorGlucoseData *sens,const time_t nu,float ge
 					int senslen= sens->showsensorname().size();
 					memcpy(buf,sens->showsensorname().data(),senslen);
 					memcpy(buf+senslen,sensorerror.data(), sensorerror.size());
-					nvgTextBox(genVG,  getx, gety, getboxwidth(getx), buf, buf+sensorerror.size()+senslen);
+					auto boxwidth= getboxwidth(getx);
+					nvgTextBox(genVG,  getx, gety, boxwidth, buf, buf+sensorerror.size()+senslen);
+					errortext=sensorerror.data();
 					}
 				else {
 				   int state=sens->getinfo()->patchState;
 				if(state&&state!=4){
 					auto format= state>4?usedtext->endedformat:usedtext->notreadyformat;
-					char buf[format.size()+17+10];
+					static char buf[256];
 					int len=snprintf(buf,sizeof(buf)-1,format.data(),sens->showsensorname().data(),state);
 					nvgTextBox(genVG,  getx, gety, getboxwidth(getx),buf, buf+len);
+					errortext=buf;
 					} 
 				else {
 					char buf[usedtext->noconnectionerror.size()+17];
@@ -1653,6 +1687,7 @@ static int showerrorvalue(const SensorGlucoseData *sens,const time_t nu,float ge
 					memcpy(buf,sens->showsensorname().data(),senslen);
 					memcpy(buf+senslen,usedtext->noconnectionerror.data(), usedtext->noconnectionerror.size());
 					nvgTextBox(genVG,  getx, gety, getboxwidth(getx),buf, buf+usedtext->noconnectionerror.size()+senslen);
+					errortext=usedtext->noconnectionerror.data();
 					}
 					}
 				return 0;
@@ -1669,6 +1704,7 @@ static void showlastsstream(const time_t nu,const float getx,std::vector<int> &u
 	bool neterror=false,usebluetoothoff=false,bluetoothoff=false,otherproblem=false;
 	static int failures=0;
 	++failures;
+
 	for(int i=0;i<used.size();i++) {
 		const int sensorindex=used[i];
 		SensorGlucoseData *hist=sensors->getSensorData(sensorindex);
@@ -1726,11 +1762,16 @@ static void showlastsstream(const time_t nu,const float getx,std::vector<int> &u
 				float usegetx=getx-headsize/3;
 				nvgTextAlign(genVG,NVG_ALIGN_LEFT|NVG_ALIGN_MIDDLE);
 				nvgFontSize(genVG,headsize/6 );
-				char buf[usedtext->readysecEnable.size()+6];
+//				static char buf[usedtext->readysecEnable.size()+6];
+				static char buf[256];
 				int minutes=60-(wait/60);
 				int ends=sprintf(buf,isInitialised?usedtext->readysec.data():usedtext->readysecEnable.data(),minutes);
 				getboxwidth(usegetx);
 				nvgTextBox(genVG,  usegetx, gety, getboxwidth(usegetx), buf,buf+ends);
+				errortext=buf;
+				glucosevalue=0;
+			       glucosevaluex=usegetx;
+       				glucosevaluey=gety+headsize*.5;
 				}
 			else
 				LOGSTRING("wait>=(60*60)\n");
@@ -1746,14 +1787,26 @@ static void showlastsstream(const time_t nu,const float getx,std::vector<int> &u
 		if(neterror) {
 //			nvgText(genVG,newgetx ,gety, usedtext->networkproblem.begin(), usedtext->networkproblem.end());
 			nvgTextBox(genVG,  newgetx, gety, getboxwidth(newgetx), usedtext->networkproblem.begin(), usedtext->networkproblem.end());
+				glucosevalue=0;
+			       glucosevaluex=newgetx;
+       				glucosevaluey=gety+headsize*.5;
+			errortext=usedtext->networkproblem.data();
 
 			}
 		else { if(usebluetoothoff) {
 		   nvgText(genVG,newgetx ,gety, usedtext->useBluetoothOff.begin(), usedtext->useBluetoothOff.end());
+				glucosevalue=0;
+			       glucosevaluex=newgetx;
+       				glucosevaluey=gety+headsize*.5;
+			errortext=usedtext->useBluetoothOff.data();
 		   }
 		   else {
 		   	if(bluetoothoff) {
 				nvgText(genVG,newgetx ,gety, usedtext->enablebluetooth.begin(), usedtext->enablebluetooth.end());
+				glucosevalue=0;
+			       glucosevaluex=newgetx;
+       				glucosevaluey=gety+headsize*.5;
+				errortext=usedtext->enablebluetooth.data();
 				}
 				}
 				}
@@ -2271,6 +2324,7 @@ void withoutredisplay(NVGcontext* genVG,uint32_t nu,uint32_t endtime)  {
 } */
 time_t lastviewtime=0;
 int onestep() {
+       glucosevaluex=-1;
 	LOGAR("onestep");
 	time_t nu=time(nullptr);
 	lastviewtime=nu;
@@ -2399,6 +2453,7 @@ void mkheights() {
 #include "datbackup.h"
 extern void setuseit();
 extern void setusenl();
+extern void setuseru() ;
 
 extern void setusepl();
 extern void setusede();
@@ -2481,6 +2536,12 @@ void  setlocale(const char *localestrbuf,const size_t len) {
 			setuseuk();
 			break;
 
+#ifdef USE_RUSSIAN 
+		case mklanguagenum("RU"):
+		case mklanguagenum("ru"):
+			setuseru() ;
+			break;
+#endif
 #ifdef USE_HEBREW
 		case mklanguagenum("IW"):
 		case mklanguagenum("iw"):
@@ -2747,8 +2808,14 @@ vector<mealposition> mealpos;
 void speakdate(time_t tim) {
 	struct tm tmbuf;
 	struct tm *stm=localtime_r(&tim,&tmbuf);
-	char buf[100];
-	sprintf(buf,"%s\n%02d %s %d",usedtext->daylabel[stm->tm_wday],stm->tm_mday,usedtext->monthlabel[stm->tm_mon],1900+stm->tm_year);
+	constexpr const int maxbuf=256;
+	char buf[maxbuf];
+	const auto wdaynr= stm->tm_wday;
+	LOGGER("wdaynr=%d\n",wdaynr);
+	const char *dayname=usedtext->speakdaylabel[wdaynr];
+	LOGGER("dayname=%s\n",dayname);
+	snprintf(buf,maxbuf,"%s %02d %s %d",dayname,stm->tm_mday,usedtext->monthlabel[stm->tm_mon],1900+stm->tm_year);
+	LOGGER("speakdate %s\n",buf);
 	speak(buf);
 	}
 int64_t screentap(float x,float y) {
@@ -2788,19 +2855,29 @@ int64_t screentap(float x,float y) {
 			}
 #ifndef WEAROS
 		if(speakout) {
-			LOGGER("x=%f [%f,%f] y=%f [%f,%f] trend=%d\n",x, glucosevaluex,(glucosevaluex+headsize), y,(glucosevaluey-headsize),glucosevaluey,glucosetrend);
-			if(glucosevaluex>0&&x>glucosevaluex&&x<(glucosevaluex+headsize)&&y<glucosevaluey&&y>(glucosevaluey-headsize)) {	
-				constexpr const int maxvalue=60;
-				char value[maxvalue];
-				auto trend=usedtext->trends[glucosetrend];
-				memcpy(value,trend.data(),trend.size());
-				char *ptr=value+trend.size();
-				*ptr++='\n';
-				snprintf(ptr,maxvalue,gformat,glucosevalue);
-				speak(value);
-				return -1LL;
+			LOGGER("x=%f [%f,%f] y=%f [%f,%f] trend=%d\n", x, glucosevaluex,
+				   (glucosevaluex + headsize), y, (glucosevaluey - headsize), glucosevaluey,
+				   glucosetrend);
+			if (glucosevaluex > 0 && x > glucosevaluex && x < (glucosevaluex + headsize*1.2f) &&
+				y < glucosevaluey && y > (glucosevaluey - headsize*.8f)) {
+				if(glucosevalue > 0) {
+					constexpr const int maxvalue = 60;
+					char value[maxvalue];
+					auto trend = usedtext->trends[glucosetrend];
+					memcpy(value, trend.data(), trend.size());
+					char *ptr = value + trend.size();
+					*ptr++ = '\n';
+					snprintf(ptr, maxvalue, gformat, glucosevalue);
+					speak(value);
+					return -1LL;
+				} else {
+					if (errortext)  {
+						speak(errortext);
+						return -1LL;
+						}
 				}
 			}
+		}
 #endif
 		}
 #ifndef WEAROS
@@ -3009,7 +3086,7 @@ int largepausedaystr(const time_t tim,char *buf) {
         LOGAR("largedaystr");
 	struct tm stmbuf;
 	localtime_r(&tim,&stmbuf);
- 	return sprintf(buf,"%02d:%02d\n%s %02d %s %d",stmbuf.tm_hour,mktmmin(&stmbuf),usedtext->daylabel[stmbuf.tm_wday],stmbuf.tm_mday,usedtext->monthlabel[stmbuf.tm_mon],1900+stmbuf.tm_year);
+ 	return sprintf(buf,"%02d:%02d\n%s %02d %s %d",stmbuf.tm_hour,mktmmin(&stmbuf),usedtext->speakdaylabel[stmbuf.tm_wday],stmbuf.tm_mday,usedtext->monthlabel[stmbuf.tm_mon],1900+stmbuf.tm_year);
 	}
 void speaknum(const Num *num) {
 	char buf[256];
@@ -3494,7 +3571,7 @@ void nextdays(int nr) {
 //constexpr int hourminstrlen=20;
 //static char hourminstr[hourminstrlen]="00:00        ";
 //static char hourminstr[hourminstrlen]="00:00       ";
-#define hourtext "00:00       "
+#define hourtext "00:00           "
 //constexpr const int hourtextlen=sizeof(hourtext)-1;
 char hourminstr[hourminstrlen]=hourtext;
 void setnowmenu(time_t nu) {
@@ -3509,8 +3586,29 @@ void setnowmenu(time_t nu) {
 						}
 					}
 				if(lastin->t>(nu-maxbluetoothage)) {
-					snprintf(hourminstr+5,hourminstrlen-5,"  %.*f   ",gludecimal,gconvert(lastin->g*10));
+					auto nonconvert= lastin->g;
+//					auto nonconvert= 40;
+#ifdef MENUARROWS
+const int  trend=lastin->tr;
+//const int  trend=5;
+
+constexpr const char *arrows[]{"",
+"↓",
+"↘",
+"→",
+"↗",
+"↑"}; 
+#ifdef WEAROS
+					snprintf(hourminstr+5,hourminstrlen-5," %s%.*f       ",arrows[trend],gludecimal,gconvert(nonconvert*10));
+#else
+					snprintf(hourminstr+5,hourminstrlen-5,"   %s %.*f      ",arrows[trend],gludecimal,gconvert(nonconvert*10));
+#endif
+#else
+					snprintf(hourminstr+5,hourminstrlen-5,"    %.*f       ",gludecimal,gconvert(nonconvert*10));
+#endif
+					LOGGER("hourminstr=%s\n", hourminstr);
 					return ;
+
 					}
 				}
 			}

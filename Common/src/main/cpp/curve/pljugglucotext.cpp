@@ -53,6 +53,14 @@ constexpr static Shortcut_t  plshortinit[]= { {"Chleb",
 extern jugglucotext pltext;
 jugglucotext pltext {
 	.daylabel={"nie","pon","wto","śro","czw","pią","sob"},
+.speakdaylabel={
+	"Niedziela",
+"Poniedziałek",
+"Wtorek",
+"Środa",
+"Czwartek",
+"Piątek",
+"Sobota"},
 	.monthlabel={
       "sty","lut","mar","kwi","maj","cze","lip","sie","wrz","paź","lis","gru"},
        

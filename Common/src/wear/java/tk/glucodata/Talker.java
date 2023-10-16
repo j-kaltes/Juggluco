@@ -5,7 +5,7 @@ import android.content.Context;
 import android.view.View;
 
 public class Talker {
-
+static long nexttime;
 static void getvalues() { }
 
 void destruct() { }

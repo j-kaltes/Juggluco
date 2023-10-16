@@ -1,10 +1,14 @@
+Support Dexcom?
 Blind:
-	- Readout error messages;
 	- View under shortcuts is spoken out.
 	- Vertaling pijltjes BE UK
 	- read alarm
 
-
+add RUSSIAN HEBREW
+	-define USE_RUSSIAN USE_HEBREW in config
+	-set IWRU in Settings.java
+	-add values-ru values-iw 
+	- make install html
 Also Spy views when not connected to the internet for Libre3?
 meerdere fallback fonts proberen
 Toon glucose waarde op webpagina als nightscout url opgevraagd wordt.

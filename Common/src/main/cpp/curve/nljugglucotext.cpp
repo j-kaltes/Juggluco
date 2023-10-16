@@ -48,6 +48,14 @@ constexpr static Shortcut_t  nlshortinit[]= { {"Meer. Brood",
 #endif
 static jugglucotext nltext {
 	.daylabel={"zo","ma","di","wo","do","vr","za"},
+.speakdaylabel={
+"Zondag",
+"Maandag",
+"Dinsdag",
+"Woensdag",
+"Donderdag",
+"Vrijdag",
+"Zaterdag"},
 	.monthlabel={"jan","feb","maa","apr","mei","jun","jul","aug","sep", "okt","nov","dec"},
 
 	.scanned="gescanned",
