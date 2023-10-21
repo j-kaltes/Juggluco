@@ -129,7 +129,7 @@ static constexpr const	int levels[] {250,180,69,53};
 		 sd= sqrt(quadifsum/(count-1));
 		 vc=sd/mean;
 		GMIper = 3.31 + 0.02392 *mean; 
-		GMImmol=round(12.71 + 4.70587 *mean/18.0);
+		GMImmol=round(12.71 + 4.70587 *mean/18.0182);
 		EA1Cper= (46.7 + mean)/28.7;
 		EA1Cmmol=round(( EA1Cper- 2.15)*10.929);
 

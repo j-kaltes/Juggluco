@@ -35,7 +35,7 @@
     <string name="amountshort">@string/amountsname</string>
     <string name="mealsname">Posiłki</string>
     <string name="closename">Zamknij</string>
-    <string name="exporthelp">Posiłki zapisane w html\nReszta w .tsv (wartości rozdzielane tabami)</string>
+    <string name="exporthelp">Posiłki zapisane w html\nReszta w .tsv (wartości rozdzielane tabulatorami)</string>
     <string name="detect">Wykryj</string>
     <string name="testip">Sprawdzaj IP</string>
     <string name="testlabel">Sprawdzaj nazwę</string>
@@ -61,29 +61,12 @@
  <string name="addconnectionbutton">Dodaj połączenie</string>
  <string name="offtouch">Wył. dotyk</string>
  <string name="glucosestatusbar">Stęż. glukozy w pasku stanu</string>
-
-<string name="lowglucosealarm">Alarm dla hipoglikemii</string>
-
-<string name="highglucosealarm">Alarm dla hiperglikemii</string>
-
- 
-
-<string name="lowglucose">&quot; Hipoglikemia! &quot;</string>
-
-<string name="highglucose">&quot; Hiperglikemia!&quot;</string>
-
- 
-
-<string name="lowglucoseshort">" Hipoglikemia!"</string>
-
-<string name="highglucoseshort">" Hiperglikemia!"</string>
-
-
-
+ <string name="lowglucosealarm">Alarm dla hipoglikemii</string>
  <string name="numlabel">&quot;Etykieta: &quot;</string>
  <string name="roundto">Zaokrąglaj do: &quot;</string>
  <string name="weight">&quot;Waga: &quot;</string>
  <string name="ringtonename">Dzwonek</string>
+ <string name="highglucosealarm">Alarm dla hiperglikemii</string>
  <string name="valueavailablenotification">Powiadomienie o ponownie dostępnej wartości glukozy</string>
  <string name="lossofsignalalarm">Alarm utraty sygnału po</string>
  <string name="cantsetminutes">&quot;Nie można ustawić minut na &quot;</string>
@@ -191,6 +174,8 @@
  <string name="connectwithsensor">Naciśnij, by połączyć się z sensorem</string>
  <string name="exchangedata">Naciśnij, by zacząć przesył danych</string>
  <string name="newnewvalue">&quot;Brak nowej wartości od &quot;</string>
+ <string name="lowglucose">&quot; Hipoglikemia!&quot;</string>
+ <string name="highglucose">&quot; Hiperglikemia!&quot;</string>
  <string name="sendto">Wysyłaj</string>
  <string name="resenddata">Prześlij dane ponownie</string>
  <string name="minimum">Minimum</string>
@@ -198,6 +183,8 @@
  <string name="duractionsec">Czas trwania (sek):</string>
  <string name="duraction">Czas trwania:</string>
  <string name="sec">sek</string>
+ <string name="lowglucoseshort">&quot; Hipoglikemia!&quot;</string>
+ <string name="highglucoseshort">&quot; Hiperglikemia!&quot;</string>
  <string name="notentered">&quot; nie wpisano&quot;</string>
  <string name="spacedand">&quot; i &quot;</string>
     <string name="disturb">N. przeszk</string>
@@ -216,7 +203,7 @@
  <string name="sendamounts">Wyślij wartości</string>
  <string name="resendquestion">Przesłać dane ponownie?</string>
  <string name="resendmessage">Użyj opcji &quot;Prześlij dane ponownie&quot; tylko po zalogowaniu się na inne konto Libreview lub po wcześniejszym usunięciu już używanego urządzenia z Libreview (Ustawienia konta-&gt;Moje urządzenia).</string>
- <string name="getaccountidquestion">Uzyskać identyfikator konta Libreview?</string>
+ <string name="getaccountidquestion">Uzyskać nr ID konta Libreview?</string>
  <string name="getaccountidmessage">Identyfikator konta jest potrzebny do używania sensorów Libre3, które są aktywowane za pomocą aplikacji Abbott Libre3 z tym kontem Libreview.</string>
  <string name="deleteconnection">Usunąć połączenie?</string>
  <string name="wakelock">Wakelock</string>
@@ -225,8 +212,8 @@
  <string name="xdripbroadcast">Nadawanie xDrip</string>
  <string name="sensorpermission">Uprawnienie do dostępu do czujników potrzebne do wyświetlania tętna.</string>
  <string name="sensorpermissionmessage">Ustaw je w Ustawieniach urządzenia, Aplikacje, Uprawnienia, Juggluco</string>
- <string name="floatglucose">Pływająca wart. gluk.</string>
- <string name="floatglucoseshort">Pływ. gluk.</string>
+ <string name="floatglucose">Pływ. gluk.</string>
+ <string name="floatglucoseshort">@string/floatglucose</string>
 
  <string name="fontsize">Rozmiar czcionki</string>
  <string name="fonttoolarge">Zbyt duży rozmiar czcionki: maks =</string>
@@ -246,7 +233,7 @@
  <string name="finishsensormessage">Przestać używać tego sensora do przesyłania strumieniowego?</string>
  
  <string name="email">E-Mail:</string>
- <string name="getaccountid">Uzyskać nr ID konta Libreview?</string>
+ <string name="getaccountid">Uzyskaj identyfikator konta Libreview</string>
 
  <string name="emailaddresstooshort">Adres e-mail jest zbyt krótki</string>
  <string name="emailaddresstoolong">Adres e-mail jest zbyt długi</string>
@@ -294,23 +281,26 @@
  <string name="test">Test</string>
  <string name="streamhistory">Historia strumienia</string>
  <string name="libreisviewed">Podgl. ekr.</string>
+ <string name="novalue">Brak wartości</string>
+ <string name="talk">Na głos</string>
+    <string name="watch">Zegarek</string>
+ <string name="menus">Całe menu</string>
+ <string name="system_ui">Integr. z sys.</string>
+ <string name="sensor">Sensor</string>
+ <string name="settings">Ustawienia</string>
+ <string name="aboutname">Informacje</string>
+ <string name="export">Eksport</string>
+ <string name="mirror">Klonowanie</string>
+ <string name="new_amount">Nowa wartość</string>
+ <string name="list">Lista</string>
+ <string name="statistics">Statystyka</string>
+ <string name="floatname">Pływ. wart.</string>
+ <string name="last_scan">Ostatni skan</string>
+    <string name="date">Data</string>
+ <string name="day_back">Dzień wstecz</string>
+ <string name="day_later">Dzień później</string>
+ <string name="week_back">Tydzień wstecz</string>
+ <string name="week_later">Tydzień później</string>
+ <string name="talk_touch">Czytaj na głos przy dotknięciu</string>
 
-<string name="system_ui">Integr. z sys.        </string>
-<string name="watch">Zegarek</string>
-<string name="sensor">Sensor</string>
-<string name="settings">Ustawienia</string>
-<string name="aboutname">Informacje</string>
-<string name="export">Eksport</string>
-<string name="mirror">Klonowanie</string>
-<string name="new_amount">Nowa wartość</string>
-<string name="list">Lista</string>
-<string name="statistics">Statystyka</string>
-<string name="talk">Na głos</string>
-<string name="floatname">Pływ. wart.        </string>
-<string name="last_scan">Ostatni odczyt</string>
-<string name="date">Data</string>
-<string name="day_back">Dzień wstecz</string>
-<string name="day_later">Dzień później</string>
-<string name="week_back">Tydzień wstecz</string>
-<string name="week_later">Tydzień później</string>
 </resources>

@@ -60,7 +60,7 @@
     <string name="save">Save</string>
  <string name="addconnectionbutton">Add Connection</string>
  <string name="offtouch">Off Touch</string>
- <string name="glucosestatusbar">Glucose in android statusbar</string>
+ <string name="glucosestatusbar">Glucose notification</string>
  <string name="lowglucosealarm">Low glucose alarm</string>
  <string name="numlabel">"Label: "</string>
  <string name="roundto">"Round to: "</string>

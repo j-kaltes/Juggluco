@@ -1,8 +1,21 @@
+Webserver: Geef History waarden, hoe:
+	1. Toevoegen optie aan;
+	2. Aparte commando's. Voordeel:
+		- Delta/trend bestaat nooit;
+		- No garbage;
+	3. Aparte poort, zelfde commando's. Gebruikers hoeven niet veranderd te worden.
+
 Support Dexcom?
 Blind:
+	- spreek statistiek
 	- View under shortcuts is spoken out.
-	- Vertaling pijltjes BE UK
-	- read alarm
+	- Glucose:
+		- Glucose lijst, 
+		- Glucose bij amounts. Mogelijkheden:
+			- Toevoegen aan modificatie scherm. Nadeel: verwarrend, gecompliceerd;
+	- read end date?
+
+Export enkel na bepaalde datum?
 
 add RUSSIAN HEBREW
 	-define USE_RUSSIAN USE_HEBREW in config

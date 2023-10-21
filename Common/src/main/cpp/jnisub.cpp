@@ -1624,7 +1624,7 @@ bool nearbymgdl(int get,int crit) {
 #include "pstructs.h"
 #endif
 
-extern void usepath(std::string_view libdirname,std::string_view filesdir) ;
+extern void usepath() ;
 VISIBLE  int abbotttest(string_view dir,scandata &data,scandata &data2,data_t *uidptr,data_t *initinfo,data_t *bluetooth,uint32_t starttijd,uint32_t bluetime,const unsigned char *decr,bool nodebug
 #ifdef TESTPS
 ,std::vector<pstruct*> &ptests
@@ -1655,7 +1655,7 @@ dontdebug=nodebug?-1:1;
 	name[dir.size()]='\0';
 	globalbasedir={name,dir.size()};
 settings= new(std::nothrow) Settings(globalbasedir,settingsdat,"NL");
-	usepath(libdirname,globalbasedir);
+	usepath();
 
 	pid_t debugpid=nodebug?0:debugclone();
 	if(abbottinit(true)<0)  {

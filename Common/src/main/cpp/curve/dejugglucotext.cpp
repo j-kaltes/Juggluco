@@ -79,10 +79,10 @@ jugglucotext detext {
 
 .historyinfo="Einmal alle 15 Minuten.\nAuf dem Sensor gespeichert für 8 Stunden.\nDurch das Scannen werden sie an dieses Programm übertragen.\nSensor: ",
 .history3info="Einmal alle 5 Minuten.\nWird 14 Tage lang auf dem Sensor gespeichert.\nÜber Bluetooth an dieses Programm übertragen.\nSensor: ",
-.sensorstarted= "Sensor gestartet:",
+.sensorstarted= "Gestartet:",
 .lastscanned="Zuletzt gescannt:",
 .laststream="Letzter Stream:",
-.sensorends="Sensor endet: ",
+.sensorends="Endet: ",
 #ifndef WEAROS
 .newamount="Neue Menge",
 .averageglucose="Durchschnittliche Glukose: ",
@@ -123,7 +123,8 @@ detext.newamount,
 	"    Darkmode      ",
          "Einstellen",
 "Stop Alarm" },
-.menustr2= {"Datum      ",hourminstr,"Vortag          ",detext.amount},
+.menustr2= {"Datum      ",hourminstr,
+"Vortag                  ",detext.amount},
 #endif
 
 .scanerrors={

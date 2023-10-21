@@ -32,7 +32,7 @@ pathconcat mkbindir(std::string_view subdir,std::string_view libname ) {
 	return "";
 	}
 
-void usepath(std::string_view libdirname,std::string_view filesdir) {
+void usepath() {
 	}
 #else
 #include <sys/stat.h>
@@ -76,7 +76,7 @@ pathconcat mkbindir(std::string_view subdir,std::string_view libname ) {
 
 	pathconcat bindir(globalbasedir, subdir);
 	const char *bindirstr=bindir.data();
-	LOGGER("usepath(%s) use\n",libdirname.data());
+	LOGGER("mkbindir(%s) use\n",libdirname.data());
 
 	mkdir(bindirstr,0700);
 	LOGGER("FILESDIR=%s, bindir=%s\n",globalbasedir.data(),bindirstr);
@@ -116,8 +116,7 @@ echo package:)";
 
 
 pathconcat libre3path;
-void usepath(std::string_view libdirname,std::string_view filesdir) {
-LOGAR("usepath");
+void usepath() {
 	globalsetpathworks=getpathworks();
 #if defined(__aarch64__) 
    if(settings->data()->triedasm&&!settings->data()->asmworks&& globalsetpathworks) 
@@ -125,10 +124,10 @@ LOGAR("usepath");
    if(globalsetpathworks) 
 #endif 
 	{
-	LOGGER("usepath(%s) use \n",libdirname.data());
+	LOGAR("usepath use");
 	}
 else  {
-	LOGGER("usepath(%s) dont use \n",libdirname.data());
+	LOGAR("usepath do not use");
 	}
 	}
 #endif

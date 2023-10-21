@@ -17,8 +17,9 @@ default sound.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>Select</b>:
 Select a ringtone. On some Samsung phone the preinstalled ringtone
 picker app crashes, so you have to install a different ringtone app
-that can be used by other apps, for example:
-<a href="https://play.google.com/store/apps/details?id=com.centralparkapps.ringo.ringtones">https://play.google.com/store/apps/details?id=com.centralparkapps.ringo.ringtones</a></p>
+that can be used by other apps, for example: <a href="https://play.google.com/store/apps/details?id=com.centralparkapps.ringo.ringtones">https://play.google.com/store/apps/details?id=com.centralparkapps.ringo.ringtones</a>, <a href="https://apkcombo.com/ringtone-picker/de.kumpewo.ringtones">https://apkcombo.com/ringtone-picker/de.kumpewo.ringtones</a> or <a href="https://m.apkpure.com/tone-picker-mp3-ringtones/com.hlidskialf.android.tonepicker">https://m.apkpure.com/tone-picker-mp3-ringtones/com.hlidskialf.android.tonepicker</a>
+
+</p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>Vibrate</b>:
 Vibrate</p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>Disturb</b>: Also
@@ -774,9 +775,10 @@ the apps you want to send this broadcast to.</p>
 apps. Previously called xDrip webserver.</p>
 <h2 class="western">Uploader</h2>
 <p>Upload to a Nightscout server.</p>
-<h2 class="western">Glucose in android status bar</h2>
-<p style="line-height: 100%; margin-bottom: 0in">If set, glucose
-values streaming via Bluetooth are quietly displayed in a
+<h2 class="western">Glucose notification</h2>
+<p style="line-height: 100%; margin-bottom: 0in">(Previously called
+&quot;<i>G</i><i>lucose in android status bar</i>&quot;). If set,
+glucose values streaming via Bluetooth are quietly displayed in a
 notification and the android status bar. If you turn it off, instead
 of a number, a dot is shown and the notification tells nothing more
 than &quot;<i>To connect to sensor</i>&quot; or &quot;<i>To exchange

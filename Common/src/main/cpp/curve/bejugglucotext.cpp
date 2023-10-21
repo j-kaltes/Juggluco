@@ -124,7 +124,9 @@ jugglucotext betext {
 	"    Darkmode      ",
         "Налады",
 	"Спыніць трывогу" },
-.menustr2= {"Дата",hourminstr,"Дзень назад    ",betext.amount},
+.menustr2= {"Дата",hourminstr,
+"Дзень назад       ",betext.amount},
+
 #endif
 
 	.scanerrors={

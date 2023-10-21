@@ -20,7 +20,9 @@ Beltoon die je krijg als je zelf geen beltoon selecteert.</p>
 Selecteer een beltoon. Op sommige Samsung smartphones is aan
 crashende ringtone picker app gepreïnstalleerd, zodat je een andere
 ringtone picker app moet installeren, bijvoorbeeld:
-<a href="https://play.google.com/store/apps/details?id=com.centralparkapps.ringo.ringtones">https://play.google.com/store/apps/details?id=com.centralparkapps.ringo.ringtones</a></p>
+<a href="https://play.google.com/store/apps/details?id=com.centralparkapps.ringo.ringtones">https://play.google.com/store/apps/details?id=com.centralparkapps.ringo.ringtones</a>, <a href="https://apkcombo.com/ringtone-picker/de.kumpewo.ringtones">https://apkcombo.com/ringtone-picker/de.kumpewo.ringtones</a> of <a href="https://m.apkpure.com/tone-picker-mp3-ringtones/com.hlidskialf.android.tonepicker">https://m.apkpure.com/tone-picker-mp3-ringtones/com.hlidskialf.android.tonepicker</a>
+
+</p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>Trillen</b>:
 Alarm door trilling</p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>Storen</b>: Maak
@@ -794,8 +796,9 @@ voor meer informatie.</p>
 Nightscout-apps. Voorheen xDrip webserver genoemd.</p>
 <h2 class="western">Uploader</h2>
 <p>Uploaden naar Nightscout-server.</p>
-<h2 class="western">Glucose op Android statusbalk</h2>
-<p style="line-height: 100%; margin-bottom: 0in">Als dit aanstaat
+<h2 class="western">Glucosemelding</h2>
+<p style="line-height: 100%; margin-bottom: 0in">(Heette vroeger
+&quot;<i>Glucose op Android statusbalk</i>&quot;). Als dit aanstaat
 worden stream glucose waarden in een melding en Android statusbalk
 weergegeven. Bij sommige smartphones wordt dit alleen uitgevoerd
 wanneer ook Androids melding instellingen gewijzigd worden.
@@ -824,9 +827,9 @@ Garmin watch app Kerfstok, worden deze labels ook naar Kerfstok
 verzonden.</p>
 <h2 class="western">Taal</h2>
 <p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
-<font><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">Juggluco
+<font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">Juggluco
 wordt weergegeven in de gekozen taal. Als er geen taalcode is
-geselecteerd, wordt de systeemtaal gebruikt.</font></font></font></p>
+geselecteerd, wordt de systeemtaal gebruikt.</font></font></p>
 <h2 class="western">Herinneringen</h2>
 <p>Specificeer een alarm dat afgaat als een bepaalde hoeveelheid (bv
 eten of medicatie) niet ingevoerd is binnen een bepaalde
@@ -1251,7 +1254,7 @@ Vreemd genoeg voorspelt die oudere formule mijn HbA1C beter dan GMI.
 </p>
 <h2 class="western">Glucose variabiliteit</h2>
 <p><span lang="en-US">Coefficient of variation</span> (%CV) als maat
-voor glucose variabiliteit. Een hogere waarde betekent, dat het bloed
+voor glucose variabiliteit. Een hogere waarde betekent dat het bloed
 glucose minder constant is.</p>
 <h2 class="western">Samenvattende grafiek</h2>
 <p>(Er moet tenminste voor 9 dagen stream glucose waarden aanwezig
@@ -1275,11 +1278,10 @@ opschuift. De grafiek kan ook naar links of rechts verschoven worden
 door een vinger links of rechts over het scherm te bewegen. Als
 <i>Verander schaal handmatig voor Tijd</i> in instellingen aanstaat,
 kun je de tijdschaal veranderen door twee vingers naar- of van elkaar
-te bewegen. Als <i>Verander schaal handmatig voor Glucose</i>
-aangevinkt is in instellingen, kun je de top van de grafiek naar
-boven en beneden bewegen door een vinger naar boven of beneden te
-bewegen in de bovenste helft van de grafiek. Hetzelfde in de beneden
-helft voor de onderkant van de grafiek.</p>
+te bewegen. Je kunt de top van de grafiek naar boven en beneden
+bewegen door een vinger naar boven of beneden te bewegen in de
+bovenste helft van de grafiek. Hetzelfde in de beneden helft voor de
+onderkant van de grafiek.</p>
 <p><br/>
 <br/>
 

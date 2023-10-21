@@ -383,28 +383,33 @@ static public String glucosestr(float gl) {
 					if(doplaysound[0])  {
 						if(doLog) {
 							Log.d(LOG_ID,"stop sound "+ring.getTitle(app));
-						}
+							}
 						ring.stop();
-						if(SuperGattCallback.dotalk)
-							SuperGattCallback.talker.speak(SuperGattCallback.previousglucose.value);
 						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 							if (curfilter[0] != -1) {
 								if (notificationManager.isNotificationPolicyAccessGranted()) {
 									notificationManager.setInterruptionFilter(curfilter[0]);
+									}
 								}
 							}
 						}
 					}
-				}
 
 				if(!isWearable) {
 					if(flash) Flash.stop();
-				}
+					}
 				if(vibrate) {
 					stopvibratealarm();
-				}
+					}
+				if(!isWearable) {
+					if(SuperGattCallback.dotalk&&kind<=1) {
+						final var  glu=SuperGattCallback.previousglucose;
+						if(glu!=null)
+							SuperGattCallback.talker.speak(glu.value);
+						}
+					}
 				setisalarm(false);
-			}
+				}
 			else  {
 				if(doLog) {
 					Log.d(LOG_ID,"runstopalarm not isalarm "+ring.getTitle(app));
@@ -412,7 +417,6 @@ static public String glucosestr(float gl) {
 			}
 		};
 		setisalarm(true);
-//	isalarm=true;
 		Log.d(LOG_ID,"schedule stop");
 		stopschedule=Applic.scheduler.schedule(runstopalarm, duration, TimeUnit.SECONDS);
 

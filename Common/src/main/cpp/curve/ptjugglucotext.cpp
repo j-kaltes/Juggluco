@@ -132,7 +132,7 @@ jugglucotext pttext {
 	"    Darkmode      ",
         "Definições",
         "Parar Alarme" },
-.menustr2= {"Data",hourminstr,"Dia anterior        ",pttext.amount},
+.menustr2= {"Data",hourminstr,"Dia anterior         ",pttext.amount},
 #endif
 
         .scanerrors={

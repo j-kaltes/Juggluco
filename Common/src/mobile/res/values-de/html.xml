@@ -9,46 +9,46 @@ Sie aus, welcher Klingelton für einen Alarm oder eine
 Benachrichtigung abgespielt werden soll und für wie viele Sekunden.</font></font></p>
 <p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.17in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
 <font face="Times New Roman"><font size="4" style="font-size: 14pt"><b>Minuten
-deaktiviert</b>&nbsp;: Wenn ein niedriger oder hoher Glukosespiegel
-anhält, ertönt der Alarm nicht sofort wieder.&nbsp;Sie können
-festlegen, nach wie vielen Minuten der Alarm erneut generiert werden
-soll, wenn der Zustand anhält.</font></font></p>
+deaktiviert</b>: Wenn ein niedriger oder hoher Glukosespiegel anhält,
+ertönt der Alarm nicht sofort wieder.&nbsp;Sie können festlegen,
+nach wie vielen Minuten der Alarm erneut generiert werden soll, wenn
+der Zustand anhält.</font></font></p>
 <p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.17in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
-<font face="Times New Roman"><font size="4" style="font-size: 14pt"><b>Ton</b>&nbsp;:
+<font face="Times New Roman"><font size="4" style="font-size: 14pt"><b>Ton</b>:
 Ton machen.</font></font></p>
 <p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.17in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
-<font face="Times New Roman"><font size="4" style="font-size: 14pt"><b>Standard</b>&nbsp;:
+<font face="Times New Roman"><font size="4" style="font-size: 14pt"><b>Standard</b>:
 Standardton verwenden.</font></font></p>
-<p style="line-height: 0.17in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
-<span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><b>Auswählen</b></span></span></font></font></span><span style="font-variant: normal"><span style="letter-spacing: normal">&nbsp;</span></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">:
-Wählen Sie einen Klingelton aus.&nbsp;Auf einigen Samsung-Telefonen
-stürzt die vorinstallierte Klingeltonauswahl-App ab, sodass Sie eine
-andere Klingelton-App installieren müssen, die von anderen Apps
-verwendet werden kann, zum
-Beispiel:&nbsp;<a href="https://play.google.com/store/apps/details?id=com.centralparkapps.ringo.ringtones">https://play.google.com/store/apps/details?id=com
-.centralparkapps.ringo.ringtones</a></span></span></span></font></font></span></p>
+<p><b>Auswählen</b>: Wählen Sie einen Klingelton aus. Auf einigen
+Samsung-Telefonen stürzt die vorinstallierte Klingeltonauswahl-App
+ab, sodass Sie eine andere Klingelton-App installieren müssen, zum
+Beispiel:
+<a href="https://play.google.com/store/apps/details?id=com.centralparkapps.ringo.ringtones">https://play.google.com/store/apps/details?id=com.centralparkapps.ringo.ringtones</a>,
+<a href="https://apkcombo.com/ringtone-picker/de.kumpewo.ringtones">https://apkcombo.com/ringtone-picker/de.kumpewo.ringtones</a>
+oder
+<a href="https://m.apkpure.com/tone-picker-mp3-ringtones/com.hlidskialf.android.tonepicker">https://m.apkpure.com/tone-picker-mp3-ringtones/com.hlidskialf.android.tonepicker</a>
+</p>
 <p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.17in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
-<font face="Times New Roman"><font size="4" style="font-size: 14pt"><b>Vibrieren</b>&nbsp;:
+<font face="Times New Roman"><font size="4" style="font-size: 14pt"><b>Vibrieren</b>:
 Vibrieren</font></font></p>
 <p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.17in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
-<font face="Times New Roman"><font size="4" style="font-size: 14pt"><b>Stören</b>&nbsp;:
-Erzeugt auch Ton, wenn „&nbsp;<i>Nicht stören</i>&nbsp;“
-eingeschaltet ist.&nbsp;Wenn Juggluco hierfür nicht die
-erforderliche Berechtigung hat, werden Sie zu einem
-Android-Einstellungsbildschirm weitergeleitet, um Juggluco diese
-Berechtigung zu erteilen.&nbsp;Indem Sie &quot;<i>Nicht stören&quot;</i>
-einschalten und auf&nbsp;<i>Play</i>&nbsp;drücken,&nbsp;können Sie
-testen, ob die Alarme während&nbsp;<i>&quot;Nicht stören&quot;</i>
-funktionieren. Diese Einstellung kann den unbeabsichtigten Effekt
-haben, dass beim Auslösen eines Alarms während einer automatischen
-„Bitte nicht stören “-Periode dieser Zustand nicht automatisch
-ausgeschaltet wird.</font></font></p>
+<font face="Times New Roman"><font size="4" style="font-size: 14pt"><b>Stören</b>:
+Erzeugt auch Ton, wenn „<i>Nicht stören</i>“ eingeschaltet ist.
+Wenn Juggluco hierfür nicht die erforderliche Berechtigung hat,
+werden Sie zu einem Android-Einstellungsbildschirm weitergeleitet, um
+Juggluco diese Berechtigung zu erteilen. Indem Sie &quot;<i>Nicht
+stören&quot;</i> einschalten und auf &quot;<i>Play</i><i>&quot;
+</i>drücken, können Sie testen, ob die Alarme während <i>&quot;Nicht
+stören&quot;</i> funktionieren. Diese Einstellung kann den
+unbeabsichtigten Effekt haben, dass beim Auslösen eines Alarms
+während einer automatischen „Bitte nicht stören “-Periode
+dieser Zustand nicht automatisch ausgeschaltet wird.</font></font></p>
 <p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.17in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
 <font face="Times New Roman"><font size="4" style="font-size: 14pt"><b>Blitz</b>&nbsp;:
 Smartphones mit Taschenlampe haben die Möglichkeit, für die gleiche
-Anzahl von Sekunden zu blinken.&nbsp;Praktisch, falls Klingeltöne
-nicht erlaubt sind und es keine klare Richtlinie bezüglich
-Taschenlampen gibt.</font></font></p>
+Anzahl von Sekunden zu blinken. Praktisch, falls Klingeltöne nicht
+erlaubt sind und es keine klare Richtlinie bezüglich Taschenlampen
+gibt.</font></font></p>
 <p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.17in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
 <font face="Times New Roman"><font size="4" style="font-size: 14pt">Auf
 Seiten wie stackoverflow.com wird manchmal behauptet, dass einige
@@ -961,12 +961,12 @@ kann. Früher xDrip-Webserver genannt.</p>
 <h2 class="western">Uploader</h2>
 <p align="left" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 100%; margin-bottom: 0in">
 Auf einen Nightscout-Server hochladen.</p>
-<h2 class="western" align="left">Glukose in der Statusleiste von
-Android</h2>
-<p align="left" style="line-height: 100%; margin-bottom: 0in">Wenn
-die Glukosewerte über Bluetooth gestreamt werden, werden sie in
-einer Benachrichtigung und in der Android-Statusleiste angezeigt. Auf
-einigen Smartphones wird der Glukosewert nur in der
+<h2 class="western" align="left">Glukosebenachrichtigung</h2>
+<p align="left" style="line-height: 100%; margin-bottom: 0in">(Früher
+&quot;<i>Glukose in der Statusleiste von Android</i><i>&quot;</i>
+genannt). Wenn die Glukosewerte über Bluetooth gestreamt werden,
+werden sie in einer Benachrichtigung und in der Android-Statusleiste
+angezeigt. Auf einigen Smartphones wird der Glukosewert nur in der
 Android-Statusleiste angezeigt, nachdem man die
 Benachrichtigungseinstellungen des Androiden geändert hat.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><span style="font-weight: normal">Sie
@@ -1511,11 +1511,11 @@ empfangen hat.</font></font></p>
 <p style="line-height: 0.19in; orphans: 2; widows: 2; background: transparent">
 <span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">Schätzt
 H</span></span></span></font></font></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><span style="font-style: normal"><span style="font-weight: normal">bA1c
-mit einer alten Formel aus durchschnittlicher Glukose (Nathan</span></span></span></span></font></font></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><span style="font-style: normal"><span style="font-weight: normal">
-</span></span></span></span></font></font></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><span style="font-style: normal"><span style="font-weight: normal">et
-al (2008)).</span></span></span></span></font></font></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><span style="font-style: normal"><span style="font-weight: normal">
-</span></span></span></span></font></font></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><span style="font-style: normal"><span style="font-weight: normal">Siehe</span></span></span></span></font></font></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><span style="font-style: normal"><span style="font-weight: normal">
-</span></span></span></span></font></font></span><a href="https://professional.diabetes.org/diapro/glucose_calc"><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><span style="font-style: normal"><span style="font-weight: normal">https://professional.diabetes.org/diapro/glucose_calc</span></span></span></span></font></font></span></a><span style="font-variant: normal"><span style="letter-spacing: normal">&nbsp;</span></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><span style="font-style: normal"><span style="font-weight: normal">für
+mit einer alten Formel aus durchschnittlicher Glukose (Nathan</span></span></span></span></font></font></span><span style="font-variant: normal"><span style="letter-spacing: normal">
+</span></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><span style="font-style: normal"><span style="font-weight: normal">et
+al (2008)).</span></span></span></span></font></font></span><span style="font-variant: normal"><span style="letter-spacing: normal">
+</span></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><span style="font-style: normal"><span style="font-weight: normal">Siehe</span></span></span></span></font></font></span><span style="font-variant: normal"><span style="letter-spacing: normal">
+</span></span><a href="https://professional.diabetes.org/diapro/glucose_calc"><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><span style="font-style: normal"><span style="font-weight: normal">https://professional.diabetes.org/diapro/glucose_calc</span></span></span></span></font></font></span></a><span style="font-variant: normal"><span style="letter-spacing: normal">&nbsp;</span></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><span style="font-style: normal"><span style="font-weight: normal">für
 einen Rechner.</span></span></span></span></font></font></span></p>
 <p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.19in; orphans: 2; widows: 2; background: transparent">
 <font face="Times New Roman"><font size="4" style="font-size: 14pt">Er
@@ -1559,7 +1559,7 @@ stehen 0% der Werte, unter der zweituntersten Linie (zwischen dem
 hellsten Blau und dem mittleren Dunkelblau) 5% der Werte Werte,
 unterhalb der dritten Linie (zwischen dem dunkelsten Blau und dem
 mittleren Dunkelblau) 25 % der Werte, unterhalb der schwarzen Linie
-50 % der Werte.&nbsp;Gefolgt von 75 %,</font></font></p>
+50 % der Werte. Gefolgt von 75 %,</font></font></p>
 <p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.19in; orphans: 2; widows: 2; background: transparent">
 <font face="Times New Roman"><font size="4" style="font-size: 14pt">Aus
 ästhetischen Gründen wird die Kurve mit einem Binomialfilter
@@ -1568,10 +1568,10 @@ geglättet.</font></font></p>
 <font face="Times New Roman"><font size="4" style="font-size: 14pt">Tippen
 Sie auf den Bildschirm, um den Überblick Graphen zu schließen,
 außer dass sich der Graph beim Tippen auf den linken oder rechten
-Rand im Tagesverlauf vor- oder zurückbewegt.&nbsp;Die Kurve kann
-auch durch Scrollen vor- und zurückbewegt werden.&nbsp;Die Zeitskala
-kann geändert werden, indem zwei Finger aufeinander zu oder
-voneinander bewegt werden.</font></font></p>
+Rand im Tagesverlauf vor- oder zurückbewegt. Die Kurve kann auch
+durch Scrollen vor- und zurückbewegt werden. Die Zeitskala kann
+geändert werden, indem zwei Finger aufeinander zu oder voneinander
+bewegt werden.</font></font></p>
 <p style="line-height: 100%; margin-bottom: 0in"><br/>
 
 </p>

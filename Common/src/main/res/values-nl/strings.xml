@@ -62,7 +62,7 @@
     <string name="save">Opslaan</string>
  <string name="addconnectionbutton">Verbinding toevoegen</string>
  <string name="offtouch">Off Touch</string>
- <string name="glucosestatusbar">Glucose op Android statusbalk</string>
+ <string name="glucosestatusbar">Glucosemelding</string>
  <string name="lowglucosealarm">Laag glucose alarm</string>
  <string name="numlabel">"Label: "</string>
  <string name="roundto">"Rond af op: "</string>

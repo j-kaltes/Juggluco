@@ -37,6 +37,9 @@
 #include "datbackup.h"
 #include "meal/Meal.h"
 #include "num.h"
+
+#define LOGGERTAG(...) LOGGER("nums: " __VA_ARGS__)
+#define LOGARTAG(...) LOGAR("nums: " __VA_ARGS__)
 extern Meal *meals;
 extern Backup *backup;
 
@@ -73,39 +76,16 @@ protected:
 
 identtype ident;
 Mmap<Num> nums;
-//Mmap<Daypos> daypos;
-//int lastday=0;
-/*(
-inline static char *_labelbase=nullptr;
-//char **labels=nullptr;
-inline static  const  string_view labelsex[]={"var1","var2","var3","var4","var5","var6","var7","var8"};
-inline static uint32_t labelcount=std::size(labelsex);
-inline static string_view *labels=const_cast<string_view*>(labelsex);
-*/
 public:
 Mmap<Libreids> libreids;
 Mmap<int32_t> librechanged;
 
-//friend void numdisplay::remake() ;
-//Numdata(const std::string_view base,identtype id,size_t len=0):ident(id>=0L?id:readident(base)),nums(numfilename(base,ident).get(),len),daypos(identfilename(base,"/dayspos%ld.dat",ident).get(),365*10)
-/*
-Numdata(const std::string_view base,identtype id,size_t len=0):ident(id>=0L?id:readident(base)),nums(numfilename(base,ident).get(),len){
-	LOGGER("ident=%lld\n",ident);
-	if(getlastpos()*3/2> nums.size()) {
-		auto newsize=nums.size()*10;
-		nums.extend(numfilename(base,ident).get(),newsize);
-		}
-	else {
-		if(len)
-			addmagic();
-		}
-	} */
 static constexpr const std::string_view libreidsname="libreids.dat";
 static constexpr const std::string_view librechangedname="librechanged.dat";
 
 Numdata(const std::string_view base,identtype id,size_t len=0):newnumsfile(numfilename(base,id==0LL?0LL:-1LL)), ident(renamefile(base,id)),nums(newnumsfile.get(),len),libreids(base,libreidsname,len),librechanged(base,librechangedname,len){
 	auto lastpos=getlastpos();
-	LOGGER("Numdata ident=%lld lastpos=%d\n",ident,lastpos);
+	LOGGERTAG("Numdata ident=%lld lastpos=%d\n",ident,lastpos);
 	if(ident!=-1LL)
 		setnewident(ident);
 	if(lastpos*3/2> nums.size()) {
@@ -173,15 +153,15 @@ void firstime(void) {
 		if(valid(it)) {
 			if(auto tim=it->time;tim<starttime)  {
 				time_t t=tim;
-				LOGGER("tim %s",ctime(&t));
+				LOGGERTAG("tim %s",ctime(&t));
 				t=starttime;
-				LOGGER(" < starttime %s",ctime(&t));
+				LOGGERTAG(" < starttime %s",ctime(&t));
 				starttime=tim;
 				}
 			}
 		}
 	time_t t=starttime;
-	LOGGER("starttime %s",ctime(&t));
+	LOGGERTAG("starttime %s",ctime(&t));
 	}	
 	*/
 static constexpr unsigned char magic[]={0xFE,0xD2,0xDE,0xAD};
@@ -229,13 +209,13 @@ static bool mknumdata(const string_view base,identtype ident)   {
 		fs::path basepath(base.cbegin(),base.cend());
 		std::error_code err;
 		if(!fs::create_directories( basepath,err)) {
-			LOGGER("create_directories(%s) failed: %s\n",basepath.c_str(),err.message().data());
+			LOGGERTAG("create_directories(%s) failed: %s\n",basepath.c_str(),err.message().data());
 			return false;
 			}
 		}
 	if(ident>=0LL) {
 		if(!writeident(base,ident)) {
-			LOGSTRING("writeident failed\n");
+			LOGARTAG("writeident failed");
 			return false;
 			}
 		}
@@ -251,18 +231,18 @@ Numdata* createnew(const string_view base,identtype ident,size_t len)  const {
 	if(!fs::is_directory(basepath))  {
 		std::error_code err;
 		if(!fs::create_directories( basepath,err)) {
-			LOGGER("create_directories(%s) failed: %s\n",basepath.c_str(),err.message().data());
+			LOGGERTAG("create_directories(%s) failed: %s\n",basepath.c_str(),err.message().data());
 			return nullptr;
 			}
 		}
 		/*
 	if(!writelabels(base,ident)) {
-		LOGSTRING("Writelabels failed\n");
+		LOGARTAG("Writelabels failed");
 		return nullptr;
 		}
 		*/
 	if(!writeident(base,ident)) {
-		LOGSTRING("writeident failed\n");
+		LOGARTAG("writeident failed");
 		}
 	Numdata *numdata=new Numdata(base,ident,len);
 	numdata->addmagic();
@@ -295,7 +275,7 @@ void setlastpos(int last)  {
 		getchangedpos()=last;
 		
 	*was=last;
-	LOGGER("setlastpos=%d\n",last);
+	LOGGERTAG("setlastpos=%d\n",last);
 	}
 void setlastpolledpos(int last)  { 
 	auto ra=raw();
@@ -374,7 +354,7 @@ const int32_t nextlibresend(uint32_t after=time(nullptr)-librekeepsecs) const {
 	const int32_t next=getlibresend();
 	const auto lastpos=getlastpos();
 	if(next>=lastpos) {
-		LOGGER("getlibresend(%u)=%d==getlastpos()=%u\n",after,next,lastpos);
+		LOGGERTAG("getlibresend(%u)=%d==getlastpos()=%u\n",after,next,lastpos);
 		return next;
 		}
 	const auto firstpos=getfirstpos();
@@ -388,20 +368,20 @@ const int32_t nextlibresend(uint32_t after=time(nullptr)-librekeepsecs) const {
 			if(wastime) 
 				break;
 			else {
-				LOGGER("zero time %d\n",i);
+				LOGGERTAG("zero time %d\n",i);
 				}
 			}
 		if(wastime>after) {
-			LOGGER("getlibresend(%u<%u(wastime))=%d\n",after,wastime,next);
+			LOGGERTAG("getlibresend(%u<%u(wastime))=%d\n",after,wastime,next);
 			return next;
 			}
 		else {
-			LOGGER("getlibresend(%u>=%u(wastime)) \n",after,wastime);
+			LOGGERTAG("getlibresend(%u>=%u(wastime)) \n",after,wastime);
 			}
 		}
 	const Num*prev=firstAfter(after);
 	int32_t res=prev-start;
-	LOGGER("getlibresend take=%d time=%u\n",res,prev->gettime());
+	LOGGERTAG("getlibresend take=%d time=%u\n",res,prev->gettime());
 	return res;
 	}
 int32_t &getlibrechangednr()  {
@@ -481,7 +461,7 @@ showitem getitem(const int pos) const { /* the pos position, starting with 0 end
 	}
 Num &at(const int pos) {
 	Num *item =startdata()+pos;
-//	LOGGER("at(%d)=%p (offset=%d)\n",pos,item,reinterpret_cast<intptr_t>(item)-reinterpret_cast<intptr_t>(nums.data()));
+//	LOGGERTAG("at(%d)=%p (offset=%d)\n",pos,item,reinterpret_cast<intptr_t>(item)-reinterpret_cast<intptr_t>(nums.data()));
 	return *item;
 	}
 Num & operator[](const int pos) {
@@ -560,28 +540,16 @@ void numsave( const uint32_t time, const float32_t value, const uint32_t type,co
 	const auto lastnum=getlastpos();
 	updatepos(ind,lastnum);
 	addlibrechange(ind);
-	LOGGER("newlastnum=%d numsave %f %s mealptrin=%d mealptr=%d\n",lastnum,value,settings->getlabel(type).data(),mealptrin,mealptr);
+	LOGGERTAG("pos=%d newlastnum=%d numsave %f %s mealptrin=%d mealptr=%d\n",ind,lastnum,value,settings->getlabel(type).data(),mealptrin,mealptr);
 	 }
 
-/*
-void updated(int pos) {
-	setlastpolledpos(pos);
-	
-	if(pos>getlastpos()||ident!=0LL) 
-		setlastpos(pos);
-	if(pos>getchangedpos())
-		getchangedpos()=pos;
-	if(pos>=getonechange())
-		getonechange()=0;
-	}
-*/
 void numsavepos(int pos, uint32_t time, float32_t value, uint32_t type,uint32_t mealptr) {
 	if(pos>0&&time<at(pos-1).time)  {
-		LOGGER("numsavepos earlier than previous %uld<%uld\n",time,at(pos-1).time);
+		LOGGERTAG("numsavepos earlier than previous %uld<%uld\n",time,at(pos-1).time);
 		at(pos).time=at(pos-1).time;
 		}
 	else {
-		LOGGER("numsavepos %d %d %f %s\n",pos,mealptr,value,settings->getlabel(type).data());
+		LOGGERTAG("numsavepos %d %d %f %s\n",pos,mealptr,value,settings->getlabel(type).data());
 		if(mealptr&&!meals->datameal()->goodmeal(mealptr)) {
 			mealptr=0;
 			}
@@ -593,7 +561,7 @@ void numsavepos(int pos, uint32_t time, float32_t value, uint32_t type,uint32_t 
 			addlibrechange(pos);
 			}
 		else {
-			LOGGER("%d older than getlibreSolid()=%d\n",pos, getlibreSolid());
+			LOGGERTAG("%d older than getlibreSolid()=%d\n",pos, getlibreSolid());
 			}
 		receivedbackup()=false;
 		}
@@ -605,7 +573,7 @@ void changeDevice() {
 void numremove(int pos) {
 	Num &num=at(pos);
 	addlibrenumsdeleted(&num,pos);
-	LOGGER("numremove(%d)\n",pos);
+	LOGGERTAG("numremove(%d)\n",pos);
 	num.type=removedtype;
 	if(pos>0)
 		num.time=at(pos-1).time; //Deleted items to be ordered in time, for binary search
@@ -639,7 +607,7 @@ int getdeclastpos() {
 int numremove(Num *num) {
 	const int ver=end()-num;
 	int pos=index(num);
-	LOGGER("numremove(NUM %d)\n",pos);
+	LOGGERTAG("numremove(NUM %d)\n",pos);
 	addlibrenumsdeleted(num,pos);
 	if(ver>0) {	
 		if(ver>1) {
@@ -667,14 +635,14 @@ void setlastchange(const Num *el) {
 	}
 
 void setmealptr(Num *hit,uint32_t mealptr) {
-	LOGGER("setmealptr(%d,%d)\n",index(hit),mealptr);
+	LOGGERTAG("setmealptr(%d,%d)\n",index(hit),mealptr);
 	hit->mealptr= meals->datameal()->endmeal(mealptr);
 	}
 
 private:
 void addlibrechange(int ind) {
 	if(ind>=getlibresend()) {
-		LOGGER("addlibrechange(%d) larger\n",ind);
+		LOGGERTAG("addlibrechange(%d) larger\n",ind);
 		return;
 		}
 	const int nrchanges=getlibrechangednr();
@@ -684,20 +652,20 @@ void addlibrechange(int ind) {
 		auto hit=std::lower_bound(start,after, ind);
 		if(hit<after) {
 			if(*hit==ind) {
-				LOGGER("addlibrechange(%d) already present\n",ind);
+				LOGGERTAG("addlibrechange(%d) already present\n",ind);
 				return;
 				}
 			memmove(hit+1,hit,reinterpret_cast<uint8_t*>(after)-reinterpret_cast<uint8_t*>(hit));
-			LOGGER("addlibrechange(%d) move\n",ind);
+			LOGGERTAG("addlibrechange(%d) move\n",ind);
 			}
 		else {
-			LOGGER("addlibrechange(%d) add to last position at %d\n",ind,nrchanges);
+			LOGGERTAG("addlibrechange(%d) add to last position at %d\n",ind,nrchanges);
 			}
 		*hit=ind;
 		++getlibrechangednr();
 		}
 	else {
-		LOGGER("addlibrechange(%d) first change\n",ind);
+		LOGGERTAG("addlibrechange(%d) first change\n",ind);
 		librechanged[getlibrechangednr()++]=ind;
 		}
 	}
@@ -706,7 +674,7 @@ void addlibrechange(int ind) {
 
 void	librechangelastpos(const int newlastpos) {
 	const int sendnr= getlibresend();
-	LOGGER("librechangelastpos(%d) sendnr=%d\n",newlastpos,sendnr);
+	LOGGERTAG("librechangelastpos(%d) sendnr=%d\n",newlastpos,sendnr);
 	if(newlastpos>=sendnr)
 		return;
 	const Num *start= startdata();
@@ -715,7 +683,7 @@ void	librechangelastpos(const int newlastpos) {
 	}
 void addmorelibrenumschanged(int ind,int nr,const Num*data) { 
 	const int sendnr= getlibresend();
-	LOGGER("addmorelibrenumschanged(%d,%d,...)   sendnr=%d\n",ind,nr,sendnr);
+	LOGGERTAG("addmorelibrenumschanged(%d,%d,...)   sendnr=%d\n",ind,nr,sendnr);
 	if(ind>=sendnr)
 		return;
 	int end=ind+nr;
@@ -746,12 +714,12 @@ void addlibrenumsdeleted(const Num *num,int ind) { //Moet VOOR  andere libre ope
 	    auto after=	start+nrchanges;
 		auto hit=std::lower_bound(start,after, ind);
 		if(hit!=after) {
-			LOGGER("addlibrenumsdeleted(const Num *num,%d) in librechanged\n",ind);
+			LOGGERTAG("addlibrenumsdeleted(const Num *num,%d) in librechanged\n",ind);
 			*hit=-1;
 			return;	
 			}
 		}
-	LOGGER("addlibrenumsdeleted(const Num *num,%d)\n",ind);
+	LOGGERTAG("addlibrenumsdeleted(const Num *num,%d)\n",ind);
 	extern Mmap<Num> librenumsdeleted;
 	librenumsdeleted[getlibrenumsdeletednr()]=*num;
 	const auto librenr=libreids[ind].nr;
@@ -762,7 +730,7 @@ void	libremovesmaller(int from,int to,int movelen) {  //to smaller than from
 	int nrsend=getlibresend();
 	auto *beg=libreids.data();
 	if(to>=nrsend) {
-		LOGGER("libremove(%d,%d) nrsend=%d  from>to>=nrsend\n",from,to,nrsend);
+		LOGGERTAG("libremove(%d,%d) nrsend=%d  from>to>=nrsend\n",from,to,nrsend);
 		return;
 		}
 	int len=nrsend-from;
@@ -785,11 +753,11 @@ void	libremovesmaller(int from,int to,int movelen) {  //to smaller than from
 					}
 				}
 			}
-		LOGGER("libremove(%d,%d) nrsend=%d  moved new libresend=%d\n",from,to,nrsend,getlibresend());
+		LOGGERTAG("libremove(%d,%d) nrsend=%d  moved new libresend=%d\n",from,to,nrsend,getlibresend());
 		return;
 		}
 	getlibresend()=to;
-	LOGGER("libremove(%d,%d) nrsend=%d no move new libersend=%d\n",from,to,nrsend,getlibresend());
+	LOGGERTAG("libremove(%d,%d) nrsend=%d no move new libersend=%d\n",from,to,nrsend,getlibresend());
 	return;
 	}
 
@@ -797,7 +765,7 @@ void	libremovelarger(int from,int to,int movelen) { //to>from
 	int nrsend=getlibresend();
 	auto *beg=libreids.data();
 	if(from>=nrsend) {
-		LOGGER("libremove(%d,%d) nrsend=%d  to>=from>=nrsend\n",from,to,nrsend);
+		LOGGERTAG("libremove(%d,%d) nrsend=%d  to>=from>=nrsend\n",from,to,nrsend);
 		return;
 		}
 	int len=nrsend-from;
@@ -820,14 +788,14 @@ void	libremovelarger(int from,int to,int movelen) { //to>from
 
 			}
 		}
-	LOGGER("libremove(%d,%d) nrsend=%d  to>=from<nrsend new libresend=%d\n",from,to,nrsend,getlibresend());
+	LOGGERTAG("libremove(%d,%d) nrsend=%d  to>=from<nrsend new libresend=%d\n",from,to,nrsend,getlibresend());
 	return;
 	}
 
 public:
 void numchange(const Num *hit, uint32_t time, float32_t value, uint32_t type,uint32_t mealptr) {
 	const int oldpos=hit-startdata();
-	LOGGER("Start numchange oldpos=%d\n",oldpos);
+	LOGGERTAG("Start numchange oldpos=%d\n",oldpos);
 	addlibrenumsdeleted(hit,oldpos);
 	if(mealptr==0)
 		mealptr=hit->mealptr;
@@ -837,7 +805,7 @@ void numchange(const Num *hit, uint32_t time, float32_t value, uint32_t type,uin
 	if(hit->time!=time) {
 		num=firstAfter(time);
 		if(num<hit) {
-			LOGSTRING("numchange num<hit\n");
+			LOGARTAG("numchange num<hit");
 			int movelen= (hit-num);
 			memmove(num+1,num,movelen*sizeof(Num));
 			setlastchange(num);
@@ -847,7 +815,7 @@ void numchange(const Num *hit, uint32_t time, float32_t value, uint32_t type,uin
 			}
 		else {
 			if(num>(hit+1)) {
-				LOGSTRING("if(num>(hit+1))\n" );
+				LOGARTAG("if(num>(hit+1))");
 				num--;
 				Num *modhit=const_cast<Num *>(hit);
 				int movelen= (num-modhit);
@@ -858,7 +826,7 @@ void numchange(const Num *hit, uint32_t time, float32_t value, uint32_t type,uin
 				libremovesmaller(pos+1,pos,movelen);
 				}
 			else  {
-				LOGSTRING("if(num<=(hit+1))\n" );
+				LOGARTAG("if(num<=(hit+1))");
 				num=const_cast<Num *>(hit);
 				setonechange(hit);
 				pos=num-startdata();
@@ -868,14 +836,14 @@ void numchange(const Num *hit, uint32_t time, float32_t value, uint32_t type,uin
 			}
 		}
 	else {
-		LOGSTRING("hit->time==time)\n"); 
+		LOGARTAG("hit->time==time"); 
 		num=const_cast<Num *>(hit);
 		setonechange(hit);
 		pos=num-startdata();
 		//addlibrenumsdeleted(num,pos);
 		lastupdate=pos+1;
 		}
-	LOGGER("numchange %d %d\n",pos,mealptr);
+	LOGGERTAG("numchange %d %d\n",pos,mealptr);
 	mealptr=meals->datameal()->endmeal(mealptr);
 	const int newpos=num-startdata();
 	*num={.time=time,.mealptr=mealptr,.value=value,.type=type};
@@ -884,7 +852,7 @@ void numchange(const Num *hit, uint32_t time, float32_t value, uint32_t type,uin
 		addlibrechange(newpos);
 		}
 	else  {
-		LOGGER("%d older than getlibreSolid()=%d\n",newpos, getlibreSolid());
+		LOGGERTAG("%d older than getlibreSolid()=%d\n",newpos, getlibreSolid());
 		}
 	updatepos(pos,lastupdate);
 	}
@@ -918,7 +886,7 @@ uint32_t getfirsttime() const {
 	auto comp=[](const Num &el,const Num &se ){return el.time<se.time;};
   	const Num *nonnull=std::upper_bound(first,endnum, zoek,comp);
 	time_t tim=(nonnull==endnum)?UINT32_MAX:nonnull->time;
-	LOGGER("getfirsttime()=%ld %s",tim,ctime(&tim));
+	LOGGERTAG("getfirsttime()=%ld %s",tim,ctime(&tim));
 	return tim;
 	}
 	/*if(first<end()&&first->time)
@@ -934,7 +902,7 @@ const bool needsync() const {
 	return ident!=0LL;
 	}
 const int getindex() const { //index in Java niet numdatas
-	LOGGER("%p, ident=%lld\n",this,ident);
+	LOGGERTAG("%p, ident=%lld\n",this,ident);
 	if(ident==0LL)
 		return 1;
 	return 0;
@@ -956,16 +924,15 @@ void updatesize() {
 //	updatesizeon();
 //	backup->wakebackup(Backup::wakenums);
 	}
-
+private:
 void updateposnowake(int pos,int end) {
 	int ind=getindex();
 	const int hnr=backup->getsendhostnr();
-	LOGGER("updateposnowake ind=%d hnr=%d) ",ind,hnr);
+	LOGGERTAG("updateposnowake pos=%d ind=%d hnr=%d\n",pos, ind,hnr);
 	for(int i=0;i<hnr;i++) {
 		struct changednums *nu=backup->getnums(i,ind); 
-		LOGGER("nu->len=%d\n",nu->len);
 		int st=nu->changed[0].start;
-		LOGGER("st=%d\n",st);
+		LOGGERTAG("st=%d nu->len=%d\n",st,nu->len);
 		if(pos<st) {
 			if(pos==(st-1))
 				nu->changed[0].start=pos;	
@@ -979,8 +946,9 @@ void updateposnowake(int pos,int end) {
 					nu->changed[0].start=mini;
 					nu->len=1;
 					}
-				else
+				else {
 					nu->changed[nu->len++]={pos,end};
+					}
 				}
 			}
 
@@ -1001,27 +969,13 @@ void updatepos(int pos,int end) {
 static constexpr int sizeslen=onechange+4-lastpolledpos;
 static_assert(sizeslen==36);
 
+public:
 template <typename... Ts>
 void remake(Ts... args) {
 	nums.~Mmap();
 	new(this) Numdata(args...);
 	}
 
-//std::unique_ptr<char[]> newnumsfile;
-//static void renametoident(std::string_view base,identtype ident) {
-/*
-void remake() {
-	if(ident==-1LL) {
-		extern pathconcat numbasedir;
-		pathconcat name(numbasedir,"watch");
-		identtype id=readident(name);
-		if(id>0) {
-			LOGGER("NUM: remake(%s,%lld,%zu)\n",name.data(),id,nummmaplen);
-			remake(name,id,nummmaplen);
-			}
-		}
-	}
-*/
 bool happened(uint32_t stime,int type,float value) const {
 	const Num *sta=begin();
 	for(const Num *ptr=end()-1;ptr>=sta;ptr--) {
@@ -1044,7 +998,7 @@ struct ardeleter { // deleter
 };
 
 static bool	sendlastpos(crypt_t*pass,int sock,uint16_t dbase,uint32_t lastpos) {
-	LOGGER("sendlastpos %hd %u\n",dbase,lastpos);
+	LOGGERTAG("sendlastpos %hd %u\n",dbase,lastpos);
 	lastpos_t data{snumnr,dbase,lastpos}; 
 	return sendcommand(pass,sock,reinterpret_cast<uint8_t*>(&data),sizeof(data));
 	}
@@ -1052,7 +1006,7 @@ static bool	sendlastpos(crypt_t*pass,int sock,uint16_t dbase,uint32_t lastpos) {
 //std::unique_ptr<char[]> newnumsfile;
 //static void renamefromident(std::string_view base,identtype ident) {
 bool numbackupinit(const numinit *nums) {
-	LOGSTRING("numbackupinit\n");
+	LOGARTAG("numbackupinit");
 	const identtype  newident=nums->ident;
 	if(ident!=newident) {
 		extern pathconcat numbasedir;
@@ -1090,31 +1044,31 @@ bool sendbackupinit(crypt_t*pass,int sock,struct changednums *nuall) {
 	nu->len=1;
 	numinit gegs{.first=static_cast<uint32_t>(getfirstpos()),.ident=ident};
 	 if(!sendcommand(pass, sock ,reinterpret_cast<uint8_t*>(&gegs),sizeof(gegs))) {
-		LOGSTRING("NUM: sendbackupinit failure\n");
+		LOGARTAG("NUM: sendbackupinit failure");
 		return false;
 		}
-	LOGSTRING("NUM: sendbackupinit success\n");
+	LOGARTAG("NUM: sendbackupinit success");
 //	nuall->init=false;
 	return true;
 	}
 bool backupsendinit(crypt_t*pass,int sock,struct changednums *nuall,uint32_t starttime) {
-	LOGGER("NUM: backupsendinit %u ",starttime);
+	LOGGERTAG("NUM: backupsendinit %u ",starttime);
 	struct changednums *nu=nuall+getindex();	
 	struct numspan *ch=nu->changed;
 	if(starttime&&(getfirstpos()!=getlastpos()))  {
 		asklastnum ask{.dbase=(bool)ident};
 		 if(!noacksendcommand(pass,sock,reinterpret_cast<uint8_t*>(&ask),sizeof(ask))) {
-		 	LOGSTRING("NUM: noacksendcommand asklastnum failed\n");
+		 	LOGARTAG("NUM: noacksendcommand asklastnum failed");
 			return false;
 			}
 		auto ret=receivedata(sock, pass,sizeof(int));
 		int *posptr=reinterpret_cast<int*>(ret.get());
 		if(!posptr) {
-			LOGSTRING("NUM: receivedata==null\n");
+			LOGARTAG("NUM: receivedata==null");
 			return false;
 			}
 		int pos=*posptr;
-	       LOGGER("NUM: get pos=%d ",pos);
+	       LOGGERTAG("NUM: get pos=%d ",pos);
 		if(pos<=getfirstpos())
 			goto STARTOVER;
 		if(pos>getlastpos()) {
@@ -1123,26 +1077,25 @@ bool backupsendinit(crypt_t*pass,int sock,struct changednums *nuall,uint32_t sta
 		const Num &num=at(pos-1);
 		if(num.time>starttime) {
 			pos=firstnotless(starttime)-startdata();
-			LOGGER("NUM: startime pos=%d\n",pos);
+			LOGGERTAG("NUM: startime pos=%d\n",pos);
 			}
 		ch[0].start=nu->lastlastpos=pos;
 		nu->len=1;
 		return true;
 		}
 	STARTOVER:
-	LOGSTRING("NUM: zero start\n");
+	LOGARTAG("NUM: zero start");
 	return sendbackupinit(pass,sock,nuall);
 	}
 
 static inline constexpr const int intinnum=(sizeof(Num)/sizeof(uint32_t));
 int update(crypt_t*pass,int sock,struct changednums *nuall) {
 	struct changednums *nu=nuall+getindex();	
-LOGSTRING("Num: update\n");
+	LOGARTAG("nums: update");
 	struct numspan *ch=nu->changed;
 	int endpos=getlastpos();
 
 	uint16_t dbase=(bool)ident;
-//	const bool sendmagic=!ch->start&&!ch->end;
 
 	int offoutnr=0;
 	int totlen=0;
@@ -1159,8 +1112,9 @@ LOGSTRING("Num: update\n");
 		if(nu->lastlastpos==endpos)
 			ret=2;
 		else {
-			if(!sendlastpos(pass,sock,dbase,endpos))
+			if(!sendlastpos(pass,sock,dbase,endpos))  {
 				return 0;
+				}
 			ret=1;
 			}
 		}
@@ -1183,7 +1137,7 @@ LOGSTRING("Num: update\n");
 			if(chstart<chend) {	
 				*numsar++=chstart;
 				const int nr=chend-chstart;
-				LOGGER("NUM SN%d: %d (%d)\n",dbase,chstart,nr);
+				LOGGERTAG("NUM SN%d: %d (%d)\n",dbase,chstart,nr);
 				*numsar++=nr;
 				const int datlen=nr*sizeof(Num);
 
@@ -1216,7 +1170,7 @@ bool backupnums(const struct numsend* innums) {
 	for(int i=0;i<nr;i++) {
 		uint32_t off=*numsar++;
 		uint32_t nr=*numsar++;
-		LOGGER("NUM RN%d: off=%d %d items\n",(bool)ident,off,nr);
+		LOGGERTAG("NUM RN%d: off=%d %d items\n",(bool)ident,off,nr);
 		const Num *data=reinterpret_cast<const Num *>(numsar);
 		addmorelibrenumschanged(off,nr,data);
 

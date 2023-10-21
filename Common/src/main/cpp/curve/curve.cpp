@@ -32,6 +32,8 @@
 #include <math.h>
 #include <cstdint>
 #include <cinttypes>
+#include <charconv>
+
 //#include "glucose.h"
 //ScanData   *glucosenow=nullptr;
 
@@ -210,10 +212,9 @@ if(hebrew())  {
 
 //	auto menufallback = nvgCreateFont(genVG, "regular","/system/fonts/NotoSerif.ttf");
 
-	menufont = nvgCreateFont(genVG, "regular", "/system/fonts/NotoSerifHebrew-Regular.ttf");
+	menufont=nvgCreateFontMem(genVG, "regular", (unsigned char *)fontfile, sizeof(fontfile), 0);
+	int fallback2 = nvgCreateFont(genVG, "regular", "/system/fonts/NotoSerifHebrew-Regular.ttf");
 	nvgAddFallbackFontId(genVG,menufont, fallback);
-	nvgAddFallbackFontId(genVG, menufont,fallback);
-	int fallback2=nvgCreateFontMem(genVG, "dance-bold", (unsigned char *)fontfile, sizeof(fontfile), 0);
 	nvgAddFallbackFontId(genVG, menufont,fallback2);
 
 
@@ -251,13 +252,13 @@ constexpr const char menufonts[][41]={
 		}
 	if((whitefont= nvgCreateFont(genVG, "dance-bold", "/system/fonts/Roboto-Regular.ttf"))==-1)
 		whitefont=blackfont;
-
+	int fallback;
 	for(const char *name:menufonts)  {
-		if((menufont = nvgCreateFont(genVG, "regular", name))!=-1)
+		if((fallback = nvgCreateFont(genVG, "regular", name))!=-1)
 			break;
 		}
 #ifdef MENUARROWS
-	int fallback=nvgCreateFontMem(genVG, "regular", (unsigned char *)fontfile, sizeof(fontfile), 0);
+	menufont=nvgCreateFontMem(genVG, "regular", (unsigned char *)fontfile, sizeof(fontfile), 0);
 	nvgAddFallbackFontId(genVG,menufont, fallback);
 #endif
 		/*
@@ -2231,7 +2232,9 @@ static bool showoldscan(NVGcontext* genVG) {
 	}
 int getmenu(int tapx) ;
 #include "displayer.h"
+#ifndef WEAROS
 std::unique_ptr<Displayer> displayer;
+#endif
 
 extern void mkheights() ;
 void	updateusedsensors(uint32_t nu) {
@@ -2260,7 +2263,9 @@ extern void showpercentiles(NVGcontext* genVG) ;
 #endif
 void  calccurvegegs();
 void resetcurvestate() {
+#ifndef WEAROS
    displayer.reset();
+  #endif
   scantoshow={-1,nullptr}; 
     numlist=0;
 #ifndef WEAROS
@@ -2346,8 +2351,10 @@ int onestep() {
 			withredisplay(genVG,nu,endtime);
 		}
 	}
+#ifndef WEAROS
 	if(displayer)
 		ret=displayer->display();
+#endif
 	endstep();	
 	return ret;
 	}
@@ -2755,7 +2762,10 @@ struct {
 void pressedback() {
 	scantoshow={-1,nullptr}; 
 	LOGSTRING("true\n");
+
+#ifndef WEAROS
 	displayer.reset();
+#endif
 	}
 bool isbutton(float x,float y) {
 	LOGSTRING("isbutton ");
@@ -2774,7 +2784,9 @@ bool isbutton(float x,float y) {
 			}
 	scantoshow={-1,nullptr}; 
 	LOGSTRING("true\n");
+#ifndef WEAROS
 	displayer.reset();
+#endif
 //	lastscan=nullptr;
 	return true;
 	}
@@ -2861,7 +2873,7 @@ int64_t screentap(float x,float y) {
 			if (glucosevaluex > 0 && x > glucosevaluex && x < (glucosevaluex + headsize*1.2f) &&
 				y < glucosevaluey && y > (glucosevaluey - headsize*.8f)) {
 				if(glucosevalue > 0) {
-					constexpr const int maxvalue = 60;
+					constexpr const int maxvalue = 80;
 					char value[maxvalue];
 					auto trend = usedtext->trends[glucosetrend];
 					memcpy(value, trend.data(), trend.size());
@@ -2882,9 +2894,9 @@ int64_t screentap(float x,float y) {
 		}
 #ifndef WEAROS
 	if(speakout) {
-		const float hgrens=dheight/6;
+		 const float hgrens=menutextheight;
 		if(y<hgrens) {
-			const float wgrens=dwidth/8;;
+			 const float wgrens=menutextheight*1.5f;
 			if(x<wgrens) {
 				speakdate(starttime);
 				return -1LL;
@@ -3014,12 +3026,19 @@ void textbox(const TI &title,const TE &text) {
 	nvgTextAlign(genVG,NVG_ALIGN_RIGHT|NVG_ALIGN_TOP);
 	showOK(x+width,y);
 	}
+
 class histgegs:public Displayer {
 	const SensorGlucoseData *hist;
-//	const uint32_t glu,tim;
 	time_t nu;
+#ifndef WEAROS
+strconcat text;
+#endif
 public:
-	histgegs(const SensorGlucoseData *hist): hist(hist)/*,glu(glu),tim(tim)*/,nu(time(nullptr)) {
+	histgegs(const SensorGlucoseData *hist): hist(hist)/*,glu(glu),tim(tim)*/,nu(time(nullptr))
+#ifndef WEAROS
+    ,text(getsensorhelp(usedtext->menustr0[3],": ","\n","\n"," "))
+#endif
+    {
 
 
 	 prevtouch.time = chrono::steady_clock::now();
@@ -3034,17 +3053,27 @@ strconcat  getsensorhelp(string_view starttext,string_view name1,string_view nam
 	return strconcat(string_view(""),starttext ,name1,hist->shortsensorname(),name2,usedtext->sensorstarted,sep2,string_view(starts, datestr(stime,starts)),hist->isLibre3()?"":sep1,hist->isLibre3()?"":usedtext->lastscanned,hist->isLibre3()?"":sep2,hist->isLibre3()?"":string_view(lastscanbuf,datestr(lastscan,lastscanbuf)),lastpolltime>0?strconcat(string_view(""),sep1,usedtext->laststream,sep2):"",lastpolltime>0?string_view(lastpollbuf,datestr(lastpolltime,lastpollbuf)):"",nu<etime?strconcat(string_view(""),sep1,usedtext->sensorends,sep2):"",
 nu<etime?string_view(ends, datestr(etime,ends)):string_view("",0));
 	}
+
+#ifndef WEAROS
 virtual int display() override {
-	textbox(usedtext->history,getsensorhelp(hist->isLibre3()?usedtext->history3info:usedtext->historyinfo,"","\n","\n"," "));
+//	textbox(usedtext->history,getsensorhelp(hist->isLibre3()?usedtext->history3info:usedtext->historyinfo,"","\n","\n"," "));
+	textbox(usedtext->history,text);
 	return 1;
 	}
-
+void speak() {
+	LOGGER("speak %s\n",text.data());
+	::speak(text.data());
+   }
+#else
+virtual int display() override {
+	return 1;
+	}
+#endif
 
 };
 //histgegs gegs(
 strconcat getsensortext(const SensorGlucoseData *hist) {
 		histgegs gegs(hist);
-		//return gegs.getsensorhelp("<small><br></small>","<h1>","</h1>","<br><br>","<br>");
 		return gegs.getsensorhelp("","<h1>","</h1>","<br><br>","<br>");
 		}
 template <class TX,class TY> 
@@ -3066,8 +3095,10 @@ extern void callshowsensorinfo(const char *text);
 						::prevtouch.x=tapx;
 						::prevtouch.y=tapy;
 						LOGGER("x=%.1f, y=%.1f\n",tapx,tapy);
-//						displayer=std::make_unique<histgegs>(hist,tim,glu);
-						displayer=std::make_unique<histgegs>(hist);
+						histgegs *gegs=new histgegs(hist);
+						if(speakout) gegs->speak();
+//						displayer=std::make_unique<histgegs>(hist);
+						displayer.reset(gegs);
 #endif
 						return true;
 						}
@@ -3094,7 +3125,7 @@ void speaknum(const Num *num) {
 	auto label=settings->getlabel(num->type);
 	memcpy(ptr,label.data(),label.size());
 	ptr+= label.size();
-	*ptr++=' ';
+	*ptr++='\n';
 	ptr+=sprintf(ptr,"%g",num->value);
 	*ptr++='\n';
 	*ptr++='\n';
@@ -3571,7 +3602,11 @@ void nextdays(int nr) {
 //constexpr int hourminstrlen=20;
 //static char hourminstr[hourminstrlen]="00:00        ";
 //static char hourminstr[hourminstrlen]="00:00       ";
+#ifdef WEAROS
 #define hourtext "00:00           "
+#else
+#define hourtext "00:00             "
+#endif
 //constexpr const int hourtextlen=sizeof(hourtext)-1;
 char hourminstr[hourminstrlen]=hourtext;
 void setnowmenu(time_t nu) {
@@ -3587,26 +3622,81 @@ void setnowmenu(time_t nu) {
 					}
 				if(lastin->t>(nu-maxbluetoothage)) {
 					auto nonconvert= lastin->g;
-//					auto nonconvert= 40;
-#ifdef MENUARROWS
+				//	auto nonconvert= 500;
 const int  trend=lastin->tr;
 //const int  trend=5;
 
-constexpr const char *arrows[]{"",
+constexpr const char arrows[][sizeof("→")]{"",
 "↓",
 "↘",
 "→",
 "↗",
 "↑"}; 
+
+#if __NDK_MAJOR__ >= 26
+
+constexpr const int trendoff=
 #ifdef WEAROS
-					snprintf(hourminstr+5,hourminstrlen-5," %s%.*f       ",arrows[trend],gludecimal,gconvert(nonconvert*10));
+0
 #else
-					snprintf(hourminstr+5,hourminstrlen-5,"   %s %.*f      ",arrows[trend],gludecimal,gconvert(nonconvert*10));
+1
 #endif
+;
+constexpr const int arrowoff=
+#ifdef WEAROS
+6
 #else
-					snprintf(hourminstr+5,hourminstrlen-5,"    %.*f       ",gludecimal,gconvert(nonconvert*10));
+8
 #endif
-					LOGGER("hourminstr=%s\n", hourminstr);
+;
+	char *ptr=hourminstr+
+
+#ifdef WEAROS
+	6;
+#else
+	7;
+#endif
+	for(auto iter=hourminstr+5;iter<ptr;++iter)
+		*iter=' ';
+
+	const int trendlen=sizeof(arrows[trend])-1;
+	memcpy(ptr,arrows[trend],trendlen);
+	static std::to_chars_result res={.ptr=nullptr};
+	char *oldres=res.ptr;
+	auto value=gconvert(nonconvert*10);
+	res=std::to_chars(ptr+trendlen+trendoff,hourminstr+hourminstrlen,value,std::chars_format::fixed,gludecimal);
+	/*
+	if(gludecimal)  {
+		auto round=roundf(value*10.0f)/10.0f;
+		res=std::to_chars(ptr+trendlen+trendoff,hourminstr+hourminstrlen,round);
+		 if(res.ptr[-2]!='.') {
+			memcpy(res.ptr,".0",2);
+			res.ptr+=2;
+			}
+		}
+	else {
+		res=std::to_chars(ptr+trendlen+trendoff,hourminstr+hourminstrlen,value);
+		}
+*/
+	for(auto it=res.ptr;it<oldres;++it)
+		*it=' ';
+					LOGGER("new hourminstr=%s\n", hourminstr);
+#else
+	static		int oldend=0;
+	auto aftertime=hourminstr+5;
+#ifdef WEAROS
+				int endpos=snprintf(aftertime,hourminstrlen-5," %s%.*f",arrows[trend],gludecimal,gconvert(nonconvert*10));
+#else
+			int endpos=snprintf(aftertime,hourminstrlen-5,"  %s %.*f",arrows[trend],gludecimal,gconvert(nonconvert*10));
+#endif
+	aftertime[endpos]=' ';
+	for(int i=endpos+1;i<oldend;i++)
+		aftertime[i]=' ';
+	
+	oldend=endpos;
+
+					LOGGER("old hourminstr=%s\n", hourminstr);
+#endif
 					return ;
 
 					}

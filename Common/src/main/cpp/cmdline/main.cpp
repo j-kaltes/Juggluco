@@ -692,8 +692,8 @@ __asm__(".symver pthread_create,pthread_create@GLIBC_2.34");
 __asm__(".symver _ZSt28__throw_bad_array_new_lengthv,_ZSt28__throw_bad_array_new_lengthv@GLIBCXX_3.4.29");
 
 */
-extern void usepath(std::string_view,std::string_view);
-void usepath(std::string_view _niets,std::string_view _nothing){}
+extern void usepath();
+void usepath(){}
 extern bool getpathworks();
 bool getpathworks() {
 	return false;

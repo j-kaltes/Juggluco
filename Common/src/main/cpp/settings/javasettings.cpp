@@ -1337,7 +1337,7 @@ int savedoses(NovoPen *pen,uint32_t reftime,uint8_t *bytes,int len) {
 			}
 		else  {
 			if(value<=2.0f&&((int64_t)nexttime-time)<60) {
-				LOGSTRING("prime\n");
+				LOGAR("prime dose");
 				used=false;
 				continue;
 				}

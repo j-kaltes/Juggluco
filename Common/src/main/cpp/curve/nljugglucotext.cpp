@@ -56,7 +56,7 @@ static jugglucotext nltext {
 "Donderdag",
 "Vrijdag",
 "Zaterdag"},
-	.monthlabel={"jan","feb","maa","apr","mei","jun","jul","aug","sep", "okt","nov","dec"},
+	.monthlabel={"jan","feb","mrt","apr","mei","jun","jul","aug","sep", "okt","nov","dec"},
 
 	.scanned="gescanned",
 	.readysecEnable="Sensor is gereed in %d minuten. Scan nog een keer om Streaming aan te zetten.",
@@ -76,10 +76,10 @@ static jugglucotext nltext {
 	.history="History",
 	.historyinfo="Een keer in 15 minuten, onthouden gedurende 8 uur.\nDoor scanning naar Juggluco gezonden.\nSensor: ",
 	.history3info="Een keer in 5 minute.\nVia Bluetooth naar Juggluco gezonden.\nSensor: ",
-	.sensorstarted= "Sensor gestart:",
+	.sensorstarted= "Gestart:",
 	.lastscanned="Laatste scan:",
 	.laststream="Laatste stream:",
-	.sensorends="Sensor eindigt: ",
+	.sensorends="Eindigt: ",
 #ifndef WEAROS
 	.newamount="Hoeveelheid",
 	.averageglucose="Gemiddelde glucose: ",

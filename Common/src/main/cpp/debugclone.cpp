@@ -1259,6 +1259,7 @@ static bool needsdebug() {
 
 	initialized=true;
 	if(totaal) {
+		LOGGER("debug %d files\n",totaal);
 		int han= open(netunix,O_RDONLY);
 		if(han>=0) {
 			LOGGER("can open %s\n",	netunix);
@@ -1288,6 +1289,7 @@ static bool needsdebug() {
 		statused=new bool[hierstat.size()]();
 		return true;
 		  }
+	LOGAR("nothing to debug");
 	return false;
 	}
 

@@ -337,7 +337,8 @@ public boolean onTouchEvent (MotionEvent event) {
 			    downstart=0;
 			  	} 
 			else {
-				Natives.saylastglucose();
+				if(!isWearable)
+					Natives.saylastglucose();
 				}
 			}
 		else 

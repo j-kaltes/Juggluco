@@ -66,6 +66,7 @@ void handlepipe(int sig) {
 void	generalsettings() {
 	signal(SIGPIPE,handlepipe);
 	}
+#ifdef ANDROID__APP
 #ifndef NONOJVM
 #include <sys/prctl.h>
 
@@ -164,6 +165,7 @@ static int overwritename() {
 	return 1;
 }
 #endif
+#endif
 
 int setfilesdir(const string_view filesdir,const char *country) {
 	LOGGER("setfilesdir %s %s\n",filesdir.data(),country?country:"null");
@@ -184,12 +186,11 @@ int setfilesdir(const string_view filesdir,const char *country) {
 extern	void setfloatptr();
 	setfloatptr();
 
-//#ifdef LIBRE3 //TODO putback
 #ifdef NEEDSPATH 
 LOGAR("NEEDSPATH");
-extern	void usepath(std::string_view,std::string_view );
+extern	void usepath();
 extern std::string_view libdirname;
-	usepath(libdirname,filesdir);
+	usepath();
 #else
 LOGAR("no NEEDSPATH");
 #endif
@@ -201,6 +202,8 @@ LOGAR("no NEEDSPATH");
 	if(settings->data()->crashed)
 		settings->setnodebug(false);
 	generalsettings();
+
+#ifdef ANDROID__APP
 #ifndef NONOJVM
 	signal(SIGUSR2,namehandler);
 	overwritename();
@@ -208,6 +211,7 @@ LOGAR("no NEEDSPATH");
 #ifndef WEAROS
 extern bool speakout;
 	speakout=settings->data()->talktouch;
+#endif
 #endif
 	return 0;
 	}

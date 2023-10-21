@@ -34,7 +34,7 @@
      <string name="amountsname">Mengen</string>
      <string name="mealsname">Mahlzeiten</string>
      <string name="closename">Schließen</string>
-     <string name="exporthelp">Mahlzeiten gespeichert in html\nRest in .tsv (tabulatorgetrennte Werte)</string>
+     <string name="exporthelp">Mahlzeiten gespeichert in html\nRest in .tsv (Tab-separated values)</string>
      <string name="detect">Erkennen</string>
      <string name="testip">IP testen</string>
      <string name="testlabel">Etikett Testen</string>
@@ -59,7 +59,7 @@
      <string name="save">Speichern</string>
   <string name="addconnectionbutton">Verbindung hinzufügen</string>
   <string name="offtouch">Off touch</string>
-  <string name="glucosestatusbar">Glukose in der Android-Statusleiste</string>
+  <string name="glucosestatusbar">Glukosebenachrichtigung</string>
   <string name="lowglucosealarm">Niedrigen Glukosewert</string>
   <string name="numlabel">"Etikett: "</string>
   <string name="roundto">"Runden auf: "</string>

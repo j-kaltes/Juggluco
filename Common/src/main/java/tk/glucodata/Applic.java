@@ -645,12 +645,14 @@ static	void		talkbackoff() {
 	}
 @Keep
 static public void speak(String message) {
-	var talker=SuperGattCallback.talker;
-	if(talker==null) {
-		SuperGattCallback.newtalker(null);
-		talker=SuperGattCallback.talker;
+	if(!isWearable) {
+		var talker=SuperGattCallback.talker;
+		if(talker==null) {
+			SuperGattCallback.newtalker(null);
+			talker=SuperGattCallback.talker;
+			}
+		talker.speak(message);
 		}
-	talker.speak(message);
 	}
 }
 

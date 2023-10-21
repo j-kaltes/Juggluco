@@ -1,8 +1,7 @@
 Terug naar Juggluco, geen menus
 
 WearOS Defaults werkt niet goed:
-
-- Blijft ontvangen uit horloge
+	- Blijft ontvangen uit horloge
 
 Reinit sync maakt dat WearOS weer glucose waarden ontvangt. Kan dat niet automatisch gebeuren?
 - In onDraw of floating glucose?

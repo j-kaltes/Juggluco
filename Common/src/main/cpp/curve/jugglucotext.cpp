@@ -75,12 +75,12 @@ jugglucotext engtext {
 	.middle="Middle",
 #endif
 	.history="History",
-	.historyinfo="Once per 15 minutes.\nRemembered on the sensor for 8 hours.\nScanning transfers them to this program.\nSensor: ",
-	.history3info="Once per 5 minutes.\nRemembered on the sensor for 14 days.\nTransferred by Bluetooth to this program.\nSensor: ",
-	.sensorstarted= "Sensor started:",
+//	.historyinfo="Once per 15 minutes.\nRemembered on the sensor for 8 hours.\nScanning transfers them to this program.\nSensor: ", 
+//	.history3info="Once per 5 minutes.\nRemembered on the sensor for 14 days.\nTransferred by Bluetooth to this program.\nSensor: ",
+	.sensorstarted= "Started:",
 	.lastscanned="Last scanned:",
 	.laststream="Last stream:",
-	.sensorends="Sensor ends: ",
+	.sensorends="Ends: ",
 #ifndef WEAROS
 	.newamount="New Amount",
 	.averageglucose="Average glucose: ",

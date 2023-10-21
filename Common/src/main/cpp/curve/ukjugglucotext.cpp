@@ -126,7 +126,8 @@ jugglucotext uktext {
 	"    Darkmode      ",
         "Налашт.",
 	"Стоп тривоги" },
-.menustr2= {"Дата",hourminstr,"День назад        ",uktext.amount},
+.menustr2= {"Дата",hourminstr,
+"День назад         ",uktext.amount},
 #endif
 
 	.scanerrors={
