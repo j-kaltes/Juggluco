@@ -1,6 +1,3 @@
-![Android Build Analyzer](buildanalyzer.png)
-As you see Juggluco consist according to Github for 1.2% out of Kotlin and according to Android Studio Build Analyzer tasks related to 
-Kotlin took 43.8% of the time to make the Debug version of Juggluco.
 # Juggluco
 An Android app that displays glucose values it receives via Bluetooth from Freestyle Libre 2 and 3 sensors.
 
@@ -49,4 +46,12 @@ libcrl_dp.so  liblibre3extension.so  and libinit.so  in the corresponding direct
 ./Common/src/libre3/jniLibs/armeabi-v7a/   
 ./Common/src/libre3/jniLibs/x86/   
 ./Common/src/libre3/jniLibs/arm64-v8a/   
-   
+
+# Changes Juggluco
+You can find all information about changes to Juggloco here:
+https://www.juggluco.nl/Juggluco/changes.html
+
+# Juggluco Build Analyzer
+![Android Build Analyzer](buildanalyzer.png)
+As you see Juggluco consist according to Github for 1.2% out of Kotlin and according to Android Studio Build Analyzer tasks related to 
+Kotlin took 43.8% of the time to make the Debug version of Juggluco.
