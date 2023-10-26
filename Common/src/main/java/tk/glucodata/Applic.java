@@ -126,7 +126,18 @@ MainActivity getActivity() {
 	return null;
 	}
 static public void Toaster(String mess) {
-	RunOnUiThread(()-> { Toast.makeText(app,mess, Toast.LENGTH_SHORT).show();}) ;
+	RunOnUiThread(()-> { Applic.argToaster(app,mess, Toast.LENGTH_SHORT);}) ;
+	}
+
+static public	void argToaster(Context context,int res,int duration) {
+	 argToaster(context,context.getString(res), duration);
+}
+static public	void argToaster(Context context,String message,int duration) {
+	Toast.makeText(context,message, duration).show();
+	if(!isWearable) {
+		if(Natives.speakmessages()) 
+			speak(message);
+		}
 	}
 private void RunOnUiThreader(Runnable action) {
 	if (Thread.currentThread().getId() != uiThreadId) {
@@ -609,7 +620,7 @@ public static void wakemirrors() {
 
 static	void initbroadcasts() {
 
-	if(Natives.getinitVersion()<18) {
+	if(Natives.getinitVersion()<19) {
 		if(Natives.getinitVersion()<14) {
 			if(Natives.getinitVersion()<13) {
 				Broadcasts.updateall();
@@ -619,7 +630,7 @@ static	void initbroadcasts() {
 			Natives.setfloatingbackground(WHITE);
 			 Natives.setfloatingforeground(BLACK);
 			}
-		Natives.setinitVersion(18);
+		Natives.setinitVersion(19);
 		}
 	var pos=Natives.getfloatingPos( );
 	if(pos!=0) {

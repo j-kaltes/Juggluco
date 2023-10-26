@@ -80,10 +80,21 @@ NumIter<Num> *mknumiters() {
 	int basecount=numdatas.size();
 	NumIter<Num> *numiters=new NumIter<Num>[basecount];
 	for(int i=0;i<basecount;i++) {
-		numiters[i]={.begin=numdatas[i]->begin(),.end=numdatas[i]->end()-1,.bytes=sizeof(Num) };
+		numiters[i]={.startall=numdatas[i]->begin(),.begin=numdatas[i]->begin(),.end=numdatas[i]->end()-1,.bytes=sizeof(Num),.index=i };
 		}
 	return numiters;
 	}
+
+NumIter<Num> *mknumPerioditers(uint32_t starttime,uint32_t endtime) {
+	int basecount=numdatas.size();
+	NumIter<Num> *numiters=new NumIter<Num>[basecount];
+	for(int i=0;i<basecount;i++) {
+		auto [beg,en]= numdatas[i]->getInRange(starttime,endtime);
+		numiters[i]={.startall=numdatas[i]->begin(),.begin=beg,.end=en-1,.bytes=sizeof(Num),.index=i };
+		}
+	return numiters;
+	}
+
 
 
 
@@ -120,72 +131,47 @@ typedef FILE*  myfilep;
 #define myprintf fprintf
 #endif
 template <class Num, class F>
-bool exportdata(int handle,NumIter<Num>*numiters,int start,int basecount,const F & func )  {
-myfilep fp=myopen(handle);
+bool exportdata(myfilep fp,NumIter<Num>*numiters,int start,int basecount,const F & func )  {
 	
-/*	FILE *fp=fdopen(handle,"w");
-	if(fp==NULL) {
-		LOGSTRING("exportnums fdopen failed");
-		close(handle);
-		return false;
-		}
-*/
+//	myfilep fp=myopen(handle);
 	for(int oldest;(oldest=ifindoldest(numiters,start,basecount))>=0;) {
 		const Num *num=numiters[oldest].prev();
 		const int bytes=numiters[oldest].bytes;
-		const Num *beg=numiters[oldest].begin;
-		const int previndex=num-beg+1;
-		const int index=(reinterpret_cast<const uint8_t*>(num)-reinterpret_cast<const uint8_t*>(beg))/bytes+1;
+		const Num *startall=numiters[oldest].startall;
+		const int index=(reinterpret_cast<const uint8_t*>(num)-reinterpret_cast<const uint8_t*>(startall))/bytes+1;
+#ifndef NOLOG
+		const int previndex=num-startall+1;
 		LOGGER("previndex=%d index=%d bytes=%d sizeof(T)=%lu\n",previndex,index,bytes,sizeof(Num));
-		func(fp,index,num,oldest);
+#endif
+		const Num *beg=numiters[oldest].begin;
+		func(fp,index,num,numiters[oldest].index,beg);
 		}
-	myclose(fp);
+//	myclose(fp);
 	return true;
 	}
 
 #include "glucose.h"	
-/*(
-bool exportscans(int handle, const std::span<const ScanData>  (SensorGlucoseData::*proc)(void) const) {	
-	int totsen=sensors->last()+1;
-	NumIter<ScanData> *iters=new NumIter<ScanData>[totsen];
-	for(int i=0;i<totsen;i++) {
-		SensorGlucoseData *hist=sensors->getSensorData(i);
-		if(hist) {
-			auto scans=(hist->*(proc))();
-			const ScanData *beg=&scans.begin()[0];
-			const ScanData *en=&scans.end()[0];
-			iters[i]={.iter=beg,.begin=beg,.end=en-1};
-			}
-		else
-			iters[i]={};
-		}
-	return exportdata(handle,iters,totsen,[](FILE *fp,const ScanData *scan,const int sens) {
-		constexpr int maxbuf=20;
-		char buf[maxbuf];
-			timestr(buf,scan->gettime());
-		fprintf(fp,"%s\t%s\t%d\t%.1f\t%.1f\t%s\n", sensors->shortsensorname(sens)->data(),buf,scan->id,scan->g/18.0,scan->ch,GlucoseNow::trendString[scan->tr]); });
-	}
-	*/
 template <class T,class FG,class FP>
-bool exports(int handle, const FG& proc,const FP& print) {	
-	int totsen=sensors->last()+1;
+bool sensorexports(myfilep handle, const FG& proc,const FP& print,uint32_t starttime=0,uint32_t endtime=UINT32_MAX) {	
+	auto indices=sensors->inperiod(	starttime,endtime);
+	int totsen=indices.size();
+
 	NumIter<T> *iters=new NumIter<T>[totsen];
 	destruct _dest([iters]{delete[] iters;});
-	LOGSTRING("exports: ");
-	for(int i=0;i<totsen;i++) {
-		SensorGlucoseData *hist=sensors->getSensorData(i);
-		if(hist) {
-			LOGGER("h%d\n",i);
-			auto scans=(hist->*(proc))();
+	LOGSTRING("sensorexports: ");
+	int i=0;
+	for(int id=totsen-1;id>=0;--id) {
+		const int index=indices[id];
+		if(SensorGlucoseData *hist=sensors->getSensorData(index)) {
+			LOGGER("h%d\n",index);
+			auto scans=(hist->*(proc))(starttime,endtime);
 			const T *beg=&scans.begin()[0];
 			const T *en=&scans.end()[0];
-			iters[i]={.iter=beg,.begin=beg,.end=en-1,.bytes=sizeof(T)};
+			iters[i++]={.startall=scans.startall(),.iter=beg,.begin=beg,.end=en-1,.bytes=sizeof(T),.index=index};
 			}
-		else
-			iters[i]={};
 		}
 	
-	return exportdata(handle,iters,0,totsen,print);
+	return exportdata(handle,iters,0,i,print);
 	}
 
 #ifdef NDEBUG
@@ -193,9 +179,9 @@ bool exports(int handle, const FG& proc,const FP& print) {
 #else
 #define EXTRA 0
 #endif
-template <bool repeatids>
-bool exportscans(int handle, const std::span<const ScanData>  (SensorGlucoseData::*proc)(void) const) {	
-#define scanhead "Sensorid\tnr\t" DATESTRING "\tTZ\tMin\t"
+
+bool currentheader(FILE* handle) {
+	#define scanhead "Sensorid\tnr\t" DATESTRING "\tTZ\tMin\t"
 	const char headend[]="\tRate\tChangeLabel\n";
 	constexpr const int headstart= sizeof(scanhead)-1;
 	char header[headstart+6+sizeof(headend)+EXTRA]=scanhead;
@@ -203,35 +189,44 @@ bool exportscans(int handle, const std::span<const ScanData>  (SensorGlucoseData
 	memcpy(header+headstart, units.data(),units.size());
 	memcpy(header+headstart+units.size(),headend,sizeof(headend));
 	int tothead=headstart+units.size()+sizeof(headend)-1;
-	if(write(handle,header,tothead)!=tothead) {
+	if(fwrite(header,1,tothead,handle)!=tothead) {
 		lerror("exportscans");
 		return false;
 		}
+	return true;
+	}
 
-	return exports<ScanData>(handle,proc, [](myfilep fp,const int index,const ScanData *scan,const int sens) {
-		static int oldid=-1;
-		static const char *oldname=nullptr;
-		const char *sensorname=sensors->shortsensorname(sens)->data();
-		const uint32_t scantime=scan->gettime();
-		static  uint32_t  oldtimes=0;
-		if((repeatids&&oldtimes!=scantime)||oldid!=scan->id||oldname!=sensorname) {
-			oldtimes=scantime;
-			oldid=scan->id;
-			oldname=sensorname;
+template <bool repeatids>
+bool fexportscans(myfilep handle, CurData   (SensorGlucoseData::*proc)(const uint32_t,const uint32_t) const,uint32_t starttime,uint32_t endtime) {
+	return sensorexports<ScanData>(handle,proc, [](myfilep fp,const int index,const ScanData *scan,const int sens,const ScanData *beg) {
+		if(repeatids||scan==beg||scan->id!=scan[-1].id) {
+			const char *sensorname=sensors->shortsensorname(sens)->data();
+			const uint32_t scantime=scan->gettime();
 			const auto [buf,zone]=	timedata(scantime);
 			fprintf(fp,"%s\t%d\t%u\t%s\t%g\t%d\t%.*f\t%+g\t%s\n",sensorname ,index,scan->gettime(),buf,zone,scan->id,gludecimal,gconvert(10*scan->g),scan->ch,GlucoseNow::trendString[scan->tr]); 
-			}	
-		});
+			}
+			},starttime,endtime);
 	} 
-/*
-	
-		const auto [buf]=	timedata(scan->gettime());
-		myprintf(fp,"%s\t%d\t%u\t%s\t%d\t%.*f\t%+g\t%s\n", sensors->shortsensorname(sens)->data(),index,scan->gettime(),buf,scan->id,gludecimal,gconvert(10*scan->g),scan->ch,GlucoseNow::trendString[scan->tr]); }		); */
-
-bool exporthistory(int handle) {
-	int totsen=sensors->last()+1;
-	NumIter<Glucose> *iters=new NumIter<Glucose>[totsen];
-	destruct _dest([iters]{delete[] iters;});
+template <bool repeatids, CurData  (SensorGlucoseData::*proc)(const uint32_t,const uint32_t) const>
+bool exportcurrent(myfilep handle,uint32_t start,uint32_t end) {
+	return fexportscans<repeatids>(handle,proc,start,end);
+	}
+template <bool repeatids>
+bool exportscans(int handle,  CurData  (SensorGlucoseData::*proc)(const uint32_t,const uint32_t) const,uint32_t starttime=0,uint32_t endtime=UINT32_MAX) {
+	myfilep fp=myopen(handle);
+	if(!fp) {
+		close(handle);
+		return false;
+		}
+	if(!currentheader(fp))  {
+      		myclose(fp);
+		return false;
+		}
+      bool ret=fexportscans<repeatids>(fp, proc,starttime,endtime);
+      myclose(fp);
+      return ret;
+	}
+static bool writehistoryheader(FILE *handle) {
 #define histhead "Sensorid\tnr\t" DATESTRING "\tTZ\tMin\t"
 	const char headend[]="\n";
 	constexpr const int headstart= sizeof(histhead)-1;
@@ -240,76 +235,120 @@ bool exporthistory(int handle) {
 	memcpy(header+headstart, units.data(),units.size());
 	memcpy(header+headstart+units.size(),headend,sizeof(headend));
 	int tothead=headstart+units.size()+sizeof(headend)-1;
-
-//	write(handle,header,tothead);
-	if(write(handle,header,tothead)!=tothead) {
+	if(fwrite(header,1,tothead,handle)!=tothead) {
 		lerror("exporthistory");
 		return false;
 		}
-	int start=0;
-	for(int i=start;i<totsen;i++) {
-		SensorGlucoseData *hist=sensors->getSensorData(i);
+	return true;
+	}
+bool fexporthistory(myfilep  handle,uint32_t starttime=0,uint32_t endtime=UINT32_MAX) {
+
+	auto indices=sensors->inperiod(	starttime,endtime);
+	int totsen=indices.size();
+
+	NumIter<Glucose> *iters=new NumIter<Glucose>[totsen];
+	destruct _dest([iters]{delete[] iters;});
+	int i=0;
+	for(int ind=totsen-1;ind>=0;--ind) {
+		const int index=indices[ind];
+		SensorGlucoseData *hist=sensors->getSensorData(index);
 		if(hist) {
-			const int begp=hist->getstarthistory();
-			const int endp=hist->getAllendhistory()-1;
-			const Glucose *beg= hist->getglucose(begp);
-			const Glucose *en= hist->getglucose(endp);
+			int start=hist->getlastnotbeforetime(starttime);
+
+			const Glucose *beg= hist->getglucose(start);
+
+			int allend=hist->getAllendhistory();
+			int end=hist->getlastnotbeforetime(endtime);
+			const Glucose *en= hist->getglucose(end);
+			if(end>=allend||en->gettime()>endtime)
+				--en;
 			
-			iters[i]={.iter=beg ,.begin=beg,.end=en,.bytes=hist->glucosebytes()};
-			}
-		else  {
-			if(start==i)
-				++start;
-			iters[i]={};
+			iters[i++]={.startall=hist->getglucose(hist->getstarthistory()),.iter=beg ,.begin=beg,.end=en,.bytes=hist->glucosebytes(),.index=index};
 			}
 
 		}
-	LOGGER("exporthistory start=%d totsen=%d\n",start,totsen);
-	if(start<totsen)
-		return exportdata(handle,iters,start,totsen,
-	[](myfilep fp,const int index,const Glucose *glu,const int sens) {
+	LOGGER("exporthistory take=%d totsen=%d\n",i,totsen);
+	if(i>0)  {
+		return exportdata(handle,iters,0,i,
+	[](myfilep fp,const int index,const Glucose *glu,const int sens,const Glucose *beg) {
 			const auto [buf,zone]=	timedata(glu->gettime());
 			fprintf(fp,"%s\t%d\t%u\t%s\t%g\t%d\t%.*f\n", sensors->shortsensorname(sens)->data(),index,glu->gettime(),buf,zone,glu->getid(),gludecimal,gconvert(glu->getsputnik())); 
 
 			});
-
+		}
 	else
 		return false;
 
 	}
-bool exportnums(int handle) {
-	NumIter<Num> *numiters=mknumiters();
+
+bool exporthistory(int handle,uint32_t starttime=0,uint32_t endtime=UINT32_MAX) {
+	myfilep fp=myopen(handle);
+	if(!fp) {
+		close(handle);
+		return false;
+		}
+	if(!writehistoryheader(fp)) {
+		myclose(fp);
+		return false;
+		}
+	bool ret=fexporthistory(fp,starttime,endtime);
+
+	myclose(fp);
+	return ret;
+	}
+bool fexportnums(myfilep handle,uint32_t starttime=0,uint32_t endtime=UINT32_MAX) {
+	NumIter<Num> *numiters=mknumPerioditers(starttime,endtime);
 	destruct _dest([numiters]{delete[] numiters;});
 	int basecount=numdatas.size();
 	tostart(numiters,basecount);
-	const char header[]="Source\tnr\t" DATESTRING "\tTZ\tValue\tLabel\n";
-	constexpr int headlen=sizeof(header)-1;
-	if(write(handle,header,headlen)!=headlen)
-		return false;
-	return exportdata(handle,numiters,0,basecount, [](myfilep fp,const int index,const Num *num,const int oldest) {
+	return exportdata(handle,numiters,0,basecount, [](myfilep fp,const int index,const Num *num,const int oldest,const Num *beg) {
 			const char *label=settings->getlabel(num->type).data();
 			const auto [buf,zone]=timedata(num->gettime());
 			fprintf(fp,"%d\t%d\t%u\t%s\t%g\t%g\t%s\n",oldest,index+numdatas[oldest]->getfirstpos(),num->gettime(),buf,zone,num->value,label);
 		});
 
-
-
 	}
-//template int ifindnewest<Num>(NumIter<Num> *,int);
-//template const Num *findnewest(NumIter<Num> *nums,int count) ;
-//template const Num *findoldest(NumIter<Num> *nums,int count) ;
+
+static bool writenumheader(FILE* handle) {
+	constexpr const char header[]="Source\tnr\t" DATESTRING "\tTZ\tValue\tLabel\n";
+	constexpr int headlen=sizeof(header)-1;
+	if(fwrite(header,1,headlen,handle)!=headlen)
+		return false;
+	return true;
+	}
+bool exportnums(int handle,uint32_t starttime=0,uint32_t endtime=UINT32_MAX) {
+
+	myfilep fp=myopen(handle);
+	if(!fp) {
+		close(handle);
+		return false;
+		}
+	if(!writenumheader(fp)) {
+		myclose(fp);
+		return false;
+		}
+	bool ret=fexportnums( fp,starttime,endtime);
+	myclose(fp);
+	return ret;
+	}
+
+
 
 
 
 #ifdef USE_MEAL
 //extern bool savemeal(int handle,const Num *num)  ;
 #include "meal/MealSave.h"
-extern bool allsavemeals(int handle) ;
+extern bool allsavemeals(int handle,uint32_t starttime,uint32_t endtime);
 
-bool savemeals(int handle) {
+
+extern bool savemeals(FILE* handle,uint32_t starttime,uint32_t endtime);
+bool savemeals(FILE * handle,uint32_t starttime,uint32_t endtime) {
 	MealSave mealsave;
 	extern vector<Numdata*> numdatas;
-	NumIter<Num> *numiters=mknumiters();
+	//NumIter<Num> *numiters=mknumiters();
+
+	NumIter<Num> *numiters=mknumPerioditers(starttime,endtime);
 	destruct _dest([numiters]{delete[] numiters;});
 	int basecount=numdatas.size();
 	tostart(numiters,basecount);
@@ -327,19 +366,108 @@ bool savemeals(int handle) {
 #ifdef JUGGLUCO_APP
 #include <jni.h>
 #include "fromjava.h"
-extern "C" JNIEXPORT jboolean  JNICALL   fromjava(exportdata)(JNIEnv *env, jclass cl,jint type,jint fd) {
+
+extern uint32_t starttime;
+extern int duration;
+extern "C" JNIEXPORT jboolean  JNICALL   fromjava(exportdata)(JNIEnv *env, jclass cl,jint type,jint fd,jint days) {
+	uint32_t endtime=std::min(starttime+duration,(uint32_t)time(nullptr));
+	uint32_t starttime=endtime-days*24*60*60;
 	switch(type) {
-		case 0: return exportnums(fd);	;
-		case 1: return exportscans<true>(fd, &SensorGlucoseData::getScandata);
-		case 2: return exportscans<false>(fd, &SensorGlucoseData::getPolldata);
-		case 3: return exporthistory(fd);
+		case 0: return exportnums(fd,starttime,endtime);	;
+		case 1: return exportscans<true>(fd, &SensorGlucoseData::scanInperiod,starttime,endtime);
+		case 2: return exportscans<false>(fd, &SensorGlucoseData::streamInperiod,starttime,endtime);
+		case 3: return exporthistory(fd,starttime,endtime);
 #ifdef USE_MEAL
-		case 4: return allsavemeals(fd);
+		case 4: return allsavemeals(fd,starttime,endtime);
 #endif
 		};
 	return false;
 	}
 #else
-template bool exportscans<true>(int handle, const std::span<const ScanData>  (SensorGlucoseData::*proc)(void) const) ;
-template bool exportscans<false>(int handle, const std::span<const ScanData>  (SensorGlucoseData::*proc)(void) const) ;	
+template bool exportscans<true>(int handle,  CurData  (SensorGlucoseData::*proc)(const uint32_t,const uint32_t) const,uint32_t,uint32_t) ;
+
+template bool exportscans<false>(int handle, CurData (SensorGlucoseData::*proc)(const uint32_t,const uint32_t) const,uint32_t,uint32_t) ;
 #endif
+
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <span>
+
+
+std::span<char> getexportdata(int startpos,int len,uint32_t starttime,uint32_t endtime, bool (*exporter)(FILE *fp,uint32_t starttime,uint32_t endtime),bool (*header)(FILE* handle)) {
+	struct Fmemopen {
+		char *mem;
+		int max;
+		int iter;
+#ifdef JUGGLUCO_APP
+	static int  writer(void *ptr,const char *gegs,int len) {
+#else
+	static ssize_t  writer(void *ptr,const char *gegs,size_t len) {
+#endif
+
+		Fmemopen *mem=(Fmemopen*)ptr;
+		int end=mem->iter+len;
+		if(end>=mem->max) {
+			mem->max=end*2;
+			char *tmp= new(std::nothrow) char [mem->max];
+			memcpy(tmp,mem->mem,mem->iter);
+			mem->mem=tmp;
+			}
+		memcpy(mem->mem+mem->iter,gegs,len);
+		mem->iter+=len;
+		return len;
+		}
+	};
+	Fmemopen mem{.mem= new(std::nothrow) char[len],.max=len,.iter=startpos};
+	if(!mem.mem)
+		return {(char *)nullptr,(size_t)0};
+#ifdef JUGGLUCO_APP
+extern FILE* funopen(const void* __cookie,
+              int (*__read_fn)(void*, char*, int),
+              int (*__write_fn)(void*, const char*, int),
+              fpos_t (*__seek_fn)(void*, fpos_t, int),
+              int (*__close_fn)(void*));
+#define FMEMOPEN(memptr) funopen(memptr,0,Fmemopen::writer,0,0)
+#else
+constexpr const cookie_io_functions_t  memfuncs = {
+               .read  = nullptr,
+               .write =Fmemopen::writer,
+               .seek  = nullptr,
+               .close =nullptr
+           };
+
+#define FMEMOPEN(memptr)  fopencookie(memptr,"w",memfuncs)
+#endif
+	if(FILE *fp=FMEMOPEN(&mem)) {
+		if(header) {
+			if(!header(fp)) {
+				delete[] mem.mem;
+				return {(char *)nullptr,(size_t)0};
+				}	
+			}
+		bool res=exporter(fp,starttime,endtime);
+		fclose(fp);
+		if(res)
+			return {mem.mem,(size_t)mem.iter};
+		}
+	delete[] mem.mem;
+	return {(char *)nullptr,(size_t)0};
+	}
+std::span<char> gethistory(int startpos, int len, uint32_t starttime, uint32_t endtime,bool header) {
+	return getexportdata(startpos,len,starttime, endtime,fexporthistory,header?writehistoryheader:nullptr);
+	}
+std::span<char> getamounts(int startpos, int len, uint32_t starttime, uint32_t endtime,bool header) {
+	return getexportdata(startpos,len,starttime, endtime,fexportnums,header?writenumheader:nullptr);
+	}
+std::span<char> getstream(int startpos, int len, uint32_t starttime, uint32_t endtime,bool header) {
+	return getexportdata(startpos,len,starttime, endtime,exportcurrent<false,&SensorGlucoseData::streamInperiod>,header?currentheader:nullptr);
+	}
+std::span<char> getscans(int startpos, int len, uint32_t starttime, uint32_t endtime,bool header) {
+	return getexportdata(startpos,len,starttime, endtime,exportcurrent<true,&SensorGlucoseData::scanInperiod>,header?currentheader:nullptr);
+	}
+
+extern bool fallsavemeals(FILE *handle,uint32_t starttime,uint32_t endtime) ;
+std::span<char> getmeals(int startpos, int len, uint32_t starttime, uint32_t endtime,bool header) {
+	return getexportdata(startpos,len,starttime, endtime,fallsavemeals,nullptr);
+	}

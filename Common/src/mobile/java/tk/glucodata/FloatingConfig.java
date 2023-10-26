@@ -101,7 +101,7 @@ static public void show(MainActivity act,View parent) {
 					var siz=Integer.parseInt(String.valueOf(v.getText()));
 					int maxfont=height*7/10;
 					if(siz>maxfont) {
-						Toast.makeText(act, act.getString(R.string.fonttoolarge)+maxfont, Toast.LENGTH_SHORT).show();
+						Applic.argToaster(act, act.getString(R.string.fonttoolarge)+maxfont, Toast.LENGTH_SHORT);
 						return true;
 						}
 					else  {

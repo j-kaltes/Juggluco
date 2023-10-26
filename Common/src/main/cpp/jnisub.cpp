@@ -20,6 +20,8 @@
 /*                                                                                   */
 /*      Fri Jan 27 12:35:35 CET 2023                                                 */
 
+constexpr const int wearduration=14*24*60+14*60;
+
 
 #include <string.h>
 #include <jni.h>
@@ -1073,7 +1075,8 @@ AlgorithmResults *callAbbottAlg(data_t *uid,int startsincebase,scanstate *oldsta
 	const int timeoffset=1000*gettimezoneoffset(&nutime);
 	algobj alarm{&AlarmC},nonAction{&NonActiona};
 	algobj range{&GluRange}, attenconf{&attconf};
-	int warmup=60, wear=14*24*60;
+//	int warmup=60, wear=14*24*60;
+	constexpr const int warmup=60, wear=wearduration;
 	outobj  confinsert, removed, compo, attenu, messstate, outalgres,  OutListPatchEvent;
 
 jnidata_t  hierjnidata={&envbuf,newstate};
@@ -1887,7 +1890,6 @@ JNIEnv *hiersubenv=(JNIEnv *) &hierjnidata;
 	LOGAR(" end getStreamingUnlockPayload");
 	return res;
 	}
-
 static AlgorithmResults * processBlue(data_t * bluedata, jbyte person,
 
 const data_t *ident,
@@ -1899,7 +1901,8 @@ scanstate *newstate,uint32_t startsincebase,uint32_t nutime) {
 	jint nusincebase=nutime-basesecs;
 	algobj alarm{&AlarmC},nonAction{&NonActiona};
 	algobj range{&GluRange}, attenconf{&attconf};
-	int warmup=60, wear=14*24*60;//TODO set with function
+//	int warmup=60, wear=14*24*60;//TODO set with function
+	constexpr const int warmup=60, wear=wearduration;//TODO set with function
 	outobj  outstarttime,  endtime,confinsert, removed, compo, attenu, messstate, outalgres;
  
 jnidata_t  hierjnidata={&envbuf,newstate};

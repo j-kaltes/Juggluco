@@ -127,7 +127,7 @@ static void init(Application app) {
        if(glucosealarms==null) glucosealarms=new tk.glucodata.GlucoseAlarms(app);
 	if(!isWearable) {
 		Talker.getvalues();
-		if(dotalk||Natives.gettouchtalk())
+		if(dotalk||Natives.gettouchtalk()||Natives.speakmessages()||Natives.speakalarms())
 			newtalker(null);
 		}
 	}
@@ -164,6 +164,7 @@ static void endtalk() {
 		previousglucose=sglucose;
 		final var fview=Floating.floatview;
 //		MainActivity.showmessage=null;
+		boolean alarmspeak=false;
 		if(fview!=null) 
 			fview.postInvalidate();
 
@@ -181,7 +182,7 @@ static void endtalk() {
 						nextalarm[1] = tim + Natives.readalarmsuspension(1) * 60;
 						alarm |= 8;
 						if(!isWearable) {
-							if (dotalk) talker.nexttime = 0L;
+							if((alarmspeak=Natives.speakalarms())) talker.nexttime = 0L;
 						}
 					}
 				}
@@ -199,8 +200,7 @@ static void endtalk() {
 						nextalarm[0] = tim + Natives.readalarmsuspension(0) * 60;
 						alarm |= 8;
 						if(!isWearable) {
-							if (dotalk)
-								talker.nexttime = 0L;
+							if((alarmspeak=Natives.speakalarms())) talker.nexttime = 0L;
 						}
 					}
 				}
@@ -219,7 +219,7 @@ static void endtalk() {
 		Applic.updatescreen();
 
 		if(!isWearable) {
-			if (dotalk)  {
+			if (dotalk||alarmspeak)  {
 				talker.selspeak(sglucose.value);
 				}
 			}

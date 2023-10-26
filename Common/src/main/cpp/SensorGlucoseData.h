@@ -86,7 +86,23 @@ bool current(int pos=1) const {
 	return valid(pos)&&!isnan(ch);
 	}
 } ;
-struct Glucose { 
+
+struct CurData {
+	const ScanData *data;
+	const int startpos,endpos;
+	CurData(const ScanData *data,const ScanData *startdat,const ScanData *enddat): data(data),startpos(startdat-data),endpos(enddat-data) {		};
+	const ScanData *startall() {
+		return data;
+	}
+	const ScanData *begin() {
+		return data+startpos;
+	}
+	const ScanData *end() {
+		return data+endpos;
+	}
+
+};
+struct Glucose {
 uint32_t time;
 uint16_t id;
 uint16_t glu[];
@@ -384,6 +400,7 @@ int32_t getstarthistory() const {
 	return getinfo()->starthistory;
 	}
 inline void setstarthistory(int pos)  {
+	LOGGER("setstarthistory(%d)\n",pos);
 	getinfo()->starthistory=pos;
 	}
 	/*
@@ -487,6 +504,42 @@ uint32_t sputnikglucose(int pos)const  {
 int gettimepos(uint32_t time)const {
 	return ( int)round(((double)time-getinfo()->starttime)/getinfo()->interval);
 	}
+int getlastnotbeforetime(uint32_t time)const {
+	int pos=gettimepos(time);
+	int newpos=pos;
+	const int start=getstarthistory(); 
+	const int end=getAllendhistory() ;
+	if(pos<start)
+		return start;
+	if(pos>end)
+		return end;
+	for(;newpos>=start;--newpos) {
+		const Glucose* gl= getglucose(newpos);
+		if(!gl->valid())
+			continue;
+		if(gl->gettime()<time)
+			break;
+		}
+	for(;newpos<end;++newpos) {
+		const Glucose* gl= getglucose(newpos);
+		if(!gl->valid())
+			continue;
+		if(gl->gettime()>=time)
+			break;
+		}
+	#ifndef NOLOG
+	time_t tim=time;
+	time_t gltime;
+	const Glucose*gl;
+	if(newpos<end&&(gl= getglucose(pos))&&gl->valid())
+		gltime=gl->gettime();
+	else
+		gltime=0;
+	LOGGER("getlastnotbeforetime pos=%d newpos=%d time=%.24s lastbefore %s",pos,newpos,ctime(&gltime),ctime(&tim));
+	#endif
+	return newpos;
+	}
+
 uint16_t getatpos(int pos,int field) const {
 	const uint16_t *d=(const uint16_t *)(historydata+pos*getelsize());
 	return d[field];
@@ -782,7 +835,6 @@ LOGGER("SensorGlucoseData %s %s scansize=%zu\n",sensordir.data(),scanpath.data()
 
     if(getinfo()->pollinterval<58.6||getinfo()->pollinterval>62.6)
 		getinfo()->pollinterval=60.5752;
-  // mkabspath();
   if(!getinfo()->prunedstream) {
 	prunedata() ;
 	getinfo()->prunedstream=true;
@@ -992,7 +1044,7 @@ const ScanData* beginscans() const {
 const ScanData*beginpolls() const { 
 	return polls.data();
 	}
-const std::span<const ScanData> getPolldata() const {
+std::span<const ScanData> getPolldata() const {
 	const int start=getinfo()->pollstart;
 	return std::span<const ScanData>(polls.data()+start,pollcount()-start);
 	}
@@ -1066,12 +1118,29 @@ void updateinit(const int ind) {
 
 
 
-static const ScanData *firstnotless(std::span<const ScanData> dat,const uint32_t start) {
+static  const ScanData *firstnotless(std::span<const ScanData> dat,const uint32_t start) {
 	const ScanData *scan=&dat[0];
         const ScanData *endscan= &dat.end()[0];
         const ScanData scanst{.t=start};
         auto comp=[](const ScanData &el,const ScanData &se ){return el.t<se.t;};
         return std::lower_bound(scan,endscan, scanst,comp);
+	}
+static CurData curInperiod(std::span<const ScanData> dat,const uint32_t starttime,const uint32_t endtime) {
+	const ScanData *scan=&dat[0];
+        const ScanData *endscan= &dat.end()[0];
+	  auto comp=[](const ScanData &el,const ScanData &se ){return el.t<se.t;};
+        ScanData scanst{.t=starttime};
+        auto first=std::lower_bound(scan,endscan, scanst,comp);
+	if(first==endscan) return {scan,endscan,endscan};
+	//   const ScanData scanend{.t=endtime};
+	scanst.t=endtime;
+	return {scan,first,std::lower_bound(first,endscan, scanst,comp)};
+	}
+CurData  streamInperiod(const uint32_t starttime,const uint32_t endtime) const {
+	return curInperiod(getPolldata() ,starttime,endtime);
+	}
+CurData  scanInperiod(const uint32_t starttime,const uint32_t endtime) const {
+	return curInperiod(getScandata(),starttime,endtime);
 	}
 
 

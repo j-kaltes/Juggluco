@@ -1942,13 +1942,13 @@ receive amounts from a mirror connection, unset this option.</p>
 <string name="talkhelp" >
 <![CDATA[
 <h1>Talk</h1>
+<h2 class="western">Speak glucose</h2>
 <p>Speaks glucose values when they arrive.</p>
 <p><b>Seconds between</b>: Specifies how many seconds Juggluco should
 wait before saying the next glucose value. Glucose values are always
 spoken immediately when they arrive. When a large value is specified,
 Juggluco will skip glucose values that arrive before this time period
 has elapsed.</p>
-<p><b>Active</b>: Turn it on</p>
 <p><b>Voice</b>: Selects a speaker out of a list of possible
 speakers.</p>
 <p><b>Speed</b>: a higher number means faster talking.</p>
@@ -1965,7 +1965,7 @@ in Android settings or going to <i>Language and input
 Services by Google</i>&quot; and install voice data. In other phones
 it is under <i>System settings-&gt;Accessibility-&gt;Vision-&gt;Text-to-Speech
 settings</i>.</p>
-<body ><h2 >Talk touch</h2>
+<h2 class="western">Talk touch</h2>
 <p>When <em>talk touch</em> is switched on, touching at certain
 places creates talk:</p>
 <ul>
@@ -1978,8 +1978,21 @@ places creates talk:</p>
 	<li><p>Long pressing an amount in the list of amounts (left middle
 	menu-&gt;list).</p>
 </ul>
+<h2 class="western">Speak messages</h2>
+<p>Reads text messages that temporarily visible on the screen and the
+result of scanning (error messages and the glucose value).</p>
+<h2 class="western">Speak Alarms</h2>
+<p>Speaks out the glucose level during Low and High glucose alarms.
+It is read both at the start of the alarm as at the moment the alarm
+is stopped.</p>
 <p><br/>
+<br/>
 
+</p>
+<p><br/>
+<br/>
+
+</p>
 <p><br/>
 <br/>
 
@@ -1994,6 +2007,29 @@ Before you can switch on &quot;Give <i>amounts</i>&quot;, you need to
 specify for every label how the amounts entered under that label
 should be given. The labels themselves can be created, modified and
 deleted in Left menu-&gt;Settings-&gt;&quot;Number Labels&quot;.</p>
+<p><br/>
+<br/>
+
+</p>
+]]>
+</string>
+<string name="helpexport" >
+<![CDATA[
+<h1>Export</h1>
+<p>Export data from Juggluco to a file.</p>
+<p>Most is saved in .tsv this can be loaded in programs like
+LibreOffice Calc, Microsoft Excel, Mathematica or R. It is a kind of
+.csv with tabs instead of comma\'s used to separate items. Characters
+are encoded UTF8 (labels) or ASCII.</p>
+<p>The meaning of the columns can be found at
+<a href="https://www.juggluco.nl/Juggluco/webserver.html">https://www.juggluco.nl/Juggluco/webserver.html</a>.</p>
+<p><b>Days</b>: Starting with Juggluco 7.1.0, you can select the
+number of days to save. The end date is the right border of the
+screen. This if you view past data in Juggluco, only old data is
+exported (the same as in left middle menu-&gt;Statistics).</p>
+<p>Starting with Juggluco 7.1.0, it is also possible to receive these
+data via the web server in Juggluco (Left menu-&gt;Settings-&gt;Webserver),
+see <a href="https://www.juggluco.nl/Juggluco/webserver.html">https://www.juggluco.nl/Juggluco/webserver.html</a></p>
 <p><br/>
 <br/>
 

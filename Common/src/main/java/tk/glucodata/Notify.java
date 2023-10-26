@@ -402,7 +402,7 @@ static public String glucosestr(float gl) {
 					stopvibratealarm();
 					}
 				if(!isWearable) {
-					if(SuperGattCallback.dotalk&&kind<=1) {
+					if(Natives.speakalarms()&&kind<=1) {
 						final var  glu=SuperGattCallback.previousglucose;
 						if(glu!=null)
 							SuperGattCallback.talker.speak(glu.value);

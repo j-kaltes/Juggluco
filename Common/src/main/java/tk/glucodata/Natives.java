@@ -89,6 +89,9 @@ public static native void startsensors( );
     public static native long tap(float x, float y);
     public static native long longpress(float x, float y);
     public static native long getstarttime();
+
+    public static native long oldestdatatime();
+
     public static native void movedate(long date,int year,int month,int day);
      public static native long getendtime();
 //     public static native void search(time[0],time[1],labelsel,funder,fabove,fgunder,fgabove,minutes[0],minutes[1]);
@@ -204,7 +207,7 @@ public static native void dolog(boolean val);
 public static native boolean islogging( );
 
 public static native String advanced();
-public static native boolean exportdata(int type,int fd);
+public static native boolean exportdata(int type,int fd,int showdays);
 //public static native void setlibversion(String version);
 public static native int getcolumns(int width);
 
@@ -687,9 +690,23 @@ public static native void setsystemui(boolean val);
 public static native void settonow();
 public static native boolean showlastscan( );
 public static native void saylastglucose();
+public static native void setspeakmessages(boolean val);
+
+public static native boolean speakmessages( );
+public static native void setspeakalarms(boolean val);
+
+public static native boolean speakalarms( );
 
 //s/^extern.*JNIEXPORT[         ]*\([a-zA-Z]*\)[ ]*JNICALL[      ]*fromjava(\([^)]*\)) *(JNIEnv[^,]*,[^,)]*[,)]\([^){]*\)[^a-zA-Z0-9]*$/public static native \1 \2(\3);/g
 //public static native void sendxdripold();
+/*
+public static boolean speakmessages() {
+	return gettouchtalk();
+	}
+public static boolean speakalarms() {
+	return SuperGattCallback.dotalk;
+	}*/
+
 }
 
 

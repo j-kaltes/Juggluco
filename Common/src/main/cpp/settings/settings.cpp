@@ -242,11 +242,22 @@ void startsensors() {
 			return ;
 		destructsensors.reset(sensors);
 		LOGSTRING("Na sensors\n");
-		/*
-		if(settings->data()->initVersion<11) {
-			sensors->setversions();
-			settings->data()->initVersion=11;
-			} */
+		if( settings->data()->initVersion<19) {
+			sensors->onallsensors([](SensorGlucoseData *hist ) {
+				auto start=hist->getstarthistory();
+				if(start>4) {
+					for(int i=4;i<start;i++)  {
+						if(hist->getglucose(i)->valid()) {
+							hist->setstarthistory(i);
+							break;
+							}
+
+						}
+
+					}
+				}
+				) ;
+			}
 		}
 	}
 
@@ -436,7 +447,7 @@ void startjuggluco(std::string_view dirfiles,const char *country) {
         startsensors( );
         extern void startthreads() ;
         startthreads();
-	settings->data()->initVersion=18;
+	settings->data()->initVersion=19;
         }
 
 static void initinjuggluco(std::string_view dirfiles,const char *country) {
@@ -454,7 +465,7 @@ static void initinjuggluco(std::string_view dirfiles,const char *country) {
         startsensors( );
         extern void startthreads() ;
         startthreads();
-	settings->data()->initVersion=18;
+	settings->data()->initVersion=19;
         }
 
 void initjuggluco(std::string_view dirfiles) {

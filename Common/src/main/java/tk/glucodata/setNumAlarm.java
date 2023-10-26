@@ -222,11 +222,11 @@ public class NumAlarmAdapter extends RecyclerView.Adapter<NumAlarmHolder> {
 
 }
 
-void settime(TextView but,int min) {
+static void settime(TextView but,int min) {
 	but.setText(String.format(usedlocale,"%02d:%02d",min/60,min%60));
 	}
 int[] minutes=new int[2];
-Button gettimeview(Activity act,int ind,View[] parent) {
+static Button gettimeview(Activity act,int[] minutes,int ind,View[] parent) {
 	Button but=new Button(act);
         but.setOnClickListener(
                 v->  {
@@ -260,9 +260,8 @@ void dodelete(View parent,int alarmpos) {
 			numadapt.notifyItemRemoved(alarmpos);
 			numadapt.notifyDataSetChanged();
 			}
-		alarmpos=-1;
+		this.alarmpos=-1;
 		itemlayout.setVisibility(GONE); 
-//	    parok.setVisibility(VISIBLE);
 		EnableControls(parent,true);
 		}
 private void askdelete( View parent,int alarmpos) {
@@ -317,8 +316,8 @@ void  mkitemlayout(Activity act,View parent) {
 	value.setMinEms(2);
 	value.setImeOptions(editoptions);
 	View[] layoutar=new View[1];
-	startbut=gettimeview(act,0,layoutar);
-	alarmbut=gettimeview(act,1,layoutar);
+	startbut=gettimeview(act,minutes,0,layoutar);
+	alarmbut=gettimeview(act,minutes,1,layoutar);
 	Delete=getbutton(act,R.string.delete);
 	Button Cancel=getbutton(act,R.string.cancel);
 	Button Save=getbutton(act,R.string.save);

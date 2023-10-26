@@ -934,8 +934,10 @@ void updateposnowake(int pos,int end) {
 		int st=nu->changed[0].start;
 		LOGGERTAG("st=%d nu->len=%d\n",st,nu->len);
 		if(pos<st) {
-			if(pos==(st-1))
+			if(pos==(st-1)) {
 				nu->changed[0].start=pos;	
+				LOGGERTAG("under start=%d\n",pos);
+				}
 			else {
 				if(nu->len>=maxchanged) {
 					int mini=nu->changed[0].start;
@@ -945,15 +947,16 @@ void updateposnowake(int pos,int end) {
 						}
 					nu->changed[0].start=mini;
 					nu->len=1;
+					LOGGERTAG("toomuch start=%d\n",mini);
 					}
 				else {
 					nu->changed[nu->len++]={pos,end};
+					LOGGERTAG("changed %d %d\n",pos,end);
 					}
 				}
 			}
 
 
-//		nu->updatedsize=false;	
 		}
 	}
 void updatepos(int pos,int end) {
@@ -1128,7 +1131,7 @@ int update(crypt_t*pass,int sock,struct changednums *nuall) {
 		uitnums->totlen=totlen;
 	//	uitnums->first=getfirstpos();
 		uitnums->last=endpos;
-
+		LOGGERTAG("update numsend dbase=%d nr=%d totlen=%d last=%d\n",dbase,offoutnr,totlen,endpos);
 		uint32_t *numsar=uitnums->nums;
 		const Num *start=startdata();
 		for(int i=nu->len-1;i>=0;i--) {
@@ -1167,6 +1170,11 @@ bool backupnums(const struct numsend* innums) {
 	const int nr=innums->nr;
 	const uint32_t *numsar=innums->nums;
 	Num *start=startdata();
+
+	LOGGERTAG("backupnums numsend dbase=%d nr=%d totlen=%d last=%d\n", innums->dbase,
+		nr,
+		innums->totlen,
+		innums->last);
 	for(int i=0;i<nr;i++) {
 		uint32_t off=*numsar++;
 		uint32_t nr=*numsar++;

@@ -87,7 +87,7 @@ static private void  getselected(MainActivity context, View parent,String title,
 	int len= names.size();
 	if(len==0) {
 	//	if(!isWearable)	EnableControls(parent,true);
-		Toast.makeText(context, context.getString(R.string.noapplisteningto)+title, Toast.LENGTH_SHORT).show();
+		Applic.argToaster(context, context.getString(R.string.noapplisteningto)+title, Toast.LENGTH_SHORT);
 		String[] niets=new String[0];
 		saveproc.accept(niets);
 		return;
@@ -179,7 +179,7 @@ static public void setlibrereceivers(MainActivity context,View settingsview,Chec
 	var all=actionListeners(XInfuus.glucoseaction);
 	/*
 	if(all.size()==0) {
-		Toast.makeText(context, context.getString(R.string.noapplisteningto)+XInfuus.glucoseaction, Toast.LENGTH_SHORT).show();
+		Applic.argToaster(context, context.getString(R.string.noapplisteningto)+XInfuus.glucoseaction, Toast.LENGTH_SHORT);
 		Natives.setlibrelinkRecepters(null);
 		XInfuus.setlibrenames();
 		box.setChecked(false);

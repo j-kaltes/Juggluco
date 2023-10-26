@@ -427,7 +427,7 @@ new View[]{isvalue},new View[]{ringisvalue,Cancel},new View[]{usealarm},new View
 		tk.glucodata.SuperGattCallback.glucosealarms.sensorinit();
 		} catch(Throwable e) {
 			Log.stack(LOG_ID,"parseShort",e);
-                	Toast.makeText(context,context.getString(R.string.cantsetminutes)+str,Toast.LENGTH_SHORT).show();
+                	Applic.argToaster(context,context.getString(R.string.cantsetminutes)+str,Toast.LENGTH_SHORT);
 			return;
 			}
 		}
@@ -631,7 +631,7 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 	var alarmbut=getbutton(context,R.string.alarms);
         alarmbut.setOnClickListener(v->{
 		if(!bluetooth.isChecked()&&Natives.backuphostNr( )<=0) {
-                	Toast.makeText(context, R.string.sensorviabluetoothon,Toast.LENGTH_LONG).show();
+                	Applic.argToaster(context, R.string.sensorviabluetoothon,Toast.LENGTH_LONG);
 			}
 		alarmsettings(context,settinglayout,issaved);
 		});
@@ -658,7 +658,7 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 			    }
 		    int unit=mmolL.isChecked()?1:(mgdl.isChecked()?2:0);
 		    if(unit==0) {
-			Toast.makeText(context, R.string.setunitfirst,Toast.LENGTH_SHORT).show();
+			Applic.argToaster(context, R.string.setunitfirst,Toast.LENGTH_SHORT);
 			return;
 		    }
 		    Natives.setsettings(unit,str2float(glow.getText().toString()), str2float(ghigh.getText().toString()), str2float(tlow.getText().toString()), str2float(thigh.getText().toString()));
@@ -682,7 +682,7 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 			if(librelinkbroadcast.isChecked()!=wasxdrip)  {
 				if(!wasxdrip) {
 					if(!bluetooth.isChecked()&&Natives.backuphostNr( )<=0) {
-						Toast.makeText(context, R.string.blueormirror,Toast.LENGTH_LONG).show();
+						Applic.argToaster(context, R.string.blueormirror,Toast.LENGTH_LONG);
 						}
 
 					final var 	starttime= Natives.laststarttime();

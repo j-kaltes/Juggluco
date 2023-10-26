@@ -343,7 +343,7 @@ try {
     if (mNfcAdapter == null) {
     	if(askNFC) {
 		Log.i(LOG_ID, "No NFC adapter found!");
-		Toast.makeText(this, getResources().getString(R.string.error_nfc_device_not_supported), Toast.LENGTH_SHORT).show();
+		Applic.argToaster(this, getResources().getString(R.string.error_nfc_device_not_supported), Toast.LENGTH_SHORT);
 		askNFC=false;
 		return;
 		}
@@ -351,7 +351,7 @@ try {
         if (!mNfcAdapter.isEnabled()) {
 	    if(!isWearable) {
 		if(askNFC) {
-			Toast.makeText(this, getResources().getString(R.string.error_nfc_disabled), Toast.LENGTH_LONG).show();
+			Applic.argToaster(this, getResources().getString(R.string.error_nfc_disabled), Toast.LENGTH_LONG);
 			if(Natives.backuphostNr( )==0) {
 				try {
 				   startActivity(new Intent(Settings.ACTION_NFC_SETTINGS));
@@ -524,7 +524,7 @@ synchronized void   startnfc(Tag tag) {
 
 private void outofStorageSpace() {
     String message= "Not enough Storage Space!!";
-    Toast.makeText(this,message,Toast.LENGTH_SHORT).show();
+    Applic.argToaster(this,message,Toast.LENGTH_SHORT);
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
     builder.setNegativeButton(R.string.ok, (dialog, id) -> { // User cancelled the dialog
     	finish();	
@@ -537,7 +537,7 @@ private void makefilesfailed() {
  	File files=getFilesDir();
 	String filespath=files.getAbsolutePath();
     String message= "Can't create directory:\n"+filespath+(files.isFile()?"\nA regular file with that name exists":"\nNot enough storage space?");
-    Toast.makeText(this,message,Toast.LENGTH_SHORT).show();
+    Applic.argToaster(this,message,Toast.LENGTH_SHORT);
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
     builder.setNegativeButton(R.string.ok, (dialog, id) -> { // User cancelled the dialog
     	finish();	
@@ -549,7 +549,7 @@ private void makefilesfailed() {
 
 void activateresult(boolean res) {
     String message= "Activation "+(res?"successfull":"failed");
-    Toast.makeText(this,message,Toast.LENGTH_SHORT).show();
+    Applic.argToaster(this,message,Toast.LENGTH_SHORT);
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
     builder.setNegativeButton(R.string.ok, (dialog, id) -> { // User cancelled the dialog
 	requestRender();
@@ -993,7 +993,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 						curve.dialogs.exportlabel.setText(R.string.failedbyexception);
 						return;
 					}
-					if (Natives.exportdata(type, fd)) {
+					if (Natives.exportdata(type, fd,Dialogs.showdays)) {
 						curve.dialogs.exportlabel.setText(R.string.saved);
 					} else {
 						curve.dialogs.exportlabel.setText(R.string.savefailed);

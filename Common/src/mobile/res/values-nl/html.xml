@@ -2098,6 +2098,7 @@ uit als deze app geen hoeveelheden ontvangt van een kloon-verbinding.</p>
 <string name="talkhelp" >
 <![CDATA[
 <h1>Praat</h1>
+<h2 class="western">Spreek glucose uit</h2>
 <p>Spreekt glucosewaarden uit als ze binnenkomen.</p>
 <p><b>Seconden er tussen</b>: Geeft aan hoeveel seconden Juggluco
 moet wachten voordat de volgende glucosewaarde wordt uitgesproken.
@@ -2105,7 +2106,6 @@ Glucosewaarden worden altijd direct uitgesproken als ze binnenkomen.
 Wanneer een grote waarde wordt gespecificeerd, zal Juggluco
 glucosewaarden overslaan die binnenkomen voordat deze tijdsperiode is
 verstreken.</p>
-<p><b>Actief</b>: schakel het in</p>
 <p><b>Spreker</b>: Selecteert een spreker uit een lijst met mogelijke
 sprekers.</p>
 <p><b>Snelheid</b>: een hoger getal betekent sneller praten.</p>
@@ -2138,7 +2138,24 @@ bepaalde plaatsen voor praten:</p>
 	<li><p>Lang indrukken van een hoeveelheid in de lijst met
 	hoeveelheden (links midden menu-&gt;lijst).</p>
 </ul>
+<h2 class="western">Spreek berichten uit</h2>
+<p>Leest berichten die tijdelijk zichtbaar zijn op het scherm en het
+resultaat van het scannen (foutmeldingen en de glucosewaarde).</p>
+<h2 class="western">Spreek alarmen uit</h2>
+<p>Spreekt het glucoseniveau uit tijdens alarmen voor lage en hoge
+glucose. Deze wordt zowel bij aanvang van het alarm uitgelezen als op
+het moment dat het alarm wordt gestopt.</p>
 <p><br/>
+<br/>
+
+</p>
+<p><br/>
+<br/>
+
+</p>
+<p><br/>
+<br/>
+<br/>
 <br/>
 
 </p>
@@ -2154,6 +2171,33 @@ moet je voor elk label aangeven hoe de onder dat label ingevoerde
 hoeveelheden moeten worden weergegeven. De labels zelf kunnen worden
 gemaakt, gewijzigd en verwijderd in het
 linkermenu-&gt;Instellingen-&gt;&quot;Nummerlabels&quot;.</p>
+<p><br/>
+<br/>
+
+</p>
+]]>
+</string>
+<string name="helpexport" >
+<![CDATA[
+<h1>Export</h1>
+<p>Exporteer gegevens uit Juggluco naar een bestand.</p>
+<p>Het meeste wordt opgeslagen in .tsv. Dit kan worden geladen in
+programma\'s als LibreOffice Calc, Microsoft Excel, Mathematica of R.
+Het is een soort .csv met tabs in plaats van komma\'s die worden
+gebruikt om items te scheiden. Tekens zijn gecodeerd in UTF8 (labels)
+of ASCII.</p>
+<p>De betekenis van de kolommen vindt je op
+<a href="https://www.juggluco.nl/Juggluco/webserver.html">https://www.juggluco.nl/Juggluco/webserver.html</a>
+.</p>
+<p><b>Dagen</b>: Vanaf Juggluco 7.1.0 kunt u het aantal dagen
+selecteren dat je wilt opslaan. De einddatum is de rechterrand van
+het scherm. Als je gegevens uit het verleden in Juggluco bekijkt,
+worden alleen oude gegevens geëxporteerd (hetzelfde als in het menu
+links in het midden -&gt; Statistiek).</p>
+<p>Vanaf Juggluco 7.1.0 is het ook mogelijk om deze gegevens te
+ontvangen via de webserver in Juggluco
+(linkermenu-&gt;Instellingen-&gt;Webserver), zie
+<a href="https://www.juggluco.nl/Juggluco/webserver.html">https://www.juggluco.nl/Juggluco/webserver.html</a></p>
 <p><br/>
 <br/>
 

@@ -25,12 +25,14 @@
 #include "settings/settings.h"
 
 template <class T> struct NumIter {
+	const T *startall;
 	const T *iter;
 	const T *begin;
 	const T *end;
 //	const T *pagenewest;
 //	const T *pageoldest;
 	int bytes;
+	int index;
 	void inc() {
 		iter=next();
 		}

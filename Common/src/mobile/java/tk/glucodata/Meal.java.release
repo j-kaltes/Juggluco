@@ -377,12 +377,12 @@ static void menuitem(MainActivity act, NumberView numb, int mealptr, int pos, In
 		}));
 	Save.setOnClickListener(v-> {
 		if(ingred[0]==-1) {
-			Toast.makeText(act,"You need to specify ingredient", Toast.LENGTH_SHORT).show();
+			Applic.argToaster(act,"You need to specify ingredient", Toast.LENGTH_SHORT);
 			return;
 			}
 		 float am=str2float( amount.getText().toString());
 		 if(am==0.0f) {
-			Toast.makeText(act,"You need to specify how much", Toast.LENGTH_SHORT).show();
+			Applic.argToaster(act,"You need to specify how much", Toast.LENGTH_SHORT);
 			return;
 		 	}	
 		int newmealptr=Natives.changemealitem(mealptr,pos,ingred[0],am);

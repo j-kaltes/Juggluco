@@ -175,9 +175,7 @@ static void setInsulin(MainActivity context, OpContext op) {
 	typestr.setPadding(laypad*2,0,0,laypad*5);
 	var ok=getbutton(context, R.string.save);
 	long[] newtime={lasttime};
-//        Date dat = new Date(lasttime);
-final	var datebutton=getbutton(context, DateFormat.getDateInstance(DateFormat.DEFAULT).format(lasttime));
-//        datebutton.setText(); timebutton.setText(DateFormat.getTimeInstance(DateFormat.SHORT).format(dat));
+	final	var datebutton=getbutton(context, DateFormat.getDateInstance(DateFormat.DEFAULT).format(lasttime));
 	var cal = Calendar.getInstance();
         datebutton.setOnClickListener(
                 v -> { 

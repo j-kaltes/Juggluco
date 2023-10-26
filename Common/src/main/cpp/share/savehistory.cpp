@@ -154,5 +154,8 @@ bool addStreamHistory(const jniHistory &hist,time_t nutime,int nuid, SensorGluco
 	LOGGER("glucose id=%d %.1f (%d) %ld %s",id,gv/180.0f,gv,was,ctime(&was));
 	save.saveel(pos,was,id, {0,gv,0x4000});
 	save.setendStreamhistory(pos+1);
+	if(!save.getstarthistory()) {
+		save.setstarthistory(pos);
+		}
 	return true;
 	}

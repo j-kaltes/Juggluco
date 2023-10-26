@@ -178,12 +178,12 @@ class GarminStatus {
 						String id = editid.getText().toString();
 						int idlen = id.length();
 						if (idlen != 32) {
-							Toast.makeText(context, "ID should be 32 characters long (now " + idlen + ")", Toast.LENGTH_SHORT).show();
+							Applic.argToaster(context, "ID should be 32 characters long (now " + idlen + ")", Toast.LENGTH_SHORT);
 							return;
 						}
 						if (!garminid.equals(id)) {
 							if (!(changed = Natives.setgarminid(id))) {
-								Toast.makeText(context, "Changed id failed", Toast.LENGTH_SHORT).show();
+								Applic.argToaster(context, "Changed id failed", Toast.LENGTH_SHORT);
 								return;
 							}
 
@@ -221,7 +221,7 @@ class GarminStatus {
 
 			@Override
 			public void onNothingSelected(AdapterView<?> parent) {
-				Toast.makeText(parent.getContext(), "Nothing selected", Toast.LENGTH_SHORT).show();
+				Applic.argToaster(parent.getContext(), "Nothing selected", Toast.LENGTH_SHORT);
 			}
 		});
 		RangeAdapter<IQDevice> adap = new RangeAdapter<>(alldata.devices, context, GarminStatus::displaystr);

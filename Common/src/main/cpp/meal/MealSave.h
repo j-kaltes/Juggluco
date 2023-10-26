@@ -30,6 +30,6 @@ class MealSave {
 		}
 	} was{0,0,0};
     public:
-	bool dostarttable(int handle,const Num * num);
-	bool savemeal(int handle,const Num *num); 
+	bool dostarttable(FILE* handle,const Num * num);
+	bool savemeal(FILE* handle,const Num *num); 
    };

@@ -287,4 +287,10 @@
 <string name="day_later">Dag later</string>
 <string name="week_back">Week terug</string>
 <string name="week_later">Week later</string>
+
+ <string name="talk_touch">Talk touch</string>
+
+ <string name="speakmessages">Spreek berichten uit</string>
+ <string name="speakalarms">Spreek alarmen uit</string>
+ <string name="speakglucose">Spreek glucose uit</string>
 </resources>

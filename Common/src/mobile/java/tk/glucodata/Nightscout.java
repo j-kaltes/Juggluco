@@ -107,7 +107,7 @@ public static void show(MainActivity context,View parent) {
 		v -> {
 		 var newkey=editkey.getText().toString();
 		 if(newkey.length()>=MAXKEY) {
-			Toast.makeText(context,newkey + context.getString(R.string.toolongsecret)+MAXKEY, Toast.LENGTH_LONG).show();
+			Applic.argToaster(context,newkey + context.getString(R.string.toolongsecret)+MAXKEY, Toast.LENGTH_LONG);
 			return;
 		 	}
 		 var portstr=portview.getText().toString();
@@ -117,29 +117,29 @@ public static void show(MainActivity context,View parent) {
                         }
                 catch(Throwable e) {
                         Log.stack(LOG_ID,"parseInt", e);
-			Toast.makeText(context,portstr+context.getString(R.string.invalidport), Toast.LENGTH_LONG).show();
+			Applic.argToaster(context,portstr+context.getString(R.string.invalidport), Toast.LENGTH_LONG);
 			return;
                         };
 		if(portstr.equals(getreceiveport())) {
-			Toast.makeText(context,"The port number should be different from the mirror port",Toast.LENGTH_LONG).show();
+			Applic.argToaster(context,"The port number should be different from the mirror port",Toast.LENGTH_LONG);
 			return;
 			}
 		if(portnum==17580) {
-			Toast.makeText(context,"The port number should be different from the http port",Toast.LENGTH_LONG).show();
+			Applic.argToaster(context,"The port number should be different from the http port",Toast.LENGTH_LONG);
 			return;
 			}	
 		if(portnum<1024||portnum> 65535) {
-			Toast.makeText(context,R.string.portrange,Toast.LENGTH_LONG).show();
+			Applic.argToaster(context,R.string.portrange,Toast.LENGTH_LONG);
 			return;
 			}
 		 if(!newkey.equals(oldkey[0])) {
 		 	oldkey[0]=newkey;
-			Toast.makeText(context,context.getString(R.string.newsecret)+newkey, Toast.LENGTH_LONG).show();
+			Applic.argToaster(context,context.getString(R.string.newsecret)+newkey, Toast.LENGTH_LONG);
 		 	Natives.setApiSecret(newkey);
 			}
 		if(portnum!= Natives.getsslport()) {
 			Natives.setsslport(portnum);
-			Toast.makeText(context,context.getString(R.string.newport)+portstr, Toast.LENGTH_LONG).show();
+			Applic.argToaster(context,context.getString(R.string.newport)+portstr, Toast.LENGTH_LONG);
 			if(Natives.getuseSSL())
 				Natives.setuseSSL(true);
 			}
@@ -190,7 +190,7 @@ public static void show(MainActivity context,View parent) {
 				enabled[0]=false;
 				sslbox.setChecked(!isChecked);
 				enabled[0]=true;
-				Toast.makeText(context, res, Toast.LENGTH_LONG).show();
+				Applic.argToaster(context, res, Toast.LENGTH_LONG);
 				}
 			else {
 				if(isChecked)

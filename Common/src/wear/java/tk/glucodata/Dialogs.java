@@ -25,6 +25,7 @@ package tk.glucodata;
 import android.widget.TextView;
 
 class Dialogs {
+	final static public int showdays=0;
 		public TextView exportlabel;
 	Dialogs(float density) { }
 	void showexport(MainActivity activity,int width,int height) { }

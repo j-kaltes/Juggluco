@@ -399,11 +399,11 @@ void makehostview(MainActivity act) {
 		final boolean sender= Amounts.isChecked()|| Stream.isChecked()|| Scans.isChecked();
 		final boolean receiver=receive.isChecked();
 		if(!sender&&!receiver) {
-			Toast.makeText(act, R.string.specifyreceiveordata,Toast.LENGTH_SHORT).show();
+			Applic.argToaster(act, R.string.specifyreceiveordata,Toast.LENGTH_SHORT);
 			return;
 			}
 		if(receiver&& Amounts.isChecked()&& Stream.isChecked()&& Scans.isChecked()) {
-			Toast.makeText(act,"When everything is sent to a host, \"Receive from\" should be turned off." ,Toast.LENGTH_LONG).show();
+			Applic.argToaster(act,"When everything is sent to a host, \"Receive from\" should be turned off." ,Toast.LENGTH_LONG);
 			return;
 			}		
 		hidekeyboard(act); //USE
@@ -424,7 +424,7 @@ void makehostview(MainActivity act) {
 			struse=ipmax;
 		if((testip.isChecked()&&!dodetect)||activeonly.isChecked()) {
 			if(struse==0) {
-				Toast.makeText(act, R.string.specifyip,Toast.LENGTH_SHORT).show();
+				Applic.argToaster(act, R.string.specifyip,Toast.LENGTH_SHORT);
 				return ;
 				}
 			}
@@ -443,7 +443,7 @@ void makehostview(MainActivity act) {
 				case -6: mess="Database busy, try again";break;
 				default: mess="Error";break;
 				}
-			Toast.makeText(act,mess,Toast.LENGTH_SHORT).show();
+			Applic.argToaster(act,mess,Toast.LENGTH_SHORT);
 			return ;
 			}	
 		configchanged=true;

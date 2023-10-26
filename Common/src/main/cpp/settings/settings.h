@@ -230,8 +230,10 @@ struct Tings {
 
 	char newYuApiKey3[41];
 
-	bool reserved9:7;//*
-	bool talktouch:1;//*
+	bool reserved9:5;//*
+	bool speakmessages:1;
+	bool speakalarms:1;
+	bool talktouch:1;
 	uint16_t sslport;
 	int32_t libre3NUMiter;
 

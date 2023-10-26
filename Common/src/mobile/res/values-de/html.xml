@@ -2683,13 +2683,13 @@ Option.</p>
 <string name="talkhelp" >
 <![CDATA[
 <h1>Sprechen</h1>
+<h2 class="western">Glukose sprechen</h2>
 <p>Sagt Glukosewerte, wenn sie eintreffen.</p>
 <p><b>Sekunden zwischen</b> : Gibt an, wie viele Sekunden Juggluco
 warten soll, bevor der nächste Glukosewert angezeigt wird.
 Glukosewerte werden immer sofort angesagt, wenn sie eintreffen. Wenn
 ein großer Wert angegeben wird, überspringt Juggluco Glukosewerte,
 die vor Ablauf dieses Zeitraums eintreffen.</p>
-<p><b>Aktiv</b>: Einschalten</p>
 <p><b>Sprecher</b>: Wählt einen Sprecher aus einer Liste möglicher
 Sprecher aus.</p>
 <p><b>Geschwindigkeit</b>: Eine höhere Zahl bedeutet schnelleres
@@ -2724,7 +2724,17 @@ Berühren bestimmter Stellen Sprechen erzeugt:</p>
 	<li><p>Langes Drücken auf eine Menge in der Mengenliste (linkes
 	mittleres Menü -&gt; Liste).</p>
 </ul>
+<h2 class="western">Mitteilungen sprechen</h2>
+<p>Liest Textnachrichten, die vorübergehend auf dem Bildschirm
+angezeigt werden, und das Ergebnis des Scans (Fehlermeldungen und
+Glukosewert).</p>
+<h2 class="western">Alarme sprechen</h2>
+<p>Liest den Glukosespiegel bei Alarmen für niedrigen und hohen
+Glukosespiegel vor. Es wird sowohl zu Beginn des Alarms als auch zum
+Zeitpunkt des Stoppens des Alarms gelesen.</p>
 <p><br/>
+<br/>
+<br/>
 <br/>
 
 </p>
@@ -2740,6 +2750,34 @@ können , müssen Sie für jedes Etikett festlegen, wie die unter
 diesem Etikett eingegebenen Mengen ausgegeben werden sollen. Die
 Etiketten selbst können im linken Menü -&gt; Einstellungen -&gt;
 &quot;Zahlenetiketten“ erstellt, geändert und gelöscht werden.</p>
+<p><br/>
+<br/>
+
+</p>
+]]>
+</string>
+<string name="helpexport" >
+<![CDATA[
+<h1>Export</h1>
+<p>Exportieren Sie Daten aus Juggluco in eine Datei.</p>
+<p>Die meisten werden im .tsv-Format gespeichert und können in
+Programme wie LibreOffice Calc, Microsoft Excel, Mathematica oder R
+geladen werden. Es handelt sich um eine Art .csv-Datei mit
+Tabulatoren anstelle von Kommas, die zum Trennen von Elementen
+verwendet werden. Zeichen werden UTF8 (Zahlenetiketten) oder ASCII
+codiert.</p>
+<p>Die Bedeutung der Spalten finden Sie unter
+<a href="https://www.juggluco.nl/Juggluco/webserver.html">https://www.juggluco.nl/Juggluco/webserver.html</a>
+.</p>
+<p><b>Tage</b>: Ab Juggluco 7.1.0 können Sie die Anzahl der zu
+speichernden Tage auswählen. Das Enddatum ist der rechte Rand des
+Bildschirms. Wenn Sie frühere Daten in Juggluco anzeigen, werden nur
+alte Daten exportiert (dasselbe wie im linken mittleren Menü -&gt;
+Statistiken).</p>
+<p>Ab Juggluco 7.1.0 ist es auch möglich, diese Daten über den
+Webserver in Juggluco zu empfangen (Linkes
+Menü-&gt;Einstellungen-&gt;Webserver), siehe
+<a href="https://www.juggluco.nl/Juggluco/webserver.html">https://www.juggluco.nl/Juggluco/webserver.html</a></p>
 <p><br/>
 <br/>
 

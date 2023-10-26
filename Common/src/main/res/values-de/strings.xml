@@ -293,4 +293,7 @@
 <string name="day_later">Tag später</string>
 <string name="week_back">Woche zurück</string>
 <string name="week_later">Woche später</string>
+ <string name="speakmessages">Mitteilungen sprechen</string>
+  <string name="speakalarms">Alarme sprechen</string>
+  <string name="speakglucose">Glukose sprechen</string>
 </resources>

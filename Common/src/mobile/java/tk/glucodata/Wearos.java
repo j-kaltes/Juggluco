@@ -186,7 +186,7 @@ static public void show(MainActivity context,View parent) {
 	Help.setOnClickListener(v-> help.help(R.string.wearosinfo,context));
 	var spin=mkspinner(context);
 	if(spin==null) {
-        	Toast.makeText(context, R.string.nowatchesfound , Toast.LENGTH_SHORT).show();
+        	Applic.argToaster(context, R.string.nowatchesfound , Toast.LENGTH_SHORT);
 		return;
 		}
 	float density=GlucoseCurve.metrics.density;

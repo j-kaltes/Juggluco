@@ -1176,7 +1176,7 @@ static bool		showerror(NVGcontext* genVG,const string_view str1,const string_vie
 	nvgTextAlign(genVG,NVG_ALIGN_LEFT|NVG_ALIGN_MIDDLE);
 	nvgTextBox( genVG, dleft+dwidth/10, dtop+dheight/2, dwidth*8/10, str2.begin(), str2.end());
 
-	if(speakout) {
+	if(settings->data()->speakmessages) {
 		char buf[str1.size()+str2.size()+2+10];
 		memcpy(buf,str1.data(),str1.size());
 		char *ptr=buf+str1.size();
@@ -1284,7 +1284,8 @@ static void	showscanner(NVGcontext* genVG,const SensorGlucoseData *hist,int scan
 	nvgTextAlign(genVG,NVG_ALIGN_LEFT|NVG_ALIGN_MIDDLE);
 	nvgText(genVG,bounds[0] -sensleft,yunder, sensorname->begin(), sensorname->end());
 #ifndef WEAROS
-	if(speakout) {
+
+	if(settings->data()->speakmessages) {
 		char value[256];
 		char *ptr;
 		if((nu-tim)>=3*60) {
@@ -1578,10 +1579,17 @@ void drawarrow(NVGcontext* genVG, float rate,float getx,float gety) {
 
 			}
 	}
-float glucosevaluex=-1,glucosevaluey=-1,glucosevalue;
-int glucosetrend=0;
+struct shownglucose_t {
+union {
+const char *errortext=nullptr;
+int glucosetrend;
+};
+float glucosevalue=0;
+float glucosevaluex=-1,glucosevaluey=-1;
+} ;
+std::vector<shownglucose_t> shownglucose;
 
-void showvalue(const ScanData *poll,const sensorname_t *sensorname, float getx,float gety) {
+void showvalue(const ScanData *poll,const sensorname_t *sensorname, float getx,float gety,int index) {
 	LOGGER("showvalue %s\n",sensorname->data());
 	float sensory= gety+headsize/3.1;
 	nvgFillColor(genVG, *getblack());
@@ -1597,8 +1605,8 @@ void showvalue(const ScanData *poll,const sensorname_t *sensorname, float getx,f
 	const uint32_t nonconvert= 40;
 #endif
 	nvgFontSize(genVG, headsize*.8);
-	glucosevaluex=getx;
-	glucosevaluey=sensory;
+	shownglucose[index].glucosevaluex=getx;
+shownglucose[index].glucosevaluey=sensory;
 	if(nonconvert<glucoselowest) {
 const				float valuex=getx;
 
@@ -1617,8 +1625,8 @@ const				float valuex=getx;
 #else
 			const float convglucose= gconvert(nonconvert*10);
 #endif
-	glucosevalue=convglucose;
-	glucosetrend=poll->tr;
+		shownglucose[index].glucosevalue=convglucose;
+		shownglucose[index].glucosetrend=poll->tr;
 
 			float valuex=getx-(convglucose>=10.0f?density*20.0f:0.0f);
 			int gllen=snprintf(head,maxhead,gformat,convglucose);
@@ -1638,12 +1646,12 @@ float				getboxwidth(const float x) {
 					}
 
 //#define DOTEST 1
-const char *errortext=nullptr;
-static int showerrorvalue(const SensorGlucoseData *sens,const time_t nu,float getx,float gety) {
-	glucosevalue=0;
+static int showerrorvalue(const SensorGlucoseData *sens,const time_t nu,float getx,float gety,int index) {
+ 
+	shownglucose[index].glucosevalue=0;
 	getx-=headsize/3;
-       glucosevaluex=getx;
-       glucosevaluey=gety+headsize*.5;
+	shownglucose[index].glucosevaluex=getx;
+	shownglucose[index].glucosevaluey=gety+headsize*.5;
 	nvgTextAlign(genVG,NVG_ALIGN_LEFT|NVG_ALIGN_MIDDLE);
 	nvgFontSize(genVG,headsize/6 );
 	if(settings->data()->nobluetooth) {
@@ -1671,7 +1679,7 @@ static int showerrorvalue(const SensorGlucoseData *sens,const time_t nu,float ge
 					memcpy(buf+senslen,sensorerror.data(), sensorerror.size());
 					auto boxwidth= getboxwidth(getx);
 					nvgTextBox(genVG,  getx, gety, boxwidth, buf, buf+sensorerror.size()+senslen);
-					errortext=sensorerror.data();
+					shownglucose[index].errortext=sensorerror.data();
 					}
 				else {
 				   int state=sens->getinfo()->patchState;
@@ -1680,7 +1688,7 @@ static int showerrorvalue(const SensorGlucoseData *sens,const time_t nu,float ge
 					static char buf[256];
 					int len=snprintf(buf,sizeof(buf)-1,format.data(),sens->showsensorname().data(),state);
 					nvgTextBox(genVG,  getx, gety, getboxwidth(getx),buf, buf+len);
-					errortext=buf;
+					shownglucose[index].errortext=buf;
 					} 
 				else {
 					char buf[usedtext->noconnectionerror.size()+17];
@@ -1688,7 +1696,7 @@ static int showerrorvalue(const SensorGlucoseData *sens,const time_t nu,float ge
 					memcpy(buf,sens->showsensorname().data(),senslen);
 					memcpy(buf+senslen,usedtext->noconnectionerror.data(), usedtext->noconnectionerror.size());
 					nvgTextBox(genVG,  getx, gety, getboxwidth(getx),buf, buf+usedtext->noconnectionerror.size()+senslen);
-					errortext=usedtext->noconnectionerror.data();
+					shownglucose[index].errortext=usedtext->noconnectionerror.data();
 					}
 					}
 				return 0;
@@ -1705,8 +1713,10 @@ static void showlastsstream(const time_t nu,const float getx,std::vector<int> &u
 	bool neterror=false,usebluetoothoff=false,bluetoothoff=false,otherproblem=false;
 	static int failures=0;
 	++failures;
+	shownglucose.resize(used.size());
 
 	for(int i=0;i<used.size();i++) {
+		shownglucose[i].glucosevaluex=-1;
 		const int sensorindex=used[i];
 		SensorGlucoseData *hist=sensors->getSensorData(sensorindex);
 		int yh=i*2+1;
@@ -1726,7 +1736,7 @@ static void showlastsstream(const time_t nu,const float getx,std::vector<int> &u
 				float sensory= gety+headsize/3.1f;
 				nvgRect(genVG, getx+sensorbounds.left, sensorbounds.top+sensory, relage*sensorbounds.width, sensorbounds.height);
 				nvgFill(genVG);
-				showvalue(poll,hist->shortsensorname(),getx,gety);
+				showvalue(poll,hist->shortsensorname(),getx,gety,i);
 				success=true;
 				if(!hist->isLibre3()) {
 					 if(settings->data()->libreIsViewed) {
@@ -1741,7 +1751,7 @@ static void showlastsstream(const time_t nu,const float getx,std::vector<int> &u
 				}
 			else {
 				LOGAR("age>=maxbluetoothage");
-				switch(showerrorvalue(hist,nu,getx,gety)) {
+				switch(showerrorvalue(hist,nu,getx,gety,i)) {
 					case 1: neterror=true;break;
 					case 2: usebluetoothoff=true;break;
 					case 3: bluetoothoff=true;break;
@@ -1769,10 +1779,10 @@ static void showlastsstream(const time_t nu,const float getx,std::vector<int> &u
 				int ends=sprintf(buf,isInitialised?usedtext->readysec.data():usedtext->readysecEnable.data(),minutes);
 				getboxwidth(usegetx);
 				nvgTextBox(genVG,  usegetx, gety, getboxwidth(usegetx), buf,buf+ends);
-				errortext=buf;
-				glucosevalue=0;
-			       glucosevaluex=usegetx;
-       				glucosevaluey=gety+headsize*.5;
+				shownglucose[i].errortext=buf;
+				shownglucose[i].glucosevalue=0;
+				shownglucose[i].glucosevaluex=usegetx;
+				shownglucose[i].glucosevaluey=gety+headsize*.5;
 				}
 			else
 				LOGSTRING("wait>=(60*60)\n");
@@ -1780,6 +1790,8 @@ static void showlastsstream(const time_t nu,const float getx,std::vector<int> &u
 
 		}
 	if(!success&&!otherproblem) {
+		int i=0;
+		shownglucose.resize(1);
 		LOGAR("!success&&!otherproblem) ");
 		int newgetx=getx-headsize/3;
 		nvgTextAlign(genVG,NVG_ALIGN_LEFT|NVG_ALIGN_MIDDLE);
@@ -1788,26 +1800,27 @@ static void showlastsstream(const time_t nu,const float getx,std::vector<int> &u
 		if(neterror) {
 //			nvgText(genVG,newgetx ,gety, usedtext->networkproblem.begin(), usedtext->networkproblem.end());
 			nvgTextBox(genVG,  newgetx, gety, getboxwidth(newgetx), usedtext->networkproblem.begin(), usedtext->networkproblem.end());
-				glucosevalue=0;
-			       glucosevaluex=newgetx;
-       				glucosevaluey=gety+headsize*.5;
-			errortext=usedtext->networkproblem.data();
+				shownglucose[i].glucosevalue=0;
+			       shownglucose[i].glucosevaluex=newgetx;
+       				shownglucose[i].glucosevaluey=gety+headsize*.5;
+				shownglucose[i].errortext=usedtext->networkproblem.data();
+
 
 			}
 		else { if(usebluetoothoff) {
 		   nvgText(genVG,newgetx ,gety, usedtext->useBluetoothOff.begin(), usedtext->useBluetoothOff.end());
-				glucosevalue=0;
-			       glucosevaluex=newgetx;
-       				glucosevaluey=gety+headsize*.5;
-			errortext=usedtext->useBluetoothOff.data();
+				shownglucose[i].glucosevalue=0;
+			       shownglucose[i].glucosevaluex=newgetx;
+       				shownglucose[i].glucosevaluey=gety+headsize*.5;
+			shownglucose[i].errortext=usedtext->useBluetoothOff.data();
 		   }
 		   else {
 		   	if(bluetoothoff) {
 				nvgText(genVG,newgetx ,gety, usedtext->enablebluetooth.begin(), usedtext->enablebluetooth.end());
-				glucosevalue=0;
-			       glucosevaluex=newgetx;
-       				glucosevaluey=gety+headsize*.5;
-				errortext=usedtext->enablebluetooth.data();
+				shownglucose[i].glucosevalue=0;
+			       shownglucose[i].glucosevaluex=newgetx;
+       				shownglucose[i].glucosevaluey=gety+headsize*.5;
+				shownglucose[i].errortext=usedtext->enablebluetooth.data();
 				}
 				}
 				}
@@ -2329,7 +2342,6 @@ void withoutredisplay(NVGcontext* genVG,uint32_t nu,uint32_t endtime)  {
 } */
 time_t lastviewtime=0;
 int onestep() {
-       glucosevaluex=-1;
 	LOGAR("onestep");
 	time_t nu=time(nullptr);
 	lastviewtime=nu;
@@ -2867,26 +2879,28 @@ int64_t screentap(float x,float y) {
 			}
 #ifndef WEAROS
 		if(speakout) {
-			LOGGER("x=%f [%f,%f] y=%f [%f,%f] trend=%d\n", x, glucosevaluex,
-				   (glucosevaluex + headsize), y, (glucosevaluey - headsize), glucosevaluey,
-				   glucosetrend);
-			if (glucosevaluex > 0 && x > glucosevaluex && x < (glucosevaluex + headsize*1.2f) &&
-				y < glucosevaluey && y > (glucosevaluey - headsize*.8f)) {
-				if(glucosevalue > 0) {
-					constexpr const int maxvalue = 80;
-					char value[maxvalue];
-					auto trend = usedtext->trends[glucosetrend];
-					memcpy(value, trend.data(), trend.size());
-					char *ptr = value + trend.size();
-					*ptr++ = '\n';
-					snprintf(ptr, maxvalue, gformat, glucosevalue);
-					speak(value);
-					return -1LL;
-				} else {
-					if (errortext)  {
-						speak(errortext);
+			for(auto &el:shownglucose) {
+				LOGGER("x=%f [%f,%f] y=%f [%f,%f] trend=%d\n", x,el.glucosevaluex,
+					   (el.glucosevaluex + headsize), y, (el.glucosevaluey - headsize),el.glucosevaluey,
+					  el.glucosetrend);
+				if (el.glucosevaluex > 0 && x > el.glucosevaluex && x < (el.glucosevaluex + headsize*1.2f) &&
+					y < el.glucosevaluey && y > (el.glucosevaluey - headsize*.8f)) {
+					if(el.glucosevalue > 0) {
+						constexpr const int maxvalue = 80;
+						char value[maxvalue];
+						auto trend = usedtext->trends[el.glucosetrend];
+						memcpy(value, trend.data(), trend.size());
+						char *ptr = value + trend.size();
+						*ptr++ = '\n';
+						snprintf(ptr, maxvalue, gformat, el.glucosevalue);
+						speak(value);
 						return -1LL;
-						}
+					} else {
+						if (el.errortext)  {
+							speak(el.errortext);
+							return -1LL;
+							}
+					}
 				}
 			}
 		}
@@ -3745,7 +3759,6 @@ void setfloatptr() {
 	menuopt0b[6]=&settings->data()->floatglucose;
 	}
 
-static std::string_view	nothing="          ";
 void setnewamount() {
 
 	int newamountoff=

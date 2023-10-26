@@ -124,9 +124,9 @@ void saveall(View v) {
 			int ret;
 			if((ret=Natives.setShortcut(i,(String)el.get(0),(String)el.get(1)))!=-1) {
 				if(ret==-5)
-					Toast.makeText(v.getContext(), "index "+i+" too large", Toast.LENGTH_SHORT).show();
+					Applic.argToaster(v.getContext(), "index "+i+" too large", Toast.LENGTH_SHORT);
 				else
-					Toast.makeText(v.getContext(), (String)el.get(ret)+" too long", Toast.LENGTH_SHORT).show();
+					Applic.argToaster(v.getContext(), (String)el.get(ret)+" too long", Toast.LENGTH_SHORT);
 				return;
 				}
 			}

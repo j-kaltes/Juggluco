@@ -302,5 +302,8 @@
  <string name="week_back">Week back</string>
  <string name="week_later">Week later</string>
  <string name="talk_touch">Talk touch</string>
+ <string name="speakmessages">Speak messages</string>
+ <string name="speakalarms">Speak alarms</string>
+ <string name="speakglucose">Speak glucose</string>
 
 </resources>

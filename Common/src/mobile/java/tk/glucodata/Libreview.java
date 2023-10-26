@@ -640,14 +640,14 @@ private static void getAccountid(MainActivity context, 	Predicate<Boolean> getge
 					long id = Long.parseLong(idstr);
 					Natives.setlibreAccountIDnumber(id);
 
-					Toast.makeText(context, context.getString(R.string.saved)+ " "+ id, Toast.LENGTH_SHORT).show();
+					Applic.argToaster(context, context.getString(R.string.saved)+ " "+ id, Toast.LENGTH_SHORT);
 				} else {
 
-					Toast.makeText(context, context.getString(R.string.noaccountidspecified), Toast.LENGTH_SHORT).show();
+					Applic.argToaster(context, context.getString(R.string.noaccountidspecified), Toast.LENGTH_SHORT);
 					return;
 				}
 			} catch (Throwable th) {
-				Toast.makeText(context, context.getString(R.string.wrongformat) + idstr, Toast.LENGTH_SHORT).show();
+				Applic.argToaster(context, context.getString(R.string.wrongformat) + idstr, Toast.LENGTH_SHORT);
 				Log.stack(LOG_ID, "parse account id", th);
 				return;
 			}
@@ -771,19 +771,19 @@ var space=getlabel(act,"        ");
 			String passstr=editpass.getText().toString();
 			if(use) {
 				if(emailstr.length()<3) {
-					Toast.makeText(act, act.getString( R.string.emailaddresstooshort)+emailstr, Toast.LENGTH_SHORT).show();
+					Applic.argToaster(act, act.getString( R.string.emailaddresstooshort)+emailstr, Toast.LENGTH_SHORT);
 					return false;
 					}
 				if(emailstr.length()>255) {
-					Toast.makeText(act,  act.getString( R.string.emailaddresstoolong)+emailstr, Toast.LENGTH_SHORT).show();
+					Applic.argToaster(act,  act.getString( R.string.emailaddresstoolong)+emailstr, Toast.LENGTH_SHORT);
 					return false;
 					}
 				if(passstr.length()<3) {
-					Toast.makeText(act, act.getString(R.string.password8)+passstr, Toast.LENGTH_SHORT).show();
+					Applic.argToaster(act, act.getString(R.string.password8)+passstr, Toast.LENGTH_SHORT);
 					return false;
 					}
 				if(passstr.length()>36) {
-					Toast.makeText(act,  act.getString(R.string.password36)+passstr, Toast.LENGTH_SHORT).show();
+					Applic.argToaster(act,  act.getString(R.string.password36)+passstr, Toast.LENGTH_SHORT);
 					return false;
 					}
 				}	

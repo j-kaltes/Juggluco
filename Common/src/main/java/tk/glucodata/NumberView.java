@@ -623,12 +623,10 @@ Log.i(LOG_ID, "getdateviewal");
         Button ok=new Button(activity);
         ok.setText(R.string.ok);
         ok.setOnClickListener(vi -> {
-	//	activity.doonback();
 		if(keyboard!=null)
 			EnableControls(keyboard,true);
 		datepicker.setVisibility(GONE);
 		if(newnumview!=null) EnableControls(newnumview,true);
-              // datepicker.setVisibility(GONE);
 		int day=datepick.getDayOfMonth();
 		int month=datepick.getMonth();
 		int year=datepick.getYear();

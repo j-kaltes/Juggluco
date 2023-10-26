@@ -137,10 +137,10 @@ val updater:Runnable= object: Runnable{
             if(event.accuracy>=SENSOR_STATUS_ACCURACY_LOW){
 //            if(event.accuracy==SENSOR_STATUS_ACCURACY_MEDIUM||event.accuracy==SENSOR_STATUS_ACCURACY_HIGH) 
                 heartrate= event.values[0]
-                Log.i( LOG_ID, "onSensorChanged accuracy=" + event.accuracy + " HR=" + heartrate);
+              //  Log.i( LOG_ID, "onSensorChanged accuracy=" + event.accuracy + " HR=" + heartrate);
             }
             else {
-                Log.i(LOG_ID, "onSensorChanged low accuracy=${event.accuracy} HR=${event.values[0]}");
+               // Log.i(LOG_ID, "onSensorChanged low accuracy=${event.accuracy} HR=${event.values[0]}");
                 heartrate= Float.NaN
             }
         }

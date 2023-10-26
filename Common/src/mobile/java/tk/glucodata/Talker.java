@@ -256,7 +256,7 @@ public static void config(MainActivity context) {
 	var pitchlabel=getlabel(context,context.getString(R.string.pitch));
 	pitchlabel.setPadding(0,pad*5,0,0);
 	var voicelabel=getlabel(context,context.getString(R.string.talker));
-       var active=getcheckbox(context,R.string.active, SuperGattCallback.dotalk);
+       var active=getcheckbox(context,R.string.speakglucose, SuperGattCallback.dotalk);
 	active.setPadding(0,0,pad*3,0);
 
 	var test=getbutton(context,context.getString(R.string.test));
@@ -285,15 +285,17 @@ public static void config(MainActivity context) {
 		if(voicepos>=0&&voicepos<voiceChoice.size())
 			spin.setSelection(voicepos);
 		spinpos[0]=-1;
-		 firstrow=new View[]{seplabel,separation,voicelabel,spin,active};
+		 firstrow=new View[]{active,seplabel,separation,voicelabel,spin};
 		}
 	else {
 		var space=new Space(context);
 		space.setMinimumWidth((int)(width*0.4));
-		 firstrow=new View[]{seplabel,separation,space,active};
+		 firstrow=new View[]{active,seplabel,separation,space};
 		 }
 	var touchtalk= getcheckbox(context,context.getString(R.string.talk_touch), Natives.gettouchtalk());
-	var secondrow=new View[]{touchtalk};
+	var speakmessages= getcheckbox(context,context.getString(R.string.speakmessages), Natives.speakmessages());
+	var speakalarms= getcheckbox(context,context.getString(R.string.speakalarms), Natives.speakalarms());
+	var secondrow=new View[]{touchtalk, speakmessages, speakalarms };
 	var layout=new Layout(context,(l,w,h)-> {
 //		if(width>w) l.setX((width-w)/2);
 		return new int[] {w,h};
@@ -342,20 +344,17 @@ public static void config(MainActivity context) {
 	save.setOnClickListener(v->  {
 		getvalues.run();
 		
-		if(active.isChecked()||touchtalk.isChecked()) {
+		if(active.isChecked()||touchtalk.isChecked()||speakmessages.isChecked()||speakalarms.isChecked()) {
 			SuperGattCallback.newtalker(context);
-			if(active.isChecked())
-				SuperGattCallback.dotalk=true;
-			else
-				SuperGattCallback.dotalk=false;
-			if(touchtalk.isChecked()) {
-				settouchtalk(true);
-				}
-			else
-				settouchtalk(false);
+			SuperGattCallback.dotalk = active.isChecked();
+			settouchtalk(touchtalk.isChecked());
+			Natives.setspeakmessages(speakmessages.isChecked());
+			Natives.setspeakalarms(speakalarms.isChecked());
 			}
 		else {
 			settouchtalk(false);
+			Natives.setspeakmessages(false);
+			Natives.setspeakalarms(false);
 			SuperGattCallback.endtalk();
 			}
 		Natives.saveVoice(curspeed,curpitch,(int)(cursep/1000L),voicepos,SuperGattCallback.dotalk);

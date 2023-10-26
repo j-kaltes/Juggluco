@@ -435,8 +435,14 @@ extern "C" JNIEXPORT jlong JNICALL fromjava(getstarttime) (JNIEnv *env, jclass c
 	};
 
 extern "C" JNIEXPORT jlong JNICALL fromjava(getendtime) (JNIEnv *env, jclass clazz) {
-	return (static_cast<jlong>(starttime)+duration)*1000l;
+	auto end=	std::min(starttime+duration,(uint32_t)time(nullptr));
+	return static_cast<jlong>(end)*1000l;
 	};
+
+extern uint32_t mintime();
+extern "C" JNIEXPORT jlong JNICALL fromjava(oldestdatatime)(JNIEnv *env, jclass thiz) {
+	return static_cast<jlong>(mintime())*1000l;
+		}
 
 void stopsearch() ;
 extern "C" JNIEXPORT void JNICALL fromjava(stopsearch) (JNIEnv *env, jclass clazz) {
@@ -606,6 +612,22 @@ extern "C" JNIEXPORT void JNICALL fromjava(settouchtalk)(JNIEnv *env, jclass thi
 extern "C" JNIEXPORT jboolean JNICALL fromjava(gettouchtalk)(JNIEnv *env, jclass thiz) {
 	return speakout;
 	}
+extern "C" JNIEXPORT void JNICALL fromjava(setspeakmessages)(JNIEnv *env, jclass thiz,jboolean val) {
+
+	settings->data()->speakmessages=val;
+	}
+
+extern "C" JNIEXPORT jboolean JNICALL fromjava(speakmessages)(JNIEnv *env, jclass thiz) {
+	return settings->data()->speakmessages;
+	}
+extern "C" JNIEXPORT void JNICALL fromjava(setspeakalarms)(JNIEnv *env, jclass thiz,jboolean val) {
+
+	settings->data()->speakalarms=val;
+	}
+
+extern "C" JNIEXPORT jboolean JNICALL fromjava(speakalarms)(JNIEnv *env, jclass thiz) {
+	return settings->data()->speakalarms;
+	}
 extern	const SensorGlucoseData *getlaststream(const uint32_t nu);
 extern "C" JNIEXPORT void JNICALL fromjava(saylastglucose)(JNIEnv *env, jclass thiz) {
 	if(speakout) {
@@ -669,3 +691,4 @@ extern "C" JNIEXPORT jboolean JNICALL fromjava(showlastscan)(JNIEnv *env, jclass
 	}
 
 #endif
+

@@ -93,24 +93,17 @@ constexpr const  std::string_view endhtml(R"(</div></body></html>)");
    
 
 
-bool dostarthtml(int handle) {
-	return write(handle,starthtml,startlen)==startlen;
+bool dostarthtml(FILE * handle) {
+	return fwrite(starthtml,1,startlen,handle)==startlen;
 	}
 
 
-bool writeview(int handle,std::string_view str) {
-	return write(handle,str.data(),str.size())==str.size();
+bool writeview(FILE * handle,std::string_view str) {
+	return fwrite(str.data(),1,str.size(),handle)==str.size();
 	}
 #include "nums/num.h"
-bool MealSave::dostarttable(int handle,const Num * num) {
+bool MealSave::dostarttable(FILE * handle,const Num * num) {
 	const time_t dat=num->gettime();
-	/*
-      static struct { 
-      	int day,month,year;
-	bool different(struct tm &tm) const {
-		return tm.tm_mday!=day||tm.tm_mon!=month||tm.tm_year!=year;
-		}
-	} was{0,0,0}; */
       struct tm tmbuf;
       localtime_r(&dat, &tmbuf);
       if(was.different(tmbuf)) {
@@ -127,7 +120,7 @@ bool MealSave::dostarttable(int handle,const Num * num) {
 	was={tmbuf.tm_mday,tmbuf.tm_mon,tmbuf.tm_year};
       	  }
 
-	if(write(handle,starttable,starttablelen)!=starttablelen)
+	if(fwrite(starttable,1,starttablelen,handle)!=starttablelen)
 		return false;
 	constexpr const int buflen=60;
 	char buf[buflen];
@@ -138,40 +131,41 @@ bool MealSave::dostarttable(int handle,const Num * num) {
 //	int len=snprintf(buf,buflen,"%d-%02d-%02d-%02d:%02d",1900+tmbuf.tm_year,tmbuf.tm_mon+1,tmbuf.tm_mday,tmbuf.tm_hour,tmbuf.tm_min);
         len+=strftime(buf+len,buflen-len,R"( <b>%a %b %e %H:%M %Y</b>)",  &tmbuf);
 
-	if(write(handle,buf,len)!=len)
+	if(fwrite(buf,1,len,handle)!=len)
 		return false;
-	return write(handle,endhead,endheadlen)==endheadlen;
+	return fwrite(endhead,1,endheadlen,handle)==endheadlen;
 	}
-bool doendtable(int handle,float total) {
-	if(write(handle,startfoot.data(),startfoot.size())!=startfoot.size())
+#define writef(handle,data,size) fwrite(data,1,size,handle)
+bool doendtable(FILE* handle,float total) {
+	if(writef(handle,startfoot.data(),startfoot.size())!=startfoot.size())
 		return false;
 	constexpr const int  buflen=10;
 	char buf[buflen];
 	int len=snprintf(buf,buflen,"%.1f",total);
-	if(write(handle,buf,len)!=len)
+	if(writef(handle,buf,len)!=len)
 		return false;
-	if(write(handle,endtable.data(),endtable.size())!=endtable.size())
+	if(writef(handle,endtable.data(),endtable.size())!=endtable.size())
 		return false;
 	return true;
 	}
 
-bool writetabitem(int handle,std::string_view item,const std::string_view td=R"(<td>)") {
-	if(write(handle,td.data(),td.size())!=td.size())
+bool writetabitem(FILE* handle,std::string_view item,const std::string_view td=R"(<td>)") {
+	if(writef(handle,td.data(),td.size())!=td.size())
 		return false;
-	if(write(handle,item.data(),item.size())!=item.size())
+	if(writef(handle,item.data(),item.size())!=item.size())
 		return false;
 
 	constexpr const char itemend[]="</td>\n";
 	constexpr const int itemendlen=sizeof(itemend)-1;
-	if(write(handle,itemend,itemendlen)!=itemendlen)
+	if(writef(handle,itemend,itemendlen)!=itemendlen)
 		return false;
 	return true;
 	}
-bool writetabnumitem(int handle,std::string_view item) {
+bool writetabnumitem(FILE* handle,std::string_view item) {
 	return writetabitem(handle,item,R"(<td  style="text-align:right" >)");
 	}
 //savemeal(int handle,uint32_t date,const int index)  
-bool MealSave::savemeal(int handle,const Num *num)  {
+bool MealSave::savemeal(FILE* handle,const Num *num)  {
 	const int index=num->mealptr;
 	extern Meal *meals;
 
@@ -189,7 +183,7 @@ bool MealSave::savemeal(int handle,const Num *num)  {
 	for(int i=0;i<nr;i++) {
 		if(!ameal.valid(i))
 			 continue;
-		if(write(handle,rowstart,startlen)!=startlen)
+		if(writef(handle,rowstart,startlen)!=startlen)
 			return false;
 		 const ingredient_t *ingr=ameal.ingredient(i);
 		if(!writetabitem(handle, ingr->name.data()))
@@ -210,7 +204,7 @@ bool MealSave::savemeal(int handle,const Num *num)  {
 		 len=snprintf(buf,buflen,"%.1f",carbitem);
 		if(!writetabnumitem(handle, std::string_view(buf,len)))
 			return false;
-		if(write(handle,rowend,endlen)!=endlen)
+		if(writef(handle,rowend,endlen)!=endlen)
 			return false;
 		totmeal+=carbitem;
 		}
@@ -218,14 +212,26 @@ bool MealSave::savemeal(int handle,const Num *num)  {
 	 }
 
 #include "destruct.h"
-extern bool savemeals(int handle) ;
-bool allsavemeals(int handle) {
-	destruct dest([handle]() {close(handle);});
-	if(!(dostarthtml(handle)&&savemeals(handle)))
+
+extern bool allsavemeals(int handle,uint32_t starttime=0,uint32_t endtime=UINT32_MAX);
+
+
+extern bool savemeals(FILE* handle,uint32_t starttime,uint32_t endtime);
+bool fallsavemeals(FILE *handle,uint32_t starttime,uint32_t endtime) {
+	if(!(dostarthtml(handle)&&savemeals(handle,starttime,endtime)))
 		return false;
-	if(write(handle,endhtml.data(),endhtml.size())!=endhtml.size())
+	if(fwrite(endhtml.data(),1,endhtml.size(),handle)!=endhtml.size())
 		return false;
 	return true;
 	}
 
 
+bool allsavemeals(int handle,uint32_t starttime,uint32_t endtime) {
+	if(FILE *fp=fdopen(handle,"w")) {
+		 bool res=fallsavemeals(fp,starttime,endtime) ;
+		 fclose(fp);
+		 return res;
+		 }
+	 close(handle);
+	return false;
+	 }

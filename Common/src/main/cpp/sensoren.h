@@ -373,8 +373,8 @@ SensorGlucoseData *makelibre3sensor(std::string_view shortname,uint32_t starttim
 
 	vector<int> inperiod(uint32_t starttime, uint32_t endtime) {
 		vector<int> out;
-		const uint32_t startend = starttime - sensorageseconds;
-		const uint32_t nothingbefore = startend - sensorageseconds;
+		const uint32_t startend = starttime>sensorageseconds?(starttime - sensorageseconds):0;
+		const uint32_t nothingbefore = startend>sensorageseconds?(startend - sensorageseconds):0;
 		const uint32_t nu = time(nullptr);
 		for(int i = last(); i >= 0; i--) {
 			const uint32_t startsensor = sensorlist()[i].starttime;

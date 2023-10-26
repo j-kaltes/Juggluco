@@ -102,7 +102,7 @@ final Runnable closeonback=()-> {
 			stack(LOG_ID, e);
 			};
 		if(get<=0) {
-        		Toast.makeText(act, "'"+str+act.getString(R.string.invaliddays), Toast.LENGTH_SHORT).show();
+        		Applic.argToaster(act, "'"+str+act.getString(R.string.invaliddays), Toast.LENGTH_SHORT);
 			return;
 			}
 		act.poponback();	

@@ -1376,7 +1376,6 @@ extern "C" JNIEXPORT jint  JNICALL   fromjava(savenovopen)(JNIEnv *env, jclass c
 		}
 	pen->type=type;
 
-//	env->GetByteArrayRegion(jar, 0, lens, );
 	 jsize lens=env->GetArrayLength(jrawdoses);
        uint8_t*  bytes=reinterpret_cast<uint8_t *>(   env->GetPrimitiveArrayCritical(jrawdoses,nullptr));
       LOGGER("jrawdoses=%p#%d\n",bytes,lens);

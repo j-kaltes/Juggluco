@@ -136,7 +136,7 @@ void mkchangelabel(MainActivity context,Runnable onsave,View parent) {
 			int pos=(labelpos>=0) ? labelpos:labels.size()-1;
 
 			if(!Natives.setlabel(pos,name,pr,wei)) {
-				Toast.makeText(context, name+context.getString(R.string.toolarg), Toast.LENGTH_SHORT).show();
+				Applic.argToaster(context, name+context.getString(R.string.toolarg), Toast.LENGTH_SHORT);
 				return;
 				}
 			if(labelpos>=0) {

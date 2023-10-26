@@ -120,11 +120,11 @@ final    private IQOpenApplicationListener mOpenAppListener = new IQOpenApplicat
 	    appmissing=-1;
             if (status == IQOpenApplicationStatus.APP_IS_ALREADY_RUNNING) {
 
-		Toast.makeText(getApplication(), "APP_IS_ALREADY_RUNNING", Toast.LENGTH_SHORT).show();
+		Applic.argToaster(getApplication(), "APP_IS_ALREADY_RUNNING", Toast.LENGTH_SHORT);
                 mAppIsOpen = true;
 	        startglucose() ;
             } else {
-		Toast.makeText(getApplication(), "Open App", Toast.LENGTH_SHORT).show();
+		Applic.argToaster(getApplication(), "Open App", Toast.LENGTH_SHORT);
                 mAppIsOpen = false;
 //		sync();
             }
@@ -286,7 +286,7 @@ void senderror(int type) {
 	}
 	/*
 public void Toaster(String mess) {
-	application.getHandler().post(()-> { Toast.makeText(getApplication(), mess, Toast.LENGTH_SHORT).show();}) ;
+	application.getHandler().post(()-> { Applic.argToaster(getApplication(), mess, Toast.LENGTH_SHORT);}) ;
 	}
 	*/
 public void errorm(String mess) {
@@ -936,7 +936,7 @@ void register(Context context) {
 			appmissing=-1;
 			Log.i(LOG_ID,"onApplicationInfoReceived");
                         try {
-                            Toast.makeText(getApplication(), "Opening  Kerfstok...", Toast.LENGTH_SHORT).show();
+                            Applic.argToaster(getApplication(), "Opening  Kerfstok...", Toast.LENGTH_SHORT);
                             mConnectIQ.openApplication(devices.get(devused), app, mOpenAppListener);
                         } catch (Exception ex) {
 				String mess=ex!=null?ex.getMessage():null;
@@ -953,7 +953,7 @@ void register(Context context) {
 			Log.i(LOG_ID,"onApplicationNotInstalled");
 			/*
 			try {
-                            Toast.makeText(context, "Garmin watch app Kerfstok missing", Toast.LENGTH_SHORT).show();
+                            Applic.argToaster(context, "Garmin watch app Kerfstok missing", Toast.LENGTH_SHORT);
 			   if(context instanceof Activity) {
 			   	Activity act=(Activity)context;
 				AlertDialog.Builder dialog = new AlertDialog.Builder(act);
@@ -987,7 +987,7 @@ void register(Context context) {
                 mConnectIQ.registerForAppEvents(devices.get(devused), mMyApp, IQlistener);
 		usewatch=true;
             } catch (InvalidStateException e) {
-                Toast.makeText(getApplication(), "ConnectIQ is not in a valid state", Toast.LENGTH_SHORT).show();
+                Applic.argToaster(getApplication(), "ConnectIQ is not in a valid state", Toast.LENGTH_SHORT);
             }
         }
 	}

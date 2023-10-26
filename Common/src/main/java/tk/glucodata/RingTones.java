@@ -174,7 +174,7 @@ static private void subEnableControls(View view,boolean enable){
 			    context.startActivityForResult(intent, request);
 			    }
 		    catch(Throwable th) {
-			Toast.makeText(context, "No Ringtone Picker found", Toast.LENGTH_LONG).show();
+			Applic.argToaster(context, "No Ringtone Picker found", Toast.LENGTH_LONG);
 		    	}
 		});
 		Button help=getbutton(context,R.string.helpname);
@@ -229,7 +229,7 @@ static private void subEnableControls(View view,boolean enable){
 				Notify.playring(ringtone,dur,sound.isChecked(),hasflash&&flashview.isChecked(),vibration.isChecked(),isWearable||Build.VERSION.SDK_INT < Build.VERSION_CODES.M||disturb.isChecked(),kind);
 				} catch(Throwable e) {
 				Log.stack(LOG_ID,"play",e);
-					Toast.makeText(context, "Can't play "+str+ " seconds", Toast.LENGTH_SHORT).show();
+					Applic.argToaster(context, "Can't play "+str+ " seconds", Toast.LENGTH_SHORT);
 				
 				}
 			});
@@ -372,11 +372,11 @@ View[] durviews;
 			if(str!=null) {
 				int durs=Integer.parseInt(str);
 				if(durs<0) {
-					Toast.makeText(context, "Duration can't be negative: "+durs, Toast.LENGTH_SHORT).show();
+					Applic.argToaster(context, "Duration can't be negative: "+durs, Toast.LENGTH_SHORT);
 					return;
 					}
 				if(durs>65535) {
-					Toast.makeText(context, durs+" too large, maximum=65535, ", Toast.LENGTH_SHORT).show();
+					Applic.argToaster(context, durs+" too large, maximum=65535, ", Toast.LENGTH_SHORT);
 					return;
 					}
 				Natives.writealarmduration(kind,durs);
@@ -392,13 +392,13 @@ View[] durviews;
 			if(def.isChecked())
 				uri="";
 			  if(!Natives.writering(kind,uri,sound.isChecked(),hasflash&&flashview.isChecked(),vibration.isChecked())) {
-				Toast.makeText(context, uri+" too large", Toast.LENGTH_SHORT).show();
+				Applic.argToaster(context, uri+" too large", Toast.LENGTH_SHORT);
 				return;
 			  	}
 			//   Notify.setring(kind);
 			} catch(Throwable e) {
 				Log.stack(LOG_ID,"save",e);
-				Toast.makeText(context, "Can't use specification", Toast.LENGTH_SHORT).show();
+				Applic.argToaster(context, "Can't use specification", Toast.LENGTH_SHORT);
 				return;
 				};
 
