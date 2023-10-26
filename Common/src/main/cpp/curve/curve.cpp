@@ -2128,12 +2128,13 @@ displaytime disp=getdisplaytime(nu,starttime,endtime, transx);
 			 }
 		 }
 
-	if(nu<endtime) {
-		if((dwidth-smallfontlineheight)>nupos) {
+	if(nu<endtime&&(dwidth-smallfontlineheight)>nupos) {
 			showbluevalue(nu, nupos,usedsensors);
 			LOGAR("end display curve");
-			}
 		}
+	else
+		shownglucose.resize(0);
+
  return 0;
 }
 

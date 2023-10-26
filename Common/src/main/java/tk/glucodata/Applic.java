@@ -649,6 +649,9 @@ static	void		talkbackon(Context cont) {
 	talkbackrunning=true;
 
 	Natives.settouchtalk(true);
+	Natives.setspeakmessages(true);
+	Natives.setspeakalarms(true);
+
 	}
 
 static	void		talkbackoff() {
