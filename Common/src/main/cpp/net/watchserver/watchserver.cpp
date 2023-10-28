@@ -1051,6 +1051,7 @@ static bool jugglucos(const char *posptr,int size, recdata *outdata) {
 				mktypeheader(res.data()+startpos,res.data()+res.size(),false,outdata,i==4?html:plain);
 				return true;
 				}
+			break;
 			}
 		}
 	return givenothing(outdata);

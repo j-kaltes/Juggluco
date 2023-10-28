@@ -368,7 +368,7 @@ globalsocket=serversock;
 					}
 
 				}
-			LOGSTRINGTAG("Wrong host\n");
+			LOGGER("Wrong host close(%d)\n",new_fd);
 			close(new_fd);
 			continue;
 			}

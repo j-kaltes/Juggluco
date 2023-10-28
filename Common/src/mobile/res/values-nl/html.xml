@@ -1607,14 +1607,14 @@ wordt ook glucosewaarden van FreeStyle Libre 3 sensoren naar
 Libreview gezonden.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>Direct</b>: stuur
 glucosewaarden onmiddellijk naar Libreview wanneer ze binnenkomen van
-Libre 3-sensoren. Dit is alleen handig in combinatie met LibreLinkUp.
-Om er gebruik van te maken, moet je een LibrelinkUp-verbinding
-toevoegen aan dit Libreview-account in een van de Libre-apps van
-Abbott. Soms is de waarde niet direct zichtbaar, omdat LibreLinkUp
-het scherm niet onmiddelijk herschrijft. Het gebruik van LibreLinkup
-is behoorlijk gevaarlijk als je niet goed kijkt, want als je de
-grafiek aanraakt, toont het een oude waarde in plaats van de huidige
-glucosewaarde.</p>
+Libre 2 en 3 sensoren. Dit is alleen handig in combinatie met
+LibreLinkUp. Om er gebruik van te maken, moet je een
+LibrelinkUp-verbinding toevoegen aan dit Libreview-account in een van
+de Libre-apps van Abbott. Soms is de waarde niet direct zichtbaar,
+omdat LibreLinkUp het scherm niet onmiddelijk herschrijft. Het
+gebruik van LibreLinkup is behoorlijk gevaarlijk als je niet goed
+kijkt, want als je de grafiek aanraakt, toont het een oude waarde in
+plaats van de huidige glucosewaarde.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>Spy Views</b>:
 Wanneer <i>Direct</i> ook is ingeschakeld, stuurt Juggluco naar
 Libreview of een waarde bekeken is of niet (met enige beperkingen om

@@ -411,7 +411,13 @@ std::span<char> getexportdata(int startpos,int len,uint32_t starttime,uint32_t e
 		if(end>=mem->max) {
 			mem->max=end*2;
 			char *tmp= new(std::nothrow) char [mem->max];
+			if(!tmp) {
+				delete[] mem->mem;
+				mem->mem=nullptr;
+				return -1;
+				}
 			memcpy(tmp,mem->mem,mem->iter);
+			delete[] mem->mem;
 			mem->mem=tmp;
 			}
 		memcpy(mem->mem+mem->iter,gegs,len);
