@@ -409,13 +409,12 @@ std::span<char> getexportdata(int startpos,int len,uint32_t starttime,uint32_t e
 		Fmemopen *mem=(Fmemopen*)ptr;
 		int end=mem->iter+len;
 		if(end>=mem->max) {
-			mem->max=end*2;
-			char *tmp= new(std::nothrow) char [mem->max];
+			const int newmax=end*2;
+			char *tmp= new(std::nothrow) char [newmax];
 			if(!tmp) {
-				delete[] mem->mem;
-				mem->mem=nullptr;
 				return -1;
 				}
+			mem->max=newmax;
 			memcpy(tmp,mem->mem,mem->iter);
 			delete[] mem->mem;
 			mem->mem=tmp;
@@ -453,9 +452,9 @@ constexpr const cookie_io_functions_t  memfuncs = {
 				}	
 			}
 		bool res=exporter(fp,starttime,endtime);
-		fclose(fp);
-		if(res)
+		if(fclose(fp)==0&&res)
 			return {mem.mem,(size_t)mem.iter};
+		lerror("fclose ");	
 		}
 	delete[] mem.mem;
 	return {(char *)nullptr,(size_t)0};
