@@ -121,11 +121,11 @@ public static void show(MainActivity context,View parent) {
 			return;
                         };
 		if(portstr.equals(getreceiveport())) {
-			Applic.argToaster(context,"The port number should be different from the mirror port",Toast.LENGTH_LONG);
+			Applic.argToaster(context,R.string.nomirrorport,Toast.LENGTH_LONG);
 			return;
 			}
 		if(portnum==17580) {
-			Applic.argToaster(context,"The port number should be different from the http port",Toast.LENGTH_LONG);
+			Applic.argToaster(context,R.string.nohttpport,Toast.LENGTH_LONG);
 			return;
 			}	
 		if(portnum<1024||portnum> 65535) {

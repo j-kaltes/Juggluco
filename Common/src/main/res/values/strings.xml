@@ -305,5 +305,20 @@
  <string name="speakmessages">Speak messages</string>
  <string name="speakalarms">Speak alarms</string>
  <string name="speakglucose">Speak glucose</string>
+    <string name="notfound">Not found</string>
+ <string name="no_ringtone_picker_found">No Ringtone Picker found</string>
+ <string name="can_t_play">"Can't play "</string>
+ <string name="seconds">" seconds"</string>
+ <string name="duration_can_t_be_negative">"Duration can't be negative: "</string>
+ <string name="too_large_maximum_65535">" too large, maximum=65535, "</string>
+ <string name="too_large">" too large"</string>
+ <string name="can_t_use_specification">Can\'t use specification</string>
+ <string name="turn_on_nearby_devices_permission">Turn on NEARBY DEVICES permission</string>
+    <string name="enable_bluetooth">Enable Bluetooth</string>
+ <string name="turn_on_location_permission">Turn on Location permission</string>
+ <string name="bluetooth_is_turned_off">Bluetooth is turned off</string>
+ <string name="allsentnoreceive">When everything is sent to a host, \"Receive from\" should be turned off.</string>
+ <string name="nomirrorport">The port number should be different from the mirror port</string>
+ <string name="nohttpport">The port number should be different from the http port</string>
 
 </resources>

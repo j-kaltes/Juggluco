@@ -107,7 +107,7 @@ public class MyGattCallback extends SuperGattCallback {
 		} catch(Throwable e) {
 			Log.stack(LOG_ID, "onDescriptorWrite", e);
 			if (Build.VERSION.SDK_INT > 30 && !Applic.mayscan())
-				Applic.Toaster("Turn on NEARBY DEVICES permission");
+				Applic.Toaster(R.string.turn_on_nearby_devices_permission);
 			var gatt= mBluetoothGatt;
 			if(gatt!=null)
 				gatt.disconnect();
@@ -195,7 +195,7 @@ void reconnect() {
 		} catch (Throwable e) {
 			Log.stack(LOG_ID, "onConnectionStateChange", e);
 			if (Build.VERSION.SDK_INT > 30 && !Applic.mayscan())
-				Applic.Toaster("Turn on NEARBY DEVICES permission");
+				Applic.Toaster(R.string.turn_on_nearby_devices_permission);
 			constatstatus = status;
 			constatchange[1] = tim;
 			if(bluetoothGatt!=null)
@@ -274,7 +274,7 @@ void reconnect() {
 		} catch (Throwable e) {
 			Log.stack(LOG_ID, "onServicesDiscovered", e);
 			if (Build.VERSION.SDK_INT > 30 && !Applic.mayscan())
-				Applic.Toaster("Turn on NEARBY DEVICES permission");
+				Applic.Toaster(R.string.turn_on_nearby_devices_permission);
 			return false;
 		}
 	}
@@ -355,7 +355,7 @@ status	int: The result of the write operation BluetoothGatt#GATT_SUCCESS if the 
 		} catch (Throwable e) {
 			Log.stack(LOG_ID, "onCharacteristicWrite", e);
 			if (Build.VERSION.SDK_INT > 30 && !Applic.mayscan())
-				Applic.Toaster("Turn on NEARBY DEVICES permission");
+				Applic.Toaster(R.string.turn_on_nearby_devices_permission);
 			bluetoothGatt.disconnect();
 		}
 	}

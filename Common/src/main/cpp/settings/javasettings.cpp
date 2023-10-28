@@ -1342,11 +1342,11 @@ int savedoses(NovoPen *pen,uint32_t reftime,uint8_t *bytes,int len) {
 				continue;
 				}
 			}
-		numda->numsave( time, value,type ,0) ;
+		numda->numsaveonly( time, value,type ,0) ;
 		nexttime=time;
 		++savednr;
 		}
-
+	backup->wakebackup(Backup::wakenums);	
 	return savednr;
 	}
 extern "C" JNIEXPORT jboolean  JNICALL   fromjava(oldnovopenvalue)(JNIEnv *env, jclass cl,jlong referencetime,jstring jserial,jbyteArray jrawdoses) {

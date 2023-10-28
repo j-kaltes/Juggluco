@@ -281,7 +281,6 @@ static public void show(MainActivity act) {
 				act.requestRender();
 		}); 
 
-//	act.addContentView(view, new ViewGroup.LayoutParams( MATCH_PARENT,WRAP_CONTENT));
 	act.addContentView(view, new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
 
     }

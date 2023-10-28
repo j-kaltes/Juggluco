@@ -1,3 +1,4 @@
+#define LOCKNUM 1
 /*      This file is part of Juggluco, an Android app to receive and display         */
 /*      glucose values from Freestyle Libre 2 and 3 sensors.                         */
 /*                                                                                   */
@@ -21,6 +22,7 @@
 
 #ifndef NUMDATA_H
 #define NUMDATA_H
+
 #include <algorithm>
 #include <string_view>
 #include <type_traits>
@@ -32,6 +34,9 @@
 #include <filesystem>
 #include "inout.h"
  #include <assert.h>
+#ifdef LOCKNUM
+#include  <mutex>
+#endif
 #include "settings/settings.h"
 #include "net/backup.h"
 #include "datbackup.h"
@@ -523,7 +528,7 @@ struct Num {
   */
 
 //Libreids libreids;
-void numsave( const uint32_t time, const float32_t value, const uint32_t type,const uint32_t mealptrin) {
+void numsaveonly( const uint32_t time, const float32_t value, const uint32_t type,const uint32_t mealptrin) {
 	Num *num=firstAfter(time);
 	const int ind=index(num);
 	const Num *endnum=end();
@@ -538,10 +543,17 @@ void numsave( const uint32_t time, const float32_t value, const uint32_t type,co
 	inclastpolledpos();
 	setlastchange(num);
 	const auto lastnum=getlastpos();
-	updatepos(ind,lastnum);
+	updateposnowake(ind,lastnum);
 	addlibrechange(ind);
 	LOGGERTAG("pos=%d newlastnum=%d numsave %f %s mealptrin=%d mealptr=%d\n",ind,lastnum,value,settings->getlabel(type).data(),mealptrin,mealptr);
 	 }
+
+void numsave( const uint32_t time, const float32_t value, const uint32_t type,const uint32_t mealptrin) {
+	numsaveonly(time,  value,  type, mealptrin);
+	if(backup)
+		backup->wakebackup(Backup::wakenums);
+	 }
+
 
 void numsavepos(int pos, uint32_t time, float32_t value, uint32_t type,uint32_t mealptr) {
 	if(pos>0&&time<at(pos-1).time)  {
@@ -925,7 +937,17 @@ void updatesize() {
 //	backup->wakebackup(Backup::wakenums);
 	}
 private:
+
+#ifdef LOCKNUM
+std::mutex nummutex;
+#define NUMLOCKGUARD 	std::lock_guard<std::mutex> lock(nummutex);
+#else
+#define NUMLOCKGUARD
+#endif
+
+
 void updateposnowake(int pos,int end) {
+ 	NUMLOCKGUARD
 	int ind=getindex();
 	const int hnr=backup->getsendhostnr();
 	LOGGERTAG("updateposnowake pos=%d ind=%d hnr=%d\n",pos, ind,hnr);
@@ -1041,6 +1063,9 @@ bool numbackupinit(const numinit *nums) {
 	}
 
 bool sendbackupinit(crypt_t*pass,int sock,struct changednums *nuall) {
+
+ 	NUMLOCKGUARD
+
 	struct changednums *nu=nuall+getindex();	
 	struct numspan *ch=nu->changed;
 	ch[0].start=nu->lastlastpos=getfirstpos();
@@ -1055,6 +1080,7 @@ bool sendbackupinit(crypt_t*pass,int sock,struct changednums *nuall) {
 	return true;
 	}
 bool backupsendinit(crypt_t*pass,int sock,struct changednums *nuall,uint32_t starttime) {
+ 	NUMLOCKGUARD
 	LOGGERTAG("NUM: backupsendinit %u ",starttime);
 	struct changednums *nu=nuall+getindex();	
 	struct numspan *ch=nu->changed;
@@ -1093,6 +1119,8 @@ bool backupsendinit(crypt_t*pass,int sock,struct changednums *nuall,uint32_t sta
 
 static inline constexpr const int intinnum=(sizeof(Num)/sizeof(uint32_t));
 int update(crypt_t*pass,int sock,struct changednums *nuall) {
+ 	NUMLOCKGUARD
+
 	struct changednums *nu=nuall+getindex();	
 	LOGARTAG("nums: update");
 	struct numspan *ch=nu->changed;

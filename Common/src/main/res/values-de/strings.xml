@@ -296,4 +296,21 @@
  <string name="speakmessages">Mitteilungen sprechen</string>
   <string name="speakalarms">Alarme sprechen</string>
   <string name="speakglucose">Glukose sprechen</string>
+
+<string name="notfound">Nicht gefunden</string>
+  <string name="no_ringtone_picker_found">Keine Ringtone picker gefunden</string>
+  <string name="can_t_play">"Kann nicht abgespielt werden"</string>
+  <string name="seconds">" Sekunden"</string>
+  <string name="duration_can_t_be_negative">"Dauer kann nicht negativ sein: "</string>
+  <string name="too_large_maximum_65535">" zu groß, Maximum=65535, "</string>
+  <string name="too_large">"zu groß"</string>
+  <string name="can_t_use_specification">Spezifikation kann nicht verwendet werden</string>
+  <string name="turn_on_nearby_devices_permission">Aktivieren Sie die Berechtigung „GERÄTE IN DER NÄHE“</string>
+     <string name="enable_bluetooth">Bluetooth aktivieren</string>
+  <string name="turn_on_location_permission">Standortberechtigung aktivieren</string>
+  <string name="bluetooth_is_turned_off">Bluetooth ist ausgeschaltet</string>
+  <string name="allsentnoreceive">Wenn alles an einen Host gesendet wird, sollte „Empfangen von“ deaktiviert sein.</string>
+  <string name="nomirrorport">Die Portnummer sollte sich vom Klonport unterscheiden</string>
+  <string name="nohttpport">Die Portnummer sollte sich vom http-Port unterscheiden</string>
+
 </resources>

@@ -1,9 +1,4 @@
-Alles spreek opties moeten aangezet worden als talkback aanstaat.
-Watch moet werken.
-Amounts verkeerd in mirror
-
 Resend data wordt niet doorgezonden.
-
 
 Terug naar Juggluco, geen menus
 
@@ -56,6 +51,7 @@ Juggluco can only be used with one Garmin device running Kerfstok at a time and 
 Possible solution:
 	- add seperate data for every watch;
 	- In each watch only difference between own and others data;
+
 turn off TESTGEN2
 Kleurverschil te klein in niet reverse screen.
 

@@ -128,6 +128,9 @@ MainActivity getActivity() {
 static public void Toaster(String mess) {
 	RunOnUiThread(()-> { Applic.argToaster(app,mess, Toast.LENGTH_SHORT);}) ;
 	}
+	static public void Toaster(int res) {
+		RunOnUiThread(()-> { Applic.argToaster(app,res, Toast.LENGTH_SHORT);}) ;
+	}
 
 static public	void argToaster(Context context,int res,int duration) {
 	 argToaster(context,context.getString(res), duration);

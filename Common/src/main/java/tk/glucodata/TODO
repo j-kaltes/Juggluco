@@ -1,5 +1,7 @@
 Support Dexcom?
+Meer messages vertalen
 Blind:
+	- Long press History read text too long
 	- spreek statistiek
 	- View under shortcuts is spoken out.
 	- Glucose:
@@ -7,6 +9,9 @@ Blind:
 		- Glucose bij amounts. Mogelijkheden:
 			- Toevoegen aan modificatie scherm. Nadeel: verwarrend, gecompliceerd;
 	- read end date?
+
+Option to use a different http Web server port?
+Problem: xDrip watch apps don't work with a different port
 
 
 add RUSSIAN HEBREW

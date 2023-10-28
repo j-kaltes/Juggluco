@@ -20,7 +20,9 @@
 
 
 #pragma once
+#ifndef NDK_DEBUG
 #define CONV18 1
+#endif
 #ifdef CONV18
 static constexpr const double convfactor=180.0;
 #else

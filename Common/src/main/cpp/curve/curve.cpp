@@ -1808,7 +1808,7 @@ static void showlastsstream(const time_t nu,const float getx,std::vector<int> &u
 
 			}
 		else { if(usebluetoothoff) {
-		   nvgText(genVG,newgetx ,gety, usedtext->useBluetoothOff.begin(), usedtext->useBluetoothOff.end());
+		   nvgTextBox(genVG,newgetx ,gety, getboxwidth(newgetx),usedtext->useBluetoothOff.begin(), usedtext->useBluetoothOff.end());
 				shownglucose[i].glucosevalue=0;
 			       shownglucose[i].glucosevaluex=newgetx;
        				shownglucose[i].glucosevaluey=gety+headsize*.5;
@@ -1816,7 +1816,7 @@ static void showlastsstream(const time_t nu,const float getx,std::vector<int> &u
 		   }
 		   else {
 		   	if(bluetoothoff) {
-				nvgText(genVG,newgetx ,gety, usedtext->enablebluetooth.begin(), usedtext->enablebluetooth.end());
+				nvgTextBox(genVG,newgetx ,gety, getboxwidth(newgetx),usedtext->enablebluetooth.begin(), usedtext->enablebluetooth.end());
 				shownglucose[i].glucosevalue=0;
 			       shownglucose[i].glucosevaluex=newgetx;
        				shownglucose[i].glucosevaluey=gety+headsize*.5;

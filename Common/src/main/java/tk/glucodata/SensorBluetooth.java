@@ -90,7 +90,7 @@ static public void reconnectall() {
     public boolean connectToActiveDevice(long delayMillis) {
     Log.i(LOG_ID, "connectToActiveDevice("+delayMillis+")");
 	if(!bluetoothIsEnabled()) {
-		Applic.Toaster("Enable Bluetooth");
+		Applic.Toaster(R.string.enable_bluetooth);
 		return false;
 		}
         boolean scan=false;
@@ -137,7 +137,7 @@ private SuperGattCallback  getCallback(BluetoothDevice device) {
 	} catch(Throwable e) {
 		Log.stack(LOG_ID,	"getCallback",e);
 		if(Build.VERSION.SDK_INT > 30&&!Applic.mayscan())
-			Applic.Toaster("Turn on NEARBY DEVICES permission");
+			Applic.Toaster(R.string.turn_on_nearby_devices_permission);
 		return null;
 	}
 }
@@ -178,7 +178,7 @@ private boolean checkdevice(BluetoothDevice device) {
 	} catch (Throwable e) {
 		Log.stack(LOG_ID, "checkdevice", e);
 		if (Build.VERSION.SDK_INT > 30 && !Applic.mayscan())
-			Applic.Toaster("Turn on NEARBY DEVICES permission");
+			Applic.Toaster(R.string.turn_on_nearby_devices_permission);
 		return true;
 	}
 }
@@ -267,7 +267,7 @@ final	private ScanSettings mScanSettings;
 			} catch (Throwable e) {
 				Log.stack(LOG_ID, e);
 				if (Build.VERSION.SDK_INT > 30 && !Applic.mayscan())
-					Applic.Toaster("Turn on NEARBY DEVICES permission");
+					Applic.Toaster(R.string.turn_on_nearby_devices_permission);
 				return false;
 		}
 			   return true;
@@ -284,7 +284,7 @@ final	private ScanSettings mScanSettings;
 				} catch (Throwable e) {
 					Log.stack(LOG_ID,  e);
 					if (Build.VERSION.SDK_INT > 30 && !Applic.mayscan())
-						Applic.Toaster("Turn on NEARBY DEVICES permission");
+						Applic.Toaster(R.string.turn_on_nearby_devices_permission);
 				}
 			}
 		};
@@ -373,12 +373,12 @@ final private Runnable scanRunnable = new Runnable() {
      boolean startScan(long delayMillis) {
 
 	    if(!Applic.mayscan()) {
-	        Applic.Toaster((Build.VERSION.SDK_INT > 30)?"Turn on NEARBY DEVICES permission":"Turn on Location permission");
+	        Applic.Toaster((Build.VERSION.SDK_INT > 30)?R.string.turn_on_nearby_devices_permission: R.string.turn_on_location_permission );
 		 return true;
 		 }
 
 	if(!bluetoothIsEnabled()) {
-		Applic.Toaster("Bluetooth is turned off");
+		Applic.Toaster(R.string.bluetooth_is_turned_off);
 		return false;
 		}
      	scanstart=true;	
@@ -503,7 +503,7 @@ static <T> int indexOf(final T[] ar,final T el) {
 
 public boolean connectDevices(long delayMillis) {
 	if(!bluetoothIsEnabled()) {
-		Applic.Toaster("Enable Bluetooth");
+		Applic.Toaster(R.string.enable_bluetooth);
 		return false;
 		}
         boolean scan=false;

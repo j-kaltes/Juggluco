@@ -814,7 +814,7 @@ if(smallScreen) {
        activity.setonback(this::searchaway);
        }
        else
-	Applic.argToaster(getContext(), "Not found", Toast.LENGTH_SHORT);
+	Applic.argToaster(getContext(), getContext().getString(R.string.notfound), Toast.LENGTH_SHORT);
     //((MainActivity)getContext()).curve.requestRender();
 }
 

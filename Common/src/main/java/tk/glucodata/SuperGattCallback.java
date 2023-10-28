@@ -329,7 +329,7 @@ public void searchforDeviceAddress() {
 			} catch (SecurityException se) {
 				var mess = se.getMessage();
 				mess = mess == null ? "" : mess;
-				String uit = ((Build.VERSION.SDK_INT > 30) ? "Turn on NEARBY DEVICES PERMISSION for Juggluco in Android Settings " : "") + mess;
+				String uit = ((Build.VERSION.SDK_INT > 30) ? Applic.app.getString(R.string.turn_on_nearby_devices_permission)  : mess) ;
 				Applic.Toaster(uit);
 				Log.stack(LOG_ID, "BluetoothGatt.close()", se);
 			}
@@ -386,8 +386,9 @@ public void searchforDeviceAddress() {
 				} catch (SecurityException se) {
 					var mess = se.getMessage();
 					mess = mess == null ? "" : mess;
-					String uit = ((Build.VERSION.SDK_INT > 30) ? "Turn on NEARBY DEVICES PERMISSION for Juggluco in Android Settings " : "") + mess;
+					String uit = ((Build.VERSION.SDK_INT > 30) ? Applic.app.getString(R.string.turn_on_nearby_devices_permission)  : mess) ;
 					Applic.Toaster(uit);
+
 					Log.stack(LOG_ID, "connectGatt", se);
 				} catch (Throwable e) {
 					Log.stack(LOG_ID, "connectGatt", e);

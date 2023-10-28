@@ -293,4 +293,21 @@
  <string name="speakmessages">Spreek berichten uit</string>
  <string name="speakalarms">Spreek alarmen uit</string>
  <string name="speakglucose">Spreek glucose uit</string>
+
+<string name="notfound">Niet gevonden</string>
+  <string name="no_ringtone_picker_found">Geen Ringtone picker gevonden</string>
+  <string name="can_t_play">"afspelen gaat niet: "</string>
+  <string name="seconds">" seconden"</string>
+  <string name="duration_can_t_be_negative">"tijdduur kan niet negatief zijn: "</string>
+  <string name="too_large_maximum_65535">" te groot, maximum=65535, "</string>
+  <string name="too_large">"te groot"</string>
+  <string name="can_t_use_specification">Kan specificatie niet gebruiken</string>
+  <string name="turn_on_nearby_devices_permission">Schakel de toestemming voor APPARATEN IN DE BUURT in</string>
+     <string name="enable_bluetooth">set Bluetooth aan</string>
+  <string name="turn_on_location_permission">Schakel locatietoestemming in</string>
+  <string name="bluetooth_is_turned_off">Bluetooth is uitgeschakeld</string>
+  <string name="allsentnoreceive">Als alles naar een host wordt verzonden, moet \"Ontvang van\" uitgeschakeld zijn.</string>
+  <string name="nomirrorport">Het poortnummer moet verschillen van de kloonpoort</string>
+  <string name="nohttpport">Het poortnummer moet verschillen van de http-poort</string>
+
 </resources>

@@ -243,9 +243,10 @@ private void deleteconfirmation(MainActivity act) {
 				Natives.deletebackuphost(hostindex);
 				hostadapt.notifyItemRemoved(hostindex);
 				}
-			hostview.setVisibility(GONE);
-			hidekeyboard(act); 
-			 act.poponback();
+//			hostview.setVisibility(GONE);
+//			hidekeyboard(act); 
+			act.doonback();
+			act.doonback();
                     }
                 }) .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
@@ -403,7 +404,7 @@ void makehostview(MainActivity act) {
 			return;
 			}
 		if(receiver&& Amounts.isChecked()&& Stream.isChecked()&& Scans.isChecked()) {
-			Applic.argToaster(act,"When everything is sent to a host, \"Receive from\" should be turned off." ,Toast.LENGTH_LONG);
+			Applic.argToaster(act,R.string.allsentnoreceive ,Toast.LENGTH_LONG);
 			return;
 			}		
 		hidekeyboard(act); //USE

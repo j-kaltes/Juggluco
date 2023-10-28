@@ -148,6 +148,14 @@ public static void startvibration(Vibrator vibrator) {
 static public synchronized void scan(GlucoseCurve curve,Tag tag) {
 	 askpermission=false;
         MainActivity main= (MainActivity)(curve.getContext());
+	if(!isWearable) {
+		if (Menus.on) {
+			Applic.RunOnUiThread(() -> {
+				main.doonback();
+				Menus.on = true;
+			});
+		}
+	}
 	var vibrator=getvibrator(main);
 	startvibration(vibrator);
 	curve.render.stepresult=GlucoseCurve.STEPBACK;
