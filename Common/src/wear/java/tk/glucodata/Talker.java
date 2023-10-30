@@ -8,6 +8,7 @@ public class Talker {
 static long nexttime;
 static void getvalues() { }
 static boolean istalking() {return false;}
+    static boolean shouldtalk() {return false;}
 void destruct() { }
 Talker() { }
 Talker(Context context) { }
