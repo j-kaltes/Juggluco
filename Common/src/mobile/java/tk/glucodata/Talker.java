@@ -228,8 +228,11 @@ private static View[] slider(MainActivity context,float init) {
 
 	return new View[] {speed,displayspeed};
 	}
-public static boolean istalking() {
-	return SuperGattCallback.dotalk||Natives.gettouchtalk()||Natives.speakmessages()||Natives.speakalarms();
+public static boolean shouldtalk() {
+	return  SuperGattCallback.dotalk||Natives.gettouchtalk()||Natives.speakmessages()||Natives.speakalarms();
+	}
+public  static boolean istalking() {
+	return SuperGattCallback.talker!=null;
 	}
 public static void config(MainActivity context) {
 	if(!istalking()) {
