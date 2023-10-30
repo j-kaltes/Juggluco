@@ -372,6 +372,7 @@ public static void config(MainActivity context) {
 			var talk=SuperGattCallback.talker;
 			if(talk!=null) {
 				talk.setvalues();
+				talk.setvoice();
 				talk.speak(say);
 				return;
 				}

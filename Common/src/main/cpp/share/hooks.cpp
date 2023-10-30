@@ -160,11 +160,13 @@ struct pthread_arg {
 	void * origarg;
 };
 static void ioreadyhandler(int sig) {
+#ifndef NOLOG
 	pid_t pid= syscall(SYS_getpid);
 	pid_t tid= syscall(SYS_gettid);
 	char buf[80];
 	prctl(PR_GET_NAME, buf, 0, 0, 0);
 	LOGGER("SIGCHLD pid=%d tid=%d %s\n",pid,tid,buf);
+#endif
 }
 #ifdef FINDHANDLE
 #include <destruct.h>
@@ -244,8 +246,10 @@ extern "C" VISIBLE  int pthread_Detach(pthread_t thread) {
 	return res;
 	}
 void *pstart_routine( void * arg) {
+#ifndef NOLOG
 	signal(SIGCHLD,ioreadyhandler);
 	LOGAR("pstart_routine");
+#endif
 	pthread_arg *myarg=reinterpret_cast<pthread_arg *>(arg);
 	void *res=myarg->start_routine(myarg->origarg);
 	endroutine=true;
