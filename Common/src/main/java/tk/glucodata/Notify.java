@@ -346,24 +346,22 @@ static public String glucosestr(float gl) {
 	}
 	private synchronized void playringhier(Ringtone ring,int duration,boolean sound,boolean flash,boolean vibrate,boolean disturb,int kind) {
 		stopalarm();
-		final int[] curfilter={-1};
+//		final int[] curfilter={-1};
 		final boolean[] doplaysound={true};
 		if(sound) {
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-				int filt=notificationManager.getCurrentInterruptionFilter();
-				Log.i(LOG_ID,"getCurrentInterruptionFilter()="+filt);
+			if(disturb) {
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+					int filt=notificationManager.getCurrentInterruptionFilter();
+					Log.i(LOG_ID,"getCurrentInterruptionFilter()="+filt);
 
-				if(filt!=NotificationManager.INTERRUPTION_FILTER_ALL) {
-					if(disturb) {
-						if(notificationManager.isNotificationPolicyAccessGranted()) {
-							curfilter[0]=filt;
-							notificationManager.setInterruptionFilter(NotificationManager.INTERRUPTION_FILTER_ALL);
+					if(filt!=NotificationManager.INTERRUPTION_FILTER_ALL) {
+							if(notificationManager.isNotificationPolicyAccessGranted()) {
+							//	curfilter[0]=filt;
+								notificationManager.setInterruptionFilter(NotificationManager.INTERRUPTION_FILTER_ALL);
+							}
 						}
 					}
-					else
-						doplaysound[0]=false;
 				}
-			}
 			if(doLog) {
 				Log.d(LOG_ID,"play "+ring.getTitle(app));
 			}
@@ -385,6 +383,7 @@ static public String glucosestr(float gl) {
 							Log.d(LOG_ID,"stop sound "+ring.getTitle(app));
 							}
 						ring.stop();
+						/*
 						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 							if (curfilter[0] != -1) {
 								if (notificationManager.isNotificationPolicyAccessGranted()) {
@@ -392,6 +391,7 @@ static public String glucosestr(float gl) {
 									}
 								}
 							}
+							*/
 						}
 					}
 

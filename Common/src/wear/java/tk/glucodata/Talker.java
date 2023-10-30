@@ -7,7 +7,7 @@ import android.view.View;
 public class Talker {
 static long nexttime;
 static void getvalues() { }
-
+static boolean istalking() {return false;}
 void destruct() { }
 Talker() { }
 Talker(Context context) { }

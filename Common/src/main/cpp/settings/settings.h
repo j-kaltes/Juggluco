@@ -445,10 +445,11 @@ Settings(const char *settingsname,const char *base,const char *country): Mmap(se
 
 
 void		setdisturbs() {
+/*
 	struct ring *al=data()->alarms;
 	al[0].disturb=true;
 	al[1].disturb=true;
-	al[3].disturb=true;
+	al[3].disturb=true; */
 	}
 
  void		mkalarms() {

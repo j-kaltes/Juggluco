@@ -2356,11 +2356,16 @@ int onestep() {
 	if(showoldscan(genVG)) {
 		ret=1;
 		}
-	else {
+	else
+	{
+#ifndef WEAROS
 		if(numlist) {
 			shownumlist();
 			}
-		else {
+		else
+#endif
+
+		{
 			withredisplay(genVG,nu,endtime);
 		}
 	}
@@ -2635,6 +2640,7 @@ void  calccurvegegs() {
 
 void		numendbegin() ;
 void flingX(float vol) {
+#ifndef WEAROS
 	if(numlist)  {
 		LOGSTRING("flingX\n");
 		if(vol<0) {
@@ -2643,6 +2649,7 @@ void flingX(float vol) {
 			}
 		return;
 		}
+#endif
 	starttime-=(duration*1.2*vol/dwidth);
 #ifndef WEAROS
 	if(!showpers)
@@ -2659,7 +2666,8 @@ bool numpagepast() ;
 int translate(float dx,float dy,float yold,float y) {
 static bool ybezig=false;
 	auto absdy=fabsf(dy);
-	if(fabsf(dx)>absdy) {	
+	if(fabsf(dx)>absdy) {
+#ifndef 	WEAROS
 		if(numlist) {
 			auto tim = std::chrono::system_clock::now();
 			static decltype(tim) oldtim{};
@@ -2679,7 +2687,9 @@ static bool ybezig=false;
 				return 0;
 
 			}
-		else  {
+		else
+#endif
+		{
 			ybezig=false;
 			starttime+=1.2*(dx/dwidth)*duration;
 			#ifndef WEAROS
@@ -2847,7 +2857,6 @@ int64_t screentap(float x,float y) {
 
 #ifndef WEAROS
 	if(!showpers ) 
-#endif
 	{
 
 		if(numlist)  {
@@ -2864,6 +2873,10 @@ int64_t screentap(float x,float y) {
 			else
 				return -2LL;
 			}
+#else
+	{
+#endif
+
 		if(emptytap) {
 			return -1LL;
 			}
@@ -3228,9 +3241,11 @@ void numpagenum(const uint32_t tim) ;
 
 static void highlightnum(const Num *num) {
 	uint32_t tim=num->time;
+#ifndef WEAROS
 	if(numlist)
 		numpagenum(tim) ;
 	else
+#endif
 		starttime=starttimefromtime(tim);
 	}
 
@@ -4119,7 +4134,7 @@ static int64_t menutap(float x,float y) {
 
 
 
-
+#ifndef WEAROS
 void settoend() ;
 void shownumiters() ;
 #include "oldest.h"
@@ -4257,7 +4272,6 @@ void shownumlist() {
 		showfromend();
 		}
 	}
-
 NumIter<Num> *mknumiters() ;
 
 void numiterinit() {
@@ -4353,7 +4367,7 @@ char buf[80];
 	starttime=starttimefromtime((first+second)/2);
 	return;
 	}
-
+#endif
 //#include <stdio.h>
        #include <sys/types.h>
        #include <sys/stat.h>

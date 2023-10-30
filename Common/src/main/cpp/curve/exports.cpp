@@ -1,3 +1,4 @@
+#ifndef WEAROS
 /*      This file is part of Juggluco, an Android app to receive and display         */
 /*      glucose values from Freestyle Libre 2 and 3 sensors.                         */
 /*                                                                                   */
@@ -139,10 +140,6 @@ bool exportdata(myfilep fp,NumIter<Num>*numiters,int start,int basecount,const F
 		const int bytes=numiters[oldest].bytes;
 		const Num *startall=numiters[oldest].startall;
 		const int index=(reinterpret_cast<const uint8_t*>(num)-reinterpret_cast<const uint8_t*>(startall))/bytes+1;
-#ifndef NOLOG
-		const int previndex=num-startall+1;
-		LOGGER("previndex=%d index=%d bytes=%d sizeof(T)=%lu\n",previndex,index,bytes,sizeof(Num));
-#endif
 		const Num *beg=numiters[oldest].begin;
 		func(fp,index,num,numiters[oldest].index,beg);
 		}
@@ -410,8 +407,11 @@ std::span<char> getexportdata(int startpos,int len,uint32_t starttime,uint32_t e
 		int end=mem->iter+len;
 		if(end>=mem->max) {
 			const int newmax=end*2;
+			LOGGER("increase to %d\n",newmax);
 			char *tmp= new(std::nothrow) char [newmax];
 			if(!tmp) {
+				delete[] mem->mem;
+				mem->mem=nullptr;
 				return -1;
 				}
 			mem->max=newmax;
@@ -447,17 +447,17 @@ constexpr const cookie_io_functions_t  memfuncs = {
 	if(FILE *fp=FMEMOPEN(&mem)) {
 		if(header) {
 			if(!header(fp)) {
-				delete[] mem.mem;
-				return {(char *)nullptr,(size_t)0};
+				return {mem.mem,std::numeric_limits<size_t>::max()};
 				}	
 			}
 		bool res=exporter(fp,starttime,endtime);
 		if(fclose(fp)==0&&res)
 			return {mem.mem,(size_t)mem.iter};
 		lerror("fclose ");	
+		return {mem.mem,std::numeric_limits<size_t>::max()};
 		}
-	delete[] mem.mem;
-	return {(char *)nullptr,(size_t)0};
+	else
+			return {mem.mem,std::numeric_limits<size_t>::max()};
 	}
 std::span<char> gethistory(int startpos, int len, uint32_t starttime, uint32_t endtime,bool header) {
 	return getexportdata(startpos,len,starttime, endtime,fexporthistory,header?writehistoryheader:nullptr);
@@ -476,3 +476,4 @@ extern bool fallsavemeals(FILE *handle,uint32_t starttime,uint32_t endtime) ;
 std::span<char> getmeals(int startpos, int len, uint32_t starttime, uint32_t endtime,bool header) {
 	return getexportdata(startpos,len,starttime, endtime,fallsavemeals,nullptr);
 	}
+#endif

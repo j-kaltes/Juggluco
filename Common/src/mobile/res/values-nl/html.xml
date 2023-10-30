@@ -20,8 +20,10 @@ Beltoon die je krijg als je zelf geen beltoon selecteert.</p>
 Selecteer een beltoon. Op sommige Samsung smartphones is aan
 crashende ringtone picker app gepreïnstalleerd, zodat je een andere
 ringtone picker app moet installeren, bijvoorbeeld:
-<a href="https://play.google.com/store/apps/details?id=com.centralparkapps.ringo.ringtones">https://play.google.com/store/apps/details?id=com.centralparkapps.ringo.ringtones</a>, <a href="https://apkcombo.com/ringtone-picker/de.kumpewo.ringtones">https://apkcombo.com/ringtone-picker/de.kumpewo.ringtones</a> of <a href="https://m.apkpure.com/tone-picker-mp3-ringtones/com.hlidskialf.android.tonepicker">https://m.apkpure.com/tone-picker-mp3-ringtones/com.hlidskialf.android.tonepicker</a>
-
+<a href="https://play.google.com/store/apps/details?id=com.centralparkapps.ringo.ringtones">https://play.google.com/store/apps/details?id=com.centralparkapps.ringo.ringtones</a>,
+<a href="https://apkcombo.com/ringtone-picker/de.kumpewo.ringtones">https://apkcombo.com/ringtone-picker/de.kumpewo.ringtones</a>
+of
+<a href="https://m.apkpure.com/tone-picker-mp3-ringtones/com.hlidskialf.android.tonepicker">https://m.apkpure.com/tone-picker-mp3-ringtones/com.hlidskialf.android.tonepicker</a>
 </p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>Trillen</b>:
 Alarm door trilling</p>
@@ -31,10 +33,12 @@ niet de benodigde toestemming hiervoor heeft, wordt je naar een
 Android instellingen schermpje geleidt waar je Juggluco deze
 toestemming kunt geven. Door op &quot;<i>Play</i>&quot; te drukken
 terwijl &quot;<i>Niet storen</i>&quot; aan staat, kun je zien of
-alarmen al of niet werken tijdens &quot;<i>Niet storen</i>&quot;.
-Deze instelling kan het onbedoelde effect hebben dat wanneer een
-alarm afgaat tijdens een automatische &quot;Niet storen&quot;-periode,
-deze status niet automatisch wordt uitgeschakeld.</p>
+alarmen al of niet werken tijdens &quot;<i>Niet storen</i>&quot;. In
+de vorige versie van Juggluco werd &quot; <i>Niet storen</i> &quot;
+weer ingeschakeld na het alarm. In de huidige versie is dat niet het
+geval, omdat dat onbedoeld tot gevolg had dat wanneer er tijdens een
+automatische &quot;<i>Niet Storen&quot;-periode</i> een alarm afging
+, deze status niet automatisch werd uitgeschakeld.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>Flits</b>:
 Smartphones met flits zaklamp hebben de mogelijk bij het afgaan van
 alarm, voor de aangeven hoeveelheid seconden, te flitsen. Handig in
@@ -1554,17 +1558,17 @@ Oekraïens vertaald door <span lang="ru-RU"><a href="mailto:3477734n@gmail.com">
 </string>
 <string name="disturbhelp" >
 <![CDATA[
-<p align="center" style="line-height: 100%; margin-top: 0.17in; margin-bottom: 0.08in; page-break-after: avoid">
-<font face="Liberation Sans, sans-serif"><font size="6" style="font-size: 28pt"><b>Toegang
-tot &ldquo;<i>Niet storen</i>&rdquo;</b></font></font></p>
-<p>In Juggluco kun je voor elk alarm aangeven of het af moet gaan
-tijdens &ldquo;<i>Niet storen</i>&rdquo; (onder alarmtoon voor dat
-alarm). Op sommige apparaten zijn alarmen tijdens &ldquo;Niet storen&rdquo;
-enkel mogelijk als Juggluco toegang heeft tot &ldquo;Niet storen&rdquo;.
-Nadat op OK gedrukt is, kom je uit in een Android instelling
-schermpje waar je Juggluco deze toestemming kunt geven. Onafhankelijk
-van wat je daar aangeeft, kun je in Juggluco voor elk alarm aangeven
-of het moet afgaan tijdens &ldquo;Niet storen&rdquo; of niet.</p>
+<h1>Toegang tot <i>&quot;Niet storen&quot;</i></h1>
+<p>Op sommige apparaten werken de alarmen niet tijdens de modus <i>&quot;Niet
+storen&quot;</i>. Met <i>&quot;Storen&quot;</i> kun je aangeven of
+<i>&quot;Niet storen&quot;</i> moet worden uitgeschakeld voordat het
+alarm wordt afgespeeld.</p>
+<p>WAARSCHUWING: Stel &quot;<i>Storen</i>&quot; niet in als het alarm
+werkt als je op &quot;<i>Afspelen</i>&quot; drukt tijdens &quot;<i>Niet
+storen</i>&quot;. Als &quot;Storen&quot; is ingesteld, schakelt
+Juggluco om een alarm af te spelen, &quot;<i>Niet storen</i>&quot;
+uit, speelt het alarm af. &quot;<i>Niet storen</i>&quot; wordt daarna
+niet meer aangezet.</p>
 ]]>
 </string>
 <string name="libreview" >

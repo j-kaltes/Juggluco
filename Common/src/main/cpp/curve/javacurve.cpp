@@ -505,7 +505,7 @@ extern "C" JNIEXPORT jlong JNICALL fromjava(lastpoll)(JNIEnv *env, jclass thiz) 
 		return 0LL;
 	}*/
 //#include "oldest.h"
-
+#ifndef WEAROS
 void numfirstpage() ;
 extern "C" JNIEXPORT void JNICALL fromjava(firstpage)(JNIEnv *env, jclass thiz) {
 	numfirstpage();
@@ -521,7 +521,7 @@ void endnumlist() ;
 extern "C" JNIEXPORT void JNICALL fromjava(endnumlist)(JNIEnv *env, jclass thiz) {
 	 endnumlist();
 	}
-
+#endif
 extern int showui;
 extern "C" JNIEXPORT jboolean JNICALL fromjava(getsystemUI)(JNIEnv *env, jclass thiz) {
 	return showui;
@@ -561,7 +561,6 @@ extern bool makepercetages() ;
 extern "C" JNIEXPORT jboolean JNICALL fromjava(makepercentages)(JNIEnv *env, jclass thiz) {
 	return makepercetages();
 	}
-#endif
 extern int numlist;
 				extern void numiterinit();
 extern "C" JNIEXPORT void JNICALL fromjava(makenumbers)(JNIEnv *env, jclass thiz) {
@@ -570,6 +569,7 @@ extern "C" JNIEXPORT void JNICALL fromjava(makenumbers)(JNIEnv *env, jclass thiz
 				numlist=1;
 				}
 			}
+#endif
 /*
 static float screenwidthcm=0;
 //extern bool iswatch;

@@ -255,6 +255,7 @@ const bool localhostonly=!settings->data()->remotelyxdripserver&&!secure;
 		  }
 	      LOGGERWEB("%swatchserver: got connection from %s sock=%d\n" ,secure?"secure":"",namestr ,new_fd);
 		void handlewatch(int sock) ;
+		try {
 #ifdef USE_SSL
 		if(secure) {
 void handlewatchsecure(int sock) ;
@@ -269,6 +270,13 @@ void handlewatchsecure(int sock) ;
 			std::thread  handlecon(handlewatch,new_fd);
 			handlecon.detach();
 			}
+		}
+		catch (const std::exception& e)     {
+			LOGGERWEB("exception %s\n",e.what() );
+		}
+		catch (...)     {
+			LOGARWEB("exception");
+		}
 		}
 	}
 void handlewatch(int sock) {
@@ -367,12 +375,35 @@ static	constexpr const char status[]="HTTP/1.1 200 OK\r\nContent-Type: text/html
 	outdata->len=statuslen;
 	return true;
 }
+static bool outofmemory(recdata *outdata) {
+
+//	const char notfoundtxt[]="HTTP/1.0 404 Not Found\r\nContent-Type: text/plain\r\nContent-Length: ";
+static	constexpr const char status[]="HTTP/1.1 413 Content Too Large\r\nContent-Type: text/html; charset=utf-8\r\nContent-Length: 30\r\n\r\n<h1>Server out of memory</h1>\n";
+	const int statuslen=sizeof(status)-1;
+	outdata->allbuf=nullptr;
+	outdata->start=status;
+	outdata->len=statuslen;
+	return true;
+}
+
+/*
 static bool givesite(recdata *outdata) {
 static	constexpr const char webpage[]="HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\nContent-Length: 133\r\n\r\n" 
 R"(<!DOCTYPE html>
 <html>
 <head>
    <meta http-equiv="refresh" content="0; url=https://www.juggluco.nl"/>
+</head>
+<body>
+</body>
+</html>
+)"; */
+static bool givesite(recdata *outdata) {
+static	constexpr const char webpage[]="HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\nContent-Length: 158\r\n\r\n" 
+R"(<!DOCTYPE html>
+<html>
+<head>
+   <meta http-equiv="refresh" content="0; url=https://www.juggluco.nl/Juggluco/webserver.html"/>
 </head>
 <body>
 </body>
@@ -393,6 +424,9 @@ static bool givestatus(recdata *outdata) {
         gmtime_r(&tim, &tmbuf);
 	constexpr const int len=sizeof(statusformat)+50;
 	outdata->allbuf=new(std::nothrow) char[len+512];
+	if(!outdata->allbuf) {
+		return outofmemory(outdata);
+		}
         char *start=outdata->allbuf+152;
 	auto thigh=gconvert(settings->targethigh());
 	auto tlow=gconvert(settings->targetlow());
@@ -432,6 +466,9 @@ bool givenolist(recdata *outdata) {
 	LOGARWEB("givenothing");
 	const std::string_view nothing="[]";
 	outdata->allbuf=new(std::nothrow) char[nothing.size()+512];
+	if(!outdata->allbuf) {
+		return outofmemory(outdata);
+		}
 	char *start=outdata->allbuf+152;
 	memcpy(start,nothing.data(),nothing.size());
 	mkjsonheader(start,start+nothing.size(),false,outdata);
@@ -441,11 +478,21 @@ bool givenothing(recdata *outdata) {
 	LOGARWEB("givenothing");
 	const std::string_view nothing="{}\n";
 	outdata->allbuf=new(std::nothrow) char[nothing.size()+512];
+	if(!outdata->allbuf) {
+		return outofmemory(outdata);
+		}
 	char *start=outdata->allbuf+152;
 	memcpy(start,nothing.data(),nothing.size());
 	mkjsonheader(start,start+nothing.size(),false,outdata);
 	return true;
 }
+
+static bool giveservererror(recdata *outdata) {
+	outdata->allbuf=nullptr;
+	outdata->len=servererrorstr.size();
+	outdata->start=servererrorstr.data();
+	return true;
+	}
 
 char *textitem(char *outiter,const ScanData *value,const char sep=9) {
 	auto mgdL=value->getmgdL();
@@ -461,9 +508,10 @@ char *textitem(char *outiter,const ScanData *value,const char sep=9) {
 	}
 
 //[{"_id":"%s","device":"%s","uploader":{"battery":%d,"type":"PHONE"},"created_at":"2023-03-05T20:05:53.203Z"},
+/*
 static bool showdevicestatus(recdata *outdata) { //seems to be used for battery level. Unimportant.
 	return givenothing(outdata);
-	}
+	} */
 static bool givecurrent(recdata *outdata) {
 	int sensorid=sensors->last();
 	const SensorGlucoseData *sens=getStreamSensor(sensorid);;
@@ -479,6 +527,8 @@ static bool givecurrent(recdata *outdata) {
 static	constexpr const char header[]="HTTP/1.1 200 OK\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Length: ";
 	constexpr const int headerlen=sizeof(header)-1;
    	outdata->allbuf=new(std::nothrow) char[sizeof(header)+1024];
+	if(!outdata->allbuf)
+		return outofmemory(outdata);
     char *start=outdata->allbuf+152,*outiter=start;
     	outiter=textitem(outiter,value)-2;
     /*
@@ -556,7 +606,7 @@ bool givesgvtxt(int nr,int interval,uint32_t lowerend,uint32_t higherend,recdata
    	outdata->allbuf=new(std::nothrow) char[bufsize];
 	if(outdata->allbuf==nullptr) {
 		LOGGERWEB("givesgvtxt new failed %d\n",bufsize);
-		return false;
+		return outofmemory(outdata);
 		}
     char *start=outdata->allbuf+250,*outiter=start;
 //	int interval=4*61;
@@ -596,6 +646,9 @@ bool		 pebbleinterpret(const char *input,int inputlen,recdata *outdata) {
 	int count=1;
 	bool mmol=true;
    	outdata->allbuf=new(std::nothrow) char[512+80*+count+200];
+	if(!outdata->allbuf) {
+		return outofmemory(outdata);
+		}
     	char *start=outdata->allbuf+150,*outiter=start;
 	auto nu=time(nullptr);
 	constexpr const char startpebble[]=R"({"status":[{"now":%lld}],"bgs":[)";
@@ -725,6 +778,10 @@ bool giveproperties(const char *input,int inputlen,recdata *outdata) {
 //	const char *end=input+inputlen;
  	if(*input++=='/') {
 		outdata->allbuf=new(std::nothrow) char[512*inputlen];
+		if(!outdata->allbuf)
+			return outofmemory(outdata);
+
+
 		char *start=outdata->allbuf+152,*outiter=start;
 		const char *endinput=input+inputlen;
 		*outiter++='{';
@@ -768,7 +825,7 @@ bool giveproperties(const char *input,int inputlen,recdata *outdata) {
 	else {
 		outdata->allbuf=new(std::nothrow) char[512*6];
 		if(!outdata->allbuf)
-    			return givenothing(outdata);
+    			return outofmemory(outdata);
 		char *start=outdata->allbuf+152,*outiter=start;
 		*outiter++='{';
 		outiter = givebgnow(outiter);
@@ -824,7 +881,9 @@ static void nosecret(std::string_view secret, recdata *outdata) {
 	outdata->start=nosecret;
 	}
 
-static bool apiv1(const char *posptr,int leftlen,bool behead,bool json, recdata *outdata) {
+static void wrongpath(std::string_view toget, recdata *outdata);
+static bool apiv1(const char *input,int leftlen,bool behead,bool json, recdata *outdata) {
+		const char *posptr=input;
 		std::string_view api="entries";
 		if(!memcmp(api.data(),posptr,api.size())) {
 			posptr+=api.size();
@@ -876,7 +935,9 @@ static bool apiv1(const char *posptr,int leftlen,bool behead,bool json, recdata 
 									return givecurrent(outdata);
 									}
 							else {
-								return givenothing(outdata);
+
+ 								wrongpath({input-7,static_cast<size_t>(leftlen+7)}, outdata);
+								return true;
 								}
 							}
 						}
@@ -901,7 +962,12 @@ static bool apiv1(const char *posptr,int leftlen,bool behead,bool json, recdata 
 		if(!memcmp(devicestatus.data(),posptr,devicestatus.size())) {
 			return showdevicestatus(outdata);
 			}  */
-		return givenothing(outdata);
+
+
+
+
+	wrongpath({input-7,static_cast<size_t>(leftlen+7)}, outdata);
+	return true;
  	}
 
 static bool setitervar(const char *&iter,std::string_view cond,bool &var) {
@@ -1030,7 +1096,10 @@ Getopts(const char *posptr,int size) {
 	};
 
 typedef		std::span<char> (*getdata_t)(int startpos, int len, uint32_t starttime, uint32_t endtime,bool);
-static bool jugglucos(const char *posptr,int size, recdata *outdata) {
+
+std::string_view jugglucocommand="x/";
+static bool jugglucos(const char * const input,int size, recdata *outdata) {
+	const char *posptr=input;
 	constexpr const std::string_view types[]={"history","stream","scans","amounts","meals"};
 	 constexpr const getdata_t procs[]={gethistory,getstream,getscans,getamounts,getmeals};
 	constexpr const int perhour[]={12*62,60*81,2*81,5*85,200};
@@ -1044,20 +1113,28 @@ static bool jugglucos(const char *posptr,int size, recdata *outdata) {
 			constexpr const int startpos=152;
 
 			std::span<char> res=procs[i](startpos,startlen,opts.start,opts.end,opts.headermode);
-			if(res.size()) {
+			if(!res.data()) {
+				return outofmemory(outdata);
+				}
+			if(res.size()!=std::numeric_limits<size_t>::max()) {
 				const std::string_view plain="text/plain";
 				const std::string_view html="text/html";
-
+				outdata->allbuf=res.data();
 				mktypeheader(res.data()+startpos,res.data()+res.size(),false,outdata,i==4?html:plain);
 				return true;
+				}
+			else {
+				delete[] res.data();
+				return giveservererror(outdata);
 				}
 			break;
 			}
 		}
-	return givenothing(outdata);
+
+	wrongpath({input-jugglucocommand.size(),size+jugglucocommand.size()},outdata);
+	return true;
 	}
 
-void wrongpath(std::string_view toget, recdata *outdata);
 bool watchcommands(char *rbuf,int len,recdata *outdata) {
 	LOGGERWEB("watchcommands len=%d %.*s",len,len,rbuf);
 	const char *start=rbuf;
@@ -1174,9 +1251,8 @@ const auto propsize= properties.size();
 		return giveproperties(toget.data()+propsize,toget.size()-propsize,outdata);
 		}
 
-std::string_view jugstr="x/";
-if(!memcmp(jugstr.data(),posptr,jugstr.size())) {
-	return jugglucos(posptr+jugstr.size(),toget.size()-jugstr.size(),outdata);
+if(!memcmp(jugglucocommand.data(),posptr,jugglucocommand.size())) {
+	return jugglucos(posptr+jugglucocommand.size(),toget.size()-jugglucocommand.size(),outdata);
 	}
 
 constexpr const std::string_view pebble="pebble";
@@ -1197,19 +1273,20 @@ const auto indexsize= index.size();
 
 
 	wrongpath(toget,outdata);
-	return false;
+	return true;
 	}
 
 
 
 void wrongpath(std::string_view toget, recdata *outdata) {
 //	const char notfoundtxt[]="HTTP/1.0 404 Not Found\r\nAccess-Control-Allow-Origin: *\r\nContent-Type: text/plain\r\nContent-Length: ";
-	const char notfoundtxt[]="HTTP/1.0 404 Not Found\r\nContent-Type: text/plain\r\nContent-Length: ";
+//	const char notfoundtxt[]="HTTP/1.0 404 Not Found\r\nContent-Type: text/plain\r\nContent-Length: ";
+	const char notfoundtxt[]="HTTP/1.1 400 Bad Request\r\nContent-Type: text/plain\r\nContent-Length: ";
 	constexpr const int startlen=sizeof(notfoundtxt)-1;
 	constexpr int maxant=4096;
 	char *notfound=outdata->allbuf=new char[maxant];
 	memcpy(notfound,notfoundtxt,startlen);
-	const char notpath[]="Path not found: ";
+	const char notpath[]="Bad Request: ";
 	constexpr const int notpathlen=sizeof(notpath)-1;
 	int pathlen=std::find(toget.begin(),toget.end(),' ')-toget.begin();
 	constexpr const int maxpath=(maxant-startlen-30);
@@ -1285,8 +1362,8 @@ void mktypeheader(char *outstart,char *outiter,const bool headonly,recdata *outd
 		}
 	else
 		 totlen=outiter-startheader;
-	LOGARWEB("All:");
-	logwriter(startheader,totlen);
+	LOGARWEB("START:");
+	logwriter(startheader,400);
 	outdata->start=startheader;
 	outdata->len=totlen;
 
@@ -1503,6 +1580,10 @@ static bool givetreatments(const char *args,int argslen, recdata *outdata)  {
 
 	int count= pret.datnr;
 	char *outstart=pret.makedata(outdata ); 
+	if(!outstart) {
+		return outofmemory(outdata);
+		}
+
 	char *outiter=outstart;
 	*outiter++='[';
 	bool carb=pret.carb;
@@ -1544,8 +1625,9 @@ bool Sgvinterpret::getdata(bool headonly,recdata *outdata) const {
 	LOGGERWEB("count=%d\n",datnr);
 
 	char *outstart=makedata(outdata);
-	if(!outstart)
-		return false;
+	if(!outstart) {
+		return outofmemory(outdata);
+		}
 	char *outiter=outstart;
 	*outiter++='[';
 	if(!getitems(outiter,datnr) )

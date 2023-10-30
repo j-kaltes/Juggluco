@@ -149,7 +149,7 @@ void	shower(NVGcontext* vg,const Num *num,const float xpos,const float xend,cons
 	nvgText(vg, xend,ypos,item,item+itemlen);
 	}
 
-
+#ifndef WEAROS
 void shownums(NVGcontext* vg, NumIter<Num> *numiters, const int nr) {
 LOGGER("shownums width=%d height=%d\n",numcontrol.width,numcontrol.height);
 	numscreen(vg,[numiters,nr](NVGcontext *vg,float xpos,float xend) {
@@ -206,3 +206,4 @@ extern "C" JNIEXPORT void JNICALL fromjava(forwardnumlist)(JNIEnv *env, jclass t
 extern "C" JNIEXPORT void JNICALL fromjava(backwardnumlist)(JNIEnv *env, jclass thiz) {
 	numpagepast();
 	}
+#endif

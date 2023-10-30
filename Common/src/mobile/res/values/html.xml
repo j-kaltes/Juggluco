@@ -17,25 +17,32 @@ default sound.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>Select</b>:
 Select a ringtone. On some Samsung phone the preinstalled ringtone
 picker app crashes, so you have to install a different ringtone app
-that can be used by other apps, for example: <a href="https://play.google.com/store/apps/details?id=com.centralparkapps.ringo.ringtones">https://play.google.com/store/apps/details?id=com.centralparkapps.ringo.ringtones</a>, <a href="https://apkcombo.com/ringtone-picker/de.kumpewo.ringtones">https://apkcombo.com/ringtone-picker/de.kumpewo.ringtones</a> or <a href="https://m.apkpure.com/tone-picker-mp3-ringtones/com.hlidskialf.android.tonepicker">https://m.apkpure.com/tone-picker-mp3-ringtones/com.hlidskialf.android.tonepicker</a>
-
+that can be used by other apps, for example:
+<a href="https://play.google.com/store/apps/details?id=com.centralparkapps.ringo.ringtones">https://play.google.com/store/apps/details?id=com.centralparkapps.ringo.ringtones</a>,
+<a href="https://apkcombo.com/ringtone-picker/de.kumpewo.ringtones">https://apkcombo.com/ringtone-picker/de.kumpewo.ringtones</a>
+or
+<a href="https://m.apkpure.com/tone-picker-mp3-ringtones/com.hlidskialf.android.tonepicker">https://m.apkpure.com/tone-picker-mp3-ringtones/com.hlidskialf.android.tonepicker</a>
 </p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>Vibrate</b>:
 Vibrate</p>
-<p style="line-height: 100%; margin-bottom: 0in"><b>Disturb</b>: Also
-generate sound when &quot;<i>Do not Disturb</i>&quot; is on. If
-Juggluco doesn\'t have the required permission for this, you will be
-directed to an Android settings screen to give Juggluco this
-permission. By switching on &quot;<i>Do not Disturb</i>&quot; and
-pressing <i>Play,</i><span style="font-variant: normal"> </span><span style="font-variant: normal"><span style="font-style: normal">you
+<p style="line-height: 100%; margin-bottom: 0in"><b>Disturb</b>: If
+&quot;<i>Do not Disturb</i>&quot; is on, turn it off before playing
+an alarm. If Juggluco doesn\'t have the required permission for this,
+you will be directed to an Android settings screen to give Juggluco
+this permission. By switching on &quot;<i>Do not Disturb</i>&quot;
+and pressing <i>Play,</i><span style="font-variant: normal"> </span><span style="font-variant: normal"><span style="font-style: normal">you
 can test whether alarms will work during </span></span><i>&quot;Do
-not Disturb&quot;</i><span style="font-style: normal">. This setting
-can have the </span><span style="font-style: normal">unintended
-</span><span style="font-style: normal">effect that when an alarm
-went o</span><span style="font-style: normal">ff</span><span style="font-style: normal">
-during </span><span style="font-style: normal">an automatic</span><span style="font-style: normal">
-&quot;Do not Dis</span><span style="font-style: normal">turb&quot;
-period, this state will not be turned off automatically.</span></p>
+not Disturb&quot;</i><span style="font-variant: normal"><span style="font-style: normal">.
+In previous version of Juggluco, &quot;</span></span><span style="font-variant: normal"><i>Do
+not Disturb</i></span><span style="font-variant: normal"><span style="font-style: normal">&quot;
+was turned on </span></span><span style="font-variant: normal"><span style="font-style: normal">again
+</span></span><span style="font-variant: normal"><span style="font-style: normal">after
+the alarm. In the current version it isn\'t, because that had the
+unintended effect that when an alarm went off</span></span><span style="font-variant: normal">
+</span><span style="font-variant: normal"><span style="font-style: normal">during
+an automatic</span></span><span style="font-variant: normal"> </span><span style="font-variant: normal"><span style="font-style: normal">&quot;</span></span><span style="font-variant: normal"><i>Do
+not Disturb</i></span><span style="font-variant: normal"><span style="font-style: normal">&quot;
+period, this state was not be turned off automatically.</span></span></p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>Flash</b>:
 Smartphones with torch flashlight have the option to flash for the
 same number of seconds. Handy in case ringtones are not allowed and
@@ -1461,16 +1468,18 @@ Deliś</a>.</span></p>
 <![CDATA[
 <h1>&quot;<i>Do not disturb</i>&quot;
 access</h1>
-<p>In Juggluco you can specify for each alarm type whether it should
-be played during &quot;<i>Do not disturb</i>&quot; (under Ringtone of
-the specific alarm.) <meta name="created" content="00:00:00">On some
-devices, alarms during &quot;<i>Do not disturb</i>&quot; mode are
-only possible if Juggluco has &quot;<i>Do not disturb</i>&quot;
-access. On pressing OK you will be directed to an Android setting
-screen where you can give Juggluco this permission. Independent of
-what you answer there, you can specify in Juggluco for each alarm
-whether it should go of during &quot;<i>Do not disturb</i>&quot; or
-not.</p>
+<p><meta name="created" content="00:00:00">On some devices, alarms
+don\'t work during &quot;<i>Do not disturb</i>&quot; mode. With
+&quot;<i>Disturb</i>&quot; you can specify whether &quot;<i>Do not
+disturb</i>&quot; should be turned off before playing the alarm.</p>
+<p>WARNING: Do not set <i>&quot;Disturb&quot;</i> if the alarm works
+when pressing <i>&quot;Play&quot;</i> during <i>&quot;Do not
+disturb&quot;</i>. With &quot;Disturb&quot; set Juggluco will when an
+alarm goes off, turn off <i>&quot;Do not disturb&quot;</i><i> </i>before
+playing the alarm. It will no longer turn on <i>&quot;Do not disturb&quot;</i>
+again, because this had the unintended side-effect that &quot;<i>Do
+not disturb</i>&quot; was not automatically turned off according to a
+set time schedule.</p>
 ]]>
 </string>
 <string name="libreview" >

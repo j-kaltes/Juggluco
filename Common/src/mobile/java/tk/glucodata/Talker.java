@@ -228,8 +228,11 @@ private static View[] slider(MainActivity context,float init) {
 
 	return new View[] {speed,displayspeed};
 	}
+public static boolean istalking() {
+	return SuperGattCallback.dotalk||Natives.gettouchtalk()||Natives.speakmessages()||Natives.speakalarms();
+	}
 public static void config(MainActivity context) {
-	if(!SuperGattCallback.dotalk) {
+	if(!istalking()) {
 	 	SuperGattCallback.newtalker(context);
 		}
 	var separation=new EditText(context);
@@ -365,6 +368,14 @@ public static void config(MainActivity context) {
 		var gl=lastglucose();
 		var say=(gl!=null&&gl.value!=null)?gl.value:"8.7";
 		getvalues.run();
+		if(istalking()) {
+			var talk=SuperGattCallback.talker;
+			if(talk!=null) {
+				talk.setvalues();
+				talk.speak(say);
+				return;
+				}
+			}
 		playstring=say;
 		SuperGattCallback.newtalker(context);
 		});

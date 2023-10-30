@@ -127,7 +127,7 @@ static void init(Application app) {
        if(glucosealarms==null) glucosealarms=new tk.glucodata.GlucoseAlarms(app);
 	if(!isWearable) {
 		Talker.getvalues();
-		if(dotalk||Natives.gettouchtalk()||Natives.speakmessages()||Natives.speakalarms())
+		if(Talker.istalking())
 			newtalker(null);
 		}
 	}
