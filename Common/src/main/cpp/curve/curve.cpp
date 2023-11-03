@@ -1300,6 +1300,7 @@ static void	showscanner(NVGcontext* genVG,const SensorGlucoseData *hist,int scan
 		memcpy(ptr,trend.data(),trend.size());
 		ptr+=trend.size();
 		*ptr++='\n';
+		*ptr++='\n';
 		memcpy(ptr,buf1,len1+1);
 		speak(value);
 		}
@@ -2916,6 +2917,7 @@ int64_t screentap(float x,float y) {
 						auto trend = usedtext->trends[el.glucosetrend];
 						memcpy(value, trend.data(), trend.size());
 						char *ptr = value + trend.size();
+						*ptr++ = '\n';
 						*ptr++ = '\n';
 						snprintf(ptr, maxvalue, gformat, el.glucosevalue);
 						speak(value);

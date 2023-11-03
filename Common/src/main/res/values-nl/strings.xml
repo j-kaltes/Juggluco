@@ -309,5 +309,13 @@
   <string name="allsentnoreceive">Als alles naar een host wordt verzonden, moet \"Ontvang van\" uitgeschakeld zijn.</string>
   <string name="nomirrorport">Het poortnummer moet verschillen van de kloonpoort</string>
   <string name="nohttpport">Het poortnummer moet verschillen van de http-poort</string>
-
+<string name="ready_in">" klaar in "</string>
+<string name="ready_for_use">Sensor klaar voor gebruik</string>
+<string name="endstime">" eindigt op dit moment"</string>
+<string name="triednothing">Niets geprobeerd</string>
+<string name="succes">Succes</string>
+<string name="resendwarning">Alle gegevens worden opnieuw verzonden, wat tijd kost en gevolgen kan hebben voor Libreview en Kerfstok</string>
+<string name="parseip">Fout bij interpreteren van IP</string>
+<string name="toomanyhosts">Maximumaantal hosts overschreden</string>
+<string name="senthosts">Juggluco zendt naar maximaal 4 hosts</string>
 </resources>

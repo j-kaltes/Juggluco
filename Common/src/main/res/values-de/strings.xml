@@ -312,5 +312,13 @@
   <string name="allsentnoreceive">Wenn alles an einen Host gesendet wird, sollte „Empfangen von“ deaktiviert sein.</string>
   <string name="nomirrorport">Die Portnummer sollte sich vom Klonport unterscheiden</string>
   <string name="nohttpport">Die Portnummer sollte sich vom http-Port unterscheiden</string>
-
+<string name="ready_in">" bereit in "</string>
+<string name="ready_for_use">Sensor einsatzbereit</string>
+<string name="endstime">" endet um diese Zeit"</string>
+<string name="triednothing">Nichts versucht</string>
+<string name="success">Erfolg</string>
+<string name="resendwarning">Alle Daten werden erneut gesendet, was einige Zeit in Anspruch nimmt und Konsequenzen für Libreview und Kefstok haben kann</string>
+<string name="parseip">Fehler beim Parsen der IP</string>
+<string name="toomanyhosts">Maximale Anzahl an Hosts überschritten</string>
+<string name="senthosts">Juggluco sendet an bis zu 4 Hosts</string>
 </resources>

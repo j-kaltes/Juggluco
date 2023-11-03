@@ -424,7 +424,8 @@ static boolean askcalendar=true;
 private static int calendar(Activity act,int ret,String name) {
 	if(askcalendar)  {
 		int waitmin=(ret&0xff)==5?ret>>8:0;
-		String mess=(waitmin>0) ?"Sensor "+name+" ready in "+waitmin+" minutes":"Sensor ready for use";
+		String mess=(waitmin>0) ?
+(act.getString(R.string.sensor)+" "+name+act.getString(R.string.ready_in)+waitmin+" "+act.getString(R.string.minutes)) :act.getString(R.string.ready_for_use);
 		newsensor(act,mess,name);
 		askcalendar=false;
 		return 0;
@@ -439,7 +440,7 @@ private static void insertcalendar(Activity act,String name) {
 	try {
 		Intent intent = new Intent(Intent.ACTION_INSERT)
 		.putExtra(CalendarContract.Events.TITLE, act.getString(R.string.enddatesensor)+name)
-		.putExtra(CalendarContract.Events.DESCRIPTION, "sensor "+name+" ends at this time")
+		.putExtra(CalendarContract.Events.DESCRIPTION, act.getString(R.string.sensor)+" "+name+act.getString(R.string.endstime) )
 		.setData(CalendarContract.Events.CONTENT_URI)
 		.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, endtime)
 		.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endtime+1000L);

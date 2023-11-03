@@ -127,8 +127,8 @@ static JSONObject  readJSONObject(HttpURLConnection urlConnection)  throws IOExc
 	Log.format("%s: readJSONObject len=%d %s",LOG_ID,ant.length(),ant);
  	return new JSONObject(ant);
 	}
-final private static String success="Success".intern();
-final private static String nothing="Tried nothing".intern();
+final private static String success=Applic.app.getString(R.string.success).intern();
+final private static String nothing=Applic.app.getString(R.string.triednothing).intern();
 
 private static String librestatus=nothing;
 @Keep

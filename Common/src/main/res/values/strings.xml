@@ -320,5 +320,14 @@
  <string name="allsentnoreceive">When everything is sent to a host, \"Receive from\" should be turned off.</string>
  <string name="nomirrorport">The port number should be different from the mirror port</string>
  <string name="nohttpport">The port number should be different from the http port</string>
+<string name="ready_in">" ready in "</string>
+<string name="ready_for_use">Sensor ready for use</string>
+<string name="endstime">" ends at this time"</string>
+<string name="triednothing">Tried nothing</string>
+<string name="success">Success</string>
+<string name="resendwarning">All data will be send again which takes time and can have consequences for Libreview and Kerfstok</string>
+<string name="parseip">Error parsing IP</string>
+<string name="toomanyhosts">Maximal number of hosts exceeded</string>
+<string name="senthosts">Juggluco sends to maximal 4 hosts</string>
 
 </resources>

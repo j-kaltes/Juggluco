@@ -255,8 +255,9 @@ private void deleteconfirmation(MainActivity act) {
 	}
 private void resentconfirmation(MainActivity act,int hostindex) {
         AlertDialog.Builder builder = new AlertDialog.Builder(act);
-        builder.setTitle("Resend data?").
-	 setMessage("All data will be send again which takes time and can have consequences for Libreview and Kerfstok").
+        builder.setTitle(act.getString(R.string.resenddata)+"?").
+//	 setMessage("All data will be send again which takes time and can have consequences for Libreview and Kerfstok").
+	 setMessage(R.string.resendwarning).
            setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 			Natives.resetbackuphost(hostindex);
@@ -438,9 +439,9 @@ void makehostview(MainActivity act) {
 			String mess;
 			switch(pos) {
 				case -1: mess=act.getString(R.string.portrange);break;
-				case -2: mess="Error parsing ip";break;
-				case  -3: mess="Maximal number of hosts exceeded";break;
-				case  -4: mess="Juggluco can sent to maximal 4 hosts";break;
+				case -2: mess=act.getString(R.string.parseip);break;
+				case  -3: mess=act.getString(R.string.toomanyhosts);break;
+				case  -4: mess=act.getString(R.string.senthosts);;break;
 				case -6: mess="Database busy, try again";break;
 				default: mess="Error";break;
 				}
