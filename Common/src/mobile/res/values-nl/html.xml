@@ -1575,22 +1575,20 @@ niet meer aangezet.</p>
 <![CDATA[
 <h1>Libreview</h1>
 <p style="line-height: 100%; margin-bottom: 0in">Juggluco kan
-glucosegegevens en hoeveelheden naar Libreview sturen. Juggluco
-gebruikt de via Bluetooth ontvangen streamgegevens om deze 15
-minutenpunten te creëren door de streamwaarden rond elk punt te
-middelen. Af en toe verzendt het ook een individuele streamwaarde op
-dezelfde manier als individuele gescande waarden naar Libreview
-worden verzonden door de Librelink-app van Abbott. Juggluco hoeft
-niet voortdurend verbonden te zijn met internet om alle gegevens naar
+glucosegegevens en hoeveelheden naar Libreview sturen. Als &quot;Stream
+history&quot; niet aanstaat, gebruikt Juggluco de via Bluetooth
+ontvangen streamgegevens om deze 15 minutenpunten te creëren door de
+streamwaarden rond elk punt te middelen. Juggluco hoeft niet
+voortdurend verbonden te zijn met internet om alle gegevens naar
 Libreview te kunnen verzenden. Net als de Librelnk-app stuurt deze
-gegevens van de afgelopen 89 dagen naar Libreview. Wat nodig is, is
+gegevens van de afgelopen 89 dagen naar Libreview. Als &quot;Stream
+History&quot; niet aan staat of by Libre 0 of 3 sensors, is het nodig
 dat Juggluco via Bluetooth voortdurend verbonden is met een Freestyle
-Libre 2-sensor. Voor Freestyle Libre 3-sensoren worden de 5 minuten
-History gegevens gebruikt, zodat alle eerdere waarden naar Libreview
-worden verzonden. Vanaf Juggluco 6.0.0 zullen History waarden ook
-worden gebruikt als &quot;<i>Streamhistory</i>&quot; is ingeschakeld
-in het linkermenu -&gt; Sensor of bij US/CA/AU Libre 2-sensoren en
-Libre 0-sensoren.</p>
+Libre 2-sensor. Bij Libre 0 en Libre 2 met &quot;Stream history&quot;
+aan, kun je gemiste waarde inhalen door te scannen. Voor Freestyle
+Libre 3-sensoren worden de 5 minuten History gegevens gebruikt, zodat
+alle eerdere waarden naar Libreview worden verzonden. 
+</p>
 <p style="line-height: 100%; margin-bottom: 0in">Om van deze service
 gebruik te maken moet je een account maken op <a href="https://libreview.com/">https://libreview.com</a>
 en het daar gebruikte <b>E-mail adres</b> en <b>wachtwoord</b> hier
@@ -1604,11 +1602,9 @@ Apparaten.</p>
 weggedraaid wordt van Juggluco, zendt Juggluco nieuwe data naar
 Libreview als dat de laatste 20 minuten niet al gedaan is. Je kunt
 ook handmatig zenden door op “<b>Zend nu</b>” te drukken.</p>
-<p style="line-height: 100%; margin-bottom: 0in">Alleen maar glucose
-waarden worden naar Libreview gezonden; geen gegevens met betrekking
-tot eten, activiteit, insuline of scanfouten. Vanaf Juggluco 4.1.0
-wordt ook glucosewaarden van FreeStyle Libre 3 sensoren naar
-Libreview gezonden.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>Zend
+hoeveelheden</b>: Zend ook hoeveelheden naar Libreview. 
+</p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>Direct</b>: stuur
 glucosewaarden onmiddellijk naar Libreview wanneer ze binnenkomen van
 Libre 2 en 3 sensoren. Dit is alleen handig in combinatie met
@@ -2185,27 +2181,24 @@ linkermenu-&gt;Instellingen-&gt;&quot;Nummerlabels&quot;.</p>
 <![CDATA[
 <h1>Export</h1>
 <p>Exporteer gegevens uit Juggluco naar een bestand.</p>
-<p>Het meeste wordt opgeslagen in .tsv. Dit kan worden geladen in
-programma\'s als LibreOffice Calc, Microsoft Excel, Mathematica of R.
-Het is een soort .csv met tabs in plaats van komma\'s die worden
-gebruikt om items te scheiden. Tekens zijn gecodeerd in UTF8 (labels)
-of ASCII.</p>
+<p>Maaltijden worden opgeslagen in html. Alle andere gegevens worden
+opgeslagen in .tsv (<a href="https://en.wikipedia.org/wiki/Tab-separated_values">Tab-separated
+values</a>). Dit kan worden geladen in programma\'s als LibreOffice
+Calc, Microsoft Excel, Mathematica of R. Het is een soort .csv met
+tabs in plaats van komma\'s om items te scheiden. Tekens zijn
+gecodeerd in UTF8 (labels) of ASCII.</p>
 <p>De betekenis van de kolommen vindt je op
 <a href="https://www.juggluco.nl/Juggluco/webserver.html">https://www.juggluco.nl/Juggluco/webserver.html</a>
 .</p>
-<p><b>Dagen</b>: Vanaf Juggluco 7.1.0 kunt u het aantal dagen
-selecteren dat je wilt opslaan. De einddatum is de rechterrand van
-het scherm. Als je gegevens uit het verleden in Juggluco bekijkt,
+<p><strong>Dagen</strong> : Vanaf Juggluco 7.1.0 kun je het aantal
+dagen selecteren dat je wilt opslaan. De einddatum is de rechterrand
+van het scherm. Als u gegevens uit het verleden in Juggluco bekijkt,
 worden alleen oude gegevens geëxporteerd (hetzelfde als in het menu
-links in het midden -&gt; Statistiek).</p>
+links in het midden -&gt; Statistieken).</p>
 <p>Vanaf Juggluco 7.1.0 is het ook mogelijk om deze gegevens te
 ontvangen via de webserver in Juggluco
 (linkermenu-&gt;Instellingen-&gt;Webserver), zie
 <a href="https://www.juggluco.nl/Juggluco/webserver.html">https://www.juggluco.nl/Juggluco/webserver.html</a></p>
-<p><br/>
-<br/>
-
-</p>
 ]]>
 </string>
 </resources>

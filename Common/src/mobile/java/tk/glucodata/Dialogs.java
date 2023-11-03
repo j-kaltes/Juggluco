@@ -23,6 +23,9 @@ package tk.glucodata;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.text.LineBreakConfig;
+import android.graphics.text.LineBreaker;
+import android.os.Build;
 import android.text.InputType;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +33,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import static android.graphics.text.LineBreaker.BREAK_STRATEGY_SIMPLE;
+import static android.text.Layout.BREAK_STRATEGY_HIGH_QUALITY;
 import static android.view.View.VISIBLE;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
@@ -66,7 +71,7 @@ private Button exportbutton(MainActivity activity,String label, int type) {
 			daynr=Integer.parseInt(String.valueOf(days.getText()));
 			} catch(Throwable th) {
 			
-				exportlabel.setText("Can't parse "+days.getText());
+				exportlabel.setText("'"+days.getText()+activity.getString(R.string.invaliddays));
 				return;
 			};
 		if(type==4)
@@ -100,11 +105,19 @@ void showexport(MainActivity activity,int width,int height) {
 		help.setOnClickListener(v-> tk.glucodata.help.help(R.string.helpexport,activity));
 
 		exportlabel=new TextView(activity);
-//		exportlabel.setElegantTextHeight(true);
+		exportlabel.setElegantTextHeight(true);
 		exportlabel.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+//		exportlabel.setMaxWidth((int)(width*.45f));
+//		exportlabel.setMinLines(3);
+
+		
+		exportlabel.setLayoutParams(new ViewGroup.LayoutParams(  (int)(width*(smallScreen?0.6f:.43f)), ViewGroup.LayoutParams.WRAP_CONTENT));
+//		exportlabel.setLayoutParams(new ViewGroup.LayoutParams( ViewGroup.LayoutParams.MATCH_PARENT,  WRAP_CONTENT));
 		exportlabel.setSingleLine(false);
+		exportlabel.setBreakStrategy(BREAK_STRATEGY_SIMPLE);
 		final int rand=Math.round(5*density);
-		exportlabel.setPadding(0,rand,0,rand);
+		final int leftright=Math.round(2*density);
+		exportlabel.setPadding(leftright,rand,0,rand);
 		Button close=new Button(activity);
 		close.setText(R.string.closename);
 		close.setOnClickListener(v-> activity.doonback());
@@ -154,7 +167,7 @@ void showexport(MainActivity activity,int width,int height) {
 		activity.curve.numberview.showkeyboard(activity);
 		}
 	else  {
-		tk.glucodata.help.showkeyboard(activity,days);
+		help.showkeyboard(activity,days);
 		}
 	activity.setonback(() -> {
 			if(smallScreen) {

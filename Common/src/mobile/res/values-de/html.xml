@@ -2060,132 +2060,95 @@ werde.</p>
 </string>
 <string name="libreview" >
 <![CDATA[
-<h1 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
-<font face="Times New Roman"><span style="background: transparent">Libreview</span></font></h1>
-<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.17in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
-<font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="background: transparent">Juggluco
-kann Glukosedaten und Mengen an Libreview senden. Juggluco verwendet
-die über Bluetooth empfangenen Stream-Daten, um diese
-15-Minuten-Punkte zu erstellen, indem die Stream-Werte um jeden Punkt
-herum gemittelt werden. Hin und wieder sendet es auch einen einzelnen
-Stream-Wert, genauso wie einzelne gescannte Werte von der
-Librelink-App von Abbott an Libreview gesendet werden. Juggluco muss
-nicht ständig mit dem Internet verbunden sein, damit alle Daten an
-Libreview gesendet werden. Wie die Librelink-App sendet sie Daten der
-letzten 89 Tage an Libreview. Voraussetzung ist, dass Juggluco
-ständig über Bluetooth mit einem Freestyle Libre 2-Sensor verbunden
-ist. Für Freestyle Libre 3-Sensoren werden die
-5-Minuten-Historydaten verwendet, sodass alle vorherigen Werte an
-Libreview gesendet werden. Ab Juggluco 6.0.0 werden History-werte
-auch bei „ Streamhistory“ verwendet&quot; ist im linken Menü -&gt;
-Sensor oder mit US/CA/AU Libre 2-Sensoren und Libre 0-Sensoren
-aktiviert.</span></font></font></p>
-<p style="line-height: 0.17in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
-<span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><span style="font-style: normal"><span style="font-weight: normal"><span style="background: transparent">Um
-diesen Dienst nutzen zu können, müssen Sie ein Libreview-Konto
-auf&nbsp;<a href="https://libreview.com/">https://libreview.com</a>&nbsp;erstellen
-und hier seine E-Mail-Adresse und sein Passwort angeben.</span></span></span></span></span></font></font></span><span style="font-variant: normal"><span style="letter-spacing: normal"><span style="background: transparent">
-</span></span></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><span style="font-style: normal"><span style="font-weight: normal"><span style="background: transparent">Senden
-Sie Daten aus demselben Zeitraum nicht mehrmals an dasselbe
-Libreview-Konto (z. B. von der Librelink-App und Juggluco). Sie
-können vorhandene Geräte in Libreview unter
+<h1>Libreview</h1>
+<p>Juggluco kann Glukosedaten und -mengen an Libreview senden. Bei
+Verwendung von Libre 0- oder 3-Sensoren, US/CA/AU Libre 2-Sensoren
+oder anderen Libre 2-Sensoren mit eingestelltem <i>Stream</i><i>
+History,</i> sendet Juggluco die Historywerte an Libreview. <span style="font-style: normal">Wenn
+Libre 2-Sensoren ohne</span><i> „Stream</i><i> History</i>“
+verwendet werden , verwendet Juggluco die über Bluetooth empfangenen
+Stream-Daten, um diese 15-Minuten-Punkte zu erstellen, indem die
+Stream-Werte um jeden Punkt herum gemittelt werden.</p>
+<p>Wie die Librelink-App sendet sie Daten der letzten 89 Tage an
+Libreview.</p>
+<p>Um diesen Dienst nutzen zu können, müssen Sie unter
+<a href="https://libreview.com/">https://libreview.com</a> ein
+Libreview-Konto erstellen und hier dessen E-Mail-Adresse und Passwort
+angeben. Senden Sie Daten aus demselben Zeitraum nicht mehrmals an
+dasselbe Libreview-Konto (z. B. von der Librelink-App und Juggluco).
+Sie können vorhandene Geräte in Libreview unter
 Kontoeinstellungen-&gt;Meine Geräte löschen oder ein neues
-Libreview-Konto erstellen.</span></span></span></span></span></font></font></span></p>
-<p style="line-height: 0.17in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
-<span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><span style="font-style: normal"><span style="font-weight: normal"><span style="background: transparent">Um
-es einzuschalten, müssen Sie auch &quot;</span></span></span></span></span></font></font></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><i><b><span style="background: transparent">An
-libreview senden</span></b></i></span></span></font></font></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><i><span style="font-weight: normal"><span style="background: transparent">&quot;</span></span></i></span></span></font></font></span><span style="font-variant: normal"><span style="letter-spacing: normal"><span style="background: transparent">&nbsp;</span></span></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><span style="font-style: normal"><span style="font-weight: normal"><span style="background: transparent">aktivieren
-.</span></span></span></span></span></font></font></span></p>
-<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.17in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
-<font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="background: transparent">Juggluco
-sendet jedes Mal neue Daten an Libreview, wenn Sie Juggluco
-verlassen, wenn dies in den letzten 20 Minuten nicht geschehen
-ist.&nbsp;Sie können es auch manuell an Libreview senden, indem Sie
-auf&nbsp;„&nbsp;<i><b>Jetzt senden</b></i>&nbsp;“&nbsp;klicken .</span></font></font></p>
-<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.17in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
-<font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="background: transparent">Neben
-Glukosewerten können auch Mengen an Libreview gesendet werden.&nbsp;Dazu
-müssen Sie auf &quot;<i><b>Mengen</b></i> <i><b>senden&nbsp;</b></i>&quot;
-tippen und angeben, was jedes Etikett bedeutet.</span></font></font></p>
-<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.17in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
-<font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="background: transparent">Ab
-Juggluco 4.1.0 werden auch Glukosewerte von FreeStyle Libre
-3-Sensoren an LibreView gesendet.</span></font></font></p>
-<p style="line-height: 0.17in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
-<span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><b><span style="background: transparent">Sofort</span></b></span></span></font></font></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal"><span style="background: transparent">:
-Glukosewerte sofort an Libreview senden, wenn sie von Libre 2- oder
-3-Sensoren eintreffen. Dies ist nur in Kombination mit LibreLinkUp
-sinnvoll. Um es nutzen zu können, müssen Sie diesem Libreview-Konto
-in einer der Libre-Apps von Abbott eine LibrelinkUp-Verbindung
-hinzufügen. Manchmal ist der Wert nicht sofort sichtbar, da die
-Anzeige von LibreLinkUp nicht automatisch neu gezeichnet wird. Die
-Verwendung von LibreLinkup ist ziemlich gefährlich, wenn Sie nicht
-genau hinschauen, denn wenn Sie die Grafik berühren, zeigt sie einen
-alten Wert anstelle des aktuellen Glukosewerts an.</span></span></span></span></font></font></span></p>
-<p style="line-height: 100%; margin-bottom: 0in"><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><b><span style="background: transparent">Spy
-Views</span></b></span></span></font></font></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal"><span style="background: transparent">:
-Wenn „</span></span></span></span></font></font></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><i><span style="font-weight: normal"><span style="background: transparent">Sofort“</span></span></i></span></font></font></span><span style="font-variant: normal"><span style="letter-spacing: normal"><span style="background: transparent">
-</span></span></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal"><span style="background: transparent">ebenfalls
-aktiviert ist, sendet Juggluco an Libreview, ob ein Wert angezeigt
-wird oder nicht</span></span></span></span></font></font></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal"><span style="background: transparent">
-</span></span></span></span></font></font></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal"><span style="background: transparent">(mit
-einigen Einschränkungen, um die Anzeige zu vieler Kreise zu
-verhindern). Wenn diese Option deaktiviert ist, meldet Juggluco
-immer, dass es nicht angezeigt wird.</span></span></span></span></font></font></span></p>
-<p style="line-height: 0.17in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
-<span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><b><span style="background: transparent">Resend
-data</span></b></span></span></font></font></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal"><span style="background: transparent">:
-Neu starten;</span></span></span></span></font></font></span><span style="font-variant: normal"><span style="letter-spacing: normal"><span style="background: transparent">
-</span></span></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal"><span style="background: transparent">Daten
-der letzten 90 Tage erneut an Libreview senden.</span></span></span></span></font></font></span><span style="font-variant: normal"><span style="letter-spacing: normal"><span style="background: transparent">
-</span></span></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal"><span style="background: transparent">Sie
-müssen dies drücken, wenn Sie zu einem neuen Libreview-Konto
-wechseln.</span></span></span></span></font></font></span></p>
-<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.17in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
-<font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="background: transparent">Das
-Ergebnis des letzten Sendeversuchs an Libreview wird unter der
-Schaltfläche „Get Account ID“ angezeigt.</span></font></font></p>
-<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.17in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
-<font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="background: transparent">Da
-die an Libreview gesendeten Werte zunächst über 15 Minuten
-gemittelt und dann analysiert werden, kann es zu kleinen Abweichungen
-zwischen den im Statistikbildschirm von Juggluco angezeigten Werten
-und Libreview kommen.&nbsp;Zum Beispiel sagt Libreview 100 % der Zeit
-aktiv, während der Statistikbildschirm von Juggluco 96,0 %
-anzeigt.&nbsp;Auch einige hohe und niedrige Werte werden
-weggemittelt, so dass Libreview eine etwas höhere&nbsp;<i>Zielzeit</i>&nbsp;angibt
-als der Statistikbildschirm von Juggluco.&nbsp;Da die realen
-Historywerte weniger extrem sind als der Durchschnitt der
-Stream-Werte um einen Historywert herum, ist dieser Unterschied
-größer, wenn Libreview auf gescannten Werten basiert.</span></font></font></p>
-<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.17in; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
-<font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="background: transparent">Juggluco
-kann gleichzeitig mit mehreren Sensoren verbunden werden, während
-Librelink jeweils nur einen Sensor verwaltet.&nbsp;Juggluco sendet
-auch Daten von jeweils nur einem Sensor an Libreview.&nbsp;Dazu
-sendet es zuerst die Daten von einem Sensor und erst wenn keine Daten
-von diesem Sensor verfügbar sind, sendet es die Daten vom folgenden
-Sensor.</span></font></font></p>
-<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.19in; orphans: 2; widows: 2; background: transparent">
-<font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="background: transparent"><b>Get
-Account ID</b>: Wenn Sie nur die LibreView-Konto-ID erhalten, aber
-keine Daten an Libreview senden möchten, können Sie Ihre
-E-Mail-Adresse und Ihr Passwort eingeben und auf „<i>Get Account
-ID</i>&quot; klicken.&nbsp;In derselben Zeile vor dieser Schaltfläche
-wird die Konto-ID angezeigt (dies kann einige Zeit dauern und der
-Bildschirm wird nicht automatisch aktualisiert).&nbsp;Das Abrufen der
-Konto-ID vom LibreView-Server ermöglicht die Verwendung eines
-FreeStyle Libre 3-Sensors, der bereits mit der Abbotts Libre 3-App
-mit diesem LibreView-Konto verwendet wurde.&nbsp;Es wird berichtet,
-dass das Starten des Sensors mit Juggluco nicht funktioniert.</span></font></font></p>
-<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.19in; orphans: 2; widows: 2; background: transparent">
-<font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="background: transparent"><b>WARNUNG</b>&nbsp;:
-Der Freestyle Libre 3-Sensor sollte mit diesem Konto aktiviert
-werden.&nbsp;Wenn Sie später zu einem Konto in der Libre 3-App
-wechseln, führt das Scannen des Sensors zu einem Fehler.</span></font></font></p>
-<p style="line-height: 100%; margin-bottom: 0in"><br/>
-
+Libreview-Konto erstellen.</p>
+<p>Um es zu aktivieren, müssen Sie auch „<strong><i>An Libreview
+senden</i></strong>“ aktivieren .</p>
+<p>Juggluco sendet jedes Mal neue Daten an Libreview, wenn Sie
+Juggluco verlassen und dies in den letzten 20 Minuten nicht geschehen
+ist. Sie können es auch manuell an Libreview senden, indem Sie auf
+„<strong><i>Jetzt senden</i></strong>“ klicken .</p>
+<p>Neben Glukosewerten können auch Mengen an Libreview gesendet
+werden. Dazu müssen Sie auf „<strong><i>Mengen </i></strong><strong><i>senden</i></strong>“
+tippen und angeben, was die einzelnen Etiketten bedeuten.</p>
+<p><strong>Sofort</strong>: Senden Sie Glukosewerte sofort an
+Libreview, wenn sie von Libre 2- oder 3-Sensoren eintreffen. Dies ist
+nur in Kombination mit LibreLinkUp sinnvoll. Um es nutzen zu können,
+müssen Sie eine LibrelinkUp-Verbindung zu diesem Libreview-Konto in
+einer der Libre-Apps von Abbott hinzufügen (Sie müssen es für
+nichts anderes verwenden). Manchmal ist der Wert nicht sofort
+sichtbar, da die Anzeige von LibreLinkUp nicht automatisch neu
+gezeichnet wird. Die Verwendung von LibreLinkup ist ziemlich
+gefährlich, wenn man nicht genau hinschaut, denn wenn man die Grafik
+berührt, zeigt sie einen alten Wert anstelle des aktuellen
+Glukosewerts an.</p>
+<p><strong>Spy Views</strong> : Wenn diese Option aktiviert ist,
+sendet Juggluco an Libreview, ob ein Wert angezeigt wird oder nicht.
+Wenn diese Option deaktiviert ist, meldet Juggluco immer, dass es
+nicht angezeigt wird. Diese Option sendet diese Informationen nur
+dann zuverlässig an Libreview, wenn auch „<i>Sofort“</i>
+aktiviert ist. 
 </p>
+<p><strong>Daten erneut senden</strong>: Neu beginnen; Daten der
+letzten 90 Tage erneut an Libreview senden. Sie müssen diese Taste
+drücken, wenn Sie zu einem neuen Libreview-Konto wechseln.</p>
+<p>Das Ergebnis des letzten Sendeversuchs an Libreview wird unter der
+Schaltfläche „Konto-ID abrufen“ angezeigt.</p>
+<p>Da die an Libreview gesendeten Werte zunächst alle 15 Minuten in
+einen Datenpunkt umgewandelt und dann analysiert werden, kann es zu
+kleinen Unterschieden zwischen den im Statistikbildschirm von
+Juggluco und Libreview angezeigten Werten kommen. Libreview gibt
+beispielsweise an, dass 100 % der Zeit aktiv sind, während der
+Statistikbildschirm von Juggluco 96,0 % anzeigt. Außerdem werden
+einige hohe und niedrige Werte gemittelt, so dass Libreview eine
+etwas höhere <i>Zielzeit</i> angibt als der Statistikbildschirm von
+Juggluco. Da die auf den Sensoren erstellten History-Werte weniger
+extrem sind als der Durchschnitt der Stream-Werte um einen
+History-wert herum, ist dieser Unterschied größer, wenn Libreview
+auf den History-<span style="font-style: normal">W</span><span style="font-style: normal">erten</span>
+basiert , wie wenn „Stream History“ in Juggluco aktiviert ist
+oder Librelink verwendet wird .</p>
+<p>Juggluco kann mit mehreren Sensoren gleichzeitig verbunden werden,
+während Librelink jeweils nur einen Sensor verwaltet. Juggluco
+sendet außerdem jeweils nur Daten von jeweils einem Sensor an
+Libreview. Dies geschieht, indem zunächst die Daten eines Sensors
+gesendet werden und erst, wenn keine Daten von diesem Sensor
+verfügbar sind, die Daten des folgenden Sensors gesendet werden.
+Wenn Juggluco auf einen folgenden Sensor umgestellt wird, kehrt
+Juggluco nicht zu einem vorherigen zurück, um die Ein-Sensor-Politik
+von Librelink zu imitieren. Das heißt, wenn Sie mehrere Sensoren
+gleichzeitig ausführen und ein später hinzugefügter Sensor früher
+endet als ein früher hinzugefügter Sensor, sendet dieser frühere
+Sensor keine Daten mehr an Libreview.</p>
+<p><strong>Konto-ID </strong><strong>erhalten</strong>: Wenn Sie nur
+die LibreView-Konto-ID erhalten, aber keine Daten an Libreview senden
+möchten, können Sie Ihre E-Mail-Adresse und Ihr Passwort eingeben
+und auf „<i>Konto-ID </i><i>erhalten</i>“ klicken. In derselben
+Zeile vor dieser Schaltfläche wird die Konto-ID angezeigt (dies kann
+einige Zeit dauern und der Bildschirm wird nicht automatisch
+aktualisiert). Das Abrufen der Konto-ID vom LibreView-Server
+ermöglicht die Verwendung eines FreeStyle Libre 3-Sensors, der
+bereits mit der Abbotts Libre 3-App verwendet wurde, mit diesem
+LibreView-Konto.</p>
+<p><strong>ACHTUNG</strong>: Der Freestyle Libre 3-Sensor sollte mit
+diesem Konto aktiviert werden.</p>
 ]]>
 </string>
 <string name="garminconfig" >
@@ -2714,28 +2677,25 @@ Etiketten selbst können im linken Menü -&gt; Einstellungen -&gt;
 <![CDATA[
 <h1>Export</h1>
 <p>Exportieren Sie Daten aus Juggluco in eine Datei.</p>
-<p>Die meisten werden im .tsv-Format gespeichert und können in
-Programme wie LibreOffice Calc, Microsoft Excel, Mathematica oder R
-geladen werden. Es handelt sich um eine Art .csv-Datei mit
-Tabulatoren anstelle von Kommas, die zum Trennen von Elementen
-verwendet werden. Zeichen werden UTF8 (Zahlenetiketten) oder ASCII
-codiert.</p>
+<p>Mahlzeiten werden im HTML gespeichert. Alle anderen Daten werden
+im .tsv-Format (<a href="https://en.wikipedia.org/wiki/Tab-separated_values">Tab-Separated
+Values</a>) gespeichert. Dies kann in Programmen wie LibreOffice
+Calc, Microsoft Excel, Mathematica oder R geladen werden. Es ist eine
+Art <a href="https://de.wikipedia.org/wiki/CSV_(Dateiformat)">CSV</a>
+mit Tabulatoren anstelle von Kommas, die zum Trennen von Elementen
+verwendet werden. Zeichen werden UTF8 (Etiketten) oder ASCII codiert.</p>
 <p>Die Bedeutung der Spalten finden Sie unter
 <a href="https://www.juggluco.nl/Juggluco/webserver.html">https://www.juggluco.nl/Juggluco/webserver.html</a>
 .</p>
-<p><b>Tage</b>: Ab Juggluco 7.1.0 können Sie die Anzahl der zu
-speichernden Tage auswählen. Das Enddatum ist der rechte Rand des
-Bildschirms. Wenn Sie frühere Daten in Juggluco anzeigen, werden nur
-alte Daten exportiert (dasselbe wie im linken mittleren Menü -&gt;
+<p><strong>Tage</strong> : Ab Juggluco 7.1.0 können Sie die Anzahl
+der zu speichernden Tage auswählen. Das Enddatum ist der rechte Rand
+des Bildschirms. Wenn Sie frühere Daten in Juggluco anzeigen, werden
+nur alte Daten exportiert (dasselbe wie im linken mittleren Menü -&gt;
 Statistiken).</p>
 <p>Ab Juggluco 7.1.0 ist es auch möglich, diese Daten über den
 Webserver in Juggluco zu empfangen (Linkes
 Menü-&gt;Einstellungen-&gt;Webserver), siehe
 <a href="https://www.juggluco.nl/Juggluco/webserver.html">https://www.juggluco.nl/Juggluco/webserver.html</a></p>
-<p><br/>
-<br/>
-
-</p>
 ]]>
 </string>
 </resources>

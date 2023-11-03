@@ -1705,8 +1705,10 @@ static int showerrorvalue(const SensorGlucoseData *sens,const time_t nu,float ge
 	
 		}
 	}
+#ifdef NOTALLVIES
 int betweenviews=60*30;
 time_t nexttimeviewed=0;
+#endif
 static void showlastsstream(const time_t nu,const float getx,std::vector<int> &used ) {
 //LOGGER("showlaststream %d\n",used.size());
 	int success=false;
@@ -1739,12 +1741,21 @@ static void showlastsstream(const time_t nu,const float getx,std::vector<int> &u
 				showvalue(poll,hist->shortsensorname(),getx,gety,i);
 				success=true;
 				if(!hist->isLibre3()) {
-					 if(settings->data()->libreIsViewed) {
-						if(poll->t>nexttimeviewed) {
+					 if(settings->data()->libreIsViewed&&!hist->getinfo()->libreviewsendall) {
+#ifdef NOTALLVIES
+						if(poll->t>nexttimeviewed) 
+#endif
+						{
+
 							const int addnum= hist->pollcount()-1;
-							hist->viewed.push_back(addnum);
-							nexttimeviewed=poll->t+betweenviews;
-							LOGGER("add %d nextime=%s",addnum,ctime(&nexttimeviewed));
+							if(hist->viewed.empty()||hist->viewed.back()!=addnum) {
+								hist->viewed.push_back(addnum);
+
+#ifdef NOTALLVIES
+								nexttimeviewed=poll->t+betweenviews;
+								LOGGER("add %d nextime=%s",addnum,ctime(&nexttimeviewed));
+#endif
+								}
 							}
 						}
 					}
@@ -3141,11 +3152,12 @@ static bool  inmenu(float x,float y) ;
 
 	static bool speakmenutap(float x,float y) ;
 
-int largepausedaystr(const time_t tim,char *buf) {
+static int largepausedaystr(const time_t tim,char *buf) {
         LOGAR("largedaystr");
 	struct tm stmbuf;
 	localtime_r(&tim,&stmbuf);
- 	return sprintf(buf,"%02d:%02d\n%s %02d %s %d",stmbuf.tm_hour,mktmmin(&stmbuf),usedtext->speakdaylabel[stmbuf.tm_wday],stmbuf.tm_mday,usedtext->monthlabel[stmbuf.tm_mon],1900+stmbuf.tm_year);
+ //	return sprintf(buf,"%02d:%02d\n%s %02d %s %d",stmbuf.tm_hour,mktmmin(&stmbuf),usedtext->speakdaylabel[stmbuf.tm_wday],stmbuf.tm_mday,usedtext->monthlabel[stmbuf.tm_mon],1900+stmbuf.tm_year);
+ 	return sprintf(buf,"%s %02d %s %d\n%02d:%02d",usedtext->speakdaylabel[stmbuf.tm_wday],stmbuf.tm_mday,usedtext->monthlabel[stmbuf.tm_mon],1900+stmbuf.tm_year,stmbuf.tm_hour,mktmmin(&stmbuf));
 	}
 void speaknum(const Num *num) {
 	char buf[256];

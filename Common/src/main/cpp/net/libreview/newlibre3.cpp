@@ -511,11 +511,13 @@ if(datasend) {
 			sens->getinfo()->libreviewnotsend=nextnum;
 			}
 		if(wrotecurrent>0) {
+#ifdef NOTALLVIES
 			extern time_t nexttimeviewed;
 			extern int betweenviews;
 			if(viewed) {
 					nexttimeviewed=nu+betweenviews;
 					}
+#endif
 			lastsensdata->getinfo()->libreviewScan=laststreamsend+1;
 			lastsensdata->getinfo()->sendsensorstart=true;
 			}

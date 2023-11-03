@@ -199,7 +199,7 @@ public void onConfigurationChanged(Configuration newConfig) {
 		if(!lang.equals(curlang)) {
 
 			curlang=lang;
-			if(SuperGattCallback.dotalk)	
+			if(Talker.istalking())	
 				SuperGattCallback.newtalker(null);
 			}
 		else  {

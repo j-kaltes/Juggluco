@@ -168,7 +168,7 @@ Applic app=	(Applic)getApplication();
 	if(!lang.equals(Applic.curlang)) {
 		Natives.setlocale(lang,(tk.glucodata.Applic.hour24=android.text.format.DateFormat.is24HourFormat(Applic.app)));
 		Applic.curlang=lang;
-		if(SuperGattCallback.dotalk)	
+		if(Talker.istalking())	
 			SuperGattCallback.newtalker(this);
 		}
 }

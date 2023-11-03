@@ -282,9 +282,8 @@ static public synchronized void scan(GlucoseCurve curve,Tag tag) {
 							}
 							ret=0;
 								break;
-						case 4: {
-							 SensorBluetooth.sensorEnded(Natives.getserial(uid, info));
-							};break;
+						case 4: 
+							 SensorBluetooth.sensorEnded(Natives.getserial(uid, info)); ;break;
 						case 3: {
 							if (value == 0) {
 							

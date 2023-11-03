@@ -34,7 +34,7 @@
      <string name="amountsname">Mengen</string>
      <string name="mealsname">Mahlzeiten</string>
      <string name="closename">Schließen</string>
-     <string name="exporthelp">Mahlzeiten gespeichert in html\nRest in .tsv (Tab-separated values)</string>
+     <string name="exporthelp">Speichert bis zum letzten auf dem Bildschirm angezeigten Wert. Der Anfang ist die Anzahl der angegebenen Tage zurück in der Zeit.</string>
      <string name="detect">Erkennen</string>
      <string name="testip">IP testen</string>
      <string name="testlabel">Etikett Testen</string>
@@ -94,7 +94,7 @@
   <string name="meal">Mahlzeit:</string>
   <string name="ringshort">Ton</string>
   <string name="days">Tage</string>
-  <string name="invaliddays">\' ist keine gültige Anzahl von Tagen</string>
+  <string name="invaliddays">\' ungültig. Tage sollten eine natürliche Zahl sein.</string>
   <string name="summarygraph">Überblick Graph</string>
   <string name="forget">Vergessen</string>
   <string name="reenable">Reenable</string>
@@ -258,7 +258,7 @@
 <string name="wentwrong">Etwas ist schief gelaufen</string>
      <string name="dosis">" Dosis "</string>
      <string name="doses">" Dosen "</string>
-  <string name="penfailed">Fehler beim Lesen des Insulinpens</string>
+  <string name="penfailed">Fehler beim Lesen des Insulinpens. Versuchen Sie es erneut</string>
   <string name="changeinsulin">"Insulintyp ändern in "</string>
      <string name="type">"Typ: "</string>
     <string name="dosesprior">Füg nur Dosen hinzu von nach:</string>

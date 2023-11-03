@@ -57,7 +57,7 @@ void datainterval(NVGcontext* vg,float x, float y,uint32_t start,uint32_t end) {
 
 static constexpr const int measuresperday=24*60;
 uint32_t startday,endday;
-static const ScanData *firstvalid(const ScanData *start,const ScanData *last,uint32_t nexttime) {
+template <class GlucoseEl> static const GlucoseEl *firstvalid(const GlucoseEl *start,const GlucoseEl *last,uint32_t nexttime) {
 	while(!start->valid()||start->gettime()<nexttime) {
 		++start;
 		if(start>=last)
@@ -65,9 +65,21 @@ static const ScanData *firstvalid(const ScanData *start,const ScanData *last,uin
 		}
 	return start;
 	}
-static const ScanData *lastvalid(const ScanData *last)  {
-	while(!last->valid())
+	/*
+static const ScanData *firstvalid(const ScanData *start,const ScanData *last,uint32_t nexttime) {
+	while(!start->valid()||start->gettime()<nexttime) {
+		++start;
+		if(start>=last)
+			return nullptr;
+		}
+	return start;
+	} */
+template <class GlucoseEl> static const GlucoseEl *lastvalid(const GlucoseEl *first,const GlucoseEl *last)  { //TODO: DOESN"T work with HISTORY
+	while(!last->valid()) {
 		--last;
+		if(last==first)
+			return first;
+		}
 	return last;
 	}
 static int getpercentile(const float frac,const uint16_t *ar,const int len)  {
@@ -461,7 +473,6 @@ void showpercentiles(NVGcontext* vg) {
 static struct persgegs *matchedminutes( std::vector<pair<const ScanData*,const ScanData*>> *polldataptr,uint32_t starttime,uint32_t endtime) {
 	std::vector<pair<const ScanData*,const ScanData*>> &polldata=*polldataptr;
 	const int days=ceilf(((float)(endtime-starttime))/seconds_in_day)+10;
-//	uint16_t  *uitdata=alldata;
 	uint16_t  *uitdata=new uint16_t[measuresperday*days]();
 	const constexpr int bucketsize=60;
 	const constexpr uint32_t maxidents= seconds_in_day/bucketsize;
@@ -480,7 +491,7 @@ static struct persgegs *matchedminutes( std::vector<pair<const ScanData*,const S
 		const ScanData *start=firstvalid(firstin,lastin,nexttime);
 		if(!start)
 			continue;
-		const ScanData *last=lastvalid(lastin-1);
+		const ScanData *last=lastvalid(start,lastin-1);
 		const ScanData *it=start;
 		if(start->gettime()<pollstart)
 			pollstart=start->gettime();

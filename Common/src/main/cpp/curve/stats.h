@@ -47,7 +47,7 @@ static constexpr const	int levels[] {250,180,69,53};
 	double active;
 	uint32_t starttime=UINT32_MAX,endtime=0;
 
-	 stats( std::vector<pair<const ScanData*,const ScanData*>> &polldata) {
+template <class GlucoseEl> stats( std::vector<pair<const GlucoseEl*,const GlucoseEl*>> &polldata) {
 		auto targetlow=settings->targetlow()/10-1;
 		auto targethigh=settings->targethigh()/10;
 		border[0]=targethigh;
@@ -59,13 +59,13 @@ static constexpr const	int levels[] {250,180,69,53};
 		totid=0;
 		for(auto [firstin,lastin]:polldata) {
 			int previd=-1;
-			const ScanData *start=firstvalid(firstin,lastin,prevtime+minint);
+			const GlucoseEl *start=firstvalid(firstin,lastin,prevtime+minint);
 			if(!start)
 				continue;
 			if(start->gettime()<starttime) {
 				starttime=start->gettime();
 				}
-			const ScanData *last=lastvalid(lastin-1);
+			const GlucoseEl *last=lastvalid(start,lastin-1);
 			int idint=last->getid()-start->getid();
 			totid+=idint;
 			int32_t late= start->gettime()-(prevtime+60);
@@ -111,10 +111,10 @@ static constexpr const	int levels[] {250,180,69,53};
 		long double mean=total/count;
 		long double quadifsum=0;
 		for(auto [firstin,lastin]:polldata) {
-			const ScanData *start=firstvalid(firstin,lastin,prevtime+minint);
+			const GlucoseEl *start=firstvalid(firstin,lastin,prevtime+minint);
 			if(!start)
 				continue;
-			const ScanData *last=lastvalid(lastin-1);
+			const GlucoseEl *last=lastvalid(start,lastin-1);
 			prevtime=last->gettime();
 			int previd=-1;
 			for(auto it=start;it<=last;it++) {

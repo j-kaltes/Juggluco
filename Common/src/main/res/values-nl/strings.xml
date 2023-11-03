@@ -37,7 +37,7 @@
     <string name="amountshort">Hoeveel</string>
     <string name="mealsname">Maaltijden</string>
     <string name="closename">Sluiten</string>
-    <string name="exporthelp"> Maaltijden opgeslagen in html\nRest in .tsv (tab-separated values)</string>
+    <string name="exporthelp">Slaat op tot de laatste waarde die op het scherm wordt weergegeven. Het begin is het aantal opgegeven dagen terug in de tijd.</string>
     <string name="detect">Detecteer</string>
     <string name="testip">Test IP</string>
     <string name="testlabel">Test Label</string>
@@ -99,7 +99,7 @@
  <string name="meal">Maaltijd:</string>
  <string name="ringshort">Toon</string>
  <string name="days">Dagen</string>
- <string name="invaliddays">\' is geen aantal dagen</string>
+ <string name="invaliddays">\' ongeldig. Dagen moet een natuurlijk getal zijn.</string>
  <string name="summarygraph">Samenvattende grafiek</string>
  <string name="forget">Vergeet</string>
  <string name="reenable">Re-enable</string>
@@ -250,7 +250,7 @@
 <string name="wentwrong">Er ging iets mis</string>
      <string name="dosis">" dosis "</string>
      <string name="doses">" doses "</string>
-  <string name="penfailed">Het lezen van de insulinepen is mislukt</string>
+  <string name="penfailed">Het lezen van de insulinepen is mislukt. Probeer het opnieuw.</string>
   <string name="changeinsulin">"Verander insulinetype naar "</string>
      <string name="type">"Type: "</string>
     <string name="dosesprior">Voeg enkel doses toe van na:</string>

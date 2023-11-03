@@ -35,7 +35,7 @@
     <string name="amountshort">@string/amountsname</string>
     <string name="mealsname">Meals</string>
     <string name="closename">Close</string>
-    <string name="exporthelp">Meals saved in html\nRest in .tsv (tab-separated values)</string>
+    <string name="exporthelp">Saves to the last value displayed on the screen. The beginning is the number of specified days back in time.</string>
     <string name="detect">Detect</string>
     <string name="testip">Test IP</string>
     <string name="testlabel">Test Label</string>
@@ -98,7 +98,7 @@
  <string name="meal">Meal:</string>
  <string name="ringshort">Ring</string>
  <string name="days">Days</string>
- <string name="invaliddays">\' is no valid number of days</string>
+ <string name="invaliddays">\' invalid. Days should be a natural number.</string>
  <string name="summarygraph">Summary graph</string>
  <string name="forget">Forget</string>
  <string name="reenable">Reenable</string>
@@ -262,7 +262,7 @@
     <string name="wentwrong">Something went wrong</string>
     <string name="dosis">" dose "</string>
     <string name="doses">" doses "</string>
- <string name="penfailed">Reading insulin pen failed</string>
+ <string name="penfailed">Reading insulin pen failed. Try again.</string>
  <string name="changeinsulin">"Change insulin type to "</string>
     <string name="type">"Type: "</string>
     <string name="dosesprior">Only add doses from after:</string>

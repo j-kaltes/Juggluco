@@ -424,7 +424,12 @@ extern time_t nexttimeviewed;
 extern int betweenviews;
 bool getisviewed(time_t wastime) {
 	bool viewed;
-	if(settings->data()->libreIsViewed&&wastime>nexttimeviewed) {
+	if(settings->data()->libreIsViewed
+#ifdef NOTALLVIES
+	&&wastime>nexttimeviewed
+#endif
+			)
+	{
 		int diff=((long long)wastime-lastviewtime);
 		viewed=abs(diff)<60;
 		LOGGER("diff=%d viewed=%d\n",diff,viewed);
@@ -494,7 +499,13 @@ static int addcurrents(char *&uitptr,time_t nu,const SensorGlucoseData *sens) {
 				if(!viewed.empty()) {
 					int previd=viewed.back();
 					const ScanData *prev=startstream+previd;
-					if(((long long)wastime-prev->gettime())<betweenviews) {
+					if(((long long)wastime-prev->gettime())<
+#ifdef NOTALLVIES
+betweenviews
+#else
+					60
+#endif
+					) {
 						LOGGER("previd=%d near %d\n",previd,i);
 						isViewed=true;
 						id=previd;

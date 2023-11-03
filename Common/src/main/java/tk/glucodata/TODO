@@ -1,3 +1,6 @@
+TALK also in WearOS versie?
+Huawei Watch versie?
+Verwijder mmol/L in widget
 Support Dexcom?
 Blind:
 	- Long press History read text too long
@@ -12,7 +15,8 @@ Blind:
 Option to use a different http Web server port?
 Problem: xDrip watch apps don't work with a different port
 
-
+Analyse History values for statistics:
+    - how interprolate to so values are aligned?
 add RUSSIAN HEBREW
 	-define USE_RUSSIAN USE_HEBREW in config
 	-set IWRU in Settings.java

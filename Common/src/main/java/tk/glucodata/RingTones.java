@@ -167,7 +167,8 @@ static private void subEnableControls(View view,boolean enable){
 		       hidekeyboard(context);
 		      try {
 			    Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
-			    intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, kind==2?RingtoneManager.TYPE_NOTIFICATION:RingtoneManager.TYPE_ALARM);
+			   // intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, kind==2?RingtoneManager.TYPE_NOTIFICATION:RingtoneManager.TYPE_ALARM);
+			    intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALL);
 			    intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false);
 			    intent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, false);
 			    final int request= MainActivity.REQUEST_RINGTONE|kind;
