@@ -68,7 +68,7 @@ public static boolean doGadgetbridge=false;
 	//    private final UUID mCharacteristicUUID_ManufacturerNameString = UUID.fromString("00002a29-0000-1000-8000-00805f9b34fb");
 //    private final UUID mCharacteristicUUID_SerialNumberString = UUID.fromString("00002a25-0000-1000-8000-00805f9b34fb");
 //    private final UUID mSIGDeviceInfoServiceUUID = UUID.fromString("0000180a-0000-1000-8000-00805f9b34fb");
-	long starttime = System.currentTimeMillis();
+	final long starttime = System.currentTimeMillis();
 	String SerialNumber;
 	public String mActiveDeviceAddress;
 	protected long dataptr = 0L;
@@ -89,11 +89,18 @@ public void disconnect() {
 	}
 public void reconnect(long old) {
 	if(charcha[1]<old)  {
+		Log.i(LOG_ID,"reconnect "+SerialNumber);
+
 		final var thegatt= mBluetoothGatt;
 		if(thegatt!=null) 
 			thegatt.disconnect();
 		connectDevice(0);
 		}
+	}
+
+void shouldreconnect(long old) {
+	if(starttime<old&&charcha[0]<old)  
+		reconnect(old);
 	}
 
 	long[] constatchange = {0L, 0L};
@@ -261,6 +268,7 @@ protected void handleGlucoseResult(long res,long timmsec) {
 			float rate = ratein / 1000.0f;
 			dowithglucose(SerialNumber, glumgdl, gl, rate, alarm, timmsec);
 			charcha[0] = timmsec;
+			SensorBluetooth.othersworking(this,timmsec);
 		} else {
 			Log.i(LOG_ID, SerialNumber + " onCharacteristicChanged: Glucose failed");
 			charcha[1] = timmsec;
@@ -383,6 +391,7 @@ public void searchforDeviceAddress() {
 							}
 						}
 					setpriority(cb.mBluetoothGatt);
+				Log.i(LOG_ID,SerialNumber+" after connectGatt");
 				} catch (SecurityException se) {
 					var mess = se.getMessage();
 					mess = mess == null ? "" : mess;

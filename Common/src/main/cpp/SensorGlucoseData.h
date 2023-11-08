@@ -1284,6 +1284,7 @@ bool setbackuptime(crypt_t *pass,int sock,int ind,uint32_t starttime) {
 		//Why get it when it is not used?
 			uint32_t histend=infothere->endhistory;
 			int histpos;
+
 			uint32_t histstart=getinfo()->update[ind].histstart= (histpos=posearlier(histend,starttime)>=0)?histpos:getbackuptimehistory(starttime);
 
 			LOGGER("GLU: hist start=%d endhistory=%d\n",histstart,histend);

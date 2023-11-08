@@ -598,7 +598,11 @@ defdisplay(stream)
 defdisplay(numbers)
 
 void speak(const char *message) {
-	getenv()->CallStaticVoidMethod(JNIApplic,jspeak,getenv()->NewStringUTF(message));
+	if(message)
+		getenv()->CallStaticVoidMethod(JNIApplic,jspeak,getenv()->NewStringUTF(message));
+	else {
+		LOGAR("speak(null)");
+		}
 	}
 
 #ifndef WEAROS

@@ -207,7 +207,7 @@ public static native void dolog(boolean val);
 public static native boolean islogging( );
 
 public static native String advanced();
-public static native boolean exportdata(int type,int fd,int showdays);
+public static native boolean exportdata(int type,int fd,float showdays);
 //public static native void setlibversion(String version);
 public static native int getcolumns(int width);
 

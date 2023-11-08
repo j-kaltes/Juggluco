@@ -892,6 +892,13 @@ void backupthread(int allindex,int sendindex) {
 		if(!passive) {
 			notpassive(current,sendindex);
 			}
+		static int count=0;
+		if(current==wakestream) {
+			if(count++%5==4) {
+				current=wakeall;
+				}
+			}
+			
 		doupdates(current,sendindex); 
 		}
 	}

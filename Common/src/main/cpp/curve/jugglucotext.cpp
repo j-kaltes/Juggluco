@@ -152,7 +152,7 @@ engtext.amount},
 
 		{"Sensor ready in",
 			"%d minutes"},
-		{"373: Sensor Error",
+		{"Sensor Error (373)",
 			"Try again later"},
 		{"New Sensor initialized",
 			"Scan again to use it"},
@@ -166,9 +166,9 @@ engtext.amount},
 			"Do something"},
 		{"Procedure takes too long",
 			"I kill program"},
-		{"365: Replace Sensor",
+		{"Replace Sensor (365)",
 			"Your Sensor is not working. Please remove your Sensor and start a new one."},
-		{"368: Replace Sensor",
+		{"Replace Sensor (368)",
 			"Your Sensor is not working. Please remove your Sensor and start a new one."},
 		{"",
 			""},
@@ -213,7 +213,8 @@ are needed. In your case it has problems with the following file)",
 		;
 
 jugglucotext *usedtext= &engtext;
-
+#include "logs.h"
 void setuseeng() {
+LOGAR("setuse en");
  usedtext= &engtext;
  }

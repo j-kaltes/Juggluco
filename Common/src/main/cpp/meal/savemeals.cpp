@@ -217,7 +217,7 @@ extern bool allsavemeals(int handle,uint32_t starttime=0,uint32_t endtime=UINT32
 
 
 extern bool savemeals(FILE* handle,uint32_t starttime,uint32_t endtime);
-bool fallsavemeals(FILE *handle,uint32_t starttime,uint32_t endtime) {
+bool fallsavemeals(FILE *handle,int _unit,uint32_t starttime,uint32_t endtime) {
 	if(!(dostarthtml(handle)&&savemeals(handle,starttime,endtime)))
 		return false;
 	if(fwrite(endhtml.data(),1,endhtml.size(),handle)!=endhtml.size())
@@ -228,7 +228,7 @@ bool fallsavemeals(FILE *handle,uint32_t starttime,uint32_t endtime) {
 
 bool allsavemeals(int handle,uint32_t starttime,uint32_t endtime) {
 	if(FILE *fp=fdopen(handle,"w")) {
-		 bool res=fallsavemeals(fp,starttime,endtime) ;
+		 bool res=fallsavemeals(fp,0,starttime,endtime) ;
 		 fclose(fp);
 		 return res;
 		 }

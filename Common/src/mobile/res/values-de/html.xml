@@ -2187,18 +2187,18 @@ soll.</font></font></p>
 </string>
 <string name="librenumhelp" >
 <![CDATA[
-<p style="line-height: 100%; orphans: 2; widows: 2; margin-bottom: 0in">
-<span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">Stellen
-Sie </span></span></span></font></font></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><i><span style="font-weight: normal">„</span></i></span></font></font></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><i><span style="font-weight: normal">Mengen</span></i></span></font></font></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><i><span style="font-weight: normal">
-senden“</span></i></span></font></font></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">
-ein, um </span></span></span></font></font></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">Mengen</span></span></span></font></font></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">
-an Libreview zu senden.</span></span></span></font></font></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">
-</span></span></span></font></font></span><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">Bevor
-Sie </span></span></span></font></font><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><i><span style="font-weight: normal">&quot;Mengen
-senden</span></i></span></font></font><span style="font-variant: normal"><span style="letter-spacing: normal">&nbsp;</span></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">&quot;
-einschalten können&nbsp;, müssen Sie für jedes Label festlegen,
-wie die unter diesem Label eingegebenen Mengen an Libreview gesendet
-werden sollen.</span></span></span></font></font></span></p>
+<p>Stellen Sie „<i>Mengen</i> <i>senden“</i>
+ein, um Mengen an Libreview zu senden. Bevor Sie <i>&quot;Mengen
+senden</i>&nbsp;&quot; einschalten können&nbsp;, müssen Sie für
+jedes Label festlegen, wie die unter diesem Label eingegebenen Mengen
+an Libreview gesendet werden sollen.</p>
+<p>Viele Benutzer denken, dass Kohlenhydrate nicht an Libreview
+gesendet werden, weil sie sie in „<i>Mahlzeitenprofil</i>“ nicht
+finden können. Aufgrund einer Einschränkung von Libreview muss
+Insulin gleichzeitig mit den Kohlenhydraten eingegeben werden, damit
+Kohlenhydrate in „<i>Mahlzeitenprofil</i>“ angezeigt werden.
+Kohlenhydrate werden immer im „<i>Tages</i><i>protokoll</i>“ und
+in der „<i>Wochenübersicht</i>“ angezeigt.</p>
 ]]>
 </string>
 <string name="setlibrenumtype" >

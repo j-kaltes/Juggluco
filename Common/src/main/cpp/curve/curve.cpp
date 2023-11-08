@@ -1581,10 +1581,8 @@ void drawarrow(NVGcontext* genVG, float rate,float getx,float gety) {
 			}
 	}
 struct shownglucose_t {
-union {
 const char *errortext=nullptr;
 int glucosetrend;
-};
 float glucosevalue=0;
 float glucosevaluex=-1,glucosevaluey=-1;
 } ;
@@ -2093,9 +2091,9 @@ displaytime disp=getdisplaytime(nu,starttime,endtime, transx);
 
 	nvgFontSize(genVG, smallsize);
 	LOGSTRING("before showNums\n");
+	const int catnr=settings->getlabelcount();
 	if(shownumbers||showmeals)  {
-		const int catnr=settings->getlabelcount()+1;
-		bool was[catnr-1];
+		bool was[catnr];
 		memset(was,0,sizeof(was));
 		for(auto el:numdatas) 
 			el->showNums(genVG, transx,  transy,was) ;
@@ -2112,11 +2110,15 @@ displaytime disp=getdisplaytime(nu,starttime,endtime, transx);
 //		nvgCircle(genVG, posx,posy,foundPointRadius);
 
 	LOGSTRING("before showhistories\n");
+	const int colorsleft=nrcolors-catnr;
+	const auto segcolor=[catnr,colorsleft,colorseg=colorsleft/3](int index,int seg) {
+		 return catnr+(index+colorseg*seg)%colorsleft;
+		 };
 	if(showhistories) {
 		nvgStrokeWidth(genVG, historyStrokeWidth);
 		for(int i=histlen-1;i>=0;i--) {
 			int index= hists[i];
-			int colorindex= (index+nrcolors*3/4)%nrcolors;
+			int colorindex=segcolor(index,2);
 			 histcurve(genVG,sensors->getSensorData(index), histpositions[i].first, histpositions[i].second,transx,transy,colorindex); 
 			 }
 		}
@@ -2125,8 +2127,8 @@ displaytime disp=getdisplaytime(nu,starttime,endtime, transx);
 		nvgStrokeWidth(genVG, pollCurveStrokeWidth);
 		for(int i=histlen-1;i>=0;i--) {
 			const int index= hists[i];
-		//	decltype(auto) col=*colors[(index+nrcolors/4)%nrcolors];
-			int  colorindex=(index+nrcolors/4)%nrcolors;
+//			int  colorindex=(index+nrcolors/4)%nrcolors;
+			int colorindex=segcolor(index,0);
 			showlineScan(genVG,pollranges[i].first,pollranges[i].second,transx,transy,colorindex);
 			 }
 		}
@@ -2134,7 +2136,8 @@ displaytime disp=getdisplaytime(nu,starttime,endtime, transx);
 	if(showscans) {
 		for(int i=histlen-1;i>=0;i--) {
 			const int index=hists[i];
-			const int colorindex=(index+nrcolors*2/4)%nrcolors;
+//			const int colorindex=(index+nrcolors*2/4)%nrcolors;
+			int colorindex=segcolor(index,1);
 			 if(!showScan(genVG,scanranges[i].first,scanranges[i].second,transx,transy,colorindex))
 				return 1;
 			 }
@@ -2491,6 +2494,7 @@ void mkheights() {
 extern void setuseit();
 extern void setusenl();
 extern void setuseru() ;
+extern void setusees();
 
 extern void setusepl();
 extern void setusede();
@@ -2556,6 +2560,13 @@ void  setlocale(const char *localestrbuf,const size_t len) {
 		case mklanguagenum("nl"):
 			setusenl();
 			break;
+
+#ifdef SPANISH
+		case mklanguagenum("ES"):
+		case mklanguagenum("es"):
+			setusees();
+			break;
+#endif
 		case mklanguagenum("PT"):
 		case mklanguagenum("pt"):
 			setusept();
@@ -2923,8 +2934,9 @@ int64_t screentap(float x,float y) {
 						speak(value);
 						return -1LL;
 					} else {
-						if (el.errortext)  {
-							speak(el.errortext);
+						const char *error=el.errortext;
+						if(error)  {
+							speak(error);
 							return -1LL;
 							}
 					}

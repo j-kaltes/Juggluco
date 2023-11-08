@@ -367,6 +367,7 @@ private void initialize() {
 		       else {
 			  if(hasip()) {
 				Natives.networkpresent();
+   		 		Applic.wakemirrors();
 				}
 			   }
 		

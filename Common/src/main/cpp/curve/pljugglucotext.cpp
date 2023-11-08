@@ -117,15 +117,15 @@ jugglucotext pltext {
 		{"Sensor zakończył działanie",""},
 
 		{"Sensor gotowy za","%d minut(y)"},
-		{"373: Błąd odczytu sensora","Spróbuj za 10 minut"},
+		{"Błąd odczytu sensora (373)","Spróbuj za 10 minut"},
 		{"Nowy sensor uruchomiony","Zeskanuj go ponownie, by z niego korzystać"},
 		{"","Blokuje funkcje dotykowe w czasie skanowania"},
 		{"",""},
 		{"Błąd podczas ładowania biblioteki", "Czy brakuje bibliotek współdzielonych?"},
 		{"Błąd podczas ładowania klasy", "Zrób coś"},
 		{"Procedura trwa zbyt długo","Zamykam program"},
-		{"365: Wymień czujnik","Twój czujnik nie działa. Usuń czujnik i uruchom nowy."},
-		{"368: Wymień czujnik","Twój czujnik nie działa. Usuń czujnik i uruchom nowy."},
+		{"Wymień czujnik (365)","Twój czujnik nie działa. Usuń czujnik i uruchom nowy."},
+		{"Wymień czujnik (368)","Twój czujnik nie działa. Usuń czujnik i uruchom nowy."},
 		{"",""},
 		{"Błąd skanowania", "Spróbuj ponownie"}},
 

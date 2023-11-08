@@ -65,13 +65,13 @@ private Button exportbutton(MainActivity activity,String label, int type) {
 	but.setText(label);
         but.setOnClickListener(
 		v-> {
-		int daynr;
+		float daynr;
 		try {
 		
-			daynr=Integer.parseInt(String.valueOf(days.getText()));
+			daynr=Float.parseFloat(String.valueOf(days.getText()));
 			} catch(Throwable th) {
 			
-				exportlabel.setText("'"+days.getText()+activity.getString(R.string.invaliddays));
+				exportlabel.setText("I don't understand \'"+days.getText()+"\'");
 				return;
 			};
 		if(type==4)
@@ -182,19 +182,19 @@ void showexport(MainActivity activity,int width,int height) {
 			);
 	}
 static	public final DateFormat fdatename=             new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss", Locale.US);
-static void algexporter(MainActivity context,int type,String prefix,String ext,int days) {
+static void algexporter(MainActivity context,int type,String prefix,String ext,float days) {
 	final long time=Natives.getendtime();
 	final String datestr=fdatename.format(time)      ;
         final String filename = prefix+datestr+ext;
         exportdata(context,type,filename,days);
 	}
-static void exporter(MainActivity context,int type,String prefix,int days) {
+static void exporter(MainActivity context,int type,String prefix,float days) {
         algexporter(context,type,prefix,".tsv",days);
 	}
 
 
-static int showdays=0;
-static private void exportdata(MainActivity 	context,int type,String name,int days) {
+static float showdays=0;
+static private void exportdata(MainActivity 	context,int type,String name,float days) {
         Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("*/*");

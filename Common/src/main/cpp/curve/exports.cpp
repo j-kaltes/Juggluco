@@ -177,12 +177,12 @@ bool sensorexports(myfilep handle, const FG& proc,const FP& print,uint32_t start
 #define EXTRA 0
 #endif
 
-bool currentheader(FILE* handle) {
+bool currentheader(FILE* handle,int unit) {
 	#define scanhead "Sensorid\tnr\t" DATESTRING "\tTZ\tMin\t"
 	const char headend[]="\tRate\tChangeLabel\n";
 	constexpr const int headstart= sizeof(scanhead)-1;
 	char header[headstart+6+sizeof(headend)+EXTRA]=scanhead;
-	auto units=unitlabels[settings->data()->unit];
+	auto units=unitlabels[unit];
 	memcpy(header+headstart, units.data(),units.size());
 	memcpy(header+headstart+units.size(),headend,sizeof(headend));
 	int tothead=headstart+units.size()+sizeof(headend)-1;
@@ -194,19 +194,19 @@ bool currentheader(FILE* handle) {
 	}
 
 template <bool repeatids>
-bool fexportscans(myfilep handle, CurData   (SensorGlucoseData::*proc)(const uint32_t,const uint32_t) const,uint32_t starttime,uint32_t endtime) {
-	return sensorexports<ScanData>(handle,proc, [](myfilep fp,const int index,const ScanData *scan,const int sens,const ScanData *beg) {
+bool fexportscans(myfilep handle, int unit,CurData   (SensorGlucoseData::*proc)(const uint32_t,const uint32_t) const,uint32_t starttime,uint32_t endtime) {
+	return sensorexports<ScanData>(handle,proc, [unit](myfilep fp,const int index,const ScanData *scan,const int sens,const ScanData *beg) {
 		if(repeatids||scan==beg||scan->id!=scan[-1].id) {
 			const char *sensorname=sensors->shortsensorname(sens)->data();
 			const uint32_t scantime=scan->gettime();
 			const auto [buf,zone]=	timedata(scantime);
-			fprintf(fp,"%s\t%d\t%u\t%s\t%g\t%d\t%.*f\t%+g\t%s\n",sensorname ,index,scan->gettime(),buf,zone,scan->id,gludecimal,gconvert(10*scan->g),scan->ch,GlucoseNow::trendString[scan->tr]); 
+			fprintf(fp,"%s\t%d\t%u\t%s\t%g\t%d\t%.*f\t%+g\t%s\n",sensorname ,index,scan->gettime(),buf,zone,scan->id,getgludecimal(unit),gconvert(10*scan->g,unit),scan->ch,GlucoseNow::trendString[scan->tr]); 
 			}
 			},starttime,endtime);
 	} 
 template <bool repeatids, CurData  (SensorGlucoseData::*proc)(const uint32_t,const uint32_t) const>
-bool exportcurrent(myfilep handle,uint32_t start,uint32_t end) {
-	return fexportscans<repeatids>(handle,proc,start,end);
+bool exportcurrent(myfilep handle,int unit,uint32_t start,uint32_t end) {
+	return fexportscans<repeatids>(handle,unit,proc,start,end);
 	}
 template <bool repeatids>
 bool exportscans(int handle,  CurData  (SensorGlucoseData::*proc)(const uint32_t,const uint32_t) const,uint32_t starttime=0,uint32_t endtime=UINT32_MAX) {
@@ -215,20 +215,21 @@ bool exportscans(int handle,  CurData  (SensorGlucoseData::*proc)(const uint32_t
 		close(handle);
 		return false;
 		}
-	if(!currentheader(fp))  {
+	const int unit= settings->data()->unit;
+	if(!currentheader(fp,unit))  {
       		myclose(fp);
 		return false;
 		}
-      bool ret=fexportscans<repeatids>(fp, proc,starttime,endtime);
+      bool ret=fexportscans<repeatids>(fp,unit,proc,starttime,endtime);
       myclose(fp);
       return ret;
 	}
-static bool writehistoryheader(FILE *handle) {
+static bool writehistoryheader(FILE *handle,int unit) {
 #define histhead "Sensorid\tnr\t" DATESTRING "\tTZ\tMin\t"
 	const char headend[]="\n";
 	constexpr const int headstart= sizeof(histhead)-1;
 	char header[headstart+6+sizeof(headend)+EXTRA]=histhead;
-	auto units=unitlabels[settings->data()->unit];
+	auto units=unitlabels[unit];
 	memcpy(header+headstart, units.data(),units.size());
 	memcpy(header+headstart+units.size(),headend,sizeof(headend));
 	int tothead=headstart+units.size()+sizeof(headend)-1;
@@ -238,7 +239,7 @@ static bool writehistoryheader(FILE *handle) {
 		}
 	return true;
 	}
-bool fexporthistory(myfilep  handle,uint32_t starttime=0,uint32_t endtime=UINT32_MAX) {
+bool fexporthistory(myfilep  handle,int unit,uint32_t starttime=0,uint32_t endtime=UINT32_MAX) {
 
 	auto indices=sensors->inperiod(	starttime,endtime);
 	int totsen=indices.size();
@@ -267,9 +268,9 @@ bool fexporthistory(myfilep  handle,uint32_t starttime=0,uint32_t endtime=UINT32
 	LOGGER("exporthistory take=%d totsen=%d\n",i,totsen);
 	if(i>0)  {
 		return exportdata(handle,iters,0,i,
-	[](myfilep fp,const int index,const Glucose *glu,const int sens,const Glucose *beg) {
+	[unit](myfilep fp,const int index,const Glucose *glu,const int sens,const Glucose *beg) {
 			const auto [buf,zone]=	timedata(glu->gettime());
-			fprintf(fp,"%s\t%d\t%u\t%s\t%g\t%d\t%.*f\n", sensors->shortsensorname(sens)->data(),index,glu->gettime(),buf,zone,glu->getid(),gludecimal,gconvert(glu->getsputnik())); 
+			fprintf(fp,"%s\t%d\t%u\t%s\t%g\t%d\t%.*f\n", sensors->shortsensorname(sens)->data(),index,glu->gettime(),buf,zone,glu->getid(),getgludecimal(unit),gconvert(glu->getsputnik(),unit)); 
 
 			});
 		}
@@ -284,16 +285,17 @@ bool exporthistory(int handle,uint32_t starttime=0,uint32_t endtime=UINT32_MAX) 
 		close(handle);
 		return false;
 		}
-	if(!writehistoryheader(fp)) {
+	int unit=settings->data()->unit;
+	if(!writehistoryheader(fp,unit)) {
 		myclose(fp);
 		return false;
 		}
-	bool ret=fexporthistory(fp,starttime,endtime);
+	bool ret=fexporthistory(fp,unit,starttime,endtime);
 
 	myclose(fp);
 	return ret;
 	}
-bool fexportnums(myfilep handle,uint32_t starttime=0,uint32_t endtime=UINT32_MAX) {
+bool fexportnums(myfilep handle,int _unit,uint32_t starttime=0,uint32_t endtime=UINT32_MAX) {
 	NumIter<Num> *numiters=mknumPerioditers(starttime,endtime);
 	destruct _dest([numiters]{delete[] numiters;});
 	int basecount=numdatas.size();
@@ -306,7 +308,7 @@ bool fexportnums(myfilep handle,uint32_t starttime=0,uint32_t endtime=UINT32_MAX
 
 	}
 
-static bool writenumheader(FILE* handle) {
+static bool writenumheader(FILE* handle,int) {
 	constexpr const char header[]="Source\tnr\t" DATESTRING "\tTZ\tValue\tLabel\n";
 	constexpr int headlen=sizeof(header)-1;
 	if(fwrite(header,1,headlen,handle)!=headlen)
@@ -320,11 +322,11 @@ bool exportnums(int handle,uint32_t starttime=0,uint32_t endtime=UINT32_MAX) {
 		close(handle);
 		return false;
 		}
-	if(!writenumheader(fp)) {
+	if(!writenumheader(fp,0)) {
 		myclose(fp);
 		return false;
 		}
-	bool ret=fexportnums( fp,starttime,endtime);
+	bool ret=fexportnums( fp,0,starttime,endtime);
 	myclose(fp);
 	return ret;
 	}
@@ -366,7 +368,7 @@ bool savemeals(FILE * handle,uint32_t starttime,uint32_t endtime) {
 
 extern uint32_t starttime;
 extern int duration;
-extern "C" JNIEXPORT jboolean  JNICALL   fromjava(exportdata)(JNIEnv *env, jclass cl,jint type,jint fd,jint days) {
+extern "C" JNIEXPORT jboolean  JNICALL   fromjava(exportdata)(JNIEnv *env, jclass cl,jint type,jint fd,jfloat days) {
 	uint32_t endtime=std::min(starttime+duration,(uint32_t)time(nullptr));
 	uint32_t starttime=endtime-days*24*60*60;
 	switch(type) {
@@ -392,7 +394,7 @@ template bool exportscans<false>(int handle, CurData (SensorGlucoseData::*proc)(
 #include <span>
 
 
-std::span<char> getexportdata(int startpos,int len,uint32_t starttime,uint32_t endtime, bool (*exporter)(FILE *fp,uint32_t starttime,uint32_t endtime),bool (*header)(FILE* handle)) {
+std::span<char> getexportdata(int startpos,int len,uint32_t starttime,uint32_t endtime, int unit,bool (*exporter)(FILE *fp,int unit,uint32_t starttime,uint32_t endtime),bool (*header)(FILE* handle,int)) {
 	struct Fmemopen {
 		char *mem;
 		int max;
@@ -446,11 +448,11 @@ constexpr const cookie_io_functions_t  memfuncs = {
 #endif
 	if(FILE *fp=FMEMOPEN(&mem)) {
 		if(header) {
-			if(!header(fp)) {
+			if(!header(fp,unit)) {
 				return {mem.mem,std::numeric_limits<size_t>::max()};
 				}	
 			}
-		bool res=exporter(fp,starttime,endtime);
+		bool res=exporter(fp,unit,starttime,endtime);
 		if(fclose(fp)==0&&res)
 			return {mem.mem,(size_t)mem.iter};
 		lerror("fclose ");	
@@ -459,21 +461,21 @@ constexpr const cookie_io_functions_t  memfuncs = {
 	else
 			return {mem.mem,std::numeric_limits<size_t>::max()};
 	}
-std::span<char> gethistory(int startpos, int len, uint32_t starttime, uint32_t endtime,bool header) {
-	return getexportdata(startpos,len,starttime, endtime,fexporthistory,header?writehistoryheader:nullptr);
+std::span<char> gethistory(int startpos, int len, uint32_t starttime, uint32_t endtime,bool header,int unit) {
+	return getexportdata(startpos,len,starttime, endtime,unit,fexporthistory,header?writehistoryheader:nullptr);
 	}
-std::span<char> getamounts(int startpos, int len, uint32_t starttime, uint32_t endtime,bool header) {
-	return getexportdata(startpos,len,starttime, endtime,fexportnums,header?writenumheader:nullptr);
+std::span<char> getamounts(int startpos, int len, uint32_t starttime, uint32_t endtime,bool header,int unit) {
+	return getexportdata(startpos,len,starttime, endtime,unit,fexportnums,header?writenumheader:nullptr);
 	}
-std::span<char> getstream(int startpos, int len, uint32_t starttime, uint32_t endtime,bool header) {
-	return getexportdata(startpos,len,starttime, endtime,exportcurrent<false,&SensorGlucoseData::streamInperiod>,header?currentheader:nullptr);
+std::span<char> getstream(int startpos, int len, uint32_t starttime, uint32_t endtime,bool header,int unit) {
+	return getexportdata(startpos,len,starttime, endtime,unit,exportcurrent<false,&SensorGlucoseData::streamInperiod>,header?currentheader:nullptr);
 	}
-std::span<char> getscans(int startpos, int len, uint32_t starttime, uint32_t endtime,bool header) {
-	return getexportdata(startpos,len,starttime, endtime,exportcurrent<true,&SensorGlucoseData::scanInperiod>,header?currentheader:nullptr);
+std::span<char> getscans(int startpos, int len, uint32_t starttime, uint32_t endtime,bool header,int unit) {
+	return getexportdata(startpos,len,starttime, endtime,unit,exportcurrent<true,&SensorGlucoseData::scanInperiod>,header?currentheader:nullptr);
 	}
 
-extern bool fallsavemeals(FILE *handle,uint32_t starttime,uint32_t endtime) ;
-std::span<char> getmeals(int startpos, int len, uint32_t starttime, uint32_t endtime,bool header) {
-	return getexportdata(startpos,len,starttime, endtime,fallsavemeals,nullptr);
+extern bool fallsavemeals(FILE *handle,int unit,uint32_t starttime,uint32_t endtime) ;
+std::span<char> getmeals(int startpos, int len, uint32_t starttime, uint32_t endtime,bool header,int unit) {
+	return getexportdata(startpos,len,starttime, endtime,unit,fallsavemeals,nullptr);
 	}
 #endif

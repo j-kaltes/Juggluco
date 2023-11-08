@@ -28,6 +28,8 @@ static constexpr const double convfactor=180.0;
 #else
 static constexpr const double convfactor=180.182;
 #endif
+static constexpr const double convertmultmmol=1.0/convfactor;
+static constexpr const double convertmultmg=1.0/10.0;
 //static constexpr const float convfactor=180.0f;
 static constexpr const double convfactordL=convfactor*0.1;
 #include <array>
@@ -512,12 +514,12 @@ bool usemmolL() const {
 	}
 void setunit(int unit) {
 	if((data()->unit=unit)==1) {
-		convertmult=1.0/convfactor;
+		convertmult= convertmultmmol;
 		gformat="%.1f";
 		gludecimal=1;
 		}
 	else  {
-		convertmult=1.0/10.0;
+		convertmult= convertmultmg;
 		gformat="%3.0f";
 		gludecimal=0;
 		}
@@ -706,6 +708,19 @@ void delnumalarm(int pos) ;
 
 inline float gconvert(const float mgperL) {
 	return settings->frommgperL(mgperL);
+	}
+/*
+float frommgperL(const float mgperL) const {
+	return mgperL*convertmult;
+	}
+	*/
+inline float gconvert(const float mgperL,int unit) {
+	if(unit==1)
+		return convertmultmmol*mgperL;
+	return mgperL*convertmultmg;
+	}
+inline int getgludecimal(int init) {
+	return init==1;
 	}
 inline  const float backconvert(const float unit) {
 	return settings->tomgperL(unit);

@@ -89,15 +89,15 @@ public class MyGattCallback extends SuperGattCallback {
 				var mess="BLELogincharacteristic.setValue";
 				wrotepass[1] = System.currentTimeMillis();
 				handshake = mess;
-				Log.e(LOG_ID,mess);
+				Log.e(LOG_ID,SerialNumber+" "+mess);
 				var gatt= mBluetoothGatt;
 				if(gatt!=null)
 					gatt.disconnect();
-
+				return;
 				}
 			if(!mBluetoothGatt.writeCharacteristic(BLELogincharacteristic)) {
 				var mess="writeCharacteristic(BLELogincharacteristic)";
-				Log.e(LOG_ID,mess);
+				Log.e(LOG_ID,SerialNumber+" "+mess);
 				handshake = mess;
 				wrotepass[1] = System.currentTimeMillis();
 				var gatt= mBluetoothGatt;
@@ -105,7 +105,7 @@ public class MyGattCallback extends SuperGattCallback {
 					gatt.disconnect();
 				}
 		} catch(Throwable e) {
-			Log.stack(LOG_ID, "onDescriptorWrite", e);
+			Log.stack(LOG_ID, SerialNumber+" onDescriptorWrite", e);
 			if (Build.VERSION.SDK_INT > 30 && !Applic.mayscan())
 				Applic.Toaster(R.string.turn_on_nearby_devices_permission);
 			var gatt= mBluetoothGatt;
@@ -128,8 +128,9 @@ static void showCharacter(String label, BluetoothGattCharacteristic characterist
 			writeBLELogin();
 		}
 	}
-
+/*
 void reconnect() {
+	Log.i(LOG_ID,SerialNumber+" reconnect");
 	var gatt=mBluetoothGatt;
 	if(gatt!=null) {
 		gatt.disconnect();
@@ -139,7 +140,7 @@ void reconnect() {
 	var sensorbluetooth=SensorBluetooth.blueone;
 	if(sensorbluetooth!=null)
 		sensorbluetooth.connectToActiveDevice(this, 0);
-	}	
+	}	 */
 	@SuppressLint("MissingPermission")
 	@Override
 	public void onConnectionStateChange(BluetoothGatt bluetoothGatt, int status, int newState) {
@@ -151,7 +152,7 @@ void reconnect() {
 		long tim = System.currentTimeMillis();
 		try {
 			if (doLog) {
-				String[] state = {"DISCONNECTED", "CONNECTING", "CONNECTED", "DISCONNECTING"};
+				final String[] state = {"DISCONNECTED", "CONNECTING", "CONNECTED", "DISCONNECTING"};
 				Log.i(LOG_ID, SerialNumber + " onConnectionStateChange, status:" + status + ", state: " + (newState < state.length ? state[newState] : newState));
 				}
 			if (newState == BluetoothProfile.STATE_CONNECTED) {
@@ -193,7 +194,7 @@ void reconnect() {
 				constatchange[1] = tim;
 			}
 		} catch (Throwable e) {
-			Log.stack(LOG_ID, "onConnectionStateChange", e);
+			Log.stack(LOG_ID, SerialNumber+" onConnectionStateChange", e);
 			if (Build.VERSION.SDK_INT > 30 && !Applic.mayscan())
 				Applic.Toaster(R.string.turn_on_nearby_devices_permission);
 			constatstatus = status;
@@ -353,7 +354,7 @@ status	int: The result of the write operation BluetoothGatt#GATT_SUCCESS if the 
 			pack1 = false;
 			pack2 = false;
 		} catch (Throwable e) {
-			Log.stack(LOG_ID, "onCharacteristicWrite", e);
+			Log.stack(LOG_ID, SerialNumber+" onCharacteristicWrite", e);
 			if (Build.VERSION.SDK_INT > 30 && !Applic.mayscan())
 				Applic.Toaster(R.string.turn_on_nearby_devices_permission);
 			bluetoothGatt.disconnect();
@@ -468,6 +469,7 @@ private	void oldonCharacteristicChanged(byte[] value) {
 			var gatt = mBluetoothGatt;
 			if (gatt != null)
 				gatt.disconnect();
+			Log.e(LOG_ID, SerialNumber+ " No ident");
 			return null;
 			}
 
@@ -482,6 +484,7 @@ private	void oldonCharacteristicChanged(byte[] value) {
 			var gatt = mBluetoothGatt;
 			if (gatt != null)
 				gatt.disconnect();
+			Log.i(LOG_ID,SerialNumber+" " +  showhex.showbytes(Ew));
 			return null;
 			}
 		if(doLog) {
@@ -495,7 +498,7 @@ private	void oldonCharacteristicChanged(byte[] value) {
 			else {
 			var mess="Authenticationdata: len="+auth.length;
 			   if (auth.length < 10) {
-				Log.e(LOG_ID,mess);
+				Log.e(LOG_ID,SerialNumber+" "+mess);
 				handshake= mess;
 				wrotepass[1] = System.currentTimeMillis();
 				var gatt = mBluetoothGatt;
@@ -524,6 +527,7 @@ private	void oldonCharacteristicChanged(byte[] value) {
 		var gatt = mBluetoothGatt;
 		if (gatt != null)
 			gatt.disconnect();
+		Log.e(LOG_ID,SerialNumber+" "+handshake);
 		return null;
 	}
 
@@ -532,7 +536,7 @@ private	void oldonCharacteristicChanged(byte[] value) {
 	byte[] buf25 = new byte[25];// this.f14472dGb = new byte[25];
 	public final void phase2(byte[] value) {
 		if (value.length != 14) {
-			Log.e(LOG_ID, "phase2 wrong " + value);
+			Log.e(LOG_ID, SerialNumber+" phase2 wrong " + value);
 			var gatt = mBluetoothGatt;
 			if (gatt != null)
 				gatt.disconnect();
@@ -541,7 +545,7 @@ private	void oldonCharacteristicChanged(byte[] value) {
 		try {
 			byte[] a = authenticateStream(value);
 			if(a==null)  {
-                		Log.e(LOG_ID, "phase2 wrong (a == null)");
+                		Log.e(LOG_ID, SerialNumber+" phase2 wrong (a == null)");
 				var gatt = mBluetoothGatt;
 				if (gatt != null)
 					gatt.disconnect();
@@ -552,7 +556,7 @@ private	void oldonCharacteristicChanged(byte[] value) {
 			BLELogincharacteristic.setValue(a);
 			if (!mBluetoothGatt.writeCharacteristic(BLELogincharacteristic)) {
 			    var mess = "phase2 retry=" + BLELoginposted + " writeCharacteristic(BLELogincharacteristic)";
-			    Log.e(LOG_ID, mess);
+			    Log.e(LOG_ID, SerialNumber+" "+mess);
 			    handshake = mess;
 			    wrotepass[1] = System.currentTimeMillis();
 			    if (BLELoginposted < 5) {
@@ -573,7 +577,7 @@ private	void oldonCharacteristicChanged(byte[] value) {
 		    mBLELoginHandler.run();
 		} catch (Exception e) {
 			handshake = "streamingUnlock failed";
-			Log.e(LOG_ID, handshake);
+			Log.e(LOG_ID, SerialNumber+" "+handshake);
 			wrotepass[1] = System.currentTimeMillis();
 			var gatt = mBluetoothGatt;
 			if (gatt != null)
@@ -616,7 +620,7 @@ private final boolean enableNotification(BluetoothGattCharacteristic bluetoothGa
 			if (i <= 0) {
 				handshake= "phase3 i<=0";
 				wrotepass[1] = System.currentTimeMillis();
-				Log.e(LOG_ID, "Error creating session context");
+				Log.e(LOG_ID, SerialNumber+" Error creating session context");
 				var gatt = mBluetoothGatt;
 				if (gatt != null)
 					gatt.disconnect();
@@ -627,7 +631,7 @@ private final boolean enableNotification(BluetoothGattCharacteristic bluetoothGa
 
             mBLELoginHandler = () -> {
                 if (!enableNotification(CompositeRawDatacharacteristic)) {
-                    Log.e(LOG_ID, "phase3 retry=" + BLELoginposted + " enableNotification failed");
+                    Log.e(LOG_ID, SerialNumber+" phase3 retry=" + BLELoginposted + " enableNotification failed");
                     handshake = "Enable CompositeRawDatacharacteristic failed";
                     wrotepass[1] = System.currentTimeMillis();
                     if (BLELoginposted < 5) {
@@ -650,7 +654,7 @@ private final boolean enableNotification(BluetoothGattCharacteristic bluetoothGa
 		} else {
 			handshake= "phase3 wrong length";
 			wrotepass[1] = System.currentTimeMillis();
-			Log.e(LOG_ID, "Erroneous response length " + value.length);
+			Log.e(LOG_ID, SerialNumber+" Erroneous response length " + value.length);
 			var gatt = mBluetoothGatt;
 			if (gatt != null)
 				gatt.disconnect();

@@ -87,6 +87,17 @@ static public void reconnectall() {
 	    }
    }
 
+static void othersworking(SuperGattCallback current ,long timmsec) {
+   final var gatts=blueone.gattcallbacks;
+	 if(gatts.size()>1) {
+   		final var old=timmsec-1000L*59*3;
+	 	for(var g:gatts) {
+			if(g!=current)
+				g.shouldreconnect(old);
+			}
+	    	}
+	}
+
     public boolean connectToActiveDevice(long delayMillis) {
     Log.i(LOG_ID, "connectToActiveDevice("+delayMillis+")");
 	if(!bluetoothIsEnabled()) {

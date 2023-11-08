@@ -143,15 +143,15 @@ jugglucotext pttext {
                 {"Sensor terminou definitivamente",""},
 
                 {"Sensor pronto em","%d minutos"},
-                {"373: Erro do Sensor","Não contacte imediatamente o serviço de apoio ao cliente Abbott; possivelmente as leituras de glicose estarão disponíveis em 10 minutos."},
+                {"Erro do Sensor (373)","Não contacte imediatamente o serviço de apoio ao cliente Abbott; possivelmente as leituras de glicose estarão disponíveis em 10 minutos."},
                 {"Novo Sensor iniciado","Scan novamente para o utilizar"},
                 {"","Bloquear toques durante o scan"},
                 {"",""},
                 {"Erro de iniciação da biblioteca","Forçar reinstalação removendo a biblioteca"},
                 {"Erro de inicialização de classificação","Fazer algo"},
                 {"O procedimento demora demasiado tempo","Fechar programa"},
-                {"365: Substitua o sensor","O seu sensor não está a funcionar. Remova o sensor e inicie um novo."},
-                {"368: Substitua o sensor","O seu sensor não está a funcionar. Remova o sensor e inicie um novo."},
+                {"Substitua o sensor (365)","O seu sensor não está a funcionar. Remova o sensor e inicie um novo."},
+                {"Substitua o sensor (368)","O seu sensor não está a funcionar. Remova o sensor e inicie um novo."},
                 {"",""},
                 {"Scan Erro","Tentar novamente"}},
 

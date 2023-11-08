@@ -320,7 +320,8 @@ still needed for them.</p>
 is an applet for the control of blood glucose by people with
 diabetes. It can scan Freestyle libre (1 and 2) sensors (via NFC) and
 receive (via Bluetooth) glucose values from <font color="#4f81bd"><font face="Calibri, serif"><i><b>Freestyle
-libre 2</b></i></font></font> sensors.</p>
+libre 2</b></i></font></font><font color="#4f81bd"> </font><font color="#4f81bd"><font face="Calibri, serif"><i><b>and
+3</b></i></font></font> sensors.</p>
 <p style="line-height: 115%; margin-bottom: 0in">As the program is
 run for the first time, you can (after initialization) scan a
 Freestyle Libre <b>2</b> sensor by holding it against the NFC sensor
@@ -344,39 +345,40 @@ the screen the fourth menu.</span>
 </p>
 <p style="line-height: 100%; orphans: 0; widows: 0; margin-top: 0.08in; margin-bottom: 0.08in; background: transparent; page-break-after: avoid">
 <font size="3" style="font-size: 12pt"><i>Menu 4: Movement (right)</i></font></p>
-<table width="96" cellpadding="0" cellspacing="0" style="background: transparent">
+<table width="96" cellpadding="0" cellspacing="0">
 	<col width="96"/>
 
 	<tr>
-		<td width="96" valign="top" style="border: none; padding: 0in"><p>15:10&nbsp;&nbsp;&nbsp;&nbsp;6.7</p>
+		<td width="96" valign="top" style="border: none; padding: 0in" sdval="0.632021990740741" sdnum="2057;0;[HH]:MM:SS.00"><p>
+			<font color="#ffff6d">15:10&nbsp;&nbsp;&nbsp;6.7</font></p>
 		</td>
 	</tr>
 	<tr>
-		<td width="96" valign="top" style="border: none; padding: 0in"><p>Search</p>
+		<td width="96" valign="top" style="border: none; padding: 0in"><p><font color="#ffff6d">Search</font></p>
 		</td>
 	</tr>
 	<tr>
-		<td width="96" valign="top" style="border: none; padding: 0in"><p>Date</p>
+		<td width="96" valign="top" style="border: none; padding: 0in"><p><font color="#ffff6d">Date</font></p>
 		</td>
 	</tr>
 	<tr>
-		<td width="96" valign="top" style="border: none; padding: 0in"><p>Day
-			back</p>
+		<td width="96" valign="top" style="border: none; padding: 0in"><p><font color="#ffff6d">Day
+			back</font></p>
 		</td>
 	</tr>
 	<tr style="background: transparent">
-		<td width="96" valign="top" style="border: none; padding: 0in"><p>Day
-			later</p>
+		<td width="96" valign="top" style="border: none; padding: 0in"><p><font color="#ffff6d">Day
+			later</font></p>
 		</td>
 	</tr>
 	<tr>
-		<td width="96" valign="top" style="border: none; padding: 0in"><p>Week
-			back</p>
+		<td width="96" valign="top" style="border: none; padding: 0in"><p><font color="#ffff6d">Week
+			back</font></p>
 		</td>
 	</tr>
 	<tr>
-		<td width="96" valign="top" style="border: none; padding: 0in"><p>Week
-			Later</p>
+		<td width="96" valign="top" style="border: none; padding: 0in"><p><font color="#ffff6d">Week
+			Later</font></p>
 		</td>
 	</tr>
 </table>
@@ -401,33 +403,33 @@ displayed on the screen by changing the distance between two fingers.</p>
 	<col width="138"/>
 
 	<tr>
-		<td width="138" valign="top" style="border: none; padding: 0in"><p>Last
-			Scan</p>
+		<td width="138" valign="top" style="border: none; padding: 0in"><p><font color="#ffff6d">Last
+			Scan</font></p>
 		</td>
 	</tr>
 	<tr>
-		<td width="138" valign="top" style="border: none; padding: 0in"><p>Scans&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[x]</p>
+		<td width="138" valign="top" style="border: none; padding: 0in"><p><font color="#ffff6d">Scans&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[x]</font></p>
 		</td>
 	</tr>
 	<tr>
-		<td width="138" valign="top" style="border: none; padding: 0in"><p>Stream&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[x]</p>
+		<td width="138" valign="top" style="border: none; padding: 0in"><p><font color="#ffff6d">Stream&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[x]</font></p>
 		</td>
 	</tr>
 	<tr>
-		<td width="138" valign="top" style="border: none; padding: 0in"><p>History&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[x]</p>
+		<td width="138" valign="top" style="border: none; padding: 0in"><p><font color="#ffff6d">History&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[x]</font></p>
 		</td>
 	</tr>
 	<tr>
-		<td width="138" valign="top" style="border: none; padding: 0in"><p>Amounts&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[x]</p>
+		<td width="138" valign="top" style="border: none; padding: 0in"><p><font color="#ffff6d">Amounts&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[x]</font></p>
 		</td>
 	</tr>
 	<tr>
-		<td width="138" valign="top" style="border: none; padding: 0in"><p>Meals&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;&nbsp;]</p>
+		<td width="138" valign="top" style="border: none; padding: 0in"><p><font color="#ffff6d">Meals&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;&nbsp;]</font></p>
 		</td>
 	</tr>
 	<tr>
-		<td width="138" height="37" valign="top" style="border: none; padding: 0in"><p>
-			Dark mode&nbsp;&nbsp;[&nbsp;&nbsp;]</p>
+		<td width="138" height="41" valign="top" style="border: none; padding: 0in"><p>
+			<font color="#ffff6d">Dark mode&nbsp;&nbsp;[&nbsp;&nbsp;]</font></p>
 		</td>
 	</tr>
 </table>
@@ -439,10 +441,10 @@ display options. To view the last scan, touch the first</span> <span lang="en-US
 the graph. A scan is the current glucose value you get when you scan
 your sensor. Scanning also transfers 15 minutes measurements of the
 last 8 hours from sensor to smartphone. Display of these values can
-be controlled by touching <i>History</i>. <i>Stream</i> stands for
-glucose values send every minute via Bluetooth from a Freestyle libre
-2 sensor to this applet. 
-</p>
+be controlled by touching <i>History</i>. Libre 3 sensors send the
+history values by Bluetooth and they are every 5 minutes. <i>Stream</i>
+stands for glucose values send every minute via Bluetooth from a
+Freestyle libre 2 and 3 sensors to this applet.</p>
 <p style="line-height: 115%; margin-bottom: 0in">You can enter all
 kind of numbers (with whatever label you like) to document you
 insulin, carbohydrate and activities. They are displayed at fixed
@@ -452,97 +454,102 @@ gives information about that item. You can edit an entered number by
 long touching it. Editing is also possible via the number list in the
 left middle menu</span> <span lang="en-US">and touching the
 corresponding data element.</span> <i>Amounts</i> determines the
-display of entered numbers. In Settings, you can specify which labels
-you like to use for these numbers. Above one of the numbers the
-corresponding label is shown.</p>
+display of entered numbers. In <i>Settings</i>, you can specify which
+labels you like to use for these numbers. Above one of the numbers
+the corresponding label is shown.</p>
 <p style="line-height: 100%; orphans: 0; widows: 0; margin-top: 0.08in; margin-bottom: 0.08in; background: transparent; page-break-after: avoid">
 <font size="3" style="font-size: 12pt"><i>Menu 2: Left of middle</i></font></p>
 <table width="96" cellpadding="0" cellspacing="0">
 	<col width="96"/>
 
 	<tr>
-		<td width="96" height="37" valign="top" style="border: none; padding: 0in"><p align="left">
-			Notify&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;]</p>
+		<td width="96" valign="top" style="border: none; padding: 0in"><p><font color="#ffff6d">Export</font></p>
 		</td>
 	</tr>
 	<tr>
-		<td width="96" valign="top" style="border: none; padding: 0in"><p>Export</p>
+		<td width="96" valign="top" style="border: none; padding: 0in"><p><font color="#ffff6d">Mirror</font></p>
 		</td>
 	</tr>
 	<tr>
-		<td width="96" valign="top" style="border: none; padding: 0in"><p>Mirror</p>
+		<td width="96" valign="top" style="border: none; padding: 0in"><p><font color="#ffff6d">New
+			Amount</font></p>
 		</td>
 	</tr>
 	<tr>
-		<td width="96" valign="top" style="border: none; padding: 0in"><p>New
-			Amount</p>
+		<td width="96" valign="top" style="border: none; padding: 0in"><p><font color="#ffff6d">List</font></p>
 		</td>
 	</tr>
 	<tr>
-		<td width="96" valign="top" style="border: none; padding: 0in"><p>List</p>
+		<td width="96" valign="top" style="border: none; padding: 0in"><p><font color="#ffff6d">Statistics</font></p>
 		</td>
 	</tr>
 	<tr>
-		<td width="96" valign="top" style="border: none; padding: 0in"><p>Statistics</p>
+		<td width="96" valign="top" style="border: none; padding: 0in"><p><font color="#ffff6d">Talk</font></p>
+		</td>
+	</tr>
+	<tr>
+		<td width="96" valign="top" style="border: none; padding: 0in"><p align="left">
+			<font color="#ffff6d">Float&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;[&nbsp;]</font></p>
 		</td>
 	</tr>
 </table>
 <p style="line-height: 115%; margin-bottom: 0in">You can enter these
-numbers by touching <i><b>New Amount</b></i> in <font color="#4f81bd"><font face="Cambria, serif"><span lang="en-US"><b>left
+numbers by touching <font color="#4f81bd"><font face="Cambria, serif"><font size="3" style="font-size: 13pt"><span lang="en-US"><b>New
+Amount</b></span></font></font></font> in <font color="#4f81bd"><font face="Cambria, serif"><span lang="en-US"><b>left
 of the middle menu</b></span></font></font>. <font color="#4f81bd"><font face="Cambria, serif"><span lang="en-US"><b>Export</b></span></font></font>
 <span lang="en-US">saves data in .tsv (tab separated values) format
 to a file. </span><font color="#4f81bd"><font face="Cambria, serif"><span lang="en-US"><b>Mirror</b></span></font></font>
 <span lang="en-US">makes it possible to send data via IP/TCP to this
 app running on a different device to display the same information.
-With </span><font color="#4f81bd"><font face="Cambria, serif"><span lang="en-US"><b>Notify</b></span></font></font>
-checked, <span lang="en-US">every incoming glucose value generates an
-Android notification. This notification is sent to some smartwatches,
-so that you can see your current glucose value</span> <span lang="en-US">on
-your watch. A version of Juggluco runs on WearOS watches. For certain
-Garmin smartwatches with touch screen there is also</span> <span lang="en-US">a
-watch app</span> <span lang="en-US">(called Kerfstok, see
-<a href="https://apps.garmin.com/en-US/apps/b6348ccc-86d8-4780-8013-d9e19fed5260">https://apps.garmin.com/en-US/apps/b6348ccc-86d8-4780-8013-d9e19fed5260</a>),
-that communicates with Juggluco, receives and displays the current
-glucose value and can be used to enter</span> <span lang="en-US">amounts.
-</span><span lang="en-US"><b>List </b></span><span lang="en-US">gives
-a list of the entered numbers. If Juggluco has received enough
-glucose values via Bluetooth, you can see some statistics by touching
-</span><span lang="en-US"><b>Statistics</b></span><span lang="en-US">.
+</span><font color="#4f81bd"><font face="Cambria, serif"><span lang="en-US"><b>List</b></span></font></font>
+<span lang="en-US">gives a list of the entered numbers. If Juggluco
+has received enough glucose values via Bluetooth, you can see some
+statistics by touching </span><font color="#4f81bd"><font face="Cambria, serif"><span lang="en-US"><b>Statistics</b></span></font></font><span lang="en-US">.
 It shows the percentage of the measurements in certain glucose
 ranges, the Glucose Management Indicator (a predictor of HbA1c),
 glucose variability and a summary graph showing the glucose value
 below which 100%,95%,75%,50%,25% and 0% of the values lie at each
-moment of the day.</span></p>
+moment of the day.</span> <span lang="en-US">In </span><font color="#4f81bd"><font face="Cambria, serif"><span lang="en-US"><b>Talk</b></span></font></font>
+<span lang="en-US">you can make Juggluco speak out incoming glucose
+values, touched elements of the graph or messages. Float turns on
+</span><font color="#4f81bd"><font face="Cambria, serif"><span lang="en-US"><b>Floating
+Glucose</b></span></font></font><span lang="en-US">. A glucose value
+present on the screen above other apps. In Settings you can change
+its color and size.</span></p>
 <p style="line-height: 100%; orphans: 0; widows: 0; margin-top: 0.08in; margin-bottom: 0.08in; background: transparent; page-break-after: avoid">
 <font size="3" style="font-size: 12pt"><i>Menu 1: Left</i></font></p>
-<table width="96" cellpadding="0" cellspacing="0">
-	<col width="96"/>
+<table width="120" cellpadding="0" cellspacing="0">
+	<col width="120"/>
 
 	<tr>
-		<td width="96" valign="top" style="border: none; padding: 0in"><p>System
-			UI&nbsp;&nbsp;[&nbsp;]</p>
+		<td width="120" valign="top" style="border: none; padding: 0in"><p><font color="#ffff6d">System
+			UI&nbsp;&nbsp;[&nbsp;]</font></p>
 		</td>
 	</tr>
 	<tr>
-		<td width="96" valign="top" style="border: none; padding: 0in"><p>Watch</p>
+		<td width="120" valign="top" style="border: none; padding: 0in"><p><font color="#ffff6d">Menus&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;]</font></p>
 		</td>
 	</tr>
 	<tr>
-		<td width="96" valign="top" style="border: none; padding: 0in"><p>Sensor</p>
+		<td width="120" valign="top" style="border: none; padding: 0in"><p><font color="#ffff6d">Watch</font></p>
 		</td>
 	</tr>
 	<tr>
-		<td width="96" height="26" valign="top" style="border: none; padding: 0in"><p>
-			Settings</p>
+		<td width="120" valign="top" style="border: none; padding: 0in"><p><font color="#ffff6d">Sensor</font></p>
 		</td>
 	</tr>
 	<tr>
-		<td width="96" height="26" valign="top" style="border: none; padding: 0in"><p>
-			About</p>
+		<td width="120" height="26" valign="top" style="border: none; padding: 0in"><p>
+			<font color="#ffff6d">Settings</font></p>
 		</td>
 	</tr>
 	<tr>
-		<td width="96" valign="top" style="border: none; padding: 0in"><p>Close</p>
+		<td width="120" height="26" valign="top" style="border: none; padding: 0in"><p>
+			<font color="#ffff6d">About</font></p>
+		</td>
+	</tr>
+	<tr>
+		<td width="120" valign="top" style="border: none; padding: 0in"><p><font color="#ffff6d">Close</font></p>
 		</td>
 	</tr>
 </table>
@@ -553,8 +560,22 @@ menu</b></span></font></font><span lang="en-US">, you can find
 to set the glucose unit to mmol/L or mg/dL, to</span> <span lang="en-US">specify</span>
 <span lang="en-US">labels, set glucose alarms and medication
 reminders</span> <span lang="en-US">and display ranges. System UI
-determines if android controls and status bar are shown. Close can be
-used to exit</span> <span lang="en-US">Juggluco.</span></p>
+determines if android controls and status bar are shown. In </span><font color="#4f81bd"><font face="Cambria, serif"><span lang="en-US"><b>Watch</b></span></font></font>
+<span lang="en-US">you can specify Juggluco to send data to all kinds
+of smartwatches. In </span><font color="#4f81bd"><font face="Cambria, serif"><span lang="en-US"><b>Sensor</b></span></font></font><span lang="en-US">,
+you can see how the connection with the sensor is going. Touch </span><font color="#4f81bd"><font face="Cambria, serif"><span lang="en-US"><b>Menus</b></span></font></font>
+<span lang="en-US">to show all the mentioned menus at the same time
+in a way that can be read by talkback. Close can be used to exit</span>
+<span lang="en-US">Juggluco.</span></p>
+<p style="line-height: 115%; margin-bottom: 0in"><br/>
+
+</p>
+<p style="line-height: 115%; margin-bottom: 0in"><br/>
+
+</p>
+<p style="line-height: 115%; margin-bottom: 0in"><br/>
+
+</p>
 ]]>
 </string>
 <string name="searchhelp" >
@@ -1622,6 +1643,17 @@ this change not result in a change in Libreview, but will both Bike
 20 and Cycling 25 be present in Libreview. The only thing you can do
 is to delete the current devices in Libreview and press on <i>Resend
 Data</i> in Juggluco.</p>
+<p>A lot of users think that carbohydrates are not send to Libreview
+because they can\'t find them in &quot;<i>Mealtime Patterns</i>&quot;.
+Because of a restriction of Libreview, <span style="font-style: normal">insulin
+needs to be entered for the same time as the carbohydrate for
+carbohydrate to be displayed in &quot;</span><i>Mealtime Patterns</i><span style="font-style: normal">&quot;.
+Carbohydrate is always displayed in &quot;</span><i>Daily log</i><span style="font-style: normal">&quot;
+and &quot;</span><i>Weekly summary</i><span style="font-style: normal">&quot;.</span></p>
+
+<p>
+<br>
+</p>
 ]]>
 </string>
 <string name="setlibrenumtype" >

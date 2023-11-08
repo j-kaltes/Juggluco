@@ -184,6 +184,8 @@ inline void lerror(const char *str) {
 	LOGGER("%s: %s\n",(char *)str,strerror(waser));
 #endif
 	}
+void flerror(const char* fmt, ...) __attribute__((format(printf, 1, 2)))   ;
+/*
 #ifdef NOTAPP
 inline void flerror(const char* fmt, ...){
 	int waser=errno;
@@ -197,7 +199,7 @@ inline void flerror(const char* fmt, ...){
 	}
 #else //!NOTAPP
 void flerror(const char* fmt, ...) __attribute__((format(printf, 1, 2)))   ;
-#endif
+#endif */
 #ifdef __cplusplus
 };
 #endif

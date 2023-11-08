@@ -137,15 +137,15 @@ jugglucotext frtext {
 		{"Le capteur a définitivement expiré",""},
 
 		{"Capteur prêt dans","%d minutes"},
-		{"373: Erreur capteur","Ne contactez pas le service clients d'Abott immédiatement; il est probable que les données seron disponibles dans 10 minutes."},
+		{"Erreur capteur (373)","Ne contactez pas le service clients d'Abott immédiatement; il est probable que les données seron disponibles dans 10 minutes."},
 		{"Nouveau capteur initialisé","Scannez à nouveau pour l'utiliser"},
 		{"","Bloquer le tactile durant le scan"},
 		{"",""},
 		{"Erreur d'initialisation de la librairie","Manque-t-il des librairies partagées?"},
 		{"Erreur d'initialisation de classe","Faites quelque chose..."},
 		{"Processus trop long","Je ferme le programme"},
-		{"365: Remplacez le capteur","Votre capteur ne fonctionne pas. Vous devez le remplacer et démarrer un nouveau."},
-		{"368: Remplacez le capteur","Votre capteur ne fonctionne pas. Vous devez le remplacer et démarrer un nouveau."},
+		{"Remplacez le capteur (365)","Votre capteur ne fonctionne pas. Vous devez le remplacer et démarrer un nouveau."},
+		{"Remplacez le capteur (368)","Votre capteur ne fonctionne pas. Vous devez le remplacer et démarrer un nouveau."},
 		{"",""},
 		{"Erreur de scan","Réessayez"}},
 

@@ -375,6 +375,12 @@ extern "C" JNIEXPORT void JNICALL   fromjava(wakestreamhereonly)(JNIEnv *env, jc
 		backup->wakebackup(Backup::wakestream);
 		}
 	}
+	/*
+extern "C" JNIEXPORT void JNICALL   fromjava(wakeallsender)(JNIEnv *env, jclass cl) {
+	if(backup) {
+		backup->getupdatedata()->wakesender();
+		}
+	} */
 extern "C" JNIEXPORT void JNICALL   fromjava(wakebackup)(JNIEnv *env, jclass cl) {
 	if(backup) {
 		backup->getupdatedata()->wakesender();

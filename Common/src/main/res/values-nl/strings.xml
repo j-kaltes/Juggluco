@@ -313,7 +313,6 @@
 <string name="ready_for_use">Sensor klaar voor gebruik</string>
 <string name="endstime">" eindigt op dit moment"</string>
 <string name="triednothing">Niets geprobeerd</string>
-<string name="succes">Succes</string>
 <string name="resendwarning">Alle gegevens worden opnieuw verzonden, wat tijd kost en gevolgen kan hebben voor Libreview en Kerfstok</string>
 <string name="parseip">Fout bij interpreteren van IP</string>
 <string name="toomanyhosts">Maximumaantal hosts overschreden</string>

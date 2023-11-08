@@ -969,19 +969,25 @@ static bool apiv1(const char *input,int leftlen,bool behead,bool json, recdata *
 	wrongpath({input-7,static_cast<size_t>(leftlen+7)}, outdata);
 	return true;
  	}
-
-static bool setitervar(const char *&iter,std::string_view cond,bool &var) {
-	if(memcmp(iter,cond.data(),cond.size()))
+static bool setitertrue(const char *&iter,std::string_view cond) {
+	if(strncasecmp(iter,cond.data(),cond.size()))
 		return false;
-	var=true;
 	iter+=cond.size();
 	return true;
 	}
-extern		std::span<char> gethistory(int startpos, int len, uint32_t starttime, uint32_t endtime,bool);
-extern		std::span<char> getstream(int startpos, int len, uint32_t starttime, uint32_t endtime,bool);
-extern		std::span<char> getscans(int startpos, int len, uint32_t starttime, uint32_t endtime,bool);
-extern		std::span<char> getamounts(int startpos, int len, uint32_t starttime, uint32_t endtime,bool);
-extern std::span<char> getmeals(int startpos, int len, uint32_t starttime, uint32_t endtime,bool header);
+
+static bool setitervar(const char *&iter,std::string_view cond,bool &var) {
+	if(setitertrue(iter,cond)) {
+		var=true;
+		return true;
+		}
+	return false;
+	}
+extern	std::span<char> gethistory(int startpos, int len, uint32_t starttime, uint32_t endtime,bool,int);
+extern	std::span<char> getstream(int startpos, int len, uint32_t starttime, uint32_t endtime,bool,int);
+extern	std::span<char> getscans(int startpos, int len, uint32_t starttime, uint32_t endtime,bool,int);
+extern	std::span<char> getamounts(int startpos, int len, uint32_t starttime, uint32_t endtime,bool,int);
+extern std::span<char> getmeals(int startpos, int len, uint32_t starttime, uint32_t endtime,bool header,int);
 
 static time_t readtime(const char *&input) {
 	struct tm tmbuf {.tm_isdst=0,.tm_gmtoff=0};
@@ -1015,6 +1021,7 @@ template <typename Num> static const char *readnum(const char *start,const char 
 struct Getopts {
 uint32_t start=0,end=0;
 bool headermode=false;
+int unit=settings->data()->unit;
 Getopts(const char *posptr,int size) {
 	int duration=0;
 	LOGGER("getopts(%s#%d)\n", posptr, size);
@@ -1024,6 +1031,16 @@ Getopts(const char *posptr,int size) {
 			std::string_view header = "header";
 			if (setitervar(iter, header, headermode))
 				continue;
+			std::string_view mmol = "mmol/L";
+			if (setitertrue(iter, mmol)) {
+				unit=1;
+				continue;
+				}
+			std::string_view mgdl = "mg/dL";
+			if(setitertrue(iter, mgdl))  {
+				unit=2;
+				continue;
+				}
 			std::string_view startsecstr = "starttime=";
 			if (!memcmp(iter, startsecstr.data(), startsecstr.size())) {
 				iter += startsecstr.length();
@@ -1095,7 +1112,7 @@ Getopts(const char *posptr,int size) {
 	};
 	};
 
-typedef		std::span<char> (*getdata_t)(int startpos, int len, uint32_t starttime, uint32_t endtime,bool);
+typedef		std::span<char> (*getdata_t)(int startpos, int len, uint32_t starttime, uint32_t endtime,bool,int);
 
 std::string_view jugglucocommand="x/";
 static bool jugglucos(const char * const input,int size, recdata *outdata) {
@@ -1111,8 +1128,8 @@ static bool jugglucos(const char * const input,int size, recdata *outdata) {
 
 			int startlen=((opts.end-opts.start)/(60*60))*perhour[i];
 			constexpr const int startpos=152;
-
-			std::span<char> res=procs[i](startpos,startlen,opts.start,opts.end,opts.headermode);
+			
+			std::span<char> res=procs[i](startpos,startlen,opts.start,opts.end,opts.headermode,opts.unit);
 			if(!res.data()) {
 				return outofmemory(outdata);
 				}
