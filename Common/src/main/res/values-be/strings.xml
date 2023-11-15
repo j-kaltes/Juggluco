@@ -32,6 +32,7 @@
     <string name="bluetoothenabled">Bluetooth уключаны</string>
     <string name="bluetoothdisabled">Bluetooth адключаны</string>
     <string name="amountsname">Сумы</string>
+    <string name="amountshort">@string/amountsname</string>
     <string name="mealsname">Ежа</string>
     <string name="closename">Зачыніць</string>
     <string name="exporthelp">Харчаванне, захаванае ў html\nRest у фармаце .tsv (значэнні падзеленыя табуляцыяй)</string>
@@ -76,7 +77,7 @@
  <string name="unit">"Адзінка: "</string>
  <string name="glucoseaxisleft">Лічбы па восі глюкозы ЛЕВА</string>
  <string name="startsapp">Сканаванне запускае праграму</string>
- <string name="sendtoxdrip">Выпраўленая трансляцыя Libre</string>
+ <string name="sendtoxdrip">Tрансляцыя ў xDrip</string>
  <string name="disablecamerakey">Адключыць ключ камеры</string>
  <string name="invertscreen">Інвертаваць экран</string>
  <string name="nfcsound">NFC гук</string>
@@ -208,15 +209,18 @@
  <string name="wakelock">Блакаванне абуджэння</string>
  <string name="wifi">Wifi</string>
  <string name="heartrate">Пульс</string>
- <string name="xdripbroadcast">xDrip вяшчаць лакальна</string>
+ <string name="xdripbroadcast">Tрансляцыя ў AAPS</string>
  <string name="sensorpermission">Для адлюстравання пульса неабходны дазвол датчыкаў</string>
  <string name="sensorpermissionmessage">Усталюйце гэта ў Наладах прылады, Праграмах, Дазволах, Juggluco</string>
- <string name="floatglucose">Плавае глюкоза</string>
+ <string name="floatglucose">Плав. глюкоза</string>
+ <string name="floatglucoseshort">@string/floatglucose</string>
+
  <string name="fontsize">Памер шрыфта</string>
  <string name="fonttoolarge">Памер шрыфта занадта вялікі: max=</string>
  <string name="foreground">Пярэдні план</string>
- <string name="background">Задні план</string>
- <string name="backgroundshort">фон</string> 
+ <string name="background">Фон</string>
+ <string name="backgroundshort">Фон-</string>
+
  <string name="transparent">Празрысты</string>
  <string name="touchable">Дакранальны</string>
 
@@ -275,9 +279,13 @@
  <string name="talker">Голас</string>
  <string name="secondsbetween">Секунд паміж</string>
  <string name="test">Тэст</string>
-
+ <string name="streamhistory">Гісторыя патоку</string>
+ <string name="libreisviewed">Шпіёнскія віды</string>
+ <string name="novalue">Няма каштоўнасці</string>
+ <string name="talk">Размаўляць</string>
+ <string name="watch">Глядзець</string>
+ <string name="menus">Меню</string>
 <string name="system_ui">System UI</string>
-<string name="watch">Глядзець</string>
 <string name="sensor">Датчык</string>
 <string name="settings">Налады</string>
 <string name="aboutname">Аб Juggluco</string>
@@ -286,12 +294,39 @@
 <string name="new_amount">Новая сума</string>
 <string name="list">Спіс</string>
 <string name="statistics">Статыстыка</string>
-<string name="talk">Размаўляць</string>
-<string name="floatname">Парыць      </string>
+<string name="floatname">Парыць</string>
 <string name="last_scan">Апошняе скан.</string>
 <string name="date">Дата</string>
 <string name="day_back">Дзень назад</string>
 <string name="day_later">Праз дзень</string>
 <string name="week_back">Тыдзень таму</string>
 <string name="week_later">Праз тыдзень</string>
+ <string name="talk_touch">Размаўляйце навобмацак</string>
+ <string name="speakmessages">Прамаўляйць паведамленні</string>
+ <string name="speakalarms">Прамаўляйць трывогі</string>
+ <string name="speakglucose">Казаць глюкозу</string>
+ <string name="notfound">Не знойдзена</string>
+ <string name="no_ringtone_picker_found">Выбар рынгтонаў не знойдзены</string>
+ <string name="can_t_play">"Не магу прайграць "</string>
+ <string name="seconds">" секунд"</string>
+ <string name="duration_can_t_be_negative">"Працягласць не можа быць адмоўнай: "</string>
+ <string name="too_large_maximum_65535">" занадта вялікі, max=65535, "</string>
+ <string name="too_large">" занадта вялікі"</string>
+ <string name="can_t_use_specification">Немагчыма выкарыстоўваць спецыфікацыю</string>
+ <string name="turn_on_nearby_devices_permission">Уключыце дазвол ПРЫЛАДЫ ПАБЛІЗУ</string>
+ <string name="enable_bluetooth">Уключыць Bluetooth</string>
+ <string name="turn_on_location_permission">Уключыце дазвол на вызначэнне месцазнаходжання</string>
+ <string name="bluetooth_is_turned_off">Bluetooth адключаны</string>
+ <string name="allsentnoreceive">Калі ўсё адпраўляецца на хост, \"Атрымаць ад\" павінен быць выключаны.</string>
+ <string name="nomirrorport">Нумар порта павінен адрознівацца ад люстранога порта</string>
+ <string name="nohttpport">Нумар порта павінен адрознівацца ад порта http</string>
+ <string name="ready_in">" гатовы у "</string>
+ <string name="ready_for_use">Датчык гатовы да выкарыстання</string>
+ <string name="endstime">" заканчваецца ў гэты час"</string>
+ <string name="triednothing">Нічога не спрабаваў</string>
+ <string name="success">Поспех</string>
+ <string name="resendwarning">Усе дадзеныя будуць адпраўлены зноў, што патрабуе часу і можа мець наступствы для Libreview і Kerfstok</string>
+ <string name="parseip">Памылка аналізу IP</string>
+ <string name="toomanyhosts">Перавышана максімальная колькасць хостаў</string>
+ <string name="senthosts">Juggluco адпраўляе максімум 4 хостам</string>
 </resources>

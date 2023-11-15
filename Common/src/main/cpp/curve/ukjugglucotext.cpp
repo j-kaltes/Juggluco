@@ -97,7 +97,7 @@ jugglucotext uktext {
 	.glucose_variability="Варіабельність глюкози: %.1f%%",
      .menustr0={
 		"System UI        ",
-		"Menus",
+		"Меню",
 		"Дивитися",
 		"Датчик",
 		"Налашт.",
@@ -167,14 +167,14 @@ jugglucotext uktext {
 	.add_s=true,
 .shortinit=ukshortinit,
 .labels=uklabels,
-.checked="checked",
-.unchecked="not checked",
+.checked="перевірено",
+.unchecked="не перевірено",
 .Undetermined="",
-.FallingQuickly="Falling quickly",
-.Falling="Falling",
-.Stable="Changing slowly",
-.Rising="Rising",
-.RisingQuickly="Rising quickly"
+.FallingQuickly="Швидко падає",
+.Falling="Падіння",
+.Stable="Змінюється повільно",
+.Rising="Підйом",
+.RisingQuickly="Швидко піднімається"
 #endif
 		}
 

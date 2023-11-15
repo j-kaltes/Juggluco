@@ -72,8 +72,8 @@ jugglucotext betext {
 .noconnectionerror=": Няма сувязі",
 .stsensorerror=": Памылка датчыка",
 .streplacesensor=": Замяніць датчык?",
-.endedformat="Sensor %s not working anymore. state=%d",
-.notreadyformat="Sensor %s not ready. state=%d",
+.endedformat="Датчык %s больш не працуе. state=%d",
+.notreadyformat="Датчык %s не гатовы. state=%d",
 #ifndef WEAROS
 	.median="Медыяна",
 	.middle="Сярэдні",
@@ -97,7 +97,7 @@ jugglucotext betext {
 	.glucose_variability="Варыябельнасць глюкозы: %.1f%%",
      .menustr0={
 		"System UI      ",
-		"Menus",
+		"Меню",
 		"Глядзець",
 		"Датчык",
 		"Налады",
@@ -144,16 +144,16 @@ jugglucotext betext {
 		{"Памылка ініцыялізацыі бібліятэкі","Ці адсутнічаюць агульныя бібліятэкі?"},
 		{"Памылка ініцыялізацыі класа","Зрабіце што-небудзь"},
 		{"Працэдура займае занадта шмат часу","Я зачыняю праграму"},
-		{"Замяніць датчык (365)","Ваш датчык не працуе. Калі ласка, выдаліце свой датчык і запусціце новы."},
-		{"Замените датчик (368)","Ваш датчык не працуе. Калі ласка, выдаліце свой датчык і запусціце новы."},
+		{"Замяніць датчык (365)","Ваш датчык не працуе. Каліласка, выдаліце свой датчык і запусціце новы."},
+		{"Замените датчик (368)","Ваш датчык не працуе. Каліласка, выдаліце свой датчык і запусціце новы."},
 		{"",""},
 		{"Памылка сканавання","Паспрабуй яшчэ"}},
 
-.libre3scanerror={"FreeStyle Libre 3, Scan error", "Try again"},
-.libre3wrongID={"Error, wrong account ID?","Specify in Settings->Libreview the same account used to activate the sensor"},
+.libre3scanerror={"FreeStyle Libre 3, памылка сканавання", "Паспрабуй яшчэ"},
+.libre3wrongID={"Памылка, няправільны ID?","Укажыце ў Налады->Libreview той жа ўліковы запіс, які выкарыстоўваўся для актывацыі датчыка"},
 .libre3scansuccess= {"FreeStyle Libre 3 sensor", "Glucose values will now be received by Juggluco"},
-.unknownNFC={"Unrecognized NFC scan Error", "Try again"},
-.nolibre3={"FreeStyle Libre 3 sensor","Not supported by this version of Juggluco"},
+.unknownNFC={"Памылка нераспазнанага сканавання NFC", "Паспрабуй яшчэ"},
+.nolibre3={"FreeStyle Libre 3 датчык","Не падтрымліваецца гэтай версіяй Juggluco"},
 #ifndef WEAROS
 	.advancedstart= R"(<h1>Мадыфікаванае прылада</h1>
 <p>У адной з бібліятэк, якія выкарыстоўваюцца гэтым дадаткам, ёсць ПАМЫЛКА, і
@@ -165,14 +165,14 @@ jugglucotext betext {
 	.add_s=true,
 .shortinit=beshortinit,
 .labels=belabels,
-.checked="checked",
-.unchecked="not checked",
+.checked="праверана",
+.unchecked="не праверана",
 .Undetermined="",
-.FallingQuickly="Falling quickly",
-.Falling="Falling",
-.Stable="Changing slowly",
-.Rising="Rising",
-.RisingQuickly="Rising quickly"
+.FallingQuickly="Хутка падае",
+.Falling="Падзенне",
+.Stable="Мяняецца павольна",
+.Rising="Падымаецца",
+.RisingQuickly="Хутка падымаецца"
 #endif
 		}
 
