@@ -317,7 +317,7 @@ extern "C" JNIEXPORT int JNICALL fromjava(setfilesdir)(JNIEnv *env, jclass clazz
 		}
 	else {
 		LOGAR("country=null\n");
-		strcpy( country,"UK");
+		strcpy( country,"GB");
 		country=(char *)"\0";
 		}
 	return setfilesdir({filesdirbuf,filesdirlen},country);

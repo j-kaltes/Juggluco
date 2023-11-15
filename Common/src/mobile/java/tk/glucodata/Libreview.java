@@ -131,11 +131,13 @@ final private static String success=Applic.app.getString(R.string.success).inter
 final private static String nothing=Applic.app.getString(R.string.triednothing).intern();
 
 private static String librestatus=nothing;
+
 @Keep
 static boolean putsensor(boolean libre3,byte[] textbytes) {
 	if(librestatus==nothing||librestatus==success)
 		librestatus=datestr(System.currentTimeMillis())+" start putsensor";
 	try {
+	for(int i=0;i<3;i++) {
 		final String gateway=getlibregateway(libre3);
 		final String baseurl=getlibrebaseurl(libre3);
 		URL url = new URL(baseurl+"/api/nisperson");
@@ -153,9 +155,35 @@ static boolean putsensor(boolean libre3,byte[] textbytes) {
 		final int status=object.getInt("status");
 		if(status!=0) {
 			String reason=object.getString("reason");
-			librestatus="putsensor: status="+status+reason==null?"":(" reason="+reason);
+			if(status==20) {
+				if("wrongDeviceInToken".equals(reason)) {
+					switch(i) {
+					   case 0:{
+						if(!postgetauth(libre3)) {
+							if(!libreconfig(libre3,false))
+								return false;
+							i=1;
+								}
+							};break;
+					     case 1: {
+							if(!libreconfig(libre3,false))
+								return false;
+							};break;
+						default: {
+							librestatus="putsensor  reason="+reason;
+							return false;
+							}
+
+						}
+					continue;
+					}
+				}
+
+			librestatus="putsensor: status="+status+(reason==null?"":(" reason="+reason));
 			}
 		return status==0;
+		  }
+	return false;
 		}  
 	catch(Throwable th) {
 		librestatus="putsensor "+ stackline(th);
@@ -391,6 +419,10 @@ static boolean postmeasurements(boolean libre3,byte[] measurementdata) {
 								if(!libreconfig(libre3,false))
 									return false;
 								};break;
+							default: {
+								librestatus="postmeasurements2 status="+code+" reason="+reason;
+								return false;
+								}
 
 							}
 //						return postmeasurements(libre3,measurementdata);
@@ -485,10 +517,13 @@ public static boolean libreconfig(boolean libre3,boolean restart){
 		  }
 
 //	final String libre23url= "https://www.google.com";
+ final  String[] urlnames= {
+			"https://fsll.freestyleserver.com/Payloads/Mobile/FSLibreLink/Android/Config/FSLibreLink_Android_2.10_GB_config.json",
+			"https://fsll.freestyleserver.com/Payloads/Mobile/FSLibreLink/Android/Config/FSLibreLink_Android_2.10_FR_config.json",
+			"https://fsll.freestyleserver.com/Payloads/Mobile/FSLibreLink/Android/Config/FSLibreLink_Android_2.10_NL_config.json",
+			"https://fsll.freestyleserver.com/Payloads/Mobile/FSLibreLink/Android/Config/FSLibreLink_Android_2.10_PL_config.json"};
 //	final String libre23url= "https://fsll.freestyleserver.com/Payloads/Mobile/Android/FSLibreLink/Config/FreeStyleLibreLink_Android_2.3_DE_config.json";
-final String libre210url=Natives.isLibreMmol()?
-"https://fsll.freestyleserver.com/Payloads/Mobile/FSLibreLink/Android/Config/FSLibreLink_Android_2.10_GB_config.json":
-"https://fsll.freestyleserver.com/Payloads/Mobile/FSLibreLink/Android/Config/FSLibreLink_Android_2.10_FR_config.json";
+final String libre210url=urlnames[Natives.getLibreCountry()];
 
 //final String libre33url="https://fsll3.freestyleserver.com/Payloads/Mobile/FSLibre3/Android/Config/FSLibre3_Android_3.3_DE_config_production.json";
 	String urlstring;

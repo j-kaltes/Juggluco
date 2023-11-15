@@ -1,3 +1,18 @@
+
+Nightscout Webserver
+	insulinType?
+{"_id":"655261b7fd4ff683108a3735","enteredBy":"loop://iPhone","duration":0.03333333333333333,"programmed":0.05,"unabsorbed":0,"automatic":true,"insulin":0.05,"eventType":"Correction Bolus","type":"normal","timestamp":"2023-11-13T17:49:42Z","syncIdentifier":"626f6c757320302e303520323032332d31312d31335431373a34393a34325a","insulinType":"Novolog","created_at":"2023-11-13T17:49:42.000Z","utcOffset":0,"mills":1699897782000,"carbs":null},
+
+Helptext:
+	- mg/dL pictures
+	- Manual title
+	- links in libreview, watch
+	- links to overview
+	- add translations
+Remove camera permission.
+Set html files ook online+plaatje
+Make interface truncate alarm thresholds etc ?
+
 Ask leave without saving in:
 	-add connection
 	-settings

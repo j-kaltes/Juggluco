@@ -674,7 +674,6 @@ public static native int getlibrenumkind(int night,int index);
 public static native float getlibrefoodweight(int night,int index);
 public static native boolean canSendNumbers(int night);
 public static native int getinfogen(byte[] info);
-public static native boolean isLibreMmol( );
 public static native void setStreamHistory(boolean val);
 public static native boolean getStreamHistory( );
 public static native void setLibreIsViewed(boolean val);
@@ -696,6 +695,7 @@ public static native boolean speakmessages( );
 public static native void setspeakalarms(boolean val);
 
 public static native boolean speakalarms( );
+public static native int getLibreCountry();
 
 //s/^extern.*JNIEXPORT[         ]*\([a-zA-Z]*\)[ ]*JNICALL[      ]*fromjava(\([^)]*\)) *(JNIEnv[^,]*,[^,)]*[,)]\([^){]*\)[^a-zA-Z0-9]*$/public static native \1 \2(\3);/g
 //public static native void sendxdripold();

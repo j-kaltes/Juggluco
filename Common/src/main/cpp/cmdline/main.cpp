@@ -109,12 +109,12 @@ cout<<intro<<"Usages: "<<progname<<R"( -d dir : save data in directory dir)"<<en
  <<"        "<<progname<<R"( [-d dir] -p port : listen on port port)"<<endl
  <<"        "<<progname<<R"( [-d dir] -l : list configuration data)"<<endl
  <<"        "<<progname<<R"( [-d dir] -c : clear configuration data)"<<endl
- <<"        "<<progname<<R"( -x[-+]: start xDrip watch app / Nightscout server or not (-x-))"<<endl
+ <<"        "<<progname<<R"( -x[-+]: start eXport/xDrip/Nightscout web server (https://www.juggluco.nl/Juggluco/webserver.html) or not (-x-))"<<endl
  <<"        "<<progname<<R"( -X[-+]:  the same but server can also be assessed remotely)"<<endl
  <<"        "<<progname<<R"( -g secret: use as api_secret secret
 )"
 #ifdef USE_SSL
-R"(        )"<<progname<<R"( -e[-+]:  Use xDrip/Nightscout server with SSL encryption)"<<endl
+R"(        )"<<progname<<R"( -e[-+]:  Use web server with SSL encryption)"<<endl
  <<"        "<<progname<<R"( -o port:  use port for the SSL server)"
 #else
 R"(Compile a dynamically linked version of )"<<progname<<R"( for SSL)"
@@ -197,7 +197,7 @@ static std::string_view treatmenttype(int labelnr) {
 	}
 int   listconnections() {
 	if(settings->data()->usexdripwebserver) {
-		cout<<"xDrip/Nightscout webserver turned on (port 17580)\n";
+		cout<<"eXport web server turned on (port 17580)\n";
 		if(settings->data()->remotelyxdripserver) {
 			cout<<"can also be used remotely over http\n";
 			}
@@ -225,7 +225,7 @@ int   listconnections() {
 			}
 		}
 	else {
-		cout<<"xdrip/Nightscout webserver turned off\n\n";
+		cout<<"eXport web server turned off\n\n";
 		}
 	const int hostnr=backup->gethostnr();
 	cout<<"Mirror port "<< backup->getupdatedata()->port <<endl;
@@ -323,7 +323,7 @@ char *api_secret=nullptr,*sslport=nullptr;
 		   case 'X': xremote=true;
 		   	case 'x': {
 				if(optarg) {
-					cerr<<"xdriparg:"<<optarg<<':'<<endl;
+					cerr<<"eXport arg:"<<optarg<<':'<<endl;
 					if(!optarg[1]) {
 						switch(optarg[0]) {
 							case '+': xdripserver=1;goto XDRIPSUCCESS;break;
@@ -335,7 +335,7 @@ char *api_secret=nullptr,*sslport=nullptr;
 					return 10;
 					}
 				else {
-					cerr<<"xdriparg\n";
+					cerr<<"eXport arg\n";
 					xdripserver=1;
 					}
 

@@ -89,32 +89,135 @@
 <string name="addconnection" >
 <![CDATA[
 <h1>Dodaj połączenie</h1>
-<p style="line-height: 100%; margin-bottom: 0in">Określenie połączenia z aplikacją Juggluco działającą na innym urządzeniu. Juggluco na jednym urządzeniu wysyła poprzez protok&oacute;ł IP/TCP dane do Juggluco na innym urządzeniu. Aby nawiązać połączenie, jedna z aplikacji Juggluco musi nasłuchiwać na jakimś porcie, a druga musi nawiązać kontakt z tym portem. Port, na kt&oacute;rym nasłuchuje ta instancja Juggluco, został podany na poprzednim ekranie (Lewe środkowe menu -&gt; Klonowanie). Tutaj określasz port, z kt&oacute;rym kontaktuje się ta instancja Juggluco, jeśli aktywnie nawiązuje kontakt. Jeśli ta instancja Juggluco nie może nasłuchiwać na danym porcie, wybierz <b>&quot;Tylko tr. aktywny</b>&quot;. Jeśli druga strona nie może nasłuchiwać na danym porcie, wybierz <b>&quot;Tylko tr. pasywny</b>&quot;, w przeciwnym razie pozostaw zaznaczoną opcję <b>&quot;Oba</b>&quot;. Aplikacja Juggluco po drugiej stronie powinna określić <i>Tylko tr. pasywny </i>jeśli wybierzesz tutaj <i>Tylko tr. aktywny</i> a <i>Tylko tr. aktywny</i> jeśli wybierzesz tutaj <i>Tylko tr. pasywny</i> <i></i> oraz <i>Oba</i> jeśli wybierzesz tutaj <i>Oba</i>.</p>
-<p style="line-height: 100%; margin-bottom: 0in">Jeśli ta instancja Juggluco aktywnie nawiązuje kontakt, należy określić IP, z kt&oacute;rymi powinna się kontaktować. Jeśli ten host ma wiele IP, określasz więcej niż jedno; na przykład, gdy dwa urządzenia są czasami połączone przez sieć domową, a czasami bezpośrednio jako przenośny hotspot. Nigdy nie podawaj IP wielu urządzeń; w takim przypadku każde z nich otrzyma tylko część danych.</p>
-<p style="line-height: 100%; margin-bottom: 0in">We wszystkich przypadkach opr&oacute;cz zaznaczenia opcji &quot;Tylko tr. aktywny&quot; można wybrać <b>&quot;Wykryj</b>&quot;; w tym przypadku Juggluco zapisuje pierwszy adres IP kontaktujący się z Juggluco jako IP drugiej strony. Sprawdzenie czy właściwe urządzenie nawiązuje kontakt może odbywać się na dwa sposoby: Wybierz <b>&quot;Sprawdzaj IP&rdquo;</b>, aby sprawdzić adres IP. Jeśli wybierzesz opcję <b>Sprawdzaj nazwę</b>, kontakt zostanie nawiązany tylko wtedy, gdy obie strony określą tę samą nazwę.</p>
-<p style="line-height: 100%; margin-bottom: 0in">Wybierz <b>Odbieraj</b>, jeśli chcesz, aby ta aplikacja działała jako aplikacja klonująca dane z innej aplikacji.</p>
-<p style="line-height: 100%; margin-bottom: 0in">Jeśli chcesz, aby to urządzenie było <b>nadawcą</b> danych, musisz określić, jakie dane ma wysyłać.</p>
-<p style="line-height: 100%; margin-bottom: 0in"><b>Wartości</b>: określone przez Ciebie dane dotyczące dawek, jedzenia i sportu.</p>
-<p style="line-height: 100%; margin-bottom: 0in"><b>Skany</b>: dane otrzymane podczas skanowania sensora (skany i historia w Libre2, w Libre3 tylko dane potrzebne do uzyskania dostępu do sensora przez Bluetooth).</p>
-<p style="line-height: 100%; margin-bottom: 0in"><b>Strumień</b>: dane odbierane przez Bluetooth. W przypadku Libre3 obejmuje to dane historyczne.</p>
-<p style="line-height: 100%; margin-bottom: 0in">Czasami niekt&oacute;re dane są już obecne w urządzeniu odbierającym. Można określić, do kiedy te dane są obecne:</p>
-<p style="line-height: 100%; margin-bottom: 0in"><i>Początek: </i>brak danych</p>
-<p style="line-height: 100%; margin-bottom: 0in"><i>Teraz: </i>wszystkie dane są obecne</p>
-<p style="line-height: 100%; margin-bottom: 0in">Lub konkretna data określona przez pozycję początkową ekranu.</p>
-<p style="line-height: 100%; margin-bottom: 0in">Gdy źr&oacute;dło danych jest dodawane do istniejącego połączenia, data początkowa określa tylko dodane źr&oacute;dło danych. Na przykład, jeśli Skany i Strumienie zostały już wysłane do hosta, a Wartości są teraz dodawane, data rozpoczęcia określa tylko wysłane Wartości.</p>
-<p style="line-height: 100%; margin-bottom: 0in">W przypadku, gdy dwa urządzenia są połączone za pomocą niezabezpieczonego połączenia, dane mogą być podpisane i zaszyfrowane poprzez podanie tego samego (maksymalnie) 16-znakowego <b>hasła</b> po obu stronach połączenia. Wybierz <b>Zapisz</b>, aby zapisać to, co zostało określone. <b>Usuń</b> spowoduje usunięcie tej specyfikacji połączenia.</p>
-<p style="line-height: 100%; margin-bottom: 0in">W najprostszej sytuacji wszystkie połączenia należą do Twojej sieci domowej, więc możesz użyć lokalnych IP. Możesz r&oacute;wnież połączyć się z Internetem przez Wi-Fi, w tym przypadku należy zapoznać się z instrukcją obsługi modemu, jak przekierować port zewnętrzny na IP i port w sieci domowej.</p>
-<p style="line-height: 100%; margin-bottom: 0in">Dwa smartfony połączone za pomocą mobilnego połączenia danych przez Internet mogą się ze sobą bezpośrednio połączyć, jeśli jeden z nich może nasłuchiwać na porcie sieciowym. Jeśli obaj nie mogą (np. jeśli żaden z nich nie ma indywidualnego IP), mogą nadal komunikować się ze sobą za pośrednictwem trzeciego urządzenia. Jedną z możliwości jest uruchomienie Juggluco na urządzeniu z systemem Android (co najmniej Android 4.4) w domu podłączonym do Internetu przez modem. Inną możliwością jest uruchomienie na komputerze (np. Twoim PC lub Amazon AWS) programu linii poleceń należącego do Juggluco: <a href="https://www.juggluco.nl/Juggluco/cmdline/index.html">https://www.juggluco.nl/Juggluco/cmdline/index.html</a></p>
-<p style="line-height: 100%; margin-bottom: 0in">Instrukcje przekierowania port&oacute;w:</p>
+<p style="line-height: 100%; margin-bottom: 0in">Określenie
+połączenia z aplikacją Juggluco działającą na innym urządzeniu.
+Juggluco na jednym urządzeniu wysyła poprzez protokół IP/TCP dane
+do Juggluco na innym urządzeniu. Aby nawiązać połączenie, jedna
+z aplikacji Juggluco musi nasłuchiwać na jakimś porcie, a druga
+musi nawiązać kontakt z tym portem. Port, na którym nasłuchuje ta
+instancja Juggluco, został podany na poprzednim ekranie (Lewe
+środkowe menu -&gt; Klonowanie). Tutaj określasz port, z którym
+kontaktuje się ta instancja Juggluco, jeśli aktywnie nawiązuje
+kontakt. Jeśli ta instancja Juggluco nie może nasłuchiwać na
+danym porcie, wybierz <b>&quot;Tylko tr. aktywny</b>&quot;. Jeśli
+druga strona nie może nasłuchiwać na danym porcie, wybierz <b>&quot;Tylko
+tr. pasywny</b>&quot;, w przeciwnym razie pozostaw zaznaczoną opcję
+<b>&quot;Oba</b>&quot;. Aplikacja Juggluco po drugiej stronie powinna
+określić <i>Tylko tr. pasywny </i>jeśli wybierzesz tutaj <i>Tylko
+tr. aktywny</i> a <i>Tylko tr. aktywny</i> jeśli wybierzesz tutaj
+<i>Tylko tr. pasywny</i> oraz <i>Oba</i> jeśli wybierzesz tutaj <i>Oba</i>.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Jeśli ta instancja
+Juggluco aktywnie nawiązuje kontakt, należy określić IP, z
+którymi powinna się kontaktować. Jeśli ten host ma wiele IP,
+określasz więcej niż jedno; na przykład, gdy dwa urządzenia są
+czasami połączone przez sieć domową, a czasami bezpośrednio jako
+przenośny hotspot. 
+</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>OSTRZEŻENIE:
+Nigdy nie podawaj IP wielu urządzeń; w takim przypadku każde z
+nich otrzyma tylko część danych.</b></p>
+<p style="line-height: 100%; margin-bottom: 0in">We wszystkich
+przypadkach oprócz zaznaczenia opcji &quot;Tylko tr. aktywny&quot;
+można wybrać <b>&quot;Wykryj</b>&quot;; w tym przypadku Juggluco
+zapisuje pierwszy adres IP kontaktujący się z Juggluco jako IP
+drugiej strony. Sprawdzenie czy właściwe urządzenie nawiązuje
+kontakt może odbywać się na dwa sposoby: Wybierz <b>&quot;Sprawdzaj
+IP”</b>, aby sprawdzić adres IP. Jeśli wybierzesz opcję
+<b>Sprawdzaj nazwę</b>, kontakt zostanie nawiązany tylko wtedy, gdy
+obie strony określą tę samą nazwę.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Wybierz <b>Odbieraj</b>,
+jeśli chcesz, aby ta aplikacja działała jako aplikacja klonująca
+dane z innej aplikacji.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Jeśli chcesz, aby
+to urządzenie było <b>nadawcą</b> danych, musisz określić, jakie
+dane ma wysyłać.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>Wartości</b>:
+określone przez Ciebie dane dotyczące dawek, jedzenia i sportu.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>Skany</b>: dane
+otrzymane podczas skanowania sensora (skany i historia w Libre2, w
+Libre3 tylko dane potrzebne do uzyskania dostępu do sensora przez
+Bluetooth).</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>Strumień</b>:
+dane odbierane przez Bluetooth. W przypadku Libre3 obejmuje to dane
+historyczne.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Czasami niektóre
+dane są już obecne w urządzeniu odbierającym. Można określić,
+do kiedy te dane są obecne:</p>
+<p style="line-height: 100%; margin-bottom: 0in"><i>Początek: </i>brak
+danych</p>
+<p style="line-height: 100%; margin-bottom: 0in"><i>Teraz: </i>wszystkie
+dane są obecne</p>
+<p style="line-height: 100%; margin-bottom: 0in">Lub konkretna data
+określona przez pozycję początkową ekranu.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Gdy źródło danych
+jest dodawane do istniejącego połączenia, data początkowa określa
+tylko dodane źródło danych. Na przykład, jeśli Skany i
+Strumienie zostały już wysłane do hosta, a Wartości są teraz
+dodawane, data rozpoczęcia określa tylko wysłane Wartości.</p>
+<p style="line-height: 100%; margin-bottom: 0in">W przypadku, gdy dwa
+urządzenia są połączone za pomocą niezabezpieczonego połączenia,
+dane mogą być podpisane i zaszyfrowane poprzez podanie tego samego
+(maksymalnie) 16-znakowego <b>hasła</b> po obu stronach połączenia.
+Wybierz <b>Zapisz</b>, aby zapisać to, co zostało określone. <b>Usuń</b>
+spowoduje usunięcie tej specyfikacji połączenia.</p>
+<p style="line-height: 100%; margin-bottom: 0in">W najprostszej
+sytuacji wszystkie połączenia należą do Twojej sieci domowej,
+więc możesz użyć lokalnych IP. Możesz również połączyć się
+z Internetem przez Wi-Fi, w tym przypadku należy zapoznać się z
+instrukcją obsługi modemu, jak przekierować port zewnętrzny na IP
+i port w sieci domowej.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Dwa smartfony
+połączone za pomocą mobilnego połączenia danych przez Internet
+mogą się ze sobą bezpośrednio połączyć, jeśli jeden z nich
+może nasłuchiwać na porcie sieciowym. Jeśli obaj nie mogą (np.
+jeśli żaden z nich nie ma indywidualnego IP), mogą nadal
+komunikować się ze sobą za pośrednictwem trzeciego urządzenia.
+Jedną z możliwości jest uruchomienie Juggluco na urządzeniu z
+systemem Android (co najmniej Android 4.4) w domu podłączonym do
+Internetu przez modem. Inną możliwością jest uruchomienie na
+komputerze (np. Twoim PC lub Amazon AWS) programu linii poleceń
+należącego do Juggluco:
+<a href="https://www.juggluco.nl/Juggluco/cmdline/index.html">https://www.juggluco.nl/Juggluco/cmdline/index.html</a></p>
+<p style="line-height: 100%; margin-bottom: 0in">Instrukcje
+przekierowania portów:</p>
 <p style="line-height: 100%; margin-bottom: 0in"><a href="https://portforward.com/how-to-port-forward/">https://portforward.com/how-to-port-forward/</a></p>
 <p style="line-height: 100%; margin-bottom: 0in"><a href="https://stevessmarthomeguide.com/understanding-port-forwarding/">https://stevessmarthomeguide.com/understanding-port-forwarding/</a></p>
-<p style="line-height: 100%; margin-bottom: 0in">Istnieje możliwość odbioru wartości stężenia glukozy przez Bluetooth na urządzeniu bez NFC (patrz <a href="https://www.juggluco.nl/Juggluco/mirror">https://www.juggluco.nl/Juggluco/mirror)</a>: Zainicjuj sensor przez NFC w urządzeniu z NFC, a następnie wyślij dane Skan&oacute;w i Strumienia do urządzenia bez NFC. Następnie odwr&oacute;ć połączenie dla danych Strumienia i wyłącz połączenie Bluetooth w urządzeniu z NFC i włącz je w urządzeniu bez NFC, a także wyłącz &quot;Sensor przez Bluetooth&quot; w urządzeniu z NFC i włącz tę opcję w urządzeniu bez NFC. Możesz więc skanować jednym urządzeniem i otrzymywać wartości glukozy przez Bluetooth na innym urządzeniu. Ale na wszystkich urządzeniach wszystkie dane z sensor&oacute;w powinny być dostępne. Jeśli urządzenia wymieniają dane, zawsze powinny otrzymywać zar&oacute;wno dane ze skanowania, jak i strumieniowe. Dlatego należy zawsze wysyłać dane Strumienia z powrotem do urządzenia NFC, a dane skanowania z powrotem do urządzenia bez NFC. W przeciwnym razie dane nie będą zsynchronizowane, co doprowadzi do wykorzystania starych danych uwierzytelniających lub nadpisania nowych danych starymi.</p>
-<p style="line-height: 100%; margin-bottom: 0in">Dane dotyczące Wartości są całkowicie niezależne.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Istnieje możliwość
+odbioru wartości stężenia glukozy przez Bluetooth na urządzeniu
+bez NFC (patrz <a href="https://www.juggluco.nl/Juggluco/mirror">https://www.juggluco.nl/Juggluco/mirror)</a>:
+Zainicjuj sensor przez NFC w urządzeniu z NFC, a następnie wyślij
+dane Skanów i Strumienia do urządzenia bez NFC. Następnie odwróć
+połączenie dla danych Strumienia i wyłącz połączenie Bluetooth
+w urządzeniu z NFC i włącz je w urządzeniu bez NFC, a także
+wyłącz &quot;Sensor przez Bluetooth&quot; w urządzeniu z NFC i
+włącz tę opcję w urządzeniu bez NFC. Możesz więc skanować
+jednym urządzeniem i otrzymywać wartości glukozy przez Bluetooth
+na innym urządzeniu. Ale na wszystkich urządzeniach wszystkie dane
+z sensorów powinny być dostępne. Jeśli urządzenia wymieniają
+dane, zawsze powinny otrzymywać zarówno dane ze skanowania, jak i
+strumieniowe. Dlatego należy zawsze wysyłać dane Strumienia z
+powrotem do urządzenia NFC, a dane skanowania z powrotem do
+urządzenia bez NFC. W przeciwnym razie dane nie będą
+zsynchronizowane, co doprowadzi do wykorzystania starych danych
+uwierzytelniających lub nadpisania nowych danych starymi.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Dane dotyczące
+Wartości są całkowicie niezależne.</p>
 <h2 class="western">Problemy z siecią</h2>
-<p>Konieczna jest ścisła specyfikacja uzupełniająca po obu stronach połączenia. Jedno proste przeoczenie może uniemożliwić transmisję danych.</p>
-<p>Możliwe, że połączenie zawiesza się i trzeba je zresetować poprzez włączenie lub wyłączenie WIFI lub naciśnięcie przycisku Synchronizacja. R&oacute;wnież przełączenie połączenia <i>Tyko tr. aktywny-Tylko tr. pasywny</i> na <i>Oba</i> lub na odwr&oacute;t może mieć znaczenie.</p>
-<p>Należy r&oacute;wnież rozważyć zmianę IP wraz ze zmianą połączenia. Na przykład w sieci domowej należy używać innych adres&oacute;w IP niż w przenośnym hotspocie.</p>
-<p><br/> <br/></p>
+<p>Konieczna jest ścisła specyfikacja uzupełniająca po obu
+stronach połączenia. Jedno proste przeoczenie może uniemożliwić
+transmisję danych.</p>
+<p>Możliwe, że połączenie zawiesza się i trzeba je zresetować
+poprzez włączenie lub wyłączenie WIFI lub naciśnięcie przycisku
+Synchronizacja. Również przełączenie połączenia <i>Tyko tr.
+aktywny-Tylko tr. pasywny</i> na <i>Oba</i> lub na odwrót może mieć
+znaczenie.</p>
+<p>Należy również rozważyć zmianę IP wraz ze zmianą
+połączenia. Na przykład w sieci domowej należy używać innych
+adresów IP niż w przenośnym hotspocie.</p>
+<p><br/>
+<br/>
+
+</p>
 ]]>
 </string>
 <string name="alarmhelp" >
@@ -669,7 +772,7 @@
 <string name="stathelp" >
 <![CDATA[
 <h1 class="western">Statystyka</h1>
-<p>Niekt&oacute;re statystyki zaczerpnięte z <a href="https://www.healthline.com/diabetesmine/ambulatory-glucose-profile">AGP</a> bez licencji, z niewielkimi modyfikacjami.</p>
+<p>Niekt&oacute;re statystyki zaczerpnięte z <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8991298">AGP</a> bez licencji, z niewielkimi modyfikacjami.</p>
 <p>Liczbę analizowanych dni można zmienić, naciskając przycisk <b>Dni</b>. Okres kończy się w momencie zakończenia pozycji ekranu i obejmuje określoną liczbę dni wstecz. Wszystkie dane opierają się jedynie na wartościach stężenia glukozy odbieranych co minutę przez Bluetooth z sensora (zwanego w Juggluco <i>strumieniem</i>).</p>
 <p>Po lewej stronie ekranu znajdują się procenty pomiar&oacute;w mieszczących się w określonych zakresach glukozy.</p>
 <h3 class="western">% czasu aktywności</h3>
@@ -719,7 +822,7 @@
 <p><br/><p><br/> <br/></p>
 ]]>
 </string>
-<string name="watchhelp" >
+<string name="kerfstok" >
 <![CDATA[
 <h1 class="western">Kerfstok</h1>
 <p style="line-height: 100%; margin-bottom: 0in">Ten widok służy do rozwiązywania problem&oacute;w z połączeniem z aplikacją Kerfstok <a href="https://apps.garmin.com/pl-PL/apps/b6348ccc-86d8-4780-8013-d9e19fed5260">(https://apps.garmin.com/pl-PL/apps/b6348ccc-86d8-4780-8013-d9e19fed5260</a> (zobacz r&oacute;wnież <a href="https://www.juggluco.nl/Kerfstok/index.html">https://www.juggluco.nl/Kerfstok/index.html)</a>. Kerfstok to aplikacja do zegark&oacute;w przeznaczona do programowanych smartwatchy Garmin z ekranem dotykowym. Kerfstok ma następujące zastosowania:</p>

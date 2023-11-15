@@ -1137,7 +1137,7 @@ et cela peut prendre un certain temps, avec la numérisation entre
 les deux, pour la récupérer.</p>
 ]]>
 </string>
-<string name="watchhelp" >
+<string name="kerfstok" >
 <![CDATA[
 <h1 class="western">Kerfstok</h1>
 <p style="line-height: 100%; margin-bottom: 0cm">Cette vue est
@@ -1418,7 +1418,7 @@ touche de retour, le retour en arrière ne fonctionnera pas.</p>
 <string name="stathelp" >
 <![CDATA[
 <h1 class="western">Statistiques</h1>
-<p>Quelques statistiques tirées d\' <a href="https://www.healthline.com/diabetesmine/ambulatory-glucose-profile">AGP</a>
+<p>Quelques statistiques tirées d\' <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8991298">AGP</a>
 licence libre, avec quelques modifications mineures.</p>
 <p>Le nombre de jours analysés peut être modifié en appuyant sur
 le bouton <b>Jours</b>. La période se termine au moment de la

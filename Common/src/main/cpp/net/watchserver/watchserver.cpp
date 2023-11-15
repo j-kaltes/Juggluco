@@ -342,7 +342,7 @@ static bool sendall(int sock ,const char *buf,int buflen) {
         LOGARWEB("success sendall");
         return true;
         }
-bool watchcommands(char *rbuf,int len,recdata *outdata) ;
+bool watchcommands(char *rbuf,int len,recdata *outdata,bool secure) ;
 bool watchcommands(int sock) {
 	constexpr const int RBUFSIZE=4096;
 	char rbuf[RBUFSIZE];
@@ -359,7 +359,7 @@ bool watchcommands(int sock) {
 
 	if(stopconnection)
 		return false;
-	bool res=watchcommands(rbuf, len,&outdata); 
+	bool res=watchcommands(rbuf, len,&outdata,false); 
 	bool res2=sendall( sock ,outdata.data(),outdata.size()) ;
 	return res&&res2&&!stopconnection;
 	}
@@ -398,22 +398,43 @@ R"(<!DOCTYPE html>
 </body>
 </html>
 )"; */
-static bool givesite(recdata *outdata) {
-static	constexpr const char webpage[]="HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\nContent-Length: 158\r\n\r\n" 
-R"(<!DOCTYPE html>
+static bool givesite(recdata *outdata,std::string_view hostname,bool secure) {
+static	constexpr const char webpage1[]="HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\nContent-Length: ";
+static	constexpr const char webpage2[]="\r\n\r\n"; 
+static	constexpr const char webpage3[]=R"(<!DOCTYPE html>
 <html>
 <head>
-   <meta http-equiv="refresh" content="0; url=https://www.juggluco.nl/Juggluco/webserver.html"/>
+   <meta http-equiv="refresh" content="0; url=https://www.juggluco.nl/Juggluco/webserver.html?urlstart=http)";
+static	constexpr const char webpageend[]=R"("/>
 </head>
 <body>
 </body>
 </html>
 )";
+static	constexpr const char slashes[]=R"(://)";
+int weblen=sizeof(webpage3)+sizeof(webpageend)-3+hostname.size()+sizeof(slashes)+secure;
+int totlen=weblen+sizeof(webpage1)+sizeof(webpage2)+5;
 
-	const int statuslen=sizeof(webpage)-1;
-	outdata->allbuf=nullptr;
-	outdata->start=webpage;
-	outdata->len=statuslen;
+	char *start=outdata->allbuf=new(std::nothrow) char[totlen];
+	if(!start)
+		return false;
+	char *endptr=start;
+	memcpy(endptr,webpage1,sizeof(webpage1)-1); endptr+=sizeof(webpage1)-1;
+	endptr+=sprintf(endptr,"%d",weblen);
+	memcpy(endptr,webpage2,sizeof(webpage2)-1); endptr+=sizeof(webpage2)-1;
+	#ifndef NOLOG
+	const char *startpage=endptr;
+	#endif
+	memcpy(endptr,webpage3,sizeof(webpage3)-1); endptr+=sizeof(webpage3)-1;
+	if(secure)
+		*endptr++='s';
+	memcpy(endptr,slashes,sizeof(slashes)-1); endptr+=sizeof(slashes)-1;
+	memcpy(endptr,hostname.data(),hostname.size());
+	endptr+=hostname.size();
+	memcpy(endptr,webpageend,sizeof(webpageend)); endptr+=sizeof(webpageend)-1;
+	outdata->start=start;
+	outdata->len=endptr-start;
+	LOGGER("givesite predict=%d pagelen=%d totlen=%d reallen=%d\n",weblen,endptr-startpage,totlen,outdata->len);
 	return true;
 }
 static bool givestatus(recdata *outdata) {
@@ -634,7 +655,7 @@ bool givesgvtxt(int nr,int interval,uint32_t lowerend,uint32_t higherend,recdata
 extern int getdeltaindex(float rate);
 extern std::string_view getdeltanamefromindex(int index) ;
 
-
+//{"status":[{"now":1699975836641}],"bgs":[{"sgv":"107","trend":4,"direction":"Flat","datetime":1699975773940,"bgdelta":9,"battery":"80","iob":"0.06","bwp":"0.13","bwpo":102,"cob":0}],"cals":[]}
 //{"sgv":"10.7","trend":4,"direction":"Flat","datetime":1676804318000}
 static char *pebbleitem(bool mmolL,char *outiter,const ScanData *item) {
 	int trend=getdeltaindex(item->ch);
@@ -655,14 +676,17 @@ bool		 pebbleinterpret(const char *input,int inputlen,recdata *outdata) {
 	constexpr const char endpebble[]=R"(],"cals":[]})";
 	outiter+=sprintf(outiter,startpebble,nu*1000LL);
 	int interval=4*61;
-	if(!getitems(outiter,count,0,UINT32_MAX,true,interval,[mmol](char *outiter,int datit, const ScanData *iter,const char *sensorname,const time_t starttime) {
+	if(!getitems(outiter,count,0,UINT32_MAX,true,interval,[mmol,nu](char *outiter,int datit, const ScanData *iter,const char *sensorname,const time_t starttime) {
 			
 		char *ptr=pebbleitem(mmol,outiter,iter);
 		if(!datit) {
 	 		//double delta= isnan(iter->ch)?0:iter->ch*deltatimes;
 	 		double delta= getdelta(iter->ch);
+
+			extern double getiob(uint32_t now);
+			double iob=getiob(nu);
 			ptr-=2;
-			ptr+=sprintf(ptr,R"(,"bgdelta":"%.1f"},)",delta);
+			ptr+=sprintf(ptr,R"(,"bgdelta":"%.1f","iob":"%.2f"},)",delta,iob); //TODO remove ""? xDrip has "", Nightscout hasn't, who is right?
 			}
 		return ptr;
 		})) {
@@ -1152,7 +1176,7 @@ static bool jugglucos(const char * const input,int size, recdata *outdata) {
 	return true;
 	}
 
-bool watchcommands(char *rbuf,int len,recdata *outdata) {
+bool watchcommands(char *rbuf,int len,recdata *outdata,bool secure) {
 	LOGGERWEB("watchcommands len=%d %.*s",len,len,rbuf);
 	const char *start=rbuf;
 	const char *ends=rbuf+len;
@@ -1168,6 +1192,7 @@ bool watchcommands(char *rbuf,int len,recdata *outdata) {
 	const int reheadlen=sizeof(rehead)-1;
 	const char api_secret[]= "api_secret: ";
 	const int	api_len=sizeof(api_secret)-1;
+	std::string_view hostname;
 	while((nl= std::find(start,ends,'\n'))!=ends) {
 		if(!memcmp(start,reget,regetlen)) {
 			const char *reststart=start+regetlen;
@@ -1202,6 +1227,14 @@ bool watchcommands(char *rbuf,int len,recdata *outdata) {
 					if(!memcmp(start,jsonstr,sizeof(jsonstr)-1)) {
 						json=true;
 						}
+					else {
+						constexpr const char hostnamestr[]="Host: ";
+						constexpr const int hostnamelen= sizeof(hostnamestr)-1;
+						if(!memcmp(start,hostnamestr,hostnamelen)) {
+							const char *name=start+hostnamelen;
+							hostname={name,static_cast<size_t>(nl-name)};
+							}
+						}
 					}
 				}
 			}
@@ -1214,11 +1247,11 @@ bool watchcommands(char *rbuf,int len,recdata *outdata) {
 	int seclen=settings->data()->apisecretlength;
 	if(seclen) {
 		if(foundsecret.size()==0) {
-			const char *start=toget.data();
-			const char *end=start+toget.size();
+			const char *starttoget=toget.data();
+			const char *end=starttoget+toget.size();
 			static constexpr const char token[]="token=";
 			static constexpr const int tokenlen=sizeof(token)-1;
-			const char *hit=std::search(start,end,token,token+tokenlen);
+			const char *hit=std::search(starttoget,end,token,token+tokenlen);
 			if(hit!=end) {
 				hit+=tokenlen;	
 				const auto len=strcspn(hit," &");
@@ -1244,7 +1277,7 @@ bool watchcommands(char *rbuf,int len,recdata *outdata) {
 			}
 		}
 	if(!toget.size()) {
-		givesite(outdata);
+		givesite(outdata,hostname,secure);
 		return true;
 		}
 	LOGGERWEB("toget=%.*s\n",(int)toget.size(),toget.data()); //to set getargs in the beginning and use everywhere
@@ -1285,7 +1318,7 @@ const auto socketsize= socket.size();
 std::string_view index="index.html";
 const auto indexsize= index.size();
 	if(toget.data()[0]==' '||!memcmp(index.data(),toget.data(),indexsize)) {
-		return givesite(outdata);
+		return givesite(outdata,hostname,secure);
 		}
 
 

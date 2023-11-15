@@ -44,6 +44,60 @@ constexpr uint16_t swakeupstream=18;
 constexpr uint16_t sglucose=19;
 constexpr uint16_t sresetdevices=20;
 constexpr uint16_t stest=99;
+
+
+#ifndef NOLOG
+//s/^.*_t \(.*\)=\(.*\);/comlabeles[\2]="\1";
+
+inline static constexpr const char *comlabels[]={
+"zero",
+"sopen",
+"smklen",
+"swrite",
+"sclose",
+"sbackup",
+"srenum",
+"sbackupstop",
+"srender",
+"snewnums",
+"snums",
+"snumnr",
+"sack",
+"snuminit",
+"sasklastnum",
+"saskfile",
+"suptodate",
+"sfileonce",
+"swakeupstream",
+"sglucose",
+"sresetdevices"};
+/*int setlabels() {
+comlabeles[1]="sopen";
+comlabeles[2]="smklen";
+comlabeles[3]="swrite";
+comlabeles[4]="sclose";
+comlabeles[5]="sbackup";
+comlabeles[6]="srenum";
+comlabeles[7]="sbackupstop";
+comlabeles[8]="srender";
+comlabeles[9]="snewnums";
+comlabeles[10]="snums";
+comlabeles[11]="snumnr";
+comlabeles[12]="sack";
+comlabeles[13]="snuminit";
+comlabeles[14]="sasklastnum";
+comlabeles[15]="saskfile";
+comlabeles[16]="suptodate";
+comlabeles[17]="sfileonce";
+comlabeles[18]="swakeupstream";
+comlabeles[19]="sglucose";
+comlabeles[20]="sresetdevices";
+};
+int get=setlabels();
+*/
+#endif
+
+
 struct datel {
  int32_t off;
  int32_t len;

@@ -87,7 +87,7 @@ import tk.glucodata.Notify;
 import tk.glucodata.R;
 
 public class Settings  {
-private final static boolean IWRU=false,SPAIN=false;
+private final static boolean IWRU=false,SPANISH=false;
 private final static String LOG_ID="Settings";
 MainActivity activity;
 
@@ -457,7 +457,7 @@ final private static String  codestr=String.valueOf(BuildConfig.VERSION_CODE);
 
 //static private final List<String> supportedlanguages= Arrays.asList("Language","be","de","en","fr","it","nl","pl","pt","uk","zh");
 //  static private final List<String> supportedlanguages= Arrays.asList("Language","be","de","en","fr","it","nl","pl","pt","uk");
-static private final List<String> supportedlanguages= IWRU?Arrays.asList("Language","be","de","en","es","fr","it","iw","nl","pl","pt","ru","uk"):(SPAIN?Arrays.asList("Language","be","de","en","es","fr","it","nl","pl","pt","uk"):Arrays.asList("Language","be","de","en","fr","it","nl","pl","pt","uk"));
+static private final List<String> supportedlanguages= IWRU?Arrays.asList("Language","be","de","en","es","fr","it","iw","nl","pl","pt","ru","uk"):(SPANISH?Arrays.asList("Language","be","de","en","es","fr","it","nl","pl","pt","uk"):Arrays.asList("Language","be","de","en","fr","it","nl","pl","pt","uk"));
 
 //static private final List<String> supportedlanguages= IWRU?Arrays.asList("Language","be","de","en","es","fr","it","iw","nl","pl","pt","ru","uk"):Arrays.asList("Language","be","de","en","es","fr","it","nl","pl","pt","uk");
 static private Spinner languagespinner(MainActivity context, int[] spinpos) {

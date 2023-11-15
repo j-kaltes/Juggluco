@@ -113,12 +113,13 @@ should specify this on the other device on you home network you are
 connecting to (or your modem if connecting remotely).</p>
 <p style="line-height: 100%; margin-bottom: 0in">After <i>Port,</i>
 you can change the TCP port this app is listening on for connections.</p>
-<p style="line-height: 100%; margin-bottom: 0in">By clicking <i><b>Add
-connection</b></i> you can specify with which hosts to connect and
+<p style="line-height: 100%; margin-bottom: 0in">By clicking <i><b>
+<a href="https://www.juggluco.nl/Jugglucohelp/addconnection.html">Add
+connection</a></b></i> you can specify with which hosts to connect and
 how to connect.</p>
 <p style="line-height: 100%; margin-bottom: 0in">A reliable network
 connection is on Android disrupted by all kinds of battery
-optimizations and background restrictions, pressing <b>Doze mode</b>
+optimizations and background restrictions, pressing <b><a href="https://www.juggluco.nl/Jugglucohelp/battery.html">Doze mode</a></b>
 helps you change that.</p>
 <p style="line-height: 100%; margin-bottom: 0in">If Juggluco
 functions as a Mirror app (receiving glucose values from another
@@ -159,7 +160,7 @@ is used is abbreviated as follows:</p>
 
 </p>
 <p style="line-height: 100%; margin-bottom: 0in">For more information
-on Mirror connections read the help under &quot;<i>Add connection</i>&quot;
+on Mirror connections read the help under &quot;<i><a href="https://www.juggluco.nl/Jugglucohelp/addconnection.html">Add connection</a></i>&quot;
 and see <a class="western" href="https://www.juggluco.nl/Juggluco/mmol.html#mirror">https://www.juggluco.nl/Juggluco/mmol.html#mirror</a></p>
 <h1>Desktop computer</h1>
 <p>You can run the Android Juggluco app on a Windows, Macintosh or
@@ -177,6 +178,7 @@ pointer.</p>
 </string>
 <string name="addconnection" >
 <![CDATA[
+
 <h1>Add connection</h1>
 <p style="line-height: 100%; margin-bottom: 0in">Specify a connection
 with another instance of Juggluco. Juggluco on one device sends via
@@ -197,9 +199,11 @@ here <i>Passive</i> <i>only</i> and <i>Both</i> if you select here
 Juggluco actively makes contact, you should specify the IP(s) it
 should contact with. If that host has multiple IPs, you specify more
 than one; for example when two devices are sometimes connected via a
-home network and sometimes directly as portable hotspot. Never
+home network and sometimes directly as portable hotspot. 
+</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>WARNING: Never
 specify the IPs of multiple devices, in that case they will each
-receive only part of the data. 
+receive only part of the data. </b>
 </p>
 <p style="line-height: 100%; margin-bottom: 0in">In all cases except
 \'Active only\', you can select \'<b>Detect</b>\'; in this case Juggluco
@@ -315,268 +319,315 @@ still needed for them.</p>
 </string>
 <string name="introhelp" >
 <![CDATA[
-<p style="line-height: 115%; margin-bottom: 0in">
-<font color="#365f91"><font face="Cambria, serif"><font size="4" style="font-size: 14pt"><b>Juggluco</b></font></font></font>
-is an applet for the control of blood glucose by people with
-diabetes. It can scan Freestyle libre (1 and 2) sensors (via NFC) and
-receive (via Bluetooth) glucose values from <font color="#4f81bd"><font face="Calibri, serif"><i><b>Freestyle
-libre 2</b></i></font></font><font color="#4f81bd"> </font><font color="#4f81bd"><font face="Calibri, serif"><i><b>and
-3</b></i></font></font> sensors.</p>
-<p style="line-height: 115%; margin-bottom: 0in">As the program is
-run for the first time, you can (after initialization) scan a
-Freestyle Libre <b>2</b> sensor by holding it against the NFC sensor
-in your smartphone. Hereafter Juggluco will try to get a Bluetooth
-connection with Freestyle Libre 2 sensors and receive every minute a
-glucose value without scanning.</p>
-<p style="line-height: 115%; margin-bottom: 0in">To take over an
-activated FreeStyle Libre <b>3</b> sensor, you need to specify the
-Libreview Account information you used to activate the sensor in
-settings-&gt;Libreview, press &quot;Get Account ID&quot; and wait for
-the Account ID to arrive before scanning.</p>
-<p style="line-height: 115%; margin-bottom: 0in"><span lang="en-US">The
-program contains four</span> <font color="#4f81bd"><font face="Cambria, serif"><font size="3" style="font-size: 13pt"><span lang="en-US"><b>menus</b></span></font></font></font><span lang="en-US">;
-by touching on an empty part of the display you can open a</span>
-<span lang="en-US">menu. Touch</span> <span lang="en-US">on the left
-fourth</span> <span lang="en-US">of the screen opens the left menu,
-the left side of the middle part opens the second</span> <span lang="en-US">menu
-and the right part of the middle opens the third</span> <span lang="en-US">menu</span>
-<span lang="en-US">and the right fourth</span> <span lang="en-US">of
-the screen the fourth menu.</span> 
-</p>
-<p style="line-height: 100%; orphans: 0; widows: 0; margin-top: 0.08in; margin-bottom: 0.08in; background: transparent; page-break-after: avoid">
-<font size="3" style="font-size: 12pt"><i>Menu 4: Movement (right)</i></font></p>
-<table width="96" cellpadding="0" cellspacing="0">
-	<col width="96"/>
-
-	<tr>
-		<td width="96" valign="top" style="border: none; padding: 0in" sdval="0.632021990740741" sdnum="2057;0;[HH]:MM:SS.00"><p>
-			<font color="#ffff6d">15:10&nbsp;&nbsp;&nbsp;6.7</font></p>
-		</td>
-	</tr>
-	<tr>
-		<td width="96" valign="top" style="border: none; padding: 0in"><p><font color="#ffff6d">Search</font></p>
-		</td>
-	</tr>
-	<tr>
-		<td width="96" valign="top" style="border: none; padding: 0in"><p><font color="#ffff6d">Date</font></p>
-		</td>
-	</tr>
-	<tr>
-		<td width="96" valign="top" style="border: none; padding: 0in"><p><font color="#ffff6d">Day
-			back</font></p>
-		</td>
-	</tr>
-	<tr style="background: transparent">
-		<td width="96" valign="top" style="border: none; padding: 0in"><p><font color="#ffff6d">Day
-			later</font></p>
-		</td>
-	</tr>
-	<tr>
-		<td width="96" valign="top" style="border: none; padding: 0in"><p><font color="#ffff6d">Week
-			back</font></p>
-		</td>
-	</tr>
-	<tr>
-		<td width="96" valign="top" style="border: none; padding: 0in"><p><font color="#ffff6d">Week
-			Later</font></p>
-		</td>
-	</tr>
-</table>
-<p style="line-height: 115%; margin-bottom: 0in"><span lang="en-US">By
-moving left and right over the screen you can move the curve left and
-right. You can also move by using the </span><font color="#4f81bd"><font face="Cambria, serif"><span lang="en-US"><b>movement
-menu</b></span></font></font> <span lang="en-US">on the right. Use
-</span><font color="#4f81bd"><font face="Cambria, serif"><span lang="en-US"><i><b>Date</b></i></span></font></font>
-<span lang="en-US">to select a date, </span><font color="#4f81bd"><font face="Cambria, serif"><span lang="en-US"><i><b>Search</b></i></span></font></font>
-<span lang="en-US">to search for glucose values and entered numbers.</span>
-<span lang="en-US">The first item of the right menu is the current
-time and by selecting it you jump to the right of the graph (now).</span></p>
-<p style="line-height: 115%; margin-bottom: 0in">If <i>manually scale
-Glucose</i> is set in Settings, moving up and down in the upper part
-of the screen changes the maximum of the graph, in the lower part of
-the screen it changes the minimum. If <i>Manually scale Time </i>is
-set in settings, you can increase or decrease the amount of time
-displayed on the screen by changing the distance between two fingers.</p>
-<p style="line-height: 100%; orphans: 0; widows: 0; margin-top: 0.08in; margin-bottom: 0.08in; background: transparent; page-break-after: avoid">
-<font size="3" style="font-size: 12pt"><i>Menu 3: Display</i></font></p>
-<table width="138" cellpadding="0" cellspacing="0">
-	<col width="138"/>
-
-	<tr>
-		<td width="138" valign="top" style="border: none; padding: 0in"><p><font color="#ffff6d">Last
-			Scan</font></p>
-		</td>
-	</tr>
-	<tr>
-		<td width="138" valign="top" style="border: none; padding: 0in"><p><font color="#ffff6d">Scans&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[x]</font></p>
-		</td>
-	</tr>
-	<tr>
-		<td width="138" valign="top" style="border: none; padding: 0in"><p><font color="#ffff6d">Stream&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[x]</font></p>
-		</td>
-	</tr>
-	<tr>
-		<td width="138" valign="top" style="border: none; padding: 0in"><p><font color="#ffff6d">History&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[x]</font></p>
-		</td>
-	</tr>
-	<tr>
-		<td width="138" valign="top" style="border: none; padding: 0in"><p><font color="#ffff6d">Amounts&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[x]</font></p>
-		</td>
-	</tr>
-	<tr>
-		<td width="138" valign="top" style="border: none; padding: 0in"><p><font color="#ffff6d">Meals&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;&nbsp;]</font></p>
-		</td>
-	</tr>
-	<tr>
-		<td width="138" height="41" valign="top" style="border: none; padding: 0in"><p>
-			<font color="#ffff6d">Dark mode&nbsp;&nbsp;[&nbsp;&nbsp;]</font></p>
-		</td>
-	</tr>
-</table>
-<p style="line-height: 115%; margin-bottom: 0in"><span lang="en-US">The
-</span><font color="#4f81bd"><font face="Cambria, serif"><span lang="en-US"><b>right
-of the middle menu</b></span></font></font> <span lang="en-US">contains
-display options. To view the last scan, touch the first</span> <span lang="en-US">item.
-</span>A cross after <i>Scans</i> means that scans are displayed in
-the graph. A scan is the current glucose value you get when you scan
-your sensor. Scanning also transfers 15 minutes measurements of the
-last 8 hours from sensor to smartphone. Display of these values can
-be controlled by touching <i>History</i>. Libre 3 sensors send the
-history values by Bluetooth and they are every 5 minutes. <i>Stream</i>
-stands for glucose values send every minute via Bluetooth from a
-Freestyle libre 2 and 3 sensors to this applet.</p>
-<p style="line-height: 115%; margin-bottom: 0in">You can enter all
-kind of numbers (with whatever label you like) to document you
-insulin, carbohydrate and activities. They are displayed at fixed
-height in the glucose graph at the specified time and date. <span lang="en-US">Touching
-on points</span> <span lang="en-US">in the graph or an entered number
-gives information about that item. You can edit an entered number by
-long touching it. Editing is also possible via the number list in the
-left middle menu</span> <span lang="en-US">and touching the
-corresponding data element.</span> <i>Amounts</i> determines the
-display of entered numbers. In <i>Settings</i>, you can specify which
-labels you like to use for these numbers. Above one of the numbers
-the corresponding label is shown.</p>
-<p style="line-height: 100%; orphans: 0; widows: 0; margin-top: 0.08in; margin-bottom: 0.08in; background: transparent; page-break-after: avoid">
-<font size="3" style="font-size: 12pt"><i>Menu 2: Left of middle</i></font></p>
-<table width="96" cellpadding="0" cellspacing="0">
-	<col width="96"/>
-
-	<tr>
-		<td width="96" valign="top" style="border: none; padding: 0in"><p><font color="#ffff6d">Export</font></p>
-		</td>
-	</tr>
-	<tr>
-		<td width="96" valign="top" style="border: none; padding: 0in"><p><font color="#ffff6d">Mirror</font></p>
-		</td>
-	</tr>
-	<tr>
-		<td width="96" valign="top" style="border: none; padding: 0in"><p><font color="#ffff6d">New
-			Amount</font></p>
-		</td>
-	</tr>
-	<tr>
-		<td width="96" valign="top" style="border: none; padding: 0in"><p><font color="#ffff6d">List</font></p>
-		</td>
-	</tr>
-	<tr>
-		<td width="96" valign="top" style="border: none; padding: 0in"><p><font color="#ffff6d">Statistics</font></p>
-		</td>
-	</tr>
-	<tr>
-		<td width="96" valign="top" style="border: none; padding: 0in"><p><font color="#ffff6d">Talk</font></p>
-		</td>
-	</tr>
-	<tr>
-		<td width="96" valign="top" style="border: none; padding: 0in"><p align="left">
-			<font color="#ffff6d">Float&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;[&nbsp;]</font></p>
-		</td>
-	</tr>
-</table>
-<p style="line-height: 115%; margin-bottom: 0in">You can enter these
-numbers by touching <font color="#4f81bd"><font face="Cambria, serif"><font size="3" style="font-size: 13pt"><span lang="en-US"><b>New
-Amount</b></span></font></font></font> in <font color="#4f81bd"><font face="Cambria, serif"><span lang="en-US"><b>left
-of the middle menu</b></span></font></font>. <font color="#4f81bd"><font face="Cambria, serif"><span lang="en-US"><b>Export</b></span></font></font>
-<span lang="en-US">saves data in .tsv (tab separated values) format
-to a file. </span><font color="#4f81bd"><font face="Cambria, serif"><span lang="en-US"><b>Mirror</b></span></font></font>
-<span lang="en-US">makes it possible to send data via IP/TCP to this
-app running on a different device to display the same information.
-</span><font color="#4f81bd"><font face="Cambria, serif"><span lang="en-US"><b>List</b></span></font></font>
-<span lang="en-US">gives a list of the entered numbers. If Juggluco
-has received enough glucose values via Bluetooth, you can see some
-statistics by touching </span><font color="#4f81bd"><font face="Cambria, serif"><span lang="en-US"><b>Statistics</b></span></font></font><span lang="en-US">.
-It shows the percentage of the measurements in certain glucose
-ranges, the Glucose Management Indicator (a predictor of HbA1c),
-glucose variability and a summary graph showing the glucose value
-below which 100%,95%,75%,50%,25% and 0% of the values lie at each
-moment of the day.</span> <span lang="en-US">In </span><font color="#4f81bd"><font face="Cambria, serif"><span lang="en-US"><b>Talk</b></span></font></font>
-<span lang="en-US">you can make Juggluco speak out incoming glucose
-values, touched elements of the graph or messages. Float turns on
-</span><font color="#4f81bd"><font face="Cambria, serif"><span lang="en-US"><b>Floating
-Glucose</b></span></font></font><span lang="en-US">. A glucose value
-present on the screen above other apps. In Settings you can change
-its color and size.</span></p>
-<p style="line-height: 100%; orphans: 0; widows: 0; margin-top: 0.08in; margin-bottom: 0.08in; background: transparent; page-break-after: avoid">
-<font size="3" style="font-size: 12pt"><i>Menu 1: Left</i></font></p>
-<table width="120" cellpadding="0" cellspacing="0">
-	<col width="120"/>
-
-	<tr>
-		<td width="120" valign="top" style="border: none; padding: 0in"><p><font color="#ffff6d">System
-			UI&nbsp;&nbsp;[&nbsp;]</font></p>
-		</td>
-	</tr>
-	<tr>
-		<td width="120" valign="top" style="border: none; padding: 0in"><p><font color="#ffff6d">Menus&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;]</font></p>
-		</td>
-	</tr>
-	<tr>
-		<td width="120" valign="top" style="border: none; padding: 0in"><p><font color="#ffff6d">Watch</font></p>
-		</td>
-	</tr>
-	<tr>
-		<td width="120" valign="top" style="border: none; padding: 0in"><p><font color="#ffff6d">Sensor</font></p>
-		</td>
-	</tr>
-	<tr>
-		<td width="120" height="26" valign="top" style="border: none; padding: 0in"><p>
-			<font color="#ffff6d">Settings</font></p>
-		</td>
-	</tr>
-	<tr>
-		<td width="120" height="26" valign="top" style="border: none; padding: 0in"><p>
-			<font color="#ffff6d">About</font></p>
-		</td>
-	</tr>
-	<tr>
-		<td width="120" valign="top" style="border: none; padding: 0in"><p><font color="#ffff6d">Close</font></p>
-		</td>
-	</tr>
-</table>
-<p style="line-height: 115%; margin-bottom: 0in"><span lang="en-US">In
-the </span><font color="#4f81bd"><font face="Cambria, serif"><span lang="en-US"><b>left
-menu</b></span></font></font><span lang="en-US">, you can find
-</span><font color="#4f81bd"><font face="Cambria, serif"><span lang="en-US"><b>Settings</b></span></font></font><span lang="en-US">,
-to set the glucose unit to mmol/L or mg/dL, to</span> <span lang="en-US">specify</span>
-<span lang="en-US">labels, set glucose alarms and medication
-reminders</span> <span lang="en-US">and display ranges. System UI
-determines if android controls and status bar are shown. In </span><font color="#4f81bd"><font face="Cambria, serif"><span lang="en-US"><b>Watch</b></span></font></font>
-<span lang="en-US">you can specify Juggluco to send data to all kinds
-of smartwatches. In </span><font color="#4f81bd"><font face="Cambria, serif"><span lang="en-US"><b>Sensor</b></span></font></font><span lang="en-US">,
-you can see how the connection with the sensor is going. Touch </span><font color="#4f81bd"><font face="Cambria, serif"><span lang="en-US"><b>Menus</b></span></font></font>
-<span lang="en-US">to show all the mentioned menus at the same time
-in a way that can be read by talkback. Close can be used to exit</span>
-<span lang="en-US">Juggluco.</span></p>
-<p style="line-height: 115%; margin-bottom: 0in"><br/>
-
-</p>
-<p style="line-height: 115%; margin-bottom: 0in"><br/>
-
-</p>
-<p style="line-height: 115%; margin-bottom: 0in"><br/>
-
-</p>
-]]>
+<img src="left.jpg" style="object-fit:contain; width:15cm;                   height:auto;margin: 1cm 1cm 1cm 1cm;">
+    <img src="leftmiddle.jpg" style="object-fit:contain; width:15cm;                   height:auto;margin: 1cm 1cm 1cm 1cm;">
+    <img src="rightmiddle.jpg" style="object-fit:contain; width:15cm;                   height:auto;margin: 1cm 1cm 1cm 1cm;">
+    <img src="right.jpg" style="object-fit:contain; width:15cm;                   height:auto;margin: 1cm 1cm 1cm 1cm;">
+    <p style="line-height: 115%; margin-bottom: 0in"> <font color="#ffffff"><font
+          face="Cambria, serif"><font style="font-size: 14pt" size="4"><b>Juggluco</b></font></font>
+        is an applet for the control of blood glucose by people with diabetes.
+        It can scan Freestyle libre (1 and 2) sensors (via NFC) and receive (via
+        Bluetooth) glucose values from <font color="#4f81bd"><font face="Calibri, serif"><i><b>Freestyle
+                libre 2</b></i></font></font><font color="#4f81bd"> </font><font
+          color="#4f81bd"><font face="Calibri, serif"><i><b>and 3</b></i></font></font>
+        sensors.</font></p>
+    <p style="line-height: 115%; margin-bottom: 0in"><font color="#ffffff">As
+        the program is run for the first time, you can (after initialization)
+        scan a Freestyle Libre <b>2</b> sensor by holding it against the NFC
+        sensor in your smartphone. Hereafter Juggluco will try to get a
+        Bluetooth connection with Freestyle Libre 2 sensors and receive every
+        minute a glucose value without scanning.</font></p>
+    <p style="line-height: 115%; margin-bottom: 0in"><font color="#ffffff">To
+        take over an activated FreeStyle Libre <b>3</b> sensor, you need to
+        specify the Libreview Account information you used to activate the
+        sensor in <a href="https://www.juggluco.nl/Jugglucohelp/libreview.html">settings-&gt;Libreview</a>,
+        press <a href="https://www.juggluco.nl/Jugglucohelp/getaccountidhelp.html">"Get
+          Account ID"</a> and wait for the Account ID to arrive before scanning.</font></p>
+    <p style="line-height: 115%; margin-bottom: 0in"><font color="#ffffff"><span
+          lang="en-US">The program contains four</span> <font color="#4f81bd"><font
+            face="Cambria, serif"><font style="font-size: 13pt" size="3"><span lang="en-US"><b>menus</b></span></font></font></font><span
+          lang="en-US">; by touching on an empty part of the display you can
+          open a</span> <span lang="en-US">menu. Touch</span> <span lang="en-US">on
+          the left fourth</span> <span lang="en-US">of the screen opens the
+          left menu, the left side of the middle part opens the second</span> <span
+          lang="en-US">menu
+          and the right part of the middle opens the third</span> <span lang="en-US">menu</span>
+        <span lang="en-US">and the right fourth</span> <span lang="en-US">of
+          the screen the fourth menu.</span> </font> </p>
+    <p style="line-height: 100%; orphans: 0; widows: 0; margin-top: 0.08in; margin-bottom: 0.08in; background: transparent; page-break-after: avoid">
+      <font color="#ffffff"><font style="font-size: 12pt" size="3"><i>Menu 4:
+            Movement (right)</i></font></font></p>
+    <table cellspacing="0" cellpadding="0" width="96">
+      <colgroup><col width="96"> </colgroup>
+      <tbody>
+        <tr>
+          <td style="border: none; padding: 0in" width="96" valign="top">
+            <p> <font color="#ffff6d">15:10&nbsp;&nbsp;&nbsp;&nbsp;6.7</font></p>
+          </td>
+        </tr>
+        <tr>
+          <td style="border: none; padding: 0in" width="96" valign="top">
+            <p><font color="#ffff6d"><a href="https://www.juggluco.nl/Jugglucohelp/searchhelp.html">Search</a></font></p>
+          </td>
+        </tr>
+        <tr>
+          <td style="border: none; padding: 0in" width="96" valign="top">
+            <p><font color="#ffff6d">Date</font></p>
+          </td>
+        </tr>
+        <tr>
+          <td style="border: none; padding: 0in" width="96" valign="top">
+            <p><font color="#ffff6d">Day back</font></p>
+          </td>
+        </tr>
+        <tr style="background: transparent">
+          <td style="border: none; padding: 0in" width="96" valign="top">
+            <p><font color="#ffff6d">Day later</font></p>
+          </td>
+        </tr>
+        <tr>
+          <td style="border: none; padding: 0in" width="96" valign="top">
+            <p><font color="#ffff6d">Week back</font></p>
+          </td>
+        </tr>
+        <tr>
+          <td style="border: none; padding: 0in" width="96" valign="top">
+            <p><font color="#ffff6d">Week Later</font></p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="line-height: 115%; margin-bottom: 0in"><font color="#ffffff"><span
+          lang="en-US">By moving left and right over the screen you can move the
+          curve left and right. You can also move by using the </span><font color="#4f81bd"><font
+            face="Cambria, serif"><span lang="en-US"><b>movement menu</b></span></font></font>
+        <span lang="en-US">on the right. Use </span><font color="#4f81bd"><font
+            face="Cambria, serif"><span lang="en-US"><i><b>Date</b></i></span></font></font>
+        <span lang="en-US">to select a date, </span><font color="#4f81bd"><font
+            face="Cambria, serif"><span lang="en-US"><i><b>Search</b></i></span></font></font>
+        <span lang="en-US">to search for glucose values and entered numbers.</span>
+        <span lang="en-US">The first item of the right menu is the current time
+          and by selecting it you jump to the right of the graph (now).</span></font></p>
+    <p style="line-height: 115%; margin-bottom: 0in"><font color="#ffffff">If <i>manually
+          scale Glucose</i> is set in Settings, moving up and down in the upper
+        part of the screen changes the maximum of the graph, in the lower part
+        of the screen it changes the minimum. If <i>Manually scale Time </i>is
+        set in settings, you can increase or decrease the amount of time
+        displayed on the screen by changing the distance between two fingers.</font></p>
+    <p style="line-height: 100%; orphans: 0; widows: 0; margin-top: 0.08in; margin-bottom: 0.08in; background: transparent; page-break-after: avoid">
+      <font color="#ffffff"><font style="font-size: 12pt" size="3"><i>Menu 3:
+            Display</i></font></font></p>
+    <table cellspacing="0" cellpadding="0" width="138">
+      <colgroup><col width="138"> </colgroup>
+      <tbody>
+        <tr>
+          <td style="border: none; padding: 0in" width="138" valign="top">
+            <p><font color="#ffff6d">Last Scan</font></p>
+          </td>
+        </tr>
+        <tr>
+          <td style="border: none; padding: 0in" width="138" valign="top">
+            <p><font color="#ffff6d">Scans&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                [x]</font></p>
+          </td>
+        </tr>
+        <tr>
+          <td style="border: none; padding: 0in" width="138" valign="top">
+            <p><font color="#ffff6d">Stream&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                [x]</font></p>
+          </td>
+        </tr>
+        <tr>
+          <td style="border: none; padding: 0in" width="138" valign="top">
+            <p><font color="#ffff6d">History&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[x]</font></p>
+          </td>
+        </tr>
+        <tr>
+          <td style="border: none; padding: 0in" width="138" valign="top">
+            <p><font color="#ffff6d">Amounts&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[x]</font></p>
+          </td>
+        </tr>
+        <tr>
+          <td style="border: none; padding: 0in" width="138" valign="top">
+            <p><font color="#ffff6d">Meals&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp; [&nbsp;&nbsp;]</font></p>
+          </td>
+        </tr>
+        <tr>
+          <td style="border: none; padding: 0in" width="138" valign="top" height="42">
+            <p> <font color="#ffff6d">Dark mode  [x]</font></p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="line-height: 115%; margin-bottom: 0in"><font color="#ffffff"><span
+          lang="en-US">The </span><font color="#4f81bd"><font face="Cambria, serif"><span
+              lang="en-US"><b>right
+                of the middle menu</b></span></font></font> <span lang="en-US">contains
+display
+          options. To view the last scan, touch the first</span> <span lang="en-US">item.
+          </span>A cross after <i>Scans</i> means that scans are displayed in
+        the graph. A scan is the current glucose value you get when you scan
+        your sensor. Scanning also transfers 15 minutes measurements of the last
+        8 hours from sensor to smartphone. Display of these values can be
+        controlled by touching <i>History</i>. Libre 3 sensors send the history
+        values by Bluetooth and they are every 5 minutes. <i>Stream</i> stands
+        for glucose values send every minute via Bluetooth from a Freestyle
+        libre 2 and 3 sensors to this applet.</font></p>
+    <p style="line-height: 115%; margin-bottom: 0in"><font color="#ffffff">You
+        can enter all kind of numbers (with whatever label you like) to document
+        you insulin, carbohydrate and activities. They are displayed at fixed
+        height in the glucose graph at the specified time and date. <span lang="en-US">Touching
+          on points</span> <span lang="en-US">in the graph or an entered number
+          gives information about that item. You can edit an entered number by
+          long touching it. Editing is also possible via the number list in the
+          left middle menu</span> <span lang="en-US">and
+          touching the corresponding data element.</span> <i>Amounts</i>
+        determines the display of entered numbers. In <i>Settings</i>, you can
+        specify which <a href="https://www.juggluco.nl/Jugglucohelp/labelhelp.html">labels</a>
+        you like to use for these numbers. Above one of the numbers the
+        corresponding label is shown.</font></p>
+    <p style="line-height: 100%; orphans: 0; widows: 0; margin-top: 0.08in; margin-bottom: 0.08in; background: transparent; page-break-after: avoid">
+      <font color="#ffffff"><font style="font-size: 12pt" size="3"><i>Menu 2:
+            Left of middle</i></font></font></p>
+    <table style="width: 119px; height: 337px;" cellspacing="0" cellpadding="0">
+      <colgroup><col width="96"> </colgroup>
+      <tbody>
+        <tr>
+          <td style="border: none; padding: 0in" width="96" valign="top">
+            <p><font color="#ffff6d"><a href="https://www.juggluco.nl/Jugglucohelp/helpexport.html">Export</a></font></p>
+          </td>
+        </tr>
+        <tr>
+          <td style="border: none; padding: 0in" width="96" valign="top">
+            <p><font color="#ffff6d"><a href="https://www.juggluco.nl/Jugglucohelp/connectionoverview.html">Mirror</a></font></p>
+          </td>
+        </tr>
+        <tr>
+          <td style="border: none; padding: 0in" width="96" valign="top">
+            <p><font color="#ffff6d">New Amount</font></p>
+          </td>
+        </tr>
+        <tr>
+          <td style="border: none; padding: 0in" width="96" valign="top">
+            <p><font color="#ffff6d">List</font></p>
+          </td>
+        </tr>
+        <tr>
+          <td style="border: none; padding: 0in" width="96" valign="top">
+            <p><font color="#ffff6d"><a href="https://www.juggluco.nl/Jugglucohelp/stathelp.html" onclick= "location.href=this.href+\'?unit=\'+unitstr;return false;" >Statistics</a></font></p>
+               
+          </td>
+        </tr>
+        <tr>
+          <td style="border: none; padding: 0in" width="96" valign="top">
+            <p><font color="#ffff6d"><a href="https://www.juggluco.nl/Jugglucohelp/talkhelp.html">Talk</a></font></p>
+          </td>
+        </tr>
+        <tr>
+          <td style="border: none; padding: 0in" width="96" valign="top">
+            <p align="left"><font color="#ffff6d">Float&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;]</font></p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="line-height: 115%; margin-bottom: 0in"><font color="#ffffff">You
+        can enter these numbers by touching <font color="#4f81bd"><font face="Cambria, serif"><font
+              style="font-size: 13pt" size="3"><span lang="en-US"><b>New Amount</b></span></font></font></font>
+        in <font color="#4f81bd"><font face="Cambria, serif"><span lang="en-US"><b>left
+                of the middle menu</b></span></font></font>. <font color="#4f81bd"><font
+            face="Cambria, serif"><span lang="en-US"><b>Export</b></span></font></font>
+        <span lang="en-US">saves data in .tsv (tab separated values) format to a
+          file. </span><font color="#4f81bd"><font face="Cambria, serif"><span
+              lang="en-US"><b>Mirror</b></span></font></font> <span lang="en-US">makes
+          it possible to send data via IP/TCP to this app running on a different
+          device to display the same information. </span><font color="#4f81bd"><font
+            face="Cambria, serif"><span lang="en-US"><b>List</b></span></font></font>
+        <span lang="en-US">gives a list of the entered numbers. If Juggluco has
+          received enough glucose values via Bluetooth, you can see some
+          statistics by touching </span><font color="#4f81bd"><font face="Cambria, serif"><span
+              lang="en-US"><b>Statistics</b></span></font></font><span lang="en-US">.
+          It shows the percentage of the measurements in certain glucose ranges,
+          the Glucose Management Indicator (a predictor of HbA1c), glucose
+          variability and a summary graph showing the glucose value below which
+          100%,95%,75%,50%,25% and 0% of the values lie at each moment of the
+          day.</span> <span lang="en-US">In </span><font color="#4f81bd"><font
+            face="Cambria, serif"><span lang="en-US"><b>Talk</b></span></font></font>
+        <span lang="en-US">you can make Juggluco speak out incoming glucose
+          values, touched elements of the graph or messages. Float turns on </span><font
+          color="#4f81bd"><font face="Cambria, serif"><span lang="en-US"><b>Floating Glucose</b></span></font></font><span lang="en-US">. A glucose
+          value present on the screen above other apps. <a href="https://www.juggluco.nl/Jugglucohelp/floatingconfig.html" onclick= "location.href=this.href+\'?unit=\'+unitstr;return false;"  >In
+            Settings you can change its color and size.</a></span></font></p>
+    <p style="line-height: 100%; orphans: 0; widows: 0; margin-top: 0.08in; margin-bottom: 0.08in; background: transparent; page-break-after: avoid">
+      <font color="#ffffff"><font style="font-size: 12pt" size="3"><i>Menu 1:
+            Left</i></font></font></p>
+    <table cellspacing="0" cellpadding="0" width="120">
+      <colgroup><col width="120"> </colgroup>
+      <tbody>
+        <tr>
+          <td style="border: none; padding: 0in" width="120" valign="top">
+            <p><font color="#ffff6d">System UI&nbsp;&nbsp;[&nbsp;]</font></p>
+          </td>
+        </tr>
+        <tr>
+          <td style="border: none; padding: 0in" width="120" valign="top">
+            <p><font color="#ffff6d">Menus&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;]</font></p>
+          </td>
+        </tr>
+        <tr>
+          <td style="border: none; padding: 0in" width="120" valign="top">
+            <p><font color="#ffff6d"><a href="https://www.juggluco.nl/Jugglucohelp/watchinfo.html">Watch</a></font></p>
+          </td>
+        </tr>
+        <tr>
+          <td style="border: none; padding: 0in" width="120" valign="top">
+            <p><font color="#ffff6d"><a href="https://www.juggluco.nl/Jugglucohelp/sensorhelp.html">Sensor</a></font></p>
+          </td>
+        </tr>
+        <tr>
+          <td style="border: none; padding: 0in" width="120" valign="top" height="26">
+            <p><font color="#ffff6d"><a href="https://www.juggluco.nl/Jugglucohelp/settinghelp.html" onclick= "location.href=this.href+\'?unit=\'+unitstr;return false;" >Settings</a></font></p>
+          </td>
+        </tr>
+        <tr>
+          <td style="border: none; padding: 0in" width="120" valign="top" height="26">
+            <p> <font color="#ffff6d"><a href="https://www.juggluco.nl/Jugglucohelp/about.html">About</a></font></p>
+          </td>
+        </tr>
+        <tr>
+          <td style="border: none; padding: 0in" width="120" valign="top">
+            <p><font color="#ffff6d">Close</font></p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="line-height: 115%; margin-bottom: 0in"><font color="#ffffff"><span
+          lang="en-US">In the </span><font color="#4f81bd"><font face="Cambria, serif"><span
+              lang="en-US"><b>left menu</b></span></font></font><span lang="en-US">,
+          you can find </span><font color="#4f81bd"><font face="Cambria, serif"><span
+              lang="en-US"><b>Settings</b></span></font></font><span lang="en-US">,
+          to set the glucose unit to mmol/L or mg/dL, to</span> <span lang="en-US">specify</span>
+        <span lang="en-US"><a href="https://www.juggluco.nl/Jugglucohelp/labelhelp.html">labels</a>,
+          set <a href="https://www.juggluco.nl/Jugglucohelp/alarmhelp.html">glucose
+            alarms</a> and <a href="https://www.juggluco.nl/Jugglucohelp/reminders.html">medication
+            reminders</a></span> <span lang="en-US">and display ranges. System
+          UI determines if android controls and status bar are shown. In </span><font
+          color="#4f81bd"><font face="Cambria, serif"><span lang="en-US"><b>Watch</b></span></font></font>
+        <span lang="en-US">you can specify Juggluco to send data to all kinds of
+          smartwatches. In </span><font color="#4f81bd"><font face="Cambria, serif"><span
+              lang="en-US"><b>Sensor</b></span></font></font><span lang="en-US">,
+          you can see how the connection with the sensor is going. Touch </span><font
+          color="#4f81bd"><font face="Cambria, serif"><span lang="en-US"><b>Menus</b></span></font></font>
+        <span lang="en-US">to show all the mentioned menus at the same time in a
+          way that can be read by talkback. Close can be used to exit</span> <span
+          lang="en-US">Juggluco.</span></font></p>
+    <p style="line-height: 115%; margin-bottom: 0in"><br>
+    </p>
+    <p style="line-height: 115%; margin-bottom: 0in"><br>
+    </p>
+    <p style="line-height: 115%; margin-bottom: 0in"><br>
+    </p>
+  ]]>
 </string>
 <string name="searchhelp" >
 <![CDATA[
@@ -660,7 +711,7 @@ button.</p>
 <string name="labelhelp" >
 <![CDATA[
 <h1>Labels for amounts</h1>
-<p style="margin-bottom: 0in; line-height: 115%">Here you can create,
+<p style="margin-bottom: 0in; line-height: 115%">Here you can <a href="https://www.juggluco.nl/Jugglucohelp/newlabelhelp.html">create</a>,
 delete and modify labels for quantities added to the graph to specify
 insulin, carbohydrate or physical activity. If you have already saved
 some quantities, they will get the label corresponding to their
@@ -755,7 +806,7 @@ without root check.</p>
 <p>pm disable-user --user 0 com.freestylelibre.app.nl</p>
 <p>Before calling Abbott customer service, you can re-enable it with:</p>
 <p>pm enable com.freestylelibre.app.nl</p>
-<h2 class="western">Libreview</h2>
+<h2 class="western"><a href="https://www.juggluco.nl/Jugglucohelp/libreview.html">Libreview</a></h2>
 <p>Connect with Libreview to send Freestyle Libre 2 and 3 glucose
 values and amounts to Libreview and to get the account id used during
 Freestyle Libre 3 sensor activation. Touch to change settings.</p>
@@ -798,10 +849,10 @@ broadcasts</a>. If you specify Juggluco as data-source in G-Watch,
 you need to turn on this broadcast.</p>
 <p>The application apps listening to this broadcast are shown. Check
 the apps you want to send this broadcast to.</p>
-<h2 class="western">Web server</h2>
+<h2 class="western"><a href="https://www.juggluco.nl/Jugglucohelp/Nightscouthelp.html">Web server</a></h2>
 <p>Web server that can be used with xDrip watches and some Nightscout
 apps. Previously called xDrip webserver.</p>
-<h2 class="western">Uploader</h2>
+<h2 class="western"><a href="https://www.juggluco.nl/Jugglucohelp/NightPost.html">Uploader</a></h2>
 <p>Upload to a Nightscout server.</p>
 <h2 class="western">Glucose notification</h2>
 <p style="line-height: 100%; margin-bottom: 0in">(Previously called
@@ -827,22 +878,20 @@ in the left middle menu. In that case the notification will be sent
 to some smartwatches, if it is configured that way. That works with
 Garmin watches, I don\'t know if it works with anything else. Alarms
 also generate notifications.</p>
-<h2 class="western">Floating glucose</h2>
+<h2 class="western"><a href="https://www.juggluco.nl/Jugglucohelp/floatingconfig.html" onclick= "location.href=this.href+\'?unit=\'+unitstr;return false;"  >Floating glucose</a></h2>
 <p>When you turn this on, a small image with the current glucose
 value is constantly present on the screen independent of which app is
 in the foreground. If you turn it on the first time, you will be
 directed to a list of apps in which you have to give Juggluco
 permission to <b>display over other apps</b>.</p>
-<h2 class="western">Config</h2>
-<p>Specify font size and colors of <i>Floating glucose</i> value.</p>
 <h2 class="western">Sensor via Bluetooth</h2>
 <p>Selects whether this app connects via Bluetooth with a Freestyle
 libre 2 or 3 sensor. This is needed for alarms and continual glucose
 monitoring.</p>
-<h2 class="western"><b>Alarms</b></h2>
+<h2 class="western"><a href="https://www.juggluco.nl/Jugglucohelp/alarmhelp.html">Alarms</a></h2>
 <p style="font-weight: normal">Set high en low glucose alarms, loss
 of signal alarm and value available notification.</p>
-<h2 class="western">Number Labels</h2>
+<h2 class="western"><a href="https://www.juggluco.nl/Jugglucohelp/labelhelp.html">Number labels</a></h2>
 <p style="line-height: 100%; margin-bottom: 0in">Specify the labels
 used for amounts. Go to a screen to determine which labels to use to
 set amounts, like insulin doses, carbohydrate consumption and hours
@@ -852,11 +901,11 @@ Kerfstok, these labels are sent to the watch app.</p>
 <p style="line-height: 100%; margin-bottom: 0in">Juggluco is
 displayed in the chosen language. When no language code is selected,
 the system language is used.</p>
-<h2 class="western">Reminders</h2>
+<h2 class="western"><a href="https://www.juggluco.nl/Jugglucohelp/reminders.html">Reminders</a></h2>
 <p style="font-weight: normal; line-height: 100%; margin-bottom: 0in">
 Specify that an alarm should go of if you didn\'t enter a certain
 amount of food or medication within a certain time period.</p>
-<h2 class="western">Colors</h2>
+<h2 class="western"><a href="https://www.juggluco.nl/Jugglucohelp/colorhelp.html">Colors</a></h2>
 <p style="line-height: 100%; margin-bottom: 0in">Change colors of
 curves, scans and numbers. To switch <i>Dark mode</i>, use right
 middle menu-&gt;Dark mode.</p>
@@ -876,8 +925,8 @@ spinner contains the name of the sensor. If Juggluco is using more
 than one sensor at the same time, you can select for which sensor to
 show information.</font></font></font></font></p>
 <p style="margin-top: 0.02in; margin-bottom: 0.02in; border: none; padding: 0in">
-<font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><i><b>Doze
-mode</b></i> leads you to a screen with information on how to disable
+
+<font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><i><b><a href="https://www.juggluco.nl/Jugglucohelp/battery.html">Doze mode</a></b></i> leads you to a screen with information on how to disable
 battery optimizations for Juggluco, that can prevent Juggluco from
 functioning.</font></font></p>
 <p style="margin-top: 0.02in; margin-bottom: 0.02in; border: none; padding: 0in">
@@ -952,7 +1001,7 @@ takes a minute, but at other times it takes much longer. The
 stage</i></font></font> <font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">gives
 the most difficulties. The most frequent are failures with
 status=133, which is the status argument of
-</font></font><a href="#onConnectionStateChange_android_bluetooth_BluetoothGatt__20int__20int_"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><u>onConnectionStateChange(BluetoothGatt
+</font></font><a href="https://developer.android.com/reference/android/bluetooth/BluetoothGattCallback#onConnectionStateChange(android.bluetooth.BluetoothGatt,%20int,%20int)"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><u>onConnectionStateChange(BluetoothGatt
 bluetoothGatt, int status, int newState)</u></font></font></a><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">.
 It means </font></font><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><i>Bluetooth
 device not found</i></font></font><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">.
@@ -973,8 +1022,9 @@ again.</font></font></p>
 &nbsp;</p>
 ]]>
 </string>
-<string name="watchhelp" >
+<string name="kerfstok" >
 <![CDATA[
+
 <h1 class="western">Kerfstok</h1>
 <p style="line-height: 100%; margin-bottom: 0in">This view is used to
 solve connection problems with Kerfstok
@@ -1034,16 +1084,18 @@ menu-&gt;Mirror) of the device in which you entered the numbers.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>Refresh</b>
 rewrites this dialog with new information (e.g. after Reinit or
 Sync).</p>
-<p style="line-height: 100%; margin-bottom: 0in">Checking &quot;<b>Glucose</b><b>&quot;</b>
+<p style="line-height: 100%; margin-bottom: 0in">Checking &quot;<b>Glucose&quot;</b>
 determines if glucose values are sent to the watch.</p>
 <p style="line-height: 100%; margin-bottom: 0in">Sometimes a button
-named &quot;<b>Send Queue</b><b>&quot;</b> is shown; this means that
-there are messages that are not yet sent to the watch. Normally they
-will be sent automatically in due time, but sometimes this was
-interrupted and pressing on <i>Send queue</i> will continue the
-sending. But if it was not sent because of a broken connecting this
-has very little benefit. Pressing <i>Send Queue </i>during an ongoing
-transaction can break the connection.</p>
+named &quot;<b>Send Queue&quot;</b> is shown; this means that there
+are messages that are not yet sent to the watch. Normally they will
+be sent automatically in due time, but sometimes this was interrupted
+and pressing on <i>Send queue</i> will continue the sending. But if
+it was not sent because of a broken connecting this has very little
+benefit. Pressing <i>Send Queue </i>during an ongoing transaction can
+break the connection.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><a href="https://www.juggluco.nl/Jugglucohelp/garminconfig.html"><b>Config</b></a>:
+set Dark mode, Shortcuts and ID.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><br/>
 
 </p>
@@ -1195,8 +1247,7 @@ back will not work.</p>
 <string name="stathelp" >
 <![CDATA[
 <h1 class="western">Statistics</h1>
-<p>Some statistics taken from <a href="https://www.healthline.com/diabetesmine/ambulatory-glucose-profile">AGP</a>
-without a license, with some minor modifications.</p>
+<p>Some statistics taken from <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8991298">AGP</a> with some minor modifications.</p>
 <p>The number of days analyzed can be modified by pressing the <b>Days</b>
 button. The period ends at the time of the end of screen position and
 spans the specified number of days back in time. All data are only
@@ -1288,9 +1339,9 @@ missing in the Juggluco app itself. When you only know that the value
 was missing because of Juggluco\'s notification or its watch face,
 will the value available notification not be evoked.</p>
 <p style="line-height: 100%; margin-bottom: 0in">For each alarm you
-can specify which Ringtone to play and for how long.</p>
+can specify which <a href="https://www.juggluco.nl/Jugglucohelp/ringtone.html">Ringtone</a> to play and for how long.</p>
 <h3 class="western">Alarm is alarm:</h3>
-<p>When set, is the ringtone played for low, high and loss of signal
+<p>When set, is the <a href="https://www.juggluco.nl/Jugglucohelp/ringtone.html">Ringtone</a> played for low, high and loss of signal
 alarms given the Android Alarms category. This means that in Android
 settings it\'s volume is managed with the Alarms volume level and it
 is not silenced when sound of the whole phone is turned off or set to
@@ -1370,7 +1421,7 @@ temperature 6.</p>
 falling glucose, rain is rising glucose. It is also put in the
 current temperature. Larger than zero means rising glucose, lower
 than zero means falling glucose.</p>
-<h2 class="western">Kerfstok</h2>
+<h2 class="western"><a href="https://www.juggluco.nl/Jugglucohelp/kerfstok.html">Kerfstok</a></h2>
 <p style="line-height: 100%; margin-bottom: 0in"><span lang="en-US">Kerfstok
 is watch app by which you can enter numbers (like insulin doses),</span>
 <span lang="en-US">but it also displays the current glucose value.
@@ -1379,7 +1430,7 @@ Kerfstok. So Kerfstok displays always the most recent glucose value.
 Kerfstok can also record all activities supported by Garmin and can
 display speed and distance. See Watch-&gt;Kerfstok Status-&gt; Help
 and <a href="https://www.juggluco.nl/Kerfstok">https://www.juggluco.nl/Kerfstok</a></span></p>
-<h2 class="western">Broadcast</h2>
+<h2 class="western"><a href="https://www.juggluco.nl/Juggluco/glucosebroadcast.html">Broadcast</a></h2>
 <p style="line-height: 100%; margin-bottom: 0in">Apps can receive
 glucose values from one of the glucose broadcasts send by Juggluco
 and send these glucose values to a watch. For example G-Watch
@@ -1387,7 +1438,7 @@ and send these glucose values to a watch. For example G-Watch
 or <a href="https://play.google.com/store/apps/details?id=sk.trupici.gwatch.wear">WearOS</a>)
 can receive glucose values from the Glucodata Broadcast (see Left
 menu-&gt;Settings).</p>
-<h2 class="western">xDrip watch apps</h2>
+<h2 class="western"><a href="https://www.juggluco.nl/Jugglucohelp/Nightscouthelp.html">xDrip watch apps</a></h2>
 <p style="line-height: 100%; margin-bottom: 0in"><span lang="en-US">Juggluco
 incorporates an xDrip/Nightscout</span> <span lang="en-US">webserver.
 This makes it possible to directly use xDrip watch apps with
@@ -1427,7 +1478,7 @@ off, also other hosts can access the server. This only applies to
 http, https is always possible. If you don\'t configure your firewall
 to redirect to port 17580, this will be only hosts on your home
 network.</p>
-<h2 class="western">WearOS Juggluco</h2>
+<h2 class="western"><a href="https://www.juggluco.nl/Jugglucohelp/wearosinfo.html">WearOS Juggluco</a></h2>
 <p>There is a version of Juggluco ported to Wear OS. The display is
 adapted to the smaller screen and a watch face is added. The watch
 face can be installed as a usual Wear OS watch face and displays
@@ -1437,7 +1488,64 @@ Bluetooth.</p>
 </string>
 <string name="wearosinfo" >
 <![CDATA[
-<p style="margin-top:0pt;margin-bottom:0pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'liberation serif  \';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000"><b>Wear Os</b></span></p><p style="margin-top:0pt;margin-bottom:0pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000"><b>Direct sensor-watch connection</b></span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">: This determines whether the watch should be directly connected with the sensor. This can only be changed when watch and phone are in sync. Use Mirror-&gt;Sync and Reinit on phone and watch, to sync phone and watch.</span></p><p style="margin-top:0pt;margin-bottom:0pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000"><b>Init watch app</b></span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">: This should be pressed once after Juggluco is installed on the WearOS watch and is running. </span></p><p style="margin-top:0pt;margin-bottom:0pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000"><b>Defaults</b></span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">: This sets the connection settings to its default values. This consists of the settings that can be changed in Left menu-&gt;Mirror on the watch and left middle menu-&gt;Mirror on the phone. It consists of settings like &quot;Active onl</span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">y&quot; and &quot;Scans&apos;. This button can be pressed when the settings have changed accidentally by water of the shower or during sleep. If you reset by reinstalling the watch version or clearing data, then you also need to remove the mirror connection on the phone.</span></p><p style="margin-top:0pt;margin-bottom:0pt;border:none;border-left:none;border-top:none;border-right:none;border-bottom:none;mso-border-between:none"><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">A special version of Juggluco can run directly on a Wear Os watch. It needs an Android smartphone with NFC to scan the sensor and via a TCP connection this data is sent to the Wear OS watch. Hereafter there are two possibilities:</span></p><ol style="padding-left:40px"><li style="list-style-type: decimal"><p style="margin-left:35.45pt;text-indent:-18pt;margin-top:0pt;margin-bottom:0pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">The sensor stays connected with the smartphone and the smartphone sends every glucose value it receives via Bluetooth to the Wear OS watch via TCP;</span></p></li><li style="list-style-type: decimal"><p style="margin-left:35.45pt;text-indent:-18pt;margin-top:0pt;margin-bottom:0pt;border:none;border-left:none;border-top:none;border-right:none;border-bottom:none;mso-border-between:none"><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">It is also possible to directly connect the sensor with the Wear OS watch. For this you need a Wear OS watch with good Bluetooth connectivity. </span></p></li></ol><p style="margin-top:0pt;margin-bottom:0pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">You can get Juggluco for Wear OS from Google Play on your watch. Some pictures are shown at </span><a href="https://www.juggluco.nl/JugglucoWearOS/index.html" title="https://www.juggluco.nl/JugglucoWearOS/index.html"><span style="font-family:\'Times New Roman\';font-size:12pt;color:#0000ff;mso-style-textfill-fill-color:#0000ff"><u>https://www.juggluco.nl/JugglucoWearOS</u></span></a></p><p style="margin-top:0pt;margin-bottom:0pt;border:none;border-left:none;border-top:none;border-right:none;border-bottom:none;mso-border-between:none"><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">To get it working do the following:</span></p><ul style="padding-left:40px"><li style="list-style-type: disc"><p style="margin-left:36pt;text-indent:-18pt;margin-top:0pt;margin-bottom:0pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">Ensure that both Bluetooth and WIFI are working on watch and phone;</span></p></li><li style="list-style-type: disc"><p style="margin-left:36pt;text-indent:-18pt;margin-top:0pt;margin-bottom:0pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">See that the watch has enough free storage space and RAM left. It is possible that Juggluco has to be reinstalled if the device runs out of storage space at a critical moment;</span></p></li><li style="list-style-type: disc"><p style="margin-left:36pt;text-indent:-18pt;margin-top:0pt;margin-bottom:0pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">Make the phone version of Juggluco working with the sensor. You have to scan the sensor a few times with &quot;Sensor via Bluetooth&quot; set. Receiving glucose values on the phone via Bluetooth is not necessary;</span></p></li><li style="list-style-type: disc"><p style="margin-left:36pt;text-indent:-18pt;margin-top:0pt;margin-bottom:0pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">Install the Wear OS version of Juggluco on your Wear Os watch and start it;</span></p></li><li style="list-style-type: disc"><p style="margin-left:36pt;text-indent:-18pt;margin-top:0pt;margin-bottom:0pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">On the phone go to left-menu-&gt;Watch-&gt;Wear Os Config. Your watch should be displayed in the spinner. Press &quot;Init watch app&quot;;</span></p></li><li style="list-style-type: disc"><p style="margin-left:36pt;text-indent:-18pt;margin-top:0pt;margin-bottom:0pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">If everything went well, in both Juggluco&apos;s a TCP connection is configured and all data on the phone is sent to the watch. This can take a long time if you were using Juggluco for a long time. You can check if the TCP </span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">connection is configured by looking in the Mirror dialog (phone: left middle menu-&gt;Mirror, watch: left-menu-&gt;Mirror). A connection with the same id as shown in the spinner for your watch should be shown. On the watch is should also contain the IP of the ph</span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">one. If the are not there or the watch side doesn&apos;t contain an IP, press again on &quot;Init watch app&quot;. If it still isn&apos;t there, check the Bluetooth connection and the phone app responsible for the connection to your watch. (When the watch already has received</span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000"> data, pressing &quot;Init watch app&quot; has the effect of re-sending all, so you could as well re-install the watch version of Juggluco. Later on, if the right IP is not shown, you should on the phone turn the external connection (WIFI or Mobile data) off and on.</span></p></li><li style="list-style-type: disc"><p style="margin-left:36pt;text-indent:-18pt;margin-top:0pt;margin-bottom:0pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">If everything went well, the same data, as displayed on the phone version of Juggluco, is displayed</span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000"> on the watch version of Juggluco. Every new glucose value received by the phone is sent via TCP to the watch. Some settings like unit, glucose alarm levels and reminders are also transmitted to the watch. Later changes should be made on the watch itself. </span></p></li><li style="list-style-type: disc"><p style="margin-left:36pt;text-indent:-18pt;margin-top:0pt;margin-bottom:0pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">If you have a sma</span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">rtwatch with good Bluetooth connectivity and you like to receive glucose values on your watch without having to carry your phone, you can connect the watch version of Juggluco directly with the sensor. After all values are sent to the watch, you can check </span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000"><b>&quot;Direct sensor-watch connection&quot;</b></span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">. By this, </span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000"><i>&quot;sensor via Bluetooth&quot;</i></span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000"> is turned off in the phone and turned on in the watch. The stream values are now sent from watch to phone as you can check in the Mirror dialog. You can&apos;t change &quot;Direct sensor-watch connection&quot; when watch and phone are not in sync.</span></p></li><li style="list-style-type: disc"><p style="margin-left:36pt;text-indent:-18pt;margin-top:0pt;margin-bottom:0pt;border:none;border-left:none;border-top:none;border-right:none;border-bottom:none;mso-border-between:none"><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">If you want to sent amounts from the watch to the phone, you should reverse the send-direction yourself in the Mirror dialog by unchecking it on the phone and checking it on the watch. On the phone &quot;</span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000"><i>Receive from</i></span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">&quot; should also be set. If everything isn&apos;t set exactly right, it doesn&apos;t work. &quot;Don&apos;t change amounts&quot; should be changed. The labels of </span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000"><i>amounts</i></span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">are always sent with the amounts. If you change the direction of the transmission of amounts from watch to phone, you can&apos;t change the labels. It shouldn&apos;t be too easy;</span></p></li></ul><p style="margin-top:0pt;margin-bottom:0pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">If the sensor has a direct Bluetooth connection with the watch and it&apos;s values are sent to a smartphone, scanned values should also be sent from the phone to the watch and the stream val</span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">ues should be synced before scanning the sensor with Juggluco (the settings are configured automatically this way.) Otherwise, old values could be sent back to the watch or modified authentication information is not sent to the watch, which will result in </span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000"><i>Unlock key</i></span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000"> errors.</span></p><p style="margin-top:0pt;margin-bottom:0pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">Changes to the connection should also only be made when the data is synchronized; the data on phone and watch should be complete copies (with the exception that you can leave out </span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000"><u>all</u></span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">amount data).</span></p><p style="margin-top:0pt;margin-bottom:0pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">The first time, when a lot of data has to be transferred from smartphone to watch, you can attach the watch to the charger. My watch turns on WIFI when it is attached to the charger.</span></p><p style="margin-top:0pt;margin-bottom:0pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'liberation serif  \';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000"><b>Watch-Phone connection</b></span></p><p style="margin-top:0pt;margin-bottom:0pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">At initialization, when all data are sent from phone to watch, you need a Wi-Fi connection between watch and phone. Later data is sent in small pieces via TCP. On my watch that is redirected through Bluetooth, but only when the ph</span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">one has an external connection, for example Wi-Fi to your home network, a mobile data connection or a portable hotspot. Otherwise the connection between phone and watch stops after some time, because Wi-Fi is turned off by the system to save battery power.</span></p><p style="margin-top:0pt;margin-bottom:0pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">Juggluco itself detects the IPs of the other side, so you don&apos;t need to set them. If you switch from Wi-Fi to mobile data, </span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">the IPs are changed automatically. Sometimes you have to switch Wi-Fi or mobile data off and on on your smartphone before it works (Juggluco determines the IP at the moment Wi-Fi or mobile data is turned on, but sometimes the IP is then not available yet.)</span></p><p style="margin-top:0pt;margin-bottom:0pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">Automatic determination of the IP of the other side is specific for the connection with a WearOS watch; for other Mirror connections you still need to specify the IPs of the other side.</span></p><p style="margin-top:0pt;margin-bottom:0pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'liberation serif  \';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000"><b>Watch face</b></span></p><p style="margin-top:0pt;margin-bottom:0pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">Juggluco for Wear </span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">OS includes a watch face that shows your current glucose level besides the time and up to four complications. To make use of it you have to select this watch face for example in your watch companion app under &quot;downloaded&quot;. Normally you will see the last gl</span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">ucose value when the screen wakes up. When the display is in ambient (always on) mode, the glucose value is only updated when the minute indicator is increased or you press a button or raise your arm. So the displayed value can be up to one minute delayed.</span></p><p style="margin-top:0pt;margin-bottom:0pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">There is also a complication that uses the Glucodata broadcast of the WearOS version to display the glucose value in every watch face that accepts the complication: </span><a href="https://github.com/pachi81/GlucoDataHandler/releases" title="https://github.com/pachi81/GlucoDataHandler/releases"><span style="font-family:\'Times New Roman\';font-size:12pt;color:#0000ff;mso-style-textfill-fill-color:#0000ff"><u>https://github.com/pachi81/GlucoDataHandler/releases</u></span></a></p><p style="margin-top:0pt;margin-bottom:0pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">A third option in to turn on </span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000"><i>Floating Glucose</i></span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000"> in Juggluco&apos;s settings on the watch. When Juggluco has the right permissions, a glucos</span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">e value is displayed over other apps. This way you can see your current glucose value while using arbitrary watch faces or apps that monitor your activity. For more information see, in the phone version of Juggluco, left menu -&gt; Settings -&gt; Floating glucose -&gt; Help.</span></p><p style="margin-top:0pt;margin-bottom:0pt;border:none;border-left:none;border-top:none;border-right:none;border-bottom:none;mso-border-between:none"><span style="font-family:\'Arial\';font-size:11pt;color:#000000;mso-style-textfill-fill-color:#000000"><br style="mso-special-character:line-break;"/><span>&nbsp;</span></span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">&nbsp;</span><span style="font-family:\'Arial\';font-size:11pt;color:#000000;mso-style-textfill-fill-color:#000000"><br style="mso-special-character:line-break;"/><span>&nbsp;</span></span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">&nbsp;</span></p>]]>
+
+  <p><h1>Wear Os</h1></p>
+  <p><strong>Direct sensor-watch connection</strong>: This determines whether the watch should be directly connected with the sensor. This can only be changed when watch and phone are in sync. Use Mirror-&gt;Sync and Reinit on phone and watch, to sync phone and watch.</p>
+  <p><strong>Init watch app</strong>: This should be pressed once after Juggluco is installed on the WearOS watch and is running.</p>
+  <p><strong>Defaults</strong>: This sets the connection settings to its default values. This consists of the settings that can be changed in Left menu-&gt;Mirror on the watch and left middle menu-&gt;Mirror on the phone. It consists of settings like "Active only" and "Scans\'. This button can be pressed when the settings have changed accidentally by water of the shower or during sleep. If you reset by reinstalling the watch version or clearing data, then you also need to remove the mirror connection on the phone.</p>
+  <p>A special version of Juggluco can run directly on a Wear Os watch. It needs an Android smartphone with NFC to scan the sensor and via a TCP connection this data is sent to the Wear OS watch. Hereafter there are two possibilities:</p>
+  <ol>
+    <li>
+      <p>The sensor stays connected with the smartphone and the smartphone sends every glucose value it receives via Bluetooth to the Wear OS watch via TCP;</p>
+    </li>
+    <li>
+      <p>It is also possible to directly connect the sensor with the Wear OS watch. For this you need a Wear OS watch with good Bluetooth connectivity.</p>
+    </li>
+  </ol>
+  <p>You can get Juggluco for Wear OS from Google Play on your watch. Some pictures are shown at <a href="https://www.juggluco.nl/JugglucoWearOS/index.html">https://www.juggluco.nl/JugglucoWearOS</a></p>
+  <p>To get it working do the following:</p>
+  <ul>
+    <li>
+      <p>Ensure that both Bluetooth and WIFI are working on watch and phone;</p>
+    </li>
+    <li>
+      <p>See that the watch has enough free storage space and RAM left. It is possible that Juggluco has to be reinstalled if the device runs out of storage space at a critical moment;</p>
+    </li>
+    <li>
+      <p>Make the phone version of Juggluco working with the sensor. You have to scan the sensor a few times with "Sensor via Bluetooth" set. Receiving glucose values on the phone via Bluetooth is not necessary;</p>
+    </li>
+    <li>
+      <p>Install the Wear OS version of Juggluco on your Wear Os watch and start it;</p>
+    </li>
+    <li>
+      <p>On the phone go to left-menu-&gt;Watch-&gt;Wear Os Config. Your watch should be displayed in the spinner. Press "Init watch app";</p>
+    </li>
+    <li>
+      <p>If everything went well, in both Juggluco\'s a TCP connection is configured and all data on the phone is sent to the watch. This can take a long time if you were using Juggluco for a long time. You can check if the TCP connection is configured by looking in the Mirror dialog (phone: left middle menu-&gt;Mirror, watch: left-menu-&gt;Mirror). A connection with the same id as shown in the spinner for your watch should be shown. On the watch is should also contain the IP of the phone. If the are not there or the watch side doesn\'t contain an IP, press again on "Init watch app". If it still isn\'t there, check the Bluetooth connection and the phone app responsible for the connection to your watch. (When the watch already has received data, pressing "Init watch app" has the effect of re-sending all, so you could as well re-install the watch version of Juggluco. Later on, if the right IP is not shown, you should on the phone turn the external connection (WIFI or Mobile data) off and on.</p>
+    </li>
+    <li>
+      <p>If everything went well, the same data, as displayed on the phone version of Juggluco, is displayed on the watch version of Juggluco. Every new glucose value received by the phone is sent via TCP to the watch. Some settings like unit, glucose alarm levels and reminders are also transmitted to the watch. Later changes should be made on the watch itself.</p>
+    </li>
+    <li>
+      <p>If you have a smartwatch with good Bluetooth connectivity and you like to receive glucose values on your watch without having to carry your phone, you can connect the watch version of Juggluco directly with the sensor. After all values are sent to the watch, you can check <strong>"Direct sensor-watch connection"</strong>. By this, <i>"sensor via Bluetooth"</i> is turned off in the phone and turned on in the watch. The stream values are now sent from watch to phone as you can check in the Mirror dialog. You can\'t change "Direct sensor-watch connection" when watch and phone are not in sync.</p>
+    </li>
+    <li>
+      <p>If you want to sent amounts from the watch to the phone, you should reverse the send-direction yourself in the Mirror dialog by unchecking it on the phone and checking it on the watch. On the phone "<i>Receive from</i>" should also be set. If everything isn\'t set exactly right, it doesn\'t work. "Don\'t change amounts" should be changed. The labels of <i>amounts</i>are always sent with the amounts. If you change the direction of the transmission of amounts from watch to phone, you can\'t change the labels. It shouldn\'t be too easy;</p>
+    </li>
+  </ul>
+  <p>If the sensor has a direct Bluetooth connection with the watch and it\'s values are sent to a smartphone, scanned values should also be sent from the phone to the watch and the stream values should be synced before scanning the sensor with Juggluco (the settings are configured automatically this way.) Otherwise, old values could be sent back to the watch or modified authentication information is not sent to the watch, which will result in <i>Unlock key</i> errors.</p>
+  <p>Changes to the connection should also only be made when the data is synchronized; the data on phone and watch should be complete copies (with the exception that you can leave out allamount data).</p>
+  <p>The first time, when a lot of data has to be transferred from smartphone to watch, you can attach the watch to the charger. My watch turns on WIFI when it is attached to the charger.</p>
+  <p><strong>Watch-Phone connection</strong></p>
+  <p>At initialization, when all data are sent from phone to watch, you need a Wi-Fi connection between watch and phone. Later data is sent in small pieces via TCP. On my watch that is redirected through Bluetooth, but only when the phone has an external connection, for example Wi-Fi to your home network, a mobile data connection or a portable hotspot. Otherwise the connection between phone and watch stops after some time, because Wi-Fi is turned off by the system to save battery power.</p>
+  <p>Juggluco itself detects the IPs of the other side, so you don\'t need to set them. If you switch from Wi-Fi to mobile data, the IPs are changed automatically. Sometimes you have to switch Wi-Fi or mobile data off and on on your smartphone before it works (Juggluco determines the IP at the moment Wi-Fi or mobile data is turned on, but sometimes the IP is then not available yet.)</p>
+  <p>Automatic determination of the IP of the other side is specific for the connection with a WearOS watch; for other Mirror connections you still need to specify the IPs of the other side.</p>
+  <p><strong>Watch face</strong></p>
+  <p>Juggluco for Wear OS includes a watch face that shows your current glucose level besides the time and up to four complications. To make use of it you have to select this watch face for example in your watch companion app under "downloaded". Normally you will see the last glucose value when the screen wakes up. When the display is in ambient (always on) mode, the glucose value is only updated when the minute indicator is increased or you press a button or raise your arm. So the displayed value can be up to one minute delayed.</p>
+  <p>There is also a complication that uses the Glucodata broadcast of the WearOS version to display the glucose value in every watch face that accepts the complication: <a href="https://github.com/pachi81/GlucoDataHandler/releases">https://github.com/pachi81/GlucoDataHandler/releases</a></p>
+  <p>A third option in to turn on <i>Floating Glucose</i> in Juggluco\'s settings on the watch. When Juggluco has the right permissions, a glucose value is displayed over other apps. This way you can see your current glucose value while using arbitrary watch faces or apps that monitor your activity. For more information see, in the phone version of Juggluco, left menu -&gt; Settings -&gt; Floating glucose -&gt; Help.</p>
+  <p>&nbsp;&nbsp; &nbsp;&nbsp;</p>
+]]>
 </string>
 <string name="about" >
 <![CDATA[
@@ -1536,7 +1644,7 @@ it wasn\'t done in the previous 20 minutes. You can also manually send
 it to Libreview by pressing <i>&quot;</i><i><b>Send now</b></i><i>&quot;</i>.</p>
 <p style="line-height: 100%; margin-bottom: 0in">Beside glucose
 values, amounts can also be sent to Libreview. For this you need to
-touch &quot;<i><b>Send amounts</b></i>&quot; and specify what each
+touch &quot;<i><b><a href="https://www.juggluco.nl/Jugglucohelp/librenumhelp.html">Send amounts</a></b></i>&quot; and specify what each
 label means.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>Immediate</b>:
 Send glucose values to Libreview immediately when they arrive from
@@ -1586,9 +1694,9 @@ previous one, to imitate the one sensor policy of Librelink. This
 means that when you run multiple sensors at a time and a later added
 one ends earlier than an earlier added sensor, this earlier sensor
 will send no data anymore to Libreview.</p>
-<p><b>Get Account ID</b>: If you only want to receive the LibreView
+<p><b><a href="https://www.juggluco.nl/Jugglucohelp/getaccountidhelp.html">Get Account ID</a></b>: If you only want to receive the LibreView
 account ID, but not send data to Libreview, you can fill in your
-E-Mail address and Password and press on &quot;<i>Get Account ID</i>&quot;.
+E-Mail address and Password and press on &quot;<i><a href="https://www.juggluco.nl/Jugglucohelp/getaccountidhelp.html">Get Account ID</a></i>&quot;.
 On the same line before this button, the Account ID will be shown
 (this can take some time and the screen is not refreshed
 automatically). Retrieving the Account ID from the LibreView server
@@ -1614,7 +1722,7 @@ know it to communicate with the watch app. To specify a different
 identifier press <b>ID</b> and type the 32 character hex string.
 Juggluco on one device can only be connected to one watch app on one
 watch. Changes will lead to loss of data.</p>
-<h2 class="western">Shortcuts</h2>
+<h2 class="western"><a href="https://www.juggluco.nl/Jugglucohelp/shortcuthelp.html">Shortcuts</a></h2>
 <p style="line-height: 100%; margin-bottom: 0in">Shortcuts are sent
 to the Garmin watch app Kerfstok to easily insert certain values.</p>
 <h2 class="western">Dark mode</h2>
@@ -1629,7 +1737,7 @@ should be white on black instead of black on white.</p>
 <![CDATA[
 <p>Set &quot;<i>Send amounts</i>&quot;,
 to send Amounts to Libreview. Before you can switch on &quot;<i>Send
-amounts</i>&quot;, you need to specify for every label how the
+amounts</i>&quot;, you need to specify for <a href="https://www.juggluco.nl/Jugglucohelp/setlibrenumtype.html">every label</a> how the
 amounts entered under that label should be sent to Libreview. The
 labels themselves can be created, modified and deleted in Left
 menu-&gt;Settings-&gt;&quot;Number Labels&quot;. 
@@ -1743,7 +1851,7 @@ values from Juggluco. It can be used by xDrip watches and some
 Nightscout apps.</p>
 <p style="line-height: 100%; margin-bottom: 0in">Using apps that are
 made to make use of the xDrip webserver is relatively easy. Just
-check active. Hereafter they can receive glucose from localhost on
+check active. Hereafter they can receive glucose from 127.0.0.1 on
 port 17580. Nightscout server URL: http://127.0.0.1:17580 
 </p>
 <p style="line-height: 100%; margin-bottom: 0in">Also, some
@@ -1853,11 +1961,11 @@ select a file containing the private key. See above.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><strong>Full Chain</strong>:
 select a file containing the Full Chain, see above.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><strong>Local only</strong>:
-the http server can only be accessed with localhost. This doesn\'t
+the http server can only be accessed with localhost (127.0.0.1). This doesn\'t
 apply to https.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>Give Amounts</b>:
 make it possible to receive the entered amounts using
-<a href="http://localhost:17580/api/v1/treatments?count=3">http://localhost:17580/api/v1/treatments?count=3</a>.
+<a href="http://127.0.0.1:17580/api/v1/treatments?count=3">http://127.0.0.1:17580/api/v1/treatments?count=3</a>.
 (You have to specify for each label what has to be done with it.
 Previously this was the same as for Libreview, after version 4.18.0
 you can place the labels in different categories for Libreview and
@@ -1869,7 +1977,7 @@ Juggluco. In xDrip you can do this in two ways:</p>
 	<i>&quot;Nightscout Follower&quot;</i><span style="font-variant: normal">
 	</span><span style="font-variant: normal"><span style="font-style: normal">and
 	giving as “Follow URL”</span></span><i>,</i><span style="font-variant: normal">
-	</span><span style="font-variant: normal"><span style="font-style: normal"><a href="http://localhost:17580/api/v1/treatments?count=3">http://127.0.0.1:17580</a>
+	</span><span style="font-variant: normal"><span style="font-style: normal"><a href="http://127.0.0.1:17580/api/v1/treatments?count=3">http://127.0.0.1:17580</a>
 	and check </span></span>“<i>Download Treatments”.</i><span style="font-variant: normal">
 	</span>
 	</p>

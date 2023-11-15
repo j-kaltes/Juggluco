@@ -105,16 +105,20 @@ void showexport(MainActivity activity,int width,int height) {
 		help.setOnClickListener(v-> tk.glucodata.help.help(R.string.helpexport,activity));
 
 		exportlabel=new TextView(activity);
-		exportlabel.setElegantTextHeight(true);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			exportlabel.setElegantTextHeight(true);
+		}
 		exportlabel.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
 //		exportlabel.setMaxWidth((int)(width*.45f));
 //		exportlabel.setMinLines(3);
 
 		
-		exportlabel.setLayoutParams(new ViewGroup.LayoutParams(  (int)(width*(smallScreen?0.6f:.43f)), ViewGroup.LayoutParams.WRAP_CONTENT));
+		exportlabel.setLayoutParams(new ViewGroup.LayoutParams(  (int)(width*(smallScreen?0.6f:.43f)), WRAP_CONTENT));
 //		exportlabel.setLayoutParams(new ViewGroup.LayoutParams( ViewGroup.LayoutParams.MATCH_PARENT,  WRAP_CONTENT));
 		exportlabel.setSingleLine(false);
-		exportlabel.setBreakStrategy(BREAK_STRATEGY_SIMPLE);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+			exportlabel.setBreakStrategy(BREAK_STRATEGY_SIMPLE);
+		}
 		final int rand=Math.round(5*density);
 		final int leftright=Math.round(2*density);
 		exportlabel.setPadding(leftright,rand,0,rand);

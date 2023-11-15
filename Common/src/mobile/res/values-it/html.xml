@@ -838,7 +838,7 @@ creata per comunicare col sensore. Verr&agrave; impostato anche
 l\'indirizzo del dispositivo.</P>
 ]]>
 </string>
-<string name="watchhelp" >
+<string name="kerfstok" >
 <![CDATA[
 
 <H1 CLASS="western">Kerfstok</H1>
@@ -1136,7 +1136,7 @@ saranno mostrati dello stesso colore.</P>
 <![CDATA[
 
 <H1 CLASS="western">Statistiche</H1>
-<P><SPAN LANG="it-IT">Alcune statistiche sono prese da <A HREF="https://www.healthline.com/diabetesmine/ambulatory-glucose-profile">AGP</A>
+<P><SPAN LANG="it-IT">Alcune statistiche sono prese da <A HREF="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8991298">AGP</A>
 senza licenza, con qualche piccola modifica.</SPAN></P>
 <P>Il numero di giorni analizzato pu&ograve; essere modificato
 premendo il bottone <B>Giorni</B><SPAN STYLE="font-weight: normal">.

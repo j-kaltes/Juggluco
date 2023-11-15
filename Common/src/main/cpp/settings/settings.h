@@ -20,9 +20,7 @@
 
 
 #pragma once
-#ifndef NDK_DEBUG
-#define CONV18 1
-#endif
+#define CONV18 1 //Minimally different and 18 fits better
 #ifdef CONV18
 static constexpr const double convfactor=180.0;
 #else
@@ -202,7 +200,7 @@ struct Tings {
 	uint32_t lastlibretime;
 	std::array<char,36> libreviewAccountID;
 	char _nullchar1;
-	int8_t empty1;
+	uint8_t librecountry;
 	int16_t empty2;
 	int32_t empty3;
 	int32_t floatglucose;
@@ -256,9 +254,18 @@ struct Tings {
 	void setdefault() {
 		memcpy(watchid,defaultid,sizeof(watchid));
 		};
+		/*
 	bool isLibreMmolL() {
 		if(!libreunit) libreunit=unit==1?1:2;
 		return unit==1;
+		} */
+	bool isLibreMmolL() {
+		return !(getLibreCountry()&1);
+		}
+	int  getLibreCountry() {
+		if(!librecountry||librecountry>4) 
+			librecountry=unit==1?1:2;
+		return librecountry-1;
 		}
 	};
 
@@ -351,6 +358,7 @@ Settings(const char *settingsname,const char *base,const char *country): Mmap(se
 		return;
 		}
 
+	if(data()->initVersion<20) { // set in Applic.initbroadcasts, startjuggluco and initinjuggluco 
 	if(data()->initVersion<18) { // set in Applic.initbroadcasts, startjuggluco and initinjuggluco 
 	if(data()->initVersion<17) { 
 	     memcpy(data()->Nightnums,data()->librenums, sizeof(Tings::ToLibre)*data()->varcount);
@@ -432,6 +440,23 @@ Settings(const char *settingsname,const char *base,const char *country): Mmap(se
 		   }
 		   data()->libreinit=0; //reinit during switch to 2.10.1
 		   }
+		   /*
+		 if(!strcasecmp(country,"GB")) {
+			data()->libreviewDeviceID[0]='\0';
+		   	data()->libreinit=0; 
+			data()->librecountry=3;
+			}
+		else {
+			 if (!strcasecmp(country, "FR")) {
+				 data()->libreviewDeviceID[0] = '\0';
+				 data()->libreinit = 0;
+				 data()->librecountry = 4;
+			 } else {
+				 data()->librecountry = data()->libreunit;
+			 }
+		 } */
+		 data()->librecountry = data()->libreunit;
+		}
 	setconvert(country);
 
 	 showui=getui();

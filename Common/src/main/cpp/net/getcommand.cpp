@@ -118,7 +118,7 @@ for(int it=0;it<len;) {
 		}
 	senddata_t *data=datain+it;
 	uint16_t *us=reinterpret_cast<uint16_t*>(data),command=*us;
-	LOGGERTAG("%d com=%d %d\n",sock,command,it);
+	LOGGERTAG("%d com=%s (%d) %d\n",sock,command<size(comlabels)?comlabels[command]:"error",command,it);
  
 	bool ret=false;
 	if(!(host->receivefrom&2)&&command!=sbackupstop&&command!=swakeupstream&&command!=sbackup&&command!=sack)  {

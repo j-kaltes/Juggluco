@@ -1029,7 +1029,7 @@ static bool	sendlastpos(crypt_t*pass,int sock,uint16_t dbase,uint32_t lastpos) {
 	}
 
 //std::unique_ptr<char[]> newnumsfile;
-//static void renamefromident(std::string_view base,identtype ident) {
+//static void renamefromident(std::string_view base,identtype ident) 
 bool numbackupinit(const numinit *nums) {
 	LOGARTAG("numbackupinit");
 	const identtype  newident=nums->ident;

@@ -26,6 +26,7 @@
 #include <arpa/inet.h>
        #include <sys/socket.h>
               #include <unistd.h>
+       #include <netinet/tcp.h>
 
 #include <iostream>
 #include <string.h>
@@ -167,6 +168,21 @@ void sendtimeout(int sock,int secs) {
 	tv.tv_usec = 0;
 	tv.tv_sec = secs;
 	setsockopt(sock, SOL_SOCKET, SO_SNDTIMEO , (const char*)&tv, sizeof tv);
+
+ const int  user_timeout = 95000;
+  if (setsockopt(sock, IPPROTO_TCP, TCP_USER_TIMEOUT, &user_timeout, sizeof(user_timeout))) {
+		flerrortag("setsockopt(%d,TCP_USER_TIMEOUT, ) failed",sock);
+  }
+  int retalive=-7;
+  socklen_t retlen=sizeof(retalive);	
+  if(getsockopt(sock, IPPROTO_TCP, TCP_USER_TIMEOUT, &retalive, &retlen)) {
+	flerrortag("getsockopt(%d,TCP_USER_TIMEOUT, ) failed",sock);
+      }
+ else {
+	  LOGGER("USER_TIMEOUT=%d\n",retalive);
+	  }
+
+
 	}
 //extern void getmyname(int sock) ;
 

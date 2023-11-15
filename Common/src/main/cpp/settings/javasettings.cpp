@@ -1480,9 +1480,13 @@ extern "C" JNIEXPORT jfloat  JNICALL   fromjava(getVoicePitch)(JNIEnv *env, jcla
 extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getVoiceActive)(JNIEnv *env, jclass cl) {
 	return settings->data()->voiceactive;
 	}
-
+/*
 extern "C" JNIEXPORT jboolean  JNICALL   fromjava(isLibreMmol)(JNIEnv *env, jclass cl) {
 	return settings->data()->isLibreMmolL();
+	} */
+
+extern "C" JNIEXPORT jint  JNICALL   fromjava(getLibreCountry)(JNIEnv *env, jclass cl) {
+	return settings->data()->getLibreCountry();
 	}
 
 

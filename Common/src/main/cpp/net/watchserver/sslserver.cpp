@@ -306,8 +306,8 @@ bool securewatchcommands(SSL *ssl) {
 	struct recdata outdata;
 	if(sslstopconnection)
 		return false;
-	bool watchcommands(char *rbuf,int len,recdata *outdata) ;
-	if(!watchcommands(rbuf, len,&outdata) ) {
+bool watchcommands(char *rbuf,int len,recdata *outdata,bool secure) ;
+	if(!watchcommands(rbuf, len,&outdata,true) ) {
 		sslservererror(ssl);
 		return false;
 		}

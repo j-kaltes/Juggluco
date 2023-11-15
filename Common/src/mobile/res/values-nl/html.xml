@@ -983,7 +983,7 @@ Android in plaats van Juggluco de verbinding maken met de sensor.</span></span><
 </p>
 ]]>
 </string>
-<string name="watchhelp" >
+<string name="kerfstok" >
 <![CDATA[
 <h1>Kerfstok</h1>
 <p style="line-height: 100%; margin-bottom: 0in">Dit schermpje dient
@@ -1230,9 +1230,7 @@ hoeveelheid wordt nu in die kleur weergegeven.</p>
 <string name="stathelp" >
 <![CDATA[
 <h1>Statistiek</h1>
-<p style="line-height: 100%; margin-bottom: 0in">Enige statistieken
-ontnomen aan <a href="https://www.healthline.com/diabetesmine/ambulatory-glucose-profile">AGP</a>,
-zonder licentie, met wat kleine wijzigingen.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Enige statistieken ontnomen aan <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8991298" >AGP</a> met wat kleine wijzigingen.</p>
 <p style="line-height: 100%; margin-bottom: 0in">Het aantal
 geanalyseerde dagen kan veranderd worden met de <b>Dagen</b> knop. De
 geanalyseerde periode eindigt met het tijdstip van de rechterkant van

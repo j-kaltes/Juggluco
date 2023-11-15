@@ -237,18 +237,50 @@ void receiversockopt(int new_fd) {
 	   if(setsockopt(new_fd, SOL_SOCKET, SO_KEEPALIVE, &keepalive, sizeof(keepalive)) < 0) {
 		flerrortag("setsockopt(%d,SO_KEEPALIVE, ) failed",new_fd);
 		 }
+	  int retalive=-4;
+	socklen_t retlen=sizeof(retalive);	
+
+	   if(getsockopt(new_fd, SOL_SOCKET, SO_KEEPALIVE, &retalive, &retlen) < 0) {
+		flerrortag("getsockopt(%d,SO_KEEPALIVE, ) failed",new_fd);
+		 }
+	else
+		  LOGGER("KEEPALIVE=%d\n",retalive);
 	   const int keepcnt = 1;
-	if(setsockopt(new_fd, IPPROTO_TCP, TCP_KEEPCNT, &keepcnt, sizeof keepcnt)<0) {
+	if(setsockopt(new_fd, IPPROTO_TCP, TCP_KEEPCNT, &keepcnt, sizeof(keepcnt))<0) {
 		flerrortag("setsockopt(%d,TCP_KEEPCNT ) failed",new_fd);
 	    }
+	retlen=sizeof(retalive);	
+	if(getsockopt(new_fd, IPPROTO_TCP, TCP_KEEPCNT, &retalive, &retlen)<0) {
+		flerrortag("getsockopt(%d,TCP_KEEPCNT ) failed",new_fd);
+	    }
+	   else
+	  LOGGER("KEEPCNT=%d\n",retalive);
+	  /*
+	   if(setsockopt(new_fd, IPPROTO_TCP, TCP_SYNCNT, keepcnt)<0)  {
+		flerrortag("setsockopt(%d,TCP_SYNCNT) failed",new_fd);
+	   	} */
 	   const int keepidle = 50;
 	   if(setsockopt(new_fd, IPPROTO_TCP, TCP_KEEPIDLE, &keepidle, sizeof(keepidle)) < 0) {
 		flerrortag("setsockopt(%d,TCP_KEEPIDLE, ) failed",new_fd);
 		 }
+	retlen=sizeof(retalive);	
+
+	   if(getsockopt(new_fd, IPPROTO_TCP, TCP_KEEPIDLE, &retalive, &retlen) < 0) {
+		flerrortag("getsockopt(%d,TCP_KEEPIDLE, ) failed",new_fd);
+		 }
+	else
+	  LOGGER("KEEPIDLE=%d\n",retalive);
 	   const int keepintvl = 45;
 	   if(setsockopt(new_fd, IPPROTO_TCP, TCP_KEEPINTVL, &keepintvl, sizeof(keepintvl)) < 0) {
 		flerrortag("setsockopt(%d,TCP_KEEPINTVL, ) failed",new_fd);
 		 }
+	retlen=sizeof(retalive);	
+	   if(getsockopt(new_fd, IPPROTO_TCP, TCP_KEEPINTVL, &retalive, &retlen) < 0) {
+		flerrortag("getsockopt(%d,TCP_KEEPINTVL, ) failed",new_fd);
+		 }
+	else
+	  LOGGER("KEEPINTVL=%d\n",retalive);
+
 extern void sendtimeout(int sock,int secs);
 	 sendtimeout(new_fd,60);
 extern void receivetimeout(int sock,int secs) ;

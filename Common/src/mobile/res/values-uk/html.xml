@@ -1,215 +1,359 @@
 <resources>
-<string name="ringtone" >
+<string name="NightPost" >
 <![CDATA[
-<h1 class="western">Рінгтон</h1>
-<p style="line-height: 100%; margin-bottom: 0cm">Виберіть
-мелодію дзвінка для будильника чи
-сповіщення та скільки секунд.</p>
-<p style="line-height: 100%; margin-bottom: 0cm"><b>Хвилини
-дезактивовані</b>: якщо низький або
-високий рівень глюкози продовжується,
-сигнал не вмикатиметься знову. Ви можете
-вказати, через скільки хвилин тривога
-повинна бути згенерована знову, якщо
-стан продовжується.</p>
-<p style="line-height: 100%; margin-bottom: 0cm"><b>Звук</b>:
-зробити звук.</p>
-<p style="line-height: 100%; margin-bottom: 0cm"><b>За
-замовчуванням</b>: використовувати звук
-за замовчуванням.</p>
-<p style="line-height: 100%; margin-bottom: 0cm"><span lang="uk-UA"><b>Вибрати</b></span><span lang="uk-UA">:
-вибрати мелодію дзвінка. На деяких
-телефонах Samsung попередньо встановлена
-програма вибору мелодії дає збій, тому
-вам потрібно встановити іншу програму
-мелодії, яку можуть використовувати
-інші програми, наприклад:
-<a href="https://play.google.com/store/apps/details?id=com.centralparkapps.ringo.ringtones">https://play.google.com/store/apps/details?id=com.centralparkapps.ringo.ringtones</a></span></p>
-<p style="line-height: 100%; margin-bottom: 0cm"><b>Вібрація</b>:
-Вібрація</p>
-<p style="line-height: 100%; margin-bottom: 0cm"><b>Турбувати</b>:
-також створювати звук, коли ввімкнено
-режим «<i>Не турбувати</i>». Якщо Juggluco не
-має необхідного дозволу для цього, вас
-буде спрямовано на екран налаштувань
-Android, щоб надати Juggluco цей дозвіл. Увімкнувши
-«<i>Не турбувати</i>» і натиснувши
-«<i>Відтворити</i>», ви можете перевірити,
-чи працюватимуть будильники під час
-«<i>Не турбувати</i>». Це налаштування
-може призвести до ненавмисного ефекту:
-коли будильник спрацьовує під час
-автоматичного режиму «<i>Не турбувати</i>»,
-цей стан не вимикається автоматично.</p>
-<p style="line-height: 100%; margin-bottom: 0cm"><b>Спалах</b>:
-Смартфони з ліхтариком мають можливість
-блимати стільки ж секунд. Зручно, якщо
-рінгтони заборонені та немає чіткої
-політики щодо ліхтариків.</p>
-<p style="line-height: 100%; margin-bottom: 0cm">На таких
-сайтах, як stackoverflow.com, іноді стверджується,
-що деякі смартфони виходять з ладу під
-час використання спалаху без дозволу
-камери, якщо це так, ви можете ввімкнути
-дозвіл камери.</p>
+<p>Завантажити на сервер
+Nightscout.</p>
+<p><span lang="uk-UA">У більшості випадків ви
+також можете використовувати веб-сервер
+у Juggluco або <a href="https://www.juggluco.nl/Juggluco/cmdline">juggluco-server</a>,
+лише AAPS і NSclient відмовляються працювати,
+якщо вони не підключені до <a href="https://github.com/nightscout/cgm-remote-monitor">cgm-remote-monitor</a>.
+Веб-сервер у Juggluco також надає суми у
+вигляді процедур Nightscout
+(<a href="https://www.juggluco.nl/Juggluco/webserver.html">https://www.juggluco.nl/Juggluco/webserver.html</a>),
+а завантажувач завантажує лише значення
+глюкози.</span></p>
+<p>Усі значення потоку завантажуються
+на сервер Nightscout у момент надходження.
+Якщо використовується кілька датчиків,
+завантажуються всі значення всіх
+датчиків. Деякі програми/циферблати/віджети
+годинника Garmin припускають, що значення
+розташовуються з інтервалом у 5 хвилин.
+Коли вони отримують значення глюкози
+з інтервалом в одну хвилину, вони
+відображатимуть лише останню п’яту
+частину кривої. З цієї причини веб-сервер,
+включений у Juggluco, розміщує значення з
+інтервалом у 5 хвилин, за винятком
+випадків, коли для параметра
+«інтервал=секунд» встановлено нижче
+значення.</p>
+<p><b>URL</b>: URL-адреса має бути у формі
+https://hostname:port, наприклад,
+https://myname.herokuapp.com:6789</p>
+<p><b>Активний</b>: увімкнути завантажувач</p>
+<p><b>Повторно надіслати дані</b>: знову
+завантажити всі дані на сервер Nightscout</p>
+<p><b>Надіслати зараз</b>: зазвичай дані
+надсилаються негайно, коли вони надходять
+від датчика або дзеркала. Натисніть цю
+кнопку, якщо з якоїсь причини попередня
+спроба не вдалася.</p>
+<p><a name="tw-target-text"></a>Версія WearOS Juggluco 4.15.0 і
+пізніші також можуть завантажувати
+значення рівня глюкози в Nightscout. Майже
+в усіх випадках краще надсилати їх через
+версію Juggluco на телефоні чи планшеті або
+через сервер Juggluco на комп’ютері. Це
+розряджає батарею, особливо якщо не
+вдається зв’язатися з сервером
+Nightscout, тому вам краще вимкнути Активний,
+коли немає надійного з’єднання.</p>
 ]]>
 </string>
-<string name="reminders" >
+<string name="Nightscouthelp" >
 <![CDATA[
-<h1 class="western">Нагадування</h1>
-<p style="line-height: 100%; margin-bottom: 0cm">Нагадування
-нагадують вам, якщо ви не ввели певну
-суму протягом певного проміжку
-часу.<br/>
-Натиснувши <b>НОВЕ</b>, ви можете
-додати нове нагадування.<br/>
-Вкажіть час
-початку та закінчення періоду часу,
-протягом якого необхідно ввести вказану
-суму під вказаною міткою.<br/>
-Якщо час
-завершення досягнуто, програма перевіряє,
-чи введено принаймні цю суму з указаною
-міткою після часу початку. Якщо ви не
-зареєструвалися, з’явиться сповіщення
-та відтвориться сигнал дзвінка.<br/>
-Наприклад,
-якщо ви вкажете:<br/>
-Левемір 6.0<br/>
-21:30 -
-23:55<br/>
-Вам буде нагадано після 23:55, якщо
-ви не вказали хоча б 6 одиниць Левеміру
-після 21:30 того ж дня.<br/>
-Вже вказані
-нагадування відображаються у списку.
-Торкніться, щоб редагувати.<br/>
-Якщо все
-йде добре, нагадування також працюють
-після перезавантаження Android без
-необхідності запускати Juggluco.</p>
-<p style="line-height: 100%; margin-bottom: 0cm"><br/>
-
+<h1 class="western">Web server</h1>
+<p style="line-height: 100%; margin-bottom: 0cm">Juggluco містить
+веб-сервер, за допомогою якого інші
+програми можуть отримувати значення
+рівня глюкози від Juggluco. Його можна
+використовувати для годинників xDrip і
+деяких програм Nightscout.<br/>
+Користуватися
+програмами, створеними для використання
+веб-сервера xDrip, відносно легко. Просто
+перевірте активність. Після цього вони
+можуть отримувати глюкозу з локального
+хосту на порт 17580. Nightscout server URL:
+http://127.0.0.1:17580 
 </p>
-<p style="line-height: 100%; margin-bottom: 0cm">На деяких
-пристроях Huawei потрібно вказати, що ви
-дозволяєте запускати програму під час
-завантаження. Це робиться в меню
-Налаштування Android -&gt; Акумулятор -&gt;
-Запуск програми. Тут ви вибираєте
-Керувати вручну для Juggluco, щоб увімкнути
-автоматичний запуск і запуск у фоновому
-режимі. Це також необхідно, щоб тривоги
-про втрату сигналу працювали після
-перезавантаження без запуску Juggluco
-користувачем.</p>
-]]>
-</string>
-<string name="connectionoverview" >
-<![CDATA[
-<h1>Дзеркало</h1>
-<p style="line-height: 100%; margin-bottom: 0cm">Надсилати
-дані на інший пристрій або отримувати
-дані з нього. Ви можете підключитися до
-пристрою Android, на якому працює Juggluco, щоб
-відображати дані так само, як тут. Після
-отримання даних сканування дзеркальний
-пристрій також може зв’язатися з
-датчиком через Bluetooth. Щоб переконатися,
-що лише один із пристроїв контактує з
-датчиком, «<i>Датчик через Bluetooth</i>»
-автоматично вимикається, коли значення
-потоку надходять через IP/TCP.<br/>
-На цьому
-екрані після wlan відображається локальна
-IP-адреса WLAN цього пристрою. Ви повинні
-вказати це на іншому пристрої у домашній
-мережі, до якого ви під’єднуєтеся (або
-на модемі, якщо під’єднуєтеся
-віддалено).<br/>
-Після «Порт» ви можете
-змінити TCP-порт, на якому ця програма
-прослуховує з’єднання.</p>
-<p style="line-height: 100%; margin-bottom: 0cm">Натиснувши
-<b>Додати підключення</b>, ви можете
-вказати, з якими хостами підключатися
-та як підключатися.<br/>
-Надійне мережеве
-з’єднання на Android порушується всілякими
-оптимізаціями батареї та фоновими
-обмеженнями. Натискання <b>режиму дрімання</b>
-допоможе вам це змінити.<br/>
-Якщо Juggluco
-функціонує як програма-дзеркало (отримує
-значення рівня глюкози з іншого пристрою,
-на якому запущено Juggluco), ви можете
-натиснути <b>Тривоги</b>, щоб перейти до
-діалогового вікна, де можна вказати
-сигнали тривоги про низький і високий
-рівень глюкози та відповідні
-сповіщення.<br/>
-<b>Дзеркало надсилає суми</b>:
-якщо програма отримує велику кількість
-даних про ліки, їжу та спорт від цієї
-програми, яка працює на іншому пристрої,
-вам не слід додавати або змінювати ту
-саму інформацію тут. Перевірка цього
-робить неможливим.<br/>
-<b>Синхронізація</b>
-надсилає нові дані на підключений
-пристрій, якщо вони доступні, або запитує
-нові дані.</p>
-<p style="line-height: 100%; margin-bottom: 0cm"><b>П</b><b>овторна
-ініціалізація</b>: закриває існуюче та
-створює нове підключення.</p>
-<p style="line-height: 100%; margin-bottom: 0cm"><b>Wifi</b> (лише
-на WearOS): якщо не налаштовано, WearOS через
-деякий час автоматично вимикає WIFI, щоб
-зберегти заряд акумулятора, а Juggluco
-перемикається на використання Bluetooth
-для з’єднання між телефоном і годинником.
-Коли її ввімкнуто, WearOS просять залишити
-WIFI увімкненим, і для її вимкнення
-знадобиться більше часу, але це все одно
-може статися. Налаштування цього
-параметра зазвичай не потрібне, і
-виробники WearOS вважають, що ввімкнення
-WIFI призведе до значного збільшення
-використання акумулятора.</p>
-<p style="line-height: 100%; margin-bottom: 0cm">Існуючи
-підключення відображаються у списку,
-відображається мітка, IP-порт і місяць,
-день і час останньої успішної
-синхронізації.<br/>
-Спосіб використання
-з’єднання скорочено наступним чином:<br/>
-n:
-суми (числа)<br/>
-s: сканує<br/>
-b: потік
-(bluetooth)<br/>
-r: отримати</p>
+<p style="line-height: 100%; margin-bottom: 0cm"><span lang="uk-UA">Також
+цим можуть скористатися деякі послідовники
+Nightscout. xDrip, Diabox і програму <a href="https://github.com/dabear/FloatingGlucose/releases">Windows
+Floating Glucose</a> можна використовувати з
+http, якщо не встановлено параметр «</span><span lang="uk-UA"><i>Лише
+локально</i></span><span lang="uk-UA">». У MacOS те саме
+стосується панелі меню Nightscout, Gluco Status і
+Gluco Tracker (усі в Apple Store). Вам також потрібен
+лише http для <a href="https://github.com/someoneAnyone/Nightscouter">Nightscouter</a>
+і <a href="https://github.com/jonfawcett/LoopFollow">LoopFollow</a>
+(IOS) і <a href="https://github.com/nightscout/nightguard">Nightguard</a>
+(IOS and WatchOS).</span></p>
+<p style="line-height: 100%; margin-bottom: 0cm">Якщо ви хочете
+отримати доступ до Juggluco через Інтернет,
+вам потрібно перенаправити порт зі
+свого модему. Ознайомитись:</p>
+<ul>
+	<li><p style="line-height: 100%; margin-bottom: 0cm"><a href="https://www.makeuseof.com/tag/what-is-port-forwarding-and-how-can-it-help-me"><span lang="uk-UA">https://www.makeuseof.com/tag/what-is-port-forwarding-and-how-can-it-help-me</span></a></p>
+	<li><p style="line-height: 100%; margin-bottom: 0cm"><a href="https://www.juggluco.nl/Juggluco/phones/index.html"><span lang="uk-UA">https://www.juggluco.nl/Juggluco/phones/index.html</span></a></p>
+	<li><p style="line-height: 100%; margin-bottom: 0cm">Середнє
+	ліве меню-&gt;Клон-&gt;Додати підключення-&gt;Довідка</p>
+</ul>
+<p style="line-height: 100%; margin-bottom: 0cm"><span lang="uk-UA">Інші
+послідовники Nightscout використовують лише
+https, і це вимагає, щоб у Juggluco був
+автентифікований ключ SSL для доменного
+імені, яке використовується для доступу
+до Juggluco. Якщо ваша зовнішня IP-адреса має
+пов’язане ім’я хоста, ви можете отримати
+сертифікат безкоштовно через <a href="https://certbot.eff.org/instructions">Certbot</a>
+або <a href="https://www.sslforfree.com/">ZeroSSL</a>. Ви не
+можете використовувати його, якщо ваш
+зовнішній IP не має імені хоста. Ви можете
+отримати безкоштовне доменне ім’я з
+<a href="https://www.freenom.com/">https://www.freenom.com</a>. Я
+спробував, але протягом кількох тижнів
+без будь-якого сповіщення вони просто
+забрали в мене домен, і коли я спробував
+зареєструвати його знову, це мало ціну.
+Ви можете купити ім’я хосту за кілька
+євро на рік (наприклад на
+<a href="https://www.strato.nl/domeinnaam">https://www.strato.nl/domeinnaam</a>).</span></p>
+<p style="line-height: 100%; margin-bottom: 0cm">Якщо ви
+отримали ключові файли від центру SSL,
+ви повинні надати їх Juggluco. Приватний
+ключ можна прочитати, натиснувши
+«<i>Приватний ключ</i>», повний ланцюжок,
+натиснувши «<i>Повний ланцюжок</i>».</p>
+<p style="line-height: 100%; margin-bottom: 0cm">Від ZeroSSL.com я
+отримав три файли: private.key, certificate.crt і
+ca_bundle.crt.</p>
+<p style="line-height: 100%; margin-bottom: 0cm">private.key – це
+приватний ключ, який ви повинні надати
+Juggluco, натиснувши «Приватний ключ».</p>
+<p style="line-height: 100%; margin-bottom: 0cm">Щоб створити
+повний ланцюжок, вам потрібно об’єднати
+certificate.crt і ca_bundle.crt.</p>
+<p style="line-height: 100%; margin-bottom: 0cm">Linux:</p>
+<pre style="margin-bottom: 0.51cm">cat certificate.crt ca_bundle.crt &gt;  fullchain.pem</pre><p style="line-height: 100%; margin-bottom: 0cm">
+Windows cmd.com:</p>
+<pre style="margin-bottom: 0.51cm">copy certificate.crt + ca_bundle.crt  fullchain.pem</pre><p style="line-height: 100%; margin-bottom: 0cm">
+Windows Powershell:</p>
+<p>cat certificate.crt &gt; fullchain.pem<br/>
+cat ca_bundle.crt &gt;&gt;
+fullchain.pem</p>
+<p style="line-height: 100%; margin-bottom: 0cm">Після
+використання Certbot я знайшов приватний
+ключ у /etc/letsencrypt/live/myhostname/privkey.pem<br/>
+і
+повний ланцюжок у
+/etc/letsencrypt/live/myhostname/fullchain.pem. &quot;myhostname&quot;
+- це ім\'я хоста, яке я використовував.</p>
+<p style="line-height: 100%; margin-bottom: 0cm"><span lang="uk-UA">Якщо
+ви просто хочете надіслати значення
+глюкози з одного Android на інший, вам краще
+скористатися функцією <a href="https://www.juggluco.nl/Juggluco/mgdL/index.html#mirror">Клон</a></span>
+<span lang="uk-UA">Juggluco (ліве середнє меню-&gt;Клон).</span></p>
+<p style="line-height: 100%; margin-bottom: 0cm">Android Aps і
+Nsclient не працюють як послідовники
+Juggluco, але ви можете надсилати їм значення
+глюкози за допомогою трансляції xDrip у
+Juggluco (меню зліва-&gt;налаштування-&gt;xDrip
+Broadcast).</p>
+<p style="line-height: 100%; margin-bottom: 0cm"><span lang="uk-UA">Вам
+потрібен SSL для програм Android Diabetes:M,
+<a href="https://play.google.com/store/apps/details?id=se.cornixit.nightwatch">Nightwatch</a>
+і <a href="https://slingithub.github.io/CheckmateWeb">Checkmate</a>,
+Sugarmate (MacOS і IOS) і <a href="https://github.com/JohanDegraeve/xdripswift">Xdrip4ios</a>,
+Shuggah і Cockpit (IOS). Вкажіть URL-адресу сервера
+Nightscout:</span></p>
+<p><i>https://hostname:port</i> 
+</p>
+<p><i>hostname</i> це ім’я хоста автентифікованого
+ключа, який ви надали Juggluco, port — це порт,
+який ви переслали на порт, який ви вказали
+на цьому екрані (за замовчуванням:
+17581).</p>
+<p style="line-height: 100%; margin-bottom: 0cm"><span lang="uk-UA">Веб-сервер
+також можна запустити на комп’ютері з
+ОС Linux. Він отримуватиме свої дані через
+<a href="https://www.juggluco.nl/Juggluco/mgdL/index.html#mirror">дзеркальне
+підключення</a> від Juggluco, підключеного
+до датчика: <a href="https://www.juggluco.nl/Juggluco/cmdline/index.html">https://www.juggluco.nl/Juggluco/cmdline</a>.</span></p>
+<p style="line-height: 100%; margin-bottom: 0cm">Інший телефон
+може підключитися до цього сервера
+через дзеркальне підключення або як
+підписник Nightscout (наприклад, на Iphone). Якщо
+є програма Nightscout, яка не працює з цим
+веб-сервером, повідомте мені. Можливо,
+його можна змусити працювати з деякими
+змінами. (Програми для iOS Nightscout і Nightscout
+X, а також програма для Android NSClient є
+специфічними для однієї конкретної
+серверної програми Nightscout і не працюватимуть
+із Juggluco.)</p>
+<p style="line-height: 100%; margin-bottom: 0cm"><b>api_secret</b>:
+вкажіть, що послідовники повинні
+встановити це значення для елемента
+заголовка http api_secret. У Juggluco 4.9.1 або пізнішої
+версії також працює тестування цього
+секрету, коли підписники використовують
+цей секрет як маркер Nightscout або
+використовують заголовок api-secret із
+секретом, закодованим SHA1.</p>
+<p style="line-height: 100%; margin-bottom: 0cm"><strong><span lang="uk-UA">Видимий</span></strong><span lang="uk-UA">:
+зробити секрет видимим.</span></p>
+<p style="line-height: 100%; margin-bottom: 0cm"><strong><span lang="uk-UA">Port</span></strong><span lang="uk-UA">:
+укажіть мережевий порт, який використовується
+для зв’язку з https-сервером. За замовчуванням
+17581.</span></p>
+<p style="line-height: 100%; margin-bottom: 0cm"><strong><span lang="uk-UA">Зберегти</span></strong><span lang="uk-UA">:
+зберегти зміни Secret або Port.</span></p>
+<p style="line-height: 100%; margin-bottom: 0cm"><strong><span lang="uk-UA">Use
+SSL</span></strong><span lang="uk-UA">: використовувати
+SSL (https). Для SSL вам потрібно надати
+приватний ключ і повний ланцюжок для
+імені хоста, який використовується для
+зв’язку з цією службою.</span></p>
+<p style="line-height: 100%; margin-bottom: 0cm"><strong><span lang="uk-UA">Приватний
+ключ</span></strong><span lang="uk-UA">: виберіть файл,
+що містить закритий ключ. Дивись вище.</span></p>
+<p style="line-height: 100%; margin-bottom: 0cm"><strong><span lang="uk-UA">Повний
+ланцюжок</span></strong><span lang="uk-UA">: виберіть
+файл, що містить повний ланцюжок, див.
+вище.</span></p>
+<p style="line-height: 100%; margin-bottom: 0cm"><strong><span lang="uk-UA">Лише
+локально</span></strong><span lang="uk-UA">: до
+http-сервера можна отримати доступ лише
+через localhost. Це не стосується https.</span></p>
+<p style="line-height: 100%; margin-bottom: 0cm"><span lang="uk-UA"><b>Надайте
+суми</b></span><span lang="uk-UA">: дозволити отримати
+введені суми за допомогою
+<a href="http://localhost:17580/api/v1/treatments?count=3">http://localhost:17580/api/v1/treatments?count=3</a>.
+(Ви повинні вказати для кожної мітки,
+що з нею потрібно зробити. Раніше це
+було так само, як і для Libreview, після версії
+4.18.0 ви можете розмістити мітки в різних
+категоріях для Libreview і цього веб-сервера.)
+Через цей інтерфейс xDrip може отримувати
+суми від Juggluco. У xDrip це можна зробити
+двома способами:</span></p>
+<ol>
+	<li><p style="line-height: 100%; margin-bottom: 0cm"><span style="font-variant: normal"><span lang="uk-UA"><span style="font-style: normal">Візьміть
+	як </span></span></span><span style="font-variant: normal"><span lang="uk-UA"><i>«Апаратне
+	джерело даних», «Послідовник Nightscout» </i></span></span><span style="font-variant: normal"><span lang="uk-UA"><span style="font-style: normal">і
+	вкажіть як </span></span></span><span style="font-variant: normal"><span lang="uk-UA"><i>«Перейти
+	URL»,</i></span></span><span style="font-variant: normal">
+	</span><span style="font-variant: normal"><span lang="uk-UA"><span style="font-style: normal"><a href="http://localhost:17580/api/v1/treatments?count=3">http://127.0.0.1:17580</a>
+	і позначте</span></span></span><span style="font-variant: normal">
+	</span><span style="font-variant: normal"><span lang="uk-UA"><i>«Завантажити
+	лікування»</i></span></span><span style="font-variant: normal">
+	</span>
+	</p>
+	<li><p style="font-variant: normal; font-style: normal; line-height: 100%; margin-bottom: 0cm">
+	Візьміть інше апаратне джерело даних,
+	наприклад Libre (програму з виправленнями),
+	і ввімкніть налаштування-&gt;Завантаження
+	в хмару-&gt;Синхронізація Nightscout (REST-API).
+	Введіть URL-адресу базового API,
+	http://somekey@127.0.0.1:17580/api/v1/ і ввімкніть
+	«Завантажувати процедури». Завантаження
+	в Juggluco неможливе, тому це лише завантажує
+	лікування та генерує деякі повідомлення
+	про помилки.</p>
+</ol>
+<p style="line-height: 100%; margin-bottom: 0cm"><span style="font-variant: normal"><span style="font-style: normal">Якщо
+прапорець «</span></span><span style="font-variant: normal"><i>Лише
+локально</i></span><span style="font-variant: normal"><span style="font-style: normal">»
+знято, ви також можете використовувати
+IP-адресу домашньої мережі телефону, на
+якому запущено Juggluco, і зовнішню IP-адресу
+вашого телефону, коли ви налаштовуєте
+модем на переадресацію на 17580 цього
+телефону. Якщо ви надали Juggluco приватний
+ключ і повний ланцюжок для імені хоста,
+за допомогою якого можна отримати доступ
+до телефону та ввімкнути його за допомогою
+SSL, ви також можете використовувати це
+ім’я хоста та вказаний тут порт,
+використовуючи https замість http.<br/>
+Якщо
+ви хочете завантажити лікування в
+Diabetes:M, ви можете надіслати дані Juggluco в
+Libreview і зберегти дані в Libreview за допомогою
+«З</span></span><span style="font-variant: normal"><i>авантажити
+дані про рівень глюкози</i></span><span style="font-variant: normal"><span style="font-style: normal">»
+та імпортувати ці дані в Diabetes:M за
+допомогою «Дані-&gt;Імпорт з інших
+джерел-&gt;Freestyle». або отримайте
+автентифікований ключ для зовнішнього
+імені хоста вашого телефону та вкажіть
+як посилання на зовнішнє джерело,
+Nightscout із URL-адресою https://yourhostname:Port, де
+ваше ім’я хосту – це ім’я хосту вашого
+телефону, на якому запущено Juggluco, для
+якого ви отримали автентифікований
+ключ а порт — це порт, який ви тут згадали.
+Здається, він не синхронізується
+автоматично, тому в Diabetes:M вам потрібно
+самостійно натиснути «Синхронізувати».<br/>
+</span></span><span style="font-variant: normal"><span style="font-style: normal"><b>Активний</b></span></span><span style="font-variant: normal"><span style="font-style: normal">:
+веб-сервер працює.</span></span></p>
 <p style="line-height: 100%; margin-bottom: 0cm"><br/>
 
 </p>
 <p style="line-height: 100%; margin-bottom: 0cm"><span lang="uk-UA">Для
 отримання додаткової інформації про
-дзеркальні підключення прочитайте
-довідку в розділі «</span><span lang="uk-UA"><i>Додати
-підключення</i></span><span lang="uk-UA">» та див
-<a class="western" href="https://www.juggluco.nl/Juggluco/mmol.html#mirror">https://www.juggluco.nl/Juggluco/mmol.html#mirror</a></span></p>
-<h1>Настільний комп\'ютер</h1>
-<p><span lang="uk-UA">Ви можете запустити програму
-Android Juggluco на комп’ютері з Windows, Macintosh або
-Linux за допомогою емулятора Android (наприклад
-<a class="western" href="https://www.genymotion.com/">Genymotion</a>).
-Juggluco на емуляторі отримує дані через
-з\'єднання Дзеркало від телефону Android,
-підключеного до датчика. Рухи щипків
-(переміщення двох пальців до або від
-одного) можна імітувати, натиснувши
-клавішу (Керування у Genymotion) під час
-переміщення вказівника миші.</span></p>
+команди веб-сервера Nightscout/xDrip, реалізовані
+в Juggluco, див. <a href="https://www.juggluco.nl/Juggluco/webserver.html">https://www.juggluco.nl/Juggluco/webserver.html</a></span></p>
+]]>
+</string>
+<string name="about" >
+<![CDATA[
+<h1>Про Juggluco</h1>
+<p style="margin-bottom: 0cm">Juggluco написав <a href="https://www.juggluco.nl/Juggluco">Jaap
+Korthals Altes</a></p>
+<p style="margin-bottom: 0cm">Крім стандартних
+бібліотек Android, використовуються
+наступні:</p>
+<p style="margin-left: 1.27cm; margin-top: 0.18cm; margin-bottom: 0cm">
+<font face="Symbol"><font size="2" style="font-size: 10pt">·</font></font><span style="font-variant: normal">
+</span>Команди NFC і Bluetooth, специфічні для
+датчиків Abbott FreeStyle Libre, і алгоритми
+інтерпретації, специфічні для датчиків
+FreeStyle Libre. Усі вони без документів;</p>
+<p style="margin-left: 1.27cm; margin-top: 0.18cm; margin-bottom: 0cm">
+<font face="Symbol"><font size="2" style="font-size: 10pt">·</font></font><span style="font-variant: normal">
+</span>Для зв\'язку з годинниками Garmin
+використовується <a href="https://developer.garmin.com/connect-iq/sdk">Connect
+IQ Mobile SDK</a>;</p>
+<p style="margin-left: 1.27cm; margin-top: 0.18cm; margin-bottom: 0cm">
+<font face="Symbol"><font size="2" style="font-size: 10pt">·</font></font><span style="font-variant: normal">
+</span>Графіки створені за допомогою
+<a href="https://github.com/memononen/nanovg">NanoVG</a>;</p>
+<p style="margin-left: 1.27cm; margin-top: 0.18cm; margin-bottom: 0cm">
+<font face="Symbol"><font size="2" style="font-size: 10pt">·</font></font><span style="font-variant: normal">
+</span>Функція дзеркала використовує <a href="https://ascon.iaik.tugraz.at/">Ascon
+authenticated encryption</a>;</p>
+<p style="margin-left: 1.27cm; margin-top: 0.18cm; margin-bottom: 0cm">
+<font face="Symbol"><font size="2" style="font-size: 10pt">·</font></font><span style="font-variant: normal">
+</span>Зв\'язок з датчиками Libre3 використовує
+<a href="https://github.com/intel/tinycrypt">TinyCrypt</a>;</p>
+<p style="margin-left: 1.27cm; margin-top: 0.18cm; margin-bottom: 0cm">
+<font face="Symbol"><font size="2" style="font-size: 10pt">·</font></font><span style="font-variant: normal">
+</span>Вибір кольору є адаптацією <a href="https://github.com/yukuku/ambilwarna">AmbilWarna</a>;</p>
+<p style="margin-left: 1.27cm; margin-top: 0.18cm; margin-bottom: 0cm">
+<font face="Symbol"><font size="2" style="font-size: 10pt">·</font></font><span style="font-variant: normal">
+</span>Підтримка NFC NovoPens є модифікацією
+коду, взятого з xDrip.</p>
+<p style="margin-bottom: 0cm">Juggluco переклав на
+італійською <a href="mailto:matteo.gabriele81@gmail.com">Matteo
+Gabriele</a>.</p>
+<p style="margin-bottom: 0cm">Juggluco переклав на
+португальську Rui Pinheiro.</p>
+<p style="margin-bottom: 0cm">Juggluco переклав на
+польською <a href="mailto:adelis@translaris.pl">Arkadiusz
+Deliś</a>.</p>
+<p style="margin-bottom: 0cm">Juggluco переклав на
+білоруською <a href="mailto:3477734n@gmail.com">Находкін
+Яўген</a></p>
+<p style="margin-bottom: 0cm">Juggluco переклав на французькою Fabrice Delfosse</p>
+<p>Juggluco переклав на українську <a href="mailto:3477734n@gmail.com">Находкін
+Яўген</a> та <a href="mailto:moydiabet@gmail.com">Діма
+Діабетик</a> 
+</p>
 <p style="line-height: 100%; margin-bottom: 0cm"><br/>
 
 </p>
@@ -380,11 +524,6 @@ WIFI або натиснувши Sync. Крім того, зміна
 з’єднання <i><span style="font-weight: normal">Лише
 активний-Лише пасивний</span></i> на обидва
 або навпаки може мати значення.</p>
-<p>Наприклад, підключення годинника до
-телефону за допомогою TCP через Bluetooth
-працює, лише якщо годинник активний, а
-телефон лише пасивний. Через WIFI працює
-в обох напрямках.</p>
 <p>Ви також повинні враховувати зміну
 IP-адрес зі зміною підключення. Наприклад,
 у домашній мережі потрібно використовувати
@@ -396,20 +535,450 @@ IP-адрес зі зміною підключення. Наприклад,
 </p>
 ]]>
 </string>
-<string name="locationpermission" >
+<string name="alarmhelp" >
+<![CDATA[
+<h1>Тривоги</h1>
+<h2 class="western">Тривоги глюкози:</h2>
+<p style="line-height: 100%; margin-bottom: 0cm">Потокові
+значення, отримані через Bluetooth, можна
+використовувати для встановлення тривог
+низького та високого рівня глюкози.</p>
+<h3 class="western">Тривога низького рівня
+глюкози:</h3>
+<p style="line-height: 100%; margin-bottom: 0cm">Значення,
+нижче якого має спрацювати сигнал.</p>
+<h3 class="western">Тривога високого рівня
+глюкози:</h3>
+<p style="line-height: 100%; margin-bottom: 0cm">Значення,
+вище якого має спрацювати сигнал.</p>
+<h3 class="western">Тривога про втрату сигналу:</h3>
+<p style="line-height: 100%; margin-bottom: 0cm">Укажіть,
+через скільки хвилин має спрацювати
+сигнал, якщо значення глюкози не отримано
+через Bluetooth.<br/>
+Сигнали припиняться,
+коли виконується одна з таких умов:</p>
+<p style="line-height: 100%; margin-bottom: 0cm">- Вказана
+тривалість минула;<br/>
+- Перегляд кривої
+торкається;<br/>
+- Торкається сповіщення
+Android Juggluco (у розблокованому стані);<br/>
+-
+Кнопка «Скасувати» торкається сповіщення
+про тривогу в Juggluco.</p>
+<h3 class="western">Доступне значення:</h3>
+<p style="line-height: 100%; margin-bottom: 0cm">Іноді датчик
+не працює. Коли ви ввімкнете це, ви
+отримаєте сповіщення, коли датчик знову
+запрацює, але лише тоді, коли ви побачите,
+що значення відсутнє в самій програмі
+Juggluco. Якщо ви знаєте, що значення було
+відсутнє через сповіщення Juggluco або його
+циферблат, чи не буде викликано сповіщення
+про доступне значення.<br/>
+Для кожного
+будильника ви можете вказати, яку мелодію
+відтворювати та як довго.</p>
+<h3 class="western">Будильник і тривога:</h3>
+<p>Коли встановлено, чи відтворюється
+мелодія дзвінка для низьких, високих і
+втрат сигналу в категорії Android Alarms. Це
+означає, що в налаштуваннях Android його
+гучність керується рівнем гучності
+будильників і не вимикається, коли звук
+усього телефону вимкнено або встановлено
+на вібрацію. Якщо будильник не встановлено,
+використовується рівень гучності
+сигналу дзвінка. Це завжди стосується
+сповіщення про доступне значення.</p>
+<h3 class="western"><br/>
+<br/>
+
+</h3>
+]]>
+</string>
+<string name="battery" >
+<![CDATA[
+<h1 class="western">Налаштування
+споживання енергії:</h1>
+<p style="line-height: 100%; margin-bottom: 0cm"><span lang="uk-UA">Зазвичай,
+коли пристрій Android не використовується,
+він переходить у режим дрімання, щоб
+споживати менше енергії. Якщо вам
+потрібно надійно отримувати значення
+глюкози через Bluetooth або TCP/IP, вам потрібно
+вимкнути оптимізацію акумулятора для
+Juggluco, а іноді й для всього пристрою, щоб
+запобігти вимкненню Juggluco на Android. Багато
+пристроїв мають додаткову оптимізацію
+батареї, активність у фоновому режимі
+та налаштування запуску під час
+завантаження, які потрібно змінити. Ви
+можете знайти їх у налаштуваннях
+Android-&gt;Акумулятор. Перегляньте
+<a href="https://dontkillmyapp.com/">https://dontkillmyapp.com</a>.</span></p>
+<p style="line-height: 100%; margin-bottom: 0cm">Під час
+використання Watch 4 або 5 вам потрібно
+дозволити <i>фонову активність</i> у
+додатку-супутнику Galaxy Wearable, Налаштування
+годинника -&gt; Додатки -&gt; Juggluco. Для
+годинників, які не мають цього параметра,
+ви можете використати таку команду зі
+свого комп’ютера:</p>
+<p style="line-height: 100%; margin-bottom: 0cm">adb shell cmd appops
+set tk.glucodata RUN_IN_BACKGROUND allow</p>
+<p style="line-height: 100%; margin-bottom: 0cm"><a href="https://www.juggluco.nl/JugglucoWearOS/install/adb.html"><span lang="uk-UA">Інформація
+про присл</span></a></p>
+]]>
+</string>
+<string name="colorhelp" >
+<![CDATA[
+<h1>Кольори</h1>
+<p>Тут ви можете змінити кольори чисел,
+кривих і точок сканування. Торкніться
+точки кривої, сканування або величини
+(щоб відобразилася інформація про цю
+точку або величину). Після цього торкніться
+кольору на панелі кольорів. Крива, точка
+сканування або величина тепер
+відображатимуться цим кольором.</p>
+<p>У версії WearOS потрібен годинник з
+клавішею «Назад», свайп назад не вийде.</p>
+]]>
+</string>
+<string name="connectionoverview" >
+<![CDATA[
+<h1>Дзеркало</h1>
+<p style="line-height: 100%; margin-bottom: 0cm">Надсилати
+дані на інший пристрій або отримувати
+дані з нього. Ви можете підключитися до
+пристрою Android, на якому працює Juggluco, щоб
+відображати дані так само, як тут. Після
+отримання даних сканування дзеркальний
+пристрій також може зв’язатися з
+датчиком через Bluetooth. Щоб переконатися,
+що лише один із пристроїв контактує з
+датчиком, «<i>Датчик через Bluetooth</i>»
+автоматично вимикається, коли значення
+потоку надходять через IP/TCP.<br/>
+На цьому
+екрані після wlan відображається локальна
+IP-адреса WLAN цього пристрою. Ви повинні
+вказати це на іншому пристрої у домашній
+мережі, до якого ви під’єднуєтеся (або
+на модемі, якщо під’єднуєтеся
+віддалено).<br/>
+Після «Порт» ви можете
+змінити TCP-порт, на якому ця програма
+прослуховує з’єднання.</p>
+<p style="line-height: 100%; margin-bottom: 0cm">Натиснувши
+<b>Додати підключення</b>, ви можете
+вказати, з якими хостами підключатися
+та як підключатися.<br/>
+Надійне мережеве
+з’єднання на Android порушується всілякими
+оптимізаціями батареї та фоновими
+обмеженнями. Натискання <b>режиму дрімання</b>
+допоможе вам це змінити.<br/>
+Якщо Juggluco
+функціонує як програма-дзеркало (отримує
+значення рівня глюкози з іншого пристрою,
+на якому запущено Juggluco), ви можете
+натиснути <b>Тривоги</b>, щоб перейти до
+діалогового вікна, де можна вказати
+сигнали тривоги про низький і високий
+рівень глюкози та відповідні
+сповіщення.<br/>
+<b>Дзеркало надсилає суми</b>:
+якщо програма отримує велику кількість
+даних про ліки, їжу та спорт від цієї
+програми, яка працює на іншому пристрої,
+вам не слід додавати або змінювати ту
+саму інформацію тут. Перевірка цього
+робить неможливим.<br/>
+<b>Синхронізація</b>
+надсилає нові дані на підключений
+пристрій, якщо вони доступні, або запитує
+нові дані.</p>
+<p style="line-height: 100%; margin-bottom: 0cm"><b>П</b><b>овторна
+ініціалізація</b>: закриває існуюче та
+створює нове підключення.</p>
+<p style="line-height: 100%; margin-bottom: 0cm"><b>Wifi</b> (лише
+на WearOS): якщо не налаштовано, WearOS через
+деякий час автоматично вимикає WIFI, щоб
+зберегти заряд акумулятора, а Juggluco
+перемикається на використання Bluetooth
+для з’єднання між телефоном і годинником.
+Коли її ввімкнуто, WearOS просять залишити
+WIFI увімкненим, і для її вимкнення
+знадобиться більше часу, але це все одно
+може статися. Налаштування цього
+параметра зазвичай не потрібне, і
+виробники WearOS вважають, що ввімкнення
+WIFI призведе до значного збільшення
+використання акумулятора.</p>
+<p style="line-height: 100%; margin-bottom: 0cm">Існуючи
+підключення відображаються у списку,
+відображається мітка, IP-порт і місяць,
+день і час останньої успішної
+синхронізації.<br/>
+Спосіб використання
+з’єднання скорочено наступним чином:<br/>
+n:
+суми (числа)<br/>
+s: сканує<br/>
+b: потік
+(bluetooth)<br/>
+r: отримати</p>
+<p style="line-height: 100%; margin-bottom: 0cm"><br/>
+
+</p>
+<p style="line-height: 100%; margin-bottom: 0cm"><span lang="uk-UA">Для
+отримання додаткової інформації про
+дзеркальні підключення прочитайте
+довідку в розділі «</span><span lang="uk-UA"><i>Додати
+підключення</i></span><span lang="uk-UA">» та див
+<a class="western" href="https://www.juggluco.nl/Juggluco/mmol.html#mirror">https://www.juggluco.nl/Juggluco/mmol.html#mirror</a></span></p>
+<h1>Настільний комп\'ютер</h1>
+<p><span lang="uk-UA">Ви можете запустити програму
+Android Juggluco на комп’ютері з Windows, Macintosh або
+Linux за допомогою емулятора Android (наприклад
+<a class="western" href="https://www.genymotion.com/">Genymotion</a>).
+Juggluco на емуляторі отримує дані через
+з\'єднання Дзеркало від телефону Android,
+підключеного до датчика. Рухи щипків
+(переміщення двох пальців до або від
+одного) можна імітувати, натиснувши
+клавішу (Керування у Genymotion) під час
+переміщення вказівника миші.</span></p>
+<p style="line-height: 100%; margin-bottom: 0cm"><br/>
+
+</p>
+]]>
+</string>
+<string name="disturbhelp" >
+<![CDATA[
+<h1>Доступ &quot;<i>Не
+турбувати</i>&quot;</h1>
+<p style="margin-bottom: 0cm">На деяких пристроях
+будильники не працюють у режимі «<i>Не
+турбувати</i>». За допомогою «<i>Турбувати</i>»
+ви можете вказати, чи потрібно вимкнути
+«<i>Не турбувати</i>» перед відтворенням
+будильника.</p>
+<p style="margin-bottom: 0cm"><br/>
+ПОПЕРЕДЖЕННЯ: не
+встановлюйте «<i>Турбувати</i>», якщо
+будильник спрацьовує при натисканні
+«<i>Відтворити</i>» під час «<i>Не турбувати</i>».
+Якщо налаштовано «<i>Турбувати</i>»,
+Juggluco вимкне «<i>Не турбувати</i>» перед
+тим, як спрацює будильник. Функція «<i>Не
+турбувати</i>» більше не вмикатиметься
+знову, оскільки це мало небажаний
+побічний ефект: «<i>Не турбувати</i>» не
+вимикалося автоматично відповідно до
+встановленого розкладу.</p>
+]]>
+</string>
+<string name="flashpermission" >
 <![CDATA[
 <p style="line-height: 100%; margin-bottom: 0cm">
-Раніше Juggluco потрібен був дозвіл на
-визначення місцезнаходження, щоб знайти
-адресу пристрою Bluetooth датчиків FreeStyle
-Libre 2. Тепер Juggluco використовує інший
-спосіб отримати адресу пристрою на
-більшості пристроїв, і дозвіл на
-місцезнаходження не потрібен.<br/>
-Juggluco
-все ще використовує старий метод на
-Android 6, 7 і 7.1, і для них все ще потрібен
-дозвіл на місцезнаходження.</p>
+Іноді стверджують, що для використання
+спалаху потрібен дозвіл камери на деяких
+смартфонах. Через це Juggluco запитував
+такий дозвіл у попередніх версіях. На
+протестованих телефонах цей дозвіл не
+потрібен, і Juggluco більше не запитує його.
+Якщо Flash не працює або ваш смартфон
+виходить з ладу або поводиться дивно
+під час використання Flash, ви можете
+спробувати його ввімкнути.<br/>
+Ви можете
+знову вимкнути його в налаштуваннях
+Android для Juggluco.</p>
+]]>
+</string>
+<string name="floatingconfig" >
+<![CDATA[
+<h1 class="western">Налаштування
+віджету:</h1>
+<p>Тут ви можете встановити розмір шрифту
+та колір переднього плану та фону
+віджету. Ви також можете зробити фон
+П<b>розорим</b>, щоб зробити його невидимим.</p>
+<p><b>Можна доторкнутися</b>: коли встановлено,
+ви можете рухати плавучу глюкозу пальцем
+і видалити її, довго натискаючи. Якщо
+сенсорну функцію не налаштовано, сенсорне
+введення переходить у вікно під віджетом,
+щоб ви могли використовувати програму
+під віджетом. Ви також можете зробити
+віджет недоторканним, <b>двічі торкнувшись</b>
+його.</p>
+<p>Після введення <b>розміру шрифту</b>
+необхідно натиснути кнопку «Enter»,
+«Готово» або «✓» на програмній клавіатурі.</p>
+<p>Ви можете вмикати та вимикати віджет
+за допомогою прапорця «<i>Плавуча глюкоза</i>»
+в налаштуваннях. Ви також можете вимкнути
+«<i>Віджет</i>», <b>довго натискаючи</b> на
+плавуче значення глюкози. Наприклад,
+якщо ви встановили розмір шрифту
+настільки великий, що ви більше не можете
+вводити менший розмір шрифту на програмній
+клавіатурі.</p>
+<p>Для відображення поверх інших програм
+Juggluco потрібен спеціальний дозвіл. У
+WearOS і Android Automotive вам потрібно використовувати
+adb, щоб надати цей дозвіл:</p>
+<p style="line-height: 100%; margin-bottom: 0cm"><b>adb shell pm
+grant tk.glucodata android.permission.SYSTEM_ALERT_WINDOW</b></p>
+<p style="line-height: 100%; margin-bottom: 0cm; background: transparent">
+На деяких годинниках (наприклад, TicWatch
+Pro) ви також можете дозволити це за
+допомогою: Налаштування Android/WearOS-&gt;Програми
+та сповіщення-&gt; Інформація про
+додаток-&gt;Juggluco-&gt;Додатково-&gt;Відображати
+поверх інших програм.</p>
+]]>
+</string>
+<string name="garminconfig" >
+<![CDATA[
+<h1>Конфігурація Garmin
+Kerfstok</h1>
+<p style="line-height: 100%; margin-bottom: 0cm"><span lang="uk-UA"><b>Вихідний
+код</b></span> <span lang="uk-UA">Kerfstok можна завантажити
+з <a href="https://www.juggluco.nl/Kerfstok/Kerfstok-source.html">https://www.juggluco.nl/Kerfstok/Kerfstok-source.html</a>).
+Користувачі можуть змінювати його.
+Кожен додаток для годинника має унікальний
+ідентифікатор. Якщо ідентифікатор
+відрізняється від ідентифікатора за
+замовчуванням, Juggluco потрібно знати його
+для зв’язку з програмою годинника. Щоб
+вказати інший ідентифікатор, натисніть
+</span><span lang="uk-UA"><b>ID</b></span> <span lang="uk-UA">і
+введіть шістнадцятковий рядок із 32
+символів. Juggluco на одному пристрої можна
+підключити лише до однієї програми
+годинника на одному годиннику. Зміни
+призведуть до втрати даних.</span></p>
+<h2 class="western">Ярлики</h2>
+<p style="line-height: 100%; margin-bottom: 0cm">Ярлики
+надсилаються до програми годинника
+Garmin Kerfstok, щоб легко вставляти певні
+значення.</p>
+<h2 class="western">Темний режим</h2>
+<p style="line-height: 100%; margin-bottom: 0cm">Укажіть, чи
+має Kerfstok бути білим на чорному замість
+чорного на білому.</p>
+<p style="line-height: 100%; margin-bottom: 0cm"><br/>
+
+</p>
+]]>
+</string>
+<string name="getaccountidhelp" >
+<![CDATA[
+<h1 class="western">Отримати
+ідентифікатор облікового запису (ID)</h1>
+<p style="line-height: 100%; margin-bottom: 0cm"><span lang="uk-UA">Як
+отримати ідентифікатор облікового
+запису Libreview, необхідний для сканування
+датчика Freestyle Libre 3 через NFC? Якщо ви
+вказали «</span><span lang="uk-UA"><b>Вручну</b></span><span lang="uk-UA">»,
+ви можете ввести ідентифікатор облікового
+запису вручну. Ви також можете скасувати
+налаштування «</span><span lang="uk-UA"><i>вручну</i></span><span lang="uk-UA">»
+та натиснути «</span><span lang="uk-UA"><b>З Libreview</b></span><span lang="uk-UA">»,
+щоб використовувати адресу електронної
+пошти та пароль свого облікового запису
+для отримання його з Libreview.<br/>
+Також
+можна отримати ідентифікатор облікового
+запису Libreview від Libreview, а потім встановити
+«</span><span lang="uk-UA"><i>вручну</i></span><span lang="uk-UA">»
+та змінити адресу електронної пошти та
+пароль облікового запису Libreview. Після
+цього ви встановите «</span><span lang="uk-UA"><i>Надіслати
+в Libreview</i></span><span lang="uk-UA">» і натиснете
+«</span><span lang="uk-UA"><i>Повторно надіслати
+дані</i></span><span lang="uk-UA">», дані будуть
+надіслані до іншого облікового запису
+Libreview, але ідентифікатор попереднього
+облікового запису все одно
+використовуватиметься для сканування
+датчика через NFC. Таким чином Juggluco
+надсилає дані в інший обліковий запис
+Libreview, ніж той, який використовує програма
+Abbotts Libre 3.</span></p>
+]]>
+</string>
+<string name="getlib" >
+<![CDATA[
+<h1>Бібліотека Libre</h1>
+<p><font size="4" style="font-size: 14pt"><b>Juggluco</b></font>
+потрібна бібліотека, включена в додаток
+Abbott Libre.</p>
+<p><b>Датчики Freestyle Libre 2 у США </b><span style="font-weight: normal">та,
+можливо, датчики в інших країнах,
+наприклад Канаді, потребують бібліотеки
+з версії 2.5.2, 2.5.3 або 2.7.1 програми Abbott
+Librelink.</span></p>
+<p><b>Інші датчики</b> також працюють з
+бібліотекою Librelink 2.4.0, 2.4.1 або 2.4,2. Версії
+після 2.4.2 стали гіршими з точки зору
+використання батареї та дають ті самі
+результати в датчиках за межами США, як
+у Freestyle Libre 2.</p>
+<p>Код країни не має значення.</p>
+<p><span lang="uk-UA">.apk, що містить Librelink,
+розповсюджується Google Play і доступний у
+всіх місцях в Інтернеті. Список посилань
+можна знайти за адресою:
+<a class="western" href="https://www.juggluco.nl/Juggluco/urls.html">https://www.juggluco.nl/Juggluco/urls.html</a></span></p>
+<p>Після завантаження APK ви можете
+дозволити Juggluco відкрити його, натиснувши
+кнопку «<b>Відкрити</b>».</p>
+<p>Також можна запустити Juggluco без прямого
+доступу до датчика Freestyle libre. Програма
+може отримувати дані через з’єднання
+IP/TCP зі смартфона, який отримує дані від
+датчика. Без доступу до датчика також
+можна вводити інформацію про контроль
+діабету, як-от кількість інсуліну,
+вуглеводів і активність, і отримувати
+ці дані з програми годинника Garmin Kerfstok.
+Торкніться <b>Без датчика</b>, щоб обмежити
+Juggluco таким чином.</p>
+]]>
+</string>
+<string name="helpexport" >
+<![CDATA[
+<h1>Експорт</h1>
+<p>Експорт даних із Juggluco у файл.</p>
+<p>Страви зберігаються в html. Усі інші
+дані зберігаються у форматі .tsv (<a href="https://en.wikipedia.org/wiki/Tab-separated_values">Значення,
+розділені табуляцією</a>). Це можна
+завантажити в таких програмах, як
+LibreOffice Calc, Microsoft Excel, Mathematica або R. Це свого
+роду .csv із вкладками замість ком, які
+використовуються для розділення
+елементів. Символи мають кодування UTF8
+(мітки) або ASCII.</p>
+<p>Значення стовпців можна знайти на
+<a href="https://www.juggluco.nl/Juggluco/webserver.html">https://www.juggluco.nl/Juggluco/webserver.html</a>.</p>
+<p><b>Дні</b>: починаючи з Juggluco 7.1.0, ви можете
+вибрати кількість днів для збереження.
+Кінцева дата – це права межа екрана.
+Якщо ви переглядаєте минулі дані в
+Juggluco, експортуються лише старі дані
+(так само, як у лівому середньому
+меню-&gt;Статистика).</p>
+<p>Починаючи з Juggluco 7.1.0, також можна
+отримувати ці дані через веб-сервер у
+Juggluco (меню ліворуч-&gt;Налаштування-&gt;Веб-сервер),
+див. <a href="https://www.juggluco.nl/Juggluco/webserver.html">https://www.juggluco.nl/Juggluco/webserver.html</a></p>
 ]]>
 </string>
 <string name="introhelp" >
@@ -421,7 +990,7 @@ Android 6, 7 і 7.1, і для них все ще потрібен
 датчики Freestyle libre (1 і 2) (через NFC) і
 отримувати (через Bluetooth) значення глюкози
 від датчиків <font color="#4f81bd"><font face="Calibri, serif"><i><b>Freestyle
-libre 2</b></i></font></font>.</p>
+libre 2 і 3</b></i></font></font>.</p>
 <p style="line-height: 115%; margin-bottom: 0cm">Коли програма
 запускається вперше, ви можете (після
 ініціалізації) просканувати датчик
@@ -456,7 +1025,8 @@ Bluetooth із датчиками Freestyle Libre 2 і щохвилини
 	<col width="151"/>
 
 	<tr>
-		<td width="151" valign="top" style="border: none; padding: 0cm"><p>15:10&nbsp;&nbsp;&nbsp;&nbsp;6.7</p>
+		<td width="151" valign="top" style="border: none; padding: 0cm" sdval="0,632021990740741" sdnum="1049;0;[HH]:MM:SS,00"><p>
+			<font color="#000000">15:10:06,70</font></p>
 		</td>
 	</tr>
 	<tr>
@@ -541,7 +1111,7 @@ Bluetooth із датчиками Freestyle Libre 2 і щохвилини
 		</td>
 	</tr>
 	<tr>
-		<td width="151" height="39" valign="top" style="border: none; padding: 0cm"><p>
+		<td width="151" height="40" valign="top" style="border: none; padding: 0cm"><p>
 			Dark mode&nbsp;&nbsp;[&nbsp;&nbsp;]</p>
 		</td>
 	</tr>
@@ -586,12 +1156,8 @@ Bluetooth із датчиками Freestyle Libre 2 і щохвилини
 	<col width="128"/>
 
 	<tr>
-		<td width="128" height="39" valign="top" style="border: none; padding: 0cm"><p align="left">
-			Повідомити&nbsp;[&nbsp;]</p>
-		</td>
-	</tr>
-	<tr>
-		<td width="128" valign="top" style="border: none; padding: 0cm"><p>Експорт</p>
+		<td width="128" height="40" valign="top" style="border: none; padding: 0cm"><p align="left">
+			Експорт</p>
 		</td>
 	</tr>
 	<tr>
@@ -611,39 +1177,37 @@ Bluetooth із датчиками Freestyle Libre 2 і щохвилини
 		<td width="128" valign="top" style="border: none; padding: 0cm"><p>Статистика</p>
 		</td>
 	</tr>
+	<tr>
+		<td width="128" valign="top" style="border: none; padding: 0cm"><p>Говорити</p>
+		</td>
+	</tr>
+	<tr>
+		<td width="128" valign="top" style="border: none; padding: 0cm"><p>Плавати&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			&nbsp;&nbsp;&nbsp;[&nbsp;]</p>
+		</td>
+	</tr>
 </table>
+<p style="line-height: 115%; margin-bottom: 0cm"><br/>
+
+</p>
 <p style="line-height: 115%; margin-bottom: 0cm"><span lang="uk-UA">Ви
 можете ввести ці цифри, торкнувшись
-опції </span><span lang="uk-UA"><b>Нова сума</b></span>
-<span lang="uk-UA">в </span><font color="#4f81bd"><font face="Cambria, serif"><span lang="uk-UA"><b>лівій
-частині середнього меню</b></span></font></font><span lang="uk-UA">.
-</span><font color="#4f81bd"><font face="Cambria, serif"><span lang="uk-UA"><b>Експорт</b></span></font></font>
-<span lang="uk-UA">зберігає дані у форматі .tsv
-(значення, розділені табуляцією) у файл.
-</span><font color="#4f81bd"><font face="Cambria, serif"><span lang="uk-UA"><b>Клон</b></span></font></font>
-<span lang="uk-UA">дає змогу надсилати дані
-через IP/TCP до цієї програми, яка працює
-на іншому пристрої, щоб відображати ту
-саму інформацію. Якщо позначено
-</span><font color="#4f81bd"><font face="Cambria, serif"><span lang="uk-UA"><b>Повідомити</b></span></font></font><span lang="uk-UA">,
-кожне вхідне значення глюкози генеруватиме
-сповіщення Android. Це сповіщення надсилається
-на деякі розумні годинники, щоб ви могли
-бачити поточне значення рівня глюкози
-на годиннику. Версія Juggluco працює на
-годинниках WearOS. Для деяких смарт-годинників
-Garmin із сенсорним екраном також є програма
-для годинника (під назвою Kerfstok, див.
-<a class="western" href="https://apps.garmin.com/en-US/apps/b6348ccc-86d8-4780-8013-d9e19fed5260">https://apps.garmin.com/en-US/apps/b6348ccc-86d8-4780-8013-d9e19fed5260</a>),
-яка спілкується з Juggluco, отримує та
-відображає поточне значення глюкози
-та може використовуватися для введення
-кількості. </span><span lang="uk-UA"><b>Список</b></span>
-<span lang="uk-UA">дає список введених чисел.
-Якщо Juggluco отримав достатню кількість
-значень глюкози через Bluetooth, ви можете
-переглянути деякі статистичні дані,
-торкнувшись </span><span lang="uk-UA"><b>Статистика</b></span><span lang="uk-UA">.
+опції </span><font color="#4f81bd"><font face="Cambria, serif"><font size="3" style="font-size: 13pt"><span lang="uk-UA"><b>Нова
+сума</b></span></font></font></font><font color="#4f81bd"><font face="Cambria, serif"><span lang="uk-UA"><b>
+</b></span></font></font><span lang="uk-UA">в </span><font color="#4f81bd"><font face="Cambria, serif"><font size="3" style="font-size: 13pt"><span lang="uk-UA"><b>лівій
+частині середнього меню</b></span></font></font></font><span lang="uk-UA">.
+</span><font color="#4f81bd"><font face="Cambria, serif"><font size="3" style="font-size: 13pt"><span lang="uk-UA"><b>Експорт</b></span></font></font></font><span lang="uk-UA">
+зберігає дані у форматі .tsv (значення,
+розділені табуляцією) у файл. Дзеркало
+дає змогу надсилати дані через IP/TCP до
+цієї програми, яка працює на іншому
+пристрої, щоб відображати ту саму
+інформацію. </span><font color="#4f81bd"><font face="Cambria, serif"><font size="3" style="font-size: 13pt"><span lang="uk-UA"><b>Список</b></span></font></font></font><span lang="uk-UA">
+дає список введених чисел. Якщо Juggluco
+отримав достатню кількість значень
+глюкози через Bluetooth, ви можете переглянути
+деякі статистичні дані, торкнувшись
+</span><font color="#4f81bd"><font face="Cambria, serif"><font size="3" style="font-size: 13pt"><span lang="uk-UA"><b>Статистика</b></span></font></font></font><span lang="uk-UA">.
 Він показує відсоток вимірювань у певних
 діапазонах глюкози, індикатор контролю
 рівня глюкози (предказник HbA1c),
@@ -651,7 +1215,15 @@ Garmin із сенсорним екраном також є програма
 підсумковий графік, що показує значення
 рівня глюкози, нижче якого 100%, 95%, 75%, 50%,
 25% і 0% значень лежить у кожному моменті
-доби.</span></p>
+доби. У </span><font color="#4f81bd"><font face="Cambria, serif"><font size="3" style="font-size: 13pt"><span lang="uk-UA"><b>Говорити</b></span></font></font></font><span lang="uk-UA">
+ви можете змусити Juggluco озвучувати вхідні
+значення рівня глюкози, елементи графіка
+або повідомлення, доторкані до них.
+</span><font color="#4f81bd"><font face="Cambria, serif"><font size="3" style="font-size: 13pt"><span lang="uk-UA"><b>Плавати</b></span></font></font></font><span lang="uk-UA">
+вмикає плаваючу глюкозу. Показник рівня
+глюкози на екрані над іншими програмами.
+У налаштуваннях ви можете змінити його
+колір і розмір.</span></p>
 <p style="line-height: 100%; orphans: 0; widows: 0; margin-top: 0.2cm; margin-bottom: 0.2cm; background: transparent; page-break-after: avoid">
 <font size="3" style="font-size: 12pt"><i>Меню 1: Ліворуч</i></font></p>
 <table width="128" cellpadding="0" cellspacing="0">
@@ -660,6 +1232,11 @@ Garmin із сенсорним екраном також є програма
 	<tr>
 		<td width="128" valign="top" style="border: none; padding: 0cm"><p>System
 			UI&nbsp;&nbsp;[&nbsp;]</p>
+		</td>
+	</tr>
+	<tr>
+		<td width="128" valign="top" style="border: none; padding: 0cm"><p>Меню
+			       <span lang="uk-UA">[&nbsp;]</span></p>
 		</td>
 	</tr>
 	<tr>
@@ -685,17 +1262,598 @@ Garmin із сенсорним екраном також є програма
 		</td>
 	</tr>
 </table>
-<p style="line-height: 115%; margin-bottom: 0cm">У <font color="#4f81bd"><font face="Cambria, serif"><b>лівому
-меню</b></font></font> ви можете знайти <font color="#4f81bd"><font face="Cambria, serif"><b>Налашт.</b></font></font>,
+<p style="line-height: 115%; margin-bottom: 0cm"><span lang="uk-UA">У
+</span><font color="#4f81bd"><font face="Cambria, serif"><span lang="uk-UA"><b>лівому
+меню</b></span></font></font><span lang="uk-UA"> ви можете
+знайти </span><font color="#4f81bd"><font face="Cambria, serif"><font size="3" style="font-size: 13pt"><span lang="uk-UA"><b>Налашт.</b></span></font></font></font><span lang="uk-UA">,
 щоб встановити одиницю вимірювання
 глюкози на ммоль/л або мг/дл, указати
 мітки, налаштувати сигнали тривоги
 рівня глюкози, нагадування про прийом
-ліків і діапазони відображення. System UI
-визначає, чи відображаються елементи
-керування та рядок стану Android. Закрити
+ліків і діапазони відображення. </span><font color="#4f81bd"><font face="Cambria, serif"><font size="3" style="font-size: 13pt"><span lang="uk-UA"><b>System
+UI</b></span></font></font></font><span lang="uk-UA"> визначає,
+чи відображаються елементи керування
+та рядок стану Android. У </span><font color="#4f81bd"><font face="Cambria, serif"><font size="3" style="font-size: 13pt"><span lang="uk-UA"><b>Дивитися
+</b></span></font></font></font><span lang="uk-UA">ви можете
+вказати Juggluco для надсилання даних на
+всі типи розумних годинників. У </span><font color="#4f81bd"><font face="Cambria, serif"><font size="3" style="font-size: 13pt"><span lang="uk-UA"><b>Датчик</b></span></font></font></font><span lang="uk-UA">
+ви можете побачити, як відбувається
+з\'єднання з датчиком. Торкніться </span><font color="#4f81bd"><font face="Cambria, serif"><font size="3" style="font-size: 13pt"><span lang="uk-UA"><b>Меню</b></span></font></font></font><span lang="uk-UA">,
+щоб відобразити всі згадані меню
+одночасно таким чином, щоб їх можна було
+прочитати за допомогою зворотного
+зв’язку. </span><font color="#4f81bd"><font face="Cambria, serif"><font size="3" style="font-size: 13pt"><span lang="uk-UA"><b>Закрити</b></span></font></font></font><span lang="uk-UA">
 можна використовувати для виходу з
-Juggluco.</p>
+Juggluco.</span></p>
+]]>
+</string>
+<string name="kerfstok" >
+<![CDATA[
+<h1 class="western"><span lang="en-US">Garmin
+</span>Kerfstok</h1>
+<p style="line-height: 100%; margin-bottom: 0cm"><span lang="uk-UA">Цей
+режим перегляду використовується для
+вирішення проблем підключення за
+допомогою Kerfstok
+(<a href="https://apps.garmin.com/en-US/apps/b6348ccc-86d8-4780-8013-d9e19fed5260">https://apps.garmin.com/en-US/apps/b6348ccc-86d8-4780-8013-d9e19fed5260</a>
+(див. також <a href="https://www.juggluco.nl/Kerfstok/index.html">https://www.juggluco.nl/Kerfstok/index.html</a>).
+Kerfstok — це програма для годинника для
+програмованих смарт-годинників Garmin із
+сенсорним екраном. Kerfstok використовується
+для таких цілей:</span></p>
+<ul>
+	<li><p style="line-height: 100%; margin-bottom: 0cm">Введіть
+	числа та обміняйтеся ними з Juggluco;</p>
+	<li><p style="line-height: 100%; margin-bottom: 0cm">Відображає
+	значення рівня глюкози, отримане від
+	Juggluco;</p>
+	<li><p style="line-height: 100%; margin-bottom: 0cm">Відображає
+	це значення глюкози під час занять
+	спортом, а також швидкість і дистанцію.
+	Дія буде записана та відображена в
+	додатку Garmin Connect.</p>
+</ul>
+<p style="line-height: 100%; margin-bottom: 0cm">Ця програма
+для годинника може підключатися через
+Bluetooth до Juggluco, щоб обмінюватися сумами
+та постійно відображати ваше поточне
+значення глюкози.<br/>
+Коли виникає
+проблема, чи може цей екран допомогти
+знайти її причину:</p>
+<p style="line-height: 100%; margin-bottom: 0cm">По-перше,
+назва вашого годинника має відображатися
+&quot;<i>ПІДКЛЮЧЕНО</i>&quot;. Якщо ні, вирішіть
+проблему в програмі Garmin Connect. По-друге,
+Kerfstok слід запустити на годиннику. 
+</p>
+<p style="line-height: 100%; margin-bottom: 0cm">Іноді зв\'язок
+між годинником і телефоном порушується.</p>
+<p style="line-height: 100%; margin-bottom: 0cm">Якщо статус
+надсилання має значення FAILURE_DURING_TRANSFER,
+ви можете виконати одну або всі з
+наведених нижче дій:</p>
+<p style="line-height: 100%; margin-bottom: 0cm">- Вимкніть і
+ввімкніть Bluetooth, а потім натисніть
+<i>Reinit</i>;</p>
+<p style="line-height: 100%; margin-bottom: 0cm">- Перезавантажте
+годинник (майже завжди успішно, але
+іноді це потрібно зробити кілька разів);</p>
+<p style="line-height: 100%; margin-bottom: 0cm">- Перезавантажте
+телефон (останній варіант).</p>
+<p style="line-height: 100%; margin-bottom: 0cm">Для інших
+проблем може бути корисно примусово
+зупинити програму Garmin connect, запустити
+її знову та натиснути reinit.</p>
+<p style="line-height: 100%; margin-bottom: 0cm">Якщо є належне
+з’єднання та з якоїсь причини суми на
+годиннику та телефоні не синхронізовані,
+ви можете натиснути «<span style="font-variant: normal"><span style="font-style: normal"><b>Синхронізувати</b></span></span>»,
+щоб вони надсилали один одному номери,
+які вони ще не надіслали.</p>
+<p style="line-height: 100%; margin-bottom: 0cm">Під час
+запуску Juggluco автоматично викликається
+Sync. Це означає, що після перевстановлення
+Kerfstok усі номери також буде видалено в
+Juggluco. Єдиний спосіб зберегти ці цифри
+- це зробити дзеркало та надіслати його
+назад до Juggluco. Будьте обережні, оскільки
+дзеркало також одразу синхронізується
+з оригіналом. Щоб функціонувати як
+резервна копія, усі з’єднання з оригіналом
+мають бути розірвані в певний момент
+часу. Ви також можете підключити годинник
+до пристрою, який є клонам (ліве середнє
+меню-&gt;Клон) пристрою, у якому ви вводили
+цифри.</p>
+<p style="line-height: 100%; margin-bottom: 0cm"><b>Оновити</b>
+переписує це діалогове вікно з новою
+інформацією (наприклад, після Reinit або
+Sync).</p>
+<p style="line-height: 100%; margin-bottom: 0cm">Перевірка
+«<b>Глюкоза</b>» визначає, чи надсилаються
+значення глюкози на годинник.</p>
+<p style="line-height: 100%; margin-bottom: 0cm">Іноді
+відображається кнопка «<b>Надіслати
+чергу</b>»; це означає, що є повідомлення,
+які ще не надіслано на годинник. Зазвичай
+вони надсилаються автоматично вчасно,
+але іноді це було перервано, і натискання
+<i>черги надсилання</i> продовжить
+надсилання. Але якщо його не було
+надіслано через розрив з’єднання, це
+мало користі. Натискання «<i>Надіслати
+чергу</i>» під час поточної транзакції
+може розірвати з’єднання.</p>
+<p style="line-height: 100%; margin-bottom: 0cm"><br/>
+
+</p>
+]]>
+</string>
+<string name="labelhelp" >
+<![CDATA[
+<h1>Ярлики даних</h1>
+<p style="line-height: 115%; margin-bottom: 0cm">Тут ви можете
+створювати, видаляти та змінювати мітки
+для кількостей, доданих до графіка, щоб
+указати інсулін, вуглеводи чи фізичну
+активність. Якщо ви вже зберегли кілька
+значень, вони отримають мітку, що
+відповідає їхній позиції. Отже, якщо ви
+дасте другій позиції іншу назву, уже
+збережені кількості, указані з попередньою
+назвою у другій позиції, отримають це
+ім’я.<br/>
+Щоб змінити мітку, торкніться
+її.<br/>
+Після <b>Їжі</b> можна вибрати, яка
+позначка означає вміст вуглеводів у
+їжі. Для цієї мітки в «<i>Новій кількості</i>»
+в лівому середньому меню додається
+кнопка <b>Їжа</b>, за допомогою якої ви
+можете вказати страву з їхніх інгредієнтів.
+Під цією міткою зберігається сума
+вуглеводів, і ви можете пізніше переглянути
+цю їжу, вибравши їжу зі збереженим
+значенням.</p>
+]]>
+</string>
+<string name="librenumhelp" >
+<![CDATA[
+<p>Встановіть «<i>Надіслати
+суми</i>», щоб надсилати суми в Libreview. Перш
+ніж увімкнути «<i>Надсилати суми</i>», вам
+потрібно вказати для кожної мітки, як
+суми, введені під цією міткою, мають
+надсилатися до Libreview. Самі мітки можна
+створювати, змінювати та видаляти в
+лівому меню-&gt;Налаштування-&gt;&quot;Числові
+мітки&quot;.</p>
+<p>Для міток, які надсилаються як коментарі
+до Libreview, застосовується таке обмеження:
+після зміни мітки видалення та зміни
+сум, введених під попередньою міткою,
+не призведуть до змін у Libreview. Наприклад,
+якщо ви раніше мали мітку «Велосипед»
+і ввели 20, а потім змінили «Велосипед»
+на «Велоспорт» і змінили 20 у 25, чи не
+призведе ця зміна до змін у Libreview, але
+чи будуть і «Велосипед 20», і «Велоспорт
+25» присутні в Libreview. Єдине, що ви можете
+зробити, це видалити поточні пристрої
+в Libreview і натиснути «Повторно надіслати
+дані» в Juggluco.</p>
+]]>
+</string>
+<string name="libreview" >
+<![CDATA[
+<h1>Libreview</h1>
+<p style="line-height: 100%; margin-bottom: 0cm">Juggluco може
+надсилати дані про рівень глюкози та
+її кількість у Libreview. У разі використання
+датчиків Libre 0 або 3, датчиків Libre 2
+США/Канади/Австралії або інших датчиків
+Libre 2 із встановленою історією потоків
+Juggluco надсилає значення історії до
+Libreview. Якщо датчики Libre 2 використовуються
+без «Історії потоку», Juggluco використовує
+дані потоку, отримані через Bluetooth, для
+створення цих 15-хвилинних точок шляхом
+усереднення значень потоку навколо
+кожної точки.<br/>
+Як і програма Librelink,
+вона надсилає дані за останні 89 днів до
+Libreview.<br/>
+Щоб скористатися цією послугою,
+вам потрібно створити обліковий запис
+Libreview на <a class="western" href="https://libreview.com/"><span lang="en-US">https://libreview.com</span></a>
+і вказати тут адресу електронної пошти
+та пароль. Не надсилайте дані за один і
+той самий період кілька разів до одного
+облікового запису Libreview (наприклад, із
+програми Librelink і Juggluco). Ви можете видалити
+існуючі пристрої в Libreview у Параметрах
+облікового запису-&gt;Мої пристрої або
+створити новий обліковий запис
+Libreview.<br/>
+Щоб увімкнути його, вам також
+потрібно поставити галочку «<i><b>Надіслати
+в libreview</b></i>».<br/>
+Juggluco надсилатиме нові
+дані в Libreview кожного разу, коли ви
+відключатиметеся від Juggluco, якщо цього
+не було зроблено протягом попередніх
+20 хвилин. Ви також можете вручну надіслати
+його до Libreview, натиснувши «<i><b>Надіслати
+зараз</b></i>».<br/>
+Крім значень глюкози,
+суми також можна надсилати в Libreview. Для
+цього потрібно торкнутися «<i><b>Надіслати
+суми</b></i>» і вказати значення кожної
+позначки.<br/>
+<i><b>Негайно</b></i>: негайно
+надсилайте значення глюкози в Libreview,
+коли вони надходять від датчиків Libre 2
+або 3. Це корисно лише в поєднанні з
+LibreLinkUp. Щоб скористатися нею, вам потрібно
+додати підключення LibrelinkUp до цього
+облікового запису Libreview в одній із
+програм Libre компанії Abbott (вам не потрібно
+використовувати її ні для чого іншого).
+Іноді значення не видно одразу, оскільки
+відображення LibreLinkUp не перемальовується
+автоматично. Користуватися LibreLinkup досить
+небезпечно, якщо ви не придивляєтеся
+уважно, оскільки коли ви торкаєтеся
+графіка, він показує старе значення
+замість поточного значення
+глюкози.<br/>
+<i><b>Шпигунські перегляди</b></i>:
+якщо цей параметр установлено, Juggluco
+надсилатиме Libreview незалежно від того,
+переглядається значення чи ні. Якщо цей
+параметр вимкнено, Juggluco завжди
+повідомлятиме, що його не переглядають.
+Ця опція надійно надсилатиме цю інформацію
+до Libreview лише тоді, коли ввімкнено
+Негайний доступ. Juggluco має бути постійно
+підключений до Інтернету, щоб ловити
+всі перегляди з Libre 3, Libre 2 запам’ятовує
+їх усі, якщо його не вбити.<br/>
+Повторно
+надіслати дані: почати заново; повторно
+надіслати дані за останні 90 днів до
+Libreview. Вам потрібно натиснути цю кнопку
+під час переходу на новий обліковий
+запис Libreview.<br/>
+Результат останньої
+спроби надсилання в Libreview відображається
+під кнопкою «Отримати ідентифікатор
+облікового запису».<br/>
+Оскільки значення,
+надіслані в Libreview, спочатку перетворюються
+в одну точку даних кожні 15 хвилин, а
+потім аналізуються, можуть бути невеликі
+відмінності між значеннями, показаними
+на екрані статистики Juggluco та Libreview.
+Наприклад, Libreview повідомляє, що активний
+100% часу, а на екрані статистики Juggluco —
+96,0%. Крім того, деякі високі та низькі
+значення будуть усереднені, тому
+Libreview дає дещо вищий цільовий час, ніж
+екран статистики Juggluco. Оскільки значення
+історії, створені на датчиках, менш
+екстремальні, ніж середнє значення
+потоку навколо значення історії, ця
+різниця буде більшою, коли Libreview базується
+на значеннях історії, як коли «Історію
+потоку» ввімкнено в Juggluco або використовується
+Librelink .<br/>
+Juggluco можна підключити до
+кількох датчиків одночасно, тоді як
+Librelink обробляє лише один датчик за раз.
+Juggluco також надсилає дані лише з одного
+датчика за раз до Libreview. Це робиться
+шляхом спершу надсилання даних з одного
+датчика і лише після того, як дані з
+цього датчика недоступні, він надсилає
+дані з наступного датчика. Коли Juggluco
+перемикається на наступний датчик,
+Juggluco не повернеться до попереднього,
+щоб імітувати політику одного датчика
+Librelink. Це означає, що коли ви запускаєте
+кілька датчиків одночасно, і один з них,
+доданий пізніше, завершується раніше,
+ніж раніше доданий датчик, цей попередній
+датчик більше не надсилатиме дані до
+Libreview.<br/>
+<i><b>Отримати ID</b></i>: якщо ви
+хочете лише отримати ідентифікатор
+облікового запису LibreView, але не надсилати
+дані в Libreview, ви можете ввести адресу
+електронної пошти та пароль і натиснути
+«Отримати ідентифікатор облікового
+запису». У тому самому рядку перед цією
+кнопкою буде показано ідентифікатор
+облікового запису (це може зайняти
+деякий час, і екран не оновиться
+автоматично). Отримання ідентифікатора
+облікового запису із сервера LibreView дає
+змогу використовувати датчик FreeStyle
+Libre 3, який уже використовувався з
+програмою Abbotts Libre 3 із цим обліковим
+записом LibreView.</p>
+<p style="line-height: 100%; margin-bottom: 0cm"><br/>
+<i><b>ПОПЕРЕДЖЕННЯ</b></i>:
+датчик Freestyle Libre 3 має бути активовано
+за допомогою цього облікового запису.</p>
+]]>
+</string>
+<string name="locationpermission" >
+<![CDATA[
+<p style="line-height: 100%; margin-bottom: 0cm">
+Раніше Juggluco потрібен був дозвіл на
+визначення місцезнаходження, щоб знайти
+адресу пристрою Bluetooth датчиків FreeStyle
+Libre 2. Тепер Juggluco використовує інший
+спосіб отримати адресу пристрою на
+більшості пристроїв, і дозвіл на
+місцезнаходження не потрібен.<br/>
+Juggluco
+все ще використовує старий метод на
+Android 6, 7 і 7.1, і для них все ще потрібен
+дозвіл на місцезнаходження.</p>
+]]>
+</string>
+<string name="mealhelp" >
+<![CDATA[
+<h1>Харчування</h1>
+<p>Вкажіть кількість інгредієнтів страви.
+Потім розраховується загальний вміст
+вуглеводів. Також можна вказати кількість
+вуглеводів для всієї страви або
+інгредієнта, а потім програма визначить
+необхідну кількість інгредієнта.
+Натисніть «<i>Додати продукт</i>», щоб
+додати продукт до страви. У викликаному
+діалоговому вікні ви можете вибрати
+інгредієнт і вказати його кількість
+(або загальну кількість вуглеводів у
+страві чи цьому продукті). Натиснувши
+«<i>Вибрати</i>» або вже вказаний інгредієнт,
+ви перейдете до списку вже визначених
+інгредієнтів. Ви можете визначити новий
+інгредієнт, натиснувши там кнопку
+<i>Визначити</i>. Тут ви можете вказати
+назву та вміст вуглеводів цього
+інгредієнта у вказаних одиницях. Ви
+також можете натиснути «База даних»,
+щоб перейти до бази даних про харчовий
+склад, де ви можете шукати інгредієнти
+та переглядати склад харчового продукту,
+а натиснувши «<i>Вибрати</i>», вставити
+назву цього продукту та вміст вуглеводів
+у визначення інгредієнта.</p>
+]]>
+</string>
+<string name="nearbypermission" >
+<![CDATA[
+<p style="line-height: 100%; margin-bottom: 0cm">
+В Android 12 є деякі нові дозволи Bluetooth, які
+вимагають від вас явної згоди на
+використання Bluetooth. Старі програми не
+припиняють працювати відразу, але тепер
+ви можете використовувати ці нові
+дозволи. Якщо ви не надасте дозвіл на
+ПРИСТРОЇ ПОРУЧ, Juggluco не зможе отримувати
+значення глюкози через Bluetooth від датчиків
+Freestyle Libre 2. Але, можливо, старі дозволи
+все ще працюють.</p>
+]]>
+</string>
+<string name="newlabelhelp" >
+<![CDATA[
+<h2 class="western">Мітка:</h2>
+<p>Назва мітки для введення чисел. Ви
+можете додати номер, прив’язаний до
+певної дати та часу, використовуючи
+«Нова сума» в лівому середньому меню.
+Ці числа можна відобразити на графіку
+рівня глюкози в цьому часовому положенні
+або в списку.</p>
+<h2 class="western">Округлити до:</h2>
+<p>Використовується в програмі годинника<span lang="en-US"><span lang="ru-RU">
+</span></span><span lang="ru-RU"><span lang="ru-RU">G</span></span><span lang="en-US"><span lang="ru-RU">a</span></span><span lang="en-US"><span lang="en-US">rmin</span></span><span lang="ru-RU"><span lang="en-US">
+</span></span>Kerfstok. Числа, введені під цією
+міткою, округляються до цього числа.</p>
+<p>0= повна точність, 0,5 = округлення до
+кратних 0,5 тощо.</p>
+<h2 class="western">Вага:</h2>
+<p>Якщо встановлено значення 0, числа
+відображаються на певній висоті на
+графіку незалежно від їх значення. Якщо
+вага перевищує 0, кожна кількість, введена
+під цією міткою, множиться на цю вагу
+та відображається у вигляді квадрата
+в тих самих координатах, що й графік
+рівня глюкози. Наприклад, ви можете
+встановити значення ваги на 1, щоб
+відображати вимірювання рівня глюкози,
+проведені уколом пальця, так само, як
+вимірювання датчика глюкози.</p>
+]]>
+</string>
+<string name="nightnumhelp" >
+<![CDATA[
+<p>Встановіть «<i>Надати
+суми</i>», щоб зробити суми доступними
+через веб-сервер Nightscout у Juggluco. Перш ніж
+увімкнути «<i>Надати суми</i>», потрібно
+вказати для кожної мітки, як мають
+надаватися суми, введені під цією міткою.
+Самі мітки можна створювати, змінювати
+та видаляти в лівому меню-&gt;Налаштування-&gt;&quot;Числові
+мітки&quot;.</p>
+]]>
+</string>
+<string name="notificationpermission" >
+<![CDATA[
+<p>Android 13 вимагає, щоб ви
+надали дозволи на ці сповіщення, перш
+ніж ви навіть дізнаєтеся, які сповіщення
+надсилаються. Juggluco має сповіщення, що
+містять значення глюкози, і вимагає
+наявності сповіщень у зв’язку з основною
+службою, яка повинна залишатися активною
+у фоновому режимі. Для належної роботи
+Juggluco краще надати Juggluco цей дозвіл.</p>
+<p>Ви можете легко вмикати та вимикати
+сповіщення в налаштуваннях Android App-Info
+-&gt; Notifications for Juggluco.</p>
+]]>
+</string>
+<string name="nutrients" >
+<![CDATA[
+<p align="center" style="line-height: 100%; margin-top: 0.43cm; margin-bottom: 0.2cm; page-break-after: avoid">
+<font face="Liberation Sans, sans-serif"><font size="6" style="font-size: 28pt"><b>База
+даних складу їжі</b></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0cm"><br/>
+
+</p>
+<p style="line-height: 100%; margin-bottom: 0cm">Тут ви можете
+шукати продукти в інтегрованому наборі
+даних МакКанса та Віддовсона «Склад
+харчових продуктів» за 2021 рік
+<a class="western" href="https://www.gov.uk/government/publications/composition-of-foods-integrated-dataset-cofid">https://www.gov.uk/government/publications/composition-of-foods-integrated-dataset-cofid</a></p>
+<p style="line-height: 100%; margin-bottom: 0cm"><br/>
+
+</p>
+<p style="line-height: 100%; margin-bottom: 0cm">Ви можете
+здійснювати пошук за допомогою регулярних
+виразів
+(<a class="western" href="https://www.regular-expressions.info/quickstart.html">https://www.regular-expressions.info/quickstart.html</a>).
+Наприклад, ви можете шукати елементи,
+які починаються на яблуко, за яким йде
+слово raw за допомогою: ^apple.*\\braw\\b</p>
+<p style="line-height: 100%; margin-bottom: 0cm">Пошук <i>apple</i>
+дає всі елементи, які містять <i>apple.</i></p>
+<p style="line-height: 100%; margin-bottom: 0cm"><br/>
+
+</p>
+<p style="line-height: 100%; margin-bottom: 0cm"><br/>
+
+</p>
+]]>
+</string>
+<string name="reminders" >
+<![CDATA[
+<h1 class="western">Нагадування</h1>
+<p style="line-height: 100%; margin-bottom: 0cm">Нагадування
+нагадують вам, якщо ви не ввели певну
+суму протягом певного проміжку
+часу.<br/>
+Натиснувши <b>НОВЕ</b>, ви можете
+додати нове нагадування.<br/>
+Вкажіть час
+початку та закінчення періоду часу,
+протягом якого необхідно ввести вказану
+суму під вказаною міткою.<br/>
+Якщо час
+завершення досягнуто, програма перевіряє,
+чи введено принаймні цю суму з указаною
+міткою після часу початку. Якщо ви не
+зареєструвалися, з’явиться сповіщення
+та відтвориться сигнал дзвінка.<br/>
+Наприклад,
+якщо ви вкажете:<br/>
+Левемір 6.0<br/>
+21:30 -
+23:55<br/>
+Вам буде нагадано після 23:55, якщо
+ви не вказали хоча б 6 одиниць Левеміру
+після 21:30 того ж дня.<br/>
+Вже вказані
+нагадування відображаються у списку.
+Торкніться, щоб редагувати.<br/>
+Якщо все
+йде добре, нагадування також працюють
+після перезавантаження Android без
+необхідності запускати Juggluco.</p>
+<p style="line-height: 100%; margin-bottom: 0cm"><br/>
+
+</p>
+<p style="line-height: 100%; margin-bottom: 0cm">На деяких
+пристроях Huawei потрібно вказати, що ви
+дозволяєте запускати програму під час
+завантаження. Це робиться в меню
+Налаштування Android -&gt; Акумулятор -&gt;
+Запуск програми. Тут ви вибираєте
+Керувати вручну для Juggluco, щоб увімкнути
+автоматичний запуск і запуск у фоновому
+режимі. Це також необхідно, щоб тривоги
+про втрату сигналу працювали після
+перезавантаження без запуску Juggluco
+користувачем.</p>
+]]>
+</string>
+<string name="ringtone" >
+<![CDATA[
+<h1 class="western">Рінгтон</h1>
+<p style="line-height: 100%; margin-bottom: 0cm">Виберіть
+мелодію дзвінка для будильника чи
+сповіщення та скільки секунд.<br/>
+<b>Хвилини
+дезактивовані:</b> якщо низький або
+високий рівень глюкози продовжується,
+сигнал не вмикатиметься знову. Ви можете
+вказати, через скільки хвилин тривога
+повинна бути згенерована знову, якщо
+стан продовжується.<br/>
+<b>Звук:</b> зробити
+звук.<br/>
+За замовчуванням: використовувати
+звук за замовчуванням.<br/>
+<b>Вибрати:</b>
+вибрати мелодію дзвінка. На деяких
+телефонах Samsung попередньо встановлена
+програма вибору мелодії дає збій, тому
+вам потрібно встановити іншу програму
+мелодії, яку можуть використовувати
+інші програми, наприклад: 
+<a href="https://play.google.com/store/apps/details?id=com.centralparkapps.ringo.ringtones">https://play.google.com/store/apps/details?id=com.centralparkapps.ringo.ringtones</a>,
+<a href="https://apkcombo.com/ringtone-picker/de.kumpewo.ringtones">https://apkcombo.com/ringtone-picker/de.kumpewo.ringtones</a>
+або
+<a href="https://m.apkpure.com/tone-picker-mp3-ringtones/com.hlidskialf.android.tonepicker">https://m.apkpure.com/tone-picker-mp3-ringtones/com.hlidskialf.android.tonepicker</a><br/>
+<b>Вібрація:</b>
+вібрація<br/>
+<b>Турбувати:</b> якщо режим
+«<i>Не турбувати</i>» ввімкнено, вимкніть
+його перед відтворенням будильника.
+Якщо Juggluco не має необхідного дозволу
+для цього, вас буде спрямовано на екран
+налаштувань Android, щоб надати Juggluco цей
+дозвіл. Увімкнувши «<i>Не турбувати</i>»
+і натиснувши «Відтворити», ви можете
+перевірити, чи працюватимуть будильники
+під час «Не турбувати». У попередній
+версії Juggluco після будильника знову
+вмикався режим «<i>Не турбувати</i>». У
+поточній версії це не так, оскільки це
+призвело до ненавмисного ефекту: коли
+будильник спрацював під час автоматичного
+періоду «<i>Не турбувати</i>», цей стан не
+вимикався автоматично.<br/>
+<span style="font-style: normal"><b>Спалах</b></span>:
+Смартфони з ліхтариком мають можливість
+блимати стільки ж секунд. Зручно, якщо
+рінгтони заборонені та немає чіткої
+політики щодо ліхтариків.<br/>
+На таких
+сайтах, як <a href="https://stackoverflow.com/">stackoverflow.com</a>,
+іноді стверджується, що деякі смартфони
+виходять з ладу під час використання
+спалаху без дозволу камери, якщо це так,
+ви можете ввімкнути дозвіл камери.</p>
 ]]>
 </string>
 <string name="searchhelp" >
@@ -766,66 +1924,165 @@ Freestyle libre 2 у цю програму.<br/>
 цього інгредієнта.</p>
 ]]>
 </string>
-<string name="shortcuthelp" >
+<string name="sensorhelp" >
 <![CDATA[
-<p style="margin-bottom: 0.36cm">У
-<span lang="en-US">Garmin </span>Kerfstok можна використовувати
-<font color="#365f91"><font face="Cambria, serif"><font size="4" style="font-size: 14pt"><b>ярлики</b></font></font></font>.</p>
-<p style="margin-bottom: 0.36cm">На екрані введення
-цифр на годиннику ви можете перейти до
-екрана ярликів (на моєму годиннику
-Vivoactive 3, провівши ліворуч). Тут ви бачите
-список міток; натискання одного з них
-вставляє відповідне значення на екрані
-цифр. Значеннями можуть бути числа або
-арифметичні оператори в поєднанні з
-числами, наприклад, *0,5, щоб помножити
-на 0,5.</p>
-<p style="margin-bottom: 0.36cm">Тут, у меню налаштувань,
-ви можете створювати, видаляти та
-редагувати ці ярлики.</p>
-<p style="margin-bottom: 0.36cm">Ліворуч відображається
-<font color="#4f81bd"><font face="Cambria, serif"><font size="3" style="font-size: 13pt"><b>список</b></font></font></font>
-наявних ярликів, після торкання одного
-з них з’являється вікно, де можна
-видалити ярлик або змінити мітку чи
-значення.</p>
-<p style="margin-bottom: 0.36cm">Новий ярлик створюється
-за допомогою <font color="#4f81bd"><font face="Cambria, serif"><font size="3" style="font-size: 13pt"><b>Новий</b></font></font></font>.</p>
-<p style="margin-bottom: 0.36cm">Зміни зберігаються
-лише після натискання кнопки <font color="#4f81bd"><font face="Cambria, serif"><font size="3" style="font-size: 13pt"><b>Зберегти</b></font></font></font>.</p>
-<p style="margin-bottom: 0.36cm"><br/>
-<br/>
+<h1 align="left">Датчик</h1>
+<p style="line-height: 100%; margin-bottom: 0cm">Спінер містить
+назву датчика. Якщо Juggluco використовує
+більше одного датчика одночасно, ви
+можете вибрати, для якого датчика
+відображати інформацію.<br/>
+<i><b>Режим
+дрімання</b></i> веде вас до екрана з
+інформацією про те, як вимкнути оптимізацію
+батареї для Juggluco, яка може перешкодити
+Juggluco функціонувати.<br/>
+<i><b>Історія
+потоків:</b></i> у Libre 2 історія – це минулі
+значення з 15-хвилинними інтервалами.
+Раніше їх отримували лише за допомогою
+сканування. Коли ви вмикаєте цю опцію,
+значення історії також отримуються
+через Bluetooth. Крім того, інші речі
+працюватимуть інакше. До Libreview буде
+надіслано значення історії, а не середні
+значення потоку. Недоліком є те, що він
+працює повільніше. Це може бути проблемою
+на годинниках WearOS.<br/>
+Цей параметр завжди
+ввімкнено для датчиків Libre 3 і US Libre
+2.<br/>
+<i><b>Дозвіл:</b></i> попередні версії
+Juggluco вимагали дозволу на місцезнаходження,
+щоб знайти адресу пристрою датчика. Це
+більше не потрібно для датчиків, які я
+використовую. Можливо, там ще є датчики,
+для яких це необхідно; в такому випадку
+ви можете його ввімкнути. Після першого
+контакту Juggluco зберігає адресу пристрою,
+і дозвіл на місцезнаходження завжди
+марний. Адреса пристрою, якщо вона
+відома, відображається після ідентифікатора
+датчика. Червоний означає американський
+датчик.<br/>
+Android 12 має новий дозвіл на
+пристрої поблизу, який можна використовувати
+замість дозволу на місцезнаходження
+для пошуку адреси пристрою Bluetooth, але
+він також потрібен для подальшого
+зв’язку з пристроями Bluetooth.<br/>
+<i><b>Припинити:</b></i>
+припинити підключення до цього датчика
+через Bluetooth. Якщо пізніше ви захочете
+знову отримувати потокові значення
+глюкози з цього датчика, вам потрібно
+лише відсканувати його знову.<br/>
+<i><b>Турбо:</b></i>
+збільшує зусилля для контакту з датчиком
+у надії, що це призведе до зменшення
+помилок підключення, але може
+використовувати більше заряду акумулятора.
+Здається, він потрібен на Watch4 із датчиками
+Freestyle Libre 2, але не з датчиками Freestyle Libre
+3 і на жодному зі смартфонів, на яких я
+його пробував.<br/>
+<i><b>Android:</b></i> Дозвольте
+Android замість Juggluco встановити з’єднання
+з датчиком.<br/>
+<i><b>Інформація:</b></i> надає
+час початку та закінчення, а також час
+останнього сканування та час потоку
+датчика.<br/>
+Щоб підключитися до датчика
+Freestyle Libre 2 через Low Energy Bluetooth, Bluetooth має
+бути ввімкнено. Нічого не станеться до
+того, як ця програма успішно просканує
+датчик. Датчик не слід підключати до
+зчитувача FreeStyle або інших аплетів на
+смартфонах. Слід вимкнути будильники
+програми Abbotts Librelink або зупинити роботу
+програми. Схоже, що деякі програми
+Librelink зв’язуються з датчиком, коли
+сигналізацію вимкнено, і можуть спричинити
+проблеми з підключенням, тому скористайтеся
+«примусовою зупинкою», щоб переконатися.
+Якщо ви запустили датчик із Freestyle Reader і
+не можете його вимкнути, ви можете
+запобігти його контакту з датчиком,
+помістивши зчитувач у <a href="https://www.offgridweb.com/preparation/faraday-bags-testing-commercial-and-diy-wireless-signal-blockers/amp/">клітку
+Фарадея</a>.<br/>
+<font size="3" style="font-size: 13pt"><b>Датчик
+через Bluetooth/Використовувати Bluetooth</b></font>
+має бути ввімкнено.<br/>
+Якщо зазначені
+вище умови виконуються, може пройти
+багато часу, перш ніж програма отримає
+значення глюкози від датчика. Часто це
+займає хвилину, але іноді це займає
+набагато більше часу. Найбільше складнощів
+викликає етап підключення. Найчастішими
+є збої зі статусом=133, який є аргументом
+статусу <u><b>onConnectionStateChange(BluetoothGatt
+bluetoothGatt, int status, int newState)</b></u>. Це означає,
+що пристрій Bluetooth не знайдено. Майже
+завжди потрібно лише деякий час, перш
+ніж пристрій знайдено. Також можливо,
+що датчик підключено до іншого пристрою,
+тимчасово не працює належним чином,
+інші пристрої заважають або Bluetooth Android
+не працює. Іноді вимкнення й увімкнення
+Bluetooth допомагає або перезавантаження
+телефону чи вимикання з’єднання
+Bluetooth інших пристроїв. Інші проблеми
+іноді вирішуються скануванням
+датчика.<br/>
+Сканування датчика за
+допомогою Juggluco (з увімкненим датчиком
+через Bluetooth) на іншому телефоні вкраде
+з’єднання з цього телефону, і може
+знадобитися деякий час із скануванням
+між ними, щоб відновити його.</p>
+<p style="line-height: 100%; margin-bottom: 0cm"><br/>
 
 </p>
 ]]>
 </string>
-<string name="labelhelp" >
+<string name="setlibrenumtype" >
 <![CDATA[
-<h1>Ярлики даних</h1>
-<p style="line-height: 115%; margin-bottom: 0cm">Тут ви можете
-створювати, видаляти та змінювати мітки
-для кількостей, доданих до графіка, щоб
-указати інсулін, вуглеводи чи фізичну
-активність. Якщо ви вже зберегли кілька
-значень, вони отримають мітку, що
-відповідає їхній позиції. Отже, якщо ви
-дасте другій позиції іншу назву, уже
-збережені кількості, указані з попередньою
-назвою у другій позиції, отримають це
-ім’я.<br/>
-Щоб змінити мітку, торкніться
-її.<br/>
-Після <b>Їжі</b> можна вибрати, яка
-позначка означає вміст вуглеводів у
-їжі. Для цієї мітки в «<i>Новій кількості</i>»
-в лівому середньому меню додається
-кнопка <b>Їжа</b>, за допомогою якої ви
-можете вказати страву з їхніх інгредієнтів.
-Під цією міткою зберігається сума
-вуглеводів, і ви можете пізніше переглянути
-цю їжу, вибравши їжу зі збереженим
-значенням.</p>
+<p>Так само, як і для
+Libreview, ви також можете вказати, як
+представляти суми через сервер Nightscout
+у Juggluco.</p>
+<p>Виберіть, як суми в Juggluco, введені під
+певною міткою, мають надсилатися до
+Libreview. Можна надіслати більше ніж один
+тип суми з однаковою міткою Libreview.
+Наприклад, якщо ви оцінюєте їжу з
+вуглеводами та чистою глюкозою під
+окремими мітками в Juggluco, ви можете
+вказати для обох, що вони повинні
+надсилатися як <b>вуглеводи</b> до Libreview.</p>
+<p>Для вуглеводів можна помножити
+<b>кількість</b>, указану в Juggluco, на певне
+число, щоб можна було перетворити інші
+одиниці в грами. Якщо ви вважаєте в
+Juggluco порції 10 грамів, ви можете ввести
+тут 10, щоб грами були надіслані в
+Libreview.</p>
+<p><b>Коментарі</b> означають, що сума
+надсилається в Libreview так, ніби ви додали
+коментарі в Librelink. Якщо ви вкажете тут
+коментарі, надсилається мітка та номер,
+введений для цієї мітки. Наприклад:
+«<i>Велосипед 50</i>», якщо у вас є мітка
+«<i>Велосипед</i>» і ви ввели «<i>50</i>» під
+цією міткою. «<i>Велосипед 50</i>» буде
+показано під графіком «<i>Щоденного
+журналу</i>» в Libreview у вказаний час.</p>
+<p><br/>
+<br/>
+
+</p>
 ]]>
 </string>
 <string name="settinghelp" >
@@ -945,7 +2202,7 @@ Libre 2 і 3 у Libreview і отримати ідентифікатор
 облікового запису, який використовується
 під час активації датчика Freestyle Libre 3.
 Торкніться, щоб змінити налаштування.</p>
-<h2 class="western">Пропатчена трансляція Libre</h2>
+<h2 class="western">В xDrip</h2>
 <p>Використовуйте трансляцію Patched Libre
 (спочатку надіслану виправленою німецькою
 програмою Librelink 2.3.0), щоб щохвилини
@@ -964,9 +2221,10 @@ xDrip. У xDrip вам потрібно встановити Libre2
 xDrip відображає власні інтерпретація
 отриманих значень глюкози. Дзеркальні
 пристрої також можна надсилати в xDrip.</p>
-<p>Перегляньте <a href="https://github.com/jakobheyman/xdripJH">https://github.com/jakobheyman/xdripJH</a>,
+<p><span lang="uk-UA">Перегляньте
+<a href="https://github.com/jakobheyman/xdripJH">https://github.com/jakobheyman/xdripJH</a>,
 щоб спробувати оновити значення глюкози
-xDrip щохвилини.</p>
+xDrip щохвилини.</span></p>
 <p>Датчики Freestyle Libre 3 надсилають пропущені
 значення після періоду відключення. Ці
 значення не надсилаються з цією
@@ -987,30 +2245,24 @@ xDrip, щоб програма відображала останні
 xDrip, тому вам потрібно вимкнути «<i>xDrip
 webservice</i>» у самому xDrip, якщо ви хочете
 використовувати порт у Juggluco.</p>
-<h2 class="western">Трансляція xDrip</h2>
+<h2 class="western">В AAPS</h2>
 <p>Надішліть ту саму трансляцію, яку
 ввімкнено в xDrip, за допомогою
-«<i>Налаштування-&gt;Налаштування між
-програмами-&gt;Локальна трансляція</i>»
-(com.eveningoutpost.dexdrip.BgEstimate). Такі програми,
-як AndroidAPS, слухають це. Додатки, націлені
-на Android 11 або новішої версії, повинні
-додати в AndroidManifest.xml наступне, щоб він
-працював: 
-</p>
-<p>&lt;queries&gt; <br/>
-&nbsp;&nbsp; &lt;package
-android:name=&quot;tk.glucodata&quot;/&gt; <br/>
-&lt;/queries&gt;</p>
+«Налаштування-&gt;Налаштування між
+програмами-&gt;Локальна трансляція».
+Такі програми, як AndroidAPS, слухають це. На
+відміну від оригінальної трансляції
+xDrip, яка транслювалася кожні 5 хвилин,
+Juggluco транслює цю трансляцію щохвилини.</p>
 <h2 class="western">Трансляція Glucodata</h2>
-<p>Нова трансляція, яка має ту саму
-функцію, що й трансляція xDrip. Простий
+<p><span lang="uk-UA">Нова трансляція, яка має ту
+саму функцію, що й трансляція xDrip. Простий
 приклад програми, яка записує отримані
 значення глюкози в logcat, можна знайти
 тут: <a href="https://www.juggluco.nl/Juggluco/glucosebroadcast.html">Glucose
 broadcasts</a>. Якщо ви вказали Juggluco як джерело
 даних у G-Watch, вам потрібно ввімкнути цю
-трансляцію.</p>
+трансляцію.</span></p>
 <p>Показані додатки, які слухають цю
 трансляцію. Перевірте програми, у які
 ви хочете надіслати цю трансляцію.</p>
@@ -1087,6 +2339,11 @@ Android. Наприклад, на Realme GT 5G вам потрібно
 у футбол. Якщо ви також використовуєте
 програму годинника Garmin Kerfstok, ці мітки
 надсилаються до програми годинника.</p>
+<h2 class="western">Мова</h2>
+<p style="line-height: 100%; margin-bottom: 0cm">Juggluco
+відображається вибраною мовою. Якщо
+код мови не вибрано, використовується
+системна мова.</p>
 <h2 class="western">Нагадування</h2>
 <p style="font-weight: normal; line-height: 100%; margin-bottom: 0cm">
 Вкажіть, що сигнал тривоги має спрацювати,
@@ -1097,414 +2354,45 @@ Android. Наприклад, на Realme GT 5G вам потрібно
 кольори кривих, сканів і чисел.</p>
 ]]>
 </string>
-<string name="sensorhelp" >
+<string name="shortcuthelp" >
 <![CDATA[
-<h1 align="left">Датчик</h1>
-<p style="line-height: 100%; margin-bottom: 0cm">Спінер містить
-назву датчика. Якщо Juggluco використовує
-більше одного датчика одночасно, ви
-можете вибрати, для якого датчика
-відображати інформацію.</p>
-<p style="line-height: 100%; margin-bottom: 0cm"><i><b>Режим
-дрімання</b></i> веде вас до екрана з
-інформацією про те, як вимкнути оптимізацію
-батареї для Juggluco, яка може перешкодити
-Juggluco функціонувати.</p>
-<p style="line-height: 100%; margin-bottom: 0cm"><i><b>Дозвіл</b></i>:
-попередні версії Juggluco вимагали дозволу
-на місцезнаходження, щоб знайти адресу
-пристрою датчика. Це більше не потрібно
-для датчиків, які я використовую. Можливо,
-там ще є датчики, для яких це необхідно;
-в такому випадку ви можете його ввімкнути.
-Після першого контакту Juggluco зберігає
-адресу пристрою, і дозвіл на місцезнаходження
-завжди марний. Адреса пристрою, якщо
-вона відома, відображається після
-ідентифікатора датчика. Червоний означає
-американський датчик.<br/>
-Android 12 має новий
-дозвіл на пристрої поблизу, який можна
-використовувати замість дозволу на
-місцезнаходження для пошуку адреси
-пристрою Bluetooth, але він також потрібен
-для подальшого зв’язку з пристроями
-Bluetooth.</p>
-<p style="line-height: 100%; margin-bottom: 0cm"><i><b>Блок.</b></i><i><b>п</b></i><i><b>робуд.</b></i>:
-деякі користувачі Android 13 скаржаться, що
-Bluetooth перестає працювати. Можливо,
-увімкнення цієї опції допомагає їм. На
-моєму смартфоні він мені не потрібен,
-а на Watch4 це не має значення. Якщо це
-працює, це збільшить використання
-акумулятора.</p>
-<p style="line-height: 100%; margin-bottom: 0cm"><i><b>Припинити</b></i>:
-припинити підключення до цього датчика
-через Bluetooth. Якщо пізніше ви захочете
-знову отримувати потокові значення
-глюкози з цього датчика, вам потрібно
-лише відсканувати його знову.</p>
-<p style="line-height: 100%; margin-bottom: 0cm"><i><b>Turbo</b></i>:
-збільшує зусилля для контакту з датчиком
-у надії, що це призведе до зменшення
-помилок підключення, але може
-використовувати більше заряду акумулятора.
-Здається, він потрібен на Watch4 із датчиками
-Freestyle Libre 2, але не з датчиками Freestyle Libre
-3 і на жодному зі смартфонів, на яких я
-його пробував.</p>
-<p style="line-height: 100%; margin-bottom: 0cm"><b>Android 13</b>:
-двоє користувачів із телефоном Android 13
-із помилками стверджували, що це
-налаштування вирішило їхні проблеми з
-підключенням Bluetooth. Двоє користувачів
-з Android 13, у яких раніше не було проблем
-із підключенням, стверджували, що у них
-виникли проблеми з підключенням через
-це налаштування.</p>
-<p style="line-height: 100%; margin-bottom: 0cm"><i><b>Інформація</b></i>:
-надає час початку та закінчення, а також
-час останнього сканування та час потоку
-датчика.</p>
-<p style="line-height: 100%; margin-bottom: 0cm">Щоб підключитися
-до датчика Freestyle Libre 2 через Low Energy
-Bluetooth, Bluetooth має бути ввімкнено. Нічого
-не станеться до того, як ця програма
-успішно просканує датчик. Датчик не
-слід підключати до зчитувача FreeStyle Libre
-або інших аплетів на смартфонах. Слід
-вимкнути будильники програми Abbotts
-Librelink або зупинити роботу програми.
-Схоже, що деякі програми Librelink зв’язуються
-з датчиком, коли сигналізацію вимкнено,
-і можуть спричинити проблеми з
-підключенням, тому скористайтеся
-«примусовою зупинкою», щоб переконатися.
-Датчик через <b>Bluetooth/Використовувати
-Bluetooth</b> має бути ввімкнено.</p>
-<p style="line-height: 100%; margin-bottom: 0cm"><span lang="uk-UA">Якщо
-зазначені вище умови виконуються, може
-пройти багато часу, перш ніж програма
-отримає значення глюкози від датчика.
-Часто це займає хвилину, але іноді це
-займає набагато більше часу. Найбільше
-складнощів викликає етап підключення.
-Найчастішими є збої зі статусом=133, який
-є аргументом статусу
-<a href="https://developer.android.com/reference/android/bluetooth/BluetoothGattCallback#onConnectionStateChange(android.bluetooth.BluetoothGatt,%20int,%20int)">onConnectionStateChange(BluetoothGatt
-bluetoothGatt, int status, int newState)</a>. Якщо ви виймете
-батарею з датчика, ви також отримаєте
-цю помилку, тому здається щось на зразок
-пристрою Bluetooth не знайдено. Іноді
-вимкнення й увімкнення Bluetooth допомагає
-або перезавантаження телефону чи
-вимикання з’єднання Bluetooth інших
-пристроїв. Інші проблеми іноді вирішуються
-скануванням датчика.</span></p>
-<p style="line-height: 100%; margin-bottom: 0cm">Сканування
-датчика за допомогою Juggluco (з увімкненим
-<i>датчиком через Bluetooth</i>) на іншому
-телефоні вкраде з’єднання з цього
-телефону, і може знадобитися деякий час
-із скануванням між ними, щоб відновити
-його.</p>
-<p style="line-height: 100%; margin-bottom: 0cm"><br/>
+<p style="margin-bottom: 0.36cm">У
+<span lang="en-US">Garmin </span>Kerfstok можна використовувати
+<font color="#365f91"><font face="Cambria, serif"><font size="4" style="font-size: 14pt"><b>ярлики</b></font></font></font>.</p>
+<p style="margin-bottom: 0.36cm">На екрані введення
+цифр на годиннику ви можете перейти до
+екрана ярликів (на моєму годиннику
+Vivoactive 3, провівши ліворуч). Тут ви бачите
+список міток; натискання одного з них
+вставляє відповідне значення на екрані
+цифр. Значеннями можуть бути числа або
+арифметичні оператори в поєднанні з
+числами, наприклад, *0,5, щоб помножити
+на 0,5.</p>
+<p style="margin-bottom: 0.36cm">Тут, у меню налаштувань,
+ви можете створювати, видаляти та
+редагувати ці ярлики.</p>
+<p style="margin-bottom: 0.36cm">Ліворуч відображається
+<font color="#4f81bd"><font face="Cambria, serif"><font size="3" style="font-size: 13pt"><b>список</b></font></font></font>
+наявних ярликів, після торкання одного
+з них з’являється вікно, де можна
+видалити ярлик або змінити мітку чи
+значення.</p>
+<p style="margin-bottom: 0.36cm">Новий ярлик створюється
+за допомогою <font color="#4f81bd"><font face="Cambria, serif"><font size="3" style="font-size: 13pt"><b>Новий</b></font></font></font>.</p>
+<p style="margin-bottom: 0.36cm">Зміни зберігаються
+лише після натискання кнопки <font color="#4f81bd"><font face="Cambria, serif"><font size="3" style="font-size: 13pt"><b>Зберегти</b></font></font></font>.</p>
+<p style="margin-bottom: 0.36cm"><br/>
+<br/>
 
 </p>
-]]>
-</string>
-<string name="watchhelp" >
-<![CDATA[
-<h1 class="western"><span lang="en-US">Garmin
-</span>Kerfstok</h1>
-<p style="line-height: 100%; margin-bottom: 0cm"><span lang="uk-UA">Цей
-режим перегляду використовується для
-вирішення проблем підключення за
-допомогою Kerfstok
-(<a href="https://apps.garmin.com/en-US/apps/b6348ccc-86d8-4780-8013-d9e19fed5260">https://apps.garmin.com/en-US/apps/b6348ccc-86d8-4780-8013-d9e19fed5260</a>
-(див. також <a href="https://www.juggluco.nl/Kerfstok/index.html">https://www.juggluco.nl/Kerfstok/index.html</a>).
-Kerfstok — це програма для годинника для
-програмованих смарт-годинників Garmin із
-сенсорним екраном. Kerfstok використовується
-для таких цілей:</span></p>
-<ul>
-	<li><p style="line-height: 100%; margin-bottom: 0cm">Введіть
-	числа та обміняйтеся ними з Juggluco;</p>
-	<li><p style="line-height: 100%; margin-bottom: 0cm">Відображає
-	значення рівня глюкози, отримане від
-	Juggluco;</p>
-	<li><p style="line-height: 100%; margin-bottom: 0cm">Відображає
-	це значення глюкози під час занять
-	спортом, а також швидкість і дистанцію.
-	Дія буде записана та відображена в
-	додатку Garmin Connect.</p>
-</ul>
-<p style="line-height: 100%; margin-bottom: 0cm">Ця програма
-для годинника може підключатися через
-Bluetooth до Juggluco, щоб обмінюватися сумами
-та постійно відображати ваше поточне
-значення глюкози.<br/>
-Коли виникає
-проблема, чи може цей екран допомогти
-знайти її причину:</p>
-<p style="line-height: 100%; margin-bottom: 0cm">По-перше,
-назва вашого годинника має відображатися
-&quot;<i>ПІДКЛЮЧЕНО</i>&quot;. Якщо ні, вирішіть
-проблему в програмі Garmin Connect. По-друге,
-Kerfstok слід запустити на годиннику. 
-</p>
-<p style="line-height: 100%; margin-bottom: 0cm">Іноді зв\'язок
-між годинником і телефоном порушується.</p>
-<p style="line-height: 100%; margin-bottom: 0cm">Якщо статус
-надсилання має значення FAILURE_DURING_TRANSFER,
-ви можете виконати одну або всі з
-наведених нижче дій:</p>
-<p style="line-height: 100%; margin-bottom: 0cm">- Вимкніть і
-ввімкніть Bluetooth, а потім натисніть
-<i>Reinit</i>;</p>
-<p style="line-height: 100%; margin-bottom: 0cm">- Перезавантажте
-годинник (майже завжди успішно, але
-іноді це потрібно зробити кілька разів);</p>
-<p style="line-height: 100%; margin-bottom: 0cm">- Перезавантажте
-телефон (останній варіант).</p>
-<p style="line-height: 100%; margin-bottom: 0cm">Для інших
-проблем може бути корисно примусово
-зупинити програму Garmin connect, запустити
-її знову та натиснути reinit.</p>
-<p style="line-height: 100%; margin-bottom: 0cm">Якщо є належне
-з’єднання та з якоїсь причини суми на
-годиннику та телефоні не синхронізовані,
-ви можете натиснути «<span style="font-variant: normal"><span style="font-style: normal"><b>Синхронізувати</b></span></span>»,
-щоб вони надсилали один одному номери,
-які вони ще не надіслали.</p>
-<p style="line-height: 100%; margin-bottom: 0cm">Під час
-запуску Juggluco автоматично викликається
-Sync. Це означає, що після перевстановлення
-Kerfstok усі номери також буде видалено в
-Juggluco. Єдиний спосіб зберегти ці цифри
-- це зробити дзеркало та надіслати його
-назад до Juggluco. Будьте обережні, оскільки
-дзеркало також одразу синхронізується
-з оригіналом. Щоб функціонувати як
-резервна копія, усі з’єднання з оригіналом
-мають бути розірвані в певний момент
-часу. Ви також можете підключити годинник
-до пристрою, який є клонам (ліве середнє
-меню-&gt;Клон) пристрою, у якому ви вводили
-цифри.</p>
-<p style="line-height: 100%; margin-bottom: 0cm"><b>Оновити</b>
-переписує це діалогове вікно з новою
-інформацією (наприклад, після Reinit або
-Sync).</p>
-<p style="line-height: 100%; margin-bottom: 0cm">Перевірка
-«<b>Глюкоза</b>» визначає, чи надсилаються
-значення глюкози на годинник.</p>
-<p style="line-height: 100%; margin-bottom: 0cm">Іноді
-відображається кнопка «<b>Надіслати
-чергу</b>»; це означає, що є повідомлення,
-які ще не надіслано на годинник. Зазвичай
-вони надсилаються автоматично вчасно,
-але іноді це було перервано, і натискання
-<i>черги надсилання</i> продовжить
-надсилання. Але якщо його не було
-надіслано через розрив з’єднання, це
-мало користі. Натискання «<i>Надіслати
-чергу</i>» під час поточної транзакції
-може розірвати з’єднання.</p>
-<p style="line-height: 100%; margin-bottom: 0cm"><br/>
-
-</p>
-]]>
-</string>
-<string name="getlib" >
-<![CDATA[
-<h1>Бібліотека Libre</h1>
-<p><font size="4" style="font-size: 14pt"><b>Juggluco</b></font>
-потрібна бібліотека, включена в додаток
-Abbott Libre.</p>
-<p><b>Датчики Freestyle Libre 2 у США </b><span style="font-weight: normal">та,
-можливо, датчики в інших країнах,
-наприклад Канаді, потребують бібліотеки
-з версії 2.5.2, 2.5.3 або 2.7.1 програми Abbott
-Librelink.</span></p>
-<p><b>Інші датчики</b> також працюють з
-бібліотекою Librelink 2.4.0, 2.4.1 або 2.4,2. Версії
-після 2.4.2 стали гіршими з точки зору
-використання батареї та дають ті самі
-результати в датчиках за межами США, як
-у Freestyle Libre 2.</p>
-<p>Код країни не має значення.</p>
-<p><span lang="uk-UA">.apk, що містить Librelink,
-розповсюджується Google Play і доступний у
-всіх місцях в Інтернеті. Список посилань
-можна знайти за адресою:
-<a class="western" href="https://www.juggluco.nl/Juggluco/urls.html">https://www.juggluco.nl/Juggluco/urls.html</a></span></p>
-<p>Після завантаження APK ви можете
-дозволити Juggluco відкрити його, натиснувши
-кнопку «<b>Відкрити</b>».</p>
-<p>Також можна запустити Juggluco без прямого
-доступу до датчика Freestyle libre. Програма
-може отримувати дані через з’єднання
-IP/TCP зі смартфона, який отримує дані від
-датчика. Без доступу до датчика також
-можна вводити інформацію про контроль
-діабету, як-от кількість інсуліну,
-вуглеводів і активність, і отримувати
-ці дані з програми годинника Garmin Kerfstok.
-Торкніться <b>Без датчика</b>, щоб обмежити
-Juggluco таким чином.</p>
-]]>
-</string>
-<string name="newlabelhelp" >
-<![CDATA[
-<h2 class="western">Мітка:</h2>
-<p>Назва мітки для введення чисел. Ви
-можете додати номер, прив’язаний до
-певної дати та часу, використовуючи
-«Нова сума» в лівому середньому меню.
-Ці числа можна відобразити на графіку
-рівня глюкози в цьому часовому положенні
-або в списку.</p>
-<h2 class="western">Округлити до:</h2>
-<p>Використовується в програмі годинника<span lang="en-US"><span lang="ru-RU">
-</span></span><span lang="ru-RU"><span lang="ru-RU">G</span></span><span lang="en-US"><span lang="ru-RU">a</span></span><span lang="en-US"><span lang="en-US">rmin</span></span><span lang="ru-RU"><span lang="en-US">
-</span></span>Kerfstok. Числа, введені під цією
-міткою, округляються до цього числа.</p>
-<p>0= повна точність, 0,5 = округлення до
-кратних 0,5 тощо.</p>
-<h2 class="western">Вага:</h2>
-<p>Якщо встановлено значення 0, числа
-відображаються на певній висоті на
-графіку незалежно від їх значення. Якщо
-вага перевищує 0, кожна кількість, введена
-під цією міткою, множиться на цю вагу
-та відображається у вигляді квадрата
-в тих самих координатах, що й графік
-рівня глюкози. Наприклад, ви можете
-встановити значення ваги на 1, щоб
-відображати вимірювання рівня глюкози,
-проведені уколом пальця, так само, як
-вимірювання датчика глюкози.</p>
-]]>
-</string>
-<string name="battery" >
-<![CDATA[
-<h1 class="western">Налаштування
-споживання енергії:</h1>
-<p style="line-height: 100%; margin-bottom: 0cm"><span lang="uk-UA">Зазвичай,
-коли пристрій Android не використовується,
-він переходить у режим дрімання, щоб
-споживати менше енергії. Якщо вам
-потрібно надійно отримувати значення
-глюкози через Bluetooth або TCP/IP, вам потрібно
-вимкнути оптимізацію акумулятора для
-Juggluco, а іноді й для всього пристрою, щоб
-запобігти вимкненню Juggluco на Android. Багато
-пристроїв мають додаткову оптимізацію
-батареї, активність у фоновому режимі
-та налаштування запуску під час
-завантаження, які потрібно змінити. Ви
-можете знайти їх у налаштуваннях
-Android-&gt;Акумулятор. Перегляньте
-<a href="https://dontkillmyapp.com/">https://dontkillmyapp.com</a>.</span></p>
-<p style="line-height: 100%; margin-bottom: 0cm">Під час
-використання Watch 4 або 5 вам потрібно
-дозволити <i>фонову активність</i> у
-додатку-супутнику Galaxy Wearable, Налаштування
-годинника -&gt; Додатки -&gt; Juggluco. Для
-годинників, які не мають цього параметра,
-ви можете використати таку команду зі
-свого комп’ютера:</p>
-<p style="line-height: 100%; margin-bottom: 0cm">adb shell cmd appops
-set tk.glucodata RUN_IN_BACKGROUND allow</p>
-<p style="line-height: 100%; margin-bottom: 0cm"><a href="https://www.juggluco.nl/JugglucoWearOS/install/adb.html"><span lang="uk-UA">Інформація
-про присл</span></a></p>
-]]>
-</string>
-<string name="nutrients" >
-<![CDATA[
-<p align="center" style="line-height: 100%; margin-top: 0.43cm; margin-bottom: 0.2cm; page-break-after: avoid">
-<font face="Liberation Sans, sans-serif"><font size="6" style="font-size: 28pt"><b>База
-даних складу їжі</b></font></font></p>
-<p style="line-height: 100%; margin-bottom: 0cm"><br/>
-
-</p>
-<p style="line-height: 100%; margin-bottom: 0cm">Тут ви можете
-шукати продукти в інтегрованому наборі
-даних МакКанса та Віддовсона «Склад
-харчових продуктів» за 2021 рік
-<a class="western" href="https://www.gov.uk/government/publications/composition-of-foods-integrated-dataset-cofid">https://www.gov.uk/government/publications/composition-of-foods-integrated-dataset-cofid</a></p>
-<p style="line-height: 100%; margin-bottom: 0cm"><br/>
-
-</p>
-<p style="line-height: 100%; margin-bottom: 0cm">Ви можете
-здійснювати пошук за допомогою регулярних
-виразів
-(<a class="western" href="https://www.regular-expressions.info/quickstart.html">https://www.regular-expressions.info/quickstart.html</a>).
-Наприклад, ви можете шукати елементи,
-які починаються на яблуко, за яким йде
-слово raw за допомогою: ^apple.*\\braw\\b</p>
-<p style="line-height: 100%; margin-bottom: 0cm">Пошук <i>apple</i>
-дає всі елементи, які містять <i>apple.</i></p>
-<p style="line-height: 100%; margin-bottom: 0cm"><br/>
-
-</p>
-<p style="line-height: 100%; margin-bottom: 0cm"><br/>
-
-</p>
-]]>
-</string>
-<string name="mealhelp" >
-<![CDATA[
-<h1>Харчування</h1>
-<p>Вкажіть кількість інгредієнтів страви.
-Потім розраховується загальний вміст
-вуглеводів. Також можна вказати кількість
-вуглеводів для всієї страви або
-інгредієнта, а потім програма визначить
-необхідну кількість інгредієнта.
-Натисніть «<i>Додати продукт</i>», щоб
-додати продукт до страви. У викликаному
-діалоговому вікні ви можете вибрати
-інгредієнт і вказати його кількість
-(або загальну кількість вуглеводів у
-страві чи цьому продукті). Натиснувши
-«<i>Вибрати</i>» або вже вказаний інгредієнт,
-ви перейдете до списку вже визначених
-інгредієнтів. Ви можете визначити новий
-інгредієнт, натиснувши там кнопку
-<i>Визначити</i>. Тут ви можете вказати
-назву та вміст вуглеводів цього
-інгредієнта у вказаних одиницях. Ви
-також можете натиснути «База даних»,
-щоб перейти до бази даних про харчовий
-склад, де ви можете шукати інгредієнти
-та переглядати склад харчового продукту,
-а натиснувши «<i>Вибрати</i>», вставити
-назву цього продукту та вміст вуглеводів
-у визначення інгредієнта.</p>
-]]>
-</string>
-<string name="colorhelp" >
-<![CDATA[
-<h1>Кольори</h1>
-<p>Тут ви можете змінити кольори чисел,
-кривих і точок сканування. Торкніться
-точки кривої, сканування або величини
-(щоб відобразилася інформація про цю
-точку або величину). Після цього торкніться
-кольору на панелі кольорів. Крива, точка
-сканування або величина тепер
-відображатимуться цим кольором.</p>
-<p>У версії WearOS потрібен годинник з
-клавішею «Назад», свайп назад не вийде.</p>
 ]]>
 </string>
 <string name="stathelp" >
 <![CDATA[
 <h1 class="western">Статистика</h1>
 <p><span lang="uk-UA">Частина статистики взята
-з <a class="western" href="https://www.healthline.com/diabetesmine/ambulatory-glucose-profile">AGP</a>
+з <a class="western" href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8991298">AGP</a>
 без ліцензії, з деякими незначними
 змінами.</span></p>
 <p>Кількість проаналізованих днів можна
@@ -1583,100 +2471,105 @@ Abbott Libre 2. GMI є заміною цього показника
 два пальці один до одного або від нього.</p>
 ]]>
 </string>
-<string name="alarmhelp" >
+<string name="staticnum" >
 <![CDATA[
-<h1>Тривоги</h1>
-<h2 class="western">Тривоги глюкози:</h2>
-<p style="line-height: 100%; margin-bottom: 0cm">Потокові
-значення, отримані через Bluetooth, можна
-використовувати для встановлення тривог
-низького та високого рівня глюкози.</p>
-<h3 class="western">Тривога низького рівня
-глюкози:</h3>
-<p style="line-height: 100%; margin-bottom: 0cm">Значення,
-нижче якого має спрацювати сигнал.</p>
-<h3 class="western">Тривога високого рівня
-глюкози:</h3>
-<p style="line-height: 100%; margin-bottom: 0cm">Значення,
-вище якого має спрацювати сигнал.</p>
-<h3 class="western">Тривога про втрату сигналу:</h3>
-<p style="line-height: 100%; margin-bottom: 0cm">Укажіть,
-через скільки хвилин має спрацювати
-сигнал, якщо значення глюкози не отримано
-через Bluetooth.<br/>
-Сигнали припиняться,
-коли виконується одна з таких умов:</p>
-<p style="line-height: 100%; margin-bottom: 0cm">- Вказана
-тривалість минула;<br/>
-- Перегляд кривої
-торкається;<br/>
-- Торкається сповіщення
-Android Juggluco (у розблокованому стані);<br/>
--
-Кнопка «Скасувати» торкається сповіщення
-про тривогу в Juggluco.</p>
-<h3 class="western">Доступне значення:</h3>
-<p style="line-height: 100%; margin-bottom: 0cm">Іноді датчик
-не працює. Коли ви ввімкнете це, ви
-отримаєте сповіщення, коли датчик знову
-запрацює, але лише тоді, коли ви побачите,
-що значення відсутнє в самій програмі
-Juggluco. Якщо ви знаєте, що значення було
-відсутнє через сповіщення Juggluco або його
-циферблат, чи не буде викликано сповіщення
-про доступне значення.<br/>
-Для кожного
-будильника ви можете вказати, яку мелодію
-відтворювати та як довго.</p>
-<h3 class="western">Будильник і тривога:</h3>
-<p>Коли встановлено, чи відтворюється
-мелодія дзвінка для низьких, високих і
-втрат сигналу в категорії Android Alarms. Це
-означає, що в налаштуваннях Android його
-гучність керується рівнем гучності
-будильників і не вимикається, коли звук
-усього телефону вимкнено або встановлено
-на вібрацію. Якщо будильник не встановлено,
-використовується рівень гучності
-сигналу дзвінка. Це завжди стосується
-сповіщення про доступне значення.</p>
-<h3 class="western"><br/>
-<br/>
+<h1 align="center">Заблоковано</h1>
+<p style="line-height: 100%; margin-bottom: 0cm"><b>Середнє
+ліве меню-&gt;</b><b>Клон</b><b>-&gt;&quot;Суми,
+отримані від дзеркала&quot;</b> встановлено,
+щоб заборонити введення сум у цю програму,
+оскільки вони будуть перевизначені
+сумами, отриманими від клона.</p>
+<p style="line-height: 100%; margin-bottom: 0cm">Якщо ця
+програма не отримує суми від дзеркального
+підключення, зніміть цей параметр.</p>
+]]>
+</string>
+<string name="talkhelp" >
+<![CDATA[
+<h1>Говорити</h1>
+<p style="font-style: normal; margin-bottom: 0cm"><font size="5" style="font-size: 18pt"><b>Говоріть
+глюкоза</b></font><br/>
+Озвучує значення
+глюкози, коли вони надходять.</p>
+<p style="font-style: normal; margin-bottom: 0cm"><br/>
+<b>Секунди
+між:</b> визначає, скільки секунд Juggluco
+має чекати, перш ніж промовити наступне
+значення глюкози. Значення глюкози
+завжди озвучуються одразу після
+надходження. Якщо вказано велике
+значення, Juggluco пропускатиме значення
+глюкози, які надходять до закінчення
+цього періоду часу.</p>
+<p style="font-style: normal; margin-bottom: 0cm"><br/>
+<b>Голос:</b>
+вибір динаміка зі списку можливих
+динаміків.</p>
+<p style="font-style: normal; margin-bottom: 0cm"><br/>
+<b>Швидкість:</b>
+більше число означає швидше розмову.</p>
+<p style="font-style: normal; margin-bottom: 0cm"><br/>
+<b>Висота:</b>
+більше число означає вищий тон.</p>
+<p style="font-style: normal; margin-bottom: 0cm"><br/>
+<b>Тест:</b>
+озвучує останнє значення глюкози.</p>
+<p style="font-style: normal; margin-bottom: 0cm"><br/>
+На деяких
+телефонах потрібно змінити налаштування
+Android для синтезу мовлення, щоб він
+працював. Іноді потрібно встановити
+дані мови або змінити конфігурацію. На
+телефонах Samsung потрібно налаштувати
+«синтез мовлення Google» замість «системи
+синтезу мовлення Samsung», щоб вибирати з
+різних голосів. Ці параметри можна
+знайти, виконавши пошук за словом «синтез
+мовлення» в налаштуваннях Android або
+перейшовши до пункту «<i>Мова та введення»
+(-&gt;Додатково)-&gt;Створення мовлення</i>.
+Тут ви можете вибрати «<i>Speech Services by
+Google</i>» і встановити голосові дані. В
+інших телефонах це в системних
+<i>налаштуваннях-&gt;Доступність-&gt;Зір-&gt;Налаштування
+синтезу мовлення.</i></p>
+<p style="margin-bottom: 0cm"><span style="font-style: normal"><br/>
+</span><font size="5" style="font-size: 18pt"><span style="font-style: normal"><b>Говоріть
+дотиком</b></span></font><span style="font-style: normal"><br/>
+Коли
+ввімкнено функцію Talk Touch, торкання в
+певних місцях створює розмову:<br/>
+     •
+Дотик до поточної глюкози;<br/>
+     • Точки
+дотику графіків і точки сканування;<br/>
 
-</h3>
-]]>
-</string>
-<string name="flashpermission" >
-<![CDATA[
-<p style="line-height: 100%; margin-bottom: 0cm">
-Іноді стверджують, що для використання
-спалаху потрібен дозвіл камери на деяких
-смартфонах. Через це Juggluco запитував
-такий дозвіл у попередніх версіях. На
-протестованих телефонах цей дозвіл не
-потрібен, і Juggluco більше не запитує його.
-Якщо Flash не працює або ваш смартфон
-виходить з ладу або поводиться дивно
-під час використання Flash, ви можете
-спробувати його ввімкнути.<br/>
-Ви можете
-знову вимкнути його в налаштуваннях
-Android для Juggluco.</p>
-]]>
-</string>
-<string name="nearbypermission" >
-<![CDATA[
-<p style="line-height: 100%; margin-bottom: 0cm">
-В Android 12 є деякі нові дозволи Bluetooth, які
-вимагають від вас явної згоди на
-використання Bluetooth. Старі програми не
-припиняють працювати відразу, але тепер
-ви можете використовувати ці нові
-дозволи. Якщо ви не надасте дозвіл на
-ПРИСТРОЇ ПОРУЧ, Juggluco не зможе отримувати
-значення глюкози через Bluetooth від датчиків
-Freestyle Libre 2. Але, можливо, старі дозволи
-все ще працюють.</p>
+    • Зворушливі суми;<br/>
+     • Дата цієї
+точки графіка називається, коли торкаються
+верхнього лівого та правого кутів;<br/>
+
+    • Тривале натискання пункту меню;<br/>
+
+    • Тривале натискання суми у списку
+сум (</span><i>ліве середнє меню-&gt;список</i><span style="font-style: normal">).</span></p>
+<p style="margin-bottom: 0cm"><span style="font-style: normal"><br/>
+</span><font size="5" style="font-size: 18pt"><span style="font-style: normal"><b>Озвучення
+повідомлень</b></span></font><span style="font-style: normal"><br/>
+Читає
+текстові повідомлення, які тимчасово
+відображаються на екрані, і результат
+сканування (повідомлення про помилки
+та значення глюкози).</span></p>
+<p style="margin-bottom: 0cm"><span style="font-style: normal"><br/>
+</span><font size="5" style="font-size: 18pt"><span style="font-style: normal"><b>Промовляйте
+будильники</b></span></font><span style="font-style: normal"><br/>
+Озвучує
+рівень глюкози під час сигналів низький
+і високий рівень глюкози. Він зчитується
+як на початку нагадування, так і в момент
+його зупинки.</span></p>
 ]]>
 </string>
 <string name="watchinfo" >
@@ -2002,8 +2895,8 @@ Bluetooth із годинником і його значення
 зарядного пристрою. Мій годинник вмикає
 WIFI, коли його підключено до зарядного
 пристрою.</p>
-<h5 class="western">Підключення годинника до
-телефону</h5>
+<h5 class="western"><font size="3" style="font-size: 12pt"><b>Підключення
+годинника до телефону</b></font></h5>
 <p>Під час ініціалізації, коли всі дані
 надсилаються з телефону на годинник,
 потрібне з’єднання Wi-Fi між годинником
@@ -2033,7 +2926,7 @@ IP-адреса тоді ще не доступна.)</p>
 годинником WearOS; для інших дзеркалальних
 з’єднань все одно потрібно вказати
 IP-адреси іншої сторони.</p>
-<h5 class="western">Циферблат</h5>
+<h5 class="western"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><b>Циферблат</b></font></font></h5>
 <p>Juggluco для Wear OS містить циферблат, який
 показує ваш поточний рівень глюкози,
 окрім часу та до чотирьох ускладнень.
@@ -2050,13 +2943,13 @@ IP-адреси іншої сторони.</p>
 натискаєте кнопку чи піднімаєте руку.
 Таким чином, відображуване значення
 може бути затримано до однієї хвилини.</p>
-<p><span lang="uk-UA">Існує також </span><span lang="uk-UA">оновлення</span><span lang="uk-UA">,
-яке використовує трансляцію Glucodata версії
+<p><span lang="uk-UA">Існує також оновлення, яке
+використовує трансляцію Glucodata версії
 WearOS для відображення значення глюкози
 на кожному циферблаті, який приймає
 ускладнення:
 <a href="https://github.com/pachi81/GlucoDataHandler/releases">https://github.com/pachi81/GlucoDataHandler/releases</a></span></p>
-<p>Третя можливість увімкнути <span lang="uk-UA"><i>в</i></span><span lang="uk-UA"><i>іджет</i></span>
+<p>Третя можливість увімкнути <span lang="uk-UA"><i>віджет</i></span>
 в налаштуваннях Juggluco на годиннику. Коли
 Juggluco має відповідні дозволи, значення
 рівня глюкози відображається поверх
@@ -2072,784 +2965,6 @@ Juggluco меню ліворуч -&gt; Налаштування -&gt;
 <br/>
 
 </p>
-]]>
-</string>
-<string name="about" >
-<![CDATA[
-<h1>Про Juggluco</h1>
-<p style="margin-bottom: 0cm">Juggluco написав <a href="https://www.juggluco.nl/Juggluco">Jaap
-Korthals Altes</a></p>
-<p style="margin-bottom: 0cm">Крім стандартних
-бібліотек Android, використовуються
-наступні:</p>
-<p style="margin-left: 1.27cm; margin-top: 0.18cm; margin-bottom: 0cm">
-<font face="Symbol"><font size="2" style="font-size: 10pt">·</font></font><span style="font-variant: normal">
-</span>Команди NFC і Bluetooth, специфічні для
-датчиків Abbott FreeStyle Libre, і алгоритми
-інтерпретації, специфічні для датчиків
-FreeStyle Libre. Усі вони без документів;</p>
-<p style="margin-left: 1.27cm; margin-top: 0.18cm; margin-bottom: 0cm">
-<font face="Symbol"><font size="2" style="font-size: 10pt">·</font></font><span style="font-variant: normal">
-</span>Для зв\'язку з годинниками Garmin
-використовується <a href="https://developer.garmin.com/connect-iq/sdk">Connect
-IQ Mobile SDK</a>;</p>
-<p style="margin-left: 1.27cm; margin-top: 0.18cm; margin-bottom: 0cm">
-<font face="Symbol"><font size="2" style="font-size: 10pt">·</font></font><span style="font-variant: normal">
-</span>Графіки створені за допомогою
-<a href="https://github.com/memononen/nanovg">NanoVG</a>;</p>
-<p style="margin-left: 1.27cm; margin-top: 0.18cm; margin-bottom: 0cm">
-<font face="Symbol"><font size="2" style="font-size: 10pt">·</font></font><span style="font-variant: normal">
-</span>Функція дзеркала використовує <a href="https://ascon.iaik.tugraz.at/">Ascon
-authenticated encryption</a>;</p>
-<p style="margin-left: 1.27cm; margin-top: 0.18cm; margin-bottom: 0cm">
-<font face="Symbol"><font size="2" style="font-size: 10pt">·</font></font><span style="font-variant: normal">
-</span>Зв\'язок з датчиками Libre3 використовує
-<a href="https://github.com/intel/tinycrypt">TinyCrypt</a>;</p>
-<p style="margin-left: 1.27cm; margin-top: 0.18cm; margin-bottom: 0cm">
-<font face="Symbol"><font size="2" style="font-size: 10pt">·</font></font><span style="font-variant: normal">
-</span>Вибір кольору є адаптацією <a href="https://github.com/yukuku/ambilwarna">AmbilWarna</a>;</p>
-<p style="margin-left: 1.27cm; margin-top: 0.18cm; margin-bottom: 0cm">
-<font face="Symbol"><font size="2" style="font-size: 10pt">·</font></font><span style="font-variant: normal">
-</span>Підтримка NFC NovoPens є модифікацією
-коду, взятого з xDrip.</p>
-<p style="margin-bottom: 0cm">Juggluco переклав на
-італійською <a href="mailto:matteo.gabriele81@gmail.com">Matteo
-Gabriele</a>.</p>
-<p style="margin-bottom: 0cm">Juggluco переклав на
-португальську Rui Pinheiro.</p>
-<p style="margin-bottom: 0cm">Juggluco переклав на
-польською <a href="mailto:adelis@translaris.pl">Arkadiusz
-Deliś</a>.</p>
-<p style="margin-bottom: 0cm">Juggluco переклав на
-білоруською <a href="mailto:3477734n@gmail.com">Находкін
-Яўген</a></p>
-<p style="margin-bottom: 0cm">Juggluco переклав на французькою Fabrice Delfosse</p>
-<p>Juggluco переклав на українську <a href="mailto:3477734n@gmail.com">Находкін
-Яўген</a> та <a href="mailto:moydiabet@gmail.com">Діма
-Діабетик</a> 
-</p>
-<p style="line-height: 100%; margin-bottom: 0cm"><br/>
-
-</p>
-]]>
-</string>
-<string name="disturbhelp" >
-<![CDATA[
-<h1>Доступ &quot;<i>Не
-турбувати</i>&quot;</h1>
-<p>У Juggluco ви можете вказати для кожного
-типу будильника, чи слід відтворювати
-його під час «<i>Не турбувати</i>» (у Мелодії
-певного будильника). На деяких пристроях
-будильники під час режиму «<i>Не турбувати</i>»
-можливі, лише якщо Juggluco має «<i>Не
-турбувати</i>&quot; доступ. Після натискання
-кнопки OK ви перейдете на екран налаштувань
-Android, де ви зможете надати Juggluco цей
-дозвіл. Незалежно від того, що ви там
-відповідаєте, ви можете вказати в
-Juggluco для кожного будильника, чи має він
-звучати під час режиму «<i>Не турбувати</i>»
-чи ні.</p>
-]]>
-</string>
-<string name="libreview" >
-<![CDATA[
-<h1>Libreview</h1>
-<p style="line-height: 100%; margin-bottom: 0cm">Juggluco може
-надсилати дані про рівень глюкози та
-її кількість у Libreview.<br/>
-Якщо ви
-використовуєте програму Abbotts Libre для
-датчиків Freestyle Libre 2, Libreview базується на
-даних історії з пам’яті датчика. Для
-цього потрібно просканувати датчик.<br/>
-Juggluco
-використовує дані потоку, отримані
-через Bluetooth, для створення цих 15-хвилинних
-точок шляхом усереднення значень потоку
-навколо кожної точки. Час від часу він
-також надсилає значення окремого потоку
-так само, як окремі відскановані значення
-надсилаються до Libreview програмою Librelink
-компанії Abbott. Juggluco не потрібно постійно
-підключатися до Інтернету, щоб усі дані
-надсилалися до Libreview. Як і програма
-Librelnk, вона надсилає дані за останні 89
-днів до Libreview. Необхідно, щоб Juggluco був
-постійно підключений до датчика Freestyle
-Libre 2 через Bluetooth. Для датчиків Freestyle Libre
-3 використовуються дані історії за 5
-хвилин, тому всі попередні значення
-надсилаються до Libreview.<br/>
-Щоб скористатися
-цією послугою, вам потрібно створити
-обліковий запис Libreview на <a class="western" href="https://libreview.com/">https://libreview.com</a>
-і вказати тут адресу електронної пошти
-та пароль. Не надсилайте дані за один і
-той самий період кілька разів до одного
-облікового запису Libreview (наприклад, із
-програми Librelink і Juggluco). Ви можете видалити
-існуючі пристрої в Libreview у Параметрах
-облікового запису-&gt;Мої пристрої або
-створити новий обліковий запис
-Libreview.<br/>
-Щоб увімкнути його, вам також
-потрібно поставити галочку «<b>Надіслати
-в libreview</b>».<br/>
-Juggluco надсилатиме нові
-дані в Libreview кожного разу, коли ви
-відключатиметеся від Juggluco, якщо цього
-не було зроблено протягом попередніх
-20 хвилин. Ви також можете вручну надіслати
-його до Libreview, натиснувши «<b>Надіслати
-зараз</b>».</p>
-<p style="line-height: 100%; margin-bottom: 0cm">Крім значень
-глюкози, суми також можна надсилати в
-Libreview. Для цього потрібно торкнутися
-«<b>Надіслати суми</b>» і вказати значення
-кожної позначки.<br/>
-Починаючи з Juggluco
-4.1.0, значення глюкози з датчиків FreeStyle
-Libre 3 також надсилаються до LibreView.<br/>
-<b>Libre3
-immediate</b>: негайно надсилайте значення
-глюкози в Libreview, коли вони надходять від
-датчиків Libre 3. Це корисно лише в поєднанні
-з LibreLinkUp. Щоб скористатися нею, потрібно
-додати підключення LibrelinkUp до цього
-облікового запису Libreview в одній із
-програм Libre компанії Abbott. Іноді значення
-не видно одразу, оскільки відображення
-LibreLinkUp не перемальовується автоматично.
-Користуватися LibreLinkup досить небезпечно,
-якщо ви не придивляєтеся уважно, оскільки
-коли ви торкаєтеся графіка, він показує
-старе значення замість поточного
-значення глюкози.<br/>
-LibreLinkUp не можна
-використовувати з датчиками Libre 2: не
-можна правдоподібно стверджувати, що
-скануватиметься щохвилини протягом
-усього дня. Замість цього скористайтеся
-дзеркальним підключенням або
-Nightscout.<br/>
-<b>Повторно надіслати дані</b>:
-почати заново; повторно надіслати дані
-за останні 90 днів до Libreview. Вам потрібно
-натиснути цю кнопку під час переходу
-на новий обліковий запис Libreview.<br/>
-Результат
-останньої спроби надсилання в Libreview
-відображається під кнопкою «Отримати
-ідентифікатор облікового запису».<br/>
-Оскільки
-значення, надіслані до Libreview, спочатку
-усереднюються протягом 15 хвилин, а потім
-аналізуються, можуть бути невеликі
-відмінності між значеннями, показаними
-на екрані статистики Juggluco та Libreview.
-Наприклад, Libreview повідомляє, що активний
-100% часу, а на екрані статистики Juggluco —
-96,0%. Крім того, деякі високі та низькі
-значення будуть усереднені, тому
-Libreview дає дещо вищий цільовий час, ніж
-екран статистики Juggluco. Оскільки реальні
-значення історії менш екстремальні,
-ніж середнє значення потоку навколо
-значення історії, ця різниця буде
-більшою, якщо Libreview базується на сканованих
-значеннях.<br/>
-Juggluco можна підключити до
-кількох датчиків одночасно, тоді як
-Librelink обробляє лише один датчик за раз.
-Juggluco також надсилає дані лише з одного
-датчика за раз до Libreview. Це робиться
-шляхом спершу надсилання даних з одного
-датчика і лише після того, як дані з
-цього датчика недоступні, він надсилає
-дані з наступного датчика. Коли Juggluco
-перемикається на наступний датчик,
-Juggluco не повернеться до попереднього,
-щоб імітувати політику одного датчика
-Librelink. Це означає, що коли ви запускаєте
-кілька датчиків одночасно, і один з них,
-доданий пізніше, завершується раніше,
-ніж раніше доданий датчик, цей попередній
-датчик більше не надсилатиме дані до
-Libreview.<br/>
-<b>Отримати </b><span lang="en-US"><b>ID</b></span>:
-якщо ви хочете лише отримати ідентифікатор
-облікового запису LibreView, але не надсилати
-дані в Libreview, ви можете ввести адресу
-електронної пошти та пароль і натиснути
-«<i>Отримати </i><span lang="en-US"><i>ID</i></span>». У
-тому самому рядку перед цією кнопкою
-буде показано ідентифікатор облікового
-запису (це може зайняти деякий час, і
-екран не оновиться автоматично). Отримання
-ідентифікатора облікового запису із
-сервера LibreView дає змогу використовувати
-датчик FreeStyle Libre 3, який уже використовувався
-з програмою Abbotts Libre 3 із цим обліковим
-записом LibreView. Повідомляється, що запуск
-датчика за допомогою Juggluco не
-працює.<br/>
-<b>ПОПЕРЕДЖЕННЯ</b>: датчик
-Freestyle Libre 3 має бути активовано за допомогою
-цього облікового запису.</p>
-]]>
-</string>
-<string name="garminconfig" >
-<![CDATA[
-<h1>Конфігурація Garmin
-Kerfstok</h1>
-<p style="line-height: 100%; margin-bottom: 0cm"><span lang="uk-UA"><b>Вихідний
-код</b></span> <span lang="uk-UA">Kerfstok можна завантажити
-з <a href="https://www.juggluco.nl/Kerfstok/Kerfstok-source.html">https://www.juggluco.nl/Kerfstok/Kerfstok-source.html</a>).
-Користувачі можуть змінювати його.
-Кожен додаток для годинника має унікальний
-ідентифікатор. Якщо ідентифікатор
-відрізняється від ідентифікатора за
-замовчуванням, Juggluco потрібно знати його
-для зв’язку з програмою годинника. Щоб
-вказати інший ідентифікатор, натисніть
-</span><span lang="uk-UA"><b>ID</b></span> <span lang="uk-UA">і
-введіть шістнадцятковий рядок із 32
-символів. Juggluco на одному пристрої можна
-підключити лише до однієї програми
-годинника на одному годиннику. Зміни
-призведуть до втрати даних.</span></p>
-<h2 class="western">Ярлики</h2>
-<p style="line-height: 100%; margin-bottom: 0cm">Ярлики
-надсилаються до програми годинника
-Garmin Kerfstok, щоб легко вставляти певні
-значення.</p>
-<h2 class="western">Темний режим</h2>
-<p style="line-height: 100%; margin-bottom: 0cm">Укажіть, чи
-має Kerfstok бути білим на чорному замість
-чорного на білому.</p>
-<p style="line-height: 100%; margin-bottom: 0cm"><br/>
-
-</p>
-]]>
-</string>
-<string name="librenumhelp" >
-<![CDATA[
-<p>Встановіть «<i>Надіслати
-суми</i>», щоб надсилати суми в Libreview. Перш
-ніж увімкнути «<i>Надсилати суми</i>», вам
-потрібно вказати для кожної мітки, як
-суми, введені під цією міткою, мають
-надсилатися до Libreview. Самі мітки можна
-створювати, змінювати та видаляти в
-лівому меню-&gt;Налаштування-&gt;&quot;Числові
-мітки&quot;.</p>
-<p>Для міток, які надсилаються як коментарі
-до Libreview, застосовується таке обмеження:
-після зміни мітки видалення та зміни
-сум, введених під попередньою міткою,
-не призведуть до змін у Libreview. Наприклад,
-якщо ви раніше мали мітку «Велосипед»
-і ввели 20, а потім змінили «Велосипед»
-на «Велоспорт» і змінили 20 у 25, чи не
-призведе ця зміна до змін у Libreview, але
-чи будуть і «Велосипед 20», і «Велоспорт
-25» присутні в Libreview. Єдине, що ви можете
-зробити, це видалити поточні пристрої
-в Libreview і натиснути «Повторно надіслати
-дані» в Juggluco.</p>
-]]>
-</string>
-<string name="setlibrenumtype" >
-<![CDATA[
-<p>Так само, як і для
-Libreview, ви також можете вказати, як
-представляти суми через сервер Nightscout
-у Juggluco.</p>
-<p>Виберіть, як суми в Juggluco, введені під
-певною міткою, мають надсилатися до
-Libreview. Можна надіслати більше ніж один
-тип суми з однаковою міткою Libreview.
-Наприклад, якщо ви оцінюєте їжу з
-вуглеводами та чистою глюкозою під
-окремими мітками в Juggluco, ви можете
-вказати для обох, що вони повинні
-надсилатися як <b>вуглеводи</b> до Libreview.</p>
-<p>Для вуглеводів можна помножити
-<b>кількість</b>, указану в Juggluco, на певне
-число, щоб можна було перетворити інші
-одиниці в грами. Якщо ви вважаєте в
-Juggluco порції 10 грамів, ви можете ввести
-тут 10, щоб грами були надіслані в
-Libreview.</p>
-<p><b>Коментарі</b> означають, що сума
-надсилається в Libreview так, ніби ви додали
-коментарі в Librelink. Якщо ви вкажете тут
-коментарі, надсилається мітка та номер,
-введений для цієї мітки. Наприклад:
-«<i>Велосипед 50</i>», якщо у вас є мітка
-«<i>Велосипед</i>» і ви ввели «<i>50</i>» під
-цією міткою. «<i>Велосипед 50</i>» буде
-показано під графіком «<i>Щоденного
-журналу</i>» в Libreview у вказаний час.</p>
-<p><br/>
-<br/>
-
-</p>
-]]>
-</string>
-<string name="floatingconfig" >
-<![CDATA[
-<h1 class="western">Налаштування
-віджету:</h1>
-<p>Тут ви можете встановити розмір шрифту
-та колір переднього плану та фону
-віджету. Ви також можете зробити фон
-П<b>розорим</b>, щоб зробити його невидимим.</p>
-<p><b>Можна доторкнутися</b>: коли встановлено,
-ви можете рухати плавучу глюкозу пальцем
-і видалити її, довго натискаючи. Якщо
-сенсорну функцію не налаштовано, сенсорне
-введення переходить у вікно під віджетом,
-щоб ви могли використовувати програму
-під віджетом. Ви також можете зробити
-віджет недоторканним, <b>двічі торкнувшись</b>
-його.</p>
-<p>Після введення <b>розміру шрифту</b>
-необхідно натиснути кнопку «Enter»,
-«Готово» або «✓» на програмній клавіатурі.</p>
-<p>Ви можете вмикати та вимикати віджет
-за допомогою прапорця «<i>Плавуча глюкоза</i>»
-в налаштуваннях. Ви також можете вимкнути
-«<i>Віджет</i>», <b>довго натискаючи</b> на
-плавуче значення глюкози. Наприклад,
-якщо ви встановили розмір шрифту
-настільки великий, що ви більше не можете
-вводити менший розмір шрифту на програмній
-клавіатурі.</p>
-<p>Для відображення поверх інших програм
-Juggluco потрібен спеціальний дозвіл. У
-WearOS і Android Automotive вам потрібно використовувати
-adb, щоб надати цей дозвіл:</p>
-<p style="line-height: 100%; margin-bottom: 0cm"><b>adb shell pm
-grant tk.glucodata android.permission.SYSTEM_ALERT_WINDOW</b></p>
-<p style="line-height: 100%; margin-bottom: 0cm; background: transparent">
-На деяких годинниках (наприклад, TicWatch
-Pro) ви також можете дозволити це за
-допомогою: Налаштування Android/WearOS-&gt;Програми
-та сповіщення-&gt; Інформація про
-додаток-&gt;Juggluco-&gt;Додатково-&gt;Відображати
-поверх інших програм.</p>
-]]>
-</string>
-<string name="getaccountidhelp" >
-<![CDATA[
-<h1 class="western">Отримати
-ідентифікатор облікового запису (ID)</h1>
-<p style="line-height: 100%; margin-bottom: 0cm"><span lang="uk-UA">Як
-отримати ідентифікатор облікового
-запису Libreview, необхідний для сканування
-датчика Freestyle Libre 3 через NFC? Якщо ви
-вказали «</span><span lang="uk-UA"><b>Вручну</b></span><span lang="uk-UA">»,
-ви можете ввести ідентифікатор облікового
-запису вручну. Ви також можете скасувати
-налаштування «</span><span lang="uk-UA"><i>вручну</i></span><span lang="uk-UA">»
-та натиснути «</span><span lang="uk-UA"><b>З Libreview</b></span><span lang="uk-UA">»,
-щоб використовувати адресу електронної
-пошти та пароль свого облікового запису
-для отримання його з Libreview.<br/>
-Також
-можна отримати ідентифікатор облікового
-запису Libreview від Libreview, а потім встановити
-«</span><span lang="uk-UA"><i>вручну</i></span><span lang="uk-UA">»
-та змінити адресу електронної пошти та
-пароль облікового запису Libreview. Після
-цього ви встановите «</span><span lang="uk-UA"><i>Надіслати
-в Libreview</i></span><span lang="uk-UA">» і натиснете
-«</span><span lang="uk-UA"><i>Повторно надіслати
-дані</i></span><span lang="uk-UA">», дані будуть
-надіслані до іншого облікового запису
-Libreview, але ідентифікатор попереднього
-облікового запису все одно
-використовуватиметься для сканування
-датчика через NFC. Таким чином Juggluco
-надсилає дані в інший обліковий запис
-Libreview, ніж той, який використовує програма
-Abbotts Libre 3.</span></p>
-]]>
-</string>
-<string name="Nightscouthelp" >
-<![CDATA[
-<h1 class="western">Web server</h1>
-<p style="line-height: 100%; margin-bottom: 0cm">Juggluco містить
-веб-сервер, за допомогою якого інші
-програми можуть отримувати значення
-рівня глюкози від Juggluco. Його можна
-використовувати для годинників xDrip і
-деяких програм Nightscout.<br/>
-Користуватися
-програмами, створеними для використання
-веб-сервера xDrip, відносно легко. Просто
-перевірте активність. Після цього вони
-можуть отримувати глюкозу з локального
-хосту на порт 17580. Nightscout server URL:
-http://127.0.0.1:17580 
-</p>
-<p style="line-height: 100%; margin-bottom: 0cm"><span lang="uk-UA">Також
-цим можуть скористатися деякі послідовники
-Nightscout. xDrip, Diabox і програму <a href="https://github.com/dabear/FloatingGlucose/releases">Windows
-Floating Glucose</a> можна використовувати з
-http, якщо не встановлено параметр «</span><span lang="uk-UA"><i>Лише
-локально</i></span><span lang="uk-UA">». У MacOS те саме
-стосується панелі меню Nightscout, Gluco Status і
-Gluco Tracker (усі в Apple Store). Вам також потрібен
-лише http для <a href="https://github.com/someoneAnyone/Nightscouter">Nightscouter</a>
-і <a href="https://github.com/jonfawcett/LoopFollow">LoopFollow</a>
-(IOS) і <a href="https://github.com/nightscout/nightguard">Nightguard</a>
-(IOS and WatchOS).</span></p>
-<p style="line-height: 100%; margin-bottom: 0cm">Якщо ви хочете
-отримати доступ до Juggluco через Інтернет,
-вам потрібно перенаправити порт зі
-свого модему. Ознайомитись:</p>
-<ul>
-	<li><p style="line-height: 100%; margin-bottom: 0cm"><a href="https://www.makeuseof.com/tag/what-is-port-forwarding-and-how-can-it-help-me"><span lang="uk-UA">https://www.makeuseof.com/tag/what-is-port-forwarding-and-how-can-it-help-me</span></a></p>
-	<li><p style="line-height: 100%; margin-bottom: 0cm"><a href="https://www.juggluco.nl/Juggluco/phones/index.html"><span lang="uk-UA">https://www.juggluco.nl/Juggluco/phones/index.html</span></a></p>
-	<li><p style="line-height: 100%; margin-bottom: 0cm">Середнє
-	ліве меню-&gt;Клон-&gt;Додати підключення-&gt;Довідка</p>
-</ul>
-<p style="line-height: 100%; margin-bottom: 0cm"><span lang="uk-UA">Інші
-послідовники Nightscout використовують лише
-https, і це вимагає, щоб у Juggluco був
-автентифікований ключ SSL для доменного
-імені, яке використовується для доступу
-до Juggluco. Якщо ваша зовнішня IP-адреса має
-пов’язане ім’я хоста, ви можете отримати
-сертифікат безкоштовно через <a href="https://certbot.eff.org/instructions">Certbot</a>
-або <a href="https://www.sslforfree.com/">ZeroSSL</a>. Ви не
-можете використовувати його, якщо ваш
-зовнішній IP не має імені хоста. Ви можете
-отримати безкоштовне доменне ім’я з
-<a href="https://www.freenom.com/">https://www.freenom.com</a>. Я
-спробував, але протягом кількох тижнів
-без будь-якого сповіщення вони просто
-забрали в мене домен, і коли я спробував
-зареєструвати його знову, це мало ціну.
-Ви можете купити ім’я хосту за кілька
-євро на рік (наприклад на
-<a href="https://www.strato.nl/domeinnaam">https://www.strato.nl/domeinnaam</a>).</span></p>
-<p style="line-height: 100%; margin-bottom: 0cm">Якщо ви
-отримали ключові файли від центру SSL,
-ви повинні надати їх Juggluco. Приватний
-ключ можна прочитати, натиснувши
-«<i>Приватний ключ</i>», повний ланцюжок,
-натиснувши «<i>Повний ланцюжок</i>».</p>
-<p style="line-height: 100%; margin-bottom: 0cm">Від ZeroSSL.com я
-отримав три файли: private.key, certificate.crt і
-ca_bundle.crt.</p>
-<p style="line-height: 100%; margin-bottom: 0cm">private.key – це
-приватний ключ, який ви повинні надати
-Juggluco, натиснувши «Приватний ключ».</p>
-<p style="line-height: 100%; margin-bottom: 0cm">Щоб створити
-повний ланцюжок, вам потрібно об’єднати
-certificate.crt і ca_bundle.crt.</p>
-<p style="line-height: 100%; margin-bottom: 0cm">Linux:</p>
-<pre style="margin-bottom: 0.51cm">cat certificate.crt ca_bundle.crt &gt;  fullchain.pem</pre><p style="line-height: 100%; margin-bottom: 0cm">
-Windows cmd.com:</p>
-<pre style="margin-bottom: 0.51cm">copy certificate.crt + ca_bundle.crt  fullchain.pem</pre><p style="line-height: 100%; margin-bottom: 0cm">
-Windows Powershell:</p>
-<p>cat certificate.crt &gt; fullchain.pem<br/>
-cat ca_bundle.crt &gt;&gt;
-fullchain.pem</p>
-<p style="line-height: 100%; margin-bottom: 0cm">Після
-використання Certbot я знайшов приватний
-ключ у /etc/letsencrypt/live/myhostname/privkey.pem<br/>
-і
-повний ланцюжок у
-/etc/letsencrypt/live/myhostname/fullchain.pem. &quot;myhostname&quot;
-- це ім\'я хоста, яке я використовував.</p>
-<p style="line-height: 100%; margin-bottom: 0cm"><span lang="uk-UA">Якщо
-ви просто хочете надіслати значення
-глюкози з одного Android на інший, вам краще
-скористатися функцією <a href="https://www.juggluco.nl/Juggluco/mgdL/index.html#mirror">Клон</a></span>
-<span lang="uk-UA">Juggluco (ліве середнє меню-&gt;Клон).</span></p>
-<p style="line-height: 100%; margin-bottom: 0cm">Android Aps і
-Nsclient не працюють як послідовники
-Juggluco, але ви можете надсилати їм значення
-глюкози за допомогою трансляції xDrip у
-Juggluco (меню зліва-&gt;налаштування-&gt;xDrip
-Broadcast).</p>
-<p style="line-height: 100%; margin-bottom: 0cm"><span lang="uk-UA">Вам
-потрібен SSL для програм Android Diabetes:M,
-<a href="https://play.google.com/store/apps/details?id=se.cornixit.nightwatch">Nightwatch</a>
-і <a href="https://slingithub.github.io/CheckmateWeb">Checkmate</a>,
-Sugarmate (MacOS і IOS) і <a href="https://github.com/JohanDegraeve/xdripswift">Xdrip4ios</a>,
-Shuggah і Cockpit (IOS). Вкажіть URL-адресу сервера
-Nightscout:</span></p>
-<p><i>https://hostname:port</i> 
-</p>
-<p><i>hostname</i> це ім’я хоста автентифікованого
-ключа, який ви надали Juggluco, port — це порт,
-який ви переслали на порт, який ви вказали
-на цьому екрані (за замовчуванням:
-17581).</p>
-<p style="line-height: 100%; margin-bottom: 0cm"><span lang="uk-UA">Веб-сервер
-також можна запустити на комп’ютері з
-ОС Linux. Він отримуватиме свої дані через
-<a href="https://www.juggluco.nl/Juggluco/mgdL/index.html#mirror">дзеркальне
-підключення</a> від Juggluco, підключеного
-до датчика: <a href="https://www.juggluco.nl/Juggluco/cmdline/index.html">https://www.juggluco.nl/Juggluco/cmdline</a>.</span></p>
-<p style="line-height: 100%; margin-bottom: 0cm">Інший телефон
-може підключитися до цього сервера
-через дзеркальне підключення або як
-підписник Nightscout (наприклад, на Iphone). Якщо
-є програма Nightscout, яка не працює з цим
-веб-сервером, повідомте мені. Можливо,
-його можна змусити працювати з деякими
-змінами. (Програми для iOS Nightscout і Nightscout
-X, а також програма для Android NSClient є
-специфічними для однієї конкретної
-серверної програми Nightscout і не працюватимуть
-із Juggluco.)</p>
-<p style="line-height: 100%; margin-bottom: 0cm"><b>api_secret</b>:
-вкажіть, що послідовники повинні
-встановити це значення для елемента
-заголовка http api_secret. У Juggluco 4.9.1 або пізнішої
-версії також працює тестування цього
-секрету, коли підписники використовують
-цей секрет як маркер Nightscout або
-використовують заголовок api-secret із
-секретом, закодованим SHA1.</p>
-<p style="line-height: 100%; margin-bottom: 0cm"><strong><span lang="uk-UA">Видимий</span></strong><span lang="uk-UA">:
-зробити секрет видимим.</span></p>
-<p style="line-height: 100%; margin-bottom: 0cm"><strong><span lang="uk-UA">Port</span></strong><span lang="uk-UA">:
-укажіть мережевий порт, який використовується
-для зв’язку з https-сервером. За замовчуванням
-17581.</span></p>
-<p style="line-height: 100%; margin-bottom: 0cm"><strong><span lang="uk-UA">Зберегти</span></strong><span lang="uk-UA">:
-зберегти зміни Secret або Port.</span></p>
-<p style="line-height: 100%; margin-bottom: 0cm"><strong><span lang="uk-UA">Use
-SSL</span></strong><span lang="uk-UA">: використовувати
-SSL (https). Для SSL вам потрібно надати
-приватний ключ і повний ланцюжок для
-імені хоста, який використовується для
-зв’язку з цією службою.</span></p>
-<p style="line-height: 100%; margin-bottom: 0cm"><strong><span lang="uk-UA">Приватний
-ключ</span></strong><span lang="uk-UA">: виберіть файл,
-що містить закритий ключ. Дивись вище.</span></p>
-<p style="line-height: 100%; margin-bottom: 0cm"><strong><span lang="uk-UA">Повний
-ланцюжок</span></strong><span lang="uk-UA">: виберіть
-файл, що містить повний ланцюжок, див.
-вище.</span></p>
-<p style="line-height: 100%; margin-bottom: 0cm"><strong><span lang="uk-UA">Лише
-локально</span></strong><span lang="uk-UA">: до
-http-сервера можна отримати доступ лише
-через localhost. Це не стосується https.</span></p>
-<p style="line-height: 100%; margin-bottom: 0cm"><span lang="uk-UA"><b>Надайте
-суми</b></span><span lang="uk-UA">: дозволити отримати
-введені суми за допомогою
-<a href="http://localhost:17580/api/v1/treatments?count=3">http://localhost:17580/api/v1/treatments?count=3</a>.
-(Ви повинні вказати для кожної мітки,
-що з нею потрібно зробити. Раніше це
-було так само, як і для Libreview, після версії
-4.18.0 ви можете розмістити мітки в різних
-категоріях для Libreview і цього веб-сервера.)
-Через цей інтерфейс xDrip може отримувати
-суми від Juggluco. У xDrip це можна зробити
-двома способами:</span></p>
-<ol>
-	<li><p style="line-height: 100%; margin-bottom: 0cm"><span style="font-variant: normal"><span lang="uk-UA"><span style="font-style: normal">Візьміть
-	як </span></span></span><span style="font-variant: normal"><span lang="uk-UA"><i>«Апаратне
-	джерело даних», «Послідовник Nightscout» </i></span></span><span style="font-variant: normal"><span lang="uk-UA"><span style="font-style: normal">і
-	вкажіть як </span></span></span><span style="font-variant: normal"><span lang="uk-UA"><i>«Перейти
-	URL»,</i></span></span><span style="font-variant: normal">
-	</span><span style="font-variant: normal"><span lang="uk-UA"><span style="font-style: normal"><a href="http://localhost:17580/api/v1/treatments?count=3">http://127.0.0.1:17580</a>
-	і позначте</span></span></span><span style="font-variant: normal">
-	</span><span style="font-variant: normal"><span lang="uk-UA"><i>«Завантажити
-	лікування»</i></span></span><span style="font-variant: normal">
-	</span>
-	</p>
-	<li><p style="font-variant: normal; font-style: normal; line-height: 100%; margin-bottom: 0cm">
-	Візьміть інше апаратне джерело даних,
-	наприклад Libre (програму з виправленнями),
-	і ввімкніть налаштування-&gt;Завантаження
-	в хмару-&gt;Синхронізація Nightscout (REST-API).
-	Введіть URL-адресу базового API,
-	http://somekey@127.0.0.1:17580/api/v1/ і ввімкніть
-	«Завантажувати процедури». Завантаження
-	в Juggluco неможливе, тому це лише завантажує
-	лікування та генерує деякі повідомлення
-	про помилки.</p>
-</ol>
-<p style="line-height: 100%; margin-bottom: 0cm"><span style="font-variant: normal"><span style="font-style: normal">Якщо
-прапорець «</span></span><span style="font-variant: normal"><i>Лише
-локально</i></span><span style="font-variant: normal"><span style="font-style: normal">»
-знято, ви також можете використовувати
-IP-адресу домашньої мережі телефону, на
-якому запущено Juggluco, і зовнішню IP-адресу
-вашого телефону, коли ви налаштовуєте
-модем на переадресацію на 17580 цього
-телефону. Якщо ви надали Juggluco приватний
-ключ і повний ланцюжок для імені хоста,
-за допомогою якого можна отримати доступ
-до телефону та ввімкнути його за допомогою
-SSL, ви також можете використовувати це
-ім’я хоста та вказаний тут порт,
-використовуючи https замість http.<br/>
-Якщо
-ви хочете завантажити лікування в
-Diabetes:M, ви можете надіслати дані Juggluco в
-Libreview і зберегти дані в Libreview за допомогою
-«З</span></span><span style="font-variant: normal"><i>авантажити
-дані про рівень глюкози</i></span><span style="font-variant: normal"><span style="font-style: normal">»
-та імпортувати ці дані в Diabetes:M за
-допомогою «Дані-&gt;Імпорт з інших
-джерел-&gt;Freestyle». або отримайте
-автентифікований ключ для зовнішнього
-імені хоста вашого телефону та вкажіть
-як посилання на зовнішнє джерело,
-Nightscout із URL-адресою https://yourhostname:Port, де
-ваше ім’я хосту – це ім’я хосту вашого
-телефону, на якому запущено Juggluco, для
-якого ви отримали автентифікований
-ключ а порт — це порт, який ви тут згадали.
-Здається, він не синхронізується
-автоматично, тому в Diabetes:M вам потрібно
-самостійно натиснути «Синхронізувати».<br/>
-</span></span><span style="font-variant: normal"><span style="font-style: normal"><b>Активний</b></span></span><span style="font-variant: normal"><span style="font-style: normal">:
-веб-сервер працює.</span></span></p>
-<p style="line-height: 100%; margin-bottom: 0cm"><br/>
-
-</p>
-<p style="line-height: 100%; margin-bottom: 0cm"><span lang="uk-UA">Для
-отримання додаткової інформації про
-команди веб-сервера Nightscout/xDrip, реалізовані
-в Juggluco, див. <a href="https://www.juggluco.nl/Juggluco/webserver.html">https://www.juggluco.nl/Juggluco/webserver.html</a></span></p>
-]]>
-</string>
-<string name="NightPost" >
-<![CDATA[
-<p>Завантажити на сервер
-Nightscout.</p>
-<p><span lang="uk-UA">У більшості випадків ви
-також можете використовувати веб-сервер
-у Juggluco або <a href="https://www.juggluco.nl/Juggluco/cmdline">juggluco-server</a>,
-лише AAPS і NSclient відмовляються працювати,
-якщо вони не підключені до <a href="https://github.com/nightscout/cgm-remote-monitor">cgm-remote-monitor</a>.
-Веб-сервер у Juggluco також надає суми у
-вигляді процедур Nightscout
-(<a href="https://www.juggluco.nl/Juggluco/webserver.html">https://www.juggluco.nl/Juggluco/webserver.html</a>),
-а завантажувач завантажує лише значення
-глюкози.</span></p>
-<p>Усі значення потоку завантажуються
-на сервер Nightscout у момент надходження.
-Якщо використовується кілька датчиків,
-завантажуються всі значення всіх
-датчиків. Деякі програми/циферблати/віджети
-годинника Garmin припускають, що значення
-розташовуються з інтервалом у 5 хвилин.
-Коли вони отримують значення глюкози
-з інтервалом в одну хвилину, вони
-відображатимуть лише останню п’яту
-частину кривої. З цієї причини веб-сервер,
-включений у Juggluco, розміщує значення з
-інтервалом у 5 хвилин, за винятком
-випадків, коли для параметра
-«інтервал=секунд» встановлено нижче
-значення.</p>
-<p><b>URL</b>: URL-адреса має бути у формі
-https://hostname:port, наприклад,
-https://myname.herokuapp.com:6789</p>
-<p><b>Активний</b>: увімкнути завантажувач</p>
-<p><b>Повторно надіслати дані</b>: знову
-завантажити всі дані на сервер Nightscout</p>
-<p><b>Надіслати зараз</b>: зазвичай дані
-надсилаються негайно, коли вони надходять
-від датчика або дзеркала. Натисніть цю
-кнопку, якщо з якоїсь причини попередня
-спроба не вдалася.</p>
-<p><a name="tw-target-text"></a>Версія WearOS Juggluco 4.15.0 і
-пізніші також можуть завантажувати
-значення рівня глюкози в Nightscout. Майже
-в усіх випадках краще надсилати їх через
-версію Juggluco на телефоні чи планшеті або
-через сервер Juggluco на комп’ютері. Це
-розряджає батарею, особливо якщо не
-вдається зв’язатися з сервером
-Nightscout, тому вам краще вимкнути Активний,
-коли немає надійного з’єднання.</p>
-]]>
-</string>
-<string name="notificationpermission" >
-<![CDATA[
-<p>Android 13 вимагає, щоб ви
-надали дозволи на ці сповіщення, перш
-ніж ви навіть дізнаєтеся, які сповіщення
-надсилаються. Juggluco має сповіщення, що
-містять значення глюкози, і вимагає
-наявності сповіщень у зв’язку з основною
-службою, яка повинна залишатися активною
-у фоновому режимі. Для належної роботи
-Juggluco краще надати Juggluco цей дозвіл.</p>
-<p>Ви можете легко вмикати та вимикати
-сповіщення в налаштуваннях Android App-Info
--&gt; Notifications for Juggluco.</p>
-]]>
-</string>
-<string name="staticnum" >
-<![CDATA[
-<h1 align="center">Заблоковано</h1>
-<p style="line-height: 100%; margin-bottom: 0cm"><b>Середнє
-ліве меню-&gt;</b><b>Клон</b><b>-&gt;&quot;Суми,
-отримані від дзеркала&quot;</b> встановлено,
-щоб заборонити введення сум у цю програму,
-оскільки вони будуть перевизначені
-сумами, отриманими від клона.</p>
-<p style="line-height: 100%; margin-bottom: 0cm">Якщо ця
-програма не отримує суми від дзеркального
-підключення, зніміть цей параметр.</p>
-]]>
-</string>
-<string name="talkhelp" >
-<![CDATA[
-<h1>Говорити</h1>
-<p>Озвучує значення глюкози, коли вони
-надходять.</p>
-<p><b>Секунди між</b>: визначає, скільки
-секунд Juggluco має чекати, перш ніж промовити
-наступне значення глюкози. Значення
-глюкози завжди озвучуються одразу після
-надходження. Якщо вказано велике
-значення, Juggluco пропускатиме значення
-глюкози, які надходять до закінчення
-цього періоду часу.</p>
-<p><b>Активний</b>: увімкнути</p>
-<p><b>Голос</b>: вибір динаміка зі списку
-можливих динаміків.</p>
-<p><b>Швидкість</b>: більше число означає
-швидше розмову.</p>
-<p><b>Висота</b>: більше число означає вищий
-тон.</p>
-<p><b>Тест</b>: озвучує останнє значення
-глюкози.</p>
-<p>На деяких телефонах потрібно змінити
-налаштування Android для синтезу мовлення,
-щоб він працював. Іноді потрібно
-встановити дані мови або змінити
-конфігурацію. На телефонах Samsung потрібно
-налаштувати «<i>синтез мовлення Google</i>»
-замість «<i>системи синтезу мовлення
-Samsung</i>», щоб вибирати з різних голосів.
-Ці параметри можна знайти, виконавши
-пошук за словом «<i>синтез мовлення</i>»
-в налаштуваннях Android або перейшовши до
-пункту «<i>Мова та введення</i>»
-<i>(-&gt;Додатково)-&gt;Створення мовлення</i>.
-Тут ви можете вибрати «<i>Speech Services by
-Google</i>» і встановити голосові дані. В
-інших телефонах це в <i>системних
-налаштуваннях-&gt;Доступність-&gt;Зір-&gt;Налаштування
-синтезу мовлення.</i></p>
 ]]>
 </string>
 </resources>

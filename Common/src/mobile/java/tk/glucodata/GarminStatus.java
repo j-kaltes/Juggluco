@@ -247,7 +247,7 @@ class GarminStatus {
 		Button ok = new Button(context);
 		ok.setText(R.string.closename);
 		Button help = getbutton(context, R.string.helpname);
-		help.setOnClickListener(v -> help(R.string.watchhelp, context));
+		help.setOnClickListener(v -> help(R.string.kerfstok, context));
 		glucose = new CheckBox(context);
 		glucose.setText(R.string.glucose);
 		glucose.setChecked(alldata.sendtowatch);

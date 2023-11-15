@@ -1658,7 +1658,7 @@ alterações só são salvas após pressionar o botão&nbsp;<font><font face="Ca
 <font><font face="Liberation Serif, serif">Estatísticas</font></font></h1>
 <p style="line-height: 0.16in; orphans: 2; widows: 2; margin-bottom: 0.1in; background: transparent">
 <span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">Algumas
-estatísticas retiradas do&nbsp;</span></span></span></font></font></font></span><a href="https://www.healthline.com/diabetesmine/ambulatory-glucose-profile">AGP</a><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">&nbsp;sem
+estatísticas retiradas do&nbsp;</span></span></span></font></font></font></span><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8991298">AGP</a><span style="font-variant: normal"><font><font face="Times"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">&nbsp;sem
 licença, com algumas pequenas modificações.</span></span></span></font></font></font></span></p>
 <p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.16in; orphans: 2; widows: 2; margin-bottom: 0.1in; background: transparent">
 <font><font face="Times"><font size="4" style="font-size: 14pt">O
@@ -1752,7 +1752,7 @@ um para o outro ou um para o outro.</font></font></font></p>
 </p>
 ]]>
 </string>
-<string name="watchhelp" >
+<string name="kerfstok" >
 <![CDATA[
 <h1 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-top: 0in; margin-bottom: 0.08in">
 <font><font face="Liberation Serif, serif"><span style="background: transparent">Kerfstok</span></font></font></h1>

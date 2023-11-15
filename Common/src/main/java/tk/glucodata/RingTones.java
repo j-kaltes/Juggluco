@@ -200,6 +200,8 @@ static private void subEnableControls(View view,boolean enable){
 	sound.setChecked(hassound);
 
 	CheckBox vibration=new CheckBox(context);
+	vibration.setPadding(0,0,rand,0);
+
 	vibration.setText(R.string.vibrationname);
 	final boolean hasvibration= Natives.alarmhasvibration(kind);
 	vibration.setChecked(hasvibration);

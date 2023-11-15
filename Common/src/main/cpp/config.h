@@ -22,6 +22,7 @@
 
 //#define USE_HEBREW 1
 //#define USE_RUSSIAN 1
+//#define SPANISH 1
 #undef NDEBUG
 #ifndef NDK_DEBUG
 #define NDEBUG 1
