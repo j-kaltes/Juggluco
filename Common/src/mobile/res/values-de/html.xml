@@ -375,8 +375,7 @@ Bildschirms das vierte Menü.</span></font></font></p>
 	<col width="96"/>
 
 	<tr>
-		<td width="96" valign="top" style="border: none; padding: 0in"><p style="orphans: 2; widows: 2; background: transparent">
-			15:10 104</p>
+		<td width="96" valign="top" style="border: none; padding: 0in"><p>15:10&nbsp;&nbsp;&nbsp;↗&nbsp;106</p>
 		</td>
 	</tr>
 	<tr>
@@ -442,32 +441,32 @@ zwischen zwei Fingern ändern.</font></font></p>
 	</tr>
 	<tr>
 		<td width="138" valign="top" style="border: none; padding: 0in"><p style="orphans: 2; widows: 2; background: transparent">
-			Scans [x]</p>
+			Scans&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[x]</p>
 		</td>
 	</tr>
 	<tr>
 		<td width="138" valign="top" style="border: none; padding: 0in"><p style="orphans: 2; widows: 2; background: transparent">
-			Stream [x]</p>
+			Stream&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[x]</p>
 		</td>
 	</tr>
 	<tr>
 		<td width="138" valign="top" style="border: none; padding: 0in"><p style="orphans: 2; widows: 2; background: transparent">
-			History [x]</p>
+			History&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[x]</p>
 		</td>
 	</tr>
 	<tr>
 		<td width="138" valign="top" style="border: none; padding: 0in"><p style="orphans: 2; widows: 2; background: transparent">
-			Mengen [x]</p>
+			Mengen&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[x]</p>
 		</td>
 	</tr>
 	<tr>
 		<td width="138" valign="top" style="border: none; padding: 0in"><p style="orphans: 2; widows: 2; background: transparent">
-			Mahlzeiten [ ]</p>
+			Mahlzeiten&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[ ]</p>
 		</td>
 	</tr>
 	<tr>
 		<td width="138" height="39" valign="top" style="border: none; padding: 0in"><p style="orphans: 2; widows: 2; background: transparent">
-			Dunkelmodus [ ]</p>
+			Dunkelmodus&nbsp;&nbsp;&nbsp;[ ]</p>
 		</td>
 	</tr>
 </table>
@@ -508,7 +507,7 @@ angezeigt.</font></font></p>
 
 	<tr>
 		<td width="96" height="39" valign="top" style="border: none; padding: 0in"><p align="left" style="orphans: 2; widows: 2; background: transparent">
-			Notify [ ]</p>
+			Notify &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[ ]</p>
 		</td>
 	</tr>
 	<tr>
@@ -576,7 +575,7 @@ liegen zu jedem Zeitpunkt des Tages.</span></span></span></span></font></font></
 
 	<tr>
 		<td width="96" valign="top" style="border: none; padding: 0in"><p style="orphans: 2; widows: 2; background: transparent">
-			System UI [ ]</p>
+			System UI&nbsp;&nbsp;&nbsp;[ ]</p>
 		</td>
 	</tr>
 	<tr>
@@ -999,8 +998,7 @@ der Standortberechtigung für die Suche nach einer
 Bluetooth-Geräteadresse verwendet werden kann, aber auch für die
 spätere Kontaktaufnahme mit Bluetooth-Geräten benötigt wird.</font></font></font></p>
 <p style="line-height: 116%; margin-bottom: 0in; border: none; padding: 0in">
-<font><font face="times new roman"><font size="4" style="font-size: 14pt"><i><b>Stream
-history</b></i><i><b>: </b></i>Bei Libre 0 und 2 handelt es sich beim
+<font><font face="times new roman"><font size="4" style="font-size: 14pt"><i><b>Bluetooth history</b></i><i><b>: </b></i>Bei Libre 0 und 2 handelt es sich beim
 History um Werte der Vergangenheit im 15-Minuten-Intervall. Bisher
 wurden sie nur durch Scannen empfangen. Wenn Sie diese Option
 aktivieren, werden die History-Werte auch über Bluetooth empfangen.
@@ -2062,9 +2060,8 @@ werde.</p>
 <h1>Libreview</h1>
 <p>Juggluco kann Glukosedaten und -mengen an Libreview senden. Bei
 Verwendung von Libre 0- oder 3-Sensoren, US/CA/AU Libre 2-Sensoren
-oder anderen Libre 2-Sensoren mit eingestelltem <i>Stream</i><i>
-History,</i> sendet Juggluco die Historywerte an Libreview. <span style="font-style: normal">Wenn
-Libre 2-Sensoren ohne</span><i> „Stream</i><i> History</i>“
+oder anderen Libre 2-Sensoren mit eingestelltem <i>Bluetooth History,</i> sendet Juggluco die Historywerte an Libreview. <span style="font-style: normal">Wenn
+Libre 2-Sensoren ohne</span><i> „Bluetoothy History</i>“
 verwendet werden , verwendet Juggluco die über Bluetooth empfangenen
 Stream-Daten, um diese 15-Minuten-Punkte zu erstellen, indem die
 Stream-Werte um jeden Punkt herum gemittelt werden.</p>
@@ -2122,7 +2119,7 @@ Juggluco. Da die auf den Sensoren erstellten History-Werte weniger
 extrem sind als der Durchschnitt der Stream-Werte um einen
 History-wert herum, ist dieser Unterschied größer, wenn Libreview
 auf den History-<span style="font-style: normal">W</span><span style="font-style: normal">erten</span>
-basiert , wie wenn „Stream History“ in Juggluco aktiviert ist
+basiert , wie wenn „Bluetooth History“ in Juggluco aktiviert ist
 oder Librelink verwendet wird .</p>
 <p>Juggluco kann mit mehreren Sensoren gleichzeitig verbunden werden,
 während Librelink jeweils nur einen Sensor verwaltet. Juggluco
@@ -2191,13 +2188,6 @@ ein, um Mengen an Libreview zu senden. Bevor Sie <i>&quot;Mengen
 senden</i>&nbsp;&quot; einschalten können&nbsp;, müssen Sie für
 jedes Label festlegen, wie die unter diesem Label eingegebenen Mengen
 an Libreview gesendet werden sollen.</p>
-<p>Viele Benutzer denken, dass Kohlenhydrate nicht an Libreview
-gesendet werden, weil sie sie in „<i>Mahlzeitenprofil</i>“ nicht
-finden können. Aufgrund einer Einschränkung von Libreview muss
-Insulin gleichzeitig mit den Kohlenhydraten eingegeben werden, damit
-Kohlenhydrate in „<i>Mahlzeitenprofil</i>“ angezeigt werden.
-Kohlenhydrate werden immer im „<i>Tages</i><i>protokoll</i>“ und
-in der „<i>Wochenübersicht</i>“ angezeigt.</p>
 ]]>
 </string>
 <string name="setlibrenumtype" >

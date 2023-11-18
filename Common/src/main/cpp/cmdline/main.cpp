@@ -268,7 +268,7 @@ bool exportscans(int handle,  CurData  (SensorGlucoseData::*proc)(const uint32_t
 bool exporthistory(int handle,uint32_t starttime=0,uint32_t endtime=UINT32_MAX) ;
 void showversion() {
 #include "version.h"
-	cout<<"Version "<<version<<endl;
+	cout<<"Version "<< APPVERSION <<endl;
 	}
 
 template <int N> void setlabeltype(const int (&types)[N]) {

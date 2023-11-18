@@ -59,7 +59,7 @@ android {
         externalNativeBuild {
             cmake {
                 version "3.22.1"
-		cppFlags  " -DAPPID=\\\"$applicationId\\\""
+		cppFlags  " -DAPPID=\\\"$applicationId\\\" "
 
             }
         }
@@ -77,10 +77,15 @@ android {
 
             //	targetSdk 26
 	//******  Zet op rollout op 100% ******
-		versionCode       431           //LIBRE2ONLY
-		versionName '7.1.10-no3'
             	dimension 'libreVersion'
+		versionCode       431           //LIBRE2ONLY
+		versionName '7.1.11-no3'
             buildConfigField 'int', 'libreVersion', '2'
+		    externalNativeBuild.cmake {
+			cppFlags "  -DAPPVERSION=\\\"$versionName\\\" "
+
+            	}
+
 		}
         libre3 {
     	ndkVersion '26.0.10792818'
@@ -90,12 +95,12 @@ android {
             dimension 'libreVersion'
 		versionCode      431           //LIBRE3
 	//******  Zet op rollout op 100% ******
-		versionName '7.1.10'
+		versionName '7.1.11'
 
            	buildConfigField 'int', 'libreVersion', '3'
 		    externalNativeBuild.cmake {
 			arguments "-Dlibre3=TRUE"
-			cppFlags " -DLIBRE3=1 "
+			cppFlags "  -DAPPVERSION=\\\"$versionName\\\"  -DLIBRE3=1 "
 
             }
 
@@ -109,14 +114,14 @@ android {
 		minSdk 26
 		versionCode      432           //WATCH
 	//******  Zet op rollout op 100% ******
-		versionName '7.1.10-wear'
+		versionName '7.1.11-wear'
 		signingConfig signingConfigs.alg
 
 //            buildConfigField 'int', 'targetSDK', "$targetSdk"
            buildConfigField 'int', 'isWear', '1'
             externalNativeBuild.cmake {
 	        arguments "-DWEAROS=TRUE"
-                cppFlags " -DWEAROS=1  -DUSEDIN=1 "
+                cppFlags " -DWEAROS=1  -DUSEDIN=1  -DAPPVERSION=\\\"$versionName\\\" "
 
                 }
 

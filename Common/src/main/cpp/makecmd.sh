@@ -6,7 +6,9 @@ fi
 UITPATH=home/jka/src/android/Glucodata/Common/src/main/cpp
 hier=`pwd`
 cat> $gc/cmdline/version.h<<!
-const char version[]="$1";
+#ifndef JUGGLUCO_APP
+#define APPVERSION "$1"
+#endif
 !
 cmake $gc 
 make  cmdlinesrc.tar 

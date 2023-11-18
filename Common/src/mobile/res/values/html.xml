@@ -319,14 +319,11 @@ still needed for them.</p>
 </string>
 <string name="introhelp" >
 <![CDATA[
-<img src="left.jpg" style="object-fit:contain; width:15cm;                   height:auto;margin: 1cm 1cm 1cm 1cm;">
-    <img src="leftmiddle.jpg" style="object-fit:contain; width:15cm;                   height:auto;margin: 1cm 1cm 1cm 1cm;">
-    <img src="rightmiddle.jpg" style="object-fit:contain; width:15cm;                   height:auto;margin: 1cm 1cm 1cm 1cm;">
-    <img src="right.jpg" style="object-fit:contain; width:15cm;                   height:auto;margin: 1cm 1cm 1cm 1cm;">
+
     <p style="line-height: 115%; margin-bottom: 0in"> <font color="#ffffff"><font
           face="Cambria, serif"><font style="font-size: 14pt" size="4"><b>Juggluco</b></font></font>
         is an applet for the control of blood glucose by people with diabetes.
-        It can scan Freestyle libre (1 and 2) sensors (via NFC) and receive (via
+        It can scan Freestyle libre (0 and 2) sensors (via NFC) and receive (via
         Bluetooth) glucose values from <font color="#4f81bd"><font face="Calibri, serif"><i><b>Freestyle
                 libre 2</b></i></font></font><font color="#4f81bd"> </font><font
           color="#4f81bd"><font face="Calibri, serif"><i><b>and 3</b></i></font></font>
@@ -362,7 +359,7 @@ still needed for them.</p>
       <tbody>
         <tr>
           <td style="border: none; padding: 0in" width="96" valign="top">
-            <p> <font color="#ffff6d">15:10&nbsp;&nbsp;&nbsp;&nbsp;6.7</font></p>
+            <p> <font color="#ffff6d">15:10&nbsp;&nbsp;&nbsp;↗&nbsp;93</font></p>
           </td>
         </tr>
         <tr>
@@ -427,14 +424,12 @@ still needed for them.</p>
         </tr>
         <tr>
           <td style="border: none; padding: 0in" width="138" valign="top">
-            <p><font color="#ffff6d">Scans&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                [x]</font></p>
+            <p><font color="#ffff6d">Scans&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[x]</font></p>
           </td>
         </tr>
         <tr>
           <td style="border: none; padding: 0in" width="138" valign="top">
-            <p><font color="#ffff6d">Stream&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                [x]</font></p>
+            <p><font color="#ffff6d">Stream&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[x]</font></p>
           </td>
         </tr>
         <tr>
@@ -449,13 +444,13 @@ still needed for them.</p>
         </tr>
         <tr>
           <td style="border: none; padding: 0in" width="138" valign="top">
-            <p><font color="#ffff6d">Meals&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p><font color="#ffff6d">Meals&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 &nbsp;&nbsp; [&nbsp;&nbsp;]</font></p>
           </td>
         </tr>
         <tr>
           <td style="border: none; padding: 0in" width="138" valign="top" height="42">
-            <p> <font color="#ffff6d">Dark mode  [x]</font></p>
+            <p> <font color="#ffff6d">Dark mode&nbsp;&nbsp;&nbsp;[x]</font></p>
           </td>
         </tr>
       </tbody>
@@ -467,9 +462,7 @@ still needed for them.</p>
 display
           options. To view the last scan, touch the first</span> <span lang="en-US">item.
           </span>A cross after <i>Scans</i> means that scans are displayed in
-        the graph. A scan is the current glucose value you get when you scan
-        your sensor. Scanning also transfers 15 minutes measurements of the last
-        8 hours from sensor to smartphone. Display of these values can be
+        the graph. A scan is the current glucose value you get when you scan a Libre 0 or 2 sensor. Scanning also transfers 15 minutes measurements of the last 8 hours from sensor to smartphone. Display of these values can be
         controlled by touching <i>History</i>. Libre 3 sensors send the history
         values by Bluetooth and they are every 5 minutes. <i>Stream</i> stands
         for glucose values send every minute via Bluetooth from a Freestyle
@@ -918,20 +911,20 @@ middle menu-&gt;Dark mode.</p>
 <string name="sensorhelp" >
 <![CDATA[
 <p style="margin-top: 0.35in; margin-bottom: 0.35in; border: none; padding: 0in">
-<font face="basic sans"><font size="5" style="font-size: 18pt"><b>Sensor</b></font></font></p>
+<font face="basic sans"><font size="5" style="font-size: 18pt"><h1>Sensor</h1></font></font></p>
 <p style="margin-top: 0.02in; margin-bottom: 0.02in; border: none; padding: 0in">
 <font face="basic roman"><font size="2" style="font-size: 10pt">T<font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">he
 spinner contains the name of the sensor. If Juggluco is using more
 than one sensor at the same time, you can select for which sensor to
 show information.</font></font></font></font></p>
 <p style="margin-top: 0.02in; margin-bottom: 0.02in; border: none; padding: 0in">
-
-<font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><i><b><a href="https://www.juggluco.nl/Jugglucohelp/battery.html">Doze mode</a></b></i> leads you to a screen with information on how to disable
-battery optimizations for Juggluco, that can prevent Juggluco from
+<a href="https://www.juggluco.nl/Jugglucohelp/battery.html"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><i><b>Doze
+mode</b></i></font></font></a><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">
+leads you to a screen with information on how to disable battery
+optimizations for Juggluco, that can prevent Juggluco from
 functioning.</font></font></p>
 <p style="margin-top: 0.02in; margin-bottom: 0.02in; border: none; padding: 0in">
-<font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><i><b>Stream
-history</b></i>: On Libre 2, history are values of the past in 15
+<font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><i><b>Bluetooth history</b></i>: On Libre 2, history are values of the past in 15
 minute intervals. Previously they were only received by scanning.
 When you turn this option on, the History values are also received
 via Bluetooth. Also, other things will work differently. To Libreview
@@ -940,8 +933,8 @@ values. The disadvantage is that it is slower. This can be an issue
 on WearOS watches.</font></font></p>
 <p style="margin-top: 0.02in; margin-bottom: 0.02in; border: none; padding: 0in">
 <font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">This
-option is always turned on for Libre 3 sensors and US Libre 2
-sensors.</font></font></p>
+option has no effect on Libre 3 and US Libre 2 sensors; they
+always receive history values via Bluetooth.</font></font></p>
 <p style="margin-top: 0.02in; margin-bottom: 0.02in; border: none; padding: 0in">
 <font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><i><b>Permission</b></i>:
 Previous versions of Juggluco required location permission to find
@@ -990,8 +983,8 @@ contact with the sensor by putting the reader in a </font></font><a href="https:
 cage</u></font></font></a><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">.</font></font></p>
 <p style="margin-top: 0.02in; margin-bottom: 0.02in; border: none; padding: 0in">
 &nbsp;<font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><b>Sensor
-via Bluetooth/Use Bluetooth</b></font></font><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">
-should be turned on.</font></font></p>
+via Bluetooth/Use Bluetooth</b></font></font> <font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">should
+be turned on.</font></font></p>
 <p style="margin-top: 0.02in; margin-bottom: 0.02in; border: none; padding: 0in">
 <font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">If
 the above conditions are satisfied, it can still take a long time
@@ -1617,9 +1610,8 @@ set time schedule.</p>
 <p style="line-height: 100%; margin-bottom: 0in">Juggluco can send
 glucose data and amounts to Libreview. When using Libre 0 or 3
 sensors, US/CA/AU Libre 2 sensors or other Libre 2 sensors with
-<i>Stream History</i> set, Juggluco sends the history values to
-Libreview. If Libre 2 sensors are used without &quot;<i>Stream
-history</i>&quot;,Juggluco uses the stream data received via
+<i>Bluetooth History</i> set, Juggluco sends the history values to
+Libreview. If Libre 2 sensors are used without &quot;<i>Bluetooth history</i>&quot;,Juggluco uses the stream data received via
 Bluetooth to create these 15 minute points by averaging the stream
 values around each point.</p>
 <p style="line-height: 100%; margin-bottom: 0in">Like the Librelink
@@ -1644,15 +1636,17 @@ it wasn\'t done in the previous 20 minutes. You can also manually send
 it to Libreview by pressing <i>&quot;</i><i><b>Send now</b></i><i>&quot;</i>.</p>
 <p style="line-height: 100%; margin-bottom: 0in">Beside glucose
 values, amounts can also be sent to Libreview. For this you need to
-touch &quot;<i><b><a href="https://www.juggluco.nl/Jugglucohelp/librenumhelp.html">Send amounts</a></b></i>&quot; and specify what each
-label means.</p>
+touch &quot;<a class="western" href="https://www.juggluco.nl/Jugglucohelp/librenumhelp.html"><i><b>Send
+amounts</b></i></a>&quot; and specify what each label means.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>Immediate</b>:
 Send glucose values to Libreview immediately when they arrive from
 Libre 2 or 3 sensors. This is only useful in combination with
 LibreLinkUp. To make use of it you need to add a LibrelinkUp
-connection to this Libreview account in one of Abbott\'s Libre apps
-(you don\'t need to use it for anything else). Sometimes the value is
-not immediately visible, because display of <span style="font-weight: normal">LibreLinkUp</span>
+connection to this Libreview account in one of Abbott\'s Libre apps.
+(If there is no Abbott Libre app in your country, you can use the
+<a class="western" href="https://www.juggluco.nl/Juggluco/libre3/patched.html">patched
+Libre 3 app</a>.) Sometimes the value is not immediately visible,
+because display of <span style="font-weight: normal">LibreLinkUp</span>
 isn\'t redrawn automatically. Using LibreLinkup is quite dangerous if
 you don\'t look closely, because when you touch the graph, it shows an
 old value instead of the current glucose value.</p>
@@ -1681,7 +1675,7 @@ target </i>than the statistics screen of Juggluco. Because the
 history values created on the sensors are less extreme than the
 average of the stream values around a history value, this difference
 will be larger when Libreview is based on the <i>history</i> values
-as when &quot;Stream History&quot; is enabled in Juggluco or
+as when &quot;Bluetooth History&quot; is enabled in Juggluco or
 Librelink is used.</p>
 <p style="line-height: 100%; margin-bottom: 0in">Juggluco can be
 connected with multiple sensors at the same time, while Librelink
@@ -1694,20 +1688,18 @@ previous one, to imitate the one sensor policy of Librelink. This
 means that when you run multiple sensors at a time and a later added
 one ends earlier than an earlier added sensor, this earlier sensor
 will send no data anymore to Libreview.</p>
-<p><b><a href="https://www.juggluco.nl/Jugglucohelp/getaccountidhelp.html">Get Account ID</a></b>: If you only want to receive the LibreView
-account ID, but not send data to Libreview, you can fill in your
-E-Mail address and Password and press on &quot;<i><a href="https://www.juggluco.nl/Jugglucohelp/getaccountidhelp.html">Get Account ID</a></i>&quot;.
-On the same line before this button, the Account ID will be shown
-(this can take some time and the screen is not refreshed
-automatically). Retrieving the Account ID from the LibreView server
-makes it possible to use a FreeStyle Libre 3 sensor that was already
-used with Abbotts Libre 3 app with this LibreView account.</p>
+<p><a class="western" href="https://www.juggluco.nl/Jugglucohelp/getaccountidhelp.html"><b>Get
+Account ID</b></a>: If you only want to receive the LibreView account
+ID, but not send data to Libreview, you can fill in your E-Mail
+address and Password and press on &quot;<a class="western" href="https://www.juggluco.nl/Jugglucohelp/getaccountidhelp.html"><i>Get
+Account ID</i></a>&quot;. On the same line before this button, the
+Account ID will be shown (this can take some time and the screen is
+not refreshed automatically). Retrieving the Account ID from the
+LibreView server makes it possible to use a FreeStyle Libre 3 sensor
+that was already used with Abbotts Libre 3 app with this LibreView
+account.</p>
 <p><b>WARNING</b>: The Freestyle Libre 3 sensor should be activated
-with this account.<br/>
-<br/>
-<br/>
-
-</p>
+with this account.</p>
 ]]>
 </string>
 <string name="garminconfig" >
@@ -1751,14 +1743,6 @@ this change not result in a change in Libreview, but will both Bike
 20 and Cycling 25 be present in Libreview. The only thing you can do
 is to delete the current devices in Libreview and press on <i>Resend
 Data</i> in Juggluco.</p>
-<p>A lot of users think that carbohydrates are not send to Libreview
-because they can\'t find them in &quot;<i>Mealtime Patterns</i>&quot;.
-Because of a restriction of Libreview, <span style="font-style: normal">insulin
-needs to be entered for the same time as the carbohydrate for
-carbohydrate to be displayed in &quot;</span><i>Mealtime Patterns</i><span style="font-style: normal">&quot;.
-Carbohydrate is always displayed in &quot;</span><i>Daily log</i><span style="font-style: normal">&quot;
-and &quot;</span><i>Weekly summary</i><span style="font-style: normal">&quot;.</span></p>
-
 <p>
 <br>
 </p>
@@ -2013,12 +1997,12 @@ doesn\'t seem to sync automatically, so in Diabetes:M you have to
 press on Sync yourself.</span></span></p>
 <p style="line-height: 100%; margin-bottom: 0in"><strong>Active</strong>:
 Web server is running.</p>
-<p style="line-height: 100%; margin-bottom: 0in"><br/>
-
-</p>
 <p style="line-height: 100%; margin-bottom: 0in">For more information
 about the Nightscout/xDrip webserver commands implemented in
 Juggluco, see <a href="https://www.juggluco.nl/Juggluco/webserver.html">https://www.juggluco.nl/Juggluco/webserver.html</a></p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
 ]]>
 </string>
 <string name="NightPost" >

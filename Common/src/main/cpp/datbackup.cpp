@@ -121,13 +121,15 @@ int updateone::update() {
 //	return sendrender(getsock());
 
 	}
+extern int  updatenums(crypt_t *,int sock,struct changednums *nums,int);
+
 int 	updateone::updatenums() {
 	if(!sendnums)
 		return 2;
 	int soc=getsock();
 	if(soc<0)
 		return 0;
-	return ::updatenums(getcrypt(),soc,nums);
+	return ::updatenums(getcrypt(),soc,nums,ind);
 	}
 
 int  updateone::updatestreamu() {

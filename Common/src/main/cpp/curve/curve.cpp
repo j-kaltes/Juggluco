@@ -698,15 +698,6 @@ bool selshown=false;
 
 #include "numdisplayfuncs.h"
 extern vector<NumDisplay*> numdatas;
-/*
-bool updatenums(int sock,struct changednums *nums) {
-	for(int i=0;i<numdatas.size();i++) {
-		if(!numdatas[i]->update(sock,nums) )
-			return false;
-		}
-	return true;
-	}
-	*/
 int typeatheight(const float h) {
 //	const float gr= density*24;
 	const float gr= density*24;

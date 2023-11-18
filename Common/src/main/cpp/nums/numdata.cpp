@@ -25,10 +25,10 @@ std::vector<Numdata*> numdatas;
 
 #include "net/passhost.h"
 //bool update(int sock,int &len, struct numspan *ch) 
-int updatenums(crypt_t*pass,int sock,struct changednums *nums) {
+int updatenums(crypt_t*pass,int sock,struct changednums *nums,int ind) {
 	int ret=0;
 	for(int i=0;i<numdatas.size();i++) {
-		if(int subret=numdatas[i]->update(pass,sock,nums)) 
+		if(int subret=numdatas[i]->update(pass,sock,nums,ind)) 
 			ret|=subret;
 		else
 			return 0;

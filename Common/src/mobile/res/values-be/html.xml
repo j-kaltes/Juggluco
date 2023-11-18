@@ -1019,7 +1019,7 @@ Bluetooth з датчыкамі Freestyle Libre 2 і кожную
 	<col width="118"/>
 
 	<tr>
-		<td width="118" valign="top" style="border: none; padding: 0cm"><p>15:10:06.70</p>
+		<td width="118" valign="top" style="border: none; padding: 0cm"><p>15:10&nbsp;&nbsp;&nbsp;↗&nbsp;6.1</p>
 		</td>
 	</tr>
 	<tr>
@@ -1083,26 +1083,22 @@ Bluetooth з датчыкамі Freestyle Libre 2 і кожную
 		</td>
 	</tr>
 	<tr>
-		<td width="161" valign="top" style="border: none; padding: 0cm"><p>Сканы
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[x]</p>
+		<td width="161" valign="top" style="border: none; padding: 0cm"><p>Сканы &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[x]</p> </td>
+	</tr>
+	<tr>
+		<td width="161" valign="top" style="border: none; padding: 0cm"><p>Паток&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[x]</p>
 		</td>
 	</tr>
 	<tr>
-		<td width="161" valign="top" style="border: none; padding: 0cm"><p>Паток&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[x]</p>
+		<td width="161" valign="top" style="border: none; padding: 0cm"><p>Гісторыя&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[x]</p>
 		</td>
 	</tr>
 	<tr>
-		<td width="161" valign="top" style="border: none; padding: 0cm"><p>Гісторыя&nbsp;&nbsp;&nbsp;&nbsp;[x]</p>
+		<td width="161" valign="top" style="border: none; padding: 0cm"><p>Сумы&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[x]</p>
 		</td>
 	</tr>
 	<tr>
-		<td width="161" valign="top" style="border: none; padding: 0cm"><p>Сумы&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			 &nbsp;[x]</p>
-		</td>
-	</tr>
-	<tr>
-		<td width="161" valign="top" style="border: none; padding: 0cm"><p>Ежа&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			   &nbsp;&nbsp;[&nbsp;&nbsp;]</p>
+		<td width="161" valign="top" style="border: none; padding: 0cm"><p>Ежа&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;&nbsp;]</p>
 		</td>
 	</tr>
 	<tr>
@@ -1233,8 +1229,7 @@ Juggluco атрымаў дастаткова значэнняў
 		</td>
 	</tr>
 	<tr>
-		<td width="113" valign="top" style="border: none; padding: 0cm"><p><font color="#000000">Меню
-			     &nbsp;&nbsp;[&nbsp;]</font></p>
+		<td width="113" valign="top" style="border: none; padding: 0cm"><p><font color="#000000">Меню &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;]</font></p>
 		</td>
 	</tr>
 	<tr>

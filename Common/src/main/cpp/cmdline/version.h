@@ -1,1 +1,3 @@
-const char version[]="7.1.9";
+#ifndef JUGGLUCO_APP
+#define APPVERSION "7.1.11"
+#endif

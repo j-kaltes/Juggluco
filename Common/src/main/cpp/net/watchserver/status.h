@@ -1,7 +1,8 @@
+#include "cmdline/version.h"
 const char statusformat[]=R"({
   "status": "ok",
-  "name": "nightscout",
-  "version": "14.2.6",
+  "name": "juggluco",
+  "version": ")" APPVERSION R"(",
   "serverTime": "%d-%02d-%02dT%02d:%02d:%02d.%03dZ",
   "serverTimeEpoch": %lld,
   "apiEnabled": true,
@@ -55,17 +56,17 @@ const char statusformat[]=R"({
     ],
     "alarmTimeagoWarn": true,
     "alarmTimeagoWarnMins": "15",
-    "alarmTimeagoUrgent": true,
+    "alarmTimeagoUrgent": false,
     "alarmTimeagoUrgentMins": "30",
     "alarmPumpBatteryLow": false,
     "language": "en",
     "focusHours": 3,
     "authDefaultRoles": "readable",
     "thresholds": {
-      "bgHigh": %.1f,
-      "bgTargetTop": %.1f,
-      "bgTargetBottom": %.1f,
-      "bgLow":%.1f 
+      "bgHigh": %.0f,
+      "bgTargetTop": %.0f,
+      "bgTargetBottom": %.0f,
+      "bgLow":%.0f 
     },
     "insecureUseHttp": false,
     "deNormalizeDates": false,

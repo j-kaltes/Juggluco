@@ -288,15 +288,37 @@ adresów IP niż w przenośnym hotspocie.</p>
 </string>
 <string name="disturbhelp" >
 <![CDATA[
-<h1>Dost�p w trybie &quot;<i>Nie przeszkadza�</i>&quot;</h1>
-<p>W Juggluco dla ka�dego typu alarmu mo�na okre�li�, czy ma by� on odtwarzany w trybie <i>&quot;Nie przeszkadza�</i>&quot; (w opcji Dzwonek danego alarmu).<meta name="created" content="00:00:00">Na niekt&oacute;rych urz�dzeniach alarmy w trybie <i>&quot;Nie przeszkadza�</i>&quot; mog� by� w��czane tylko wtedy, gdy Juggluco ma dost�p do dzia�ania w trybie <i>&quot;Nie przeszkadza�</i>&quot;. Po naci�ni�ciu przycisku OK zostaniesz przekierowany do ekranu ustawie� systemu Android, gdzie mo�esz udzieli� Juggluco tego uprawnienia. Niezale�nie od tego, co tam odpowiesz, w Juggluco dla ka�dego alarmu mo�esz okre�li�, czy ma on zadzia�a� w trybie <i>&quot;Nie przeszkadza�</i>&quot;, czy nie.</p>
+<h1>Dostęp w trybie &quot;<i>Nie
+przeszkadzać</i>&quot;</h1>
+<p>W Juggluco dla każdego typu alarmu można określić, czy ma być
+on odtwarzany w trybie <i>&quot;Nie przeszkadzać</i>&quot; (w opcji
+Dzwonek danego alarmu).<meta name="created" content="00:00:00">Na
+niektórych urządzeniach alarmy w trybie <i>&quot;Nie przeszkadzać</i>&quot;
+mogą być włączane tylko wtedy, gdy Juggluco ma dostęp do
+działania w trybie <i>&quot;Nie przeszkadzać</i>&quot;. Po
+naciśnięciu przycisku OK zostaniesz przekierowany do ekranu
+ustawień systemu Android, gdzie możesz udzielić Juggluco tego
+uprawnienia. Niezależnie od tego, co tam odpowiesz, w Juggluco dla
+każdego alarmu możesz określić, czy ma on zadziałać w trybie
+<i>&quot;Nie przeszkadzać</i>&quot;, czy nie.</p>
 ]]>
 </string>
 <string name="flashpermission" >
 <![CDATA[
-<p style="line-height: 100%; margin-bottom: 0in">Niekiedy twierdzi si�, �e korzystanie z lampy b�yskowej wymaga w niekt&oacute;rych smartfonach uprawnienia do dost�pu do Aparatu. Z tego powodu aplikacja Juggluco w poprzednich wersjach prosi�a o to uprawnienie. Na testowanych telefonach to uprawnienie nie jest potrzebne i Juggluco ju� o nie nie prosi. Je�li Miganie lamp� b�yskow� nie dzia�a lub smartfon zawiesza si� albo zachowuje si� dziwnie podczas u�ywania opcji Miganie lamp� b�yskow�, mo�esz spr&oacute;bowa� w��czy� to uprawnienie.</p>
-<p style="line-height: 100%; margin-bottom: 0in">Mo�esz je ponownie wy��czy� w ustawieniach Androida dla aplikacji Juggluco.</p>
-<p style="line-height: 100%; margin-bottom: 0in"><br/></p>
+<p style="line-height: 100%; margin-bottom: 0in">
+Niekiedy twierdzi się, że korzystanie z lampy błyskowej wymaga w
+niektórych smartfonach uprawnienia do dostępu do Aparatu. Z tego
+powodu aplikacja Juggluco w poprzednich wersjach prosiła o to
+uprawnienie. Na testowanych telefonach to uprawnienie nie jest
+potrzebne i Juggluco już o nie nie prosi. Jeśli Miganie lampą
+błyskową nie działa lub smartfon zawiesza się albo zachowuje się
+dziwnie podczas używania opcji Miganie lampą błyskową, możesz
+spróbować włączyć to uprawnienie.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Możesz je ponownie
+wyłączyć w ustawieniach Androida dla aplikacji Juggluco.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
 ]]>
 </string>
 <string name="floatingconfig" >
@@ -332,29 +354,51 @@ adresów IP niż w przenośnym hotspocie.</p>
 <string name="getlib" >
 <![CDATA[
 <h1>Biblioteka Libre</h1>
-<p><font size="4" style="font-size: 14pt"><span lang="pl-PL"><b>Juggluco</b></span></font><span lang="pl-PL"> potrzebuje biblioteki zawartej w </span><span lang="pl-PL">aplikacji Libre firmy Abbott</span><span lang="pl-PL"></span><span lang="pl-PL"></span><span lang="pl-PL">.</span></p>
-<p><span lang="pl-PL"><b>Sensory Freestyle Libre 2 w USA </b></span><span lang="pl-PL">i ewentualnie sensory w innych krajach, takich jak Kanada, wymagaj� biblioteki z wersji 2.5.2, 2.5.3 lub 2.7.1 aplikacji Librelink firmy Abbott.</span></p>
-<p><span lang="pl-PL"><b>Inne sensory </b></span><span lang="pl-PL"> dzia�aj� r&oacute;wnie� z bibliotek�</span><span lang="pl-PL"> Librelink 2.4.0, 2.4.1</span><span lang="pl-PL"> lub</span><span lang="pl-PL"> 2.4.2</span><span lang="pl-PL">. </span><span lang="pl-PL">Wersje po 2.4.2 sta�y si� gorsze pod wzgl�dem zu�ycia baterii i daj� takie same wyniki</span> <span lang="pl-PL">jak w nieameryka�skich sensorach Freestyle Libre 2.</span></p>
-<p><span lang="pl-PL">Kod kraju nie robi r&oacute;�nicy.</span></p>
-<p><span lang="pl-PL">Plik .apk zawieraj�cy Librelink jest dystrybuowany przez Google Play i na wszystkich miejscach, kt&oacute;re s� dost�pne w sieci. Lista link&oacute;w znajduje si� na: </span><a href="https://www.juggluco.nl/Juggluco/urls.html">https://www.juggluco.nl/Juggluco/urls.html</a></p>
-<p><span lang="pl-PL">Po pobraniu pliku APK, mo�esz pozwoli� Juggluco otworzy� go, dotykaj�c przycisku </span><span lang="pl-PL"><b>Otw&oacute;rz</b></span><span lang="pl-PL">.</span></p>
-<p><span lang="pl-PL">Mo�liwe jest r&oacute;wnie� uruchomienie Juggluco bez bezpo�redniego dost�pu do sensora Freestyle libre. Aplikacja mo�e uzyska� dane poprzez po��czenie IP/TCP ze smartfona, kt&oacute;ry pobiera dane z sensora. Bez dost�pu do sensora mo�na r&oacute;wnie� wprowadza� informacje dotycz�ce kontroli cukrzycy, takie jak ilo�ci insuliny, w�glowodan&oacute;w i aktywno�ci i pobiera� te dane z aplikacji Kerfstok do zegark&oacute;w Garmin. Naci�nij </span><span lang="pl-PL"><b>Bez sensora</b></span><span lang="pl-PL">, aby ograniczy� Juggluco do tego</span> <span lang="pl-PL">sposobu.</span></p>
+<p><font size="4" style="font-size: 14pt"><span lang="pl-PL"><b>Juggluco</b></span></font>
+<span lang="pl-PL">potrzebuje biblioteki zawartej w aplikacji Libre
+firmy Abbott.</span></p>
+<p><span lang="pl-PL"><b>Sensory Freestyle Libre 2 w USA </b></span><span lang="pl-PL">i
+ewentualnie sensory w innych krajach, takich jak Kanada, wymagają
+biblioteki z wersji 2.5.2, 2.5.3 lub 2.7.1 aplikacji Librelink firmy
+Abbott.</span></p>
+<p><span lang="pl-PL"><b>Inne sensory </b></span><span lang="pl-PL">działają
+również z biblioteką</span> <span lang="pl-PL">Librelink 2.4.0,
+2.4.1</span> <span lang="pl-PL">lub</span> <span lang="pl-PL">2.4.2.
+Wersje po 2.4.2 stały się gorsze pod względem zużycia baterii i
+dają takie same wyniki</span> <span lang="pl-PL">jak w
+nieamerykańskich sensorach Freestyle Libre 2.</span></p>
+<p>Kod kraju nie robi różnicy.</p>
+<p><span lang="pl-PL">Plik .apk zawierający Librelink jest
+dystrybuowany przez Google Play i na wszystkich miejscach, które są
+dostępne w sieci. Lista linków znajduje się na:
+</span><a href="https://www.juggluco.nl/Juggluco/urls.html">https://www.juggluco.nl/Juggluco/urls.html</a></p>
+<p><span lang="pl-PL">Po pobraniu pliku APK, możesz pozwolić
+Juggluco otworzyć go, dotykając przycisku </span><span lang="pl-PL"><b>Otwórz</b></span><span lang="pl-PL">.</span></p>
+<p><span lang="pl-PL">Możliwe jest również uruchomienie Juggluco
+bez bezpośredniego dostępu do sensora Freestyle libre. Aplikacja
+może uzyskać dane poprzez połączenie IP/TCP ze smartfona, który
+pobiera dane z sensora. Bez dostępu do sensora można również
+wprowadzać informacje dotyczące kontroli cukrzycy, takie jak ilości
+insuliny, węglowodanów i aktywności i pobierać te dane z
+aplikacji Kerfstok do zegarków Garmin. Naciśnij </span><span lang="pl-PL"><b>Bez
+sensora</b></span><span lang="pl-PL">, aby ograniczyć Juggluco do
+tego</span> <span lang="pl-PL">sposobu.</span></p>
 ]]>
 </string>
 <string name="introhelp" >
 <![CDATA[
 <p style="line-height: 115%; margin-bottom: 0in">
-<font color="#365f91"><font face="Cambria, serif"><font size="4" style="font-size: 14pt"><b>Juggluco</b></font></font></font>To aplikacja służąca do kontroli stężenia glukozy we krwi przez osoby chore na cukrzycę. Może skanować sensory Freestyle libre (1 i 2) (przez NFC) i odbierać (przez Bluetooth) wartości glukozy z sensor&oacute;w<font color="#4f81bd"><font face="Calibri, serif"><i><b>Freestyle libre 2</b></i></font></font>.</p>
+<font color="#365f91"><font face="Cambria, serif"><font size="4" style="font-size: 14pt"><b>Juggluco </b></font></font></font>To aplikacja służąca do kontroli stężenia glukozy we krwi przez osoby chore na cukrzycę. Może skanować sensory Freestyle libre (1 i 2) (przez NFC) i odbierać (przez Bluetooth) wartości glukozy z sensor&oacute;w<font color="#4f81bd"><font face="Calibri, serif"><i><b>Freestyle libre 2</b></i></font></font>.</p>
 <p style="line-height: 115%; margin-bottom: 0in">Przy pierwszym uruchomieniu aplikacji można (po inicjalizacji) zeskanować czujnik Freestyle Libre <b>2</b>, przytrzymując go przy czujniku NFC w smartfonie. Następnie aplikacja Juggluco będzie pr&oacute;bować uzyskać połączenie Bluetooth z sensorami Freestyle Libre 2 i co minutę odbierać wartość glukozy bez skanowania.</p>
 <p style="line-height: 115%; margin-bottom: 0in">Aby przejąć aktywowany sensor FreeStyle Libre <b>3</b>, należy podać informacje o koncie Libreview, kt&oacute;re zostało użyte do aktywacji czujnika w ustawieniach -&gt;Libreview, nacisnąć &quot;Uzyskaj identyfikator konta Libreview&quot; i poczekać na nadejście identyfikatora konta przed skanowaniem.</p>
 <p style="line-height: 115%; margin-bottom: 0in"><span lang="pl-PL">Aplikacja zawiera cztery</span><font color="#4f81bd"><font face="Cambria, serif"><font size="3" style="font-size: 13pt"><span lang="pl-PL"><b>menu</b></span></font></font></font><span lang="pl-PL">; dotykając pustej części ekranu można otworzyć jedno z</span> <span lang="pl-PL">menu. Dotknięcie</span> <span lang="pl-PL">w lewą ćwiartkę</span> <span lang="pl-PL">ekranu otwiera lewe menu, w lewą część środkową otwiera drugie</span> <span lang="pl-PL">menu, w prawą część środkową otwiera trzecie</span> <span lang="pl-PL">menu</span><span lang="pl-PL">, a w prawą ćwiartkę</span> <span lang="pl-PL">ekranu otwiera czwarte menu.</span></p>
 <p style="line-height: 100%; orphans: 0; widows: 0; margin-top: 0.08in; margin-bottom: 0.08in; background: transparent; page-break-after: avoid">
 <font size="3" style="font-size: 12pt"><i>Menu 4: Poruszanie się (Prawe)</i></font></p>
-<table width="96" cellpadding="0" cellspacing="0" style="background: transparent">
+<table width="150" cellpadding="0" cellspacing="0" style="background: transparent">
 	<col width="96"/>
 
 	<tr>
-		<td width="96" valign="top" style="border: none; padding: 0in"><p>15:10&nbsp;&nbsp;&nbsp;&nbsp;106</p>
+		<td width="96" valign="top" style="border: none; padding: 0in"><p>15:10&nbsp;&nbsp;&nbsp;↗&nbsp;106</p>
 		</td>
 	</tr>
 	<tr>
@@ -394,11 +438,11 @@ adresów IP niż w przenośnym hotspocie.</p>
 		</td>
 	</tr>
 	<tr>
-		<td width="138" valign="top" style="border: none; padding: 0in"><p>Skany&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[x]</p>
+		<td width="138" valign="top" style="border: none; padding: 0in"><p>Skany&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[x]</p>
 		</td>
 	</tr>
 	<tr>
-		<td width="138" valign="top" style="border: none; padding: 0in"><p>Strumień &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[x]</p>
+		<td width="138" valign="top" style="border: none; padding: 0in"><p>Strumień&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[x]</p>
 		</td>
 	</tr>
 	<tr>
@@ -414,7 +458,7 @@ adresów IP niż w przenośnym hotspocie.</p>
 		</td>
 	</tr>
 	<tr>
-		<td width="138" height="37" valign="top" style="border: none; padding: 0in"><p>Tryb ciemny  [  ]</p>
+		<td width="138" height="37" valign="top" style="border: none; padding: 0in"><p>Tryb ciemny &nbsp;[  ]</p>
 		</td>
 	</tr>
 </table>
@@ -422,13 +466,9 @@ adresów IP niż w przenośnym hotspocie.</p>
 <p style="line-height: 115%; margin-bottom: 0in">Możesz wprowadzić wszystkie rodzaje liczb (z dowolną etykietą), aby udokumentować swoją insulinę, węglowodany i aktywności. Są one wyświetlane na stałej wysokości na wykresie glukozy o określonej godzinie i w określonym dniu. <span lang="pl-PL">Dotknięcie punkt&oacute;w</span> <span lang="pl-PL">na wykresie lub wprowadzonej liczby daje informacje o tym elemencie. Wprowadzoną liczbę można edytować, długo ją dotykając. Edycja jest możliwa r&oacute;wnież poprzez listę numer&oacute;w w środkowym lewym menu</span> <span lang="pl-PL">i dotknięcie odpowiedniego elementu danych.</span> <i>Wartości</i> określają spos&oacute;b wyświetlania wprowadzonych liczb. W Ustawieniach można określić, jakie etykiety mają być używane dla tych numer&oacute;w. Nad jedną z liczb widnieje odpowiadająca jej etykieta.</p>
 <p style="line-height: 100%; orphans: 0; widows: 0; margin-top: 0.08in; margin-bottom: 0.08in; background: transparent; page-break-after: avoid">
 <font size="3" style="font-size: 12pt"><i>Menu 2: Środkowe lewe</i></font></p>
-<table width="96" cellpadding="0" cellspacing="0">
+<table width="150" cellpadding="0" cellspacing="0">
 	<col width="96"/>
 
-	<tr>
-		<td width="96" height="37" valign="top" style="border: none; padding: 0in"><p align="left">Powiadom. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;]</p>
-		</td>
-	</tr>
 	<tr>
 		<td width="96" valign="top" style="border: none; padding: 0in"><p>Eksport</p>
 		</td>
@@ -449,11 +489,19 @@ adresów IP niż w przenośnym hotspocie.</p>
 		<td width="96" valign="top" style="border: none; padding: 0in"><p>Statystyka</p>
 		</td>
 	</tr>
+	<tr>
+		<td width="96" valign="top" style="border: none; padding: 0in"><p>Na głos</p>
+		</td>
+	</tr>
+	<tr>
+		<td width="96" height="37" valign="top" style="border: none; padding: 0in"><p align="left">Pływ. wart.&nbsp;&nbsp;&nbsp;[&nbsp;]</p>
+		</td>
+	</tr>
 </table>
 <p style="line-height: 115%; margin-bottom: 0in">Liczby te można wprowadzić dotykając <i><b>Nowa wartość</b></i> w<font color="#4f81bd"><font face="Cambria, serif"><span lang="pl-PL"><b>lewej części menu środkowego</b></span></font></font>.<font color="#4f81bd"><font face="Cambria, serif"><span lang="pl-PL"><b>Eksport</b></span></font></font><span lang="pl-PL">zapisuje dane w formacie .tsv (wartości oddzielone tabulatorami) do pliku.</span><font color="#4f81bd"><font face="Cambria, serif"><span lang="pl-PL"><b>Klonowanie</b></span></font></font><span lang="pl-PL">umożliwia wysyłanie danych przez IP/TCP do tej aplikacji działającej na innym urządzeniu w celu wyświetlenia tych samych informacji. Jeżeli zaznaczona jest opcja</span><font color="#4f81bd"><font face="Cambria, serif"><span lang="pl-PL"><b>Powiadom.</b></span></font></font>, <span lang="pl-PL">każda przychodząca wartość glukozy generuje powiadomienie w systemie Android. To powiadomienie jest wysyłane do niekt&oacute;rych smartwatch&oacute;w, dzięki czemu możesz zobaczyć swoją aktualną wartość glukozy</span> <span lang="pl-PL">na swoim zegarku. Wersja Juggluco działa na zegarkach z systemem WearOS. Dla niekt&oacute;rych smartwatch&oacute;w Garmin z ekranem dotykowym istnieje r&oacute;wnież</span> <span lang="pl-PL">aplikacja do zegarka</span> <span lang="pl-PL">(zwana Kerfstok, patrz <a href="https://apps.garmin.com/pl-PL/apps/b6348ccc-86d8-4780-8013-d9e19fed5260">https://apps.garmin.com/pl-PL/apps/b6348ccc-86d8-4780-8013-d9e19fed5260)</a>, kt&oacute;ra komunikuje się z Juggluco, odbiera i wyświetla aktualną wartość glukozy i może być używana do wprowadzania</span> <span lang="pl-PL">wartości. </span><span lang="pl-PL"><b>Lista </b></span><span lang="pl-PL">podaje listę wprowadzonych liczb. Jeśli aplikacja Juggluco otrzymała wystarczającą ilość wartości glukozy przez Bluetooth, możesz zobaczyć niekt&oacute;re statystyki, dotykając opcji </span><span lang="pl-PL"><b>Statystyka</b></span><span lang="pl-PL">. Pokazuje odsetek pomiar&oacute;w w określonych zakresach stężenia glukozy, wskaźnik pomiaru glukozy GMI (predyktor HbA1c), zmienność stężenia glukozy oraz wykres zbiorczy przedstawiający wartość glukozy, poniżej kt&oacute;rej w każdym momencie dnia leży 100%, 95%, 75%, 50%, 25% i 0% wartości.</span></p>
 <p style="line-height: 100%; orphans: 0; widows: 0; margin-top: 0.08in; margin-bottom: 0.08in; background: transparent; page-break-after: avoid">
 <font size="3" style="font-size: 12pt"><i>Menu 1: Lewe</i></font></p>
-<table width="96" cellpadding="0" cellspacing="0">
+<table width="150" cellpadding="0" cellspacing="0">
 	<col width="96"/>
 
 	<tr>
@@ -486,12 +534,27 @@ adresów IP niż w przenośnym hotspocie.</p>
 </string>
 <string name="labelhelp" >
 <![CDATA[
-<h1>Etykiety dla warto�ci</h1>
-<p style="margin-bottom: 0in; line-height: 115%">Tutaj mo�na tworzy�, usuwa� i modyfikowa� etykiety dla ilo�ci dodawanych do wykresu w celu okre�lenia insuliny, w�glowodan&oacute;w lub aktywno�ci fizycznej. Je�li zapisa�e� ju� jakie� ilo�ci, otrzymaj� one etykiet� odpowiadaj�c� ich pozycji. Je�li wi�c nadasz drugiej pozycji inn� nazw�, ju� zapisane ilo�ci okre�lone poprzedni� nazw� w drugiej pozycji otrzymaj� t� nazw�.</p>
-<p style="margin-bottom: 0in; line-height: 115%">Aby zmodyfikowa� etykiet�, dotknij jej.</p>
-<p style="margin-bottom: 0in; line-height: 115%"></p>
-<p style="margin-bottom: 0in; line-height: 115%">Po naci�ni�ciu opcji <b>Posi�ek </b>mo�na wybra�, kt&oacute;ra etykieta oznacza zawarto�� w�glowodan&oacute;w w posi�kach. Dla tej etykiety w opcji <i>&quot;Nowa warto��</i>&quot; w lewym �rodkowym menu dodano przycisk <b>Posi�ek</b>, za pomoc� kt&oacute;rego mo�na okre�li� posi�ek z jego sk�adnik&oacute;w. Suma w�glowodan&oacute;w jest nast�pnie zapisywana pod t� etykiet� i mo�na p&oacute;�niej wy�wietli� ten posi�ek, wybieraj�c opcj� Posi�ek o zapisanej warto�ci.</p>
-<p style="margin-bottom: 0in; line-height: 115%"><br/></p>
+<h1>Etykiety dla wartości</h1>
+<p style="line-height: 115%; margin-bottom: 0in">Tutaj można
+tworzyć, usuwać i modyfikować etykiety dla ilości dodawanych do
+wykresu w celu określenia insuliny, węglowodanów lub aktywności
+fizycznej. Jeśli zapisałeś już jakieś ilości, otrzymają one
+etykietę odpowiadającą ich pozycji. Jeśli więc nadasz drugiej
+pozycji inną nazwę, już zapisane ilości określone poprzednią
+nazwą w drugiej pozycji otrzymają tę nazwę.</p>
+<p style="line-height: 115%; margin-bottom: 0in">Aby zmodyfikować
+etykietę, dotknij jej.</p>
+<p style="line-height: 115%; margin-bottom: 0in">Po naciśnięciu
+opcji <b>Posiłek </b>można wybrać, która etykieta oznacza
+zawartość węglowodanów w posiłkach. Dla tej etykiety w opcji
+<i>&quot;Nowa wartość</i>&quot; w lewym środkowym menu dodano
+przycisk <b>Posiłek</b>, za pomocą którego można określić
+posiłek z jego składników. Suma węglowodanów jest następnie
+zapisywana pod tą etykietą i można później wyświetlić ten
+posiłek, wybierając opcję Posiłek o zapisanej wartości.</p>
+<p style="line-height: 115%; margin-bottom: 0in"><br/>
+
+</p>
 ]]>
 </string>
 <string name="librenumhelp" >
@@ -532,9 +595,18 @@ adresów IP niż w przenośnym hotspocie.</p>
 </string>
 <string name="locationpermission" >
 <![CDATA[
-<p style="line-height: 100%; margin-bottom: 0in">Wcze�niej aplikacja Juggluco potrzebowa�a uprawnienia do dost�pu do danych lokalizacji, aby znale�� adres urz�dzenia Bluetooth w sensorach FreeStyle Libre 2. Teraz Juggluco u�ywa innego sposobu, aby uzyska� adres urz�dzenia na wi�kszo�ci urz�dze� i jest uprawnienie do dost�pu do danych lokalizacji nie jest konieczne.</p>
-<p style="line-height: 100%; margin-bottom: 0in">Juggluco nadal u�ywa starej metody na Androidzie 6, 7 i 7.1 i dla nich uprawnienie do dost�pu do danych lokalizacji jest nadal potrzebne.</p>
-<p style="line-height: 100%; margin-bottom: 0in"><br/></p>
+<p style="line-height: 100%; margin-bottom: 0in">
+Wcześniej aplikacja Juggluco potrzebowała uprawnienia do dostępu
+do danych lokalizacji, aby znaleźć adres urządzenia Bluetooth w
+sensorach FreeStyle Libre 2. Teraz Juggluco używa innego sposobu,
+aby uzyskać adres urządzenia na większości urządzeń i jest
+uprawnienie do dostępu do danych lokalizacji nie jest konieczne.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Juggluco nadal używa
+starej metody na Androidzie 6, 7 i 7.1 i dla nich uprawnienie do
+dostępu do danych lokalizacji jest nadal potrzebne.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
 ]]>
 </string>
 <string name="mealhelp" >

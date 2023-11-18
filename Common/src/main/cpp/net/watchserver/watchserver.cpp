@@ -437,7 +437,23 @@ int totlen=weblen+sizeof(webpage1)+sizeof(webpage2)+5;
 	LOGGER("givesite predict=%d pagelen=%d totlen=%d reallen=%d\n",weblen,endptr-startpage,totlen,outdata->len);
 	return true;
 }
-static bool givestatus(recdata *outdata) {
+
+//{"settings":{"units":"mmol","thresholds":{"bgHigh":169,"bgLow":70}}}
+static bool givedripstatus(recdata *outdata) {
+	constexpr const char format[]= R"({"settings":{"units":"%s","thresholds":{"bgHigh":%.0f,"bgLow":%.0f}}})";
+	constexpr const int len=sizeof(format)+6+2*12;
+	outdata->allbuf=new(std::nothrow) char[len+512];
+	if(!outdata->allbuf) {
+		return outofmemory(outdata);
+		}
+        char *start=outdata->allbuf+152;
+	auto halarm=gconvert(settings->data()->ahigh,2);
+	auto lowalarm=gconvert(settings->data()->alow,2);
+	int alllen=snprintf(start,len,format, settings->getunitlabel().data(),halarm,lowalarm);
+	mkjsonheader(start,start+alllen,false,outdata); 
+	return true;
+	}
+static bool givenightstatus(recdata *outdata) {
 	constexpr static
 	#include "status.h"
 	auto tim=time(nullptr);
@@ -449,11 +465,11 @@ static bool givestatus(recdata *outdata) {
 		return outofmemory(outdata);
 		}
         char *start=outdata->allbuf+152;
-	auto thigh=gconvert(settings->targethigh());
-	auto tlow=gconvert(settings->targetlow());
-	auto halarm=gconvert(settings->data()->ahigh);
+	auto thigh=gconvert(settings->targethigh(),2);
+	auto tlow=gconvert(settings->targetlow(),2);
+	auto halarm=gconvert(settings->data()->ahigh,2);
 
-	auto lowalarm=gconvert(settings->data()->alow);
+	auto lowalarm=gconvert(settings->data()->alow,2);
 	const char *unitlabel=settings->getunitlabel().data();
 	int alllen=snprintf(start,len,statusformat,tmbuf.tm_year+1900,tmbuf.tm_mon+1,tmbuf.tm_mday, tmbuf.tm_hour, tmbuf.tm_min,tmbuf.tm_sec,0,tim*1000LL,unitlabel,halarm,thigh,tlow,lowalarm);
 	mkjsonheader(start,start+alllen,false,outdata); 
@@ -974,7 +990,7 @@ static bool apiv1(const char *input,int leftlen,bool behead,bool json, recdata *
 			if(*end==' '||*end=='/')
 				return givestatushtml(outdata);
 			else
-				return givestatus(outdata);
+				return givenightstatus(outdata);
 			}
 	std::string_view treatments="treatments";
 	const auto treatsize= treatments.size();
@@ -1308,6 +1324,10 @@ if(!memcmp(jugglucocommand.data(),posptr,jugglucocommand.size())) {
 constexpr const std::string_view pebble="pebble";
 	if(!memcmp(pebble.data(),toget.data(),pebble.size())) {
 		return pebbleinterpret(toget.data()+pebble.size(),toget.size()-pebble.size(),outdata);
+		} 
+constexpr const std::string_view status="status.json";
+	if(!memcmp(status.data(),toget.data(),status.size())) {
+		return givedripstatus(outdata);
 		} 
 std::string_view socket="socket.io";
 const auto socketsize= socket.size();

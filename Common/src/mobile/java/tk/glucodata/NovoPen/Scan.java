@@ -229,6 +229,8 @@ static void setInsulin(MainActivity context, OpContext op) {
 					int back=savenovopen(dose.referencetime,serial,ty,dose.rawdoses,d==lastdose);
 					if(back<0)  {
 						Applic.Toaster(context.getString(R.string.wentwrong));
+						context.doonback();
+						return;
 						}
 					else
 						nr+=back;

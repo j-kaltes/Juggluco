@@ -400,18 +400,12 @@ plaçant contre le capteur NFC de votre smartphone. Par la suite,
 Juggluco tentera d\'établir une connexion Bluetooth avec les capteurs
 Freestyle Libre 2 et recevra chaque minute une valeur de glucose sans
 devoir effectuer un scan.</p>
-<p style="margin-bottom: 0cm; line-height: 115%"><br/>
-
-</p>
 <p style="margin-bottom: 0cm; line-height: 115%">Pour prendre en
 charge un capteur FreeStyle Libre 3 déjà activé, vous devez
 spécifier les informations de compte Libreview que vous avez
 utilisées pour activer le capteur. Dans Paramètres -&gt; Libreview,
 appuyez sur &quot;Obtenir l\'ID de compte&quot; et attendez que l\'ID
 de compte arrive avant de scanner le capteur<b>.</b></p>
-<p style="margin-bottom: 0cm; line-height: 115%"><br/>
-
-</p>
 <p style="margin-bottom: 0cm; line-height: 115%"><span lang="en-US">Le
 programme contient quatre </span><font color="#4f81bd"><font face="Cambria, serif"><font size="3" style="font-size: 13pt"><span lang="en-US"><b>menus</b></span></font></font></font>
 <span lang="en-US">; en touchant une partie vide de l\'écran, vous
@@ -427,8 +421,7 @@ et le quart droit de l\'écran le quatrième menu.</span></p>
 	<col width="140"/>
 
 	<tr>
-		<td width="140" valign="top" style="border: none; padding: 0cm"><p>15:10
-			6.7</p>
+		<td width="140" valign="top" style="border: none; padding: 0cm"><p>15:10&nbsp;&nbsp;↗&nbsp;104</p>
 		</td>
 	</tr>
 	<tr>
@@ -479,9 +472,6 @@ inférieure de l\'écran, il modifie le minimum. Si <i>Mettre à
 l\'échelle manuellement le temps</i> est défini dans les paramètres,
 vous pouvez augmenter ou diminuer la durée affichée à l\'écran en
 modifiant la distance entre deux doigts.</p>
-<p style="margin-bottom: 0cm; line-height: 115%"><br/>
-
-</p>
 <p style="margin-top: 0.2cm; margin-bottom: 0.2cm; line-height: 100%; orphans: 0; widows: 0; background: transparent; page-break-after: avoid">
 <font size="3" style="font-size: 12pt"><i>Menu 3 : Affichage (milieu
 droit)</i></font></p>
@@ -494,40 +484,33 @@ droit)</i></font></p>
 		</td>
 	</tr>
 	<tr>
-		<td width="138" valign="top" style="border: none; padding: 0cm"><p>Numérisations
-			[x]</p>
+		<td width="138" valign="top" style="border: none; padding: 0cm"><p>Scans&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[x]</p>
 		</td>
 	</tr>
 	<tr>
-		<td width="138" valign="top" style="border: none; padding: 0cm"><p>Flux
-			[x]</p>
+		<td width="138" valign="top" style="border: none; padding: 0cm"><p>Flux&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[x]</p>
 		</td>
 	</tr>
 	<tr>
-		<td width="138" valign="top" style="border: none; padding: 0cm"><p>Historique
-			[x]</p>
+
+		<td width="138" valign="top" style="border: none; padding: 0cm"><p>Historique&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[x]</p>
 		</td>
 	</tr>
 	<tr>
-		<td width="138" valign="top" style="border: none; padding: 0cm"><p>Quantités
-			[x]</p>
+		<td width="138" valign="top" style="border: none; padding: 0cm"><p>Quantités &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [x]</p>
 		</td>
 	</tr>
 	<tr>
-		<td width="138" valign="top" style="border: none; padding: 0cm"><p>Repas
-			[ ]</p>
+		<td width="138" valign="top" style="border: none; padding: 0cm"><p>Repas&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[ &nbsp;]</p>
 		</td>
 	</tr>
 	<tr>
 		<td width="138" height="39" valign="top" style="border: none; padding: 0cm"><p>
-			Mode sombre [ ]</p>
+			Mode sombre [ &nbsp;]</p>
 		</td>
 	</tr>
 </table>
-<p style="margin-bottom: 0cm; line-height: 115%"><br/>
-
-</p>
-<p style="margin-bottom: 0cm; line-height: 115%"><span lang="en-US">L</span><span lang="en-US">e</span><font color="#4f81bd">
+<p style="margin-bottom: 0cm; line-height: 115%">Le<font color="#4f81bd">
 </font><font color="#4f81bd"><font face="Cambria, serif"><span lang="en-US"><b>menu
 du milieu</b></span></font></font> <font color="#4f81bd"><font face="Cambria, serif"><span lang="en-US"><b>à</b></span></font></font>
 <font color="#4f81bd"><font face="Cambria, serif"><span lang="en-US"><b>droite
@@ -557,20 +540,11 @@ de données correspondant. </span><span style="font-variant: normal"><span style
 Paramètres, vous pouvez spécifier les étiquettes que vous
 souhaitez utiliser pour ces quantités. Au-dessus de l\'une des
 quantités, l\'étiquette correspondante est affichée.</p>
-<p style="margin-bottom: 0cm; line-height: 115%"><br/>
-
-</p>
 <p style="margin-top: 0.2cm; margin-bottom: 0.2cm; line-height: 100%; orphans: 0; widows: 0; background: transparent; page-break-after: avoid">
 <font size="3" style="font-size: 12pt"><i>Menu 2 : </i></font><font size="3" style="font-size: 12pt"><i>Milieu
 gauche</i></font></p>
 <table width="125" cellpadding="0" cellspacing="0">
 	<col width="125"/>
-
-	<tr>
-		<td width="125" height="39" valign="top" style="border: none; padding: 0cm"><p align="left">
-			Notifier [ ]</p>
-		</td>
-	</tr>
 	<tr>
 		<td width="125" valign="top" style="border: none; padding: 0cm"><p>Exporter</p>
 		</td>
@@ -580,8 +554,7 @@ gauche</i></font></p>
 		</td>
 	</tr>
 	<tr>
-		<td width="125" valign="top" style="border: none; padding: 0cm"><p>Nouvelle
-			quantité</p>
+		<td width="125" valign="top" style="border: none; padding: 0cm"><p>Nouvelle quantité</p>
 		</td>
 	</tr>
 	<tr>
@@ -590,6 +563,12 @@ gauche</i></font></p>
 	</tr>
 	<tr>
 		<td width="125" valign="top" style="border: none; padding: 0cm"><p>Statistiques</p>
+		</td>
+	<tr>
+		<td width="125" valign="top" style="border: none; padding: 0cm"><p>Parler</p>
+		</td>
+	<tr>
+		<td width="125" valign="top" style="border: none; padding: 0cm"><p>Flotter &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ ]</p>
 		</td>
 	</tr>
 </table>
@@ -603,9 +582,6 @@ séparées par des tabulations) dans un fichier. </span><font color="#4f81bd"><f
 données via </span><span lang="en-US">TCP/IP</span><span lang="en-US">
 à cette application exécutée sur un appareil différent pour
 afficher les mêmes informations.</span></p>
-<p style="margin-bottom: 0cm; line-height: 115%"><br/>
-
-</p>
 <p style="margin-bottom: 0cm; line-height: 115%"><span lang="en-US">Lorsque
 </span><font color="#4f81bd"><font face="Cambria, serif"><span lang="en-US"><b>Notifier</b></span></font></font>
 est coché, <span lang="en-US">chaque valeur de glucose entrante
@@ -630,9 +606,6 @@ l\'HbA1c), la variabilité du glucose et un graphique récapitulatif
 montrant la valeur de glucose en dessous de laquelle 100&nbsp;%,
 95&nbsp;%, 75&nbsp;%, 50&nbsp;%, 25&nbsp;% et 0% des valeurs se
 situent à chaque instant de la journée.</span></p>
-<p style="margin-bottom: 0cm; line-height: 115%"><br/>
-
-</p>
 <p style="margin-top: 0.2cm; margin-bottom: 0.2cm; line-height: 100%; orphans: 0; widows: 0; background: transparent; page-break-after: avoid">
 <font size="3" style="font-size: 12pt"><i>Menu 1 : Gauche</i></font></p>
 <table width="125" cellpadding="0" cellspacing="0">

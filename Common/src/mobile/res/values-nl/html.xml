@@ -364,7 +364,7 @@ opent het vierde menu.</p>
 	<col width="90"/>
 
 	<tr>
-		<td width="90" valign="top" style="border: none; padding: 0in"><p>15:46&nbsp;&nbsp;&nbsp;5.6</p>
+		<td width="90" valign="top" style="border: none; padding: 0in"><p>15:46&nbsp;&nbsp;↗&nbsp;5.6</p>
 		</td>
 	</tr>
 	<tr>
@@ -432,28 +432,27 @@ veranderd worden door de afstand tussen twee vingers te veranderen.</span></p>
 		</td>
 	</tr>
 	<tr style="background: transparent">
-		<td width="138" valign="top" style="border: none; padding: 0in"><p>Scans&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[x]</p>
+		<td width="138" valign="top" style="border: none; padding: 0in"><p>Scans&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[x]</p>
 		</td>
 	</tr>
 	<tr>
-		<td width="138" valign="top" style="border: none; padding: 0in"><p>Stream&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[x]</p>
+		<td width="138" valign="top" style="border: none; padding: 0in"><p>Stream&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[x]</p>
 		</td>
 	</tr>
 	<tr>
-		<td width="138" valign="top" style="border: none; padding: 0in"><p>History&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[x]</p>
+		<td width="138" valign="top" style="border: none; padding: 0in"><p>History&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[x]</p>
 		</td>
 	</tr>
 	<tr style="background: transparent">
-		<td width="132" valign="top" style="border: none; padding: 0in"><p>Hoeveelheden&nbsp;&nbsp;[x]</p>
+		<td width="132" valign="top" style="border: none; padding: 0in"><p>Hoeveelheden&nbsp;[x]</p>
 		</td>
 	</tr>
 	<tr style="background: transparent">
-		<td width="132" valign="top" style="border: none; padding: 0in"><p>Maaltijden&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;&nbsp;]</p>
+		<td width="132" valign="top" style="border: none; padding: 0in"><p>Maaltijden&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;&nbsp;]</p>
 		</td>
 	</tr>
 	<tr style="background: transparent">
-		<td width="132" valign="top" style="border: none; padding: 0in"><p>Dark
-			mode&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[x]</p>
+		<td width="132" valign="top" style="border: none; padding: 0in"><p>Dark mode&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[x]</p>
 		</td>
 	</tr>
 </table>
@@ -493,10 +492,6 @@ midden</i></font></p>
 	<col width="96"/>
 
 	<tr>
-		<td width="96" valign="top" style="border: none; padding: 0in"><p>Melding&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;]</p>
-		</td>
-	</tr>
-	<tr>
 		<td width="96" valign="top" style="border: none; padding: 0in"><p>Export</p>
 		</td>
 	</tr>
@@ -514,6 +509,14 @@ midden</i></font></p>
 	</tr>
 	<tr>
 		<td width="96" valign="top" style="border: none; padding: 0in"><p>Statistiek</p>
+		</td>
+	</tr>
+	<tr>
+		<td width="96" valign="top" style="border: none; padding: 0in"><p>Praat</p>
+		</td>
+	</tr>
+	<tr>
+		<td width="96" valign="top" style="border: none; padding: 0in"><p>Zweef&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;]</p>
 		</td>
 	</tr>
 </table>
@@ -552,8 +555,11 @@ data-analyses zien door op <b>Statistiek</b> te drukken.</p>
 	<col width="108"/>
 
 	<tr>
-		<td width="108" valign="top" style="border: none; padding: 0in"><p>System
-			UI&nbsp;&nbsp;&nbsp;[x]</p>
+		<td width="108" valign="top" style="border: none; padding: 0in"><p>System UI&nbsp;&nbsp;&nbsp;[x]</p>
+		</td>
+	</tr>
+	<tr>
+		<td width="108" valign="top" style="border: none; padding: 0in"><p>Menus&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[ ]</p>
 		</td>
 	</tr>
 	<tr>
@@ -927,8 +933,7 @@ je naar een schermpje dat uitlegt hoe je kan voorkomen dat Androids
 batterij besparende maatregelen Juggluco’s functioneren onmogelijk
 maken.</font></font></font></p>
 <p style="line-height: 120%; margin-bottom: 0in; border: none; padding: 0in">
-<font><font face="Times New Roman"><font size="3" style="font-size: 12pt"><b>Stream
-history</b></font></font></font><font><font face="Times New Roman"><font size="3" style="font-size: 12pt">:
+<font><font face="Times New Roman"><font size="3" style="font-size: 12pt"><b>Bluetooth History</b></font></font></font><font><font face="Times New Roman"><font size="3" style="font-size: 12pt">:
 </font></font></font><font><font face="Times New Roman"><font size="3" style="font-size: 12pt">Bij
 Libre 0 en 2 sensoren, is History waarden uit het verleden met een
 interval van 15 minuten. Voorheen werden ze alleen ontvangen door
@@ -938,8 +943,7 @@ anders werken. Naar Libreview worden de history waarden verzonden, in
 plaats van de gemiddelden van de streamwaarden. Het nadeel is dat het
 langzamer is. Dit kan een probleem zijn bij WearOS-horloges.</font></font></font></p>
 <p style="line-height: 120%; margin-bottom: 0in; border: none; padding: 0in">
-<font><font face="Times New Roman"><font size="3" style="font-size: 12pt">Deze
-optie is altijd ingeschakeld voor Libre 3-sensoren en US Libre
+<font><font face="Times New Roman"><font size="3" style="font-size: 12pt">Deze optie heeft geen invloed op Libre 3- en US Libre
 2-sensoren.</font></font></font></p>
 <p style="line-height: 120%; margin-bottom: 0in; border: none; padding: 0in">
 <font><font face="Times New Roman"><font size="3" style="font-size: 12pt"><b>Toestemming</b></font></font></font><font><font face="Times New Roman"><font size="3" style="font-size: 12pt">:
@@ -1573,16 +1577,14 @@ niet meer aangezet.</p>
 <![CDATA[
 <h1>Libreview</h1>
 <p style="line-height: 100%; margin-bottom: 0in">Juggluco kan
-glucosegegevens en hoeveelheden naar Libreview sturen. Als &quot;Stream
-history&quot; niet aanstaat, gebruikt Juggluco de via Bluetooth
+glucosegegevens en hoeveelheden naar Libreview sturen. Als &quot;Bluetooth history&quot; niet aanstaat, gebruikt Juggluco de via Bluetooth
 ontvangen streamgegevens om deze 15 minutenpunten te creëren door de
 streamwaarden rond elk punt te middelen. Juggluco hoeft niet
 voortdurend verbonden te zijn met internet om alle gegevens naar
 Libreview te kunnen verzenden. Net als de Librelnk-app stuurt deze
-gegevens van de afgelopen 89 dagen naar Libreview. Als &quot;Stream
-History&quot; niet aan staat of by Libre 0 of 3 sensors, is het nodig
+gegevens van de afgelopen 89 dagen naar Libreview. Als &quot;Bluetooth History&quot; niet aan staat of by Libre 0 of 3 sensors, is het nodig
 dat Juggluco via Bluetooth voortdurend verbonden is met een Freestyle
-Libre 2-sensor. Bij Libre 0 en Libre 2 met &quot;Stream history&quot;
+Libre 2-sensor. Bij Libre 0 en Libre 2 met &quot;Bluetooth History&quot;
 aan, kun je gemiste waarde inhalen door te scannen. Voor Freestyle
 Libre 3-sensoren worden de 5 minuten History gegevens gebruikt, zodat
 alle eerdere waarden naar Libreview worden verzonden. 
@@ -1700,13 +1702,6 @@ hoeveelheden</i>&quot; aan te kunnen vinken, moet je eerst voor elk
 label aangeven wat het is.</p>
 <p>De labels zelf kunnen worden aangemaakt, gewijzigd en verwijderd
 in het linkermenu-&gt;Instellingen-&gt;&quot;Nummer Labels&quot;.</p>
-<p>Veel gebruikers denken dat koolhydraten niet naar Libreview worden
-gestuurd omdat ze ze niet kunnen vinden in &quot;<i>Maaltijd</i><i>trends</i>&quot;.
-Vanwege een beperking van Libreview moet insuline worden ingevoerd
-voor dezelfde tijd als de koolhydraten om koolhydraten weer te geven
-in &quot;<i>Maaltijd</i><i>trends</i>&quot;. Koolhydraten worden
-altijd weergegeven in &quot;<i>Dagelijks</i><i> </i><i>log</i><i>boek</i>&quot;
-en &quot;<i>Wek</i><i>elijks </i><i>overzicht</i> &quot;.</p>
 ]]>
 </string>
 <string name="setlibrenumtype" >

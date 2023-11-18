@@ -946,13 +946,15 @@ std::mutex nummutex;
 #endif
 
 
+bool updatebusy[maxsendtohost]{};
 void updateposnowake(int pos,int end) {
  	NUMLOCKGUARD
 	int ind=getindex();
 	const int hnr=backup->getsendhostnr();
 	LOGGERTAG("updateposnowake pos=%d ind=%d hnr=%d\n",pos, ind,hnr);
-	for(int i=0;i<hnr;i++) {
-		struct changednums *nu=backup->getnums(i,ind); 
+	for(int hostindex=0;hostindex<hnr;hostindex++) {
+		updatebusy[hostindex]=true;
+		struct changednums *nu=backup->getnums(hostindex,ind); 
 		int st=nu->changed[0].start;
 		LOGGERTAG("st=%d nu->len=%d\n",st,nu->len);
 		if(pos<st) {
@@ -978,8 +980,8 @@ void updateposnowake(int pos,int end) {
 				}
 			}
 
-
 		}
+	LOGARTAG("end updateposnowake"); 
 	}
 void updatepos(int pos,int end) {
 	if(backup) {
@@ -1064,26 +1066,27 @@ bool numbackupinit(const numinit *nums) {
 
 bool sendbackupinit(crypt_t*pass,int sock,struct changednums *nuall) {
 
- 	NUMLOCKGUARD
+ { 	NUMLOCKGUARD
+	LOGARTAG("sendbackupinit start NUMLOCKGUARD");
 
 	struct changednums *nu=nuall+getindex();	
 	struct numspan *ch=nu->changed;
 	ch[0].start=nu->lastlastpos=getfirstpos();
 	nu->len=1;
+	LOGARTAG("end NUMLOCKGUARD");
+	}
+
 	numinit gegs{.first=static_cast<uint32_t>(getfirstpos()),.ident=ident};
 	 if(!sendcommand(pass, sock ,reinterpret_cast<uint8_t*>(&gegs),sizeof(gegs))) {
-		LOGARTAG("NUM: sendbackupinit failure");
+		LOGARTAG("sendbackupinit failure");
 		return false;
 		}
-	LOGARTAG("NUM: sendbackupinit success");
+	LOGARTAG("sendbackupinit success");
 //	nuall->init=false;
 	return true;
 	}
 bool backupsendinit(crypt_t*pass,int sock,struct changednums *nuall,uint32_t starttime) {
- 	NUMLOCKGUARD
 	LOGGERTAG("NUM: backupsendinit %u ",starttime);
-	struct changednums *nu=nuall+getindex();	
-	struct numspan *ch=nu->changed;
 	if(starttime&&(getfirstpos()!=getlastpos()))  {
 		asklastnum ask{.dbase=(bool)ident};
 		 if(!noacksendcommand(pass,sock,reinterpret_cast<uint8_t*>(&ask),sizeof(ask))) {
@@ -1108,8 +1111,14 @@ bool backupsendinit(crypt_t*pass,int sock,struct changednums *nuall,uint32_t sta
 			pos=firstnotless(starttime)-startdata();
 			LOGGERTAG("NUM: startime pos=%d\n",pos);
 			}
+ 		{ 
+		NUMLOCKGUARD
+		struct changednums *nu=nuall+getindex();	
+		struct numspan *ch=nu->changed;
 		ch[0].start=nu->lastlastpos=pos;
 		nu->len=1;
+		}
+		LOGAR("end backupsendinit");
 		return true;
 		}
 	STARTOVER:
@@ -1118,9 +1127,10 @@ bool backupsendinit(crypt_t*pass,int sock,struct changednums *nuall,uint32_t sta
 	}
 
 static inline constexpr const int intinnum=(sizeof(Num)/sizeof(uint32_t));
-int update(crypt_t*pass,int sock,struct changednums *nuall) {
- 	NUMLOCKGUARD
-
+int update(crypt_t*pass,int sock,struct changednums *nuall,int ind) {
+// 	NUMLOCKGUARD
+	nummutex.lock();
+	updatebusy[ind]=false; //Otherwise it has lock in network operation and which can lead to an ANR kill off app.
 	struct changednums *nu=nuall+getindex();	
 	LOGARTAG("nums: update");
 	struct numspan *ch=nu->changed;
@@ -1140,6 +1150,7 @@ int update(crypt_t*pass,int sock,struct changednums *nuall) {
 		}
 	int ret;
 	if(!offoutnr) {
+		nummutex.unlock();
 		if(nu->lastlastpos==endpos)
 			ret=2;
 		else {
@@ -1157,7 +1168,6 @@ int update(crypt_t*pass,int sock,struct changednums *nuall) {
 		uitnums->dbase=dbase;
 		uitnums->nr=offoutnr;
 		uitnums->totlen=totlen;
-	//	uitnums->first=getfirstpos();
 		uitnums->last=endpos;
 		LOGGERTAG("update numsend dbase=%d nr=%d totlen=%d last=%d\n",dbase,offoutnr,totlen,endpos);
 		uint32_t *numsar=uitnums->nums;
@@ -1177,14 +1187,21 @@ int update(crypt_t*pass,int sock,struct changednums *nuall) {
 				numsar+=nr*intinnum;
 				}
 			}
+		nummutex.unlock();
 		 if(!sendcommand(pass, sock ,destructptr.get(),totlen))
 		 	return 0;
 		ret=1;
 
 		}
-	nu->lastlastpos=endpos;
-	ch[0].start=endpos;
-	nu->len=1;
+
+ 	 {NUMLOCKGUARD
+		if(updatebusy[ind])
+			return 2;
+		nu->lastlastpos=endpos;
+		ch[0].start=endpos;
+		nu->len=1;
+		LOGAR("end update");
+	}
 	return ret;
 	}
 	
