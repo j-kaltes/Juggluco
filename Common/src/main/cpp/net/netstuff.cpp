@@ -57,7 +57,11 @@ bool   getaddr(const char *host, const char *port, struct sockaddr_in6  *uit) {
 	struct addrinfo hints{.ai_flags=AI_ADDRCONFIG|AI_NUMERICHOST,.ai_family=AF_UNSPEC,.ai_socktype=SOCK_STREAM};
 	struct addrinfo *servinfo=nullptr;
 	destruct serv([&servinfo]{ if(servinfo)freeaddrinfo(servinfo);});
-	if(int status=getaddrinfo(host,port,&hints,&servinfo)) {
+	if(
+#ifndef NOLOG
+	int status=
+#endif
+	getaddrinfo(host,port,&hints,&servinfo)) {
 		LOGGERTAG("getaddrinfo: %s:%s %s\n",host,port,gai_strerror(status));
 		return false; 
 		}

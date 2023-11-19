@@ -79,7 +79,11 @@ static bool startwatchserver(bool secure,int port,int *sockptr) {
 	{
 	struct addrinfo *servinfo=nullptr;
 	destruct serv([&servinfo]{ if(servinfo)freeaddrinfo(servinfo);});
-	if(int status=getaddrinfo(nullptr,watchserverport,&hints,&servinfo)) {
+	if(
+#ifndef NOLOG
+	int status=
+#endif
+	getaddrinfo(nullptr,watchserverport,&hints,&servinfo)) {
 		LOGGERWEB("getaddrinfo: %s\n",gai_strerror(status));
 		return false;
 		}
@@ -1046,8 +1050,9 @@ static time_t readlocaltime(const char *&input) {
 
 template <typename Num> static const char *readnum(const char *start,const char *ends,Num &num) {
 	auto [ptr, ec]=std::from_chars(start, ends, num);
+	if(ec==std::errc())
+		return ptr;
 	switch(ec)  {
-		case std::errc():break;
 		case std::errc::invalid_argument:
 			LOGARWEB("That isn't a number. ");
 		case  std::errc::result_out_of_range:
@@ -1055,9 +1060,8 @@ template <typename Num> static const char *readnum(const char *start,const char 
 		default:
 			LOGGERWEB("Error %d\n",ec);
 			return nullptr;
+		}
 	}
-	return ptr;
-}
 struct Getopts {
 uint32_t start=0,end=0;
 bool headermode=false;

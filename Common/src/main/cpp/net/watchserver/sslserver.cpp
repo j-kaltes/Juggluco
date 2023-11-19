@@ -46,8 +46,10 @@ void (*OPENSSL_add_all_algorithms_noconfptr)(void)=NULL;
 void (*SSL_load_error_stringsptr)(void)=NULL;
 
 int logcallback(const char *str, size_t len, void *u) {
+#ifndef NOLOG
 	const char *format=(const char *)u;
 	loggert(format,str);
+#endif
 	return 0;
 	}
 
@@ -203,10 +205,11 @@ static pathconcat private_file;
 static bool getkeynames() {
 	 chainfilename=pathconcat(globalbasedir,fullchainfileonly);
 	 private_file=pathconcat(globalbasedir,privatekey);
+	 LOGAR("getkeynames");
 	 return true;
 	}
 std::string haskeyfiles() {
-static auto _hasnames=getkeynames();
+[[maybe_unused]] static auto _hasnames=getkeynames();
  if(access(chainfilename.data(), R_OK)!=0) {
 	return std::string(fullchainfileonly)+std::string(" missing");
 	}

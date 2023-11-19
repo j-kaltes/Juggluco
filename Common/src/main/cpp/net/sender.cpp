@@ -321,7 +321,7 @@ bool activate=true;
 		const char *host= pass->gethostname(); 
 		char port[10];
 		sprintf(port,"%d",pass->getport());
-		if(int status=getaddrinfo(host,port,&hints,&servinfo)) {
+		if(getaddrinfo(host,port,&hints,&servinfo)) {
 			for(struct addrinfo *iter=servinfo;iter!=nullptr;iter=iter->ai_next) {
 				const struct sockaddr_in6  *sin= reinterpret_cast<const struct sockaddr_in6*>(iter->ai_addr);
 					if(int ret=connectone(sin,sock, stype,pass,cons,use
@@ -391,6 +391,7 @@ bool activate=true;
 				socklen_t errlen = sizeof(error);
 				if(getsockopt(cons[i].fd, SOL_SOCKET, SO_ERROR, (void *)&error, &errlen)==-1)
 					lerrortag("getsockopt");
+#ifndef NOLOG
 				const char *errstr="";
 				switch(error) {
 					case EINTR: errstr="The system call was interrupted by a signal that was caught; see signal(7).";break;
@@ -408,6 +409,7 @@ bool activate=true;
 
 					};
 				LOGGERTAG(" %d: POLLERR %s (%d)\n",cons[i].fd,errstr,error);
+#endif
 				close(cons[i].fd); 
 				continue;
 				}

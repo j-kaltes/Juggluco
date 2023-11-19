@@ -1276,7 +1276,10 @@ bool setbackuptime(crypt_t *pass,int sock,int ind,uint32_t starttime) {
 		if(getinfo()->update[ind].scanstart==0) {
 			uint32_t scantime= infothere->lastscantime;
 			uint32_t scanend=infothere->scancount;
-			uint32_t scanstart=getinfo()->update[ind].scanstart=(scantime<starttime)?scanend:getbackuptimescan(starttime);
+#ifndef NOLOG
+			uint32_t scanstart=
+#endif
+			getinfo()->update[ind].scanstart=(scantime<starttime)?scanend:getbackuptimescan(starttime);
 			LOGGER("GLU: scanstart=%d scancount=%d\n",scanstart,scanend);
 			}
 		else {
@@ -1288,7 +1291,10 @@ bool setbackuptime(crypt_t *pass,int sock,int ind,uint32_t starttime) {
 			uint32_t histend=infothere->endhistory;
 			int histpos;
 
-			uint32_t histstart=getinfo()->update[ind].histstart= (histpos=posearlier(histend,starttime)>=0)?histpos:getbackuptimehistory(starttime);
+#ifndef NOLOG
+			uint32_t histstart=
+#endif
+			getinfo()->update[ind].histstart= (histpos=posearlier(histend,starttime)>=0)?histpos:getbackuptimehistory(starttime);
 
 			LOGGER("GLU: hist start=%d endhistory=%d\n",histstart,histend);
 			}
@@ -1296,8 +1302,13 @@ bool setbackuptime(crypt_t *pass,int sock,int ind,uint32_t starttime) {
 			LOGGER("GLU histstart=%d\n",getinfo()->update[ind].histstart);
 			}
 		if(getinfo()->update[ind].streamstart==0) {
+#ifndef NOLOG
 			uint32_t streamend=(dat->len<asklen)?0:infothere->pollcount;
-			uint32_t streamstart=getinfo()->update[ind].streamstart=getbackuptimestream(starttime);
+#endif
+#ifndef NOLOG
+			uint32_t streamstart=
+#endif
+			getinfo()->update[ind].streamstart=getbackuptimestream(starttime);
 			LOGGER("GLU: streamstart=%d streamend=%d\n", streamstart,streamend);
 			}
 		else {

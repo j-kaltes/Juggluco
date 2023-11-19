@@ -189,7 +189,6 @@ extern	void setfloatptr();
 #ifdef NEEDSPATH 
 LOGAR("NEEDSPATH");
 extern	void usepath();
-extern std::string_view libdirname;
 	usepath();
 #else
 LOGAR("no NEEDSPATH");

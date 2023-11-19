@@ -316,7 +316,10 @@ void activereceivethread(int allindex,passhost_t *pass) {
    else   
 #endif  
 		{
-			auto status=active_receive[h]->backupcond.wait_for(lck,std::chrono::seconds(waitsec));    //Inreality much longer if phone is in doze mode.
+#ifndef NOLOG
+			auto status=
+#endif
+				active_receive[h]->backupcond.wait_for(lck,std::chrono::seconds(waitsec));    //Inreality much longer if phone is in doze mode.
 			LOGGER("R-active after lock %stimeout\n",(status==std::cv_status::no_timeout)?"no-":"");
 			}
 			}

@@ -30,8 +30,10 @@ void SensorGlucoseData::prunestream() {
 	LOGGER("prunestream %d\n",len);
 	for(int i=len-2;i>=0;i--) {
 		if(pollsdata[i].t>pollsdata[i+1].t) {
+#ifndef NOLOG
 			time_t tim=pollsdata[i].t;
 			LOGGER("%d's wrong stream wrong: id=%d %.1f %s",i,pollsdata[i].id,pollsdata[i].g/18.0f,ctime(&tim));
+#endif
 			if(i<scount&&scansdata[i].t==0&&scansdata[i].id==0) {
 				if((i==(scount-1)||pollsdata[i].t<scansdata[i+1].t)&&(i==0||pollsdata[i].t>scansdata[i-1].t)) {
 					LOGSTRING("move to scans\n");

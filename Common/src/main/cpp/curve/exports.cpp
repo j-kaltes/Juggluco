@@ -65,11 +65,12 @@ auto    timedata(const time_t tim) {
 	struct tm tmbuf;
 	 struct tm *stm=localtime_r(&tim,&tmbuf);
 //       struct tm *stm=localtime(&tim);
+constexpr const int maxbuf=21;
      struct { 
-     	char buf[21+veilig];
+     	char buf[maxbuf+veilig];
 	float zone;
 	} ret;  
-      sprintf(ret.buf,"%d-%02d-%02d-%02d:%02d:%02d",1900+stm->tm_year,stm->tm_mon+1,stm->tm_mday,stm->tm_hour,stm->tm_min,stm->tm_sec);
+      snprintf(ret.buf,maxbuf,"%04u-%02u-%02u-%02u:%02u:%02u", 1900+stm->tm_year,stm->tm_mon+1,stm->tm_mday,stm->tm_hour,stm->tm_min,stm->tm_sec);
       int zone=timegm(stm) - tim;
       ret.zone=zone/(60.0f*60.0f);
       return ret;

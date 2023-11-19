@@ -271,17 +271,22 @@ void showversion() {
 	cout<<"Version "<< APPVERSION <<endl;
 	}
 
-template <int N> void setlabeltype(const int (&types)[N]) {
+template <int N> bool setlabeltype(const int (&types)[N]) {
 	auto *nums=settings->data()->Nightnums;
+	bool did=false;
 	for(int i=0;i<N;i++) {
+		bool didnow=true;
 		switch(toupper(types[i])) {
 			case 'R': nums[i].kind=1;nums[i].weight=1.0f;break;
 			case 'L':nums[i].kind=2;nums[i].weight=1.0f;break;
 			case 'C':nums[i].kind=3;nums[i].weight=1.0f;break;
 			case 'O': nums[i].kind=4;break;
 			case 'D': nums[i].kind=5;break;
+			default: didnow=false; 
 			}
+		did =did||didnow;
 		}
+	return did;
 	}
 
  Readall alldir;
@@ -309,12 +314,22 @@ bool xremote=false,activeonly=false,passiveonly=false,testip=true
 int xdripserver=-1,use_ssl=-1,give_treatments=-1;
 int changer=-1;
 int unit=0;
-int labeltype[10];
+
+int labeltype[maxvarnr]{};
 uint32_t starttime=0,endtime=UINT32_MAX;
 char *api_secret=nullptr,*sslport=nullptr;
            for(int opt;(opt = getopt(argc, argv, "Z:o:e::g:p:d:lcX::x::ransvzibAPw:hN:S:B:H:m:GMR:L:C:0:1:2:3:4:5:6:7:8:9:t::")) != -1;) {
 	   	if(opt>='0'&&opt<='9') {
-			labeltype[opt-'0']=optarg[0];
+			int num=opt-'0';
+			if(optarg[0]>='0'&&optarg[0]<='9') {
+				num=num*10+optarg++[0]-'0';
+				if(num>=maxvarnr) {
+					cerr<<num<<" is too large, maximal "<<maxvarnr<<" labels allowed\n";
+					return 10;
+					}
+				}
+			labeltype[num]=optarg[0];
+			cout<<num<<": "<<optarg[0]<<endl;
 			}
 		else {
                switch (opt) {
@@ -458,8 +473,9 @@ static constexpr const	char defaultname[]="jugglucodata";
 		uitdir=alldir;
 		}
 	cout<<"Saving in directory "<<uitdir.data()<<endl;
+	bool did=false;
 	startjuggluco(uitdir,nullptr);
-	setlabeltype(labeltype);
+	did=did||setlabeltype(labeltype);
 
 	if(sslport) {
 		int port;
@@ -472,6 +488,7 @@ static constexpr const	char defaultname[]="jugglucodata";
 			return 10;
 			}
 		settings->data()->sslport=port;
+		did=true;
 		}
 	if(api_secret) {
 		int len=strlen(api_secret);
@@ -483,19 +500,25 @@ static constexpr const	char defaultname[]="jugglucodata";
 		memcpy(settings->data()->apisecret,api_secret,len);
 	extern void	makesha1secret();
 		makesha1secret();
+		did=true;
 		}
 	if(use_ssl>=0) {
 		settings->data()->useSSL=use_ssl;
+		did=true;
 		}
 	if(give_treatments>=0) {
 		settings->data()->saytreatments=give_treatments;
+		did=true;
 		}
 	if(xdripserver>=0) {
 		settings->data()->usexdripwebserver=xdripserver;
 		settings->data()->remotelyxdripserver=xremote;
+		did=true;
 		}
-	if(unit)
+	if(unit)  {
 		settings->setunit(unit);
+		did=true;
+		}
 	else
 		settings->setlinuxcountry();
 //	constexpr size_t nummmaplen=77056;
@@ -516,7 +539,6 @@ static constexpr const	char defaultname[]="jugglucodata";
 	bool sender=	nums||scans||stream;
 	int hostnr=backup->gethostnr();
 	if(!sender&&!receive) {
-		bool did=false;
 		if(rmindex>=0) {
 			if(rmindex>hostnr) {
 				cerr<<"Argument to -R should refer to an existing connection (1-"<<hostnr<<endl<<")"<<endl;
@@ -532,9 +554,9 @@ static constexpr const	char defaultname[]="jugglucodata";
 			did=true;
 //			return 1234;
 			}
-		if(unit) {
+	/*	if(unit) {
 			did=true;
-			}
+			} */
 		if(list)
 			return 	listconnections();
 		if(clear)

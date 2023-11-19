@@ -77,7 +77,11 @@ static bool startserver(char *port, passhost_t *hosts,int *hostlen,int *socks,bo
 	destruct serv([&servinfo]{ if(servinfo)freeaddrinfo(servinfo);});
 	{
 	destruct wweg([port]{delete[] port;});
-	if(int status=getaddrinfo(nullptr,port,&hints,&servinfo)) {
+	if(
+#ifndef NOLOG
+	int status=
+#endif
+	getaddrinfo(nullptr,port,&hints,&servinfo)) {
 		LOGGERTAG("getaddrinfo: %s\n",gai_strerror(status));
 		return false;
 		}
