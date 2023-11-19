@@ -150,7 +150,7 @@ empfangen (receive)</p>
 <p align="left" style="line-height: 100%; margin-bottom: 0in"><span lang="de-DE">Weitere
 Informationen zu Klon-Verbindungen finden Sie in der Hilfe unter
 &quot;</span><span lang="de-DE"><i>Verbindung hinzufügen</i></span><span lang="de-DE">&quot;
-und unter </span><a class="western" href="https://www.juggluco.nl/Juggluco/mgdL#mirror"><span lang="de-DE"><u>https://www.juggluco.nl/Juggluco/mgdL#mirror</u></span></a></p>
+und unter </span><a class="western" href="https://www.juggluco.nl/index.html#mirror"><span lang="de-DE"><u>https://www.juggluco.nl/Juggluco/index.html#mirror</u></span></a></p>
 <h1>Desktop-Computer</h1>
 <p align="left" style="line-height: 100%; margin-bottom: 0in"><span style="text-decoration: none"><span lang="de-DE">Sie
 können die Android Juggluco-App mit Hilfe eines Android-Emulators
@@ -2227,69 +2227,15 @@ diesem Etikett „<i>50“</i> eingegeben haben<i>.&nbsp;</i>„&nbsp;<i>Bike
 </string>
 <string name="floatingconfig" >
 <![CDATA[
-<h1 style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
-<font face="Times New Roman">Schwebende Glukose</font></h1>
-<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
-<font face="Times New Roman"><font size="4" style="font-size: 14pt">Hier
-können Sie die Schriftgröße und die Vorder- und Hintergrundfarbe
-der schwebenden Glukose einstellen.</font> <font size="4" style="font-size: 14pt">Sie
-können den Hintergrund auch auf</font> <font size="4" style="font-size: 14pt"><b>Transparent</b></font>
-<font size="4" style="font-size: 14pt">setzen, wodurch er unsichtbar
-wird.</font></font></p>
-<p style="orphans: 2; widows: 2"><a name="__DdeLink__546_3430959450"></a>
-<span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><b>Berührbar</b></span></span></font></font></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">:
-Wenn eingestellt, können Sie die schwebende Glukose mit dem Finger
-bewegen und durch langes Drücken entfernen. Wenn „Berührbar“
-deaktiviert ist, geht die Berührungseingabe in das Fenster unter der
-schwebenden Glukose, sodass Sie die App unter der schwebenden Glukose
-verwenden können.</span></span></span></font></font></span><span style="font-variant: normal"><span style="letter-spacing: normal">
-</span></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">Sie
-können die schwebende Glukose auch unberührbar machen, indem Sie</span></span></span></font></font></span><span style="font-variant: normal"><span style="letter-spacing: normal">
-</span></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><b>zweimal</b></span></span></font></font></span><span style="font-variant: normal"><span style="letter-spacing: normal">
-</span></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">darauf
-tippen.</span></span></span></font></font></span></p>
-<p style="orphans: 2; widows: 2"><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">Nachdem
-Sie die </span></span></span></font></font></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><b>Schriftgröße</b></span></span></font></font></span><span style="font-variant: normal"><span style="letter-spacing: normal">
-</span></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">eingegeben
-haben, müssen Sie die „</span></span></span></font></font></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><i><span style="font-weight: normal">Enter“-,
-</span></i></span></font></font></span><span style="font-variant: normal"><span style="letter-spacing: normal">„</span></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><i><span style="font-weight: normal">Fertig“</span></i></span></font></font></span><span style="font-variant: normal"><span style="letter-spacing: normal">
-</span></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">-</span></span></span></font></font></span><span style="font-variant: normal"><span style="letter-spacing: normal">
-</span></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">oder
-&quot;</span></span></span></font></font></span><span style="font-variant: normal"><span style="letter-spacing: normal">✓</span></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">&quot;-
-Taste der Soft-Tastatur drücken.</span></span></span></font></font></span></p>
-<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
-<font face="Times New Roman"><font size="4" style="font-size: 14pt">Sie
-können schwebende Glukose mit dem Kontrollkästchen „<i>Schwebende
-Glukose</i>“ in den Einstellungen ein- und ausschalten. Sie können
-„Schwebende Glukose“ auch deaktivieren, indem Sie <b>lange</b>
-auf den schwebenden Glukosewert <b>drücken</b>. Zum Beispiel, wenn
-Sie die Schriftgröße so groß eingestellt haben, dass Sie auf der
-Soft-Tastatur keine kleinere Schriftgröße mehr eingeben können.</font></font></p>
-<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
-<font face="Times New Roman"><font size="4" style="font-size: 14pt">Um
-über anderen Apps angezeigt zu werden, benötigt Juggluco eine
-spezielle Berechtigung. Auf WearOS und auch Android Automotive müssen
-Sie adb verwenden, um diese Berechtigung zu erteilen:</font></font></p>
-<p style="line-height: 100%; margin-bottom: 0in"><b>adb shell pm
-grant tk.glucodata android.permission.SYSTEM_ALERT_WINDOW</b></p>
-<p style="line-height: 100%; margin-bottom: 0in">Bei einigen Uhren
-(z. B. TicWatch Pro) können Sie dies auch zulassen mit:
-Android/WearOS-Einstellungen-&gt;Apps &amp; Benachrichtigungen-&gt;
-App-Info-&gt;Juggluco-&gt;Erweitert-&gt;<font face="Liberation Serif, serif">Ü</font>ber
-anderen Apps einblenden.</p>
-<p style="line-height: 100%; margin-bottom: 0in"><br/>
 
-</p>
-<p style="line-height: 100%; margin-bottom: 0in"><br/>
-
-</p>
-<p style="line-height: 100%; margin-bottom: 0in"><br/>
-
-</p>
-<p style="orphans: 2; widows: 2"><br/>
-<br/>
-
-</p>
+  <h1>Schwebende Glukose</h1>
+  <p>Hier können Sie die Schriftgröße und die Vorder- und Hintergrundfarbe der schwebenden Glukose einstellen. Sie können den Hintergrund auch auf <strong>Transparent</strong> setzen, wodurch er unsichtbar wird.</p>
+  <p><strong>Berührbar</strong>: Wenn eingestellt, können Sie die schwebende Glukose mit dem Finger bewegen und durch langes Drücken (ohne Bewegung) entfernen. Wenn „Berührbar“ deaktiviert ist, geht die Berührungseingabe in das Fenster unter der schwebenden Glukose, sodass Sie die App unter der schwebenden Glukose verwenden können. Sie können die schwebende Glukose auch unberührbar machen, indem Sie <strong>zweimal</strong> darauf tippen.</p>
+  <p>Nachdem Sie die <strong>Schriftgröße</strong> eingegeben haben, müssen Sie die „<i>Enter“-,</i> „<i>Fertig“</i> - oder "✓"- Taste der Soft-Tastatur drücken.</p>
+  <p>Sie können <i>Schwebende Glukose</i> über das Menü links in der Mitte -&gt;Schweben ein- und ausschalten. Sie können „<i>Schwebende Glukose</i>“ auch deaktivieren, indem Sie <strong>lange</strong> auf den schwebenden Glukosewert <strong>drücken</strong>. Zum Beispiel, wenn Sie die Schriftgröße so groß eingestellt haben, dass Sie auf der Soft-Tastatur keine kleinere Schriftgröße mehr eingeben können.</p>
+  <p>Um über anderen Apps angezeigt zu werden, benötigt Juggluco eine spezielle Berechtigung. Auf WearOS und auch Android Automotive müssen Sie adb verwenden, um diese Berechtigung zu erteilen:</p>
+  <p><strong>adb shell pm grant tk.glucodata android.permission.SYSTEM_ALERT_WINDOW</strong></p>
+  <p>Bei einigen Uhren (z. B. TicWatch Pro) können Sie dies auch zulassen mit: Android/WearOS-Einstellungen-&gt;Apps & Benachrichtigungen-&gt; App-Info-&gt;Juggluco-&gt;Erweitert-&gt;Über anderen Apps einblenden.</p>
 ]]>
 </string>
 <string name="getaccountidhelp" >
@@ -2397,7 +2343,7 @@ die vollständige Kette in
 ist der von mir verwendete Hostname.</span></p>
 <p style="line-height: 100%; margin-bottom: 0in"><span lang="de-DE">Wenn
 Sie nur Glukosewerte von einem Android zum anderen senden möchten,
-können Sie besser die <a href="https://www.juggluco.nl/Juggluco/mgdL/index.html#mirror">Klonfunktion</a></span>
+können Sie besser die <a href="https://www.juggluco.nl/Juggluco/index.html#mirror">Klonfunktion</a></span>
 <span lang="de-DE">von Juggluco verwenden (linkes mittleres Menü -&gt;
 Klon).</span></p>
 <p style="line-height: 100%; margin-bottom: 0in">Android Aps und

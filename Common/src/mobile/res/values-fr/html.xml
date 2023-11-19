@@ -198,7 +198,7 @@ numérisations</p>
 <p style="margin-bottom: 0cm; line-height: 100%">Pour plus
 d\'informations sur les connexions miroir, lisez l\'aide sous &quot;
 <i>Ajouter une connexion</i> &quot; et consultez
-<a class="western" href="https://www.juggluco.nl/Juggluco/mmol.html#mirror">https://www.juggluco.nl/Juggluco/mmol.html#mirror</a></p>
+<a class="western" href="https://www.juggluco.nl/Juggluco/index.html#mirror">https://www.juggluco.nl/Juggluco/index.html#mirror</a></p>
 <h1>Ordinateur de bureau</h1>
 <p>Vous pouvez exécuter l\'application Android Juggluco sur un
 ordinateur Windows, Macintosh ou Linux à l\'aide d\'un émulateur
@@ -2302,7 +2302,7 @@ complète dans /etc/letsencrypt/live/myhostname/fullchain.pem. &quot;
 </p>
 <p style="margin-bottom: 0cm; line-height: 100%">Si vous souhaitez
 simplement envoyer des valeurs de glucose d\'un Android à l\'autre, il
-vaut mieux utiliser la fonction <a href="https://www.juggluco.nl/Juggluco/mgdL/index.html#mirror">miroir</a>
+vaut mieux utiliser la fonction <a href="https://www.juggluco.nl/Juggluco/index.html#mirror">miroir</a>
 de Juggluco (menu central gauche -&gt; Miroir).</p>
 <p style="margin-bottom: 0cm; line-height: 100%"><br/>
 
@@ -2329,7 +2329,7 @@ redirigé vers le port que vous avez spécifié dans cet écran (par
 défaut : 17581).</p>
 <p style="margin-bottom: 0cm; line-height: 100%">Le serveur Web peut
 également être exécuté sur un ordinateur Linux. Il recevra ses
-données d\'une <a href="https://www.juggluco.nl/Juggluco/mgdL/index.html#mirror">connexion
+données d\'une <a href="https://www.juggluco.nl/Juggluco/index.html#mirror">connexion
 miroir</a> de Juggluco connectée au capteur :
 <a href="https://www.juggluco.nl/Juggluco/cmdline/index.html">https://www.juggluco.nl/Juggluco/cmdline</a>
 .</p>

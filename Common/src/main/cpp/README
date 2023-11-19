@@ -1,11 +1,11 @@
-For more information see:
-http://jkaltes.byethost16.com/Juggluco/cmdline/index.html
+For more information see: https://www.juggluco.nl/Juggluco/cmdline/index.html
 
 Compile for debugging with:
 
 cmake -DDEBUG=ON $srcdir
 make juggluco
 
+Replace $srcdir with the directory cpp source of Juggluco. The directory that contains this README and CMakeLists.txt (https://github.com/j-kaltes/Juggluco/tree/primary/Common/src/main/cpp).
 To compile without logging and debug information (in a fresh directory):
 
 cmake $srcdir

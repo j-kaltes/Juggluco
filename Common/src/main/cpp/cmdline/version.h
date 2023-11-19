@@ -1,3 +1,3 @@
-#ifndef JUGGLUCO_APP
-#define APPVERSION "7.1.11"
+#ifndef APPVERSION 
+#define APPVERSION "7.1.12"
 #endif

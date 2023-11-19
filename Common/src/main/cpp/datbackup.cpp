@@ -527,3 +527,7 @@ std::mutex change_host_mutex;
 void definished(int sensorindex) {
 	backup->definished(sensorindex);	
 	}
+
+int getgetsendnr() {
+	return backup->getupdatedata()->sendnr;
+	}

@@ -161,7 +161,7 @@ wordt als volgt afgekort:
 <p style="line-height: 100%; margin-bottom: 0in">Lees voor meer
 informatie over Kloon-verbindingen de help onder &quot;<i>Verbinding
 toevoegen</i>&quot; en zie
-<a href="https://www.juggluco.nl/Juggluco/mmol.html#mirror">https://www.juggluco.nl/Juggluco/mmol.html#mirror</a></p>
+<a href="https://www.juggluco.nl/Juggluco/index.html#mirror">https://www.juggluco.nl/Juggluco/index.html#mirror</a></p>
 <h1>Desktop computer</h1>
 <p style="line-height: 100%; margin-bottom: 0in">Je kan de Android
 Juggluco-app uitvoeren op een Windows-, Macintosh- of Linux-computer
@@ -1734,18 +1734,17 @@ ingevoerd hebt, wordt de opmerking &quot;<i>Fietsen 50</i>&quot;.</p>
 de zwevende glucose instellen. Je kunt de achtergrond ook instellen
 op <b>Doorzichtig</b>, waardoor deze onzichtbaar wordt.</p>
 <p><b>Tastbaar</b>: ingesteld, kunt je de zwevende glucose met je
-vinger verplaatsen en verwijderen door er lang op te drukken. Wanneer
-tastbaar niet is ingesteld, gaat touch-invoer naar het venster onder
-de zwevende glucose, zodat je de app onder de zwevende glucose kunt
-gebruiken. Je kunt de zwevende glucose ook onaantastbaar maken door
-er <b>twee</b> keer op de drukken.</p>
+vinger verplaatsen en verwijderen door er lang op te drukken (zonder
+te bewegen). Wanneer tastbaar niet is ingesteld, gaat touch-invoer
+naar het venster onder de zwevende glucose, zodat je de app onder de
+zwevende glucose kunt gebruiken. Je kunt de zwevende glucose ook
+onaantastbaar maken door er <b>twee</b> keer op de drukken.</p>
 <p>Nadat je de <b>lettergrootte</b> hebt getypt, moet je op de
 &quot;<i>Enter&quot;-, </i>&quot;<i>Gereed&quot;-</i> of &quot;✓&quot;-
 knop van het soft-keyboard drukken.</p>
-<p>Je kunt Floating glucose in- en uitschakelen met het selectievakje
-&quot;<i>Zwevende</i> <i>glucose&quot;</i> in de instellingen. Je
-kunt zwevende glucose ook uitschakelen door <b>lang</b> op de
-zwevende glucosewaarde te drukken. Bijvoorbeeld wanneer je de
+<p>Je kunt Floating glucose in- en uitschakelen met linker midden
+menu-&gt;Zweef. Je kunt zwevende glucose ook uitschakelen door <b>lang</b>
+op de zwevende glucosewaarde te drukken. Bijvoorbeeld wanneer je de
 lettergrootte zo groot hebt ingesteld dat je geen kleinere
 lettergrootte meer kunt typen op het soft-keyboard.</p>
 <p>Om weer te geven boven andere apps heeft Juggluco speciale
@@ -1873,7 +1872,7 @@ de</span> <span lang="nl-NL">Full Chain</span> <span lang="nl-NL">in
 is de hostnaam die ik heb gebruikt.</span></p>
 <p style="line-height: 100%; margin-bottom: 0in"><span lang="nl-NL">Als
 je alleen glucosewaarden van de ene Android naar de andere wilt
-sturen, kun je beter de <a href="https://www.juggluco.nl/Juggluco/mgdL/index.html#mirror">Kloonfunctie</a></span>
+sturen, kun je beter de <a href="https://www.juggluco.nl/Juggluco/index.html#mirror">Kloonfunctie</a></span>
 <span lang="nl-NL">van Juggluco gebruiken (Links midden menu-&gt;Kloon).</span></p>
 <p style="line-height: 100%; margin-bottom: 0in">Android Aps en
 Nsclient werken niet als volgeling van Juggluco, maar je kunt er wel
@@ -1894,7 +1893,7 @@ aan Juggluco heeft gegeven, <i>poort</i> is de poort die je hebt
 opgegeven (standaard: 17581).</p>
 <p style="line-height: 100%; margin-bottom: 0in"><span lang="nl-NL">De
 webserver kan ook op een Linux-computer worden uitgevoerd. Het
-ontvangt zijn gegevens van een <a href="https://www.juggluco.nl/Juggluco/mgdL/index.html#mirror">Kloonverbinding</a></span>
+ontvangt zijn gegevens van een <a href="https://www.juggluco.nl/Juggluco/index.html#mirror">Kloonverbinding</a></span>
 <span lang="nl-NL">van Juggluco die een Bluetooth verbinding met de
 sensor heeft: <a href="https://www.juggluco.nl/Juggluco/cmdline/index.html">https://www.juggluco.nl/Juggluco/cmdline</a>
 .</span></p>

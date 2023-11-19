@@ -1015,7 +1015,6 @@ bool reinitabbott() {
 extern "C" JNIEXPORT jboolean  JNICALL   fromjava(abbottreinit)(JNIEnv *env, jclass _cl) {
 	return reinitabbott();
 	}
-
 void	setstreaming(SensorGlucoseData *hist) {
 		LOGSTRING("setstreaming(SensorGlucoseData)\n");
 		if(!backup)

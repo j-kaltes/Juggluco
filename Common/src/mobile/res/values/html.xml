@@ -161,7 +161,7 @@ is used is abbreviated as follows:</p>
 </p>
 <p style="line-height: 100%; margin-bottom: 0in">For more information
 on Mirror connections read the help under &quot;<i><a href="https://www.juggluco.nl/Jugglucohelp/addconnection.html">Add connection</a></i>&quot;
-and see <a class="western" href="https://www.juggluco.nl/Juggluco/mmol.html#mirror">https://www.juggluco.nl/Juggluco/mmol.html#mirror</a></p>
+and see <a class="western" href="https://www.juggluco.nl/Juggluco/index.html#mirror">https://www.juggluco.nl/Juggluco/index.html#mirror</a></p>
 <h1>Desktop computer</h1>
 <p>You can run the Android Juggluco app on a Windows, Macintosh or
 Linux computer with the help of an Android Emulator (for example
@@ -1783,18 +1783,19 @@ in Libreview at the specified time.</p>
 of the floating glucose. You can also set background to <b>Transparent</b>,
 making it invisible.</p>
 <p><b>Touchable</b>: when set you can move the floating glucose with
-your finger and remove it by long pressing it. When touchable is
-unset, goes touch input to the window beneath the floating glucose,
-so you can use the app under the floating glucose. You can also make
-the floating glucose untouchable by <b>double tapping</b> it.</p>
+your finger and remove it by long pressing it (without moving). When
+touchable is unset, touch input goes to the window beneath the
+floating glucose, so you can use the app under the floating glucose.
+You can also make the floating glucose untouchable by <b>double
+tapping</b> it.</p>
 <p>After typing the <b>font size</b>, you have to press the “<i>Enter”,
 </i>“<i>Done”</i> or &quot;✓&quot; -button on the soft
 keyboard.</p>
-<p>You can turn on and off Floating glucose with the “<i>Floating
-glucose</i>” checkbox in settings. You can also turn off “Floating
-glucose” by <b>long pressing</b> on the floating glucose value. For
-example when you have set the font size so large that you are not
-able anymore to type a smaller font size on the soft keyboard.</p>
+<p>You can turn on and off Floating glucose with left middle
+menu-&gt;Float. You can also turn off “Floating glucose” by <b>long
+pressing</b> on the floating glucose value. For example when you have
+set the font size so large that you are not able anymore to type a
+smaller font size on the soft keyboard.</p>
 <p>To display over other apps Juggluco needs a special permission. On
 WearOS and also Android Automotive you need to use adb to give this
 permission:</p>
@@ -1895,7 +1896,7 @@ in /etc/letsencrypt/live/myhostname/fullchain.pem. &quot;<em>myhostname</em>&quo
 is the hostname I used.</p>
 <p style="line-height: 100%; margin-bottom: 0in">If you just want to
 send glucose values from one Android to the other, you can better use
-Juggluco\'s <a href="https://www.juggluco.nl/Juggluco/mgdL/index.html#mirror">mirror</a>
+Juggluco\'s <a href="https://www.juggluco.nl/Juggluco/index.html#mirror">mirror</a>
 function (Left middle menu-&gt;Mirror).</p>
 <p style="line-height: 100%; margin-bottom: 0in">Android Aps and
 Nsclient don\'t work as follower of Juggluco, but you can send glucose
@@ -1913,8 +1914,7 @@ given to Juggluco, <i>port</i> is the port you forwarded to the port
 you specified in this screen (default: 17581).</p>
 <p style="line-height: 100%; margin-bottom: 0in">The web server can
 also be run on a Linux computer. It will receive its data from a
-<a href="https://www.juggluco.nl/Juggluco/mgdL/index.html#mirror">mirror
-connection</a> from Juggluco connected to the sensor:
+<a href="https://www.juggluco.nl/Juggluco/index.html#mirror">mirror connection</a> from Juggluco connected to the sensor:
 <a href="https://www.juggluco.nl/Juggluco/cmdline/index.html">https://www.juggluco.nl/Juggluco/cmdline</a>.</p>
 <p style="line-height: 100%; margin-bottom: 0in">Another phone can
 connect to this server via a mirror connection or as Nightscout

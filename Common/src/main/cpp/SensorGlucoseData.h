@@ -147,7 +147,8 @@ struct updatestate {
 	bool changedstreamstart:1;
 	bool changedhistorystart:1;
 	bool sendKAuth:1;
-	uint8_t rest:3;
+	bool sendhiststart:1;
+	uint8_t rest:2;
 	};
 static inline constexpr const int deviceaddresslen=18;
 struct Info {
@@ -401,7 +402,10 @@ int32_t getstarthistory() const {
 	}
 inline void setstarthistory(int pos)  {
 	LOGGER("setstarthistory(%d)\n",pos);
-	getinfo()->starthistory=pos;
+	if(pos!=getinfo()->starthistory) {
+		getinfo()->starthistory=pos;
+		setsendhiststart();
+		}
 	}
 	/*
 int32_t getendhistory() const {
@@ -827,7 +831,6 @@ if(const ScanData *last=lastpoll()) {
 			}
 		}
 	}
-//if(!getinfo()->msec) getinfo()->msec=rand()%1000;
 LOGGER("getinfo()->lastHistoricLifeCountReceivedPos=%d\n", getinfo()->lastHistoricLifeCountReceivedPos);
 if(!getinfo()->lastHistoricLifeCountReceivedPos)
 	getinfo()->lastHistoricLifeCountReceivedPos=12;
@@ -1340,6 +1343,14 @@ void sendbluetoothOn(int maxind) {
 		up[i].sendbluetoothOn=true;
 		}
 	}
+void setsendhiststart() {
+	extern int getgetsendnr();
+	const int maxind=getgetsendnr();
+	updatestate  *up= getinfo()->update;
+	for(int i=0;i<maxind;i++) {
+		up[i].sendhiststart=true;
+		}
+	}
 /*
 sendscan:	
 0: don't send history
@@ -1374,41 +1385,55 @@ int updatestream(crypt_t *pass,int sock,int ind,int sensindex,int sendscan)  {
 			return 0;
 			}
 
-//		int histend=-1;
 	  struct {
 	  	uint16_t endStreamhistory; 
 		uint16_t startedwithStreamhistory; 
 		} endinfo;
 		std::vector<subdata> vect;
+		bool wrotehistory=false;
+		const bool sendhiststart=getinfo()->update[ind].sendhiststart;
 		switch(sendscan) {
 			case 1: {
 				memcpy(&endinfo,&getinfo()->endStreamhistory,sizeof(endinfo));
-//				histend=getStreamendhistory();
 				int res=newsendhistory(pass,sock,ind,sensindex, true,endinfo.endStreamhistory) ;
-				if(!res) {
-					return 0;
-					}
-				vect.reserve(2);
+				switch(res) {
+					case 0: return 0;
+					case 1: {
+						wrotehistory=true;
+						vect.reserve(2+sendhiststart);
+						break;
+						};
+					default:
+						vect.reserve(1+sendhiststart);
+
+					};
 				};break;
 			case 2: {
 				memcpy(&endinfo,&getinfo()->endStreamhistory,sizeof(endinfo));
-			//	histend=getStreamendhistory();
 				int res=oldsendhistory(pass,sock,ind, sensindex,false,endinfo.endStreamhistory) ;
-				if(!res) {
-					return 0;
-					}
-				vect.reserve(2);
+				switch(res) {
+					case 0: return 0;
+					case 1: {
+						wrotehistory=true;
+						vect.reserve(2+sendhiststart);
+						break;
+						};
+					default:
+					vect.reserve(1+sendhiststart);
+					};
 				break;
 				}
 			default: 
 				vect.reserve(1);
 				break;
 			};
+		if(sendhiststart) {
+			vect.push_back({reinterpret_cast<const senddata_t *>(getinfo()->starthistory),offsetof(Info,starthistory),sizeof(getinfo()->starthistory)});
+			}
 		vect.push_back({reinterpret_cast<uint8_t*>(&pollinfo),off,len});
-		if(sendscan) {
+		if(wrotehistory) {
 			vect.push_back({reinterpret_cast<const senddata_t *>(&endinfo),offsetof(Info,endStreamhistory),sizeof(endinfo)});
 			}
-
 		 if(!senddata(pass,sock,vect, infopath,cmd,reinterpret_cast<const uint8_t *>(&streamstart),sizeof(streamstart))) {
 			LOGSTRING("GLU: senddata info.data failed\n");
 			return 0;
@@ -1417,10 +1442,12 @@ int updatestream(crypt_t *pass,int sock,int ind,int sensindex,int sendscan)  {
 		if(!getinfo()->update[ind].changedstreamstart) {
 			LOGGER("streamstart=%d\n",streamend);
 			getinfo()->update[ind].streamstart=streamend;
+
 			}
 		else  {
 			LOGSTRING("startchanged\n");
 			}
+		if(sendhiststart) getinfo()->update[ind].sendhiststart=false;
 		if(isLibre3()) {
 			int endhistory=getScanendhistory();	
 			if(oldsendhistory(pass,sock,ind,sensindex,true,endhistory))
