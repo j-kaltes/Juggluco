@@ -498,7 +498,7 @@ display
         </tr>
         <tr>
           <td style="border: none; padding: 0in" width="96" valign="top">
-            <p><font color="#ffff6d">New Amount</font></p>
+            <p><font color="#ffff6d"><a href="https://www.juggluco.nl/Jugglucohelp/newamount.html" onclick= "location.href=this.href+\'?unit=\'+unitstr;return false;">New Amount</a></font></p>
           </td>
         </tr>
         <tr>
@@ -1219,7 +1219,7 @@ pressing on <i>Select</i> or the already specified ingredient, you
 come into a list of already defined ingredients. You can define a new
 ingredient by pressing there on <i>Define</i>. Here you can than
 specify the name and carbohydrate content of that ingredient in the
-specified unit. You can also press <i>Database</i> to come in a food
+specified unit. You can also press <i><a href="https://www.juggluco.nl/Jugglucohelp/nutrients.html">Database</a></i> to come in a food
 composition database where you can search for ingredients and see the
 composition of a food, and by pressing <i>Select</i> insert this
 foods name and carbohydrate content in an ingredient definition.</p>
@@ -2156,6 +2156,37 @@ exported (the same as in left middle menu-&gt;Statistics).</p>
 <p>Starting with Juggluco 7.1.0, it is also possible to receive these
 data via the web server in Juggluco (Left menu-&gt;Settings-&gt;Web
 server), see <a href="https://www.juggluco.nl/Juggluco/webserver.html">https://www.juggluco.nl/Juggluco/webserver.html</a></p>
+<p><br/>
+<br/>
+
+</p>
+]]>
+</string>
+<string name="newamount" >
+<![CDATA[
+<h1>New Amount</h1>
+<p>With <b>New amount</b> you can enter numbers associated with an
+arbitrary Label. You can set labels under left menu→Settings→<a href="https://www.juggluco.nl/Jugglucohelp/labelhelp.html">Number
+Labels</a>. The <i>Amounts</i> entered with a particular label will
+be shown at certain hight in the graph determined by the label.</p>
+<p>You can later change the amount by long pressing it. You can also
+select it from the list of entered amounts under Left middle
+menu→List.</p>
+<p>It is also possible to receive <b>Insulin</b> dose data from <a href="https://www.juggluco.nl/Juggluco/index.html#novopens" onclick="location.href=\'https://www.juggluco.nl/Juggluco/index.html?unit=\'+unitstr+\'#novopens\';return false;" >NovoPen® 6 or NovoPen Echo® Plus</a> by scanning the NFC pen. After scanning
+you can change under what label the doses are saved in Juggluco and
+restrict doses to doses from <b>after</b> a certain date and time.
+When hundreds of doses are present in the memory of the pen, it can
+take more than 30 seconds before they are all received via NFC by
+Juggluco.</p>
+<p>Under Left menu-&gt;Settings-&gt;<a href="https://www.juggluco.nl/Jugglucohelp/labelhelp.html">Number
+Labels</a> is also specified under which label you enter the
+carbohydrates of a meal. In <i>New amount</i>, a <b>Meal</b> button
+is displayed  for this label. Tapping this <a href="https://www.juggluco.nl/Jugglucohelp/mealhelp.html"><i>Meal</i></a> button brings
+you to to a display
+in which you can specify a meal out of its components. The
+carbohydrates content is then calculated or you can specify the
+carbohydrate content and the needed quantify of one ingredient is
+then calculated.</p>
 <p><br/>
 <br/>
 

@@ -1209,7 +1209,7 @@ ingredi&euml;nt te drukken, kom je uit in een lijst van al
 gedefinieerde ingredi&euml;nten. Je kunt een nieuw ingredi&euml;nt
 defini&euml;ren door op <b>Defini&euml;ren</b> te drukken. Dan kun je
 de naam, eenheid en koolhydraat per eenheid aangeven. Je kunt ook op
-<b>Database</b> drukken; daarmee kom je in een voedsel samenstelling
+<b><a href="https://www.juggluco.nl/Jugglucohelp/nl/nutrients.html">Database</a></b> drukken; daarmee kom je in een voedsel samenstelling
 database, waarin je naar een bepaald ingredi&euml;nt kunt zoeken en
 een gevonden ingredi&euml;nt door op S<b>electeren</b> te drukken in
 een ingredi&euml;nt definitie kan voegen (naam, eenheid en
@@ -2200,6 +2200,39 @@ links in het midden -&gt; Statistieken).</p>
 ontvangen via de webserver in Juggluco
 (linkermenu-&gt;Instellingen-&gt;Webserver), zie
 <a href="https://www.juggluco.nl/Juggluco/webserver.html">https://www.juggluco.nl/Juggluco/webserver.html</a></p>
+]]>
+</string>
+<string name="newamount" >
+<![CDATA[
+<h1>Hoeveelheid</h1>
+<p>Bij <b>Hoeveelheid</b> kun je getallen onder een willekeurig label
+invoeren. Je kunt labels instellen onder het linkermenu →
+Instellingen → <a href="https://www.juggluco.nl/Jugglucohelp/nl/labelhelp.html">Nummer Labels</a>. De <i>Hoeveelheden</i> die met een bepaald label zijn
+ingevoerd, worden op een bepaalde hoogte weergegeven in de grafiek
+die door het label wordt bepaald.</p>
+<p>Je kunt de ingevoerde hoeveelheid later wijzigen door er lang op
+te drukken. Je kunt het ook selecteren uit de lijst met ingevoerde
+hoeveelheden in het linker midden menu → Lijst.</p>
+<p>Het is ook mogelijk om  <b>de insulinedosis</b> gegevens te
+ontvangen van <a href="https://www.juggluco.nl/Juggluco/index.html#novopens" onclick="location.href=\'https://www.juggluco.nl/Juggluco/index.html?unit=\'+unitstr+\'#novopens\';return false;">NovoPen®
+6 of NovoPen Echo® Plus</a> door de NFC-pen te scannen. Na het
+scannen kun je wijzigen onder welk label de doses in Juggluco worden
+opgeslagen en de doses beperken tot doses van <b>na</b> een bepaalde
+datum en tijd. Wanneer er honderden doses in het geheugen van de pen
+aanwezig zijn, kan het ruim 30 seconden duren voordat ze allemaal via
+NFC door Juggluco worden ontvangen.</p>
+<p>Onder Linkermenu -&gt; Instellingen -&gt; <a href="https://www.juggluco.nl/Jugglucohelp/nl/labelhelp.html">Nummer
+labels</a> staat ook aangegeven onder welk label je de koolhydraten
+van een maaltijd invoert. In <i>Hoeveelheid</i> wordt voor dit label
+een <b>Maaltijd</b>-knop weergegeven. Als je op deze <a href="https://www.juggluco.nl/Jugglucohelp/nl/mealhelp.html">Maaltijd</a>-knop tikt,
+<i>gaat</i> je naar een scherm waarin je een maaltijd uit zijn componenten kunt samenstellen. Het
+koolhydraatgehalte wordt vervolgens berekend of je kunt het
+koolhydraatgehalte opgeven en vervolgens wordt de benodigde
+hoeveelheid van één ingrediënt berekend.</p>
+<p><br/>
+<br/>
+
+</p>
 ]]>
 </string>
 </resources>

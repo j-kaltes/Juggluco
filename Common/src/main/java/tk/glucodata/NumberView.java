@@ -190,7 +190,7 @@ public   View addnumberview(MainActivity context,final int bron,final long time,
 		}
 
 	valueedit.setMinEms(4);
-        View[] row1 = {getspinner(context), valueedit};
+//        View[] row1 = {getspinner(context), valueedit};
         deletebutton = new Button(context);
         deletebutton.setText(R.string.delete);
 
@@ -199,8 +199,12 @@ public   View addnumberview(MainActivity context,final int bron,final long time,
         savebutton = new Button(context);
         savebutton.setText(R.string.save);
 
-
-        Layout layout = isWearable?new Layout(context,new View[] {source},new View[]{datebutton,timebutton} ,row1, new View[]{messagetext,savebutton,deletebutton},new View[]{cancel}):new Layout(context, (lay, w, h) -> {
+	Button helpbutton;
+	if(!isWearable) {
+		helpbutton=getbutton(context,R.string.helpname);
+		helpbutton.setOnClickListener(v-> help.help(R.string.newamount,context));
+		}
+        Layout layout = isWearable?new Layout(context,new View[] {source},new View[]{datebutton,timebutton} ,new View[]{getspinner(context), valueedit}, new View[]{messagetext,savebutton,deletebutton},new View[]{cancel}):new Layout(context, (lay, w, h) -> {
 		int wid=GlucoseCurve.getwidth();
 		if(!smallScreen) {
 			Log.i(LOG_ID,"no smallScreen");
@@ -248,7 +252,7 @@ public   View addnumberview(MainActivity context,final int bron,final long time,
 		    lay.setY(0);
 			}
 
-			return new int[] {w,h}; }, row1,new View[]{datebutton, mealbutton,source,timebutton},new View[]{cancel,messagetext,deletebutton, savebutton});
+			return new int[] {w,h}; },new View[]{helpbutton,getspinner(context), valueedit},new View[]{datebutton, mealbutton,source,timebutton},new View[]{cancel,messagetext,deletebutton, savebutton});
 
         timebutton.setOnClickListener(
                 v -> {

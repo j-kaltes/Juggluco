@@ -147,8 +147,8 @@ static long nexttime=0L;
 void selspeak(String message) {
 	var now=System.currentTimeMillis();	
 	if(now>nexttime) {
-		speak(message);
 		nexttime=now+cursep;
+		speak(message);
 		}
 	}
 static private double base2=Math.log(2);
@@ -330,6 +330,8 @@ public static void config(MainActivity context) {
 			 var str = separation.getText().toString();
 			if(str != null) {
 				cursep = Integer.parseInt(str)*1000L;
+				var now=System.currentTimeMillis();	
+				nexttime=now+cursep;
 				}
 			var speedstr=((EditText)speeds[1]).getText().toString();
 			if(speedstr != null) {

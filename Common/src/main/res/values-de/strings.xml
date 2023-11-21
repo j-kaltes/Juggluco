@@ -115,7 +115,7 @@
   <string name="watchappinstalled">Watch-App auf Watch installiert</string>
   <string name="error">Fehler</string>
   <string name="additem">Komponente hinzufügen</string>
-  <string name="round">runden </string>
+  <string name="round">"runden "</string>
   <string name="repeat">Wiederholen</string>
  <string name="ingredient">Zutat</string>
   <string name="select">Auswählen</string>

@@ -166,7 +166,7 @@
  <string name="failedbyexception">Mislukte door exception</string>
  <string name="nodata">Geen gegevensa</string>
  <string name="addsensorenddate">Sensor einddatum toevoegen aan calendar app</string>
- <string name="enddatesensor">"Sensor einddatum"</string>
+ <string name="enddatesensor">"Sensor einddatum "</string>
  <string name="open">Open</string>
  <string name="withoutsensor">Zonder sensor</string>
  <string name="wronglibrary">Library werkt niet goed, probeer een andere</string>
