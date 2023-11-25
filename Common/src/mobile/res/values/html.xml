@@ -35,18 +35,16 @@ can test whether alarms will work during </span></span><i>&quot;Do
 not Disturb&quot;</i><span style="font-variant: normal"><span style="font-style: normal">.
 In previous version of Juggluco, &quot;</span></span><span style="font-variant: normal"><i>Do
 not Disturb</i></span><span style="font-variant: normal"><span style="font-style: normal">&quot;
-was turned on </span></span><span style="font-variant: normal"><span style="font-style: normal">again
-</span></span><span style="font-variant: normal"><span style="font-style: normal">after
-the alarm. In the current version it isn\'t, because that had the
-unintended effect that when an alarm went off</span></span><span style="font-variant: normal">
+was turned on again after the alarm. In the current version it isn\'t,
+because that had the unintended effect that when an alarm went off</span></span><span style="font-variant: normal">
 </span><span style="font-variant: normal"><span style="font-style: normal">during
 an automatic</span></span><span style="font-variant: normal"> </span><span style="font-variant: normal"><span style="font-style: normal">&quot;</span></span><span style="font-variant: normal"><i>Do
 not Disturb</i></span><span style="font-variant: normal"><span style="font-style: normal">&quot;
 period, this state was not be turned off automatically.</span></span></p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>Flash</b>:
-Smartphones with torch flashlight have the option to flash for the
+Smartphones with torch flash light have the option to flash for the
 same number of seconds. Handy in case ringtones are not allowed and
-there is no clear policy concerning flashlights.</p>
+there is no clear policy concerning flash light.</p>
 <p style="line-height: 100%; margin-bottom: 0in">On sites like
 stackoverflow.com it is sometimes claimed that some smartphones crash
 when using Flash light without camera permission, if that is the case
@@ -444,7 +442,7 @@ still needed for them.</p>
         </tr>
         <tr>
           <td style="border: none; padding: 0in" width="138" valign="top">
-            <p><font color="#ffff6d">Meals&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <p><font color="#ffff6d"><a href="https://www.juggluco.nl/Jugglucohelp/mealhelp.html">Meals</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 &nbsp;&nbsp; [&nbsp;&nbsp;]</font></p>
           </td>
         </tr>

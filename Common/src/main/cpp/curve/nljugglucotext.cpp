@@ -111,7 +111,7 @@ static jugglucotext nltext {
 		"Praat",
 		"Zweef        "
 		},
-	.menustr2= {"Laatste scan","Scans","Stream","History","Hoeveelheden           ","Maaltijden","Dark mode"},
+	.menustr2= {"Laatste scan","Scans","Stream","History","Hoeveelheden        ","Maaltijden","Dark mode"},
 	.menustr3= {hourminstr,"Zoeken","Datum","Dag terug","Dag later","Week terug","Week later"},
 #else
  .amount="Hoeveelheid",

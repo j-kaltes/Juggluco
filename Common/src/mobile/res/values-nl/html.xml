@@ -338,7 +338,7 @@ toestemming nog steeds nodig.</p>
 <font size="4" style="font-size: 14pt"><b>Juggluco</b></font> is een
 app voor het beheersen van bloed glucose door mensen met diabetes.
 Het kan Freestyle Libre (1 en 2) sensoren (via NFC) scannen en
-glucose waarden via Bluetooth ontvangen van Freestyle Libre 2
+glucose waarden via Bluetooth ontvangen van Freestyle Libre 2 en 3
 sensoren.</p>
 <p style="line-height: 100%; margin-bottom: 0in">Nadat het programma
 is opgestart, kun je een Freestyle Libre 2 sensor scannen door het
@@ -368,7 +368,7 @@ opent het vierde menu.</p>
 		</td>
 	</tr>
 	<tr>
-		<td width="90" valign="top" style="border: none; padding: 0in"><p>Zoeken</p>
+		<td width="90" valign="top" style="border: none; padding: 0in"><p><a href="https://www.juggluco.nl/Jugglucohelp/nl/searchhelp.html">Zoeken</a></p>
 		</td>
 	</tr>
 	<tr>
@@ -448,7 +448,7 @@ veranderd worden door de afstand tussen twee vingers te veranderen.</span></p>
 		</td>
 	</tr>
 	<tr style="background: transparent">
-		<td width="132" valign="top" style="border: none; padding: 0in"><p>Maaltijden&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;&nbsp;]</p>
+		<td width="132" valign="top" style="border: none; padding: 0in"><p><a href="https://www.juggluco.nl/Jugglucohelp/nl/mealhelp.html">Maaltijden</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;&nbsp;]</p>
 		</td>
 	</tr>
 	<tr style="background: transparent">
@@ -492,15 +492,15 @@ midden</i></font></p>
 	<col width="96"/>
 
 	<tr>
-		<td width="96" valign="top" style="border: none; padding: 0in"><p>Export</p>
+		<td width="96" valign="top" style="border: none; padding: 0in"><p><a href="https://www.juggluco.nl/Jugglucohelp/nl/helpexport.html">Export</a></p>
 		</td>
 	</tr>
 	<tr>
-		<td width="96" valign="top" style="border: none; padding: 0in"><p>Kloon</p>
+		<td width="96" valign="top" style="border: none; padding: 0in"><p><a href="https://www.juggluco.nl/Jugglucohelp/nl/connectionoverview.html">Kloon</a></p>
 		</td>
 	</tr>
 	<tr>
-		<td width="96" valign="top" style="border: none; padding: 0in"><p>Hoeveelheid</p>
+		<td width="96" valign="top" style="border: none; padding: 0in"><p><a href="https://www.juggluco.nl/Jugglucohelp/nl/newamount.html">Hoeveelheid</a></p>
 		</td>
 	</tr>
 	<tr>
@@ -508,11 +508,11 @@ midden</i></font></p>
 		</td>
 	</tr>
 	<tr>
-		<td width="96" valign="top" style="border: none; padding: 0in"><p>Statistiek</p>
+		<td width="96" valign="top" style="border: none; padding: 0in"><p><a href="https://www.juggluco.nl/Jugglucohelp/nl/stathelp.html">Statistiek</a></p>
 		</td>
 	</tr>
 	<tr>
-		<td width="96" valign="top" style="border: none; padding: 0in"><p>Praat</p>
+		<td width="96" valign="top" style="border: none; padding: 0in"><p><a href="https://www.juggluco.nl/Jugglucohelp/nl/talkhelp.html">Praat</a></p>
 		</td>
 	</tr>
 	<tr>
@@ -563,19 +563,19 @@ data-analyses zien door op <b>Statistiek</b> te drukken.</p>
 		</td>
 	</tr>
 	<tr>
-		<td width="108" valign="top" style="border: none; padding: 0in"><p>Horloges</p>
+		<td width="108" valign="top" style="border: none; padding: 0in"><p><a href="https://www.juggluco.nl/Jugglucohelp/nl/watchinfo.html">Horloges</a></p>
 		</td>
 	</tr>
 	<tr>
-		<td width="108" valign="top" style="border: none; padding: 0in"><p>Sensor</p>
+		<td width="108" valign="top" style="border: none; padding: 0in"><p><a href="https://www.juggluco.nl/Jugglucohelp/nl/sensorhelp.html">Sensor</a></p>
 		</td>
 	</tr>
 	<tr>
-		<td width="108" valign="top" style="border: none; padding: 0in"><p>Instellingen</p>
+		<td width="108" valign="top" style="border: none; padding: 0in"><p><a href="https://www.juggluco.nl/Jugglucohelp/nl/settinghelp.html">Instellingen</a></p>
 		</td>
 	</tr>
 	<tr>
-		<td width="108" valign="top" style="border: none; padding: 0in"><p>About</p>
+		<td width="108" valign="top" style="border: none; padding: 0in"><p><a href="https://www.juggluco.nl/Jugglucohelp/nl/about.html">About</a></p>
 		</td>
 	</tr>
 	<tr>
@@ -588,8 +588,8 @@ data-analyses zien door op <b>Statistiek</b> te drukken.</p>
 </p>
 <p style="font-weight: normal; line-height: 100%; margin-bottom: 0in">
 In het linker menu bevind zich <b>Instellingen</b> waar je de glucose
-eenheid (mmol/L of mg/dL) kunt aangeven, labels kunt schrijven,
-glucose alarmen en medicatie herinneringen kan aangeven en weergave
+eenheid (mmol/L of mg/dL) kunt aangeven, <a href="https://www.juggluco.nl/Jugglucohelp/nl/labelhelp.html">labels</a> kunt schrijven,
+<a href="https://www.juggluco.nl/Jugglucohelp/nl/alarmhelp.html">glucose alarmen</a> en <a href="https://www.juggluco.nl/Jugglucohelp/nl/reminders.html">medicatie herinneringen</a> kan aangeven en weergave
 domeinen kunt bepalen. <b>System UI</b> bepaald of Android knoppen en
 statusbalk getoond worden. <b>Horloges</b> bevat instellingen en hulp
 met betrekking tot verbonden horloges. <b>Sensor</b> geeft informatie

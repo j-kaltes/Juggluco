@@ -557,8 +557,8 @@ void numsave( const uint32_t time, const float32_t value, const uint32_t type,co
 
 void numsavepos(int pos, uint32_t time, float32_t value, uint32_t type,uint32_t mealptr) {
 	if(pos>0&&time<at(pos-1).time)  {
-		LOGGERTAG("numsavepos earlier than previous %uld<%uld\n",time,at(pos-1).time);
-		at(pos).time=at(pos-1).time;
+		LOGGERTAG("numsavepos earlier than previous %u<%u\n",time,at(pos-1).time);
+//		at(pos).time=at(pos-1).time;
 		}
 	else {
 		LOGGERTAG("numsavepos %d %d %f %s\n",pos,mealptr,value,settings->getlabel(type).data());

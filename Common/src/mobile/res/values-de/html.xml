@@ -1640,17 +1640,45 @@ startet.</span></span></span></font></font></span></p>
 </string>
 <string name="ringtone" >
 <![CDATA[
-
-  <h1>Klingelton</h1>
-  <p>Wählen Sie aus, welcher Klingelton für einen Alarm oder eine Benachrichtigung abgespielt werden soll und für wie viele Sekunden.</p>
-  <p><strong>Minuten deaktiviert</strong>: Wenn ein niedriger oder hoher Glukosespiegel anhält, ertönt der Alarm nicht sofort wieder.&nbsp;Sie können festlegen, nach wie vielen Minuten der Alarm erneut generiert werden soll, wenn der Zustand anhält.</p>
-  <p><strong>Ton</strong>: Ton machen.</p>
-  <p><strong>Standard</strong>: Standardton verwenden.</p>
-  <p><strong>Auswählen</strong>: Wählen Sie einen Klingelton aus. Auf einigen Samsung-Telefonen stürzt die vorinstallierte Klingeltonauswahl-App ab, sodass Sie eine andere Klingelton-App installieren müssen, zum Beispiel: <a href="https://play.google.com/store/apps/details?id=com.centralparkapps.ringo.ringtones">https://play.google.com/store/apps/details?id=com.centralparkapps.ringo.ringtones</a>, <a href="https://apkcombo.com/ringtone-picker/de.kumpewo.ringtones">https://apkcombo.com/ringtone-picker/de.kumpewo.ringtones</a> oder <a href="https://m.apkpure.com/tone-picker-mp3-ringtones/com.hlidskialf.android.tonepicker">https://m.apkpure.com/tone-picker-mp3-ringtones/com.hlidskialf.android.tonepicker</a></p>
-  <p><strong>Vibrieren</strong>: Vibrieren</p>
-  <p><strong>Stören</strong>: Erzeugt auch Ton, wenn „<i>Nicht stören</i>“ eingeschaltet ist. Wenn Juggluco hierfür nicht die erforderliche Berechtigung hat, werden Sie zu einem Android-Einstellungsbildschirm weitergeleitet, um Juggluco diese Berechtigung zu erteilen. Indem Sie "<i>Nicht stören"</i> einschalten und auf "<i>Play"</i> drücken, können Sie testen, ob die Alarme während <i>"Nicht stören"</i> funktionieren. In der vorherigen Version von Juggluco war „Nicht stören“ nach dem Alarm wieder aktiviert. In der aktuellen Version ist dies nicht der Fall, da dies den unbeabsichtigten Effekt hatte, dass dieser Status nicht automatisch deaktiviert wurde, wenn während einer automatischen „N<i>icht stören</i>“-Periode ein Alarm ausgelöst wurde.</p>
-  <p><strong>Blitz</strong>&nbsp;: Smartphones mit Taschenlampe haben die Möglichkeit, für die gleiche Anzahl von Sekunden zu blinken. Praktisch, falls Klingeltöne nicht erlaubt sind und es keine klare Richtlinie bezüglich Taschenlampen gibt.</p>
-  <p>Auf Seiten wie stackoverflow.com wird manchmal behauptet, dass einige Smartphones abstürzen, wenn sie Blitzlicht ohne Kameraerlaubnis verwenden, wenn das der Fall ist, können Sie die Kameraerlaubnis aktivieren.</p>
+<h1>Klingelton</h1>
+<p>Wählen Sie aus, welcher Klingelton für einen Alarm oder eine
+Benachrichtigung abgespielt werden soll und für wie viele Sekunden.</p>
+<p><strong>Minuten deaktiviert</strong>: Wenn ein niedriger oder
+hoher Glukosespiegel anhält, ertönt der Alarm nicht sofort
+wieder.&nbsp;Sie können festlegen, nach wie vielen Minuten der Alarm
+erneut generiert werden soll, wenn der Zustand anhält.</p>
+<p><strong>Ton</strong>: Ton machen.</p>
+<p><strong>Standard</strong>: Standardton verwenden.</p>
+<p><strong>Auswählen</strong>: Wählen Sie einen Klingelton aus. Auf
+einigen Samsung-Telefonen stürzt die vorinstallierte
+Klingeltonauswahl-App ab, sodass Sie eine andere Klingelton-App
+installieren müssen, zum Beispiel:
+<a href="https://play.google.com/store/apps/details?id=com.centralparkapps.ringo.ringtones">https://play.google.com/store/apps/details?id=com.centralparkapps.ringo.ringtones</a>,
+<a href="https://apkcombo.com/ringtone-picker/de.kumpewo.ringtones">https://apkcombo.com/ringtone-picker/de.kumpewo.ringtones</a>
+oder
+<a href="https://m.apkpure.com/tone-picker-mp3-ringtones/com.hlidskialf.android.tonepicker">https://m.apkpure.com/tone-picker-mp3-ringtones/com.hlidskialf.android.tonepicker</a></p>
+<p><strong>Vibrieren</strong>: Vibrieren</p>
+<p><strong>Stören</strong>: Erzeugt auch Ton, wenn „<i>Nicht
+stören</i>“ eingeschaltet ist. Wenn Juggluco hierfür nicht die
+erforderliche Berechtigung hat, werden Sie zu einem
+Android-Einstellungsbildschirm weitergeleitet, um Juggluco diese
+Berechtigung zu erteilen. Indem Sie &quot;<i>Nicht stören&quot;</i>
+einschalten und auf &quot;<i>Play&quot;</i> drücken, können Sie
+testen, ob die Alarme während <i>&quot;Nicht stören&quot;</i>
+funktionieren. In der vorherigen Version von Juggluco war „Nicht
+stören“ nach dem Alarm wieder aktiviert. In der aktuellen Version
+ist dies nicht der Fall, da dies den unbeabsichtigten Effekt hatte,
+dass dieser Status nicht automatisch deaktiviert wurde, wenn während
+einer automatischen „N<i>icht stören</i>“-Periode ein Alarm
+ausgelöst wurde.</p>
+<p><strong>Blitz: </strong>Smartphones mit Taschenlampenlicht haben
+die Möglichkeit, für die gleiche Anzahl von Sekunden zu blinken.
+Praktisch für den Fall, dass Klingeltöne nicht erlaubt sind und es
+keine klaren Richtlinien bezüglich Blitzlicht gibt.</p>
+<p>Auf Seiten wie stackoverflow.com wird manchmal behauptet, dass
+einige Smartphones abstürzen, wenn sie Blitzlicht ohne
+Kameraerlaubnis verwenden, wenn das der Fall ist, können Sie die
+Kameraerlaubnis aktivieren.</p>
 ]]>
 </string>
 <string name="searchhelp" >

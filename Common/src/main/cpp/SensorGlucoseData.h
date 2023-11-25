@@ -1439,7 +1439,7 @@ int updatestream(crypt_t *pass,int sock,int ind,int sensindex,int sendscan)  {
 				break;
 			};
 		if(sendhiststart) {
-			vect.push_back({reinterpret_cast<const senddata_t *>(getinfo()->starthistory),offsetof(Info,starthistory),sizeof(getinfo()->starthistory)});
+			vect.push_back({reinterpret_cast<const senddata_t *>(&getinfo()->starthistory),offsetof(Info,starthistory),sizeof(getinfo()->starthistory)});
 			}
 		vect.push_back({reinterpret_cast<uint8_t*>(&pollinfo),off,len});
 		if(wrotehistory) {

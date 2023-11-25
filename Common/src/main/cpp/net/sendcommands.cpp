@@ -380,6 +380,7 @@ bool newsenddata(crypt_t *pass,const int sock,const std::vector<subdata>&data,co
 	const int elnr= data.size();
 	const int namelen=naar.size()+1;
 	int buflen=sizeof(datel)*elnr+namelen+sizeof(fileonce_t);
+	LOGGERTAG("start enddata vect %s elnr=%d\n",naar.data(),elnr);
 	for(auto &el:data) {
 		LOGGERTAG("ellen=%d\n",el.datalen);
 		buflen+=el.datalen;	
