@@ -457,6 +457,32 @@ static bool givedripstatus(recdata *outdata) {
 	mkjsonheader(start,start+alllen,false,outdata); 
 	return true;
 	}
+
+static bool givestatusv3(recdata *outdata) {
+	#include "status3.h"
+	constexpr const int len=sizeof(statusv3)+20;
+	outdata->allbuf=new(std::nothrow) char[len+512];
+	if(!outdata->allbuf) {
+		return outofmemory(outdata);
+		}
+        char *start=outdata->allbuf+152;
+	int alllen=snprintf(start,len,statusv3, time(nullptr));
+	mkjsonheader(start,start+alllen,false,outdata); 
+	return true;
+
+	}
+//api/v3/entries?sort%24desc=date&limit=6&fields=sgv%2Cdirection%2CsrvCreated&type%24eq=sgv
+//api/v3/entries?sort%24desc=date&limit=1&fields=sgv%2Cdirection%2CsrvCreated&type%24eq=sgv
+template <class T, size_t N>
+inline static constexpr void addar(char *&uitptr,const T (&array)[N]) {
+	constexpr const int len=N-1;
+	memcpy(uitptr,array,len);
+	uitptr+=len;
+	}
+/*
+{"status":200,"result":[{"sgv":123,"direction":"Flat","srvCreated":1701290313000},{"sgv":120,"direction":"Flat","srvCreated":1701290308000},{"sgv":125,"direction":"Flat","srvCreated":1701290253000},{"sgv":121,"direction":"Flat","srvCreated":1701290246000},{"sgv":127,"direction":"Flat","srvCreated":1701290193000},{"sgv":121,"direction":"Flat","srvCreated":1701290186000}]}
+*/
+
 static bool givenightstatus(recdata *outdata) {
 	constexpr static
 	#include "status.h"
@@ -480,12 +506,6 @@ static bool givenightstatus(recdata *outdata) {
 	return true;
 	}
 
-template <class T, size_t N>
-inline static constexpr void addar(char *&uitptr,const T (&array)[N]) {
-	constexpr const int len=N-1;
-	memcpy(uitptr,array,len);
-	uitptr+=len;
-	}
 
 
 extern std::string_view getdeltaname(float rate);
@@ -757,6 +777,36 @@ char * givecage(char *outiter) {
 */
 			//  {"delta":{"absolute":-2,"elapsedMins":5,"interpolated":false,"mean5MinsAgo":137,"times":{"recent":1676718516000,"previous":1676718216000},"mgdl":-2,"scaled":-2,"display":"-2","previous":{"mean":137,"last":137,"mills":1676718216000,"sgvs":[{"_id":"63f0b09d4d77ce842e333f3d","mgdl":137,"mills":1676718216000,"device":"loop://iPhone","direction":"Flat","type":"sgv","scaled":137}]}}}
 
+static bool getv3entries(recdata *outdata) {
+	int count=6;
+   	outdata->allbuf=new(std::nothrow) char[512+75*count+200];
+	if(!outdata->allbuf) {
+		return outofmemory(outdata);
+		}
+    	char *start=outdata->allbuf+150,*outiter=start;
+	constexpr const char begin[]=R"({"status":200,"result":[)";
+	addar(outiter,begin);
+	uint32_t lowerend=0, higherend=UINT32_MAX;
+	 if(!getitems(outiter,count, lowerend,higherend,false, 55,[](char *outiter,int datit, const ScanData *iter,const char *sensorname,const time_t starttime)
+
+				{
+				int len=sprintf(outiter,R"({"sgv":%d,"direction":"%s","srvCreated":%u000},)",iter->getmgdL(),getdeltaname(iter->ch).data(),iter->gettime());
+				return outiter+len;
+				}
+				)) {
+				return givenothing(outdata);
+					}
+	
+	*--outiter=']';
+	++outiter;
+	*outiter++='}';	
+//	mkjsonheader(start, outiter, false, outdata);
+
+      mktypeheader(start,outiter,false,outdata, "application/json");
+
+	return true;
+
+	}
 
 char *getdeltastr(char *start) {
 	char *outiter=start;
@@ -1266,37 +1316,47 @@ bool watchcommands(char *rbuf,int len,recdata *outdata,bool secure) {
 		
 	int seclen=settings->data()->apisecretlength;
 	if(seclen) {
-		if(foundsecret.size()==0) {
-			const char *starttoget=toget.data();
-			const char *end=starttoget+toget.size();
-			static constexpr const char token[]="token=";
-			static constexpr const int tokenlen=sizeof(token)-1;
-			const char *hit=std::search(starttoget,end,token,token+tokenlen);
-			if(hit!=end) {
-				hit+=tokenlen;	
-				const auto len=strcspn(hit," &");
-				foundsecret={hit,len};
-				LOGGERWEB("has token %.*s#%zd\n",(int)len,foundsecret.data(),foundsecret.size());
+		const char *starttoget=toget.data();
+		if(memcmp(starttoget,settings->data()->apisecret,seclen)||(starttoget[seclen]!='/'&&starttoget[seclen]!=' ')) {
+			if(foundsecret.size()==0) {
+				const char *end=starttoget+toget.size();
+				static constexpr const char token[]="token=";
+				static constexpr const int tokenlen=sizeof(token)-1;
+				const char *hit=std::search(starttoget,end,token,token+tokenlen);
+				if(hit!=end) {
+					hit+=tokenlen;	
+					const auto len=strcspn(hit," &");
+					foundsecret={hit,len};
+					LOGGERWEB("has token %.*s#%zd\n",(int)len,foundsecret.data(),foundsecret.size());
+					}
+				}
+			const char *realsecret;
+			if(issha1) {
+				realsecret=sha1secret.data();
+				seclen=sha1secret.size();
+				}
+			else {
+				realsecret=settings->data()->apisecret;
+				}
+			if(seclen!=foundsecret.size()||memcmp(realsecret,foundsecret.data(),seclen)) {
+				LOGGERWEB("%s#%d!=%.*s#%zd \n", realsecret,seclen,(int)foundsecret.size(), foundsecret.data(),foundsecret.size());
+				nosecret(foundsecret, outdata) ;
+				return false;
+				}
+			else {
+				LOGARWEB("secret matched");
 				}
 			}
-		const char *realsecret;
-		if(issha1) {
-			realsecret=sha1secret.data();
-			seclen=sha1secret.size();
-			}
 		else {
-			realsecret=settings->data()->apisecret;
-			}
-		if(seclen!=foundsecret.size()||memcmp(realsecret,foundsecret.data(),seclen)) {
-			LOGGERWEB("%s#%d!=%.*s#%zd \n", realsecret,seclen,(int)foundsecret.size(), foundsecret.data(),foundsecret.size());
-			nosecret(foundsecret, outdata) ;
-			return false;
-			}
-		else {
-			LOGARWEB("secret matched");
+			int newstart=seclen+1;
+			if(newstart>=toget.size()||toget.data()[seclen]==' ') {
+				givesite(outdata,hostname,secure);
+				return true;
+				}
+			toget=toget.substr(newstart);
 			}
 		}
-	if(!toget.size()) {
+	if(!toget.size()||*toget.data()==' '||*toget.data()=='?') {
 		givesite(outdata,hostname,secure);
 		return true;
 		}
@@ -1329,6 +1389,16 @@ constexpr const std::string_view pebble="pebble";
 	if(!memcmp(pebble.data(),toget.data(),pebble.size())) {
 		return pebbleinterpret(toget.data()+pebble.size(),toget.size()-pebble.size(),outdata);
 		} 
+std::string_view statusv3="api/v3/status";
+const auto stav3size= statusv3.size();
+	if(!memcmp(statusv3.data(),toget.data(),stav3size)) {
+		return givestatusv3(outdata);
+		}
+std::string_view entriesv3="api/v3/entries";
+const auto entries3size= entriesv3.size();
+	if(!memcmp(entriesv3.data(),toget.data(),entries3size)) {
+		return getv3entries(outdata);
+		}
 constexpr const std::string_view status="status.json";
 	if(!memcmp(status.data(),toget.data(),status.size())) {
 		return givedripstatus(outdata);
@@ -1411,9 +1481,10 @@ void mkjsonheader(char *outstart,char *outiter,const bool headonly,recdata *outd
 	}
  */
 void mktypeheader(char *outstart,char *outiter,const bool headonly,recdata *outdata,std::string_view type)  {
+//	constexpr const char header1[]="HTTP/1.1 200 OK\r\nVary: Accept, Accept-Encoding\r\nContent-Type: ";
 	constexpr const char header1[]="HTTP/1.1 200 OK\r\nContent-Type: ";
 	constexpr const int header1len=sizeof(header1)-1;
-	constexpr const char content[]="\r\nContent-Length: " ;
+	constexpr const char content[]="; charset=utf-8\r\nContent-Length: " ;
 	constexpr const int contentlen=sizeof(content)-1;
 	const int headerstartlen=header1len+contentlen+type.size();
 	int uitlen=outiter-outstart;
@@ -1465,7 +1536,7 @@ private:
 	char *firstdata(char *outiter,time_t starttime,uint32_t dattime) const ;
 	char *writeitem(char *outiter,int datit, const ScanData *iter,const char *sensorname,const time_t starttime) const;
 	//void mkjsonheader(char *outstart,char *outiter,const bool headonly,recdata *outdata) const;
-	bool getitems(char *&outiter,const int  datnr) const;
+	bool getv1entries(char *&outiter,const int  datnr) const;
 }; 
 
 bool givesgvtxt(const char *input,int inlen,recdata *outdata,char sep) {
@@ -1553,7 +1624,7 @@ char *Sgvinterpret::writeitem(char *outiter,int datit, const ScanData *iter,cons
 
 
 
-bool Sgvinterpret::getitems(char *&outiter,const int  datnr) const {
+bool Sgvinterpret::getv1entries(char *&outiter,const int  datnr) const {
 
 	return  ::getitems(outiter,datnr, lowerend,higherend,alldata, interval,[this](char *outiter,int datit, const ScanData *iter,const char *sensorname,const time_t starttime)
 				{return writeitem(outiter, datit, iter,sensorname, starttime);});
@@ -1704,7 +1775,7 @@ bool Sgvinterpret::getdata(bool headonly,recdata *outdata) const {
 		}
 	char *outiter=outstart;
 	*outiter++='[';
-	if(!getitems(outiter,datnr) )
+	if(!getv1entries(outiter,datnr) )
 		return false;
 	if(outiter==(outstart+1)&&noempty) {
 		*outstart='\0';

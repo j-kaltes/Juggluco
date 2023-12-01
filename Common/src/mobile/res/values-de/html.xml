@@ -54,9 +54,7 @@ sie Glukose von localhost auf Port 17580 empfangen.
 Nightscout-Server-URL: http://127.0.0.1:17580.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><span lang="de-DE">Auch
 einige Nightscout</span> <span lang="de-DE">Apps</span> <span lang="de-DE">können
-davon Gebrauch machen. xDrip, Diabox und eine
-<a href="https://github.com/dabear/FloatingGlucose/releases">Windows-Floating-Glucose-</a>
-App können mit http verwendet werden, wenn „</span><span lang="de-DE"><i>Nur
+davon Gebrauch machen. xDrip, Diabox, eine <a href="https://github.com/dabear/FloatingGlucose/releases">Windows-Floating-Glucose-</a> App und ein Windows-, Linux- und macOS- <a href="https://github.com/kashamalasha/nightscout-widget-electron"><i>ELECTRON-</i> Widget</a> können mit http verwendet werden, wenn „</span><span lang="de-DE"><i>Nur
 lokal</i></span>“ <span lang="de-DE">nicht eingestellt ist.</span>
 <span lang="de-DE">Unter MacOS gilt dasselbe für Nightscout Menu
 Bar, Gluco Status und Gluco Tracker (alle im Apple Store).</span>
@@ -111,9 +109,7 @@ verketten.</p>
 Windows-cmd.com:</p>
 <pre style="margin-bottom: 0.2in">copy certificate.crt + ca_bundle.crt fullchain.pem</pre><p style="line-height: 100%; margin-bottom: 0in">
 Windows-Powershell:</p>
-<p>cat certificate.crt &gt; fullchain.pem<br/>
-cat ca_bundle.crt &gt;&gt;
-fullchain.pem</p>
+<pre>gc certificate.crt,ca_bundle.crt -Encoding Byte -Read 512 | sc fullchain.pem -Encoding Byte</pre>
 <p style="line-height: 100%; margin-bottom: 0in"><span lang="de-DE">Nachdem
 ich Certbot verwendet hatte, fand ich den privaten Schlüssel in
 /etc/letsencrypt/live/myhostname/privkey.pem</span> <span lang="de-DE">und
@@ -1675,10 +1671,10 @@ ausgelöst wurde.</p>
 die Möglichkeit, für die gleiche Anzahl von Sekunden zu blinken.
 Praktisch für den Fall, dass Klingeltöne nicht erlaubt sind und es
 keine klaren Richtlinien bezüglich Blitzlicht gibt.</p>
-<p>Auf Seiten wie stackoverflow.com wird manchmal behauptet, dass
-einige Smartphones abstürzen, wenn sie Blitzlicht ohne
-Kameraerlaubnis verwenden, wenn das der Fall ist, können Sie die
-Kameraerlaubnis aktivieren.</p>
+<p><br/>
+<br/>
+
+</p>
 ]]>
 </string>
 <string name="searchhelp" >

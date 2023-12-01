@@ -45,10 +45,9 @@ period, this state was not be turned off automatically.</span></span></p>
 Smartphones with torch flash light have the option to flash for the
 same number of seconds. Handy in case ringtones are not allowed and
 there is no clear policy concerning flash light.</p>
-<p style="line-height: 100%; margin-bottom: 0in">On sites like
-stackoverflow.com it is sometimes claimed that some smartphones crash
-when using Flash light without camera permission, if that is the case
-you can turn on Camera permission.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
 <p style="line-height: 100%; margin-bottom: 0in"><br/>
 
 </p>
@@ -1838,11 +1837,12 @@ check active. Hereafter they can receive glucose from 127.0.0.1 on
 port 17580. Nightscout server URL: http://127.0.0.1:17580 
 </p>
 <p style="line-height: 100%; margin-bottom: 0in">Also, some
-Nightscout followers can make use of it. xDrip, Diabox and a <a href="https://github.com/dabear/FloatingGlucose/releases">Windows
-Floating Glucose</a> app can be used with http when &quot;local only&quot;
-is not set. On MacOS the same is true for Nightscout Menu Bar, Gluco
-Status and Gluco Tracker (all in Apple Store). You also only need
-http for <a href="https://github.com/someoneAnyone/Nightscouter">Nightscouter</a>
+Nightscout followers can make use of it. xDrip, Diabox, a <a href="https://github.com/dabear/FloatingGlucose/releases">Windows
+Floating Glucose</a> app and a Windows, Linux and macOS <a href="https://github.com/kashamalasha/nightscout-widget-electron"><i>ELECTRON</i>
+widget</a> can be used with http when &quot;local only&quot; is not
+set. On MacOS the same is true for Nightscout Menu Bar, Gluco Status
+and Gluco Tracker (all in Apple Store). You also only need http for
+<a href="https://github.com/someoneAnyone/Nightscouter">Nightscouter</a>
 and <a href="https://github.com/jonfawcett/LoopFollow">LoopFollow</a>
 (IOS) and <a href="https://github.com/nightscout/nightguard">Nightguard</a>
 (IOS and WatchOS).</p>
@@ -1853,7 +1853,7 @@ your modem. See:</p>
 	<li><p style="line-height: 100%; margin-bottom: 0in"><a href="https://www.makeuseof.com/tag/what-is-port-forwarding-and-how-can-it-help-me">https://www.makeuseof.com/tag/what-is-port-forwarding-and-how-can-it-help-me</a></p>
 	<li><p style="line-height: 100%; margin-bottom: 0in"><a href="https://www.juggluco.nl/Juggluco/phones/index.html">https://www.juggluco.nl/Juggluco/phones/index.html</a></p>
 	<li><p style="line-height: 100%; margin-bottom: 0in">Left middle
-	menu-&gt;Mirror-&gt;Add Conection-&gt;Help</p>
+	menu-&gt;Mirror-&gt;<a href="https://www.juggluco.nl/Jugglucohelp/addconnection.html">Add Conection</a>-&gt;Help</p>
 </ul>
 <p style="line-height: 100%; margin-bottom: 0in">Other Nightscout
 followers only make use of https and that requires that Juggluco has
@@ -1882,12 +1882,9 @@ chain, you have to concatenate certificate.crt and ca_bundle.crt.</p>
 <pre style="margin-bottom: 0.2in">cat certificate.crt ca_bundle.crt &gt;  fullchain.pem</pre><p style="line-height: 100%; margin-bottom: 0in">
 Windows cmd.com:</p>
 <pre style="margin-bottom: 0.2in">copy certificate.crt + ca_bundle.crt  fullchain.pem</pre><p style="line-height: 100%; margin-bottom: 0in">
-Windows Powershell:</p>
-<p>cat certificate.crt &gt; fullchain.pem<br/>
-cat ca_bundle.crt &gt;&gt;
-fullchain.pem</p>
-<p style="line-height: 100%; margin-bottom: 0in">After using Certbot
-I found the Private key in
+Windows Powershell, something like:</p>
+<pre style="margin-bottom: 0.2in">gc certificate.crt,ca_bundle.crt -Encoding Byte -Read 512 | sc fullchain.pem -Encoding Byte</pre><p style="line-height: 100%; margin-bottom: 0in">
+After using Certbot I found the Private key in
 /etc/letsencrypt/live/myhostname/privkey.pem</p>
 <p style="line-height: 100%; margin-bottom: 0in">and the full chain
 in /etc/letsencrypt/live/myhostname/fullchain.pem. &quot;<em>myhostname</em>&quot;
@@ -1895,11 +1892,11 @@ is the hostname I used.</p>
 <p style="line-height: 100%; margin-bottom: 0in">If you just want to
 send glucose values from one Android to the other, you can better use
 Juggluco\'s <a href="https://www.juggluco.nl/Juggluco/index.html#mirror">mirror</a>
-function (Left middle menu-&gt;Mirror).</p>
+function (Left middle menu-&gt;<a href="https://www.juggluco.nl/Jugglucohelp/connectionoverview.html">Mirror</a>).</p>
 <p style="line-height: 100%; margin-bottom: 0in">Android Aps and
 Nsclient don\'t work as follower of Juggluco, but you can send glucose
 values to them with the xDrip broadcast in Juggluco (left
-menu-&gt;settings-&gt;xDrip Broadcast).</p>
+menu-&gt;<a href="https://www.juggluco.nl/Jugglucohelp/settinghelp.html">Settings</a>-&gt;xDrip Broadcast).</p>
 <p style="line-height: 100%; margin-bottom: 0in">You need SSL for the
 Android apps Diabetes:M, <a href="https://play.google.com/store/apps/details?id=se.cornixit.nightwatch">Nightwatch</a>
 and <a href="https://slingithub.github.io/CheckmateWeb">Checkmate</a>,
@@ -1912,7 +1909,8 @@ given to Juggluco, <i>port</i> is the port you forwarded to the port
 you specified in this screen (default: 17581).</p>
 <p style="line-height: 100%; margin-bottom: 0in">The web server can
 also be run on a Linux computer. It will receive its data from a
-<a href="https://www.juggluco.nl/Juggluco/index.html#mirror">mirror connection</a> from Juggluco connected to the sensor:
+<a href="https://www.juggluco.nl/Juggluco/index.html#mirror">mirror
+connection</a> from Juggluco connected to the sensor:
 <a href="https://www.juggluco.nl/Juggluco/cmdline/index.html">https://www.juggluco.nl/Juggluco/cmdline</a>.</p>
 <p style="line-height: 100%; margin-bottom: 0in">Another phone can
 connect to this server via a mirror connection or as Nightscout
@@ -1943,8 +1941,8 @@ select a file containing the private key. See above.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><strong>Full Chain</strong>:
 select a file containing the Full Chain, see above.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><strong>Local only</strong>:
-the http server can only be accessed with localhost (127.0.0.1). This doesn\'t
-apply to https.</p>
+the http server can only be accessed with localhost (127.0.0.1). This
+doesn\'t apply to https.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>Give Amounts</b>:
 make it possible to receive the entered amounts using
 <a href="http://127.0.0.1:17580/api/v1/treatments?count=3">http://127.0.0.1:17580/api/v1/treatments?count=3</a>.
@@ -1966,7 +1964,7 @@ Juggluco. In xDrip you can do this in two ways:</p>
 	<li><p style="line-height: 100%; margin-bottom: 0in"><span style="font-variant: normal"><span style="font-style: normal">Take
 	another Hardware Data Source for example </span></span><i>Libre
 	(patched app)</i><span style="font-variant: normal"> </span><span style="font-variant: normal"><span style="font-style: normal">and
-	turn on settings-&gt;Cloud Upload-&gt;Nightscout Sync (REST-API).
+	turn on Settings-&gt;Cloud Upload-&gt;Nightscout Sync (REST-API).
 	Enter as Base API URL, http://somekey@127.0.0.1:17580/api/v1/ and
 	turn on &quot;</span></span><i>Download treatments</i><span style="font-variant: normal"><span style="font-style: normal">&quot;.
 	Uploading to Juggluco is impossible, so this only downloads

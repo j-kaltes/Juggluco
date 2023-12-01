@@ -138,9 +138,7 @@ certificate.crt і ca_bundle.crt.</p>
 Windows cmd.com:</p>
 <pre style="margin-bottom: 0.51cm">copy certificate.crt + ca_bundle.crt  fullchain.pem</pre><p style="line-height: 100%; margin-bottom: 0cm">
 Windows Powershell:</p>
-<p>cat certificate.crt &gt; fullchain.pem<br/>
-cat ca_bundle.crt &gt;&gt;
-fullchain.pem</p>
+<pre>gc certificate.crt,ca_bundle.crt -Encoding Byte -Read 512 | sc fullchain.pem -Encoding Byte</pre>
 <p style="line-height: 100%; margin-bottom: 0cm">Пасля
 выкарыстання Certbot я знайшоў прыватны
 ключ у /etc/letsencrypt/live/myhostname/privkey.pem<br/>

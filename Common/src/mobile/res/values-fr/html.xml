@@ -2288,9 +2288,7 @@ complète, vous devez concaténer certificate.crt et ca_bundle.crt.</p>
 Windows cmd.com :</p>
 <pre style="margin-bottom: 0.51cm">copier certificat.crt + ca_bundle.crt fullchain.pem</pre><p style="margin-bottom: 0cm; line-height: 100%">
 Powershell Windows :</p>
-<p>cat certificat.crt &gt; chaîne complète.pem <br/>
-cat
-ca_bundle.crt &gt;&gt; chaîne complète.pem</p>
+<pre>gc certificate.crt,ca_bundle.crt -Encoding Byte -Read 512 | sc fullchain.pem -Encoding Byte</pre>
 <p style="margin-bottom: 0cm; line-height: 100%">Après avoir utilisé
 Certbot, j\'ai trouvé la clé privée dans
 /etc/letsencrypt/live/myhostname/privkey.pem</p>

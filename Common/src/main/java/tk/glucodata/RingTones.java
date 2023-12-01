@@ -68,7 +68,7 @@ public class RingTones {
 // Ringtone ringtone;
  TextView name;
 CheckBox flashview;
-Button permission;
+//Button permission;
 private static final String LOG_ID="RingTones";
 
 static public RingTones one=null;
@@ -191,7 +191,7 @@ static private void subEnableControls(View view,boolean enable){
 	 TextView waitlabel=getlabel(context,R.string.minuteddeactivated);
 		waitlabel.setPadding(rand*2,0,0,0);
 	 flashview=new CheckBox(context);
-	 permission=new Button(context);
+	 //permission=new Button(context);
 
 	final boolean hasflash= !isWearable && Flash.hasFlash(context);
 	CheckBox sound=new CheckBox(context);
@@ -241,7 +241,7 @@ static private void subEnableControls(View view,boolean enable){
 		Button Save=getbutton(context,R.string.save);
 
 
-	var soundselect=isWearable||Build.VERSION.SDK_INT <Build.VERSION_CODES.M?new View[] {def,Select}:new View[] {def,Select,disturb};
+	var soundselect=new View[] {def,Select};
 	if(!hassound) {
 		for(var el:soundselect)
 			el.setEnabled(false);
@@ -297,13 +297,13 @@ View[] durviews;
 		boolean flashalarm= Natives.alarmhasflash(kind);
 		flashview.setChecked(flashalarm);
 		flashview.setText(R.string.flash);
+		/*
 		flashview.setOnCheckedChangeListener(
 			 (buttonView,  isChecked) -> {
 			      var flashperm=Applic.hasPermissions( context, MainActivity.flashpermissions).length==0;
-				permission.setVisibility(isChecked&&!flashperm?VISIBLE:INVISIBLE);
+				//permission.setVisibility(isChecked&&!flashperm?VISIBLE:INVISIBLE);
 				 } 
 				 );
-
 		var flashperm2=Applic.hasPermissions( context, MainActivity.flashpermissions).length==0;
 		permission.setText(R.string.permission);
 		permission.setVisibility((!flashperm2&&flashalarm)?VISIBLE:INVISIBLE);
@@ -314,15 +314,16 @@ View[] durviews;
 					permission.setVisibility(INVISIBLE);
 				 } 
 				 );
-	//	int pad=(int)(GlucoseCurve.metrics.density*4.0f);
-//		permission.setPadding(0,0,pad,0);
+
+*/
 	}
 	else {
 		flashview.setVisibility(INVISIBLE);
-		permission.setVisibility(INVISIBLE);
+		//permission.setVisibility(INVISIBLE);
 		}
-	views[start+2]=isWearable?new View[]{sound,vibration}:new View[]{sound,vibration};
-	views[start+3]=isWearable?new View[]{play}:new View[]{flashview,permission};
+
+	views[start+2]=isWearable?new View[]{sound,vibration}: (Build.VERSION.SDK_INT <Build.VERSION_CODES.M? new View[]{sound}:new View[]{sound,disturb});
+	views[start+3]=isWearable?new View[]{play}:new View[]{flashview,vibration};
 	
 	View lay;
 	ScrollView scroll=new ScrollView(context);

@@ -44,12 +44,9 @@ Smartphones met flits zaklamp hebben de mogelijk bij het afgaan van
 alarm, voor de aangeven hoeveelheid seconden, te flitsen. Handig in
 situaties waar het afgaan van telefoons verboden is en er geen
 duidelijke regels bestaan betreffende het gebruik van flitsen.</p>
-<p style="line-height: 100%; margin-bottom: 0in"><b>Toestemming</b>:
-Hoewel ik het zelf nooit meegemaakt heb, wordt in internet forums
-zoals stackoverflow.com wel beweert, dat een app zou crashen als het
-de flits gebruikt wordt zonder Camera toestemming. Als dat het geval
-is kun je Juggluco deze toestemming geven door op <i>Toestemming</i>
-te drukken.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
 <p style="line-height: 100%; margin-bottom: 0in"><br/>
 
 </p>
@@ -1803,10 +1800,7 @@ ontvangen van localhost op poort 17580. Nightscout server URL:
 http://127.0.0.1:17580 
 </p>
 <p style="line-height: 100%; margin-bottom: 0in"><span lang="nl-NL">Ook
-sommige Nightscout-volgers kunnen er gebruik van maken. xDrip, Diabox
-en een <a href="https://github.com/dabear/FloatingGlucose/releases">Windows
-Floating Glucose-</a> app kunnen worden gebruikt met http als &quot;alleen
-lokaal&quot; niet is ingesteld.</span> Op MacOS geldt hetzelfde voor
+sommige Nightscout-volgers kunnen er gebruik van maken. xDrip, Diabox, een <a href="https://github.com/dabear/FloatingGlucose/releases">Windows Floating Glucose-</a> app en een Windows-, Linux- en macOS- <a href="https://github.com/kashamalasha/nightscout-widget-electron"><i>ELECTRON</i> widget</a> kunnen worden gebruikt met http als &quot;alleen lokaal&quot; niet is ingesteld.</span> Op MacOS geldt hetzelfde voor
 Nightscout Menu Bar, Gluco Status en Gluco Tracker (allemaal in Apple
 Store). Je hebt ook alleen http nodig voor <a href="https://github.com/someoneAnyone/Nightscouter">Nightscouter</a>
 en <a href="https://github.com/jonfawcett/LoopFollow">LoopFollow</a>
@@ -1861,9 +1855,7 @@ te maken, moet je certificate.crt en ca_bundle.crt samenvoegen.</p>
 Windows cmd.com:</p>
 <pre style="margin-bottom: 0.2in">copy certificate.crt + ca_bundle.crt fullchain.pem</pre><p style="line-height: 100%; margin-bottom: 0in">
 Windows PowerShell:</p>
-<p>cat certificate.crt &gt; fullchain.pem <br/>
-cat ca_bundle.crt &gt;&gt;
-fullchain.pem</p>
+<pre>gc certificate.crt,ca_bundle.crt -Encoding Byte -Read 512 | sc fullchain.pem -Encoding Byte</pre>
 <p style="line-height: 100%; margin-bottom: 0in"><span lang="nl-NL">Nadat
 ik Certbot had gebruikt, vond ik de private key</span> <span lang="nl-NL">in
 /etc/letsencrypt/live/myhostname/privkey.pem</span> <span lang="nl-NL">en

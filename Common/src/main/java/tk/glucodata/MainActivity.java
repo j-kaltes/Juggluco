@@ -33,7 +33,6 @@ import static tk.glucodata.Applic.isWearable;
 import static tk.glucodata.Applic.scanpermissions;
 import static tk.glucodata.Applic.talkbackoff;
 import static tk.glucodata.Applic.talkbackon;
-import static tk.glucodata.Applic.useflash;
 import static tk.glucodata.Floating.setfloatglucose;
 import static tk.glucodata.Floating.shoulduseadb;
 import static tk.glucodata.GlucoseCurve.STEPBACK;
@@ -765,14 +764,9 @@ boolean finepermission() {
 	else
 		return true;
 	}
-
-public static final String[] flashpermissions={ Manifest.permission.CAMERA};
 /*
-	Log.i(LOG_ID,"flashpermission");
-        if(!Natives.getuseflash()) {
-	     useflash(false);
-	      return -1;
-	      }*/
+public static final String[] flashpermissions={ Manifest.permission.CAMERA};
+	      
 public int flashpermission() {
         if (Build.VERSION.SDK_INT >= 23) {
 		var noperm=Applic.hasPermissions( this, flashpermissions);
@@ -803,6 +797,7 @@ public int flashpermission() {
 			return 1;
 			}
 	}
+	*/
 
 static public final int SENSOR_PERMISSION_REQUEST_CODE=0x23457;
 static final int FLASH_PERMISSION_REQUEST_CODE=0x11224;
@@ -825,7 +820,7 @@ public void onRequestPermissionsResult(int requestCode, String[] permissions, in
 				}
 			explicit(this);	
 		 	};break;
-
+/*
 	        case FLASH_PERMISSION_REQUEST_CODE: {
 			Log.i(LOG_ID,"FLASH_PERMISSION_REQUEST_CODE");
 			if (granted) {
@@ -834,7 +829,7 @@ public void onRequestPermissionsResult(int requestCode, String[] permissions, in
 				Log.i(LOG_ID,"Flash denied");
 				useflash(false);
 				}
-			} return;
+			} return; */
 		case LOCATION_PERMISSION_REQUEST_CODE:
 			Log.i(LOG_ID,"LOCATION_PERMISSION_REQUEST_CODE");
 			if (granted) {

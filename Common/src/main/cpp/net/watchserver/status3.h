@@ -1,0 +1,1 @@
+static constexpr const char statusv3[]=R"({"status":200,"result":{"version":"14.2.6","apiVersion":"3.0.3-alpha","srvDate":%ld000,"storage":{"storage":"mongodb","version":"6.0.4"},"apiPermissions":{"devicestatus":"crud","entries":"crud","food":"crud","profile":"crud","settings":"crud","treatments":"crud"}}})";

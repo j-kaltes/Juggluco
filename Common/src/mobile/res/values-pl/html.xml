@@ -31,7 +31,7 @@
 <p style="line-height: 100%; margin-bottom: 0in">Linux:</p>
 <pre style="margin-bottom: 0.2in">cat certificate.crt ca_bundle.crt &gt; fullchain.pem</pre><p style="line-height: 100%; margin-bottom: 0in">Windows cmd.com:</p>
 <pre style="margin-bottom: 0.2in">copy certificate.crt + ca_bundle.crt fullchain.pem</pre><p style="line-height: 100%; margin-bottom: 0in">Windows Powershell:</p>
-<p>cat certificate.crt &gt; fullchain.pem<br/> cat ca_bundle.crt &gt;&gt; fullchain.pem</p>
+<pre>gc certificate.crt,ca_bundle.crt -Encoding Byte -Read 512 | sc fullchain.pem -Encoding Byte</pre>
 <p style="line-height: 100%; margin-bottom: 0in">Po użyciu Certbota znalazłem klucz prywatny w /etc/letsencrypt/live/myhostname/privkey.pem</p>
 <p style="line-height: 100%; margin-bottom: 0in">a pełny łańcuch w /etc/letsencrypt/live/myhostname/fullchain.pem. <em>&quot;myhostname</em>&quot; to nazwa hosta, kt&oacute;rej użyłem.</p>
 <p style="line-height: 100%; margin-bottom: 0in">Jeśli chcesz tylko wysłać wartości glukozy z jednego urządzenia z Androidem do drugiego, lepiej użyć funkcji <a href="https://www.juggluco.nl/Juggluco/index.html#mirror">klonowanie</a> w Juggluco (Lewe środkowe menu -&gt; Klonowanie).</p>

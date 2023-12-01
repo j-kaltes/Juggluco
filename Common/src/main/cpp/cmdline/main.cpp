@@ -219,6 +219,7 @@ int   listconnections() {
 			}
 		cout<<"api/v1/treatments turned "<<(settings->data()->saytreatments?"on":"off")<<endl;
 		if(settings->data()->apisecretlength) {
+			settings->data()->apisecret[settings->data()->apisecretlength]='\0';
 			cout<<"api_secret: "<<settings->data()->apisecret<<endl<<endl;
 		}else  {
 			cout<<"No api_secret\n\n";
@@ -497,7 +498,7 @@ static constexpr const	char defaultname[]="jugglucodata";
 			return 10;
 			}
 		settings->data()->apisecretlength=len;
-		memcpy(settings->data()->apisecret,api_secret,len);
+		memcpy(settings->data()->apisecret,api_secret,len+1);
 	extern void	makesha1secret();
 		makesha1secret();
 		did=true;

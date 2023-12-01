@@ -109,17 +109,15 @@ private final long uiThreadId;
 public Handler getHandler() {
 	return mHandler;
 	}
+/*
 static boolean canuseflash=false;
 static public void useflash(boolean val) {
 	canuseflash=val;
 	
 	if(val&&tk.glucodata.RingTones.one!=null&&tk.glucodata.RingTones.one.permission!=null)
 		tk.glucodata.RingTones.one.permission.setVisibility(INVISIBLE);
-	/*
-	if(!val&&tk.glucodata.RingTones.one!=null&&tk.glucodata.RingTones.one.flashview!=null)
-		tk.glucodata.RingTones.one.flashview.setChecked(false);
-		*/
 	}
+	*/
 MainActivity getActivity() {
 	if(curve!=null)
 		return (MainActivity)curve.getContext();
