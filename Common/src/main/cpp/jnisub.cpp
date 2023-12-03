@@ -20,7 +20,7 @@
 /*                                                                                   */
 /*      Fri Jan 27 12:35:35 CET 2023                                                 */
 
-constexpr const int wearduration=14*24*60+14*60;
+constexpr const int wearduration=14*24*60;
 
 
 #include <string.h>

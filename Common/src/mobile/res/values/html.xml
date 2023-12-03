@@ -183,7 +183,7 @@ IP/TCP data to a Juggluco on another device. To establish a
 connection, one of the Juggluco\'s has to listen on a port and the
 other has to make contact to that port. The port this instance of
 Juggluco is listening on, was given in the previous screen (Left
-middle menu-&gt; Mirror). Here you specify the port this instance of
+middle menu-&gt;<a href="https://www.juggluco.nl/Jugglucohelp/connectionoverview.html">Mirror</a>). Here you specify the port this instance of
 Juggluco contacts to if it actively makes contact. If this instance
 of Juggluco can\'t listen on a port, select &quot;<b>Active only</b>&quot;.
 If the other side can\'t listen on a port, select &quot;<b>Passive
@@ -821,7 +821,7 @@ http://127.0.0.1:17580</p>
 <p>Juggluco can also directly contact with xDrip watch apps, so that
 the watch app displays more recent glucose values. To use this
 feature check <i>&quot;xDrip webserver&quot;</i> in the left menu
-under <b>Watch</b>. See Help under left menu-&gt;watch for more
+under <b>Watch</b>. See Help under left menu-&gt;<a href="https://www.juggluco.nl/Jugglucohelp/watchinfo.html">Watch</a> for more
 information. Only one app can listen to the network port used by the
 xDrip webserver, so you need to turn off &quot;<i>xDrip webservice</i>&quot;
 in xDrip itself if you want to make use of the one in Juggluco.</p>
@@ -1070,7 +1070,7 @@ back to Juggluco. Be careful because the mirror also is immediately
 synced with its original. To function as a backup, all connection
 with the original should be broken at some point in time. You can
 also connect the watch to a device that is a mirror (left middle
-menu-&gt;Mirror) of the device in which you entered the numbers.</p>
+menu-&gt;<a href="https://www.juggluco.nl/Jugglucohelp/connectionoverview.html">Mirror</a>) of the device in which you entered the numbers.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>Refresh</b>
 rewrites this dialog with new information (e.g. after Reinit or
 Sync).</p>
@@ -1427,7 +1427,7 @@ and send these glucose values to a watch. For example G-Watch
 (<a href="https://play.google.com/store/apps/details?id=sk.trupici.g_watch">TizenOS</a>
 or <a href="https://play.google.com/store/apps/details?id=sk.trupici.gwatch.wear">WearOS</a>)
 can receive glucose values from the Glucodata Broadcast (see Left
-menu-&gt;Settings).</p>
+menu-&gt;<a href="https://www.juggluco.nl/Jugglucohelp/settinghelp.html">Settings</a>).</p>
 <h2 class="western"><a href="https://www.juggluco.nl/Jugglucohelp/Nightscouthelp.html">xDrip watch apps</a></h2>
 <p style="line-height: 100%; margin-bottom: 0in"><span lang="en-US">Juggluco
 incorporates an xDrip/Nightscout</span> <span lang="en-US">webserver.
@@ -1482,7 +1482,7 @@ Bluetooth.</p>
   <p><h1>Wear Os</h1></p>
   <p><strong>Direct sensor-watch connection</strong>: This determines whether the watch should be directly connected with the sensor. This can only be changed when watch and phone are in sync. Use Mirror-&gt;Sync and Reinit on phone and watch, to sync phone and watch.</p>
   <p><strong>Init watch app</strong>: This should be pressed once after Juggluco is installed on the WearOS watch and is running.</p>
-  <p><strong>Defaults</strong>: This sets the connection settings to its default values. This consists of the settings that can be changed in Left menu-&gt;Mirror on the watch and left middle menu-&gt;Mirror on the phone. It consists of settings like "Active only" and "Scans\'. This button can be pressed when the settings have changed accidentally by water of the shower or during sleep. If you reset by reinstalling the watch version or clearing data, then you also need to remove the mirror connection on the phone.</p>
+  <p><strong>Defaults</strong>: This sets the connection settings to its default values. This consists of the settings that can be changed in Left menu-&gt;<a href="https://www.juggluco.nl/Jugglucohelp/connectionoverview.html">Mirror</a> on the watch and left middle menu-&gt;Mirror on the phone. It consists of settings like "Active only" and "Scans\'. This button can be pressed when the settings have changed accidentally by water of the shower or during sleep. If you reset by reinstalling the watch version or clearing data, then you also need to remove the mirror connection on the phone.</p>
   <p>A special version of Juggluco can run directly on a Wear Os watch. It needs an Android smartphone with NFC to scan the sensor and via a TCP connection this data is sent to the Wear OS watch. Hereafter there are two possibilities:</p>
   <ol>
     <li>
@@ -1508,10 +1508,10 @@ Bluetooth.</p>
       <p>Install the Wear OS version of Juggluco on your Wear Os watch and start it;</p>
     </li>
     <li>
-      <p>On the phone go to left-menu-&gt;Watch-&gt;Wear Os Config. Your watch should be displayed in the spinner. Press "Init watch app";</p>
+      <p>On the phone go to left-menu-&gt;Watch-&gt;<a href="https://www.juggluco.nl/Jugglucohelp/wearosinfo.html">Wear Os Config</a>. Your watch should be displayed in the spinner. Press "Init watch app";</p>
     </li>
     <li>
-      <p>If everything went well, in both Juggluco\'s a TCP connection is configured and all data on the phone is sent to the watch. This can take a long time if you were using Juggluco for a long time. You can check if the TCP connection is configured by looking in the Mirror dialog (phone: left middle menu-&gt;Mirror, watch: left-menu-&gt;Mirror). A connection with the same id as shown in the spinner for your watch should be shown. On the watch is should also contain the IP of the phone. If the are not there or the watch side doesn\'t contain an IP, press again on "Init watch app". If it still isn\'t there, check the Bluetooth connection and the phone app responsible for the connection to your watch. (When the watch already has received data, pressing "Init watch app" has the effect of re-sending all, so you could as well re-install the watch version of Juggluco. Later on, if the right IP is not shown, you should on the phone turn the external connection (WIFI or Mobile data) off and on.</p>
+      <p>If everything went well, in both Juggluco\'s a TCP connection is configured and all data on the phone is sent to the watch. This can take a long time if you were using Juggluco for a long time. You can check if the TCP connection is configured by looking in the Mirror dialog (phone: left middle menu-&gt;<a href="https://www.juggluco.nl/Jugglucohelp/connectionoverview.html">Mirror</a>, watch: left-menu-&gt;Mirror). A connection with the same id as shown in the spinner for your watch should be shown. On the watch is should also contain the IP of the phone. If the are not there or the watch side doesn\'t contain an IP, press again on "Init watch app". If it still isn\'t there, check the Bluetooth connection and the phone app responsible for the connection to your watch. (When the watch already has received data, pressing "Init watch app" has the effect of re-sending all, so you could as well re-install the watch version of Juggluco. Later on, if the right IP is not shown, you should on the phone turn the external connection (WIFI or Mobile data) off and on.</p>
     </li>
     <li>
       <p>If everything went well, the same data, as displayed on the phone version of Juggluco, is displayed on the watch version of Juggluco. Every new glucose value received by the phone is sent via TCP to the watch. Some settings like unit, glucose alarm levels and reminders are also transmitted to the watch. Later changes should be made on the watch itself.</p>
@@ -1533,7 +1533,7 @@ Bluetooth.</p>
   <p><strong>Watch face</strong></p>
   <p>Juggluco for Wear OS includes a watch face that shows your current glucose level besides the time and up to four complications. To make use of it you have to select this watch face for example in your watch companion app under "downloaded". Normally you will see the last glucose value when the screen wakes up. When the display is in ambient (always on) mode, the glucose value is only updated when the minute indicator is increased or you press a button or raise your arm. So the displayed value can be up to one minute delayed.</p>
   <p>There is also a complication that uses the Glucodata broadcast of the WearOS version to display the glucose value in every watch face that accepts the complication: <a href="https://github.com/pachi81/GlucoDataHandler/releases">https://github.com/pachi81/GlucoDataHandler/releases</a></p>
-  <p>A third option in to turn on <i>Floating Glucose</i> in Juggluco\'s settings on the watch. When Juggluco has the right permissions, a glucose value is displayed over other apps. This way you can see your current glucose value while using arbitrary watch faces or apps that monitor your activity. For more information see, in the phone version of Juggluco, left menu -&gt; Settings -&gt; Floating glucose -&gt; Help.</p>
+  <p>A third option in to turn on <i>Floating Glucose</i> in Juggluco\'s settings on the watch. When Juggluco has the right permissions, a glucose value is displayed over other apps. This way you can see your current glucose value while using arbitrary watch faces or apps that monitor your activity. For more information see, in the phone version of Juggluco, left menu -&gt; Settings -&gt; <a href="https://www.juggluco.nl/Jugglucohelp/floatingconfig.html">Floating glucose</a> -&gt; Help.</p>
   <p>&nbsp;&nbsp; &nbsp;&nbsp;</p>
 ]]>
 </string>
@@ -1729,7 +1729,7 @@ to send Amounts to Libreview. Before you can switch on &quot;<i>Send
 amounts</i>&quot;, you need to specify for <a href="https://www.juggluco.nl/Jugglucohelp/setlibrenumtype.html">every label</a> how the
 amounts entered under that label should be sent to Libreview. The
 labels themselves can be created, modified and deleted in Left
-menu-&gt;Settings-&gt;&quot;Number Labels&quot;. 
+menu-&gt;Settings-&gt;&quot;<a href="https://www.juggluco.nl/Jugglucohelp/labelhelp.html">Number Labels</a>&quot;. 
 </p>
 <p>For labels send as comments to Libreview the following restriction
 applies: after you change a label, will deletions and changes of
@@ -1838,10 +1838,11 @@ port 17580. Nightscout server URL: http://127.0.0.1:17580
 </p>
 <p style="line-height: 100%; margin-bottom: 0in">Also, some
 Nightscout followers can make use of it. xDrip, Diabox, a <a href="https://github.com/dabear/FloatingGlucose/releases">Windows
-Floating Glucose</a> app and a Windows, Linux and macOS <a href="https://github.com/kashamalasha/nightscout-widget-electron"><i>ELECTRON</i>
-widget</a> can be used with http when &quot;local only&quot; is not
-set. On MacOS the same is true for Nightscout Menu Bar, Gluco Status
-and Gluco Tracker (all in Apple Store). You also only need http for
+Floating Glucose</a> app and a Windows, Linux and macOS widget
+(<a href="https://github.com/kashamalasha/nightscout-widget-electron">Owlet</a>)
+can be used with http when &quot;<i>local only</i>&quot; is not set.
+On MacOS the same is true for Nightscout Menu Bar, Gluco Status and
+Gluco Tracker (all in Apple Store). You also only need http for
 <a href="https://github.com/someoneAnyone/Nightscouter">Nightscouter</a>
 and <a href="https://github.com/jonfawcett/LoopFollow">LoopFollow</a>
 (IOS) and <a href="https://github.com/nightscout/nightguard">Nightguard</a>
@@ -1853,7 +1854,8 @@ your modem. See:</p>
 	<li><p style="line-height: 100%; margin-bottom: 0in"><a href="https://www.makeuseof.com/tag/what-is-port-forwarding-and-how-can-it-help-me">https://www.makeuseof.com/tag/what-is-port-forwarding-and-how-can-it-help-me</a></p>
 	<li><p style="line-height: 100%; margin-bottom: 0in"><a href="https://www.juggluco.nl/Juggluco/phones/index.html">https://www.juggluco.nl/Juggluco/phones/index.html</a></p>
 	<li><p style="line-height: 100%; margin-bottom: 0in">Left middle
-	menu-&gt;Mirror-&gt;<a href="https://www.juggluco.nl/Jugglucohelp/addconnection.html">Add Conection</a>-&gt;Help</p>
+	menu-&gt;Mirror-&gt;<a href="https://www.juggluco.nl/Jugglucohelp/addconnection.html">Add
+	Conection</a>-&gt;Help</p>
 </ul>
 <p style="line-height: 100%; margin-bottom: 0in">Other Nightscout
 followers only make use of https and that requires that Juggluco has
@@ -1896,7 +1898,8 @@ function (Left middle menu-&gt;<a href="https://www.juggluco.nl/Jugglucohelp/con
 <p style="line-height: 100%; margin-bottom: 0in">Android Aps and
 Nsclient don\'t work as follower of Juggluco, but you can send glucose
 values to them with the xDrip broadcast in Juggluco (left
-menu-&gt;<a href="https://www.juggluco.nl/Jugglucohelp/settinghelp.html">Settings</a>-&gt;xDrip Broadcast).</p>
+menu-&gt;<a href="https://www.juggluco.nl/Jugglucohelp/settinghelp.html">Settings</a>-&gt;xDrip
+Broadcast).</p>
 <p style="line-height: 100%; margin-bottom: 0in">You need SSL for the
 Android apps Diabetes:M, <a href="https://play.google.com/store/apps/details?id=se.cornixit.nightwatch">Nightwatch</a>
 and <a href="https://slingithub.github.io/CheckmateWeb">Checkmate</a>,
@@ -1922,10 +1925,17 @@ particular Nightscout server program and will not work with
 Juggluco.)</p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>api_secret</b>:
 Specify that followers should set the ap<span style="font-weight: normal">i</span><b>_</b>secret
-http header element to this value. In Juggluco 4.9.1 or higher does
-testing on this secret also work when the followers use this secret
-as Nightscout token or use the api<b>-</b>secret header with an SHA1
-encoded secret.</p>
+http header element to this value. This secret also works when the
+followers use this secret as <a href="https://www.juggluco.nl/Juggluco/webserver.html#token">Nightscout
+token</a> or use the api<b>-</b>secret header with an SHA1 encoded
+secret. Starting with Juggluco 7.1.15 it is also possible to make the
+api_secret the first element of the path of the Nightscout server
+URL. If xyz is the api_secret and http://hostname:port is the
+Nightscout server URL, you can specify http://hostname:port/xzy as
+the Nightscout server URL. For <a href="https://github.com/kashamalasha/nightscout-widget-electron">Owlet</a>
+this is the only way to make use of the api_secret. <i>NIGHTSCOUT
+TOKEN</i> in <a href="https://github.com/kashamalasha/nightscout-widget-electron">Owlet</a>
+settings has no effect.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><strong>Visible</strong>:
 Make Secret visible.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><strong>Port</strong>:
@@ -2052,7 +2062,7 @@ App-Info -&gt; Notifications for Juggluco.</p>
 <![CDATA[
 <h1 align="center">Blocked</h1>
 <p style="line-height: 100%; margin-bottom: 0in"><b>Left middle
-menu-&gt;Mirror-&gt;&quot;</b><em><b>Amounts received from mirror</b></em><b>&quot;</b>
+menu-&gt;<a href="https://www.juggluco.nl/Jugglucohelp/connectionoverview.html">Mirror</a>-&gt;&quot;</b><em><b>Amounts received from mirror</b></em><b>&quot;</b>
 is set to prevent entering amounts in this app, because they will be
 overridden by amounts received from the mirror connection.</p>
 <p style="line-height: 100%; margin-bottom: 0in">If this app doesn\'t
@@ -2126,7 +2136,7 @@ to make amounts accessible via the Nightscout webserver in Juggluco.
 Before you can switch on &quot;Give <i>amounts</i>&quot;, you need to
 specify for every label how the amounts entered under that label
 should be given. The labels themselves can be created, modified and
-deleted in Left menu-&gt;Settings-&gt;&quot;Number Labels&quot;.</p>
+deleted in Left menu-&gt;Settings-&gt;&quot;<a href="https://www.juggluco.nl/Jugglucohelp/labelhelp.html">Number Labels</a>&quot;.</p>
 <p><br/>
 <br/>
 
@@ -2148,9 +2158,9 @@ UTF8 (labels) or ASCII.</p>
 <p><b>Days</b>: Starting with Juggluco 7.1.0, you can select the
 number of days to save. The end date is the right border of the
 screen. This if you view past data in Juggluco, only old data is
-exported (the same as in left middle menu-&gt;Statistics).</p>
+exported (the same as in left middle menu-&gt;<a href="https://www.juggluco.nl/Jugglucohelp/stathelp.html">Statistics</a>).</p>
 <p>Starting with Juggluco 7.1.0, it is also possible to receive these
-data via the web server in Juggluco (Left menu-&gt;Settings-&gt;Web
+data via the web server in Juggluco (Left menu-&gt;<a href="https://www.juggluco.nl/Jugglucohelp/settinghelp.html">Settings</a>-&gt;Web
 server), see <a href="https://www.juggluco.nl/Juggluco/webserver.html">https://www.juggluco.nl/Juggluco/webserver.html</a></p>
 <p><br/>
 <br/>

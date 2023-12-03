@@ -160,8 +160,9 @@ int SensorGlucoseData::updatescan(crypt_t *pass,int sock,int ind,int sensorindex
 			streamhistend=getStreamendhistory();
 			wrotehistory=oldsendhistory(pass,sock,ind,sensorindex,false,std::max(streamhistend,getScanendhistory()));
 			}
-		else
-			wrotehistory=newsendhistory(pass,sock,ind,sensorindex,false,false);
+		else   {
+			wrotehistory=newsendhistory(pass,sock,ind,sensorindex,false,getScanendhistory());
+			}
 		switch(wrotehistory) {
 			case 0:return 0;
 			case 1: memcpy(infoptr,meminfo.data(),startinfolen);

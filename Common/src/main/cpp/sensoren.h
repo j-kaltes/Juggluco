@@ -188,8 +188,6 @@ public:
 					}
 				}
 
-
-//			if(sensorlist()[i].starttime<first) first=sensorlist()[i].starttime;
 			}
 		}
 		if (first == UINT32_MAX)

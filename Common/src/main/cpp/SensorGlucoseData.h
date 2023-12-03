@@ -334,8 +334,9 @@ uint32_t getfirsttime() const {
 		if(id&&tim)
 			return tim;
 		}
+	LOGGER("%s: no history\n",showsensorname().data());
 
-	return UINT32_MAX;
+	return  firstpolltime();
 	}
 void checkhistory(std::ostream &os) {
 	int interval=getinterval();
@@ -760,11 +761,12 @@ size_t maxscansize()  {
 	const int scanblocks=ceil((40*days*sizeof(ScanData))/blocksize);
         int used=getinfo()->scancount*sizeof(ScanData);
         int past= getAllendhistory()-getinfo()->starthistory;
+	/*
 	if(past<0||used<0) {
 		LOGGER("past=%d used=%d\n",past,used);
 		haserror=true;
 		return 0;
-		}
+		} */
 	int take;
 	int maxp=maxpos();
 	if(maxp<past)

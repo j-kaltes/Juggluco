@@ -1800,7 +1800,12 @@ ontvangen van localhost op poort 17580. Nightscout server URL:
 http://127.0.0.1:17580 
 </p>
 <p style="line-height: 100%; margin-bottom: 0in"><span lang="nl-NL">Ook
-sommige Nightscout-volgers kunnen er gebruik van maken. xDrip, Diabox, een <a href="https://github.com/dabear/FloatingGlucose/releases">Windows Floating Glucose-</a> app en een Windows-, Linux- en macOS- <a href="https://github.com/kashamalasha/nightscout-widget-electron"><i>ELECTRON</i> widget</a> kunnen worden gebruikt met http als &quot;alleen lokaal&quot; niet is ingesteld.</span> Op MacOS geldt hetzelfde voor
+sommige Nightscout-volgers kunnen er gebruik van maken. xDrip,
+Diabox, een <a href="https://github.com/dabear/FloatingGlucose/releases">Windows
+Floating Glucose-</a> app en een Windows-, Linux- en macOS- widget</span>
+<span lang="nl-NL">(</span><span lang="nl-NL"><i><a href="https://github.com/kashamalasha/nightscout-widget-electron">Owlet</a>)</i></span>
+<span lang="nl-NL">kunnen worden gebruikt met http als &quot;alleen
+lokaal&quot; niet is ingesteld.</span> Op MacOS geldt hetzelfde voor
 Nightscout Menu Bar, Gluco Status en Gluco Tracker (allemaal in Apple
 Store). Je hebt ook alleen http nodig voor <a href="https://github.com/someoneAnyone/Nightscouter">Nightscouter</a>
 en <a href="https://github.com/jonfawcett/LoopFollow">LoopFollow</a>
@@ -1845,9 +1850,9 @@ te drukken.</span></p>
 ontving ik drie bestanden: private.key, certificate.crt en
 ca_bundle.crt.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><span lang="nl-NL">private.key
-is de private sleutel, die </span><span lang="nl-NL">je</span><span lang="nl-NL">
-aan Juggluco moet geven door op &quot;</span><em><span lang="nl-NL">Private
-Key</span></em><span lang="nl-NL">&quot; te drukken.</span></p>
+is de private sleutel, die je</span> <span lang="nl-NL">aan Juggluco
+moet geven door op &quot;</span><em><span lang="nl-NL">Private Key</span></em><span lang="nl-NL">&quot;
+te drukken.</span></p>
 <p style="line-height: 100%; margin-bottom: 0in">Om de <i>Full Chain</i>
 te maken, moet je certificate.crt en ca_bundle.crt samenvoegen.</p>
 <p style="line-height: 100%; margin-bottom: 0in">Linux:</p>
@@ -1855,9 +1860,9 @@ te maken, moet je certificate.crt en ca_bundle.crt samenvoegen.</p>
 Windows cmd.com:</p>
 <pre style="margin-bottom: 0.2in">copy certificate.crt + ca_bundle.crt fullchain.pem</pre><p style="line-height: 100%; margin-bottom: 0in">
 Windows PowerShell:</p>
-<pre>gc certificate.crt,ca_bundle.crt -Encoding Byte -Read 512 | sc fullchain.pem -Encoding Byte</pre>
-<p style="line-height: 100%; margin-bottom: 0in"><span lang="nl-NL">Nadat
-ik Certbot had gebruikt, vond ik de private key</span> <span lang="nl-NL">in
+<pre style="margin-bottom: 0.2in">gc certificate.crt,ca_bundle.crt -Encoding Byte -Read 512 | sc fullchain.pem -Encoding Byte</pre><p style="line-height: 100%; margin-bottom: 0in">
+<span lang="nl-NL">Nadat ik Certbot had gebruikt, vond ik de private
+key</span> <span lang="nl-NL">in
 /etc/letsencrypt/live/myhostname/privkey.pem</span> <span lang="nl-NL">en
 de</span> <span lang="nl-NL">Full Chain</span> <span lang="nl-NL">in
 /etc/letsencrypt/live/mijnhostnaam/fullchain.pem. &quot;</span><span lang="nl-NL"><i>mijn</i></span><em><span lang="nl-NL"><i>hostnaam</i></span></em><span lang="nl-NL">&quot;
@@ -1900,10 +1905,18 @@ Juggluco.)
 </p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>api_secret</b>:
 Geef op dat volgers het api<b>_</b>secret http-header-element op deze
-waarde moeten instellen. In Juggluco 4.9.1 of hoger werkt het testen
-op dit geheim ook wanneer de volgers dit geheim gebruiken als
-Nightscout-token of de api<b>-</b>secret-header gebruiken met een
-SHA1-gecodeerd geheim.</p>
+waarde moeten instellen. Dit geheim werkt ook wanneer de volgers dit
+geheim gebruiken als <a href="https://www.juggluco.nl/Juggluco/webserver.html#token">Nightscout-token</a>
+of de api<strong>-</strong>secret header gebruiken met een
+SHA1-gecodeerd geheim. Vanaf Juggluco 7.1.15 is het ook mogelijk om
+api_secret het eerste element van het pad van de
+Nightscout-server-URL te maken. Als xyz het api_secret is en
+http://hostnaam:port de URL van de Nightscout-server is, kun je
+http://hostnaam:port/xzy opgeven als de Nightscout-server-URL. Bij
+<a href="https://github.com/kashamalasha/nightscout-widget-electron">Owlet</a>
+is dit de enige manier om gebruik te maken van api_secret. <i>NIGHTSCOUT
+TOKEN</i> in <a href="https://github.com/kashamalasha/nightscout-widget-electron">Owlet</a>s
+instellingen heeft geen effect.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><strong><span lang="nl-NL">Tonen</span></strong><span lang="nl-NL">:
 Maak api_secret</span> <span lang="nl-NL">zichtbaar.</span></p>
 <p style="line-height: 100%; margin-bottom: 0in"><strong><span lang="nl-NL">Poort</span></strong><span lang="nl-NL">:

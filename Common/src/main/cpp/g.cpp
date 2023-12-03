@@ -325,7 +325,7 @@ static	 const int waitsig=60;
 		ret=4<<16;
 		}
 	else {
-		LOGSTRING("alg==null ");
+		LOGAR("alg==null");
 		if(datptr->getSensorAgeInMinutes()==0)
 			ret=3<<16;
 		}
