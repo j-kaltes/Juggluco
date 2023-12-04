@@ -174,7 +174,7 @@
  <string name="cantextract">Kan %s niet uit apk halen, probeer een andere apk</string>
  <string name="connectwithsensor">Voor verbinding met sensor</string>
  <string name="exchangedata">Om data uit te wisselen</string>
- <string name="newnewvalue">"Geen nieuwe waarde since "</string>
+ <string name="nonewvalue">"Geen nieuwe waarde since "</string>
  <string name="lowglucose">" Laag Glucose!"</string>
  <string name="highglucose">" Hoog Glucose!"</string>
  <string name="sendto">Zend naar</string>

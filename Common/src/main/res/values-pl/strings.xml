@@ -173,7 +173,7 @@
  <string name="cantextract">Nie można wyodrębnić %s, spróbuj innego apk</string>
  <string name="connectwithsensor">Naciśnij, by połączyć się z sensorem</string>
  <string name="exchangedata">Naciśnij, by zacząć przesył danych</string>
- <string name="newnewvalue">&quot;Brak nowej wartości od &quot;</string>
+ <string name="nonewvalue">&quot;Brak nowej wartości od &quot;</string>
  <string name="lowglucose">&quot; Hipoglikemia!&quot;</string>
  <string name="highglucose">&quot; Hiperglikemia!&quot;</string>
  <string name="sendto">Wysyłaj</string>

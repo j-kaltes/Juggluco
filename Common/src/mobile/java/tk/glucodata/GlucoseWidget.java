@@ -71,14 +71,12 @@ static private void showviews(RemoteViews views,int rId,AppWidgetManager appWidg
 		final var time=SuperGattCallback.previousglucose.time;
 		if((now-time)>oldage) {
 			final String tformat= timef.format(time);
-			String message = Applic.app.getString(R.string.newnewvalue) + tformat;
+			String message = Applic.app.getString(R.string.nonewvalue) + tformat;
 			views=remoteMessage(message);
 			id=R.id.content;
 		}
 		else {
 			views = remote.arrowremote(2,SuperGattCallback.previousglucose);
-       // var tmp = new notGlucose(System.currentTimeMillis(), "27.8", 1.4f);
-        //views = remote.arrowremote(2, tmp);
 			}
 		}
 	else {
@@ -88,8 +86,6 @@ static private void showviews(RemoteViews views,int rId,AppWidgetManager appWidg
 
 	showviews(views,id,  appWidgetManager, appWidgetId);
     }
-//        var tmp = new notGlucose(System.currentTimeMillis(), "27.8", 1.4f);
-       // RemoteViews views = remote.arrowremote(2, tmp);
 
 static private void updateall(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
 	if(appWidgetIds==null|| appWidgetIds.length == 0) {
@@ -128,7 +124,7 @@ public static void oldvalue(long time) {
 	if(ids.length>0) {
 		Log.i(LOG_ID,"oldvalue widgets");
 		final String tformat= timef.format(time);
-		String message = Applic.app.getString(R.string.newnewvalue) + tformat;
+		String message = Applic.app.getString(R.string.nonewvalue) + tformat;
 		var views=remoteMessage(message);
 		for(var id:ids) {
 			showviews(views,R.id.content,manage,id);

@@ -73,7 +73,7 @@ LibreHist  libreRealHistory(SensorGlucoseData *sens,uint32_t starttime,uint32_t 
 	const uint32_t endpos=sens->getAllendhistory();
 #ifndef NOLOG
 	time_t tim=starttime;
-	LOGGER("%s getAllendhistory=%d libreviewnotsendHistory=%d from %s", sens->shortsensorname()->data(), endpos, notsend,ctime(&tim));
+	LOGGER("libreRealHistory %s getAllendhistory=%d libreviewnotsendHistory=%d from %s", sens->shortsensorname()->data(), endpos, notsend,ctime(&tim));
 #endif
 	auto iter=notsend;
 	auto *info=sens->getinfo();

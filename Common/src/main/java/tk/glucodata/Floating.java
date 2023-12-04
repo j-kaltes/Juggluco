@@ -247,7 +247,7 @@ public static int floatfontsize;
 	var gety = floatCanvas.getHeight() * 0.37f;
 	floatPaint.setTextSize(fontsize*.3f);
 	var xpos=0.2f;
-	String message= Applic.app.getString(R.string.newnewvalue);
+	String message= Applic.app.getString(R.string.nonewvalue);
 	floatCanvas.drawText(message, xpos, gety, floatPaint);
 	gety = floatCanvas.getHeight() * 0.88f;
 	floatCanvas.drawText(tformat, xpos, gety, floatPaint);
@@ -337,8 +337,17 @@ public boolean onTouchEvent (MotionEvent event) {
 			    downstart=0;
 			  	} 
 			else {
-				if(!isWearable)
-					Natives.saylastglucose();
+				if(!isWearable)  {
+					long time=Natives.saylastglucose();
+					if(time>=0) {
+						var talker=SuperGattCallback.talker;
+						if(talker==null) {
+							SuperGattCallback.newtalker(null);
+							talker=SuperGattCallback.talker;
+							}
+						talker.speak(time==0L?Applic.app.getString(R.string.novalue):Applic.app.getString(R.string.nonewvalue) + timef.format(time));
+						}
+					}
 				}
 			}
 		else 

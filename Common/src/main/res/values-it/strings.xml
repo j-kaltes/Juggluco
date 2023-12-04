@@ -176,7 +176,7 @@
  <string name="sec">sec</string>
  <string name="connectwithsensor">Connessione al sensore</string>
 <string name="exchangedata">Scambio dati</string>
-<string name="newnewvalue">"Nessun valore dalle "</string>
+<string name="nonewvalue">"Nessun valore dalle "</string>
 <string name="lowglucose">" Glucosio BASSO!"</string>
 <string name="highglucose">" Glucosio ALTO!"</string>
  <string name="lowglucoseshort">" IPO!"</string>

@@ -172,7 +172,7 @@
 <string name="cantextract">Ne peut extraire %s, essayez un autre apk</string>
 <string name="connectwithsensor">Connexion requise avec le capteur</string>
 <string name="exchangedata">Données à échanger</string>
-<string name="newnewvalue">"Pas de nouvelle valeur depuis "</string>
+<string name="nonewvalue">"Pas de nouvelle valeur depuis "</string>
 <string name="lowglucose">" Glucose bas !"</string>
 <string name="highglucose">" Glucose haut !"</string>
 <string name="sendto">Envoyer à</string>

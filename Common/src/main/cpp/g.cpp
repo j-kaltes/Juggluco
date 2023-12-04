@@ -384,6 +384,9 @@ extern "C" JNIEXPORT jlong JNICALL   fromjava(getdataptr)(JNIEnv *env, jclass cl
 		}
 	else {
 		data=new libre2stream(sensorindex,sens);
+		if(!sens->getinfo()->startedwithStreamhistory) {
+			sens->getinfo()->startedwithStreamhistory=std::max(sens->getinfo()->endhistory,1);
+			}
 		}
 	if(data->good())
 		return reinterpret_cast<jlong>(data);

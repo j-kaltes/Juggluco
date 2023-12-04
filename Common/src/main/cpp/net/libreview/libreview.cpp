@@ -625,14 +625,16 @@ constexpr const int  bytesnumbers=0;
 		return true;
 		}
 
-	if(nrscans|histtotal|hasnewcurrent) {
+	if(nrscans||histtotal||hasnewcurrent) {
 		for(int i=startsensor;i<senslen;i++) {
 			if(lists[i].size||(i==newcurrent)) {
 				const int index=sensints[i];
 				SensorGlucoseData *sensdata=sensors->getSensorData(index);
-				if(!putwhenneeded(false,sensdata))
-					return false;
-				break;
+				if(!sensdata->getinfo()->libreviewsendall) {
+					if(!putwhenneeded(false,sensdata))
+						return false;
+					break;
+					}
 				}
 			}
 		}
@@ -686,7 +688,6 @@ afterlocalstartime.size() +afterhists.size() + afterscans.size()+ usertokenlen+ 
 static    const bool mmolL=settings->data()->isLibreMmolL();
 static  constexpr const char unitlabel[][7]={"mg/dL","mmol/L"};
 	char *uitptr=uitbuf;
-//	time_t nu=time(nullptr);
 	addstrview(uitptr,datastart);
 	addstrview(uitptr,unitlabel[mmolL]);
 	addstrview(uitptr,afterunit);
@@ -699,7 +700,6 @@ static  constexpr const char unitlabel[][7]={"mg/dL","mmol/L"};
 		}
 	addstrview(uitptr,afterstreaming);
 	addstrview(uitptr,localestr);
-//iscellaneous.addProperty("selectedLanguage", Locale.getDefault().getLanguage() + '_' + ((Object) Locale.getDefault().getCountry()));
 	addstrview(uitptr,afterlocale);
 	uitptr+=sprintf(uitptr,"%d",(int)round(settings->targetlow()/10.0));
 	addstrview(uitptr,afterlow);
@@ -768,27 +768,31 @@ static  constexpr const char unitlabel[][7]={"mg/dL","mmol/L"};
 		for(int i=last;i>=startsensor;i--) {
 			int index=sensints[i];
 			SensorGlucoseData *sensdata=sensors->getSensorData(index);
-			auto  scans=sensdata->getScandata();
-			const ScanData *endscans=&scans[scans.size()];
-			int scanoff=sensdata->getinfo()->scanoff;
-			int startid=sensdata->getinfo()->libreviewScan;
-			int id=startid;
-			if(startid) {
-				starttimeiter=0;
-				}
-			LOGGER("scanoff=%d startid=%d end=%d\n",scanoff,startid,scans.size());
-			for(const ScanData *iter=&scans[scanoff+startid];iter<endscans;++iter) {
-				++id;
-				if(iter->valid()&&iter->gettime()>starttimeiter) {
-					uitptr=libreScanel(*iter, id,uitptr);
-					*uitptr++=',';
-					++scansiter;
+
+			if(!sensdata->getinfo()->libreviewsendall) {
+				auto  scans=sensdata->getScandata();
+				const ScanData *endscans=&scans[scans.size()];
+				int scanoff=sensdata->getinfo()->scanoff;
+				int startid=sensdata->getinfo()->libreviewScan;
+				int id=startid;
+				if(startid) {
+					starttimeiter=0;
+					}
+				LOGGER("scanoff=%d startid=%d end=%d\n",scanoff,startid,scans.size());
+				for(const ScanData *iter=&scans[scanoff+startid];iter<endscans;++iter) {
+					++id;
+					if(iter->valid()&&iter->gettime()>starttimeiter) {
+						uitptr=libreScanel(*iter, id,uitptr);
+						*uitptr++=',';
+						++scansiter;
+						}
+					}
+				scanids[i]=id;
+				if(lists[i].size) {
+					starttimeiter=lists[i].list[lists[i].size-1].ti;
 					}
 				}
-			scanids[i]=id;
-			if(lists[i].size) {
-				starttimeiter=lists[i].list[lists[i].size-1].ti;
-				}
+
 			}
 		if(uitptr>wasuit)
 			--uitptr;
@@ -826,26 +830,27 @@ static  constexpr const char unitlabel[][7]={"mg/dL","mmol/L"};
 				for(int i=last;i>=startsensor;i--) {
 					const int index=sensints[i];
 					SensorGlucoseData *sensdata=sensors->getSensorData(index);
-
-					if(!sensdata->isLibre3()) {
-						sensdata->viewed.clear();
-						if(newcurrent==i||sensdata->getinfo()->libreviewScan!=scanids[i]||lists[i].size) { 
-							sensdata->getinfo()->sendsensorstart=true;
-							if(previewsens) {
-								previewsens->getinfo()->libreviewsendall=true;
+					if(!sensdata->getinfo()->libreviewsendall) {
+						if(!sensdata->isLibre3()) {
+							sensdata->viewed.clear();
+							if(newcurrent==i||sensdata->getinfo()->libreviewScan!=scanids[i]||lists[i].size) { 
+								sensdata->getinfo()->sendsensorstart=true;
+								if(previewsens) {
+									previewsens->getinfo()->libreviewsendall=true;
+									}
 								}
-							}
-						sensdata->getinfo()->libreviewScan=scanids[i];
-						if(lists[i].size) {
-							if(lists[i].notsend)
-								sensdata->getinfo()->libreviewnotsend=lists[i].notsend;
-							if(lists[i].notsendHistory)
-								sensdata->getinfo()->libreviewnotsendHistory=lists[i].notsendHistory;
-							setlibresend(sensdata,lists[i]);
-							}
-						previewsens=sensdata;
-						lastlibre2=i;
+							sensdata->getinfo()->libreviewScan=scanids[i];
+							if(lists[i].size) {
+								if(lists[i].notsend)
+									sensdata->getinfo()->libreviewnotsend=lists[i].notsend;
+								if(lists[i].notsendHistory)
+									sensdata->getinfo()->libreviewnotsendHistory=lists[i].notsendHistory;
+								setlibresend(sensdata,lists[i]);
+								}
+							previewsens=sensdata;
+							lastlibre2=i;
 
+							}
 						}
 					}
 					

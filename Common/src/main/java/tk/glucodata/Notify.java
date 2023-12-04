@@ -685,7 +685,7 @@ static final long glucosetimeout=1000*60*3;
 	/*
 	@SuppressWarnings("deprecation")
 void oldnotification(long time) {
-	String message= Applic.app.getString(R.string.newnewvalue)+ timef.format(time);
+	String message= Applic.app.getString(R.string.nonewvalue)+ timef.format(time);
 	Log.i(LOG_ID,"oldnotification "+message);
 	var GluNotBuilder=mkbuilder(GLUCOSENOTIFICATION);
 	if (Build.VERSION.SDK_INT < 31) {
@@ -707,7 +707,7 @@ void oldnotification(long time) {
 */
 void oldnotification(long time) {
 	final String tformat= timef.format(time);
-	String message = Applic.app.getString(R.string.newnewvalue) + tformat;
+	String message = Applic.app.getString(R.string.nonewvalue) + tformat;
 	 placelargenotification(R.drawable.novalue, message,GLUCOSENOTIFICATION,true);
 	}
 	@SuppressWarnings("deprecation")
@@ -893,7 +893,7 @@ setDeleteIntent(DeleteReceiver.getDeleteIntent()) .setContentTitle(message);
  public void  lossalarm(long time) {
  	Log.i(LOG_ID,"lossalarm");
 	final String tformat= timef.format(time);
-	final String message= "***  "+Applic.app.getString(R.string.newnewvalue)+tformat+" ***";
+	final String message= "***  "+Applic.app.getString(R.string.nonewvalue)+tformat+" ***";
 
 //	oldfloatmessage(tformat, true) ;
 	glucosealarm(4,R.drawable.loss ,message, GLUCOSENOTIFICATION ,true);

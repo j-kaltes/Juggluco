@@ -670,5 +670,6 @@ static public void speak(String message) {
 		talker.speak(message);
 		}
 	}
+
 }
 

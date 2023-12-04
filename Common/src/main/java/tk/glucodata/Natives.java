@@ -688,7 +688,7 @@ public static native boolean getsystemui( );
 public static native void setsystemui(boolean val);
 public static native void settonow();
 public static native boolean showlastscan( );
-public static native void saylastglucose();
+public static native long saylastglucose();
 public static native void setspeakmessages(boolean val);
 
 public static native boolean speakmessages( );

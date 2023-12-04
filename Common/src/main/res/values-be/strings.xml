@@ -173,7 +173,7 @@
  <string name="cantextract">Немагчыма распакаваць %s, паспрабуйце іншы apk</string>
  <string name="connectwithsensor">Каб злучыцца з датчыкам</string>
  <string name="exchangedata">Для абмену дадзенымі</string>
- <string name="newnewvalue">"Няма новага значэння "</string>
+ <string name="nonewvalue">"Няма новага значэння "</string>
  <string name="lowglucose">" Нізкі ўзровень глюкозы!"</string>
  <string name="highglucose">" Высокі ўзровень глюкозы!"</string>
  <string name="sendto">Адправіць</string>
