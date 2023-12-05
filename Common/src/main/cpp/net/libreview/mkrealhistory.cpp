@@ -77,22 +77,15 @@ LibreHist  libreRealHistory(SensorGlucoseData *sens,uint32_t starttime,uint32_t 
 #endif
 	auto iter=notsend;
 	auto *info=sens->getinfo();
-	if(!iter) {
-		while(true) {
-			if(iter>=endpos) {
-				return {.notsendHistory=endpos};
-				}
-			const Glucose *gl=sens->getglucose(iter);
-
-			if(gl->valid()&&!info->isLibreSend(iter)&&gl->gettime()>starttime)
-				break;
-			++iter;
-			}
-		}
-	else {
+	while(true) {
 		if(iter>=endpos) {
 			return {.notsendHistory=endpos};
 			}
+		const Glucose *gl=sens->getglucose(iter);
+
+		if(gl->valid()&&!info->isLibreSend(iter)&&gl->gettime()>starttime)
+			break;
+		++iter;
 		}
 	int datalen=(int)endpos-iter;
 	LibreHistEl *list=new LibreHistEl[datalen];

@@ -79,7 +79,7 @@ android {
 	//******  Zet op rollout op 100% ******
             	dimension 'libreVersion'
 		versionCode          437                 //LIBRE2ONLY
-		versionName '7.1.18-no3'
+		versionName '7.1.19-no3'
             buildConfigField 'int', 'libreVersion', '2'
 		    externalNativeBuild.cmake {
 			cppFlags "  -DAPPVERSION=\\\"$versionName\\\" "
@@ -95,7 +95,7 @@ android {
             dimension 'libreVersion'
 		versionCode         437                 //LIBRE3
 	//******  Zet op rollout op 100% ******
-		versionName '7.1.18'
+		versionName '7.1.19'
 
            	buildConfigField 'int', 'libreVersion', '3'
 		    externalNativeBuild.cmake {
@@ -114,7 +114,7 @@ android {
 		minSdk 26
 		versionCode         438                 //WATCH
 	//******  Zet op rollout op 100% ******
-		versionName '7.1.18-wear'
+		versionName '7.1.19-wear'
 		signingConfig signingConfigs.alg
 
 //            buildConfigField 'int', 'targetSDK', "$targetSdk"
