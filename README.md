@@ -32,10 +32,12 @@ For more information: https://www.juggluco.nl/JugglucoWearOS
 
 ## BUILD Juggluco
 Building seems not to work under Windows. In Common/build.gradle
+
 `
 cppFlags  " -DAPPID=\\\"$applicationId\\\" "
 
 `
+
 should result in APPID being defined with the Application ID surrounded by quotes (""). This happens under Linux, but not Windows.
 Gradle and cmake should work independent of operation system, so it is their fault. And why do you use Microsoft Windows anyway?
 
