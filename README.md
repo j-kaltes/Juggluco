@@ -35,7 +35,6 @@ Building seems not to work under Windows. In Common/build.gradle
 
 ``
 cppFlags  " -DAPPID=\\\"$applicationId\\\" "
-
 ``
 
 should result in APPID being defined with the Application ID surrounded by quotes (""). This happens under Linux, but not Windows.
