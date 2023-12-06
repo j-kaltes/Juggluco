@@ -31,6 +31,13 @@ A direct connection between Watch 4 and sensor is unusable with nearly half of t
 For more information: https://www.juggluco.nl/JugglucoWearOS
 
 ## BUILD Juggluco
+Building seems not to work under Windows. In Common/build.gradle
+
+cppFlags  " -DAPPID=\\\"$applicationId\\\" "
+
+should result in APPID being defined with the Application ID surrounded by quotes (""). This happens under Linux, but not Windows.
+Gradle and cmake should work independent of operation system, so it is their fault. And why do you use Microsoft Windows anyway?
+
 The following files need to be added to run Juggluco and can be found by unzipping a recent (>=5.1.14) Juggluco apk:
 https://www.juggluco.nl/Juggluco/download.html
 
