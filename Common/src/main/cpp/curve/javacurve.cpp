@@ -690,8 +690,9 @@ extern "C" JNIEXPORT jboolean JNICALL fromjava(showlastscan)(JNIEnv *env, jclass
 		const SensorGlucoseData *hist=sensors->getSensorData(lastsensor);
 		if(hist) {
 			const ScanData *scan= hist->lastscan();
-			if(scan&&scan->valid()&&((time(nullptr)-scan->t)<(60*60*5))) {
-				scantoshow={lastsensor,scan};
+			const uint32_t nu=time(nullptr);
+			if(scan&&scan->valid()&&((nu-scan->t)<(60*60*5))) {
+				scantoshow={lastsensor,scan,nu};
 				return true;
 				}
 			}

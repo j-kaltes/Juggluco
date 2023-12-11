@@ -1513,6 +1513,7 @@ std::vector<int>viewed;
 struct lastscan_t {
 	int sensorindex;
 	const ScanData *scan;
+	uint32_t showtime;
 	};
 #endif
 

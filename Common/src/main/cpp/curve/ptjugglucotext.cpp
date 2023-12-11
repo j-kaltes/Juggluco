@@ -173,6 +173,7 @@ são necessárias. No seu caso, tem problemas com o seguinte ficheiro)",
 
 .checked="checked",
 .unchecked="not checked",
+.Undetermined="",
 .FallingQuickly="A descer rapidamente",
 .Falling="A descer",
 .Stable="Em alteração lenta",

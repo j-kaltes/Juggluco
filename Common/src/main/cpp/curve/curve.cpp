@@ -1218,10 +1218,10 @@ int getglucosestr(uint32_t nonconvert,char *glucosestr,int maxglucosestr) {
 	}
 
 constexpr int maxbluetoothage=3*60;
-static void	showscanner(NVGcontext* genVG,const SensorGlucoseData *hist,int scanident) {
-	time_t nu=time(nullptr);
+static void	showscanner(NVGcontext* genVG,const SensorGlucoseData *hist,int scanident,time_t nu) {
 	const ScanData &last=*hist->getscan(scanident);
-	startstep((nu-last.t)< maxbluetoothage?*getwhite():getoldcolor());
+	const bool isold=(nu-last.t)>=maxbluetoothage;
+	startstep(isold?getoldcolor():*getwhite());
 	float x= dwidth+dleft;
 	constexpr int maxbuf=50;
 	char buf[maxbuf*2];
@@ -1232,19 +1232,16 @@ static void	showscanner(NVGcontext* genVG,const SensorGlucoseData *hist,int scan
 	char *buf1=buf+len;
 	--len;
 	const int32_t gluval=last.g;
-//	const int32_t gluval=501;
 	int len1;
 	float endtime=x,sensleft=0.0f;
 
 	if(gluval<glucoselowest) {
-	//	len1=snprintf(buf1,maxbuf,"%.*f>",gludecimal,gconvert(glucoselowest*10));
 		len1=mkshowlow(buf1,maxbuf);
 		endtime-=smallerlen;
 		sensleft=smallerlen;
 		}
 	else {
 		if(gluval>glucosehighest) {
-		//	len1=snprintf(buf1,maxbuf,"%.*f<",gludecimal,gconvert(glucosehighest*10));
 			len1=mkshowhigh(buf1,maxbuf);
 			endtime-=smallerlen;
 			}
@@ -1267,25 +1264,52 @@ static void	showscanner(NVGcontext* genVG,const SensorGlucoseData *hist,int scan
 			y=dheight-th;
 
 	nvgText(genVG, x,y, buf1, buf1+len1);
-	const float yunder=y+((y>(dheight/2))?-1:1)*headsize/2.0;
+	const bool showabove=y>(dheight/2);
+	const float yunder=y+(showabove?-1:1)*headsize/2.0;
 	nvgFontSize(genVG,mediumfont );
 	nvgText(genVG, endtime,yunder, buf, buf+len);
 	const sensorname_t *sensorname=hist->shortsensorname();
 	nvgFontSize(genVG,smallsize );
 	nvgTextAlign(genVG,NVG_ALIGN_LEFT|NVG_ALIGN_MIDDLE);
-	nvgText(genVG,bounds[0] -sensleft,yunder, sensorname->begin(), sensorname->end());
+    const auto sensorx=bounds[0] -sensleft;
+	nvgText(genVG,sensorx,yunder, sensorname->begin(), sensorname->end());
+	const bool showdate=(nu-last.t)>=60*60*12;
+	constexpr const int maxdatebuf=30;
+	int datelen;
+	char datebuf[maxdatebuf];
+	if(isold) {
+		if(showdate) {
+			float datey=yunder+(showabove?-1:1)*sensorbounds.height;
+			nvgTextAlign(genVG,NVG_ALIGN_RIGHT|NVG_ALIGN_MIDDLE);
+			datelen=snprintf(datebuf,maxdatebuf,"%s %d %s %04d",usedtext->speakdaylabel[tmbuf.tm_wday],tmbuf.tm_mday,usedtext->monthlabel[tmbuf.tm_mon],1900+tmbuf.tm_year);
+			nvgText(genVG,dleft+dwidth,datey, datebuf, datebuf+datelen);
+			}
+		nvgStrokeWidth(genVG, TrendStrokeWidth);
+		nvgStrokeColor(genVG, *getwhite());
+		nvgBeginPath(genVG);
+	 	nvgMoveTo(genVG,dleft ,dtop) ;
+		nvgLineTo( genVG, dwidth,dheight);
+		nvgStroke(genVG);
+		nvgBeginPath(genVG);
+	 	nvgMoveTo(genVG,dwidth ,dtop) ;
+		nvgLineTo( genVG, dleft,dheight);
+		nvgStroke(genVG);
+		}
 #ifndef WEAROS
 
 	if(settings->data()->speakmessages) {
-		char value[256];
-		char *ptr;
-		if((nu-tim)>=3*60) {
-			memcpy(value,buf,len);
-			ptr=value+len;
+		char value[300];
+		char *ptr=value;;
+		if(isold) {
+			if(showdate) {
+				memcpy(ptr,datebuf,datelen);
+				ptr+=datelen;
+				*ptr++='\n';
+				*ptr++='\n';
+				}
+			memcpy(ptr,buf,len);
+			ptr+=len;
 			*ptr++='\n';
-			}
-		else {
-			ptr=value;
 			}
 		auto trend=usedtext->trends[last.tr];
 		memcpy(ptr,trend.data(),trend.size());
@@ -1380,8 +1404,6 @@ template <class LT> void glucoselines(const float last,const float smallfontline
 		if(dy>smallfontlineheight) {
 			constexpr const int  bufsize=50;
 			char buf[bufsize];
-//			int len=snprintf(buf,bufsize,"%g",y/convfactor);
-//			int len=snprintf(buf,bufsize,"%g",gconvert(y));
 #ifdef CONV18
 			int len=snprintf(buf,bufsize,"%g",gconvert(y));
 #else
@@ -1941,7 +1963,7 @@ if(timdis>0&&((duration/timdis)<grens)) {
 		1.5;
 		#endif
 
-		char tbuf[50];
+		char tbuf[70];
 uint32_t showtime=
 	#ifdef WEAROS
 	(endtime+starttime)/2
@@ -2083,12 +2105,6 @@ displaytime disp=getdisplaytime(nu,starttime,endtime, transx);
 	nvgFontSize(genVG, smallsize);
 	LOGSTRING("before showNums\n");
 	const int catnr=settings->getlabelcount();
-	if(shownumbers||showmeals)  {
-		bool was[catnr];
-		memset(was,0,sizeof(was));
-		for(auto el:numdatas) 
-			el->showNums(genVG, transx,  transy,was) ;
-		}
 
 	showdates(nu,starttime,endtime) ;
 
@@ -2133,6 +2149,12 @@ displaytime disp=getdisplaytime(nu,starttime,endtime, transx);
 				return 1;
 			 }
 		 }
+	if(shownumbers||showmeals)  {
+		bool was[catnr];
+		memset(was,0,sizeof(was));
+		for(auto el:numdatas) 
+			el->showNums(genVG, transx,  transy,was) ;
+		}
 
 	if(nu<endtime&&(dwidth-smallfontlineheight)>nupos) {
 			showbluevalue(nu, nupos,usedsensors);
@@ -2167,7 +2189,7 @@ static void endstep() {
 }
 
 bool restart=false;
-static bool showoldscan(NVGcontext* genVG) ;
+static bool showoldscan(NVGcontext* genVG,uint32_t ) ;
 
 static void defaulterror(NVGcontext* genVG,int scerror)   {
 		char buf[50];
@@ -2179,7 +2201,8 @@ static bool errorpair(const errortype &error) {
 	return showerror(genVG,error.first,error.second);
 	}
 int badscanMessage(int kind) {
-	if(!showoldscan(genVG)) {
+	const uint32_t nu=time(nullptr);
+	if(!showoldscan(genVG,nu)) {
 		LOGGER("javabadscan	%d: \n",kind);
 		const int scerror= kind&0xff;
 		switch(scerror) {
@@ -2241,12 +2264,17 @@ static void showtext(NVGcontext* genVG ,time_t nu,int tapx) ;
 
 struct lastscan_t scantoshow={-1,nullptr}; 
 
-static bool showoldscan(NVGcontext* genVG) {
+static bool showoldscan(NVGcontext* genVG,uint32_t nu) {
 	if(scantoshow.scan) {
-		numlist=0;
-	      const SensorGlucoseData *hist=sensors->getSensorData(scantoshow.sensorindex);
-	      showscanner(genVG,hist,scantoshow.scan-hist->beginscans()) ;
-	      return true;
+		if((nu-scantoshow.showtime)<60) {
+			numlist=0;
+		      const SensorGlucoseData *hist=sensors->getSensorData(scantoshow.sensorindex);
+		      showscanner(genVG,hist,scantoshow.scan-hist->beginscans(),nu) ;
+		      return true;
+		      }
+		  else {
+			scantoshow={-1,nullptr}; 
+		  	}
 		}
 	return false;
 	}
@@ -2359,7 +2387,7 @@ int onestep() {
 	emptytap=false;
 
 	void		shownumlist();
-	if(showoldscan(genVG)) {
+	if(showoldscan(genVG,nu)) {
 		ret=1;
 		}
 	else
@@ -2853,17 +2881,18 @@ void lognum(const Num *num) {
 #endif	
 int numfrompos(const float x,const float y) ;
 vector<mealposition> mealpos;
-
-void speakdate(time_t tim) {
+static int verbosedate(time_t tim,char *buf,int maxbuf=256) {
 	struct tm tmbuf;
 	struct tm *stm=localtime_r(&tim,&tmbuf);
+	const auto wdaynr= stm->tm_wday;
+	const char *dayname=usedtext->speakdaylabel[wdaynr];
+	return snprintf(buf,maxbuf,"%s %d %s %d",dayname,stm->tm_mday,usedtext->monthlabel[stm->tm_mon],1900+stm->tm_year);
+	}
+
+static void speakdate(time_t tim) {
 	constexpr const int maxbuf=256;
 	char buf[maxbuf];
-	const auto wdaynr= stm->tm_wday;
-	LOGGER("wdaynr=%d\n",wdaynr);
-	const char *dayname=usedtext->speakdaylabel[wdaynr];
-	LOGGER("dayname=%s\n",dayname);
-	snprintf(buf,maxbuf,"%s %02d %s %d",dayname,stm->tm_mday,usedtext->monthlabel[stm->tm_mon],1900+stm->tm_year);
+	verbosedate(tim,buf,maxbuf);
 	LOGGER("speakdate %s\n",buf);
 	speak(buf);
 	}
@@ -3220,7 +3249,7 @@ int64_t longpress(float x,float y) {
 			if(const ScanData *scan=nearbyscan(x,y,scanranges[i].first,scanranges[i].second,transx,transy)) {
 				LOGGER("longpress scan %.1f\n",scan->g/18.0);
 				int index=hists[i];
-				scantoshow={index,scan};
+				scantoshow={index,scan,static_cast<uint32_t>(time(nullptr))};
 				return 0LL;
 				}
 			 }
@@ -4077,8 +4106,9 @@ static int64_t doehier(int menu,int item) {
 						const SensorGlucoseData *hist=sensors->getSensorData(lastsensor);
 						if(hist) {
 							const ScanData *scan= hist->lastscan();
-							if(scan&&scan->valid()&&((time(nullptr)-scan->t)<(60*60*5)))
-								scantoshow={lastsensor,scan};
+							const uint32_t nu= time(nullptr);
+							if(scan&&scan->valid()&&((nu-scan->t)<(60*60*5)))
+								scantoshow={lastsensor,scan,nu};
 							}
 						}
 					}; return -1ll;

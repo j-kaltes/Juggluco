@@ -28,7 +28,7 @@
 #include "settings/settings.h"
 
 //extern bool setfilesdir(const string_view filesdir,const char *country) ;
-extern void startjuggluco(std::string_view dirfiles,const char *country) ;
+extern int startjuggluco(std::string_view dirfiles,const char *country) ;
 extern char *localestr;
 char localebuf[]="en_NL";
 
@@ -475,7 +475,10 @@ static constexpr const	char defaultname[]="jugglucodata";
 		}
 	cout<<"Saving in directory "<<uitdir.data()<<endl;
 	bool did=false;
-	startjuggluco(uitdir,nullptr);
+	switch(startjuggluco(uitdir,nullptr)) {
+		case 0:break;
+		default: return 10;
+		};
 	did=did||setlabeltype(labeltype);
 
 	if(sslport) {

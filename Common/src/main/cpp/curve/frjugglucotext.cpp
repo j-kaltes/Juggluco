@@ -60,7 +60,6 @@ jugglucotext frtext {
 "Jeudi",
 "Vendredi",
 "Samedi"},
-//	.monthlabel={ "Janv","Fevr","Mars","Avril","Mai"      ,             "Juin", "Juil","Août","Sept", "Oct","Nov","Déc"},
 	.monthlabel={
       "Jan","Fev","Mar","Avr","Mai"      ,             "Jun",
        "Jui","Aou","Sep",
@@ -75,6 +74,8 @@ jugglucotext frtext {
 .noconnectionerror=": Pas de connexion.",
 .stsensorerror=": Erreur du capteur",
 .streplacesensor=": Remplacer le capteur ?",
+.endedformat="Sensor %s not working anymore. state=%d",
+.notreadyformat="Sensor %s not ready. state=%d",
 #ifndef WEAROS
 	.median="Moyenne",
 	.middle="Milieu",
@@ -166,9 +167,9 @@ requis. Dans votre cas le fichier suivant pose problème )",
 	.add_s=true,
 .shortinit=shortinit,
 .labels=labels,
-
 .checked="checked",
 .unchecked="not checked",
+.Undetermined="",
 .FallingQuickly="Baisse rapide",
 .Falling="Baisse",
 .Stable="Modification lente",

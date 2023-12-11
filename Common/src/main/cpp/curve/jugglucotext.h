@@ -30,8 +30,6 @@ struct Shortcut_t {const char name[12];const float value;} ;
 constexpr int hourminstrlen=25;
 extern char hourminstr[hourminstrlen];
 typedef const char *charptr_t;
-//typedef std::string_view  *string_viewar;
-//typedef std::pair<const char*,const char *> errortype;
 typedef std::pair<std::string_view,std::string_view> errortype;
 struct jugglucotext {
 char daylabel[7][12];

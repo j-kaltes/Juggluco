@@ -58,11 +58,11 @@ table {
   <body>)";
   constexpr const int startlen=sizeof(starthtml)-1;
 
-constexpr const char starttable[]=R"(<div class="column"><table><caption  style="text-align:left">)";
+constexpr const char starttable[]=R"(<div class="column"><table style="white-space:nowrap;">)";
+//constexpr const char starttable[]=R"(<div class="column"><table><caption  style="text-align:left">)";
 constexpr const int  starttablelen=sizeof(starttable)-1;
 
-constexpr const char   endhead[]=R"(</caption>
-	<col style="width:15ch">
+constexpr const char   endhead[]=R"(<col style="width:15ch">
         <col style="width:1ch">
         <col style="width:8ch">
       <thead style="background-color:#1E90FF;color:black;">
@@ -80,7 +80,16 @@ constexpr const int endheadlen=sizeof(endhead)-1;
 constexpr const  std::string_view startfoot(R"(</tbody>
       <tfoot>
         <tr>
-          <td colspan="4"><b>Total</b></td>
+          <td><b>)");
+/*	  Total</b></td>
+          <td colspan="3"></td>
+          <td style="text-align:right"><b>)"); */
+
+constexpr const  std::string_view date2total(R"(</b></td>
+
+          <td ></td>
+          <td><b>Total</b></td>
+          <td ></td>
           <td style="text-align:right"><b>)");
 
 constexpr const  std::string_view endtable(R"(</b></td>
@@ -122,6 +131,7 @@ bool MealSave::dostarttable(FILE * handle,const Num * num) {
 
 	if(fwrite(starttable,1,starttablelen,handle)!=starttablelen)
 		return false;
+		/*
 	constexpr const int buflen=60;
 	char buf[buflen];
 	int len=snprintf(buf,buflen,"%g ",num->value);
@@ -132,18 +142,35 @@ bool MealSave::dostarttable(FILE * handle,const Num * num) {
         len+=strftime(buf+len,buflen-len,R"( <b>%a %b %e %H:%M %Y</b>)",  &tmbuf);
 
 	if(fwrite(buf,1,len,handle)!=len)
-		return false;
+		return false; */
 	return fwrite(endhead,1,endheadlen,handle)==endheadlen;
 	}
 #define writef(handle,data,size) fwrite(data,1,size,handle)
-bool doendtable(FILE* handle,float total) {
+
+//std::string_view total2date=R"(</b></td></tr><tr><td><b>)";
+
+
+
+bool doendtable(FILE* handle,float total,time_t dat) {
 	if(writef(handle,startfoot.data(),startfoot.size())!=startfoot.size())
 		return false;
-	constexpr const int  buflen=10;
+
+{	constexpr const int buflen=60;
+	char buf[buflen];
+      struct tm tmbuf;
+      localtime_r(&dat, &tmbuf);
+       int tlen=snprintf(buf,buflen,"%04d-%02d-%02d %02d:%02d",  tmbuf.tm_year+1900,tmbuf.tm_mon+1,tmbuf.tm_mday,tmbuf.tm_hour,tmbuf.tm_min); 
+       if(writef(handle,buf,tlen)!=tlen)
+		return false;
+}
+	if(writef(handle,date2total.data(),date2total.size())!=date2total.size())
+		return false;
+ {	constexpr const int  buflen=10;
 	char buf[buflen];
 	int len=snprintf(buf,buflen,"%.1f",total);
 	if(writef(handle,buf,len)!=len)
 		return false;
+}
 	if(writef(handle,endtable.data(),endtable.size())!=endtable.size())
 		return false;
 	return true;
@@ -208,7 +235,7 @@ bool MealSave::savemeal(FILE* handle,const Num *num)  {
 			return false;
 		totmeal+=carbitem;
 		}
-	 return doendtable(handle,totmeal); 
+	 return doendtable(handle,totmeal,num->gettime()); 
 	 }
 
 #include "destruct.h"

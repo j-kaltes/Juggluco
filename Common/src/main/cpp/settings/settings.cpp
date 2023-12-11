@@ -437,9 +437,12 @@ void setupnetwork() {
 
        }
 
-void startjuggluco(std::string_view dirfiles,const char *country) {
+int  startjuggluco(std::string_view dirfiles,const char *country) {
  	mkdir(dirfiles.data(),0700);
-        setfilesdir(dirfiles,country);
+	int res;
+        if((res=setfilesdir(dirfiles,country))) {
+		return res;
+		}
         extern int startmeals() ;
         startmeals();
         extern void startsensors() ;
@@ -447,6 +450,7 @@ void startjuggluco(std::string_view dirfiles,const char *country) {
         extern void startthreads() ;
         startthreads();
 	settings->data()->initVersion=21;
+	return 0;
         }
 
 static void initinjuggluco(std::string_view dirfiles,const char *country) {

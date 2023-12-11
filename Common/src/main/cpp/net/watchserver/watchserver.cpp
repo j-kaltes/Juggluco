@@ -283,6 +283,7 @@ void handlewatchsecure(int sock) ;
 		}
 		}
 	}
+static bool	plainwatchcommands(int sock);
 void handlewatch(int sock) {
       const char threadname[]="watchconnect";
       LOGGERWEB("handlewatch %d\n",sock);
@@ -291,9 +292,8 @@ extern void sendtimeout(int sock,int secs);
 extern void receivetimeout(int sock,int secs) ;
  	receivetimeout(sock,60);
  	sendtimeout(sock,5*60);
-bool	watchcommands(int sock);
 	
-	watchcommands(sock);
+	plainwatchcommands(sock);
 	close(sock);
 	}
 
@@ -347,7 +347,7 @@ static bool sendall(int sock ,const char *buf,int buflen) {
         return true;
         }
 bool watchcommands(char *rbuf,int len,recdata *outdata,bool secure) ;
-bool watchcommands(int sock) {
+static bool plainwatchcommands(int sock) {
 	constexpr const int RBUFSIZE=4096;
 	char rbuf[RBUFSIZE];
 	int len;
@@ -403,6 +403,9 @@ R"(<!DOCTYPE html>
 </html>
 )"; */
 static bool givesite(recdata *outdata,std::string_view hostname,bool secure) {
+if(hostname.data()==nullptr) {
+	hostname="localhost";
+	}
 static	constexpr const char webpage1[]="HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\nContent-Length: ";
 static	constexpr const char webpage2[]="\r\n\r\n"; 
 static	constexpr const char webpage3[]=R"(<!DOCTYPE html>
@@ -1313,6 +1316,11 @@ bool watchcommands(char *rbuf,int len,recdata *outdata,bool secure) {
 			break;
 		}
 	
+
+	if(!toget.data()) {
+		return givenothing(outdata);
+		return false;
+		}
 		
 	int seclen=settings->data()->apisecretlength;
 	if(seclen) {
@@ -1403,12 +1411,13 @@ constexpr const std::string_view status="status.json";
 	if(!memcmp(status.data(),toget.data(),status.size())) {
 		return givedripstatus(outdata);
 		} 
+		/*
 std::string_view socket="socket.io";
 const auto socketsize= socket.size();
 	if(!memcmp(socket.data(),toget.data(),socketsize)) {
 		return givenothing(outdata);
-//		return givestrange(socket.data()+socketsize,toget.size()-propsize,outdata);
 		}
+		*/
 std::string_view index="index.html";
 const auto indexsize= index.size();
 	if(toget.data()[0]==' '||!memcmp(index.data(),toget.data(),indexsize)) {

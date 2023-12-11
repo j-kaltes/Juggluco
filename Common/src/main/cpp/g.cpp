@@ -260,7 +260,7 @@ static	 const int waitsig=60;
 			logscanresult(alg);
 			int gluval=alg->currentglucose().getValue();
 			if(gluval) {
-				scantoshow={ab.sensorindex,scanda};
+				scantoshow={ab.sensorindex,scanda,static_cast<uint32_t>(tim)};
 				wakeaftermin(0);
 				if(setbluetoothon||!ab.hist->streamingIsEnabled())  {
 					return 8<<16|gluval;
