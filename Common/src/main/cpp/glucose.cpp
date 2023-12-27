@@ -268,6 +268,7 @@ int SensorGlucoseData::updatescan(crypt_t *pass,int sock,int ind,int sensorindex
 			}
 		  streamsend.active=false;
 		  if(wassendstreaming) {
+
 			return 5;
 			}
 		return 1;

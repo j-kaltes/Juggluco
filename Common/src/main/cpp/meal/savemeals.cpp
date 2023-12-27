@@ -62,10 +62,7 @@ constexpr const char starttable[]=R"(<div class="column"><table style="white-spa
 //constexpr const char starttable[]=R"(<div class="column"><table><caption  style="text-align:left">)";
 constexpr const int  starttablelen=sizeof(starttable)-1;
 
-constexpr const char   endhead[]=R"(<col style="width:15ch">
-        <col style="width:1ch">
-        <col style="width:8ch">
-      <thead style="background-color:#1E90FF;color:black;">
+constexpr const char   endhead[]=R"(<thead style="background-color:#1E90FF;color:black;">
         <tr>
           <td>Ingredient</td>
           <td>Quantity</td>
@@ -84,10 +81,14 @@ constexpr const  std::string_view startfoot(R"(</tbody>
 /*	  Total</b></td>
           <td colspan="3"></td>
           <td style="text-align:right"><b>)"); */
+constexpr const  std::string_view datestr2unix(R"(</b></td>
+          <td><span hidden>)");
 
-constexpr const  std::string_view date2total(R"(</b></td>
 
-          <td ></td>
+
+
+
+constexpr const  std::string_view unix2total(R"(</span></td>
           <td><b>Total</b></td>
           <td ></td>
           <td style="text-align:right"><b>)");
@@ -163,14 +164,18 @@ bool doendtable(FILE* handle,float total,time_t dat) {
        if(writef(handle,buf,tlen)!=tlen)
 		return false;
 }
-	if(writef(handle,date2total.data(),date2total.size())!=date2total.size())
+	if(writef(handle,datestr2unix.data(),datestr2unix.size())!=datestr2unix.size())
 		return false;
- {	constexpr const int  buflen=10;
+ 	constexpr const int  buflen=14;
 	char buf[buflen];
-	int len=snprintf(buf,buflen,"%.1f",total);
+	int len=snprintf(buf,buflen,"%lu",dat);
 	if(writef(handle,buf,len)!=len)
 		return false;
-}
+	if(writef(handle,unix2total.data(),unix2total.size())!=unix2total.size())
+		return false;
+	len=snprintf(buf,buflen,"%.1f",total);
+	if(writef(handle,buf,len)!=len)
+		return false;
 	if(writef(handle,endtable.data(),endtable.size())!=endtable.size())
 		return false;
 	return true;

@@ -124,14 +124,11 @@ verbreekt de bestaande en creëert een nieuwe verbinding.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>Wifi</b>
 (specifiek voor WearOS): gebruik Wifi in plaats van TCP over
 Bluetooth voor te verbinding tussen telefoon en horloge. Normaal
-gesproken is dit niet nodig als de telefoon een externe verbinding
-heeft (Wifi of mobiele data). Het kan gebruikt worden als de telefoon
+gesproken is dit niet nodig. Het kan gebruikt worden als de telefoon
 geen externe verbinding heeft en er op de telefoon een portable
 hotspot ingericht is waarmee het horloge verbonden is. De makers van
 WearOS denken dat Wifi aanzetten het accu gebruik drastisch
-vermeerdert, wat ik niet kan bevestigen. Hoe dan ook is de verbinding
-veel beter als de telefoon een externe verbinding heeft en WIFI
-uitgezet is op het horloge.</p>
+vermeerdert, wat ik niet kan bevestigen.</p>
 <p style="line-height: 100%; margin-bottom: 0in">Bestaande
 verbindingen worden weergegeven. Getoond wordt de label, IP, poort,
 wat verzonden wordt en de datum en tijd van de laatste succesvolle
@@ -1231,7 +1228,9 @@ hoeveelheid wordt nu in die kleur weergegeven.</p>
 <string name="stathelp" >
 <![CDATA[
 <h1>Statistiek</h1>
-<p style="line-height: 100%; margin-bottom: 0in">Enige statistieken ontnomen aan <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8991298" >AGP</a> met wat kleine wijzigingen.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Enige statistieken
+ontnomen aan <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8991298">AGP</a>
+met wat kleine wijzigingen.</p>
 <p style="line-height: 100%; margin-bottom: 0in">Het aantal
 geanalyseerde dagen kan veranderd worden met de <b>Dagen</b> knop. De
 geanalyseerde periode eindigt met het tijdstip van de rechterkant van
@@ -1256,9 +1255,9 @@ GMI wordt in nieuwere apps gebruikt.
 Vreemd genoeg voorspelt die oudere formule mijn HbA1C beter dan GMI. 
 </p>
 <h2 class="western">Glucose variabiliteit</h2>
-<p><span lang="en-US">Coefficient of variation</span> (%CV) als maat
-voor glucose variabiliteit. Een hogere waarde betekent dat het bloed
-glucose minder constant is.</p>
+<p>De variatiecoëfficiënt, %CV=(SD/gemiddelde)*100%, als maatstaf
+voor de glucose variabiliteit. Een hogere variatiecoëfficiënt
+betekent dat de glucosewaarden verder afwijken van het gemiddelde.</p>
 <h2 class="western">Samenvattende grafiek</h2>
 <p>(Er moet tenminste voor 9 dagen stream glucose waarden aanwezig
 zijn, voordat een samenvattende grafiek getoond kan worden).</p>
@@ -2192,7 +2191,7 @@ opgeslagen in .tsv (<a href="https://en.wikipedia.org/wiki/Tab-separated_values"
 values</a>). Dit kan worden geladen in programma\'s als LibreOffice
 Calc, Microsoft Excel, Mathematica of R. Het is een soort .csv met
 tabs in plaats van komma\'s om items te scheiden. Tekens zijn
-gecodeerd in UTF8 (labels) of ASCII.</p>
+gecodeerd in UTF8.</p>
 <p>De betekenis van de kolommen vindt je op
 <a href="https://www.juggluco.nl/Juggluco/webserver.html">https://www.juggluco.nl/Juggluco/webserver.html</a>
 .</p>

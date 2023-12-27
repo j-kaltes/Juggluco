@@ -786,6 +786,7 @@ void convertlast() {
 		int changed = INT_MAX;
 		int did = 2;
 		int lastlast = -1;
+		bool newdevices=false;
 		for(int i = firstsensor; i <= last(); i++) {
 			LOGGER("sensor %d\n", i);
 			if(SensorGlucoseData *hist = getSensorData(i)) {
@@ -803,7 +804,7 @@ void convertlast() {
 					const int resscan = hist->updatescan(pass, sock, ind, i,i>=startupdate,upstream);
 					switch(resscan) {
 						case 0: return did&0x4;
-						case 5: 
+						case 5:  newdevices=true;
 						case 1: {
 							if(changed>i)
 								changed = i + 1; //MODIFIED
@@ -831,7 +832,17 @@ void convertlast() {
 			startupdate = endsens;
 
 			did = 1;
-		}
+			if(newdevices)  {
+				extern bool sendResetDevices(crypt_t *pass,const int sock) ;
+				if(!sendResetDevices(pass,sock)) {
+					LOGGER("GLU %s: sendResetDevices(pass,sock) failed\n",shortsensorname()->data());
+					return did&0x4;
+					}
+				else {
+					LOGGER("GLU %s: sendResetDevices(pass,sock)\n",shortsensorname()->data());
+					}
+				}
+			}
 		if(lastlast >= 0) {
 			bool sendshowglucose(crypt_t *pass, const int sock, const uint16_t sensorindex);
 			if (!sendshowglucose(pass, sock, lastlast))

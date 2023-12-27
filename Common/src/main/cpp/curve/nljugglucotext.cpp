@@ -148,7 +148,7 @@ static jugglucotext nltext {
 .libre3wrongID={"Fout, verkeerde account-ID?","Specificeer in Instellingen->Libreview hetzelfde account dat is gebruikt om de sensor te activeren"},
 .libre3scansuccess= {"FreeStyle Libre 3-sensor", "Glucosewaarden worden nu ontvangen door Juggluco"},
 .unknownNFC={"Onbekende NFC-scanfout", "Probeer het opnieuw"},
-.nolibre3={"FreeStyle Libre 3-sensor","Niet ondersteund door deze versie van Juggluco"},
+.nolibre3={"FreeStyle Libre 3-sensor","Download de juiste versie van https://www.juggluco.nl/download.html"},
 #ifndef WEAROS
 	.advancedstart= R"(<h1>Veranderd apparaat</h1>
 <p>Een van de libraries

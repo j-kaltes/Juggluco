@@ -184,7 +184,7 @@ engtext.amount},
 .unknownNFC={"Unrecognized NFC scan Error", 
 	"Try again"},
 .nolibre3={"FreeStyle Libre 3 sensor",
-	"Not supported by this version of Juggluco"},
+	"Download the correct version from https://www.juggluco.nl/download.html"},
 #ifndef WEAROS
 	.advancedstart= R"(<h1>Modified device</h1>
 <p>One of the libraries used by this application has a BUG that makes

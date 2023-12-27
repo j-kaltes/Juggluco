@@ -631,7 +631,7 @@ anderen Gerät empfängt, auf dem Juggluco läuft), können Sie auf
 <b>Alarme </b>drücken, um ein Dialogfeld aufzurufen, in dem Sie
 Alarme für niedrige und hohe Glukosewerte festlegen können.</p>
 <p align="left" style="line-height: 100%; margin-bottom: 0in"><b>Klon
-sendet Mengen</b><b>: </b>Wenn die App die Mengen an Medikamenten,
+sendet Mengen: </b>Wenn die App die Mengen an Medikamenten,
 Nahrungsmitteln und Sportdaten von dieser App auf einem anderen Gerät
 erhält, sollten Sie diese Informationen hier nicht hinzufügen oder
 ändern. Wenn Sie dies markieren, wird es unmöglich. 
@@ -645,16 +645,13 @@ Schließt eine bestehende und erstellt eine neue Verbindung.</p>
 <p align="left" style="line-height: 100%; margin-bottom: 0in"><b>Wifi
 </b>(nur unter WearOS): Verwenden Sie WIFI anstelle von TCP über
 Bluetooth für die Verbindung zwischen Telefon und Uhr. Dies ist
-normalerweise nicht erforderlich, wenn das Telefon über eine externe
-Verbindung (WIFI oder mobile Daten) verfügt. Diese Option kann in
-dem seltenen Fall verwendet werden, dass das Telefon keine externe
-Verbindung hat und es einen tragbaren Hotspot auf dem Telefon gibt,
-mit dem die Uhr verbunden ist. Die Macher von WearOS sind der
-Meinung, dass das Einschalten von WIFI zu einem starken Anstieg des
-Akkuverbrauchs führt; ich kann dies nicht bestätigen. Jedenfalls
-ist die Verbindung zwischen Telefon und Uhr viel stabiler, wenn das
-Telefon eine externe Verbindung hat und WIFI auf der Uhr
-ausgeschaltet ist.</p>
+normalerweise nicht erforderlich. Diese Option kann in dem seltenen
+Fall verwendet werden, dass das Telefon keine externe Verbindung hat
+und es einen tragbaren Hotspot auf dem Telefon gibt, mit dem die Uhr
+verbunden ist. Die Macher von WearOS sind der Meinung, dass das
+Einschalten von WIFI zu einem starken Anstieg des Akkuverbrauchs
+führt; ich kann dies nicht bestätigen. 
+</p>
 <p align="left" style="line-height: 100%; margin-bottom: 0in">Bestehende
 Verbindungen werden in einer Liste angezeigt, die Bezeichnung, der
 IP-Port sowie Monat, Tag und Uhrzeit der letzten erfolgreichen
@@ -861,7 +858,7 @@ Values</a>) gespeichert. Dies kann in Programmen wie LibreOffice
 Calc, Microsoft Excel, Mathematica oder R geladen werden. Es ist eine
 Art <a href="https://de.wikipedia.org/wiki/CSV_(Dateiformat)">CSV</a>
 mit Tabulatoren anstelle von Kommas, die zum Trennen von Elementen
-verwendet werden. Zeichen werden UTF8 (Etiketten) oder ASCII codiert.</p>
+verwendet werden. Zeichen werden UTF8 codiert.</p>
 <p>Die Bedeutung der Spalten finden Sie unter
 <a href="https://www.juggluco.nl/Juggluco/webserver.html">https://www.juggluco.nl/Juggluco/webserver.html</a>
 .</p>
@@ -2081,10 +2078,11 @@ werden erst nach Drücken der&nbsp;Schaltfläche&nbsp;<font face="Cambria, serif
 </string>
 <string name="stathelp" >
 <![CDATA[
-<h1>Statistiken</h1>
+<h1 class="western">Statistiken</h1>
 <p style="line-height: 0.19in; orphans: 2; widows: 2; background: transparent">
 <span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">Einige
-Statistiken stammen von&nbsp;<a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8991298" >AGP</a> mit einigen geringfügigen Änderungen.</span></span></span></font></font></span></p>
+Statistiken stammen von&nbsp;<a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8991298">AGP</a>
+mit einigen geringfügigen Änderungen.</span></span></span></font></font></span></p>
 <p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.19in; orphans: 2; widows: 2; background: transparent">
 <font face="Times New Roman"><font size="4" style="font-size: 14pt">Die
 Anzahl der analysierten Tage kann durch Drücken der&nbsp;Taste&nbsp;<b>Tage</b>
@@ -2130,9 +2128,9 @@ Libre 3-App verwendet.</span></span></span></span></font></font></span></p>
 <h3 class="western">Glukosevariabilität:</h3>
 <p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.19in; orphans: 2; widows: 2; background: transparent">
 <font face="Times New Roman"><font size="4" style="font-size: 14pt">Der
-Variationskoeffizient (%CV) als Maß für die
-Glukosevariabilität.&nbsp;Höhere Werte bedeuten, dass der
-Glukosespiegel weniger konstant ist.</font></font></p>
+Variationskoeffizient, %CV=(SD/Mittelwert)*100 %, als Maß für die
+Glukosevariabilität. Ein höherer Variationskoeffizient bedeutet,
+dass die Glukosewerte stärker vom Mittelwert abweichen.</font></font></p>
 <h3 class="western">Überblick Graph</h3>
 <p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.19in; orphans: 2; widows: 2; background: transparent">
 <font face="Times New Roman"><font size="4" style="font-size: 14pt">(Nur
@@ -2250,30 +2248,23 @@ Zeitpunkt des Stoppens des Alarms gelesen.</p>
 </string>
 <string name="watchinfo" >
 <![CDATA[
-<h1 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
-<font face="Times New Roman">Uhren</font></h1>
-<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
-<font face="Times New Roman"><font size="4" style="font-size: 14pt">Derzeit
-bietet Juggluco vier Möglichkeiten, um Glukosewerte auf Ihrer Uhr
-anzuzeigen.</font></font></p>
+<h1>Uhren</h1>
+<p>Derzeit bietet Juggluco vier Möglichkeiten, um Glukosewerte auf
+Ihrer Uhr anzuzeigen.</p>
 <h2 class="western">Benachrichtigen</h2>
-<p style="font-variant: normal; font-style: normal; line-height: 100%; margin-bottom: 0in">
-Wenn <i>Benachrichtigen</i> aktiviert ist, wird jedes Mal eine
+<p>Wenn <i>Benachrichtigen</i> aktiviert ist, wird jedes Mal eine
 Android-Benachrichtigung erstellt, wenn ein neuer Glukosewert
-eintrifft. <span style="font-weight: normal">Bei einigen Uhren werden
-Benachrichtigungen nur an die Uhr gesendet, wenn eine neue
-Benachrichtigung erstellt wird, für sie müssen Sie </span><i><b>Separat</b></i>
-<span style="font-weight: normal">aktivieren</span> . Für diese
+eintrifft. Bei einigen Uhren werden Benachrichtigungen nur an die Uhr
+gesendet, wenn eine neue Benachrichtigung erstellt wird, für sie
+müssen Sie <strong><i>Separat</i></strong> aktivieren . Für diese
 Uhren müssen Sie auch <i>Separat</i> einschalten, um
 Alarmbenachrichtigungen auf der Uhr zu erhalten.</p>
 <h2 class="western">Watchdrip</h2>
-<p style="line-height: 100%; margin-bottom: 0in"><span lang="de-DE">Durch
-das Einschalten sendet Juggluco Glukosewerte an <a href="https://bigdigital.home.blog/2022/06/16/watchdrip-a-new-application-for-xdrip-watch-integration">Watchdrip+</a>
+<p>Durch das Einschalten sendet Juggluco Glukosewerte an <a href="https://bigdigital.home.blog/2022/06/16/watchdrip-a-new-application-for-xdrip-watch-integration">Watchdrip+</a>
 . Watchdrip+ sendet Zifferblätter mit Glukosewerten an
-MiBand/Amazfit-Uhren.</span></p>
+MiBand/Amazfit-Uhren.</p>
 <h2 class="western">GadgetBridge</h2>
-<p><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">GadgetBridge
-(<a href="https://codeberg.org/Freeyourgadget/Gadgetbridge/wiki">Wiki</a>)
+<p>GadgetBridge (<a href="https://codeberg.org/Freeyourgadget/Gadgetbridge/wiki">Wiki</a>)
 ermöglicht die Anzeige von Wetterinformationen auf
 MiBand/Amazfit-Uhren. Wenn die Gadgetbridge-Option aktiviert ist,
 sendet Juggluco Glukosewerte unter dem Vorwand, dass es sich um
@@ -2283,61 +2274,49 @@ Nachteil, dass weniger Informationen angezeigt werden. Juggluco trägt
 den Glukosewert und einen Richtungspfeil in den Wetterort ein. Dieser
 Ort wird auf der Uhr unter Wetter angezeigt. Ich habe kein
 Zifferblatt gefunden, das diesen Ort anzeigt. Der gerundete
-Glukosewert wird in die aktuelle Temperatur übernommen. </font></font><span style="font-variant: normal"><font><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">Nur
-für&nbsp;</span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: normal"><span style="font-style: normal"><b>mmol/L</b></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">:
-Der Wert vor dem Punkt wird in die maximale Temperatur eingetragen
-und der Wert nach dem Punkt in die minimale Temperatur.&nbsp;Die
-Werte von&nbsp;</span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: normal"><span style="font-style: normal"><b>mg/dL</b></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: normal"><span style="font-style: normal"><b>
-</b></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">sind
-für Temperaturen zu groß, deshalb wird die letzte Ziffer bei der
-Minimaltemperatur und die Zahlen vor der letzten Ziffer bei der
-Maximaltemperatur eingetragen.</span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">
-</span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">Somit
-ergibt sich aus 106 mg/dL: maximale Temperatur 10, minimale
-Temperatur 6.</span></span></span></font></font></font></span></p>
-<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
-<font><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">Die
-Richtung der Änderung bestimmt das Wettersymbol: Schnee bedeutet
-fallende Glukose, Regen bedeutet steigende Glukose. Es wird auch mit
-die aktuelle Temperatur eingegeben.&nbsp;Größer als Null bedeutet
-steigender Glukosewert, kleiner als Null bedeutet fallender
-Glukosewert.</font></font></font></p>
+Glukosewert wird in die aktuelle Temperatur übernommen. Nur
+für&nbsp;<strong>mmol/L</strong>: Der Wert vor dem Punkt wird in die
+maximale Temperatur eingetragen und der Wert nach dem Punkt in die
+minimale Temperatur.&nbsp;Die Werte von&nbsp;<strong>mg/dL</strong>
+sind für Temperaturen zu groß, deshalb wird die letzte Ziffer bei
+der Minimaltemperatur und die Zahlen vor der letzten Ziffer bei der
+Maximaltemperatur eingetragen. Somit ergibt sich aus 106 mg/dL:
+maximale Temperatur 10, minimale Temperatur 6.</p>
+<p>Die Richtung der Änderung bestimmt das Wettersymbol: Schnee
+bedeutet fallende Glukose, Regen bedeutet steigende Glukose. Es wird
+auch mit die aktuelle Temperatur eingegeben.&nbsp;Größer als Null
+bedeutet steigender Glukosewert, kleiner als Null bedeutet fallender
+Glukosewert.</p>
 <h2 class="western">Kerfstok</h2>
-<p style="orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
-<span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><span style="font-style: normal"><span style="font-weight: normal">Kerfstok
-ist eine Uhren-App, mit der Sie Zahlen (wie Insulindosen) eingeben
-können, aber auch den aktuellen Glukosewert anzeigen.&nbsp;Sobald
-ein neuer Glukosewert eintrifft, sendet Juggluco diesen sofort nach
-Kerfstok.&nbsp;So zeigt Kerfstok immer den aktuellsten Glukosewert
-an.&nbsp;Kerfstok kann auch alle von Garmin unterstützten
-Aktivitäten aufzeichnen und kann Geschwindigkeit und Distanz
-anzeigen.&nbsp;Siehe Watch-&gt;Kerfstok Status-&gt; Help
-und&nbsp;<a href="https://www.juggluco.nl/Kerfstok">https://www.juggluco.nl/Kerfstok</a></span></span></span></span></font></font></span></p>
+<p>Kerfstok ist eine Uhren-App, mit der Sie Zahlen (wie Insulindosen)
+eingeben können, aber auch den aktuellen Glukosewert
+anzeigen.&nbsp;Sobald ein neuer Glukosewert eintrifft, sendet
+Juggluco diesen sofort nach Kerfstok.&nbsp;So zeigt Kerfstok immer
+den aktuellsten Glukosewert an.&nbsp;Kerfstok kann auch alle von
+Garmin unterstützten Aktivitäten aufzeichnen und kann
+Geschwindigkeit und Distanz anzeigen.&nbsp;Siehe Watch-&gt;Kerfstok
+Status-&gt; Help und&nbsp;<a href="https://www.juggluco.nl/Kerfstok">https://www.juggluco.nl/Kerfstok</a></p>
 <h2 class="western">Broadcast</h2>
-<p style="line-height: 100%; margin-bottom: 0in"><span lang="de-DE">Apps
-können Glukosewerte von einer der von Juggluco gesendeten Broadcasts
-empfangen und diese Glukosewerte an eine Uhr senden. Beispielsweise
-kann G-Watch (<a href="https://play.google.com/store/apps/details?id=sk.trupici.g_watch">TizenOS</a>
+<p>Apps können Glukosewerte von einer der von Juggluco gesendeten
+Broadcasts empfangen und diese Glukosewerte an eine Uhr senden.
+Beispielsweise kann G-Watch (<a href="https://play.google.com/store/apps/details?id=sk.trupici.g_watch">TizenOS</a>
 oder <a href="https://play.google.com/store/apps/details?id=sk.trupici.gwatch.wear">WearOS</a>)
 Glukosewerte von Glucodata Broadcast empfangen (siehe linkes Menü -&gt;
-Einstellungen).</span></p>
-<h2 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
-<font face="Times New Roman">xDrip Watch-Apps</font></h2>
-<p style="orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
-<span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><span style="font-style: normal"><span style="font-weight: normal">Juggluco
-enthält einen xDrip-Webserver.&nbsp;Dadurch ist es möglich,
-xDrip-Watch-Apps direkt mit Juggluco zu verwenden.&nbsp;xDrip zeigt
-nur alle 5 Minuten einen neuen Glukosewert an, während Juggluco jede
-Minute einen neuen Glukosewert anzeigt.&nbsp;Juggluco sendet auch den
-letzten Glukosewert an die xDrip-Uhren-Apps.&nbsp;Die Glukosewerte
-werden nur dann an die Uhren gesendet, wenn die Uhren-App danach
-fragt, also wie alt die angezeigten Werte sind, hängt davon ab, wann
-die Uhren-App danach fragt.&nbsp;Zum Beispiel fragen Zifferblätter
-und Datenfelder auf Garmin-Uhren nur alle 5 Minuten nach einem
-Glukosewert.&nbsp;Über xDrip lassen sich diese oft auf 10 Minuten
-alte Glukosewerte zurückführen.&nbsp;Bei direkter Verbindung mit
-Juggluco zeigen diese Zifferblätter bis zu 6 Minuten alte
-Glukosewerte an.&nbsp;Unter&nbsp;</span></span></span></span></font></font></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><span style="font-style: normal"><b>Garmin</b></span></span></span></font></font></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><span style="font-style: normal"><span style="font-weight: normal">,
+Einstellungen).</p>
+<h2 class="western">xDrip Watch-Apps</h2>
+<p>Juggluco enthält einen xDrip-Webserver.&nbsp;Dadurch ist es
+möglich, xDrip-Watch-Apps direkt mit Juggluco zu verwenden.&nbsp;xDrip
+zeigt nur alle 5 Minuten einen neuen Glukosewert an, während
+Juggluco jede Minute einen neuen Glukosewert anzeigt.&nbsp;Juggluco
+sendet auch den letzten Glukosewert an die xDrip-Uhren-Apps.&nbsp;Die
+Glukosewerte werden nur dann an die Uhren gesendet, wenn die
+Uhren-App danach fragt, also wie alt die angezeigten Werte sind,
+hängt davon ab, wann die Uhren-App danach fragt.&nbsp;Zum Beispiel
+fragen Zifferblätter und Datenfelder auf Garmin-Uhren nur alle 5
+Minuten nach einem Glukosewert.&nbsp;Über xDrip lassen sich diese
+oft auf 10 Minuten alte Glukosewerte zurückführen.&nbsp;Bei
+direkter Verbindung mit Juggluco zeigen diese Zifferblätter bis zu 6
+Minuten alte Glukosewerte an.&nbsp;Unter&nbsp;<strong>Garmin</strong>,
 wenn Sie Kerfstok nicht verwenden können, haben Sie die folgenden
 Optionen, um regelmäßig einen aktuellen Glukosewert zu
 erhalten.&nbsp;Ein xDrip-Widget
@@ -2351,37 +2330,26 @@ aktualisiert:&nbsp;<a href="https://apps.garmin.com/de-DE/apps/aaf6533b-bca1-436
 können versuchen, in einem Moment zu beginnen, so dass ein
 Glukosewert angefordert wird, sobald er verfügbar ist.&nbsp;Datenfelder
 und Zifferblätter wären die ideale Lösung, aber die von Garmin
-auferlegten Einschränkungen machen sie wenig wert.</span></span></span></span></font></font></span></p>
-<p style="orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
-<span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><span style="font-style: normal"><span style="font-weight: normal">Laut
-einem Benutzer gibt es auch ein Watchface für&nbsp;</span></span></span></span></font></font></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><span style="font-style: normal"><b>Fitbit-</b></span></span></span></font></font></span><span style="font-variant: normal"><span style="letter-spacing: normal">&nbsp;</span></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><span style="font-style: normal"><span style="font-weight: normal">Uhren,
-das mit dem xDrip-Webserver funktioniert:&nbsp;<a href="https://glancewatchface.com/">https://glancewatchface.com</a></span></span></span></span></font></font></span></p>
-<p style="orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
-<span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><span style="font-style: normal"><span style="font-weight: normal">Weitere
-Informationen zur Webserver-Schnittstelle finden Sie
-unter&nbsp;<a href="https://www.juggluco.nl/Juggluco/webserver.html">https://www.juggluco.nl/Juggluco/webserver.html</a></span></span></span></span></font></font></span></p>
-<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent">
-<font face="Times New Roman"><font size="4" style="font-size: 14pt"><b>local
-only</b>&nbsp;: akzeptiert nur Verbindungen von localhost
-(127.0.0.1).&nbsp;Wenn Sie es ausschalten, können auch andere Hosts
-auf den Server zugreifen.&nbsp;Wenn Sie Ihre Firewall nicht so
-konfigurieren, dass sie auf Port 17580 umleitet, sind dies nur Hosts
-in Ihrem Heimnetzwerk.&nbsp;Dieser Server verwendet nur http.&nbsp;Ich
-habe auch eine https-Version erstellt, aber das scheint ohne ein von
-einer Zertifizierungsstelle signiertes Zertifikat für Ihren
-Hostnamen nutzlos zu sein.&nbsp;Also habe ich es weggelassen.</font></font></p>
-<h2 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
-<font face="Times New Roman">Juggluco for WearOS</font></h2>
-<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
-<font face="Times New Roman"><font size="4" style="font-size: 14pt">Es
-gibt eine Version von Juggluco, die auf Wear OS portiert wurde.&nbsp;Die
-Anzeige wird an den kleineren Bildschirm angepasst und ein Watchface
-hinzugefügt.&nbsp;Das Watchface lässt sich wie ein gewöhnliches
-Wear OS Watchface installieren und zeigt neben der Uhrzeit auch den
-per Bluetooth empfangenen aktuellen Glukosewert an.</font></font></p>
-<p style="line-height: 100%; margin-bottom: 0in"><br/>
-
-</p>
+auferlegten Einschränkungen machen sie wenig wert.</p>
+<p>Laut einem Benutzer gibt es auch ein Watchface für&nbsp;<strong>Fitbit-</strong>&nbsp;Uhren,
+das mit dem xDrip-Webserver funktioniert:&nbsp;<a href="https://glancewatchface.com/">https://glancewatchface.com</a></p>
+<p>Weitere Informationen zur Webserver-Schnittstelle finden Sie
+unter&nbsp;<a href="https://www.juggluco.nl/Juggluco/webserver.html">https://www.juggluco.nl/Juggluco/webserver.html</a></p>
+<p><strong>local only</strong>&nbsp;: akzeptiert nur Verbindungen von
+localhost (127.0.0.1).&nbsp;Wenn Sie es ausschalten, können auch
+andere Hosts auf den Server zugreifen.&nbsp;Wenn Sie Ihre Firewall
+nicht so konfigurieren, dass sie auf Port 17580 umleitet, sind dies
+nur Hosts in Ihrem Heimnetzwerk.&nbsp;Dieser Server verwendet nur
+http.&nbsp;Ich habe auch eine https-Version erstellt, aber das
+scheint ohne ein von einer Zertifizierungsstelle signiertes
+Zertifikat für Ihren Hostnamen nutzlos zu sein.&nbsp;Also habe ich
+es weggelassen.</p>
+<h2 class="western">Juggluco for WearOS</h2>
+<p>Es gibt eine Version von Juggluco, die auf Wear OS portiert
+wurde.&nbsp;Die Anzeige wird an den kleineren Bildschirm angepasst
+und ein Watchface hinzugefügt.&nbsp;Das Watchface lässt sich wie
+ein gewöhnliches Wear OS Watchface installieren und zeigt neben der
+Uhrzeit auch den per Bluetooth empfangenen aktuellen Glukosewert an.</p>
 ]]>
 </string>
 <string name="wearosinfo" >

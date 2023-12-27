@@ -1,9 +1,9 @@
-Remove bad request message?
+Set statushtml back
+Remove bad request message from Owlet?
+
 Only give current and pebble when not too old?
 Geef sensor id inplaats van, Juggluco in webserver?
 
-Lijnen moeten onder amounts
-Ergens staat 18 naar notificatie?
 Beperk aantal connecties webserver?
 Resend data wordt niet doorgezonden.
 
@@ -25,7 +25,7 @@ Starthistory? Moet niet al verkregen data terugzenden.
 - wordt history doorgezonden?
 See setbackuptime
 
-Moet mirror streamhistory setting overnemen?
+Moet mirror Bluetoothhistory setting overnemen?
 
 History wordt niet naar horloge gezonden?
 

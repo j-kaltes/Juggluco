@@ -80,6 +80,7 @@ const char statusformat[]=R"({
       "simple"
     ],
     "enable": [
+    "cors"
     ]
   },
   "authorized": null,

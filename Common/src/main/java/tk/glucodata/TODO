@@ -1,6 +1,9 @@
-Make old scan more obvious: 
-- Kruis voor oude waarden niet een beetje vreemd?
 
+Watchdrip stoppen alarm?
+Naar Libreview vanout horloge?
+- Voorkomen dat oude waarden gezonden worden:
+	- Aangeven vanaf wanneer
+	- Informatie vanaf telefoon naar horloge
 Clicken ofzo op floating glucose app laten starten?
 
 Ook scans tonen in Nightscout server?
@@ -15,7 +18,7 @@ Helptext:
 	- links in libreview, watch
 	- links to overview
 	- add translations
-Remove camera permission.
+
 Make interface truncate alarm thresholds etc ?
 
 Ask leave without saving in:
@@ -39,7 +42,7 @@ Option to use a different http Web server port?
 Problem: xDrip watch apps don't work with a different port
 
 Analyse History values for statistics:
-    - how interprolate to so values are aligned?
+    - how interpolate to so values are aligned?
 add RUSSIAN HEBREW
 	-define USE_RUSSIAN USE_HEBREW in config
 	-set IWRU in Settings.java

@@ -24,6 +24,7 @@ package tk.glucodata;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
+import static tk.glucodata.Applic.mgdLmult;
 import static tk.glucodata.Log.doLog;
 import static tk.glucodata.MessageSender.initwearos;
 import static tk.glucodata.settings.Settings.removeContentView;
@@ -87,7 +88,7 @@ static public void show(MainActivity context) {
 				if (glucose > 28f)
 					glucose = 2.2f;
 
-			mgdl=(int)Math.round(glucose*18);
+			mgdl=(int)Math.round(glucose*mgdLmult);
 			}
 			else {
 				glucose += 13f;

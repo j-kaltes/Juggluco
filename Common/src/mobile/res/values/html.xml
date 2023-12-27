@@ -1237,7 +1237,8 @@ back will not work.</p>
 <string name="stathelp" >
 <![CDATA[
 <h1 class="western">Statistics</h1>
-<p>Some statistics taken from <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8991298">AGP</a> with some minor modifications.</p>
+<p>Some statistics taken from <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8991298">AGP</a>
+with some minor modifications.</p>
 <p>The number of days analyzed can be modified by pressing the <b>Days</b>
 button. The period ends at the time of the end of screen position and
 spans the specified number of days back in time. All data are only
@@ -1265,9 +1266,10 @@ A1c), given in percentage and mmol/mol.</span> <span lang="en-US">For
 me personally Estimated A1C is a better predictor than GMI, but it is
 used in Abbott\'s Libre 3 app.</span></p>
 <h3 class="western">Glucose Variability:</h3>
-<p>The coefficient of variation (%CV), as a measure of glucose
-variability. Higher values mean that the glucose level is less
-constant.</p>
+<p>The coefficient of variation, %CV=(SD/mean)*100%, as a measure of
+glucose variability.  A higher coefficient of variation means that
+the glucose values are father from the mean. 
+</p>
 <h3 class="western">Summary graph</h3>
 <p>(Only present when at least 9 days of stream glucose values are
 available).</p>
@@ -2109,8 +2111,8 @@ places creates talk:</p>
 	menu-&gt;list).</p>
 </ul>
 <h2 class="western">Speak messages</h2>
-<p>Reads text messages that temporarily visible on the screen and the
-result of scanning (error messages and the glucose value).</p>
+<p>Reads text messages, that are temporarily visible on the screen,
+and the result of scanning (error messages and the glucose value).</p>
 <h2 class="western">Speak Alarms</h2>
 <p>Speaks out the glucose level during Low and High glucose alarms.
 It is read both at the start of the alarm as at the moment the alarm
@@ -2152,7 +2154,7 @@ deleted in Left menu-&gt;Settings-&gt;&quot;<a href="https://www.juggluco.nl/Jug
 values</a>). This can be loaded in programs like LibreOffice Calc,
 Microsoft Excel, Mathematica or R. It is a kind of .csv with tabs
 instead of comma\'s used to separate items. Characters are encoded
-UTF8 (labels) or ASCII.</p>
+UTF8.</p>
 <p>The meaning of the columns can be found at
 <a href="https://www.juggluco.nl/Juggluco/webserver.html">https://www.juggluco.nl/Juggluco/webserver.html</a>.</p>
 <p><b>Days</b>: Starting with Juggluco 7.1.0, you can select the

@@ -18,9 +18,10 @@
 /*                                                                                   */
 /*      Fri Jan 27 12:36:58 CET 2023                                                 */
 
-
 #pragma once
+#ifdef NOLOG
 #define CONV18 1 //Minimally different and 18 fits better
+#endif
 #ifdef CONV18
 static constexpr const double convfactor=180.0;
 #else

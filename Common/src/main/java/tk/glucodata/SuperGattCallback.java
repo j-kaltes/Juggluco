@@ -36,6 +36,7 @@ import static android.bluetooth.BluetoothGatt.CONNECTION_PRIORITY_BALANCED;
 import static android.bluetooth.BluetoothGatt.CONNECTION_PRIORITY_HIGH;
 import static tk.glucodata.Applic.app;
 import static tk.glucodata.Applic.isWearable;
+import static tk.glucodata.Applic.mgdLmult;
 import static tk.glucodata.Natives.thresholdchange;
 
 public abstract class SuperGattCallback extends BluetoothGattCallback {
@@ -263,7 +264,7 @@ protected void handleGlucoseResult(long res,long timmsec) {
 		if (glumgdl != 0) {
 			int alarm = (int) ((res >> 48) & 0xFFL);
 			Log.i(LOG_ID, SerialNumber + " alarm=" + alarm);
-			float gl = Applic.unit == 1 ? glumgdl / 18.0f : glumgdl;
+			float gl = Applic.unit == 1 ? glumgdl / mgdLmult : glumgdl;
 			short ratein = (short) ((res >> 32) & 0xFFFFL);
 			float rate = ratein / 1000.0f;
 			dowithglucose(SerialNumber, glumgdl, gl, rate, alarm, timmsec);

@@ -168,7 +168,7 @@ static int overwritename() {
 #endif
 
 int setfilesdir(const string_view filesdir,const char *country) {
-	LOGGER("setfilesdir %s %s\n",filesdir.data(),country?country:"null");
+	LOGGER("setfilesdir %s %s convfactor=%f\n",filesdir.data(),country?country:"null",convfactor);
 	globalbasedir=filesdir;
 	numbasedir.set(globalbasedir,"nums");
 	sensorbasedir.set(globalbasedir,"sensors");

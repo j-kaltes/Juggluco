@@ -21,6 +21,7 @@
 
 package tk.glucodata;
 
+import static tk.glucodata.Applic.mgdLmult;
 import static tk.glucodata.Applic.unit;
 
 class GlucoseDraw  {
@@ -813,7 +814,7 @@ static int getgludraw(float val) {
 	if(unit==1) {
 		if(val<2.2f)
 			return lowvalue;
-		if(val>(500.0/18.0))
+		if(val>(500.0/mgdLmult))
 			return highmmolvalue;
 	        int ind=Math.round(val*10)-22;
 		return mmolicon[ind];

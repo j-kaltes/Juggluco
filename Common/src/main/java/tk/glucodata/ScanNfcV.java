@@ -47,6 +47,7 @@ import static android.content.Context.VIBRATOR_SERVICE;
 import static android.view.View.GONE;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static tk.glucodata.Applic.isWearable;
+import static tk.glucodata.Applic.mgdLmult;
 import static tk.glucodata.BuildConfig.libreVersion;
 import static tk.glucodata.Gen2.getversion;
 import static tk.glucodata.Libre3.libre3NFC;
@@ -257,7 +258,7 @@ static public synchronized void scan(GlucoseCurve curve,Tag tag) {
 					showbytes("data",data); */
 					int uit = Natives.nfcdata(uid, info, data);
 					value = uit & 0xFFFF;
-					Log.format("glucose=%.1f\n",(float)value/18.0f);
+					Log.format("glucose=%.1f\n",(float)value/mgdLmult);
 					ret = uit >> 16;
 					if(newdevice!=null&& Arrays.equals(newdevice,uid)&& Applic.app.canusebluetooth() ) {
 						if(value!=0|| (ret&0xFF)==5||(ret&0xFF)==7) {

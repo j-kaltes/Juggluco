@@ -289,10 +289,9 @@ bool noacksendone(crypt_t *pass,const int sock, const uint32_t com) {
 	
 bool sendbackupstop(crypt_t *pass,const int sock) {
 	return  noacksendone(pass,sock, sbackupstop) ;
-//	return sendone(pass,sock,sbackupstop);
-/*
-	constexpr const	uint32_t com= sbackupstop;
-	return  noacksendcommand(pass,sock ,reinterpret_cast<const senddata_t *>(&com),4);*/
+	}
+bool sendResetDevices(crypt_t *pass,const int sock) {
+	return  noacksendone(pass,sock, sresetdevices) ;
 	}
 bool sendbackup(crypt_t *pass,const int sock) {
 	return noacksendone(pass,sock,sbackup);

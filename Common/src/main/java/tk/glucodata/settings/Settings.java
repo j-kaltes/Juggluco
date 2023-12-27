@@ -69,6 +69,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.os.LocaleListCompat;
 import androidx.core.widget.NestedScrollView;
 
+import java.text.DecimalFormatSymbols;
 import java.util.Arrays;
 import java.util.List;
 
@@ -85,15 +86,26 @@ import tk.glucodata.Menus;
 import tk.glucodata.Natives;
 import tk.glucodata.Notify;
 import tk.glucodata.R;
+import java.text.DecimalFormat;
+import java.util.Locale;
 
 public class Settings  {
 private final static boolean IWRU=false,SPANISH=false;
 private final static String LOG_ID="Settings";
 MainActivity activity;
 
-public static String    float2string(Float get) {
+/*
+public static String    oldfloat2string(Float get) {
     return get.toString();
-}
+} */
+private static final DecimalFormat df1 = new DecimalFormat("#.#",new DecimalFormatSymbols(Locale.US));
+public static String    float2string(Float get) {
+    return df1.format(get);
+} 
+/*
+public static String    float2string(Float get) {
+      return String.format("%.1f",get);
+	}  */
 boolean IntentscanEnabled() {
 	try{
 	Application app= activity.getApplication();

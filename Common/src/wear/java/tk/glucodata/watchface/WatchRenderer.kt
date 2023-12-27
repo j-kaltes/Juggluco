@@ -151,7 +151,7 @@ val updater:Runnable= object: Runnable{
         if(measureheart) {
             if(manage != null) {
                 sensor = manage.getDefaultSensor(Sensor.TYPE_HEART_RATE)
-                registersensor(Natives.getheartrate())
+                registersensor(Applic.getHeartRate())
             }
         }
 
@@ -195,7 +195,7 @@ override fun shouldAnimate(): Boolean {
      */
     private fun updateWatchFaceData(userStyle: UserStyle) {
         Log.d(LOG_ID, "updateWatchFace(): $userStyle")
-	registersensor(Natives.getheartrate())
+	registersensor(Applic.getHeartRate())
 
         var newWatchFaceData: WatchFaceData=watchFaceData 
         // Loops through user style and applies new values to watchFaceData.
@@ -293,7 +293,7 @@ private fun watchtime(canvas:Canvas,localtime: LocalTime) {
 var rendertime:Long=0L
 
     override fun render(canvas: Canvas, bounds: Rect, zonedDateTime: ZonedDateTime,sharedAssets:InnerAssets) {
-	registersensor(Natives.getheartrate())
+	registersensor(Applic.getHeartRate())
     Log.i(LOG_ID, "render");
         canvas.drawColor(BLACK)
         drawComplications(canvas, zonedDateTime)

@@ -64,6 +64,12 @@
 #define LOGARWEB(...) LOGAR("webserver: " __VA_ARGS__)
 typedef std::conditional<sizeof(long long) == sizeof(int64_t), long long, int64_t >::type longlongtype;
 
+#ifdef NOTAPP
+#include "cmdline/jugglucotext.h"
+#else
+#include "curve/jugglucotext.h"
+#endif
+extern jugglucotext engtext;
 
 static void watchserverloop(int *sockptr,bool secure) ;
 static bool startwatchserver(bool secure,int port,int *sockptr) {
@@ -372,11 +378,27 @@ void mktypeheader(char *outstart,char *outiter,const bool headonly,recdata *outd
  void mkjsonheader(char *outstart,char *outiter,const bool headonly,recdata *outdata) ;
 static bool givestatushtml(recdata *outdata) {
 //static	constexpr const char status[]="HTTP/1.1 200 OK\r\nAccess-Control-Allow-Origin: *\r\nContent-Type: text/html; charset=utf-8\r\nContent-Length: 19\r\n\r\n<h1>STATUS OK</h1>\n";
-static	constexpr const char status[]="HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\nContent-Length: 19\r\n\r\n<h1>STATUS OK</h1>\n";
-	const int statuslen=sizeof(status)-1;
-	outdata->allbuf=nullptr;
+//static	constexpr const char status[]="HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\nContent-Length: 19\r\n\r\n<h1>STATUS OK</h1>";
+static	constexpr const char statusstart[]="HTTP/1.1 200 OK\r\nX-Powered-By: Express\r\nAccess-Control-Allow-Origin: *\r\nAccess-Control-Allow-Methods: GET,PUT,POST,DELETE,OPTIONS\r\nAccess-Control-Allow-Headers: Content-Type, Authorization, Content-Length, X-Requested-With\r\nVary: Accept, Accept-Encoding\r\nContent-Type: text/html; charset=utf-8\r\nContent-Length: 18\r\nDate: ";
+
+static	constexpr const char statusend[]=" GMT\r\nConnection: keep-alive\r\nKeep-Alive: timeout=5\r\n\r\n<h1>STATUS OK</h1>";
+
+	constexpr const int totlen=sizeof(statusstart)+sizeof(statusend)+60;
+	char *status=outdata->allbuf=new(std::nothrow) char[totlen];
+	constexpr int startlen=sizeof(statusstart)-1;
+	memcpy(status,statusstart,startlen);
+	char *ptr=status+startlen;
+	auto nu=time(nullptr);
+	struct tm stmbuf;
+	gmtime_r(&nu,&stmbuf);
+	ptr+=sprintf(ptr,R"(%s, %02d %s %04d %02d:%02d:%02d)",
+engtext.daylabel[stmbuf.tm_wday],stmbuf.tm_mday, engtext.monthlabel[stmbuf.tm_mon],stmbuf.tm_year+1900,
+stmbuf.tm_hour,stmbuf.tm_mday,stmbuf.tm_sec);
+	const int statusendlen=sizeof(statusend)-1;
+	memcpy(ptr,statusend,statusendlen);
+	
 	outdata->start=status;
-	outdata->len=statuslen;
+	outdata->len=ptr-status+statusendlen;
 	return true;
 }
 static bool outofmemory(recdata *outdata) {
@@ -508,6 +530,16 @@ static bool givenightstatus(recdata *outdata) {
 	mkjsonheader(start,start+alllen,false,outdata); 
 	return true;
 	}
+/*
+static bool gzipnightstatus(recdata *outdata) {
+	constexpr static
+	#include "statusgz.h"
+	outdata->allbuf=nullptr;
+	outdata->len=sizeof(statusgz);
+	outdata->start=(const char *)statusgz;
+	return true;
+	} */
+
 
 
 
@@ -645,12 +677,6 @@ Date: Sat, 18 Feb 2023 22:08:56 GMT
 Transfer-Encoding: chunked
 Via: 1.1 vegur
 */
-#ifdef NOTAPP
-#include "cmdline/jugglucotext.h"
-#else
-#include "curve/jugglucotext.h"
-#endif
-extern jugglucotext engtext;
 int formattime(char *buf, time_t tim) {
         struct tm tmbuf;
 	gmtime_r(&tim, &tmbuf);
@@ -700,50 +726,24 @@ extern std::string_view getdeltanamefromindex(int index) ;
 
 //{"status":[{"now":1699975836641}],"bgs":[{"sgv":"107","trend":4,"direction":"Flat","datetime":1699975773940,"bgdelta":9,"battery":"80","iob":"0.06","bwp":"0.13","bwpo":102,"cob":0}],"cals":[]}
 //{"sgv":"10.7","trend":4,"direction":"Flat","datetime":1676804318000}
+//{"sgv":"6.9","trend":4,"direction":"Flat","datetime":1703072118000}
 static char *pebbleitem(bool mmolL,char *outiter,const ScanData *item) {
 	int trend=getdeltaindex(item->ch);
-	float value=mmolL?item->getmmolL():item->getmgdL();
-	return outiter+=sprintf(outiter,R"({"sgv":"%.1f","trend":%d,"direction":"%s","datetime":%lld},)",value,trend,getdeltanamefromindex(trend).data(),item->gettime()*1000LL);
+	const char start[]=R"({"sgv":")";
+	addar(outiter,start);
+	if(mmolL) 
+		outiter+=sprintf(outiter,"%.1f", item->getmmolL());
+	else
+		outiter+=sprintf(outiter,"%d", item->getmgdL());
+	return outiter+=sprintf(outiter,R"(","trend":%d,"direction":"%s","datetime":%lld},)",trend,getdeltanamefromindex(trend).data(),item->gettime()*1000LL);
 	}
 
-bool		 pebbleinterpret(const char *input,int inputlen,recdata *outdata) {
-	int count=1;
-	bool mmol=true;
-   	outdata->allbuf=new(std::nothrow) char[512+80*+count+200];
-	if(!outdata->allbuf) {
-		return outofmemory(outdata);
-		}
-    	char *start=outdata->allbuf+150,*outiter=start;
-	auto nu=time(nullptr);
-	constexpr const char startpebble[]=R"({"status":[{"now":%lld}],"bgs":[)";
-	constexpr const char endpebble[]=R"(],"cals":[]})";
-	outiter+=sprintf(outiter,startpebble,nu*1000LL);
-	int interval=4*61;
-	if(!getitems(outiter,count,0,UINT32_MAX,true,interval,[mmol,nu](char *outiter,int datit, const ScanData *iter,const char *sensorname,const time_t starttime) {
-			
-		char *ptr=pebbleitem(mmol,outiter,iter);
-		if(!datit) {
-	 		//double delta= isnan(iter->ch)?0:iter->ch*deltatimes;
-	 		double delta= getdelta(iter->ch);
-
-			extern double getiob(uint32_t now);
-			double iob=getiob(nu);
-			ptr-=2;
-			ptr+=sprintf(ptr,R"(,"bgdelta":"%.1f","iob":"%.2f"},)",delta,iob); //TODO remove ""? xDrip has "", Nightscout hasn't, who is right?
-			}
-		return ptr;
-		})) {
-		return givenothing(outdata);
-	};
-	addar(--outiter,endpebble);
-	mkjsonheader(start, outiter, false, outdata);
-	return true;
-	}
 char * givebuckets(char *start) {
 	char *outiter=start;
 	const char startbuckets[]=R"("buckets":[)";
 	addar(outiter,startbuckets);
 	int interval=4*61;
+
 	if(!getitems(outiter,4,0,UINT32_MAX,true,interval,[](char *outiter,int datit, const ScanData *iter,const char *sensorname,const time_t starttime) {
 		return writebucket(outiter,datit,iter,sensorname);
 	})) {
@@ -979,7 +979,7 @@ static void nosecret(std::string_view secret, recdata *outdata) {
 	}
 
 static void wrongpath(std::string_view toget, recdata *outdata);
-static bool apiv1(const char *input,int leftlen,bool behead,bool json, recdata *outdata) {
+static bool apiv1(const char *input,int leftlen,bool behead,bool json,recdata *outdata) {
 		const char *posptr=input;
 		std::string_view api="entries";
 		if(!memcmp(api.data(),posptr,api.size())) {
@@ -1042,13 +1042,15 @@ static bool apiv1(const char *input,int leftlen,bool behead,bool json, recdata *
 				}
 			}
 	std::string_view status="status";
-		if(!memcmp(status.data(),posptr,status.size())) {
-			const char *end=posptr+status.size();
-			if(*end==' '||*end=='/')
-				return givestatushtml(outdata);
-			else
-				return givenightstatus(outdata);
+	if(!memcmp(status.data(),posptr,status.size())) {
+		const char *end=posptr+status.size();
+		if(!json&&(*end==' '||*end=='/'))
+			return givestatushtml(outdata);
+		else {
+//			if(gzip) return gzipnightstatus(outdata);
+			return givenightstatus(outdata);
 			}
+		}
 	std::string_view treatments="treatments";
 	const auto treatsize= treatments.size();
 		if(!memcmp(treatments.data(),posptr,treatsize)) {
@@ -1141,7 +1143,11 @@ Getopts(const char *posptr,int size) {
 			std::string_view startsecstr = "starttime=";
 			if (!memcmp(iter, startsecstr.data(), startsecstr.size())) {
 				iter += startsecstr.length();
-				iter = readnum<uint32_t>(iter, ends, start);
+				uint32_t tmpstart;
+				if(auto tmp=readnum<uint32_t>(iter, ends, tmpstart)) {
+					iter = tmp;
+					start=tmpstart;
+					}
 				continue;
 			    }
 			std::string_view startsstr = "start=";
@@ -1157,7 +1163,13 @@ Getopts(const char *posptr,int size) {
 			std::string_view endsecstr = "endtime=";
 			if (!memcmp(iter, endsecstr.data(), endsecstr.size())) {
 				iter += endsecstr.length();
-				iter = readnum<uint32_t>(iter, ends, end);
+//				iter = readnum<uint32_t>(iter, ends, end);
+
+				uint32_t tmpend;
+				if(auto tmp=readnum<uint32_t>(iter, ends, tmpend)) {
+					iter = tmp;
+					end=tmpend;
+					}
 				continue;
 				}
 			std::string_view endsstr = "end=";
@@ -1174,8 +1186,11 @@ Getopts(const char *posptr,int size) {
 			if (!memcmp(iter, durationsecstr.data(), durationsecstr.size())) {
 				iter += durationsecstr.length();
 				int secs;
-				iter = readnum<int>(iter, ends, secs);
-				duration+=secs;
+				if(auto tmpiter = readnum<int>(iter, ends, secs)) {
+					iter=tmpiter;
+					duration+=secs;
+					}
+				
 				continue;
 				}
 			std::string_view durationdaystr = "days=";
@@ -1193,7 +1208,7 @@ Getopts(const char *posptr,int size) {
 				}
 			}
 		}
-	if(!duration)
+	if(duration<=0)
 		duration=5*60*60;
 	if (!end) {
 		if(start) {
@@ -1249,6 +1264,7 @@ static bool jugglucos(const char * const input,int size, recdata *outdata) {
 	return true;
 	}
 
+static bool		 pebbleinterpret(const char *input,int inputlen,recdata *outdata);
 bool watchcommands(char *rbuf,int len,recdata *outdata,bool secure) {
 	LOGGERWEB("watchcommands len=%d %.*s",len,len,rbuf);
 	const char *start=rbuf;
@@ -1259,6 +1275,7 @@ bool watchcommands(char *rbuf,int len,recdata *outdata,bool secure) {
 	std::string_view toget;
 	bool behead=false;
 	bool json=false;
+//	bool gzip=false;
 	const char reget[]= "GET /";
 	const int regetlen=sizeof(reget)-1;
 	const char rehead[]= "HEAD /";
@@ -1296,16 +1313,30 @@ bool watchcommands(char *rbuf,int len,recdata *outdata,bool secure) {
 						}
 					}
 				else {
-					constexpr const char jsonstr[]="Accept: application/json";
+					constexpr const char jsonstr[]=R"(Accept: application/json)";
 					if(!memcmp(start,jsonstr,sizeof(jsonstr)-1)) {
 						json=true;
+						LOGAR("Accepts json");
 						}
 					else {
-						constexpr const char hostnamestr[]="Host: ";
-						constexpr const int hostnamelen= sizeof(hostnamestr)-1;
-						if(!memcmp(start,hostnamestr,hostnamelen)) {
-							const char *name=start+hostnamelen;
-							hostname={name,static_cast<size_t>(nl-name)};
+/*					    constexpr const char encoding[]=R"(Accept-Encoding:)";
+					    constexpr const int encodelen= sizeof(encoding)-1;
+						if(json&&!memcmp(start,encoding,encodelen)) {
+							const char *type=start+encodelen;
+							constexpr const std::string_view gzipstr="gzip";
+							const char *hit=std::search(type,nl,gzipstr.begin(),gzipstr.end());
+							if(hit!=nl) {
+								gzip=true;
+								LOGAR("Accepts gzip");
+								}
+							}
+						else  */{
+							constexpr const char hostnamestr[]="Host: ";
+							constexpr const int hostnamelen= sizeof(hostnamestr)-1;
+							if(!memcmp(start,hostnamestr,hostnamelen)) {
+								const char *name=start+hostnamelen;
+								hostname={name,static_cast<size_t>(nl-name)};
+								}
 							}
 						}
 					}
@@ -1536,6 +1567,7 @@ class Sgvinterpret {
 	const char *event=nullptr;
 	bool carb=false;
 	bool insulin=false;
+	bool mmol=settings->usemmolL();
 	bool getargs(const char *start,int len) ;
 	bool getdata(bool headonly,recdata *outdata) const;
 
@@ -1548,6 +1580,45 @@ private:
 	bool getv1entries(char *&outiter,const int  datnr) const;
 }; 
 
+static bool		 pebbleinterpret(const char *input,int inputlen,recdata *outdata) {
+	Sgvinterpret pret;
+	pret.datnr=1;
+	if(!pret.getargs(input,inputlen))  {
+		wrongpath({input,(size_t)inputlen},outdata);
+		return false;
+		}
+	int count=pret.datnr>0?pret.datnr:1;
+	bool mmol=pret.mmol;
+   	outdata->allbuf=new(std::nothrow) char[512+80*+count+200];
+	if(!outdata->allbuf) {
+		return outofmemory(outdata);
+		}
+    	char *start=outdata->allbuf+150,*outiter=start;
+	auto nu=time(nullptr);
+	constexpr const char startpebble[]=R"({"status":[{"now":%lld}],"bgs":[)";
+	constexpr const char endpebble[]=R"(],"cals":[]})";
+	outiter+=sprintf(outiter,startpebble,nu*1000LL);
+
+	if(!getitems(outiter,count,pret.lowerend,pret.higherend,true,pret.interval,[mmol,nu](char *outiter,int datit, const ScanData *iter,const char *sensorname,const time_t starttime) {
+			
+		char *ptr=pebbleitem(mmol,outiter,iter);
+		if(!datit) {
+	 		//double delta= isnan(iter->ch)?0:iter->ch*deltatimes;
+	 		double delta= getdelta(iter->ch);
+
+			extern double getiob(uint32_t now);
+			double iob=getiob(nu);
+			ptr-=2;
+			ptr+=sprintf(ptr,R"(,"bgdelta":"%.1f","iob":"%.2f"},)",delta,iob); //TODO remove ""? xDrip has "", Nightscout hasn't, who is right?
+			}
+		return ptr;
+		})) {
+		return givenothing(outdata);
+	};
+	addar(--outiter,endpebble);
+	mkjsonheader(start, outiter, false, outdata);
+	return true;
+	}
 bool givesgvtxt(const char *input,int inlen,recdata *outdata,char sep) {
 	Sgvinterpret pret;
 	pret.datnr=10;
@@ -1711,6 +1782,8 @@ static bool givetreatments(const char *args,int argslen, recdata *outdata)  {
 		}
 	
 	if(!pret.getargs(args,argslen)) {
+
+		wrongpath({args,(size_t)argslen},outdata);
 		return false;
 		}
 	
@@ -1986,6 +2059,21 @@ int rewriteperc(char *start,int len) {
 				continue;
 				}
 			}
+			else {
+				std::string_view unitstr="units=";
+				if(!memcmp(iter,unitstr.data(),unitstr.size())) {
+					iter+=unitstr.length();
+					std::string_view mmolstr="mmol";
+					if(!memcmp(iter,mmolstr.data(),mmolstr.size())) {
+						mmol=true;
+						iter+=mmolstr.size();
+						}
+					else {
+						mmol=false;
+						}
+					continue;
+					}
+				}
 			}
 		
 	}
@@ -1994,11 +2082,15 @@ int rewriteperc(char *start,int len) {
 			datnr=100000;
 
 		}
+	if(higherend<=lowerend)
+		return false;
 	return true;
 	};
 static bool	 sgvinterpret(const char *start,int len,bool headonly,recdata *outdata,bool all) {
 	Sgvinterpret pret(all);
 	if(!pret.getargs(start,len)) {
+
+		wrongpath({start,(size_t)len},outdata);
 
 		return false;
 		}

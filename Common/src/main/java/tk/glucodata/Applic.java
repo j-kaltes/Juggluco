@@ -76,7 +76,7 @@ import tk.glucodata.settings.Broadcasts;
 //import static tk.glucodata.MessageSender.messagesender;
 
 public class Applic extends Application {
-
+static final float mgdLmult=18.0182f;
 //public static tk.glucodata.MessageSender messagesender=null;
    static boolean Nativesloaded=false;
 public static boolean hour24=true;
@@ -586,7 +586,7 @@ boolean needsnatives() {
 static boolean bluetoothEnabled() {	
 	return SensorBluetooth.bluetoothIsEnabled();
 	}
-static final boolean usewakelock=false;
+static final boolean usewakelock=true;
 @Keep
 static void doglucose(String SerialNumber, int mgdl, float gl, float rate, int alarm, long timmsec,boolean wasblueoff) {
 	var wakelock=	usewakelock?(((PowerManager) app.getSystemService(POWER_SERVICE)).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Juggluco::Applic")):null;
@@ -670,6 +670,8 @@ static public void speak(String message) {
 		talker.speak(message);
 		}
 	}
-
+static public boolean getHeartRate() {
+	return initproccalled&&Natives.getheartrate();
+	}
 }
 

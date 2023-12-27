@@ -96,7 +96,7 @@ class WatchFaceConfigActivity : ComponentActivity() {
         Log.d(LOG_ID, "\tselected color style: $colorStyleId")
 
         binding.preview.watchFaceBackground.setImageBitmap(userStylesAndPreview.previewImage)
-	binding.heartRate.isChecked = Natives.getheartrate()
+	binding.heartRate.isChecked = Applic.getHeartRate()
 
 
         enabledWidgets()
