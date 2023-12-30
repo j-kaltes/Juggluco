@@ -466,9 +466,12 @@ private void destruct() {
 	}
 public static void destructor() {
 	if(blueone!=null) {
+		Log.i(LOG_ID,"destructor blueone!=null");
 		blueone.destruct();
 		blueone=null;
 		}
+	else
+		Log.i(LOG_ID,"destructor blueone==null");
 	}
 //static boolean nullKAuth=false;
 
@@ -530,7 +533,8 @@ public boolean connectDevices(long delayMillis) {
 private boolean updateDevicers() {
 	if(!Natives.getusebluetooth()) {
 		Log.d(LOG_ID,"updateDevicers !getusebluetooth()");
-		removeDevices();
+		destruct(); 
+		blueone=null;
 		return false;
 		}
 	Log.i(LOG_ID,"updateDevicers");

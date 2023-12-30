@@ -22,9 +22,12 @@
 package tk.glucodata.watchface
 
 import android.content.Context
-import android.content.Context.*
+import android.content.Context.SENSOR_SERVICE
 import android.graphics.Canvas
-import android.graphics.Color.*
+import android.graphics.Color.BLACK
+import android.graphics.Color.GRAY
+import android.graphics.Color.TRANSPARENT
+import android.graphics.Color.WHITE
 import android.graphics.Paint
 import android.graphics.Paint.Align
 import android.graphics.Rect
@@ -32,11 +35,14 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
-import android.hardware.SensorManager.*
+import android.hardware.SensorManager.SENSOR_DELAY_NORMAL
+import android.hardware.SensorManager.SENSOR_STATUS_ACCURACY_LOW
 import android.view.SurfaceHolder
-import androidx.core.content.ContextCompat.getSystemService
-import androidx.wear.watchface.*
-import androidx.wear.watchface.Renderer.CanvasRenderer2
+import androidx.wear.watchface.ComplicationSlot
+import androidx.wear.watchface.ComplicationSlotsManager
+import androidx.wear.watchface.DrawMode
+import androidx.wear.watchface.Renderer
+import androidx.wear.watchface.WatchState
 import androidx.wear.watchface.complications.data.ComplicationType
 import androidx.wear.watchface.complications.rendering.CanvasComplicationDrawable
 import androidx.wear.watchface.complications.rendering.ComplicationDrawable
@@ -44,19 +50,26 @@ import androidx.wear.watchface.style.CurrentUserStyleRepository
 import androidx.wear.watchface.style.UserStyle
 import androidx.wear.watchface.style.UserStyleSetting
 import androidx.wear.watchface.style.WatchFaceLayer
-import kotlinx.coroutines.*
-import tk.glucodata.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Runnable
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
+import tk.glucodata.Applic
 import tk.glucodata.Applic.removescreenupdater
 import tk.glucodata.Applic.setscreenupdater
+import tk.glucodata.CommonCanvas
+import tk.glucodata.Log
+import tk.glucodata.Natives
+import tk.glucodata.strGlucose
 import tk.glucodata.watchface.data.watchface.ColorStyleIdAndResourceIds
 import tk.glucodata.watchface.data.watchface.WatchFaceColorPalette.Companion.convertToWatchFaceColorPalette
 import tk.glucodata.watchface.data.watchface.WatchFaceData
 import tk.glucodata.watchface.utils.COLOR_STYLE_SETTING
 import tk.glucodata.watchface.utils.ratTimebaseY
-import java.lang.Float.isNaN
 import java.time.LocalTime
 import java.time.ZonedDateTime
-import kotlin.math.pow
 
 // Default for how Long each frame is displayed at expected frame rate.
 //private const val FRAME_PERIOD_MS_DEFAULT: Long = 16L
@@ -125,7 +138,22 @@ val updater:Runnable= object: Runnable{
             postInvalidate()
         }
     }
-    val sensorlist: SensorEventListener 
+    private val sensorlist: SensorEventListener
+    /*    private static Object cloneObject(Object obj) {
+            try {
+                Object clone = obj.getClass().newInstance();
+                for (Field field : obj.getClass().getDeclaredFields()) {
+                    if (!Modifier.isFinal(field.getModifiers())) {
+                        field.setAccessible(true);
+                        field.set(clone, field.get(obj));
+                    }
+                }
+                return clone;
+            } catch (Exception e) {
+                Log.stack(TAG,"cloneObject ",e);
+                return null;
+            }
+        } */
 
     init {
         Log.i(LOG_ID,"init")
@@ -165,7 +193,7 @@ val updater:Runnable= object: Runnable{
     }
 
 
-fun registersensor(on:Boolean):Boolean {
+private fun registersensor(on:Boolean):Boolean {
 	if(on==registered)
 		return on
 	heartrate= Float.NaN
@@ -181,7 +209,7 @@ fun registersensor(on:Boolean):Boolean {
 	     }
     else
 		Log.i(LOG_ID,"registersensor($on) sensor==null")
-	    return  registered
+    return  registered
 	 }
 	 /*
 override fun shouldAnimate(): Boolean {
@@ -290,7 +318,7 @@ private fun watchtime(canvas:Canvas,localtime: LocalTime) {
         }
 	}
 
-var rendertime:Long=0L
+private var rendertime:Long=0L
 
     override fun render(canvas: Canvas, bounds: Rect, zonedDateTime: ZonedDateTime,sharedAssets:InnerAssets) {
 	registersensor(Applic.getHeartRate())
@@ -364,7 +392,7 @@ var rendertime:Long=0L
     companion object {
         private const val LOG_ID = "WatchRenderer"
 
-       private  val    measureheart=true;
+       private  const val    measureheart=true;
 //	private  var thisone:WatchRenderer?=null
 /*
   public fun setheartrate(on:Boolean):Boolean {

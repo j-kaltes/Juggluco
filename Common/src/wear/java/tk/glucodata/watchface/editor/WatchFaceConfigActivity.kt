@@ -131,12 +131,13 @@ class WatchFaceConfigActivity : ComponentActivity() {
         stateHolder.setComplication(EXTREMERIGHT_COMPLICATION_ID)
     }
 
-var  heartratebox:CheckBox?=null
+private var  heartratebox:CheckBox?=null
 
 fun askpermission(perm:String) {
  requestPermissions(arrayOf(perm), SENSOR_REQUEST_CODE)
  }
 override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     when (requestCode) {
         SENSOR_REQUEST_CODE -> {
   	    val granted=(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)
@@ -186,11 +187,12 @@ private val requestPermissionLauncher = registerForActivityResult(ActivityResult
 					    val builder = AlertDialog.Builder(this)
 					    builder.setTitle(R.string.sensorpermission)
 					    builder.setMessage(R.string.sensorpermissionmessage).
-					   setPositiveButton(R.string.ok)  { dialog, id -> {
-							Log.i(LOG_ID,"now ask permission")
+                        setPositiveButton(R.string.ok, { _, _ -> {
+                               Log.i(LOG_ID, "now ask permission")
 //							    heartratebox = box askpermission(bodies)
 
-						    }} .show().setCanceledOnTouchOutside(false)
+                           }
+                       }) .show().setCanceledOnTouchOutside(false)
                         }
 				else {
 				     askpermission(bodies)

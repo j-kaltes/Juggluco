@@ -48,6 +48,8 @@ class MessageReceiver: WearableListenerService() {
 		var source=  sender.localnode
 		  Log.i(LOG_ID,"path==MessageSender.DEFAULTS_PATH "+source );
 		  setWearosdefaults(source,true);
+		   val context=if(MainActivity.thisone==null)Applic.app;else MainActivity.thisone;
+		   Applic.setbluetooth(context,false)
 		 }
 	    MessageSender.WAKE_PATH -> {
 		Natives.wakehereonly()

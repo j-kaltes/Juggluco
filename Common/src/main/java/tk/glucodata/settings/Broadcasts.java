@@ -96,10 +96,15 @@ static private void  getselected(MainActivity context, View parent,String title,
 	final int startids=1;
 	final int endlen=len+startids;
 	views[0]=new View[]{getlabel(context,title)};
+	boolean onechecked=false;
+
 	for(int i=0;i<len;i++) {
 		final var name=names.get(i);
-		views[i+startids]=new View[]{getcheckbox(context,name,isElement(name,selected))};
+		final var checked=isElement(name,selected);
+		onechecked=onechecked||checked;
+		views[i+startids]=new View[]{getcheckbox(context,name,checked)};
 		}
+	final boolean finalonechecked=onechecked;
 	var save=getbutton(context, R.string.save);
 
 	var cancel=getbutton(context, R.string.cancel);
@@ -144,7 +149,11 @@ static private void  getselected(MainActivity context, View parent,String title,
 	Runnable closerun=()-> {
 		if(!isWearable)	EnableControls(parent,true);
 		removeContentView(theview) ;
-		saveproc.accept(null);
+		if(selected.length!=0&&!finalonechecked) {
+			saveproc.accept(new String[0]);
+			}
+		else
+			saveproc.accept(null);
 		};
 	context.setonback(closerun);
 	save.setOnClickListener(v->{
@@ -177,15 +186,6 @@ static private void  getselected(MainActivity context, View parent,String title,
 static public void setlibrereceivers(MainActivity context,View settingsview,CheckBox box,boolean[] dont) {
 	var selected= Natives.librelinkRecepters();
 	var all=actionListeners(XInfuus.glucoseaction);
-	/*
-	if(all.size()==0) {
-		Applic.argToaster(context, context.getString(R.string.noapplisteningto)+XInfuus.glucoseaction, Toast.LENGTH_SHORT);
-		Natives.setlibrelinkRecepters(null);
-		XInfuus.setlibrenames();
-		box.setChecked(false);
-		dont[0]=false;
-		return;
-		} */
 	getselected(context,settingsview,"Patched Libre",selected, all,newselected-> {
 			if(newselected!=null) {
 				Natives.setlibrelinkRecepters(newselected);

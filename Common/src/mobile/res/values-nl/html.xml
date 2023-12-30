@@ -1936,6 +1936,11 @@ privésleutel. Zie hierboven.</span></p>
 <p style="line-height: 100%; margin-bottom: 0in"><strong><span lang="nl-NL">Full
 Chain</span></strong><span lang="nl-NL">: selecteer een bestand dat
 de Full Chain bevat, zie hierboven.</span></p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>Interval</b>:
+standaard minimaal interval in seconden tussen glucosewaarden.
+Normaal gesproken is dit 270 seconden. Een net opvraag kan deze
+waarde ook wijzigen door de optie interval= op te geven. Zie
+https://www.juggluco.nl/Juggluco/webserver.html</p>
 <p style="line-height: 100%; margin-bottom: 0in"><strong><span lang="nl-NL">Actief</span></strong><span lang="nl-NL">:
 webserver is actief.</span></p>
 <p style="line-height: 100%; margin-bottom: 0in"><strong><span lang="nl-NL">Alleen

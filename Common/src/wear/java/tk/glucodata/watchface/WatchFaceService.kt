@@ -55,7 +55,7 @@ class WatchFaceService : WatchFaceService() {
 class Mytaplistener: WatchFace.TapListener {
 	@UiThread
 	override fun onTapEvent(
-        @TapType tapType: Int,
+        tapType: Int,
         tapEvent: TapEvent,
         complicationSlot: ComplicationSlot?
 	) {

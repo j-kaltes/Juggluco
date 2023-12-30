@@ -225,9 +225,11 @@ static public void show(MainActivity context,View parent) {
 					var nod=nodeslist.get(nodenum);
 					String name=makenodename(nod);
 					Runnable setdef=()-> {
+						sender.toDefaults(nod);
 						Log.i(LOG_ID,"set to default "+name);
 						Natives.setWearosdefaults(name,isGalaxy(nod));
-						sender.toDefaults(nod);
+						var main=MainActivity.thisone;
+						Applic.setbluetooth(main==null?Applic.app:main,true);
 						};
 					if(Natives.directsensorwatch(name)<0) {
 						confirmunsynced(context,setdef);

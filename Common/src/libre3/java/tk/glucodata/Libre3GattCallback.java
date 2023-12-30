@@ -193,13 +193,13 @@ void free() {
 	   Log.i(LOG_ID, "onServicesDiscovered status="+status);
             if (status == GATT_SUCCESS) {
                 if(!getservices()) {
-			bluetoothGatt.disconnect();
+			dodisconnect(bluetoothGatt);
 			disconnected(status);
 			}
 		}
              else {
                 Log.e(LOG_ID, "BLE: onServicesDiscovered error: " + status);
-		bluetoothGatt.disconnect();
+		dodisconnect(bluetoothGatt);
 		disconnected(status);
             }
         }
@@ -214,7 +214,7 @@ private	byte[] rdtData;
  	   var message="getsecdata unknown command length=" + value.length;
             Log.e( LOG_ID, message);
 	    setfailure(message);
-	    mBluetoothGatt.disconnect();
+	    dodisconnect(mBluetoothGatt);
             return rdtLength;
         }
         int i2 = value[0] & 0xFF;
@@ -222,7 +222,7 @@ private	byte[] rdtData;
             var message= "getsecdata secu Sequence=" + i2 + "!=" + rdtSequence + "-1 (rdtSequence-1)";
             Log.e( LOG_ID, message);
 	    setfailure(message);
-	    mBluetoothGatt.disconnect();
+	    dodisconnect(mBluetoothGatt);
             return rdtLength;
         }
         info("getsecdata num=" + i2 + " rdtSequence=" + rdtSequence);
@@ -278,13 +278,13 @@ private void challenge67() {
 	if(!java.util.Arrays.equals(r2,backr2)) {
 		Log.i(LOG_ID,"r2!=backr2");
 		//TODO disconnect?
-		mBluetoothGatt.disconnect(); //TODO: or try again?
+		dodisconnect(mBluetoothGatt); //TODO: or try again?
 		return;
 		}
 	var backr1=copyOfRange(decr,16,32);
 	if(!java.util.Arrays.equals(r1,backr1)) {
 		Log.i(LOG_ID,"r1!=backr1");
-		mBluetoothGatt.disconnect(); //TODO: or try again?
+		dodisconnect(mBluetoothGatt); //TODO: or try again?
 		//TODO disconnect?
 		return;
 		}
@@ -303,7 +303,7 @@ private void receivedCHALLENGE_DATA() {
 		case 67: challenge67();break;
 		default: {
 			var message="receivedCHALLENGE_DATA unknown length="+rdtLength;
-		 	mBluetoothGatt.disconnect();
+		 	dodisconnect(mBluetoothGatt);
 			Log.i(LOG_ID,message);
 			setfailure(message);
 			}
@@ -333,7 +333,7 @@ private boolean sendSecurityCommand(byte b) {
 		var message="writeCharacteristic(gattCharCommandResponse) failed "+b;
 		Log.e(LOG_ID, message);
 		setfailure(message);  
-		mBluetoothGatt.disconnect(); //TODO: or try again?
+		dodisconnect(mBluetoothGatt); //TODO: or try again?
 		return false;
 		}
 	return true; 
@@ -359,7 +359,7 @@ private boolean setCertificate65() {
 	var message= "generateKAuth(patchEphemeral) failed";
 	Log.e(LOG_ID, message);
 	setfailure(message);  
-	mBluetoothGatt.disconnect(); 
+	dodisconnect(mBluetoothGatt); 
 	return false;
 	}
 private void receivedCERT_DATA() {
@@ -370,7 +370,7 @@ private void receivedCERT_DATA() {
 			var message="receivedCERT_DATA unknown length="+rdtLength;
 			Log.i(LOG_ID,message);
 			setfailure(message);  
-			mBluetoothGatt.disconnect(); 
+			dodisconnect(mBluetoothGatt); 
 			}
 		};
 	}
@@ -452,7 +452,7 @@ private void onCharacteristicChanged33(BluetoothGatt gatt, BluetoothGattCharacte
                 fast_data(value);
             } else {
                 logcharacter(uuid,"Unknown",value);;
-		 mBluetoothGatt.disconnect();
+		 dodisconnect(mBluetoothGatt);
 		 disconnected(1042);
             }
 	   if(wakelock!=null)
@@ -480,7 +480,7 @@ private	void fast_data(byte[] encryp) {
 	byte[] decr=intDecrypt(cryptptr,5,encryp);
         if (decr == null) {
             info("fast_data decrypt went wrong"); //TODO: DISCONNECT?
-		mBluetoothGatt.disconnect(); 
+		dodisconnect(mBluetoothGatt); 
 
         } else {
             Natives.saveLibre3fastData(sensorptr, decr);
@@ -579,6 +579,10 @@ private void realdisconnected(int status) {
 	connectDevice(0);//TODO:  What if it fails?
 	}
 
+static private final void dodisconnect(BluetoothGatt bluetoothGatt) {
+	Log.e(LOG_ID,"disconnect()");
+	bluetoothGatt.disconnect();
+	}
 private void disconnected(int status) {
 	Log.i(LOG_ID,"disconnected("+status+")");
 //	realdisconnected(status); //TODO remove this
@@ -696,7 +700,7 @@ private    void preparedata(byte[] value) {
                 return;
             }
             info("preparedata unimplemented " + i2);
-	    mBluetoothGatt.disconnect();
+	    dodisconnect(mBluetoothGatt);
 	   disconnected(9788);
             return;
         }
@@ -717,7 +721,7 @@ private    void preparedata(byte[] value) {
 	   //nothing
         } else {
             info("prepare date unknown sig=" + i2 + " num=" + i3);
-	    mBluetoothGatt.disconnect();
+	    dodisconnect(mBluetoothGatt);
 	   disconnected(1023);
             return;
         }
@@ -728,7 +732,7 @@ private    void preparedata(byte[] value) {
   private  int writedata(BluetoothGattCharacteristic bluetoothGattCharacteristic) {
       if(wrtData==null) {
         Log.e(LOG_ID,"writedata wrtData==null"+ bluetoothGattCharacteristic.getUuid().toString());
-	    mBluetoothGatt.disconnect();
+	    dodisconnect(mBluetoothGatt);
 	   disconnected(1099);
        	return 0;
          }
@@ -749,7 +753,7 @@ private    void preparedata(byte[] value) {
 		    return 1;
 	else {
 		Log.e(LOG_ID,"writeCharacteristic(bluetoothGattCharacteristic) failed");
-	    	mBluetoothGatt.disconnect();
+	    	dodisconnect(mBluetoothGatt);
 		return 0; //TODO disconnect?
 		}
         }

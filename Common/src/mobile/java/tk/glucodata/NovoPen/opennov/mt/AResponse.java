@@ -2,6 +2,8 @@ package tk.glucodata.NovoPen.opennov.mt;
 
 import static tk.glucodata.NovoPen.opennov.mt.ApoepElement.APOEP;
 import static tk.glucodata.NovoPen.opennov.mt.ApoepElement.SYS_TYPE_MANAGER;
+import static tk.glucodata.NovoPen.opennov.OpenNov.TAG;
+import tk.glucodata.Log;
 import tk.glucodata.NovoPen.opennov.BaseMessage;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -19,26 +21,11 @@ public class AResponse extends BaseMessage {
     public AResponse() {
     }
 
-    private static Object cloneObject(Object obj) {
-        try {
-            Object clone = obj.getClass().newInstance();
-            for (Field field : obj.getClass().getDeclaredFields()) {
-                if (!Modifier.isFinal(field.getModifiers())) {
-                    field.setAccessible(true);
-                    field.set(clone, field.get(obj));
-                }
-            }
-            return clone;
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return null;
-        }
-    }
 
     public AResponse(final ARequest request) {
         this.result = 3;
         this.protocol = APOEP;
-        this.apoep = (ApoepElement) cloneObject(request.getApoep());
+        this.apoep = new ApoepElement(request.getApoep());
     }
 
     public byte[] encode() {

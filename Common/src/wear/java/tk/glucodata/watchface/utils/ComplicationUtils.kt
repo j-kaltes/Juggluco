@@ -76,10 +76,9 @@ sealed class ComplicationConfig(val id: Int, val supportedTypes: List<Complicati
  object Top : ComplicationConfig(
         TOP_COMPLICATION_ID,
         listOf(
+            ComplicationType.EMPTY,
             ComplicationType.LONG_TEXT,
-            ComplicationType.LIST,
             ComplicationType.PHOTO_IMAGE,
-            ComplicationType.PROTO_LAYOUT,
             ComplicationType.RANGED_VALUE,
             ComplicationType.SMALL_IMAGE,
             ComplicationType.SHORT_TEXT,
@@ -90,26 +89,24 @@ sealed class ComplicationConfig(val id: Int, val supportedTypes: List<Complicati
     object ExtremeRight : ComplicationConfig(
         EXTREMERIGHT_COMPLICATION_ID,
         listOf(
+            ComplicationType.EMPTY,
             ComplicationType.RANGED_VALUE,
             ComplicationType.MONOCHROMATIC_IMAGE,
             ComplicationType.SHORT_TEXT,
             ComplicationType.SMALL_IMAGE,
 	    ComplicationType.LONG_TEXT,
 	    ComplicationType.PHOTO_IMAGE,
-            ComplicationType.PROTO_LAYOUT,
-            ComplicationType.LIST
         )
     )
     @OptIn(ComplicationExperimental::class)
     object Bottom : ComplicationConfig(
         BOTTOM_COMPLICATION_ID,
         listOf(
+            ComplicationType.EMPTY,
             ComplicationType.RANGED_VALUE,
             ComplicationType.MONOCHROMATIC_IMAGE,
             ComplicationType.SMALL_IMAGE,
              ComplicationType.PHOTO_IMAGE,
-            ComplicationType.PROTO_LAYOUT,
-            ComplicationType.LIST,
             ComplicationType.SHORT_TEXT,
             ComplicationType.LONG_TEXT
         )
@@ -119,14 +116,13 @@ sealed class ComplicationConfig(val id: Int, val supportedTypes: List<Complicati
     object Right : ComplicationConfig(
         RIGHT_COMPLICATION_ID,
         listOf(
+            ComplicationType.EMPTY,
             ComplicationType.RANGED_VALUE,
             ComplicationType.SHORT_TEXT,
             ComplicationType.LONG_TEXT,
             ComplicationType.MONOCHROMATIC_IMAGE,
             ComplicationType.SMALL_IMAGE,
             ComplicationType.PHOTO_IMAGE,
-            ComplicationType.PROTO_LAYOUT,
-            ComplicationType.LIST
         )
     )
 

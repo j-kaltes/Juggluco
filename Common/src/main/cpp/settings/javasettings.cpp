@@ -1517,3 +1517,9 @@ extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getRTL)(JNIEnv *env, jclass cl
 	return settings->data()->RTL;
 	}
 
+extern "C" JNIEXPORT void  JNICALL   fromjava(setinterval)(JNIEnv *env, jclass cl,jint val) {
+	settings->data()->nightinterval=val;
+	}
+extern "C" JNIEXPORT jint  JNICALL   fromjava(getinterval)(JNIEnv *env, jclass cl) {
+	return settings->data()->nightinterval;
+	}

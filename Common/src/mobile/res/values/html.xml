@@ -1952,6 +1952,10 @@ chain for the host name used to contact this service.</p>
 select a file containing the private key. See above.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><strong>Full Chain</strong>:
 select a file containing the Full Chain, see above.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>Interval</b>:
+default minimal interval (in seconds) between glucose values. Normally this is
+270 seconds. A request can also change this value by supplying the interval=
+option. See <a href="https://www.juggluco.nl/Juggluco/webserver.html">https://www.juggluco.nl/Juggluco/webserver.html</a></p>
 <p style="line-height: 100%; margin-bottom: 0in"><strong>Local only</strong>:
 the http server can only be accessed with localhost (127.0.0.1). This
 doesn\'t apply to https.</p>
@@ -2176,11 +2180,13 @@ server), see <a href="https://www.juggluco.nl/Juggluco/webserver.html">https://w
 <p>With <b>New amount</b> you can enter numbers associated with an
 arbitrary Label. You can set labels under left menu→Settings→<a href="https://www.juggluco.nl/Jugglucohelp/labelhelp.html">Number
 Labels</a>. The <i>Amounts</i> entered with a particular label will
-be shown at certain hight in the graph determined by the label.</p>
+be shown at certain height in the graph determined by the label.</p>
 <p>You can later change the amount by long pressing it. You can also
 select it from the list of entered amounts under Left middle
 menu→List.</p>
-<p>It is also possible to receive <b>Insulin</b> dose data from <a href="https://www.juggluco.nl/Juggluco/index.html#novopens" onclick="location.href=\'https://www.juggluco.nl/Juggluco/index.html?unit=\'+unitstr+\'#novopens\';return false;" >NovoPen® 6 or NovoPen Echo® Plus</a> by scanning the NFC pen. After scanning
+<p>It is also possible to receive <b>Insulin</b> dose data from
+<a href="https://www.juggluco.nl/Juggluco/index.html#novopens" onclick="location.href=\'https://www.juggluco.nl/Juggluco/index.html?unit=\'+unitstr+\'#novopens\';return false;">NovoPen®
+6 or NovoPen Echo® Plus</a> by scanning the NFC pen. After scanning
 you can change under what label the doses are saved in Juggluco and
 restrict doses to doses from <b>after</b> a certain date and time.
 When hundreds of doses are present in the memory of the pen, it can
@@ -2189,12 +2195,11 @@ Juggluco.</p>
 <p>Under Left menu-&gt;Settings-&gt;<a href="https://www.juggluco.nl/Jugglucohelp/labelhelp.html">Number
 Labels</a> is also specified under which label you enter the
 carbohydrates of a meal. In <i>New amount</i>, a <b>Meal</b> button
-is displayed  for this label. Tapping this <a href="https://www.juggluco.nl/Jugglucohelp/mealhelp.html"><i>Meal</i></a> button brings
-you to to a display
-in which you can specify a meal out of its components. The
-carbohydrates content is then calculated or you can specify the
-carbohydrate content and the needed quantify of one ingredient is
-then calculated.</p>
+is displayed for this label. Tapping this <a href="https://www.juggluco.nl/Jugglucohelp/mealhelp.html"><i>Meal</i></a>
+button brings you to to a display in which you can specify a meal out
+of its components. The carbohydrates content is then calculated or
+you can specify the carbohydrate content and the needed quantify of
+one ingredient is then calculated.</p>
 <p><br/>
 <br/>
 

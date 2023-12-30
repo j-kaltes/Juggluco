@@ -252,6 +252,7 @@ struct Tings {
 	int pensnr;
 	std::array<NovoPen,maxpennr>  pens;
 	ToLibre Nightnums[maxvarnr];
+	int32_t nightinterval;
 	void setdefault() {
 		memcpy(watchid,defaultid,sizeof(watchid));
 		};
@@ -359,6 +360,7 @@ Settings(const char *settingsname,const char *base,const char *country): Mmap(se
 		return;
 		}
 
+	if(data()->initVersion<22) { // set in Applic.initbroadcasts, startjuggluco and initinjuggluco 
 	if(data()->initVersion<20) { // set in Applic.initbroadcasts, startjuggluco and initinjuggluco 
 	if(data()->initVersion<18) { // set in Applic.initbroadcasts, startjuggluco and initinjuggluco 
 	if(data()->initVersion<17) { 
@@ -457,6 +459,8 @@ Settings(const char *settingsname,const char *base,const char *country): Mmap(se
 			 }
 		 } */
 		 data()->librecountry = data()->libreunit;
+		}
+		data()->nightinterval=270;
 		}
 	setconvert(country);
 

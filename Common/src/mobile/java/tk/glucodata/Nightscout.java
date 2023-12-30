@@ -88,6 +88,9 @@ public static void show(MainActivity context,View parent) {
         editkey.setTransformationMethod(new PasswordTransformationMethod());
 	 editkey.setMinEms(12);
 	editkey.setText(key);
+	/*
+	var vis=new ToggleButton(context);
+	vis.setButtonDrawable("@drawable/check");  */
 
        var visible = new CheckBox(context);
        visible.setText(R.string.visible);
@@ -102,6 +105,9 @@ public static void show(MainActivity context,View parent) {
 	var oldport=Natives.getsslport();
   	var portview=getnumedit(context, ""+oldport);
                         
+	 var labinterval=getlabel(context,"Interval");
+	int interval=Natives.getinterval();
+  	var intervalview=getnumedit(context, ""+interval);
    
 	save.setOnClickListener(
 		v -> {
@@ -143,7 +149,20 @@ public static void show(MainActivity context,View parent) {
 			if(Natives.getuseSSL())
 				Natives.setuseSSL(true);
 			}
+
+		 var intervalstr=intervalview.getText().toString();
+		 int intervalnum=0;
+		 try {
+                        intervalnum=Integer.parseInt(intervalstr);
+                        }
+                catch(Throwable e) {
+                        Log.stack(LOG_ID,"parseInt", e);
+			Applic.argToaster(context,intervalstr+" invalid", Toast.LENGTH_LONG);
+			return;
+                        };
+		Natives.setinterval(intervalnum);
 		tk.glucodata.help.hidekeyboard(context);
+		Applic.argToaster(context, R.string.saved,Toast.LENGTH_SHORT);
 		});
 	var chain=getbutton(context,R.string.fullchain);
 	chain.setOnClickListener(
@@ -208,7 +227,7 @@ public static void show(MainActivity context,View parent) {
 			l.setX((width-w)/2);
 		l.setY(0);
 		return new int[] {w,h};
-		},new View[]{secret,editkey},new View[]{visible,labport,portview,save} , new View[]{sslbox,privkey,chain},new View[]{local,httpport,treatments},new View[]{Help,server,Close} );
+		},new View[]{secret,editkey,visible},new View[]{sslbox,labport,portview,save} , new View[]{privkey,chain,labinterval,intervalview},new View[]{local,httpport,treatments},new View[]{Help,server,Close} );
 	treatments.setOnCheckedChangeListener( (buttonView,  isChecked) -> {
 		switch(nochangeamounts[0])  {
 			case 0: {

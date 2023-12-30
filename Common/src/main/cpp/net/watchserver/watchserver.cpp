@@ -327,7 +327,7 @@ void servererror(int sock) {
 
 
 
-static bool	 sgvinterpret(const char *start,int len,bool headonly, recdata *data,bool all=true) ;
+static bool	 sgvinterpret(const char *start,int len,bool headonly, bool gmt,recdata *data,bool all=true) ;
 
 
 static bool givetreatments(const char *args,int argslen, recdata *data) ;
@@ -556,6 +556,13 @@ char * writebucket(char *outiter,const int index,const ScanData *val,const char 
 //https://api/v1/entries/current
 
 extern int Tdatestring(time_t tim,char *buf) ;
+extern int TdatestringGMT(time_t tim,char *buf) ;
+
+static int oneTdatestringGMT(time_t tim,char *buf) {
+        struct tm tmbuf;
+	gmtime_r(&tim, &tmbuf);
+        return sprintf(buf,R"(%04d-%02d-%02dT%02d:%02d:%02d.000Z)",tmbuf.tm_year+1900,tmbuf.tm_mon+1,tmbuf.tm_mday, tmbuf.tm_hour, tmbuf.tm_min,tmbuf.tm_sec);
+        }
 
 //		return givetreatments(outdata);
 bool givenolist(recdata *outdata) {
@@ -608,6 +615,8 @@ char *textitem(char *outiter,const ScanData *value,const char sep=9) {
 static bool showdevicestatus(recdata *outdata) { //seems to be used for battery level. Unimportant.
 	return givenothing(outdata);
 	} */
+
+static bool	 currentjson(recdata *outdata);
 static bool givecurrent(recdata *outdata) {
 	int sensorid=sensors->last();
 	const SensorGlucoseData *sens=getStreamSensor(sensorid);;
@@ -627,20 +636,6 @@ static	constexpr const char header[]="HTTP/1.1 200 OK\r\nContent-Type: text/plai
 		return outofmemory(outdata);
     char *start=outdata->allbuf+152,*outiter=start;
     	outiter=textitem(outiter,value)-2;
-    /*
-	addar(outiter,header);
-	outiter+=sprintf(outiter,"%d\r\n\r\n", (mgdL>99)?(currentlen+1):currentlen); */
-/*
-	auto mgdL=value->getmgdL();
-	time_t tim=value->gettime();
-	const char * changelabel=getdeltaname(value->ch).data();
-//	*outiter++='"';
-//	outiter+=Tdatestring(tim,outiter);
-        struct tm tmbuf;
-	gmtime_r(&tim, &tmbuf);
-        outiter+=sprintf(outiter,R"("%d-%02d-%02dT%02d:%02d:%02d.000Z")",tmbuf.tm_year+1900,tmbuf.tm_mon+1,tmbuf.tm_mday, tmbuf.tm_hour, tmbuf.tm_min,tmbuf.tm_sec);
-	outiter+=sprintf(outiter,R"(	%ld	%d	"%s"	"Juggluco")",tim*1000L,mgdL,changelabel);
-	*/
 	long long len=outiter-start;
 	char lenstr[20];
 	int lenlen=snprintf(lenstr,20,"%lld\r\n\r\n",len);
@@ -742,7 +737,7 @@ char * givebuckets(char *start) {
 	char *outiter=start;
 	const char startbuckets[]=R"("buckets":[)";
 	addar(outiter,startbuckets);
-	int interval=4*61;
+	int interval=settings->data()->nightinterval;
 
 	if(!getitems(outiter,4,0,UINT32_MAX,true,interval,[](char *outiter,int datit, const ScanData *iter,const char *sensorname,const time_t starttime) {
 		return writebucket(outiter,datit,iter,sensorname);
@@ -987,12 +982,12 @@ static bool apiv1(const char *input,int leftlen,bool behead,bool json,recdata *o
 			leftlen-=api.size();
 			std::string_view sgvjson="/sgv.json";
 			if(!memcmp(sgvjson.data(),posptr,sgvjson.size())) {
-				return sgvinterpret(posptr+sgvjson.size(),leftlen-sgvjson.size(),behead,outdata);
+				return sgvinterpret(posptr+sgvjson.size(),leftlen-sgvjson.size(),behead,true,outdata);
 				}
 			else {
 				std::string_view api2=".json";
 				if(!memcmp(api2.data(),posptr,api2.size())) {
-					return sgvinterpret(posptr+api2.size(),leftlen-api2.size(),behead,outdata);
+					return sgvinterpret(posptr+api2.size(),leftlen-api2.size(),behead,true,outdata);
 					}
 				else {
 					const constexpr std::string_view api2="/sgv";
@@ -1011,7 +1006,7 @@ static bool apiv1(const char *input,int leftlen,bool behead,bool json,recdata *o
 
 						if(*posptr==' '||*posptr=='?') {
 							if(json)
-								return sgvinterpret(posptr,leftlen,false,outdata);
+								return sgvinterpret(posptr,leftlen,false,true,outdata);
 							else
 								return givesgvtxt(posptr,leftlen,outdata,9);
 							}
@@ -1021,7 +1016,7 @@ static bool apiv1(const char *input,int leftlen,bool behead,bool json,recdata *o
 					else  {
 						if(*posptr==' '||*posptr=='?') {
 							if(json)
-								return sgvinterpret(posptr,leftlen,false,outdata);
+								return sgvinterpret(posptr,leftlen,false,true,outdata);
 							else
 								return givesgvtxt(posptr,leftlen,outdata,9);
 							}
@@ -1029,8 +1024,13 @@ static bool apiv1(const char *input,int leftlen,bool behead,bool json,recdata *o
 							std::string_view current="/current";
 							const auto cursize= current.size();
 							if(!memcmp(current.data(),posptr,cursize)) {
+								posptr+=cursize;
+								std::string_view json2=".json";
+								if(!memcmp(json2.data(),posptr,json2.size())) 
+									return currentjson(outdata);
+								else 
 									return givecurrent(outdata);
-									}
+								}
 							else {
 
  								wrongpath({input-7,static_cast<size_t>(leftlen+7)}, outdata);
@@ -1402,7 +1402,7 @@ bool watchcommands(char *rbuf,int len,recdata *outdata,bool secure) {
 	LOGGERWEB("toget=%.*s\n",(int)toget.size(),toget.data()); //to set getargs in the beginning and use everywhere
 std::string_view sgv="sgv.json";
 	if(!memcmp(sgv.data(),toget.data(),sgv.size())) {
-		return sgvinterpret(toget.data()+sgv.size(),toget.size()-sgv.size(),behead,outdata,false);
+		return sgvinterpret(toget.data()+sgv.size(),toget.size()-sgv.size(),behead,false,outdata,false);
 		}
 
 ///api/v1/entries.json
@@ -1560,9 +1560,11 @@ void mkjsonheader(char *outstart,char *outiter,const bool headonly,recdata *outd
 class Sgvinterpret {
 	bool briefmode=false,sensorinfo=false,alldata=false,noempty=false;
   public:
-	Sgvinterpret(bool all=true): alldata(all) {}
-	int datnr=24;
-	int interval=270;
+	Sgvinterpret(bool all=true,bool gmt=true,int datnr=24): alldata(all),gmt(gmt),datnr(datnr) {}
+
+	int interval=settings->data()->nightinterval;
+	bool gmt;
+	int datnr;
 	uint32_t lowerend=0,higherend=INT32_MAX;
 	const char *event=nullptr;
 	bool carb=false;
@@ -1573,7 +1575,7 @@ class Sgvinterpret {
 
 	char *makedata(recdata *outdata ) const;
 private:
-	static char *dontbrief(char *outiter,const char *name,const ScanData *iter) ;
+	char *dontbrief(char *outiter,const char *name,const ScanData *iter) const ;
 	char *firstdata(char *outiter,time_t starttime,uint32_t dattime) const ;
 	char *writeitem(char *outiter,int datit, const ScanData *iter,const char *sensorname,const time_t starttime) const;
 	//void mkjsonheader(char *outstart,char *outiter,const bool headonly,recdata *outdata) const;
@@ -1635,10 +1637,10 @@ char *Sgvinterpret::makedata(recdata *outdata ) const {
 		return nullptr;
 	return output+152;
 	}
-char *Sgvinterpret::dontbrief(char *outiter,const char *name,const ScanData *iter) {
+char *Sgvinterpret::dontbrief(char *outiter,const char *name,const ScanData *iter) const {
 	outiter+=sprintf(outiter,R"("_id":"%s#%d","device":"Juggluco","dateString":")", name,iter->id);
 	const char *startdate=outiter;
-	int len=Tdatestring(iter->t,outiter);
+	int len=(gmt?oneTdatestringGMT:Tdatestring)(iter->t,outiter);
 	outiter+=len;
 	std::string_view st= R"(","sysTime":")";
 	memcpy(outiter,st.data(),st.size());
@@ -1732,7 +1734,7 @@ static char *writetreatment(char *outiter,const int numbase,const int pos,const 
 	const time_t tim=num->gettime();
         struct tm tmbuf;
         gmtime_r(&tim, &tmbuf);
-	outiter+=sprintf(outiter,R"({"_id":"num%d#%d","eventType":"<none>","insulinInjections":"[]","enteredBy":"Juggluco","created_at":"%d-%02d-%02dT%02d:%02d:%02d.000Z",)",numbase,pos,tmbuf.tm_year+1900,tmbuf.tm_mon+1,tmbuf.tm_mday, tmbuf.tm_hour, tmbuf.tm_min,tmbuf.tm_sec);
+	outiter+=sprintf(outiter,R"({"_id":"num%d#%d","eventType":"<none>","insulinInjections":"[]","enteredBy":"Juggluco","created_at":"%04d-%02d-%02dT%02d:%02d:%02d.000Z",)",numbase,pos,tmbuf.tm_year+1900,tmbuf.tm_mon+1,tmbuf.tm_mday, tmbuf.tm_hour, tmbuf.tm_min,tmbuf.tm_sec);
 
 	float w=0.0f;
 	 if((w=longNightWeight(type))!=0.0f) {
@@ -2086,8 +2088,13 @@ int rewriteperc(char *start,int len) {
 		return false;
 	return true;
 	};
-static bool	 sgvinterpret(const char *start,int len,bool headonly,recdata *outdata,bool all) {
-	Sgvinterpret pret(all);
+
+static bool	 currentjson(recdata *outdata) {
+	Sgvinterpret pret(true,true,1);
+	return pret.getdata(false,outdata);
+	}
+static bool	 sgvinterpret(const char *start,int len,bool headonly,bool gmt,recdata *outdata,bool all) {
+	Sgvinterpret pret(all,gmt);
 	if(!pret.getargs(start,len)) {
 
 		wrongpath({start,(size_t)len},outdata);

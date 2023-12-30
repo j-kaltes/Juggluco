@@ -71,4 +71,17 @@ public class ApoepElement extends BaseMessage {
         this.olistCount = olistCount;
         this.olistLen = olistLen;
     }
+    public ApoepElement(ApoepElement orig) {
+        this.version =orig.version;
+        this.encoding =orig.encoding;
+        this.nomenclature =orig.nomenclature;
+        this.functional =orig.functional;
+        this.systemType =orig.systemType;
+        this.systemId =orig.systemId;
+        this.configId =orig.configId;
+        this.recMode =orig.recMode;
+        this.olistCount =orig.olistCount;
+        this.olistLen =orig.olistLen;
+
+    }
 }

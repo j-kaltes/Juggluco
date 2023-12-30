@@ -9,6 +9,8 @@ import static tk.glucodata.NovoPen.opennov.mt.Apdu.ApduType.RlrqApdu;
 import static tk.glucodata.NovoPen.opennov.mt.EventReport.MDC_NOTI_CONFIG;
 import static tk.glucodata.NovoPen.opennov.mt.EventReport.MDC_NOTI_SEGMENT_DATA;
 import static tk.glucodata.Log.showbytes;
+
+import tk.glucodata.Log;
 import tk.glucodata.NovoPen.opennov.HexDump;
 import tk.glucodata.NovoPen.opennov.mt.ARequest;
 import tk.glucodata.NovoPen.opennov.mt.AResponse;
@@ -29,6 +31,7 @@ import java.nio.ByteBuffer;
  * OpenNov message processing
  */
 public class Message extends BaseMessage {
+private final static String LOG_ID="OpenNovMessage";
     private static final int EVENT_REPORT_CHOSEN = 256;
     private static final int CONFIRMED_EVENT_REPORT_CHOSEN = 257;
     private static final int SCONFIRMED_EVENT_REPORT_CHOSEN = 513;
@@ -159,7 +162,9 @@ public class Message extends BaseMessage {
     }
 
     public byte[] getAResponse() {
+    	Log.i(LOG_ID,"getAResponse()");
         var apdu = Apdu.builder().at(Apdu.ApduType.AareApdu).choicePayload(new AResponse(context.aRequest).encode()).build();
+    	Log.i(LOG_ID,"getAResponse() return");
         return apdu.encode();
     }
 
