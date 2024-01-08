@@ -37,9 +37,13 @@ import tk.glucodata.R;
 import static android.os.Build.VERSION.RELEASE;
 import static java.lang.System.exit;
 import static tk.glucodata.Applic.isWearable;
+import static tk.glucodata.Log.doLog;
 import static tk.glucodata.Natives.setDevice;
 import static tk.glucodata.Natives.startmeals;
 import static tk.glucodata.Natives.startsensors;
+
+import android.os.Build;
+import android.text.format.DateFormat;
 
 
 public class numio   {
@@ -102,7 +106,7 @@ if(true) {
 		}
 	int ret=130;
 	final String nativedir=con.getApplicationInfo().nativeLibraryDir;
-        Natives.setlocale(locstr,(tk.glucodata.Applic.hour24=android.text.format.DateFormat.is24HourFormat(con)));
+        Natives.setlocale(locstr,(Applic.hour24= DateFormat.is24HourFormat(con)));
 	switch (ret=Natives.setfilesdir(filespath, country,nativedir)) {
 		case 1:
 			settingsnull();
@@ -154,12 +158,36 @@ if(true) {
 		default:
 	}
 
-	 final String version= BuildConfig.VERSION_CODE+" "+ BuildConfig.VERSION_NAME +" "+ BuildConfig.BUILD_TIME+"\n";
+	if(doLog) {
+		var build=new StringBuilder();
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+			build.append("\nVERSION.BASE_OS: "+ Build.VERSION.BASE_OS);
+			}
+		build.append("\nVERSION.RELEASE: "+ RELEASE+"\n"+
+		"VERSION.SDK_INT: "+ Build.VERSION.SDK_INT+"\n"+
+		"BRAND: "+ Build.BRAND+"\n"+
+		"CPU_ABI2: "+ Build.CPU_ABI2+"\n"+
+		"CPU_ABI: "+ Build.CPU_ABI+"\n"+
+		"DEVICE: "+ Build.DEVICE+"\n"+
+		"FINGERPRINT: "+ Build.FINGERPRINT+"\n"+
+		"MANUFACTURER: "+ Build.MANUFACTURER+"\n"+
+		"MODEL: "+ Build.MODEL);
 
-        Log.i(LOG_ID,version+locstr+" "+country+" nativeDir="+nativedir);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			build.append("\nSUPPORTED_ABIS: ");
+			for(var ap: Build.SUPPORTED_ABIS) {
+				build.append(ap);
+				build.append(", ");
+				}
+		}
+	build.append('\n');
+		Natives.log(build.toString());
+		 final String version= BuildConfig.VERSION_CODE+" "+ BuildConfig.VERSION_NAME +" "+ BuildConfig.BUILD_TIME+"\n";
+		Log.i(LOG_ID,version+locstr+" "+country+" nativeDir="+nativedir);
+		}
 
 	if(!isWearable)
-		setDevice(android.os.Build.MANUFACTURER, android.os.Build.MODEL, RELEASE);
+		setDevice(Build.MANUFACTURER, Build.MODEL, RELEASE);
 
  	startsensors( );
 	startmeals();

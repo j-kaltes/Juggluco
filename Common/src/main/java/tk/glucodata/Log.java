@@ -23,7 +23,7 @@ package tk.glucodata;
 
 import static tk.glucodata.Applic.usedlocale;
 public class Log {
-static final boolean doLog=BuildConfig.doLog==1;
+public static final boolean doLog=BuildConfig.doLog==1;
 static final private String LOG_ID="Log";
 private static void log(String type,String one,String two) {
    	if(!Applic.Nativesloaded)  {

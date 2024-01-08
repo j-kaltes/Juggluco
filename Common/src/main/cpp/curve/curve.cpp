@@ -1021,15 +1021,7 @@ template <class TX,class TY> void histcurve(NVGcontext* genVG,const SensorGlucos
 	}
 
 
-static uint32_t getnumlasttime() {
-	uint32_t last=0u;
-	for(auto el:numdatas)  {
-		auto mog=el->getlasttime();
-		if(mog>last)
-			last=mog;	
-		}
-	return last;
-	}
+extern uint32_t getnumlasttime();
 uint32_t maxstarttime() ;
 uint32_t maxtime() {
 	const uint32_t numt=getnumlasttime();
@@ -4427,6 +4419,7 @@ int64_t openNums(std::string_view numpath,int64_t ident) {
 		numdatas.push_back(numdata);
 		if(ident==0LL)
 			newhit.numdisplay=numdata;
+		
 		}
 	
 	LOGGER("numdir=%s ptr=%p\n",numpath.data(),numdata);

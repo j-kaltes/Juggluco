@@ -576,7 +576,7 @@ static void	defineingredient(MainActivity act ,IngredientViewAdapter  foodadapt,
 	EditText unit=new EditText(act);
         unit.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
         unit.setImeOptions(editoptions);
-        unit.setMinEms(6);
+        unit.setMinEms(4);
 	TextView carblabel=getlabel(act,R.string.carbperunit);
 	EditText carb=new EditText(act);
 	carb.setMinEms(5);
@@ -641,7 +641,7 @@ static void	defineingredient(MainActivity act ,IngredientViewAdapter  foodadapt,
 			l.setX(0);
 		l.setY(0);
 		return new int[]{w,h};
-		},new View[]{namelabel,name},new View[] {unitlabel,unit,spinner},new View[]{carblabel,carb},new View[] {Cancel,Database,Delete,Save});
+		},new View[]{namelabel,name,unitlabel,unit,spinner},new View[]{Database,carblabel,carb},new View[] {Cancel,Delete,Save});
 
 	   int pad=(int)(tk.glucodata.GlucoseCurve.metrics.density*5.0);
 	   lay.setPadding(pad,0,pad,pad/2);

@@ -24,6 +24,19 @@
 std::vector<Numdata*> numdatas;
 
 #include "net/passhost.h"
+
+extern void makenightswitch();
+void makenightswitch() {
+	if(settings->data()->initVersion<23) {
+		LOGAR("makenightswitch");
+		settings->data()->postTreatments=false;
+		for(auto *num:numdatas) {
+			num->getnightSwitch() =num->getlastpos();
+			}
+		settings->data()->initVersion=23;
+		}
+	}
+
 //bool update(int sock,int &len, struct numspan *ch) 
 int updatenums(crypt_t*pass,int sock,struct changednums *nums,int ind) {
 	int ret=0;
@@ -85,6 +98,15 @@ int sendlastnum(const int dbase) {
 	return numdatas[dbase]->getlastpos();
 	}
 
+uint32_t getnumlasttime() {
+	uint32_t last=0u;
+	for(auto el:numdatas)  {
+		auto mog=el->getlasttime();
+		if(mog>last)
+			last=mog;	
+		}
+	return last;
+	}
 
 #ifdef LIBRENUMBERS
 extern pathconcat numbasedir;

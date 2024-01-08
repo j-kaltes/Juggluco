@@ -953,11 +953,19 @@ extern "C" JNIEXPORT jfloat  JNICALL   fromjava(getlibrefoodweight)(JNIEnv *env,
 		}
 	return (night?settings->data()->Nightnums:settings->data()->librenums)[index].weight;
 	}
+
 extern "C" JNIEXPORT void  JNICALL   fromjava(setsaytreatments)(JNIEnv *env, jclass cl,jboolean val) {
 	settings->data()->saytreatments=val;
 	}
 extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getsaytreatments)(JNIEnv *env, jclass cl) {
 	return settings->data()->saytreatments;
+	}
+
+extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getpostTreatments)(JNIEnv *env, jclass cl) {
+	return settings->data()->postTreatments;
+	}
+extern "C" JNIEXPORT void  JNICALL   fromjava(setpostTreatments)(JNIEnv *env, jclass cl,jboolean val) {
+	settings->data()->postTreatments=val;
 	}
 
 extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getSendNumbers)(JNIEnv *env, jclass cl) {
@@ -1069,7 +1077,9 @@ extern "C" JNIEXPORT jint  JNICALL   fromjava(getinitVersion)(JNIEnv *env, jclas
 extern "C" JNIEXPORT void  JNICALL   fromjava(setfloatglucose)(JNIEnv *env, jclass cl,jboolean val) {
 	settings->data()->floatglucose=val;
 	}
+extern void	makenightswitch();
 extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getfloatglucose)(JNIEnv *env, jclass cl) {
+	makenightswitch(); //Something after everything
 	return settings->data()->floatglucose;
 	}
 

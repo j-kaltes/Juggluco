@@ -227,7 +227,8 @@ public static void show(MainActivity context,View parent) {
 			l.setX((width-w)/2);
 		l.setY(0);
 		return new int[] {w,h};
-		},new View[]{secret,editkey,visible},new View[]{sslbox,labport,portview,save} , new View[]{privkey,chain,labinterval,intervalview},new View[]{local,httpport,treatments},new View[]{Help,server,Close} );
+//		},new View[]{secret,editkey,visible},new View[]{sslbox,labport,portview,save} , new View[]{privkey,chain,labinterval,intervalview},new View[]{local,httpport,treatments},new View[]{Help,server,Close} );
+		},new View[]{secret,editkey,visible},new View[]{labport,portview,labinterval,intervalview} , new View[]{sslbox,privkey,chain,save},new View[]{local,httpport,treatments},new View[]{Help,server,Close} );
 	treatments.setOnCheckedChangeListener( (buttonView,  isChecked) -> {
 		switch(nochangeamounts[0])  {
 			case 0: {
@@ -264,8 +265,18 @@ public static void show(MainActivity context,View parent) {
 				Log.stack(LOG_ID,"parseInt", e);
 				};
 			if(portnum== Natives.getsslport()) {
-				okproc.run();
-				return;
+				 var intervalstr=intervalview.getText().toString();
+				 int intervalnum=0;
+				 try {
+					intervalnum=Integer.parseInt(intervalstr);
+					}
+				catch(Throwable e) {
+					Log.stack(LOG_ID,"parseInt", e);
+					};
+				if(intervalnum==Natives.getinterval())  {
+					okproc.run();
+					return;
+					}
 				}
 			}
 		Confirm.ask(context,context.getString(R.string.withoutsaving),"",okproc);

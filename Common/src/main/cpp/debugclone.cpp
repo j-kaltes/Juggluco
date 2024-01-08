@@ -1077,10 +1077,12 @@ thedebugger(){
 	}
 
 };
+/*
 void logfiles(decltype(hieraccess) fil) {
 	for(auto el:fil) 
 		LOGGER("%s\n",el.data());
 	}
+	*/
 #ifndef USEDIN
 Readall<int> reusestat;
 Readall<int> reuseopen;

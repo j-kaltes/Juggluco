@@ -1307,11 +1307,11 @@ onderkant van de grafiek.</p>
 ontvangen (stream) glucose waarde kan gebruikt worden om een alarm af
 te laten gaan.</p>
 <h2 class="western">Laag glucose alarm</h2>
-<p style="line-height: 100%; margin-bottom: 0in">Waarde waar onder
-het alarm af moet gaan.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Waarde waarbij en
+waaronder het alarm af moet gaan.</p>
 <h2 class="western">Hoog glucose alarm</h2>
-<p style="line-height: 100%; margin-bottom: 0in">Waarde waar boven
-het alarm af moet gaan.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Waarde waarbij
+waarboven het alarm af moet gaan.</p>
 <h2 class="western">Signaal verlies alarm</h2>
 <p style="line-height: 100%; margin-bottom: 0in">Geef aan na hoeveel
 minuten geen glucose waarde via Bluetooth ontvangen moet zijn,
@@ -1331,14 +1331,14 @@ een van het volgende:</p>
 </ul>
 <h2 class="western">Waarde aanwezig melding</h2>
 <p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
-Soms werkt de sensor niet. Als deze optie aanstaat, krijg je een melding
-als de sensor weer werkt, maar pas als je hebt gezien dat de waarde
-ontbreekt in de Juggluco-app zelf. Als je alleen weet dat de waarde
-ontbrak vanwege de melding van Juggluco of de wijzerplaat, wordt de
-waarde aanwezig melding niet opgeroepen.</p>
+Soms werkt de sensor niet. Als deze optie aanstaat, krijg je een
+melding als de sensor weer werkt, maar pas als je hebt gezien dat de
+waarde ontbreekt in de Juggluco-app zelf. Als je alleen weet dat de
+waarde ontbrak vanwege de melding van Juggluco of de wijzerplaat,
+wordt de waarde aanwezig melding niet opgeroepen.</p>
 <p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
-Voor elk alarm kun je aangeven welke beltoon moet worden afgespeeld en
-voor hoe lang.</p>
+Voor elk alarm kun je aangeven welke beltoon moet worden afgespeeld
+en voor hoe lang.</p>
 <h2 class="western">Alarm is alarm:</h2>
 <p style="line-height: 100%; margin-bottom: 0in">Indien ingesteld,
 krijgt de beltoon afgespeeld voor laag, hoog en verlies van
@@ -1827,10 +1827,10 @@ Juggluco een geverifieerde SSL-sleutel heeft voor de domeinnaam die
 wordt gebruikt om toegang te krijgen tot Juggluco. Als je</span>
 <span lang="nl-NL">externe IP een bijbehorende hostnaam heeft, kan</span>
 <span lang="nl-NL">je</span> <span lang="nl-NL">gratis een
-certificaat krijgen via <a href="https://certbot.eff.org/instructions">Certbot</a>
-of <a href="https://www.sslforfree.com/">ZeroSSL</a> . Je</span> <span lang="nl-NL">kunt
-er geen gebruik van maken als je</span> <span lang="nl-NL">externe IP
-geen hostnaam heeft. Je</span> <span lang="nl-NL">kan</span> <span lang="nl-NL">een
+certificaat krijgen via <a href="https://certbot.eff.org/instructions">Certbot</a>.</span>
+<span lang="nl-NL">Je</span> <span lang="nl-NL">kunt er geen gebruik
+van maken als je</span> <span lang="nl-NL">externe IP geen hostnaam
+heeft. Je</span> <span lang="nl-NL">kan</span> <span lang="nl-NL">een
 gratis domeinnaam krijgen van <a href="https://www.freenom.com/">https://www.freenom.com</a>
 . Ik heb het geprobeerd, maar binnen een paar weken zonder enige
 kennisgeving namen ze het domein gewoon van me af en toen ik het
@@ -1845,23 +1845,13 @@ geven. De private key kan worden ingelezen door op &quot;</span><em><span lang="
 Key</span></em><span lang="nl-NL">&quot; te drukken, de Full Chain
 door op &quot;</span><em><span lang="nl-NL">Full Chain</span></em><span lang="nl-NL">&quot;
 te drukken.</span></p>
-<p style="line-height: 100%; margin-bottom: 0in">Van ZeroSSL.com
-ontving ik drie bestanden: private.key, certificate.crt en
-ca_bundle.crt.</p>
-<p style="line-height: 100%; margin-bottom: 0in"><span lang="nl-NL">private.key
-is de private sleutel, die je</span> <span lang="nl-NL">aan Juggluco
-moet geven door op &quot;</span><em><span lang="nl-NL">Private Key</span></em><span lang="nl-NL">&quot;
-te drukken.</span></p>
-<p style="line-height: 100%; margin-bottom: 0in">Om de <i>Full Chain</i>
-te maken, moet je certificate.crt en ca_bundle.crt samenvoegen.</p>
-<p style="line-height: 100%; margin-bottom: 0in">Linux:</p>
-<pre style="margin-bottom: 0.2in">cat certificate.crt ca_bundle.crt &gt; fullchain.pem</pre><p style="line-height: 100%; margin-bottom: 0in">
-Windows cmd.com:</p>
-<pre style="margin-bottom: 0.2in">copy certificate.crt + ca_bundle.crt fullchain.pem</pre><p style="line-height: 100%; margin-bottom: 0in">
-Windows PowerShell:</p>
-<pre style="margin-bottom: 0.2in">gc certificate.crt,ca_bundle.crt -Encoding Byte -Read 512 | sc fullchain.pem -Encoding Byte</pre><p style="line-height: 100%; margin-bottom: 0in">
-<span lang="nl-NL">Nadat ik Certbot had gebruikt, vond ik de private
-key</span> <span lang="nl-NL">in
+<p style="line-height: 100%; margin-bottom: 0in">Nadat je Certbot
+hebt geïnstalleerd en poort 80 (http) van je modem naar je computer
+hebt omgeleid, kunt je eenvoudigweg het volgende commando uitvoeren:</p>
+<pre style="margin-bottom: 0.2in">certbot certonly --standalone --preferred-challenges http -d <i>mijnhostnaam</i></pre><p style="line-height: 100%; margin-bottom: 0in">
+Zie <a href="https://devpress.csdn.net/linux/62e7999e907d7d59d1c8cfd0.html">https://devpress.csdn.net/linux/62e7999e907d7d59d1c8cfd0.html</a> .</p>
+<p style="line-height: 100%; margin-bottom: 0in"><span lang="nl-NL">Nadat
+ik Certbot had gebruikt, vond ik de private key</span> <span lang="nl-NL">in
 /etc/letsencrypt/live/myhostname/privkey.pem</span> <span lang="nl-NL">en
 de</span> <span lang="nl-NL">Full Chain</span> <span lang="nl-NL">in
 /etc/letsencrypt/live/mijnhostnaam/fullchain.pem. &quot;</span><span lang="nl-NL"><i>mijn</i></span><em><span lang="nl-NL"><i>hostnaam</i></span></em><span lang="nl-NL">&quot;
@@ -2041,14 +2031,10 @@ Juggluco,zie <a href="https://www.juggluco.nl/Juggluco/webserver.html">https://w
 <![CDATA[
 <p>Uploaden naar een Nightscout-server. 
 </p>
-<p>In de meeste gevallen kun je ook de webserver in Juggluco of
-<a href="https://www.juggluco.nl/Juggluco/cmdline">juggluco-server</a>
+<p><span lang="nl-NL">In de meeste gevallen kun je ook de <a href="https://www.juggluco.nl/Jugglucohelp/nl/Nightscouthelp.html">webserver
+in Juggluco</a> of <a href="https://www.juggluco.nl/Juggluco/cmdline">juggluco-server</a>
 gebruiken. Alleen AAPS en NSclient weigeren te werken zonder
-verbinding met <a href="https://github.com/nightscout/cgm-remote-monitor">cgm-remote-monitor</a>.
-De webserver in Juggluco geeft ook hoeveelheden door in de vorm van
-Nightscout behandelingen (
-<a href="https://www.juggluco.nl/Juggluco/webserver.html">https://www.juggluco.nl/Juggluco/webserver.html</a>
-), de uploader uploadt alleen glucose waarden.</p>
+verbinding met <a href="https://github.com/nightscout/cgm-remote-monitor">cgm-remote-monitor</a>.</span></p>
 <p>Alle streamwaarden worden geüpload naar de Nightscout-server op
 het moment dat ze binnenkomen. Bij gebruik van meerdere sensoren
 worden alle waarden van alle sensoren geüpload. Sommige Garmin
@@ -2062,6 +2048,20 @@ wanneer &quot;interval=secs&quot; is ingesteld op een lagere waarde.</p>
 https://hostnaam:poort, bijvoorbeeld
 https://mijnnaam.herokuapp.com:6789</p>
 <p><b>Actief</b> : Zet de server aan</p>
+<p><span lang="nl-NL"><b>Geef hoeveelheden</b></span><span lang="nl-NL">:
+Stuur ook hoeveelheden als behandelingen naar Nightscout. Als je het
+selectievakje aanraakt, kom je in een dialoogvenster waarin je voor
+elk label kunt opgeven wat het in Nightscout betekent. Deze
+specificaties worden gedeeld met de webserver in Juggluco (
+<a href="https://www.juggluco.nl/Jugglucohelp/nl/Nightscouthelp.html">linkermenu
+→ Instellingen → Webserver</a> ). Pas als alle labels zijn
+afgehandeld, kunt je “Geef hoeveelheden” aanvinken. Als je later
+een nieuw label toevoegt, moet je er zelf aan denken te specificeren
+wat er mee moet gebeuren. Vanwege een bug in <a href="https://github.com/nightscout/cgm-remote-monitor">Nightscout</a>
+worden invoegingen </span><span lang="nl-NL">op eerdere tijdstippen</span><span lang="nl-NL">
+of verwijderingen pas getoond nadat items met een nieuwe tijd zijn
+toegevoegd. Dit betekent dat het beter is om minder vaak naar
+Nightscout te sturen.</span></p>
 <p><b>Herzend data</b>: Upload alle gegevens opnieuw naar de
 Nightscout-server</p>
 <p><b>Zend nu</b> : Normaal gesproken worden gegevens direct

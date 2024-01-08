@@ -310,13 +310,17 @@ bool securewatchcommands(SSL *ssl) {
 	if(sslstopconnection)
 		return false;
 bool watchcommands(char *rbuf,int len,recdata *outdata,bool secure) ;
+/*
 	if(!watchcommands(rbuf, len,&outdata,true) ) {
 		sslservererror(ssl);
 		return false;
 		}
 	return SSL_writeptr(ssl,outdata.data(),outdata.size())&&!sslstopconnection;
-;
-	}
+; */
+	bool res=watchcommands(rbuf, len,&outdata,true);
+	bool res2= SSL_writeptr(ssl,outdata.data(),outdata.size());
+	return res&&res2&&!sslstopconnection;
+	} 
 
 static SSL_CTX *globalctx=nullptr;
 

@@ -106,7 +106,7 @@ struct Tings {
 	bool xinfuus:1;
 	bool levelleft:1;
 	bool nolog:1;
-	bool reservedpath:1; 
+	bool postTreatments:1; 
 	bool usegarmin:1;
 	bool usexdripwebserver:1;
 	bool useWearos:1;

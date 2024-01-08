@@ -4,14 +4,12 @@
 <p>Auf einen Nightscout-Server
 hochladen. 
 </p>
-<p>In den meisten Fällen können Sie auch den Webserver in Juggluco
-oder <a href="https://www.juggluco.nl/Juggluco/cmdline">juggluco-server</a>
+<p><span lang="de-DE">In den meisten Fällen können Sie auch den
+<a href="https://www.juggluco.nl/Jugglucohelp/de/Nightscouthelp.html">Webserver
+in Juggluco</a> oder <a href="https://www.juggluco.nl/Juggluco/cmdline">juggluco-server</a>
 verwenden. Nur AAPS und NSclient verweigern die Arbeit, wenn
 <a href="https://github.com/nightscout/cgm-remote-monitor">cgm-remote-monitor</a>
-nicht verbunden ist. Der Webserver in Juggluco gibt auch Mengen in
-Form von Nightscout-Behandlungen aus (
-<a href="https://www.juggluco.nl/Juggluco/webserver.html">https://www.juggluco.nl/Juggluco/webserver.html</a>),
-der Uploader lädt nur Glukosewerte hoch.</p>
+nicht verbunden ist.</span></p>
 <p>Alle Stream-Werte werden im Moment ihres Eintreffens auf den
 Nightscout-Server hochgeladen. Wenn mehrere Sensoren verwendet
 werden, werden alle Werte aller Sensoren hochgeladen. Einige Garmin
@@ -24,6 +22,19 @@ auf einen niedrigeren Wert eingestellt ist.</p>
 <p><b>URL</b> : Die URL sollte die Form https://hostname:port haben,
 z. B. https://myname.herokuapp.com:6789</p>
 <p><b>Aktiv</b> : Server einschalten</p>
+<p><span lang="de-DE"><b>Mengen</b></span><span lang="de-DE"> </span><span lang="de-DE"><b>geben</b></span><span lang="de-DE">:
+Auch Mengen als Behandlungen an Nightscout senden. Durch Berühren
+der Checkbox gelangen Sie zu einem Dialog, in dem Sie für jedes
+Label festlegen können, was es in Nightscout bedeutet. Diese
+Spezifikationen werden mit dem Webserver in Juggluco geteilt ( <a href="https://www.juggluco.nl/Jugglucohelp/de/Nightscouthelp.html">Linkes
+Menü→Einstellungen→Webserver</a> ). Erst wenn alle Labels
+verarbeitet sind, können Sie „ </span><span lang="de-DE"><i>Mengen
+geben</i></span><span lang="de-DE">“ ankreuzen. Wenn Sie später
+ein neues Etikett hinzufügen, müssen Sie selbst festlegen, was
+damit geschehen soll. Aufgrund eines Fehlers in <a href="https://github.com/nightscout/cgm-remote-monitor">Nightscout</a>
+werden Einfügungen zu älteren Zeiträumen oder Löschungen erst
+angezeigt, nachdem Elemente mit einer neuen Zeit hinzugefügt wurden.
+Das bedeutet, dass es besser ist, seltener an Nightscout zu senden.</span></p>
 <p><b>Daten erneut senden</b>: Laden Sie alle Daten erneut auf den
 Nightscout-Server hoch</p>
 <p><b>Jetzt senden</b>: Normalerweise werden Daten sofort gesendet,
@@ -80,9 +91,8 @@ Juggluco über einen authentifizierten SSL-Schlüssel für den
 Domänennamen verfügt, der für den Zugriff auf Juggluco verwendet
 wird. Wenn Ihre externe IP einen zugehörigen Hostnamen hat, können
 Sie ein Zertifikat kostenlos über <a href="https://certbot.eff.org/instructions">Certbot</a>
-oder <a href="https://www.sslforfree.com/">ZeroSSL</a> erhalten. Sie
-können es nicht verwenden, wenn Ihre externe IP keinen Hostnamen
-hat. Sie können einen kostenlosen Domainnamen von
+erhalten. Sie können es nicht verwenden, wenn Ihre externe IP keinen
+Hostnamen hat. Sie können einen kostenlosen Domainnamen von
 <a href="https://www.freenom.com/">https://www.freenom.com</a>
 erhalten. Ich habe es versucht, aber innerhalb von ein paar Wochen
 haben sie mir ohne jede Benachrichtigung einfach die Domain
@@ -95,24 +105,14 @@ müssen Sie diese an Juggluco weitergeben. Der Private Key kann durch
 Drücken von „</span><strong><span lang="de-DE"><i><span style="font-weight: normal">Privater
 Schlüssel</span></i></span></strong>“ <span lang="de-DE">eingelesen
 werden, die Full Chain durch Drücken von „</span><em><span lang="de-DE">Full
-Chain</span></em>“<span lang="de-DE">.</span></p>
-<p style="line-height: 100%; margin-bottom: 0in">Von ZeroSSL.com habe
-ich drei Dateien erhalten: private.key, certificate.crt und
-ca_bundle.crt.</p>
-<p style="line-height: 100%; margin-bottom: 0in"><span lang="de-DE">private.key
-ist der private Schlüssel, den Sie Juggluco geben müssen, indem Sie
-auf &quot;</span><strong><span lang="de-DE"><i><span style="font-weight: normal">Privater
-Schlüssel</span></i></span></strong><span lang="de-DE">&quot;
-drücken.</span></p>
-<p style="line-height: 100%; margin-bottom: 0in">Um die vollständige
-Kette zu erstellen, müssen Sie certificate.crt und ca_bundle.crt
-verketten.</p>
-<p style="line-height: 100%; margin-bottom: 0in">Linux:</p>
-<pre style="margin-bottom: 0.2in">cat certificate.crt ca_bundle.crt &gt; fullchain.pem</pre><p style="line-height: 100%; margin-bottom: 0in">
-Windows-cmd.com:</p>
-<pre style="margin-bottom: 0.2in">copy certificate.crt + ca_bundle.crt fullchain.pem</pre><p style="line-height: 100%; margin-bottom: 0in">
-Windows-Powershell:</p>
-<pre style="margin-bottom: 0.2in">gc certificate.crt,ca_bundle.crt -Encoding Byte -Read 512 | sc fullchain.pem -Encoding Byte</pre><p style="line-height: 100%; margin-bottom: 0in">
+Chain</span></em>“<span lang="de-DE">. </span>
+</p>
+<p style="line-height: 100%; margin-bottom: 0in">Nachdem Sie Certbot
+installiert und Port 80 (http) von Ihrem Modem auf Ihren Computer
+umgeleitet haben, können Sie einfach Folgendes drücken:</p>
+<pre style="margin-bottom: 0.2in">certbot certonly --standalone --preferred-challenges http -d <i>myhostname</i></pre>
+<p>Siehe <a href="https://devpress.csdn.net/linux/62e7999e907d7d59d1c8cfd0.html">https://devpress.csdn.net/linux/62e7999e907d7d59d1c8cfd0.html</a> . </p>
+<p style="line-height: 100%; margin-bottom: 0in">
 <span lang="de-DE">Nachdem ich Certbot verwendet hatte, fand ich den
 privaten Schlüssel in /etc/letsencrypt/live/myhostname/privkey.pem</span>
 <span lang="de-DE">und die vollständige Kette in
@@ -190,8 +190,9 @@ Chain</span></strong><span lang="de-DE">: Wählen Sie eine Datei aus,
 die die vollständige Kette enthält, siehe oben.</span></p>
 <p style="line-height: 100%; margin-bottom: 0in"><span style="font-variant: normal"><font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: normal"><span style="font-style: normal"><b>Interval</b></span></span></font></font></font></span><span style="font-variant: normal"><font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">:
 Standardmäßiges minimales Intervall (in Sekunden) zwischen
-Glukosewerten. Normalerweise ist dieser 270 </span></span></span></font></font></font></span><span style="font-variant: normal"><font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">Sekunden.</span></span></span></font></font></font></span><span style="font-variant: normal"><font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">
-Eine Anfrage kann diesen Wert auch ändern, indem sie die Option
+Glukosewerten. Normalerweise ist dieser 270 Sekunden.</span></span></span></font></font></font></span><span style="font-variant: normal"><font color="#000000"><span style="letter-spacing: normal">
+</span></font></span><span style="font-variant: normal"><font color="#000000"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">Eine
+Anfrage kann diesen Wert auch ändern, indem sie die Option
 „interval=“ </span></span></span></font></font></font></span><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><span lang="de-DE">bereitstellt.
 Siehe&nbsp;<a href="https://www.juggluco.nl/Juggluco/webserver.html">https://www.juggluco.nl/Jugggluco/webserver.html</a></span></font></font></p>
 <p style="line-height: 100%; margin-bottom: 0in"><strong><span lang="de-DE">Aktiv</span></strong><span lang="de-DE">:
@@ -451,7 +452,7 @@ Hotspot.</p>
 </string>
 <string name="alarmhelp" >
 <![CDATA[
-<h1 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
+<h1 style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
 <font face="Times New Roman">Alarm</font></h1>
 <h2 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-top: 0.14in; margin-bottom: 0.08in; background: transparent">
 <font face="Liberation Sans, sans-serif"><font size="4" style="font-size: 16pt">Glukosealarme:</font></font></h2>
@@ -463,12 +464,12 @@ Alarme für niedrige und hohe Glukose einzustellen.</font></font></p>
 <font face="Liberation Sans, sans-serif">Niedriger Glukosewert:</font></h3>
 <p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
 <font face="Times New Roman"><font size="4" style="font-size: 14pt">Wert,
-unter dem ein Alarm ausgelöst werden soll.</font></font></p>
+bei und unter dem ein Alarm ausgelöst werden soll.</font></font></p>
 <h3 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-top: 0.1in; margin-bottom: 0.08in; background: transparent">
 <font face="Liberation Sans, sans-serif">Hoher Glukosewert:</font></h3>
 <p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
 <font face="Times New Roman"><font size="4" style="font-size: 14pt">Wert,
-über dem ein Alarm ausgelöst werden soll.</font></font></p>
+bei und über dem ein Alarm ausgelöst werden soll.</font></font></p>
 <h3 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-top: 0.1in; margin-bottom: 0.08in; background: transparent">
 <font face="Liberation Sans, sans-serif">Signalverlustalarm:</font></h3>
 <p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
@@ -496,12 +497,12 @@ Juggluco berührt.</font></font></p>
 <h3 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-top: 0.1in; margin-bottom: 0.08in; background: transparent">
 <font face="Liberation Sans, sans-serif">Verfügbarer Wert:</font></h3>
 <p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
-Manchmal funktioniert der Sensor nicht. Wenn Sie dies einschalten, werden Sie benachrichtigt, wenn der Sensor
-wieder funktioniert, aber nur, wenn Sie in der Juggluco-App selbst
-gesehen haben, dass der Wert fehlt. Wenn
-Sie nur wissen, dass der Wert aufgrund der Benachrichtigung von
-Juggluco oder seines Zifferblatts gefehlt hat, wird die
-Benachrichtigung über den verfügbaren Wert nicht aufgerufe</p>
+Manchmal funktioniert der Sensor nicht. Wenn Sie dies einschalten,
+werden Sie benachrichtigt, wenn der Sensor wieder funktioniert, aber
+nur, wenn Sie in der Juggluco-App selbst gesehen haben, dass der Wert
+fehlt. Wenn Sie nur wissen, dass der Wert aufgrund der
+Benachrichtigung von Juggluco oder seines Zifferblatts gefehlt hat,
+wird die Benachrichtigung über den verfügbaren Wert nicht aufgerufe</p>
 <p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2">
 Für jeden Alarm können Sie festlegen, welcher Klingelton wie lange
 abgespielt werden soll.</p>

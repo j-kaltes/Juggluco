@@ -1304,11 +1304,11 @@ from each other.</p>
 received via Bluetooth can be used to set low and high glucose
 alarms.</p>
 <h3 class="western">Low glucose alarm:</h3>
-<p style="line-height: 100%; margin-bottom: 0in">Value below which an
-alarm should go off.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Value at and below
+which an alarm should go off.</p>
 <h3 class="western">High glucose alarm:</h3>
-<p style="line-height: 100%; margin-bottom: 0in">Value above which an
-alarm should go off.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Value at and above
+which an alarm should go off.</p>
 <h3 class="western">Loss of signal alarm:</h3>
 <p style="line-height: 100%; margin-bottom: 0in">Specify after how
 many minutes an alarm should go off if no glucose value is received
@@ -1331,15 +1331,16 @@ missing in the Juggluco app itself. When you only know that the value
 was missing because of Juggluco\'s notification or its watch face,
 will the value available notification not be evoked.</p>
 <p style="line-height: 100%; margin-bottom: 0in">For each alarm you
-can specify which <a href="https://www.juggluco.nl/Jugglucohelp/ringtone.html">Ringtone</a> to play and for how long.</p>
+can specify which <a href="https://www.juggluco.nl/Jugglucohelp/ringtone.html">Ringtone</a>
+to play and for how long.</p>
 <h3 class="western">Alarm is alarm:</h3>
-<p>When set, is the <a href="https://www.juggluco.nl/Jugglucohelp/ringtone.html">Ringtone</a> played for low, high and loss of signal
-alarms given the Android Alarms category. This means that in Android
-settings it\'s volume is managed with the Alarms volume level and it
-is not silenced when sound of the whole phone is turned off or set to
-vibration. When <i>Alarm is alarm</i> is not set, the ringtone volume
-level is used. This is always the case for the value available
-notification.</p>
+<p>When set, is the <a href="https://www.juggluco.nl/Jugglucohelp/ringtone.html">Ringtone</a>
+played for low, high and loss of signal alarms given the Android
+Alarms category. This means that in Android settings it\'s volume is
+managed with the Alarms volume level and it is not silenced when
+sound of the whole phone is turned off or set to vibration. When
+<i>Alarm is alarm</i> is not set, the ringtone volume level is used.
+This is always the case for the value available notification.</p>
 <h3 class="western"><br/>
 <br/>
 
@@ -1863,10 +1864,9 @@ your modem. See:</p>
 followers only make use of https and that requires that Juggluco has
 an authenticated SSL key for the domain name used to access Juggluco.
 If your external IP has an associated hostname, you can get a
-certificate for free via <a href="https://certbot.eff.org/instructions">Certbot</a>
-or <a href="https://www.sslforfree.com/">ZeroSSL</a>. You can\'t make
-use of it if your external IP doesn\'t have a hostname. You can get a
-free domain name from <a href="https://www.freenom.com/">https://www.freenom.com</a>.
+certificate for free via <a href="https://certbot.eff.org/instructions">Certbot</a>.
+You can\'t make use of it if your external IP doesn\'t have a hostname.
+You can get a free domain name from <a href="https://www.freenom.com/">https://www.freenom.com</a>.
 I tried it, but within a few weeks without any notification they just
 took the domain away from me and when I tried to register it again it
 had a price. You can buy a hostname for a few Euro\'s a year (for
@@ -1875,23 +1875,17 @@ example from <a href="https://www.strato.nl/domeinnaam">https://www.strato.nl/do
 the key files from an SSL authority, you have to give them to
 Juggluco. The private key can be read in by pressing &quot;<em>Private
 Key</em>&quot;, the Full Chain by pressing &quot;<em>Full Chain</em>&quot;.</p>
-<p style="line-height: 100%; margin-bottom: 0in">From ZeroSSL.com I
-received three files: private.key, certificate.crt and ca_bundle.crt.</p>
-<p style="line-height: 100%; margin-bottom: 0in">private.key is the
-private key, you have to give to Juggluco by pressing &quot;<em>Private
-Key</em>&quot;.</p>
-<p style="line-height: 100%; margin-bottom: 0in">To make the full
-chain, you have to concatenate certificate.crt and ca_bundle.crt.</p>
-<p style="line-height: 100%; margin-bottom: 0in">Linux:</p>
-<pre style="margin-bottom: 0.2in">cat certificate.crt ca_bundle.crt &gt;  fullchain.pem</pre><p style="line-height: 100%; margin-bottom: 0in">
-Windows cmd.com:</p>
-<pre style="margin-bottom: 0.2in">copy certificate.crt + ca_bundle.crt  fullchain.pem</pre><p style="line-height: 100%; margin-bottom: 0in">
-Windows Powershell, something like:</p>
-<pre style="margin-bottom: 0.2in">gc certificate.crt,ca_bundle.crt -Encoding Byte -Read 512 | sc fullchain.pem -Encoding Byte</pre><p style="line-height: 100%; margin-bottom: 0in">
-After using Certbot I found the Private key in
-/etc/letsencrypt/live/myhostname/privkey.pem</p>
-<p style="line-height: 100%; margin-bottom: 0in">and the full chain
-in /etc/letsencrypt/live/myhostname/fullchain.pem. &quot;<em>myhostname</em>&quot;
+<p style="line-height: 100%; margin-bottom: 0in">After installing
+Certbot and having redirected port 80 (http) from your modem to your
+computer, you can simply press:</p>
+<pre>certbot certonly --standalone --preferred-challenges http -d <i>myhostname</i></pre>
+<p>
+See <a href="https://devpress.csdn.net/linux/62e7999e907d7d59d1c8cfd0.html">https://devpress.csdn.net/linux/62e7999e907d7d59d1c8cfd0.html</a>.
+</p>
+<p style="line-height: 100%; margin-bottom: 0in">After using Certbot
+I found the Private key in
+/etc/letsencrypt/live/myhostname/privkey.pem and the full chain in
+/etc/letsencrypt/live/myhostname/fullchain.pem. &quot;<em>myhostname</em>&quot;
 is the hostname I used.</p>
 <p style="line-height: 100%; margin-bottom: 0in">If you just want to
 send glucose values from one Android to the other, you can better use
@@ -1953,9 +1947,10 @@ select a file containing the private key. See above.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><strong>Full Chain</strong>:
 select a file containing the Full Chain, see above.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>Interval</b>:
-default minimal interval (in seconds) between glucose values. Normally this is
-270 seconds. A request can also change this value by supplying the interval=
-option. See <a href="https://www.juggluco.nl/Juggluco/webserver.html">https://www.juggluco.nl/Juggluco/webserver.html</a></p>
+default minimal interval (in seconds) between glucose values.
+Normally this is 270 seconds. A request can also change this value by
+supplying the interval= option. See
+<a href="https://www.juggluco.nl/Juggluco/webserver.html">https://www.juggluco.nl/Juggluco/webserver.html</a></p>
 <p style="line-height: 100%; margin-bottom: 0in"><strong>Local only</strong>:
 the http server can only be accessed with localhost (127.0.0.1). This
 doesn\'t apply to https.</p>
@@ -2019,15 +2014,11 @@ Juggluco, see <a href="https://www.juggluco.nl/Juggluco/webserver.html">https://
 </string>
 <string name="NightPost" >
 <![CDATA[
-<p>Upload to a Nightscout server.</p>
-<p>In most cases you can also use the webserver in Juggluco or
-<a href="https://www.juggluco.nl/Juggluco/cmdline">juggluco-server</a>,
+<h1>Upload to a Nightscout server.</h1>
+<p>In most cases you can also use the <a href="https://www.juggluco.nl/Jugglucohelp/Nightscouthelp.html">web
+server in Juggluco</a> or <a href="https://www.juggluco.nl/Juggluco/cmdline">juggluco-server</a>,
 only AAPS and NSclient refuse to work when not connected to
-<a href="https://github.com/nightscout/cgm-remote-monitor">cgm-remote-monitor</a>.
-The web server in Juggluco also gives amounts in the form of
-Nightscout treatments
-(<a href="https://www.juggluco.nl/Juggluco/webserver.html">https://www.juggluco.nl/Juggluco/webserver.html</a>),
-the uploader only uploads glucose values.</p>
+<a href="https://github.com/nightscout/cgm-remote-monitor">cgm-remote-monitor</a>.</p>
 <p>All stream values are uploaded to the Nightscout server at the
 moment they arrive. When multiple sensor are used, all values of all
 sensors are uploaded. Some Garmin watch apps/faces/widgets assume
@@ -2039,6 +2030,17 @@ set to a lower value.</p>
 <p><b>URL</b>: the url should be in the form of https://hostname:port
 for example, https://myname.herokuapp.com:6789</p>
 <p><b>Active</b>: Turn on uploader</p>
+<p><b>Give Amounts</b>: Also send amounts as treatments to
+Nightscout. Touching the checkbox brings you to a dialog in which you
+can specify for every label what it means in Nightscout. These
+specifications are shared with web server in Juggluco (<a href="https://www.juggluco.nl/Jugglucohelp/Nightscouthelp.html">Left
+menu→Settings→Web server</a>). Only when all labels are handled,
+can you check “<i>Give Amounts</i>”. If you later add a new
+label, you have to remember yourself to specify what to do with it.
+<span lang="en-US">Because of a bug in <a href="https://github.com/nightscout/cgm-remote-monitor">Nightscout</a>,
+insertions at older time periods or deletions are only shown after
+items with a new time are added. </span><span lang="en-US">This means
+that it is better to send less often to Nightscout.</span></p>
 <p><b>Resend data</b>: Upload all data again to the Nightscout server</p>
 <p><b>Send now</b>: Normally data is immediately send when it arrives
 from the sensor or a mirror connection. Press on this button when for

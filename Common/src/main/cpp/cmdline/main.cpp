@@ -532,6 +532,8 @@ static constexpr const	char defaultname[]="jugglucodata";
 	 if(Numdata* numdata=Numdata::getnumdata( pathconcat(numbasedir,"watch"),-1,nummmaplen)) {
 		numdatas.push_back(numdata);
 		}
+	extern void makenightswitch();
+	makenightswitch();
 	if(!backup)  {
 		fprintf(stderr,"My error: No Backup\n");
 		return 2;

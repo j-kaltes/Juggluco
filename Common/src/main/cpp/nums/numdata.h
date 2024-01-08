@@ -42,6 +42,8 @@
 #include "datbackup.h"
 #include "meal/Meal.h"
 #include "num.h"
+//extern void wakeaftermin(const int waitmin) ;
+//extern void wakeuploader();
 
 #define LOGGERTAG(...) LOGGER("nums: " __VA_ARGS__)
 #define LOGARTAG(...) LOGAR("nums: " __VA_ARGS__)
@@ -75,6 +77,9 @@ static constexpr const int onechange=152;
 static constexpr const int libresend=160;
 static constexpr const int librechangednr=164;
 static constexpr const int libreSolid=168;
+static constexpr const int nightStart=172;
+static constexpr const int nightSend=176;
+static constexpr const int nightSwitch=180;
 static constexpr const int datastart=256;
 std::unique_ptr<char[]> newnumsfile;
 protected:
@@ -405,6 +410,37 @@ const int32_t getlibreSolid() const  {
 	const char *raw=reinterpret_cast<const char *>(nums.data());
 	return *reinterpret_cast<const int32_t *>(raw+libreSolid);
 	}
+
+int32_t &getnightStart()  {
+	char *raw=reinterpret_cast<char *>(nums.data());
+	return *reinterpret_cast<int32_t *>(raw+nightStart);
+	}
+const int32_t getnightStart() const  {
+	const char *raw=reinterpret_cast<const char *>(nums.data());
+	return *reinterpret_cast<const int32_t *>(raw+nightStart);
+	}
+int32_t &getnightSend()  {
+	char *raw=reinterpret_cast<char *>(nums.data());
+	return *reinterpret_cast<int32_t *>(raw+nightSend);
+	}
+const int32_t getnightSend() const  {
+	const char *raw=reinterpret_cast<const char *>(nums.data());
+	return *reinterpret_cast<const int32_t *>(raw+nightSend);
+	}
+int32_t &getnightSwitch()  {
+	char *raw=reinterpret_cast<char *>(nums.data());
+	return *reinterpret_cast<int32_t *>(raw+nightSwitch);
+	}
+void nightBack(int pos) {
+	auto was=getnightStart();
+	if(pos<was)
+		getnightStart()=pos;
+	}
+void setNightSend(int pos) {
+	getnightStart()=pos;
+	getnightSend()=pos;
+	}
+	
 void setonechange(const Num *num) {
 	const int pos=num-startdata();
 	setonechange(pos);
@@ -543,6 +579,7 @@ void numsaveonly( const uint32_t time, const float32_t value, const uint32_t typ
 	inclastpolledpos();
 	setlastchange(num);
 	const auto lastnum=getlastpos();
+	nightBack(ind);
 	updateposnowake(ind,lastnum);
 	addlibrechange(ind);
 	LOGGERTAG("pos=%d newlastnum=%d numsave %f %s mealptrin=%d mealptr=%d\n",ind,lastnum,value,settings->getlabel(type).data(),mealptrin,mealptr);
@@ -552,6 +589,8 @@ void numsave( const uint32_t time, const float32_t value, const uint32_t type,co
 	numsaveonly(time,  value,  type, mealptrin);
 	if(backup)
 		backup->wakebackup(Backup::wakenums);
+	//wakeuploader();
+	//wakeaftermin(1);
 	 }
 
 
@@ -567,7 +606,6 @@ void numsavepos(int pos, uint32_t time, float32_t value, uint32_t type,uint32_t 
 			}
 		Num &num=at(pos);
 		addlibrenumsdeleted(&num,pos);
-//		num={time,mealptr,value,type};
 		num={.time=time,.mealptr=mealptr,.value=value,.type=type};
 		if(pos>=getlibreSolid()) {
 			addlibrechange(pos);
@@ -576,6 +614,8 @@ void numsavepos(int pos, uint32_t time, float32_t value, uint32_t type,uint32_t 
 			LOGGERTAG("%d older than getlibreSolid()=%d\n",pos, getlibreSolid());
 			}
 		receivedbackup()=false;
+		nightBack(pos);
+		updatepos(pos,getlastpos()); //ADDED
 		}
 	 }
 static constexpr uint32_t removedtype=0xFFFFFFFF;
@@ -591,6 +631,7 @@ void numremove(int pos) {
 		num.time=at(pos-1).time; //Deleted items to be ordered in time, for binary search
 	else
 		num.time=at(pos+1).time;
+	nightBack(pos);
 	updatepos(pos,pos+1);
 	}
 int index(const Num *num)const {
@@ -633,6 +674,7 @@ int numremove(Num *num) {
 		if(getlibresend() > newlastpos)
 			getlibresend()=newlastpos;
 		}
+	nightBack(pos);
 	updatepos(pos,getlastpos());
 	return pos;
 	}
@@ -866,6 +908,7 @@ void numchange(const Num *hit, uint32_t time, float32_t value, uint32_t type,uin
 	else  {
 		LOGGERTAG("%d older than getlibreSolid()=%d\n",newpos, getlibreSolid());
 		}
+	nightBack(pos);
 	updatepos(pos,lastupdate);
 	}
 std::pair<const Num*,const Num*> getInRange(const uint32_t start,const uint32_t endtime) const {
@@ -987,6 +1030,10 @@ void updatepos(int pos,int end) {
 	if(backup) {
 		updateposnowake(pos,end);
 		backup->wakebackup(Backup::wakenums);
+
+	//wakeuploader();
+	//wakeaftermin(1);
+
 		}
 	}
 
@@ -1233,6 +1280,7 @@ bool backupnums(const struct numsend* innums) {
 		uint32_t eind=off+nr;
 		if(off<getchangedpos()) 
 			getchangedpos()=off;
+		nightBack(off);
 		updateposnowake(off,eind);
 		receivedbackup()=true;
 		}
@@ -1242,6 +1290,8 @@ bool backupnums(const struct numsend* innums) {
 	
 	if(backup)
 		backup->wakebackup(Backup::wakenums);
+	//wakeuploader();
+	//wakeaftermin(1);
 	return true;
 	}
 

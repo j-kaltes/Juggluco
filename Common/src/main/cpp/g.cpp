@@ -635,10 +635,10 @@ jlong glucoseback(uint32_t glval,float drate,SensorGlucoseData *hist) {
 		extern void wakeuploader();
 
 
-extern void wakeuploader();
+extern void wakestreamuploader();
 extern void wakelibrecurrent() ;
 void wakewithcurrent() {
-	wakeuploader();
+	wakestreamuploader();
 #if !defined(WEAROS) && !defined(TESTMENU)
 	if(settings->data()->LibreCurrentOnly) {
 		LOGAR("wakelibrecurrent()");

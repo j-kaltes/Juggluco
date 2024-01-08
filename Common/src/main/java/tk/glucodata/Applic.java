@@ -632,7 +632,7 @@ static	void initbroadcasts() {
 			Natives.setfloatingbackground(WHITE);
 			 Natives.setfloatingforeground(BLACK);
 			}
-		Natives.setinitVersion(22);
+		//Natives.setinitVersion(22);
 		}
 	var pos=Natives.getfloatingPos( );
 	if(pos!=0) {

@@ -6,6 +6,7 @@
 #include "settings/settings.h"
 #include "share/logs.h"
 #include "sensoren.h"
+#include "nums/numdata.h"
 extern Settings *settings;
 extern Sensoren *sensors;
 /*[
@@ -28,8 +29,10 @@ extern JNIEnv *getenv();
 
 
 jclass nightpostclass=nullptr;
-jstring jnightuploadurl=nullptr;
+jstring jnightuploadEntriesurl=nullptr;
+jstring jnightuploadTreatmentsurl=nullptr;
 jstring jnightuploadsecret= nullptr;
+/*
 void makeuploadurl(JNIEnv *env) {
 		const int namelen=settings->data()->nightuploadnamelen;
 		const char *name=settings->data()->nightuploadname;
@@ -37,12 +40,30 @@ void makeuploadurl(JNIEnv *env) {
 		char fullname[namelen+sizeof(lasturl)];
 		memcpy(fullname,name,namelen);
 		memcpy(fullname+namelen,lasturl,sizeof(lasturl));
-		if(jnightuploadurl)
-			env->DeleteGlobalRef(jnightuploadurl);
+		if(jnightuploadEntriesurl)
+			env->DeleteGlobalRef(jnightuploadEntriesurl);
 		auto local=env->NewStringUTF(fullname);
-		jnightuploadurl=  (jstring)env->NewGlobalRef(local);
+		jnightuploadEntriesurl=  (jstring)env->NewGlobalRef(local);
+		env->DeleteLocalRef(local);
+		} */
+static void makeuploadurl(JNIEnv *env,std::string_view pathstr,jstring &url) {
+
+		const int namelen=settings->data()->nightuploadnamelen;
+		const char *name=settings->data()->nightuploadname;
+		char fullname[namelen+pathstr.size()+1];
+		memcpy(fullname,name,namelen);
+		memcpy(fullname+namelen,pathstr.data(),pathstr.size()+1);
+		auto local=env->NewStringUTF(fullname);
+
+		if(url)
+			env->DeleteGlobalRef(url);
+		url=  (jstring)env->NewGlobalRef(local);
 		env->DeleteLocalRef(local);
 		}
+static void makeuploadurls(JNIEnv *env) {
+	makeuploadurl(env,R"(/api/v1/entries)",jnightuploadEntriesurl);
+	makeuploadurl(env,R"(/api/v1/treatments)",jnightuploadTreatmentsurl);
+	}
 
 extern std::string sha1encode(const char *secret, int len);
 void makeuploadsecret(JNIEnv *env) {
@@ -70,7 +91,7 @@ bool inituploader(JNIEnv *env) {
 			}
 		}
 	makeuploadsecret(env); 
-	makeuploadurl(env);
+	makeuploadurls(env);
 extern void startuploaderthread();
 	startuploaderthread();
 	LOGAR("end inituploader");
@@ -78,6 +99,7 @@ extern void startuploaderthread();
        }
 
 //static boolean upload(String httpurl,byte[] postdata,String secret) ;
+extern vector<Numdata*> numdatas;
 static void reset() {
 	const int last=sensors->last();
 	settings->data()->nightsensor=0;
@@ -86,18 +108,26 @@ static void reset() {
 			sens->getinfo()->nightiter=0;
 			}
 		}
+	for(auto *numdata:numdatas)
+		numdata->setNightSend(0);
 	}
-bool nightupload(const char *data,int len) {
-	const static jmethodID  upload=getenv()->GetStaticMethodID(nightpostclass,"upload","(Ljava/lang/String;[BLjava/lang/String;)Z");
+static bool nightupload(jstring jnightuploadurl,const char *data,int len,bool put) {
+	const static jmethodID  upload=getenv()->GetStaticMethodID(nightpostclass,"upload","(Ljava/lang/String;[BLjava/lang/String;Z)Z");
 	auto env=getenv();
 	jbyteArray uit=env->NewByteArray(len);
         env->SetByteArrayRegion(uit, 0, len,(const jbyte *)data);
-	bool res=env->CallStaticBooleanMethod(nightpostclass,upload,jnightuploadurl,uit,jnightuploadsecret);
+	bool res=env->CallStaticBooleanMethod(nightpostclass,upload,jnightuploadurl,uit,jnightuploadsecret,put);
 	LOGGER("nightupload=%d\n",res);
 	env->DeleteLocalRef(uit);
 	return res;
 	}
+bool nightuploadEntries(const char *data,int len) {
+	return nightupload(jnightuploadEntriesurl,data,len,false);
+	}
 
+bool nightuploadTreatments(const char *data,int len) {
+	return nightupload(jnightuploadTreatmentsurl,data,len,true);
+	}
 
 
 //extern int Tdatestring(time_t tim,char *buf) ;
@@ -113,21 +143,21 @@ template <class T> int mkuploaditem(char *buf,const char *sensorname,const T &it
 	char timestr[50];
 	Tdatestring(tim,timestr);
 
-//	return sprintf(buf,R"({"type":"sgv","device":"Juggluco","dateString":"%s","date":%lld,"sgv":%d,"delta":%.3f,"direction":"%s","noise":1,"filtered":%d,"unfiltered":%d,"rssi":100},)",tim*1000LL,timestr,mgdL,delta,directionlabel,mgdL*1000,mgdL*1000);
-//	return sprintf(buf,R"({"type":"sgv","device":"Juggluco","dateString":"%s","date":%lld,"sgv":%d,"delta":%.3f,"direction":"%s","noise":1,"filtered":%d,"unfiltered":%d,"rssi":100,"sysTime":"%s"},)",timestr,tim*1000LL,mgdL,delta,directionlabel,mgdL*1000,mgdL*1000,timestr);
 	return sprintf(buf,R"({"type":"sgv","device":"%s","dateString":"%s","date":%lld,"sgv":%d,"delta":%.3f,"direction":"%s","noise":1,"filtered":%d,"unfiltered":%d,"rssi":100},)",sensorname,timestr,tim*1000LL,mgdL,delta,directionlabel,mgdL*1000,mgdL*1000);
-//	return sprintf(buf,R"({"type":"sgv","device":"Juggluco","date":%lld,"sgv":%d,"delta":%.3f,"direction":"%s"},)",tim*1000LL,mgdL,delta,directionlabel);
 
 	}
 
-bool upload() {
+extern  const int nighttimeback;
+const int nighttimeback=60*60*24*30;
+bool uploadCGM() {
 	LOGSTRING("upload\n");
 	int last=sensors->last();
-	if(last<0)
-		return false;
-	constexpr const int timeback=60*60*24*30;
+	if(last<0) {
+		LOGAR("No sensors");
+		return true;
+		}
 	time_t nu=time(nullptr);
-	uint32_t mintime=nu-timeback;
+	uint32_t mintime=nu-nighttimeback;
 	if(!settings->data()->nightsensor)
 		settings->data()->nightsensor=sensors->firstafter(mintime);
 	int startsensor= settings->data()->nightsensor;
@@ -149,8 +179,10 @@ bool upload() {
 				const int arraysize=3+left*itemsize;
 				LOGGER("arraysize=%d\n",arraysize);
 				char  *start=new(std::nothrow)  char[arraysize];
-				if(!start)
+				if(!start) {
+					LOGGER("new char[%d] failed\n",arraysize);
 					return false;
+					}
 				unique_ptr<char[]> destruct(start);
 				char *ptr=start;
 				*ptr++='[';
@@ -166,7 +198,7 @@ bool upload() {
 					int datalen=ptr-start;
 					LOGGER("%d: UPLOADER #%d\n",sensorid,datalen);
 					LOGGERN(start,datalen);
-					if(nightupload(start,datalen)) {
+					if(nightuploadEntries(start,datalen)) {
 						sens->getinfo()->nightiter=len;
 						LOGGER("%d nightupload Success\n",sensorid);
 						LOGGER("%d saved nightiter=%d\n", sensorid,len);
@@ -193,6 +225,8 @@ Backup::condvar_t  uploadercondition;
 bool uploaderrunning=false;
 
 extern bool networkpresent;
+
+extern bool uploadtreatments();
 static void uploaderthread() {
 	int waitmin=0;
 	uploaderrunning=true;
@@ -217,20 +251,33 @@ static void uploaderthread() {
 			LOGSTRING("end uploaderthread\n");
 			return;
 			}
+		const auto current=uploadercondition.dobackup;
 		uploadercondition.dobackup=0;
-		if(upload()) {
-			waitmin=5*60;
+		if(current&(Backup::wakestream|Backup::wakeall)) {
+			if(!uploadCGM()) {
+				waitmin=15;
+				continue;
+				}
 			}
-		else {
-			waitmin=15;
-			continue;
+#ifndef WEAROS
+		if(current&(Backup::wakenums|Backup::wakeall)) {
+			if(!uploadtreatments()) {
+				waitmin=15;
+				continue;
+				}
 			}
+#endif
+		waitmin=5*60;
 		}
 	}
 
 void wakeuploader() {
 	if(uploaderrunning) 
 		uploadercondition.wakebackup(Backup::wakeall);
+	}
+void wakestreamuploader() {
+	if(uploaderrunning) 
+		uploadercondition.wakebackup(Backup::wakestream);
 	}
 #include "fromjava.h"	
 extern "C" JNIEXPORT void JNICALL fromjava(wakeuploader) (JNIEnv *env, jclass clazz) {

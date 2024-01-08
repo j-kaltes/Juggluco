@@ -88,17 +88,12 @@ RemoteGlucose(float gl,float notwidth,float xper,int whiteonblack) {
 
 final RemoteViews arrowremote(int kind, notGlucose glucose) {
 	RemoteViews remoteViews= new RemoteViews(Applic.app.getPackageName(),R.layout.arrowandvalue);
-//	long unixtime = System.currentTimeMillis() / 1000L;
 	if(glucose==null) {
 			return remoteViews;
 	}
 	var gety = canvas.getHeight() * 0.98f;
 	var getx = notglucosex;
 	var rate = glucose.rate;
-	/*
-	if(whiteonblack)
-		canvas.drawColor(BLACK);
-	else */
 	canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
 	glucosePaint.setTextSize(glucosesize);
 	if (isNaN(rate)) {
@@ -113,14 +108,15 @@ final RemoteViews arrowremote(int kind, notGlucose glucose) {
 
 	canvas.drawText(glucose.value, getx, gety, glucosePaint);
 	float valwidth = glucosePaint.measureText(glucose.value, 0, glucose.value.length());
-	if (kind > 1) {
-		glucosePaint.setTextSize(glucosesize * .4f);
-		canvas.drawText(unitlabel, getx + valwidth + glucosesize * .2f, gety - glucosesize * .25f, glucosePaint);
-	} else {
-		glucosePaint.setTextSize(glucosesize * .65f);
-		canvas.drawText(" " + Applic.app.getString(kind == 0 ? R.string.lowglucoseshort : R.string.highglucoseshort), getx + valwidth + glucosesize * .2f, gety - glucosesize * .15f, glucosePaint);
-	}
-
+	if(kind<50) {
+		if (kind > 1) {
+			glucosePaint.setTextSize(glucosesize * .4f);
+			canvas.drawText(unitlabel, getx + valwidth + glucosesize * .2f, gety - glucosesize * .25f, glucosePaint);
+		} else {
+			glucosePaint.setTextSize(glucosesize * .65f);
+			canvas.drawText(" " + Applic.app.getString(kind == 0 ? R.string.lowglucoseshort : R.string.highglucoseshort), getx + valwidth + glucosesize * .2f, gety - glucosesize * .15f, glucosePaint);
+		}
+	    }
 	canvas.setBitmap(glucoseBitmap);
 	remoteViews.setImageViewBitmap(arrowandvalue, glucoseBitmap);
 	return remoteViews;

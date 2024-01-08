@@ -19,9 +19,9 @@ public class GlucoseWidget extends AppWidgetProvider {
 
 private static void setWidth(int widthdip) {
 		var    widthpx = widthdip*GlucoseCurve.getDensity();
-		var fontsize=widthpx*0.22f;
-		remote=  new RemoteGlucose(fontsize,widthpx,0.180f,2);
-//		remote=  new RemoteGlucose(fontsize,widthpx,0.180f,false);
+//		var fontsize=widthpx*0.22f;
+		var fontsize=widthpx*(Applic.unit==1?0.35f:0.4f);
+		remote=  new RemoteGlucose(fontsize,widthpx,Applic.unit==1?0.30f:0.32f,2);
 		width=widthdip;
 		}
  @Override
@@ -68,6 +68,8 @@ static private void showviews(RemoteViews views,int rId,AppWidgetManager appWidg
         if(SuperGattCallback.previousglucose != null|| (((glu=Natives.lastglucose())!=null) && ((SuperGattCallback.previousglucose = new notGlucose(glu.time * 1000L, glu.value, glu.rate))!=null))) {
 
 		final var now=System.currentTimeMillis();
+//		SuperGattCallback.previousglucose.value="27.8";
+	//	SuperGattCallback.previousglucose.value="388";
 		final var time=SuperGattCallback.previousglucose.time;
 		if((now-time)>oldage) {
 			final String tformat= timef.format(time);
@@ -76,7 +78,7 @@ static private void showviews(RemoteViews views,int rId,AppWidgetManager appWidg
 			id=R.id.content;
 		}
 		else {
-			views = remote.arrowremote(2,SuperGattCallback.previousglucose);
+			views = remote.arrowremote(50,SuperGattCallback.previousglucose);
 			}
 		}
 	else {

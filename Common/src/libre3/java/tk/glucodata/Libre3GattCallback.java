@@ -51,7 +51,7 @@ import static tk.glucodata.Log.showbytes;
 
 
 public class Libre3GattCallback extends SuperGattCallback {
-	static final private boolean doTEST=Log.doLog;
+	static final private boolean doTEST=false;
 	static private final String LOG_ID = "Libre3GattCallback";
 	private boolean shouldenablegattCharCommandResponse = false;
 	private boolean isServicesDiscovered = false;

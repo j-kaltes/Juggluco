@@ -57,6 +57,8 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import tk.glucodata.settings.LibreNumbers;
+
 public class NightPost  {
 	private static final String LOG_ID="NightPost";
 
@@ -86,15 +88,47 @@ private static  String getstart(HttpURLConnection con,int max)  throws IOExcepti
 		}
 	}
 
+
 @Keep
-static public boolean upload(String httpurl,byte[] postdata,String secret) {
+static public boolean deleteUrl(String urlstring,String secret) {
+	try {
+		URL url = new URL(urlstring);
+		if(url==null)  {
+			return false;
+			}
+		HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+		urlConnection.setRequestProperty("api-secret", secret);
+		urlConnection.setRequestProperty("Content-Type", "application/json");
+		urlConnection.setRequestMethod("DELETE");
+
+		final int code=urlConnection.getResponseCode();
+		String res=getstring(urlConnection);
+		if(code==HTTP_OK) {
+			Log.i(LOG_ID,"deleteUrl success "+res);
+			return true;
+			}
+		else {
+			Log.i(LOG_ID,"deleteUrl failure "+res);
+			return false;
+			}
+
+		}
+	catch(Throwable th) {
+		String error ="deleteUrl:\n"+stackline(th);
+
+		Log.e(LOG_ID,error);
+		return false;
+		}
+	}
+@Keep
+static public boolean upload(String httpurl,byte[] postdata,String secret,boolean put) {
 	Log.i(LOG_ID,"upload("+httpurl+",#"+postdata.length+","+ secret+")");
 	try {
 		URL url = new URL(httpurl);
 		HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 		urlConnection.setConnectTimeout(10000);
 		urlConnection.setReadTimeout(60000);
-		urlConnection.setRequestMethod("POST");
+		urlConnection.setRequestMethod(put?"PUT":"POST");
 		urlConnection.setDoOutput(true);
 		
 		urlConnection.setRequestProperty("api-secret", secret);
@@ -107,12 +141,14 @@ static public boolean upload(String httpurl,byte[] postdata,String secret) {
 		outputPost.close();
 		final int code=urlConnection.getResponseCode();
 		if(code==HTTP_OK) {
-			String res=getstart(urlConnection,80);
+//			String res=getstart(urlConnection,80);
+			String res=getstring(urlConnection);
 			Log.i(LOG_ID,"upload success "+res);
 			return true;
 			}
 		else {
-			var uploadstatus="upload ResponseCode="+code;
+			 String ant=getstring(urlConnection);
+			var uploadstatus="upload ResponseCode="+code+" "+ant;
 			Log.e(LOG_ID,uploadstatus);
 			return false;
 			}
@@ -138,15 +174,17 @@ private static	void askclearupload(Context context) {
 
 public static void  config(MainActivity act, View settingsview) {
 	EnableControls(settingsview,false);
-	var urllabel=getlabel(act,"Nightscout Server URL");
+	var urllabel=getlabel(act,"Nightscout URL");
 	var url=getedit(act, Natives.getnightuploadurl());
-        url.setMinEms(12);
+	final int minems=isWearable?12:16;
+        url.setMinEms(minems);
 	var secretlabel=getlabel(act,R.string.secret);
+	secretlabel.setPadding(0,0,0,0);
     var editsecret= new EditText(act);
         editsecret.setImeOptions(editoptions);
         editsecret.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
         editsecret.setTransformationMethod(new PasswordTransformationMethod());
-	 editsecret.setMinEms(12);
+	 editsecret.setMinEms(minems);
 	String secretwas=Natives.getnightuploadsecret();
 	if(secretwas!=null) {
 		editsecret.setText(secretwas);
@@ -158,14 +196,18 @@ public static void  config(MainActivity act, View settingsview) {
 	var wake=getbutton(act,act.getString(R.string.sendnow));
 	wake.setOnClickListener(v-> Natives.wakeuploader());
 	Button help;
+	CheckBox treatments;
 	if(!isWearable) {
 		help=getbutton(act,R.string.helpname);
 		help.setOnClickListener(v-> help(R.string.NightPost,act));
+		treatments=getcheckbox(act,R.string.treatments,Natives.getpostTreatments());
 		}
 	boolean useuploader=Natives.getuseuploader();
 	var activebox=getcheckbox(act,R.string.active,useuploader);
        var visible = new CheckBox(act);
        visible.setText(R.string.visible);
+	int pad= (int)tk.glucodata.GlucoseCurve.metrics.density*7;
+	visible.setPadding(0,0,pad,0);
         visible.setOnCheckedChangeListener( (buttonView,  isChecked)-> {
                         editsecret.setInputType(isChecked?InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD:InputType.TYPE_TEXT_VARIATION_PASSWORD);
                         if(isChecked)
@@ -183,24 +225,29 @@ public static void  config(MainActivity act, View settingsview) {
                         else {
                                 lay.setX((width-w)/2); lay.setY(0);
                                 };
-                        return new int[] {w,h};}, new View[]{urllabel,url},new View[]{secretlabel,visible,editsecret},new View[]{activebox,clear,wake},new View[]{help,cancel,save});
+                        return new int[] {w,h};}, new View[]{urllabel,url},new View[]{secretlabel,visible,editsecret},new View[]{activebox,clear,wake},new View[]{treatments,help,cancel,save});
 
-	
 		int laypar;
 		final View allview=isWearable?new ScrollView(act):layout;
 		if(isWearable) {
 			((ScrollView)allview).addView(layout);
 			laypar=ViewGroup.LayoutParams.MATCH_PARENT;
 			layout.setBackgroundColor(tk.glucodata.Applic.backgroundcolor);
-/*		      int pad= (int)tk.glucodata.GlucoseCurve.metrics.density*7;
-		       url.setPadding(pad,0,0,0);
-		       secretlabel.setPadding(pad,0,0,0);
-		       visible.setPadding(0,0,pad,0); */
-		}
-		else {
+		} else {
+			int[] nochangeamounts={0};
+			treatments.setOnCheckedChangeListener( (buttonView,  isChecked) -> {
+				switch(nochangeamounts[0])  {
+					case 0: {
+						++nochangeamounts[0];
+						treatments.setChecked(!isChecked);
+						LibreNumbers.mklayout(act,1,treatments,nochangeamounts,layout);
+						};break;
+					case  2: Natives.setpostTreatments(isChecked);break;
+
+					};
+				});
 			laypar=ViewGroup.LayoutParams.WRAP_CONTENT;
 		      allview.setBackgroundResource(R.drawable.dialogbackground);
-		      int pad= (int)tk.glucodata.GlucoseCurve.metrics.density*7;
 		       allview.setPadding(pad,pad,pad,pad);
 	       	}
 

@@ -326,7 +326,6 @@ void calccurvegegs();
 
 extern "C" JNIEXPORT void JNICALL fromjava(calccurvegegs)(JNIEnv *env, jclass clazz) {
 	calccurvegegs();
-
 	}
 
 extern void flingX(float vol);

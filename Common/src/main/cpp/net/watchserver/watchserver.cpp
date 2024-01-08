@@ -483,7 +483,7 @@ static bool givedripstatus(recdata *outdata) {
 	return true;
 	}
 
-static bool givestatusv3(recdata *outdata) {
+static bool givestatusv3right(recdata *outdata) {
 	#include "status3.h"
 	constexpr const int len=sizeof(statusv3)+20;
 	outdata->allbuf=new(std::nothrow) char[len+512];
@@ -496,14 +496,28 @@ static bool givestatusv3(recdata *outdata) {
 	return true;
 
 	}
+static bool givestatusv3(recdata *outdata) {
+		return givestatusv3right(outdata);
+		}
+	/*
+static bool givestatusv3wrong(recdata *outdata) {
+static	constexpr const char status[]="HTTP/1.1 401 Unauthorized\r\nContent-Type: application/json; charset=utf-8\r\nContent-Length: 61\r\n\r\n" R"({"status":401,"message":"Missing or bad access token or JWT"})";
+	const int statuslen=sizeof(status)-1;
+	outdata->allbuf=nullptr;
+	outdata->start=status;
+	outdata->len=statuslen;
+	return true;
+}
+static bool givestatusv3(recdata *outdata) {
+	static bool given=false;
+	if(given)
+		return givestatusv3right(outdata);
+	given=true;
+	return givestatusv3wrong(outdata);
+	}
+	*/
 //api/v3/entries?sort%24desc=date&limit=6&fields=sgv%2Cdirection%2CsrvCreated&type%24eq=sgv
 //api/v3/entries?sort%24desc=date&limit=1&fields=sgv%2Cdirection%2CsrvCreated&type%24eq=sgv
-template <class T, size_t N>
-inline static constexpr void addar(char *&uitptr,const T (&array)[N]) {
-	constexpr const int len=N-1;
-	memcpy(uitptr,array,len);
-	uitptr+=len;
-	}
 /*
 {"status":200,"result":[{"sgv":123,"direction":"Flat","srvCreated":1701290313000},{"sgv":120,"direction":"Flat","srvCreated":1701290308000},{"sgv":125,"direction":"Flat","srvCreated":1701290253000},{"sgv":121,"direction":"Flat","srvCreated":1701290246000},{"sgv":127,"direction":"Flat","srvCreated":1701290193000},{"sgv":121,"direction":"Flat","srvCreated":1701290186000}]}
 */
@@ -775,6 +789,35 @@ char * givecage(char *outiter) {
 */
 			//  {"delta":{"absolute":-2,"elapsedMins":5,"interpolated":false,"mean5MinsAgo":137,"times":{"recent":1676718516000,"previous":1676718216000},"mgdl":-2,"scaled":-2,"display":"-2","previous":{"mean":137,"last":137,"mills":1676718216000,"sgvs":[{"_id":"63f0b09d4d77ce842e333f3d","mgdl":137,"mills":1676718216000,"device":"loop://iPhone","direction":"Flat","type":"sgv","scaled":137}]}}}
 
+extern uint32_t getnumlasttime() ;
+static bool getv2auth(recdata *outdata) {
+	static constexpr const char auth[]=R"({"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NUb2tlbiI6Im93bGV0LTIyYjliMjE3YTIwOGJhNzUiLCJpYXQiOjE3MDQ0NTMzOTUsImV4cCI6MTcwNDQ4MjE5NX0.HQzcZ8N_fFcXiGv7qRuiiUXkZFBsdGTvV1O1nvpRWpQ","sub":"owlet","permissionGroups":[["*:*:read"],["*:*:read"]],"iat":%u,"exp":%u})";
+   	outdata->allbuf=new(std::nothrow) char[512+sizeof(auth)+2*10];
+	if(!outdata->allbuf) {
+		return outofmemory(outdata);
+		}
+    	char *start=outdata->allbuf+150;
+	uint32_t now=time(nullptr);
+	uint32_t expire=now*60*60*8;
+	auto alllen=sprintf(start,auth,now,expire);
+	mkjsonheader(start,start+alllen,false,outdata); 
+	return true;
+	}
+static bool getv3modified(recdata *outdata) {
+	uint32_t now=time(nullptr);
+	auto lastentries= sensors->timelastdata();
+	auto lastnum=getnumlasttime();
+	#include "lastModified.h"
+   	outdata->allbuf=new(std::nothrow) char[512+sizeof(lastModified)+3*10+1];
+	if(!outdata->allbuf) {
+		return outofmemory(outdata);
+		}
+    	char *start=outdata->allbuf+150;
+	uint32_t lastprofile=99;
+	auto alllen=sprintf(start,lastModified,now,lastentries,lastprofile,lastnum);
+	mkjsonheader(start,start+alllen,false,outdata); 
+	return true;
+	}
 static bool getv3entries(recdata *outdata) {
 	int count=6;
    	outdata->allbuf=new(std::nothrow) char[512+75*count+200];
@@ -1420,6 +1463,12 @@ const auto propsize= properties.size();
 		return giveproperties(toget.data()+propsize,toget.size()-propsize,outdata);
 		}
 
+std::string_view authv2=R"(api/v2/authorization/request/)";
+const auto authv2size= authv2.size();
+	if(!memcmp(authv2.data(),toget.data(),authv2size)) {
+		return  getv2auth(outdata);
+		}
+
 if(!memcmp(jugglucocommand.data(),posptr,jugglucocommand.size())) {
 	return jugglucos(posptr+jugglucocommand.size(),toget.size()-jugglucocommand.size(),outdata);
 	}
@@ -1438,6 +1487,12 @@ const auto entries3size= entriesv3.size();
 	if(!memcmp(entriesv3.data(),toget.data(),entries3size)) {
 		return getv3entries(outdata);
 		}
+std::string_view modifiedv3="api/v3/lastModified";
+const auto modified3size= modifiedv3.size();
+	if(!memcmp(modifiedv3.data(),toget.data(),modified3size)) {
+		return getv3modified(outdata);
+		}
+
 constexpr const std::string_view status="status.json";
 	if(!memcmp(status.data(),toget.data(),status.size())) {
 		return givedripstatus(outdata);
@@ -1726,18 +1781,46 @@ bool Sgvinterpret::getv1entries(char *&outiter,const int  datnr) const {
     "sysTime": "2023-03-03T12:33:02.779+0100",
     "utcOffset": 0,
     "insulin": null*/
+extern int mkid(char *outiter,int base,int pos) ;
+/*
+template <class T>
+static void toend(NumIter<T> *numiters,int maxnum) {
+	for(int i=0;i<maxnum;i++) {
+		numiters[i].iter=numiters[i].end;
+		}
+	} */
 
-static char *writetreatment(char *outiter,const int numbase,const int pos,const Num*num) {
+extern char *writetreatment(char *outiter,const int numbase,const int pos,const Num*num,int border);
+
+int mkid(char *outiter,int base,int pos) {
+	int len=sprintf(outiter,"ba%de%d",base,pos);
+	int over=24-len;
+	memset(outiter+len,'b',over);
+	return 24;
+	}
+char *writetreatment(char *outiter,const int numbase,const int pos,const Num*num,int border) {
 	const int type=num->type;
-	if(type>=settings->varcount()||!settings->data()->Nightnums[type].kind)
+	if(type>=settings->varcount()||!settings->data()->Nightnums[type].kind) {
 		return outiter;
+		}
 	const time_t tim=num->gettime();
         struct tm tmbuf;
         gmtime_r(&tim, &tmbuf);
-	outiter+=sprintf(outiter,R"({"_id":"num%d#%d","eventType":"<none>","insulinInjections":"[]","enteredBy":"Juggluco","created_at":"%04d-%02d-%02dT%02d:%02d:%02d.000Z",)",numbase,pos,tmbuf.tm_year+1900,tmbuf.tm_mon+1,tmbuf.tm_mday, tmbuf.tm_hour, tmbuf.tm_min,tmbuf.tm_sec);
+		addar(outiter,R"({"_id":")");
+
+	if(pos>=border) 
+		outiter+=mkid(outiter,numbase,pos);
+	else
+		outiter+=sprintf(outiter,"num%d#%d",numbase,pos);
+
+//	outiter+=sprintf(outiter,R"({"_id":"num%d#%d","eventType":"<none>","enteredBy":"Juggluco","created_at":"%04d-%02d-%02dT%02d:%02d:%02d.000Z",)",numbase,pos,tmbuf.tm_year+1900,tmbuf.tm_mon+1,tmbuf.tm_mday, tmbuf.tm_hour, tmbuf.tm_min,tmbuf.tm_sec);
+
+	addar(outiter,R"(","eventType":"<none>","enteredBy":"Juggluco","created_at":")");
+	outiter+=sprintf(outiter,R"(%04d-%02d-%02dT%02d:%02d:%02d.000Z",)",tmbuf.tm_year+1900,tmbuf.tm_mon+1,tmbuf.tm_mday, tmbuf.tm_hour, tmbuf.tm_min,tmbuf.tm_sec);
 
 	float w=0.0f;
 	 if((w=longNightWeight(type))!=0.0f) {
+	 	
 	 	addar(outiter,R"("notes":"Long-Acting",)");
 	 	}
 	else { if((w=rapidNightWeight(type))!=0.0f) {
@@ -1745,7 +1828,11 @@ static char *writetreatment(char *outiter,const int numbase,const int pos,const 
 	 	}
 		}
 	if(w!=0.0f) {
-		outiter+=sprintf(outiter,R"("carbs":null,"insulin":%g},)",w*num->value);
+		const char * typestr=settings->getlabel(type).data();;
+		auto units=w*num->value;
+		//outiter+=sprintf(outiter,R"("carbs":null,"insulin":%g,"insulinType":"%s","insulinInjections":"[{\"insulin\":\"%s\",\"units\":%.1f}]"},)",units,typestr,typestr,units); //WARNING: treatments are not displayed in xDrip when insulinInjections is included. Problem?
+		outiter+=sprintf(outiter,R"("carbs":null,"insulin":%g,"insulinType":"%s"},)",units,typestr);
+
 		}
 	else {
 		if((w=carboNightWeight(type) )!=0.0f) {
@@ -1758,14 +1845,6 @@ static char *writetreatment(char *outiter,const int numbase,const int pos,const 
 		}
 	return outiter;
 	}
-/*
-template <class T>
-static void toend(NumIter<T> *numiters,int maxnum) {
-	for(int i=0;i<maxnum;i++) {
-		numiters[i].iter=numiters[i].end;
-		}
-	} */
-
 static bool givetreatments(const char *args,int argslen, recdata *outdata)  {
 	Sgvinterpret pret;
 	pret.datnr=100;
@@ -1790,26 +1869,18 @@ static bool givetreatments(const char *args,int argslen, recdata *outdata)  {
 		}
 	
 	const int basecount=numdatas.size();
-	LOGARWEB("givetreatments:");
 	NumIter<Num> numiters[basecount];
 	for(int i=0;i<basecount;i++) {
 		auto [low,high]= numdatas[i]->getInRange(pret.lowerend,pret.higherend); 
-
 		numiters[i].begin=low;
 		numiters[i].iter=numiters[i].end=high-1;
 		numiters[i].bytes=sizeof(Num);
-		/*
-		if(low!=high) {
-			time_t tim=low->time;
-			LOGGERWEB("low=%d %s",tim,ctime(&tim));
-			tim=(high-1)->time;
-			LOGGERWEB("high=%d %s",tim,ctime(&tim));
-			} */
 		}
 
 	int count= pret.datnr;
 	char *outstart=pret.makedata(outdata ); 
 	if(!outstart) {
+		LOGARWEB("givetreatments:");
 		return outofmemory(outdata);
 		}
 
@@ -1817,8 +1888,9 @@ static bool givetreatments(const char *args,int argslen, recdata *outdata)  {
 	*outiter++='[';
 	bool carb=pret.carb;
 	bool insulin=pret.insulin;
+	int i=0;
 	if(settings->data()->saytreatments&&!pret.event) {
-		for(int i=0;i<count;) {
+		for(;i<count;) {
 			auto [ind,num]=findnewestwith(numiters,basecount);
 			if(!num) {
 				LOGGERWEB("no values %d %p\n",ind,num);
@@ -1833,8 +1905,9 @@ static bool givetreatments(const char *args,int argslen, recdata *outdata)  {
 				 if(longNightWeight(type)==0.0f&&rapidNightWeight(type)==0.0f) 
 				 	continue;
 				}
-			int pos=num-numdatas[ind]->begin();
-			char *out=writetreatment(outiter,ind,pos,num);
+			const int pos=num-numdatas[ind]->begin();
+			const int border=numdatas[ind]->getnightSwitch();
+			char *out=writetreatment(outiter,ind,pos,num,border);
 			if(out!=outiter) {
 				outiter=out;
 				i++;
@@ -1845,6 +1918,7 @@ static bool givetreatments(const char *args,int argslen, recdata *outdata)  {
 	 *outiter++=']';
 	 *outiter++='\n';
        mkjsonheader(outstart,outiter, false,outdata);
+       LOGGER("givetreatments nr=%d len=%d %.50s\n",i,outiter-outstart,outstart);
        return true;
 	}
 

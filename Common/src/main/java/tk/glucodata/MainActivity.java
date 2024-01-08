@@ -585,6 +585,7 @@ void activateresult(boolean res) {
             curve.onPause();
 
 	if(!isWearable) {
+		Natives.wakeuploader();
 		wakelibreview(20);
 		if(Natives.getlibrelinkused()) {
 			final var 	starttime= Natives.laststarttime();

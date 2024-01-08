@@ -699,6 +699,10 @@ public static native int getLibreCountry();
 public static native void setinterval(int val);
 public static native int getinterval( );
 
+public static native boolean getpostTreatments( );
+public static native void setpostTreatments(boolean val);
+
+
 //s/^extern.*JNIEXPORT[         ]*\([a-zA-Z]*\)[ ]*JNICALL[      ]*fromjava(\([^)]*\)) *(JNIEnv[^,]*,[^,)]*[,)]\([^){]*\)[^a-zA-Z0-9]*$/public static native \1 \2(\3);/g
 //public static native void sendxdripold();
 /*
