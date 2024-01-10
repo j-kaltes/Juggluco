@@ -176,6 +176,11 @@ bool uploadCGM() {
 			LOGGER("%d: positer=%d\n",sensorid,positer);
 			int left=len-positer;
 			if(left>=0) {
+constexpr const int			maxitems=10440;
+				if(left>maxitems) {
+					left=maxitems;
+					len=positer+left;
+					}
 				const int arraysize=3+left*itemsize;
 				LOGGER("arraysize=%d\n",arraysize);
 				char  *start=new(std::nothrow)  char[arraysize];

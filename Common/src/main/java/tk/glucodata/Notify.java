@@ -805,12 +805,12 @@ static void testnot() {
 	var dr=GlucoseDraw.getgludraw(gl);
 //	Notify.onenot.makearrownotification(2,dr,"message",sglucose,GLUCOSENOTIFICATION ,false);
  }
-
+/*
 static void test2() {
 	float gl=7.8f;
 	float rate=0.0f;
 	SuperGattCallback.dowithglucose("Serialnumber", (int)(gl*18f), gl,rate, 0,System.currentTimeMillis()) ;
-	}
+	} */
 
  public void  arrowplacelargenotification(int kind,int draw,String message,notGlucose glucose,String type,boolean once) {
         hasvalue=true;

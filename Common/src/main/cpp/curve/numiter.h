@@ -182,6 +182,13 @@ template <class T,typename F=bool (*)(const T *)> const T *findoldest(NumIter<T>
 		return nums[oldest].prev();
 	return nullptr;
 	}
+template <class T,typename F=bool (*)(const T *)> 
+const std::pair<int,const T*> findoldestwith(NumIter<T> *nums,int count,const F& notval=notvalid) {
+	int oldest = ifindoldest(nums,0,count,notval);
+	if(oldest>=0)
+		return {oldest,nums[oldest].prev()};
+	return {-1,nullptr};
+	}
 //template  <class T> const T *findoldest(NumIter<T> *nums,int count) ;
 //template  <class T> const T *findnewest(NumIter<T> *nums,int count) ;
 //extern template<typename F> const Num *findoldest(NumIter<Num> *nums,int count,const F& notval=notva<Num>) ;

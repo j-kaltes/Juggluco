@@ -22,19 +22,22 @@ auf einen niedrigeren Wert eingestellt ist.</p>
 <p><b>URL</b> : Die URL sollte die Form https://hostname:port haben,
 z. B. https://myname.herokuapp.com:6789</p>
 <p><b>Aktiv</b> : Server einschalten</p>
-<p><span lang="de-DE"><b>Mengen</b></span><span lang="de-DE"> </span><span lang="de-DE"><b>geben</b></span><span lang="de-DE">:
+<p><span lang="de-DE"><b>Mengen</b></span> <span lang="de-DE"><b>geben</b></span><span lang="de-DE">:
 Auch Mengen als Behandlungen an Nightscout senden. Durch Berühren
 der Checkbox gelangen Sie zu einem Dialog, in dem Sie für jedes
 Label festlegen können, was es in Nightscout bedeutet. Diese
 Spezifikationen werden mit dem Webserver in Juggluco geteilt ( <a href="https://www.juggluco.nl/Jugglucohelp/de/Nightscouthelp.html">Linkes
 Menü→Einstellungen→Webserver</a> ). Erst wenn alle Labels
 verarbeitet sind, können Sie „ </span><span lang="de-DE"><i>Mengen
-geben</i></span><span lang="de-DE">“ ankreuzen. Wenn Sie später
+geben</i></span>“ <span lang="de-DE">ankreuzen. Wenn Sie später
 ein neues Etikett hinzufügen, müssen Sie selbst festlegen, was
 damit geschehen soll. Aufgrund eines Fehlers in <a href="https://github.com/nightscout/cgm-remote-monitor">Nightscout</a>
 werden Einfügungen zu älteren Zeiträumen oder Löschungen erst
 angezeigt, nachdem Elemente mit einer neuen Zeit hinzugefügt wurden.
-Das bedeutet, dass es besser ist, seltener an Nightscout zu senden.</span></p>
+Das bedeutet, dass es besser ist, seltener an Nightscout zu senden.
+</span><span lang="de-DE">J</span><span lang="de-DE">etzt geschieht
+dies jedes Mal, wenn der Benutzer Juggluco verlässt, indem er das
+Display ausschaltet oder zu einer anderen App wechselt.</span></p>
 <p><b>Daten erneut senden</b>: Laden Sie alle Daten erneut auf den
 Nightscout-Server hoch</p>
 <p><b>Jetzt senden</b>: Normalerweise werden Daten sofort gesendet,
@@ -151,7 +154,7 @@ Nightscout-Follower (z. B. auf einem iPhone) mit diesem Server
 verbinden. Wenn es eine Nightscout-App gibt, die mit diesem Webserver
 nicht funktioniert, teilen Sie es mir bitte mit. Vielleicht kann es
 mit ein paar Änderungen zum Laufen gebracht werden. (Die IOS-Apps
-Nightscout und Nightscout X und die Android-App NSClient sind
+Nightscout und Nightscout X sind
 spezifisch für ein bestimmtes Nightscout-Serverprogramm und
 funktionieren nicht mit Juggluco.) 
 </p>

@@ -2058,10 +2058,12 @@ specificaties worden gedeeld met de webserver in Juggluco (
 afgehandeld, kunt je “Geef hoeveelheden” aanvinken. Als je later
 een nieuw label toevoegt, moet je er zelf aan denken te specificeren
 wat er mee moet gebeuren. Vanwege een bug in <a href="https://github.com/nightscout/cgm-remote-monitor">Nightscout</a>
-worden invoegingen </span><span lang="nl-NL">op eerdere tijdstippen</span><span lang="nl-NL">
-of verwijderingen pas getoond nadat items met een nieuwe tijd zijn
+worden invoegingen op eerdere tijdstippen</span> <span lang="nl-NL">of
+verwijderingen pas getoond nadat items met een nieuwe tijd zijn
 toegevoegd. Dit betekent dat het beter is om minder vaak naar
-Nightscout te sturen.</span></p>
+Nightscout te sturen. Nu gebeurt dit elke keer dat de gebruiker
+Juggluco verlaat door het display uit te schakelen of naar een andere
+app te gaan.</span></p>
 <p><b>Herzend data</b>: Upload alle gegevens opnieuw naar de
 Nightscout-server</p>
 <p><b>Zend nu</b> : Normaal gesproken worden gegevens direct

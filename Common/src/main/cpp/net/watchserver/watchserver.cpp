@@ -818,6 +818,18 @@ static bool getv3modified(recdata *outdata) {
 	mkjsonheader(start,start+alllen,false,outdata); 
 	return true;
 	}
+static bool nothingV3(recdata *outdata) {
+static	constexpr const char status[]="HTTP/1.1 200\r\nContent-Type: application/json; charset=utf-8\r\nContent-Length: 26\r\n\r\n" R"({"status":200,"result":[]})";
+
+	const int statuslen=sizeof(status)-1;
+	outdata->allbuf=nullptr;
+	outdata->start=status;
+	outdata->len=statuslen;
+	return true;
+	}
+static bool getv3food(recdata *outdata) {
+	return nothingV3(outdata);
+	}
 static bool getv3entries(recdata *outdata) {
 	int count=6;
    	outdata->allbuf=new(std::nothrow) char[512+75*count+200];
@@ -1016,7 +1028,7 @@ static void nosecret(std::string_view secret, recdata *outdata) {
 	outdata->start=nosecret;
 	}
 
-static void wrongpath(std::string_view toget, recdata *outdata);
+void wrongpath(std::string_view toget, recdata *outdata);
 static bool apiv1(const char *input,int leftlen,bool behead,bool json,recdata *outdata) {
 		const char *posptr=input;
 		std::string_view api="entries";
@@ -1307,6 +1319,7 @@ static bool jugglucos(const char * const input,int size, recdata *outdata) {
 	return true;
 	}
 
+static bool		 getv3treatments(const char *input,int inputlen,recdata *outdata); 
 static bool		 pebbleinterpret(const char *input,int inputlen,recdata *outdata);
 bool watchcommands(char *rbuf,int len,recdata *outdata,bool secure) {
 	LOGGERWEB("watchcommands len=%d %.*s",len,len,rbuf);
@@ -1486,6 +1499,32 @@ std::string_view entriesv3="api/v3/entries";
 const auto entries3size= entriesv3.size();
 	if(!memcmp(entriesv3.data(),toget.data(),entries3size)) {
 		return getv3entries(outdata);
+		}
+std::string_view treatmentsv3="api/v3/treatments";
+const auto treatments3size= treatmentsv3.size();
+
+	if(!memcmp(treatmentsv3.data(),toget.data(),treatments3size)) {
+		const char *start=toget.data()+treatmentsv3.size();
+		std::string_view history="/history";
+		if(!memcmp(start,history.data(),history.size()))  {
+			return nothingV3(outdata);
+			}
+		std::string_view jsonstr=".json";
+		if(!memcmp(start,jsonstr.data(),jsonstr.size())) 
+			start+=jsonstr.size();
+		return getv3treatments( start,toget.end()-start, outdata);
+		}
+
+std::string_view foodv3=R"(api/v3/food)";
+const auto food3size= foodv3.size();
+	if(!memcmp(foodv3.data(),toget.data(),food3size)) {
+		return getv3food(outdata);
+		}
+
+std::string_view devicestatusv3=R"(api/v3/devicestatus/history)";
+const auto devicestatus3size= devicestatusv3.size();
+	if(!memcmp(devicestatusv3.data(),toget.data(),devicestatus3size)) {
+		return nothingV3(outdata);
 		}
 std::string_view modifiedv3="api/v3/lastModified";
 const auto modified3size= modifiedv3.size();
@@ -1813,7 +1852,6 @@ char *writetreatment(char *outiter,const int numbase,const int pos,const Num*num
 	else
 		outiter+=sprintf(outiter,"num%d#%d",numbase,pos);
 
-//	outiter+=sprintf(outiter,R"({"_id":"num%d#%d","eventType":"<none>","enteredBy":"Juggluco","created_at":"%04d-%02d-%02dT%02d:%02d:%02d.000Z",)",numbase,pos,tmbuf.tm_year+1900,tmbuf.tm_mon+1,tmbuf.tm_mday, tmbuf.tm_hour, tmbuf.tm_min,tmbuf.tm_sec);
 
 	addar(outiter,R"(","eventType":"<none>","enteredBy":"Juggluco","created_at":")");
 	outiter+=sprintf(outiter,R"(%04d-%02d-%02dT%02d:%02d:%02d.000Z",)",tmbuf.tm_year+1900,tmbuf.tm_mon+1,tmbuf.tm_mday, tmbuf.tm_hour, tmbuf.tm_min,tmbuf.tm_sec);
@@ -2189,4 +2227,211 @@ Content-Length: 6890
 
 */
 
+class V3Args {
+public:
+	int datnr=0;
+	uint32_t lowerend=0,higherend=INT32_MAX;
+	bool getargs(const char *start,int len) ;
+	}; 
+  bool V3Args::getargs(const char *start,int lenin) {
+	 int 	len=rewriteperc(const_cast<char *>(start),lenin);
+	LOGGERWEB("after V3Args::getargs(%.*s#%d)\n",len,start,len);
+
+	const char *ends=start+len;
+	start++;
+	for(const char *iter=start;iter<ends;iter=std::find(iter,ends,'&')+1) {
+		std::string_view count="limit=";
+		if(!memcmp(iter,count.data(),count.size())) {
+			iter+=count.length();
+			if(!(iter=readnum<int>(iter,ends,datnr))||datnr<0) {
+
+				return false;
+				}
+			}
+		else {
+//		created_at$gt=2023-10-02T13:45:26.653Z
+		 std::string_view findstr="created_at$";
+		 if(!memcmp(iter,findstr.data(),findstr.size())) {
+			iter+=findstr.size();
+			std::string_view gtstr="gt";
+			if(!memcmp(iter,gtstr.data(),gtstr.size())) {
+				iter+=gtstr.size();
+				bool equal;
+				if(*iter=='=') {
+					equal=false;
+					++iter;	
+					}
+				else {
+					std::string_view eisstr="e=";
+					if(!memcmp(iter,eisstr.data(),eisstr.size())) {
+						equal=true;
+						iter+=eisstr.size();
+						}
+					else {
+						continue;
+						}
+					}
+				   if(iter[4]=='-') {
+					lowerend=readtime(iter);
+					}
+				else  {
+					const char *ptr;
+					longlongtype tmp;
+					if(!(ptr=readnum<longlongtype>(iter,ends,tmp))) {
+						LOGGERWEB("gt%s readnum failed '%s'\n",equal?"e":"",iter);
+						return false;
+						}
+					if(lowerend>1602042233000LL)
+						lowerend=tmp/1000LL;
+					iter=ptr;
+					LOGGERWEB("greater than %d\n",lowerend);
+					}
+				if(!equal) {
+					++lowerend;
+					}
+				}
+			else {
+			std::string_view ltstr="lt";
+			if(!memcmp(iter,ltstr.data(),ltstr.size())) {
+				iter+=ltstr.size();
+				bool equal;
+				if(*iter=='=') {
+					equal=false;
+					++iter;	
+					}
+				else {
+					std::string_view eisstr="e=";
+					if(!memcmp(iter,eisstr.data(),eisstr.size())) {
+						equal=true;
+						iter+=eisstr.size();
+						}
+					else {
+						continue;
+						}
+					}
+				  if(iter[4]=='-') {
+					higherend=readtime(iter);
+					}
+				else  {
+					const char *ptr;
+					longlongtype tmp;
+					if(!(ptr=readnum<longlongtype>(iter,ends,tmp))) {
+						LOGGERWEB("lt%s readnum failed '%s'\n",equal?"e":"",iter);
+						return false;
+						}
+					if(higherend>1602042233000LL)
+						higherend=tmp/1000LL;
+					iter=ptr;
+					LOGGERWEB("smaller than %d\n",higherend);
+					}
+				if(equal) {
+						++higherend;
+						}
+				  }
+				}
+			}
+			}	
+		}
+	if(!datnr) {
+		return false;
+		}
+	if(higherend<=lowerend)
+		return false;
+	return true;
+	};
+
+char *writetreatmentv3(char *outiter,const int numbase,const int pos,const Num*num) {
+	const int type=num->type;
+	if(type>=settings->varcount()||!settings->data()->Nightnums[type].kind) {
+		return outiter;
+		}
+	const time_t tim=num->gettime();
+        struct tm tmbuf;
+        gmtime_r(&tim, &tmbuf);
+
+	addar(outiter,R"({"eventType":"<none>","enteredBy":"Juggluco","created_at":")");
+	outiter+=sprintf(outiter,R"(%04d-%02d-%02dT%02d:%02d:%02d.000Z",)",tmbuf.tm_year+1900,tmbuf.tm_mon+1,tmbuf.tm_mday, tmbuf.tm_hour, tmbuf.tm_min,tmbuf.tm_sec);
+
+	float w=0.0f;
+	 if((w=longNightWeight(type))!=0.0f) {
+	 	
+	 	addar(outiter,R"("notes":"Long-Acting",)");
+	 	}
+	else { if((w=rapidNightWeight(type))!=0.0f) {
+	 	addar(outiter,R"("notes":"Rapid-Acting",)");
+	 	}
+		}
+	if(w!=0.0f) {
+		const char * typestr=settings->getlabel(type).data();;
+		auto units=w*num->value;
+		outiter+=sprintf(outiter,R"("insulin":%g,"insulinType":"%s")",units,typestr);
+
+		}
+	else {
+		if((w=carboNightWeight(type) )!=0.0f) {
+			outiter+=sprintf(outiter,R"("carbs":%g)",w*num->value);
+			}
+		else {
+			std::string_view typestr=settings->getlabel(type);
+			outiter+=sprintf(outiter,R"("notes":"%s %g")",typestr.data(),num->value);
+			}
+		}
+	addar(outiter,R"(,"utcOffset":0,"identifier":")");
+	outiter+=mkid(outiter,numbase,pos);
+	outiter+=sprintf(outiter,R"(","srvModified":%lu000,"srvCreated":%lu000},)",tim,tim);
+	return outiter;
+	}
+
+void wrongpath(std::string_view toget, recdata *outdata);
+
+
+ void mkjsonheader(char *outstart,char *outiter,const bool headonly,recdata *outdata) ;
+bool		 getv3treatments(const char *input,int inputlen,recdata *outdata) {
+	V3Args args; 
+	if(!args.getargs(input,inputlen)) {
+		wrongpath({input,(size_t)inputlen},outdata);
+		return false;
+		}
+	
+	const int basecount=numdatas.size();
+	NumIter<Num> numiters[basecount];
+	for(int i=0;i<basecount;i++) {
+		auto [low,high]= numdatas[i]->getInRange(args.lowerend,args.higherend); 
+		numiters[i].iter=numiters[i].begin=low;
+		numiters[i].end=high-1;
+		numiters[i].bytes=sizeof(Num);
+		}
+	auto count=args.datnr;
+
+	char *buffer=outdata->allbuf= new(std::nothrow) char[512+count*270];
+	if(!buffer) {
+		LOGARWEB("getv3treatments:");
+		return outofmemory(outdata);
+		}
+	 char *outiter=buffer+152;
+	 char *outstart=outiter;
+	addar(outiter,R"({"status":200,"result":[)");
+	int i=0;
+	
+	for(;i<count;) {
+		auto [ind,num]=findoldestwith(numiters,basecount);
+			if(!num) {
+				LOGGERWEB("no values %d %p\n",ind,num);
+				break;
+				}
+			const int pos=num-numdatas[ind]->begin();
+			char *out=writetreatmentv3(outiter,ind,pos,num);
+			if(out!=outiter) {
+				outiter=out;
+				i++;
+				}
+			}
+	if(outiter[-1]==',') --outiter;
+	 addar(outiter,"]}");
+       mkjsonheader(outstart,outiter, false,outdata);
+       LOGGERWEB("givetreatments nr=%d len=%d %.50s\n",i,outiter-outstart,outstart);
+       return true;
+	}
+
 #endif
+

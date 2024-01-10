@@ -56,27 +56,28 @@ private static final String LOG_ID="WearInt";
 private static final String ACTION_WATCH_COMMUNICATION_SENDER = "com.eveningoutpost.dexdrip.watch.wearintegration.BROADCAST_SERVICE_SENDER";
 static private final long oldvalue=1000*60*5L;
 static final Map<String, Settings> mapsettings=new HashMap<>();
-    /*
-    private static int getBatteryLevel() { //From xDrip
+/*
+private static int getBatteryLevel() { //From xDrip
+
         final Intent batteryIntent = Applic.app.registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
         try {
             int level = batteryIntent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
             int scale = batteryIntent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
             if (level == -1 || scale == -1) {
+                Log.e(LOG_ID,"level="+level+" scale="+scale);
                 return 50;
             }
-            return (int) (((float) level / (float) scale) * 100.0f);
-        } catch (NullPointerException e) {
+            int perc= (int) (((float) level / (float) scale) * 100.0f);
+            Log.i(LOG_ID,"BatteryLevel="+perc);
+            return perc;
+        } catch (Throwable error) {
+                        String mess=error!=null?error.getMessage():null;
+                        Log.e(LOG_ID,"getBatteryLevel "+mess);
+
             return 50;
-        }
-    } 
-04-03 12:38:37.808 23511 23511 I System.out: [FUNCTION]<->[alarm]
-04-03 12:38:37.808 23511 23511 I System.out: [type]<->[bg_missed_alerts] 
-04-03 12:38:37.808 23511 23511 I System.out: [message]<->[BG Readings Missed  (@12:38)]
-04-03 12:33:44.198 23511 23511 I System.out: bundle content 
-04-03 12:33:44.198 23511 23511 I System.out: [FUNCTION]<->[alarm]
-04-03 12:33:44.198 23511 23511 I System.out: [type]<->[BG_ALERT_TYPE]
-04-03 12:33:44.198 23511 23511 I System.out: [message]<->[LOW 3,4]
+                }
+        } 
+
 */
 static void alarm(String value ) {
         Intent intent = new Intent(ACTION_WATCH_COMMUNICATION_SENDER);

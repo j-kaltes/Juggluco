@@ -8,7 +8,6 @@
 #include "destruct.h"
 constexpr const int treatmentitemsize=300;
 
-constexpr const int	maxtreatments=100;
 extern vector<Numdata*> numdatas;
 
 extern bool nightuploadTreatments(const char *data,int len) ;

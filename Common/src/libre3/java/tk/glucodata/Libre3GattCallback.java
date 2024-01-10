@@ -80,13 +80,11 @@ void free() {
 	endcrypt(tmp);
 	}
 	public Libre3GattCallback(String SerialNumber, long dataptr)  {
-		super(3);
+		super(SerialNumber,dataptr,3);
 		Log.d(LOG_ID, "Libre3GattCallback(..)");
-		this.SerialNumber = SerialNumber;
-		this.dataptr = dataptr;
+//		this.dataptr = dataptr;
 		sensorptr = Natives.getsensorptr(dataptr);
-		mActiveDeviceAddress = Natives.getDeviceAddress(dataptr);
-		Log.i(LOG_ID, "new Libre3GattCallback " + SerialNumber + " " + ((mActiveDeviceAddress != null) ? mActiveDeviceAddress : "null"));
+//		mActiveDeviceAddress = Natives.getDeviceAddress(dataptr);
 
 		if(Thread.currentThread().equals( Looper.getMainLooper().getThread() )) {
 			var thr=new Thread(()-> init());

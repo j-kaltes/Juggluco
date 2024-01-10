@@ -200,7 +200,7 @@ public static void  config(MainActivity act, View settingsview) {
 	if(!isWearable) {
 		help=getbutton(act,R.string.helpname);
 		help.setOnClickListener(v-> help(R.string.NightPost,act));
-		treatments=getcheckbox(act,R.string.treatments,Natives.getpostTreatments());
+		treatments=getcheckbox(act,R.string.sendamounts,Natives.getpostTreatments());
 		}
 	boolean useuploader=Natives.getuseuploader();
 	var activebox=getcheckbox(act,R.string.active,useuploader);

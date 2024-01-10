@@ -351,6 +351,12 @@ extern "C" JNIEXPORT jlong JNICALL   fromjava(getsensorptr)(JNIEnv *env, jclass 
 		}
 	return reinterpret_cast<jlong>(sdata->hist);
 	}
+extern "C" JNIEXPORT jlong JNICALL   fromjava(getSensorStartmsec)(JNIEnv *env, jclass cl,jlong dataptr) {
+	if(!dataptr)
+		return 0LL;
+	const streamdata *sdata=reinterpret_cast<const streamdata *>(dataptr);
+	return sdata->hist->getstarttime()*1000LL; 
+	}
 extern "C" JNIEXPORT void JNICALL   fromjava(finishSensor)(JNIEnv *env, jclass cl,jlong dataptr) {
 	streamdata *sdata=reinterpret_cast<streamdata *>(dataptr);
 	if(!sdata)

@@ -79,9 +79,15 @@ public static boolean doGadgetbridge=false;
 	boolean superseded=false;
 	public final int sensorgen;
 	int readrssi=9999;
+	private long sensorstartmsec;
 //	public SuperGattCallback(SensorBluetooth sensorbluetooth, String SerialNumber, long dataptr);
-protected	SuperGattCallback(int gen) {
+protected	SuperGattCallback(String SerialNumber,long dataptr,int gen) {
+	this.SerialNumber = SerialNumber;
+	this.dataptr = dataptr;
+	mActiveDeviceAddress = Natives.getDeviceAddress(dataptr);
+	sensorstartmsec=Natives.getSensorStartmsec(dataptr);
 	sensorgen=gen;
+	Log.i(LOG_ID, "new SuperGattCallback " + SerialNumber + " " + ((mActiveDeviceAddress != null) ? mActiveDeviceAddress : "null"));
 	}
 public void disconnect() {
 	final var thegatt= mBluetoothGatt;
@@ -160,7 +166,7 @@ static void endtalk() {
 	}
 
 
-	static void dowithglucose(String SerialNumber, int mgdl, float gl, float rate, int alarm, long timmsec) {
+	static void dowithglucose(String SerialNumber, int mgdl, float gl, float rate, int alarm, long timmsec,long sensorstartmsec) {
 		if(gl==0.0)
 			return;
 		if (glucosealarms == null)
@@ -247,7 +253,7 @@ static void endtalk() {
 
 				}
 			if(Natives.getxbroadcast())
-				SendLikexDrip.broadcastglucose(mgdl,rate,timmsec);
+				SendLikexDrip.broadcastglucose(mgdl,rate,timmsec,sensorstartmsec);
 			if(!isWearable) {
 				if(doWearInt)
 					tk.glucodata.WearInt.sendglucose(mgdl, rate, alarm, timmsec);
@@ -267,7 +273,7 @@ protected void handleGlucoseResult(long res,long timmsec) {
 			float gl = Applic.unit == 1 ? glumgdl / mgdLmult : glumgdl;
 			short ratein = (short) ((res >> 32) & 0xFFFFL);
 			float rate = ratein / 1000.0f;
-			dowithglucose(SerialNumber, glumgdl, gl, rate, alarm, timmsec);
+			dowithglucose(SerialNumber, glumgdl, gl, rate, alarm, timmsec,sensorstartmsec);
 			charcha[0] = timmsec;
 			SensorBluetooth.othersworking(this,timmsec);
 		} else {

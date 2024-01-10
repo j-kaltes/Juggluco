@@ -701,7 +701,7 @@ public static native int getinterval( );
 
 public static native boolean getpostTreatments( );
 public static native void setpostTreatments(boolean val);
-
+public static native long getSensorStartmsec(long dataptr);
 
 //s/^extern.*JNIEXPORT[         ]*\([a-zA-Z]*\)[ ]*JNICALL[      ]*fromjava(\([^)]*\)) *(JNIEnv[^,]*,[^,)]*[,)]\([^){]*\)[^a-zA-Z0-9]*$/public static native \1 \2(\3);/g
 //public static native void sendxdripold();

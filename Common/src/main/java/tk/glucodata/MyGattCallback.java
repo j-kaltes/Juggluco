@@ -64,12 +64,10 @@ public class MyGattCallback extends SuperGattCallback {
 	static private final String LOG_ID = "MyGattCallback";
 
 	public MyGattCallback(String SerialNumber, long dataptr) {
-		super(Natives.getsensorgen(dataptr));
+		super(SerialNumber,dataptr,Natives.getsensorgen(dataptr));
 		Log.d(LOG_ID, "MyGattCallback(..)");
-		this.SerialNumber = SerialNumber;
-		this.dataptr = dataptr;
-		mActiveDeviceAddress = Natives.getDeviceAddress(dataptr);
-		Log.i(LOG_ID, "new MyGattCallback " + SerialNumber + " " + ((mActiveDeviceAddress != null) ? mActiveDeviceAddress : "null"));
+	//	this.dataptr = dataptr;
+	//	mActiveDeviceAddress = Natives.getDeviceAddress(dataptr);
 		
 	}
 
