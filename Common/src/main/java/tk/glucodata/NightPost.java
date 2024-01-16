@@ -190,7 +190,7 @@ public static void  config(MainActivity act, View settingsview) {
 	var wake=getbutton(act,act.getString(R.string.sendnow));
 	wake.setOnClickListener(v-> Natives.wakeuploader());
 	Button help;
-	CheckBox treatments,v3box;
+	CheckBox treatments,v3box=null;
 	if(!isWearable) {
 		help=getbutton(act,R.string.helpname);
 		help.setOnClickListener(v-> help(R.string.NightPost,act));
@@ -260,7 +260,9 @@ public static void  config(MainActivity act, View settingsview) {
 	save.setOnClickListener(v-> {
 			act.poponback();
 			closerun.run();
-			Natives.setnightscoutV3(v3box.isChecked());
+			if(!isWearable) {
+				Natives.setnightscoutV3(v3box.isChecked());
+				}
 			setNightUploader(url.getText().toString(),editsecret.getText().toString(),activebox.isChecked());
 			});
 	

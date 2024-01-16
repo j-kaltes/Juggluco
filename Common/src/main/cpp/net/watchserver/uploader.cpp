@@ -7,6 +7,7 @@
 #include "share/logs.h"
 #include "sensoren.h"
 #include "nums/numdata.h"
+#include "common.h"
 extern Settings *settings;
 extern Sensoren *sensors;
 constexpr int HTTP_OK=200;
@@ -186,7 +187,6 @@ static bool uploadCGM3() {
 	if(!settings->data()->nightsensor)
 		settings->data()->nightsensor=sensors->firstafter(mintime);
 	int startsensor= settings->data()->nightsensor;
-	constexpr const int itemsize=350;
 
 	constexpr const auto twoweeks=15*24*60*60;
 	time_t old=nu-twoweeks;
@@ -205,7 +205,7 @@ static bool uploadCGM3() {
 				for(;positer<len;positer++) { //Geen overlappende data?
 					const ScanData *el= &gdata[positer];
 					if(el->valid(positer)&&el->gettime()>mintime) {
-						constexpr const int max3entry=280;
+						constexpr const int max3entry=300;
 						char buf[max3entry];
 extern char * writev3entry(char *outin,const ScanData *val, const sensorname_t *sensorname,bool server=true);
 						const char *ptr=writev3entry(buf,el, sensorname,false);

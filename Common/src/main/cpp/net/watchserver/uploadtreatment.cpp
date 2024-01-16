@@ -8,6 +8,7 @@
 #include "logs.h"
 #include "destruct.h"
 #include "nightnumcategories.h"
+#include "common.h"
 constexpr int HTTP_OK=200;
 
 constexpr const int treatmentitemsize=300;

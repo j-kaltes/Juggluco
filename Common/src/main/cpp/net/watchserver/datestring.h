@@ -12,11 +12,6 @@ inline int Tdatestring(time_t tim,char *buf) {
 	}
 
 
-inline double getdelta(float change) {
-	static constexpr const double deltatimes=5.0;
-	 return isnan(change)?0:change*deltatimes; //json has no nan. This is obviously wrong, I don't know what else to do. Return null?
-	 }
-
 #include "sha1.hpp"
 inline std::string sha1encode(const char *secret, int len) {
 	std::string strsecret(secret,len);

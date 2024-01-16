@@ -27,9 +27,3 @@ inline bool isNightNote(int type) {
 	return settings->data()->Nightnums[type].kind==4;
 	}
 
-template <class T, size_t N>
-inline static constexpr void addar(char *&uitptr,const T (&array)[N]) {
-	constexpr const int len=N-1;
-	memcpy(uitptr,array,len);
-	uitptr+=len;
-	}
