@@ -9,6 +9,7 @@
 #include "nums/numdata.h"
 extern Settings *settings;
 extern Sensoren *sensors;
+constexpr int HTTP_OK=200;
 /*[
   {
     "type": "string",
@@ -27,10 +28,11 @@ extern Sensoren *sensors;
 */
 extern JNIEnv *getenv();
 
-
 jclass nightpostclass=nullptr;
 jstring jnightuploadEntriesurl=nullptr;
+jstring jnightuploadEntries3url=nullptr;
 jstring jnightuploadTreatmentsurl=nullptr;
+jstring jnightuploadTreatments3url=nullptr;
 jstring jnightuploadsecret= nullptr;
 /*
 void makeuploadurl(JNIEnv *env) {
@@ -62,7 +64,9 @@ static void makeuploadurl(JNIEnv *env,std::string_view pathstr,jstring &url) {
 		}
 static void makeuploadurls(JNIEnv *env) {
 	makeuploadurl(env,R"(/api/v1/entries)",jnightuploadEntriesurl);
+	makeuploadurl(env,R"(/api/v3/entries)",jnightuploadEntries3url);
 	makeuploadurl(env,R"(/api/v1/treatments)",jnightuploadTreatmentsurl);
+	makeuploadurl(env,R"(/api/v3/treatments)",jnightuploadTreatments3url);
 	}
 
 extern std::string sha1encode(const char *secret, int len);
@@ -103,6 +107,7 @@ extern vector<Numdata*> numdatas;
 static void reset() {
 	const int last=sensors->last();
 	settings->data()->nightsensor=0;
+	settings->data()->lastuploadtime=0;
 	for(int sensorid=0;sensorid<=last;sensorid++) {
 		if(SensorGlucoseData *sens=sensors->getSensorData(sensorid)) {
 			sens->getinfo()->nightiter=0;
@@ -111,22 +116,28 @@ static void reset() {
 	for(auto *numdata:numdatas)
 		numdata->setNightSend(0);
 	}
-static bool nightupload(jstring jnightuploadurl,const char *data,int len,bool put) {
-	const static jmethodID  upload=getenv()->GetStaticMethodID(nightpostclass,"upload","(Ljava/lang/String;[BLjava/lang/String;Z)Z");
+static int nightupload(jstring jnightuploadurl,const char *data,int len,bool put) {
+	const static jmethodID  upload=getenv()->GetStaticMethodID(nightpostclass,"upload","(Ljava/lang/String;[BLjava/lang/String;Z)I");
 	auto env=getenv();
 	jbyteArray uit=env->NewByteArray(len);
         env->SetByteArrayRegion(uit, 0, len,(const jbyte *)data);
-	bool res=env->CallStaticBooleanMethod(nightpostclass,upload,jnightuploadurl,uit,jnightuploadsecret,put);
+	int res=env->CallStaticIntMethod(nightpostclass,upload,jnightuploadurl,uit,jnightuploadsecret,put);
 	LOGGER("nightupload=%d\n",res);
 	env->DeleteLocalRef(uit);
 	return res;
 	}
-bool nightuploadEntries(const char *data,int len) {
+int nightuploadEntries(const char *data,int len) {
 	return nightupload(jnightuploadEntriesurl,data,len,false);
 	}
+int nightuploadEntries3(const char *data,int len) {
+	return nightupload(jnightuploadEntries3url,data,len,false);
+	}
 
-bool nightuploadTreatments(const char *data,int len) {
+int nightuploadTreatments(const char *data,int len) {
 	return nightupload(jnightuploadTreatmentsurl,data,len,true);
+	}
+int nightuploadTreatments3(const char *data,int len) {
+	return nightupload(jnightuploadTreatments3url,data,len,false);
 	}
 
 
@@ -147,9 +158,23 @@ template <class T> int mkuploaditem(char *buf,const char *sensorname,const T &it
 
 	}
 
+template <class T> int mkuploaditemv3(char *buf,const char *sensorname,const T &item) {
+	const time_t tim=item.gettime();
+	int mgdL=item.getmgdL();
+	float change= item.getchange();
+	const char * directionlabel=getdeltaname(change).data();
+	double delta=getdelta(change);
+	char timestr[50];
+	Tdatestring(tim,timestr);
+
+	return sprintf(buf,R"({"type":"sgv","device":"%s","dateString":"%s","date":%lld,"sgv":%d,"delta":%.3f,"direction":"%s","noise":1,"filtered":%d,"unfiltered":%d,"rssi":100},)",sensorname,timestr,tim*1000LL,mgdL,delta,directionlabel,mgdL*1000,mgdL*1000);
+
+	}
+
 extern  const int nighttimeback;
 const int nighttimeback=60*60*24*30;
-bool uploadCGM() {
+
+static bool uploadCGM3() {
 	LOGSTRING("upload\n");
 	int last=sensors->last();
 	if(last<0) {
@@ -170,7 +195,72 @@ bool uploadCGM() {
 	for(int sensorid=last;sensorid>=startsensor;--sensorid) {
 		if(SensorGlucoseData *sens=sensors->getSensorData(sensorid)) {
 			std::span<const ScanData> gdata=sens->getPolldata();
-			const char *sensorname=sens->showsensorname().data();
+			const sensorname_t *sensorname=sens->shortsensorname();
+			int len=gdata.size();
+			int positer=sens->getinfo()->nightiter;
+			LOGGER("%d: positer=%d\n",sensorid,positer);
+			int left=len-positer;
+			bool send=false;
+			if(left>=0) {
+				for(;positer<len;positer++) { //Geen overlappende data?
+					const ScanData *el= &gdata[positer];
+					if(el->valid(positer)&&el->gettime()>mintime) {
+						constexpr const int max3entry=280;
+						char buf[max3entry];
+extern char * writev3entry(char *outin,const ScanData *val, const sensorname_t *sensorname,bool server=true);
+						const char *ptr=writev3entry(buf,el, sensorname,false);
+						const int buflen=ptr-buf;
+						logwriter(buf,buflen);
+						auto res=nightuploadEntries3(buf,buflen);
+						if(res==200||res==201) {
+							sens->getinfo()->nightiter=positer+1;
+							send=true;
+							}
+						else {
+							LOGSTRING("nightupload failure\n");
+							if(send)
+								settings->data()->nightsensor=sensorid;
+							else
+								settings->data()->nightsensor=newstartsensor;
+							return false;
+							}
+						}
+					}
+				if(send)
+					newstartsensor=sensorid;
+				continue;
+				}
+			if(sens->getstarttime()>old) 
+				newstartsensor=sensorid;
+
+			}
+		}
+	settings->data()->nightsensor=newstartsensor;
+	return true;
+	}
+static bool uploadCGM() {
+	LOGSTRING("upload\n");
+	int last=sensors->last();
+	if(last<0) {
+		LOGAR("No sensors");
+		return true;
+		}
+	time_t nu=time(nullptr);
+	uint32_t mintime=nu-nighttimeback;
+	if(!settings->data()->nightsensor)
+		settings->data()->nightsensor=sensors->firstafter(mintime);
+	int startsensor= settings->data()->nightsensor;
+	constexpr const int itemsize=350;
+
+	constexpr const auto twoweeks=15*24*60*60;
+	time_t old=nu-twoweeks;
+
+	int newstartsensor=startsensor;
+	for(int sensorid=last;sensorid>=startsensor;--sensorid) {
+		if(SensorGlucoseData *sens=sensors->getSensorData(sensorid)) {
+			std::span<const ScanData> gdata=sens->getPolldata();
+			const sensorname_t *sensorname=sens->shortsensorname();
+			const char *sensornamestr=sensorname->data();
 			int len=gdata.size();
 			int positer=sens->getinfo()->nightiter;
 			LOGGER("%d: positer=%d\n",sensorid,positer);
@@ -193,8 +283,9 @@ constexpr const int			maxitems=10440;
 				*ptr++='[';
 				for(;positer<len;positer++) { //Geen overlappende data?
 					const ScanData &el= gdata[positer];
-					if(el.valid(positer)&&el.gettime()>mintime)
-						ptr+=mkuploaditem(ptr,sensorname,el);
+					if(el.valid(positer)&&el.gettime()>mintime) {
+						ptr+=mkuploaditem(ptr,sensornamestr,el);
+						}
 					}
 				LOGGER("%d new positer=%d\n",sensorid,len);
 				if(ptr>(start+1)) {
@@ -203,7 +294,7 @@ constexpr const int			maxitems=10440;
 					int datalen=ptr-start;
 					LOGGER("%d: UPLOADER #%d\n",sensorid,datalen);
 					LOGGERN(start,datalen);
-					if(nightuploadEntries(start,datalen)) {
+					if(nightuploadEntries(start,datalen)==HTTP_OK) {
 						sens->getinfo()->nightiter=len;
 						LOGGER("%d nightupload Success\n",sensorid);
 						LOGGER("%d saved nightiter=%d\n", sensorid,len);
@@ -231,7 +322,7 @@ bool uploaderrunning=false;
 
 extern bool networkpresent;
 
-extern bool uploadtreatments();
+extern bool uploadtreatments(bool);
 static void uploaderthread() {
 	int waitmin=0;
 	uploaderrunning=true;
@@ -240,6 +331,7 @@ static void uploaderthread() {
        prctl(PR_SET_NAME, view, 0, 0, 0);
 
 	while(true) {
+
 		  if(!networkpresent||!uploadercondition.dobackup) {
 			if(!networkpresent) {
 				waitmin=60;
@@ -258,15 +350,16 @@ static void uploaderthread() {
 			}
 		const auto current=uploadercondition.dobackup;
 		uploadercondition.dobackup=0;
+		bool useV3=settings->data()->nightscoutV3;
 		if(current&(Backup::wakestream|Backup::wakeall)) {
-			if(!uploadCGM()) {
+			if(!(useV3?uploadCGM3():uploadCGM())) {
 				waitmin=15;
 				continue;
 				}
 			}
 #ifndef WEAROS
 		if(current&(Backup::wakenums|Backup::wakeall)) {
-			if(!uploadtreatments()) {
+			if(!uploadtreatments(useV3)) {
 				waitmin=15;
 				continue;
 				}

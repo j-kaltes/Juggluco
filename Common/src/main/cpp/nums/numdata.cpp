@@ -71,7 +71,7 @@ bool happened(uint32_t stime,int type,float value)  {
 bool receivelastpos(const lastpos_t *data) {
 	if(numdatas.size()<2)
 		return false;
-	numdatas[data->dbase]->setlastpos(data->lastpos);
+	numdatas[data->dbase]-> receivelastpos(data->lastpos);
 	return true;
 	}
 

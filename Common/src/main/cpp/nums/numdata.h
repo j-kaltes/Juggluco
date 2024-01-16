@@ -29,6 +29,7 @@
 #include <stdint.h>
 #include <memory>
 #include <stdlib.h>
+#include <time.h>
 
 #include <string.h>
 #include <filesystem>
@@ -49,6 +50,7 @@
 #define LOGARTAG(...) LOGAR("nums: " __VA_ARGS__)
 extern Meal *meals;
 extern Backup *backup;
+void	setnumchanged();
 
 typedef std::conditional<sizeof(long long) == sizeof(int64_t), long long, int64_t >::type identtype; //to get rid of %lld warning
 constexpr size_t nummmaplen=77056;//  ((sizeof(size_t)==4)?64ul*1024ul*1024ul:(1024ul*1024*1024ul))/sizeof(Num);
@@ -89,19 +91,29 @@ Mmap<Num> nums;
 public:
 Mmap<Libreids> libreids;
 Mmap<int32_t> librechanged;
+Mmap<uint32_t> changetimes;
 
 static constexpr const std::string_view libreidsname="libreids.dat";
 static constexpr const std::string_view librechangedname="librechanged.dat";
-
-Numdata(const std::string_view base,identtype id,size_t len=0):newnumsfile(numfilename(base,id==0LL?0LL:-1LL)), ident(renamefile(base,id)),nums(newnumsfile.get(),len),libreids(base,libreidsname,len),librechanged(base,librechangedname,len){
-	auto lastpos=getlastpos();
-	LOGGERTAG("Numdata ident=%lld lastpos=%d\n",ident,lastpos);
+static constexpr const std::string_view changetimesname="changetimes.dat";
+uint32_t changed(int pos) const {
+	return changetimes[pos];
+	}
+bool changedsince(uint32_t tim,int pos) const {
+	return changed(pos)>=tim;
+	}
+Numdata(const std::string_view base,identtype id,size_t len=0):newnumsfile(numfilename(base,id==0LL?0LL:-1LL)), ident(renamefile(base,id)),nums(newnumsfile.get(),len),libreids(base,libreidsname,len),librechanged(base,librechangedname,len), changetimes(base,changetimesname,len)
+{
+	auto lastpo=getlastpos();
+	LOGGERTAG("Numdata ident=%lld lastpo=%d\n",ident,lastpo);
 	if(ident!=-1LL)
 		setnewident(ident);
-	if(lastpos*3/2> nums.size()) {
+	if(lastpo*3/2> nums.size()) {
 		auto newsize=nums.size()*10;
 		nums.extend(newnumsfile.get(),newsize);
 		libreids.extend(base,libreidsname,newsize);
+		librechanged.extend(base,librechangedname,newsize);
+		changetimes.extend(base,changetimesname,newsize);
 		}
 	else {
 		if(len)
@@ -189,30 +201,6 @@ bool trymagic() const {
 	return !memcmp(magic,ra,sizeof(magic));
 	}
 
-/*
-static bool writelabels(const char *name)  {
-	Create file(name);
-	if(file==-1) {
-		LOGSTRING("writelabels Open ");
-		lerror(name);
-		return false;
-		}
-	for(int i=0;i<labelcount;i++) {
-//		int len=strlen(labels[i]);
-		int len=labels[i].size();
-		const char nl[]="\n";
-		if(write(file,labels[i].data(),len)!=len) {
-			lerror(name);
-			return false;
-			}
-		if(write(file,nl,sizeof(nl)-1)!=1) {
-			lerror(name);
-			return false;
-			}
-		}
-	return true;
-	}
-*/
 static bool mknumdata(const string_view base,identtype ident)   {
 	 if(struct stat st;stat(base.data(),&st)||!S_ISDIR(st.st_mode)) {
 //	if(!fs::is_directory(basepath))  
@@ -278,9 +266,19 @@ void setfirstpos(int first)  {
 	auto ra=raw();
 	*reinterpret_cast<int *>(ra+firstpos)=first;
 	}
+
+int getlastpos() const {
+	const char *raw=reinterpret_cast<const char *>(nums.data());
+	return *reinterpret_cast<const int *>(raw+lastpos);
+	}
+int *lastposptr()  {
+	return reinterpret_cast<int *>(raw()+lastpos);
+	}
+void inclastpos() {
+	++*lastposptr();
+	}
 void setlastpos(int last)  { 
-	auto ra=raw();
-	int *was=reinterpret_cast<int *>(ra+lastpos);
+	int *was=lastposptr();
 	if(getchangedpos()==*was)
 		getchangedpos()=last;
 		
@@ -328,10 +326,6 @@ int getfirstpos() const { /*File functions: from which position in file starting
 	const char *raw=reinterpret_cast<const char *>(nums.data());
 	return *reinterpret_cast<const int *>(raw+firstpos);
 	}
-int getlastpos() const {
-	const char *raw=reinterpret_cast<const char *>(nums.data());
-	return *reinterpret_cast<const int *>(raw+lastpos);
-	}
 int &getchangedpos()  {
 	char *raw=reinterpret_cast<char *>(nums.data());
 	return *reinterpret_cast<int *>(raw+changedpos);
@@ -362,9 +356,9 @@ const int32_t getlibresend() const  {
 
 const int32_t nextlibresend(uint32_t after=time(nullptr)-librekeepsecs) const {
 	const int32_t next=getlibresend();
-	const auto lastpos=getlastpos();
-	if(next>=lastpos) {
-		LOGGERTAG("getlibresend(%u)=%d==getlastpos()=%u\n",after,next,lastpos);
+	const auto lastpo=getlastpos();
+	if(next>=lastpo) {
+		LOGGERTAG("getlibresend(%u)=%d==getlastpos()=%u\n",after,next,lastpo);
 		return next;
 		}
 	const auto firstpos=getfirstpos();
@@ -459,9 +453,6 @@ void setonechange(int pos) {
 		}
 	}
 
-void inclastpos() {
-	++*reinterpret_cast<int *>(raw()+lastpos);
-	}
 
 void inclastpolledpos() {
 	++*reinterpret_cast<int *>(raw()+lastpolledpos);
@@ -564,6 +555,28 @@ struct Num {
   */
 
 //Libreids libreids;
+void receivelastpos(int lastpos)  {
+	const auto oldlastpos=getlastpos();
+	if(lastpos<oldlastpos) {
+		setchangetimes(lastpos,oldlastpos);
+		}
+	setlastpos(lastpos);
+	}
+
+void setonlychangetimes(int ind,int nr,const Num*data) { 
+	const int end=ind+nr;
+	const Num *start= startdata();
+	uint32_t now=time(nullptr);
+	for(int i=ind;i<end;i++) {
+		if(memcmp(start +i, data+i-ind,sizeof(*start))) { 
+			changetimes[i]=now;
+			}
+		}
+	}
+void setchangetimes(int pos,int end,const uint32_t tim=time(nullptr)) {
+	for(int i=pos;i<end;i++)
+		changetimes[i]=tim;
+	}
 void numsaveonly( const uint32_t time, const float32_t value, const uint32_t type,const uint32_t mealptrin) {
 	Num *num=firstAfter(time);
 	const int ind=index(num);
@@ -572,6 +585,10 @@ void numsaveonly( const uint32_t time, const float32_t value, const uint32_t typ
 		const int movelen=(endnum-num);
 		libremovelarger(ind,ind+1,movelen);
 		memmove(num+1,num,movelen*sizeof(Num));
+		setchangetimes(ind,ind+movelen+1);
+		}
+	else {
+		setchangetimes(ind,ind+1);
 		}
 	uint32_t mealptr=meals->datameal()->endmeal(mealptrin);
 	*num={.time=time,.mealptr=mealptr,.value=value,.type=type};
@@ -589,6 +606,7 @@ void numsave( const uint32_t time, const float32_t value, const uint32_t type,co
 	numsaveonly(time,  value,  type, mealptrin);
 	if(backup)
 		backup->wakebackup(Backup::wakenums);
+	setnumchanged();
 	//wakeuploader();
 	//wakeaftermin(1);
 	 }
@@ -616,9 +634,14 @@ void numsavepos(int pos, uint32_t time, float32_t value, uint32_t type,uint32_t 
 		receivedbackup()=false;
 		nightBack(pos);
 		updatepos(pos,getlastpos()); //ADDED
+		setchangetimes(pos,pos+1);
 		}
+	setnumchanged();
 	 }
-static constexpr uint32_t removedtype=0xFFFFFFFF;
+//static constexpr uint32_t removedtype=0xFFFFFFFF;
+static constexpr uint32_t removedbit=1<<31;
+static constexpr uint32_t otherbits=~removedbit;
+
 void changeDevice() {
 	getlibreSolid()=getlibresend();
 	}
@@ -626,13 +649,16 @@ void numremove(int pos) {
 	Num &num=at(pos);
 	addlibrenumsdeleted(&num,pos);
 	LOGGERTAG("numremove(%d)\n",pos);
-	num.type=removedtype;
+//	num.type=removedtype;
+	num.type|=removedbit;
 	if(pos>0)
 		num.time=at(pos-1).time; //Deleted items to be ordered in time, for binary search
 	else
 		num.time=at(pos+1).time;
 	nightBack(pos);
 	updatepos(pos,pos+1);
+	setchangetimes(pos,pos+1);
+	setnumchanged();
 	}
 int index(const Num *num)const {
 	return num-startdata();
@@ -645,14 +671,14 @@ int numremove(Num *num) { //Ook effect in NumberView
 	}
 	*/
 int getdeclastpos() {
-//	--*reinterpret_cast<int *>(raw()+lastpos);
 	Num *last=end()-1;
-	last->type=removedtype;
+//	last->type=removedtype;
+	last->type|=removedbit;
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wsequence-point"
 	last->time=(--last)->time;
 #pragma GCC diagnostic pop
-	for(;last>=begin()&&last->type==removedtype;last--)
+	for(;last>=begin()&&(last->type&removedbit);last--)
 		;
 	return last-startdata()+1;
 	}
@@ -667,15 +693,23 @@ int numremove(Num *num) {
 			const int movelen= (ver-1);
 			memmove(num,num+1,movelen*sizeof(Num));
 			libremovesmaller(pos+1,pos,movelen);
+			setchangetimes(pos,pos+1+movelen);
 			}
+		else {
+		   setchangetimes(pos,pos+1);
+		   }
 		const int newlastpos= getdeclastpos();
 		setlastpos(newlastpos);
 		setlastchange(pos);
 		if(getlibresend() > newlastpos)
 			getlibresend()=newlastpos;
 		}
+	else  {
+		   setchangetimes(pos,pos+1);
+		   }
 	nightBack(pos);
 	updatepos(pos,getlastpos());
+	setnumchanged();
 	return pos;
 	}
 
@@ -735,18 +769,22 @@ void	librechangelastpos(const int newlastpos) {
 	for(int i=newlastpos;i<sendnr;i++)
 		addlibrenumsdeleted(start+i,i);
 	}
+
+
 void addmorelibrenumschanged(int ind,int nr,const Num*data) { 
 	const int sendnr= getlibresend();
 	LOGGERTAG("addmorelibrenumschanged(%d,%d,...)   sendnr=%d\n",ind,nr,sendnr);
-	if(ind>=sendnr)
+	if(ind>=sendnr) {
 		return;
+		}
 	int end=ind+nr;
 	if(end> sendnr)
 		end=sendnr;
 	if(end<getlibreSolid())
 		return;
+		/*
 	if(ind<getlibreSolid())
-		ind=getlibreSolid();
+		ind=getlibreSolid(); */
 	const Num *start= startdata();
 	for(int i=ind;i<end;i++) {
 		if(memcmp(start +i, data+i-ind,sizeof(*start))) { //TODO: CHANGE HERE instead of memcpy
@@ -866,6 +904,7 @@ void numchange(const Num *hit, uint32_t time, float32_t value, uint32_t type,uin
 			pos=num-startdata();
 			lastupdate=getlastpos();
 			libremovelarger(pos,pos+1,movelen);
+		   	setchangetimes(pos,pos+1+movelen);
 			}
 		else {
 			if(num>(hit+1)) {
@@ -878,6 +917,7 @@ void numchange(const Num *hit, uint32_t time, float32_t value, uint32_t type,uin
 				pos=modhit-startdata();
 				lastupdate=getlastpos();
 				libremovesmaller(pos+1,pos,movelen);
+		   		setchangetimes(pos,pos+1+movelen);
 				}
 			else  {
 				LOGARTAG("if(num<=(hit+1))");
@@ -886,6 +926,7 @@ void numchange(const Num *hit, uint32_t time, float32_t value, uint32_t type,uin
 				pos=num-startdata();
 				lastupdate=pos+1;
 			//	addlibrenumsdeleted(num,pos);
+		   		setchangetimes(pos,pos+1);
 				}
 			}
 		}
@@ -896,6 +937,7 @@ void numchange(const Num *hit, uint32_t time, float32_t value, uint32_t type,uin
 		pos=num-startdata();
 		//addlibrenumsdeleted(num,pos);
 		lastupdate=pos+1;
+		setchangetimes(pos,pos+1);
 		}
 	LOGGERTAG("numchange %d %d\n",pos,mealptr);
 	mealptr=meals->datameal()->endmeal(mealptr);
@@ -910,6 +952,7 @@ void numchange(const Num *hit, uint32_t time, float32_t value, uint32_t type,uin
 		}
 	nightBack(pos);
 	updatepos(pos,lastupdate);
+	setnumchanged();
 	}
 std::pair<const Num*,const Num*> getInRange(const uint32_t start,const uint32_t endtime) const {
 	Num zoek;
@@ -923,7 +966,8 @@ std::pair<const Num*,const Num*> getInRange(const uint32_t start,const uint32_t 
 		return {en,en};
 		}
 	zoek.time=endtime;
-  	const Num *high=std::upper_bound(low,en, zoek,comp);
+//  	const Num *high=std::upper_bound(low,en, zoek,comp);
+  	const Num *high=std::lower_bound(low,en, zoek,comp);
 	return {low,high};
 	}
 uint32_t getlasttime() const {
@@ -1071,9 +1115,9 @@ struct ardeleter { // deleter
     }
 };
 
-static bool	sendlastpos(crypt_t*pass,int sock,uint16_t dbase,uint32_t lastpos) {
-	LOGGERTAG("sendlastpos %hd %u\n",dbase,lastpos);
-	lastpos_t data{snumnr,dbase,lastpos}; 
+static bool	sendlastpos(crypt_t*pass,int sock,uint16_t dbase,uint32_t lastpo) {
+	LOGGERTAG("sendlastpos %hd %u\n",dbase,lastpo);
+	lastpos_t data{snumnr,dbase,lastpo}; 
 	return sendcommand(pass,sock,reinterpret_cast<uint8_t*>(&data),sizeof(data));
 	}
 
@@ -1272,6 +1316,7 @@ bool backupnums(const struct numsend* innums) {
 		uint32_t nr=*numsar++;
 		LOGGERTAG("NUM RN%d: off=%d %d items\n",(bool)ident,off,nr);
 		const Num *data=reinterpret_cast<const Num *>(numsar);
+		setonlychangetimes(off, nr,data);
 		addmorelibrenumschanged(off,nr,data);
 
 		const int datlen=nr*sizeof(Num);
@@ -1284,9 +1329,13 @@ bool backupnums(const struct numsend* innums) {
 		updateposnowake(off,eind);
 		receivedbackup()=true;
 		}
-	librechangelastpos(innums->last);
-	setlastpos(innums->last);
-	setlastpolledpos(innums->last); 
+	auto newlastpos=innums->last;
+	if(newlastpos<getlastpos()) {
+		setchangetimes(newlastpos,getlastpos());
+		}
+	librechangelastpos(newlastpos);
+	setlastpos(newlastpos);
+	setlastpolledpos(newlastpos); 
 	
 	if(backup)
 		backup->wakebackup(Backup::wakenums);

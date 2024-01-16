@@ -1356,6 +1356,7 @@ int savedoses(NovoPen *pen,uint32_t reftime,uint8_t *bytes,int len) {
 		nexttime=time;
 		++savednr;
 		}
+	setnumchanged();
 	backup->wakebackup(Backup::wakenums);	
 	return savednr;
 	}
@@ -1533,3 +1534,11 @@ extern "C" JNIEXPORT void  JNICALL   fromjava(setinterval)(JNIEnv *env, jclass c
 extern "C" JNIEXPORT jint  JNICALL   fromjava(getinterval)(JNIEnv *env, jclass cl) {
 	return settings->data()->nightinterval;
 	}
+
+extern "C" JNIEXPORT void  JNICALL   fromjava(setnightscoutV3)(JNIEnv *env, jclass cl,jboolean val) {
+	settings->data()->nightscoutV3=val;
+	}
+extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getnightscoutV3)(JNIEnv *env, jclass cl) {
+	return settings->data()->nightscoutV3;
+	}
+

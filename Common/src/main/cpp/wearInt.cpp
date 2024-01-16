@@ -38,7 +38,7 @@ int interval=duration/datnr;
 LOGGER("start=%ud end=%ud duration=%d interval=%d\n",start,end,duration,interval);
 	const auto targetlow=settings->data()->tlow;
 	const auto targethigh=settings->data()->thigh;
- return getitems(notused,datnr,start,end,true, interval,[env,targetlow,targethigh,low,within,high](char *outiter,int datit, const ScanData *iter,const char *sensorname,const time_t starttime) {
+ return getitems(notused,datnr,start,end,true, interval,[env,targetlow,targethigh,low,within,high](char *outiter,int datit, const ScanData *iter,const sensorname_t *sensorname,const time_t starttime) {
  	const static       jmethodID jadd=env->GetMethodID(env->FindClass("com/eveningoutpost/dexdrip/services/broadcastservice/models/GraphLine"),"add","(FF)V");
 	const auto valuemgL=iter->getsputnik();
 	const jobject jlist=(valuemgL<targetlow)?low:(valuemgL>targethigh?high:within);

@@ -97,6 +97,8 @@ static public boolean deleteUrl(String urlstring,String secret) {
 			return false;
 			}
 		HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+		urlConnection.setConnectTimeout(10000);
+		urlConnection.setReadTimeout(60000);
 		urlConnection.setRequestProperty("api-secret", secret);
 		urlConnection.setRequestProperty("Content-Type", "application/json");
 		urlConnection.setRequestMethod("DELETE");
@@ -121,7 +123,7 @@ static public boolean deleteUrl(String urlstring,String secret) {
 		}
 	}
 @Keep
-static public boolean upload(String httpurl,byte[] postdata,String secret,boolean put) {
+static public int upload(String httpurl,byte[] postdata,String secret,boolean put) {
 	Log.i(LOG_ID,"upload("+httpurl+",#"+postdata.length+","+ secret+")");
 	try {
 		URL url = new URL(httpurl);
@@ -140,23 +142,15 @@ static public boolean upload(String httpurl,byte[] postdata,String secret,boolea
 		outputPost.flush();
 		outputPost.close();
 		final int code=urlConnection.getResponseCode();
-		if(code==HTTP_OK) {
-//			String res=getstart(urlConnection,80);
-			String res=getstring(urlConnection);
-			Log.i(LOG_ID,"upload success "+res);
-			return true;
-			}
-		else {
-			 String ant=getstring(urlConnection);
-			var uploadstatus="upload ResponseCode="+code+" "+ant;
-			Log.e(LOG_ID,uploadstatus);
-			return false;
-			}
+		String res=getstring(urlConnection);
+		var uploadstatus="upload ResponseCode="+code+" "+res;
+		Log.e(LOG_ID,uploadstatus);
+		return code;
 		 }
 	catch(Throwable th) {
 		final String posterror="upload\n"+stackline(th);
 		Log.e(LOG_ID,posterror);
-		return false;
+		return -1;
 		}
  	}
 private static	void askclearupload(Context context) {
@@ -196,11 +190,12 @@ public static void  config(MainActivity act, View settingsview) {
 	var wake=getbutton(act,act.getString(R.string.sendnow));
 	wake.setOnClickListener(v-> Natives.wakeuploader());
 	Button help;
-	CheckBox treatments;
+	CheckBox treatments,v3box;
 	if(!isWearable) {
 		help=getbutton(act,R.string.helpname);
 		help.setOnClickListener(v-> help(R.string.NightPost,act));
 		treatments=getcheckbox(act,R.string.sendamounts,Natives.getpostTreatments());
+		v3box=getcheckbox(act,"test V3",Natives.getnightscoutV3());
 		}
 	boolean useuploader=Natives.getuseuploader();
 	var activebox=getcheckbox(act,R.string.active,useuploader);
@@ -225,7 +220,7 @@ public static void  config(MainActivity act, View settingsview) {
                         else {
                                 lay.setX((width-w)/2); lay.setY(0);
                                 };
-                        return new int[] {w,h};}, new View[]{urllabel,url},new View[]{secretlabel,visible,editsecret},new View[]{activebox,clear,wake},new View[]{treatments,help,cancel,save});
+                        return new int[] {w,h};}, new View[]{urllabel,url},new View[]{secretlabel,visible,editsecret},new View[]{activebox,v3box,clear,wake},new View[]{treatments,help,cancel,save});
 
 		int laypar;
 		final View allview=isWearable?new ScrollView(act):layout;
@@ -265,6 +260,7 @@ public static void  config(MainActivity act, View settingsview) {
 	save.setOnClickListener(v-> {
 			act.poponback();
 			closerun.run();
+			Natives.setnightscoutV3(v3box.isChecked());
 			setNightUploader(url.getText().toString(),editsecret.getText().toString(),activebox.isChecked());
 			});
 	

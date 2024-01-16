@@ -187,7 +187,7 @@ struct Tings {
 	std::array<char,36> libreviewDeviceID;
 	char _nullchar;
 	bool LibreCurrentOnly:1;
-	bool reserved5:1;
+	bool nightscoutV3:1;
 
 	bool RTL:1;
 
@@ -253,6 +253,8 @@ struct Tings {
 	std::array<NovoPen,maxpennr>  pens;
 	ToLibre Nightnums[maxvarnr];
 	int32_t nightinterval;
+	uint32_t timenumchanged;
+	uint32_t lastuploadtime;
 	void setdefault() {
 		memcpy(watchid,defaultid,sizeof(watchid));
 		};

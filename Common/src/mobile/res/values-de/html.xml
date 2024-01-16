@@ -22,6 +22,11 @@ auf einen niedrigeren Wert eingestellt ist.</p>
 <p><b>URL</b> : Die URL sollte die Form https://hostname:port haben,
 z. B. https://myname.herokuapp.com:6789</p>
 <p><b>Aktiv</b> : Server einschalten</p>
+<p><b>Test V3</b>: Lassen Sie Juggluco api/v3 zum Hochladen auf
+Nightscout verwenden. Verwenden Sie es nicht zum Hochladen auf einen
+Nightscout-Server, der zuvor V2-Uploads empfangen hat, und senden Sie
+keine V2-Uploads an einen Nightscout-Server, der zuvor V3-Uploads
+empfangen hat.</p>
 <p><span lang="de-DE"><b>Mengen</b></span> <span lang="de-DE"><b>geben</b></span><span lang="de-DE">:
 Auch Mengen als Behandlungen an Nightscout senden. Durch Berühren
 der Checkbox gelangen Sie zu einem Dialog, in dem Sie für jedes
@@ -35,9 +40,8 @@ damit geschehen soll. Aufgrund eines Fehlers in <a href="https://github.com/nigh
 werden Einfügungen zu älteren Zeiträumen oder Löschungen erst
 angezeigt, nachdem Elemente mit einer neuen Zeit hinzugefügt wurden.
 Das bedeutet, dass es besser ist, seltener an Nightscout zu senden.
-</span><span lang="de-DE">J</span><span lang="de-DE">etzt geschieht
-dies jedes Mal, wenn der Benutzer Juggluco verlässt, indem er das
-Display ausschaltet oder zu einer anderen App wechselt.</span></p>
+Jetzt geschieht dies jedes Mal, wenn der Benutzer Juggluco verlässt,
+indem er das Display ausschaltet oder zu einer anderen App wechselt.</span></p>
 <p><b>Daten erneut senden</b>: Laden Sie alle Daten erneut auf den
 Nightscout-Server hoch</p>
 <p><b>Jetzt senden</b>: Normalerweise werden Daten sofort gesendet,
@@ -113,12 +117,14 @@ Chain</span></em>“<span lang="de-DE">. </span>
 <p style="line-height: 100%; margin-bottom: 0in">Nachdem Sie Certbot
 installiert und Port 80 (http) von Ihrem Modem auf Ihren Computer
 umgeleitet haben, können Sie einfach Folgendes drücken:</p>
-<pre style="margin-bottom: 0.2in">certbot certonly --standalone --preferred-challenges http -d <i>myhostname</i></pre>
-<p>Siehe <a href="https://devpress.csdn.net/linux/62e7999e907d7d59d1c8cfd0.html">https://devpress.csdn.net/linux/62e7999e907d7d59d1c8cfd0.html</a> . </p>
-<p style="line-height: 100%; margin-bottom: 0in">
-<span lang="de-DE">Nachdem ich Certbot verwendet hatte, fand ich den
-privaten Schlüssel in /etc/letsencrypt/live/myhostname/privkey.pem</span>
-<span lang="de-DE">und die vollständige Kette in
+<pre style="margin-bottom: 0.2in">certbot certonly --standalone --preferred-challenges http -d <i>myhostname</i></pre><p>
+Siehe <a href="https://devpress.csdn.net/linux/62e7999e907d7d59d1c8cfd0.html">https://devpress.csdn.net/linux/62e7999e907d7d59d1c8cfd0.html</a>
+. 
+</p>
+<p style="line-height: 100%; margin-bottom: 0in"><span lang="de-DE">Nachdem
+ich Certbot verwendet hatte, fand ich den privaten Schlüssel in
+/etc/letsencrypt/live/myhostname/privkey.pem</span> <span lang="de-DE">und
+die vollständige Kette in
 /etc/letsencrypt/live/myhostname/fullchain.pem. &quot;</span><em><span lang="de-DE">myhostname</span></em><span lang="de-DE">&quot;
 ist der von mir verwendete Hostname.</span></p>
 <p style="line-height: 100%; margin-bottom: 0in"><span lang="de-DE">Wenn
@@ -132,7 +138,7 @@ können ihnen Glukosewerte mit der xDrip-Broadcast in Juggluco senden
 (linkes Menü-&gt; <a href="https://www.juggluco.nl/Jugglucohelp/de/settinghelp.html">Einstellungen</a>-&gt;
 xDrip Broadcast).</p>
 <p style="line-height: 100%; margin-bottom: 0in">SSL benötigen Sie
-für die Android-Apps Diabetes:M, <a href="https://play.google.com/store/apps/details?id=se.cornixit.nightwatch">Nightwatch</a>
+für die Android-Apps AAPS, Diabetes:M, <a href="https://play.google.com/store/apps/details?id=se.cornixit.nightwatch">Nightwatch</a>
 und <a href="https://slingithub.github.io/CheckmateWeb">Checkmate</a>,
 Sugarmate (MacOS und IOS) und <a href="https://github.com/JohanDegraeve/xdripswift">Xdrip4ios</a>,
 Shuggah und Cockpit (IOS).</p>
@@ -145,6 +151,36 @@ Nightscout-Server-URL an:
 authentifizierten Schlüssels, den Sie Juggluco gegeben haben,</span>
 <span lang="de-DE">port ist der Port, den Sie an den hier angegebenen
 Port weitergeleitet haben (Standard: 17581).</span></p>
+<p style="line-height: 100%; margin-bottom: 0in">AAPS kann mit
+Juggluco 7.3.0 und höher verwendet werden. Dazu müssen Sie in AAPS
+<i>NSClientV3</i> mit den folgenden Einstellungen auswählen:</p>
+<ul>
+	<li><p style="line-height: 100%; margin-bottom: 0in">Verwenden Sie
+	als <i>NS-Zug</i><i>angs</i><i>token</i> das hier angegebene
+	api_secret.</p>
+	<li><p style="line-height: 100%; margin-bottom: 0in">nicht gesetzt
+	„<i>Mit Websockets verbinden</i>“;</p>
+	<li><p style="line-height: 100%; margin-bottom: 0in">Deaktivieren
+	Sie unter „ <i>Synchronisierung“</i><span style="font-style: normal">
+	alle Uploads</span><i>. </i>Nur einschalten:</p>
+	<ul>
+		<li><p style="line-height: 100%; margin-bottom: 0in">Historische
+		CGM Daten ergänzen;</p>
+		<li><p style="line-height: 100%; margin-bottom: 0in">Insulin
+		abrufen;</p>
+		<li><p style="line-height: 100%; margin-bottom: 0in">Kohlenhydrate
+		abrufen;</p>
+		<li><p style="line-height: 100%; margin-bottom: 0in">Ereignisse
+		abrufen;</p>
+	</ul>
+	<li><p style="line-height: 100%; margin-bottom: 0in">Deaktivieren
+	Sie alle „<i>erweiterten Einstellungen</i>“.</p>
+</ul>
+<p style="line-height: 100%; margin-bottom: 0in">Das Einfügen von
+Mengen vor zuvor eingegebenen Mengen führt dazu, dass AAPS doppelte
+Behandlungen hat. Dies geschieht auch, wenn die v3-Schnittstelle mit
+einem Nightscout-Server verwendet wird, der v3-Uploads von Juggluco
+empfängt.</p>
 <p style="line-height: 100%; margin-bottom: 0in">Der Webserver kann
 auch auf einem Linux-Rechner betrieben werden. Es erhält seine Daten
 von einer Klonverbindung von Juggluco, die mit dem Sensor verbunden
@@ -154,9 +190,8 @@ Nightscout-Follower (z. B. auf einem iPhone) mit diesem Server
 verbinden. Wenn es eine Nightscout-App gibt, die mit diesem Webserver
 nicht funktioniert, teilen Sie es mir bitte mit. Vielleicht kann es
 mit ein paar Änderungen zum Laufen gebracht werden. (Die IOS-Apps
-Nightscout und Nightscout X sind
-spezifisch für ein bestimmtes Nightscout-Serverprogramm und
-funktionieren nicht mit Juggluco.) 
+Nightscout und Nightscout X sind spezifisch für ein bestimmtes
+Nightscout-Serverprogramm und funktionieren nicht mit Juggluco.) 
 </p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>api_secret</b>:
 Geben Sie an, dass Follower das HTTP-Header-Element api<b>_</b>secret
@@ -167,11 +202,7 @@ mit einem SHA1-codierten Geheimnis verwenden. Ab Juggluco 7.1.15 ist
 es auch möglich, api_secret zum ersten Element des Pfads der
 Nightscout-Server-URL zu machen. Wenn xyz das api_secret und
 http://hostname:port die Nightscout-Server-URL ist, können Sie
-http://hostname:port/xzy als Nightscout-Server-URL angeben. Für
-<a href="https://github.com/kashamalasha/nightscout-widget-electron">Owlet</a>
-ist dies die einzige Möglichkeit, das api_secret zu nutzen. <i>Das
-NIGHTSCOUT TOKEN</i> in <a href="https://github.com/kashamalasha/nightscout-widget-electron">den
-Owlet-</a> Einstellungen hat keine Auswirkung.</p>
+http://hostname:port/xzy als Nightscout-Server-URL angeben.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><strong><span lang="de-DE">Sichtbar</span></strong><span lang="de-DE">:
 Geheimnis</span> <span lang="de-DE">sichtbar machen.</span></p>
 <p style="line-height: 100%; margin-bottom: 0in"><strong><span lang="de-DE">Port</span></strong><span lang="de-DE">:

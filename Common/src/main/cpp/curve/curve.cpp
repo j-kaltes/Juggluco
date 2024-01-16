@@ -589,7 +589,7 @@ pair<const ScanData*,const ScanData*> getScanRange(const ScanData *scan,const in
 		return {endscan,endscan};
 		}
 	scanst.t=end;
-  	const ScanData *high=upper_bound(low,endscan, scanst,comp);
+  	const ScanData *high=lower_bound(low,endscan, scanst,comp);
 
 	return {low,high};
 	}

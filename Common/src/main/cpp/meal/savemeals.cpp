@@ -245,11 +245,11 @@ bool MealSave::savemeal(FILE* handle,const Num *num)  {
 
 #include "destruct.h"
 
-extern bool allsavemeals(int handle,uint32_t starttime=0,uint32_t endtime=UINT32_MAX);
+extern bool allsavemeals(int handle,uint32_t starttime=0,uint32_t endtime=UINT32_MAX,int maxcount=INT_MAX);
 
 
 extern bool savemeals(FILE* handle,uint32_t starttime,uint32_t endtime);
-bool fallsavemeals(FILE *handle,int _unit,uint32_t starttime,uint32_t endtime) {
+bool fallsavemeals(FILE *handle,int _unit,uint32_t starttime,uint32_t endtime,int maxcount) {
 	if(!(dostarthtml(handle)&&savemeals(handle,starttime,endtime)))
 		return false;
 	if(fwrite(endhtml.data(),1,endhtml.size(),handle)!=endhtml.size())
@@ -258,9 +258,9 @@ bool fallsavemeals(FILE *handle,int _unit,uint32_t starttime,uint32_t endtime) {
 	}
 
 
-bool allsavemeals(int handle,uint32_t starttime,uint32_t endtime) {
+bool allsavemeals(int handle,uint32_t starttime,uint32_t endtime,int maxcount) {
 	if(FILE *fp=fdopen(handle,"w")) {
-		 bool res=fallsavemeals(fp,0,starttime,endtime) ;
+		 bool res=fallsavemeals(fp,0,starttime,endtime,maxcount) ;
 		 fclose(fp);
 		 return res;
 		 }

@@ -67,12 +67,12 @@ bool  exportdata(const char *filename,P proc,Ts... args)  {
 	}
 
 
-extern bool allsavemeals(int handle,uint32_t starttime=0,uint32_t endtime=UINT32_MAX);
+extern bool allsavemeals(int handle,uint32_t starttime=0,uint32_t endtime=UINT32_MAX,int maxcount=INT_MAX);
 
 
-extern bool exportnums(int handle,uint32_t starttime=0,uint32_t endtime=UINT32_MAX);
-bool exportnummer(const char *filename,uint32_t starttime=0,uint32_t endtime=UINT32_MAX) {
-	return exportdata(filename,exportnums,starttime,endtime);
+extern bool exportnums(int handle,uint32_t starttime=0,uint32_t endtime=UINT32_MAX,int maxcount=INT_MAX);
+bool exportnummer(const char *filename,uint32_t starttime=0,uint32_t endtime=UINT32_MAX,int maxcount=INT_MAX) {
+	return exportdata(filename,exportnums,starttime,endtime,maxcount);
 	}
 /*
 bool exportnums(const char *filename) {
@@ -265,8 +265,8 @@ const char dirconf[]=".jugglucorc";
 //bool exportscans(int handle, const std::span<const ScanData>  (SensorGlucoseData::*proc)(void) const) ;
 
 template <bool repeatids>
-bool exportscans(int handle,  CurData  (SensorGlucoseData::*proc)(const uint32_t,const uint32_t) const,uint32_t starttime=0,uint32_t endtime=UINT32_MAX) ;
-bool exporthistory(int handle,uint32_t starttime=0,uint32_t endtime=UINT32_MAX) ;
+bool exportscans(int handle,  CurData  (SensorGlucoseData::*proc)(const uint32_t,const uint32_t) const,uint32_t starttime=0,uint32_t endtime=UINT32_MAX,int maxcount=INT_MAX) ;
+bool exporthistory(int handle,uint32_t starttime=0,uint32_t endtime=UINT32_MAX,int maxcount=INT_MAX) ;
 void showversion() {
 #include "version.h"
 	cout<<"Version "<< APPVERSION <<endl;
@@ -567,8 +567,9 @@ static constexpr const	char defaultname[]="jugglucodata";
 			return 	listconnections();
 		if(clear)
 			return clearhosts();
+	int maxcount=INT_MAX;
 		if(numexport)  {
-			 if(!exportnummer(numexport,starttime,endtime)) 
+			 if(!exportnummer(numexport,starttime,endtime,maxcount)) 
 				return 13;
 			did=true;
 			}
@@ -581,23 +582,23 @@ static constexpr const	char defaultname[]="jugglucodata";
 			}
 #endif
 		if(historyexport)  {
-			 if(!exportdata(historyexport,exporthistory,starttime,endtime))
+			 if(!exportdata(historyexport,exporthistory,starttime,endtime,maxcount))
 				return 13;
 			did=true;
 
 			}
 		if(scanexport) {
-			if(!exportdata(scanexport,exportscans<true>, &SensorGlucoseData::scanInperiod,starttime,endtime))
+			if(!exportdata(scanexport,exportscans<true>, &SensorGlucoseData::scanInperiod,starttime,endtime,maxcount))
 				return 13;
 			did=true;
 			}
 		if(pollexport) {
-			if(!exportdata(pollexport,exportscans<false>, &SensorGlucoseData::streamInperiod,starttime,endtime))
+			if(!exportdata(pollexport,exportscans<false>, &SensorGlucoseData::streamInperiod,starttime,endtime,maxcount))
 				return 13;
 			did=true;
 			}
 		if(mealexport) {
-			if(!exportdata(mealexport,allsavemeals,starttime,endtime))
+			if(!exportdata(mealexport,allsavemeals,starttime,endtime,maxcount))
 				return 13;
 			did=true;
 			}

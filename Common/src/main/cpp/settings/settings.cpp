@@ -476,4 +476,7 @@ void initjuggluco(std::string_view dirfiles) {
         extern void setupnetwork();
         setupnetwork();
 	}
+void setnumchanged() {
+	settings->data()->timenumchanged=time(nullptr);
+	}
 

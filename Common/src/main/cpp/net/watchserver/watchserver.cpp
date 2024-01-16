@@ -48,13 +48,21 @@
 #include <sys/wait.h>
        #include <unistd.h>
        #include <sys/syscall.h> 
+#include <map>
 #include "../netstuff.h"
 #include "destruct.h"
+#include "inout.h"
 
 #include "logs.h"
 #include "watchserver.h"
 
 #include "datestring.h"
+
+template <typename T>
+inline void	addstrview(char *&uitptr,const T indata) {
+	memcpy(uitptr,indata.data(),indata.size());
+	uitptr+=indata.size();
+	}
 
 #ifndef LOGGER
 #define LOGGER(...) fprintf(stderr,__VA_ARGS__)
@@ -412,6 +420,13 @@ static	constexpr const char status[]="HTTP/1.1 413 Content Too Large\r\nContent-
 	return true;
 }
 
+
+static bool giveservererror(recdata *outdata) {
+	outdata->allbuf=nullptr;
+	outdata->len=servererrorstr.size();
+	outdata->start=servererrorstr.data();
+	return true;
+	}
 /*
 static bool givesite(recdata *outdata) {
 static	constexpr const char webpage[]="HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\nContent-Length: 133\r\n\r\n" 
@@ -424,6 +439,99 @@ R"(<!DOCTYPE html>
 </body>
 </html>
 )"; */
+/*
+typedef std::array<chars,180> auth_t;
+auth_t mkauth() {
+	static constexpr const char chars[]={'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','.','-'};
+	constexpr const int maxchars=sizeof(chars);
+	auth_t authbuf;
+	authbuf.back()='\0';
+	constexpr const int len=autbuf.size()-1
+	for(int i=0;i<len;i++) {
+		authbuf[i]=random()/maxchars;
+		}
+	return authbuf;
+	}
+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NUb2tlbiI6ImFhcHMtOTQ0Y2YzZGVkYTMxMTkxNCIsImlhdCI6MTcwNTMyNDMzMSwiZXhwIjoxNzA1MzUzMTMxfQ.-Ct6FxKCsNmO-HNqNJO2JUtuO3PZCgIB-zEV2kYDCak"
+{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NUb2tlbiI6ImFhcHMtOTQ0Y2YzZGVkYTMxMTkxNCIsImlhdCI6MTcwNTMyNDMzMSwiZXhwIjoxNzA1MzUzMTMxfQ.-Ct6FxKCsNmO-HNqNJO2JUtuO3PZCgIB-zEV2kYDCak","sub":"aaps","permissionGroups":[["*"],["*:*:read"]],"iat":1705324331,"exp":1705353131}
+
+static std::unordered_map<auth_t,uint32_t> authority;
+*/
+#include "net/makerandom.h"
+typedef std::array<char,179> auth_t;
+static bool mkauth(auth_t &authbuf) {
+	static constexpr const char chars[]={'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','.','-'};
+	constexpr const int authlen=tuple_size<auth_t>();
+	unsigned char rbuf[(authlen*6+7)/8];
+	if(!makerandom(rbuf, sizeof(rbuf))) {
+		return false;
+		}
+	int i=0;
+	for(i=0;i<size(rbuf);i++) {
+		authbuf[i]=chars[rbuf[i]&0x3F];
+		}
+		
+	for(int rit=0;i<authlen;++i,++rit) {
+		authbuf[i]=chars[((rbuf[rit*3]>>2)&0x30)|((rbuf[rit*3+1]>>4)&0x0C)|((rbuf[rit*3+2]>>6)&0x03)];
+		}
+	return true;
+	}
+
+static std::map<auth_t,uint32_t> authority;
+
+
+static std::mutex authmutex;
+constexpr const int expirelater=4*60*60; 
+/*Disadvantage: more tokens
+Advantage: gets new token earlier in case Juggluco restarted. Juggluco doesn't save tokens
+*/
+
+static bool authorization(recdata *outdata) {
+   	outdata->allbuf=new(std::nothrow) char[512+400];
+	if(!outdata->allbuf) {
+		return outofmemory(outdata);
+		}
+    	char *start=outdata->allbuf+150;
+	char *outiter=start;
+
+	uint32_t now=time(nullptr);
+	uint32_t expire=now+60*60*4;
+	addar(outiter,R"({"token":")");
+	auth_t au;
+	if(!mkauth(au)) {
+   		delete[] outdata->allbuf;
+   		outdata->allbuf=nullptr;
+		return giveservererror(outdata);
+		}
+	{
+	std::lock_guard<std::mutex> lck(authmutex);
+	std::erase_if(authority, [expiredtime=now-expirelater](const auto& auth){ return auth.second < expiredtime; });
+	authority.insert({au,expire});
+	};
+	addstrview(outiter,au);
+	addar(outiter,R"(","sub":"Juggluco","permissionGroups":[["*:*:read"],["*:*:read"]],"iat":)");
+	outiter+=sprintf(outiter,R"(%u,"exp":%u})",now,expire);
+	mkjsonheader(start,outiter,false,outdata); 
+	return true;
+	}
+
+static bool isauthorized(const auth_t *authori) {
+	if(!authori)
+		return false;
+	std::lock_guard<std::mutex> lck(authmutex);
+	if(!authority.size())
+		return false;
+	if(const auto hit=authority.find(*authori);hit==authority.end())
+		return false;
+	else  {
+		if((hit->second+expirelater)<(time(nullptr))) {
+			LOGGER("expired %u\n",hit->second);
+			authority.erase(hit);
+			return false;
+			}
+		return true;
+		}
+	}
 static bool givesite(recdata *outdata,std::string_view hostname,bool secure) {
 if(hostname.data()==nullptr) {
 	hostname="localhost";
@@ -604,12 +712,6 @@ bool givenothing(recdata *outdata) {
 	return true;
 }
 
-static bool giveservererror(recdata *outdata) {
-	outdata->allbuf=nullptr;
-	outdata->len=servererrorstr.size();
-	outdata->start=servererrorstr.data();
-	return true;
-	}
 
 char *textitem(char *outiter,const ScanData *value,const char sep=9) {
 	auto mgdL=value->getmgdL();
@@ -709,9 +811,11 @@ bool givesgvtxt(int nr,int interval,uint32_t lowerend,uint32_t higherend,recdata
 		}
     char *start=outdata->allbuf+250,*outiter=start;
 //	int interval=4*61;
-	if(!getitems(outiter,nr,lowerend,higherend,true,interval,[sep](char *outiter,int datit, const ScanData *iter,const char *sensorname,const time_t starttime) {
+	if(!getitems(outiter,nr,lowerend,higherend,true,interval,[sep](char *outiter,int datit, const ScanData *iter,const sensorname_t * sensorname ,const time_t starttime) {
 		return textitem(outiter,iter,sep);
 	})) {
+		delete[] outdata->allbuf;
+		 outdata->allbuf=nullptr;
 		return givenothing(outdata);
 	};
 	outiter-=2;
@@ -753,8 +857,8 @@ char * givebuckets(char *start) {
 	addar(outiter,startbuckets);
 	int interval=settings->data()->nightinterval;
 
-	if(!getitems(outiter,4,0,UINT32_MAX,true,interval,[](char *outiter,int datit, const ScanData *iter,const char *sensorname,const time_t starttime) {
-		return writebucket(outiter,datit,iter,sensorname);
+	if(!getitems(outiter,4,0,UINT32_MAX,true,interval,[](char *outiter,int datit, const ScanData *iter,const sensorname_t *sensorname,const time_t starttime) {
+		return writebucket(outiter,datit,iter,sensorname->data());
 	})) {
 		return start;
 	};
@@ -790,6 +894,7 @@ char * givecage(char *outiter) {
 			//  {"delta":{"absolute":-2,"elapsedMins":5,"interpolated":false,"mean5MinsAgo":137,"times":{"recent":1676718516000,"previous":1676718216000},"mgdl":-2,"scaled":-2,"display":"-2","previous":{"mean":137,"last":137,"mills":1676718216000,"sgvs":[{"_id":"63f0b09d4d77ce842e333f3d","mgdl":137,"mills":1676718216000,"device":"loop://iPhone","direction":"Flat","type":"sgv","scaled":137}]}}}
 
 extern uint32_t getnumlasttime() ;
+/*
 static bool getv2auth(recdata *outdata) {
 	static constexpr const char auth[]=R"({"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NUb2tlbiI6Im93bGV0LTIyYjliMjE3YTIwOGJhNzUiLCJpYXQiOjE3MDQ0NTMzOTUsImV4cCI6MTcwNDQ4MjE5NX0.HQzcZ8N_fFcXiGv7qRuiiUXkZFBsdGTvV1O1nvpRWpQ","sub":"owlet","permissionGroups":[["*:*:read"],["*:*:read"]],"iat":%u,"exp":%u})";
    	outdata->allbuf=new(std::nothrow) char[512+sizeof(auth)+2*10];
@@ -798,23 +903,28 @@ static bool getv2auth(recdata *outdata) {
 		}
     	char *start=outdata->allbuf+150;
 	uint32_t now=time(nullptr);
-	uint32_t expire=now*60*60*8;
+	uint32_t expire=now+60*60*8;
 	auto alllen=sprintf(start,auth,now,expire);
 	mkjsonheader(start,start+alllen,false,outdata); 
 	return true;
-	}
+	} */
 static bool getv3modified(recdata *outdata) {
 	uint32_t now=time(nullptr);
 	auto lastentries= sensors->timelastdata();
-	auto lastnum=getnumlasttime();
+	auto lastnum=settings->data()->timenumchanged;
+	if(!lastnum)
+		lastnum=1546297200;
+
 	#include "lastModified.h"
    	outdata->allbuf=new(std::nothrow) char[512+sizeof(lastModified)+3*10+1];
 	if(!outdata->allbuf) {
 		return outofmemory(outdata);
 		}
     	char *start=outdata->allbuf+150;
-	uint32_t lastprofile=99;
-	auto alllen=sprintf(start,lastModified,now,lastentries,lastprofile,lastnum);
+//	uint32_t lastprofile=1546297200;
+//	auto alllen=sprintf(start,lastModified,now,lastentries,lastprofile,lastnum);
+	uint32_t lastdevicestatus=1546297200;
+	auto alllen=sprintf(start,lastModified,now,lastdevicestatus,lastentries,lastnum);
 	mkjsonheader(start,start+alllen,false,outdata); 
 	return true;
 	}
@@ -830,36 +940,11 @@ static	constexpr const char status[]="HTTP/1.1 200\r\nContent-Type: application/
 static bool getv3food(recdata *outdata) {
 	return nothingV3(outdata);
 	}
-static bool getv3entries(recdata *outdata) {
-	int count=6;
-   	outdata->allbuf=new(std::nothrow) char[512+75*count+200];
-	if(!outdata->allbuf) {
-		return outofmemory(outdata);
-		}
-    	char *start=outdata->allbuf+150,*outiter=start;
-	constexpr const char begin[]=R"({"status":200,"result":[)";
-	addar(outiter,begin);
-	uint32_t lowerend=0, higherend=UINT32_MAX;
-	 if(!getitems(outiter,count, lowerend,higherend,false, 55,[](char *outiter,int datit, const ScanData *iter,const char *sensorname,const time_t starttime)
 
-				{
-				int len=sprintf(outiter,R"({"sgv":%d,"direction":"%s","srvCreated":%u000},)",iter->getmgdL(),getdeltaname(iter->ch).data(),iter->gettime());
-				return outiter+len;
-				}
-				)) {
-				return givenothing(outdata);
-					}
-	
-	*--outiter=']';
-	++outiter;
-	*outiter++='}';	
-//	mkjsonheader(start, outiter, false, outdata);
+extern char *nightexport(char *buffer,uint32_t starttime,uint32_t endtime,int maxcount,uint32_t &last);
 
-      mktypeheader(start,outiter,false,outdata, "application/json");
-
-	return true;
-
-	}
+char * writev3entry(char *outin,const ScanData *val, const sensorname_t *sensorname,bool server=true);
+static bool getv3entries(const char *cmdstart,const char *cmdend,recdata *outdata) ;
 
 char *getdeltastr(char *start) {
 	char *outiter=start;
@@ -1088,6 +1173,7 @@ static bool apiv1(const char *input,int leftlen,bool behead,bool json,recdata *o
 								}
 							else {
 
+
  								wrongpath({input-7,static_cast<size_t>(leftlen+7)}, outdata);
 								return true;
 								}
@@ -1117,12 +1203,78 @@ static bool apiv1(const char *input,int leftlen,bool behead,bool json,recdata *o
 			return showdevicestatus(outdata);
 			}  */
 
+std::string_view properties="properties";
+const auto propsize= properties.size();
+	if(!memcmp(properties.data(),input,propsize)) {
+		return giveproperties(input+propsize,leftlen-propsize,outdata);
+		}
+
+std::string_view authv2=R"(authorization/request/)";
+const auto authv2size= authv2.size();
+	if(!memcmp(authv2.data(),input,authv2size)) {
+		return authorization(outdata);
+		}
 
 
 
 	wrongpath({input-7,static_cast<size_t>(leftlen+7)}, outdata);
 	return true;
  	}
+
+static bool apiv3(const char *input,const char *inpend,recdata *outdata) ;
+
+static bool		 getv3treatments(const char *input,int inputlen,recdata *outdata,uint32_t modifiedafter=0);
+
+static bool treatmenthistoryV3(const char *start,const char *ends,recdata *outdata) ;
+static bool apiv3(const char *input,const char *inpend,recdata *outdata) {
+std::string_view statusv3="status";
+const auto stav3size= statusv3.size();
+	if(!memcmp(statusv3.data(),input,stav3size)) {
+		return givestatusv3(outdata);
+		}
+std::string_view entriesv3="entries";
+const auto entries3size= entriesv3.size();
+	if(!memcmp(entriesv3.data(),input,entries3size)) {
+		const char *start=input+entries3size;
+		return getv3entries(start,inpend,outdata);
+		}
+std::string_view treatmentsv3="treatments";
+const auto treatments3size= treatmentsv3.size();
+
+	if(!memcmp(treatmentsv3.data(),input,treatments3size)) {
+		const char *start=input+treatmentsv3.size();
+		std::string_view history="/history/";
+		if(!memcmp(start,history.data(),history.size()))  {
+			start+=history.size();
+			return treatmenthistoryV3(start,inpend,outdata);
+			}
+		std::string_view jsonstr=".json";
+		if(!memcmp(start,jsonstr.data(),jsonstr.size())) 
+			start+=jsonstr.size();
+		return getv3treatments( start,inpend-start, outdata,0);
+		}
+std::string_view foodv3=R"(food)";
+const auto food3size= foodv3.size();
+	if(!memcmp(foodv3.data(),input,food3size)) {
+		return getv3food(outdata);
+		}
+//https://a.juggluco.nl:3333/api/v3/treatments/history/1704969101?limit=100&fields=_all'
+
+std::string_view devicestatusv3=R"(devicestatus/history)";
+const auto devicestatus3size= devicestatusv3.size();
+	if(!memcmp(devicestatusv3.data(),input,devicestatus3size)) {
+		return nothingV3(outdata);
+		}
+std::string_view modifiedv3="lastModified";
+const auto modified3size= modifiedv3.size();
+	if(!memcmp(modifiedv3.data(),input,modified3size)) {
+		return getv3modified(outdata);
+		}
+
+
+	wrongpath({input,static_cast<size_t>(inpend-input)}, outdata);
+	return true;
+	}
 static bool setitertrue(const char *&iter,std::string_view cond) {
 	if(strncasecmp(iter,cond.data(),cond.size()))
 		return false;
@@ -1137,11 +1289,11 @@ static bool setitervar(const char *&iter,std::string_view cond,bool &var) {
 		}
 	return false;
 	}
-extern	std::span<char> gethistory(int startpos, int len, uint32_t starttime, uint32_t endtime,bool,int);
-extern	std::span<char> getstream(int startpos, int len, uint32_t starttime, uint32_t endtime,bool,int);
-extern	std::span<char> getscans(int startpos, int len, uint32_t starttime, uint32_t endtime,bool,int);
-extern	std::span<char> getamounts(int startpos, int len, uint32_t starttime, uint32_t endtime,bool,int);
-extern std::span<char> getmeals(int startpos, int len, uint32_t starttime, uint32_t endtime,bool header,int);
+extern	std::span<char> gethistory(int startpos, int len, uint32_t starttime, uint32_t endtime,bool,int,int);
+extern	std::span<char> getstream(int startpos, int len, uint32_t starttime, uint32_t endtime,bool,int,int);
+extern	std::span<char> getscans(int startpos, int len, uint32_t starttime, uint32_t endtime,bool,int,int);
+extern	std::span<char> getamounts(int startpos, int len, uint32_t starttime, uint32_t endtime,bool,int,int);
+extern std::span<char> getmeals(int startpos, int len, uint32_t starttime, uint32_t endtime,bool header,int,int);
 
 static time_t readtime(const char *&input) {
 	struct tm tmbuf {.tm_isdst=0,.tm_gmtoff=0};
@@ -1176,6 +1328,7 @@ struct Getopts {
 uint32_t start=0,end=0;
 bool headermode=false;
 int unit=settings->data()->unit;
+int datnr=INT_MAX;
 Getopts(const char *posptr,int size) {
 	int duration=0;
 	LOGGER("getopts(%s#%d)\n", posptr, size);
@@ -1218,7 +1371,6 @@ Getopts(const char *posptr,int size) {
 			std::string_view endsecstr = "endtime=";
 			if (!memcmp(iter, endsecstr.data(), endsecstr.size())) {
 				iter += endsecstr.length();
-//				iter = readnum<uint32_t>(iter, ends, end);
 
 				uint32_t tmpend;
 				if(auto tmp=readnum<uint32_t>(iter, ends, tmpend)) {
@@ -1227,6 +1379,8 @@ Getopts(const char *posptr,int size) {
 					}
 				continue;
 				}
+
+
 			std::string_view endsstr = "end=";
 			if (!memcmp(iter, endsstr.data(), endsstr.size())) {
 				iter += endsstr.length();
@@ -1261,6 +1415,17 @@ Getopts(const char *posptr,int size) {
 				iter+=res;
 				continue;
 				}
+			std::string_view count="maxcount=";
+			if(!memcmp(iter,count.data(),count.size())) {
+				iter+=count.length();
+				const char *ptr;
+				if(!(ptr=readnum<int>(iter,ends,datnr))||datnr<0) {
+					LOGGERWEB("wrong argument count=%s\n",iter);
+					}
+				else
+					iter=ptr;
+				continue;
+				}
 			}
 		}
 	if(duration<=0)
@@ -1279,7 +1444,7 @@ Getopts(const char *posptr,int size) {
 	};
 	};
 
-typedef		std::span<char> (*getdata_t)(int startpos, int len, uint32_t starttime, uint32_t endtime,bool,int);
+typedef		std::span<char> (*getdata_t)(int startpos, int len, uint32_t starttime, uint32_t endtime,bool,int,int);
 
 std::string_view jugglucocommand="x/";
 static bool jugglucos(const char * const input,int size, recdata *outdata) {
@@ -1296,13 +1461,13 @@ static bool jugglucos(const char * const input,int size, recdata *outdata) {
 			int startlen=((opts.end-opts.start)/(60*60))*perhour[i];
 			constexpr const int startpos=152;
 			
-			std::span<char> res=procs[i](startpos,startlen,opts.start,opts.end,opts.headermode,opts.unit);
+			std::span<char> res=procs[i](startpos,startlen,opts.start,opts.end,opts.headermode,opts.unit,opts.datnr);
 			if(!res.data()) {
 				return outofmemory(outdata);
 				}
 			if(res.size()!=std::numeric_limits<size_t>::max()) {
-				const std::string_view plain="text/plain";
-				const std::string_view html="text/html";
+				const std::string_view plain="text/plain; charset=utf-8";
+				const std::string_view html="text/html; charset=utf-8";
 				outdata->allbuf=res.data();
 				mktypeheader(res.data()+startpos,res.data()+res.size(),false,outdata,i==4?html:plain);
 				return true;
@@ -1319,8 +1484,9 @@ static bool jugglucos(const char * const input,int size, recdata *outdata) {
 	return true;
 	}
 
-static bool		 getv3treatments(const char *input,int inputlen,recdata *outdata); 
+
 static bool		 pebbleinterpret(const char *input,int inputlen,recdata *outdata);
+
 bool watchcommands(char *rbuf,int len,recdata *outdata,bool secure) {
 	LOGGERWEB("watchcommands len=%d %.*s",len,len,rbuf);
 	const char *start=rbuf;
@@ -1339,6 +1505,7 @@ bool watchcommands(char *rbuf,int len,recdata *outdata,bool secure) {
 	const char api_secret[]= "api_secret: ";
 	const int	api_len=sizeof(api_secret)-1;
 	std::string_view hostname;
+	const auth_t *authori=nullptr;
 	while((nl= std::find(start,ends,'\n'))!=ends) {
 		if(!memcmp(start,reget,regetlen)) {
 			const char *reststart=start+regetlen;
@@ -1391,7 +1558,18 @@ bool watchcommands(char *rbuf,int len,recdata *outdata,bool secure) {
 							constexpr const int hostnamelen= sizeof(hostnamestr)-1;
 							if(!memcmp(start,hostnamestr,hostnamelen)) {
 								const char *name=start+hostnamelen;
-								hostname={name,static_cast<size_t>(nl-name)};
+									
+								hostname={name,static_cast<size_t>(nl-name-(nl[-1]==0x0D?1:0))};
+								}
+							else {
+								std::string_view autho="Authorization: ";
+								if(!memcmp(start,autho.data(),autho.size())) {
+									const char *authstart=nl-tuple_size<auth_t>()-(nl[-1]==0x0D?1:0);
+									if(authstart>(start+autho.size())) {
+										authori=reinterpret_cast<const auth_t *>(authstart);
+										LOGGER("authori=%s\n",authori->data());
+										}
+									}
 								}
 							}
 						}
@@ -1408,7 +1586,6 @@ bool watchcommands(char *rbuf,int len,recdata *outdata,bool secure) {
 		return givenothing(outdata);
 		return false;
 		}
-		
 	int seclen=settings->data()->apisecretlength;
 	if(seclen) {
 		const char *starttoget=toget.data();
@@ -1435,8 +1612,21 @@ bool watchcommands(char *rbuf,int len,recdata *outdata,bool secure) {
 				}
 			if(seclen!=foundsecret.size()||memcmp(realsecret,foundsecret.data(),seclen)) {
 				LOGGERWEB("%s#%d!=%.*s#%zd \n", realsecret,seclen,(int)foundsecret.size(), foundsecret.data(),foundsecret.size());
-				nosecret(foundsecret, outdata) ;
-				return false;
+				std::string_view request="api/v2/authorization/request/";
+				if(!memcmp(request.data(),starttoget,request.size())) {
+					starttoget+=request.size();
+					if(!memcmp(starttoget,settings->data()->apisecret,seclen)) {
+						return authorization(outdata);
+						}
+					}
+				if(!isauthorized(authori)) {
+					if(!foundsecret.size()&&(!toget.size()||*toget.data()==' '||*toget.data()=='?')) {
+						givesite(outdata,hostname,secure);
+						return true;
+						}
+					nosecret(foundsecret, outdata) ;
+					return false;
+					}
 				}
 			else {
 				LOGARWEB("secret matched");
@@ -1445,7 +1635,8 @@ bool watchcommands(char *rbuf,int len,recdata *outdata,bool secure) {
 		else {
 			int newstart=seclen+1;
 			if(newstart>=toget.size()||toget.data()[seclen]==' ') {
-				givesite(outdata,hostname,secure);
+				pathconcat  name(hostname,std::string_view(starttoget,seclen));
+				givesite(outdata,name,secure);
 				return true;
 				}
 			toget=toget.substr(newstart);
@@ -1465,23 +1656,23 @@ std::string_view sgv="sgv.json";
 //https:///api/v1/entries?count=2
 ///api/v1/entries/sgv.txt?c
 //https://dnarnianbg.herokuapp.com/api/v1/entries/sgv?count=4
-	std::string_view v1="api/v1/";
 	const char *posptr= toget.data();
-	if(!memcmp(v1.data(),posptr,v1.size())) {
-		return apiv1(posptr+v1.size(),toget.size()-v1.size(),behead,json,outdata);
-		}
-std::string_view properties="api/v2/properties";
-const auto propsize= properties.size();
-	if(!memcmp(properties.data(),toget.data(),propsize)) {
-		return giveproperties(toget.data()+propsize,toget.size()-propsize,outdata);
-		}
+	std::string_view api="api/v";
+	if(!memcmp(api.data(),posptr,api.size())) {
+		posptr+=api.size();
+		if(posptr[1]=='/') {
+			if((*posptr=='1'||*posptr=='2')) {
+				posptr+=2;
+				return apiv1(posptr,toget.end()-posptr,behead,json,outdata);
+				}
+			if(*posptr=='3') {
+				posptr+=2;
+				return apiv3(posptr,toget.end(),outdata);
+				}
+			}
 
-std::string_view authv2=R"(api/v2/authorization/request/)";
-const auto authv2size= authv2.size();
-	if(!memcmp(authv2.data(),toget.data(),authv2size)) {
-		return  getv2auth(outdata);
-		}
 
+		}
 if(!memcmp(jugglucocommand.data(),posptr,jugglucocommand.size())) {
 	return jugglucos(posptr+jugglucocommand.size(),toget.size()-jugglucocommand.size(),outdata);
 	}
@@ -1490,48 +1681,6 @@ constexpr const std::string_view pebble="pebble";
 	if(!memcmp(pebble.data(),toget.data(),pebble.size())) {
 		return pebbleinterpret(toget.data()+pebble.size(),toget.size()-pebble.size(),outdata);
 		} 
-std::string_view statusv3="api/v3/status";
-const auto stav3size= statusv3.size();
-	if(!memcmp(statusv3.data(),toget.data(),stav3size)) {
-		return givestatusv3(outdata);
-		}
-std::string_view entriesv3="api/v3/entries";
-const auto entries3size= entriesv3.size();
-	if(!memcmp(entriesv3.data(),toget.data(),entries3size)) {
-		return getv3entries(outdata);
-		}
-std::string_view treatmentsv3="api/v3/treatments";
-const auto treatments3size= treatmentsv3.size();
-
-	if(!memcmp(treatmentsv3.data(),toget.data(),treatments3size)) {
-		const char *start=toget.data()+treatmentsv3.size();
-		std::string_view history="/history";
-		if(!memcmp(start,history.data(),history.size()))  {
-			return nothingV3(outdata);
-			}
-		std::string_view jsonstr=".json";
-		if(!memcmp(start,jsonstr.data(),jsonstr.size())) 
-			start+=jsonstr.size();
-		return getv3treatments( start,toget.end()-start, outdata);
-		}
-
-std::string_view foodv3=R"(api/v3/food)";
-const auto food3size= foodv3.size();
-	if(!memcmp(foodv3.data(),toget.data(),food3size)) {
-		return getv3food(outdata);
-		}
-
-std::string_view devicestatusv3=R"(api/v3/devicestatus/history)";
-const auto devicestatus3size= devicestatusv3.size();
-	if(!memcmp(devicestatusv3.data(),toget.data(),devicestatus3size)) {
-		return nothingV3(outdata);
-		}
-std::string_view modifiedv3="api/v3/lastModified";
-const auto modified3size= modifiedv3.size();
-	if(!memcmp(modifiedv3.data(),toget.data(),modified3size)) {
-		return getv3modified(outdata);
-		}
-
 constexpr const std::string_view status="status.json";
 	if(!memcmp(status.data(),toget.data(),status.size())) {
 		return givedripstatus(outdata);
@@ -1615,10 +1764,9 @@ void mkjsonheader(char *outstart,char *outiter,const bool headonly,recdata *outd
 	}
  */
 void mktypeheader(char *outstart,char *outiter,const bool headonly,recdata *outdata,std::string_view type)  {
-//	constexpr const char header1[]="HTTP/1.1 200 OK\r\nVary: Accept, Accept-Encoding\r\nContent-Type: ";
 	constexpr const char header1[]="HTTP/1.1 200 OK\r\nContent-Type: ";
 	constexpr const int header1len=sizeof(header1)-1;
-	constexpr const char content[]="; charset=utf-8\r\nContent-Length: " ;
+	constexpr const char content[]="\r\nContent-Length: " ;
 	constexpr const int contentlen=sizeof(content)-1;
 	const int headerstartlen=header1len+contentlen+type.size();
 	int uitlen=outiter-outstart;
@@ -1649,7 +1797,7 @@ void mktypeheader(char *outstart,char *outiter,const bool headonly,recdata *outd
 	}
 
 void mkjsonheader(char *outstart,char *outiter,const bool headonly,recdata *outdata)  {
-	mktypeheader(outstart,outiter,headonly,outdata, "application/json");
+	mktypeheader(outstart,outiter,headonly,outdata, "application/json; charset=utf-8");
 	}
 class Sgvinterpret {
 	bool briefmode=false,sensorinfo=false,alldata=false,noempty=false;
@@ -1695,7 +1843,7 @@ static bool		 pebbleinterpret(const char *input,int inputlen,recdata *outdata) {
 	constexpr const char endpebble[]=R"(],"cals":[]})";
 	outiter+=sprintf(outiter,startpebble,nu*1000LL);
 
-	if(!getitems(outiter,count,pret.lowerend,pret.higherend,true,pret.interval,[mmol,nu](char *outiter,int datit, const ScanData *iter,const char *sensorname,const time_t starttime) {
+	if(!getitems(outiter,count,pret.lowerend,pret.higherend,true,pret.interval,[mmol,nu](char *outiter,int datit, const ScanData *iter,const sensorname_t *sensorname,const time_t starttime) {
 			
 		char *ptr=pebbleitem(mmol,outiter,iter);
 		if(!datit) {
@@ -1705,10 +1853,12 @@ static bool		 pebbleinterpret(const char *input,int inputlen,recdata *outdata) {
 			extern double getiob(uint32_t now);
 			double iob=getiob(nu);
 			ptr-=2;
-			ptr+=sprintf(ptr,R"(,"bgdelta":"%.1f","iob":"%.2f"},)",delta,iob); //TODO remove ""? xDrip has "", Nightscout hasn't, who is right?
+			ptr+=sprintf(ptr,R"(,"bgdelta":"%.2f","iob":"%.2f"},)",delta,iob); //TODO remove ""? xDrip has "", Nightscout hasn't, who is right?
 			}
 		return ptr;
 		})) {
+		delete[] outdata->allbuf;
+		outdata->allbuf=nullptr;
 		return givenothing(outdata);
 	};
 	addar(--outiter,endpebble);
@@ -1782,7 +1932,6 @@ char *Sgvinterpret::writeitem(char *outiter,int datit, const ScanData *iter,cons
 		outiter=dontbrief(outiter,sensorname,iter);
 		}
 	 double delta= getdelta(iter->ch);
-//	 double delta= isnan(iter->ch)?0:iter->ch*deltatimes;
 	 std::string_view name=getdeltaname(iter->ch);
 	 outiter+=sprintf(outiter,R"("date":%d000,"sgv":%d,"delta":%.3f,"direction":"%s","noise":1)",iter->t,iter->getmgdL(),delta,name.data());
 	    if (!briefmode) {
@@ -1802,8 +1951,8 @@ char *Sgvinterpret::writeitem(char *outiter,int datit, const ScanData *iter,cons
 
 bool Sgvinterpret::getv1entries(char *&outiter,const int  datnr) const {
 
-	return  ::getitems(outiter,datnr, lowerend,higherend,alldata, interval,[this](char *outiter,int datit, const ScanData *iter,const char *sensorname,const time_t starttime)
-				{return writeitem(outiter, datit, iter,sensorname, starttime);});
+	return  ::getitems(outiter,datnr, lowerend,higherend,alldata, interval,[this](char *outiter,int datit, const ScanData *iter,const sensorname_t *sensorname,const time_t starttime)
+				{return writeitem(outiter, datit, iter,sensorname->data(), starttime);});
 
 	}
 //{"_id":"6401c40addf76d1473eb7d02","timestamp":1677837282000,"eventType":"<none>","enteredBy":"xdrip pos:6.52","notes":"Swim → Aaps → nog meer","uuid":"6401c40addf76d1473eb7d02","created_at":"2023-03-03T09:54:42.000Z","sysTime":"2023-03-03T10:54:42.000+0100","utcOffset":0,"carbs":null,"insulin":null},
@@ -1971,8 +2120,11 @@ bool Sgvinterpret::getdata(bool headonly,recdata *outdata) const {
 		}
 	char *outiter=outstart;
 	*outiter++='[';
-	if(!getv1entries(outiter,datnr) )
-		return false;
+	if(!getv1entries(outiter,datnr) )  {
+		delete[] outdata->allbuf;
+		outdata->allbuf=nullptr;
+		return givenothing(outdata);
+		}
 	if(outiter==(outstart+1)&&noempty) {
 		*outstart='\0';
 		outiter=outstart;
@@ -2014,9 +2166,16 @@ int rewriteperc(char *start,int len) {
 		switch(toshort(next)) {
 			case toshort("5B"): *uititer++='[';break;
 			case toshort("5D"): *uititer++=']';break;
-			case toshort("24"): *uititer++='$';break;
 			case toshort("3D"): *uititer++='=';break;
 			case toshort("20"): *uititer++=' ';break;
+			case toshort("24"): *uititer++='$';break;
+			case toshort("21"): *uititer++='!';break;
+			/*
+			case toshort("22"): *uititer++='"';break;
+			case toshort("23"): *uititer++='#';break;
+			case toshort("25"): *uititer++='%';break;
+			case toshort("26"): *uititer++='&';break; */
+			case toshort("2C"): *uititer++=',';break;
 			default: LOGGERWEB(LOGID "strange char %.3s\n",next-1); memmove(uititer,next-1,3);uititer+=3;
 			}
 		iter=next+2;
@@ -2229,9 +2388,11 @@ Content-Length: 6890
 
 class V3Args {
 public:
-	int datnr=0;
+	int datnr=24;
 	uint32_t lowerend=0,higherend=INT32_MAX;
+	bool decrease=false;
 	bool getargs(const char *start,int len) ;
+	char * 		 treatmentlist(char *outstart,uint32_t,uint32_t *) const;
 	}; 
   bool V3Args::getargs(const char *start,int lenin) {
 	 int 	len=rewriteperc(const_cast<char *>(start),lenin);
@@ -2239,6 +2400,7 @@ public:
 
 	const char *ends=start+len;
 	start++;
+
 	for(const char *iter=start;iter<ends;iter=std::find(iter,ends,'&')+1) {
 		std::string_view count="limit=";
 		if(!memcmp(iter,count.data(),count.size())) {
@@ -2247,6 +2409,23 @@ public:
 
 				return false;
 				}
+			}
+		else {
+		std::string_view sort="sort";
+		if(!memcmp(iter,sort.data(),sort.size())) {
+			iter+=sort.length();
+			std::string_view desc="$desc=";
+			if(!memcmp(iter,desc.data(),desc.size())) {
+				iter+=desc.length();
+				std::string_view date="date";
+				if(!memcmp(iter,date.data(),date.size())) {
+					iter+=date.length();
+					decrease=true;
+					continue;
+					}
+				}
+			LOGGERWEB("unknown option %.10s\n",iter);
+			continue;
 			}
 		else {
 //		created_at$gt=2023-10-02T13:45:26.653Z
@@ -2281,8 +2460,10 @@ public:
 						LOGGERWEB("gt%s readnum failed '%s'\n",equal?"e":"",iter);
 						return false;
 						}
-					if(lowerend>1602042233000LL)
+					if(tmp>1602042233000LL)
 						lowerend=tmp/1000LL;
+					else
+						lowerend=tmp;
 					iter=ptr;
 					LOGGERWEB("greater than %d\n",lowerend);
 					}
@@ -2319,8 +2500,10 @@ public:
 						LOGGERWEB("lt%s readnum failed '%s'\n",equal?"e":"",iter);
 						return false;
 						}
-					if(higherend>1602042233000LL)
+					if(tmp>1602042233000LL)
 						higherend=tmp/1000LL;
+					else
+						higherend=tmp;
 					iter=ptr;
 					LOGGERWEB("smaller than %d\n",higherend);
 					}
@@ -2331,6 +2514,7 @@ public:
 				}
 			}
 			}	
+			}
 		}
 	if(!datnr) {
 		return false;
@@ -2340,97 +2524,430 @@ public:
 	return true;
 	};
 
-char *writetreatmentv3(char *outiter,const int numbase,const int pos,const Num*num) {
-	const int type=num->type;
-	if(type>=settings->varcount()||!settings->data()->Nightnums[type].kind) {
-		return outiter;
+extern int mkidV3(char *outiter,int base,int pos) ;
+char *writetreatmentv3(char *outiter,const int numbase,const int pos,const Num*num,uint32_t modified,bool invalid) {
+	const int typein=num->type;
+	const int type=num->type&Numdata::otherbits;
+	if(typein>=settings->varcount()||!settings->data()->Nightnums[type].kind) {
+		if(!invalid||!(typein&Numdata::removedbit))
+			return outiter;
 		}
 	const time_t tim=num->gettime();
         struct tm tmbuf;
         gmtime_r(&tim, &tmbuf);
 
-	addar(outiter,R"({"eventType":"<none>","enteredBy":"Juggluco","created_at":")");
-	outiter+=sprintf(outiter,R"(%04d-%02d-%02dT%02d:%02d:%02d.000Z",)",tmbuf.tm_year+1900,tmbuf.tm_mon+1,tmbuf.tm_mday, tmbuf.tm_hour, tmbuf.tm_min,tmbuf.tm_sec);
+	addar(outiter,R"({"app":"Juggluco","eventType":"<none>","created_at":")");
+	outiter+=sprintf(outiter,R"(%04d-%02d-%02dT%02d:%02d:%02d.000Z","date":%lu000,)",tmbuf.tm_year+1900,tmbuf.tm_mon+1,tmbuf.tm_mday, tmbuf.tm_hour, tmbuf.tm_min,tmbuf.tm_sec,tim);
+	LOGAR("before printvar");
+	if(type<settings->varcount()&&settings->data()->Nightnums[type].kind) {
+		float w=0.0f;
+		 if((w=longNightWeight(type))!=0.0f) {
+			
+			addar(outiter,R"("notes":"Long-Acting",)");
+			}
+		else { if((w=rapidNightWeight(type))!=0.0f) {
+			addar(outiter,R"("notes":"Rapid-Acting",)");
+			}
+			}
+		if(w!=0.0f) {
+			const char * typestr=settings->getlabel(type).data();;
+			auto units=w*num->value;
+			outiter+=sprintf(outiter,R"("insulin":%g,"insulinType":"%s",)",units,typestr);
 
-	float w=0.0f;
-	 if((w=longNightWeight(type))!=0.0f) {
-	 	
-	 	addar(outiter,R"("notes":"Long-Acting",)");
-	 	}
-	else { if((w=rapidNightWeight(type))!=0.0f) {
-	 	addar(outiter,R"("notes":"Rapid-Acting",)");
-	 	}
-		}
-	if(w!=0.0f) {
-		const char * typestr=settings->getlabel(type).data();;
-		auto units=w*num->value;
-		outiter+=sprintf(outiter,R"("insulin":%g,"insulinType":"%s")",units,typestr);
-
-		}
-	else {
-		if((w=carboNightWeight(type) )!=0.0f) {
-			outiter+=sprintf(outiter,R"("carbs":%g)",w*num->value);
 			}
 		else {
-			std::string_view typestr=settings->getlabel(type);
-			outiter+=sprintf(outiter,R"("notes":"%s %g")",typestr.data(),num->value);
+			if((w=carboNightWeight(type) )!=0.0f) {
+				outiter+=sprintf(outiter,R"("carbs":%g,)",w*num->value);
+				}
+			else {
+				std::string_view typestr=settings->getlabel(type);
+				if(typestr!=Settings::unknownlabel)
+					outiter+=sprintf(outiter,R"("notes":"%s %g",)",typestr.data(),num->value);
+				}
 			}
 		}
-	addar(outiter,R"(,"utcOffset":0,"identifier":")");
-	outiter+=mkid(outiter,numbase,pos);
-	outiter+=sprintf(outiter,R"(","srvModified":%lu000,"srvCreated":%lu000},)",tim,tim);
+	LOGAR("before utcOffset");
+	addar(outiter,R"("utcOffset":0,"identifier":")");
+	outiter+=mkidV3(outiter,numbase,pos);
+	LOGAR("before srvModified");
+	outiter+=sprintf(outiter,R"(","srvModified":%u000,"srvCreated":%lu000)",modified,tim);
+	if(invalid) {
+		addar(outiter,R"(,"isValid":false},)");
+		}
+	else
+		addar(outiter,R"(},)");
 	return outiter;
 	}
 
 void wrongpath(std::string_view toget, recdata *outdata);
 
-
- void mkjsonheader(char *outstart,char *outiter,const bool headonly,recdata *outdata) ;
-bool		 getv3treatments(const char *input,int inputlen,recdata *outdata) {
-	V3Args args; 
-	if(!args.getargs(input,inputlen)) {
-		wrongpath({input,(size_t)inputlen},outdata);
-		return false;
-		}
-	
+char * 		 V3Args::treatmentlist(char *outstart,uint32_t minmodified,uint32_t *lastmodifiedptr) const {
+	char *outiter=outstart;
+	*outiter++='[';
 	const int basecount=numdatas.size();
 	NumIter<Num> numiters[basecount];
 	for(int i=0;i<basecount;i++) {
-		auto [low,high]= numdatas[i]->getInRange(args.lowerend,args.higherend); 
-		numiters[i].iter=numiters[i].begin=low;
-		numiters[i].end=high-1;
+		auto [low,high]= numdatas[i]->getInRange(lowerend,higherend); 
+		if(decrease) {
+			numiters[i].begin=low;
+			numiters[i].iter=numiters[i].end=high-1;
+			}
+		else {
+			numiters[i].iter=numiters[i].begin=low;
+			numiters[i].end=high-1;
+			}
 		numiters[i].bytes=sizeof(Num);
 		}
-	auto count=args.datnr;
-
-	char *buffer=outdata->allbuf= new(std::nothrow) char[512+count*270];
-	if(!buffer) {
-		LOGARWEB("getv3treatments:");
-		return outofmemory(outdata);
-		}
-	 char *outiter=buffer+152;
-	 char *outstart=outiter;
-	addar(outiter,R"({"status":200,"result":[)");
 	int i=0;
-	
-	for(;i<count;) {
-		auto [ind,num]=findoldestwith(numiters,basecount);
+	uint32_t lastmodified=0;
+	for(;i<datnr;) {
+		auto [ind,num]=decrease?findnewestwith(numiters,basecount):findoldestwith(numiters,basecount);
 			if(!num) {
 				LOGGERWEB("no values %d %p\n",ind,num);
 				break;
 				}
 			const int pos=num-numdatas[ind]->begin();
-			char *out=writetreatmentv3(outiter,ind,pos,num);
-			if(out!=outiter) {
-				outiter=out;
-				i++;
+			uint32_t chtime=numdatas[ind]->changed(pos);	
+			LOGGER("%d changetime(%d)==%u\n",ind,pos,chtime);
+			if(chtime>minmodified||(!chtime&&(chtime=num->gettime())>minmodified)) {
+				char *out=writetreatmentv3(outiter,ind,pos,num,chtime,(num->type&Numdata::removedbit)&&minmodified);
+				if(out!=outiter) {
+					lastmodified=std::max(lastmodified,chtime);
+					outiter=out;
+					i++;
+					}
 				}
 			}
-	if(outiter[-1]==',') --outiter;
-	 addar(outiter,"]}");
-       mkjsonheader(outstart,outiter, false,outdata);
-       LOGGERWEB("givetreatments nr=%d len=%d %.50s\n",i,outiter-outstart,outstart);
+	if(minmodified) {
+		if(i<datnr) {
+			for(int nd=0;nd<basecount;nd++) {
+				auto *numdata=numdatas[nd];
+				int lastpos=numdata->getlastpos();
+				const Num*beg=numdata->begin();
+				if(numiters[nd].end==(beg+lastpos-1)) {
+					uint32_t chtime;
+					for(int cha=lastpos;;cha++) {
+						chtime=numdata->changed(cha);
+						if(!chtime) {
+							LOGGER("%d: %d not changed\n",nd,cha);
+							break;
+							}
+						if(minmodified<chtime) {
+							LOGGER("%d: %d changed\n",nd,cha);
+							char *out=writetreatmentv3(outiter,nd,cha,beg+cha,chtime,true);
+							if(out!=outiter) {
+								lastmodified=std::max(lastmodified,chtime);
+								outiter=out;
+								++i;
+								if(i>=datnr) {
+									goto OUTLOOP;
+									}
+								}
+							}
+						}
+					}	
+				else {
+					LOGGER("%d not lastpos\n",nd);
+					}
+				}
+			}
+		}
+	OUTLOOP:
+	if(outiter[-1]==',') {
+		--outiter;
+		*lastmodifiedptr=lastmodified;
+		}
+	 *outiter++=']';
+	#ifndef NOLOG
+	time_t lowt=lowerend;
+	time_t hight=higherend;
+	char lowbuf[26];
+	char highbuf[26];
+	int outlen=outiter-outstart;
+       LOGGERWEB("treatmentlist %u %.24s to %u %.24s nr=%d len=%d\n",lowerend,ctime_r(&lowt,lowbuf),higherend,ctime_r(&hight,highbuf),i,outlen);
+       logprint(outstart,outlen);
+       #endif
+       return outiter;
+	}
+
+ void mkjsonheader(char *outstart,char *outiter,const bool headonly,recdata *outdata) ;
+/*
+bool treatmenthistoryV3(const char *start,const char *ends,recdata *outdata) {
+	longlongtype lowerend;
+	if(const char *input=readnum(start,ends,lowerend)) {
+		V3Args args; 
+		auto inputlen= ends-input;
+		if(!args.getargs(input,inputlen)) {
+			wrongpath({input,inputlen},outdata);
+			return false;
+			}
+		}
+	else
+		wrongpath({start,(size_t)(end-start)},outdata);
+	}
+	*/
+bool		 getv3treatments(const char *input,int inputlen,recdata *outdata,uint32_t modifiedafter) {
+	V3Args args; 
+	if(!args.getargs(input,inputlen)) {
+		wrongpath({input,(size_t)inputlen},outdata);
+		return false;
+		}
+
+	char *buffer=outdata->allbuf= new(std::nothrow) char[512+50+20+args.datnr*300];
+	if(!buffer) {
+		LOGARWEB("getv3treatments:");
+		return outofmemory(outdata);
+		}
+	 char *outiter=buffer+200;
+	 char *outstart=outiter;
+	addar(outiter,R"({"status":200,"result":)");
+	uint32_t lastmodified=0;
+	outiter=args.treatmentlist(outiter,modifiedafter,&lastmodified);
+
+	 *outiter++='}';
+	 *outiter++='\n';
+	 constexpr const int buflen=120;
+	char buf[buflen];
+	char *ptr=buf+snprintf(buf,buflen,"application/json; charset=utf-8\r\netag: W/\"%u000\"\r\nlast-modified: " ,lastmodified);
+	ptr+=formattime(ptr,lastmodified);
+	mktypeheader(outstart,outiter,false,outdata, {buf,(size_t)(ptr-buf)});
        return true;
+	}
+
+bool treatmenthistoryV3(const char *start,const char *ends,recdata *outdata) {
+	longlongtype modifiedafter;
+	if(const char *input=readnum(start,ends,modifiedafter)) {
+		if(modifiedafter>10443596400LL)
+			modifiedafter/=1000LL;
+		LOGGER("history %ld %s\n",modifiedafter,ctime((time_t*)&modifiedafter));
+		return 	 getv3treatments(input,ends-input,outdata,(uint32_t)modifiedafter);
+		}
+	else  {
+		wrongpath({start,(size_t)(ends-start)},outdata);
+		return false;
+		}
+	}
+//{"app":"Juggluco","date":1705002216000,"sgv":190,"delta":10.97,"direction":"Flat","type":"sgv","utcOffset":0,"identifier":"64011dbf1a09ef8e1b65989e","created_at":"2024-01-11T19:43:36.000Z","srvModified":1705002231031,"srvCreated":1705002231031}
+
+	/*
+int mkv3streamid(char *outiter,const sensorname_t *name,int num) { 
+const uint16_t *gets=reinterpret_cast<const uint16_t*>(&name[2]);
+int ch2=name->back();
+int len=sprintf(outiter,"%04hx%04hx-%04hx-%04hx-%02xee-eeeeeeeeeeee",gets[3],gets[2],gets[1],gets[0],ch2);
+outiter+=24;
+if(auto [ptr,ec]=std::to_chars(outiter,outiter+10,num);ec != std::errc()) {
+	LOGGER("tochar failed: %s\n",std::make_error_code(ec).message().c_str());
+	} 
+//puts(buf);
+return len;
+//0fffffff-ffff-ffff-ffff-17500fffffff"
+//c149bacfb000007f
+}
+int mkv1streamid(char *outiter,const sensorname_t *name,int num) { 
+const uint16_t *gets=reinterpret_cast<const uint16_t*>(&name[2]);
+int ch2=name->back();
+int len=sprintf(outiter,"%04hx%04hx%04hx%04hx%02xeeeee",gets[3],gets[2],gets[1],gets[0],ch2);
+outiter+=18;
+if(auto [ptr,ec]=std::to_chars(outiter,outiter+10,num);ec != std::errc()) {
+	LOGGER("tochar failed: %s\n",std::make_error_code(ec).message().c_str());
+	} 
+//puts(buf);
+
+return len;
+//0fffffff-ffff-ffff-ffff-17500fffffff"
+//c149bacfb000007f
+}
+*/
+int mkv3streamid(char *outiter,const sensorname_t *name,int num) { 
+LOGGER("sensorname=%s\n",name->data());
+const uint16_t *gets=reinterpret_cast<const uint16_t*>(name->data());
+int ch2=name->back();
+int len=sprintf(outiter,"%04x%04x-%04x-%04x-%02xee-eeeeeeeeeeee",(int)(gets[4]),(int)(gets[3]),(int)(gets[2]),(int)(gets[1]),ch2);
+
+outiter+=24;
+if(auto [ptr,ec]=std::to_chars(outiter,outiter+10,num);ec != std::errc()) {
+	LOGGER("tochar failed: %s\n",std::make_error_code(ec).message().c_str());
+	} 
+//puts(buf);
+return len;
+//0fffffff-ffff-ffff-ffff-17500fffffff"
+//c149bacfb000007f
+}
+int mkv1streamid(char *outiter,const sensorname_t *name,int num) { 
+LOGGER("sensorname=%s\n",name->data());
+const uint16_t *gets=reinterpret_cast<const uint16_t*>(name->data());
+int ch2=name->back();
+int len=sprintf(outiter,"%04x%04x%04x%04x%02xeeeeee",(int)(gets[4]),(int)(gets[3]),(int)(gets[2]),(int)(gets[1]),ch2);
+
+outiter+=18;
+if(auto [ptr,ec]=std::to_chars(outiter,outiter+10,num);ec != std::errc()) {
+	LOGGER("tochar failed: %s\n",std::make_error_code(ec).message().c_str());
+	} 
+//puts(buf);
+
+return len;
+//0fffffff-ffff-ffff-ffff-17500fffffff"
+//c149bacfb000007f
+}
+char * writev3entry(char *outin,const ScanData *val, const sensorname_t *sensorname,bool server) {
+	char *outptr=outin;
+	addar(outptr,R"({"app":"Juggluco","device":")");
+	memcpy(outptr,sensorname->data(),sensorname->size());
+	outptr+=sensorname->size();
+	addar(outptr,R"(","date":)");
+	const time_t tim=val->gettime();
+	if(auto [ptr,ec]=std::to_chars(outptr,outptr+12,tim);ec == std::errc()) {
+		outptr=ptr;
+	 	}
+	else {
+		LOGGER("tochar failed: %s\n",std::make_error_code(ec).message().c_str());
+		}
+	addar(outptr,R"(000,"sgv":)");
+	if(auto [ptr,ec]=std::to_chars(outptr,outptr+12,val->getmgdL());ec == std::errc()) {
+		outptr=ptr;
+	 	}
+	else {
+		LOGGER("tochar failed: %s\n",std::make_error_code(ec).message().c_str());
+		}
+	addar(outptr,R"(,"delta":)");
+	 double delta= getdelta(val->ch);
+
+#if __NDK_MAJOR__ >= 26
+	if(auto [ptr,ec]=std::to_chars(outptr,outptr+20,delta,std::chars_format::fixed,3);ec == std::errc()) {
+		outptr=ptr;
+	 	}
+	else {
+		LOGGER("tochar failed: %s\n",std::make_error_code(ec).message().c_str());
+		}
+#else
+	outptr+=sprintf(outptr,"%.3f",delta);
+#endif
+	addar(outptr,R"(,"direction":")");
+	 std::string_view name=getdeltaname(val->ch);
+	 addstrview(outptr,name);
+	addar(outptr,R"(","type":"sgv","utcOffset":0,"identifier":")");
+	/*
+	addstrview(outptr,*sensorname);
+	*outptr++='#';
+	if(auto [ptr,ec]=std::to_chars(outptr,outptr+12,index);ec == std::errc()) {
+		outptr=ptr;
+	 	}
+	else {
+		LOGGER("tochar failed: %s\n",std::make_error_code(ec).message().c_str());
+		} */
+	outptr+=mkv3streamid(outptr,sensorname,val->id);
+	if(server) {
+		addar(outptr,R"(","created_at":")");
+		struct tm tmbuf;
+		gmtime_r(&tim, &tmbuf);
+		outptr+=sprintf(outptr,R"(%04d-%02d-%02dT%02d:%02d:%02d)",tmbuf.tm_year+1900,tmbuf.tm_mon+1,tmbuf.tm_mday, tmbuf.tm_hour, tmbuf.tm_min,tmbuf.tm_sec);
+
+		addar(outptr,R"(.000Z","srvModified":)");
+		if(auto [ptr,ec]=std::to_chars(outptr,outptr+12,tim);ec == std::errc()) {
+			outptr=ptr;
+			}
+		else {
+			LOGGER("tochar failed: %s\n",std::make_error_code(ec).message().c_str());
+			}
+
+		addar(outptr,R"(000,"srvCreated":)");
+		if(auto [ptr,ec]=std::to_chars(outptr,outptr+12,tim);ec == std::errc()) {
+			outptr=ptr;
+			}
+		else {
+			LOGGER("tochar failed: %s\n",std::make_error_code(ec).message().c_str());
+			}
+		addar(outptr,R"(000})");
+		}
+	else {
+		addar(outptr,R"(","_id":")");
+		outptr+=mkv1streamid(outptr,sensorname,val->id);
+		addar(outptr,R"("})");
+		}
+	return outptr;
+	}
+
+bool getv3entries(const char *cmdstart,const char *cmdend,recdata *outdata) {
+	std::string_view history="/history/";
+	longlongtype lowerend=0;
+	if(!memcmp(cmdstart,history.data(),history.size()))  {
+		cmdstart+=history.size();
+		if(const char *input=readnum(cmdstart,cmdend,lowerend)) {
+			if(lowerend>10443596400LL)
+				lowerend/=1000LL;
+			cmdstart=input;
+			}
+		}
+	std::string_view json=".json";
+	if(!memcmp(cmdstart,json.data(),json.size())) { 
+		cmdstart+=json.size();
+		}
+
+	int inputlen=cmdend-cmdstart;
+	V3Args args; 
+	if(!args.getargs(cmdstart,inputlen)) {
+		wrongpath({cmdstart,(size_t)inputlen},outdata);
+		return false;
+		}
+	int count=args.datnr;
+	if(lowerend)
+		args.lowerend=lowerend;
+
+   	outdata->allbuf=new(std::nothrow) char[512+50+320*count+200];
+	if(!outdata->allbuf) {
+		return outofmemory(outdata);
+		}
+    	char *start=outdata->allbuf+200,*outiter=start;
+	constexpr const char begin[]=R"({"status":200,"result":[)";
+	addar(outiter,begin);
+	uint32_t lastmodified;
+	if(args.decrease) {
+		 lastmodified=getitems(outiter,count, args.lowerend,args.higherend,false, 55,[](char *outiter,int datit, const ScanData *iter,const sensorname_t *sensorname,const time_t starttime)
+
+				{
+				char *out=writev3entry(outiter,iter, sensorname,true);
+				*out++=',';
+				return out;
+				
+				}
+				); 
+				/*
+		if(!lastmodified) {
+			delete[] outdata->allbuf;
+			outdata->allbuf=nullptr;
+			return givenothing(outdata);
+			} */
+	
+			}
+	else {
+		outiter=nightexport(outiter,args.lowerend,args.higherend,count,lastmodified);
+		}
+	if(outiter[-1]==',')
+		--outiter;
+	*outiter++=']';
+	*outiter++='}';	
+
+//      mktypeheader(start,outiter,false,outdata, "application/json; charset=utf-8");
+
+	 constexpr const int buflen=120;
+	char buf[buflen];
+	char *ptr=buf+snprintf(buf,buflen,"application/json; charset=utf-8\r\netag: W/\"%u000\"\r\nlast-modified: " ,lastmodified);
+	ptr+=formattime(ptr,lastmodified);
+	mktypeheader(start,outiter,false,outdata, {buf,(size_t)(ptr-buf)});
+	return true;
+
+	}
+int mkidV3(char *outiter,int base,int pos) {
+	constexpr const  char temp[]="ffffffff-ffff-ffff-ffff-ffffffffffff";
+	memcpy(outiter,temp,sizeof(temp));
+	if(auto [ptr,ec]=std::to_chars(outiter,outiter+10,base);ec != std::errc()) {
+		LOGGER("tochar failed: %s\n",std::make_error_code(ec).message().c_str());
+		}
+	outiter+=24;
+	if(auto [ptr,ec]=std::to_chars(outiter,outiter+10,pos);ec != std::errc()) {
+		LOGGER("tochar failed: %s\n",std::make_error_code(ec).message().c_str());
+		}
+	return sizeof(temp)-1;
 	}
 
 #endif

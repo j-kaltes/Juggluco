@@ -1849,7 +1849,8 @@ te drukken.</span></p>
 hebt geïnstalleerd en poort 80 (http) van je modem naar je computer
 hebt omgeleid, kunt je eenvoudigweg het volgende commando uitvoeren:</p>
 <pre style="margin-bottom: 0.2in">certbot certonly --standalone --preferred-challenges http -d <i>mijnhostnaam</i></pre><p style="line-height: 100%; margin-bottom: 0in">
-Zie <a href="https://devpress.csdn.net/linux/62e7999e907d7d59d1c8cfd0.html">https://devpress.csdn.net/linux/62e7999e907d7d59d1c8cfd0.html</a> .</p>
+Zie <a href="https://devpress.csdn.net/linux/62e7999e907d7d59d1c8cfd0.html">https://devpress.csdn.net/linux/62e7999e907d7d59d1c8cfd0.html</a>
+.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><span lang="nl-NL">Nadat
 ik Certbot had gebruikt, vond ik de private key</span> <span lang="nl-NL">in
 /etc/letsencrypt/live/myhostname/privkey.pem</span> <span lang="nl-NL">en
@@ -1860,10 +1861,35 @@ is de hostnaam die ik heb gebruikt.</span></p>
 je alleen glucosewaarden van de ene Android naar de andere wilt
 sturen, kun je beter de <a href="https://www.juggluco.nl/Juggluco/index.html#mirror">Kloonfunctie</a></span>
 <span lang="nl-NL">van Juggluco gebruiken (Links midden menu-&gt;Kloon).</span></p>
-<p style="line-height: 100%; margin-bottom: 0in">Android Aps en
-Nsclient werken niet als volgeling van Juggluco, maar je kunt er wel
-glucosewaarden naar sturen met de xDrip-Broadcast in Juggluco
-(linkermenu-&gt;instellingen-&gt;xDrip Broadcast).</p>
+<p style="line-height: 100%; margin-bottom: 0in">AAPS kan worden
+gebruikt met Juggluco 7.3.0 en hoger. Hiervoor moet je in AAPS
+instellingen, <i>NSClientV3</i> selecteren, met de volgende
+instellingen:</p>
+<ul>
+	<li><p style="line-height: 100%; margin-bottom: 0in">gebruik als
+	<i>NS-toegangstoken</i> het hier opgegeven <i>api</i><i>_secret</i>;</p>
+	<li><p style="line-height: 100%; margin-bottom: 0in">schakel “
+	<i>Verbind met websockets</i>” uit;</p>
+	<li><p style="line-height: 100%; margin-bottom: 0in">Schakel onder “
+	<i>Synchronisatie</i> ” alle uploads uit. Schakel alleen in:</p>
+	<ul>
+		<li><p style="line-height: 100%; margin-bottom: 0in">ontvang/backfill
+		CGM gegevens;</p>
+		<li><p style="line-height: 100%; margin-bottom: 0in">Ontvang
+		insuline;</p>
+		<li><p style="line-height: 100%; margin-bottom: 0in">Ontvang
+		koolhydraten;</p>
+		<li><p style="line-height: 100%; margin-bottom: 0in">Accepteer
+		behandelingen;</p>
+	</ul>
+	<li><p style="line-height: 100%; margin-bottom: 0in"><span style="font-style: normal">Schakel
+	alle </span><i>“geavanceerde instellingen</i>” uit .</p>
+</ul>
+<p style="line-height: 100%; margin-bottom: 0in">Het invoegen van
+hoeveelheden in tijd vóór eerder ingevoerde hoeveelheden, zorgt
+ervoor dat AAPS dubbele behandelingen krijgt. Dit gebeurt ook wanneer
+de v3-interface wordt gebruikt met een Nightscout-server die
+v3-uploads ontvangt van Juggluco.</p>
 <p style="line-height: 100%; margin-bottom: 0in">Je hebt SSL nodig
 voor de Android apps Diabetes:M, <a href="https://play.google.com/store/apps/details?id=se.cornixit.nightwatch">Nightwatch</a>
 en <a href="https://slingithub.github.io/CheckmateWeb">Checkmate</a>
@@ -2048,6 +2074,10 @@ wanneer &quot;interval=secs&quot; is ingesteld op een lagere waarde.</p>
 https://hostnaam:poort, bijvoorbeeld
 https://mijnnaam.herokuapp.com:6789</p>
 <p><b>Actief</b> : Zet de server aan</p>
+<p><b>test V3</b>: Laat Juggluco api/v3 gebruiken om te uploaden naar
+Nightscout. Gebruik het niet om te uploaden naar een
+Nightscout-server die eerder V2-uploads heeft ontvangen en stuur geen
+V2-uploads naar een Nightscout-server die eerder V3-uploads ontving.</p>
 <p><span lang="nl-NL"><b>Geef hoeveelheden</b></span><span lang="nl-NL">:
 Stuur ook hoeveelheden als behandelingen naar Nightscout. Als je het
 selectievakje aanraakt, kom je in een dialoogvenster waarin je voor

@@ -34,6 +34,7 @@ import static android.view.View.INVISIBLE;
 import static java.util.Locale.US;
 import static tk.glucodata.GlucoseCurve.STEPBACK;
 import static tk.glucodata.GlucoseCurve.smallfontsize;
+import static tk.glucodata.Log.doLog;
 import static tk.glucodata.MessageSender.initwearos;
 import static tk.glucodata.SuperGattCallback.endtalk;
 import static tk.glucodata.util.getlocale;
@@ -76,7 +77,7 @@ import tk.glucodata.settings.Broadcasts;
 //import static tk.glucodata.MessageSender.messagesender;
 
 public class Applic extends Application {
-static final float mgdLmult=18.0182f;
+static final float mgdLmult= doLog?18.0182f:18.0f;
 //public static tk.glucodata.MessageSender messagesender=null;
    static boolean Nativesloaded=false;
 public static boolean hour24=true;
@@ -241,7 +242,7 @@ static String[] hasPermissions(Context context, String[] perms) {
 	}
 static String[] noPermissions(Context context) {
 	String[] noperms=  hasPermissions(context, scanpermissions) ;
-	if(Log.doLog) {
+	if(doLog) {
 		Log.i(LOG_ID,"nopermissions:");
 		for(var el:noperms) {
 			Log.i(LOG_ID,el);

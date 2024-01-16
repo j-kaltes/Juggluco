@@ -2153,12 +2153,12 @@ clavier logiciel.</p>
 <p>Pour afficher au-dessus d\'autres applications, Juggluco a besoin
 d\'une autorisation spéciale. Sur WearOS et Android Automotive, vous
 devez utiliser adb pour donner cette autorisation&nbsp;:</p>
-<p style="margin-bottom: 0cm; line-height: 100%"><b>adb shell pm
-accorder tk.glucodata android.permission.SYSTEM_ALERT_WINDOW</b></p>
-<p style="margin-bottom: 0cm; line-height: 100%"><br/>
+<p style="line-height: 100%; margin-bottom: 0in"><b>adb shell pm
+grant tk.glucodata android.permission.SYSTEM_ALERT_WINDOW</b></p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
 
 </p>
-<p style="margin-bottom: 0cm; line-height: 100%; background: transparent">
+<p style="line-height: 100%; margin-bottom: 0in; background: transparent">
 Sur certaines montres (par exemple TicWatch Pro), vous pouvez
 également l\'autoriser avec&nbsp;: Paramètres Android/WearOS -&gt;
 Applications et notifications -&gt; Informations sur l\'application -&gt;

@@ -126,9 +126,9 @@ extern std::string_view globalbasedir;
 	const char *systembase[]={"/usr/lib/x86_64-linux-gnu","/usr/lib64","/usr/lib"};
 
 	#elif defined(__i386__)
-	const char *systembase[]="/usr/lib/i386-linux-gnu","/usr/lib32","/usr/lib"};
+	const char *systembase[]={"/usr/lib/i386-linux-gnu","/usr/lib32","/usr/lib"};
 	#else
-	const char *systembase[]="/usr/lib"};
+	const char *systembase[]={"/usr/lib"};
 	#endif
 #endif
 void * dlopener(std::string_view filename,int flags) {

@@ -1878,8 +1878,7 @@ Key</em>&quot;, the Full Chain by pressing &quot;<em>Full Chain</em>&quot;.</p>
 <p style="line-height: 100%; margin-bottom: 0in">After installing
 Certbot and having redirected port 80 (http) from your modem to your
 computer, you can simply press:</p>
-<pre>certbot certonly --standalone --preferred-challenges http -d <i>myhostname</i></pre>
-<p>
+<pre style="margin-bottom: 0.2in">certbot certonly --standalone --preferred-challenges http -d <i>myhostname</i></pre><p>
 See <a href="https://devpress.csdn.net/linux/62e7999e907d7d59d1c8cfd0.html">https://devpress.csdn.net/linux/62e7999e907d7d59d1c8cfd0.html</a>.
 </p>
 <p style="line-height: 100%; margin-bottom: 0in">After using Certbot
@@ -1891,12 +1890,8 @@ is the hostname I used.</p>
 send glucose values from one Android to the other, you can better use
 Juggluco\'s <a href="https://www.juggluco.nl/Juggluco/index.html#mirror">mirror</a>
 function (Left middle menu-&gt;<a href="https://www.juggluco.nl/Jugglucohelp/connectionoverview.html">Mirror</a>).</p>
-<p style="line-height: 100%; margin-bottom: 0in">Android Aps doesn\'t work as follower of Juggluco, but you can send glucose
-values to them with the xDrip broadcast in Juggluco (left
-menu-&gt;<a href="https://www.juggluco.nl/Jugglucohelp/settinghelp.html">Settings</a>-&gt;xDrip
-Broadcast).</p>
 <p style="line-height: 100%; margin-bottom: 0in">You need SSL for the
-Android apps Diabetes:M, <a href="https://play.google.com/store/apps/details?id=se.cornixit.nightwatch">Nightwatch</a>
+Android apps AAPS, Diabetes:M, <a href="https://play.google.com/store/apps/details?id=se.cornixit.nightwatch">Nightwatch</a>
 and <a href="https://slingithub.github.io/CheckmateWeb">Checkmate</a>,
 Sugarmate (MacOS and IOS) and <a href="https://github.com/JohanDegraeve/xdripswift">Xdrip4ios</a>,
 Shuggah and Cockpit (IOS). Specify as Nightscout server URL:</p>
@@ -1905,6 +1900,32 @@ Shuggah and Cockpit (IOS). Specify as Nightscout server URL:</p>
 <p><i>hostname</i> is the host name of the authenticated key you have
 given to Juggluco, <i>port</i> is the port you forwarded to the port
 you specified in this screen (default: 17581).</p>
+<p style="line-height: 100%; margin-bottom: 0in">AAPS can be used
+with Juggluco 7.3.0 and higher. For this you need to select
+<i>NSClientV3</i> in AAPS, with the following settings:</p>
+<ul>
+	<li><p style="line-height: 100%; margin-bottom: 0in">use as <i>NS
+	access token</i> the api-secret specified here;</p>
+	<li><p style="line-height: 100%; margin-bottom: 0in">unset “<i>Connect
+	to websockets</i>”;</p>
+	<li><p style="line-height: 100%; margin-bottom: 0in">under
+	“<i>Synchronization</i>”, turn off all uploads. Only turn on:</p>
+	<ul>
+		<li><p style="line-height: 100%; margin-bottom: 0in">Receive/backfill
+		CGM data;</p>
+		<li><p style="line-height: 100%; margin-bottom: 0in">Receive
+		Insulin;</p>
+		<li><p style="line-height: 100%; margin-bottom: 0in">Receive carbs;</p>
+		<li><p style="line-height: 100%; margin-bottom: 0in">Receive
+		therapy events;</p>
+	</ul>
+	<li><p style="line-height: 100%; margin-bottom: 0in">Turn off all
+	“<i>advanced settings</i>”.</p>
+</ul>
+<p style="line-height: 100%; margin-bottom: 0in">Inserting amounts
+before earlier entered amounts, makes that AAPS will have duplicate
+treatments. This also happens when the v3 interface is used with a
+Nightscout server that receives v3 uploads from Juggluco.</p>
 <p style="line-height: 100%; margin-bottom: 0in">The web server can
 also be run on a Linux computer. It will receive its data from a
 <a href="https://www.juggluco.nl/Juggluco/index.html#mirror">mirror
@@ -1915,8 +1936,8 @@ connect to this server via a mirror connection or as Nightscout
 follower (for example on an Iphone). If there is a Nightscout app
 that doesn\'t work with this web server, please tell me. Maybe it can
 be made to work with a few changes. (The IOS apps Nightscout and
-Nightscout X are specific for one particular Nightscout server program and will not work with
-Juggluco.)</p>
+Nightscout X are specific for one particular Nightscout server
+program and will not work with Juggluco.)</p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>api_secret</b>:
 Specify that followers should set the ap<span style="font-weight: normal">i</span><b>_</b>secret
 http header element to this value. This secret also works when the
@@ -1926,10 +1947,7 @@ secret. Starting with Juggluco 7.1.15 it is also possible to make the
 api_secret the first element of the path of the Nightscout server
 URL. If xyz is the api_secret and http://hostname:port is the
 Nightscout server URL, you can specify http://hostname:port/xzy as
-the Nightscout server URL. For <a href="https://github.com/kashamalasha/nightscout-widget-electron">Owlet</a>
-this is the only way to make use of the api_secret. <i>NIGHTSCOUT
-TOKEN</i> in <a href="https://github.com/kashamalasha/nightscout-widget-electron">Owlet</a>
-settings has no effect.</p>
+the Nightscout server URL.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><strong>Visible</strong>:
 Make Secret visible.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><strong>Port</strong>:
@@ -2028,6 +2046,11 @@ set to a lower value.</p>
 <p><b>URL</b>: the url should be in the form of https://hostname:port
 for example, https://myname.herokuapp.com:6789</p>
 <p><b>Active</b>: Turn on uploader</p>
+<p><b>test V3</b>:  Let Juggluco use api/v3 to upload to Nightscout.
+Don’t use it to upload to a Nightscout server that previously
+received V2 uploads and don’t send V2 uploads to a Nightscout
+server that previously received V3 uploads. 
+</p>
 <p><b>Give Amounts</b>: Also send amounts as treatments to
 Nightscout. Touching the checkbox brings you to a dialog in which you
 can specify for every label what it means in Nightscout. These
@@ -2038,9 +2061,9 @@ label, you have to remember yourself to specify what to do with it.
 <span lang="en-US">Because of a bug in <a href="https://github.com/nightscout/cgm-remote-monitor">Nightscout</a>,
 insertions at older time periods or deletions are only shown after
 items with a new time are added. This means that it is better to send
-less often to Nightscout. </span><span lang="en-US">Now it is done
-every time the user switches away from Juggluco by turning off the
-display or going to another app.</span></p>
+less often to Nightscout. Now it is done every time the user switches
+away from Juggluco by turning off the display or going to another
+app.</span></p>
 <p><b>Resend data</b>: Upload all data again to the Nightscout server</p>
 <p><b>Send now</b>: Normally data is immediately send when it arrives
 from the sensor or a mirror connection. Press on this button when for
@@ -2165,7 +2188,7 @@ UTF8.</p>
 <a href="https://www.juggluco.nl/Juggluco/webserver.html">https://www.juggluco.nl/Juggluco/webserver.html</a>.</p>
 <p><b>Days</b>: Starting with Juggluco 7.1.0, you can select the
 number of days to save. The end date is the right border of the
-screen. This if you view past data in Juggluco, only old data is
+screen. Thus if you view past data in Juggluco, only old data is
 exported (the same as in left middle menu-&gt;<a href="https://www.juggluco.nl/Jugglucohelp/stathelp.html">Statistics</a>).</p>
 <p>Starting with Juggluco 7.1.0, it is also possible to receive these
 data via the web server in Juggluco (Left menu-&gt;<a href="https://www.juggluco.nl/Jugglucohelp/settinghelp.html">Settings</a>-&gt;Web

@@ -1123,7 +1123,6 @@ static bool isstarted=started();
 #include <thread>
 void startlibrethread() {
 	if(!libreviewrunning) {
-
 		srand(time(nullptr));
 		std::thread libre(libreviewthread);
 		libre.detach();

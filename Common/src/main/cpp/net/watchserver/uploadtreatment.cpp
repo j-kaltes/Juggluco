@@ -1,19 +1,24 @@
 
 #ifndef WEAROS
-#include <algorithm>
 #include <jni.h>
+#include <charconv>
+#include <algorithm>
 #include "settings/settings.h"
 #include "nums/numdata.h"
 #include "logs.h"
 #include "destruct.h"
+#include "nightnumcategories.h"
+constexpr int HTTP_OK=200;
+
 constexpr const int treatmentitemsize=300;
 
 extern vector<Numdata*> numdatas;
 
-extern bool nightuploadTreatments(const char *data,int len) ;
+extern int nightuploadTreatments(const char *data,int len) ;
+extern int nightuploadTreatments3(const char *data,int len) ;
 char *writetreatment(char *outiter,const int numbase,const int pos,const Num*num,int border);
 extern  const int nighttimeback;
-
+int mkidV3(char *outiter,int base,int pos) ;
 
 static jstring  makeurl(JNIEnv *env,std::string_view pathstr1,std::string_view pathstr2) {
 		const int namelen=settings->data()->nightuploadnamelen;
@@ -46,10 +51,67 @@ bool deletetreatment(JNIEnv *env,int base,int del) {
 	return res;
 	}
 
+bool deletetreatment3(JNIEnv *env,int base,int del) {
+	const static jmethodID  deleteUrl=env->GetStaticMethodID(nightpostclass,"deleteUrl","(Ljava/lang/String;Ljava/lang/String;)Z");
+	constexpr const std::string_view treatment=R"(/api/v3/treatments/)";
+	char buf[50];
+	int len=mkidV3(buf, base, del);
+	jstring url=makeurl(env,treatment,std::string_view(buf,len));
+	LOGGER("delete %.24s\n",buf);
+	bool res=env->CallStaticBooleanMethod(nightpostclass,deleteUrl,url,jnightuploadsecret);
+	env->DeleteLocalRef(url);
+	return res;
+	}
+
 extern JNIEnv *getenv();
-bool uploadtreatments() {
+
+static char *writetreatmentV3(char *outiter,const int numbase,const int pos,const Num*num) ;
+static bool sendtreatment3(int base,int iter,const Num *num,Numdata *numdata) {
+	char buf[treatmentitemsize];
+	if(char *end=writetreatmentV3(buf,base,iter,num);end!=buf) {
+		int datalen=end-buf;
+		logwriter(buf,datalen);
+		if(int res=nightuploadTreatments3(buf,datalen);res==200||res==201) {
+			LOGGER("treatment base=%d len=%d nightupload Success\n",base,datalen);
+			numdata->setNightSend(iter+1);
+			return true;
+			}
+		else  {
+			LOGGER("treatment base=%d len=%d nightupload failed code=%d\n",base,datalen,res);
+			return false;
+			}
+		}
+	else {
+		LOGGER("Skip iter=%d, type=%d\n",iter,num->type);
+
+		}
+	return true;
+	}
+
+static bool sendtreatment(int base,int iter,const Num *num,Numdata *numdata) {
+	char buf[treatmentitemsize];
+	if(char *end=writetreatment(buf,base,iter,num,0);end!=buf) {
+		int datalen=end-buf-1;
+		logwriter(buf,datalen);
+		if(nightuploadTreatments(buf,datalen)==HTTP_OK) {
+			LOGGER("treatment base=%d len=%d nightupload Success\n",base,datalen);
+			numdata->setNightSend(iter+1);
+			return true;
+			}
+		return false;
+		}
+	else {
+		LOGGER("Skip iter=%d, type=%d\n",iter,num->type);
+
+		}
+	return true;
+	}
+bool uploadtreatments(bool useV3) {
 	if(settings->data()->postTreatments) {
-		const uint32_t oldtime=time(nullptr)-nighttimeback;
+		const uint32_t now=time(nullptr);
+		const uint32_t oldtime=now-nighttimeback;
+		const uint32_t lastloadtime=settings->data()->lastuploadtime;
+		LOGGER("lastloadtime=%d\n",lastloadtime);
 		const int basecount=numdatas.size();
 		for(int base=0;base<basecount;++base) {
 			auto *numdata=numdatas[base];
@@ -61,9 +123,11 @@ bool uploadtreatments() {
 				LOGGER("delete %d cases\n",send-start);
 				auto env=getenv();
 				for(int del=send-1;del>=start;--del) {
-					if(!deletetreatment(env,base,del)) {
-						LOGGER("deletetreatment(%d,%d) failed\n",base,del);
-						return false;
+					 if(numdata->changedsince(lastloadtime,del)||del>=last) {		
+						if(!(useV3?deletetreatment3(env,base,del):deletetreatment(env,base,del))) {
+							LOGGER("deletetreatment(%d,%d) failed\n",base,del);
+							return false;
+							}
 						}
 					numdata->getnightSend()=del;
 					}
@@ -79,7 +143,7 @@ bool uploadtreatments() {
 						const Num *hit=std::upper_bound(startnum,en, zoek,comp);
 						if(hit==en) {
 							LOGGER("No new num after %d\n",start);
-							return false;
+							continue;
 							}
 						start=hit-nummers;
 						nr=last-start;
@@ -87,20 +151,10 @@ bool uploadtreatments() {
 					for(auto iter=start;iter<last;iter++) {
 						const Num *num=nummers+iter;
 						if(numdata->valid(num)) {
-							char buf[treatmentitemsize];
-							if(char *end=writetreatment(buf,base,iter,num,0);end!=buf) {
-								int datalen=end-buf-1;
-								logwriter(buf,datalen);
-								if(nightuploadTreatments(buf,datalen)) {
-									LOGGER("treatment base=%d len=%d nightupload Success\n",base,datalen);
-									}
-								else {
-									numdata->setNightSend(iter+1);
+					 		if(numdata->changedsince(lastloadtime,iter)||num->gettime()>=lastloadtime) {		
+								if(!(useV3?sendtreatment3:sendtreatment)(base,iter,num,numdata) ) {
 									return false;
 									}
-								}
-							else {
-								LOGGER("Skip iter=%d, type=%d\n",iter,num->type);
 								}
 							}
 						}
@@ -108,9 +162,60 @@ bool uploadtreatments() {
 					}
 
 			}
+
+		settings->data()->lastuploadtime=now;
+		LOGGER("new lastloadtime=%d\n",now);
 		}
 	return true;
 	}
 
+
+char *writetreatmentV3(char *outiter,const int numbase,const int pos,const Num*num) {
+	const int type=num->type;
+	if(type>=settings->varcount()||!settings->data()->Nightnums[type].kind) {
+		return outiter;
+		}
+	const time_t tim=num->gettime();
+	addar(outiter,R"({"identifier":")");
+
+	outiter+=mkidV3(outiter,numbase,pos);
+	addar(outiter,R"(","_id":")");
+	outiter+=mkid(outiter,numbase, pos) ;
+	addar(outiter,R"(","date":)");
+	if(auto [ptr,ec]=std::to_chars(outiter,outiter+15,tim);ec == std::errc()) {
+		outiter=ptr;
+		}
+	else
+		LOGGER("tochar failed: %s\n",std::make_error_code(ec).message().c_str());
+
+	addar(outiter,R"(000,"utcOffset":0,"eventType":"<none>","app":"Juggluco",)");
+  
+
+	float w=0.0f;
+	 if((w=longNightWeight(type))!=0.0f) {
+	 	
+	 	addar(outiter,R"("notes":"Long-Acting",)");
+	 	}
+	else { if((w=rapidNightWeight(type))!=0.0f) {
+	 	addar(outiter,R"("notes":"Rapid-Acting",)");
+	 	}
+		}
+	if(w!=0.0f) {
+		const char * typestr=settings->getlabel(type).data();;
+		auto units=w*num->value;
+		outiter+=sprintf(outiter,R"("insulin":%g,"insulinType":"%s"})",units,typestr);
+
+		}
+	else {
+		if((w=carboNightWeight(type) )!=0.0f) {
+			outiter+=sprintf(outiter,R"("carbs":%g})",w*num->value);
+			}
+		else {
+			std::string_view typestr=settings->getlabel(type);
+			outiter+=sprintf(outiter,R"("notes":"%s %g"})",typestr.data(),num->value);
+			}
+		}
+	return outiter;
+	}
 //R"({"timestamp":%u000,"eventType":"<none>","enteredBy":"Juggluco","notes":"Walk 7","carbs":%g,"insulin":%g,"created_at":"2024-01-06T11:31:03Z","_id":"%s"}
 #endif
