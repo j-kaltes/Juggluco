@@ -190,13 +190,13 @@ public static void  config(MainActivity act, View settingsview) {
 	var wake=getbutton(act,act.getString(R.string.sendnow));
 	wake.setOnClickListener(v-> Natives.wakeuploader());
 	Button help;
-	CheckBox treatments,v3box=null;
+	CheckBox treatments;
 	if(!isWearable) {
 		help=getbutton(act,R.string.helpname);
 		help.setOnClickListener(v-> help(R.string.NightPost,act));
 		treatments=getcheckbox(act,R.string.sendamounts,Natives.getpostTreatments());
-		v3box=getcheckbox(act,"test V3",Natives.getnightscoutV3());
 		}
+	final CheckBox v3box=!isWearable?getcheckbox(act,"test V3",Natives.getnightscoutV3()):null;
 	boolean useuploader=Natives.getuseuploader();
 	var activebox=getcheckbox(act,R.string.active,useuploader);
        var visible = new CheckBox(act);
