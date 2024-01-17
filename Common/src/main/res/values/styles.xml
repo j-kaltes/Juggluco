@@ -7,6 +7,7 @@
     <item name="android:textViewStyle">@style/MyTextViewStyle</item>
      <item name="android:textAppearanceButton">@style/textAppearanceButton</item>
       <item name="android:spinnerStyle">@android:style/Widget.Holo.Spinner</item>
+           <item name="android:windowSwipeToDismiss">false</item>
 </style>
 
  <style name="textAppearanceButton" parent="@android:style/TextAppearance.Material.Widget.Button">

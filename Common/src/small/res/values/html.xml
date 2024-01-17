@@ -1,0 +1,43 @@
+<resources>
+<string name="ringtone" ></string>
+<string name="reminders" ></string>
+<string name="connectionoverview" ></string>
+<string name="addconnection" ></string>
+<string name="downloadinfo" ></string>
+<string name="locationpermission" ></string>
+<string name="notificationpermission"></string>
+<string name="introhelp" ></string>
+<string name="searchhelp" ></string>
+<string name="shortcuthelp" ></string>
+<string name="labelhelp" ></string>
+<string name="settinghelp" ></string>
+<string name="sensorhelp" ></string>
+<string name="watchhelp" ></string>
+<string name="getlib" ></string>
+<string name="newlabelhelp" ></string>
+<string name="battery" ></string>
+<string name="nutrients" ></string>
+<string name="mealhelp" ></string>
+<string name="colorhelp" ></string>
+<string name="stathelp" ></string>
+<string name="alarmhelp" ></string>
+<string name="flashpermission" ></string>
+<string name="nearbypermission" ></string>
+<string name="watchinfo" ></string>
+<string name="wearosinfo" ></string>
+<string name="about" ></string>
+<string name="disturbhelp" ></string>
+<string name="floatingconfig" ></string>
+<string name="NightPost" ></string>
+<string name="newamount" ></string>
+<string name="staticnum" >
+<![CDATA[
+<h1 align="center">&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Blocked</h1>
+<p>&nbsp;&nbsp;&nbsp;&nbsp<b>Left menu-&gt;Mirror-&gt;&quot;</b><em><b>Mirror sends amounts</b></em><b>&quot;</b>
+is set to prevent entering amounts in this app, because they will be
+overridden by amounts received from the mirror connection.</p>
+<p>If this app doesn\'t
+receive amounts from a mirror connection, unset this option.</p>
+]]>
+</string>
+</resources>

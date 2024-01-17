@@ -2293,7 +2293,7 @@ Zeitpunkt des Stoppens des Alarms gelesen.</p>
 <string name="watchinfo" >
 <![CDATA[
 <h1>Uhren</h1>
-<p>Derzeit bietet Juggluco vier Möglichkeiten, um Glukosewerte auf
+<p>Derzeit bietet Juggluco 6 Möglichkeiten, um Glukosewerte auf
 Ihrer Uhr anzuzeigen.</p>
 <h2 class="western">Benachrichtigen</h2>
 <p>Wenn <i>Benachrichtigen</i> aktiviert ist, wird jedes Mal eine

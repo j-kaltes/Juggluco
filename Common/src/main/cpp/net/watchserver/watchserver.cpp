@@ -1268,7 +1268,7 @@ const auto modified3size= modifiedv3.size();
 
 
 	wrongpath({input,static_cast<size_t>(inpend-input)}, outdata);
-	return true;
+	return false;
 	}
 static bool setitertrue(const char *&iter,std::string_view cond) {
 	if(strncasecmp(iter,cond.data(),cond.size()))

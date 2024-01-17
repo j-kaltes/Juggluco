@@ -129,9 +129,27 @@ android {
 		viewBinding true
 	    }
         }
+
+        small {
+
+            dimension 'wearos'
+		minSdk 19
+		versionCode             446                         //WATCH
+		versionName '7.3.0-small'
+		signingConfig signingConfigs.alg
+
+           buildConfigField 'int', 'isWear', '1'
+            externalNativeBuild.cmake {
+	        arguments "-DWEAROS=TRUE"
+                cppFlags " -DWEAROS=1  -DUSEDIN=1  -DAPPVERSION=\\\"$versionName\\\" "
+
+                }
+
+	  buildFeatures {
+		viewBinding true
+	    }
+        }
        mobile {
-           // targetSdk 26
-             // targetSdk 31
             dimension 'wearos'
            buildConfigField 'int', 'isWear', '0'
         }

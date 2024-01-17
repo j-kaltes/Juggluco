@@ -1,3 +1,11 @@
+Calculating task graph as configuration cache cannot be reused because file 'Common/build.gradle' has changed.
+Type-safe project accessors is an incubating feature.
+
+> Configure project :Common
+WARNING: The option setting 'android.defaults.buildfeatures.buildconfig=true' is deprecated.
+The current default is 'false'.
+It will be removed in version 9.0 of the Android Gradle plugin.
+You can resolve this warning in Android Studio via `Refactor` > `Migrate BuildConfig to Gradle Build Files`
 
 > Task :tasks
 
@@ -15,22 +23,180 @@ Build tasks
 -----------
 assemble - Assemble main outputs for all the variants.
 assembleAndroidTest - Assembles all the Test applications.
+assembleDebug - Assembles main outputs for all Debug variants.
+assembleDebug2 - Assembles main outputs for all Debug2 variants.
+assembleDebug3 - Assembles main outputs for all Debug3 variants.
+assembleDebugdub - Assembles main outputs for all Debugdub variants.
+assembleLibre3 - Assembles main outputs for all Libre3 variants.
+assembleLibreOld - Assembles main outputs for all LibreOld variants.
+assembleMobile - Assembles main outputs for all Mobile variants.
+assembleMobileLibre3 - Assembles main outputs for all MobileLibre3 variants.
+assembleMobileLibreOld - Assembles main outputs for all MobileLibreOld variants.
+assembleRelease - Assembles main outputs for all Release variants.
+assembleRelease2 - Assembles main outputs for all Release2 variants.
+assembleRelease2log - Assembles main outputs for all Release2log variants.
+assembleReleasedebug - Assembles main outputs for all Releasedebug variants.
+assembleReleasedub - Assembles main outputs for all Releasedub variants.
+assembleReleaselog - Assembles main outputs for all Releaselog variants.
+assembleSmall - Assembles main outputs for all Small variants.
+assembleSmallLibre3 - Assembles main outputs for all SmallLibre3 variants.
+assembleSmallLibreOld - Assembles main outputs for all SmallLibreOld variants.
+assembleWear - Assembles main outputs for all Wear variants.
+assembleWearLibre3 - Assembles main outputs for all WearLibre3 variants.
+assembleWearLibreOld - Assembles main outputs for all WearLibreOld variants.
 build - Assembles and tests this project.
 buildDependents - Assembles and tests this project and all projects that depend on it.
+buildKotlinToolingMetadata - Build metadata json file containing information about the used Kotlin tooling
 buildNeeded - Assembles and tests this project and all projects it depends on.
 bundle - Assemble bundles for all the variants.
+bundleDebug - Assembles bundles for all Debug variants.
+bundleDebug2 - Assembles bundles for all Debug2 variants.
+bundleDebug3 - Assembles bundles for all Debug3 variants.
+bundleDebugdub - Assembles bundles for all Debugdub variants.
+bundleLibre3 - Assembles bundles for all Libre3 variants.
+bundleLibreOld - Assembles bundles for all LibreOld variants.
+bundleMobile - Assembles bundles for all Mobile variants.
+bundleMobileLibre3 - Assembles bundles for all MobileLibre3 variants.
+bundleMobileLibreOld - Assembles bundles for all MobileLibreOld variants.
+bundleRelease - Assembles bundles for all Release variants.
+bundleRelease2 - Assembles bundles for all Release2 variants.
+bundleRelease2log - Assembles bundles for all Release2log variants.
+bundleReleasedebug - Assembles bundles for all Releasedebug variants.
+bundleReleasedub - Assembles bundles for all Releasedub variants.
+bundleReleaselog - Assembles bundles for all Releaselog variants.
+bundleSmall - Assembles bundles for all Small variants.
+bundleSmallLibre3 - Assembles bundles for all SmallLibre3 variants.
+bundleSmallLibreOld - Assembles bundles for all SmallLibreOld variants.
+bundleWear - Assembles bundles for all Wear variants.
+bundleWearLibre3 - Assembles bundles for all WearLibre3 variants.
+bundleWearLibreOld - Assembles bundles for all WearLibreOld variants.
 clean - Deletes the build directory.
-compileDebug2Sources
-compileDebug2UnitTestSources
-compileDebug3Sources
-compileDebug3UnitTestSources
-compileDebugAndroidTestSources
-compileDebugSources
-compileDebugUnitTestSources
-compileRelease2Sources
-compileRelease2UnitTestSources
-compileReleaseSources
-compileReleaseUnitTestSources
+compileMobileLibre3Debug2Sources
+compileMobileLibre3Debug2UnitTestSources
+compileMobileLibre3Debug3Sources
+compileMobileLibre3Debug3UnitTestSources
+compileMobileLibre3DebugAndroidTestSources
+compileMobileLibre3DebugdubSources
+compileMobileLibre3DebugdubUnitTestSources
+compileMobileLibre3DebugSources
+compileMobileLibre3DebugUnitTestSources
+compileMobileLibre3Release2logSources
+compileMobileLibre3Release2logUnitTestSources
+compileMobileLibre3Release2Sources
+compileMobileLibre3Release2UnitTestSources
+compileMobileLibre3ReleasedebugSources
+compileMobileLibre3ReleasedebugUnitTestSources
+compileMobileLibre3ReleasedubSources
+compileMobileLibre3ReleasedubUnitTestSources
+compileMobileLibre3ReleaselogSources
+compileMobileLibre3ReleaselogUnitTestSources
+compileMobileLibre3ReleaseSources
+compileMobileLibre3ReleaseUnitTestSources
+compileMobileLibreOldDebug2Sources
+compileMobileLibreOldDebug2UnitTestSources
+compileMobileLibreOldDebug3Sources
+compileMobileLibreOldDebug3UnitTestSources
+compileMobileLibreOldDebugAndroidTestSources
+compileMobileLibreOldDebugdubSources
+compileMobileLibreOldDebugdubUnitTestSources
+compileMobileLibreOldDebugSources
+compileMobileLibreOldDebugUnitTestSources
+compileMobileLibreOldRelease2logSources
+compileMobileLibreOldRelease2logUnitTestSources
+compileMobileLibreOldRelease2Sources
+compileMobileLibreOldRelease2UnitTestSources
+compileMobileLibreOldReleasedebugSources
+compileMobileLibreOldReleasedebugUnitTestSources
+compileMobileLibreOldReleasedubSources
+compileMobileLibreOldReleasedubUnitTestSources
+compileMobileLibreOldReleaselogSources
+compileMobileLibreOldReleaselogUnitTestSources
+compileMobileLibreOldReleaseSources
+compileMobileLibreOldReleaseUnitTestSources
+compileSmallLibre3Debug2Sources
+compileSmallLibre3Debug2UnitTestSources
+compileSmallLibre3Debug3Sources
+compileSmallLibre3Debug3UnitTestSources
+compileSmallLibre3DebugAndroidTestSources
+compileSmallLibre3DebugdubSources
+compileSmallLibre3DebugdubUnitTestSources
+compileSmallLibre3DebugSources
+compileSmallLibre3DebugUnitTestSources
+compileSmallLibre3Release2logSources
+compileSmallLibre3Release2logUnitTestSources
+compileSmallLibre3Release2Sources
+compileSmallLibre3Release2UnitTestSources
+compileSmallLibre3ReleasedebugSources
+compileSmallLibre3ReleasedebugUnitTestSources
+compileSmallLibre3ReleasedubSources
+compileSmallLibre3ReleasedubUnitTestSources
+compileSmallLibre3ReleaselogSources
+compileSmallLibre3ReleaselogUnitTestSources
+compileSmallLibre3ReleaseSources
+compileSmallLibre3ReleaseUnitTestSources
+compileSmallLibreOldDebug2Sources
+compileSmallLibreOldDebug2UnitTestSources
+compileSmallLibreOldDebug3Sources
+compileSmallLibreOldDebug3UnitTestSources
+compileSmallLibreOldDebugAndroidTestSources
+compileSmallLibreOldDebugdubSources
+compileSmallLibreOldDebugdubUnitTestSources
+compileSmallLibreOldDebugSources
+compileSmallLibreOldDebugUnitTestSources
+compileSmallLibreOldRelease2logSources
+compileSmallLibreOldRelease2logUnitTestSources
+compileSmallLibreOldRelease2Sources
+compileSmallLibreOldRelease2UnitTestSources
+compileSmallLibreOldReleasedebugSources
+compileSmallLibreOldReleasedebugUnitTestSources
+compileSmallLibreOldReleasedubSources
+compileSmallLibreOldReleasedubUnitTestSources
+compileSmallLibreOldReleaselogSources
+compileSmallLibreOldReleaselogUnitTestSources
+compileSmallLibreOldReleaseSources
+compileSmallLibreOldReleaseUnitTestSources
+compileWearLibre3Debug2Sources
+compileWearLibre3Debug2UnitTestSources
+compileWearLibre3Debug3Sources
+compileWearLibre3Debug3UnitTestSources
+compileWearLibre3DebugAndroidTestSources
+compileWearLibre3DebugdubSources
+compileWearLibre3DebugdubUnitTestSources
+compileWearLibre3DebugSources
+compileWearLibre3DebugUnitTestSources
+compileWearLibre3Release2logSources
+compileWearLibre3Release2logUnitTestSources
+compileWearLibre3Release2Sources
+compileWearLibre3Release2UnitTestSources
+compileWearLibre3ReleasedebugSources
+compileWearLibre3ReleasedebugUnitTestSources
+compileWearLibre3ReleasedubSources
+compileWearLibre3ReleasedubUnitTestSources
+compileWearLibre3ReleaselogSources
+compileWearLibre3ReleaselogUnitTestSources
+compileWearLibre3ReleaseSources
+compileWearLibre3ReleaseUnitTestSources
+compileWearLibreOldDebug2Sources
+compileWearLibreOldDebug2UnitTestSources
+compileWearLibreOldDebug3Sources
+compileWearLibreOldDebug3UnitTestSources
+compileWearLibreOldDebugAndroidTestSources
+compileWearLibreOldDebugdubSources
+compileWearLibreOldDebugdubUnitTestSources
+compileWearLibreOldDebugSources
+compileWearLibreOldDebugUnitTestSources
+compileWearLibreOldRelease2logSources
+compileWearLibreOldRelease2logUnitTestSources
+compileWearLibreOldRelease2Sources
+compileWearLibreOldRelease2UnitTestSources
+compileWearLibreOldReleasedebugSources
+compileWearLibreOldReleasedebugUnitTestSources
+compileWearLibreOldReleasedubSources
+compileWearLibreOldReleasedubUnitTestSources
+compileWearLibreOldReleaselogSources
+compileWearLibreOldReleaselogUnitTestSources
+compileWearLibreOldReleaseSources
+compileWearLibreOldReleaseUnitTestSources
 
 Build Setup tasks
 -----------------
@@ -47,63 +213,334 @@ javaToolchains - Displays the detected java toolchains.
 outgoingVariants - Displays the outgoing variants of root project 'Glucodata'.
 projects - Displays the sub-projects of root project 'Glucodata'.
 properties - Displays the properties of root project 'Glucodata'.
+resolvableConfigurations - Displays the configurations that can be resolved in root project 'Glucodata'.
 tasks - Displays the tasks runnable from root project 'Glucodata' (some of the displayed tasks may belong to subprojects).
 
 Install tasks
 -------------
-installDebug - Installs the Debug build.
-installDebug2 - Installs the Debug2 build.
-installDebug3 - Installs the Debug3 build.
-installDebugAndroidTest - Installs the android (on device) tests for the Debug build.
-installRelease - Installs the Release build.
-installRelease2 - Installs the Release2 build.
+installMobileLibre3Debug - Installs the Debug build for flavor MobileLibre3.
+installMobileLibre3Debug2 - Installs the Debug2 build for flavor MobileLibre3.
+installMobileLibre3Debug3 - Installs the Debug3 build for flavor MobileLibre3.
+installMobileLibre3DebugAndroidTest - Installs the android (on device) tests for the MobileLibre3Debug build.
+installMobileLibre3Debugdub - Installs the Debugdub build for flavor MobileLibre3.
+installMobileLibre3Release - Installs the Release build for flavor MobileLibre3.
+installMobileLibre3Release2 - Installs the Release2 build for flavor MobileLibre3.
+installMobileLibre3Release2log - Installs the Release2log build for flavor MobileLibre3.
+installMobileLibre3Releasedebug - Installs the Releasedebug build for flavor MobileLibre3.
+installMobileLibre3Releasedub - Installs the Releasedub build for flavor MobileLibre3.
+installMobileLibre3Releaselog - Installs the Releaselog build for flavor MobileLibre3.
+installMobileLibreOldDebug - Installs the Debug build for flavor MobileLibreOld.
+installMobileLibreOldDebug2 - Installs the Debug2 build for flavor MobileLibreOld.
+installMobileLibreOldDebug3 - Installs the Debug3 build for flavor MobileLibreOld.
+installMobileLibreOldDebugAndroidTest - Installs the android (on device) tests for the MobileLibreOldDebug build.
+installMobileLibreOldDebugdub - Installs the Debugdub build for flavor MobileLibreOld.
+installMobileLibreOldRelease - Installs the Release build for flavor MobileLibreOld.
+installMobileLibreOldRelease2 - Installs the Release2 build for flavor MobileLibreOld.
+installMobileLibreOldRelease2log - Installs the Release2log build for flavor MobileLibreOld.
+installMobileLibreOldReleasedebug - Installs the Releasedebug build for flavor MobileLibreOld.
+installMobileLibreOldReleasedub - Installs the Releasedub build for flavor MobileLibreOld.
+installMobileLibreOldReleaselog - Installs the Releaselog build for flavor MobileLibreOld.
+installSmallLibre3Debug - Installs the Debug build for flavor SmallLibre3.
+installSmallLibre3Debug2 - Installs the Debug2 build for flavor SmallLibre3.
+installSmallLibre3Debug3 - Installs the Debug3 build for flavor SmallLibre3.
+installSmallLibre3DebugAndroidTest - Installs the android (on device) tests for the SmallLibre3Debug build.
+installSmallLibre3Debugdub - Installs the Debugdub build for flavor SmallLibre3.
+installSmallLibre3Release - Installs the Release build for flavor SmallLibre3.
+installSmallLibre3Release2 - Installs the Release2 build for flavor SmallLibre3.
+installSmallLibre3Release2log - Installs the Release2log build for flavor SmallLibre3.
+installSmallLibre3Releasedebug - Installs the Releasedebug build for flavor SmallLibre3.
+installSmallLibre3Releasedub - Installs the Releasedub build for flavor SmallLibre3.
+installSmallLibre3Releaselog - Installs the Releaselog build for flavor SmallLibre3.
+installSmallLibreOldDebug - Installs the Debug build for flavor SmallLibreOld.
+installSmallLibreOldDebug2 - Installs the Debug2 build for flavor SmallLibreOld.
+installSmallLibreOldDebug3 - Installs the Debug3 build for flavor SmallLibreOld.
+installSmallLibreOldDebugAndroidTest - Installs the android (on device) tests for the SmallLibreOldDebug build.
+installSmallLibreOldDebugdub - Installs the Debugdub build for flavor SmallLibreOld.
+installSmallLibreOldRelease - Installs the Release build for flavor SmallLibreOld.
+installSmallLibreOldRelease2 - Installs the Release2 build for flavor SmallLibreOld.
+installSmallLibreOldRelease2log - Installs the Release2log build for flavor SmallLibreOld.
+installSmallLibreOldReleasedebug - Installs the Releasedebug build for flavor SmallLibreOld.
+installSmallLibreOldReleasedub - Installs the Releasedub build for flavor SmallLibreOld.
+installSmallLibreOldReleaselog - Installs the Releaselog build for flavor SmallLibreOld.
+installWearLibre3Debug - Installs the Debug build for flavor WearLibre3.
+installWearLibre3Debug2 - Installs the Debug2 build for flavor WearLibre3.
+installWearLibre3Debug3 - Installs the Debug3 build for flavor WearLibre3.
+installWearLibre3DebugAndroidTest - Installs the android (on device) tests for the WearLibre3Debug build.
+installWearLibre3Debugdub - Installs the Debugdub build for flavor WearLibre3.
+installWearLibre3Release - Installs the Release build for flavor WearLibre3.
+installWearLibre3Release2 - Installs the Release2 build for flavor WearLibre3.
+installWearLibre3Release2log - Installs the Release2log build for flavor WearLibre3.
+installWearLibre3Releasedebug - Installs the Releasedebug build for flavor WearLibre3.
+installWearLibre3Releasedub - Installs the Releasedub build for flavor WearLibre3.
+installWearLibre3Releaselog - Installs the Releaselog build for flavor WearLibre3.
+installWearLibreOldDebug - Installs the Debug build for flavor WearLibreOld.
+installWearLibreOldDebug2 - Installs the Debug2 build for flavor WearLibreOld.
+installWearLibreOldDebug3 - Installs the Debug3 build for flavor WearLibreOld.
+installWearLibreOldDebugAndroidTest - Installs the android (on device) tests for the WearLibreOldDebug build.
+installWearLibreOldDebugdub - Installs the Debugdub build for flavor WearLibreOld.
+installWearLibreOldRelease - Installs the Release build for flavor WearLibreOld.
+installWearLibreOldRelease2 - Installs the Release2 build for flavor WearLibreOld.
+installWearLibreOldRelease2log - Installs the Release2log build for flavor WearLibreOld.
+installWearLibreOldReleasedebug - Installs the Releasedebug build for flavor WearLibreOld.
+installWearLibreOldReleasedub - Installs the Releasedub build for flavor WearLibreOld.
+installWearLibreOldReleaselog - Installs the Releaselog build for flavor WearLibreOld.
 uninstallAll - Uninstall all applications.
-uninstallDebug - Uninstalls the Debug build.
-uninstallDebug2 - Uninstalls the Debug2 build.
-uninstallDebug3 - Uninstalls the Debug3 build.
-uninstallDebugAndroidTest - Uninstalls the android (on device) tests for the Debug build.
-uninstallRelease - Uninstalls the Release build.
-uninstallRelease2 - Uninstalls the Release2 build.
+uninstallMobileLibre3Debug - Uninstalls the Debug build for flavor MobileLibre3.
+uninstallMobileLibre3Debug2 - Uninstalls the Debug2 build for flavor MobileLibre3.
+uninstallMobileLibre3Debug3 - Uninstalls the Debug3 build for flavor MobileLibre3.
+uninstallMobileLibre3DebugAndroidTest - Uninstalls the android (on device) tests for the MobileLibre3Debug build.
+uninstallMobileLibre3Debugdub - Uninstalls the Debugdub build for flavor MobileLibre3.
+uninstallMobileLibre3Release - Uninstalls the Release build for flavor MobileLibre3.
+uninstallMobileLibre3Release2 - Uninstalls the Release2 build for flavor MobileLibre3.
+uninstallMobileLibre3Release2log - Uninstalls the Release2log build for flavor MobileLibre3.
+uninstallMobileLibre3Releasedebug - Uninstalls the Releasedebug build for flavor MobileLibre3.
+uninstallMobileLibre3Releasedub - Uninstalls the Releasedub build for flavor MobileLibre3.
+uninstallMobileLibre3Releaselog - Uninstalls the Releaselog build for flavor MobileLibre3.
+uninstallMobileLibreOldDebug - Uninstalls the Debug build for flavor MobileLibreOld.
+uninstallMobileLibreOldDebug2 - Uninstalls the Debug2 build for flavor MobileLibreOld.
+uninstallMobileLibreOldDebug3 - Uninstalls the Debug3 build for flavor MobileLibreOld.
+uninstallMobileLibreOldDebugAndroidTest - Uninstalls the android (on device) tests for the MobileLibreOldDebug build.
+uninstallMobileLibreOldDebugdub - Uninstalls the Debugdub build for flavor MobileLibreOld.
+uninstallMobileLibreOldRelease - Uninstalls the Release build for flavor MobileLibreOld.
+uninstallMobileLibreOldRelease2 - Uninstalls the Release2 build for flavor MobileLibreOld.
+uninstallMobileLibreOldRelease2log - Uninstalls the Release2log build for flavor MobileLibreOld.
+uninstallMobileLibreOldReleasedebug - Uninstalls the Releasedebug build for flavor MobileLibreOld.
+uninstallMobileLibreOldReleasedub - Uninstalls the Releasedub build for flavor MobileLibreOld.
+uninstallMobileLibreOldReleaselog - Uninstalls the Releaselog build for flavor MobileLibreOld.
+uninstallSmallLibre3Debug - Uninstalls the Debug build for flavor SmallLibre3.
+uninstallSmallLibre3Debug2 - Uninstalls the Debug2 build for flavor SmallLibre3.
+uninstallSmallLibre3Debug3 - Uninstalls the Debug3 build for flavor SmallLibre3.
+uninstallSmallLibre3DebugAndroidTest - Uninstalls the android (on device) tests for the SmallLibre3Debug build.
+uninstallSmallLibre3Debugdub - Uninstalls the Debugdub build for flavor SmallLibre3.
+uninstallSmallLibre3Release - Uninstalls the Release build for flavor SmallLibre3.
+uninstallSmallLibre3Release2 - Uninstalls the Release2 build for flavor SmallLibre3.
+uninstallSmallLibre3Release2log - Uninstalls the Release2log build for flavor SmallLibre3.
+uninstallSmallLibre3Releasedebug - Uninstalls the Releasedebug build for flavor SmallLibre3.
+uninstallSmallLibre3Releasedub - Uninstalls the Releasedub build for flavor SmallLibre3.
+uninstallSmallLibre3Releaselog - Uninstalls the Releaselog build for flavor SmallLibre3.
+uninstallSmallLibreOldDebug - Uninstalls the Debug build for flavor SmallLibreOld.
+uninstallSmallLibreOldDebug2 - Uninstalls the Debug2 build for flavor SmallLibreOld.
+uninstallSmallLibreOldDebug3 - Uninstalls the Debug3 build for flavor SmallLibreOld.
+uninstallSmallLibreOldDebugAndroidTest - Uninstalls the android (on device) tests for the SmallLibreOldDebug build.
+uninstallSmallLibreOldDebugdub - Uninstalls the Debugdub build for flavor SmallLibreOld.
+uninstallSmallLibreOldRelease - Uninstalls the Release build for flavor SmallLibreOld.
+uninstallSmallLibreOldRelease2 - Uninstalls the Release2 build for flavor SmallLibreOld.
+uninstallSmallLibreOldRelease2log - Uninstalls the Release2log build for flavor SmallLibreOld.
+uninstallSmallLibreOldReleasedebug - Uninstalls the Releasedebug build for flavor SmallLibreOld.
+uninstallSmallLibreOldReleasedub - Uninstalls the Releasedub build for flavor SmallLibreOld.
+uninstallSmallLibreOldReleaselog - Uninstalls the Releaselog build for flavor SmallLibreOld.
+uninstallWearLibre3Debug - Uninstalls the Debug build for flavor WearLibre3.
+uninstallWearLibre3Debug2 - Uninstalls the Debug2 build for flavor WearLibre3.
+uninstallWearLibre3Debug3 - Uninstalls the Debug3 build for flavor WearLibre3.
+uninstallWearLibre3DebugAndroidTest - Uninstalls the android (on device) tests for the WearLibre3Debug build.
+uninstallWearLibre3Debugdub - Uninstalls the Debugdub build for flavor WearLibre3.
+uninstallWearLibre3Release - Uninstalls the Release build for flavor WearLibre3.
+uninstallWearLibre3Release2 - Uninstalls the Release2 build for flavor WearLibre3.
+uninstallWearLibre3Release2log - Uninstalls the Release2log build for flavor WearLibre3.
+uninstallWearLibre3Releasedebug - Uninstalls the Releasedebug build for flavor WearLibre3.
+uninstallWearLibre3Releasedub - Uninstalls the Releasedub build for flavor WearLibre3.
+uninstallWearLibre3Releaselog - Uninstalls the Releaselog build for flavor WearLibre3.
+uninstallWearLibreOldDebug - Uninstalls the Debug build for flavor WearLibreOld.
+uninstallWearLibreOldDebug2 - Uninstalls the Debug2 build for flavor WearLibreOld.
+uninstallWearLibreOldDebug3 - Uninstalls the Debug3 build for flavor WearLibreOld.
+uninstallWearLibreOldDebugAndroidTest - Uninstalls the android (on device) tests for the WearLibreOldDebug build.
+uninstallWearLibreOldDebugdub - Uninstalls the Debugdub build for flavor WearLibreOld.
+uninstallWearLibreOldRelease - Uninstalls the Release build for flavor WearLibreOld.
+uninstallWearLibreOldRelease2 - Uninstalls the Release2 build for flavor WearLibreOld.
+uninstallWearLibreOldRelease2log - Uninstalls the Release2log build for flavor WearLibreOld.
+uninstallWearLibreOldReleasedebug - Uninstalls the Releasedebug build for flavor WearLibreOld.
+uninstallWearLibreOldReleasedub - Uninstalls the Releasedub build for flavor WearLibreOld.
+uninstallWearLibreOldReleaselog - Uninstalls the Releaselog build for flavor WearLibreOld.
 
 Verification tasks
 ------------------
 check - Runs all checks.
+checkJetifier - Checks whether Jetifier is needed for the current project
 connectedAndroidTest - Installs and runs instrumentation tests for all flavors on connected devices.
 connectedCheck - Runs all device checks on currently connected devices.
-connectedDebugAndroidTest - Installs and runs the tests for debug on connected devices.
+connectedMobileLibre3DebugAndroidTest - Installs and runs the tests for mobileLibre3Debug on connected devices.
+connectedMobileLibreOldDebugAndroidTest - Installs and runs the tests for mobileLibreOldDebug on connected devices.
+connectedSmallLibre3DebugAndroidTest - Installs and runs the tests for smallLibre3Debug on connected devices.
+connectedSmallLibreOldDebugAndroidTest - Installs and runs the tests for smallLibreOldDebug on connected devices.
+connectedWearLibre3DebugAndroidTest - Installs and runs the tests for wearLibre3Debug on connected devices.
+connectedWearLibreOldDebugAndroidTest - Installs and runs the tests for wearLibreOldDebug on connected devices.
 deviceAndroidTest - Installs and runs instrumentation tests using all Device Providers.
 deviceCheck - Runs all device checks using Device Providers and Test Servers.
 lint - Runs lint on the default variant.
-lintAnalyzeDebug - Run lint analysis on the debug variant
-lintAnalyzeDebug2 - Run lint analysis on the debug2 variant
-lintAnalyzeDebug3 - Run lint analysis on the debug3 variant
-lintAnalyzeRelease - Run lint analysis on the release variant
-lintAnalyzeRelease2 - Run lint analysis on the release2 variant
-lintDebug - Run lint on the debug variant
-lintDebug2 - Run lint on the debug2 variant
-lintDebug3 - Run lint on the debug3 variant
 lintFix - Runs lint on the default variant and applies any safe suggestions to the source code.
-lintFixDebug - Fix lint on the debug variant
-lintFixDebug2 - Fix lint on the debug2 variant
-lintFixDebug3 - Fix lint on the debug3 variant
-lintFixRelease - Fix lint on the release variant
-lintFixRelease2 - Fix lint on the release2 variant
-lintRelease - Run lint on the release variant
-lintRelease2 - Run lint on the release2 variant
-lintVitalAnalyzeRelease - Run lint analysis with only the fatal issues enabled on the release variant
-lintVitalAnalyzeRelease2 - Run lint analysis with only the fatal issues enabled on the release2 variant
-lintVitalRelease - Run lint with only the fatal issues enabled on the release variant
-lintVitalRelease2 - Run lint with only the fatal issues enabled on the release2 variant
+lintMobileLibre3Debug - Print text output from the corresponding lint report task
+lintMobileLibre3Debug2 - Print text output from the corresponding lint report task
+lintMobileLibre3Debug3 - Print text output from the corresponding lint report task
+lintMobileLibre3Debugdub - Print text output from the corresponding lint report task
+lintMobileLibre3Release - Print text output from the corresponding lint report task
+lintMobileLibre3Release2 - Print text output from the corresponding lint report task
+lintMobileLibre3Release2log - Print text output from the corresponding lint report task
+lintMobileLibre3Releasedebug - Print text output from the corresponding lint report task
+lintMobileLibre3Releasedub - Print text output from the corresponding lint report task
+lintMobileLibre3Releaselog - Print text output from the corresponding lint report task
+lintMobileLibreOldDebug - Print text output from the corresponding lint report task
+lintMobileLibreOldDebug2 - Print text output from the corresponding lint report task
+lintMobileLibreOldDebug3 - Print text output from the corresponding lint report task
+lintMobileLibreOldDebugdub - Print text output from the corresponding lint report task
+lintMobileLibreOldRelease - Print text output from the corresponding lint report task
+lintMobileLibreOldRelease2 - Print text output from the corresponding lint report task
+lintMobileLibreOldRelease2log - Print text output from the corresponding lint report task
+lintMobileLibreOldReleasedebug - Print text output from the corresponding lint report task
+lintMobileLibreOldReleasedub - Print text output from the corresponding lint report task
+lintMobileLibreOldReleaselog - Print text output from the corresponding lint report task
+lintSmallLibre3Debug - Print text output from the corresponding lint report task
+lintSmallLibre3Debug2 - Print text output from the corresponding lint report task
+lintSmallLibre3Debug3 - Print text output from the corresponding lint report task
+lintSmallLibre3Debugdub - Print text output from the corresponding lint report task
+lintSmallLibre3Release - Print text output from the corresponding lint report task
+lintSmallLibre3Release2 - Print text output from the corresponding lint report task
+lintSmallLibre3Release2log - Print text output from the corresponding lint report task
+lintSmallLibre3Releasedebug - Print text output from the corresponding lint report task
+lintSmallLibre3Releasedub - Print text output from the corresponding lint report task
+lintSmallLibre3Releaselog - Print text output from the corresponding lint report task
+lintSmallLibreOldDebug - Print text output from the corresponding lint report task
+lintSmallLibreOldDebug2 - Print text output from the corresponding lint report task
+lintSmallLibreOldDebug3 - Print text output from the corresponding lint report task
+lintSmallLibreOldDebugdub - Print text output from the corresponding lint report task
+lintSmallLibreOldRelease - Print text output from the corresponding lint report task
+lintSmallLibreOldRelease2 - Print text output from the corresponding lint report task
+lintSmallLibreOldRelease2log - Print text output from the corresponding lint report task
+lintSmallLibreOldReleasedebug - Print text output from the corresponding lint report task
+lintSmallLibreOldReleasedub - Print text output from the corresponding lint report task
+lintSmallLibreOldReleaselog - Print text output from the corresponding lint report task
+lintVitalMobileLibre3Debug2 - Print text output from the corresponding lint report task
+lintVitalMobileLibre3Release - Print text output from the corresponding lint report task
+lintVitalMobileLibre3Release2 - Print text output from the corresponding lint report task
+lintVitalMobileLibre3Release2log - Print text output from the corresponding lint report task
+lintVitalMobileLibre3Releasedebug - Print text output from the corresponding lint report task
+lintVitalMobileLibre3Releasedub - Print text output from the corresponding lint report task
+lintVitalMobileLibre3Releaselog - Print text output from the corresponding lint report task
+lintVitalMobileLibreOldDebug2 - Print text output from the corresponding lint report task
+lintVitalMobileLibreOldRelease - Print text output from the corresponding lint report task
+lintVitalMobileLibreOldRelease2 - Print text output from the corresponding lint report task
+lintVitalMobileLibreOldRelease2log - Print text output from the corresponding lint report task
+lintVitalMobileLibreOldReleasedebug - Print text output from the corresponding lint report task
+lintVitalMobileLibreOldReleasedub - Print text output from the corresponding lint report task
+lintVitalMobileLibreOldReleaselog - Print text output from the corresponding lint report task
+lintVitalSmallLibre3Debug2 - Print text output from the corresponding lint report task
+lintVitalSmallLibre3Release - Print text output from the corresponding lint report task
+lintVitalSmallLibre3Release2 - Print text output from the corresponding lint report task
+lintVitalSmallLibre3Release2log - Print text output from the corresponding lint report task
+lintVitalSmallLibre3Releasedebug - Print text output from the corresponding lint report task
+lintVitalSmallLibre3Releasedub - Print text output from the corresponding lint report task
+lintVitalSmallLibre3Releaselog - Print text output from the corresponding lint report task
+lintVitalSmallLibreOldDebug2 - Print text output from the corresponding lint report task
+lintVitalSmallLibreOldRelease - Print text output from the corresponding lint report task
+lintVitalSmallLibreOldRelease2 - Print text output from the corresponding lint report task
+lintVitalSmallLibreOldRelease2log - Print text output from the corresponding lint report task
+lintVitalSmallLibreOldReleasedebug - Print text output from the corresponding lint report task
+lintVitalSmallLibreOldReleasedub - Print text output from the corresponding lint report task
+lintVitalSmallLibreOldReleaselog - Print text output from the corresponding lint report task
+lintVitalWearLibre3Debug2 - Print text output from the corresponding lint report task
+lintVitalWearLibre3Release - Print text output from the corresponding lint report task
+lintVitalWearLibre3Release2 - Print text output from the corresponding lint report task
+lintVitalWearLibre3Release2log - Print text output from the corresponding lint report task
+lintVitalWearLibre3Releasedebug - Print text output from the corresponding lint report task
+lintVitalWearLibre3Releasedub - Print text output from the corresponding lint report task
+lintVitalWearLibre3Releaselog - Print text output from the corresponding lint report task
+lintVitalWearLibreOldDebug2 - Print text output from the corresponding lint report task
+lintVitalWearLibreOldRelease - Print text output from the corresponding lint report task
+lintVitalWearLibreOldRelease2 - Print text output from the corresponding lint report task
+lintVitalWearLibreOldRelease2log - Print text output from the corresponding lint report task
+lintVitalWearLibreOldReleasedebug - Print text output from the corresponding lint report task
+lintVitalWearLibreOldReleasedub - Print text output from the corresponding lint report task
+lintVitalWearLibreOldReleaselog - Print text output from the corresponding lint report task
+lintWearLibre3Debug - Print text output from the corresponding lint report task
+lintWearLibre3Debug2 - Print text output from the corresponding lint report task
+lintWearLibre3Debug3 - Print text output from the corresponding lint report task
+lintWearLibre3Debugdub - Print text output from the corresponding lint report task
+lintWearLibre3Release - Print text output from the corresponding lint report task
+lintWearLibre3Release2 - Print text output from the corresponding lint report task
+lintWearLibre3Release2log - Print text output from the corresponding lint report task
+lintWearLibre3Releasedebug - Print text output from the corresponding lint report task
+lintWearLibre3Releasedub - Print text output from the corresponding lint report task
+lintWearLibre3Releaselog - Print text output from the corresponding lint report task
+lintWearLibreOldDebug - Print text output from the corresponding lint report task
+lintWearLibreOldDebug2 - Print text output from the corresponding lint report task
+lintWearLibreOldDebug3 - Print text output from the corresponding lint report task
+lintWearLibreOldDebugdub - Print text output from the corresponding lint report task
+lintWearLibreOldRelease - Print text output from the corresponding lint report task
+lintWearLibreOldRelease2 - Print text output from the corresponding lint report task
+lintWearLibreOldRelease2log - Print text output from the corresponding lint report task
+lintWearLibreOldReleasedebug - Print text output from the corresponding lint report task
+lintWearLibreOldReleasedub - Print text output from the corresponding lint report task
+lintWearLibreOldReleaselog - Print text output from the corresponding lint report task
 test - Run unit tests for all variants.
-testDebug2UnitTest - Run unit tests for the debug2 build.
-testDebug3UnitTest - Run unit tests for the debug3 build.
-testDebugUnitTest - Run unit tests for the debug build.
-testRelease2UnitTest - Run unit tests for the release2 build.
-testReleaseUnitTest - Run unit tests for the release build.
+testMobileLibre3Debug2UnitTest - Run unit tests for the mobileLibre3Debug2 build.
+testMobileLibre3Debug3UnitTest - Run unit tests for the mobileLibre3Debug3 build.
+testMobileLibre3DebugdubUnitTest - Run unit tests for the mobileLibre3Debugdub build.
+testMobileLibre3DebugUnitTest - Run unit tests for the mobileLibre3Debug build.
+testMobileLibre3Release2logUnitTest - Run unit tests for the mobileLibre3Release2log build.
+testMobileLibre3Release2UnitTest - Run unit tests for the mobileLibre3Release2 build.
+testMobileLibre3ReleasedebugUnitTest - Run unit tests for the mobileLibre3Releasedebug build.
+testMobileLibre3ReleasedubUnitTest - Run unit tests for the mobileLibre3Releasedub build.
+testMobileLibre3ReleaselogUnitTest - Run unit tests for the mobileLibre3Releaselog build.
+testMobileLibre3ReleaseUnitTest - Run unit tests for the mobileLibre3Release build.
+testMobileLibreOldDebug2UnitTest - Run unit tests for the mobileLibreOldDebug2 build.
+testMobileLibreOldDebug3UnitTest - Run unit tests for the mobileLibreOldDebug3 build.
+testMobileLibreOldDebugdubUnitTest - Run unit tests for the mobileLibreOldDebugdub build.
+testMobileLibreOldDebugUnitTest - Run unit tests for the mobileLibreOldDebug build.
+testMobileLibreOldRelease2logUnitTest - Run unit tests for the mobileLibreOldRelease2log build.
+testMobileLibreOldRelease2UnitTest - Run unit tests for the mobileLibreOldRelease2 build.
+testMobileLibreOldReleasedebugUnitTest - Run unit tests for the mobileLibreOldReleasedebug build.
+testMobileLibreOldReleasedubUnitTest - Run unit tests for the mobileLibreOldReleasedub build.
+testMobileLibreOldReleaselogUnitTest - Run unit tests for the mobileLibreOldReleaselog build.
+testMobileLibreOldReleaseUnitTest - Run unit tests for the mobileLibreOldRelease build.
+testSmallLibre3Debug2UnitTest - Run unit tests for the smallLibre3Debug2 build.
+testSmallLibre3Debug3UnitTest - Run unit tests for the smallLibre3Debug3 build.
+testSmallLibre3DebugdubUnitTest - Run unit tests for the smallLibre3Debugdub build.
+testSmallLibre3DebugUnitTest - Run unit tests for the smallLibre3Debug build.
+testSmallLibre3Release2logUnitTest - Run unit tests for the smallLibre3Release2log build.
+testSmallLibre3Release2UnitTest - Run unit tests for the smallLibre3Release2 build.
+testSmallLibre3ReleasedebugUnitTest - Run unit tests for the smallLibre3Releasedebug build.
+testSmallLibre3ReleasedubUnitTest - Run unit tests for the smallLibre3Releasedub build.
+testSmallLibre3ReleaselogUnitTest - Run unit tests for the smallLibre3Releaselog build.
+testSmallLibre3ReleaseUnitTest - Run unit tests for the smallLibre3Release build.
+testSmallLibreOldDebug2UnitTest - Run unit tests for the smallLibreOldDebug2 build.
+testSmallLibreOldDebug3UnitTest - Run unit tests for the smallLibreOldDebug3 build.
+testSmallLibreOldDebugdubUnitTest - Run unit tests for the smallLibreOldDebugdub build.
+testSmallLibreOldDebugUnitTest - Run unit tests for the smallLibreOldDebug build.
+testSmallLibreOldRelease2logUnitTest - Run unit tests for the smallLibreOldRelease2log build.
+testSmallLibreOldRelease2UnitTest - Run unit tests for the smallLibreOldRelease2 build.
+testSmallLibreOldReleasedebugUnitTest - Run unit tests for the smallLibreOldReleasedebug build.
+testSmallLibreOldReleasedubUnitTest - Run unit tests for the smallLibreOldReleasedub build.
+testSmallLibreOldReleaselogUnitTest - Run unit tests for the smallLibreOldReleaselog build.
+testSmallLibreOldReleaseUnitTest - Run unit tests for the smallLibreOldRelease build.
+testWearLibre3Debug2UnitTest - Run unit tests for the wearLibre3Debug2 build.
+testWearLibre3Debug3UnitTest - Run unit tests for the wearLibre3Debug3 build.
+testWearLibre3DebugdubUnitTest - Run unit tests for the wearLibre3Debugdub build.
+testWearLibre3DebugUnitTest - Run unit tests for the wearLibre3Debug build.
+testWearLibre3Release2logUnitTest - Run unit tests for the wearLibre3Release2log build.
+testWearLibre3Release2UnitTest - Run unit tests for the wearLibre3Release2 build.
+testWearLibre3ReleasedebugUnitTest - Run unit tests for the wearLibre3Releasedebug build.
+testWearLibre3ReleasedubUnitTest - Run unit tests for the wearLibre3Releasedub build.
+testWearLibre3ReleaselogUnitTest - Run unit tests for the wearLibre3Releaselog build.
+testWearLibre3ReleaseUnitTest - Run unit tests for the wearLibre3Release build.
+testWearLibreOldDebug2UnitTest - Run unit tests for the wearLibreOldDebug2 build.
+testWearLibreOldDebug3UnitTest - Run unit tests for the wearLibreOldDebug3 build.
+testWearLibreOldDebugdubUnitTest - Run unit tests for the wearLibreOldDebugdub build.
+testWearLibreOldDebugUnitTest - Run unit tests for the wearLibreOldDebug build.
+testWearLibreOldRelease2logUnitTest - Run unit tests for the wearLibreOldRelease2log build.
+testWearLibreOldRelease2UnitTest - Run unit tests for the wearLibreOldRelease2 build.
+testWearLibreOldReleasedebugUnitTest - Run unit tests for the wearLibreOldReleasedebug build.
+testWearLibreOldReleasedubUnitTest - Run unit tests for the wearLibreOldReleasedub build.
+testWearLibreOldReleaselogUnitTest - Run unit tests for the wearLibreOldReleaselog build.
+testWearLibreOldReleaseUnitTest - Run unit tests for the wearLibreOldRelease build.
+updateLintBaseline - Updates the lint baseline using the default variant.
 
 To see all tasks and more detail, run gradlew tasks --all
 
 To see more detail about a task, run gradlew help --task <task>
 
+0 problems were found storing the configuration cache.
+
+See the complete report at file:///f/jka/extra/android/Juggluco/Glucodata/build/reports/configuration-cache/9zrfc99dn9axe0lu2iljyli6k/6uqmkrb2pdk53yrqp29254sdp/configuration-cache-report.html
+
 BUILD SUCCESSFUL in 1s
 1 actionable task: 1 executed
+Configuration cache entry stored.

@@ -820,11 +820,11 @@ void addlibrenumsdeleted(const Num *num,int ind) { //Moet VOOR  andere libre ope
 	}
 void	libremovesmaller(int from,int to,int movelen) {  //to smaller than from
 	int nrsend=getlibresend();
-	auto *beg=libreids.data();
 	if(to>=nrsend) {
 		LOGGERTAG("libremove(%d,%d) nrsend=%d  from>to>=nrsend\n",from,to,nrsend);
 		return;
 		}
+	auto *beg=libreids.data();
 	int len=nrsend-from;
 	if(len>0) {
 		memmove(beg+to,beg+from,sizeof(*beg)*std::min(len,movelen));
@@ -855,11 +855,11 @@ void	libremovesmaller(int from,int to,int movelen) {  //to smaller than from
 
 void	libremovelarger(int from,int to,int movelen) { //to>from
 	int nrsend=getlibresend();
-	auto *beg=libreids.data();
 	if(from>=nrsend) {
 		LOGGERTAG("libremove(%d,%d) nrsend=%d  to>=from>=nrsend\n",from,to,nrsend);
 		return;
 		}
+	auto *beg=libreids.data();
 	int len=nrsend-from;
 	memmove(beg+to,beg+from,sizeof(*beg)*std::min(len,movelen));
 	if(movelen>=len)
