@@ -763,6 +763,11 @@ hele Librelink app uit te schakelen met:</p>
 <p>Voordat je Abbotts klantenservice belt, kun je het weer
 inschakelen met het volgende commando:</p>
 <p>adb shell pm enable com.freestylelibre.app.nl</p>
+<h2 class="western">Health Connect</h2>
+<p>Stuur minutieuze glucosewaarden naar <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.healthdata">Health
+Connect</a> . Je kunt andere apps toegang geven tot deze
+glucosewaarden, bijvoorbeeld <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.fitness">Google
+Fit</a> . Andere apps kunnen weer gegevens van Google Fit krijgen.</p>
 <h2 class="western">Libreview</h2>
 <p style="line-height: 100%; margin-bottom: 0in">Geeft aan of stream
 Freestyle Libre 2 glucose waarden naar Libreview verzonden worden.
@@ -1373,7 +1378,7 @@ machtigingen, toestemmingen, rechten en mogelijkheden), die vergen
 dat je expliciet toestemming geeft voor het gebruikt van Bluetooth.
 Als je deze &ldquo;Apparaten in de buurt&rdquo; toestemming niet
 geeft, kan Juggluco geen glucose waarden ontvangen via Bluetooth van
-Freestyle Libre 2 sensoren.</p>
+Freestyle Libre 2 en 3 sensoren.</p>
 ]]>
 </string>
 <string name="watchinfo" >
@@ -1573,12 +1578,14 @@ niet meer aangezet.</p>
 <![CDATA[
 <h1>Libreview</h1>
 <p style="line-height: 100%; margin-bottom: 0in">Juggluco kan
-glucosegegevens en hoeveelheden naar Libreview sturen. Als &quot;Bluetooth history&quot; niet aanstaat, gebruikt Juggluco de via Bluetooth
+glucosegegevens en hoeveelheden naar Libreview sturen. Als &quot;Bluetooth
+history&quot; niet aanstaat, gebruikt Juggluco de via Bluetooth
 ontvangen streamgegevens om deze 15 minutenpunten te creëren door de
 streamwaarden rond elk punt te middelen. Juggluco hoeft niet
 voortdurend verbonden te zijn met internet om alle gegevens naar
 Libreview te kunnen verzenden. Net als de Librelnk-app stuurt deze
-gegevens van de afgelopen 89 dagen naar Libreview. Als &quot;Bluetooth History&quot; niet aan staat of by Libre 0 of 3 sensors, is het nodig
+gegevens van de afgelopen 89 dagen naar Libreview. Als &quot;Bluetooth
+History&quot; niet aan staat of by Libre 0 of 3 sensors, is het nodig
 dat Juggluco via Bluetooth voortdurend verbonden is met een Freestyle
 Libre 2-sensor. Bij Libre 0 en Libre 2 met &quot;Bluetooth History&quot;
 aan, kun je gemiste waarde inhalen door te scannen. Voor Freestyle
@@ -1598,6 +1605,12 @@ Apparaten.</p>
 weggedraaid wordt van Juggluco, zendt Juggluco nieuwe data naar
 Libreview als dat de laatste 20 minuten niet al gedaan is. Je kunt
 ook handmatig zenden door op “<b>Zend nu</b>” te drukken.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>RU</b>: Je moet
+dit aanvinken als je gebruik maakt van <a href="https://libreview.ru/">https://libreview.<b>ru</b></a>
+in plaats van <a href="https://libreview.com/">https://libreview.com</a>.
+Dit geldt alleen voor Libre 2-sensoren. Libre 3-sensoren kunnen
+alleen worden gebruikt met libreview.com, omdat er geen Russische
+Libre 3-app bestaat.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>Zend
 hoeveelheden</b>: Zend ook hoeveelheden naar Libreview. 
 </p>
@@ -1838,13 +1851,6 @@ opnieuw probeerde te registreren, had het een prijs. Voor een paar
 euro per jaar koop je</span> <span lang="nl-NL">al een hostname
 (bijvoorbeeld via <a href="https://www.strato.nl/domeinnaam">https://www.strato.nl/domeinnaam</a>
 ).</span></p>
-<p style="line-height: 100%; margin-bottom: 0in"><span lang="nl-NL">Als
-je</span> <span lang="nl-NL">de Key-bestanden van een SSL-autoriteit
-hebt ontvangen, moet je</span> <span lang="nl-NL">deze aan Juggluco
-geven. De private key kan worden ingelezen door op &quot;</span><em><span lang="nl-NL">Private
-Key</span></em><span lang="nl-NL">&quot; te drukken, de Full Chain
-door op &quot;</span><em><span lang="nl-NL">Full Chain</span></em><span lang="nl-NL">&quot;
-te drukken.</span></p>
 <p style="line-height: 100%; margin-bottom: 0in">Nadat je Certbot
 hebt geïnstalleerd en poort 80 (http) van je modem naar je computer
 hebt omgeleid, kunt je eenvoudigweg het volgende commando uitvoeren:</p>
@@ -1858,6 +1864,13 @@ de</span> <span lang="nl-NL">Full Chain</span> <span lang="nl-NL">in
 /etc/letsencrypt/live/mijnhostnaam/fullchain.pem. &quot;</span><span lang="nl-NL"><i>mijn</i></span><em><span lang="nl-NL"><i>hostnaam</i></span></em><span lang="nl-NL">&quot;
 is de hostnaam die ik heb gebruikt.</span></p>
 <p style="line-height: 100%; margin-bottom: 0in"><span lang="nl-NL">Als
+je</span> <span lang="nl-NL">de Key-bestanden van een SSL-autoriteit
+hebt ontvangen, moet je</span> <span lang="nl-NL">deze aan Juggluco
+geven. De private key kan worden ingelezen door op &quot;</span><em><span lang="nl-NL">Private
+Key</span></em><span lang="nl-NL">&quot; te drukken, de Full Chain
+door op &quot;</span><em><span lang="nl-NL">Full Chain</span></em><span lang="nl-NL">&quot;
+te drukken.</span></p>
+<p style="line-height: 100%; margin-bottom: 0in"><span lang="nl-NL">Als
 je alleen glucosewaarden van de ene Android naar de andere wilt
 sturen, kun je beter de <a href="https://www.juggluco.nl/Juggluco/index.html#mirror">Kloonfunctie</a></span>
 <span lang="nl-NL">van Juggluco gebruiken (Links midden menu-&gt;Kloon).</span></p>
@@ -1867,7 +1880,7 @@ instellingen, <i>NSClientV3</i> selecteren, met de volgende
 instellingen:</p>
 <ul>
 	<li><p style="line-height: 100%; margin-bottom: 0in">gebruik als
-	<i>NS-toegangstoken</i> het hier opgegeven <i>api</i><i>_secret</i>;</p>
+	<i>NS-toegangstoken</i> het hier opgegeven <i>api_secret</i>;</p>
 	<li><p style="line-height: 100%; margin-bottom: 0in">schakel “
 	<i>Verbind met websockets</i>” uit;</p>
 	<li><p style="line-height: 100%; margin-bottom: 0in">Schakel onder “
@@ -1882,14 +1895,15 @@ instellingen:</p>
 		<li><p style="line-height: 100%; margin-bottom: 0in">Accepteer
 		behandelingen;</p>
 	</ul>
-	<li><p style="line-height: 100%; margin-bottom: 0in"><span style="font-style: normal">Schakel
-	alle </span><i>“geavanceerde instellingen</i>” uit .</p>
+	<li><p style="line-height: 100%; margin-bottom: 0in"><span style="font-variant: normal"><span style="font-style: normal">Schakel
+	alle </span></span>“<i>geavanceerde instellingen</i>” uit .</p>
 </ul>
 <p style="line-height: 100%; margin-bottom: 0in">Het invoegen van
 hoeveelheden in tijd vóór eerder ingevoerde hoeveelheden, zorgt
 ervoor dat AAPS dubbele behandelingen krijgt. Dit gebeurt ook wanneer
 de v3-interface wordt gebruikt met een Nightscout-server die
-v3-uploads ontvangt van Juggluco.</p>
+v3-uploads ontvangt van Juggluco. Soms begint AAPS de server pas om
+behandelingen te vragen nadat AAPS gestopt en opnieuw is opgestart.</p>
 <p style="line-height: 100%; margin-bottom: 0in">Je hebt SSL nodig
 voor de Android apps Diabetes:M, <a href="https://play.google.com/store/apps/details?id=se.cornixit.nightwatch">Nightwatch</a>
 en <a href="https://slingithub.github.io/CheckmateWeb">Checkmate</a>

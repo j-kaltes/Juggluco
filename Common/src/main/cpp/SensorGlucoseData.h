@@ -217,6 +217,7 @@ uint16_t endStreamhistory;
 uint16_t startedwithStreamhistory; 
 uint16_t libreviewnotsendHistory;
 bool sendLibre[15*24*4];
+uint16_t healthconnectiter;
 void clearLibreSend(int end) {
 	bzero(sendLibre,sizeof(sendLibre));
 	}
@@ -1071,6 +1072,9 @@ const ScanData *lastpoll() const {
 	}
 const ScanData *getscan(int ind) const {
 	return scans.data()+ind;
+	}
+const ScanData *getstream(int ind) const {
+	return polls.data()+ind;
 	}
 static void exportscans(const char *file,int count,const ScanData *scans)  {
 	std::ofstream uit(file);

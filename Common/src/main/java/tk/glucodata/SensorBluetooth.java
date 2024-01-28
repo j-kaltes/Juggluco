@@ -439,12 +439,20 @@ static  ArrayList<SuperGattCallback>  mygatts() {
 	}
 private void removeDevice(String str) {
 	for(int i=0;i<gattcallbacks.size();i++) {
-		if(str.equals(gattcallbacks.get(i).SerialNumber)) {
-			Log.i(LOG_ID,"removeDevice "+ gattcallbacks.get(i).SerialNumber);
-			gattcallbacks.get(i).free();
+		var gatt= gattcallbacks.get(i);
+		if(str.equals(gatt.SerialNumber)) {
+			Log.i(LOG_ID,"removeDevice "+ gatt.SerialNumber);
+			gatt.free();
 			gattcallbacks.remove(i);
 			Natives.setmaxsensors(gattcallbacks.size());
+			for(;i<gattcallbacks.size();++i) {
+				gatt= gattcallbacks.get(i);
+				gatt.stopHealth=false;
+				}
 			return;
+			}
+		else {
+			gatt.stopHealth=false;
 			}
 		}	
 	Log.i(LOG_ID,"removeDevice: didn't remove"+ str);
@@ -556,14 +564,17 @@ private boolean updateDevicers() {
 	else {
 		
 		int heb=0;
+
 		for(int i=0;i<gatnr;i++) {
-			String was= gattcallbacks.get(i).SerialNumber;
+			var gatt= gattcallbacks.get(i);
+			String was= gatt.SerialNumber;
 			int instr=was==null?-1:indexOf(devs,was);
 			if(instr<0) {
 				Log.i(LOG_ID,"can remove "+ was);
 				rem.add(i);	
 				}
 			else {
+				gatt.stopHealth=false;
 				Log.i(LOG_ID,"keep "+ was);
 				heb++;
 				devs[instr]=null;		

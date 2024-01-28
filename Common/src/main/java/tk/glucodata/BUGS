@@ -1,9 +1,16 @@
+
+Health connect Resend data
+compile OldLibre, Wear
+
+Dialog soms te hoog
+
+No relevant changes: https://github.com/j-kaltes/Juggluco/compare/ecfb46b..678de7a
+
 Geen nieuw id in juggluco server
 What do com.google.android.gms.auth.api.signin and com.google.android.gms.dynamite in my app??
 
 
 Only give current and pebble when not too old?
-Geef sensor id inplaats van, Juggluco in webserver?
 
 Beperk aantal connecties webserver?
 Resend data wordt niet doorgezonden.
@@ -19,7 +26,7 @@ Reinit sync maakt dat WearOS weer glucose waarden ontvangt. Kan dat niet automat
 - redraw of app.
 
 
-Verwijderen van de verkeerde notificatie? Deleteverwijdered Foreground service notification.
+Verwijderen van de verkeerde notificatie? Delete verwijdered Foreground service notification.
 Starthistory? Moet niet al verkregen data terugzenden. 
 - Gelijk zetten met Stream vanaf zelfde tijd.
 - Ook zetten bij wisseling watch.

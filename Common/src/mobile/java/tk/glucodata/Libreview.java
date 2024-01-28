@@ -32,6 +32,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Space;
 import android.widget.Toast;
 
 import com.google.android.gms.security.ProviderInstaller;
@@ -521,7 +522,8 @@ public static boolean libreconfig(boolean libre3,boolean restart){
 			"https://fsll.freestyleserver.com/Payloads/Mobile/FSLibreLink/Android/Config/FSLibreLink_Android_2.10_GB_config.json",
 			"https://fsll.freestyleserver.com/Payloads/Mobile/FSLibreLink/Android/Config/FSLibreLink_Android_2.10_FR_config.json",
 			"https://fsll.freestyleserver.com/Payloads/Mobile/FSLibreLink/Android/Config/FSLibreLink_Android_2.10_NL_config.json",
-			"https://fsll.freestyleserver.com/Payloads/Mobile/FSLibreLink/Android/Config/FSLibreLink_Android_2.10_PL_config.json"};
+			"https://fsll.freestyleserver.com/Payloads/Mobile/FSLibreLink/Android/Config/FSLibreLink_Android_2.10_PL_config.json",
+			"https://fsll.freestyleserver.com/Payloads/Mobile/FSLibreLink/Android/Config/FSLibreLink_Android_2.10_RU_config.json"};
 //	final String libre23url= "https://fsll.freestyleserver.com/Payloads/Mobile/Android/FSLibreLink/Config/FreeStyleLibreLink_Android_2.3_DE_config.json";
 final String libre210url=urlnames[Natives.getLibreCountry()];
 
@@ -712,7 +714,7 @@ public static void  config(MainActivity act, View settingsview,CheckBox sendto,b
 	EnableControls(settingsview,false);
 	var emaillabel=getlabel(act,R.string.email);
 	var email=getedit(act, getlibreemail());
-        email.setMinEms(12);
+        email.setMinEms(16);
 
 	var passlabel=getlabel(act,act.getString(R.string.password)+":");
 	var      editpass= new EditText(act);
@@ -729,6 +731,8 @@ public static void  config(MainActivity act, View settingsview,CheckBox sendto,b
 	var cancel=getbutton(act,R.string.cancel);
 	var help=getbutton(act,R.string.helpname);
 	help.setOnClickListener(v-> help(R.string.libreview,act));
+	final boolean isRussia=Natives.getLibreCountry()==4;
+	var russia=getcheckbox(act,"RU",isRussia);
 	boolean usedlibre= getuselibreview();
 	var sendtolibreview=getcheckbox(act,R.string.uselibreview,usedlibre);
 	var librecurrent=getcheckbox(act,R.string.librecurrent,Natives.getLibreCurrent());
@@ -768,7 +772,7 @@ var space=getlabel(act,"        ");
                         else {
                                 lay.setX((width-w)/2); lay.setY(0);
                                 };
-                        return new int[] {w,h};}, new View[]{emaillabel,email},new View[]{passlabel,editpass},new View[]{clear,accountid,getaccountid},new View[]{statusview},new View[]{sendtolibreview,librecurrent,libreisviewed,numbers},new View[]{send,help,cancel,ok});
+                        return new int[] {w,h};}, new View[]{emaillabel,email},new View[]{passlabel,editpass,russia},new View[]{clear,accountid,getaccountid},new View[]{statusview},new View[]{sendtolibreview,librecurrent,libreisviewed,numbers},new View[]{send,help,cancel,ok});
 	if(usedlibre) {
 		send.setOnClickListener(v-> wakelibreview(0));
 		}
@@ -826,6 +830,9 @@ var space=getlabel(act,"        ");
 			setlibrepass(passstr);
 			if((emailstr.length()==0&&passstr.length()==0)) {
 				clearlibreview();
+				}
+			if(isRussia!=russia.isChecked()) {
+				Natives.setLibreCountry((!isRussia)?4:(Applic.unit==1?0:1));
 				}
 			return true;
 		};

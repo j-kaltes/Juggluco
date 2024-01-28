@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android" 
     android:description="@string/app_widget_description"
     android:initialKeyguardLayout="@layout/glucose_widget"
     android:initialLayout="@layout/glucose_widget"
@@ -8,7 +8,6 @@
     android:minResizeWidth="0dp"
     android:minResizeHeight="0dp"
     android:previewImage="@drawable/widget"
-    android:previewLayout="@layout/glucose_widget"
     android:resizeMode="horizontal|vertical"
     android:targetCellWidth="3"
     android:targetCellHeight="1"

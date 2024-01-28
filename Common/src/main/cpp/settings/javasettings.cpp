@@ -1499,6 +1499,9 @@ extern "C" JNIEXPORT jboolean  JNICALL   fromjava(isLibreMmol)(JNIEnv *env, jcla
 extern "C" JNIEXPORT jint  JNICALL   fromjava(getLibreCountry)(JNIEnv *env, jclass cl) {
 	return settings->data()->getLibreCountry();
 	}
+extern "C" JNIEXPORT void  JNICALL   fromjava(setLibreCountry)(JNIEnv *env, jclass cl,int val) {
+	settings->data()->librecountry=val+1;
+	}
 
 
 extern bool switchgen2();
@@ -1541,4 +1544,13 @@ extern "C" JNIEXPORT void  JNICALL   fromjava(setnightscoutV3)(JNIEnv *env, jcla
 extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getnightscoutV3)(JNIEnv *env, jclass cl) {
 	return settings->data()->nightscoutV3;
 	}
+
+
+extern "C" JNIEXPORT void  JNICALL   fromjava(sethealthConnect)(JNIEnv *env, jclass cl,jboolean val) {
+	settings->data()->healthConnect=val;
+	}
+extern "C" JNIEXPORT jboolean  JNICALL   fromjava(gethealthConnect)(JNIEnv *env, jclass cl) {
+	return settings->data()->healthConnect;
+	}
+
 

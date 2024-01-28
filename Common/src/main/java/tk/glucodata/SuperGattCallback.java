@@ -26,6 +26,8 @@ import android.app.Application;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCallback;
+import android.bluetooth.BluetoothGattCharacteristic;
+import android.bluetooth.BluetoothGattDescriptor;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -38,6 +40,7 @@ import static tk.glucodata.Applic.app;
 import static tk.glucodata.Applic.isWearable;
 import static tk.glucodata.Applic.mgdLmult;
 import static tk.glucodata.Natives.thresholdchange;
+import static tk.glucodata.SensorBluetooth.blueone;
 
 public abstract class SuperGattCallback extends BluetoothGattCallback {
 volatile protected	boolean stop=false;
@@ -264,7 +267,29 @@ static void endtalk() {
 			}
 
 	}
-
+boolean stopHealth=false;
+private boolean	dohealth(SuperGattCallback one) {
+if(!isWearable) {
+		var blue=blueone;
+		if(blue==null)
+			return true; //false?
+	   final var gatts=blue.gattcallbacks;
+	   boolean other=gatts.size()>1;
+	   if(!other) {
+	   	return true; //TODO stopHealth=false
+		}
+	   if(stopHealth)
+	   	return false;
+	   for(var el:gatts) {
+	   	if(el!=one)
+			el.stopHealth=true;
+	   	}
+	return true;
+	}
+else {
+	return false;
+	}
+	}
 protected void handleGlucoseResult(long res,long timmsec) {
 		int glumgdl = (int) (res & 0xFFFFFFFFL);
 		if (glumgdl != 0) {
@@ -275,6 +300,16 @@ protected void handleGlucoseResult(long res,long timmsec) {
 			float rate = ratein / 1000.0f;
 			dowithglucose(SerialNumber, glumgdl, gl, rate, alarm, timmsec,sensorstartmsec);
 			charcha[0] = timmsec;
+			if(!isWearable) {
+				if(Natives.gethealthConnect( )) {
+				    if(Build.VERSION.SDK_INT >= 28) {
+					if(dohealth(this)) {
+							final long sensorptr = Natives.getsensorptr(dataptr);//TODO: set sensorptr in SuperGattCallback?
+							HealthConnection.Companion.writeAll(sensorptr,SerialNumber);
+							}
+						}
+					}
+				}
 			SensorBluetooth.othersworking(this,timmsec);
 		} else {
 			Log.i(LOG_ID, SerialNumber + " onCharacteristicChanged: Glucose failed");
@@ -365,7 +400,7 @@ public void searchforDeviceAddress() {
 		return () -> {
 			Log.i(LOG_ID,"getConnectDevice Runnable "+ SerialNumber);
 			var device= cb.mActiveBluetoothDevice;
-			var sensorbluetooth=SensorBluetooth.blueone;
+			var sensorbluetooth= blueone;
 			if(sensorbluetooth==null) {
 				Log.e(LOG_ID,"sensorbluetooth==null");
 				return;
@@ -437,5 +472,27 @@ public void searchforDeviceAddress() {
 		else {
 			Log.e(LOG_ID,"setpriority BluetoothGatt==null");
 			}
+	}
+
+@SuppressLint("MissingPermission")
+static  protected  final boolean enableNotification(BluetoothGatt mBluetoothGatt, BluetoothGattCharacteristic bluetoothGattCharacteristic) {
+	Log.i(LOG_ID,	"enableNotification");
+        if(!mBluetoothGatt.setCharacteristicNotification(bluetoothGattCharacteristic, true)) {
+		Log.e(LOG_ID,"setCharacteristicNotification("+bluetoothGattCharacteristic.getUuid().toString()+",true) failed");
+
+		}
+        BluetoothGattDescriptor descriptor = bluetoothGattCharacteristic.getDescriptor(mCharacteristicConfigDescriptor);
+        if(!descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE)) {
+		Log.e(LOG_ID,"descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE))  failed");
+		}
+        if(!mBluetoothGatt.writeDescriptor(descriptor)) {
+		Log.e(LOG_ID,"mBluetoothGatt.writeDescriptor(descriptor))  failed");
+		return false;
+		}
+	return true;
+        }
+
+protected final boolean asknotification(BluetoothGattCharacteristic charac) {
+		return enableNotification(mBluetoothGatt, charac);
 	}
 }

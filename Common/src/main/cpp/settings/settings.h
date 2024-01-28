@@ -233,7 +233,8 @@ struct Tings {
 
 	char newYuApiKey3[41];
 
-	bool reserved9:5;//*
+	bool reserved9:4;//*
+	bool healthConnect:1;
 	bool speakmessages:1;
 	bool speakalarms:1;
 	bool talktouch:1;
@@ -267,7 +268,7 @@ struct Tings {
 		return !(getLibreCountry()&1);
 		}
 	int  getLibreCountry() {
-		if(!librecountry||librecountry>4) 
+		if(!librecountry||librecountry>5) 
 			librecountry=unit==1?1:2;
 		return librecountry-1;
 		}
@@ -404,6 +405,7 @@ Settings(const char *settingsname,const char *base,const char *country): Mmap(se
 										data()->systemUI=true;
 										}
 									data()->setdefault();
+
 									};
 								data()->flash=false;
 								}
@@ -443,7 +445,8 @@ Settings(const char *settingsname,const char *base,const char *country): Mmap(se
 			data()->sslport=17581;
 		     }
 		   }
-		   data()->libreinit=0; //reinit during switch to 2.10.1
+
+		 data()->libreinit=0; //reinit during switch to 2.10.1
 		   }
 		   /*
 		 if(!strcasecmp(country,"GB")) {
@@ -460,10 +463,15 @@ Settings(const char *settingsname,const char *base,const char *country): Mmap(se
 				 data()->librecountry = data()->libreunit;
 			 }
 		 } */
-		 data()->librecountry = data()->libreunit;
+		 if(!strcasecmp(country,"RU")) {
+			data()->librecountry=5;
+			}
+		else
+			 data()->librecountry = data()->libreunit;
 		}
 		data()->nightinterval=270;
 		}
+
 	setconvert(country);
 
 	 showui=getui();

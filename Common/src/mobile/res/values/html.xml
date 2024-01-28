@@ -796,6 +796,11 @@ without root check.</p>
 <p>pm disable-user --user 0 com.freestylelibre.app.nl</p>
 <p>Before calling Abbott customer service, you can re-enable it with:</p>
 <p>pm enable com.freestylelibre.app.nl</p>
+<h2 class="western">Health Connect</h2>
+<p>Send minutely glucose values to <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.healthdata">Health
+Connect</a>. You can give other app access to these glucose values,
+for example <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.fitness">Google
+Fit</a>. Other apps again can get assess to data from Google Fit.</p>
 <h2 class="western"><a href="https://www.juggluco.nl/Jugglucohelp/libreview.html">Libreview</a></h2>
 <p>Connect with Libreview to send Freestyle Libre 2 and 3 glucose
 values and amounts to Libreview and to get the account id used during
@@ -821,10 +826,11 @@ http://127.0.0.1:17580</p>
 <p>Juggluco can also directly contact with xDrip watch apps, so that
 the watch app displays more recent glucose values. To use this
 feature check <i>&quot;xDrip webserver&quot;</i> in the left menu
-under <b>Watch</b>. See Help under left menu-&gt;<a href="https://www.juggluco.nl/Jugglucohelp/watchinfo.html">Watch</a> for more
-information. Only one app can listen to the network port used by the
-xDrip webserver, so you need to turn off &quot;<i>xDrip webservice</i>&quot;
-in xDrip itself if you want to make use of the one in Juggluco.</p>
+under <b>Watch</b>. See Help under left menu-&gt;<a href="https://www.juggluco.nl/Jugglucohelp/watchinfo.html">Watch</a>
+for more information. Only one app can listen to the network port
+used by the xDrip webserver, so you need to turn off &quot;<i>xDrip
+webservice</i>&quot; in xDrip itself if you want to make use of the
+one in Juggluco.</p>
 <h2 class="western">xDrip broadcast</h2>
 <p>Send the same broadcast as turned on in xDrip with
 &quot;<i>Settings-&gt;Inter-app settings-&gt;Broadcast locally&quot;</i>.
@@ -839,15 +845,16 @@ broadcasts</a>. If you specify Juggluco as data-source in G-Watch,
 you need to turn on this broadcast.</p>
 <p>The application apps listening to this broadcast are shown. Check
 the apps you want to send this broadcast to.</p>
-<h2 class="western"><a href="https://www.juggluco.nl/Jugglucohelp/Nightscouthelp.html">Web server</a></h2>
+<h2 class="western"><a href="https://www.juggluco.nl/Jugglucohelp/Nightscouthelp.html">Web
+server</a></h2>
 <p>Web server that can be used with xDrip watches and some Nightscout
 apps. Previously called xDrip webserver.</p>
 <h2 class="western"><a href="https://www.juggluco.nl/Jugglucohelp/NightPost.html">Uploader</a></h2>
 <p>Upload to a Nightscout server.</p>
 <h2 class="western">Glucose notification</h2>
 <p style="line-height: 100%; margin-bottom: 0in">(Previously called
-&quot;<i>G</i><i>lucose in android status bar</i>&quot;). If set,
-glucose values streaming via Bluetooth are quietly displayed in a
+&quot;<i>Glucose in android status bar</i>&quot;). If set, glucose
+values streaming via Bluetooth are quietly displayed in a
 notification and the android status bar. If you turn it off, instead
 of a number, a dot is shown and the notification tells nothing more
 than &quot;<i>To connect to sensor</i>&quot; or &quot;<i>To exchange
@@ -868,7 +875,8 @@ in the left middle menu. In that case the notification will be sent
 to some smartwatches, if it is configured that way. That works with
 Garmin watches, I don\'t know if it works with anything else. Alarms
 also generate notifications.</p>
-<h2 class="western"><a href="https://www.juggluco.nl/Jugglucohelp/floatingconfig.html" onclick= "location.href=this.href+\'?unit=\'+unitstr;return false;"  >Floating glucose</a></h2>
+<h2 class="western"><a href="https://www.juggluco.nl/Jugglucohelp/floatingconfig.html" onclick="location.href=this.href+\'?unit=\'+unitstr;return false;">Floating
+glucose</a></h2>
 <p>When you turn this on, a small image with the current glucose
 value is constantly present on the screen independent of which app is
 in the foreground. If you turn it on the first time, you will be
@@ -881,7 +889,8 @@ monitoring.</p>
 <h2 class="western"><a href="https://www.juggluco.nl/Jugglucohelp/alarmhelp.html">Alarms</a></h2>
 <p style="font-weight: normal">Set high en low glucose alarms, loss
 of signal alarm and value available notification.</p>
-<h2 class="western"><a href="https://www.juggluco.nl/Jugglucohelp/labelhelp.html">Number labels</a></h2>
+<h2 class="western"><a href="https://www.juggluco.nl/Jugglucohelp/labelhelp.html">Number
+labels</a></h2>
 <p style="line-height: 100%; margin-bottom: 0in">Specify the labels
 used for amounts. Go to a screen to determine which labels to use to
 set amounts, like insulin doses, carbohydrate consumption and hours
@@ -1371,7 +1380,7 @@ give explicit consent for the use of Bluetooth. Old apps don\'t
 immediately stop working, but you can now make use of these new
 permissions. If you don\'t give this NEARBY DEVICES permission,
 Juggluco can\'t receive Glucose values via Bluetooth from Freestyle
-Libre 2 sensors. But maybe the old permissions still work.</p>
+Libre 2 and 3 sensors. But maybe the old permissions still work.</p>
 ]]>
 </string>
 <string name="watchinfo" >
@@ -1394,8 +1403,7 @@ on, Juggluco sends glucose values to <a href="https://bigdigital.home.blog/2022/
 Watchdrip+ sends watch faces, showing glucose values, to
 MiBand/Amazfit watches.</p>
 <h2 class="western">GadgetBridge</h2>
-<p>GadgetBridge (<a href="https://codeberg.org/Freeyourgadget/Gadgetbridge/wiki">Wiki</a>)
-makes it possible to display weather information on MiBand/Amazfit
+<p><a href="https://gadgetbridge.org">GadgetBridge</a> makes it possible to display weather information on MiBand/Amazfit
 watches. With the Gadgetbridge option turned on, will Juggluco send
 glucose values to GadgetBridge under the pretext that it is weather
 information. This had the advantage above Watchdrip that it is much
@@ -1611,7 +1619,8 @@ set time schedule.</p>
 glucose data and amounts to Libreview. When using Libre 0 or 3
 sensors, US/CA/AU Libre 2 sensors or other Libre 2 sensors with
 <i>Bluetooth History</i> set, Juggluco sends the history values to
-Libreview. If Libre 2 sensors are used without &quot;<i>Bluetooth history</i>&quot;,Juggluco uses the stream data received via
+Libreview. If Libre 2 sensors are used without &quot;<i>Bluetooth
+history</i>&quot;,Juggluco uses the stream data received via
 Bluetooth to create these 15 minute points by averaging the stream
 values around each point.</p>
 <p style="line-height: 100%; margin-bottom: 0in">Like the Librelink
@@ -1638,6 +1647,11 @@ it to Libreview by pressing <i>&quot;</i><i><b>Send now</b></i><i>&quot;</i>.</p
 values, amounts can also be sent to Libreview. For this you need to
 touch &quot;<a class="western" href="https://www.juggluco.nl/Jugglucohelp/librenumhelp.html"><i><b>Send
 amounts</b></i></a>&quot; and specify what each label means.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>RU</b>: You need
+to set this if you make use of <a class="western" href="https://libreview.ru/">https://libreview.<span style="text-decoration: none"><b>ru</b></span></a>
+instead of <a class="western" href="https://libreview.com/">https://libreview.com</a>.
+This only applies to Libre 2 sensors. Libre 3 sensors can only be
+used with libreview.com, because no Russian Libre 3 app exists.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>Immediate</b>:
 Send glucose values to Libreview immediately when they arrive from
 Libre 2 or 3 sensors. This is only useful in combination with
@@ -1871,10 +1885,6 @@ I tried it, but within a few weeks without any notification they just
 took the domain away from me and when I tried to register it again it
 had a price. You can buy a hostname for a few Euro\'s a year (for
 example from <a href="https://www.strato.nl/domeinnaam">https://www.strato.nl/domeinnaam</a>).</p>
-<p style="line-height: 100%; margin-bottom: 0in">If you have received
-the key files from an SSL authority, you have to give them to
-Juggluco. The private key can be read in by pressing &quot;<em>Private
-Key</em>&quot;, the Full Chain by pressing &quot;<em>Full Chain</em>&quot;.</p>
 <p style="line-height: 100%; margin-bottom: 0in">After installing
 Certbot and having redirected port 80 (http) from your modem to your
 computer, you can simply press:</p>
@@ -1886,6 +1896,10 @@ I found the Private key in
 /etc/letsencrypt/live/myhostname/privkey.pem and the full chain in
 /etc/letsencrypt/live/myhostname/fullchain.pem. &quot;<em>myhostname</em>&quot;
 is the hostname I used.</p>
+<p style="line-height: 100%; margin-bottom: 0in">If you have received
+the key files from an SSL authority, you have to give them to
+Juggluco. The private key can be read in by pressing &quot;<em>Private
+Key</em>&quot;, the Full Chain by pressing &quot;<em>Full Chain</em>&quot;.</p>
 <p style="line-height: 100%; margin-bottom: 0in">If you just want to
 send glucose values from one Android to the other, you can better use
 Juggluco\'s <a href="https://www.juggluco.nl/Juggluco/index.html#mirror">mirror</a>
@@ -1925,7 +1939,7 @@ with Juggluco 7.3.0 and higher. For this you need to select
 <p style="line-height: 100%; margin-bottom: 0in">Inserting amounts
 before earlier entered amounts, makes that AAPS will have duplicate
 treatments. This also happens when the v3 interface is used with a
-Nightscout server that receives v3 uploads from Juggluco.</p>
+Nightscout server that receives v3 uploads from Juggluco.</p><p>Sometimes AAPS only starts asking the server for treatments after AAPS was force stopped and restarted.</p>
 <p style="line-height: 100%; margin-bottom: 0in">The web server can
 also be run on a Linux computer. It will receive its data from a
 <a href="https://www.juggluco.nl/Juggluco/index.html#mirror">mirror
@@ -2229,6 +2243,18 @@ one ingredient is then calculated.</p>
 <br/>
 
 </p>
+]]>
+</string>
+<string name="healthpermission" >
+<![CDATA[
+<h1>Allowance to write Blood glucose</h1>
+<p>To be able to write Glucose values to Health Connect, the user
+needs to give Juggluco permission to write Blood Glucose to Health
+Connect. 
+</p>
+<p>This permission isn’t needed for anything else than receiving
+glucose values in Health Connect. In all other aspect Juggluco can
+function without this permission.</p>
 ]]>
 </string>
 </resources>

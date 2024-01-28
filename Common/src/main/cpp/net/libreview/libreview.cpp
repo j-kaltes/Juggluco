@@ -643,10 +643,16 @@ constexpr const int deviceidlen=sizeof(R"(b76f19a9-d4a0-4d67-8999-56b89b0968ee)"
 	const int usertokenlen= settings->data()->tokensize;
      const std::array<char,36> &deviceID=settings->data()->libreviewDeviceID;
 
+constexpr const std::string_view appstart=R"(com.freestylelibre.app.)";
+/*
 constexpr const std::string_view mmolmodel=R"(com.freestylelibre.app.gb)";
 constexpr const std::string_view mgmodel=R"(com.freestylelibre.app.fr)";
+constexpr const std::string_view mmolmodel=R"(com.freestylelibre.app.nl)";
+constexpr const std::string_view mgmodel=R"(com.freestylelibre.app.pl)";
+constexpr const std::string_view rumodel=R"(com.freestylelibre.app.ru)"; */
+constexpr const char countries[][3]={"gb","fr","nl","pl","ru"};
 
-constexpr const int modelnamelen= mmolmodel.size();
+
 constexpr const int unitlen=6;
 
 	int totallen=bytesnumbers+histtotal*histelUitlen+ startsensorlen*senslen+datastart.size()+unitlen+
@@ -666,7 +672,8 @@ dMODEL.size()+
 	aftermodelName.size()+
 	dRELEASE.size()+
 	afterosVersionName.size()+
-modelnamelen+ 
+    appstart.size()+
+sizeof(countries[0])+
 deviceidlen+ afterident.size())*2+ 350 + timeuitlen+
 	aftercurrents.size()
 	+afterdevice2.size() +
@@ -686,6 +693,7 @@ afterlocalstartime.size() +afterhists.size() + afterscans.size()+ usertokenlen+ 
      std::unique_ptr<char[]> bufdeleter(uitbuf);
 
 static    const bool mmolL=settings->data()->isLibreMmolL();
+static    const int country=settings->data()->getLibreCountry();
 static  constexpr const char unitlabel[][7]={"mg/dL","mmol/L"};
 	char *uitptr=uitbuf;
 	addstrview(uitptr,datastart);
@@ -715,7 +723,8 @@ static  constexpr const char unitlabel[][7]={"mg/dL","mmol/L"};
 	addstrview(uitptr,afterHardDescr);
 	addstrview(uitptr,dMANUFACTURER);
 	addstrview(uitptr,afterHardwareName);
-	addstrview(uitptr,mmolL?mmolmodel:mgmodel);
+	addstrview(uitptr,appstart);
+	addar(uitptr,countries[country]);
 	addstrview(uitptr,aftermodelName);
 	addstrview(uitptr,dRELEASE);
 	addstrview(uitptr,afterosVersionName);

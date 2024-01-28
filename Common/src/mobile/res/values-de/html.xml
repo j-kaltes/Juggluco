@@ -106,14 +106,6 @@ haben sie mir ohne jede Benachrichtigung einfach die Domain
 weggenommen und als ich versuchte, sie erneut zu registrieren, hatte
 sie einen Preis. Sie können einen Hostnamen für ein paar Euro pro
 Jahr kaufen (zum Beispiel von <a href="https://www.strato.nl/domeinnaam">https://www.strato.nl/domeinnaam</a>).</span></p>
-<p style="line-height: 100%; margin-bottom: 0in"><span lang="de-DE">Wenn
-Sie die Schlüsseldateien von einer SSL-Autorität erhalten haben,
-müssen Sie diese an Juggluco weitergeben. Der Private Key kann durch
-Drücken von „</span><strong><span lang="de-DE"><i><span style="font-weight: normal">Privater
-Schlüssel</span></i></span></strong>“ <span lang="de-DE">eingelesen
-werden, die Full Chain durch Drücken von „</span><em><span lang="de-DE">Full
-Chain</span></em>“<span lang="de-DE">. </span>
-</p>
 <p style="line-height: 100%; margin-bottom: 0in">Nachdem Sie Certbot
 installiert und Port 80 (http) von Ihrem Modem auf Ihren Computer
 umgeleitet haben, können Sie einfach Folgendes drücken:</p>
@@ -127,6 +119,14 @@ ich Certbot verwendet hatte, fand ich den privaten Schlüssel in
 die vollständige Kette in
 /etc/letsencrypt/live/myhostname/fullchain.pem. &quot;</span><em><span lang="de-DE">myhostname</span></em><span lang="de-DE">&quot;
 ist der von mir verwendete Hostname.</span></p>
+<p style="line-height: 100%; margin-bottom: 0in"><span lang="de-DE">Wenn
+Sie die Schlüsseldateien von einer SSL-Autorität erhalten haben,
+müssen Sie diese an Juggluco weitergeben. Der Private Key kann durch
+Drücken von „</span><strong><span lang="de-DE"><i><span style="font-weight: normal">Privater
+Schlüssel</span></i></span></strong>“ <span lang="de-DE">eingelesen
+werden, die Full Chain durch Drücken von „</span><em><span lang="de-DE">Full
+Chain</span></em>“<span lang="de-DE">. </span>
+</p>
 <p style="line-height: 100%; margin-bottom: 0in"><span lang="de-DE">Wenn
 Sie nur Glukosewerte von einem Android zum anderen senden möchten,
 können Sie besser die <a href="https://www.juggluco.nl/Juggluco/index.html#mirror">Klonfunktion</a></span>
@@ -156,13 +156,13 @@ Juggluco 7.3.0 und höher verwendet werden. Dazu müssen Sie in AAPS
 <i>NSClientV3</i> mit den folgenden Einstellungen auswählen:</p>
 <ul>
 	<li><p style="line-height: 100%; margin-bottom: 0in">Verwenden Sie
-	als <i>NS-Zug</i><i>angs</i><i>token</i> das hier angegebene
-	api_secret.</p>
+	als <i>NS-Zugangstoken</i> das hier angegebene api_secret.</p>
 	<li><p style="line-height: 100%; margin-bottom: 0in">nicht gesetzt
 	„<i>Mit Websockets verbinden</i>“;</p>
 	<li><p style="line-height: 100%; margin-bottom: 0in">Deaktivieren
-	Sie unter „ <i>Synchronisierung“</i><span style="font-style: normal">
-	alle Uploads</span><i>. </i>Nur einschalten:</p>
+	Sie unter „ <i>Synchronisierung“</i><span style="font-variant: normal">
+	</span><span style="font-variant: normal"><span style="font-style: normal">alle
+	Uploads</span></span><i>. </i>Nur einschalten:</p>
 	<ul>
 		<li><p style="line-height: 100%; margin-bottom: 0in">Historische
 		CGM Daten ergänzen;</p>
@@ -180,7 +180,8 @@ Juggluco 7.3.0 und höher verwendet werden. Dazu müssen Sie in AAPS
 Mengen vor zuvor eingegebenen Mengen führt dazu, dass AAPS doppelte
 Behandlungen hat. Dies geschieht auch, wenn die v3-Schnittstelle mit
 einem Nightscout-Server verwendet wird, der v3-Uploads von Juggluco
-empfängt.</p>
+empfängt. Manchmal beginnt AAPS erst, den Server nach Behandlungen
+zu fragen, nachdem AAPS zwangsweise gestoppt und neu gestartet wurde.</p>
 <p style="line-height: 100%; margin-bottom: 0in">Der Webserver kann
 auch auf einem Linux-Rechner betrieben werden. Es erhält seine Daten
 von einer Klonverbindung von Juggluco, die mit dem Sensor verbunden
@@ -1279,8 +1280,9 @@ an Libreview gesendet werden sollen.</p>
 <h1>Libreview</h1>
 <p>Juggluco kann Glukosedaten und -mengen an Libreview senden. Bei
 Verwendung von Libre 0- oder 3-Sensoren, US/CA/AU Libre 2-Sensoren
-oder anderen Libre 2-Sensoren mit eingestelltem <i>Bluetooth History,</i> sendet Juggluco die Historywerte an Libreview. <span style="font-style: normal">Wenn
-Libre 2-Sensoren ohne</span><i> „Bluetoothy History</i>“
+oder anderen Libre 2-Sensoren mit eingestelltem <i>Bluetooth History,</i>
+sendet Juggluco die Historywerte an Libreview. <span style="font-variant: normal"><span style="font-style: normal">Wenn
+Libre 2-Sensoren ohne</span></span> „<i>Bluetoothy History</i>“
 verwendet werden , verwendet Juggluco die über Bluetooth empfangenen
 Stream-Daten, um diese 15-Minuten-Punkte zu erstellen, indem die
 Stream-Werte um jeden Punkt herum gemittelt werden.</p>
@@ -1301,8 +1303,14 @@ Juggluco verlassen und dies in den letzten 20 Minuten nicht geschehen
 ist. Sie können es auch manuell an Libreview senden, indem Sie auf
 „<strong><i>Jetzt senden</i></strong>“ klicken .</p>
 <p>Neben Glukosewerten können auch Mengen an Libreview gesendet
-werden. Dazu müssen Sie auf „<strong><i>Mengen </i></strong><strong><i>senden</i></strong>“
+werden. Dazu müssen Sie auf „<strong><i>Mengen senden</i></strong>“
 tippen und angeben, was die einzelnen Etiketten bedeuten.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>RU</b>: Sie
+müssen dies festlegen, wenn Sie <a href="https://libreview.ru/">https://libreview.<b>ru</b></a>
+anstelle von <a href="https://libreview.com/">https://libreview.com</a>
+verwenden. Dies gilt nur für Libre 2-Sensoren. Libre 3-Sensoren
+können nur mit libreview.com verwendet werden, da keine russische
+Libre 3-App existiert.</p>
 <p><strong>Sofort</strong>: Senden Sie Glukosewerte sofort an
 Libreview, wenn sie von Libre 2- oder 3-Sensoren eintreffen. Dies ist
 nur in Kombination mit LibreLinkUp sinnvoll. Um es nutzen zu können,
@@ -1319,8 +1327,7 @@ sendet Juggluco an Libreview, ob ein Wert angezeigt wird oder nicht.
 Wenn diese Option deaktiviert ist, meldet Juggluco immer, dass es
 nicht angezeigt wird. Diese Option sendet diese Informationen nur
 dann zuverlässig an Libreview, wenn auch „<i>Sofort“</i>
-aktiviert ist. 
-</p>
+aktiviert ist.</p>
 <p><strong>Daten erneut senden</strong>: Neu beginnen; Daten der
 letzten 90 Tage erneut an Libreview senden. Sie müssen diese Taste
 drücken, wenn Sie zu einem neuen Libreview-Konto wechseln.</p>
@@ -1337,7 +1344,7 @@ etwas höhere <i>Zielzeit</i> angibt als der Statistikbildschirm von
 Juggluco. Da die auf den Sensoren erstellten History-Werte weniger
 extrem sind als der Durchschnitt der Stream-Werte um einen
 History-wert herum, ist dieser Unterschied größer, wenn Libreview
-auf den History-<span style="font-style: normal">W</span><span style="font-style: normal">erten</span>
+auf den History-<span style="font-variant: normal"><span style="font-style: normal">Werten</span></span>
 basiert , wie wenn „Bluetooth History“ in Juggluco aktiviert ist
 oder Librelink verwendet wird .</p>
 <p>Juggluco kann mit mehreren Sensoren gleichzeitig verbunden werden,
@@ -1352,11 +1359,11 @@ von Librelink zu imitieren. Das heißt, wenn Sie mehrere Sensoren
 gleichzeitig ausführen und ein später hinzugefügter Sensor früher
 endet als ein früher hinzugefügter Sensor, sendet dieser frühere
 Sensor keine Daten mehr an Libreview.</p>
-<p><strong>Konto-ID </strong><strong>erhalten</strong>: Wenn Sie nur
-die LibreView-Konto-ID erhalten, aber keine Daten an Libreview senden
+<p><strong>Konto-ID erhalten</strong>: Wenn Sie nur die
+LibreView-Konto-ID erhalten, aber keine Daten an Libreview senden
 möchten, können Sie Ihre E-Mail-Adresse und Ihr Passwort eingeben
-und auf „<i>Konto-ID </i><i>erhalten</i>“ klicken. In derselben
-Zeile vor dieser Schaltfläche wird die Konto-ID angezeigt (dies kann
+und auf „<i>Konto-ID erhalten</i>“ klicken. In derselben Zeile
+vor dieser Schaltfläche wird die Konto-ID angezeigt (dies kann
 einige Zeit dauern und der Bildschirm wird nicht automatisch
 aktualisiert). Das Abrufen der Konto-ID vom LibreView-Server
 ermöglicht die Verwendung eines FreeStyle Libre 3-Sensors, der
@@ -1424,7 +1431,7 @@ Inhaltsstoffdefinition einfügen.</font></font></p>
 12 hat einige neue Bluetooth-Berechtigungen, die eine ausdrückliche
 Zustimmung zur Verwendung von Bluetooth erfordern. Wenn Sie diese
 GERÄTE IN DER NÄHE-Berechtigung nicht erteilen, kann Juggluco keine
-Glukosewerte über Bluetooth von Freestyle Libre 2-Sensoren
+Glukosewerte über Bluetooth von Freestyle Libre 2 und 3 Sensoren
 empfangen.</font></font></p>
 ]]>
 </string>
@@ -1965,6 +1972,12 @@ gesamte App deaktivieren:</p>
 <p align="left">Bevor Sie den Kundendienst von Abbott anrufen,
 aktivieren Sie ihn erneut mit:</p>
 <p align="left">pm enable com.freestylelibre.app.de</p>
+<h2 class="western">Health Connect</h2>
+<p>Senden Sie minutengenaue Glukosewerte an <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.healthdata">Health
+Connect</a> . Sie können anderen Apps Zugriff auf diese Glukosewerte
+gewähren, beispielsweise <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.fitness">Google
+Fit</a> . Andere Apps können wiederum auf Daten von Google Fit
+zugreifen.</p>
 <h2 class="western" align="left">Libreview</h2>
 <p align="left">Verbinden Sie sich mit Libreview, um die Glukosewerte
 and Mengen des Freestyle Libre 2 und 3 an Libreview zu senden und die
@@ -2027,10 +2040,10 @@ kann. Früher xDrip-Webserver genannt.</p>
 Auf einen Nightscout-Server hochladen.</p>
 <h2 class="western" align="left">Glukosebenachrichtigung</h2>
 <p align="left" style="line-height: 100%; margin-bottom: 0in">(Früher
-&quot;<i>Glukose in der Statusleiste von Android</i><i>&quot;</i>
-genannt). Wenn die Glukosewerte über Bluetooth gestreamt werden,
-werden sie in einer Benachrichtigung und in der Android-Statusleiste
-angezeigt. Auf einigen Smartphones wird der Glukosewert nur in der
+&quot;<i>Glukose in der Statusleiste von Android&quot;</i> genannt).
+Wenn die Glukosewerte über Bluetooth gestreamt werden, werden sie in
+einer Benachrichtigung und in der Android-Statusleiste angezeigt. Auf
+einigen Smartphones wird der Glukosewert nur in der
 Android-Statusleiste angezeigt, nachdem man die
 Benachrichtigungseinstellungen des Androiden geändert hat.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><span style="font-weight: normal">Sie

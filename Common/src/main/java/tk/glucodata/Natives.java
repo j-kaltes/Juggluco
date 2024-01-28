@@ -696,6 +696,7 @@ public static native void setspeakalarms(boolean val);
 
 public static native boolean speakalarms( );
 public static native int getLibreCountry();
+public static native void setLibreCountry(int val);
 public static native void setinterval(int val);
 public static native int getinterval( );
 
@@ -704,7 +705,12 @@ public static native void setpostTreatments(boolean val);
 public static native long getSensorStartmsec(long dataptr);
 public static native void setnightscoutV3(boolean val);
 public static native boolean getnightscoutV3( );
-
+public static native long streamfromSensorptr(long sensorptr,int pos);
+public static native int healthConnectfromSensorptr(long sensorptr);
+public static native void healthConnectWritten(long sensorptr,int pos);
+public static native void sethealthConnect(boolean val);
+public static native boolean gethealthConnect( );
+public static native void healthConnectReset();
 //s/^extern.*JNIEXPORT[         ]*\([a-zA-Z]*\)[ ]*JNICALL[      ]*fromjava(\([^)]*\)) *(JNIEnv[^,]*,[^,)]*[,)]\([^){]*\)[^a-zA-Z0-9]*$/public static native \1 \2(\3);/g
 //public static native void sendxdripold();
 /*

@@ -49,6 +49,8 @@ import java.util.Calendar;
 
 import androidx.annotation.Keep;
 import androidx.annotation.UiThread;
+
+import tk.glucodata.nums.numio;
 import tk.glucodata.settings.Settings;
 
 import static android.util.TypedValue.COMPLEX_UNIT_PX;
@@ -572,13 +574,18 @@ void startlibrelink(String lang) {
 			 	return;
 			 	}
 			else {
-			    MainActivity activity = (MainActivity) getContext();
-			    numberview.addnumberview(activity,hitptr);
-			    if(!Natives.staticnum()) {
-				    if(!smallScreen) {
-						showkeyboard(activity);
-						}
+				 MainActivity activity = (MainActivity) getContext();
+				if(Natives.staticnum()&&hitptr== numio.newhit) {
+					help.help(R.string.staticnum,activity);
 					}
+				else {
+				    numberview.addnumberview(activity,hitptr);
+				    if(!Natives.staticnum()) {
+					    if(!smallScreen) {
+							showkeyboard(activity);
+							}
+						}
+				    }
 			    }
 			    }
                 	}

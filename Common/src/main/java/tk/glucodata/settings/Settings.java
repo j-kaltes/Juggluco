@@ -48,6 +48,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.os.Build;
 import android.text.InputType;
 import android.util.TypedValue;
 import android.view.View;
@@ -77,6 +78,7 @@ import tk.glucodata.Applic;
 import tk.glucodata.BuildConfig;
 import tk.glucodata.Floating;
 import tk.glucodata.GlucoseCurve;
+import tk.glucodata.HealthConnection;
 import tk.glucodata.LabelAdapter;
 import tk.glucodata.Layout;
 import tk.glucodata.Libreview;
@@ -592,6 +594,9 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 	jugglucobroadcast.setChecked(Natives.getJugglucobroadcast());
 
 
+	final var healthconnect=(isWearable||Build.VERSION.SDK_INT <28) ?null:getcheckbox(context, "Health Connect", Natives.gethealthConnect());
+
+
 	final boolean wasxdrip= isWearable?false:Natives.getuselibreview();
 
 	if(!isWearable) {
@@ -599,6 +604,18 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 		libreview.setChecked(wasxdrip);
 		librelinkbroadcast.setText(R.string.sendtoxdrip);
 		librelinkbroadcast.setChecked(Natives.getlibrelinkused());
+		 if(Build.VERSION.SDK_INT >= 28) {
+			healthconnect.setOnCheckedChangeListener( (buttonView,  isChecked) -> {
+					Natives.sethealthConnect(isChecked);
+					if(isChecked) {
+						HealthConnection.Companion.init(context);
+						}
+					else {
+						HealthConnection.Companion.stop();
+						}
+					}
+				);
+			}
 		}
 	final var hasnfc=MainActivity.hasnfc;
 	if(hasnfc)  {
@@ -804,12 +821,15 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 
 
 	       floatconfig.setOnClickListener(v-> tk.glucodata.FloatingConfig.show(context,thelayout[0]));
+		final View[] librerow=
+		 (Build.VERSION.SDK_INT >= 28)? 
+			new View[]{showalways,healthconnect,libreview}
+			:
+			new View[]{showalways,libreview};
 		View[] rowglu=new View[]{ bluetooth,floatconfig,alarmbut};
 		row8=new View[]{changelabels,langspin,numalarm,colbut};
 		views=new View[][]{row0, row1,new View[]{scalelabel,fixatex,fixatey}, row2,new View[]{levelleft,camera,reverseorientation},
-		hasnfc?new View[]{nfcsound, globalscan}:null,
-
-		new View[]{showalways,libreview,librelinkbroadcast},new View[]{xdripbroadcast ,jugglucobroadcast ,webserver,uploader }, rowglu,row8,row9};
+		hasnfc?new View[]{nfcsound, globalscan}:null,librerow,new View[] {librelinkbroadcast,xdripbroadcast ,jugglucobroadcast},new View[] {webserver,uploader }, rowglu,row8,row9};
 	       webserver.setOnClickListener(v-> tk.glucodata.Nightscout.show(context,thelayout[0]));
 	       uploader.setOnClickListener(v-> tk.glucodata.NightPost.config(context,thelayout[0]));
 		}

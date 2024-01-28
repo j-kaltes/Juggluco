@@ -2408,8 +2408,26 @@ extern void render() ;
 
 int getalarmcode(const uint32_t glval,SensorGlucoseData *hist) ;
 extern void     processglucosevalue(int sendindex,int newstart) ;
+
+static bool dohealth(int sensorindex) {
+    static int thesensor=sensorindex;
+    if(!settings->data()->healthConnect)
+        return false;
+    if(usedsensors.size()==1)  {
+        return true;
+    }
+    if(sensorindex==thesensor)
+        return true;
+    auto en=usedsensors.end();
+    if(std::find(usedsensors.begin(),en,thesensor)==en) {
+        thesensor=sensorindex;
+        return true;
+    }
+    return false;
+}
 void     processglucosevalue(int sendindex,int newstart) {
 //	if(!streamvalueshown) return;
+
 extern	bool hasnotiset();
 	if(settings) {
 		if(!sensors)
@@ -2445,8 +2463,9 @@ extern	bool hasnotiset();
 						}
 					settings->data()->nobluetooth=true;
 					float rate=poll->ch;
-extern void telldoglucose(const char *name,int32_t mgdl,float glu,float rate,int alarm,int64_t mmsec,bool wasnoblue,int64_t startsensor) ;
-					telldoglucose(hist->shortsensorname()->data(),poll->g,glu,rate,alarm,tim*1000LL,wasnoblue,startsensor);
+extern void telldoglucose(const char *name,int32_t mgdl,float glu,float rate,int alarm,int64_t mmsec,bool wasnoblue,int64_t startsensor,intptr_t) ;
+
+					telldoglucose(hist->shortsensorname()->data(),poll->g,glu,rate,alarm,tim*1000LL,wasnoblue,startsensor,dohealth(sendindex)?reinterpret_cast<intptr_t>(hist):0LL);
 
 				//	wakeuploader();
 extern				void wakewithcurrent();

@@ -220,7 +220,7 @@ void reconnect() {
 					if (sensorgen == 2) {
 						Log.i(LOG_ID, "Using security generation 2");
 						conphase = 1;
-						boolean isEnabled = enableNotification(BLELogincharacteristic);
+						boolean isEnabled = asknotification(BLELogincharacteristic);
 						Log.i(LOG_ID, "Enabled Security notification: " + isEnabled);
 						return true;
 					}
@@ -589,7 +589,7 @@ private	void oldonCharacteristicChanged(byte[] value) {
 	}
 
 	int tovalue;
-
+/*
 static	public final boolean enableNotification(BluetoothGatt bluetoothGatt,BluetoothGattCharacteristic bluetoothGattCharacteristic) {
 	bluetoothGatt.setCharacteristicNotification(bluetoothGattCharacteristic, true);
 	BluetoothGattDescriptor descriptor = bluetoothGattCharacteristic.getDescriptor(mCharacteristicConfigDescriptor);
@@ -598,7 +598,7 @@ static	public final boolean enableNotification(BluetoothGatt bluetoothGatt,Bluet
 	}
 private final boolean enableNotification(BluetoothGattCharacteristic bluetoothGattCharacteristic) {
 	return enableNotification(mBluetoothGatt, bluetoothGattCharacteristic);
-	}
+	} */
 
 	public final void phase3(byte[] value) {
 		int i;
@@ -628,7 +628,7 @@ private final boolean enableNotification(BluetoothGattCharacteristic bluetoothGa
 			conphase = 4;
 
             mBLELoginHandler = () -> {
-                if (!enableNotification(CompositeRawDatacharacteristic)) {
+                if (!asknotification(CompositeRawDatacharacteristic)) {
                     Log.e(LOG_ID, SerialNumber+" phase3 retry=" + BLELoginposted + " enableNotification failed");
                     handshake = "Enable CompositeRawDatacharacteristic failed";
                     wrotepass[1] = System.currentTimeMillis();

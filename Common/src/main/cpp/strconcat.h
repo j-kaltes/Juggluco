@@ -21,6 +21,7 @@
 
 #pragma once
 #include <string_view>
+#include <string.h>
 #ifndef LOGGER
 #include "share/logs.h"
 #endif

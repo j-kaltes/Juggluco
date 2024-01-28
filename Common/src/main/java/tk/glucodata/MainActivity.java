@@ -99,6 +99,7 @@ public class MainActivity extends AppCompatActivity implements NfcAdapter.Reader
 
 //public class MainActivity extends CarActivity implements NfcAdapter.ReaderCallback  {
 //    boolean    hideSystem=true;
+    LaunchShit  permHealth=isWearable?null:new LaunchShit(this);
     GlucoseCurve curve=null;
 //    Button okbutton=null;
     private static final String LOG_ID = "MainActivity";
@@ -238,9 +239,9 @@ private void supportRTL() {
 		supportRTL();
 	else
 		supportLTR(); */
-	if(Applic.app.stopprogram>0){
+	if(Applic.stopprogram >0){
 		android.util.Log.e(LOG_ID,"Stop program");
-		if(Applic.app.stopprogram==1)
+		if(Applic.stopprogram ==1)
 			outofStorageSpace();
 		else {
 			makefilesfailed();
@@ -266,9 +267,10 @@ private void supportRTL() {
 //	setTheme(R.style.AppTheme);
 //	setTheme(R.style.AppTheme);
 	showSystemUI();
-	if(!glversion()) return;
+	if(!glversion())
+		return;
 
-        startall();
+    startall();
 	thisone=this;
 	/*
 	if(!isWearable) {
@@ -305,13 +307,20 @@ void handleIntent(Intent intent) {
 				}
 			}
 		}
+	var action= intent.getAction();
 
-       if ((intent.getFlags() & Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) == 0&&"android.nfc.action.TECH_DISCOVERED".equals(intent.getAction())) {
+       if ((intent.getFlags() & Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) == 0&&"android.nfc.action.TECH_DISCOVERED".intern()==action) {
            curve.waitnfc=true;
            Log.d(LOG_ID,"TECH_DISCOVERED");
            Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
            startnfc(tag);
+	   return;
        }
+      if("androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE".intern() ==action|| "android.intent.action.VIEW_PERMISSION_USAGE".intern()==action)  {
+      	help.help(R.string.healthpermission,this);
+	return;
+      	}
+
 //       else hideSystem=true;
    }
 static final String setbluetoothon="setbluetoothon";
@@ -729,8 +738,15 @@ private void netinitstep() {
 		else
 			useBluetooth(Natives.getusebluetooth());
 		started=true;
+		if(!isWearable) {
+			if(Natives.gethealthConnect()) {
+				 if(Build.VERSION.SDK_INT >= 28) {
+					HealthConnection.Companion.init(this);
+					}
+				}
+			}
 		}
-}
+	}
 private boolean gaverational=false;
 
 
@@ -864,7 +880,7 @@ public void onRequestPermissionsResult(int requestCode, String[] permissions, in
 				}
 			if(bluediag.returntoblue) {
 				bluediag.returntoblue=false;
-			        new bluediag(this); 
+			    new bluediag(this);
 				}
 			return;
 	}

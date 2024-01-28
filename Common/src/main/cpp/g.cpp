@@ -351,6 +351,40 @@ extern "C" JNIEXPORT jlong JNICALL   fromjava(getsensorptr)(JNIEnv *env, jclass 
 		}
 	return reinterpret_cast<jlong>(sdata->hist);
 	}
+extern "C" JNIEXPORT jlong JNICALL   fromjava(streamfromSensorptr)(JNIEnv *env, jclass cl,jlong sensorptr,int pos) {
+	const auto *sens=reinterpret_cast<const SensorGlucoseData*>(sensorptr); 
+	const ScanData *start= sens->beginpolls();
+	const int len=sens->pollcount();
+	for(int i=pos;i<len;i++) {
+		const ScanData *item=start+i;
+		if(item->valid()) {
+			for(++i;i<len&&!start[i].valid();i++)
+				;
+			return ((jlong)item->gettime())|(((jlong)item->getmgdL())<<32|((jlong)i)<<48);
+			}
+		}
+	return ((jlong)len)<<48;
+	}
+extern "C" JNIEXPORT void JNICALL   fromjava(healthConnectReset)(JNIEnv *env, jclass cl) {
+	sensors->onallsensors([](SensorGlucoseData *sens) {
+			auto *info=sens->getinfo();
+			info->healthconnectiter=info->pollstart;
+			}) ;
+
+	}
+extern "C" JNIEXPORT jint JNICALL   fromjava(healthConnectfromSensorptr)(JNIEnv *env, jclass cl,jlong sensorptr) {
+	auto *info=reinterpret_cast<SensorGlucoseData*>(sensorptr)->getinfo();
+	int start=info->healthconnectiter;
+	if(!start) {
+		info->healthconnectiter=start=info->pollstart;
+		}
+	auto res=start|((int)info->pollcount<<16);
+	LOGGER("healthConnectfromSensorptr=%x\n",res);
+	return res;
+	}
+extern "C" JNIEXPORT void JNICALL   fromjava(healthConnectWritten)(JNIEnv *env, jclass cl,jlong sensorptr,jint pos) {
+	reinterpret_cast<SensorGlucoseData*>(sensorptr)->getinfo()->healthconnectiter=pos;
+	}
 extern "C" JNIEXPORT jlong JNICALL   fromjava(getSensorStartmsec)(JNIEnv *env, jclass cl,jlong dataptr) {
 	if(!dataptr)
 		return 0LL;

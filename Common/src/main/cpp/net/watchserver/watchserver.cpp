@@ -1576,7 +1576,7 @@ bool watchcommands(char *rbuf,int len,recdata *outdata,bool secure) {
 			break;
 		}
 	
-
+	LOGAR("After while");
 	if(!toget.data()) {
 		return givenothing(outdata);
 		return false;
@@ -2386,6 +2386,7 @@ public:
 	int datnr=24;
 	uint32_t lowerend=0,higherend=INT32_MAX;
 	bool decrease=false;
+	bool fields=false;
 	bool getargs(const char *start,int len) ;
 	char * 		 treatmentlist(char *outstart,uint32_t,uint32_t *) const;
 	}; 
@@ -2404,6 +2405,7 @@ public:
 
 				return false;
 				}
+			continue;
 			}
 		else {
 		std::string_view sort="sort";
@@ -2507,8 +2509,15 @@ public:
 						}
 				  }
 				}
+			continue;
 			}
-			}	
+
+			 std::string_view fieldsstr="fields=sgv,direction,srvCreated";
+			 if(!memcmp(iter,fieldsstr.data(),fieldsstr.size())) {
+			 	iter+=fieldsstr.size();
+				fields=true;
+				}	
+			}
 			}
 		}
 	if(!datnr) {
@@ -2753,6 +2762,30 @@ return len;
 //c149bacfb000007f
 }
 */
+
+//{"sgv":113,"direction":"Flat","srvCreated":1706383248228}
+static char * writev3entryfield(char *outin,const ScanData *val) {
+	char *outptr=outin;
+	addar(outptr,R"({"sgv":)");
+	if(auto [ptr,ec]=std::to_chars(outptr,outptr+12,val->getmgdL());ec == std::errc()) {
+		outptr=ptr;
+	 	}
+	else {
+		LOGGER("tochar failed: %s\n",std::make_error_code(ec).message().c_str());
+		}
+	addar(outptr,R"(,"direction":")");
+	 std::string_view name=getdeltaname(val->ch);
+	addstrview(outptr,name);
+	addar(outptr,R"(","srvCreated":)");
+	if(auto [ptr,ec]=std::to_chars(outptr,outptr+12,val->gettime());ec == std::errc()) {
+		outptr=ptr;
+		}
+	else {
+		LOGGER("tochar failed: %s\n",std::make_error_code(ec).message().c_str());
+		}
+	addar(outptr,R"(000})");
+	return outptr;
+	}
 bool getv3entries(const char *cmdstart,const char *cmdend,recdata *outdata) {
 	std::string_view history="/history/";
 	longlongtype lowerend=0;
@@ -2788,13 +2821,12 @@ bool getv3entries(const char *cmdstart,const char *cmdend,recdata *outdata) {
 	addar(outiter,begin);
 	uint32_t lastmodified;
 	if(args.decrease) {
-		 lastmodified=getitems(outiter,count, args.lowerend,args.higherend,false, 55,[](char *outiter,int datit, const ScanData *iter,const sensorname_t *sensorname,const time_t starttime)
+		 lastmodified=getitems(outiter,count, args.lowerend,args.higherend,false, 55,[fields=(bool)args.fields](char *outiter,int datit, const ScanData *iter,const sensorname_t *sensorname,const time_t starttime)
 
 				{
-				char *out=writev3entry(outiter,iter, sensorname,true);
+				char *out=fields?writev3entryfield(outiter,iter):writev3entry(outiter,iter, sensorname,true);
 				*out++=',';
 				return out;
-				
 				}
 				); 
 				/*

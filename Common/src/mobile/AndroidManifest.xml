@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:overrideLibrary="androidx.health.connect.client" >
+    <uses-sdk tools:overrideLibrary="androidx.health.connect.client"/>
 
     <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE" />
-
+<!-- s/^[	 ]*\(.*\)[	 ]*$/<uses-permission android:name="\1"\/>/g -->
+<uses-permission android:name="android.permission.health.WRITE_BLOOD_GLUCOSE"/>
     <uses-feature
         android:name="android.hardware.type.automotive"
         android:required="false" />
@@ -53,6 +56,10 @@
          devices.
     -->
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+<queries>
+    <package android:name="com.google.android.apps.healthdata" />
+</queries>
+
 
     <queries>
         <intent>
@@ -150,6 +157,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE" />
+            </intent-filter>
 
             <meta-data
                 android:name="android.nfc.action.TECH_DISCOVERED"
@@ -172,6 +182,21 @@
                 android:name="android.nfc.action.TECH_DISCOVERED"
                 android:resource="@xml/nfc_tech_filter" />
         </activity-alias>
+
+
+  <!-- For versions starting Android 14, create an activity alias to show the rationale
+       of Health Connect permissions once users click the privacy policy link. -->
+  <activity-alias
+      android:name="ViewPermissionUsageActivity"
+      android:exported="true"
+      android:targetActivity=".MainActivity"
+      android:permission="android.permission.START_VIEW_PERMISSION_USAGE">
+    <intent-filter>
+      <action android:name="android.intent.action.VIEW_PERMISSION_USAGE" />
+      <category android:name="android.intent.category.HEALTH_PERMISSIONS" />
+    </intent-filter>
+  </activity-alias>
+
 
         <receiver
             android:name=".NumAlarm"
