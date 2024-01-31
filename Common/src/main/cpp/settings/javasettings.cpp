@@ -1554,3 +1554,27 @@ extern "C" JNIEXPORT jboolean  JNICALL   fromjava(gethealthConnect)(JNIEnv *env,
 	}
 
 
+static bool hasRapidInsulin() {
+	const int nr=settings->getlabelcount();
+	for(int i=0;i<nr;i++) {
+		if(settings->data()->Nightnums[i].kind==1)
+			return true;
+		}
+	return false;
+	}
+extern "C" JNIEXPORT jboolean  JNICALL   fromjava(setIOB)(JNIEnv *env, jclass cl,jboolean val) {
+	if(val) {
+		if(!hasRapidInsulin()) {
+			return false;
+			}
+		}
+	settings->data()->IOB=val;
+	return true;
+	}
+extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getIOB)(JNIEnv *env, jclass cl) {
+	return settings->data()->IOB;
+	}
+
+
+
+

@@ -1,6 +1,11 @@
+Iets met instellen IOB:
+	- Instellen variabele categorien?
+	- Verschillende typen insuline
+	- ga geen nummers af als er geen Insuline category bestaat.
+
+Remove log messages in production.
 
 Health connect Resend data
-compile OldLibre, Wear
 
 Dialog soms te hoog
 

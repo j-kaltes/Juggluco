@@ -1,4 +1,5 @@
 <resources>
+<string name="IOB" ></string>
 <string name="healthpermission" ></string>
 <string name="ringtone" ></string>
 <string name="reminders" ></string>

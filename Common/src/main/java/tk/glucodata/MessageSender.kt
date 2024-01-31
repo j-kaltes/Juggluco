@@ -253,7 +253,7 @@ companion object {
     const val BLUETOOTH_PATH = "/bluetooth"
     const val DATA_PATH = "/data"
     const val MESSAGES_PATH = "/messages"
-    val scope = CoroutineScope(Dispatchers.IO)
+    val scope = CoroutineScope(Dispatchers.IO+SupervisorJob()  )
     private var messagesender: MessageSender? = null
     @JvmStatic
     public fun getMessageSender(): MessageSender? {

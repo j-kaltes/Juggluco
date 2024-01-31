@@ -88,6 +88,13 @@ constexpr static const int maxcolors=80;
 constexpr static const int startbackground=maxcolors/2;
 constexpr static const int maxalarms=5;
 
+typedef std::array<char,179> auth_t;
+constexpr static const int AUTHMAX=512;
+struct authpair {
+	auth_t auth;
+	uint32_t expires;
+	};
+
 struct Tings {
 	uint32_t glow,ghigh,tlow,thigh,alow,ahigh;
 	int32_t duration;
@@ -233,7 +240,8 @@ struct Tings {
 
 	char newYuApiKey3[41];
 
-	bool reserved9:4;//*
+	bool reserved9:3;//*
+	bool IOB:1;
 	bool healthConnect:1;
 	bool speakmessages:1;
 	bool speakalarms:1;
@@ -256,6 +264,9 @@ struct Tings {
 	int32_t nightinterval;
 	uint32_t timenumchanged;
 	uint32_t lastuploadtime;
+	uint32_t authstart;
+	uint32_t authend;
+	authpair authdata[AUTHMAX];
 	void setdefault() {
 		memcpy(watchid,defaultid,sizeof(watchid));
 		};

@@ -1537,7 +1537,7 @@ uint32_t lastsensorends() {
 			}
 		return 0;
 		}
-//void	showbluevalue(const float dlast,const time_t nu,const int xpos) {
+//void	showbluevalue(const float dlast,const time_t nu,const int xpos) 
 
 void drawarrow(NVGcontext* genVG, float rate,float getx,float gety) {
 		if(!isnan(rate)) {
@@ -1593,13 +1593,22 @@ float glucosevaluex=-1,glucosevaluey=-1;
 } ;
 std::vector<shownglucose_t> shownglucose;
 
-void showvalue(const ScanData *poll,const sensorname_t *sensorname, float getx,float gety,int index) {
+static void showvalue(const ScanData *poll,const sensorname_t *sensorname, float getx,float gety,int index,uint32_t nu) {
 	LOGGER("showvalue %s\n",sensorname->data());
 	float sensory= gety+headsize/3.1;
 	nvgFillColor(genVG, *getblack());
 	nvgFontSize(genVG,mediumfont );
 	nvgTextAlign(genVG,NVG_ALIGN_LEFT|NVG_ALIGN_TOP);
 	nvgText(genVG, getx,sensory, sensorname->begin(), sensorname->end());
+	/*
+    double getiob(uint32_t);
+	const auto iob=getiob(nu);
+	if(!index&&iob!=0.0) {
+		constexpr const int maxbuf=20;
+		char buf[maxbuf];
+		int len=snprintf(buf,maxbuf,"IOB: %.1f",iob);
+		nvgText(genVG, getx,sensory+sensorbounds.bottom, buf,buf+len);
+		} */
 	nvgTextAlign(genVG,NVG_ALIGN_LEFT|NVG_ALIGN_MIDDLE);
 	constexpr const int maxhead=11;
 	char head[maxhead];
@@ -1742,7 +1751,7 @@ static void showlastsstream(const time_t nu,const float getx,std::vector<int> &u
 				float sensory= gety+headsize/3.1f;
 				nvgRect(genVG, getx+sensorbounds.left, sensorbounds.top+sensory, relage*sensorbounds.width, sensorbounds.height);
 				nvgFill(genVG);
-				showvalue(poll,hist->shortsensorname(),getx,gety,i);
+				showvalue(poll,hist->shortsensorname(),getx,gety,i,nu);
 				success=true;
 				if(!hist->isLibre3()) {
 					 if(settings->data()->libreIsViewed&&!hist->getinfo()->libreviewsendall) {
@@ -1895,20 +1904,36 @@ LOGGER("showbluevalue %zd\n",used.size());
 		
 		nvgTextAlign(genVG,NVG_ALIGN_LEFT|NVG_ALIGN_TOP);
 		{
-		constexpr int maxbuf=100;
+		constexpr int maxbuf=120;
 		char tbuf[maxbuf];
-           largedaystr(nu,tbuf) ;
+         const int datlen=largedaystr(nu,tbuf) ;
 		const float timex =
 			getx
 		#ifdef WEAROS
 			-timelen
 		#endif
 		;
-		nvgText(genVG, timex,datehigh, tbuf, NULL);
+/*
+#ifndef WEAROS	
+		double getiob(uint32_t);
+		if(const auto iob=getiob(nu)) {
+			datlen+=snprintf(tbuf+datlen,maxbuf-datlen," IOB: %.2f",iob);
+			}
+#endif */
+		nvgText(genVG, timex,datehigh, tbuf, tbuf+datlen);
+
+#ifndef WEAROS	
+	if( settings->data()->IOB) {
+		double getiob(uint32_t);
+		int len=snprintf(tbuf,maxbuf,"IOB: %.2f",getiob(nu));
+		nvgText(genVG, timex,2.3*smallfontlineheight, tbuf,tbuf+len);
+		}
+#endif
+
 		LOGGER("xpos=%d dwidth=%.1f headsize=%.1f density=%.1f getx=%.1f timex=%.1f\n",xpos,dwidth,headsize, density,getx,timex);
 		}
 	showlastsstream(nu, getx,used) ;
-		}
+	}
 
 void	showsavedomain(const float last, const float dlow,const float dhigh) {
 	nvgBeginPath(genVG);

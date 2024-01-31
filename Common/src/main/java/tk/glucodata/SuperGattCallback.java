@@ -230,7 +230,7 @@ static void endtalk() {
 			}
 			;
 		} catch (Throwable e) {
-			Log.stack(LOG_ID, e);
+			Log.stack(LOG_ID,SerialNumber, e);
 		}
 		Log.v(LOG_ID, SerialNumber + " "+tim+" glucose=" + gl + " " + rate);
 		Applic.updatescreen();
@@ -318,7 +318,7 @@ protected void handleGlucoseResult(long res,long timmsec) {
 	}
 
 public void searchforDeviceAddress() {
-	Log.i(LOG_ID,"searchforDeviceAddress()");
+	Log.i(LOG_ID,SerialNumber+" searchforDeviceAddress()");
 
 	setDeviceAddress(null);
 	close();
@@ -341,17 +341,17 @@ public void searchforDeviceAddress() {
 		mActiveBluetoothDevice = device;
 		if(device!=null) {
 			String address=device.getAddress();
-			Log.i(LOG_ID,"setDevice("+address+")");
+			Log.i(LOG_ID,SerialNumber+"setDevice("+address+")");
 			setDeviceAddress(address);
 			}
 		else  {
-			Log.i(LOG_ID,"setDevice("+null+")");
+			Log.i(LOG_ID, SerialNumber +" "+"setDevice("+null+")");
 			setDeviceAddress(null);
 			}
 	}
 
 	public void setDeviceAddress(String address) {
-		Log.i(LOG_ID,"setDeviceAddress("+ address+")");
+		Log.i(LOG_ID, SerialNumber +" "+"setDeviceAddress("+ address+")");
 		mActiveDeviceAddress = address;
 		Natives.setDeviceAddress(dataptr, address);
 	}
@@ -381,7 +381,7 @@ public void searchforDeviceAddress() {
 				mess = mess == null ? "" : mess;
 				String uit = ((Build.VERSION.SDK_INT > 30) ? Applic.app.getString(R.string.turn_on_nearby_devices_permission)  : mess) ;
 				Applic.Toaster(uit);
-				Log.stack(LOG_ID, "BluetoothGatt.close()", se);
+				Log.stack(LOG_ID, SerialNumber +" "+ "BluetoothGatt.close()", se);
 			}
 		finally {	
 			mBluetoothGatt = null;
@@ -393,7 +393,7 @@ public void searchforDeviceAddress() {
 		var cb = this;
 		close();
 		if (cb.mActiveBluetoothDevice == null) {
-			Log.i(LOG_ID,"cb.mActiveBluetoothDevice == null");
+			Log.i(LOG_ID, SerialNumber +" "+"cb.mActiveBluetoothDevice == null");
 			foundtime = 0L;
 			return null;
 		}
@@ -402,15 +402,15 @@ public void searchforDeviceAddress() {
 			var device= cb.mActiveBluetoothDevice;
 			var sensorbluetooth= blueone;
 			if(sensorbluetooth==null) {
-				Log.e(LOG_ID,"sensorbluetooth==null");
+				Log.e(LOG_ID, SerialNumber +" "+"sensorbluetooth==null");
 				return;
 				}
 			if(!sensorbluetooth.bluetoothIsEnabled()) {
-				Log.e(LOG_ID,"!sensorbluetooth.bluetoothIsEnabled()");
+				Log.e(LOG_ID, SerialNumber +" "+"!sensorbluetooth.bluetoothIsEnabled()");
 				return ;
 				}
 			if(device==null) {
-				Log.e(LOG_ID,"device==null");
+				Log.e(LOG_ID, SerialNumber +" "+"device==null");
 				return;
 				}
 		
@@ -440,9 +440,9 @@ public void searchforDeviceAddress() {
 					String uit = ((Build.VERSION.SDK_INT > 30) ? Applic.app.getString(R.string.turn_on_nearby_devices_permission)  : mess) ;
 					Applic.Toaster(uit);
 
-					Log.stack(LOG_ID, "connectGatt", se);
+					Log.stack(LOG_ID, SerialNumber +" "+ "connectGatt", se);
 				} catch (Throwable e) {
-					Log.stack(LOG_ID, "connectGatt", e);
+					Log.stack(LOG_ID, SerialNumber +" "+ "connectGatt", e);
 
 					}
 		};
@@ -470,23 +470,23 @@ public void searchforDeviceAddress() {
 			}
 			}
 		else {
-			Log.e(LOG_ID,"setpriority BluetoothGatt==null");
+			Log.e(LOG_ID, SerialNumber +" "+"setpriority BluetoothGatt==null");
 			}
 	}
 
 @SuppressLint("MissingPermission")
-static  protected  final boolean enableNotification(BluetoothGatt mBluetoothGatt, BluetoothGattCharacteristic bluetoothGattCharacteristic) {
-	Log.i(LOG_ID,	"enableNotification");
+ protected  final boolean enableNotification(BluetoothGatt mBluetoothGatt, BluetoothGattCharacteristic bluetoothGattCharacteristic) {
+	Log.i(LOG_ID, SerialNumber +" "+	"enableNotification");
         if(!mBluetoothGatt.setCharacteristicNotification(bluetoothGattCharacteristic, true)) {
-		Log.e(LOG_ID,"setCharacteristicNotification("+bluetoothGattCharacteristic.getUuid().toString()+",true) failed");
+		Log.e(LOG_ID, SerialNumber +" "+"setCharacteristicNotification("+bluetoothGattCharacteristic.getUuid().toString()+",true) failed");
 
 		}
         BluetoothGattDescriptor descriptor = bluetoothGattCharacteristic.getDescriptor(mCharacteristicConfigDescriptor);
         if(!descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE)) {
-		Log.e(LOG_ID,"descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE))  failed");
+		Log.e(LOG_ID, SerialNumber +" "+"descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE))  failed");
 		}
         if(!mBluetoothGatt.writeDescriptor(descriptor)) {
-		Log.e(LOG_ID,"mBluetoothGatt.writeDescriptor(descriptor))  failed");
+		Log.e(LOG_ID, SerialNumber +" "+"mBluetoothGatt.writeDescriptor(descriptor))  failed");
 		return false;
 		}
 	return true;

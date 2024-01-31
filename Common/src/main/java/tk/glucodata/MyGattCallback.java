@@ -185,6 +185,10 @@ void reconnect() {
 						if(!stop) {
 							bluetoothGatt.connect();
 							}
+						else {
+							bluetoothGatt.close();
+							mBluetoothGatt = null;
+							}
 						}
 					conphase = 0;
 				}

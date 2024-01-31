@@ -1,4 +1,4 @@
-
+#ifndef WEAROS
 #include <math.h>
 #include "nums/numdata.h"
 #include "nightnumcategories.h"
@@ -47,3 +47,4 @@ double getiob(uint32_t now) {
 		}
 	return iob;
 	}
+#endif

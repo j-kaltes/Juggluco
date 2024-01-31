@@ -36,6 +36,7 @@ import static androidx.core.os.LocaleListCompat.getEmptyLocaleList;
 import static tk.glucodata.Applic.isWearable;
 import static tk.glucodata.Natives.getRTL;
 import static tk.glucodata.NumberView.avoidSpinnerDropdownFocus;
+import static tk.glucodata.RingTones.EnableControls;
 import static tk.glucodata.help.help;
 import static tk.glucodata.util.getbutton;
 import static tk.glucodata.util.getcheckbox;
@@ -815,6 +816,7 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 		showalways.setOnCheckedChangeListener( (buttonView,  isChecked) -> Notify.glucosestatus(isChecked) );
 	       var webserver=getbutton(context,R.string.webserver);
 	       var uploader=getbutton(context,"Uploader");
+	       var iob=getcheckbox(context,"IOB",Natives.getIOB());
 /*		var streamhistory=getcheckbox(context,R.string.streamhistory,Natives.getStreamHistory( ));
 		streamhistory.setOnCheckedChangeListener( (buttonView,  isChecked) -> Natives.setStreamHistory(isChecked) );*/
 	       var floatconfig=getbutton(context,R.string.floatglucose);
@@ -829,9 +831,17 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 		View[] rowglu=new View[]{ bluetooth,floatconfig,alarmbut};
 		row8=new View[]{changelabels,langspin,numalarm,colbut};
 		views=new View[][]{row0, row1,new View[]{scalelabel,fixatex,fixatey}, row2,new View[]{levelleft,camera,reverseorientation},
-		hasnfc?new View[]{nfcsound, globalscan}:null,librerow,new View[] {librelinkbroadcast,xdripbroadcast ,jugglucobroadcast},new View[] {webserver,uploader }, rowglu,row8,row9};
+		hasnfc?new View[]{nfcsound, globalscan}:null,librerow,new View[] {librelinkbroadcast,xdripbroadcast ,jugglucobroadcast},new View[] {webserver,iob,uploader }, rowglu,row8,row9};
 	       webserver.setOnClickListener(v-> tk.glucodata.Nightscout.show(context,thelayout[0]));
 	       uploader.setOnClickListener(v-> tk.glucodata.NightPost.config(context,thelayout[0]));
+		iob.setOnCheckedChangeListener( (buttonView,  isChecked) -> {
+				if(!Natives.setIOB(isChecked)) {
+					iob.setChecked(false);
+					EnableControls(thelayout[0],false);
+					tk.glucodata.help.help(R.string.IOB,context,l->EnableControls(thelayout[0],true) );
+					}
+				}
+			);
 		}
 
 	help.setFocusableInTouchMode(true);

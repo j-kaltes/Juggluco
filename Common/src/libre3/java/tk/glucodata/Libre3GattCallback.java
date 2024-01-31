@@ -98,20 +98,28 @@ void free() {
 		else
 			init();
 	}
-
+private final void checkBluetoothGatt(BluetoothGatt bluetoothGatt) {
+	if(tk.glucodata.Log.doLog) {
+		if(bluetoothGatt!=mBluetoothGatt) {
+			Log.i(LOG_ID,SerialNumber+" bluetoothGatt!=mBluetoothGatt"+(bluetoothGatt==null?" bluetoothGatt==null":(mBluetoothGatt==null?" mBluetoothGatt==null":"")));
+			}
+		}
+	}
 	@Override 
 	public void onCharacteristicRead(BluetoothGatt bluetoothGatt, BluetoothGattCharacteristic bluetoothGattCharacteristic, int i2) {
+		checkBluetoothGatt(bluetoothGatt);
 		if (bluetoothGattCharacteristic.getUuid().equals(LIBRE3_CHAR_PATCH_STATUS)) {
 			//    libre3BLESensor.access$700(libre3BLESensor.this, bluetoothGattCharacteristic);
-			showbytes(LOG_ID + " onCharacteristicRead " + bluetoothGattCharacteristic.getUuid().toString(), bluetoothGattCharacteristic.getValue());
+			showbytes(LOG_ID + " "+SerialNumber+" onCharacteristicRead " + bluetoothGattCharacteristic.getUuid().toString(), bluetoothGattCharacteristic.getValue());
 		}
 	}
 
 	@Override 
 	public void onCharacteristicWrite(BluetoothGatt bluetoothGatt, BluetoothGattCharacteristic bluetoothGattCharacteristic, int i2) {
+		checkBluetoothGatt(bluetoothGatt);
 		oncharwrite(bluetoothGattCharacteristic);
 		var value = bluetoothGattCharacteristic.getValue();
-		showbytes(LOG_ID + " onCharacteristicWrite " + bluetoothGattCharacteristic.getUuid().toString(), value);
+		showbytes(LOG_ID + " "+SerialNumber+" onCharacteristicWrite " + bluetoothGattCharacteristic.getUuid().toString(), value);
 	}
 
 //	private boolean wasConnected = false;
@@ -119,6 +127,9 @@ void free() {
 	@SuppressLint("MissingPermission")
 	@Override 
 	public void onConnectionStateChange(BluetoothGatt bluetoothGatt, int status, int newState) {
+		checkBluetoothGatt(bluetoothGatt);
+
+
 		if(stop) {
 			Log.i(LOG_ID, SerialNumber + ": "+"onConnectionStateChange stop==true");
 			return;
@@ -153,8 +164,12 @@ void free() {
 				}
 			} 
 		if(!stop)  {
-			 realdisconnected(status);
+			 realdisconnected(bluetoothGatt,status);
 			 }
+		else {
+			bluetoothGatt.close();
+			mBluetoothGatt = null;
+			}
             }
         }
 
@@ -167,6 +182,7 @@ void free() {
 
         @Override 
         public void onDescriptorWrite(BluetoothGatt bluetoothGatt, BluetoothGattDescriptor bluetoothGattDescriptor, int status) {
+		checkBluetoothGatt(bluetoothGatt);
            // libre3BLESensor.access$1900(libre3blesensor, characteristic, status);
 		Log.i(LOG_ID, SerialNumber + ": "+ "onDescriptorWrite status="+status);
 	    BluetoothGattCharacteristic characteristic = bluetoothGattDescriptor.getCharacteristic();
@@ -186,6 +202,7 @@ void free() {
             }
 		readrssi=rssi;
 		if(shouldenablegattCharCommandResponse) {
+			checkBluetoothGatt(bluetoothGatt);
 			enablegattCharCommandResponse();
 			shouldenablegattCharCommandResponse=false;
 			}
@@ -193,6 +210,7 @@ void free() {
 
         @Override // android.bluetooth.BluetoothGattCallback
         public void onServicesDiscovered(BluetoothGatt bluetoothGatt, int status) {
+		checkBluetoothGatt(bluetoothGatt);
 	   Log.i(LOG_ID, SerialNumber + ": "+ "onServicesDiscovered status="+status);
             if (status == GATT_SUCCESS) {
                 if(!getservices()) {
@@ -262,7 +280,7 @@ private void mknonceback() {
 	byte[] pin=Natives.getpin(sensorptr);
 	arraycopy(pin,0,uit,32,4);
 	var encrypted= Natives.processbar(7,nonce1,uit);
-	showbytes("processbar(7,nonce1,uit)",encrypted);
+	showbytes(SerialNumber+" processbar(7,nonce1,uit)",encrypted);
 	wrtData=encrypted;
 	wrtOffset=0;
 	writedata(gattCharChallengeData);
@@ -354,7 +372,7 @@ private void setCertificate140() {
 		}
 	}
 private boolean	generateKAuth(byte[] input) {
-	showbytes(LOG_ID+" generateKAuth",input);
+	showbytes(LOG_ID+ " "+SerialNumber +" generateKAuth",input);
 	//Saves something?
 	return Natives.processint(6,input,null)!=0;
 	}
@@ -401,6 +419,8 @@ private    void save_history(byte[] value) {
     }
 @Override 
 public void onCharacteristicChanged(BluetoothGatt bluetoothGatt, BluetoothGattCharacteristic bluetoothGattCharacteristic) {
+
+		checkBluetoothGatt(bluetoothGatt);
 	onCharacteristicChanged33(bluetoothGatt, bluetoothGattCharacteristic, bluetoothGattCharacteristic.getValue());
 	}
 static final private String charglucosedata= "CHAR_GLUCOSE_DATA".intern();
@@ -410,7 +430,7 @@ static final private String charglucosedata= "CHAR_GLUCOSE_DATA".intern();
 private  void logcharacter(UUID uuid,String str,byte[] value) {
 	    final long timmsec = System.currentTimeMillis();
 	   if(str!=charglucosedata) setsuccess(timmsec,str);
-            showbytes(LOG_ID+" onCharacteristicChanged  "+uuid.toString()+" "+str, value);
+            showbytes(LOG_ID+ " "+SerialNumber +" onCharacteristicChanged  "+uuid.toString()+" "+str, value);
 	    }
 private void onCharacteristicChanged33(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, byte[] value) {
 	   var wakelock=	Applic.usewakelock?(((PowerManager) app.getSystemService(POWER_SERVICE)).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Juggluco::Libre3")):null;
@@ -541,7 +561,7 @@ private void init() {
 
 //private	boolean sendEphemeralKeys=false;
 @SuppressLint("MissingPermission")
-private void realdisconnected(int status) {
+private void realdisconnected(BluetoothGatt bluetoothGatt,int status) {
 	//sendEphemeralKeys=false;
 	Log.i(LOG_ID, SerialNumber + ": "+"disconnected "+status);
 	/*
@@ -566,12 +586,15 @@ private void realdisconnected(int status) {
 	init();
 	wrotecharacter=false;
 	sendqueue.clear();
-	if(autoconnect&&status!=19&&mBluetoothGatt!=null) {
-		mBluetoothGatt.connect();
+	if(autoconnect&&status!=19) {
+		bluetoothGatt.connect();
 		return;
 		}
-	close();
-	connectDevice(0);//TODO:  What if it fails?
+	else {
+		bluetoothGatt.close();
+		mBluetoothGatt = null;
+		connectDevice(0);//TODO:  What if it fails?
+		}
 	}
 
 private final void dodisconnect(BluetoothGatt bluetoothGatt) {
@@ -580,7 +603,6 @@ private final void dodisconnect(BluetoothGatt bluetoothGatt) {
 	}
 private void disconnected(int status) {
 	Log.i(LOG_ID, SerialNumber + ": "+"disconnected("+status+")");
-//	realdisconnected(status); //TODO remove this
 	}
 
 private  void  setsuccess(long timmsec,String str) {
@@ -664,10 +686,11 @@ void access1700(byte[] value) {
         factoryData.write(decr,1,decr.length-1);
         }
 */
+//s/showbytes(LOG_ID+/& " "+SerialNumber +/g 
 private void access1100(byte[] value) {
  //       byte[] decr=com.adc.trident.app.frameworks.mobileservices.libre3.security.Libre3BCSecurityContext::decrypt(1,value);
         byte[] decr=intDecrypt(cryptptr,1,value); //USED for what??
-	showbytes(LOG_ID+" access1100",decr);
+	showbytes(LOG_ID+" "+ SerialNumber +" access1100",decr);
 //        bluetoothGattCharacteristic.setValue(decr);//Slaat nergens op
 /*
         switch(currentControlCommand) {
@@ -684,7 +707,7 @@ private void access1100(byte[] value) {
 	}
 
 private    void preparedata(byte[] value) {
-    	showbytes(LOG_ID+" preparedata",value);
+    	showbytes(LOG_ID+ " "+SerialNumber +" preparedata",value);
 //        MSLibre3Event mSLibre3Event;
         int i2 = value[0] & 0xFF;
         if (value.length == 1) {
@@ -740,7 +763,7 @@ private    void preparedata(byte[] value) {
             int min = Math.min(length, 18);
             byte[] bArr = new byte[20];
             System.arraycopy(this.wrtData, this.wrtOffset, bArr, 2, min);
-            showbytes("writedata  wrtOffset="+wrtOffset+" length="+min,bArr);
+            showbytes(SerialNumber+" writedata  wrtOffset="+wrtOffset+" length="+min,bArr);
             bluetoothGattCharacteristic.setValue(bArr);
             bluetoothGattCharacteristic.setValue(this.wrtOffset, 18, 0);
             this.wrtOffset += min;
@@ -758,13 +781,13 @@ private    void preparedata(byte[] value) {
 private int getcomphase() {
 	return commandphase;
 	}
-private static byte[]           generateEphemeralKeys() {
+private  byte[]           generateEphemeralKeys() {
 
 	var evikeys=Natives.processbar(5,null,null);
 	var uit=new byte[evikeys.length+1];
 	arraycopy(evikeys,0,uit,1,evikeys.length);
 	uit[0]=(byte)0x4;
-	showbytes(LOG_ID+ " generateEphemeralKeys()",uit);
+	showbytes(LOG_ID+ " "+SerialNumber + " generateEphemeralKeys()",uit);
 	return uit;
 	}
 
@@ -970,7 +993,7 @@ private void cancelretrytimer() {
 private boolean wrotecharacter=false;
 @SuppressLint("MissingPermission")
 private boolean qsendcommand(byte[] command) {
-	showbytes(LOG_ID+" qsendcommand",command);
+	showbytes(LOG_ID+ " "+SerialNumber +" qsendcommand",command);
 	onqueue(command);
 	if(!wrotecharacter)
 		return fromqueue();
@@ -980,7 +1003,7 @@ private boolean sendcommandonly(byte[] encr) {
 	gattCharPatchDataControl.setValue(encr);
 	wrotecharacter=true;
 	if(mBluetoothGatt.writeCharacteristic(gattCharPatchDataControl)) {
-		showbytes(LOG_ID+" qsendcommand written",encr);
+		showbytes(LOG_ID+ " "+SerialNumber +" qsendcommand written",encr);
 		return true;
 		}
 	else  {
@@ -989,7 +1012,7 @@ private boolean sendcommandonly(byte[] encr) {
 	return false;
 	}
 private void onqueue(byte[] command) {
-	showbytes(LOG_ID+" onqueue sizebefore="+sendqueue.size(),command);
+	showbytes(LOG_ID+ " "+SerialNumber +" onqueue sizebefore="+sendqueue.size(),command);
 	byte[] encr= intEncrypt(cryptptr,0,command);
 	sendqueue.offer(encr);
 	}

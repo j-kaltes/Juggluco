@@ -1,6 +1,3 @@
-#ifndef NOLOG
-#define SETVALUE 1
-#endif
 /*      This file is part of Juggluco, an Android app to receive and display         */
 /*      glucose values from Freestyle Libre 2 and 3 sensors.                         */
 /*                                                                                   */
@@ -471,17 +468,128 @@ static bool mkauth(auth_t &authbuf) {
 		}
 	return true;
 	}
+/*
+struct Authority_type{
+	int iter;
+	auth_t auth[100];
+	}; */
+//Mmap<Authority_type>
 
-static std::map<auth_t,uint32_t> authority;
-
-
-static std::mutex authmutex;
 constexpr const int expirelater=4*60*60; 
+#define SAVEAUTH
+#ifdef SAVEAUTH
+class {
+
+/*typedef std::array<char,179> auth_t;
+struct authpair {
+	auth_t auth;
+	uint32_t expires;
+	}; */
+
+auto &end() {
+	return settings->data()->authend;
+	}
+auto &start() {
+	return settings->data()->authstart;
+	}
+auto end() const {
+	return settings->data()->authend;
+	}
+auto start() const {
+	return settings->data()->authstart;
+	}
+authpair *data() {
+	return settings->data()->authdata;
+	}
+
+public:
+void insert(const auth_t &au,uint32_t expire) {
+	data()[end()++%AUTHMAX]={au,expire};
+	LOGGER("insert(%.*s) at %d\n",au.size(),au.data(),end()-1);
+	};
+void	erase_expired(uint32_t expiredtime) {
+	const authpair *dat=data();	
+	int en=end();
+	for(int it=start();it<en;++it) {
+		if(dat[it%AUTHMAX].expires>expiredtime) {
+			LOGGER("erase_expired oldstart=%d newstart=%d end=%d\n",start(),it,en);
+			start()=it;
+			return;
+			}
+		}	
+	start()=en; //TODO: *iter()=*start()=0;
+	LOGGER("erase_expired nothing left  end=%d\n",en);
+	};
+size_t size() const {
+	return end()-start();
+	};
+bool find(const auth_t *authori)  {
+	LOGGER("Authority find: %.*s\n",(int)authori->size(), authori->data());
+	authpair *dat=data();	
+	int en=end();
+	int st=start();
+	for(int it=en-1;it>=st;--it) {
+		const authpair &au=dat[it%AUTHMAX];
+		if(!memcmp(au.auth.data(),authori->data(),authori->size())) {
+			if((au.expires+expirelater)<time(nullptr)){
+				LOGGER("%d Authority expired: %.*s\n",it, (int)au.auth.size(), au.auth.data());
+				start()=it+1;
+				return false;
+				}
+			LOGGER("%d Authority found: %.*s\n",it,(int)au.auth.size(), au.auth.data());
+			return true;
+			}	
+		else {
+			LOGGER("%d Authority not: %.*s\n",it,(int)au.auth.size(), au.auth.data());
+			}
+		}
+	LOGAR("Autority no one");
+	return false;
+	};
+	} authority;
+#else
+class {
+	typedef std::map<auth_t,uint32_t>  authmap_t;
+	authmap_t authmap;
+public:
+void insert(const auth_t &au,uint32_t expire) {
+	authmap.insert({au,expire});
+	};
+void	erase_expired(uint32_t expiredtime) {
+	std::erase_if(authmap, [expiredtime](const auto& auth){ return auth.second < expiredtime; });
+	};
+size_t size() const {
+	return authmap.size();
+	};
+auto end() const {
+	return authmap.end();
+	}
+bool find(const auth_t *authori) {
+	if(const auto hit=authmap.find(*authori);hit!=authmap.end()) {
+		if((hit->second+expirelater)>=time(nullptr)){
+			return true;
+			}
+		LOGGER("expired %u\n",hit->second);
+		authmap.erase(hit);
+		}
+	else {
+	#ifndef NOLOG
+		LOGGER("Authority not found: %.*s\n",(int)authori->size(), authori->data());
+		for(auto [el,_ex]:authmap) {
+			LOGGER("not: %.*s\n",(int)el.size(), el.data());
+			}
+	#endif
+		}
+	return false;
+	};
+	} authority;
+#endif
+static std::mutex authmutex;
 /*Disadvantage: more tokens
 Advantage: gets new token earlier in case Juggluco restarted. Juggluco doesn't save tokens
 */
 
-static bool authorization(recdata *outdata) {
+static bool authorization(bool hassecret,recdata *outdata) {
    	outdata->allbuf=new(std::nothrow) char[512+400];
 	if(!outdata->allbuf) {
 		return outofmemory(outdata);
@@ -498,11 +606,11 @@ static bool authorization(recdata *outdata) {
    		outdata->allbuf=nullptr;
 		return giveservererror(outdata);
 		}
-	{
-	std::lock_guard<std::mutex> lck(authmutex);
-	std::erase_if(authority, [expiredtime=now-expirelater](const auto& auth){ return auth.second < expiredtime; });
-	authority.insert({au,expire});
-	};
+	if(hassecret) {
+		std::lock_guard<std::mutex> lck(authmutex);
+		authority.erase_expired(now-expirelater);
+		authority.insert(au,expire);
+		};
 	addstrview(outiter,au);
 	addar(outiter,R"(","sub":"Juggluco","permissionGroups":[["*:*:read"],["*:*:read"]],"iat":)");
 	outiter+=sprintf(outiter,R"(%u,"exp":%u})",now,expire);
@@ -514,18 +622,11 @@ static bool isauthorized(const auth_t *authori) {
 	if(!authori)
 		return false;
 	std::lock_guard<std::mutex> lck(authmutex);
-	if(!authority.size())
+	if(!authority.size()) {
+		LOGAR("Authority empty");
 		return false;
-	if(const auto hit=authority.find(*authori);hit==authority.end())
-		return false;
-	else  {
-		if((hit->second+expirelater)<(time(nullptr))) {
-			LOGGER("expired %u\n",hit->second);
-			authority.erase(hit);
-			return false;
-			}
-		return true;
 		}
+	return authority.find(authori);
 	}
 static bool givesite(recdata *outdata,std::string_view hostname,bool secure) {
 if(hostname.data()==nullptr) {
@@ -1109,7 +1210,7 @@ static void nosecret(std::string_view secret, recdata *outdata) {
 	}
 
 void wrongpath(std::string_view toget, recdata *outdata);
-static bool apiv1(const char *input,int leftlen,bool behead,bool json,recdata *outdata) {
+static bool apiv1(const char *input,int leftlen,bool behead,bool json,bool hassecret,recdata *outdata) {
 		const char *posptr=input;
 		std::string_view api="entries";
 		if(!memcmp(api.data(),posptr,api.size())) {
@@ -1207,7 +1308,7 @@ const auto propsize= properties.size();
 std::string_view authv2=R"(authorization/request/)";
 const auto authv2size= authv2.size();
 	if(!memcmp(authv2.data(),input,authv2size)) {
-		return authorization(outdata);
+		return authorization(hassecret,outdata);
 		}
 
 
@@ -1611,7 +1712,7 @@ bool watchcommands(char *rbuf,int len,recdata *outdata,bool secure) {
 				if(!memcmp(request.data(),starttoget,request.size())) {
 					starttoget+=request.size();
 					if(!memcmp(starttoget,settings->data()->apisecret,seclen)) {
-						return authorization(outdata);
+						return authorization(true,outdata);
 						}
 					}
 				if(!isauthorized(authori)) {
@@ -1629,7 +1730,7 @@ bool watchcommands(char *rbuf,int len,recdata *outdata,bool secure) {
 			}
 		else {
 			int newstart=seclen+1;
-			if(newstart>=toget.size()||toget.data()[seclen]==' ') {
+			if(newstart>=toget.size()||toget.data()[seclen]==' '||((toget.data()[seclen+1]==' ')&&toget.data()[seclen]=='/')) {
 				pathconcat  name(hostname,std::string_view(starttoget,seclen));
 				givesite(outdata,name,secure);
 				return true;
@@ -1658,7 +1759,7 @@ std::string_view sgv="sgv.json";
 		if(posptr[1]=='/') {
 			if((*posptr=='1'||*posptr=='2')) {
 				posptr+=2;
-				return apiv1(posptr,toget.end()-posptr,behead,json,outdata);
+				return apiv1(posptr,toget.end()-posptr,behead,json,seclen,outdata);
 				}
 			if(*posptr=='3') {
 				posptr+=2;
@@ -2421,14 +2522,20 @@ public:
 					continue;
 					}
 				}
+			std::string_view datestr="=date";
+			if(!memcmp(iter,datestr.data(),datestr.size())) {
+				iter+=datestr.length();
+				continue;
+				}
 			LOGGERWEB("unknown option %.10s\n",iter);
 			continue;
 			}
 		else {
 //		created_at$gt=2023-10-02T13:45:26.653Z
 		 std::string_view findstr="created_at$";
-		 if(!memcmp(iter,findstr.data(),findstr.size())) {
-			iter+=findstr.size();
+		 std::string_view datestr="date$";
+		 if((!memcmp(iter,findstr.data(),findstr.size())&&(iter+=findstr.size(),true))||
+		 (!memcmp(iter,datestr.data(),datestr.size())&&(iter+=datestr.size(),true))) {
 			std::string_view gtstr="gt";
 			if(!memcmp(iter,gtstr.data(),gtstr.size())) {
 				iter+=gtstr.size();
@@ -2512,7 +2619,7 @@ public:
 			continue;
 			}
 
-			 std::string_view fieldsstr="fields=sgv,direction,srvCreated";
+			 std::string_view fieldsstr="fields=sgv,direction,date";
 			 if(!memcmp(iter,fieldsstr.data(),fieldsstr.size())) {
 			 	iter+=fieldsstr.size();
 				fields=true;
@@ -2764,26 +2871,51 @@ return len;
 */
 
 //{"sgv":113,"direction":"Flat","srvCreated":1706383248228}
-static char * writev3entryfield(char *outin,const ScanData *val) {
+/*
+ {
+      "date": 1706539449000,
+      "sgv": 132,
+      "direction": "Flat"
+    } */
+static char * writev3entryfield(char *outin,const ScanData *val,const bool date,const bool sgv,const bool direction) {
 	char *outptr=outin;
-	addar(outptr,R"({"sgv":)");
-	if(auto [ptr,ec]=std::to_chars(outptr,outptr+12,val->getmgdL());ec == std::errc()) {
-		outptr=ptr;
-	 	}
+	*outptr++='{';
+	bool wrote=false;
+	if(date) {
+		addar(outptr,R"("date":)");
+		if(auto [ptr,ec]=std::to_chars(outptr,outptr+12,val->gettime());ec == std::errc()) {
+			outptr=ptr;
+			}
+		else {
+			LOGGER("tochar failed: %s\n",std::make_error_code(ec).message().c_str());
+			}
+		addar(outptr,R"(000)");
+		wrote=true;
+	     }
+	   if(sgv) {
+	   	if(wrote)
+			*outptr++=',';
+		else
+			wrote=true;
+		addar(outptr,R"("sgv":)");
+		if(auto [ptr,ec]=std::to_chars(outptr,outptr+12,val->getmgdL());ec == std::errc()) {
+			outptr=ptr;
+			}
+		else {
+			LOGGER("tochar failed: %s\n",std::make_error_code(ec).message().c_str());
+			}
+		}
+	if(direction) {
+	   	if(wrote)
+			*outptr++=',';
+		addar(outptr,R"("direction":")");
+		 std::string_view name=getdeltaname(val->ch);
+		addstrview(outptr,name);
+		addar(outptr,R"("})");
+		}
 	else {
-		LOGGER("tochar failed: %s\n",std::make_error_code(ec).message().c_str());
+		*outptr='}';
 		}
-	addar(outptr,R"(,"direction":")");
-	 std::string_view name=getdeltaname(val->ch);
-	addstrview(outptr,name);
-	addar(outptr,R"(","srvCreated":)");
-	if(auto [ptr,ec]=std::to_chars(outptr,outptr+12,val->gettime());ec == std::errc()) {
-		outptr=ptr;
-		}
-	else {
-		LOGGER("tochar failed: %s\n",std::make_error_code(ec).message().c_str());
-		}
-	addar(outptr,R"(000})");
 	return outptr;
 	}
 bool getv3entries(const char *cmdstart,const char *cmdend,recdata *outdata) {
@@ -2824,7 +2956,7 @@ bool getv3entries(const char *cmdstart,const char *cmdend,recdata *outdata) {
 		 lastmodified=getitems(outiter,count, args.lowerend,args.higherend,false, 55,[fields=(bool)args.fields](char *outiter,int datit, const ScanData *iter,const sensorname_t *sensorname,const time_t starttime)
 
 				{
-				char *out=fields?writev3entryfield(outiter,iter):writev3entry(outiter,iter, sensorname,true);
+				char *out=fields?writev3entryfield(outiter,iter,true,true,true):writev3entry(outiter,iter, sensorname,true);
 				*out++=',';
 				return out;
 				}

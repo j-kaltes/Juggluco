@@ -803,6 +803,13 @@ voor meer informatie.</p>
 <h2 class="western">Webserver</h2>
 <p>Webserver die kan worden gebruikt met xDrip-horloges en sommige
 Nightscout-apps. Voorheen xDrip webserver genoemd.</p>
+<h2>Insulin onboard (IOB)</h2>
+<p>IOB is een maat voor hoeveel insulineactiviteit van eerdere
+insulinedoses nog aanwezig is. Hiervoor moet je insulinedoses
+invoeren onder een label in de categorie “<i>Snelwerkende
+insuline</i>”. Onder linkermenu → Instellingen → Webserver →
+<a href="https://www.juggluco.nl/Jugglucohelp/nl/setlibrenumtype.html">Geef
+hoeveelheden</a> kun je aangeven welke labels “<i>Snelwerkende insuline</i>” zijn.</p>
 <h2 class="western">Uploader</h2>
 <p>Uploaden naar Nightscout-server.</p>
 <h2 class="western">Glucosemelding</h2>
@@ -2069,12 +2076,12 @@ Juggluco,zie <a href="https://www.juggluco.nl/Juggluco/webserver.html">https://w
 </string>
 <string name="NightPost" >
 <![CDATA[
-<p>Uploaden naar een Nightscout-server. 
-</p>
-<p><span lang="nl-NL">In de meeste gevallen kun je ook de <a href="https://www.juggluco.nl/Jugglucohelp/nl/Nightscouthelp.html">webserver
+<h1>Upload Nightscout. 
+</h1>
+<p>In de meeste gevallen kun je ook de <a href="https://www.juggluco.nl/Jugglucohelp/nl/Nightscouthelp.html">webserver
 in Juggluco</a> of <a href="https://www.juggluco.nl/Juggluco/cmdline">juggluco-server</a>
-gebruiken. Alleen AAPS en NSclient weigeren te werken zonder
-verbinding met <a href="https://github.com/nightscout/cgm-remote-monitor">cgm-remote-monitor</a>.</span></p>
+gebruiken. Slechts een paar apps, die niets anders doen dan de Nightscout-webpagina weergeven, hebben <a href="https://github.com/nightscout/cgm-remote-monitor">cgm-remote-monitor</a>
+nodig.Je kunt zelfs AAPS en AAPSClient gebruiken met de webserver in Juggluco 7.4.1.</p>
 <p>Alle streamwaarden worden geüpload naar de Nightscout-server op
 het moment dat ze binnenkomen. Bij gebruik van meerdere sensoren
 worden alle waarden van alle sensoren geüpload. Sommige Garmin
@@ -2284,6 +2291,21 @@ een <b>Maaltijd</b>-knop weergegeven. Als je op deze <a href="https://www.jugglu
 koolhydraatgehalte wordt vervolgens berekend of je kunt het
 koolhydraatgehalte opgeven en vervolgens wordt de benodigde
 hoeveelheid van één ingrediënt berekend.</p>
+<p><br/>
+<br/>
+
+</p>
+]]>
+</string>
+<string name="IOB" >
+<![CDATA[
+<h1>Insulin onboard (IOB)</h1>
+<p>IOB is een maat voor hoeveel insulineactiviteit van eerdere
+insulinedoses nog aanwezig is. Hiervoor moet je insulinedoses
+invoeren onder een label in de categorie “<i>Snelwerkende
+insuline</i>”. Onder linkermenu → Instellingen → Webserver →
+<a href="https://www.juggluco.nl/Jugglucohelp/nl/setlibrenumtype.html">Geef
+hoeveelheden</a> kun je aangeven welke labels “<i>Snelwerkende insuline</i>” zijn.</p>
 <p><br/>
 <br/>
 

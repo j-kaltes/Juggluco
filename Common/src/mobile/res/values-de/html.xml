@@ -1,15 +1,12 @@
 <resources>
 <string name="NightPost" >
 <![CDATA[
-<p>Auf einen Nightscout-Server
-hochladen. 
-</p>
+<h1>Hochladen</h1>
 <p><span lang="de-DE">In den meisten Fällen können Sie auch den
 <a href="https://www.juggluco.nl/Jugglucohelp/de/Nightscouthelp.html">Webserver
 in Juggluco</a> oder <a href="https://www.juggluco.nl/Juggluco/cmdline">juggluco-server</a>
-verwenden. Nur AAPS und NSclient verweigern die Arbeit, wenn
-<a href="https://github.com/nightscout/cgm-remote-monitor">cgm-remote-monitor</a>
-nicht verbunden ist.</span></p>
+verwenden. Nur wenige Apps, die lediglich die Nightscout-Webseite
+anzeigen, benötigen <a href="https://github.com/nightscout/cgm-remote-monitor">cgm-remote-monitor</a> Sie können AAPS und AAPSClient sogar mit dem Webserver in Juggluco 7.4.1 verwenden.</span></p>
 <p>Alle Stream-Werte werden im Moment ihres Eintreffens auf den
 Nightscout-Server hochgeladen. Wenn mehrere Sensoren verwendet
 werden, werden alle Werte aller Sensoren hochgeladen. Einige Garmin
@@ -2035,6 +2032,14 @@ Sie die Apps an, an die diese Broadcast gesendet werden soll.</p>
 <p align="left" style="line-height: 100%; margin-bottom: 0in">Webserver,
 der mit xDrip-Uhren und einigen Nightscout-Apps verwendet werden
 kann. Früher xDrip-Webserver genannt.</p>
+<h2>Insulin onboard (IOB)</h2>
+<p>IOB ist ein Maß dafür, wie viel Insulinaktivität von früheren
+Insulindosen noch vorhanden ist. Hierzu müssen Sie Insulindosen
+unter einem Etikett in der Kategorie „ <i>Schnell wirkendes Insulin</i>
+“ eintragen. Sie können im linken Menü→Einstellungen→Webserver→
+<a href="https://www.juggluco.nl/Jugglucohelp/de/setlibrenumtype.html">Mengen
+geben</a> angeben, welche Etiketten „<i>Schnell wirkendes Insulin</i>“
+sind.</p>
 <h2 class="western">Uploader</h2>
 <p align="left" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 100%; margin-bottom: 0in">
 Auf einen Nightscout-Server hochladen.</p>
@@ -2621,6 +2626,22 @@ anzeigt.</font></font></p>
 
 </p>
 <p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+]]>
+</string>
+<string name="IOB" >
+<![CDATA[
+<h1>Insulin onboard (IOB)</h1>
+<p>IOB ist ein Maß dafür, wie viel Insulinaktivität von früheren
+Insulindosen noch vorhanden ist. Hierzu müssen Sie Insulindosen
+unter einem Etikett in der Kategorie „ <i>Schnell wirkendes Insulin</i>
+“ eintragen. Sie können im linken Menü→Einstellungen→Webserver→
+<a href="https://www.juggluco.nl/Jugglucohelp/de/setlibrenumtype.html">Mengen
+geben</a> angeben, welche Etiketten „<i>Schnell wirkendes Insulin</i>“
+sind.</p>
+<p><br/>
+<br/>
 
 </p>
 ]]>

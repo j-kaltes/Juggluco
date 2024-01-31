@@ -114,7 +114,7 @@ static void othersworking(SuperGattCallback current ,long timmsec) {
 	  return false;
     	}
     public boolean connectToActiveDevice(SuperGattCallback cb,long delayMillis) {
-	Log.i(LOG_ID,"connectToActiveDevice(SuperGattCallback cb,"+ delayMillis+")");
+	Log.i(LOG_ID,"connectToActiveDevice("+cb.SerialNumber+"," + delayMillis+")");
 	if(!cb.connectDevice(delayMillis)&&!mScanning) {
 		return startScan(delayMillis);
 		}
@@ -632,15 +632,15 @@ static boolean updateDevices() {
 	}
 
 boolean checkandconnect(SuperGattCallback  cb,long delay) {
-	Log.i(LOG_ID,"checkandconnect(SuperGattCallback  cb,"+ delay+")");
+	Log.i(LOG_ID,"checkandconnect("+cb.SerialNumber+","+ delay+")");
 	if (cb.mActiveDeviceAddress != null) {
 		if(BluetoothAdapter.checkBluetoothAddress(cb.mActiveDeviceAddress)) {
-			Log.i(LOG_ID, "checkBluetoothAddress(" +cb.mActiveDeviceAddress +") succeeded");
+			Log.i(LOG_ID, cb.SerialNumber+" checkBluetoothAddress(" +cb.mActiveDeviceAddress +") succeeded");
 			cb.mActiveBluetoothDevice = mBluetoothAdapter.getRemoteDevice(cb.mActiveDeviceAddress);
 			connectToActiveDevice(cb, delay);
 			return false;
 		  }	 
-		Log.i(LOG_ID, "checkBluetoothAddress(" +cb.mActiveDeviceAddress +") failed");
+		Log.i(LOG_ID, cb.SerialNumber+" checkBluetoothAddress(" +cb.mActiveDeviceAddress +") failed");
 		 cb.setDeviceAddress(null);
 		}
 	if(Applic.mayscan()) {

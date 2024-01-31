@@ -849,6 +849,13 @@ the apps you want to send this broadcast to.</p>
 server</a></h2>
 <p>Web server that can be used with xDrip watches and some Nightscout
 apps. Previously called xDrip webserver.</p>
+<h2>Insulin onboard (IOB)</h2>
+<p>IOB is a measure of how much insulin activity remains from
+previous insulin doses. To do this, you must enter insulin doses
+under a label in the “<i>Rapid acting insulin</i>” category. You
+can specify what labels are “<i>Rapid acting insulin</i>” under
+Left menu→Settings→Web server→<a href="https://www.juggluco.nl/Jugglucohelp/setlibrenumtype.html">Give
+Amounts</a>.</p>
 <h2 class="western"><a href="https://www.juggluco.nl/Jugglucohelp/NightPost.html">Uploader</a></h2>
 <p>Upload to a Nightscout server.</p>
 <h2 class="western">Glucose notification</h2>
@@ -2044,11 +2051,13 @@ Juggluco, see <a href="https://www.juggluco.nl/Juggluco/webserver.html">https://
 </string>
 <string name="NightPost" >
 <![CDATA[
-<h1>Upload to a Nightscout server.</h1>
+<h1>Upload to Nightscout server</h1>
 <p>In most cases you can also use the <a href="https://www.juggluco.nl/Jugglucohelp/Nightscouthelp.html">web
-server in Juggluco</a> or <a href="https://www.juggluco.nl/Juggluco/cmdline">juggluco-server</a>,
-only AAPS and NSclient refuse to work when not connected to
-<a href="https://github.com/nightscout/cgm-remote-monitor">cgm-remote-monitor</a>.</p>
+server in Juggluco</a> or <a href="https://www.juggluco.nl/Juggluco/cmdline">juggluco-server</a>.
+Only a few apps, that do nothing more than displaying the Nightscout
+web page, need <a href="https://github.com/nightscout/cgm-remote-monitor">cgm-remote-monitor</a>.
+You can even use AAPS and AAPSClient with the web server in Juggluco
+7.4.1.</p>
 <p>All stream values are uploaded to the Nightscout server at the
 moment they arrive. When multiple sensor are used, all values of all
 sensors are uploaded. Some Garmin watch apps/faces/widgets assume
@@ -2060,7 +2069,7 @@ set to a lower value.</p>
 <p><b>URL</b>: the url should be in the form of https://hostname:port
 for example, https://myname.herokuapp.com:6789</p>
 <p><b>Active</b>: Turn on uploader</p>
-<p><b>test V3</b>:  Let Juggluco use api/v3 to upload to Nightscout.
+<p><b>test V3</b>: Let Juggluco use api/v3 to upload to Nightscout.
 Don’t use it to upload to a Nightscout server that previously
 received V2 uploads and don’t send V2 uploads to a Nightscout
 server that previously received V3 uploads. 
@@ -2247,14 +2256,29 @@ one ingredient is then calculated.</p>
 </string>
 <string name="healthpermission" >
 <![CDATA[
-<h1>Allowance to write Blood glucose</h1>
-<p>To be able to write Glucose values to Health Connect, the user
-needs to give Juggluco permission to write Blood Glucose to Health
-Connect. 
+<h1>Allowance to write <i>b</i><i>lood
+glucose</i></h1>
+<p>To be able to write Glucose values to <b>Health Connect,</b> the
+user needs to give Juggluco permission to write <b>B</b><b>lood
+Glucose</b> to Health Connect. 
 </p>
 <p>This permission isn’t needed for anything else than receiving
 glucose values in Health Connect. In all other aspect Juggluco can
 function without this permission.</p>
+]]>
+</string>
+<string name="IOB" >
+<![CDATA[
+<h1>Insulin onboard (IOB)</h1>
+<p>IOB is a measure of how much insulin activity remains from
+previous insulin doses. To do this, you must enter insulin doses
+under a label in the “<i>Rapid acting insulin</i>” category. You
+can specify what labels are “<i>Rapid acting insulin</i>” under
+Left menu→Settings→Web server→<a href="https://www.juggluco.nl/Jugglucohelp/setlibrenumtype.html">Give
+Amounts</a>.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
 ]]>
 </string>
 </resources>

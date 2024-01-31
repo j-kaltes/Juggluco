@@ -13,6 +13,7 @@ import androidx.health.connect.client.records.metadata.Device
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import java.time.Instant
@@ -23,7 +24,7 @@ class HealthConnection(private val client: HealthConnectClient) {
 	var active= AtomicBoolean(false)
 
 
-  private var scope = CoroutineScope(Dispatchers.IO)
+  private var scope = CoroutineScope(Dispatchers.IO+SupervisorJob())
 //TODO: test not already active
 private  fun writeAllIns(sensorptr:Long,sensorName:String) {
     if (active.getAndSet(true)) {
@@ -77,13 +78,14 @@ private suspend fun checkPermissionsAndRun(act:MainActivity?) {
             Log.i(LOG_ID,"granted")
             hasPermission = true
         } else {
-            Log.i(LOG_ID,"request")
             hasPermission = false
             if(act?.permHealth!=null) {
-		val launch=act.permHealth
-		 launch.permissionsLauncher.launch(PERMISSIONS)
+                val launch=act.permHealth
+                launch.permissionsLauncher.launch(PERMISSIONS)
+                Log.i(LOG_ID,"requested")
                 }
-            Log.i(LOG_ID,"requested")
+            else
+                Log.i(LOG_ID,"no act?.permHealth, not requested")
         }
     }
 

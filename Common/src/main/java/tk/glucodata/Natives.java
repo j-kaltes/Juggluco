@@ -711,16 +711,10 @@ public static native void healthConnectWritten(long sensorptr,int pos);
 public static native void sethealthConnect(boolean val);
 public static native boolean gethealthConnect( );
 public static native void healthConnectReset();
-//s/^extern.*JNIEXPORT[         ]*\([a-zA-Z]*\)[ ]*JNICALL[      ]*fromjava(\([^)]*\)) *(JNIEnv[^,]*,[^,)]*[,)]\([^){]*\)[^a-zA-Z0-9]*$/public static native \1 \2(\3);/g
-//public static native void sendxdripold();
-/*
-public static boolean speakmessages() {
-	return gettouchtalk();
-	}
-public static boolean speakalarms() {
-	return SuperGattCallback.dotalk;
-	}*/
+public static native boolean setIOB(boolean val);
+public static native boolean getIOB( );
 
+//s/^extern.*JNIEXPORT[         ]*\([a-zA-Z]*\)[ ]*JNICALL[      ]*fromjava(\([^)]*\)) *(JNIEnv[^,]*,[^,)]*[,)]\([^){]*\)[^a-zA-Z0-9]*$/public static native \1 \2(\3);/g
 }
 
 

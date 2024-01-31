@@ -1,8 +1,7 @@
+Let wear/small share code.
 Version for Android Wear and Huawei watch 4 and ColorOS?
 - Of grootte testen en WearOS opmaak gebruiken.
 - Speciale compile for watch?
-BUGS:
-	Scoll doesn't work
 
 Use libreids for web server and uploads.
 
