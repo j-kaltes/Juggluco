@@ -2270,11 +2270,11 @@ function without this permission.</p>
 <string name="IOB" >
 <![CDATA[
 <h1>Insulin onboard (IOB)</h1>
-<p>IOB is a measure of how much insulin activity remains from
-previous insulin doses. To do this, you must enter insulin doses
-under a label in the “<i>Rapid acting insulin</i>” category. You
-can specify what labels are “<i>Rapid acting insulin</i>” under
-Left menu→Settings→Web server→<a href="https://www.juggluco.nl/Jugglucohelp/setlibrenumtype.html">Give
+<p>IOB is a measure of how much insulin remains from previous insulin
+doses. To do this, you must enter insulin doses under a label in the
+“<i>Rapid acting insulin</i>” category. You can specify what
+labels are “<i>Rapid acting insulin</i>” under Left
+menu→Settings→Web server→<a href="https://www.juggluco.nl/Jugglucohelp/setlibrenumtype.html">Give
 Amounts</a>.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><br/>
 

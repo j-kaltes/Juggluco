@@ -2633,7 +2633,7 @@ anzeigt.</font></font></p>
 <string name="IOB" >
 <![CDATA[
 <h1>Insulin onboard (IOB)</h1>
-<p>IOB ist ein Maß dafür, wie viel Insulinaktivität von früheren
+<p>IOB ist ein Maß dafür, wie viel Insulin von früheren
 Insulindosen noch vorhanden ist. Hierzu müssen Sie Insulindosen
 unter einem Etikett in der Kategorie „ <i>Schnell wirkendes Insulin</i>
 “ eintragen. Sie können im linken Menü→Einstellungen→Webserver→

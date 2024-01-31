@@ -2300,12 +2300,12 @@ hoeveelheid van één ingrediënt berekend.</p>
 <string name="IOB" >
 <![CDATA[
 <h1>Insulin onboard (IOB)</h1>
-<p>IOB is een maat voor hoeveel insulineactiviteit van eerdere
-insulinedoses nog aanwezig is. Hiervoor moet je insulinedoses
-invoeren onder een label in de categorie “<i>Snelwerkende
-insuline</i>”. Onder linkermenu → Instellingen → Webserver →
-<a href="https://www.juggluco.nl/Jugglucohelp/nl/setlibrenumtype.html">Geef
-hoeveelheden</a> kun je aangeven welke labels “<i>Snelwerkende insuline</i>” zijn.</p>
+<p>IOB is een maat voor hoeveel insuline van eerdere insulinedoses
+nog aanwezig is. Hiervoor moet je insulinedoses invoeren onder een
+label in de categorie “<i>Snelwerkende insuline</i>”. Onder
+linkermenu → Instellingen → Webserver → <a href="https://www.juggluco.nl/Jugglucohelp/nl/setlibrenumtype.html">Geef
+hoeveelheden</a> kun je aangeven welke labels “<i>Snelwerkende
+insuline</i>” zijn.</p>
 <p><br/>
 <br/>
 
