@@ -1728,14 +1728,19 @@ static void showlastsstream(const time_t nu,const float getx,std::vector<int> &u
 	bool neterror=false,usebluetoothoff=false,bluetoothoff=false,otherproblem=false;
 	static int failures=0;
 	++failures;
-	shownglucose.resize(used.size());
+	const auto usedsize=used.size();
+	shownglucose.resize(usedsize);
 
-	for(int i=0;i<used.size();i++) {
+	for(int i=0;i<usedsize;i++) {
 		shownglucose[i].glucosevaluex=-1;
 		const int sensorindex=used[i];
 		SensorGlucoseData *hist=sensors->getSensorData(sensorindex);
 		int yh=i*2+1;
-		float gety=smallsize*.5f+dtop+dheight*yh/(used.size()*2.0f);
+#ifdef WEAROS
+		float gety=smallsize*.5f+dtop+dheight*yh/(usedsize*2.0f);
+#else
+		float gety=smallsize*1.4f+dtop+(dheight-smallsize*.8f)*yh/(usedsize*2.0f);
+#endif
 		const ScanData *poll=hist->lastpoll();
 		if(poll) {
 			LOGSTRING("poll!=null\n");
@@ -1926,7 +1931,7 @@ LOGGER("showbluevalue %zd\n",used.size());
 	if( settings->data()->IOB) {
 		double getiob(uint32_t);
 		int len=snprintf(tbuf,maxbuf,"IOB: %.2f",getiob(nu));
-		nvgText(genVG, timex,2.3*smallfontlineheight, tbuf,tbuf+len);
+		nvgText(genVG, timex,2*smallfontlineheight, tbuf,tbuf+len);
 		}
 #endif
 

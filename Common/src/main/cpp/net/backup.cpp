@@ -52,6 +52,7 @@
 
 #define lerrortag(...) lerror("backup: " __VA_ARGS__)
 #define LOGGERTAG(...) LOGGER("backup: " __VA_ARGS__)
+#define LOGARTAG(...) LOGAR("backup: " __VA_ARGS__)
 #define LOGSTRINGTAG(...) LOGSTRING("backup: " __VA_ARGS__)
 #define flerrortag(...) flerror("backup: " __VA_ARGS__)
 using namespace std;
@@ -61,6 +62,11 @@ using namespace std;
 struct passhost_t ;
 
 bool *shutdownreceiver=nullptr;
+#include "mirrorerror.h"
+constexpr const int maxservererror=200;
+char servererrorbuf[maxservererror]="";
+#define serverprint(...) snprintf( servererrorbuf,maxservererror,__VA_ARGS__)
+#define servererror(...) savebuferror(servererrorbuf,maxservererror,__VA_ARGS__)
 static bool serverloop(int sock, passhost_t *hosts,int &hostlen,int *socks)  ;
 static bool startserver(char *port, passhost_t *hosts,int *hostlen,int *socks,bool *shutdownreceiver) {
 	prctl(PR_SET_NAME, "RECEIVER", 0, 0, 0);
@@ -77,12 +83,9 @@ static bool startserver(char *port, passhost_t *hosts,int *hostlen,int *socks,bo
 	destruct serv([&servinfo]{ if(servinfo)freeaddrinfo(servinfo);});
 	{
 	destruct wweg([port]{delete[] port;});
-	if(
-#ifndef NOLOG
-	int status=
-#endif
-	getaddrinfo(nullptr,port,&hints,&servinfo)) {
-		LOGGERTAG("getaddrinfo: %s\n",gai_strerror(status));
+	if(int status= getaddrinfo(nullptr,port,&hints,&servinfo)) {
+		serverprint("getaddrinfo: %s",gai_strerror(status));
+		LOGGERTAG("%s\n",servererrorbuf);
 		return false;
 		}
 	}
@@ -90,7 +93,7 @@ static bool startserver(char *port, passhost_t *hosts,int *hostlen,int *socks,bo
 	int sock;
 	for(struct addrinfo *ips=servinfo;;ips=ips->ai_next) {
 		if(!ips) {
-			LOGSTRINGTAG("no addresses to bind left\n");
+			LOGARTAG("no addresses to bind left");
 			if(*shutdownreceiver) {
 				LOGSTRINGTAG("shutdownreceiver return\n");
 				return false;
@@ -101,17 +104,20 @@ static bool startserver(char *port, passhost_t *hosts,int *hostlen,int *socks,bo
 			}
 		sock=socket(ips->ai_family,ips->ai_socktype,ips->ai_protocol);
 		if(sock==-1) {
-			lerrortag("socket");
+			servererror("socket");
+			LOGGERTAG("%s\n",servererrorbuf);
 			continue;
 			}
 		const int  yes=1;	
 		if(setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) == -1) {
-			flerrortag("setsockopt close(%d)",sock);
+			servererror("setsockopt close(%d)",sock);
+			LOGGERTAG("%s\n",servererrorbuf);
 			close(sock);
 			return false;
 			}
 		if(bind(sock,ips->ai_addr,ips->ai_addrlen)==-1) {
-			flerrortag("bind close(%d)",sock);
+			servererror("bind port=%s",port);
+			LOGGERTAG("%s close(%d)\n",servererrorbuf,sock);
 			close(sock);
 			continue;
 			}
@@ -196,7 +202,8 @@ static bool testreceivemagic(passhost_t *pass,int sock) {
 		const int testlen=sendmagicspec.size()-4;
 		if(!memcmp(buf,sendmagicspec.data(),testlen)) { 
 			if(!memcmp(buf+testlen,sendmagicspec.end()-4,3)) {
-				LOGSTRINGTAG("I don't connect with myself\n");
+				savemessage(pass,"I don't connect with myself");
+				LOGGERTAG("%s\n",getmirrorerror(pass));
 				}
 			else {
 				constexpr int reclen=sizeof(receivemagic);
@@ -222,15 +229,21 @@ static bool testreceivemagic(passhost_t *pass,int sock) {
 					return true;
 
 					}
-				else
-					flerrortag("sendmagic %d",sock);
+				else {
+					saveerror(pass,"sendmagic %d",sock);
+					LOGGERTAG("%s\n",getmirrorerror(pass));
+					}
 				}
 			}
-		else
-			LOGGERTAG("wrong  magic %d",sock);
+		else  {
+			saveerror(pass,"wrong  magic %d",sock);
+			LOGGERTAG("%s\n",getmirrorerror(pass));
+			}
 		}
-	else	
-		LOGGERTAG("testreceivemagic recvni(%d..)=%d\n",sock,res);
+	else	{
+		saveerror(pass,"testreceivemagic recvni(%d..)=%d\n",sock,res);
+		LOGGERTAG("%s\n",getmirrorerror(pass));
+		}
 	return false;
 	}
 extern bool networkpresent;
@@ -321,7 +334,9 @@ globalsocket=serversock;
 		LOGGERTAG("na accept(serversock=%d)=%d\n",serversock,new_fd);
 		if (new_fd == -1) {
 			int ern=errno;
-			flerrortag("accept %d",ern);
+			servererror("accept %d",ern);
+			LOGGERTAG("%s\n",servererrorbuf);
+
 			switch(ern) {
 				case EFAULT: 
 				case EPROTO:
@@ -382,13 +397,15 @@ globalsocket=serversock;
 				char name[passhost_t::maxnamelen];
 				int rlen;
 				if((rlen=recvni(new_fd,name,passhost_t::maxnamelen))==passhost_t::maxnamelen) {
-					LOGGERTAG("hostlabel=%s\n",name);
+					serverprint("hostlabel=%s",name);
+					LOGGERTAG("%s\n",servererrorbuf);
 					for(int h=0;h<hostlen;h++) {
 						passhost_t& host=hosts[h];
 						if((host.passive())&&host.hasname&&!memcmp(host.getname(),name,passhost_t::maxnamelen)) { 
 							bool nothostreg=!host.hasip(addrptr)&&(!host.detect||!host.addiphasfamport(addrptr));
 							if(!host.noip&&nothostreg) {
-								LOGSTRINGTAG("wrong ip\n");
+								serverprint("label %s host %d wrong ip",name,h);
+								LOGGERTAG("%s\n",servererrorbuf);
 								continue;
 								}
 							LOGSTRINGTAG("take \n");
@@ -400,7 +417,8 @@ globalsocket=serversock;
 				else {
 					const int ind= rlen>0?(rlen>passhost_t::maxnamelen?(passhost_t::maxnamelen-1):rlen):0;
 					name[ind]='\0';
-					LOGGERTAG("recvni(%d,%s)==%d!=%d\n",new_fd,name,rlen,passhost_t::maxnamelen);
+					serverprint("recvni(%d,%s)==%d!=%d\n",new_fd,name,rlen,passhost_t::maxnamelen);
+					LOGGERTAG("%s\n",servererrorbuf);
 					}
 
 				}
@@ -416,6 +434,7 @@ globalsocket=serversock;
 			close(new_fd);
 			continue;
 			}
+	*servererrorbuf='\0';
 	#define SENDPASSIVE 1	 
 	#define RECEIVEFROM 2	 
 

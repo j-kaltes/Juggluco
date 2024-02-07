@@ -119,7 +119,8 @@ struct updateone {
 	bool sendnums;
 	bool sendstream;
 	bool sendscans;
-	bool restore;
+	bool restore:7;
+	bool sendjugglucoid:1;
 	uint8_t pass[16];
 	struct changednums nums[2];
 	void setindex(int index,int allin) {
@@ -354,7 +355,9 @@ const std::array<char,17> getpass(int pos) const {
 		return zero;
 	}
 void getport(int pos,char *buf) {
-	snprintf(buf,6, "%d",ntohs(getupdatedata()->allhosts[pos].ips[0].sin6_port));
+	auto &host=getupdatedata()->allhosts[pos];
+	snprintf(buf,6, "%d",host.getport());
+//	snprintf(buf,6, "%d",ntohs(host.ips[0].sin6_port));
 	}
 
 void addsize() {
@@ -479,6 +482,7 @@ void clearhost(int index) {
 	host.backupupdated=0;
 	host.starttime=0;
 	host.starttimeindex=UINT16_MAX;
+	host.sendjugglucoid=false;
 	}
 void resetall()  {
 	if(getupdatedata()->sendnr>0)
@@ -643,8 +647,8 @@ void setactivereceive(int allindex,passhost_t *ph,bool startthread=true) {
 			}
 		}
 
-int changehost(int index,JNIEnv *env,jobjectArray jnames,int nr,bool detect,string_view port,const bool sendnums,const bool sendstream,const bool sendscans,const bool restore,const bool receive,const bool activeonly,string_view pass,uint32_t starttime,bool passiveonly,const char *label=nullptr,const bool testip=true,bool startthreads=true) {
-	LOGGER("changehost(%d,sendnums=%d,sendstream=%d,sendscans=%d,receive=%d,activeonly=%d,passiveonly=%d,label=%s port=%s nr=%d\n",index,sendnums,sendstream,sendscans,receive,activeonly,passiveonly,label,port.data(),nr);
+int changehost(int index,JNIEnv *env,jobjectArray jnames,int nr,bool detect,string_view port,const bool sendnums,const bool sendstream,const bool sendscans,const bool restore,const bool receive,const bool activeonly,string_view pass,uint32_t starttime,bool passiveonly,const char *label=nullptr,const bool testip=true,bool startthreads=true,bool hashostname=false) {
+	LOGGER("changehost(%d,sendnums=%d,sendstream=%d,sendscans=%d,receive=%d,activeonly=%d,passiveonly=%d,label=%s port=%s nr=%d hashostname=%d\n",index,sendnums,sendstream,sendscans,receive,activeonly,passiveonly,label,port.data(),nr,hashostname);
 	const int hostnr=getupdatedata()->hostnr;
 	if(index<0) 
 		index=hostnr;
@@ -661,6 +665,10 @@ int changehost(int index,JNIEnv *env,jobjectArray jnames,int nr,bool detect,stri
 			LOGSTRING("changehost: port.size()>5)\n");
 			return -1;
 			}
+		}
+	int portint=atoi(port.data());
+	if(portint>65535||portint<1024) {
+		LOGGER("port out of range %d\n",portint);
 		}
 
  	struct oldnet {
@@ -683,66 +691,99 @@ int changehost(int index,JNIEnv *env,jobjectArray jnames,int nr,bool detect,stri
 	bool newthread=false;
 	const bool dontopen=sendto&&passiveonly;
 	int lmaxip=maxip-(label?1:0);
+	auto &thehost=getupdatedata()->allhosts[index];
+
 	if(sendto) {
-		if(newhost||getupdatedata()->allhosts[index].index==-1) {  //Fout??
+		if(newhost||thehost.index==-1) {  //Fout??
 			tohost=getupdatedata()->sendnr;
 			if(tohost>=maxsendtohost) {
 				LOGSTRING("changehost: tohost>=maxsendtohost\n");
 				return -4;
 				}
-			getupdatedata()->allhosts[index].index=tohost;
+			thehost.index=tohost;
 			newthread=true;
 			}
 		else  {
-			tohost=getupdatedata()->allhosts[index].index;
+			tohost=thehost.index;
 			}
 
 		changereceiver(index,tohost,sendnums,sendstream,sendscans,restore,pass.size(),starttime);
-		getupdatedata()->allhosts[index].sendpassive=dontopen;
+		thehost.sendpassive=dontopen;
 		}
 	else {
 		tohost=0;
-		getupdatedata()->allhosts[index].sendpassive=false;
-		int sendindex=getupdatedata()->allhosts[index].index;
+		thehost.sendpassive=false;
+		int sendindex=thehost.index;
 		if(!newhost) {
 			if(sendindex>=0) {
 				deletestart(sendindex);
-				getupdatedata()->allhosts[index].index=-1;
+				thehost.index=-1;
 				deleteend(sendindex); 
 				}
 			}
-		getupdatedata()->allhosts[index].index=-1;
+		thehost.index=-1;
 		}
 
-	if(getupdatedata()->allhosts[index].activereceive)
+	if(thehost.activereceive)
 			endactivereceive(index) ;
-	int res=getupdatedata()->allhosts[index].nr=env?jsetips(port.data(),env, jnames, nr,getupdatedata()->allhosts[index].ips,lmaxip): setips(port.data(),(const char **)jnames, nr,getupdatedata()->allhosts[index].ips,lmaxip); 
+	int res;
+	if(hashostname) {
+		thehost.hostname=true;
+		if(env) {
+			jstring  jhostname=(jstring)env->GetObjectArrayElement(jnames,0);
+			int namelen= env->GetStringUTFLength( jhostname);
+			if(namelen>maxhostname) {
+				LOGGER("supplied name too long %d>%d\n",namelen,maxhostname);
+				return -5;
+				}
+
+			jint jnamelen = env->GetStringLength( jhostname);
+
+			char *hostname=thehost.gethostname();
+
+			env->GetStringUTFRegion( jhostname, 0,jnamelen, hostname); 
+			hostname[namelen]='\0';
+			}
+		else {
+			LOGAR("What to do with hashostname with env=null?");
+			return -6;
+			}
+		thehost.setportwithhostname(portint);
+		res=thehost.nr=1;
+		detect=false;
+		}
+	else   {
+
+        thehost.hostname=false;
+		res=thehost.nr=env?jsetips(port.data(),env, jnames, nr,thehost.ips,lmaxip): setips(port.data(),(const char **)jnames, nr,thehost.ips,lmaxip);
+		}
 	int ret=index;
+	
 	if(res<0) {
-		getupdatedata()->allhosts[index].nr=0;
+		thehost.nr=0;
 		ret=-2;
 		}
 	if(detect) {
 		if(res<lmaxip)  {
-			getupdatedata()->allhosts[index].detect=true;
-			getupdatedata()->allhosts[index].ips[res]={.sin6_family=AF_INET6,.sin6_port=htons(atoi(port.data())),.sin6_addr=noaddress};
+			thehost.detect=true;
+			thehost.ips[res]={.sin6_family=AF_INET6,.sin6_port=htons(atoi(port.data())),.sin6_addr=noaddress};
 			}
 		else
-			getupdatedata()->allhosts[index].detect=false;
+			thehost.detect=false;
 		}
 	else {
 		if(res==0&&!(passiveonly&&!testip))   {
 			LOGSTRING("res==0&&!(passiveonly&&!testip))\n");
 			ret=-2;
 			}
-		getupdatedata()->allhosts[index].detect=false;
+		thehost.detect=false;
 		}
 	if(label) {
-		getupdatedata()->allhosts[index].setname(label);
+		thehost.setname(label);
 		}
 	else
-		getupdatedata()->allhosts[index].hasname=false;
-	getupdatedata()->allhosts[index].noip=!testip;
+		thehost.hasname=false;
+	thehost.noip=!testip;
 	lastuptodate[index]=0;
 /*
 Receive	   	reconnect	receivefrom:
@@ -751,19 +792,19 @@ true	  	false	  	2
 false		true 	 	1
 false	  	false	  	0
 */
-	getupdatedata()->allhosts[index].receivefrom=receive?(reconnect?3:2):((sendto&reconnect)?1:0);
-	LOGGER("receivefrom=%d\n", getupdatedata()->allhosts[index].receivefrom);
-	setpass( getupdatedata()->allhosts[index].pass,pass);
+	thehost.receivefrom=receive?(reconnect?3:2):((sendto&reconnect)?1:0);
+	LOGGER("receivefrom=%d\n", thehost.receivefrom);
+	setpass( thehost.pass,pass);
 
 	if(newhost)  {
 		++(getupdatedata()->hostnr);
-		getupdatedata()->allhosts[index].wearos=false;
+		thehost.wearos=false;
 		LOGSTRING("new host ++hostnr\n");
-		getupdatedata()->allhosts[index].newconnection=true;
+		thehost.newconnection=true;
 
 		}
 	else {
-		LOGGER("wearos(%d)=%d\n", index,getupdatedata()->allhosts[index].wearos);
+		LOGGER("wearos(%d)=%d\n", index,thehost.wearos);
 		}
 
 	deupdated(); 
@@ -773,12 +814,12 @@ false	  	false	  	0
 		if(!activeonly)
 			startreceiver(false);
 		}
-	LOGGER("activereceive was=%d nu=%d\n",getupdatedata()->allhosts[index].activereceive,receiveactive);
+	LOGGER("activereceive was=%d nu=%d\n",thehost.activereceive,receiveactive);
 	if(receiveactive) {
 		setactivereceive(index,getupdatedata()->allhosts+index,startthreads);
 		}
 	else
-		getupdatedata()->allhosts[index].activereceive=0;
+		thehost.activereceive=0;
 		
 	shouldaskfordata=getshouldaskfordata();
 #ifdef WEAROS_MESSAGES

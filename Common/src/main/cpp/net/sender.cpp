@@ -52,6 +52,7 @@
 #define flerrortag(...) flerror("sender: " __VA_ARGS__)
 
 using namespace std;
+#include "mirrorerror.h"
 
 void	sendpassinit(int sock,passhost_t *host,crypt_t *ctx) {
 	constexpr int makelen=8;
@@ -127,21 +128,33 @@ static int testsendmagic(passhost_t *pass,int sock) {
 	else
 		magicptr=&sendmagicspec;
 	if(sendni(sock,magicptr->data(),magicptr->size())!=magicptr->size()) {
-		lerrortag("send magic failed\n");
+		char *buf=getmirrorerror(pass);
+		int waser=errno;
+		constexpr const char mess[]="send magic failed: ";
+		constexpr const int len=sizeof(mess)-1;
+		memcpy(buf,mess,len);
+		strerror_r(waser, buf+len, maxmirrortext-len);
+		LOGGERTAG("%s",buf);
 		return 1;
 		}
-//	constexpr int buflen=1024;
 constexpr const int recsize=sizeof(receivemagic);
 	char buf[recsize];
 	LOGSTRINGTAG("before recv magic\n");
 	int gotlen;
 	if((gotlen=recvni(sock,buf,recsize))!=recsize) {
-		flerrortag("recv()=%d!=%d\n",gotlen,(int)recsize);
+		char *ptr=getmirrorerror(pass);
+		int waser=errno;
+		int len=snprintf(ptr,maxmirrortext,"magic recv()=%d!=%d: ",gotlen,(int)recsize);
+		strerror_r(waser, ptr+len, maxmirrortext-len);
+		LOGGERTAG("%s",ptr);
 		return 2;
 		}
 	LOGSTRINGTAG("after recv magic\n");
 	if(memcmp(buf,receivemagic,recsize-4)) {//4 less for version info
-		LOGSTRINGTAG("Wrong magic\n");
+		char wrong[]="Wrong magic";
+		char *buf=getmirrorerror(pass);
+		memcpy(buf,wrong,sizeof(wrong));
+		LOGGERN(wrong,sizeof(wrong)-1);
 		return 3;
 		}
 	LOGGERTAG("testsendmagic %d success\n",sock);
@@ -196,6 +209,9 @@ bool sendtype(int sock,char type) {
 	return true;
         }
 
+
+extern char *getmirrorerror(const passhost_t *pass);
+
 int shakehands(passhost_t *pass,int &sock,char stype) {
 	LOGGERTAG("shakehands connection %d\n",sock);
 	
@@ -213,7 +229,9 @@ int shakehands(passhost_t *pass,int &sock,char stype) {
 		const char *name= pass->getname();
 		LOGGERTAG("sendni(%d,%s,)\n",sock,name);
 		if(sendni(sock,name,pass->maxnamelen)!=pass->maxnamelen) {
-			lerrortag("send name");
+			char err[]="send name";
+			saveerror(pass,err);
+			LOGGER("%s",getmirrorerror(pass));
 			return -1;
 			}
 		
@@ -313,34 +331,63 @@ bool activate=true;
 	sock=-1;
 
 	struct pollfd	 cons[10];
-	if(false) {
-//	if(pass->hashostname())  //NOT further implemented. A lot of difficulties and who needs this?
+	if(pass->hashostname()) { 
 		struct addrinfo hints{.ai_flags=AI_ADDRCONFIG,.ai_family=AF_UNSPEC,.ai_socktype=SOCK_STREAM};
+	//	struct addrinfo hints{.ai_family=AF_UNSPEC,.ai_socktype=SOCK_STREAM};
 		struct addrinfo *servinfo=nullptr;
 		destruct serv([&servinfo]{ if(servinfo)freeaddrinfo(servinfo);});
 		const char *host= pass->gethostname(); 
 		char port[10];
 		sprintf(port,"%d",pass->getport());
-		if(getaddrinfo(host,port,&hints,&servinfo)) {
+		LOGGERTAG("connect to %s %s\n",host,port);
+		if(int error=getaddrinfo(host,port,&hints,&servinfo)) {
+			char *buf=getmirrorerror(pass);
+			#ifndef NOLOG
+			int len=
+			#endif
+			snprintf(buf, maxmirrortext,"connect %s %s failed: %s\n",host,port,gai_strerror(error));
+			LOGGERN(buf,len);
+			return -1;
+			}
+		else {
 			for(struct addrinfo *iter=servinfo;iter!=nullptr;iter=iter->ai_next) {
-				const struct sockaddr_in6  *sin= reinterpret_cast<const struct sockaddr_in6*>(iter->ai_addr);
-					if(int ret=connectone(sin,sock, stype,pass,cons,use
+			const struct sockaddr *sa=iter->ai_addr;
+			const struct sockaddr_in6  *sin;
+			switch(sa->sa_family) {
+				case AF_INET6: sin= reinterpret_cast<const struct sockaddr_in6*>(iter->ai_addr);
+				 	break;
+				case AF_INET: {
+					auto *tmp=reinterpret_cast<sockaddr_in6*>(alloca(sizeof(sockaddr_in6 )));
+					*tmp={.sin6_family=AF_INET6, .sin6_port=((struct sockaddr_in *)sa)->sin_port, .sin6_addr=v426(sa)};	
+					sin=const_cast<const sockaddr_in6*>(tmp);
+					break;
+					}
+				default: {
+					LOGGERTAG("unknown family %d\n",sa->sa_family);
+					return -1;
+
+					}
+					};
+
+			if(int ret=connectone(sin,sock, stype,pass,cons,use
 	#if defined(WEAROS_MESSAGES)
 								  ,activate
 	#endif
-		)) {
+		);ret>=0) {
 
-				LOGGERTAG("found %d\n",ret);
+				LOGGERTAG("found %s:%s sock=%d\n",host,port,ret);
 				return ret;
 				}
+
+			LOGGERTAG("wait %s\n",host);
            		}
 
 			}
-		else return -1;
 	} else {
 		const int nr=pass->nr;
 		LOGGERTAG("makeconnection nr=%d\n",nr);
 		if(nr<=0) {
+			savemessage(pass,"connection has on %d ips\n",nr);
 			return -1;
 			}
 		for(int i=0;i<nr;i++) {
@@ -370,12 +417,21 @@ bool activate=true;
 		switch(errcode) {
 			case -1: {
 				int er=errno;
-				lerrortag("poll");
+				saveerror(pass,"poll");
+				#ifndef NOLOG
+				char *ptr=getmirrorerror(pass);
+				LOGGERTAG("%s",ptr);
+				#endif
 				if(er== EINTR)
 					continue;
 				return -1;
 				};
-			case 0: {LOGSTRINGTAG("poll timeout\n");
+			case 0: {
+				savemessage(pass,"poll timeout");
+				#ifndef NOLOG
+				char *ptr=getmirrorerror(pass);
+				LOGGERTAG("%s",ptr);
+				#endif
 				return -1;
 				}
 			};
@@ -457,13 +513,17 @@ bool activate=true;
 		use=newuse;
 		}
 	LOGSTRINGTAG("no one\n");
+	savemessage(pass,"No connection succeeded");
 	return -1;
 	}
 
 int makeconnection(passhost_t *pass,int &sock,crypt_t*ctx,char stype) {
 	int res=makeconnection2(pass,sock,stype);
-	if(res>=0&&ctx)
-		sendpassinit(sock,pass,ctx);
+	if(res>=0) {
+		*getmirrorerror(pass)='\0';
+		if(ctx)
+			sendpassinit(sock,pass,ctx);
+		}
 	return res;
 	}
 

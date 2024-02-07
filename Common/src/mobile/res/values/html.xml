@@ -175,7 +175,6 @@ pointer.</p>
 </string>
 <string name="addconnection" >
 <![CDATA[
-
 <h1>Add connection</h1>
 <p style="line-height: 100%; margin-bottom: 0in">Specify a connection
 with another instance of Juggluco. Juggluco on one device sends via
@@ -183,15 +182,15 @@ IP/TCP data to a Juggluco on another device. To establish a
 connection, one of the Juggluco\'s has to listen on a port and the
 other has to make contact to that port. The port this instance of
 Juggluco is listening on, was given in the previous screen (Left
-middle menu-&gt;<a href="https://www.juggluco.nl/Jugglucohelp/connectionoverview.html">Mirror</a>). Here you specify the port this instance of
-Juggluco contacts to if it actively makes contact. If this instance
-of Juggluco can\'t listen on a port, select &quot;<b>Active only</b>&quot;.
-If the other side can\'t listen on a port, select &quot;<b>Passive
-only</b>&quot;, otherwise leave &quot;<b>Both</b>&quot; checked. The
-Juggluco on the other side should specify <i>Passive only </i>if you
-select here <i>Active only</i> and <i>Active only</i> if you select
-here <i>Passive</i> <i>only</i> and <i>Both</i> if you select here
-<i>Both</i>.</p>
+middle menu-&gt;<a href="https://www.juggluco.nl/Jugglucohelp/connectionoverview.html">Mirror</a>).
+Here you specify the port this instance of Juggluco contacts to if it
+actively makes contact. If this instance of Juggluco can\'t listen on
+a port, select &quot;<b>Active only</b>&quot;. If the other side
+can\'t listen on a port, select &quot;<b>Passive only</b>&quot;,
+otherwise leave &quot;<b>Both</b>&quot; checked. The Juggluco on the
+other side should specify <i>Passive only </i>if you select here
+<i>Active only</i> and <i>Active only</i> if you select here <i>Passive</i>
+<i>only</i> and <i>Both</i> if you select here <i>Both</i>.</p>
 <p style="line-height: 100%; margin-bottom: 0in">If this instance of
 Juggluco actively makes contact, you should specify the IP(s) it
 should contact with. If that host has multiple IPs, you specify more
@@ -202,6 +201,12 @@ home network and sometimes directly as portable hotspot.
 specify the IPs of multiple devices, in that case they will each
 receive only part of the data. </b>
 </p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>hostname</b>:
+Specify one hostname instead of IPs. This will make the connection
+dependent on a nameserver thus slower and under influence of
+disruption of the nameserver connection. This should only be turned
+on in case you can’t get configure a static IP and the hostname is
+automatically assigned to the dynamic IP.</p>
 <p style="line-height: 100%; margin-bottom: 0in">In all cases except
 \'Active only\', you can select \'<b>Detect</b>\'; in this case Juggluco
 saves the first IP contacting Juggluco as the IP of the other side.
@@ -725,201 +730,202 @@ saved value.</p>
 </string>
 <string name="settinghelp" >
 <![CDATA[
-<h1 class="western">Settings</h1>
-<h2 class="western">Unit</h2>
-<p style="line-height: 100%; margin-bottom: 0in">Select whether
-glucose values should be given in mmol/L or dm/dL.</p>
-<h2 class="western">Graph range: low-high.</h2>
-<p style="line-height: 100%; margin-bottom: 0in">Give a low and high
-value, so that the bottom of the screen correspondents to the lowest
-and the top to the highest. These values are only used when all the
-glucose values displayed on the screen are within these bounds.
-Otherwise, the bounds are widened so that all values are visible.
-When you take 3 mmol/L (54 mg/dL) and 9 mmol/L (162 mg/dL), and all
-the values on the visible display are between 5 mmol/L and 6 mmol/L,
-the graph displays a glucose axis from 3 to 9. 
-</p>
-<p style="line-height: 100%; margin-bottom: 0in">If <b>Manually scale
-Glucose</b> is turned on, you can change this: moving your finger
-over the top of the screen, moves the top half of the graph up and
-down; moving over the bottom of the screen moves the bottom half of
-the graph up and down.</p>
-<h2 class="western">Target range: low-high</h2>
-<p style="line-height: 100%; margin-bottom: 0in">The higher side of
-the display is colored differently so you can see high values easier.
-The same is true for low values. A red line is displayed to show the
-too low side of the display.</p>
-<h2 class="western">Glucose-axis numbers LEFT</h2>
-<p>Place the numbers of the glucose level in the graph on the left of
-the screen. Useful if you want to place your current glucose in the
-middle of the screen, for example in Wear OS.</p>
-<h2 class="western">Invert screen</h2>
-<p style="line-height: 100%; margin-bottom: 0in">Turn the display
-upside down. It is switch on by default, because otherwise I did now
-and then accidentally touch OK while scanning a sensor.</p>
-<p style="line-height: 100%; margin-bottom: 0in">Some people ask for
-portrait mode, but I have turned that off, because it is totally
-inappropriate for the display of the glucose graph.</p>
-<h2 class="western">Nfc sound</h2>
-<p>Make sound during scanning in addition to vibration.</p>
-<h2 class="western">Scanning starts app</h2>
-<p>If checked this app will be started when you scan a sensor via NFC
-even if this app is not displayed. If multiple apps have this
-setting, android will display a chooser from which to select which
-app you want to use. Somehow choosing one doesn\'t work and selecting
-one to be chosen the next time neither. So in this case you can\'t
-scan without an app in the foreground. Turning it off in this app,
-will make it possible that at least one app can be activated this
-way.</p>
-<p>If you have root access, you can also disable NFC activation of
-Abbott\'s Librelink app (doesn\'t work with Libre3):</p>
-<p>Become root in adb shell or termux, and type:</p>
-<p>pm disable
-com.freestylelibre.app.nl/com.librelink.app.ui.common.NFCScanActivity</p>
-<p>On Librelink 2.7.1 and lower you had to press:</p>
-<p>pm disable
-com.freestylelibre.app.nl/com.librelink.app.ui.common.ScanSensorActivity</p>
-<p><span lang="en-US">com.freestylelibre.app.nl is here the Dutch
-version of Librelink, this should be replaced with the version you
-are using. You can find its name by typing</span> <span lang="en-US">(even
-without root):</span></p>
-<p>pm list package freestylelibre</p>
-<p>Afterwards, you can still use Librelink for scanning when it is in
-the foreground, but it will not be started otherwise. Librelink 2.5.2
-and higher crash themselves if they detect root. But in Magisk you
-can easily hide root by renaming Magisk and adding individual apps to
-the denylist (Magisk 24.3) or Magiskhide (Magisk 23.0). You should
-also add Juggluco to the denylist. Except when you use US Freestyle
-Libre 2 sensors, you can also use an older version of Librelink
-without root check.</p>
-<p>Without root, under adb shell, you can also disable the whole app:</p>
-<p>pm disable-user --user 0 com.freestylelibre.app.nl</p>
-<p>Before calling Abbott customer service, you can re-enable it with:</p>
-<p>pm enable com.freestylelibre.app.nl</p>
-<h2 class="western">Health Connect</h2>
-<p>Send minutely glucose values to <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.healthdata">Health
-Connect</a>. You can give other app access to these glucose values,
-for example <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.fitness">Google
-Fit</a>. Other apps again can get assess to data from Google Fit.</p>
-<h2 class="western"><a href="https://www.juggluco.nl/Jugglucohelp/libreview.html">Libreview</a></h2>
-<p>Connect with Libreview to send Freestyle Libre 2 and 3 glucose
-values and amounts to Libreview and to get the account id used during
-Freestyle Libre 3 sensor activation. Touch to change settings.</p>
-<h2 class="western">Patched Libre broadcast</h2>
-<p>Use the Patched Libre broadcast (originally send by the patched
-German Librelink app 2.3.0), to send the Bluetooth glucose stream
-data every minute to xDrip. In xDrip you need to set Libre2 (patched
-App) as hardware data source. The glucose values displayed in xDrip
-are different from the values it receives. For some reason xDrip only
-updates its value every 5 minutes, probably because it was made for
-devices that send only once per 5 minutes (A watch face connected to
-xDrip regularly displayed more than 9 minute old values.) In
-addition, xDrip displays its own interpretation of received glucose
-values. Mirror devices can also sent to xDrip.</p>
-<p>See <a href="https://github.com/jakobheyman/xdripJH">https://github.com/jakobheyman/xdripJH</a>
-for an attempt to update the glucose value of xDrip every minute.</p>
-<p>Freestyle Libre 3 sensors send missed values after a disconnection
-period. These values are not sent with this broadcast. You will
-receive them if you turn on the Web server in Juggluco and make xDrip
-a Nightscout follower of Juggluco. Nightscout server:
-http://127.0.0.1:17580</p>
-<p>Juggluco can also directly contact with xDrip watch apps, so that
-the watch app displays more recent glucose values. To use this
-feature check <i>&quot;xDrip webserver&quot;</i> in the left menu
-under <b>Watch</b>. See Help under left menu-&gt;<a href="https://www.juggluco.nl/Jugglucohelp/watchinfo.html">Watch</a>
-for more information. Only one app can listen to the network port
-used by the xDrip webserver, so you need to turn off &quot;<i>xDrip
-webservice</i>&quot; in xDrip itself if you want to make use of the
-one in Juggluco.</p>
-<h2 class="western">xDrip broadcast</h2>
-<p>Send the same broadcast as turned on in xDrip with
-&quot;<i>Settings-&gt;Inter-app settings-&gt;Broadcast locally&quot;</i>.
-Apps like AndroidAPS listen to it. Unlike the original xDrip
-broadcast which was broadcast every 5 minutes, Juggluco broadcasts
-this broadcast every minute.</p>
-<h2 class="western">Glucodata broadcast</h2>
-<p>A new broadcast that has the same function as the xDrip broadcast.
-A simple example app that writes received glucose values to logcat
-you can find here: <a href="https://www.juggluco.nl/Juggluco/glucosebroadcast.html">Glucose
-broadcasts</a>. If you specify Juggluco as data-source in G-Watch,
-you need to turn on this broadcast.</p>
-<p>The application apps listening to this broadcast are shown. Check
-the apps you want to send this broadcast to.</p>
-<h2 class="western"><a href="https://www.juggluco.nl/Jugglucohelp/Nightscouthelp.html">Web
-server</a></h2>
-<p>Web server that can be used with xDrip watches and some Nightscout
-apps. Previously called xDrip webserver.</p>
-<h2>Insulin onboard (IOB)</h2>
-<p>IOB is a measure of how much insulin activity remains from
-previous insulin doses. To do this, you must enter insulin doses
-under a label in the “<i>Rapid acting insulin</i>” category. You
-can specify what labels are “<i>Rapid acting insulin</i>” under
-Left menu→Settings→Web server→<a href="https://www.juggluco.nl/Jugglucohelp/setlibrenumtype.html">Give
-Amounts</a>.</p>
-<h2 class="western"><a href="https://www.juggluco.nl/Jugglucohelp/NightPost.html">Uploader</a></h2>
-<p>Upload to a Nightscout server.</p>
-<h2 class="western">Glucose notification</h2>
-<p style="line-height: 100%; margin-bottom: 0in">(Previously called
-&quot;<i>Glucose in android status bar</i>&quot;). If set, glucose
-values streaming via Bluetooth are quietly displayed in a
-notification and the android status bar. If you turn it off, instead
-of a number, a dot is shown and the notification tells nothing more
-than &quot;<i>To connect to sensor</i>&quot; or &quot;<i>To exchange
-data</i>&quot;. An app that stays running in the background, is
-obliged by Android to have such visible notification (otherwise it is
-easily stopped by Android). Juggluco only turns off the notification,
-when &quot;<i>Sensor via Bluetooth</i>&quot; is turned off and there
-are no mirror connections.</p>
-<p style="line-height: 100%; margin-bottom: 0in">On some smartphones,
-the glucose value is only shown in the Android status bar after
-changing Androids notification settings. On Realme GT 5G for example,
-you have to go to applist-&gt;Juggluco-&gt;manage notifications, tab
-on glucoseNotification and turn off &quot;Set to Silent&quot;.
-&quot;Display in status bar&quot; will now be shown turned on.</p>
-<p style="font-weight: normal; line-height: 100%; margin-bottom: 0in">
-You can also get an android notification by selecting <i>Notify</i>
-in the left middle menu. In that case the notification will be sent
-to some smartwatches, if it is configured that way. That works with
-Garmin watches, I don\'t know if it works with anything else. Alarms
-also generate notifications.</p>
-<h2 class="western"><a href="https://www.juggluco.nl/Jugglucohelp/floatingconfig.html" onclick="location.href=this.href+\'?unit=\'+unitstr;return false;">Floating
-glucose</a></h2>
-<p>When you turn this on, a small image with the current glucose
-value is constantly present on the screen independent of which app is
-in the foreground. If you turn it on the first time, you will be
-directed to a list of apps in which you have to give Juggluco
-permission to <b>display over other apps</b>.</p>
-<h2 class="western">Sensor via Bluetooth</h2>
-<p>Selects whether this app connects via Bluetooth with a Freestyle
-libre 2 or 3 sensor. This is needed for alarms and continual glucose
-monitoring.</p>
-<h2 class="western"><a href="https://www.juggluco.nl/Jugglucohelp/alarmhelp.html">Alarms</a></h2>
-<p style="font-weight: normal">Set high en low glucose alarms, loss
-of signal alarm and value available notification.</p>
-<h2 class="western"><a href="https://www.juggluco.nl/Jugglucohelp/labelhelp.html">Number
-labels</a></h2>
-<p style="line-height: 100%; margin-bottom: 0in">Specify the labels
-used for amounts. Go to a screen to determine which labels to use to
-set amounts, like insulin doses, carbohydrate consumption and hours
-spend playing football. If you also use the Garmin watch app
-Kerfstok, these labels are sent to the watch app.</p>
-<h2 class="western">Language</h2>
-<p style="line-height: 100%; margin-bottom: 0in">Juggluco is
-displayed in the chosen language. When no language code is selected,
-the system language is used.</p>
-<h2 class="western"><a href="https://www.juggluco.nl/Jugglucohelp/reminders.html">Reminders</a></h2>
-<p style="font-weight: normal; line-height: 100%; margin-bottom: 0in">
-Specify that an alarm should go of if you didn\'t enter a certain
-amount of food or medication within a certain time period.</p>
-<h2 class="western"><a href="https://www.juggluco.nl/Jugglucohelp/colorhelp.html">Colors</a></h2>
-<p style="line-height: 100%; margin-bottom: 0in">Change colors of
-curves, scans and numbers. To switch <i>Dark mode</i>, use right
-middle menu-&gt;Dark mode.</p>
-<h2 class="western"><br/>
-<br/>
 
-</h2>
-]]>
+    <h1 class="western">Settings</h1>
+    <h2 class="western">Unit</h2>
+    <p style="line-height: 100%; margin-bottom: 0in">Select whether
+      glucose values should be given in mmol/L or dm/dL.</p>
+    <h2 class="western">Graph range: low-high.</h2>
+    <p style="line-height: 100%; margin-bottom: 0in">Give a low and high
+      value, so that the bottom of the screen correspondents to the lowest
+      and the top to the highest. These values are only used when all the
+      glucose values displayed on the screen are within these bounds.
+      Otherwise, the bounds are widened so that all values are visible.
+      When you take 3 mmol/L (54 mg/dL) and 9 mmol/L (162 mg/dL), and all
+      the values on the visible display are between 5 mmol/L and 6 mmol/L,
+      the graph displays a glucose axis from 3 to 9. </p>
+    <p style="line-height: 100%; margin-bottom: 0in">If <b>Manually scale
+        Glucose</b> is turned on, you can change this: moving your finger
+      over the top of the screen, moves the top half of the graph up and
+      down; moving over the bottom of the screen moves the bottom half of
+      the graph up and down.</p>
+    <h2 class="western">Target range: low-high</h2>
+    <p style="line-height: 100%; margin-bottom: 0in">The higher side of
+      the display is colored differently so you can see high values easier.
+      The same is true for low values. A red line is displayed to show the
+      too low side of the display.</p>
+    <h2 class="western">Glucose-axis numbers LEFT</h2>
+    <p>Place the numbers of the glucose level in the graph on the left of
+      the screen. Useful if you want to place your current glucose in the
+      middle of the screen, for example in Wear OS.</p>
+    <h2 class="western">Invert screen</h2>
+    <p style="line-height: 100%; margin-bottom: 0in">Turn the display
+      upside down. It is switch on by default, because otherwise I did now
+      and then accidentally touch OK while scanning a sensor.</p>
+    <p style="line-height: 100%; margin-bottom: 0in">Some people ask for
+      portrait mode, but I have turned that off, because it is totally
+      inappropriate for the display of the glucose graph.</p>
+    <h2 class="western">Nfc sound</h2>
+    <p>Make sound during scanning in addition to vibration.</p>
+    <h2 class="western">Scanning starts app</h2>
+    <p>If checked this app will be started when you scan a sensor via NFC
+      even if this app is not displayed. If multiple apps have this
+      setting, android will display a chooser from which to select which
+      app you want to use. Somehow choosing one doesn\'t work and selecting
+      one to be chosen the next time neither. So in this case you can\'t
+      scan without an app in the foreground. Turning it off in this app,
+      will make it possible that at least one app can be activated this
+      way.</p>
+    <p>If you have root access, you can also disable NFC activation of
+      Abbott\'s Librelink app (doesn\'t work with Libre3):</p>
+    <p>Become root in adb shell or termux, and type:</p>
+    <p>pm disable
+      com.freestylelibre.app.nl/com.librelink.app.ui.common.NFCScanActivity</p>
+    <p>On Librelink 2.7.1 and lower you had to press:</p>
+    <p>pm disable
+      com.freestylelibre.app.nl/com.librelink.app.ui.common.ScanSensorActivity</p>
+    <p><span lang="en-US">com.freestylelibre.app.nl is here the Dutch
+        version of Librelink, this should be replaced with the version you
+        are using. You can find its name by typing</span> <span lang="en-US">(even
+without
+        root):</span></p>
+    <p>pm list package freestylelibre</p>
+    <p>Afterwards, you can still use Librelink for scanning when it is in
+      the foreground, but it will not be started otherwise. Librelink 2.5.2
+      and higher crash themselves if they detect root. But in Magisk you
+      can easily hide root by renaming Magisk and adding individual apps to
+      the denylist (Magisk 24.3) or Magiskhide (Magisk 23.0). You should
+      also add Juggluco to the denylist. Except when you use US Freestyle
+      Libre 2 sensors, you can also use an older version of Librelink
+      without root check.</p>
+    <p>Without root, under adb shell, you can also disable the whole app:</p>
+    <p>pm disable-user --user 0 com.freestylelibre.app.nl</p>
+    <p>Before calling Abbott customer service, you can re-enable it with:</p>
+    <p>pm enable com.freestylelibre.app.nl</p>
+    <h2 class="western">Health Connect</h2>
+    <p>Send minutely glucose values to <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.healthdata">Health
+        Connect</a>. You can give other app access to these glucose values,
+      for example <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.fitness">Google
+        Fit</a>. Other apps again can get assess to data from Google Fit.</p>
+    <h2 class="western"><a href="https://www.juggluco.nl/Jugglucohelp/libreview.html">Libreview</a></h2>
+    <p>Connect with Libreview to send Freestyle Libre 2 and 3 glucose
+      values and amounts to Libreview and to get the account id used during
+      Freestyle Libre 3 sensor activation. Touch to change settings.</p>
+    <h2 class="western">Patched Libre broadcast</h2>
+    <p>Use the Patched Libre broadcast (originally send by the patched
+      German Librelink app 2.3.0), to send the Bluetooth glucose stream
+      data every minute to xDrip. In xDrip you need to set Libre2 (patched
+      App) as hardware data source. The glucose values displayed in xDrip
+      are different from the values it receives. For some reason xDrip only
+      updates its value every 5 minutes, probably because it was made for
+      devices that send only once per 5 minutes (A watch face connected to
+      xDrip regularly displayed more than 9 minute old values.) In
+      addition, xDrip displays its own interpretation of received glucose
+      values. Mirror devices can also sent to xDrip.</p>
+    <p>See <a href="https://github.com/jakobheyman/xdripJH">https://github.com/jakobheyman/xdripJH</a>
+      for an attempt to update the glucose value of xDrip every minute.</p>
+    <p>Freestyle Libre 3 sensors send missed values after a disconnection
+      period. These values are not sent with this broadcast. You will
+      receive them if you turn on the Web server in Juggluco and make xDrip
+      a Nightscout follower of Juggluco. Nightscout server:
+      http://127.0.0.1:17580</p>
+    <p>Juggluco can also directly contact with xDrip watch apps, so that
+      the watch app displays more recent glucose values. To use this
+      feature check <i>"xDrip webserver"</i> in the left menu
+      under <b>Watch</b>. See Help under left menu-&gt;<a href="https://www.juggluco.nl/Jugglucohelp/watchinfo.html">Watch</a>
+      for more information. Only one app can listen to the network port
+      used by the xDrip webserver, so you need to turn off "<i>xDrip
+        webservice</i>" in xDrip itself if you want to make use of the
+      one in Juggluco.</p>
+    <h2 class="western">xDrip broadcast</h2>
+    <p>Send the same broadcast as turned on in xDrip with
+      "<i>Settings-&gt;Inter-app settings-&gt;Broadcast locally"</i>.
+      Apps like AndroidAPS listen to it. Unlike the original xDrip
+      broadcast which was broadcast every 5 minutes, Juggluco broadcasts
+      this broadcast every minute.</p>
+    <h2 class="western">Glucodata broadcast</h2>
+    <p>A new broadcast that has the same function as the xDrip broadcast.
+      A simple example app that writes received glucose values to logcat
+      you can find here: <a href="https://www.juggluco.nl/Juggluco/glucosebroadcast.html">Glucose
+        broadcasts</a>. If you specify Juggluco as data-source in G-Watch,
+      you need to turn on this broadcast.</p>
+    <p>The application apps listening to this broadcast are shown. Check
+      the apps you want to send this broadcast to.</p>
+    <h2 class="western"><a href="https://www.juggluco.nl/Jugglucohelp/Nightscouthelp.html">Web
+        server</a></h2>
+    <p>Web server that can be used with xDrip watches and some Nightscout
+      apps. Previously called xDrip webserver.</p>
+    <h2>Insulin onboard (IOB)</h2>
+    <p>IOB is a measure of how much insulin remains from
+      previous insulin doses. To do this, you must enter insulin doses
+      under a label in the “<i>Rapid acting insulin</i>” category. You
+      can specify what labels are “<i>Rapid acting insulin</i>” under
+      Left menu→Settings→Web server→<a href="https://www.juggluco.nl/Jugglucohelp/setlibrenumtype.html">Give
+        Amounts</a>.</p>
+    <h2 class="western"><a href="https://www.juggluco.nl/Jugglucohelp/NightPost.html">Uploader</a></h2>
+    <p>Upload to a Nightscout server.</p>
+    <h2 class="western">Glucose notification</h2>
+    <p style="line-height: 100%; margin-bottom: 0in">(Previously called
+      "<i>Glucose in android status bar</i>"). If set, glucose
+      values streaming via Bluetooth are quietly displayed in a
+      notification and the android status bar. If you turn it off, instead
+      of a number, a dot is shown and the notification tells nothing more
+      than "<i>To connect to sensor</i>" or "<i>To exchange
+        data</i>". An app that stays running in the background, is
+      obliged by Android to have such visible notification (otherwise it is
+      easily stopped by Android). Juggluco only turns off the notification,
+      when "<i>Sensor via Bluetooth</i>" is turned off and there
+      are no mirror connections.</p>
+    <p style="line-height: 100%; margin-bottom: 0in">On some smartphones,
+      the glucose value is only shown in the Android status bar after
+      changing Androids notification settings. On Realme GT 5G for example,
+      you have to go to applist-&gt;Juggluco-&gt;manage notifications, tab
+      on glucoseNotification and turn off "Set to Silent".
+      "Display in status bar" will now be shown turned on.</p>
+    <p style="font-weight: normal; line-height: 100%; margin-bottom: 0in">
+      You can also get an android notification by selecting <i>Notify</i>
+      in the left middle menu. In that case the notification will be sent
+      to some smartwatches, if it is configured that way. That works with
+      Garmin watches, I don\'t know if it works with anything else. Alarms
+      also generate notifications.</p>
+    <h2 class="western"><a href="https://www.juggluco.nl/Jugglucohelp/floatingconfig.html"
+        onclick="location.href=this.href+\'?unit=\'+unitstr;return false;">Floating
+        glucose</a></h2>
+    <p>When you turn this on, a small image with the current glucose
+      value is constantly present on the screen independent of which app is
+      in the foreground. If you turn it on the first time, you will be
+      directed to a list of apps in which you have to give Juggluco
+      permission to <b>display over other apps</b>.</p>
+    <h2 class="western">Sensor via Bluetooth</h2>
+    <p>Selects whether this app connects via Bluetooth with a Freestyle
+      libre 2 or 3 sensor. This is needed for alarms and continual glucose
+      monitoring.</p>
+    <h2 class="western"><a href="https://www.juggluco.nl/Jugglucohelp/alarmhelp.html">Alarms</a></h2>
+    <p style="font-weight: normal">Set high en low glucose alarms, loss
+      of signal alarm and value available notification.</p>
+    <h2 class="western"><a href="https://www.juggluco.nl/Jugglucohelp/labelhelp.html">Number
+        labels</a></h2>
+    <p style="line-height: 100%; margin-bottom: 0in">Specify the labels
+      used for amounts. Go to a screen to determine which labels to use to
+      set amounts, like insulin doses, carbohydrate consumption and hours
+      spend playing football. If you also use the Garmin watch app
+      Kerfstok, these labels are sent to the watch app.</p>
+    <h2 class="western">Language</h2>
+    <p style="line-height: 100%; margin-bottom: 0in">Juggluco is
+      displayed in the chosen language. When no language code is selected,
+      the system language is used.</p>
+    <h2 class="western"><a href="https://www.juggluco.nl/Jugglucohelp/reminders.html">Reminders</a></h2>
+    <p style="font-weight: normal; line-height: 100%; margin-bottom: 0in">
+      Specify that an alarm should go of if you didn\'t enter a certain
+      amount of food or medication within a certain time period.</p>
+    <h2 class="western"><a href="https://www.juggluco.nl/Jugglucohelp/colorhelp.html">Colors</a></h2>
+    <p style="line-height: 100%; margin-bottom: 0in">Change colors of
+      curves, scans and numbers. To switch <i>Dark mode</i>, use right
+      middle menu-&gt;Dark mode.</p>
+    <h2 class="western"><br>
+      <br>
+    </h2>
+  ]]>
 </string>
 <string name="sensorhelp" >
 <![CDATA[

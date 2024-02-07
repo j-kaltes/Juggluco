@@ -1,4 +1,15 @@
-Let wear/small share code.
+Complte OpenGL mirror version for windows, Linux, IOS and AsteroidOS
+AsteroidOS Bluetooth, NFC
+
+Iets met instellen IOB:
+	- Instellen variabele categorien?
+	- Verschillende typen insuline
+	- ga geen nummers af als er geen Insuline category bestaat.
+
+Help:
+	- uploader, broadcast. Bij langzame hologe/telefoon kan android device laten slapen voordat alles afgehandeld wordt.
+	Verander inleidende tekst:
+
 Version for Android Wear and Huawei watch 4 and ColorOS?
 - Of grootte testen en WearOS opmaak gebruiken.
 - Speciale compile for watch?
@@ -112,8 +123,7 @@ Oudheids indicator toevoegen aan zwevende glucose. Mogelijkheden:
 Do iets met libre3 events:
 - Remove?
 - LOG?
-Google Fit? Deprecated
-Health Connect? Encapsulated in Google Play and other restrictions.
+
 Test apps?
 make hostname option in mirror.
 send to tidepool

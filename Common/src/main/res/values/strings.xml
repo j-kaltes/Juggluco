@@ -329,5 +329,6 @@
 <string name="parseip">Error parsing IP</string>
 <string name="toomanyhosts">Maximal number of hosts exceeded</string>
 <string name="senthosts">Juggluco sends to maximal 4 hosts</string>
+    <string name="hostname">hostname</string>
 
 </resources>

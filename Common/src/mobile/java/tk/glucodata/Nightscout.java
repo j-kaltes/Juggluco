@@ -221,6 +221,8 @@ public static void show(MainActivity context,View parent) {
 	var treatments=getcheckbox(context,R.string.treatments,saytreatments);
 	int[] nochangeamounts={0};
 
+	var errstr=Natives.nightError();
+	var errorrow=errstr.length()>0?new View[]{getlabel(context,errstr)}:null;
 	var layout=new Layout(context,(l,w,h)-> {
 		var width= GlucoseCurve.getwidth();
 		if(width>w)
@@ -228,7 +230,7 @@ public static void show(MainActivity context,View parent) {
 		l.setY(0);
 		return new int[] {w,h};
 //		},new View[]{secret,editkey,visible},new View[]{sslbox,labport,portview,save} , new View[]{privkey,chain,labinterval,intervalview},new View[]{local,httpport,treatments},new View[]{Help,server,Close} );
-		},new View[]{secret,editkey,visible},new View[]{labport,portview,labinterval,intervalview} , new View[]{sslbox,privkey,chain,save},new View[]{local,httpport,treatments},new View[]{Help,server,Close} );
+		},new View[]{secret,editkey,visible},new View[]{labport,portview,labinterval,intervalview} , new View[]{sslbox,privkey,chain,save},new View[]{local,httpport,treatments},errorrow,new View[]{Help,server,Close} );
 	treatments.setOnCheckedChangeListener( (buttonView,  isChecked) -> {
 		switch(nochangeamounts[0])  {
 			case 0: {

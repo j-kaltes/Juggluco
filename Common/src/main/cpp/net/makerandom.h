@@ -32,3 +32,4 @@ inline bool makerandom(void *buf,size_t len) {
 	#endif
 	return true;
 	}
+//template <class cl> inline bool makerandom(cl ) {

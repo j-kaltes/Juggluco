@@ -1,9 +1,0 @@
-<resources>
-<string name="staticnum" >
-<![CDATA[
-<h1 align="center">&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Blokada</h1>
-<p>&nbsp;&nbsp;&nbsp;&nbsp<b>Lewe menu-&gt; Klonowanie -&gt; &quot;</b><em><b>Wartości otrzymane z klonowania</b></em><b>&quot;</b> włącza się, aby zapobiec wprowadzaniu wartości w tej aplikacji, ponieważ zostaną one zastąpione wartościami otrzymanymi z połączenia w ramach klonowania.</p>
-<p style="line-height: 100%; margin-bottom: 0in">Jeśli ta aplikacja nie odbiera wartości z połączenia w ramach klonowania, należy wyłączyć tę opcję.</p>
-]]>
-</string>
-</resources>

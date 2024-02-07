@@ -487,7 +487,7 @@ void initproc() {
 		if(tk.glucodata.Applic.useWearos()) {
 			initwearos(this);
 			}
-		 needsnatives();
+		needsnatives();
 		Log.i("Applic","initproc width="+initscreenwidth);
 		libre3init.init();
 		SuperGattCallback.init(this);
@@ -628,7 +628,7 @@ public static void wakemirrors() {
 	Natives.wakebackup();
 	}
 
-static	void initbroadcasts() {
+private static	void initbroadcasts() {
 
 	if(Natives.getinitVersion()<22) {
 		if(Natives.getinitVersion()<14) {

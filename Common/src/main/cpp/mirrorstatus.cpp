@@ -29,6 +29,8 @@ extern std::array<int,maxallhosts>   messagereceiversockets;
 extern std::array<int,maxallhosts>             us2peers;
 extern mirrorstatus_t mirrorstatus[maxallhosts];
 
+constexpr const int maxmirrortext=200;
+extern char *getmirrorerror(const passhost_t *pass);
 struct deleter {
 const char *ptr;
 deleter(const char ptr[]): ptr(ptr){};
@@ -56,17 +58,27 @@ const char *const * const sendptr=sendmessagestrbase+1;
 	const int len=host.nr;
 	char ips[maxip*46+1]="";
 	char *ipsptr=ips;
-	for(int i=0;i<len;i++) {
-		namehost name(host.ips+i);
-#if __ANDROID_API__ >= 26
-		ipsptr=stpcpy(ipsptr,name.data());
-#else
-		const int nlen=strlen(name.data());
-		memcpy(ipsptr,name.data(),nlen);
-		ipsptr+=nlen;
-#endif
+	if(host.hashostname() ) {
+		const char *name=host.gethostname();
+		const int len=strlen(name);
+		memcpy(ipsptr,name,len);
+		ipsptr+=len;
 		*ipsptr++=' ';
 		}
+	else {
+		for(int i=0;i<len;i++) {
+			namehost name(host.ips+i);
+	#if __ANDROID_API__ >= 26
+			ipsptr=stpcpy(ipsptr,name.data());
+	#else
+			const int nlen=strlen(name.data());
+			memcpy(ipsptr,name.data(),nlen);
+			ipsptr+=nlen;
+	#endif
+			*ipsptr++=' ';
+			}
+		}
+	ipsptr+=sprintf(ipsptr,"%d",host.getport());
 	if(host.index>=0) {
 		updateone &send=backup->getupdatedata()->tosend[host.index];
 		sendsock=send.getsock();
@@ -89,15 +101,16 @@ extern bool getactive(int pos);
 	
 
 	static char format[]=R"(<h1>Connection %d: %s</h1><p>%s <i>%s</i><br>Send to: %s%s%s running=%s socket=%d locked=%s<br>Receive from: %s %d %s socket=%d wait for commands: %s, interpret: %s</p>  <p><b>WearOS</b><br>messages=%s<br>Sender:<br>to bluetooth running=%d received=%s  sendmessage: %s<br>messagesendersocket=%d<br>Receiver:<br>to bluetooth running=%d received=%s  sendmessage: %s<br>messagereceiversocket=%d<br>otherside index=%d</p>)";
-	const int maxbuf=sizeof(format)+12*5+2*8+2+passhost_t::maxnamelen+100+20;
+	const int maxbuf=sizeof(format)+12*5+2*8+2+passhost_t::maxnamelen+100+20+maxmirrortext;
 	char *buf=new(nothrow) char[maxbuf];
 		if(!buf)  {
 			return std::unique_ptr<const char[],deleter>((char *)errormessage,deleter(errormessage));
 			}
 	constexpr const  int startwearos=168;
+	int buflen;
 	if(host.wearos) {
 		format[startwearos]=' ';
-		int len=snprintf(buf,maxbuf,format,allindex,host.getnameif(),ips,connect,sendnums?"Amounts ":"",sendscans?"Scans ":"",sendstream?"Stream ":"",boolstr[status.sender.running],sendsock,boolstr[status.sender.locked],
+		buflen=snprintf(buf,maxbuf,format,allindex,host.getnameif(),ips,connect,sendnums?"Amounts ":"",sendscans?"Scans ":"",sendstream?"Stream ":"",boolstr[status.sender.running],sendsock,boolstr[status.sender.locked],
 
 		boolstr[receives],status.receive.tid,receivethread,receivesock,boolstr[status.receive.ingetcom()],boolstr[status.receive.ininterpret],
 
@@ -113,12 +126,13 @@ messagereceiversockets[allindex],
 	else {
 		format[startwearos]='\0';
 
-		int len=snprintf(buf,maxbuf,format,allindex,host.getnameif(),ips,connect,sendnums?"Amounts ":"",sendscans?"Scans ":"",sendstream?"Stream ":"",boolstr[status.sender.running],sendsock,boolstr[status.sender.locked],
+		buflen=snprintf(buf,maxbuf,format,allindex,host.getnameif(),ips,connect,sendnums?"Amounts ":"",sendscans?"Scans ":"",sendstream?"Stream ":"",boolstr[status.sender.running],sendsock,boolstr[status.sender.locked],
 
 		boolstr[receives],status.receive.tid,receivethread,receivesock,boolstr[status.receive.ingetcom()],boolstr[status.receive.ininterpret]);
 
 		}
-
+	buf[buflen++]='\n';
+	  strcpy(buf+buflen,getmirrorerror(&host));
 		return std::unique_ptr<const char[],deleter> (buf,deleter(nullptr));
 
 	}
@@ -127,3 +141,14 @@ extern "C" JNIEXPORT jstring JNICALL   fromjava(mirrorStatus)(JNIEnv *envin, jcl
 	auto text=getnetstatus(allindex); 
 	return envin->NewStringUTF(text.get());
 	}
+
+extern char servererrorbuf[];
+extern "C" JNIEXPORT jstring JNICALL   fromjava(serverError)(JNIEnv *envin, jclass cl) {
+	return envin->NewStringUTF(servererrorbuf);
+	}
+#ifndef WEAROS
+extern char nighterrorbuf[];
+extern "C" JNIEXPORT jstring JNICALL   fromjava(nightError)(JNIEnv *envin, jclass cl) {
+	return envin->NewStringUTF(nighterrorbuf);
+	}
+#endif

@@ -1,21 +1,14 @@
-Iets met instellen IOB:
-	- Instellen variabele categorien?
-	- Verschillende typen insuline
-	- ga geen nummers af als er geen Insuline category bestaat.
+Roep sync ergens aan in watchserver wanneer gevraagd wordt.
+	REMOVE sync bij enkel connectie
 
-Remove log messages in production.
 
-Health connect Resend data
 
-Dialog soms te hoog
 
 No relevant changes: https://github.com/j-kaltes/Juggluco/compare/ecfb46b..678de7a
 
 Geen nieuw id in juggluco server
 What do com.google.android.gms.auth.api.signin and com.google.android.gms.dynamite in my app??
 
-
-Only give current and pebble when not too old?
 
 Beperk aantal connecties webserver?
 Resend data wordt niet doorgezonden.

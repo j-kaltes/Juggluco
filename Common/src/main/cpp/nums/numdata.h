@@ -82,6 +82,7 @@ static constexpr const int libreSolid=168;
 static constexpr const int nightStart=172;
 static constexpr const int nightSend=176;
 static constexpr const int nightSwitch=180;
+static constexpr const int nightIDstart=184;
 static constexpr const int datastart=256;
 std::unique_ptr<char[]> newnumsfile;
 protected:
@@ -421,10 +422,17 @@ const int32_t getnightSend() const  {
 	const char *raw=reinterpret_cast<const char *>(nums.data());
 	return *reinterpret_cast<const int32_t *>(raw+nightSend);
 	}
+
 int32_t &getnightSwitch()  {
 	char *raw=reinterpret_cast<char *>(nums.data());
 	return *reinterpret_cast<int32_t *>(raw+nightSwitch);
 	}
+
+int32_t &getnightIDstart()  {
+	char *raw=reinterpret_cast<char *>(nums.data());
+	return *reinterpret_cast<int32_t *>(raw+nightIDstart);
+	}
+
 void nightBack(int pos) {
 	auto was=getnightStart();
 	if(pos<was)

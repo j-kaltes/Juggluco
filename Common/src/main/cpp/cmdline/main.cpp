@@ -235,7 +235,7 @@ int   listconnections() {
 	for(int h=0;h<hostnr;h++) {
 		cout<<h+1<<": ";
 		const passhost_t &host=backup->getupdatedata()->allhosts[h];
-		cout<< (host.hasname?host.getname():"")<<(host.detect?" detect,":" ")<< (host.receivefrom&2?" receiver":"")<<(getpassive(h)?" passiveonly ":" ")<<(getactive(h)?" active only ":"")<<(host.haspass()?backup->getpass(h).data():"no pass") <<", port="<< ntohs(host.ips[0].sin6_port);
+		cout<< (host.hasname?host.getname():"")<<(host.noip?" don't test IP,":" test IP,")<<(host.detect?" detect,":" ")<< (host.receivefrom&2?" receiver":"")<<(getpassive(h)?" passiveonly ":" ")<<(getactive(h)?" active only ":"")<<(host.haspass()?backup->getpass(h).data():"no pass") <<", port="<< ntohs(host.ips[0].sin6_port);
 		int sin=host.index;
 		if(sin>=0) {
 			const updateone &sto=backup->getupdatedata()->tosend[sin];

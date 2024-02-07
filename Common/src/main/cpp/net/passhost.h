@@ -78,6 +78,9 @@ false	  	false	  	0
 	const char *gethostname() const {
 		return reinterpret_cast<const hostnamedata*>(ips)->name;
 		}
+	char *gethostname() {
+		return reinterpret_cast<hostnamedata*>(ips)->name;
+		}
 	void sethostname(std::string_view name) {
 		int len=std::min(name.size(),sizeof(hostnamedata::name)-1);
 		char *doel=reinterpret_cast<hostnamedata*>(ips)->name;

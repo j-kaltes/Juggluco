@@ -877,7 +877,11 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 
 		if(advhelp!=null) {
 			advanced.setOnClickListener(v -> {
-				help(advhelp, (MainActivity) (v.getContext()));
+				EnableControls(thelayout[0],false);
+				help(advhelp, (MainActivity) (v.getContext()),l->
+					EnableControls(thelayout[0],true)
+					
+					);
 			});
 			}
 		}

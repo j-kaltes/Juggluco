@@ -23,7 +23,7 @@
 -verbose
 -keep,allowshrinking,allowoptimization class com.garmin.android.connectiq.IQDevice
 -keep,allowshrinking,allowoptimization class com.garmin.android.connectiq.IQApp
--keep,allowshrinking,allowoptimization class android.widget.Spinner.mPopup
+-keep,allowshrinking,allowoptimization class android.widget.Spinner
 #-keep class com.garmin.android.connectiq.IQMessage # Needed?
 #-keep class tk.glucodata.MainActivity
 #-keep,allowshrinking,allowoptimization class tk.glucodata.nums.item # Doesnt work

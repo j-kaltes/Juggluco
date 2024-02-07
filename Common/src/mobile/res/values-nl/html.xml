@@ -173,21 +173,21 @@ bewegen) kunnen worden gesimuleerd door een toets in te drukken
 <p style="line-height: 100%; margin-bottom: 0in">Specificeer een
 verbinding met een ander exemplaar van Juggluco; Juggluco op een
 apparaat zendt data via IP/TCP naar Juggluco op een ander apparaat.
-Om een verbinding te vormen moet een van de Juggluco&rsquo;s
-luisteren op een poort en het andere exemplaar van Juggluco contact
-maken met die poort. De poort van de Juggluco die je nu gebruikt
-stond in het vorige schermpje (linker midden menu&rarr; Kloon). In
-het huidige schermpje wordt de poort aangegeven waarmee deze Juggluco
-contact maakt als het zelf actief contact maakt.</p>
+Om een verbinding te vormen moet een van de Juggluco’s luisteren op
+een poort en het andere exemplaar van Juggluco contact maken met die
+poort. De poort van de Juggluco die je nu gebruikt stond in het
+vorige schermpje (linker midden menu→ Kloon). In het huidige
+schermpje wordt de poort aangegeven waarmee deze Juggluco contact
+maakt als het zelf actief contact maakt.</p>
 <p style="line-height: 100%; margin-bottom: 0in">Als het exemplaar
 van Juggluco dat je nu gebruikt niet kan luisteren op een poort,
-selecteer &ldquo;<b>Active Only</b>&ldquo;. Als de andere kant niet
-kan luisteren op een poort, selecteer &ldquo;<b>Passive only</b>&rdquo;,
-in andere gevallen vink &ldquo;<b>Beide</b>&rdquo; aan. De Juggluco
-aan de andere kant moet het omgekeerde aangeven: <i>Passive only</i>
-als hier <i>Active only</i> werd aangegeven, <i>Active only</i> als
-hier <i>Passive only</i> werd aangegeven en <i>Beide</i> als hier
-<i>Beide</i> werd aangegeven.</p>
+selecteer “<b>Active Only</b>“. Als de andere kant niet kan
+luisteren op een poort, selecteer “<b>Passive only</b>”, in
+andere gevallen vink “<b>Beide</b>” aan. De Juggluco aan de
+andere kant moet het omgekeerde aangeven: <i>Passive only</i> als
+hier <i>Active only</i> werd aangegeven, <i>Active only</i> als hier
+<i>Passive only</i> werd aangegeven en <i>Beide</i> als hier <i>Beide</i>
+werd aangegeven.</p>
 <p style="line-height: 100%; margin-bottom: 0in">Als het huidige
 exemplaar van Juggluco actief contact maakt, moet de IP aangegeven
 worden. Als dat apparaat meerdere IPs heeft geef er dan meer aan. Het
@@ -196,21 +196,27 @@ gaat en op andere plaatsen via een persoonlijke hotspot. Geef nooit
 de IPs van meerdere apparaten; in dat geval wordt een gedeelte van de
 data verzonden naar het ene en een ander gedeelte naar het andere
 apparaat.</p>
+<p style="line-height: 100%; margin-bottom: 0in">hostname: Geef één
+hostnaam op in plaats van IP\'s. Hierdoor wordt de verbinding
+afhankelijk van een nameserver en dus langzamer en onder invloed van
+verstoring van de nameserververbinding. Dit moet alleen worden
+ingeschakeld als je geen statisch IP-adres kunt configureren en deze
+hostnaam automatisch aan het dynamische IP-adres wordt toegewezen.</p>
 <p style="line-height: 100%; margin-bottom: 0in">In alle gevallen op
-&ldquo;Active only&rdquo; na, kun je Detecteer aanvinken; in dat
-geval slaat Juggluco de eerste IP op die contact maakt met Juggluco.</p>
+“Active only” na, kun je Detecteer aanvinken; in dat geval slaat
+Juggluco de eerste IP op die contact maakt met Juggluco.</p>
 <p style="line-height: 100%; margin-bottom: 0in">Op twee manieren kan
 bepaald worden wie contact maakt:</p>
 <ul>
-	<li><p style="line-height: 100%; margin-bottom: 0in">Selecteer &ldquo;<b>Test
-	IP</b>&rdquo; om te testen op de IP;</p>
-	<li><p style="line-height: 100%; margin-bottom: 0in">Selecteer &ldquo;<b>Test
-	Label</b>&rdquo; om enkel een verbinding te vormen als de andere
-	kant hetzelfde label aangegeven heeft.</p>
+	<li><p style="line-height: 100%; margin-bottom: 0in">Selecteer “<b>Test
+	IP</b>” om te testen op de IP;</p>
+	<li><p style="line-height: 100%; margin-bottom: 0in">Selecteer “<b>Test
+	Label</b>” om enkel een verbinding te vormen als de andere kant
+	hetzelfde label aangegeven heeft.</p>
 </ul>
 <p style="line-height: 100%; margin-bottom: 0in">De verbinding kan
-gebruikt worden om te ontvangen of te zenden. Selecteer &ldquo;<b>Ontvang
-van</b>&rdquo; om data te ontvangen van deze verbinding. Om te zenden
+gebruikt worden om te ontvangen of te zenden. Selecteer “<b>Ontvang
+van</b>” om data te ontvangen van deze verbinding. Om te zenden
 naar deze verbinding, moet je aangeven welke data verzonden wordt:</p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>Hoeveelheden</b>:
 dosis, eet en sport data;</p>
@@ -243,8 +249,8 @@ situatie horen alle verbindingen tot je thuis netwerk en kunnen
 lokale IPs gebruikt worden. Het is ook mogelijk over internet via
 Wi-Fi een verbinding te vormen. In dat geval moet je de handleiding
 van je modem nazien om uit te vinden hoe een externe poort
-doorverwezen (<span lang="en-GB">forward</span><span lang="en-GB">ed</span>)
-kan worden naar een IP en poort binnen je thuis netwerk.</p>
+doorverwezen (<span lang="en-GB">forwarded</span>) kan worden naar
+een IP en poort binnen je thuis netwerk.</p>
 <p style="line-height: 100%; margin-bottom: 0in">Twee smartphones
 verbonden via een mobiele data verbinding over internet, kunnen
 rechtstreeks met elkaar verbonden worden, als een van hen op een
@@ -272,9 +278,9 @@ NFC, op de volgende manier:</p>
 	en stream data naar het apparaat zonder NFC;</p>
 	<li><p style="line-height: 100%; margin-bottom: 0in">Keer de
 	richting van de stream data om in de betreffende kloon verbindingen;</p>
-	<li><p style="line-height: 100%; margin-bottom: 0in">Zet &ldquo;sensor
-	via Bluetooth&rdquo; UIT in het apparaat met NFC en AAN in het
-	apparaat zonder NFC;</p>
+	<li><p style="line-height: 100%; margin-bottom: 0in">Zet “sensor
+	via Bluetooth” UIT in het apparaat met NFC en AAN in het apparaat
+	zonder NFC;</p>
 	<li><p style="line-height: 100%; margin-bottom: 0in">Zet Bluetooth
 	aan in het apparaat zonder NFC.</p>
 </ul>
@@ -306,8 +312,8 @@ smartphone <i>passsiveonly</i>. Over mijn WIFI thuis netwerk, werkt
 worden gehouden dat IPs veranderen als de netwerkverbinding
 verandert.</p>
 <p style="line-height: 100%; margin-bottom: 0in">Een verbinding via
-het thuis netwerk gebruikt andere IPs dan een verbinding via
-een persoonlijke hotspot.</p>
+het thuis netwerk gebruikt andere IPs dan een verbinding via een
+persoonlijke hotspot.</p>
 ]]>
 </string>
 <string name="locationpermission" >
@@ -803,13 +809,13 @@ voor meer informatie.</p>
 <h2 class="western">Webserver</h2>
 <p>Webserver die kan worden gebruikt met xDrip-horloges en sommige
 Nightscout-apps. Voorheen xDrip webserver genoemd.</p>
-<h2>Insulin onboard (IOB)</h2>
-<p>IOB is een maat voor hoeveel insulineactiviteit van eerdere
-insulinedoses nog aanwezig is. Hiervoor moet je insulinedoses
-invoeren onder een label in de categorie “<i>Snelwerkende
-insuline</i>”. Onder linkermenu → Instellingen → Webserver →
-<a href="https://www.juggluco.nl/Jugglucohelp/nl/setlibrenumtype.html">Geef
-hoeveelheden</a> kun je aangeven welke labels “<i>Snelwerkende insuline</i>” zijn.</p>
+<h2 class="western">Insulin onboard (IOB)</h2>
+<p>IOB is een maat voor hoeveel insuline van eerdere insulinedoses
+nog aanwezig is. Hiervoor moet je insulinedoses invoeren onder een
+label in de categorie “<i>Snelwerkende insuline</i>”. Onder
+linkermenu → Instellingen → Webserver → <a href="https://www.juggluco.nl/Jugglucohelp/nl/setlibrenumtype.html">Geef
+hoeveelheden</a> kun je aangeven welke labels “<i>Snelwerkende
+insuline</i>” zijn.</p>
 <h2 class="western">Uploader</h2>
 <p>Uploaden naar Nightscout-server.</p>
 <h2 class="western">Glucosemelding</h2>

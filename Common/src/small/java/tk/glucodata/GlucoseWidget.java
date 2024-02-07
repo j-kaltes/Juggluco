@@ -1,8 +1,1 @@
-package tk.glucodata;
-
-
-public class GlucoseWidget  {
- public static void update() {
-    }
-
-}
+../../../../wear/java/tk/glucodata/GlucoseWidget.java

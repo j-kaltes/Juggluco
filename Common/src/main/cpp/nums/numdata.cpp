@@ -24,16 +24,24 @@
 std::vector<Numdata*> numdatas;
 
 #include "net/passhost.h"
-
+#include "net/makerandom.h"
 extern void makenightswitch();
+
 void makenightswitch() {
-	if(settings->data()->initVersion<23) {
-		LOGAR("makenightswitch");
-		settings->data()->postTreatments=false;
-		for(auto *num:numdatas) {
-			num->getnightSwitch() =num->getlastpos();
+	if(settings->data()->initVersion<24) {
+		if(settings->data()->initVersion<23) {
+			LOGAR("makenightswitch");
+			settings->data()->postTreatments=false;
+			for(auto *num:numdatas) {
+				num->getnightSwitch() =num->getlastpos();
+				}
 			}
-		settings->data()->initVersion=23;
+		makerandom(&settings->data()->jugglucoID,sizeof(settings->data()->jugglucoID));
+		for(auto *num:numdatas) {
+			num->getnightIDstart() =num->getlastpos();
+			}
+
+		settings->data()->initVersion=24;
 		}
 	}
 

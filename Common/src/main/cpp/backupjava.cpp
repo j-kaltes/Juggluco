@@ -35,13 +35,16 @@ extern "C" JNIEXPORT jboolean  JNICALL   fromjava(backuphasrestore)(JNIEnv *env,
 extern "C" JNIEXPORT jint  JNICALL   fromjava(backuphostNr)(JNIEnv *env, jclass cl) {
 	return backup->	gethostnr();
 	}
-//static native String[] getbackuphostnames(int pos);
 
 extern "C" JNIEXPORT jboolean  JNICALL   fromjava(detectIP)(JNIEnv *envin, jclass cl,jint pos) {
 	const passhost_t &host=backup->getupdatedata()->allhosts[pos];
 	return host.detect;
 	}
-extern "C" JNIEXPORT jobjectArray  JNICALL   fromjava(getbackuphostnames)(JNIEnv *env, jclass cl,jint pos) {
+extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getbackupHasHostname)(JNIEnv *envin, jclass cl,jint pos) {
+	const passhost_t &host=backup->getupdatedata()->allhosts[pos];
+	return host.hashostname();
+	}
+extern "C" JNIEXPORT jobjectArray  JNICALL   fromjava(getbackupIPs)(JNIEnv *env, jclass cl,jint pos) {
 	if(!backup)  {
 		LOGSTRING("backup==null\n");
 		return nullptr;
@@ -62,9 +65,16 @@ extern "C" JNIEXPORT jobjectArray  JNICALL   fromjava(getbackuphostnames)(JNIEnv
 		LOGGER(R"(NewObjectArray(%d,env->FindClass("java/lang/String")==null)""\n",len);
 		return nullptr;
 		}
-	for(int i=0;i<len;i++) {
-		namehost name(host.ips+i);
-		env->SetObjectArrayElement(ipar,i,env->NewStringUTF(name));
+	if(len>0) {
+		if(host.hashostname()) {
+			env->SetObjectArrayElement(ipar,0,env->NewStringUTF(host.gethostname()));
+			}
+		else  {
+			for(int i=0;i<len;i++) {
+				namehost name(host.ips+i);
+				env->SetObjectArrayElement(ipar,i,env->NewStringUTF(name));
+				}
+			}
 		}
 	return ipar;
 	}
@@ -171,6 +181,7 @@ extern "C" JNIEXPORT jstring JNICALL   fromjava(getbackuppassword)(JNIEnv *envin
 extern "C" JNIEXPORT jstring JNICALL   fromjava(getbackuphostport)(JNIEnv *envin, jclass cl,jint pos) {
 	if(!backup||pos>=backup->gethostnr())
 		return nullptr;
+	
 	char port[6];
 	backup->getport(pos,port);
 	return envin->NewStringUTF(port);
@@ -277,7 +288,7 @@ extern "C" JNIEXPORT jboolean JNICALL   fromjava(stringarray)(JNIEnv *env, jclas
 #include <mutex>
 extern std::mutex change_host_mutex;
 #endif
-extern "C" JNIEXPORT jint JNICALL   fromjava(changebackuphost)(JNIEnv *env, jclass cl,jint pos,jobjectArray jnames,jint nr,jboolean detect,jstring jport,jboolean nums,jboolean stream,jboolean scans,jboolean recover,jboolean receive,jboolean activeonly,jboolean passiveonly,jstring jpass,jlong starttime,jstring jlabel,jboolean testip) {
+extern "C" JNIEXPORT jint JNICALL   fromjava(changebackuphost)(JNIEnv *env, jclass cl,jint pos,jobjectArray jnames,jint nr,jboolean detect,jstring jport,jboolean nums,jboolean stream,jboolean scans,jboolean recover,jboolean receive,jboolean activeonly,jboolean passiveonly,jstring jpass,jlong starttime,jstring jlabel,jboolean testip,jboolean hashostname) {
 #ifndef TESTMENU
 	LOGAR("changebackuphost const std::lock_guard<std::mutex> lock(change_host_mutex)");
   const std::lock_guard<std::mutex> lock(change_host_mutex);
@@ -295,7 +306,7 @@ extern "C" JNIEXPORT jint JNICALL   fromjava(changebackuphost)(JNIEnv *env, jcla
 		env->GetStringUTFRegion( jpass, 0,jpasslen, passptr); passptr[passlen]='\0';
 		}
 	const char *label=jlabel?env->GetStringUTFChars( jlabel, NULL):nullptr;
- 	jint res=backup->changehost(pos,env,jnames,nr,detect,std::string_view(port,portlen),nums,stream,scans,recover,receive,activeonly,std::string_view(passptr,passlen),starttime,passiveonly,label,testip);
+ 	jint res=backup->changehost(pos,env,jnames,nr,detect,std::string_view(port,portlen),nums,stream,scans,recover,receive,activeonly,std::string_view(passptr,passlen),starttime,passiveonly,label,testip,true,hashostname);
 	if(jlabel)
 		env->ReleaseStringUTFChars(jlabel, label);
 	return res;

@@ -22,6 +22,8 @@
 #ifndef WEAROS
 #include "settings/settings.h"
 #include <charconv>
+#include <inttypes.h>
+#include <system_error>
 //#include <arpa/inet.h>
        #include <sys/types.h>
        #include <sys/socket.h>
@@ -71,6 +73,11 @@ typedef std::conditional<sizeof(long long) == sizeof(int64_t), long long, int64_
 #endif
 extern jugglucotext engtext;
 
+constexpr const int maxnighterror=200;
+char nighterrorbuf[maxnighterror]="";
+#include "mirrorerror.h"
+#define nightprint(...) snprintf( nighterrorbuf,maxnighterror,__VA_ARGS__)
+#define nighterror(...) savebuferror(nighterrorbuf,maxnighterror,__VA_ARGS__)
 static void watchserverloop(int *sockptr,bool secure) ;
 static bool startwatchserver(bool secure,int port,int *sockptr) {
 	const char *servername=secure?"SSL WATCHSERVER":"WATCHSERVER";
@@ -85,12 +92,9 @@ static bool startwatchserver(bool secure,int port,int *sockptr) {
 	{
 	struct addrinfo *servinfo=nullptr;
 	destruct serv([&servinfo]{ if(servinfo)freeaddrinfo(servinfo);});
-	if(
-#ifndef NOLOG
-	int status=
-#endif
-	getaddrinfo(nullptr,watchserverport,&hints,&servinfo)) {
-		LOGGERWEB("getaddrinfo: %s\n",gai_strerror(status));
+	if(int status= getaddrinfo(nullptr,watchserverport,&hints,&servinfo)) {
+		nightprint("getaddrinfo: %s",gai_strerror(status));
+		LOGGERWEB("%s\n",nighterrorbuf);
 		return false;
 		}
 	for(struct addrinfo *ips=servinfo;;ips=ips->ai_next) {
@@ -99,18 +103,21 @@ static bool startwatchserver(bool secure,int port,int *sockptr) {
 			}
 		sock=socket(ips->ai_family,ips->ai_socktype,ips->ai_protocol);
 		if(sock==-1) {
-			lerror("socket");
+			nighterror("socket");
+			LOGGERWEB("%s\n",nighterrorbuf);
 			continue;
 			}
 		const int  yes=1;	
-		if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) == -1) {
-			lerror("setsockopt");
+		if(setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) == -1) {
+			nighterror("setsockopt");
+			LOGGERWEB("%s\n",nighterrorbuf);
 			close(sock);
 			return false;
 			}
 		if(bind(sock,ips->ai_addr,ips->ai_addrlen)==-1) {
-			lerror("bind");
+			nighterror("bind port=%d",port);
 			close(sock);
+			LOGGERWEB("%s\n",nighterrorbuf);
 			continue;
 			}
 		break;
@@ -118,11 +125,12 @@ static bool startwatchserver(bool secure,int port,int *sockptr) {
 	}
 	constexpr int const BACKLOG=5;
 	if (listen(sock, BACKLOG) == -1) {
+		nighterror("listen");
 		close(sock);
-		lerror("listen");
+		LOGGERWEB("%s\n",nighterrorbuf);
 		return false;
 		}
-
+	*nighterrorbuf='\0';
 	*sockptr=sock;
 	watchserverloop(sockptr,secure) ;
 	return true;
@@ -263,7 +271,10 @@ const bool localhostonly=!settings->data()->remotelyxdripserver&&!secure;
 				continue;
 				}
 		  }
+
 	      LOGGERWEB("%swatchserver: got connection from %s sock=%d\n" ,secure?"secure":"",namestr ,new_fd);
+	     void wakesender();
+	      wakesender();
 		void handlewatch(int sock) ;
 		try {
 #ifdef USE_SSL
@@ -505,7 +516,7 @@ authpair *data() {
 public:
 void insert(const auth_t &au,uint32_t expire) {
 	data()[end()++%AUTHMAX]={au,expire};
-	LOGGER("insert(%.*s) at %d\n",au.size(),au.data(),end()-1);
+	LOGGER("insert(%.*s) at %d\n",(int)au.size(),au.data(),end()-1);
 	};
 void	erase_expired(uint32_t expiredtime) {
 	const authpair *dat=data();	
@@ -517,7 +528,7 @@ void	erase_expired(uint32_t expiredtime) {
 			return;
 			}
 		}	
-	start()=en; //TODO: *iter()=*start()=0;
+	end()=start()=0;
 	LOGGER("erase_expired nothing left  end=%d\n",en);
 	};
 size_t size() const {
@@ -1720,6 +1731,12 @@ bool watchcommands(char *rbuf,int len,recdata *outdata,bool secure) {
 						givesite(outdata,hostname,secure);
 						return true;
 						}
+
+					time_t tim=time(nullptr);
+        				struct tm stm;
+		 			localtime_r(&tim, &stm);
+					nightprint(R"(%02d:%02d %02d:%02d: Wrong secret "%.*s")",stm.tm_mday,stm.tm_mon+1,stm.tm_hour,stm.tm_min,(int)foundsecret.size(),foundsecret.data());
+
 					nosecret(foundsecret, outdata) ;
 					return false;
 					}
@@ -2074,7 +2091,7 @@ static void toend(NumIter<T> *numiters,int maxnum) {
 		}
 	} */
 
-extern char *writetreatment(char *outiter,const int numbase,const int pos,const Num*num,int border);
+extern char *writetreatment(char *outiter,const int numbase,const int pos,const Num*num,int border,int borderID);
 
 int mkid(char *outiter,int base,int pos) {
 	int len=sprintf(outiter,"ba%de%d",base,pos);
@@ -2082,7 +2099,13 @@ int mkid(char *outiter,int base,int pos) {
 	memset(outiter+len,'b',over);
 	return 24;
 	}
-char *writetreatment(char *outiter,const int numbase,const int pos,const Num*num,int border) {
+
+int mkidid(char *outiter,int base,int pos) {
+	int len=sprintf(outiter,"%u%07u%016" PRIx64  ,base,pos,settings->data()->jugglucoID);
+	return len;
+	}
+
+char *writetreatment(char *outiter,const int numbase,const int pos,const Num*num,int border,int borderID) {
 	const int type=num->type;
 	if(type>=settings->varcount()||!settings->data()->Nightnums[type].kind) {
 		return outiter;
@@ -2091,11 +2114,15 @@ char *writetreatment(char *outiter,const int numbase,const int pos,const Num*num
         struct tm tmbuf;
         gmtime_r(&tim, &tmbuf);
 		addar(outiter,R"({"_id":")");
-
-	if(pos>=border) 
-		outiter+=mkid(outiter,numbase,pos);
-	else
-		outiter+=sprintf(outiter,"num%d#%d",numbase,pos);
+	if(pos>=borderID) {
+		outiter+=mkidid(outiter,numbase,pos);
+		}
+	else {
+		if(pos>=border) 
+			outiter+=mkid(outiter,numbase,pos);
+		else
+			outiter+=sprintf(outiter,"num%d#%d",numbase,pos);
+		}
 
 
 	addar(outiter,R"(","eventType":"<none>","enteredBy":"Juggluco","created_at":")");
@@ -2190,7 +2217,8 @@ static bool givetreatments(const char *args,int argslen, recdata *outdata)  {
 				}
 			const int pos=num-numdatas[ind]->begin();
 			const int border=numdatas[ind]->getnightSwitch();
-			char *out=writetreatment(outiter,ind,pos,num,border);
+			const int borderID=numdatas[ind]->getnightIDstart();
+			char *out=writetreatment(outiter,ind,pos,num,border,borderID);
 			if(out!=outiter) {
 				outiter=out;
 				i++;
@@ -2636,7 +2664,8 @@ public:
 	};
 
 extern int mkidV3(char *outiter,int base,int pos) ;
-char *writetreatmentv3(char *outiter,const int numbase,const int pos,const Num*num,uint32_t modified,bool invalid) {
+extern int mkididV3(char *outiter,int base,int pos) ;
+char *writetreatmentv3(char *outiter,const int numbase,const int pos,const Num*num,uint32_t modified,bool invalid,int borderID) {
 	const int typein=num->type;
 	const int type=num->type&Numdata::otherbits;
 	if(typein>=settings->varcount()||!settings->data()->Nightnums[type].kind) {
@@ -2679,7 +2708,7 @@ char *writetreatmentv3(char *outiter,const int numbase,const int pos,const Num*n
 		}
 	LOGAR("before utcOffset");
 	addar(outiter,R"("utcOffset":0,"identifier":")");
-	outiter+=mkidV3(outiter,numbase,pos);
+	outiter+=(pos>=borderID?mkididV3:mkidV3)(outiter,numbase,pos);
 	LOGAR("before srvModified");
 	outiter+=sprintf(outiter,R"(","srvModified":%u000,"srvCreated":%lu000)",modified,tim);
 	if(invalid) {
@@ -2721,7 +2750,7 @@ char * 		 V3Args::treatmentlist(char *outstart,uint32_t minmodified,uint32_t *la
 			uint32_t chtime=numdatas[ind]->changed(pos);	
 			LOGGER("%d changetime(%d)==%u\n",ind,pos,chtime);
 			if(chtime>minmodified||(!chtime&&(chtime=num->gettime())>minmodified)) {
-				char *out=writetreatmentv3(outiter,ind,pos,num,chtime,(num->type&Numdata::removedbit)&&minmodified);
+				char *out=writetreatmentv3(outiter,ind,pos,num,chtime,(num->type&Numdata::removedbit)&&minmodified,numdatas[ind]->getnightIDstart());
 				if(out!=outiter) {
 					lastmodified=std::max(lastmodified,chtime);
 					outiter=out;
@@ -2745,7 +2774,7 @@ char * 		 V3Args::treatmentlist(char *outstart,uint32_t minmodified,uint32_t *la
 							}
 						if(minmodified<chtime) {
 							LOGGER("%d: %d changed\n",nd,cha);
-							char *out=writetreatmentv3(outiter,nd,cha,beg+cha,chtime,true);
+							char *out=writetreatmentv3(outiter,nd,cha,beg+cha,chtime,true,numdata->getnightIDstart());
 							if(out!=outiter) {
 								lastmodified=std::max(lastmodified,chtime);
 								outiter=out;
@@ -2987,6 +3016,26 @@ bool getv3entries(const char *cmdstart,const char *cmdend,recdata *outdata) {
 	return true;
 
 	}
+
+int mkididV3(char *input,int base,int pos) {
+	char *outiter=input;
+	constexpr const  char temp[]="ffffffffffff";
+	memcpy(outiter,temp,4);
+	if(auto [ptr,ec]=std::to_chars(outiter,outiter+10,base);ec != std::errc()) {
+		LOGGER("tochar failed: %s\n",std::make_error_code(ec).message().c_str());
+		}
+	outiter+=4;
+	uint16_t *id=reinterpret_cast<uint16_t *>(&settings->data()->jugglucoID);
+	outiter+=sprintf(outiter,"%04x-%04x-%04x-%04x-",id[0],id[1],id[2],id[3]);
+	memcpy(outiter,temp,sizeof(temp)-1);
+	if(auto [ptr,ec]=std::to_chars(outiter,outiter+10,pos);ec != std::errc()) {
+		LOGGER("tochar failed: %s\n",std::make_error_code(ec).message().c_str());
+		}
+	return 36;
+	}
+
+
+
 int mkidV3(char *outiter,int base,int pos) {
 	constexpr const  char temp[]="ffffffff-ffff-ffff-ffff-ffffffffffff";
 	memcpy(outiter,temp,sizeof(temp));
@@ -2999,6 +3048,7 @@ int mkidV3(char *outiter,int base,int pos) {
 		}
 	return sizeof(temp)-1;
 	}
+
 
 #endif
 

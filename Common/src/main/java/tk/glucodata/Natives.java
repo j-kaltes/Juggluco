@@ -244,15 +244,14 @@ public static native boolean getsystemUI();
 
 public static native boolean backuphasrestore( );
 public static native int backuphostNr( );
-public static native String[] getbackuphostnames(int pos);
+public static native String[] getbackupIPs(int pos);
+public static native boolean getbackupHasHostname(int pos);
+
 public static native String getbackuphostport(int pos);
 public static native String getbackuppassword(int pos);
 public static native boolean isWearOS(int pos);
-//public static native int changebackuphost(int pos,String name,String port,boolean nums,boolean stream,boolean scans );
-//public static native int changebackuphost(int pos,String name,String port,boolean nums,boolean stream,boolean scans,boolean receive,boolean reconnect,String pass);
-//public static native int changebackuphost(int pos,String[] names,int nr,boolean dodetect,String port,boolean nums,boolean stream,boolean scans,boolean recover,boolean receive,boolean reconnect,boolean accepts,String pass,long starttime);
 
-public static native int changebackuphost(int pos,String[] names,int nr,boolean detect,String port,boolean nums,boolean stream,boolean scans,boolean recover,boolean receive,boolean activeonly,boolean passiveonly,String pass,long starttime,String label,boolean testip);
+public static native int changebackuphost(int pos,String[] names,int nr,boolean detect,String port,boolean nums,boolean stream,boolean scans,boolean recover,boolean receive,boolean activeonly,boolean passiveonly,String pass,long starttime,String label,boolean testip,boolean hasname);
 
 
 public static native boolean detectIP(int pos);
@@ -713,6 +712,10 @@ public static native boolean gethealthConnect( );
 public static native void healthConnectReset();
 public static native boolean setIOB(boolean val);
 public static native boolean getIOB( );
+public static native float getIOBvalue(long time);
+public static native String serverError();
+public static native String nightError();
+
 
 //s/^extern.*JNIEXPORT[         ]*\([a-zA-Z]*\)[ ]*JNICALL[      ]*fromjava(\([^)]*\)) *(JNIEnv[^,]*,[^,)]*[,)]\([^){]*\)[^a-zA-Z0-9]*$/public static native \1 \2(\3);/g
 }

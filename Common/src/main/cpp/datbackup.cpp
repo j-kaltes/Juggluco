@@ -129,7 +129,18 @@ int 	updateone::updatenums() {
 	int soc=getsock();
 	if(soc<0)
 		return 0;
-	return ::updatenums(getcrypt(),soc,nums,ind);
+	if(!sendjugglucoid) {
+		LOGAR("updatenums sendjugglucoid");
+		const int offset=offsetof(Tings,jugglucoID);
+		const auto *data=reinterpret_cast<const senddata_t*>(&settings->data()->jugglucoID);
+		const int len=sizeof(Tings::jugglucoID);
+		if(!senddata(getcrypt(),soc,offset,data,len,settingsdat) )  {
+			LOGAR("updatenums sendjugglucoid error");
+			return 0;
+			}
+		sendjugglucoid=true;
+		}
+	return ::updatenums(getcrypt(),getsock(),nums,ind);
 	}
 
 int  updateone::updatestreamu() {
@@ -534,3 +545,53 @@ void definished(int sensorindex) {
 int getgetsendnr() {
 	return backup->getupdatedata()->sendnr;
 	}
+void wakesender() {
+	 backup->getupdatedata()->wakesender();	
+	 }
+#include "mirrorerror.h"
+char mirrorerrors[maxallhosts][maxmirrortext];
+int getindex(const  passhost_t *host) {
+	return host-backup->getupdatedata()->allhosts;
+	}
+char *getmirrorerror(const passhost_t *pass) {
+	int index=getindex(pass);
+	return mirrorerrors[index];
+	}
+int savemessage(const passhost_t *pass,const char* fmt, ...){
+        va_list args;
+        va_start(args, fmt);
+	char *buf=getmirrorerror(pass);
+	int len=vsnprintf(buf,maxmirrortext, fmt, args);
+	va_end(args);
+    return len;
+	}
+	/*
+void saveerror(const passhost_t *pass,const char* fmt, ...){
+	int waser=errno;
+        va_list args;
+        va_start(args, fmt);
+	char *buf=getmirrorerror(pass);
+	int len=vsnprintf(buf,maxmirrortext, fmt, args);
+	va_end(args);
+	strcpy(buf+len,": ");
+	len+=2;
+	if(len<maxmirrortext)
+		strerror_r(waser, buf+len, maxmirrortext-len);
+	} */
+
+void savebuferror(char *buf,int maxbuf,const char* fmt, ...){
+	int waser=errno;
+        va_list args;
+        va_start(args, fmt);
+	int len=vsnprintf(buf,maxbuf, fmt, args);
+	va_end(args);
+	strcpy(buf+len,": ");
+	len+=2;
+	if(len<maxbuf)
+		strerror_r(waser, buf+len, maxbuf-len);
+	}
+
+
+
+
+

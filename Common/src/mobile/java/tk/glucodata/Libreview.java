@@ -84,6 +84,8 @@ import static tk.glucodata.util.getbutton;
 import static tk.glucodata.util.getcheckbox;
 import static tk.glucodata.util.getlabel;
 import static tk.glucodata.NightPost.getstring;
+import static tk.glucodata.NightPost.nothing;
+import static tk.glucodata.NightPost.success;
 import static tk.glucodata.util.getlocale;
 
 public class Libreview  {
@@ -128,8 +130,6 @@ static JSONObject  readJSONObject(HttpURLConnection urlConnection)  throws IOExc
 	Log.format("%s: readJSONObject len=%d %s",LOG_ID,ant.length(),ant);
  	return new JSONObject(ant);
 	}
-final private static String success=Applic.app.getString(R.string.success).intern();
-final private static String nothing=Applic.app.getString(R.string.triednothing).intern();
 
 private static String librestatus=nothing;
 

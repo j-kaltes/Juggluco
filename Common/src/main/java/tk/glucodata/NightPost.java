@@ -28,6 +28,7 @@ import static tk.glucodata.Backup.getedit;
 import static tk.glucodata.Log.stackline;
 import static tk.glucodata.Natives.setNightUploader;
 import static tk.glucodata.RingTones.EnableControls;
+import static tk.glucodata.bluediag.datestr;
 import static tk.glucodata.help.help;
 import static tk.glucodata.settings.Settings.editoptions;
 import static tk.glucodata.settings.Settings.removeContentView;
@@ -88,12 +89,16 @@ private static  String getstart(HttpURLConnection con,int max)  throws IOExcepti
 		}
 	}
 
-
+final  static String nothing=Applic.app.getString(R.string.triednothing).intern();
+final static String success=Applic.app.getString(R.string.success).intern();
+static private String uploadstatus=nothing;
 @Keep
 static public boolean deleteUrl(String urlstring,String secret) {
+	uploadtime=System.currentTimeMillis();
 	try {
 		URL url = new URL(urlstring);
 		if(url==null)  {
+			uploadstatus="URL("+urlstring+")==null";
 			return false;
 			}
 		HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
@@ -107,23 +112,28 @@ static public boolean deleteUrl(String urlstring,String secret) {
 		String res=getstring(urlConnection);
 		if(code==HTTP_OK) {
 			Log.i(LOG_ID,"deleteUrl success "+res);
+			uploadstatus=success;
 			return true;
 			}
 		else {
-			Log.i(LOG_ID,"deleteUrl failure "+res);
+			String delerror="delete "+urlstring+" failure code="+code+'\n'+res;
+			Log.e(LOG_ID,delerror);
+			uploadstatus=delerror;
 			return false;
 			}
 
 		}
 	catch(Throwable th) {
 		String error ="deleteUrl:\n"+stackline(th);
-
+		uploadstatus=error;
 		Log.e(LOG_ID,error);
 		return false;
 		}
 	}
+private static long uploadtime=System.currentTimeMillis();
 @Keep
 static public int upload(String httpurl,byte[] postdata,String secret,boolean put) {
+	uploadtime=System.currentTimeMillis();
 	Log.i(LOG_ID,"upload("+httpurl+",#"+postdata.length+","+ secret+")");
 	try {
 		URL url = new URL(httpurl);
@@ -143,12 +153,20 @@ static public int upload(String httpurl,byte[] postdata,String secret,boolean pu
 		outputPost.close();
 		final int code=urlConnection.getResponseCode();
 		String res=getstring(urlConnection);
-		var uploadstatus="upload ResponseCode="+code+" "+res;
-		Log.e(LOG_ID,uploadstatus);
+		final String resstr="upload ResponseCode="+code+"\n"+res;
+		if(code!=200&&code!=201) {
+			uploadstatus=resstr;
+			Log.e(LOG_ID,resstr);
+			}
+		else {
+			uploadstatus=success;
+			Log.i(LOG_ID,resstr);
+			}
 		return code;
 		 }
 	catch(Throwable th) {
 		final String posterror="upload\n"+stackline(th);
+		uploadstatus=posterror;
 		Log.e(LOG_ID,posterror);
 		return -1;
 		}
@@ -210,7 +228,12 @@ public static void  config(MainActivity act, View settingsview) {
                         else
                                         editsecret.setTransformationMethod(new PasswordTransformationMethod());
                         });
-	final Layout layout=isWearable?new Layout(act, (lay, w, h) -> { return new int[] {w,h};}, new View[]{secretlabel},new View[]{visible},new View[]{editsecret},new View[]{urllabel},new View[]{url},new View[]{clear},new View[]{wake},new View[]{activebox,cancel},new View[]{save}):new Layout(act, (lay, w, h) -> {
+
+	  var statusview=getlabel(act,datestr(uploadtime)+": "+uploadstatus);
+	  int statuspad=  (int)tk.glucodata.GlucoseCurve.metrics.density*7;
+	statusview.setPadding(statuspad,statuspad,statuspad,statuspad);
+
+	final Layout layout=isWearable?new Layout(act, (lay, w, h) -> { return new int[] {w,h};}, new View[]{secretlabel},new View[]{visible},new View[]{editsecret},new View[]{urllabel},new View[]{url},new View[]{statusview},new View[]{clear},new View[]{wake},new View[]{activebox,cancel},new View[]{save}):new Layout(act, (lay, w, h) -> {
 		var height=GlucoseCurve.getheight();
 		var width=GlucoseCurve.getwidth();
                         if(w>=width||h>=height) {
@@ -220,7 +243,7 @@ public static void  config(MainActivity act, View settingsview) {
                         else {
                                 lay.setX((width-w)/2); lay.setY(0);
                                 };
-                        return new int[] {w,h};}, new View[]{urllabel,url},new View[]{secretlabel,visible,editsecret},new View[]{activebox,v3box,clear,wake},new View[]{treatments,help,cancel,save});
+                        return new int[] {w,h};}, new View[]{urllabel,url},new View[]{secretlabel,visible,editsecret},new View[]{statusview},new View[]{activebox,v3box,clear,wake},new View[]{treatments,help,cancel,save});
 
 		int laypar;
 		final View allview=isWearable?new ScrollView(act):layout;

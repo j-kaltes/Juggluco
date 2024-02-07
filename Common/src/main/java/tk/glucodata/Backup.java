@@ -69,6 +69,7 @@ import static tk.glucodata.Applic.isWearable;
 import static tk.glucodata.BuildConfig.isReleaseID;
 import static tk.glucodata.Natives.getBlueMessage;
 import static tk.glucodata.Natives.getWifi;
+import static tk.glucodata.Natives.getbackupHasHostname;
 import static tk.glucodata.Natives.isWearOS;
 import static tk.glucodata.Natives.mirrorStatus;
 import static tk.glucodata.RingTones.EnableControls;
@@ -174,9 +175,9 @@ boolean[] sendchecked;
 	private static final String defaultport= isReleaseID==1?"8795":"9113";
 	private	CheckBox Amounts =null;
 	private CheckBox Scans =null;
-	private CheckBox Stream =null,receive=null,detect=null;
+	private CheckBox Stream =null,receive=null,detect=null,checkhostname;
 	private RadioButton activeonly=null,passiveonly=null,both=null;
-	private final EditText[] hostname={null,null,null,null};
+	private final EditText[] editIPs={null,null,null,null};
 	private EditText editpass=null;
 	private EditText portedit=null;
 	private ScrollView hostview=null;
@@ -269,26 +270,25 @@ private void resentconfirmation(MainActivity act,int hostindex) {
         }).show().setCanceledOnTouchOutside(false);
 	}
 void makehostview(MainActivity act) {
-	for(int i=0;i<hostname.length;i++) {
-		hostname[i]=new EditText(act);
-		hostname[i].setMinEms(6);
-		hostname[i].setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-		hostname[i].setImeOptions(editoptions);
-//		hostname[i].getBackground().mutate().setColorFilter(agetColor(act,android.R.color.holo_blue_light), PorterDuff.Mode.SRC_ATOP);
-		setColorFilter(hostname[i].getBackground().mutate(),agetColor(act,android.R.color.holo_blue_light));
+	for(int i=0;i<editIPs.length;i++) {
+		editIPs[i]=new EditText(act);
+		editIPs[i].setMinEms(6);
+		editIPs[i].setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+		editIPs[i].setImeOptions(editoptions);
+		setColorFilter(editIPs[i].getBackground().mutate(),agetColor(act,android.R.color.holo_blue_light));
 		}
 	portedit=new EditText(act);
 	portedit.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
 	portedit.setImeOptions(editoptions);
 	portedit.setMinEms(3);
 	Button save=getbutton(act,R.string.save);
-	TextView Hostlabel=getlabel(act,R.string.ips);
+	TextView IPslabel=getlabel(act,R.string.ips);
 	detect = new CheckBox(act);
 	detect.setText(R.string.detect);
 	detect.setOnCheckedChangeListener( (buttonView,  isChecked)-> {
 			final int vis=isChecked?INVISIBLE:VISIBLE;
-			final int lastip=hostname.length-(haslabel.isChecked()?1:0)-1;
-			hostname[lastip].setVisibility(vis);
+			final int lastip=editIPs.length-(haslabel.isChecked()?1:0)-1;
+			editIPs[lastip].setVisibility(vis);
 			});
 	detect.setVisibility(INVISIBLE);
 
@@ -301,15 +301,44 @@ void makehostview(MainActivity act) {
         label.setImeOptions(editoptions);
         label.setMinEms(10);
 
+	checkhostname=getcheckbox(act,act.getString(R.string.hostname),false);
+	final Runnable doHasName= ()->{
+			IPslabel.setVisibility(INVISIBLE);
+//			final int lastip= editIPs.length-1;
+			final int lastip= editIPs.length;
+			for(var i=1;i<lastip;++i)
+				editIPs[i].setVisibility(INVISIBLE);
+//				editIPs[i].setVisibility(GONE);
+//			editIPs[lastip].setVisibility(INVISIBLE);
+			editIPs[0].setMinEms(20);
+			detect.setVisibility(INVISIBLE);
+			};
+
+	 checkhostname.setOnCheckedChangeListener( (buttonView,  isChecked)-> {
+		if(isChecked) {
+			doHasName.run();
+			}
+		else {
+			IPslabel.setVisibility(VISIBLE);
+			detect.setVisibility(VISIBLE);
+			final int nrips=editIPs.length-(detect.isChecked()?1:0)-(haslabel.isChecked()?1:0);
+			for(var i=1;i<nrips;++i)
+				editIPs[i].setVisibility(VISIBLE);
+			editIPs[0].setMinEms(6);
+			}
+	 	});
+
+
 	setColorFilter(label.getBackground().mutate(),agetColor(act,android.R.color.holo_red_light));
 	haslabel.setOnCheckedChangeListener( (buttonView,  isChecked)-> {
 			final int vis=isChecked?VISIBLE:INVISIBLE;
 			label.setVisibility(vis);
 			label.requestFocus();
+			if(checkhostname.isChecked())
+				return;
 			final int vis2=isChecked?INVISIBLE:VISIBLE;
-			final int lastip=hostname.length-(detect.isChecked()?1:0)-1;
-			hostname[lastip].setVisibility(vis2);
-	//		label.setEnabled(isChecked);
+			final int lastip=editIPs.length-(detect.isChecked()?1:0)-1;
+			editIPs[lastip].setVisibility(vis2);
 			});
 
 		
@@ -331,9 +360,9 @@ void makehostview(MainActivity act) {
 		final var vis2=(buttonView==activeonly||(buttonView==passiveonly&&!testip.isChecked()))?INVISIBLE:VISIBLE;
 		detect.setVisibility(vis2);
 		final var vis4=(buttonView==passiveonly&&!testip.isChecked())?INVISIBLE:VISIBLE;
-		final int ipnr=hostname.length-(haslabel.isChecked()?1:0)-(detect.isChecked()?1:0);
+		final int ipnr=editIPs.length-(haslabel.isChecked()?1:0)-(detect.isChecked()?1:0);
 		for(int i=0;i<ipnr;i++)
-			hostname[i].setVisibility(vis4);
+			editIPs[i].setVisibility(vis4);
 		final var vis3=buttonView==activeonly?INVISIBLE:VISIBLE;
 		testip.setVisibility(vis3);
 	};
@@ -343,9 +372,9 @@ void makehostview(MainActivity act) {
 		final var vis2=(passiveonly.isChecked()&&!isChecked)?INVISIBLE:VISIBLE;
 		final var vis=(activeonly.isChecked()||(passiveonly.isChecked()&&!testip.isChecked()))?INVISIBLE:VISIBLE;
 		detect.setVisibility(vis);
-		final int ipnr=hostname.length-(haslabel.isChecked()?1:0)-(detect.isChecked()?1:0);
+		final int ipnr=editIPs.length-(haslabel.isChecked()?1:0)-(detect.isChecked()?1:0);
 		for(int i=0;i<ipnr;i++)
-			hostname[i].setVisibility(vis2);
+			editIPs[i].setVisibility(vis2);
 		});
 	receive = new CheckBox(act);
 	receive.setText(R.string.receivefrom);
@@ -410,10 +439,10 @@ void makehostview(MainActivity act) {
 			}		
 		hidekeyboard(act); //USE
 		int hostnr=Natives.backuphostNr( );
-		String[] names=new String[hostname.length];
+		String[] names=new String[editIPs.length];
 		int struse=0;
 		if(testip.isChecked()||!passiveonly.isChecked()) {
-			for (EditText editText : hostname) {
+			for (EditText editText : editIPs) {
 				String name = editText.getText().toString();
 				if (name.length() != 0) {
 					names[struse++] = name;
@@ -421,7 +450,7 @@ void makehostview(MainActivity act) {
 			}
 			}
 		final boolean dodetect= detect.isChecked()&&!activeonly.isChecked();
-		int ipmax=hostname.length-(dodetect?1:0)-(haslabel.isChecked()?1:0);
+		int ipmax=editIPs.length-(dodetect?1:0)-(haslabel.isChecked()?1:0);
 		if(struse>=ipmax)
 			struse=ipmax;
 		if((testip.isChecked()&&!dodetect)||activeonly.isChecked()) {
@@ -433,28 +462,28 @@ void makehostview(MainActivity act) {
 
 		long starttime=(alldata.getVisibility()!=VISIBLE||alldata.isChecked())?0L:(fromnow.isChecked()? System.currentTimeMillis():Natives.getstarttime())/1000L;
 
-		int pos=Natives.changebackuphost(hostindex,names,struse,dodetect,portedit.getText().toString(), Amounts.isChecked(),Stream.isChecked(),Scans.isChecked(),restore.isChecked(),receiver,activeonly.isChecked(),passiveonly.isChecked(),Password.isChecked()?editpass.getText().toString():null,starttime,haslabel.isChecked()?label.getText().toString():null,testip.isChecked());
+		int pos=Natives.changebackuphost(hostindex,names,struse,dodetect,portedit.getText().toString(), Amounts.isChecked(),Stream.isChecked(),Scans.isChecked(),restore.isChecked(),receiver,activeonly.isChecked(),passiveonly.isChecked(),Password.isChecked()?editpass.getText().toString():null,starttime,haslabel.isChecked()?label.getText().toString():null,testip.isChecked(),checkhostname.isChecked());
 
 		if(pos<0) {
-			String mess;
-			switch(pos) {
-				case -1: mess=act.getString(R.string.portrange);break;
-				case -2: mess=act.getString(R.string.parseip);break;
-				case  -3: mess=act.getString(R.string.toomanyhosts);break;
-				case  -4: mess=act.getString(R.string.senthosts);;break;
-				case -6: mess="Database busy, try again";break;
-				default: mess="Error";break;
-				}
+			String mess= switch (pos) {
+				case -1 : yield act.getString(R.string.portrange);
+				case -2 : yield act.getString(R.string.parseip);
+				case -3 : yield act.getString(R.string.toomanyhosts);
+				case -4 : yield act.getString(R.string.senthosts);
+				case -5 : yield "Hostname too long";
+				case -6 : yield "Database busy, try again";
+				default : yield "Error";
+			};
 			Applic.argToaster(act,mess,Toast.LENGTH_SHORT);
 			return ;
 			}	
 		configchanged=true;
-	        if(pos==hostnr)  {
-		    delete.setVisibility(VISIBLE);
-		    hostadapt.notifyItemInserted(pos);
-		    }
-		   else
-			hostadapt.notifyItemChanged(pos);
+		if(pos==hostnr)  {
+			delete.setVisibility(VISIBLE);
+			hostadapt.notifyItemInserted(pos);
+			}
+	   else
+		   hostadapt.notifyItemChanged(pos);
 //		 hostview.setVisibility(GONE);
 		 act.doonback();
 	  	//alarms.setEnabled( Natives.isreceiving( ));
@@ -498,7 +527,8 @@ void makehostview(MainActivity act) {
 			hideSystemUI(act);
 			final int[] ret={w,h};
 			return ret;
-		}, new View[]{ Portlabel},new View[] {portedit},new View[]{new Space(act),Hostlabel,detect,new Space(act)}, Arrays.copyOfRange(hostname,0,hostname.length/2),Arrays.copyOfRange(hostname,hostname.length/2,hostname.length) ,new View[] {testip},new View[] {haslabel},new View[]{label},
+
+		}, new View[]{ Portlabel},new View[] {portedit},new View[]{new Space(act),IPslabel,detect,new Space(act)}, Arrays.copyOfRange(editIPs,0,editIPs.length/2),Arrays.copyOfRange(editIPs,editIPs.length/2,editIPs.length) ,new View[] {testip},new View[] {haslabel},new View[]{label},
 				new View[]{passiveonly},new View[]{activeonly},new View[]{both},new View[] {receive},new View[] {Sendlabel,Amounts},new View[]{Scans,Stream},new View[]{startlabel},new View[]{alldata,fromnow},new View[]{screenpos} ,new View[]{Password,visible },new View[]{editpass},new View[]{delete,Close},new View[] {reset},new View[]{save});
 		}
 	else {
@@ -506,7 +536,8 @@ void makehostview(MainActivity act) {
 			hideSystemUI(act);
 			final int[] ret = {w, h};
 			return ret;
-		}, new View[]{Portlabel, portedit, Hostlabel, detect}, hostname, new View[]{testip, haslabel, label},
+
+		}, new View[]{Portlabel, portedit, checkhostname,IPslabel, detect}, editIPs, new View[]{testip, haslabel, label},
 				new View[]{passiveonly, activeonly, both}, new View[]{receive, Sendlabel, Amounts, Scans, Stream, restore}, fromrow, new View[]{Password, editpass, visible}, new View[]{delete, Close, reset, Help, save});
 		}
 	Close.setOnClickListener(v-> act.doonback());
@@ -549,6 +580,7 @@ void changehostview(MainActivity act,final int index,String[] names,boolean dode
 
 
 
+
 	 	final String labelstr=Natives.getbackuplabel(index);
 		if(labelstr!=null) {
 			label.setText(labelstr);
@@ -559,13 +591,13 @@ void changehostview(MainActivity act,final int index,String[] names,boolean dode
 			haslabel.setChecked(false); 
 			label.setVisibility(INVISIBLE);
 			}
-		int maxhosts=hostname.length-(dodetect?1:0)-(labelstr==null?0:1);
+		final boolean hasHostname=getbackupHasHostname(index);
+		int maxhosts=hasHostname?1:(editIPs.length-(dodetect?1:0)-(labelstr==null?0:1));
 		   for(int i=0;i<Math.min(names.length,maxhosts);i++) {
-			   hostname[i].setText(names[i]);
+			   editIPs[i].setText(names[i]);
 		   }
-
 		   for(int i=0;i<maxhosts;i++)
-		       hostname[i].setVisibility(vis);
+			       editIPs[i].setVisibility(vis);
 		   boolean isactiveonly =Natives.getbackuphostactive(index);
 		   detect.setVisibility((ispassive&&!dotestip||isactiveonly)?INVISIBLE:VISIBLE);
 		if(isactiveonly)
@@ -579,10 +611,13 @@ void changehostview(MainActivity act,final int index,String[] names,boolean dode
 			}
 		boolean iswearos=isWearOS(index);
 		Log.i(LOG_ID,(labelstr!=null?labelstr:"")+" Iswearos("+index+")="+iswearos);
+
+		checkhostname.setChecked(hasHostname);
 		}
 	else {
 		 stream=false;scans=false;amounts=false;
 
+		checkhostname.setChecked(false);
 	       receive.setChecked(false);
 	       detect.setChecked(false);
 		both.setChecked(true);
@@ -608,11 +643,8 @@ void changehostview(MainActivity act,final int index,String[] names,boolean dode
 	
 
 	sendfrom[0].setChecked(true);
-//	sendfrom[1].setChecked(false);
-	for(View v:fromrow) 
-		v.setVisibility(GONE);
-      for(int i=names==null?0:names.length;i<hostname.length;i++) 
-	       hostname[i].setText("");
+	for(View v:fromrow) v.setVisibility(GONE);
+    for(int i=names==null?0:names.length;i<editIPs.length;i++) editIPs[i].setText("");
 
 
        portedit.setText(port);
@@ -629,7 +661,7 @@ void changehostview(MainActivity act,final int index,String[] names,boolean dode
        hostindex=index;
 	}
 void changehostview(MainActivity act,int index,View parent) {
-	String[] names=Natives.getbackuphostnames(index);
+	String[] names=Natives.getbackupIPs(index);
 	String port=Natives.getbackuphostport(index);
 	String pass= Natives.getbackuppassword(index);
 	changehostview(act,index,names,Natives.detectIP(index),port,pass, parent) ;
@@ -744,6 +776,8 @@ View blpan= (thishost[2]==null)?new Space(act):getlabel(act,"bt-pan: "+thishost[
 	recycle.setMinimumHeight(lineheight*6);
 	View lay;
 
+	var errstr=Natives.serverError();
+	var errorrow=errstr.length()>0?new View[]{getlabel(act,errstr)}:null;
 	if(isWearable) {
 		CheckBox wifi=getcheckbox(act,act.getString(R.string.wifi),getWifi());
 		wifi.setOnCheckedChangeListener( (buttonView,  isChecked)-> {
@@ -754,7 +788,7 @@ View blpan= (thishost[2]==null)?new Space(act):getlabel(act,"bt-pan: "+thishost[
 			else
 				UseWifi.stopusewifi();
 			});
-		final Layout layout=new Layout(act, new View[]{getlabel(act,act.getString(R.string.thishost))},new View[]{blpan},new View[]{p2p},new View[]{ip},new View[]{new Space(act),labport,portview,Save,new Space(act)},new View[]{recycle},new View[] {hosts},new View[]{staticnum},new View[]{Sync,reinit},new View[]{wifi,alarms},new View[]{Cancel});
+		final Layout layout=new Layout(act, new View[]{getlabel(act,act.getString(R.string.thishost))},new View[]{blpan},new View[]{p2p},new View[]{ip},new View[]{new Space(act),labport,portview,Save,new Space(act)},new View[]{recycle},new View[] {hosts},new View[]{staticnum},new View[]{Sync,reinit},new View[]{wifi,alarms},errorrow,new View[]{Cancel});
 		var hori=new NestedScrollView(act);
 		hori.setFillViewport(true);
 		hori.setSmoothScrollingEnabled(false);
@@ -766,7 +800,8 @@ View blpan= (thishost[2]==null)?new Space(act):getlabel(act,"bt-pan: "+thishost[
 		lay=hori;
 		}
 	else {
-		lay=new Layout(act, new View[]{ip,blpan,p2p,labport,portview,Save},new View[]{recycle},new View[] {battery,Help,alarms,staticnum},new View[]{Sync,reinit,hosts,Cancel});
+		
+		lay=new Layout(act, new View[]{ip,blpan,p2p,labport,portview,Save},new View[]{recycle},new View[] {battery,Help,alarms,staticnum},errorrow,new View[]{Sync,reinit,hosts,Cancel});
 		}
 	Save.setOnClickListener(v->  {
 		Natives.setreceiveport(portview.getText().toString());
@@ -847,7 +882,7 @@ View blpan= (thishost[2]==null)?new Space(act):getlabel(act,"bt-pan: "+thishost[
 	@Override
 	public void onBindViewHolder(final HostViewHolder holder, int pos) {
 		TextView text=(TextView)holder.itemView;
-		String[] names =Natives.getbackuphostnames(pos);
+		String[] names =Natives.getbackupIPs(pos);
 		 StringBuilder sb = new StringBuilder();
 		String port=Natives.getbackuphostport(pos);
 		long date=Natives.lastuptodate(pos);

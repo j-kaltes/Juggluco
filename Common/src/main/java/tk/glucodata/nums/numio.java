@@ -171,6 +171,7 @@ if(true) {
 		"DEVICE: "+ Build.DEVICE+"\n"+
 		"FINGERPRINT: "+ Build.FINGERPRINT+"\n"+
 		"MANUFACTURER: "+ Build.MANUFACTURER+"\n"+
+		"PRODUCT: "+ Build.PRODUCT+"\n"+
 		"MODEL: "+ Build.MODEL);
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

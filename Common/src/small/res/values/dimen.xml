@@ -1,7 +1,1 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-	<dimen name="ambilwarna_hsvHeight">240dp</dimen>
-	<dimen name="ambilwarna_hsvWidth">99dp</dimen>
-	<dimen name="ambilwarna_hueWidth">27dp</dimen>
-	<dimen name="ambilwarna_spacer">0dp</dimen>
-</resources>
+../../../wear/res/values/dimen.xml
