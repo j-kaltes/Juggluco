@@ -65,7 +65,7 @@ android {
         }
 //	resourceConfigurations += ["en", "nl", "fr","it", "de", "pl", "pt","be","uk"]
     //ndk { abiFilters  'armeabi-v7a' }
-       ndk { abiFilters  'arm64-v8a' }
+     //  ndk { abiFilters  'arm64-v8a' }
         signingConfig signingConfigs.alg
     buildToolsVersion '33.0.0'
     }
@@ -88,7 +88,6 @@ android {
 
 		}
         libre3 {
-    	ndkVersion '26.0.10792818'
             // targetSdk 26
 	   minSdk 26
 //	   minSdk 23
@@ -352,7 +351,8 @@ buildTypes {
 
     }
 
-    ndkVersion '25.2.9519653'
+    ndkVersion '26.1.10909125'
+    //ndkVersion '25.2.9519653'
     kotlinOptions {
         jvmTarget =  JavaVersion.VERSION_17
     }
@@ -421,7 +421,7 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3'
     implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.22'
     implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.9.22'
-    implementation 'com.google.android.gms:play-services-base:18.2.0'
+    implementation 'com.google.android.gms:play-services-base:18.3.0'
  implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3'
   mobileImplementation "androidx.health.connect:connect-client:1.1.0-alpha07"
 
@@ -436,7 +436,7 @@ dependencies {
     wearImplementation 'androidx.activity:activity-ktx:1.8.2'
     wearImplementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     wearImplementation 'com.google.android.material:material:1.11.0'
-    wearImplementation 'androidx.databinding:viewbinding:8.2.0'
+    wearImplementation 'androidx.databinding:viewbinding:8.2.2'
     wearImplementation 'androidx.core:core-ktx:1.12.0'
 
 
@@ -446,12 +446,12 @@ dependencies {
     wearImplementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
 
-    wearImplementation 'androidx.wear.watchface:watchface-style:1.2.0'
-    wearImplementation 'androidx.wear.watchface:watchface-complications:1.2.0'
-    wearImplementation 'androidx.wear.watchface:watchface-editor:1.2.0'
-    wearImplementation 'androidx.wear.watchface:watchface-client:1.2.0'
-    wearImplementation 'androidx.wear.watchface:watchface:1.2.0'
-    wearImplementation 'androidx.wear.watchface:watchface-complications-rendering:1.2.0'
+    wearImplementation 'androidx.wear.watchface:watchface-style:1.2.1'
+    wearImplementation 'androidx.wear.watchface:watchface-complications:1.2.1'
+    wearImplementation 'androidx.wear.watchface:watchface-editor:1.2.1'
+    wearImplementation 'androidx.wear.watchface:watchface-client:1.2.1'
+    wearImplementation 'androidx.wear.watchface:watchface:1.2.1'
+    wearImplementation 'androidx.wear.watchface:watchface-complications-rendering:1.2.1'
 
 }
 

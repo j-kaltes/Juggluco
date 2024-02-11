@@ -59,6 +59,14 @@
 extern const char *package;
 extern int packagelen;
 
+extern "C" {
+typedef void (*sighandler_t)(int);
+
+sighandler_t bsd_signal(int signum, sighandler_t handler);
+}
+
+#define asignal signal
+
 extern "C" int VISIBLE __android_log_print(int prio, const char* tag, const char* fmt, ...) __attribute__((__format__(printf, 3, 4)));
 extern "C" int VISIBLE __android_log_write(int prio, const char* tag, const char* text) ;
 
@@ -139,7 +147,7 @@ extern "C" int  VISIBLE Pipe(int pipefd[2]) {
 	}
 extern "C" int  VISIBLE pipe(int pipefd[2]) {
 	return  Pipe(pipefd);
-	}
+	} 
 
 #endif
 
@@ -247,7 +255,7 @@ extern "C" VISIBLE  int pthread_Detach(pthread_t thread) {
 	}
 void *pstart_routine( void * arg) {
 #ifndef NOLOG
-	signal(SIGCHLD,ioreadyhandler);
+	asignal(SIGCHLD,ioreadyhandler);
 	LOGAR("pstart_routine");
 #endif
 	pthread_arg *myarg=reinterpret_cast<pthread_arg *>(arg);
@@ -305,8 +313,10 @@ extern "C" VISIBLE  int pthread_Detach(pthread_t thread) {
 #endif
 #include <sys/prctl.h>
 #include <signal.h>
+#include <android/dlext.h>
+
 void *pstart_routine( void * arg) {
-	signal(SIGCHLD, ioreadyhandler);
+	asignal(SIGCHLD, ioreadyhandler);
 	LOGAR("pstart_routine");
 	pthread_arg *myarg = reinterpret_cast<pthread_arg *>(arg);
 	void *res = myarg->start_routine(myarg->origarg);
@@ -420,3 +430,10 @@ extern "C" VISIBLE  int FClose(FILE *stream) {
 	return res;
 	}
 #endif
+
+#include <android/dlext.h>
+extern "C" {
+void *android_dlopen_ext( const char * __filename, int __flags, const android_dlextinfo * __info) {
+	return dlopen(__filename,__flags);
+	}
+	}

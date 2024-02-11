@@ -475,7 +475,7 @@ Settings(const char *settingsname,const char *base,const char *country): Mmap(se
 				 data()->librecountry = data()->libreunit;
 			 }
 		 } */
-		 if(!strcasecmp(country,"RU")) {
+		 if(country&&!strcasecmp(country,"RU")) {
 			data()->librecountry=5;
 			}
 		else

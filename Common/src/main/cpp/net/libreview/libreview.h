@@ -60,12 +60,13 @@ inline int TdatestringGMT(time_t tim,int mil,char *buf) {
 	gmtime_r(&tim, &tmbuf);
         return sprintf(buf,R"(%d-%02d-%02dT%02d:%02d:%02d.%03dZ)",tmbuf.tm_year+1900,tmbuf.tm_mon+1,tmbuf.tm_mday, tmbuf.tm_hour, tmbuf.tm_min,tmbuf.tm_sec,mil);
         }
+#define arandom lrand48
 inline int getmmsec() {
-	return rand()%1000;
+	return arandom()%1000;
 	}
 
 inline int TdatestringGMT(time_t tim,char *buf) {
-	int mil=rand()%1000;
+	int mil=arandom()%1000;
 	return TdatestringGMT(tim,mil,buf) ;
         }
 
@@ -91,7 +92,7 @@ inline int Tdatestringlocal(time_t tim,int mil,char *buf) {
         }
 
 inline int Tdatestringlocal(time_t tim,char *buf) {
-	int mil=rand()%1000;
+	int mil=arandom()%1000;
 	return  Tdatestringlocal(tim, mil,buf);
         }
 

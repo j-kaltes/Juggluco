@@ -71,7 +71,7 @@ static void makeuploadurls(JNIEnv *env) {
 	}
 
 extern std::string sha1encode(const char *secret, int len);
-void makeuploadsecret(JNIEnv *env) {
+static void makeuploadsecret(JNIEnv *env) {
 		if(jnightuploadsecret)
 			env->DeleteGlobalRef(jnightuploadsecret);
 

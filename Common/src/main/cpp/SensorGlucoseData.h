@@ -136,8 +136,9 @@ class SensorGlucoseData {
 bool haserror=false;
 string sensordir;
 //inline static  const string basedir{FILEDIR};
-inline static const int blocksize=getpagesize();
-
+public:
+inline static const int blocksize=sysconf(_SC_PAGESIZE);
+private:
 static constexpr uint16_t defaultinterval=15*60;
 
 struct updatestate {

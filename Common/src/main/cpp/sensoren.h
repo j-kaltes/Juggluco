@@ -152,7 +152,7 @@ public:
 		}
 	static bool create(string_view inbasedir) {
 		pathconcat file{inbasedir, "sensors.dat"};
-		const int pagesize = getpagesize();
+		const int pagesize =  SensorGlucoseData::blocksize;
 		{
 			struct stat st;
 			if (!stat(file, &st) && ((st.st_mode & S_IFMT) == S_IFREG) && st.st_size >= pagesize)

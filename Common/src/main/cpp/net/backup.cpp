@@ -81,14 +81,12 @@ static bool startserver(char *port, passhost_t *hosts,int *hostlen,int *socks,bo
 
 	struct addrinfo *servinfo=nullptr;
 	destruct serv([&servinfo]{ if(servinfo)freeaddrinfo(servinfo);});
-	{
 	destruct wweg([port]{delete[] port;});
 	if(int status= getaddrinfo(nullptr,port,&hints,&servinfo)) {
 		serverprint("getaddrinfo: %s",gai_strerror(status));
 		LOGGERTAG("%s\n",servererrorbuf);
 		return false;
 		}
-	}
 	RESTART: {
 	int sock;
 	for(struct addrinfo *ips=servinfo;;ips=ips->ai_next) {
@@ -397,7 +395,7 @@ globalsocket=serversock;
 				char name[passhost_t::maxnamelen];
 				int rlen;
 				if((rlen=recvni(new_fd,name,passhost_t::maxnamelen))==passhost_t::maxnamelen) {
-					serverprint("hostlabel=%s",name);
+					serverprint(R"(hostlabel="%s")",name);
 					LOGGERTAG("%s\n",servererrorbuf);
 					for(int h=0;h<hostlen;h++) {
 						passhost_t& host=hosts[h];

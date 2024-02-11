@@ -40,7 +40,12 @@ because that had the unintended effect that when an alarm went off</span></span>
 </span><span style="font-variant: normal"><span style="font-style: normal">during
 an automatic</span></span><span style="font-variant: normal"> </span><span style="font-variant: normal"><span style="font-style: normal">&quot;</span></span><span style="font-variant: normal"><i>Do
 not Disturb</i></span><span style="font-variant: normal"><span style="font-style: normal">&quot;
-period, this state was not be turned off automatically.</span></span></p>
+period, this state was not be turned off automatically. </span></span><span style="font-variant: normal"><span style="font-style: normal">If
+you don’t want the hear alarms during “</span></span><span style="font-variant: normal"><i>Do
+not Disturb</i></span><span style="font-variant: normal"><span style="font-style: normal">”,
+you probably also need to unset “</span></span><span style="font-variant: normal"><i>Alarm
+is alarm</i></span><span style="font-variant: normal"><span style="font-style: normal">”
+in the previous screen.</span></span></p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>Flash</b>:
 Smartphones with torch flash light have the option to flash for the
 same number of seconds. Handy in case ringtones are not allowed and

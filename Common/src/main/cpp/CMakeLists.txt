@@ -18,7 +18,10 @@ set(MYCFLAGS " -g -Wall -Wno-sign-compare -fvisibility=hidden ")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}  ${MYCFLAGS}" )
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}   ${MYCFLAGS} -std=c++20 -fno-rtti -fno-exceptions")
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}   ${MYCFLAGS} -std=c++20 -fno-rtti -fexceptions")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}   ${MYCFLAGS} -std=c++20 -fno-rtti  -fexceptions   -DALWAYSPATH=1 ")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}   ${MYCFLAGS} -std=c++20 -fno-rtti -nodefaultlibs -static-libgcc -static-libstdc++ -fexceptions  -DALWAYSPATH=1  ")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}   ${MYCFLAGS} -fPIC -std=c++20 -fno-rtti -nolibc -static-libstdc++ -fexceptions -DANDROID_STL=c++_static -DALWAYSPATH=1  ")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}   ${MYCFLAGS} -std=c++20 -fno-rtti -fexceptions  -DALWAYSPATH=1  ")
+
 #set(INCLUDESELF /home/jka/src/android/Glucodata/app/src/main/cpp )
 set(INCLUDESELF ${CMAKE_CURRENT_SOURCE_DIR})
 set(OPENGL_LIB GLESv3)
@@ -63,11 +66,15 @@ target_compile_definitions( g  PRIVATE  -DWEAROS_MESSAGES=1 -DDONTSCALESTROKEWID
 
 #add_custom_command(TARGET g POST_BUILD COMMAND ${INCLUDESELF}/patchelf/src/patchelf --remove-needed libc++_shared.so  $<TARGET_FILE:g>)
 
+#add_link_options(-g  -Wl,-z,muldefs)
 add_link_options(-g  )
 
 
 #find_library(log-lib              log )
-target_link_libraries( g  c++_static ${log-lib} ${OPENGL_LIB} android EGL m z)
+#target_link_libraries( g   c++_static /tmp/libc.so /home/jka/Android/Sdk/ndk/26.1.10909125/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/i686-linux-android/libc.a ${log-lib} ${OPENGL_LIB} android EGL m atomic z dl)
+
+#target_link_libraries( g   c++_static /tmp/libc.so c.a ${log-lib} ${OPENGL_LIB} android EGL m atomic z dl)
+target_link_libraries( g   c++_static c ${log-lib} ${OPENGL_LIB} android EGL m atomic z dl)
 export(TARGETS g ANDROID_MK Android.mk)
 
 #add_library(calibrate  SHARED IMPORTED )

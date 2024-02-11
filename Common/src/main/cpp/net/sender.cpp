@@ -134,7 +134,7 @@ static int testsendmagic(passhost_t *pass,int sock) {
 		constexpr const int len=sizeof(mess)-1;
 		memcpy(buf,mess,len);
 		strerror_r(waser, buf+len, maxmirrortext-len);
-		LOGGERTAG("%s",buf);
+		LOGGERTAG("%s\n",buf);
 		return 1;
 		}
 constexpr const int recsize=sizeof(receivemagic);
@@ -146,7 +146,7 @@ constexpr const int recsize=sizeof(receivemagic);
 		int waser=errno;
 		int len=snprintf(ptr,maxmirrortext,"magic recv()=%d!=%d: ",gotlen,(int)recsize);
 		strerror_r(waser, ptr+len, maxmirrortext-len);
-		LOGGERTAG("%s",ptr);
+		LOGGERTAG("%s\n",ptr);
 		return 2;
 		}
 	LOGSTRINGTAG("after recv magic\n");
@@ -238,8 +238,12 @@ int shakehands(passhost_t *pass,int &sock,char stype) {
 		}
 	int magret;
 	if((magret=testsendmagic(pass,sock)))  {
-		if(magret==2)
+		if(magret==2)  {
+			if(pass->hasname) {
+				savemessage(pass,"Wrong label?");
+				}
 			return -2;
+			}
 		return -1;
 		}
 	if(stype) {
@@ -438,7 +442,8 @@ bool activate=true;
 		int newuse=0;
 		for(int i=0;i<use;i++) {
 			if(cons[i].revents & POLLRDHUP){
-				LOGGERTAG(" %d: POLLRDHUP\n",cons[i].fd);
+				savemessage(pass," %d: POLLRDHUP",cons[i].fd);
+				LOGGERTAG("%s\n",getmirrorerror(pass));
 				close(cons[i].fd); 
 				continue;
 				}
@@ -447,7 +452,6 @@ bool activate=true;
 				socklen_t errlen = sizeof(error);
 				if(getsockopt(cons[i].fd, SOL_SOCKET, SO_ERROR, (void *)&error, &errlen)==-1)
 					lerrortag("getsockopt");
-#ifndef NOLOG
 				const char *errstr="";
 				switch(error) {
 					case EINTR: errstr="The system call was interrupted by a signal that was caught; see signal(7).";break;
@@ -464,18 +468,21 @@ bool activate=true;
 					case ETIMEDOUT: errstr="Timeout while attempting connection.";break;
 
 					};
-				LOGGERTAG(" %d: POLLERR %s (%d)\n",cons[i].fd,errstr,error);
-#endif
+				savemessage(pass,"POLLERR: %s",errstr);
+
+				LOGGERTAG("%s (%d) socket=%d\n",getmirrorerror(pass),error,cons[i].fd);
 				close(cons[i].fd); 
 				continue;
 				}
 			if(cons[i].revents &POLLHUP){
-				LOGGERTAG(" %d: POLLHUP\n",cons[i].fd);
+				savemessage(pass,"socket %d: POLLHUP",cons[i].fd);
+				LOGGERTAG("%s\n",getmirrorerror(pass));
 				close(cons[i].fd);
 				continue;
 				}
 			if(cons[i].revents &POLLNVAL){
-				LOGGERTAG(" %d: POLLNVAL\n",cons[i].fd);
+				savemessage(pass,"socket %d: POLLNVAL\n",cons[i].fd);
+				LOGGERTAG("%s\n",getmirrorerror(pass));
 				close(cons[i].fd);
 				continue;
 				}
@@ -513,7 +520,6 @@ bool activate=true;
 		use=newuse;
 		}
 	LOGSTRINGTAG("no one\n");
-	savemessage(pass,"No connection succeeded");
 	return -1;
 	}
 

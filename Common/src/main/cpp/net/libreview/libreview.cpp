@@ -1130,6 +1130,7 @@ static bool started() {
 static bool isstarted=started();
 */
 #include <thread>
+#define srand(x)
 void startlibrethread() {
 	if(!libreviewrunning) {
 		srand(time(nullptr));

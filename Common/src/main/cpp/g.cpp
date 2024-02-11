@@ -38,6 +38,12 @@
 #include <stdlib.h>
 #include <thread>
 #include <future>
+extern "C" {
+typedef void (*sighandler_t)(int);
+
+sighandler_t bsd_signal(int signum, sighandler_t handler);
+};
+#define asignal signal
 //#include <sys/syscall.h>
 //#undef NOLOG
        #include "logs.h"
@@ -162,7 +168,7 @@ void usr2handler(int get) {
         int tid=syscall(SYS_gettid);
         LOGGER("handler: %d\n",tid);
         if(jumpenvset) {
-                signal(get,SIG_IGN);
+                asignal(get,SIG_IGN);
                 longjmp( jumpenv, tid);
                 }
         LOGSTRING("no jump\n");
@@ -173,7 +179,7 @@ void alarmhandler(int sig) {
         pid_t tid=syscall(SYS_gettid);
         LOGGER("Alarm %d\n",tid);
         if(nfcdatatid!=0) {
-                signal(SIGALRM,SIG_IGN);
+                asignal(SIGALRM,SIG_IGN);
                 pid_t grid=syscall(SYS_getpid);
                 if(tgkill(grid,nfcdatatid,usesig))
                         lerror("tgkill");
@@ -187,11 +193,11 @@ extern "C" JNIEXPORT jint JNICALL fromjava(nfcdata)(JNIEnv *env, jclass thiz, jb
 	LOGGER("nfcdata %d\n", nfcdatatid);
       setthreadname( "NFC");
       destruct dest([](){nfcdatatid=0;
-                signal(SIGALRM,SIG_IGN);
-                signal(usesig,SIG_IGN);
+                asignal(SIGALRM,SIG_IGN);
+                asignal(usesig,SIG_IGN);
       		});
-	signal(usesig,usr2handler);
-	signal(SIGALRM,alarmhandler);
+	asignal(usesig,usr2handler);
+	asignal(SIGALRM,alarmhandler);
 static	 const int waitsig=60;
 	alarm(waitsig);
 	if(setjmp(jumpenv)==nfcdatatid)  {

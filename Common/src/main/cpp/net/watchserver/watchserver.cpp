@@ -1735,7 +1735,10 @@ bool watchcommands(char *rbuf,int len,recdata *outdata,bool secure) {
 					time_t tim=time(nullptr);
         				struct tm stm;
 		 			localtime_r(&tim, &stm);
-					nightprint(R"(%02d:%02d %02d:%02d: Wrong secret "%.*s")",stm.tm_mday,stm.tm_mon+1,stm.tm_hour,stm.tm_min,(int)foundsecret.size(),foundsecret.data());
+
+					int it=snprintf( nighterrorbuf,maxnighterror,R"(%02d:%02d %02d:%02d: Wrong secret)",stm.tm_mday,stm.tm_mon+1,stm.tm_hour,stm.tm_min);
+					if(!issha1)
+						snprintf( nighterrorbuf+it,maxnighterror-it,R"( "%.*s")",(int)foundsecret.size(),foundsecret.data());
 
 					nosecret(foundsecret, outdata) ;
 					return false;
@@ -2125,7 +2128,8 @@ char *writetreatment(char *outiter,const int numbase,const int pos,const Num*num
 		}
 
 
-	addar(outiter,R"(","eventType":"<none>","enteredBy":"Juggluco","created_at":")");
+	outiter+=sprintf(outiter,R"(","date":%lu)",tim);
+	addar(outiter,R"(000,"eventType":"<none>","enteredBy":"Juggluco","created_at":")");
 	outiter+=sprintf(outiter,R"(%04d-%02d-%02dT%02d:%02d:%02d.000Z",)",tmbuf.tm_year+1900,tmbuf.tm_mon+1,tmbuf.tm_mday, tmbuf.tm_hour, tmbuf.tm_min,tmbuf.tm_sec);
 
 	float w=0.0f;
