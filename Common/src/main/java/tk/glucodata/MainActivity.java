@@ -22,6 +22,7 @@
 package tk.glucodata;
 
 
+import static android.content.Intent.EXTRA_PERMISSION_GROUP_NAME;
 import static android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS;
 import static android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM;
 import static android.view.View.GONE;
@@ -316,8 +317,18 @@ void handleIntent(Intent intent) {
            startnfc(tag);
 	   return;
        }
-      if("androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE".intern() ==action|| "android.intent.action.VIEW_PERMISSION_USAGE".intern()==action)  {
-      	help.help(R.string.healthpermission,this);
+      if("androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE".intern() ==action)  {
+		help.help(R.string.healthpermission,this);
+		return;
+		}
+      if("android.intent.action.VIEW_PERMISSION_USAGE".intern()==action)  {
+	final var groupname=extras.getString(EXTRA_PERMISSION_GROUP_NAME);
+	switch(groupname) {
+		case "android.permission-group.HEALTH"->help.help(R.string.healthpermission,this);
+		case "android.permission-group.NOTIFICATIONS"-> help.help(R.string.notificationpermission,this);
+		case "android.permission-group.NEARBY_DEVICES"-> help.help(R.string.nearbypermission,this);
+		default-> Log.i(LOG_ID,"EXTRA_PERMISSION_GROUP_NAME="+groupname); 
+		};
 	return;
       	}
 
@@ -406,7 +417,7 @@ static Deque<String>  shownummessage=new ArrayDeque<>();
 static  String showmessage=null;
 
 
-
+static public int tryHealth=5;
 private static int resumenr=isRelease?10:2;
     @Override
     protected void onResume() {
@@ -455,15 +466,28 @@ private static int resumenr=isRelease?10:2;
 				 Log.i(LOG_ID,"Natives.getaskedNotify( )");
 			 }
 		} */
+	boolean showsdialog=false;
 	for(var el:shownummessage) {
 		showindialog(el,false);
+	 	showsdialog=true;
 		}
 	shownummessage.clear();
 	final var mess=showmessage;
-		if(mess!=null) {
-			showindialog(mess,true);
+	if(mess!=null) {
+		showindialog(mess,true);
+	 	showsdialog=true;
 		}
 	if(!isWearable) {
+		if(!showsdialog) {
+			if(tryHealth>0) {
+				if(Natives.gethealthConnect()&& Build.VERSION.SDK_INT >= 28) {
+						--tryHealth;
+						HealthConnection.Companion.init(this);
+					} 
+				else
+				   tryHealth = 0;
+				}
+			}
 		var am = (AccessibilityManager) getSystemService(ACCESSIBILITY_SERVICE);
 		List list;
 		if(am.isEnabled()&&am.isTouchExplorationEnabled()&&(list=am.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_SPOKEN))!=null&&!list.isEmpty()) {
@@ -1127,10 +1151,11 @@ boolean backinapp()  {
 	   }
 	@Override
 	public	void onBackPressed() {
-		Log.d(LOG_ID,"onBackPressed");
-		if(!backinapp())
-			  moveTaskToBack(true);
-	  }
+		super.onBackPressed();
+		Log.d(LOG_ID, "onBackPressed");
+		if (!backinapp())
+			moveTaskToBack(true);
+	}
 void tonotaccesssettings() {
 	Log.i(LOG_ID,"tonotaccesssettings()");
 	try {
@@ -1186,8 +1211,8 @@ void showindialog(String message,boolean cancel) {
 	if(cancel) {
 		cancelglucosedialog();
 		}
-	 AlertDialog.Builder builder = new AlertDialog.Builder(cont);
-	 var dialog=builder.setNegativeButton(R.string.cancel, (dia, id) -> {
+	 final AlertDialog.Builder builder = new AlertDialog.Builder(cont);
+	 final var dialog=builder.setNegativeButton(R.string.cancel, (dia, id) -> {
 		if(cancel) {
 			shownglucosealert=null;
 			}
@@ -1197,6 +1222,17 @@ void showindialog(String message,boolean cancel) {
 			}
 	    }).setMessage(message).create();;
 	   dialog.setCanceledOnTouchOutside(false);
+	    dialog.setOnShowListener(a ->  {
+//	    	final var colres= android.R.color.holo_red_light;
+	    	final var colres= android.R.color.holo_orange_light;
+//	    	final var colres= android.R.color.holo_blue_bright;
+//	    	final var colres= android.R.color.holo_blue_light; //Very infrequently button not shown. Maybe this helps.
+		final var col=
+		   (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)?getResources().getColor(colres, getTheme()):
+    			getResources().getColor(colres);
+		  dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(col);
+		}	
+    		);
 	    dialog.show();
 
 	if(cancel) shownglucosealert=dialog;

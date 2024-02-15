@@ -31,6 +31,8 @@
 extern Sensoren *sensors;
 static	constexpr const int seconds_in_day=24*60*60;
 extern uint32_t starttime;
+extern void setstarttime(uint32_t);
+
 extern int duration;
 extern bool showpers;
 bool showpers=false;
@@ -373,12 +375,12 @@ void showpercentiles(NVGcontext* vg) {
 		if(duration>seconds_in_day)
 		   duration=seconds_in_day;
 		if(starttime<startday) {
-			starttime=startday;
+			setstarttime(startday);
 			}
 		else {
 			const uint32_t laststart=endday-duration+30*60;
 			if(starttime>laststart)
-				starttime=laststart;
+				setstarttime(laststart);
 			}
 		//int startid=globalperc.gettimemin(starttijd);
 		uint32_t starter=starttime-startday;

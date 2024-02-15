@@ -1048,6 +1048,20 @@ uint32_t mintime() {
 int gmin=2*180;
 int grange=8*180;
 uint32_t starttime;
+#ifdef WEAROS
+const
+#endif
+int diffcurrent=0;
+extern void setstarttime(uint32_t);
+void setstarttime(uint32_t newstart) {
+	starttime=newstart;
+#ifndef WEAROS
+	if(diffcurrent) {
+		diffcurrent=time(nullptr)-starttime;
+		LOGGER("diffcurrent=%d\n",diffcurrent);
+		}
+#endif
+	}
 uint32_t maxstarttime() {
 //	return maxtime()-duration/2;
 	float duraf=((float)valuesize/dwidth);
@@ -1073,11 +1087,11 @@ uint32_t minstarttime() {
 void begrenstijd() {
 	auto maxstart= maxstarttime();
 	if(starttime>maxstart)
-		starttime=maxstart;
+		setstarttime(maxstart);
 	else {
 		auto minstart= minstarttime();
 		if(starttime<minstart)
-			starttime=minstart;
+			setstarttime(minstart);
 		}
 	}
 
@@ -2065,8 +2079,11 @@ pair<int32_t,int32_t> *histpositions=nullptr;
 int histlen=0;
 vector<int> hists;
 
-int displaycurve(NVGcontext* genVG,time_t nu,uint32_t starttime,uint32_t endtime) {
-//	if(iswatch) { return showwatchface(nu); }
+int displaycurve(NVGcontext* genVG,time_t nu) {
+
+	const uint32_t starttime=(diffcurrent&&nu<(::starttime+duration*5/6))?(nu-diffcurrent):(::starttime);
+	const uint32_t endtime=starttime+duration;
+
 
 	mealpos.clear();
 	LOGSTRING("display\n");
@@ -2076,8 +2093,6 @@ int displaycurve(NVGcontext* genVG,time_t nu,uint32_t starttime,uint32_t endtime
 	scanranges=new pair<const ScanData *,const ScanData*> [histlen];
 	delete[] pollranges;
 	pollranges=new pair<const ScanData *,const ScanData*> [histlen];
-//	pair<const ScanData *,const ScanData*> scanranges[histlen];
-//	pair<const ScanData *,const ScanData*> pollranges[histlen];
 	delete[] histpositions;
 	histpositions=new std::remove_reference_t<decltype(histpositions[0])>[histlen];
 	LOGSTRING("before getranges\n");
@@ -2348,7 +2363,8 @@ nrmenu=0;
  nrmenu=0,selmenu=0;
   calccurvegegs();
     }
-void withredisplay(NVGcontext* genVG,uint32_t nu,uint32_t endtime)  {
+
+static void withredisplay(NVGcontext* genVG,uint32_t nu)  {
 /*
 if(rotation!=0.0) {
 	LOGGER("rotate %f\n",rotation);
@@ -2368,7 +2384,8 @@ if(rotation!=0.0) {
 int oldtapx=tapx;
 tapx=-8000;
 #endif
-	    if( !displaycurve(genVG,nu,starttime, endtime)&&( ((tapx
+
+	    if( !displaycurve(genVG,nu)&&( ((tapx
 #ifdef WEAROSx
 
 	    =oldtapx
@@ -2403,7 +2420,7 @@ int onestep() {
 	time_t nu=time(nullptr);
 	lastviewtime=nu;
 	updateusedsensors(nu);
-	uint32_t endtime=starttime+duration;
+
 	selshown=false;
 	int ret=0;
 	emptytap=false;
@@ -2422,7 +2439,7 @@ int onestep() {
 #endif
 
 		{
-			withredisplay(genVG,nu,endtime);
+			withredisplay(genVG,nu);
 		}
 	}
 #ifndef WEAROS
@@ -2734,7 +2751,9 @@ void flingX(float vol) {
 		return;
 		}
 #endif
-	starttime-=(duration*1.2*vol/dwidth);
+
+//	starttime-=(duration*1.2*vol/dwidth);
+	setstarttime(starttime-(duration*1.2*vol/dwidth));
 #ifndef WEAROS
 	if(!showpers)
 #endif
@@ -2775,7 +2794,7 @@ static bool ybezig=false;
 #endif
 		{
 			ybezig=false;
-			starttime+=1.2*(dx/dwidth)*duration;
+			setstarttime(starttime+1.2*(dx/dwidth)*duration);
 			#ifndef WEAROS
 			if(!showpers)
 			#endif
@@ -2822,7 +2841,7 @@ void xscaleGesture(float scalex,float midx) {
 	uint32_t focustime=rat*oldduration+starttime;
 	duration=(int)round(oldduration/pow(scalex,5.0));
 	LOGGER("xscale scale=%f mid=%f oldduration=%f newduration=%d\n",scalex,midx,oldduration,duration);
-	starttime=focustime-rat*duration;
+	setstarttime(focustime-rat*duration);
 	auto maxstart= maxstarttime();
 	if(
 #ifndef WEAROS
@@ -2830,7 +2849,7 @@ void xscaleGesture(float scalex,float midx) {
 #endif
 
 	starttime>maxstart)
-		starttime=maxstart;
+		setstarttime(maxstart);
 	setend=0;
 
 	
@@ -2838,19 +2857,21 @@ void xscaleGesture(float scalex,float midx) {
 
 
 void prevscr() {
-	starttime-=duration;
+	setstarttime(starttime-duration);
 	auto minstart= minstarttime();
 	if(starttime<minstart)
-		starttime=minstart;
+		setstarttime(minstart);
 	}
 void  nextscr() {
-	starttime+=duration;
+	setstarttime(starttime+duration);
 #ifndef WEAROS
 	if(!showpers) 
 #endif
 
 	{
-		auto maxstart= maxstarttime(); if(starttime>maxstart) starttime=maxstart;
+		auto maxstart= maxstarttime(); 
+		if(starttime>maxstart) 
+			setstarttime(maxstart);
 		}
 	}
 static int64_t menutap(float x,float y) ;
@@ -3334,7 +3355,7 @@ static void highlightnum(const Num *num) {
 		numpagenum(tim) ;
 	else
 #endif
-		starttime=starttimefromtime(tim);
+		setstarttime(starttimefromtime(tim));
 	}
 
 static uint32_t glucosesearch(uint32_t starttime,uint32_t endtime) ;
@@ -3430,7 +3451,7 @@ static const Glucose * findhistory(const SensorGlucoseData  * hist, const uint32
 static void glucosesel(uint32_t tim) {
 	if(tim>starttime&&tim<timeend())
 		return;
-	starttime=starttimefromtime(tim);
+	setstarttime(starttimefromtime(tim));
 	}
 #ifndef NDEBUG
 void logglucose(const char *str,const Glucose *glu) {
@@ -3701,19 +3722,21 @@ return 1;
 static constexpr const int day=60*60*24;
 void prevdays(int nr) {
 	//starttime=starttimefromtime(starttime-nr*day);
-	starttime-=nr*day;
+	setstarttime(starttime-nr*day);
 	auto minstart= minstarttime();
 	if(starttime<minstart)
-		starttime=minstart;
+		setstarttime(minstart);
 	}
 void nextdays(int nr) {
 	//starttime=starttimefromtime(starttime+day*nr);
-	starttime+=day*nr;
+	setstarttime(starttime+day*nr);
 #ifndef WEAROS
 	if(!showpers) 
 #endif
 	{
-		auto maxstart= maxstarttime(); if(starttime>maxstart) starttime=maxstart;
+		auto maxstart= maxstarttime(); 
+		if(starttime>maxstart) 
+			setstarttime(maxstart);
 		}
 	}
 
@@ -4092,7 +4115,7 @@ static int64_t doehier(int menu,int item) {
 //				case 1: return 1LL*0x10+3;
 				case 1: {
 					auto max=time(nullptr);
-					starttime=max-duration*3/5;
+					setstarttime(max-duration*3/5);
 					return -1LL;
 					}
 				case 2: prevdays(1); return -1LL;
@@ -4170,7 +4193,7 @@ static int64_t doehier(int menu,int item) {
 			auto max=time(nullptr);
 		//	starttime=starttimefromtime(max);
 //			if((starttime+duration)<max) 
-			starttime=max-duration*3/5;
+			setstarttime(max-duration*3/5);
 			return -1;
 				};
 			case 3: prevdays(1); return -1;
@@ -4453,7 +4476,7 @@ char buf[80];
 		return;
 	if((starttime+duration)>=first&&starttime<second)
 		return;
-	starttime=starttimefromtime((first+second)/2);
+	setstarttime(starttimefromtime((first+second)/2));
 	return;
 	}
 #endif

@@ -1,4 +1,5 @@
 #include <sys/prctl.h>
+#include "curve.h"
 #include <jni.h>
 #include <string_view>
 #include <string>
@@ -294,6 +295,28 @@ extern "C" JNIEXPORT void JNICALL fromjava(setlocale)(JNIEnv *env, jclass clazz,
 		}
 	}
 
+extern uint32_t starttime;
+#ifndef WEAROS
+extern int diffcurrent;
+static void setdiffcurrent(bool val) {
+	if(val) {
+		diffcurrent=time(nullptr)-starttime;
+		}
+	else 
+		diffcurrent=0;
+	}
+extern "C" JNIEXPORT void  JNICALL   fromjava(setcurrentRelative)(JNIEnv *env, jclass cl,jboolean val) {
+	settings->data()->currentRelative=val;
+	setdiffcurrent(val);
+	}
+extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getcurrentRelative)(JNIEnv *env, jclass cl) {
+	return settings->data()->currentRelative;
+	}
+#else
+#define setdiffcurrent( val)
+#endif
+
+
 extern std::string_view libdirname;
 extern int setfilesdir(const std::string_view filesdir,const char *country) ;
 extern "C" JNIEXPORT int JNICALL fromjava(setfilesdir)(JNIEnv *env, jclass clazz, jstring dir,jstring jcountry,jstring nativedir) {
@@ -320,12 +343,15 @@ extern "C" JNIEXPORT int JNICALL fromjava(setfilesdir)(JNIEnv *env, jclass clazz
 		strcpy( country,"GB");
 		country=(char *)"\0";
 		}
-	return setfilesdir({filesdirbuf,filesdirlen},country);
+	auto res= setfilesdir({filesdirbuf,filesdirlen},country);
+
+	return res;
 	}
 void calccurvegegs();
 
 extern "C" JNIEXPORT void JNICALL fromjava(calccurvegegs)(JNIEnv *env, jclass clazz) {
 	calccurvegegs();
+	setdiffcurrent(settings->data()->currentRelative);
 	}
 
 extern void flingX(float vol);
@@ -427,7 +453,6 @@ extern "C" JNIEXPORT jlong JNICALL fromjava(mkhitptr) (JNIEnv *env, jclass clazz
 extern "C" JNIEXPORT void JNICALL fromjava(freehitptr)(JNIEnv *env, jclass thiz,jlong ptr) {
 	delete reinterpret_cast<NumHit *>(ptr);
 	}
-extern uint32_t starttime;
 extern int duration;
 extern "C" JNIEXPORT jlong JNICALL fromjava(getstarttime) (JNIEnv *env, jclass clazz) {
 	return static_cast<jlong>(starttime)*1000l;
@@ -474,6 +499,7 @@ extern "C" JNIEXPORT jint JNICALL fromjava(search) (JNIEnv *env, jclass clazz,ji
 	}
 
 void begrenstijd();
+extern void setstarttime(uint32_t);
 extern "C" JNIEXPORT void JNICALL fromjava(movedate) (JNIEnv *env, jclass clazz,jlong milli,jint year,jint month,jint day) {
 	time_t tim=milli/1000l;
 	struct tm		stm{};
@@ -482,7 +508,7 @@ extern "C" JNIEXPORT void JNICALL fromjava(movedate) (JNIEnv *env, jclass clazz,
 	stm.tm_mon=month;
 	stm.tm_mday=day;
 	time_t timto=mktime(&stm);
-	starttime+=uint32_t((int64_t)timto-(int64_t)tim);
+	setstarttime(starttime+uint32_t((int64_t)timto-(int64_t)tim));
 	begrenstijd() ;
 	};
 void prevdays(int nr);
@@ -543,7 +569,6 @@ extern "C" JNIEXPORT jlong JNICALL fromjava(openNums)(JNIEnv *env, jclass thiz,j
 	LOGAR("end openNums");
 	return res;
 	}
-#include "curve.h"
 extern "C" JNIEXPORT void JNICALL fromjava(setlastcolor)(JNIEnv *env, jclass thiz,jint color) {
 	LOGGER("lasttouchedcolor=%d color=%x\n",lasttouchedcolor,color);
 	if(lasttouchedcolor<0)
@@ -677,7 +702,7 @@ extern "C" JNIEXPORT void JNICALL fromjava(setsystemui)(JNIEnv *env, jclass thiz
 
 extern "C" JNIEXPORT void JNICALL fromjava(settonow)(JNIEnv *env, jclass thiz) {
 	auto max=time(nullptr);
-	starttime=max-duration*3/5;
+	setstarttime(max-duration*3/5);
 	}
 
 #include "sensoren.h"

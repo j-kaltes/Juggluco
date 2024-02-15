@@ -867,6 +867,15 @@ without
       can specify what labels are “<i>Rapid acting insulin</i>” under
       Left menu→Settings→Web server→<a href="https://www.juggluco.nl/Jugglucohelp/setlibrenumtype.html">Give
         Amounts</a>.</p>
+    <h2 class="western">Now clamp</h2><p>When “<i>Now clamp</i>” is set, the time period displayed on the
+screen is scrolled to the left so that the present is always at the
+same point of the screen. Some users run Juggluco on an Android
+emulator on a computer at a few meter distance from them. When “<i>Now
+clamp</i>” is turned off, the location of the current glucose value
+would move to the right with the passage of time, so that after a few
+hours it isn’t visible anymore. This makes it necessary to walk to
+the computer and scroll the screen a few centimeter. When “<i>Now
+clamp</i>” is turned on, this distraction is no longer required.</p>
     <h2 class="western"><a href="https://www.juggluco.nl/Jugglucohelp/NightPost.html">Uploader</a></h2>
     <p>Upload to a Nightscout server.</p>
     <h2 class="western">Glucose notification</h2>
@@ -1392,13 +1401,15 @@ again in the Android settings for Juggluco.</p>
 </string>
 <string name="nearbypermission" >
 <![CDATA[
-<p style="line-height: 100%; margin-bottom: 0in">
-Android 12 has some new Bluetooth permissions which require you to
-give explicit consent for the use of Bluetooth. Old apps don\'t
-immediately stop working, but you can now make use of these new
-permissions. If you don\'t give this NEARBY DEVICES permission,
-Juggluco can\'t receive Glucose values via Bluetooth from Freestyle
-Libre 2 and 3 sensors. But maybe the old permissions still work.</p>
+<h1>NEARBY DEVICES permission</h1>
+<p style="line-height: 100%; margin-bottom: 0in">Juggluco needs
+NEARBY DEVICES permission to receive glucose values via Bluetooth
+from Freestyle Libre 2 and 3 sensors. If Juggluco receives these
+glucose values from Juggluco running on another phone or watch,
+Juggluco doesn’t need this permission.</p>
+<p style="line-height: 100%; margin-bottom: 0in">To watches, Juggluco
+connects via the companion app of that watch, so that Juggluco itself
+doesn’t need this permission to connect to watches.</p>
 ]]>
 </string>
 <string name="watchinfo" >
@@ -2112,15 +2123,21 @@ is unable to contact the Nightscout server, so you can better turn
 </string>
 <string name="notificationpermission" >
 <![CDATA[
-<p>Android 13 requires that before you
-even know what kind of notifications are send, you give permissions
-for these notifications. Juggluco has notifications containing
-glucose values and requires to have a notifications in connection
-with a foreground service that is required to stay active in the
-background. For the proper function of Juggluco, you can better give
-Juggluco this permission.</p>
-<p>You can easily turn notifications on and off in Androids settings
-App-Info -&gt; Notifications for Juggluco.</p>
+<h1>Notifications</h1>
+<p>Unless Juggluco is used with Freestyle Libre 0 sensors, Juggluco
+must remain active in the background to receive a glucose reading
+every minute either directly from the sensor via Bluetooth or via a
+network connection. To prevent apps from being killed by Android,
+Android requires apps to display a notification so users know the
+application is present in the background. The text “To connect with
+sensor” or “To exchange data” describes why Juggluco has to
+stay active in the background.</p>
+<p>Juggluco also uses the notification to display the current glucose
+value and a change direction arrow.</p>
+<p><br/>
+<br/>
+
+</p>
 ]]>
 </string>
 <string name="staticnum" >

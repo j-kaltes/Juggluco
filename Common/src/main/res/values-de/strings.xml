@@ -321,4 +321,5 @@
 <string name="parseip">Fehler beim Parsen der IP</string>
 <string name="toomanyhosts">Maximale Anzahl an Hosts überschritten</string>
 <string name="senthosts">Juggluco sendet an bis zu 4 Hosts</string>
+   <string name="clampnow">Festgesteckt jetzt</string>
 </resources>

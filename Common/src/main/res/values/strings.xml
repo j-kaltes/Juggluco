@@ -330,5 +330,5 @@
 <string name="toomanyhosts">Maximal number of hosts exceeded</string>
 <string name="senthosts">Juggluco sends to maximal 4 hosts</string>
     <string name="hostname">hostname</string>
-
+   <string name="clampnow">Now clamp</string>
 </resources>

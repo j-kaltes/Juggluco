@@ -317,4 +317,5 @@
 <string name="parseip">Fout bij interpreteren van IP</string>
 <string name="toomanyhosts">Maximumaantal hosts overschreden</string>
 <string name="senthosts">Juggluco zendt naar maximaal 4 hosts</string>
+   <string name="clampnow">Vast nu</string>
 </resources>

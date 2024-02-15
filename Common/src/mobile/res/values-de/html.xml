@@ -1432,13 +1432,18 @@ Inhaltsstoffdefinition einfügen.</font></font></p>
 </string>
 <string name="nearbypermission" >
 <![CDATA[
-<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 100%; orphans: 2; widows: 2; margin-bottom: 0in">
-<font face="Times New Roman"><font size="4" style="font-size: 14pt">Android
-12 hat einige neue Bluetooth-Berechtigungen, die eine ausdrückliche
-Zustimmung zur Verwendung von Bluetooth erfordern. Wenn Sie diese
-GERÄTE IN DER NÄHE-Berechtigung nicht erteilen, kann Juggluco keine
-Glukosewerte über Bluetooth von Freestyle Libre 2 und 3 Sensoren
-empfangen.</font></font></p>
+<h1>Berechtigung für Geräte in der
+Nähe</h1>
+<p style="line-height: 100%; margin-bottom: 0in">Juggluco benötigt
+die Erlaubnis von GERÄTEN IN DER NÄHE, um Glukosewerte über
+Bluetooth von den Sensoren Freestyle Libre 2 und 3 zu empfangen. Wenn
+Juggluco diese Glukosewerte von Juggluco empfängt, das auf einem
+anderen Telefon oder einer anderen Uhr läuft, benötigt Juggluco
+diese Erlaubnis nicht.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Zu Uhren stellt
+Juggluco eine Verbindung über die Begleit-App dieser Uhr her, sodass
+Juggluco selbst diese Berechtigung nicht benötigt, um eine
+Verbindung zu Uhren herzustellen.</p>
 ]]>
 </string>
 <string name="newamount" >
@@ -1505,18 +1510,22 @@ Etiketten selbst können im linken Menü -&gt; Einstellungen -&gt; &quot;Zahlene
 </string>
 <string name="notificationpermission" >
 <![CDATA[
-<p>Android 13 erfordert, dass Sie
-Berechtigungen für diese Benachrichtigungen erteilen, bevor Sie
-überhaupt wissen, welche Art von Benachrichtigungen gesendet werden.
-Juggluco verfügt über Benachrichtigungen, die Glukosewerte
-enthalten, und benötigt Benachrichtigungen in Verbindung mit einem
-Foreground Service, der erforderlich ist, um im Hintergrund aktiv zu
-bleiben. Für die ordnungsgemäße Funktion von Juggluco sollten Sie
-Juggluco besser diese Erlaubnis erteilen.</p>
-<p>Sie können Benachrichtigungen ganz einfach in den
-Android-Einstellungen „App-Info“ -&gt;„Benachrichtigungen
-verwalten“ f<font face="Liberation Serif, serif">ü</font>r
-Juggluco ein- und ausschalten.</p>
+<h1>Benachrichtigungen</h1>
+<p>Sofern Juggluco nicht mit Freestyle Libre 0-Sensoren verwendet
+wird, muss Juggluco im Hintergrund aktiv bleiben, um jede Minute
+einen Glukosewert, entweder direkt vom Sensor über Bluetooth oder
+über eine Netzwerkverbindung, zu empfangen. Um zu verhindern, dass
+Apps von Android beendet werden, erfordert Android, dass Apps eine
+Benachrichtigung anzeigen, damit Benutzer wissen, dass die Anwendung
+im Hintergrund läuft. Der Text „<i>Zur Verbindung mit dem </i><i>Sensor</i>“
+oder „<i>Um </i><i>Daten aus</i><i>zu</i><i>tauschen</i>“
+beschreibt, warum Juggluco im Hintergrund aktiv bleiben muss.</p>
+<p>Juggluco nutzt die Benachrichtigung auch, um den aktuellen
+Glukosewert und einen Richtungsänderungspfeil anzuzeigen.</p>
+<p><br/>
+<br/>
+
+</p>
 ]]>
 </string>
 <string name="nutrients" >
@@ -2049,6 +2058,18 @@ unter einem Etikett in der Kategorie „ <i>Schnell wirkendes Insulin</i>
 <a href="https://www.juggluco.nl/Jugglucohelp/de/setlibrenumtype.html">Mengen
 geben</a> angeben, welche Etiketten „<i>Schnell wirkendes Insulin</i>“
 sind.</p>
+<h2 class="western">Festgesteckt jetzt</h2>
+<p>Wenn „<i>Festgesteckt jetzt</i>“ eingestellt ist, wird der auf
+dem Bildschirm angezeigte Zeitraum nach links gescrollt, sodass sich
+die Gegenwart immer an der gleichen Stelle des Bildschirms befindet.
+Einige Benutzer führen Juggluco auf einem Android-Emulator auf einem
+Computer aus, der einige Meter von ihnen entfernt ist. Wenn
+„<i>Festgesteckt jetzt</i>“ ausgeschaltet ist, verschiebt sich
+die Position des aktuellen Glukosewerts im Laufe der Zeit nach
+rechts, sodass er nach einigen Stunden nicht mehr sichtbar ist. Dies
+macht es erforderlich, zum Computer zu gehen und den Bildschirm
+einige Zentimeter zu scrollen. Wenn „<i>Festgesteckt jetzt</i>“
+aktiviert ist, ist diese Ablenkung nicht mehr erforderlich.</p>
 <h2 class="western">Uploader</h2>
 <p align="left" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 100%; margin-bottom: 0in">
 Auf einen Nightscout-Server hochladen.</p>

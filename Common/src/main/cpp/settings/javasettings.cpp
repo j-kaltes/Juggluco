@@ -334,7 +334,7 @@ extern "C" JNIEXPORT void  JNICALL   fromjava(setshowalways)(JNIEnv *env, jclass
 	settings->data()->dontshowalways=!val;
 	}
 
-static const uint32_t starttime=time(nullptr);
+//static const uint32_t starttime=time(nullptr);
 extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getaskedNotify)(JNIEnv *env, jclass cl) {
 /*
 	constexpr const uint32_t waittime=

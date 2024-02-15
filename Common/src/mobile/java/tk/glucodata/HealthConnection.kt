@@ -114,8 +114,10 @@ companion object {
         context.startActivity(intent)
     }
    fun init(context:MainActivity)  {
-       GlobalScope.launch {
-          susinit(context)
+     if(instance==null) {
+	       GlobalScope.launch {
+		  susinit(context)
+		}
        }
 
    }
@@ -136,6 +138,7 @@ private suspend   fun susinit(context: MainActivity): Int {
                        Log.i(LOG_ID, "after getOrCreate")
                        health.checkPermissionsAndRun(context)
                        Log.i(LOG_ID, "after checkPermissionsAndRun")
+		       MainActivity.tryHealth=0;
                    }
 
                    HealthConnectClient.SDK_UNAVAILABLE_PROVIDER_UPDATE_REQUIRED -> {

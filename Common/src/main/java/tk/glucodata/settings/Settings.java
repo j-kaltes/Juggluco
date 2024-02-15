@@ -609,9 +609,11 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 			healthconnect.setOnCheckedChangeListener( (buttonView,  isChecked) -> {
 					Natives.sethealthConnect(isChecked);
 					if(isChecked) {
+				   		MainActivity.tryHealth = 5;
 						HealthConnection.Companion.init(context);
 						}
 					else {
+				   		MainActivity.tryHealth = 0;
 						HealthConnection.Companion.stop();
 						}
 					}
@@ -817,6 +819,8 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 	       var webserver=getbutton(context,R.string.webserver);
 	       var uploader=getbutton(context,"Uploader");
 	       var iob=getcheckbox(context,"IOB",Natives.getIOB());
+	       var fixed=getcheckbox(context,R.string.clampnow,Natives.getcurrentRelative());
+		fixed.setOnCheckedChangeListener( (buttonView,  isChecked) -> Natives.setcurrentRelative(isChecked));
 /*		var streamhistory=getcheckbox(context,R.string.streamhistory,Natives.getStreamHistory( ));
 		streamhistory.setOnCheckedChangeListener( (buttonView,  isChecked) -> Natives.setStreamHistory(isChecked) );*/
 	       var floatconfig=getbutton(context,R.string.floatglucose);
@@ -831,7 +835,7 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 		View[] rowglu=new View[]{ bluetooth,floatconfig,alarmbut};
 		row8=new View[]{changelabels,langspin,numalarm,colbut};
 		views=new View[][]{row0, row1,new View[]{scalelabel,fixatex,fixatey}, row2,new View[]{levelleft,camera,reverseorientation},
-		hasnfc?new View[]{nfcsound, globalscan}:null,librerow,new View[] {librelinkbroadcast,xdripbroadcast ,jugglucobroadcast},new View[] {webserver,iob,uploader }, rowglu,row8,row9};
+		hasnfc?new View[]{nfcsound, globalscan}:null,librerow,new View[] {librelinkbroadcast,xdripbroadcast ,jugglucobroadcast},new View[] {webserver,iob,fixed,uploader }, rowglu,row8,row9};
 	       webserver.setOnClickListener(v-> tk.glucodata.Nightscout.show(context,thelayout[0]));
 	       uploader.setOnClickListener(v-> tk.glucodata.NightPost.config(context,thelayout[0]));
 		iob.setOnCheckedChangeListener( (buttonView,  isChecked) -> {

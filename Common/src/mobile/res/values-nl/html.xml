@@ -816,6 +816,17 @@ label in de categorie “<i>Snelwerkende insuline</i>”. Onder
 linkermenu → Instellingen → Webserver → <a href="https://www.juggluco.nl/Jugglucohelp/nl/setlibrenumtype.html">Geef
 hoeveelheden</a> kun je aangeven welke labels “<i>Snelwerkende
 insuline</i>” zijn.</p>
+<h2 class="western">Vast nu</h2>
+<p>Wanneer “<i>Vast nu</i>” is ingesteld, wordt de tijdsperiode
+die op het scherm wordt weergegeven naar links gescrolld, zodat het
+heden zich altijd op hetzelfde punt op het scherm bevindt. Sommige
+gebruikers draaien Juggluco op een Android-emulator op een computer
+op een paar meter afstand van hen. Wanneer “<i>Vast nu</i>” is
+uitgeschakeld, zou de locatie van de huidige glucosewaarde na verloop
+van tijd naar rechts verschuiven, zodat deze na een paar uur niet
+meer zichtbaar is. Hierdoor is het noodzakelijk om naar de computer
+te lopen en het scherm een paar centimeter to scrollen. Wanneer “<i>Vast
+nu</i>” is ingeschakeld, is deze afleiding niet langer nodig.</p>
 <h2 class="western">Uploader</h2>
 <p>Uploaden naar Nightscout-server.</p>
 <h2 class="western">Glucosemelding</h2>
@@ -1384,14 +1395,17 @@ toestemming weer intrekken in de Android instellingen voor Juggluco.</p>
 </string>
 <string name="nearbypermission" >
 <![CDATA[
-<p style="line-height: 100%; margin-bottom: 0in">
-Android heeft enkele nieuwe Bluetooth &ldquo;permissions&rdquo; (in
-de Nederlandse versie van Android afwisselend aangeduid met
-machtigingen, toestemmingen, rechten en mogelijkheden), die vergen
-dat je expliciet toestemming geeft voor het gebruikt van Bluetooth.
-Als je deze &ldquo;Apparaten in de buurt&rdquo; toestemming niet
-geeft, kan Juggluco geen glucose waarden ontvangen via Bluetooth van
-Freestyle Libre 2 en 3 sensoren.</p>
+<h1>APPARATEN IN DE BUURT toestemming</h1>
+<p style="line-height: 100%; margin-bottom: 0in">Juggluco heeft
+toestemming voor APPARATEN IN DE BUURT nodig om glucosewaarden via
+Bluetooth te ontvangen van Freestyle Libre 2- en 3-sensoren. Als
+Juggluco deze glucosewaarden ontvangt van Juggluco die op een andere
+telefoon of horloge draait, heeft Juggluco deze toestemming niet
+nodig.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Met horloges maakt
+Juggluco verbinding via de app behorende bij het horloge, zodat
+Juggluco zelf deze toestemming niet nodig heeft om verbinding te
+maken met horloges.</p>
 ]]>
 </string>
 <string name="watchinfo" >
@@ -2138,15 +2152,21 @@ er geen betrouwbare verbinding is.</p>
 </string>
 <string name="notificationpermission" >
 <![CDATA[
-<p>Android 13 vereist dat voordat je
-weet wat voor soort meldingen worden verzonden, je toestemming geeft
-voor deze meldingen. Juggluco heeft notificaties met glucosewaarden
-en vereist notificaties in verband met een Foreground Service die
-nodig is om op de achtergrond actief te blijven. Voor een goede
-werking van Juggluco kun je beter Juggluco deze toestemming geven.</p>
-<p>Meldingen kun je eenvoudig in- en uitschakelen in de
-Android-instellingen &quot;<i>App-Info -&gt; Meldingen </i><i>beheren</i>&quot;
-voor Juggluco.</p>
+<h1>Meldingen</h1>
+<p>Tenzij Juggluco wordt gebruikt met Freestyle Libre 0 sensoren,
+moet Juggluco in de achtergrond actief blijven om elke minuut een
+glucosemeting te ontvangen, rechtstreeks van de sensor via Bluetooth
+of via een netwerkverbinding.  Als apps geen melding weergeven 
+waaraan gebruikers kunnen zien dat een applicatie in de achtergrond
+aanwezig is, wordt de app eerder door Android beëindigd. De tekst
+“Voor verbinding met sensor” of “Om gegevens uit te wisselen”
+beschrijft waarom Juggluco in de achtergrond actief moet blijven.</p>
+<p>Juggluco gebruikt de melding ook om de huidige glucosewaarde en
+een richtingspijl weer te geven.</p>
+<p><br/>
+<br/>
+
+</p>
 ]]>
 </string>
 <string name="staticnum" >

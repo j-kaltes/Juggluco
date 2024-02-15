@@ -715,6 +715,8 @@ public static native boolean getIOB( );
 public static native float getIOBvalue(long time);
 public static native String serverError();
 public static native String nightError();
+public static native void setcurrentRelative(boolean val);
+public static native boolean getcurrentRelative( );
 
 
 //s/^extern.*JNIEXPORT[         ]*\([a-zA-Z]*\)[ ]*JNICALL[      ]*fromjava(\([^)]*\)) *(JNIEnv[^,]*,[^,)]*[,)]\([^){]*\)[^a-zA-Z0-9]*$/public static native \1 \2(\3);/g

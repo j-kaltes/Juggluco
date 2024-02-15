@@ -240,7 +240,8 @@ struct Tings {
 
 	char newYuApiKey3[41];
 
-	bool reserved9:3;//*
+	bool reserved9:2;//*
+	bool currentRelative:1;//*
 	bool IOB:1;
 	bool healthConnect:1;
 	bool speakmessages:1;
