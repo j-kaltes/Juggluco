@@ -118,7 +118,9 @@ public:
 		else {
 			 libre2=libre3=false;
 			}
-		uint32_t sendfrom=time(nullptr)-librekeepsecs;
+
+		uint32_t starttime=settings->data()->startlibretime;
+		uint32_t sendfrom=starttime?starttime:(time(nullptr)-librekeepsecs);
 #ifndef NOLOG
 {
 		time_t showtime=sendfrom;
@@ -130,17 +132,26 @@ public:
 			const SensorGlucoseData *sens=getSensorData(i);
 			if(sens&&!sens->isLibre3()) {
 				settings->data()->startlibreview=i;
-				if(!sens->getinfo()->libreviewsendall&&sens->getstarttime()>sendfrom) {
+				if(!sens->getinfo()->libreviewsendall&&sens->getmaxtime()>sendfrom) {
 					libre2=true;
 					break;
 					}
 				}
 			}
+		LOGGER("settings->data()->startlibre3view=%d settings->data()->startlibreview=%d\n",settings->data()->startlibre3view,settings->data()->startlibreview);
 		for(int i= settings->data()->startlibre3view;i<=lastsens; i++) {
 			const SensorGlucoseData *sens=getSensorData(i);
-			if(sens&&sens->isLibre3()) {
+			if(!sens) {
+				LOGGER("ERROR getSensorData(i)==NULL\n",i);
+				continue;
+				}
+			if(sens->isLibre3()) {
 				settings->data()->startlibre3view=i;
-				if(!sens->getinfo()->libreviewsendall&&sens->getstarttime()>sendfrom) {
+				#ifndef NOLOG
+				time_t tim=sens->getmaxtime();
+				LOGGER("libre3 %d sendnall=%d starttime=%s",i,sens->getinfo()->libreviewsendall,ctime(&tim));
+				#endif
+				if(!sens->getinfo()->libreviewsendall&&sens->getmaxtime()>sendfrom) {
 					libre3=true;
 					break;
 					}

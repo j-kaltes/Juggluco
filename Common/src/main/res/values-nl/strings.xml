@@ -200,7 +200,7 @@
     <string name="comments">Opmerking</string>
  <string name="sendamounts">Zend hoeveelheden</string>
  <string name="resendquestion">Herzend data?</string>
- <string name="resendmessage">Gebruik \"Resend data\" enkel na wisseling naar een ander Libreview account of nadat het huidige \"Apparaat\" uit Libreview verwijderd is (Account instellingen->Mijn Apparaten).</string>
+ <string name="resendmessage">Zorg ervoor dat je geen overlappende gegevens naar Libreview zend.</string>
  <string name="getaccountidquestion">Haal Account ID van Libreview?</string>
  <string name="getaccountidmessage">De Account ID is noodzakelijk om Libre3 sensoren te gebruiken die geactiveerd zijn door Abbott\'s Libre3 app met dit Libreview account.</string>
  <string name="deleteconnection">Verwijder verbinding?</string>
@@ -318,4 +318,6 @@
 <string name="toomanyhosts">Maximumaantal hosts overschreden</string>
 <string name="senthosts">Juggluco zendt naar maximaal 4 hosts</string>
    <string name="clampnow">Vast nu</string>
+    <string name="sendfrom">Zend vanaf:</string>
+ <string name="changestartbutton">Begin wijzigen</string>
 </resources>

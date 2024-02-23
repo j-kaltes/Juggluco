@@ -355,7 +355,8 @@ const int32_t getlibresend() const  {
 	return *reinterpret_cast<const int32_t *>(raw+libresend);
 	}
 
-const int32_t nextlibresend(uint32_t after=time(nullptr)-librekeepsecs) const {
+//const int32_t nextlibresend(uint32_t after=time(nullptr)-librekeepsecs) const {
+const int32_t nextlibresend(uint32_t after) const {
 	const int32_t next=getlibresend();
 	const auto lastpo=getlastpos();
 	if(next>=lastpo) {
@@ -552,6 +553,14 @@ Num* firstnotless(const uint32_t tim) {
 	Num *en= end();
 	auto comp=[](const Num &el,const Num &se ){return el.time<se.time;};
   	return std::lower_bound(beg,en, zoek,comp);
+	}
+const Num* firstnotless(const uint32_t tim) const {
+    Numdata *mthis=const_cast<Numdata*>(this);
+    Num *num=mthis->firstnotless(tim);
+	return const_cast<const Num *>(num);
+	}
+int firstnotlessIndex(const uint32_t tim) const {
+	return firstnotless(tim)-startdata(); 
 	}
 /*
 struct Num {

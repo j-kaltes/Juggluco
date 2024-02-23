@@ -1334,8 +1334,8 @@ Wenn diese Option deaktiviert ist, meldet Juggluco immer, dass es
 nicht angezeigt wird. Diese Option sendet diese Informationen nur
 dann zuverlässig an Libreview, wenn auch „<i>Sofort“</i>
 aktiviert ist.</p>
-<p><strong>Daten erneut senden</strong>: Neu beginnen; Daten der
-letzten 90 Tage erneut an Libreview senden. Sie müssen diese Taste
+<p><b>Anfang</b><b> ändern</b>: Daten ab einem bestimmten Datum und
+einer bestimmten Uhrzeit erneut senden. Sie müssen diese Taste
 drücken, wenn Sie zu einem neuen Libreview-Konto wechseln.</p>
 <p>Das Ergebnis des letzten Sendeversuchs an Libreview wird unter der
 Schaltfläche „Konto-ID abrufen“ angezeigt.</p>
@@ -1649,8 +1649,8 @@ Klingeltonauswahl-App ab, sodass Sie eine andere Klingelton-App
 installieren müssen, zum Beispiel:
 <a href="https://play.google.com/store/apps/details?id=com.centralparkapps.ringo.ringtones">https://play.google.com/store/apps/details?id=com.centralparkapps.ringo.ringtones</a>,
 <a href="https://apkcombo.com/ringtone-picker/de.kumpewo.ringtones">https://apkcombo.com/ringtone-picker/de.kumpewo.ringtones</a>
-oder
-<a href="https://m.apkpure.com/tone-picker-mp3-ringtones/com.hlidskialf.android.tonepicker">https://m.apkpure.com/tone-picker-mp3-ringtones/com.hlidskialf.android.tonepicker</a></p>
+oder <a href="https://www.apkmonk.com/app/com.hlidskialf.android.tonepicker">https://www.apkmonk.com/app/com.hlidskialf.android.tonepicker</a>
+</p>
 <p><strong>Vibrieren</strong>: Vibrieren</p>
 <p><strong>Stören</strong>: Erzeugt auch Ton, wenn „<i>Nicht
 stören</i>“ eingeschaltet ist. Wenn Juggluco hierfür nicht die
@@ -2674,6 +2674,27 @@ sind.</p>
 <br/>
 
 </p>
+]]>
+</string>
+<string name="healthpermission" >
+<![CDATA[
+<h1>Schreiben von <i>Blutzucker</i> zulassen</h1>
+<p>Um Glukosewerte in <b>Health Connect</b> schreiben zu können, muss der Benutzer Juggluco die Berechtigung erteilen, <b>Blutzucker</b>
+in Health Connect zu schreiben.</p>
+<p>Diese Berechtigung ist für nichts anderes als den Empfang von
+Glukosewerten in Health Connect erforderlich. In allen anderen
+Aspekten kann Juggluco ohne diese Erlaubnis funktionieren.</p>
+]]>
+</string>
+<string name="changestart" >
+<![CDATA[
+<h1>Anfang ändern</h1>
+<p>Ändern Sie das Datum und die Uhrzeit, ab der Daten an Libreview
+gesendet werden. Dies kann nützlich sein, wenn einige der Daten
+bereits in Libreview vorhanden sind. Zum Beispiel, nachdem Sie eine
+Klonverbindung verwendet haben, um Daten auf ein anderes Telefon zu
+übertragen, und dann dieses neue Telefon verwendet haben, um Daten
+an Libreview zu senden.</p>
 ]]>
 </string>
 </resources>

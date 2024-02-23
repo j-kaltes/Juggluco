@@ -23,7 +23,6 @@ void switchrealhistory(SensorGlucoseData *sensdata,bool torealhistory) {
 						}
 					}
 				}
-
 			sensdata->getinfo()->libreviewnotsendHistory=histnum;
 			LOGGER("libreviewnotsend=%d\n",sensdata->getinfo()->libreviewnotsendHistory);
 			sensdata->getinfo()->realHistory=true;
@@ -62,14 +61,7 @@ void switchrealhistory(SensorGlucoseData *sensdata,bool torealhistory) {
 
 
 LibreHist  libreRealHistory(SensorGlucoseData *sens,uint32_t starttime,uint32_t nu) { //test on start time;
-
 	const uint32_t notsend=sens->getinfo()->libreviewnotsendHistory;
-	/*
-	if(sens->getinfo()->libreviewnotsendHistory==1104)
-		sens->getinfo()->libreviewnotsendHistory=1036; */
-
-		
-
 	const uint32_t endpos=sens->getAllendhistory();
 #ifndef NOLOG
 	time_t tim=starttime;

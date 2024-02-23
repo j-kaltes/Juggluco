@@ -35,7 +35,7 @@
     <string name="amountshort">@string/amountsname</string>
     <string name="mealsname">Posiłki</string>
     <string name="closename">Zamknij</string>
-    <string name="exporthelp">Posiłki zapisane w html\nReszta w .tsv (wartości rozdzielane tabulatorami)</string>
+    <string name="exporthelp">Zapisuje ostatnią wartość wyświetlaną na ekranie. Początek to określona liczba dni wstecz.</string>
     <string name="detect">Wykryj</string>
     <string name="testip">Sprawdzaj IP</string>
     <string name="testlabel">Sprawdzaj nazwę</string>
@@ -60,7 +60,7 @@
     <string name="save">Zapisz</string>
  <string name="addconnectionbutton">Dodaj połączenie</string>
  <string name="offtouch">Wył. dotyk</string>
- <string name="glucosestatusbar">Stęż. glukozy w pasku stanu</string>
+ <string name="glucosestatusbar">Powiadomienie o wartości glikemii</string>
  <string name="lowglucosealarm">Alarm dla hipoglikemii</string>
  <string name="numlabel">&quot;Etykieta: &quot;</string>
  <string name="roundto">Zaokrąglaj do: &quot;</string>
@@ -98,7 +98,7 @@
  <string name="meal">Posiłek:</string>
  <string name="ringshort">Dzwonek</string>
  <string name="days">Dni</string>
- <string name="invaliddays">\&quot; nie jest prawidłową liczbą dni</string>
+ <string name="invaliddays">\&apos; nieważne. Wartość dni powinna być liczbą naturalną.</string>
  <string name="summarygraph">Wykres zbiorczy</string>
  <string name="forget">Zapomnij</string>
  <string name="reenable">Włącz ponownie</string>
@@ -256,13 +256,13 @@
 <string name="invalidport">&quot;nieprawidłowy numer portu&quot;</string>
 <string name="newsecret">&quot;nowe api_secret: &quot;</string>
 <string name="newport">&quot;nowy port =&quot;</string>
-<string name="webserver">Web server</string>
+<string name="webserver">Serwer WWW</string>
 <string name="treatments">Przekaż wartości</string>
 <string name="android13">Android</string>
     <string name="wentwrong">Coś poszło nie tak</string>
     <string name="dosis">&quot; dawka &quot;</string>
     <string name="doses">&quot; dawki/-ek &quot;</string>
- <string name="penfailed">Odczyt pena do insuliny nie powiódł się</string>
+ <string name="penfailed">Odczyt pena do insuliny nie powiódł się. Spróbuj ponownie.</string>
  <string name="changeinsulin">&quot;Zmień typ insuliny na &quot;</string>
     <string name="type">&quot;Typ: &quot;</string>
     <string name="dosesprior">Dodaj dawki tylko po:</string>
@@ -279,7 +279,7 @@
  <string name="talker">Głos</string>
  <string name="secondsbetween">Sekund(y) pomiędzy</string>
  <string name="test">Test</string>
- <string name="streamhistory">Historia strumienia</string>
+ <string name="streamhistory">Historia Bluetooth</string>
  <string name="libreisviewed">Podgl. ekr.</string>
  <string name="novalue">Brak wartości</string>
  <string name="talk">Na głos</string>
@@ -302,5 +302,33 @@
  <string name="week_back">Tydzień wstecz</string>
  <string name="week_later">Tydzień później</string>
  <string name="talk_touch">Czytaj na głos przy dotknięciu</string>
-
+ <string name="speakmessages">Mów powiadomienia na głos</string>
+ <string name="speakalarms">Mów alarmy na głos</string>
+ <string name="speakglucose">Mów wartość glikemii na głos</string>
+    <string name="notfound">Nie znaleziono</string>
+ <string name="no_ringtone_picker_found">Nie znaleziono aplikacji do wybierania dzwonków</string>
+ <string name="can_t_play">&quot;Nie mogę odtworzyć&quot;</string>
+ <string name="seconds">&quot; sekund(y)&quot;</string>
+ <string name="duration_can_t_be_negative">&quot;Czas trwania nie może być ujemny: &quot;</string>
+ <string name="too_large_maximum_65535">&quot; za duży, maksymalnie=65535, &quot;</string>
+ <string name="too_large">&quot; za duży&quot;</string>
+ <string name="can_t_use_specification">Nie można użyć specyfikacji</string>
+ <string name="turn_on_nearby_devices_permission">Włącz uprawnienie SKANOWANIE URZĄDZEŃ W POBLIŻU</string>
+    <string name="enable_bluetooth">Włącz Bluetooth</string>
+ <string name="turn_on_location_permission">Włącz uprawnienia lokalizacji</string>
+ <string name="bluetooth_is_turned_off">Bluetooth jest wyłączony</string>
+ <string name="allsentnoreceive">Gdy wszystko jest wysyłane do hosta, opcja \&quot;Odbieraj\&quot; powinna być wyłączona.</string>
+ <string name="nomirrorport">Numer portu powinien różnić się od numeru portu klona</string>
+ <string name="nohttpport">Numer portu powinien różnić się od portu http</string>
+<string name="ready_in">&quot; gotowy za &quot;</string>
+<string name="ready_for_use">Sensor gotowy do użycia</string>
+<string name="endstime">&quot; kończy się w tym momencie&quot;</string>
+<string name="triednothing">Nie podjęto żadnej próby</string>
+<string name="success">Powodzenie</string>
+<string name="resendwarning">Wszystkie dane zostaną przesłane ponownie, co wymaga czasu i może mieć konsekwencje dla Libreview i Kerfstok.</string>
+<string name="parseip">Błąd parsowania adresu IP</string>
+<string name="toomanyhosts">Przekroczono maksymalną liczbę hostów</string>
+<string name="senthosts">Juggluco wysyła do maksymalnie 4 hostów</string>
+    <string name="hostname">nazwa hosta</string>
+   <string name="clampnow">Pokaż zawsze „teraz”</string>
 </resources>

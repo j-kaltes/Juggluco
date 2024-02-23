@@ -21,7 +21,7 @@ that can be used by other apps, for example:
 <a href="https://play.google.com/store/apps/details?id=com.centralparkapps.ringo.ringtones">https://play.google.com/store/apps/details?id=com.centralparkapps.ringo.ringtones</a>,
 <a href="https://apkcombo.com/ringtone-picker/de.kumpewo.ringtones">https://apkcombo.com/ringtone-picker/de.kumpewo.ringtones</a>
 or
-<a href="https://m.apkpure.com/tone-picker-mp3-ringtones/com.hlidskialf.android.tonepicker">https://m.apkpure.com/tone-picker-mp3-ringtones/com.hlidskialf.android.tonepicker</a>
+<a href="https://www.apkmonk.com/app/com.hlidskialf.android.tonepicker">https://www.apkmonk.com/app/com.hlidskialf.android.tonepicker</a>
 </p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>Vibrate</b>:
 Vibrate</p>
@@ -1701,8 +1701,8 @@ this information to Libreview when also <i>Immediate</i> is turned
 on. Juggluco should be constantly connected to the internet to catch
 all views from Libre 3, Libre 2 remembers them all as long as it is
 not killed.</p>
-<p style="line-height: 100%; margin-bottom: 0in"><b>Resend data</b>:
-Start anew; resend data of the last 90 days to Libreview. You need to
+<p style="line-height: 100%; margin-bottom: 0in"><b>Change start</b>:
+Start anew; resend data from a specified date and time. You need to
 press this when switching to a new Libreview account.</p>
 <p style="line-height: 100%; margin-bottom: 0in">Result of the last
 time trying to send to Libreview is displayed below the &quot;Get
@@ -2284,11 +2284,10 @@ one ingredient is then calculated.</p>
 </string>
 <string name="healthpermission" >
 <![CDATA[
-<h1>Allowance to write <i>b</i><i>lood
-glucose</i></h1>
+<h1>Permission to write <i>blood glucose</i></h1>
 <p>To be able to write Glucose values to <b>Health Connect,</b> the
-user needs to give Juggluco permission to write <b>B</b><b>lood
-Glucose</b> to Health Connect. 
+user needs to give Juggluco permission to write <b>Blood Glucose</b>
+to Health Connect. 
 </p>
 <p>This permission isn’t needed for anything else than receiving
 glucose values in Health Connect. In all other aspect Juggluco can
@@ -2307,6 +2306,16 @@ Amounts</a>.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><br/>
 
 </p>
+]]>
+</string>
+<string name="changestart" >
+<![CDATA[
+<h1>Change start</h1>
+<p>Change the date and time from, which data will be send to
+Libreview. This can be useful when some of the data is already
+present on Libreview. For example after using a mirror connection to
+transfer data to another phone and then using that new phone to send
+data to Libreview.</p>
 ]]>
 </string>
 </resources>

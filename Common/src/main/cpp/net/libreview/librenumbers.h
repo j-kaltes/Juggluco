@@ -386,7 +386,9 @@ static int spaceneeded() {
 		return 0;
 	int deleted=settings->data()->libredeletednr;
 	int total=deleted;
-	const uint32_t from =time(nullptr)-librekeepsecs;
+
+	const uint32_t starttime= settings->data()->startlibretime;
+	const uint32_t from =starttime?starttime:(time(nullptr)-librekeepsecs);
 	for(auto *numdat:numdatas) {
 		total+=(numdat->getlastpos()-numdat->nextlibresend(from));
 		total+=numdat->getlibrechangednr();
@@ -425,7 +427,8 @@ Numbers():ids(new Libregeg[numdatas.size()]),libreNR(librenr()) {
 		return;
 	LOGGER("libreNR=%d\n",libreNR);
 	const int nnr= numdatas.size();
-	const uint32_t from =time(nullptr)-librekeepsecs;
+	const uint32_t starttime= settings->data()->startlibretime;
+	const uint32_t from =starttime?starttime:(time(nullptr)-librekeepsecs);
 	for(int i=0;i<nnr;i++) {
 		Numdata*numdat=numdatas[i];
 		const auto lastpos=numdat->getlastpos(); 
@@ -658,4 +661,5 @@ int main() {
 
 	}
 	*/
+
 

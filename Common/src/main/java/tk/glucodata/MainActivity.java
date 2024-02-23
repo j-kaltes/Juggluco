@@ -73,6 +73,8 @@ import android.view.accessibility.AccessibilityManager;
 import android.widget.Toast;
 
 import androidx.activity.ComponentActivity;
+//import androidx.activity.OnBackPressedCallback;
+//import androidx.activity.OnBackPressedDispatcher;
 import androidx.annotation.UiThread;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -284,6 +286,16 @@ private void supportRTL() {
 //       if(!isRelease) Test.test();
 	if(Menus.on)
 		Menus.show(this);
+	/*new OnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+    	@Override
+		public void handleOnBackPressed() {
+		Log.d(LOG_ID, "handleOnBackPressed");
+		if(!backinapp())  {
+			Log.d(LOG_ID, "moveTaskToBack");
+			moveTaskToBack(true);
+			}
+	  }
+	}); */
     }
 void handleIntent(Intent intent) {
 	if(intent==null)
@@ -1071,6 +1083,8 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     }	
     else {
 	    if(keyCode== KeyEvent.KEYCODE_CAMERA) {
+	    	Log.i(LOG_ID,"keyCode== KeyEvent.KEYCODE_CAMERA)");
+
 			final int camkey=Natives.camerakey();
 			switch(camkey) {
 				case 0: Natives.setcamerakey(2);break;
@@ -1149,12 +1163,15 @@ boolean backinapp()  {
 		return doonback();
 		}
 	   }
+
 	@Override
 	public	void onBackPressed() {
-		super.onBackPressed();
 		Log.d(LOG_ID, "onBackPressed");
-		if (!backinapp())
-			moveTaskToBack(true);
+		if(!backinapp())  {
+			Log.d(LOG_ID, "moveTaskToBack");
+	//		moveTaskToBack(true);
+			super.onBackPressed();
+			}
 	}
 void tonotaccesssettings() {
 	Log.i(LOG_ID,"tonotaccesssettings()");

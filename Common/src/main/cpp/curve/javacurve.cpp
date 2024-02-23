@@ -296,11 +296,13 @@ extern "C" JNIEXPORT void JNICALL fromjava(setlocale)(JNIEnv *env, jclass clazz,
 	}
 
 extern uint32_t starttime;
-#ifndef WEAROS
+
+extern void setdiffcurrent();
+
 extern int diffcurrent;
 static void setdiffcurrent(bool val) {
 	if(val) {
-		diffcurrent=time(nullptr)-starttime;
+		setdiffcurrent();
 		}
 	else 
 		diffcurrent=0;
@@ -312,9 +314,6 @@ extern "C" JNIEXPORT void  JNICALL   fromjava(setcurrentRelative)(JNIEnv *env, j
 extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getcurrentRelative)(JNIEnv *env, jclass cl) {
 	return settings->data()->currentRelative;
 	}
-#else
-#define setdiffcurrent( val)
-#endif
 
 
 extern std::string_view libdirname;

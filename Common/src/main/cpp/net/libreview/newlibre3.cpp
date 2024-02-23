@@ -316,9 +316,8 @@ bool sendlibre3viewdata(bool hasnewcurrent,uint32_t nu) {
 	int startsensor=settings->data()->startlibre3view;
 	int lastsensor=sensors->last();
 	int inhistory=0;
-	LOGGER("Start sendlibre3viewdata startlibre3view=%d lastsensor=%d\n",startsensor,lastsensor);
 	if(lastsensor<startsensor)	{
-		LOGGER("lastsensor(%d)<startsensor(%d)\n",lastsensor,startsensor);
+		LOGGER("sendlibre3viewdata: lastsensor(%d)<startsensor(%d)\n",lastsensor,startsensor);
 		if(!sendnumbers3())
 			return true;
 		}
@@ -334,7 +333,12 @@ bool sendlibre3viewdata(bool hasnewcurrent,uint32_t nu) {
 		}
 	
 	int lastlibre3=-1;
-	const uint32_t oldtimer=nu-Sensoren::sensorageseconds;
+	const uint32_t fromtime=settings->data()->startlibretime;
+	const uint32_t oldtimer=fromtime?fromtime:(nu-Sensoren::sensorageseconds);
+#ifndef NOLOG
+	const time_t tim=oldtimer;
+	LOGGER("Start sendlibre3viewdata startlibre3view=%d lastsensor=%d from=%s",startsensor,lastsensor,ctime(&tim));
+#endif
 	for(int i=startsensor;i<=lastsensor;i++) {
 		SensorGlucoseData *sensdata=sensors->getSensorData(i);
 		if(sensdata->isLibre3()) {

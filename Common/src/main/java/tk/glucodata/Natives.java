@@ -490,7 +490,7 @@ public static native boolean switchgen2( );
 
 //public static native void logBluetoothGattCharacteristic(String jmess, BluetoothGattCharacteristic bluetoothGattCharacteristic);
 
-public static native void clearlibreview( );
+public static native void  clearlibreFromMSec(long from);
 public static native void wakelibreview(int min );
 
 

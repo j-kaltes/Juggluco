@@ -1048,19 +1048,19 @@ uint32_t mintime() {
 int gmin=2*180;
 int grange=8*180;
 uint32_t starttime;
-#ifdef WEAROS
-const
-#endif
 int diffcurrent=0;
 extern void setstarttime(uint32_t);
+void setdiffcurrent() {
+	diffcurrent=time(nullptr)-starttime;
+	if(diffcurrent>(duration*5/6))
+		diffcurrent=-1;
+	LOGGER("diffcurrent=%d\n",diffcurrent);
+	}
 void setstarttime(uint32_t newstart) {
 	starttime=newstart;
-#ifndef WEAROS
 	if(diffcurrent) {
-		diffcurrent=time(nullptr)-starttime;
-		LOGGER("diffcurrent=%d\n",diffcurrent);
+		setdiffcurrent();
 		}
-#endif
 	}
 uint32_t maxstarttime() {
 //	return maxtime()-duration/2;
@@ -2081,7 +2081,7 @@ vector<int> hists;
 
 int displaycurve(NVGcontext* genVG,time_t nu) {
 
-	const uint32_t starttime=(diffcurrent&&nu<(::starttime+duration*5/6))?(nu-diffcurrent):(::starttime);
+	const uint32_t starttime=(diffcurrent>0)?(nu-diffcurrent):(::starttime);
 	const uint32_t endtime=starttime+duration;
 
 

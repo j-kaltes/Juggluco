@@ -1,5 +1,7 @@
+try out updates
 Complete OpenGL mirror version for windows, Linux, IOS and AsteroidOS
-AsteroidOS Bluetooth, NFC
+	AsteroidOS Bluetooth, NFC
+Simplified version that immediately updates values, instead of dependence on poll frequency.
 
 Iets met instellen IOB:
 	- Instellen variabele categorien?

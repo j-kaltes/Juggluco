@@ -202,7 +202,7 @@
  <string name="dontsend">Don\'t send</string>
  <string name="sendamounts">Send amounts</string>
  <string name="resendquestion">Resend data?</string>
- <string name="resendmessage">Use \"Resend data\" only after switching to a different Libreview account or after first removing the already used device from Libreview (Account settings->My Devices).</string>
+ <string name="resendmessage">Be careful not to send overlapping data to Libreview.</string>
  <string name="getaccountidquestion">Get Account ID from Libreview?</string>
  <string name="getaccountidmessage">The Account ID is needed to use Libre3 sensors that are activated with Abbotts Libre3 app with this Libreview account.</string>
  <string name="deleteconnection">Delete connection?</string>
@@ -331,4 +331,6 @@
 <string name="senthosts">Juggluco sends to maximal 4 hosts</string>
     <string name="hostname">hostname</string>
    <string name="clampnow">Now clamp</string>
+    <string name="sendfrom">"Send from: "</string>
+ <string name="changestartbutton">Change start</string>
 </resources>

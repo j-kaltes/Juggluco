@@ -395,7 +395,7 @@ globalsocket=serversock;
 				char name[passhost_t::maxnamelen];
 				int rlen;
 				if((rlen=recvni(new_fd,name,passhost_t::maxnamelen))==passhost_t::maxnamelen) {
-					serverprint(R"(hostlabel="%s")",name);
+					serverprint(R"(host tries to connect, label="%s")",name);
 					LOGGERTAG("%s\n",servererrorbuf);
 					for(int h=0;h<hostlen;h++) {
 						passhost_t& host=hosts[h];

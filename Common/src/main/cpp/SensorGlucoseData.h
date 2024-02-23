@@ -219,7 +219,13 @@ uint16_t startedwithStreamhistory;
 uint16_t libreviewnotsendHistory;
 bool sendLibre[15*24*4];
 uint16_t healthconnectiter;
-void clearLibreSend(int end) {
+void clearLibreSendEnd(int start) {
+	const int len=(int)sizeof(sendLibre)-start*sizeof(sendLibre[0]);
+	LOGGER("clearLibreSendEnd(%d) sizeof(sendLibre)=%d len=%d\n",start,sizeof(sendLibre),len);
+	if(len>0)
+		bzero(sendLibre+start,len);
+	}
+void clearLibreSendAll() {
 	bzero(sendLibre,sizeof(sendLibre));
 	}
 bool isLibreSend(int pos ) const {
@@ -1200,13 +1206,13 @@ int posearlier(int pos,uint32_t starttime) {
 int getbackuptimestream(uint32_t starttime)  {
 	decltype(auto) poldat=getPolldata();
 	int pos=firstnotless(poldat,starttime)-beginpolls();
-	LOGGER("GLU: setbackuptimestream pos=%d\n",pos);
+	LOGGER("GLU: getbackuptimestream pos=%d\n",pos);
 	return pos;
 	}
 int  getbackuptimescan(uint32_t starttime)  {
 	decltype(auto) scandat=getScandata();
 	int pos=firstnotless(scandat,starttime)-&scandat[0];
-	LOGGER("GLU: setbackuptimescan pos=%d\n",pos);
+	LOGGER("GLU: getbackuptimescan pos=%d\n",pos);
 	return pos;
 	}
 	/*
@@ -1250,7 +1256,7 @@ uint32_t getbackuptimehistory(uint32_t starttime)  {
 		}
 #ifndef NOLOG
 	time_t tim=starttime;
-	LOGGER("GLU: setbackuptimehistory pos=%d %s",pos,ctime(&tim));
+	LOGGER("GLU: getbackuptimehistory pos=%d %s",pos,ctime(&tim));
 #endif
 	return pos;
 	}

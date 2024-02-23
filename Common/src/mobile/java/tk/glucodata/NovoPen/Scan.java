@@ -48,7 +48,6 @@ import android.widget.Space;
 import android.widget.Spinner;
 
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -116,7 +115,7 @@ private static void changeTypeconfirmation(MainActivity act,String type,Runnable
             }
         }).show().setCanceledOnTouchOutside(false);
 	}
-static  public final DateFormat fhourmin=             new SimpleDateFormat("HH:mm", Locale.US);
+//static  public final DateFormat fhourmin=             new SimpleDateFormat("HH:mm", Locale.US);
 
 static void setInsulin(MainActivity context, OpContext op) {
 

@@ -47,6 +47,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.DateFormat;
+import java.util.Calendar;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -56,10 +58,10 @@ import tk.glucodata.settings.LibreNumbers;
 import static android.view.View.GONE;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
+import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static java.net.HttpURLConnection.HTTP_OK;
 import static tk.glucodata.Backup.getedit;
 import static tk.glucodata.Log.stackline;
-import static tk.glucodata.Natives.clearlibreview;
 import static tk.glucodata.Natives.getlibreDeviceID;
 import static tk.glucodata.Natives.getlibrebaseurl;
 import static tk.glucodata.Natives.getlibreemail;
@@ -574,17 +576,83 @@ final String libre210url=urlnames[Natives.getLibreCountry()];
 		}
 	}
 
-private static	void askclearlibreview(Context context) {
+private static void resendDateDialog(MainActivity context,View parent) {
+
+	EnableControls(parent,false);
+	final var sendfrom=getlabel(context,context.getString(R.string.sendfrom));
+	var lasttime=System.currentTimeMillis()-89*24*60*60*1000L;
+	long[] newtime={lasttime};
+	final var helpbutton=getbutton(context,R.string.helpname);
+        helpbutton.setOnClickListener(v-> help.help(R.string.changestart,context));
+	final	var datebutton=getbutton(context, DateFormat.getDateInstance(DateFormat.DEFAULT).format(lasttime));
+	var cal = Calendar.getInstance();
+        var cancel=getbutton(context,R.string.cancel);
+	var ok=getbutton(context, R.string.save);
+        datebutton.setOnClickListener(
+                v -> { 
+			context.getnumberview().getdateviewal(context,newtime[0], (year,month,day)-> {
+		     cal.set(Calendar.YEAR,year);
+		     cal.set(Calendar.MONTH,month);
+		     cal.set(Calendar.DAY_OF_MONTH,day);
+		     long newmsec= cal.getTimeInMillis();
+		     newtime[0]=newmsec;
+			datebutton.setText(DateFormat.getDateInstance(DateFormat.DEFAULT).format(newmsec));
+			});
+
+		});	
+
+          cal.setTimeInMillis(newtime[0]);
+	  int[] hour={cal.get(Calendar.HOUR_OF_DAY)};
+	int[]  min={cal.get(Calendar.MINUTE)};
+	var timebutton=getbutton(context,  String.format(Locale.US,"%02d:%02d",hour[0],min[0] ));
+    	var  layout=new Layout(context,(x,w,h)->{
+			var width=GlucoseCurve.getwidth();
+			x.setX((width-w)/2);
+			x.setY(0);
+			return new int[] {w,h};
+	},new View[]{helpbutton,sendfrom},new View[]{datebutton,timebutton},new View[]{ok,cancel});
+	timebutton.setOnClickListener(v-> {
+		layout.setVisibility(INVISIBLE);
+			context.getnumberview().gettimepicker(context,hour[0], min[0], (h,m) -> {
+				hour[0]=h;
+				min[0]=m;
+				cal.set(Calendar.HOUR_OF_DAY,h);
+				cal.set(Calendar.MINUTE,m);
+			         newtime[0]= cal.getTimeInMillis();
+				timebutton.setText(String.format(Locale.US,"%02d:%02d",h,m));
+			   },()-> layout.setVisibility(View.VISIBLE));});
+        layout.setBackgroundColor(Applic.backgroundcolor);
+
+	var density= tk.glucodata.GlucoseCurve.metrics.density;
+	int pad=(int)(10.0*density);
+	layout.setPadding(pad,pad,pad,(int)(density*14.0));
+	Runnable closeall= () -> { 
+		removeContentView(layout);
+		EnableControls(parent,true);
+		Log.i(LOG_ID,"resendDateDialog back");
+		};
+	context.setonback(closeall);
+	ok.setOnClickListener(v -> {
+		context.poponback();
+		askclearlibreview(context,newtime[0],closeall);
+		});
+	cancel.setOnClickListener(v -> context.doonback());
+        context.addContentView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+	}
+
+private static	void askclearlibreview(MainActivity context,long fromtime,Runnable r) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         var dialog=builder.setTitle(R.string.resendquestion).
 	 setMessage(R.string.resendmessage).
            setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-			clearlibreview() ;
-
-                    }
+					Log.i(LOG_ID,"askclearlibreview Click");
+					Natives.clearlibreFromMSec(fromtime);
+					r.run();
+					}
                 }) .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
+			context.setonback(r);
             }
         }).create();
 	dialog.setCanceledOnTouchOutside(false);
@@ -663,7 +731,7 @@ private static void getAccountid(MainActivity context, 	Predicate<Boolean> getge
       layout.setBackgroundResource(R.drawable.dialogbackground);
       int pad= (int)tk.glucodata.GlucoseCurve.metrics.density*7;
 	 layout.setPadding(pad,pad,pad,pad);
-	context.addContentView(layout, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT));
+	context.addContentView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
 	Runnable closerun=()-> {
 		layout.setVisibility(GONE);
 		removeContentView(layout);
@@ -749,13 +817,11 @@ public static void  config(MainActivity act, View settingsview,CheckBox sendto,b
 	sendtolibreview.setOnCheckedChangeListener( (buttonView,  isChecked) -> {
 		numbers.setVisibility(isChecked?VISIBLE:INVISIBLE);;
 		});
-	var clear=getbutton(act,R.string.resenddata);
+	var clear=getbutton(act,act.getString(R.string.changestartbutton));
+
 	  var statusview=getlabel(act,librestatus==success?(posttime+": "+librestatus):librestatus);
 	  int statuspad=  (int)tk.glucodata.GlucoseCurve.metrics.density*7;
 	statusview.setPadding(statuspad,statuspad,statuspad,statuspad);
-	clear.setOnClickListener(v->  {
-			askclearlibreview(act);
-			});
 	
 //	  clear.setPadding(0,0,0,pad*5);
 	long accountidnum=Natives.getlibreAccountIDnumber();
@@ -773,6 +839,10 @@ var space=getlabel(act,"        ");
                                 lay.setX((width-w)/2); lay.setY(0);
                                 };
                         return new int[] {w,h};}, new View[]{emaillabel,email},new View[]{passlabel,editpass,russia},new View[]{clear,accountid,getaccountid},new View[]{statusview},new View[]{sendtolibreview,librecurrent,libreisviewed,numbers},new View[]{send,help,cancel,ok});
+
+	clear.setOnClickListener(v->  {
+			resendDateDialog(act,layout);
+			});
 	if(usedlibre) {
 		send.setOnClickListener(v-> wakelibreview(0));
 		}
@@ -829,7 +899,7 @@ var space=getlabel(act,"        ");
 			setlibreemail(emailstr);
 			setlibrepass(passstr);
 			if((emailstr.length()==0&&passstr.length()==0)) {
-				clearlibreview();
+				Natives.clearlibreFromMSec(0L);
 				}
 			if(isRussia!=russia.isChecked()) {
 				Natives.setLibreCountry((!isRussia)?4:(Applic.unit==1?0:1));
@@ -862,7 +932,7 @@ var space=getlabel(act,"        ");
 	      layout.setBackgroundResource(R.drawable.dialogbackground);
 	      int pad= (int)tk.glucodata.GlucoseCurve.metrics.density*7;
 		  layout.setPadding(pad,pad,pad,pad);
-		act.addContentView(layout, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT));
+		act.addContentView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
 	
 	}
 

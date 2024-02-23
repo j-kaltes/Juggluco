@@ -269,6 +269,7 @@ struct Tings {
 	uint32_t authend;
 	authpair authdata[AUTHMAX];
 	uint64_t jugglucoID;
+	uint32_t startlibretime;
 	void setdefault() {
 		memcpy(watchid,defaultid,sizeof(watchid));
 		};

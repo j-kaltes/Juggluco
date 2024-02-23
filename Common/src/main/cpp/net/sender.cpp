@@ -240,7 +240,7 @@ int shakehands(passhost_t *pass,int &sock,char stype) {
 	if((magret=testsendmagic(pass,sock)))  {
 		if(magret==2)  {
 			if(pass->hasname) {
-				savemessage(pass,"Wrong label?");
+				savemessage(pass,"Sender with label %s rejected by receiver",pass->getname());
 				}
 			return -2;
 			}

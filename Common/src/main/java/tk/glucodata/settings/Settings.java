@@ -782,6 +782,8 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 	View[][] views;
 	final String advhelp=isWearable?null:Natives.advanced();
 		Button display=isWearable?getbutton(context,context.getString(R.string.display)):null;
+	       var fixed=getcheckbox(context,R.string.clampnow,Natives.getcurrentRelative());
+		fixed.setOnCheckedChangeListener( (buttonView,  isChecked) -> Natives.setcurrentRelative(isChecked));
 	if(isWearable) {
 
 	       var uploader=getbutton(context,"Uploader");
@@ -797,7 +799,7 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 			View[] rowglu=new View[]{bluetooth};
 
 			View[] camornum=new View[] {alarmbut,numalarm};
-			views=new View[][]{new View[]{getlabel(context,R.string.unit)}, row0, row1,new View[]{scalelabel},new View[]{fixatex,fixatey}, row2,new View[]{levelleft},hasnfc?(new View[]{globalscan,nfcsound}):null, new View[]{xdripbroadcast},new View[]{jugglucobroadcast},new View[]{uploader},new View[]{floatconfig,floatglucose},camornum,rowglu,new View[]{colbut,display},new View[]{langspin},new View[]{cancel,ok},new View[] {getlabel(context,BuildConfig.BUILD_TIME)},new View[]{getlabel(context,BuildConfig.VERSION_NAME)},new View[]{getlabel(context,codestr) }};;
+			views=new View[][]{new View[]{getlabel(context,R.string.unit)}, row0, row1,new View[]{scalelabel},new View[]{fixatex,fixatey}, row2,new View[]{levelleft},hasnfc?(new View[]{globalscan,nfcsound}):null, new View[]{xdripbroadcast},new View[]{jugglucobroadcast},new View[]{fixed,uploader},new View[]{floatconfig,floatglucose},camornum,rowglu,new View[]{colbut,display},new View[]{langspin},new View[]{cancel,ok},new View[] {getlabel(context,BuildConfig.BUILD_TIME)},new View[]{getlabel(context,BuildConfig.VERSION_NAME)},new View[]{getlabel(context,codestr) }};;
 	       uploader.setOnClickListener(v-> tk.glucodata.NightPost.config(context,thelayout[0]));
 		}
 	else {
@@ -819,8 +821,6 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 	       var webserver=getbutton(context,R.string.webserver);
 	       var uploader=getbutton(context,"Uploader");
 	       var iob=getcheckbox(context,"IOB",Natives.getIOB());
-	       var fixed=getcheckbox(context,R.string.clampnow,Natives.getcurrentRelative());
-		fixed.setOnCheckedChangeListener( (buttonView,  isChecked) -> Natives.setcurrentRelative(isChecked));
 /*		var streamhistory=getcheckbox(context,R.string.streamhistory,Natives.getStreamHistory( ));
 		streamhistory.setOnCheckedChangeListener( (buttonView,  isChecked) -> Natives.setStreamHistory(isChecked) );*/
 	       var floatconfig=getbutton(context,R.string.floatglucose);
