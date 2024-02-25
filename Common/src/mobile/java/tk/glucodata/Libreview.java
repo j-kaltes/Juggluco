@@ -40,6 +40,7 @@ import com.google.android.gms.security.ProviderInstaller;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -55,6 +56,7 @@ import java.util.UUID;
 import androidx.annotation.Keep;
 import tk.glucodata.settings.LibreNumbers;
 
+import static tk.glucodata.NightPost.readJSONObject;
 import static android.view.View.GONE;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
@@ -126,12 +128,6 @@ static JSONObject  readJSONObject(HttpURLConnection urlConnection)  throws IOExc
 	Log.i(LOG_ID,"readJSONObject len="len+" "+ant);
  	return new JSONObject(ant);
 	}*/
-
-static JSONObject  readJSONObject(HttpURLConnection urlConnection)  throws IOException, JSONException {
-	String ant=getstring(urlConnection);
-	Log.format("%s: readJSONObject len=%d %s",LOG_ID,ant.length(),ant);
- 	return new JSONObject(ant);
-	}
 
 private static String librestatus=nothing;
 

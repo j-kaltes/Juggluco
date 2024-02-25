@@ -972,10 +972,14 @@ extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getSendNumbers)(JNIEnv *env, j
 	return settings->data()->sendnumbers;
 	}
 extern "C" JNIEXPORT jboolean  JNICALL   fromjava(canSendNumbers)(JNIEnv *env, jclass cl,jint night) {
-	if(!night&&settings->data()->sendnumbers)
-		return true;
-	if(night&&settings->data()->saytreatments)
-		return true;
+	if(!night) {
+		if(settings->data()->sendnumbers)
+			return true;
+		}
+	else  {
+		if(settings->data()->saytreatments ||settings->data()->postTreatments)
+			return true;
+		}
 	const auto *nums=night?settings->data()->Nightnums:settings->data()->librenums;
 	for(int i=0;i<settings->getlabelcount();++i) {
 		if(!nums[i].kind) {
@@ -1198,7 +1202,8 @@ extern "C" JNIEXPORT jstring  JNICALL   fromjava(getnightuploadsecret)(JNIEnv *e
 	return env->NewStringUTF(settings->data()->nightuploadsecret);
 	}
 	extern	void enduploaderthread();
-extern "C" JNIEXPORT void  JNICALL   fromjava(setNightUploader)(JNIEnv *env, jclass cl,jstring jurl,jstring jsecret,jboolean active) {
+extern "C" JNIEXPORT void  JNICALL   fromjava(setNightUploader)(JNIEnv *env, jclass cl,jstring jurl,jstring jsecret,jboolean active,jboolean v3) {
+	settings->data()->nightscoutV3=v3;
 	if(jurl!=nullptr) {
 		int maxurllen=sizeof(settings->data()->nightuploadname)-1;
 		char *name=settings->data()->nightuploadname;
@@ -1539,9 +1544,10 @@ extern "C" JNIEXPORT jint  JNICALL   fromjava(getinterval)(JNIEnv *env, jclass c
 	return settings->data()->nightinterval;
 	}
 
+/*
 extern "C" JNIEXPORT void  JNICALL   fromjava(setnightscoutV3)(JNIEnv *env, jclass cl,jboolean val) {
 	settings->data()->nightscoutV3=val;
-	}
+	} */
 extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getnightscoutV3)(JNIEnv *env, jclass cl) {
 	return settings->data()->nightscoutV3;
 	}

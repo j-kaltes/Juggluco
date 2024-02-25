@@ -72,13 +72,19 @@ static void makeuploadurls(JNIEnv *env) {
 
 extern std::string sha1encode(const char *secret, int len);
 static void makeuploadsecret(JNIEnv *env) {
-		if(jnightuploadsecret)
-			env->DeleteGlobalRef(jnightuploadsecret);
+		const bool useV3=settings->data()->nightscoutV3;
+		if(useV3) {
+			jnightuploadsecret=nullptr;
+			}
+		else  {
+			if(jnightuploadsecret)
+				env->DeleteGlobalRef(jnightuploadsecret);
 
-		const char *secret=settings->data()->nightuploadsecret;
-		std::string encoded=sha1encode(secret,strlen(secret));
-		auto local=env->NewStringUTF(encoded.data());
-		jnightuploadsecret=  (jstring)env->NewGlobalRef(local);
+			const char *secret=settings->data()->nightuploadsecret;
+			std::string encoded=sha1encode(secret,strlen(secret));
+			auto local=env->NewStringUTF(encoded.data());
+			jnightuploadsecret=  (jstring)env->NewGlobalRef(local);
+			}
 		}
 bool inituploader(JNIEnv *env) {
 	if(!settings->data()->nightuploadon)  

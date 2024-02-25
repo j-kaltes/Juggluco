@@ -6,7 +6,9 @@
 <a href="https://www.juggluco.nl/Jugglucohelp/de/Nightscouthelp.html">Webserver
 in Juggluco</a> oder <a href="https://www.juggluco.nl/Juggluco/cmdline">juggluco-server</a>
 verwenden. Nur wenige Apps, die lediglich die Nightscout-Webseite
-anzeigen, benötigen <a href="https://github.com/nightscout/cgm-remote-monitor">cgm-remote-monitor</a> Sie können AAPS und AAPSClient sogar mit dem Webserver in Juggluco 7.4.1 verwenden.</span></p>
+anzeigen, benötigen <a href="https://github.com/nightscout/cgm-remote-monitor">cgm-remote-monitor</a>
+Sie können AAPS und AAPSClient sogar mit dem Webserver in Juggluco
+7.4.1 verwenden.</span></p>
 <p>Alle Stream-Werte werden im Moment ihres Eintreffens auf den
 Nightscout-Server hochgeladen. Wenn mehrere Sensoren verwendet
 werden, werden alle Werte aller Sensoren hochgeladen. Einige Garmin
@@ -21,9 +23,12 @@ z. B. https://myname.herokuapp.com:6789</p>
 <p><b>Aktiv</b> : Server einschalten</p>
 <p><b>Test V3</b>: Lassen Sie Juggluco api/v3 zum Hochladen auf
 Nightscout verwenden. Verwenden Sie es nicht zum Hochladen auf einen
-Nightscout-Server, der zuvor V2-Uploads empfangen hat, und senden Sie
-keine V2-Uploads an einen Nightscout-Server, der zuvor V3-Uploads
-empfangen hat.</p>
+Nightscout-Server, der zuvor V1-Uploads empfangen hat, und senden Sie
+keine V1-Uploads an einen Nightscout-Server, der zuvor V3-Uploads
+empfangen hat. Anstelle des api_secret müssen Sie ein Access Token
+(Zugriffstoken) mit der Berechtigung zum Hochladen von treatments und
+entries angeben. Sie können eines in der Nightscout-Web-Interface
+unter Admin Tools erstellen.</p>
 <p><span lang="de-DE"><b>Mengen</b></span> <span lang="de-DE"><b>geben</b></span><span lang="de-DE">:
 Auch Mengen als Behandlungen an Nightscout senden. Durch Berühren
 der Checkbox gelangen Sie zu einem Dialog, in dem Sie für jedes

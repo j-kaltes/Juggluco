@@ -2098,8 +2098,10 @@ Juggluco,zie <a href="https://www.juggluco.nl/Juggluco/webserver.html">https://w
 </h1>
 <p>In de meeste gevallen kun je ook de <a href="https://www.juggluco.nl/Jugglucohelp/nl/Nightscouthelp.html">webserver
 in Juggluco</a> of <a href="https://www.juggluco.nl/Juggluco/cmdline">juggluco-server</a>
-gebruiken. Slechts een paar apps, die niets anders doen dan de Nightscout-webpagina weergeven, hebben <a href="https://github.com/nightscout/cgm-remote-monitor">cgm-remote-monitor</a>
-nodig.Je kunt zelfs AAPS en AAPSClient gebruiken met de webserver in Juggluco 7.4.1.</p>
+gebruiken. Slechts een paar apps, die niets anders doen dan de
+Nightscout-webpagina weergeven, hebben <a href="https://github.com/nightscout/cgm-remote-monitor">cgm-remote-monitor</a>
+nodig.Je kunt zelfs AAPS en AAPSClient gebruiken met de webserver in
+Juggluco 7.4.1.</p>
 <p>Alle streamwaarden worden geüpload naar de Nightscout-server op
 het moment dat ze binnenkomen. Bij gebruik van meerdere sensoren
 worden alle waarden van alle sensoren geüpload. Sommige Garmin
@@ -2115,8 +2117,12 @@ https://mijnnaam.herokuapp.com:6789</p>
 <p><b>Actief</b> : Zet de server aan</p>
 <p><b>test V3</b>: Laat Juggluco api/v3 gebruiken om te uploaden naar
 Nightscout. Gebruik het niet om te uploaden naar een
-Nightscout-server die eerder V2-uploads heeft ontvangen en stuur geen
-V2-uploads naar een Nightscout-server die eerder V3-uploads ontving.</p>
+Nightscout-server die eerder V1-uploads heeft ontvangen en stuur geen
+V1-uploads naar een Nightscout-server die eerder V3-uploads ontving.
+Op de plaats van het api_secret moet je een <i>Access Token</i>
+opgeven met toestemming om treatments en entries up te loaden. Je
+kunt een “Access Token”  aanmaken in de Nightscout-webinterface
+onder <i>Admin tools</i>.</p>
 <p><span lang="nl-NL"><b>Geef hoeveelheden</b></span><span lang="nl-NL">:
 Stuur ook hoeveelheden als behandelingen naar Nightscout. Als je het
 selectievakje aanraakt, kom je in een dialoogvenster waarin je voor

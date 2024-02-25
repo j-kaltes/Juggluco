@@ -2093,9 +2093,11 @@ for example, https://myname.herokuapp.com:6789</p>
 <p><b>Active</b>: Turn on uploader</p>
 <p><b>test V3</b>: Let Juggluco use api/v3 to upload to Nightscout.
 Don’t use it to upload to a Nightscout server that previously
-received V2 uploads and don’t send V2 uploads to a Nightscout
-server that previously received V3 uploads. 
-</p>
+received V1 uploads and don’t send V1 uploads to a Nightscout
+server that previously received V3 uploads. At the place of the
+api_secret you need to specify an <i>Access Token</i> with permission
+to upload treatments and entries. You can create one in the
+Nightscout web interface under Admin Tools.</p>
 <p><b>Give Amounts</b>: Also send amounts as treatments to
 Nightscout. Touching the checkbox brings you to a dialog in which you
 can specify for every label what it means in Nightscout. These

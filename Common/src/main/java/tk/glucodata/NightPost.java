@@ -50,6 +50,9 @@ import android.widget.ScrollView;
 
 import androidx.annotation.Keep;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -95,6 +98,7 @@ static private String uploadstatus=nothing;
 @Keep
 static public boolean deleteUrl(String urlstring,String secret) {
 	uploadtime=System.currentTimeMillis();
+	Log.i(LOG_ID,"deleteUrl "+urlstring+" "+ secret);
 	try {
 		URL url = new URL(urlstring);
 		if(url==null)  {
@@ -104,7 +108,10 @@ static public boolean deleteUrl(String urlstring,String secret) {
 		HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 		urlConnection.setConnectTimeout(10000);
 		urlConnection.setReadTimeout(60000);
-		urlConnection.setRequestProperty("api-secret", secret);
+		if(secret!=null)
+				urlConnection.setRequestProperty("api-secret", secret);
+		else
+			urlConnection.setRequestProperty("Authorization", gettoken(uploadtime));
 		urlConnection.setRequestProperty("Content-Type", "application/json");
 		urlConnection.setRequestMethod("DELETE");
 
@@ -116,7 +123,7 @@ static public boolean deleteUrl(String urlstring,String secret) {
 			return true;
 			}
 		else {
-			String delerror="delete "+urlstring+" failure code="+code+'\n'+res;
+			String delerror="deleteUrl "+urlstring+" failure code="+code+'\n'+res;
 			Log.e(LOG_ID,delerror);
 			uploadstatus=delerror;
 			return false;
@@ -130,11 +137,68 @@ static public boolean deleteUrl(String urlstring,String secret) {
 		return false;
 		}
 	}
+
+/*
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3NUb2tlbiI6ImFhcHMtOTQ0Y2YzZGVkYTMxMTkxNCIsImlhdCI6MTcwODg1NDE1NiwiZXhwIjoxNzA4ODgyOTU2fQ.YrNGSUPiz-3zxv6ZxfOO_Sm98bKrK0eDjZYIR6LPQUY",
+  "sub": "aaps",
+  "permissionGroups": [
+    [
+      "*"
+    ],
+    []
+  ],
+  "iat": 1708854156,
+  "exp": 1708882956
+} */
+static private long  expire=0L;
+static private String token="";
+
+static JSONObject  readJSONObject(HttpURLConnection urlConnection)  throws IOException, JSONException {
+	String ant=getstring(urlConnection);
+	Log.format("%s: readJSONObject len=%d %s",LOG_ID,ant.length(),ant);
+ 	return new JSONObject(ant);
+	}
+
+private static String gettoken(long now) {
+	if(now<expire)
+		return token;
+	var Nighturl=Natives.getnightuploadurl();
+	var secret=Natives.getnightuploadsecret();
+	var authstr=Nighturl+ "/api/v2/authorization/request/"+secret;
+	try {
+
+		URL url = new URL(authstr);
+		HttpURLConnection  urlConnection = (HttpURLConnection) url.openConnection();
+		urlConnection.setRequestMethod("GET");
+		final int code=urlConnection.getResponseCode();
+		if(code==HTTP_OK) {
+			JSONObject object =  readJSONObject(urlConnection) ;
+			final String tokenin=object.getString( "token");
+			final var expirein=object.getLong( "exp");
+			expire=expirein*1000L;
+			token="Bearer "+tokenin;
+			return token;
+			}
+		else {
+			uploadstatus="gettoken failed code="+code;
+			Log.e(LOG_ID,uploadstatus);
+			return "";
+			}
+
+		}
+	catch(Throwable th) {
+		uploadstatus="gettoken:\n"+(th==null?"Network error ":th.getMessage());
+		Log.e(LOG_ID,uploadstatus);
+		return "";
+		}
+	}
+
 private static long uploadtime=System.currentTimeMillis();
 @Keep
 static public int upload(String httpurl,byte[] postdata,String secret,boolean put) {
 	uploadtime=System.currentTimeMillis();
-	Log.i(LOG_ID,"upload("+httpurl+",#"+postdata.length+","+ secret+")");
+	Log.i(LOG_ID,"upload("+httpurl+",#"+postdata.length+","+ secret+","+(put?"PUT":"POST")+")");
 	try {
 		URL url = new URL(httpurl);
 		HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
@@ -142,8 +206,10 @@ static public int upload(String httpurl,byte[] postdata,String secret,boolean pu
 		urlConnection.setReadTimeout(60000);
 		urlConnection.setRequestMethod(put?"PUT":"POST");
 		urlConnection.setDoOutput(true);
-		
-		urlConnection.setRequestProperty("api-secret", secret);
+		if(secret!=null)
+			urlConnection.setRequestProperty("api-secret", secret);
+		else
+			urlConnection.setRequestProperty("Authorization", gettoken(uploadtime));
 		urlConnection.setRequestProperty("Content-Type", "application/json");
 	       urlConnection.setRequestProperty( "Content-Length", Integer.toString( postdata.length ));
 
@@ -283,10 +349,7 @@ public static void  config(MainActivity act, View settingsview) {
 	save.setOnClickListener(v-> {
 			act.poponback();
 			closerun.run();
-			if(!isWearable) {
-				Natives.setnightscoutV3(v3box.isChecked());
-				}
-			setNightUploader(url.getText().toString(),editsecret.getText().toString(),activebox.isChecked());
+			setNightUploader(url.getText().toString(),editsecret.getText().toString(),activebox.isChecked(),isWearable?false:v3box.isChecked());
 			});
 	
 	}

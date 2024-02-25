@@ -123,15 +123,13 @@ bool uploadtreatments(bool useV3) {
 			auto start=numdata->getnightStart(); 
 			auto send=numdata->getnightSend(); 
 			const Num *nummers=numdata->startdata();
+            auto env=getenv();
 			if(send>start) {
 				LOGGER("delete %d cases\n",send-start);
-				auto env=getenv();
-				for(int del=send-1;del>=start;--del) {
-					 if(numdata->changedsince(lastloadtime,del)||del>=last) {		
-						if(!((useV3?deletetreatment3:deletetreatment)(env,base,del,numdata->getnightIDstart()))) {
-							LOGGER("deletetreatment(%d,%d) failed\n",base,del);
-							return false;
-							}
+				for(int del=send-1;del>=last;--del) {
+					if(!((useV3?deletetreatment3:deletetreatment)(env,base,del,numdata->getnightIDstart()))) {
+						LOGGER("deletetreatment(%d,%d) failed\n",base,del);
+						return false;
 						}
 					numdata->getnightSend()=del;
 					}
@@ -156,6 +154,7 @@ bool uploadtreatments(bool useV3) {
 						const Num *num=nummers+iter;
 						if(numdata->valid(num)) {
 					 		if(numdata->changedsince(lastloadtime,iter)||num->gettime()>=lastloadtime) {		
+								(useV3?deletetreatment3:deletetreatment)(env,base,iter,numdata->getnightIDstart());
 								if(!(useV3?sendtreatment3:sendtreatment)(base,iter,num,numdata) ) {
 									return false;
 									}
