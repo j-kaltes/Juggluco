@@ -1614,15 +1614,6 @@ static void showvalue(const ScanData *poll,const sensorname_t *sensorname, float
 	nvgFontSize(genVG,mediumfont );
 	nvgTextAlign(genVG,NVG_ALIGN_LEFT|NVG_ALIGN_TOP);
 	nvgText(genVG, getx,sensory, sensorname->begin(), sensorname->end());
-	/*
-    double getiob(uint32_t);
-	const auto iob=getiob(nu);
-	if(!index&&iob!=0.0) {
-		constexpr const int maxbuf=20;
-		char buf[maxbuf];
-		int len=snprintf(buf,maxbuf,"IOB: %.1f",iob);
-		nvgText(genVG, getx,sensory+sensorbounds.bottom, buf,buf+len);
-		} */
 	nvgTextAlign(genVG,NVG_ALIGN_LEFT|NVG_ALIGN_MIDDLE);
 	constexpr const int maxhead=11;
 	char head[maxhead];
@@ -1827,8 +1818,16 @@ static void showlastsstream(const time_t nu,const float getx,std::vector<int> &u
 				shownglucose[i].glucosevaluex=usegetx;
 				shownglucose[i].glucosevaluey=gety+headsize*.5;
 				}
-			else
-				LOGSTRING("wait>=(60*60)\n");
+			else   {
+				LOGAR("age>=maxbluetoothage");
+				switch(showerrorvalue(hist,nu,getx,gety,i)) { //TODO: integrate with same above
+					case 1: neterror=true;break;
+					case 2: usebluetoothoff=true;break;
+					case 3: bluetoothoff=true;break;
+					default: otherproblem=true;
+					};
+				LOGAR("Afgter showerrorvalue(hist,nu,getx,gety)) ");
+				}
 			}
 
 		}

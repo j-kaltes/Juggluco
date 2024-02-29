@@ -65,9 +65,9 @@ static PowerManager.WakeLock wakeLock =null;
   public int onStartCommand(Intent intent, int flags, int startId) {
 	if(started) return Service.START_STICKY;//NODIG?
         started=true;
-	if(Natives.getfloatglucose())
-		Floating.makefloat();
 	Applic.app.initproc();
+	if(Natives.getfloatglucose()&&!Natives.gethidefloatinJuggluco())
+		Floating.makefloat();
   	try {
 		if(intent==null) {
 			if(!Applic.possiblybluetooth(this)) {

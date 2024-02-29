@@ -79,7 +79,7 @@ android {
 	//******  Zet op rollout op 100% ******
             	dimension 'libreVersion'
 		versionCode                     454                                       //LIBRE2ONLY
-		versionName '7.5.1-no3'
+		versionName '7.6.0-no3'
             buildConfigField 'int', 'libreVersion', '2'
 		    externalNativeBuild.cmake {
 			cppFlags "  -DAPPVERSION=\\\"$versionName\\\" "
@@ -94,7 +94,7 @@ android {
             dimension 'libreVersion'
 		versionCode                    454                                       //LIBRE3
 	//******  Zet op rollout op 100% ******
-		versionName '7.5.1'
+		versionName '7.6.0'
 
            	buildConfigField 'int', 'libreVersion', '3'
 		    externalNativeBuild.cmake {
@@ -113,7 +113,7 @@ android {
 		minSdk 26
 		versionCode                    454                                       //WATCH
 	//******  Zet op rollout op 100% ******
-		versionName '7.5.1-wear'
+		versionName '7.6.0-wear'
 		signingConfig signingConfigs.alg
 
 //            buildConfigField 'int', 'targetSDK', "$targetSdk"
@@ -134,7 +134,7 @@ android {
             dimension 'wearos'
 		minSdk 19
 		versionCode                    454                                       //WATCH
-		versionName '7.5.1-small'
+		versionName '7.6.0-small'
 		signingConfig signingConfigs.alg
 
            buildConfigField 'int', 'isWear', '1'

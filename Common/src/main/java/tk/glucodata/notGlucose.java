@@ -22,7 +22,7 @@
 package tk.glucodata;
 
 public final class notGlucose {
-	public	long time;
+	public	long time; //mmsec
 	public	String value;
 	public	float rate;
 	public notGlucose(long time,String value,float rate) {

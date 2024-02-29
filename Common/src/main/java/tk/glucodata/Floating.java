@@ -24,6 +24,7 @@ import static android.graphics.Color.BLACK;
 import static android.graphics.Color.WHITE;
 import static android.view.WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
 import static java.lang.Float.isNaN;
+import static java.util.Collections.swap;
 import static tk.glucodata.Applic.isWearable;
 import static tk.glucodata.CommonCanvas.drawarrow;
 import static tk.glucodata.MainActivity.OVERLAY_PERMISSION_REQUEST_CODE;
@@ -48,6 +49,9 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.text.DateFormat;
+import java.util.Date;
+
 import tk.glucodata.Applic;
 import tk.glucodata.Notify;
 import tk.glucodata.R;
@@ -56,7 +60,29 @@ public class Floating extends View {
 
 	static private final String LOG_ID="Floating";
 static private final int oldage=60*3;
-
+static void init() {
+	Log.i(LOG_ID,"init()");
+	var pos=Natives.getfloatingPos( );
+	final var metrics = Applic.app.getResources().getDisplayMetrics();
+	density=metrics.density;
+	Log.i(LOG_ID,"density="+density);
+	if(pos!=0) {
+		Floating.xview=pos&0xFFFF;
+		Floating.yview=pos>>16;
+		}
+	else {
+		var h = metrics.heightPixels;
+		var w = metrics.widthPixels;
+		if(h > w) {
+			xview = h * .5f;
+			yview = w * .5f;
+		} else {
+			xview = w * .5f;
+			yview = h * .5f;
+		}
+		}
+	Floating.showtime= Natives.getfloattime();
+	}
 	public Floating(Context context) {
 		super(context);
 	}
@@ -110,6 +136,7 @@ public static void rewritefloating(Activity context) {
 	    TextView messageText = (TextView)dialog.findViewById(android.R.id.message);
 		final var metrics = Applic.app.getResources().getDisplayMetrics();
 		var screenwidth = metrics.widthPixels;
+		density=metrics.density;
 		int pad=(int)(screenwidth*.05);
 	    messageText.setGravity(Gravity.LEFT);
 	    messageText.setPadding(pad,0,pad,0);
@@ -137,20 +164,42 @@ public static void rewritefloating(Activity context) {
 			}
 		}
 		else {
-			removefloating();
+	 		turnoffFloating();
 			}
 	}
 	}
 
-	public static void removefloating() {
+	public static void removeFloating() {
 		if(floatview!=null) {
 			windowMana.removeView(floatview);
 			floatview=null;
 			}
+		}
+
+	private static void turnoffFloating() {
+		removeFloating();
 		Natives.setfloatglucose(false);
 		}
-	static float xview=0.0f;
-	static float yview=0.0f;
+	private static void hidefloating() {
+		Log.i(LOG_ID,"hidefloating() density="+density); 
+		hide=true;
+		removeFloating();	
+		windowMana = (WindowManager) Applic.app.getSystemService(Context.WINDOW_SERVICE);
+		floatview=new Floating(Applic.app);
+		floatPaint = new Paint();
+		floatPaint.setTextAlign(Paint.Align.LEFT);
+		floatPaint.setColor(floatingforeground);
+ 		final int nrdens=(isWearable&&density<2)?20:14;
+
+		final int floatingheight=(int)(density*nrdens),floatingwidth=floatingheight*2;
+		floatPaint.setTextSize(floatingheight);
+		final var type = (Build.VERSION.SDK_INT < Build.VERSION_CODES.O)?WindowManager.LayoutParams.TYPE_SYSTEM_ALERT: WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+		final var flags = FLAG_NOT_FOCUSABLE;
+		var params= new WindowManager.LayoutParams( floatingwidth,(int)(floatingheight),(int) floatingx, (int)floatingy, type, flags, PixelFormat.TRANSLUCENT);
+		windowMana.addView(floatview, params);
+		}
+	static float xview;
+	static float yview;
 	static int transnr=0;
 static void translate(float dx,float dy) {
 		xview += dx ;
@@ -160,6 +209,7 @@ static void translate(float dx,float dy) {
 		var screenheight = metrics.heightPixels;
 		var maxx=screenwidth;
 		var maxy=screenheight;
+
 		if(xview<0)
 			xview=0;
 		if(xview>maxx)
@@ -171,9 +221,13 @@ static void translate(float dx,float dy) {
 		var params = makeparams(screenwidth, (int)(screenheight));
 		windowMana.updateViewLayout(floatview, params);
 		}
-	private static WindowManager.LayoutParams makeparams(int screenwidth, int screenheight){
+static float floatingx,floatingy;
+private static WindowManager.LayoutParams makeparams(int screenwidth, int screenheight){
 		var xpos= -screenwidth*.5f+xview;
 		var ypos= -screenheight*.5f+yview;
+		floatingx=xpos;
+		floatingy=ypos;
+
 		var type = (Build.VERSION.SDK_INT < Build.VERSION_CODES.O)?WindowManager.LayoutParams.TYPE_SYSTEM_ALERT: WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
 		var flags = FLAG_NOT_FOCUSABLE|(Natives.getfloatingTouchable()?0:WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 		return	 new WindowManager.LayoutParams( floatingwidth,(int)(floatingheight),(int) xpos, (int)ypos, type, flags, PixelFormat.TRANSLUCENT);
@@ -190,9 +244,15 @@ static int floatingforeground=BLACK;
 
 static int			floatingwidth;
 static int			floatingheight;
+private static int timesize;
+private static int timeHeight;
+public static boolean showtime=true;
+private static float density;
 public static int floatfontsize;
 	static boolean makefloat() {
 	{
+
+		hide=false;
 
 		if(floatview!=null) {
 			windowMana.removeView(floatview);
@@ -215,18 +275,32 @@ public static int floatfontsize;
 			Log.format(LOG_ID+" Natives.getfloatingbackground()=0x%x\n",floatingbackground);
 			if(floatfontsize<5||floatfontsize>(int)(screenheight*.8)) {
 				floatfontsize=(int)Notify.glucosesize; }
-			floatPaint.setTextSize(floatfontsize);
 			floatPaint.setAntiAlias(true);
 			floatPaint.setTextAlign(Paint.Align.LEFT);
 			float notheight = floatfontsize * 0.8f;
 			var notwidth = notheight * 3.40;
+
+			floatdensity = notheight / 54.0f;
+			if(showtime) {	
+				Rect bounds=new Rect();
+				timesize= (int)(floatfontsize*.25f);
+				floatPaint.setTextSize(timesize);
+				floatPaint.getTextBounds(":58",0,3, bounds);
+				timeHeight=(int)(bounds.height()*1.2f);
+				notheight+=timeHeight;
+				}
+			else {
+				timeHeight =  timesize = 0;
+			} 
+			floatPaint.setTextSize(floatfontsize);
+
 			floatglucosex = (int) (notwidth * .272f);
 			floatingwidth=(int)notwidth;
+
 			floatingheight=(int)(notheight);
 
 			windowMana.addView(floatview, makeparams(screenwidth, (int)(screenheight)));
 
-			floatdensity = notheight / 54.0f;
 			Natives.setfloatglucose(true);
 		} catch (Throwable th) {
 			Log.stack(LOG_ID, "makefloat", th);
@@ -254,43 +328,74 @@ public static int floatfontsize;
 	floatPaint.setTextSize(fontsize);
 	}
 
-
+static boolean hide=false;
 @Override 
 protected void onDraw(Canvas floatCanvas) {
  	super.onDraw(floatCanvas);
 	Log.i(LOG_ID,"onDraw");
-	final var glucose= Natives.lastglucose();
+	final strGlucose  glucose= Natives.lastglucose();
 	if(glucose!=null) {
 		final var now=System.currentTimeMillis()/1000L;
 		final var age=now-glucose.time;
 		if(age<oldage) {
+			if(hide) {
+				Log.i(LOG_ID,"onDraw hide");
+				final var gety = floatCanvas.getHeight() * 0.85f;
+				final var xpos=0.2f;
+				floatCanvas.drawColor(floatingbackground);
+				floatPaint.setColor(floatingforeground);
+			//	floatCanvas.drawText("27.8", xpos, gety, floatPaint);
+				floatCanvas.drawText(glucose.value, xpos, gety, floatPaint);
+				return;
+				}
 			floatCanvas.drawColor(floatingbackground);
 			floatPaint.setColor(floatingforeground);
-			var gety = floatCanvas.getHeight() * 0.98f;
+			var gety = (floatCanvas.getHeight()-timeHeight) * 0.98f;
 			var xpos=floatglucosex;
 			var rate=glucose.rate;
 			if (!isNaN(rate))  {
 				 float weightrate = (rate > 1.6 ? -1.0f : (rate < -1.6 ? 1.0f : (rate / -1.6f)));
 				 float arrowy = gety - floatfontsize * .4f + (CommonCanvas.glnearnull(rate) ? 0.0f : (weightrate * floatfontsize * .4f));
 				drawarrow(floatCanvas, floatPaint, floatdensity, rate, xpos*.85f, arrowy);
+//				drawarrow(floatCanvas, floatPaint, floatdensity, rate, showtime?xpos:(.85f*xpos), arrowy);
 				}
 			floatCanvas.drawText(glucose.value, xpos, gety*.9659f, floatPaint);
-			
+			if(showtime)  {
+				var timestr= DateFormat.getTimeInstance(DateFormat.SHORT).format(new Date(glucose.time*1000L));
+				floatPaint.setTextSize(timesize);
+				floatCanvas.drawText(timestr, density, gety+timeHeight, floatPaint);
+				floatPaint.setTextSize(floatfontsize);
+				Log.i(LOG_ID,"time: "+glucose.time+" "+timestr);
+				}
+		return;
+		}
+		else {
+			if(!hide) {
+				oldfloatmessage(floatCanvas,glucose.time);
+				return;
+				}
 			}
-		else
-			oldfloatmessage(floatCanvas,glucose.time);
 
 		}
 	else {
-		final var gety = floatCanvas.getHeight() * 0.8f;
-		final var xpos=0.2f;
-		final float fontsize= floatfontsize;
-		floatCanvas.drawColor(floatingbackground);
-		floatPaint.setColor(floatingforeground);
-		floatPaint.setTextSize(fontsize*.68f);
-		floatCanvas.drawText(Applic.app.getString(R.string.novalue), xpos, gety, floatPaint);
-		floatPaint.setTextSize(fontsize);
+		if(!hide) {
+			final var gety = floatCanvas.getHeight() * 0.8f;
+			final var xpos=0.2f;
+			final float fontsize= floatfontsize;
+			floatCanvas.drawColor(floatingbackground);
+			floatPaint.setColor(floatingforeground);
+			floatPaint.setTextSize(fontsize*.68f);
+			floatCanvas.drawText(Applic.app.getString(R.string.novalue), xpos, gety, floatPaint);
+			floatPaint.setTextSize(fontsize);
+			return;
+			}
 		}
+	Log.i(LOG_ID,"onDraw hide");
+	final var gety = floatCanvas.getHeight() * 0.82f;
+	final var xpos=0.2f;
+	floatCanvas.drawColor(floatingbackground);
+	floatPaint.setColor(floatingforeground);
+	floatCanvas.drawText(" X ", xpos, gety, floatPaint);
 	
 
 	}
@@ -318,13 +423,42 @@ public boolean onTouchEvent (MotionEvent event) {
         switch (event.getAction() & MotionEvent.ACTION_MASK) {
 		case MotionEvent.ACTION_BUTTON_PRESS:
             case MotionEvent.ACTION_DOWN:
+
                 Log.i(LOG_ID,"Down");
 		startX= event.getX();
 		startY= event.getY();
-                moved =false;
-		if((event.getEventTime()-downstart)<maxdoubletime) {
-			setTouchable(false);
+		Log.i(LOG_ID,"startX="+startX+" xview="+xview+" floatglucosex="+floatglucosex);
+	    	if(hide) {
+			Log.i(LOG_ID,"unhide");
+			hide=false;
+			if(Natives.getfloatglucose( ))
+				makefloat();
+			moved =false;
+			downstart=event.getEventTime();
+			return true;
+			} 
+		else {
+			if(startX< floatglucosex ) {
+				Log.i(LOG_ID,"<floatglucosex");
+				var act=MainActivity.thisone;
+				if(act!=null) {
+					Log.i(LOG_ID,"startActivityIfNeeded( new Intent(Applic.app,MainActivity)). active="+act.active);
+
+					act.startActivityIfNeeded( new Intent(Applic.app,MainActivity.class),0);
+					//act.runOnUiThread(() -> act.startActivityIfNeeded( new Intent(Applic.app,MainActivity.class),0));
+					}
+				else {
+					Log.i(LOG_ID,"MainActivity.thisone=null");
+					var intent=new Intent(Applic.app,MainActivity.class);
+					 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+					keeprunning.theservice.startActivity( intent);
+					}
+				}
+			if((event.getEventTime()-downstart)<maxdoubletime) {
+				setTouchable(false);
+				}
 			}
+                moved =false;
 		downstart=event.getEventTime();
                 break;
 
@@ -333,7 +467,7 @@ public boolean onTouchEvent (MotionEvent event) {
 	case MotionEvent.ACTION_UP:
 		if(!moved) {
 			if((event.getEventTime()-downstart)>mindowntime) {
-			    removefloating();
+			    hidefloating();
 			    downstart=0;
 			  	} 
 			else {
@@ -366,7 +500,7 @@ public boolean onTouchEvent (MotionEvent event) {
 	  	else {
 			if(!moved) {
 				if((event.getEventTime()-downstart)>mindowntime)
-				    removefloating();
+				    hidefloating();
 				    }
 			}
 			

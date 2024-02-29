@@ -1592,3 +1592,16 @@ extern "C" JNIEXPORT jfloat  JNICALL   fromjava(getIOBvalue)(JNIEnv *env, jclass
 	}
 #endif
 
+
+extern "C" JNIEXPORT void  JNICALL   fromjava(setfloattime)(JNIEnv *env, jclass cl,jboolean val) {
+	settings->data()->floattime=val;
+	}
+extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getfloattime)(JNIEnv *env, jclass cl) {
+	return settings->data()->floattime;
+	}
+extern "C" JNIEXPORT void  JNICALL   fromjava(sethidefloatinJuggluco)(JNIEnv *env, jclass cl,jboolean val) {
+	settings->data()->hidefloatinJuggluco=val;
+	}
+extern "C" JNIEXPORT jboolean  JNICALL   fromjava(gethidefloatinJuggluco)(JNIEnv *env, jclass cl) {
+	return settings->data()->hidefloatinJuggluco;
+	}

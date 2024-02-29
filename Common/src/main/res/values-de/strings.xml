@@ -262,6 +262,7 @@
   <string name="changeinsulin">"Insulintyp ändern in "</string>
      <string name="type">"Typ: "</string>
     <string name="dosesprior">Füg nur Dosen hinzu von nach:</string>
+    <string name="modify">Ändern</string>
   <string name="notsynced">Nicht synchronisiert</string>
   <string name="lossdata">Das Zurücksetzen auf die standardwerte kann zu Datenverlust führen.</string>
   <string name="defaults">Standardwerte</string>
@@ -324,4 +325,5 @@
    <string name="clampnow">Festgesteckt jetzt</string>
     <string name="sendfrom">Senden von:</string>
  <string name="changestartbutton">Anfang ändern</string>
+ <string name="floatjuggluco">Über</string>
 </resources>

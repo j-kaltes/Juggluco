@@ -717,6 +717,10 @@ public static native String serverError();
 public static native String nightError();
 public static native void setcurrentRelative(boolean val);
 public static native boolean getcurrentRelative( );
+public static native void setfloattime(boolean val);
+public static native boolean getfloattime( );
+public static native void sethidefloatinJuggluco(boolean val);
+public static native boolean gethidefloatinJuggluco( );
 
 
 //s/^extern.*JNIEXPORT[         ]*\([a-zA-Z]*\)[ ]*JNICALL[      ]*fromjava(\([^)]*\)) *(JNIEnv[^,]*,[^,)]*[,)]\([^){]*\)[^a-zA-Z0-9]*$/public static native \1 \2(\3);/g

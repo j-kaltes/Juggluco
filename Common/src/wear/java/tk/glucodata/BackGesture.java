@@ -22,8 +22,6 @@
 
 package tk.glucodata;
 
-import static tk.glucodata.Floating.removefloating;
-import static tk.glucodata.Floating.rewritefloating;
 
 import android.graphics.PointF;
 import android.view.MotionEvent;

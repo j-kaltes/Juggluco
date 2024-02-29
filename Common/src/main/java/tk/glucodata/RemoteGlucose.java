@@ -36,10 +36,14 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
+import android.graphics.Rect;
 import android.os.Build;
 import android.util.DisplayMetrics;
 import android.widget.RemoteViews;
 import static tk.glucodata.R.id.arrowandvalue;
+
+import java.text.DateFormat;
+import java.util.Date;
 
 class RemoteGlucose {
 final private static String LOG_ID="RemoteGlucose";
@@ -49,21 +53,34 @@ final private Paint glucosePaint;
 final private  float density;
 final private float glucosesize;
 final private  int notglucosex;
-
-RemoteGlucose(float gl,float notwidth,float xper,int whiteonblack) {
+final private int timeHeight;
+final private int timesize;
+RemoteGlucose(float gl,float notwidth,float xper,int whiteonblack,boolean givetime) {
 
 	glucosesize=gl;
 	glucosePaint=new Paint();
-	glucosePaint.setTextSize(glucosesize);
 	glucosePaint.setAntiAlias(true);
 	glucosePaint.setTextAlign(Paint.Align.LEFT);
 	float notheight=glucosesize*0.8f;
 	notglucosex= (int)(notwidth*xper);
+	density= notheight/54.0f;
+
+	if(givetime) {	
+		Rect bounds=new Rect();
+		timesize= (int)(glucosesize*.2f);
+		glucosePaint.setTextSize(timesize);
+		glucosePaint.getTextBounds("8.9",0,3, bounds);
+		timeHeight=(int)(bounds.height()*1.2f);
+		notheight+=timeHeight;
+		}
+	else {
+		timeHeight =  timesize = 0;
+	}
+	glucosePaint.setTextSize(glucosesize);
 	glucoseBitmap = Bitmap.createBitmap((int)notwidth, (int)notheight, Bitmap.Config.ARGB_8888);
 	canvas = new Canvas(glucoseBitmap);
 
-	Log.i(LOG_ID,"glucosesize="+glucosesize+"notwidth="+notwidth+" notheight="+notheight+"color="+ format("%x",glucosePaint.getColor()));
-	density= notheight/54.0f;
+	Log.i(LOG_ID,"timesize="+timesize+" timeHeight="+timeHeight+" glucosesize="+glucosesize+" notwidth="+notwidth+" notheight="+notheight+"color="+ format("%x",glucosePaint.getColor()));
 	switch(whiteonblack) {
 		case 1: 
 		case 2: glucosePaint.setColor(WHITE);break;
@@ -91,7 +108,7 @@ final RemoteViews arrowremote(int kind, notGlucose glucose) {
 	if(glucose==null) {
 			return remoteViews;
 	}
-	var gety = canvas.getHeight() * 0.98f;
+	var gety = (canvas.getHeight()-timeHeight) * 0.98f;
 	var getx = notglucosex;
 	var rate = glucose.rate;
 	canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
@@ -107,8 +124,8 @@ final RemoteViews arrowremote(int kind, notGlucose glucose) {
 	}
 
 	canvas.drawText(glucose.value, getx, gety, glucosePaint);
-	float valwidth = glucosePaint.measureText(glucose.value, 0, glucose.value.length());
 	if(kind<50) {
+		float valwidth = glucosePaint.measureText(glucose.value, 0, glucose.value.length());
 		if (kind > 1) {
 			glucosePaint.setTextSize(glucosesize * .4f);
 			canvas.drawText(unitlabel, getx + valwidth + glucosesize * .2f, gety - glucosesize * .25f, glucosePaint);
@@ -117,6 +134,12 @@ final RemoteViews arrowremote(int kind, notGlucose glucose) {
 			canvas.drawText(" " + Applic.app.getString(kind == 0 ? R.string.lowglucoseshort : R.string.highglucoseshort), getx + valwidth + glucosesize * .2f, gety - glucosesize * .15f, glucosePaint);
 		}
 	    }
+	else {
+		var timestr= DateFormat.getTimeInstance(DateFormat.SHORT).format(new Date(glucose.time));
+		glucosePaint.setTextSize(timesize);
+		canvas.drawText(timestr, density*16, gety+timeHeight, glucosePaint);
+		Log.i(LOG_ID,"time: "+timestr);
+		}
 	canvas.setBitmap(glucoseBitmap);
 	remoteViews.setImageViewBitmap(arrowandvalue, glucoseBitmap);
 	return remoteViews;

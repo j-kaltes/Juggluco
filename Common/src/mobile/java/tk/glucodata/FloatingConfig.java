@@ -148,14 +148,32 @@ static public void show(MainActivity act,View parent) {
 	var  backgroundlabel=getlabel(act,R.string.background);
 	backgroundlabel.setTextColor(WHITE);
 	foregroundswitch.setTextColor(WHITE);
-	var leftlayout=new Layout(act,(l, w, h)-> { return new int[] {w,h}; },new View[]{sizelabel,sizeview},new View[]{touchable,transparant}, new View[]{foregroundswitch,backgroundlabel},new View[]{floatglucose},new View[]{Help,close});
+
+	var timeshow=getcheckbox(act,R.string.time,Floating.showtime);
+	timeshow.setOnCheckedChangeListener( (buttonView,  isChecked) -> {
+		Floating.showtime=isChecked;
+		Natives.setfloattime(isChecked);
+		rewritefloating(act);
+		});
+	boolean[] hidden={Natives.gethidefloatinJuggluco()};
+	var hide=getcheckbox(act,R.string.floatjuggluco, !hidden[0]);
+	if(hidden[0]) {
+		Floating.makefloat();
+		}
+	hide.setOnCheckedChangeListener( (buttonView,  isChecked) -> {
+		hidden[0]=!isChecked;
+		Natives.sethidefloatinJuggluco(!isChecked);
+		});
+
+
+
+	var leftlayout=new Layout(act,(l, w, h)-> { return new int[] {w,h}; },new View[]{sizelabel,sizeview},new View[]{touchable,transparant}, new View[]{foregroundswitch,backgroundlabel},new View[]{hide,timeshow,floatglucose},new View[]{Help,close});
 	leftlayout.setLayoutParams( new ViewGroup.LayoutParams(WRAP_CONTENT,MATCH_PARENT));
 	view.setLayoutParams( new ViewGroup.LayoutParams(MATCH_PARENT,MATCH_PARENT));
 	 layout=new Layout(act,(l,w,h)-> { return new int[] {w,h}; }, new View[]{view,leftlayout});
 	layout.setBackgroundColor(Applic.backgroundcolor);
 	transparant.setOnCheckedChangeListener( (buttonView,  isChecked) -> {
 		Floating.setbackgroundalpha(isChecked?0:0xff);
-	//	rewritefloating(act);
 		Floating.invalidatefloat();
 		removeContentView(layout);
 		act.poponback();
@@ -171,8 +189,6 @@ static public void show(MainActivity act,View parent) {
 		act.poponback();
 		show(act,parent);
 
-//		dialog.setColor(getcolor());
-//		view.invalidate();
 	});
 
 	       act.addContentView(layout, new ViewGroup.LayoutParams(MATCH_PARENT,MATCH_PARENT));
@@ -186,7 +202,12 @@ static public void show(MainActivity act,View parent) {
 	  }
 	act.setonback(()-> { 
 		parent.setVisibility(VISIBLE);
-		removeContentView(layout); });
+		removeContentView(layout); 
+		if(hidden[0]) {
+			Floating.removeFloating();
+			}
+
+		});
 	close.setOnClickListener(v->{
 		act.doonback();
 	});

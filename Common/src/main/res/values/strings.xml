@@ -333,4 +333,5 @@
    <string name="clampnow">Now clamp</string>
     <string name="sendfrom">"Send from: "</string>
  <string name="changestartbutton">Change start</string>
+ <string name="floatjuggluco">Above</string>
 </resources>

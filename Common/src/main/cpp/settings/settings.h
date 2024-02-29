@@ -240,7 +240,8 @@ struct Tings {
 
 	char newYuApiKey3[41];
 
-	bool reserved9:2;//*
+	bool hidefloatinJuggluco:1;//*
+	bool floattime:1;
 	bool currentRelative:1;//*
 	bool IOB:1;
 	bool healthConnect:1;

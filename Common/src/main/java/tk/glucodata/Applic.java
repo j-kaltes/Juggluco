@@ -642,12 +642,7 @@ private static	void initbroadcasts() {
 			}
 		//Natives.setinitVersion(22);
 		}
-	var pos=Natives.getfloatingPos( );
-	if(pos!=0) {
-		Floating.xview=pos&0xFFFF;
-		Floating.yview=pos>>16;
-		}
-
+	Floating.init();
 	XInfuus.setlibrenames();
 	JugglucoSend.setreceivers();
 	SendLikexDrip.setreceivers();

@@ -1526,7 +1526,238 @@ stream glucose waarde getoond wordt.</font></p>
 </string>
 <string name="wearosinfo" >
 <![CDATA[
-<p style="margin-top:0pt;margin-bottom:0pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000"><b>WearOS</b></span></p><p style="line-height:116%;margin-top:0pt;margin-bottom:0pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000"><b>Directe sensor-horloge-verbinding</b></span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">: hier</span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">mee wordt bepaald of het horloge rechtstreeks met de sensor moet worden verbonden. Dit kan alleen worden gewijzigd als horloge en telefoon zijn gesynchroniseerd. Gebruik Kloon-&gt;Sync en Reinit op telefoon en horloge om telefoon en horloge te synchroniseren.</span></p><p style="line-height:116%;margin-top:0pt;margin-bottom:0pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000"><b>Init </b></span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000"><b>horloge </b></span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000"><b>app</b></span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">: hierop moet één keer worden gedrukt nadat Juggluco op het WearOS-horloge is geïnstalleerd en draait. </span></p><p style="line-height:120%;margin-top:0pt;margin-bottom:0pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000"><b>Standaardwaarden</b></span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">: hiermee worden de verbindingsinstellingen ing</span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">esteld op de standaardwaarden. Dit bestaat uit de instellingen die kunnen worden gewijzigd in het linkermenu-&gt;Kloon op het horloge en het linkermiddenmenu-&gt;Kloon op de telefoon. Het bestaat uit instellingen zoals &apos;Active only en &apos;Scans&apos;. Deze knop kan word</span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">en ingedrukt wanneer de instellingen per ongeluk zijn gewijzigd door water van de douche of tijdens het slapen. Als je reset door de horlogeversie opnieuw te installeren of gegevens te wissen, dan moet je ook de Kloon-verbinding op de telefoon verwijderen.</span></p><p style="line-height:120%;margin-top:0pt;margin-bottom:0pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'Arial\';font-size:11pt;color:#000000;mso-style-textfill-fill-color:#000000"><br style="mso-special-character:line-break;"/><span>&nbsp;</span></span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">&nbsp;</span></p><p style="line-height:120%;margin-top:0pt;margin-bottom:0pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">Een speciale versie </span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">van Juggluco draait op WearOS horloges. Elke sensor moet wel geïnitialiseerd worden door hem te scannen met Juggluco draaiend op de verbonden Android smartphone. Via een TCP-verbinding wordt de verkregen sensor informatie naar het WearOS horloge verzonden.</span></p><p style="line-height:120%;margin-top:0pt;margin-bottom:0pt;border:none;border-left:none;border-top:none;border-right:none;border-bottom:none;mso-border-between:none"><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">Hierna zijn er twee mogelijkheden:</span></p><ol style="padding-left:40px"><li style="list-style-type: decimal"><p style="margin-left:35.45pt;text-indent:-18pt;line-height:120%;margin-top:0pt;margin-bottom:0pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">De sensor blijft verbonden met de smartphone en de smartphone zendt elke glucose waarde, die het van de sensor via Bluetooth ontvangt, naar het WearOS horloge;</span></p></li><li style="list-style-type: decimal"><p style="margin-left:35.45pt;text-indent:-18pt;line-height:120%;margin-top:0pt;margin-bottom:0pt;border:none;border-left:none;border-top:none;border-right:none;border-bottom:none;mso-border-between:none"><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">Juggluco op het WearOS horloge vormt een directe verbinding met de sensor. Helaas werkt dit op het horloge dat</span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000"> door door 60% gebruikt wordt (Samsung Galaxy Watch4) niet altijd goed. De helft van de sensoren heeft dermate grote verbindings-problemen met het horloge dat het op deze wijze onbruikbaar is, terwijl mijn smartphone geen problemen heeft met deze sensoren.</span></p></li></ol><p style="line-height:120%;margin-top:0pt;margin-bottom:0pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">Een WearOS horloge met Android 8 of hoger is nodig. Juggluco voor WearOS kun je vinden in Google Play op dat horloge. Voor enige afbeeldingen zie: </span><a href="https://www.juggluco.nl/JugglucoWearOS/index.html" title="https://www.juggluco.nl/JugglucoWearOS/index.html"><span style="font-family:\'Times New Roman\';font-size:12pt;color:#0000ff;mso-style-textfill-fill-color:#0000ff"><u>https://www.juggluco.nl/JugglucoWearOS</u></span></a></p><p style="line-height:120%;margin-top:0pt;margin-bottom:0pt;border:none;border-left:none;border-top:none;border-right:none;border-bottom:none;mso-border-between:none"><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">Om Juggluco op WearOS aan de praat te krijgen, doe je het volgende:</span></p><ol style="padding-left:40px"><li style="list-style-type: decimal"><p style="margin-left:35.45pt;text-indent:-18pt;line-height:120%;margin-top:0pt;margin-bottom:0pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">Verzeker je ervan dat Bluetooth en WIFI aanstaan en goed functioneren op horloge e</span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">n smartphone. Soms wordt de WIFI-verbinding constant verbroken. Om dat tegen te gaan kun je het horloge met de lader verbinden, maar dan wordt de Bluetooth verbinding met de smartphone constant verbroken. Soms is het rebooten van het horloge een oplossing;</span></p></li><li style="list-style-type: decimal"><p style="margin-left:35.45pt;text-indent:-18pt;line-height:120%;margin-top:0pt;margin-bottom:0pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">Zorg ervoor dat op het horloge voldoende opslag ruime en RAM vrij is. Er bestaat de mogelijkheid dat Juggluco geherinstalleerd moet worden als op een kritiek moment de opslag helemaal volraakt;</span></p></li><li style="list-style-type: decimal"><p style="margin-left:35.45pt;text-indent:-18pt;line-height:120%;margin-top:0pt;margin-bottom:0pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">Zorg dat Juggluco op de verbonden smartphone werkt met de sensor. Hiervoor moet je de sensor een aantal malen scannen. (“</span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000"><i>Sensor via Bluetoot</i></span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">h” moet je daarbij NIET uitgezet hebben);</span></p></li><li style="list-style-type: decimal"><p style="margin-left:35.45pt;text-indent:-18pt;line-height:120%;margin-top:0pt;margin-bottom:0pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">Start Juggluco voor WearOS op het horloge;</span></p></li><li style="list-style-type: decimal"><p style="margin-left:35.45pt;text-indent:-18pt;line-height:120%;margin-top:0pt;margin-bottom:0pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">Ga naar linker menu→Horloges→WearOS Config. Het horloge hoort bovenin het schermpje getoond te worden. Druk op </span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000"><i>Init Horloge app</i></span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">.</span></p></li><li style="list-style-type: decimal"><p style="margin-left:35.45pt;text-indent:-18pt;line-height:120%;margin-top:0pt;margin-bottom:0pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">Als alles goed gaat, wordt er in beide Juggluco’s een configuratie voor een TCP-verbinding tussen hen gevormd en wordt alle data van de telefoon naar het horloge verzonden. Dit kan lang duren als je Juggl</span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">uco lang gebruikt hebt. Je kunt controleren of een TCP-verbinding geconfigureerd is door te kijken in het Kloon schermpje (Smartphone: linker midden menu→Kloon, horloge: linker menu→Kloon). Een connectie met als label de ID die getoond werd in het WearOS s</span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">chermpje moet getoond worden. Als het daar niet is, druk dan opnieuw op “Init horloge app”. Als het er hierna nog niet is, controleer dan de Bluetooth verbinding en de Android app horend bij je horloge en verantwoordelijk voor de verbinding met je horloge;</span></p></li><li style="list-style-type: decimal"><p style="margin-left:35.45pt;text-indent:-18pt;line-height:120%;margin-top:0pt;margin-bottom:0pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">Als alles goed ging, wordt nu dezelfde data weergegeven in de WearOS versie van Juggluco als op je smartphone. Elke nieuwe glucose </span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">waarde ontvangen door de smartphone wordt via TCP doorgezonden naar het horloge. Sommige instellingen als de eenheid, glucose alarm niveaus en herinneringen zijn ook overgedragen naar het horloge. Latere veranderingen moet je uitvoeren op het horloge zelf;</span></p></li><li style="list-style-type: decimal"><p style="margin-left:35.45pt;text-indent:-18pt;line-height:120%;margin-top:0pt;margin-bottom:0pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">Als de Low Energy</span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000"> Bluetooth van je WearOS watch nog op zelfde manier functioneert als de Android waar WearOS uit voorgekomen is, kun je ook het WearOS horloge een directe verbinding laten vormen met de sensor. Nadat alle waarden naar het horloge verzonden zijn, kun je op “</span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000"><b>Directe sensor-horloge verbinding</b></span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">” drukken. Hiermee wordt “Sensor via Bluetooth” uitgezet op </span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">de telefoon en aangezet op het horloge. De stream waarden worden nu van horloge naar telefoon gezonden. Je kunt het controleren in het Kloon schermpje. &quot;Directe sensor-horloge verbinding&quot; kan niet veranderd worden als horloge en telefoon niet in sync zijn;</span></p></li><li style="list-style-type: decimal"><p style="margin-left:35.45pt;text-indent:-18pt;line-height:120%;margin-top:0pt;margin-bottom:0pt;border:none;border-left:none;border-top:none;border-right:none;border-bottom:none;mso-border-between:none"><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">Als je de hoeveelheden op je horloge in</span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000"> wil voeren en gezonden wil hebben naar je smartphone, moet je de zendrichting in het Kloon schermpje zelf veranderen, door hoeveelheden op je smartphone uit te vinken en op je horloge aan te vinken. Op je telefoon moet “Ontvang van” ook aangevinkt zijn. “</span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000"><i>Verander hoeveelheden niet</i></span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">” moet</span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000"> uitgezet worden op het horloge en aan op de telefoon. Labels worden altijd in de richting van hoeveelheden gezonden en kunnen alleen op de smartphone veranderd worden. Dus als je een label wilt veranderen moet de richting van smartphone naar horloge gaan.</span></p></li></ol><p style="line-height:120%;margin-top:0pt;margin-bottom:0pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">Als het horloge een directe Blu</span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">etooth verbinding heeft met de sensor en haar waarden naar de smartphone gezonden worden, moeten de gescande waarden ook naar het horloge gezonden worden (Dit wordt automatisch zo ingesteld als je de bovenstaande instructies gevolgd hebt). De stream waarde</span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">n moeten naar de smartphone gezonden zijn, voordat gescand wordt. Als niet alle sensor data overgezonden zouden worden, kan oude informatie terug gezonden worden naar het horloge of veranderde authenticatie-informatie niet gezonden worden naar het horloge.</span></p><p style="line-height:120%;margin-top:0pt;margin-bottom:0pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">Veranderingen in een functionerende verbinding moeten alleen doorgevoerd worden wanneer alle data overgezonden is (bekijk de Sync datum in linker middle menu→ kloon).</span></p><p style="margin-top:0pt;margin-bottom:0pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'liberation sans  \';font-size:16pt;color:#000000;mso-style-textfill-fill-color:#000000"><b>Horloge-telefoon verbinding</b></span></p><p style="line-height:120%;margin-top:0pt;margin-bottom:0pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">Tijdens de initialisatie, wanneer alle data verzonden wordt van telefoon naar horloge, is een functionerende WIFI verbinding noodzakelijk. Latere data worden in kleine deeltjes via TCP verzonden. Op</span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000"> mijn horloge wordt WI-FI uitgezet en worden deze kleine hoeveelheden via Bluetooth verzonden. Maar dit gebeurd alleen wanneer de telefoon verbonden is met een externe verbinding (als dat niet het geval is stopt de verbinding na enige tijd). Dit kan een mo</span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">bile data verbinding zijn of een Wi-Fi connectie met de modem, maar ook een Wi-Fi verbinding met een persoonlijke/draagbare hotspot van een Android apparaat zelfs als dat apparaat niet verbonden is met Internet. Je kunt dan Wi-Fi op het horloge uitzetten. </span></p><p style="line-height:120%;margin-top:0pt;margin-bottom:0pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">Bij een op bovenstaande manier gevormde horloge-telefoon verbinding, zendt Juggluco zelf de IP over naar de andere kant van de connectie; je hoeft ze niet in te vullen. Als veranderd wordt van Wi-Fi naar Mo</span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">bile data worden de IPs automatisch bijgewerkt (soms werkt dit niet goed en moet eerst Wi-Fi of Mobile Data uit- en aangezet worden voordat de IP gedetecteerd is). Bij andere Kloon verbindingen moet de IP van de andere zijde wel handmatig ingevoerd worden.</span></p><p style="line-height:120%;margin-top:0pt;margin-bottom:0pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">Soms stokt de verbinding tussen horloge en telefoon. Om hem weer aan de praat te krijgen kan het volgende effect hebben:</span></p><p style="line-height:120%;margin-top:0pt;margin-bottom:0pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">– Externe WiFi of Mobile data connectie van de smartphone uit-en aanzetten. Soms moet het meerdere malen gedaan worden voordat het horloge een veranderde IP heeft ontdekt;</span></p><p style="line-height:120%;margin-top:0pt;margin-bottom:0pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">– Hetzelfde met het horloge als die het heeft;</span></p><p style="line-height:120%;margin-top:0pt;margin-bottom:0pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">– Als de verbinding alleen over Bluetooth gaat kan die uit en aangezet worden. Wi-Fi aan en uitzetten kan ook;</span></p><p style="line-height:120%;margin-top:0pt;margin-bottom:0pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">– Soms moet ook op </span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000"><i>Sync</i></span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000"> in Juggluco op het horloge gedrukt worden.</span></p><p style="margin-top:0pt;margin-bottom:0pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'liberation sans  \';font-size:16pt;color:#000000;mso-style-textfill-fill-color:#000000"><b>Wijzerplaat</b></span></p><p style="line-height:116%;margin-top:0pt;margin-bottom:0pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">Juggluco voor WearOS bevat een wijzerplaat die je huidige glucosewaarde toont naast de tijd en maximaal vier complicaties (toevoegingen aan de wijzerplaat door de</span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000"> gebruiker). Om er gebruik van te maken, moet je deze wijzerplaat instellen op je horloge of de Android app die bij je horloge hoort. Meestal zie je de nieuwste glucose waarden als het scherm ontwaakt wordt. Als het scherm in “Always on” mode is, wordt het</span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000"> scherm enkel op de minuut ververst, zodat een maximaal een minuut oude waarde getoond kan worden. Een nieuwe waarde wordt wel getoond wanneer je dezelfde beweging maakt die anders het scherm doet oplichten: arm optillen, scherm aanraken of knop indrukken.</span></p><p style="line-height:120%;margin-top:0pt;margin-bottom:0pt;border:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-right-alt:none;mso-border-bottom-alt:none;mso-border-between:none"><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">Een andere mogelijkheid is de glucose broadcast van WearOS version van Juggluco te gebruiken om de glucose waarden in een andere watch face weer te geven. Bijvoorbeeld: </span><a href="https://github.com/pachi81/GlucoDataHandler/releases" title="https://github.com/pachi81/GlucoDataHandler/releases"><span style="font-family:\'Times New Roman\';font-size:12pt;color:#0000ff;mso-style-textfill-fill-color:#0000ff"><u>https://github.com/pachi81/GlucoDataHandler/releases</u></span></a></p><p style="line-height:120%;margin-top:0pt;margin-bottom:0pt;border:none;border-left:none;border-top:none;border-right:none;border-bottom:none;mso-border-between:none"><span style="font-family:\'Arial\';font-size:11pt;color:#000000;mso-style-textfill-fill-color:#000000">De grootste flexibiliteit bied</span><span style="font-family:\'Arial\';font-size:11pt;color:#000000;mso-style-textfill-fill-color:#000000">t </span><span style="font-family:\'Arial\';font-size:11pt;color:#000000;mso-style-textfill-fill-color:#000000"><i>“Zwevende glucose”</i></span><span style="font-family:\'Arial\';font-size:11pt;color:#000000;mso-style-textfill-fill-color:#000000"> (linker menu-&gt;Instellingen-&gt;Zwevende glucose). Hiermee wordt de glucose waarde boven alle watch faces en andere schermpjes weergegeven zonder dat daar een complicatie slot voor nodig is. Voor meer informatie zie de hulp in de telefoon versie onder l</span><span style="font-family:\'Arial\';font-size:11pt;color:#000000;mso-style-textfill-fill-color:#000000">inker menu-&gt;Instellingen-&gt;Zwevende glucose.</span><span style="font-family:\'Arial\';font-size:11pt;color:#000000;mso-style-textfill-fill-color:#000000"><br style="mso-special-character:line-break;"/><span>&nbsp;</span></span><span style="font-family:\'Times New Roman\';font-size:12pt;color:#000000;mso-style-textfill-fill-color:#000000">&nbsp;</span></p>]]>
+<h1>WearOS</h1>
+<p style="border: none; padding: 0in"><b>Directe
+sensor-horloge-verbinding</b>: hiermee wordt bepaald of het horloge
+rechtstreeks met de sensor moet worden verbonden. Dit kan alleen
+worden gewijzigd als horloge en telefoon zijn gesynchroniseerd.
+Gebruik Kloon-&gt;Sync en Reinit op telefoon en horloge om telefoon
+en horloge te synchroniseren.</p>
+<p style="border: none; padding: 0in"><b>Init horloge app</b>: hierop
+moet één keer worden gedrukt nadat Juggluco op het WearOS-horloge
+is geïnstalleerd en draait. 
+</p>
+<p style="border: none; padding: 0in"><b>Standaardwaarden</b>:
+hiermee worden de verbindingsinstellingen ingesteld op de
+standaardwaarden. Dit bestaat uit de instellingen die kunnen worden
+gewijzigd in het linkermenu-&gt;Kloon op het horloge en het
+linkermiddenmenu-&gt;Kloon op de telefoon. Het bestaat uit
+instellingen zoals \'Active only en \'Scans\'. Deze knop kan worden
+ingedrukt wanneer de instellingen per ongeluk zijn gewijzigd door
+water van de douche of tijdens het slapen. Als je reset door de
+horlogeversie opnieuw te installeren of gegevens te wissen, dan moet
+je ook de Kloon-verbinding op de telefoon verwijderen.</p>
+<p style="border: none; padding: 0in">Een speciale versie van
+Juggluco draait op WearOS horloges. Elke sensor moet wel
+geïnitialiseerd worden door hem te scannen met Juggluco draaiend op
+de verbonden Android smartphone. Via een TCP-verbinding wordt de
+verkregen sensor informatie naar het WearOS horloge verzonden.</p>
+<p style="border: none; padding: 0in">Hierna zijn er twee
+mogelijkheden:</p>
+<ol>
+	<li><p style="border: none; padding: 0in">De sensor blijft verbonden
+	met de smartphone en de smartphone zendt elke glucose waarde, die
+	het van de sensor via Bluetooth ontvangt, naar het WearOS horloge;</p></li>
+	<li><p style="border: none; padding: 0in">Juggluco op het WearOS
+	horloge vormt een directe verbinding met de sensor. Helaas werkt dit
+	op het horloge dat door door 60% gebruikt wordt (Samsung Galaxy
+	Watch4) niet altijd goed. De helft van de sensoren heeft dermate
+	grote verbindings-problemen met het horloge dat het op deze wijze
+	onbruikbaar is, terwijl mijn smartphone geen problemen heeft met
+	deze sensoren.</p></li>
+</ol>
+<p style="border: none; padding: 0in">Een WearOS horloge met Android
+8 of hoger is nodig. Voor enige afbeeldingen zie:
+<a href="https://www.juggluco.nl/JugglucoWearOS/index.html"><u>https://www.juggluco.nl/JugglucoWearOS</u></a></p>
+<p style="border: none; padding: 0in">Om Juggluco op WearOS aan de
+praat te krijgen, doe je het volgende:</p>
+<ol>
+	<li><p style="border: none; padding: 0in">Verzeker je ervan dat
+	Bluetooth en WIFI aanstaan en goed functioneren op horloge en
+	smartphone. Soms wordt de WIFI-verbinding constant verbroken. Om dat
+	tegen te gaan kun je het horloge met de lader verbinden, maar dan
+	wordt de Bluetooth verbinding met de smartphone constant verbroken.
+	Soms is het rebooten van het horloge een oplossing;</p></li>
+	<li><p style="border: none; padding: 0in">Zorg ervoor dat op het
+	horloge voldoende opslag ruime en RAM vrij is. Er bestaat de
+	mogelijkheid dat Juggluco geherinstalleerd moet worden als op een
+	kritiek moment de opslag helemaal volraakt;</p></li>
+	<li><p style="border: none; padding: 0in">Zorg dat Juggluco op de
+	verbonden smartphone werkt met de sensor. Hiervoor moet je de sensor
+	een aantal malen scannen. (“<i>Sensor via Bluetoot</i>h” moet je
+	daarbij NIET uitgezet hebben);</p></li>
+	<li><p style="border: none; padding: 0in">Start Juggluco voor WearOS
+	op het horloge;</p></li>
+	<li><p style="border: none; padding: 0in">Ga naar linker
+	menu→Horloges→WearOS Config. Het horloge hoort bovenin het
+	schermpje getoond te worden. Druk op <i>Init Horloge app</i>.</p></li>
+	<li><p style="border: none; padding: 0in">Als alles goed gaat, wordt
+	er in beide Juggluco’s een configuratie voor een TCP-verbinding
+	tussen hen gevormd en wordt alle data van de telefoon naar het
+	horloge verzonden. Dit kan lang duren als je Juggluco lang gebruikt
+	hebt. Je kunt controleren of een TCP-verbinding geconfigureerd is
+	door te kijken in het Kloon schermpje (Smartphone: linker midden
+	menu→Kloon, horloge: linker menu→Kloon). Een connectie met als
+	label de ID die getoond werd in het WearOS schermpje moet getoond
+	worden. Als het daar niet is, druk dan opnieuw op “Init horloge
+	app”. Als het er hierna nog niet is, controleer dan de Bluetooth
+	verbinding en de Android app horend bij je horloge en
+	verantwoordelijk voor de verbinding met je horloge;</p></li>
+	<li><p style="border: none; padding: 0in">Als alles goed ging, wordt
+	nu dezelfde data weergegeven in de WearOS versie van Juggluco als op
+	je smartphone. Elke nieuwe glucose waarde ontvangen door de
+	smartphone wordt via TCP doorgezonden naar het horloge. Sommige
+	instellingen als de eenheid, glucose alarm niveaus en herinneringen
+	zijn ook overgedragen naar het horloge. Latere veranderingen moet je
+	uitvoeren op het horloge zelf;</p></li>
+	<li><p style="border: none; padding: 0in">Als de Low Energy
+	Bluetooth van je WearOS watch nog op zelfde manier functioneert als
+	de Android waar WearOS uit voorgekomen is, kun je ook het WearOS
+	horloge een directe verbinding laten vormen met de sensor. Nadat
+	alle waarden naar het horloge verzonden zijn, kun je op “<b>Directe
+	sensor-horloge verbinding</b>” drukken. Hiermee wordt “Sensor
+	via Bluetooth” uitgezet op de telefoon en aangezet op het horloge.
+	De stream waarden worden nu van horloge naar telefoon gezonden. Je
+	kunt het controleren in het Kloon schermpje. &quot;Directe
+	sensor-horloge verbinding&quot; kan niet veranderd worden als
+	horloge en telefoon niet in sync zijn;</p></li>
+	<li><p style="border: none; padding: 0in">Als je de hoeveelheden op
+	je horloge in wil voeren en gezonden wil hebben naar je smartphone,
+	moet je de zendrichting in het Kloon schermpje zelf veranderen, door
+	hoeveelheden op je smartphone uit te vinken en op je horloge aan te
+	vinken. Op je telefoon moet “Ontvang van” ook aangevinkt zijn.
+	“<i>Verander hoeveelheden niet</i>” moet uitgezet worden op het
+	horloge en aan op de telefoon. Labels worden altijd in de richting
+	van hoeveelheden gezonden en kunnen alleen op de smartphone
+	veranderd worden. Dus als je een label wilt veranderen moet de
+	richting van smartphone naar horloge gaan.</p></li>
+</ol>
+<p style="border: none; padding: 0in">Als het horloge een directe
+Bluetooth verbinding heeft met de sensor en haar waarden naar de
+smartphone gezonden worden, moeten de gescande waarden ook naar het
+horloge gezonden worden (Dit wordt automatisch zo ingesteld als je de
+bovenstaande instructies gevolgd hebt). De stream waarden moeten naar
+de smartphone gezonden zijn, voordat gescand wordt. Als niet alle
+sensor data overgezonden zouden worden, kan oude informatie terug
+gezonden worden naar het horloge of veranderde
+authenticatie-informatie niet gezonden worden naar het horloge.</p>
+<p style="border: none; padding: 0in">Veranderingen in een
+functionerende verbinding moeten alleen doorgevoerd worden wanneer
+alle data overgezonden is (bekijk de Sync datum in linker middle
+menu→ kloon).</p>
+<h2 class="western"><strong>Watch-Phone-verbinding</strong></h2>
+<p>De horlogetelefoonverbinding is een aanpassing van de
+kloonverbinding die je kunt configureren tussen telefoons waarop
+Juggluco draait en computers waarop de <a href="https://www.juggluco.nl/Juggluco/cmdline">Juggluco-server</a>
+draait. Wanneer de verbinding tussen telefoon en horloge automatisch
+tot stand wordt gebracht op de hierboven beschreven manier, heeft
+deze de volgende toevoegingen:</p>
+<ul>
+	<li><p>Het IP-adres van de andere kant van de verbinding wordt
+	automatisch bepaald. Normaal gesproken hoef je niets rechtstreeks
+	met de kloonverbinding te doen. In plaats daarvan kun je het
+	linkermenu → Horloges → WearOS-config gebruiken om de
+	instellingen te wijzigen. De uitzondering hierop is wanneer je
+	cijfers op het horloge wilt invoeren. Vervolgens moet je de
+	klooninstellingen handmatig wijzigen zoals beschreven onder <a href="#enteronwatch"><i>Invoeren
+	op horloge</i></a> .</p></li>
+	<li><p>Als de WIFI-verbinding tussen de telefoon en het horloge niet
+	werkt, schakelt Juggluco over op het gebruik van TCP via Bluetooth.
+	Behalve wanneer er bij het eerste gebruik veel gegevens naar het
+	horloge moeten worden verzonden, kun je WIFI op het horloge
+	uitschakelen.</p></li>
+</ul>
+<p style="margin-bottom: 0in">Wanneer er geen gegevens worden
+uitgewisseld tussen de Juggluco’s op de telefoon en het horloge,
+kun je het volgende bekijken:</p>
+<ul>
+	<li><p style="margin-bottom: 0in">Bluetooth moet zijn ingeschakeld
+	op horloge en telefoon (WIFI kan worden uitgeschakeld);</p></li>
+	<li><p style="margin-bottom: 0in">De bijbehorende app van het
+	horloge moet weergeven dat het horloge is verbonden met de telefoon;</p></li>
+	<li><p style="margin-bottom: 0in">In het linkermenu → Kloon op het
+	horloge en het linker midden menu → Kloon op de telefoon moet er
+	automatisch een verbindingsitem worden gemaakt met de identificatie
+	van het horloge (dezelfde identificatie als weergegeven in het
+	linkermenu → Horloge → &quot;WearOS config&quot; op de
+	telefoon);</p></li>
+	<li><p style="margin-bottom: 0in">Het kan helpen om op Reinit en/of
+	Synch te drukken in het linkermenu → Kloon op het horloge;</p></li>
+	<li><p style="margin-bottom: 0in">Soms moet je hetzelfde op de
+	telefoon doen. Daarna moet je het misschien opnieuw doen op het
+	horloge;</p></li>
+	<li><p style="margin-bottom: 0in">Bluetooth uit- en inschakelen van
+	de telefoon of het horloge kan helpen. Hierna moet je opnieuw op
+	Reinit en Sync drukken op het horloge;</p></li>
+	<li><p style="margin-bottom: 0in">Hetzelfde doen met WIFI of mobiele
+	data is soms nodig;</p></li>
+	<li><p style="margin-bottom: 0in">Soms is een herstart van telefoon
+	en/of horloge nodig om Bluetooth weer werkend te krijgen;</p></li>
+	<li><p style="margin-bottom: 0in">Het is mogelijk dat op de een of
+	andere manier de instellingen in de kloonverbinding naar de
+	verkeerde waarden zijn gewijzigd. Je kunt ze terugzetten naar de
+	oorspronkelijke waarden door op het linkermenu → Horloge →
+	&quot;WearOS config&quot; → Standaard op de telefoon te drukken.
+	Dit heeft ook tot gevolg dat de sensor met de telefoon wordt
+	verbonden in plaats van met het horloge. Gegevens die alleen op het
+	horloge aanwezig zijn, worden overschreven;</p></li>
+	<li><p style="margin-bottom: 0in">Als al het andere niet lukt, kun
+	je de horlogeversie opnieuw installeren en opnieuw beginnen. In dat
+	geval dien je de bestaande horlogeverbinding te verwijderen onder
+	Linkermiddenmenu →Kloon.</p></li>
+	<li><p style="margin-bottom: 0in">Als de gegevens op de een of
+	andere manier op de telefoon ontbreken, maar wel op het horloge
+	aanwezig zijn, is het veel moeilijker. Op de een of andere manier
+	moet je eerst een functionerende kloonverbinding tot stand brengen
+	om de gegevens op de telefoon te ontvangen.</p></li>
+</ul>
+<h2 class="western">Invoeren op horloge</h2>
+<p>Als je hoeveelheden insuline, koolhydraten en activiteiten op het
+horloge invoert, kun je dat niet meer op de telefoon doen. Ook het
+scannen van insulinepennen is niet meer mogelijk.</p>
+<p>Hiervoor bestaat momenteel geen knop. Aan beide zijden van de
+kloonverbinding tussen het horloge en de begeleidende telefoon moet
+je wijzigingen aanbrengen in de klooninstellingen. Zorg er eerst voor
+dat de telefoon en het horloge gesynchroniseerd zijn en doe dan het
+volgende:</p>
+<h5 class="western">TELEFOON:</h5>
+<p>Ga naar linker midden menu → Kloon. Druk op de horlogeverbinding
+en vervolgens op <i>Wijzigen</i> .<span style="font-style: normal">
+Schakel “</span><i>Hoeveelheden</i><span style="font-style: normal">”</span><span style="font-style: normal">
+</span>uit en controleer of <i>Ontvang van</i> is aangevinkt. Druk
+hierna op “<i>Opslaan</i>” en vervolgens op “<i>Sluiten</i>”.
+Vink  “K<i>loon </i><i>stuurt hoeveelheden”</i> aan.</p>
+<h5 class="western">HORLOGE:</h5>
+<p>Ga naar het linkermenu → Kloon. Druk op de horlogeverbinding en
+vervolgens op <i>Wijzigen</i>. Vink “<i>Hoeveelheden</i>” aan.
+Stel “<i>Nu</i>” in als het tijdstip tot wanneer alle gegevens al
+op de telefoon aanwezig zijn. Druk hierna op “<i>Opslaan</i>” en
+vervolgens op “<i>Sluiten</i>”. Schakel “<i>kloon </i><i>stuurt
+hoeveelheden</i><i>”</i> uit.</p>
+<p style="border: none; padding: 0in"><b>Wijzerplaat</b></p>
+<p style="border: none; padding: 0in">Juggluco voor WearOS bevat een
+wijzerplaat die je huidige glucosewaarde toont naast de tijd en
+maximaal vier complicaties (toevoegingen aan de wijzerplaat door de
+gebruiker). Om er gebruik van te maken, moet je deze wijzerplaat
+instellen op je horloge of de Android app die bij je horloge hoort.
+Meestal zie je de nieuwste glucose waarden als het scherm ontwaakt
+wordt. Als het scherm in “Always on” mode is, wordt het scherm
+enkel op de minuut ververst, zodat een maximaal een minuut oude
+waarde getoond kan worden. Een nieuwe waarde wordt wel getoond
+wanneer je dezelfde beweging maakt die anders het scherm doet
+oplichten: arm optillen, scherm aanraken of knop indrukken.</p>
+<p style="border: none; padding: 0in">Een andere mogelijkheid is de
+glucose broadcast van WearOS version van Juggluco te gebruiken om de
+glucose waarden in een andere watch face weer te geven. Bijvoorbeeld:
+<a href="https://github.com/pachi81/GlucoDataHandler/releases"><u>https://github.com/pachi81/GlucoDataHandler/releases</u></a></p>
+<p style="border: none; padding: 0in">De grootste flexibiliteit biedt
+“<i>Zwevende glucose”</i> (linker menu-&gt;Instellingen-&gt;Zwevende
+glucose). Hiermee wordt de glucose waarde boven alle watch faces en
+andere schermpjes weergegeven zonder dat daar een complicatie slot
+voor nodig is. Voor meer informatie zie de hulp in de telefoon versie
+onder linker menu-&gt;Instellingen-&gt;Zwevende glucose.<br/>
+&nbsp;&nbsp;</p>
+]]>
 </string>
 <string name="about" >
 <![CDATA[
@@ -1773,29 +2004,40 @@ te bewegen). Wanneer tastbaar niet is ingesteld, gaat touch-invoer
 naar het venster onder de zwevende glucose, zodat je de app onder de
 zwevende glucose kunt gebruiken. Je kunt de zwevende glucose ook
 onaantastbaar maken door er <b>twee</b> keer op de drukken.</p>
+<p style="background: transparent"><b>Boven</b>: toon ook de zwevende
+glucose boven Juggluco.</p>
+<p style="background: transparent"><b>Tijd</b>: toon het tijdstempel
+van de glucosewaarde.</p>
+<p style="background: transparent"><b>Actief</b>: schakel het in.</p>
 <p>Nadat je de <b>lettergrootte</b> hebt getypt, moet je op de
 &quot;<i>Enter&quot;-, </i>&quot;<i>Gereed&quot;-</i> of &quot;✓&quot;-
 knop van het soft-keyboard drukken.</p>
 <p>Je kunt Floating glucose in- en uitschakelen met linker midden
-menu-&gt;Zweef. Je kunt zwevende glucose ook uitschakelen door <b>lang</b>
-op de zwevende glucosewaarde te drukken. Bijvoorbeeld wanneer je de
-lettergrootte zo groot hebt ingesteld dat je geen kleinere
-lettergrootte meer kunt typen op het soft-keyboard.</p>
+menu-&gt;Zweef. 
+</p>
+<p>U kunt overschakelen naar Juggluco door op de pijlzijde van de
+zwevende glucose te tikken. Twee keer drukken op de
+glucosewaardezijde zorgt ervoor dat de zwevende glucose ontastbaar
+wordt. Als je lang op de glucosewaarde drukt, wordt slechts een
+kleine glucosewaarde weergegeven, zodat je kunt communiceren met wat
+eronder zit. Als je op die kleine display tikt, wordt het weer
+vergroot. Als je beweegt terwijl je de glucosewaardezijde aanraakt,
+beweegt de zwevende glucose.</p>
 <p>Om weer te geven boven andere apps heeft Juggluco speciale
 toestemming nodig. Op WearOS en ook Android Automotive moet je adb
 gebruiken om deze toestemming te geven:</p>
-<p style="line-height: 100%; margin-bottom: 0in"><b>adb shell pm
-grant tk.glucodata android.permission.SYSTEM_ALERT_WINDOW</b></p>
-<p style="line-height: 100%; margin-bottom: 0in; background: transparent">
-Op sommige horloges (bijvoorbeeld TicWatch Pro) kunt je dit ook
-toestaan met: Android/WearOS-instellingen-&gt;Apps &amp; meldingen-&gt;
+<p style="margin-bottom: 0in"><b>adb shell pm grant tk.glucodata
+android.permission.SYSTEM_ALERT_WINDOW</b></p>
+<p style="background: transparent">Op sommige horloges (bijvoorbeeld
+TicWatch Pro) kunt je dit ook toestaan met:
+Android/WearOS-instellingen-&gt;Apps &amp; meldingen-&gt;
 App-info-&gt;Juggluco-&gt;Geavanceerd-&gt;Weergave vóór andere
 apps.</p>
-<p style="line-height: 100%; margin-bottom: 0in; background: transparent">
+<p style="background: transparent"><br/>
 <br/>
 
 </p>
-<p style="line-height: 100%; margin-bottom: 0in; background: transparent">
+<p style="background: transparent"><br/>
 <br/>
 
 </p>

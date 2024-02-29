@@ -478,6 +478,8 @@ private static int resumenr=isRelease?10:2;
 				 Log.i(LOG_ID,"Natives.getaskedNotify( )");
 			 }
 		} */
+	if(Natives.gethidefloatinJuggluco())
+		Floating.removeFloating();
 	boolean showsdialog=false;
 	for(var el:shownummessage) {
 		showindialog(el,false);
@@ -612,6 +614,8 @@ void activateresult(boolean res) {
 	if(!Applic.Nativesloaded)
 		return;
 
+	if(Natives.getfloatglucose( )&&Natives.gethidefloatinJuggluco())
+		Floating.makefloat();
 	Natives.setpaused(null);
         if (mNfcAdapter != null) {
 	   try {

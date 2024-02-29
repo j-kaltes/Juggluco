@@ -157,7 +157,7 @@ static RemoteGlucose arrowNotify;
 			DisplayMetrics metrics= Applic.app.getResources().getDisplayMetrics();
 			Log.i(LOG_ID,"metrics.density="+ metrics.density+ " width="+metrics.widthPixels+" height="+metrics.heightPixels);
 			var notwidth=Math.min(metrics.widthPixels,metrics.heightPixels);
-			arrowNotify=new RemoteGlucose(glucosesize,notwidth,0.12f,whiteonblack?1:0);
+			arrowNotify=new RemoteGlucose(glucosesize,notwidth,0.12f,whiteonblack?1:0,false);
 		}
 	}
 

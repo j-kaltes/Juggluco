@@ -21,7 +21,7 @@ private static void setWidth(int widthdip) {
 		var    widthpx = widthdip*GlucoseCurve.getDensity();
 //		var fontsize=widthpx*0.22f;
 		var fontsize=widthpx*(Applic.unit==1?0.35f:0.4f);
-		remote=  new RemoteGlucose(fontsize,widthpx,Applic.unit==1?0.30f:0.32f,2);
+		remote=  new RemoteGlucose(fontsize,widthpx,Applic.unit==1?0.30f:0.32f,2,true);
 		width=widthdip;
 		}
  @Override
@@ -73,7 +73,7 @@ static private void showviews(RemoteViews views,int rId,AppWidgetManager appWidg
 		final var time=SuperGattCallback.previousglucose.time;
 		if((now-time)>oldage) {
 			final String tformat= timef.format(time);
-			String message = Applic.app.getString(R.string.nonewvalue) + tformat;
+			String message = "\n  "+Applic.app.getString(R.string.nonewvalue) + tformat;
 			views=remoteMessage(message);
 			id=R.id.content;
 		}
@@ -82,7 +82,7 @@ static private void showviews(RemoteViews views,int rId,AppWidgetManager appWidg
 			}
 		}
 	else {
-			views=remoteMessage("   "+Applic.app.getString(R.string.novalue));
+			views=remoteMessage("\n  "+Applic.app.getString(R.string.novalue));
 			id=R.id.content;
 			}
 
@@ -144,11 +144,6 @@ public static void oldvalue(long time) {
 		int ids[] = manage.getAppWidgetIds(new ComponentName(Applic.app, cl));
 		if(ids.length>0) {
 			updateall(Applic.app, manage, ids);
-			/*
-			Intent intent = new Intent(Applic.app,cl);
-			intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-			intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS,ids);
-			Applic.app.sendBroadcast(intent); */
 			}
 		else
 			used=false;

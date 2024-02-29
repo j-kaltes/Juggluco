@@ -254,6 +254,7 @@
   <string name="changeinsulin">"Verander insulinetype naar "</string>
      <string name="type">"Type: "</string>
     <string name="dosesprior">Voeg enkel doses toe van na:</string>
+    <string name="modify">Wijzig</string>
 <string name="notsynced">Niet gesynchroniseerd</string>
   <string name="lossdata">Instellen op standaardwaarden kan leiden tot gegevensverlies.</string>
   <string name="defaults">Standaardwaarden</string>
@@ -320,4 +321,5 @@
    <string name="clampnow">Vast nu</string>
     <string name="sendfrom">Zend vanaf:</string>
  <string name="changestartbutton">Begin wijzigen</string>
+ <string name="floatjuggluco">Boven</string>
 </resources>

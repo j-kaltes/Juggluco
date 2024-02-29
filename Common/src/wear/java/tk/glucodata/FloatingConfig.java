@@ -74,16 +74,17 @@ static public void show(MainActivity act,View view) {
 	int height=GlucoseCurve.getheight();
 	int width=GlucoseCurve.getwidth();
 	var  sizelabel=getlabel(act,R.string.fontsize);
-	int pad=height/10;
+
+	int pad=height/14;
 	sizelabel.setPadding(pad,0,0,0);
 	var  sizeview= new EditText(act);
               sizeview.setImeOptions(editoptions);
-                sizeview.setMinEms(4);
+                sizeview.setMinEms(2);
                 sizeview.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
 
 	int fontsize=Natives.getfloatingFontsize();
 	sizeview.setText(fontsize+"");
-	sizeview.setPadding(pad,0,0,0);
+//	sizeview.setPadding(pad,0,0,0);
         TextView.OnEditorActionListener  actlist= new TextView.OnEditorActionListener() {
                     @Override
                     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -128,8 +129,29 @@ static public void show(MainActivity act,View view) {
 
 
 
+	var timeshow=getcheckbox(act,R.string.time,Floating.showtime);
+	timeshow.setOnCheckedChangeListener( (buttonView,  isChecked) -> {
+		Floating.showtime=isChecked;
+		Natives.setfloattime(isChecked);
+		rewritefloating(act);
+		});
+	final   int pad2=(int)(tk.glucodata.GlucoseCurve.metrics.density*5.0);
 
-	Layout layout=new Layout(act,(l,w,h)-> { return new int[] {w,h}; },new View[]{touchable},new View[]{transparentview},  new View[]{sizelabel,sizeview},new View[]{foreground,backgroundview},new View[]{close});
+//	timeshow.setPadding(pad,0,0,0);
+	transparentview.setPadding(0,0,pad2,0);
+
+	boolean[] hidden={Natives.gethidefloatinJuggluco()};
+	var hide=getcheckbox(act,R.string.floatjuggluco, !hidden[0]);
+	hide.setPadding(0,0,(int)(tk.glucodata.GlucoseCurve.metrics.density*13f),0);
+	if(hidden[0]) {
+		Floating.makefloat();
+		}
+	hide.setOnCheckedChangeListener( (buttonView,  isChecked) -> {
+		hidden[0]=isChecked;
+		Natives.sethidefloatinJuggluco(!isChecked);
+		});
+
+	Layout layout=new Layout(act,(l,w,h)-> { return new int[] {w,h}; },new View[]{touchable},new View[]{sizelabel,sizeview,hide},new View[]{timeshow,transparentview},  new View[]{foreground,backgroundview},new View[]{close});
 
 	transparentview.setOnCheckedChangeListener( (buttonView,  isChecked) -> {
 		background=true;
@@ -159,7 +181,11 @@ static public void show(MainActivity act,View view) {
 	       act.addContentView(layout, new ViewGroup.LayoutParams(MATCH_PARENT,MATCH_PARENT));
 	act.setonback(()-> {
 		view.setVisibility(VISIBLE);
-		removeContentView(layout); });
+		removeContentView(layout); 
+		if(!hidden[0]) {
+			Floating.removeFloating();
+			}
+		});
 	close.setOnClickListener(v->{
 		act.doonback();
 	});

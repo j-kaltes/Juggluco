@@ -790,15 +790,54 @@ ausschalten.</font></font></p>
 </string>
 <string name="floatingconfig" >
 <![CDATA[
-
-  <h1>Schwebende Glukose</h1>
-  <p>Hier können Sie die Schriftgröße und die Vorder- und Hintergrundfarbe der schwebenden Glukose einstellen. Sie können den Hintergrund auch auf <strong>Transparent</strong> setzen, wodurch er unsichtbar wird.</p>
-  <p><strong>Berührbar</strong>: Wenn eingestellt, können Sie die schwebende Glukose mit dem Finger bewegen und durch langes Drücken (ohne Bewegung) entfernen. Wenn „Berührbar“ deaktiviert ist, geht die Berührungseingabe in das Fenster unter der schwebenden Glukose, sodass Sie die App unter der schwebenden Glukose verwenden können. Sie können die schwebende Glukose auch unberührbar machen, indem Sie <strong>zweimal</strong> darauf tippen.</p>
-  <p>Nachdem Sie die <strong>Schriftgröße</strong> eingegeben haben, müssen Sie die „<i>Enter“-,</i> „<i>Fertig“</i> - oder "✓"- Taste der Soft-Tastatur drücken.</p>
-  <p>Sie können <i>Schwebende Glukose</i> über das Menü links in der Mitte -&gt;Schweben ein- und ausschalten. Sie können „<i>Schwebende Glukose</i>“ auch deaktivieren, indem Sie <strong>lange</strong> auf den schwebenden Glukosewert <strong>drücken</strong>. Zum Beispiel, wenn Sie die Schriftgröße so groß eingestellt haben, dass Sie auf der Soft-Tastatur keine kleinere Schriftgröße mehr eingeben können.</p>
-  <p>Um über anderen Apps angezeigt zu werden, benötigt Juggluco eine spezielle Berechtigung. Auf WearOS und auch Android Automotive müssen Sie adb verwenden, um diese Berechtigung zu erteilen:</p>
-  <p><strong>adb shell pm grant tk.glucodata android.permission.SYSTEM_ALERT_WINDOW</strong></p>
-  <p>Bei einigen Uhren (z. B. TicWatch Pro) können Sie dies auch zulassen mit: Android/WearOS-Einstellungen-&gt;Apps & Benachrichtigungen-&gt; App-Info-&gt;Juggluco-&gt;Erweitert-&gt;Über anderen Apps einblenden.</p>
+<h1>Schwebende Glukose</h1>
+<p><span lang="de-DE">Hier können Sie die Schriftgröße und die
+Vorder- und Hintergrundfarbe der schwebenden Glukose einstellen. Sie
+können den Hintergrund auch auf </span><strong><span lang="de-DE">Transparent</span></strong><span lang="de-DE">
+setzen, wodurch er unsichtbar wird.</span></p>
+<p><strong><span lang="de-DE">Berührbar</span></strong><span lang="de-DE">:
+Wenn eingestellt, können Sie die schwebende Glukose mit dem Finger
+bewegen und durch langes Drücken (ohne Bewegung) entfernen. Wenn
+„Berührbar“ deaktiviert ist, geht die Berührungseingabe in das
+Fenster unter der schwebenden Glukose, sodass Sie die App unter der
+schwebenden Glukose verwenden können. Sie können die schwebende
+Glukose auch unberührbar machen, indem Sie </span><strong><span lang="de-DE">zweimal</span></strong><span lang="de-DE">
+darauf tippen.</span></p>
+<p style="background: transparent"><font face="Liberation Serif, serif"><b>Ü</b></font><b>ber</b>:
+ schwebende Glukose auch über Juggluco.</p>
+<p style="background: transparent"><b>Zeit</b>: Zeitstempel des
+Glukosewerts.</p>
+<p style="background: transparent"><b>Aktiv</b>: Einschalten.</p>
+<p><span lang="de-DE">Nachdem Sie die </span><strong><span lang="de-DE">Schriftgröße</span></strong><span lang="de-DE">
+eingegeben haben, müssen Sie die „</span><span lang="de-DE"><i>Enter“-,</i></span><span lang="de-DE">
+„</span><span lang="de-DE"><i>Fertig“</i></span><span lang="de-DE">
+- oder &quot;✓&quot;- Taste der Soft-Tastatur drücken.</span></p>
+<p><span lang="de-DE">Sie können </span><span lang="de-DE"><i>Schwebende
+Glukose</i></span><span lang="de-DE"> über das Menü links in der
+Mitte -&gt;Schweben ein- und ausschalten. </span>
+</p>
+<p><span lang="de-DE">Sie können zu Juggluco wechseln, indem Sie auf
+die </span><span lang="de-DE"><b>Pfeilseite </b></span><span lang="de-DE">der
+schwebenden Glukose tippen. Durch zweimaliges Antippen der
+Glukosewertseite wird die schwebende Glukose </span><strong><span lang="de-DE"><span style="font-weight: normal">Unbe</span></span></strong><strong><span lang="de-DE"><span style="font-weight: normal">rührbar</span></span></strong><span lang="de-DE">.
+</span><span lang="de-DE"><span style="font-weight: normal">Wenn Sie
+</span></span><span lang="de-DE"><b>lange</b></span><span lang="de-DE"><span style="font-weight: normal">
+auf </span></span><span lang="de-DE">den Glukosewert drücken, wird
+nur ein kleiner Glukosewert angezeigt, so dass Sie mit dem, was sich
+darunter befindet, interagieren können. Durch Antippen der kleinen
+Anzeige wird dieser wieder vergrößert. Durch </span><span lang="de-DE"><b>Bewegen</b></span><span lang="de-DE">
+beim Berühren der Glukosewertseite wird </span><span lang="de-DE">die</span><span lang="de-DE">
+schwebende Glukose </span><span lang="de-DE"><span style="font-weight: normal">verschoben&nbsp;</span></span><span lang="de-DE">.</span></p>
+<p><span lang="de-DE">Um über anderen Apps angezeigt zu werden,
+benötigt Juggluco eine spezielle Berechtigung. Auf WearOS und auch
+Android Automotive müssen Sie adb verwenden, um diese Berechtigung
+zu erteilen:</span></p>
+<p><strong><span lang="de-DE">adb shell pm grant tk.glucodata
+android.permission.SYSTEM_ALERT_WINDOW</span></strong></p>
+<p>Bei einigen Uhren (z. B. TicWatch Pro) können Sie dies auch
+zulassen mit: Android/WearOS-Einstellungen-&gt;Apps &amp;
+Benachrichtigungen-&gt; App-Info-&gt;Juggluco-&gt;Erweitert-&gt;Über
+anderen Apps einblenden.</p>
 ]]>
 </string>
 <string name="garminconfig" >
@@ -2451,8 +2490,7 @@ Uhrzeit auch den per Bluetooth empfangenen aktuellen Glukosewert an.</p>
 </string>
 <string name="wearosinfo" >
 <![CDATA[
-<h1 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-top: 0in; margin-bottom: 0.1in">
-<font face="Liberation Serif, serif">Wear OS</font></h1>
+<h1>Wear OS</h1>
 <p><b>Direkte Sensor-Uhr-Verbindung</b>: Legt fest, ob die Uhr direkt
 mit dem Sensor verbunden werden soll. Dies kann nur geändert werden,
 wenn Uhr und Telefon synchronisiert sind. Verwenden Sie Klon-&gt;Sync
@@ -2460,75 +2498,58 @@ und Reinit auf Telefon und Uhr, um Telefon und Uhr zu
 synchronisieren.</p>
 <p><b>Init watch app</b>: Dies sollte einmal gedrückt werden,
 nachdem Juggluco auf der WearOS-Uhr installiert wurde und läuft.</p>
-<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
-<font face="Times New Roman"><font size="4" style="font-size: 14pt"><b>Standardwerte</b>:
-Dies setzt die Verbindungseinstellungen auf die Standardwerte. Dies
-besteht aus den Einstellungen, die geändert werden können Linkes
-Menü -&gt; Klon auf der Uhr und linkes mittleres Menü -&gt; Kon auf
-dem Telefon. Sie besteht aus Einstellungen wie „Nur aktiv“ und
+<p style="background: transparent"><b>Standardwerte</b>: Dies setzt
+die Verbindungseinstellungen auf die Standardwerte. Dies besteht aus
+den Einstellungen, die geändert werden können Linkes Menü -&gt;
+Klon auf der Uhr und linkes mittleres Menü -&gt; Kon auf dem
+Telefon. Sie besteht aus Einstellungen wie „Nur aktiv“ und
 „Scans“. Diese Schaltfläche kann gedrückt werden, wenn sich die
 Einstellungen versehentlich durch Wasser in der Dusche oder während
 des Schlafens geändert haben. Wenn Sie auf die Standardeinstellungen
 zurücksetzen, indem Sie die Watch-Version neu installieren oder
 Daten löschen, müssen Sie auch die Mirror-Verbindung auf dem
-Telefon entfernen.</font></font></p>
-<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
-<font face="Times New Roman"><font size="4" style="font-size: 14pt">Eine
-spezielle Version von Juggluco kann direkt auf einer Wear OS-Uhr
-ausgeführt werden. Es benötigt ein Android-Smartphone mit NFC, um
-den Sensor zu scannen und über eine TCP-Verbindung werden diese
-Daten an die Wear OS-Uhr gesendet. Danach gibt es zwei Möglichkeiten:</font></font></p>
+Telefon entfernen.</p>
+<p style="background: transparent">Eine spezielle Version von
+Juggluco kann direkt auf einer Wear OS-Uhr ausgeführt werden. Es
+benötigt ein Android-Smartphone mit NFC, um den Sensor zu scannen
+und über eine TCP-Verbindung werden diese Daten an die Wear OS-Uhr
+gesendet. Danach gibt es zwei Möglichkeiten:</p>
 <ol>
-	<li><p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
-	<font face="Times New Roman"><font size="4" style="font-size: 14pt">Der
-	Sensor bleibt mit dem Smartphone verbunden und das Smartphone sendet
-	jeden Glukosewert, den es über Bluetooth erhält, über TCP an die
-	Wear OS-Uhr;</font></font></p>
-	<li><p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
-	<font face="Times New Roman"><font size="4" style="font-size: 14pt">Es
-	ist auch möglich, den Sensor direkt mit der Wear OS-Uhr zu
-	verbinden. Dazu benötigen Sie eine Wear OS-Uhr mit guter
-	Bluetooth-Konnektivität.</font></font></p>
+	<li><p style="background: transparent">Der Sensor bleibt mit dem
+	Smartphone verbunden und das Smartphone sendet jeden Glukosewert,
+	den es über Bluetooth erhält, über TCP an die Wear OS-Uhr;</p></li>
+	<li><p style="background: transparent">Es ist auch möglich, den
+	Sensor direkt mit der Wear OS-Uhr zu verbinden. Dazu benötigen Sie
+	eine Wear OS-Uhr mit guter Bluetooth-Konnektivität.</p></li>
 </ol>
-<p style="orphans: 2; widows: 2; background: transparent"><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><span style="font-style: normal"><span style="font-weight: normal">Sie
-können Juggluco für Wear OS von Google Play auf Ihre Uhr
-herunterladen.</span></span></span></span></font></font></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><span style="font-style: normal"><span style="font-weight: normal">
-</span></span></span></span></font></font></span><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><span style="font-style: normal"><span style="font-weight: normal">Einige
-Bilder werden hier gezeigt:</span></span></span></span></font></font></span><span style="font-variant: normal"><span style="letter-spacing: normal">
-</span></span><a href="https://www.juggluco.nl/JugglucoWearOS/index.html"><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><span style="font-style: normal"><span style="font-weight: normal">https://www.juggluco.nl/JugglucoWearOS</span></span></span></span></font></font></span></a></p>
-<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
-<font face="Times New Roman"><font size="4" style="font-size: 14pt">Damit
-es funktioniert, gehen Sie wie folgt vor:</font></font></p>
+<p>Einige Bilder werden hier gezeigt:
+<a href="https://www.juggluco.nl/JugglucoWearOS/index.html">https://www.juggluco.nl/JugglucoWearOS</a></p>
+<p style="background: transparent">Damit es funktioniert, gehen Sie
+wie folgt vor:</p>
 <ul>
-	<li><p align="left" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
-	<font face="Times New Roman"><font size="4" style="font-size: 14pt">Stellen
-	Sie sicher, dass sowohl Bluetooth als auch WIFI auf Uhr und Telefon
-	funktionieren;</font></font></p>
-	<li><p align="left" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
-	<font face="Times New Roman"><font size="4" style="font-size: 14pt">Stellen
-	Sie sicher, dass die Uhr über genügend freien Speicherplatz und
-	RAM verfügt.&nbsp;Es ist möglich, dass Juggluco neu installiert
-	werden muss, wenn dem Gerät in einem kritischen Moment der
-	Speicherplatz ausgeht;</font></font></p>
-	<li><p align="left" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
-	<font face="Times New Roman"><font size="4" style="font-size: 14pt">Stellen
-	Sie sicher, dass die Telefonversion von Juggluco mit dem Sensor
+	<li><p align="left" style="background: transparent">Stellen Sie
+	sicher, dass sowohl Bluetooth als auch WIFI auf Uhr und Telefon
+	funktionieren;</p></li>
+	<li><p align="left" style="background: transparent">Stellen Sie
+	sicher, dass die Uhr über genügend freien Speicherplatz und RAM
+	verfügt.&nbsp;Es ist möglich, dass Juggluco neu installiert werden
+	muss, wenn dem Gerät in einem kritischen Moment der Speicherplatz
+	ausgeht;</p></li>
+	<li><p align="left" style="background: transparent">Stellen Sie
+	sicher, dass die Telefonversion von Juggluco mit dem Sensor
 	funktioniert.&nbsp;Sie müssen den Sensor einige Male scannen, wenn
 	„Sensor via Bluetooth“ eingestellt ist.&nbsp;Das Empfangen von
 	Glukosewerten auf dem Telefon über Bluetooth ist nicht
-	erforderlich;</font></font></p>
-	<li><p align="left" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
-	<font face="Times New Roman"><font size="4" style="font-size: 14pt">Installieren
-	Sie die Wear OS-Version von Juggluco auf Ihrer Wear Os-Uhr und
-	starten Sie sie;</font></font></p>
-	<li><p align="left" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
-	<font face="Times New Roman"><font size="4" style="font-size: 14pt">Gehen
-	Sie auf dem Telefon zum linken Menü -&gt; Uhren -&gt; Wear Os
+	erforderlich;</p></li>
+	<li><p align="left" style="background: transparent">Installieren Sie
+	die Wear OS-Version von Juggluco auf Ihrer Wear Os-Uhr und starten
+	Sie sie;</p></li>
+	<li><p align="left" style="background: transparent">Gehen Sie auf
+	dem Telefon zum linken Menü -&gt; Uhren -&gt; Wear Os
 	Konfigurieren.&nbsp;Ihre Uhr sollte im Spinner angezeigt
-	werden.&nbsp;Drücken Sie „Init Watch App“;</font></font></p>
-	<li><p align="left" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
-	<font face="Times New Roman"><font size="4" style="font-size: 14pt">Wenn
-	alles geklappt hat, wird in beiden Jugglucos eine TCP-Verbindung
+	werden.&nbsp;Drücken Sie „Init Watch App“;</p></li>
+	<li><p align="left" style="background: transparent">Wenn alles
+	geklappt hat, wird in beiden Jugglucos eine TCP-Verbindung
 	konfiguriert und alle Daten des Telefons werden an die Uhr
 	gesendet.&nbsp;Dies kann lange dauern, wenn Sie Juggluco über einen
 	längeren Zeitraum verwendet haben.&nbsp;Sie können überprüfen,
@@ -2546,32 +2567,29 @@ es funktioniert, gehen Sie wie folgt vor:</font></font></p>
 	können also auch die Watch-Version von Juggluco neu
 	installieren.&nbsp;Wenn später nicht die richtige IP angezeigt
 	wird, sollten Sie am Telefon die externe Verbindung (WLAN oder
-	mobile Daten) aus- und wieder einschalten.)</font></font></p>
-	<li><p align="left" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
-	<font face="Times New Roman"><font size="4" style="font-size: 14pt">Wenn
-	alles gut gelaufen ist, werden die gleichen Daten, die auf der
-	Telefonversion von Juggluco angezeigt werden, auf der Uhrenversion
-	von Juggluco angezeigt.&nbsp;Jeder neue Glukosewert, der vom Telefon
-	empfangen wird, wird über TCP an die Uhr gesendet.&nbsp;Einige
-	Einstellungen wie Einheit, Glukose-Alarmwerte und Erinnerungen
-	werden ebenfalls an die Uhr übertragen.&nbsp;Spätere Änderungen
-	sollten an der Uhr selbst vorgenommen werden.</font></font></p>
-	<li><p align="left" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
-	<font face="Times New Roman"><font size="4" style="font-size: 14pt">Wenn
-	Sie eine Smartwatch mit guter Bluetooth-Konnektivität haben und
-	Glukosewerte auf Ihrer Uhr empfangen möchten, ohne Ihr Telefon
-	tragen zu müssen, können Sie die Uhrenversion von Juggluco direkt
-	mit dem Sensor verbinden.&nbsp;Nachdem alle Werte an die Uhr
-	gesendet wurden, können Sie&nbsp;<b>&quot;Direkte
-	Sensor-Uhr-Verbindung&quot;</b> aktivieren&nbsp;.&nbsp;Dadurch wird
-	&quot;Sensor über Bluetooth&quot; im Telefon ausgeschaltet und in
-	der Uhr eingeschaltet.&nbsp;Die Stream-Werte werden jetzt von der
-	Uhr zum Telefon gesendet, wie Sie im Spiegeldialog überprüfen
-	können.&nbsp;Sie können die „Direkte Sensor-Uhr-Verbindung“
-	nicht ändern, wenn Uhr und Telefon nicht synchron sind.</font></font></p>
-	<li><p align="left" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
-	<font face="Times New Roman"><font size="4" style="font-size: 14pt">Wenn
-	Sie Mengen von der Uhr zum Telefon senden möchten, sollten Sie die
+	mobile Daten) aus- und wieder einschalten.)</p></li>
+	<li><p align="left" style="background: transparent">Wenn alles gut
+	gelaufen ist, werden die gleichen Daten, die auf der Telefonversion
+	von Juggluco angezeigt werden, auf der Uhrenversion von Juggluco
+	angezeigt.&nbsp;Jeder neue Glukosewert, der vom Telefon empfangen
+	wird, wird über TCP an die Uhr gesendet.&nbsp;Einige Einstellungen
+	wie Einheit, Glukose-Alarmwerte und Erinnerungen werden ebenfalls an
+	die Uhr übertragen.&nbsp;Spätere Änderungen sollten an der Uhr
+	selbst vorgenommen werden.</p></li>
+	<li><p align="left" style="background: transparent">Wenn Sie eine
+	Smartwatch mit guter Bluetooth-Konnektivität haben und Glukosewerte
+	auf Ihrer Uhr empfangen möchten, ohne Ihr Telefon tragen zu müssen,
+	können Sie die Uhrenversion von Juggluco direkt mit dem Sensor
+	verbinden.&nbsp;Nachdem alle Werte an die Uhr gesendet wurden,
+	können Sie&nbsp;<b>&quot;Direkte Sensor-Uhr-Verbindung&quot;</b>
+	aktivieren&nbsp;.&nbsp;Dadurch wird &quot;Sensor über Bluetooth&quot;
+	im Telefon ausgeschaltet und in der Uhr eingeschaltet.&nbsp;Die
+	Stream-Werte werden jetzt von der Uhr zum Telefon gesendet, wie Sie
+	im Spiegeldialog überprüfen können.&nbsp;Sie können die „Direkte
+	Sensor-Uhr-Verbindung“ nicht ändern, wenn Uhr und Telefon nicht
+	synchron sind.</p></li>
+	<li><p align="left" style="background: transparent">Wenn Sie Mengen
+	von der Uhr zum Telefon senden möchten, sollten Sie die
 	Senderichtung im Spiegeldialog selbst umkehren, indem Sie sie auf
 	dem Telefon deaktivieren und auf der Uhr aktivieren.&nbsp;Am Telefon
 	sollte auch „Empfangen von“ eingestellt sein.&nbsp;Wenn nicht
@@ -2580,87 +2598,144 @@ es funktioniert, gehen Sie wie folgt vor:</font></font></p>
 	Mengenetiketten&nbsp;werden immer mit den Mengen versendet&nbsp;<i>.&nbsp;</i>Wenn
 	Sie die Richtung der Übertragung von Mengen von der Uhr zum Telefon
 	ändern, können Sie die Beschriftungen nicht ändern.&nbsp;Es
-	sollte nicht zu einfach sein;</font></font></p>
+	sollte nicht zu einfach sein;</p></li>
 </ul>
-<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
-<font face="Times New Roman"><font size="4" style="font-size: 14pt">Wenn
-der Sensor eine direkte Bluetooth-Verbindung mit der Uhr hat und
-seine Werte an ein Smartphone gesendet werden, sollten gescannte
-Werte auch vom Telefon an die Uhr gesendet und die Stream-Werte
-synchronisiert werden, bevor der Sensor mit Juggluco gescannt wird
-(dies wird automatisch konfiguriert auf diese Weise, wenn <i>&quot;Direkte
+<p style="background: transparent">Wenn der Sensor eine direkte
+Bluetooth-Verbindung mit der Uhr hat und seine Werte an ein
+Smartphone gesendet werden, sollten gescannte Werte auch vom Telefon
+an die Uhr gesendet und die Stream-Werte synchronisiert werden, bevor
+der Sensor mit Juggluco gescannt wird (dies wird automatisch
+konfiguriert auf diese Weise, wenn <i>&quot;Direkte
 Sensor-Uhr-Verbindung&quot;</i> eingestellt ist.). Andernfalls
 könnten alte Werte an die Uhr zurückgesendet werden oder geänderte
 Authentifizierungsinformationen werden nicht an die Uhr gesendet, was
-zu Fehlern beim Entsperren des Schlüssels führt.</font></font></p>
-<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
-<font face="Times New Roman"><font size="4" style="font-size: 14pt">Auch
-Änderungen an der Verbindung sollten nur bei synchronisierten Daten
-vorgenommen werden;&nbsp;Die Daten auf Telefon und Uhr sollten
-vollständige Kopien sein (mit der Ausnahme, dass
-Sie&nbsp;<u>alle</u>&nbsp;Mengendaten weglassen können).</font></font></p>
-<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
-<font face="Times New Roman"><font size="4" style="font-size: 14pt">Wenn
-zum ersten Mal viele Daten vom Smartphone zur Uhr übertragen werden
-müssen, können Sie die Uhr an das Ladegerät anschließen.&nbsp;Meine
-Uhr schaltet WLAN ein, wenn sie an das Ladegerät angeschlossen ist.</font></font></p>
-<h5 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-top: 0.08in; margin-bottom: 0.04in; background: transparent">
-<font face="Liberation Serif, serif">Watch-Phone-Verbindung</font></h5>
-<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
-<font face="Times New Roman"><font size="4" style="font-size: 14pt">Bei
-der Initialisierung, wenn alle Daten vom Telefon zur Uhr gesendet
-werden, benötigen Sie eine WLAN-Verbindung zwischen Uhr und
-Telefon.&nbsp;Später werden Daten in kleinen Stücken über TCP
-gesendet.&nbsp;Auf meiner Uhr wird das über Bluetooth umgeleitet,
-aber nur, wenn das Telefon eine externe Verbindung hat, zum Beispiel
-WLAN zum Heimnetzwerk, eine mobile Datenverbindung oder einen mobilen
-Hotspot.&nbsp;Andernfalls bricht die Verbindung zwischen Telefon und
-Uhr nach einiger Zeit ab, da WLAN vom System abgeschaltet wird, um
-Akkustrom zu sparen.</font></font></p>
-<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
-<font face="Times New Roman"><font size="4" style="font-size: 14pt">Juggluco
-selbst erkennt die IPs der anderen Seite, sodass Sie sie nicht
-festlegen müssen.&nbsp;Wenn Sie von WLAN auf mobile Daten umstellen,
-werden die IPs automatisch geändert.&nbsp;Manchmal müssen Sie WLAN
-oder mobile Daten auf Ihrem Smartphone aus- und wieder einschalten,
-bevor es funktioniert (Juggluco ermittelt die IP in dem Moment, in
-dem WLAN oder mobile Daten eingeschaltet werden, aber manchmal ist
-die IP dann noch nicht verfügbar.)</font></font></p>
-<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
-<font face="Times New Roman"><font size="4" style="font-size: 14pt">Spezifisch
-für die Verbindung mit einer WearOS-Uhr ist die automatische
-Bestimmung der IP der Gegenseite;&nbsp;für andere Klon-Verbindungen
-müssen Sie noch die IPs der anderen Seite angeben.</font></font></p>
-<h5 class="western" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; margin-top: 0.08in; margin-bottom: 0.04in; background: transparent">
-<font face="Liberation Serif, serif">Zifferblatt</font></h5>
-<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
-<font face="Times New Roman"><font size="4" style="font-size: 14pt">Juggluco
-für Wear OS enthält ein Zifferblatt, das neben der Uhrzeit auch
-Ihren aktuellen Glukosespiegel und bis zu vier Komplikationen
-anzeigt.&nbsp;Um es zu nutzen, müssen Sie dieses Zifferblatt zum
-Beispiel in Ihrer Watch Companion App unter &quot;heruntergeladen&quot;
+zu Fehlern beim Entsperren des Schlüssels führt.</p>
+<p style="background: transparent">Auch Änderungen an der Verbindung
+sollten nur bei synchronisierten Daten vorgenommen werden;&nbsp;Die
+Daten auf Telefon und Uhr sollten vollständige Kopien sein (mit der
+Ausnahme, dass Sie&nbsp;<u>alle</u>&nbsp;Mengendaten weglassen
+können).</p>
+<p style="background: transparent">Wenn zum ersten Mal viele Daten
+vom Smartphone zur Uhr übertragen werden müssen, können Sie die
+Uhr an das Ladegerät anschließen.&nbsp;Meine Uhr schaltet WLAN ein,
+wenn sie an das Ladegerät angeschlossen ist.</p>
+<h2 class="western"><strong>Uhr-Telefon-Verbindung</strong></h2>
+<p>Die Uhr-Telefon-Verbindung ist eine Anpassung der Klonverbindung,
+die Sie zwischen Telefonen, auf denen Juggluco läuft, und Computern,
+auf denen der <a href="https://www.juggluco.nl/Juggluco/cmdline">Juggluco-Server</a>
+läuft, konfigurieren können. Wenn die Verbindung zwischen Telefon
+und Uhr auf die oben beschriebene Weise automatisch hergestellt wird,
+gibt es folgende Ergänzungen:</p>
+<ul>
+	<li><p>Die IP der Gegenseite der Verbindung wird automatisch
+	ermittelt. Normalerweise müssen Sie mit der Klonverbindung nichts
+	direkt tun. Stattdessen können Sie die Einstellungen über das
+	linke Menü→Uhren→WearOS-Konfiguration ändern. Die Ausnahme
+	besteht, wenn Sie Zahlen auf der Uhr eingeben möchten. Anschließend
+	müssen Sie die Kloneinstellungen manuell ändern, wie unter <a href="../wearosinfo.html#enteronwatch"><i>Auf
+	der Smartwatch eingeben</i></a> beschrieben .</p></li>
+	<li><p>Wenn die WLAN-Verbindung zwischen Telefon und Uhr nicht
+	funktioniert, wechselt Juggluco zur Verwendung von TCP über
+	Bluetooth. Außer wenn bei der ersten Verwendung viele Daten an die
+	Uhr gesendet werden müssen, können Sie WLAN auf der Uhr
+	ausschalten.</p></li>
+</ul>
+<p style="margin-bottom: 0in">Wenn keine Daten zwischen den Jugglucos
+auf Telefon und Uhr ausgetauscht werden, können Sie Folgendes
+beobachten:</p>
+<ul>
+	<li><p style="margin-bottom: 0in">Bluetooth sollte auf Uhr und
+	Telefon eingeschaltet sein (WLAN kann ausgeschaltet werden);</p></li>
+	<li><p style="margin-bottom: 0in">Die Begleit-App der Uhr sollte
+	anzeigen, dass die Uhr mit dem Telefon verbunden ist;</p></li>
+	<li><p style="margin-bottom: 0in">Im linken Menü→Klon auf der Uhr
+	und im linken mittleren Menü→Klon auf dem Telefon sollte
+	automatisch ein Verbindungseintrag mit der Kennung der Uhr erstellt
+	werden (dieselbe Kennung, die im linken
+	Menü→Uhr→„WearOS-Konfiguration“ auf dem Telefon angezeigt
+	wird);</p></li>
+	<li><p style="margin-bottom: 0in">Das Drücken von Reinit und/oder
+	Sync im linken Menü→Klon auf der Uhr kann helfen;</p></li>
+	<li><p style="margin-bottom: 0in">Manchmal müssen Sie das Gleiche
+	auch am Telefon tun. Danach müssen Sie dies möglicherweise erneut
+	auf der Uhr tun.</p></li>
+	<li><p style="margin-bottom: 0in">Das Aus- und Einschalten von
+	Bluetooth auf dem Telefon oder der Uhr kann hilfreich sein.
+	Anschließend müssen Sie auf der Uhr erneut „Reinit“ und
+	„Synchronisieren“ drücken.</p></li>
+	<li><p style="margin-bottom: 0in">Manchmal ist es erforderlich,
+	dasselbe mit WLAN oder mobilen Daten zu tun.</p></li>
+	<li><p style="margin-bottom: 0in">Manchmal ist ein Neustart des
+	Telefons und/oder der Uhr erforderlich, damit Bluetooth wieder
+	funktioniert.</p></li>
+	<li><p style="margin-bottom: 0in">Es ist möglich, dass die
+	Einstellungen in der Klonverbindung irgendwie auf die falschen Werte
+	geändert werden. Sie können sie auf die ursprünglichen Werte
+	zurücksetzen, indem Sie auf dem Telefon auf das linke
+	Menü→Uhr→„WearOS-Konfiguration“→Standardwerten drücken.
+	Dies hat auch den Effekt, dass der Sensor mit dem Telefon statt mit
+	der Uhr verbunden wird. ACHTUNG: Nur auf der Uhr vorhandene Daten
+	werden überschrieben;</p></li>
+	<li><p style="margin-bottom: 0in">Wenn alles andere fehlschlägt,
+	können Sie die Watch-Version neu installieren und von vorne
+	beginnen. In diesem Fall müssen Sie die bestehende Uhrenverbindung
+	unter Menü links in der Mitte → Klon entfernen.</p></li>
+	<li><p style="margin-bottom: 0in">Wenn die Daten irgendwie auf dem
+	Telefon fehlen, aber auf der Uhr vorhanden sind, ist es viel
+	schwieriger. Irgendwie muss man zunächst eine funktionierende
+	Klonverbindung herstellen, um die Daten auf dem Telefon zu
+	empfangen.</p></li>
+</ul>
+<h2 class="western"><a name="enteronwatch"></a>Auf der Smartwatch
+eingeben</h2>
+<p>Wenn man auf der Uhr Insulin-, Kohlenhydrat- und Aktivitätsmengen
+eingibt, ist das am Telefon nicht mehr möglich. Auch das Scannen von
+Insulinpens ist nicht mehr möglich.</p>
+<p>Derzeit gibt es hierfür keinen einzigen Button. Auf beiden Seiten
+der Klon-Verbindung zwischen der Uhr und dem Begleittelefon müssen
+Sie Änderungen in den Klon-Einstellungen vornehmen. Stellen Sie
+zunächst sicher, dass Telefon und Uhr synchron sind, und gehen Sie
+dann wie folgt vor:</p>
+<h5 class="western">TELEFON:</h5>
+<p>Gehen Sie zu Menü links in der Mitte→Klon. Drücken Sie auf die
+Uhrverbindung und dann auf <i>Ändern</i> . Deaktivieren Sie <i>Mengen</i>
+und achten Sie darauf, dass „<i>Empfangen von“</i> aktiviert ist.
+Klicken Sie anschließend auf „<i>Speichern</i>“ und dann auf „
+<i>Schließen</i>“. Stellen Sie „<i>Klon sendet Mengen</i>“
+ein.</p>
+<h5 class="western">SMARTWATCH:</h5>
+<p>Gehen Sie zum linken Menü→Klon. Drücken Sie auf die
+Uhrverbindung und dann auf <i>Ändern</i>. Aktivieren Sie „
+<i>Mengen</i>“. Stellen Sie „<i>Jetzt</i>“ als Zeitpunkt ein,
+bis zu dem alle Daten bereits auf dem Telefon vorhanden sind. Klicken
+Sie anschließend auf „<i>Speichern</i>“ und dann auf „
+<i>Schließen</i> “. Deaktivieren Sie „<i>Mirror sendet Mengen</i>“.</p>
+<h2 class="western">Zifferblatt</h2>
+<p style="background: transparent">Juggluco für Wear OS enthält ein
+Zifferblatt, das neben der Uhrzeit auch Ihren aktuellen
+Glukosespiegel und bis zu vier Komplikationen anzeigt. Um es zu
+nutzen, müssen Sie dieses Zifferblatt zum Beispiel in Ihrer Watch
+Companion App unter &quot;heruntergeladen&quot;
 auswählen.&nbsp;Normalerweise sehen Sie den letzten Glukosewert,
 wenn der Bildschirm aufwacht.&nbsp;Wenn sich das Display im
 Always-On-Modus befindet, wird der Glukosewert nur aktualisiert, wenn
 die Minutenanzeige erhöht wird oder Sie eine Taste drücken oder
 Ihren Arm heben.&nbsp;Dadurch kann der angezeigte Wert bis zu einer
-Minute verzögert werden.</font></font></p>
-<p style="orphans: 2; widows: 2; background: transparent"><span style="font-variant: normal"><font face="Times New Roman"><font size="4" style="font-size: 14pt"><span style="letter-spacing: normal"><span lang="de-DE"><span style="font-style: normal"><span style="font-weight: normal">Sie
+Minute verzögert werden.</p>
+<p style="background: transparent"><span style="font-variant: normal"><span style="letter-spacing: normal">Sie
 können auch ein anderes Zifferblatt verwenden (z.
 B.&nbsp;<a href="https://play.google.com/store/apps/details?id=com.ustwo.watchfaces.bits">https://play.google.com/store/apps/details?id=com.ustwo.watchfaces.bits</a>&nbsp;)
 und eine App-Verknüpfung zu Juggluco hinzufügen.&nbsp;Auf diese
 Weise können Sie Ihren Glukosespiegel ermitteln, indem Sie auf diese
-Verknüpfung drücken.</span></span></span></span></font></font></span></p>
-<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; orphans: 2; widows: 2; background: transparent">
-<font face="Times New Roman"><font size="4" style="font-size: 14pt">Mit
-etwas Programmierung können Sie auch ein separates Zifferblatt
-erstellen, das den Glukosewert der Glukose Broadcast von Juggluco
-anzeigt.</font></font></p>
-<p style="orphans: 2; widows: 2; background: transparent"><br/>
+Verknüpfung drücken.</span></span></p>
+<p style="background: transparent">Mit etwas Programmierung können
+Sie auch ein separates Zifferblatt erstellen, das den Glukosewert der
+Glukose Broadcast von Juggluco anzeigt.</p>
+<p style="background: transparent"><br/>
 <br/>
 
 </p>
-<p style="line-height: 100%; margin-bottom: 0in"><br/>
+<p style="margin-bottom: 0in"><br/>
 
 </p>
 ]]>
