@@ -1261,11 +1261,15 @@ extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getuselibreview)(JNIEnv *env, 
 
 extern "C" JNIEXPORT void  JNICALL   fromjava(setuselibreview)(JNIEnv *env, jclass cl,jboolean val) {
 	alwaysnewstatus=true;
-	 settings->data()->sendtolibreview=val;
-	 if(val) {
-	 	settings->data()->uselibre=true; 
-		 startlibrethread();
-		 }
+	if(settings->data()->sendtolibreview!=val)  {
+		 settings->data()->sendtolibreview=val;
+		 if(val) {
+			settings->data()->uselibre=true; 
+			 startlibrethread();
+			 }
+		else
+			settings->data()->uselibre=false; 
+		}
 //	else endlibrethread();
 	}
 

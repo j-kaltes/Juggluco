@@ -228,6 +228,9 @@ static int sayactivereceive(const passhost_t *host) {
 void	updateone::open() {
      auto *host=backup->getupdatedata()->allhosts+allindex;
      LOGGER("updateone::open %d %s  receivefrom=%d sendpassive=%d activereceive=%d\n",allindex,host->getnameif(),host->receivefrom,host->sendpassive,host->activereceive);
+     if(host->deactivated) {
+     	return;
+     	 }
 
 #ifdef WEAROS_MESSAGES
 	if(host->wearos&&wearmessages[allindex]) {
@@ -374,6 +377,10 @@ void updatedata::wakesender() {
     LOGAR("wakesender");
     for(int i=0;i<hostnr;i++) {
 	passhost_t &host=allhosts[i];
+	if(host.deactivated) {
+        LOGGER("%d deactivated\n", i);
+        }
+	else {
 	if(
 #ifdef WEAROS_MESSAGES
 	!(wearmessages[i]&&host.wearos)&&
@@ -405,12 +412,17 @@ void updatedata::wakesender() {
 					  
 				}
 		}
+		}
 	}
 	}
 void updatedata::wakestreamsender() {
     LOGAR("wakestreamsender");
 	for(int i=0;i<hostnr;i++) {
 		passhost_t &host=allhosts[i];
+		if(host.deactivated) {
+		LOGGER("deactivated %d\n",i);
+		}
+	else {
 	if(
 #ifdef WEAROS_MESSAGES
 	!(wearmessages[i]&&host.wearos)&&
@@ -434,6 +446,7 @@ void updatedata::wakestreamsender() {
 					  
 				}
 			}
+		}
 		}
 	}
 

@@ -382,6 +382,8 @@ globalsocket=serversock;
 		if(hit==endhost) {
 			for(int h=0;h<hostlen;h++) {
 				passhost_t& host=hosts[h];
+				if(host.deactivated)
+					continue;
 				if((host.passive())&&!host.hasname&&host.detect) {
 					if(!host.addiphasfamport(addrptr)) {
 						continue;
@@ -399,6 +401,8 @@ globalsocket=serversock;
 					LOGGERTAG("%s\n",servererrorbuf);
 					for(int h=0;h<hostlen;h++) {
 						passhost_t& host=hosts[h];
+						if(host.deactivated)
+							continue;
 						if((host.passive())&&host.hasname&&!memcmp(host.getname(),name,passhost_t::maxnamelen)) { 
 							bool nothostreg=!host.hasip(addrptr)&&(!host.detect||!host.addiphasfamport(addrptr));
 							if(!host.noip&&nothostreg) {

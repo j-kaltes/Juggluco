@@ -171,6 +171,7 @@ public static void rewritefloating(Activity context) {
 
 	public static void removeFloating() {
 		if(floatview!=null) {
+			Log.i(LOG_ID,"removeFloating()");
 			windowMana.removeView(floatview);
 			floatview=null;
 			}
@@ -201,7 +202,7 @@ public static void rewritefloating(Activity context) {
 	static float xview;
 	static float yview;
 	static int transnr=0;
-static void translate(float dx,float dy) {
+static private void translate(float dx,float dy) {
 		xview += dx ;
 		yview += dy ;
 		final var metrics = Applic.app.getResources().getDisplayMetrics();
@@ -219,6 +220,10 @@ static void translate(float dx,float dy) {
 		if(yview>maxy)
 			yview=maxy;
 		var params = makeparams(screenwidth, (int)(screenheight));
+		if(floatview==null)  {
+			Log.e(LOG_ID,"floatview==null");
+			return;
+			}
 		windowMana.updateViewLayout(floatview, params);
 		}
 static float floatingx,floatingy;
@@ -251,6 +256,7 @@ private static float density;
 public static int floatfontsize;
 	static boolean makefloat() {
 	{
+	Log.i(LOG_ID,"makefloat");
 
 		hide=false;
 
@@ -417,9 +423,10 @@ public void	onScreenStateChanged(int state) {
 	
 	}
 private static final float movethreshold=6.0f;
-public boolean onTouchEvent (MotionEvent event) {
+public boolean onTouchEvent(MotionEvent event) {
 	if(Natives.turnoffalarm()) Notify.stopalarm();
         Log.i(LOG_ID,event.toString());
+	try {
         switch (event.getAction() & MotionEvent.ACTION_MASK) {
 		case MotionEvent.ACTION_BUTTON_PRESS:
             case MotionEvent.ACTION_DOWN:
@@ -508,6 +515,9 @@ public boolean onTouchEvent (MotionEvent event) {
                 }
                 break;
         }
+		} catch(Throwable th) {
+			Log.stack(LOG_ID,"onTouchEvent",th);
+			}
         return true; 
     }
 

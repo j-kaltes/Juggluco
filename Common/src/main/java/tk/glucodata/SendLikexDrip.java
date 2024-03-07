@@ -83,9 +83,9 @@ static void broadcastglucose(double glucose,float rate,long timmsec,long sensorS
 	intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
 	for(var name:names) {
 		if(name!=null) {
-			Log.i(LOG_ID,name);
 	      		intent.setPackage(name);
 		      context.sendBroadcast(intent);
+			Log.i(LOG_ID,name);
 		      }
 	   	}
 	}

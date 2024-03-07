@@ -226,9 +226,19 @@ std::string loadsslfunctions() {
    setenv("LD_LIBRARY_PATH",globalbasedir.data(), 1);
 #endif
 
-const char cryptolib[]="libcrypto.so";
+char cryptolib[]="libcrypto.so"      
+#ifndef  __ANDROID_API__
+".3"
+#endif
+;
 void* cryptohandle;
-  if(!(cryptohandle=dlopener(cryptolib, RTLD_NOW))) {
+  if(!(cryptohandle=dlopener(cryptolib, RTLD_NOW))
+#ifndef  __ANDROID_API__
+&&(cryptolib[12]='\0', !(cryptohandle=dlopener(cryptolib, RTLD_NOW)))) {
+cryptolib[12]='.';
+#else
+) {
+#endif
 	  return  std::string("dlopen==nullptr: ")+std::string(dlerror());
 //	  dlclose(cryptohandle);
 	  }
@@ -240,10 +250,20 @@ if(!(hgetsym(cryptohandle,ERR_print_errors_cb))) {
 	  return std::string("hgetsym ERR_print_errors_cb fails");
 	}
 
-const char libssl[]="libssl.so";
+char libssl[]="libssl.so"      
+#ifndef  __ANDROID_API__
+".3"
+#endif
+;
 const char *libname=libssl;
   void *handle;
-  if(!(handle=dlopener(libname, RTLD_NOW))) {
+  if(!(handle=dlopener(libname, RTLD_NOW))
+#ifndef  __ANDROID_API__
+&&(libssl[9]='\0',!(handle=dlopener(libname, RTLD_NOW)))) {
+libssl[9]='.';
+#else
+) {
+#endif
 	  return std::string("dlopen==nullptr: ")+std::string(dlerror());
 	  }
   *((void **)&TheMethod)=dlsym(handle, "TLSv1_2_server_method");

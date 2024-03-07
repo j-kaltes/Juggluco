@@ -22,5 +22,5 @@
 
 #pragma once
 
-constexpr const int maxsendtohost=4;
+constexpr const int maxsendtohost=6;
 constexpr const int maxallhosts=8;

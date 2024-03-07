@@ -47,6 +47,7 @@ struct wearmessage {
 */
 
 #define LOGGERTAG(...) LOGGER("messages: " __VA_ARGS__)
+#define LOGARTAG(...) LOGAR("messages: " __VA_ARGS__)
 #define LOGSTRINGTAG(...) LOGSTRING("messages: " __VA_ARGS__)
 struct wearmessagetype{
    int16_t phonehostnr;
@@ -203,10 +204,11 @@ void sendMessagesON(passhost_t *pass, bool val) {
 	}
 
 bool	sendmessage(const int phonehostnr,bool phonesender,const uint8_t *buf,const int inlen) {
-	LOGGERTAG("start sendmessage(%d,%d,%p#%d)\n",phonehostnr,phonesender,buf,inlen);
 	auto env=getenv();
    	int totlen=inlen+sizeof(wearmessage)-sizeof(wearmessage::len);
+	LOGGERTAG("start sendmessage(%d,%d,%p#%d) totlen=%d\n",phonehostnr,phonesender,buf,inlen,totlen);
 	jbyteArray uit=env->NewByteArray(totlen);
+	LOGARTAG("after env->NewByteArray(totlen)");
 	int start=offsetof(wearmessage,type);
 	int offdata=offsetof(wearmessage,data);
 
@@ -223,7 +225,7 @@ bool	sendmessage(const int phonehostnr,bool phonesender,const uint8_t *buf,const
         bool res=jname?env->CallStaticBooleanMethod(jMessageSender,jsendDatawithName,jname,uit):false;
 #endif
         env->DeleteLocalRef(uit);
-	LOGGER("end sendmessage res=%d",res);
+	LOGGERTAG("end sendmessage res=%d\n",res);
 	return res;
 	}
 void clearnetworkcache() {

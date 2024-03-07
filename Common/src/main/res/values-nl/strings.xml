@@ -317,7 +317,7 @@
 <string name="resendwarning">Alle gegevens worden opnieuw verzonden, wat tijd kost en gevolgen kan hebben voor Libreview en Kerfstok</string>
 <string name="parseip">Fout bij interpreteren van IP</string>
 <string name="toomanyhosts">Maximumaantal hosts overschreden</string>
-<string name="senthosts">Juggluco zendt naar maximaal 4 hosts</string>
+<string name="senthosts">Juggluco zendt naar maximaal 6 hosts</string>
    <string name="clampnow">Vast nu</string>
     <string name="sendfrom">Zend vanaf:</string>
  <string name="changestartbutton">Begin wijzigen</string>

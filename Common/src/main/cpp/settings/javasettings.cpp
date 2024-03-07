@@ -695,6 +695,8 @@ extern "C" JNIEXPORT void  JNICALL   fromjava(setlibreemail)(JNIEnv *env, jclass
 	env->GetStringUTFRegion(jemail, 0,jlen, settings->data()->libreemail);
 	jint len = env->GetStringUTFLength( jemail);
 	settings->data()->libreemail[len]='\0';
+	if(jlen<3)
+		settings->data()->uselibre=false;
 	 }
 extern "C" JNIEXPORT jstring  JNICALL   fromjava(getlibreemail)(JNIEnv *env, jclass cl) {
 	 return env->NewStringUTF(settings->data()->libreemail);

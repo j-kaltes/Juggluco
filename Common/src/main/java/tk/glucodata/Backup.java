@@ -677,15 +677,20 @@ if(!isWearable)
 	var info=new TextView(act);
      int pad=(int)(GlucoseCurve.metrics.density*7.0);
    info.setPadding(pad,0,pad,0);
-
+	var deactive=getcheckbox(act,"Off",Natives.getHostDeactivated(pos));
+	deactive.setOnCheckedChangeListener( (buttonView,  isChecked)-> Natives.setHostDeactivated(pos,isChecked));
+	if(isWearable) {
+		modify.setPadding((int) (GlucoseCurve.metrics.density*23),0,0,0);
+		deactive.setPadding(0,0, (int) (GlucoseCurve.metrics.density*40),0);
+		}
 	sethtml(info, mirrorStatus(pos));
-	Layout layout=isWearable?(new Layout(act,new View[]{modify}, new View[]{info},new View[]{close})):new Layout(act, (l, w, h) -> {
+	Layout layout=isWearable?(new Layout(act,new View[]{modify,deactive}, new View[]{info},new View[]{close})):new Layout(act, (l, w, h) -> {
 		int width=GlucoseCurve.getwidth();
 		l.setX(width-w);
 		l.setY(0);
 		final int[] lret={w,h};
 		return lret;
-	},new View[]{modify,close} , new View[]{info});
+	},new View[]{modify,deactive,close} , new View[]{info});
 	if(isWearable)
 		layout.setBackgroundColor(Applic.backgroundcolor);
 	else {

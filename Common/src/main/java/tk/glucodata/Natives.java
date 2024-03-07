@@ -721,6 +721,8 @@ public static native void setfloattime(boolean val);
 public static native boolean getfloattime( );
 public static native void sethidefloatinJuggluco(boolean val);
 public static native boolean gethidefloatinJuggluco( );
+public static native boolean getHostDeactivated(int pos);
+public static native void setHostDeactivated(int pos,boolean val);
 
 
 //s/^extern.*JNIEXPORT[         ]*\([a-zA-Z]*\)[ ]*JNICALL[      ]*fromjava(\([^)]*\)) *(JNIEnv[^,]*,[^,)]*[,)]\([^){]*\)[^a-zA-Z0-9]*$/public static native \1 \2(\3);/g

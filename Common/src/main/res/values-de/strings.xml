@@ -321,7 +321,7 @@
 <string name="resendwarning">Alle Daten werden erneut gesendet, was einige Zeit in Anspruch nimmt und Konsequenzen für Libreview und Kefstok haben kann</string>
 <string name="parseip">Fehler beim Parsen der IP</string>
 <string name="toomanyhosts">Maximale Anzahl an Hosts überschritten</string>
-<string name="senthosts">Juggluco sendet an bis zu 4 Hosts</string>
+<string name="senthosts">Juggluco sendet an bis zu 6 Hosts</string>
    <string name="clampnow">Festgesteckt jetzt</string>
     <string name="sendfrom">Senden von:</string>
  <string name="changestartbutton">Anfang ändern</string>

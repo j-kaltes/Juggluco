@@ -328,7 +328,7 @@
 <string name="resendwarning">All data will be send again which takes time and can have consequences for Libreview and Kerfstok</string>
 <string name="parseip">Error parsing IP</string>
 <string name="toomanyhosts">Maximal number of hosts exceeded</string>
-<string name="senthosts">Juggluco sends to maximal 4 hosts</string>
+<string name="senthosts">Juggluco sends to maximal 6 hosts</string>
     <string name="hostname">hostname</string>
    <string name="clampnow">Now clamp</string>
     <string name="sendfrom">"Send from: "</string>

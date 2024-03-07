@@ -328,7 +328,7 @@
 <string name="resendwarning">Wszystkie dane zostaną przesłane ponownie, co wymaga czasu i może mieć konsekwencje dla Libreview i Kerfstok.</string>
 <string name="parseip">Błąd parsowania adresu IP</string>
 <string name="toomanyhosts">Przekroczono maksymalną liczbę hostów</string>
-<string name="senthosts">Juggluco wysyła do maksymalnie 4 hostów</string>
+<string name="senthosts">Juggluco wysyła do maksymalnie 6 hostów</string>
     <string name="hostname">nazwa hosta</string>
    <string name="clampnow">Pokaż zawsze „teraz”</string>
 </resources>

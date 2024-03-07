@@ -124,6 +124,7 @@ struct updateone {
 	uint8_t pass[16];
 	struct changednums nums[2];
 	void setindex(int index,int allin) {
+		LOGGER("setindex(%d,%d)\n",index,allin);
 		ind=index;
 		allindex=allin;
 		}
@@ -240,7 +241,7 @@ void startactivereceivers() {
 	for(int i=0;i<len;i++) {
 		hostsocks[i]=-1;
 		passhost_t *ph= getupdatedata()->allhosts+i;
-		if(ph->activereceive) {
+		if(ph->activereceive&&!ph->deactivated) {
 			setactivereceive(i,ph); 
 			}
 		}
@@ -377,20 +378,20 @@ void deupdated() {
 	}
 void deletestart(int sendindex) {
 		for(int i=0;i<(getupdatedata()->hostnr);i++) {
-			int sin=getupdatedata()->allhosts[i].index;
-			if(sin>=sendindex) {
-			       if(con_vars[sin]) {
-			       		
-				       const int sock= getupdatedata()->tosend[sin].getsock();
-				       LOGGER("call wakestop %p\n",con_vars[sin]);
-					con_vars[sin]->wakebackuponly(Backup::wakestop);
-				       LOGGER(" shutdown %d\n",sock);
-					::shutdown(sock,SHUT_RDWR);
-			//		close(sock);
+			auto &host=getupdatedata()->allhosts[i];
+			if(!host.deactivated) {
+				int sin=host.index;
+				if(sin>=sendindex) {
+				       if(con_vars[sin]) {
+					       const int sock= getupdatedata()->tosend[sin].getsock();
+					       LOGGER("call wakestop %p\n",con_vars[sin]);
+						con_vars[sin]->wakebackuponly(Backup::wakestop);
+					       LOGGER(" shutdown %d\n",sock);
+						::shutdown(sock,SHUT_RDWR);
 
+					       }
 				       }
-//			       getupdatedata()->tosend[sin].setsock(-1);
-			       }
+				 }
 			}
 		if(--getupdatedata()->sendnr!=sendindex)  {
 			int fromend=getupdatedata()->sendnr-sendindex;
@@ -401,22 +402,22 @@ void deletestart(int sendindex) {
 			LOGGER("crypts[%d]=nullptr\n", getupdatedata()->sendnr);
 			}
 		con_vars[getupdatedata()->sendnr]->wakebackuponly(Backup::wakestop|Backup::wakeend);
-//		con_vars.resize(getupdatedata()->sendnr);
 		}
 void deleteend(int sendindex) {
 		for(int i=0;i<backup->getupdatedata()->hostnr;i++) {
 			const int sin=getupdatedata()->allhosts[i].index;
 			if(sin>sendindex) {
 				--getupdatedata()->allhosts[i].index;
-		//		getupdatedata()->tosend[si].setindex(si,i);
+				LOGGER("allhosts[%d].index=%d\n",i,getupdatedata()->allhosts[i].index);
 				}
 			}
 		}
 void setindices(int start) {
 	for(int i=start;i< backup->getupdatedata()->hostnr;i++) {
 		const int si=getupdatedata()->allhosts[i].index;
-		if(si>-1) 
+		if(si>-1)  {
 			getupdatedata()->tosend[si].setindex(si,i);
+			}
 		}
 	}
 
@@ -626,9 +627,9 @@ void endactivereceive(int allindex) {
 	extern std::vector<condvar_t*> active_receive;
 	passhost_t *ph=getupdatedata()->allhosts+allindex;
 	if(ph->activereceive) {
-		active_receive[ph->activereceive-1]->wakebackup(Backup::wakeend);
+		if(!ph->deactivated)
+			active_receive[ph->activereceive-1]->wakebackup(Backup::wakeend);
 		ph->activereceive=0;
-
 		LOGGER("endactivereceive(%d) shutdown(%d)\n",allindex,hostsocks[allindex]);
 		::shutdown(hostsocks[allindex],SHUT_RDWR);
 		}
@@ -719,6 +720,7 @@ int changehost(int index,JNIEnv *env,jobjectArray jnames,int nr,bool detect,stri
 				deletestart(sendindex);
 				thehost.index=-1;
 				deleteend(sendindex); 
+				setindices(index);
 				}
 			}
 		thehost.index=-1;
@@ -795,6 +797,7 @@ false	  	false	  	0
 	thehost.receivefrom=receive?(reconnect?3:2):((sendto&reconnect)?1:0);
 	LOGGER("receivefrom=%d\n", thehost.receivefrom);
 	setpass( thehost.pass,pass);
+	thehost.deactivated=false;
 
 	if(newhost)  {
 		++(getupdatedata()->hostnr);
@@ -842,6 +845,50 @@ bool isreceiving() const {
 		}
 	return receives;
 //	return getupdatedata()->hostnr!= getupdatedata()->sendnr;
+	}
+
+void deactivateHost(int index,bool deactive) {
+	if(index>=getupdatedata()->hostnr) 
+		return ;
+	auto &host=getupdatedata()->allhosts[index];
+
+	if(host.deactivated==deactive)
+		return;
+	host.deactivated=deactive;
+	if(deactive) {
+		if(host.activereceive) {
+			LOGGER("stop active receive 	shutdown(%d)\n",hostsocks[index]);
+            extern std::vector<condvar_t*> active_receive;
+			active_receive[host.activereceive-1]->wakebackup(Backup::wakeend);
+			::shutdown(hostsocks[index],SHUT_RDWR);
+			}
+		else {
+			if(host.receivefrom) {
+				int sock=hostsocks[index];
+				if(sock>=0) {
+					LOGGER("%d: close(%d)\n",index,sock);
+					::shutdown(sock,SHUT_RDWR);
+					close(sock);
+					hostsocks[index]=-1;
+					}
+				}
+			}
+		int sin=host.index;
+		if(sin>=0) {
+		       const int sock= getupdatedata()->tosend[sin].getsock();
+			con_vars[sin]->wakebackuponly(Backup::wakestop|Backup::wakeend);
+		       LOGGER(" shutdown %d\n",sock);
+			::shutdown(sock,SHUT_RDWR);
+			}
+
+		}
+	else {
+		if(host.index>=0)
+			startthread(index,host.index);
+		if(host.activereceive) {
+			setactivereceive(index,&host);
+			}
+		}
 	}
 void notupdatedsettings() {
 
@@ -1099,16 +1146,22 @@ static void startbackup(std::string_view globalbasedir) {
 		const int maxsend=backup->getupdatedata()->sendnr;
 		const int hostnr= backup->getupdatedata()->hostnr;
 		for(int i=0;i<hostnr;i++) {
-			int index=backup->getupdatedata()->allhosts[i].index;
+			auto &host=backup->getupdatedata()->allhosts[i];
+			int index=host.index;
 			LOGGER("index=%d\n",index);
 			if(index>=maxsend) {
 				LOGGER("allhosts[i].index %d >= %d sendnr\n",index,maxsend);
-				backup->getupdatedata()->allhosts[i].index=-1;
+				host.index=-1;
 				}
 			else {
 				if(index>=0) {
-					LOGGER("startthread %d %d\n",i,index);
-					startthread(i,index);
+					if(host.deactivated) {
+						LOGGER("deactivated %d %d\n",i,index);
+					}
+					else {
+						LOGGER("startthread %d %d\n",i,index);
+						startthread(i,index);
+						}
 					}
 				else {
 					LOGSTRING(" no start\n");

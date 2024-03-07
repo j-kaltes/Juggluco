@@ -340,7 +340,7 @@ extern void wakeaftermin(const int waitmin) ;
 extern void wakeuploader();
 
 extern "C" JNIEXPORT void JNICALL   fromjava(networkpresent)(JNIEnv *env, jclass cl) {
-      LOGSTRING("networkpresent\n");
+      LOGAR("networkpresent");
 	if(backup) {
 		backup->getupdatedata()->wakesender();
 		networkpresent=true;
@@ -354,6 +354,7 @@ extern "C" JNIEXPORT void JNICALL   fromjava(networkpresent)(JNIEnv *env, jclass
 #if !defined(WEAROS) && !defined(TESTMENU)
 	 wakeaftermin(0) ;
 #endif
+	LOGAR("end networkpresend");
 	}
 void resetnetwork() {
 	LOGSTRING("resetnetwork\n");
@@ -402,4 +403,14 @@ extern "C" JNIEXPORT void JNICALL   fromjava(wakehereonly)(JNIEnv *env, jclass c
 	if(backup) {
 		backup->wakebackup();
 		}
+	}
+
+extern "C" JNIEXPORT jboolean JNICALL   fromjava(getHostDeactivated)(JNIEnv *envin, jclass cl,jint pos) {
+	if(pos<backup->getupdatedata()->hostnr) {
+		return backup->getupdatedata()->allhosts[pos].deactivated;
+		}
+	return true;
+	}
+extern "C" JNIEXPORT void JNICALL   fromjava(setHostDeactivated)(JNIEnv *envin, jclass cl,jint pos,jboolean val) {
+	backup->deactivateHost(pos,val);
 	}

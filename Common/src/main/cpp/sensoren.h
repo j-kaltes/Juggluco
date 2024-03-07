@@ -624,6 +624,10 @@ vector<int> usedsince(uint32_t tim,uint32_t nu) {
 				LOGGER("%s finished\n", showsensorname(i));
 				continue;
 				}
+			if(!sensorlist()[i].starttime) {
+				LOGGER("%d no starttime\n",i);
+				continue;
+				}
 			if (sensorlist()[i].starttime < old) {
 				LOGGER("%s old\n", showsensorname(i));
 				break;
@@ -798,7 +802,9 @@ void convertlast() {
 		int did = 2;
 		int lastlast = -1;
 		bool newdevices=false;
-		for(int i = firstsensor; i <= last(); i++) {
+
+		const int lastsens=last();
+		for(int i = firstsensor; i <= lastsens; i++) {
 			LOGGER("sensor %d\n", i);
 			if(SensorGlucoseData *hist = getSensorData(i)) {
 				if(upstream) {
@@ -807,7 +813,7 @@ void convertlast() {
 						case 0: return did&0x4;
 							//		case 1: changed=i;
 						};
-					if(resstream == 1 && i == last())
+					if(resstream == 1 && i == lastsens)
 						lastlast = i;
 					did |= resstream;
 					}
@@ -831,14 +837,15 @@ void convertlast() {
 				return did&0x4;
 
 		}
-		if((last() >= startupdate && (changed = 0, true)) || changed < INT_MAX) {
+		if((lastsens >= startupdate && (changed = 0, true)) || changed < INT_MAX) {
 
-			int endsens = last() + 1;
+			const int endsens = lastsens + 1;
 			string_view sensorfile("sensors/sensors.dat");
 			const auto *begin = map.data(); //Start with info block, sensor at position 1
-			LOGGER("senddata(%d,%p,%d,%s)\n", changed, begin + changed, endsens + 1 - changed,
+			const int afterend=endsens+1; //sensors start from 1
+			LOGGER("senddata(%d,%p,%d,%s)\n", changed, begin + changed, afterend  - changed,
 				   sensorfile.data());
-			if (!senddata(pass, sock, changed, begin + changed, begin + endsens + 1, sensorfile))
+			if (!senddata(pass, sock, changed, begin + changed, begin + afterend , sensorfile))
 				return did&0x4;
 			startupdate = endsens;
 

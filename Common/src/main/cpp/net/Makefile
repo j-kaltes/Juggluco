@@ -1,6 +1,6 @@
 #CXXFLAGS=-std=c++20 -O3
 #CXXFLAGS=-DANDROID_STL=c++_static -static-libstdc++ -std=c++20 -g -DMAIN -I./include 
-CXXFLAGS=-std=c++20 -g -DMAIN -I./include 
+CXXFLAGS=-m32 -std=c++20 -g -DMAIN -I./include 
 LOADLIBES=-lpthread
 #LOADLIBES=-lc++_static
 CXX=clang++

@@ -48,6 +48,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -572,16 +573,18 @@ static public boolean alertseparate=false;
 			GluNotBuilder.setDeleteIntent(DeleteReceiver.getDeleteIntent());
 			}
 		Log.i(LOG_ID,"makearrownotification setOnlyAlertOnce("+once+") "+glucose.value);
-		GluNotBuilder.setSmallIcon(draw).setOnlyAlertOnce(once).setContentTitle(message);
+		GluNotBuilder.setSmallIcon(draw).setOnlyAlertOnce(once); 
+		GluNotBuilder.setContentTitle(message);
+
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 			GluNotBuilder.setVisibility(VISIBILITY_PUBLIC);
-		}
+			}
+
 		if(!isWearable) {
-			if(TargetSDK<31||Build.VERSION.SDK_INT < 31) {
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-					GluNotBuilder.setStyle(new Notification.DecoratedCustomViewStyle());
-					}
-				}
+		      if(Build.VERSION.SDK_INT  >= 24) {
+				GluNotBuilder.setStyle(new Notification.DecoratedCustomViewStyle());
+		//	GluNotBuilder.setStyle( new Notification.DecoratedMediaCustomViewStyle());
+			}
 			GluNotBuilder.setShowWhen(true);
 			RemoteViews remoteViews=arrowNotify.arrowremote(kind,glucose);
 			if(whiteonblack) {

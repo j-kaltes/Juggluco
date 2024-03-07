@@ -328,5 +328,5 @@
  <string name="resendwarning">Усе дадзеныя будуць адпраўлены зноў, што патрабуе часу і можа мець наступствы для Libreview і Kerfstok</string>
  <string name="parseip">Памылка аналізу IP</string>
  <string name="toomanyhosts">Перавышана максімальная колькасць хостаў</string>
- <string name="senthosts">Juggluco адпраўляе максімум 4 хостам</string>
+ <string name="senthosts">Juggluco адпраўляе максімум 6 хостам</string>
 </resources>
