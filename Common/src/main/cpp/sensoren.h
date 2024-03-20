@@ -89,13 +89,16 @@ public:
 
 	int32_t last() const {
 		auto l= reinterpret_cast<const infoblock *>(map.data())->last;
-		LOGGER("last()=%d\n",l);
+		/*
+		for(;l>=0&&!sensorlist()[l].starttime; --l)  {
+			LOGGER("last() %d starttime==0\n",l);
+			} */
 		return l;
-	}
+		}
 
 	infoblock *infoblockptr() {
 		return reinterpret_cast<infoblock *>(map.data());
-	}
+		}
 
 	Sensoren(string_view basedirin) : inbasedir(basedirin), mapfile{inbasedir, "sensors.dat"},
 									  map(mapfile), maxhist(map.data()?(last() + 2):100),
@@ -208,13 +211,12 @@ public:
 
 	uint32_t timelastdata() {
 		auto nr = last();
-		if (nr >= 0) {
-			if (const SensorGlucoseData *his = getSensorData(nr))
-				return his->lastused();
-//		return his->getlastscantime();
-		}
-		return time(NULL);
-	}
+		if(nr >= 0) {
+		   if(const SensorGlucoseData *his = getSensorData(nr))
+		      return his->lastused();
+		  }
+	    return time(NULL);
+	    }
 
 	void extend(int newcap) {
 		map.extend(mapfile, 1 + newcap);
@@ -252,6 +254,7 @@ public:
 		sensorlist()[infoblockptr()->last].present = 1;
 		sensorlist()[infoblockptr()->last].endtime = 0;
 		sensorlist()[infoblockptr()->last].finished = 0;
+		sensorlist()[infoblockptr()->last].initialized=false;
 		infoblockptr()->current = infoblockptr()->last;
 		LOGGER("add sensor %.16s\n", name.data());
 		return infoblockptr()->last;
@@ -843,10 +846,30 @@ void convertlast() {
 			string_view sensorfile("sensors/sensors.dat");
 			const auto *begin = map.data(); //Start with info block, sensor at position 1
 			const int afterend=endsens+1; //sensors start from 1
+
 			LOGGER("senddata(%d,%p,%d,%s)\n", changed, begin + changed, afterend  - changed,
 				   sensorfile.data());
-			if (!senddata(pass, sock, changed, begin + changed, begin + afterend , sensorfile))
+
+			std::vector<subdata> vect;
+			int subtract;
+	
+			if(changed==0) {
+				vect.reserve(2);
+				vect.push_back({reinterpret_cast<const senddata_t*>( &lastsens),0,4});
+				subtract=4;
+				}
+			else {
+				vect.reserve(1);
+				subtract=0;
+				}
+			vect.push_back({reinterpret_cast<const senddata_t*>(begin+changed)+subtract,static_cast<int>(changed*sizeof(begin[0]))+subtract,static_cast<int>((afterend-changed)*sizeof(begin[0]))-subtract});
+
+			if(!senddata(pass, sock, vect , sensorfile))
 				return did&0x4;
+
+/*
+			if (!senddata(pass, sock, changed, begin + changed, begin + afterend , sensorfile))
+				return did&0x4; */
 			startupdate = endsens;
 
 			did = 1;

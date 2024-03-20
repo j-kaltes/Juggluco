@@ -1,5 +1,4 @@
-ZeroSSL uit readme Juggluco server
-Probeer watch-server connectie uit. Schrijf handleiding.
+Refer to direct watch manual.
 
 Send from watch to Libreview
 
@@ -28,7 +27,6 @@ IOB beter:
 	- langer dan 6 uur
 
 Watchdrip stoppen alarm?
-Naar Libreview vanout horloge?
 - Voorkomen dat oude waarden gezonden worden:
 	- Aangeven vanaf wanneer
 	- Informatie vanaf telefoon naar horloge
@@ -51,8 +49,6 @@ Ask leave without saving in:
 	-add connection
 	-settings
 TALK also in WearOS versie?
-Huawei Watch versie?
-Verwijder mmol/L uit widget
 Support Dexcom?
 Blind:
 	- Long press History read text too long

@@ -765,6 +765,11 @@ bool bluetoothback() {
 
 private:
 size_t maxscansize()  {
+	if(!getinfo()) 	 {
+		LOGAR("maxscansize()  getinfo()==null");
+		haserror=true;
+		return 0;
+		}
 	const int days=	std::max((int)getinfo()->days,15);
 	const int scanblocks=ceil((40*days*sizeof(ScanData))/blocksize);
         int used=getinfo()->scancount*sizeof(ScanData);
@@ -893,6 +898,8 @@ uint32_t getlastpolltime() const {
 
 uint32_t getlastpolltime() const {
 	const ScanData* start= polls.data();
+	if(!start)
+		return 0;
 	for(int i=pollcount()-1;i>=getinfo()->pollstart;--i) {
 		if(start[i].valid(i))
 			return start[i].t;	

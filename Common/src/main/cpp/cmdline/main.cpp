@@ -235,7 +235,11 @@ int   listconnections() {
 	for(int h=0;h<hostnr;h++) {
 		cout<<h+1<<": ";
 		const passhost_t &host=backup->getupdatedata()->allhosts[h];
-		cout<< (host.hasname?host.getname():"")<<(host.noip?" don't test IP,":" test IP,")<<(host.detect?" detect,":" ")<< (host.receivefrom&2?" receiver":"")<<(getpassive(h)?" passiveonly ":" ")<<(getactive(h)?" active only ":"")<<(host.haspass()?backup->getpass(h).data():"no pass") <<", port="<< ntohs(host.ips[0].sin6_port);
+		cout<< (host.hasname?host.getname():"")<<(host.noip?" don't test IP,":" test IP,")<<(host.detect?" detect,":" ")<< (host.receivefrom&2?" receiver":"")<<(getpassive(h)?" passiveonly ":" ")<<(getactive(h)?" active only ":"")<<(host.haspass()?backup->getpass(h).data():"no pass");
+		const int len=host.nr;
+		if(len>0) {
+			cout << ", port="<< ntohs(host.ips[0].sin6_port);
+			}
 		int sin=host.index;
 		if(sin>=0) {
 			const updateone &sto=backup->getupdatedata()->tosend[sin];
@@ -243,7 +247,6 @@ int   listconnections() {
 			if(sen) 
 				cout<<" send " <<(sto.sendnums?"nums ":"")<<(sto.sendscans?"scans ":"")<<(sto.sendstream?"stream ":"");
 			}
-		const int len=host.nr;
 		for(int i=0;i<len;i++) {
 			namehost name(host.ips+i);
 			cout<<" "<<name.data();
@@ -482,16 +485,16 @@ static constexpr const	char defaultname[]="jugglucodata";
 	did=did||setlabeltype(labeltype);
 
 	if(sslport) {
-		int port;
-		if(sscanf(sslport,"%d",&port)<=0) {
+		int sport;
+		if(sscanf(sslport,"%d",&sport)<=0) {
 			perror("sscanf");
 			return 10;
 			}
-		if(port<1024||port>65535) {
+		if(sport<1024||sport>65535) {
 			cerr<<"port should be between 1024 and 65535\n";
 			return 10;
 			}
-		settings->data()->sslport=port;
+		settings->data()->sslport=sport;
 		did=true;
 		}
 	if(api_secret) {
@@ -558,11 +561,7 @@ static constexpr const	char defaultname[]="jugglucodata";
 			backup->getupdatedata()->port[port.size()]='\0';
 
 			did=true;
-//			return 1234;
 			}
-	/*	if(unit) {
-			did=true;
-			} */
 		if(list)
 			return 	listconnections();
 		if(clear)

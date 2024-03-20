@@ -16,19 +16,10 @@ Juggluco server can also function as simplified Nightscout/xDrip web server.
 SSL doesn't work with the precompiled version, because statically linked programs can't use dlopen.
 
 To use the SSL version, you need an authenticated ssl key for the hostname that is used to contact with the juggluco server.
-You can get such a key for your domain name for free using certbot (https://certbot.eff.org/instructions) or 
-ZeroSSL (https://www.sslforfree.com/). 
 
-Sometimes there is a separate certificate.pem and chain.pem file. You get the fullchain.pem  by concatenating these files:
-cat cert.pem chain.pem  > fullchain.pem 
-If you receive the keys from ZeroSSL.com cert.pem is named certificate.crt  and chain.pem is named ca_bundle.crt. 
-So you have to do the following:
+You can get such a key for your domain name for free using certbot (https://certbot.eff.org/instructions). 
 
-	cat certificate.crt ca_bundle.crt >  fullchain.pem 
-
-ZeroSSL.com calls prevkey.pem private.key, so you have to do
-
-	cp private.key prevkey.pem
+See Left menu->Settings->Web server->Help in Juggluco or https://www.juggluco.nl/Jugglucohelp/Nightscouthelp.html
 
 Put fullchain.pem privkey.pem in the jugglucodata directory where also the other data is saved. 
 

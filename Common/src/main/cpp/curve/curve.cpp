@@ -1026,6 +1026,10 @@ uint32_t maxstarttime() ;
 uint32_t maxtime() {
 	const uint32_t numt=getnumlasttime();
 	const uint32_t sent= sensors->timelastdata(); 
+	#ifdef NOLOG
+	time_t tim=sent;
+	LOGGER("sensors->timelastdata()=%u %s",sent,ctime(&tim));
+	#endif
 	return max(numt,sent);
 	}
 	
@@ -2676,14 +2680,13 @@ void  setlocale(const char *localestrbuf,const size_t len) {
 				}
 			break;
 			#endif
-			/*
 		case mklanguagenum("ZH"):
 		case mklanguagenum("zh"):
 			setusezh();
 			if(chfontset!=CHINESE) {
 				initfont();
 				}
-			return; */
+			return; 
 		default: setuseeng();
 		};
 	if(chfontset!=REST) {
