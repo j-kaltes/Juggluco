@@ -517,7 +517,7 @@ uint32_t sputnikglucose(int pos)const  {
 int gettimepos(uint32_t time)const {
 	return ( int)round(((double)time-getinfo()->starttime)/getinfo()->interval);
 	}
-int getlastnotbeforetime(uint32_t time)const {
+int getfirstnotbeforetime(uint32_t time)const {
 	int pos=gettimepos(time);
 	int newpos=pos;
 	const int start=getstarthistory(); 
@@ -544,11 +544,12 @@ int getlastnotbeforetime(uint32_t time)const {
 	time_t tim=time;
 	time_t gltime;
 	const Glucose*gl;
-	if(newpos<end&&(gl= getglucose(pos))&&gl->valid())
+	if(newpos<end&&(gl= getglucose(newpos))&&gl->valid())
 		gltime=gl->gettime();
 	else
 		gltime=0;
-	LOGGER("getlastnotbeforetime pos=%d newpos=%d time=%.24s lastbefore %s",pos,newpos,ctime(&gltime),ctime(&tim));
+	char glbuf[27],buf[27];
+	LOGGER("getfirstnotbeforetime pos=%d newpos=%d time=%.24s lastbefore %s",pos,newpos,ctime_r(&gltime,glbuf),ctime_r(&tim,buf));
 	#endif
 	return newpos;
 	}

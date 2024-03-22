@@ -390,42 +390,46 @@ SensorGlucoseData *makelibre3sensor(std::string_view shortname,uint32_t starttim
 		const uint32_t nu = time(nullptr);
 		for(int i = last(); i >= 0; i--) {
 			const uint32_t startsensor = sensorlist()[i].starttime;
-			if(startsensor >= endtime)
+			if(startsensor >= endtime) {
+				LOGGER("%d: inperiod startsensor (%u) >= endtime (%u) \n",i,startsensor,endtime);
 				continue;
+				}
 			if(startsensor < startend)  {
 				if(startsensor < nothingbefore) {
 					break;
 					}
+				LOGGER("%d: startsensor (%u) < startend (%u) \n",i,startsensor,startend);
 				continue;
 				}
 
 			auto oneend = sensorlist()[i].endtime;
-			if(sensorlist()[i].finished && oneend && oneend <= starttime) {
+			if(sensorlist()[i].finished && oneend && oneend < starttime) {
+				LOGGER("%d: inperiod finished &&endtime (%u) <starttime (%u)\n",i,oneend,starttime);
 				continue;
 			}
 			checkinfo(i, nu);
 			oneend = sensorlist()[i].endtime;
-			if(oneend && oneend <= starttime) {
+			if(oneend && oneend < starttime) {
+				LOGGER("%d: inperiod endtime (%u) <starttime (%u)\n",i,oneend,starttime);
 				continue;
-			}
+				}
 			out.push_back(i);
 		}
 		return out;
 	}
 	bool inperiod(int i, uint32_t starttime, uint32_t endtime) {
 		const uint32_t startsensor = sensorlist()[i].starttime;
-		if (startsensor >= endtime)
+		if(startsensor >= endtime)
 			return false;
-		if (startsensor < (starttime - sensorageseconds))
+		if(startsensor < (starttime - sensorageseconds))
 			return false;
-
 		const auto oneend = sensorlist()[i].endtime;
-		if (sensorlist()[i].finished && oneend && oneend <= starttime) {
+		if(sensorlist()[i].finished && oneend && oneend < starttime) {
 			return false;;
-		}
+			}
 		const uint32_t nu = time(nullptr);
 		checkinfo(i, nu);
-		if (sensorlist()[i].endtime && sensorlist()[i].endtime <= starttime)
+		if (sensorlist()[i].endtime && sensorlist()[i].endtime < starttime)
 			return false;
 
 		return true;

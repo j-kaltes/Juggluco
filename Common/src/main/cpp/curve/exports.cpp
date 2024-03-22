@@ -26,7 +26,8 @@
 #include "numiter.h"
 
 extern Sensoren *sensors;
-
+#define LOGGERTAG(...) LOGGER("export: " __VA_ARGS__)
+#define LOGGARTAG(...) LOGGAR("export: " __VA_ARGS__)
 
 #define DATESTRING "UnixTime\tYYYY-mm-dd-HH:MM:SS"
 constexpr int veilig=
@@ -151,18 +152,22 @@ template <class T,class FG,class FP>
 bool sensorexports(myfilep handle, const FG& proc,const FP& print,uint32_t starttime=0,uint32_t endtime=UINT32_MAX,int maxcount=INT_MAX) {	
 	auto indices=sensors->inperiod(	starttime,endtime);
 	int totsen=indices.size();
-
+	LOGGERTAG("sensorexports start time=%u endtime=%u %d indices\n",starttime,endtime,totsen);
 	NumIter<T> *iters=new NumIter<T>[totsen];
 	destruct _dest([iters]{delete[] iters;});
-	LOGSTRING("sensorexports: ");
 	int i=0;
 	for(int id=totsen-1;id>=0;--id) {
 		const int index=indices[id];
 		if(SensorGlucoseData *hist=sensors->getSensorData(index)) {
-			LOGGER("h%d\n",index);
 			auto scans=(hist->*(proc))(starttime,endtime);
 			const T *beg=&scans.begin()[0];
 			const T *en=&scans.end()[0];
+			#ifndef NOLOG
+			if(beg!=en)
+				LOGGERTAG("h%d %u\n",index,beg->gettime());
+			else
+				LOGGERTAG("h%d\n",index);
+			#endif	
 			iters[i++]={.startall=scans.startall(),.iter=beg,.begin=beg,.end=en-1,.bytes=sizeof(T),.index=index};
 			}
 		}
@@ -199,7 +204,7 @@ bool fexportscans(myfilep handle, int unit,CurData   (SensorGlucoseData::*proc)(
 			const char *sensorname=sensors->shortsensorname(sens)->data();
 			const uint32_t scantime=scan->gettime();
 			const auto [buf,zone]=	timedata(scantime);
-			fprintf(fp,"%s\t%d\t%u\t%s\t%g\t%d\t%.*f\t%+g\t%s\n",sensorname ,index,scan->gettime(),buf,zone,scan->id,getgludecimal(unit),gconvert(10*scan->g,unit),scan->ch,GlucoseNow::trendString[scan->tr]); 
+			fprintf(fp,"%s\t%d\t%u\t%s\t%g\t%d\t%.*f\t%+g\t%s\n",sensorname ,index,scantime,buf,zone,scan->id,getgludecimal(unit),gconvert(10*scan->g,unit),scan->ch,GlucoseNow::trendString[scan->tr]); 
 			return true;
 			}
 		return false;
@@ -242,10 +247,8 @@ static bool writehistoryheader(FILE *handle,int unit) {
 	return true;
 	}
 bool fexporthistory(myfilep  handle,int unit,uint32_t starttime=0,uint32_t endtime=UINT32_MAX,int maxcount=INT_MAX) {
-
-	auto indices=sensors->inperiod(	starttime,endtime);
-	int totsen=indices.size();
-
+	const auto indices=sensors->inperiod(starttime,endtime);
+	const int totsen=indices.size();
 	NumIter<Glucose> *iters=new NumIter<Glucose>[totsen];
 	destruct _dest([iters]{delete[] iters;});
 	int i=0;
@@ -253,21 +256,19 @@ bool fexporthistory(myfilep  handle,int unit,uint32_t starttime=0,uint32_t endti
 		const int index=indices[ind];
 		SensorGlucoseData *hist=sensors->getSensorData(index);
 		if(hist) {
-			int start=hist->getlastnotbeforetime(starttime);
-
+			const int start=hist->getfirstnotbeforetime(starttime);
 			const Glucose *beg= hist->getglucose(start);
-
-			int allend=hist->getAllendhistory();
-			int end=hist->getlastnotbeforetime(endtime);
+			const int allend=hist->getAllendhistory();
+			const int end=hist->getfirstnotbeforetime(endtime);
 			const Glucose *en= hist->getglucose(end);
 			if(end>=allend||en->gettime()>endtime)
 				--en;
-			
 			iters[i++]={.startall=hist->getglucose(hist->getstarthistory()),.iter=beg ,.begin=beg,.end=en,.bytes=hist->glucosebytes(),.index=index};
+			LOGGERTAG("fexporthistory starttime=%u start=%d endtime=%u end=%d\n",starttime,start,endtime,end);
 			}
 
 		}
-	LOGGER("exporthistory take=%d totsen=%d\n",i,totsen);
+	LOGGERTAG("exporthistory take=%d totsen=%d\n",i,totsen);
 	if(i>0)  {
 		return exportdata(handle,iters,0,i,
 	[unit](myfilep fp,const int index,const Glucose *glu,const int sens,const Glucose *beg) {
@@ -413,7 +414,7 @@ std::span<char> getexportdata(int startpos,int len,uint32_t starttime,uint32_t e
 		int end=mem->iter+len;
 		if(end>=mem->max) {
 			const int newmax=end*2;
-			LOGGER("increase to %d\n",newmax);
+			LOGGERTAG("increase to %d\n",newmax);
 			char *tmp= new(std::nothrow) char [newmax];
 			if(!tmp) {
 				delete[] mem->mem;

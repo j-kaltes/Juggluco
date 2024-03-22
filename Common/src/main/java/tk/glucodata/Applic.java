@@ -397,14 +397,12 @@ private void initialize() {
 			}
 		@Override
 		public void onLost(Network network) {
-			var sender=tk.glucodata.MessageSender.getMessageSender();
-			if(sender!=null)
-				sender.nulltimes();
-		   Log.i(LOG_ID, "onLost(" + network+")");
-//		   if(hasonAvailable) 
+		      Log.i(LOG_ID, "onLost(" + network+")");
 			Natives.networkabsent();
+     			MessageSender.reinit();
+//		   if(hasonAvailable) 
 		       if(useWearos()) {
-   		 	Applic.wakemirrors();
+				Applic.wakemirrors();
 			}
 		}
 	    });
@@ -624,10 +622,15 @@ static boolean updateDevices() { //Rename to reset
 	} */
 
 public static void wakemirrors() {
+	Log.i(LOG_ID,"wakemirrors");
 	MessageSender.sendwake();
 	Natives.wakebackup();
 	}
-
+@Keep 
+static public void resetWearOS() {
+	MessageSender.reinit();
+	wakemirrors();
+	}
 private static	void initbroadcasts() {
 
 	if(Natives.getinitVersion()<22) {

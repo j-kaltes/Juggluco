@@ -481,6 +481,14 @@ public fun sendDatawithInt(ident: Int, data: ByteArray) {
      public fun isGalaxy(node:Node): Boolean {
     	return node.getDisplayName().startsWith("Galaxy Watch") 
 	}
+
+     @JvmStatic 	
+     public fun reinit() {
+     		Log.i(LOG_ID,"reinit")
+		Natives.resetnetwork()
+		getMessageSender()?.nulltimes()
+		sendnetinfo()
+		}
     }
 
 }

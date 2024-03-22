@@ -749,11 +749,7 @@ View blpan= (thishost[2]==null)?new Space(act):getlabel(act,"bt-pan: "+thishost[
    Sync.setOnClickListener(v-> Applic.wakemirrors());
   Button reinit=getbutton(act,"Reinit");
    reinit.setOnClickListener(v-> {
-	  Natives.resetnetwork();
-	var sender=tk.glucodata.MessageSender.getMessageSender();
-	if(sender!=null)
-		sender.nulltimes();
-	MessageSender.sendnetinfo();
+	MessageSender.reinit();
 	}
    );
   boolean[] issaved={false};

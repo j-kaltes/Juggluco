@@ -1358,7 +1358,8 @@ touched;</p>
 <p style="line-height: 100%; margin-bottom: 0in">- The Android
 notification of Juggluco is touched (in unlocked state);</p>
 <p style="line-height: 100%; margin-bottom: 0in">- Cancel button is
-touched of the alarm notification in Juggluco.</p>
+touched of the alarm notification in Juggluco;</p>
+<p style="line-height: 100%; margin-bottom: 0in">- The <i>Floating Glucose</i> is touched.</p>
 <h3 class="western">Value available:</h3>
 <p style="line-height: 100%; margin-bottom: 0in">Sometimes the sensor
 doesn’t work. When you turn this on, you will be notified when the
@@ -1639,7 +1640,8 @@ following additions:</p>
 	Except when a lot of data has to be send to the watch on it’s
 	first use, you can turn off WIFI on the watch.</p></li>
 </ul>
-<p style="margin-bottom: 0in">When no data are exchanged between the Juggluco\'s on phone  and watch you can watch the following:</p>
+<p style="margin-bottom: 0in">When no data are exchanged between the
+Juggluco\'s on phone and watch you can watch the following:</p>
 <ul>
 	<li><p style="margin-bottom: 0in">Bluetooth should be turn ON on
 	watch and phone (WIFI can be turned off);</p></li>
@@ -1675,7 +1677,7 @@ following additions:</p>
 	Somehow you first have to create a functioning mirror connection to
 	receive the data on the phone.</p></li>
 </ul>
-<h2 id="enteronwatch">Enter on watch</h2>
+<h2 class="western"><a name="enteronwatch"></a>Enter on watch</h2>
 <p>If you enter amounts of insulin, carbohydrate and activities on
 the watch, you can’t do that anymore on the phone. Also scanning of
 insulin pens is no longer possible.</p>
@@ -1714,8 +1716,17 @@ current glucose value while using arbitrary watch faces or apps that
 monitor your activity. For more information see, in the phone version
 of Juggluco, left menu -&gt; Settings -&gt; <a href="https://www.juggluco.nl/Jugglucohelp/floatingconfig.html">Floating
 glucose</a> -&gt; Help.</p>
-<p><br/>
-<br/>
+<h2 class="western">Followers</h2>
+<p style="margin-bottom: 0in">From the companion app you can again
+send to other devices over the internet as described under Left
+middle menu→<a href="https://www.juggluco.nl/Jugglucohelp/connectionoverview.html">Mirror</a>.
+It is also possible to connect the watch directly to a server on the
+internet and from that to a follower phone as described at:
+<a href="https://www.juggluco.nl/Juggluco/cmdline/watch">https://www.juggluco.nl/Juggluco/cmdline/watch</a></p>
+<p style="margin-bottom: 0in"><br/>
+
+</p>
+<p style="margin-bottom: 0in"><br/>
 
 </p>
 ]]>

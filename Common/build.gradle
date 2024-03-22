@@ -78,8 +78,8 @@ android {
             //	targetSdk 26
 	//******  Zet op rollout op 100% ******
             	dimension 'libreVersion'
-		versionCode                       456                                           //LIBRE2ONLY
-		versionName '7.6.3-no3'
+		versionCode                        457                                             //LIBRE2ONLY
+		versionName '7.6.4-no3'
             buildConfigField 'int', 'libreVersion', '2'
 		    externalNativeBuild.cmake {
 			cppFlags "  -DAPPVERSION=\\\"$versionName\\\" "
@@ -92,9 +92,9 @@ android {
 	   minSdk 26
 //	   minSdk 23
             dimension 'libreVersion'
-		versionCode                      456                                           //LIBRE3
+		versionCode                       457                                             //LIBRE3
 	//******  Zet op rollout op 100% ******
-		versionName '7.6.3'
+		versionName '7.6.4'
 
            	buildConfigField 'int', 'libreVersion', '3'
 		    externalNativeBuild.cmake {
@@ -111,9 +111,9 @@ android {
             // targetSdk 30
             dimension 'wearos'
 		minSdk 26
-		versionCode                      456                                           //WATCH
+		versionCode                       457                                             //WATCH
 	//******  Zet op rollout op 100% ******
-		versionName '7.6.3-wear'
+		versionName '7.6.4-wear'
 		signingConfig signingConfigs.alg
 
 //            buildConfigField 'int', 'targetSDK', "$targetSdk"
@@ -133,8 +133,8 @@ android {
 
             dimension 'wearos'
 		minSdk 19
-		versionCode                      456                                           //WATCH
-		versionName '7.6.3-small'
+		versionCode                       457                                             //WATCH
+		versionName '7.6.4-small'
 		signingConfig signingConfigs.alg
 
            buildConfigField 'int', 'isWear', '1'
@@ -351,8 +351,8 @@ buildTypes {
 
     }
 
-//    ndkVersion '26.2.11394342'
      ndkVersion '25.2.9519653'
+     // ndkVersion '26.2.11394342'
 
     kotlinOptions {
         jvmTarget =  JavaVersion.VERSION_17
@@ -420,8 +420,8 @@ dependencies {
 	implementation 'androidx.core:core:1.12.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0'
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.22'
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.9.22'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.23'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.9.23'
     implementation 'com.google.android.gms:play-services-base:18.3.0'
  implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.8.0'
   mobileImplementation "androidx.health.connect:connect-client:1.1.0-alpha07"
@@ -437,7 +437,7 @@ dependencies {
     wearImplementation 'androidx.activity:activity-ktx:1.8.2'
     wearImplementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     wearImplementation 'com.google.android.material:material:1.11.0'
-    wearImplementation 'androidx.databinding:viewbinding:8.2.2'
+    wearImplementation 'androidx.databinding:viewbinding:8.3.1'
     wearImplementation 'androidx.core:core-ktx:1.12.0'
 
 
