@@ -261,10 +261,13 @@ bool fexporthistory(myfilep  handle,int unit,uint32_t starttime=0,uint32_t endti
 			const int allend=hist->getAllendhistory();
 			const int end=hist->getfirstnotbeforetime(endtime);
 			const Glucose *en= hist->getglucose(end);
-			if(end>=allend||en->gettime()>endtime)
+			LOGGER("hist->getAllendhistory()=%d end=%d\n",allend,end);
+			if(end>=allend||en->gettime()>endtime) {
+				LOGAR("--en");
 				--en;
+				}
 			iters[i++]={.startall=hist->getglucose(hist->getstarthistory()),.iter=beg ,.begin=beg,.end=en,.bytes=hist->glucosebytes(),.index=index};
-			LOGGERTAG("fexporthistory starttime=%u start=%d endtime=%u end=%d\n",starttime,start,endtime,end);
+			LOGGERTAG("fexporthistory starttime=%u start=%d endtime=%u end=%d\n",starttime,start,endtime,en);
 			}
 
 		}

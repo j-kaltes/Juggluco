@@ -145,6 +145,8 @@ int ifindoldest(NumIter<T> *nums,int start,int count,const F& notval=notvalid) {
 	int i=start;
 	for(;i<count;i++)  {
 		if(nums[i].bytes>0) {
+//			LOGGER("nums[i].bytes=%d\n",nums[i].bytes);
+//			LOGGER("nums[i].iter=%p nums[i].end=%p\n",nums[i].iter, nums[i].end);
 			while(nums[i].iter&&nums[i].iter<=nums[i].end) {
 				if(!notval(nums[i].iter))
 					goto foundfirst;
@@ -172,7 +174,7 @@ int ifindoldest(NumIter<T> *nums,int start,int count,const F& notval=notvalid) {
 		}
 	
 	nums[oldest].inc();
-    //LOGGER("oldest %d\n",oldest);
+ //   LOGGER("oldest %d\n",oldest);
 	return oldest;
 	}
 //template  <class T,typename F=decltype(notva<T>)>

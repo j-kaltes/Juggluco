@@ -1365,5 +1365,7 @@ bool backupnums(const struct numsend* innums) {
 //update sizes? startpos?
 };
 #undef  devicenr 
+#undef LOGGERTAG
+#undef LOGARTAG
 
 #endif

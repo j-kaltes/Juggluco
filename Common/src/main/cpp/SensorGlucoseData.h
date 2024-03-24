@@ -518,14 +518,15 @@ int gettimepos(uint32_t time)const {
 	return ( int)round(((double)time-getinfo()->starttime)/getinfo()->interval);
 	}
 int getfirstnotbeforetime(uint32_t time)const {
-	int pos=gettimepos(time);
+	const int pos=gettimepos(time);
 	int newpos=pos;
 	const int start=getstarthistory(); 
 	const int end=getAllendhistory() ;
-	if(pos<start)
+	if(newpos<start)
 		return start;
-	if(pos>end)
-		return end;
+	if(newpos>end)  {
+		newpos=end-1;
+		}
 	for(;newpos>=start;--newpos) {
 		const Glucose* gl= getglucose(newpos);
 		if(!gl->valid())
