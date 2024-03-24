@@ -522,12 +522,15 @@ int getfirstnotbeforetime(uint32_t time)const {
 	int newpos=pos;
 	const int start=getstarthistory(); 
 	const int end=getAllendhistory() ;
-	if(newpos<start)
-		return start;
-	if(newpos>end)  {
-		newpos=end-1;
+	if(newpos<start) {
+		newpos=start;
 		}
-	for(;newpos>=start;--newpos) {
+	else  {
+		if(newpos>end)  {
+			newpos=end-1;
+			}
+		}
+	for(;newpos>start;--newpos) {
 		const Glucose* gl= getglucose(newpos);
 		if(!gl->valid())
 			continue;
