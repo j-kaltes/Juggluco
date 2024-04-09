@@ -22,6 +22,7 @@
   #define _XOPEN_SOURCE
 
 //#include "history.h"
+#include <algorithm>
 #include "alg.h"
 #include "nfcdata.h"
 
@@ -87,7 +88,7 @@ auto pos=inp.find_last_of('/',len-15);
 const char *name=inp.data()+( (pos== std::string_view::npos)? 0: pos+1);
 //const char *end = inp.data()+inp.length();
 const char *end = inp.end();
-const char *num=find_if_not(name,end,[](char val) {return isdigit(val)==0;});
+const char *num=std::find_if_not(name,end,[](char val) {return isdigit(val)==0;});
 	if(end==num) {
 		cerr<<name<<"No date in filename"<<endl;
 		return -1;

@@ -212,8 +212,9 @@ iwtext.newamount,
 .Falling="Falling",
 .Stable="Changing slowly",
 .Rising="Rising",
-.RisingQuickly="Rising quickly"
+.RisingQuickly="Rising quickly",
 #endif
+.receivingpastvalues="Receiving old values"
 }
 
 

@@ -20,7 +20,7 @@
 /*                                                                                   */
 /*      Fri Jan 27 12:35:35 CET 2023                                                 */
 
-constexpr const int wearduration=14*24*60;
+constexpr const int librewearduration=14*24*60;
 
 
 #include <string.h>
@@ -314,6 +314,7 @@ extern "C" jobject     nothingproc(va_list) {
 	}
 static jmethodID nothing=(jmethodID) nothingproc;
 extern "C"
+
 jmethodID   subGetStaticMethodID(JNIEnv* , jclass cl, const char*name, const char*sig) {
 	subLOGGER("subGet...MethodID(JNIEnv*,..,%s,%s)..",name,sig); 
 	jclasser* cla=(jclasser *)cl;
@@ -328,6 +329,75 @@ jmethodID   subGetStaticMethodID(JNIEnv* , jclass cl, const char*name, const cha
 	subLOGSTRING("Not found\n");
 	return  nothing;
 	}
+#ifdef SIBIONICS
+#include "sibionics/AlgorithmContext.hpp"
+
+constexpr const int ig_dataField=offsetof(AlgorithmContext,ig_data); 
+constexpr const int mNativeContextField=offsetof(AlgorithmContext,mNativeContext); 
+constexpr const int currentWarningField=offsetof(AlgorithmContext,currentWarning); 
+constexpr const int glucoseWarningField=offsetof(AlgorithmContext,glucoseWarning); 
+constexpr const int ig_trendField=offsetof(AlgorithmContext,ig_trend); 
+constexpr const int temperatureWarningField=offsetof(AlgorithmContext,temperatureWarning); 
+
+jobject newAlgContext(va_list) {
+	LOGAR("newAlgContext(va_list)");
+	return reinterpret_cast<jobject>(new AlgorithmContext()); 
+	}
+#endif
+
+
+//s/[a-z]\+ \(.*\);/constexpr const int \1Field=offsetof(AlgorithmContext,\1); 
+void         subSetLongField(JNIEnv*env,jobject  jobject1,jfieldID  fieldid,jlong  value) {
+   LOGGER("SetLongField %llx\n",value);
+    uint8_t *alg=reinterpret_cast<uint8_t *>(jobject1);
+   jlong *longptr =reinterpret_cast<jlong *>(alg+reinterpret_cast<intptr_t>(fieldid));
+   *longptr=value;
+   }
+void         subSetDoubleField(JNIEnv*env,jobject  jobject1,jfieldID  fieldid,jdouble  value) {
+   LOGGER("SetDoubleField %lf\n",value);
+    uint8_t *alg=reinterpret_cast<uint8_t *>(jobject1);
+   double *doubleptr =reinterpret_cast<double *>(alg+reinterpret_cast<intptr_t>(fieldid));
+   *doubleptr=value;
+   }
+void         subSetIntField(JNIEnv*env,jobject  jobject1,jfieldID  fieldid,jint  value) {
+   LOGGER("SetIntField %i\n",value);
+    uint8_t *alg=reinterpret_cast<uint8_t *>(jobject1);
+   int *intptr =reinterpret_cast<int *>(alg+reinterpret_cast<intptr_t>(fieldid));
+   *intptr=value;
+   }
+
+
+jlong        subGetLongField(JNIEnv*env,jobject  jobject1,jfieldID  fieldid) {
+    uint8_t *alg=reinterpret_cast<uint8_t *>(jobject1);
+   jlong *longptr =reinterpret_cast<jlong *>(alg+reinterpret_cast<intptr_t>(fieldid));
+   LOGGER("GetLongField()=%llx\n",*longptr);
+   return *longptr;
+   }
+
+const char*  subGetStringUTFChars(JNIEnv*env,jstring  jstring1,jboolean * jboolean2) {
+   const char *res=reinterpret_cast<const char *>(jstring1);
+   LOGGER("GetStringUTFChars %s\n",res);
+   return res;
+   }
+void         subReleaseStringUTFChars(JNIEnv*env,jstring  jstring1,const char * const2) {
+   LOGGER("ReleaseStringUTFChars %s %s\n",const2,((const char *)jstring1)==const2?"equal":"unequal");
+   }
+
+jobject      subNewObjectV(JNIEnv*env,jclass  jclass1,jmethodID  jmethodID2,va_list  va_list3) {
+	LOGGER("NewObjectV start %p\n",jmethodID2);
+	typedef jobject     (*new_t)(va_list args);
+	new_t newer= reinterpret_cast<new_t>(jmethodID2);
+	auto res=newer(va_list3);
+	LOGGER("NewObjectV=%p\n",res);
+	return res;
+   }
+
+
+
+jfieldID     subGetFieldID(JNIEnv*env,jclass  jclass1,const char * name,const char * sig) {
+   LOGGER("GetFieldID(%s,%s)\n",name,sig);
+   return reinterpret_cast<jfieldID>(subGetStaticMethodID(env , jclass1, name, sig) );
+   }
 struct algobj {
 public:
  jclasser *cl;
@@ -615,10 +685,22 @@ subGetStaticMethodID(JNIEnv* , jclass cl, const char*name, const char*sig) {
 */
 //s/&\([A-Za-z_0-9]*\)}/function(\1)}/g
 #define function(x) (void *)&x
+#define valueptr(x) (void *)x
 
 /* renamed from: com.abbottdiabetescare.flashglucose.sensorabstractionservice.dataprocessing.MemoryRegion */
 jclasser AlgorithR{"AlgorithmResults", {{"<init>","(Ljava/util/List;Lcom/abbottdiabetescare/flashglucose/sensorabstractionservice/dataprocessing/GlucoseValue;Lcom/abbottdiabetescare/flashglucose/sensorabstractionservice/TrendArrow;Lcom/abbottdiabetescare/flashglucose/sensorabstractionservice/Alarm;ZIZ)V",function(newalgorithmresults2_4<0>)},
 {"<init>","(Ljava/util/List;Lcom/abbottdiabetescare/flashglucose/sensorabstractionservice/dataprocessing/GlucoseValue;FLcom/abbottdiabetescare/flashglucose/sensorabstractionservice/TrendArrow;Lcom/abbottdiabetescare/flashglucose/sensorabstractionservice/Alarm;ZIZ)V",function(newalgorithmresults2_4<3>)}}};
+#ifdef SIBIONICS
+jclasser AlgContext{"AlgorithmContext",{{"<init>","()V",function(newAlgContext)},
+{"mNativeContext","J",valueptr(mNativeContextField)},
+{"ig_data","D",valueptr(ig_dataField)},
+{"glucoseWarning","I",valueptr(glucoseWarningField)},
+{"currentWarning","I",valueptr(currentWarningField)},
+{"temperatureWarning","I",valueptr(temperatureWarningField)},
+{"ig_trend","I",valueptr(ig_trendField)}}};
+//s/^.*AlgorithmContext,\([^,]*\),\([^)]*\)).*$/{"\1","\2",function(\1Field)},
+
+#endif
 jclasser classen[] {
 {"ArrayList", {{"add","(Ljava/lang/Object;)Z",function(addtohist)},{ "<init>","()V", function(newarraylist)}}},
 {"GlucoseValue",{{ "<init>","(III)V",function(newglucosevalue)}}},
@@ -1076,7 +1158,7 @@ AlgorithmResults *callAbbottAlg(data_t *uid,int startsincebase,scanstate *oldsta
 	algobj alarm{&AlarmC},nonAction{&NonActiona};
 	algobj range{&GluRange}, attenconf{&attconf};
 //	int warmup=60, wear=14*24*60;
-	constexpr const int warmup=60, wear=wearduration;
+	constexpr const int warmup=60, wear=librewearduration;
 	outobj  confinsert, removed, compo, attenu, messstate, outalgres,  OutListPatchEvent;
 
 jnidata_t  hierjnidata={&envbuf,newstate};
@@ -1185,7 +1267,6 @@ Abbott::scanresult_t Abbott::callAbbottAlg(scandata *data) {
 #endif
 	int startsincebase=startDate-basesecs;
 	const int timelast=nutime-startDate;
-	//constexpr const int endsensorsecs=  1195800;
 	LOGGER("timelast=%d endsensorsecs=%d\n",timelast,endsensorsecs);
 	if(timelast>=endsensorsecs&&timelast<days15) {
 		if(!state->datpos(FAKE)) {
@@ -1311,8 +1392,6 @@ JNIEnv *hiersubenv=(JNIEnv *) &hierjnidata;
 	data_t *messuit;
 
 const int timelast=data->gettime()-start;
-//constexpr const int endsensorsecs= 14*24*60*60;
-//constexpr const int endsensorsecs=  1195800;
 if(timelast>=endsensorsecs&&timelast<days15) {
 	startminbase+=daysecs;
 	LOGSTRING("Tijdelijk erbij\n");
@@ -1902,7 +1981,7 @@ scanstate *newstate,uint32_t startsincebase,uint32_t nutime) {
 	algobj alarm{&AlarmC},nonAction{&NonActiona};
 	algobj range{&GluRange}, attenconf{&attconf};
 //	int warmup=60, wear=14*24*60;//TODO set with function
-	constexpr const int warmup=60, wear=wearduration;//TODO set with function
+	constexpr const int warmup=60, wear=librewearduration;//TODO set with function
 	outobj  outstarttime,  endtime,confinsert, removed, compo, attenu, messstate, outalgres;
  
 jnidata_t  hierjnidata={&envbuf,newstate};

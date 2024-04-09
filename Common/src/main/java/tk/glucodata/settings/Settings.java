@@ -93,7 +93,7 @@ import java.text.DecimalFormat;
 import java.util.Locale;
 
 public class Settings  {
-private final static boolean IWRU=false,SPANISH=false;
+private final static boolean IWRU=true,SPANISH=false;
 private final static String LOG_ID="Settings";
 MainActivity activity;
 
@@ -472,7 +472,7 @@ final private static String  codestr=String.valueOf(BuildConfig.VERSION_CODE);
 
 //static private final List<String> supportedlanguages= Arrays.asList("Language","be","de","en","fr","it","nl","pl","pt","uk","zh");
 //  static private final List<String> supportedlanguages= Arrays.asList("Language","be","de","en","fr","it","nl","pl","pt","uk");
-static private final List<String> supportedlanguages= IWRU?Arrays.asList("Language","be","de","en","es","fr","it","iw","nl","pl","pt","ru","uk","zh"):(SPANISH?Arrays.asList("Language","be","de","en","es","fr","it","nl","pl","pt","uk","zh"):Arrays.asList("Language","be","de","en","fr","it","nl","pl","pt","uk","zh"));
+static private final List<String> supportedlanguages= IWRU?Arrays.asList("Language","be","de","en","es","fr","it","nl","pl","pt","ru","uk","zh"):(SPANISH?Arrays.asList("Language","be","de","en","es","fr","it","nl","pl","pt","uk","zh"):Arrays.asList("Language","be","de","en","fr","it","nl","pl","pt","uk","zh"));
 
 //static private final List<String> supportedlanguages= IWRU?Arrays.asList("Language","be","de","en","es","fr","it","iw","nl","pl","pt","ru","uk"):Arrays.asList("Language","be","de","en","es","fr","it","nl","pl","pt","uk");
 static private Spinner languagespinner(MainActivity context, int[] spinpos) {
@@ -702,7 +702,7 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 
 
 		    if(blueused!=bluetooth.isChecked()) {
-			      Applic.setbluetooth(activity,!blueused);
+				 activity.setbluetoothmain( !blueused);
 				}
 	//	   Natives.setwaitwithenablestreaming(waitblue.isChecked());
 		  Natives.setfixatex(!fixatex.isChecked());
@@ -805,13 +805,15 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 	else {
 		View[] row8;
 		View[] row9;
+		var about=getbutton(context,"About");
+	       about.setOnClickListener(v-> tk.glucodata.GlucoseCurve.doabout(context));
 		if(advhelp!=null) {
 			advanced=new Button(context);
 			advanced.setText(R.string.advanced);
-			row9=new View[]{advanced,help,cancel,ok};
+			row9=new View[]{advanced,help,about,cancel,ok};
 			}
 		else {
-			row9=new View[]{help,cancel,ok};
+			row9=new View[]{help,about,cancel,ok};
 			}
 
         	CheckBox showalways=new CheckBox(context);

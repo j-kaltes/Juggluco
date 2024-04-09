@@ -22,6 +22,7 @@
 #ifndef SEARCH_H
 #define SEARCH_H
 #include <regex>
+#include <algorithm>
 #include "logs.h"
 template <class InputIt, class OutputIt, class Reg,typename LABEL> OutputIt matches(InputIt first,InputIt last,OutputIt res,const Reg &match, LABEL label) {
 	try {

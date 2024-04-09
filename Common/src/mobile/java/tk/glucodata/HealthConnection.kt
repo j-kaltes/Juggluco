@@ -79,7 +79,8 @@ private  fun writeAllIns(sensorptr:Long,sensorName:String) {
                 if (siz == 0) {
                     Log.e(LOG_ID, "insertRecors $siz==0")
                     return@launch
-                }
+                  }
+                Log.i(LOG_ID,"siz=$siz")
                 start += take;
                 Natives.healthConnectWritten(sensorptr, start)
             }

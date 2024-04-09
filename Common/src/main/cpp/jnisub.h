@@ -218,6 +218,13 @@ struct libre3stream:streamdata {
 	libre3stream(int sensindex,SensorGlucoseData *sens): streamdata(3, sensindex,sens){};
 	};
 
+struct AlgorithmContext;
+struct sistream:streamdata {
+	AlgorithmContext *algcontext;
+	sistream(int sensindex,SensorGlucoseData *sens,AlgorithmContext *context): streamdata(0x10, sensindex,sens),algcontext(context){
+		};
+	};
+
 struct libre2stream:streamdata {
 	int startsincebase;
 	jbyte person=0;

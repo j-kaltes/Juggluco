@@ -256,6 +256,7 @@ static	 const int waitsig=60;
 
 		sensor* senso=sensors->getsensor(ab.sensorindex);
 		senso->initialized=true;
+		senso->halfdays=29;
 		}
 	else {
 	if(alg){
@@ -287,7 +288,7 @@ static	 const int waitsig=60;
 					setstreaming(ab.hist); //NEEDED/
 					setusedsensors(); //NEEDED
 					senso->finished=0;
-					backup->definished(ab.sensorindex);
+					backup->resensordata(ab.sensorindex);
 					return 8<<16|gluval;
 					}
 				return gluval;
@@ -299,7 +300,7 @@ static	 const int waitsig=60;
 					LOGSTRING("was finished\n");
 					setbluetoothon=true;
 					senso->finished=0;
-					backup->definished(ab.sensorindex);
+					backup->resensordata(ab.sensorindex);
 					}
 				senso->initialized=true;
 				const bool enablestreaming=setbluetoothon||(ab.hist&&!ab.hist->streamingIsEnabled());
@@ -408,6 +409,12 @@ extern "C" JNIEXPORT void JNICALL   fromjava(finishSensor)(JNIEnv *env, jclass c
 	backup->wakebackup(Backup::wakeall);
 	}
 extern bool streamHistory() ;
+#ifdef SIBIONICS
+struct AlgorithmContext;
+extern AlgorithmContext *initAlgorithm(SensorGlucoseData*);
+extern bool siInit();
+#endif
+
 extern "C" JNIEXPORT jlong JNICALL   fromjava(getdataptr)(JNIEnv *env, jclass cl,jstring jsensor) {
 	if(!sensors)
 		return 0LL;
@@ -426,17 +433,28 @@ extern "C" JNIEXPORT jlong JNICALL   fromjava(getdataptr)(JNIEnv *env, jclass cl
 	SensorGlucoseData *sens= sensors->getSensorData(sensorindex);
 	sens->sensorerror=false;
 	streamdata *data;
-	if(sens->isLibre3()) {
-		data= new libre3stream(sensorindex,sens);
-		}
-	else {
-		data=new libre2stream(sensorindex,sens);
-		if(streamHistory()) {
-			if(!sens->getinfo()->startedwithStreamhistory) {
-				sens->getinfo()->startedwithStreamhistory=std::max(sens->getinfo()->endhistory,1);
-				}
-			}
-		}
+#ifdef SIBIONICS
+	if(sens->isSibionics()) {
+	   if(!siInit())
+	      return 0LL;
+   	AlgorithmContext *alg=initAlgorithm(sens);
+         data= new sistream(sensorindex,sens,alg);
+      }
+  else 
+#endif
+  {
+      if(sens->isLibre3()) {
+         data= new libre3stream(sensorindex,sens);
+         }
+      else {
+         data=new libre2stream(sensorindex,sens);
+         if(streamHistory()) {
+            if(!sens->getinfo()->startedwithStreamhistory) {
+               sens->getinfo()->startedwithStreamhistory=std::max(sens->getinfo()->endhistory,1);
+               }
+            }
+         }
+        }
 	if(data->good())
 		return reinterpret_cast<jlong>(data);
 	LOGSTRING("getdataptr(): !data->good()\n");
@@ -463,8 +481,9 @@ extern "C" JNIEXPORT void JNICALL  fromjava(setDeviceAddress)(JNIEnv *env, jclas
 		env->GetStringUTFRegion(jdeviceAddress, 0,getlen,usedhist->deviceaddress());
 		usedhist->deviceaddress()[getlen]='\0';
 		}
-	LOGGER("setDeviceAddress(%s)\n", usedhist->deviceaddress());
-        }
+	  LOGGER("setDeviceAddress(%s)\n", usedhist->deviceaddress());
+     }
+
 extern "C" JNIEXPORT int JNICALL   fromjava(getLibreVersion)(JNIEnv *envin, jclass cl,jlong dataptr) {
 	if(!dataptr)
 		return 0;
@@ -736,7 +755,7 @@ extern "C" JNIEXPORT jlong JNICALL   fromjava(processTooth)(JNIEnv *envin, jclas
 			if(senso->finished) {
 				LOGGER("processTooth finished=%d\n", senso->finished);
 				senso->finished=0;
-				backup->definished(sdata->sensorindex);
+				backup->resensordata(sdata->sensorindex);
 				}
 
 			backup->wakebackup(Backup::wakestream);

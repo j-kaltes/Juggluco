@@ -725,5 +725,13 @@ public void onReadRemoteRssi(BluetoothGatt gatt, int rssi, int status)  {
 		readrssi=rssi;
 		}
 	}
+
+@Override
+public boolean matchDeviceName(String deviceName) {
+	if(!deviceName.startsWith("ABBOTT")) {
+		return false;
+		}
+	return SerialNumber.equals(deviceName.substring(6));
+	}
 }
 

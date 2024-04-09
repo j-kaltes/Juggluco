@@ -179,8 +179,9 @@ são necessárias. No seu caso, tem problemas com o seguinte ficheiro)",
 .Falling="A descer",
 .Stable="Em alteração lenta",
 .Rising="A subir",
-.RisingQuickly="A subir rapidamente"
+.RisingQuickly="A subir rapidamente",
 #endif
+.receivingpastvalues="Receiving old values"
                 }
 
 

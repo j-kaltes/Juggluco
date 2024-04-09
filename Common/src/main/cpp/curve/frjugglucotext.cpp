@@ -174,8 +174,9 @@ requis. Dans votre cas le fichier suivant pose problème )",
 .Falling="Baisse",
 .Stable="Modification lente",
 .Rising="Augmentation",
-.RisingQuickly="Augmentation rapide"
+.RisingQuickly="Augmentation rapide",
 #endif
+        .receivingpastvalues="Receiving old values"
 		}
 
 

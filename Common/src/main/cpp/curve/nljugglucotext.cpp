@@ -170,8 +170,9 @@ volgende file)",
 .Falling="Daalt",
 .Stable="Verandert langzaam",
 .Rising="Stijgt",
-.RisingQuickly="Stijgt snel"
+.RisingQuickly="Stijgt snel",
 #endif
+.receivingpastvalues="Oude glucose waarden komen binnen"
 		}
 
 

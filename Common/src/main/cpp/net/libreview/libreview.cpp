@@ -561,7 +561,7 @@ int startsensor=0;
 		SensorGlucoseData *sensdata=sensors->getSensorData(index);
 		auto *info=sensdata->getinfo();
 		if(!info->libreviewsendall) {
-			if(!sensdata->isLibre3()) {
+			if(sensdata->isLibre2()) {
 				const bool userealhistory=  (info->startedwithStreamhistory&&( info->libreviewnotsendHistory>= info->startedwithStreamhistory||info->startedwithStreamhistory==1))
 						||!sensdata->pollcount();
 				switchrealhistory(sensdata,userealhistory);
@@ -595,9 +595,11 @@ int startsensor=0;
 					++usedsensor;
 					}
 				else {
-					if(index>=settings->data()->startlibre3view) {
-						settings->data()->haslibre3=true; 
-						} 
+			    if(sensdata->isLibre3()) {
+                  if(index>=settings->data()->startlibre3view) {
+                     settings->data()->haslibre3=true; 
+                     } 
+                    }
 					lists[i]= {};
 					}
 				}
@@ -841,7 +843,7 @@ int startsensor=0;
 					const int index=sensints[i];
 					SensorGlucoseData *sensdata=sensors->getSensorData(index);
 					if(!sensdata->getinfo()->libreviewsendall) {
-						if(!sensdata->isLibre3()) {
+						if(sensdata->isLibre2()) {
 							sensdata->viewed.clear();
 							if(newcurrent==i||sensdata->getinfo()->libreviewScan!=scanids[i]||lists[i].size) { 
 								sensdata->getinfo()->sendsensorstart=true;
@@ -948,10 +950,12 @@ int askhasnewcurrent(time_t nu) {
 		LOGAR("no sensor");
 		return -1;
 		}
-	auto oldtime=nu-15*24*60*60;
+	auto oldtime=nu-day15secs;
 	int last=sensors->last();
 	for(int i=last;i>=0;--i) {	
 		const auto *sens=sensors->getSensorData(i);
+      if(sens->isSibionics())
+         continue;
 		 int start=sens->isLibre3()?sens->getinfo()->libreviewScan:sens->getinfo()->libreCurrentIter;
 		int pollstart= sens->getinfo()->pollstart;
 		if(start<pollstart)
@@ -1143,6 +1147,7 @@ void clearfromDate(const uint32_t starttime, bool initall=true) {
 #endif
 			}
 		else {
+         if(firstuse->isLibre2())  {
 			info->clearLibreSendEnd(histpos);
 			int scanpos=firstuse->getbackuptimescan(starttime);
 			info->realHistory=false;
@@ -1156,9 +1161,10 @@ void clearfromDate(const uint32_t starttime, bool initall=true) {
 			LOGGER("clearfromDate Libre2 index=%d notsend=%d stream=%d scanpos=%d from=%s",index,histpos,streampos,scanpos,ctime(&tim));
 #endif
 			}
+         }
 		
 		for(int i=index+1;i<=lastsens;i++) {
-			if(SensorGlucoseData *sens=sensors->getSensorData(i)) {
+			if(SensorGlucoseData *sens=sensors->getSensorData(i);sens&&!sens->isSibionics()) {
 				auto *info=sens->getinfo();
 				info->clearLibreSendAll();
 				info->putsensor=false;
@@ -1197,17 +1203,19 @@ static void clearlibregegs() {
 	settings->data()->startlibreview=0;
 	settings->data()->startlibre3view=0;
 	sensors->onallsensors([](SensorGlucoseData *sens) {
-		auto *info=sens->getinfo();
-		info->clearLibreSendAll();
-		info->putsensor=false;
-		info->libreviewScan=0;
-		info->sendsensorstart=false;
-		info->libreviewnotsend=0;
-		info->libreviewnotsendHistory=0;
-		info->libreviewsendall=false;
-	 	info->libreCurrentIter=0;
-		info->scanoff=0;
-//		info->startedwithStreamhistory=0;
+      if(!sens->isSibionics())  {
+         auto *info=sens->getinfo();
+         info->clearLibreSendAll();
+         info->putsensor=false;
+         info->libreviewScan=0;
+         info->sendsensorstart=false;
+         info->libreviewnotsend=0;
+         info->libreviewnotsendHistory=0;
+         info->libreviewsendall=false;
+         info->libreCurrentIter=0;
+         info->scanoff=0;
+   //		info->startedwithStreamhistory=0;
+         }
 		});
 	sensors->setversions();
 #ifdef LIBRE3ONLY

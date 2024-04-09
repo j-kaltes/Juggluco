@@ -54,6 +54,7 @@ constexpr const char defaultport[]{
 #include "settings/settings.h"
 
 #include "mirrorstatus.hpp"
+#include "mirrorerror.h"
 #ifdef WEAROS_MESSAGES
 extern bool wearmessages[];
 #endif
@@ -298,9 +299,9 @@ if(wearmessages)
 #endif */
 }
 
-void definished(int sensor)  {
+void resensordata(int sensor)  {
      if(sensor<0) {
-     	LOGGER("definished(%d)\n",sensor);
+     	LOGGER("resensordata(%d)\n",sensor);
 	return;
      	}
      for(int i=0;i<getupdatedata()->sendnr;i++) {
@@ -511,8 +512,10 @@ void changereceiver(int allindex,int index,const bool sendnums,const bool sendst
 		getupdatedata()->sendnr++;
 		con_vars.resize( getupdatedata()->sendnr);
 		}
-	else
-		con_vars[index]->wakebackuponly(Backup::wakestop);
+	else  {
+		if(con_vars[index])
+			con_vars[index]->wakebackuponly(Backup::wakestop);
+		}
 	updateone &host=getupdatedata()->tosend[index];
 	host.setindex(index,allindex);
 //	if(starttime) host.setbackupstarttime(starttime); 
@@ -848,6 +851,7 @@ bool isreceiving() const {
 	}
 
 void deactivateHost(int index,bool deactive) {
+	LOGGER("deactivateHost(%d,%d)\n",index,deactive);
 	if(index>=getupdatedata()->hostnr) 
 		return ;
 	auto &host=getupdatedata()->allhosts[index];
@@ -876,8 +880,9 @@ void deactivateHost(int index,bool deactive) {
 		int sin=host.index;
 		if(sin>=0) {
 		       const int sock= getupdatedata()->tosend[sin].getsock();
-			con_vars[sin]->wakebackuponly(Backup::wakestop|Backup::wakeend);
 		       LOGGER(" shutdown %d\n",sock);
+		       if(con_vars[sin])
+				con_vars[sin]->wakebackuponly(Backup::wakestop|Backup::wakeend);
 			::shutdown(sock,SHUT_RDWR);
 			}
 
@@ -1019,6 +1024,7 @@ int updateproc(condvar_t *varsptr,uintptr_t cond,updateone &shost,int  (updateon
 		int res= (shost.*proc)();
 		if(!res) {
 			auto *pass=backup->getupdatedata()->allhosts+shost.allindex;
+			savemessage(pass,"Send failed");
 		//	if(!pass->sendpassive)
 			shost.close();
 			if(

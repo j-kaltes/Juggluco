@@ -84,9 +84,9 @@ template<typename T,typename ...Ts> char *	nconcat(int len,  T &&one,  Ts &&... 
 
 	const char *asstr=reinterpret_cast<const char *>( &one[0]);
 	if constexpr(sizeof...(Ts)==0) {
-		namelen=len+en+1;
-		ptr= new char[namelen];
-		ptr[namelen-1]='\0';
+		namelen=len+en;
+		ptr= new char[namelen+1];
+		ptr[namelen]='\0';
 		}
 	else {
 		do {
@@ -100,7 +100,7 @@ template<typename T,typename ...Ts> char *	nconcat(int len,  T &&one,  Ts &&... 
 	return ptr;
 	}
 
-pathconcat():name(nullptr),namelen(1) {}
+pathconcat():name(nullptr),namelen(0) {}
 
 template <typename ...Ts>
 pathconcat(  Ts &&... args) {
@@ -108,14 +108,14 @@ pathconcat(  Ts &&... args) {
 	}
 pathconcat(pathconcat &&in)  noexcept :name(in.name),namelen(in.namelen) { 
 	in.name=nullptr;
-	in.namelen=1;
+	in.namelen=0;
 	LOGGER("pathconcat( pathconcat &&in=%s)\n",name);
 }
 
 pathconcat(const pathconcat &&in)    noexcept    :pathconcat(std::move(const_cast<pathconcat &&>(in))) { 
 	}
-pathconcat( pathconcat &in):name(new char[in.namelen]),namelen(in.namelen) { 
-	memcpy(name,in.name,in.namelen);
+pathconcat( pathconcat &in):name(new char[in.namelen+1]),namelen(in.namelen) { 
+	memcpy(name,in.name,in.namelen+1);
 	LOGGER("pathconcat( pathconcat &in=%s)\n",name);
 }
 pathconcat &operator=( pathconcat &&in)   noexcept {
@@ -130,16 +130,16 @@ pathconcat &operator=(const pathconcat &&in)   noexcept {
 pathconcat &operator=(pathconcat &in) {
 	LOGGER("pathconcat &operator=(pathconcat &in %s) {\n",in.name);
 	delete[] name;
-	name=new char[in.namelen];
+	name=new char[in.namelen+1];
 	namelen=in.namelen;
-	memcpy(name,in.name,namelen);
+	memcpy(name,in.name,namelen+1);
 	return *this;
 	}
 ~pathconcat() {
 	delete[] name;
 	}
 operator const std::string_view() const {
-	return std::string_view(name,namelen-1);
+	return std::string_view(name,namelen);
 	}
 char *begin() {return data();}
 char *end() {return begin()+size();}
@@ -161,7 +161,7 @@ operator char *() {
 operator const char *() const {
 	return name;
 	}
-int size() const {return namelen-1;}
+int size() const {return namelen;}
 int length() const {return size();}
 
 template <typename ...Ts>

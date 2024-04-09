@@ -181,6 +181,7 @@ seguenti file)",
 .Rising="In aumento",
 .RisingQuickly="In rapido aumento",
 #endif
+.receivingpastvalues="Receiving old values"
 }
 		;
 #ifdef JUGGLUCO_APP

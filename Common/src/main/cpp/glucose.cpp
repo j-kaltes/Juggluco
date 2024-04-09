@@ -134,7 +134,7 @@ int SensorGlucoseData::newsendhistory(crypt_t *pass,int sock,int ind,int sensori
 	}
 int SensorGlucoseData::updateKAuth(crypt_t *pass,int sock,int ind)  {
 	if(getinfo()->update[ind].sendKAuth) {
-		const int off=getinfo()->haskAuth?offsetof(Info,kAuth):offsetof(Info,haskAuth);
+		const int off=(getinfo()->haskAuth)?offsetof(Info,kAuth):offsetof(Info,haskAuth);
 		constexpr const int  endoff=offsetof(Info,haskAuth)+1;
 		const int len=endoff-off;
 		if(!senddata(pass,sock,off,reinterpret_cast<const senddata_t *>(getinfo())+off,len, infopath)) {
@@ -149,6 +149,25 @@ int SensorGlucoseData::updateKAuth(crypt_t *pass,int sock,int ind)  {
 	}
 //	int histend=sendStream?getStreamendhistory():getendhistory(); 
 int SensorGlucoseData::updatescan(crypt_t *pass,int sock,int ind,int sensorindex,bool dotoch,int sendstream)  {
+	if(isSibionics()) {
+		LOGGER("GLU: updatescan ind=%d sensorindex=%d\n",ind,sensorindex);
+		if(!getinfo()->update[ind].siScan&&getinfo()->siIdlen>16&&getinfo()->siId[0]) {
+			LOGGER("GLU: updatescan Write Start: ind=%d sensorindex=%d\n",ind,sensorindex);
+
+			std::vector<subdata> vect;
+			vect.reserve(3);
+			vect.push_back({meminfo.data(),0,offsetof(Info,pin)});
+			vect.push_back({meminfo.data()+offsetof(Info,siBlueToothNum),offsetof(Info,siBlueToothNum),sizeof(Info::siBlueToothNum)});
+			vect.push_back({meminfo.data()+offsetof(Info,siIdlen),offsetof(Info,siIdlen),sizeof(Info::siIdlen)+ sizeof(Info::siId) });
+			 if(!senddata(pass,sock,vect, infopath)) {
+				LOGSTRING("GLU: senddata info.data failed\n");
+				return 0;
+				 }
+			getinfo()->update[ind].siScan=true;
+			return 1;
+		}
+		return 2;
+	} else {
 	bool did=false;
 	constexpr const int startinfolen=offsetof(Info, pollcount);
 	alignas(alignof(Info)) uint8_t infoptr[startinfolen];
@@ -176,8 +195,14 @@ int SensorGlucoseData::updatescan(crypt_t *pass,int sock,int ind,int sensorindex
 			};
 		}
 	else {
-		if(!updateKAuth(pass,sock,ind))
-			return 0;
+		switch(updateKAuth(pass,sock,ind)) {
+			case 0: return 0;
+			case 1: 
+				if(!did) {
+					memcpy(infoptr,meminfo.data(),startinfolen);
+					did=true;
+					}
+			};
 		}
 
 	int scanend=getinfo()->scancount;
@@ -185,7 +210,7 @@ int SensorGlucoseData::updatescan(crypt_t *pass,int sock,int ind,int sensorindex
 	if(scanend>scanstart) {
 		if(!did)
 			memcpy(infoptr,meminfo.data(),startinfolen);
-		LOGSTRING("GLU: updatescan\n");
+		LOGAR("GLU: updatescan add scans");
 		if(const struct ScanData *startscans=scans.data()) {
 			if(scanpath) {
 				if(senddata(pass,sock,scanstart,startscans+scanstart,startscans+scanend,scanpath)) {
@@ -227,7 +252,6 @@ int SensorGlucoseData::updatescan(crypt_t *pass,int sock,int ind,int sensorindex
 			std::vector<subdata> vect;
 			vect.reserve(3);
 			vect.push_back({infoptr,0,startinfolen});
-	//		constexpr const int startdev=offsetof(Info, deviceaddress);
 			constexpr const int startdev=offsetof(Info, streamingIsEnabled);
 			constexpr const int devlen=offsetof(Info,libreviewScan)-startdev;
 			static_assert((4+deviceaddresslen)==devlen);
@@ -235,7 +259,6 @@ int SensorGlucoseData::updatescan(crypt_t *pass,int sock,int ind,int sensorindex
 			vect.push_back({((uint8_t*)meminfo.data())+startdev,startdev,devlen});
 			if(sendstream&&wrotehistory==1) {
 
-//				vect.push_back({reinterpret_cast<const senddata_t *>(&streamhistend),offsetof(Info,endStreamhistory),sizeof(Info::endStreamhistory)});
 
 				vect.push_back({reinterpret_cast<const senddata_t *>(&endinfo),offsetof(Info,endStreamhistory),sizeof(endinfo)});
 				}
@@ -274,6 +297,7 @@ int SensorGlucoseData::updatescan(crypt_t *pass,int sock,int ind,int sensorindex
 		return 1;
 		  }
 	return 2;
+	   }
 	}
 template <typename It,typename T>
 It	find_last(It beg, It en,T el) {
@@ -389,6 +413,9 @@ std::string_view getdeltaname(float rate) {
 	return getdeltanamefromindex(getdeltaindex(rate));
 	}
 
+int writeStartime(crypt_t *pass, const int sock, const int sensorindex) {
+	return sensors->writeStartime(pass, sock,sensorindex);
+	}
 /*
 std::string_view getdeltaname(float rate) {
 	if(rate>=3.5f)

@@ -50,6 +50,7 @@ android {
         minSdk 19
         compileSdk 33
         applicationId "tk.glucodata"
+	versionName '8.0.0'
 //	multiDexEnabled true
 
         buildConfigField 'String', 'BUILD_TIME', 'new java.text.SimpleDateFormat("HH:mm:ss dd-MMM-yyyy").format(new java.util.Date(' + System.currentTimeMillis() + 'L))'
@@ -70,16 +71,19 @@ android {
     buildToolsVersion '33.0.0'
     }
 
-    flavorDimensions 'wearos','libreVersion'
+    flavorDimensions 'wearos','libreVersion','SiBionics'
     productFlavors {
+
         libreOld {
-            minSdk 19
+            //minSdk 19
+//            minSdk 21
 
             //	targetSdk 26
 	//******  Zet op rollout op 100% ******
             	dimension 'libreVersion'
-		versionCode                        457                                             //LIBRE2ONLY
-		versionName '7.6.5-no3'
+		versionCode                         458                                               //LIBRE2ONLY
+	//	versionName '8.0.0-no3'
+		versionNameSuffix '-no3'
             buildConfigField 'int', 'libreVersion', '2'
 		    externalNativeBuild.cmake {
 			cppFlags "  -DAPPVERSION=\\\"$versionName\\\" "
@@ -92,9 +96,8 @@ android {
 	   minSdk 26
 //	   minSdk 23
             dimension 'libreVersion'
-		versionCode                       457                                             //LIBRE3
+		versionCode                        458                                               //LIBRE3
 	//******  Zet op rollout op 100% ******
-		versionName '7.6.5'
 
            	buildConfigField 'int', 'libreVersion', '3'
 		    externalNativeBuild.cmake {
@@ -104,6 +107,27 @@ android {
             }
 
 		}
+        si {
+	  	minSdk 21
+		minSdkVersion 21
+            	dimension 'SiBionics'
+		versionNameSuffix '-sibionics'
+		versionCode                   458                                            
+	        buildConfigField 'int', 'SiBionics', '1'
+	         externalNativeBuild.cmake {
+			cppFlags "  -DAPPVERSION=\\\"$versionName\\\"  -DSIBIONICS=1 "
+            		}
+		}
+        nosi {
+            	dimension 'SiBionics'
+		versionCode                         458                                            
+		versionNameSuffix '-nosi'
+	        buildConfigField 'int', 'SiBionics', '0'
+	         externalNativeBuild.cmake {
+			cppFlags "  -DAPPVERSION=\\\"$versionName\\\" "
+            		}
+		}
+
         wear {
           // targetSdk 26
 //           targetSdk 31
@@ -111,9 +135,10 @@ android {
             // targetSdk 30
             dimension 'wearos'
 		minSdk 26
-		versionCode                       457                                             //WATCH
+		versionCode                        458                                               //WATCH
 	//******  Zet op rollout op 100% ******
-		versionName '7.6.5-wear'
+		//versionName '8.0.0-wear'
+		versionNameSuffix '-wear'
 		signingConfig signingConfigs.alg
 
 //            buildConfigField 'int', 'targetSDK', "$targetSdk"
@@ -132,9 +157,9 @@ android {
         small {
 
             dimension 'wearos'
-		minSdk 19
-		versionCode                       457                                             //WATCH
-		versionName '7.6.5-small'
+		versionCode                        458                                               //WATCH
+		//versionName '8.0.0-small'
+		versionNameSuffix '-small'
 		signingConfig signingConfigs.alg
 
            buildConfigField 'int', 'isWear', '1'
@@ -170,7 +195,7 @@ buildTypes {
             jniDebuggable false
             debuggable false
             externalNativeBuild.cmake {
-                cppFlags "-std=c++20","-DRELEASEID=1","-DRELEASE=1","-DNORAWSTREAM=1" , "-DRELEASEDIR=1", "-DNOLOG=1" //, "-DSCANLOG=1" , "-DNOLOG=1"
+                cppFlags "-std=c++2b","-DRELEASEID=1","-DRELEASE=1","-DNORAWSTREAM=1" , "-DRELEASEDIR=1", "-DNOLOG=1" //, "-DSCANLOG=1" , "-DNOLOG=1"
 
 
                 }
@@ -190,7 +215,7 @@ buildTypes {
             jniDebuggable false
             debuggable false
             externalNativeBuild.cmake {
-                cppFlags " -std=c++20","-DRELEASEID=1","-DRELEASE=1","-DNORAWSTREAM=1" , "-DRELEASEDIR=1", "-DSCANLOG=1"
+                cppFlags " -std=c++2b","-DRELEASEID=1","-DRELEASE=1","-DNORAWSTREAM=1" , "-DRELEASEDIR=1", "-DSCANLOG=1"
 
 
                 }
@@ -209,8 +234,8 @@ buildTypes {
             buildConfigField 'int', 'isRelease', '1'
         buildConfigField 'int', 'isReleaseID', '1'
             externalNativeBuild.cmake {
-                cppFlags "-std=c++20","-DRELEASEID=1","-DRELEASE=1","-DNORAWSTREAM=1" , "-DRELEASEDIR=1", "-DNOLOG=1", "-DAPPSUFFIX=\\\"$applicationIdSuffix\\\""           //, "-DSCANLOG=1" , "-DNOLOG=1"
-//                cppFlags "-std=c++20","-DRELEASEID=1","-DRELEASE=1","-DNORAWSTREAM=1" , "-DRELEASEDIR=1", "-DNOLOG=1"         //, "-DSCANLOG=1" , "-DNOLOG=1"
+                cppFlags "-std=c++2b","-DRELEASEID=1","-DRELEASE=1","-DNORAWSTREAM=1" , "-DRELEASEDIR=1", "-DNOLOG=1", "-DAPPSUFFIX=\\\"$applicationIdSuffix\\\""           //, "-DSCANLOG=1" , "-DNOLOG=1"
+//                cppFlags "-std=c++2b","-DRELEASEID=1","-DRELEASE=1","-DNORAWSTREAM=1" , "-DRELEASEDIR=1", "-DNOLOG=1"         //, "-DSCANLOG=1" , "-DNOLOG=1"
 
 
                 }
@@ -224,7 +249,7 @@ buildTypes {
 	    applicationIdSuffix ".dub"
         buildConfigField 'int', 'doLog', '1'
             externalNativeBuild.cmake {
-                cppFlags "-std=c++20", "-DDEBUG=1", "-DSCANLOG=1", "-DAPPSUFFIX=\\\"$applicationIdSuffix\\\""
+                cppFlags "-std=c++2b", "-DDEBUG=1", "-DSCANLOG=1", "-DAPPSUFFIX=\\\"$applicationIdSuffix\\\""
 
 	    	}
             debuggable true
@@ -245,7 +270,7 @@ buildTypes {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro', 'proguard-rules.my', 'proguard-rules.log'
            // proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro', 'proguard-rules.my'
             externalNativeBuild.cmake {
-                cppFlags "-std=c++20","-DDEBUG=1", "-DSCANLOG=1",  "-DAPPSUFFIX=\\\"$applicationIdSuffix\\\""
+                cppFlags "-std=c++2b","-DDEBUG=1", "-DSCANLOG=1",  "-DAPPSUFFIX=\\\"$applicationIdSuffix\\\""
 //               arguments " -DCMAKE_CXX_FLAGS=' -DCMAKE_VERBOSE_MAKEFILE=1 -DDEBUG=1 -DSCANLOG=1 -DRELEASEDIR=1'"
                 }
             }
@@ -265,7 +290,7 @@ buildTypes {
 	    shrinkResources false 
 
             externalNativeBuild.cmake {
-                cppFlags "-std=c++20", "-DDEBUG=1", "-DSCANLOG=1", "-DAPPSUFFIX=\\\"$applicationIdSuffix\\\""
+                cppFlags "-std=c++2b", "-DDEBUG=1", "-DSCANLOG=1", "-DAPPSUFFIX=\\\"$applicationIdSuffix\\\""
 
             	}
             }
@@ -281,7 +306,7 @@ buildTypes {
 
             signingConfig signingConfigs.alg
             externalNativeBuild.cmake {
-                cppFlags "-std=c++20", "-DDEBUG=1", "-DSCANLOG=1", "-DAPPSUFFIX=\\\"$applicationIdSuffix\\\"","-DNDK_DEBUG=1","-UNDEBUG"
+                cppFlags "-std=c++2b", "-DDEBUG=1", "-DSCANLOG=1", "-DAPPSUFFIX=\\\"$applicationIdSuffix\\\"","-DNDK_DEBUG=1","-UNDEBUG"
 
 
             }
@@ -297,10 +322,10 @@ buildTypes {
             buildConfigField 'int', 'isRelease', '1'
         buildConfigField 'int', 'isReleaseID', '0'
             externalNativeBuild.cmake {
-                cppFlags "-std=c++20","-DRELEASEID=0","-DRELEASE=1","-DNORAWSTREAM=1" , "-DRELEASEDIR=0", "-DNOLOG=1" //, "-DSCANLOG=1" , "-DNOLOG=1"
+                cppFlags "-std=c++2b","-DRELEASEID=0","-DRELEASE=1","-DNORAWSTREAM=1" , "-DRELEASEDIR=0", "-DNOLOG=1" //, "-DSCANLOG=1" , "-DNOLOG=1"
 
-//         cppFlags "-std=c++20","-DRELEASE=1", "-DRELEASEDIR=1","-DNORAWSTREAM=1" //, "-DNOLOG=1"
-//	         cppFlags "-std=c++20","-DRELEASE=1", "-DRELEASEDIR=1","-DNORAWSTREAM=1", "-DNOLOG=1"
+//         cppFlags "-std=c++2b","-DRELEASE=1", "-DRELEASEDIR=1","-DNORAWSTREAM=1" //, "-DNOLOG=1"
+//	         cppFlags "-std=c++2b","-DRELEASE=1", "-DRELEASEDIR=1","-DNORAWSTREAM=1", "-DNOLOG=1"
 //                arguments " -DCMAKE_VERBOSE_MAKEFILE=1  -DCMAKE_CXX_FLAGS=' -DRELEASE=1 -DNORAWSTREAM=1 -DNOLOG=1'" 
 
                 }
@@ -316,8 +341,8 @@ buildTypes {
             buildConfigField 'int', 'isReleaseID', '1'
         buildConfigField 'int', 'doLog', '1'
             externalNativeBuild.cmake {
-                cppFlags "-std=c++20","-DRELEASEID=1", "-DDEBUG=1", "-DSCANLOG=1", "-DRELEASEDIR=1"
-               // cppFlags "-std=c++20", "-DDEBUG=1", "-DSCANLOG=1"
+                cppFlags "-std=c++2b","-DRELEASEID=1", "-DDEBUG=1", "-DSCANLOG=1", "-DRELEASEDIR=1"
+               // cppFlags "-std=c++2b", "-DDEBUG=1", "-DSCANLOG=1"
 	    	}
         }
         debug3 {
@@ -326,7 +351,7 @@ buildTypes {
             buildConfigField 'int', 'isReleaseID', '1'
         buildConfigField 'int', 'doLog', '1'
             externalNativeBuild.cmake {
-                cppFlags "-std=c++20","-DRELEASEID=1","-DDEBUG=1", "-DSCANLOG=1", "-DRELEASEDIR=1","-DNDK_DEBUG=1","-UNDEBUG"
+                cppFlags "-std=c++2b","-DRELEASEID=1","-DDEBUG=1", "-DSCANLOG=1", "-DRELEASEDIR=1","-DNDK_DEBUG=1","-UNDEBUG"
 		}
 
             versionNameSuffix 'DEBUGRELEASE'
@@ -351,8 +376,8 @@ buildTypes {
 
     }
 
-//     ndkVersion '25.2.9519653'
-      ndkVersion '26.2.11394342'
+     ndkVersion '25.2.9519653'
+     // ndkVersion '26.2.11394342'
 
     kotlinOptions {
         jvmTarget =  JavaVersion.VERSION_17
@@ -453,6 +478,7 @@ dependencies {
     wearImplementation 'androidx.wear.watchface:watchface-client:1.2.1'
     wearImplementation 'androidx.wear.watchface:watchface:1.2.1'
     wearImplementation 'androidx.wear.watchface:watchface-complications-rendering:1.2.1'
+    siImplementation 'com.google.android.gms:play-services-code-scanner:16.1.0'
 
 }
 

@@ -110,7 +110,9 @@ void changelib(uint8_t *from) {
    	settings->data()->triedasm=true;
 	const uint8_t was[]{0x04,0x2E,0x05,0x94};
 	uint8_t *start=(uint8_t*)from+0x119c+7560 -4;
+#ifndef NOLOG
         hexstr isnow(start,4);
+#endif
    if(!memcmp(start,was,4)) 
         {
         LOGGER("Sign de same =%s\n",isnow.str());

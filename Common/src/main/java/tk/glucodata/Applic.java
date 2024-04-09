@@ -314,6 +314,7 @@ void initbluetooth(boolean usebluetooth,Context context,boolean frommain) {
 			else
 				Log.i(LOG_ID,"keeprunning not started="+keeprunning.started);
 			if(frommain)
+			//	explicit((MainActivity)context);
 				((MainActivity)context).askNotify();
 			}
 		}
@@ -356,21 +357,17 @@ private void initialize() {
 			connectivityManager.registerNetworkCallback((new NetworkRequest.Builder()).build(), new ConnectivityManager.NetworkCallback() {
 		@Override
 		public void onAvailable(Network network) {
-			hasonAvailable=true;
-		       Log.i(LOG_ID, "network: onAvailable(" + network+")");
-		       if(useWearos()) {
-				Natives.networkpresent();
-				MessageSender.sendnetinfo();
+			   hasonAvailable=true;
+		      Log.i(LOG_ID, "network: onAvailable(" + network+")");
+            if(useWearos()||hasip()) {
+                  Natives.networkpresent();
+     			      MessageSender.reinit();
+                   if(useWearos()) {
+                     MessageSender.sendnetinfo();
+                       }
    		 		Applic.wakemirrors();
-				}
-		       else {
-			  if(hasip()) {
-				Natives.networkpresent();
-   		 		Applic.wakemirrors();
-				}
-			   }
-		
-		}
+			      }
+		      }
 		@Override
 		public void onUnavailable () {
 			Log.i(LOG_ID,"network: onUnavailable()");

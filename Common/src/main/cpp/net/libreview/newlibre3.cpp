@@ -326,15 +326,17 @@ bool sendlibre3viewdata(bool hasnewcurrent,uint32_t nu) {
 		if(sensdata->isLibre3()) 
 			break;
 		else {
-			if(notsendall2(startsensor)) {
-				settings->data()->haslibre2=true; 
-				} 
+         if(!sensdata->isSibionics()) {
+            if(notsendall2(startsensor)) {
+               settings->data()->haslibre2=true; 
+               } 
+              }
 			}
 		}
 	
 	int lastlibre3=-1;
 	const uint32_t fromtime=settings->data()->startlibretime;
-	const uint32_t oldtimer=fromtime?fromtime:(nu-Sensoren::sensorageseconds);
+	const uint32_t oldtimer=fromtime?fromtime:(nu-day15secs);
 #ifndef NOLOG
 	const time_t tim=oldtimer;
 	LOGGER("Start sendlibre3viewdata startlibre3view=%d lastsensor=%d from=%s",startsensor,lastsensor,ctime(&tim));
@@ -356,10 +358,12 @@ bool sendlibre3viewdata(bool hasnewcurrent,uint32_t nu) {
 				}
 			}
 		else {
-			if(notsendall2(i)) {
-				settings->data()->haslibre2=true; 
-				} 
-			}
+         if(!sensdata->isSibionics()) {
+            if(notsendall2(i)) {
+               settings->data()->haslibre2=true; 
+               } 
+            }
+         }
 		}
 	if(startsensor>lastlibre3) {
 		settings->data()->haslibre3= sendnumbers3();

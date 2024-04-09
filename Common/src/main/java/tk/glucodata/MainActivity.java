@@ -109,15 +109,15 @@ public class MainActivity extends AppCompatActivity implements NfcAdapter.Reader
     private NfcAdapter mNfcAdapter=null;
 boolean started=false;
 void startall() {
-	Log.d(LOG_ID,"startall");
-	if(!started)  {
+	Log.d(LOG_ID, "startall");
+	if (!started) {
 		startdisplay();
 		// started=true;
 		netinitstep();
-		 }
-	 }
-void askNotify() {
-        if(Build.VERSION.SDK_INT >=33)  {
+		}
+}
+boolean askNotify() {
+      if(Build.VERSION.SDK_INT >=33)  {
 		var perm= Manifest.permission.POST_NOTIFICATIONS;
 		if(ContextCompat.checkSelfPermission(this, perm)!= PackageManager.PERMISSION_GRANTED)  {
 			var permar=new String[]{perm};
@@ -129,14 +129,15 @@ void askNotify() {
 			else   {
 				requestPermissions(permar, NOTIFICATION_PERMISSION_REQUEST_CODE);
 				}
-			return;
+			return false;
 			}
 		}
 	explicit(this);
+   return true;
 	}
 void startdisplay() {
-  Log.i(LOG_ID,"startdisplay");
-Applic app=	(Applic)getApplication();
+   Log.i(LOG_ID,"startdisplay");
+   Applic app=	(Applic)getApplication();
 	app.setbackgroundcolor(this) ;
 	if(Applic.Nativesloaded)
 	    app.needsnatives() ;
@@ -875,6 +876,7 @@ public void onRequestPermissionsResult(int requestCode, String[] permissions, in
 			else {
 				Log.i(LOG_ID,"Required NO Notification permission");
 				}
+
 			explicit(this);	
 		 	};break;
 /*
@@ -898,6 +900,9 @@ public void onRequestPermissionsResult(int requestCode, String[] permissions, in
 					    }
 			} else {
 				Log.i(LOG_ID,"denied");
+				 setbluetoothmain(false);
+			     Applic.argToaster(this,"No permission. Sensor via Bluetooth turned off", Toast.LENGTH_LONG);
+
 				if(!gaverational) {
 					bluediag.returntoblue=false;
 					if(Build.VERSION.SDK_INT <26)  {
@@ -1270,7 +1275,13 @@ public void useBluetooth(boolean val) {
 	}
 
 public  void setbluetoothmain(boolean on) {
- 	Applic.setbluetooth(this, on) ;
+    if(on) {
+	      Natives.setusebluetooth(on);
+         if(!finepermission()) {
+            return;
+            }
+        }
+    Applic.setbluetooth(this, on) ;
 	if(fineres!=null)
 		fineres.call();
 	}

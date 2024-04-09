@@ -60,6 +60,7 @@ import static java.lang.Math.abs;
 import static java.lang.System.currentTimeMillis;
 import static tk.glucodata.Applic.isWearable;
 import static tk.glucodata.Applic.usedlocale;
+import static tk.glucodata.BuildConfig.SiBionics;
 import static tk.glucodata.Natives.turnoffalarm;
 import static tk.glucodata.NumberView.geteditview;
 import static tk.glucodata.NumberView.geteditwearos;
@@ -467,7 +468,10 @@ void startlibrelink(String lang) {
                                 case 5: {
 					if(!isWearable) {
 						MainActivity activity = (MainActivity) getContext();
-						doabout(activity);
+						if(SiBionics==1)
+							Sibionics.scan(activity);
+						else
+							doabout(activity);
 						}
 
 
@@ -1145,7 +1149,7 @@ public void onResume() {
       super.onPause();
     }
 
-void	doabout(MainActivity activity) {
+static public void	doabout(MainActivity activity) {
 if(!isWearable) {
 	String about=activity.getString(R.string.about)+"<p>Version Code: "+ BuildConfig.VERSION_CODE+"<br>Version Name: "+ 
     	BuildConfig.VERSION_NAME +"<br>"+Natives.getCPUarch()+"<br>Build time: "+ BuildConfig.BUILD_TIME +"</p>";

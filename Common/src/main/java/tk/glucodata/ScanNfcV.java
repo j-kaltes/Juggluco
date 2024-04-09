@@ -222,7 +222,7 @@ static public synchronized void scan(GlucoseCurve curve,Tag tag) {
 						}
 					 else{
 						Log.i(LOG_ID,"scanned "+name);
-						if(SensorBluetooth.resetDevice(streamptr, name))
+						if(SensorBluetooth.resetDeviceOrFree(streamptr, name))
 							askpermission = true;
 						ret = 0xFC;
 						value=1;

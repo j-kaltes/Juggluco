@@ -71,6 +71,8 @@ extern "C" JNIEXPORT void JNICALL fromjava(showbytes)(JNIEnv *env, jclass thiz, 
 			LOGGER("%s zero bytes array\n",str);
 		}
 	} */
+
+
 extern "C" JNIEXPORT void JNICALL fromjava(showbytes)(JNIEnv *env, jclass thiz,jstring jmess,jbyteArray jar) {
 #ifndef NOLOG
 	if(dolog) {
@@ -84,7 +86,6 @@ extern "C" JNIEXPORT void JNICALL fromjava(showbytes)(JNIEnv *env, jclass thiz,j
 		constexpr const int startlen=0;
 		int totlen=startlen+len+(jar?(vallen*3):nulllen)+1;
 		char mess[totlen];
-////////////////		memcpy(mess,start,startlen);
 		jint jlen = env->GetStringLength(jmess);
 		env->GetStringUTFRegion(jmess, 0,jlen, mess+startlen);
 		int pos=startlen+len;

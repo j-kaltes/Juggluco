@@ -84,7 +84,7 @@ void namehandler(int sig) {
 	const char buf[]="Verdwenen";
 	 prctl(PR_SET_NAME, buf, 0, 0, 0);
 	asignal(SIGUSR2,SIG_IGN);
-	int getsockets();
+extern	int getsockets();
 	getsockets();
 
       #include <sys/syscall.h>    

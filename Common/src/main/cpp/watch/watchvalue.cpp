@@ -129,7 +129,7 @@ extern "C" JNIEXPORT jobject  JNICALL   fromjava(lastglucose)(JNIEnv *env, jclas
 		return nullptr;
 		}
 	const jlong tim=poll->gettime();
-	const char *sensorid=hist->shortsensorname()->data();
+	const char *sensorid=hist->othershortsensorname()->data();
 	LOGGERTAG("strGlucose(%lld,%s,%s,%.1f)\n",(long long)tim,buf,sensorid,poll->ch);
 	const float rateofchange=( nonconvert<glucoselowest||nonconvert>glucosehighest)?NAN:poll->ch;
 	return env->NewObject(item,iconstruct,tim,env->NewStringUTF(buf),env->NewStringUTF(sensorid),rateofchange);

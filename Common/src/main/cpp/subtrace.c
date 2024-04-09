@@ -105,9 +105,9 @@
 
 
     jobject      subNewGlobalRef(JNIEnv*env,jobject  jobject1) {
-   LOGSTRING("NewGlobalRef\n");
-
-   }
+      LOGGER("NewGlobalRef %p\n",jobject1);
+      return jobject1;
+      }
 
 
     void         subDeleteGlobalRef(JNIEnv*env,jobject  jobject1) {
@@ -146,11 +146,6 @@
 
    }
 
-
-    jobject      subNewObjectV(JNIEnv*env,jclass  jclass1,jmethodID  jmethodID2,va_list  va_list3) {
-   LOGSTRING("NewObjectV\n");
-
-   }
 
 
     jobject      subNewObjectA(JNIEnv*env,jclass  jclass1,jmethodID  jmethodID2,const jvalue * const3) {
@@ -509,10 +504,6 @@
    }
 
 
-    jfieldID     subGetFieldID(JNIEnv*env,jclass  jclass1,const char * const2,const char * const3) {
-   LOGSTRING("GetFieldID\n");
-
-   }
 
 
     jobject      subGetObjectField(JNIEnv*env,jobject  jobject1,jfieldID  jfieldID2) {
@@ -551,10 +542,6 @@
    }
 
 
-    jlong        subGetLongField(JNIEnv*env,jobject  jobject1,jfieldID  jfieldID2) {
-   LOGSTRING("GetLongField\n");
-
-   }
 
 
     jfloat       subGetFloatField(JNIEnv*env,jobject  jobject1,jfieldID  jfieldID2) {
@@ -599,16 +586,6 @@
    }
 
 
-    void         subSetIntField(JNIEnv*env,jobject  jobject1,jfieldID  jfieldID2,jint  jint3) {
-   LOGSTRING("SetIntField\n");
-
-   }
-
-
-    void         subSetLongField(JNIEnv*env,jobject  jobject1,jfieldID  jfieldID2,jlong  jlong3) {
-   LOGSTRING("SetLongField\n");
-
-   }
 
 
     void         subSetFloatField(JNIEnv*env,jobject  jobject1,jfieldID  jfieldID2,jfloat  jfloat3) {
@@ -617,10 +594,6 @@
    }
 
 
-    void         subSetDoubleField(JNIEnv*env,jobject  jobject1,jfieldID  jfieldID2,jdouble  jdouble3) {
-   LOGSTRING("SetDoubleField\n");
-
-   }
 
 
 
@@ -943,16 +916,7 @@
    }
 
 
-    const char*  subGetStringUTFChars(JNIEnv*env,jstring  jstring1,jboolean * jboolean2) {
-   LOGSTRING("GetStringUTFChars\n");
 
-   }
-
-
-    void         subReleaseStringUTFChars(JNIEnv*env,jstring  jstring1,const char * const2) {
-   LOGSTRING("ReleaseStringUTFChars\n");
-
-   }
 
 
     jobjectArray  subNewObjectArray(JNIEnv*env,jsize  jsize1,jclass  jclass2,jobject  jobject3) {

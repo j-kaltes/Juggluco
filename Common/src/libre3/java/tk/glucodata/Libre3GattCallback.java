@@ -209,19 +209,19 @@ private final void checkBluetoothGatt(BluetoothGatt bluetoothGatt) {
 		}
 
         @Override // android.bluetooth.BluetoothGattCallback
-        public void onServicesDiscovered(BluetoothGatt bluetoothGatt, int status) {
-		checkBluetoothGatt(bluetoothGatt);
-	   Log.i(LOG_ID, SerialNumber + ": "+ "onServicesDiscovered status="+status);
-            if (status == GATT_SUCCESS) {
+     public void onServicesDiscovered(BluetoothGatt bluetoothGatt, int status) {
+		  checkBluetoothGatt(bluetoothGatt);
+	       Log.i(LOG_ID, SerialNumber + ": "+ "onServicesDiscovered status="+status);
+          if (status == GATT_SUCCESS) {
                 if(!getservices()) {
-			dodisconnect(bluetoothGatt);
-			disconnected(status);
-			}
-		}
+                  dodisconnect(bluetoothGatt);
+                  disconnected(status);
+                  }
+		      }
              else {
                 Log.e(LOG_ID, SerialNumber + ": "+ "BLE: onServicesDiscovered error: " + status);
-		dodisconnect(bluetoothGatt);
-		disconnected(status);
+               dodisconnect(bluetoothGatt);
+               disconnected(status);
             }
         }
 

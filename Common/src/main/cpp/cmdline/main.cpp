@@ -691,7 +691,7 @@ void     processglucosevalue(int sendindex,int newstart) {
 				logprint("finished=%d not finished %s ",senso->finished,ctime(&tim));
 				if(senso->finished) {
 					senso->finished=0;
-					backup->definished(sendindex);
+					backup->resensordata(sendindex);
 					}
 
 				}

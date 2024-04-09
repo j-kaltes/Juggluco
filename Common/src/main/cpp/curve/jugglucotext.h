@@ -95,6 +95,7 @@ std::string_view Undetermined, FallingQuickly,Falling, Stable, Rising, RisingQui
 std::string_view trends[6];
 };
 #endif
+std::string_view receivingpastvalues;
 };
 
 extern jugglucotext *usedtext;

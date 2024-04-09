@@ -19,8 +19,9 @@
 /*      Fri Jan 27 12:35:09 CET 2023                                                 */
 
 
-#ifndef GLUCOSEHISTORY_H
-#define GLUCOSEHISTORY_H
+//#ifndef GLUCOSEHISTORY_H
+//#define GLUCOSEHISTORY_H
+#pragma once
 //#include <filesystem>
 
 #include <sys/mman.h>
@@ -61,6 +62,8 @@ inline	constexpr const char rawstream[]="rawstream.dat";
 #include <string_view>
 extern std::string_view globalbasedir;
 //string basedir(FILEDIR);
+
+extern int writeStartime(crypt_t *pass, const int sock, const int sensorindex); 
 constexpr int maxminutes=22000;
 struct ScanData {uint32_t t;int32_t id;int32_t g;int32_t tr;float ch;
  uint16_t getmgdL() const { return g;};
@@ -149,7 +152,8 @@ struct updatestate {
 	bool changedhistorystart:1;
 	bool sendKAuth:1;
 	bool sendhiststart:1;
-	uint8_t rest:2;
+   bool siScan:1;
+   bool siStream:1;
 	};
 static inline constexpr const int deviceaddresslen=18;
 struct Info {
@@ -164,27 +168,45 @@ uint16_t pollstart;
 uint8_t dupl:7;
 bool uselater:1;
 uint8_t days:7;
-bool auth12removed:1;
+bool sibionics:1;
 //uint32_t reserved2[2];
 uint32_t pin;
 uint16_t lastLifeCountReceived;
 uint16_t lastHistoricLifeCountReceivedPos;
-struct { int len;
+struct { 
+   int len;
 	signed char data[8];
 	} ident;
-struct { 
-	int len;
-	signed char data[6];
-	} info;
-uint32_t bluestart;	
 union {
-	struct { int len;
-		signed char data[6];
-		uint8_t sensorgenDONTUSE;
-		bool reserved2;
-		} blueinfo;
-	uint8_t streamingAuthenticationData[12];
+struct {
+   struct { 
+      int len;
+      signed char data[6];
+      int16_t extra;
+      } info;
+	struct {
+		uint32_t bluestart;	
+		union {
+			struct { int len;
+				signed char data[6];
+				uint8_t sensorgenDONTUSE;
+				bool reserved2;
+				} blueinfo;
+			uint8_t streamingAuthenticationData[12];
+			};
+		};
+      };
+
+
+   struct {
+       char siBlueToothNum[9];
+       char siBetween;
+       uint8_t siDeviceNamelen;
+       char8_t siToken;
+       char8_t siDeviceName[16];
+
 	};
+    };
 uint32_t pollcount;
 double pollinterval; 
 uint32_t lockcount;
@@ -209,7 +231,14 @@ uint16_t libreviewnotsend:14;
 bool prunedstream:1;
 bool putsensor:1;
 updatestate update[std::max(maxsendtohost,8)];
-uint8_t kAuth[149];
+union {
+   uint8_t kAuth[149];
+   struct {
+      uint32_t siIdlen;
+      char8_t siId[68];
+      char8_t reservedS[77];
+      } __attribute__ ((packed)); //sizeof=4 element and non multiple of 4
+   }; 
 bool haskAuth;
 uint16_t nightiter;
 uint32_t libreCurrentIter;
@@ -239,7 +268,7 @@ void unSetLibreSend(int pos) {
 	}
 
 bool infowrong() const {
-	if(days<10||days>16)
+	if(days<10||days>30)
 		return true;	
 	if(starttime<1583013600)
 		return true;
@@ -283,7 +312,7 @@ const int nrunits(int perhour=4)  {
 //	if(error()) return 0;
 	const auto elsize=getelsize();
 	const auto days=getinfo()->days;
-	if(elsize<10||elsize>20||days<14||days>20) {
+	if(elsize<10||elsize>20||days<14||days>30) {
 		LOGGER("nrunits error elsize=%d days=%d\n",elsize,days);
 		haserror=true;
 		return 0;
@@ -307,6 +336,8 @@ std::mutex mutex;
 int getsensorgen() const {
 //	return getinfo()->blueinfo.sensorgen;
 	const data_t *info=getpatchinfo();
+   if(!info->length())
+      return 0;
 	return getgeneration((const char *)info->data());
 	}
 void setsensorgen() {
@@ -328,6 +359,12 @@ bool waiting=true;
 const int32_t maxpos() const {
 	return getinfo()->days*24*perhour();
 	}
+const int32_t maxstreampos() const {
+   auto days=getinfo()->days;
+   if(days<15)
+      days=15;
+   return days*24*60;
+   }
 int streamingIsEnabled() const{
 	return getinfo()->streamingIsEnabled;
 	}
@@ -602,10 +639,18 @@ bool hasbluetooth() const {
 	return getinfo()->bluestart!=bluestartunknown;
 	}
 bool canusestreaming() const {
- 	return  isLibre3()||hasbluetooth();
+ 	return  isSibionics()||isLibre3()||hasbluetooth();
  //	return  hasbluetooth();
 	}
 
+const sensorname_t * othershortsensorname() const {
+	if(isSibionics()) {
+       const char *name=(char *)&getinfo()->siToken;
+       if(*name)
+	         return reinterpret_cast<const sensorname_t *>(name);
+      }
+	return reinterpret_cast<const sensorname_t *>(sensordir.data()+sensordir.length()-11);
+	}
 
 //typedef array<char,11>  sensorname_t;
 const sensorname_t * shortsensorname() const {
@@ -616,10 +661,14 @@ const longsensorname_t * sensorname() const {
 	return reinterpret_cast<const longsensorname_t *>(sensordir.data()+sensordir.length()-16);
 	}
 std::string_view showsensorname() const {
-	if(isLibre3()) 
-		return std::string_view(sensordir.data()+sensordir.length()-9,9);
-	else
-		return std::string_view(shortsensorname()->data(),11);
+	if(isSibionics()) 
+	      return std::string_view((char *)getinfo()->siDeviceName,getinfo()->siDeviceNamelen);
+     else {
+      if(isLibre3()) 
+         return std::string_view(sensordir.data()+sensordir.length()-9,9);
+      else
+         return std::string_view(shortsensorname()->data(),11);
+        }
 	}
 	/*
 static int getgeneration(const char *info) {
@@ -684,23 +733,20 @@ static bool mkdatabase(string_view sensordir,time_t start,const  char *uid,const
 	settings->data()->haslibre2=true;
 	return true;
 	}
-	/*
-static pathconcat namelibre3(const std::string_view sensorid) {
-	char sendir[17]="E07A-XXX";              
-	const int totsens=16;
-	const int len=sensorid.length();
-	memcpy(sendir+totsens-len,sensordir.data(),len);
-	sendir[totsens]='\0';
-	return pathconcat(basedir,std::string_view(sendir,totsens));
-	} */
 /*
 E007-0M0063KNUJ0
 E07A-XX068ZMRF18              
 E07A-000T3YL1R50
 */
- bool isLibre3() const {
-	return getinfo()->interval==interval5;
+ bool isSibionics() const {
+	return getinfo()->sibionics;
 	}
+ bool isLibre3() const {
+	return !isSibionics()&&(getinfo()->interval==interval5);
+	}
+ bool isLibre2() const {
+   return !isSibionics()&&!isLibre3();
+   }
 	/*
  bool libreviewable() const {
 	return !isLibre3()&&pollcount();
@@ -726,8 +772,30 @@ static bool mkdatabase3(string_view sensordir,time_t start,uint32_t pin,const ch
 		
 	writeall(infoname,&inf,sizeof(inf));
 
-	//	settings->data()->haslibre2=libre2;
 	settings->data()->haslibre3=true;
+
+	return true;
+	}
+static bool mkdatabaseSI(string_view sensordir,string_view sensorgegs,uint32_t now) {
+     LOGGER("mkdatabaseSI %s,%s\n",sensordir.data(),sensorgegs.data());
+	mkdir(sensordir.data(),0700);
+	pathconcat infoname(sensordir,infopdat);
+	if(access(infoname,F_OK)!=-1)  {
+		Readall<uint8_t> inf(infoname);
+		if(inf.data()&&inf.size()>=sizeof(Info)) {
+			const Info *in=reinterpret_cast<const Info*>(inf.data());
+			if(in->starttime>1700000000&&in->dupl>0&&in->sibionics)
+				return false;
+			}
+		}
+	uint32_t start=now;
+       Info inf{.starttime=(uint32_t)start,.lastscantime=(uint32_t)start,.starthistory=0,.endhistory=0,.scancount=0,.startid=0,.interval=interval5,.dupl=3,.days=24 ,.sibionics=true,.lastLifeCountReceived=0,.pollcount=0, .lockcount=1};
+       inf.siIdlen=sensorgegs.size();
+       memcpy(inf.siId,sensorgegs.data(),inf.siIdlen);
+       memcpy(inf.siBlueToothNum,sensorgegs.end()-12,8);
+	inf.siBlueToothNum[8]='\0';
+		
+	writeall(infoname,&inf,sizeof(inf));
 
 	return true;
 	}
@@ -815,11 +883,14 @@ pathconcat polluit;
  pathconcat histpath;
  pathconcat scanpath;
  pathconcat trendspath;
+
+
+
  static constexpr const char trendsdat[]="trends.dat";
 SensorGlucoseData(string_view sensordir,int spec,string_view baseuit): sensordir(sensordir),meminfo(sensordir,infopdat,sizeof(struct Info)),historydata(sensordir,"data.dat",getinfo()?nrunits(perhour()):(haserror=true,0)),
 scansize(maxscansize()),
 scans(sensordir,"current.dat",scansize),
-polls(sensordir,"polls.dat",21600),
+polls(sensordir,"polls.dat",maxstreampos()),
 trends(sensordir,trendsdat,scansize),
 specstart(spec),
  polluit(baseuit, "polls.dat"),
@@ -827,7 +898,8 @@ specstart(spec),
  updateinfopath(baseuit, "updateinfo.dat"),
  histpath(baseuit, "data.dat"),
  scanpath(baseuit, "current.dat"),
- trendspath(baseuit, trendsdat)
+ trendspath(baseuit, trendsdat),
+ statefile(sensordir,"state.json")
 {
 if(error()) {
 	LOGSTRING("SensorGlucoseData Error\n");
@@ -865,6 +937,28 @@ LOGGER("SensorGlucoseData %s %s scansize=%zu\n",sensordir.data(),scanpath.data()
    }
 
 	public:
+template <typename T>
+std::string_view absToRel(T absname) {
+	const auto start=globalbasedir.size()+1;
+	return std::string_view{absname.data()+start,absname.size()-start};
+	} 
+std::string_view relstatefile() {
+	return absToRel(statefile);
+	}
+
+	/*
+template <typename T>
+const char * absToRel(T absname) {
+	const int start=globalbasedir.size()+1;
+	return absname.data()+start;
+	}
+const char * relstatefile() {
+	return absToRel(statefile);
+	} */
+pathconcat statefile;
+
+
+
 SensorGlucoseData(string_view sensin,int specin): SensorGlucoseData(sensin, specin, std::string_view(sensin.data()+specin,sensin.size()-specin)) {
 	}
 	public:
@@ -872,7 +966,7 @@ SensorGlucoseData(string_view sensin): SensorGlucoseData(sensin,globalbasedir.si
 	}
 //bool haserror=false;
 bool error() const {
-	if(!haserror&&meminfo.data()&& historydata.data()&&polls.data()&& (isLibre3()||(scans.data()&& trends.data())))
+	if(!haserror&&meminfo.data()&& historydata.data()&&polls.data()&& (isSibionics()||isLibre3()||(scans.data()&& trends.data())))
 		return false;	
 	return true;
 	}
@@ -963,6 +1057,12 @@ bool savepoll(time_t tim,int id,int glu,int trend,float change) {
 			}
 		}
 	saveglucosedata(polls,getinfo()->pollcount,tim, id, glu, trend, change);
+	return true;
+	}
+
+bool savestream(time_t tim,int id,int glu,int trend,float change) {
+	saveglucosedata(polls,getinfo()->pollcount,tim, id, glu, trend, change);
+	setSiIndex(id+1);
 	return true;
 	}
 
@@ -1393,6 +1493,26 @@ sendscan:
 1: also via stream
 2: also via scan
 */
+
+int sendjson(crypt_t *pass,int sock,int ind)  {
+	int waslock=getinfo()->lockcount;
+	if(getinfo()->update[ind].rawstreamstart<waslock) {
+		const char *statename=statefile.data();
+		Readall<unsigned char> json(statename);
+		if(!json.data()||!json.size()) {
+			LOGGER("GLU: %s doesn't exist\n",statename);
+			return 2;
+			}
+		if(!senddata(pass,sock,0,json.data(),json.size(),relstatefile())) {
+			LOGGER("GLU: senddata %s failed\n",relstatefile().data());
+			return 0;
+			}
+		getinfo()->update[ind].rawstreamstart=waslock;
+		return 1;	
+		}
+	return 2;
+	}
+
 int updatestream(crypt_t *pass,int sock,int ind,int sensindex,int sendscan)  {
 	getinfo()->update[ind].changedstreamstart=false;
 	int streamstart=getinfo()->update[ind].streamstart;
@@ -1463,15 +1583,34 @@ int updatestream(crypt_t *pass,int sock,int ind,int sensindex,int sendscan)  {
 				vect.reserve(1);
 				break;
 			};
-		if(sendhiststart) {
-			vect.push_back({reinterpret_cast<const senddata_t *>(&getinfo()->starthistory),offsetof(Info,starthistory),sizeof(getinfo()->starthistory)});
-			}
 		vect.push_back({reinterpret_cast<uint8_t*>(&pollinfo),off,len});
-		if(wrotehistory) {
-			vect.push_back({reinterpret_cast<const senddata_t *>(&endinfo),offsetof(Info,endStreamhistory),sizeof(endinfo)});
-			}
+	  bool updateStarttime=false;
+	      if(isSibionics()&&!getinfo()->update[ind].siStream&&getinfo()->siDeviceName[0]&&
+                                 getinfo()->deviceaddress[0]&&
+                                 getinfo()->siDeviceNamelen>3) {
+			updateStarttime=true;
+      			LOGAR("updateStream send starttime, deviceName and deviceAddress");
+			vect.push_back({reinterpret_cast<const senddata_t *>(&getinfo()->starttime),offsetof(Info,starttime),4});
+			vect.push_back({reinterpret_cast<const senddata_t *>(&getinfo()->siDeviceNamelen),offsetof(Info,siDeviceNamelen),18});
+			vect.push_back({reinterpret_cast<const senddata_t *>(getinfo()->deviceaddress),offsetof(Info,deviceaddress),deviceaddresslen});
+         }
+        else {
+         if(sendhiststart) {
+            vect.push_back({reinterpret_cast<const senddata_t *>(&getinfo()->starthistory),offsetof(Info,starthistory),sizeof(getinfo()->starthistory)});
+            }
+            if(wrotehistory) {
+               vect.push_back({reinterpret_cast<const senddata_t *>(&endinfo),offsetof(Info,endStreamhistory),sizeof(endinfo)});
+               }
+           }
 		 if(!senddata(pass,sock,vect, infopath,cmd,reinterpret_cast<const uint8_t *>(&streamstart),sizeof(streamstart))) {
 			LOGSTRING("GLU: senddata info.data failed\n");
+			return 0;
+			}
+		if(updateStarttime) {
+			if(writeStartime(pass,sock,sensindex))  {
+				getinfo()->update[ind].siStream=true;
+				return 1;
+				}
 			return 0;
 			}
 
@@ -1531,6 +1670,15 @@ time_t lifeCount2time(uint32_t lifecount) {
 bool sensorerror=false;
 bool replacesensor=false;
 std::vector<int>viewed;
+int getSiIndex() const {
+	return getinfo()->lockcount;
+	}
+void setSiIndex(int index)  {
+	getinfo()->lockcount=index;
+	}
+
+uint32_t receivehistory=0;
+int retried=0;
 };
 
 struct lastscan_t {
@@ -1538,5 +1686,5 @@ struct lastscan_t {
 	const ScanData *scan;
 	uint32_t showtime;
 	};
-#endif
+//#endif
 

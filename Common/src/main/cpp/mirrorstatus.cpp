@@ -23,13 +23,13 @@
 #include "datbackup.h"
 #include "mirrorstatus.hpp"
 #include "net/netstuff.h"
-
+#include "mirrorerror.h"
 extern std::array<int,maxallhosts>   messagesendersockets;
 extern std::array<int,maxallhosts>   messagereceiversockets;
 extern std::array<int,maxallhosts>             us2peers;
 extern mirrorstatus_t mirrorstatus[maxallhosts];
 
-constexpr const int maxmirrortext=200;
+//constexpr const int maxmirrortext=200;
 extern char *getmirrorerror(const passhost_t *pass);
 struct deleter {
 const char *ptr;

@@ -83,7 +83,7 @@ static jmethodID summaryready=nullptr;
 	#ifdef  WEAROS
 static jmethodID showsensorinfo=nullptr;
 #endif
-jmethodID  jdoglucose=nullptr, jupdateDevices=nullptr, jbluetoothEnabled=nullptr,jspeak=nullptr;
+jmethodID  jdoglucose=nullptr, jupdateDevices=nullptr, jbluetoothEnabled=nullptr,jspeak=nullptr, jresetWearOS=nullptr;
 jclass JNIApplic;
 #ifdef OLDXDRIP
 #ifndef  WEAROS
@@ -137,6 +137,9 @@ if(cl) {
 		}
 	if(!(jspeak=env->GetStaticMethodID(JNIApplic,"speak","(Ljava/lang/String;)V"))) {
 		LOGSTRING(R"(jspeak=env->GetStaticMethodID(JNIApplic,"speak","(Ljava/lang/String;)V") failed)" "\n");
+		}
+	if(!(jresetWearOS=env->GetStaticMethodID(JNIApplic,"resetWearOS","()V"))) {
+		LOGSTRING(R"(jresetWearOS=env->GetStaticMethodID(JNIApplic,"resetWearOS","()V") failed)" "\n");
 		}
 	}
 else {
@@ -230,6 +233,13 @@ bool updateDevices() {
 		}
     return   getenv()->CallStaticBooleanMethod(JNIApplic,jupdateDevices);
     }
+void resetWearOS() {
+    if(!jresetWearOS)  {
+    	LOGAR("jresetWearOS==null");
+		}
+     else
+        getenv()->CallStaticVoidMethod(JNIApplic,jresetWearOS);
+    }
 void visiblebutton() {
 	if(glucosecurve) {
 		if(summaryready)  {
@@ -300,12 +310,16 @@ extern uint32_t starttime;
 extern void setdiffcurrent();
 
 extern int diffcurrent;
+extern bool nowclamp;
+bool nowclamp=false;
 static void setdiffcurrent(bool val) {
+   nowclamp=val;
+   /*
 	if(val) {
 		setdiffcurrent();
 		}
 	else 
-		diffcurrent=0;
+		diffcurrent=0; */
 	}
 extern "C" JNIEXPORT void  JNICALL   fromjava(setcurrentRelative)(JNIEnv *env, jclass cl,jboolean val) {
 	settings->data()->currentRelative=val;
@@ -690,7 +704,7 @@ extern "C" JNIEXPORT jlong JNICALL fromjava(saylastglucose)(JNIEnv *env, jclass 
 		}
 	return -1L;
 	}
-
+//MENUS functions:
 extern "C" JNIEXPORT jboolean JNICALL fromjava(getsystemui)(JNIEnv *env, jclass thiz) {
 	return showui;
 	}

@@ -250,8 +250,9 @@ bool sendcommandpass(ascon_aead_ctx_t *ctx,int sock ,const unsigned char *buf,in
 	if(erbij>0)
 		new_ct_bytes += ascon_aead128a_encrypt_update(ctx, startdata+new_ct_bytes, reinterpret_cast<const uint8_t *>(zeros), erbij);
 	ascon_aead128a_encrypt_final(ctx, startdata + new_ct_bytes, allbuf, taglen);
-	if(!noacksendcommand(sock,allbuf,totlen))
+	if(!noacksendcommand(sock,allbuf,totlen))  {
 		return false;
+		}
 	if(askack)
 		return getack(sock);
 	return true;

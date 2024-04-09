@@ -94,8 +94,10 @@ protected	SuperGattCallback(String SerialNumber,long dataptr,int gen) {
 	}
 public void disconnect() {
 	final var thegatt= mBluetoothGatt;
-	if(thegatt!=null)
+	if(thegatt!=null) {
+		Log.i(LOG_ID,"Disconnect");
 		thegatt.disconnect();
+		}
 	}
 public void reconnect(long old) {
 	if(charcha[1]<old)  {
@@ -494,5 +496,8 @@ public void searchforDeviceAddress() {
 
 protected final boolean asknotification(BluetoothGattCharacteristic charac) {
 		return enableNotification(mBluetoothGatt, charac);
+	}
+public boolean matchDeviceName(String deviceName) {
+	return false;
 	}
 }

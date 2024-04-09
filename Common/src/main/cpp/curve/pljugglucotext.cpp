@@ -153,8 +153,9 @@ jugglucotext pltext {
 .Falling="Spadek",
 .Stable="Powolna zmiana",
 .Rising="Wzrost",
-.RisingQuickly="Szybki wzrost"
+.RisingQuickly="Szybki wzrost",
 #endif
+.receivingpastvalues="Receiving old values"
 		}
 
 

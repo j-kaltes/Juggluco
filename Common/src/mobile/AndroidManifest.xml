@@ -4,71 +4,16 @@
     tools:overrideLibrary="androidx.health.connect.client" >
     <uses-sdk tools:overrideLibrary="androidx.health.connect.client"/>
 
-    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE" />
 <!-- s/^[	 ]*\(.*\)[	 ]*$/<uses-permission android:name="\1"\/>/g -->
 <uses-permission android:name="android.permission.health.WRITE_BLOOD_GLUCOSE"/>
-    <uses-feature
-        android:name="android.hardware.type.automotive"
-        android:required="false" />
-    <uses-feature
-        android:name="android.hardware.nfc"
-        android:required="false" />
-    <uses-feature
-        android:glEsVersion="0x00020000"
-        android:required="true" /> <!-- <uses-permission-sdk-23 android:name="android.permission.ACCESS_NOTIFICATION_POLICY"/> -->
-     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" android:maxSdkVersion="32" />
+<uses-feature android:name="android.hardware.type.automotive" android:required="false" />
 
-    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.NFC" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission
-        android:name="android.permission.ACCESS_COARSE_LOCATION"
-        android:maxSdkVersion="30" />
-    <uses-permission
-        android:name="android.permission.ACCESS_FINE_LOCATION"
-        android:maxSdkVersion="30" />
-    <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-    <!--
- Needed only if your app looks for Bluetooth devices.
-         You must add an attribute to this permission, or declare the
-         ACCESS_FINE_LOCATION permission, depending on the results when you
-         check location usage in your app.
-    -->
-    <uses-permission
-        android:name="android.permission.BLUETOOTH_SCAN"
-        android:usesPermissionFlags="neverForLocation" />
-    <!--
- Needed only if your app makes the device discoverable to Bluetooth
-         devices.
-    -->
-    <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
-    <!--
- Needed only if your app communicates with already-paired Bluetooth
-         devices.
-    -->
-    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
 <queries>
     <package android:name="com.google.android.apps.healthdata" />
 </queries>
-
-
     <queries>
         <intent>
             <action android:name="android.intent.action.TTS_SERVICE" />
-        </intent>
-    </queries>
-    <queries>
-        <intent>
-            <action android:name="android.nfc.action.TECH_DISCOVERED" />
         </intent>
     </queries>
     <queries>
@@ -82,20 +27,9 @@
         </intent>
     </queries>
     <queries>
-        <intent>
-            <action android:name="com.eveningoutpost.dexdrip.BgEstimate" />
-        </intent>
-    </queries>
-    <queries>
-        <intent>
-            <action android:name="glucodata.Minute" />
-        </intent>
-    </queries>
-    <queries>
         <package android:name="com.garmin.android.apps.connectmobile" />
     </queries>
 
-    <uses-permission-sdk-23 android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 
     <supports-screens
         android:anyDensity="true"
@@ -107,25 +41,13 @@
 
     <uses-permission android:name="android.permission.FLASHLIGHT" />
 
-    <uses-feature
-        android:name="android.hardware.camera.flash"
-        android:required="false" />
-    <uses-feature
-        android:name="android.hardware.bluetooth_le"
-        android:required="false" />
+    <uses-feature android:name="android.hardware.camera.flash" android:required="false" />
 
     <application
         android:name=".Applic"
-        android:allowBackup="false"
-        android:debuggable="true"
-        android:extractNativeLibs="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:localeConfig="@xml/locales_config"
-        android:persistent="true"
-        android:theme="@style/AppTheme"
-        android:usesCleartextTraffic="true"
-        tools:ignore="HardcodedDebugMode">
+        android:theme="@style/AppTheme">
         <receiver
             android:name=".GlucoseWidget"
             android:exported="false">
@@ -141,51 +63,17 @@
         <activity
             android:name=".MainActivity"
             android:allowEmbedded="true"
-            android:autoRemoveFromRecents="false"
-            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|uiMode|fontScale|locale"
-            android:excludeFromRecents="false"
             android:exported="true"
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:screenOrientation="reverseLandscape"
-            android:stateNotNeeded="true"
-            android:windowSoftInputMode="stateHidden|adjustPan">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
+	    >
             <intent-filter>
                 <action android:name="androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE" />
             </intent-filter>
 
-            <meta-data
-                android:name="android.nfc.action.TECH_DISCOVERED"
-                android:resource="@xml/nfc_tech_filter" />
         </activity>
-
-        <activity-alias
-            android:name=".glucodata"
-            android:enabled="true"
-            android:exported="true"
-            android:label="@string/app_name"
-            android:targetActivity=".MainActivity">
-            <intent-filter>
-                <action android:name="android.nfc.action.TECH_DISCOVERED" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.nfc.action.TECH_DISCOVERED"
-                android:resource="@xml/nfc_tech_filter" />
-        </activity-alias>
-
-
-  <!-- For versions starting Android 14, create an activity alias to show the rationale
-       of Health Connect permissions once users click the privacy policy link. -->
   <activity-alias
       android:name="ViewPermissionUsageActivity"
       android:exported="true"
@@ -197,78 +85,20 @@
     </intent-filter>
   </activity-alias>
 
-
-        <receiver
-            android:name=".NumAlarm"
-            android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </receiver>
-        <receiver
-            android:name=".DeleteReceiver"
-            android:enabled="true"
-            android:exported="true"></receiver>
-        <receiver
-            android:name=".LossOfSensorAlarm"
-            android:enabled="true"
-            android:exported="true"></receiver>
-        <receiver
-            android:name=".Maintenance"
-            android:enabled="true"
-            android:exported="true"></receiver>
-
-        <service
-            android:name=".keeprunning"
-            android:enabled="true"
-            android:exported="true"
-            android:foregroundServiceType="connectedDevice" />
         <service
             android:name=".MessageReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
-
-                <data
-                    android:host="*"
-                    android:pathPrefix="/data"
-                    android:scheme="wear" />
-                <data
-                    android:host="*"
-                    android:pathPrefix="/messages"
-                    android:scheme="wear" />
-                <data
-                    android:host="*"
-                    android:pathPrefix="/netinfo"
-                    android:scheme="wear" />
-                <data
-                    android:host="*"
-                    android:pathPrefix="/wake"
-                    android:scheme="wear" />
-                <data
-                    android:host="*"
-                    android:pathPrefix="/wakestream"
-                    android:scheme="wear" />
+                <data android:host="*" android:pathPrefix="/data" android:scheme="wear" />
+                <data android:host="*" android:pathPrefix="/messages" android:scheme="wear" />
+                <data android:host="*" android:pathPrefix="/netinfo" android:scheme="wear" />
+                <data android:host="*" android:pathPrefix="/wake" android:scheme="wear" />
+                <data android:host="*" android:pathPrefix="/wakestream" android:scheme="wear" />
             </intent-filter>
         </service>
 
-        <provider
-            android:name="androidx.startup.InitializationProvider"
-            android:authorities="${applicationId}.androidx-startup"
-            tools:node="remove" />
 
-        <service
-            android:name="androidx.appcompat.app.AppLocalesMetadataHolderService"
-            android:enabled="false"
-            android:exported="false">
-            <meta-data
-                android:name="autoStoreLocales"
-                android:value="true" />
-        </service>
     </application>
 
 </manifest>

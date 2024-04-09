@@ -174,8 +174,9 @@ jugglucotext uktext {
 .Falling="Падіння",
 .Stable="Змінюється повільно",
 .Rising="Підйом",
-.RisingQuickly="Швидко піднімається"
+.RisingQuickly="Швидко піднімається",
 #endif
+.receivingpastvalues="Receiving old values"
 		}
 
 

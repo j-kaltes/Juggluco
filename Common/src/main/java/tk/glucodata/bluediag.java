@@ -60,7 +60,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-import androidx.annotation.Keep;
 
 import static android.bluetooth.BluetoothGatt.CONNECTION_PRIORITY_BALANCED;
 import static android.bluetooth.BluetoothGatt.CONNECTION_PRIORITY_HIGH;
@@ -452,16 +451,16 @@ if(!isWearable) {
       view.setBackgroundColor( Applic.backgroundcolor);
 	show(act,showview);
 	act.addContentView(showview, new ViewGroup.LayoutParams( WRAP_CONTENT, WRAP_CONTENT));
-	var scheduled=Applic.scheduler.scheduleAtFixedRate( ()-> {Log.i(LOG_ID,"scheduled");
-
+	var scheduled=Applic.scheduler.scheduleAtFixedRate( ()-> {
+       Log.i(LOG_ID,"scheduled");
 	    act.runOnUiThread( ()-> { 
-		if(gatts!=null&&gatts.size()>0) {
-			if(gattselected>= gatts.size()) {
-				Log.i(LOG_ID,"show: gattselected="+ gattselected);
-				gattselected=0;
-				}
-			showinfo(gatts.get(gattselected),act);
-			}
+         if(gatts!=null&&gatts.size()>0) {
+            if(gattselected>= gatts.size()) {
+               Log.i(LOG_ID,"show: gattselected="+ gattselected);
+               gattselected=0;
+               }
+            showinfo(gatts.get(gattselected),act);
+            }
 
 	    });},29,29, TimeUnit.SECONDS);
 	act.setonback(() -> {
@@ -521,8 +520,7 @@ Log.i(LOG_ID,"showall");
 	if(blue!=null&&blue.scantime!=0L) {
 		final List<Pair> messages = new ArrayList<>();
 		put(messages,blue.scantime,": Start search for sensors\n");
-		if(blue.unknownfound>0L)
-			put(messages,blue.unknownfound,": Skip "+blue.unknownname+"\n");
+//		if(blue.unknownfound>0L) put(messages,blue.unknownfound,": Skip "+blue.unknownname+"\n");
 
 		final ArrayList<SuperGattCallback> gatts=SensorBluetooth.mygatts();
 		if(gatts==null) {

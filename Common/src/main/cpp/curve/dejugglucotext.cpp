@@ -166,9 +166,10 @@ detext.newamount,
 .Falling="Fällt",
 .Stable="Ändert sich langsam",
 .Rising="Steigt",
-.RisingQuickly="Steigt rasch"
+.RisingQuickly="Steigt rasch",
 
 #endif
+.receivingpastvalues="Alte Glukosewerte kommen rein"
 		}
 
 

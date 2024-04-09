@@ -1,3 +1,15 @@
+Bij switch naar direct sensor-watch connectie, moet in bluediag gekeken worden.
+
+Sometimes times in the future are received from sensor.
+
+Bij wisselen wifi network, wordt verbinding horloge-telefoon verbroken. Reinit, sync doet het weer werken.
+
+Test bij nieuwe installatie. 
+The mirror connection didn't work. After changing the password it did, but earlier they already looked the same. Why?
+In Mirror Phone verdwijnt stream als eind uit beeld.
+Libre3 getservice in both onConnectionStateChange and onServiceDisc?
+[x] over System UI en Dark mode en te dicth bij Amounts
+
 Bij sluiten reminder wordt notificatie niet verwijderd.
 While compiling juggluco server -lz is added.
 Drukken op menu toont soms niets? Om is er geen menu?

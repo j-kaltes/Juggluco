@@ -9,7 +9,7 @@ btype=$1
 OUTPUTDIR=$5
 
 #OUTPUTDIR=$APPDIR/Common/build/mij/$model/$ABI/$btype
-CXXFLAGS="-std=c++20 -DAPPID=\\\"tk.glucodata\\\" -DAPPSUFFIX=\\\"\\\" -DRELEASEID=1  -DLIBRE3=1 "
+CXXFLAGS="-std=c++2b -DAPPID=\\\"tk.glucodata\\\" -DAPPSUFFIX=\\\"\\\" -DRELEASEID=1  -DLIBRE3=1 -DSIBIONICS=1 "
 if test $model = "watch"
 then
 CXXFLAGS+=" -DWEAROS=1  -DUSEDIN=1 "
@@ -27,7 +27,7 @@ fi
 echo $CXXFLAGS
 cmake\
 	-H$APPDIR/Common/src/main/cpp\
-	$DEBUGOPT -DCMAKE_CXX_FLAGS="-std=c++20 $CXXFLAGS "\
+	$DEBUGOPT -DCMAKE_CXX_FLAGS="-std=c++2b $CXXFLAGS "\
 	-DCMAKE_FIND_ROOT_PATH=$OUTPUTDIR\
 	-DCMAKE_BUILD_TYPE=$btype\
 	-DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK/build/cmake/android.toolchain.cmake\

@@ -31,7 +31,7 @@
 #include "netstuff.h"
 #include "datbackup.h"
 #include "aligner.h"
-
+#include "mirrorerror.h"
 #define lerrortag(...) lerror("getcommands: " __VA_ARGS__)
 #define LOGGERTAG(...) LOGGER("getcommands: " __VA_ARGS__)
 #define LOGSTRINGTAG(...) LOGSTRING("getcommands: " __VA_ARGS__)
@@ -122,6 +122,8 @@ for(int it=0;it<len;) {
  
 	bool ret=false;
 	if(!(host->receivefrom&2)&&command!=sbackupstop&&command!=swakeupstream&&command!=sbackup&&command!=sack)  {
+
+      savemessage(host,"Other side sends, but I am not configured to receive");
 		LOGSTRINGTAG("interpret: I don't receive from  this host\n");
 		return {-1,0};
 		}
@@ -426,6 +428,7 @@ static int interpretcommands(int sock,passhost_t *host,crypt_t *ctx,senddata_t *
 	return 0;
 	}
 constexpr int MAXDATA=1024*1024*256;
+
 static bool getcom(int sock, passhost_t *host,ascon_aead_ctx_t *ctx) {
 	int allindex=gethostindex(host);
 	auto &status=mirrorstatus[allindex].receive;
@@ -467,12 +470,14 @@ static bool getcom(int sock, passhost_t *host,ascon_aead_ctx_t *ctx) {
 		int res= ascon_aead128a_decrypt_update(ctx, uit, start, testlen);
 		constexpr int intlen=sizeof(int);
 		if(res<intlen)  {
+         savemessage(host,"1: Encrypted with a different password?");
 			LOGGERTAG("ascon_aead128a_decrypt_update(...%d)=%d\n",len1,res);
 			return false;
 			}
 		const int datlen=*reinterpret_cast<int *>(uit);
 		LOGGERTAG("datlen=%d\n",datlen);
 		if(datlen<0||datlen>MAXDATA) {
+         savemessage(host,"2: Encrypted with a different password?");
 			LOGGERTAG("strange datasize=%d\n",datlen);
 			return false;
 			}
@@ -481,6 +486,7 @@ static bool getcom(int sock, passhost_t *host,ascon_aead_ctx_t *ctx) {
 		if(totlen>maxcom) {
 			senddata_t *newbuf= new (maxalign,std::nothrow) senddata_t [totlen];
 			if(!uit) {
+            savemessage(host,"Out of Memory?");
 				sleep(1);
 				return false;
 				}
@@ -491,6 +497,7 @@ static bool getcom(int sock, passhost_t *host,ascon_aead_ctx_t *ctx) {
 		const int bijlen=totlen-testlen;
 		uint8_t *incrypt=new(std::nothrow) uint8_t[bijlen];
 		if(!incrypt) {
+         savemessage(host,"Out of Memory?");
 			sleep(1);
 			return false;
 			}
@@ -518,6 +525,7 @@ static bool getcom(int sock, passhost_t *host,ascon_aead_ctx_t *ctx) {
 		bool is_tag_valid;
 		res += ascon_aead128a_decrypt_final( ctx,uit+res, &is_tag_valid, tag, taglen);
 		if(!is_tag_valid) {		
+         savemessage(host,"3: Encrypted with a different password");
 			LOGSTRINGTAG("ascon_aead128a_decrypt_final returns invalid\n");
 			return false;
 			}

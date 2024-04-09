@@ -109,4 +109,4 @@ extern bool	libresendmeasurements(bool libre3,const char *measurements,const int
 
 extern bool sendlibre3viewdata(bool,uint32_t);
 #include "settings/mixpass.h"
-
+constexpr  const uint32_t day15secs=15*24*60*60;

@@ -204,8 +204,9 @@ are needed. In your case it has problems with the following file)",
 .Falling="Falling",
 .Stable="Changing slowly",
 .Rising="Rising",
-.RisingQuickly="Rising quickly"
+.RisingQuickly="Rising quickly",
 #endif
+.receivingpastvalues="Receiving old values"
 
 		}
 

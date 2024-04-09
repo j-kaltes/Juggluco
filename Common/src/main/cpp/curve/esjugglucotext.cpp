@@ -211,6 +211,7 @@ Se necesitan. En su caso tiene problemas con el siguiente archivo)",
 .Rising="Aumentando",
 .RisingQuickly="Aumentando rápidamente",
 #endif
+.receivingpastvalues="Receiving old values"
 
 }
 

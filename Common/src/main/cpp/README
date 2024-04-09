@@ -13,7 +13,7 @@ make juggluco
 
 Juggluco server can also function as simplified Nightscout/xDrip web server.
 
-SSL doesn't work with the precompiled version, because statically linked programs can't use dlopen.
+SSL doesn't work with the statically linked precompiled version, use the dynamic precompiled version or compile it yourself.
 
 To use the SSL version, you need an authenticated ssl key for the hostname that is used to contact with the juggluco server.
 
@@ -23,7 +23,4 @@ See Left menu->Settings->Web server->Help in Juggluco or https://www.juggluco.nl
 
 Put fullchain.pem privkey.pem in the jugglucodata directory where also the other data is saved. 
 
-It does not work with Nsclient and scout.
-It does work with Garmin Nightscout watches, xDrip and Diabox as followers, Nightwatch, G-Watch as follower
-Glimp doesn't connect at all and complaints about invalid nightscout web address also when I enter a webaddress of another nightscout server doesn't it work.
 For more information see in Juggluco Left menu->Settings->Web Server->Help.
