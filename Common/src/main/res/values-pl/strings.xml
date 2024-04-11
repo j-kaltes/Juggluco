@@ -212,7 +212,7 @@
  <string name="xdripbroadcast">Nadawaj zamiast xDrip</string>
  <string name="sensorpermission">Uprawnienie do dostępu do czujników potrzebne do wyświetlania tętna.</string>
  <string name="sensorpermissionmessage">Ustaw je w Ustawieniach urządzenia, Aplikacje, Uprawnienia, Juggluco</string>
- <string name="floatjuggluco">Powyżej</string>
+ <string name="floatglucose">Pływ. gluk.</string>
  <string name="floatglucoseshort">@string/floatglucose</string>
 
  <string name="fontsize">Rozmiar czcionki</string>
@@ -333,6 +333,7 @@
    <string name="clampnow">Zawsze teraz</string>
     <string name="sendfrom">&quot;Wysyłaj od: &quot;</string>
  <string name="changestartbutton">Zmień początek</string>
+ <string name="floatjuggluco">Powyżej</string>
  <string name="uploader">Przesył do NS</string>
  <string name="interval">Odstęp czasu</string>
  <string name="off">Wyłącz</string>
