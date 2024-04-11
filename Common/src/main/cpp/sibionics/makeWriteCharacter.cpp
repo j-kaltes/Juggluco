@@ -66,7 +66,7 @@ static auto makeWriteCharacter(int index, std::string_view address) {
 	int8_t zeros[] = {0, 0, 0, 0,0, 0, 0, 0};
         const auto su = sum(AddArr, sum(indexAr, sum(startAr,0))) ;
         std::array<int8_t,1> sign= {(int8_t) (((int8_t) (~(su & 0xFF))) + 1)};
-        return contconcat<int8_t>(startAr,indexAr,AddArr,zeros,sign);
+        return concat(startAr,indexAr,AddArr,zeros,sign);
     }
 /*
 int  main(int argc,char **argv) {

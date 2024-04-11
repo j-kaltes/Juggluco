@@ -107,7 +107,11 @@ static jugglucotext ittext {
 		"Orologio",
 		"Sensore",
 		"Impostazione",
-		"About",
+#if defined(SIBIONICS)
+"Sibionics",
+#else
+"About",
+#endif
 		"Chiudi",
 		"Stop Allarme"
 		},

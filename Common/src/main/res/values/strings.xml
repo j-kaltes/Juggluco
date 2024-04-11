@@ -334,4 +334,10 @@
     <string name="sendfrom">"Send from: "</string>
  <string name="changestartbutton">Change start</string>
  <string name="floatjuggluco">Above</string>
+ <string name="uploader">Uploader</string>
+ <string name="sibionics">Sibionics</string>
+ <string name="mmolL">mmol/L</string>
+ <string name="mgdL">mg/dL</string>
+ <string name="interval">Interval</string>
+ <string name="off">Off</string>
 </resources>

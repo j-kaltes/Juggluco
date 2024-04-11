@@ -97,7 +97,13 @@ jugglucotext engtext {
 		"Watch",
 		"Sensor",
 		"Settings",
+
+#if defined(SIBIONICS)
+		"Sibionics",
+#else
 		"About",
+#endif
+
 		"Close",
 		"Stop Alarm"
 		},

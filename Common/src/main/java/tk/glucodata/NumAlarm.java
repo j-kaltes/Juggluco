@@ -93,7 +93,7 @@ static void numalarm(Application mApp) {
 		}
 	builder.append(labels.get(nums[i]));
 	builder.append(mApp.getString(R.string.notentered));
-	Notify.init();
+	Notify.init(mApp);
 	Notify.onenot.amountalarm(builder.toString());
 	}
 static void	   handlealarm(Application context) {

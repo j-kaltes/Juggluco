@@ -174,7 +174,7 @@ void setnotify(boolean on) {
 	}
 public void setunit(int unit)  {
 	Natives.setunit(unit);
-	Notify.mkunitstr(unit);
+	Notify.mkunitstr(app,unit);
 	}
 public void sendlabels() {
 	if(!isWearable) {

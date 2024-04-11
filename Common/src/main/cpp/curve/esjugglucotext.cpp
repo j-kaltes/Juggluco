@@ -101,7 +101,11 @@ jugglucotext estext {
 "Reloj",
 "Sensor",
 "Ajustes",
+#if defined(SIBIONICS)
+"Sibionics",
+#else
 "Acerca",
+#endif
 "Cerrar",
 "Detener alarma"
 },

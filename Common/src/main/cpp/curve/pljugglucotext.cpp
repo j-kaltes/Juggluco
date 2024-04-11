@@ -1,6 +1,12 @@
 #include "jugglucotext.h"
 #ifndef WEAROS
-constexpr static std::string_view pllabels[]={"Insul szybk","Węglowodan","Dextro","Insul dług","Rower","Spacer","Krew"};
+constexpr static std::string_view pllabels[]={"Insul szybk",
+"Węglowodan",
+"Dextro",
+"Insul dług",
+"Rower",
+"Spacer",
+"Krew"};
 constexpr static Shortcut_t  plshortinit[]= { {"Chleb",
         .48},
         {"Bułka1",
@@ -31,18 +37,27 @@ constexpr static Shortcut_t  plshortinit[]= { {"Chleb",
 
 extern jugglucotext pltext;
 jugglucotext pltext {
-	.daylabel={"nie","pon","wto","śro","czw","pią","sob"},
-.speakdaylabel={
-	"Niedziela",
-"Poniedziałek",
-"Wtorek",
-"Środa",
-"Czwartek",
-"Piątek",
-"Sobota"},
-	.monthlabel={"sty","lut","mar","kwi","maj","cze","lip","sie","wrz","paź","lis","gru"},
-       
-      
+	.daylabel={"nie",
+	"pon",
+	"wto",
+	"śro",
+	"czw",
+	"pią",
+	"sob"},
+.speakdaylabel={ "niedziela","poniedziałek","wtorek","środa","czwartek","piątek","sobota"},
+	.monthlabel={
+      "sty",
+      "lut",
+      "mar",
+      "kwi",
+      "maj",             
+      "cze",
+       "lip",
+       "sie",
+       "wrz",
+      "paź",
+      "lis",
+      "gru"},
 
 	.scanned="Zeskanowano",
 	.readysecEnable="Sensor gotowy za %d minut(y). Zeskanuj go ponownie, by włączyć przesył danych co 1 min.",
@@ -51,7 +66,7 @@ jugglucotext pltext {
 .enablebluetooth="Włącz Bluetooth",
 .useBluetoothOff="'Użyj Bluetooth' wył.",
 .noconnectionerror=": Brak połączenia",
-.stsensorerror=": Błąd sensora",
+.stsensorerror=": Błąd odczytu sensora",
 .streplacesensor=": Wymienić sensor?",
 .endedformat="Sensor %s przestał działać. patchState=%d",
 .notreadyformat="%s nie jest jeszcze gotowy. state=%d",
@@ -60,12 +75,12 @@ jugglucotext pltext {
 	.middle=" Średnia",
 #endif
 	.history="Historia",
-	.historyinfo="Raz na 15 minut.\nSensor zapamiętuje wartości przez 8 godzin.\nSkanowanie przesyła je do aplikacji.\nSensor: ",
-	.history3info="Raz na 5 minut.\nSensor zapamiętuje wartości przez 14 dni.\nSą one przesyłane przez Bluetooth do tej aplikacji.\nSensor: ",
-	.sensorstarted= "Początek sensora:",
-	.lastscanned="Ostatni odczyt:",
+//	 historyinfo="Raz na 15 minut.\nSensor zapamiętuje wartości przez 8 godzin.\nSkanowanie przesyła je do aplikacji.\nSensor: ", 
+//	.history3info="Raz na 5 minut.\nSensor zapamiętuje wartości przez 14 dni.\nSą one przesyłane przez Bluetooth do tej aplikacji.\nSensor: ",
+	.sensorstarted= "Początek:",
+	.lastscanned="Ostatni skan:",
 	.laststream="Ostatni strumień:",
-	.sensorends="Koniec sensora: ",
+	.sensorends="Koniec: ",
 #ifndef WEAROS
 	.newamount="Nowa wartość",
 	.averageglucose="Średnie stęż. glukozy: ",
@@ -82,7 +97,11 @@ jugglucotext pltext {
 		"Zegarek",
 		"Sensor",
 		"Ustawienia",
+#if defined(SIBIONICS)
+"Sibionics",
+#else
 		"Informacje",
+#endif
 		"Zamknij",
 		"Zatrzymaj alarm"
 		},
@@ -93,10 +112,23 @@ jugglucotext pltext {
 		"Lista", 
 		"Statystyka",
 		"Na głos",
-		"Pływ. wart.        "
+		"Pływ. wart."
 		},
-	.menustr2= {"Ostatni odczyt","Skany","Strumień","Historia","Wartości","Posiłki","Tryb ciemny        "},
-	.menustr3= {hourminstr,"Wyszukaj","Data","Dzień wstecz","Dzień później","Tydzień wstecz","Tydzień później"},
+	.menustr2= {"Ostatni odczyt",
+	"Skany",
+	"Strumień",
+	"Historia",
+	"Wartości",
+	"Posiłki",
+   "Tryb ciemny        "},
+
+	.menustr3= {hourminstr,
+	"Wyszukaj",
+	"Data",
+	"Dzień wstecz",
+	"Dzień później",
+	"Tydzień wstecz",
+	"Tydzień później"},
 #else
  .amount="Wartość",
  .menustr0= {
@@ -105,35 +137,59 @@ jugglucotext pltext {
 	"   Tr. ciemny      ",
         "Ustawienia",
 	"Zatrzym. alarm"},
-.menustr2= {"Data",hourminstr, "1 d. wstecz            ",pltext.amount},
+.menustr2= {"Data",
+hourminstr,
+"Dzień wstecz            ",pltext.amount},
 
 #endif
 
 	.scanerrors={
-		{"Błąd skanowania (%d)","Spróbuj ponownie"},
-		{"Błąd instalacji","?"},
-		{"Błąd przetwarzania danych","Spróbuj ponownie"},
-		{"Uruchomienie sensora",""},
-		{"Sensor zakończył działanie",""},
+		{"Błąd skanowania (%d)",
+			"Spróbuj ponownie"},
+		{"Błąd instalacji",
+			"?"},
+		{"Błąd przetwarzania danych",
+			"Spróbuj ponownie"},
+		{"Uruchomienie sensora",
+			""},
+		{"Sensor zakończył działanie",
+			""},
 
-		{"Sensor gotowy za","%d minut(y)"},
-		{"Błąd odczytu sensora (373)","Spróbuj za 10 minut"},
-		{"Nowy sensor uruchomiony","Zeskanuj go ponownie, by z niego korzystać"},
-		{"","Blokuje funkcje dotykowe w czasie skanowania"},
-		{"",""},
-		{"Błąd podczas ładowania biblioteki", "Czy brakuje bibliotek współdzielonych?"},
-		{"Błąd podczas ładowania klasy", "Zrób coś"},
-		{"Procedura trwa zbyt długo","Zamykam program"},
-		{"Wymień czujnik (365)","Twój czujnik nie działa. Usuń czujnik i uruchom nowy."},
-		{"Wymień czujnik (368)","Twój czujnik nie działa. Usuń czujnik i uruchom nowy."},
-		{"",""},
-		{"Błąd skanowania", "Spróbuj ponownie"}},
+		{"Sensor gotowy za",
+			"%d minut(y)"},
+		{"Błąd sensora (373)",
+			"Spróbuj za 10 minut"},
+		{"Nowy sensor uruchomiony",
+			"Zeskanuj go ponownie, by z niego korzystać"},
+		{"",
+			"Blokuje funkcje dotykowe w czasie skanowania"},
+		{"",
+			""},
+		{"Błąd podczas ładowania biblioteki",
+			"Czy brakuje bibliotek współdzielonych?"},
+		{"Błąd podczas ładowania klasy",
+			"Zrób coś"},
+		{"Procedura trwa zbyt długo",
+			"Zamykam program"},
+		{"Wymień sensor (365)",
+			"Twój sensor nie działa. Usuń ten sensor i uruchom nowy."},
+		{"Wymień sensor (368)",
+			"Twój sensor nie działa. Usuń ten sensor i uruchom nowy."},
+		{"",
+			""},
+		{"Błąd skanowania",
+			"Spróbuj ponownie"}},
 
-.libre3scanerror={"FreeStyle Libre 3, Błąd skanowania", "Spróbuj ponownie"},
-.libre3wrongID={"Błąd, niepoprawny nr ID konta?", "W menu Ustawienia ->Libreview wpisz to samo konto, które zostało użyte do aktywacji sensora"},
-.libre3scansuccess={"Sensor FreeStyle Libre 3", "Wartości stężenia glukozy będą teraz odbierane przez Juggluco"},
-.unknownNFC={"Nieznany błąd skanowania NFC", "Spróbuj ponownie"},
-.nolibre3={"Sensor FreeStyle Libre 3", "Nie jest obsługiwany przez tę wersję Juggluco"},
+.libre3scanerror={"FreeStyle Libre 3, Błąd skanowania", 
+	"Spróbuj ponownie"},
+.libre3wrongID={"Błąd, niepoprawny nr ID konta?",
+	"W menu Ustawienia ->Libreview wpisz to samo konto, które zostało użyte do aktywacji sensora"},
+.libre3scansuccess={"Sensor FreeStyle Libre 3", 
+	"Wartości stężenia glukozy będą teraz odbierane przez Juggluco"},
+.unknownNFC={"Nieznany błąd skanowania NFC", 
+	"Spróbuj ponownie"},
+.nolibre3={"Sensor FreeStyle Libre 3",
+	"Pobierz poprawną wersję ze strony https://www.juggluco.nl/download.html"},
 #ifndef WEAROS
 	.advancedstart= R"(<h1>Urządzenie zmodyfikowane</h1>
 <p>Jedna z bibliotek używanych przez tę aplikację ma BŁĄD, który powoduje, że się zawiesza, jeśli wykryje pewne pliki.
@@ -155,13 +211,15 @@ jugglucotext pltext {
 .Rising="Wzrost",
 .RisingQuickly="Szybki wzrost",
 #endif
-.receivingpastvalues="Receiving old values"
+.receivingpastvalues="Odbieranie starych wartości"
+
 		}
 
 
 		;
 
-
+#include "logs.h"
 void setusepl() {
+LOGAR("setuse pl");
  usedtext= &pltext;
  }

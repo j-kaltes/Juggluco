@@ -14,9 +14,9 @@ jugglucotext chiText {
     },
 
     .scanned = "已扫描",
-    .readysecEnable = "传感器在 %d 分钟内准备好。再次扫描以启用流式传输。",
+    .readysecEnable = "传感器在 %d 分钟内准备好。再次扫描以启用蓝牙传输。",
     .readysec = "传感器在 %d 分钟内准备好。",
-    .networkproblem = "镜像中没有葡萄糖数据",
+    .networkproblem = "镜像中没有血糖数据",
     .enablebluetooth = "启用蓝牙",
     .useBluetoothOff = "'使用蓝牙' 关闭",
     .noconnectionerror = ": 无连接",
@@ -37,7 +37,7 @@ jugglucotext chiText {
     .sensorends = "结束于: ",
 
 #ifndef WEAROS
-    .newamount = "新金额",
+    .newamount = "新标签",
     .averageglucose = "平均葡萄糖: ",
     .duration = "持续时间: %.1f 天",
     .timeactive = "%.1f%% 的时间处于活动状态",
@@ -48,12 +48,16 @@ jugglucotext chiText {
     .glucose_variability = "葡萄糖变异性: %.1f%%",
     .menustr0 = {
         "系统 UI        ",
-        "菜单",
+        "主菜单",
         "手表",
         "传感器",
         "设置",
+#if defined(SIBIONICS)
+"Sibionics",
+#else
         "关于",
-        "关闭",
+#endif
+        "关闭应用",
         "停止警报"
     },
     .menustr1 = {
@@ -62,29 +66,29 @@ jugglucotext chiText {
         chiText.newamount,
         "列表", 
         "统计",
-        "讲话",
-        "浮动        "
+        "播报",
+        "悬浮窗        "
     },
-    .menustr2 = {"最后扫描",
-        "扫描",
-        "流式传输",
+    .menustr2 = {"最后一次扫描",
+        "扫描数据",
+        "蓝牙数据",
         "历史记录",
-        "金额",
-        "餐",
-        "暗模式        "},
+        "标签数据",
+        "餐饮",
+        "黑暗模式        "},
     .menustr3 = {hourminstr,
         "搜索",
         "日期",
+        "向前一天",
         "向后一天",
-        "向后一天",
-        "向后一周",
-        "向前一周"},
+        "向前一周",
+        "向后一周"},
 #else
-    .amount = "金额",
+    .amount = "标签",
     .menustr0 = {
         "镜像",
         "传感器",
-        "    暗模式      ",
+        "黑暗模式",
         "设置",
         "停止警报" },
     .menustr2 = {"日期  ",
@@ -143,9 +147,7 @@ jugglucotext chiText {
 
 #ifndef WEAROS
     .advancedstart = R"(<h1>修改过的设备</h1>
-<p>此应用程序使用的库之一存在 BUG，如果检测到某些文件，则会导致
-它崩溃。您的设备包含了一些这样的文件。该程序包含了一个绕过此 BUG 的
-黑客，但最好以其他方式使这些文件不可检测。例如，Magisk 有选项可以
+<p>此应用程序使用的库之存在BUG，会检测root或者框架什么的，作者已经尝试绕过，但最好以其他方式使这些文件不可检测。例如，Magisk 有选项可以
 为某些应用程序隐藏 root（Magiskhide 或 Denylist）并更改自己的名称，两者都需要。在您的情况下，它对以下文件有问题)",
     .add_s = true,
     .shortinit = shortinit,

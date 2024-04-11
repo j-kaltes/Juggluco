@@ -164,7 +164,7 @@ int SensorGlucoseData::updatescan(crypt_t *pass,int sock,int ind,int sensorindex
 				return 0;
 				 }
 			getinfo()->update[ind].siScan=true;
-			return 1;
+			return 5;
 		}
 		return 2;
 	} else {

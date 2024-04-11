@@ -60,7 +60,7 @@
     <string name="save">Zapisz</string>
  <string name="addconnectionbutton">Dodaj połączenie</string>
  <string name="offtouch">Wył. dotyk</string>
- <string name="glucosestatusbar">Powiadomienie o wartości glikemii</string>
+ <string name="glucosestatusbar">Wartość glikemii w pasku stanu</string>
  <string name="lowglucosealarm">Alarm dla hipoglikemii</string>
  <string name="numlabel">&quot;Etykieta: &quot;</string>
  <string name="roundto">Zaokrąglaj do: &quot;</string>
@@ -77,7 +77,7 @@
  <string name="unit">&quot;Jednostka: &quot;</string>
  <string name="glucoseaxisleft">Oś glukozy po LEWEJ</string>
  <string name="startsapp">Skanowanie uruchamia aplikację</string>
- <string name="sendtoxdrip">Patched Libre Broadcast</string>
+ <string name="sendtoxdrip">Wysyłaj do xDrip</string>
  <string name="disablecamerakey">Wyłącz przycisk aparatu</string>
  <string name="invertscreen">Odwróć ekran</string>
  <string name="nfcsound">Dźwięk NFC</string>
@@ -115,7 +115,7 @@
  <string name="dozeupdate">Aktualizacja w trybie uśpienia</string>
  <string name="refresh">Odśwież</string>
  <string name="sendqueue">Wyślij kolejkę</string>
- <string name="reinit">Wznów poł.</string>
+ <string name="reinit">Reinic.</string>
  <string name="watchappinstalled">Aplikacja zainstalowana na zegarku</string>
  <string name="error">Błąd</string>
  <string name="additem">Dodaj pozycję</string>
@@ -188,7 +188,7 @@
  <string name="notentered">&quot; nie wpisano&quot;</string>
  <string name="spacedand">&quot; i &quot;</string>
     <string name="disturb">N. przeszk</string>
-    <string name="uselibreview">Wyślij do Libreview</string>
+    <string name="uselibreview">Wysyłaj do Libreview</string>
     <string name="libreviewname">Libreview</string>
     <string name="sendnow">Wyślij teraz</string>
     <string name="blueormirror">Należy włączyć &quot;Sensor przez Bluetooth&quot; lub skonfigurować to urządzenie jako klonujące</string>
@@ -200,19 +200,19 @@
  <string name="longinsulin">Insulina długodziałająca</string>
     <string name="comments">Notatki</string>
  <string name="dontsend">Nie wysyłaj</string>
- <string name="sendamounts">Wyślij wartości</string>
+ <string name="sendamounts">Wysyłaj wartości</string>
  <string name="resendquestion">Przesłać dane ponownie?</string>
- <string name="resendmessage">Użyj opcji &quot;Prześlij dane ponownie&quot; tylko po zalogowaniu się na inne konto Libreview lub po wcześniejszym usunięciu już używanego urządzenia z Libreview (Ustawienia konta-&gt;Moje urządzenia).</string>
+ <string name="resendmessage">Należy uważać, aby nie wysyłać tych samych, nakładających się danych do Libreview.</string>
  <string name="getaccountidquestion">Uzyskać nr ID konta Libreview?</string>
  <string name="getaccountidmessage">Identyfikator konta jest potrzebny do używania sensorów Libre3, które są aktywowane za pomocą aplikacji Abbott Libre3 z tym kontem Libreview.</string>
  <string name="deleteconnection">Usunąć połączenie?</string>
  <string name="wakelock">Wakelock</string>
  <string name="wifi">Wifi</string>
  <string name="heartrate">Tętno</string>
- <string name="xdripbroadcast">Nadawanie xDrip</string>
+ <string name="xdripbroadcast">Nadawaj zamiast xDrip</string>
  <string name="sensorpermission">Uprawnienie do dostępu do czujników potrzebne do wyświetlania tętna.</string>
  <string name="sensorpermissionmessage">Ustaw je w Ustawieniach urządzenia, Aplikacje, Uprawnienia, Juggluco</string>
- <string name="floatglucose">Pływ. gluk.</string>
+ <string name="floatjuggluco">Powyżej</string>
  <string name="floatglucoseshort">@string/floatglucose</string>
 
  <string name="fontsize">Rozmiar czcionki</string>
@@ -257,7 +257,7 @@
 <string name="newsecret">&quot;nowe api_secret: &quot;</string>
 <string name="newport">&quot;nowy port =&quot;</string>
 <string name="webserver">Serwer WWW</string>
-<string name="treatments">Przekaż wartości</string>
+<string name="treatments">Wysyłaj wartości</string>
 <string name="android13">Android</string>
     <string name="wentwrong">Coś poszło nie tak</string>
     <string name="dosis">&quot; dawka &quot;</string>
@@ -330,5 +330,11 @@
 <string name="toomanyhosts">Przekroczono maksymalną liczbę hostów</string>
 <string name="senthosts">Juggluco wysyła do maksymalnie 6 hostów</string>
     <string name="hostname">nazwa hosta</string>
-   <string name="clampnow">Pokaż zawsze „teraz”</string>
+   <string name="clampnow">Zawsze teraz</string>
+    <string name="sendfrom">&quot;Wysyłaj od: &quot;</string>
+ <string name="changestartbutton">Zmień początek</string>
+ <string name="floatjuggluco">Wyżej</string>
+ <string name="uploader">Przesył do NS</string>
+ <string name="interval">Odstęp czasu</string>
+ <string name="off">Wyłącz</string>
 </resources>

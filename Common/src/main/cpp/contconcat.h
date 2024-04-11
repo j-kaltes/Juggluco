@@ -32,37 +32,8 @@
 using namespace std;
 
 #include "contsize.h"
-
-template<class T, typename Enable = void>
-struct value_type;
-
-template<class T>
-struct value_type<T, std::void_t<typename T::value_type>>
-{
-    using type = typename T::value_type;
-};
-
-
-template<class T, std::size_t N>
-struct value_type<const T[N]>
-{
-    using type = T;
-};
-template<class T, std::size_t N>
-struct value_type<T[N]>
-{
-    using type = T;
-};
-
-
-
-//template<typename T> using element_type_t = value_type<T>::type;
-template<typename T> using element_type_t = typename std::iterator_traits<decltype(std::begin(std::declval<T>())[0])>::value_type;
-//template<typename T> using element_type_t = std::remove_cv_t<std::remove_reference<std::remove_cv_t<decltype(*std::begin(std::declval<std::remove_reference<T>>()))>>>;
 template <typename eltype>
 class contconcat {
-//using eltype = CON::value_type;
-//using eltype = element_type_t<CON>;
 eltype *name;
 int namelen;
 public:
@@ -130,11 +101,16 @@ operator const eltype *() const {
 int size() const {return namelen;}
 int length() const {return size();}
 };
-//template<typename T> struct is_container : std::integral_constant<bool, has_const_iterator<T>::value && has_begin_end<T>::beg_value && has_begin_end<T>::end_value> { };
-//std::enable_if_t< std::is_base_of_v< std::input_iterator_tag, std::iterator_traits<T>::iterator_category > >.
 
-//template<class T, std::enable_if_t<std::is_pointer<T>::value , bool> = false >
- //using contconcat=contconcat<T>;
-//template<class T, std::size_t N> using contconcat=contconcat<T[N]>;
-//template<class T,typename std::enable_if<is_container<T>::value>::type> using contconcat=contconcat<T>;
-
+template <typename T,typename ...Ts> requires requires(T t) {typename T::value_type;}
+contconcat<typename T::value_type> concat(T a,Ts &&... args) {
+      return contconcat<typename T::value_type> (a,args...);
+   };
+template<typename T, std::size_t N,typename ...Ts>
+contconcat<T> concat(T (&a)[N],Ts &&... args) {
+      return contconcat<T>(a,args...);
+      }      
+template<typename T, std::size_t N,typename ...Ts>
+contconcat<T> concat(const T (&a)[N],Ts &&... args){
+      return contconcat<T>(a,args...);
+      }      

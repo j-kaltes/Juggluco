@@ -28,7 +28,7 @@ import static tk.glucodata.Natives.hasalarmloss;
 public class SuperGlucoseAlarms {
     final private static String LOG_ID="SuperGlucoseAlarms";
 public SuperGlucoseAlarms(Application context) {
-	Notify.init();
+	Notify.init(context);
 	}
 
 static final int showtime = 3 * 60 * 1000;

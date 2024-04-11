@@ -1286,7 +1286,7 @@ static void	showscanner(NVGcontext* genVG,const SensorGlucoseData *hist,int scan
 	nvgFontSize(genVG,mediumfont );
 	nvgText(genVG, endtime,yunder, buf, buf+len);
 	const sensorname_t *sensorname=hist->othershortsensorname();
-	nvgFontSize(genVG,smallsize );
+	nvgFontSize(genVG,headsize*.134f );
 	nvgTextAlign(genVG,NVG_ALIGN_LEFT|NVG_ALIGN_MIDDLE);
     const auto sensorx=bounds[0] -sensleft;
 	nvgText(genVG,sensorx,yunder, sensorname->begin(), sensorname->end());
@@ -2639,9 +2639,11 @@ bool hebrew() {
 void  setlocale(const char *localestrbuf,const size_t len) {
 	LOGGER("locale=%s\n",localestrbuf);
 	localestr={localestrbuf,len};
+	/*
 	#if defined(SIBIONICS) && !defined(WEAROS)
-	destruct dest([] { usedtext->menustr0[5]=std::string_view("Sibionics");});
+	destruct dest([] { usedtext->menustr0[5]=usedtext->sibionics;});
 	#endif
+	*/
 	const int16_t lannum=mklanguagenum(localestrbuf);
 	switch(lannum) {
 		case mklanguagenum("DE"):

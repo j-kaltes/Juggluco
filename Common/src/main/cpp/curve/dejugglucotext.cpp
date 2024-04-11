@@ -99,7 +99,12 @@ jugglucotext detext {
 "Uhren",
 "Sensor",
 "Einstellungen",
+
+#if defined(SIBIONICS)
+"Sibionics",
+#else
 "About",
+#endif
 "Schließen",
 "Alarm stoppen"
 },

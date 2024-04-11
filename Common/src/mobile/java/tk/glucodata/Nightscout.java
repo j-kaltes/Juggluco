@@ -105,7 +105,7 @@ public static void show(MainActivity context,View parent) {
 	var oldport=Natives.getsslport();
   	var portview=getnumedit(context, ""+oldport);
                         
-	 var labinterval=getlabel(context,"Interval");
+	 var labinterval=getlabel(context,R.string.interval);
 	int interval=Natives.getinterval();
   	var intervalview=getnumedit(context, ""+interval);
    
@@ -173,7 +173,7 @@ public static void show(MainActivity context,View parent) {
 	var local=getcheckbox(context,R.string.localonly,Natives.getXdripServerLocal( ));
 	float density=GlucoseCurve.metrics.density;
 	int laypad=(int)(density*4.0);
-	var httpport=getlabel(context,"http port=17580");
+	var httpport=getlabel(context,"http "+context.getString(R.string.port)+"=17580");
 	httpport.setPadding(laypad*3,0,0,0);
 	local.setOnCheckedChangeListener(
 			 (buttonView,  isChecked) -> {

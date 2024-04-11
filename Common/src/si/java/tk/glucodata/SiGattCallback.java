@@ -224,15 +224,8 @@ boolean novalue=false;
 @Override // android.bluetooth.BluetoothGattCallback
 public void onCharacteristicChanged(BluetoothGatt bluetoothGatt, BluetoothGattCharacteristic bluetoothGattCharacteristic) {
 	byte[] value = bluetoothGattCharacteristic.getValue();
-//	var uuid=bluetoothGattCharacteristic.getUuid();
-//   processData(value,System.currentTimeMillis());
    long timmsec=System.currentTimeMillis();
   long res=Natives.SIprocessData(dataptr, value,timmsec);
-  if(res==3L) {
-      Log.e(LOG_ID,"3: disconnect");
-      disconnect();
-      return;
-     } 
   if(res==2L) {
       novalue=true;
 		Applic.app.getHandler().postDelayed( ()->   {
@@ -243,8 +236,13 @@ public void onCharacteristicChanged(BluetoothGatt bluetoothGatt, BluetoothGattCh
       return;
       }
    novalue=false;
+  if(res==3L) {
+      Log.e(LOG_ID,"3: disconnect");
+      disconnect();
+      return;
+     } 
    if(res==1L) return;
-      handleGlucoseResult(res,timmsec);
+   handleGlucoseResult(res,timmsec);
     }
 
 @Override

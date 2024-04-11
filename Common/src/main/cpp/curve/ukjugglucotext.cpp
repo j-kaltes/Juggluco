@@ -101,7 +101,11 @@ jugglucotext uktext {
 		"Дивитися",
 		"Датчик",
 		"Налашт.",
+#if defined(SIBIONICS)
+"Sibionics",
+#else
 		"Аб Juggluco",
+#endif
 		"Закрити",
 		"Стоп тривоги"
 		},

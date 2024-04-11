@@ -100,12 +100,12 @@ class MessageReceiver: WearableListenerService() {
 		  if(isWearable)
 			   UseWifi.usewifi()
 		   Natives.ontbytesettings(data)
-		   Notify.mkunitstr(Natives.getunit())
+		   Notify.mkunitstr(Applic.app,Natives.getunit())
 		sendnetinfo(messageEvent.getSourceNodeId())
 		}
 		 MessageSender.SETTINGS_PATH   -> {
 			 Natives.ontbytesettings(data)
-        		Notify.mkunitstr(Natives.getunit())
+        		Notify.mkunitstr(Applic.app,Natives.getunit())
 			}
 		 MessageSender.MESSAGES_PATH -> {
 			 val sender=tk.glucodata.MessageSender.getMessageSender()

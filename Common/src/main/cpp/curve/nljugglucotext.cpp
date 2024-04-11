@@ -98,7 +98,11 @@ static jugglucotext nltext {
 		"Horloges",
 		"Sensor",
 		"Instellingen",
-		"About",
+#if defined(SIBIONICS)
+"Sibionics",
+#else
+"About",
+#endif
 		"Sluiten",
 		"Stop Alarm"
 		},

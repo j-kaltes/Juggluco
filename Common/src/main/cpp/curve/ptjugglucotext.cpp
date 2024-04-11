@@ -109,7 +109,11 @@ jugglucotext pttext {
                 "Relógio",
                 "Sensor",
                 "Definições",
+#if defined(SIBIONICS)
+"Sibionics",
+#else
                 "Sobre",
+#endif
                 "Fechar",
                 "Parar Alarme"
                 },

@@ -103,7 +103,11 @@ jugglucotext iwtext {
 "שעון",
 "חיישן",
 "הגדרות",
+#if defined(SIBIONICS)
+"Sibionics",
+#else
 "על אודות",
+#endif
 "סגור",
 "עצור אזעקה"
 },

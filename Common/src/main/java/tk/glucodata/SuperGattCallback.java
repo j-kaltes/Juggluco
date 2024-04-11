@@ -98,6 +98,9 @@ public void disconnect() {
 		Log.i(LOG_ID,"Disconnect");
 		thegatt.disconnect();
 		}
+     else  {
+		Log.i(LOG_ID,"Disconnect mBluetoothGatt==null");
+      }
 	}
 public void reconnect(long old) {
 	if(charcha[1]<old)  {

@@ -103,7 +103,11 @@ jugglucotext frtext {
 		"Montre",
 		"Capteur",
 		"Paramètres",
-		"A propos",
+#if defined(SIBIONICS)
+"Sibionics",
+#else
+"A propos",
+#endif
 		"Fermer",
 		"Arrêt alarme"
 		},

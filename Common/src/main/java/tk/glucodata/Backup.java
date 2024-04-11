@@ -677,7 +677,7 @@ if(!isWearable)
 	var info=new TextView(act);
      int pad=(int)(GlucoseCurve.metrics.density*7.0);
    info.setPadding(pad,0,pad,0);
-	var deactive=getcheckbox(act,"Off",Natives.getHostDeactivated(pos));
+	var deactive=getcheckbox(act,R.string.off,Natives.getHostDeactivated(pos));
 	deactive.setOnCheckedChangeListener( (buttonView,  isChecked)-> Natives.setHostDeactivated(pos,isChecked));
 	if(isWearable) {
 		modify.setPadding((int) (GlucoseCurve.metrics.density*23),0,0,0);
@@ -747,7 +747,7 @@ View blpan= (thishost[2]==null)?new Space(act):getlabel(act,"bt-pan: "+thishost[
 
   Button Sync=getbutton(act,act.getString(R.string.sync));
    Sync.setOnClickListener(v-> Applic.wakemirrors());
-  Button reinit=getbutton(act,"Reinit");
+  Button reinit=getbutton(act,R.string.reinit);
    reinit.setOnClickListener(v-> {
 	MessageSender.reinit();
 	}

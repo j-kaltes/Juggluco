@@ -517,7 +517,7 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 		  recreate(issaved);
                 });
 
-            mmolL.setText("mmol/L");
+            mmolL.setText(R.string.mmolL);
          mgdl = new RadioButton(context);
         mgdl.setOnClickListener(v-> {
 		((Applic) context.getApplication()).setunit(2);
@@ -525,7 +525,7 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 		  recreate(issaved);
         });
 
-        mgdl.setText("mg/dL");
+        mgdl.setText(R.string.mgdL);
         View[] row0 = isWearable?new View[]{new Space(context),mmolL, mgdl,new Space(context)}:new View[]{unitlabel, mmolL, mgdl};
 
         TextView graphlabel = new TextView(context);
@@ -786,7 +786,7 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 		fixed.setOnCheckedChangeListener( (buttonView,  isChecked) -> Natives.setcurrentRelative(isChecked));
 	if(isWearable) {
 
-	       var uploader=getbutton(context,"Uploader");
+	       var uploader=getbutton(context,R.string.uploader);
 	       var floatconfig=getbutton(context,R.string.floatglucoseshort);
 
 	       floatconfig.setOnClickListener(v-> tk.glucodata.FloatingConfig.show(context,thelayout[0]));
@@ -805,7 +805,7 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 	else {
 		View[] row8;
 		View[] row9;
-		var about=getbutton(context,"About");
+		var about=getbutton(context,R.string.aboutname);
 	       about.setOnClickListener(v-> tk.glucodata.GlucoseCurve.doabout(context));
 		if(advhelp!=null) {
 			advanced=new Button(context);
@@ -821,7 +821,7 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 		showalways.setChecked(Natives.getshowalways()) ;
 		showalways.setOnCheckedChangeListener( (buttonView,  isChecked) -> Notify.glucosestatus(isChecked) );
 	       var webserver=getbutton(context,R.string.webserver);
-	       var uploader=getbutton(context,"Uploader");
+	       var uploader=getbutton(context,R.string.uploader);
 	       var iob=getcheckbox(context,"IOB",Natives.getIOB());
 /*		var streamhistory=getcheckbox(context,R.string.streamhistory,Natives.getStreamHistory( ));
 		streamhistory.setOnCheckedChangeListener( (buttonView,  isChecked) -> Natives.setStreamHistory(isChecked) );*/

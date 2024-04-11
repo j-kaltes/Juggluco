@@ -173,6 +173,7 @@ jugglucotext betext {
 .Stable="Мяняецца павольна",
 .Rising="Падымаецца",
 .RisingQuickly="Хутка падымаецца",
+.sibionics="Sibionics",
 #endif
         .receivingpastvalues="Receiving old values"
 		}

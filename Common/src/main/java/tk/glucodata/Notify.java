@@ -73,9 +73,9 @@ import java.util.concurrent.TimeUnit;
 public class Notify {
     static final private String LOG_ID="Notify";
 static Notify onenot=null;
-static void init() {
+static void init(Context cont) {
 	if(onenot==null) {
-		onenot = new Notify();
+		onenot = new Notify(cont);
 
 		}
 	}
@@ -83,15 +83,15 @@ static String glucoseformat=null;
 static String pureglucoseformat=null;
 static String unitlabel=null;
 //public static int unit=0;
-static void mkunitstr(int unit) {
+static void mkunitstr(Context cont,int unit) {
 	Applic.unit=unit;	
 	pureglucoseformat=unit==1?"%.1f":"%.0f";
 	if(isWearable) {
         	glucoseformat=pureglucoseformat;
 		}
 	else  {
-        	glucoseformat=unit==1?"%.1f mmol/L":"%.0f mg/dL";
-		unitlabel=unit==1?"mmol/L":"mg/dL";
+		unitlabel=unit==1?cont.getString(R.string.mmolL):cont.getString(R.string.mgdL);
+        	glucoseformat=unit==1?"%.1f "+unitlabel:"%.0f "+unitlabel;
 		}
 
 	}
@@ -162,11 +162,11 @@ static RemoteGlucose arrowNotify;
 		}
 	}
 
-	Notify() {
+	Notify(Context cont) {
 		showalways=Natives.getshowalways();
 		Log.i(LOG_ID,"showalways="+showalways);
 		alertseparate=Natives.getSeparate( );
-		mkunitstr(Natives.getunit());
+		mkunitstr(cont,Natives.getunit());
 		notificationManager =(NotificationManager) Applic.app.getSystemService(NOTIFICATION_SERVICE);
 		createNotificationChannel(Applic.app);
 		mkpaint();
@@ -772,7 +772,7 @@ Notification getforgroundnotification() {
 	}
 
 static public void shownovalue() {
-	init();
+	init(Applic.app);
 	onenot.novalue();
 	}
 private void novalue() {
@@ -788,7 +788,7 @@ public void foregroundno(Service service) {
 	}
 static public void foregroundnot(Service service) {
 //	Application app=service.getApplication();
-	init();
+	init(service);
 	onenot.foregroundno(service);
 	}	
  public void  placelargenotification(int draw,String message,String type,boolean once) {

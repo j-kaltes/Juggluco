@@ -156,7 +156,7 @@ jlong AlgorithmContext::processData(SensorGlucoseData *sens,time_t nowsecs,int8_
                       sens->receivehistory=nowsecs;
 
                      }
-                     }
+                  }
           else {
             if(index==maxid)
 	            sens->setSiIndex(maxid+1);

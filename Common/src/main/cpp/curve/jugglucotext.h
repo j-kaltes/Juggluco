@@ -94,6 +94,7 @@ std::string_view Undetermined, FallingQuickly,Falling, Stable, Rising, RisingQui
 };
 std::string_view trends[6];
 };
+std::string_view sibionics;
 #endif
 std::string_view receivingpastvalues;
 };
