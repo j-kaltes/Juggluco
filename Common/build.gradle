@@ -17,8 +17,8 @@ android {
 //thekeypassword = IDontKnow
 //thekeyfile = everyone.keystore
 
-//    if(thekeypassword != "") {
-        if("$thekeypassword" != "") {
+//    if("something"=="nothing") {
+        if(project.hasProperty('thekeypassword')&& "$thekeypassword" != "") {
 	    signingConfigs {
 		alg {
 		    storeFile file("$thekeyfile")
