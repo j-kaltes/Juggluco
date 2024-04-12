@@ -334,4 +334,10 @@
     <string name="sendfrom">"发送自:"</string>
  <string name="changestartbutton">选择数据发送</string>
  <string name="floatjuggluco">置顶</string>
+<string name="uploader">上传到NS</string>
+ <string name="sibionics">硅基扫码</string>
+ <string name="interval">Interval</string>
+ <string name="off">关</string>
+ <string name="streamingenabled">" 传输已开启"</string>
+ <string name="streamingnotenabled">" 传输未开启"</string>
 </resources>

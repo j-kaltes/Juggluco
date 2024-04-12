@@ -93,7 +93,7 @@ import java.text.DecimalFormat;
 import java.util.Locale;
 
 public class Settings  {
-private final static boolean IWRU=true,SPANISH=false;
+private final static boolean RU=true,SPANISH=false;
 private final static String LOG_ID="Settings";
 MainActivity activity;
 
@@ -472,7 +472,7 @@ final private static String  codestr=String.valueOf(BuildConfig.VERSION_CODE);
 
 //static private final List<String> supportedlanguages= Arrays.asList("Language","be","de","en","fr","it","nl","pl","pt","uk","zh");
 //  static private final List<String> supportedlanguages= Arrays.asList("Language","be","de","en","fr","it","nl","pl","pt","uk");
-static private final List<String> supportedlanguages= IWRU?Arrays.asList("Language","be","de","en","es","fr","it","nl","pl","pt","ru","uk","zh"):(SPANISH?Arrays.asList("Language","be","de","en","es","fr","it","nl","pl","pt","uk","zh"):Arrays.asList("Language","be","de","en","fr","it","nl","pl","pt","uk","zh"));
+static private final List<String> supportedlanguages= RU?Arrays.asList("Language","be","de","en","fr","it","nl","pl","pt","ru","uk","zh"):(SPANISH?Arrays.asList("Language","be","de","en","es","fr","it","nl","pl","pt","uk","zh"):Arrays.asList("Language","be","de","en","fr","it","nl","pl","pt","uk","zh"));
 
 //static private final List<String> supportedlanguages= IWRU?Arrays.asList("Language","be","de","en","es","fr","it","iw","nl","pl","pt","ru","uk"):Arrays.asList("Language","be","de","en","es","fr","it","nl","pl","pt","uk");
 static private Spinner languagespinner(MainActivity context, int[] spinpos) {
@@ -791,7 +791,7 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 
 	       floatconfig.setOnClickListener(v-> tk.glucodata.FloatingConfig.show(context,thelayout[0]));
 		CheckBox floatglucose=new CheckBox(context);
-		floatglucose.setText("  " );
+		floatglucose.setText("      " );
 
 
 		floatglucose.setChecked(Natives.getfloatglucose());

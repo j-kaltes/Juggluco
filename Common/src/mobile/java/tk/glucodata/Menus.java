@@ -122,15 +122,19 @@ static public void show(MainActivity act) {
 					removeContentView(view);
 					Settings.set(act);
 	}); 
-        var aboutview=view.findViewById(R.id.about);aboutview.setOnClickListener(v ->{
-					if(!isWearable) {
-						  var c=Applic.app.curve;
-						  if(c!=null)
-							c.doabout(act);
-						}
-
-
-	}); 
+        Button aboutview=view.findViewById(R.id.about);
+        if(tk.glucodata.BuildConfig.SiBionics==1) {
+         aboutview.setText(R.string.sibionics);
+        aboutview.setOnClickListener(v ->
+              Sibionics.scan(act));
+            }
+        else  {
+           aboutview.setOnClickListener(v ->{
+                       var c=Applic.app.curve;
+                       if(c!=null)
+                        c.doabout(act);
+                  }); 
+                 }
         var closeview=view.findViewById(R.id.close);closeview.setOnClickListener(v ->{
 		act.moveTaskToBack(true);
 	}); 

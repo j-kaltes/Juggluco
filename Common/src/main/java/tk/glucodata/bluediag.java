@@ -140,9 +140,9 @@ public static void showsensorinfo(String text,MainActivity act) {
 void showinfo(final SuperGattCallback gatt,MainActivity act) {
 	starttimeV.setText(datestr(gatt.starttime));
 	if(gatt.streamingEnabled() )
-		streaming.setText(" Streaming enabled");
+		streaming.setText(R.string.streamingenabled);
 	else
-		streaming.setText(" Streaming not enabled");
+		streaming.setText(R.string.streamingnotenabled);
 	
 /*	var visi=gatt.sensorgen==3?INVISIBLE:VISIBLE;
 	if(!isWearable) {

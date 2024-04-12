@@ -57,10 +57,10 @@ jugglucotext rutext {
       "Ноя",
       "Дек"},
 
-	.scanned="Отсканированный",
+	.scanned="Отсканирован",
 	.readysecEnable="Датчик будет готов через %d минут. Повторите сканирование, чтобы включить потоковую передачу.",
 	.readysec="Датчик будет готов через %d минут.",
-.networkproblem="Нет глюкозы от зеркала",
+.networkproblem="Нет данных глюкозы от зеркала",
 .enablebluetooth="Вкл Bluetooth",
 .useBluetoothOff="'Используйте Bluetooth' off",
 .noconnectionerror=": Нет соединения",
@@ -75,10 +75,10 @@ jugglucotext rutext {
 	.history="История",
 //	.historyinfo="Once per 15 minutes.\nRemembered on the sensor for 8 hours.\nScanning transfers them to this program.\nSensor: ", 
 //	.history3info="Once per 5 minutes.\nRemembered on the sensor for 14 days.\nTransferred by Bluetooth to this program.\nSensor: ",
-	.sensorstarted= "Начатый:",
+	.sensorstarted= "Начал работу:",
 	.lastscanned="Последнее сканирование:",
 	.laststream="Последний поток:",
-	.sensorends="Конец: ",
+	.sensorends="Закончит работу: ",
 #ifndef WEAROS
 	.newamount="Новая сумма",
 	.averageglucose="Средняя глюкоза: ",
@@ -90,7 +90,7 @@ jugglucotext rutext {
 	.SD="SD: %.2f",
 	.glucose_variability="Изменчивость уровня глюкозы: %.1f%%",
      .menustr0={
-		"System UI        ",
+		"System UI         ",
 		"Меню",
 		"Часы",
 		"Датчик",
@@ -110,10 +110,10 @@ jugglucotext rutext {
 		"Лист", 
 		"Статистика",
 		"Озвучка",
-		"Плав.глюк.        "
+		"Плав.глюк.         "
 		},
 	.menustr2= {"Послед. скан",
-	"Сканирование        ",
+	"Сканирование         ",
 	"Поток",
 	"История",
 	"Суммы",
@@ -136,7 +136,7 @@ jugglucotext rutext {
 	"Стоп тревога" },
 .menustr2= {"Дата  ",
 hourminstr,
-"День назад                ",
+"День назад      ",
 rutext.amount},
 #endif
 
@@ -188,7 +188,7 @@ rutext.amount},
 .nolibre3={"FreeStyle Libre 3 датчик",
 	"Загрузите корректную версию отсюда https://www.juggluco.nl/download.html"},
 #ifndef WEAROS
-	.advancedstart= R"(<h1>Modified device</h1>
+	.advancedstart= R"(<h1>Модифицированное устройство, телефон с ROOT</h1>
 <p>В одной из библиотек, используемых этим приложением, есть ошибка, которая приводит
 к сбою при обнаружении определенных файлов. Некоторые из
 этих файлов содержатся на вашем устройстве. Эта программа содержит способ обойти эту ошибку, но
@@ -199,16 +199,16 @@ rutext.amount},
 	.add_s=true,
 .shortinit=rushortinit,
 .labels=rulabels,
-.checked="проверен",
-.unchecked="не проверен",
+.checked="Проверен",
+.unchecked="Не проверен",
 .Undetermined="Не определен",
-.FallingQuickly="Быстро падающий",
-.Falling="Падающий",
-.Stable="Медленно меняясь",
-.Rising="Поднимающийся",
+.FallingQuickly="Быстро падает",
+.Falling="Падает",
+.Stable="Медленно меняется",
+.Rising="Поднимается",
 .RisingQuickly="Быстро растет",
 #endif
-.receivingpastvalues="Receiving old values"
+.receivingpastvalues="Получение старых значений"
 
 		}
 
@@ -218,6 +218,6 @@ rutext.amount},
 #include "logs.h"
 extern void setuseru();
 void setuseru() {
-LOGAR("установить использование rus");
+LOGAR("Использование rus");
  usedtext= &rutext;
  }

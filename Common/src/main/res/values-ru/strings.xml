@@ -16,7 +16,7 @@
 	<string name="android13">Android</string>
     <string name="app_name">Juggluco</string>
     <string name="background">Задний план</string>
-    <string name="backgroundshort">Позади-</string>
+    <string name="backgroundshort">Позади</string>
     <string name="blueormirror">Датчик через Bluetooth должен быть включен или он должен быть настроен как клон</string>
     <string name="bluetooth_is_turned_off">Bluetooth выключен</string>
     <string name="bluetoothdisabled">Отключение Bluetooth</string>
@@ -84,14 +84,14 @@
     <string name="export">Экспорт</string>
     <string name="exporthelp">Сохраняется до последнего значения, отображаемого на экране. Начало - это количество заданных дней назад во времени.</string>
     <string name="failedbyexception">Сбой из-за исключения</string>
-    <string name="failure_info">Информация о сбое</string>
+    <string name="failure_info">Инфо о сбое</string>
     <string name="finish">Завершить</string>
     <string name="finishsensormessage">Прекратить использовать этот датчик для потоковой передачи?</string>
     <string name="flash">Вспышка</string>
     <string name="floatglucose">Плавающая глюкоза</string>
     <string name="floatglucoseshort">Плав. глюк</string>
     <string name="floatname">Плавающая</string>
-    <string name="fontsize">Размер текста</string>
+    <string name="fontsize">Разм. текст</string>
     <string name="fonttoolarge">Слишком большой размер шрифта: max=</string>
     <string name="foreground">Передний план</string>
     <string name="forget">Забыть</string>
@@ -109,7 +109,7 @@
     <string name="graphrange">"Диапазон графиков: "</string>
     <string name="heartrate">Частота сердцебиения</string>
     <string name="helpname">Помощь</string>
-    <string name="high_priority">Высокий приоритет</string>
+    <string name="high_priority">Приоритет</string>
     <string name="highglucose">" Высокий уровень глюкозы!"</string>
     <string name="highglucosealarm">Сигнал тревоги о высоком уровне глюкозы</string>
     <string name="highglucoseshort">"Высокий сахар!"</string>
@@ -127,7 +127,7 @@
     <string name="language">ru</string>
     <string name="languagename">Язык</string>
     <string name="last_failure">Последняя ошибка</string>
-    <string name="last_scan">Последнее сканирование</string>
+    <string name="last_scan">Последний скан</string>
     <string name="last_success">Последний успех</string>
     <string name="librecurrent">Немедленно</string>
 	<string name="libreisviewed">Наблюдающие взгляды</string>
@@ -151,8 +151,8 @@
     <string name="minimum">Минимум</string>
     <string name="minuteddeactivated">Минуты отключены:</string>
     <string name="minutes">Минуты</string>
-    <string name="mirror">Клон</string>
-	<string name="modify">Модифицировать</string>
+    <string name="mirror">Клон (зеркало)</string>
+	<string name="modify">Изменить</string>
     <string name="multiply">Умножьте на:</string>
     <string name="name">Имя:</string>
     <string name="new_amount">Новое количество</string>
@@ -179,7 +179,7 @@
     <string name="now">Сейчас</string>
     <string name="nowatchesfound">Часы не найдены</string>
     <string name="numalarm_description">Напоминание о дозировке, приеме пищи или физических упражнениях</string>
-    <string name="numberlabels">Номерные метки</string>
+    <string name="numberlabels">Метки поведения</string>
     <string name="numlabel">"Этикетка: "</string>
     <string name="offtouch">Отключение тач касаний </string>
     <string name="ok">Ок</string>
@@ -223,8 +223,8 @@
     <string name="saved">Сохраненный</string>
     <string name="savefailed">Сохранить не удалось</string>
     <string name="scan_permission">Разрешение на сканирование</string>
-    <string name="scanname">Сканирование</string>
-    <string name="scansname">Сканирования</string>
+    <string name="scanname">Скан-е</string>
+    <string name="scansname">Скан-я</string>
     <string name="search">Поиск</string>
     <string name="searchtopast">Поиск в прошлых</string>
     <string name="sec">сек</string>
@@ -236,7 +236,7 @@
     <string name="sendnow">Отправить сейчас</string>
     <string name="sendqueue">Отправка очереди</string>
     <string name="sendto">Отправлять на</string>
-	<string name="sendtoxdrip">Трансляция Patched Libre</string>
+	<string name="sendtoxdrip">Отправка в Libre patch".</string>
     <string name="sensor">Сенсор</string>
     <string name="sensorpermission">Разрешение доступа к датчикам требуется для отображения частоты сердечных сокращений</string>
     <string name="sensorpermissionmessage">Вы можете установить его в настройках устройства, приложениях, разрешениях</string>
@@ -265,7 +265,7 @@
     <string name="statistics">Статистика</string>
     <string name="status">Статус</string>
 	<string name="streamhistory">История потоковой передачи</string>
-    <string name="streamname">Потоковая передача</string>
+    <string name="streamname">Поток</string>
     <string name="success">Успешно</string>
     <string name="summarygraph">Обзор графика</string>
     <string name="sync">Синхр</string>
@@ -285,13 +285,13 @@
     <string name="toolongsecret">: api_секрет слишком большой. max=</string>
     <string name="toomanyhosts">Превышено максимальное количество хостов</string>
     <string name="total">Сумма:</string>
-    <string name="touchable">Чувствует касание</string>
+    <string name="touchable">Сенсорный</string>
     <string name="trace">Проследить</string>
     <string name="transparent">Прозрачный</string>
     <string name="treatments">Лечение</string>
     <string name="triednothing">Ничего не проверено</string>
     <string name="turn_on_location_permission">Включить разрешение на определение местоположения</string>
-    <string name="turn_on_nearby_devices_permission">Включите разрешение „УСТРОЙСТВА ПО БЛИЗОСТИ“</string>
+    <string name="turn_on_nearby_devices_permission">Включите разрешение "УСТРОЙСТВА ПО БЛИЗОСТИ“</string>
     <string name="type">"Тип: "</string>
     <string name="unit">"Блок: "</string>
     <string name="unknown">Неизвестный</string>
@@ -318,10 +318,10 @@
     <string name="wronglibrary">Библиотека не работает должным образом, попробуйте использовать другую</string>
     <string name="xdripbroadcast">Трансляция xdrip</string>
     <string name="hostname">Имя хоста</string>
-   <string name="clampnow">Захват сейчас</string>
+   <string name="clampnow">Захват</string>
     <string name="sendfrom">"Отправить из: "</string>
 <string name="changestartbutton">Начало изменений</string>
-<string name="floatjuggluco">Плавающая</string>
+<string name="floatjuggluco">Парящий</string>
 <string name="uploader">Загрузчик</string>
 <string name="mmolL">ммоль/л</string>
 <string name="mgdL">мг/дл</string>

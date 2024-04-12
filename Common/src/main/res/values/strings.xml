@@ -340,4 +340,6 @@
  <string name="mgdL">mg/dL</string>
  <string name="interval">Interval</string>
  <string name="off">Off</string>
+ <string name="streamingenabled">" Streaming enabled"</string>
+ <string name="streamingnotenabled">" Streaming not enabled"</string>
 </resources>

@@ -53,7 +53,7 @@ jugglucotext chiText {
         "传感器",
         "设置",
 #if defined(SIBIONICS)
-"Sibionics",
+"硅基扫码",
 #else
         "关于",
 #endif
@@ -75,7 +75,7 @@ jugglucotext chiText {
         "历史记录",
         "标签数据",
         "餐饮",
-        "黑暗模式        "},
+        "黑暗模式           "},
     .menustr3 = {hourminstr,
         "搜索",
         "日期",
