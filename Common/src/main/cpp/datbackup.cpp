@@ -605,6 +605,16 @@ void savebuferror(char *buf,int maxbuf,const char* fmt, ...){
 	}
 
 
+void	sendstartsensors(int startpos) {
+	LOGGER("sendstartsensors(%d)\n",startpos);
+	const int maxint=backup->getupdatedata()->sendnr;
+	for(int i=0;i<maxint;i++) {
+		auto &host=backup->getupdatedata()->tosend[i];
+		LOGGER("%i %d\n",i,host.startsensors);
+		if(host.startsensors>startpos)
+			host.startsensors=startpos;
+		}
+	}
 
 
 

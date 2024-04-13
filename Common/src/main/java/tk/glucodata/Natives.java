@@ -728,7 +728,7 @@ public static native void setHostDeactivated(int pos,boolean val);
 //public static native int getSIindex(long dataptr);
 public static native void saveDeviceName(long dataptr,String deviceName);
 public static native long SIprocessData(long dataptr, byte[] bluetoothdata,long mmsec);
-//public static native String getSiBluetoothNum(long dataptr);
+public static native String getSiBluetoothNum(long dataptr);
 public static native byte[] getSiWriteCharacter(long dataptr);
 public static native String addSIscangetName(String jgegs);
 //s/^extern.*JNIEXPORT[         ]*\([a-zA-Z]*\)[ ]*JNICALL[      ]*fromjava(\([^)]*\)) *(JNIEnv[^,]*,[^,)]*[,)]\([^){]*\)[^a-zA-Z0-9]*$/public static native \1 \2(\3);/g

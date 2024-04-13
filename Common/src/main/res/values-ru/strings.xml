@@ -15,12 +15,12 @@
     <string name="amountsname">Количества</string>
 	<string name="android13">Android</string>
     <string name="app_name">Juggluco</string>
-    <string name="background">Задний план</string>
+    <string name="background">Зад.фон</string>
     <string name="backgroundshort">Позади</string>
     <string name="blueormirror">Датчик через Bluetooth должен быть включен или он должен быть настроен как клон</string>
     <string name="bluetooth_is_turned_off">Bluetooth выключен</string>
     <string name="bluetoothdisabled">Отключение Bluetooth</string>
-    <string name="bluetoothenabled">Включен Bluetooth</string>
+    <string name="bluetoothenabled">Вкл.Bluetooth</string>
     <string name="both">Обе</string>
     <string name="can_t_play">Не удается воспроизвести</string>
     <string name="can_t_use_specification">Спецификация не может быть использована</string>
@@ -65,7 +65,7 @@
     <string name="doses">" Дозы "</string>
     <string name="dosesprior">Добавляйте дозы только после:</string>
     <string name="dosis">" Дозировка "</string>
-    <string name="dozemode">Режим ожидания</string>
+    <string name="dozemode">Спящий режим</string>
     <string name="dozeupdate">Обновление в режиме ожидания</string>
     <string name="duraction">Продолжительность:</string>
     <string name="duractionsec">Продолжительность (сек.):</string>
@@ -93,7 +93,7 @@
     <string name="floatname">Плавающая</string>
     <string name="fontsize">Разм. текст</string>
     <string name="fonttoolarge">Слишком большой размер шрифта: max=</string>
-    <string name="foreground">Передний план</string>
+    <string name="foreground">Перед.фон</string>
     <string name="forget">Забыть</string>
     <string name="fromlibreview">От Libreview</string>
     <string name="fullchain">Полная цепочка</string>
@@ -103,7 +103,7 @@
     <string name="getaccountidquestion">Получить идентификатор учетной записи из Libreview??</string>
     <string name="getkerfstok">Получите приложение для просмотра Kerfstok</string>
     <string name="glucose">Глюкоза</string>
-    <string name="glucose_value">Уровень глюкозы</string>
+    <string name="glucose_value">Ур.глюк</string>
     <string name="glucoseaxisleft">Ось глюкозы СЛЕВА</string>
     <string name="glucosestatusbar">уведомление о глюкозе</string>
     <string name="graphrange">"Диапазон графиков: "</string>
@@ -126,9 +126,9 @@
     <string name="kerfstok_missing_title">Kerfstok не установлен на часах</string>
     <string name="language">ru</string>
     <string name="languagename">Язык</string>
-    <string name="last_failure">Последняя ошибка</string>
+    <string name="last_failure">Ошибка</string>
     <string name="last_scan">Последний скан</string>
-    <string name="last_success">Последний успех</string>
+    <string name="last_success">Успешно</string>
     <string name="librecurrent">Немедленно</string>
 	<string name="libreisviewed">Наблюдающие взгляды</string>
     <string name="libreviewname">Libreview</string>
@@ -236,7 +236,7 @@
     <string name="sendnow">Отправить сейчас</string>
     <string name="sendqueue">Отправка очереди</string>
     <string name="sendto">Отправлять на</string>
-	<string name="sendtoxdrip">Отправка в Libre patch".</string>
+	<string name="sendtoxdrip">Отправка в Libre patch</string>
     <string name="sensor">Сенсор</string>
     <string name="sensorpermission">Разрешение доступа к датчикам требуется для отображения частоты сердечных сокращений</string>
     <string name="sensorpermissionmessage">Вы можете установить его в настройках устройства, приложениях, разрешениях</string>
@@ -259,12 +259,12 @@
     <string name="specifyip">Укажите IP</string>
     <string name="specifyreceiveordata">Укажите, Вы получаете или отправляете данные на другое устройство</string>
     <string name="speed">Скорость</string>
-    <string name="stage">Ступень</string>
+    <string name="stage">Статус</string>
     <string name="start">Старт</string>
     <string name="startsapp">Сканирование запускает приложение</string>
     <string name="statistics">Статистика</string>
     <string name="status">Статус</string>
-	<string name="streamhistory">История потоковой передачи</string>
+	<string name="streamhistory">История потока</string>
     <string name="streamname">Поток</string>
     <string name="success">Успешно</string>
     <string name="summarygraph">Обзор графика</string>
@@ -295,8 +295,8 @@
     <string name="type">"Тип: "</string>
     <string name="unit">"Блок: "</string>
     <string name="unknown">Неизвестный</string>
-    <string name="unlock_key">Неизвестный ключ</string>
-    <string name="use_bluetooth">Bluetooth использование</string>
+    <string name="unlock_key">Разблок.ключ </string>
+    <string name="use_bluetooth">Исп.Bluetooth</string>
     <string name="uselibreview">Используйте Libreview</string>
     <string name="usessl">Используйте SSL</string>
     <string name="value">Значение</string>

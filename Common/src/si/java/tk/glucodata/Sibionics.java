@@ -27,11 +27,14 @@ import static tk.glucodata.Applic.Toaster;
 import android.app.Activity;
 import android.widget.Toast;
 
+//import com.google.mlkit.vision.barcode.BarcodeScannerOptions;
+//import com.google.mlkit.vision.barcode.common.Barcode;
 import com.google.mlkit.vision.barcode.common.Barcode;
-import com.google.mlkit.vision.codescanner.GmsBarcodeScannerOptions;
-import com.google.mlkit.vision.codescanner.GmsBarcodeScanning;
+//import com.google.mlkit.vision.codescanner.GmsBarcodeScannerOptions;
+//import com.google.mlkit.vision.codescanner.GmsBarcodeScanning;
 
 public class Sibionics {
+private	static final boolean bundled=true;
 private static final String LOG_ID="Sibionics";
 
 
@@ -67,25 +70,31 @@ longserialnumber
 0106972831640165112312091724120810LT41231108C21231108GEPD802JPP76 
 */
 //LT2309GEPD
-  private static void    connectdevice(String scantag) {
+  private static boolean    connectdevice(String scantag) {
          String name=Natives.addSIscangetName(scantag);
-         SensorBluetooth.resetDevice(name);
+         if(name!=null)  {
+            SensorBluetooth.resetDevice(name);
+            return true;
             }
-private static void connectSensor(final String scantag) {
-        if (scantag.contains("0697283164")) {
+          return false;
+         }
+//(17)221115(21)211003AK45(SI)61WG1538   
+//1722111521211003AK45SI61WG1538       
+
 /*		final var len=scantag.length() ;
 		final var deviceName=scantag.substring(len - 12, len - 8);  //GEPD8
 		final var after=scantag.substring(len - 8, len - 4); // 802J */
-               connectdevice(scantag);
-        } else {
+
+private static void connectSensor(final String scantag) {
+        if(!connectdevice(scantag)) {
            	wrongtag(); 
         }
     }
 
 
 public static void scan(Activity act) {
-	final var options = new GmsBarcodeScannerOptions.Builder().setBarcodeFormats( Barcode.FORMAT_DATA_MATRIX,Barcode.FORMAT_QR_CODE).build();
-	var scanner = GmsBarcodeScanning.getClient(act, options);
+	final var options =  new com.google.mlkit.vision.codescanner.GmsBarcodeScannerOptions.Builder().setBarcodeFormats( Barcode.FORMAT_DATA_MATRIX, Barcode.FORMAT_QR_CODE).build();
+	final var scanner =  com.google.mlkit.vision.codescanner.GmsBarcodeScanning.getClient(act, options);
 	scanner.startScan().addOnSuccessListener(
 	       barcode -> {
 	       var rawValue = barcode.getRawValue();

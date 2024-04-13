@@ -4,10 +4,12 @@
 #include <string_view>
 #include <string>
 #include "share/logs.h"
+#include "sensoren.h"
 #include "fromjava.h"
 //#include "curve.h"
 //#include "nanovg_gl.h"
 //#include "nanovg_gl_utils.h"
+extern Sensoren *sensors;
 #define NANOVG_GLES2_IMPLEMENTATION
 
 extern "C" JNIEXPORT jint JNICALL fromjava(openglversion)(JNIEnv* env, jclass obj) {
@@ -231,6 +233,7 @@ bool updateDevices() {
 
     		return false;
 		}
+     sensors->deletelast();
     return   getenv()->CallStaticBooleanMethod(JNIApplic,jupdateDevices);
     }
 void resetWearOS() {
@@ -718,7 +721,6 @@ extern "C" JNIEXPORT void JNICALL fromjava(settonow)(JNIEnv *env, jclass thiz) {
 	setstarttime(max-duration*3/5);
 	}
 
-#include "sensoren.h"
 
 extern struct lastscan_t scantoshow;
 extern "C" JNIEXPORT jboolean JNICALL fromjava(showlastscan)(JNIEnv *env, jclass thiz) {

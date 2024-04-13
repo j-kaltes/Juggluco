@@ -33,7 +33,6 @@ extern void	sendstreaming(SensorGlucoseData *hist);
 
 extern bool siInit();
 
-/*
 extern "C" JNIEXPORT jstring JNICALL   fromjava(getSiBluetoothNum)(JNIEnv *envin, jclass cl,jlong dataptr) {
 	if(!dataptr)
 		return nullptr;
@@ -45,7 +44,7 @@ extern "C" JNIEXPORT jstring JNICALL   fromjava(getSiBluetoothNum)(JNIEnv *envin
 	const char *name=usedhist->getinfo()->siBlueToothNum;
 	LOGGER("getSiBluetoothNum()=%s\n",name);
 	return envin->NewStringUTF(name);
-	} */
+	} 
 extern AlgorithmContext *initAlgorithm(SensorGlucoseData *sens);
 
 extern void	sendKAuth(SensorGlucoseData *hist);
@@ -67,11 +66,13 @@ extern "C" JNIEXPORT jstring JNICALL   fromjava(addSIscangetName)(JNIEnv *env, j
    destruct   dest([jgegs,gegs,env]() {env->ReleaseStringUTFChars(jgegs, gegs);});
    const size_t gegslen= env->GetStringUTFLength( jgegs);
    auto [sensindex,sens]= sensors->makeSIsensorindex({gegs,gegslen},time(nullptr));
-	backup->wakebackup(Backup::wakescan);
-	const char *name=sens->shortsensorname()->data();
-	LOGGER("addSIscangetName(%s)=%s\n",gegs,name);
-	return env->NewStringUTF(name);
-
+   if(sens) {
+      backup->wakebackup(Backup::wakeall);
+      const char *name=sens->shortsensorname()->data();
+      LOGGER("addSIscangetName(%s)=%s\n",gegs,name);
+      return env->NewStringUTF(name);
+      }
+   return nullptr;
    }
 extern "C" JNIEXPORT void JNICALL   fromjava(saveDeviceName)(JNIEnv *env, jclass cl,jlong dataptr,jstring jdeviceName) {
 	if(!dataptr)

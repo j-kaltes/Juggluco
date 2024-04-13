@@ -435,6 +435,7 @@ extern "C" JNIEXPORT jlong JNICALL   fromjava(getdataptr)(JNIEnv *env, jclass cl
 	streamdata *data;
 #ifdef SIBIONICS
 	if(sens->isSibionics()) {
+      LOGGER("getdataptr(%s) isSibinics\n",sensor);
 	   if(!siInit())
 	      return 0LL;
    	AlgorithmContext *alg=initAlgorithm(sens);
@@ -444,9 +445,11 @@ extern "C" JNIEXPORT jlong JNICALL   fromjava(getdataptr)(JNIEnv *env, jclass cl
 #endif
   {
       if(sens->isLibre3()) {
+         LOGGER("getdataptr(%s) Libre3\n",sensor);
          data= new libre3stream(sensorindex,sens);
          }
       else {
+         LOGGER("getdataptr(%s) Libre2\n",sensor);
          data=new libre2stream(sensorindex,sens);
          if(streamHistory()) {
             if(!sens->getinfo()->startedwithStreamhistory) {

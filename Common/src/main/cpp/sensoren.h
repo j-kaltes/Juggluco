@@ -61,6 +61,7 @@ uint32_t maxtime() const {
 	}
 	} __attribute__ ((packed)) __attribute__ ((aligned (4))) ; /*always 32 bytes */
 
+extern void	sendstartsensors(int startpos);
 extern void	sendKAuth(SensorGlucoseData *hist);
 class Sensoren {
 	string inbasedir;
@@ -245,8 +246,30 @@ public:
 		return maxhist;
 	}
 
+void	removeunused() {
+		if(int l=last();l>=0) {
+			const SensorGlucoseData *hist = getSensorData(l);
+			if(hist->unused()) {
+				--infoblockptr()->last;
+	         sendstartsensors(l); 
+				delete hist;
+				}
+
+			}
+		}
+void	deletelast() {
+	int l=last();
+	if(l>=0) {
+		const auto *old=hist[l];
+      if(old&&old->unused()) {
+         delete	old;
+         hist[l]=nullptr;
+         }
+		}
+	}
 	int addsensor(string_view name) {
 		LOGGER("addsensor(%.16s)\n", name.data());
+		removeunused();
 		infoblockptr()->last++;
 		if (last() >= capacity())
 			extend(capacity() * 2);
@@ -320,27 +343,37 @@ int makelibre3sensorindex(std::string_view shortname,uint32_t starttime,const ui
 		return sensindex;
 		}
 	const pathconcat sensordir(inbasedir,name);
-	if(SensorGlucoseData::mkdatabase3(sensordir, starttime,pin,deviceaddress) ) {
+	SensorGlucoseData::mkdatabase3(sensordir, starttime,pin,deviceaddress); 
 		const int ind=addsensor(std::string_view(name.data(),name.size()));
 		sensor *sen=getsensor(ind);
 		sen->halfdays=14*2;
 		sen->initialized=true;
 		return ind ;
-		}
-	return -1;
 	}
 
 
 
-static std::string_view namefromSIgegs(const char *gegs,const int len) {
-	return {gegs+len-17,16};
+static std::string_view namefromSIgegs(const char *gegs,const int len,bool hasnum) {
+	if(hasnum)
+		return {gegs+len-17,16};
+	return {gegs+len-16,16};
 	}
 std::pair<int,SensorGlucoseData *> makeSIsensorindex(std::string_view gegsSI,uint32_t now) {
 
 #ifndef NOLOG
 	LOGGER("makeSIsensorindex(%s)\n",gegsSI.data());
 #endif
-	const auto name=namefromSIgegs(gegsSI.data(),gegsSI.size());
+	std::string_view num="0697283164";
+//	bool hasnum=std::ranges::contains_subrange(gegsSI,num);
+	bool hasnum=std::search(gegsSI.begin(),gegsSI.end(),num.begin(),num.end())!=gegsSI.end();
+	if(!hasnum) {	
+		std::string_view si="(SI)";
+	//	if(gegsSI.size()<36||!std::ranges::contains_subrange(gegsSI,si))
+		if(gegsSI.size()<36||std::search(gegsSI.begin(),gegsSI.end(),si.begin(),si.end())==gegsSI.end())
+			return {-1,nullptr};
+		}
+
+	const auto name=namefromSIgegs(gegsSI.data(),gegsSI.size(),hasnum);
 
 	if(sensor *sensgegs = findsensorm(name.data()) ) {
 		LOGGER("known sensor %s\n",sensgegs->showsensorname());
@@ -354,14 +387,12 @@ std::pair<int,SensorGlucoseData *> makeSIsensorindex(std::string_view gegsSI,uin
 		return {sensindex,sens};
 		}
 	const pathconcat sensordir(inbasedir,name);
-	if(SensorGlucoseData::mkdatabaseSI(sensordir,gegsSI,now ) ) {
-		const int ind=addsensor(name);
-		sensor *sen=getsensor(ind);
-		sen->initialized=true;
-		sen->halfdays=24*2;
-		return {ind,getSensorData(ind)} ;
-		}
-	return {-1,nullptr};
+	SensorGlucoseData::mkdatabaseSI(sensordir,gegsSI,now,hasnum );
+	const int ind=addsensor(name);
+	sensor *sen=getsensor(ind);
+	sen->initialized=true;
+	sen->halfdays=24*2;
+	return {ind,getSensorData(ind)} ;
 	}
 SensorGlucoseData *makelibre3sensor(std::string_view shortname,uint32_t starttime,const uint32_t pin,const char *deviceaddress,const uint32_t now) {
 	int sensindex=makelibre3sensorindex(shortname,starttime,pin,deviceaddress,now);

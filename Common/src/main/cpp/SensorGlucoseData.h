@@ -776,7 +776,7 @@ static bool mkdatabase3(string_view sensordir,time_t start,uint32_t pin,const ch
 
 	return true;
 	}
-static bool mkdatabaseSI(string_view sensordir,string_view sensorgegs,uint32_t now) {
+static bool mkdatabaseSI(string_view sensordir,string_view sensorgegs,uint32_t now,bool hasnum) {
      LOGGER("mkdatabaseSI %s,%s\n",sensordir.data(),sensorgegs.data());
 	mkdir(sensordir.data(),0700);
 	pathconcat infoname(sensordir,infopdat);
@@ -792,7 +792,12 @@ static bool mkdatabaseSI(string_view sensordir,string_view sensorgegs,uint32_t n
        Info inf{.starttime=(uint32_t)start,.lastscantime=(uint32_t)start,.starthistory=0,.endhistory=0,.scancount=0,.startid=0,.interval=interval5,.dupl=3,.days=24 ,.sibionics=true,.lastLifeCountReceived=0,.pollcount=0, .lockcount=1};
        inf.siIdlen=sensorgegs.size();
        memcpy(inf.siId,sensorgegs.data(),inf.siIdlen);
-       memcpy(inf.siBlueToothNum,sensorgegs.end()-12,8);
+       if(hasnum) {
+	       memcpy(inf.siBlueToothNum,sensorgegs.end()-12,8);
+		}
+	else {
+	       memcpy(inf.siBlueToothNum,&sensorgegs[28],8);
+		}
 	inf.siBlueToothNum[8]='\0';
 		
 	writeall(infoname,&inf,sizeof(inf));
@@ -835,7 +840,10 @@ bool bluetoothback() {
 	}
 
 
-
+bool unused() const {
+	const auto *info=getinfo();
+	return info->pollcount==0&&info->scancount==0&&info->endhistory==0;
+	}
 private:
 size_t maxscansize()  {
 	if(!getinfo()) 	 {
