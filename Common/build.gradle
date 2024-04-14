@@ -17,7 +17,6 @@ android {
 //thekeypassword = IDontKnow
 //thekeyfile = everyone.keystore
 
-//    if("something"=="nothing") {
         if(project.hasProperty('thekeypassword')&& "$thekeypassword" != "") {
 	    signingConfigs {
 		alg {
@@ -50,7 +49,7 @@ android {
         minSdk 19
         compileSdk 33
         applicationId "tk.glucodata"
-	versionName '8.0.1'
+	versionName '8.0.2'
 //	multiDexEnabled true
 
         buildConfigField 'String', 'BUILD_TIME', 'new java.text.SimpleDateFormat("HH:mm:ss dd-MMM-yyyy").format(new java.util.Date(' + System.currentTimeMillis() + 'L))'
@@ -82,7 +81,7 @@ android {
 	//******  Zet op rollout op 100% ******
             	dimension 'libreVersion'
 		versionCode                          459                                                 //LIBRE2ONLY
-	//	versionName '8.0.1-no3'
+	//	versionName '8.0.2-no3'
 		versionNameSuffix '-no3'
             buildConfigField 'int', 'libreVersion', '2'
 		    externalNativeBuild.cmake {
@@ -137,7 +136,7 @@ android {
 		minSdk 26
 		versionCode                         459                                                 //WATCH
 	//******  Zet op rollout op 100% ******
-		//versionName '8.0.1-wear'
+		//versionName '8.0.2-wear'
 		versionNameSuffix '-wear'
 		signingConfig signingConfigs.alg
 
@@ -158,7 +157,7 @@ android {
 
             dimension 'wearos'
 		versionCode                         459                                                 //WATCH
-		//versionName '8.0.1-small'
+		//versionName '8.0.2-small'
 		versionNameSuffix '-small'
 		signingConfig signingConfigs.alg
 
@@ -377,7 +376,7 @@ buildTypes {
     }
 
      ndkVersion '25.2.9519653'
-//      ndkVersion '26.3.11579264'
+     // ndkVersion '26.3.11579264'
 
     kotlinOptions {
         jvmTarget =  JavaVersion.VERSION_17
@@ -406,10 +405,35 @@ buildTypes {
     buildFeatures {
         aidl true
     }
-    /*
-	android.sourceSets.releaselog {
-	    manifest.srcFile 'debug/AndroidManifest.xml'
-	   } */
+       sourceSets {
+       mobileLibre3Si {
+            java.srcDirs = ['src/mobileSi/java']
+            jniLibs.srcDirs = [ 'src/mobileSi/jniLibs']
+            manifest { srcFile 'src/mobileSi/AndroidManifest.xml' }
+            }
+       mobileLibreOldSi {
+            java.srcDirs = ['src/mobileSi/java']
+            jniLibs.srcDirs = [ 'src/mobileSi/jniLibs']
+            manifest { srcFile 'src/mobileSi/AndroidManifest.xml' }
+            }
+
+         wearLibre3Si{
+            java.srcDirs = ['src/wearSi/java']
+            jniLibs.srcDirs = [ 'src/wearSi/jniLibs']
+            manifest { srcFile 'src/wearSi/AndroidManifest.xml' }
+            }
+         wearLibreOldSi{
+            java.srcDirs = ['src/wearSi/java']
+            jniLibs.srcDirs = [ 'src/wearSi/jniLibs']
+            manifest { srcFile 'src/wearSi/AndroidManifest.xml' }
+            }
+
+         smallLibreOldSi{
+            java.srcDirs = ['src/smallSi/java']
+            jniLibs.srcDirs = [ 'src/smallSi/jniLibs']
+            manifest { srcFile 'src/smallSi/AndroidManifest.xml' }
+            }
+         }
 
 }
 
@@ -478,7 +502,14 @@ dependencies {
     wearImplementation 'androidx.wear.watchface:watchface-client:1.2.1'
     wearImplementation 'androidx.wear.watchface:watchface:1.2.1'
     wearImplementation 'androidx.wear.watchface:watchface-complications-rendering:1.2.1'
-    siImplementation 'com.google.android.gms:play-services-code-scanner:16.1.0'
+configurations {
+mobileLibre3SiImplementation {}
+mobileLibreOldSiImplementation {}
+}
+mobileLibre3SiImplementation 'com.google.android.gms:play-services-code-scanner:16.1.0'
+mobileLibre3SiImplementation 'com.journeyapps:zxing-android-embedded:4.1.0'
+    mobileLibreOldSiImplementation 'com.google.android.gms:play-services-code-scanner:16.1.0'
+mobileLibreOldSiImplementation 'com.journeyapps:zxing-android-embedded:4.1.0'
 
 }
 

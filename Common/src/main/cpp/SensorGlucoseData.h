@@ -64,7 +64,7 @@ extern std::string_view globalbasedir;
 //string basedir(FILEDIR);
 
 extern int writeStartime(crypt_t *pass, const int sock, const int sensorindex); 
-constexpr int maxminutes=22000;
+constexpr int maxminutes=50000;
 struct ScanData {uint32_t t;int32_t id;int32_t g;int32_t tr;float ch;
  uint16_t getmgdL() const { return g;};
  float getmmolL() const { return g/convfactordL;};

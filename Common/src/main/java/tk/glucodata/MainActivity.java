@@ -34,11 +34,10 @@ import static tk.glucodata.Applic.isWearable;
 import static tk.glucodata.Applic.scanpermissions;
 import static tk.glucodata.Applic.talkbackoff;
 import static tk.glucodata.Applic.talkbackon;
+import static tk.glucodata.BuildConfig.SiBionics;
 import static tk.glucodata.Floating.setfloatglucose;
 import static tk.glucodata.Floating.shoulduseadb;
 import static tk.glucodata.GlucoseCurve.STEPBACK;
-import static tk.glucodata.Natives.getRTL;
-import static tk.glucodata.Natives.hasstreamed;
 import static tk.glucodata.Log.showbytes;
 import static tk.glucodata.Natives.wakelibreview;
 import static tk.glucodata.help.hidekeyboard;
@@ -56,7 +55,6 @@ import android.content.Intent;
 import android.content.pm.ConfigurationInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.nfc.NfcAdapter;
@@ -72,12 +70,8 @@ import android.view.View;
 import android.view.accessibility.AccessibilityManager;
 import android.widget.Toast;
 
-import androidx.activity.ComponentActivity;
-//import androidx.activity.OnBackPressedCallback;
-//import androidx.activity.OnBackPressedDispatcher;
 import androidx.annotation.UiThread;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.ContextCompat;
 
 import java.io.File;
@@ -87,8 +81,9 @@ import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.List;
-import java.util.Locale;
 
+//import androidx.activity.OnBackPressedCallback;
+//import androidx.activity.OnBackPressedDispatcher;
 //import com.google.android.apps.auto.sdk.CarActivity;
 ;
 
@@ -938,6 +933,7 @@ static final String[] keys={"privkey.pem","fullchain.pem"};
 public static final int PRIVATE_REQUEST=0x80;
 public static final int CHAIN_REQUEST=0x81;
 private static  final int REQUEST_NOTIFICATION=0x50;
+static  final int REQUEST_BARCODE=0x10;
 public static final int REQUEST_EXPORT=0x70;
 //public static final int REQUEST_EXPORT=0x54e806d0;
 public static final int REQUEST_RINGTONE=0x60;
@@ -1025,6 +1021,12 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
 	};
 	if(!isWearable) {
+               if(SiBionics==1)  {
+		if((requestCode & (REQUEST_MASK|REQUEST_BARCODE)) == REQUEST_BARCODE) {
+			   Sibionics.zXingResult(requestCode, resultCode, data);
+			   return;
+			   }
+		   }
 		if ((requestCode & (REQUEST_MASK | REQUEST_EXPORT)) == REQUEST_EXPORT) {
 			try {
 				if (resultCode == Activity.RESULT_OK) {

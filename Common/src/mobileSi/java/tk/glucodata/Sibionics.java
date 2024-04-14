@@ -22,14 +22,24 @@
 package tk.glucodata;
 
 
+import static com.google.zxing.integration.android.IntentIntegrator.DATA_MATRIX;
+import static com.google.zxing.integration.android.IntentIntegrator.QR_CODE;
 import static tk.glucodata.Applic.Toaster;
+import static tk.glucodata.Applic.isWearable;
+import static tk.glucodata.MainActivity.REQUEST_BARCODE;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.widget.Toast;
 
 //import com.google.mlkit.vision.barcode.BarcodeScannerOptions;
 //import com.google.mlkit.vision.barcode.common.Barcode;
-import com.google.mlkit.vision.barcode.common.Barcode;
+//import com.google.mlkit.vision.barcode.common.Barcode;
+//import com.google.mlkit.vision.barcode.common.Barcode;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
+
+import java.util.Locale;
 //import com.google.mlkit.vision.codescanner.GmsBarcodeScannerOptions;
 //import com.google.mlkit.vision.codescanner.GmsBarcodeScanning;
 
@@ -71,38 +81,68 @@ longserialnumber
 */
 //LT2309GEPD
   private static boolean    connectdevice(String scantag) {
-         String name=Natives.addSIscangetName(scantag);
-         if(name!=null)  {
-            SensorBluetooth.resetDevice(name);
-            return true;
-            }
+     if(!isWearable) {
+            String name=Natives.addSIscangetName(scantag);
+            if(name!=null)  {
+               SensorBluetooth.resetDevice(name);
+               return true;
+               }
+               }
           return false;
          }
-//(17)221115(21)211003AK45(SI)61WG1538   
-//1722111521211003AK45SI61WG1538       
 
-/*		final var len=scantag.length() ;
-		final var deviceName=scantag.substring(len - 12, len - 8);  //GEPD8
-		final var after=scantag.substring(len - 8, len - 4); // 802J */
 
-private static void connectSensor(final String scantag) {
+static void connectSensor(final String scantag) {
+     if(!isWearable) {
         if(!connectdevice(scantag)) {
            	wrongtag(); 
         }
+        }
     }
+
+private static void scanZXing(Activity act) {
+     if(!isWearable) {
+		IntentIntegrator intentIntegrator = new IntentIntegrator(act);
+		intentIntegrator.setPrompt("To use a Sibionic sensor, scan its Data Matrix or QR Code");
+		intentIntegrator.setOrientationLocked(true); 
+		intentIntegrator.setDesiredBarcodeFormats( DATA_MATRIX, QR_CODE);
+		intentIntegrator.setRequestCode(REQUEST_BARCODE);
+		intentIntegrator.initiateScan(); 
+      }
+      }
+static void zXingResult(int requestCode, int resultCode, Intent data) {
+       IntentResult intentResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+       if (intentResult != null) {
+          final var scan=intentResult.getContents();
+          if ( scan== null) Toaster( "Cancelled");
+           else {
+                Log.i(LOG_ID,"Scan: "+scan);
+                connectSensor(scan);
+             }
+          }
+       }
+       
 
 
 public static void scan(Activity act) {
-	final var options =  new com.google.mlkit.vision.codescanner.GmsBarcodeScannerOptions.Builder().setBarcodeFormats( Barcode.FORMAT_DATA_MATRIX, Barcode.FORMAT_QR_CODE).build();
+     if(!isWearable) {
+	  final var country= Locale.getDefault().getCountry();
+      if("CN".equalsIgnoreCase(country))
+            scanZXing(act);
+       else
+         scanGoogle(act);
+         }
+      }
+private static void scanGoogle(Activity act) {
+     if(!isWearable) {
+	final var options =  new com.google.mlkit.vision.codescanner.GmsBarcodeScannerOptions.Builder().setBarcodeFormats( com.google.mlkit.vision.barcode.common.Barcode.FORMAT_DATA_MATRIX, com.google.mlkit.vision.barcode.common.Barcode.FORMAT_QR_CODE).build();
 	final var scanner =  com.google.mlkit.vision.codescanner.GmsBarcodeScanning.getClient(act, options);
 	scanner.startScan().addOnSuccessListener(
 	       barcode -> {
 	       var rawValue = barcode.getRawValue();
 		var message="Scanned: "+rawValue;
 		   Log.i(LOG_ID,message);
-//		   Toast.makeText(act, rawValue, Toast.LENGTH_LONG).show();
 		   connectSensor(rawValue);
-		 // Task completed successfully
 	       })
 	   .addOnCanceledListener(
 	       () -> {
@@ -114,12 +154,16 @@ public static void scan(Activity act) {
 	       })
 	   .addOnFailureListener(
 	       e -> {
-		var message=e.getMessage();
-		Log.i(LOG_ID,message);
-		Toast.makeText(act, message, Toast.LENGTH_LONG).show();
+            var message=e.getMessage();
+            Log.i(LOG_ID,message);
+            Toast.makeText(act, message, Toast.LENGTH_SHORT).show();
+            Toast.makeText(act, "Move to zXing", Toast.LENGTH_SHORT).show();
+            scanZXing(act);
+        
 		 // Task failed with an exception
 	       });
 
+   }
 	}
 
 };
