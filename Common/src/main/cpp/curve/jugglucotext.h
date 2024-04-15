@@ -54,7 +54,8 @@ std::string_view history,historyinfo, history3info,
 	sensorstarted,
 	lastscanned,
 	laststream,
-	sensorends
+	sensorends,
+	sensorexpectedend
 #ifndef WEAROS
 ,
 	newamount,

@@ -80,7 +80,8 @@ jugglucotext engtext {
 	.sensorstarted= "Started:",
 	.lastscanned="Last scanned:",
 	.laststream="Last stream:",
-	.sensorends="Ends: ",
+	.sensorends="Ends officially: ",
+	.sensorexpectedend="Expected end: ",
 #ifndef WEAROS
 	.newamount="New Amount",
 	.averageglucose="Average glucose: ",

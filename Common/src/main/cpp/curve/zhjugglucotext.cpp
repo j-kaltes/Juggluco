@@ -35,6 +35,7 @@ jugglucotext chiText {
     .lastscanned = "最后扫描:",
     .laststream = "最后流式传输:",
     .sensorends = "结束于: ",
+	.sensorexpectedend="Expected to end: ",
 
 #ifndef WEAROS
     .newamount = "新标签",

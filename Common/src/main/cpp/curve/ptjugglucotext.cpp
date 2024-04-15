@@ -93,6 +93,7 @@ jugglucotext pttext {
         .lastscanned="Último scan:",
         .laststream="Último stream:",
         .sensorends="Sensor termina: ",
+	.sensorexpectedend="Expected to end: ",
 #ifndef WEAROS
         .newamount="Novo valor",
         .averageglucose="Glicose Média: ",

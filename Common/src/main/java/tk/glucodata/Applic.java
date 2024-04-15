@@ -577,7 +577,12 @@ boolean needsnatives() {
 	Notify.mkpaint();
 	return ret;
 	}
-
+   /*
+@Keep
+static void toCalendar(String name) {
+   MainActivity.tocalendarapp=true;
+    MainActivity.calendarsensor=name;
+   } */
 @Keep
 static boolean bluetoothEnabled() {	
 	return SensorBluetooth.bluetoothIsEnabled();

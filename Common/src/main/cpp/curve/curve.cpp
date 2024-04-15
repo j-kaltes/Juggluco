@@ -1558,8 +1558,9 @@ uint32_t lastsensorends() {
 		if(lastsen>=0) {
 			const sensor *sen=sensors->getsensor(lastsen);
 //			time_t enddate= (14*24)*60*60+sen->starttime;
+			return (14*24)*60*60+sen->starttime;
 			
-			return sen->maxtime();
+			//return sen->maxtime();
 			}
 		return 0;
 		}
@@ -3191,13 +3192,14 @@ void textbox(const TI &title,const TE &text) {
 	}
 
 class histgegs:public Displayer {
+   const int sensorindex;
 	const SensorGlucoseData *hist;
 	time_t nu;
 #ifndef WEAROS
 strconcat text;
 #endif
 public:
-	histgegs(const SensorGlucoseData *hist): hist(hist)/*,glu(glu),tim(tim)*/,nu(time(nullptr))
+	histgegs(const int sensorindex,const SensorGlucoseData *hist): sensorindex(sensorindex),hist(hist)/*,glu(glu),tim(tim)*/,nu(time(nullptr))
 #ifndef WEAROS
     ,text(getsensorhelp(usedtext->menustr0[3],": ","\n","\n"," "))
 #endif
@@ -3208,13 +3210,14 @@ public:
 	LOGGER("histgegs %s",ctime(&nu));
 	} 
 strconcat  getsensorhelp(string_view starttext,string_view name1,string_view name2,string_view sep1,string_view sep2) {
-	char starts[50],ends[50];
-	time_t stime=hist->getstarttime(),etime= hist->getmaxtime();
+	char starts[50],ends[50],pends[50];
+   const sensor *sensor=sensors->getsensor(sensorindex);
+	time_t stime=hist->getstarttime(),etime= hist->officialendtime(),reallends=sensor->maxtime();
 	char lastscanbuf[50],lastpollbuf[50];
 	time_t lastscan=hist->getlastscantime();
 	time_t lastpolltime=hist->getlastpolltime();
 	return strconcat(string_view(""),starttext ,name1,hist->showsensorname(),name2,usedtext->sensorstarted,sep2,string_view(starts, datestr(stime,starts)),!hist->isLibre2()?"":sep1,!hist->isLibre2()?"":usedtext->lastscanned,!hist->isLibre2()?"":sep2,!hist->isLibre2()?"":string_view(lastscanbuf,datestr(lastscan,lastscanbuf)),lastpolltime>0?strconcat(string_view(""),sep1,usedtext->laststream,sep2):"",lastpolltime>0?string_view(lastpollbuf,datestr(lastpolltime,lastpollbuf)):"",nu<etime?strconcat(string_view(""),sep1,usedtext->sensorends,sep2):"",
-nu<etime?string_view(ends, datestr(etime,ends)):string_view("",0));
+nu<etime?string_view(ends, datestr(etime,ends)):string_view("",0),sep1,usedtext->sensorexpectedend,sep2,string_view(pends, datestr(reallends,pends)));;
 	}
 
 #ifndef WEAROS
@@ -3236,14 +3239,14 @@ virtual int display() override {
 
 };
 //histgegs gegs(
-strconcat getsensortext(const SensorGlucoseData *hist) {
-		histgegs gegs(hist);
+strconcat getsensortext(const int sensorindex,const SensorGlucoseData *hist) {
+		histgegs gegs(sensorindex,hist);
 		return gegs.getsensorhelp("","<h1>","</h1>","<br><br>","<br>");
 		}
 
-void showhistory(const SensorGlucoseData *hist,const float tapx, const float tapy) {
+static void showhistory(const int sensorindex,const SensorGlucoseData *hist,const float tapx, const float tapy) {
 #ifdef WEAROS
-						histgegs gegs(hist);
+						histgegs gegs(sensorindex,hist);
 
 extern void callshowsensorinfo(const char *text);
 						callshowsensorinfo(gegs.getsensorhelp("","<h1>","</h1>","<br><br>","<br>").data());
@@ -3251,7 +3254,7 @@ extern void callshowsensorinfo(const char *text);
 						::prevtouch.x=tapx;
 						::prevtouch.y=tapy;
 						LOGGER("x=%.1f, y=%.1f\n",tapx,tapy);
-						histgegs *gegs=new histgegs(hist);
+						histgegs *gegs=new histgegs(sensorindex,hist);
 						if(speakout) gegs->speak();
 						displayer.reset(gegs);
 #endif
@@ -3260,14 +3263,15 @@ extern void callshowsensorinfo(const char *text);
 template <class TX,class TY> 
 bool nearbyhistory( const float tapx,const float tapy,  const TX &transx,  const TY &transy) {
 	for(int i=histlen-1;i>=0;i--) {
-		const SensorGlucoseData *hist=sensors->getSensorData(hists[i]);
+      const int sensorindex= hists[i];
+		const SensorGlucoseData *hist=sensors->getSensorData(sensorindex);
 		const auto [firstpos,lastpos]=histpositions[i];
 			for(auto pos=firstpos;pos<=lastpos;pos++) {
 				uint32_t tim,glu;
 				if((tim=hist->timeatpos(pos))&&( glu=hist->sputnikglucose(pos))) {
 					auto posx=transx(tim),posy=transy( glu);
 					if(nearby(posx-tapx,posy-tapy)) {
-                  showhistory(hist,tapx,tapy);
+                  showhistory(sensorindex,hist,tapx,tapy);
 						return true;
 						}
 					}
@@ -3353,8 +3357,9 @@ int64_t longpress(float x,float y) {
 		for(int i=histlen-1;i>=0;i--) {
 			if(const ScanData *poll=nearbyscan(x,y,pollranges[i].first,pollranges[i].second,transx,transy)) {
 				LOGGER("longpress poll %.1f\n",poll->g/18.0);
-		      const SensorGlucoseData *hist=sensors->getSensorData(hists[i]);
-            showhistory(hist,x,y);
+                const int sensorindex= hists[i];
+		      const SensorGlucoseData *hist=sensors->getSensorData(sensorindex);
+            showhistory(sensorindex,hist,x,y);
 				return 0LL;
 				}
 			 }

@@ -79,6 +79,7 @@ jugglucotext rutext {
 	.lastscanned="Последнее сканирование:",
 	.laststream="Последний поток:",
 	.sensorends="Закончит работу: ",
+	.sensorexpectedend="Expected to end: ",
 #ifndef WEAROS
 	.newamount="Новая сумма",
 	.averageglucose="Средняя глюкоза: ",

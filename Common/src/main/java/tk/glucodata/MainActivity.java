@@ -427,6 +427,7 @@ static  String showmessage=null;
 
 static public int tryHealth=5;
 private static int resumenr=isRelease?10:2;
+static boolean tocalendarapp=false;
     @Override
     protected void onResume() {
         super.onResume();
@@ -488,6 +489,15 @@ private static int resumenr=isRelease?10:2;
 	 	showsdialog=true;
 		}
 	if(!isWearable) {
+               if(SiBionics==1)  {
+			if(tocalendarapp) {
+				final String name=Natives.getUsedSensorName();
+				if(name!=null) {
+					ScanNfcV.calendar(this, 0, name);
+					tocalendarapp=false;
+					}
+				}
+			}
 		if(!showsdialog) {
 			if(tryHealth>0) {
 				if(Natives.gethealthConnect()&& Build.VERSION.SDK_INT >= 28) {

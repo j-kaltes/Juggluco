@@ -87,6 +87,7 @@ jugglucotext iwtext {
 .lastscanned="נסרק אחרון:",
 .laststream="זרם אחרון:",
 .sensorends="קצה החיישן:",
+	.sensorexpectedend="Expected to end: ",
 #ifndef WEAROS
 .newamount="כמות חדשה",
 .averageglucose="גלוקוז ממוצע: ",

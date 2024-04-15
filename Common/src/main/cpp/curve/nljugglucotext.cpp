@@ -79,7 +79,8 @@ static jugglucotext nltext {
 	.sensorstarted= "Gestart:",
 	.lastscanned="Laatste scan:",
 	.laststream="Laatste stream:",
-	.sensorends="Eindigt: ",
+	.sensorends="Eindigt officieel: ",
+      .sensorexpectedend="Verwacht einde: ",
 #ifndef WEAROS
 	.newamount="Hoeveelheid",
 	.averageglucose="Gemiddelde glucose: ",

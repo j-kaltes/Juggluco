@@ -81,6 +81,7 @@ jugglucotext pltext {
 	.lastscanned="Ostatni skan:",
 	.laststream="Ostatni strumień:",
 	.sensorends="Koniec: ",
+	.sensorexpectedend="Expected to end: ",
 #ifndef WEAROS
 	.newamount="Nowa wartość",
 	.averageglucose="Średnie stęż. glukozy: ",

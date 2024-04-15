@@ -85,6 +85,7 @@ longserialnumber
             String name=Natives.addSIscangetName(scantag);
             if(name!=null)  {
                SensorBluetooth.resetDevice(name);
+               MainActivity.tocalendarapp=true;
                return true;
                }
                }

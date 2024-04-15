@@ -85,6 +85,7 @@ jugglucotext uktext {
 	.lastscanned="Останнє сканування:",
 	.laststream="Останній потік:",
 	.sensorends="Датчик закінчується: ",
+	.sensorexpectedend="Expected to end: ",
 #ifndef WEAROS
 	.newamount="Нова сума",
 	.averageglucose="Середня глюкоза: ",

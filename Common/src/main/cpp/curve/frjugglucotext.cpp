@@ -87,6 +87,7 @@ jugglucotext frtext {
 	.lastscanned="Dernier scan:",
 	.laststream="Dernier flux:",
 	.sensorends="Expiration capteur: ",
+	.sensorexpectedend="Expected to end: ",
 #ifndef WEAROS
 	.newamount="Nouvelle quantité",
 	.averageglucose="Glucose moyen: ",

@@ -82,7 +82,7 @@ public static boolean doGadgetbridge=false;
 	boolean superseded=false;
 	public final int sensorgen;
 	int readrssi=9999;
-	private long sensorstartmsec;
+	protected long sensorstartmsec;
 //	public SuperGattCallback(SensorBluetooth sensorbluetooth, String SerialNumber, long dataptr);
 protected	SuperGattCallback(String SerialNumber,long dataptr,int gen) {
 	this.SerialNumber = SerialNumber;

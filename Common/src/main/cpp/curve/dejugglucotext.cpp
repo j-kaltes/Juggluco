@@ -82,7 +82,8 @@ jugglucotext detext {
 .sensorstarted= "Gestartet:",
 .lastscanned="Zuletzt gescannt:",
 .laststream="Letzter Stream:",
-.sensorends="Endet: ",
+.sensorends="Endet offiziell:",
+ .sensorexpectedend="Erwartetes Ende:",
 #ifndef WEAROS
 .newamount="Neue Menge",
 .averageglucose="Durchschnittliche Glukose: ",

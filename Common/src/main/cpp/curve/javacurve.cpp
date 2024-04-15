@@ -63,6 +63,17 @@ extern "C" JNIEXPORT jlong JNICALL fromjava(sensorends)(JNIEnv* env, jclass obj)
 	return  lastsensorends() ;
 	}
 
+
+extern "C" JNIEXPORT jstring JNICALL   fromjava(getUsedSensorName)(JNIEnv *envin, jclass cl) {
+	if(const SensorGlucoseData *sens=sensors->getSensorData();sens&&sens->pollcount()) {
+		const char *name=sens->shortsensorname()->data();
+		LOGGER("getUsedSensorName()=%s\n",name);
+		return envin->NewStringUTF(name);
+		}
+	return nullptr;
+	}
+
+
 extern int badscanMessage(int kind);
 extern "C" JNIEXPORT jint JNICALL fromjava(badscan)(JNIEnv* env, jclass obj,jint kind) {
 	return badscanMessage( kind) ;
@@ -110,10 +121,10 @@ JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* reserved) {
 const jclass cl=env->FindClass("tk/glucodata/GlucoseCurve");
 if(!cl) {
 	summaryready=nullptr;
-	LOGSTRING("Can't find GlucoseCurve\n");
+	LOGAR("Can't find GlucoseCurve");
 	}
 else {
-	LOGSTRING("found GlucoseCurve\n");
+	LOGAR("found GlucoseCurve");
 	summaryready=env->GetMethodID(cl,"summaryready","()V");
 	#ifdef  WEAROS
 	showsensorinfo=env->GetMethodID(cl,"showsensorinfo","(Ljava/lang/String;)V");
@@ -129,23 +140,27 @@ if(cl) {
 	JNIApplic = (jclass)env->NewGlobalRef(cl);
 	env->DeleteLocalRef(cl);
 	if(!(jdoglucose=env->GetStaticMethodID(JNIApplic,"doglucose","(Ljava/lang/String;IFFIJZJJ)V"))) {
-		LOGSTRING(R"(GetStaticMethodID(JNIApplic,"doglucose","(Ljava/lang/String;IFFIJZJJ)V"))) failed)" "\n");
+		LOGAR(R"(GetStaticMethodID(JNIApplic,"doglucose","(Ljava/lang/String;IFFIJZJJ)V"))) failed)" "");
 		}
 	if(!(jupdateDevices=env->GetStaticMethodID(JNIApplic,"updateDevices","()Z"))) {
-		LOGSTRING(R"(jupdateDevices=env->GetStaticMethodID(JNIApplic,"updateDevices","()Z") failed)" "\n");
+		LOGAR(R"(jupdateDevices=env->GetStaticMethodID(JNIApplic,"updateDevices","()Z") failed)" "");
 		}
 	if(!(jbluetoothEnabled=env->GetStaticMethodID(JNIApplic,"bluetoothEnabled","()Z"))) {
-		LOGSTRING(R"(jbluetoothEnabled=env->GetStaticMethodID(JNIApplic,"bluetoothEnabled","()Z") failed)" "\n");
+		LOGAR(R"(jbluetoothEnabled=env->GetStaticMethodID(JNIApplic,"bluetoothEnabled","()Z") failed)" "");
 		}
 	if(!(jspeak=env->GetStaticMethodID(JNIApplic,"speak","(Ljava/lang/String;)V"))) {
-		LOGSTRING(R"(jspeak=env->GetStaticMethodID(JNIApplic,"speak","(Ljava/lang/String;)V") failed)" "\n");
+		LOGAR(R"(jspeak=env->GetStaticMethodID(JNIApplic,"speak","(Ljava/lang/String;)V") failed)" "");
 		}
 	if(!(jresetWearOS=env->GetStaticMethodID(JNIApplic,"resetWearOS","()V"))) {
-		LOGSTRING(R"(jresetWearOS=env->GetStaticMethodID(JNIApplic,"resetWearOS","()V") failed)" "\n");
+		LOGAR(R"(jresetWearOS=env->GetStaticMethodID(JNIApplic,"resetWearOS","()V") failed)" "");
 		}
+      /*
+	if(!(jtoCalendar=env->GetStaticMethodID(JNIApplic,"toCalendar","()V"))) {
+		LOGAR(R"(jtoCalendar=env->GetStaticMethodID(JNIApplic,"toCalendar","(Ljava/lang/String;)V") failed)" "");
+		} */
 	}
 else {
-	LOGSTRING(R"(FindClass("tk/glucodata/Applic") failed)" "\n");
+	LOGAR(R"(FindClass("tk/glucodata/Applic") failed)" "");
 	}
 }
 
@@ -159,11 +174,11 @@ if(cl) {
 	XInfuus = (jclass)env->NewGlobalRef(cl);
 	env->DeleteLocalRef(cl);
 	if(!(sendGlucoseBroadcast=env->GetStaticMethodID(XInfuus,"sendGlucoseBroadcast","(Ljava/lang/String;DFJ)V"))) {
-		LOGSTRING(R"(GetStaticMethodID(XInfuus,"sendGlucoseBroadcast","(Ljava/lang/String;DFJ)V()) failed)" "\n");
+		LOGAR(R"(GetStaticMethodID(XInfuus,"sendGlucoseBroadcast","(Ljava/lang/String;DFJ)V()) failed)" "");
 		}
 	}
 else {
-	LOGSTRING(R"(FindClass("tk/glucodata/XInfuus") failed)" "\n");
+	LOGAR(R"(FindClass("tk/glucodata/XInfuus") failed)" "");
 	}
 	}
 #endif
@@ -193,7 +208,7 @@ initlibreviewjni(env);
 jinitmessages(env) ;
 #endif
 
-	LOGSTRING("end JNI_OnLoad\n");
+	LOGAR("end JNI_OnLoad");
 	 return JNI_VERSION_1_6;
 }
 class attach {
@@ -229,7 +244,7 @@ void telldoglucose(const char *name,int32_t mgdl,float glu,float rate,int alarm,
 
 bool updateDevices() {
     if(!jupdateDevices)  {
-    	LOGSTRING("jupdateDevices==null\n");
+    	LOGAR("jupdateDevices==null");
 
     		return false;
 		}
@@ -247,11 +262,11 @@ void visiblebutton() {
 	if(glucosecurve) {
 		if(summaryready)  {
 			JNIEnv *env =getenv(); 
-			LOGSTRING("call summaryready\n");
+			LOGAR("call summaryready");
 			env->CallVoidMethod(glucosecurve,summaryready);
 			}
 		else
-			LOGSTRING("didn't find GlucoseCurve\n");
+			LOGAR("didn't find GlucoseCurve");
 		}
 	}
 
@@ -260,17 +275,17 @@ void callshowsensorinfo(const char *text) {
 	if(glucosecurve) {
 		if(showsensorinfo)  {
 			JNIEnv *env =getenv(); 
-			LOGSTRING("call showsensorinfo\n");
+			LOGAR("call showsensorinfo");
 			env->CallVoidMethod(glucosecurve,showsensorinfo,env->NewStringUTF(text));
 			}
 		else
-			LOGSTRING("didn't find GlucoseCurve\n");
+			LOGAR("didn't find GlucoseCurve");
 		}
 	}
 #endif
 
 void render() {
-	LOGSTRING("Render\n");
+	LOGAR("Render");
 	if(glucosecurve) {
 		struct method {
 		   jmethodID requestRendermeth;
@@ -644,6 +659,15 @@ void speak(const char *message) {
 		LOGAR("speak(null)");
 		}
 	}
+   /*
+void toCalendar(const char *message) {
+	if(message)
+		getenv()->CallStaticVoidMethod(JNIApplic,jtoCalendar,getenv()->NewStringUTF(message));
+	else {
+		LOGAR("toCalendar(null)");
+		}
+	} */
+
 
 #ifndef WEAROS
 extern bool speakout;

@@ -85,6 +85,7 @@ jugglucotext estext {
 .lastscanned="Último escaneo:",
 .laststream="Última transmisión:",
 .sensorends="Termina:",
+	.sensorexpectedend="Expected to end: ",
 #ifndef WEAROS
 .newamount="Nueva cantidad",
 .averageglucose="Glucosa promedio: ",

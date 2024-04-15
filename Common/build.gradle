@@ -49,7 +49,7 @@ android {
         minSdk 19
         compileSdk 33
         applicationId "tk.glucodata"
-	versionName '8.0.2'
+	versionName '8.0.3'
 //	multiDexEnabled true
 
         buildConfigField 'String', 'BUILD_TIME', 'new java.text.SimpleDateFormat("HH:mm:ss dd-MMM-yyyy").format(new java.util.Date(' + System.currentTimeMillis() + 'L))'
@@ -81,7 +81,7 @@ android {
 	//******  Zet op rollout op 100% ******
             	dimension 'libreVersion'
 		versionCode                          459                                                 //LIBRE2ONLY
-	//	versionName '8.0.2-no3'
+	//	versionName '8.0.3-no3'
 		versionNameSuffix '-no3'
             buildConfigField 'int', 'libreVersion', '2'
 		    externalNativeBuild.cmake {
@@ -136,7 +136,7 @@ android {
 		minSdk 26
 		versionCode                         459                                                 //WATCH
 	//******  Zet op rollout op 100% ******
-		//versionName '8.0.2-wear'
+		//versionName '8.0.3-wear'
 		versionNameSuffix '-wear'
 		signingConfig signingConfigs.alg
 
@@ -157,7 +157,7 @@ android {
 
             dimension 'wearos'
 		versionCode                         459                                                 //WATCH
-		//versionName '8.0.2-small'
+		//versionName '8.0.3-small'
 		versionNameSuffix '-small'
 		signingConfig signingConfigs.alg
 
@@ -401,7 +401,7 @@ buildTypes {
         includeInBundle true
     }
     compileSdk 34
-    buildToolsVersion '34.0.0 rc3'
+    buildToolsVersion '35.0.0 rc3'
     buildFeatures {
         aidl true
     }
@@ -486,7 +486,7 @@ dependencies {
     wearImplementation 'androidx.activity:activity-ktx:1.8.2'
     wearImplementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     wearImplementation 'com.google.android.material:material:1.11.0'
-    wearImplementation 'androidx.databinding:viewbinding:8.3.1'
+    wearImplementation 'androidx.databinding:viewbinding:8.3.2'
     wearImplementation 'androidx.core:core-ktx:1.12.0'
 
 
@@ -507,9 +507,9 @@ mobileLibre3SiImplementation {}
 mobileLibreOldSiImplementation {}
 }
 mobileLibre3SiImplementation 'com.google.android.gms:play-services-code-scanner:16.1.0'
-mobileLibre3SiImplementation 'com.journeyapps:zxing-android-embedded:4.1.0'
+mobileLibre3SiImplementation 'com.journeyapps:zxing-android-embedded:4.3.0'
     mobileLibreOldSiImplementation 'com.google.android.gms:play-services-code-scanner:16.1.0'
-mobileLibreOldSiImplementation 'com.journeyapps:zxing-android-embedded:4.1.0'
+mobileLibreOldSiImplementation 'com.journeyapps:zxing-android-embedded:4.3.0'
 
 }
 

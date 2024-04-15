@@ -241,7 +241,10 @@ public void onCharacteristicChanged(BluetoothGatt bluetoothGatt, BluetoothGattCh
       disconnect();
       return;
      } 
-   if(res==1L) return;
+   if(res==1L) {
+      sensorstartmsec=Natives.getSensorStartmsec(dataptr);
+      return;
+      }
    handleGlucoseResult(res,timmsec);
     }
 

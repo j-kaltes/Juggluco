@@ -124,6 +124,8 @@ jlong AlgorithmContext::processData(SensorGlucoseData *sens,time_t nowsecs,int8_
                   auto starttime=makestarttime(index,eventTime);
                   sens->getinfo()->starttime=starttime;
                    sensor->starttime=starttime;
+//extern void toCalendar( const char *name);
+ //                  toCalendar( sens->shortsensorname()->data());
                   }
             if(const double newvalue=process(index,value,temp);newvalue>0.1) {
       #ifndef NOLOG

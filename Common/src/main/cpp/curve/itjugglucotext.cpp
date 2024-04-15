@@ -91,6 +91,7 @@ static jugglucotext ittext {
 	.lastscanned="Ultima scansione:",
 	.laststream="Ultima scansione:",
 	.sensorends="Il sensore teminerà il: ",
+	.sensorexpectedend="Expected to end: ",
 #ifndef WEAROS
 	.newamount="Nuovo valore",
 	.averageglucose="Media glicemica: ",

@@ -219,6 +219,7 @@ static public synchronized void scan(GlucoseCurve curve,Tag tag) {
 					 if(name==null){
 						Log.i(LOG_ID,"name==null");
 						ret=0xFA;
+                  Natives.freedataptr(streamptr);
 						}
 					 else{
 						Log.i(LOG_ID,"scanned "+name);
@@ -389,7 +390,9 @@ static private void newsensor(Activity act,String text,String name) {
 	}
 
 //    int width=getscreenwidth(act);
-    int width=GlucoseCurve.getwidth();
+        var metrics= act.getResources().getDisplayMetrics();
+   // int width=GlucoseCurve.getwidth();
+    int width= metrics.widthPixels;
     int pad=width/30;
     act.runOnUiThread(() -> {
 	TextView tv=getlabel(act,text);
@@ -399,11 +402,15 @@ static private void newsensor(Activity act,String text,String name) {
     calendar.setPadding(0,pad,0,pad);
 	calendar.setChecked(true);
 	calendar.setText(R.string.addsensorenddate);
+
+
 	Button ok=getbutton(act,R.string.ok);
+
 	Layout lay=new Layout(act, (l, w, h) -> {
 		if(width>2)
 			l.setX((width-w)/2);
-		var height=GlucoseCurve.getheight();
+//		var height=GlucoseCurve.getheight();
+		var height=metrics.heightPixels;
 		if(height>h)
 			l.setY((height-h)/2);
 
@@ -422,7 +429,7 @@ static private void newsensor(Activity act,String text,String name) {
 	});
 	}
 static boolean askcalendar=true;
-private static int calendar(Activity act,int ret,String name) {
+static int calendar(Activity act,int ret,String name) {
 	if(askcalendar)  {
 		int waitmin=(ret&0xff)==5?ret>>8:0;
 		String mess=(waitmin>0) ?

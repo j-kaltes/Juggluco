@@ -731,6 +731,10 @@ public static native long SIprocessData(long dataptr, byte[] bluetoothdata,long 
 public static native String getSiBluetoothNum(long dataptr);
 public static native byte[] getSiWriteCharacter(long dataptr);
 public static native String addSIscangetName(String jgegs);
+//public static native String getShowSensorName(long dataptr);
+
+public static native String getUsedSensorName( );
+
 //s/^extern.*JNIEXPORT[         ]*\([a-zA-Z]*\)[ ]*JNICALL[      ]*fromjava(\([^)]*\)) *(JNIEnv[^,]*,[^,)]*[,)]\([^){]*\)[^a-zA-Z0-9]*$/public static native \1 \2(\3);/g
 }
 
