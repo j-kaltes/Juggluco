@@ -111,23 +111,29 @@ private static void scanZXing(Activity act) {
 		intentIntegrator.initiateScan(); 
       }
       }
-static void zXingResult(int requestCode, int resultCode, Intent data) {
-       IntentResult intentResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+static void zXingResult(int resultCode, Intent data) {
+       Log.i(LOG_ID,"zXingResult(" +resultCode+",data)");
+       IntentResult intentResult = IntentIntegrator.parseActivityResult(resultCode, data);
        if (intentResult != null) {
           final var scan=intentResult.getContents();
-          if ( scan== null) Toaster( "Cancelled");
+          if ( scan== null) 
+            Toaster( "Cancelled");
            else {
                 Log.i(LOG_ID,"Scan: "+scan);
+                Toaster(scan);
                 connectSensor(scan);
              }
           }
+         else {
+            Log.i(LOG_ID,"intentResult == null"); 
+            }
        }
        
 
 
 public static void scan(Activity act) {
      if(!isWearable) {
-	  final var country= Locale.getDefault().getCountry();
+	  final var country= Log.doLog?"CN":Locale.getDefault().getCountry();
       if("CN".equalsIgnoreCase(country))
             scanZXing(act);
        else
@@ -147,7 +153,7 @@ private static void scanGoogle(Activity act) {
 	       })
 	   .addOnCanceledListener(
 	       () -> {
-		var message="Scan canceled";
+		var message="Scan cancelled";
 
 		Log.i(LOG_ID,message);
 		Toast.makeText(act, message, Toast.LENGTH_LONG).show();

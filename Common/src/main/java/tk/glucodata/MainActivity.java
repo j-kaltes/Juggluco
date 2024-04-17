@@ -1012,31 +1012,33 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 			if (resultCode == Activity.RESULT_OK&&openfile!=null) 
 				openfile.getlib(data,this);
 		}; return;
-	      case PRIVATE_REQUEST:
+	   case PRIVATE_REQUEST:
 		case CHAIN_REQUEST:
-		if (resultCode == Activity.RESULT_OK) {
-			Uri uri; 
-			if(data==null||(uri= data.getData()) == null) { 
-				//TODO error
-				return;
-				}
-			try {
-				var input=new FileInputStream( getContentResolver().openFileDescriptor(uri, "r").getFileDescriptor());
-				savekey(input,keys[requestCode&~PRIVATE_REQUEST]);
-				}
-			 catch(Throwable th) {
-			 	Log.stack(LOG_ID,"openFileDescriptor",th);
-			 	}
-			}
+         if(!isWearable) {
+            if (resultCode == Activity.RESULT_OK) {
+               Uri uri; 
+               if(data==null||(uri= data.getData()) == null) { 
+                  //TODO error
+                  return;
+                  }
+               try {
+                  var input=new FileInputStream( getContentResolver().openFileDescriptor(uri, "r").getFileDescriptor());
+                  savekey(input,keys[requestCode&~PRIVATE_REQUEST]);
+                  }
+                catch(Throwable th) {
+                  Log.stack(LOG_ID,"openFileDescriptor",th);
+                  }
+               };
+            }
+         return;
+      case REQUEST_BARCODE: 
+         if(SiBionics==1 &&!isWearable) {
+			   Sibionics.zXingResult(resultCode, data);
+			   return;
+			   }
 
 	};
 	if(!isWearable) {
-               if(SiBionics==1)  {
-		if((requestCode & (REQUEST_MASK|REQUEST_BARCODE)) == REQUEST_BARCODE) {
-			   Sibionics.zXingResult(requestCode, resultCode, data);
-			   return;
-			   }
-		   }
 		if ((requestCode & (REQUEST_MASK | REQUEST_EXPORT)) == REQUEST_EXPORT) {
 			try {
 				if (resultCode == Activity.RESULT_OK) {
@@ -1288,10 +1290,12 @@ public void useBluetooth(boolean val) {
 
 public  void setbluetoothmain(boolean on) {
     if(on) {
-	      Natives.setusebluetooth(on);
-         if(!finepermission()) {
-            return;
-            }
+	 Natives.setusebluetooth(on);
+	 if(Build.VERSION.SDK_INT < 26||Build.VERSION.SDK_INT>30) {
+		if(!finepermission()) {
+			return;
+			}
+		}
         }
     Applic.setbluetooth(this, on) ;
 	if(fineres!=null)

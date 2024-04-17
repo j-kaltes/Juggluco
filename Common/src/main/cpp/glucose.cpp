@@ -416,6 +416,35 @@ std::string_view getdeltaname(float rate) {
 int writeStartime(crypt_t *pass, const int sock, const int sensorindex) {
 	return sensors->writeStartime(pass, sock,sensorindex);
 	}
+
+uint32_t sendstreamfrom()  {
+	extern std::vector<int> usedsensors;
+	extern void setusedsensors() ;
+	if(!usedsensors.size()) {
+		setusedsensors();
+		if(!usedsensors.size())  {
+         LOGAR("sendstreamfrom()=0 usedsensors.size()==0");
+			return 0;
+           }
+		}
+	uint32_t lasttime=UINT32_MAX;	
+	for(const int i:usedsensors) {
+		if(const SensorGlucoseData *hist = sensors->getSensorData(i)) {
+         uint32_t tim = hist->getlastpolltime();
+         if(!tim) {
+            tim=hist->getstarttime();
+            }
+			if(tim < lasttime) {
+				lasttime = tim;
+				}
+			}
+		}
+#ifndef NOLOG
+   time_t ttime=lasttime;
+   LOGGER("sendstreamfrom()=%lu %s",ttime,ctime(&ttime));
+#endif
+	return  lasttime;
+	}
 /*
 std::string_view getdeltaname(float rate) {
 	if(rate>=3.5f)

@@ -3212,7 +3212,7 @@ public:
 strconcat  getsensorhelp(string_view starttext,string_view name1,string_view name2,string_view sep1,string_view sep2) {
 	char starts[50],ends[50],pends[50];
    const sensor *sensor=sensors->getsensor(sensorindex);
-	time_t stime=hist->getstarttime(),etime= hist->officialendtime(),reallends=sensor->maxtime();
+	time_t stime=hist->getstarttime(),etime= hist->officialendtime(),reallends=hist->isLibre3()?etime:sensor->maxtime();
 	char lastscanbuf[50],lastpollbuf[50];
 	time_t lastscan=hist->getlastscantime();
 	time_t lastpolltime=hist->getlastpolltime();

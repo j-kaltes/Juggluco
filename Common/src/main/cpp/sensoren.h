@@ -744,6 +744,9 @@ std::pair<int, uint32_t> lastused(uint32_t (SensorGlucoseData::*proc)(void) cons
 		return lastused(&SensorGlucoseData::getlastpolltime);
 	}
 
+
+
+
 	auto firstpolltime() {
 		for (int i = 0; i <= last(); i++) { //MODIFIED!!
 			if (sensorlist()[i].present) {

@@ -43,7 +43,6 @@
 <queries> <package android:name="com.google.android.apps.healthdata" /> </queries>
 
 
-    <queries> <intent> <action android:name="android.intent.action.TTS_SERVICE" /> </intent> </queries>
 
     <queries> <intent> <action android:name="android.nfc.action.TECH_DISCOVERED" /> </intent> </queries>
 

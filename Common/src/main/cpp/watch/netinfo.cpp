@@ -38,6 +38,7 @@ std::array<int,maxallhosts>		peers2us,us2peers;
 #define LOGSTRINGTAG(...) LOGSTRING("netinfo: " __VA_ARGS__)
 
 
+extern uint32_t sendstreamfrom() ;
 extern void setBlueMessage(int,bool val);
 extern bool getpassive(int pos) ;
 extern bool getactive(int pos) ;
@@ -165,7 +166,9 @@ static void setdefaults(const char *infolabel,bool galaxy) {
 			names[i]=hostnames[i].data();
 			LOGGERTAG("host: %s\n",names[i]);
 			}
-		auto [_id,lasttime]=sensors->lastpolltime();
+		//auto [_id,lasttime]=sensors->lastpolltime();
+
+		auto lasttime=sendstreamfrom();
 		bool activeonly;
 		bool passiveonly;
 		bool sendnums;
@@ -213,7 +216,7 @@ static void setdefaults(const char *infolabel,bool galaxy) {
 
 
 updateone &getsendto(const passhost_t *host);
-static bool watchsensor(const passhost_t *wearhost) {
+static bool hasDirectWatchConnection(const passhost_t *wearhost) {
 	if(!wearhost)
 		return false;
        if constexpr(iswatchapp()) {
@@ -398,12 +401,12 @@ extern "C" JNIEXPORT  jbyteArray  JNICALL   fromjava(getmynetinfo)(JNIEnv *env, 
 			wearhost->receivefrom=getreceivefrom(index,receive,activeonly,passiveonly);
 			}
 		else {
-			info.watchsensor=watchsensor(wearhost);
+			info.watchsensor=hasDirectWatchConnection(wearhost);
 			setsendinfo(info,wearhost);
 		   }
 		}
 	else {
-		info.watchsensor=watchsensor(wearhost);
+		info.watchsensor=hasDirectWatchConnection(wearhost);
 		setsendinfo(info,wearhost);
 		}
 	LOGGER("getmynetinfo info.watchsensor=%d\n",info.watchsensor);
@@ -416,8 +419,7 @@ extern "C" JNIEXPORT  jbyteArray  JNICALL   fromjava(getmynetinfo)(JNIEnv *env, 
 	return uit;
 	}
 
-
-extern "C" JNIEXPORT jboolean  JNICALL   fromjava(setmynetinfo)(JNIEnv *env, jclass cl,  jstring jident, jbyteArray jar,jboolean galaxy) { 
+extern "C" JNIEXPORT jboolean  JNICALL   fromjava(setmynetinfo)(JNIEnv *env, jclass cl,  jstring jident, jbyteArray jar,jboolean galaxy) {
    if(!jar) return false;
    if(!backup) return false;
 	if(!jident) return false;
@@ -500,7 +502,9 @@ extern "C" JNIEXPORT jboolean  JNICALL   fromjava(setmynetinfo)(JNIEnv *env, jcl
 				LOGGERTAG("host: %s\n",names[i]);
 				}
 
-			auto [_id,lasttime]=sensors->lastpolltime();
+//			auto [_id,lasttime]=sensors->lastpolltime();
+			auto lasttime=sendstreamfrom();
+
 			bool activeonly=getactive(index);
 			bool passiveonly=getpassive(index);
         		backup->changehost(index,nullptr,(jobjectArray)names,len,true,portstr,sendnums, sendstream, sendscans,false, receive,activeonly ,backup->getpass(index).data(),lasttime,passiveonly,infolabel,false,true);
@@ -637,7 +641,7 @@ extern "C" JNIEXPORT jint  JNICALL   fromjava(directsensorwatch)(JNIEnv *env, jc
 		long last=lastuptodate[index];
 		if((nu-last)>3*60)
 			return -1;
-		return watchsensor(host);
+		return hasDirectWatchConnection(host);
 		}
 	return -1;
        }
