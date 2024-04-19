@@ -37,7 +37,7 @@
     <string name="compositionof100gram">Состав на 100 грамм</string>
     <string name="config">Конфигурация</string>
     <string name="connection">Подключение</string>
-    <string name="connectwithsensor">Для подключения к датчику</string>
+    <string name="connectwithsensor">Подключение к датчику</string>
     <string name="darkmode">Темный режим</string>
     <string name="database">База данных</string>
     <string name="datapresentuntil">"Данные сохраняются на приемнике до тех пор, пока: "</string>
@@ -111,7 +111,7 @@
     <string name="helpname">Помощь</string>
     <string name="high_priority">Приоритет</string>
     <string name="highglucose">" Высокий уровень глюкозы!"</string>
-    <string name="highglucosealarm">Сигнал тревоги о высоком уровне глюкозы</string>
+    <string name="highglucosealarm">Тревога о высоком уровне глюкозы</string>
     <string name="highglucoseshort">"Высокий сахар!"</string>
     <string name="historyname">История</string>
     <string name="info">Инфо</string>
@@ -139,7 +139,7 @@
     <string name="lossdata">Сброс к значениям по умолчанию может привести к потере данных.</string>
     <string name="lossofsignalalarm">Тревога о потере сигнала</string>
     <string name="lowglucose">" Низкий уровень глюкозы!"</string>
-    <string name="lowglucosealarm">Тревога о Низком уровне глюкозы</string>
+    <string name="lowglucosealarm">Тревога о низком уровне глюкозы</string>
     <string name="lowglucoseshort">"Низкий сахар!"</string>
     <string name="manual">Вручную</string>
     <string name="manuallyscale">Ручное масштабирование</string>
@@ -157,7 +157,7 @@
     <string name="name">Имя:</string>
     <string name="new_amount">Новое количество</string>
     <string name="newname">Новое</string>
-    <string name="nonewvalue">"Нет нового значения с тех пор "</string>
+    <string name="nonewvalue">"Нет нового значения с "</string>
     <string name="newport">Новый порт =</string>
     <string name="newsecret">"Новый api секрет: "</string>
     <string name="nextpage">Новая страница</string>
@@ -236,7 +236,7 @@
     <string name="sendnow">Отправить сейчас</string>
     <string name="sendqueue">Отправка очереди</string>
     <string name="sendto">Отправлять на</string>
-	<string name="sendtoxdrip">Отправка в Libre patch</string>
+	<string name="sendtoxdrip">Отправка в Libre patch".</string>
     <string name="sensor">Сенсор</string>
     <string name="sensorpermission">Разрешение доступа к датчикам требуется для отображения частоты сердечных сокращений</string>
     <string name="sensorpermissionmessage">Вы можете установить его в настройках устройства, приложениях, разрешениях</string>

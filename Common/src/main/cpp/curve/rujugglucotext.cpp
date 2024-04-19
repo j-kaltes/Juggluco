@@ -57,7 +57,7 @@ jugglucotext rutext {
       "Ноя",
       "Дек"},
 
-	.scanned="Отсканирован",
+	.scanned="Сканирование",
 	.readysecEnable="Датчик будет готов через %d минут. Повторите сканирование, чтобы включить потоковую передачу.",
 	.readysec="Датчик будет готов через %d минут.",
 .networkproblem="Нет данных глюкозы от зеркала",
@@ -78,8 +78,8 @@ jugglucotext rutext {
 	.sensorstarted= "Начал работу:",
 	.lastscanned="Последнее сканирование:",
 	.laststream="Последний поток:",
-	.sensorends="Закончит работу: ",
-	.sensorexpectedend="Expected to end: ",
+	.sensorends="Официально заканчивается: ",
+    .sensorexpectedend="Ожидаемо заканчивается: ",
 #ifndef WEAROS
 	.newamount="Новая сумма",
 	.averageglucose="Средняя глюкоза: ",
@@ -91,7 +91,7 @@ jugglucotext rutext {
 	.SD="SD: %.2f",
 	.glucose_variability="Изменчивость уровня глюкозы: %.1f%%",
      .menustr0={
-		"System UI         ",
+		"System UI        ",
 		"Меню",
 		"Часы",
 		"Датчик",
@@ -111,10 +111,10 @@ jugglucotext rutext {
 		"Лист", 
 		"Статистика",
 		"Озвучка",
-		"Плав.глюк.         "
+		"Плав.глюк.        "
 		},
 	.menustr2= {"Послед. скан",
-	"Сканирование         ",
+	"Сканирование        ",
 	"Поток",
 	"История",
 	"Суммы",
@@ -137,7 +137,7 @@ jugglucotext rutext {
 	"Стоп тревога" },
 .menustr2= {"Дата  ",
 hourminstr,
-"День назад      ",
+"День назад                ",
 rutext.amount},
 #endif
 

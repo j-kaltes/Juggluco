@@ -67,7 +67,7 @@ struct netinfo1 {
 	bool blue;
 	};
 
-bool isGalaxyWatch=true;
+int isGalaxyWatch=-1;
 extern updateone &getsendto(int index);
 // bool mkwearos=false;
 #include <mutex>
@@ -102,8 +102,13 @@ else {
 	}
 	bool sendstream, sendscans, receive,sendnums,activeonly,passiveonly;
 
+
 	if constexpr( iswatchapp()) {
 		LOGSTRINGTAG("watch app\n");
+      if(isGalaxyWatch<0) {
+         LOGAR("isGalaxyWatch<0");
+         return nullptr;
+         }
 		sendstream=false;
 		sendscans=false;
 		sendnums=false;
@@ -303,7 +308,7 @@ extern "C" JNIEXPORT  jbyteArray  JNICALL   fromjava(getmynetinfo)(JNIEnv *env, 
         destruct   dest([jident,id,env]() {env->ReleaseStringUTFChars(jident, id);});
 	struct netinfo1 info;
 	auto myport=atoi(backup->getmyport());
-	LOGGERTAG("getmynetinfo(%s,%d,%d) port=%d\n", id,create,watchHasSensor,myport);
+	LOGGERTAG("getmynetinfo(%s,%d,%d,%d) port=%d\n", id,create,watchHasSensor,galaxy,myport);
 	passhost_t *wearhost=getwearoshost(create,id,galaxy);
 	if(!wearhost)  {
 		LOGSTRINGTAG("wearhost==null\n");
@@ -441,7 +446,7 @@ extern "C" JNIEXPORT jboolean  JNICALL   fromjava(setmynetinfo)(JNIEnv *env, jcl
     passhost_t *allhosts=update->allhosts;
    int index=host-allhosts;
    const char *infolabel=usedversion?info->newlabel:reinterpret_cast<const netinfo *>(info)->label;
-   LOGGERTAG("setmynetinfo %s usedversion=%d infolabel=%s\n",id,usedversion,infolabel);
+   LOGGERTAG("setmynetinfo %s usedversion=%d infolabel=%s galaxy=%d\n",id,usedversion,infolabel,galaxy);
     host->setname(infolabel);
    if(!usedversion) {
 	   namehost hostnamer(&info->ip);
@@ -658,6 +663,7 @@ bool getwearindex(JNIEnv *env, jstring jident) {
    return index;
    }
 extern "C" JNIEXPORT  void  JNICALL   fromjava(isGalaxyWatch)(JNIEnv *env, jclass cl,jboolean val) {
+   LOGGER("setGalaxyWatch(%d)\n",val);
 	 isGalaxyWatch=val;  
 	}
 
