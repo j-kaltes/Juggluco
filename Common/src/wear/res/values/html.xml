@@ -25,6 +25,7 @@
 <string name="alarmhelp" ></string>
 <string name="flashpermission" ></string>
 <string name="nearbypermission" ></string>
+    <string name="camerapermission" ></string>
 <string name="watchinfo" ></string>
 <string name="wearosinfo" ></string>
 <string name="about" ></string>

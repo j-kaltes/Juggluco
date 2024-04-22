@@ -2476,4 +2476,14 @@ transfer data to another phone and then using that new phone to send
 data to Libreview.</p>
 ]]>
 </string>
+<string name="camerapermission" >
+<![CDATA[
+<h1>CAMERA permission</h1>
+<p>To use a Sibionics sensor, you need to scan a data matrix on the
+package making use of the camera of the phone. For this Juggluco can
+make use of either Google Play services in which case Juggluco
+doesn’t need camera permission or Juggluco makes use of zXing in
+which case Juggluco needs camera permission.</p>
+]]>
+</string>
 </resources>

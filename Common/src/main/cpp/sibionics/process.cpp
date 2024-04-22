@@ -60,7 +60,7 @@ static uint32_t makestarttime(int index,uint32_t eventTime) {
 	return starttime;
    }
 
-extern bool savejson(SensorGlucoseData *sens,int index,const AlgorithmContext *alg );
+extern bool savejson(SensorGlucoseData *sens,std::string_view, int index,const AlgorithmContext *alg );
 extern jlong glucoseback(uint32_t glval,float drate,SensorGlucoseData *hist) ;
 
 void logbytes(std::string_view text,const uint8_t *value,int vallen) {
@@ -74,6 +74,25 @@ void logbytes(std::string_view text,const uint8_t *value,int vallen) {
          }
 		LOGGERN(mess,ptr-mess);
       }
+
+
+#ifdef SIHISTORY
+void	 AlgorithmContext::saveSi3(SensorGlucoseData *sens,int index,uint32_t eventTime,int value,float temp) {
+        if(const double newvalue=process3(index,value,temp);newvalue>0.1) {
+               const int mgL=std::round(newvalue*convfactordL);
+		const int idpos=int(round(index/(double)sens->getmininterval()));
+		Glucose *item=sens->getglucose(idpos);
+		item->time=eventTime;
+		item->id=index;
+		item->glu[1]=mgL;
+		const int newend=idpos+1;
+		if(newend>sens->getScanendhistory())
+			sens->setendhistory(newend);
+    	    	}
+	}
+#else
+#define saveSi3(sens,index, eventTime, value, temp) 
+#endif
 jlong AlgorithmContext::processData(SensorGlucoseData *sens,time_t nowsecs,int8_t *data,int totlen,int sensorindex) {
 	logbytes("SIprocess",(uint8_t*)data,totlen);
    if(data[2] != 9||data[0] != -86 || data[1] != 85) {
@@ -132,7 +151,7 @@ jlong AlgorithmContext::processData(SensorGlucoseData *sens,time_t nowsecs,int8_
                const long electric= std::byteswap(one[2]);
                const int status = std::byteswap(one[4]);
       #endif
-               const int mgdL=std::round(value*convfactordL/10.0);
+               const int mgdL=std::round(newvalue*convfactordL/10.0);
                const int trend=ig_trend;
                const float change=sitrend2RateOfChange(trend);
                const int abbotttrend=sitrend2abbott(trend);
@@ -141,6 +160,7 @@ jlong AlgorithmContext::processData(SensorGlucoseData *sens,time_t nowsecs,int8_
                     {
                      sens->savestream(eventTime,index,mgdL,abbotttrend,change);
                      sens->retried=0;
+		     saveSi3(sens,index,eventTime,value,temp);
                      if(!numOfUnreceived)  {
                        sens->sensorerror=false;
                         if(sensor->finished) {
@@ -149,7 +169,7 @@ jlong AlgorithmContext::processData(SensorGlucoseData *sens,time_t nowsecs,int8_
                            backup->resensordata(sensorindex);
                            }
                        auto res=glucoseback(mgdL,change,sens);
-                        savejson(sens,index,this);
+                        savejson(sens,sens->statefile,index,this);
                         backup->wakebackup(Backup::wakestream);
                      extern void wakewithcurrent();
                         wakewithcurrent();

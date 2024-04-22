@@ -912,6 +912,10 @@ specstart(spec),
  scanpath(baseuit, "current.dat"),
  trendspath(baseuit, trendsdat),
  statefile(sensordir,"state.json")
+
+#ifdef SIHISTORY
+ ,statefile3(sensordir,"state3.json")
+#endif
 {
 if(error()) {
 	LOGSTRING("SensorGlucoseData Error\n");
@@ -968,6 +972,10 @@ const char * relstatefile() {
 	return absToRel(statefile);
 	} */
 pathconcat statefile;
+
+#ifdef SIHISTORY
+pathconcat statefile3;
+#endif
 
 
 

@@ -706,10 +706,10 @@ private boolean resetDevicer(long streamptr,String name) {
 	for(int i=0;i<gattcallbacks.size();i++) {
 		SuperGattCallback  cb= gattcallbacks.get(i);
 	   if(Natives.sameSensor(streamptr,cb.dataptr)) {
-		Log.d(LOG_ID,"reset free "+name);
-		cb.resetdataptr();
-		return checkandconnect(cb,0);
-		}
+         Log.d(LOG_ID,"reset free "+name);
+         cb.resetdataptr();
+         return checkandconnect(cb,0);
+         }
 	  }
 	return addDevice(name,streamptr);
     }

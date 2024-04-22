@@ -335,6 +335,7 @@ void handleIntent(Intent intent) {
 		case "android.permission-group.HEALTH"->help.help(R.string.healthpermission,this);
 		case "android.permission-group.NOTIFICATIONS"-> help.help(R.string.notificationpermission,this);
 		case "android.permission-group.NEARBY_DEVICES"-> help.help(R.string.nearbypermission,this);
+		case "android.permission-group.CAMERA"-> help.help(R.string.camerapermission,this);
 		default-> Log.i(LOG_ID,"EXTRA_PERMISSION_GROUP_NAME="+groupname); 
 		};
 	return;
