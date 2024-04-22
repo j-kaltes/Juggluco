@@ -112,7 +112,7 @@ jlong AlgorithmContext::processData(SensorGlucoseData *sens,time_t nowsecs,int8_
    const int maxoff=multiple*14;
    int8_t * const start=data+4;
    for(int off=0;off < maxoff;off+=14) {
-      const int16_t *one=reinterpret_cast<int16_t*>(start+off);
+      const uint16_t *one=reinterpret_cast<uint16_t*>(start+off);
       const int index=std::byteswap(one[0]);
       const float temp = std::byteswap(one[1])/ 10.0f;
       const int value = std::byteswap(one[3]);

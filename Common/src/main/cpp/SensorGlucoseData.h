@@ -1294,7 +1294,6 @@ CurData  scanInperiod(const uint32_t starttime,const uint32_t endtime) const {
 
 
 dataonlyptr  getfromfile(crypt_t *pass,int sock, std::string_view filename,int offset,int asklen) {
-	LOGSTRING("GLU: getfromfile\n");
 	const int pathlen=filename.size()+1;
 	constexpr const int ali=alignof(struct askfile);
 	const int comlen=((sizeof(askfile)+(pathlen+ali-1))/ali)*ali;
@@ -1305,9 +1304,11 @@ dataonlyptr  getfromfile(crypt_t *pass,int sock, std::string_view filename,int o
 	ask->len= asklen;
 
 	ask->namelen=pathlen;
+
+	LOGGER("GLU: getfromfile(sock=%d %s offset=%d asklen=%d comlen=%d)\n",sock,filename.data(),offset,asklen,comlen);
 	memcpy(ask->name,filename.data(),pathlen);
 	if(!noacksendcommand(pass,sock,buf,comlen) ) {
-		LOGSTRING("GLU:  !noacksendcommand\n");
+		LOGAR("GLU:  !noacksendcommand");
 		return dataonlyptr(nullptr); 
 		}
 	return receivedataonly(sock,pass, asklen);

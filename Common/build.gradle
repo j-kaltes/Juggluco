@@ -49,7 +49,7 @@ android {
         minSdk 19
         compileSdk 33
         applicationId "tk.glucodata"
-	versionName '8.0.6'
+	versionName '8.0.7'
 //	multiDexEnabled true
 
         buildConfigField 'String', 'BUILD_TIME', 'new java.text.SimpleDateFormat("HH:mm:ss dd-MMM-yyyy").format(new java.util.Date(' + System.currentTimeMillis() + 'L))'
@@ -81,7 +81,7 @@ android {
 	//******  Zet op rollout op 100% ******
             	dimension 'libreVersion'
 		versionCode                          459                                                 //LIBRE2ONLY
-	//	versionName '8.0.6-no3'
+	//	versionName '8.0.7-no3'
 		versionNameSuffix '-no3'
             buildConfigField 'int', 'libreVersion', '2'
 		    externalNativeBuild.cmake {
@@ -136,7 +136,7 @@ android {
 		minSdk 26
 		versionCode                         459                                                 //WATCH
 	//******  Zet op rollout op 100% ******
-		//versionName '8.0.6-wear'
+		//versionName '8.0.7-wear'
 		versionNameSuffix '-wear'
 		signingConfig signingConfigs.alg
 
@@ -157,7 +157,7 @@ android {
 
             dimension 'wearos'
 		versionCode                         459                                                 //WATCH
-		//versionName '8.0.6-small'
+		//versionName '8.0.7-small'
 		versionNameSuffix '-small'
 		signingConfig signingConfigs.alg
 
