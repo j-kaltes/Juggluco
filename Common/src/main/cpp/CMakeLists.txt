@@ -14,15 +14,15 @@ endif()
 cmake_minimum_required(VERSION 3.13)
 project(Glucodata)
 set(MYCFLAGS " -g -Wall -Wno-sign-compare -fvisibility=hidden ")
-#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}  -gdwarf-4 -g3  -Wall")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}  ${MYCFLAGS}" )
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}   ${MYCFLAGS} -std=c++20 -fno-rtti -fno-exceptions")
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}   ${MYCFLAGS} -std=c++20 -fno-rtti -fexceptions")
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}   ${MYCFLAGS} -std=c++20 -fno-rtti -nodefaultlibs -static-libgcc -static-libstdc++ -fexceptions  -DALWAYSPATH=1  ")
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}   ${MYCFLAGS} -fPIC -std=c++20 -fno-rtti -nolibc -static-libstdc++ -fexceptions -DANDROID_STL=c++_static -DALWAYSPATH=1  ")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}   ${MYCFLAGS} -std=c++2b -fno-rtti -fexceptions  -DALWAYSPATH=1  ")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}   ${MYCFLAGS} -Wno-vla-cxx-extension -fno-rtti -fexceptions  -DALWAYSPATH=1  ")
 
-#set(INCLUDESELF /home/jka/src/android/Glucodata/app/src/main/cpp )
+if (${CMAKE_SYSTEM_NAME} MATCHES "Android")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}   -std=gnu++2b   ")
+else()
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -std=c++20 ")
+endif()
+
 set(INCLUDESELF ${CMAKE_CURRENT_SOURCE_DIR})
 set(OPENGL_LIB GLESv3)
 #set(OPENGL_LIB GLESv2)
@@ -43,51 +43,25 @@ set(EXTRAVIEW ${NETDIR}/libreview/putsensor.cpp ${NETDIR}/libreview/mkrealhistor
 
 set(LIBRE3FILES ${INCLUDESELF}/libre3/bluetooth.cpp ${INCLUDESELF}/libre3/nfc.cpp)
 
-#if(libre3) else() endif()
-
-#set(LIBRARYPATH /o/home/jka/src/android/librelibs/2.5.2/${ANDROID_ABI})
 set(ASCONFILES ${LIBASCON}/src/ascon_permutations.c ${LIBASCON}/src/ascon_buffering.c ${LIBASCON}/src/ascon_aead_common.c ${LIBASCON}/src/ascon_aead128a.c)
-#add_definitions(-DANDROID_STL=c++_static -DDYNLINK  -DUSE_MEAL -DNOTIMEOUT -DUSE_SSL=1)
 add_definitions(-DANDROID_STL=c++_static -DDYNLINK -DUSE_MEAL -DNOTIMEOUT  )
-#add_definitions(-DANDROID_STL=c++_static -DDYNLINK -DUSE_MEAL -DNOTIMEOUT)
-#add_definitions(-DANDROID__APP -DANDROID_STL=c++_static -DDYNLINK -DINJUGGLUCO=1 )
 add_library( g SHARED  ${BCRYPTFILES} dofirst.cpp settings/exception.cpp prunestream.cpp ${EXTRAVIEW} watch/messages.cpp watch/netinfo.cpp watch/watchvalue.cpp removeoldstates.cpp   ${CURVEDIR}/zhjugglucotext.cpp  ${CURVEDIR}/ukjugglucotext.cpp  ${CURVEDIR}/bejugglucotext.cpp ${CURVEDIR}/frjugglucotext.cpp ${CURVEDIR}/pljugglucotext.cpp ${CURVEDIR}/ptjugglucotext.cpp ${CURVEDIR}/esjugglucotext.cpp ${CURVEDIR}/nljugglucotext.cpp ${CURVEDIR}/dejugglucotext.cpp  ${CURVEDIR}/jugglucotext.cpp  ${CURVEDIR}/itjugglucotext.cpp ${CURVEDIR}/percentile.cpp foods/javabase.cpp ${ASCONFILES} backupjava.cpp glucose.cpp ${CURVEDIR}/shownums.cpp g.cpp jnisub.cpp share/getsockets.cpp share/hooks.cpp wearInt.cpp logjava.cpp share/logs.cpp share/nfcdata.cpp  share/serial.cpp scanstate.cpp statedata.cpp share/timestr.cpp share/savehistory.cpp ${NANOVG}/nanovg.c ${CURVEDIR}/curve.cpp ${CURVEDIR}/javacurve.cpp ${CURVEDIR}/exports.cpp settings/javasettings.cpp settings/settings.cpp debugclone.cpp ${NETDIR}/watchserver/common.cpp ${NETDIR}/watchserver/uploader.cpp  ${NETDIR}/watchserver/uploadtreatment.cpp  ${NETDIR}/watchserver/iob.cpp   ${NETDIR}/watchserver/sslserver.cpp    ${NETDIR}/watchserver/watchserver.cpp ${NETDIR}/netstuff.cpp ${NETDIR}/sender.cpp ${NETDIR}/sendcommands.cpp ${NETDIR}/backup.cpp ${NETDIR}/getcommand.cpp mirrorstatus.cpp datbackup.cpp nums/numdata.cpp nums/numjava.cpp  meal/mealjava.cpp meal/savemeals.cpp  ${LIBRE3FILES} libre3/loadlibs.cpp ${CURVEDIR}/iwjugglucotext.cpp ${CURVEDIR}/rujugglucotext.cpp sibionics/start.cpp sibionics/process.cpp sibionics/makeWriteCharacter.cpp  ) #  ${CURVEDIR}/iwjugglucotext.cpp 
 target_compile_definitions(g PRIVATE  -DUSE_SSL=1 -DANDROID__APP=1  -DJUGGLUCO_APP=1)
-#add_library( g SHARED  ${ASCONFILES} backupjava.cpp glucose.cpp ${CURVEDIR}/shownums.cpp g.cpp jnisub.cpp share/hooks.cpp share/logs.cpp share/nfcdata.cpp  share/serial.cpp  statedata.cpp share/timestr.cpp share/savehistory.cpp ${NANOVG}/nanovg.c ${CURVEDIR}/curve.cpp ${CURVEDIR}/exports.cpp settings/javasettings.cpp settings/settings.cpp debugclone.cpp  ${NETDIR}/netstuff.cpp ${NETDIR}/sender.cpp ${NETDIR}/sendcommands.cpp ${NETDIR}/backup.cpp ${NETDIR}/getcommand.cpp datbackup.cpp nums/numdata.cpp nums/numjava.cpp  meal/mealjava.cpp ) # ${CURVEDIR}/rgb2hsv.cpp  ) 
-#set_source_files_properties(curve.cpp PROPERTIES COMPILE_FLAGS )
-#target_include_directories(g PRIVATE ${NANOVG}  ${INCLUDESELF} ${INCLUDESELF}/share ${INCLUDESELF}/LibAscon/inc /n/ojka/src/android/frida/build/sdk-android-arm64/include ${INCLUDESELF}/bcrypt)
 target_include_directories(g PRIVATE ${NANOVG}  ${INCLUDESELF} ${INCLUDESELF}/share ${INCLUDESELF}/LibAscon/inc ${INCLUDESELF}/include ${INCLUDESELF}/bcrypt)
 target_compile_definitions( g  PRIVATE  -DWEAROS_MESSAGES=1 -DDONTSCALESTROKEWIDTH  -DLIBRENUMBERS=1 )
 
-#set_target_properties(DataProcessing PROPERTIES IMPORTED_LOCATION  ${CMAKE_CURRENT_SOURCE_DIR}/lib/${ANDROID_ABI}/libDataProcessing.so)
-#set_target_properties(c++_shared PROPERTIES IMPORTED_LOCATION /home/jka/Android/Sdk/ndk/22.0.6917172/sources/cxx-stl/llvm-libc++/libs/${ANDROID_ABI}/libc++_shared.so)
-#target_compile_options(g  PUBLIC  ${CMAKE_CXX_FLAGS}  )
-#target_link_options(g  PUBLIC   ${CMAKE_CXX_FLAGS}  )
-
-#add_custom_command(TARGET g POST_BUILD COMMAND ${INCLUDESELF}/patchelf/src/patchelf --remove-needed libc++_shared.so  $<TARGET_FILE:g>)
-
-#add_link_options(-g  -Wl,-z,muldefs)
 add_link_options(-g  )
 
 
-#find_library(log-lib              log )
-#target_link_libraries( g   c++_static /tmp/libc.so /home/jka/Android/Sdk/ndk/26.1.10909125/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/i686-linux-android/libc.a ${log-lib} ${OPENGL_LIB} android EGL m atomic z dl)
-
-#target_link_libraries( g   c++_static /tmp/libc.so c.a ${log-lib} ${OPENGL_LIB} android EGL m atomic z dl)
 target_link_libraries( g   c++_static c ${log-lib} ${OPENGL_LIB} android EGL m atomic z dl)
 export(TARGETS g ANDROID_MK Android.mk)
 
-#add_library(calibrate  SHARED IMPORTED )
-#set_target_properties(calibrate PROPERTIES IMPORTED_LOCATION /n/ojka/src/android/libre2.5.3-CA/app/src/main/uitlib/${ANDROID_ABI}/libcalibrate.so)
-#add_custom_target( calibrate  ALL  COMMAND java -cp /home/jka/prog/java unzip /home/jka/Downloads/us2.7.1/com.freestylelibre2.app.us.apk ${ORLIBNAME}  "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/libcalibrate.so"   )
 
 add_executable(libnative.so    abbotttest.cpp )
 target_include_directories( libnative.so PRIVATE  ${INCLUDESELF} ${INCLUDESELF}/share  LibAscon/inc)
 target_link_libraries( libnative.so    ${log-lib} ${OPENGL_LIB} android EGL m g )
 target_compile_definitions(libnative.so PUBLIC -DANDROID__APP )
 
-#add_executable(nonsense    nonsense.c )
-#target_link_libraries( nonsense    calibrate )
 
 add_library(native SHARED IMPORTED)
 
@@ -111,7 +85,7 @@ target_link_options(readlog  PUBLIC   -fopenmp -static )
 set(extradefs -DJUSTATIC=1 )
 else()
 target_compile_options(juggluco PUBLIC   -pthread  )
-target_link_libraries( juggluco     m pthread dl z )
+target_link_libraries( juggluco     m pthread dl )
 target_compile_options(readlog PUBLIC  -fopenmp )
 target_link_options(readlog  PUBLIC   -fopenmp  )
 

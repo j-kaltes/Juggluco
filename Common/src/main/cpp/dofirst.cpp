@@ -89,7 +89,7 @@ echo package:)";
 
 
 
-	int pathlen=libdirname.size();
+	const int pathlen=libdirname.size();
 //	constexpr const char endname[]="/libinit.so";
 	 const char *endname=libname.data();
 	 const int endnamelen=libname.size();

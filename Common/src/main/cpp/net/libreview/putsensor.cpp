@@ -40,7 +40,7 @@ static const char puttextend[]=R"(",
   "GatewayType": "FSLibreLink3.Android"
 })";
 
-int tokenlen=settings->data()->tokensize3;
+const int tokenlen=settings->data()->tokensize3;
 char puttext[512+tokenlen];
 int endpos=sprintf(puttext,puttextstart,
 		settings->data()->DateOfBirth,sensorname,
@@ -68,7 +68,7 @@ jbyteArray getlibre2puttext(JNIEnv *env, const char *sensorname) {
 	static constexpr const char putlibre2start[]=R"({"DomainData":"{\"activeSensor\":\"%s\"}","UserToken":")";
 	static constexpr const char putlibre2end[]=R"(","Domain":"Libreview","GatewayType":"FSLibreLink.Android"})";
 
-	int tokenlen=settings->data()->tokensize;
+	const int tokenlen=settings->data()->tokensize;
 	char puttext[sizeof(putlibre2start)+ sizeof(putlibre2end)+tokenlen+16-1+EXTRA];
 	int endpos=sprintf(puttext, putlibre2start,sensorname);
 	memcpy(puttext+endpos,settings->data()->libreviewUserToken,tokenlen);

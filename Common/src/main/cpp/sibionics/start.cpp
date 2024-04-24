@@ -21,6 +21,7 @@
 
 #ifdef SIBIONICS
 
+#include "config.h"
 //#define SIHISTORY
 #include <dlfcn.h>
 #include <string_view>

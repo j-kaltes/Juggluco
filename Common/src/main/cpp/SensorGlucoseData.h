@@ -45,7 +45,7 @@
 inline int getpagesize(void) {
   return sysconf(_SC_PAGESIZE);
 } */
-
+#include "config.h"
 
 #include "inout.h"
 
@@ -64,7 +64,10 @@ extern std::string_view globalbasedir;
 //string basedir(FILEDIR);
 
 extern int writeStartime(crypt_t *pass, const int sock, const int sensorindex); 
-constexpr int maxminutes=50000;
+
+constexpr int maxdays=30;
+constexpr int maxminutes=maxdays*24*60;
+constexpr const int maxdaysSI=24;
 struct ScanData {uint32_t t;int32_t id;int32_t g;int32_t tr;float ch;
  uint16_t getmgdL() const { return g;};
  float getmmolL() const { return g/convfactordL;};
@@ -132,7 +135,7 @@ void unSetLibreSend() {
 	}
 	*/
 bool valid() const {
-	return glu[1]&&glu[1]>380&&glu[1]<5020&&id>=0&&id<maxminutes&&time>1598911200u&&time<2145909600u;
+	return glu[1]&&glu[1]>380&&glu[1]<5020&&id>=0&&time>1598911200u&&time<2145909600u;
 	}
 };
 class SensorGlucoseData {
@@ -268,7 +271,7 @@ void unSetLibreSend(int pos) {
 	}
 
 bool infowrong() const {
-	if(days<10||days>30)
+	if(days<10||days>maxdays)
 		return true;	
 	if(starttime<1583013600)
 		return true;
@@ -312,7 +315,7 @@ const int nrunits(int perhour=4)  {
 //	if(error()) return 0;
 	const auto elsize=getelsize();
 	const auto days=getinfo()->days;
-	if(elsize<10||elsize>20||days<14||days>30) {
+	if(elsize<10||elsize>20||days<14||days>maxdays) {
 		LOGGER("nrunits error elsize=%d days=%d\n",elsize,days);
 		haserror=true;
 		return 0;
@@ -793,7 +796,8 @@ static bool mkdatabaseSI(string_view sensordir,string_view sensorgegs,uint32_t n
 			}
 		}
 	uint32_t start=now;
-       Info inf{.starttime=(uint32_t)start,.lastscantime=(uint32_t)start,.starthistory=0,.endhistory=0,.scancount=0,.startid=0,.interval=interval5,.dupl=3,.days=24 ,.sibionics=true,.lastLifeCountReceived=0,.pollcount=0, .lockcount=1};
+	//TODO other days
+       Info inf{.starttime=(uint32_t)start,.lastscantime=(uint32_t)start,.starthistory=0,.endhistory=0,.scancount=0,.startid=0,.interval=interval5,.dupl=3,.days=maxdaysSI ,.sibionics=true,.lastLifeCountReceived=0,.pollcount=0, .lockcount=1};
        inf.siIdlen=sensorgegs.size();
        memcpy(inf.siId,sensorgegs.data(),inf.siIdlen);
        if(hasnum) {

@@ -21,6 +21,7 @@
 
 #include "settings/settings.h"
 #include "datbackup.h"
+#include "secs.h"
 
 void SensorGlucoseData::backhistory(int pos) {
 	const int maxind=backup->getupdatedata()->sendnr;
@@ -417,8 +418,19 @@ int writeStartime(crypt_t *pass, const int sock, const int sensorindex) {
 	return sensors->writeStartime(pass, sock,sensorindex);
 	}
 
-uint32_t sendstreamfrom()  {
+std::vector<int> usedsensors;
+void setusedsensors(uint32_t nu) {
+	uint32_t recent=nu-daysecs;	
+	usedsensors=sensors->bluetoothactive(recent,nu);
+	}
+
+extern void setusedsensors() ;
+void setusedsensors() {
+	uint32_t nu=time(nullptr);	
+	setusedsensors(nu);
+	}
 	extern std::vector<int> usedsensors;
+uint32_t sendstreamfrom()  {
 	extern void setusedsensors() ;
 	if(!usedsensors.size()) {
 		setusedsensors();

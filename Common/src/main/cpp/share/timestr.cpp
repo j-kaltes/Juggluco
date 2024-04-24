@@ -25,7 +25,6 @@
 #include <string.h>
 
 
-using namespace std;
 int    timestr(char *buf,time_t tim) {
 	struct tm tmbuf;	
 	if(localtime_r(&tim,&tmbuf))
@@ -40,6 +39,7 @@ int    timestr(char *buf,time_t tim) {
 #ifdef MAIN
 #include <iostream>
 #include <string.h>
+using namespace std;
 int main(void) {
     char buf[500];
 	strcpy(buf+timestr(buf),"-raw.dat");

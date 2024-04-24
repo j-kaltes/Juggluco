@@ -20,6 +20,7 @@
 
 
 #ifdef SIBIONICS
+#include "config.h"
 #include <numeric>
 #include <bit>
 #include <stdio.h>

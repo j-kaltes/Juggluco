@@ -199,8 +199,7 @@ extern const ScanData *lastscan;
 constexpr time_t basesecs=1262304000L;
 constexpr const int endsensorsecs= (14*24-1)*60*60; 
 constexpr const int days15=(15*24*60*60);
-constexpr const int daysecs=24*60*60;
-
+#include "secs.h"
 struct streamdata {
 	int libreversion;
 	int sensorindex;

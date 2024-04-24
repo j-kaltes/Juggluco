@@ -283,7 +283,8 @@ const T *begin() {return data();}
 const T *end() {return data()+length();}
 operator  T *() {return data();}
 operator  const T *() const  {return data();}
-operator  std::basic_string_view<T>() const { return std::basic_string_view<T>{all,len};}
+//operator  std::basic_string_view<T>() const { return {all,(size_t)len};}
+    operator  std::string_view() const { return {reinterpret_cast<char *>(all),(size_t)len};}
 
 void shrink(size_t siz) {
 	len=siz;

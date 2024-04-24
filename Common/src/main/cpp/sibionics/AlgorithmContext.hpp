@@ -24,6 +24,7 @@
 #include <cstdint>
 #include <ctime>
 #include <jni.h>
+#include "config.h"
 class SensorGlucoseData;
 struct AlgorithmContext {
     double ig_data;

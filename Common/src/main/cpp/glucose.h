@@ -52,3 +52,4 @@ const char *trendstr() const {
     const float rateOfChange;
     GlucoseNow(GlucoseValue *val,const int trend,const float rate):GlucoseValue(*val),trendArrow(trend),rateOfChange(rate) {}
 	};
+

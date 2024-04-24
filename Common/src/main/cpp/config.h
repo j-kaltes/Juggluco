@@ -69,3 +69,6 @@
 #if defined(LIBRE3)
 #define NEEDSPATH 1
 #endif
+//#ifndef NOLOG
+//#define SIHISTORY 1
+//#endif

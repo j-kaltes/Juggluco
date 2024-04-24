@@ -458,6 +458,11 @@ globalsocket=serversock;
 				passivesender(new_fd,hit);
 				continue;
 				}
+         else {
+            constexpr const char mess[]="Other side should be active only";
+            LOGAR(mess);
+				savemessage(hit,mess);
+            }
 
 			}
 

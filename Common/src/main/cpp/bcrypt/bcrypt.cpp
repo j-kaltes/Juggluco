@@ -136,10 +136,10 @@ extern "C" JNIEXPORT jbyteArray JNICALL fromjava(intEncrypt)(JNIEnv *env, jclass
 		return nullptr;
 	if(!jplain)
 		return nullptr;
-	jsize inlen=env->GetArrayLength(jplain);
+	const jsize inlen=env->GetArrayLength(jplain);
 	if(inlen<=0)
 		return nullptr;
-	jsize uitlen= inlen+6;
+	const jsize uitlen= inlen+6;
 	uint8_t plain[inlen];
 	uint8_t encrypted[uitlen];
 	env->GetByteArrayRegion(jplain,0,inlen,(jbyte*)plain);
@@ -155,10 +155,10 @@ extern "C" JNIEXPORT jbyteArray JNICALL fromjava(intDecrypt)(JNIEnv *env, jclass
 		return nullptr;
 	if(!jencrypted)
 		return nullptr;
-	jsize encryptlen=env->GetArrayLength(jencrypted);
+	const jsize encryptlen=env->GetArrayLength(jencrypted);
 	if(encryptlen<7)
 		return nullptr;
-	jsize plainlen= encryptlen-6;
+	const jsize plainlen= encryptlen-6;
 	uint8_t encrypted[encryptlen];
 	uint8_t plain[plainlen];
 	env->GetByteArrayRegion(jencrypted,0,encryptlen,(jbyte*)encrypted);

@@ -29,7 +29,7 @@ extern bool dolog;
 extern "C" JNIEXPORT void JNICALL fromjava(log)(JNIEnv *env, jclass thiz,jstring jmess) {
 #ifndef NOLOG 
 	if(dolog) {
-		jint len = env->GetStringUTFLength( jmess);
+		const jint len = env->GetStringUTFLength( jmess);
 		char mess[len+1];
 		jint jlen = env->GetStringLength( jmess);
 		env->GetStringUTFRegion(jmess, 0,jlen, mess);
@@ -76,7 +76,7 @@ extern "C" JNIEXPORT void JNICALL fromjava(showbytes)(JNIEnv *env, jclass thiz, 
 extern "C" JNIEXPORT void JNICALL fromjava(showbytes)(JNIEnv *env, jclass thiz,jstring jmess,jbyteArray jar) {
 #ifndef NOLOG
 	if(dolog) {
-		jint len = env->GetStringUTFLength(jmess);
+		const jint len = env->GetStringUTFLength(jmess);
 		
 
 		constexpr const char nullstr[]=" null";
@@ -84,9 +84,9 @@ extern "C" JNIEXPORT void JNICALL fromjava(showbytes)(JNIEnv *env, jclass thiz,j
         	const jsize vallen=jar?env->GetArrayLength(jar):0;
 
 		constexpr const int startlen=0;
-		int totlen=startlen+len+(jar?(vallen*3):nulllen)+1;
+		const int totlen=startlen+len+(jar?(vallen*3):nulllen)+1;
 		char mess[totlen];
-		jint jlen = env->GetStringLength(jmess);
+		const jint jlen = env->GetStringLength(jmess);
 		env->GetStringUTFRegion(jmess, 0,jlen, mess+startlen);
 		int pos=startlen+len;
 		if(jar) {

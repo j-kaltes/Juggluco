@@ -54,6 +54,7 @@ const char *showsensorname() const {
 	return name;
 	}
 uint32_t wearduration() const {
+//   if(halfdays==24*2) const_cast<sensor *>(this)->halfdays=30*2;
 	return (halfdays?halfdays:29)*12*60*60;
 	}
 uint32_t maxtime() const {
@@ -114,9 +115,11 @@ public:
 									  hist(new SensorGlucoseData *[maxhist]()) {
 	}
 	void setlibre3nums() {
+#ifdef LIBRENUMBERS
 		const SensorGlucoseData *sens=getSensorData();
 	extern	void setlibrenum3(bool);
 		setlibrenum3(sens!=nullptr&&sens->isLibre3());
+#endif
 		}
 	void setversions()  {
 		bool libre3;
@@ -391,7 +394,7 @@ std::pair<int,SensorGlucoseData *> makeSIsensorindex(std::string_view gegsSI,uin
 	const int ind=addsensor(name);
 	sensor *sen=getsensor(ind);
 	sen->initialized=true;
-	sen->halfdays=24*2;
+	sen->halfdays=maxdaysSI*2;
 	return {ind,getSensorData(ind)} ;
 	}
 SensorGlucoseData *makelibre3sensor(std::string_view shortname,uint32_t starttime,const uint32_t pin,const char *deviceaddress,const uint32_t now) {
@@ -837,7 +840,11 @@ int writeStartime(crypt_t *pass, const int sock, const int sensorindex) {
 		bool newdevices=false;
 
 		const int lastsens=last();
+		int newfirst=-1;
 		for(int i = firstsensor; i <= lastsens; i++) {
+			if(newfirst<0&&!sensorlist()[i].finished)  {
+				newfirst=i;
+				}
 			LOGGER("sensor %d\n", i);
 			if(SensorGlucoseData *hist = getSensorData(i)) {
 				if(upstream) {
@@ -869,10 +876,11 @@ int writeStartime(crypt_t *pass, const int sock, const int sensorindex) {
 					};
 					did |= resscan;
 				}
+				/*
 				if(sensorlist()[i].finished) {
 					if ((firstsensor + 1) == i)
 						firstsensor = i;
-				}
+				} */
 			} else
 				return did&0x4;
 
@@ -926,7 +934,8 @@ int writeStartime(crypt_t *pass, const int sock, const int sensorindex) {
 			if (!sendshowglucose(pass, sock, lastlast))
 				return did&0x4;
 		}
-
+		if(newfirst>=0)
+			firstsensor=newfirst;
 		return did;
 	}
 

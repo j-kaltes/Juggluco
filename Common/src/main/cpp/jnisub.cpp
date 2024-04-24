@@ -1230,17 +1230,8 @@ AlgorithmResults *Abbott::callAbbottAlg(int startsincebase,scanstate *oldstate,s
 //extern bool savehistory(AlgorithmResults *res,time_t nutime,nfcdata &nfc,SensorGlucoseData &save) ;
 //nfcdata  *lastnfcdata=nullptr;
 //extern bool savehistory(const AlgorithmResults *res,time_t nutime,const nfcdata *nfcptr,SensorGlucoseData &save) ;
+extern void setusedsensors() ;
 
-std::vector<int> usedsensors;
-void setusedsensors(uint32_t nu) {
-	uint32_t recent=nu-daysecs;	
-	usedsensors=sensors->bluetoothactive(recent,nu);
-	}
-
-void setusedsensors() {
-	uint32_t nu=time(nullptr);	
-	setusedsensors(nu);
-	}
 
 
 
