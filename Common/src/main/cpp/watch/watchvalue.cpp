@@ -33,7 +33,7 @@
 #define LOGSTRINGTAG(...) LOGSTRING("watchvalue: " __VA_ARGS__)
 extern Sensoren *sensors;
 extern std::vector<int> usedsensors;
-const int maxwatchage=60*3;
+const int maxwatchage=maxbluetoothage;
 extern bool networkpresent;
 
 #define javapackage "tk/glucodata/"

@@ -35,6 +35,8 @@ public class DeleteReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        Applic app=(Applic) context.getApplicationContext();
+        app.initproc();
         final String action = intent.getAction();
         try {
             if (action != null && action.equals(clearnotification)) {

@@ -256,9 +256,9 @@ static void endtalk() {
 		if(tim>nexttime) {
 			nexttime=tim+mininterval;
 			if(!isWearable) {
-				if(Natives.getlibrelinkused())
-					XInfuus.sendGlucoseBroadcast(SerialNumber, mgdl, rate, timmsec);
-
+				if(Natives.getlibrelinkused()) XInfuus.sendGlucoseBroadcast(SerialNumber, mgdl, rate, timmsec);
+            if(Natives.geteverSensebroadcast()) EverSense.broadcastglucose(mgdl, rate, timmsec);
+				//SendNSClient.broadcastglucose(mgdl, rate, timmsec);
 				}
 			if(Natives.getxbroadcast())
 				SendLikexDrip.broadcastglucose(mgdl,rate,timmsec,sensorstartmsec);

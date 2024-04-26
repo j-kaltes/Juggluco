@@ -47,11 +47,13 @@ static bool vers(getJNIfunctions)() {
 	return true;
 	}
 
-double AlgorithmContext::vers(process)(int index,double value, double temp) {
-   return processAlgorithmContext(subenv,nullptr,reinterpret_cast<jobject>(this),index,value,temp,0.0,4.4,11.1);
+double SiContext::vers(process)(int index,double value, double temp) {
+   return vers(processAlgorithmContext)(subenv,nullptr,reinterpret_cast<jobject>(vers(algcontext)),index,value,temp,0.0,4.4,11.1);
 };
 
-AlgorithmContext *vers(initAlgorithm)(SensorGlucoseData *sens) {
+getjson_t vers(getjson);
+setjson_t vers(setjson);
+AlgorithmContext *vers(initAlgorithm)(SensorGlucoseData *sens, setjson_t setjson) {
     jobject jalg= vers(getAlgorithmContextFromNative)(subenv,nullptr);
     char *shortname=sens->getinfo()->siBlueToothNum;
     int res = vers(initAlgorithmContext)(subenv,nullptr,jalg, 0, reinterpret_cast<jstring>(shortname));
@@ -60,6 +62,29 @@ AlgorithmContext *vers(initAlgorithm)(SensorGlucoseData *sens) {
         return nullptr;
     }
     auto algcontext=reinterpret_cast<AlgorithmContext *>(jalg);
-     loadjson(sens, sens->vers(statefile).data(),algcontext); 
+     loadjson(sens, sens->vers(statefile).data(),algcontext,setjson); 
      return algcontext;
      }
+
+static bool vers(getNativefunctions)() {
+	std::string_view alglib=algLibName;
+	void *handle=openlib(alglib);
+	if(!handle) {
+		LOGGER("dlopen %s failed: %s\n",alglib.data(),dlerror());
+		return false;
+		}
+ 	const char *getjsonstr=jsonname(get,Ev);
+	vers(getjson)= (getjson_t)dlsym(handle,getjsonstr);
+	 if(!vers(getjson)) {
+	 	LOGGER("dlsym %s failed\n",getjsonstr);
+		return false;
+	 	}
+ 	const char *setjsonstr=jsonname(set,EPc);
+	vers(setjson)= (setjson_t)dlsym(handle,setjsonstr);
+	 if(!vers(setjson)) {
+	 	LOGGER("dlsym %s failed\n",setjsonstr);
+		return false;
+	 	}
+     LOGAR("found Nativefunctions");
+     return true;
+	}

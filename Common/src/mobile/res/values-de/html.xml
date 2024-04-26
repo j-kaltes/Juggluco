@@ -1950,44 +1950,42 @@ diesem Etikett „<i>50“</i> eingegeben haben<i>.&nbsp;</i>„&nbsp;<i>Bike
 <![CDATA[
 <h1 class="western" align="left">Einstellungen</h1>
 <h2 class="western" align="left">Einheit</h2>
-<p align="left" style="line-height: 100%; margin-bottom: 0in">Wählen
-Sie, ob die Glukosewerte in mmol/L oder dm/dL angegeben werden
-sollen.</p>
+<p align="left" style="margin-bottom: 0in">Wählen Sie, ob die
+Glukosewerte in mmol/L oder dm/dL angegeben werden sollen.</p>
 <h2 class="western" align="left">Kurvenbereich: niedrig-hoch.</h2>
-<p align="left" style="line-height: 100%; margin-bottom: 0in">Geben
-Sie einen niedrigen und einen hohen Wert an, so dass der untere Teil
-des Bildschirms dem niedrigsten und der obere Teil dem höchsten Wert
-entspricht. Diese Werte werden nur verwendet, wenn alle auf dem
-Bildschirm angezeigten Glukosewerte innerhalb dieser Grenzen liegen.
-Andernfalls werden die Grenzen erweitert, so dass alle Werte sichtbar
-sind. Wenn Sie 3 mmol/L (54 mg/dL) und 9 mmol/L (162 mg/dL) messen
-und alle Werte auf der sichtbaren Anzeige zwischen 5 mmol/L und 6
-mmol/L liegen, zeigt das Diagramm eine Glukoseachse von 3 bis 9 an. 
+<p align="left" style="margin-bottom: 0in">Geben Sie einen niedrigen
+und einen hohen Wert an, so dass der untere Teil des Bildschirms dem
+niedrigsten und der obere Teil dem höchsten Wert entspricht. Diese
+Werte werden nur verwendet, wenn alle auf dem Bildschirm angezeigten
+Glukosewerte innerhalb dieser Grenzen liegen. Andernfalls werden die
+Grenzen erweitert, so dass alle Werte sichtbar sind. Wenn Sie 3
+mmol/L (54 mg/dL) und 9 mmol/L (162 mg/dL) messen und alle Werte auf
+der sichtbaren Anzeige zwischen 5 mmol/L und 6 mmol/L liegen, zeigt
+das Diagramm eine Glukoseachse von 3 bis 9 an. 
 </p>
-<p align="left" style="line-height: 100%; margin-bottom: 0in">Wenn
-die <b>manuelle Blutzuckerskala </b>aktiviert ist, können Sie dies
-ändern: Wenn Sie Ihren Finger über den oberen Teil des Bildschirms
-bewegen, wird die obere Hälfte des Diagramms nach oben und unten
-verschoben; wenn Sie über den unteren Teil des Bildschirms fahren,
-wird die untere Hälfte des Diagramms nach oben und unten verschoben.</p>
+<p align="left" style="margin-bottom: 0in">Wenn die <b>manuelle
+Blutzuckerskala </b>aktiviert ist, können Sie dies ändern: Wenn Sie
+Ihren Finger über den oberen Teil des Bildschirms bewegen, wird die
+obere Hälfte des Diagramms nach oben und unten verschoben; wenn Sie
+über den unteren Teil des Bildschirms fahren, wird die untere Hälfte
+des Diagramms nach oben und unten verschoben.</p>
 <h2 class="western" align="left">Zielbereich: niedrig-hoch</h2>
-<p align="left" style="line-height: 100%; margin-bottom: 0in">Die
-obere Seite der Anzeige ist anders gefärbt, damit Sie hohe Werte
-leichter erkennen können. Das Gleiche gilt für niedrige Werte. Eine
-rote Linie zeigt die zu niedrige Seite der Anzeige an.</p>
+<p align="left" style="margin-bottom: 0in">Die obere Seite der
+Anzeige ist anders gefärbt, damit Sie hohe Werte leichter erkennen
+können. Das Gleiche gilt für niedrige Werte. Eine rote Linie zeigt
+die zu niedrige Seite der Anzeige an.</p>
 <h2 class="western" align="left">Zahlen der Glukose-Achse LINKS</h2>
 <p align="left">Platzieren Sie die Zahlen des Blutzuckerspiegels in
 der Grafik auf der linken Seite des Bildschirms. Nützlich, wenn Sie
 Ihren aktuellen Blutzuckerwert in der Mitte des Bildschirms anzeigen
 möchten, z. B. bei Wear OS.</p>
 <h2 class="western" align="left">Bildschirm invertieren</h2>
-<p align="left" style="line-height: 100%; margin-bottom: 0in">Drehen
-Sie das Display auf den Kopf. Es ist standardmäßig eingeschaltet,
-weil ich sonst hin und wieder beim Scannen eines Sensors
-versehentlich OK berührt habe.</p>
-<p align="left" style="line-height: 100%; margin-bottom: 0in">Manche
-Leute fragen nach dem Hochformat, aber ich habe das ausgeschaltet,
-weil es für die Anzeige der Glukosekurve völlig ungeeignet ist.</p>
+<p align="left" style="margin-bottom: 0in">Drehen Sie das Display auf
+den Kopf. Es ist standardmäßig eingeschaltet, weil ich sonst hin
+und wieder beim Scannen eines Sensors versehentlich OK berührt habe.</p>
+<p align="left" style="margin-bottom: 0in">Manche Leute fragen nach
+dem Hochformat, aber ich habe das ausgeschaltet, weil es für die
+Anzeige der Glukosekurve völlig ungeeignet ist.</p>
 <h2 class="western" align="left">Nfc-Ton</h2>
 <p align="left">Erzeugen Sie beim Scannen zusätzlich zur Vibration
 einen Ton.</p>
@@ -2054,10 +2052,9 @@ alle 5 Minuten senden (eine mit xDrip verbundene Armbanduhr zeigte
 regelmäßig mehr als 9 Minuten alte Werte an). Darüber hinaus zeigt
 xDrip seine eigene Interpretation der empfangenen Glukosewerte an.
 Auch Klongeräte können an xDrip senden.</p>
-<p align="left"><span lang="de-DE">Siehe
-</span><a href="https://github.com/jakobheyman/xdripJH"><span lang="de-DE"><u>https://github.com/jakobheyman/xdripJH</u></span></a>
-<span lang="de-DE">für einen Versuch, den Glukosewert von xDrip jede
-Minute zu aktualisieren.</span></p>
+<p align="left">Siehe <a href="https://github.com/jakobheyman/xdripJH"><u>https://github.com/jakobheyman/xdripJH</u></a>
+für einen Versuch, den Glukosewert von xDrip jede Minute zu
+aktualisieren.</p>
 <p align="left">Freestyle Libre 3-Sensoren senden fehlende Werte nach
 einer Unterbrechungszeit. Diese Werte werden mit diesem Broadcast
 nicht gesendet. Sie erhalten sie, wenn Sie den Webserver in Juggluco
@@ -2072,28 +2069,47 @@ eine App kann den vom xDrip-Webserver verwendeten Netzwerkport
 abhören, daher müssen Sie den „<i>xDrip-Webservice“</i> in
 xDrip selbst deaktivieren, wenn Sie den in Juggluco verwenden
 möchten.</p>
+<h2 class="western" align="left">EverSense</h2>
+<p style="background: transparent">Noch eine Glukosebroadcast. Damit
+kann jede Minute ein Glukosewert an xDrip gesendet werden. xDrip
+ignoriert fast alle davon, da es auf einem Wert in 5 Minuten besteht.
+Sie können diese Einschränkung aufheben, indem Sie den Quellcode
+von xDrip bearbeiten. Ändern Sie&nbsp;<i>4 * 60 * 1000</i>&nbsp;in&nbsp;<i>55
+*
+1000</i>&nbsp;in&nbsp;<a href="https://github.com/NightscoutFoundation/xDrip/blob/645e8b4cb8fa3ad7b280f598d6f2f6bdb84ce392/app/src/main/java/com/eveningoutpost/dexdrip/models/BgReading.java#L969">app/src/main/java/com/eveningoutpost/dexdrip/models/BgReading.java</a>&nbsp;,
+sodass Folgendes entsteht:</p>
+<p>public static BgReading readingNearTimeStamp(long startTime)
+{<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;long
+margin = (55 * 1000);<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return
+readingNearTimeStamp(startTime, margin);<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</p>
+<p style="background: transparent">Der Vorteil gegenüber der Patched
+Libre broadcast besteht darin, dass xDrip die Glukosewerte nicht auf
+eine nicht spezifizierte Weise umwandelt.</p>
 <h2 class="western" align="left">xDrip Broadcast</h2>
-<p align="left" style="line-height: 100%; margin-bottom: 0in">Senden
-Sie die gleiche Broadcast, die in xDrip mit
+<p align="left" style="margin-bottom: 0in">Senden Sie die gleiche
+Broadcast, die in xDrip mit
 „Einstellungen-&gt;Inter-App-Einstellungen-&gt;Lokaler Broadcast“
 aktiviert wurde. Apps wie AndroidAPS hören es sich an. Im Gegensatz
 zur ursprünglichen xDrip-Broadcast, die alle 5 Minuten ausgestrahlt
 wurde, sendet Juggluco diese Broadcast jede Minute.</p>
 <h2 class="western" align="left">Glucodata Broadcast</h2>
-<p align="left" style="line-height: 100%; margin-bottom: 0in">Eine
-neue Broadcast, die dieselbe Funktion wie die xDrip Broadcast hat.
-<span lang="de-DE">Eine einfache Beispielanwendung, die empfangene
-Glukosewerte in logcat schreibt, finden Sie hier:</span> <span lang="de-DE"><a href="https://www.juggluco.nl/Juggluco/glucosebroadcast.html">Glucose
-broadcasts</a>.</span></p>
-<p align="left" style="line-height: 100%; margin-bottom: 0in">Wenn
-Sie Juggluco als Datenquelle in G-Watch angeben, müssen Sie diese
-Broadcast aktivieren.</p>
-<p align="left" style="line-height: 100%; margin-bottom: 0in">Geben
-Sie die Apps an, an die diese Broadcast gesendet werden soll.</p>
+<p align="left" style="margin-bottom: 0in">Eine neue Broadcast, die
+dieselbe Funktion wie die xDrip Broadcast hat. Eine einfache
+Beispielanwendung, die empfangene Glukosewerte in logcat schreibt,
+finden Sie hier: <a href="https://www.juggluco.nl/Juggluco/glucosebroadcast.html">Glucose
+broadcasts</a>.</p>
+<p align="left" style="margin-bottom: 0in">Wenn Sie Juggluco als
+Datenquelle in G-Watch angeben, müssen Sie diese Broadcast
+aktivieren.</p>
+<p align="left" style="margin-bottom: 0in">Geben Sie die Apps an, an
+die diese Broadcast gesendet werden soll.</p>
 <h2 class="western">Webserver</h2>
-<p align="left" style="line-height: 100%; margin-bottom: 0in">Webserver,
-der mit xDrip-Uhren und einigen Nightscout-Apps verwendet werden
-kann. Früher xDrip-Webserver genannt.</p>
+<p align="left" style="margin-bottom: 0in">Webserver, der mit
+xDrip-Uhren und einigen Nightscout-Apps verwendet werden kann. Früher
+xDrip-Webserver genannt.</p>
 <h2 class="western">Insulin onboard (IOB)</h2>
 <p>IOB ist ein Maß dafür, wie viel Insulin von früheren
 Insulindosen noch vorhanden ist. Hierzu müssen Sie Insulindosen
@@ -2115,59 +2131,57 @@ macht es erforderlich, zum Computer zu gehen und den Bildschirm
 einige Zentimeter zu scrollen. Wenn „<i>Festgesteckt jetzt</i>“
 aktiviert ist, ist diese Ablenkung nicht mehr erforderlich.</p>
 <h2 class="western">Uploader</h2>
-<p align="left" style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 100%; margin-bottom: 0in">
-Auf einen Nightscout-Server hochladen.</p>
+<p align="left" style="margin-bottom: 0in">Auf einen
+Nightscout-Server hochladen.</p>
 <h2 class="western" align="left">Glukosebenachrichtigung</h2>
-<p align="left" style="line-height: 100%; margin-bottom: 0in">(Früher
-&quot;<i>Glukose in der Statusleiste von Android&quot;</i> genannt).
-Wenn die Glukosewerte über Bluetooth gestreamt werden, werden sie in
-einer Benachrichtigung und in der Android-Statusleiste angezeigt. Auf
+<p align="left" style="margin-bottom: 0in">(Früher &quot;<i>Glukose
+in der Statusleiste von Android&quot;</i> genannt). Wenn die
+Glukosewerte über Bluetooth gestreamt werden, werden sie in einer
+Benachrichtigung und in der Android-Statusleiste angezeigt. Auf
 einigen Smartphones wird der Glukosewert nur in der
 Android-Statusleiste angezeigt, nachdem man die
 Benachrichtigungseinstellungen des Androiden geändert hat.</p>
-<p style="line-height: 100%; margin-bottom: 0in"><span style="font-weight: normal">Sie
-können auch eine Android-Benachrichtigung erhalten, indem Sie im
-linken mittleren Menü </span><i><span style="font-weight: normal">Benachrichtigen</span></i>
-<span style="font-weight: normal">auswählen. In diesem Fall wird die
+<p style="margin-bottom: 0in">Sie können auch eine
+Android-Benachrichtigung erhalten, indem Sie im linken mittleren Menü
+<i>Benachrichtigen</i> auswählen. In diesem Fall wird die
 Benachrichtigung an einige Smartwatches gesendet, wenn dies so
 konfiguriert ist. Das funktioniert mit Garmin-Uhren, ich weiß nicht,
 ob es mit anderen funktioniert. Alarme generieren auch
-Benachrichtigungen.</span></p>
+Benachrichtigungen.</p>
 <h2 class="western">Schwebende Glukose</h2>
-<p style="line-height: 100%; margin-bottom: 0in">Wenn Sie diese
-einschalten, wird unabhängig davon, welche App im Vordergrund ist,
-ständig ein kleines Bild mit dem aktuellen Glukosewert auf dem
-Bildschirm angezeigt. Wenn Sie es das erste Mal einschalten, werden
-Sie zu einer Liste von Apps weitergeleitet, in denen Sie Juggluco die
-Erlaubnis geben müssen, <b>über anderen Apps angezeigt</b> zu
-werden.</p>
+<p style="margin-bottom: 0in">Wenn Sie diese einschalten, wird
+unabhängig davon, welche App im Vordergrund ist, ständig ein
+kleines Bild mit dem aktuellen Glukosewert auf dem Bildschirm
+angezeigt. Wenn Sie es das erste Mal einschalten, werden Sie zu einer
+Liste von Apps weitergeleitet, in denen Sie Juggluco die Erlaubnis
+geben müssen, <b>über anderen Apps angezeigt</b> zu werden.</p>
 <h2 class="western" align="left">Sensor über Bluetooth</h2>
 <p align="left">Legt fest, ob diese App über Bluetooth mit einem
 Freestyle libre 2 oder 3 Sensor verbunden werden soll. Dies ist für
 Alarme und die kontinuierliche Blutzuckermessung erforderlich.</p>
 <h2 class="western" align="left"><b>Alarme</b></h2>
-<p align="left" style="font-weight: normal">Stellen Sie Alarme für
-hohen und niedrigen Glukosewert, Signalverlustalarm und
-Benachrichtigung über verfügbaren Wert ein.</p>
+<p align="left">Stellen Sie Alarme für hohen und niedrigen
+Glukosewert, Signalverlustalarm und Benachrichtigung über
+verfügbaren Wert ein.</p>
 <h2 class="western" align="left">Zahlenetiketten</h2>
-<p align="left" style="line-height: 100%; margin-bottom: 0in">Legen
-Sie die für die Mengen verwendeten Bezeichnungen fest. Gehen Sie zum
-Unterbildschirm, um festzulegen, welche Kennzeichnungen zum Festlegen
-von Mengen verwendet werden, z. B. Insulindosen,
-Kohlenhydratverbrauch und Stunden, die Sie mit Fußballspielen
-verbringen. Wenn Sie auch die Garmin-Uhren-App Kerfstok verwenden,
-werden diese Etiketten an die Uhren-App gesendet.</p>
+<p align="left" style="margin-bottom: 0in">Legen Sie die für die
+Mengen verwendeten Bezeichnungen fest. Gehen Sie zum Unterbildschirm,
+um festzulegen, welche Kennzeichnungen zum Festlegen von Mengen
+verwendet werden, z. B. Insulindosen, Kohlenhydratverbrauch und
+Stunden, die Sie mit Fußballspielen verbringen. Wenn Sie auch die
+Garmin-Uhren-App Kerfstok verwenden, werden diese Etiketten an die
+Uhren-App gesendet.</p>
 <h2 class="western">Sprache</h2>
 <p>Juggluco wird in der gewählten Sprache angezeigt. Wenn kein
 Sprachcode ausgewählt ist, wird die Systemsprache verwendet.</p>
 <h2 class="western" align="left">Erinnerungen</h2>
-<p align="left" style="font-weight: normal; line-height: 100%; margin-bottom: 0in">
-Legen Sie fest, dass ein Alarm ausgelöst werden soll, wenn Sie eine
-bestimmte Menge an Lebensmitteln oder Medikamenten nicht innerhalb
-einer bestimmten Zeitspanne eingegeben haben.</p>
+<p align="left" style="margin-bottom: 0in">Legen Sie fest, dass ein
+Alarm ausgelöst werden soll, wenn Sie eine bestimmte Menge an
+Lebensmitteln oder Medikamenten nicht innerhalb einer bestimmten
+Zeitspanne eingegeben haben.</p>
 <h2 class="western" align="left">Farben</h2>
-<p align="left" style="line-height: 100%; margin-bottom: 0in">Ändern
-Sie die Farben von Kurven, Scans und Zahlen.</p>
+<p align="left" style="margin-bottom: 0in">Ändern Sie die Farben von
+Kurven, Scans und Zahlen.</p>
 ]]>
 </string>
 <string name="shortcuthelp" >

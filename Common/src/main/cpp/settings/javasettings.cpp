@@ -386,10 +386,14 @@ extern "C" JNIEXPORT void  JNICALL   fromjava(setuseflash)(JNIEnv *env, jclass c
 	settings->data()->flash=val;
 	}
 extern "C" JNIEXPORT jintArray  JNICALL   fromjava(numAlarmEvents)(JNIEnv *env, jclass cl) {
+   LOGAR("start numAlarmEvents");
 	vector<int> failures=settings->numAlarmEvents();
+   LOGAR("after failures=numAlarmEvents");
 	const int failnr= failures.size();
-	if(!failnr)
+	if(!failnr) {
+      LOGAR("failures.size()==0");
 		return nullptr;
+      }
 	jintArray  uit=env->NewIntArray(failnr) ;
 	env->SetIntArrayRegion(uit, 0,failnr, failures.data());
 	return uit;
@@ -1060,6 +1064,16 @@ extern "C" JNIEXPORT void  JNICALL   fromjava(setglucodataRecepters)(JNIEnv *env
 	setstringarray(env,jnames,reinterpret_cast<BroadcastListeners<0> *>(broad), broad->getmax());
         }
 
+extern "C" JNIEXPORT jobjectArray  JNICALL   fromjava(everSenseRecepters)(JNIEnv *env, jclass cl) {
+	return mkjavastringarray(env,&settings->data()->everSenseBroadcast);
+        }
+extern "C" JNIEXPORT void  JNICALL   fromjava(seteverSenseRecepters)(JNIEnv *env, jclass cl, jobjectArray jnames) {
+	auto *broad=&settings->data()->everSenseBroadcast;
+	setstringarray(env,jnames,reinterpret_cast<BroadcastListeners<0> *>(broad), broad->getmax());
+        }
+extern "C" JNIEXPORT jboolean  JNICALL   fromjava(geteverSensebroadcast)(JNIEnv *env, jclass cl) {
+	return settings->data()->everSenseBroadcast.nr;
+	}
 
 extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getxbroadcast)(JNIEnv *env, jclass cl) {
 	return settings->data()->xdripBroadcast.nr;

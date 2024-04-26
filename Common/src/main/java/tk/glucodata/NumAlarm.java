@@ -41,8 +41,10 @@ static final private String LOG_ID="NumAlarm";
         @Override
         public void onReceive(Context context, Intent intent) {
 	   String action=intent.getAction();
+         Applic app=(Applic) context.getApplicationContext();
+        app.initproc();
 	   Log.i(LOG_ID,"onReceive "+((action!=null)?action:" null"));
-	   handlealarm((Application) context.getApplicationContext());
+	   handlealarm(app);
 	   if(action!=null) {
 	   	if(Notify.closename.equals(action)) {
 				if( ((KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE)).isKeyguardLocked()) {

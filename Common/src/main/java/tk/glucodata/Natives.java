@@ -588,6 +588,11 @@ public static native boolean getheartrate( );
 public static native String[] librelinkRecepters( );
 public static native void setlibrelinkRecepters( String[] jnames);
 public static native boolean getlibrelinkused();
+public static native String[] everSenseRecepters();
+public static native boolean geteverSensebroadcast();
+
+public static native void seteverSenseRecepters( String[] jnames);
+
 public static native String[] xdripRecepters( );
 public static native void setxdripRecepters( String[] jnames);
 public static native String[] glucodataRecepters( );
@@ -734,7 +739,7 @@ public static native String addSIscangetName(String jgegs);
 //public static native String getShowSensorName(long dataptr);
 
 public static native String getUsedSensorName( );
-
+//public static native void sendxdripold();
 //s/^extern.*JNIEXPORT[         ]*\([a-zA-Z]*\)[ ]*JNICALL[      ]*fromjava(\([^)]*\)) *(JNIEnv[^,]*,[^,)]*[,)]\([^){]*\)[^a-zA-Z0-9]*$/public static native \1 \2(\3);/g
 }
 

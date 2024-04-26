@@ -1,3 +1,4 @@
+
 #ifdef SIBIONICS
 /*      This file is part of Juggluco, an Android app to receive and display         */
 /*      glucose values from Freestyle Libre 2 and 3 sensors.                         */
@@ -27,10 +28,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <type_traits>
-#include "SensorGlucoseData.h"
-#include "jnisub.h" //PUT sistream etc in different header?
 #include "contconcat.h"
-#include "fromjava.h"
 
 
 static int8_t oneel(const char *start) {
@@ -65,21 +63,26 @@ static auto makeWriteCharacter(int index, std::string_view address) {
          int8_t startAr[] = {-86, 85, 7};
 	int8_t zeros[] = {0, 0, 0, 0,0, 0, 0, 0};
         const auto su = sum(AddArr, sum(indexAr, sum(startAr,0))) ;
-        std::array<int8_t,1> sign= {(int8_t) (((int8_t) (~(su & 0xFF))) + 1)};
-        return concat(startAr,indexAr,AddArr,zeros,sign);
+        std::array<int8_t,1> checksum= {(int8_t) (((int8_t) (~(su & 0xFF))) + 1)};
+        return concat(startAr,indexAr,AddArr,zeros,checksum);
     }
-/*
+#ifdef MAIN
 int  main(int argc,char **argv) {
-   int get=992;
+   int get=34304;
    if(argc>1)
       get=atoi(argv[1]);
+
    auto res=makeWriteCharacter(get,"E1:54:53:09:27:43");
    for(auto el:res) {
       printf("%02X ",(uint8_t)el);
       }
      puts("");
-   } */
+   } 
+#else
 
+#include "SensorGlucoseData.h"
+#include "jnisub.h" //PUT sistream etc in different header?
+#include "fromjava.h"
 extern "C" JNIEXPORT jbyteArray JNICALL   fromjava(getSiWriteCharacter)(JNIEnv *env, jclass cl,jlong dataptr) {
 	if(!dataptr)
 		return nullptr;
@@ -94,4 +97,5 @@ extern "C" JNIEXPORT jbyteArray JNICALL   fromjava(getSiWriteCharacter)(JNIEnv *
 	env->SetByteArrayRegion(uit, 0, len,codes.data());
 	return uit;
 	}
+#endif
 #endif

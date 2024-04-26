@@ -47,6 +47,7 @@ import java.util.ArrayList;
 
 import tk.glucodata.Applic;
 import tk.glucodata.Consumer;
+import tk.glucodata.EverSense;
 import tk.glucodata.JugglucoSend;
 import tk.glucodata.Layout;
 import tk.glucodata.MainActivity;
@@ -224,6 +225,20 @@ static public void setglucodatareceivers(MainActivity context,View settingsview,
 			}
 		);
 	}
+
+static public void seteverSensereceivers(MainActivity context,View settingsview,CheckBox box,boolean[] dont) {
+	var all=actionListeners(EverSense.glucoseaction);
+	var selected= Natives.everSenseRecepters();
+ 	getselected(context,settingsview,"EverSense",selected, all,newselected-> {
+			if(newselected!=null) {
+				Natives.seteverSenseRecepters(newselected);
+				EverSense.setreceivers();
+				box.setChecked(newselected.length>0);
+				}
+			dont[0]=false;
+			}
+		);
+	}
 static public void updateall() {
 	if(Natives.getxbroadcast()) {
 		var xlis=actionListeners(SendLikexDrip.ACTION);
@@ -231,7 +246,7 @@ static public void updateall() {
 		}
 	if(getJugglucobroadcast()) {
 		var juglis=actionListeners(JugglucoSend.ACTION);
-		Natives.setglucodataRecepters(juglis.toArray(new String[juglis.size()]));
+		Natives.seteverSenseRecepters(juglis.toArray(new String[juglis.size()]));
 		}
 	}
 }

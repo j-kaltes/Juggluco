@@ -22,6 +22,7 @@
 #ifdef SIBIONICS
 
 #include "config.h"
+#define SI3ONLY
 //#define SIHISTORY
 #include <dlfcn.h>
 #include <string_view>
@@ -48,7 +49,9 @@ extern "C" JNIEXPORT jstring JNICALL   fromjava(getSiBluetoothNum)(JNIEnv *envin
 	LOGGER("getSiBluetoothNum()=%s\n",name);
 	return envin->NewStringUTF(name);
 	} 
-extern AlgorithmContext *initAlgorithm(SensorGlucoseData *sens);
+//extern AlgorithmContext *initAlgorithm(SensorGlucoseData *sens,setjson_t setjson);
+
+//AlgorithmContext *vers(initAlgorithm)(SensorGlucoseData *sens, setjson_t setjson) {
 
 extern void	sendKAuth(SensorGlucoseData *hist);
 /*extern "C" JNIEXPORT jlong JNICALL   fromjava(makeSIdataptr)(JNIEnv *env, jclass cl,jstring jgegs) {
@@ -117,16 +120,15 @@ if(!dataptr) {
  data_t *bluedata=fromjbyteArray(envin,bluetoothdata);
   destruct _destbluedata([bluedata]{data_t::deleteex(bluedata);});
  sistream *sdata=reinterpret_cast<sistream *>(dataptr);
- AlgorithmContext *algcontext=sdata->algcontext;
   SensorGlucoseData *sens=sdata->hist;
   if(!sens) {
       LOGAR("SIprocessData SensorGlucoseData==null");
       return 0LL;
      }
- return algcontext->processData(sens,timsec,bluedata->data(),bluedata->size(),sdata->sensorindex);
+ return sdata->sicontext.processData(sens,timsec,bluedata->data(),bluedata->size(),sdata->sensorindex);
 }
-class NativeAlgorithm;
 extern std::string_view libdirname;
+#include "sibionics/json.h"
 void *openlib(std::string_view libname) {
 	int liblen=libdirname.size();
    if(liblen<=0) {
@@ -140,44 +142,13 @@ void *openlib(std::string_view libname) {
 	LOGGER("open %s\n",fullpath);
 	return dlopen(fullpath, RTLD_NOW);
 	}
-typedef   char * (*getjson_t)(NativeAlgorithm*);
-typedef   int  (*setjson_t)(NativeAlgorithm*,char *);
 
-getjson_t getjson;
-setjson_t setjson;
 
-#define jsonname(et,end) "_ZN21NativeAlgorithmV1_1_223" #et  "JsonAlgorithmContext" #end
-//#define jsonname(et,end) "_ZN22NativeAlgorithmV1_1_3B23" #et  "JsonAlgorithmContext" #end //Makes one in 5 minutes
 
 //"_ZN21NativeAlgorithmV1_1_223getJsonAlgorithmContextEv";
 //_ZN22NativeAlgorithmV1_1_3B23getJsonAlgorithmContextEv
 //_ZN22NativeAlgorithmV1_1_3B23setJsonAlgorithmContextEPc
-
-static bool getNativefunctions() {
-	std::string_view alglib="/libnative-algorithm-v1_1_2.so";
-//	std::string_view alglib="/libnative-algorithm-v1_1_3_B.so";
-	void *handle=openlib(alglib);
-	if(!handle) {
-		LOGGER("dlopen %s failed: %s\n",alglib.data(),dlerror());
-		return false;
-		}
- 	const char *getjsonstr=jsonname(get,Ev);
-	getjson= (getjson_t)dlsym(handle,getjsonstr);
-	 if(!getjson) {
-	 	LOGGER("dlsym %s failed\n",getjsonstr);
-		return false;
-	 	}
- 	const char *setjsonstr=jsonname(set,EPc);
-	setjson= (setjson_t)dlsym(handle,setjsonstr);
-	 if(!setjson) {
-	 	LOGGER("dlsym %s failed\n",setjsonstr);
-		return false;
-	 	}
-     LOGAR("found Nativefunctions");
-     return true;
-	}
 #define algtype(x) x##_t
-#define algjavastr(x) "Java_com_algorithm_v1_11_12_NativeAlgorithmLibraryV1_11_12_" #x
 //#define algjavastr(x) "Java_com_algorithm_v1_11_13_1b_NativeAlgorithmLibraryV1_11_13B_" #x
 
 extern "C" {
@@ -190,22 +161,43 @@ extern JNIEnv *subenv;
 
 extern JavaVM *getnewvm();
 
-extern bool loadjson(SensorGlucoseData *sens, const char *statename,const AlgorithmContext *alg ) ;
+extern bool loadjson(SensorGlucoseData *sens, const char *statename,const AlgorithmContext *alg, setjson_t setjson) ;
+#ifdef SI3ONLY
+#undef algLibName 
+#undef jniAlglib 
+#undef vers
+#undef algjavastr
+#undef jsonname
 
+#define jsonname(et,end) "_ZN22NativeAlgorithmV1_1_3B23" #et  "JsonAlgorithmContext" #end //Makes one in 5 minutes
+#define algLibName "/libnative-algorithm-v1_1_3_B.so";
+#define jniAlglib 	"/libnative-algorithm-jni-v113B.so";
+#define vers(x) x 
+#undef algjavastr
+#define algjavastr(x) "Java_com_algorithm_v1_11_13_1b_NativeAlgorithmLibraryV1_11_13B_" #x
+
+#include "jnifuncs.h"
+#else
 #undef jniAlglib 
 #undef vers
 #undef algjavastr
 #define jniAlglib 	"/libnative-algorithm-jni-v112.so";
 #define algjavastr(x) "Java_com_algorithm_v1_11_12_NativeAlgorithmLibraryV1_11_12_" #x
+#define algLibName "/libnative-algorithm-v1_1_2.so"
+#define jsonname(et,end) "_ZN21NativeAlgorithmV1_1_223" #et  "JsonAlgorithmContext" #end
 #define vers(x) x
 
 #include "jnifuncs.h"
 
 #ifdef SIHISTORY
+#undef algLibName 
 #undef jniAlglib 
 #undef vers
 #undef algjavastr
+#undef jsonname
 
+#define jsonname(et,end) "_ZN22NativeAlgorithmV1_1_3B23" #et  "JsonAlgorithmContext" #end //Makes one in 5 minutes
+#define algLibName "/libnative-algorithm-v1_1_3_B.so";
 #define jniAlglib 	"/libnative-algorithm-jni-v113B.so";
 #define vers(x) x ##3
 #undef algjavastr
@@ -214,25 +206,23 @@ extern bool loadjson(SensorGlucoseData *sens, const char *statename,const Algori
 #include "jnifuncs.h"
 
 #endif
-
+#endif
  bool siInit() {
    static bool init=getNativefunctions()&&getJNIfunctions() 
 #ifdef SIHISTORY
-   &&getJNIfunctions3()
+&& getNativefunctions3() &&getJNIfunctions3()
 #endif
    ;
    return init;
    };
 
 #include <charconv>
-bool loadjson(SensorGlucoseData *sens, const char *statename,const AlgorithmContext *alg ) {
+bool loadjson(SensorGlucoseData *sens, const char *statename,const AlgorithmContext *alg, setjson_t setjson) {
    auto *nati=reinterpret_cast<NativeAlgorithm*>(alg ->mNativeContext);
    if(!nati) {
       LOGAR("mNativeContext==null");
       return false;
       }
-
-//	const char *statename=sens->statefile.data();
       sens->mutex.lock();
       Readall json(statename);
       sens->mutex.unlock();
@@ -245,7 +235,7 @@ bool loadjson(SensorGlucoseData *sens, const char *statename,const AlgorithmCont
      return true;
 	}
 
-bool savejson(SensorGlucoseData *sens,const string_view name,int index,const AlgorithmContext *alg ) {
+bool savejson(SensorGlucoseData *sens,const string_view name,int index,const AlgorithmContext *alg,getjson_t getjson) {
 	if(!getjson) {
 		LOGAR("getjson==null");
 		return false;
@@ -265,27 +255,35 @@ bool savejson(SensorGlucoseData *sens,const string_view name,int index,const Alg
 		LOGAR("jsonlen==0");
 		return false;
 		}
-	const int maxbuf=name.size()+5;
+	const int maxbuf=name.size()+6+2;
 	char buf[maxbuf];
    memcpy(buf,name.data(),name.size());
 	char *startnum=buf+name.size();
 	auto [ptr,ec]  =std::to_chars(startnum,buf+maxbuf,index);
-	pathconcat fullname(sens->getsensordir(),std::string_view(buf,ptr-buf));
-	bool success=writeall(fullname.data(),json,jsonlen);
+   *ptr='\0';
+	bool success=writeall(buf,json,jsonlen);
 	if(!success) {
 		return false;
 		}
 	int res;
 	{
 	std::lock_guard<std::mutex> lock(sens->mutex);
-	res=rename(fullname.data(),name.data());
+	res=rename(buf,name.data());
 	}
 	if(res) {
-		flerror("rename(%s,%s) failed",fullname.data(),name.data());
+		flerror("rename(%s,%s) failed",buf,name.data());
 		return false;
 		}
 	return true;
 	}
+#include "sibionics/SiContext.hpp"
+   SiContext::SiContext(SensorGlucoseData *sens): algcontext(initAlgorithm(sens,setjson))
+#ifdef SIHISTORY
+,algcontext3(initAlgorithm3(sens,setjson3))
+#endif
+   {
+
+   	};
 #else
 bool siInit() {return false;}
 #endif

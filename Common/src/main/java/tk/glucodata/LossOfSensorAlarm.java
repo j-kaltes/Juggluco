@@ -38,7 +38,9 @@ static final private String LOG_ID="LossOfSensorAlarm";
         @Override
         public void onReceive(Context context, Intent intent) {
 	   Log.i(LOG_ID,"onReceive ");
-	   SuperGattCallback.init((Application) context.getApplicationContext());
+      Applic app=(Applic) context.getApplicationContext();
+      app.initproc();
+	   SuperGattCallback.init(app);
 	   SuperGattCallback.glucosealarms.handlealarm();
 	if(!keeprunning.started) {
 		Applic.possiblybluetooth(context) ;

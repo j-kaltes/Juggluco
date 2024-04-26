@@ -28,6 +28,7 @@ import static java.util.Collections.swap;
 import static tk.glucodata.Applic.isWearable;
 import static tk.glucodata.CommonCanvas.drawarrow;
 import static tk.glucodata.MainActivity.OVERLAY_PERMISSION_REQUEST_CODE;
+import static tk.glucodata.Notify.glucosetimeoutSEC;
 import static tk.glucodata.Notify.timef;
 
 import android.app.Activity;
@@ -59,7 +60,7 @@ import tk.glucodata.R;
 public class Floating extends View {
 
 	static private final String LOG_ID="Floating";
-static private final int oldage=60*3;
+static private final int oldage=glucosetimeoutSEC;
 static void init() {
 	Log.i(LOG_ID,"init()");
 	var pos=Natives.getfloatingPos( );

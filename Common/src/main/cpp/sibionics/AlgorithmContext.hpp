@@ -21,11 +21,7 @@
 
 
 #pragma once
-#include <cstdint>
-#include <ctime>
 #include <jni.h>
-#include "config.h"
-class SensorGlucoseData;
 struct AlgorithmContext {
     double ig_data;
     jlong mNativeContext;
@@ -33,12 +29,5 @@ struct AlgorithmContext {
     int glucoseWarning;
     int ig_trend;
     int temperatureWarning;
-    double process(int index,double value, double temp);
-#ifdef SIHISTORY
-    double process3(int index,double value, double temp);
-#endif
-    jlong processData(SensorGlucoseData *sens,time_t nowsecs,int8_t *data,int totlen,int sensorindex) ;
-    void	saveSi3(SensorGlucoseData *sens,int index,uint32_t eventTime,int value,float temp);
-
     };
 #endif

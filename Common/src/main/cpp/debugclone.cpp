@@ -597,6 +597,8 @@ int syscallwait(pid_t pid) {
 	slog log;
         log<<"stopped status "<<status<<" "<<stopped<<" "<<sign<<endl;;
 	}
+   if(sign==11)
+      return 11;
     }
 }
 

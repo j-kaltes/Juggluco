@@ -26,7 +26,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <vector>
-#include "sibionics/AlgorithmContext.hpp"
+#include "sibionics/SiContext.hpp"
 #include "SensorGlucoseData.h"
 #include "settings/settings.h"
 #include "sensoren.h"
@@ -61,9 +61,11 @@ static uint32_t makestarttime(int index,uint32_t eventTime) {
 	return starttime;
    }
 
-extern bool savejson(SensorGlucoseData *sens,std::string_view, int index,const AlgorithmContext *alg );
+#include "sibionics/json.h"
+extern bool savejson(SensorGlucoseData *sens,std::string_view, int index,const AlgorithmContext *alg,getjson_t getjson );
+extern getjson_t getjson;
 extern jlong glucoseback(uint32_t glval,float drate,SensorGlucoseData *hist) ;
-
+#ifndef NOLOG
 void logbytes(std::string_view text,const uint8_t *value,int vallen) {
 		int totlen=text.size()+2+vallen*3+1;
 		char mess[totlen];
@@ -75,26 +77,35 @@ void logbytes(std::string_view text,const uint8_t *value,int vallen) {
          }
 		LOGGERN(mess,ptr-mess);
       }
-
+#else
+#define logbytes(text,value, vallen) 
+#endif
 
 #ifdef SIHISTORY
-void	 AlgorithmContext::saveSi3(SensorGlucoseData *sens,int index,uint32_t eventTime,int value,float temp) {
-        if(const double newvalue=process3(index,value,temp);newvalue>0.1) {
-               const int mgL=std::round(newvalue*convfactordL);
-		const int idpos=int(round(index/(double)sens->getmininterval()));
-		Glucose *item=sens->getglucose(idpos);
-		item->time=eventTime;
-		item->id=index;
-		item->glu[1]=mgL;
-		const int newend=idpos+1;
-		if(newend>sens->getScanendhistory())
-			sens->setendhistory(newend);
-    	    	}
+extern getjson_t getjson3;
+void	 SiContext::saveSi3(SensorGlucoseData *sens,int index,uint32_t eventTime,bool save,int value,float temp,bool dosavejson) {
+     if(const double newvalue=process3(index,value,temp);newvalue>0.1) {
+            const int mgL=std::round(newvalue*convfactordL);
+         if(save) {
+            const int idpos=int(round(index/(double)sens->getmininterval()));
+            Glucose *item=sens->getglucose(idpos);
+            item->time=eventTime;
+            item->id=index;
+            item->glu[1]=mgL;
+            const int newend=idpos+1;
+            if(newend>sens->getScanendhistory()) sens->setendhistory(newend);
+            if(dosavejson||!(index%256)) {
+               savejson(sens,sens->statefile3,index,algcontext3,getjson3);
+               }
+            }
+
+         }
 	}
 #else
-#define saveSi3(sens,index, eventTime, value, temp) 
+#define saveSi3(sens, index,eventTime, save, value, temp, last)
+
 #endif
-jlong AlgorithmContext::processData(SensorGlucoseData *sens,time_t nowsecs,int8_t *data,int totlen,int sensorindex) {
+jlong SiContext::processData(SensorGlucoseData *sens,time_t nowsecs,int8_t *data,int totlen,int sensorindex) {
 	logbytes("SIprocess",(uint8_t*)data,totlen);
    if(data[2] != 9||data[0] != -86 || data[1] != 85) {
       LOGGER("wrong start %d %d %d\n",data[0],data[1],data[2]);
@@ -135,34 +146,36 @@ jlong AlgorithmContext::processData(SensorGlucoseData *sens,time_t nowsecs,int8_
                }
        const int addtime=std::byteswap(one[6]);
          long  offtime=addtime  - (numOfUnreceived * 60) ;
-         if(offtime>0) {
+         const time_t eventTime= nowsecs + offtime;
+         const bool infuture=offtime>0;
+         if(infuture) {
             LOGGER("Siprocess: wrong time: %d seconds future addtime=%d index=%d temp=%f value=%f numOfUnreceived=%d\n",offtime,addtime,index,temp, value/10.0f,numOfUnreceived);
                }
            else  {
-            const time_t eventTime= nowsecs + offtime;
-             if(maxid<2) {
+             if(maxid<10) {
                   auto starttime=makestarttime(index,eventTime);
                   sens->getinfo()->starttime=starttime;
                    sensor->starttime=starttime;
-//extern void toCalendar( const char *name);
- //                  toCalendar( sens->shortsensorname()->data());
                   }
-            if(const double newvalue=process(index,value,temp);newvalue>0.1) {
+		 }
+            if(const double newvalue=process(index,value,temp);newvalue>2.0) {
       #ifndef NOLOG
                const long electric= std::byteswap(one[2]);
                const int status = std::byteswap(one[4]);
       #endif
                const int mgdL=std::round(newvalue*convfactordL/10.0);
-               const int trend=ig_trend;
+               const int trend=algcontext->ig_trend;
                const float change=sitrend2RateOfChange(trend);
                const int abbotttrend=sitrend2abbott(trend);
                   LOGGER("SIprocess: index=%d temp=%f electric=%ld value=%f->%f status=%d numOfUnreceived=%d addtime=%d trend=%d rate=%.2f abbotttrend=%d\n", index, temp, electric, value/10.0f, mgdL/convfactordL,status, numOfUnreceived, addtime,trend,change,abbotttrend);
                  
                     {
-                     sens->savestream(eventTime,index,mgdL,abbotttrend,change);
-                     sens->retried=0;
-		     saveSi3(sens,index,eventTime,value,temp);
-                     if(!numOfUnreceived)  {
+         	if(infuture) sens->setSiIndex(index+1);
+            else sens->savestream(eventTime,index,mgdL,abbotttrend,change);
+            sens->retried=0;
+
+		     saveSi3(sens,index,eventTime,!infuture,value,temp,!numOfUnreceived);
+               if(!numOfUnreceived)  {
                        sens->sensorerror=false;
                         if(sensor->finished) {
                            sensor->finished=0;
@@ -170,13 +183,16 @@ jlong AlgorithmContext::processData(SensorGlucoseData *sens,time_t nowsecs,int8_
                            backup->resensordata(sensorindex);
                            }
                        auto res=glucoseback(mgdL,change,sens);
-                        savejson(sens,sens->statefile,index,this);
+                        savejson(sens,sens->statefile,index,algcontext,getjson);
                         backup->wakebackup(Backup::wakestream);
                      extern void wakewithcurrent();
                         wakewithcurrent();
                         return res;
                        }
-                      sens->receivehistory=nowsecs;
+                 else {
+		               if(!infuture&&!(index%256)) savejson(sens,sens->statefile,index,algcontext,getjson);
+                     }
+                   sens->receivehistory=nowsecs;
 
                      }
                   }
@@ -184,12 +200,11 @@ jlong AlgorithmContext::processData(SensorGlucoseData *sens,time_t nowsecs,int8_
             if(index==maxid)
 	            sens->setSiIndex(maxid+1);
             LOGGER("SIprocess failed: index=%d temp=%f value=%f numOfUnreceived=%d\n", index, temp, value/10.0f,numOfUnreceived);
-            if(!numOfUnreceived)  {
+            if(!numOfUnreceived&&!(index%5))  {
                sens->sensorerror=true;
                return 0LL;
                }
             }
-         }
       }
      return 1LL;
     }

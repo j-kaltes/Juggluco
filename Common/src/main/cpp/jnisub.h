@@ -216,14 +216,13 @@ struct streamdata {
 struct libre3stream:streamdata {
 	libre3stream(int sensindex,SensorGlucoseData *sens): streamdata(3, sensindex,sens){};
 	};
-
-struct AlgorithmContext;
+#ifdef SIBIONICS
+#include "sibionics/SiContext.hpp"
 struct sistream:streamdata {
-	AlgorithmContext *algcontext;
-	sistream(int sensindex,SensorGlucoseData *sens,AlgorithmContext *context): streamdata(0x10, sensindex,sens),algcontext(context){
-		};
+	SiContext sicontext;
+	sistream(int sensindex,SensorGlucoseData *sens): streamdata(0x10, sensindex,sens),sicontext(sens){ };
 	};
-
+#endif
 struct libre2stream:streamdata {
 	int startsincebase;
 	jbyte person=0;

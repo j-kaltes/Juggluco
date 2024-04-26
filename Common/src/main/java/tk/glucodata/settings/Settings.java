@@ -586,9 +586,15 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 	globalscan.setText(R.string.startsapp);
 
         final CheckBox librelinkbroadcast=(!isWearable)?new CheckBox(context):null;
+
         final CheckBox libreview=(!isWearable)?new CheckBox(context):null;
         final CheckBox xdripbroadcast=new CheckBox(context);
+
+        final CheckBox everSensebroadcast=(!isWearable)?new CheckBox(context):null;
+
         final CheckBox jugglucobroadcast=new CheckBox(context);
+
+
 	xdripbroadcast.setText(R.string.xdripbroadcast);
 	xdripbroadcast.setChecked(Natives.getxbroadcast());
 	jugglucobroadcast.setText("Glucodata broadcast");
@@ -600,11 +606,16 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 
 	final boolean wasxdrip= isWearable?false:Natives.getuselibreview();
 
+	final boolean usedlibrebroad= isWearable?false:Natives.getlibrelinkused();
 	if(!isWearable) {
 		libreview.setText(R.string.libreviewname);
 		libreview.setChecked(wasxdrip);
 		librelinkbroadcast.setText(R.string.sendtoxdrip);
-		librelinkbroadcast.setChecked(Natives.getlibrelinkused());
+
+		librelinkbroadcast.setChecked(usedlibrebroad);
+		everSensebroadcast.setText(R.string.everSensebroadcast);
+		everSensebroadcast.setChecked(Natives.geteverSensebroadcast());
+
 		 if(Build.VERSION.SDK_INT >= 28) {
 			healthconnect.setOnCheckedChangeListener( (buttonView,  isChecked) -> {
 					Natives.sethealthConnect(isChecked);
@@ -708,20 +719,18 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 		  Natives.setfixatex(!fixatex.isChecked());
 		  Natives.setfixatey(!fixatey.isChecked());
 
+		if(!bluetooth.isChecked()&&Natives.backuphostNr( )<=0) {
+			Applic.argToaster(context, R.string.blueormirror,Toast.LENGTH_LONG);
+			}
 		  if(!isWearable) {
 			  if(diskey > 0) {
 				  final int setto = camera.isChecked() ? 1 : 2;
 				  if (diskey != setto) Natives.setcamerakey(setto);
 			  }
-			if(librelinkbroadcast.isChecked()!=wasxdrip)  {
-				if(!wasxdrip) {
-					if(!bluetooth.isChecked()&&Natives.backuphostNr( )<=0) {
-						Applic.argToaster(context, R.string.blueormirror,Toast.LENGTH_LONG);
-						}
-
+			if(librelinkbroadcast.isChecked()!=usedlibrebroad)  {
+				if(!usedlibrebroad) {
 					final var 	starttime= Natives.laststarttime();
 					if(starttime!=0L) {
-
 						tk.glucodata.XInfuus.sendSensorActivateBroadcast(context, Natives.lastsensorname(), starttime);
 						}
 					}
@@ -816,6 +825,7 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 			row9=new View[]{help,about,cancel,ok};
 			}
 
+//      var oldxdrip=getbutton(context,"send old"); oldxdrip.setOnClickListener(v-> tk.glucodata.Natives.sendxdripold());
         	CheckBox showalways=new CheckBox(context);
 		showalways.setText(R.string.glucosestatusbar);
 		showalways.setChecked(Natives.getshowalways()) ;
@@ -837,7 +847,8 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 		View[] rowglu=new View[]{ bluetooth,floatconfig,alarmbut};
 		row8=new View[]{changelabels,langspin,numalarm,colbut};
 		views=new View[][]{row0, row1,new View[]{scalelabel,fixatex,fixatey}, row2,new View[]{levelleft,camera,reverseorientation},
-		hasnfc?new View[]{nfcsound, globalscan}:null,librerow,new View[] {librelinkbroadcast,xdripbroadcast ,jugglucobroadcast},new View[] {webserver,iob,fixed,uploader }, rowglu,row8,row9};
+
+		hasnfc?new View[]{nfcsound, globalscan}:null,librerow,new View[] {librelinkbroadcast,everSensebroadcast, xdripbroadcast ,jugglucobroadcast},new View[] {webserver,iob,fixed,uploader }, rowglu,row8,row9};
 	       webserver.setOnClickListener(v-> tk.glucodata.Nightscout.show(context,thelayout[0]));
 	       uploader.setOnClickListener(v-> tk.glucodata.NightPost.config(context,thelayout[0]));
 		iob.setOnCheckedChangeListener( (buttonView,  isChecked) -> {
@@ -881,6 +892,15 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 					}
 		    });
 
+		final boolean[] everSensenothing = {false};
+		everSensebroadcast.setOnCheckedChangeListener( (buttonView,  isChecked) -> {
+					if (!everSensenothing[0]) {
+						everSensenothing[0] = true;
+						everSensebroadcast.setChecked(!isChecked);
+						Broadcasts.seteverSensereceivers(context, lay, everSensebroadcast, everSensenothing);
+					}
+				}
+				);
 		if(advhelp!=null) {
 			advanced.setOnClickListener(v -> {
 				EnableControls(thelayout[0],false);
@@ -901,6 +921,7 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 				}
 			}
 			);
+
 
 	final boolean[] juggluconothing = {false};
 	jugglucobroadcast.setOnCheckedChangeListener( (buttonView,  isChecked) -> {

@@ -19,6 +19,8 @@
 /*      Fri Jan 27 12:36:58 CET 2023                                                 */
 
 #pragma once
+
+constexpr int maxbluetoothage=11*30;
 #ifdef NOLOG
 #define CONV18 1 //Minimally different and 18 fits better
 #endif
@@ -253,7 +255,8 @@ struct Tings {
 
 	uint16_t tokensize3;
 	char libreviewUserToken3[1024];
-	BroadcastListeners<5> librelinkBroadcast;
+	BroadcastListeners<2> librelinkBroadcast;
+	BroadcastListeners<3> everSenseBroadcast;
 	BroadcastListeners<10> xdripBroadcast;
 	BroadcastListeners<10> glucodataBroadcast;
 	int nightuploadnamelen;

@@ -1,0 +1,1114 @@
+<resources>
+<string name="ringtone" >
+<![CDATA[
+<h1 class="western">铃声</h1>
+<p style="line-height: 100%; margin-bottom: 0in">选择报警或通知的铃声以及持续多少秒。</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>（几）分钟不连续报警</b>：如果低或高血糖水平持续，报警不会立即再次响起。您可以指定如果条件持续，多少分钟后应再次生成报警。</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>声音</b>：发出声音。</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>默认声音</b>：使用默认声音。</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>选择声音</b>：选择一个铃声。在一些三星手机上，预装的铃声选择器应用程序会崩溃，因此您必须安装一个不同的铃声应用程序，该应用程序可以被其他应用程序使用，例如：<a href="https://play.google.com/store/apps/details?id=com.centralparkapps.ringo.ringtones">https://play.google.com/store/apps/details?id=com.centralparkapps.ringo.ringtones</a>，<a href="https://apkcombo.com/ringtone-picker/de.kumpewo.ringtones">https://apkcombo.com/ringtone-picker/de.kumpewo.ringtones</a>或<a href="https://www.apkmonk.com/app/com.hlidskialf.android.tonepicker">https://www.apkmonk.com/app/com.hlidskialf.android.tonepicker</a></p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>振动</b>：振动</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>勿扰响铃</b>：如果开启了“勿扰模式”，在播放报警之前关闭它。如果Juggluco没有此权限，您将被引导到一个安卓设置屏幕以给予Juggluco这个权限。通过打开“勿扰模式”并按下“播放”，您可以测试在“勿扰模式”期间是否会工作。在Juggluco的早期版本中，在报警后会再次打开“勿扰模式”。在当前版本中，它不会，因为这样做会导致当在自动“勿扰模式”期间报警响起时，这个状态不会自动关闭。如果您不希望在“勿扰模式”期间听到报警，您可能还需要在上一个屏幕取消设置“使用警报音量级别”。</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>闪光灯</b>：具有手电筒闪光灯的智能手机可以选择闪光相同的秒数。在不允许铃声且没有明确关于闪光灯的政策的情况下很方便。</p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+]]>
+</string>
+<string name="reminders" >
+<![CDATA[
+<h1 class="western">提醒</h1>
+<p style="line-height: 100%; margin-bottom: 0in">提醒功能可以在一定时间间隔内未输入某个特定数量时提醒您。
+	提醒功能可以在您在一段时间内没有输入特定标签的情况下提醒您。换句话说，如果您设定了一个注射胰岛素提醒标签，10点到11点2个单位，但在规定的时间内没有写注射胰岛素标签或者没达到值，这个功能就会提醒您。</p>
+<p style="line-height: 100%; margin-bottom: 0in">按<b>新建</b>可以添加一个新的提醒。</p>
+<p style="line-height: 100%; margin-bottom: 0in">指定时间段的开始和结束时间，在此时间段内，您应该输入指定标签下的指定数量。</p>
+<p style="line-height: 100%; margin-bottom: 0in">如果到达结束时间，程序会检查您是否在开始时间之后已经输入了至少这个数量并带有指定标签。如果您没有到达，将显示一个通知并播放铃声。</p>
+<p style="line-height: 100%; margin-bottom: 0in">例如，如果您指定：</p>
+<p style="line-height: 100%; margin-bottom: 0in"><i>Levemir 6.0</i></p>
+<p style="line-height: 100%; margin-bottom: 0in"><i>21:30 - 23:55</i></p>
+<p style="line-height: 100%; margin-bottom: 0in">如果您在当天的21:30之后未指定至少6单位的Levemir，将在23:55之后提醒您。</p>
+<p style="line-height: 100%; margin-bottom: 0in">已指定的提醒将显示在列表中。触摸以编辑。</p>
+<p style="line-height: 100%; margin-bottom: 0in">如果一切顺利，即使用户未启动Juggluco，提醒也会在安卓重启后正常工作。</p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+<p style="line-height: 100%; margin-bottom: 0in">在一些华为设备上，您需要指定允许一个程序在启动时运行。这可以在安卓设置 -&gt; 电池 -&gt; 应用启动中完成。在这里为Juggluco选择<i>手动管理</i>，以便<i>自动启动</i>和<i>后台运行</i>处于开启状态。这对于在用户未启动Juggluco的情况下，重启后信号丢失报警能正常工作也是必要的。</p>
+]]>
+</string>
+<string name="connectionoverview" >
+<![CDATA[
+<h1>镜像</h1>
+<p style="line-height: 100%; margin-bottom: 0in"><span lang="en-US">向另一台设备发送数据或从另一台设备接收数据。您可以连接到运行Juggluco的安卓设备</span> <span lang="en-US">以同样的方式显示数据。</span> <span lang="en-US">接收到扫描数据后，镜像设备也可以通过蓝牙与传感器联系。为了确保只有一个设备与传感器联系，</span><span lang="en-US"><i>通过蓝牙的传感器</i></span><span lang="en-US">&quot;在通过IP/TCP接收流值时自动关闭。</span></p>
+<p style="line-height: 100%; margin-bottom: 0in">在这个屏幕上，<i>wlan</i>之后显示了这个设备的本地wlan IP，您应该在您家庭网络上连接的另一台设备上指定这个（如果远程连接，则指定您的调制解调器）。</p>
+<p style="line-height: 100%; margin-bottom: 0in">在<i>端口</i>之后，您可以更改这个应用程序监听连接的TCP端口。</p>
+<p style="line-height: 100%; margin-bottom: 0in">通过点击<i><b><a href="https://www.juggluco.nl/Jugglucohelp/addconnection.html">添加连接</a></b></i>您可以指定要连接的主机以及连接方式。</p>
+<p style="line-height: 100%; margin-bottom: 0in">安卓上的网络连接会因各种电池优化和后台限制而中断，按<b>，需要给全各种权限，开启自启动，调整无限制后台等解决此问题。</p>
+<p style="line-height: 100%; margin-bottom: 0in">如果Juggluco作为镜像应用（从运行Juggluco的另一台设备接收葡萄糖值），您可以按<b>警报</b>进入一个对话框，在其中可以指定低和高葡萄糖警报以及相关通知。</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>镜像发送标签</b><b>：</b>如果应用程序从另一台运行此应用程序的设备接收到药物、食物和运动数据的量，您不应在此处添加或修改这些相同的信息。选中此项会使其变得不可能。
+</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>同步</b>发送新数据到已连接的设备（如果有的话）或请求新数据（就是一个手动刷新）。
+</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>reinit</b>：关闭现有连接并创建新连接。（不知为何无法翻译此选项，这个就等于重置，从头刷新数据）</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>Wifi</b>（仅限WearOS）：如果未设置，WearOS会在一段时间后自动关闭WIFI以节省电池寿命，Juggluco会切换到使用蓝牙连接手机和手表。如果开启，WearOS会被要求保持WIFI开启，但它仍然可能在一段时间后被关闭。通常不需要设置此选项，WearOS的制造商认为开启WIFI会导致电池使用量大幅增加。</p>
+
+<p style="line-height: 100%; margin-bottom: 0in">现有连接以列表形式显示，显示标签、IP端口以及最后一次成功同步的月、日和时间。
+</p>
+<p style="line-height: 100%; margin-bottom: 0in">连接使用方式的缩写如下：</p>
+<p style="line-height: 100%; margin-bottom: 0in">n: 标签（数字）</p>
+<p style="line-height: 100%; margin-bottom: 0in">s: 扫描</p>
+<p style="line-height: 100%; margin-bottom: 0in">b: 流（蓝牙）</p>
+<p style="line-height: 100%; margin-bottom: 0in">r: 接收</p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+</p>
+<p style="line-height: 100%; margin-bottom: 0in">有关镜像连接的更多信息，请阅读&quot;<i><a href="https://www.juggluco.nl/Jugglucohelp/addconnection.html">添加连接</a></i>&quot;下的帮助，并查看<a class="western" href="https://www.juggluco.nl/Juggluco/index.html#mirror">https://www.juggluco.nl/Juggluco/index.html#mirror</a></p>
+<h1>桌面电脑</h1>
+<p>您可以在Windows、Macintosh或Linux计算机上使用Android模拟器（例如<a class="western" href="https://www.genymotion.com/">Genymotion</a>）运行Android Juggluco应用。模拟器上的Juggluco通过镜像连接从连接到传感器的Android手机接收数据。可以通过在移动鼠标指针时按下一个键（在Genymotion中为Control）来模拟捏合动作（两个手指相互靠近或远离）。</p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+</p>
+]]>
+</string>
+<string name="addconnection" >
+<![CDATA[
+<h1>添加连接</h1>
+<p style="line-height: 100%; margin-bottom: 0in">指定与另一个Juggluco实例的连接。一个设备上的Juggluco通过IP/TCP将数据发送到另一个设备上的Juggluco。要建立连接，一个Juggluco必须在在一个端口监听，另一个在一个端口主动连接。这个Juggluco的端口在前一个屏幕中给出（左中菜单-&gt;<a href="https://www.juggluco.nl/Jugglucohelp/connectionoverview.html">镜像</a>）。在这里，您指定这个Juggluco互相联系的端口（主动联系）。如果要Juggluco主动传送数据，请选择“<b>仅主动</b>”。如果另一方选择被动传送数据，请选择“<b>仅被动</b>”，（仅主动适用于有一侧设备IP总变化，这里选主动本机理论上可以无视IP变化，仅被动就是对面可以无视，双方IP稳定可选择双向，都需要设置对面的IP）要双向同步数据“<b>双向</b>”选中。另一方的Juggluco应该根据您在这里选择的情况指定。</p>
+<p style="line-height: 100%; margin-bottom: 0in">如果这个Juggluco仅主动，您应该指定它应该联系的IP。如果那个主机有多个IP，您可以指定多个；例如，当两个设备有时通过家庭网络连接，有时直接作为便携式热点连接时。
+</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>警告：永远不要指定多个设备的IP，否则它们将各自只接收到部分数据（意思就是数据会乱七八糟的）（可以一个设备的多个IP，不可以多个设备的多个IP，多个设备需要多个添加连接，而不是一个）。</b>
+</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>主机名</b>：指定一个主机名而不是IP。这将使连接依赖于DNS名称服务器，因此会慢一些，并受到DNS名称服务器连接中断的影响。只有在您无法配置静态IP且主机名自动分配给动态IP（DHCP）的情况下，才应开启此选项。</p>
+<p style="line-height: 100%; margin-bottom: 0in">除了\'仅主动\'之外的所有情况，您都可以选择\'<b>检测</b>\'；在这种情况下，Juggluco会将首次联系Juggluco的IP保存为另一方的IP。验证正确的设备是否正在联系可以通过两种方式：选择\'<b>测试IP</b>\'来测试IP。如果您选择<b>测试标签</b>，则只有当双方都指定了相同的标签时，才会建立联系。</p>
+<p style="line-height: 100%; margin-bottom: 0in">选择<b>接收数据</b>如果您希望此应用程序充当镜像应用。
+</p>
+<p style="line-height: 100%; margin-bottom: 0in">如果您希望此设备成为数据的发送方（<b>发送数据</b>），您需要指定要发送的数据。</p>
+
+<p style="line-height: 100%; margin-bottom: 0in"><b>标签</b>：您指定的剂量、食物和运动数据。</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>扫描</b>：通过扫描传感器接收的数据（在Libre2下为扫描和历史记录，在Libre3下仅为通过蓝牙访问传感器所需的数据）。</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>蓝牙</b>：通过蓝牙接收的数据。在Libre3下，这包括历史数据。</p>
+<p style="line-height: 100%; margin-bottom: 0in">有时接收设备上已经存在一些数据。您可以指定这些数据存在的时间：</p>
+<p style="line-height: 100%; margin-bottom: 0in"><i>开始：</i>没有数据存在，全部传送</p>
+<p style="line-height: 100%; margin-bottom: 0in"><i>现在：</i>所有数据都存在，从现在开始发送</p>
+<p style="line-height: 100%; margin-bottom: 0in">或者在主界面的视图，拖动到确定的特定日期，就会在这个设置里看到这个日期 从这个日期传送数据。</p>
+<p style="line-height: 100%; margin-bottom: 0in">当向现有连接添加数据源时，开始日期仅决定添加的数据源。例如，如果扫描数据和蓝牙数据已经发送到主机，现在添加了标签，开始日期仅决定发送的标签。
+</p>
+<p style="line-height: 100%; margin-bottom: 0in">如果两个设备通过不安全的连接连接，可以通过在连接的两端指定相同的（最多）16个字符的<b>密码</b>对数据进行签名和加密。选择<b>保存</b>以保存您指定的内容。<b>删除</b>将删除连接。</p>
+<p style="line-height: 100%; margin-bottom: 0in">在最简单的情况下，所有连接都属于您的家庭网络，因此您可以使用本地IP。您也可以通过Wi-Fi通过互联网连接，这种情况下您应该查阅您的调制解调器手册了解如何将外部端口转发到您家庭网络的IP和端口。
+</p>
+<p style="line-height: 100%; margin-bottom: 0in">通过移动数据连接通过互联网连接的两部智能手机可以直接相互连接，如果其中一个可以在网络端口上监听（这种事情在中国大陆不可能，一定要使用一台带有公网IP的服务器作为中转，有一定技术难度）。如果两者都不能（例如，如果两者都没有单独的IP），它们仍然可以通过第三个设备相互通信。一种可能性（这种也不可能，中国大陆目前宽带几乎不可能有固定公网IP）是在家中通过调制解调器连接到互联网的Android设备（最低Android 4.4）上运行Juggluco。另一种可能性是在计算机上运行属于Juggluco的命令行程序（例如，您的PC或Amazon AWS）：
+<a href="https://www.juggluco.nl/Juggluco/cmdline/index.html">https://www.juggluco.nl/Juggluco/cmdline/index.html</a></p>
+<p style="line-height: 100%; margin-bottom: 0in">端口转发教程：</p>
+<p style="line-height: 100%; margin-bottom: 0in"><a href="https://portforward.com/how-to-port-forward/">https://portforward.com/how-to-port-forward/</a></p>
+<p style="line-height: 100%; margin-bottom: 0in"><a href="https://stevessmarthomeguide.com/understanding-port-forwarding/">https://stevessmarthomeguide.com/understanding-port-forwarding/</a></p>
+<p style="line-height: 100%; margin-bottom: 0in">可以在没有NFC的设备上通过蓝牙接收葡萄糖值（参见<a href="https://www.juggluco.nl/Juggluco/mirror">https://www.juggluco.nl/Juggluco/mirror</a>）：在NFC设备上通过NFC初始化传感器，然后将扫描和蓝牙数据发送到非NFC设备。之后，反转连接蓝牙数据，关闭NFC设备的蓝牙连接并在非NFC设备上打开，并在NFC设备中关闭“通过蓝牙的传感器”并在非NFC设备中打开。因此，您可以在一台设备上扫描，并在另一台设备上通过蓝牙获取葡萄糖值。但是在所有设备上都应该有所有传感器数据。如果设备交换数据，它们总是应该接收到扫描和蓝牙数据。因此，您应该始终将蓝牙数据发送回NFC设备，将扫描数据发送回非NFC设备。否则，数据将不同步，导致使用旧的认证数据或新数据被旧数据覆盖。</p>
+
+<p style="line-height: 100%; margin-bottom: 0in">标签数据完全独立。</p>
+<h2 class="western">网络问题</h2>
+<p>连接的两端需要严格的互补规范。一个简单的遗漏可能会使数据传输失败。</p>
+<p>连接可能会挂起，需要通过关闭或打开WIFI或按同步按钮来重置。此外，将<i>仅主动-仅被动</i>连接切换为<i>双向</i>或相反（人话就是多试试），也可能会有所不同。</p>
+<p>您还应该考虑连接更改时IP的更改。例如，在家庭网络上使用的IP与便携式热点上使用的IP不同。</p>
+<p><br/>
+<br/>
+</p>
+]]>
+</string>
+<string name="locationpermission" >
+<![CDATA[
+<p style="line-height: 100%; margin-bottom: 0in">
+以前，Juggluco 需要位置权限来找到 FreeStyle Libre 2 传感器的蓝牙设备地址。现在 Juggluco 在大多数设备上使用另一种方法来获取设备地址，不再需要位置权限。
+</p>
+<p style="line-height: 100%; margin-bottom: 0in">Juggluco 仍然在 Android 6、7 和 7.1 上使用旧方法，因此仍然需要位置权限。</p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+]]>
+</string>
+<string name="introhelp" >
+<![CDATA[
+
+    <p style="line-height: 115%; margin-bottom: 0in"> <font color="#ffffff"><font
+          face="Cambria, serif"><font style="font-size: 14pt" size="4"><b>Juggluco</b></font></font>
+          是一个用于控制糖尿病患者血糖的小程序。它可以扫描Freestyle Libre (0 和 2) 传感器（通过NFC）并通过蓝牙接收来自 <font color="#4f81bd"><font face="Calibri, serif"><i><b>Freestyle Libre 2</b></i></font></font><font color="#4f81bd"> </font><font
+                 color="#4f81bd"><font face="Calibri, serif"><i><b>和 3</b></i></font></font>
+          传感器的血糖值。</font></p>
+          <p style="line-height: 115%; margin-bottom: 0in"><font color="#ffffff">当程序首次运行时，你可以（在初始化之后）通过将其靠近智能手机的NFC传感器来扫描Freestyle Libre <b>2</b> 传感器。之后，Juggluco将尝试与Freestyle Libre 2传感器建立蓝牙连接，并在不进行扫描的情况下每分钟接收一次血糖值。</font></p>
+          <p style="line-height: 115%; margin-bottom: 0in"><font color="#ffffff">要接管已激活的FreeStyle Libre <b>3</b> 传感器（我不知道中国大陆是否可用），你需要在 <a href="https://www.juggluco.nl/Jugglucohelp/libreview.html">设置->Libreview</a> 中指定你用于激活传感器的Libreview账户信息，按下 <a href="https://www.juggluco.nl/Jugglucohelp/getaccountidhelp.html">"获取账户ID"</a> 并等待账户ID到达后再进行扫描。</font></p>
+          <p style="line-height: 115%; margin-bottom: 0in"><font color="#ffffff"><span
+                 lang="en-US">该程序包含四个</span> <font color="#4f81bd"><font
+                   face="Cambria, serif"><font style="font-size: 13pt" size="3"><span lang="en-US"><b>菜单</b></span></font></font></font>
+                   ：通过触摸显示屏的空白部分，你可以打开一个菜单。触摸屏幕的左四分之一部分会打开左侧菜单，中间部分的左侧会打开第二个
+                   菜单，中间部分的右侧会打开第三个菜单，屏幕的右四分之一部分会打开第四个菜单。 </font> </p>
+          <p style="line-height: 100%; orphans: 0; widows: 0; margin-top: 0.08in; margin-bottom: 0.08in; background: transparent; page-break-after: avoid">
+          <font color="#ffffff"><font style="font-size: 12pt" size="3"><i>菜单4:移动选项</i></font></font></p>
+          <table cellspacing="0" cellpadding="0" width="96">
+          <colgroup><col width="96"> </colgroup>
+          <tbody>
+          <tr>
+          <td style="border: none; padding: 0in" width="96" valign="top">
+          <p> <font color="#ffff6d">15:10 ↗ 93</font></p>
+          </td>
+          </tr>
+          <tr>
+          <td style="border: none; padding: 0in" width="96" valign="top">
+          <p><font color="#ffff6d"><a href="https://www.juggluco.nl/Jugglucohelp/searchhelp.html">搜索</a></font></p>
+          </td>
+          </tr>
+          <tr>
+          <td style="
+border: none; padding: 0in" width="96" valign="top">
+<p><font color="#ffff6d">日期</font></p>
+</td>
+</tr>
+<tr>
+<td style="border: none; padding: 0in" width="96" valign="top">
+<p><font color="#ffff6d">向前一天</font></p>
+</td>
+</tr>
+<tr style="background: transparent">
+<td style="border: none; padding: 0in" width="96" valign="top">
+<p><font color="#ffff6d">向后一天</font></p>
+</td>
+</tr>
+<tr>
+<td style="border: none; padding: 0in" width="96" valign="top">
+<p><font color="#ffff6d">向前一周</font></p>
+</td>
+</tr>
+<tr>
+<td style="border: none; padding: 0in" width="96" valign="top">
+<p><font color="#ffff6d">向后一周</font></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p style="line-height: 115%; margin-bottom: 0in"><font color="#ffffff"><span
+       lang="en-US">通过在屏幕上左右移动，你可以左右移动曲线。你也可以使用</span><font color="#4f81bd"><font
+         face="Cambria, serif"><span lang="en-US"><b>移动选项</b></span></font></font>
+<span lang="en-US">来移动。使用</span><font color="#4f81bd"><font
+         face="Cambria, serif"><span lang="en-US"><i><b>日期</b></i></span></font></font>
+<span lang="en-US">来选择日期，使用</span><font color="#4f81bd"><font
+         face="Cambria, serif"><span lang="en-US"><i><b>搜索</b></i></span></font></font>
+<span lang="en-US">来搜索血糖值和输入的数字。</span>
+<span lang="en-US">右侧菜单的第一项是当前时间，通过选择它你可以跳转到图表的最右侧（即现在）。</span></font></p>
+<p style="line-height: 115%; margin-bottom: 0in"><font color="#ffffff">如果在设置中设置了<i>手动缩放血糖</i>，在屏幕的上半部分上下移动会改变图表的最大值，在屏幕的下半部分上下移动会改变最小值。如果在设置中设置了<i>手动缩放时间</i>，你可以通过改变两个手指之间的距离来增加或减少屏幕上显示的时间量。</font></p>
+<p style="line-height: 100%; orphans: 0; widows: 0; margin-top: 0.08in; margin-bottom: 0.08in; background: transparent; page-break-after: avoid">
+<font color="#ffffff"><font style="font-size: 12pt" size="3"><i>菜单 3:
+显示选项</i></font></font></p>
+<table cellspacing="0" cellpadding="0" width="138">
+<colgroup><col width="138"> </colgroup>
+<tbody>
+<tr>
+<td style="border: none; padding: 0in" width="138" valign="top">
+<p><font color="#ffff6d">最后一次扫描</font></p>
+</td>
+</tr>
+<tr>
+<td style="border: none; padding: 0in" width="138" valign="top">
+<p><font color="#ffff6d">扫描数据            [x]</font></p>
+</td>
+</tr>
+<tr>
+<td style="border: none; padding: 0in" width="138" valign="top">
+<p><font color="#ffff6d">蓝牙数据          [x]</font></p>
+  </td>
+  </tr>
+  <tr>
+  <td style="border: none; padding: 0in" width="138" valign="top">
+  <p><font color="#ffff6d">历史数据         [x]</font></p>
+  </td>
+  </tr>
+  <tr>
+  <td style="border: none; padding: 0in" width="138" valign="top">
+  <p><font color="#ffff6d">标签数据      [x]</font></p>
+  </td>
+  </tr>
+  <tr>
+  <td style="border: none; padding: 0in" width="138" valign="top">
+  <p><font color="#ffff6d"><a href="https://www.juggluco.nl/Jugglucohelp/mealhelp.html">餐饮</a>          [  ]</font></p>
+  </td>
+  </tr>
+  <tr>
+  <td style="border: none; padding: 0in" width="138" valign="top" height="42">
+  <p> <font color="#ffff6d">暗黑模式   [x]</font></p>
+  </td>
+  </tr>
+  </tbody>
+  </table>
+  <p style="line-height: 115%; margin-bottom: 0in"><font color="#ffffff"><span
+         lang="en-US">中间右侧的菜单</span> <font color="#4f81bd"><font face="Cambria, serif"><span
+             lang="en-US"><b>包含显示选项</b></span></font></font>。<span lang="en-US">要查看最后一次扫描，请触摸第一项。</span>
+  <span lang="en-US">在<i>扫描</i>后面的叉号表示图表中显示了扫描结果。扫描是你在扫描Libre 0或2传感器时获得的当前血糖值。扫描还会将传感器最近8小时的15分钟测量值传输到智能手机。这些值的显示可以通过触摸<i>历史数据</i>来控制。Libre 3传感器通过蓝牙发送历史值，它们是每5分钟一次。<i>蓝牙数据</i>代表来自Freestyle libre 2和3传感器的每分钟通过蓝牙发送到这个小程序的血糖值。</font></p>
+  <p style="line-height: 115%; margin-bottom: 0in"><font color="#ffffff">你可以输入各种数字（带有任何你喜欢的标签）来记录你的胰岛素、碳水化合物和活动。它们会在指定的时间和日期以固定高度显示在血糖图表中。<span lang="en-US">触摸图表中的点</span> <span lang="en-US">或输入的数字会提供有关该项目的信息。你可以通过长按来编辑输入的数字。也可以通过左中菜单中的数字列表进行编辑</span> <span lang="en-US">并触摸相应的数据元素。</span> <i>输入数据</i>决定了输入数字的显示。在<i>设置</i>中，你可以指定你喜欢用于这些数字的<a href="https://www.juggluco.nl/Jugglucohelp/labelhelp.html">标签</a>。在数字的上方会显示相应的标签。</font></p>
+  <p style="line-height: 100%; orphans: 0; widows: 0; margin-top: 0.08in; margin-bottom: 0.08in; background: transparent; page-break-after: avoid">
+  <font color="#ffffff"><font style="font-size: 12pt" size="3"><i>菜单 2:
+  中间左侧</i></font></font></p>
+  <table style="width: 119px; height: 337px;" cellspacing="0" cellpadding="0">
+    <colgroup><col width="96"> </colgroup>
+    <tbody>
+    <tr>
+    <td style="border: none; padding: 0in" width="96" valign="top">
+    <p><font color="#ffff6d"><a href="https://www.juggluco.nl/Jugglucohelp/helpexport.html">导出</a></font></p>
+    </td>
+    </tr>
+    <tr>
+    <td style="border: none; padding: 0in" width="96" valign="top">
+    <p><font color="#ffff6d"><a href="https://www.juggluco.nl/Jugglucohelp/connectionoverview.html">镜像</a></font></p>
+    </td>
+    </tr>
+    <tr>
+    <td style="border: none; padding: 0in" width="96" valign="top">
+    <p><font color="#ffff6d"><a href="https://www.juggluco.nl/Jugglucohelp/newamount.html" onclick= "location.href=this.href+\'?unit=\'+unitstr;return false;">新建标签</a></font></p>
+    </td>
+    </tr>
+    <tr>
+    <td style="border: none; padding: 0in" width="96" valign="top">
+    <p><font color="#ffff6d">列表</font></p>
+    </td>
+    </tr>
+    <tr><td style="border: none; padding: 0in" width="96" valign="top">
+      <p><font color="#ffff6d"><a href="https://www.juggluco.nl/Jugglucohelp/stathelp.html" onclick= "location.href=this.href+\'?unit=\'+unitstr;return false;" >统计</a></font></p>
+      </td>
+      </tr>
+      <tr>
+      <td style="border: none; padding: 0in" width="96" valign="top">
+      <p><font color="#ffff6d"><a href="https://www.juggluco.nl/Jugglucohelp/talkhelp.html">播报</a></font></p>
+      </td>
+      </tr>
+      <tr>
+      <td style="border: none; padding: 0in" width="96" valign="top">
+      <p align="left"><font color="#ffff6d">悬浮窗[ ]</font></p>
+      </td>
+      </tr>
+      </tbody>
+      </table>
+      <p style="line-height: 115%; margin-bottom: 0in"><font color="#ffffff">你可以通过点击中间左侧菜单中的<font color="#4f81bd"><font face="Cambria, serif"><font
+                 style="font-size: 13pt" size="3"><span lang="en-US"><b>新建标签</b></span></font></font></font>来添加一些标注（例如胰岛素，运动量，食用的碳水化合物）。<font color="#4f81bd"><font
+               face="Cambria, serif"><span lang="en-US"><b>导出</b></span></font></font><span lang="en-US">会将数据以.csv（制表符分隔值）格式保存到文件中。</span><font color="#4f81bd"><font face="Cambria, serif"><span
+                 lang="en-US"><b>镜像</b></span></font></font> <span lang="en-US">可以通过IP/TCP将数据发送到运行此应用程序的不同设备上，以显示相同的信息。</span><font color="#4f81bd"><font face="Cambria, serif"><span lang="en-US"><b>列表</b></span></font></font><span lang="en-US">提供了输入数字的列表。如果Juggluco通过蓝牙接收到足够的血糖值，你可以通过点击</span><font color="#4f81bd"><font face="Cambria, serif"><span
+                 lang="en-US"><b>统计</b></span></font></font><span lang="en-US">来查看一些统计数据。它显示了在某些血糖范围内的测量百分比、血糖管理指标（HbA1c的预测指标）、血糖波动性以及每天每个时刻低于100%、95%、75%、50%、25%和0%的血糖值的总结图。</span><span lang="en-US">在</span><font color="#4f81bd"><font face="Cambria, serif"><span lang="en-US"><b>播报</b></span></font></font><span lang="en-US">中，你可以让Juggluco朗读传入的血糖值、触摸的图表元素或消息。<b>悬浮窗</b>打开</span><font color="#4f81bd"><font face="Cambria, serif"><span lang="en-US"><b>悬浮血糖</b></span></font></font><span lang="en-US">。一个在其他应用上方屏幕上显示的血糖值。<a href="https://www.juggluco.nl/Jugglucohelp/floatingconfig.html" onclick= "location.href=this.href+\'?unit=\'+unitstr;return false;"  >在设置中，你可以更改其颜色和大小。</a></span></font></p>
+      <p style="line-height: 100%; orphans: 0; widows: 0; margin-top: 0.08in; margin-bottom: 0.08in; background: transparent; page-break-after: avoid">
+      <font color="#ffffff"><font style="font-size: 12pt" size="3"><i>菜单 1: 左侧</i></font></font></p>
+<table cellspacing="0" cellpadding="0" width="120">
+<colgroup><col width="120"> </colgroup>
+<tbody>
+<tr>
+<td style="border: none; padding: 0in" width="120" valign="top">
+<p><font color="#ffff6d">主菜单        [ ]</font></p>
+</td>
+</tr>
+<tr>
+<td style="border: none; padding: 0in" width="120" valign="top">
+<p><font color="#ffff6d"><a href="https://www.juggluco.nl/Jugglucohelp/watchinfo.html">手表</a></font></p>
+</td>
+</tr>
+<tr>
+<td style="border: none; padding: 0in" width="120" valign="top">
+<p><font color="#ffff6d"><a href="https://www.juggluco.nl/Jugglucohelp/sensorhelp.html">传感器</a></font></p>
+</td>
+</tr>
+<tr>
+<td style="border: none; padding: 0in" width="120" valign="top" height="26">
+<p><font color="#ffff6d"><a href="https://www.juggluco.nl/Jugglucohelp/settinghelp.html" onclick= "location.href=this.href+\'?unit=\'+unitstr;return false;" >设置</a></font></p>
+</td>
+</tr>
+<tr>
+<td style="border: none; padding: 0in" width="120" valign="top" height="26">
+<p> <font color="#ffff6d"><a href="https://www.juggluco.nl/Jugglucohelp/about.html">关于</a></font></p>
+</td>
+</tr>
+<tr>
+<td style="border: none; padding: 0in" width="120" valign="top">
+<p><font color="#ffff6d">关闭应用</font></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p style="line-height: 115%; margin-bottom: 0in"><font color="#ffffff"><span
+       lang="en-US">在</span><font color="#4f81bd"><font face="Cambria, serif"><span
+           lang="en-US"><b>左侧菜单</b></span></font></font><span lang="en-US">中，
+你可以找到</span><font color="#4f81bd"><font face="Cambria, serif"><span
+           lang="en-US"><b>设置</b></span></font></font><span lang="en-US">，
+用于设置血糖单位为mmol/L或mg/dL，</span> <span lang="en-US">指定</span>
+<span lang="en-US"><a href="https://www.juggluco.nl/Jugglucohelp/labelhelp.html">标签</a>，
+设置<a href="https://www.juggluco.nl/Jugglucohelp/alarmhelp.html">血糖警报</a>和<a href="https://www.juggluco.nl/Jugglucohelp/reminders.html">药物提醒</a></span> <span lang="en-US">以及显示范围。系统
+UI决定是否显示安卓控制和状态栏。在</span><font
+       color="#4f81bd"><font face="Cambria, serif"><span lang="en-US"><b>手表</b></span></font></font>
+<span lang="en-US">中，你可以指定Juggluco向各种智能手表发送数据（仅限 Wear OS，佳明，miband，xdrip 手表程序等）（全智能手表等同于安卓手机，在镜像里同步）。在</span><font color="#4f81bd"><font face="Cambria, serif"><span
+           lang="en-US"><b>传感器</b></span></font></font><span lang="en-US">中，
+你可以查看与传感器的连接情况。点击</span><font
+       color="#4f81bd"><font face="Cambria, serif"><span lang="en-US"><b>主菜单</b></span></font></font>
+<span lang="en-US">可以同时显示所有提到的菜单，以便talkback可以阅读。关闭应用可以用来退出Juggluco。</span></font></p>
+<p style="line-height: 115%; margin-bottom: 0in"><br>
+</p>
+<p style="line-height: 115%; margin-bottom: 0in"><br>
+</p>
+<p style="line-height: 115%; margin-bottom: 0in"><br>
+</p>
+
+  ]]>
+</string>
+<string name="searchhelp" >
+<![CDATA[
+<h1>搜索</h1>
+<p style="line-height: 115%; margin-bottom: 0in">搜索可以用来查找血糖值和标签等。</p>
+<p style="line-height: 115%; margin-bottom: 0in">您可以<b>用之间</b>搜索值。例如：10 – 999 来搜索10到999之间的值。</p>
+<p style="line-height: 115%; margin-bottom: 0in">葡萄糖值在扫描、历史数据和蓝牙数据中被分开。</p>
+<p style="line-height: 115%; margin-bottom: 0in"><i>扫描</i>：扫描后立即显示的值。</p>
+<p style="line-height: 115%; margin-bottom: 0in"><i>历史</i>：传感器上保存的定期测量值，并传输到此应用。Freestyle Libre 2传感器每15分钟保存一次值，并通过NFC传输到此应用。Freestyle Libre 3传感器，每5分钟保存一次值，并通过蓝牙传输。</p>
+<p style="line-height: 115%; margin-bottom: 0in"><i>蓝牙</i>：Freestyle libre 2传感器通过蓝牙发送到此应用的1分钟周期测量值。</p>
+<p style="line-height: 115%; margin-bottom: 0in">如果您已输入胰岛素、消耗或活动数据，您可以通过选择相应的<b>标签</b>在下拉框中并指定感兴趣的数字范围来搜索它们：例如，在50到100之间循环。</p>
+<p style="line-height: 115%; margin-bottom: 0in">您也可以指定您感兴趣的<b>时间段</b>。如果您对晚上22:00到早上07:00之间的低血糖感兴趣，您按下第一个时间显示（开始时显示00:00）并将其更改为22:00，并将第二个时间显示更改为07:00（您还必须选择流和/或历史并指定从0到3.9 mmol/L（70 mg/dL）的值范围）。</p>
+<p style="line-height: 115%; margin-bottom: 0in">触摸<b>箭头</b>开始在给定方向上搜索。</p>
+<p style="line-height: 115%; margin-bottom: 0in"><b>重置</b>将所有搜索值设置为开始时的状态。</p>
+<p style="line-height: 115%; margin-bottom: 0in">在<i>设置</i>下的<i>数字标签</i>中，您可以选择哪个标签（例如<i>Carbohydra</i>）与餐饮相关联。如果您在<i>“新标签”</i>中选择此标签，则会出现一个<i>“餐饮”</i>按钮。触摸后，您可以从其成分中输入一餐。如果您在此处的下拉框中选择此标签，则屏幕顶部会出现一个框，在其中您可以指定要搜索的成分和可选的最小数量。</p>
+]]>
+</string>
+<string name="shortcuthelp" >
+<![CDATA[
+<p style="margin-bottom: 0.14in"><font color="#365f91"><font face="Cambria, serif"><font size="4" style="font-size: 14pt"><b>快捷方式</b></font></font></font>
+可以在Kerfstok中使用。</p>
+<p style="margin-bottom: 0.14in">在手表的数字输入屏幕上，您可以通过向左滑动（在我的Vivoactive 3手表上）进入快捷方式屏幕。在这里，您会看到一个标签列表；点击其中一个会在数字屏幕中插入相应的值。这些值可以是数字或与数字结合使用的算术运算符，例如*0.5表示乘以0.5。</p>
+<p style="margin-bottom: 0.14in">在设置菜单中，您可以创建、删除和编辑这些快捷方式。</p>
+<p style="margin-bottom: 0.14in">现有快捷方式的<font color="#4f81bd"><font face="Cambria, serif"><font size="3" style="font-size: 13pt"><b>列表</b></font></font></font>
+显示在左侧，触摸其中一个后，会出现一个显示屏，您可以在此删除快捷方式，或更改标签或值。</p>
+<p style="margin-bottom: 0.14in">使用<font color="#4f81bd"><font face="Cambria, serif"><font size="3" style="font-size: 13pt"><b>新建</b></font></font></font>
+创建新的快捷方式。</p>
+<p style="margin-bottom: 0.14in">更改只有在按下<font color="#4f81bd"><font face="Cambria, serif"><font size="3" style="font-size: 13pt"><b>保存</b></font></font></font>
+按钮后才会保存。</p>
+<p style="margin-bottom: 0.14in"><br/>
+<br/>
+
+</p>
+]]>
+</string>
+<string name="labelhelp" >
+<![CDATA[
+<h1>编辑标签</h1>
+<p style="margin-bottom: 0in; line-height: 115%">在这里，您可以<a href="https://www.juggluco.nl/Jugglucohelp/newlabelhelp.html">创建</a>、删除和修改图表中添加标签的名称，以指定胰岛素、碳水化合物或体力活动。如果您已经保存了一些数据，在这里更改标签会同步修改标签。</p>
+<p style="margin-bottom: 0in; line-height: 115%">要修改标签，请触摸它。</p>
+<p style="margin-bottom: 0in; line-height: 115%"></p>
+<p style="margin-bottom: 0in; line-height: 115%">（此项暂不理解意义所在）在<b>餐饮</b>之后，您可以选择哪个标签代表餐饮的碳水化合物含量。对于该标签，在左侧中间菜单的“<i>新量</i>”中添加了一个<b>餐饮</b>按钮，您可以通过它指定餐饮的成分。然后将碳水化合物总和保存在此标签下，您可以稍后通过选择保存值的餐饮来查看此餐饮。</p>
+<p style="margin-bottom: 0in; line-height: 115%"><br/>
+
+</p>
+]]>
+</string>
+<string name="settinghelp" >
+<![CDATA[
+
+    <h1 class="western">设置</h1>
+    <h2 class="western">单位</h2>
+    <p style="line-height: 100%; margin-bottom: 0in">选择葡萄糖值应以mmol/L或mg/dL给出。</p>
+    <h2 class="western">图表显示范围：低-高</h2>
+    <p style="line-height: 100%; margin-bottom: 0in">给出一个低值和高值，使得屏幕底部对应于最低值，顶部对应于最高值。当屏幕上显示的所有葡萄糖值都在这些范围内时，才使用这些值。否则，范围将扩大以使所有值可见。当你取3 mmol/L（54 mg/dL）和9 mmol/L（162 mg/dL），并且可见显示屏上的所有值都在5 mmol/L和6 mmol/L之间时，图表显示一个从3到9的葡萄糖轴。</p>
+    <p style="line-height: 100%; margin-bottom: 0in">如果<b>手动缩放葡萄糖</b>开启，你可以更改这个：在屏幕顶部移动你的手指，上半部分的图表会上下移动；在屏幕底部移动则会使图表的下半部分上下移动。</p>
+    <h2 class="western">警戒线显示范围：低-高</h2>
+    <p style="line-height: 100%; margin-bottom: 0in">显示的较高侧被不同颜色标记，以便您更容易看到高值。低值也是如此。一个红线被用来显示显示屏的过低侧。</p>
+    <h2 class="western">葡萄糖轴左（太抽象了，没办法翻译）</h2>
+    <p>将图表中的葡萄糖水平数字放在屏幕的左侧。如果你想将当前葡萄糖值放在屏幕中间，例如在Wear OS中，这很有用。</p>
+    <h2 class="western">反转屏幕</h2>
+    <p style="line-height: 100%; margin-bottom: 0in">将显示屏上下颠倒。默认情况下开启，因为否则我有时会在扫描传感器时不小心触碰到OK。</p>
+    <p style="line-height: 100%; margin-bottom: 0in">有些人要求竖屏模式，但我已经关闭了，因为它完全不适合葡萄糖图表的显示。</p>
+    <h2 class="western">NFC声音</h2>
+    <p>在扫描时除了振动外还发出声音。</p>
+    <h2 class="western">扫描启动应用程序（只要扫描nfc自动跳转到这里）</h2>
+    <p>如果勾选，当你通过NFC扫描传感器时，即使这个应用没有显示，也会启动这个应用。如果多个应用有这个设置，安卓会显示一个选择器让你选择你想使用哪个应用。不知何故，选择一个不起作用，选择下次也不起作用。所以在这种情况下，你不能在没有前台应用的情况下扫描。在这个应用中关闭它，将使至少一个应用可以通过这种方式激活。</p>
+    <p>如果你有root权限，你还可以禁用Abbott的Librelink应用的NFC激活（不适用于Libre3）：</p>
+    <p>在adb shell或termux中成为root，并输入：</p>
+    <p>pm disable com.freestylelibre.app.nl/com.librelink.app.ui.common.NFCScanActivity</p>
+    <p>在Librelink 2.7.1及更低版本中，你必须按下：</p>
+    <p>pm disable com.freestylelibre.app.nl/com.librelink.app.ui.common.ScanSensorActivity</p>
+    <p><span lang="en-US">com.freestylelibre.app.nl是这里的荷兰版Librelink，应该用你正在使用的版本替换。你可以通过键入</span> <span lang="en-US">(即使没有root)：</span></p>
+    <p>pm list package freestylelibre</p>
+    <p>之后，你仍然可以在Librelink在前台时用它进行扫描，但否则它不会被启动。Librelink 2.5.2及更高版本如果检测到root会自行崩溃。但在Magisk中，你可以通过重命名Magisk并将单独的应用添加到拒绝列表（Magisk 24.3）或Magiskhide（Magisk 23.0）中来轻松隐藏root。你也应该将Juggluco添加到拒绝列表中。除非你使用美国Freestyle Libre 2传感器，否则你也可以使用没有root检查的旧版本Librelink。</p>
+    <p>没有root，在adb shell下，你也可以禁用整个应用：</p>
+    <p>pm disable-user --user 0 com.freestylelibre.app.nl</p>
+    <p>在联系Abbott客户服务之前，你可以用以下方式重新启用它：</p>
+    <p>pm enable com.freestylelibre.app.nl</p>
+    <h2 class="western">Health Connect</h2>
+    <p>将每分钟的葡萄糖值发送到<a href="https://play.google.com/store/apps/details?id=com.google.android.apps.healthdata">Health Connect</a>。你可以授权其他应用访问这些葡萄糖值，例如<a href="https://play.google.com/store/apps/details?id=com.google.android.apps.fitness">Google Fit</a>。其他应用再次可以从Google Fit获取数据。</p>
+    <h2 class="western"><a href="https://www.juggluco.nl/Jugglucohelp/libreview.html">Libreview</a></h2>
+    <p>与Libreview连接，将Freestyle Libre 2和3的葡萄糖值和数量发送到Libreview，并获取在Freestyle Libre 3传感器激活期间使用的帐户ID。触摸以更改设置。</p>
+    <h2 class="western">修补的Libre广播（其实就是魔改版）</h2>
+    <p>使用修补的Libre广播（最初由修补的德国Librelink应用2.3.0发送），每分钟将蓝牙葡萄糖流数据发送到xDrip。在xDrip中，你需要将Libre2（修补的应用）设置为硬件数据源。xDrip中显示的葡萄糖值与它接收到的值不同。由于某种原因，xDrip每5分钟只更新一次它的值，可能是因为它是为每5分钟只发送一次的设备制作的（与xDrip连接的手表表盘经常显示超过9分钟的旧值）。此外，xDrip显示它对接收到的葡萄糖值的自己的解释。镜像设备也可以发送到xDrip。</p>
+    <p>参见<a href="https://github.com/jakobheyman/xdripJH">https://github.com/jakobheyman/xdripJH</a>，试图每分钟更新xDrip的葡萄糖值。</p>
+    <p>Freestyle Libre 3传感器在断开连接期间发送遗漏的值。这些值不会通过此广播发送。如果你打开Juggluco的Web服务器并使xDrip成为Juggluco的Nightscout追随者，你将收到这些值。Nightscout服务器：http://127.0.0.1:17580</p>
+    <p>Juggluco还可以直接与xDrip手表应用联系，使手表应用显示更近的葡萄糖值。要使用此功能，请在左侧菜单下的<b>手表</b>下勾选<i>"xDrip Web服务器"</i>。有关更多信息，请参阅左侧菜单-&gt;<a href="https://www.juggluco.nl/Jugglucohelp/watchinfo.html">手表</a>下的帮助。只有一个应用可以监听xDrip Web服务器使用的网络端口，所以如果你想使用Juggluco中的一个，你需要关闭xDrip本身的"<i>xDrip Web服务</i>"。</p>
+    <h2 class="western">xDrip广播</h2>
+    <p>发送与在xDrip中开启的相同的广播，通过"<i>设置-&gt;应用间设置-&gt;本地广播"</i>。像AndroidAPS这样的应用会监听它。与原始的xDrip广播不同，后者每5分钟广播一次，Juggluco每分钟广播这个广播一次。</p>
+    <h2 class="western">Glucodata广播</h2>
+    <p>一个新的广播，具有与xDrip广播相同的功能。一个将接收到的葡萄糖值写入logcat的简单示例应用，你可以在这里找到：<a href="https://www.juggluco.nl/Juggluco/glucosebroadcast.html">葡萄糖广播</a>。如果你在G-Watch中指定Juggluco为数据源，你需要打开这个广播。</p>
+    <p>监听这个广播的应用程序显示出来。勾选你想发送这个广播的应用。</p>
+    <h2 class="western"><a href="https://www.juggluco.nl/Jugglucohelp/Nightscouthelp.html">Web服务器</a></h2>
+    <p>Web服务器可用于xDrip手表和一些Nightscout应用。以前称为xDrip Web服务器。</p>
+    <h2>体内还有多少胰岛素（IOB）</h2>
+    <p>IOB是衡量从先前的胰岛素剂量中剩余多少胰岛素的指标。为此，您必须在“<i>快速作用胰岛素</i>”类别下的标签中输入胰岛素剂量。您可以在左侧菜单→设置→Web服务器→<a href="https://www.juggluco.nl/Jugglucohelp/setlibrenumtype.html">发送标签</a>下指定哪些标签是“<i>快速作用胰岛素</i>”。</p>
+    <h2 class="western">固定当前时刻</h2>
+    <p>当设置了“<i>固定当前时刻</i>”时，显示屏上的时间段向左滚动，以便当前时间始终位于屏幕的同一点。一些用户在距离他们几米远的计算机上运行Juggluco。当“<i>固定当前时刻</i>”关闭时，当前葡萄糖值的位置随着时间的推移向右移动，以致于几个小时后它不再可见。这使得有必要走到计算机前并将屏幕滚动几厘米。当“<i>固定当前时刻</i>”打开时，不再需要这种干扰。</p>
+    <h2 class="western"><a href="https://www.juggluco.nl/Jugglucohelp/NightPost.html">Uploader</a></h2>
+    <p>上传到Nightscout服务器。</p>
+    <h2 class="western">葡萄糖通知</h2>
+    <p style="line-height: 100%; margin-bottom: 0in">（以前称为“<i>安卓状态栏中的葡萄糖</i>”）。如果设置，通过蓝牙流传输的葡萄糖值将在通知和安卓状态栏中静默显示。如果你关闭它，代替数字，将显示一个点，通知将只告诉“<i>连接到传感器</i>”或“<i>交换数据</i>”。在后台持续运行的应用被安卓要求有这样的可见通知（否则它很容易被安卓停止）。当“<i>通过蓝牙的传感器</i>”关闭并且没有镜像连接时，Juggluco才关闭通知。</p>
+    <p style="line-height: 100%; margin-bottom: 0in">在某些智能手机上，只有在更改安卓通知设置后，葡萄糖值才会显示在安卓状态栏中。例如，在Realme GT 5G上，您必须转到applist-&gt;Juggluco-&gt;manage notifications，点击glucoseNotification并关闭“设置为静音”。 “在状态栏显示”现在将显示为打开。</p>
+    <p style="font-weight: normal; line-height: 100%; margin-bottom: 0in">你也可以通过选择左中菜单中的<i>通知</i>来获得一个安卓通知。在这种情况下，如果配置了，通知将发送到一些智能手表。这适用于Garmin手表，我不知道它是否适用于其他任何东西。报警也会生成通知。</p>
+    <h2 class="western"><a href="https://www.juggluco.nl/Jugglucohelp/floatingconfig.html" onclick="location.href=this.href+\'?unit=\'+unitstr;return false;">悬浮窗设置</a></h2>
+    <p>当你打开这个功能时，一个带有当前葡萄糖值的小图像会持续出现在屏幕上，无论哪个应用处于前台。如果你第一次打开它，你将被引导到一个应用列表中，你必须给予Juggluco<b>在其他应用上显示</b>的权限。</p>
+    <h2 class="western">通过蓝牙连接传感器（如果直连必开！关闭等于不连接传感器）</h2>
+    <p>选择此应用是否通过蓝牙连接到Freestyle libre 2或3传感器。这对于报警和持续葡萄糖监测是必要的。</p>
+    <h2 class="western"><a href="https://www.juggluco.nl/Jugglucohelp/alarmhelp.html">警报</a></h2>
+    <p style="font-weight: normal">设置高低葡萄糖报警、信号丢失报警和值可用通知。</p>
+    <h2 class="western"><a href="https://www.juggluco.nl/Jugglucohelp/labelhelp.html">设置标签</a></h2>
+    <p style="line-height: 100%; margin-bottom: 0in">指定用于数量的标签。转到一个屏幕以确定使用哪些标签来设置数量，如胰岛素剂量、碳水化合物消耗和花费足球时间的小时数。如果您还使用Garmin手表应用Kerfstok，这些标签将发送到手表应用。</p>
+    <h2 class="western">语言</h2>
+    <p style="line-height: 100%; margin-bottom: 0in">Juggluco以所选语言显示。当没有选择语言代码时，使用系统语言。</p>
+    <h2 class="western"><a href="https://www.juggluco.nl/Jugglucohelp/reminders.html">提醒</a></h2>
+    <p style="font-weight: normal; line-height: 100%; margin-bottom: 0in">指定如果在一定时间内没有输入一定数量的食物或药物，应发出警报。</p>
+    <h2 class="western"><a href="https://www.juggluco.nl/Jugglucohelp/colorhelp.html">颜色</a></h2>
+    <p style="line-height: 100%; margin-bottom: 0in">更改曲线、扫描和数字的颜色。要切换<i>黑暗模式</i>，使用右中菜单-&gt;黑暗模式。</p>
+    <h2 class="western"><br><br></h2>
+  ]]>
+</string>
+<string name="sensorhelp" >
+<![CDATA[
+<p style="margin-top: 0.35in; margin-bottom: 0.35in; border: none; padding: 0in">
+<font face="basic sans"><font size="5" style="font-size: 18pt"><h1>传感器</h1></font></font></p>
+<p style="margin-top: 0.02in; margin-bottom: 0.02in; border: none; padding: 0in">
+<font face="basic roman"><font size="2" style="font-size: 10pt"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">选项框包含传感器的名称。如果Juggluco同时使用多个传感器，您可以选择要显示哪个传感器的信息。</font></font></font></font></p>
+<p style="margin-top: 0.02in; margin-bottom: 0.02in; border: none; padding: 0in">
+<a href="https://www.juggluco.nl/Jugglucohelp/battery.html"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><i><b>省电模式</b></i></font></font></a><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">
+引导您进入一个屏幕，该屏幕上有关于如何为Juggluco禁用电池优化的信息，这些优化可能会阻止Juggluco的功能。</font></font></p>
+<p style="margin-top: 0.02in; margin-bottom: 0.02in; border: none; padding: 0in">
+<font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><i><b>蓝牙历史记录（仅适用于 Libre 2）</b></i>：在Libre 2上，历史记录是过去15分钟间隔的值。以前它们只能通过扫描接收。当您打开此选项时，历史记录值也会通过蓝牙接收。此外，其他事情也会有所不同。历史记录值将发送到Libreview，而不是流值的平均值。缺点是速度较慢。这在WearOS手表上可能是一个问题。</font></font></p>
+<p style="margin-top: 0.02in; margin-bottom: 0.02in; border: none; padding: 0in">
+<font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">此选项对Libre 3和美国Libre 2传感器无效；它们总是通过蓝牙接收历史记录值。</font></font></p>
+<p style="margin-top: 0.02in; margin-bottom: 0.02in; border: none; padding: 0in">
+<font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><i><b>权限</b></i>：
+以前的Juggluco版本需要位置权限来找到传感器的设备地址。但现在并非必须。也许还有一些传感器需要它，你可以打开它。在首次连接后，Juggluco会保存设备地址，正常情况下位置权限没什么用。如果已知的设备，设备地址将显示在传感器标识符之后。红色表示可能是美国的传感器。</font></font></p>
+<p style="margin-top: 0.02in; margin-bottom: 0.02in; border: none; padding: 0in">
+<font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">Android
+12有一个新的附近设备权限，可用于替代位置权限来搜索蓝牙设备地址，但它也需要用于与蓝牙设备的后续联系。</font></font></p>
+<p style="margin-top: 0.02in; margin-bottom: 0.02in; border: none; padding: 0in">
+<font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><i><b>终止</b></i>：
+停止通过蓝牙连接到此传感器。如果稍后您想再次接收此传感器的流葡萄糖值，您只需再次扫描它。</font></font></p>
+<p style="margin-top: 0.02in; margin-bottom: 0.02in; border: none; padding: 0in">
+<font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><i><b>积极连接</b></i>：
+增加与传感器联系的努力，希望这样可以减少连接错误，但可能会使用更多的电池电量。在Watch4上似乎需要使用Freestyle Libre 2传感器，但不需要使用Freestyle Libre 3传感器，也不需要在我尝试的任何智能手机上。</font></font></p>
+<p style="margin-top: 0.02in; margin-bottom: 0.02in; border: none; padding: 0in">
+<font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><b>Android</b>：
+让Android而不是Juggluco与传感器建立连接。</font></font></p>
+<p style="margin-top: 0.02in; margin-bottom: 0.02in; border: none; padding: 0in">
+<font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><i><b>信息</b></i>：
+提供传感器的开始和结束时间以及最后的扫描和流时间。</font></font></p>
+<p style="margin-top: 0.02in; margin-bottom: 0.02in; border: none; padding: 0in">
+<font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">要通过蓝牙连接到Freestyle Libre 2传感器，应打开蓝牙。在此应用成功扫描传感器之前，不会发生任何事情。传感器不应与FreeStyle阅读器或智能手机上的其他小程序连接。应关闭Abbotts Librelink应用的报警或停止该应用。一些Librelink应用似乎在报警关闭时仍然与传感器联系，并可能导致连接问题，可以使用\'</font></font><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><i>强制停止</i></font></font><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">\'
+来停止应用。如果您已经使用Freestyle Reader启动了传感器，并且您无法将其关闭，您可以通过将阅读器放入</font></font><a href="https://www.offgridweb.com/preparation/faraday-bags-testing-commercial-and-diy-wireless-signal-blockers/amp"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><u>法拉第笼</u></font></font></a><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">中来防止它与传感器接触。</font></font></p>
+<p style="margin-top: 0.02in; margin-bottom: 0.02in; border: none; padding: 0in">
+&nbsp;<font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><b>通过蓝牙的传感器/使用蓝牙</b></font></font> <font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">应打开。</font></font></p>
+<p style="margin-top: 0.02in; margin-bottom: 0.02in; border: none; padding: 0in">
+<font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">如果满足上述条件，应用从传感器接收葡萄糖值可能仍需要很长时间。通常需要一分钟，但其他时候需要更长时间。</font></font><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><i>连接阶段</i></font></font> <font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">最常见的是状态=133的故障，这是</font></font><a href="https://developer.android.com/reference/android/bluetooth/BluetoothGattCallback#onConnectionStateChange(android.bluetooth.BluetoothGatt,%20int,%20int)"><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><u>onConnectionStateChange(BluetoothGatt
+bluetoothGatt, int status, int newState)</u></font></font></a><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">的状态参数。这意味着</font></font><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt"><i>未找到蓝牙设备</i></font></font><font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">。一般情况下需要多试几次多等一会才能找到设备。也有可能传感器连接到了另一台设备，暂时无法正常工作，其他设备干扰或安卓的蓝牙无法正常工作。有时关闭并重新打开蓝牙似乎有帮助，或者重新启动手机或关闭其他设备的蓝牙连接。其他问题有时可以通过扫描传感器来解决。</font></font></p>
+<p style="margin-top: 0.02in; margin-bottom: 0.02in; border: none; padding: 0in">
+<font face="Liberation Serif, serif"><font size="3" style="font-size: 12pt">用Juggluco（启用<i>通过蓝牙的传感器</i>）在另一部手机上扫描传感器，会从这部手机上窃取连接，可能需要一些时间，在此期间需要扫描，才能再次获取连接。</font></font></p>
+<p style="margin-top: 0.04in; margin-bottom: 0.04in; border: none; padding: 0in">
+&nbsp;</p>
+]]>
+</string>
+<string name="kerfstok" >
+<![CDATA[
+
+<h1 class="western">Kerfstok</h1>
+<p style="line-height: 100%; margin-bottom: 0in">此视图用于解决 Kerfstok 的连接问题（<a href="https://apps.garmin.com/en-US/apps/b6348ccc-86d8-4780-8013-d9e19fed5260">https://apps.garmin.com/en-US/apps/b6348ccc-86d8-4780-8013-d9e19fed5260</a>，另见 <a href="https://www.juggluco.nl/Kerfstok/index.html">https://www.juggluco.nl/Kerfstok/index.html</a>）。Kerfstok 是一款用于可编程 Garmin 智能手表的触摸屏应用程序。Kerfstok 有以下用途：</p>
+<ul>
+	<li><p style="line-height: 100%; margin-bottom: 0in">输入数字并与 Juggluco 交换；</p>
+	<li><p style="line-height: 100%; margin-bottom: 0in">显示从 Juggluco 接收的流式血糖值；</p>
+	<li><p style="line-height: 100%; margin-bottom: 0in">在运动时显示此血糖值，同时还显示速度和距离。活动将被记录并可以在 Garmin 的连接应用程序中显示。</p>
+</ul>
+<p style="line-height: 100%; margin-bottom: 0in">这款手表应用程序可以通过蓝牙与 Juggluco 连接，以交换量并持续显示您当前的血糖值。</p>
+<p style="line-height: 100%; margin-bottom: 0in">当出现问题时，此屏幕可以帮助找到其原因：</p>
+<p style="line-height: 100%; margin-bottom: 0in">首先，您的手表名称应显示为“<i>已连接</i>”。如果没有，请在 Garmin 的连接应用程序中解决问题。其次，应该在您的手表上启动 Kerfstok。</p>
+<p style="line-height: 100%; margin-bottom: 0in">有时，手表和手机之间的连接会中断。</p>
+<p style="line-height: 100%; margin-bottom: 0in">如果发送状态为 FAILURE_DURING_TRANSFER，您可以执行以下一个或全部操作：</p>
+<p style="line-height: 100%; margin-bottom: 0in">- 关闭并打开蓝牙，然后按<i>重新初始化</i>；</p>
+<p style="line-height: 100%; margin-bottom: 0in">- 重启手表（几乎总是成功的，但有时需要多次执行）；</p>
+<p style="line-height: 100%; margin-bottom: 0in">- 重启手机（最后选择）。</p>
+<p style="line-height: 100%; margin-bottom: 0in">对于其他问题，强制停止 Garmin 连接应用程序，重新启动它并按重新初始化可能有用。</p>
+<p style="line-height: 100%; margin-bottom: 0in">如果有正确的连接，出于某种原因手表和手机上的量不同步，您可以按<b>同步</b>，让它们将尚未发送的数字相互发送。</p>
+
+<p style="line-height: 100%; margin-bottom: 0in">Juggluco 启动时会自动调用<i>同步</i>。这意味着在您重新安装 Kerfstok 后，所有数字也将在 Juggluco 中被删除。保留这些数字的唯一方法是创建一个镜像并将其发送回 Juggluco。小心，因为镜像也会立即与原始数据同步。要作为备份，必须在某个时间点断开与原始数据的所有连接。您还可以将手表连接到作为镜像（左侧中间菜单-&gt;<a href="https://www.juggluco.nl/Jugglucohelp/connectionoverview.html">镜像</a>）的设备，您在其中输入了数字。</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>刷新</b>会用新信息重写此对话框（例如，重新初始化或同步后）。</p>
+<p style="line-height: 100%; margin-bottom: 0in">勾选“<b>血糖</b>”决定是否将血糖值发送到手表。</p>
+<p style="line-height: 100%; margin-bottom: 0in">有时会显示名为“<b>发送队列</b>”的按钮；这意味着有尚未发送到手表的消息。通常，这些消息将在适当的时间自动发送，但有时这会被中断，按<i>发送队列</i>将继续发送。但是，如果由于连接断开而没有发送，则这没有太大好处。在进行中的交易期间按<i>发送队列</i>可能会断开连接。</p>
+<p style="line-height: 100%; margin-bottom: 0in"><a href="https://www.juggluco.nl/Jugglucohelp/garminconfig.html"><b>配置</b></a>：设置暗模式、快捷方式和 ID。</p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+</p>
+]]>
+</string>
+<string name="getlib" >
+<![CDATA[
+<h1>Libre库</h1>
+<p><font size="4" style="font-size: 14pt"><span lang="en-US"><b>Juggluco</b></span></font>
+<span lang="en-US">需要包含在</span><span lang="en-US">Abbott的
+</span><span lang="en-US">Libre</span><span lang="en-US">应用中的一个库。</span>
+</p>
+<p><span lang="en-US"><b>美国Freestyle Libre 2传感器</b></span><span lang="en-US">和其他国家如加拿大的传感器可能需要来自Abbott\'s Librelink应用版本2.5.2、2.5.3或2.7.1的库。</span></p>
+<p><span lang="en-US"><b>其他传感器</b></span><span lang="en-US">
+也可以使用来自</span><span lang="en-US">Librelink
+2.4.0、2.4.1</span><span lang="en-US">或</span><span lang="en-US">
+2.4.2</span><span lang="en-US">的库。 </span><span lang="en-US">2.4.2之后的版本在电池使用方面变得更糟，且在非美国地区的Freestyle Libre 2传感器中给出相同的结果。</span></p>
+<p><span lang="en-US">国家代码没有区别。</span></p>
+<p><span lang="en-US">包含Librelink的.apk由Google Play分发，并且在网络上的各种地方都可以获取。链接列表可以在以下网址找到：
+</span><a href="https://www.juggluco.nl/Juggluco/urls.html">https://www.juggluco.nl/Juggluco/urls.html</a></p>
+<p><span lang="en-US">下载APK后，您可以让Juggluco通过触摸</span><span lang="en-US"><b>打开</b></span>
+<span lang="en-US">按钮来打开它。</span> 
+</p>
+<p><span lang="en-US">也可以在没有直接访问Freestyle libre传感器的情况下运行Juggluco。应用程序可以通过IP/TCP连接从获取传感器数据的智能手机中获取数据。在没有访问传感器的情况下，也可以输入糖尿病控制信息，如胰岛素、碳水化合物和活动量，并从Garmin手表应用Kerfstok获取这些数据。触摸<span lang="en-US"><b>无传感器</b></span>
+	<span lang="en-US">可以限制Juggluco以这种方式运行。</span></p>
+	
+	]]>
+</string>
+<string name="newlabelhelp" >
+<![CDATA[
+<h2 class="western">标签：</h2>
+<p>用于输入数字的标签名称。您可以通过左侧中间菜单中的“新建数量”添加与特定日期和时间相关联的数字。这些数字可以在图表中的该时间位置或在列表中显示。</p>
+<h2 class="western">四舍五入至：</h2>
+<p>在手表应用 Kerfstok 中使用。在此标签下输入的数字将四舍五入到此数字。</p>
+<p>0=完全精确，0.5=四舍五入到 0.5 的倍数等。</p>
+<h2 class="western">权重：</h2>
+<p>当设置为 0 时，数字在图表中的特定高度显示，与它们的值无关。如果权重大于 0，则在此标签下输入的每个数量都乘以此权重，并以与血糖图相同的坐标显示为正方形。例如，您可以将权重设置为 1，以与血糖传感器测量的方式相同显示指尖血糖测量值。</p>
+]]>
+</string>
+<string name="battery" >
+<![CDATA[
+<h1 class="western">保持运行</h1>
+<p style="line-height: 100%; margin-bottom: 0in">通常，当安卓设备未使用时，它会进入省电模式以减少能耗。如果您需要通过蓝牙或TCP/IP可靠地接收葡萄糖值，您需要为Juggluco关闭电池优化。许多设备有额外的电池优化、后台活动和开机启动设置，需要更改。您可以在安卓设置-&gt;电池下找到它们。参见<a href="https://dontkillmyapp.com/">https://dontkillmyapp.com</a>。</p>
+<p style="line-height: 100%; margin-bottom: 0in">在使用Watch 4或5时，您必须在Galaxy Wearable配套应用中<i>允许后台活动</i>，在手表设置-&gt;应用-&gt;Juggluco中。对于没有这个设置的手表，您可以使用以下命令从计算机执行：</p>
+<p style="line-height: 100%; margin-bottom: 0in">adb shell cmd appops set tk.glucodata RUN_IN_BACKGROUND allow</p>
+<p style="line-height: 100%; margin-bottom: 0in"><a href="https://www.juggluco.nl/JugglucoWearOS/install/adb.html">关于adb的信息</a></p>
+]]>
+</string>
+<string name="nutrients" >
+<![CDATA[
+<p align="center" style="line-height: 100%; margin-top: 0.17in; margin-bottom: 0.08in; page-break-after: avoid">
+<font face="Liberation Sans, sans-serif"><font size="6" style="font-size: 28pt"><b>食物成分数据库</b></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+<p style="line-height: 100%; margin-bottom: 0in">（这没办法汉化，抱歉）在这里，您可以查找McCance和Widdowson的《食物成分综合数据集2021》中的食物
+<a class="western" href="https://www.gov.uk/government/publications/composition-of-foods-integrated-dataset-cofid">https://www.gov.uk/government/publications/composition-of-foods-integrated-dataset-cofid</a></p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+<p style="line-height: 100%; margin-bottom: 0in">您可以使用正则表达式进行搜索
+(<a class="western" href="https://www.regular-expressions.info/quickstart.html">https://www.regular-expressions.info/quickstart.html</a>)。
+例如，您可以用 ^apple.*\\braw\\b 搜索以 <i>apple</i> 开头，后面跟着单词 <i>raw</i> 的项。</p>
+<p style="line-height: 100%; margin-bottom: 0in">搜索 <i>apple</i> 将显示所有包含 <i>apple</i> 的项。</p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+]]>
+</string>
+<string name="mealhelp" >
+<![CDATA[
+<h1>餐饮</h1>
+<p>指定餐饮的成分数量。然后计算总碳水化合物含量。也可以指定整个餐饮或成分的碳水化合物量，程序然后确定成分所需的数量。按“<i>添加项目</i>”将项目添加到餐饮中。在弹出的对话框中，您可以选择一个成分并指定其数量（或餐饮或该项目的总碳水化合物）。通过按<i>选择</i>或已指定的成分，您进入已定义成分的列表。您可以通过在那里按<i>定义</i>来定义新成分。在这里，您可以指定该成分的名称和指定单位中的碳水化合物含量。您也可以按<i><a href="https://www.juggluco.nl/Jugglucohelp/nutrients.html">数据库</a></i>进入食物成分数据库，在那里您可以搜索成分并查看食物的成分，并通过按<i>选择</i>将该食物的名称和碳水化合物含量插入成分定义中。</p>
+]]>
+</string>
+<string name="colorhelp" >
+<![CDATA[
+<h1>颜色</h1>
+<p>在这里，您可以更改数字、曲线和扫描点的颜色。触摸曲线、扫描或标签的一个点（会显示有关该点或标签的信息）。之后，在颜色视图中触摸一个颜色。曲线、扫描点或标签现在将以该颜色显示。</p>
+<p>在WearOS版本中，您需要一款带有返回键的手表，滑动返回将不起作用。</p>
+]]>
+</string>
+<string name="stathelp" >
+<![CDATA[
+<h1 class="western">统计数据</h1>
+<p>一些从 <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8991298">AGP</a>
+中获取的统计数据，经过了一些小的修改。</p>
+<p>可以通过按下<b>天数</b>按钮来修改分析的天数。时期在屏幕结束位置的时间结束，并向后延伸指定的天数。所有数据仅基于每分钟通过蓝牙从传感器接收的血糖值（在Juggluco中称为<i>流</i>）。</p>
+<p>在屏幕的左侧是落入某些血糖范围的测量百分比。</p>
+<h3 class="western">活跃时间的百分比</h3>
+<p>Juggluco从传感器接收血糖值的时间百分比。</p>
+<h3 class="western">估计的A1C</h3>
+<p>用旧公式从平均血糖估计H<span lang="en-US">bA1c（Nathan</span> <span lang="en-US">et al (2008)）。参见
+<a href="https://professional.diabetes.org/diapro/glucose_calc">https://professional.diabetes.org/diapro/glucose_calc</a></span>
+<span lang="en-US">查看计算器。</span></p>
+<p><span lang="en-US">如果人们正在寻找Abbott的Libre</span> <span lang="en-US">2
+应用中显示的值，它在这里显示。GMI是这个指标的2018年替代品。</span>
+</p>
+<h3 class="western">血糖管理指标（GMI）</h3>
+<p><span lang="en-US">根据一般使用的公式从平均血糖计算（参见<a href="https://www.jaeb.org/gmi/">https://www.jaeb.org/gmi/</a>）。
+它是HbA1c（也称为A1c）的经验性预测，以百分比和mmol/mol给出。</span> <span lang="en-US">对我个人来说，估计的A1C是比GMI更好的预测器，但它在Abbott的Libre 3应用中使用。</span></p>
+<h3 class="western">血糖变异性：</h3>
+<p>作为衡量血糖变异性的系数，%CV=(SD/mean)*100%。较高的变异系数意味着血糖值离平均值更远。
+</p>
+<h3 class="western">摘要图</h3>
+<p>（仅当至少有9天的流血糖值可用时存在）。</p>
+<p>在此期间的所有流血糖值被用来绘制一个综合图表，显示每天的每一分钟血糖值是如何分布的。黑色或白色的中位线显示了每天每一分钟50%的血糖值低于该值的血糖值。最浅的蓝色是所有值所在的区域。较深的蓝色是围绕中位数的区域，其中90%的值位于该区域。最深的蓝色是围绕中位数的50%的值的区域。如果您将区域的边界视为线条，那么您也可以将其描述如下：在最低线下有0%的值，在第二低线下（在最浅的蓝色和中间的深蓝色之间）有5%的值，在第三线下（在最深的蓝色和中间的深蓝色之间）有25%的值，在黑线下有50%的值。接着是75%，95%和100%。
+</p>
+<p>出于审美原因，曲线用二项式滤波器平滑处理。</p>
+<p>点击屏幕关闭摘要图，除了当点击左边或右边的边界时，图表会向后或向前移动。通过滚动也可以向前和向后移动曲线。通过将两个手指向彼此靠近或远离来改变时间尺度。</p>
+]]>
+</string>
+<string name="alarmhelp" >
+<![CDATA[
+<h1>警报</h1>
+<h2 class="western">葡萄糖警报：</h2>
+<p style="line-height: 100%; margin-bottom: 0in">通过蓝牙接收的值可用于设置低和高葡萄糖警报。</p>
+<h3 class="western">低葡萄糖警报：</h3>
+<p style="line-height: 100%; margin-bottom: 0in">低于设置值发出警报。</p>
+<h3 class="western">高葡萄糖警报：</h3>
+<p style="line-height: 100%; margin-bottom: 0in">高于设置值发出警报。</p>
+<h3 class="western">信号丢失警报：</h3>
+<p style="line-height: 100%; margin-bottom: 0in">如果通过蓝牙未接收到血糖值，指定多少分钟后应发出警报。</p>
+<p style="line-height: 100%; margin-bottom: 0in">当满足以下条件之一时，警报将<b>停止</b>：</p>
+<p style="line-height: 100%; margin-bottom: 0in">- 指定的响铃时间已过；</p>
+<p style="line-height: 100%; margin-bottom: 0in">- 点了曲线视图；</p>
+<p style="line-height: 100%; margin-bottom: 0in">- 点了Juggluco的Android通知（在解锁状态下）；</p>
+<p style="line-height: 100%; margin-bottom: 0in">- 点了Juggluco中的警报通知的取消按钮。</p>
+<h3 class="western">传感器可用通知：</h3>
+<p style="line-height: 100%; margin-bottom: 0in">（其实就是掉线了又连接上会有提醒，但是必须是进入了应用看到了掉线才行）有时传感器不工作。当您开启此功能时，如果传感器再次工作，您将收到通知，但只有当您在Juggluco应用本身中看到值丢失时才会这样。当您仅因为Juggluco的通知或其手表表盘知道值丢失时，将不会触发值可用通知。</p>
+<p style="line-height: 100%; margin-bottom: 0in">对于每个警报，您可以指定要播放的<a href="https://www.juggluco.nl/Jugglucohelp/ringtone.html">铃声</a>以及播放时长。</p>
+<h3 class="western">使用警报音量级别：</h3>
+<p>（音量一般分为媒体音量，铃声音量，通话音量，这些音量调整均分开，我不知道这里指的是什么，应该是单独的音量调整，不跟随系统铃声音量，即使静音也会响铃，推荐开启）设置后，低、高和信号丢失警报的<a href="https://www.juggluco.nl/Jugglucohelp/ringtone.html">铃声</a>将被赋予Android警报类别。这意味着在Android设置中，它的音量将与警报音量级别一起管理，并且当整个手机的声音关闭或设置为振动时，它不会被静音。当<i>使用警报音量级别</i>未设置时，将使用铃声音量级别。对于值可用通知，始终如此。</p>
+
+<h3 class="western"><br/>
+<br/>
+</h3>
+]]>
+</string>
+<string name="flashpermission" >
+<![CDATA[
+
+    <p style="line-height: 100%; margin-bottom: 0in">
+        有人说，使用手机的闪光灯需要相机权限。以前的版本的Juggluco会要求这个权限。但在我们测试的手机上，这个权限其实不是必须的，现在Juggluco不再要求这个权限了。如果你发现闪光灯不能用，或者使用闪光灯时手机出现问题，可以尝试打开这个权限。
+    </p>
+    <p style="line-height: 100%; margin-bottom: 0in">
+        如果不需要，你可以在Juggluco的设置里关闭这个权限。
+    </p>
+]]>
+</string>
+<string name="nearbypermission" >
+<![CDATA[
+<h1>附近设备权限</h1>
+<p style="line-height: 100%; margin-bottom: 0in">Juggluco 需要附近设备权限才能通过蓝牙从 Freestyle Libre 2 和 3 传感器接收血糖值。如果 Juggluco 从另一部手机或手表上运行的 Juggluco 接收这些血糖值，Juggluco 就不需要这个权限。</p>
+<p style="line-height: 100%; margin-bottom: 0in">对于手表，Juggluco 通过该手表的配套应用连接，因此 Juggluco 本身不需要这个权限就可以连接到手表。</p>
+]]>
+</string>
+<string name="watchinfo" >
+<![CDATA[
+
+<h1>手表</h1>
+<p>当前，Juggluco有六种方法可以在您的手表上获取血糖值。</p>
+<h2 class="western">通知</h2>
+<p>当“通知”打开时，每次到达新的血糖值时，都会创建一个Android通知。在某些手表上，只有在创建新通知时才会向手表发送通知，因此您必须打开“独立通知”选项才能让其生效。对于这些手表，您还必须打开“独立通知”选项以在手表上接收警报通知。</p>
+<h2 class="western">Watchdrip</h2>
+<p>通过打开此选项，Juggluco会将血糖值发送到<a href="https://bigdigital.home.blog/2022/06/16/watchdrip-a-new-application-for-xdrip-watch-integration">Watchdrip+</a>。Watchdrip+会将显示血糖值的表盘发送到MiBand/Amazfit手表。</p>
+<h2 class="western">GadgetBridge</h2>
+<p><a href="https://gadgetbridge.org">GadgetBridge</a> 可使MiBand/Amazfit手表显示天气信息。在打开Gadgetbridge选项后，Juggluco会将血糖值作为天气信息发送到GadgetBridge。与Watchdrip相比，这样做的优点是速度更快，但缺点是显示的信息较少。Juggluco将血糖值和方向箭头放置在天气的位置上。天气位置显示在手表上的天气下面。我还没有找到显示此位置的任何表盘。仅适用于<b>mmol/L</b>单位：小数点之前的值放在最高温度，小数点之后的值放在最低温度。对于<b>mg/dL</b>的值来说，数字太大，无法用作温度，因此将最后一位放在最低温度，倒数第二位以前的数字放在最高温度。因此，106 mg/dL变成：最高温度10，最低温度6。</p>
+<p>变化的方向决定了天气图标：下降的血糖是下雪，上升的血糖是下雨。它也显示在当前温度中。大于零表示血糖上升，小于零表示血糖下降。</p>
+<h2 class="western"><a href="https://www.juggluco.nl/Jugglucohelp/kerfstok.html">Kerfstok</a></h2>
+<p>Kerfstok是一款手表应用程序，您可以通过该应用程序输入数字（如胰岛素剂量），但它还会显示当前的血糖值。每当到达新的血糖值时，Juggluco会立即将其发送到Kerfstok上。因此，Kerfstok始终显示最新的血糖值。Kerfstok还可以记录Garmin支持的所有活动，并显示速度和距离。请参见 Watch->Kerfstok 状态->帮助和<a href="https://www.juggluco.nl/Kerfstok">https://www.juggluco.nl/Kerfstok</a></p>
+<h2 class="western"><a href="https://www.juggluco.nl/Juggluco/glucosebroadcast.html">广播</a></h2>
+<p>应用程序可以从Juggluco发送的血糖广播中接收血糖值，并将这些血糖值发送到手表。例如，G-Watch（<a href="https://play.google.com/store/apps/details?id=sk.trupici.g_watch">TizenOS</a>或<a href="https://play.google.com/store/apps/details?id=sk.trupici.gwatch.wear">WearOS</a>）可以从Glucodata广播中接收血糖值（请参见左侧菜单-><a href="https://www.juggluco.nl/Jugglucohelp/settinghelp.html">设置</a>）。</p>
+<h2 class="western"><a href="https://www.juggluco.nl/Jugglucohelp/Nightscouthelp.html">xDrip手表应用程序</a></h2>
+<p>Juggluco内置了xDrip/Nightscout web服务器。这使得直接在Juggluco中使用xDrip手表应用程序成为可能。xDrip每5分钟显示一次新的血糖值，而Juggluco每分钟显示一次新的血糖值。Juggluco还会将最新的血糖值发送到xDrip手表应用程序。只有当手表应用程序请求它们时，才会将血糖值发送到手表，因此显示的值的年龄取决于手表应用程序何时请求它们。例如，Garmin手表上的表盘和数据字段只在每5分钟请求一次血糖值。通过xDrip，这通常导致获得10分钟之前的血糖值。当与Juggluco直接连接时，这些表盘会显示高达6分钟之前的血糖值。在</p>
+<p>Garmin上，如果无法使用Kerfstok，则有以下选项可以定期接收最新的血糖值。可以在记录活动期间使用xDrip小部件（<a href="https://apps.garmin.com/en-US/apps/73115e04-dc9f-4765-ad88-e7ae283ce995">https://apps.garmin.com/en-US/apps/73115e04-dc9f-4765-ad88-e7ae283ce995</a>）。因此，如果空闲，您可以在录制标准Garmin运动应用程序的同时切换到此xDrip小部件。还有一个更新血糖值的xDrip运动应用程序：<a href="https://apps.garmin.com/en-US/apps/aaf6533b-bca1-4365-9131-9f882f6f148c">https://apps.garmin.com/en-US/apps/aaf6533b-bca1-4365-9131-9f882f6f148c</a>。您可以尝试在某一时刻启动，以便它在可用后立即请求血糖值。数据字段和表盘将是理想的解决方案，但Garmin施加的限制使它们的价值很小。</p>
+<p>根据用户的说法，Fitbit手表也有一个使用xDrip web服务器的表盘：<a href="https://glancewatchface.com/">https://glancewatchface.com</a></p>
+<p>有关web服务器接口的更多信息，请参见<a href="https://www.juggluco.nl/Juggluco/webserver.html">https://www.juggluco.nl/Juggluco/webserver.html</a></p>
+<p><b>仅限本地</b>：仅接受来自本地主机（127.0.0.1）的连接。如果关闭此选项，则其他主机也可以访问服务器。这仅适用于http，https始终可用。如果您未配置防火墙将端口重定向到端口17580，则仅适用于家庭网络中的主机。</p>
+<h2 class="western"><a href="https://www.juggluco.nl/Jugglucohelp/wearosinfo.html">WearOS Juggluco</a></h2>
+<p>Juggluco移植到了Wear OS上。显示屏适应了较小的屏幕，并添加了一个手表表盘。可以将该手表表盘安装为普通的Wear OS手表表盘，并显示通过蓝牙接收到的当前血糖值。</p>
+]]>
+</string>
+<string name="wearosinfo" >
+<![CDATA[
+
+<h1>Wear Os</h1>
+<p><strong>手表直接连接传感器</strong>：此选项使手表与传感器直接连接。仅在手表和手机同步时可更改此设置。使用“镜像 -&gt; 同步并重新初始化”在手机和手表上同步手表和手机。</p>
+<p><strong>初始化手表应用程序</strong>：在手表上安装Juggluco(Wear Os版)并运行后，需要按下此按钮。</p>
+<p><strong>恢复默认</strong>：将连接设置为其默认值。它包括左侧菜单 -&gt; <a href="https://www.juggluco.nl/Jugglucohelp/connectionoverview.html">镜像</a>（手表上）和左中部菜单 -&gt; 镜像（手机上）中更改的设置。它包括诸如“仅激活”和“扫描”之类的设置。如果因淋浴或睡眠时不慎更改了设置，则可以按下此按钮。如果通过重新安装手表版本或清除数据重置，则还需要在手机上移除镜像连接。</p>
+<p>特殊版本的Juggluco可以直接在Wear Os手表上运行。它需要一台带有NFC的Android智能手机来扫描传感器，并通过TCP连接将数据发送到Wear OS手表。之后你可以选择：</p>
+<ol>
+	<li><p>默认传感器与手机连接，并且通过蓝牙将接收到的血糖值通过TCP发送到Wear OS手表；</p></li>
+	<li><p>或者也可以选择将传感器直接与Wear OS手表连接。为此，需要具有良好蓝牙连接性的Wear OS手表。</p></li>
+</ol>
+<p>一些图片在此处显示：<a href="https://www.juggluco.nl/JugglucoWearOS/index.html">https://www.juggluco.nl/JugglucoWearOS</a></p>
+<p>要使其正常工作，请执行以下操作：</p>
+<ul>
+	<li><p>确保手表和手机的蓝牙和WIFI正常工作；</p></li>
+	<li><p>确保手表具有足够的可用存储空间和内存。如果设备在关键时刻存储空间不足，可能需要重新安装Juggluco；</p></li>
+	<li><p>让Juggluco手机版本与传感器配对。您需要使用“通过蓝牙扫描传感器”多次扫描传感器。无需通过蓝牙在手机上接收血糖值；</p></li>
+	<li><p>在Wear Os手表上安装Juggluco Wear OS版本并启动它；</p></li>
+	<li><p>打开手机上的左侧菜单 -&gt; 手表 -&gt; <a href="https://www.juggluco.nl/Jugglucohelp/wearosinfo.html">Wear Os配置</a>。您的手表应显示在列表中。按下“初始化手表应用程序”；</p></li>
+	<li><p>如果一切顺利，手机和手表会成功连接，并且手机上的所有数据都会发送到手表。这可能需要很长时间，如果您使用Juggluco已经很长时间了。您可以通过查看镜像对话框（手机：左中部菜单 -&gt; <a href="https://www.juggluco.nl/Jugglucohelp/connectionoverview.html">镜像</a>，手表：左侧菜单 -&gt; 镜像）。应该显示与手表下拉列表中显示的相同ID的连接。在手表上也应包含手机的IP地址。如果这两者不在或者手表侧不包含IP，则应该再次按下“初始化手表应用程序”。如果仍然不行，请检查蓝牙连接或与手表连接的手机app。（当手表已经接收到数据时，按下“初始化手表应用程序”将重发所有数据。</p></li>
+	<li><p>如果一切顺利，手机版本和手表版本的Juggluco显示相同的数据。手机接收的每个血糖值都会通过TCP发送到手表。一些设置，例如单位，血糖警报级别和提醒也会传输到手表。如果想要修改请在手表本身上操作。</p>
+	<li><p>如果您有蓝牙连接良好的Wear Os手表，并且希望在不携带手机的情况下在手表上接收血糖值，可以直接将Juggluco手表版本与传感器连接。在将所有值发送到手表后，您可以勾选<strong>“手表直接连接传感器”</strong>。通过此操作，在手机上关闭“通过蓝牙扫描传感器”，并在手表上打开它。观看的流式值现在会从手表发送到手机，您可以在镜像对话框中检查。在手表和手机不同步时无法更改“手表直接连接传感器”设置。</p></li>
+	<li><p>//如果您想将“标签”从手表发送到手机，您应该在镜像对话框中自行反转发送方向，即在手机上取消选中，并在手表上选中。在手机上也应设置“接收来自...”。如果所有设置都不正确，将无法正常工作。应更改“不更改“标签””。“标签”的标签始终与“标签”一起发送。如果更改发送“标签”从手表到手机的传输方向，无法更改标签。这不应该太容易。</p></li>
+</ul>
+<p>//如果传感器与手表直接蓝牙连接，并且其值从手机发送到手表，则在扫描传感器之前，还应将扫描到的值从手机发送到手表，并在同步流式值之前进行同步（以此方式自动配置设置）。否则，可能会将旧值发送回手表，或者修改的身份验证信息不会发送到手表，从而导致<i>解锁密钥</i>错误。</p>
+<p>//只有在该数据同步时才能进行连接的更改；手机和手表上的数据应该是完全相同的副本（除了所有amount数据可以省略）。</p>
+<p>第一次时，当需要从智能手机向手表传输大量数据时，您可以将手表连接到充电器上，避免手表没电。</p>
+<h2 class="western"><strong>手表-手机连接</strong></h2>
+<p>手表-手机连接是在运行Juggluco的手机和运行<a href="https://www.juggluco.nl/Juggluco/cmdline">Juggluco服务器</a>的计算机之间进行的镜像连接的改编版本。当以上述方式自动生成手机和手表之间的连接时，它具有以下附加功能：</p>
+<ul>
+	<li><p>自动确定连接的另一端的IP。通常情况下，您无需直接处理镜像连接。相反，您可以使用左侧菜单→手表→Wear OS配置来更改设置。唯一的例外是当您希望在手表上输入数字时。然后，您必须手动更改镜像设置，如下所述：<a href="#enteronwatch">在手表上输入</a>。</p></li>
+	<li><p>如果手机和手表之间的WIFI连接不起作用，Juggluco将切换到使用蓝牙上的TCP。仅当向手表发送大量数据时，您可以关闭手表上的WIFI。</p></li>
+</ul>
+<p style="margin-bottom: 0in">当电话和手表上的Juggluco之间没有交换数据时，您可以查看以下内容：</p>
+<ul>
+	<li><p style="margin-bottom: 0in">手表和手机上应该打开蓝牙（可以关闭WIFI）；</p></li>
+	<li><p style="margin-bottom: 0in">手表的伴侣应用程序应显示手表已连接到手机；</p></li>
+	<li><p style="margin-bottom: 0in">在手表上的左侧菜单→镜像和手机上的左中部菜单→镜像应自动创建具有手表标识符的连接条目（与手机上的左侧菜单→手表→“Wear OS配置”中显示的标识符相同）。</p></li>
+	<li><p style="margin-bottom: 0in">在手表上的镜像菜单中，重新初始化和/或同步可能有所帮助；</p></li>
+	<li><p style="margin-bottom: 0in">有时您需要在手机上执行相同的操作。然后，您可能需要再次在手表上执行相同操作；</p></li>
+	<li><p style="margin-bottom: 0in">在手机和手表上轮流关闭和打开蓝牙可能会有所帮助。此后，您还需要在手表上按下重新初始化和同步；</p></li>
+	<li><p style="margin-bottom: 0in">使用WIFI或移动数据执行相同操作有时是必要的；</p></li>
+	<li><p style="margin-bottom: 0in">有时候，需要重新启动手机和/或手表，以使蓝牙重新正常工作；</p></li>
+	<li><p style="margin-bottom: 0in">可能以某种方式更改了镜像连接中的设置，导致其值错误。可以通过在手机上按下左侧菜单→手表→“Wear OS配置”→默认值来将其重置为原始值。这也会将传感器连接到手机而不是手表。将重写仅在手表上存在的数据；</p></li>
+	<li><p style="margin-bottom: 0in">如果所有其他方法都失败，则可以重新安装手表版本并重新开始。在这种情况下，您需要在左中部菜单→镜像下删除现有的手表连接。</p></li>
+	<li><p style="margin-bottom: 0in">如果以某种方式手机上的数据丢失，但在手表上存在，则情况就会更加困难。您必须首先创建一个功能正常的镜像连接，以将数据接收到手机上。</p></li>
+</ul>
+<h2 id="enteronwatch">在手表上输入</h2>
+<p>如果您在手表上输入胰岛素、碳水化合物和活动量，则将无法在手机上进行输入。另外，无法扫描胰岛素笔。</p>
+<p>当前没有直接的按钮可用于此目的。您必须在连接手表和手机之间的镜像连接的两侧进行更改镜像设置。首先确保手机和手表同步，然后执行以下操作：</p>
+<h5 class="western">手机：</h5>
+<p>进入左中部菜单→镜像。按下手表连接，然后点击<i>修改</i>。取消<i>“标签”</i>的选择，并确保选中<i>接收自</i>。然后按<i>保存</i>然后按<i>关闭</i>。设置<i>镜像发送“标签”</i>。</p>
+<h5 class="western">手表：</h5>
+<p>进入左侧菜单→镜像。按下手表连接，然后点击<i>修改</i>。设置<i>“标签”</i>。将“现在”设置为已在手机上存在所有数据的时间点。然后按<i>保存</i>然后按<i>关闭</i>。取消选择<i>镜像发送“标签”</i>。</p>
+<h2 class="western"><strong>表盘</strong></h2>
+<p>Wear OS的Juggluco包括一个表盘，可以显示当前的血糖水平、时间和最多四个复杂功能。要使用它，您必须选择此表盘，例如在手表伴侣应用程序中选择"已下载"。当屏幕唤醒时，通常会显示最后的血糖值。当显示处于环境（始终显示）模式时，只有在分钟指示器增加或按下按钮或抬起手臂时，血糖值才会更新。因此，显示的值可能会延迟高达一分钟。</p>
+<p>还有一种复杂功能使用WearOS版本的Glucodata广播显示血糖值，可以在接受此复杂功能的每个表盘上使用：<a href="https://github.com/pachi81/GlucoDataHandler/releases">https://github.com/pachi81/GlucoDataHandler/releases</a></p>
+<p>第三个选项是在 Juggluco 手表的设置中打开 <i>Floating Glucose</i>。当 Juggluco 有适当的权限时，一个血糖值会显示在其他应用程序上方。这样，您在使用任意的表盘或监测您活动的应用程序时，可以看到您当前的血糖值。有关更多信息，请参见 Juggluco 手机版本中的左侧菜单 -&gt; 设置 -&gt; <a href="https://www.juggluco.nl/Jugglucohelp/floatingconfig.html">Floating
+	glucose</a> -&gt; 帮助。</p>
+<p><br/>
+<br/>
+
+</p>
+]]>
+</string>
+<string name="about" >
+<![CDATA[
+<h1>关于</h1>
+<p style="line-height: 100%; margin-bottom: 0in"><span lang="en-US">Juggluco
+由 <a href="https://www.juggluco.nl/Juggluco">Jaap
+Korthals Altes</a> 编写</span></p>
+<p style="line-height: 100%; margin-bottom: 0in">除了标准的安卓库，还使用了以下内容：</p>
+<ul>
+	<li><p align="left" style="line-height: 100%; margin-bottom: 0in">Abbott FreeStyle Libre 传感器的 NFC
+	和蓝牙命令以及 FreeStyle Libre 传感器的解释算法。</p>
+	<li><p align="left" style="line-height: 100%; margin-bottom: 0in"><span lang="en-US">与 Garmin 手表通信使用了<a href="https://developer.garmin.com/connect-iq/sdk">
+	Connect IQ Mobile SDK</a>；</span></p>
+	<li><p align="left" style="line-height: 100%; margin-bottom: 0in"><span lang="en-US">图表是用 <a href="https://github.com/memononen/nanovg">NanoVG</a> 创建的；</span></p>
+	<li><p align="left" style="line-height: 100%; margin-bottom: 0in"><span lang="en-US">镜像功能使用了 <a href="https://ascon.iaik.tugraz.at/">Ascon
+	认证加密</a>；</span></p>
+	<li><p align="left" style="line-height: 100%; margin-bottom: 0in"><span lang="en-US">与 Libre3 传感器的通信使用了 <a href="https://github.com/intel/tinycrypt">TinyCrypt</a>；</span></p>
+	<li><p align="left" style="line-height: 100%; margin-bottom: 0in"><span lang="en-US">颜色选择器是 <a href="https://github.com/yukuku/ambilwarna">AmbilWarna</a> 的改编；</span></p>
+	<li><p align="left" style="line-height: 100%; margin-bottom: 0in">对 NFC NovoPens 的支持是从 xDrip 中提取的代码的修改。</p>
+</ul>
+<p style="line-height: 100%; margin-bottom: 0in"><span lang="en-US">Juggluco
+被 <a href="mailto:matteo.gabriele81@gmail.com">Matteo
+Gabriele</a> 翻译成意大利语。</span></p>
+<p style="line-height: 100%; margin-bottom: 0in">Juggluco 被 Rui Pinheiro 翻译成葡萄牙语。</p>
+<p style="line-height: 100%; margin-bottom: 0in"><span lang="en-US">Juggluco
+被 <a href="mailto:adelis@translaris.pl">Arkadiusz
+Deliś</a> 翻译成波兰语。</span></p>
+<p>Juggluco 被 <a href="mailto:3477734n@gmail.com">Находкін Яўген</a> 翻译成白俄罗斯语。</p>
+<p>Juggluco 被 Fabrice Delfosse 翻译成法语。</p>
+<p>Juggluco 被 <a href="mailto:3477734n@gmail.com"><span lang="ru-RU">Находкін Яўген</a> </span><span lang="en-US">和</span><a href="mailto:moydiabet@gmail.com"><span lang="ru-RU">Дзіма Дыябетык</span></a> 翻译成乌克兰语。</p>
+<p>Juggluco 被 <a href="mailto:q.pw@qq.com"><span lang="zh-CN">兜子a</a> </span>翻译成中文。</p>
+
+</p>
+]]>
+</string>
+<string name="disturbhelp" >
+<![CDATA[
+<h1>&quot;<i>勿扰模式</i>&quot;响铃</h1>
+<p><meta name="created" content="00:00:00">在某些设备上，铃声在&quot;<i>勿扰模式</i>&quot;下不会响。通过&quot;<i>勿扰响铃</i>&quot;，您可以指定是否应在警报响起前关闭&quot;<i>勿扰模式</i>&quot;。</p>
+<p>警告：如果在<i>&quot;勿扰模式&quot;</i>下按<i>&quot;播放&quot;</i>时报警能正常响，则不要设置<i>&quot;勿扰响铃&quot;</i>。（勿扰响铃原理是关闭勿扰模式再响铃，"勿扰模式"无法自动关闭我也没能理解，应该是我翻译错了。）设置了&quot;勿扰响铃&quot;后，Juggluco在警报响起时会先关闭<i>&quot;勿扰模式&quot;</i>再播放闹钟。它不会再次打开<i>&quot;勿扰模式&quot;</i>，因为这样做会导致一个意外的副作用，即根据设定的时间表，&quot;<i>勿扰模式</i>&quot;无法自动关闭。</p>
+]]>
+</string>
+<string name="libreview" >
+<![CDATA[
+<h1>Libreview（不确定中国大陆地区是否可用，自行测试）</h1>
+<p style="line-height: 100%; margin-bottom: 0in">Juggluco 可以将血糖数据和标签发送到 Libreview。当使用 Libre 0 或 3 传感器、美国/加拿大/澳大利亚 Libre 2 传感器或设置了<i>蓝牙历史记录</i>的其他 Libre 2 传感器时，Juggluco 将历史值发送到 Libreview。如果 Libre 2 传感器在没有“<i>蓝牙历史记录</i>”的情况下使用，Juggluco 将使用通过蓝牙接收的流数据来创建这些 15 分钟点，方法是对每个点周围的流值进行平均。</p>
+<p style="line-height: 100%; margin-bottom: 0in">与 Librelink 应用程序一样，它将过去 89 天的数据发送到 Libreview。</p>
+<p style="line-height: 100%; margin-bottom: 0in"><span lang="zh-CN">要使用此服务，您需要在<a class="western" href="https://libreview.com/">https://libreview.com</a> 创建一个 Libreview 账户，并在此处指定其电子邮件地址和密码。</span> <span lang="zh-CN">不要将相同时期的数据多次发送到同一个 Libreview 账户（例如从 Librelink 应用程序和 Juggluco）。您可以在 Libreview 中的账户设置-&gt;我的设备中删除现有设备，或者您可以使用一个新的 Libreview 账户。</span></p>
+<p style="line-height: 100%; margin-bottom: 0in"><span lang="zh-CN">要打开它，您还需要勾选“</span><span lang="zh-CN"><i><b>发送到 libreview</b></i></span><span lang="zh-CN"><i>”。</i></span><span lang="zh-CN">
+</span>
+</p>
+<p style="line-height: 100%; margin-bottom: 0in">每当您切换离开 Juggluco 且上次 20 分钟内未完成时，Juggluco 将向 Libreview 发送新数据。您也可以通过按<i>“</i><i><b>立即发送</b></i><i>”</i>手动将其发送到 Libreview。</p>
+<p style="line-height: 100%; margin-bottom: 0in">除了血糖值，还可以将标签发送到 Libreview。为此，您需要点击“<a class="western" href="https://www.juggluco.nl/Jugglucohelp/librenumhelp.html"><i><b>发送标签</b></i></a>”并指定每个标签的含义。</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>RU</b>：如果您使用的是<a class="western" href="https://libreview.ru/">https://libreview.<span style="text-decoration: none"><b>ru</b></span></a> 而不是 <a class="western" href="https://libreview.com/">https://libreview.com</a>，则需要设置此选项。这仅适用于 Libre 2 传感器。Libre 3 传感器只能与 libreview.com 一起使用，因为没有俄罗斯的 Libre 3 应用程序。</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>立即发送</b>：当 Libre 2 或 3 传感器到达时，立即将血糖值发送到 Libreview。这仅在与 LibreLinkUp 结合使用时有用。要使用它，您需要在 Abbott 的 Libre 应用程序中将 LibreLinkUp 连接添加到此 Libreview 账户。如果您所在国家没有 Abbott Libre 应用程序，您可以使用<a class="western" href="https://www.juggluco.nl/Juggluco/libre3/patched.html">修补版 Libre 3 应用程序</a>。有时，值不会立即显示，因为 LibreLinkUp 的显示不会自动重绘。如果您不仔细查看，使用 LibreLinkUp 非常危险，因为当您触摸图表时，它会显示旧值而不是当前血糖值。</p>
+
+<p style="line-height: 100%; margin-bottom: 0in"><b>查看状态同步</b>：当设置此选项时，Juggluco 将向 Libreview 发送值是否被查看的信息。当关闭此选项时，Juggluco 将始终表示未查看。仅当同时打开<i>立即发送</i>时，此选项才会可靠地将此信息发送到 Libreview。为了捕捉 Libre 3 的所有查看情况，Juggluco 应该始终连接到互联网，Libre 2 可以记住所有查看情况，只要它没有被终止。</p>
+<p style="line-height: 100%; margin-bottom: 0in"><b>选择数据发送</b>：重新开始；从指定的日期和时间重新发送数据。当切换到新的 Libreview 账户时，您需要按下此按钮。</p>
+<p style="line-height: 100%; marg  in-bottom: 0in">下方的“获取账户 ID”按钮下方显示了上次尝试发送到 Libreview 的结果。</p>
+<p style="line-height: 100%; margin-bottom: 0in">由于发送到 Libreview 的值首先被转换为每 15 分钟的一个数据点，然后进行分析，因此 Juggluco 的统计屏幕和 Libreview 显示的值之间可能存在小的差异。例如，Libreview 表示 100% 的时间处于活动状态，而 Juggluco 的统计屏幕表示 96.0%。此外，一些高值和低值将被平均掉，因此 Libreview 给出的<i>目标时间</i>比 Juggluco 的统计屏幕更高。由于传感器上创建的历史值比围绕历史值的流值的平均值更不极端，因此当 Libreview 基于<i>历史</i>值时（例如在 Juggluco 中启用“蓝牙历史”或使用 Librelink 时），这种差异会更大。</p>
+<p style="line-height: 100%; margin-bottom: 0in">Juggluco 可以同时连接多个传感器，而 Librelink 一次只能处理一个传感器。Juggluco 也一次只将一个传感器的数据发送到 Libreview。它首先发送一个传感器的数据，只有在该传感器没有可用数据后，才发送下一个传感器的数据。当 Juggluco 切换到下一个传感器时，Juggluco 不会回到前一个传感器，以模仿 Librelink 的一个传感器策略。这意味着当您同时运行多个传感器且后添加的传感器比先添加的传感器更早结束时，这个先添加的传感器将不再向 Libreview 发送数据。</p>
+<p><a class="western" href="https://www.juggluco.nl/Jugglucohelp/getaccountidhelp.html"><b>获取账户 ID</b></a>：如果您只想接收 LibreView 账户 ID，但不想将数据发送到 Libreview，您可以填写您的电子邮件地址和密码，然后按“<a class="western" href="https://www.juggluco.nl/Jugglucohelp/getaccountidhelp.html"><i>获取账户 ID</i></a>”。在此按钮之前的同一行，将显示账户 ID（这可能需要一些时间，且屏幕不会自动刷新）。从 LibreView 服务器检索账户 ID，使得可以使用与此 LibreView 账户已经使用的 Abbotts Libre 3 应用程序的 FreeStyle Libre 3 传感器。</p>
+
+<p><b>警告</b>：应该使用此账户激活 Freestyle Libre 3 传感器。</p>
+]]>
+</string>
+<string name="garminconfig" >
+<![CDATA[
+<h1>Kerfstok配置</h1>
+<p style="line-height: 100%; margin-bottom: 0in">Kerfstok的<b>源代码</b>可以从
+<a href="https://www.juggluco.nl/Kerfstok/Kerfstok-source.html">https://www.juggluco.nl/Kerfstok/Kerfstok-source.html</a>)下载。用户可以自由修改它。每个手表应用都有一个独特的标识符。如果标识符与默认值不同，Juggluco需要知道它以与手表应用通信。要指定不同的标识符，请按<b>ID</b>并输入32个字符的十六进制字符串。Juggluco在一个设备上只能连接到一个手表上的一个手表应用。更改将导致数据丢失。</p>
+<h2 class="western"><a href="https://www.juggluco.nl/Jugglucohelp/shortcuthelp.html">快捷方式</a></h2>
+<p style="line-height: 100%; margin-bottom: 0in">快捷方式被发送到Garmin手表应用Kerfstok，以便轻松插入某些值。</p>
+<h2 class="western">暗黑模式</h2>
+<p style="line-height: 100%; margin-bottom: 0in">指定Kerfstok是否应该是白底黑字而不是黑底白字。</p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+]]>
+</string>
+<string name="librenumhelp" >
+<![CDATA[
+<p>（其实就是能把你的标注胰岛素量，碳水等跟瞬感的官方app同步，设定一下最好）设置“<i>发送标签</i>”以将标签发送到 Libreview。在您可以打开“<i>发送标签</i>”之前，您需要为<a href="https://www.juggluco.nl/Jugglucohelp/setlibrenumtype.html">每个标签</a>指定应如何将该标签下输入的量发送到 Libreview。标签本身可以在左侧菜单→设置→“<a href="https://www.juggluco.nl/Jugglucohelp/labelhelp.html">数字标签</a>”中创建、修改和删除。</p>
+<p>对于作为评论发送到 Libreview 的标签，适用以下限制：更改标签后，删除和更改先前标签下输入的量将不会导致 Libreview 中的修改。例如，如果您之前有标签“自行车”并输入 20，然后将“自行车”更改为“骑行”并将 20 修改为 25，这种更改将不会导致 Libreview 中的更改，但“自行车 20”和“骑行 25”都将出现在 Libreview 中。您唯一能做的是删除 Libreview 中的当前设备，并在 Juggluco 中按<i>重新发送数据（意思就是你同步再改名新旧同时存在，已经提交到官方app的无法撤销更改，会从新的开始计数）</i>。</p>
+<p>
+<br>
+</p>
+]]>
+</string>
+<string name="setlibrenumtype" >
+<![CDATA[
+<p>与Libreview的方式相同，您也可以在Juggluco中通过Nightscout服务器指定如何表示数量。</p>
+<p>选择在Juggluco中特定标签下输入的数量应如何发送到Libreview。可以使用相同的Libreview标签发送多种类型的数量。例如，如果您在Juggluco中分别用不同的标签记录碳水化合物和纯葡萄糖食物，您可以为两者指定它们应该作为<b>碳水化合物</b>发送到Libreview。</p>
+<p>对于碳水化合物，可以<b>乘以</b>Juggluco中给出的数量的某个数，以便您可以将其他单位转换为克。如果您在Juggluco中计算每份10克的食物，您可以在这里输入10，这样就会将克数发送到Libreview。</p>
+<p><b>评论</b>意味着标签会被发送到Libreview，就像您在Librelink中添加了评论一样。如果您在这里指定了评论，将发送该标签及其对应的数字。例如：“<i>自行车 50</i>”，如果您有一个标签“<i>自行车</i>”，并且在该标签下输入了“<i>50</i>”。“<i>自行车 50</i>”将在指定的时间显示在Libreview的“<i>日志</i>”图表下方。</p>
+<p><br/><br/></p>
+]]>
+</string>
+<string name="floatingconfig" >
+<![CDATA[
+<h1 class="western">悬浮窗</h1>
+<p>在这里，您可以设置悬浮窗的字体大小、前景色和背景色。文字颜色和背景颜色选项切换可以更改对应的颜色。
+</p>
+<p><b>可触摸</b>：设置后，您可以用手指移动悬浮窗，并通过长按（不移动）来移除它。当未设置可触摸时，触摸输入会传递到悬浮窗下面的窗口，因此您可以使用悬浮窗下面的应用。您也可以通过<b>双击</b>悬浮窗来使其不可触摸。</p>
+<p><b>透明</b>：悬浮窗改成透明。</p>
+<p><b>置顶</b>：悬浮窗也会显示在Juggluco之上。</p>
+<p><b>时间</b>：血糖值的时间戳。</p>
+<p><b>开启悬浮窗</b>：开启它。</p>
+<p>输入<b>字体大小</b>后，您需要按软键盘上的“<i>Enter”，</i>“<i>Done</i>”或“✓”按钮。</p>
+
+	<p>您可以通过左侧中间菜单的 Float 来开启或关闭悬浮窗。
+	</p>
+	<p>通过点击悬浮窗的<b>箭头侧</b>可以切换到 Juggluco。双击血糖值侧会使悬浮窗变得不可触摸。<b>长按</b>血糖值会仅显示一个小的血糖值，以便您可以与下方的内容互动，点击小显示屏会再次放大。触摸血糖值侧边时移动，<b>移动</b>悬浮窗。</p>
+	<p>要在其他应用上显示 Juggluco 需要特殊权限。在 WearOS 和 Android Automotive 上，您需要使用 adb 来授予此权限：</p>
+	<p style="margin-bottom: 0in"><b>adb shell pm grant tk.glucodata android.permission.SYSTEM_ALERT_WINDOW</b></p>
+	<p style="background: transparent">在一些手表上（例如 TicWatch Pro），您也可以通过 Android/WearOS 设置-&gt;应用与通知-&gt;应用信息-&gt;Juggluco-&gt;高级-&gt;在其他应用上显示 来允许它。</p>
+	]]>
+</string>
+<string name="getaccountidhelp" >
+<![CDATA[
+<h1 class="western">获取账户ID</h1>
+<p style="line-height: 100%; margin-bottom: 0in">如何获取扫描Freestyle Libre 3传感器所需的Libreview账户ID？如果你选择"手动"，你可以手动输入账户ID。你也可以取消选择“手动”并点击“从Libreview获取”来使用你的账户电子邮件地址和密码从Libreview接收它。</p>
+<p style="line-height: 100%; margin-bottom: 0in">（这里好像是可以实际传送数据和绑定血糖仪的账户可以不是一个，我不太理解这样的用途是什么，或者有人需要？）也可以从Libreview接收Libreview账户ID，然后设置“手动”并更改Libreview账户电子邮件地址和密码。当你之后设置“发送到Libreview”并点击“重新发送数据”时，数据将被发送到不同的Libreview账户，但之前的账户ID仍将被用于通过NFC扫描传感器。这样，Juggluco将数据发送到与Abbotts Libre 3应用使用的Libreview账户不同的账户。</p>
+]]>
+</string>
+<string name="Nightscouthelp" >
+<![CDATA[
+<h1 class="western">网络服务器（这是一个本地服务器，跟隔壁Uploader的不一样，最好是用于本地使用ns同步数据的）</h1>
+<p style="line-height: 100%; margin-bottom: 0in">Juggluco 集成了一个 网络服务器，其他应用程序可以通过它从 Juggluco 接收血糖值。它可用于 xDrip 手表和一些 Nightscout 应用程序。</p>
+<p style="line-height: 100%; margin-bottom: 0in">使用为 xDrip Web 服务器制作的应用程序相对简单。只需检查激活。之后，他们可以从 127.0.0.1 的端口 17580 接收血糖值。Nightscout 服务器 URL：http://127.0.0.1:17580</p>
+<p style="line-height: 100%; margin-bottom: 0in">此外，一些 Nightscout 关注者也可以使用它。xDrip、Diabox、<a href="https://github.com/dabear/FloatingGlucose/releases">Windows Floating Glucose</a> 应用程序和 Windows、Linux 和 macOS 小部件（<a href="https://github.com/kashamalasha/nightscout-widget-electron">Owlet</a>）可以在“仅限本地”未设置时使用 http。在 macOS 上，对于 Nightscout Menu Bar、Gluco Status 和 Gluco Tracker（所有在 Apple Store 中）也是如此。对于 <a href="https://github.com/someoneAnyone/Nightscouter">Nightscouter</a> 和 <a href="https://github.com/jonfawcett/LoopFollow">LoopFollow</a>（IOS）以及 <a href="https://github.com/nightscout/nightguard">Nightguard</a>（IOS 和 WatchOS），您也只需要 http。</p>
+<p style="line-height: 100%; margin-bottom: 0in">如果您想通过互联网访问 Juggluco，您需要从您的调制解调器转发一个端口。参见：</p>
+<ul>
+	<li><p style="line-height: 100%; margin-bottom: 0in"><a href="https://www.makeuseof.com/tag/what-is-port-forwarding-and-how-can-it-help-me">https://www.makeuseof.com/tag/what-is-port-forwarding-and-how-can-it-help-me</a></p>
+	<li><p style="line-height: 100%; margin-bottom: 0in"><a href="https://www.juggluco.nl/Juggluco/phones/index.html">https://www.juggluco.nl/Juggluco/phones/index.html</a></p>
+	<li><p style="line-height: 100%; margin-bottom: 0in">左侧菜单栏中间-&gt;镜像-&gt;<a href="https://www.juggluco.nl/Jugglucohelp/addconnection.html">添加连接</a>-&gt;帮助</p>
+</ul>
+<p style="line-height: 100%; margin-bottom: 0in">其他 Nightscout 关注者只使用 https，这要求 Juggluco 具有用于访问 Juggluco 的域名的认证 SSL 密钥。如果您的外部 IP 有关联的主机名，您可以通过 <a href="https://certbot.eff.org/instructions">Certbot</a> 免费获取证书。如果您的外部 IP 没有主机名，您将无法使用它。您可以从 <a href="https://www.freenom.com/">https://www.freenom.com</a> 免费获取一个域名。我尝试了，但几周后，没有任何通知，他们只是将域名从我这里拿走了，当我试图再次注册时，它有一个价格。您可以每年花几欧元购买一个主机名（例如从 <a href="https://www.strato.nl/domeinnaam">https://www.strato.nl/domeinnaam</a>）。</p>
+<p style="line-height: 100%; margin-bottom: 0in">安装 Certbot 并将您的调制解调器的端口 80（http）重定向到您的计算机后，您可以简单地按：</p>
+<pre style="margin-bottom: 0.2in">certbot certonly --standalone --preferred-challenges http -d <i>myhostname</i></pre>
+<p>参见 <a href="https://devpress.csdn.net/linux/62e7999e907d7d59d1c8cfd0.html">https://devpress.csdn.net/linux/62e7999e907d7d59d1c8cfd0.html</a>。</p>
+<p style="line-height: 100%; margin-bottom: 0in">使用 Certbot 后，我在 /etc/letsencrypt/live/myhostname/privkey.pem 中找到了私钥，完整链在 /etc/letsencrypt/live/myhostname/fullchain.pem 中。“<em>myhostname</em>”是我使用的主机名。</p>
+<p style="line-height: 100%; margin-bottom: 0in">如果您已从 SSL 机构收到密钥文件，您必须将其提供给 Juggluco。可以通过按“<em>私钥</em>”读取私钥，通过按“<em>完整链</em>”读取完整链。</p>
+<p style="line-height: 100%; margin-bottom: 0in">如果您只想将血糖值从一个 Android 设备发送到另一个 Android 设备，您可以更好地使用 Juggluco 的 <a href="https://www.juggluco.nl/Juggluco/index.html#mirror">镜像</a> 功能（左侧菜单栏中间-&gt;<a href="https://www.juggluco.nl/Jugglucohelp/connectionoverview.html">镜像</a>）。</p>
+<p style="line-height: 100%; margin-bottom: 0in">您需要 SSL 来使用 Android 应用 AAPS、Diabetes:M、<a href="https://play.google.com/store/apps/details?id=se.cornixit.nightwatch">Nightwatch</a> 和 <a href="https://slingithub.github.io/CheckmateWeb">Checkmate</a>、Sugarmate（MacOS 和 IOS）和 <a href="https://github.com/JohanDegraeve/xdripswift">Xdrip4ios</a>、Shuggah 和 Cockpit（IOS）。将 Nightscout 服务器 URL 指定为：</p>
+<p><i>https://hostname:port</i></p>
+<p><i>hostname</i> 是您提供给 Juggluco 的认证密钥的主机名，<i>port</i> 是您在此屏幕中指定的端口（默认值：17581）。</p>
+<p style="line-height: 100%; margin-bottom: 0in">AAPS 可以与 Juggluco 7.3.0 及更高版本一起使用。为此，您需要在 AAPS 中选择 <i>NSClientV3</i>，并使用以下设置：</p>
+<ul>
+	<li><p style="line-height: 100%; margin-bottom: 0in">使用此处指定的 api-secret 用作 <i>NS 访问令牌</i>；</p>
+		<li><p style="line-height: 100%; margin-bottom: 0in">取消勾选“<i>连接到 WebSockets</i>”；</p>
+		<li><p style="line-height: 100%; margin-bottom: 0in">在“<i>同步</i>”下，关闭所有上传。只打开：</p>
+		<ul>
+			<li><p style="line-height: 100%; margin-bottom: 0in">接收/回填 CGM 数据；</p>
+			<li><p style="line-height: 100%; margin-bottom: 0in">接收胰岛素；</p>
+			<li><p style="line-height: 100%; margin-bottom: 0in">接收碳水化合物；</p>
+			<li><p style="line-height: 100%; margin-bottom: 0in">接收治疗事件；</p>
+		</ul>
+		<li><p style="line-height: 100%; margin-bottom: 0in">关闭所有“<i>高级设置</i>”。</p>
+	</ul>
+	<p style="line-height: 100%; margin-bottom: 0in">在较早输入的量之前插入量，会导致 AAPS 有重复的治疗。当使用 v3 接口与从 Juggluco 接收 v3 上传的 Nightscout 服务器一起使用时，也会发生这种情况。</p><p>有时，AAPS 只有在强制停止并重新启动后才开始向服务器请求治疗。</p>
+	<p style="line-height: 100%; margin-bottom: 0in">Web 服务器也可以在 Linux 计算机上运行。它将从与传感器连接的 Juggluco 的<a href="https://www.juggluco.nl/Juggluco/index.html#mirror">镜像连接</a>接收数据：<a href="https://www.juggluco.nl/Juggluco/cmdline/index.html">https://www.juggluco.nl/Juggluco/cmdline</a>。</p>
+	<p style="line-height: 100%; margin-bottom: 0in">另一部手机可以通过镜像连接或作为 Nightscout 关注者连接到此服务器（例如在 iPhone 上）。如果有一个不适用于此 Web 服务器的 Nightscout 应用，请告诉我。也许可以通过一些更改使其正常工作。（IOS 应用 Nightscout 和 Nightscout X 是针对特定 Nightscout 服务器程序的，不会与 Juggluco 一起工作。）</p>
+	<p style="line-height: 100%; margin-bottom: 0in"><b>api_secret</b>：指定关注者应将 api_secret http 头元素设置为此值。当关注者使用此密钥作为<a href="https://www.juggluco.nl/Juggluco/webserver.html#token">Nightscout 令牌</a>或使用带有 SHA1 编码密钥的 api-secret 头时，此密钥也有效。从 Juggluco 7.1.15 开始，也可以将 api_secret 作为 Nightscout 服务器 URL 路径的第一个元素。如果 xyz 是 api_secret，http://hostname:port 是 Nightscout 服务器 URL，您可以指定 http://hostname:port/xyz 作为 Nightscout 服务器 URL。</p>
+	<p style="line-height: 100%; margin-bottom: 0in"><strong>可见</strong>：使密钥可见。</p>
+	<p style="line-height: 100%; margin-bottom: 0in"><strong>端口</strong>：指定用于联系 https 服务器的网络端口。默认值是 17581。</p>
+	<p style="line-height: 100%; margin-bottom: 0in"><strong>保存</strong>：保存密钥或端口的修改。</p>
+	<p style="line-height: 100%; margin-bottom: 0in"><strong>使用 SSL</strong>：使用 SSL（https）。对于 SSL，您需要为用于联系此服务的主机名提供私钥和完整链。</p>
+	<p style="line-height: 100%; margin-bottom: 0in"><strong>私钥</strong>：选择包含私钥的文件。见上文。</p>
+	<p style="line-height: 100%; margin-bottom: 0in"><strong>完整链</strong>：选择包含完整链的文件，见上文（其实就是指的证书文件）。</p>
+	<p style="line-height: 100%; margin-bottom: 0in"><b>interval（间隔）</b>：血糖值之间的默认最小间隔时间（以秒为单位）。通常为 270 秒。请求还可以通过提供 interval= 选项来更改此值。见<a href="https://www.juggluco.nl/Juggluco/webserver.html">https://www.juggluco.nl/Juggluco/webserver.html</a></p>
+	<p style="line-height: 100%; margin-bottom: 0in"><strong>仅限本地（不清楚到底是除本地外只能使用https还是本地只能使用http，应该是后者）</strong>：http 服务器只能使用 localhost（127.0.0.1）访问。这不适用于 https。</p>
+	<p style="line-height: 100%; margin-bottom: 0in"><b>发送标签</b>：使得可以通过<a href="http://127.0.0.1:17580/api/v1/treatments?count=3">http://127.0.0.1:17580/api/v1/treatments?count=3</a>接收输入的标签。（您必须为每个标签指定定义。以前这与 Libreview 相同，但在 4.18.0 版本之后，您可以将标签放在不同的类别中，（意思就是区分了）用于 Libreview 和此 Web 服务器。）通过此接口，xDrip 可以从 Juggluco 接收量。在 xDrip 中，您可以通过两种方式执行此操作：</p>
+	<ol>
+		<li><p style="line-height: 100%; margin-bottom: 0in">将“<i>硬件数据源</i>”设为<i>“Nightscout 关注者”</i>，并将“跟随 URL”设为 <a href="http://127.0.0.1:17580/api/v1/treatments?count=3">http://127.0.0.1:17580</a>，勾选“下载治疗”。</p>
+		<li><p style="line-height: 100%; margin-bottom: 0in">选择另一个硬件数据源，例如 <i>Libre（修补的应用）</i>，并打开设置-&gt;云上传-&gt;Nightscout 同步（REST-API）。将基础 API URL 输入为 http://somekey@127.0.0.1:17580/api/v1/ 并打开“下载治疗”。上传到 Juggluco 是不可能的，所以这只会下载治疗并生成一些错误消息。</p>
+	</ol>
+	<p style="line-height: 100%; margin-bottom: 0in">当“仅限本地”未选中时，您还可以使用运行 Juggluco 的手机的家庭网络 IP，当您配置调制解调器转发到该手机的 17580 时，也可以使用手机的外部 IP。如果您已经为可以通过该主机名访问的手机提供了私钥和完整链，并打开了“使用 SSL”，则可以使用该主机名和您在此处指定的端口，使用 https 而不是 http。</p>
+	<p style="line-height: 100%; margin-bottom: 0in">当您想要将治疗上传到 Diabetes:M 时，您可以将 Juggluco 的数据发送到 Libreview 并使用“下载血糖数据”保存 Libreview 中的数据，然后在 Diabetes:M 中使用数据-&gt;从其他来源导入-&gt;Freestyle 导入这些数据，或者为您手机的外部主机名获取经过认证的密钥，并将外部来源链接设为 Nightscout，URL 为 https://yourhostname:Port，其中 yourhostname 是运行 Juggluco 的手机的主机名，您已经收到了认证的密钥，Port 是您在此处提到的端口。似乎不会自动同步，所以在 Diabetes:M 中，您需要自己按下同步。</p>
+
+	<p style="line-height: 100%; margin-bottom: 0in"><strong>活动</strong>：点击就代表激活了Web 服务器，正在运行。</p>
+	<p style="line-height: 100%; margin-bottom: 0in">有关 Juggluco 中实现的 Nightscout/xDrip Web 服务器命令的更多信息，请参见 <a href="https://www.juggluco.nl/Juggluco/webserver.html">https://www.juggluco.nl/Juggluco/webserver.html</a></p>
+	<p style="line-height: 100%; margin-bottom: 0in"><br/>
+	</p>
+	]]>
+</string>
+<string name="NightPost" >
+<![CDATA[
+<h1>上传到 Nightscout 服务器</h1>
+<p>在大多数情况下，您也可以使用 <a href="https://www.juggluco.nl/Jugglucohelp/Nightscouthelp.html">Juggluco 中的 Web 服务器</a> 或 <a href="https://www.juggluco.nl/Juggluco/cmdline">juggluco-server</a>。只有一些仅显示 Nightscout 网页的应用程序需要 <a href="https://github.com/nightscout/cgm-remote-monitor">cgm-remote-monitor</a>。您甚至可以在 Juggluco 7.4.1 中使用 AAPS 和 AAPSClient 与 Juggluco 中的 Web 服务器一起使用。</p>
+<p>所有蓝牙接收的值在到达时都会上传到 Nightscout 服务器。当使用多个传感器时，所有传感器的所有值都会被上传。一些 Garmin 手表应用/表盘/小部件假设值之间间隔 5 分钟。当它们接收到每分钟一个的血糖值时，它们只会显示曲线的最后五分之一。因此，Juggluco 中集成的 Web 服务器将值间隔 5 分钟，除非设置了“interval=secs”为较低的值。</p>
+<p><b>URL</b>：URL 应该是 https://hostname:port 的形式，例如，https://myname.herokuapp.com:6789</p>
+<p><b>活动</b>：打开上传器</p>
+<p><b>test V3</b>：（使用V3协议）让 Juggluco 使用 api/v3 上传到 Nightscout。不要将其用于之前接收过 V1 上传的 Nightscout 服务器，也不要将 V1 上传发送到之前接收过 V3 上传的 Nightscout 服务器。在 api_secret 的位置，您需要指定一个具有上传治疗和条目权限的<i>访问令牌</i>。您可以在 Nightscout 网络界面的 Admin Tools 下创建一个。</p>
+<p><b>发送标签</b>：还将标签的信息作为治疗值发送到 Nightscout。点击复选框将带您进入一个对话框，您可以在其中为每个标签指定它在 Nightscout 中的含义。这些规格与 Juggluco 中的 网络 服务器共享（<a href="https://www.juggluco.nl/Jugglucohelp/Nightscouthelp.html">左侧菜单→设置→Web 服务器</a>）。只有当所有标签都被设定了以后时，您才能使用“<i>发送标签</i>”。如果您稍后添加了一个新标签，您必须自己设定指定要对其做什么。由于 <a href="https://github.com/nightscout/cgm-remote-monitor">Nightscout</a> 中的一个错误，（意思是你必须新加一个便签值才能变更较早时间的）在添加具有新时间的项目后，才会显示较早时间段的插入或删除。最好不要频繁向 Nightscout 发送。现在每次用户切换离开 Juggluco 时都会执行，例如关闭显示屏或转到另一个应用程序。</p>
+<p><b>重新发送数据（注意是所有）</b>：再次将所有数据上传到 Nightscout 服务器</p>
+<p><b>立即发送（其实就是重试）</b>：通常数据在从传感器或镜像连接到达时立即发送。当出于某种原因之前的尝试失败时，按下此按钮。</p>
+	
+	<p>Juggluco 4.15.0 及更高版本的 WearOS 版本也可以将血糖值上传到 Nightscout。在几乎所有情况下，您可以通过手机或平板电脑上的 Juggluco 版本或通过计算机上的 Juggluco 服务器将它们发送。这将消耗电池，特别是当它无法联系到 Nightscout 服务器时，所以当没有可靠的连接时，您最好关闭<i>激活</i>。</p>
+	]]>
+</string>
+<string name="notificationpermission" >
+<![CDATA[
+<h1>通知</h1>
+<p>除非 Juggluco 与 Freestyle Libre 0 传感器一起使用，否则 Juggluco 必须在后台保持活动状态，以便每分钟通过蓝牙直接从传感器或通过网络连接接收一次血糖读数。为了防止应用程序被安卓杀死，安卓要求应用程序显示通知，以便用户知道应用程序在后台存在。文本“连接传感器”或“交换数据”描述了 Juggluco 为什么必须在后台保持活动状态。</p>
+<p>Juggluco 还使用通知来显示当前血糖值和变化方向箭头。</p>
+<p><br/>
+<br/>
+
+</p>
+]]>
+</string>
+<string name="staticnum" >
+<![CDATA[
+
+<h1 align="center">已禁止新建标签</h1>
+<p><b>左中菜单-><a href="https://www.juggluco.nl/Jugglucohelp/connectionoverview.html">镜像</a>-"</b>禁止新建标签<em><b></b></em>，你设置了这个选项。<b>此设置为防止在此应用程序中输入标签，是为了防止标签在镜像连接接收时本机的标签记录会被覆盖。</b></p>
+<p>如果此应用程序没有从镜像接收标签，请取消设置此选项。</p>
+]]>
+</string>
+<string name="talkhelp" >
+<![CDATA[
+
+<h1>播报（好像是调用本地tts所以语言应该不是问题）</h1>
+<h2 class="western">播报血糖（其实就是总开关）</h2>
+<p>当葡萄糖值到达时会朗读出来。</p>
+<p><b>播报间隔（秒）</b>: 指定Juggluco在说下一个葡萄糖值之前等待多少秒。葡萄糖值在到达时会立即朗读出来。当指定一个较大的数字时，Juggluco将跳过在此时间段结束之前到达的葡萄糖值。</p>
+<p><b>语音</b>: 从可能的发言者列表中选择一个发言者。（这个语音应该是tts控制，我是小米手机，只显示三个。）</p>
+<p><b>速度</b>: 数字越大朗读越快。</p>
+<p><b>音高</b>: 数字越大音调越高。</p>
+<p><b>测试</b>: 朗读出最后一个葡萄糖值。</p>
+<p>在某些手机上，必须更改Android的文本转语音设置才能正常使用。有时需要安装语言数据或更改配置。在三星手机上，“<i>Google文本转语音</i>”必须设置为“<i>三星文本转语音引擎</i>”代替才能选择不同的语音。可以通过在Android设置中搜索<i>文本转语音</i>，或访问<i>语言和输入（-&gt;高级）-&gt;文本转语音</i>来找到这些选项。在这里，您可以选择“<i>Google语音服务</i>”并安装语音数据。在其他手机上，该选项位于<i>系统设置-&gt;辅助功能-&gt;视觉-&gt;文本转语音设置</i>中。</p>
+<h2 class="western">Talk touch</h2>
+<p>打开<em>点触播报</em>后，点击特定位置会朗读出相应的信息：</p>
+<ul>
+	<li><p>点击当前葡萄糖值；</p>
+	<li><p>点击图形和扫描点；</p>
+	<li><p>点击金额；</p>
+	<li><p>当点击左上角和右上角时，会说出该图形点的日期；</p>
+	<li><p>长按菜单项；</p>
+	<li><p>长按金额列表中的金额（左中菜单 -&gt; 列表）。</p>
+</ul>
+<h2 class="western">详细信息</h2>
+<p>朗读出临时显示在屏幕上的文本信息，以及扫描结果（错误消息和葡萄糖值）。</p>
+<h2 class="western">播报警报</h2>
+<p>在低葡萄糖和高葡萄糖警报期间朗读葡萄糖水平。在警报开始和停止的时刻都会朗读出来。</p>
+<p><br/>
+<br/>
+
+</p>
+<p><br/>
+<br/>
+
+</p>
+<p><br/>
+<br/>
+
+</p>
+]]>
+</string>
+<string name="nightnumhelp" >
+<![CDATA[
+<p>设置“发送<i>标签</i>”以通过 Juggluco 中的 Nightscout Web 服务器访问标签。在您可以打开“发送<i>标签</i>”之前，您需要为每个标签指定应如何提供在该标签下输入的量。标签本身可以在左侧菜单-&gt;设置-&gt;“<a href="https://www.juggluco.nl/Jugglucohelp/labelhelp.html">编辑标签</a>”中创建、修改和删除。</p>
+<p><br/>
+<br/>
+
+</p>
+]]>
+</string>
+<string name="helpexport" >
+<![CDATA[
+<h1>导出</h1>
+<p>将Juggluco中的数据导出到文件。</p>
+<p>标签以html格式保存。所有其他数据以.csv格式保存
+(<a href="https://en.wikipedia.org/wiki/Tab-separated_values">制表符分隔</a>)。这可以加载到如LibreOffice Calc、
+Microsoft Excel、Mathematica或R等程序中。这是一种.csv格式，使用制表符而不是逗号来分隔项目。字符编码为UTF8。</p>
+<p>列的含义可以在
+<a href="https://www.juggluco.nl/Juggluco/webserver.html">https://www.juggluco.nl/Juggluco/webserver.html</a>中找到。</p>
+<p><b>天数</b>：从Juggluco 7.1.0开始，您可以选择要保存的天数。结束日期是屏幕的右边界。因此，如果您在Juggluco中查看过去的数据，则只导出旧数据（与左中菜单-&gt;<a href="https://www.juggluco.nl/Jugglucohelp/stathelp.html">统计</a>中的相同）。</p>
+<p>从Juggluco 7.1.0开始，也可以通过Juggluco中的网络服务器接收这些数据（左菜单-&gt;<a href="https://www.juggluco.nl/Jugglucohelp/settinghelp.html">设置</a>-&gt;网络服务器），请参阅<a href="https://www.juggluco.nl/Juggluco/webserver.html">https://www.juggluco.nl/Juggluco/webserver.html</a></p>
+<p><br/>
+<br/>
+
+</p>
+]]>
+</string>
+<string name="newamount" >
+<![CDATA[
+<h1>新标签</h1>
+<p>使用<b>新标签</b>，您可以输入与任意标签相关联的值。您可以在左侧菜单→设置→<a href="https://www.juggluco.nl/Jugglucohelp/labelhelp.html">编辑标签</a>下设置标签。使用特定标签输入的<i>值</i>将根据标签在图表中的一定高度显示。</p>
+<p>您可以通过长按标签来更改值。您还可以从左侧中间菜单→列表中输入的量列表中选择它。</p>
+<p>也可以通过扫描 NFC 笔从<a href="https://www.juggluco.nl/Juggluco/index.html#novopens" onclick="location.href=\'https://www.juggluco.nl/Juggluco/index.html?unit=\'+unitstr+\'#novopens\';return false;">NovoPen® 6 或 NovoPen Echo® Plus</a>接收<b>胰岛素</b>剂量数据。扫描后，您可以更改在 Juggluco 中保存剂量的标签，并且可以设置只接收某个特定日期和时间之后的剂量数据。当笔的内存中存在数百个剂量时，Juggluco 通过 NFC 接收所有剂量可能需要超过 30 秒。</p>
+<p>在左侧菜单→设置→<a href="https://www.juggluco.nl/Jugglucohelp/labelhelp.html">编辑标签</a>下还指定了您在哪个标签下输入餐饮的碳水化合物。在<i>新标签</i>中，此标签将显示一个<b>餐饮</b>按钮。点击这个<a href="https://www.juggluco.nl/Jugglucohelp/mealhelp.html"><i>餐饮</i></a>按钮将带您进入一个显示屏，您可以在其中指定餐饮的组成部分。然后会计算出碳水化合物含量，或者您可以指定碳水化合物含量，然后计算出所需成分的数量。</p>
+	
+	<p><br/>
+	<br/>
+	</p>
+	]]>
+</string>
+<string name="healthpermission" >
+<![CDATA[
+<h1>写入<i>血糖</i>的权限</h1>
+<p>（这个应该是健康授权，在较高的安卓版本写入读取健康数据需要授权，中国大陆的手机一般不涉及这个）为了能够将血糖值写入<b>健康连接(Health Connect)</b>，用户需要授予Juggluco权限将<b>血糖</b>写入健康连接。</p>
+<p>除了在健康连接中接收血糖值外，这个权限不需要用于其他任何方面。在所有其他方面，Juggluco可以在没有这个权限的情况下运行。</p>
+]]>
+</string>
+<string name="IOB" >
+<![CDATA[
+<h1>未消耗的胰岛素（IOB）</h1>
+<p>IOB 是衡量注射的胰岛素剂量中身体还剩多少胰岛素的指标。为此，您必须在“<i>速效胰岛素</i>”类别下的标签中输入胰岛素剂量。您可以在左侧菜单→设置→Web 服务器→<a href="https://www.juggluco.nl/Jugglucohelp/setlibrenumtype.html">提供量</a>中指定哪些标签是“<i>速效胰岛素</i>”。</p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+]]>
+</string>
+<string name="changestart" >
+<![CDATA[
+<h1>选择数据发送</h1>
+<p>（其实就是选择数据发送，选择一个时间开始往后的数据发送上去）选择数据发送到Libreview的日期和时间。当Libreview上已经存在一些数据时，这可能很有用。例如，在使用镜像连接将数据传输到另一部手机后，然后使用这部新手机将数据发送到Libreview。</p>
+]]>
+</string>
+</resources>

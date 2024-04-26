@@ -9,6 +9,8 @@
 //#include "curve.h"
 //#include "nanovg_gl.h"
 //#include "nanovg_gl_utils.h"
+//#define OLDXDRIP
+
 extern Sensoren *sensors;
 #define NANOVG_GLES2_IMPLEMENTATION
 
@@ -100,7 +102,7 @@ jmethodID  jdoglucose=nullptr, jupdateDevices=nullptr, jbluetoothEnabled=nullptr
 jclass JNIApplic;
 #ifdef OLDXDRIP
 #ifndef  WEAROS
-jclass XInfuus;
+jclass EverSense;
 jmethodID  sendGlucoseBroadcast=nullptr;
 #endif
 #endif
@@ -168,17 +170,18 @@ else {
 #ifdef OLDXDRIP
 #ifndef  WEAROS
 {
-const static jclass cl=env->FindClass("tk/glucodata/XInfuus");
+const static jclass cl=env->FindClass("tk/glucodata/EverSense");
 if(cl) {
 
-	XInfuus = (jclass)env->NewGlobalRef(cl);
+	EverSense = (jclass)env->NewGlobalRef(cl);
 	env->DeleteLocalRef(cl);
-	if(!(sendGlucoseBroadcast=env->GetStaticMethodID(XInfuus,"sendGlucoseBroadcast","(Ljava/lang/String;DFJ)V"))) {
-		LOGAR(R"(GetStaticMethodID(XInfuus,"sendGlucoseBroadcast","(Ljava/lang/String;DFJ)V()) failed)" "");
+//	broadcastglucose(int mgdl, float rate, long timmsec)
+	if(!(sendGlucoseBroadcast=env->GetStaticMethodID(EverSense,"broadcastglucose","(IFJ)V"))) {
+		LOGAR(R"(GetStaticMethodID(EverSense,"broadcastglucose","(IFJ)V") failed)" "");
 		}
 	}
 else {
-	LOGAR(R"(FindClass("tk/glucodata/XInfuus") failed)" "");
+	LOGAR(R"(FindClass("tk/glucodata/EverSense") failed)" "");
 	}
 	}
 #endif
@@ -709,7 +712,7 @@ extern "C" JNIEXPORT jlong JNICALL fromjava(saylastglucose)(JNIEnv *env, jclass 
 		if(!poll||!poll->valid()) {
 			return 0L;
 			}
-		if(poll->gettime()<(nu-60*3)) {
+		if(poll->gettime()<(nu-maxbluetoothage)) {
 			return poll->gettime()*1000L;
 			}
 		

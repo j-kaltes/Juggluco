@@ -673,7 +673,6 @@ void render() {
 
 extern void     processglucosevalue(int sendindex,int newstart) ;
 void     processglucosevalue(int sendindex,int newstart) {
-	constexpr int maxbluetoothage=3*60;
 	if(!sensors)
 		return;
 	LOGGER("processglucosevalue %d %d\n", sendindex,newstart);

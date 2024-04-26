@@ -21,6 +21,7 @@
 
 package tk.glucodata;
 
+import static tk.glucodata.Notify.glucosetimeout;
 import static tk.glucodata.Notify.penmutable;
 import static tk.glucodata.Notify.timef;
 
@@ -61,8 +62,7 @@ static private RemoteViews remoteMessage(String message) {
                 remoteViews.setTextViewText(R.id.content, message);
 		return remoteViews;
 	}
-static private long oldage=60*3*1000L;
-
+static private long oldage=glucosetimeout;
 static private void showviews(RemoteViews views,int rId,AppWidgetManager appWidgetManager, int appWidgetId) {
 	 Intent intent = new Intent(Applic.app, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(Applic.app, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT|penmutable);

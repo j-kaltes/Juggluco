@@ -410,8 +410,6 @@ extern "C" JNIEXPORT void JNICALL   fromjava(finishSensor)(JNIEnv *env, jclass c
 	}
 extern bool streamHistory() ;
 #ifdef SIBIONICS
-struct AlgorithmContext;
-extern AlgorithmContext *initAlgorithm(SensorGlucoseData*);
 extern bool siInit();
 #endif
 
@@ -438,8 +436,7 @@ extern "C" JNIEXPORT jlong JNICALL   fromjava(getdataptr)(JNIEnv *env, jclass cl
       LOGGER("getdataptr(%s) isSibinics\n",sensor);
 	   if(!siInit())
 	      return 0LL;
-   	AlgorithmContext *alg=initAlgorithm(sens);
-         data= new sistream(sensorindex,sens,alg);
+         data= new sistream(sensorindex,sens);
       }
   else 
 #endif

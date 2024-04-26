@@ -77,7 +77,7 @@
  <string name="unit">"Unit: "</string>
  <string name="glucoseaxisleft">Glucose-axis LEFT</string>
  <string name="startsapp">Scanning starts app</string>
- <string name="sendtoxdrip">Patched Libre Broadcast</string>
+ <string name="sendtoxdrip">Patched Libre</string>
  <string name="disablecamerakey">Disable camera key</string>
  <string name="invertscreen">Invert screen</string>
  <string name="nfcsound">NFC sound</string>
@@ -342,4 +342,5 @@
  <string name="off">Off</string>
  <string name="streamingenabled">" Streaming enabled"</string>
  <string name="streamingnotenabled">" Streaming not enabled"</string>
+    <string name="everSensebroadcast">EverSense</string>
 </resources>

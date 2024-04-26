@@ -417,7 +417,9 @@ public static int initscreenwidth;
 static private final BroadcastReceiver minTimeReceiver = new BroadcastReceiver() {
     @Override
     public void onReceive(Context context, Intent intent) {
-    	Applic.app.domintime();
+        Applic app=(Applic) context.getApplicationContext();
+        app.initproc();
+    	app.domintime();
         }
 };
 void domintime() {
@@ -649,6 +651,7 @@ private static	void initbroadcasts() {
 		}
 	Floating.init();
 	XInfuus.setlibrenames();
+   EverSense.setreceivers();
 	JugglucoSend.setreceivers();
 	SendLikexDrip.setreceivers();
         }

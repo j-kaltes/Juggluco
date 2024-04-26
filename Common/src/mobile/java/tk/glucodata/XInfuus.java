@@ -21,7 +21,6 @@
 
 package tk.glucodata;
 
-import androidx.annotation.Keep;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -61,7 +60,6 @@ static public void setlibrenames() {
     }
 
     */
-//@Keep
 public static final String glucoseaction="com.librelink.app.ThirdPartyIntegration.GLUCOSE_READING";
 public static void sendGlucoseBroadcast(String serial, double currentGlucose,float rate,long mmsec) {
 	final Context context=Applic.app;

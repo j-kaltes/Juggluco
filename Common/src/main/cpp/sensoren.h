@@ -55,6 +55,8 @@ const char *showsensorname() const {
 	}
 uint32_t wearduration() const {
 //   if(halfdays==24*2) const_cast<sensor *>(this)->halfdays=30*2;
+	if(halfdays==(maxdaysSI*2))
+		return maxSIhours*60*60;
 	return (halfdays?halfdays:29)*12*60*60;
 	}
 uint32_t maxtime() const {
@@ -582,8 +584,8 @@ vector<SensorGlucoseData *> inperiod(uint32_t starttime,uint32_t endtime) {
 			bool error = hist[ind]->error();
 			if(!error) {
 				if(hist[ind]->infowrong()) {
-					infoblockptr()->last = ind - 1;
-					LOGSTRING("infoblock wrong\n");
+				//	infoblockptr()->last = ind - 1;
+					LOGAR("infoblock wrong");
 					goto INFOWRONGERROR;
 				}
 				}

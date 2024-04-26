@@ -520,16 +520,15 @@ Log.i(LOG_ID,"showall");
 	if(blue!=null&&blue.scantime!=0L) {
 		final List<Pair> messages = new ArrayList<>();
 		put(messages,blue.scantime,": Start search for sensors\n");
-//		if(blue.unknownfound>0L) put(messages,blue.unknownfound,": Skip "+blue.unknownname+"\n");
-
 		final ArrayList<SuperGattCallback> gatts=SensorBluetooth.mygatts();
 		if(gatts==null) {
 			Log.i(LOG_ID,"showall gatts==null");
-			return;
 			}
-		for(SuperGattCallback gatt:gatts) {
-			if(gatt.foundtime>0L)
-				put(messages,gatt.foundtime,": Found "+gatt.SerialNumber +"\n");
+		else {
+			for(SuperGattCallback gatt:gatts) {
+				if(gatt.foundtime>0L)
+					put(messages,gatt.foundtime,": Found "+gatt.SerialNumber +"\n");
+				}
 			}
 		if(blue.scantimeouttime>0L)
 			put(messages,blue.scantimeouttime, ": timeout\n");
@@ -548,12 +547,11 @@ Log.i(LOG_ID,"showall");
 		scanview.setVisibility(VISIBLE);
 		}
 	else  {
-			Log.i(LOG_ID,"scanview.setVisibility(GONE);");
-			scanview.setVisibility(GONE);
-			}
+		Log.i(LOG_ID,"scanview.setVisibility(GONE);");
+		scanview.setVisibility(GONE);
+		}
 	if(!isWearable) {
 		activity.setfineres(()-> {
-
 		if( Build.VERSION.SDK_INT < 23|| Applic.noPermissions(activity).length==0) {
 			Log.i(LOG_ID,"locationpermissin.setVisibility(GONE);");
 			locationpermission.setVisibility(GONE);
@@ -562,10 +560,6 @@ Log.i(LOG_ID,"showall");
 		}
 	bluestate.setText( mBluetoothAdapter==null?activity.getString(R.string.nobluetooth):(mBluetoothAdapter.isEnabled()?activity.getString(R.string.bluetoothenabled): activity.getString(R.string.bluetoothdisabled)));
         usebluetooth.setChecked(Natives.getusebluetooth());
-	/*setwakelock=true;
-        wakelock.setChecked(Natives.getwakelock());
-	setwakelock=false;
-	*/
         priority.setChecked(Natives.getpriority());
 	streamhistory.setChecked(Natives.getStreamHistory( ));
 	if(!isWearable) {

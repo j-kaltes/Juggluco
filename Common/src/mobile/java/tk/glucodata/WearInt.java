@@ -45,6 +45,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import static tk.glucodata.Natives.getxDripTrendName;
+import static tk.glucodata.Notify.glucosetimeout;
 
 import com.eveningoutpost.dexdrip.services.broadcastservice.models.GraphLine;
 import com.eveningoutpost.dexdrip.services.broadcastservice.models.Settings;
@@ -54,7 +55,7 @@ import tk.glucodata.Applic;
 public class  WearInt  {
 private static final String LOG_ID="WearInt";
 private static final String ACTION_WATCH_COMMUNICATION_SENDER = "com.eveningoutpost.dexdrip.watch.wearintegration.BROADCAST_SERVICE_SENDER";
-static private final long oldvalue=1000*60*5L;
+static private final long oldvalue=glucosetimeout;
 static final Map<String, Settings> mapsettings=new HashMap<>();
 /*
 private static int getBatteryLevel() { //From xDrip

@@ -133,12 +133,11 @@ static void zXingResult(int resultCode, Intent data) {
 
 public static void scan(Activity act) {
      if(!isWearable) {
-	  final var country= Log.doLog?"CN":Locale.getDefault().getCountry();
-      if("CN".equalsIgnoreCase(country))
+         if(BuildConfig.DEBUG)
             scanZXing(act);
-       else
-         scanGoogle(act);
-         }
+          else
+            scanGoogle(act);
+            }
       }
 private static void scanGoogle(Activity act) {
      if(!isWearable) {

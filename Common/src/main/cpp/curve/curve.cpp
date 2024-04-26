@@ -646,7 +646,8 @@ std::vector<pair<const ScanData*,const ScanData*>> getsensorranges(uint32_t star
 		}
 	return polldata;
 	}
-static uint32_t pollgapdist=5*60;
+//static uint32_t pollgapdist=5*60;
+static uint32_t pollgapdist=6*60;
 pair<const ScanData*,const ScanData*> getScanRangeRuim(const ScanData *scan,const int len,const uint32_t start,const uint32_t end) {
 	auto [low,high]= getScanRange(scan,len,start,end);
 	const ScanData *endscan= scan+len;
@@ -856,7 +857,7 @@ template <class TX,class TY> void showlineScan(NVGcontext* genVG,const ScanData 
 	nvgStrokeColor(genVG, *col);
 	nvgFillColor(genVG,*col);
 	nvgStrokeWidth(genVG, pollCurveStrokeWidth);
-	uint32_t late=0,dif=5*60;
+	uint32_t late=0,dif=pollgapdist;
 	float startx=-1000,starty=-1000;
 	for(const ScanData *it=low;it!=high;it++) {
 		if(it->valid()) {
@@ -1234,7 +1235,6 @@ int getglucosestr(uint32_t nonconvert,char *glucosestr,int maxglucosestr) {
 		}
 	}
 
-constexpr int maxbluetoothage=3*60;
 static void	showscanner(NVGcontext* genVG,const SensorGlucoseData *hist,int scanident,time_t nu) {
 	const ScanData &last=*hist->getscan(scanident);
 	const bool isold=(nu-last.t)>=maxbluetoothage;

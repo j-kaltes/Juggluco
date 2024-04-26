@@ -71,6 +71,9 @@ import java.util.concurrent.TimeUnit;
 //import tk.glucodata.Natives;
 
 public class Notify {
+static public final int glucosetimeoutSEC=30*11;
+static public final long glucosetimeout=1000L*glucosetimeoutSEC;
+
     static final private String LOG_ID="Notify";
 static Notify onenot=null;
 static void init(Context cont) {
@@ -682,8 +685,7 @@ void fornotify(Notification notif) {
 		       }
 		}
 	}
-//static final long glucosetimeout=1000*60*5;
-static final long glucosetimeout=1000*60*3;
+//static final long glucosetimeout=1000*60*3;
 
 	/*
 	@SuppressWarnings("deprecation")

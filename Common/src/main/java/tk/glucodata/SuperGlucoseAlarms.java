@@ -31,7 +31,7 @@ public SuperGlucoseAlarms(Application context) {
 	Notify.init(context);
 	}
 
-static final int showtime = 3 * 60 * 1000;
+static final long showtime = Notify.glucosetimeout;
 
 
 public	static long waitmmsec() {

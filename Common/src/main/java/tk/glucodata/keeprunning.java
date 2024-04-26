@@ -65,7 +65,8 @@ static PowerManager.WakeLock wakeLock =null;
   public int onStartCommand(Intent intent, int flags, int startId) {
 	if(started) return Service.START_STICKY;//NODIG?
         started=true;
-	Applic.app.initproc();
+         Applic app=(Applic) getApplicationContext();
+        app.initproc();
 	if(Natives.getfloatglucose()&&!Natives.gethidefloatinJuggluco())
 		Floating.makefloat();
   	try {
