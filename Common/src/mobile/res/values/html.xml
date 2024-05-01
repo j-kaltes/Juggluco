@@ -310,16 +310,18 @@ over a portable hotspot.</p>
 </string>
 <string name="locationpermission" >
 <![CDATA[
-<p style="line-height: 100%; margin-bottom: 0in">
-Previously Juggluco needed location permission to find the Bluetooth
-device address of FreeStyle Libre 2 sensors. Now Juggluco uses
-another way to get the device address on most devices and is location
-permission not necessary. 
+<h1>Location permission 
+</h1>
+<p style="margin-bottom: 0in">Devices running Android 6 to 11 need
+location permission to find <b>Sibionic</b><b>s</b><b> sensors.</b></p>
+<p style="margin-bottom: 0in">Previously Juggluco needed location
+permission to find the Bluetooth device address of FreeStyle Libre 2
+sensors. Now Juggluco uses another way to get the device address on
+most devices and is location permission not necessary. 
 </p>
-<p style="line-height: 100%; margin-bottom: 0in">Juggluco still uses
-the old method on Android 6,7 and 7.1 and location permission is
-still needed for them.</p>
-<p style="line-height: 100%; margin-bottom: 0in"><br/>
+<p style="margin-bottom: 0in">Juggluco still uses the old method on
+Android 6,7 and 7.1 and location permission is still needed for them.</p>
+<p style="margin-bottom: 0in"><br/>
 
 </p>
 ]]>
@@ -840,7 +842,7 @@ for more information. Only one app can listen to the network port
 used by the xDrip webserver, so you need to turn off &quot;<i>xDrip
 webservice</i>&quot; in xDrip itself if you want to make use of the
 one in Juggluco.</p>
-<h2 class="western">EverSense</h2>
+<h2 id="eversense" class="western">EverSense</h2>
 <p>Yet another glucose broadcast. It can be used to send every minute a
 glucose value to xDrip. xDrip will ignore nearly all of them because
 of its insistence on one value in 5 minutes. You can remove this

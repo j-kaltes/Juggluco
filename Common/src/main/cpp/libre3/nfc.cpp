@@ -24,7 +24,7 @@
 #include <string.h>
 #include "fromjava.h"
 #include "logs.h"
-#include "jnisub.h"
+#include "libre2.h"
 #include "destruct.h"
 #include "sensoren.h"
 #include "SensorGlucoseData.h"

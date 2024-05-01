@@ -302,6 +302,10 @@ void	deletelast() {
 	sensor *getsensor(const int ind) {
 		return sensorlist() + ind;
 	}
+bool isSibionics(const int ind) const {
+	const sensor *sens=getsensor(ind);
+	return sens->halfdays>=(maxdaysSI*2);
+	}
 
 static SensorGlucoseData::longsensorname_t  namelibre3(const std::string_view sensorid) {
 	SensorGlucoseData::longsensorname_t  sens;

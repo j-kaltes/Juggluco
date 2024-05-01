@@ -1425,17 +1425,19 @@ diesem Konto aktiviert werden.</p>
 </string>
 <string name="locationpermission" >
 <![CDATA[
-<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.17in; orphans: 2; widows: 2; margin-bottom: 0in">
-<font><font face="Times New Roman"><font size="4" style="font-size: 14pt">Zuvor
+<h1>Standortberechtigung</h1>
+<p style="margin-bottom: 0in"><font face="Times New Roman">Geräte
+mit Android 6 bis 11 benötigen eine Standortberechtigung, um
+<b>Sibionics-Sensoren</b> zu finden.</font></p>
+<p style="margin-bottom: 0in"><font face="Times New Roman">Zuvor
 benötigte Juggluco eine Standortberechtigung, um die
 Bluetooth-Geräteadresse von FreeStyle Libre 2-Sensoren zu
 finden.&nbsp;Jetzt verwendet Juggluco auf den meisten Geräten einen
 anderen Weg, um die Geräteadresse zu erhalten, und es ist keine
-Standorterlaubnis erforderlich.</font></font></font></p>
-<p style="font-variant: normal; letter-spacing: normal; font-style: normal; font-weight: normal; line-height: 0.17in; orphans: 2; widows: 2; margin-bottom: 0in">
-<font><font face="Times New Roman"><font size="4" style="font-size: 14pt">Juggluco
+Standorterlaubnis erforderlich.</font></p>
+<p style="margin-bottom: 0in"><font face="Times New Roman">Juggluco
 verwendet immer noch die alte Methode auf Android 6,7 und 7.1 und es
-wird immer noch eine Standorterlaubnis für sie benötigt.</font></font></font></p>
+wird immer noch eine Standorterlaubnis für sie benötigt.</font></p>
 <p><br/>
 <br/>
 <br/>

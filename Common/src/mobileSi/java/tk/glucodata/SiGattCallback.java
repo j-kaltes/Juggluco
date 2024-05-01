@@ -40,11 +40,12 @@ import java.util.UUID;
 public class SiGattCallback extends SuperGattCallback {
 
     static private final String LOG_ID = "SiGattCallback";
-
+static int siNR=0;
     public SiGattCallback(String SerialNumber, long dataptr) {
         super(SerialNumber, dataptr, 0x10);
 	mActiveDeviceAddress=null;
         Log.d(LOG_ID, "SiGattCallback(..)");
+	++siNR;
     }
 
 
@@ -269,4 +270,9 @@ public boolean matchDeviceName(String deviceName) {
       }
      return false;
 	}
+
+@Override
+public void free() {
+		--siNR;
+		}
 }

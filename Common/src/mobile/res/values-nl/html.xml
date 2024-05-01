@@ -317,16 +317,19 @@ persoonlijke hotspot.</p>
 </string>
 <string name="locationpermission" >
 <![CDATA[
-<p style="line-height: 100%; margin-bottom: 0in">
-Vroeger had Juggluco locatie toestemming nodig om het Bluetooth
-device adres van Freestyle Libre 2 sensoren te vinden. Nu verkrijgt
-Juggluco het device adres op een andere manier en is locatie
-toestemming niet meer nodig. 
+<h1>Locatie toestemming</h1>
+<p style="margin-bottom: 0in">Apparaten met Android 6 tot en met 11
+hebben locatietoestemming nodig om <b>Sibionics-sensoren</b> te
+vinden.</p>
+<p style="margin-bottom: 0in">Vroeger had Juggluco locatie
+toestemming nodig om het Bluetooth device adres van Freestyle Libre 2
+sensoren te vinden. Nu verkrijgt Juggluco het device adres op een
+andere manier en is locatie toestemming niet meer nodig. 
 </p>
-<p style="line-height: 100%; margin-bottom: 0in">Juggluco gebruikt
-nog steeds de oude methode op Android 6, 7 en 7.1 en daar is locatie
-toestemming nog steeds nodig.</p>
-<p style="line-height: 100%; margin-bottom: 0in"><br/>
+<p style="margin-bottom: 0in">Juggluco gebruikt nog steeds de oude
+methode op Android 6, 7 en 7.1 en daar is locatie toestemming nog
+steeds nodig.</p>
+<p style="margin-bottom: 0in"><br/>
 
 </p>
 ]]>

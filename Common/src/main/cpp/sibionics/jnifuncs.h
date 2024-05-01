@@ -2,6 +2,7 @@
 algtype(getAlgorithmContextFromNative) vers(getAlgorithmContextFromNative);
 algtype(initAlgorithmContext) vers(initAlgorithmContext);
 algtype(processAlgorithmContext) vers(processAlgorithmContext);
+algtype(getAlgorithmVersion) vers(getAlgorithmVersion);
 
 static bool vers(getJNIfunctions)() {
 	static	std::string_view alglib=jniAlglib;
@@ -17,7 +18,15 @@ static bool vers(getJNIfunctions)() {
 		return false;
 	 	}
       }
-
+//Java_com_algorithm_v1_11_13_1b_NativeAlgorithmLibraryV1_11_13B_getAlgorithmVersion
+//Java_com_algorithm_v1_11_13_1b_NativeAlgorithmLibraryV1_11_13B_" #x
+{	constexpr const char str[]=algjavastr(getAlgorithmVersion);
+	vers(getAlgorithmVersion)= (algtype(getAlgorithmVersion)) dlsym(handle,str);
+	 if(!vers(getAlgorithmVersion)) {
+	 	LOGGER("dlsym %s failed: %s\n",str,dlerror());
+		return false;
+	 	}
+}
 {	constexpr const char str[]=algjavastr(initAlgorithmContext);
 	vers(initAlgorithmContext)= (algtype(initAlgorithmContext)) dlsym(handle,str);
 	 if(!vers(initAlgorithmContext)) {
@@ -48,11 +57,30 @@ static bool vers(getJNIfunctions)() {
 	}
 
 double SiContext::vers(process)(int index,double value, double temp) {
-   return vers(processAlgorithmContext)(subenv,nullptr,reinterpret_cast<jobject>(vers(algcontext)),index,value,temp,0.0,4.4,11.1);
-};
+   const auto res= vers(processAlgorithmContext)(subenv,nullptr,reinterpret_cast<jobject>(vers(algcontext)),index,value,temp,0.0,targetlow,targethigh);
+	 LOGGER("processAlgorithmContext(%p,%d,%f,%f,%f,%f,%f)=%f\n",algcontext,index,value,temp,0.0,targetlow,targethigh,res);
+	 return res;
+	};
 
 getjson_t vers(getjson);
 setjson_t vers(setjson);
+#ifdef TEST
+AlgorithmContext *vers(initAlgorithm)(const char *shortname) {
+    char *version = (char *)vers(getAlgorithmVersion)(subenv,nullptr);
+    LOGGER("getAlgorithmVersion()=%s\n",version);
+    jobject jalg= vers(getAlgorithmContextFromNative)(subenv,nullptr);
+    version = (char *)vers(getAlgorithmVersion)(subenv,nullptr);
+    LOGGER("getAlgorithmVersion()=%s\n",version);
+    int res = vers(initAlgorithmContext)(subenv,nullptr,jalg, 0, reinterpret_cast<jstring>((char *)shortname));
+    if(res != 1) {
+        LOGGER("initAlgorithmContext(algcontext,0,%s)==%d\n",shortname,res);
+        return nullptr;
+    }
+    auto algcontext=reinterpret_cast<AlgorithmContext *>(jalg);
+    // loadjson(sens, sens->vers(statefile).data(),algcontext,setjson); 
+     return algcontext;
+     }
+#else
 AlgorithmContext *vers(initAlgorithm)(SensorGlucoseData *sens, setjson_t setjson) {
     jobject jalg= vers(getAlgorithmContextFromNative)(subenv,nullptr);
     char *shortname=sens->getinfo()->siBlueToothNum;
@@ -65,7 +93,7 @@ AlgorithmContext *vers(initAlgorithm)(SensorGlucoseData *sens, setjson_t setjson
      loadjson(sens, sens->vers(statefile).data(),algcontext,setjson); 
      return algcontext;
      }
-
+#endif
 static bool vers(getNativefunctions)() {
 	std::string_view alglib=algLibName;
 	void *handle=openlib(alglib);

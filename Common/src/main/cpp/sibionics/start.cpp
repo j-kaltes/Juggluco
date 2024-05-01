@@ -28,7 +28,7 @@
 #include <string_view>
 #include <mutex>
 #include "SensorGlucoseData.h"
-#include "jnisub.h" //PUT sistream etc in different header?
+#include "libre2.h" //PUT sistream etc in different header?
 #include "fromjava.h"
 #include "destruct.h"
 #include "sibionics/AlgorithmContext.hpp"
@@ -155,6 +155,7 @@ extern "C" {
 typedef  jobject JNICALL (*algtype(getAlgorithmContextFromNative))(JNIEnv *env, jclass thiz);
 typedef  jint JNICALL (*algtype(initAlgorithmContext))(JNIEnv *env, jclass thiz,jobject alg,jint i,jstring strarg);
 typedef  jdouble JNICALL (*algtype(processAlgorithmContext))(JNIEnv *env, jclass thiz,jobject algContext,jint index,jdouble value, jdouble temp,jdouble dzero,jdouble low,jdouble high);
+typedef  jstring JNICALL (*algtype(getAlgorithmVersion))(JNIEnv *env, jclass thiz);
 };
 
 extern JNIEnv *subenv;
@@ -174,6 +175,9 @@ extern bool loadjson(SensorGlucoseData *sens, const char *statename,const Algori
 #define jniAlglib 	"/libnative-algorithm-jni-v113B.so";
 #define vers(x) x 
 #undef algjavastr
+
+constexpr const double targetlow=3.9;
+constexpr const double targethigh=7.8;
 #define algjavastr(x) "Java_com_algorithm_v1_11_13_1b_NativeAlgorithmLibraryV1_11_13B_" #x
 
 #include "jnifuncs.h"
@@ -181,6 +185,8 @@ extern bool loadjson(SensorGlucoseData *sens, const char *statename,const Algori
 #undef jniAlglib 
 #undef vers
 #undef algjavastr
+constexpr const double targetlow=4.4;
+constexpr const double targethigh=11.1;
 #define jniAlglib 	"/libnative-algorithm-jni-v112.so";
 #define algjavastr(x) "Java_com_algorithm_v1_11_12_NativeAlgorithmLibraryV1_11_12_" #x
 #define algLibName "/libnative-algorithm-v1_1_2.so"
@@ -196,6 +202,8 @@ extern bool loadjson(SensorGlucoseData *sens, const char *statename,const Algori
 #undef algjavastr
 #undef jsonname
 
+constexpr const double targetlow=3.9;
+constexpr const double targethigh=7.8;
 #define jsonname(et,end) "_ZN22NativeAlgorithmV1_1_3B23" #et  "JsonAlgorithmContext" #end //Makes one in 5 minutes
 #define algLibName "/libnative-algorithm-v1_1_3_B.so";
 #define jniAlglib 	"/libnative-algorithm-jni-v113B.so";

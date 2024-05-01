@@ -5,6 +5,6 @@ import android.app.Activity;
 
 public class Sibionics {
 public static void scan(Activity act) { }
-static void connectSensor(final String scantag) {}
-static void zXingResult(int resultCode, Object data) {}
+static boolean connectSensor(final String scantag) {return false;}
+static boolean zXingResult(int resultCode, Object data) {return false;}
 };

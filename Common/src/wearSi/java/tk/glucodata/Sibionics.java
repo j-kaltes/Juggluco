@@ -1,10 +1,1 @@
-package tk.glucodata;
-
-
-import android.app.Activity;
-
-public class Sibionics {
-public static void scan(Activity act) { }
-static void connectSensor(final String scantag) {}
-static void zXingResult(int resultCode, Object data) {}
-};
+../../../../nosi/java/tk/glucodata/Sibionics.java

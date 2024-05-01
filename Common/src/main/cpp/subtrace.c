@@ -882,7 +882,6 @@
 
     jstring      subNewString(JNIEnv*env,const jchar * const1,jsize  jsize2) {
    LOGSTRING("NewString\n");
-
    }
 
 
@@ -906,12 +905,14 @@
 
     jstring      subNewStringUTF(JNIEnv*env,const char * const1) {
    LOGGER("NewStringUTF(%s)\n",const1);
-   return nullptr;
+   return (jstring)const1;
    }
 
 
     jsize        subGetStringUTFLength(JNIEnv*env,jstring  jstring1) {
    LOGSTRING("GetStringUTFLength\n");
+   const char *str=(const char *)jstring1;
+   return strlen(str);
 
    }
 

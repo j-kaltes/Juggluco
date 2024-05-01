@@ -28,7 +28,7 @@
 #include <thread>
 #include <future>
 
-#include "jnisub.h"
+#include "libre2.h"
 #ifdef TESTPS
 #define abbottdec(x) (*x)
 #define abbottcall(x) x

@@ -84,34 +84,33 @@ longserialnumber
      if(!isWearable) {
             String name=Natives.addSIscangetName(scantag);
             if(name!=null)  {
-               SensorBluetooth.resetDevice(name);
                MainActivity.tocalendarapp=true;
-               return true;
+               return SensorBluetooth.resetDevice(name);
                }
-               }
+            }
+          wrongtag(); 
           return false;
          }
 
 
-static void connectSensor(final String scantag) {
+static boolean connectSensor(final String scantag) {
      if(!isWearable) {
-        if(!connectdevice(scantag)) {
-           	wrongtag(); 
+        return connectdevice(scantag);
         }
-        }
+    return false;
     }
 
 private static void scanZXing(Activity act) {
      if(!isWearable) {
-		IntentIntegrator intentIntegrator = new IntentIntegrator(act);
-		intentIntegrator.setPrompt("To use a Sibionic sensor, scan its Data Matrix or QR Code");
-		intentIntegrator.setOrientationLocked(true); 
-		intentIntegrator.setDesiredBarcodeFormats( DATA_MATRIX, QR_CODE);
-		intentIntegrator.setRequestCode(REQUEST_BARCODE);
-		intentIntegrator.initiateScan(); 
+         IntentIntegrator intentIntegrator = new IntentIntegrator(act);
+         intentIntegrator.setPrompt("To use a Sibionic sensor, scan its Data Matrix or QR Code");
+         intentIntegrator.setOrientationLocked(true); 
+         intentIntegrator.setDesiredBarcodeFormats( DATA_MATRIX, QR_CODE);
+         intentIntegrator.setRequestCode(REQUEST_BARCODE);
+         intentIntegrator.initiateScan(); 
+         }
       }
-      }
-static void zXingResult(int resultCode, Intent data) {
+static boolean zXingResult(int resultCode, Intent data) {
        Log.i(LOG_ID,"zXingResult(" +resultCode+",data)");
        IntentResult intentResult = IntentIntegrator.parseActivityResult(resultCode, data);
        if (intentResult != null) {
@@ -121,17 +120,18 @@ static void zXingResult(int resultCode, Intent data) {
            else {
                 Log.i(LOG_ID,"Scan: "+scan);
                 Toaster(scan);
-                connectSensor(scan);
+                return connectSensor(scan);
              }
           }
          else {
             Log.i(LOG_ID,"intentResult == null"); 
             }
+        return false;
        }
        
 
 
-public static void scan(Activity act) {
+public static void scan(MainActivity act) {
      if(!isWearable) {
          if(BuildConfig.DEBUG)
             scanZXing(act);
@@ -139,7 +139,7 @@ public static void scan(Activity act) {
             scanGoogle(act);
             }
       }
-private static void scanGoogle(Activity act) {
+private static void scanGoogle(MainActivity act) {
      if(!isWearable) {
 	final var options =  new com.google.mlkit.vision.codescanner.GmsBarcodeScannerOptions.Builder().setBarcodeFormats( com.google.mlkit.vision.barcode.common.Barcode.FORMAT_DATA_MATRIX, com.google.mlkit.vision.barcode.common.Barcode.FORMAT_QR_CODE).build();
 	final var scanner =  com.google.mlkit.vision.codescanner.GmsBarcodeScanning.getClient(act, options);
@@ -148,7 +148,9 @@ private static void scanGoogle(Activity act) {
 	       var rawValue = barcode.getRawValue();
 		var message="Scanned: "+rawValue;
 		   Log.i(LOG_ID,message);
-		   connectSensor(rawValue);
+		   if(connectSensor(rawValue)) {
+            act.finepermission(); 
+            }
 	       })
 	   .addOnCanceledListener(
 	       () -> {

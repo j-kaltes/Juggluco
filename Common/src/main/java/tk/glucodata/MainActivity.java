@@ -39,6 +39,7 @@ import static tk.glucodata.Floating.setfloatglucose;
 import static tk.glucodata.Floating.shoulduseadb;
 import static tk.glucodata.GlucoseCurve.STEPBACK;
 import static tk.glucodata.Log.showbytes;
+import static tk.glucodata.Natives.hasSibionics;
 import static tk.glucodata.Natives.wakelibreview;
 import static tk.glucodata.help.hidekeyboard;
 import static tk.glucodata.settings.Settings.removeContentView;
@@ -779,7 +780,7 @@ public void requestRender() {
 
 private void netinitstep() {
 	if(!started) {
-		if (Build.VERSION.SDK_INT < 26||Build.VERSION.SDK_INT>30) {
+		if (Build.VERSION.SDK_INT < 26||Build.VERSION.SDK_INT>30||hasSibionics()) {
 			useBluetooth(Natives.getusebluetooth()&&finepermission());
 			}
 		else
@@ -899,7 +900,7 @@ public void onRequestPermissionsResult(int requestCode, String[] permissions, in
 			Log.i(LOG_ID,"LOCATION_PERMISSION_REQUEST_CODE");
 			if (granted) {
 				if(Natives.getusebluetooth())  {
-					if(Build.VERSION.SDK_INT <26||Build.VERSION.SDK_INT>30 ) 
+					if(Build.VERSION.SDK_INT <26||Build.VERSION.SDK_INT>30 ||hasSibionics()) 
 						useBluetooth(true);
 					else
 					    SensorBluetooth.goscan();
@@ -911,7 +912,7 @@ public void onRequestPermissionsResult(int requestCode, String[] permissions, in
 
 				if(!gaverational) {
 					bluediag.returntoblue=false;
-					if(Build.VERSION.SDK_INT <26)  {
+					if(Build.VERSION.SDK_INT <26 ||hasSibionics() )  {
 						help.basehelp(R.string.locationpermission,
 								this, l -> {
 									useBluetooth(false);
@@ -1034,7 +1035,8 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
          return;
       case REQUEST_BARCODE: 
          if(SiBionics==1 &&!isWearable) {
-			   Sibionics.zXingResult(resultCode, data);
+			   if(Sibionics.zXingResult(resultCode, data))
+               finepermission();
 			   return;
 			   }
 
@@ -1292,7 +1294,7 @@ public void useBluetooth(boolean val) {
 public  void setbluetoothmain(boolean on) {
     if(on) {
 	 Natives.setusebluetooth(on);
-	 if(Build.VERSION.SDK_INT < 26||Build.VERSION.SDK_INT>30) {
+	 if(Build.VERSION.SDK_INT < 26||Build.VERSION.SDK_INT>30||hasSibionics()) {
 		if(!finepermission()) {
 			return;
 			}

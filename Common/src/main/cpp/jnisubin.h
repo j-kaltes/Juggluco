@@ -16,7 +16,67 @@
 /*      You should have received a copy of the GNU General Public License            */
 /*      along with Juggluco. If not, see <https://www.gnu.org/licenses/>.            */
 /*                                                                                   */
-/*      Fri Jan 27 12:35:09 CET 2023                                                 */
+/*      Wed May 01 10:52:38 CEST 2024                                                 */
 
 
-#include "libre2.h"
+
+#pragma once
+#include <unordered_map>
+#include "scanstate.h"
+struct Method {
+string name;
+string pat;
+void *func;
+};
+
+
+struct jclasser
+{
+std::vector<Method> funcs;
+
+static std::unordered_map<string,jclasser*> classid; 
+jclasser(const char name[], std::vector<Method> &&funcs): funcs(std::move(funcs)) {
+	classid.emplace( std::make_pair(name, this));
+	}
+};
+struct algobj {
+public:
+ jclasser *cl;
+void *ptr=nullptr;
+algobj(jclasser *cl):cl(cl) {}
+operator jobject() {
+        return (jobject)this;
+        }
+	/*
+operator intptr_t() {
+	return reinterpret_cast<intptr_t>(ptr);
+	}
+	*/
+intptr_t toint() {
+	return reinterpret_cast<intptr_t>(ptr);
+	}
+};
+extern jclasser out;
+struct outobj :public algobj{
+outobj(): algobj(&out) {}
+// jclasser *algobj::cl=&out;
+};
+struct jnidata_t {
+	const struct JNINativeInterface* functions;
+	scanstate *map;
+	};
+
+class PatchEvent {
+private:
+    const int id;
+    const int errorCode;
+public:
+    PatchEvent(int id, int code) :id(id),errorCode(code) { }
+
+   int getId()const { return id; }
+
+   int getErrorCode() const { return errorCode; }
+};
+extern JNIEnv *subenv;
+
+extern bool javaAttached;

@@ -23,10 +23,10 @@
 #pragma once
 #include <jni.h>
 struct AlgorithmContext {
-    double ig_data;
-    jlong mNativeContext;
     int currentWarning;
     int glucoseWarning;
+    double ig_data;
+    jlong mNativeContext;
     int ig_trend;
     int temperatureWarning;
     };

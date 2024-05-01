@@ -60,7 +60,10 @@ static uint32_t makestarttime(int index,uint32_t eventTime) {
 #endif
 	return starttime;
    }
-
+#ifdef MAIN
+#define savejson(sens,name,  index,alg,getjson )x
+#define glucoseback(glval, drate,hist) 
+#else
 #include "sibionics/json.h"
 extern bool savejson(SensorGlucoseData *sens,std::string_view, int index,const AlgorithmContext *alg,getjson_t getjson );
 extern getjson_t getjson;
@@ -80,12 +83,12 @@ void logbytes(std::string_view text,const uint8_t *value,int vallen) {
 #else
 #define logbytes(text,value, vallen) 
 #endif
-
+#endif
 #ifdef SIHISTORY
 extern getjson_t getjson3;
-void	 SiContext::saveSi3(SensorGlucoseData *sens,int index,uint32_t eventTime,bool save,int value,float temp,bool dosavejson) {
+void	 SiContext::saveSi3(SensorGlucoseData *sens,int index,uint32_t eventTime,bool save,double value,float temp,bool dosavejson) {
      if(const double newvalue=process3(index,value,temp);newvalue>0.1) {
-            const int mgL=std::round(newvalue*convfactordL);
+            const int mgL=std::round(newvalue* convfactor);
          if(save) {
             const int idpos=int(round(index/(double)sens->getmininterval()));
             Glucose *item=sens->getglucose(idpos);
@@ -127,7 +130,7 @@ jlong SiContext::processData(SensorGlucoseData *sens,time_t nowsecs,int8_t *data
       const uint16_t *one=reinterpret_cast<uint16_t*>(start+off);
       const int index=std::byteswap(one[0]);
       const float temp = std::byteswap(one[1])/ 10.0f;
-      const int value = std::byteswap(one[3]);
+      const double value = std::byteswap(one[3])/10.0;
       const int numOfUnreceived=std::byteswap(one[5]);
 
        const int maxid=sens->getSiIndex();
@@ -148,8 +151,9 @@ jlong SiContext::processData(SensorGlucoseData *sens,time_t nowsecs,int8_t *data
          long  offtime=addtime  - (numOfUnreceived * 60) ;
          const time_t eventTime= nowsecs + offtime;
          const bool infuture=offtime>0;
+         LOGGER("Siprocess: addtime=%d added=%ld\n",addtime,offtime);
          if(infuture) {
-            LOGGER("Siprocess: wrong time: %d seconds future addtime=%d index=%d temp=%f value=%f numOfUnreceived=%d\n",offtime,addtime,index,temp, value/10.0f,numOfUnreceived);
+            LOGGER("Siprocess: wrong time: %ld seconds future addtime=%d index=%d temp=%f value=%f numOfUnreceived=%d\n",offtime,addtime,index,temp, value,numOfUnreceived);
                }
            else  {
              if(maxid<10) {
@@ -163,11 +167,11 @@ jlong SiContext::processData(SensorGlucoseData *sens,time_t nowsecs,int8_t *data
                const long electric= std::byteswap(one[2]);
                const int status = std::byteswap(one[4]);
       #endif
-               const int mgdL=std::round(newvalue*convfactordL/10.0);
+               const int mgdL=std::round(newvalue*convfactordL);
                const int trend=algcontext->ig_trend;
                const float change=sitrend2RateOfChange(trend);
                const int abbotttrend=sitrend2abbott(trend);
-                  LOGGER("SIprocess: index=%d temp=%f electric=%ld value=%f->%f status=%d numOfUnreceived=%d addtime=%d trend=%d rate=%.2f abbotttrend=%d\n", index, temp, electric, value/10.0f, mgdL/convfactordL,status, numOfUnreceived, addtime,trend,change,abbotttrend);
+                  LOGGER("SIprocess: index=%d temp=%f electric=%ld value=%f->%f status=%d numOfUnreceived=%d addtime=%d trend=%d rate=%.2f abbotttrend=%d\n", index, temp, electric, value, mgdL/convfactordL,status, numOfUnreceived, addtime,trend,change,abbotttrend);
                  
                     {
          	if(infuture) sens->setSiIndex(index+1);
@@ -199,7 +203,7 @@ jlong SiContext::processData(SensorGlucoseData *sens,time_t nowsecs,int8_t *data
           else {
             if(index==maxid)
 	            sens->setSiIndex(maxid+1);
-            LOGGER("SIprocess failed: index=%d temp=%f value=%f numOfUnreceived=%d\n", index, temp, value/10.0f,numOfUnreceived);
+            LOGGER("SIprocess failed: index=%d temp=%f value=%f numOfUnreceived=%d\n", index, temp, value,numOfUnreceived);
             if(!numOfUnreceived&&!(index%5))  {
                sens->sensorerror=true;
                return 0LL;

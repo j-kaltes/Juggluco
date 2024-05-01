@@ -48,7 +48,7 @@ sighandler_t bsd_signal(int signum, sighandler_t handler);
 //#undef NOLOG
        #include "logs.h"
        #include "inout.h"
-#include "jnisub.h"
+#include "libre2.h"
 #include "serial.h"
 #include "fromjava.h"
 
@@ -145,6 +145,33 @@ class scanlogger {
 #define logscan false 
 #endif
 #ifdef LOGSCANRESULT
+void AlgorithmResults::showresults(FILE *stream,scandata *dat) const {
+    time_t nutime=dat->gettime();
+    int nuid=glu->id;
+    fprintf(stream,"History:\n");
+	constexpr const int maxtim=17;
+	char buf[maxtim];
+ jint len=hist->size();
+int uselen=std::min(history::num,len);
+for(int i=0;i<uselen;i++) {
+        const GlucoseValue *g=(*hist)[i];
+	int gv=g->value;
+	int id=g->id;
+	time_t was=nutime-(nuid-id)*60;
+	uint16_t raw=dat->gethistoryglucose(i);
+
+	showtime(&was,buf);
+	fprintf(stream,"Glucose %d\t%.1f\t(%d\t%.1f)\t%d\t%d\t%s\n",gv,gv/18.0, (int)roundf(raw/10.0),raw/180.0, id, g->dataQuality,buf);
+	}
+	showtime(&nutime,buf);
+	fputc('\n',stream);
+	for(int i=0;i<trend::num;i++) {
+		uint16_t raw=dat->gettrendglucose(i);
+		fprintf(stream, "%.1f ",raw/180.0);
+		}
+    fprintf(stream,"\n%s Nu Glucose %.1f %s %f %d %d\n",buf,(float)glu->value/18.0,glu->trendstr(),glu->rate(),nuid,glu->dataQuality);
+    fflush(stream);
+  }
 static void			logscanresult( const AlgorithmResults *alg) {
 	extern			pathconcat logbasedir;
 				static pathconcat logfile(logbasedir,"uit.txt");
@@ -812,6 +839,17 @@ extern "C" JNIEXPORT jlong JNICALL   fromjava(laststarttime)(JNIEnv *envin, jcla
 
 extern std::vector<int> usedsensors;
 extern void setusedsensors() ;
+extern "C" JNIEXPORT jboolean  JNICALL   fromjava(hasSibionics)(JNIEnv *env, jclass cl) {
+	setusedsensors();
+	const int len= usedsensors.size();
+	 for(int i=0;i<len;i++) {
+	 	const int index=usedsensors[i];
+      if(sensors->isSibionics(index))
+            return true;
+		  }
+   return false;
+	} 
+
 #ifdef LIBRE3
 extern "C" JNIEXPORT jobjectArray  JNICALL   fromjava(activeSensors)(JNIEnv *env, jclass cl) {
 	setusedsensors();
