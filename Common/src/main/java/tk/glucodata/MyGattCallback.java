@@ -68,7 +68,7 @@ public class MyGattCallback extends SuperGattCallback {
 		Log.d(LOG_ID, "MyGattCallback(..)");
 	//	this.dataptr = dataptr;
 	//	mActiveDeviceAddress = Natives.getDeviceAddress(dataptr);
-		
+//		if(doLog) mActiveDeviceAddress=null;
 	}
 
 

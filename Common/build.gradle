@@ -49,7 +49,7 @@ android {
         minSdk 19
         compileSdk 33
         applicationId "tk.glucodata"
-	versionName '8.0.12'
+	versionName '8.0.13'
 //	multiDexEnabled true
 
         buildConfigField 'String', 'BUILD_TIME', 'new java.text.SimpleDateFormat("HH:mm:ss dd-MMM-yyyy").format(new java.util.Date(' + System.currentTimeMillis() + 'L))'
@@ -80,8 +80,8 @@ android {
             //	targetSdk 26
 	//******  Zet op rollout op 100% ******
             	dimension 'libreVersion'
-		versionCode                             462                                                       //LIBRE2ONLY
-	//	versionName '8.0.12-no3'
+		versionCode                              463                                                         //LIBRE2ONLY
+	//	versionName '8.0.13-no3'
 		versionNameSuffix '-no3'
             buildConfigField 'int', 'libreVersion', '2'
 		    externalNativeBuild.cmake {
@@ -95,7 +95,8 @@ android {
 	   minSdk 26
 //	   minSdk 23
             dimension 'libreVersion'
-		versionCode                            462                                                       //LIBRE3
+		versionNameSuffix '-li3'
+		versionCode                             463                                                         //LIBRE3
 	//******  Zet op rollout op 100% ******
 
            	buildConfigField 'int', 'libreVersion', '3'
@@ -110,8 +111,8 @@ android {
 	  	minSdk 21
 		minSdkVersion 21
             	dimension 'SiBionics'
-		versionNameSuffix '-sibionics'
-		versionCode                       462                                                    
+		versionNameSuffix '-si'
+		versionCode                        463                                                      
 	        buildConfigField 'int', 'SiBionics', '1'
 	         externalNativeBuild.cmake {
 			cppFlags "  -DAPPVERSION=\\\"$versionName\\\"  -DSIBIONICS=1 "
@@ -119,7 +120,7 @@ android {
 		}
         nosi {
             	dimension 'SiBionics'
-		versionCode                             462                                                    
+		versionCode                              463                                                      
 		versionNameSuffix '-nosi'
 	        buildConfigField 'int', 'SiBionics', '0'
 	         externalNativeBuild.cmake {
@@ -134,9 +135,9 @@ android {
             // targetSdk 30
             dimension 'wearos'
 		minSdk 26
-		versionCode                            462                                                       //WATCH
+		versionCode                             463                                                         //WATCH
 	//******  Zet op rollout op 100% ******
-		//versionName '8.0.12-wear'
+		//versionName '8.0.13-wear'
 		versionNameSuffix '-wear'
 		signingConfig signingConfigs.alg
 
@@ -156,8 +157,8 @@ android {
         small {
 
             dimension 'wearos'
-		versionCode                            462                                                       //WATCH
-		//versionName '8.0.12-small'
+		versionCode                             463                                                         //WATCH
+		//versionName '8.0.13-small'
 		versionNameSuffix '-small'
 		signingConfig signingConfigs.alg
 
@@ -174,6 +175,7 @@ android {
         }
        mobile {
             dimension 'wearos'
+		   versionNameSuffix '-phone'
            buildConfigField 'int', 'isWear', '0'
         }
     }

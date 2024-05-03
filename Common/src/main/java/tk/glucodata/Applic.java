@@ -612,7 +612,11 @@ static void doglucose(String SerialNumber, int mgdl, float gl, float rate, int a
 @Keep
 static boolean updateDevices() { //Rename to reset
 	if(tk.glucodata.SensorBluetooth.blueone!=null) {
-		 tk.glucodata.SensorBluetooth.blueone.resetDevices();
+		 if(tk.glucodata.SensorBluetooth.blueone.resetDevices()) {
+			var main=MainActivity.thisone;
+			if(main!=null)
+				main.finepermission();
+		 	}
 		 return true;
 		}
 	Log.e(LOG_ID,"tk.glucodata.SensorBluetooth.blueone==null");

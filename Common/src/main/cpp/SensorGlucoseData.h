@@ -65,10 +65,28 @@ extern std::string_view globalbasedir;
 
 extern int writeStartime(crypt_t *pass, const int sock, const int sensorindex); 
 
-constexpr const int maxdaysSI=24;
-constexpr int maxdays=40;
+
+constexpr int maxdays=
+#ifdef TESTLONGSI
+50;
+#else
+30;
+#endif
+constexpr const int stdMaxDaysSI=24;
+constexpr const int maxdaysSI=
+
+#ifdef TESTLONGSI
+maxdays;
+#else
+stdMaxDaysSI;
+#endif
 constexpr int maxminutes=maxdays*24*60;
-constexpr const int maxSIhours=572;
+constexpr const int maxSIhours=
+#ifdef TESTLONGSI
+maxdaysSI*60*60*24;
+#else
+572;
+#endif
 /*constexpr const int maxSIhours=
 #ifndef NOLOG
 maxdaysSI*24

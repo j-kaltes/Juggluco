@@ -83,6 +83,7 @@ int  main(int argc,char **argv) {
 #include "SensorGlucoseData.h"
 #include "libre2.h" //PUT sistream etc in different header?
 #include "fromjava.h"
+#include "share/hexstr.h"
 extern "C" JNIEXPORT jbyteArray JNICALL   fromjava(getSiWriteCharacter)(JNIEnv *env, jclass cl,jlong dataptr) {
 	if(!dataptr)
 		return nullptr;
@@ -92,9 +93,12 @@ extern "C" JNIEXPORT jbyteArray JNICALL   fromjava(getSiWriteCharacter)(JNIEnv *
 	const int index=usedhist->getSiIndex();
 	const auto address=usedhist->deviceaddress();
    const auto codes=makeWriteCharacter(index,address);
-	int len=codes.size();
+   const auto *data=codes.data();
+	const int len=codes.size();
+   hexstr hex((const uint8_t *)data,len);
+   LOGGER("getSiWriteCharacter(index=%d)=%s\n",index,hex.str());
 	jbyteArray uit=env->NewByteArray(len);
-	env->SetByteArrayRegion(uit, 0, len,codes.data());
+	env->SetByteArrayRegion(uit, 0, len,data);
 	return uit;
 	}
 #endif

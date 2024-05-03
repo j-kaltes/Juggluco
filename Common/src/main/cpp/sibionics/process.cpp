@@ -194,7 +194,10 @@ jlong SiContext::processData(SensorGlucoseData *sens,time_t nowsecs,int8_t *data
                         return res;
                        }
                  else {
-		               if(!infuture&&!(index%256)) savejson(sens,sens->statefile,index,algcontext,getjson);
+		               if(!infuture&&!(index%256)) {
+                        savejson(sens,sens->statefile,index,algcontext,getjson);
+                        backup->wakebackup(Backup::wakestream);
+                        }
                      }
                    sens->receivehistory=nowsecs;
 

@@ -27,18 +27,21 @@
 #include "config.h"
 class SensorGlucoseData;
 #include "AlgorithmContext.hpp"
-struct SiContext {
+class SiContext {
+private:
    AlgorithmContext *algcontext;
 #ifdef SIHISTORY
    AlgorithmContext *algcontext3;
 #endif
-   SiContext(SensorGlucoseData *sens);
     double process(int index,double value, double temp);
 #ifdef SIHISTORY
     double process3(int index,double value, double temp);
+void	 saveSi3(SensorGlucoseData *sens,int index,uint32_t eventTime,bool save,int value,float temp,bool savejson) ;
 #endif
+public:
+   SiContext(SensorGlucoseData *sens);
     jlong processData(SensorGlucoseData *sens,time_t nowsecs,int8_t *data,int totlen,int sensorindex) ;
-	void	 saveSi3(SensorGlucoseData *sens,int index,uint32_t eventTime,bool save,int value,float temp,bool savejson) ;
+   ~SiContext();
 
     };
 #endif

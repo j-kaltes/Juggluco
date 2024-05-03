@@ -52,6 +52,7 @@ import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ConfigurationInfo;
 import android.content.pm.PackageManager;
@@ -234,6 +235,7 @@ private void supportRTL() {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+		thisone=this;
 	/*
 	if(getRTL())
 		supportRTL();
@@ -271,7 +273,6 @@ private void supportRTL() {
 		return;
 
     startall();
-	thisone=this;
 	/*
 	if(!isWearable) {
 		new Thread(() -> {
@@ -801,10 +802,10 @@ private boolean gaverational=false;
 boolean finepermission() {
 	MainActivity act=this;
 	Log.i(LOG_ID,"finepermission");
-        if (Build.VERSION.SDK_INT >= 23) {
+  if(Build.VERSION.SDK_INT >= 23) {
 		var noperm=Applic.hasPermissions( act, scanpermissions);
 		if(noperm.length==0) {
-			return true;
+         return systemlocation() ;
 			}
 		for(var scanpermission:noperm) {
 			if(shouldShowRequestPermissionRationale(scanpermission)) {
@@ -871,6 +872,14 @@ static final int LOCATION_PERMISSION_REQUEST_CODE=0x942365;
 private static final int NOTIFICATION_PERMISSION_REQUEST_CODE=0x8878;
 
 //private final int STORAGE_PERMISSION_REQUEST_CODE=0x445533;
+private void hasLocationContinue() {
+      if(Natives.getusebluetooth())  {
+         if(Build.VERSION.SDK_INT <26||Build.VERSION.SDK_INT>30 ||hasSibionics()) 
+            useBluetooth(true);
+         else
+             SensorBluetooth.goscan();
+         }
+   }
 @Override
 public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
 	super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -899,12 +908,8 @@ public void onRequestPermissionsResult(int requestCode, String[] permissions, in
 		case LOCATION_PERMISSION_REQUEST_CODE:
 			Log.i(LOG_ID,"LOCATION_PERMISSION_REQUEST_CODE");
 			if (granted) {
-				if(Natives.getusebluetooth())  {
-					if(Build.VERSION.SDK_INT <26||Build.VERSION.SDK_INT>30 ||hasSibionics()) 
-						useBluetooth(true);
-					else
-					    SensorBluetooth.goscan();
-					    }
+            if(systemlocation())
+               hasLocationContinue();
 			} else {
 				Log.i(LOG_ID,"denied");
 				 setbluetoothmain(false);
@@ -953,6 +958,7 @@ public static final int REQUEST_LIB=0x200;
 public static final int REQUEST_MASK=0xFFFFFF00;
 public static final int IGNORE_BATTERY_OPTIMIZATION_SETTINGS=0x100;
 static final int OVERLAY_PERMISSION_REQUEST_CODE=0x40;
+//static final private int REQUEST_CHECK_SETTINGS=0x20;
 //public static final int REQUEST_IGNORE_BATTERY_OPTIMIZATIONS=0x300;
 Openfile openfile=null;
 
@@ -993,6 +999,21 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 	super.onActivityResult(requestCode, resultCode, data);
 	Log.format("Main.onActivityResult %x\n",requestCode);
 	switch(requestCode) {
+   /*
+         case REQUEST_CHECK_SETTINGS:
+             switch (resultCode) {
+                 case Activity.RESULT_OK:
+                     // All required changes were successfully made
+                     Log.i(LOG_ID,"REQUEST_CHECK_SETTINGS OK");
+                     hasLocationContinue();
+                     break;
+                 case Activity.RESULT_CANCELED:
+                     // The user was asked to change settings, but chose not to
+                     Log.i(LOG_ID,"REQUEST_CHECK_SETTINGS CANCELLED");
+                     Applic.Toaster("Location is turned off, can't scan for devices");
+                     break;
+                 default: break;
+             }; break; */
 		case OVERLAY_PERMISSION_REQUEST_CODE: {
 			Log.i(LOG_ID, "OVERLAY_PERMISSION_REQUEST_CODE ");
 			if(Floating.cannotoverlay()  ) {
@@ -1285,6 +1306,168 @@ call fineres=null;
 public void setfineres(call proc) {
 	fineres=proc;
 	}
+
+private static int getLocationMode(Context context) {
+       return Settings.Secure.getInt(context.getContentResolver(), Settings.Secure.LOCATION_MODE, Settings.Secure.LOCATION_MODE_OFF);
+   }
+public static boolean isLocationEnabled(Context context) {
+       return getLocationMode(context) != Settings.Secure.LOCATION_MODE_OFF;
+   }
+
+private boolean systemlocation() {
+	if(Build.VERSION.SDK_INT > 30||Build.VERSION.SDK_INT < 23||!(hasSibionics()||Build.VERSION.SDK_INT<26))  {
+		return true;
+	}
+	Log.i(LOG_ID,"systemlocation()");
+   try {
+       if(!isLocationEnabled(this)) {
+            Log.i(LOG_ID,"Location not Enabled");
+            needsLocation();
+         }
+      else
+         Log.i(LOG_ID,"Location Enabled");
+      }catch (Throwable th) {
+         Log.stack(LOG_ID,"Settings.Secure.LOCATION_MODE",th);
+         }
+    return true;
+    }
+
+    /*
+private boolean systemlocation() {
+	if(Build.VERSION.SDK_INT > 30||Build.VERSION.SDK_INT < 23||!(hasSibionics()||Build.VERSION.SDK_INT<26))  {
+		return true;
+	}
+
+	Log.i(LOG_ID,"systemlocation()");
+try {
+	LocationManager locationManager =
+			(LocationManager) getSystemService(Context.LOCATION_SERVICE);
+	final boolean locationEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)||locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+
+	if (!locationEnabled) {
+		Log.i(LOG_ID, "Location not enabled");
+		// Build an alert dialog here that requests that the user enable
+		// the location services, then when the user clicks the "OK" button,
+		enableLocationSettings();
+	} else
+		Log.i(LOG_ID, "Location enabled");
+}
+catch (Throwable th) {
+	Log.stack(LOG_ID,"LocationManager.isProviderEnabled",th);
+	}
+    return true;
+}
+*/
+private static void needsLocation() {
+	 MainActivity main=thisone;
+    if(main!=null) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(main);
+        builder.setTitle("Location").
+         setMessage("System Location needs to be turned on to find Bluetooth devices").
+           setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            enableLocationSettings();
+            }
+   }).setOnCancelListener(l->enableLocationSettings()).show().setCanceledOnTouchOutside(false);
+         }
+     else {
+      Applic.Toaster("Turn on Location in System settings"); 
+       }
+   }
+
+private static void enableLocationSettings() {
+      MainActivity main=thisone;
+      if(thisone!=null) {
+            Log.i(LOG_ID,"ACTION_LOCATION_SOURCE_SETTINGS");
+             Intent settingsIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+             main.startActivity(settingsIntent);
+             }
+    }
+/* Doesn't work on a lot of phones and watches
+private boolean systemlocation() { 
+	 if(Build.VERSION.SDK_INT > 30||Build.VERSION.SDK_INT < 23||!(hasSibionics()||Build.VERSION.SDK_INT<26))  {
+         return true;
+         }
+   Log.i(LOG_ID,"systemlocation()");
+   try {
+   LocationRequest locr= new Builder(PRIORITY_HIGH_ACCURACY,10000).build(); //How else to ask for android location settings
+   LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(locr);
+	builder.setNeedBle(true).setAlwaysShow(true);
+	Task<LocationSettingsResponse> task = LocationServices.getSettingsClient(this).checkLocationSettings(builder.build());
+     task.addOnCompleteListener(new OnCompleteListener<LocationSettingsResponse>() {
+     @Override
+     public void onComplete(Task<LocationSettingsResponse> task) {
+         try {
+             LocationSettingsResponse response = task.getResult(ApiException.class);
+             Log.i(LOG_ID,"settings are satisfied");
+             // All location settings are satisfied. The client can initialize location
+             // requests here.
+         } catch (ApiException exception) {
+	 Log.i(LOG_ID,"exception "+exception.toString());
+             switch (exception.getStatusCode()) {
+                 case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                     // Location settings are not satisfied. But could be fixed by showing the
+                     // user a dialog.
+                     try {
+                         // Cast to a resolvable exception.
+                         ResolvableApiException resolvable = (ResolvableApiException) exception;
+                         // Show the dialog by calling startResolutionForResult(),
+                         // and check the result in onActivityResult().
+
+                         resolvable.startResolutionForResult( MainActivity.this, REQUEST_CHECK_SETTINGS);
+			 Log.i(LOG_ID,"startResolutionForResult");
+                         return;
+                     } catch (IntentSender.SendIntentException e) {
+                         // Ignore the error.
+                     } catch (ClassCastException e) {
+                         // Ignore, should be an impossible error.
+                     }
+                     break;
+                 case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                     // Location settings are not satisfied. However, we have no way to fix the
+                     // settings so we won't show the dialog.
+                     Applic.Toaster("No location, don't know how to fix it");
+                     break;
+              }
+         }
+          hasLocationContinue();
+     }
+ });
+ return false;
+ }
+ catch (Throwable th) {
+   Log.stack(LOG_ID,"LocationSettingsRequest",th);
+   return true;
+      }
+
+      }
+*/
+
+/*
+   LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
+   SettingsClient client = LocationServices.getSettingsClient(this);
+   Task<LocationSettingsResponse> task = client.checkLocationSettings(builder.build());
+   task.addOnSuccessListener(this, new OnSuccessListener<LocationSettingsResponse>() {
+       @Override
+       public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
+       }
+   });
+task.addOnFailureListener(this, new OnFailureListener() {
+    @Override
+    public void onFailure(@NonNull Exception e) {
+        if (e instanceof ResolvableApiException) {
+            try {
+                // Show the dialog by calling startResolutionForResult(),
+                // and check the result in onActivityResult().
+                ResolvableApiException resolvable = (ResolvableApiException) e;
+                resolvable.startResolutionForResult(MainActivity.this, REQUEST_CHECK_SETTINGS);
+            } catch (IntentSender.SendIntentException sendEx) {
+            }
+        }
+    } });
+*/
+
 public void useBluetooth(boolean val) {
 	Applic.app.initbluetooth(val,this,true);
 	if(fineres!=null)

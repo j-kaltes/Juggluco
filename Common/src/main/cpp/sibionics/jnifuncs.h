@@ -3,6 +3,7 @@ algtype(getAlgorithmContextFromNative) vers(getAlgorithmContextFromNative);
 algtype(initAlgorithmContext) vers(initAlgorithmContext);
 algtype(processAlgorithmContext) vers(processAlgorithmContext);
 algtype(getAlgorithmVersion) vers(getAlgorithmVersion);
+algtype(releaseAlgorithmContext) vers(releaseAlgorithmContext);
 
 static bool vers(getJNIfunctions)() {
 	static	std::string_view alglib=jniAlglib;
@@ -37,6 +38,13 @@ static bool vers(getJNIfunctions)() {
 {	constexpr const char str[]=algjavastr(processAlgorithmContext);
 	vers(processAlgorithmContext)= (algtype(processAlgorithmContext)) dlsym(handle,str);
 	 if(!vers(processAlgorithmContext)) {
+	 	LOGGER("dlsym %s failed: %s\n",str,dlerror());
+		return false;
+	 	}
+}
+{	constexpr const char str[]=algjavastr(releaseAlgorithmContext);
+	vers(releaseAlgorithmContext)= (algtype(releaseAlgorithmContext)) dlsym(handle,str);
+	 if(!vers(releaseAlgorithmContext)) {
 	 	LOGGER("dlsym %s failed: %s\n",str,dlerror());
 		return false;
 	 	}

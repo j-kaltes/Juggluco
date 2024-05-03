@@ -38,7 +38,7 @@ import static tk.glucodata.Natives.bluetoothOnKey;
 public class AlgNfcV {
     //    private static final String LOG_ID = packa.ge.name + AlgNfcV.class.getSimpleName();
     private static final String LOG_ID = "AlgNfcV";
-    private static final long nfcReadTimeout = 3000; // [ms]
+    private static final long nfcReadTimeout = 5000; // [ms]
 
 //static boolean NFC_USE_MULTI_BLOCK_READ=true ;
 

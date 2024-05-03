@@ -328,11 +328,11 @@ static public synchronized void scan(GlucoseCurve curve,Tag tag) {
 
 
 							case 7:
-								final long[] newsensor =  {50, 150,50,50,12,8,15,73};
+								final long[] newsensorVib =  {50, 150,50,50,12,8,15,73};
 								if(android.os.Build.VERSION.SDK_INT < 26) 
-									vibrator.vibrate(newsensor, -1);
+									vibrator.vibrate(newsensorVib, -1);
 								else
-									vibrator.vibrate(VibrationEffect.createWaveform(newsensor, -1));
+									vibrator.vibrate(VibrationEffect.createWaveform(newsensorVib, -1));
 								String sensorident = Natives.getserial(uid, info);
 								curve.render.badscan =calendar(main,ret,sensorident);
 		//						ret=0;
@@ -389,37 +389,37 @@ static private void newsensor(Activity act,String text,String name) {
 		XInfuus.sendSensorActivateBroadcast(act, name, Natives.laststarttime());
 	}
 
-//    int width=getscreenwidth(act);
         var metrics= act.getResources().getDisplayMetrics();
-   // int width=GlucoseCurve.getwidth();
     int width= metrics.widthPixels;
     int pad=width/30;
     act.runOnUiThread(() -> {
 	TextView tv=getlabel(act,text);
 	tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24f);
 
-        CheckBox calendar = new CheckBox(act);
-    calendar.setPadding(0,pad,0,pad);
-	calendar.setChecked(true);
-	calendar.setText(R.string.addsensorenddate);
-
+        CheckBox calBox = new CheckBox(act);
+    calBox.setPadding(0,pad,0,pad);
+	calBox.setChecked(true);
+	calBox.setText(R.string.addsensorenddate);
+	final var endtime=		Natives.sensorends()*1000L;
+	final boolean  stillused=endtime<= System.currentTimeMillis();
+	if(!stillused)
+		calBox.setVisibility(GONE);
 
 	Button ok=getbutton(act,R.string.ok);
 
 	Layout lay=new Layout(act, (l, w, h) -> {
 		if(width>2)
 			l.setX((width-w)/2);
-//		var height=GlucoseCurve.getheight();
 		var height=metrics.heightPixels;
 		if(height>h)
 			l.setY((height-h)/2);
 
 			return new int[] {w,h};
-		},new View[]{tv},new View[]{calendar},new View[]{ok});
+		},new View[]{tv},new View[]{calBox},new View[]{ok});
     	ok.setOnClickListener(v->{
 	   	removeContentView(lay); 
-		if(calendar.isChecked()) {
-			insertcalendar(act,name) ;
+		if(stillused&&calBox.isChecked()) {
+			insertcalendar(act,name,endtime) ;
 			}
 
 		});
@@ -441,10 +441,11 @@ static int calendar(Activity act,int ret,String name) {
 	else
 		return ret;
 	}
-private static void insertcalendar(Activity act,String name) {
+private static void insertcalendar(Activity act,String name,long endtime) {
+/*
 	long endtime=Natives.sensorends()*1000L;
 	if(endtime<= System.currentTimeMillis())
-		return;
+		return; */
 	try {
 		Intent intent = new Intent(Intent.ACTION_INSERT)
 		.putExtra(CalendarContract.Events.TITLE, act.getString(R.string.enddatesensor)+name)

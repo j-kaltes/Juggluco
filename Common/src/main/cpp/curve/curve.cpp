@@ -1704,10 +1704,13 @@ static int showerrorvalue(const SensorGlucoseData *sens,const time_t nu,float ge
 				} 
 			else {
            if((nu-sens->receivehistory)<60) {
-//					static char buf[]="Receiving past values";
+					static char buf[256];
 					auto past=usedtext->receivingpastvalues;
-					nvgTextBox(genVG,  getx, gety, getboxwidth(getx),std::begin(past), std::end(past));
-					shownglucose[index].errortext=std::begin(past);
+					memcpy(buf,past.data(),past.size());
+					char *ptr=buf+past.size();
+					ptr+=sprintf(ptr,": %d",sens->pollcount());
+					nvgTextBox(genVG,  getx, gety, getboxwidth(getx),buf, ptr);
+					shownglucose[index].errortext=buf;
             }
             else {
 				if(sens->sensorerror) {

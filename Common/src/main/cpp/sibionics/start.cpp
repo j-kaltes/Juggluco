@@ -49,23 +49,7 @@ extern "C" JNIEXPORT jstring JNICALL   fromjava(getSiBluetoothNum)(JNIEnv *envin
 	LOGGER("getSiBluetoothNum()=%s\n",name);
 	return envin->NewStringUTF(name);
 	} 
-//extern AlgorithmContext *initAlgorithm(SensorGlucoseData *sens,setjson_t setjson);
 
-//AlgorithmContext *vers(initAlgorithm)(SensorGlucoseData *sens, setjson_t setjson) {
-
-extern void	sendKAuth(SensorGlucoseData *hist);
-/*extern "C" JNIEXPORT jlong JNICALL   fromjava(makeSIdataptr)(JNIEnv *env, jclass cl,jstring jgegs) {
-   if(!siInit())
-      return 0LL;
-   const char *gegs = env->GetStringUTFChars( jgegs, NULL);
-   if(!gegs) return 0LL;
-   destruct   dest([jgegs,gegs,env]() {env->ReleaseStringUTFChars(jgegs, gegs);});
-   const size_t gegslen= env->GetStringUTFLength( jgegs);
-   auto [sensindex,sens]= sensors->makeSIsensorindex({gegs,gegslen},time(nullptr));
-   AlgorithmContext *alg=initAlgorithm(sens);
-   sistream *streamd=new sistream(sensindex,sens,alg);
-   return reinterpret_cast<jlong>(streamd);
-   } */
 extern "C" JNIEXPORT jstring JNICALL   fromjava(addSIscangetName)(JNIEnv *env, jclass cl,jstring jgegs) {
    const char *gegs = env->GetStringUTFChars( jgegs, NULL);
    if(!gegs) return 0LL;
@@ -156,6 +140,10 @@ typedef  jobject JNICALL (*algtype(getAlgorithmContextFromNative))(JNIEnv *env, 
 typedef  jint JNICALL (*algtype(initAlgorithmContext))(JNIEnv *env, jclass thiz,jobject alg,jint i,jstring strarg);
 typedef  jdouble JNICALL (*algtype(processAlgorithmContext))(JNIEnv *env, jclass thiz,jobject algContext,jint index,jdouble value, jdouble temp,jdouble dzero,jdouble low,jdouble high);
 typedef  jstring JNICALL (*algtype(getAlgorithmVersion))(JNIEnv *env, jclass thiz);
+
+typedef  jint JNICALL (*algtype(releaseAlgorithmContext))(JNIEnv *env, jclass thiz,jobject algContext);
+//    public static native int releaseAlgorithmContext(AlgorithmContext algorithmContext);
+
 };
 
 extern JNIEnv *subenv;
@@ -292,6 +280,22 @@ bool savejson(SensorGlucoseData *sens,const string_view name,int index,const Alg
    {
 
    	};
+SiContext::~SiContext() {
+#ifndef NOLOG
+	int res=
+#endif
+	releaseAlgorithmContext(subenv,nullptr, reinterpret_cast<jobject>(algcontext));
+	LOGGER("releaseAlgorithmContext(%p)=%d\n",algcontext,res);
+   delete algcontext;
+	#ifdef SIHISTORY
+#ifndef NOLOG
+	res=
+#endif
+	releaseAlgorithmContext3(subenv,nullptr, reinterpret_cast<jobject>(algcontext3));
+	LOGGER("releaseAlgorithmContext3(%p)=%d\n",algcontext3,res);
+   delete algcontext2;
+#endif
+	};
 #else
 bool siInit() {return false;}
 #endif

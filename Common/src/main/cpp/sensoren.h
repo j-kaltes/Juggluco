@@ -55,7 +55,7 @@ const char *showsensorname() const {
 	}
 uint32_t wearduration() const {
 //   if(halfdays==24*2) const_cast<sensor *>(this)->halfdays=30*2;
-	if(halfdays==(maxdaysSI*2))
+	if(halfdays==(stdMaxDaysSI*2))
 		return maxSIhours*60*60;
 	return (halfdays?halfdays:29)*12*60*60;
 	}
@@ -304,7 +304,7 @@ void	deletelast() {
 	}
 bool isSibionics(const int ind) const {
 	const sensor *sens=getsensor(ind);
-	return sens->halfdays>=(maxdaysSI*2);
+	return sens->halfdays>=(stdMaxDaysSI*2);
 	}
 
 static SensorGlucoseData::longsensorname_t  namelibre3(const std::string_view sensorid) {

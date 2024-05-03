@@ -273,6 +273,7 @@ public boolean matchDeviceName(String deviceName) {
 
 @Override
 public void free() {
+	 super.free();
 		--siNR;
 		}
 }
