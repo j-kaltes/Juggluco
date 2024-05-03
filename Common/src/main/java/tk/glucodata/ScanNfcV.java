@@ -401,7 +401,7 @@ static private void newsensor(Activity act,String text,String name) {
 	calBox.setChecked(true);
 	calBox.setText(R.string.addsensorenddate);
 	final var endtime=		Natives.sensorends()*1000L;
-	final boolean  stillused=endtime<= System.currentTimeMillis();
+	final boolean  stillused=endtime>System.currentTimeMillis();
 	if(!stillused)
 		calBox.setVisibility(GONE);
 
