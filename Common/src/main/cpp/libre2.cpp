@@ -1035,7 +1035,7 @@ state,
 		else {
 			const GlucoseNow & gl=res->currentglucose();
 			const int gluc=gl.getValue();
-			LOGGER("processStream %d %.1f (%d) rate=%.1f",gl.getQuality(),gluc/18.0,gluc,gl.rate());
+			LOGGER("processStream %d %.1f (%d) rate=%.1f",gl.getQuality(),gluc/convfactordL,gluc,gl.rate());
 			if(!nearbymgdl(gluc,96))
 				return 12;;
 			scanstate statescan(4);
@@ -1047,7 +1047,7 @@ state,
 				const GlucoseNow & gl=alg2->currentglucose();
 				const int gluc=gl.getValue();
 				if(memcmp(data2.data->data(),decr,data2.data->size())) return 12;
-			        LOGGER("processScan %d %.1f (%d) rate=%.1f",gl.getQuality(),gluc/18.0,gluc,gl.rate());
+			        LOGGER("processScan %d %.1f (%d) rate=%.1f",gl.getQuality(),gluc/convfactordL,gluc,gl.rate());
 				if(!nearbymgdl(gluc,78)) 
 					return 12;;
 				}
@@ -1272,7 +1272,7 @@ if(alg) {
 		const int gluc=gl.getValue();
 		const int qual=gl.getQuality();
 		int gid=gl.getId();
-		LOGGER("processStream %d %d %.1f\n",gid,qual,gluc/18.0);
+		LOGGER("processStream %d %d %.1f\n",gid,qual,gluc/convfactordL);
 		if(!qual&&gluc) {
 			if(hist->savepoll(nutime,gid,gluc,gl.trend(),gl.rate())) {
 				if(streamHistory()) {

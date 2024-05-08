@@ -83,7 +83,6 @@ public static boolean doGadgetbridge=false;
 	public final int sensorgen;
 	int readrssi=9999;
 	protected long sensorstartmsec;
-//	public SuperGattCallback(SensorBluetooth sensorbluetooth, String SerialNumber, long dataptr);
 protected	SuperGattCallback(String SerialNumber,long dataptr,int gen) {
 	this.SerialNumber = SerialNumber;
 	this.dataptr = dataptr;
@@ -325,7 +324,8 @@ protected void handleGlucoseResult(long res,long timmsec) {
 public void searchforDeviceAddress() {
 	Log.i(LOG_ID,SerialNumber+" searchforDeviceAddress()");
 
-	setDeviceAddress(null);
+	//setDeviceAddress(null);
+	mActiveDeviceAddress = null;
 	close();
 	}	
 	String getinfo() {
@@ -391,6 +391,9 @@ public void searchforDeviceAddress() {
 		finally {	
 			mBluetoothGatt = null;
 			}
+		}
+	else {
+		Log.i(LOG_ID,"mBluetoothGatt==null");
 		}
 
 	}
@@ -500,7 +503,7 @@ public void searchforDeviceAddress() {
 protected final boolean asknotification(BluetoothGattCharacteristic charac) {
 		return enableNotification(mBluetoothGatt, charac);
 	}
-public boolean matchDeviceName(String deviceName) {
+public boolean matchDeviceName(String deviceName,String address) {
 	return false;
 	}
 }

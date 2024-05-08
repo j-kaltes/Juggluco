@@ -66,9 +66,6 @@ public class MyGattCallback extends SuperGattCallback {
 	public MyGattCallback(String SerialNumber, long dataptr) {
 		super(SerialNumber,dataptr,Natives.getsensorgen(dataptr));
 		Log.d(LOG_ID, "MyGattCallback(..)");
-	//	this.dataptr = dataptr;
-	//	mActiveDeviceAddress = Natives.getDeviceAddress(dataptr);
-//		if(doLog) mActiveDeviceAddress=null;
 	}
 
 
@@ -727,7 +724,7 @@ public void onReadRemoteRssi(BluetoothGatt gatt, int rssi, int status)  {
 	}
 
 @Override
-public boolean matchDeviceName(String deviceName) {
+public boolean matchDeviceName(String deviceName,String address) {
 	if(!deviceName.startsWith("ABBOTT")) {
 		return false;
 		}

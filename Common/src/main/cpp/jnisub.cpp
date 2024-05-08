@@ -244,7 +244,7 @@ void         subSetIntField(JNIEnv*env,jobject  jobject1,jfieldID  fieldid,jint 
 
 
 jlong        subGetLongField(JNIEnv*env,jobject  jobject1,jfieldID  fieldid) {
-    uint8_t *alg=reinterpret_cast<uint8_t *>(jobject1);
+//    uint8_t *alg=reinterpret_cast<uint8_t *>(jobject1);
    jlong value =*fieldvalue<jlong>(jobject1,fieldid);
    LOGGER("GetLongField()=%llx\n",value);
    return value;

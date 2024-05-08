@@ -85,7 +85,7 @@ import static tk.glucodata.util.sethtml;
 
 //import org.w3c.dom.Text;
 
-class Backup {
+public class Backup {
 static final private String LOG_ID="backup";
 static class changer implements TextWatcher {
 	View view;

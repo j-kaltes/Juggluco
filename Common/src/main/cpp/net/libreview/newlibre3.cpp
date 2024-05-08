@@ -222,8 +222,28 @@ int addsensorstart(char *buf,uint32_t nu,int mil,SensorGlucoseData *sens)  {
 	return sprintf(buf,onesensorstart,startGMT,histor,nowtimestr);
 	}
 
+extern time_t lastviewtime;
+extern time_t nexttimeviewed;
 
 extern bool getisviewed(time_t wastime) ;
+bool getisviewed(time_t wastime) {
+	bool viewed;
+	if(settings->data()->libreIsViewed
+#ifdef NOTALLVIES
+	&&wastime>nexttimeviewed
+#endif
+			)
+	{
+		int diff=((long long)wastime-lastviewtime);
+		viewed=abs(diff)<60;
+		LOGGER("diff=%d viewed=%d\n",diff,viewed);
+		if(viewed) {
+//			nexttimeviewed=wastime+betweenviews;
+			return true;
+			}
+		}
+	return false;
+	}
 static int addcurrent(char *buf,int64_t histor,const ScanData *el,bool &viewed) {
 	char gmttime[25+EXTRATIME];
 	auto tim=el->gettime();

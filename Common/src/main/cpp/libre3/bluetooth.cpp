@@ -330,7 +330,7 @@ extern "C" JNIEXPORT  jboolean JNICALL fromjava(saveLibre3fastData)(JNIEnv *env,
 					backup->wakebackup(Backup::wakestream);
 				}
 			else {
-				LOGGER("fastdata invalid lifecount=%d curval=%.1f\n",lifecount,curval/18.0f);
+				LOGGER("fastdata invalid lifecount=%d curval=%.1f\n",lifecount,curval/convfactordL);
 				}
 			sens->fastupdatelifecount(lifecount);
 			}

@@ -563,7 +563,7 @@ bool savenewhistory(int pos, int lifeCount, uint16_t mgL) {
 
 #ifndef NOLOG
 		const auto wastime=lifeCount2time(lifeCount);
-		LOGGER("savenewhistory(%d,%d,%.1f) known %s",pos,lifeCount,mgL/180.0f,ctime(&wastime));
+		LOGGER("savenewhistory(%d,%d,%.1f) known %s",pos,lifeCount,mgL/convfactor,ctime(&wastime));
 	#endif
 		return false;
 		}
@@ -571,7 +571,7 @@ bool savenewhistory(int pos, int lifeCount, uint16_t mgL) {
 	item->time=wastime;
 	item->id=lifeCount;
 	item->glu[1]=mgL;
-	LOGGER("savenewhistory(%d,%d,%.1f) %s",pos,lifeCount,mgL/180.0f,ctime(&wastime));
+	LOGGER("savenewhistory(%d,%d,%.1f) %s",pos,lifeCount,mgL/convfactor,ctime(&wastime));
 //        saveel(pos,wastime,lifeCount, {0,mgL});
 	return true;
 	}
@@ -830,7 +830,7 @@ static bool mkdatabaseSI(string_view sensordir,string_view sensorgegs,uint32_t n
 		Readall<uint8_t> inf(infoname);
 		if(inf.data()&&inf.size()>=sizeof(Info)) {
 			const Info *in=reinterpret_cast<const Info*>(inf.data());
-			if(in->starttime>1700000000&&in->dupl>0&&in->sibionics)
+			if(in->pollcount&&in->starttime>1700000000&&in->dupl>0&&in->sibionics)
 				return false;
 			}
 		}
@@ -988,6 +988,7 @@ LOGGER("SensorGlucoseData %s %s scansize=%zu\n",sensordir.data(),scanpath.data()
 	prunedata() ;
 	getinfo()->prunedstream=true;
   	}
+	*deviceaddressSI='\0';
    }
 
 	public:
@@ -1153,7 +1154,7 @@ int savepollallIDsonly(time_t tim,const int id,int glu,int trend,float change) {
 			getinfo()->pollstart=id;	
 			}
 		}
-	LOGGER("count=%d savepollallIDsonly(%lu,%d,%.1f,%d,%.1f) %s",count,tim,id,glu/18.0,trend,change,ctime(&tim));
+	LOGGER("count=%d savepollallIDsonly(%lu,%d,%.1f,%d,%.1f) %s",count,tim,id,glu/convfactordL,trend,change,ctime(&tim));
 	polls[id]={static_cast<uint32_t>(tim),id,glu,trend,change};
 	return count;
 	}
@@ -1603,7 +1604,7 @@ int updatestream(crypt_t *pass,int sock,int ind,int sensindex,int sendscan)  {
 #ifndef NOLOG
 		const struct ScanData *fn=startstreambuf+streamstart;
 		time_t tim=fn->t;
-		LOGGER("GLU: streamstart=%d streamend=%d %s %.1f (%d) dowith=%d %s",streamstart,streamend,polluit.data(),fn->g/18.0,fn->g,cmd,ctime(&tim));
+		LOGGER("GLU: streamstart=%d streamend=%d %s %.1f (%d) dowith=%d %s",streamstart,streamend,polluit.data(),fn->g/convfactordL,fn->g,cmd,ctime(&tim));
 #endif
 
 		if(!senddata(pass,sock,streamstart,startstreambuf+streamstart,startstreambuf+streamend,polluit)) {
@@ -1749,6 +1750,8 @@ void setSiIndex(int index)  {
 
 uint32_t receivehistory=0;
 int retried=0;
+
+char deviceaddressSI[deviceaddresslen];
 };
 
 struct lastscan_t {

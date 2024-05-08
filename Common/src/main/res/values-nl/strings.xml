@@ -322,4 +322,5 @@
     <string name="sendfrom">Zend vanaf:</string>
  <string name="changestartbutton">Begin wijzigen</string>
  <string name="floatjuggluco">Boven</string>
+ <string name="threshold">Drempel</string>
 </resources>

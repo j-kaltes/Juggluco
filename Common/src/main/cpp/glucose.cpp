@@ -167,7 +167,13 @@ int SensorGlucoseData::updatescan(crypt_t *pass,int sock,int ind,int sensorindex
 				 }
 			getinfo()->update[ind].siScan=true;
 			return 5;
-		}
+			}
+		else {
+			if(getinfo()->update[ind].sendstreaming) {
+				getinfo()->update[ind].sendstreaming=false;
+				return 5;
+				}
+			}
 		return 2;
 	} else {
 	bool did=false;
@@ -236,6 +242,7 @@ int SensorGlucoseData::updatescan(crypt_t *pass,int sock,int ind,int sensorindex
 		}
 	bool wassendstreaming=getinfo()->update[ind].sendstreaming;
 	getinfo()->update[ind].sendstreaming=false;
+	
 	destruct streamsend([this,ind,&wassendstreaming] {
 				if(wassendstreaming)
 					getinfo()->update[ind].sendstreaming=wassendstreaming;
@@ -293,7 +300,6 @@ int SensorGlucoseData::updatescan(crypt_t *pass,int sock,int ind,int sensorindex
 			}
 		  streamsend.active=false;
 		  if(wassendstreaming) {
-
 			return 5;
 			}
 		return 1;

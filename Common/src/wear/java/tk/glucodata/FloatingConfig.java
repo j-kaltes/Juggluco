@@ -147,7 +147,7 @@ static public void show(MainActivity act,View view) {
 		Floating.makefloat();
 		}
 	hide.setOnCheckedChangeListener( (buttonView,  isChecked) -> {
-		hidden[0]=isChecked;
+		hidden[0]=!isChecked;
 		Natives.sethidefloatinJuggluco(!isChecked);
 		});
 
@@ -182,7 +182,7 @@ static public void show(MainActivity act,View view) {
 	act.setonback(()-> {
 		view.setVisibility(VISIBLE);
 		removeContentView(layout); 
-		if(!hidden[0]) {
+		if(hidden[0]) {
 			Floating.removeFloating();
 			}
 		});

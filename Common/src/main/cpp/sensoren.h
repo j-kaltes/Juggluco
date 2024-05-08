@@ -384,13 +384,16 @@ std::pair<int,SensorGlucoseData *> makeSIsensorindex(std::string_view gegsSI,uin
 
 	const auto name=namefromSIgegs(gegsSI.data(),gegsSI.size(),hasnum);
 
+   removeunused();
 	if(sensor *sensgegs = findsensorm(name.data()) ) {
 		LOGGER("known sensor %s\n",sensgegs->showsensorname());
 		const int	sensindex= sensgegs - sensorlist();
 		SensorGlucoseData *sens=getSensorData(sensindex) ;
 		sendKAuth(sens);
 		sensgegs->finished=0;
-		sens->getinfo()->lastscantime=now;
+      auto *info= sens->getinfo();
+		info->lastscantime=now;
+      if(!info->pollcount) info->starttime=now; //Not needed
 	void resensordata(int sensorindex) ;
 		resensordata(sensindex);
 		return {sensindex,sens};
@@ -847,6 +850,12 @@ int writeStartime(crypt_t *pass, const int sock, const int sensorindex) {
 
 		const int lastsens=last();
 		int newfirst=-1;
+		std::vector<SensorGlucoseData *> sendstream;
+		destruct failed([&sendstream,ind] {
+			for(auto *el:sendstream)
+				el->getinfo()->update[ind].sendstreaming=true;
+				
+			});
 		for(int i = firstsensor; i <= lastsens; i++) {
 			if(newfirst<0&&!sensorlist()[i].finished)  {
 				newfirst=i;
@@ -874,7 +883,9 @@ int writeStartime(crypt_t *pass, const int sock, const int sensorindex) {
 					const int resscan = hist->updatescan(pass, sock, ind, i,i>=startupdate,upstream);
 					switch(resscan) {
 						case 0: return did&0x4;
-						case 5:  newdevices=true;
+						case 5:  
+							sendstream.push_back(hist);
+							newdevices=true;
 						case 1: {
 							if(changed>i)
 								changed = i + 1; //MODIFIED
@@ -942,6 +953,7 @@ int writeStartime(crypt_t *pass, const int sock, const int sensorindex) {
 		}
 		if(newfirst>=0)
 			firstsensor=newfirst;
+		failed.active=false;
 		return did;
 	}
 

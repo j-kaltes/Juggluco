@@ -32,7 +32,7 @@ void SensorGlucoseData::prunestream() {
 		if(pollsdata[i].t>pollsdata[i+1].t) {
 #ifndef NOLOG
 			time_t tim=pollsdata[i].t;
-			LOGGER("%d's wrong stream wrong: id=%d %.1f %s",i,pollsdata[i].id,pollsdata[i].g/18.0f,ctime(&tim));
+			LOGGER("%d's wrong stream wrong: id=%d %.1f %s",i,pollsdata[i].id,pollsdata[i].g/convfactordL,ctime(&tim));
 #endif
 			if(i<scount&&scansdata[i].t==0&&scansdata[i].id==0) {
 				if((i==(scount-1)||pollsdata[i].t<scansdata[i+1].t)&&(i==0||pollsdata[i].t>scansdata[i-1].t)) {
@@ -41,7 +41,7 @@ void SensorGlucoseData::prunestream() {
 					}
 				}
 		      pollsdata[i]={.t=pollsdata[i+1].t-45,.id=pollsdata[i+1].id-1,.g=0};
-		       LOGGER("changed to id=%d %.1f %s",pollsdata[i].id,pollsdata[i].g/18.0f,ctime(&tim));
+		       LOGGER("changed to id=%d %.1f %s",pollsdata[i].id,pollsdata[i].g/convfactordL,ctime(&tim));
 			}
 		}
 	}

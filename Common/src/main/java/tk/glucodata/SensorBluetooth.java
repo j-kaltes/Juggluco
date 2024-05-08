@@ -139,7 +139,7 @@ private SuperGattCallback  getCallback(BluetoothDevice device) {
 		for (var cb : gattcallbacks) {
 			if (cb.mActiveDeviceAddress != null && address.equals(cb.mActiveDeviceAddress))
 				return cb;
-			if(cb.matchDeviceName(deviceName))
+			if(cb.matchDeviceName(deviceName,address))
 				return cb;
 			Log.d(LOG_ID, "not: " + cb.SerialNumber);
 		       }

@@ -1621,3 +1621,10 @@ extern "C" JNIEXPORT void  JNICALL   fromjava(sethidefloatinJuggluco)(JNIEnv *en
 extern "C" JNIEXPORT jboolean  JNICALL   fromjava(gethidefloatinJuggluco)(JNIEnv *env, jclass cl) {
 	return settings->data()->hidefloatinJuggluco;
 	}
+
+extern "C" JNIEXPORT jfloat  JNICALL   fromjava(getthreshold)(JNIEnv *env, jclass cl) {
+	return settings->data()->threshold;
+	}
+extern "C" JNIEXPORT void  JNICALL   fromjava(setthreshold)(JNIEnv *env, jclass cl,jfloat val) {
+	settings->data()->threshold=val;
+	}

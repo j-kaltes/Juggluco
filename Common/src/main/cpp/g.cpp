@@ -161,7 +161,7 @@ for(int i=0;i<uselen;i++) {
 	uint16_t raw=dat->gethistoryglucose(i);
 
 	showtime(&was,buf);
-	fprintf(stream,"Glucose %d\t%.1f\t(%d\t%.1f)\t%d\t%d\t%s\n",gv,gv/18.0, (int)roundf(raw/10.0),raw/180.0, id, g->dataQuality,buf);
+	fprintf(stream,"Glucose %d\t%.1f\t(%d\t%.1f)\t%d\t%d\t%s\n",gv,gv/convfactordL, (int)roundf(raw/10.0),raw/180.0, id, g->dataQuality,buf);
 	}
 	showtime(&nutime,buf);
 	fputc('\n',stream);
@@ -169,7 +169,7 @@ for(int i=0;i<uselen;i++) {
 		uint16_t raw=dat->gettrendglucose(i);
 		fprintf(stream, "%.1f ",raw/180.0);
 		}
-    fprintf(stream,"\n%s Nu Glucose %.1f %s %f %d %d\n",buf,(float)glu->value/18.0,glu->trendstr(),glu->rate(),nuid,glu->dataQuality);
+    fprintf(stream,"\n%s Nu Glucose %.1f %s %f %d %d\n",buf,(float)glu->value/convfactordL,glu->trendstr(),glu->rate(),nuid,glu->dataQuality);
     fflush(stream);
   }
 static void			logscanresult( const AlgorithmResults *alg) {
@@ -427,8 +427,10 @@ extern "C" JNIEXPORT jlong JNICALL   fromjava(getSensorStartmsec)(JNIEnv *env, j
 	}
 extern "C" JNIEXPORT void JNICALL   fromjava(finishSensor)(JNIEnv *env, jclass cl,jlong dataptr) {
 	streamdata *sdata=reinterpret_cast<streamdata *>(dataptr);
-	if(!sdata)
+	if(!sdata) {
+	   LOGAR("finishSensor dataptr=null");
 		return;
+      }
 	LOGGER("finishSensor %s\n",sdata->hist->showsensorname().data());
 	sensors->finishsensor(sdata->sensorindex);
 	setstreaming(sdata->hist); 
@@ -441,8 +443,10 @@ extern bool siInit();
 #endif
 
 extern "C" JNIEXPORT jlong JNICALL   fromjava(getdataptr)(JNIEnv *env, jclass cl,jstring jsensor) {
-	if(!sensors)
+	if(!sensors) {
+      LOGAR("ERROR: sensors==null");
 		return 0LL;
+      }
 	constexpr const  int shortsensorlen=11;
 	jint getlen= env->GetStringUTFLength( jsensor);
 	if(getlen!=shortsensorlen) {
@@ -453,17 +457,21 @@ extern "C" JNIEXPORT jlong JNICALL   fromjava(getdataptr)(JNIEnv *env, jclass cl
 	sensor[sizeof(sensor)-1]='\0';
 
 	int sensorindex=sensors->sensorindexshort(sensor);
-	if(sensorindex<0)
+	if(sensorindex<0) {
+      LOGGER("ERROR: %s unknown sensor\n",sensor);
 		return 0LL;
+      }
 	SensorGlucoseData *sens= sensors->getSensorData(sensorindex);
 	sens->sensorerror=false;
 	streamdata *data;
 #ifdef SIBIONICS
 	if(sens->isSibionics()) {
       LOGGER("getdataptr(%s) isSibinics\n",sensor);
-	   if(!siInit())
-	      return 0LL;
-         data= new sistream(sensorindex,sens);
+	   if(!siInit()) {
+         LOGAR("siInit()==false");
+         return 0LL;
+         }
+      data= new sistream(sensorindex,sens);
       }
   else 
 #endif
@@ -501,14 +509,15 @@ extern "C" JNIEXPORT void JNICALL  fromjava(setDeviceAddress)(JNIEnv *env, jclas
 	SensorGlucoseData *usedhist=reinterpret_cast<streamdata *>(dataptr)->hist ; 
 	if(!usedhist)
 		return;
+  char *deviceaddress=usedhist->isSibionics()?usedhist->deviceaddressSI:usedhist->deviceaddress();
 	if(!jdeviceAddress)
-		usedhist->deviceaddress()[0]='\0';
+		deviceaddress[0]='\0';
 	else {
 		const jint getlen= std::min(env->GetStringUTFLength( jdeviceAddress),17);
-		env->GetStringUTFRegion(jdeviceAddress, 0,getlen,usedhist->deviceaddress());
-		usedhist->deviceaddress()[getlen]='\0';
+		env->GetStringUTFRegion(jdeviceAddress, 0,getlen,deviceaddress);
+		deviceaddress[getlen]='\0';
 		}
-	  LOGGER("setDeviceAddress(%s)\n", usedhist->deviceaddress());
+	  LOGGER("setDeviceAddress(%s)\n", deviceaddress);
      }
 
 extern "C" JNIEXPORT int JNICALL   fromjava(getLibreVersion)(JNIEnv *envin, jclass cl,jlong dataptr) {
@@ -551,12 +560,16 @@ extern "C" JNIEXPORT jstring JNICALL   fromjava(getShowSensorName)(JNIEnv *envin
 	} */
 
 extern "C" JNIEXPORT jstring JNICALL   fromjava(getDeviceAddress)(JNIEnv *envin, jclass cl,jlong dataptr) {
-	if(!dataptr)
+	if(!dataptr) {
+      LOGAR("getDeviceAddress(null)");
 		return nullptr;
+      }
 	const SensorGlucoseData *usedhist=reinterpret_cast<streamdata *>(dataptr)->hist ; 
 	if(!usedhist)
 		return nullptr;
-	const char *address=usedhist->deviceaddress();
+//	const char *address=usedhist->deviceaddress();
+
+  const char *address=usedhist->isSibionics()?usedhist->deviceaddressSI:usedhist->deviceaddress();
 	if(!*address)
 		return nullptr;
 	LOGGER("getDeviceAddress()=%s\n",address);

@@ -729,6 +729,17 @@ schermpje wordt weergegeven welk percentage van de metingen zich
 binnen het doelbereik bevond.</p>
 <h2 class="western">Glucose-as nummers LINKS</h2>
 <p>Plaats de nummers voor het glucoseniveau links in het scherm.</p>
+<h2 class="western">Drempel</h2>
+<p style="background: transparent">Pas een drempelwaarde toe op de
+snelheid waarmee de glucosewaarden veranderen. Alleen wanneer de
+veranderingssnelheid de gespecificeerde hoeveelheid afwijkt van 0,
+verschilt de pijl van de veranderingssnelheid van horizontaal. Je
+kunt willekeurige waarden tussen 0 en 0,8 gebruiken. De drempel wordt
+gebruikt om te voorkomen dat er te veel betekenis wordt gegeven aan
+kleine absolute veranderingswaarden. Het is heel goed mogelijk dat de
+veranderingssnelheid een langzaam stijgende glucosewaarde laat zien,
+maar deze in werkelijkheid daalt. De drempel wordt gebruikt om een
+​​voorzichtiger uitspraak te doen.</p>
 <h2 class="western">Scherm omkeren</h2>
 <p>Draai het scherm om. Dit staat standaard aan, omdat ik anders per
 ongeluk OK aanraakte bij het scannen. 
@@ -897,56 +908,44 @@ tijdsperiode.</p>
 </string>
 <string name="sensorhelp" >
 <![CDATA[
-<p style="margin-bottom: 0in; border: none; padding: 0in">
-<font><font face="liberation serif"><font size="3" style="font-size: 12pt"><b>Sensor</b></font></font></font></p>
-<p style="line-height: 120%; margin-bottom: 0in; border: none; padding: 0in">
-<font><font face="Times New Roman"><font size="3" style="font-size: 12pt">Dit
+<p style="border: none; padding: 0in"><font face="liberation serif"><b>Sensor</b></font></p>
+<p style="border: none; padding: 0in"><font face="Times New Roman">Dit
 schermpje geeft informatie over de Bluetooth connectie met sensoren
 en kan gebruikt worden om de oorzaak van connectie problemen op de
-sporen. </font></font></font>
+sporen. </font>
 </p>
-<p style="line-height: 120%; margin-bottom: 0in; border: none; padding: 0in">
-<font><font face="Times New Roman"><font size="3" style="font-size: 12pt"><span lang="nl-NL">Bluetooth
+<p style="border: none; padding: 0in"><font face="Times New Roman">Bluetooth
 moet aanstaan. Juggluco kan pas contact maken met een sensor nadat de
 sensor succesvol is gescand. Het kan zijn dat een sensor onvindbaar
 is omdat het al een connectie heeft met LibreLink of Freestyle
 Reader. Om die reden moet in Freestyle Reader glucose alarmen afgezet
-worden en Librelink gestopt worden met “</span></font></font></font><font><font face="Times New Roman"><font size="3" style="font-size: 12pt"><span lang="nl-NL"><i>Stop
-forceren</i></span></font></font></font><font><span lang="nl-NL">”
-</span></font><font><font face="Times New Roman"><font size="3" style="font-size: 12pt"><span lang="nl-NL">in
-App-info (vooral belangrijk in het begin).</span></font></font></font><font><span lang="nl-NL">
-</span></font><font><font face="Arial"><font size="2" style="font-size: 11pt"><span lang="nl-NL">Als
-je de sensor hebt gestart met Freestyle Reader en je kunt hem niet
+worden en Librelink gestopt worden met “</font><font face="Times New Roman"><i>Stop
+forceren</i></font>” <font face="Times New Roman">in App-info
+(vooral belangrijk in het begin).</font> <font face="Arial">Als je de
+sensor hebt gestart met Freestyle Reader en je kunt hem niet
 uitschakelen, kun je voorkomen dat hij in contact komt met de sensor
-door de reader in een </span></font></font></font><a href="https://www.offgridweb.com/preparation/faraday-bags-testing-commercial-and-diy-wireless-signal-blockers/amp/"><font><font face="Arial"><font size="2" style="font-size: 11pt"><span lang="nl-NL"><u>kooi
-van Faraday</u></span></font></font></font></a><font><span lang="nl-NL">
-</span></font><font><font face="Arial"><font size="2" style="font-size: 11pt"><span lang="nl-NL">te
-plaatsen.</span></font></font></font></p>
-<p style="line-height: 120%; margin-bottom: 0in; border: none; padding: 0in">
-<font><font face="Times New Roman"><font size="3" style="font-size: 12pt"><b>Sensor
-via Bluetooth/Gebruik Bluetooth</b></font></font></font><font>
-</font><font><font face="Times New Roman"><font size="3" style="font-size: 12pt">moet
-aanstaan.</font></font></font></p>
-<p style="line-height: 120%; margin-bottom: 0in; border: none; padding: 0in">
-<font><font face="Times New Roman"><font size="3" style="font-size: 12pt">Als
+door de reader in een </font><a href="https://www.offgridweb.com/preparation/faraday-bags-testing-commercial-and-diy-wireless-signal-blockers/amp/"><font face="Arial"><u>kooi
+van Faraday</u></font></a> <font face="Arial">te plaatsen.</font></p>
+<p style="border: none; padding: 0in"><font face="Times New Roman"><b>Sensor
+via Bluetooth/Gebruik Bluetooth</b></font> <font face="Times New Roman">moet
+aanstaan.</font></p>
+<p style="border: none; padding: 0in"><font face="Times New Roman">Als
 de bovenstaande voorwaarden voldaan zijn, kan het nog steeds lang
 duren voordat Juggluco, glucose waarden ontvangt van de sensor. Vaak
 duurt het iets langer dan een minuut, maar op andere momenten duurt
-het veel langer.</font></font></font></p>
-<p style="line-height: 120%; margin-bottom: 0in; border: none; padding: 0in">
-<font><font face="Times New Roman"><font size="3" style="font-size: 12pt"><span lang="nl-NL">Meestal
+het veel langer.</font></p>
+<p style="border: none; padding: 0in"><font face="Times New Roman">Meestal
 bestaan er gedurende enige tijd connectie problemen met status=133.
-Dit betreft </span></font></font></font><a href="#onConnectionStateChange(android.bluetooth.BluetoothGatt,%20int,%20int)"><font><font face="Times New Roman"><font size="3" style="font-size: 12pt"><span lang="nl-NL"><u>onConnectionStateChange(BluetoothGatt
-bluetoothGatt, int status, int newState)</u></span></font></font></font></a><font><font face="Times New Roman"><font size="3" style="font-size: 12pt"><span lang="nl-NL">.
+Dit betreft </font><a href="#onConnectionStateChange(android.bluetooth.BluetoothGatt,%20int,%20int)"><font face="Times New Roman"><u>onConnectionStateChange(BluetoothGatt
+bluetoothGatt, int status, int newState)</u></font></a><font face="Times New Roman">.
 Als je de batterij uit de sensor haalt krijg je ook deze fout, dus
-het betekent zoiets als “</span></font></font></font><font><font face="Times New Roman"><font size="3" style="font-size: 12pt"><span lang="nl-NL"><i>Bluetooth
-apparaat niet gevonden</i></span></font></font></font><font><span lang="nl-NL">”</span></font><font><font face="Times New Roman"><font size="3" style="font-size: 12pt"><span lang="nl-NL">.
+het betekent zoiets als “</font><font face="Times New Roman"><i>Bluetooth
+apparaat niet gevonden</i></font>”<font face="Times New Roman">.
 Een paar minuten wachten helpt meestal. Soms help Bluetooth uit en
 aanzetten. De sensor scannen helpt soms ook. In zeldzame gevallen
 moet de telefoon gereboot worden of Bluetooth even uitgezet worden in
-andere apparaten.</span></font></font></font></p>
-<p style="line-height: 120%; margin-bottom: 0in; border: none; padding: 0in">
-<font><font face="Times New Roman"><font size="3" style="font-size: 12pt">Als
+andere apparaten.</font></p>
+<p style="border: none; padding: 0in"><font face="Times New Roman">Als
 een nieuw geïnitialiseerde sensor wel getoond wordt, maar er na 10
 minuten helemaal geen connectie informatie getoond wordt, kan het
 zijn dat er een minuut er voor opnieuw begonnen is door het
@@ -956,75 +955,66 @@ gezocht wordt met de sensor. Bluetooth uit- en aanzetten en/of
 scannen kan helpen. Als het om een WearOS horloge gaat, kun je het
 beste proberen de verbonden smartphone een connectie te laten vormen.
 Je kunt ook proberen of een stop forceren en herstarten van Juggluco
-werkt.</font></font></font></p>
-<p style="line-height: 120%; margin-bottom: 0in; border: none; padding: 0in">
-<font><font face="Times New Roman"><font size="3" style="font-size: 12pt">De
-sensor scannen met Juggluco (met </font></font></font><font><font face="Times New Roman"><font size="3" style="font-size: 12pt"><i>Sensor
-via Bluetooth</i></font></font></font><font> </font><font><font face="Times New Roman"><font size="3" style="font-size: 12pt">aan)
-op een andere telefoon of het initialiseren van de sensor met de
-patched DE Librelink of US Libre 2 app, zorgt dat de authenticatie
-informatie nodig voor contact met de sensor verandert en de eerste
-Juggluco geen Bluetooth connectie met de sensor meer kan vormen. Door
-de sensor weer een aantal malen te scannen na zo’n mislukte
-connectie poging, kan Juggluco weer een connectie vormen met de
-sensor.</font></font></font></p>
-<p style="line-height: 120%; margin-bottom: 0in; border: none; padding: 0in">
-<font><font face="Times New Roman"><font size="3" style="font-size: 12pt"><b>Doze
-mode</b></font></font></font><font><font face="Times New Roman"><font size="3" style="font-size: 12pt"><b>
-</b></font></font></font><font><font face="Times New Roman"><font size="3" style="font-size: 12pt">brengt
-je naar een schermpje dat uitlegt hoe je kan voorkomen dat Androids
-batterij besparende maatregelen Juggluco’s functioneren onmogelijk
-maken.</font></font></font></p>
-<p style="line-height: 120%; margin-bottom: 0in; border: none; padding: 0in">
-<font><font face="Times New Roman"><font size="3" style="font-size: 12pt"><b>Bluetooth History</b></font></font></font><font><font face="Times New Roman"><font size="3" style="font-size: 12pt">:
-</font></font></font><font><font face="Times New Roman"><font size="3" style="font-size: 12pt">Bij
-Libre 0 en 2 sensoren, is History waarden uit het verleden met een
-interval van 15 minuten. Voorheen werden ze alleen ontvangen door
-middel van scannen. Wanneerje deze optie inschakelt, worden de
-historiewaarden ook via Bluetooth ontvangen. Ook andere dingen zullen
-anders werken. Naar Libreview worden de history waarden verzonden, in
-plaats van de gemiddelden van de streamwaarden. Het nadeel is dat het
-langzamer is. Dit kan een probleem zijn bij WearOS-horloges.</font></font></font></p>
-<p style="line-height: 120%; margin-bottom: 0in; border: none; padding: 0in">
-<font><font face="Times New Roman"><font size="3" style="font-size: 12pt">Deze optie heeft geen invloed op Libre 3- en US Libre
-2-sensoren.</font></font></font></p>
-<p style="line-height: 120%; margin-bottom: 0in; border: none; padding: 0in">
-<font><font face="Times New Roman"><font size="3" style="font-size: 12pt"><b>Toestemming</b></font></font></font><font><font face="Times New Roman"><font size="3" style="font-size: 12pt">:
+werkt.</font></p>
+<p style="border: none; padding: 0in"><font face="Times New Roman">De
+sensor scannen met Juggluco (met </font><font face="Times New Roman"><i>Sensor
+via Bluetooth</i></font> <font face="Times New Roman">aan) op een
+andere telefoon of het initialiseren van de sensor met de patched DE
+Librelink of US Libre 2 app, zorgt dat de authenticatie informatie
+nodig voor contact met de sensor verandert en de eerste Juggluco geen
+Bluetooth connectie met de sensor meer kan vormen. Door de sensor
+weer een aantal malen te scannen na zo’n mislukte connectie poging,
+kan Juggluco weer een connectie vormen met de sensor.</font></p>
+<p style="border: none; padding: 0in"><font face="Times New Roman"><b>Doze
+mode</b></font> <font face="Times New Roman">brengt je naar een
+schermpje dat uitlegt hoe je kan voorkomen dat Androids batterij
+besparende maatregelen Juggluco’s functioneren onmogelijk maken.</font></p>
+<p style="border: none; padding: 0in"><font face="Times New Roman"><b>Bluetooth
+History</b></font><font face="Times New Roman">: Bij Libre 0 en 2
+sensoren, is History waarden uit het verleden met een interval van 15
+minuten. Voorheen werden ze alleen ontvangen door middel van scannen.
+Wanneerje deze optie inschakelt, worden de historiewaarden ook via
+Bluetooth ontvangen. Ook andere dingen zullen anders werken. Naar
+Libreview worden de history waarden verzonden, in plaats van de
+gemiddelden van de streamwaarden. Het nadeel is dat het langzamer is.
+Dit kan een probleem zijn bij WearOS-horloges.</font></p>
+<p style="border: none; padding: 0in"><font face="Times New Roman">Deze
+optie heeft geen invloed op Libre 3- en US Libre 2-sensoren.</font></p>
+<p style="border: none; padding: 0in"><font face="Times New Roman"><b>Toestemming</b></font><font face="Times New Roman">:
 Eerdere versies van Juggluco hadden een locatie machtiging nodig om
 te zoeken naar het Bluetooth device adres van sensoren. Dit is niet
 meer noodzakelijk, maar je kunt Juggluco nog steeds die toestemming
-geven en onder Android 6 en 7 werkt het nog op de oude manier.</font></font></font></p>
-<p style="line-height: 120%; margin-bottom: 0in; border: none; padding: 0in">
-<font><font face="Times New Roman"><font size="3" style="font-size: 12pt">Het
+geven en onder Android 6 en 7 werkt het nog op de oude manier.</font></p>
+<p style="border: none; padding: 0in"><font face="Times New Roman">Het
 device adres wordt getoond na de sensor naam. Rode letters betekent
 dat het een niet Europese FreeStyle Libre 2 sensor is zoals die
-gebruikt wordt in de Verenigde Staten, Canada en Australië.</font></font></font></p>
-<p style="line-height: 120%; margin-bottom: 0in; border: none; padding: 0in">
-<font><font face="Times New Roman"><font size="3" style="font-size: 12pt">Als
-het device adres bekend is, heb je niets aan een locatie machtiging.</font></font></font></p>
-<p style="line-height: 120%; margin-bottom: 0in; border: none; padding: 0in">
-<font><font face="Times New Roman"><font size="3" style="font-size: 12pt">Android
-12 heeft een nieuwe “</font></font></font><font><font face="Times New Roman"><font size="3" style="font-size: 12pt"><i>Apparaten
-in de buurt</i></font></font></font><font>”
-</font><font><font face="Times New Roman"><font size="3" style="font-size: 12pt">machtiging,
+gebruikt wordt in de Verenigde Staten, Canada en Australië.</font></p>
+<p style="border: none; padding: 0in"><font face="Times New Roman">Als
+het device adres bekend is, heb je niets aan een locatie machtiging.</font></p>
+<p style="border: none; padding: 0in"><font face="Times New Roman">Android
+12 heeft een nieuwe “</font><font face="Times New Roman"><i>Apparaten
+in de buurt</i></font>” <font face="Times New Roman">machtiging,
 die gebruikt wordt in plaats van de locatie machtiging, maar ook
-nodig is voor later contact met de sensor.</font></font></font></p>
-<p style="line-height: 120%; margin-bottom: 0in; border: none; padding: 0in">
-<font><font face="Times New Roman"><font size="3" style="font-size: 12pt"><b>Beëindig</b></font></font></font><font><font face="Times New Roman"><font size="3" style="font-size: 12pt">:
+nodig is voor later contact met de sensor.</font></p>
+<p style="border: none; padding: 0in"><b>Vergeten</b>: laat Juggluco
+het apparaatadres vergeten en scannen naar het apparaatadres. Bij
+sommige sensoren is dit nodig om verbinding te krijgen en wordt dan
+automatisch gedaan door Juggluco. Met deze knop kun je handmatig
+zeggen dat Juggluco dat moet doen, omdat er wellicht andere
+gelegenheden zijn waarbij het ook nodig is.</p>
+<p style="border: none; padding: 0in"><font face="Times New Roman"><b>Beëindig</b></font><font face="Times New Roman">:
 Maak geen contact via Bluetooth meer met deze sensor. Als je deze
-sensor weer wil gebruiken, hoef je hem alleen maar te scannen.</font></font></font></p>
-<p style="line-height: 120%; margin-bottom: 0in; border: none; padding: 0in">
-<font><font face="Times New Roman"><font size="3" style="font-size: 12pt"><b>Turbo</b></font></font></font><font><font face="Times New Roman"><font size="3" style="font-size: 12pt">:
+sensor weer wil gebruiken, hoef je hem alleen maar te scannen.</font></p>
+<p style="border: none; padding: 0in"><font face="Times New Roman"><b>Turbo</b></font><font face="Times New Roman">:
 Als dit aanstaat, krijgt de verbinding met de sensor een hogere
 voorrang. Dit moet leiden tot minder verbindingsfouten, maar zou meer
 stroom kunnen gebruiken. Lijkt nodig te zijn op Watch4 met Freestyle
 Libre 2 sensoren, maar niet met Freestyle Libre 3 sensoren en ook
-niet op de smartphones die ik uitgeprobeerd heb.</font></font></font></p>
-<p style="line-height: 120%; margin-bottom: 0in; border: none; padding: 0in">
-<span style="font-variant: normal"><font><font face="basic roman"><font size="2" style="font-size: 10pt"><span style="letter-spacing: normal"><span style="font-style: normal"><b>Android</b></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="basic roman"><font size="2" style="font-size: 10pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">:</span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="basic roman"><font size="2" style="font-size: 10pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">
-</span></span></span></font></font></font></span><span style="font-variant: normal"><font><font face="basic roman"><font size="2" style="font-size: 10pt"><span style="letter-spacing: normal"><span style="font-style: normal"><span style="font-weight: normal">Laat
-Android in plaats van Juggluco de verbinding maken met de sensor.</span></span></span></font></font></font></span></p>
-<p style="line-height: 120%; margin-bottom: 0in; border: none; padding: 0in">
+niet op de smartphones die ik uitgeprobeerd heb.</font></p>
+<p style="border: none; padding: 0in"><span style="font-variant: normal"><font face="basic roman"><span style="letter-spacing: normal"><b>Android</b></span></font></span><span style="font-variant: normal"><font face="basic roman"><span style="letter-spacing: normal">:</span></font></span><span style="font-variant: normal"><span style="letter-spacing: normal">
+</span></span><span style="font-variant: normal"><font face="basic roman"><span style="letter-spacing: normal">Laat
+Android in plaats van Juggluco de verbinding maken met de sensor.</span></font></span></p>
+<p style="border: none; padding: 0in"><br/>
 <br/>
 
 </p>

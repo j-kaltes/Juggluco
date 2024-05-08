@@ -38,13 +38,14 @@ public class CommonCanvas {
 
     companion object {
         private const val LOG_ID = "CommonCanvas"
-	@JvmStatic
- inline fun glnearnull(rate:Float):Boolean = (rate<.8f&&rate>-.8f)
+//	@JvmStatic
+// inline fun glnearnull(rate:Float):Boolean = (rate<.8f&&rate>-.8f)
 
 	@JvmStatic
 public fun drawarrow(canvas: Canvas,paint:Paint,density:Float, ratein:Float, getx:Float, gety:Float):Boolean {
 	if(!ratein.isNaN()) {
-		val rate= if(glnearnull(ratein)) .0f else ratein
+//		val rate= if(glnearnull(ratein)) .0f else ratein
+		val rate= Natives.thresholdchange(ratein);
 		val x1:Double= (getx-density*40.0)
 		val y1:Double= (gety+rate*density*30.0)
 

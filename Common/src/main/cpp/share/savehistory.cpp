@@ -70,13 +70,13 @@ LOGGER("start=%d end=%d\n",start,uselen);
 			firstchanged=topos;
 #ifndef NOLOG
 		time_t tim=item->gettime();
-		LOGGER("add %d %.1f %s",item->getid(),(float) item->getmgdL()/18.0f,ctime(&tim));
+		LOGGER("add %d %.1f %s",item->getid(),(float) item->getmgdL()/convfactordL,ctime(&tim));
 #endif
 		}
 	else {
 #ifndef NOLOG
 		time_t tim=item->gettime();	
-		LOGGER("already streamed %d %.1f %s",item->getid(),(float)item->getmgdL()/18.0f,ctime(&tim));
+		LOGGER("already streamed %d %.1f %s",item->getid(),(float)item->getmgdL()/convfactordL,ctime(&tim));
 #endif
 		}
 	if(!gluv.getQuality())

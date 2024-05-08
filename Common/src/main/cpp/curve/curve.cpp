@@ -648,7 +648,7 @@ std::vector<pair<const ScanData*,const ScanData*>> getsensorranges(uint32_t star
 	return polldata;
 	}
 //static uint32_t pollgapdist=5*60;
-static uint32_t pollgapdist=6*60;
+static uint32_t pollgapdist=330;
 pair<const ScanData*,const ScanData*> getScanRangeRuim(const ScanData *scan,const int len,const uint32_t start,const uint32_t end) {
 	auto [low,high]= getScanRange(scan,len,start,end);
 	const ScanData *endscan= scan+len;
@@ -792,15 +792,18 @@ static void makecircle(float posx,float posy) {
 
 	}
 
-template <class TX,class TY> void showlineScan(NVGcontext* genVG,const ScanData *low,const ScanData *high,  const TX &transx,  const TY &transy,const int colorindex) {
+template <class TX,class TY> void showlineScan(NVGcontext* genVG,const ScanData *low,const ScanData *high,  const TX &transx,  const TY &transy,const int colorindex,bool isSibionics) {
 	bool search=streamsearchtype==(streamsearchtype&searchdata.type);
+//   uint32_t dif=isSibionics?450:pollgapdist;
+   uint32_t dif=isSibionics?8*60:pollgapdist;
+
 	if(search) {
 		nvgBeginPath(genVG);
 //		nvgStrokeColor(genVG, yellow); nvgFillColor(genVG, yellow);
 		nvgStrokeColor(genVG, *getyellow()); nvgFillColor(genVG, *getyellow());
 		nvgStrokeWidth(genVG, hitStrokeWidth);
 		bool restart=true,first;
-		uint32_t late=0,dif=pollgapdist;
+		uint32_t late=0;
 		bool washit=false;
 		float prevx=-1.0f,prevy;
 		for(const ScanData *it=low;it!=high;it++) {
@@ -858,7 +861,7 @@ template <class TX,class TY> void showlineScan(NVGcontext* genVG,const ScanData 
 	nvgStrokeColor(genVG, *col);
 	nvgFillColor(genVG,*col);
 	nvgStrokeWidth(genVG, pollCurveStrokeWidth);
-	uint32_t late=0,dif=pollgapdist;
+	uint32_t late=0;
 	float startx=-1000,starty=-1000;
 	for(const ScanData *it=low;it!=high;it++) {
 		if(it->valid()) {
@@ -2127,6 +2130,7 @@ int displaycurve(NVGcontext* genVG,time_t nu) {
 	pollranges=new pair<const ScanData *,const ScanData*> [histlen];
 	delete[] histpositions;
 	histpositions=new std::remove_reference_t<decltype(histpositions[0])>[histlen];
+   bool sibionics[histlen];
 	LOGSTRING("before getranges\n");
 	for(int i=histlen-1;i>=0;--i) {
 		auto his=sensors->getSensorData(hists[i]);
@@ -2146,6 +2150,7 @@ int displaycurve(NVGcontext* genVG,time_t nu) {
 		{
 			scan=his->getPolldata();
 			pollranges[i] =getScanRangeRuim(scan.data(),scan.size(),starttime,endtime) ;
+         sibionics[i]=his->isSibionics();
 			}
 //		if(showhistories)
 			histpositions[i]= histPositions(his, starttime,  endtime); 
@@ -2205,7 +2210,7 @@ displaytime disp=getdisplaytime(nu,starttime,endtime, transx);
 			const int index= hists[i];
 //			int  colorindex=(index+nrcolors/4)%nrcolors;
 			int colorindex=segcolor(index,0);
-			showlineScan(genVG,pollranges[i].first,pollranges[i].second,transx,transy,colorindex);
+			showlineScan(genVG,pollranges[i].first,pollranges[i].second,transx,transy,colorindex,sibionics[i]);
 			 }
 		}
 	LOGSTRING("before showscans\n");
@@ -3358,7 +3363,7 @@ int64_t longpress(float x,float y) {
 	if(showscans) {
 		for(int i=histlen-1;i>=0;i--) {
 			if(const ScanData *scan=nearbyscan(x,y,scanranges[i].first,scanranges[i].second,transx,transy)) {
-				LOGGER("longpress scan %.1f\n",scan->g/18.0);
+				LOGGER("longpress scan %.1f\n",scan->g/convfactordL);
 				int index=hists[i];
 				scantoshow={index,scan,static_cast<uint32_t>(time(nullptr))};
 				return 0LL;
@@ -3368,7 +3373,7 @@ int64_t longpress(float x,float y) {
 	if(showstream) {
 		for(int i=histlen-1;i>=0;i--) {
 			if(const ScanData *poll=nearbyscan(x,y,pollranges[i].first,pollranges[i].second,transx,transy)) {
-				LOGGER("longpress poll %.1f\n",poll->g/18.0);
+				LOGGER("longpress poll %.1f\n",poll->g/convfactordL);
                 const int sensorindex= hists[i];
 		      const SensorGlucoseData *hist=sensors->getSensorData(sensorindex);
             showhistory(sensorindex,hist,x,y);

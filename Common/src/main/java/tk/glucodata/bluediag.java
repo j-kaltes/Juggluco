@@ -96,7 +96,7 @@ TextView streaming;
 TextView address;
 TextView starttimeV;
 TextView rssiview;
-//Button forget;
+Button forget;
 //Button reenable;
 Button info;
 void setrow(long[] times, TextView[]  timeviews, TextView info) {
@@ -144,11 +144,7 @@ void showinfo(final SuperGattCallback gatt,MainActivity act) {
 	else
 		streaming.setText(R.string.streamingnotenabled);
 	
-/*	var visi=gatt.sensorgen==3?INVISIBLE:VISIBLE;
-	if(!isWearable) {
-		if(reenable!=null)
-			reenable.setVisibility(visi);
-		} */
+//	var visi=gatt.sensorgen==3?INVISIBLE:VISIBLE;
 	final int rssi=gatt.readrssi;
 	if(rssi<0) {
 		rssiview.setText("Rssi = "+rssi);
@@ -156,9 +152,10 @@ void showinfo(final SuperGattCallback gatt,MainActivity act) {
 	else
 		rssiview.setText(""); 
 		 
-/*	if(forget!=null)  {
-		forget.setVisibility(visi);
-		if(gatt.sensorgen!=3) {
+	if(forget!=null)  {
+//		forget.setVisibility(visi);
+//		if(gatt.sensorgen!=3) 
+      {
 			forget.setOnClickListener(v-> {
 				gatt.searchforDeviceAddress();
 				SensorBluetooth.startscan();
@@ -168,7 +165,6 @@ void showinfo(final SuperGattCallback gatt,MainActivity act) {
 				});
 			}
 		}
-		*/
 
 	address.setText(gatt.mActiveDeviceAddress == null?"Address unknown":gatt.mActiveDeviceAddress);
 	if(gatt.sensorgen == 2) {
@@ -195,6 +191,7 @@ TextView bluestate;
 private BluetoothAdapter mBluetoothAdapter=null;
 //boolean setwakelock=false;
 CheckBox usebluetooth;
+boolean wasuse;
 CheckBox priority,streamhistory;
 Button locationpermission;
 TextView scanview;
@@ -252,6 +249,7 @@ bluediag(MainActivity act) {
 	LayoutInflater flater= LayoutInflater.from(act);
 	View view = flater.inflate(R.layout.bluesensor, null, false);
 
+	forget=view.findViewById(R.id.forget);
 	scanview=view.findViewById(R.id.scan);
 	starttimeV=view.findViewById(R.id.stage);
 	rssiview=view.findViewById(R.id.rssi);
@@ -322,6 +320,7 @@ if(!isWearable) {
 }
 	if (gatts == null || gatts.size()== 0) {
 		priority.setVisibility(GONE);
+		forget.setVisibility(GONE);
 		}
 	if(!Natives.getusebluetooth()) {
 		streamhistory.setVisibility(GONE);
@@ -336,15 +335,7 @@ if(!isWearable) {
 	glucosetimes=new TextView[]{view.findViewById(R.id.glucosesuccess) , view.findViewById(R.id.glucosefailure)}; glucoseinfo=view.findViewById(R.id.glucoseinfo);
 	bluestate=view.findViewById(R.id.bluestate);
 	usebluetooth=view.findViewById(R.id.usebluetooth);
-	/*
-	wakelock=view.findViewById(R.id.wakelock);
-	wakelock.setOnCheckedChangeListener(
-		 (buttonView,  isChecked) -> {
-		 	if(!setwakelock) {
-				keeprunning.setWakelock(isChecked);
-				}
-		 	}
-		 ); */
+   
 	usebluetooth.setOnCheckedChangeListener(
 		 (buttonView,  isChecked) -> {
 		 	Log.i(LOG_ID,"usebluetooth "+isChecked);
@@ -353,7 +344,11 @@ if(!isWearable) {
 				 act.setbluetoothmain( !blueused);
 				 act.requestRender();
 				 act.doonback();
-				new bluediag(act);
+				 new bluediag(act);
+			 }
+			 else {
+				 if (isChecked != wasuse)
+					 new bluediag(act);
 			 }
 		 }
 		 );
@@ -559,7 +554,7 @@ Log.i(LOG_ID,"showall");
 		});
 		}
 	bluestate.setText( mBluetoothAdapter==null?activity.getString(R.string.nobluetooth):(mBluetoothAdapter.isEnabled()?activity.getString(R.string.bluetoothenabled): activity.getString(R.string.bluetoothdisabled)));
-        usebluetooth.setChecked(Natives.getusebluetooth());
+        usebluetooth.setChecked(wasuse = Natives.getusebluetooth());
         priority.setChecked(Natives.getpriority());
 	streamhistory.setChecked(Natives.getStreamHistory( ));
 	if(!isWearable) {

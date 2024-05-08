@@ -1794,21 +1794,16 @@ Mindestmenge dieser Zutat.</font></font></p>
 </string>
 <string name="sensorhelp" >
 <![CDATA[
-<p style="margin-bottom: 0in; border: none; padding: 0in">
-<font><font face="liberation serif"><font size="3" style="font-size: 12pt"><b>Sensor</b></font></font></font></p>
-<p style="line-height: 116%; margin-bottom: 0in; border: none; padding: 0in">
-<font><font face="times new roman"><font size="4" style="font-size: 14pt">Der
+<p style="border: none; padding: 0in"><font face="liberation serif"><b>Sensor</b></font></p>
+<p style="border: none; padding: 0in"><font face="times new roman">Der
 Spinner enthält den Namen des Sensors.&nbsp;Wenn Juggluco
 gleichzeitig mehr als einen Sensor verwendet, können Sie auswählen,
-für welchen Sensor Informationen angezeigt werden sollen.</font></font></font></p>
-<p style="line-height: 116%; margin-bottom: 0in; border: none; padding: 0in">
-<font><font face="times new roman"><font size="4" style="font-size: 14pt"><i><b>Doze-Modus</b></i></font></font></font><font><font face="times new roman"><font size="4" style="font-size: 14pt"><i><b>
-</b></i></font></font></font><font><font face="times new roman"><font size="4" style="font-size: 14pt">führt
-Sie zu einem Bildschirm mit Informationen zum Deaktivieren der
-Batterieoptimierung für Juggluco, die die Funktion von Juggluco
-verhindern können.</font></font></font></p>
-<p style="line-height: 116%; margin-bottom: 0in; border: none; padding: 0in">
-<font><font face="times new roman"><font size="4" style="font-size: 14pt"><i><b>Berechtigung</b></i></font></font></font><font><font face="times new roman"><font size="4" style="font-size: 14pt">:
+für welchen Sensor Informationen angezeigt werden sollen.</font></p>
+<p style="border: none; padding: 0in"><font face="times new roman"><i><b>Doze-Modus</b></i></font>
+<font face="times new roman">führt Sie zu einem Bildschirm mit
+Informationen zum Deaktivieren der Batterieoptimierung für Juggluco,
+die die Funktion von Juggluco verhindern können.</font></p>
+<p style="border: none; padding: 0in"><font face="times new roman"><i><b>Berechtigung</b></i></font><font face="times new roman">:
 Frühere Versionen von Juggluco benötigten eine
 Standortberechtigung, um die Geräteadresse des Sensors zu
 finden.&nbsp;Bei den von mir verwendeten Sensoren ist dies nicht mehr
@@ -1817,49 +1812,49 @@ ist;&nbsp;In diesem Fall können Sie es einschalten.&nbsp;Nach dem
 ersten Kontakt speichert Juggluco die Geräteadresse und die
 Standorterlaubnis ist immer nutzlos.&nbsp;Die Geräteadresse wird,
 falls bekannt, nach der Sensorkennung angezeigt.&nbsp;Rot bedeutet
-einen US-ähnlichen Sensor.</font></font></font></p>
-<p style="line-height: 116%; margin-bottom: 0in; border: none; padding: 0in">
-<font><font face="times new roman"><font size="4" style="font-size: 14pt">Android
+einen US-ähnlichen Sensor.</font></p>
+<p style="border: none; padding: 0in"><font face="times new roman">Android
 12 hat eine neue Berechtigung für Geräte in der Nähe, die anstelle
 der Standortberechtigung für die Suche nach einer
 Bluetooth-Geräteadresse verwendet werden kann, aber auch für die
-spätere Kontaktaufnahme mit Bluetooth-Geräten benötigt wird.</font></font></font></p>
-<p style="line-height: 116%; margin-bottom: 0in; border: none; padding: 0in">
-<font><font face="times new roman"><font size="4" style="font-size: 14pt"><i><b>Bluetooth history</b></i><i><b>: </b></i>Bei Libre 0 und 2 handelt es sich beim
-History um Werte der Vergangenheit im 15-Minuten-Intervall. Bisher
-wurden sie nur durch Scannen empfangen. Wenn Sie diese Option
-aktivieren, werden die History-Werte auch über Bluetooth empfangen.
-Auch andere Dinge werden anders funktionieren. An Libreview werden
-die History-Werte anstelle der Durchschnittswerte der Streamwerte
-gesendet. Der Nachteil ist, dass es langsamer ist. Dies kann bei
-WearOS-Uhren ein Problem sein.</font></font></font></p>
-<p style="line-height: 116%; margin-bottom: 0in; border: none; padding: 0in">
-<font><font face="times new roman"><font size="4" style="font-size: 14pt">Diese
+spätere Kontaktaufnahme mit Bluetooth-Geräten benötigt wird.</font></p>
+<p style="border: none; padding: 0in"><font face="times new roman"><i><b>Bluetooth
+history: </b></i>Bei Libre 0 und 2 handelt es sich beim History um
+Werte der Vergangenheit im 15-Minuten-Intervall. Bisher wurden sie
+nur durch Scannen empfangen. Wenn Sie diese Option aktivieren, werden
+die History-Werte auch über Bluetooth empfangen. Auch andere Dinge
+werden anders funktionieren. An Libreview werden die History-Werte
+anstelle der Durchschnittswerte der Streamwerte gesendet. Der
+Nachteil ist, dass es langsamer ist. Dies kann bei WearOS-Uhren ein
+Problem sein.</font></p>
+<p style="border: none; padding: 0in"><font face="times new roman">Diese
 Option ist für Libre 3-Sensoren und US Libre 2-Sensoren immer
-aktiviert.</font></font></font></p>
-<p style="line-height: 116%; margin-bottom: 0in; border: none; padding: 0in">
-<font><font face="times new roman"><font size="4" style="font-size: 14pt"><i><b>Beenden</b></i></font></font></font><font><font face="times new roman"><font size="4" style="font-size: 14pt">:
+aktiviert.</font></p>
+<p style="border: none; padding: 0in"><font face="times new roman"><b>Vergessen</b>:
+Lassen Sie Juggluco die Geräteadresse vergessen und nach der
+Geräteadresse suchen. Bei einigen Sensoren ist dies erforderlich, um
+eine Verbindung herzustellen, und wird dann von Juggluco automatisch
+durchgeführt. Mit dieser Schaltfläche können Sie manuell
+festlegen, dass Juggluco dies tun soll, da es möglicherweise auch
+andere Gelegenheiten gibt, bei denen dies ebenfalls erforderlich ist.</font></p>
+<p style="border: none; padding: 0in"><font face="times new roman"><i><b>Beenden</b></i></font><font face="times new roman">:
 Verbindung zu diesem Sensor über Bluetooth beenden. Wenn Sie später
 wieder Stream-Glukosewerte von diesem Sensor erhalten möchten,
-müssen Sie ihn nur erneut scannen.</font></font></font></p>
-<p style="line-height: 116%; margin-bottom: 0in; border: none; padding: 0in">
-<font><font face="times new roman"><font size="4" style="font-size: 14pt"><i><b>Turbo</b></i></font></font></font><font><font face="times new roman"><font size="4" style="font-size: 14pt">:
+müssen Sie ihn nur erneut scannen.</font></p>
+<p style="border: none; padding: 0in"><font face="times new roman"><i><b>Turbo</b></i></font><font face="times new roman">:
 Erhöht den Aufwand für den Kontakt mit dem Sensor in der Hoffnung,
 dass dies zu weniger Verbindungsfehlern führt, aber mehr
 Batterieleistung verbraucht. Scheint auf Watch4 mit Freestyle Libre
 2-Sensoren benötigt zu werden, aber nicht mit Freestyle Libre
 3-Sensoren und auf keinem der Smartphones, auf denen ich es
-ausprobiert habe.</font></font></font></p>
-<p style="line-height: 116%; margin-bottom: 0in; border: none; padding: 0in">
-<font><font face="times new roman"><font size="4" style="font-size: 14pt"><i><b>Android</b></i></font></font></font><font><font face="times new roman"><font size="4" style="font-size: 14pt">:
+ausprobiert habe.</font></p>
+<p style="border: none; padding: 0in"><font face="times new roman"><i><b>Android</b></i></font><font face="times new roman">:
 Lassen Sie Android anstelle von Juggluco die Verbindung mit dem
-Sensor herstellen.</font></font></font></p>
-<p style="line-height: 116%; margin-bottom: 0in; border: none; padding: 0in">
-<font><font face="times new roman"><font size="4" style="font-size: 14pt"><i><b>Info</b></i></font></font></font><font>&nbsp;</font><font><font face="times new roman"><font size="4" style="font-size: 14pt">:
+Sensor herstellen.</font></p>
+<p style="border: none; padding: 0in"><font face="times new roman"><i><b>Info</b></i></font>&nbsp;<font face="times new roman">:
 Gibt Start- und Endzeiten sowie die letzten Scan- und Stream-Zeiten
-des Sensors an.</font></font></font></p>
-<p style="line-height: 116%; margin-bottom: 0in; border: none; padding: 0in">
-<font><font face="times new roman"><font size="4" style="font-size: 14pt"><span lang="de-DE">Um
+des Sensors an.</font></p>
+<p style="border: none; padding: 0in"><font face="times new roman">Um
 sich über Low Energy Bluetooth mit einem Freestyle Libre 2-Sensor zu
 verbinden, sollte Bluetooth eingeschaltet sein.&nbsp;Bevor der Sensor
 von dieser App erfolgreich gescannt wird, passiert nichts.&nbsp;Der
@@ -1868,49 +1863,42 @@ Applets auf Smartphones verbunden werden.&nbsp;Die Alarme der Abbotts
 Librelink-App sollten ausgeschaltet oder die App angehalten
 werden.&nbsp;Einige Librelink-Apps scheinen den Sensor zu
 kontaktieren, während Alarme ausgeschaltet sind, und können
-Verbindungsprobleme verursachen, also verwenden Sie „&nbsp;</span></font></font></font><font><font face="times new roman"><font size="4" style="font-size: 14pt"><span lang="de-DE"><i>Stopp
-erzwingen</i></span></font></font></font><font><span lang="de-DE">&nbsp;“</span></font><font><font face="times new roman"><font size="4" style="font-size: 14pt"><span lang="de-DE">,
-um sicherzugehen. Wenn Sie den Sensor mit Freestyle Reader gestartet
+Verbindungsprobleme verursachen, also verwenden Sie „&nbsp;</font><font face="times new roman"><i>Stopp
+erzwingen</i></font>&nbsp;“<font face="times new roman">, um
+sicherzugehen. Wenn Sie den Sensor mit Freestyle Reader gestartet
 haben und ihn nicht ausschalten können, können Sie verhindern, dass
 er mit dem Sensor in Kontakt kommt, indem Sie den Reader in einen
-</span></font></font></font><a href="https://www.offgridweb.com/preparation/faraday-bags-testing-commercial-and-diy-wireless-signal-blockers/amp/"><font><font face="arial"><font size="4" style="font-size: 14pt"><span lang="de-DE"><u>Faradayschen
-Käfig</u></span></font></font></font></a><font><span lang="de-DE">
-</span></font><font><font face="times new roman"><font size="4" style="font-size: 14pt"><span lang="de-DE">stecken.</span></font></font></font></p>
-<p style="line-height: 116%; margin-bottom: 0in; border: none; padding: 0in">
-<font><font face="times new roman"><font size="4" style="font-size: 14pt"><b>Sensor
-über Bluetooth/Bluetooth</b></font></font></font><font>
-</font><font><font face="times new roman"><font size="4" style="font-size: 14pt"><b>nutzen</b></font></font></font><font>
-</font><font><font face="times new roman"><font size="4" style="font-size: 14pt">sollte
-eingeschaltet sein.</font></font></font></p>
-<p style="line-height: 116%; margin-bottom: 0in; border: none; padding: 0in">
-<font><font face="times new roman"><font size="4" style="font-size: 14pt">Wenn
+</font><a href="https://www.offgridweb.com/preparation/faraday-bags-testing-commercial-and-diy-wireless-signal-blockers/amp/"><font face="arial"><u>Faradayschen
+Käfig</u></font></a> <font face="times new roman">stecken.</font></p>
+<p style="border: none; padding: 0in"><font face="times new roman"><b>Sensor
+über Bluetooth/Bluetooth</b></font> <font face="times new roman"><b>nutzen</b></font>
+<font face="times new roman">sollte eingeschaltet sein.</font></p>
+<p style="border: none; padding: 0in"><font face="times new roman">Wenn
 die oben genannten Bedingungen erfüllt sind, kann es noch lange
 dauern, bis die App Glukosewerte vom Sensor erhält.&nbsp;Oft dauert
 es eine Minute, aber manchmal dauert es viel
-länger.&nbsp;Die&nbsp;</font></font></font><font><font face="times new roman"><font size="4" style="font-size: 14pt"><i>Verbindungsphase</i></font></font></font><font>&nbsp;</font><font><font face="times new roman"><font size="4" style="font-size: 14pt">verursacht
-die meisten Probleme.</font></font></font><font> </font><font><font face="times new roman"><font size="4" style="font-size: 14pt">Am
+länger.&nbsp;Die&nbsp;</font><font face="times new roman"><i>Verbindungsphase</i></font>&nbsp;<font face="times new roman">verursacht
+die meisten Probleme.</font> <font face="times new roman">Am
 häufigsten sind Fehler mit status=133, dem Statusargument von
 onConnectionStateChange(BluetoothGatt bluetoothGatt, int status, int
-newState).</font></font></font><font> </font><font><font face="times new roman"><font size="4" style="font-size: 14pt">Wenn
-Sie die Batterie aus einem Sensor entfernen, erhalten Sie auch diesen
-Fehler, also scheint es so etwas wie&nbsp;</font></font></font><font><font face="times new roman"><font size="4" style="font-size: 14pt"><i>Bluetooth-Gerät
-nicht gefunden</i></font></font></font><font>&nbsp;</font><font><font face="times new roman"><font size="4" style="font-size: 14pt">zu
-sein .&nbsp;Manchmal scheint es zu helfen, Bluetooth aus- und
+newState).</font> <font face="times new roman">Wenn Sie die Batterie
+aus einem Sensor entfernen, erhalten Sie auch diesen Fehler, also
+scheint es so etwas wie&nbsp;</font><font face="times new roman"><i>Bluetooth-Gerät
+nicht gefunden</i></font>&nbsp;<font face="times new roman">zu sein
+.&nbsp;Manchmal scheint es zu helfen, Bluetooth aus- und
 einzuschalten oder das Telefon neu zu starten oder die
 Bluetooth-Verbindung anderer Geräte auszuschalten.&nbsp;Andere
-Probleme werden manchmal durch Scannen des Sensors gelöst.</font></font></font></p>
-<p style="line-height: 116%; margin-bottom: 0in; border: none; padding: 0in">
-<font><font face="times new roman"><font size="4" style="font-size: 14pt">Das
-Scannen des Sensors mit Juggluco (mit aktiviertem&nbsp;</font></font></font><font><font face="times new roman"><font size="4" style="font-size: 14pt"><i>Sensor
-über Bluetooth</i></font></font></font><font>&nbsp;</font><font><font face="times new roman"><font size="4" style="font-size: 14pt">)
-auf einem anderen Telefon stiehlt die Verbindung von diesem Telefon
-und es kann einige Zeit dauern, bis das Scannen zwischendurch
-wiederhergestellt ist.</font></font></font></p>
-<p style="line-height: 116%; margin-bottom: 0in; border: none; padding: 0in">
-<font><font face="Arial"><font size="2" style="font-size: 11pt"><br/>
-&nbsp;</font></font></font><font>&nbsp;</font><font><font face="Arial"><font size="2" style="font-size: 11pt"><br/>
-&nbsp;</font></font></font><font>&nbsp;</font><font><font face="Arial"><font size="2" style="font-size: 11pt"><br/>
-&nbsp;</font></font></font><font>&nbsp;</font></p>
+Probleme werden manchmal durch Scannen des Sensors gelöst.</font></p>
+<p style="border: none; padding: 0in"><font face="times new roman">Das
+Scannen des Sensors mit Juggluco (mit aktiviertem&nbsp;</font><font face="times new roman"><i>Sensor
+über Bluetooth</i></font>&nbsp;<font face="times new roman">) auf
+einem anderen Telefon stiehlt die Verbindung von diesem Telefon und
+es kann einige Zeit dauern, bis das Scannen zwischendurch
+wiederhergestellt ist.</font></p>
+<p style="border: none; padding: 0in"><font face="Arial"><br/>
+&nbsp;</font>&nbsp;<font face="Arial"><br/>
+&nbsp;</font>&nbsp;<font face="Arial"><br/>
+&nbsp;</font>&nbsp;</p>
 ]]>
 </string>
 <string name="setlibrenumtype" >
@@ -1981,6 +1969,17 @@ die zu niedrige Seite der Anzeige an.</p>
 der Grafik auf der linken Seite des Bildschirms. Nützlich, wenn Sie
 Ihren aktuellen Blutzuckerwert in der Mitte des Bildschirms anzeigen
 möchten, z. B. bei Wear OS.</p>
+<h2 class="western" align="left">Schwelle</h2>
+<p style="background: transparent">Legen Sie einen Schwellenwert für
+die Änderungsrate der Glukosewerte fest. Nur wenn die Änderungsrate
+um den angegebenen Betrag von 0 abweicht, unterscheidet sich der
+Änderungsratenpfeil von der Horizontalen. Sie können beliebige
+Werte zwischen 0 und 0.8 verwenden. Der Schwellenwert wird verwendet,
+um zu verhindern, dass kleinen absoluten Änderungsratenwerten zu
+viel Bedeutung beigemessen wird. Es ist durchaus möglich, dass die
+Änderungsrate einen langsam steigenden Glukosewert anzeigt, in
+Wirklichkeit aber sinkt. Der Schwellenwert dient dazu, eine
+vorsichtigere Aussage zu treffen.</p>
 <h2 class="western" align="left">Bildschirm invertieren</h2>
 <p align="left" style="margin-bottom: 0in">Drehen Sie das Display auf
 den Kopf. Es ist standardmäßig eingeschaltet, weil ich sonst hin

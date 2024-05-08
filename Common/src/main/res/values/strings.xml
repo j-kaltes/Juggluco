@@ -343,4 +343,5 @@
  <string name="streamingenabled">" Streaming enabled"</string>
  <string name="streamingnotenabled">" Streaming not enabled"</string>
     <string name="everSensebroadcast">EverSense</string>
+ <string name="threshold">Threshold</string>
 </resources>

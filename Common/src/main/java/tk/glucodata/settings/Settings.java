@@ -34,7 +34,9 @@ import static android.widget.Spinner.MODE_DIALOG;
 import static android.widget.Spinner.MODE_DROPDOWN;
 import static androidx.core.os.LocaleListCompat.getEmptyLocaleList;
 import static tk.glucodata.Applic.isWearable;
+import static tk.glucodata.Backup.getnumedit;
 import static tk.glucodata.Natives.getRTL;
+import static tk.glucodata.Natives.setthreshold;
 import static tk.glucodata.NumberView.avoidSpinnerDropdownFocus;
 import static tk.glucodata.RingTones.EnableControls;
 import static tk.glucodata.help.help;
@@ -685,9 +687,11 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 	var langspin=languagespinner(context,spinpos);
 	var startspinpos=spinpos[0];
 	Log.i(LOG_ID,"startspinpos="+startspinpos);
-/*	final var pastRTL= getRTL();
-	var checkRTL=getcheckbox(context, "RTL", pastRTL);
-	*/
+
+		final var threslabel=getlabel(context,R.string.threshold);
+
+		final var thresstring=float2string(Natives.getthreshold());
+		final var threshold=getnumedit(context,thresstring);
     ok.setOnClickListener(v->{
 		final int wasorient=Natives.getScreenOrientation();
 		if(!isWearable) {	
@@ -736,6 +740,16 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 					}
 				}
 			  }
+
+      var newthreshold=threshold.getText().toString();
+      if(!thresstring.equals(newthreshold)) {
+         float thres=str2float(newthreshold);
+         if(thres>0.8f||thres<0.0f) {
+               Applic.argToaster(context, "A threshold should 0.0 - 0.8",Toast.LENGTH_LONG);
+            }
+          else
+            setthreshold(thres);
+         }
 		 if(hasnfc) {
 			var was=Natives.nfcsound();
 			boolean moet=nfcsound.isChecked();
@@ -750,25 +764,11 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 		   context.poponback();
 		    hidekeyboard();
 		    finish();
-//		var rtl=checkRTL.isChecked();
-		if(tk.glucodata.Menus.on)
-			tk.glucodata.Menus.show(context);
+		if(tk.glucodata.Menus.on) tk.glucodata.Menus.show(context);
 		if(spinpos[0]!=startspinpos) {
-/*			Log.i(LOG_ID,"setpinpos[0]="+spinpos[0]+" getRTL()=="+pastRTL+" checked="+rtl);
-			Natives.setRTL(rtl);  */
-
-			var newlocale=(spinpos[0]==0)?getEmptyLocaleList():LocaleListCompat.forLanguageTags(supportedlanguages.get(spinpos[0]));
-			AppCompatDelegate.setApplicationLocales(newlocale);
-			}
-/*		else {
-			Log.i(LOG_ID,"getRTL()=="+pastRTL+" checked="+rtl);
-			if(rtl!=pastRTL) {
-				Natives.setRTL(rtl); 
-				Intent intent = context.getIntent();
-				context.finish();
-				context.startActivity(intent);
-				}
-			} */
+            var newlocale=(spinpos[0]==0)?getEmptyLocaleList():LocaleListCompat.forLanguageTags(supportedlanguages.get(spinpos[0]));
+            AppCompatDelegate.setApplicationLocales(newlocale);
+            }
 			});
 
 	Layout[] thelayout=new Layout[1];
@@ -808,7 +808,7 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 			View[] rowglu=new View[]{bluetooth};
 
 			View[] camornum=new View[] {alarmbut,numalarm};
-			views=new View[][]{new View[]{getlabel(context,R.string.unit)}, row0, row1,new View[]{scalelabel},new View[]{fixatex,fixatey}, row2,new View[]{levelleft},hasnfc?(new View[]{globalscan,nfcsound}):null, new View[]{xdripbroadcast},new View[]{jugglucobroadcast},new View[]{fixed,uploader},new View[]{floatconfig,floatglucose},camornum,rowglu,new View[]{colbut,display},new View[]{langspin},new View[]{cancel,ok},new View[] {getlabel(context,BuildConfig.BUILD_TIME)},new View[]{getlabel(context,BuildConfig.VERSION_NAME)},new View[]{getlabel(context,codestr) }};;
+			views=new View[][]{new View[]{getlabel(context,R.string.unit)}, row0, row1,new View[]{scalelabel},new View[]{fixatex,fixatey}, row2, new View[]{threslabel,threshold}, new View[]{levelleft},hasnfc?(new View[]{globalscan,nfcsound}):null, new View[]{xdripbroadcast},new View[]{jugglucobroadcast},new View[]{fixed,uploader},new View[]{floatconfig,floatglucose},camornum,rowglu,new View[]{colbut,display},new View[]{langspin},new View[]{cancel,ok},new View[] {getlabel(context,BuildConfig.BUILD_TIME)},new View[]{getlabel(context,BuildConfig.VERSION_NAME)},new View[]{getlabel(context,codestr) }};;
 	       uploader.setOnClickListener(v-> tk.glucodata.NightPost.config(context,thelayout[0]));
 		}
 	else {
@@ -846,7 +846,7 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 			new View[]{showalways,libreview};
 		View[] rowglu=new View[]{ bluetooth,floatconfig,alarmbut};
 		row8=new View[]{changelabels,langspin,numalarm,colbut};
-		views=new View[][]{row0, row1,new View[]{scalelabel,fixatex,fixatey}, row2,new View[]{levelleft,camera,reverseorientation},
+		views=new View[][]{row0, row1,new View[]{scalelabel,fixatex,fixatey}, row2,new View[]{levelleft,threslabel,threshold,camera,reverseorientation},
 
 		hasnfc?new View[]{nfcsound, globalscan}:null,librerow,new View[] {librelinkbroadcast,everSensebroadcast, xdripbroadcast ,jugglucobroadcast},new View[] {webserver,iob,fixed,uploader }, rowglu,row8,row9};
 	       webserver.setOnClickListener(v-> tk.glucodata.Nightscout.show(context,thelayout[0]));

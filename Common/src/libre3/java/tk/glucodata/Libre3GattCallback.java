@@ -82,9 +82,7 @@ void free() {
 	public Libre3GattCallback(String SerialNumber, long dataptr)  {
 		super(SerialNumber,dataptr,3);
 		Log.d(LOG_ID, SerialNumber + ": "+ "Libre3GattCallback(..)");
-//		this.dataptr = dataptr;
 		sensorptr = Natives.getsensorptr(dataptr);
-//		mActiveDeviceAddress = Natives.getDeviceAddress(dataptr);
 
 		if(Thread.currentThread().equals( Looper.getMainLooper().getThread() )) {
 			var thr=new Thread(()-> init());
@@ -1137,6 +1135,12 @@ private void receivedpatchstatus(byte[] value) {
 			qsendcommand(command);
 			} */
 		}
+	}
+
+@Override
+public boolean matchDeviceName(String deviceName,String address) {
+	final var thisaddress = Natives.getDeviceAddress(dataptr);
+	return thisaddress!=null&&address.equals(thisaddress);
 	}
 }
 

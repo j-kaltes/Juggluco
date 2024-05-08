@@ -362,7 +362,8 @@ protected void onDraw(Canvas floatCanvas) {
 			var rate=glucose.rate;
 			if (!isNaN(rate))  {
 				 float weightrate = (rate > 1.6 ? -1.0f : (rate < -1.6 ? 1.0f : (rate / -1.6f)));
-				 float arrowy = gety - floatfontsize * .4f + (CommonCanvas.glnearnull(rate) ? 0.0f : (weightrate * floatfontsize * .4f));
+//				 float arrowy = gety - floatfontsize * .4f + (CommonCanvas.glnearnull(rate) ? 0.0f : (weightrate * floatfontsize * .4f));
+				 float arrowy = gety - floatfontsize * .4f + weightrate * floatfontsize * .4f;
 				drawarrow(floatCanvas, floatPaint, floatdensity, rate, xpos*.85f, arrowy);
 //				drawarrow(floatCanvas, floatPaint, floatdensity, rate, showtime?xpos:(.85f*xpos), arrowy);
 				}

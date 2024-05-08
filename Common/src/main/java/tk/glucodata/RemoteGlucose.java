@@ -118,7 +118,7 @@ final RemoteViews arrowremote(int kind, notGlucose glucose) {
 	} else {
 		float weightrate=0.0f,arrowy;
 		 weightrate = (rate > 1.6 ? -1.0f : (rate < -1.6 ? 1.0f : (rate / -1.6f)));
-		 arrowy = gety - glucosesize * .4f + (CommonCanvas.glnearnull(rate) ? 0.0f : (weightrate * glucosesize * .4f));
+		 arrowy = gety - glucosesize * .4f + weightrate * glucosesize * .4f;
 		Log.i(LOG_ID, "weightrate=" + weightrate+" arrowy="+arrowy);
 		drawarrow(canvas, glucosePaint, density, rate, getx * .85f, arrowy);
 	}

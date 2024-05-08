@@ -149,19 +149,19 @@ jlong SiContext::processData(SensorGlucoseData *sens,time_t nowsecs,int8_t *data
                }
        const int addtime=std::byteswap(one[6]);
          long  offtime=addtime  - (numOfUnreceived * 60) ;
-         const time_t eventTime= nowsecs + offtime;
          const bool infuture=offtime>0;
          LOGGER("Siprocess: addtime=%d added=%ld\n",addtime,offtime);
+         time_t eventTime=nowsecs + offtime;
          if(infuture) {
             LOGGER("Siprocess: wrong time: %ld seconds future addtime=%d index=%d temp=%f value=%f numOfUnreceived=%d\n",offtime,addtime,index,temp, value,numOfUnreceived);
                }
-           else  {
+           else {
              if(maxid<10) {
                   auto starttime=makestarttime(index,eventTime);
                   sens->getinfo()->starttime=starttime;
                    sensor->starttime=starttime;
                   }
-		 }
+		   }
             if(const double newvalue=process(index,value,temp);newvalue>2.0) {
       #ifndef NOLOG
                const long electric= std::byteswap(one[2]);
@@ -174,8 +174,8 @@ jlong SiContext::processData(SensorGlucoseData *sens,time_t nowsecs,int8_t *data
                   LOGGER("SIprocess: index=%d temp=%f electric=%ld value=%f->%f status=%d numOfUnreceived=%d addtime=%d trend=%d rate=%.2f abbotttrend=%d\n", index, temp, electric, value, mgdL/convfactordL,status, numOfUnreceived, addtime,trend,change,abbotttrend);
                  
                     {
-         	if(infuture) sens->setSiIndex(index+1);
-            else sens->savestream(eventTime,index,mgdL,abbotttrend,change);
+//         	if(infuture) sens->setSiIndex(index+1);
+            sens->savestream(eventTime,index,mgdL,abbotttrend,change);
             sens->retried=0;
 
 		     saveSi3(sens,index,eventTime,!infuture,value,temp,!numOfUnreceived);

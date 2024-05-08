@@ -34,6 +34,8 @@ static constexpr const double convertmultmg=1.0/10.0;
 //static constexpr const float convfactor=180.0f;
 static constexpr const double convfactordL=convfactor*0.1;
 #include <array>
+//#include <stdfloat>
+#define _Float32 float
 #ifdef  JUGGLUCO_APP
 #include "appcolor.h"
 #else
@@ -212,7 +214,7 @@ struct Tings {
 	char _nullchar1;
 	uint8_t librecountry;
 	int16_t empty2;
-	int32_t empty3;
+	_Float32 threshold;
 	int32_t floatglucose;
 
 	char newYuApiKey[41];
@@ -381,8 +383,8 @@ Settings(const char *settingsname,const char *base,const char *country): Mmap(se
 		return;
 		}
 
-	if(data()->initVersion<22) { // set in Applic.initbroadcasts, startjuggluco and initinjuggluco 
-	if(data()->initVersion<20) { // set in Applic.initbroadcasts, startjuggluco and initinjuggluco 
+	if(data()->initVersion<22) { 
+	if(data()->initVersion<20) {
 	if(data()->initVersion<18) { // set in Applic.initbroadcasts, startjuggluco and initinjuggluco 
 	if(data()->initVersion<17) { 
 	     memcpy(data()->Nightnums,data()->librenums, sizeof(Tings::ToLibre)*data()->varcount);

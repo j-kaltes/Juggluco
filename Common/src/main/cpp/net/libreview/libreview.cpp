@@ -416,27 +416,7 @@ bool putwhenneeded(bool libre3,SensorGlucoseData *sensdata) {
 		return true;
 		}
 	}
-extern time_t lastviewtime;
-extern time_t nexttimeviewed;
 extern int betweenviews;
-bool getisviewed(time_t wastime) {
-	bool viewed;
-	if(settings->data()->libreIsViewed
-#ifdef NOTALLVIES
-	&&wastime>nexttimeviewed
-#endif
-			)
-	{
-		int diff=((long long)wastime-lastviewtime);
-		viewed=abs(diff)<60;
-		LOGGER("diff=%d viewed=%d\n",diff,viewed);
-		if(viewed) {
-//			nexttimeviewed=wastime+betweenviews;
-			return true;
-			}
-		}
-	return false;
-	}
 static char *onecurrent(const ScanData &scanel,const int  nr,char *ptr,bool isviewed) {
 	const auto mgdL= scanel.getmgdL();
 	valuestart(ptr, (float)mgdL);
@@ -493,24 +473,32 @@ static int addcurrents(char *&uitptr,time_t nu,const SensorGlucoseData *sens) {
 			bool isViewed=false;
 			int id=i;
 			if(settings->data()->libreIsViewed) {
-				if(!viewed.empty()) {
-					int previd=viewed.back();
-					const ScanData *prev=startstream+previd;
-					if(((long long)wastime-prev->gettime())<
-#ifdef NOTALLVIES
-betweenviews
-#else
-					60
-#endif
-					) {
-						LOGGER("previd=%d near %d\n",previd,i);
-						isViewed=true;
-						id=previd;
-						}
-					else {
-						LOGGER("previd=%d %x near %d %x\n",previd,prev->gettime(),i,wastime);
-						}
-					}
+
+extern jobject glucosecurve;
+            if(glucosecurve) {
+               isViewed=true;
+            }
+            /*
+            else {
+               if(!viewed.empty()) {
+                  int previd=viewed.back();
+                  const ScanData *prev=startstream+previd;
+                  if(((long long)wastime-prev->gettime())<
+   #ifdef NOTALLVIES
+   betweenviews
+   #else
+                  60
+   #endif
+                  ) {
+                     LOGGER("previd=%d near %d\n",previd,i);
+                     isViewed=true;
+                     id=previd;
+                     }
+                  else {
+                     LOGGER("previd=%d %x near %d %x\n",previd,prev->gettime(),i,wastime);
+                     }
+                  }
+               }*/
 				}
 			uitptr=onecurrent(*el,i,uitptr,isViewed);
 			*uitptr++=',';

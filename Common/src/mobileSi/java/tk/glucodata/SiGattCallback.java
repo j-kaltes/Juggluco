@@ -43,8 +43,8 @@ public class SiGattCallback extends SuperGattCallback {
 static int siNR=0;
     public SiGattCallback(String SerialNumber, long dataptr) {
         super(SerialNumber, dataptr, 0x10);
-	mActiveDeviceAddress=null;
-        Log.d(LOG_ID, "SiGattCallback(..)");
+//	mActiveDeviceAddress=null;
+        Log.d(LOG_ID, SerialNumber+" SiGattCallback(..)");
 	++siNR;
     }
 
@@ -229,12 +229,15 @@ public void onCharacteristicChanged(BluetoothGatt bluetoothGatt, BluetoothGattCh
    long timmsec=System.currentTimeMillis();
   long res=Natives.SIprocessData(dataptr, value,timmsec);
   if(res==2L) {
-      novalue=true;
-		Applic.app.getHandler().postDelayed( ()->   {
+     if(!novalue) {
+	    novalue=true;
+	    Applic.app.getHandler().postDelayed( ()->   {
             if(novalue) {
                Log.e(LOG_ID,"2: postDelayed disconnect");
                disconnect();
+	       novalue=false;
                }},30*1000L);
+	       }
       return;
       }
    novalue=false;
@@ -259,7 +262,7 @@ public void onReadRemoteRssi(BluetoothGatt gatt, int rssi, int status)  {
 	}
 
 @Override
-public boolean matchDeviceName(String deviceName) {
+public boolean matchDeviceName(String deviceName,String address) {
 	final var len=deviceName.length();
    final String bluetoothNum=Natives.getSiBluetoothNum(dataptr);
 //   final String bluetoothNum=SerialNumber;

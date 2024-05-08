@@ -24,5 +24,7 @@ constexpr int32_t glucoselowest=40;
 constexpr int32_t glucosehighest=500;
 
 inline bool glnearnull(float rate) {
-	return rate<.8f&&rate>-.8f;
+	auto the=settings->data()->threshold;
+//	return rate<.8f&&rate>-.8f;
+	return fabsf(rate)<the;
 	}

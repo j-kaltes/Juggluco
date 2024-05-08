@@ -25,7 +25,7 @@
 #include <algorithm>
 #include "alg.h"
 #include "nfcdata.h"
-
+#include "settings/settings.h"
 
 
 
@@ -48,7 +48,7 @@ int    sensorAgeInMinutes = getSensorAgeInMinutes();
 		time_t wastime=(onmindate-dataAgeInMinutes)*60;
 	timestring(wastime,timestr,maxt);
 	//		int sum=gethistglucose<uint32_t>(counter);
-		outf("%s %.1f %d\n",timestr,glucoseLevelRaw/180.0,glucoseLevelRaw);
+		outf("%s %.1f %d\n",timestr,glucoseLevelRaw/convfactor,glucoseLevelRaw);
             }
         }
 	}
@@ -70,7 +70,7 @@ int    sensorAgeInMinutes = getSensorAgeInMinutes();
 		time_t wastime=(onmindate-dataAgeInMinutes)*60;
 //		int  sum=getTrendrest<uint32_t>(counter);
 		timestring(wastime,timestr,maxt);
-		outf("%s %.1f %d\n",timestr,glucoseLevelRaw/180.0,glucoseLevelRaw);
+		outf("%s %.1f %d\n",timestr,glucoseLevelRaw/convfactor,glucoseLevelRaw);
 
             }
         }
@@ -130,7 +130,7 @@ char timestr[maxt];
 		if(dataAgeInMinutes >= sensorAgeInMinutes ) {
 			time_t wastime=(onmindate-dataAgeInMinutes)*60;
 			timestring(wastime,timestr,maxt);
-			outf("%s: %.1f, before start sensor\n",timestr,glucoseLevelRaw/180.0);
+			outf("%s: %.1f, before start sensor\n",timestr,glucoseLevelRaw/convfactor);
 			return false;
 			}
 		  }
