@@ -400,6 +400,27 @@ AlgorithmResults *alg=(AlgorithmResults *)outalgres.ptr;
 
 #endif
 	if(alg) {
+
+#ifndef NOLOG
+	jint startminbase=starttime->toint();
+	time_t start=basesecs+startminbase;
+	{
+	char buf[50];
+	LOGGER("init starttime %s",ctime_r(&start,buf));
+
+	jint endminbase=endtime->toint();
+	time_t end=basesecs+endminbase;
+	LOGGER("init endtime %s",ctime_r(&end,buf));
+	}
+
+
+	timevalues times= patchtimevalues(data->info) ;
+  LOGGER("warmup=%d,wear=%d\n",times.warmup,times.wear);
+#endif
+
+
+
+
 		alg->setremoved(isremoved);
 		alg->setinserted(isinserted);
 		}
@@ -551,8 +572,16 @@ scanstate *Abbott::initnewsensor( scandata *data) {
 	char buf[50];
 	LOGGER("init starttime %s",ctime_r(&start,buf));
 
+	jint endminbase=endtime.toint();
+	time_t end=basesecs+endminbase;
+	LOGGER("init endtime %s",ctime_r(&end,buf));
 	}
+
+
+	timevalues times= patchtimevalues(data->info) ;
+  LOGGER("warmup=%d,wear=%d\n",times.warmup,times.wear);
 #endif
+
 	if(int sindex=sensors->sensorindex(serial.data());sindex>=0) {
 		sensorindex=sindex;
 		 hist=sensors->getSensorData(sindex);
@@ -1248,6 +1277,7 @@ return (AlgorithmResults *)outalgres.ptr;
 //extern std::span<streamdat> laststream;
 
 extern bool addStreamHistory(const jniHistory &hist,time_t nutime,int nuid, SensorGlucoseData &save) ;
+
 const AlgorithmResults *  libre2stream::processTooth(data_t * bluedata, scanstate *newstate,uint32_t nutime) {
 
 const data_t *ident=getident();

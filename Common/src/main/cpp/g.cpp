@@ -247,13 +247,13 @@ static	 const int waitsig=60;
 	time_t tim=time(nullptr);
 	std::unique_ptr<scandata> unidatptr(new scandata(env,info,data,tim));
 
-	scandata *datptr=unidatptr.get();
+    scandata *datptr=unidatptr.get();
 /*
-	timevalues times= patchtimevalues(datptr->info) ;
-	if(times.wear>0) {
-		LOGGER("warmup=%d,wear=%d\n",times.warmup,times.wear);
-		}
-		*/
+    timevalues times= patchtimevalues(datptr->info) ;
+    if(times.wear>0) {
+        LOGGER("warmup=%d,wear=%d\n",times.warmup,times.wear);
+        } */
+		
 	scanlogger	logs;
 #ifdef SCANLOG
 	if(logscan)  {
@@ -512,15 +512,12 @@ extern "C" JNIEXPORT void JNICALL  fromjava(setDeviceAddress)(JNIEnv *env, jclas
   char *deviceaddress=usedhist->deviceaddress();
 	if(!jdeviceAddress) {
 		deviceaddress[0]='\0';
-     if(usedhist->isSibionics()) usedhist->deviceaddressSI[0]='\0';
-      }
-	else {
+       } else {
 		const jint getlen= std::min(env->GetStringUTFLength( jdeviceAddress),17);
 		env->GetStringUTFRegion(jdeviceAddress, 0,getlen,deviceaddress);
 		deviceaddress[getlen]='\0';
-     if(usedhist->isSibionics())
-         memcpy(usedhist->deviceaddressSI,deviceaddress,getlen+1);
-		}
+	    usedhist->scannedAddress=true;
+	}
 	  LOGGER("setDeviceAddress(%s)\n", deviceaddress);
      }
 
@@ -571,10 +568,8 @@ extern "C" JNIEXPORT jstring JNICALL   fromjava(getDeviceAddress)(JNIEnv *envin,
 	const SensorGlucoseData *usedhist=reinterpret_cast<streamdata *>(dataptr)->hist ; 
 	if(!usedhist)
 		return nullptr;
-//	const char *address=usedhist->deviceaddress();
-
-  const char *address=usedhist->isSibionics()?usedhist->deviceaddressSI:usedhist->deviceaddress();
-	if(!*address)
+	const char *address=usedhist->deviceaddress();
+	if(!*address||(usedhist->isSibionics()&&!usedhist->scannedAddress))
 		return nullptr;
 	LOGGER("getDeviceAddress()=%s\n",address);
 	return envin->NewStringUTF(address);

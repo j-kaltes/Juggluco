@@ -836,7 +836,7 @@ static bool mkdatabaseSI(string_view sensordir,string_view sensorgegs,uint32_t n
 		}
 	uint32_t start=now;
 	//TODO other days
-       Info inf{.starttime=(uint32_t)start,.lastscantime=(uint32_t)start,.starthistory=0,.endhistory=0,.scancount=0,.startid=0,.interval=interval5,.dupl=3,.days=maxdaysSI ,.sibionics=true,.lastLifeCountReceived=0,.pollcount=0, .lockcount=1};
+       Info inf{.starttime=(uint32_t)start,.lastscantime=(uint32_t)start,.starthistory=0,.endhistory=0,.scancount=0,.startid=0,.interval=interval5,.dupl=3,.days=maxdaysSI ,.sibionics=true,.lastLifeCountReceived=0,.pollcount=0,.pollinterval=88.0, .lockcount=1};
        inf.siIdlen=sensorgegs.size();
        memcpy(inf.siId,sensorgegs.data(),inf.siIdlen);
        if(hasnum) {
@@ -987,8 +987,6 @@ if(const ScanData *last=lastpoll()) {
             getinfo()->prunedstream=true;
             }
        }
-   else
-      *deviceaddressSI='\0';
    }
 
 	public:
@@ -1750,8 +1748,7 @@ void setSiIndex(int index)  {
 
 uint32_t receivehistory=0;
 int retried=0;
-
-char deviceaddressSI[deviceaddresslen];
+bool scannedAddress=false;
 };
 
 struct lastscan_t {

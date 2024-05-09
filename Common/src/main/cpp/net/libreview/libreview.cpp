@@ -469,7 +469,7 @@ static int addcurrents(char *&uitptr,time_t nu,const SensorGlucoseData *sens) {
 			auto wastime= el->gettime();
 			if(wastime<old)
 				return 0;
-			const auto &viewed=sens->viewed;
+	//		const auto &viewed=sens->viewed;
 			bool isViewed=false;
 			int id=i;
 			if(settings->data()->libreIsViewed) {

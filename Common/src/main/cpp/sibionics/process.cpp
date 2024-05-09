@@ -168,6 +168,7 @@ jlong SiContext::processData(SensorGlucoseData *sens,time_t nowsecs,int8_t *data
 	    	sens->getinfo()->pollinterval=newvalue-value;
 	    }
 	   else {
+	   	if(sens->getinfo()->pollinterval<40)
 		   newvalue=value+sens->getinfo()->pollinterval;
 	   	}
       #ifndef NOLOG
@@ -181,8 +182,8 @@ jlong SiContext::processData(SensorGlucoseData *sens,time_t nowsecs,int8_t *data
                   LOGGER("SIprocess: index=%d temp=%f electric=%ld value=%f->%f status=%d numOfUnreceived=%d addtime=%d trend=%d rate=%.2f abbotttrend=%d\n", index, temp, electric, value, mgdL/convfactordL,status, numOfUnreceived, addtime,trend,change,abbotttrend);
                  
 //         	if(infuture) sens->setSiIndex(index+1);
-	   if(newvalue>1.8) {
-		sens->savestream(eventTime,index,mgdL,abbotttrend,change);
+	   if(newvalue>1.8&&newvalue<30) {
+         sens->savestream(eventTime,index,mgdL,abbotttrend,change);
             	sens->retried=0;
 	        saveSi3(sens,index,eventTime,!infuture,value,temp,!numOfUnreceived);
                if(!numOfUnreceived)  {
