@@ -977,18 +977,18 @@ if(const ScanData *last=lastpoll()) {
 			}
 		}
 	}
-LOGGER("getinfo()->lastHistoricLifeCountReceivedPos=%d\n", getinfo()->lastHistoricLifeCountReceivedPos);
-if(!getinfo()->lastHistoricLifeCountReceivedPos)
-	getinfo()->lastHistoricLifeCountReceivedPos=12;
-LOGGER("SensorGlucoseData %s %s scansize=%zu\n",sensordir.data(),scanpath.data(),scansize);
-
-    if(getinfo()->pollinterval<58.6||getinfo()->pollinterval>62.6)
-		getinfo()->pollinterval=60.5752;
-  if(!getinfo()->prunedstream) {
-	prunedata() ;
-	getinfo()->prunedstream=true;
-  	}
-	*deviceaddressSI='\0';
+   if(!isSibionics()) {
+      LOGGER("getinfo()->lastHistoricLifeCountReceivedPos=%d\n", getinfo()->lastHistoricLifeCountReceivedPos);
+      if(!getinfo()->lastHistoricLifeCountReceivedPos) getinfo()->lastHistoricLifeCountReceivedPos=12;
+      LOGGER("SensorGlucoseData %s %s scansize=%zu\n",sensordir.data(),scanpath.data(),scansize);
+      if(getinfo()->pollinterval<58.6||getinfo()->pollinterval>62.6) getinfo()->pollinterval=60.5752;
+      if(!getinfo()->prunedstream) {
+            prunedata() ;
+            getinfo()->prunedstream=true;
+            }
+       }
+   else
+      *deviceaddressSI='\0';
    }
 
 	public:

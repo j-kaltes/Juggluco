@@ -129,7 +129,7 @@ jlong SiContext::processData(SensorGlucoseData *sens,time_t nowsecs,int8_t *data
    for(int off=0;off < maxoff;off+=14) {
       const uint16_t *one=reinterpret_cast<uint16_t*>(start+off);
       const int index=std::byteswap(one[0]);
-      const float temp = std::byteswap(one[1])/ 10.0f;
+      const double temp = std::byteswap(one[1])/ 10.0f;
       const double value = std::byteswap(one[3])/10.0;
       const int numOfUnreceived=std::byteswap(one[5]);
 
@@ -154,6 +154,7 @@ jlong SiContext::processData(SensorGlucoseData *sens,time_t nowsecs,int8_t *data
          time_t eventTime=nowsecs + offtime;
          if(infuture) {
             LOGGER("Siprocess: wrong time: %ld seconds future addtime=%d index=%d temp=%f value=%f numOfUnreceived=%d\n",offtime,addtime,index,temp, value,numOfUnreceived);
+            eventTime=nowsecs;
                }
            else {
              if(maxid<10) {
@@ -162,7 +163,13 @@ jlong SiContext::processData(SensorGlucoseData *sens,time_t nowsecs,int8_t *data
                    sensor->starttime=starttime;
                   }
 		   }
-            if(const double newvalue=process(index,value,temp);newvalue>2.0) {
+	   double newvalue=0.0;
+            if((newvalue=process(index,value,temp))>1.8) {
+	    	sens->getinfo()->pollinterval=newvalue-value;
+	    }
+	   else {
+		   newvalue=value+sens->getinfo()->pollinterval;
+	   	}
       #ifndef NOLOG
                const long electric= std::byteswap(one[2]);
                const int status = std::byteswap(one[4]);
@@ -173,12 +180,11 @@ jlong SiContext::processData(SensorGlucoseData *sens,time_t nowsecs,int8_t *data
                const int abbotttrend=sitrend2abbott(trend);
                   LOGGER("SIprocess: index=%d temp=%f electric=%ld value=%f->%f status=%d numOfUnreceived=%d addtime=%d trend=%d rate=%.2f abbotttrend=%d\n", index, temp, electric, value, mgdL/convfactordL,status, numOfUnreceived, addtime,trend,change,abbotttrend);
                  
-                    {
 //         	if(infuture) sens->setSiIndex(index+1);
-            sens->savestream(eventTime,index,mgdL,abbotttrend,change);
-            sens->retried=0;
-
-		     saveSi3(sens,index,eventTime,!infuture,value,temp,!numOfUnreceived);
+	   if(newvalue>1.8) {
+		sens->savestream(eventTime,index,mgdL,abbotttrend,change);
+            	sens->retried=0;
+	        saveSi3(sens,index,eventTime,!infuture,value,temp,!numOfUnreceived);
                if(!numOfUnreceived)  {
                        sens->sensorerror=false;
                         if(sensor->finished) {
@@ -187,23 +193,23 @@ jlong SiContext::processData(SensorGlucoseData *sens,time_t nowsecs,int8_t *data
                            backup->resensordata(sensorindex);
                            }
                        auto res=glucoseback(mgdL,change,sens);
-                        savejson(sens,sens->statefile,index,algcontext,getjson);
+		       if(!(index%5))
+				savejson(sens,sens->statefile,index,algcontext,getjson);
                         backup->wakebackup(Backup::wakestream);
                      extern void wakewithcurrent();
                         wakewithcurrent();
                         return res;
                        }
                  else {
-		               if(!infuture&&!(index%256)) {
-                        savejson(sens,sens->statefile,index,algcontext,getjson);
-                        backup->wakebackup(Backup::wakestream);
-                        }
+		       if(!infuture&&!(index%500)) {
+				savejson(sens,sens->statefile,index,algcontext,getjson);
+				backup->wakebackup(Backup::wakestream);
+				}
+                      sens->receivehistory=nowsecs;
                      }
-                   sens->receivehistory=nowsecs;
 
                      }
-                  }
-          else {
+           else {
             if(index==maxid)
 	            sens->setSiIndex(maxid+1);
             LOGGER("SIprocess failed: index=%d temp=%f value=%f numOfUnreceived=%d\n", index, temp, value,numOfUnreceived);
@@ -212,7 +218,7 @@ jlong SiContext::processData(SensorGlucoseData *sens,time_t nowsecs,int8_t *data
                return 0LL;
                }
             }
-      }
+      	}
      return 1LL;
     }
 /*

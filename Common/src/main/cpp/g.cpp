@@ -509,13 +509,17 @@ extern "C" JNIEXPORT void JNICALL  fromjava(setDeviceAddress)(JNIEnv *env, jclas
 	SensorGlucoseData *usedhist=reinterpret_cast<streamdata *>(dataptr)->hist ; 
 	if(!usedhist)
 		return;
-  char *deviceaddress=usedhist->isSibionics()?usedhist->deviceaddressSI:usedhist->deviceaddress();
-	if(!jdeviceAddress)
+  char *deviceaddress=usedhist->deviceaddress();
+	if(!jdeviceAddress) {
 		deviceaddress[0]='\0';
+     if(usedhist->isSibionics()) usedhist->deviceaddressSI[0]='\0';
+      }
 	else {
 		const jint getlen= std::min(env->GetStringUTFLength( jdeviceAddress),17);
 		env->GetStringUTFRegion(jdeviceAddress, 0,getlen,deviceaddress);
 		deviceaddress[getlen]='\0';
+     if(usedhist->isSibionics())
+         memcpy(usedhist->deviceaddressSI,deviceaddress,getlen+1);
 		}
 	  LOGGER("setDeviceAddress(%s)\n", deviceaddress);
      }
