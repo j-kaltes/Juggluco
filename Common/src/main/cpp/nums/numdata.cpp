@@ -28,7 +28,7 @@ std::vector<Numdata*> numdatas;
 extern void makenightswitch();
 
 void makenightswitch() {
-	if(settings->data()->initVersion<26) {
+   if(settings->data()->initVersion<26) {
       if(settings->data()->initVersion<25) {
          if(settings->data()->initVersion<24) {
             if(settings->data()->initVersion<23) {
@@ -48,8 +48,8 @@ void makenightswitch() {
            resensordata(0);
            }
         settings->data()->threshold=0.8f;
-         settings->data()->initVersion=26;
          }
+        settings->data()->initVersion=27;
 	}
 
 //bool update(int sock,int &len, struct numspan *ch) 

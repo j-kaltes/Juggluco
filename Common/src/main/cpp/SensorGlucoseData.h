@@ -58,6 +58,7 @@ inline int getpagesize(void) {
 //#include "datbackup.h"
 #include "maxsendtohost.h"
 #include "settings/settings.h"
+#include "timevalues.h"
 inline	constexpr const char rawstream[]="rawstream.dat";
 #include <string_view>
 extern std::string_view globalbasedir;
@@ -198,8 +199,13 @@ uint8_t dupl:7;
 bool uselater:1;
 uint8_t days:7;
 bool sibionics:1;
-//uint32_t reserved2[2];
-uint32_t pin;
+union {
+  uint32_t pin;
+  struct {
+  	uint16_t warmup;
+  	uint16_t wearduration;
+	
+  };};
 uint16_t lastLifeCountReceived;
 uint16_t lastHistoricLifeCountReceivedPos;
 struct { 
@@ -275,8 +281,17 @@ int16_t scanoff;
 uint16_t endStreamhistory; 
 uint16_t startedwithStreamhistory; 
 uint16_t libreviewnotsendHistory;
-bool sendLibre[15*24*4];
-uint16_t healthconnectiter;
+union {
+struct {
+   bool oldsendLibre[15*24*4];
+   uint16_t oldhealthconnectiter;
+   };
+struct {
+   bool sendLibre[20*24*4];
+   uint16_t healthconnectiter;
+   };
+};
+
 void clearLibreSendEnd(int start) {
 	const int len=(int)sizeof(sendLibre)-start*sizeof(sendLibre[0]);
 	LOGGER("clearLibreSendEnd(%d) sizeof(sendLibre)=%d len=%d\n",start,sizeof(sendLibre),len);
@@ -740,7 +755,10 @@ static int getgeneration(const char *info) {
 
 
 
-static bool mkdatabase(string_view sensordir,time_t start,const  char *uid,const  char *infodat,uint8_t days=15,uint8_t dupl=3,uint32_t bluestart=0,const char *blueinfo=nullptr,uint16_t secinterval=defaultinterval) {
+static bool mkdatabase(string_view sensordir,time_t start,const  char *uid,const  char *infodat,const timevalues *timesptr,uint8_t dupl=3,uint32_t bluestart=0,const char *blueinfo=nullptr,uint16_t secinterval=defaultinterval) {
+     const auto wearduration=timesptr->wear;
+     const uint8_t days=wearduration/(60*24)+1;
+
      LOGGER("mkdatabase %s,%s",sensordir.data(),ctime(&start));
        int gen=getgeneration(infodat);
 //	pathconcat  sensordir{basedir,sensorid};
@@ -755,7 +773,7 @@ static bool mkdatabase(string_view sensordir,time_t start,const  char *uid,const
 				return false;
 			}
 		}
-       Info inf{.starttime=(uint32_t)start,.lastscantime=inf.starttime,.starthistory=0,.endhistory=0,.scancount=0,.startid=0,.interval=secinterval,.dupl=dupl,.days=days , .pollcount=0, .lockcount=0};
+       Info inf{.starttime=(uint32_t)start,.lastscantime=inf.starttime,.starthistory=0,.endhistory=0,.scancount=0,.startid=0,.interval=secinterval,.dupl=dupl,.days=days ,.warmup=timesptr->warmup,.wearduration=wearduration, .pollcount=0, .lockcount=0};
 	inf.ident.len=8;
 //		memcpy(&inf.ident.data,uid,8);
 	memcpy(inf.ident.data,uid,8);

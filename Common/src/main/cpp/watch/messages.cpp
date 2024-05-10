@@ -386,7 +386,7 @@ int messagemakeconnection(passhost_t *pass,int &sock,crypt_t*ctx,char stype) {
 //bool wearmessages=false;
 
 
-extern bool getwearindex(JNIEnv *env, jstring jident) ;
+extern int getwearindex(JNIEnv *env, jstring jident) ;
 extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getBlueMessage)(JNIEnv *env, jclass cl,int index) {
 	if(index<0)
 		return false;

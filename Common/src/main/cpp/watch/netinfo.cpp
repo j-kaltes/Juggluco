@@ -82,7 +82,7 @@ passhost_t * getwearoshost(const bool create,const char *label,bool galaxy,bool 
     passhost_t *endhosts=update->allhosts+nrhost;
     passhost_t *found= std::find_if(hosts,endhosts,[label](const passhost_t &host){
     		 const bool same=host.hasname&&!strncmp(label,host.getname(),passhost_t::maxnamelen);
-		 LOGGERTAG("%s %d (as %s)\n",host.getname(),same,label);
+		 LOGGERTAG("%s %s %s)\n",host.getname(),same?"=":"!=",label);
 		 return same;
 		});
     if(found==endhosts) {
@@ -651,7 +651,7 @@ extern "C" JNIEXPORT jint  JNICALL   fromjava(directsensorwatch)(JNIEnv *env, jc
 	return -1;
        }
 
-bool getwearindex(JNIEnv *env, jstring jident) {
+int getwearindex(JNIEnv *env, jstring jident) {
     if(!jident) return -1;
    const char *id = env->GetStringUTFChars( jident, NULL);
    if (id == nullptr) return -1;

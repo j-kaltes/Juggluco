@@ -37,7 +37,7 @@
 #include "jnisubin.h"
 #include "hexstr.h"
 
-constexpr const int librewearduration=14*24*60;
+//constexpr const int librewearduration=14*24*60;
 
 typedef struct JNINativeInterface * JNIEnvC;
 extern struct JNINativeInterface envbuf;
@@ -341,7 +341,7 @@ data_t *fromjbyteArray(JNIEnv *env,jbyteArray jar,jint len) {
 	LOGGER("fromjbyteArray %d\n",lens);
 	return dat;
 	}
-//Abbott(string_view basedir,data_t *uidin,int fam=0): sensordir(basedir,getserial(fam,reinterpret_cast<unsigned char *>(uidin->data()))), uid(uidin) {}
+/*
 static jint getFamily(JNIEnv *env,jbyteArray info) {
 	jint fam=abbottcall(getProductFamily)(env,nullptr, parsertype, info,getjtoken(env));
 	LOGGER("getProductFamily()=%d\n", fam);
@@ -350,12 +350,39 @@ static jint getFamily(JNIEnv *env,jbyteArray info) {
 		LOGGER("getProductFamily()=%d\n", fam);
 		}
 	return fam;
+	} */
+
+//timevalues     patchtimevalues(const data_t *info) {
+static jint getFamily(const data_t *info) {
+	abbottinit();
+	debugclone();
+	jint fam=abbottcall(getProductFamily)(subenv,nullptr, parsertype, (jbyteArray) info,casttoken);
+	LOGGER("getProductFamily()=%d\n", fam);
+	if(!fam) {
+		fam=abbottcall(getProductFamily)(subenv,nullptr, parsertype, (jbyteArray) info,casttoken);
+		LOGGER("getProductFamily()=%d\n", fam);
+		}
+	return fam;
 	}
 
-Abbott::Abbott(JNIEnv *env,string_view basedir,jbyteArray juid, jbyteArray info): Abbott(basedir,fromjbyteArray(env,juid),getFamily(env,info)) {
+
+Abbott::Abbott(JNIEnv *env,string_view basedir,jbyteArray juid, const data_t *info): Abbott(basedir,fromjbyteArray(env,juid),getFamily(info)) {
+	if(hist&&hist->getinfo()->wearduration>(60*7*24)) {
+		warmup=hist->getinfo()->warmup;
+		wearduration=hist->getinfo()->wearduration;
+		}
+	else {
+		timevalues times= patchtimevalues(info) ;
+		warmup=times.warmup;
+		wearduration=times.wear;
+      if(hist) {
+		   hist->getinfo()->warmup=warmup;
+		   hist->getinfo()->wearduration=wearduration;
+          }
+		}
 	}
 extern jclasser AlarmC, NonActiona, GluRange, attconf;
-AlgorithmResults *callAbbottAlg(data_t *uid,int startsincebase,scanstate *oldstate,scandata *data,scanstate *newstate,outobj *starttime,outobj *endtime,jobject person) {
+AlgorithmResults *callAbbottAlg(data_t *uid,int startsincebase,scanstate *oldstate,scandata *data,scanstate *newstate,outobj *starttime,outobj *endtime,jobject person,int warmup,int wear) {
 	LOGSTRING("start callAbbottAlg/3\n");
 	const time_t nutime=data->gettime();
 	const int lastsincebase=nutime-basesecs;
@@ -363,7 +390,7 @@ AlgorithmResults *callAbbottAlg(data_t *uid,int startsincebase,scanstate *oldsta
 	algobj alarm{&AlarmC},nonAction{&NonActiona};
 	algobj range{&GluRange}, attenconf{&attconf};
 //	int warmup=60, wear=14*24*60;
-	constexpr const int warmup=60, wear=librewearduration;
+//	constexpr const int warmup=60, wear=librewearduration;
 	outobj  confinsert, removed, compo, attenu, messstate, outalgres,  OutListPatchEvent;
 
 jnidata_t  hierjnidata={&envbuf,newstate};
@@ -414,8 +441,6 @@ AlgorithmResults *alg=(AlgorithmResults *)outalgres.ptr;
 	}
 
 
-	timevalues times= patchtimevalues(data->info) ;
-  LOGGER("warmup=%d,wear=%d\n",times.warmup,times.wear);
 #endif
 
 
@@ -451,7 +476,8 @@ AlgorithmResults *alg=(AlgorithmResults *)outalgres.ptr;
 
 //AlgorithmResults *callAbbottAlg(data_t *uid,int startsincebase,scanstate *oldstate,scandata *data,scanstate *newstate,outobj *starttime,outobj *endtime,jobject person) {
 AlgorithmResults *Abbott::callAbbottAlg(int startsincebase,scanstate *oldstate,scandata *data,scanstate *newstate,outobj *starttime,outobj *endtime,jobject person) {
-	return ::callAbbottAlg(uid,startsincebase,oldstate,data,newstate,starttime,endtime,person) ;
+
+	return ::callAbbottAlg(uid,startsincebase,oldstate,data,newstate,starttime,endtime,person,warmup,wearduration) ;
 	}
 //extern bool savehistory(AlgorithmResults *res,time_t nutime,nfcdata &nfc,SensorGlucoseData &save) ;
 //nfcdata  *lastnfcdata=nullptr;
@@ -578,9 +604,8 @@ scanstate *Abbott::initnewsensor( scandata *data) {
 	}
 
 
-	timevalues times= patchtimevalues(data->info) ;
-  LOGGER("warmup=%d,wear=%d\n",times.warmup,times.wear);
 #endif
+	timevalues times= patchtimevalues(data->info) ;
 
 	if(int sindex=sensors->sensorindex(serial.data());sindex>=0) {
 		sensorindex=sindex;
@@ -598,8 +623,11 @@ scanstate *Abbott::initnewsensor( scandata *data) {
 		else
 			bluestart=SensorGlucoseData:: bluestartunknown;
 
-		SensorGlucoseData::mkdatabase(sensordir,start,(const char *)uid->data(),infodata,15,3,bluestart,nullptr) ;
+		SensorGlucoseData::mkdatabase(sensordir,start,(const char *)uid->data(),infodata,&times,3,bluestart,nullptr) ;
 		int ind=sensors->addsensor(serial.data());
+		sensor *sen=sensors->getsensor(ind);
+		sen->halfdays=times.wear/(30*24)+1;
+
 		hist=sensors->getSensorData(ind);
 		sensorindex=ind;
 extern bool streamHistory() ;
@@ -920,7 +948,7 @@ const data_t *ident,
 const data_t *info,
 #endif
 scanstate *state,
-scanstate *newstate,uint32_t startsincebase,uint32_t nutime) ;
+scanstate *newstate,uint32_t startsincebase,uint32_t nutime,int warmup,int wearduration) ;
 
 scanstate* testinitsensor( scandata *data,data_t *uid,scanstate*) ;
 
@@ -992,7 +1020,7 @@ settings= new(std::nothrow) Settings(globalbasedir,settingsdat,"NL");
 	int fam= abbottcall(getProductFamily)(hiersubenv2, nullptr, parsertype,  (jbyteArray)  infoptr,casttoken);
 	LOGGER("Family=%d\n",fam);
 	auto [warm,wear]= patchtimevalues(infoptr);
-	if(warm==-1) {
+	if(wear==0) {
 		LOGSTRING("patchtimefailure\n");
 		return 12;
 		}
@@ -1056,7 +1084,7 @@ AlgorithmResults *res=processBlue(bluetooth, 0, uidptr,
 initinfo,
 #endif
 state,
-&newstate,startsincebase,bluetime) ;
+&newstate,startsincebase,bluetime,60,14*24*60) ;
 		if(!res) {
 			LOGSTRING("processStream failed\n");
 			return 12;
@@ -1069,7 +1097,7 @@ state,
 				return 12;;
 			scanstate statescan(4);
 			outobj person,endtime,starttime;
-			if(AlgorithmResults *alg2=callAbbottAlg(uidptr,startsincebase,&newstate,&data2,&statescan,&starttime,&endtime,person)) {
+			if(AlgorithmResults *alg2=callAbbottAlg(uidptr,startsincebase,&newstate,&data2,&statescan,&starttime,&endtime,person,60,(60*24*14))) {
 				if(!nodebug) {
 					__attribute__((used)) static	pid_t stop=getsid(debugpid);
 					}
@@ -1119,10 +1147,14 @@ timevalues     patchtimevalues(const data_t *info) {
 	outobj warmup, wear;
 	abbottinit();
 	debugclone();
-        if (abbottcall(getPatchTimeValues)(subenv,nullptr,parsertype, (jbyteArray) info, warmup, wear,casttoken)) {
-		return  {(int)warmup.toint(), (int)wear.toint()};
+  if(abbottcall(getPatchTimeValues)(subenv,nullptr,parsertype, (jbyteArray) info, warmup, wear,casttoken)) {
+      const auto warmupget=(uint16_t)warmup.toint();
+      const auto wearget=(uint16_t)wear.toint();
+      LOGGER("patchtimevalues warmup=%d wear=%d\n",warmupget,wearget);
+		return  {warmupget, wearget};
         	}
-        return {-1,-1}; 
+     LOGAR("patchtimevalues failed");
+     return {0,0};
     }
 jbyte  getactivationcommand(const data_t *info) {
 	LOGSTRING("start getActivationCommand ");
@@ -1202,12 +1234,12 @@ const data_t *ident,
 const data_t *info,
 #endif
 scanstate *state,
-scanstate *newstate,uint32_t startsincebase,uint32_t nutime) {
+scanstate *newstate,uint32_t startsincebase,uint32_t nutime,int warmup,int wear) {
 	jint nusincebase=nutime-basesecs;
 	algobj alarm{&AlarmC},nonAction{&NonActiona};
 	algobj range{&GluRange}, attenconf{&attconf};
 //	int warmup=60, wear=14*24*60;//TODO set with function
-	constexpr const int warmup=60, wear=librewearduration;//TODO set with function
+//	constexpr const int warmup=60, wear=librewearduration;//TODO set with function
 	outobj  outstarttime,  endtime,confinsert, removed, compo, attenu, messstate, outalgres;
  
 jnidata_t  hierjnidata={&envbuf,newstate};
@@ -1284,6 +1316,12 @@ const data_t *ident=getident();
 #ifdef HASP1
 const data_t *info=getinfo();
 #endif
+
+if(hist->getinfo()->wearduration<(7*24*60)) {
+	 auto [warmup,wear]= patchtimevalues(info) ;
+   hist->getinfo()->warmup=warmup;
+   hist->getinfo()->wearduration=wear;
+   }
 const AlgorithmResults * alg= processBlue(bluedata, person,
 
 ident,
@@ -1291,7 +1329,7 @@ ident,
 info,
 #endif
 state,
-newstate, startsincebase,nutime);
+newstate, startsincebase,nutime,hist->getinfo()->warmup,hist->getinfo()->wearduration);
 if(alg) {
 		/*int insert=reinterpret_cast<intptr_t>(confinsert.ptr);
 		int isremoved=reinterpret_cast<intptr_t>(removed.ptr);
@@ -1361,8 +1399,11 @@ extern "C" JNIEXPORT jbyteArray  JNICALL fromjava(bluetoothOnKey)(JNIEnv *envin,
 			return nullptr;
 		}
 	else {
-		SensorGlucoseData::mkdatabase(pathconcat(sensorbasedir,serial),starttime,(const char *)uid->data(),(const char *)info->data(),15,3,starttime,(const char *)info->data());
-		sensors->addsensor(serial.data());
+	   timevalues times= patchtimevalues(info) ;
+		SensorGlucoseData::mkdatabase(pathconcat(sensorbasedir,serial),starttime,(const char *)uid->data(),(const char *)info->data(),&times,3,starttime,(const char *)info->data());
+		int ind=sensors->addsensor(serial.data());
+		sensor *sen=sensors->getsensor(ind);
+		sen->halfdays=times.wear/(30*24)+1;
 		}
 	scanstate astate;
 	const data_t* pay=getStreamingPayload(&astate,uid, info, starttime); 
@@ -1489,7 +1530,7 @@ extern "C" JNIEXPORT void JNICALL   fromjava(USenabledStreaming)(JNIEnv *envin, 
 scanstate * testinitsensor( scandata *data,data_t *uid,scanstate *newstateptr) {
 	scanstate inp,newstate(4);
 	outobj person,endtime,starttime;
-	AlgorithmResults * alg=callAbbottAlg(uid,0,&inp,data,&newstate,&starttime,&endtime,person);
+	AlgorithmResults * alg=callAbbottAlg(uid,0,&inp,data,&newstate,&starttime,&endtime,person,60,60*24*14);
 	if(!alg) {
 		LOGSTRING("first callAbbottAlg failed\n");
 		return nullptr;

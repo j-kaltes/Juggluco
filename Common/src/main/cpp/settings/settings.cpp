@@ -249,22 +249,32 @@ void startsensors() {
 			return ;
 		destructsensors.reset(sensors);
 		LOGSTRING("Na sensors\n");
-		if( settings->data()->initVersion<21) {
-			sensors->onallsensors([](SensorGlucoseData *hist ) {
-				auto start=hist->getstarthistory();
-				if(start>4) {
-					for(int i=4;i<start;i++)  {
-						if(hist->getglucose(i)->valid()) {
-							hist->setstarthistory(i);
-							break;
-							}
+		if(settings->data()->initVersion<27) {
+         if( settings->data()->initVersion<21) {
+            sensors->onallsensors([](SensorGlucoseData *hist ) {
+               auto start=hist->getstarthistory();
+               if(start>4) {
+                  for(int i=4;i<start;i++)  {
+                     if(hist->getglucose(i)->valid()) {
+                        hist->setstarthistory(i);
+                        break;
+                        }
 
-						}
+                     }
 
-					}
-				}
-				) ;
+                  }
+               }
+               ) ;
+               }
+            sensors->onallsensors([](SensorGlucoseData *hist ) {
+               auto *info=hist->getinfo();
+               if(info->oldhealthconnectiter) {
+                  info->healthconnectiter=info->oldhealthconnectiter;
+                  info->oldhealthconnectiter=0;
+                  }
+                  });
 			}
+
 		}
 	}
 

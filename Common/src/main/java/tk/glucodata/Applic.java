@@ -70,6 +70,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import tk.glucodata.nums.AllData;
 import tk.glucodata.nums.numio;
@@ -364,6 +365,7 @@ private void initialize() {
      			      MessageSender.reinit();
                    if(useWearos()) {
                      MessageSender.sendnetinfo();
+					   Applic.scheduler.schedule(()-> { resetWearOS(); }, 20, TimeUnit.SECONDS);
                        }
    		 		Applic.wakemirrors();
 			      }
@@ -400,6 +402,7 @@ private void initialize() {
 //		   if(hasonAvailable) 
 		       if(useWearos()) {
 				Applic.wakemirrors();
+				Applic.scheduler.schedule(()-> { resetWearOS(); }, 20, TimeUnit.SECONDS);
 			}
 		}
 	    });

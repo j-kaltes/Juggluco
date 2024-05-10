@@ -238,16 +238,16 @@ static	 const int waitsig=60;
 		return 10<<16;
 		}
 	LOGSTRING("voor Abbott:Abbott\n");
-	Abbott ab(env,sensorbasedir,uid, info);
+	time_t tim=time(nullptr);
+	std::unique_ptr<scandata> unidatptr(new scandata(env,info,data,tim));
+       scandata *datptr=unidatptr.get();
+	Abbott ab(env,sensorbasedir,uid, datptr->info);
 	LOGSTRING("Na Abbott:Abbott\n");
 	if(ab.error()) {
 		LOGSTRING("Error in Abbott::Abbott\n");
 		return 11<<16;
 		}
-	time_t tim=time(nullptr);
-	std::unique_ptr<scandata> unidatptr(new scandata(env,info,data,tim));
 
-    scandata *datptr=unidatptr.get();
 /*
     timevalues times= patchtimevalues(datptr->info) ;
     if(times.wear>0) {

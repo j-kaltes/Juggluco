@@ -86,11 +86,8 @@ pathconcat sensordir;
 data_t *uid;
 scanstate *state;
 int errorcode=0;
-//Sensoren sens;
-
-//Abbott(string_view basedir,string &&sensor,data_t *uidin): serial(std::move(sensor)),sensordir(basedir,serial),uid(uidin),state(hist?(hist->mutex.lock(),new scanstate(sensordir)):nullptr) {
+int warmup,wearduration;
 Abbott(string_view basedir,string &&sensor,data_t *uidin): serial(std::move(sensor)),sensordir(basedir,serial),uid(uidin),state(hist?locknew<scanstate>(hist->mutex,sensordir):nullptr) {
-//	if(hist) hist->mutex.unlock();
 	LOGSTRING("Abbott(string_view basedir,string &&sensor,data_t *uidin)\n");
 	std::filesystem::path dir( sensordir.cbegin(),sensordir.cend());
 	 if(!((is_directory(dir)||std::filesystem::create_directories(dir) )&&!access(sensordir.data(), W_OK|R_OK|X_OK))) {
@@ -98,27 +95,18 @@ Abbott(string_view basedir,string &&sensor,data_t *uidin): serial(std::move(sens
 		errorcode=1;
 	 	}
 	}
-/*
-Abbott(string_view basedir,data_t *uidin,int fam=0): sensordir(basedir,getserial(fam,reinterpret_cast<unsigned char *>(uidin->data()))), uid(uidin) {
-	init();
-	}
-	*/
 Abbott(string_view basedir,data_t *uidin,int fam): Abbott(basedir,getserial(fam,reinterpret_cast<unsigned char *>(uidin->data())), uidin) {
 	}
-public:
-const string_view getsensordir() const {return sensordir;};
-const data_t * getsensorid() const {return uid;};
-/*
-Abbott(string_view basedir,string_view sensor): sensordir(basedir,sensor), uid(data_t::newex(unserial(sensor.data()))) {
-	init();
-	}
-	*/
-
 Abbott(string_view basedir,string_view  sensor): Abbott(basedir,string(sensor), data_t::newex(unserial(sensor.data()))) {
 	}
 
-//Abbott(JNIEnv *env,jobject obj,string_view basedir,jbyteArray juid, jbyteArray info);
-Abbott(JNIEnv *env,string_view basedir,jbyteArray juid, jbyteArray info);
+public:
+const string_view getsensordir() const {return sensordir;};
+const data_t * getsensorid() const {return uid;};
+
+//Abbott(JNIEnv *env,string_view basedir,jbyteArray juid, jbyteArray info);
+
+Abbott(JNIEnv *env,string_view basedir,jbyteArray juid, const data_t *info);
 ~Abbott() {
  	data_t::deleteex(uid);
 	delete state;
@@ -141,10 +129,7 @@ extern int  abbottinit(bool doch=false);
 bool linklib(const char *filename) ;
 
 typedef int8_t* Bytes_t;
-
-struct timevalues {
-int warmup,wear;
-};
+#include "timevalues.h"
 
 extern timevalues     patchtimevalues(const data_t *info) ;
 extern jbyte  getactivationcommand(const data_t *info) ;
