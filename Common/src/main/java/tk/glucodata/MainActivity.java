@@ -1056,10 +1056,12 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
          return;
       case REQUEST_BARCODE: 
          if(SiBionics==1 &&!isWearable) {
-			   if(Sibionics.zXingResult(resultCode, data))
-               finepermission();
-			   return;
-			   }
+		   if(Sibionics.zXingResult(resultCode, data))
+			finepermission();
+		    else 
+			systemlocation();
+		   return;
+		   }
 
 	};
 	if(!isWearable) {
@@ -1314,7 +1316,7 @@ public static boolean isLocationEnabled(Context context) {
        return getLocationMode(context) != Settings.Secure.LOCATION_MODE_OFF;
    }
 
-private boolean systemlocation() {
+boolean systemlocation() {
 	if(Build.VERSION.SDK_INT > 30||Build.VERSION.SDK_INT < 23||!(hasSibionics()||Build.VERSION.SDK_INT<26))  {
 		return true;
 	}

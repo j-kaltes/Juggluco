@@ -305,7 +305,7 @@ characteristic	BluetoothGattCharacteristic: Characteristic that was written to t
 status	int: The result of the write operation BluetoothGatt#GATT_SUCCESS if the operation succeeds.
 */
 	boolean justenablednotification = false;
-
+private   boolean failedbefore=false;
 	@Override
 	public void onCharacteristicWrite(BluetoothGatt bluetoothGatt, BluetoothGattCharacteristic bluetoothGattCharacteristic, int status) {
 		Log.d(LOG_ID, bluetoothGatt.getDevice().getAddress() + " onCharacteristicWrite, status:" + status + " UUID:" + bluetoothGattCharacteristic.getUuid().toString());
@@ -344,10 +344,16 @@ status	int: The result of the write operation BluetoothGatt#GATT_SUCCESS if the 
 				wrotepass[1] = tim;
 				handshake = "Enabling notification failed";
 				Log.i(LOG_ID, SerialNumber + " onCharacteristicWrite:  enabling notification failed");
+            if(failedbefore) {
+               Natives.resetbluetooth(dataptr);
+               failedbefore=false;
+               }
+            else failedbefore=true;
 				bluetoothGatt.disconnect();
 				return;
 			}
 
+         failedbefore=false;
 			conphase = 4;
 			wrotepass[0] = tim;
 			pack1 = false;

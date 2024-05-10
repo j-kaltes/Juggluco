@@ -35,7 +35,7 @@ static constexpr const double convertmultmg=1.0/10.0;
 static constexpr const double convfactordL=convfactor*0.1;
 #include <array>
 //#include <stdfloat>
-#define _Float32 float
+typedef float float32_t;
 #ifdef  JUGGLUCO_APP
 #include "appcolor.h"
 #else
@@ -214,7 +214,7 @@ struct Tings {
 	char _nullchar1;
 	uint8_t librecountry;
 	int16_t empty2;
-	_Float32 threshold;
+	float32_t threshold;
 	int32_t floatglucose;
 
 	char newYuApiKey[41];

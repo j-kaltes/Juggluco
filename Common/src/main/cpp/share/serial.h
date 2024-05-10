@@ -29,7 +29,7 @@
 extern std::string getserial(int fam, const unsigned char *byte) ;
 extern std::array<unsigned char,8> unserial(const char * const str) ;
 
-inline constexpr unsigned char unalf(char ch) {
+inline  unsigned char unalf(char ch) {
 // 0123456789 A CDEFGH JKLMN PQR TUVWXYZ;
 	ch=toupper(ch);
 	if(ch=='B')

@@ -66,6 +66,7 @@ uint32_t maxtime() const {
 
 extern void	sendstartsensors(int startpos);
 extern void	sendKAuth(SensorGlucoseData *hist);
+extern void  setstreaming(SensorGlucoseData *hist);
 class Sensoren {
 	string inbasedir;
 	pathconcat mapfile;
@@ -390,6 +391,7 @@ std::pair<int,SensorGlucoseData *> makeSIsensorindex(std::string_view gegsSI,uin
 		const int	sensindex= sensgegs - sensorlist();
 		SensorGlucoseData *sens=getSensorData(sensindex) ;
 		sendKAuth(sens);
+      setstreaming(sens);
 		sensgegs->finished=0;
       auto *info= sens->getinfo();
 		info->lastscantime=now;
@@ -856,12 +858,14 @@ int writeStartime(crypt_t *pass, const int sock, const int sensorindex) {
 				el->getinfo()->update[ind].sendstreaming=true;
 				
 			});
+
+		const uint32_t now = time(NULL);
 		for(int i = firstsensor; i <= lastsens; i++) {
-			if(newfirst<0&&!sensorlist()[i].finished)  {
-				newfirst=i;
-				}
 			LOGGER("sensor %d\n", i);
 			if(SensorGlucoseData *hist = getSensorData(i)) {
+				if(newfirst<0&&now<hist->getmaxtime())  {
+					newfirst=i;
+					}
 				if(upstream) {
 					const int resstream = hist->updatestream(pass, sock, ind, i,0);
 					switch (resstream) {

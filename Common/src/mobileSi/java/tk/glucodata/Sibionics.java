@@ -151,6 +151,8 @@ private static void scanGoogle(MainActivity act) {
 		   if(connectSensor(rawValue)) {
             act.finepermission(); 
             }
+          else
+            act.systemlocation();
 	       })
 	   .addOnCanceledListener(
 	       () -> {

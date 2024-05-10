@@ -756,8 +756,8 @@ static int getgeneration(const char *info) {
 
 
 static bool mkdatabase(string_view sensordir,time_t start,const  char *uid,const  char *infodat,const timevalues *timesptr,uint8_t dupl=3,uint32_t bluestart=0,const char *blueinfo=nullptr,uint16_t secinterval=defaultinterval) {
-     const auto wearduration=timesptr->wear;
-     const uint8_t days=wearduration/(60*24)+1;
+     const uint16_t wear=timesptr->wear;
+     const uint8_t days=wear/(60*24)+1;
 
      LOGGER("mkdatabase %s,%s",sensordir.data(),ctime(&start));
        int gen=getgeneration(infodat);
@@ -773,7 +773,7 @@ static bool mkdatabase(string_view sensordir,time_t start,const  char *uid,const
 				return false;
 			}
 		}
-       Info inf{.starttime=(uint32_t)start,.lastscantime=inf.starttime,.starthistory=0,.endhistory=0,.scancount=0,.startid=0,.interval=secinterval,.dupl=dupl,.days=days ,.warmup=timesptr->warmup,.wearduration=wearduration, .pollcount=0, .lockcount=0};
+       Info inf{.starttime=(uint32_t)start,.lastscantime=inf.starttime,.starthistory=0,.endhistory=0,.scancount=0,.startid=0,.interval=secinterval,.dupl=dupl,.days=days ,.warmup=timesptr->warmup,.wearduration=wear, .pollcount=0, .lockcount=0};
 	inf.ident.len=8;
 //		memcpy(&inf.ident.data,uid,8);
 	memcpy(inf.ident.data,uid,8);
