@@ -139,8 +139,8 @@ data_t  * getactivationpayload(scanstate *state,const data_t * patchid, const da
 extern const ScanData *lastscan;
 
 constexpr time_t basesecs=1262304000L;
-constexpr const int endsensorsecs= (14*24-1)*60*60; 
-constexpr const int days15=(15*24*60*60);
+//constexpr const int endsensorsecs= (14*24-1)*60*60; 
+//constexpr const int days15=(15*24*60*60);
 #include "secs.h"
 struct streamdata {
 	int libreversion;
@@ -173,7 +173,7 @@ struct libre2stream:streamdata {
 	int blueuit;
 	#endif
 public:
-	libre2stream(int sensindex,SensorGlucoseData *sens):streamdata(2, sensindex,sens),startsincebase(((time(NULL)-hist->getstarttime())>=endsensorsecs?daysecs:0)+hist->getstarttime()-basesecs),state(locknew<scanstate>(hist->mutex,hist->getsensordir())) {
+	libre2stream(int sensindex,SensorGlucoseData *sens):streamdata(2, sensindex,sens),startsincebase((((hist->officialendtime()-time(nullptr))<=60*60)?daysecs:0)+hist->getstarttime()-basesecs),state(locknew<scanstate>(hist->mutex,hist->getsensordir())) {
 #ifndef NORAWSTREAM
 		pathconcat uit(hist->getsensordir(),rawstream);
 		blueuit=open(uit.data(),O_APPEND|O_CREAT|O_WRONLY, S_IRUSR |S_IWUSR);

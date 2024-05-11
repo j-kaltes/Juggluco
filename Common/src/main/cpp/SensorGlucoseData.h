@@ -480,7 +480,8 @@ const int perhour() const {
 	return 60/getmininterval();
 	}
 uint32_t officialendtime() const {
-	return 14*24*60*60+getstarttime();
+	int wear=getinfo()->wearduration;
+	return (wear?wear*60:14*24*60*60)+getstarttime();
 	}
 	
 uint32_t getmaxtime() const {

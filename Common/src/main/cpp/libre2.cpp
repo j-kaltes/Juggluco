@@ -509,9 +509,11 @@ Abbott::scanresult_t Abbott::callAbbottAlg(scandata *data) {
 	LOGGER("startdate: %s",ctime_r(&startDate,timebuf)?timebuf:"null");
 #endif
 	int startsincebase=startDate-basesecs;
-	const int timelast=nutime-startDate;
-	LOGGER("timelast=%d endsensorsecs=%d\n",timelast,endsensorsecs);
-	if(timelast>=endsensorsecs&&timelast<days15) {
+//	const int timelast=nutime-startDate; LOGGER("timelast=%d endsensorsecs=%d\n",timelast,endsensorsecs);
+const    int timeleft=hist->officialendtime()-nutime;
+LOGGER("timeleft=%d\n",timeleft); 
+	if(timeleft<(60*60)&&timeleft>-daysecs) {
+//	if(timelast>=endsensorsecs&&timelast<days15) 
 		if(!state->datpos(FAKE)) {
 		    LOGSTRING("new Fake\n");
 		   setbluetoothon=true;
@@ -644,8 +646,13 @@ JNIEnv *hiersubenv=(JNIEnv *) &hierjnidata;
 
 	data_t *messuit;
 
-const int timelast=data->gettime()-start;
-if(timelast>=endsensorsecs&&timelast<days15) {
+//const int timelast=data->gettime()-start;
+
+const int timeleft=hist->officialendtime()-data->gettime();
+const bool oldsensor=timeleft<=(60*60);
+LOGGER("timeleft=%d oldsensor=\n",timeleft,oldsensor); 
+if(oldsensor&&timeleft>-daysecs) {
+//if(timelast>=endsensorsecs&&timelast<days15) 
 	startminbase+=daysecs;
 	LOGSTRING("Tijdelijk erbij\n");
 	}
@@ -663,7 +670,7 @@ if(timelast>=endsensorsecs&&timelast<days15) {
 		messuit=newstateptr->alloc(messwas->length());
 		memcpy(messuit->data(),messwas->data(),messwas->length());
 		}
-	if(timelast>=endsensorsecs)
+	if(oldsensor)
 	    newstateptr->datpos(FAKE)=1;
 		
 	delete alg;

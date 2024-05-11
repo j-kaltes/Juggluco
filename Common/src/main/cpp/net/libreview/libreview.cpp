@@ -398,7 +398,7 @@ bool putwhenneeded(bool libre3,SensorGlucoseData *sensdata) {
 	if(!sensdata->getinfo()->putsensor) {
 		time_t nu=time(nullptr)	;
         const char *sensorid= sensdata->showsensorname().data();
-		if((nu-sensdata->getstarttime())<(14*24*60*60)) {
+		if(nu<sensdata->officialendtime()) {
 			if(!(sensdata->getinfo()->putsensor=putsensor(libre3,sensorid))) {
 				LOGGER("putsensor %s failed\n",sensorid);
 				return false;
@@ -938,7 +938,7 @@ int askhasnewcurrent(time_t nu) {
 		LOGAR("no sensor");
 		return -1;
 		}
-	auto oldtime=nu-day15secs;
+//	auto oldtime=nu-day15secs;
 	int last=sensors->last();
 	for(int i=last;i>=0;--i) {	
 		const auto *sens=sensors->getSensorData(i);
@@ -951,7 +951,7 @@ int askhasnewcurrent(time_t nu) {
 		const int		ends=sens->pollcount()-1;
 		if(start<=ends)
 			return i;
-		if(sens->getstarttime()	<oldtime)
+		if(sens->getmaxtime()<nu)
 			return -1;
 		}
 	return -1;

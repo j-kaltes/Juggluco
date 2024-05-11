@@ -863,7 +863,7 @@ int writeStartime(crypt_t *pass, const int sock, const int sensorindex) {
 		for(int i = firstsensor; i <= lastsens; i++) {
 			LOGGER("sensor %d\n", i);
 			if(SensorGlucoseData *hist = getSensorData(i)) {
-				if(newfirst<0&&now<hist->getmaxtime())  {
+				if(newfirst<0&&(!sensorlist()[i].finished||now<hist->getmaxtime()))  {
 					newfirst=i;
 					}
 				if(upstream) {
