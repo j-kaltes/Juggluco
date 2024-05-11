@@ -479,9 +479,19 @@ int getmininterval() const {
 const int perhour() const {
 	return 60/getmininterval();
 	}
+int getweardurationMIN() const {
+   if(isLibre2()) {
+	   int wear=getinfo()->wearduration;
+      if(wear)
+         return wear;
+      }
+   return 14*24*60;
+   } 
+int getweardurationSEC() const {
+   return getweardurationMIN() *60;
+   }
 uint32_t officialendtime() const {
-	int wear=getinfo()->wearduration;
-	return (wear?wear*60:14*24*60*60)+getstarttime();
+	return getstarttime()+getweardurationSEC();
 	}
 	
 uint32_t getmaxtime() const {
