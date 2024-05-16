@@ -353,6 +353,7 @@ extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getcurrentRelative)(JNIEnv *en
 
 extern std::string_view libdirname;
 extern int setfilesdir(const std::string_view filesdir,const char *country) ;
+//#include "curve/shell.h"
 extern "C" JNIEXPORT int JNICALL fromjava(setfilesdir)(JNIEnv *env, jclass clazz, jstring dir,jstring jcountry,jstring nativedir) {
 	{
 	size_t nativedirlen= env->GetStringUTFLength( nativedir);

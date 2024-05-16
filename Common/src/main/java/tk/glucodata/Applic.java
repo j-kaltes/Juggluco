@@ -473,13 +473,13 @@ public static void initwearos(Context app) {
 	Log.i(LOG_ID,"before sendnetinfo");
 	MessageSender.sendnetinfo();
 	}*/
-void initproc() {
+boolean initproc() {
 	if(!initproccalled) {
 //		DisplayMetrics metrics= getResources().getDisplayMetrics();
 	//	initscreenwidth= metrics.widthPixels;
 	//	Log.i("Applic","initproc width="+initscreenwidth);
 		if(!numio.setlibrary(this))
-			return;
+			return false;
 		if(isWearable) {
 			if(Natives.getWifi())
 				UseWifi.usewifi();
@@ -499,6 +499,7 @@ void initproc() {
 		MessageSender.sendnetinfo();
 		Specific.start(this);
 		}
+	return true;
 	}
 
 public static void setbluetooth(Context activity,boolean on) {

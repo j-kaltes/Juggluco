@@ -96,12 +96,31 @@ if(true) {
        String country=loc.getCountry();
 	var locstr=loc.getLanguage();
 	Applic.curlang=locstr;
-        File files=con.getFilesDir();
+   File files=con.getFilesDir();
 	String filespath=files.getAbsolutePath();
 	if(!files.isDirectory())  {
+      android.util.Log.e(LOG_ID,filespath+" not a directory");
 		if(!files.mkdirs()) {
-			Applic.stopprogram=2;
-			return false;
+         android.util.Log.e(LOG_ID,"mkdirs "+filespath+" failed");
+         try {
+            Thread.sleep(1000L);
+            }
+         catch(Throwable th) {
+            Log.stack(LOG_ID,"sleep",th);
+            };
+			files=con.getFilesDir();
+	      filespath=files.getAbsolutePath();
+			if(!files.isDirectory()) {
+		      if(!files.mkdirs()) {
+               android.util.Log.e(LOG_ID,"mkdirs "+filespath+" failed");
+               Applic.stopprogram=2;
+               return false;
+               }
+              else
+               android.util.Log.i(LOG_ID,"mkdirs "+filespath+" succeeded");
+				}
+         else
+            android.util.Log.i(LOG_ID,filespath+" is a directory");
 			}
 		}
 	int ret=130;

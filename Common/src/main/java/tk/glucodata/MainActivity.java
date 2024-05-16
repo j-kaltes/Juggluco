@@ -589,16 +589,29 @@ private void outofStorageSpace() {
    
    }
 private void makefilesfailed() {
- 	File files=getFilesDir();
-	String filespath=files.getAbsolutePath();
+File files=getFilesDir();
+String filespath=files.getAbsolutePath();
     String message= "Can't create directory:\n"+filespath+(files.isFile()?"\nA regular file with that name exists":"\nNot enough storage space?");
     Applic.argToaster(this,message,Toast.LENGTH_SHORT);
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
-    builder.setNegativeButton(R.string.ok, (dialog, id) -> { // User cancelled the dialog
+    Runnable end=()-> {
     	finish();	
 	keeprunning.stop();
 	System.exit(8);
-	}).setTitle("Juggluco has to exit").setMessage(message).show().setCanceledOnTouchOutside(false);
+	};
+    var dialog=builder.setNegativeButton(R.string.ok, (dial, id) -> {
+	end.run();
+    	// User cancelled the dialog
+	}).setTitle("Juggluco has to exit").setMessage(message).create();
+   dialog.setCanceledOnTouchOutside(false);
+   dialog.setOnShowListener(d->{
+   	Log.e(LOG_ID,"setOnShowListener");
+	if(files.isDirectory()||files.mkdirs()) {
+   	Log.e(LOG_ID,filespath+" accessable");
+	   System.exit(8);
+		}
+   		});
+	dialog.show();
    
    }
 

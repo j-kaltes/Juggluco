@@ -1020,7 +1020,7 @@ if(const ScanData *last=lastpoll()) {
 
 	public:
 template <typename T>
-std::string_view absToRel(T absname) {
+std::string_view absToRel(T& absname) {
 	const auto start=globalbasedir.size()+1;
 	return std::string_view{absname.data()+start,absname.size()-start};
 	} 
@@ -1589,7 +1589,7 @@ int sendjson(crypt_t *pass,int sock,int ind)  {
       pathconcat *files[]={&statefile, &statefile3};
 		for(auto *sfile:files)
 #else
-		auto *sfile = &statefile;
+		const auto *sfile = &statefile;
 #endif
 
       {
@@ -1600,6 +1600,7 @@ int sendjson(crypt_t *pass,int sock,int ind)  {
             return 2;
             }
          const auto relstate=absToRel(*sfile);
+         LOGGER("statefile=%s\n",statename);
          if(!senddata(pass,sock,0,json.data(),json.size(),relstate)) {
             LOGGER("GLU: senddata %s failed\n",relstate.data());
             return 0;

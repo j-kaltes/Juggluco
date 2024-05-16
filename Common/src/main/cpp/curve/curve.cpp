@@ -1535,7 +1535,7 @@ template <class LT> void epochlines(uint32_t first,uint32_t last, const LT &tran
 		nvgStrokeColor(genVG, *getblack());
 		for(time_t t=start;t<last;t+=(24*60*60)) {
 			float dtim=transx(t);
-			LOGGER("%ld\n",t);
+		//	LOGGER("%ld\n",t);
 			nvgBeginPath(genVG);
 			nvgMoveTo(genVG,dtim ,0) ;
 			nvgLineTo( genVG, dtim,dheight);
@@ -1631,7 +1631,9 @@ float glucosevalue=0;
 float glucosevaluex=-1,glucosevaluey=-1;
 } ;
 std::vector<shownglucose_t> shownglucose;
-
+#ifndef NOLOG
+//#define TESTVALUE
+#endif
 static void showvalue(const ScanData *poll,const sensorname_t *sensorname, float getx,float gety,int index,uint32_t nu) {
 	LOGGER("showvalue %s\n",sensorname->data());
 	float sensory= gety+headsize/3.1;
@@ -1642,7 +1644,10 @@ static void showvalue(const ScanData *poll,const sensorname_t *sensorname, float
 	nvgTextAlign(genVG,NVG_ALIGN_LEFT|NVG_ALIGN_MIDDLE);
 	constexpr const int maxhead=11;
 	char head[maxhead];
-#if 1
+#ifdef TESTVALUE
+   static int values[]={230,184};
+	const auto nonconvert= values[index];
+#elif 1
 	const auto nonconvert= poll->g;
 #else
 	const uint32_t nonconvert= 40;
@@ -1668,13 +1673,19 @@ const				float valuex=getx;
 #else
 			const float convglucose= gconvert(nonconvert*10);
 #endif
+
 		shownglucose[index].glucosevalue=convglucose;
 		shownglucose[index].glucosetrend=poll->tr;
 
 			float valuex=getx-(convglucose>=10.0f?density*20.0f:0.0f);
 			int gllen=snprintf(head,maxhead,gformat,convglucose);
 			nvgText(genVG,valuex ,gety, head, head+gllen);
-			float rate=poll->ch;
+#ifdef TESTVALUE
+const float trends[]={-3,0};
+			const float rate=trends[index];
+#else
+			const float rate=poll->ch;
+#endif
 			drawarrow(genVG,rate,valuex-10*density,gety);
 			}
 		}
