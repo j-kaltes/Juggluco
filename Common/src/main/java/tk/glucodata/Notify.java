@@ -456,20 +456,20 @@ static public String glucosestr(float gl) {
 			}
 	}
 	private void soundalarm(int kind,int draw,String message,String type,boolean alarm) {
-		placelargenotification(draw,message,type,!alarm);
 		if(alarm) {
 			Log.d(LOG_ID,"soundalarm "+kind);
 			mksound(kind);
 		}
+		placelargenotification(draw,message,type,!alarm);
 	}
 
 	private void arrowsoundalarm(int kind,int draw,String message,notGlucose sglucose,String type,boolean alarm) {
-		arrowplacelargenotification(kind,draw,message,sglucose,type,!alarm);
 		if(alarm) {
 			makeseparatenotification(draw,message, sglucose,type);
 			Log.d(LOG_ID,"arrowsoundalarm "+kind);
 			mksound(kind);
 		}
+		arrowplacelargenotification(kind,draw,message,sglucose,type,!alarm);
 	}
 
 	private void glucosealarm(int kind,int draw,String message,String type,boolean alarm) {
@@ -533,7 +533,9 @@ static public String glucosestr(float gl) {
 
 	static final String fromnotification="FromNotification";
 	final static int forcecloserequest=7812;
+	final static int stopalarmrequest=7810;
 	static final String closename= "ForceClose";
+	static final String stopalarm= "StopAlarm";
 	final static int penmutable= android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M? PendingIntent.FLAG_IMMUTABLE:0;
 
 private void  makeseparatenotification(int draw,String message,notGlucose glucose,String type) {
@@ -626,6 +628,7 @@ static public boolean alertseparate=false;
 
     }
 @SuppressWarnings({"deprecation"})
+
 private PendingIntent mkpending() {
 	Intent notifyIntent = new Intent(Applic.app,MainActivity.class);
 	notifyIntent.putExtra(fromnotification,true);
@@ -847,16 +850,9 @@ public void  notifyer(int draw,String message,String type,int notid) {
 
 //	notificationManager.cancel(glucosenotificationid);
 
-	 Intent notifyIntent = new Intent(Applic.app,MainActivity.class);
-	notifyIntent.putExtra(fromnotification,true);
-        notifyIntent.addCategory(Intent. CATEGORY_LAUNCHER ) ;
-        notifyIntent.setAction(Intent. ACTION_MAIN ) ;
-        notifyIntent.setFlags(Intent. FLAG_ACTIVITY_CLEAR_TOP | Intent. FLAG_ACTIVITY_SINGLE_TOP );
-	PendingIntent notifyPendingIntent = PendingIntent.getActivity(Applic.app, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT|penmutable);
 
-	NumNotBuilder.setAutoCancel(true).setContentIntent(notifyPendingIntent).
+	NumNotBuilder.setAutoCancel(true).setContentIntent(mkpending()).
 setDeleteIntent(DeleteReceiver.getDeleteIntent()) .setContentTitle(message);
-//	NumNotBuilder.setAutoCancel(true).setContentIntent(notifyPendingIntent).setSubText(message);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 			NumNotBuilder.setVisibility(VISIBILITY_PUBLIC);
 			NumNotBuilder.setCategory(Notification.CATEGORY_ALARM);

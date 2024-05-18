@@ -53,6 +53,12 @@ static final private String LOG_ID="NumAlarm";
 					killprogram(0);
 					}
 			}
+         else {
+	   	   if(Notify.stopalarm.equals(action)) {
+               Log.i(LOG_ID,"Stop Alarm");
+			      Notify.stopalarm();
+               }
+            }
 		}
 //		if(!keeprunning.started&&(Intent.ACTION_BOOT_COMPLETED.equals(action))) 
 	if(!keeprunning.started) {

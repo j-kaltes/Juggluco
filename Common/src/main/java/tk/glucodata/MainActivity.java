@@ -300,12 +300,13 @@ void handleIntent(Intent intent) {
 		return;
 	final Bundle extras = intent.getExtras();
 	if(extras!=null)  {
-		Log.i(LOG_ID,"fromnotification");
 		if(extras.getBoolean(Notify.fromnotification, false)) {
+			Log.i(LOG_ID,"fromnotification");
 			Notify.stopalarm();
 			return;
 			}
 		else   {
+			Log.i(LOG_ID,"not fromnotification");
 			if(extras.containsKey(setbluetoothon)) {
 			    Applic.setbluetooth(this,extras.getBoolean(setbluetoothon,false) );
 			    return;
@@ -313,6 +314,7 @@ void handleIntent(Intent intent) {
 			var message=extras.getString("alarmMessage");
         		if(message!=null) {
 				var cancel=extras.getBoolean("Cancel",false);
+				Log.i(LOG_ID,"alarmMessage "+message+" cancel="+cancel);
 				showindialog(message,cancel);
 				return;
 				}
