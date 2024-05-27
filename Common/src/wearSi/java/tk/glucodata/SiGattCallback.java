@@ -1,1 +1,1 @@
-/n/ojka/src/android/Juggluco/Glucodata/Common/src/mobileSi/java/tk/glucodata/SiGattCallback.java
+../../../../mobileSi/java/tk/glucodata/SiGattCallback.java

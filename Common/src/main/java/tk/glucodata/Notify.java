@@ -669,7 +669,7 @@ private Notification.Builder   mkbuilder(String type) {
 
 
 
-static final private boolean  alertseperate=true;
+//static final private boolean  alertseperate=true;
 
 
 void fornotify(Notification notif) {

@@ -1,1 +1,0 @@
-/n/ojka/prog/ssl/mx.juggluco.nl/serverkey.h

@@ -1,1 +1,0 @@
-/n/ojka/prog/ssl/mx.juggluco.nl/servercrt.h
