@@ -93,7 +93,7 @@
  <string name="display">Wyświetl</string>
  <string name="shutcuts">Skróty</string>
  <string name="advanced">Zaawansowane</string>
- <string name="newname">Nowa</string>
+ <string name="newname">Nowy wpis</string>
  <string name="deletelast">Usuń ostatnią</string>
  <string name="meal">Posiłek:</string>
  <string name="ringshort">Dzwonek</string>
@@ -256,7 +256,7 @@
 <string name="invalidport">&quot;nieprawidłowy numer portu&quot;</string>
 <string name="newsecret">&quot;nowe api_secret: &quot;</string>
 <string name="newport">&quot;nowy port =&quot;</string>
-<string name="webserver">Serwer WWW</string>
+<string name="webserver">Serwer sieciowy</string>
 <string name="treatments">Wysyłaj wartości</string>
 <string name="android13">Android</string>
     <string name="wentwrong">Coś poszło nie tak</string>
@@ -333,8 +333,15 @@
    <string name="clampnow">Zawsze teraz</string>
     <string name="sendfrom">&quot;Wysyłaj od: &quot;</string>
  <string name="changestartbutton">Zmień początek</string>
- <string name="floatjuggluco">Powyżej</string>
- <string name="uploader">Przesył do NS</string>
- <string name="interval">Odstęp czasu</string>
+ <string name="floatjuggluco">Wyżej</string>
+ <string name="uploader">Uploader</string>
+ <string name="sibionics">Sibionics</string>
+ <string name="mmolL">mmol/L</string>
+ <string name="mgdL">mg/dL</string>
+ <string name="interval">Przerwa</string>
  <string name="off">Wyłącz</string>
+ <string name="streamingenabled">&quot; Przesył strumienia aktywny&quot;</string>
+ <string name="streamingnotenabled">&quot; Przesył strumienia nieaktywny&quot;</string>
+    <string name="everSensebroadcast">EverSense</string>
+ <string name="threshold">Próg</string>
 </resources>

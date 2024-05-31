@@ -1779,6 +1779,7 @@ void setSiIndex(int index)  {
 uint32_t receivehistory=0;
 int retried=0;
 bool scannedAddress=false;
+int broadcastfrom=INT_MAX;
 };
 
 struct lastscan_t {

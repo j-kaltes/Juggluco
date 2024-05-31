@@ -31,6 +31,7 @@
 #include "settings/settings.h"
 #include "sensoren.h"
 #include "datbackup.h"
+#include "xdrip.h"
 extern Sensoren *sensors;
 #ifndef LOGGER
 #define LOGGER(...) printf(__VA_ARGS__)
@@ -179,37 +180,47 @@ jlong SiContext::processData(SensorGlucoseData *sens,time_t nowsecs,int8_t *data
                const int trend=algcontext->ig_trend;
                const float change=sitrend2RateOfChange(trend);
                const int abbotttrend=sitrend2abbott(trend);
-                  LOGGER("SIprocess: index=%d temp=%f electric=%ld value=%f->%f status=%d numOfUnreceived=%d addtime=%d trend=%d rate=%.2f abbotttrend=%d\n", index, temp, electric, value, mgdL/convfactordL,status, numOfUnreceived, addtime,trend,change,abbotttrend);
+           LOGGER("SIprocess: index=%d temp=%f electric=%ld value=%f->%f status=%d numOfUnreceived=%d addtime=%d trend=%d rate=%.2f abbotttrend=%d\n", index, temp, electric, value, mgdL/convfactordL,status, numOfUnreceived, addtime,trend,change,abbotttrend);
                  
 //         	if(infuture) sens->setSiIndex(index+1);
 	   if(newvalue>1.8&&newvalue<30) {
-         sens->savestream(eventTime,index,mgdL,abbotttrend,change);
-            	sens->retried=0;
+           sens->savestream(eventTime,index,mgdL,abbotttrend,change);
+           sens->retried=0;
 	        saveSi3(sens,index,eventTime,!infuture,value,temp,!numOfUnreceived);
-               if(!numOfUnreceived)  {
-                       sens->sensorerror=false;
-                        if(sensor->finished) {
-                           sensor->finished=0;
-                           LOGGER("SIprocess finished=%d\n", sensor->finished);
-                           backup->resensordata(sensorindex);
-                           }
-                       auto res=glucoseback(mgdL,change,sens);
-		       if(!(index%5))
-				savejson(sens,sens->statefile,index,algcontext,getjson);
-                        backup->wakebackup(Backup::wakestream);
-                     extern void wakewithcurrent();
-                        wakewithcurrent();
-                        return res;
-                       }
+           if(!numOfUnreceived)  {
+                 sens->sensorerror=false;
+                 if(sensor->finished) {
+                        sensor->finished=0;
+                        LOGGER("SIprocess finished=%d\n", sensor->finished);
+                        backup->resensordata(sensorindex);
+                        }
+                   auto res=glucoseback(mgdL,change,sens);
+                   if(!(index%5)) savejson(sens,sens->statefile,index,algcontext,getjson);
+                    backup->wakebackup(Backup::wakestream);
+                  extern void wakewithcurrent();
+                     wakewithcurrent();
+
+#ifdef OLDXDRIP 
+                     if(sens->broadcastfrom<INT_MAX) {
+                        sendxdripold(sens,sens->broadcastfrom,sens->pollcount()-1);
+                        sens->broadcastfrom=INT_MAX;
+                        }
+#endif
+                     return res;
+                    }
                  else {
-		       if(!infuture&&!(index%500)) {
-				savejson(sens,sens->statefile,index,algcontext,getjson);
-				backup->wakebackup(Backup::wakestream);
-				}
+                   if(!infuture&&!(index%500)) {
+                        savejson(sens,sens->statefile,index,algcontext,getjson);
+                        backup->wakebackup(Backup::wakestream);
+                        }
                       sens->receivehistory=nowsecs;
                      }
+#ifdef OLDXDRIP 
+                  const int last=sens->pollcount()-1;
+                  if(last<sens->broadcastfrom) sens->broadcastfrom=last;
+#endif
 
-                     }
+               }
            else {
             if(index==maxid)
 	            sens->setSiIndex(maxid+1);

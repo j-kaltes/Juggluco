@@ -860,30 +860,6 @@ private boolean	lastphase5=false;
 					return;
 			}
 
-
-/*
-            MSLibre3CommandSentEvent mSLibre3CommandSentEvent = new MSLibre3CommandSentEvent();
-            mSLibre3CommandSentEvent.setDevice(this.msDevice);
-            this.stateMachine.handleEvent(mSLibre3CommandSentEvent);
-            ServiceAdaptor serviceAdaptor = ServiceAdaptor.getInstance();
-            serviceAdaptor.adaptorCallback.onEvent(mSLibre3CommandSentEvent);
-            synchronized (syncObject) {
-                while (true) {
-                    MSLibre3Event poll = this.pendingEvents.poll();
-                    if (poll == null) {
-                        break;
-                    }
-                    this.stateMachine.handleEvent(poll);
-                    serviceAdaptor.adaptorCallback.onEvent(poll);
-                }
-            }
-            if (this.pendingEvents.size() == 0) {
-                this.isNotificationSuspended = false;
-            }
-	    */
-/*            if (sendqueue.size() == 0) {
-                isNotificationSuspended = false;
-            }*/
         } else {
 //	     fromqueue();
             info("oncharwrite else");

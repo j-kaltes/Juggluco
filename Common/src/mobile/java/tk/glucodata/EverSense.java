@@ -26,6 +26,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.Keep;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -47,7 +49,7 @@ public static  void setreceivers() {
     }
 
 public static final String glucoseaction="com.eveningoutpost.dexdrip.NS_EMULATOR";
-//@Keep
+@Keep
 static void broadcastglucose(int mgdl, float rate, long timmsec) {
     try {
         final JSONArray sgv_array = new JSONArray();
