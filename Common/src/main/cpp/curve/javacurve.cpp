@@ -9,7 +9,7 @@
 //#include "curve.h"
 //#include "nanovg_gl.h"
 //#include "nanovg_gl_utils.h"
-//#define OLDXDRIP
+//#define OLDEVERSENSE
 
 extern Sensoren *sensors;
 #define NANOVG_GLES2_IMPLEMENTATION
@@ -100,7 +100,7 @@ static jmethodID showsensorinfo=nullptr;
 #endif
 jmethodID  jdoglucose=nullptr, jupdateDevices=nullptr, jbluetoothEnabled=nullptr,jspeak=nullptr, jresetWearOS=nullptr;
 jclass JNIApplic;
-#ifdef OLDXDRIP
+#ifdef OLDEVERSENSE
 #ifndef  WEAROS
 jclass EverSense;
 jmethodID  sendGlucoseBroadcast=nullptr;
@@ -167,7 +167,7 @@ else {
 }
 
 
-#ifdef OLDXDRIP
+#ifdef OLDEVERSENSE
 #ifndef  WEAROS
 {
 const static jclass cl=env->FindClass("tk/glucodata/EverSense");

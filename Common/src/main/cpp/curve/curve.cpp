@@ -4221,11 +4221,11 @@ static int64_t doehier(int menu,int item) {
 //					if(settings->staticnum()) return -1LL;
 					break;
 				case 3:	nrmenu=0; 
-					if(!numlist) {
-						void numiterinit();
-						numiterinit();
-						numlist=1;
-						}
+				   if(!numlist) {
+				      void numiterinit();
+				      numiterinit();
+				      numlist=1;
+				      }
 					break;
 
 #ifdef PERCENTILES
@@ -4419,22 +4419,31 @@ void showfromstart() {
 	}
 
 void numpagenum(const uint32_t tim) {
-//	const Num *nums[basecount];
 	int tot=0;
 	for(int i=0;i<basecount;i++)  {
 		const Num *ptr=numdatas[i]->firstnotless(tim) ;
 		if(ptr==numdatas[i]->end()||ptr->gettime()>tim)
 			ptr--;
-		int pos=ptr-numdatas[i]->begin()+1;
-		if(pos>0)
+//		int pos=ptr-numdatas[i]->begin()+1;
+		int pos=ptr-numdatas[i]->begin();
+		LOGGER("pos=%d\n",pos);
+		if(pos>0) {
+			LOGGER("num %.1f %s\n",ptr->value, settings->getlabel(ptr->type).data());
 			tot+=pos;
+			}
 		numiters[i].iter=ptr;
 		}
-
-	int percol=dheight/textheight;
-	int tever=tot%(nrcolumns*percol);
-	while(tever--) {
-//		findnewest(numiters,basecount,notvali);
+	const int percol=dheight/textheight;
+	const int onpage=nrcolumns*percol;
+	#ifndef NOLOG
+	time_t tims=tim;
+	LOGGER("nrcolumns=%d percol=%d onpage=%d %s",nrcolumns,percol,onpage,ctime(&tims));
+	#endif
+	for(int tever=tot%onpage
+#ifndef NOLOG
+	, niets=LOGGER("tever=%d\n",tever)
+#endif
+	;tever>0;--tever) {
 		ifindnewest(numiters,basecount,notvali);
 		};
 	int newest;
@@ -4462,7 +4471,11 @@ void shownumlist() {
 	}
 NumIter<Num> *mknumiters() ;
 
+
+extern int getcolumns(int width);
 void numiterinit() {
+	nrcolumns=getcolumns(round(3.4*smallsize));
+	LOGAR("numiterinit");
 	basecount=numdatas.size();
 	delete[] numiters;
 	numiters=mknumiters() ;

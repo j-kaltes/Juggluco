@@ -348,6 +348,14 @@ static public String glucosestr(float gl) {
 	void stopvibratealarm() {
 		vibrator.cancel();
 	}
+private static int  lastalarm=-1;
+
+static	void stoplossalarm(){
+	if(lastalarm==4) {
+		lastalarm=-1;
+		stopalarm();
+		}
+	}
 	private synchronized void playringhier(Ringtone ring,int duration,boolean sound,boolean flash,boolean vibrate,boolean disturb,int kind) {
 		stopalarm();
 //		final int[] curfilter={-1};
@@ -379,6 +387,7 @@ static public String glucosestr(float gl) {
 			vibratealarm(kind);
 		}
 		runstopalarm= () -> {
+         		lastalarm=-1;
 			if(getisalarm()) {
 				Log.d(LOG_ID,"runstopalarm  isalarm");
 				if(sound) {
@@ -387,15 +396,6 @@ static public String glucosestr(float gl) {
 							Log.d(LOG_ID,"stop sound "+ring.getTitle(app));
 							}
 						ring.stop();
-						/*
-						if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-							if (curfilter[0] != -1) {
-								if (notificationManager.isNotificationPolicyAccessGranted()) {
-									notificationManager.setInterruptionFilter(curfilter[0]);
-									}
-								}
-							}
-							*/
 						}
 					}
 
@@ -420,9 +420,10 @@ static public String glucosestr(float gl) {
 				}
 			}
 		};
-		setisalarm(true);
-		Log.d(LOG_ID,"schedule stop");
-		stopschedule=Applic.scheduler.schedule(runstopalarm, duration, TimeUnit.SECONDS);
+	lastalarm=kind;
+	setisalarm(true);
+	Log.d(LOG_ID,"schedule stop");
+	stopschedule=Applic.scheduler.schedule(runstopalarm, duration, TimeUnit.SECONDS);
 
 	}
 	void mksound(int kind) {
@@ -471,6 +472,7 @@ static public String glucosestr(float gl) {
 		}
 		arrowplacelargenotification(kind,draw,message,sglucose,type,!alarm);
 	}
+
 
 	private void glucosealarm(int kind,int draw,String message,String type,boolean alarm) {
 		Log.i(LOG_ID,"glucose alarm kind="+kind+" "+message+" alarm="+alarm);

@@ -164,7 +164,7 @@ void setminheight(View[] views,int minheight) {
 	}
 //void getnumcontrol(MainActivity activity,int width,int height) {
 void getnumcontrol(MainActivity activity) {
-
+   Log.i(LOG_ID,"getnumcontrol start");
 	if(numcontrol==null) {
            ImageButton first=new ImageButton(activity);
            first.setImageResource( R.drawable.baseline_first_page_24);
@@ -273,6 +273,7 @@ void getnumcontrol(MainActivity activity) {
 		else
 			 requestRender();
 		 });
+   Log.i(LOG_ID,"getnumcontrol end");
 	}
 
     void showkeyboard(Activity context) {

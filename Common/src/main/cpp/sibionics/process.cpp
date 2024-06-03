@@ -31,7 +31,7 @@
 #include "settings/settings.h"
 #include "sensoren.h"
 #include "datbackup.h"
-#include "xdrip.h"
+#include "EverSense.hpp"
 extern Sensoren *sensors;
 #ifndef LOGGER
 #define LOGGER(...) printf(__VA_ARGS__)
@@ -200,9 +200,9 @@ jlong SiContext::processData(SensorGlucoseData *sens,time_t nowsecs,int8_t *data
                   extern void wakewithcurrent();
                      wakewithcurrent();
 
-#ifdef OLDXDRIP 
+#ifdef OLDEVERSENSE 
                      if(sens->broadcastfrom<INT_MAX) {
-                        sendxdripold(sens,sens->broadcastfrom,sens->pollcount()-1);
+                        sendEverSenseold(sens,sens->broadcastfrom,sens->pollcount()-1);
                         sens->broadcastfrom=INT_MAX;
                         }
 #endif
@@ -215,7 +215,7 @@ jlong SiContext::processData(SensorGlucoseData *sens,time_t nowsecs,int8_t *data
                         }
                       sens->receivehistory=nowsecs;
                      }
-#ifdef OLDXDRIP 
+#ifdef OLDEVERSENSE 
                   const int last=sens->pollcount()-1;
                   if(last<sens->broadcastfrom) sens->broadcastfrom=last;
 #endif

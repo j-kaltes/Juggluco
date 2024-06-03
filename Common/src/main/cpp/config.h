@@ -73,5 +73,5 @@
 //#define SIHISTORY 1
 //#endif
 #ifndef WEAROS
-#define OLDXDRIP 1
+#define OLDEVERSENSE 1
 #endif

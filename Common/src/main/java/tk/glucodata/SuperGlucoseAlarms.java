@@ -83,6 +83,7 @@ public	void handlealarm() {
 	}
 
 public void setagealarm(final long numsec) {
+		Notify.stoplossalarm();
 		saidloss = false;
 		MyGattCallback.oldtime = numsec + showtime;
 		LossOfSensorAlarm.setalarm(Applic.app, MyGattCallback.oldtime);
