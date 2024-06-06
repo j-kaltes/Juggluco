@@ -40,11 +40,10 @@ cppFlags  " -DAPPID=\\\"$applicationId\\\" "
 should result in APPID being defined with the Application ID surrounded by quotes (""). This happens under Linux, but not Windows.
 Gradle and cmake should work independent of operation system, so it is their fault. And why do you use Microsoft Windows anyway?
 
-The following files need to be added to run Juggluco and can be found by unzipping a recent (>=5.1.14) Juggluco apk:
+The following files need to be added to build Juggluco and can be found by unzipping an Arm/Arm64/x86/x86_64 Juggluco apk from
 https://www.juggluco.nl/Juggluco/download.html
 
-
-libcalibrat2.so and libcalibrate.so in lib/* of the APK should be put in the corresponding directories in:
+libcalibrat2.so and libcalibrate.so in lib/* of the APK should be put in the corresponding directories (e.g. the libraries in armeabi-v7a of the apk should be put in armeabi-v7) in:
 
 ./Common/src/main/jniLibs/x86_64/    
 ./Common/src/main/jniLibs/armeabi-v7a/   
@@ -56,4 +55,8 @@ libcrl_dp.so  liblibre3extension.so  and libinit.so  in the corresponding direct
 ./Common/src/libre3/jniLibs/armeabi-v7a/   
 ./Common/src/libre3/jniLibs/x86/   
 ./Common/src/libre3/jniLibs/arm64-v8a/   
-   
+
+libnative-algorithm-jni-v113B.so  libnative-encrypy-decrypt-v110.so  libnative-struct2json.so libnative-algorithm-v1_1_3_B.so   libnative-sensitivity-v110.so in
+./Common/src/mobileSi/jniLibs/armeabi-v7a/
+./Common/src/mobileSi/jniLibs/arm64-v8a/
+

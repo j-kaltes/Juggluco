@@ -105,6 +105,7 @@ static public boolean deleteUrl(String urlstring,String secret) {
 			uploadstatus="URL("+urlstring+")==null";
 			return false;
 			}
+    uploadstatus=" start deleteURL "+urlstring;
 		HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 		urlConnection.setConnectTimeout(10000);
 		urlConnection.setReadTimeout(60000);
@@ -170,6 +171,8 @@ private static String gettoken(long now) {
 
 		URL url = new URL(authstr);
 		HttpURLConnection  urlConnection = (HttpURLConnection) url.openConnection();
+		urlConnection.setConnectTimeout(10000);
+		urlConnection.setReadTimeout(60000);
 		urlConnection.setRequestMethod("GET");
 		final int code=urlConnection.getResponseCode();
 		if(code==HTTP_OK) {
@@ -200,6 +203,8 @@ static public int upload(String httpurl,byte[] postdata,String secret,boolean pu
 	uploadtime=System.currentTimeMillis();
 	Log.i(LOG_ID,"upload("+httpurl+",#"+postdata.length+","+ secret+","+(put?"PUT":"POST")+")");
 	try {
+
+      uploadstatus="start upload "+httpurl;
 		URL url = new URL(httpurl);
 		HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 		urlConnection.setConnectTimeout(10000);
