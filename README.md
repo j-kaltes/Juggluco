@@ -44,7 +44,6 @@ The following files need to be added to build Juggluco and can be found by unzip
 https://www.juggluco.nl/Juggluco/download.html
 
 libcalibrat2.so and libcalibrate.so in lib/* of the APK should be put in the corresponding directories (e.g. the libraries from armeabi-v7a of the apk should be put in armeabi-v7) in:
-
 ./Common/src/main/jniLibs/x86_64/    
 ./Common/src/main/jniLibs/armeabi-v7a/   
 ./Common/src/main/jniLibs/x86/   
