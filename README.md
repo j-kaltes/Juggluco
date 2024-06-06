@@ -56,7 +56,8 @@ libcrl_dp.so  liblibre3extension.so  and libinit.so  in the corresponding direct
 ./Common/src/libre3/jniLibs/x86/   
 ./Common/src/libre3/jniLibs/arm64-v8a/   
 
-libnative-algorithm-jni-v113B.so  libnative-encrypy-decrypt-v110.so  libnative-struct2json.so libnative-algorithm-v1_1_3_B.so   libnative-sensitivity-v110.so in
-./Common/src/mobileSi/jniLibs/armeabi-v7a/
+libnative-algorithm-jni-v113B.so  libnative-encrypy-decrypt-v110.so  libnative-struct2json.so libnative-algorithm-v1_1_3_B.so   libnative-sensitivity-v110.so in   
+./Common/src/mobileSi/jniLibs/armeabi-v7a/   
 ./Common/src/mobileSi/jniLibs/arm64-v8a/
+
 
