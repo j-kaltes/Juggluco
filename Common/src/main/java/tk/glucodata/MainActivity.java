@@ -242,7 +242,7 @@ private void supportRTL() {
 	else
 		supportLTR(); */
 	if(Applic.stopprogram >0){
-		android.util.Log.e(LOG_ID,"Stop program");
+		Log.e(LOG_ID,"Stop program");
 		if(Applic.stopprogram ==1)
 			outofStorageSpace();
 		else {
@@ -439,7 +439,7 @@ static boolean tocalendarapp=false;
 	if(Applic.stopprogram>0)
 		return;
 	if(!DiskSpace.check(this)) {
-		android.util.Log.e(LOG_ID,"Stop program");
+		Log.e(LOG_ID,"Stop program");
 		Applic.stopprogram=1;
 		outofStorageSpace();
 		return;

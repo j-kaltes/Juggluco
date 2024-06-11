@@ -96,32 +96,33 @@ if(true) {
        String country=loc.getCountry();
 	var locstr=loc.getLanguage();
 	Applic.curlang=locstr;
-   File files=con.getFilesDir();
+	File files=con.getFilesDir();
 	String filespath=files.getAbsolutePath();
 	if(!files.isDirectory())  {
-      android.util.Log.e(LOG_ID,filespath+" not a directory");
-		if(!files.mkdirs()) {
-         android.util.Log.e(LOG_ID,"mkdirs "+filespath+" failed");
-         try {
-            Thread.sleep(1000L);
-            }
-         catch(Throwable th) {
-            Log.stack(LOG_ID,"sleep",th);
-            };
-			files=con.getFilesDir();
-	      filespath=files.getAbsolutePath();
-			if(!files.isDirectory()) {
+	    Log.e(LOG_ID,filespath+" not a directory");
+	    if(!files.mkdirs()) {
+		 Log.e(LOG_ID,"mkdirs "+filespath+" failed");
+		 try {
+		    Thread.sleep(5000L);
+		    }
+		 catch(Throwable th) {
+		    Log.stack(LOG_ID,"sleep",th);
+		    };
+		 files=con.getFilesDir();
+		 filespath=files.getAbsolutePath();
+		if(!files.isDirectory()) {
 		      if(!files.mkdirs()) {
-               android.util.Log.e(LOG_ID,"mkdirs "+filespath+" failed");
-               Applic.stopprogram=2;
-               return false;
-               }
-              else
-               android.util.Log.i(LOG_ID,"mkdirs "+filespath+" succeeded");
-				}
-         else
-            android.util.Log.i(LOG_ID,filespath+" is a directory");
-			}
+			   Log.e(LOG_ID,"mkdirs "+filespath+" failed");
+			   Applic.stopprogram=2;
+	   		   System.exit(8);
+			    return false;
+		       }
+		      else
+		       Log.i(LOG_ID,"mkdirs "+filespath+" succeeded");
+		}
+		 else
+		    Log.i(LOG_ID,filespath+" is a directory");
+		}
 		}
 	int ret=130;
 	final String nativedir=con.getApplicationInfo().nativeLibraryDir;
@@ -218,6 +219,7 @@ if(true) {
 	numptrs[0]=Natives.openNums(datadir,-1L); //order important!!
 	Natives.calccurvegegs();
 	Log.i(LOG_ID,"end setlibrary");
+   Applic.stopprogram=0;
 	return true;
 	}
 	else {

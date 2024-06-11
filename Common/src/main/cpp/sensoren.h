@@ -54,13 +54,15 @@ const char *showsensorname() const {
 	return name;
 	}
 uint32_t wearduration() const {
-//   if(halfdays==24*2) const_cast<sensor *>(this)->halfdays=30*2;
 	if(halfdays==(stdMaxDaysSI*2))
 		return maxSIhours*60*60;
 	return (halfdays?halfdays:29)*12*60*60;
 	}
 uint32_t maxtime() const {
 	return starttime+wearduration();
+	}
+uint32_t largemaxtime() const {
+	return maxtime()+60*60*24;
 	}
 	} __attribute__ ((packed)) __attribute__ ((aligned (4))) ; /*always 32 bytes */
 
@@ -712,7 +714,7 @@ void finishsensor(int ind) {
 				LOGGER("%d no starttime\n",i);
 				continue;
 				}
-			if(sensor.maxtime() <= nu) {
+			if(sensor.largemaxtime() <= nu) {
 				LOGGER("%s old\n", showsensorname(i));
 				break;
 				}

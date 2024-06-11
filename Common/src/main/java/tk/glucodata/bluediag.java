@@ -322,7 +322,7 @@ if(!isWearable) {
 		priority.setVisibility(GONE);
 		forget.setVisibility(GONE);
 		}
-	if(!Natives.getusebluetooth()) {
+	if(!Natives.optionStreamHistory()) {
 		streamhistory.setVisibility(GONE);
 		}
 	contimes=new TextView[]{view.findViewById(R.id.consuccess) , view.findViewById(R.id.confail)};

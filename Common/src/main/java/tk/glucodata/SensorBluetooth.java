@@ -418,8 +418,8 @@ public void stopScan(boolean retry) {
         if (this.mScanning) {
             stopscantime=System.currentTimeMillis();
             this.mScanning = false;
-            if (bluetoothIsEnabled()) {
-		scanner.stop();
+	    scanner.stop();
+            if(bluetoothIsEnabled()) {
 		if(retry) {
 			int waitscan=scaninterval;
 			if(scantime>0L) {
@@ -778,6 +778,7 @@ static final boolean keepBluetooth=false;
 private void addreceiver() {
 	if(mBluetoothAdapterReceiver==null) {
 	 mBluetoothAdapterReceiver=new BroadcastReceiver() {
+//		private boolean wasScanning=false;
 		@SuppressLint("MissingPermission")
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -785,7 +786,7 @@ private void addreceiver() {
 			int intExtra = intent.getIntExtra("android.bluetooth.adapter.extra.STATE", -1);
 			if (intExtra == BluetoothAdapter.STATE_OFF) {
 			    Log.v(LOG_ID,"BLUETOOTH switched OFF");
-
+			    // wasScanning=mScanning; 
 			    SensorBluetooth.this.stopScan(false);
 			for(var cb: gattcallbacks)  
 				cb.close();
@@ -795,6 +796,7 @@ private void addreceiver() {
 			    if(!isWearable) {
 				    Applic.app.numdata.sync();
 				    }
+//			    if(wasScanning) { SensorBluetooth.this.startScan(250L); }
 			    SensorBluetooth.this.connectToActiveDevice(500);
 			}
 		    }

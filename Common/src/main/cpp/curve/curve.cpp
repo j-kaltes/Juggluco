@@ -1961,12 +1961,15 @@ LOGGER("showbluevalue %zd\n",used.size());
 		char head[maxhead];
 		memcpy(head,usedtext->sensorends.data(),usedtext->sensorends.size());
 
-		if(time_t enddate=lastsensorends()) {
-			const int tstart=usedtext->sensorends.size();
-			char *endstr=head+tstart;
-			int end= datestr(enddate,endstr); 
-			nvgTextAlign(genVG,NVG_ALIGN_CENTER|NVG_ALIGN_BOTTOM);
-			nvgText(genVG, -dheight/2+down-smallfontlineheight,dwidth-timex, std::begin(head), head+end+tstart);
+
+		if(const auto *sens=sensors->getSensorData()) {
+			if(time_t enddate=sens->officialendtime()) {
+				const int tstart=usedtext->sensorends.size();
+				char *endstr=head+tstart;
+				int end= datestr(enddate,endstr); 
+				nvgTextAlign(genVG,NVG_ALIGN_CENTER|NVG_ALIGN_BOTTOM);
+				nvgText(genVG, -dheight/2+down-smallfontlineheight,dwidth-timex, std::begin(head), head+end+tstart);
+				}
 			}
 		nvgResetTransform(genVG);
 		}

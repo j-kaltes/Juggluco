@@ -36,7 +36,9 @@
 #include "libre2.h"
 #include "jnisubin.h"
 #include "hexstr.h"
-
+#if !defined(__aarch64__) 
+#define GEN2ROOTSHECK 1
+#endif
 //constexpr const int librewearduration=14*24*60;
 
 typedef struct JNINativeInterface * JNIEnvC;
@@ -612,6 +614,7 @@ scanstate *Abbott::initnewsensor( scandata *data) {
 	if(int sindex=sensors->sensorindex(serial.data());sindex>=0) {
 		sensorindex=sindex;
 		 hist=sensors->getSensorData(sindex);
+
 		if(hist->streamingIsEnabled()==1)
 			hist->setbluetoothOn(0);
 		}
@@ -619,16 +622,15 @@ scanstate *Abbott::initnewsensor( scandata *data) {
 		const char *infodata=(const char *)data->info->data();
 		uint32_t bluestart;
 		scanstate astate;
-	        if(getStreamingPayload(&astate,uid, data->info, start)) {
+     if(getStreamingPayload(&astate,uid, data->info, start)) {
 			bluestart=0;
 			}
 		else
 			bluestart=SensorGlucoseData:: bluestartunknown;
-
 		SensorGlucoseData::mkdatabase(sensordir,start,(const char *)uid->data(),infodata,&times,3,bluestart,nullptr) ;
 		int ind=sensors->addsensor(serial.data());
-		sensor *sen=sensors->getsensor(ind);
-		sen->halfdays=times.wear/(30*24)+1;
+/*		sensor *sen=sensors->getsensor(ind);
+		sen->halfdays=times.wear/(30*24)+1;*/
 
 		hist=sensors->getSensorData(ind);
 		sensorindex=ind;
@@ -638,6 +640,9 @@ extern bool streamHistory() ;
 		if(streamHistory()) 
 			setstartedwithStreamhistory();
 		}
+   sensor *sen=sensors->getsensor(sensorindex);
+   sen->halfdays=times.wear/(30*24)+1;
+
 	constexpr const int	threeyear=94694400 ;//2013
 	constexpr const int sec_per_day=60*60*24;
 scanstate *newstateptr=new scanstate(sensordir,data->gettime());
@@ -866,7 +871,12 @@ unlink(libpath);
 		LOGAR("doesn't carry libs");
 		return -1;	
 #else
-	bool gen2= settings->data()->streamHistory||userver2();
+	bool gen2= 
+#ifdef GEN2ROOTSHECK
+   settings->data()->streamHistory||userver2();
+#else
+   true;
+#endif
 
 	bool firstsuccess=false;
 	extern bool hasGen1;
@@ -886,9 +896,6 @@ unlink(libpath);
 			firstsuccess=linklib(libpath) ;
 			if(firstsuccess) {
 				packager=native;
-//				packager.addend();
-			/*	abbottcall(initialize)(env,thiz, thiz);
-				abbottcall(dpSetMaxAlgorithmVersion)(env,thiz, 3,casttoken);  */
 				void setendedwithStreamhistory();
 				setendedwithStreamhistory();
 				}
@@ -900,7 +907,13 @@ unlink(libpath);
 		setstartedwithStreamhistory();
 		LOGAR("native.make2()");
 		native.make2();
-		settings->setnodebug(false);
+		settings->setnodebug(
+#ifdef GEN2ROOTSHECK
+      false
+#else
+     true 
+#endif
+      );
 		libpath=native.getlib();
 		if(!linklib(libpath)) {
 			LOGGER("linking failed %s\n",libpath);

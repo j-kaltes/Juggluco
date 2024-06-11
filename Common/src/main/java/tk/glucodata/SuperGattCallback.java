@@ -400,7 +400,7 @@ public void searchforDeviceAddress() {
 	private Runnable getConnectDevice(long delayMillis) {
 		var cb = this;
 		close();
-		if (cb.mActiveBluetoothDevice == null) {
+		if(cb.mActiveDeviceAddress ==null|| cb.mActiveBluetoothDevice == null) {
 			Log.i(LOG_ID, SerialNumber +" "+"cb.mActiveBluetoothDevice == null");
 			foundtime = 0L;
 			return null;
