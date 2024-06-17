@@ -325,7 +325,7 @@
 <string name="endstime">" ends at this time"</string>
 <string name="triednothing">Tried nothing</string>
 <string name="success">Success</string>
-<string name="resendwarning">All data will be send again which takes time and can have consequences for Libreview and Kerfstok</string>
+<string name="resendwarning">All data will be sent again which takes time and can have consequences for Libreview and Kerfstok</string>
 <string name="parseip">Error parsing IP</string>
 <string name="toomanyhosts">Maximal number of hosts exceeded</string>
 <string name="senthosts">Juggluco sends to maximal 6 hosts</string>

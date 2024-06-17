@@ -158,7 +158,7 @@ OPTIONS:
 	-w password: encrypt communication with password
 	-p port:  connect to port (default: 8795)
 
-	-C n: overwrite n-th connection. If this program sends to this connection, data will not be resend. 
+	-C n: overwrite n-th connection. If this program sends to this connection, data will not be resent.
 
 example:
 

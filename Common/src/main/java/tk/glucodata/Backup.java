@@ -257,7 +257,6 @@ private void deleteconfirmation(MainActivity act) {
 private void resentconfirmation(MainActivity act,int hostindex) {
         AlertDialog.Builder builder = new AlertDialog.Builder(act);
         builder.setTitle(act.getString(R.string.resenddata)+"?").
-//	 setMessage("All data will be send again which takes time and can have consequences for Libreview and Kerfstok").
 	 setMessage(R.string.resendwarning).
            setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
