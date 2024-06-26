@@ -4,7 +4,6 @@ Common/.cxx/
 build/
 jniLibs/
 local.properties
-printmappingout.txt
 
 # Directories for signed APKs:
 Common/mobileLibre3Nosi/
