@@ -8,6 +8,11 @@
      <item name="android:textAppearanceButton">@style/textAppearanceButton</item>
       <item name="android:spinnerStyle">@android:style/Widget.Holo.Spinner</item>
            <item name="android:windowSwipeToDismiss">false</item>
+    <!-- Set the navigation bar to 50% translucent white -->
+<!--    <item name="android:navigationBarColor">#80FFFFFF</item> -->
+<!--    <item name="android:navigationBarColor">@android:color/transparent</item> -->
+    <!-- Since the nav bar is white, we will use dark icons -->
+  <!--  <item name="android:windowLightNavigationBar">true</item> -->
 </style>
 
  <style name="textAppearanceButton" parent="@android:style/TextAppearance.Material.Widget.Button">

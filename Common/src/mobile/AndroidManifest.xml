@@ -2,7 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:overrideLibrary="androidx.health.connect.client" >
-    <uses-sdk tools:overrideLibrary="androidx.health.connect.client"/>
+
+<!--    <uses-sdk tools:overrideLibrary="com.google.android.gms.common, androidx.appcompat.resources, com.google.android.gms.tasks, com.google.android.gms.base, com.google.android.gms.wearable, androidx.health.connect.client"/> -->
+   <uses-sdk tools:overrideLibrary="androidx.health.connect.client"/> 
+
+
 
 <!-- s/^[	 ]*\(.*\)[	 ]*$/<uses-permission android:name="\1"\/>/g -->
 <uses-permission android:name="android.permission.health.WRITE_BLOOD_GLUCOSE"/>

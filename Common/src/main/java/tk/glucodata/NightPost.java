@@ -309,11 +309,12 @@ public static void  config(MainActivity act, View settingsview) {
 		var width=GlucoseCurve.getwidth();
                         if(w>=width||h>=height) {
                                 lay.setX(0);
-                                lay.setY(0);
                                 }
                         else {
-                                lay.setX((width-w)/2); lay.setY(0);
+                                lay.setX((width-w)/2); 
                                 };
+
+			lay.setY(MainActivity.systembarTop);
                         return new int[] {w,h};}, new View[]{urllabel,url},new View[]{secretlabel,visible,editsecret},new View[]{statusview},new View[]{activebox,v3box,clear,wake},new View[]{treatments,help,cancel,save});
 
 		int laypar;

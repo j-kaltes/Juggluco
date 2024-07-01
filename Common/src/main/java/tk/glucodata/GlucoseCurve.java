@@ -49,6 +49,8 @@ import java.util.Calendar;
 
 import androidx.annotation.Keep;
 import androidx.annotation.UiThread;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 
 import tk.glucodata.nums.numio;
 import tk.glucodata.settings.Settings;
@@ -61,6 +63,7 @@ import static java.lang.System.currentTimeMillis;
 import static tk.glucodata.Applic.isWearable;
 import static tk.glucodata.Applic.usedlocale;
 import static tk.glucodata.BuildConfig.SiBionics;
+import static tk.glucodata.MainActivity.systembarTop;
 import static tk.glucodata.Natives.turnoffalarm;
 import static tk.glucodata.NumberView.geteditview;
 import static tk.glucodata.NumberView.geteditwearos;
@@ -243,8 +246,19 @@ void getnumcontrol(MainActivity activity) {
 		   final int width=getWidth();
 		   final int height=getHeight();
 		   int columns=Natives.numcontrol(w,h);
-		   if(height>h)
-			   v.setY((height-h)/2.0f);
+         int bar=systembarTop;
+         int over;
+         if(bar>0) {
+               v.setY(bar);
+               over=height-bar;
+               if(over>h)
+                  over=h;
+               }
+          else  {
+               if(height>h)
+                  v.setY((height-h)/2.0f);
+                over=h;
+               }
 		if(width>w) {
 			   if(columns==1)  {
 				   v.setX(width-w);
@@ -257,7 +271,7 @@ void getnumcontrol(MainActivity activity) {
 			   }
             	    requestRender();
 
-			return new int[] {w,h};
+			return new int[] {w,over};
 		  },new View[]{first}, new View[]{back}, new View[]{search},new View[]{closecontrol}, new View[]{next}, new View[]{last}
 		  );
            activity.addContentView(numcontrol, new ViewGroup.LayoutParams(WRAP_CONTENT,MATCH_PARENT));
@@ -507,6 +521,11 @@ void startlibrelink(String lang) {
 				case 6:  Floating.setfloatglucose((MainActivity) getContext(),!Natives.getfloatglucose()) ;break;
 				};
 				};break;
+		    case 2: {
+		    	var light=item==0;
+			var main=(MainActivity) getContext();
+			main.lightBars(light);
+		    	};break;
 		    case 3:
                             switch (item) {
                                 case 1:
@@ -972,11 +991,15 @@ void mkmealsearch(MainActivity act) {
 //		mealingredient.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI| EditorInfo.IME_FLAG_NO_FULLSCREEN| EditorInfo.IME_ACTION_SEARCH);
 //		mealquantity.setOnEditorActionListener(actlist);
 		meallayout=new Layout(act,
-/*(lay, w, h)->{
-//		    lay.setX(MyRenderer.widthdiff);
+(lay, w, h)->{
+		    lay.setY(systembarTop*4/5);
+		    lay.setX(MainActivity.systembarLeft);
 
-		return new int[] {w-MyRenderer.widthdiff,h};
-		},*/
+		return new int[] {w-MainActivity.systembarLeft-MainActivity.systembarRight,h};
+		},
+
+      //pick.setPadding(MainActivity.systembarLeft,MainActivity.systembarTop,0,MainActivity.systembarBottom);
+      //buttonlay.setPadding(0,MainActivity.systembarTop/2,MainActivity.systembarRight,MainActivity.systembarBottom);
 
 
 		new View[] {inglabel,mealingredient,qualabel,mealquantity});
@@ -987,6 +1010,7 @@ void mkmealsearch(MainActivity act) {
 		meallayout.setVisibility(VISIBLE);
 		meallayout.bringToFront();
 		}
+	
 
 	}
 

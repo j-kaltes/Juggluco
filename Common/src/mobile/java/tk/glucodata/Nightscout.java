@@ -227,7 +227,7 @@ public static void show(MainActivity context,View parent) {
 		var width= GlucoseCurve.getwidth();
 		if(width>w)
 			l.setX((width-w)/2);
-		l.setY(0);
+		l.setY(MainActivity.systembarTop);
 		return new int[] {w,h};
 //		},new View[]{secret,editkey,visible},new View[]{sslbox,labport,portview,save} , new View[]{privkey,chain,labinterval,intervalview},new View[]{local,httpport,treatments},new View[]{Help,server,Close} );
 		},new View[]{secret,editkey,visible},new View[]{labport,portview,labinterval,intervalview} , new View[]{sslbox,privkey,chain,save},new View[]{local,httpport,treatments},errorrow,new View[]{Help,server,Close} );

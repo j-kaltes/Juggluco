@@ -45,6 +45,7 @@ public static int widthdiff=0;
         public void onSurfaceChanged(GL10 gl, int w, int h) {
 //	eglSurfaceAttrib(eglGetCurrentDisplay(), eglGetCurrentSurface(EGL_DRAW), EGL_SWAP_BEHAVIOR , EGL_BUFFER_PRESERVED);
 	if(Applic.Nativesloaded) {
+           // Natives.resize(w, h-MainActivity.systembarBottom,Applic.initscreenwidth);
             Natives.resize(w, h,Applic.initscreenwidth);
 	    widthdiff=w-Applic.initscreenwidth;
 	    }

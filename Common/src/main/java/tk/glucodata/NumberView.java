@@ -205,7 +205,7 @@ public   View addnumberview(MainActivity context,final int bron,final long time,
 		helpbutton.setOnClickListener(v-> help.help(R.string.newamount,context));
 		}
         Layout layout = isWearable?new Layout(context,new View[] {source},new View[]{datebutton,timebutton} ,new View[]{getspinner(context), valueedit}, new View[]{messagetext,savebutton,deletebutton},new View[]{cancel}):new Layout(context, (lay, w, h) -> {
-		int wid=GlucoseCurve.getwidth();
+		int wid=GlucoseCurve.getwidth()-MainActivity.systembarRight;
 		if(!smallScreen) {
 			Log.i(LOG_ID,"no smallScreen");
 			int hei=GlucoseCurve.getheight();
@@ -751,7 +751,9 @@ public void gettimepicker(MainActivity activity,int hourin, int minin, ObjIntCon
 	else {
 		Layout buttonlay=new Layout(activity,new View[] {cancel},new View[]{ok});
 		buttonlay.setLayoutParams(new ViewGroup.LayoutParams(   ViewGroup.LayoutParams.WRAP_CONTENT, MATCH_PARENT));
-		 views=new View[][] {new View[] {pick,buttonlay}};
+	  views=new View[][] {new View[] {pick,buttonlay}};
+      pick.setPadding(MainActivity.systembarLeft,MainActivity.systembarTop,0,MainActivity.systembarBottom);
+      buttonlay.setPadding(0,MainActivity.systembarTop/2,MainActivity.systembarRight,MainActivity.systembarBottom);
 	 };
 //		buttonlay.setBackgroundColor( RED);
 	pick.setLayoutParams(new ViewGroup.LayoutParams(smallScreen?WRAP_CONTENT:MATCH_PARENT , ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -776,6 +778,10 @@ public void gettimepicker(MainActivity activity,int hourin, int minin, ObjIntCon
 					}
 					return new int[]{w, h};
 				}, views);
+
+	if(smallScreen) 
+      layout.setPadding(MainActivity.systembarLeft,MainActivity.systembarTop,MainActivity.systembarRight,MainActivity.systembarBottom);
+
 		layout.setBackgroundColor( Applic.backgroundcolor);
         activity.addContentView(layout,  new ViewGroup.LayoutParams(smallScreen?WRAP_CONTENT:MATCH_PARENT, smallScreen?WRAP_CONTENT:MATCH_PARENT));
         timepicker=layout;

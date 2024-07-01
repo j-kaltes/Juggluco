@@ -78,14 +78,22 @@ public static   void basehelp(int res,MainActivity act,Consumer<Layout> okproc) 
 	}
 
 	public static   void  basehelp(String text,MainActivity act,Consumer<Layout>  okproc) {
-		  basehelp(text,act,okproc,(v,w,h)-> new int[] {w,h},new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT)) ;
+		  basehelp(text,act,okproc,(v,w,h)-> new int[] {w,h},new ViewGroup.MarginLayoutParams(MATCH_PARENT, MATCH_PARENT)) ;
 		}
 	@SuppressWarnings("deprecation")
-	public static   void  basehelp(String text,MainActivity act,Consumer<Layout>  okproc,Placer place, ViewGroup.LayoutParams params) {
+	public static   void  basehelp(String text,MainActivity act,Consumer<Layout>  okproc,Placer place, ViewGroup.MarginLayoutParams params) {
        hidekeyboard(act);
 	    ScrollView       helpscroll=new ScrollView(act);
            TextView helpview=new TextView(act);
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        helpview.setText(fromHtml(text,TO_HTML_PARAGRAPH_LINES_CONSECUTIVE));
+    }
+    else {
+			helpview.setText(fromHtml(text));
+	}
 	   int pad=(int)(GlucoseCurve.getDensity()*7.0);
+//	   helpview.setPadding(pad,pad,pad,pad+ MainActivity.systembarTop);
 	   helpview.setPadding(pad,pad,pad,pad);
            helpview.setTextColor(Color.WHITE);
            helpview.setTextIsSelectable(true);
@@ -95,21 +103,42 @@ public static   void basehelp(int res,MainActivity act,Consumer<Layout> okproc) 
 	   
            Button ok=new Button(act);
            ok.setText(R.string.ok);
-           final Layout  helplayout=new Layout(act,place,new View[]{helpscroll},new View[]{ok});
+
+           final Layout  helplayout=new Layout(act,
+
+	   (l,w,h)-> {
+
+      /*if(w==width) {
+         l.setY(MainActivity.systembarTop);
+         l.setX(MainActivity.systembarLeft);
+         var neww=w-MainActivity.systembarLeft-MainActivity.systembarRight;
+         var newh=h-MainActivity.systembarTop-MainActivity.systembarBottom;
+	       return place.place(l,neww,newh); 
+          }
+         else */
+//         var newh=h-MainActivity.systembarTop-MainActivity.systembarBottom;
+          var af=MainActivity.systembarTop*3/4;
+            l.setY(af);
+	       return place.place(l,w,h -af); 
+		}, new View[]{helpscroll},new View[]{ok});
            ok.setOnClickListener(v->{
 		act.poponback();
 		 okproc.accept(helplayout);
 		removeContentView(helplayout);
 	   	});
+        params.setMargins(
+            MainActivity.systembarLeft,
+            0,
+            MainActivity.systembarRight,
+
+           MainActivity.systembarBottom
+		);
+      helplayout.setLayoutParams(params);
+        helplayout.requestLayout();
 	      helplayout.setBackgroundResource(R.drawable.helpbackground);
            act.addContentView(helplayout, params);
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-        helpview.setText(fromHtml(text,TO_HTML_PARAGRAPH_LINES_CONSECUTIVE));
-    }
-    else {
-			helpview.setText(fromHtml(text));
-	}
+
      Runnable closerun=() -> {
 			 okproc.accept(helplayout);
 		removeContentView(helplayout);
@@ -120,7 +149,7 @@ public static   void basehelp(int res,MainActivity act,Consumer<Layout> okproc) 
 };
 
 	@SuppressLint("deprecation")
-	public static   void help(String text,MainActivity act,Consumer<Layout>  okproc,Placer place, ViewGroup.LayoutParams params) {
+	public static   void help(String text,MainActivity act,Consumer<Layout>  okproc,Placer place, ViewGroup.MarginLayoutParams params) {
 		Log.i(LOG_ID,"help");
        hidekeyboard(act);
       Button ok;
@@ -132,6 +161,7 @@ public static   void basehelp(int res,MainActivity act,Consumer<Layout> okproc) 
            TextView helpview=new TextView(act);
 	   int pad=(int)(GlucoseCurve.getDensity()*7.0);
 	   helpview.setPadding(pad,pad,pad,pad);
+//	   helpview.setPadding(pad,pad,pad,pad+ MainActivity.systembarTop);
 
            helpview.setTextColor(Color.WHITE);
            helpview.setTextIsSelectable(true);
@@ -143,17 +173,74 @@ public static   void basehelp(int res,MainActivity act,Consumer<Layout> okproc) 
            ok=new Button(act);
            ok.setText(R.string.ok);
 	   okbutton=new WeakReference<Button>(ok);
-           helplayout=new Layout(act,place,new View[]{helpscroll},new View[]{ok});
+	   
+//			var height=GlucoseCurve.getheight();
+			var width=GlucoseCurve.getwidth();
+
+//          var wleft= width-MainActivity.systembarLeft-MainActivity.systembarRight;
+           helplayout=new Layout(act,
+
+	   (l,w,h)-> {
+
+      //   var newh=h-MainActivity.systembarTop-MainActivity.systembarBottom;
+	   //    return place.place(l,w,h); 
+
+          var af=MainActivity.systembarTop*3/4;
+            l.setY(af);
+	       return place.place(l,w,h -af); 
+      /*
+      if(w>=wleft) {
+         l.setY(MainActivity.systembarTop);
+         l.setX(MainActivity.systembarLeft);
+         var neww=w-MainActivity.systembarLeft-MainActivity.systembarRight;
+         var newh=h-MainActivity.systembarTop-MainActivity.systembarBottom;
+	       return place.place(l,neww,newh); 
+          }
+         else 
+	       return place.place(l,w,h); 
+
+	      var res=place.place(l,w,h);
+		l.setY(MainActivity.systembarTop);
+		l.setX(MainActivity.systembarLeft);
+
+		   var neww=res[0]-MainActivity.systembarLeft-MainActivity.systembarRight;
+		   var newh=res[1]-MainActivity.systembarTop-MainActivity.systembarBottom;
+
+			final int[] ret={neww,newh};
+			return ret; */
+		}
+	   ,new View[]{helpscroll},new View[]{ok});
 	     whelplayout=new WeakReference<Layout>(helplayout);
 
 //              helplayout.setBackgroundColor(Applic.backgroundcolor);
 	      helplayout.setBackgroundResource(R.drawable.helpbackground);
+        params.setMargins(
+            MainActivity.systembarLeft,
+            0,
+            MainActivity.systembarRight,
+           MainActivity.systembarBottom
+		);
+            
+         helplayout.setLayoutParams(params);
+        helplayout.requestLayout();
            act.addContentView(helplayout, params);
        }
        else {
            helplayout.setVisibility(VISIBLE);
            helplayout.bringToFront();
+        ViewGroup.MarginLayoutParams marg = (ViewGroup.MarginLayoutParams) helplayout.getLayoutParams();
+         marg.width=params.width; 
+         marg.height=params.height; 
+        marg.setMargins(
+            MainActivity.systembarLeft,
+            0,
+            MainActivity.systembarRight,
+           MainActivity.systembarBottom
+		);
+         helplayout.setLayoutParams(marg);
+        helplayout.requestLayout();
        }
+     //   ViewGroup.MarginLayoutParams marg = (ViewGroup.MarginLayoutParams) helplayout.getLayoutParams();
 //       whelpview.get().setText(Html.fromHtml(text));
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
         whelpview.get().setText(fromHtml(text,TO_HTML_PARAGRAPH_LINES_CONSECUTIVE));
@@ -182,7 +269,8 @@ public static   void basehelp(int res,MainActivity act,Consumer<Layout> okproc) 
 	public static   void help(String text,MainActivity act,Consumer<Layout>  okproc) {
 	 help( text, act, okproc,(v,w,h)-> {
 	 	return new int[] {w,h};
-		}, new ViewGroup.LayoutParams(MATCH_PARENT, WRAP_CONTENT));
+		}, new ViewGroup.MarginLayoutParams(MATCH_PARENT, WRAP_CONTENT));
+		 //new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
 	}
 public static   void help(String text,MainActivity act) {
 	help(text,act,l->{});

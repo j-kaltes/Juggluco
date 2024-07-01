@@ -28,6 +28,9 @@
 #include "curve.h"
 #include "bino.h"
 #include "jugglucotext.h"
+extern int statusbarleft,statusbarright;
+
+extern int statusbarheight;
 extern Sensoren *sensors;
 static	constexpr const int seconds_in_day=24*60*60;
 extern uint32_t starttime;
@@ -270,8 +273,10 @@ void showpercentile(NVGcontext* vg,T frac,const int startid,const int endid) {
 	if(showforwardpercentile(vg,frac,startid,endid))
 		nvgStroke(vg);
 	};
+
 const float getidstep(const int showids) const {
-	return ((float)dwidth)/(showids-1);
+	return ((float)(dwidth))/(showids-1);
+//	return ((float)(dwidth-statusbarleft-statusbarright))/(showids-1);
 	}
 inline constexpr const static int maxids=60*24;
 int reindex(const int index) const {
@@ -389,22 +394,18 @@ void showpercentiles(NVGcontext* vg) {
 		const int showids=globalperc.effectmin(duration/60);
 		const int endid=startid+showids;
 		LOGGER("startid=%d, endid=%d, showids=%d\n",startid,endid,showids);
-	//	const float move=((float)dwidth)/(showids-1);
-//		const float move=((float)dwidth)/showids;
 		const float move=getidstep(showids);
 		int pos=isplace(startid,std::min(endid,maxids),move);
 
-//static		constexpr const NVGcolor lighterblue={{{0.2f, 0.2f,1.0f,0.07f}}};
 		nvgFillColor(vg, lighttest);
 		showround(vg,f0,startid,endid);
 		float startpos=move*pos;;	
-		float ystart=smallfontlineheight*3,afm=10*density;;
+		const float ystart=smallfontlineheight*3+statusbarheight,afm=10*density;;
 		float ypos=ystart+2* smallfontlineheight;
 		nvgBeginPath(vg);
 		nvgRect(vg, startpos, ypos,afm , afm);
 		nvgFill(vg);
 
-//static		constexpr const NVGcolor lightblue4={{{0.2f, 0.2f,1.0f,0.25f}}};
 		nvgFillColor(vg, midlight);
 		showround(vg,f10,startid,endid);
 		ypos+=smallfontlineheight;
@@ -434,9 +435,9 @@ void showpercentiles(NVGcontext* vg) {
 		showlines(gmin,gmax);
 		nvgTextAlign(vg,NVG_ALIGN_LEFT|NVG_ALIGN_TOP);
 		const float datehigh=smallfontlineheight*1.2;
-		datainterval(vg,density, datehigh,pollstart,polllast);
+		datainterval(vg,density+statusbarleft, datehigh+statusbarheight,pollstart,polllast);
 		nvgTextAlign(vg,NVG_ALIGN_RIGHT|NVG_ALIGN_TOP);
-		ypos=ystart;
+		//ypos=ystart;
 //		const char median[]="Median";
 		startpos-=5*density;
 		ypos=ystart-smallfontlineheight/2;
@@ -637,10 +638,12 @@ void leginterval(NVGcontext* vg,const float x,const float y, const int *between)
 	nvgText(vg, x,y,buf,buf+buflen);
 	}
 void stats::showbar(NVGcontext* vg) {
+
+	int dwidth=::dwidth-statusbarleft-statusbarright;	
 	auto stat=this;
 	float rowheight=smallfontlineheight*1.5;
-	float useh=dheight*.8f,starty=(dheight-useh)/2.0f,startx=dwidth*.01f,usewidth=dwidth*.04f;
-	float xleg=startx*2+usewidth+timelen+smallsize;
+	float useh=dheight*.8f,starty=(dheight-useh)/2.0f,startx=dwidth*.01f+statusbarleft,usewidth=dwidth*.04f;
+	float xleg=startx+ dwidth*.01f+usewidth+timelen+smallsize;
 	 
 	const char perform[]="%.1f%%";
 	constexpr int maxbuf=40;
@@ -710,10 +713,11 @@ constexpr const NVGcolor cols[]={orange,yellow,mediumseagreen,redinit,brown};
 
 
 void stats::otherstats(NVGcontext* vg) {
+	int dwidth=::dwidth-statusbarleft-statusbarright;	
 	nvgTextAlign(vg,NVG_ALIGN_CENTER|NVG_ALIGN_TOP);
 	datainterval(vg,dwidth/2, 0,starttime,endtime);
 	float rowheight=smallfontlineheight*1.5;
-	float xpos=dwidth/3+dleft;
+	float xpos=dwidth/3+dleft+statusbarleft;
 	float ypos=0.1*dheight+dtop;
 	constexpr int maxbuf=70;
 	char buf[maxbuf];

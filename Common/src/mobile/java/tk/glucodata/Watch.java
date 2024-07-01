@@ -161,6 +161,7 @@ static public void show(MainActivity context) {
 		var width= GlucoseCurve.getwidth();
 		if(width>w)
 			l.setX((width-w)/2);
+      l.setY(MainActivity.systembarTop);
 		return new int[] {w,h};
 		},mibandrow,new View[] {notify,separate},new View[]{wearbox,wearossettings},new View[]{server,serverconfig},new View[]{kerfstok,status},new View[]{Help,Ok} );
 	float density=GlucoseCurve.metrics.density;

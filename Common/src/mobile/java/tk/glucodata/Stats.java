@@ -130,10 +130,9 @@ final Runnable closeonback=()-> {
 		Layout layout = new Layout(act, (l, w, h) -> {
 			int height = GlucoseCurve.getheight();
 			int width = GlucoseCurve.getwidth();
-			if(width>w)
-				l.setX((width - w));
-			if(height>h)
-				l.setY((height - h));
+			if(width>w) l.setX(width - w-MainActivity.systembarRight);
+
+			if(height>h) l.setY((height - h -MainActivity. systembarBottom));
 			return new int[]{w, h};
 		}, new View[]{Days, Help, Close, Curve});
 		if(!act.curve.statspresent)

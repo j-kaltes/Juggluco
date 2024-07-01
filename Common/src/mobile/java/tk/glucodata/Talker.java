@@ -23,6 +23,7 @@ package tk.glucodata;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
+import static tk.glucodata.Natives.getInvertColors;
 import static tk.glucodata.Natives.getVoicePitch;
 import static tk.glucodata.Natives.getVoiceSeparation;
 import static tk.glucodata.Natives.getVoiceSpeed;
@@ -330,12 +331,15 @@ public static void config(MainActivity context) {
 
       //layout.setBackgroundResource(R.drawable.dialogbackground);
 	layout.setBackgroundColor( Applic.backgroundcolor);
+      context.lightBars(false);
 	context.setonback(()-> { 
 		tk.glucodata.help.hidekeyboard(context);
 		removeContentView(layout); 
 		spinner=null;
 		if(Menus.on)
 			Menus.show(context);
+
+   		context.lightBars(!getInvertColors( ));
 		});
 	cancel.setOnClickListener(v->  {
 		context.doonback();
@@ -407,6 +411,8 @@ public static void config(MainActivity context) {
 		SuperGattCallback.newtalker(context);
 		});
 
+
+  	layout.setPadding(MainActivity.systembarLeft,MainActivity.systembarTop/2,MainActivity.systembarRight,0);
 	context.addContentView(layout, new ViewGroup.LayoutParams(MATCH_PARENT, WRAP_CONTENT));
 
 	}

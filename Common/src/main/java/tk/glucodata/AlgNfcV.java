@@ -126,19 +126,27 @@ public class AlgNfcV {
         log("start activate");
         if (!nfctry(tag)) //Overbodig?
             return false;
+	if(getversion(info)==2) {
+		Log.i(LOG_ID,"US libre 2");
+		if(!Gen2.activate(tag))
+			return false;
+		}
+	else {
         byte activationCommand = Natives.activationcommand(info);
         log("command=" + activationCommand);
         byte person = 0;
         byte[] activationPayload = Natives.activationpayload(uid, info, person);
-        byte[] precmd = {2, activationCommand, 7};
-        byte[] cmd = new byte[(precmd.length + activationPayload.length)];
-        System.arraycopy(precmd, 0, cmd, 0, precmd.length);
-        System.arraycopy(activationPayload, 0, cmd, precmd.length, activationPayload.length);
-        log("activate cmd");
-        if (nfccmd(tag, cmd) == null) {
-            log("activation failed");
-            return false;
-        }
+		Log.i(LOG_ID,"Non US libre 2");
+		byte[] precmd = {2, activationCommand, 7};
+		byte[] cmd = new byte[(precmd.length + activationPayload.length)];
+		System.arraycopy(precmd, 0, cmd, 0, precmd.length);
+		System.arraycopy(activationPayload, 0, cmd, precmd.length, activationPayload.length);
+		log("activate cmd");
+		if(nfccmd(tag, cmd) == null) {
+		    log("activation failed");
+		    return false;
+		}
+		}
         if(enableStreaming(tag, info)) {
             log("Streaming enabled");
             return true;

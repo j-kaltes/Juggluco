@@ -131,7 +131,7 @@ static void askround(MainActivity act,Runnable runner ,View parent) {
 	Layout lay=new Layout(act,(l,w,h)->{
 //		int height=GlucoseCurve.getheight();
 		int width=GlucoseCurve.getwidth();
-		l.setY(0);
+		l.setY(MainActivity.systembarTop);
 		if(width>w)
 			l.setX((width-w)/2);
 		else
@@ -190,20 +190,22 @@ static Layout menuview(final NumberView numb, MainActivity act, int mealptr, Obj
 			if(numb.noroom)
 				l.setX(width-w);
 			else {
-				int half= width/2;
+				int half= (width-MainActivity.systembarRight)/2;
 				int bij=(half-w)/4;
-				l.setX(half+bij);
+				l.setX(half+bij );
 				}
 			   }
 	 	else
 			l.setX(0);
-
+      var af=MainActivity.systembarTop;
 		if(h>=0.9f*height)
-			l.setY(0);
-		else
-			l.setY((height-h)/2);
+			l.setY(af);
+		else  {
+			l.setY(Math.max(af,(height-h)/2));
+         af=0;
+         }
 
-		return new int[]{w,h};
+		return new int[]{w,h-af};
 		},new View[]{roundlabel,repeat},new View[]{recycle},new View[] {add,Help,close});
 	roundlabel.setOnClickListener(v-> 
 		askround(act,()->{
@@ -211,7 +213,7 @@ static Layout menuview(final NumberView numb, MainActivity act, int mealptr, Obj
 		roundlabel.setText(act.getString(R.string.round)+Natives.getroundto());
 		},lay));
     	lay.setBackgroundColor(Applic.backgroundcolor);
-	act.addContentView(lay, smallScreen?new ViewGroup.LayoutParams(  MATCH_PARENT, MATCH_PARENT):new ViewGroup.LayoutParams(width/2, height));
+	act.addContentView(lay, smallScreen?new ViewGroup.LayoutParams(  MATCH_PARENT, MATCH_PARENT):new ViewGroup.LayoutParams((width-MainActivity.systembarRight)/2, height));
 	repeat.setOnClickListener(v->{
 	     removeContentView(lay);
 	     act.hideSystemUI();
@@ -501,11 +503,11 @@ static void selectingredient(MainActivity act,NumberView numb,IntConsumer setind
 	int width=GlucoseCurve.getwidth();
 	int viewwidth=(int)(width*.56);
 	int xpos=(width-viewwidth)/2;
-	int ypos= 0;
+	int ypos=MainActivity.systembarTop*3/4;
 	Layout lay=new Layout(act,(l,w,h)-> {
-
-//		l.setY((height-h)/2);
-		return new int[]{w,h};
+      var af=MainActivity.systembarTop*3/4;
+		l.setY(af);
+		return new int[]{w,h-af};
 		},new View[]{recycle},new View[] {add,edit,close});
 	lay.setX(xpos);
 	lay.setY(ypos);
@@ -639,7 +641,7 @@ static void	defineingredient(MainActivity act ,IngredientViewAdapter  foodadapt,
 			l.setX((width-w)/2);
 		else
 			l.setX(0);
-		l.setY(0);
+		l.setY(MainActivity.systembarTop);
 		return new int[]{w,h};
 		},new View[]{namelabel,name,unitlabel,unit,spinner},new View[]{Database,carblabel,carb},new View[] {Cancel,Delete,Save});
 
@@ -761,7 +763,7 @@ static Layout  fooddatabase(MainActivity act, TriConsumer<String,Float,String> g
 	recycle.scrollToPosition(random.nextInt(fnr));
 	Layout lay=new Layout(act,(l,w,h)->{
 		int width=GlucoseCurve.getwidth();
-		l.setY(0);
+		l.setY(MainActivity.systembarTop);
 		if(width>w)
 			l.setX((width-w)/2);
 		else

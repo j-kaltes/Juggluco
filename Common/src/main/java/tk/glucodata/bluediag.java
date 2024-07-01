@@ -134,7 +134,7 @@ public static void showsensorinfo(String text,MainActivity act) {
 			if(width>w)
 				l.setX((width-w)/2);
 			return new int[] {w,h};
-			}, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+			}, new ViewGroup.MarginLayoutParams(WRAP_CONTENT, WRAP_CONTENT));
 		}
 
 void showinfo(final SuperGattCallback gatt,MainActivity act) {

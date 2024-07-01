@@ -767,5 +767,18 @@ extern "C" JNIEXPORT jboolean JNICALL fromjava(showlastscan)(JNIEnv *env, jclass
 	return false;
 	}
 
+
+extern jint width,height;
+extern int statusbarheight;
+extern int statusbarleft,statusbarright;
+  void withbottom();
+extern "C" JNIEXPORT void JNICALL fromjava(systembar)(JNIEnv *env, jclass thiz,jint left,jint top,jint right,jint bottom) {
+	statusbarheight=top*4/5;
+ statusbarleft=left;
+ statusbarright=right;
+ dbottom=bottom;
+//  resizescreen(width, height,width);
+  withbottom();
+	}
 #endif
 

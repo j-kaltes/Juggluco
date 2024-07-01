@@ -103,8 +103,7 @@ WAS_JNIEXPORT jbyte JNICALL   abbottdec(getActivationCommand)(JNIEnv *env, jobje
 
 WAS_JNIEXPORT jbyteArray JNICALL  abbottdec( getActivationPayload)(JNIEnv *env, jobject obj, jint parsertype, jbyteArray patchid, jbyteArray info, jbyte person,jbyteArray token72)=nullptr;
 
-//WAS_JNIEXPORT jboolean JNICALL   abbottdec(getNeedsReaderInfoForActivation)(JNIEnv *env, jobject obj, jint parsertype) ;
-
+//WAS_JNIEXPORT jboolean JNICALL   abbottdec(getNeedsReaderInfoForActivation)(JNIEnv *env, jobject obj, jint parsertype,jbyteArray token72) ;
 WAS_JNIEXPORT jbyteArray JNICALL  abbottdec(getStreamingUnlockPayload) (JNIEnv *envin, jobject obj, jint parsertype, jbyteArray sensorident, jbyteArray patchinfo, jbyte person, jint timestamp, jint unlockcount,jbyteArray token72)=nullptr;
 
 WAS_JNIEXPORT jobject JNICALL abbottdec(getNextRegionToRead)(JNIEnv *, jobject, jint, jbyteArray, jbyteArray, jbyteArray, jint,jbyteArray token72)=nullptr;
@@ -161,6 +160,7 @@ jint         subRegisterNatives(JNIEnv*, jclass name, const JNINativeMethod*meth
 	setfunc(getEnableStreamingPayload);
 	setfunc(getStreamingUnlockPayload); 
 //	setfuncneed(getStreamingUnlockPayload); //Use version without rootcheck instead. This one is so slow that the sensor hangs up (status=19) on slow devices (e.g.  WearOS watch).
+ //  LOGGER("%s %s\n",methods[it].name,methods[it].signature);
 //	setfunc(getNeedsReaderInfoForActivation);
 	++it;
 	setfunc(getTotalMemorySize);
@@ -238,7 +238,7 @@ if((dynlibhandle=dlopen(filename,RTLD_LAZY))) {
 			 &&getdynsym(getPatchTimeValues)
 			ds(getActivationCommand)
 			ds(getActivationPayload)
-	//		 ds(getNeedsReaderInfoForActivation)
+//			 ds(getNeedsReaderInfoForActivation)
 			ds(getStreamingUnlockPayload)
 			&&getdynsymname(processStream,processStream2_7)
 			 ds(dpSetMaxAlgorithmVersion)
@@ -587,7 +587,7 @@ Abbott::scanresult_t Abbott::ProcessOne(scandata *data) {
 //scanstate is a bad idea, I should change it to malloc e.d.
 const data_t*  getStreamingPayload(scanstate *stateptr,const data_t * sensorident, const data_t * patchinfo, uint32_t tim) ;
 scanstate *Abbott::initnewsensor( scandata *data) {
-	LOGSTRING("initnewsensor ");
+	LOGAR("initnewsensor");
 	jbyteArray juid =(jbyteArray) uid; 
 	scanstate inp,newstate(4);
 	outobj person,endtime,starttime;
@@ -597,18 +597,7 @@ scanstate *Abbott::initnewsensor( scandata *data) {
 		}
 	jint startminbase=starttime.toint();
 	time_t start=basesecs+startminbase;
-#ifndef NOLOG
-	{
-	char buf[50];
-	LOGGER("init starttime %s",ctime_r(&start,buf));
 
-	jint endminbase=endtime.toint();
-	time_t end=basesecs+endminbase;
-	LOGGER("init endtime %s",ctime_r(&end,buf));
-	}
-
-
-#endif
 	timevalues times= patchtimevalues(data->info) ;
 
 	if(int sindex=sensors->sensorindex(serial.data());sindex>=0) {
@@ -655,7 +644,7 @@ JNIEnv *hiersubenv=(JNIEnv *) &hierjnidata;
 
 const int timeleft=hist->officialendtime()-data->gettime();
 const bool oldsensor=timeleft<=(60*60);
-LOGGER("timeleft=%d oldsensor=\n",timeleft,oldsensor); 
+LOGGER("timeleft=%d oldsensor=%d\n",timeleft,oldsensor); 
 if(oldsensor&&timeleft>-daysecs) {
 //if(timelast>=endsensorsecs&&timelast<days15) 
 	startminbase+=daysecs;
@@ -834,6 +823,7 @@ bool userver2() {
 //bool	norootchecklib=false;
 bool doinitnative=false;;
 bool rootcheck=false;
+
 static int doabbottinit(bool dochmod) {
 LOGAR("doabbottinit");
       settings->data()->crashed=true;
@@ -957,6 +947,10 @@ unlink(libpath);
 			rootcheck=false;
 			LOGSTRING("No P1\n");
 		}
+
+/*    LOGAR("start getNeedsReaderInfoForActivation ");
+    bool res=   abbottcall(getNeedsReaderInfoForActivation)(subenv, nullptr, parsertype,casttoken) ;
+    LOGGER("end getNeedsReaderInfoForActivation=%d\n",res); */
 	#endif
 		return 0;
 }
@@ -1193,25 +1187,24 @@ data_t  * getactivationpayload(scanstate *state,const data_t * patchid, const da
          return res;
         }
 	*/
-	/*
+/*	
 bool getneedsreaderinfoforactivation()   {
 	abbottinit();
 	debugclone();
-	LOGSTRING("start getNeedsReaderInfoForActivation ");
-	bool res=   abbottcall(getNeedsReaderInfoForActivation)(subenv, nullptr, parsertype) ;
-	LOGSTRING(" end getNeedsReaderInfoForActivation\n");
+	LOGAR("start getNeedsReaderInfoForActivation ");
+	bool res=   abbottcall(getNeedsReaderInfoForActivation)(subenv, nullptr, parsertype,casttoken) ;
+	LOGGER("end getNeedsReaderInfoForActivation=%d\n",res);
 	return res;
-	}
-	*/
+	} */
 extern "C" JNIEXPORT jboolean JNICALL fromjava(hasRootcheck)(JNIEnv* env, jclass obj) {
 	return rootcheck;
 	}
 extern "C" JNIEXPORT jbyte JNICALL fromjava(activationcommand)(JNIEnv* env, jclass obj,jbyteArray info) {
 	abbottinit();
 	debugclone(); //Nodig?
-	LOGSTRING("start getActivationCommand ");
-       	jbyte res=  abbottcall(getActivationCommand)(env,obj, parsertype, info,getjtoken(env));
-	LOGSTRING(" end getActivationCommand\n");
+	LOGAR("start getActivationCommand");
+   jbyte res=  abbottcall(getActivationCommand)(env,obj, parsertype, info,getjtoken(env));
+	LOGAR(" end getActivationCommand");
 	return res;
 	}
 extern "C" JNIEXPORT jbyteArray  JNICALL fromjava(activationpayload)(JNIEnv *env, jclass obj,  jbyteArray patchid, jbyteArray info, jbyte person)  {

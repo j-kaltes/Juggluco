@@ -60,6 +60,9 @@ using namespace std::literals;
 
 #include "error_codes.h"
 #include "jugglucotext.h"
+int statusbarheight=0;
+
+int statusbarleft=0,statusbarright=0;
 int startincolors=0;
 int lasttouchedcolor=-1;
 static void printGlString(const char* name, GLenum s) {
@@ -363,24 +366,27 @@ void	initopengl(int started)  {
 
 bool alarmongoing=false;
 
-
+void withbottom() {
+	extern const int maxmenulen;
+	dheight=height-dtop-dbottom;
+	const float maxmenu= (float)dheight/maxmenulen;
+	if(menutextheight>maxmenu)
+		menutextheight=maxmenu;
+	LOGGER("menutextheight=%f\n", menutextheight);
+	}
 void resizescreen(int widthin, int heightin,int initscreenwidth) {
 	width=widthin;
 	height=heightin;
 	LOGGER("resize(%d,%d)\n",width,height);
-	dheight=height-dtop-dbottom,dwidth=width-dleft-dright; //Display area for graph in pixels
+	dwidth=width-dleft-dright; //Display area for graph in pixels
 
 	textheight=density*48;
 	int times=ceil(height/textheight);
 	textheight=height/times;
 	menutextheight=density*48;
 
-	extern const int maxmenulen;
-	const float maxmenu= (float)dheight/maxmenulen;
-	if(menutextheight>maxmenu)
-		menutextheight=maxmenu;
-		
-	LOGGER("menutextheight=%f\n", menutextheight);
+	withbottom();
+
 
 	float facetimelen=2.0f*dwidth/3.0f;
 	LOGGER("facetimelen=%.1f\n",facetimelen);
@@ -750,6 +756,7 @@ static bool glucosepointinfo(time_t tim,uint32_t value,   float posx, float posy
 #endif
 
 		selshown=true;
+		LOGGER("glucosepointinfo %s %ud %f\n",buf,tim,posx);
 		return true;
 		}
 	return false;
@@ -798,7 +805,6 @@ template <class TX,class TY> void showlineScan(NVGcontext* genVG,const ScanData 
 #endif
 ) {
 	bool search=streamsearchtype==(streamsearchtype&searchdata.type);
-//   uint32_t dif=isSibionics?450:pollgapdist;
 #ifdef SI5MIN
    uint32_t dif=isSibionics?8*60:pollgapdist;
 #else
@@ -807,7 +813,6 @@ template <class TX,class TY> void showlineScan(NVGcontext* genVG,const ScanData 
 
 	if(search) {
 		nvgBeginPath(genVG);
-//		nvgStrokeColor(genVG, yellow); nvgFillColor(genVG, yellow);
 		nvgStrokeColor(genVG, *getyellow()); nvgFillColor(genVG, *getyellow());
 		nvgStrokeWidth(genVG, hitStrokeWidth);
 		bool restart=true,first;
@@ -876,6 +881,10 @@ template <class TX,class TY> void showlineScan(NVGcontext* genVG,const ScanData 
 			const uint32_t tim= it->t;
 			const auto glu=it->g*10;
 			const auto posx= transx(tim),posy=transy(glu);
+/*#ifndef NOLOG
+time_t ttim=tim;
+			LOGGER("showlineScan posx=%f tim=%ud %s",posx,tim,ctime(&ttim));
+#endif */
 
 			if(!restart&&tim>late) {
 				nvgStroke(genVG);
@@ -1510,9 +1519,10 @@ void timelines(const displaytime *disp, const LT &transx ,uint32_t nu) {
 	#endif
 		 {
 		 	snprintf(buf,6,"%02d:%02d",stm->tm_hour,mktmmin(stm));
-			nvgText(genVG, dtim,timehight, buf, buf+5);
+			nvgText(genVG, dtim,timehight+statusbarheight, buf, buf+5);
 			}
 		nvgBeginPath(genVG);
+	//	LOGGER("timelines tim=%ud dtim=%f\n",tim,dtim);
 		nvgMoveTo(genVG,dtim ,0) ;
 		nvgLineTo( genVG, dtim,dheight);
 		nvgStroke(genVG);
@@ -1996,13 +2006,13 @@ LOGGER("showbluevalue %zd\n",used.size());
 			datlen+=snprintf(tbuf+datlen,maxbuf-datlen," IOB: %.2f",iob);
 			}
 #endif */
-		nvgText(genVG, timex,datehigh, tbuf, tbuf+datlen);
+		nvgText(genVG, timex,datehigh+statusbarheight, tbuf, tbuf+datlen);
 
 #ifndef WEAROS	
 	if( settings->data()->IOB) {
 		double getiob(uint32_t);
 		int len=snprintf(tbuf,maxbuf,"IOB: %.2f",getiob(nu));
-		nvgText(genVG, timex,2*smallfontlineheight, tbuf,tbuf+len);
+		nvgText(genVG, timex,2*smallfontlineheight+statusbarheight, tbuf,tbuf+len);
 		}
 #endif
 
@@ -2083,29 +2093,32 @@ uint32_t showtime=
 	#endif
 
 		LOGGER("displaytime %s\n",tbuf);
-		nvgText(genVG,xpos ,datehigh, tbuf, NULL);
+		nvgText(genVG,xpos ,datehigh+statusbarheight, tbuf, NULL);
 #ifndef WEAROS
 		if(nu>=endtime) {
 			daystr(endtime,tbuf);
 			nvgTextAlign(genVG,NVG_ALIGN_RIGHT|NVG_ALIGN_TOP);
-			nvgText(genVG, dwidth+dleft,datehigh, tbuf, NULL);
+			nvgText(genVG, dwidth+dleft,datehigh+statusbarheight, tbuf, NULL);
 			}
 #endif
 		}
 	}
-auto gettrans(uint32_t starttime,uint32_t endtime) {
-	double interval=endtime-starttime;
-	const double usedleft=0.0;
-	const double usedwidth=dwidth-2*usedleft;
+static auto gettrans(uint32_t starttime,uint32_t endtime) {
+
 	const double usedtop=pointRadius;
 	const double usedheight=dheight-2*usedtop;
 	const int gmax=gmin+grange;
-	const double xscale=usedwidth/interval,xmove=usedleft-((double)starttime)*usedwidth/interval;
 	const double yscale= -usedheight/grange,ymove= usedtop+usedheight*gmax/grange;
+   const auto transy=[yscale,ymove](uint32_t y) {return y*yscale + ymove;};
 
-	const auto transx=[xscale,xmove](uint32_t x) {return x*xscale + xmove;};
-       	const auto transy=[yscale,ymove](uint32_t y) {return y*yscale + ymove;};
-//	return pair<decltype(transx),decltype
+/*	const double xscale=usedwidth/interval,xmove=usedleft-((double)starttime)*usedwidth/interval;
+	const auto transx=[xscale,xmove](uint32_t x) {return x*xscale + xmove;}; */
+
+	double interval=endtime-starttime;
+	const double xscale=dwidth/interval;
+    const double doublestart=starttime;
+	const auto transx=[xscale,doublestart](uint32_t x) {return (x-doublestart)*xscale;};
+
 	return make_pair(transx,transy);
 	}
 void showlines(int gm,int gmax) {
@@ -2163,7 +2176,7 @@ int displaycurve(NVGcontext* genVG,time_t nu) {
 			sleep(1);
 			return 0;
 			}
-        	LOGGER("%s\n",his->othershortsensorname()->data());
+        	//LOGGER("%s\n",his->othershortsensorname()->data());
 		std::span<const ScanData> 	scan;
 		//if(showscans) 
 		{
@@ -4054,7 +4067,7 @@ LOGAR("showtext");
 	 float yrand=randsize*density;
 //	float menutextheight=density*48;
 	float menuplace= dwidth/ maxmenu;
-	float x=xrand+menu*menuplace,starty=yrand,y=starty;
+	float x=xrand+menu*menuplace,starty=yrand+statusbarheight,y=starty;
 
 	nvgTextAlign(genVG,NVG_ALIGN_LEFT|NVG_ALIGN_TOP);
 
@@ -4263,7 +4276,8 @@ static int64_t doehier(int menu,int item) {
 				case 5: showmeals=!showmeals;return -1ll;
 				extern void setinvertcolors(bool val) ;
 
-				case 6: invertcolors=!invertcolors; setinvertcolors(invertcolors) ; return -1ll;
+				case 6: invertcolors=!invertcolors; setinvertcolors(invertcolors) ; return menu+invertcolors*0x10;
+            break;//return -1ll;
 				};break;
 		case 3: {
 		nrmenu=0;

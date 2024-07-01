@@ -20,6 +20,7 @@
 
 
 package tk.glucodata;
+import static android.content.Context.RECEIVER_EXPORTED;
 import static tk.glucodata.Log.doLog;
 
 import android.content.BroadcastReceiver;
@@ -84,7 +85,7 @@ static private watchdrip receiver=null;
 static void register() {
 	if(receiver==null)
 		receiver=new watchdrip();
-	Applic.app.registerReceiver(receiver, new IntentFilter("com.eveningoutpost.dexdrip.watch.wearintegration.BROADCAST_SERVICE_RECEIVER"));
+	Applic.app.registerReceiver(receiver, new IntentFilter("com.eveningoutpost.dexdrip.watch.wearintegration.BROADCAST_SERVICE_RECEIVER"),RECEIVER_EXPORTED);
 	}
 static void unregister() {
 	if(receiver!=null)

@@ -121,7 +121,7 @@ void mkchangelabel(MainActivity context,Runnable onsave,View parent) {
 			var width=getscreenwidth(context);
 			if(width>w)
 				  l.setX(( width- w) *.6f);
-                    l.setY(0);
+          l.setY(MainActivity.systembarTop);
 			return new int[] {w,h};
                 }, views);
 	if(Natives.staticnum()) {
@@ -250,6 +250,9 @@ void    mklabellayout(View parent ) {
 	Layout butlay=new Layout(context,new View[]{menulabel,spinner},new View[] {delete},new View[]{help},new View[]{addnew},new View[]{ok});
 	butlay.setLayoutParams(new ViewGroup.LayoutParams(   ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
 		recycle.setLayoutParams(new ViewGroup.LayoutParams(   ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
+      butlay.setPadding(0,MainActivity.systembarTop/2,MainActivity.systembarRight,MainActivity.systembarBottom);
+      recycle.setPadding(MainActivity.systembarLeft,MainActivity.systembarTop,0,MainActivity.systembarBottom);
     final ViewGroup  labellayout=new Layout(context,(x,w,h)->{
     			hideSystemUI();
 			return new int[] {w,h};

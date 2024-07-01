@@ -43,8 +43,17 @@ struct mealposition {
 	int mealbase;
 	};
 extern vector<mealposition> mealpos;
+
+extern int statusbarheight;
 inline float	numtypeheight(const int type)  {
-		float schuif=smallfontlineheight*3;
+		float schuif=statusbarheight+smallfontlineheight*
+#ifdef WEAROS
+   3.8
+#else
+      3.25
+#endif
+
+      ;
 		return dtop+schuif+(dheight-schuif-smallfontlineheight/2)*(numheights[type])/(shownlabels-1);
 		}
 inline bool nearby(float dx,float dy) {

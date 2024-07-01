@@ -604,7 +604,7 @@ private static void resendDateDialog(MainActivity context,View parent) {
     	var  layout=new Layout(context,(x,w,h)->{
 			var width=GlucoseCurve.getwidth();
 			x.setX((width-w)/2);
-			x.setY(0);
+			x.setY(MainActivity.systembarTop);
 			return new int[] {w,h};
 	},new View[]{helpbutton,sendfrom},new View[]{datebutton,timebutton},new View[]{ok,cancel});
 	timebutton.setOnClickListener(v-> {
@@ -717,11 +717,12 @@ private static void getAccountid(MainActivity context, 	Predicate<Boolean> getge
 		var width=GlucoseCurve.getwidth();
                         if(w>=width||h>=height) {
                                 lay.setX(0);
-                                lay.setY(0);
                                 }
                         else {
-                                lay.setX((width-w)/2); lay.setY(0);
+                                lay.setX((width-w)/2); 
                                 };
+
+			lay.setY(MainActivity.systembarTop);
                         return new int[] {w,h};}, new View[]{manual,editid,help},new View[]{fromlibreview,close,save});
 
       layout.setBackgroundResource(R.drawable.dialogbackground);
@@ -829,11 +830,11 @@ var space=getlabel(act,"        ");
 		var width=GlucoseCurve.getwidth();
                         if(w>=width||h>=height) {
                                 lay.setX(0);
-                                lay.setY(0);
                                 }
                         else {
-                                lay.setX((width-w)/2); lay.setY(0);
+                                lay.setX((width-w)/2); 
                                 };
+			lay.setY(MainActivity.systembarTop);
                         return new int[] {w,h};}, new View[]{emaillabel,email},new View[]{passlabel,editpass,russia},new View[]{clear,accountid,getaccountid},new View[]{statusview},new View[]{sendtolibreview,librecurrent,libreisviewed,numbers},new View[]{send,help,cancel,ok});
 
 	clear.setOnClickListener(v->  {

@@ -142,15 +142,16 @@ static byte[] getuspatch(NfcV nfc, byte[] uid, int start, int len) {
 static private final int scanner(NfcV nfc, byte[] uid, byte b, byte[] uitar) {
         try {
 	 int numb=0;
+	final byte always7=uid[6];
 	if(newVersion) {
-	    byte[] extra = issuenfc(nfc, new byte[]{2, -95, 7, 34});
+	    byte[] extra = issuenfc(nfc, new byte[]{2, -95, always7, 34});
 	    if(!goodnfc(extra))  {
 		Log.e(LOG_ID,"new byte[]{2, -95, 7, 34}) failed");
 		return -1;
 		}
 	    numb = (extra[3] | (extra[4] << 8)) & 0xFFFF;
 	    }
-         byte[] a = issuenfc(nfc, new byte[]{2, -95, 7, 32});
+         byte[] a = issuenfc(nfc, new byte[]{2, -95, always7, 32});
         if(goodnfc(a)) {
 	        Log.d(LOG_ID,"scanner goodnfc");
         	byte[] result = copyOfRange(a, 1, a.length);
@@ -287,6 +288,36 @@ static private boolean lastenaable(int i, byte[] bArr, byte[] bArr2, byte[] bArr
 		return true;
 		}
     }
+private  static boolean inactivate(NfcV nfc,byte[] uid) {
+        byte[] outarv2=new  byte[0x13];
+        byte value=27;
+        Log.d(LOG_ID,"activate");
+        int resv1=scanner(nfc,uid, value, outarv2);
+      if(resv1<0)	return false;
+      final byte[] resp1=issuenfc(nfc,outarv2);      
+      final boolean res=resp1!=null &&(v2v1streaming(resv1,0, Arrays.copyOfRange(resp1, 1, resp1.length), new byte[5]) > 0);
+       errorP1(resv1);
+       return res;
+	}
+
+static boolean activate(final Tag tag) {
+	try {
+		byte[] uid=tag.getId();
+		final NfcV nfc = NfcV.get(tag);
+       nfc.connect();
+		boolean res=inactivate(nfc, uid);
+		nfc.close();
+		return res;
+		}
+  catch (Throwable error) {
+		String mess=error!=null?error.getMessage():null;
+		if(mess==null) {
+			mess="error";
+			}
+	       Log.stack(LOG_ID ,mess,error);
+		}
+	return false;
+	}
 private static boolean gen2enablestreaming(NfcV nfc,byte[] uid) {
 	byte[] outarv2=new  byte[0x13];
 	byte value=0x1e;
@@ -330,12 +361,12 @@ static boolean gen2enablestreaming(final Tag tag) {
 	try {
 		byte[] uid=tag.getId();
 		final NfcV nfc = NfcV.get(tag);
-                nfc.connect();
+       nfc.connect();
 		boolean res=gen2enablestreaming(nfc, uid);
 		nfc.close();
 		return res;
 		}
-        catch (Throwable error) {
+  catch (Throwable error) {
 		String mess=error!=null?error.getMessage():null;
 		if(mess==null) {
 			mess="error";

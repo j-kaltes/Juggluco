@@ -118,6 +118,8 @@ public static void    mklayout(MainActivity context,int night,CheckBox donum,int
 
 	recycle.setLayoutParams(new ViewGroup.LayoutParams(   ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
     final ViewGroup  librenumlayout=new Layout(context,(x,w,h)->{ hideSystemUI(); return new int[] {w,h}; },new View[] {recycle},new View[]{help,sendnumbers,close});
+
+	librenumlayout.setPadding(MainActivity.systembarLeft,MainActivity.systembarTop,MainActivity.systembarRight,MainActivity.systembarBottom);
 	var adapt = new LibreNumberAdapter(librenumlayout,sendnumbers,night);
 	recycle.setAdapter(adapt);
 

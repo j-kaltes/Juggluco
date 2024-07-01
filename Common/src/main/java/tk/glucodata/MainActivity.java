@@ -23,9 +23,12 @@ package tk.glucodata;
 
 
 import static android.content.Intent.EXTRA_PERMISSION_GROUP_NAME;
+import static android.graphics.Color.BLUE;
+import static android.graphics.Color.WHITE;
 import static android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS;
 import static android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM;
 import static android.view.View.GONE;
+import static androidx.core.view.ViewCompat.setOnApplyWindowInsetsListener;
 import static tk.glucodata.Applic.TargetSDK;
 import static tk.glucodata.Applic.app;
 import static tk.glucodata.Applic.explicit;
@@ -39,6 +42,7 @@ import static tk.glucodata.Floating.setfloatglucose;
 import static tk.glucodata.Floating.shoulduseadb;
 import static tk.glucodata.GlucoseCurve.STEPBACK;
 import static tk.glucodata.Log.showbytes;
+import static tk.glucodata.Natives.getInvertColors;
 import static tk.glucodata.Natives.hasSibionics;
 import static tk.glucodata.Natives.wakelibreview;
 import static tk.glucodata.help.hidekeyboard;
@@ -66,15 +70,21 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.os.ParcelFileDescriptor;
 import android.provider.Settings;
+import android.text.format.DateFormat;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.accessibility.AccessibilityManager;
 import android.widget.Toast;
 
+import androidx.activity.EdgeToEdge;
 import androidx.annotation.UiThread;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.core.graphics.Insets;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -132,6 +142,11 @@ boolean askNotify() {
 	explicit(this);
    return true;
 	}
+public static int systembarTop=0;
+public static int systembarBottom=0;
+public static int systembarLeft=0;
+public static int systembarRight=0;
+//public static int navigationbarLeft=0;
 void startdisplay() {
    Log.i(LOG_ID,"startdisplay");
    Applic app=	(Applic)getApplication();
@@ -139,6 +154,30 @@ void startdisplay() {
 	if(Applic.Nativesloaded)
 	    app.needsnatives() ;
 	curve = new GlucoseCurve(this);
+   if(!isWearable) {
+      if(Build.VERSION.SDK_INT >= 30) {
+         setOnApplyWindowInsetsListener(curve,(v, windowInsets) -> {
+          Insets insets = /*windowInsets.getInsets(WindowInsetsCompat.Type.statusBars());
+            Log.i(LOG_ID, "statusBars: left="+insets.left+ " right="+insets.right+ " bottom="+insets.bottom+ " top="+insets.top);
+
+           insets = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars());
+            Log.i(LOG_ID, "navigationBars: left="+insets.left+ " right="+insets.right+ " bottom="+insets.bottom+ " top="+insets.top); */
+           insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
+            Log.i(LOG_ID, "systemBars: left="+insets.left+ " right="+insets.right+ " bottom="+insets.bottom+ " top="+insets.top);
+          Natives.systembar(insets.left, insets.top, insets.right, insets.bottom);
+
+         systembarLeft=insets.left;
+         systembarTop=insets.top;
+         systembarRight=insets.right;
+         systembarBottom=insets.bottom;
+
+          requestRender();
+            return windowInsets;
+      });
+    // showSystemBarsAppearance();
+      }
+      lightBars(!getInvertColors( ));
+      }
 
 	setContentView(curve);
 
@@ -167,7 +206,7 @@ void startdisplay() {
 	var lang=getString(R.string.language);
 	Log.i(LOG_ID,"curlang="+Applic.curlang+" newlang="+lang+" locale="+util.getlocale().getLanguage());
 	if(!lang.equals(Applic.curlang)) {
-		Natives.setlocale(lang,(tk.glucodata.Applic.hour24=android.text.format.DateFormat.is24HourFormat(Applic.app)));
+		Natives.setlocale(lang,(Applic.hour24= DateFormat.is24HourFormat(Applic.app)));
 		Applic.curlang=lang;
 		if(Talker.istalking())	
 			SuperGattCallback.newtalker(this);
@@ -231,10 +270,64 @@ private void supportLTR() {
 private void supportRTL() {
 	setDirection(new Locale("iw"));
 	} */
+public void lightBars(boolean light) {
+      if(Build.VERSION.SDK_INT >= 30) {
+         var win=getWindow();
+         var view= win.getDecorView();
+         WindowInsetsControllerCompat windowInsetsController =WindowCompat.getInsetsController(win, view);
+         windowInsetsController.setAppearanceLightStatusBars(light);
+         windowInsetsController.setAppearanceLightNavigationBars(light);
+    // win.setNavigationBarColor(Color.TRANSPARENT);
+//     win.setNavigationBarColor(BLUE);
+//   Log.i(LOG_ID,"getNavigationBarColor()="+win.getNavigationBarColor());
+ //  Log.i(LOG_ID,"isNavigationBarContrastEnforced() "+win.isNavigationBarContrastEnforced());
+      }
 
+   }
+//s/android.view.WindowInsetsController.\([A-Z_]*\),/if((status\&android.view.WindowInsetsController.\1)!=0)  {message+=" "+"\1";};/g
+//s/\([A-Z_]*\),/if((status\&android.view.WindowInsetsController.\1)!=0)  {message+=" "+"\1";};/g
+	/*
+void showSystemBarsAppearance() {
+	if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+		var win = getWindow();
+		WindowInsetsController windowInsetsController = null;
+		windowInsetsController = win.getInsetsController();
+		final int status = windowInsetsController.getSystemBarsAppearance();
+		String message = "getSystemBarsAppearance()="+String.format("%x",status);
+//if((status&android.view.WindowInsetsController.APPEARANCE_OPAQUE_STATUS_BARS)!=0)  {message+=" "+"APPEARANCE_OPAQUE_STATUS_BARS";}; if((status&android.view.WindowInsetsController.APPEARANCE_OPAQUE_NAVIGATION_BARS)!=0)  {message+=" "+"APPEARANCE_OPAQUE_NAVIGATION_BARS";}; if((status&android.view.WindowInsetsController.APPEARANCE_LOW_PROFILE_BARS)!=0)  {message+=" "+"APPEARANCE_LOW_PROFILE_BARS";};
+		if((status&android.view.WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS)!=0)  {message+=" "+"APPEARANCE_LIGHT_STATUS_BARS";};
+		if((status&android.view.WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS)!=0)  {message+=" "+"APPEARANCE_LIGHT_NAVIGATION_BARS";};
+		if ((status & android.view.WindowInsetsController.APPEARANCE_TRANSPARENT_CAPTION_BAR_BACKGROUND) != 0) {
+			message += " " + "APPEARANCE_TRANSPARENT_CAPTION_BAR_BACKGROUND";
+		}
+		;
+		if ((status & android.view.WindowInsetsController.APPEARANCE_LIGHT_CAPTION_BARS) != 0) {
+			message += " " + "APPEARANCE_LIGHT_CAPTION_BARS";
+		}
+		;
+		;
+		Log.i(LOG_ID, message);
+	}
+   } */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+if(Build.VERSION.SDK_INT >= 30)  {
+        if(!isWearable)
+            EdgeToEdge.enable(this);
+            }
+
+
+//        WindowCompat.setDecorFitsSystemWindows(getWindow(), true);
+//if(Build.VERSION.SDK_INT >= 21) 
+{
+        /*    Window window = this.getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.setStatusBarColor(WHITE); */
+        }
+
+
 		thisone=this;
 	/*
 	if(getRTL())
@@ -333,16 +426,26 @@ void handleIntent(Intent intent) {
 		help.help(R.string.healthpermission,this);
 		return;
 		}
-      if("android.intent.action.VIEW_PERMISSION_USAGE".intern()==action)  {
-	final var groupname=extras.getString(EXTRA_PERMISSION_GROUP_NAME);
-	switch(groupname) {
-		case "android.permission-group.HEALTH"->help.help(R.string.healthpermission,this);
-		case "android.permission-group.NOTIFICATIONS"-> help.help(R.string.notificationpermission,this);
-		case "android.permission-group.NEARBY_DEVICES"-> help.help(R.string.nearbypermission,this);
-		case "android.permission-group.CAMERA"-> help.help(R.string.camerapermission,this);
-		default-> Log.i(LOG_ID,"EXTRA_PERMISSION_GROUP_NAME="+groupname); 
-		};
-	return;
+	if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+      if("android.intent.action.VIEW_PERMISSION_USAGE".intern()==action) {
+		  if (extras != null) {
+			  final String groupname;
+			  groupname = extras.getString(EXTRA_PERMISSION_GROUP_NAME);
+			  switch (groupname) {
+				  case "android.permission-group.HEALTH" ->
+						  help.help(R.string.healthpermission, this);
+				  case "android.permission-group.NOTIFICATIONS" ->
+						  help.help(R.string.notificationpermission, this);
+				  case "android.permission-group.NEARBY_DEVICES" ->
+						  help.help(R.string.nearbypermission, this);
+				  case "android.permission-group.CAMERA" ->
+						  help.help(R.string.camerapermission, this);
+				  default -> Log.i(LOG_ID, "EXTRA_PERMISSION_GROUP_NAME=" + groupname);
+			  }
+			  ;
+			  }
+	  		}
+			return;
       	}
 
 //       else hideSystem=true;
@@ -1059,8 +1162,8 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
                   //TODO error
                   return;
                   }
-               try {
-                  var input=new FileInputStream( getContentResolver().openFileDescriptor(uri, "r").getFileDescriptor());
+               try(var filedescr= getContentResolver().openFileDescriptor(uri, "r")){
+                  var input=new FileInputStream(filedescr.getFileDescriptor());
                   savekey(input,keys[requestCode&~PRIVATE_REQUEST]);
                   }
                 catch(Throwable th) {
@@ -1090,8 +1193,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 						return;
 					}
 					int fd = -1;
-					try {
-						ParcelFileDescriptor parcelFileDescriptor = getContentResolver().openFileDescriptor(uri, "w");
+					try(ParcelFileDescriptor parcelFileDescriptor = getContentResolver().openFileDescriptor(uri, "w")) {
 						if (parcelFileDescriptor != null)
 							fd = parcelFileDescriptor.detachFd();
 						else {
@@ -1126,11 +1228,16 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 			if (resultCode == Activity.RESULT_OK) {
 				try {
 					Uri uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
-					String uristr = uri.toString();
-					if (uristr != null) {
-						int kind = requestCode & 0xF;
-						tk.glucodata.RingTones.setring(kind, uristr);
-					}
+					if(uri==null) {
+							Log.i(LOG_ID,"getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI)==null");
+						}
+					else {
+						String uristr = uri.toString();
+						if (uristr != null) {
+							int kind = requestCode & 0xF;
+							tk.glucodata.RingTones.setring(kind, uristr);
+						}
+						}
 				} catch(Throwable e) {
 						Log.stack(LOG_ID,e);
 				}

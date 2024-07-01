@@ -51,6 +51,7 @@ import static android.widget.Spinner.MODE_DIALOG;
 import static android.widget.Spinner.MODE_DROPDOWN;
 import static tk.glucodata.Applic.isWearable;
 import static tk.glucodata.Applic.usedlocale;
+import static tk.glucodata.Natives.getInvertColors;
 import static tk.glucodata.Natives.getNumAlarm;
 import static tk.glucodata.NumberView.avoidSpinnerDropdownFocus;
 import static tk.glucodata.RingTones.EnableControls;
@@ -111,6 +112,7 @@ if(genlayout==null) {
 	   }
 	else
 	 views=new View[][]{new View[]{recycle},new View[]{ring,help,newone,ok}};
+	act.lightBars(!getInvertColors( ));
 	genlayout= new Layout(act, (l, w, h) -> {
 		if(!isWearable) {
 			var height=GlucoseCurve.getheight();
@@ -162,6 +164,7 @@ act.setonback( () -> {
 			}
 		removeContentView(genlayout);
 		NumAlarm.handlealarm(act.getApplication());
+   	act.lightBars(false);
 		});
 }
 
@@ -332,7 +335,7 @@ void  mkitemlayout(Activity act,View parent) {
 		if(isWearable&&height>h) {
 			l.setY((height-h)/2);
 		}else
-			l.setY(0);
+			l.setY(MainActivity.systembarTop);
 		var width=GlucoseCurve.getwidth();
 		if(width>w)
 			l.setX((width-w)/2);

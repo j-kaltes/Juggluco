@@ -68,6 +68,7 @@ import static tk.glucodata.Applic.backgroundcolor;
 import static tk.glucodata.Applic.isWearable;
 import static tk.glucodata.BuildConfig.isReleaseID;
 import static tk.glucodata.Natives.getBlueMessage;
+import static tk.glucodata.Natives.getInvertColors;
 import static tk.glucodata.Natives.getWifi;
 import static tk.glucodata.Natives.getbackupHasHostname;
 import static tk.glucodata.Natives.isWearOS;
@@ -538,6 +539,11 @@ void makehostview(MainActivity act) {
 
 		}, new View[]{Portlabel, portedit, checkhostname,IPslabel, detect}, editIPs, new View[]{testip, haslabel, label},
 				new View[]{passiveonly, activeonly, both}, new View[]{receive, Sendlabel, Amounts, Scans, Stream, restore}, fromrow, new View[]{Password, editpass, visible}, new View[]{delete, Close, reset, Help, save});
+
+       // layout.setPadding(0, MainActivity.systembarTop/2,0,0);
+
+  	layout.setPadding(MainActivity.systembarLeft,MainActivity.systembarTop/2,MainActivity.systembarRight,MainActivity.systembarBottom);
+
 		}
 	Close.setOnClickListener(v-> act.doonback());
 	hostview.addView(layout);
@@ -684,9 +690,9 @@ if(!isWearable)
 		}
 	sethtml(info, mirrorStatus(pos));
 	Layout layout=isWearable?(new Layout(act,new View[]{modify,deactive}, new View[]{info},new View[]{close})):new Layout(act, (l, w, h) -> {
-		int width=GlucoseCurve.getwidth();
-		l.setX(width-w);
-		l.setY(0);
+
+		l.setX(GlucoseCurve.getwidth()-MainActivity.systembarRight-w);
+		l.setY(MainActivity.systembarTop);
 		final int[] lret={w,h};
 		return lret;
 	},new View[]{modify,deactive,close} , new View[]{info});
@@ -802,7 +808,11 @@ View blpan= (thishost[2]==null)?new Space(act):getlabel(act,"bt-pan: "+thishost[
 	else {
 		
 		lay=new Layout(act, new View[]{ip,blpan,p2p,labport,portview,Save},new View[]{recycle},new View[] {battery,Help,alarms,staticnum},errorrow,new View[]{Sync,reinit,hosts,Cancel});
+
+
+  	lay.setPadding(MainActivity.systembarLeft,MainActivity.systembarTop/2,MainActivity.systembarRight,MainActivity.systembarBottom);
 		}
+
 	Save.setOnClickListener(v->  {
 		Natives.setreceiveport(portview.getText().toString());
 		Save.setVisibility(GONE);
@@ -815,6 +825,7 @@ View blpan= (thishost[2]==null)?new Space(act):getlabel(act,"bt-pan: "+thishost[
 	recycle.setAdapter(hostadapt);
 	recycle.setLayoutParams(new ViewGroup.LayoutParams(  MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 	Runnable closerun= ()-> {
+   	act.lightBars(!getInvertColors( ));
 		if(hostview!=null)
 			removeContentView(hostview);
 		hidekeyboard(act);
@@ -838,12 +849,15 @@ View blpan= (thishost[2]==null)?new Space(act):getlabel(act,"bt-pan: "+thishost[
 
 	if(!isWearable&&android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
 		battery.setText(R.string.dozemode);
-		battery.setOnClickListener(v-> Battery.batteryscreen(act,lay));
+		battery.setOnClickListener(v-> {
+         Battery.batteryscreen(act,lay);
+         });
 		}
 	else {
 		battery.setVisibility(GONE);
 	}
 	lay.setBackgroundColor(Applic.backgroundcolor);
+   act.lightBars(false);
 	act.addContentView(lay, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT));
 	}
 

@@ -42,6 +42,7 @@ import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static tk.glucodata.Applic.isWearable;
 import static tk.glucodata.MainActivity.IGNORE_BATTERY_OPTIMIZATION_SETTINGS;
+import static tk.glucodata.Natives.getInvertColors;
 import static tk.glucodata.settings.Settings.removeContentView;
 import static tk.glucodata.util.getbutton;
 import static tk.glucodata.util.sethtml;
@@ -70,12 +71,24 @@ if(!isWearable) {
 		final PowerManager pm = (PowerManager)context.getSystemService(Activity.POWER_SERVICE);
 		boolean isIgnoringBatteryOptimizations = pm.isIgnoringBatteryOptimizations(context.getPackageName());
 		battery.setChecked(isIgnoringBatteryOptimizations);
-		final Layout lay=new Layout(context, (l, w, h) -> new int[] {w,h}, new View[]{info},isWearable?new View[]{Close}:new View[]{battery,Close});
+		context.lightBars(false);
+		final Layout lay=new Layout(context, (l, w, h) -> {
+/*			l.setY(MainActivity.systembarTop);
+			var newh=h-MainActivity.systembarTop; */
+			return new int[] {w,h}; }
+				, new View[]{info}
+			,isWearable?new View[]{Close}:new View[]{battery,Close});
+		lay.setPadding(MainActivity.systembarLeft,MainActivity.systembarTop,MainActivity.systembarRight,MainActivity.systembarBottom);
+
+
 		Runnable closerun=()-> {
 			if(parent!=null)
 				parent.setVisibility(VISIBLE);
 			lay.setVisibility(GONE);
 			removeContentView(lay); 
+
+			if(!context.showui)
+   				context.lightBars(!getInvertColors( ));
 			};
 		context.setonback(closerun);
 		battery.setOnClickListener(v-> {

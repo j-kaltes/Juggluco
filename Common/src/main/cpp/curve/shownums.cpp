@@ -38,11 +38,11 @@ float colwidth() const {
 	};
 	} numcontrol;
 
-
+extern int statusbarheight;
 template <typename F>
 void columnfromabove(NVGcontext* vg,const F &show) {
-	float miny=dtop+textheight*.35;
-	int nr=dheight/textheight;
+	float miny=dtop+textheight*.35+statusbarheight;
+	int nr=(dheight-statusbarheight)/textheight;
 	for(float y=miny;nr--&&show(y);y+=textheight) {
 		}
 
@@ -50,7 +50,7 @@ void columnfromabove(NVGcontext* vg,const F &show) {
 	
 template <typename F>
 void columnfrombelow(NVGcontext* vg,int nr,const F &show) {
-	float miny=dtop+textheight*.35;
+	float miny=dtop+textheight*.35+statusbarheight;
 	float maxy= miny+(nr-1)*textheight;
 
 	for(float y=maxy;nr--&&show(y);y-=textheight) {
@@ -84,7 +84,7 @@ void numscreen(NVGcontext* vg, const F & col)  {
 template <typename F>
 void numscreenback(NVGcontext* vg, const F & col)  {
 	initcolumns(vg);
-	int nr=dheight/textheight;
+	int nr=(dheight-statusbarheight)/textheight;
 
 	if(nrcolumns==1) {
 		col(vg,nr,dleft,dleft+dwidth-numcontrol.width-smallsize);

@@ -35,6 +35,7 @@ import static android.widget.Spinner.MODE_DROPDOWN;
 import static androidx.core.os.LocaleListCompat.getEmptyLocaleList;
 import static tk.glucodata.Applic.isWearable;
 import static tk.glucodata.Backup.getnumedit;
+import static tk.glucodata.Natives.getInvertColors;
 import static tk.glucodata.Natives.getRTL;
 import static tk.glucodata.Natives.setthreshold;
 import static tk.glucodata.NumberView.avoidSpinnerDropdownFocus;
@@ -139,6 +140,7 @@ void EnableIntentScanning(boolean val) {
 	}
 static private Settings thisone=null;
 public static void set(MainActivity act) {
+	act.lightBars(false);
 	act.showui=true;
     	act.showSystemUI();
 	(thisone=new Settings()).makesettings(act);
@@ -154,6 +156,7 @@ private void makesettingsin(MainActivity act) {
 
 		hidekeyboard();
 		finish();
+   		act.lightBars(!getInvertColors( ));
 		if(tk.glucodata.Menus.on)
 			tk.glucodata.Menus.show(activity);
 
@@ -202,12 +205,11 @@ void finish() {
 	thisone=null;
 
 	activity.showui=false;
+//   activity.hideSystemUI();
 	Applic.app.getHandler().postDelayed( ()->{
 				activity.hideSystemUI();
 				},1);
 		activity.requestRender();
-//	Applic.wakemirrors();
-//	activity=null;
 	}
 
 //    Button deletelabel;
@@ -397,6 +399,7 @@ new View[]{isvalue},new View[]{ringisvalue,Cancel},new View[]{usealarm},new View
 		int[] ret={w,h};
 		return ret;
 		},views);
+  layout.setPadding(MainActivity.systembarLeft,MainActivity.systembarTop,MainActivity.systembarRight,MainActivity.systembarBottom);
 	var scroll=new ScrollView(context);	
 	scroll.addView(layout);
 	scroll.setFillViewport(true);
@@ -573,6 +576,8 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 		v->{
 	   	context.poponback();
 	       hidekeyboard();
+
+   		context.lightBars(!getInvertColors( ));
 		finish();
 		if(tk.glucodata.Menus.on)
 			tk.glucodata.Menus.show(context);
@@ -764,6 +769,8 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 		   context.poponback();
 		    hidekeyboard();
 		    finish();
+
+   		context.lightBars(!getInvertColors( ));
 		if(tk.glucodata.Menus.on) tk.glucodata.Menus.show(context);
 		if(spinpos[0]!=startspinpos) {
             var newlocale=(spinpos[0]==0)?getEmptyLocaleList():LocaleListCompat.forLanguageTags(supportedlanguages.get(spinpos[0]));
@@ -871,6 +878,7 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 		
 		return ret;
 		},views);
+
 	thelayout[0]=lay;
 	if(!isWearable) {
 		final boolean[] donothing={false};
@@ -952,7 +960,10 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 
 	final	int laywidth=MATCH_PARENT;
 	final   int pad=(int)(tk.glucodata.GlucoseCurve.metrics.density*7.0);
-	   lay.setPadding(pad,pad*2,pad,pad);
+//	   lay.setPadding(pad,pad*2,pad,pad);
+	   lay.setPadding(MainActivity.systembarLeft+pad,MainActivity.systembarTop,pad+MainActivity.systembarRight,pad+MainActivity.systembarBottom);
+
+  // scroll.setPadding(0,10*MainActivity.systembarTop,0,0);
 //		lay.setPadding(pad,pad*2,pad,pad*6);
 
 	if(isWearable) {

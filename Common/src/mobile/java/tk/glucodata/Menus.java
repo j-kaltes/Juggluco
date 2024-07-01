@@ -66,6 +66,7 @@ import static android.view.View.VISIBLE;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static tk.glucodata.Applic.isWearable;
+import static tk.glucodata.Natives.getInvertColors;
 import static tk.glucodata.Natives.getshowscans;
 import static tk.glucodata.Natives.getsystemui;
 import static tk.glucodata.Natives.setsystemui;
@@ -85,7 +86,9 @@ static public void show(MainActivity act) {
 	View view = flater.inflate(R.layout.menus, null, false);
 	view.setAccessibilityDelegate(Layout.accessDeli);
         view.setBackgroundColor( Applic.backgroundcolor);
+      act.lightBars(false);
 	act.setonback(() -> {
+   		act.lightBars(!getInvertColors( ));
 			   Log.i(LOG_ID,"onback");
 			   on=false;
 			removeContentView(view);
@@ -102,12 +105,15 @@ static public void show(MainActivity act) {
         var menusview=view.findViewById(R.id.menus);menusview.setOnClickListener(v ->{
 				act.poponback();
 			   on=false;
+
+   		act.lightBars(!getInvertColors( ));
 			removeContentView(view);
 				act.requestRender();
 		}); 
         var watchview=view.findViewById(R.id.watch);watchview.setOnClickListener(v ->{
 
 				if(!isWearable) {
+   		   act.lightBars(!getInvertColors( ));
 					removeContentView(view);
 					tk.glucodata.Watch.show(act);
 					}
@@ -115,6 +121,7 @@ static public void show(MainActivity act) {
 	}); 
         var sensorview=view.findViewById(R.id.sensor);sensorview.setOnClickListener(v ->{
 
+   		   act.lightBars(!getInvertColors( ));
 				removeContentView(view);
 			       new bluediag(act);
 		}); 
@@ -142,6 +149,7 @@ static public void show(MainActivity act) {
 		var c=Applic.app.curve;
 		  if(c!=null) {
 			  Log.i(LOG_ID,"EXPORT");
+   		   act.lightBars(!getInvertColors( ));
 		     removeContentView(view);
 		     c.dialogs.showexport(act,c.getWidth(),c.getHeight()); 
 		     }
@@ -159,6 +167,7 @@ static public void show(MainActivity act) {
 					else {
 						var c=Applic.app.curve;
 						if (c != null) {
+   		         act.lightBars(!getInvertColors( ));
 							removeContentView(view);
 							c.numberview.addnumberview(act);
 							if (!smallScreen)
@@ -170,6 +179,7 @@ static public void show(MainActivity act) {
         var listview=view.findViewById(R.id.list);listview.setOnClickListener(v -> {
 				var c = Applic.app.curve;
 				if (c != null) {
+   		         act.lightBars(!getInvertColors( ));
 					removeContentView(view);
 					Natives.makenumbers();
 					act.requestRender();
@@ -180,6 +190,7 @@ static public void show(MainActivity act) {
         var statisticsview=view.findViewById(R.id.statistics);statisticsview.setOnClickListener(v ->{
 
 			if(Natives.makepercentages()) {
+   		         act.lightBars(!getInvertColors( ));
 				removeContentView(view);
 				act.requestRender();
 				Stats.mkstats(act);
@@ -197,6 +208,7 @@ static public void show(MainActivity act) {
 
         var lastscanview=view.findViewById(R.id.lastscan);lastscanview.setOnClickListener(v ->{
 		if(Natives.showlastscan()) {
+               act.lightBars(!getInvertColors( ));
 			removeContentView(view);
 			act.requestRender();
 			}
@@ -238,9 +250,10 @@ static public void show(MainActivity act) {
 
 	Natives.setInvertColors(isChecked);
 	});
-	darkmodeview.setChecked( Natives.getInvertColors());
+	darkmodeview.setChecked( getInvertColors());
         var nowview=view.findViewById(R.id.now);nowview.setOnClickListener(v ->{
 
+               act.lightBars(!getInvertColors( ));
 		removeContentView(view);
 	Natives.settonow();
 				act.requestRender();
@@ -249,6 +262,7 @@ static public void show(MainActivity act) {
         var searchview=view.findViewById(R.id.search);searchview.setOnClickListener(v ->{
 		  var c=Applic.app.curve;
 		  if(c!=null) {
+               act.lightBars(!getInvertColors( ));
 			removeContentView(view);
 			c.startsearch();
 			}
@@ -257,33 +271,41 @@ static public void show(MainActivity act) {
         var dateview=view.findViewById(R.id.date);dateview.setOnClickListener(v ->{
 		  var c=Applic.app.curve;
 		  if(c!=null) {
+               act.lightBars(!getInvertColors( ));
 			removeContentView(view);
 			  c.startdatepick(Natives.getstarttime());
 			  }
 		
 		}); 
         var daybackview=view.findViewById(R.id.dayback);daybackview.setOnClickListener(v ->{
+               act.lightBars(!getInvertColors( ));
 			removeContentView(view);
 		Natives.prevday(1);
 				act.requestRender();
 		}); 
         var daylaterview=view.findViewById(R.id.daylater);daylaterview.setOnClickListener(v ->{
+               act.lightBars(!getInvertColors( ));
 			removeContentView(view);
 		Natives.nextday(1);
 				act.requestRender();
 		}); 
         var weekbackview=view.findViewById(R.id.weekback);weekbackview.setOnClickListener(v ->{
 
+               act.lightBars(!getInvertColors( ));
 			removeContentView(view);
 		Natives.prevday(7);
 				act.requestRender();
 	}); 
         var weeklaterview=view.findViewById(R.id.weeklater);weeklaterview.setOnClickListener(v ->{
 
+               act.lightBars(!getInvertColors( ));
 			removeContentView(view);
 		Natives.nextday(7);
 				act.requestRender();
 		}); 
+   
+	  // view.setPadding(0,MainActivity.systembarTop,0,0);
+  	view.setPadding(MainActivity.systembarLeft,MainActivity.systembarTop*3/4,MainActivity.systembarRight,MainActivity.systembarBottom);
 
 	act.addContentView(view, new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
 

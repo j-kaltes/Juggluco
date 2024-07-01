@@ -6,11 +6,23 @@ plugins {
 
 def task = gradle.startParameter.taskNames[0] ?: ""
 
+//def MINSDK = 19
+int MINSDK=19
+
 if(task.contains("LibreOldNosi")&&!task.contains("Wear")) {
     ndkver = '25.2.9519653'
+   APPCOMPAT = '1.6.1'
+     GMSBASE = '18.4.0'
+   GMSWEAR = '18.1.0'
+
+     MINSDK = 19
    }
 else {
        ndkver = '27.0.11902837 rc2'
+      APPCOMPAT = '1.7.0'
+      GMSWEAR = '18.2.0'
+     GMSBASE = '18.5.0'
+      MINSDK = 21
        }
 android {
  namespace "tk.glucodata"
@@ -51,13 +63,12 @@ android {
 
 
     defaultConfig {
-        targetSdk 33
-//       	targetSdk 26
-            buildConfigField 'int', 'targetSDK', "$targetSdk"
-        minSdk 19
+        minSdk        MINSDK
+        targetSdk 35
+        buildConfigField 'int', 'targetSDK', "$targetSdk"
         compileSdk 33
         applicationId "tk.glucodata"
-	versionName '8.0.24'
+	versionName '8.1.0'
 //	multiDexEnabled true
 
         buildConfigField 'String', 'BUILD_TIME', 'new java.text.SimpleDateFormat("HH:mm:ss dd-MMM-yyyy").format(new java.util.Date(' + System.currentTimeMillis() + 'L))'
@@ -83,14 +94,15 @@ android {
     productFlavors {
 
         libreOld {
+//        minSdk 19
             //minSdk 19
 //            minSdk 21
 
             //	targetSdk 26
 	//******  Zet op rollout op 100% ******
             	dimension 'libreVersion'
-		versionCode                                     470                                                                       //LIBRE2ONLY
-	//	versionName '8.0.24-no3'
+		versionCode                                      471                                                                         //LIBRE2ONLY
+	//	versionName '8.1.0-no3'
 		versionNameSuffix '-no3'
             buildConfigField 'int', 'libreVersion', '2'
 		    externalNativeBuild.cmake {
@@ -107,7 +119,7 @@ android {
 //	   minSdk 23
             dimension 'libreVersion'
 		versionNameSuffix '-li3'
-		versionCode                                    470                                                                       //LIBRE3
+		versionCode                                     471                                                                         //LIBRE3
 	//******  Zet op rollout op 100% ******
 
            	buildConfigField 'int', 'libreVersion', '3'
@@ -123,7 +135,7 @@ android {
 		minSdkVersion 21
             	dimension 'SiBionics'
 		versionNameSuffix '-si'
-		versionCode                               470                                                                    
+		versionCode                                471                                                                      
 	        buildConfigField 'int', 'SiBionics', '1'
 	         externalNativeBuild.cmake {
 			cppFlags "  -DAPPVERSION=\\\"$versionName\\\"  -DSIBIONICS=1 "
@@ -131,7 +143,7 @@ android {
 		}
         nosi {
             	dimension 'SiBionics'
-		versionCode                                     470                                                                    
+		versionCode                                      471                                                                      
 		versionNameSuffix '-nosi'
 	        buildConfigField 'int', 'SiBionics', '0'
 	         externalNativeBuild.cmake {
@@ -146,9 +158,9 @@ android {
             // targetSdk 30
             dimension 'wearos'
 		minSdk 26
-		versionCode                                    470                                                                       //WATCH
+		versionCode                                     471                                                                         //WATCH
 	//******  Zet op rollout op 100% ******
-		//versionName '8.0.24-wear'
+		//versionName '8.1.0-wear'
 		versionNameSuffix '-wear'
 		signingConfig signingConfigs.alg
 
@@ -167,9 +179,10 @@ android {
 
         small {
 
+//        minSdk 19
             dimension 'wearos'
-		versionCode                                    470                                                                       //WATCH
-		//versionName '8.0.24-small'
+		versionCode                                     471                                                                         //WATCH
+		//versionName '8.1.0-small'
 		versionNameSuffix '-small'
 		signingConfig signingConfigs.alg
 
@@ -185,6 +198,7 @@ android {
 	    }
         }
        mobile {
+//        minSdk 19
             dimension 'wearos'
 		   versionNameSuffix '-phone'
            buildConfigField 'int', 'isWear', '0'
@@ -413,7 +427,7 @@ buildTypes {
         includeInApk true
         includeInBundle true
     }
-    compileSdk 34
+    compileSdk 35
     buildToolsVersion '35.0.0 rc4'
     buildFeatures {
         aidl true
@@ -478,29 +492,29 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1'
     implementation 'androidx.core:core-ktx:1.13.1'
   implementation 'com.android.support:support-annotations:28.0.0'
-    implementation 'androidx.appcompat:appcompat:1.6.1'
+
+    implementation "androidx.appcompat:appcompat:$APPCOMPAT"
     implementation 'androidx.activity:activity:1.9.0'
 	implementation 'androidx.core:core:1.13.1'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1'
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.24'
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.9.24'
-    implementation 'com.google.android.gms:play-services-base:18.4.0'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.0.0'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:2.0.0'
+    implementation "com.google.android.gms:play-services-base:$GMSBASE"
  implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.8.1'
   mobileImplementation "androidx.health.connect:connect-client:1.1.0-alpha07"
 
 
 
     compileOnly 'com.google.android.wearable:wearable:2.9.0'
-
-    implementation 'com.google.android.gms:play-services-wearable:18.1.0'
+    implementation "com.google.android.gms:play-services-wearable:$GMSWEAR"
 
 
 
     wearImplementation 'androidx.activity:activity-ktx:1.9.0'
     wearImplementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     wearImplementation 'com.google.android.material:material:1.12.0'
-    wearImplementation 'androidx.databinding:viewbinding:8.4.0'
+    wearImplementation 'androidx.databinding:viewbinding:8.5.0'
     wearImplementation 'androidx.core:core-ktx:1.13.1'
 
 

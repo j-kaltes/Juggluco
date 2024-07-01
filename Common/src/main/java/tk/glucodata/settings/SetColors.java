@@ -58,6 +58,8 @@ public static void endcolors(MainActivity act) {
 		}
 	} */
 static void show(MainActivity act) {
+
+   act.lightBars(!Natives.getInvertColors( ));
 	int initialColor= 0xfff7f022;
 //	Natives.getlastcolor();
 	int width=GlucoseCurve.getwidth();
@@ -67,22 +69,32 @@ static void show(MainActivity act) {
 		Natives.setlastcolor(c);
 		tk.glucodata.Applic.app.redraw();
     }, v-> {
+      int afx,afy;
+      if(Natives.getsystemUI()) {
+         afy= MainActivity.systembarTop;
+         afx= MainActivity.systembarLeft;
+         }
+        else {
+        afx=afy=0;
+         
+         }
+      Log.i(LOG_ID, "Color systembarTop="+afy);
+		Log.i(LOG_ID, "Color systembarLeft="+afx);
 	    if(isWearable) {
-		int h=v.getMeasuredHeight();	
-		int w=v.getMeasuredWidth();	
-		v.setX((int)(width*.97)-w);
-		v.setY((height-h)/2);
+         int h=v.getMeasuredHeight();	
+         int w=v.getMeasuredWidth();	
+         v.setX((int)(width*.97)-w);
+         v.setY((height-h)/2);
 		}
+      else  {
+		   v.setY(afy);
+		   v.setX(afx);
+         }
     	}
 	);
 	View view=dialog.getview();
-	/*
-	if(!isWearable) {	
-		int vheight= (int)act.getResources().getDimension(R.dimen.ambilwarna_hsvHeight);
-		Log.i(LOG_ID,"height="+vheight);
-		view.setY( (GlucoseCurve.getheight()-vheight)/2);
-		} */
         view.setBackgroundColor(Applic.backgroundcolor);
+
 	if(isWearable) {
 	       act.addContentView(view, new ViewGroup.LayoutParams((int)(width*0.65), (int)(height*0.65)));
 	      // theview=view;

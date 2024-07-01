@@ -62,11 +62,12 @@ public class LibreNumberHolder extends RecyclerView.ViewHolder {
 	private 	View sendnumbers;
 	private int night;
 private static final String LOG_ID="LibreNumberHolder";
+/*
 RadioButton mkradiobutton(Context context, String label) {
 	  var radio  = new RadioButton(context);
 	  radio.setText(label);
 	  return radio;
-	}
+	} */
 int getid(View layout,int res) {
 	RadioButton longacting=layout.findViewById(res);
 	final int longid=longacting.getId();
@@ -103,13 +104,13 @@ void sendoptions(View labelview,int pos) {
 	weight.setImeOptions(editoptions);
          Button help=layout.findViewById(R.id.help);
 	help.setOnClickListener(v->{tk.glucodata.help.basehelp(context.getString(R.string.setlibrenumtype),context,l-> { } , (hv,w,h)-> {return new int[] {
-	getwidth(),getheight() };} , new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT)); }); ;
+	getwidth(),getheight() };} , new ViewGroup.MarginLayoutParams(MATCH_PARENT, MATCH_PARENT)); }); ;
 
 	measuredgrid grid=layout.findViewById(R.id.librenum);
 	grid.setmeasure((l,w,h)-> {
 		int height= getheight();
 		int width= getwidth();
-		l.setY(0);
+		l.setY(MainActivity.systembarTop);
 		int x=(width>w)?((width-w)/2):0;
 		l.setX(x);
 	});

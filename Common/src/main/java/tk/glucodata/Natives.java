@@ -743,6 +743,7 @@ public static native boolean hasSibionics();
 public static native String getUsedSensorName( );
 public static native float getthreshold( );
 public static native void setthreshold(float val);
+public static native void systembar(int left,int top,int right,int bottom);
 
 //public static native void sendxdripold();
 //s/^extern.*JNIEXPORT[         ]*\([a-zA-Z]*\)[ ]*JNICALL[      ]*fromjava(\([^)]*\)) *(JNIEnv[^,]*,[^,)]*[,)]\([^){]*\)[^a-zA-Z0-9]*$/public static native \1 \2(\3);/g

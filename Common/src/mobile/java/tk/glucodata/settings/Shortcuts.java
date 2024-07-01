@@ -165,12 +165,16 @@ public void mkshortlistview(MainActivity act) {
 		
 		scroll.setLayoutParams(new ViewGroup.LayoutParams(   ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
 		mkshortlist(act);
+     var top= MainActivity.systembarTop*3/4;
+     shortlist.setPadding(0,top,0,0);
 		scroll.addView(shortlist);
 		Layout butview= new Layout(act,new View[]{add},new View[]{help},new View[]{cancel},new View[]{ok});
 		butview.setLayoutParams(new ViewGroup.LayoutParams(   ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
+   butview.setPadding(0,top,0,0);
 		shortlistview= new Layout(act,(a,w,h)->{
 			hideSystemUI(act);
 			return new int[] {w,h}; },new View[]{scroll,butview});
+   shortlistview.setPadding(MainActivity.systembarLeft,0,MainActivity.systembarRight,MainActivity.systembarBottom);
 		shortlistview.setBackgroundColor(tk.glucodata.Applic.backgroundcolor);
 		act.addContentView(shortlistview, new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
 		}
@@ -259,7 +263,7 @@ if(shortedit==null) {
 			var width= getscreenwidth(act);
 			if(width>w)
 			    l.setX(( width- w)* 0.7f);
-			    l.setY(0);
+          l.setY(MainActivity.systembarTop);
 
 			return new int[] {w,h};
 			    }, new View[] {label,labedit},new View[] {value,valedit},new View[] {delete,cancel,save});

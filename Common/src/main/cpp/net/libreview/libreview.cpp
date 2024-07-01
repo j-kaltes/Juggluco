@@ -163,7 +163,6 @@ static char *libreScanel(const ScanData &scanel,const int16_t  nr,char *ptr) {
 
 	ptr+=sprintf(ptr,R"(","trendArrow":"%s","isActionable":true,"isFirstAfterTimeChange":false},"recordNumber":%hd,"timestamp":")",trendName[scanel.tr],id);
 	ptr+=Tdatestringlocal(scanel.gettime(),mil,ptr);
-//	ptr+=sprintf(ptr,R"("})");
 	addar(ptr,R"("})");
 	return ptr;
 	}
@@ -632,12 +631,7 @@ int startsensor=0;
 	     const std::array<char,36> &deviceID=settings->data()->libreviewDeviceID;
 
 	constexpr const std::string_view appstart=R"(com.freestylelibre.app.)";
-	/*
-	constexpr const std::string_view mmolmodel=R"(com.freestylelibre.app.gb)";
-	constexpr const std::string_view mgmodel=R"(com.freestylelibre.app.fr)";
-	constexpr const std::string_view mmolmodel=R"(com.freestylelibre.app.nl)";
-	constexpr const std::string_view mgmodel=R"(com.freestylelibre.app.pl)";
-	constexpr const std::string_view rumodel=R"(com.freestylelibre.app.ru)"; */
+
 	constexpr const char countries[][3]={"gb","fr","nl","pl","ru"};
 
 
@@ -838,6 +832,7 @@ int startsensor=0;
 								if(previewsens) {
 									previewsens->getinfo()->libreviewsendall=true;
 									}
+							   lastlibre2=i;
 								}
 							sensdata->getinfo()->libreviewScan=scanids[i];
 							if(lists[i].size) {
@@ -848,7 +843,6 @@ int startsensor=0;
 								setlibresend(sensdata,lists[i]);
 								}
 							previewsens=sensdata;
-							lastlibre2=i;
 
 							}
 						}
@@ -927,7 +921,89 @@ static bool alwaysnewstatus3=false;
 
 static bool askforaccount=false;
 extern bool networkpresent;
-
+static int askhasnewcurrent2(time_t nu) {
+	if(!settings->data()->LibreCurrentOnly) { 
+		LOGSTRING("LibreCurrentOnly==false\n");
+		return -1;
+		}
+	const auto *lastsensor=sensors->getSensorData(-1);
+	if(!lastsensor)  {
+		LOGAR("no sensor");
+		return -1;
+		}
+	const int last=sensors->last();
+   for(int i=settings->data()->startlibreview;i<=last;++i) {
+		const auto *sens=sensors->getSensorData(i);
+      if(sens->getinfo()->libreviewsendall)
+         continue;
+      if(!sens->isLibre2())
+         continue;
+		if(sens->getmaxtime()<nu)
+			continue;
+       int start=sens->getinfo()->libreCurrentIter;
+		const int pollstart= sens->getinfo()->pollstart;
+		if(start<pollstart)
+			start=pollstart;
+		const int		ends=sens->pollcount()-1;
+		if(start<=ends)
+			return i;
+      else {
+            if(start>0) {
+               const int prev=start-1;
+               const ScanData *startstream=sens->beginpolls();
+               const ScanData *el=startstream+prev;
+               if(el->valid()) {
+                  auto ti=el->gettime();
+                  if((nu-ti)<(5*60))
+                     return -1;
+                  }
+                }
+         }
+		}
+	return -1;
+	}
+static int askhasnewcurrent3(time_t nu) {
+	if(!settings->data()->LibreCurrentOnly) { 
+		LOGSTRING("LibreCurrentOnly==false\n");
+		return -1;
+		}
+	const auto *lastsensor=sensors->getSensorData(-1);
+	if(!lastsensor)  {
+		LOGAR("no sensor");
+		return -1;
+		}
+	const int last=sensors->last();
+   for(int i=settings->data()->startlibre3view;i<=last;++i) {
+		const auto *sens=sensors->getSensorData(i);
+      if(sens->getinfo()->libreviewsendall)
+         continue;
+      if(!sens->isLibre3())
+         continue;
+		if(sens->getmaxtime()<nu)
+			continue;
+		int start=sens->getinfo()->libreviewScan;
+		const int pollstart= sens->getinfo()->pollstart;
+		if(start<pollstart)
+			start=pollstart;
+		const int		ends=sens->pollcount()-1;
+		if(start<=ends)
+			return i;
+       else {
+            if(start>0) {
+               const int prev=start-1;
+               const ScanData *startstream=sens->beginpolls();
+               const ScanData *el=startstream+prev;
+               if(el->valid()) {
+                  auto ti=el->gettime();
+                  if((nu-ti)<(5*60))
+                     return -1;
+                  }
+                }
+             }
+		}
+	return -1;
+	}
+/*
 int askhasnewcurrent(time_t nu) {
 	if(!settings->data()->LibreCurrentOnly) { 
 		LOGSTRING("LibreCurrentOnly==false\n");
@@ -938,10 +1014,11 @@ int askhasnewcurrent(time_t nu) {
 		LOGAR("no sensor");
 		return -1;
 		}
-//	auto oldtime=nu-day15secs;
-	int last=sensors->last();
+	const int last=sensors->last();
 	for(int i=last;i>=0;--i) {	
 		const auto *sens=sensors->getSensorData(i);
+      if(sens->libreviewsendall)
+         return -1;
       if(sens->isSibionics())
          continue;
 		 int start=sens->isLibre3()?sens->getinfo()->libreviewScan:sens->getinfo()->libreCurrentIter;
@@ -955,7 +1032,7 @@ int askhasnewcurrent(time_t nu) {
 			return -1;
 		}
 	return -1;
-	}
+	} */
 void libreviewthread() {
 	sensors->setversions();
 //	settings->data()->libreinit3=false;
@@ -986,8 +1063,9 @@ void libreviewthread() {
 			return;
 			}
  		const   time_t nu=time(nullptr);
-		const int newcurrent=askhasnewcurrent(nu);
-		const bool hasnewcurrent=newcurrent>=0;
+		const int newcurrent2=askhasnewcurrent2(nu);
+		const bool hasnewcurrent3=askhasnewcurrent3(nu)>=0;
+		const bool hasnewcurrent=newcurrent2>=0||hasnewcurrent3;
 		if((librecondition.dobackup&Backup::wakeall)||(hasnewcurrent&&(librecondition.dobackup&Backup::wakestream))) {
 			librecondition.dobackup=0;
 			if(askforaccount||settings->data()->haslibre3) {
@@ -1008,7 +1086,7 @@ void libreviewthread() {
 					LOGAR("end libreview thread, account id only");
 					return;
 					}
-				if(sendlibre3viewdata(hasnewcurrent,nu)) {
+				if(sendlibre3viewdata(hasnewcurrent3,nu)) {
 					waitmin=5*60;
 					}
 				else {
@@ -1033,7 +1111,7 @@ void libreviewthread() {
 					return;
 					}
 
-				if(sendlibreviewdata(newcurrent,nu)) {
+				if(sendlibreviewdata(newcurrent2,nu)) {
 					waitmin=5*60;
 					}
 				else {
@@ -1136,19 +1214,19 @@ void clearfromDate(const uint32_t starttime, bool initall=true) {
 			}
 		else {
          if(firstuse->isLibre2())  {
-			info->clearLibreSendEnd(histpos);
-			int scanpos=firstuse->getbackuptimescan(starttime);
-			info->realHistory=false;
-			info->libreviewnotsend =streampos;
-			info->libreCurrentIter=streampos;
-			info->libreviewScan=scanpos;
-			info->scanoff=0;
-			info->libreviewnotsendHistory=histpos;
-#ifndef NOLOG
-			const time_t tim=starttime;
-			LOGGER("clearfromDate Libre2 index=%d notsend=%d stream=%d scanpos=%d from=%s",index,histpos,streampos,scanpos,ctime(&tim));
-#endif
-			}
+            info->clearLibreSendEnd(histpos);
+            const int scanpos=firstuse->getbackuptimescan(starttime);
+            info->realHistory=false;
+            info->libreviewnotsend =streampos;
+            info->libreCurrentIter=streampos;
+            info->libreviewScan=scanpos;
+            info->scanoff=0;
+            info->libreviewnotsendHistory=histpos;
+   #ifndef NOLOG
+            const time_t tim=starttime;
+            LOGGER("clearfromDate Libre2 index=%d notsend=%d stream=%d scanpos=%d from=%s",index,histpos,streampos,scanpos,ctime(&tim));
+   #endif
+            }
          }
 		
 		for(int i=index+1;i<=lastsens;i++) {

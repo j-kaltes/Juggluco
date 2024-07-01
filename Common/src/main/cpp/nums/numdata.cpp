@@ -46,7 +46,7 @@ void makenightswitch() {
 
                }
               }
-           settings->data()->threshold=0.8f;
+//           settings->data()->threshold=0.8f;
             }
        extern         void resensordata(int sensorindex);
         resensordata(0);
