@@ -68,7 +68,7 @@ android {
         buildConfigField 'int', 'targetSDK', "$targetSdk"
         compileSdk 33
         applicationId "tk.glucodata"
-	versionName '8.1.0'
+	versionName '8.1.1'
 //	multiDexEnabled true
 
         buildConfigField 'String', 'BUILD_TIME', 'new java.text.SimpleDateFormat("HH:mm:ss dd-MMM-yyyy").format(new java.util.Date(' + System.currentTimeMillis() + 'L))'
@@ -101,8 +101,8 @@ android {
             //	targetSdk 26
 	//******  Zet op rollout op 100% ******
             	dimension 'libreVersion'
-		versionCode                                      471                                                                         //LIBRE2ONLY
-	//	versionName '8.1.0-no3'
+		versionCode                                       472                                                                           //LIBRE2ONLY
+	//	versionName '8.1.1-no3'
 		versionNameSuffix '-no3'
             buildConfigField 'int', 'libreVersion', '2'
 		    externalNativeBuild.cmake {
@@ -119,7 +119,7 @@ android {
 //	   minSdk 23
             dimension 'libreVersion'
 		versionNameSuffix '-li3'
-		versionCode                                     471                                                                         //LIBRE3
+		versionCode                                      472                                                                           //LIBRE3
 	//******  Zet op rollout op 100% ******
 
            	buildConfigField 'int', 'libreVersion', '3'
@@ -135,7 +135,7 @@ android {
 		minSdkVersion 21
             	dimension 'SiBionics'
 		versionNameSuffix '-si'
-		versionCode                                471                                                                      
+		versionCode                                 472                                                                        
 	        buildConfigField 'int', 'SiBionics', '1'
 	         externalNativeBuild.cmake {
 			cppFlags "  -DAPPVERSION=\\\"$versionName\\\"  -DSIBIONICS=1 "
@@ -143,7 +143,7 @@ android {
 		}
         nosi {
             	dimension 'SiBionics'
-		versionCode                                      471                                                                      
+		versionCode                                       472                                                                        
 		versionNameSuffix '-nosi'
 	        buildConfigField 'int', 'SiBionics', '0'
 	         externalNativeBuild.cmake {
@@ -158,9 +158,9 @@ android {
             // targetSdk 30
             dimension 'wearos'
 		minSdk 26
-		versionCode                                     471                                                                         //WATCH
+		versionCode                                      472                                                                           //WATCH
 	//******  Zet op rollout op 100% ******
-		//versionName '8.1.0-wear'
+		//versionName '8.1.1-wear'
 		versionNameSuffix '-wear'
 		signingConfig signingConfigs.alg
 
@@ -181,8 +181,8 @@ android {
 
 //        minSdk 19
             dimension 'wearos'
-		versionCode                                     471                                                                         //WATCH
-		//versionName '8.1.0-small'
+		versionCode                                      472                                                                           //WATCH
+		//versionName '8.1.1-small'
 		versionNameSuffix '-small'
 		signingConfig signingConfigs.alg
 
@@ -503,8 +503,8 @@ dependencies {
     implementation "com.google.android.gms:play-services-base:$GMSBASE"
  implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.8.1'
   mobileImplementation "androidx.health.connect:connect-client:1.1.0-alpha07"
-
-
+//  mobileImplementation files('/n/ojka/Downloads/ciq-companion-app-sdk-2.0.3.aar');
+  mobileImplementation "com.garmin.connectiq:ciq-companion-app-sdk:2.0.3@aar"
 
     compileOnly 'com.google.android.wearable:wearable:2.9.0'
     implementation "com.google.android.gms:play-services-wearable:$GMSWEAR"

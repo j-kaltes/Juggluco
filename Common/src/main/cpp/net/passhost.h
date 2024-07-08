@@ -137,6 +137,10 @@ bool hasip(const struct sockaddr *addrptr) const {
 	return false;
 	};
 bool addiphasfamport(const struct sockaddr *addrptr) {
+	if(nr>=maxip) {
+		LOGGER("addiphasfamport %d>=maxip\n",nr);
+		return false;
+		}
 	if(!::putiphasfamport( addrptr,ips+nr)) {
 		LOGSTRING("addiphasfamport returns false\n");
 		return false;
@@ -153,8 +157,9 @@ bool putip(const sockaddr_in6  *addrptr) {
 	return true;
 	}
 void putips(const sockaddr_in6  *addrptr,int nrin) {
-	memcpy(ips,addrptr,nrin*sizeof(ips[0]));
-	nr=nrin;
+	const int usenr=std::min(nrin,maxip);
+	memcpy(ips,addrptr,usenr*sizeof(ips[0]));
+	nr=usenr;
 	detect=false;
 	}
 bool putip(const struct sockaddr *addrptr) {

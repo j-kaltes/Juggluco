@@ -55,10 +55,10 @@ extern "C" JNIEXPORT jobjectArray  JNICALL   fromjava(getbackupIPs)(JNIEnv *env,
 		return nullptr;
 		}
 	passhost_t &host=backup->getupdatedata()->allhosts[pos];
-	const int len=host.nr;
-	if(len<0) {
+	int len=host.nr;
+	if(len<0||len>maxip) {
 		LOGGER("host.nr==%d\n",len);
-		host.nr=0;
+		host.nr=len=0;
 		}
 	jobjectArray  ipar = env->NewObjectArray(len,env->FindClass("java/lang/String"),nullptr);
 	if(!ipar) {
@@ -129,13 +129,12 @@ bool resetbylabel(const char *label,bool galaxy) {
 	const passhost_t &host=backup->getupdatedata()->allhosts[pos];
 	const int nr=host.nr;
 	if(nr>0) {
-		struct sockaddr_in6 ips[host.nr];
+		struct sockaddr_in6 ips[maxip];
 		memcpy(ips,host.ips,sizeof(ips));
-//		backup->deletehost(pos);
 
 		passhost_t *newhost=getwearoshost(true,label,galaxy,true);
 		memcpy(newhost->ips,ips,sizeof(ips));
-		newhost->nr=nr;
+		newhost->nr=std::min(nr,maxip);
 		}
 	else {
 		backup->deletehost(pos);

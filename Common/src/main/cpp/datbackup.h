@@ -737,7 +737,7 @@ int changehost(int index,JNIEnv *env,jobjectArray jnames,int nr,bool detect,stri
 		if(env) {
 			jstring  jhostname=(jstring)env->GetObjectArrayElement(jnames,0);
 			int namelen= env->GetStringUTFLength( jhostname);
-			if(namelen>maxhostname) {
+			if(namelen>=maxhostname) { //terminanting zero
 				LOGGER("supplied name too long %d>%d\n",namelen,maxhostname);
 				return -5;
 				}

@@ -394,6 +394,11 @@ bool activate=true;
 			savemessage(pass,"connection has on %d ips\n",nr);
 			return -1;
 			}
+		if(nr>=maxip) {
+			pass->nr=0;
+			savemessage(pass,"connection has on %d ips\n",nr);
+			return -1;
+			}
 		for(int i=0;i<nr;i++) {
 			const struct sockaddr_in6  *sin=&pass->ips[i];
 			if(int ret=connectone(sin,sock, stype,pass,cons,use

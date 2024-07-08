@@ -54,7 +54,7 @@ const char *showsensorname() const {
 	return name;
 	}
 uint32_t wearduration() const {
-	if(halfdays==(stdMaxDaysSI*2))
+	if(halfdays>=(stdMaxDaysSI*2))
 		return maxSIhours*60*60;
 	return (halfdays?halfdays:29)*12*60*60;
 	}
@@ -473,9 +473,9 @@ SensorGlucoseData *makelibre3sensor(std::string_view shortname,uint32_t starttim
 
 	vector<int> inperiod(uint32_t starttime, uint32_t endtime) {
 		vector<int> out;
-//		const uint32_t startend = starttime>sensorageseconds?(starttime - sensorageseconds):0;
-//		const uint32_t nothingbefore = startend>sensorageseconds?(startend - sensorageseconds):0;
 		const uint32_t nu = time(nullptr);
+      
+      const uint32_t oldsecs=starttime-maxSIhours*60*60;
 		for(int i = last(); i >= 0; i--) {
 			auto &sensor=sensorlist()[i];
 			const uint32_t startsensor = sensor.starttime;
@@ -484,14 +484,11 @@ SensorGlucoseData *makelibre3sensor(std::string_view shortname,uint32_t starttim
 				continue;
 				}
 
-			const uint32_t maxtime = sensor.maxtime();
-			if(maxtime <= starttime)  {
-				if((starttime-maxtime)>maxageseconds) {
-					break;
-					}
-				LOGGER("%d: maxtime (%u) <= starttime (%u) \n",i,maxtime,starttime);
-				continue;
-				}
+
+			if(sensor.maxtime() <= oldsecs) {
+				LOGGER("%s old\n", showsensorname(i));
+				break;
+				} 
 
 			auto oneend = sensor.endtime;
 			if(sensor.finished && oneend && oneend < starttime) {
@@ -701,11 +698,9 @@ void finishsensor(int ind) {
 	vector<int> bluetoothactive(uint32_t tim, uint32_t nu) {
 		LOGSTRING("bluetoothactive\n");
 		vector<int> out;
-//		uint32_t old = nu - sensorageseconds;
-//		uint32_t established = nu - 2*60*60;
-
+      const uint32_t oldsecs=nu-maxSIhours*60*60;
 		for (int i = last(); i >= 0; i--) {
-			auto &sensor=sensorlist()[i];
+			const auto &sensor=sensorlist()[i];
 			if (sensor.finished) {
 				LOGGER("%s finished\n", showsensorname(i));
 				continue;
@@ -714,15 +709,28 @@ void finishsensor(int ind) {
 				LOGGER("%d no starttime\n",i);
 				continue;
 				}
-			if(sensor.largemaxtime() <= nu) {
+
+            /*
+			if(sensor.starttime<oldsec) {
+				LOGGER("%s start time %ul\n",showsensorname(i),sensor.starttime);
+				break;
+				} */
+			if(sensor.maxtime() <= oldsecs) {
 				LOGGER("%s old\n", showsensorname(i));
 				break;
-				}
+				} 
 			const SensorGlucoseData *hist = getSensorData(i);
 			if (!hist) {
 				LOGSTRING("hist==null\n");
 				continue;
 				}
+     const auto sensmax=hist->getmaxtime() ;
+      if(sensmax<=nu) {
+				LOGGER("%s old\n", showsensorname(i));
+            if(sensmax<oldsecs)
+               break;
+				continue;
+            }
 			const auto lasttime=hist->lastused() ;
 			bool canuse=hist-> canusestreaming() ;
 			LOGGER("%s: can %suse streaming, lasttime=%d\n",showsensorname(i),canuse?"":"not ",lasttime);

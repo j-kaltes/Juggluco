@@ -55,14 +55,16 @@ const char *const * const sendptr=sendmessagestrbase+1;
 	bool sendnums=false;
 	bool sendstream=false;
 	bool sendscans=false;
+   if(host.nr>maxip) 
+      host.nr=0;
 	const int len=host.nr;
 	char ips[maxip*46+1]="";
 	char *ipsptr=ips;
 	if(host.hashostname() ) {
 		const char *name=host.gethostname();
-		const int len=strlen(name);
-		memcpy(ipsptr,name,len);
-		ipsptr+=len;
+		const int namelen=strlen(name);
+		memcpy(ipsptr,name,namelen);
+		ipsptr+=namelen;
 		*ipsptr++=' ';
 		}
 	else {

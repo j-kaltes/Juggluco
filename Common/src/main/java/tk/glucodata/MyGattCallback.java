@@ -114,11 +114,17 @@ static void showCharacter(String label, BluetoothGattCharacteristic characterist
         Log.showbytes(label + " UUID: " + characteristic.getUuid().toString(), value);
     }
 @Override // android.bluetooth.BluetoothGattCallback
-	public void onDescriptorWrite(BluetoothGatt bluetoothGatt, BluetoothGattDescriptor bluetoothGattDescriptor, int i) {
-		super.onDescriptorWrite(bluetoothGatt, bluetoothGattDescriptor, i);
-		BluetoothGattCharacteristic characteristic = bluetoothGattDescriptor.getCharacteristic();
-		if(doLog)
-			showCharacter("onDescriptorWrite", characteristic);
+	public void onDescriptorWrite(BluetoothGatt bluetoothGatt, BluetoothGattDescriptor bluetoothGattDescriptor, int status) {
+		super.onDescriptorWrite(bluetoothGatt, bluetoothGattDescriptor, status);
+		if(doLog)  {
+		   BluetoothGattCharacteristic characteristic = bluetoothGattDescriptor.getCharacteristic();
+			showCharacter(SerialNumber+" onDescriptorWrite status="+status, characteristic);
+          }
+      if(status!=GATT_SUCCESS ) {
+				bluetoothGatt.disconnect();
+            return;
+         }
+         
 		if (sensorgen == 2 && conphase == 1) {
 			writeBLELogin();
 		}
@@ -280,7 +286,8 @@ void reconnect() {
 	}
 
 
-	@Override // android.bluetooth.BluetoothGattCallback
+	@SuppressLint("MissingPermission")
+    @Override // android.bluetooth.BluetoothGattCallback
 	public void onServicesDiscovered(BluetoothGatt bluetoothGatt, int status) {
 		Log.i(LOG_ID, "BLE onServicesDiscovered invoked, status: " + status);
 //		readrssi=9999; mBluetoothGatt.readRemoteRssi();
@@ -527,7 +534,7 @@ private	void oldonCharacteristicChanged(byte[] value) {
 		contactint = authlastv1v2(31, Ew, bArr2, bArr3,numb);
 		if(contactint > 0)
 			return bArr3;
-		handshake= "Auth <=0";
+		handshake= "Auth = "+contactint;
 		wrotepass[1] = System.currentTimeMillis();
 		var gatt = mBluetoothGatt;
 		if (gatt != null)
@@ -683,10 +690,10 @@ public void onCharacteristicChanged(BluetoothGatt bluetoothGatt, BluetoothGattCh
 		return;
 		}
 
-	boolean str=uuidstr.equals(mCharacteristicUUID_CompositeRawData.toString());
-	boolean withoutstr=uuid.equals(mCharacteristicUUID_CompositeRawData);
 	if(doLog) {
-            	Log.i(LOG_ID, "UUID: with str=" + str + " without=" + withoutstr + " conphase=" + conphase);
+//      boolean str=uuidstr.equals(mCharacteristicUUID_CompositeRawData.toString());
+      final boolean isRawData=uuid.equals(mCharacteristicUUID_CompositeRawData);
+      Log.i(LOG_ID, "UUID: "+(isRawData?"CompositeRawData, ":"")+ " conphase=" + conphase);
 		Log.i(LOG_ID, "onCharacteristicChanged " + uuidstr);
 	     }
 	if (!mCharacteristicUUID_BLELogin.equals(uuid)) {

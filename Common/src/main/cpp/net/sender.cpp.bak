@@ -198,6 +198,10 @@ int opensender(passhost_t *pass,int &sock,crypt_t*ctx,char stype) {
 	if(nr<=0) {
 		return -1;
 		}
+	if(nr>=maxip) {
+		pass->nr=0;
+		return -1;
+		}
 //	struct sockaddr_in6  *sin=&pass->connect;
 	struct pollfd	 cons[nr];
 	int use=0;
