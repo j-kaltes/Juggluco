@@ -4,7 +4,7 @@
     tools:overrideLibrary="androidx.health.connect.client" >
 
 <!--    <uses-sdk tools:overrideLibrary="com.google.android.gms.common, androidx.appcompat.resources, com.google.android.gms.tasks, com.google.android.gms.base, com.google.android.gms.wearable, androidx.health.connect.client"/> -->
-   <uses-sdk tools:overrideLibrary="androidx.health.connect.client"/> 
+   <uses-sdk tools:overrideLibrary="androidx.health.connect.client,com.garmin.android.connectiq"/> 
 
 
 

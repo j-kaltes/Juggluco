@@ -61,6 +61,9 @@ uint32_t wearduration() const {
 uint32_t maxtime() const {
 	return starttime+wearduration();
 	}
+uint32_t officialendTime() const {
+	return starttime+wearduration();
+	}
 uint32_t largemaxtime() const {
 	return maxtime()+60*60*24;
 	}

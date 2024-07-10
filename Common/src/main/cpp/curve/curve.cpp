@@ -1575,6 +1575,7 @@ void setmaxsensors(size_t sensornr) {
 
 //float highglucose=1350;
 //float lowglucose=702;
+/*
 uint32_t lastsensorends() {
 		int lastsen=sensors->last();
 		if(lastsen>=0) {
@@ -1585,7 +1586,13 @@ uint32_t lastsensorends() {
 			//return sen->maxtime();
 			}
 		return 0;
-		}
+		} */
+uint32_t lastsensorends() {
+			if(const SensorGlucoseData *hist = sensors->getSensorData()) {
+               return hist->officialendtime();
+               }
+          return 0u;
+          }
 //void	showbluevalue(const float dlast,const time_t nu,const int xpos) 
 
 void drawarrow(NVGcontext* genVG, float rate,float getx,float gety) {

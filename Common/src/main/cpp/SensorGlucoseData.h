@@ -40,6 +40,7 @@
 #include <mutex>
 #include <algorithm>
 #include <unistd.h>
+#include <climits>
 
 /*
 inline int getpagesize(void) {
