@@ -1,28 +1,5 @@
-/*      This file is part of Juggluco, an Android app to receive and display         */
-/*      glucose values from Freestyle Libre 2 and 3 sensors.                         */
-/*                                                                                   */
-/*      Copyright (C) 2021 Jaap Korthals Altes <jaapkorthalsaltes@gmail.com>         */
-/*                                                                                   */
-/*      Juggluco is free software: you can redistribute it and/or modify             */
-/*      it under the terms of the GNU General Public License as published            */
-/*      by the Free Software Foundation, either version 3 of the License, or         */
-/*      (at your option) any later version.                                          */
-/*                                                                                   */
-/*      Juggluco is distributed in the hope that it will be useful, but              */
-/*      WITHOUT ANY WARRANTY; without even the implied warranty of                   */
-/*      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                         */
-/*      See the GNU General Public License for more details.                         */
-/*                                                                                   */
-/*      You should have received a copy of the GNU General Public License            */
-/*      along with Juggluco. If not, see <https://www.gnu.org/licenses/>.            */
-/*                                                                                   */
-/*      Fri Jan 27 15:20:04 CET 2023                                                 */
-
-
-
 #include "jugglucotext.h"
 #ifndef WEAROS
-//constexpr static std::string_view belabels[]={ "Хуткі інсулін", "Вугляводы", "Дэкстроза", "Доўгі інсулін", "Ровар", "Прагулка", "Кроў"};
 constexpr static std::string_view belabels[]={ "Хуткі", "Вугляв", "Дэкстр", "Доўгі", "Ровар", "Прагул", "Кроў"};
 constexpr static Shortcut_t  beshortinit[]= { {"Bread",
         .48},
@@ -79,13 +56,13 @@ jugglucotext betext {
 	.middle="Сярэдні",
 #endif
 	.history="Гісторыя",
-	.historyinfo="Раз у 15 хвілін.\nЗапомніў на датчыку 8 гадзін.\nСканаванне перадае іх гэтай праграме.\nДатчык: ",
-	.history3info="Раз у 5 хвілін.\nЗапомніў на датчыку 14 дзён.\nПерададзена па Bluetooth у гэту праграму.\nДатчык: ",
+//	.historyinfo="Раз у 15 хвілін.\nЗапомніў на датчыку 8 гадзін.\nСканаванне перадае іх гэтай праграме.\nДатчык: ",
+//	.history3info="Раз у 5 хвілін.\nЗапомніў на датчыку 14 дзён.\nПерададзена па Bluetooth у гэту праграму.\nДатчык: ",
 	.sensorstarted= "Датчык запушчаны:",
 	.lastscanned="Апошняе сканаванне:",
 	.laststream="Апошні паток:",
 	.sensorends="Датчык заканчваецца: ",
-	.sensorexpectedend="Expected to end: ",
+	.sensorexpectedend="Чакаецца заканчэнне: ",
 #ifndef WEAROS
 	.newamount="Новая сума",
 	.averageglucose="Сярэдняя глюкоза: ",
@@ -102,7 +79,12 @@ jugglucotext betext {
 		"Глядзець",
 		"Датчык",
 		"Налады",
+#if defined(SIBIONICS)
+		"Sibionics",
+#else
 		"Аб Juggluco",
+#endif
+
 		"Зачыніць",
 		"Спыніць трывогу"
 		},
@@ -115,7 +97,13 @@ jugglucotext betext {
 		"Размаўляць",
 		"Парыць      "
 		},
-	.menustr2= {"Апошняе скан.","Сканы","Паток","Гісторыя","Сумы","Ежа","Dark mode        "},
+	.menustr2= {"Апошняе скан.",
+	    "Сканы",
+	    "Паток",
+	    "Гісторыя",
+	    "Сумы",
+	    "Ежа",
+	    "Dark mode        "},
 	.menustr3= {hourminstr,"Пошук","Дата","Дзень назад","Праз дзень","Тыдзень таму","Праз тыдзень"},
 #else
  .amount="Сума",
@@ -138,7 +126,7 @@ jugglucotext betext {
 		{"Датчык дакладна скончыўся",""},
 
 		{"Датчык гатовы праз","%d хвілін"},
-		{"Памылка датчыка (373)","Не адразу звяртайцеся ў службу падтрымкі кліентаў Abbott; магчыма, паказанні глюкозы стануць даступныя праз 10 хвілін."},
+		{"Памылка датчыка (373)","Паўтарыце спробу пазней"},
 		{"Новы датчык ініцыялізаваны","Праскануйце яшчэ раз, каб выкарыстоўваць яго"},
 		{"","Блакуе дакрананне падчас сканавання"},
 		{"",""},
@@ -152,7 +140,7 @@ jugglucotext betext {
 
 .libre3scanerror={"FreeStyle Libre 3, памылка сканавання", "Паспрабуй яшчэ"},
 .libre3wrongID={"Памылка, няправільны ID?","Укажыце ў Налады->Libreview той жа ўліковы запіс, які выкарыстоўваўся для актывацыі датчыка"},
-.libre3scansuccess= {"FreeStyle Libre 3 sensor", "Glucose values will now be received by Juggluco"},
+.libre3scansuccess= {"FreeStyle Libre 3 датчык", "Цяпер Juggluco будзе атрымліваць значэнні глюкозы"},
 .unknownNFC={"Памылка нераспазнанага сканавання NFC", "Паспрабуй яшчэ"},
 .nolibre3={"FreeStyle Libre 3 датчык","Не падтрымліваецца гэтай версіяй Juggluco"},
 #ifndef WEAROS
@@ -174,9 +162,9 @@ jugglucotext betext {
 .Stable="Мяняецца павольна",
 .Rising="Падымаецца",
 .RisingQuickly="Хутка падымаецца",
-.sibionics="Sibionics",
+//.sibionics="Sibionics",
 #endif
-        .receivingpastvalues="Receiving old values"
+        .receivingpastvalues="Атрыманне старых значэнняў"
 		}
 
 

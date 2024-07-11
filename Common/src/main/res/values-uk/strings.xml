@@ -77,7 +77,7 @@
  <string name="unit">"Одиниця: "</string>
  <string name="glucoseaxisleft">Цифри на осі глюкози ЛІВО</string>
  <string name="startsapp">Сканування запускає програму</string>
- <string name="sendtoxdrip">Tрансляція в xDrip</string>
+ <string name="sendtoxdrip">xDrip(Libre patch)</string>
  <string name="disablecamerakey">Вимкнути клавішу камери</string>
  <string name="invertscreen">Інвертувати екран</string>
  <string name="nfcsound">NFC звук</string>
@@ -329,4 +329,19 @@
  <string name="parseip">Помилка аналізу IP</string>
  <string name="toomanyhosts">Перевищено максимальну кількість хостів</string>
  <string name="senthosts">Juggluco надсилає максимум 6 хостам</string>
+ <string name="hostname">hostname</string>
+ <string name="clampnow">Тепер затискаємо</string>
+ <string name="sendfrom">"Надіслати з: "</string>
+ <string name="changestartbutton">Початок зміни</string>
+ <string name="floatjuggluco">Вище</string>
+ <string name="uploader">Завантаж.</string>
+ <string name="sibionics">Sibionics</string>
+ <string name="mmolL">mmol/L</string>
+ <string name="mgdL">mg/dL</string>
+ <string name="interval">Інтервал</string>
+ <string name="off">Вимкн</string>
+ <string name="streamingenabled">" Потокове передавання ввімкн"</string>
+ <string name="streamingnotenabled">" Потокове передавання не ввімкн"</string>
+ <string name="everSensebroadcast">xDrip(EverSense)</string>
+ <string name="threshold">Threshold</string>
 </resources>

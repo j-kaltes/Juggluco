@@ -1,24 +1,3 @@
-/*      This file is part of Juggluco, an Android app to receive and display         */
-/*      glucose values from Freestyle Libre 2 and 3 sensors.                         */
-/*                                                                                   */
-/*      Copyright (C) 2021 Jaap Korthals Altes <jaapkorthalsaltes@gmail.com>         */
-/*                                                                                   */
-/*      Juggluco is free software: you can redistribute it and/or modify             */
-/*      it under the terms of the GNU General Public License as published            */
-/*      by the Free Software Foundation, either version 3 of the License, or         */
-/*      (at your option) any later version.                                          */
-/*                                                                                   */
-/*      Juggluco is distributed in the hope that it will be useful, but              */
-/*      WITHOUT ANY WARRANTY; without even the implied warranty of                   */
-/*      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                         */
-/*      See the GNU General Public License for more details.                         */
-/*                                                                                   */
-/*      You should have received a copy of the GNU General Public License            */
-/*      along with Juggluco. If not, see <https://www.gnu.org/licenses/>.            */
-/*                                                                                   */
-/*      Fri Jan 27 15:20:04 CET 2023                                                 */
-
-
 #include "jugglucotext.h"
 #ifndef WEAROS
 constexpr static std::string_view uklabels[]={"Швидкий","Вуглев","Дэкстр","Довгий","Велос","Прагул","Кров"};
@@ -79,13 +58,13 @@ jugglucotext uktext {
 	.middle="Середній",
 #endif
 	.history="Історія",
-	.historyinfo="Раз у 15 хвилин.\nЗапам'ятовується на датчику 8 годин.\nСканування передає їх до цієї програми.\nДатчик: ",
-	.history3info="Раз у 5 хвилин.\nЗапам'ятовується на датчику 14 днів.\nПередано через Bluetooth до цієї програми.\nДатчик: ",
+//	.historyinfo="Раз у 15 хвилин.\nЗапам'ятовується на датчику 8 годин.\nСканування передає їх до цієї програми.\nДатчик: ",
+//	.history3info="Раз у 5 хвилин.\nЗапам'ятовується на датчику 14 днів.\nПередано через Bluetooth до цієї програми.\nДатчик: ",
 	.sensorstarted= "Датчик запущений:",
 	.lastscanned="Останнє сканування:",
 	.laststream="Останній потік:",
 	.sensorends="Датчик закінчується: ",
-	.sensorexpectedend="Expected to end: ",
+	.sensorexpectedend="Очікується закінчення: ",
 #ifndef WEAROS
 	.newamount="Нова сума",
 	.averageglucose="Середня глюкоза: ",
@@ -118,10 +97,14 @@ jugglucotext uktext {
 		"Статистика",
 		"Говорити",
 		"Плавати        "
-
-
 		},
-	.menustr2= {"Останнє скан.","Скани","Потік","Історія","Суми","Їжа","Dark mode        "},
+	.menustr2= {"Останнє скан.",
+	    "Скани",
+	    "Потік",
+	    "Історія",
+	    "Суми",
+	    "Їжа",
+	    "Dark mode        "},
 	.menustr3= {hourminstr,"Пошук","Дата","День назад","Через день","Тиждень тому","Тиждень пізн"},
 #else
  .amount="Сума",
@@ -143,7 +126,7 @@ jugglucotext uktext {
 		{"Датчик точно закінчився",""},
 
 		{"Датчик готовий","%d хвилин"},
-		{"Помилка датчика (373)","Не звертайтеся відразу до служби підтримки клієнтів Abbott; можливо, показники рівня глюкози доступні через 10 хвилин."},
+		{"Помилка датчика (373)","Спробуйте ще раз пізніше"},
 		{"Новий датчик активовано","Відскануйте ще раз, щоб використати його"},
 		{"","Блокує дотик під час сканування"},
 		{"",""},
@@ -181,7 +164,7 @@ jugglucotext uktext {
 .Rising="Підйом",
 .RisingQuickly="Швидко піднімається",
 #endif
-.receivingpastvalues="Receiving old values"
+.receivingpastvalues="Отримання старих значень"
 		}
 
 
