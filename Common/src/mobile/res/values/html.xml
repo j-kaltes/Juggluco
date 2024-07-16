@@ -974,7 +974,8 @@ mode.</p>
 <h1>Sensor</h1>
 <p style="border: none; padding: 0in"><font face="basic roman">T<font face="Liberation Serif, serif">he
 spinner contains the name of the sensor. If Juggluco is using more
-than one sensor at the same time, you can select for which sensor to
+than one sensor at the same time, you can select </font><font face="Liberation Serif, serif">the</font><font face="Liberation Serif, serif">
+sensor </font><font face="Liberation Serif, serif">for which </font><font face="Liberation Serif, serif">to
 show information.</font></font></p>
 <p style="border: none; padding: 0in"><a href="https://www.juggluco.nl/Jugglucohelp/battery.html"><font face="Liberation Serif, serif"><i><b>Doze
 mode</b></i></font></a> <font face="Liberation Serif, serif">leads
@@ -988,10 +989,8 @@ When you turn this option on, the History values are also received
 via Bluetooth. Also, other things will work differently. To Libreview
 will be sent the history values, instead of averages of the stream
 values. The disadvantage is that it is slower. This can be an issue
-on WearOS watches.</font></p>
-<p style="border: none; padding: 0in"><font face="Liberation Serif, serif">This
-option has no effect on Libre 3 and US Libre 2 sensors; they always
-receive history values via Bluetooth.</font></p>
+on WearOS watches. This option has no effect on Libre 3 and US Libre
+2 sensors; they always receive history values via Bluetooth.</font></p>
 <p style="border: none; padding: 0in"><font face="Liberation Serif, serif"><i><b>Permission</b></i>:
 Previous versions of Juggluco required location permission to find
 the device address of the sensor. This is no longer necessary for the
@@ -999,21 +998,22 @@ sensors I use. Maybe there are still sensors out there for which it
 is necessary; in that case you can turn it on. After the first
 contact Juggluco saves the device address and location permission is
 always useless. The device address, if known, is displayed after the
-sensor identifier. Red means a US-like sensor.</font></p>
-<p style="border: none; padding: 0in"><font face="Liberation Serif, serif">Android
-12 has a new Nearby devices permission, which can be used instead of
+sensor identifier. Red means a US-like sensor. Android 12 has a new
+<i>Nearby devices</i> permission, which can be used instead of
 location permission for searching for a Bluetooth device address, but
 it is also needed for later contact with Bluetooth devices.</font></p>
 <p style="border: none; padding: 0in"><font face="Liberation Serif, serif"><i><b>Forget</b></i><i>:</i>
 Let Juggluco forget the device address and scan for the device
 address. For some sensors this is needed to get a connection and is
-then done automatically by Juggluco. With this button you can manually say
-that Juggluco should do that, because there are maybe other occasions in which
-it is also needed.</font></p>
+then done automatically by Juggluco. With this button you can
+manually say that Juggluco should do that, because there are maybe
+other occasions in which it is also needed.</font></p>
 <p style="border: none; padding: 0in"><font face="Liberation Serif, serif"><i><b>Terminate</b></i>:
-stop connecting to this sensor via Bluetooth. If later you want to again
-receive stream glucose values from this sensor, you only have to scan
-it again.</font></p>
+stop connecting to this sensor via Bluetooth. If later you want to
+again receive stream glucose values from this sensor, you only have
+to scan it again. If the sensor is directly connected with the watch,
+you need first to turn that off and then press on <i>Terminate</i> on
+the phone and then on <i>Sync</i> on the watch.</font></p>
 <p style="border: none; padding: 0in"><font face="Liberation Serif, serif"><i><b>Turbo</b></i>:
 Increases effort to contact with sensor in the hope that it results
 in less connection errors, but can uses more battery power. Seems to
@@ -1021,7 +1021,8 @@ be needed on Watch4 with Freestyle Libre 2 sensors, but not with
 Freestyle Libre 3 sensors and on none of the smartphones I tried it
 on.</font></p>
 <p style="border: none; padding: 0in"><font face="Liberation Serif, serif"><b>Android</b>:
-Let Android instead of Juggluco make the connection with the sensor.</font></p>
+Let Android instead of Juggluco make the connection with the sensor.
+Don’t use it!</font></p>
 <p style="border: none; padding: 0in"><font face="Liberation Serif, serif"><i><b>Info</b></i>:
 Gives start and end times and last scan and stream times of sensor.</font></p>
 <p style="border: none; padding: 0in"><font face="Liberation Serif, serif">To
@@ -1037,7 +1038,7 @@ If you have started the sensor with Freestyle Reader and you can’t
 turn it off, you can prevent it from getting into contact with the
 sensor by putting the reader in a </font><a href="https://www.offgridweb.com/preparation/faraday-bags-testing-commercial-and-diy-wireless-signal-blockers/amp"><font face="Liberation Serif, serif"><u>Faraday
 cage</u></font></a><font face="Liberation Serif, serif">.</font></p>
-<p style="border: none; padding: 0in">&nbsp;<font face="Liberation Serif, serif"><b>Sensor
+<p style="border: none; padding: 0in"><font face="Liberation Serif, serif"><b>Sensor
 via Bluetooth/Use Bluetooth</b></font> <font face="Liberation Serif, serif">should
 be turned on.</font></p>
 <p style="border: none; padding: 0in"><font face="Liberation Serif, serif">If
@@ -1053,17 +1054,21 @@ It means </font><font face="Liberation Serif, serif"><i>Bluetooth
 device not found</i></font><font face="Liberation Serif, serif">.
 Nearly always it just takes some time before the device is found. It
 is also possible that the sensor is connected to another device,
-temperary not functioning well, other devices are interfering or the
+temporary not functioning well, other devices are interfering or the
 Bluetooth of Android doesn’t function. Sometimes turning Bluetooth
 off and on seems to help or rebooting the phone or turning off the
 Bluetooth connection of other devices. Other problems are sometimes
-resolved by scanning the sensor.</font></p>
+resolved by scanning the sensor. </font><font face="Liberation Serif, serif">Intervening
+water (including body water) can be a problem, so that wearing a
+WearOS watch on a different arm than the sensor can give connection
+problems when the arms are held in a way that the body is positioned
+between watch and sensor.</font></p>
 <p style="border: none; padding: 0in"><font face="Liberation Serif, serif">Scanning
-the sensor with Juggluco (with <i>Sensor via Bluetooth</i> enabled)
-on another phone, will steal the connection away from this phone and
-it can take some time, with scanning in between, to get it back
-again.</font></p>
-<p style="border: none; padding: 0in">&nbsp;</p>
+the sensor with Juggluco (with </font><font face="Liberation Serif, serif"><i>Sensor
+via Bluetooth</i></font><font face="Liberation Serif, serif">
+enabled) on another phone, will steal the connection away from this
+phone and it can take some time, with scanning in between, to get it
+back again.</font></p>
 ]]>
 </string>
 <string name="kerfstok" >
@@ -1545,10 +1550,10 @@ watch.</p>
 <p><strong>Init watch app</strong>: This should be pressed once after
 Juggluco is installed on the WearOS watch and is running.</p>
 <p><strong>Defaults</strong>: This sets the connection settings to
-its default values. This consists of the settings that can be changed
-in Left menu-&gt;<a href="https://www.juggluco.nl/Jugglucohelp/connectionoverview.html">Mirror</a>
+its default values. This has to do with the settings that can be
+changed in Left menu-&gt;<a href="https://www.juggluco.nl/Jugglucohelp/connectionoverview.html">Mirror</a>
 on the watch and left middle menu-&gt;Mirror on the phone. It
-consists of settings like &quot;Active only&quot; and &quot;Scans\'.
+consists of settings like &quot;<i>Active only</i>&quot; and &quot;<i>Scans”</i>.
 This button can be pressed when the settings have changed
 accidentally by water of the shower or during sleep. If you reset by
 reinstalling the watch version or clearing data, then you also need
@@ -1574,30 +1579,30 @@ there are two possibilities:</p>
 	left. It is possible that Juggluco has to be reinstalled if the
 	device runs out of storage space at a critical moment;</p></li>
 	<li><p>Make the phone version of Juggluco working with the sensor.
-	You have to scan the sensor a few times with &quot;Sensor via
-	Bluetooth&quot; set. Receiving glucose values on the phone via
-	Bluetooth is not necessary;</p></li>
-	<li><p>Install the Wear OS version of Juggluco on your Wear OS watch
-	and start it;</p></li>
-	<li><p>On the phone go to left-menu-&gt;Watch-&gt;<a href="https://www.juggluco.nl/Jugglucohelp/wearosinfo.html">Wear
+	You have to scan the sensor a few times with &quot;<i>Sensor via
+	Bluetooth</i>&quot; set;</p></li>
+	<li><p><a href="https://www.juggluco.nl/JugglucoWearOS/install/adb.html">Install</a>
+	the Wear OS version of Juggluco on your Wear OS watch and start it;</p></li>
+	<li><p>On the phone, go to left menu-&gt;Watch-&gt;<a href="https://www.juggluco.nl/Jugglucohelp/wearosinfo.html">Wear
 	OS Config</a>. Your watch should be displayed in the spinner. Press
 	&quot;Init watch app&quot;;</p></li>
 	<li><p>If everything went well, in both Juggluco\'s a TCP connection
 	is configured and all data on the phone is sent to the watch. This
-	can take a long time if you were using Juggluco for a long time. You
-	can check if the TCP connection is configured by looking in the
-	Mirror dialog (phone: left middle menu-&gt;<a href="https://www.juggluco.nl/Jugglucohelp/connectionoverview.html">Mirror</a>,
+	can take a long time if you were using Juggluco for a long time, so
+	that a lot of data has to be sent. You can check if the TCP
+	connection is configured by looking in the mirror dialog (phone:
+	left middle menu-&gt;<a href="https://www.juggluco.nl/Jugglucohelp/connectionoverview.html">Mirror</a>,
 	watch: left-menu-&gt;Mirror). A connection with the same id as shown
 	in the spinner for your watch should be shown. On the watch is
-	should also contain the IP of the phone. If the are not there or the
-	watch side doesn\'t contain an IP, press again on &quot;Init watch
-	app&quot;. If it still isn\'t there, check the Bluetooth connection
-	and the phone app responsible for the connection to your watch.
-	(When the watch already has received data, pressing &quot;Init watch
-	app&quot; has the effect of re-sending all, so you could as well
-	re-install the watch version of Juggluco. Later on, if the right IP
-	is not shown, you should on the phone turn the external connection
-	(WIFI or Mobile data) off and on.</p></li>
+	should also contain the IP of the phone. If they are not there or
+	the watch side doesn\'t contain an IP, press again on &quot;<i>Init
+	watch app</i>&quot;. If it still isn\'t there, check the Bluetooth
+	connection and the phone app responsible for the connection to your
+	watch. (When the watch already has received data, pressing &quot;<i>Init
+	watch app</i>&quot; has the effect of re-sending all data, so you
+	could as well re-install the watch version of Juggluco. Later on, if
+	the right IP is not shown, you should on the phone turn the external
+	connection (WIFI or Mobile data) off and on.</p></li>
 	<li><p>If everything went well, the same data, as displayed on the
 	phone version of Juggluco, is displayed on the watch version of
 	Juggluco. Every new glucose value received by the phone is sent via
@@ -1614,15 +1619,15 @@ there are two possibilities:</p>
 	from watch to phone as you can check in the Mirror dialog. You can\'t
 	change &quot;Direct sensor-watch connection&quot; when watch and
 	phone are not in sync.</p></li>
-	<li><p>If you want to send amounts from the watch to the phone, you
-	should reverse the send-direction yourself in the Mirror dialog by
+	<li><p>If you want to sent amounts from the watch to the phone, you
+	should reverse the send-direction yourself in the mirror-dialog by
 	unchecking it on the phone and checking it on the watch. On the
 	phone &quot;<i>Receive from</i>&quot; should also be set. If
 	everything isn\'t set exactly right, it doesn\'t work. &quot;Don\'t
-	change amounts&quot; should be changed. The labels of <i>amounts</i>are
+	change amounts&quot; should be changed. The labels of <i>amounts </i>are
 	always sent with the amounts. If you change the direction of the
 	transmission of amounts from watch to phone, you can\'t change the
-	labels. It shouldn\'t be too easy;</p></li>
+	labels;</p></li>
 </ul>
 <p>If the sensor has a direct Bluetooth connection with the watch and
 it\'s values are sent to a smartphone, scanned values should also be
@@ -1633,9 +1638,9 @@ sent back to the watch or modified authentication information is not
 sent to the watch, which will result in <i>Unlock key</i> errors.</p>
 <p>Changes to the connection should also only be made when the data
 is synchronized; the data on phone and watch should be complete
-copies (with the exception that you can leave out allamount data).</p>
+copies (with the exception that you can leave out all amount-data).</p>
 <p>The first time, when a lot of data has to be transferred from
-smartphone to watch, you can attach the watch to the charger. My
+smartphone to watch, you can attach the watch to the charger: my
 watch turns on WIFI when it is attached to the charger.</p>
 <h2 class="western"><strong>Watch-Phone connection</strong></h2>
 <p>The watch-phone connection is an adaptation of the mirror
@@ -1654,10 +1659,10 @@ following additions:</p>
 	watch</i></a>.</p></li>
 	<li><p>If the WIFI connection between the phone and the watch
 	doesn’t work, Juggluco switches to the use of TCP over Bluetooth.
-	Except when a lot of data has to be sent to the watch on its
-	first use, you can turn off WIFI on the watch.</p></li>
+	Except when a lot of data has to be sent to the watch on its first
+	use, you can turn off WIFI on the watch.</p></li>
 </ul>
-<p style="margin-bottom: 0in">When no data are exchanged between
+<p style="margin-bottom: 0in">When no data is exchanged between
 Juggluco on the phone and watch you can check the following:</p>
 <ul>
 	<li><p style="margin-bottom: 0in">Bluetooth should be turned on on
@@ -1673,13 +1678,13 @@ Juggluco on the phone and watch you can check the following:</p>
 	left menu→Mirror on the watch can help;</p></li>
 	<li><p style="margin-bottom: 0in">Sometime you need to do the same
 	on the phone. Thereafter you may need to do it again on the watch;</p></li>
-	<li><p style="margin-bottom: 0in">Turning Bluetooth off and on phone
-	or watch can help. Hereafter you have again to press Reinit and Sync
-	on the watch;</p></li>
+	<li><p style="margin-bottom: 0in">Turning Bluetooth off-and-on on
+	phone or watch can help. Hereafter you have again to press Reinit
+	and Sync on the watch;</p></li>
 	<li><p style="margin-bottom: 0in">Doing the same with WIFI or mobile
 	data is sometimes needed;</p></li>
-	<li><p style="margin-bottom: 0in">Sometimes a reboot of the phone and/or
-	watch is needed to get Bluetooth working again;</p></li>
+	<li><p style="margin-bottom: 0in">Sometimes a reboot of the phone
+	and/or watch is needed to get Bluetooth working again;</p></li>
 	<li><p style="margin-bottom: 0in">It is possible that somehow the
 	settings in the mirror connection are changed to the wrong values.
 	You can reset them to the original values by pressing left
@@ -1809,13 +1814,8 @@ set time schedule.</p>
 <![CDATA[
 <h1>Libreview</h1>
 <p style="line-height: 100%; margin-bottom: 0in">Juggluco can send
-glucose data and amounts to Libreview. When using Libre 0 or 3
-sensors, US/CA/AU Libre 2 sensors or other Libre 2 sensors with
-<i>Bluetooth History</i> set, Juggluco sends the history values to
-Libreview. If Libre 2 sensors are used without &quot;<i>Bluetooth
-history</i>&quot;,Juggluco uses the stream data received via
-Bluetooth to create these 15 minute points by averaging the stream
-values around each point.</p>
+glucose data and amounts to Libreview. 
+</p>
 <p style="line-height: 100%; margin-bottom: 0in">Like the Librelink
 app, it sends data from the last 89 days to Libreview. 
 </p>
@@ -1844,7 +1844,8 @@ amounts</b></i></a>&quot; and specify what each label means.</p>
 to set this if you make use of <a class="western" href="https://libreview.ru/">https://libreview.<span style="text-decoration: none"><b>ru</b></span></a>
 instead of <a class="western" href="https://libreview.com/">https://libreview.com</a>.
 This only applies to Libre 2 sensors. Libre 3 sensors can only be
-used with libreview.com, because no Russian Libre 3 app exists.</p>
+used with libreview.com, because no Russian Abbott Libre 3 app
+exists.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>Immediate</b>:
 Send glucose values to Libreview immediately when they arrive from
 Libre 2 or 3 sensors. This is only useful in combination with
@@ -1871,19 +1872,15 @@ press this when switching to a new Libreview account.</p>
 <p style="line-height: 100%; margin-bottom: 0in">Result of the last
 time trying to send to Libreview is displayed below the &quot;Get
 Account ID&quot; button.</p>
-<p style="line-height: 100%; margin-bottom: 0in">Because the values
-sent to Libreview are first transformed to one data point in every 15
-minutes and then analyzed, there can be small differences between the
-values shown in Juggluco\'s statistics screen and Libreview. For
-example Libreview says 100% of the time active, while Juggluco\'s
-statistics screen says 96.0%. Also some high and low values will be
-averaged away, so that Libreview gives a somewhat higher <i>time in
-target </i>than the statistics screen of Juggluco. Because the
-history values created on the sensors are less extreme than the
-average of the stream values around a history value, this difference
-will be larger when Libreview is based on the <i>history</i> values
-as when &quot;Bluetooth History&quot; is enabled in Juggluco or
-Librelink is used.</p>
+<p style="line-height: 100%; margin-bottom: 0in">Libreview uses the
+history values for its analysis and Juggluco uses the stream values
+for its statistics screen (<a class="western" href="https://www.juggluco.nl/Jugglucohelp/stathelp.html">left
+middle menu-&gt;Statistics</a>).  This difference causes small
+differences between Libreview and the statistics of Juggluco. Because
+the stream values are more extreme, Juggluco is somewhat more
+negative: lower time in range, larger variability. Also <i>time
+sensor active</i> is smaller according to Juggluco; it counts every
+missing stream value.</p>
 <p style="line-height: 100%; margin-bottom: 0in">Juggluco can be
 connected with multiple sensors at the same time, while Librelink
 only handles one sensor at a time. Juggluco also sends data from only
@@ -1905,8 +1902,7 @@ not refreshed automatically). Retrieving the Account ID from the
 LibreView server makes it possible to use a FreeStyle Libre 3 sensor
 that was already used with Abbotts Libre 3 app with this LibreView
 account.</p>
-<p><b>WARNING</b>: The Freestyle Libre 3 sensor should be activated
-with this account.</p>
+<p>Data from Sibionics sensors is not sent to Libreview.</p>
 ]]>
 </string>
 <string name="garminconfig" >

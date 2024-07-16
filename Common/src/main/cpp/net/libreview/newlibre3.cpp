@@ -356,7 +356,7 @@ bool sendlibre3viewdata(bool hasnewcurrent,uint32_t nu) {
 	
 	int lastlibre3=-1;
 	const uint32_t fromtime=settings->data()->startlibretime;
-	const uint32_t oldtimer=fromtime?fromtime:(nu-day15secs);
+	const uint32_t oldtimer=(fromtime?fromtime:nu)-day15secs;
 #ifndef NOLOG
 	const time_t tim=oldtimer;
 	LOGGER("Start sendlibre3viewdata startlibre3view=%d lastsensor=%d from=%s",startsensor,lastsensor,ctime(&tim));
