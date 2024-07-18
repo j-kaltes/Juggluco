@@ -26,6 +26,9 @@ import static tk.glucodata.Backup.getedit;
 import static tk.glucodata.Backup.getnumedit;
 import static tk.glucodata.MainActivity.CHAIN_REQUEST;
 import static tk.glucodata.MainActivity.PRIVATE_REQUEST;
+import static tk.glucodata.MainActivity.doonback;
+import static tk.glucodata.MainActivity.poponback;
+import static tk.glucodata.MainActivity.setonback;
 import static tk.glucodata.Natives.getreceiveport;
 import static tk.glucodata.RingTones.EnableControls;
 import static tk.glucodata.help.hidekeyboard;
@@ -53,16 +56,13 @@ import tk.glucodata.settings.LibreNumbers;
 
 public class Nightscout {
 static final private String LOG_ID="Nightscout";
-static private void openfile(MainActivity act,int requestid) {
+static private void openfile(Activity act,int requestid) {
 	try {
 		Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
 		intent.addCategory(Intent.CATEGORY_OPENABLE);
 		String name= MainActivity.keys[requestid&~PRIVATE_REQUEST];
 		intent.setType("*/*");
         	intent.putExtra(Intent.EXTRA_TITLE, name);
-//		var uri= Uri.fromFile(new File("/sdcard/Download",name));
-//		 intent.putExtra(DocumentsContract.EXTRA_INFO,name);
-//	    intent.putExtra(DocumentsContract.EXTRA_INITIAL_URI, uri);
 
 		act.startActivityForResult(intent, requestid);
 	}
@@ -72,25 +72,20 @@ static private void openfile(MainActivity act,int requestid) {
     }
 
 static final private int MAXKEY=80;
-public static void show(MainActivity context,View parent) {
+public static void show(Activity context,View parent) {
    	EnableControls(parent,false);
 
 	var save=getbutton(context,R.string.save);
-//	var visible=getcheckbox(context,"Visible",false);
 	var secret=getlabel(context,R.string.secret);
 
 	String key=Natives.getApiSecret();
 	String[] oldkey={key};
-//	var editkey=getedit(context,key);
     var editkey= new EditText(context);
         editkey.setImeOptions(editoptions);
         editkey.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
         editkey.setTransformationMethod(new PasswordTransformationMethod());
 	 editkey.setMinEms(12);
 	editkey.setText(key);
-	/*
-	var vis=new ToggleButton(context);
-	vis.setButtonDrawable("@drawable/check");  */
 
        var visible = new CheckBox(context);
        visible.setText(R.string.visible);
@@ -250,9 +245,9 @@ public static void show(MainActivity context,View parent) {
 
 		closeproc[0]=()-> {
 		 var newkey=editkey.getText().toString();
-		context.setonback(closeproc[0]);
+		setonback(closeproc[0]);
 		 Runnable okproc= () -> {
-                        context.poponback();
+         poponback();
 			EnableControls(parent,true);
 			hidekeyboard(context);
 			removeContentView(layout); 
@@ -284,11 +279,10 @@ public static void show(MainActivity context,View parent) {
 		Confirm.ask(context,context.getString(R.string.withoutsaving),"",okproc);
 		};
 
-	context.setonback( closeproc[0]);
+	setonback( closeproc[0]);
 	Close.setOnClickListener(
 		v -> {
-		        //  context.poponback();
-                        context.doonback();
+              doonback();
 
 			});
 

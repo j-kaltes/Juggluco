@@ -22,14 +22,20 @@
 package tk.glucodata;
 import static android.graphics.Color.BLACK;
 import static android.graphics.Color.WHITE;
+import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static android.view.WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
 import static java.lang.Float.isNaN;
 import static java.util.Collections.swap;
+import static tk.glucodata.Applic.backgroundcolor;
 import static tk.glucodata.Applic.isWearable;
 import static tk.glucodata.CommonCanvas.drawarrow;
 import static tk.glucodata.MainActivity.OVERLAY_PERMISSION_REQUEST_CODE;
+import static tk.glucodata.MainActivity.doonback;
+import static tk.glucodata.MainActivity.setonback;
 import static tk.glucodata.Notify.glucosetimeoutSEC;
 import static tk.glucodata.Notify.timef;
+import static tk.glucodata.util.getbutton;
+import static tk.glucodata.util.getlabel;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -43,10 +49,14 @@ import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.os.Build;
 import android.provider.Settings;
+import android.text.InputType;
+import android.text.method.ScrollingMovementMethod;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -144,7 +154,6 @@ public static void rewritefloating(Activity context) {
 	}
 
 	public static void setfloatglucose(Activity context, boolean val) {
-	//if(!isWearable)  
 	{
 		if(val) {
 			if(!makefloat()) {
@@ -200,6 +209,62 @@ public static void rewritefloating(Activity context) {
 		var params= new WindowManager.LayoutParams( floatingwidth,(int)(floatingheight),(int) floatingx, (int)floatingy, type, flags, PixelFormat.TRANSLUCENT);
 		windowMana.addView(floatview, params);
 		}
+
+private boolean asking=false;
+private void untouchable() {
+   if(asking)
+      return;
+   asking=true;
+		final var type = (Build.VERSION.SDK_INT < Build.VERSION_CODES.O)?WindowManager.LayoutParams.TYPE_SYSTEM_ALERT: WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+		final var flags = FLAG_NOT_FOCUSABLE;
+        final int x=isWearable?0:(int) floatingx;
+        final int y=isWearable?0:(int)floatingy;
+		var params= new WindowManager.LayoutParams( WRAP_CONTENT,WRAP_CONTENT,x, y, type, flags, PixelFormat.OPAQUE);
+      /*
+      Context context= MainActivity.thisone;
+        if(context==null)
+            context=keeprunning.theservice; */
+      final Context context= Applic.app;
+       var ok=getbutton(context,R.string.ok);
+       var cancel=getbutton(context,R.string.cancel);
+       var untouch=getlabel(context, R.string.untouchablequestion);
+       untouch.setTextColor(Color.WHITE);
+      untouch.setElegantTextHeight(true);
+      untouch.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+      untouch.setSingleLine(false);
+
+	    untouch.setPadding((int)(density*5),0,0,0);
+//      untouch.setImeOptions(EditorInfo.IME_FLAG_NO_ENTER_ACTION);
+//      untouch.setMinLines(2);
+//untouch.setVerticalScrollBarEnabled(true); untouch.setMovementMethod(ScrollingMovementMethod.getInstance()); untouch.setScrollBarStyle(View.SCROLLBARS_INSIDE_INSET);
+//      var lp = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT); untouch.setLayoutParams(lp);
+		var layout=new Layout(context,  
+(v,w,h) -> {
+         var wid=ok.getMeasuredWidth()+cancel.getMeasuredWidth();
+         Log.i(LOG_ID,"layout width="+w+" ok+cancel="+wid);
+         if(wid>0) {
+            untouch.setWidth(wid);
+            w=wid;
+            }
+			return new int[] {w,h};
+         },
+      new View[] {untouch},new View[]{cancel,ok});
+      layout.setBackgroundColor(Color.BLACK);
+	ok.setOnClickListener(
+			v-> {
+				setTouchable(false);
+				windowMana.removeView(layout);
+            asking=false;
+			});
+	cancel.setOnClickListener(
+			v-> {
+				windowMana.removeView(layout);
+            asking=false;
+			});
+		windowMana.addView(layout,params);
+      }
+
+
 	static float xview;
 	static float yview;
 	static int transnr=0;
@@ -449,22 +514,23 @@ public boolean onTouchEvent(MotionEvent event) {
 		else {
 			if(startX< floatglucosex ) {
 				Log.i(LOG_ID,"<floatglucosex");
-				var act=MainActivity.thisone;
+				final var act=MainActivity.thisone;
+//                  (Activity)getContext();
+            final var intent=new Intent(Applic.app,MainActivity.class);
 				if(act!=null) {
-					Log.i(LOG_ID,"startActivityIfNeeded( new Intent(Applic.app,MainActivity)). active="+act.active);
+					Log.i(LOG_ID,"startActivityIfNeeded( new Intent(Applic.app,MainActivity)). ");
 
-					act.startActivityIfNeeded( new Intent(Applic.app,MainActivity.class),0);
+					act.startActivityIfNeeded( intent,0);
 					//act.runOnUiThread(() -> act.startActivityIfNeeded( new Intent(Applic.app,MainActivity.class),0));
 					}
 				else {
 					Log.i(LOG_ID,"MainActivity.thisone=null");
-					var intent=new Intent(Applic.app,MainActivity.class);
 					 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 					keeprunning.theservice.startActivity( intent);
 					}
 				}
 			if((event.getEventTime()-downstart)<maxdoubletime) {
-				setTouchable(false);
+             untouchable();
 				}
 			}
                 moved =false;
@@ -477,6 +543,8 @@ public boolean onTouchEvent(MotionEvent event) {
 		if(!moved) {
 			if((event.getEventTime()-downstart)>mindowntime) {
 			    hidefloating();
+            //final var act=(Activity)getContext();
+
 			    downstart=0;
 			  	} 
 			else {

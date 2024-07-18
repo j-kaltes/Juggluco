@@ -40,15 +40,6 @@ static private float glucose=80f;
 static private float trend=-5.2f;
 static private final  String LOG_ID="Watch";
 static public void show(MainActivity context) {
-	/*
-	var pens=getbutton(context,"try Pens");
-	pens.setOnClickListener(v->{
- 			if(addnovopen("A serial",3))
-				Log.i(LOG_ID,"Add serial succeeded");
-			else
-				Log.i(LOG_ID,"Add serial failed");;
-
-			}); */
        var notify=getcheckbox(context,context.getString(R.string.notify), Notify.alertwatch);
 	
 	notify.setOnCheckedChangeListener(
@@ -109,12 +100,6 @@ static public void show(MainActivity context) {
 	var usexdripserver=Natives.getusexdripwebserver();
 	var server=getcheckbox(context,R.string.webserver,usexdripserver);
 	server.setOnCheckedChangeListener( (buttonView,  isChecked) -> Natives.setusexdripwebserver(isChecked));
-/*
-	var local=getcheckbox(context,"local only",Natives.getXdripServerLocal( ));
-	local.setOnCheckedChangeListener(
-			 (buttonView,  isChecked) -> {
-				Natives.setXdripServerLocal(isChecked);
-			 });*/
 	var serverconfig=getbutton(context,R.string.config);
 	var usegarmin=Natives.getusegarmin();
 	var kerfstok=getcheckbox(context,"Kerfstok",usegarmin); 

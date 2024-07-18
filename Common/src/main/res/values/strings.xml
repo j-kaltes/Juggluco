@@ -344,4 +344,5 @@
  <string name="streamingnotenabled">" Streaming not enabled"</string>
     <string name="everSensebroadcast">EverSense</string>
  <string name="threshold">Threshold</string>
+ <string name="untouchablequestion">Make floating glucose untouchable?</string>
 </resources>

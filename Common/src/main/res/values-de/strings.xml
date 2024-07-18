@@ -327,5 +327,5 @@
  <string name="changestartbutton">Anfang ändern</string>
  <string name="floatjuggluco">Über</string>
  <string name="threshold">Schwelle</string>
-
+ <string name="untouchablequestion">Schwebende Glukose untastbar machen?</string>
 </resources>

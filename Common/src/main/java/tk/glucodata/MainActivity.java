@@ -104,6 +104,9 @@ import java.util.List;
 
 //public class MainActivity extends ComponentActivity implements NfcAdapter.ReaderCallback  {
 public class MainActivity extends AppCompatActivity implements NfcAdapter.ReaderCallback  {
+public MainActivity() {
+	clearonback() ;
+	}
 // Extending from AppCompatActivity requires to use an AppCompat theme for the Activity.
 // In the manifest, for the activity, use android:theme="@style/Theme.AppCompat"
 
@@ -346,13 +349,6 @@ if(Build.VERSION.SDK_INT >= 30)  {
 	DisplayMetrics metrics= this.getResources().getDisplayMetrics();
 	screenheight= metrics.heightPixels;
 	screenwidth= metrics.widthPixels;
-//	float xcm =2.54f*screenwidth/metrics.xdpi;
-	//Natives.setscreenwidthcm(xcm);
-//	wearable=xcm<5.8f;
-
-
-//	hideSystemUI(); initscreenwidth=getscreenwidth(this);
-       // setAmbientEnabled();
         Log.i(LOG_ID,"onCreate start target="+ TargetSDK);
 	if(TargetSDK>30) {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -366,17 +362,10 @@ if(Build.VERSION.SDK_INT >= 30)  {
 		return;
 
     startall();
-	/*
-	if(!isWearable) {
-		new Thread(() -> {
-			Libreview.testlibre3();
-		}).start();
-	} */
-       Log.i(LOG_ID,"onCreate end");
-      // if(!isRelease) test.test();
-//       if(!isRelease) Test.test();
+    Log.i(LOG_ID,"onCreate end");
 	if(Menus.on)
 		Menus.show(this);
+   // ExtraActivity.specifics(this);
 	/*new OnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
     	@Override
 		public void handleOnBackPressed() {
@@ -1294,28 +1283,25 @@ public NumberView getnumberview() {
 	return curve.numberview;
 	}
 
-//public Stack<Runnable> backrun=new Stack<Runnable>() ;
-final private Deque<Runnable> backrun = new ArrayDeque<>();
-public void setonback(Runnable run) {
+final static private Deque<Runnable> backrun = new ArrayDeque<>();
+static public void setonback(Runnable run) {
 	Log.i(LOG_ID,"setonback");
 	backrun.addFirst(run);
 	}
-public boolean doonback() {
+static public boolean doonback() {
 	Log.i(LOG_ID,"doonback");
 	if(!backrun.isEmpty()) {
-//		Runnable wasback=backrun.pop();
 		Runnable wasback=backrun.removeFirst();
 		wasback.run();
 		return true;
 		}
 	return false;
 	}
-				
-public void poponback() {
+static public void poponback() {
 	if(!backrun.isEmpty()) 
 		backrun.removeFirst();
 	}
-public void clearonback() {
+static public void clearonback() {
 	backrun.clear();
 	}
 boolean backinapp()  {

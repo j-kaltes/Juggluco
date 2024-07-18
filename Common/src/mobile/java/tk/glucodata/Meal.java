@@ -763,14 +763,19 @@ static Layout  fooddatabase(MainActivity act, TriConsumer<String,Float,String> g
 	recycle.scrollToPosition(random.nextInt(fnr));
 	Layout lay=new Layout(act,(l,w,h)->{
 		int width=GlucoseCurve.getwidth();
-		l.setY(MainActivity.systembarTop);
-		if(width>w)
+//		l.setY(MainActivity.systembarTop);
+		if(width>w) {
 			l.setX((width-w)/2);
+         		}
 		else
 			l.setX(0);
-		return new int[]{w,h};},new View[]{Help,searchstr,searchbutton,Close,}	,new View[]{recycle});
-	   int pad=(int)(tk.glucodata.GlucoseCurve.metrics.density*5.0);
-	   lay.setPadding(pad,0,pad,0);
+	//	return new int[]{w,h-MainActivity.systembarTop};
+		return new int[]{w,h};
+
+		},new View[]{Help,searchstr,searchbutton,Close,}	,new View[]{recycle});
+	 //  int pad=(int)(tk.glucodata.GlucoseCurve.metrics.density*5.0);
+	//   lay.setPadding(pad,0,pad,0);
+  	lay.setPadding(MainActivity.systembarLeft,MainActivity.systembarTop/2,MainActivity.systembarRight,MainActivity.systembarBottom);
     	lay.setBackgroundColor(Applic.backgroundcolor);
 	act.addContentView(lay, new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
 	searchstr.requestFocus();

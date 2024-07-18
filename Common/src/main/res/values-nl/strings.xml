@@ -323,4 +323,5 @@
  <string name="changestartbutton">Begin wijzigen</string>
  <string name="floatjuggluco">Boven</string>
  <string name="threshold">Drempel</string>
+ <string name="untouchablequestion">Zwevende glucose ontastbaar maken?</string>
 </resources>

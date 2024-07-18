@@ -717,14 +717,10 @@ public void gettimepicker(MainActivity activity,int hourin, int minin, ObjIntCon
    settime=timeset;
     if(timepicker==null) {
         pick =new TimePicker(activity);
-/*(	if(smallScreen)
-		setMode(pick, 1);
-	Log.i(LOG_ID,"mMode="+pick.getMode());*/
         pick.setIs24HourView( android.text.format.DateFormat.is24HourFormat(activity));
         Button cancel=new Button(activity);
         cancel.setText(R.string.cancel);
         cancel.setOnClickListener(vi -> { 
-	//	timepicker.setVisibility(INVISIBLE);
 		activity.doonback();
 
 		});
@@ -732,7 +728,6 @@ public void gettimepicker(MainActivity activity,int hourin, int minin, ObjIntCon
         ok.setText(R.string.ok);
         ok.setOnClickListener(vi -> {
 		activity.doonback();
-        //    timepicker.setVisibility(INVISIBLE);
             int hour,min;
             if(Build.VERSION.SDK_INT < 23) {
                  hour=pick.getCurrentHour();
@@ -829,12 +824,6 @@ void setmealbutton(int labelsel,long hitptr) {
 Spinner getspinner(Activity context) {
 if(spinner==null) {
         spinner=new Spinner(context,isWearable?MODE_DIALOG: MODE_DROPDOWN);
-      /* spinner=new Spinner(context, MODE_DROPDOWN);
-	var height=GlucoseCurve.getheight();
-	spinner.setDropDownHorizontalOffset(height/3);
-	spinner.setDropDownVerticalOffset(0);*/
-//	 mSpinnerSimple.setDropDownWidth();
-	// spinner.setDropDownHeight(height);
 	final int minheight=GlucoseCurve.dpToPx(48);
 	spinner.setMinimumHeight(minheight);
 	avoidSpinnerDropdownFocus(spinner);
