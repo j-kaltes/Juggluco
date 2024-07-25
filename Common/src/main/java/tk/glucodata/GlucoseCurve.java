@@ -63,6 +63,7 @@ import static java.lang.System.currentTimeMillis;
 import static tk.glucodata.Applic.isWearable;
 import static tk.glucodata.Applic.usedlocale;
 import static tk.glucodata.BuildConfig.SiBionics;
+import static tk.glucodata.MainActivity.systembarBottom;
 import static tk.glucodata.MainActivity.systembarTop;
 import static tk.glucodata.Natives.turnoffalarm;
 import static tk.glucodata.NumberView.geteditview;
@@ -168,7 +169,9 @@ void setminheight(View[] views,int minheight) {
 //void getnumcontrol(MainActivity activity,int width,int height) {
 void getnumcontrol(MainActivity activity) {
    Log.i(LOG_ID,"getnumcontrol start");
-	if(numcontrol==null) {
+
+   final int height=getHeight();
+	if(numcontrol==null||numcontrol.getHeight()!=(height-systembarTop)) {
            ImageButton first=new ImageButton(activity);
            first.setImageResource( R.drawable.baseline_first_page_24);
            first.setOnClickListener(v-> {
@@ -244,7 +247,7 @@ void getnumcontrol(MainActivity activity) {
         setminheight(controls,minheight);
 	   numcontrol= new Layout(activity,(v,w,h) -> {
 		   final int width=getWidth();
-		   final int height=getHeight();
+//		   final int height=getHeight();
 		   int columns=Natives.numcontrol(w,h);
          int bar=systembarTop;
          int over;
@@ -264,13 +267,12 @@ void getnumcontrol(MainActivity activity) {
 				   v.setX(width-w);
 				}
 			   else {
-	//		   	   setminheight(controls,0);
 
 				   v.setX(((width-w)/2.0f));
 				   }
 			   }
             	    requestRender();
-
+         over-=systembarBottom;
 			return new int[] {w,over};
 		  },new View[]{first}, new View[]{back}, new View[]{search},new View[]{closecontrol}, new View[]{next}, new View[]{last}
 		  );

@@ -4374,9 +4374,9 @@ bool numpagepast() {
 extern int nrcolumns;
 int nrcolumns=1;
 int numfrompos(const float x,const float y) {
-	int rows=dheight/textheight;
+	int rows=((dheight-statusbarheight)/(double)textheight);
 
-	int ind= ((nrcolumns!=1&&x>(dleft+dwidth/2))?rows:0)+ (y-dtop)/textheight;
+	int ind= ((nrcolumns!=1&&x>(dleft+dwidth/2))?rows:0)+ std::min(rows-1,(int)((y-statusbarheight-dtop)/textheight));
 	LOGGER("rows=%d, ind=%d\n",rows,ind);
 	int i=0,index;
 	for(int i=0;i<basecount;i++) {
@@ -4457,7 +4457,8 @@ void numpagenum(const uint32_t tim) {
 			}
 		numiters[i].iter=ptr;
 		}
-	const int percol=dheight/textheight;
+	const int percol=(dheight-statusbarheight)/textheight;
+//	const int percol=round((dheight-statusbarheight)/(double)textheight);
 	const int onpage=nrcolumns*percol;
 	#ifndef NOLOG
 	time_t tims=tim;
