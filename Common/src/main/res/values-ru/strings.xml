@@ -5,7 +5,7 @@
     <string name="active">Активно</string>
     <string name="activeonly">Только активный</string>
     <string name="addconnectionbutton">Добавление соединения</string>
-    <string name="additem">Добавление компонента</string>
+    <string name="additem">Добавить блюдо</string>
     <string name="addsensorenddate">Добавить дату окончания работы датчика в приложение Календарь</string>
 	<string name="advanced">Дополнительно</string>
     <string name="alarm_description">Слишком низкий или слишком высокий уровень глюкозы</string>
@@ -29,7 +29,7 @@
     <string name="cantsetminutes">"Минуты не могут быть установлены на "</string>
     <string name="carbo">Углеводы</string>
     <string name="carbohydrate">Углевод:</string>
-    <string name="carbperunit">Углеводы/Блок:</string>
+    <string name="carbperunit">Углеводов в порции:</string>
     <string name="changeinsulin">"Изменение типа инсулина на "</string>
     <string name="closename">Закрыть</string>
     <string name="colors">Цвета</string>
@@ -105,7 +105,7 @@
     <string name="glucose">Глюкоза</string>
     <string name="glucose_value">Ур.глюк</string>
     <string name="glucoseaxisleft">Ось глюкозы СЛЕВА</string>
-    <string name="glucosestatusbar">уведомление о глюкозе</string>
+    <string name="glucosestatusbar">ГК в шторке</string>
     <string name="graphrange">"Диапазон графиков: "</string>
     <string name="heartrate">Частота сердцебиения</string>
     <string name="helpname">Помощь</string>
@@ -115,7 +115,7 @@
     <string name="highglucoseshort">"Высокий сахар!"</string>
     <string name="historyname">История</string>
     <string name="info">Инфо</string>
-    <string name="ingredient">Ингредиенты</string>
+    <string name="ingredient">Что ем</string>
     <string name="initwatchapp">Запустить приложение watch app</string>
     <string name="installedlibrary">Установленная библиотека</string>
     <string name="invaliddays">"' недействительный. Дни должны быть натуральным числом."</string>
@@ -146,7 +146,7 @@
     <string name="meal">Еда: </string>
     <string name="mealname">Прием пищи</string>
     <string name="mealsname">Приемы пищи</string>
-    <string name="mealtotal">Сумма приемов пищи:</string>
+    <string name="mealtotal">Всего съем:</string>
 	<string name="menus">Меню</string>
     <string name="minimum">Минимум</string>
     <string name="minuteddeactivated">Минуты отключены:</string>
@@ -193,14 +193,14 @@
     <string name="password36">Максимальная длина пароля составляет 36 символов</string>
     <string name="password8">Пароль должен содержать не менее 8 символов</string>
     <string name="penfailed">Ошибка при считывании показаний инсулиновой ручки. Попробуйте еще раз</string>
-    <string name="per">" по "</string>
+    <string name="per">" в "</string>
     <string name="permission">Разрешение</string>
-    <string name="pitch">Подача</string>
-    <string name="play">Тест </string>
+    <string name="pitch">Тональность</string>
+    <string name="play">Проиграть</string>
     <string name="port">Порт</string>
     <string name="portrange">Порт должен находиться в диапазоне от 1024 до 65535</string>
     <string name="privatekey">Приватный ключ</string>
-    <string name="quantity">количество</string>
+    <string name="quantity">Порция:</string>
     <string name="rapidinsulin">Быстрый инсулин</string>
     <string name="ready_for_use">Датчик готов к использованию</string>
     <string name="ready_in">" готовый в "</string>
@@ -229,14 +229,14 @@
     <string name="searchtopast">Поиск в прошлом</string>
     <string name="sec">сек</string>
     <string name="seconds">" Секунды"</string>
-    <string name="secondsbetween">Секунды между ними</string>
+    <string name="secondsbetween">Секунд между ними</string>
     <string name="secret">api-секрет</string>
     <string name="select">Выбрать</string>
     <string name="sendamounts">Отправлять результаты</string>
     <string name="sendnow">Отправить сейчас</string>
     <string name="sendqueue">Отправка очереди</string>
     <string name="sendto">Отправлять на</string>
-	<string name="sendtoxdrip">Отправка в Libre patch".</string>
+	<string name="sendtoxdrip">Отправка в Libre patch</string>
     <string name="sensor">Сенсор</string>
     <string name="sensorpermission">Разрешение доступа к датчикам требуется для отображения частоты сердечных сокращений</string>
     <string name="sensorpermissionmessage">Вы можете установить его в настройках устройства, приложениях, разрешениях</string>
@@ -272,7 +272,7 @@
     <string name="system_ui">НЕ полный экран</string>
     <string name="talk">Проговаривать</string>
 	<string name="talk_touch">Проговаривать касания</string>
-    <string name="talker">Говорящий</string>
+    <string name="talker">Голос</string>
     <string name="targetrange">"Целевой диапазон: "</string>
     <string name="test">Тест</string>
     <string name="testip">IP Тест</string>
@@ -284,7 +284,7 @@
     <string name="toolarg">Слишком большой</string>
     <string name="toolongsecret">: api_секрет слишком большой. max=</string>
     <string name="toomanyhosts">Превышено максимальное количество хостов</string>
-    <string name="total">Сумма:</string>
+    <string name="total">В порции:</string>
     <string name="touchable">Сенсорный</string>
     <string name="trace">Проследить</string>
     <string name="transparent">Прозрачный</string>
@@ -293,7 +293,7 @@
     <string name="turn_on_location_permission">Включить разрешение на определение местоположения</string>
     <string name="turn_on_nearby_devices_permission">Включите разрешение "УСТРОЙСТВА ПО БЛИЗОСТИ“</string>
     <string name="type">"Тип: "</string>
-    <string name="unit">"Блок: "</string>
+    <string name="unit">"Порция: "</string>
     <string name="unknown">Неизвестный</string>
     <string name="unlock_key">Разблок.ключ </string>
     <string name="use_bluetooth">Исп. Bluetooth</string>
@@ -320,6 +320,7 @@
     <string name="hostname">Имя хоста</string>
    <string name="clampnow">Захват</string>
     <string name="sendfrom">"Отправить из: "</string>
+    <string name="everSensebroadcast">EverSense</string>
 <string name="changestartbutton">Начало изменений</string>
 <string name="floatjuggluco">Парящий</string>
 <string name="uploader">Загрузчик</string>
