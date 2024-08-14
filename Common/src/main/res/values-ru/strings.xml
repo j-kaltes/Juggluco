@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="USE_ALARM">Тревога - это тревога</string>
-    <string name="aboutname">О программе</string>
+    <string name="aboutname">About</string>
     <string name="active">Активно</string>
     <string name="activeonly">Только активный</string>
     <string name="addconnectionbutton">Добавление соединения</string>
@@ -31,19 +31,19 @@
     <string name="carbohydrate">Углевод:</string>
     <string name="carbperunit">Углеводов в порции:</string>
     <string name="changeinsulin">"Изменение типа инсулина на "</string>
-    <string name="closename">Закрыть</string>
+    <string name="closename">Выход</string>
     <string name="colors">Цвета</string>
     <string name="comments">Комментарии</string>
     <string name="compositionof100gram">Состав на 100 грамм</string>
     <string name="config">Конфигурация</string>
     <string name="connection">Подключение</string>
     <string name="connectwithsensor">Подключение к датчику</string>
-    <string name="darkmode">Темный режим</string>
+    <string name="darkmode">Темная тема</string>
     <string name="database">База данных</string>
     <string name="datapresentuntil">"Данные сохраняются на приемнике до тех пор, пока: "</string>
-    <string name="date">Дата</string>
-    <string name="day_back">Прошлый день</string>
-    <string name="day_later">Следующий день</string>
+    <string name="date">К дате</string>
+    <string name="day_back">День назад</string>
+    <string name="day_later">День вперед</string>
     <string name="days">Дни</string>
     <string name="defaultname">Стандарт</string>
     <string name="defaults">Стандартные</string>
@@ -90,7 +90,7 @@
     <string name="flash">Вспышка</string>
     <string name="floatglucose">Плавающая глюкоза</string>
     <string name="floatglucoseshort">Плав. глюк</string>
-    <string name="floatname">Плавающая</string>
+    <string name="floatname">Плавающая глюкоза</string>
     <string name="fontsize">Разм. текст</string>
     <string name="fonttoolarge">Слишком большой размер шрифта: max=</string>
     <string name="foreground">Перед.фон</string>
@@ -130,33 +130,33 @@
     <string name="last_scan">Последний скан</string>
     <string name="last_success">Успешно</string>
     <string name="librecurrent">Немедленно</string>
-	<string name="libreisviewed">Наблюдающие взгляды</string>
+	<string name="libreisviewed">Шпионские просмотры</string>
     <string name="libreviewname">Libreview</string>
-    <string name="list">Список</string>
-    <string name="localonly">Только локальный</string>
+    <string name="list">Все записи</string>
+    <string name="localonly">Только локально</string>
     <string name="longinsulin">Инсулин длительного действия</string>
     <string name="loss_description">Juggluco потерял контакт с датчиком</string>
     <string name="lossdata">Сброс к значениям по умолчанию может привести к потере данных.</string>
     <string name="lossofsignalalarm">Тревога о потере сигнала</string>
-    <string name="lowglucose">" Низкий уровень глюкозы!"</string>
+    <string name="lowglucose">"Низкий уровень глюкозы!"</string>
     <string name="lowglucosealarm">Тревога о низком уровне глюкозы</string>
     <string name="lowglucoseshort">"Низкий сахар!"</string>
     <string name="manual">Вручную</string>
     <string name="manuallyscale">Ручное масштабирование</string>
     <string name="meal">Еда: </string>
     <string name="mealname">Прием пищи</string>
-    <string name="mealsname">Приемы пищи</string>
+    <string name="mealsname">Еда</string>
     <string name="mealtotal">Всего съем:</string>
 	<string name="menus">Меню</string>
     <string name="minimum">Минимум</string>
     <string name="minuteddeactivated">Минуты отключены:</string>
     <string name="minutes">Минуты</string>
-    <string name="mirror">Клон (зеркало)</string>
+    <string name="mirror">Зеркало (клон)</string>
 	<string name="modify">Изменить</string>
     <string name="multiply">Умножьте на:</string>
     <string name="name">Имя:</string>
     <string name="new_amount">Новое значение</string>
-    <string name="newname">Новое</string>
+    <string name="newname">Создать</string>
     <string name="nonewvalue">"Нет нового значения с "</string>
     <string name="newport">Новый порт =</string>
     <string name="newsecret">"Новый api секрет: "</string>
@@ -196,7 +196,7 @@
     <string name="per">" в "</string>
     <string name="permission">Разрешение</string>
     <string name="pitch">Тональность</string>
-    <string name="play">Проиграть</string>
+    <string name="play">Тест</string>
     <string name="port">Порт</string>
     <string name="portrange">Порт должен находиться в диапазоне от 1024 до 65535</string>
     <string name="privatekey">Приватный ключ</string>
@@ -237,7 +237,7 @@
     <string name="sendqueue">Отправка очереди</string>
     <string name="sendto">Отправлять на</string>
 	<string name="sendtoxdrip">В xDrip Libre patch</string>
-    <string name="sensor">Сенсор</string>
+    <string name="sensor">Датчик</string>
     <string name="sensorpermission">Разрешение доступа к датчикам требуется для отображения частоты сердечных сокращений</string>
     <string name="sensorpermissionmessage">Вы можете установить его в настройках устройства, приложениях, разрешениях</string>
     <string name="sensorviabluetooth">Датчик по Bluetooth</string>
@@ -269,8 +269,8 @@
     <string name="success">Успешно</string>
     <string name="summarygraph">Обзор графика</string>
     <string name="sync">Синхр.</string>
-    <string name="system_ui">НЕ полный экран</string>
-    <string name="talk">Проговаривать</string>
+    <string name="system_ui">System UI</string>
+    <string name="talk">Озвучка</string>
 	<string name="talk_touch">Проговаривать касания</string>
     <string name="talker">Голос</string>
     <string name="targetrange">"Целевой диапазон: "</string>
@@ -282,7 +282,7 @@
     <string name="too_large">слишком большой</string>
     <string name="too_large_maximum_65535">" слишком большой, Max=65535, "</string>
     <string name="toolarg">Слишком большой</string>
-    <string name="toolongsecret">: api_секрет слишком большой. max=</string>
+    <string name="toolongsecret">: api_секрет слишком большой. Max=</string>
     <string name="toomanyhosts">Превышено максимальное количество хостов</string>
     <string name="total">В порции:</string>
     <string name="touchable">Сенсорный</string>
@@ -318,14 +318,14 @@
     <string name="wronglibrary">Библиотека не работает должным образом, попробуйте использовать другую</string>
     <string name="xdripbroadcast">Как из xDrip</string>
     <string name="hostname">Имя хоста</string>
-   <string name="clampnow">Захват</string>
-    <string name="sendfrom">"Отправить из: "</string>
+   <string name="clampnow">Фиксировать</string>
+    <string name="sendfrom">"Начиная с: "</string>
     <string name="everSensebroadcast">EverSense</string>
-<string name="changestartbutton">Начало изменений</string>
+<string name="changestartbutton">Начать с даты</string>
 <string name="floatjuggluco">Парящий</string>
-<string name="uploader">Загрузчик</string>
+<string name="uploader">В облако</string>
 <string name="mmolL">ммоль/л</string>
 <string name="mgdL">мг/дл</string>
 <string name="interval">Интервал</string>
-<string name="off">Off</string>
+<string name="off">Выкл</string>
 </resources>
