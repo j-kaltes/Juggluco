@@ -25,5 +25,6 @@ import android.view.View;
 
 @FunctionalInterface
 public interface measured {
+   //public int[]  measure(View view, int width, int height);
    public void measure(View view, int width, int height);
 }

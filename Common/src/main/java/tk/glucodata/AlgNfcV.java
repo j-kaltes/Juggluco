@@ -281,8 +281,8 @@ static    private byte[] readoncedata(NfcV nfc, byte[] uid,int start, int len) {
                 return null;
             	}
 	    int destpos= iter * 8;
-//	    int copylen=Math.min(received.length - 1,lenwholeblocks-destpos);
-	    int copylen=received.length - 1;
+	    int copylen=Math.min(received.length - 1,lenwholeblocks-destpos);
+//	    int copylen=received.length - 1;
 	    Log.i(LOG_ID,"destpos="+destpos+" len="+copylen);
             System.arraycopy(received, 1, buf,destpos, copylen);
             iter+=min;

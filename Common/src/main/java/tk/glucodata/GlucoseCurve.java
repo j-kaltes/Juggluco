@@ -64,6 +64,8 @@ import static tk.glucodata.Applic.isWearable;
 import static tk.glucodata.Applic.usedlocale;
 import static tk.glucodata.BuildConfig.SiBionics;
 import static tk.glucodata.MainActivity.systembarBottom;
+import static tk.glucodata.MainActivity.systembarLeft;
+import static tk.glucodata.MainActivity.systembarRight;
 import static tk.glucodata.MainActivity.systembarTop;
 import static tk.glucodata.Natives.turnoffalarm;
 import static tk.glucodata.NumberView.geteditview;
@@ -264,11 +266,11 @@ void getnumcontrol(MainActivity activity) {
                }
 		if(width>w) {
 			   if(columns==1)  {
-				   v.setX(width-w);
+				   v.setX(width-w-systembarRight);
 				}
 			   else {
 
-				   v.setX(((width-w)/2.0f));
+				   v.setX(((width-w-systembarRight+systembarLeft)/2.0f));
 				   }
 			   }
             	    requestRender();
@@ -995,9 +997,9 @@ void mkmealsearch(MainActivity act) {
 		meallayout=new Layout(act,
 (lay, w, h)->{
 		    lay.setY(systembarTop*4/5);
-		    lay.setX(MainActivity.systembarLeft);
+		    lay.setX(systembarLeft);
 
-		return new int[] {w-MainActivity.systembarLeft-MainActivity.systembarRight,h};
+		return new int[] {w- systembarLeft- systembarRight,h};
 		},
 
       //pick.setPadding(MainActivity.systembarLeft,MainActivity.systembarTop,0,MainActivity.systembarBottom);

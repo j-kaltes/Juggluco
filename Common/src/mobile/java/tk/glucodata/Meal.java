@@ -21,6 +21,7 @@
 
 package tk.glucodata;
 
+import android.os.Build;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -388,7 +389,7 @@ static void menuitem(MainActivity act, NumberView numb, int mealptr, int pos, In
 		if(!smallScreen&&hei>h)
 			l.setY((hei-h)/2);
 		else
-			l.setY(0);
+             		l.setY(MainActivity.systembarTop*3/4);
 		return new int[]{w,h};
 		},new View[]{amountlabel,amount},new View[]{ingrlabel,Ingredient},new View[]{carblabel,carbos},new View[]{totallabel,total}, new View[]{mealtotallabel,mealtotal},
 			new View[] {Delete,Cancel,Save});
@@ -502,14 +503,14 @@ static void selectingredient(MainActivity act,NumberView numb,IntConsumer setind
 	int height=GlucoseCurve.getheight();
 	int width=GlucoseCurve.getwidth();
 	int viewwidth=(int)(width*.56);
-	int xpos=(width-viewwidth)/2;
+//	int xpos=(width-viewwidth)/2;
 	int ypos=MainActivity.systembarTop*3/4;
 	Layout lay=new Layout(act,(l,w,h)-> {
       var af=MainActivity.systembarTop*3/4;
 		l.setY(af);
+	   l.setX((width-w)/2);
 		return new int[]{w,h-af};
 		},new View[]{recycle},new View[] {add,edit,close});
-	lay.setX(xpos);
 	lay.setY(ypos);
 	IntConsumer hiercons=i-> {
 		/*lay.setVisibility(GONE);
@@ -534,7 +535,7 @@ static void selectingredient(MainActivity act,NumberView numb,IntConsumer setind
 
 
         lay.setBackgroundResource(R.drawable.dialogbackground);
-	act.addContentView(lay, new ViewGroup.LayoutParams(viewwidth, height));
+	act.addContentView(lay, new ViewGroup.LayoutParams(smallScreen?MATCH_PARENT:viewwidth, height));
 	lay.invalidate();
 	lay.setVisibility(VISIBLE);
 	lay.bringToFront();
@@ -829,7 +830,7 @@ static void	shownutrients(MainActivity act,int id,boolean showzero,TriConsumer<S
 	para.columnSpec = GridLayout.spec(1, 3); 
 	TextView per100=getlabel(act,R.string.compositionof100gram);
 	grid.addView(per100,para);
-   int pad=(int)(tk.glucodata.GlucoseCurve.metrics.density*5.0);
+   int pad=(int)(GlucoseCurve.metrics.density*5.0);
         for(int i=0;i<ingr.length;i++) {
 		if((showzero&&ingr[i]!=-1)||ingr[i]>0) {
 			TextView name = new TextView(act);
@@ -866,23 +867,30 @@ static void	shownutrients(MainActivity act,int id,boolean showzero,TriConsumer<S
         zero.setChecked(showzero);
 	   zero.setPadding(0,0,0,0);
 	GridLayout.LayoutParams parzero = new GridLayout.LayoutParams();
- int padzero=(int)	(tk.glucodata.GlucoseCurve.metrics.density*7.0);
+ int padzero=(int)	(GlucoseCurve.metrics.density*7.0);
 	parzero.setMargins(padzero, 0, padzero, 0);
 	ScrollView scroll=new ScrollView(act);
 	
     grid.setmeasure((l,w,h)-> {
 		int height=GlucoseCurve.getheight();
 		int width=GlucoseCurve.getwidth();
-		if(width>w)
-			scroll.setX((width-w)/2);
-		else
-			scroll.setX(0);
-		if(!smallScreen&&height>h)
+      int x=width>w?((width-w)/2):0;
+      scroll.setX(x);
+		if(!smallScreen&&height>h) {
 			scroll.setY((height-h)/2);
-		else
-			scroll.setY(0);
+         }
+		else   {
+          var above=MainActivity.systembarTop*3/4;
+          scroll.setY(above);
+         if((height-above)>h) 
+            scroll.setPadding(0,0,0,0);
+         else
+			      scroll.setPadding(0,0,0,above);
+		}
 
     		});
+	//      scroll.setPadding(0,0,0,MainActivity.systembarTop*3/4);
+
 	Button Select=getbutton(act,R.string.select);
 	grid.addView(Select);
 	zero.setOnCheckedChangeListener((buttonView, isChecked)-> {
@@ -909,7 +917,7 @@ static void	shownutrients(MainActivity act,int id,boolean showzero,TriConsumer<S
 	scroll.addView(grid);
 	scroll.setSmoothScrollingEnabled(false);
         scroll.setVerticalScrollBarEnabled(false);
-	act.addContentView(scroll,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+	act.addContentView(scroll,new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
         scroll.setBackgroundResource(R.drawable.dialogbackground);
 	Close.setOnClickListener(v-> act.doonback());
 	act.setonback(() -> {

@@ -39,8 +39,11 @@ double getiob(uint32_t now) {
 				if(it->time<=oldage)
 					break;
 				if((weight=rapidNightWeight(it->type))!=0.0f) {
-					long double agemin= (now-it->time)/60;
-					iob+=getoneiob(it->value,weight,agemin);
+               const int  agesec=now-it->time;
+               if(agesec>=0)  {
+                  long double agemin= agesec/60;
+                  iob+=getoneiob(it->value,weight,agemin);
+                  }
 					}
 				}
 			}

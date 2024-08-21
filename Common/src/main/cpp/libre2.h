@@ -71,6 +71,7 @@ B * locknew(M &mu,Ts && ... args) {
 
 
 
+void removestatelnk(string_view sbasedir );
 class Abbott {
 public:
 struct scanresult_t {
@@ -117,7 +118,12 @@ AlgorithmResults *callAbbottAlg(int startsincebase,scanstate *state,scandata *da
 //AlgorithmResults *callAbbottAlg(scanstate *state,scandata *data,scanstate *newstate) ;
 scanresult_t callAbbottAlg(scandata *data) ;
 scanstate *initnewsensor( scandata *data) ;
-
+void removestate() {
+	if(hist)
+		removestatelnk(hist->getsensordir());
+	if(state)
+		state->removefile();
+	}
 };
 //AlgorithmResults *callAbbottAlg(ByteArray *uid,scanstate *state,scandata *data,scanstate *newstate);
 //extern "C" JNIEXPORT jint JNICALL Java_tk_glucodata_Glucose_init(JNIEnv *env, jclass thiz,jstring dir) ;

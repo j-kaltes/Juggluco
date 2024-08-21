@@ -26,15 +26,20 @@
 #include "settings/settings.h"
 #include "curve.h"
 
+
+ //statusbarleft=left;
+ //statusbarright=right;
+extern int statusbarleft,statusbarright;
 extern  NVGcolor *colors[];
 struct  {
  int width;
  int height;
  float second() const {
- 	return (dwidth+width)/2 +dleft;	
+   return (dwidth-statusbarleft-statusbarright+width)/2 +dleft+statusbarleft;	
+
  	};
 float colwidth() const {
-	return (dwidth-width)/2;
+	return (dwidth-width-statusbarright-statusbarleft)/2;
 	};
 	} numcontrol;
 
@@ -70,14 +75,17 @@ void initcolumns( NVGcontext* vg) {
 extern int nrcolumns;
 template <typename F>
 void numscreen(NVGcontext* vg, const F & col)  {
+   auto l=dleft+ statusbarleft;
+   //auto w=dwidth-statusbarright;
+   auto w=dwidth-statusbarright-statusbarleft;
 	initcolumns(vg);
 	if(nrcolumns==1) {
-		col(vg,dleft,dleft+dwidth-numcontrol.width-smallsize);
+		col(vg,l,l+w-numcontrol.width-smallsize);
 		}
 	else {
 		float xmid=numcontrol.second();
 		float xwidth=numcontrol.colwidth();
-		col(vg,dleft,dleft+xwidth-smallsize);
+		col(vg,l,l+xwidth-smallsize);
 		col(vg,xmid+smallsize,xmid+xwidth);
 		}
 	}
@@ -86,14 +94,16 @@ void numscreenback(NVGcontext* vg, const F & col)  {
 	initcolumns(vg);
 	int nr=(dheight-statusbarheight)/textheight;
 
+   auto l=dleft+ statusbarleft;
+   auto w=dwidth-statusbarright-statusbarleft;
 	if(nrcolumns==1) {
-		col(vg,nr,dleft,dleft+dwidth-numcontrol.width-smallsize);
+		col(vg,nr,l,l+w-numcontrol.width-smallsize);
 		}
 	else {
 		float xmid=numcontrol.second();
 		float xwidth=numcontrol.colwidth();
 		col(vg,nr,xmid+smallsize,xmid+xwidth);
-		col(vg,nr,dleft,dleft+xwidth-smallsize);
+		col(vg,nr,l,l+xwidth-smallsize);
 		}
 	}
 inline int mktmmin(const struct tm *tmptr) {

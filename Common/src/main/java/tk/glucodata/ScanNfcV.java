@@ -38,6 +38,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Arrays;
 
@@ -457,8 +458,9 @@ private static void insertcalendar(Activity act,String name,long endtime) {
 		} 
 	catch(Throwable error) {
 			String mess=error.getMessage();
-			if(mess==null) mess="";
-       			Log.stack(LOG_ID,mess,error);
+			if(mess==null) mess="Exception";
+       		Log.stack(LOG_ID,mess,error);
+			Toast.makeText(act,mess, Toast.LENGTH_LONG).show();
 			}
 	}
 

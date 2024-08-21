@@ -113,6 +113,7 @@ void sendoptions(View labelview,int pos) {
 		l.setY(MainActivity.systembarTop);
 		int x=(width>w)?((width-w)/2):0;
 		l.setX(x);
+            //	return new int[]{w,Math.min(h,height-MainActivity.systembarTop)};
 	});
 
 	if(kindids==null) {

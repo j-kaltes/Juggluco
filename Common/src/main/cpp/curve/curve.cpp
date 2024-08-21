@@ -1588,8 +1588,9 @@ uint32_t lastsensorends() {
 		return 0;
 		} */
 uint32_t lastsensorends() {
-			if(const SensorGlucoseData *hist = sensors->getSensorData()) {
-               return hist->officialendtime();
+	if(const SensorGlucoseData *hist = sensors->getSensorData()) {
+              // return hist->officialendtime();
+               return hist->expectedEndTime();
                }
           return 0u;
           }
@@ -1976,12 +1977,14 @@ LOGGER("showbluevalue %zd\n",used.size());
 //		constexpr int maxhead=54;
 		constexpr int maxhead=80;
 		char head[maxhead];
-		memcpy(head,usedtext->sensorends.data(),usedtext->sensorends.size());
+
+	//	memcpy(head,usedtext->sensorends.data(),usedtext->sensorends.size());
+		memcpy(head,usedtext->sensorexpectedend.data(),usedtext->sensorexpectedend.size());
 
 
 		if(const auto *sens=sensors->getSensorData()) {
-			if(time_t enddate=sens->officialendtime()) {
-				const int tstart=usedtext->sensorends.size();
+			if(time_t enddate=sens->expectedEndTime()) {
+				const int tstart=usedtext->sensorexpectedend.size();
 				char *endstr=head+tstart;
 				int end= datestr(enddate,endstr); 
 				nvgTextAlign(genVG,NVG_ALIGN_CENTER|NVG_ALIGN_BOTTOM);
@@ -3279,7 +3282,9 @@ public:
 strconcat  getsensorhelp(string_view starttext,string_view name1,string_view name2,string_view sep1,string_view sep2) {
 	char starts[50],ends[50],pends[50];
    const sensor *sensor=sensors->getsensor(sensorindex);
-	time_t stime=hist->getstarttime(),etime= hist->officialendtime(),reallends=hist->isLibre3()?etime:sensor->maxtime();
+	time_t stime=hist->getstarttime(),etime= hist->officialendtime();
+	//time_t reallends=hist->isLibre3()?etime:sensor->maxtime();
+	time_t reallends=hist->expectedEndTime();
 	char lastscanbuf[50],lastpollbuf[50];
 	time_t lastscan=hist->getlastscantime();
 	time_t lastpolltime=hist->getlastpolltime();

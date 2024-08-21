@@ -213,7 +213,7 @@ public   View addnumberview(MainActivity context,final int bron,final long time,
 				if(hei>h)
 				    lay.setY((hei - h) / 2);
 				   else
-				    lay.setY(0);
+				    lay.setY(MainActivity.systembarTop*3/4);
 				 if(wid>w) {
 				       int half= wid / 2;
 				       int af=(half-w)/4;
@@ -241,7 +241,8 @@ public   View addnumberview(MainActivity context,final int bron,final long time,
 				    lay.setY(half - h-af);
 				    }
 				   else
-				    lay.setY(0);
+
+				    lay.setY(MainActivity.systembarTop*3/4);
 
 				}
 			}
@@ -249,7 +250,7 @@ public   View addnumberview(MainActivity context,final int bron,final long time,
 			Log.i(LOG_ID,"smallScreen");
 			if(wid>w)
 			    lay.setX((wid - w)/2);
-		    lay.setY(0);
+          lay.setY(MainActivity.systembarTop*3/4);
 			}
 
 			return new int[] {w,h}; },new View[]{helpbutton,getspinner(context), valueedit},new View[]{datebutton, mealbutton,source,timebutton},new View[]{cancel,messagetext,deletebutton, savebutton});

@@ -64,11 +64,11 @@ android {
 
     defaultConfig {
         minSdk        MINSDK
-        targetSdk 35
+        targetSdk 34
         buildConfigField 'int', 'targetSDK', "$targetSdk"
         compileSdk 33
         applicationId "tk.glucodata"
-	versionName '8.1.5'
+	versionName '8.1.6'
 //	multiDexEnabled true
 
         buildConfigField 'String', 'BUILD_TIME', 'new java.text.SimpleDateFormat("HH:mm:ss dd-MMM-yyyy").format(new java.util.Date(' + System.currentTimeMillis() + 'L))'
@@ -101,8 +101,8 @@ android {
             //	targetSdk 26
 	//******  Zet op rollout op 100% ******
             	dimension 'libreVersion'
-		versionCode                                           476                                                                                   //LIBRE2ONLY
-	//	versionName '8.1.5-no3'
+		versionCode                                            477                                                                                     //LIBRE2ONLY
+	//	versionName '8.1.6-no3'
 		versionNameSuffix '-no3'
             buildConfigField 'int', 'libreVersion', '2'
 		    externalNativeBuild.cmake {
@@ -119,7 +119,7 @@ android {
 //	   minSdk 23
             dimension 'libreVersion'
 		versionNameSuffix '-li3'
-		versionCode                                          476                                                                                   //LIBRE3
+		versionCode                                           477                                                                                     //LIBRE3
 	//******  Zet op rollout op 100% ******
 
            	buildConfigField 'int', 'libreVersion', '3'
@@ -135,7 +135,7 @@ android {
 		minSdkVersion 21
             	dimension 'SiBionics'
 		versionNameSuffix '-si'
-		versionCode                                     476                                                                                
+		versionCode                                      477                                                                                  
 	        buildConfigField 'int', 'SiBionics', '1'
 	         externalNativeBuild.cmake {
 			cppFlags "  -DAPPVERSION=\\\"$versionName\\\"  -DSIBIONICS=1 "
@@ -143,7 +143,7 @@ android {
 		}
         nosi {
             	dimension 'SiBionics'
-		versionCode                                           476                                                                                
+		versionCode                                            477                                                                                  
 		versionNameSuffix '-nosi'
 	        buildConfigField 'int', 'SiBionics', '0'
 	         externalNativeBuild.cmake {
@@ -158,9 +158,9 @@ android {
             // targetSdk 30
             dimension 'wearos'
 		minSdk 26
-		versionCode                                          476                                                                                   //WATCH
+		versionCode                                           477                                                                                     //WATCH
 	//******  Zet op rollout op 100% ******
-		//versionName '8.1.5-wear'
+		//versionName '8.1.6-wear'
 		versionNameSuffix '-wear'
 		signingConfig signingConfigs.alg
 
@@ -181,8 +181,8 @@ android {
 
 //        minSdk 19
             dimension 'wearos'
-		versionCode                                          476                                                                                   //WATCH
-		//versionName '8.1.5-small'
+		versionCode                                           477                                                                                     //WATCH
+		//versionName '8.1.6-small'
 		versionNameSuffix '-small'
 		signingConfig signingConfigs.alg
 
@@ -494,12 +494,12 @@ dependencies {
   implementation 'com.android.support:support-annotations:28.0.0'
 
     implementation "androidx.appcompat:appcompat:$APPCOMPAT"
-    implementation 'androidx.activity:activity:1.9.0'
+    implementation 'androidx.activity:activity:1.9.1'
 	implementation 'androidx.core:core:1.13.1'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1'
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.0.0'
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib:2.0.0'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.0.10'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:2.0.10'
     implementation "com.google.android.gms:play-services-base:$GMSBASE"
  implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.8.1'
   mobileImplementation "androidx.health.connect:connect-client:1.1.0-alpha07"
@@ -511,10 +511,10 @@ dependencies {
 
 
 
-    wearImplementation 'androidx.activity:activity-ktx:1.9.0'
+    wearImplementation 'androidx.activity:activity-ktx:1.9.1'
     wearImplementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     wearImplementation 'com.google.android.material:material:1.12.0'
-    wearImplementation 'androidx.databinding:viewbinding:8.5.1'
+    wearImplementation 'androidx.databinding:viewbinding:8.5.2'
     wearImplementation 'androidx.core:core-ktx:1.13.1'
 
 

@@ -147,12 +147,12 @@ void showexport(MainActivity activity,int width,int height) {
 			    }
 			   else {
 			    l.setX(0);
-			    l.setY(0);
+             l.setY(MainActivity.systembarTop*3/4);
 			   	}
 			   }
 		else {
 			    l.setX((wid-w)/2);
-			    l.setY(0);
+             l.setY(MainActivity.systembarTop*3/4);
 			}
 			return new int[] {w,h};
 

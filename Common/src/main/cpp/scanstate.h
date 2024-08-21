@@ -24,6 +24,20 @@
 #include "inout.h"
 using std::string_view;
 
+
+/*Optimisations of g++ and clang assume that "this" is never null. This function bypasses this assumption on the versions I tested */
+inline bool isnull(void *ptr) {
+   typedef char type;
+   type *other=(type *)ptr+1;
+   return other==(decltype(other))sizeof(*other);
+   }
+   /*
+bool isnull(void *ptr) { 
+   const uintptr_t tester=(uintptr_t)ptr;
+   return tester<sizeof(void *);
+   }
+*/
+
 template <typename T>
 constexpr int alignstart(int len) {
 	constexpr int size=alignof(T);
@@ -50,7 +64,10 @@ virtual ~multimmap() {}
 int datastart() const {
 	return maxdats*sizeof(int);
 	}
+
 data_t *get(int datnr) {
+  if(isnull(this))
+		return nullptr;
 	if(!map.data())
 		return nullptr;
 	int pos=datpos(datnr);

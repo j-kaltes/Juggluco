@@ -209,10 +209,16 @@ union {
   };};
 uint16_t lastLifeCountReceived;
 uint16_t lastHistoricLifeCountReceivedPos;
+union {
 struct { 
    int len;
 	signed char data[8];
 	} ident;
+struct {
+  	uint16_t wearduration2;
+  	uint8_t warmup2;
+   };
+   };
 union {
 struct {
    struct { 
@@ -481,11 +487,9 @@ const int perhour() const {
 	return 60/getmininterval();
 	}
 int getweardurationMIN() const {
-   if(isLibre2()) {
-	   int wear=getinfo()->wearduration;
-      if(wear)
+   const int wear=isLibre2()?getinfo()->wearduration:getinfo()->wearduration2;
+   if(wear)
          return wear;
-      }
    return 14*24*60;
    } 
 int getweardurationSEC() const {
@@ -494,6 +498,17 @@ int getweardurationSEC() const {
 uint32_t officialendtime() const {
 	return getstarttime()+getweardurationSEC();
 	}
+int expectedWearDuration() const {
+	if(isSibionics()) {
+		return (maxSIhours*60-19)*60;
+		}
+	if(isLibre3())
+		return getweardurationSEC();
+	return getweardurationSEC()+12*60*60;
+	}
+uint32_t expectedEndTime() const {
+	 return getstarttime()+ expectedWearDuration();
+	 }
 	
 uint32_t getmaxtime() const {
 /*
@@ -828,7 +843,7 @@ E07A-000T3YL1R50
 	return !isLibre3()&&pollcount();
 	} */
 static	constexpr uint16_t interval5=5*60;
-static bool mkdatabase3(string_view sensordir,time_t start,uint32_t pin,const char *address) {
+static bool mkdatabase3(string_view sensordir,time_t start,uint32_t pin,const char *address,uint16_t warmup, uint16_t wearduration) {
      LOGGER("mkdatabase3 %s,%s",sensordir.data(),ctime(&start));
 	mkdir(sensordir.data(),0700);
 	pathconcat infoname(sensordir,infopdat);
@@ -840,7 +855,7 @@ static bool mkdatabase3(string_view sensordir,time_t start,uint32_t pin,const ch
 				return false;
 			}
 		}
-       Info inf{.starttime=(uint32_t)start,.lastscantime=(uint32_t)time(nullptr),.starthistory=0,.endhistory=0,.scancount=0,.startid=0,.interval=interval5,.dupl=3,.days=15 ,.pin=pin,.lastLifeCountReceived=1,.pollcount=0, .lockcount=0};
+       Info inf{.starttime=(uint32_t)start,.lastscantime=(uint32_t)time(nullptr),.starthistory=0,.endhistory=0,.scancount=0,.startid=0,.interval=interval5,.dupl=3,.days=15 ,.pin=pin,.lastLifeCountReceived=1,.wearduration2=wearduration,.warmup2=static_cast<uint8_t>(warmup),.pollcount=0, .lockcount=0};
 	if(address)
 		strcpy(inf.deviceaddress,address);
 	else

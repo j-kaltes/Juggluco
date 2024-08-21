@@ -341,7 +341,7 @@ static	 const int waitsig=60;
 					sensor* senso=sensors->getsensor(ab.sensorindex);
 
 				       LOGGER("%s was %d,set senso->finished=1;\n",senso->shortsensorname()->data(),senso->finished);
-
+					ab.removestate();
 					senso->finished=1;
 					setstreaming(ab.hist); 
 					setusedsensors();

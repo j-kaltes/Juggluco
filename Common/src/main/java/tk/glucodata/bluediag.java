@@ -287,6 +287,7 @@ bluediag(MainActivity act) {
 			addscroll.setY(y);
 			int x=(width>w)?((width-w)/2):0;
 			addscroll.setX(x);
+            	//	return new int[]{w,Math.min(h,height-y)};
 		}); 
 		addscroll2=addscroll;
 

@@ -57,8 +57,15 @@ public void setmeasure(measured mea) {
      int height= getMeasuredHeight(); //also possible in callback
         int width= getMeasuredWidth();
 	if(measure!=null) {
-		measure.measure(this,width,height);
-		}
+        measure.measure(this,width,height);
+	/*
+        int[] make=measure.measure(this,width,height);
+      if(make!=null&&make.length==2)
+         setMeasuredDimension(make[0],make[1]);
+      else
+         setMeasuredDimension(width,height);*/
+      }
+
     }
 
 

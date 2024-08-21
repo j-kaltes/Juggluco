@@ -242,7 +242,7 @@ extern "C" JNIEXPORT jlong JNICALL fromjava(interpret3NFC2)(JNIEnv *env, jclass 
 	hexstr pinhex((uint8_t*)&nfc->pin,4);
 	LOGGER("deviceaddress=%s pin=%s activation: %s",devaddress,pinhex.str(),ctime(&acttime));
 #endif
-	int sensindex=sensors->makelibre3sensorindex(std::string_view(first.nfc.serialnumber,9),acttime,nfc->pin,devaddress,now);
+	int sensindex=sensors->makelibre3sensorindex(std::string_view(first.nfc.serialnumber,9),acttime,nfc->pin,devaddress,now,first.nfc.warmup,first.nfc.wearduration);
 	SensorGlucoseData *sens=sensors->getSensorData(sensindex);
 	sendstreaming(sens); 
 	libre3stream *streamd=new libre3stream(sensindex,sens);

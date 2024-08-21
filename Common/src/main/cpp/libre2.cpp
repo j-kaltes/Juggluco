@@ -934,6 +934,10 @@ unlink(libpath);
 		}
 	settings->data()->crashed=false;
 	//	abbottcall(dpEnableDebugLogging)(env,thiz);
+
+
+//      const int memsize=abbottcall(getTotalMemorySize)(env,thiz,parsertype,casttoken); LOGGER("getTotalMemorySize()=%d\n",memsize);
+
 	#define DYNLINK3
 	#ifdef DYNLINK3
 		if(P1) {

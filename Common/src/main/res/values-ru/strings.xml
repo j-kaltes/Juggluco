@@ -31,7 +31,7 @@
     <string name="carbohydrate">Углевод:</string>
     <string name="carbperunit">Углеводов в порции:</string>
     <string name="changeinsulin">"Изменение типа инсулина на "</string>
-    <string name="closename">Выход</string>
+    <string name="closename">Закрыть</string>
     <string name="colors">Цвета</string>
     <string name="comments">Комментарии</string>
     <string name="compositionof100gram">Состав на 100 грамм</string>
@@ -196,7 +196,6 @@
     <string name="per">" в "</string>
     <string name="permission">Разрешение</string>
     <string name="pitch">Тональность</string>
-    <string name="play">Тест</string>
     <string name="port">Порт</string>
     <string name="portrange">Порт должен находиться в диапазоне от 1024 до 65535</string>
     <string name="privatekey">Приватный ключ</string>
@@ -215,8 +214,8 @@
     <string name="resendquestion">Отправить данные на сервер повторно?</string>
     <string name="resendwarning">Все данные отправляются повторно, это займет некоторое время и может иметь последствия для Libreview и Kefstok</string>
     <string name="resetname">Сброс</string>
-    <string name="ringshort">Сигнал</string>
-    <string name="ringtonename">Звуковой сигнал</string>
+    <string name="ringshort">Рингтон</string>
+    <string name="ringtonename">Имя мелодии</string>
     <string name="round">Округление</string>
     <string name="roundto">"Округлять до: "</string>
     <string name="save">Сохранить</string>
@@ -236,7 +235,6 @@
     <string name="sendnow">Отправить сейчас</string>
     <string name="sendqueue">Отправка очереди</string>
     <string name="sendto">Отправлять на</string>
-	<string name="sendtoxdrip">В xDrip Libre patch</string>
     <string name="sensor">Датчик</string>
     <string name="sensorpermission">Разрешение доступа к датчикам требуется для отображения частоты сердечных сокращений</string>
     <string name="sensorpermissionmessage">Вы можете установить его в настройках устройства, приложениях, разрешениях</string>
@@ -316,14 +314,12 @@
     <string name="withoutsensor">Без датчика</string>
     <string name="wrongformat">Неправильный формат</string>
     <string name="wronglibrary">Библиотека не работает должным образом, попробуйте использовать другую</string>
-    <string name="xdripbroadcast">Как из xDrip</string>
     <string name="hostname">Имя хоста</string>
-   <string name="clampnow">Фиксировать</string>
     <string name="sendfrom">"Начиная с: "</string>
     <string name="everSensebroadcast">EverSense</string>
 <string name="changestartbutton">Начать с даты</string>
 <string name="floatjuggluco">Парящий</string>
-<string name="uploader">В облако</string>
+<string name="uploader">Загрузчик</string>
 <string name="mmolL">ммоль/л</string>
 <string name="mgdL">мг/дл</string>
 <string name="interval">Интервал</string>

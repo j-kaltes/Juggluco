@@ -1,30 +1,41 @@
 #include "jugglucotext.h"
 #ifndef WEAROS
-constexpr static std::string_view rulabels[]={"Короткий",
-"Углеводы",
+constexpr static char rulabels2[][12]=
+{"Kopoтkuй",
+"Yглeвoд",
 "Сахар",
-"Длинный",
+"Дoлгuй",
 "Велик",
-"Ходьба",
+"Хoдьбa",
 "Кровь"};
+constexpr static std::string_view rulabels[]={"Kopoтkuй",
+"Yглeвoд",
+"Сахар",
+"Дoлгuй",
+"Велик",
+"Хoдьбa",
+"Кровь"};
+
+
+
 
 constexpr static Shortcut_t  rushortinit[]= { {"Хлеб",
         .48},
-        {"Виноград",
+        {"Яблoкo",
         .165f},
-        {"Йогурт",
+        {"Фрукт",
         .058f},
         {"Рис",
         .75f},
-        {"Макароны",
+        {"Makaрoны",
         .65f},
-        {"Помидоры",
+        {"Томат",
         .03f},
-        {"Овощная смесь",
+        {"Суп",
         .078f},
         {"Сок",
         .109f},
-        {"Спорт.пит.",
+        {"Спорт",
         .873f},
         {"Грибы",
         .07300000f}};
@@ -97,7 +108,7 @@ jugglucotext rutext {
 #else
 		"About",
 #endif
-		"Выход",
+		"Закрыть",
 		"Стоп тревога"
 		},
 	.menustr1={

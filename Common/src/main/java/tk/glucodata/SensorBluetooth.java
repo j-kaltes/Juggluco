@@ -49,6 +49,8 @@ import static android.bluetooth.BluetoothProfile.GATT;
 import static tk.glucodata.Applic.isWearable;
 import static tk.glucodata.BuildConfig.libreVersion;
 import static tk.glucodata.Log.doLog;
+//import static tk.glucodata.Log.showScanSettings;
+//import static tk.glucodata.Log.showScanfilters;
 
 public class SensorBluetooth {
 static void	setAutoconnect(boolean val) {
@@ -283,6 +285,9 @@ final	private ScanSettings mScanSettings;
 		if(mBluetoothLeScanner!=null) {
 			Log.i(LOG_ID,"Scanner21.start");
 				try {
+
+ 		//		showScanfilters( mScanFilters ) ;
+		//	 showScanSettings(   mScanSettings) ;
 		       this.mBluetoothLeScanner.startScan(mScanFilters, mScanSettings, mScanCallback);
 			} catch (Throwable e) {
 				Log.stack(LOG_ID, e);

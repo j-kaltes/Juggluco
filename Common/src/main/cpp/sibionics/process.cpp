@@ -130,7 +130,7 @@ jlong SiContext::processData(SensorGlucoseData *sens,time_t nowsecs,int8_t *data
    for(int off=0;off < maxoff;off+=14) {
       const uint16_t *one=reinterpret_cast<uint16_t*>(start+off);
       const int index=std::byteswap(one[0]);
-      const double temp = std::byteswap(one[1])/ 10.0f;
+      const double temp = std::byteswap(one[1])/ 10.0;
       const double value = std::byteswap(one[3])/10.0;
       const int numOfUnreceived=std::byteswap(one[5]);
 

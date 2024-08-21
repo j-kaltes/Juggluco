@@ -314,6 +314,20 @@ It	find_last(It beg, It en,T el) {
 				return it;
 	return en;
 	}
+
+void removestatelnk(string_view sbasedir ) { 
+	constexpr const char start[]="/state.lnk";
+	int baselen= sbasedir.length();
+	if(sbasedir[baselen-1]=='/')
+		baselen--;
+	const int buflen=baselen+sizeof(start);
+	char filename[buflen]; 
+	memcpy(filename,&sbasedir[0],baselen);
+	char *ptr=filename+baselen;
+	memcpy(ptr,start,sizeof(start));
+	LOGGER("unlink(%s)\n",filename);
+   unlink(filename);
+	}
 string_view getpreviousstate(string_view sbasedir ) { // delete[] should be called on result
 	LOGGER("get previous state %s\n",sbasedir.data());
 	constexpr const char start[]="/state.lnk";

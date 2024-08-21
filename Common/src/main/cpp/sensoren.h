@@ -326,7 +326,7 @@ SensorGlucoseData *makelibre3sensor(std::string_view shortname,uint32_t starttim
 	return makelibre3sensor(shortname, starttime,0,nullptr,now);
 	}
 
-int makelibre3sensorindex(std::string_view shortname,uint32_t starttime,const uint32_t pin,const char *deviceaddress,uint32_t now) {
+int makelibre3sensorindex(std::string_view shortname,uint32_t starttime,const uint32_t pin,const char *deviceaddress,uint32_t now ,uint16_t warmup,uint16_t wearduration) {
  	const auto  name=namelibre3(shortname);
 
 #ifndef NOLOG
@@ -358,10 +358,10 @@ int makelibre3sensorindex(std::string_view shortname,uint32_t starttime,const ui
 		return sensindex;
 		}
 	const pathconcat sensordir(inbasedir,name);
-	SensorGlucoseData::mkdatabase3(sensordir, starttime,pin,deviceaddress); 
+	SensorGlucoseData::mkdatabase3(sensordir, starttime,pin,deviceaddress,warmup,wearduration); 
 		const int ind=addsensor(std::string_view(name.data(),name.size()));
 		sensor *sen=getsensor(ind);
-		sen->halfdays=14*2;
+		sen->halfdays=2*wearduration/(24*60);
 		sen->initialized=true;
 		return ind ;
 	}
@@ -414,7 +414,7 @@ std::pair<int,SensorGlucoseData *> makeSIsensorindex(std::string_view gegsSI,uin
 	return {ind,getSensorData(ind)} ;
 	}
 SensorGlucoseData *makelibre3sensor(std::string_view shortname,uint32_t starttime,const uint32_t pin,const char *deviceaddress,const uint32_t now) {
-	int sensindex=makelibre3sensorindex(shortname,starttime,pin,deviceaddress,now);
+	int sensindex=makelibre3sensorindex(shortname,starttime,pin,deviceaddress,now,60,14*24*60);
 	if(sensindex<0)
 		return nullptr;
 	return getSensorData(sensindex);
@@ -478,7 +478,8 @@ SensorGlucoseData *makelibre3sensor(std::string_view shortname,uint32_t starttim
 		vector<int> out;
 		const uint32_t nu = time(nullptr);
       
-      const uint32_t oldsecs=starttime-maxSIhours*60*60;
+     constexpr const int maxage=maxSIhours*60*60;
+      const uint32_t oldsecs=maxage>=starttime?0:starttime-maxage;
 		for(int i = last(); i >= 0; i--) {
 			auto &sensor=sensorlist()[i];
 			const uint32_t startsensor = sensor.starttime;

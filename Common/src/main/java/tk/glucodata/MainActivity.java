@@ -362,6 +362,7 @@ if(Build.VERSION.SDK_INT >= 30)  {
 		return;
 
     startall();
+//	Log.showLoader();
     Log.i(LOG_ID,"onCreate end");
 	if(Menus.on)
 		Menus.show(this);
