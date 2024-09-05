@@ -16,9 +16,9 @@
   <string name="ongoing_description">Pågående program</string>
   <string name="scan_permission">Behörigheter</string>
   <string name="scanname">Skanna</string>
-  <string name="scansname">Skanningar</string>
+  <string name="scansname">Skannade</string>
   <string name="historyname">Historiska</string>
-  <string name="streamname">Strömmande</string>
+  <string name="streamname">Strömmade</string>
   <string name="resetname">Återställ</string>
   <string name="helpname">Hjälp</string>
   <string name="searchtopast">Sök tidiagre</string>
