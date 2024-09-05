@@ -2033,7 +2033,7 @@ to receive the Libreview Account id from Libreview and thereafter set
 Libreview account e-mail address and password. When you thereafter
 set &quot;<i>Send to Libreview</i>&quot; and press &quot;<i>Resend
 data</i>&quot;, data will be sent to that different Libreview
-account, but the previous account ID is will still be used to scan
+account, but the previous/manually entered account ID will still be used to scan
 the sensor via NFC. This way, Juggluco sends data to a different
 Libreview account than Abbotts Libre 3 app uses.</p>
 ]]>

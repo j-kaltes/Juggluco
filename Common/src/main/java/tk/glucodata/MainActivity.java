@@ -315,6 +315,7 @@ void showSystemBarsAppearance() {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+// 	Log.testAppend((byte)7,(short) -4);
 if(Build.VERSION.SDK_INT >= 30)  {
         if(!isWearable)
             EdgeToEdge.enable(this);

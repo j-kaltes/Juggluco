@@ -2661,6 +2661,7 @@ void mkheights() {
 #include "datbackup.h"
 extern void setuseit();
 extern void setusenl();
+extern void setusesv();
 extern void setuseru() ;
 extern void setusees();
 
@@ -2756,7 +2757,10 @@ void  setlocale(const char *localestrbuf,const size_t len) {
 		case mklanguagenum("uk"):
 			setuseuk();
 			break;
-
+		case mklanguagenum("SV"):
+		case mklanguagenum("sv"):
+			setusesv();
+			break;
 #ifdef USE_RUSSIAN 
 		case mklanguagenum("RU"):
 		case mklanguagenum("ru"):

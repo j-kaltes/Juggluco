@@ -96,7 +96,7 @@
 <string name="newname">Novo</string>
 <string name="deletelast">Excluir o último</string>
 <string name="meal">Refeição:</string>
-<string namee="ringshort">Anel</string>
+<string name="ringshort">Anel</string>
 <string name="days">Dias</string>
 <string name="invaliddays">\' não é um número válido de dias</string>
 <string name="summarygraph">Gráfico de resumo</string>

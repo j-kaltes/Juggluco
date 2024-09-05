@@ -137,8 +137,9 @@ static int siNR=0;
 
 
     static private final UUID serviceUUID = UUID.fromString("0000ff30-0000-1000-8000-00805f9b34fb");
-    static private final UUID service1UID = UUID.fromString("0000ff31-0000-1000-8000-00805f9b34fb");
-    static private final UUID service2UID = UUID.fromString("0000ff32-0000-1000-8000-00805f9b34fb");
+    static private final UUID serviceChar1UUID = UUID.fromString("0000ff31-0000-1000-8000-00805f9b34fb");
+    static private final UUID serviceChar2UUID = UUID.fromString("0000ff32-0000-1000-8000-00805f9b34fb");
+
     private BluetoothGattCharacteristic service1, service2;
 
     private boolean discover(BluetoothGatt bluetoothGatt) {
@@ -151,8 +152,9 @@ static int siNR=0;
                wrotepass[1] = System.currentTimeMillis();
                return false;
            }
-           service1 = service.getCharacteristic(service1UID);
-           service2 = service.getCharacteristic(service2UID);
+
+           service1 = service.getCharacteristic(serviceChar1UUID);
+           service2 = service.getCharacteristic(serviceChar2UUID);
            if (service1 == null || service2 == null) {
                var mess=(service1 == null ? "service1==null " : "") + (service2 == null ? "service2==null" : "");
                Log.i(LOG_ID, mess);
@@ -163,13 +165,10 @@ static int siNR=0;
 
         return enablenotifications(bluetoothGatt);
     }
-
-    private static final UUID descriptor = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
-
     private boolean enablenotifications(BluetoothGatt bluetoothGatt) {
       Log.i(LOG_ID,"enablenotifications");
 
-        var des = service1.getDescriptor(descriptor);
+        var des = service1.getDescriptor(mCharacteristicConfigDescriptor);
         if (des == null) {
 		      final		var tim = System.currentTimeMillis();
             var mes="service1.getDescriptor(descriptor)==null";

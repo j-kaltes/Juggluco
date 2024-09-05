@@ -475,11 +475,11 @@ new View[]{isvalue},new View[]{ringisvalue,Cancel},new View[]{usealarm},new View
 final private static String  codestr=String.valueOf(BuildConfig.VERSION_CODE);
 
 
-//static private final List<String> supportedlanguages= Arrays.asList("Language","be","de","en","fr","it","nl","pl","pt","uk","zh");
-//  static private final List<String> supportedlanguages= Arrays.asList("Language","be","de","en","fr","it","nl","pl","pt","uk");
-static private final List<String> supportedlanguages= RU?Arrays.asList("Language","be","de","en","fr","it","nl","pl","pt","ru","uk","zh"):(SPANISH?Arrays.asList("Language","be","de","en","es","fr","it","nl","pl","pt","uk","zh"):Arrays.asList("Language","be","de","en","fr","it","nl","pl","pt","uk","zh"));
+//static private final List<String> supportedlanguages= Arrays.asList("Language","be","de","en","fr","it","nl","pl","pt","sv","uk","zh");
+//  static private final List<String> supportedlanguages= Arrays.asList("Language","be","de","en","fr","it","nl","pl","pt","sv","uk");
+static private final List<String> supportedlanguages= RU?Arrays.asList("Language","be","de","en","fr","it","nl","pl","pt","ru","sv","uk","zh"):(SPANISH?Arrays.asList("Language","be","de","en","es","fr","it","nl","pl","pt","sv","uk","zh"):Arrays.asList("Language","be","de","en","fr","it","nl","pl","pt","sv","uk","zh"));
 
-//static private final List<String> supportedlanguages= IWRU?Arrays.asList("Language","be","de","en","es","fr","it","iw","nl","pl","pt","ru","uk"):Arrays.asList("Language","be","de","en","es","fr","it","nl","pl","pt","uk");
+//static private final List<String> supportedlanguages= IWRU?Arrays.asList("Language","be","de","en","es","fr","it","iw","nl","pl","pt","ru","sv","uk"):Arrays.asList("Language","be","de","en","es","fr","it","nl","pl","pt","sv","uk");
 static private Spinner languagespinner(MainActivity context, int[] spinpos) {
 	var spin=  new Spinner(context,isWearable?MODE_DIALOG: MODE_DROPDOWN);
 

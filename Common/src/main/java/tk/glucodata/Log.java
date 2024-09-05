@@ -174,5 +174,7 @@ public static void showScanSettings(  ScanSettings mScanSettings) {
    Log.i("ScanSettings","Phy="+mScanSettings.getPhy());
    Log.i("ScanSettings","ReportDelayMillis="+mScanSettings.getReportDelayMillis());
    }
+
 */
+
 };

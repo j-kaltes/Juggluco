@@ -13,16 +13,16 @@ constexpr static std::string_view svlabels[]={
   };
 constexpr static Shortcut_t  svshortinit[]= {
   {"Bröd", .48},
-  {"Vinbärsbulle1", .56f},
-  {"vinbärsbulle2", .595f},
+  {"Vinbärsbu1", .56f},
+  {"vinbärsbu2", .595f},
   {"Druvor", .165f},
-  {"Fruktyoghurt", .058f},
+  {"Fruktyoghur", .058f},
   {"Ris", .75f},
   {"Pasta", .65f},
   {"Tomat", .03f},
   {"Mexican mix", .078f},
   {"Apelsinjos", .109f},
-  {"Proteinpulver", .873f},
+  {"Sportpulver", .873f},
   {"Mix(morot)", .07f},
   {"Mix svamp", .07300000f}
   };
@@ -110,8 +110,8 @@ jugglucotext svtext {
    .menustr0= {
       "Spegling",
       "Sensor",
-      "    Mörkt läge    ",
-            "Inställningar",
+      "  Mörkt läge      ",
+      "Inställningar",
       "Stoppa larm"
     },
     .menustr2= {
@@ -167,8 +167,8 @@ exempel möjlighet att dölja root för vissa applikationer (Magiskhide
 eller Denylist) och ändra sitt eget namn, båda behövs. I ditt fall
 är det problem med följande fil)",
 	.add_s=true,
-  .shortinit=shortinit,
-  .labels=labels,
+  .shortinit=svshortinit,
+  .labels=svlabels,
   .checked="Aktiv",
   .unchecked="Inaktiv",
   .Undetermined="",

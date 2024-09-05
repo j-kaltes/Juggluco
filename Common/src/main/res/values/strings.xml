@@ -12,7 +12,7 @@
     <string name="error_nfc_disabled">NFC is disabled, you can enable it in device settings.</string>
 
    <string name="kerfstok_missing_title">Kerfstok is not installed on watch</string>
-    <string name="kerfstok_missing_message">Kerfstok is not installed on watch. In Garmin connectiq store you can get it</string>
+    <string name="kerfstok_missing_message">Kerfstok is not installed on watch. In Garmin Connect IQ store you can get it</string>
 
 
     <string name="alarm_description">Too low or too high glucose</string>
@@ -191,7 +191,7 @@
     <string name="uselibreview">Send to Libreview</string>
     <string name="libreviewname">Libreview</string>
     <string name="sendnow">Send now</string>
-    <string name="blueormirror">"Sensor via Bluetooth" should be turned or this should be configured as a mirror</string>
+    <string name="blueormirror">"Sensor via Bluetooth" should be turned on or this should be configured as a mirror</string>
     <string name="vibrationname">Vibrate</string>
     <string name="high_priority">Turbo</string>
     <string name="darkmode">Dark mode</string>
