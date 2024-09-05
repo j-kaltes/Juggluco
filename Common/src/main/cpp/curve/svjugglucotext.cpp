@@ -48,7 +48,7 @@ jugglucotext svtext {
 	.middle="Mitten",
 #endif
 	.history="Historik",
-  //	.historyinfo="Var 15:de minut.\nSensorn har minne för de 8 senaste timmarna.\nSkanning överför dem till detta program.\nSensor: ", 
+  //	.historyinfo="Var 15:de minut.\nSensorn har minne för de 8 senaste timmarna.\nSkanning överför dem till detta program.\nSensor: ",
   //	.history3info="Var 5:e minut.\nSensorn har minne för 14 dagar.\nÖverförs via Bluetooth till detta program.\nSensor: ",
 	.sensorstarted= "Startad:",
 	.lastscanned="Senast skannad:",
@@ -85,7 +85,7 @@ jugglucotext svtext {
 		"Export",
 		"Spegling",
 		"Värde",
-		"Lista", 
+		"Lista",
 		"Statistik",
 		"Tal",
 		"Flytande     "
@@ -148,10 +148,10 @@ jugglucotext svtext {
   "Fel! Kontrollera konto-id",
 	"Ange samma konto som används för att aktivera sensorn i Inställningar->Libreview"},
 .libre3scansuccess= {
-  "FreeStyle Libre 3 sensor", 
+  "FreeStyle Libre 3 sensor",
 	"Glukosvärden kommer nu att tas emot av Juggluco"},
 .unknownNFC={
-  "Okänt NFC-skanningfel", 
+  "Okänt NFC-skanningfel",
 	"Försök igen"},
 .nolibre3={
   "FreeStyle Libre 3 sensor",
