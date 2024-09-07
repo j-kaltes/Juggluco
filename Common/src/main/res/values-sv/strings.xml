@@ -21,7 +21,7 @@
   <string name="streamname">Strömmade</string>
   <string name="resetname">Återställ</string>
   <string name="helpname">Hjälp</string>
-  <string name="searchtopast">Sök tidiagre</string>
+  <string name="searchtopast">Sök tidigare</string>
   <string name="nobluetooth">Inget Bluetooth</string>
   <string name="bluetoothenabled">Bluetooth aktiverat</string>
   <string name="bluetoothdisabled">Bluetooth avstängt</string>
@@ -205,7 +205,7 @@
   <string name="heartrate">Puls</string>
   <string name="xdripbroadcast">xDrip broadcast</string>
   <string name="sensorpermission">Sensorernas tillstånd krävs för att visa puls</string>
-  <string name="sensorpermissionmessage">Ställ in det i enhetsiens Inställningar, Appar, Behörigheter, Juggluco</string>
+  <string name="sensorpermissionmessage">Ställ in det i enhetens Inställningar, Appar, Behörigheter, Juggluco</string>
   <string name="floatglucose">Flytande glukosvärde</string>
   <string name="floatglucoseshort">@string/floatglucose</string>
   <string name="fontsize">Fontstorlek</string>
