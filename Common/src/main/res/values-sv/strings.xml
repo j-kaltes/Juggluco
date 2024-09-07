@@ -81,13 +81,13 @@
   <string name="sensorviabluetooth">Sensor via Bluetooth</string>
   <string name="sensorviabluetoothon">För larm i icke-spegelenheter bör \'Sensor via Bluetooth\' vara påslagen</string>
   <string name="setunitfirst">Ange först enhet</string>
-  <string name="numberlabels">Ettiketter för värden</string>
+  <string name="numberlabels">Etiketter</string>
   <string name="colors">Färger</string>
   <string name="remindersname">Påminnelser</string>
   <string name="display">Visa</string>
   <string name="shutcuts">Genvägar</string>
   <string name="advanced">Avancerat</string>
-  <string name="newname">Nytt</string>
+  <string name="newname">Ny</string>
   <string name="deletelast">Radera senaste</string>
   <string name="meal">Måltid:</string>
   <string name="ringshort">Signal</string>
