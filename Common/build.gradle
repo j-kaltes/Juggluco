@@ -18,7 +18,7 @@ if(task.contains("LibreOldNosi")&&!task.contains("Wear")) {
      MINSDK = 19
    }
 else {
-       ndkver = '27.0.12077973'
+       ndkver = '27.1.12297006'
       APPCOMPAT = '1.7.0'
       GMSWEAR = '18.2.0'
      GMSBASE = '18.5.0'
@@ -494,15 +494,15 @@ dependencies {
   implementation 'com.android.support:support-annotations:28.0.0'
 
     implementation "androidx.appcompat:appcompat:$APPCOMPAT"
-    implementation 'androidx.activity:activity:1.9.1'
+    implementation 'androidx.activity:activity:1.9.2'
 	implementation 'androidx.core:core:1.13.1'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1'
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.0.10'
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib:2.0.10'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.0.20'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:2.0.20'
     implementation "com.google.android.gms:play-services-base:$GMSBASE"
  implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.8.1'
-  mobileImplementation "androidx.health.connect:connect-client:1.1.0-alpha07"
+  mobileImplementation 'androidx.health.connect:connect-client:1.1.0-alpha08'
 //  mobileImplementation files('/n/ojka/Downloads/ciq-companion-app-sdk-2.0.3.aar');
   mobileImplementation "com.garmin.connectiq:ciq-companion-app-sdk:2.0.3@aar"
 
@@ -511,10 +511,10 @@ dependencies {
 
 
 
-    wearImplementation 'androidx.activity:activity-ktx:1.9.1'
+    wearImplementation 'androidx.activity:activity-ktx:1.9.2'
     wearImplementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     wearImplementation 'com.google.android.material:material:1.12.0'
-    wearImplementation 'androidx.databinding:viewbinding:8.5.2'
+    wearImplementation 'androidx.databinding:viewbinding:8.6.0'
     wearImplementation 'androidx.core:core-ktx:1.13.1'
 
 

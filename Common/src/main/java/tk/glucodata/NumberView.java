@@ -69,6 +69,8 @@ import static android.widget.Spinner.MODE_DROPDOWN;
 import static java.lang.System.currentTimeMillis;
 //import static tk.glucodata.Applic.smallScreen;
 import static tk.glucodata.Applic.isWearable;
+import static tk.glucodata.MainActivity.systembarLeft;
+import static tk.glucodata.MainActivity.systembarRight;
 import static tk.glucodata.RingTones.EnableControls;
 import static tk.glucodata.settings.Settings.editoptions;
 import static tk.glucodata.settings.Settings.removeContentView;
@@ -205,30 +207,31 @@ public   View addnumberview(MainActivity context,final int bron,final long time,
 		helpbutton.setOnClickListener(v-> help.help(R.string.newamount,context));
 		}
         Layout layout = isWearable?new Layout(context,new View[] {source},new View[]{datebutton,timebutton} ,new View[]{getspinner(context), valueedit}, new View[]{messagetext,savebutton,deletebutton},new View[]{cancel}):new Layout(context, (lay, w, h) -> {
-		int wid=GlucoseCurve.getwidth()-MainActivity.systembarRight;
+		int wid=GlucoseCurve.getwidth()- systembarRight;
 		if(!smallScreen) {
 			Log.i(LOG_ID,"no smallScreen");
 			int hei=GlucoseCurve.getheight();
 			   if(wid>hei) {
+			      int minleft=systembarLeft*3/4;
 				if(hei>h)
 				    lay.setY((hei - h) / 2);
 				   else
 				    lay.setY(MainActivity.systembarTop*3/4);
 				 if(wid>w) {
-				       int half= wid / 2;
-				       int af=(half-w)/4;
-					    int posx=half - w-af;
-					    if(posx<0) {
-						posx=0;
-						noroom=true;
-						}
-					     else
-						noroom=false;
-					    lay.setX(posx);
-					  }
+				    int half= wid / 2;
+				    int af=(half-w)/4;
+				    int posx=half - w-af;
+				    if(posx<minleft) {
+					posx=minleft;
+					noroom=true;
+					}
+				    else
+					noroom=false;
+				    lay.setX(posx);
+				  }
 					else
-					    lay.setX(0);
-				    }
+					    lay.setX(minleft);
+			    }
 			else {
 				if(wid>w)
 				    lay.setX((wid - w)/2);
@@ -748,8 +751,8 @@ public void gettimepicker(MainActivity activity,int hourin, int minin, ObjIntCon
 		Layout buttonlay=new Layout(activity,new View[] {cancel},new View[]{ok});
 		buttonlay.setLayoutParams(new ViewGroup.LayoutParams(   ViewGroup.LayoutParams.WRAP_CONTENT, MATCH_PARENT));
 	  views=new View[][] {new View[] {pick,buttonlay}};
-      pick.setPadding(MainActivity.systembarLeft,MainActivity.systembarTop,0,MainActivity.systembarBottom);
-      buttonlay.setPadding(0,MainActivity.systembarTop/2,MainActivity.systembarRight,MainActivity.systembarBottom);
+      pick.setPadding(systembarLeft,MainActivity.systembarTop,0,MainActivity.systembarBottom);
+      buttonlay.setPadding(0,MainActivity.systembarTop/2, systembarRight,MainActivity.systembarBottom);
 	 };
 //		buttonlay.setBackgroundColor( RED);
 	pick.setLayoutParams(new ViewGroup.LayoutParams(smallScreen?WRAP_CONTENT:MATCH_PARENT , ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -776,7 +779,7 @@ public void gettimepicker(MainActivity activity,int hourin, int minin, ObjIntCon
 				}, views);
 
 	if(smallScreen) 
-      layout.setPadding(MainActivity.systembarLeft,MainActivity.systembarTop,MainActivity.systembarRight,MainActivity.systembarBottom);
+      layout.setPadding(systembarLeft,MainActivity.systembarTop, systembarRight,MainActivity.systembarBottom);
 
 		layout.setBackgroundColor( Applic.backgroundcolor);
         activity.addContentView(layout,  new ViewGroup.LayoutParams(smallScreen?WRAP_CONTENT:MATCH_PARENT, smallScreen?WRAP_CONTENT:MATCH_PARENT));
@@ -977,12 +980,16 @@ Layout getkeyboard(Context context) {
 		}*/
 	if(wid>hei) {
 		lay.setY((hei-h)/2);
+      int mostright=wid-w-systembarRight;
 		if(noroom)
-			lay.setX(wid-w);
+			lay.setX(mostright);
 		else {
-			int half= wid/2;
+			int half= (wid-systembarRight)/2;
 			int bij=(half-w)/4;
-			lay.setX(half+bij);
+         int xpos=half+bij;
+         if(xpos>mostright)
+            xpos=mostright;
+         lay.setX(xpos);
 
 		}
 

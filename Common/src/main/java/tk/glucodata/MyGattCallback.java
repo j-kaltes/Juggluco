@@ -61,6 +61,7 @@ import static tk.glucodata.Natives.processTooth;
 public class MyGattCallback extends SuperGattCallback {
 	private int conphase = 0;
 
+       static private final UUID mADCCustomServiceUUID = UUID.fromString("0000fde3-0000-1000-8000-00805f9b34fb");
 	static private final String LOG_ID = "MyGattCallback";
 
 	public MyGattCallback(String SerialNumber, long dataptr) {
@@ -157,7 +158,6 @@ void reconnect() {
 				Log.i(LOG_ID, SerialNumber + " onConnectionStateChange, status:" + status + ", state: " + (newState < state.length ? state[newState] : newState));
 				}
 			if (newState == BluetoothProfile.STATE_CONNECTED) {
-//				readrssi=9999; mBluetoothGatt.readRemoteRssi();
 				if(!bluetoothGatt.discoverServices()) {
 					Log.e(LOG_ID,"bluetoothGatt.discoverServices()  failed");
 					}
@@ -219,7 +219,7 @@ void reconnect() {
 			var sensorbluetooth=SensorBluetooth.blueone;
 			if(sensorbluetooth==null)
 				return false;
-			BluetoothGattService service = mBluetoothGatt.getService(sensorbluetooth.mADCCustomServiceUUID);
+			BluetoothGattService service = mBluetoothGatt.getService(mADCCustomServiceUUID);
 			if (service != null) {
 				BLELogincharacteristic = service.getCharacteristic(mCharacteristicUUID_BLELogin);
 				CompositeRawDatacharacteristic = service.getCharacteristic(mCharacteristicUUID_CompositeRawData);
@@ -274,7 +274,7 @@ void reconnect() {
 					}
 			}
 			else {
-				Log.i(LOG_ID,"mBluetoothGatt.getService(sensorbluetooth.mADCCustomServiceUUID)==null");
+				Log.i(LOG_ID,"mBluetoothGatt.getService(mADCCustomServiceUUID)==null");
 				return false;
 				}
 		} catch (Throwable e) {
@@ -332,7 +332,7 @@ private   boolean failedbefore=false;
 			long tim = System.currentTimeMillis();
 			justenablednotification = true;
 			if (status == GATT_SUCCESS &&
-					(service = bluetoothGatt.getService(sensorbluetooth.mADCCustomServiceUUID)) != null &&
+					(service = bluetoothGatt.getService(mADCCustomServiceUUID)) != null &&
 					(characteristic = service.getCharacteristic(mCharacteristicUUID_CompositeRawData)) != null &&
 					//noinspection MissingPermission
 					bluetoothGatt.setCharacteristicNotification(characteristic, true) &&
@@ -743,5 +743,10 @@ public boolean matchDeviceName(String deviceName,String address) {
 		}
 	return SerialNumber.equals(deviceName.substring(6));
 	}
+
+@Override
+public UUID getService() {
+   return mADCCustomServiceUUID;
+   }
 }
 

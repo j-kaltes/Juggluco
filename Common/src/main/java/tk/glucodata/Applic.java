@@ -569,7 +569,13 @@ boolean needsnatives() {
         GlucoseCurve.metrics= res.getDisplayMetrics();
 	initscreenwidth= GlucoseCurve.metrics.widthPixels;
         Natives.setfontsize(smallfontsize, menufontsize, GlucoseCurve.metrics.density, headfontsize);
-	boolean smallsize=((initscreenwidth/smallfontsize)<44.69);
+   final double screensize=(initscreenwidth/smallfontsize);
+     Log.i(LOG_ID,"initscreenwidth="+initscreenwidth);
+     Log.i(LOG_ID,"smallfontsize="+smallfontsize);
+     Log.i(LOG_ID,"screensize="+screensize);
+//	boolean smallsize=((initscreenwidth/smallfontsize)<44.69);
+	final boolean smallsize=screensize<25.0;
+//	boolean smallsize=false;
 	boolean ret;
 	if(smallsize!= NumberView.smallScreen) {
 		NumberView.smallScreen=smallsize;

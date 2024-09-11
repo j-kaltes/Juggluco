@@ -45,6 +45,11 @@ import java.util.UUID;
 
 import androidx.annotation.RequiresApi;
 
+import static android.bluetooth.BluetoothDevice.ACTION_BOND_STATE_CHANGED;
+import static android.bluetooth.BluetoothDevice.BOND_BONDED;
+import static android.bluetooth.BluetoothDevice.BOND_BONDING;
+import static android.bluetooth.BluetoothDevice.BOND_NONE;
+import static android.bluetooth.BluetoothDevice.EXTRA_BOND_STATE;
 import static android.bluetooth.BluetoothProfile.GATT;
 import static tk.glucodata.Applic.isWearable;
 import static tk.glucodata.BuildConfig.libreVersion;
@@ -65,7 +70,6 @@ public static void startscan() {
     private static final String LOG_ID = "SensorBluetooth";
     private static final int scantimeout = 390000;
     private static final int  scaninterval=60000;
-    protected static final UUID mADCCustomServiceUUID = UUID.fromString("0000fde3-0000-1000-8000-00805f9b34fb");
 
 //   public Applic Applic.app;
  static   private BluetoothAdapter mBluetoothAdapter;
@@ -108,14 +112,15 @@ static void othersworking(SuperGattCallback current ,long timmsec) {
 		}
         boolean scan=false;
         for(var cb: gattcallbacks)    
-		if(!cb.connectDevice(delayMillis))
-			scan=true;
-        if(scan) {
-		return startScan(delayMillis);
+            if(!cb.connectDevice(delayMillis))  {
+               scan=true;
+               }
+     if(scan) {
+		  return startScan(delayMillis);
 	    }
 	  return false;
     	}
-    public boolean connectToActiveDevice(SuperGattCallback cb,long delayMillis) {
+ public boolean connectToActiveDevice(SuperGattCallback cb,long delayMillis) {
 	Log.i(LOG_ID,"connectToActiveDevice("+cb.SerialNumber+"," + delayMillis+")");
 	if(!cb.connectDevice(delayMillis)&&!mScanning) {
 		return startScan(delayMillis);
@@ -202,7 +207,7 @@ long scantimeouttime=0L;
 
 boolean mScanning = false;
 class Scanner21 implements Scanner  {
-final	private List<ScanFilter> mScanFilters = null;
+	private List<ScanFilter> mScanFilters = null;
 final	private ScanSettings mScanSettings;
 	private BluetoothLeScanner mBluetoothLeScanner=null;
 	@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -231,19 +236,19 @@ final	private ScanSettings mScanSettings;
 		    } */
 		}
 
-		@Override 
+		@Override
 		public void onBatchScanResults(List<ScanResult> list) {
-		    //if(!resultbusy) 
+		    //if(!resultbusy)
 		    {
 		//	    resultbusy=true;
 			    Log.v(LOG_ID,"onBatchScanResults");
 			   final var len=list.size();
-			    for(int i=0;i < len&& !processScanResult(list.get(i));++i) 
+			    for(int i=0;i < len&& !processScanResult(list.get(i));++i)
 				;
 		//	    resultbusy=false;
 			     }
 		     }
-		@Override 
+		@Override
 		public void onScanFailed(int errorCode) {
    		   if(doLog) {
 			    final String[] scanerror={"SCAN_0",
@@ -267,11 +272,7 @@ final	private ScanSettings mScanSettings;
 		ScanSettings.Builder builder = new ScanSettings.Builder();
 		builder.setReportDelay(0);
 		mScanSettings = builder.build();
-	/*	
-		mScanFilters=new ArrayList<>();
-	ScanFilter.Builder builder2 = new ScanFilter.Builder();
-		builder2.setServiceUuid(new ParcelUuid(SensorBluetooth.mADCCustomServiceUUID));
-		mScanFilters.add(builder2.build()); */
+
 		Log.i(LOG_ID,"Scanner21");
 		}
 	@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -282,23 +283,39 @@ final	private ScanSettings mScanSettings;
 	@SuppressLint("MissingPermission")
 	@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 	public boolean start()  {
-		if(mBluetoothLeScanner!=null) {
-			Log.i(LOG_ID,"Scanner21.start");
-				try {
-
- 		//		showScanfilters( mScanFilters ) ;
-		//	 showScanSettings(   mScanSettings) ;
-		       this.mBluetoothLeScanner.startScan(mScanFilters, mScanSettings, mScanCallback);
-			} catch (Throwable e) {
-				Log.stack(LOG_ID, e);
-				if (Build.VERSION.SDK_INT > 30 && !Applic.mayscan())
-					Applic.Toaster(R.string.turn_on_nearby_devices_permission);
-				return false;
-		}
-			   return true;
-			   }
+	    if(mBluetoothLeScanner!=null) {
+	       Log.i(LOG_ID,"Scanner21.start");
+            mScanFilters=new ArrayList<>();
+            Log.d(LOG_ID,"SCAN: starting scan.");
+           	for(var cb: gattcallbacks)   {
+				Log.d(LOG_ID,"serial number: " + cb.SerialNumber);
+				if (cb.mActiveDeviceAddress != null) {
+					 Log.d(LOG_ID,"address: " + cb.mActiveDeviceAddress);
+					}
+				final var service=cb.getService();
+				if(service==null) {
+					Log.i(LOG_ID,"getService should return UUID");
+					mScanFilters=null;
+					break;
+					}
+				else {
+					ScanFilter.Builder builder2 = new ScanFilter.Builder();
+					builder2.setServiceUuid(new ParcelUuid(service));
+					mScanFilters.add(builder2.build());
+					}
+				}
+		try {
+		     this.mBluetoothLeScanner.startScan(mScanFilters, mScanSettings, mScanCallback);
+		     } 
+	         catch (Throwable e) {
+		      Log.stack(LOG_ID, e);
+		       if (Build.VERSION.SDK_INT > 30 && !Applic.mayscan()) Applic.Toaster(R.string.turn_on_nearby_devices_permission);
+			   return false;
+		            }
+		   return true;
+		   }
 		return false;
-		    }
+		 }
 	@SuppressLint("MissingPermission")
 	@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 	public void stop() {
@@ -329,7 +346,15 @@ class ArchScanner  implements Scanner {
 		   }
 	@SuppressLint("MissingPermission")
 	public boolean start()  {
-//		return SensorBluetooth.mBluetoothAdapter.startLeScan(new UUID[] {SensorBluetooth.this.mADCCustomServiceUUID},mLeScanCallback);
+	   Log.d(LOG_ID,"SCAN: starting scan.");
+	   switch(gattcallbacks.size()) {
+		 	case 0: Log.e(LOG_ID,"nothing to scan for");return false;
+			case 1:
+				final var service=gattcallbacks.get(0).getService();
+				if(service!=null) {
+					  return SensorBluetooth.mBluetoothAdapter.startLeScan(new UUID[] {service},mLeScanCallback);
+					  }
+			}
 		return SensorBluetooth.mBluetoothAdapter.startLeScan(mLeScanCallback);
 		  }
 	@SuppressLint("MissingPermission")
@@ -368,33 +393,26 @@ static public void sensorEnded(String str) {
 private boolean scanstart=false;	
 long scantime=0L;
 final private Runnable scanRunnable = new Runnable() {
-            @Override 
-            public void run() {
-		scantime=System.currentTimeMillis();
-                    SensorBluetooth sensorBluetooth = SensorBluetooth.this;
-                if (bluetoothIsEnabled() && gattcallbacks.size() != 0) {
-                    if (!scanner.init()) {
-                        return;
-                    }
-                    Log.d(LOG_ID,"SCAN: starting scan.");
-			for(var cb: gattcallbacks)   {
-                    		Log.d(LOG_ID,"serial number: " + cb.SerialNumber);
-                    		if (cb.mActiveDeviceAddress != null) {
-					Log.d(LOG_ID,"address: " + cb.mActiveDeviceAddress);
-				    }
-				   }
-		    if(scanner.start()) {
-			   mScanning = true;
-			    Applic.app.getHandler().postDelayed(sensorBluetooth.mScanTimeoutRunnable, scantimeout);
-			    }
-		   else {
-                    	Log.d(LOG_ID,"Start scan failed");
-			return;
-                	}
-		}		
-            }
+   @Override 
+   public void run() {
+       scantime=System.currentTimeMillis();
+       SensorBluetooth sensorBluetooth = SensorBluetooth.this;
+       if (bluetoothIsEnabled() && gattcallbacks.size() != 0) {
+           if (!scanner.init()) {
+                 return;
+               }
+       if(scanner.start()) {
+         mScanning = true;
+          Applic.app.getHandler().postDelayed(sensorBluetooth.mScanTimeoutRunnable, scantimeout);
+          }
+      else {
+                  Log.d(LOG_ID,"Start scan failed");
+      return;
+               }
+   }		
+         }
 
-    };
+ };
      boolean startScan(long delayMillis) {
 
 	    if(!Applic.mayscan()) {
@@ -423,7 +441,7 @@ public void stopScan(boolean retry) {
         if (this.mScanning) {
             stopscantime=System.currentTimeMillis();
             this.mScanning = false;
-	    scanner.stop();
+	         scanner.stop();
             if(bluetoothIsEnabled()) {
 		if(retry) {
 			int waitscan=scaninterval;
@@ -481,6 +499,7 @@ private void removeDevices() {
 	}
 
 private void destruct() {
+	removeReceivers();
 	if(mBluetoothManager!=null)   {
 		stopScan(false);
 		removeDevices();
@@ -634,7 +653,7 @@ private boolean updateDevicers() {
 		return initializeBluetooth();
 		}
 	else {
-		addreceiver();
+		addReceivers();
 		return connectDevices(0);
 		}
 //	       startScan(0);
@@ -694,7 +713,7 @@ private boolean addDevice(String str,long dataptr) {
 			return initializeBluetooth();
 			}
 		else  {
-			addreceiver();
+			addReceivers();
 			return checkandconnect( cb,0);
 			}
 		}
@@ -780,7 +799,20 @@ static void start() {
 		}
 	}
 static final boolean keepBluetooth=false;
-private void addreceiver() {
+
+private void removeBluetoothStateReceiver() {
+	var rec= mBluetoothAdapterReceiver;
+	mBluetoothAdapterReceiver=null;
+	if(rec!=null) {
+		try {
+			Applic.app.unregisterReceiver(rec);
+			}
+		catch(Throwable th) {
+			Log.stack(LOG_ID, "removeBluetoothStateReceiver",th);
+			}
+		}
+	}
+private void addBluetoothStateReceiver() {
 	if(mBluetoothAdapterReceiver==null) {
 	 mBluetoothAdapterReceiver=new BroadcastReceiver() {
 //		private boolean wasScanning=false;
@@ -810,9 +842,88 @@ private void addreceiver() {
 		Applic.app.registerReceiver( mBluetoothAdapterReceiver, new IntentFilter("android.bluetooth.adapter.action.STATE_CHANGED"));
 		}
 	}
+
+private BroadcastReceiver bondStateReceiver =null;
+
+private void addReceivers() {
+ 	addBluetoothStateReceiver();
+ 	addBondStateReceiver() ;
+	}
+private void removeReceivers() {
+ 	removeBluetoothStateReceiver();
+ 	removeBondStateReceiver() ;
+	}
+private void addBondStateReceiver() {
+    bondStateReceiver=new BroadcastReceiver() {
+	    @Override
+	    public void onReceive(Context context, Intent intent) {
+		final BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+		final var tmp=blueone;
+		if(tmp==null) {
+			Log.i(LOG_ID,"Bond Broadcast: no SensorBluetooth");
+			return;
+			}
+		if(device==null) {
+			Log.e(LOG_ID,"Bond Broadcast: BluetoothDevice.EXTRA_DEVICE ==null");
+			return ;
+			}
+		String address=device.getAddress();
+		if(address==null) {
+			Log.e(LOG_ID,"Bond Broadcast: device.getAddress()==null");
+			return;
+			}
+		final String action = intent.getAction();
+		if(action==null) {
+			Log.e(LOG_ID,"Bond Broadcast: action==null");
+			return;
+			}
+		for(var cb: tmp.gattcallbacks)     {
+		    if(cb.mActiveDeviceAddress!=null) {
+			if(address.equals(cb.mActiveDeviceAddress)) {
+			   if(action.equals(ACTION_BOND_STATE_CHANGED)) {
+			      final int bondState = intent.getIntExtra(EXTRA_BOND_STATE, BluetoothDevice.ERROR);
+			      final int previousBondState = intent.getIntExtra(BluetoothDevice.EXTRA_PREVIOUS_BOND_STATE, -1);
+			      switch (bondState) {
+				case BOND_BONDING:
+					Log.i(LOG_ID,"Broadcast: BOND_BONDING "+address);
+					    break;
+					case BOND_BONDED:
+					  Log.i(LOG_ID,"Broadcast: BOND_BONDED "+address);
+					    break;
+					case BOND_NONE:
+					  Log.i(LOG_ID,"Broadcast: BOND_NONE "+address);
+					    break;
+					case BluetoothDevice.ERROR:
+					  Log.i(LOG_ID,"Broadcast: ERROR "+address);
+					    break;
+					  default:
+					    Log.i(LOG_ID,"Broadcast: "+bondState+ " "+address);
+				    }
+				}
+				return;
+				}
+			}
+		    }
+		Log.i(LOG_ID,"Bond Broadcast: no sensor matches address "+address);
+	    }
+	};
+	Applic.app.registerReceiver(bondStateReceiver, new IntentFilter(ACTION_BOND_STATE_CHANGED));
+	}
+
+private void removeBondStateReceiver() {
+	final var rec=bondStateReceiver;
+	bondStateReceiver=null;
+	if(rec!=null) {
+		try {
+			Applic.app.unregisterReceiver(rec);
+			}
+		catch(Throwable th) {
+			Log.stack(LOG_ID, "removeBondStateReceiver",th);
+			}
+		}
+	}
+
 private boolean initializeBluetooth() {
-
-
         Log.v(LOG_ID,"initializeBluetooth");
 //        mBluetoothManager = (BluetoothManager) Applic.app.getSystemService("bluetooth");
         mBluetoothManager = (BluetoothManager) Applic.app.getSystemService(Context.BLUETOOTH_SERVICE);
@@ -837,7 +948,7 @@ private boolean initializeBluetooth() {
 				    }
 				    }
 				}
-			addreceiver();
+			addReceivers();
 			return connectToActiveDevice(0);
 			}
 		else
@@ -847,5 +958,4 @@ private boolean initializeBluetooth() {
 
 	return false;
     }
-
 }

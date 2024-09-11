@@ -355,18 +355,18 @@ Mmap<std::array<uint16_t,16>> trends;
 //static constexpr int getinfo()->dupl=3,days=15;
 const int historybytes(int perhour=4)  {
 	if(!getinfo()) {
-		LOGSTRING("historybytes no getinfo\n");
+		LOGGER("%s historybytes no getinfo\n",shortsensorname()->data());
 		haserror=true;
 		return 0;
 		}
     const auto elsize=getelsize();
 	LOGAR("historybytes");
 #ifndef SIHISTORY
-        if(isSibionics()) return 4*elsize;
+   if(isSibionics()) return 4*elsize;
 #endif
 	const auto days=getinfo()->days;
 	if(elsize<10||elsize>20||days<14||days>maxdays) {
-		LOGGER("historybytes error elsize=%d days=%d\n",elsize,days);
+		LOGGER("%s: historybytes error elsize=%d days=%d\n",shortsensorname()->data(),elsize,days);
 		haserror=true;
 		return 0;
 		}
@@ -437,7 +437,7 @@ uint32_t getfirsttime() const {
 		if(id&&tim)
 			return tim;
 		}
-	LOGGER("%s: no history\n",showsensorname().data());
+	LOGGER("%s: no history\n",shortsensorname()->data());
 
 	return  firstpolltime();
 	}
@@ -940,7 +940,7 @@ private:
 size_t maxscansize()  {
    if(isSibionics()||isLibre3()) return 4;
 	if(!getinfo()) 	 {
-		LOGAR("maxscansize()  getinfo()==null");
+		LOGGER("%s: maxscansize()  getinfo()==null",shortsensorname()->data());
 		haserror=true;
 		return 0;
 		}
@@ -1001,7 +1001,7 @@ specstart(spec),
 #endif
 {
 if(error()) {
-	LOGSTRING("SensorGlucoseData Error\n");
+	LOGGER("SensorGlucoseData %s %s Error\n",sensordir.data(),baseuit.data());
 	return;
 	}
 if(const ScanData *last=lastpoll()) {

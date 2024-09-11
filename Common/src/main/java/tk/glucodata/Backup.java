@@ -691,6 +691,9 @@ if(!isWearable)
 	sethtml(info, mirrorStatus(pos));
 	Layout layout=isWearable?(new Layout(act,new View[]{modify,deactive}, new View[]{info},new View[]{close})):new Layout(act, (l, w, h) -> {
 
+      var x=GlucoseCurve.getwidth()-MainActivity.systembarRight-w;
+      if(x<MainActivity.systembarLeft)
+         x=MainActivity.systembarLeft;
 		l.setX(GlucoseCurve.getwidth()-MainActivity.systembarRight-w);
 		l.setY(MainActivity.systembarTop);
 		final int[] lret={w,h};

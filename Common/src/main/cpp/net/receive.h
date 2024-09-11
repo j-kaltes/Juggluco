@@ -87,7 +87,7 @@ constexpr const int maxbytes=16;
 		back[i*2]=showhex(data[i]>>4);
 		back[i*2+1]=showhex(data[i]&0xf);
 		}
-	back[maxbytes*2]='\0';
+	back[take*2]='\0';
 	return back;
 	}
 

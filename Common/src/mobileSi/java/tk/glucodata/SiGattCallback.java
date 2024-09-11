@@ -136,7 +136,7 @@ static int siNR=0;
     }
 
 
-    static private final UUID serviceUUID = UUID.fromString("0000ff30-0000-1000-8000-00805f9b34fb");
+    static  private final UUID serviceUUID = UUID.fromString("0000ff30-0000-1000-8000-00805f9b34fb");
     static private final UUID serviceChar1UUID = UUID.fromString("0000ff31-0000-1000-8000-00805f9b34fb");
     static private final UUID serviceChar2UUID = UUID.fromString("0000ff32-0000-1000-8000-00805f9b34fb");
 
@@ -275,7 +275,13 @@ public boolean matchDeviceName(String deviceName,String address) {
 
 @Override
 public void free() {
-	 super.free();
-		--siNR;
-		}
+	super.free();
+	--siNR;
+	}
+
+
+@Override
+public UUID getService() {
+   return serviceUUID ;
+   }
 }

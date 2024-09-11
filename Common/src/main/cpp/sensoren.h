@@ -119,7 +119,7 @@ public:
 		}
 
 	Sensoren(string_view basedirin) : inbasedir(basedirin), mapfile{inbasedir, "sensors.dat"},
-									  map(mapfile), maxhist(map.data()?(last() + 2):100),
+									  map(mapfile,1024), maxhist(map.data()?(last() + 2):100),
 									  hist(new SensorGlucoseData *[maxhist]()) {
 	}
 	void setlibre3nums() {
@@ -282,8 +282,7 @@ void	deletelast() {
 		LOGGER("addsensor(%.16s)\n", name.data());
 		removeunused();
 		infoblockptr()->last++;
-		if (last() >= capacity())
-			extend(capacity() * 2);
+      sensorlistmap();
 		if (last() >= getmaxhistory()) {
 			setmaxhistory(last() * 2);
 		}
@@ -574,6 +573,12 @@ vector<SensorGlucoseData *> inperiod(uint32_t starttime,uint32_t endtime) {
 	return out;
 	}
 	*/
+    void  sensorlistmap() {
+      const auto minsize= last()+100;
+		if (minsize >= capacity())
+			extend(minsize * 2);
+
+      }
 	SensorGlucoseData *getSensorData(int ind = -1) {
 	//	LOGGER("getSensorData(%d)\n",ind);
 		if (ind < 0) {
@@ -583,27 +588,30 @@ vector<SensorGlucoseData *> inperiod(uint32_t starttime,uint32_t endtime) {
 				return nullptr;
 			}
 		}
-		if (ind >= getmaxhistory())
+      sensorlistmap();
+		if(ind >= getmaxhistory())
 			setmaxhistory(ind * 2);
+      const char *name= sensorlist()[ind].name;
 		if (!hist[ind]) {
-			if (!sensorlist()[ind].name[0]) {
-				LOGGER("getSensorData sensorlist()[%d].name[0]==null\n", ind);
+			if (!name[0]) {
+				LOGGER("getSensorData sensorlist()[%d].name[0]==0\n", ind);
 				return nullptr;
 			}
-			hist[ind] = new SensorGlucoseData( pathconcat(inbasedir, std::string_view(sensorlist()[ind].name, sensornamelen)));
+
+		   LOGGER("getSensorData(%d) %s\n",ind,name);
+			hist[ind] = new SensorGlucoseData( pathconcat(inbasedir, std::string_view(name, sensornamelen)));
 			}
 		if (hist[ind]) {
-			bool error = hist[ind]->error();
+			const bool error = hist[ind]->error();
 			if(!error) {
 				if(hist[ind]->infowrong()) {
-				//	infoblockptr()->last = ind - 1;
-					LOGAR("infoblock wrong");
+					LOGGER("hist[%d] %s: infoblock wrong",ind,name);
 					goto INFOWRONGERROR;
-				}
+				   }
 				}
 			else {
 				INFOWRONGERROR:
-				LOGSTRING("hist[ind]->error()\n");
+				LOGGER("%s: hist[%d]->error()\n",name,ind);
 				SensorGlucoseData *tmp = hist[ind];
 				hist[ind] = nullptr;
 				delete tmp;
@@ -880,6 +888,7 @@ int writeStartime(crypt_t *pass, const int sock, const int sensorindex) {
 				if(newfirst<0&&(!sensorlist()[i].finished||now<hist->getmaxtime()))  {
 					newfirst=i;
 					}
+
 				if(upstream) {
 					const int resstream = hist->updatestream(pass, sock, ind, i,0);
 					switch (resstream) {
@@ -897,6 +906,7 @@ int writeStartime(crypt_t *pass, const int sock, const int sensorindex) {
 						did|=jsonres;
 						}
 					}
+
 				if(upscan) {
 					const int resscan = hist->updatescan(pass, sock, ind, i,i>=startupdate,upstream);
 					switch(resscan) {

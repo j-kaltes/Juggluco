@@ -3128,15 +3128,15 @@ int64_t screentap(float x,float y) {
 		}
 #ifndef WEAROS
 	if(speakout) {
-		 const float hgrens=menutextheight;
+		 const float hgrens=menutextheight+statusbarheight;
 		if(y<hgrens) {
-			 const float wgrens=menutextheight*1.5f;
+			 const float wgrens=menutextheight*1.5f+statusbarleft;
 			if(x<wgrens) {
 				speakdate(starttime);
 				return -1LL;
 				}
 			else {
-			 	if(x>(dwidth-wgrens)){
+			 	if(x>(dwidth-statusbarright-wgrens)){
 					const time_t endtime=starttime+duration;
 					const time_t nu=time(nullptr); 
 					if(endtime>nu)
@@ -3148,8 +3148,8 @@ int64_t screentap(float x,float y) {
 				}
 			}
 		}
-	const float wgrens=density*10;
-	const float rgrens=dwidth-wgrens;
+	const float wgrens=density*10+statusbarleft;
+	const float rgrens=dwidth-statusbarright-wgrens;
 
 	if(x<wgrens)  {
 			prevscr();

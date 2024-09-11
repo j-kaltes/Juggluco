@@ -602,7 +602,22 @@ int jsetips(const char *port,JNIEnv *env, const jobjectArray jar, const int len,
 		char name[namelen+1];
 
 		jint jnamelen = env->GetStringLength( jname);
-		env->GetStringUTFRegion( jname, 0,jnamelen, name); name[namelen]='\0';
+		env->GetStringUTFRegion( jname, 0,jnamelen, name); 
+		name[namelen]='\0';
+		int start=0;
+		for(;start<namelen&&name[start]==' ';++start) {
+			}
+		if(start>=namelen) {
+			LOGGER("no ip '%s'\n",name);
+			return -1;
+			}
+		if(start) {
+			memmove(name,name+start,namelen+1-start);
+			namelen-=start;
+			}
+		for(int last=namelen-1;last>=0&&name[last]==' ';--last) {
+			name[last]='\0';
+			}
 		if(!getaddr(name,port,connect+i))
 			return  -1;
 

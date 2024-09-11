@@ -1118,5 +1118,10 @@ public boolean matchDeviceName(String deviceName,String address) {
 	final var thisaddress = Natives.getDeviceAddress(dataptr);
 	return thisaddress!=null&&address.equals(thisaddress);
 	}
+
+@Override
+public UUID getService() {
+   return  LIBRE3_DATA_SERVICE;
+   }
 }
 

@@ -17,7 +17,7 @@ Juggluco can send glucose values to smartwatches in six ways:
 - Juggluco for WearOS;
 - by sending glucose values to Watchdrip's (MiBand/Amazfit/ZeppOS).
 
-Juggluco can use (but not start) **US** Freestyle Libre 2 sensors.
+Juggluco can use (and since version 8.1.0 also start) **US** Freestyle Libre 2 sensors.
 
 ## WearOS
 

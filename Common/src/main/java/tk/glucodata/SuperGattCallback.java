@@ -36,6 +36,8 @@ import java.util.UUID;
 
 import static android.bluetooth.BluetoothGatt.CONNECTION_PRIORITY_BALANCED;
 import static android.bluetooth.BluetoothGatt.CONNECTION_PRIORITY_HIGH;
+import static android.bluetooth.BluetoothGattDescriptor.ENABLE_INDICATION_VALUE;
+import static android.bluetooth.BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE;
 import static tk.glucodata.Applic.app;
 import static tk.glucodata.Applic.isWearable;
 import static tk.glucodata.Applic.mgdLmult;
@@ -482,16 +484,25 @@ public void searchforDeviceAddress() {
 			}
 	}
 
-@SuppressLint("MissingPermission")
+
  protected  final boolean enableNotification(BluetoothGatt mBluetoothGatt, BluetoothGattCharacteristic bluetoothGattCharacteristic) {
+ 	return enableGattDescriptor(mBluetoothGatt, bluetoothGattCharacteristic,ENABLE_NOTIFICATION_VALUE);
+        }
+ protected  final boolean enableIndication(BluetoothGatt mBluetoothGatt, BluetoothGattCharacteristic bluetoothGattCharacteristic) {
+ 	return enableGattDescriptor( mBluetoothGatt,  bluetoothGattCharacteristic,ENABLE_INDICATION_VALUE);
+        }
+@SuppressLint("MissingPermission")
+ protected  final boolean enableGattDescriptor(BluetoothGatt mBluetoothGatt, BluetoothGattCharacteristic bluetoothGattCharacteristic,byte[] type) {
 	Log.i(LOG_ID, SerialNumber +" "+	"enableNotification");
         if(!mBluetoothGatt.setCharacteristicNotification(bluetoothGattCharacteristic, true)) {
 		Log.e(LOG_ID, SerialNumber +" "+"setCharacteristicNotification("+bluetoothGattCharacteristic.getUuid().toString()+",true) failed");
 
+		return false;
 		}
         BluetoothGattDescriptor descriptor = bluetoothGattCharacteristic.getDescriptor(mCharacteristicConfigDescriptor);
-        if(!descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE)) {
-		Log.e(LOG_ID, SerialNumber +" "+"descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE))  failed");
+        if(!descriptor.setValue(type)) {
+		Log.e(LOG_ID, SerialNumber +" "+"descriptor.setValue())  failed");
+		return false;
 		}
         if(!mBluetoothGatt.writeDescriptor(descriptor)) {
 		Log.e(LOG_ID, SerialNumber +" "+"mBluetoothGatt.writeDescriptor(descriptor))  failed");
@@ -506,4 +517,9 @@ protected final boolean asknotification(BluetoothGattCharacteristic charac) {
 public boolean matchDeviceName(String deviceName,String address) {
 	return false;
 	}
+public UUID getService()  {
+   return null;
+   }
+public void bonded()  {
+   }
 }
