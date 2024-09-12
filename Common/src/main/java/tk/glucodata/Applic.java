@@ -567,7 +567,7 @@ boolean needsnatives() {
         final float menufontsize = res.getDimension(R.dimen.abc_text_size_menu_material);
         smallfontsize = res.getDimension(R.dimen.abc_text_size_small_material);
         GlucoseCurve.metrics= res.getDisplayMetrics();
-	initscreenwidth= GlucoseCurve.metrics.widthPixels;
+	initscreenwidth= Math.max(GlucoseCurve.metrics.heightPixels,GlucoseCurve.metrics.widthPixels);
         Natives.setfontsize(smallfontsize, menufontsize, GlucoseCurve.metrics.density, headfontsize);
    final double screensize=(initscreenwidth/smallfontsize);
      Log.i(LOG_ID,"initscreenwidth="+initscreenwidth);

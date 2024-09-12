@@ -1,4 +1,4 @@
-grep -s "$@"  $w/*.java $w/*/*java $w/*.kt $m/*.java $m/*/*java $m/*.kt $g/*.java $g/*/*java $g/*.kt $w/*/*.kt $w/*/*/*.kt  $l3/*.java $l3/*/*.java $m/*/*/*.java $m/*/*/*/*.java $si/*.java 
+grep -s "$@"  $w/*.java $w/*/*java $w/*.kt $m/*.java $m/*/*java $m/*.kt $g/*.java $g/*/*java $g/*.kt $w/*/*.kt $w/*/*/*.kt  $l3/*.java $l3/*/*.java $m/*/*/*.java $m/*/*/*/*.java $si/*.java /f/jka/extra/android/Juggluco/Glucodata/Common/src/dexcom/java/tk/glucodata/*.java
 
 
 #*.java */*java *.kt
