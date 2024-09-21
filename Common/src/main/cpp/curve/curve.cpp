@@ -36,12 +36,12 @@
 #include <charconv>
 
 using namespace std::literals;
-//#include "glucose.h"
+//#include "glucose.hpp"
 //ScanData   *glucosenow=nullptr;
 
 
 
-#include "curve.h"
+#include "curve.hpp"
 #include "nanovg_gl.h"
 #include "nanovg_gl_utils.h"
 
@@ -49,17 +49,17 @@ using namespace std::literals;
 #include "config.h"
 //#define FILEDIR "/sdcard/libre2/"
 //#include "Glucograph.h"
-#include "logs.h"
+#include "logs.hpp"
 //#define LOGGER(...)  __android_log_print(ANDROID_LOG_VERBOSE, LOG_TAG, __VA_ARGS__)
-#include "settings/settings.h"
+#include "settings/settings.hpp"
 
-#include "SensorGlucoseData.h"
-#include "sensoren.h"
-#include "nums/numdata.h"
-#include "nfcdata.h"
+#include "SensorGlucoseData.hpp"
+#include "sensoren.hpp"
+#include "nums/numdata.hpp"
+#include "nfcdata.hpp"
 
 #include "error_codes.h"
-#include "jugglucotext.h"
+#include "jugglucotext.hpp"
 int statusbarheight=0;
 
 int statusbarleft=0,statusbarright=0;
@@ -702,10 +702,10 @@ int shownlabels;
 //x=(y-A)/D;
 jfloat tapx=-700,tapy;
 bool selshown=false;
-//#include "numdisplay.h"
+//#include "numdisplay.hpp"
 //vector<NumDisplay*> numdatas;
 
-#include "numdisplayfuncs.h"
+#include "numdisplayfuncs.hpp"
 extern vector<NumDisplay*> numdatas;
 int typeatheight(const float h) {
 //	const float gr= density*24;
@@ -1234,7 +1234,7 @@ static void		scanwait(NVGcontext* genVG) {
 	nvgText(genVG, dleft+dwidth/2,dtop+dheight/2, str1.begin(), str1.end());
 	endstep();
 	}
-#include "gluconfig.h"
+#include "gluconfig.hpp"
 int mkshowlow(char *buf, const int maxbuf) {
 		return snprintf(buf,maxbuf,"%.*f>",gludecimal,gconvert(glucoselowest*10));
 	}
@@ -2406,7 +2406,7 @@ static bool showoldscan(NVGcontext* genVG,uint32_t nu) {
 	return false;
 	}
 int getmenu(int tapx) ;
-#include "displayer.h"
+#include "displayer.hpp"
 #ifndef WEAROS
 std::unique_ptr<Displayer> displayer;
 #endif
@@ -2657,8 +2657,8 @@ void mkheights() {
 	shownlabels=nr;
 	}
 
-#include "net/backup.h"
-#include "datbackup.h"
+#include "net/backup.hpp"
+#include "datbackup.hpp"
 extern void setuseit();
 extern void setusenl();
 extern void setusesv();
@@ -2707,7 +2707,7 @@ bool hebrew() {
 	}
 #endif
 
-#include "destruct.h"
+#include "destruct.hpp"
 void  setlocale(const char *localestrbuf,const size_t len) {
 	LOGGER("locale=%s\n",localestrbuf);
 	localestr={localestrbuf,len};
@@ -2794,7 +2794,7 @@ extern	void logstrings(const string_view lang) ;
 #endif
 	}
 
-#include "strconcat.h"
+#include "strconcat.hpp"
 #if 0
 void logstrings(const string_view lang) {
 extern		pathconcat logbasedir;
@@ -3017,7 +3017,7 @@ bool isbutton(float x,float y) {
 	return true;
 	}
 
-#include "numiter.h"
+#include "numiter.hpp"
 NumIter<Num> *numiters=nullptr;
 int basecount;
 
@@ -3180,7 +3180,7 @@ extern bool showsummarygraph;
 	}
 
 Num newnum;
-#include "numhit.h"
+#include "numhit.hpp"
 NumHit newhit={nullptr,&newnum};
 
 int  hitremove(int64_t ptr) {
@@ -4358,7 +4358,7 @@ static int64_t menutap(float x,float y) {
 #ifndef WEAROS
 void settoend() ;
 void shownumiters() ;
-#include "oldest.h"
+#include "oldest.hpp"
 bool numpagepast() {
 	if(!numiters)
 		return false;

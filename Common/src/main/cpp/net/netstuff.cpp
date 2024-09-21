@@ -26,9 +26,9 @@
 #include <arpa/inet.h>
 #include <sys/socket.h>
 #include <unistd.h>
-#include "destruct.h"
-#include "logs.h"
-#include "netstuff.h"
+#include "destruct.hpp"
+#include "logs.hpp"
+#include "netstuff.hpp"
 #include <ifaddrs.h>
 #include <string.h>
 #include <sys/ioctl.h>

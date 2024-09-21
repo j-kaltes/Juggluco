@@ -43,8 +43,8 @@
 #include <sys/wait.h>
        #include <unistd.h>
        #include <sys/syscall.h> 
-#include "destruct.h"
-#include "logs.h"
+#include "destruct.hpp"
+#include "logs.hpp"
 #ifndef LOGGER
 #define LOGGER(...) fprintf(stderr,__VA_ARGS__)
 #endif
@@ -139,9 +139,9 @@ static bool startserver(char *port, passhost_t *hosts,int *hostlen,int *socks,bo
 	}
 	}
 
-#include "netstuff.h"
+#include "netstuff.hpp"
 #include <thread>
-#include "passhost.h"
+#include "passhost.hpp"
 static int globalsocket=-1;
 //get_in_addr((struct sockaddr *)&their_addr)
 bool receiveractive() {
@@ -192,7 +192,7 @@ bool sameaddress(const  struct sockaddr *addr, const struct sockaddr_in6  *known
 
 static bool testreceivemagic(passhost_t *pass,int sock) {
 #include "receivemagic.h"
-#include "sendmagic.h"
+#include "sendmagic.hpp"
 	constexpr int buflen=1024;
 	char buf[buflen];
 	int res;

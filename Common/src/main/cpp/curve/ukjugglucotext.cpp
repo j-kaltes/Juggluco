@@ -1,4 +1,4 @@
-#include "jugglucotext.h"
+#include "jugglucotext.hpp"
 #ifndef WEAROS
 constexpr static std::string_view uklabels[]={"Швидкий","Вуглев","Дэкстр","Довгий","Велос","Прагул","Кров"};
 constexpr static Shortcut_t  ukshortinit[]= { {"Bread",

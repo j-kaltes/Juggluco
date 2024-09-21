@@ -31,7 +31,7 @@
        #include <errno.h>
              #include <unistd.h>
 //#include "history.h"
-#include "logs.h"
+#include "logs.hpp"
 #ifndef ANDROID__APP
 #warning "ANDROID__APP not defined"
 //#define  ANDROID__APP

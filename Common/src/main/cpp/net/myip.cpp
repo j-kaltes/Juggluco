@@ -28,9 +28,9 @@
 #include <arpa/inet.h>
 #include <netinet/in.h>
        #include <unistd.h>
-#include "netstuff.h"
-#include "destruct.h"
-#include "logs.h"
+#include "netstuff.hpp"
+#include "destruct.hpp"
+#include "logs.hpp"
 
 namehost myip (){
   if(int socketfd = socket(AF_INET, SOCK_STREAM, 0);socketfd >= 0) {

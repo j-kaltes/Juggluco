@@ -1,7 +1,7 @@
 #ifndef WEAROS
 #include <math.h>
-#include "nums/numdata.h"
-#include "nightnumcategories.h"
+#include "nums/numdata.hpp"
+#include "nightnumcategories.hpp"
 extern vector<Numdata*> numdatas;
 
 /*

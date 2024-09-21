@@ -32,7 +32,7 @@
 using namespace std;
 #undef LOGGER
 #define LOGGER(...)   fprintf(stderr,__VA_ARGS__)
-#include "strconcat.h"
+#include "strconcat.hpp"
 using namespace std;
 int    timestr(char *buf,time_t tim) {
         struct tm tmbuf;

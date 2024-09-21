@@ -25,7 +25,7 @@ bool globalsetpathworks=false;
 #include "config.h"
 #include <string_view>
 
-#include "inout.h"
+#include "inout.hpp"
 
 #if ! defined(NEEDSPATH)
 pathconcat mkbindir(std::string_view subdir,std::string_view libname ) {
@@ -39,7 +39,7 @@ void usepath() {
 #include <string.h>
 #define _GNU_SOURCE 1
 #include <dlfcn.h>
-#include "settings/settings.h"
+#include "settings/settings.hpp"
 
 /*
 static const char *owerjslkdfjlsdQQ(void) {

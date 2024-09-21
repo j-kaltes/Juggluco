@@ -30,12 +30,12 @@
 #include <dlfcn.h>
 #include <link.h>
 #include <string_view>
-#include "SensorGlucoseData.h"
-#include "debugclone.h"
-#include "settings/settings.h"
-#include "libre2.h"
-#include "jnisubin.h"
-#include "hexstr.h"
+#include "SensorGlucoseData.hpp"
+#include "debugclone.hpp"
+#include "settings/settings.hpp"
+#include "libre2.hpp"
+#include "jnisubin.hpp"
+#include "hexstr.hpp"
 #if !defined(__aarch64__) 
 #define GEN2ROOTSHECK 1
 #endif
@@ -674,7 +674,7 @@ if(oldsensor&&timeleft>-daysecs) {
 	}
 
 
-#include "environ.h"
+#include "environ.hpp"
 static char *inenv(char **env,string_view str)  {
 	 const char *name {str.data()};
 	 int len=str.length();
@@ -975,7 +975,7 @@ bool nearbymgdl(int get,int crit) {
 	}
 
 #ifdef TESTPS
-#include "pstructs.h"
+#include "pstructs.hpp"
 #endif
 
 extern void usepath() ;
@@ -1477,7 +1477,7 @@ extern "C" JNIEXPORT jboolean  JNICALL fromjava(hasBluetooth)(JNIEnv *envin, jcl
 	return res!=nullptr;
 	}
 
-#include "hex.h"
+#include "hex.hpp"
 bool  setDeviceAddressB(JNIEnv *env,SensorGlucoseData *hist,jbyteArray jaddress ) {
 	if(jaddress==nullptr) {
 		LOGSTRING("setDeviceAddressB(null)\n");

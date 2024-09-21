@@ -19,8 +19,8 @@
 /*      Fri Jan 27 12:35:35 CET 2023                                                 */
 
 
-#include "datbackup.h"
-#include "nums/numdata.h"
+#include "datbackup.hpp"
+#include "nums/numdata.hpp"
 void receivetimeout(int sock,int secs) ;
 void sendtimeout(int sock,int secs) ;
 

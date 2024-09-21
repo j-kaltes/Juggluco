@@ -26,7 +26,7 @@
 #include <tinycrypt/ccm_mode.h>
 #include "../share/fromjava.h"
 
-#include "logs.h"
+#include "logs.hpp"
 //#include <tinycrypt/constants.h>
 typedef uint8_t byte;
 static   constexpr const byte packetDescriptor[][3]={

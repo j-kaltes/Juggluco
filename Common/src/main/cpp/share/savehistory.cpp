@@ -19,10 +19,10 @@
 /*      Fri Jan 27 12:37:55 CET 2023                                                 */
 
 
-#include "SensorGlucoseData.h"
+#include "SensorGlucoseData.hpp"
 #include "jnihistory.h"
-#include "nfcdata.h"
-#include "datbackup.h"
+#include "nfcdata.hpp"
+#include "datbackup.hpp"
 extern bool saveSputnik_PG2(const jniHistory &hist,time_t nutime,int nuid,const nfcdata  *nfcptr, SensorGlucoseData &save) ;
 bool saveSputnik_PG2(const jniHistory &hist,time_t nutime,int nuid,const nfcdata  *nfcptr, SensorGlucoseData &save) { 
      jint len=hist.size();

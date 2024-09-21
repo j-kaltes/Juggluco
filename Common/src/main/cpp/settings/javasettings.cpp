@@ -25,11 +25,11 @@
 #include <cinttypes>
 #include <cmath>
 #include <algorithm>
-#include "settings.h"
+#include "settings.hpp"
 #include <jni.h>
 //#include "fromjava.h"
 #include "config.h"
-#include "datbackup.h"
+#include "datbackup.hpp"
 extern Backup *backup;
 #define fromjava(x) Java_tk_glucodata_Natives_ ##x
 extern "C" JNIEXPORT jfloat  JNICALL   fromjava(getweight)(JNIEnv *env, jclass cl,jint pos) {
@@ -179,7 +179,7 @@ static constexpr const char endstart[]=R"(:</p>)";
 
 extern bool wrongfiles() ;
 extern		std::vector<std::string_view> usedfiles;
-#include "curve/jugglucotext.h"
+#include "curve/jugglucotext.hpp"
 extern bool rootcheck;
 extern "C" JNIEXPORT jstring  JNICALL   fromjava(advanced)(JNIEnv *env, jclass cl) {
 	if(!rootcheck)
@@ -558,7 +558,7 @@ extern "C" JNIEXPORT void  JNICALL   fromjava(setroundto)(JNIEnv *env, jclass cl
 	settings->data()->roundto=val;
 	}
 
-#include "hex.h"
+#include "hex.hpp"
 extern "C" JNIEXPORT jboolean  JNICALL   fromjava(setgarminid)(JNIEnv *env, jclass cl,jstring jid) {
 	if(jid==nullptr) {
 		settings->data()->setdefault();
@@ -705,7 +705,7 @@ extern "C" JNIEXPORT void  JNICALL   fromjava(setlibreemail)(JNIEnv *env, jclass
 extern "C" JNIEXPORT jstring  JNICALL   fromjava(getlibreemail)(JNIEnv *env, jclass cl) {
 	 return env->NewStringUTF(settings->data()->libreemail);
 	}
-#include "mixpass.h"
+#include "mixpass.hpp"
 extern "C" JNIEXPORT void  JNICALL   fromjava(setlibrepass)(JNIEnv *env, jclass cl,jstring jpass) {
 	const jint jlen = env->GetStringLength(jpass);
 	char tmp[37];
@@ -1326,7 +1326,7 @@ float getvalue() const {
 
 };
 
-#include "nums/numdata.h"
+#include "nums/numdata.hpp"
 int savedoses(NovoPen *pen,uint32_t reftime,uint8_t *bytes,int len) {
 	int type=pen->type;
 	auto lasttime=pen->lasttime;

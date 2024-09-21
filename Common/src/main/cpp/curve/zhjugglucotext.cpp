@@ -1,4 +1,4 @@
-#include "jugglucotext.h"
+#include "jugglucotext.hpp"
 #ifndef WEAROS
 constexpr static std::string_view labels[] = {"快速胰岛素", "碳水化合物", "右旋糖酐", "长效胰岛素", "骑自行车", "步行", "血液"};
 constexpr static Shortcut_t  shortinit[] = { {"面包", .48}, {"醋酸红", .56f}, {"醋酸红2", .595f}, {"葡萄", .165f}, {"水果酸", .058f}, {"米饭", .75f}, {"通心粉", .65f}, {"番茄", .03f}, {"墨西哥", .078f}, {"橙汁", .109f}, {"运动粉", .873f}, {"混合胡", .07f}, {"混合蘑", .073f}};
@@ -164,7 +164,7 @@ jugglucotext chiText {
 #endif
 .receivingpastvalues="Receiving old values"
 };
-#include "logs.h"
+#include "logs.hpp"
 void setusezh() {
 LOGAR("usedtext= &chiText");
  usedtext= &chiText;

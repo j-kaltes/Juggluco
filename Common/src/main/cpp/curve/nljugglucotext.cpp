@@ -19,7 +19,7 @@
 /*      Fri Jan 27 15:20:04 CET 2023                                                 */
 
 
-#include "jugglucotext.h"
+#include "jugglucotext.hpp"
 #ifndef WEAROS
 constexpr static std::string_view nllabels[]={ "Insuli snel", "Koolhydraat","Dextro", "Insuli lang","Fietsen", "Wandelen","Bloed"};
 constexpr static Shortcut_t  nlshortinit[]= { {"Meer. Brood",
@@ -150,7 +150,8 @@ static jugglucotext nltext {
 
 
 .libre3scanerror={"FreeStyle Libre 3, Scanfout", "Probeer het opnieuw"},
-.libre3wrongID={"Fout, verkeerde account-ID?","Specificeer in Instellingen->Libreview hetzelfde account dat is gebruikt om de sensor te activeren"},
+.libre3wrongID={"Fout, verkeerde account-ID?",
+R"(Moet hetzelfde zijn als bij het activeren van de sensor. Gebruik Linkermenu->Instellingen->Libreview->"Account-ID ophalen" om het te halen van Libreview.)"},
 .libre3scansuccess= {"FreeStyle Libre 3-sensor", "Glucosewaarden worden nu ontvangen door Juggluco"},
 .unknownNFC={"Onbekende NFC-scanfout", "Probeer het opnieuw"},
 .nolibre3={"FreeStyle Libre 3-sensor","Download de juiste versie van https://www.juggluco.nl/download.html"},

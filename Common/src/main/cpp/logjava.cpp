@@ -19,9 +19,9 @@
 /*      Fri Jan 27 12:35:35 CET 2023                                                 */
 
 
-#include "logs.h"
+#include "logs.hpp"
 #include "fromjava.h"
-#include "settings/settings.h"
+#include "settings/settings.hpp"
 
 #ifndef NOLOG 
 extern bool dolog;

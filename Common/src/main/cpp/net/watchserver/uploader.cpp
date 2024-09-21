@@ -3,11 +3,11 @@
 #include <jni.h>
 #include <ctime>
 #include <memory>
-#include "settings/settings.h"
-#include "share/logs.h"
-#include "sensoren.h"
-#include "nums/numdata.h"
-#include "common.h"
+#include "settings/settings.hpp"
+#include "share/logs.hpp"
+#include "sensoren.hpp"
+#include "nums/numdata.hpp"
+#include "common.hpp"
 extern Settings *settings;
 extern Sensoren *sensors;
 constexpr int HTTP_OK=200;
@@ -149,7 +149,7 @@ int nightuploadTreatments3(const char *data,int len) {
 
 
 //extern int Tdatestring(time_t tim,char *buf) ;
-#include "datestring.h"
+#include "datestring.hpp"
 extern double getdelta(float change);
 extern std::string_view getdeltaname(float change);
 template <class T> int mkuploaditem(char *buf,const char *sensorname,const T &item) {
@@ -324,7 +324,7 @@ constexpr const int			maxitems=10440;
 	return true;
 	}
 
-#include "datbackup.h"
+#include "datbackup.hpp"
 Backup::condvar_t  uploadercondition;
 bool uploaderrunning=false;
 

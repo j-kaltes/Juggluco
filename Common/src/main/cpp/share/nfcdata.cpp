@@ -24,8 +24,8 @@
 //#include "history.h"
 #include <algorithm>
 #include "alg.h"
-#include "nfcdata.h"
-#include "settings/settings.h"
+#include "nfcdata.hpp"
+#include "settings/settings.hpp"
 
 
 

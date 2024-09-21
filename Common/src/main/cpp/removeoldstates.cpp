@@ -23,7 +23,7 @@
        #include <dirent.h>
        #include <stdio.h>
 #include <stdlib.h>
-#include "inout.h"
+#include "inout.hpp"
 
 
 void removeoldstates(const std::string_view dirin) {

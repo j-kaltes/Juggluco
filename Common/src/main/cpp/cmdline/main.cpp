@@ -23,9 +23,9 @@
 
 #include <signal.h>
 
-#include "datbackup.h"
-#include "nums/numdata.h"
-#include "settings/settings.h"
+#include "datbackup.hpp"
+#include "nums/numdata.hpp"
+#include "settings/settings.hpp"
 
 //extern bool setfilesdir(const string_view filesdir,const char *country) ;
 extern int startjuggluco(std::string_view dirfiles,const char *country) ;
@@ -622,7 +622,7 @@ static constexpr const	char defaultname[]="jugglucodata";
 		}
 	return 1234;
        }
-#include "net/netstuff.h"
+#include "net/netstuff.hpp"
 void sighandler(int sig) { }
 static void wakeup() {
 	backup->getupdatedata()->wakesender();
@@ -633,7 +633,7 @@ void exitproc() {
 	cout<<"This is a normal exit"<<endl;
 	}
  unsigned int alarm(unsigned int seconds);
-// #include "SensorGlucoseData.h"
+// #include "SensorGlucoseData.hpp"
 static	void setalarm();
 int main(int argc,char **argv) {
 //	bool active=backup->getupdatedata()->port[0];

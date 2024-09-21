@@ -28,10 +28,10 @@
 #undef _GNU_SOURCE 
 #define _GNU_SOURCE  
 #include "config.h"
-#include "inout.h"
-#include "jnisub.h"
-#include "logs.h"
-#include "jnisubin.h"
+#include "inout.hpp"
+#include "jnisub.hpp"
+#include "logs.hpp"
+#include "jnisubin.hpp"
 using namespace std;
 
 ;

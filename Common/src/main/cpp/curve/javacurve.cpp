@@ -1,12 +1,12 @@
 #include <sys/prctl.h>
-#include "curve.h"
+#include "curve.hpp"
 #include <jni.h>
 #include <string_view>
 #include <string>
-#include "share/logs.h"
-#include "sensoren.h"
+#include "share/logs.hpp"
+#include "sensoren.hpp"
 #include "fromjava.h"
-//#include "curve.h"
+//#include "curve.hpp"
 //#include "nanovg_gl.h"
 //#include "nanovg_gl_utils.h"
 //#define OLDEVERSENSE
@@ -433,10 +433,10 @@ extern "C" JNIEXPORT jlong JNICALL fromjava(longpress) (JNIEnv *env, jclass claz
 	return longpress(x,y);
 	}
 
-#include "numhit.h"
+#include "numhit.hpp"
 
 extern NumHit newhit;
-#include "numdisplay.h"
+#include "numdisplay.hpp"
 #include "nums/num.h"
 extern "C" JNIEXPORT jlong JNICALL fromjava(newhit) (JNIEnv *env, jclass clazz) {
 		return reinterpret_cast<jlong>(&newhit);
@@ -564,7 +564,7 @@ extern "C" JNIEXPORT jlong JNICALL fromjava(lastpoll)(JNIEnv *env, jclass thiz) 
 	else
 		return 0LL;
 	}*/
-//#include "oldest.h"
+//#include "oldest.hpp"
 #ifndef WEAROS
 void numfirstpage() ;
 extern "C" JNIEXPORT void JNICALL fromjava(firstpage)(JNIEnv *env, jclass thiz) {

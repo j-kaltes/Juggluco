@@ -22,12 +22,12 @@
 #include <vector>
 #include <stdio.h>
 #include <jni.h>
-#include "SensorGlucoseData.h"
-#include "sensoren.h"
-#include "settings/settings.h"
+#include "SensorGlucoseData.hpp"
+#include "sensoren.hpp"
+#include "settings/settings.hpp"
 #include "share/fromjava.h"
-#include "datbackup.h"
-#include "gluconfig.h"
+#include "datbackup.hpp"
+#include "gluconfig.hpp"
 
 #define LOGGERTAG(...) LOGGER("watchvalue: " __VA_ARGS__)
 #define LOGSTRINGTAG(...) LOGSTRING("watchvalue: " __VA_ARGS__)

@@ -27,12 +27,12 @@
 #include <dlfcn.h>
 #include <string_view>
 #include <mutex>
-#include "SensorGlucoseData.h"
-#include "libre2.h" //PUT sistream etc in different header?
+#include "SensorGlucoseData.hpp"
+#include "libre2.hpp" //PUT sistream etc in different header?
 #include "fromjava.h"
-#include "destruct.h"
+#include "destruct.hpp"
 #include "sibionics/AlgorithmContext.hpp"
-#include "datbackup.h"
+#include "datbackup.hpp"
 extern void	sendstreaming(SensorGlucoseData *hist);
 
 extern bool siInit();
@@ -112,7 +112,7 @@ if(!dataptr) {
  return sdata->sicontext.processData(sens,timsec,bluedata->data(),bluedata->size(),sdata->sensorindex);
 }
 extern std::string_view libdirname;
-#include "sibionics/json.h"
+#include "sibionics/json.hpp"
 void *openlib(std::string_view libname) {
 	int liblen=libdirname.size();
    if(liblen<=0) {
@@ -168,7 +168,7 @@ constexpr const double targetlow=3.9;
 constexpr const double targethigh=7.8;
 #define algjavastr(x) "Java_com_algorithm_v1_11_13_1b_NativeAlgorithmLibraryV1_11_13B_" #x
 
-#include "jnifuncs.h"
+#include "jnifuncs.hpp"
 #else
 #undef jniAlglib 
 #undef vers
@@ -181,7 +181,7 @@ constexpr const double targethigh=11.1;
 #define jsonname(et,end) "_ZN21NativeAlgorithmV1_1_223" #et  "JsonAlgorithmContext" #end
 #define vers(x) x
 
-#include "jnifuncs.h"
+#include "jnifuncs.hpp"
 
 #ifdef SIHISTORY
 #undef algLibName 
@@ -199,7 +199,7 @@ constexpr const double targethigh=7.8;
 #undef algjavastr
 #define algjavastr(x) "Java_com_algorithm_v1_11_13_1b_NativeAlgorithmLibraryV1_11_13B_" #x
 
-#include "jnifuncs.h"
+#include "jnifuncs.hpp"
 
 #endif
 #endif

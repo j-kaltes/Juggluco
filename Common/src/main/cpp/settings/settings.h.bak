@@ -6,9 +6,9 @@
 #include "cmdlinecolor.h"
 #endif
 #include "config.h"
-#include "inout.h"
-#include "countryunits.h"
-#include "curve/jugglucotext.h"
+#include "inout.hpp"
+#include "countryunits.hpp"
+#include "curve/jugglucotext.hpp"
 extern int showui;
 struct Settings;
 extern Settings *settings;

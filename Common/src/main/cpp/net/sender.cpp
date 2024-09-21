@@ -38,13 +38,13 @@
 #include <alloca.h>
        #include <sys/prctl.h>
 
-#include "destruct.h"
+#include "destruct.hpp"
 
-#include "logs.h"
-#include "netstuff.h"
-#include "passhost.h"
+#include "logs.hpp"
+#include "netstuff.hpp"
+#include "passhost.hpp"
 #include "crypt.h"
-#include "makerandom.h"
+#include "makerandom.hpp"
 
 #define lerrortag(...) lerror("sender: " __VA_ARGS__)
 #define LOGGERTAG(...) LOGGER("sender: " __VA_ARGS__)
@@ -102,7 +102,7 @@ bool block(int sock) {
      }
 
 
-#include "sendmagic.h"
+#include "sendmagic.hpp"
 static auto getsendmagic() {
 	std::array<unsigned char,sizeof(sendmagic)> back=sendmagicinit;
 	uint8_t lastrand;

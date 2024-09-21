@@ -20,7 +20,7 @@
 
 
 #include <jni.h>
-#include "logs.h"
+#include "logs.hpp"
 void thrownull(JNIEnv * env,const char *message) {
 	LOGGER("nullptr %s\n",message);
 #ifdef JUGGLUCO_APP

@@ -1,5 +1,5 @@
-#include "datbackup.h"
-#include "nums/numdata.h"
+#include "datbackup.hpp"
+#include "nums/numdata.hpp"
 void receivetimeout(int sock,int secs) ;
 void sendtimeout(int sock,int secs) ;
 

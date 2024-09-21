@@ -99,7 +99,7 @@ static private void showviews(RemoteViews views,int rId,AppWidgetManager appWidg
 			id=R.id.content;
 		}
 		else {
-			views = remote.arrowremote(50,SuperGattCallback.previousglucose);
+			views = remote.arrowremote(50,SuperGattCallback.previousglucose,false);
 			}
 		}
 	else {

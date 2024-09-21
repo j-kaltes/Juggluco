@@ -79,8 +79,11 @@ public static String stackline(Throwable e) {
 	final int len=str.length();
 	if(len>100) {
 		int end=str.indexOf("\n");
-		if(end>=0&&end<len)
+		if(end<len)  {
+			if(end<20)
+				end=100;
 			return str.substring(0,end);
+			}
 		}
 	return str;
 	}

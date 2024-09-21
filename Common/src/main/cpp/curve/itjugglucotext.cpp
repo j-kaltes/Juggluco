@@ -19,7 +19,7 @@
 /*      Fri Jan 27 15:20:04 CET 2023                                                 */
 
 
-#include "jugglucotext.h"
+#include "jugglucotext.hpp"
 extern jugglucotext engtext;
 #ifndef WEAROS
 constexpr static std::string_view itlabels[]= {"Rapida","Carboidrati","Glucosio","Lenta","Bike","Walk","Capillare"};
@@ -190,7 +190,7 @@ seguenti file)",
 }
 		;
 #ifdef JUGGLUCO_APP
-#include "logs.h"
+#include "logs.hpp"
 #else
 #include <stdio.h>
 #define LOGGER(...) fprintf(stderr,__VA_ARGS__)

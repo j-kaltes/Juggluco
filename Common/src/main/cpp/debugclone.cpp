@@ -81,12 +81,12 @@ x86_64	rax		rax	rdi	rsi	rdx	r10	r8	r9
 #include <sys/resource.h>
 #include <sys/reg.h>
 //#include <linux/futex.h>      /* Definition of FUTEX_* constants */
-#include "debugclone.h"
-#include "maximum.h"
+#include "debugclone.hpp"
+#include "maximum.hpp"
 extern bool libre3initialized;
 std::string_view syscallstr[callmax];
 #ifdef __ARM_NR_BASE
-#include "armmax.h"
+#include "armmax.hpp"
 std::string_view  armcallstr[armmax];
 #endif
 using namespace std;
@@ -102,21 +102,21 @@ bool inited=initstr();
 #ifdef TEST
 #pragma message "TEST"
 #endif
-#include "inout.h"
+#include "inout.hpp"
 
 
-#include "strconcat.h"
+#include "strconcat.hpp"
 extern std::string_view libdirname;
 #ifdef LIBRE3
 static strconcat libre3lib;
 #endif
 //strconcat libre3lib("",R"(package:)",libdirname,"/libinit.so\n");
 using namespace std;
-#include "logs.h"
-#include "openat.h"
-#include "access.h"
-#include "stat.h"
-#include "slog.h"
+#include "logs.hpp"
+#include "openat.hpp"
+#include "access.hpp"
+#include "stat.hpp"
+#include "slog.hpp"
 
 static bool seesnetunix=false;
 static constexpr const char netunix[]= R"(/proc/net/unix)";

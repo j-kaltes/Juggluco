@@ -22,7 +22,7 @@
 #ifdef USE_MEAL
 #include <algorithm>
 #include <string.h>
-#include "Meal.h"
+#include "Meal.hpp"
 #include "fromjava.h"
 
 extern Meal *meals;

@@ -24,14 +24,14 @@ constexpr const char defaultport[]{
 };
 
 
-#include "inout.h"
-#include "net/backup.h"
-#include "destruct.h"
-#include "net/passhost.h"
-#include "net/netstuff.h"
-#include "sensoren.h"
+#include "inout.hpp"
+#include "net/backup.hpp"
+#include "destruct.hpp"
+#include "net/passhost.hpp"
+#include "net/netstuff.hpp"
+#include "sensoren.hpp"
 
-#include "settings/settings.h"
+#include "settings/settings.hpp"
 #ifdef WEAROS_MESSAGES
 extern bool wearmessages;
 #endif

@@ -22,9 +22,9 @@
  #include <unistd.h>
  #include <string_view>
         #include <time.h>
-#include "settings/settings.h"
-#include "Meal.h"
-#include "MealSave.h"
+#include "settings/settings.hpp"
+#include "Meal.hpp"
+#include "MealSave.hpp"
 
 constexpr const char starthtml[]=R"(<!DOCTYPE html>
 <html>
@@ -243,7 +243,7 @@ bool MealSave::savemeal(FILE* handle,const Num *num)  {
 	 return doendtable(handle,totmeal,num->gettime()); 
 	 }
 
-#include "destruct.h"
+#include "destruct.hpp"
 
 extern bool allsavemeals(int handle,uint32_t starttime=0,uint32_t endtime=UINT32_MAX,int maxcount=INT_MAX);
 

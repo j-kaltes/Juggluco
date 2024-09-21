@@ -20,7 +20,7 @@
 
 
 
-#include "nums/numdata.h"
+#include "nums/numdata.hpp"
 #include "fromjava.h"
 extern vector<Numdata*> numdatas;
 

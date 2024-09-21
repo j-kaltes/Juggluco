@@ -20,9 +20,9 @@
 
 #include <memory>
 #include <array>
-#include "datbackup.h"
+#include "datbackup.hpp"
 #include "mirrorstatus.hpp"
-#include "net/netstuff.h"
+#include "net/netstuff.hpp"
 #include "mirrorerror.h"
 extern std::array<int,maxallhosts>   messagesendersockets;
 extern std::array<int,maxallhosts>   messagereceiversockets;

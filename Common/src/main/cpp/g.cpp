@@ -46,14 +46,14 @@ sighandler_t bsd_signal(int signum, sighandler_t handler);
 #define asignal signal
 //#include <sys/syscall.h>
 //#undef NOLOG
-       #include "logs.h"
-       #include "inout.h"
-#include "libre2.h"
-#include "serial.h"
+       #include "logs.hpp"
+       #include "inout.hpp"
+#include "libre2.hpp"
+#include "serial.hpp"
 #include "fromjava.h"
 
-#include "settings/settings.h"
-#include "datbackup.h"
+#include "settings/settings.hpp"
+#include "datbackup.hpp"
 #include "error_codes.h"
 #ifdef DYNLINK
 #define abbottdec(x) (*x)
@@ -74,7 +74,7 @@ void testserial(JNIEnv *env, jobject thiz) ;
 #endif
 bool setbluetoothon=false;
 extern					void setusedsensors() ;
-#include "debugclone.h"
+#include "debugclone.hpp"
 extern int    timestr(char *buf,time_t tim) ;
 extern lastscan_t  scantoshow;
 //JNIEXPORT void JNICALL Java_tk_glucodata_Glucose_nfcdata(JNIEnv *env, jobject thiz, jbyteArray uid, jbyteArray info,jbyteArray data) {
@@ -574,7 +574,7 @@ extern "C" JNIEXPORT jstring JNICALL   fromjava(getDeviceAddress)(JNIEnv *envin,
 	LOGGER("getDeviceAddress()=%s\n",address);
 	return envin->NewStringUTF(address);
 	}
-#include "strconcat.h"
+#include "strconcat.hpp"
 extern	strconcat getsensortext(const int sensorindex,const SensorGlucoseData *hist);
 extern "C" JNIEXPORT jstring JNICALL   fromjava(getsensortext)(JNIEnv *envin, jclass cl,jlong dataptr) {
    const streamdata *str=reinterpret_cast<const streamdata *>(dataptr);
@@ -681,7 +681,7 @@ constexpr const jlong isLow=7LL<<48;
 constexpr const jlong isAgain=3LL<<48;
 constexpr const jlong isLowest=5LL<<48;
 
-#include "gluconfig.h"
+#include "gluconfig.hpp"
 extern void setbuffer(char *);
 
 static void savestate(libre2stream *sdata) {
@@ -938,7 +938,7 @@ extern "C" JNIEXPORT jstring  JNICALL   fromjava(getCPUarch)(JNIEnv *env, jclass
 	}
 
 /*
-#include "destruct.h"
+#include "destruct.hpp"
 
 extern "C" JNIEXPORT jstring  JNICALL   fromjava(chmod)(JNIEnv *env, jclass cl,jstring filename,jint mode) {
 	const char *str = env->GetStringUTFChars( filename, NULL);

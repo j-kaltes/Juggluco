@@ -19,7 +19,7 @@
 /*      Fri Jan 27 12:35:35 CET 2023                                                 */
 
 
-#include "inout.h"
+#include "inout.hpp"
 #include <string.h>
 
 int main() {

@@ -19,7 +19,7 @@
 /*      Fri Jan 27 15:20:04 CET 2023                                                 */
 
 
-#include "jugglucotext.h"
+#include "jugglucotext.hpp"
 #ifndef WEAROS
 constexpr static std::string_view labels[]={"Ins. rapide","Glucides","Dextro","Ins. basale","Vélo","Marche","Sang"};
 constexpr static Shortcut_t  shortinit[]= { {"Pain blanc",

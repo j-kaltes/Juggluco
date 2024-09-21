@@ -28,19 +28,19 @@
 #include <thread>
 #include <future>
 
-#include "libre2.h"
+#include "libre2.hpp"
 #ifdef TESTPS
 #define abbottdec(x) (*x)
 #define abbottcall(x) x
 #define WAS_JNIEXPORT 
 extern "C" WAS_JNIEXPORT jint JNICALL   abbottdec(P1)(JNIEnv *envin, jobject obj, jint i, jint i2,jbyteArray  bArr,jbyteArray  bArr2) ;
 extern "C" WAS_JNIEXPORT jbyteArray JNICALL abbottdec(P2)(JNIEnv *, jobject, jint, jint, jbyteArray, jbyteArray);
-#include "pstructs.h"
+#include "pstructs.hpp"
 #endif
 using namespace std;
 //extern bool abbotttest(std::string_view dir) ;
 
-#include "inout.h"
+#include "inout.hpp"
 //extern bool abbotttest(string_view dir,data_t *infoptr,data_t *rawptr,data_t *uidptr,data_t *initinfo,data_t *bluetooth,uint32_t starttijd,uint32_t bluetime,uint32_t tijd) ;
 
 extern  int abbotttest(string_view dir,scandata &data,scandata &data2,data_t *uidptr,data_t *initinfo,data_t *bluetooth,uint32_t starttijd,uint32_t bluetime,const unsigned char *decr,bool nodebug

@@ -4,7 +4,7 @@
 #include <memory>
  #include <sys/types.h> 
  #include "comtypes.h"
- #include "passhost.h"
+ #include "passhost.hpp"
  #include "crypt.h"
 extern bool senddata(crypt_t *pass,const int sock,const int offset,const senddata_t *data,const int datalen,const std::string_view naar,uint16_t dowith=0,const uint8_t *extra=nullptr,int extralen=0) ;
 
@@ -55,7 +55,7 @@ struct arcastdeleter { // deleter
     };
 typedef std::unique_ptr<dataonly,arcastdeleter<4,dataonly>>  dataonlyptr;
 //dataonlyptr receivedatanopass(int sock,const int len); 
-#include "aligner.h"
+#include "aligner.hpp"
 template <int nr>
 using unique_al= std::unique_ptr<uint8_t[],ardeleter<nr,uint8_t>> ;
 unique_al<4> receivedata(int sock, crypt_t *ctx,const int len) ;

@@ -28,8 +28,8 @@
 #include <string.h>
 #include <charconv>
 //#undef NOLOG
-#include "logs.h"
-#include "inout.h"
+#include "logs.hpp"
+#include "inout.hpp"
 //bool mute=true;
 /*
 void setbuffer(char * buf) {

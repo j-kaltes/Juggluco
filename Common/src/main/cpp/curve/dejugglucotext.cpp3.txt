@@ -1,5 +1,5 @@
 
-#include "jugglucotext.h"
+#include "jugglucotext.hpp"
 #ifndef WEAROS
 constexpr static std::string_view delabels[]={ "Ins schnell", "Kohlenhydra", "Dextrose", "Langes Insu", "radeln", "Walk", "Blut"};
 constexpr static Shortcut_t  deshortinit[]= { {"Bread",

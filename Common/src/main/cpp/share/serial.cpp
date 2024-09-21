@@ -26,10 +26,10 @@
 #include <iostream>
 #include <string.h>
 #include <assert.h>
-#include "inout.h"
-#include "serial.h"
+#include "inout.hpp"
+#include "serial.hpp"
 using std::array;
-#include "hex.h"
+#include "hex.hpp"
 /*
 static unsigned char dehex(char ch) { return ch<='9'?ch-'0':(ch-'A'+10);};
 
@@ -145,7 +145,7 @@ cout<<"found "<<diffs<<" differences\n";
 #endif
 /*
 typedef std::array<char,11>  sensorname_t;
-//#include "gltype.h"
+//#include "gltype.hpp"
 template<class T>
 int64_t libreviewHistorAlg(const T *sensorid,int start, int shift) {
         int64_t  uit = 0;

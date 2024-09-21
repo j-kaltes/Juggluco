@@ -3,12 +3,12 @@
 #include <jni.h>
 #include <charconv>
 #include <algorithm>
-#include "settings/settings.h"
-#include "nums/numdata.h"
-#include "logs.h"
-#include "destruct.h"
-#include "nightnumcategories.h"
-#include "common.h"
+#include "settings/settings.hpp"
+#include "nums/numdata.hpp"
+#include "logs.hpp"
+#include "destruct.hpp"
+#include "nightnumcategories.hpp"
+#include "common.hpp"
 constexpr int HTTP_OK=200;
 
 constexpr const int treatmentitemsize=300;

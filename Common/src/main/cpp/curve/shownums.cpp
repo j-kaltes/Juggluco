@@ -22,9 +22,9 @@
 
 #include <array>
 #include <stdio.h>
-#include "numiter.h"
-#include "settings/settings.h"
-#include "curve.h"
+#include "numiter.hpp"
+#include "settings/settings.hpp"
+#include "curve.hpp"
 
 
  //statusbarleft=left;

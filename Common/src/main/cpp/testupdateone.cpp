@@ -20,7 +20,7 @@
 
 
 #include <stdint.h>
-#include "net/passhost.h"
+#include "net/passhost.hpp"
 struct numspan {
 	int start;
 	int end;

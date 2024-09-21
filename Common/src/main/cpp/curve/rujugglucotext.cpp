@@ -1,4 +1,4 @@
-#include "jugglucotext.h"
+#include "jugglucotext.hpp"
 #ifndef WEAROS
 constexpr static char rulabels2[][12]=
 {"Kopoтkuй",
@@ -223,7 +223,7 @@ rutext.amount},
 
 		;
 
-#include "logs.h"
+#include "logs.hpp"
 extern void setuseru();
 void setuseru() {
 LOGAR("Использование rus");

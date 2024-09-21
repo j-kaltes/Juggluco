@@ -25,9 +25,9 @@
 #include <jni.h>
 #include <span>
 #include <sys/prctl.h>
-#include "SensorGlucoseData.h"
+#include "SensorGlucoseData.hpp"
 #include "fromjava.h"
-#include "sensoren.h"
+#include "sensoren.hpp"
 extern Sensoren *sensors;
 void toEverSense(JNIEnv *env,const std::span<const ScanData> stream) { 
 	if(stream.size()) {

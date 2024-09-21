@@ -24,7 +24,7 @@
 #include  <cmath>
 #include <string>
 #include <vector>
-#include "database.h"
+#include "database.hpp"
 int main(int argc,char **argv) {
 Nutrients nuts;
 

@@ -51,7 +51,7 @@ struct mealdata {
 
 };
 	*/
-	#include "Meal.h"
+	#include "Meal.hpp"
 #include <iostream>
 using namespace std;
 int main() {

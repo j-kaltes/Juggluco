@@ -20,10 +20,10 @@
 /*      Fri Jan 27 15:20:04 CET 2023                                                 */
 
 
-#include "settings/settings.h"
-#include "SensorGlucoseData.h"
-#include "sensoren.h"
-#include "numiter.h"
+#include "settings/settings.hpp"
+#include "SensorGlucoseData.hpp"
+#include "sensoren.hpp"
+#include "numiter.hpp"
 
 extern Sensoren *sensors;
 #define LOGGERTAG(...) LOGGER("export: " __VA_ARGS__)
@@ -147,7 +147,7 @@ bool exportdata(myfilep fp,NumIter<Num>*numiters,int start,int basecount,const F
 	return true;
 	}
 
-#include "glucose.h"	
+#include "glucose.hpp"	
 template <class T,class FG,class FP>
 bool sensorexports(myfilep handle, const FG& proc,const FP& print,uint32_t starttime=0,uint32_t endtime=UINT32_MAX,int maxcount=INT_MAX) {	
 	auto indices=sensors->inperiod(	starttime,endtime);
@@ -345,7 +345,7 @@ bool exportnums(int handle,uint32_t starttime=0,uint32_t endtime=UINT32_MAX,int 
 
 #ifdef USE_MEAL
 //extern bool savemeal(int handle,const Num *num)  ;
-#include "meal/MealSave.h"
+#include "meal/MealSave.hpp"
 extern bool allsavemeals(int handle,uint32_t starttime,uint32_t endtime,int maxcount=INT_MAX);
 
 

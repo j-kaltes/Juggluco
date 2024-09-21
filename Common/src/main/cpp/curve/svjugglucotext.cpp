@@ -1,4 +1,4 @@
-#include "jugglucotext.h"
+#include "jugglucotext.hpp"
 #ifndef WEAROS
 constexpr static std::string_view svlabels[]={
   // max 11 bytes

@@ -22,12 +22,12 @@
 #include <jni.h>
 #include <math.h>
 
-#include "sensoren.h"
+#include "sensoren.hpp"
 #include "fromjava.h"
-#include "logs.h"
-#include "destruct.h"
-#include "datbackup.h"
-#include "hexstr.h"
+#include "logs.hpp"
+#include "destruct.hpp"
+#include "datbackup.hpp"
+#include "hexstr.hpp"
 extern Sensoren *sensors;
 
 extern void	sendKAuth(SensorGlucoseData *hist);

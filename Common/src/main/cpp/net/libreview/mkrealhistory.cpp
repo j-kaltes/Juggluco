@@ -1,5 +1,5 @@
 #include "LibreHist.hpp"
-#include "libreview.h"
+#include "libreview.hpp"
 /*
 bool startedwithStreamhistory(const SensorGlucoseData *sensdata) {
 	const bool userealhistory= (sensdata->getinfo()->libreviewnotsendHistory>= sensdata->getinfo()->startedwithStreamhistory)||!sensdata->pollcount();

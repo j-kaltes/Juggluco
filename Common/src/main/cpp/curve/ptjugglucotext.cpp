@@ -20,7 +20,7 @@
 
 
 
-#include "jugglucotext.h"
+#include "jugglucotext.hpp"
 #ifndef WEAROS
 constexpr static std::string_view ptlabels[]={"Insu Rápida","Carbohidra","Glicemia","Insul Lenta","Bicicleta","Caminhada","Sangue"};
 constexpr static Shortcut_t  ptshortinit[]= { {"Pão",

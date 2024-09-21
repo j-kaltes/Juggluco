@@ -19,8 +19,8 @@
 /*      Fri Jan 27 12:35:35 CET 2023                                                 */
 
 
-#include "settings/settings.h"
-#include "datbackup.h"
+#include "settings/settings.hpp"
+#include "datbackup.hpp"
 #include "secs.h"
 
 void SensorGlucoseData::backhistory(int pos) {

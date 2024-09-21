@@ -488,21 +488,21 @@ dependencies {
 //	mobileImplementation 'com.github.lecho:hellocharts-library:1.5.8@aar'
 
     implementation 'androidx.recyclerview:recyclerview:1.3.2'
-    implementation "androidx.startup:startup-runtime:1.1.1"
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1'
+    implementation 'androidx.startup:startup-runtime:1.2.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0'
     implementation 'androidx.core:core-ktx:1.13.1'
   implementation 'com.android.support:support-annotations:28.0.0'
 
     implementation "androidx.appcompat:appcompat:$APPCOMPAT"
     implementation 'androidx.activity:activity:1.9.2'
 	implementation 'androidx.core:core:1.13.1'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0'
     implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.0.20'
     implementation 'org.jetbrains.kotlin:kotlin-stdlib:2.0.20'
     implementation "com.google.android.gms:play-services-base:$GMSBASE"
- implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.8.1'
-  mobileImplementation 'androidx.health.connect:connect-client:1.1.0-alpha08'
+ implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.9.0'
+  mobileImplementation 'androidx.health.connect:connect-client:1.1.0-alpha09'
 //  mobileImplementation files('/n/ojka/Downloads/ciq-companion-app-sdk-2.0.3.aar');
   mobileImplementation "com.garmin.connectiq:ciq-companion-app-sdk:2.0.3@aar"
 
@@ -514,7 +514,7 @@ dependencies {
     wearImplementation 'androidx.activity:activity-ktx:1.9.2'
     wearImplementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     wearImplementation 'com.google.android.material:material:1.12.0'
-    wearImplementation 'androidx.databinding:viewbinding:8.6.0'
+    wearImplementation 'androidx.databinding:viewbinding:8.6.1'
     wearImplementation 'androidx.core:core-ktx:1.13.1'
 
 

@@ -43,7 +43,7 @@
 #include <stdarg.h>
 //#include <type_traits>
 
-#include "logs.h"
+#include "logs.hpp"
 #define logM(...)
 
 #if __ANDROID_API__ >= 24
@@ -179,14 +179,14 @@ static void ioreadyhandler(int sig) {
 #endif
 }
 #ifdef FINDHANDLE
-#include <destruct.h>
+#include <destruct.hpp>
 static int copyfd=0;
 
 static char *pmcom;
 static int pmcomlen=0;
 
 
-#include "destruct.h"
+#include "destruct.hpp"
 static bool endroutine=false;
 static int giveuslibre2(const char *dirname) {
 	int fp=open(dirname, O_DIRECTORY|O_RDONLY);

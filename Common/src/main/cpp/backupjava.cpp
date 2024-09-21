@@ -22,8 +22,8 @@
 #include <jni.h>
 #include <alloca.h>
 #include "fromjava.h"
-#include "datbackup.h"
-#include "net/netstuff.h"
+#include "datbackup.hpp"
+#include "net/netstuff.hpp"
 
 
 void netwakeup();

@@ -246,6 +246,23 @@ static public String glucosestr(float gl) {
 		}
 	}
 	boolean hasvalue=false;
+
+
+void showglucose(notGlucose strgl,float gl) {
+		var draw= GlucoseDraw.getgludraw(gl);
+		var message= format(usedlocale,glucoseformat,gl);
+		arrowglucosenotification(2,draw, message,strgl,GLUCOSENOTIFICATION ,true);
+		}
+      /*
+void overwriteglucose() {
+  
+	var strgl=SuperGattCallback.previousglucose;
+	if(strgl==null)
+		return;
+   showglucose(strgl,strgl.gl);
+	}*/
+
+
 	void normalglucose(notGlucose strgl,float gl,float rate,boolean waiting) {
 		MainActivity.showmessage=null;
 		var act=MainActivity.thisone;
@@ -411,8 +428,11 @@ static	void stoplossalarm(){
 						if(glu!=null)
 							SuperGattCallback.talker.speak(glu.value);
 						}
+                if(kind<2) overwriteglucose(kind);
+                  //overwriteglucose();
 					}
 				setisalarm(false);
+
 				}
 			else  {
 				if(doLog) {
@@ -463,9 +483,20 @@ static	void stoplossalarm(){
 		}
 		placelargenotification(draw,message,type,!alarm);
 	}
-
+private int wasdraw=-1;
+private String wasmessage=null,wastype;
+void overwriteglucose(int kind) {
+   if(wasdraw==-1)
+      return;
+	var strgl=SuperGattCallback.previousglucose;
+	if(strgl==null)
+		return;
+   arrowglucosenotification(kind,wasdraw,wasmessage,strgl,wastype,true);
+   wasdraw=-1;
+   }
 	private void arrowsoundalarm(int kind,int draw,String message,notGlucose sglucose,String type,boolean alarm) {
 		if(alarm) {
+         wasdraw=draw;wasmessage=message;wastype=type;
 			makeseparatenotification(draw,message, sglucose,type);
 			Log.d(LOG_ID,"arrowsoundalarm "+kind);
 			mksound(kind);
@@ -593,7 +624,7 @@ static public boolean alertseparate=false;
 		//	GluNotBuilder.setStyle( new Notification.DecoratedMediaCustomViewStyle());
 			}
 			GluNotBuilder.setShowWhen(true);
-			RemoteViews remoteViews=arrowNotify.arrowremote(kind,glucose);
+			RemoteViews remoteViews=arrowNotify.arrowremote(kind,glucose,kind<2&&!once);
 			if(whiteonblack) {
 				if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 					GluNotBuilder.setColorized(true);

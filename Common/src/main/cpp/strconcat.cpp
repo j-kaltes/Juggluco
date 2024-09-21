@@ -22,8 +22,8 @@
 #include <iostream>
 #include <string_view>
 #include <array>
-#include "inout.h"
-#include "strconcat.h"
+#include "inout.hpp"
+#include "strconcat.hpp"
 using namespace std;
 
 

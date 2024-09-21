@@ -19,7 +19,7 @@
 /*      Fri Jan 27 12:35:35 CET 2023                                                 */
 
 
-#include "scanstate.h"
+#include "scanstate.hpp"
 #include <string.h>
 #include "timestr.h"
 data_t *scanstate::fromfile(const char *filename) {

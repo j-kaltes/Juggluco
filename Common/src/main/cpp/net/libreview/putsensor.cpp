@@ -22,8 +22,8 @@
 #include <jni.h>
 #include <cstdio>
 #include <cstring>
-#include "settings/settings.h"
-#include "settings/mixpass.h"
+#include "settings/settings.hpp"
+#include "settings/mixpass.hpp"
 
 jbyteArray  getlibre3puttext(JNIEnv *env, const char *sensorname) {
 	LOGGER("getlibre3puttext(%s)\n",sensorname);

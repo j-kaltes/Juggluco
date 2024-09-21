@@ -61,8 +61,8 @@ extern "C" JNIEXPORT jobjectArray  JNICALL   fromjava(getcomponentunits)(JNIEnv 
 
 
 #else
-#include "destruct.h"
-#include "database.h"
+#include "destruct.hpp"
+#include "database.hpp"
 
 static Nutrients nutrients;
 extern "C" JNIEXPORT jlong  JNICALL   fromjava(foodsearch)(JNIEnv *env, jclass cl, jstring jzoek) {

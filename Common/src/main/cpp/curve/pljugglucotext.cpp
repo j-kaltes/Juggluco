@@ -1,4 +1,4 @@
-#include "jugglucotext.h"
+#include "jugglucotext.hpp"
 #ifndef WEAROS
 constexpr static std::string_view pllabels[]={"Insul szybk",
 "Węglowodan",
@@ -219,7 +219,7 @@ hourminstr,
 
 		;
 
-#include "logs.h"
+#include "logs.hpp"
 void setusepl() {
 LOGAR("setuse pl");
  usedtext= &pltext;

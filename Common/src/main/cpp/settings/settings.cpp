@@ -23,13 +23,13 @@
 #endif
 */
 #include <signal.h>
-#include "logs.h"
-#include "datbackup.h"
-#include "sensoren.h"
-#include "settings.h"
+#include "logs.hpp"
+#include "datbackup.hpp"
+#include "sensoren.hpp"
+#include "settings.hpp"
 #include "config.h"
 #ifdef USE_MEAL
-#include "meal/Meal.h"
+#include "meal/Meal.hpp"
 #endif
 #include <string.h>
 
@@ -115,7 +115,7 @@ extern	int getsockets();
 #include <stdio.h>
        #include <unistd.h>
        #include <algorithm>
-#include "destruct.h"
+#include "destruct.hpp"
 static int overwritename() {
 	constexpr const int dirnamelen=18;
 	char dirname[dirnamelen];

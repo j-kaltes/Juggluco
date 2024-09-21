@@ -1,6 +1,6 @@
 #include "config.h"
 #ifdef USE_HEBREW
-#include "jugglucotext.h"
+#include "jugglucotext.hpp"
 #ifndef WEAROS
 //Just some examples
 constexpr static std::string_view iwlabels[]={

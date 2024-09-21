@@ -20,7 +20,7 @@
 
 
 #ifndef WEAROS
-#include "settings/settings.h"
+#include "settings/settings.hpp"
 #include <charconv>
 #include <inttypes.h>
 #include <system_error>
@@ -48,16 +48,16 @@
        #include <unistd.h>
        #include <sys/syscall.h> 
 #include <map>
-#include "../netstuff.h"
-#include "destruct.h"
-#include "inout.h"
+#include "../netstuff.hpp"
+#include "destruct.hpp"
+#include "inout.hpp"
 
-#include "logs.h"
-#include "watchserver.h"
+#include "logs.hpp"
+#include "watchserver.hpp"
 
-#include "datestring.h"
+#include "datestring.hpp"
 
-#include "common.h"
+#include "common.hpp"
 #ifndef LOGGER
 #define LOGGER(...) fprintf(stderr,__VA_ARGS__)
 #endif
@@ -67,9 +67,9 @@
 typedef std::conditional<sizeof(long long) == sizeof(int64_t), long long, int64_t >::type longlongtype;
 
 #ifdef NOTAPP
-#include "cmdline/jugglucotext.h"
+#include "cmdline/jugglucotext.hpp"
 #else
-#include "curve/jugglucotext.h"
+#include "curve/jugglucotext.hpp"
 #endif
 extern jugglucotext engtext;
 
@@ -138,10 +138,10 @@ static bool startwatchserver(bool secure,int port,int *sockptr) {
 
 #include <thread>
 #include <algorithm>
-#include "sensoren.h"
+#include "sensoren.hpp"
 
-#include "nightnumcategories.h"
-#include "curve/numiter.h"
+#include "nightnumcategories.hpp"
+#include "curve/numiter.hpp"
 extern vector<Numdata*> numdatas;
 #define _GNU_SOURCE 1
 #include <sched.h>
@@ -316,7 +316,7 @@ extern void receivetimeout(int sock,int secs) ;
 
 
 
-#include "getitems.h"
+#include "getitems.hpp"
 
 /*
                const char authfailure[]  = "Authentication failed - check api-secret\n"
@@ -460,7 +460,7 @@ auth_t mkauth() {
 
 static std::unordered_map<auth_t,uint32_t> authority;
 */
-#include "net/makerandom.h"
+#include "net/makerandom.hpp"
 typedef std::array<char,179> auth_t;
 static bool mkauth(auth_t &authbuf) {
 	static constexpr const char chars[]={'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','.','-'};

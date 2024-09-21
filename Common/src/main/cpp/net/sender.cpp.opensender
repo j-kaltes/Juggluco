@@ -16,13 +16,13 @@
 
        #include <sys/prctl.h>
 
-#include "destruct.h"
+#include "destruct.hpp"
 
-#include "logs.h"
-#include "netstuff.h"
-#include "passhost.h"
+#include "logs.hpp"
+#include "netstuff.hpp"
+#include "passhost.hpp"
 #include "crypt.h"
-#include "makerandom.h"
+#include "makerandom.hpp"
 using namespace std;
 
 void	sendpassinit(int sock,passhost_t *host,crypt_t *ctx) {
@@ -72,7 +72,7 @@ bool block(int sock) {
      }
 
 
-#include "sendmagic.h"
+#include "sendmagic.hpp"
 auto getsendmagic() {
 	std::array<unsigned char,sizeof(sendmagic)> back=sendmagicinit;
 	makerandom(end(back)-4,4);

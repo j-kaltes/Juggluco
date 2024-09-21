@@ -27,10 +27,10 @@
 #include <stdint.h>
 #include <vector>
 #include "sibionics/SiContext.hpp"
-#include "SensorGlucoseData.h"
-#include "settings/settings.h"
-#include "sensoren.h"
-#include "datbackup.h"
+#include "SensorGlucoseData.hpp"
+#include "settings/settings.hpp"
+#include "sensoren.hpp"
+#include "datbackup.hpp"
 #include "EverSense.hpp"
 extern Sensoren *sensors;
 #ifndef LOGGER
@@ -65,7 +65,7 @@ static uint32_t makestarttime(int index,uint32_t eventTime) {
 #define savejson(sens,name,  index,alg,getjson )x
 #define glucoseback(glval, drate,hist) 
 #else
-#include "sibionics/json.h"
+#include "sibionics/json.hpp"
 extern bool savejson(SensorGlucoseData *sens,std::string_view, int index,const AlgorithmContext *alg,getjson_t getjson );
 extern getjson_t getjson;
 extern jlong glucoseback(uint32_t glval,float drate,SensorGlucoseData *hist) ;

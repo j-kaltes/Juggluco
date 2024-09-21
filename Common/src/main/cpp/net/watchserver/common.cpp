@@ -4,10 +4,10 @@
 #include <stdint.h>
 #include <system_error>
 
-#include "SensorGlucoseData.h"
-#include "gltype.h"
-#include "common.h"
-#include "logs.h"
+#include "SensorGlucoseData.hpp"
+#include "gltype.hpp"
+#include "common.hpp"
+#include "logs.hpp"
 extern double getdelta(float change);
 extern std::string_view getdeltaname(float rate);
 int mkv3streamid(char *outiter,const sensorname_t *name,int num) { 

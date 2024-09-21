@@ -19,12 +19,12 @@
 /*      Fri Jan 27 12:36:44 CET 2023                                                 */
 
 
-#include "nums/numdata.h"
+#include "nums/numdata.hpp"
 #include <vector>
 std::vector<Numdata*> numdatas;
 
-#include "net/passhost.h"
-#include "net/makerandom.h"
+#include "net/passhost.hpp"
+#include "net/makerandom.hpp"
 extern void makenightswitch();
 
 void makenightswitch() {

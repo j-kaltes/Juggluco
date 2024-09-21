@@ -23,12 +23,12 @@
 #include <ctime>
 #include <string.h>
 #include "fromjava.h"
-#include "logs.h"
-#include "libre2.h"
-#include "destruct.h"
-#include "sensoren.h"
-#include "SensorGlucoseData.h"
-#include "hexstr.h"
+#include "logs.hpp"
+#include "libre2.hpp"
+#include "destruct.hpp"
+#include "sensoren.hpp"
+#include "SensorGlucoseData.hpp"
+#include "hexstr.hpp"
 //00A500010001000000C04E1E0D0101040C043036385A4D524631382F97
 //00A500010001000000C04E1E0D0101040C013036385A4D52463138164A
 extern Sensoren *sensors;

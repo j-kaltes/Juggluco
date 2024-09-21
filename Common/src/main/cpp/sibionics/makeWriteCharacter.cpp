@@ -28,7 +28,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <type_traits>
-#include "contconcat.h"
+#include "contconcat.hpp"
 
 
 static int8_t oneel(const char *start) {
@@ -80,10 +80,10 @@ int  main(int argc,char **argv) {
    } 
 #else
 
-#include "SensorGlucoseData.h"
-#include "libre2.h" //PUT sistream etc in different header?
+#include "SensorGlucoseData.hpp"
+#include "libre2.hpp" //PUT sistream etc in different header?
 #include "fromjava.h"
-#include "share/hexstr.h"
+#include "share/hexstr.hpp"
 extern "C" JNIEXPORT jbyteArray JNICALL   fromjava(getSiWriteCharacter)(JNIEnv *env, jclass cl,jlong dataptr) {
 	if(!dataptr)
 		return nullptr;

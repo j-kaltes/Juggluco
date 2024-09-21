@@ -31,17 +31,17 @@
        #include <new>
        #include <assert.h>
 
-#include "backup.h"
-#include "inout.h"
-#include "logs.h"
-#include "netstuff.h"
+#include "backup.hpp"
+#include "inout.hpp"
+#include "logs.hpp"
+#include "netstuff.hpp"
 //#define LOGGERTAG(...) fprintf(stderr,__VA_ARGS__)
 #define lerrortag(...) lerror("sendcommands: " __VA_ARGS__)
 #define LOGGERTAG(...) LOGGER("sendcommands: " __VA_ARGS__)
 #define LOGSTRINGTAG(...) LOGSTRING("sendcommands: " __VA_ARGS__)
 #define flerrortag(...) flerror("sendcommands: " __VA_ARGS__)
 
-#include "aligner.h"
+#include "aligner.hpp"
 
 bool receivecrypt(int sock,crypt_t *ctx,uint8_t *uit) {
 	constexpr int taglen=16;
@@ -186,7 +186,7 @@ struct com_t {
 	uint16_t com;
 	int16_t han;
 	}; 
-#include "receive.h"
+#include "receive.hpp"
 bool sendfile(int sock,crypt_t *pass,const char *filename,uint32_t off,uint32_t len) {
 	LOGGERTAG("sendfile %s %u %u ",filename,off,len);
  	int totlen=aligner<alignof(dataonly)>(sizeof(dataonly)+len);

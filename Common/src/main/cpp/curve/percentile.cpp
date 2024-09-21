@@ -23,11 +23,11 @@
 #include <string.h>
 #include <memory>
 #include <thread>
-#include "SensorGlucoseData.h"
-#include "sensoren.h"
-#include "curve.h"
-#include "bino.h"
-#include "jugglucotext.h"
+#include "SensorGlucoseData.hpp"
+#include "sensoren.hpp"
+#include "curve.hpp"
+#include "bino.hpp"
+#include "jugglucotext.hpp"
 extern int statusbarleft,statusbarright;
 
 extern int statusbarheight;
@@ -456,7 +456,7 @@ extern void showpercentiles(NVGcontext* vg) ;
 
 
 
-#include "stats.h"
+#include "stats.hpp"
 std::unique_ptr<struct stats> statptr;
 extern void showstats(NVGcontext* vg,stats *stat) ;
 
@@ -630,7 +630,7 @@ bool makepercetages() {
        statisticsendtime=starttime+duration;
 	return mkpercentiles(daystoanalyse);
 	}
-#include "settings/settings.h"
+#include "settings/settings.hpp"
 void leginterval(NVGcontext* vg,const float x,const float y, const int *between) {
 	const constexpr int maxbuf=10;
 	char buf[maxbuf];

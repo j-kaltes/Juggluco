@@ -33,8 +33,8 @@ longsensorname_t  namelibre3(const std::string_view sensorid) {
         memcpy(&sens[0]+startlen,sensorid.data(),len);
 	return sens;
         }
-#include "strconcat.h"
-#include "inout.h"
+#include "strconcat.hpp"
+#include "inout.hpp"
 
 pathconcat logbasedir("/tmp/logs");
 int main(int argc,char **argv) {

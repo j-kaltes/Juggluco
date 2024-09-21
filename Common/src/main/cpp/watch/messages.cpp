@@ -33,9 +33,9 @@
 #include <array>
 #include <thread>
 #include <semaphore>
-#include "destruct.h"
-#include "datbackup.h"
-#include "net/netstuff.h"
+#include "destruct.hpp"
+#include "datbackup.hpp"
+#include "net/netstuff.hpp"
 /*
 struct wearmessage {
    int32_t len;

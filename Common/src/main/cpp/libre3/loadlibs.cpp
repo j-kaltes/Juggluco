@@ -22,8 +22,8 @@
 #include <jni.h>
 #include <string.h>
 #include <cinttypes>
-#include "logs.h"
-#include "settings/settings.h"
+#include "logs.hpp"
+#include "settings/settings.hpp"
 
 
 static jclass      myFindClass(JNIEnv*, const char* name) {
@@ -83,9 +83,9 @@ extern std::string_view libdirname;
 
 #define CHANGECODE
 #ifdef CHANGECODE
-#include "unprotect.h"
+#include "unprotect.hpp"
 #endif
-#include "hexstr.h"
+#include "hexstr.hpp"
 /*
 void changelib(uint8_t *from) {
         uint8_t *start= (uint8_t*)from+2432 +7560 -4;
@@ -247,7 +247,7 @@ static bool loadNFC() {
 	LOGGER("RegisterNatives %s OK\n",classname);
 	return true;	 */
 	}
-#include "debugclone.h"
+#include "debugclone.hpp"
 extern "C" JNIEXPORT jint JNICALL fromjava(startTimeIDsum)(JNIEnv *env, jclass cl, jbyteArray bArr, jlong time, jlong account) {
 
 	settings->setnodebug(false);

@@ -23,9 +23,9 @@
 #ifdef WEAROS_MESSAGES
 #include <zlib.h>
 #endif
-#include "net/netstuff.h"
+#include "net/netstuff.hpp"
 #include "share/fromjava.h"
-#include "datbackup.h"
+#include "datbackup.hpp"
 #ifdef WEAROS
 #define iswatchapp() 1
 #else

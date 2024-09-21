@@ -27,13 +27,13 @@
 #include <stdio.h>
 #include <time.h>
 #include <unistd.h>
-#include "sensoren.h"
-#include "destruct.h"
-#include "SensorGlucoseData.h"
-#include "settings/settings.h"
-#include "libreview.h"
+#include "sensoren.hpp"
+#include "destruct.hpp"
+#include "SensorGlucoseData.hpp"
+#include "settings/settings.hpp"
+#include "libreview.hpp"
 #ifdef LIBRENUMBERS
-#include "librenumbers.h"
+#include "librenumbers.hpp"
 #endif
 constexpr const int DEBUGLEN=0;
 constexpr const int EXTRALEN=
@@ -879,7 +879,7 @@ int startsensor=0;
 #include <sys/prctl.h>
 extern JNIEnv *getenv();
 
-#include "datbackup.h"
+#include "datbackup.hpp"
 
 Backup::condvar_t  librecondition;
 void initlibreviewjni(JNIEnv *env) {

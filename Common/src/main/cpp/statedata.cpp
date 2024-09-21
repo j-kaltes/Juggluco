@@ -19,13 +19,13 @@
 /*      Fri Jan 27 12:35:35 CET 2023                                                 */
 
 
-#include "libre2.h"
+#include "libre2.hpp"
 #include <iostream>
 #include <string_view>
 #include <memory>
 #include <string.h>
 #include <assert.h>
-#include "inout.h"
+#include "inout.hpp"
 #include "timestr.h"
 
 #define VISIBLE __attribute__((__visibility__("default")))

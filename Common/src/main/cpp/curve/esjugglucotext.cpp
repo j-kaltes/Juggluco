@@ -1,6 +1,6 @@
 #include "config.h"
 #ifdef SPANISH
-#include "jugglucotext.h"
+#include "jugglucotext.hpp"
 #ifndef WEAROS
 constexpr static std::string_view eslabels[]={"Fast Insuli",
 "Carbohidra",
@@ -223,7 +223,7 @@ Se necesitan. En su caso tiene problemas con el siguiente archivo)",
 
 ;
 
-#include "logs.h"
+#include "logs.hpp"
 extern void setusees() ;
 void setusees() {
   LOGAR("switch to ES");

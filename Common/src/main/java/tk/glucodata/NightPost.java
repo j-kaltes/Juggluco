@@ -132,7 +132,7 @@ static public boolean deleteUrl(String urlstring,String secret) {
 
 		}
 	catch(Throwable th) {
-		String error ="deleteUrl:\n"+stackline(th);
+		String error ="deleteUrl error:\n"+stackline(th);
 		uploadstatus=error;
 		Log.e(LOG_ID,error);
 		return false;
@@ -236,7 +236,7 @@ static public int upload(String httpurl,byte[] postdata,String secret,boolean pu
 		return code;
 		 }
 	catch(Throwable th) {
-		final String posterror="upload\n"+stackline(th);
+		final String posterror="upload failure:\n"+stackline(th);
 		uploadstatus=posterror;
 		Log.e(LOG_ID,posterror);
 		return -1;

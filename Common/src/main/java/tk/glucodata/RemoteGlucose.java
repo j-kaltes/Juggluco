@@ -109,8 +109,8 @@ RemoteGlucose(float gl,float notwidth,float xper,int whiteonblack,boolean giveti
 		};
 }
 
-final RemoteViews arrowremote(int kind, notGlucose glucose) {
-	final boolean alarm=kind<2&&getisalarm();
+final RemoteViews arrowremote(int kind, notGlucose glucose,final boolean alarm) {
+//	final boolean alarm=kind<2&&getisalarm();
 	RemoteViews remoteViews= new RemoteViews(Applic.app.getPackageName(),alarm?R.layout.alarm:R.layout.arrowandvalue);
 	if(alarm) {
 		Intent closeintent=new Intent(Applic.app,NumAlarm.class);

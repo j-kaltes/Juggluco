@@ -29,13 +29,13 @@
 #include <ctime>
 #include  <inttypes.h>
 #include <memory>
-#include "sensoren.h"
-#include "settings/settings.h"
-#include "SensorGlucoseData.h"
-#include "share/serial.h"
-#include "libreview.h"
+#include "sensoren.hpp"
+#include "settings/settings.hpp"
+#include "SensorGlucoseData.hpp"
+#include "share/serial.hpp"
+#include "libreview.hpp"
 #ifdef LIBRENUMBERS
-#include "librenumbers.h"
+#include "librenumbers.hpp"
 #endif
 
 

@@ -22,7 +22,7 @@
 #include <stdio.h>
 #include <vector>
 #include <jni.h>
-#include "inout.h"
+#include "inout.hpp"
 
 #define abbottdec(x) (*x)
 #define abbottcall(x) x

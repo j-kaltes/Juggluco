@@ -24,13 +24,13 @@
 #include <string.h>
        #include <unistd.h>
 #include "comtypes.hpp"
-#include "receive.h"
-#include "passhost.h"
-#include "makerandom.h"
+#include "receive.hpp"
+#include "passhost.hpp"
+#include "makerandom.hpp"
 #include "crypt.h"
-#include "netstuff.h"
-#include "datbackup.h"
-#include "aligner.h"
+#include "netstuff.hpp"
+#include "datbackup.hpp"
+#include "aligner.hpp"
 #include "mirrorerror.h"
 #define lerrortag(...) lerror("getcommands: " __VA_ARGS__)
 #define LOGGERTAG(...) LOGGER("getcommands: " __VA_ARGS__)
@@ -92,7 +92,7 @@ extern	bool backupnums(const struct numsend* innums);
 //cmd han uint32_t uint32_t unsigned byte
 //bool savedata(int fp,uint32_t offset, uint32_t len,const unsigned char *data) {
 
-#include "aligner.h"
+#include "aligner.hpp"
 //int alignadd(int was,int bij) { return was+((bij+3)/4)*4; }
 /*
 int alignadd(int was,int bij) {

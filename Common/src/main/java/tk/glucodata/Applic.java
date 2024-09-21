@@ -192,6 +192,7 @@ public static String curlang=null;
 public void onConfigurationChanged(Configuration newConfig) {
 	super.onConfigurationChanged(newConfig);
    	if(Nativesloaded)  {
+		needsnatives();
 		var lang=getlocale().getLanguage();
 
 		var new24 = DateFormat.is24HourFormat(this);
@@ -209,7 +210,6 @@ public void onConfigurationChanged(Configuration newConfig) {
 
 		Applic.hour24=new24;
 		Natives.setlocale(lang, new24);
-
 		}
 } 
 @Override
@@ -415,7 +415,7 @@ private void initialize() {
 
 
 
-public static int initscreenwidth;
+public static int initscreenwidth=-1;
 
 static private final BroadcastReceiver minTimeReceiver = new BroadcastReceiver() {
     @Override
@@ -557,8 +557,14 @@ static void updatescreen() {
 static float headfontsize;
 
 boolean needsnatives() {
+	final var res=getResources();
+        GlucoseCurve.metrics= res.getDisplayMetrics();
+	var newinitscreenwidth= Math.max(GlucoseCurve.metrics.heightPixels,GlucoseCurve.metrics.widthPixels);
+	if(newinitscreenwidth==initscreenwidth)
+		return false;
        Log.i(LOG_ID,"needsnatives");
-	var res=getResources();
+	initscreenwidth=newinitscreenwidth;
+
         headfontsize = res.getDimension(R.dimen.abc_text_size_display_4_material);
 	Notify.glucosesize=Applic.app.headfontsize*.35f;
 		
@@ -566,15 +572,14 @@ boolean needsnatives() {
 
         final float menufontsize = res.getDimension(R.dimen.abc_text_size_menu_material);
         smallfontsize = res.getDimension(R.dimen.abc_text_size_small_material);
-        GlucoseCurve.metrics= res.getDisplayMetrics();
-	initscreenwidth= Math.max(GlucoseCurve.metrics.heightPixels,GlucoseCurve.metrics.widthPixels);
         Natives.setfontsize(smallfontsize, menufontsize, GlucoseCurve.metrics.density, headfontsize);
-   final double screensize=(initscreenwidth/smallfontsize);
-     Log.i(LOG_ID,"initscreenwidth="+initscreenwidth);
-     Log.i(LOG_ID,"smallfontsize="+smallfontsize);
+   final double screensize=(newinitscreenwidth/menufontsize);
+     Log.i(LOG_ID,"initscreenwidth="+newinitscreenwidth);
+     Log.i(LOG_ID,"menufontsize="+menufontsize);
      Log.i(LOG_ID,"screensize="+screensize);
 //	boolean smallsize=((initscreenwidth/smallfontsize)<44.69);
-	final boolean smallsize=screensize<25.0;
+	final boolean smallsize=screensize<34.0;
+//	final boolean smallsize=screensize<31;
 //	boolean smallsize=false;
 	boolean ret;
 	if(smallsize!= NumberView.smallScreen) {
@@ -583,10 +588,8 @@ boolean needsnatives() {
 		}
 	else
 		ret=false;
-
 		
-
-	Notify.mkpaint();
+   Notify.mkpaint();
 	return ret;
 	}
    /*

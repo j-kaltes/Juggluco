@@ -32,13 +32,13 @@ char privatekey[]="privkey.pem";
 #include <string>
 #include <string_view>
 #include <sys/prctl.h>
-#include <strconcat.h>
+#include "strconcat.hpp"
 #include "openssl/ssl.h"
 #include "openssl/err.h"
-#include "logs.h"
-#include "inout.h"
-#include "watchserver.h"
-#include "destruct.h"
+#include "logs.hpp"
+#include "inout.hpp"
+#include "watchserver.hpp"
+#include "destruct.hpp"
 const SSL_METHOD *(*TheMethod)(void);
 int (*SSL_library_initptr)(void)=NULL;
 void (*OPENSSL_add_all_algorithms_noconfptr)(void)=NULL;

@@ -1,4 +1,4 @@
-#include "jugglucotext.h"
+#include "jugglucotext.hpp"
 #ifndef WEAROS
 constexpr static std::string_view labels[]={"Fast Insuli",
 "Carbohydra",
@@ -173,8 +173,7 @@ engtext.amount},
 			"Do something"},
 		{"Procedure takes too long",
 			"I kill program"},
-		{"Replace Sensor (365)",
-			"Your Sensor is not working. Please remove your Sensor and start a new one."},
+		{"Replace Sensor (365)", "Your Sensor is not working. Please remove your Sensor and start a new one."},
 		{"Replace Sensor (368)",
 			"Your Sensor is not working. Please remove your Sensor and start a new one."},
 		{"",
@@ -185,7 +184,7 @@ engtext.amount},
 .libre3scanerror={"FreeStyle Libre 3, Scan error", 
 	"Try again"},
 .libre3wrongID={"Error, wrong account ID?",
-	"Specify in Settings->Libreview the same account used to activate the sensor"},
+	R"(Should be the same as when activating the sensor. Use Left menu->Settings->Libreview->"Get Account ID" to retrieve it from Libreview.)"},
 .libre3scansuccess= {"FreeStyle Libre 3 sensor", 
 	"Glucose values will now be received by Juggluco"},
 .unknownNFC={"Unrecognized NFC scan Error", 
@@ -221,7 +220,7 @@ are needed. In your case it has problems with the following file)",
 		;
 
 jugglucotext *usedtext= &engtext;
-#include "logs.h"
+#include "logs.hpp"
 void setuseeng() {
 LOGAR("setuse en");
  usedtext= &engtext;

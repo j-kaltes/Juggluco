@@ -31,14 +31,14 @@
        #include <string.h>
         #include <dlfcn.h>
 
-#include "destruct.h"
+#include "destruct.hpp"
 
 //#define MAIN
 #ifdef MAIN
 #define lerror perror
 #define LOGGER printf
 #else
-#include "logs.h"
+#include "logs.hpp"
 #endif
 static int32_t getadbuid() { 
 	const int32_t adbuid=2000;

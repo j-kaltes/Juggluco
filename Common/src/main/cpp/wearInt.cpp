@@ -23,8 +23,8 @@
 #include <jni.h>
 
 #include "fromjava.h"
-#include "settings/settings.h"
-#include "net/watchserver/getitems.h"
+#include "settings/settings.hpp"
+#include "net/watchserver/getitems.hpp"
 
 constexpr const int FUZZER=30;
 
