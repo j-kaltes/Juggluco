@@ -18,9 +18,9 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}  ${MYCFLAGS}" )
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}   ${MYCFLAGS} -Wno-vla-cxx-extension -fno-rtti -fexceptions  -DALWAYSPATH=1  ")
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Android")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}   -std=gnu++2b   ")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}   -std=gnu++2b   ")
 else()
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -std=c++20 ")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -std=c++23 ")
 endif()
 
 set(INCLUDESELF ${CMAKE_CURRENT_SOURCE_DIR})

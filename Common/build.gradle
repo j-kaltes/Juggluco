@@ -16,6 +16,8 @@ if(task.contains("LibreOldNosi")&&!task.contains("Wear")) {
    GMSWEAR = '18.1.0'
 
      MINSDK = 19
+   CPPSTD = "-std=gnu++2b"
+
    }
 else {
        ndkver = '27.1.12297006'
@@ -23,6 +25,7 @@ else {
       GMSWEAR = '18.2.0'
      GMSBASE = '18.5.0'
       MINSDK = 21
+   CPPSTD = "-std=gnu++23"
        }
 android {
  namespace "tk.glucodata"
@@ -68,7 +71,7 @@ android {
         buildConfigField 'int', 'targetSDK', "$targetSdk"
         compileSdk 33
         applicationId "tk.glucodata"
-	versionName '8.1.7'
+	     versionName '8.1.7'
 //	multiDexEnabled true
 
         buildConfigField 'String', 'BUILD_TIME', 'new java.text.SimpleDateFormat("HH:mm:ss dd-MMM-yyyy").format(new java.util.Date(' + System.currentTimeMillis() + 'L))'
@@ -78,7 +81,8 @@ android {
         externalNativeBuild {
             cmake {
                 version "3.22.1"
-		cppFlags  " -DAPPID=\\\"$applicationId\\\" "
+//		cppFlags  " -DAPPID=\\\"$applicationId\\\"   -DAPPVERSION=\\\"$versionName\\\" "
+		cppFlags  " -DAPPID=\"quotes($applicationId)\"   -DAPPVERSION=\"quotes($versionName)\" "
 
             }
         }
@@ -106,7 +110,7 @@ android {
 		versionNameSuffix '-no3'
             buildConfigField 'int', 'libreVersion', '2'
 		    externalNativeBuild.cmake {
-			cppFlags "  -DAPPVERSION=\\\"$versionName\\\" "
+//			cppFlags "  -DAPPVERSION=\\\"$versionName\\\" "
 
             	}
 
@@ -125,7 +129,7 @@ android {
            	buildConfigField 'int', 'libreVersion', '3'
 		    externalNativeBuild.cmake {
 			arguments "-Dlibre3=TRUE"
-			cppFlags "  -DAPPVERSION=\\\"$versionName\\\"  -DLIBRE3=1 "
+			cppFlags "   -DLIBRE3=1 "
 
             }
 
@@ -138,7 +142,7 @@ android {
 		versionCode                                       478                                                                                    
 	        buildConfigField 'int', 'SiBionics', '1'
 	         externalNativeBuild.cmake {
-			cppFlags "  -DAPPVERSION=\\\"$versionName\\\"  -DSIBIONICS=1 "
+			cppFlags "   -DSIBIONICS=1 "
             		}
 		}
         nosi {
@@ -147,7 +151,6 @@ android {
 		versionNameSuffix '-nosi'
 	        buildConfigField 'int', 'SiBionics', '0'
 	         externalNativeBuild.cmake {
-			cppFlags "  -DAPPVERSION=\\\"$versionName\\\" "
             		}
 		}
 
@@ -168,7 +171,7 @@ android {
            buildConfigField 'int', 'isWear', '1'
             externalNativeBuild.cmake {
 	        arguments "-DWEAROS=TRUE"
-                cppFlags " -DWEAROS=1  -DUSEDIN=1  -DAPPVERSION=\\\"$versionName\\\" "
+                cppFlags " -DWEAROS=1  -DUSEDIN=1   "
 
                 }
 
@@ -189,7 +192,7 @@ android {
            buildConfigField 'int', 'isWear', '1'
             externalNativeBuild.cmake {
 	        arguments "-DWEAROS=TRUE"
-                cppFlags " -DWEAROS=1  -DUSEDIN=1  -DAPPVERSION=\\\"$versionName\\\" "
+                cppFlags " -DWEAROS=1  -DUSEDIN=1   "
 
                 }
 
@@ -221,7 +224,7 @@ buildTypes {
             jniDebuggable false
             debuggable false
             externalNativeBuild.cmake {
-                cppFlags "-std=gnu++2b","-DRELEASEID=1","-DRELEASE=1","-DNORAWSTREAM=1" , "-DRELEASEDIR=1", "-DNOLOG=1" //, "-DSCANLOG=1" , "-DNOLOG=1"
+                cppFlags "$CPPSTD","-DRELEASEID=1","-DRELEASE=1","-DNORAWSTREAM=1" , "-DRELEASEDIR=1", "-DNOLOG=1" //, "-DSCANLOG=1" , "-DNOLOG=1"
 
 
                 }
@@ -260,8 +263,8 @@ buildTypes {
             buildConfigField 'int', 'isRelease', '1'
         buildConfigField 'int', 'isReleaseID', '1'
             externalNativeBuild.cmake {
-                cppFlags "-std=gnu++2b","-DRELEASEID=1","-DRELEASE=1","-DNORAWSTREAM=1" , "-DRELEASEDIR=1", "-DNOLOG=1", "-DAPPSUFFIX=\\\"$applicationIdSuffix\\\""           //, "-DSCANLOG=1" , "-DNOLOG=1"
-//                cppFlags "-std=gnu++2b","-DRELEASEID=1","-DRELEASE=1","-DNORAWSTREAM=1" , "-DRELEASEDIR=1", "-DNOLOG=1"         //, "-DSCANLOG=1" , "-DNOLOG=1"
+                cppFlags "$CPPSTD","-DRELEASEID=1","-DRELEASE=1","-DNORAWSTREAM=1" , "-DRELEASEDIR=1", "-DNOLOG=1", "-DAPPSUFFIX=\"quotes($applicationIdSuffix)\" "           //, "-DSCANLOG=1" , "-DNOLOG=1"
+//                cppFlags "$CPPSTD","-DRELEASEID=1","-DRELEASE=1","-DNORAWSTREAM=1" , "-DRELEASEDIR=1", "-DNOLOG=1"         //, "-DSCANLOG=1" , "-DNOLOG=1"
 
 
                 }
@@ -275,7 +278,7 @@ buildTypes {
 	    applicationIdSuffix ".dub"
         buildConfigField 'int', 'doLog', '1'
             externalNativeBuild.cmake {
-                cppFlags "-std=gnu++2b", "-DDEBUG=1", "-DSCANLOG=1", "-DAPPSUFFIX=\\\"$applicationIdSuffix\\\""
+                cppFlags "$CPPSTD", "-DDEBUG=1", "-DSCANLOG=1", "-DAPPSUFFIX=\"quotes($applicationIdSuffix)\""
 
 	    	}
             debuggable true
@@ -296,7 +299,7 @@ buildTypes {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro', 'proguard-rules.my', 'proguard-rules.log'
            // proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro', 'proguard-rules.my'
             externalNativeBuild.cmake {
-                cppFlags "-std=gnu++2b","-DDEBUG=1", "-DSCANLOG=1",  "-DAPPSUFFIX=\\\"$applicationIdSuffix\\\""
+                cppFlags "$CPPSTD","-DDEBUG=1", "-DSCANLOG=1",  "-DAPPSUFFIX=\"quotes($applicationIdSuffix)\""
 //               arguments " -DCMAKE_CXX_FLAGS=' -DCMAKE_VERBOSE_MAKEFILE=1 -DDEBUG=1 -DSCANLOG=1 -DRELEASEDIR=1'"
                 }
             }
@@ -316,7 +319,7 @@ buildTypes {
 	    shrinkResources false 
 
             externalNativeBuild.cmake {
-                cppFlags "-std=gnu++2b", "-DDEBUG=1", "-DSCANLOG=1", "-DAPPSUFFIX=\\\"$applicationIdSuffix\\\""
+                cppFlags "$CPPSTD", "-DDEBUG=1", "-DSCANLOG=1", "-DAPPSUFFIX=\"quotes($applicationIdSuffix)\""
 
             	}
             }
@@ -332,7 +335,7 @@ buildTypes {
 
             signingConfig signingConfigs.alg
             externalNativeBuild.cmake {
-                cppFlags "-std=gnu++2b", "-DDEBUG=1", "-DSCANLOG=1", "-DAPPSUFFIX=\\\"$applicationIdSuffix\\\"","-DNDK_DEBUG=1","-UNDEBUG"
+                cppFlags "$CPPSTD", "-DDEBUG=1", "-DSCANLOG=1", "-DAPPSUFFIX=\"quotes($applicationIdSuffix)\"","-DNDK_DEBUG=1","-UNDEBUG"
 
 
             }
@@ -348,10 +351,10 @@ buildTypes {
             buildConfigField 'int', 'isRelease', '1'
         buildConfigField 'int', 'isReleaseID', '0'
             externalNativeBuild.cmake {
-                cppFlags "-std=gnu++2b","-DRELEASEID=0","-DRELEASE=1","-DNORAWSTREAM=1" , "-DRELEASEDIR=0", "-DNOLOG=1" //, "-DSCANLOG=1" , "-DNOLOG=1"
+                cppFlags "$CPPSTD","-DRELEASEID=0","-DRELEASE=1","-DNORAWSTREAM=1" , "-DRELEASEDIR=0", "-DNOLOG=1" //, "-DSCANLOG=1" , "-DNOLOG=1"
 
-//         cppFlags "-std=gnu++2b","-DRELEASE=1", "-DRELEASEDIR=1","-DNORAWSTREAM=1" //, "-DNOLOG=1"
-//	         cppFlags "-std=gnu++2b","-DRELEASE=1", "-DRELEASEDIR=1","-DNORAWSTREAM=1", "-DNOLOG=1"
+//         cppFlags "$CPPSTD","-DRELEASE=1", "-DRELEASEDIR=1","-DNORAWSTREAM=1" //, "-DNOLOG=1"
+//	         cppFlags "$CPPSTD","-DRELEASE=1", "-DRELEASEDIR=1","-DNORAWSTREAM=1", "-DNOLOG=1"
 //                arguments " -DCMAKE_VERBOSE_MAKEFILE=1  -DCMAKE_CXX_FLAGS=' -DRELEASE=1 -DNORAWSTREAM=1 -DNOLOG=1'" 
 
                 }
@@ -367,8 +370,8 @@ buildTypes {
             buildConfigField 'int', 'isReleaseID', '1'
         buildConfigField 'int', 'doLog', '1'
             externalNativeBuild.cmake {
-                cppFlags "-std=gnu++2b","-DRELEASEID=1", "-DDEBUG=1", "-DSCANLOG=1", "-DRELEASEDIR=1"
-               // cppFlags "-std=gnu++2b", "-DDEBUG=1", "-DSCANLOG=1"
+                cppFlags "$CPPSTD","-DRELEASEID=1", "-DDEBUG=1", "-DSCANLOG=1", "-DRELEASEDIR=1"
+               // cppFlags "$CPPSTD", "-DDEBUG=1", "-DSCANLOG=1"
 	    	}
         }
         debug3 {
@@ -377,7 +380,7 @@ buildTypes {
             buildConfigField 'int', 'isReleaseID', '1'
         buildConfigField 'int', 'doLog', '1'
             externalNativeBuild.cmake {
-                cppFlags "-std=gnu++2b","-DRELEASEID=1","-DDEBUG=1", "-DSCANLOG=1", "-DRELEASEDIR=1","-DNDK_DEBUG=1","-UNDEBUG"
+                cppFlags "$CPPSTD","-DRELEASEID=1","-DDEBUG=1", "-DSCANLOG=1", "-DRELEASEDIR=1","-DNDK_DEBUG=1","-UNDEBUG"
 		}
 
             versionNameSuffix 'DEBUGRELEASE'
