@@ -20,12 +20,12 @@ if(task.contains("LibreOldNosi")&&!task.contains("Wear")) {
 
    }
 else {
-       ndkver = '27.1.12297006'
+       ndkver = '28.0.12433566'
       APPCOMPAT = '1.7.0'
       GMSWEAR = '18.2.0'
      GMSBASE = '18.5.0'
       MINSDK = 21
-   CPPSTD = "-std=gnu++23"
+   CPPSTD = "-std=gnu++26"
        }
 android {
  namespace "tk.glucodata"
@@ -69,9 +69,10 @@ android {
         minSdk        MINSDK
         targetSdk 34
         buildConfigField 'int', 'targetSDK', "$targetSdk"
+        buildConfigField 'int', 'minSDK', "$minSdk"
         compileSdk 33
         applicationId "tk.glucodata"
-	     versionName '8.1.7'
+	     versionName '8.2.0'
 //	multiDexEnabled true
 
         buildConfigField 'String', 'BUILD_TIME', 'new java.text.SimpleDateFormat("HH:mm:ss dd-MMM-yyyy").format(new java.util.Date(' + System.currentTimeMillis() + 'L))'
@@ -105,8 +106,8 @@ android {
             //	targetSdk 26
 	//******  Zet op rollout op 100% ******
             	dimension 'libreVersion'
-		versionCode                                             478                                                                                       //LIBRE2ONLY
-	//	versionName '8.1.7-no3'
+		versionCode                                              479                                                                                         //LIBRE2ONLY
+	//	versionName '8.2.0-no3'
 		versionNameSuffix '-no3'
             buildConfigField 'int', 'libreVersion', '2'
 		    externalNativeBuild.cmake {
@@ -119,11 +120,12 @@ android {
             // targetSdk 26
 	   minSdk 26
 
+        buildConfigField 'int', 'minSDK', "$minSdk"
        //ndkver = '27.0.11718014 rc1'
 //	   minSdk 23
             dimension 'libreVersion'
 		versionNameSuffix '-li3'
-		versionCode                                            478                                                                                       //LIBRE3
+		versionCode                                             479                                                                                         //LIBRE3
 	//******  Zet op rollout op 100% ******
 
            	buildConfigField 'int', 'libreVersion', '3'
@@ -139,7 +141,7 @@ android {
 		minSdkVersion 21
             	dimension 'SiBionics'
 		versionNameSuffix '-si'
-		versionCode                                       478                                                                                    
+		versionCode                                        479                                                                                      
 	        buildConfigField 'int', 'SiBionics', '1'
 	         externalNativeBuild.cmake {
 			cppFlags "   -DSIBIONICS=1 "
@@ -147,7 +149,7 @@ android {
 		}
         nosi {
             	dimension 'SiBionics'
-		versionCode                                             478                                                                                    
+		versionCode                                              479                                                                                      
 		versionNameSuffix '-nosi'
 	        buildConfigField 'int', 'SiBionics', '0'
 	         externalNativeBuild.cmake {
@@ -161,9 +163,10 @@ android {
             // targetSdk 30
             dimension 'wearos'
 		minSdk 26
-		versionCode                                            478                                                                                       //WATCH
+        buildConfigField 'int', 'minSDK', "$minSdk"
+		versionCode                                             479                                                                                         //WATCH
 	//******  Zet op rollout op 100% ******
-		//versionName '8.1.7-wear'
+		//versionName '8.2.0-wear'
 		versionNameSuffix '-wear'
 		signingConfig signingConfigs.alg
 
@@ -184,8 +187,8 @@ android {
 
 //        minSdk 19
             dimension 'wearos'
-		versionCode                                            478                                                                                       //WATCH
-		//versionName '8.1.7-small'
+		versionCode                                             479                                                                                         //WATCH
+		//versionName '8.2.0-small'
 		versionNameSuffix '-small'
 		signingConfig signingConfigs.alg
 
@@ -511,13 +514,13 @@ dependencies {
 
     compileOnly 'com.google.android.wearable:wearable:2.9.0'
     implementation "com.google.android.gms:play-services-wearable:$GMSWEAR"
-
+  // implementation 'com.google.android.gms:play-services-wearable:10.2.0' Needed for China? https://developer.android.com/training/wearables/creating-app-china#data-layer
 
 
     wearImplementation 'androidx.activity:activity-ktx:1.9.2'
     wearImplementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     wearImplementation 'com.google.android.material:material:1.12.0'
-    wearImplementation 'androidx.databinding:viewbinding:8.6.1'
+    wearImplementation 'androidx.databinding:viewbinding:8.7.0'
     wearImplementation 'androidx.core:core-ktx:1.13.1'
 
 
@@ -533,6 +536,8 @@ dependencies {
     wearImplementation 'androidx.wear.watchface:watchface-client:1.2.1'
     wearImplementation 'androidx.wear.watchface:watchface:1.2.1'
     wearImplementation 'androidx.wear.watchface:watchface-complications-rendering:1.2.1'
+    wearImplementation 'androidx.wear.watchface:watchface-complications-data-source-ktx:1.2.1'
+
 configurations {
 mobileLibre3SiImplementation {}
 mobileLibreOldSiImplementation {}

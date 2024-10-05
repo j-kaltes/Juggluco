@@ -142,7 +142,7 @@ float headheight;
 jint width=-1,height=-1;
 
 float dleft=0,dtop=0,dbottom{0},dright=0,dheight,dwidth;
-float smallsize=300,menusize=smallsize,headsize=900,midsize, mediumfont;
+float smallsize=300,menusize=smallsize,headsize=900,midsize, mediumfont,timefontsize=smallsize;
 float density;
 float textheight,menutextheight;
 float smallfontlineheight;
@@ -413,6 +413,10 @@ static float dayEndStrokeWidth;
 static float nowLineStrokeWidth;
 static float pointRadius;
 float foundPointRadius,arrowstrokewidth;
+void settimefont() {
+//   timefontsize=smallsize*(hour24()?1:0.9);
+   timefontsize=smallsize;
+   }
 void setfontsize(float small,float menu,float density,float headin) {
 float head=headin
 #ifdef WEAROS
@@ -426,6 +430,8 @@ LOGGER("density=%.1f, head=%.1f, small=%.1f\n",(double)density,(double)head,(dou
 ::headsize=head;
 ::midsize=head/3;
 ::mediumfont= headsize/6;
+
+ settimefont() ;
 historyStrokeWidth=3*density;
 numcircleStrokeWidth=5/2*density;
 lowGlucoseStrokeWidth=2.5*density;
@@ -434,6 +440,7 @@ hitStrokeWidth=10*density;
 TrendStrokeWidth=15/2*density;
 glucoseLinesStrokeWidth=1.5*density;
 timeLinesStrokeWidth=glucoseLinesStrokeWidth;
+//timeLinesStrokeWidth=glucoseLinesStrokeWidth*(hour24()?1:0.7);
 dayEndStrokeWidth=2*density;
 nowLineStrokeWidth=density*2;
 pointRadius=4*density;
@@ -471,20 +478,22 @@ inline int mktmmin(const struct tm *tmptr) {
 		return tmptr->tm_min;
 	return tmptr->tm_min+1;
 	} */
-bool hourmin(const time_t tim,char buf[6]) {
+
+int hourmin(const time_t tim,char buf[8]) {
 	struct tm tmbuf;
 	 struct tm *stm=localtime_r(&tim,&tmbuf);
-	 snprintf(buf,6,"%02d:%02d",stm->tm_hour,mktmmin(stm));
-	 if(stm->tm_hour||stm->tm_min)
-	 	return false;
-	return true;
+	 //snprintf(buf,6,"%02d:%02d",stm->tm_hour,mktmmin(stm));
+   return  mktime(stm->tm_hour,mktmmin(stm),buf);
 	}
 int largedaystr(const time_t tim,char *buf) {
         LOGAR("largedaystr");
 	struct tm stmbuf;
 	localtime_r(&tim,&stmbuf);
- 	return sprintf(buf,"%02d:%02d %s %02d %s %d",stmbuf.tm_hour,mktmmin(&stmbuf),usedtext->daylabel[stmbuf.tm_wday],stmbuf.tm_mday,usedtext->monthlabel[stmbuf.tm_mon],1900+stmbuf.tm_year);
+   int len=mktime(stmbuf.tm_hour,mktmmin(&stmbuf),buf);
+ 	len+=sprintf(buf+len," %s %02d %s %d",usedtext->daylabel[stmbuf.tm_wday],stmbuf.tm_mday,usedtext->monthlabel[stmbuf.tm_mon],1900+stmbuf.tm_year);
+   return len;
 	}
+
 //		strftime(tbuf, maxbuf,"%H:%M %a %e %b %Y", &tmbuf);
 
 //static constexpr const int glucosetype=0xffffffff;//std::numeric_limits<int>::max();
@@ -731,6 +740,7 @@ float getfreey() {
 	}
 
 
+
 static bool glucosepointinfo(time_t tim,uint32_t value,   float posx, float posy) {
 	if((!selshown&&nearby(posx-tapx,posy-tapy))) {
 		constexpr int maxbuf=60;
@@ -738,7 +748,8 @@ static bool glucosepointinfo(time_t tim,uint32_t value,   float posx, float posy
 		struct tm tmbuf;
 		 struct tm *tms=localtime_r(&tim,&tmbuf);
 
-		int len=snprintf(buf,maxbuf,"%02d:%02d", tms->tm_hour,mktmmin(tms));
+//		int len=snprintf(buf,maxbuf,"%02d:%02d", tms->tm_hour,mktmmin(tms));
+      int len=mktime(tms->tm_hour,mktmmin(tms),buf);
 		nvgFontSize(genVG, smallsize);
 		nvgTextAlign(genVG,NVG_ALIGN_CENTER|NVG_ALIGN_MIDDLE);
 		float cor=((posy-dtop)<(dheight/2))?smallsize:-smallsize;
@@ -1185,7 +1196,7 @@ void showok(bool good,bool up) {
 	nvgTextAlign(genVG,NVG_ALIGN_RIGHT|(up?NVG_ALIGN_TOP:NVG_ALIGN_BOTTOM));
 	const float fromtop= mediumfont*2.0f;
 	float ypos=dtop+(up?fromtop:(dheight-fromtop));
-	float xpos=dwidth+dleft-mediumfont*3.0f;
+	float xpos=dwidth-statusbarright+dleft-mediumfont*3.0f;
 
 	const char *ok=good?"OK":"ESC";
 	const int oklen=good?2:3;
@@ -1260,13 +1271,16 @@ static void	showscanner(NVGcontext* genVG,const SensorGlucoseData *hist,int scan
 	const ScanData &last=*hist->getscan(scanident);
 	const bool isold=(nu-last.t)>=maxbluetoothage;
 	startstep(isold?getoldcolor():*getwhite());
-	float x= dwidth+dleft;
+   float right=dleft+dwidth-statusbarright;
+	float x=right; 
 	constexpr int maxbuf=50;
 	char buf[maxbuf*2];
 	time_t tim=last.t;
 	struct tm tmbuf;
 	 struct tm *tms=localtime_r(&tim,&tmbuf);
-	int len=snprintf(buf,maxbuf,"%02d:%02d ", tms->tm_hour,mktmmin(tms));
+//	int len=snprintf(buf,maxbuf,"%02d:%02d ", tms->tm_hour,mktmmin(tms));
+   int len=mktime(tms->tm_hour,mktmmin(tms),buf);
+   buf[len++]=' ';
 	char *buf1=buf+len;
 	--len;
 	const int32_t gluval=last.g;
@@ -1320,16 +1334,16 @@ static void	showscanner(NVGcontext* genVG,const SensorGlucoseData *hist,int scan
 			float datey=yunder+(showabove?-1:1)*sensorbounds.height;
 			nvgTextAlign(genVG,NVG_ALIGN_RIGHT|NVG_ALIGN_MIDDLE);
 			datelen=snprintf(datebuf,maxdatebuf,"%s %d %s %04d",usedtext->speakdaylabel[tmbuf.tm_wday],tmbuf.tm_mday,usedtext->monthlabel[tmbuf.tm_mon],1900+tmbuf.tm_year);
-			nvgText(genVG,dleft+dwidth,datey, datebuf, datebuf+datelen);
+			nvgText(genVG,right,datey, datebuf, datebuf+datelen);
 			}
 		nvgStrokeWidth(genVG, TrendStrokeWidth);
 		nvgStrokeColor(genVG, *getwhite());
 		nvgBeginPath(genVG);
 	 	nvgMoveTo(genVG,dleft ,dtop) ;
-		nvgLineTo( genVG, dwidth,dheight);
+		nvgLineTo( genVG, right,dheight);
 		nvgStroke(genVG);
 		nvgBeginPath(genVG);
-	 	nvgMoveTo(genVG,dwidth ,dtop) ;
+	 	nvgMoveTo(genVG,right ,dtop) ;
 		nvgLineTo( genVG, dleft,dheight);
 		nvgStroke(genVG);
 		}
@@ -1466,7 +1480,7 @@ struct displaytime {
 template <class LT>
 const displaytime getdisplaytime(const uint32_t nu,const uint32_t starttime,const uint32_t endtime, const LT &transx) {
 	const float xscale=transx(1)-transx(0);
-	const float mindisunit=smallsize*3;
+	const float mindisunit=smallsize*(hour24()?3:4.5);
 	const  float minst=abs(mindisunit/xscale);
 	const uint32_t tstep=(minst<=60*15)?60*15:((minst<=60*30)?60*30:ceilf((minst/(60.0*60)))*(60*60));
 	const uint32_t first=uint32_t(ceilf(starttime/(double)tstep))*tstep;	
@@ -1485,6 +1499,7 @@ void timelines(const displaytime *disp, const LT &transx ,uint32_t nu) {
 	const uint32_t numlast= (disp->last>nu)?(disp->last-tstep):disp->last;
 	#endif
 	nvgFillColor(genVG, *getblack());
+	nvgFontSize(genVG, timefontsize);
 	nvgTextAlign(genVG,NVG_ALIGN_CENTER|NVG_ALIGN_TOP);
 	const float timehight=
 	#ifdef WEAROS
@@ -1495,7 +1510,7 @@ void timelines(const displaytime *disp, const LT &transx ,uint32_t nu) {
 	;
 	for(auto tim=first;tim<=last;tim+=tstep) {
 		float dtim=transx(tim);
-		char buf[6];
+		char buf[8];
 		struct tm tmbuf;
 		time_t tmptime=tim;
 		 struct tm *stm=localtime_r(&tmptime,&tmbuf);
@@ -1518,15 +1533,15 @@ void timelines(const displaytime *disp, const LT &transx ,uint32_t nu) {
 		 if(tim<=numlast)  
 	#endif
 		 {
-		 	snprintf(buf,6,"%02d:%02d",stm->tm_hour,mktmmin(stm));
-			nvgText(genVG, dtim,timehight+statusbarheight, buf, buf+5);
+        int len=mktime(stm->tm_hour,mktmmin(stm),buf);
+			nvgText(genVG, dtim,timehight+statusbarheight, buf, buf+len);
 			}
 		nvgBeginPath(genVG);
-	//	LOGGER("timelines tim=%ud dtim=%f\n",tim,dtim);
 		nvgMoveTo(genVG,dtim ,0) ;
 		nvgLineTo( genVG, dtim,dheight);
 		nvgStroke(genVG);
 		}
+	nvgFontSize(genVG, smallsize);
 	}
 
 template <class LT> void epochlines(uint32_t first,uint32_t last, const LT &transx) {
@@ -1696,8 +1711,14 @@ const				float valuex=getx;
 		shownglucose[index].glucosetrend=poll->tr;
 
 			float valuex=getx-(convglucose>=10.0f?density*20.0f:0.0f);
-			int gllen=snprintf(head,maxhead,gformat,convglucose);
-			nvgText(genVG,valuex ,gety, head, head+gllen);
+         char *value=head+1;
+			int gllen=snprintf(value,maxhead-1,gformat,convglucose);
+         if(gllen<3) {
+            value=head;
+            *value=' ';
+            ++gllen;
+            }
+			nvgText(genVG,valuex ,gety, value, value+gllen);
 #ifdef TESTVALUE
 const float trends[]={-3,0};
 			const float rate=trends[index];
@@ -3365,8 +3386,10 @@ static int largepausedaystr(const time_t tim,char *buf) {
         LOGAR("largedaystr");
 	struct tm stmbuf;
 	localtime_r(&tim,&stmbuf);
- //	return sprintf(buf,"%02d:%02d\n%s %02d %s %d",stmbuf.tm_hour,mktmmin(&stmbuf),usedtext->speakdaylabel[stmbuf.tm_wday],stmbuf.tm_mday,usedtext->monthlabel[stmbuf.tm_mon],1900+stmbuf.tm_year);
- 	return sprintf(buf,"%s %02d %s %d\n%02d:%02d",usedtext->speakdaylabel[stmbuf.tm_wday],stmbuf.tm_mday,usedtext->monthlabel[stmbuf.tm_mon],1900+stmbuf.tm_year,stmbuf.tm_hour,mktmmin(&stmbuf));
+ 	//return sprintf(buf,"%s %02d %s %d\n%02d:%02d",usedtext->speakdaylabel[stmbuf.tm_wday],stmbuf.tm_mday,usedtext->monthlabel[stmbuf.tm_mon],1900+stmbuf.tm_year,stmbuf.tm_hour,mktmmin(&stmbuf));
+ 	int len=sprintf(buf,"%s %02d %s %d\n",usedtext->speakdaylabel[stmbuf.tm_wday],stmbuf.tm_mday,usedtext->monthlabel[stmbuf.tm_mon],1900+stmbuf.tm_year);
+   len+=mktime(stmbuf.tm_hour,mktmmin(&stmbuf),buf+len);
+   return len;
 	}
 void speaknum(const Num *num) {
 	char buf[256];
@@ -3859,14 +3882,14 @@ void nextdays(int nr) {
 //static char hourminstr[hourminstrlen]="00:00        ";
 //static char hourminstr[hourminstrlen]="00:00       ";
 #ifdef WEAROS
-#define hourtext "00:00           "
+#define hourtext "00:00                 "
 #else
-#define hourtext "00:00             "
+#define hourtext "00:00                 "
 #endif
 //constexpr const int hourtextlen=sizeof(hourtext)-1;
 char hourminstr[hourminstrlen]=hourtext;
 void setnowmenu(time_t nu) {
-	hourmin(nu,hourminstr);
+	int timelen=hourmin(nu,hourminstr);
 	const int ulen=usedsensors.size();
 	if(ulen>0) {
 		for(int i=0;i<ulen;) {
@@ -3889,6 +3912,7 @@ constexpr const char arrows[][sizeof("→")]{"",
 "↗",
 "↑"}; 
 
+char *aftertime=hourminstr+timelen;
 #if __NDK_MAJOR__ >= 26
 
 constexpr const int trendoff=
@@ -3898,41 +3922,27 @@ constexpr const int trendoff=
 1
 #endif
 ;
-	char *ptr=hourminstr+
-
+constexpr const int between=
 #ifdef WEAROS
-	6;
+	1;
 #else
-	7;
+	2;
 #endif
-	for(auto iter=hourminstr+5;iter<ptr;++iter)
-		*iter=' ';
-
+	char *ptr=aftertime+between;
+   memset(aftertime,' ',between);
 	const int trendlen=sizeof(arrows[trend])-1;
 	memcpy(ptr,arrows[trend],trendlen);
 	static std::to_chars_result res={.ptr=nullptr};
 	char *oldres=res.ptr;
 	auto value=gconvert(nonconvert*10);
+   if constexpr (trendoff) memset(ptr+trendlen,' ',trendoff);
 	res=std::to_chars(ptr+trendlen+trendoff,hourminstr+hourminstrlen,value,std::chars_format::fixed,gludecimal);
-	/*
-	if(gludecimal)  {
-		auto round=roundf(value*10.0f)/10.0f;
-		res=std::to_chars(ptr+trendlen+trendoff,hourminstr+hourminstrlen,round);
-		 if(res.ptr[-2]!='.') {
-			memcpy(res.ptr,".0",2);
-			res.ptr+=2;
-			}
-		}
-	else {
-		res=std::to_chars(ptr+trendlen+trendoff,hourminstr+hourminstrlen,value);
-		}
-*/
 	for(auto it=res.ptr;it<oldres;++it)
 		*it=' ';
 					LOGGER("new hourminstr=%s\n", hourminstr);
 #else
 	static		int oldend=0;
-	auto aftertime=hourminstr+5;
+//	auto aftertime=hourminstr+;
 #ifdef WEAROS
 				int endpos=snprintf(aftertime,hourminstrlen-5," %s%.*f",arrows[trend],gludecimal,gconvert(nonconvert*10));
 #else
@@ -3952,7 +3962,7 @@ constexpr const int trendoff=
 				}
 			}
 		}
-	memset(hourminstr+5,' ',hourminstrlen-6); 
+	memset(hourminstr+timelen,' ',hourminstrlen-timelen); 
 	}
 //int notify=false;
 

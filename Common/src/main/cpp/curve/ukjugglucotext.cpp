@@ -115,7 +115,7 @@ jugglucotext uktext {
         "Налашт.",
 	"Стоп тривоги" },
 .menustr2= {"Дата",hourminstr,
-"День назад         ",uktext.amount},
+"День назад                ",uktext.amount},
 #endif
 
 	.scanerrors={

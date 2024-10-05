@@ -50,7 +50,7 @@ void makenightswitch() {
             }
        extern         void resensordata(int sensorindex);
         resensordata(0);
-     settings->data()->initVersion=28;
+//     settings->data()->initVersion=28;
         }
 	}
 

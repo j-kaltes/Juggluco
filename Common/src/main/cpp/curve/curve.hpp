@@ -198,10 +198,36 @@ inline const NVGcolor *getthreehour() {
 #include "jugglucotext.hpp"
 extern NVGcontext* genVG;
 
+inline int mk12time(int hour,int min,char *buf) {
+      int hour12 = hour % 12;
+      if(!hour12) hour12 = 12;
+      int len=sprintf(buf,"%d:%02d",hour12,min);
+      if(hour>=12) {
+         memcpy(buf+len,"pm",3);
+         }
+       else
+         memcpy(buf+len,"am",3);
+       return len+2;
+       }
+
+inline int mk24time(int hour,int min,char *buf) {
+	return sprintf(buf,"%02d:%02d", hour,min);
+      }
+inline bool hour24() {
+   extern bool hour24clock;
+   return hour24clock;
+   }
+inline int mktime(int hour,int min, char *buf) {
+   if(hour24()) 
+      return  mk24time(hour,min,buf);
+   return  mk12time(hour,min,buf);
+   }
 inline int datestr(const time_t tim,char *buf) {
 	struct tm tmbuf;
 	 struct tm *stm=localtime_r(&tim,&tmbuf);
-	return sprintf(buf,"%s %02d-%02d-%d %02d:%02d",usedtext->daylabel[stm->tm_wday],stm->tm_mday,stm->tm_mon+1,1900+stm->tm_year,stm->tm_hour,stm->tm_min);
+	int len=sprintf(buf,"%s %02d-%02d-%d ",usedtext->daylabel[stm->tm_wday],stm->tm_mday,stm->tm_mon+1,1900+stm->tm_year);
+    len+=mktime(stm->tm_hour,stm->tm_min,buf+len);
+   return len;
 	}
 
 

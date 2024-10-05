@@ -167,8 +167,8 @@
   <string name="wronglibrary">Bibliothek funktioniert nicht richtig, versuche es mit einer anderen</string>
   <string name="installedlibrary">Installierte Bibliothek</string>
   <string name="cantextract">Kann %s nicht extrahieren, versuche es mit einer anderen apk</string>
-  <string name="connectwithsensor">Zur Verbindung mit dem Sensor</string>
-  <string name="exchangedata">Um Daten auszutauschen</string>
+  <string name="connectwithsensor">Aktiv für Sensorverbindung</string>
+  <string name="exchangedata">Aktiv für Datenverbindung</string>
   <string name="nonewvalue">"Kein neuer Wert seit "</string>
   <string name="lowglucose">" Niedriger Glukosewert!"</string>
   <string name="highglucose">" Hoher Glukosewert!"</string>
@@ -328,4 +328,13 @@
  <string name="floatjuggluco">Über</string>
  <string name="threshold">Schwelle</string>
  <string name="untouchablequestion">Schwebende Glukose untastbar machen?</string>
+
+<string name="hour12">12h</string>
+<string name="complications">Komplikationen</string>
+<string name="colors_style_setting_description">Zifferblattfarbe</string>
+<string name="glucosenumbercomplicationlabel">Glukosewert</string>
+<string name="glucosearrowcomplicationlabel">Glukosepfeil</string>
+<string name="glucosearrowvaluecomplicationlabel">Wert + Pfeil</string>
+<string name="text">Text</string>
+<string name="arrow">Pfeil</string>
 </resources>

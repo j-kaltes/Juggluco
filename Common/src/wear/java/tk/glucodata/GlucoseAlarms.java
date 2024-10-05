@@ -23,6 +23,7 @@ package tk.glucodata;
 
 import android.app.Application;
 
+import static tk.glucodata.Applic.isWearable;
 import static tk.glucodata.Natives.hasalarmloss;
 
 public class GlucoseAlarms extends SuperGlucoseAlarms {
@@ -58,6 +59,7 @@ public	void handlealarm() {
 		if(view!=null) {
 			view.postInvalidate();
 			}
+		 tk.glucodata.glucosecomplication.GlucoseValue.updateall();
 
 		long wastime = MyGattCallback.oldtime - showtime;
 

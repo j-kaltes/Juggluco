@@ -89,12 +89,12 @@ jugglucotext chiText {
     .menustr0 = {
         "镜像",
         "传感器",
-        "黑暗模式",
+        "黑暗模式       ",
         "设置",
         "停止警报" },
     .menustr2 = {"日期  ",
         hourminstr,
-        "向后一天                ",
+        "向后一天                       ",
         chiText.amount},
 #endif
 

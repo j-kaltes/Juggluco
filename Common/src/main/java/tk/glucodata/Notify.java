@@ -84,7 +84,7 @@ static void init(Context cont) {
 	}
 static String glucoseformat=null;
 static String pureglucoseformat=null;
-static String unitlabel=null;
+static public String unitlabel="mg/dL";
 //public static int unit=0;
 static void mkunitstr(Context cont,int unit) {
 	Applic.unit=unit;	
@@ -152,8 +152,8 @@ static public Ringtone mkrings(String uristr,int kind) {
 
 
 final  static boolean whiteonblack=false;
-@ColorInt  static int foregroundcolor=BLACK;
-static float glucosesize;
+@ColorInt  public static int foregroundcolor=BLACK;
+static public float glucosesize;
 static RemoteGlucose arrowNotify;
 
 	static void mkpaint() {
@@ -213,7 +213,7 @@ static RemoteGlucose arrowNotify;
 
 	//	    channel.setShowBadge(false);
 	void lowglucose(notGlucose strgl,float gl,float rate,boolean alarm) {
-		arrowglucosealarm(0,GlucoseDraw.getgludraw(gl), format(usedlocale,glucoseformat, gl)+Applic.app.getString(isWearable?R.string.lowglucoseshort:R.string.lowglucose), strgl,GLUCOSEALARM,alarm);
+		arrowglucosealarm(0,gl, format(usedlocale,glucoseformat, gl)+Applic.app.getString(isWearable?R.string.lowglucoseshort:R.string.lowglucose), strgl,GLUCOSEALARM,alarm);
 		if(!isWearable) {
 			if(alarm)  {
 				tk.glucodata.WearInt.alarm("LOW "+strgl.value);
@@ -221,7 +221,7 @@ static RemoteGlucose arrowNotify;
 			}
 	}
 	void highglucose(notGlucose strgl,float gl,float rate,boolean alarm) {
-		arrowglucosealarm(1,GlucoseDraw.getgludraw(gl), format(usedlocale,glucoseformat, gl)+Applic.app.getString(isWearable?R.string.highglucoseshort:R.string.highglucose), strgl,GLUCOSEALARM,alarm);
+		arrowglucosealarm(1,gl,format(usedlocale,glucoseformat, gl)+Applic.app.getString(isWearable?R.string.highglucoseshort:R.string.highglucose), strgl,GLUCOSEALARM,alarm);
 		if(!isWearable) {
 			if(alarm)  {
 				tk.glucodata.WearInt.alarm("HIGH "+strgl.value);
@@ -249,9 +249,8 @@ static public String glucosestr(float gl) {
 
 
 void showglucose(notGlucose strgl,float gl) {
-		var draw= GlucoseDraw.getgludraw(gl);
 		var message= format(usedlocale,glucoseformat,gl);
-		arrowglucosenotification(2,draw, message,strgl,GLUCOSENOTIFICATION ,true);
+		arrowglucosenotification(2,gl, message,strgl,GLUCOSENOTIFICATION ,true);
 		}
       /*
 void overwriteglucose() {
@@ -270,16 +269,15 @@ void overwriteglucose() {
 			act.cancelglucosedialog();
 		Log.i(LOG_ID,"normalglucose waiting="+waiting);
 		if(waiting)
-			arrowglucosealarm(2,GlucoseDraw.getgludraw(gl), format(usedlocale,glucoseformat, gl), strgl,GLUCOSENOTIFICATION ,true);
+			arrowglucosealarm(2,gl, format(usedlocale,glucoseformat, gl), strgl,GLUCOSENOTIFICATION ,true);
 
 		else if(!isWearable){
 			Log.i(LOG_ID,"arrowglucosenotification  alertwatch="+alertwatch+" showalways="+showalways);
 			if(showalways||alertwatch) {
-				var draw= GlucoseDraw.getgludraw(gl);
 				var message= format(usedlocale,glucoseformat,gl);
 				if(alertwatch)
-					makeseparatenotification(draw,message, strgl,GLUCOSENOTIFICATION);  
-				arrowglucosenotification(2,draw, message,strgl,GLUCOSENOTIFICATION ,!alertwatch);
+					makeseparatenotification(gl,message, strgl,GLUCOSENOTIFICATION);  
+				arrowglucosenotification(2,gl, message,strgl,GLUCOSENOTIFICATION ,!alertwatch);
 				}
 			else {
 				if(hasvalue) {
@@ -483,29 +481,33 @@ static	void stoplossalarm(){
 		}
 		placelargenotification(draw,message,type,!alarm);
 	}
-private int wasdraw=-1;
+//private int wasdraw=-1;
+private float wasvalue=0.0f;
 private String wasmessage=null,wastype;
 void overwriteglucose(int kind) {
-   if(wasdraw==-1)
+//   if(wasdraw==-1) return;
+   if(wasvalue<0.1f)
       return;
 	var strgl=SuperGattCallback.previousglucose;
 	if(strgl==null)
 		return;
-   arrowglucosenotification(kind,wasdraw,wasmessage,strgl,wastype,true);
-   wasdraw=-1;
+   arrowglucosenotification(kind,wasvalue,wasmessage,strgl,wastype,true);
+   wasvalue=0.0f;
    }
-	private void arrowsoundalarm(int kind,int draw,String message,notGlucose sglucose,String type,boolean alarm) {
+	private void arrowsoundalarm(int kind,float glvalue,String message,notGlucose sglucose,String type,boolean alarm) {
 		if(alarm) {
-         wasdraw=draw;wasmessage=message;wastype=type;
-			makeseparatenotification(draw,message, sglucose,type);
+        // wasdraw=draw;
+        wasvalue=glvalue;
+         wasmessage=message;wastype=type;
+			makeseparatenotification(glvalue,message, sglucose,type);
 			Log.d(LOG_ID,"arrowsoundalarm "+kind);
 			mksound(kind);
 		}
-		arrowplacelargenotification(kind,draw,message,sglucose,type,!alarm);
+		arrowplacelargenotification(kind,glvalue,message,sglucose,type,!alarm);
 	}
 
 
-	private void glucosealarm(int kind,int draw,String message,String type,boolean alarm) {
+	private void lossofsignalalarm(int kind,int draw,String message,String type,boolean alarm) {
 		Log.i(LOG_ID,"glucose alarm kind="+kind+" "+message+" alarm="+alarm);
 		if(alarm) {
 			if(kind!=2)
@@ -522,11 +524,11 @@ void overwriteglucose(int kind) {
 				MainActivity.showmessage=message;
 			}
 		if(!alarm&&alertwatch)
-			glucosenotification(draw,message,GLUCOSENOTIFICATION ,false);
+			lossofsensornotification(draw,message,GLUCOSENOTIFICATION ,false);
 		else
 			soundalarm(kind,draw,message,type,alarm);
 	}
-	private void arrowglucosealarm(int kind,int draw,String message,notGlucose strglucose,String type,boolean alarm) {
+	private void arrowglucosealarm(int kind,float glvalue,String message,notGlucose strglucose,String type,boolean alarm) {
 		Log.i(LOG_ID,"arrowglucosealarm kind="+kind+" "+ message+" alarm="+alarm);
 		if(alarm) {
 			if(kind!=2)
@@ -545,10 +547,10 @@ void overwriteglucose(int kind) {
 			}
 		if(!alarm&&alertwatch) {
 			Log.i(LOG_ID,"arrowglucosealarm alertwatch="+alertwatch);
-			arrowglucosenotification(kind,draw,message,strglucose,GLUCOSENOTIFICATION ,false);
+			arrowglucosenotification(kind,glvalue,message,strglucose,GLUCOSENOTIFICATION ,false);
 		}
 		else
-			arrowsoundalarm(kind,draw,message,strglucose,type,alarm);
+			arrowsoundalarm(kind,glvalue,message,strglucose,type,alarm);
 	}
 
 	private void canceller() {
@@ -571,7 +573,20 @@ void overwriteglucose(int kind) {
 	static final String stopalarm= "StopAlarm";
 	final static int penmutable= android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M? PendingIntent.FLAG_IMMUTABLE:0;
 
-private void  makeseparatenotification(int draw,String message,notGlucose glucose,String type) {
+//StatusIcon icons=isWearable?null:new StatusIcon();
+
+private void setIcon( Notification.Builder GluNotBuilder,float glvalue) {
+ /*        if(!isWearable&&tk.glucodata.BuildConfig.minSDK>=23) {
+               final var glstr=format(Applic.usedlocale,Notify.pureglucoseformat, glvalue);
+               final var icon=icons.getIcon(glstr); //Become too small. 
+			      GluNotBuilder.setSmallIcon(icon);
+            }
+          else*/  {
+		         var draw= GlucoseDraw.getgludraw(glvalue);
+			      GluNotBuilder.setSmallIcon(draw);
+               }
+              }
+private void  makeseparatenotification(float glvalue,String message,notGlucose glucose,String type) {
 	if(!isWearable) {
 		if(alertseparate) {
 			notificationManager.cancel(glucosealarmid);
@@ -579,10 +594,9 @@ private void  makeseparatenotification(int draw,String message,notGlucose glucos
 			var GluNotBuilder=mkbuilderintent(type,intent);
 			GluNotBuilder.setDeleteIntent(DeleteReceiver.getDeleteIntent());
 			Log.i(LOG_ID,"makeseparatenotification "+glucose.value);
-			
-			GluNotBuilder.setSmallIcon(draw).setContentTitle(message);
-			
-			GluNotBuilder.setShowWhen(true);
+
+		   setIcon(GluNotBuilder,glvalue);
+			GluNotBuilder.setShowWhen(true).setContentTitle(message);
 			if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 //				final int timeout= Build.VERSION.SDK_INT >= 30? 60*1500:60*3000;  
 				final int timeout= 800*60;//Build.VERSION.SDK_INT >= 30? 60*1500:60*3000;  
@@ -603,7 +617,7 @@ private void  makeseparatenotification(int draw,String message,notGlucose glucos
 		}
     }
 static public boolean alertseparate=false;
-	private Notification  makearrownotification(int kind,int draw,String message,notGlucose glucose,String type,boolean once) {
+	private Notification  makearrownotification(int kind,float glvalue,String message,notGlucose glucose,String type,boolean once) {
 
 		var intent =mkpending();
 		var GluNotBuilder=mkbuilderintent(type,intent);
@@ -611,8 +625,12 @@ static public boolean alertseparate=false;
 			GluNotBuilder.setDeleteIntent(DeleteReceiver.getDeleteIntent());
 			}
 		Log.i(LOG_ID,"makearrownotification setOnlyAlertOnce("+once+") "+glucose.value);
-		GluNotBuilder.setSmallIcon(draw).setOnlyAlertOnce(once); 
-		GluNotBuilder.setContentTitle(message);
+
+		//var draw= GlucoseDraw.getgludraw(glvalue);
+
+		  setIcon(GluNotBuilder,glvalue);
+//		GluNotBuilder.setSmallIcon(draw). 
+		GluNotBuilder.setContentTitle(message).setOnlyAlertOnce(once);
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 			GluNotBuilder.setVisibility(VISIBILITY_PUBLIC);
@@ -662,7 +680,8 @@ static public boolean alertseparate=false;
     }
 @SuppressWarnings({"deprecation"})
 
-private PendingIntent mkpending() {
+static public PendingIntent mkpending() {
+   Log.i(LOG_ID,"mkpending");
 	Intent notifyIntent = new Intent(Applic.app,MainActivity.class);
 	notifyIntent.putExtra(fromnotification,true);
 	notifyIntent.addCategory(Intent. CATEGORY_LAUNCHER ) ;
@@ -761,6 +780,7 @@ private Notification  makenotification(int draw,String message,String type,boole
 		}
 		}
 	Log.i(LOG_ID,"makenotification "+message);
+
         GluNotBuilder.setSmallIcon(draw).setOnlyAlertOnce(once).setContentTitle(message).setShowWhen(true);
 
 	if(!isWearable) {
@@ -835,6 +855,7 @@ static public void foregroundnot(Service service) {
 
     }
 static int testtimes=1;
+/*
 static void testnot() {
 	float gl=11.4f;
 	var timmsec= System.currentTimeMillis()-1000;
@@ -843,28 +864,28 @@ static void testnot() {
 	boolean waiting=false;
 	var sglucose=new notGlucose(timmsec, format(Applic.usedlocale,Notify.pureglucoseformat, gl) , rate);
 //	Notify.onenot.normalglucose(sglucose,gl, rate,waiting);
-	var dr=GlucoseDraw.getgludraw(gl);
-//	Notify.onenot.makearrownotification(2,dr,"message",sglucose,GLUCOSENOTIFICATION ,false);
+//	var dr=GlucoseDraw.getgludraw(gl);
+	Notify.onenot.makearrownotification(2,gl,"message",sglucose,GLUCOSENOTIFICATION ,false);
  }
-/*
+
 static void test2() {
 	float gl=7.8f;
 	float rate=0.0f;
 	SuperGattCallback.dowithglucose("Serialnumber", (int)(gl*18f), gl,rate, 0,System.currentTimeMillis()) ;
 	} */
 
- public void  arrowplacelargenotification(int kind,int draw,String message,notGlucose glucose,String type,boolean once) {
+ public void  arrowplacelargenotification(int kind,float glvalue,String message,notGlucose glucose,String type,boolean once) {
         hasvalue=true;
-	fornotify(makearrownotification(kind,draw,message,glucose,type,once));
+	fornotify(makearrownotification(kind,glvalue,message,glucose,type,once));
 
     }
- public void  glucosenotification(int draw,String message,String type,boolean once) {
+ public void  lossofsensornotification(int draw,String message,String type,boolean once) {
  	Log.i(LOG_ID,"notify "+message);
 	fornotify(makenotification(draw,message,type,once));
 	}
- public void  arrowglucosenotification(int kind,int draw,String message,notGlucose glucose,String type,boolean once) {
+ public void  arrowglucosenotification(int kind,float glvalue,String message,notGlucose glucose,String type,boolean once) {
  	Log.i(LOG_ID,"notify "+message);
-	fornotify(makearrownotification( kind,draw, message, glucose, type, once)) ;
+	fornotify(makearrownotification( kind,glvalue, message, glucose, type, once)) ;
 	}
 
 final private 	int numalarmid=81432;
@@ -902,7 +923,7 @@ setDeleteIntent(DeleteReceiver.getDeleteIntent()) .setContentTitle(message);
 		} else
 			NumNotBuilder.setContent(NumRemoteViewss);
 		}
-//	NumNotBuilder.setSmallIcon(draw).setPriority(Notification.PRIORITY_HIGH);
+
 	NumNotBuilder.setSmallIcon(draw).setPriority(Notification.PRIORITY_MAX);
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -930,7 +951,7 @@ setDeleteIntent(DeleteReceiver.getDeleteIntent()) .setContentTitle(message);
 	final String message= "***  "+Applic.app.getString(R.string.nonewvalue)+tformat+" ***";
 
 //	oldfloatmessage(tformat, true) ;
-	glucosealarm(4,R.drawable.loss ,message, GLUCOSENOTIFICATION ,true);
+	lossofsignalalarm(4,R.drawable.loss ,message, GLUCOSENOTIFICATION ,true);
 	}
 	
 

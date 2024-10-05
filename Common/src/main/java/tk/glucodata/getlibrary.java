@@ -123,12 +123,13 @@ public static void openlibrary(MainActivity context) {
       Applic.RunOnUiThread(() -> {   context.openfile.showchoice(context,false); });
        }
 
-
+static boolean showintro=false;
 public static boolean getlibrary(MainActivity context) {
 	if(Applic.includeLib) {
 		if(!isWearable) {
 			if(!getShownintro()) {
-				help.help(R.string.introhelp,context,l->setShownintro(true));
+				showintro=true;
+			//	help.help(R.string.introhelp,context,l->setShownintro(true));
 				}
 		  }
 		return true;
@@ -143,6 +144,7 @@ public static boolean getlibrary(MainActivity context) {
 		}
 
 
+ // showintro=true;
    help.help(R.string.introhelp,context);
    help.sethelpbutton(GONE); 
     if (!files.exists())

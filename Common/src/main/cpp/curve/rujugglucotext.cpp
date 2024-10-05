@@ -1,13 +1,5 @@
 #include "jugglucotext.hpp"
 #ifndef WEAROS
-constexpr static char rulabels2[][12]=
-{"Kopoтkuй",
-"Yглeвoд",
-"Сахар",
-"Дoлгuй",
-"Велик",
-"Хoдьбa",
-"Кровь"};
 constexpr static std::string_view rulabels[]={"Kopoтkuй",
 "Yглeвoд",
 "Сахар",

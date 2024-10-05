@@ -3,12 +3,20 @@
     android:fillViewport="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:scrollIndicators="top"
+    android:scrollbars="horizontal"
+     android:fadeScrollbars="false"
+    android:scrollbarStyle="insideInset"
    android:id="@+id/background" >
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/help"
         android:layout_width="match_parent"
+     android:fadeScrollbars="false"
+        android:scrollIndicators="left"
         android:layout_height="match_parent"
+        android:scrollbars="vertical"
+    android:scrollbarStyle="insideInset"
         android:fillViewport="true">
 
 
@@ -21,7 +29,8 @@
             android:paddingBottom="30dp"
             android:paddingLeft="25dp"
             android:paddingRight="8dp"
-	    >
+
+            >
             <TextView
                 android:id="@+id/bluestate"
                 android:layout_width="wrap_content"

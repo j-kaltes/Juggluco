@@ -46,6 +46,8 @@ import android.os.Build;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.RemoteViews;
+
+import static tk.glucodata.NumberView.minhourstr;
 import static tk.glucodata.R.id.arrowandvalue;
 
 import java.text.DateFormat;
@@ -155,7 +157,8 @@ final RemoteViews arrowremote(int kind, notGlucose glucose,final boolean alarm) 
 		}
 	    }
 	else {
-		var timestr= DateFormat.getTimeInstance(DateFormat.SHORT).format(new Date(glucose.time));
+		//var timestr= DateFormat.getTimeInstance(DateFormat.SHORT).format(new Date(glucose.time));
+		var timestr= minhourstr(glucose.time);
 		glucosePaint.setTextSize(timesize);
 		canvas.drawText(timestr, usedensity*16, gety+timeHeight, glucosePaint);
 		Log.i(LOG_ID,"time: "+timestr);

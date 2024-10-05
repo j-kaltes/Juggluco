@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">Juggluco</string>
 
-    <string name="analog_watch_face_name" translatable="false">Juggluco</string>
-
-    <string name="colors_style_setting">Colors</string>
-
+    <string name="watch_face_name" translatable="false">Juggluco</string>
+    <string name="colors_style_setting">@string/colors</string>
     <!-- Subtitle for the menu option to select the watch face color theme [CHAR LIMIT=20] -->
-    <string name="colors_style_setting_description">Watchface color</string>
 
     <!-- Name of watchface style [CHAR LIMIT=20] -->
     <string name="ambient_style_name">Ambient Style</string>
@@ -26,26 +22,7 @@
     <!-- Name of watchface style [CHAR LIMIT=20] -->
     <string name="white_style_name">White Style</string>
 
-
-    <!-- A menu option to select a widget that lets us configure the Complications (a watch
-    making term) [CHAR LIMIT=20] -->
-    <string name="watchface_complications_setting">Complications</string>
-
-
-    <!-- Menu option within the complications configuration widget that lets us select both
-    the left and the right complication for rendering. [CHAR LIMIT=20] -->
-    <string name="watchface_complications_setting_both">Both</string>
-
-    <string name="watchface_complications_setting_none">None</string>
-
-    <string name="watchface_complications_setting_left">Left</string>
-
-    <string name="watchface_complications_setting_right">Right</string>
-
-
     <string name="title_activity_watch_face_config">Configuration</string>
-
-
 
 
 

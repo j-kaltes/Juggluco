@@ -132,7 +132,7 @@ jugglucotext frtext {
         "Paramètres",
 	"Arrêt alarme" },
 .menustr2= {"Date",hourminstr,
-"Jour avant             ",frtext.amount},
+"Jour avant                    ",frtext.amount},
 #endif
 
 	.scanerrors={

@@ -1,4 +1,12 @@
-Check boxes recht midden menu to veel naar rechts.
+Bij scannen tijd en id door elkaar
+
+Google Play requirements:
+- Scrollbar in Sensor?
+- Horizonscroll bar in sensor screen is in top and fades
+- Apps versies moeten verschillende versienummers hebben
+- WearOS versie, moet required voor watch gebruiken?
+
+
 Bij klein scherm linker en rechter menu buiten beeld.
 Na failure to give nearby device permission, wordt ook niet om andere permissions gevraagd.
 Data overzenden naar remote device duurt te lang.

@@ -175,6 +175,7 @@ static int overwritename() {
 #endif
 #endif
 
+extern	void inithour24();
 int setfilesdir(const string_view filesdir,const char *country) {
 	LOGGER("setfilesdir %s %s convfactor=%f\n",filesdir.data(),country?country:"null",convfactor);
 	globalbasedir=filesdir;
@@ -211,6 +212,8 @@ LOGAR("no NEEDSPATH");
 	generalsettings();
 
 #ifdef ANDROID__APP
+
+	inithour24();
 #ifndef NONOJVM
 	asignal(SIGUSR2,namehandler);
 	overwritename();

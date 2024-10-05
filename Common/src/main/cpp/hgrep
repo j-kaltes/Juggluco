@@ -1,1 +1,1 @@
-grep "$@" *.cpp *.c *.h */*.cpp */*.h */*.c net/watchserver/*.cpp net/watchserver/*.h net/watchserver/*.c net/libreview/*.cpp net/libreview/*.h net/libreview/*.c 
+grep "$@" *.cpp *.c *.hpp *.h */*.cpp */*.hpp */*.h */*.c net/watchserver/*.cpp net/watchserver/*.hpp net/watchserver/*.h net/watchserver/*.c net/libreview/*.cpp net/libreview/*.hpp net/libreview/*.h net/libreview/*.c 

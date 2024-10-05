@@ -265,8 +265,9 @@ bluediag(MainActivity act) {
 	if(isWearable) {
 		HorizontalScrollView scroll= view.findViewById(R.id.background);
 		scroll.setSmoothScrollingEnabled(false);
-              scroll.setVerticalScrollBarEnabled(false);
-                scroll.setHorizontalScrollBarEnabled(false);
+      scroll.setVerticalScrollBarEnabled(false);
+      scroll.setHorizontalScrollBarEnabled(Applic.horiScrollbar);
+      scroll.setScrollBarFadeDuration(0);
 		int height=GlucoseCurve.getheight();
 		scroll.setMinimumHeight(height);
 		Log.i(LOG_ID,"height="+height);
@@ -276,8 +277,8 @@ bluediag(MainActivity act) {
 		final var addscroll= new HorizontalScrollView(act);
 		addscroll.addView(grid);
 		addscroll.setSmoothScrollingEnabled(false);
-	      addscroll.setVerticalScrollBarEnabled(false);
-		addscroll.setHorizontalScrollBarEnabled(false);
+	   addscroll.setVerticalScrollBarEnabled(false);
+		addscroll.setHorizontalScrollBarEnabled(Applic.horiScrollbar);
 		int heightU=GlucoseCurve.getheight();
 		addscroll.setMinimumHeight(heightU);
 		grid.setmeasure((l,w,h)-> {

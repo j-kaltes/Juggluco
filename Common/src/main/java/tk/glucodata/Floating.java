@@ -34,6 +34,7 @@ import static tk.glucodata.MainActivity.doonback;
 import static tk.glucodata.MainActivity.setonback;
 import static tk.glucodata.Notify.glucosetimeoutSEC;
 import static tk.glucodata.Notify.timef;
+import static tk.glucodata.NumberView.minhourstr;
 import static tk.glucodata.util.getbutton;
 import static tk.glucodata.util.getlabel;
 
@@ -416,7 +417,6 @@ protected void onDraw(Canvas floatCanvas) {
 				final var xpos=0.2f;
 				floatCanvas.drawColor(floatingbackground);
 				floatPaint.setColor(floatingforeground);
-			//	floatCanvas.drawText("27.8", xpos, gety, floatPaint);
 				floatCanvas.drawText(glucose.value, xpos, gety, floatPaint);
 				return;
 				}
@@ -427,14 +427,12 @@ protected void onDraw(Canvas floatCanvas) {
 			var rate=glucose.rate;
 			if (!isNaN(rate))  {
 				 float weightrate = (rate > 1.6 ? -1.0f : (rate < -1.6 ? 1.0f : (rate / -1.6f)));
-//				 float arrowy = gety - floatfontsize * .4f + (CommonCanvas.glnearnull(rate) ? 0.0f : (weightrate * floatfontsize * .4f));
 				 float arrowy = gety - floatfontsize * .4f + weightrate * floatfontsize * .4f;
 				drawarrow(floatCanvas, floatPaint, floatdensity, rate, xpos*.85f, arrowy);
-//				drawarrow(floatCanvas, floatPaint, floatdensity, rate, showtime?xpos:(.85f*xpos), arrowy);
 				}
 			floatCanvas.drawText(glucose.value, xpos, gety*.9659f, floatPaint);
 			if(showtime)  {
-				var timestr= DateFormat.getTimeInstance(DateFormat.SHORT).format(new Date(glucose.time*1000L));
+				var timestr= minhourstr(glucose.time*1000L);
 				floatPaint.setTextSize(timesize);
 				floatCanvas.drawText(timestr, density, gety+timeHeight, floatPaint);
 				floatPaint.setTextSize(floatfontsize);

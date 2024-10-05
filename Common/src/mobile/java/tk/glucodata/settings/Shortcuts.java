@@ -160,8 +160,8 @@ public void mkshortlistview(MainActivity act) {
 		help.setOnClickListener(v->{tk.glucodata.help.help(R.string.shortcuthelp,act); });
 		ScrollView scroll=new ScrollView(act);
 		scroll.setSmoothScrollingEnabled(false);
-		scroll.setVerticalScrollBarEnabled(false);
-		scroll.setHorizontalScrollBarEnabled(false);
+		scroll.setVerticalScrollBarEnabled(Applic.scrollbar);
+		scroll.setHorizontalScrollBarEnabled(Applic.horiScrollbar);
 		
 		scroll.setLayoutParams(new ViewGroup.LayoutParams(   ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
 		mkshortlist(act);

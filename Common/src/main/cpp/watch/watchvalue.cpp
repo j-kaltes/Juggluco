@@ -62,11 +62,13 @@ static void keepnet(uint32_t wastime,uint32_t nu) {
 		}
 	}
 
-const SensorGlucoseData *getlaststream(const uint32_t nu) {
+std::pair<const SensorGlucoseData *,int> getlaststream(const uint32_t nu) {
 // 	uint32_t mintime=nu-maxwatchage;
  	uint32_t mintime=0;
 	const SensorGlucoseData *take=nullptr;
-	for(int i=0;i<usedsensors.size();i++) {
+   int pos=-1;
+   const int total=usedsensors.size();
+	for(int i=0;i<total ;i++) {
 		const int index=usedsensors[i];
 		const SensorGlucoseData *hist=sensors->getSensorData(index);
 		const ScanData *poll=hist->lastpoll();
@@ -75,15 +77,18 @@ const SensorGlucoseData *getlaststream(const uint32_t nu) {
 			if(then>mintime) {
 				mintime=then;
 				take=hist;
+                pos=i;
 				}
 			}
 		}
 	keepnet(mintime,nu);
-	return take;
+   if(total>1)
+      ++pos;
+	return {take,pos};
 	}
 
 extern "C" JNIEXPORT jlong  JNICALL   fromjava(lastglucosetime)(JNIEnv *env, jclass cl) {
-	const auto *hist=getlaststream(maxwatchage);
+	const auto [hist,index]=getlaststream(maxwatchage);
 	if(hist) 
 		return hist->lastpoll()->t*1000LL;
 		
@@ -100,7 +105,7 @@ int getglucosestr(uint32_t nonconvert,char *glucosestr,int maxglucosestr);
 extern float threshold(float drate);
 extern "C" JNIEXPORT jobject  JNICALL   fromjava(lastglucose)(JNIEnv *env, jclass cl) {
 	const uint32_t nu=time(nullptr);	
-	const auto *hist=getlaststream(nu);
+	const auto [hist,index]=getlaststream(maxwatchage);
 	if(!hist)  {
 		LOGSTRINGTAG("getlaststream(nu)=null\n");
 		return nullptr;
@@ -124,7 +129,7 @@ extern "C" JNIEXPORT jobject  JNICALL   fromjava(lastglucose)(JNIEnv *env, jclas
 		LOGGERTAG("FindClass(%s) failed\n",glucoseclass);
 		return nullptr;
 		}
-	const char glsig[]= "(JLjava/lang/String;Ljava/lang/String;F)V";
+	const char glsig[]= "(JLjava/lang/String;Ljava/lang/String;FI)V";
 	static jmethodID iconstruct = env->GetMethodID(item,"<init>",glsig);
 	if(!iconstruct) {
 		LOGGERTAG("GetMethodID(item,<init>,%s) failed\n", glsig);
@@ -134,7 +139,7 @@ extern "C" JNIEXPORT jobject  JNICALL   fromjava(lastglucose)(JNIEnv *env, jclas
 	const char *sensorid=hist->othershortsensorname()->data();
 	LOGGERTAG("strGlucose(%lld,%s,%s,%.1f)\n",(long long)tim,buf,sensorid,poll->ch);
 	const float rateofchange=( nonconvert<glucoselowest||nonconvert>glucosehighest)?NAN:threshold(poll->ch);
-	return env->NewObject(item,iconstruct,tim,env->NewStringUTF(buf),env->NewStringUTF(sensorid),rateofchange);
+	return env->NewObject(item,iconstruct,tim,env->NewStringUTF(buf),env->NewStringUTF(sensorid),rateofchange,index);
        }
 
 

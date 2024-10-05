@@ -31,7 +31,7 @@ public class BackGesture implements View.OnTouchListener {
 	private static final String LOG_ID="BackGesture";
 private final MainActivity main;
 private final float 	miny,maxy,minx,maxx;
-BackGesture(MainActivity act) {
+public BackGesture(MainActivity act) {
 	int height=GlucoseCurve.getheight();
 	miny=height*.1f;
 	maxy=height*.9f;

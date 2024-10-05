@@ -21,9 +21,11 @@
 
 package tk.glucodata;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.TypedArray;
 import android.graphics.BlendMode;
 import android.graphics.BlendModeColorFilter;
 import android.graphics.PorterDuff;
@@ -33,6 +35,7 @@ import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
+import android.text.method.ScrollingMovementMethod;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -42,13 +45,14 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.HorizontalScrollView;
+//import android.widget.HorizontalScrollView;
 import android.widget.RadioButton;
 import android.widget.ScrollView;
 import android.widget.Space;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.util.Arrays;
@@ -192,7 +196,7 @@ private View[] fromrow;
  private CheckBox   visible;
 	int hostindex=-1;
 
-	static void setradio(RadioButton[] radios) {
+public	static void setradio(RadioButton[] radios) {
 	   for(RadioButton but:radios) {
 		but.setOnCheckedChangeListener( (buttonView,  isChecked) -> {
 		   if(isChecked) {
@@ -519,7 +523,7 @@ void makehostview(MainActivity act) {
 	for(CheckBox vi:boxes) {
 		vi.setOnCheckedChangeListener(needport);
 		}
-        hostview=new ScrollView(act);
+  hostview=new ScrollView(act);
 
 	Layout layout;
 	if(isWearable) {
@@ -530,6 +534,7 @@ void makehostview(MainActivity act) {
 
 		}, new View[]{ Portlabel},new View[] {portedit},new View[]{new Space(act),IPslabel,detect,new Space(act)}, Arrays.copyOfRange(editIPs,0,editIPs.length/2),Arrays.copyOfRange(editIPs,editIPs.length/2,editIPs.length) ,new View[] {testip},new View[] {haslabel},new View[]{label},
 				new View[]{passiveonly},new View[]{activeonly},new View[]{both},new View[] {receive},new View[] {Sendlabel,Amounts},new View[]{Scans,Stream},new View[]{startlabel},new View[]{alldata,fromnow},new View[]{screenpos} ,new View[]{Password,visible },new View[]{editpass},new View[]{delete,Close},new View[] {reset},new View[]{save});
+  	layout.setPadding(0,0,0,0);
 		}
 	else {
 		layout = new Layout(act, (l, w, h) -> {
@@ -548,8 +553,10 @@ void makehostview(MainActivity act) {
 	Close.setOnClickListener(v-> act.doonback());
 	hostview.addView(layout);
 	hostview.setFillViewport(true);
-	hostview.setSmoothScrollingEnabled(false);
-        hostview.setVerticalScrollBarEnabled(false);
+//	hostview.setSmoothScrollingEnabled(false);
+	hostview.setSmoothScrollingEnabled(true);
+    hostview.setVerticalScrollBarEnabled(Applic.scrollbar);
+    hostview.setScrollbarFadingEnabled(false);
 //	act.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE|WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         act.addContentView(hostview, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT));
         hostview.setBackgroundColor(backgroundcolor);
@@ -680,6 +687,19 @@ if(!isWearable)
 
 //  	var help=getbutton(act,R.string.helpname);
 	var info=new TextView(act);
+   /*
+     info.setVerticalScrollBarEnabled(true);
+     info.setMovementMethod(new ScrollingMovementMethod());
+     info.setScrollBarStyle(View.SCROLLBARS_INSIDE_INSET);
+     TypedArray a = info.getContext().getTheme().obtainStyledAttributes(new int[0]);
+      try {
+           @SuppressLint("DiscouragedPrivateApi") Method initializeScrollbars = android.view.View.class.getDeclaredMethod("initializeScrollbars", TypedArray.class);
+           initializeScrollbars.invoke(info, a);
+       } catch(Throwable e) {
+         Log.stack(LOG_ID,"initializeScrollbars",e);
+       }
+              a.recycle();     
+              */
      int pad=(int)(GlucoseCurve.metrics.density*7.0);
    info.setPadding(pad,0,pad,0);
 	var deactive=getcheckbox(act,R.string.off,Natives.getHostDeactivated(pos));
@@ -730,9 +750,15 @@ void addhostview(MainActivity act,View parent) {
 HostViewAdapter hostadapt;
 Button alarms;
 public  void mkbackupview(MainActivity act) {
+	act.lightBars(false);
 	act.showui=true;
-	act.showSystemUI();
-	realmkbackupview(act);
+   if(!isWearable&&!Natives.getsystemUI()) {
+	   act.showSystemUI();
+      Applic.app.getHandler().postDelayed( ()->{
+      realmkbackupview(act); },1);
+      }
+    else
+      realmkbackupview(act);
 //	Applic.app.getHandler().postDelayed( ()-> realmkbackupview(act),1); //for what was it needed?
 	}
 private  void realmkbackupview(MainActivity act) {
@@ -798,22 +824,26 @@ View blpan= (thishost[2]==null)?new Space(act):getlabel(act,"bt-pan: "+thishost[
 				UseWifi.stopusewifi();
 			});
 		final Layout layout=new Layout(act, new View[]{getlabel(act,act.getString(R.string.thishost))},new View[]{blpan},new View[]{p2p},new View[]{ip},new View[]{new Space(act),labport,portview,Save,new Space(act)},new View[]{recycle},new View[] {hosts},new View[]{staticnum},new View[]{Sync,reinit},new View[]{wifi,alarms},errorrow,new View[]{Cancel});
-		var hori=new NestedScrollView(act);
+//		var hori=new NestedScrollView(act);
+		var hori=new ScrollView(act);
 		hori.setFillViewport(true);
-		hori.setSmoothScrollingEnabled(false);
-                hori.setVerticalScrollBarEnabled(false);
-                hori.setHorizontalScrollBarEnabled(false);
+//		hori.setSmoothScrollingEnabled(false);
+       hori.setVerticalScrollBarEnabled(Applic.scrollbar);
+//       hori.setHorizontalScrollBarEnabled(Applic.horiScrollbar);
+      hori.setScrollbarFadingEnabled(false);
+		hori.setSmoothScrollingEnabled(true);
 		int height=GlucoseCurve.getheight();
 		hori.setMinimumHeight(height);
 		hori.addView(layout);
 		lay=hori;
 		}
 	else {
-		
-		lay=new Layout(act, new View[]{ip,blpan,p2p,labport,portview,Save},new View[]{recycle},new View[] {battery,Help,alarms,staticnum},errorrow,new View[]{Sync,reinit,hosts,Cancel});
+		var layout=new Layout(act, new View[]{ip,blpan,p2p,labport,portview,Save},new View[]{recycle},new View[] {battery,Help,alarms,staticnum},errorrow,new View[]{Sync,reinit,hosts,Cancel});
+		layout.setPadding(MainActivity.systembarLeft,MainActivity.systembarTop/2,MainActivity.systembarRight,MainActivity.systembarBottom);
 
-
-  	lay.setPadding(MainActivity.systembarLeft,MainActivity.systembarTop/2,MainActivity.systembarRight,MainActivity.systembarBottom);
+       Log.i(LOG_ID,"density="+GlucoseCurve.metrics.density+" systembarTop="+ MainActivity.systembarTop+" systembarLeft="+ MainActivity.systembarLeft);
+	//	layout.setPadding(pad,MainActivity.systembarTop,MainActivity.systembarRight,MainActivity.systembarBottom);
+	   lay=layout;
 		}
 
 	Save.setOnClickListener(v->  {
@@ -839,7 +869,8 @@ View blpan= (thishost[2]==null)?new Space(act):getlabel(act,"bt-pan: "+thishost[
 			}
 		Applic.updateservice(act,Natives.getusebluetooth());
 		act.showui=false;
-		Applic.app.getHandler().postDelayed(act::hideSystemUI,1);
+      if(!isWearable)
+         Applic.app.getHandler().postDelayed(act::hideSystemUI,1);
 		if(Menus.on)
 			Menus.show(act);
 
@@ -860,7 +891,7 @@ View blpan= (thishost[2]==null)?new Space(act):getlabel(act,"bt-pan: "+thishost[
 		battery.setVisibility(GONE);
 	}
 	lay.setBackgroundColor(Applic.backgroundcolor);
-   act.lightBars(false);
+//   act.lightBars(false);
 	act.addContentView(lay, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT));
 	}
 

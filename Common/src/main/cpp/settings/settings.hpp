@@ -139,7 +139,7 @@ struct Tings {
 	bool saytreatments:1;
 	bool useSSL:1;
 	bool floatingNotTouchable:1;
-	bool OLDfloatglucose:1;
+	bool hour24:1;
 	bool lowalarm,highalarm,availablealarm;
 	bool lossalarm;
 	uint8_t watchid[16];
@@ -285,6 +285,13 @@ struct Tings {
 	authpair authdata[AUTHMAX];
 	uint64_t jugglucoID;
 	uint32_t startlibretime;
+
+   int32_t ComplicationArrowColor;
+	int32_t ComplicationTextColor;
+	int32_t ComplicationTextBorderColor;
+	int32_t ComplicationBackgroundColor;
+
+
 	void setdefault() {
 		memcpy(watchid,defaultid,sizeof(watchid));
 		};
@@ -411,6 +418,8 @@ Settings(const char *settingsname,const char *base,const char *country): Mmap(se
 		return;
 		}
 
+//	if(data()->initVersion<30) 
+   { 
 	if(data()->initVersion<26) { 
       if(data()->initVersion<22) { 
       if(data()->initVersion<20) {
@@ -523,6 +532,11 @@ Settings(const char *settingsname,const char *base,const char *country): Mmap(se
          movebroadcast();
    
          }
+//      data()->ComplicationArrowColor=0xff00ffff;
+//      data()->ComplicationTextColor=0xffffffff;
+ //     data()->ComplicationTextBorderColor=0xff000000;
+     // data()->ComplicationBackgroundColor=0xff000000;
+      }
 
 	setconvert(country);
 
@@ -612,7 +626,7 @@ void setunit(int unit) {
 		}
 	else  {
 		convertmult= convertmultmg;
-		gformat="%3.0f";
+		gformat="%.0f";
 		gludecimal=0;
 		}
 

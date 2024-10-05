@@ -36,15 +36,31 @@ import kotlin.math.sqrt
 
 public class CommonCanvas {
 
-    companion object {
-        private const val LOG_ID = "CommonCanvas"
-//	@JvmStatic
-// inline fun glnearnull(rate:Float):Boolean = (rate<.8f&&rate>-.8f)
+	companion object {
+		private const val LOG_ID = "CommonCanvas"
 
+		@JvmStatic
+		public fun drawarrow(
+			canvas: Canvas,
+			paint: Paint,
+			density: Float,
+			ratein: Float,
+			getx: Float,
+			gety: Float
+		): Boolean {
+			if (!ratein.isNaN()) {
+				val rate = Natives.thresholdchange(ratein);
+				val x1: Double = (getx - density * 40.0)
+				val y1: Double = (gety + rate * density * 30.0)
+				paintArrow(canvas, paint, density, rate, x1, y1, getx.toDouble(), gety.toDouble());
+				return true
+			}
+			return false
+		}
+		/*
 	@JvmStatic
 public fun drawarrow(canvas: Canvas,paint:Paint,density:Float, ratein:Float, getx:Float, gety:Float):Boolean {
 	if(!ratein.isNaN()) {
-//		val rate= if(glnearnull(ratein)) .0f else ratein
 		val rate= Natives.thresholdchange(ratein);
 		val x1:Double= (getx-density*40.0)
 		val y1:Double= (gety+rate*density*30.0)
@@ -82,6 +98,74 @@ public fun drawarrow(canvas: Canvas,paint:Paint,density:Float, ratein:Float, get
 		}
     return false
 	}
+	*/
 
-    }
+private fun paintArrow( canvas: Canvas, paint: Paint, density: Float, rate: Float, x1: Double, y1: Double, getx: Double, gety: Double) {
+
+		var rx: Double = getx - x1
+		var ry: Double = gety - y1
+		val rlen = sqrt(rx.pow(2.0) + ry.pow(2.0))
+		rx /= rlen
+		ry /= rlen
+
+		val l: Double = density * 12.0;
+
+		val addx = l * rx;
+		val addy = l * ry;
+		val tx1 = getx - 2 * addx;
+		val ty1 = gety - 2 * addy;
+		val xtus: Float = (getx - 1.5 * addx).toFloat();
+		val ytus: Float = (gety - 1.5 * addy).toFloat();
+		val hx = ry;
+		val hy = -rx;
+		val sx1: Float = (tx1 + l * hx).toFloat();
+		val sy1: Float = (ty1 + l * hy).toFloat();
+		val sx2: Float = (tx1 - l * hx).toFloat();
+		val sy2: Float = (ty1 - l * hy).toFloat();
+		paint.strokeWidth = density.toFloat() * 5.0f
+		canvas.drawLine(x1.toFloat(), y1.toFloat(), xtus, ytus, paint)
+		canvas.drawPath(Path().apply {
+			moveTo(sx1, sy1);
+			lineTo(getx.toFloat(), gety.toFloat());
+			lineTo(sx2, sy2);
+			lineTo(xtus, ytus);
+			close()
+		}, paint)
+	}
+
+		//{{x -> h - (4 h)/Sqrt[16 + 9 rate^2], y -> h + (3 h rate)/Sqrt[16 + 9 rate^2]}, {x -> h + (4 h)/Sqrt[16 + 9 rate^2], y -> h - (3 h rate)/Sqrt[16 + 9 rate^2]}}
+
+	@JvmStatic public fun testcircle( canvas: Canvas, paint: Paint,density:Float) {
+		val height = canvas.height.toDouble(); //assume square
+		val half = height * .5f
+/*		paint.setStyle(Paint.Style.STROKE)
+		paint.setStrokeWidth(height*.05f);
+		canvas.drawCircle(half,half,half, paint); */
+		val rate=0.0f;
+		paintArrow(canvas, paint, density, rate, 0.0, half, height, half);
+		}
+		@JvmStatic
+		public fun drawarrowcircle(
+			canvas: Canvas,
+			paint: Paint,
+			density: Float,
+			ratein: Float
+		): Boolean {
+			if (!ratein.isNaN()) {
+				val height: Double = canvas.height.toDouble(); //assume square
+				val rate = Natives.thresholdchange(ratein);
+				val common = 1.0 / sqrt(16.0 + 9.0 * rate.pow(2));
+				val xcom = (2.0 * height * common);
+				val half = height * .5;
+				val x1 = half - xcom;
+				val ycom = (3 * half * rate * common);
+				val y1 = half + ycom;
+				val x2 = half + xcom;
+				val y2 = half - ycom;
+				paintArrow(canvas, paint, density, rate, x1, y1, x2, y2);
+				return true
+			}
+			return false
+		}
+	}
 }

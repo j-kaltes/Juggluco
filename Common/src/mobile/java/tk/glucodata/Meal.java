@@ -916,7 +916,7 @@ static void	shownutrients(MainActivity act,int id,boolean showzero,TriConsumer<S
 	   grid.setPadding(pad,0,0,0);
 	scroll.addView(grid);
 	scroll.setSmoothScrollingEnabled(false);
-        scroll.setVerticalScrollBarEnabled(false);
+        scroll.setVerticalScrollBarEnabled(Applic.scrollbar);
 	act.addContentView(scroll,new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
         scroll.setBackgroundResource(R.drawable.dialogbackground);
 	Close.setOnClickListener(v-> act.doonback());

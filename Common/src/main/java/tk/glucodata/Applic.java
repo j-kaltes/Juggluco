@@ -31,6 +31,7 @@ import static android.net.NetworkCapabilities.TRANSPORT_WIFI;
 import static android.net.NetworkCapabilities.TRANSPORT_WIFI_AWARE;
 import static android.provider.Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS;
 import static android.view.View.INVISIBLE;
+//import java.text.DateFormat;
 import static java.util.Locale.US;
 import static tk.glucodata.GlucoseCurve.STEPBACK;
 import static tk.glucodata.GlucoseCurve.smallfontsize;
@@ -78,6 +79,8 @@ import tk.glucodata.settings.Broadcasts;
 //import static tk.glucodata.MessageSender.messagesender;
 
 public class Applic extends Application {
+public static final  boolean scrollbar=true;
+public static final  boolean horiScrollbar=true;
 static final float mgdLmult= doLog?18.0182f:18.0f;
 //public static tk.glucodata.MessageSender messagesender=null;
    static boolean Nativesloaded=false;
@@ -121,9 +124,10 @@ static public void useflash(boolean val) {
 	}
 	*/
 MainActivity getActivity() {
-	if(curve!=null)
+   return MainActivity.thisone;
+/*	if(curve!=null)
 		return (MainActivity)curve.getContext();
-	return null;
+	return null;  */
 	}
 static public void Toaster(String mess) {
 	RunOnUiThread(()-> { Applic.argToaster(app,mess, Toast.LENGTH_SHORT);}) ;
@@ -188,6 +192,13 @@ void setcurve(GlucoseCurve curve) {
 	}
 //void savestate() { if(blue!=null) blue.savestate(); }
 public static String curlang=null;
+
+private static boolean hasSystemtimeformat=true;
+public static boolean systemtimeformat() {
+//	return DateFormat.is24HourFormat(app)==hour24;
+	return hasSystemtimeformat;
+	}
+public static boolean was24=true;
 @Override
 public void onConfigurationChanged(Configuration newConfig) {
 	super.onConfigurationChanged(newConfig);
@@ -196,22 +207,45 @@ public void onConfigurationChanged(Configuration newConfig) {
 		var lang=getlocale().getLanguage();
 
 		var new24 = DateFormat.is24HourFormat(this);
+		hasSystemtimeformat=DateFormat.is24HourFormat(app)==hour24;
+		if(new24!=was24) {
+			Notify.timef = java.text.DateFormat.getTimeInstance(java.text.DateFormat.SHORT);
+			was24=new24;
+			}
 		Log.i(LOG_ID,"Applic.onConfigurationChanged new="+lang+" cur="+curlang+ (Applic.hour24?" 24uur":" 12uur"));
-		if(!lang.equals(curlang)) {
 
+		if(!lang.equals(curlang)) {
 			curlang=lang;
 			if(Talker.istalking())	
 				SuperGattCallback.newtalker(null);
 			}
 		else  {
-			if(Applic.hour24 ==new24)
-				return;
+			return;
 			}
 
-		Applic.hour24=new24;
-		Natives.setlocale(lang, new24);
+		Natives.setlocale(lang);
 		}
-} 
+}	 
+
+static private void setjavahour24(boolean val) {
+	Applic.hour24=val;
+	hasSystemtimeformat=DateFormat.is24HourFormat(app)==hour24;
+      if(!isWearable) {
+         var main=MainActivity.thisone;
+         if(main!=null) {
+            var tmpcurve=main.curve;
+            if(tmpcurve!=null) {
+               if(tmpcurve.search!=null)
+                  tmpcurve.clearsearch(null);
+               }
+              }
+            }
+	   }
+
+static public void sethour24(boolean val) {
+ 	Natives.sethour24(val);
+	setjavahour24(val);
+	}
 @Override
 public void onTerminate () {
 	super.onTerminate();
@@ -498,6 +532,9 @@ boolean initproc() {
 		initproccalled=true;
 		MessageSender.sendnetinfo();
 		Specific.start(this);
+		if(isWearable) {
+			 tk.glucodata.glucosecomplication.GlucoseValue.updateall();
+			 }
 		}
 	return true;
 	}
@@ -537,7 +574,7 @@ void setbackgroundcolor(Context context) {
      	
     }
 
-static private Runnable updater=null;
+//static private Runnable updater=null;
 static private ArrayList<Runnable> updaters=new ArrayList<Runnable>();
 public static void  setscreenupdater(Runnable up) {
 	updaters.add(up);	
@@ -654,19 +691,25 @@ static public void resetWearOS() {
 	}
 private static	void initbroadcasts() {
 
-	if(Natives.getinitVersion()<22) {
-		if(Natives.getinitVersion()<14) {
-			if(Natives.getinitVersion()<13) {
-				Broadcasts.updateall();
+	Floating.init(); //sets initVersion
+   final var initversion=Natives.getinitVersion();
+	if(initversion<29) {
+		if(initversion<22) {
+			if(initversion<14) {
+				if(initversion<13) {
+					Broadcasts.updateall();
+					}
+				if(Notify.arrowNotify!=null)
+					Natives.setfloatingFontsize((int) Notify.glucosesize);
+				Natives.setfloatingbackground(WHITE);
+				 Natives.setfloatingforeground(BLACK);
 				}
-			if(Notify.arrowNotify!=null)
-				Natives.setfloatingFontsize((int) Notify.glucosesize);
-			Natives.setfloatingbackground(WHITE);
-			 Natives.setfloatingforeground(BLACK);
 			}
-		//Natives.setinitVersion(22);
+		sethour24(DateFormat.is24HourFormat(app));
+      Natives.setinitVersion(29);
 		}
-	Floating.init();
+
+   setjavahour24(Natives.gethour24());
 	XInfuus.setlibrenames();
    EverSense.setreceivers();
 	JugglucoSend.setreceivers();

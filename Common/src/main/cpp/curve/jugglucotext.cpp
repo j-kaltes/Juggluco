@@ -136,12 +136,12 @@ jugglucotext engtext {
  .menustr0= {
 	"Mirror",
 	"Sensor",
-	"    Darkmode      ",
+	"  Darkmode      ",
         "Settings",
 	"Stop Alarm" },
 .menustr2= {"Date  ",
 hourminstr,
-"Day back                ",
+"Day back                       ",
 engtext.amount},
 #endif
 

@@ -126,7 +126,8 @@ if(true) {
 		}
 	int ret=130;
 	final String nativedir=con.getApplicationInfo().nativeLibraryDir;
-        Natives.setlocale(locstr,(Applic.hour24= DateFormat.is24HourFormat(con)));
+//        Natives.setlocale(locstr,(Applic.hour24= DateFormat.is24HourFormat(con)));
+        Natives.setlocale(locstr);
 	switch (ret=Natives.setfilesdir(filespath, country,nativedir)) {
 		case 1:
 			settingsnull();

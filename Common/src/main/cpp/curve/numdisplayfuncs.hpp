@@ -182,7 +182,8 @@ template <class TX,class TY> void NumDisplay::showNums(NVGcontext* vg, const TX 
 					 const time_t tim= it->time;
 					 struct tm *tms=localtime(&tim);
 					lasttouchedcolor=colorindex;
-					buflen=snprintf(buf,maxbuf,"%02d:%02d", tms->tm_hour, mktmmin(tms));
+//					buflen=snprintf(buf,maxbuf,"%02d:%02d", tms->tm_hour, mktmmin(tms));
+					buflen=mktime(tms->tm_hour, mktmmin(tms),buf);
 					char *buf2=buf+buflen;
 					if(settings->getlabelweightmgperL(it->type))  {
 						constexpr const int maxbuf2=10;

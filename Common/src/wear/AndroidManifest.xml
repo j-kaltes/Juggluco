@@ -17,8 +17,7 @@
 
     <!-- android:debuggable="true" -->
     <application android:name=".Applic" android:theme="@style/Theme.WatchFace"
-        android:icon="@mipmap/ic_launcher"
-    >
+        android:icon="@mipmap/ic_launcher">
         <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
         <activity
             android:name=".MainActivity"
@@ -34,8 +33,11 @@
             android:name="tk.glucodata.watchface.WatchFaceService"
             android:directBootAware="true"
             android:exported="true"
-            android:label="@string/analog_watch_face_name"
-            android:permission="android.permission.BIND_WALLPAPER">
+            android:label="@string/watch_face_name"
+            android:permission="android.permission.BIND_WALLPAPER"
+ 	    android:maxSdkVersion="33" 
+
+	    >
             <intent-filter>
                 <action android:name="android.service.wallpaper.WallpaperService" />
                 <category android:name="com.google.android.wearable.watchface.category.WATCH_FACE" />
@@ -62,7 +64,9 @@
         <activity
             android:name="tk.glucodata.watchface.editor.WatchFaceConfigActivity"
             android:exported="true"
-            android:label="@string/title_activity_watch_face_config">
+            android:label="@string/title_activity_watch_face_config"
+ 	    android:maxSdkVersion="33" 
+	    >
 
             <intent-filter>
                 <action android:name="androidx.wear.watchface.editor.action.WATCH_FACE_EDITOR" />
@@ -88,6 +92,63 @@
                 <data android:host="*" android:pathPrefix="/wakestream" android:scheme="wear" />
             </intent-filter>
          </service>
+
+      <!--  android:icon="@drawable/ic_launcher" -->
+  <service
+            android:name=".glucosecomplication.ArrowDataSourceService"
+            android:exported="true"
+
+            android:icon="@drawable/arrowblackwhite"
+            android:label="@string/glucosearrowcomplicationlabel"
+            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
+            <intent-filter>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="SMALL_IMAGE" />
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="0" />
+        </service>
+  <service
+            android:name=".glucosecomplication.NumberDataSourceService"
+            android:exported="true"
+
+            android:icon="@drawable/valuemgdl"
+            android:label="@string/glucosenumbercomplicationlabel"
+            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
+            <intent-filter>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="SMALL_IMAGE" />
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="0" />
+        </service>
+  <service android:name=".glucosecomplication.ArrowValueDataSourceService"
+            android:exported="true"
+
+            android:icon="@drawable/valuearrow"
+            android:label="@string/glucosearrowvaluecomplicationlabel"
+            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
+            <intent-filter>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="LARGE_IMAGE,SMALL_IMAGE" />
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="0" />
+        </service>
+
+
 
     </application>
 </manifest>

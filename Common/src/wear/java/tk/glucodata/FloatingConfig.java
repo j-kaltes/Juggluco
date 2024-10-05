@@ -73,7 +73,7 @@ static public void show(MainActivity act,View view) {
 	view.setVisibility(INVISIBLE);
 	int height=GlucoseCurve.getheight();
 	int width=GlucoseCurve.getwidth();
-	var  sizelabel=getlabel(act,R.string.fontsize);
+	var  sizelabel=getlabel(act,R.string.fontsizeshort);
 
 	int pad=height/14;
 	sizelabel.setPadding(pad,0,0,0);
@@ -200,36 +200,22 @@ static public void showcolors(MainActivity act) {
 	AmbilWarnaDialog dialog = new AmbilWarnaDialog(act, initialColor,c-> {
 	Log.i(LOG_ID,String.format(usedlocale,"col=%x",c));
 		setcolor(c);
-		//rewritefloating(act);
 		Floating.invalidatefloat();
     }, v-> {
       	int h=v.getMeasuredHeight();
                 int w=v.getMeasuredWidth();
-//                v.setX((int)(width*.97)-w);
- //               v.setY((height-h)/2);
                 v.setY((int)((height-h)*.5));
                 v.setX((int)((width-w)*.57));
 
     	}
 	);
 	View view=dialog.getview();
-
-
-
-
-
-//	view.setLayoutParams( new ViewGroup.LayoutParams(MATCH_PARENT,MATCH_PARENT));
-/*	var colorlayout=new Layout(act,(l, w, h)-> { return new int[] {w,h}; },new View[]{view});
-	colorlayout.setBackgroundColor(Applic.backgroundcolor); */
 	var layout=new FrameLayout(act);
 	layout.addView(view, new ViewGroup.LayoutParams((int)(width*0.72), (int)(height*0.72)));
 	act.addContentView(layout,  new ViewGroup.LayoutParams(MATCH_PARENT,MATCH_PARENT));
 	layout.setBackgroundColor(Applic.backgroundcolor);
 	  layout.setOnTouchListener(new BackGesture(act));
 	act.setonback(()-> { removeContentView(layout); });
-
-
-
 
 	Button noclose= act.findViewById(R.id.closeambi);
 	 if(noclose!=null) {

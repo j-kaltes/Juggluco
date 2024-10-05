@@ -140,7 +140,7 @@ jugglucotext pltext {
 	"Zatrzym. alarm"},
 .menustr2= {"Data",
 hourminstr,
-"Dzień wstecz            ",pltext.amount},
+"Dzień wstecz              ",pltext.amount},
 
 #endif
 

@@ -110,11 +110,45 @@ jmethodID  sendGlucoseBroadcast=nullptr;
 extern void initlibreviewjni(JNIEnv *env);
 
 extern bool jinitmessages(JNIEnv* env);
+#ifndef NOLOG
+#include <sys/resource.h>
+void showonelimit(const char *name, int resource) {
+      struct rlimit rlim;
+       if(!getrlimit(resource, &rlim)) {
+           LOGGER("getrlimit %-10s cur=%-20lu max=%lu\n",name+7,rlim.rlim_cur,rlim.rlim_max);
+            }
+         else {
+            flerror("getrlimit(%s..)",name);
+            }
+        }
+#define onelimit(x) showonelimit(#x,x)
+void showlimits() {
+onelimit(RLIMIT_CPU);
+onelimit(RLIMIT_FSIZE);
+onelimit(RLIMIT_DATA);
+onelimit(RLIMIT_STACK);
+onelimit(RLIMIT_CORE);
+onelimit(RLIMIT_RSS);
+onelimit(RLIMIT_NPROC);
+onelimit(RLIMIT_NOFILE);
+onelimit(RLIMIT_MEMLOCK);
+onelimit(RLIMIT_AS);
+onelimit(RLIMIT_LOCKS);
+onelimit(RLIMIT_SIGPENDING);
+onelimit(RLIMIT_MSGQUEUE);
+onelimit(RLIMIT_NICE);
+onelimit(RLIMIT_RTPRIO);
+onelimit(RLIMIT_RTTIME);
+   }
+#endif
 
 JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* reserved) {
 	vmptr=vm;
 	   JNIEnv* env=nullptr;
 	LOGAR("JNI_OnLoad");
+#ifndef NOLOG
+   showlimits();
+#endif
     if (vm->GetEnv(reinterpret_cast<void**>(&env), JNI_VERSION_1_6) != JNI_OK) {
         return JNI_ERR;
       }
@@ -309,14 +343,14 @@ extern "C" JNIEXPORT jint JNICALL fromjava(step)(JNIEnv* env, jclass obj) {
 	return onestep();
 	}
 
-extern bool hour24clock;
 extern char localestrbuf[15];
 
 
 
 void  setlocale(const char *localestrbuf,const size_t len) ;
-extern "C" JNIEXPORT void JNICALL fromjava(setlocale)(JNIEnv *env, jclass clazz,jstring jlocalestr,jboolean hour24) {
-	hour24clock=hour24;
+
+
+extern "C" JNIEXPORT void JNICALL fromjava(setlocale)(JNIEnv *env, jclass clazz,jstring jlocalestr) {
 	if(jlocalestr) {
 		size_t len=env->GetStringLength(jlocalestr);
 		env->GetStringUTFRegion( jlocalestr, 0,len, localestrbuf);

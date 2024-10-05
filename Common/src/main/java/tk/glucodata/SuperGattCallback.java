@@ -246,6 +246,9 @@ static void endtalk() {
 				talker.selspeak(sglucose.value);
 				}
 			}
+        else {
+         tk.glucodata.glucosecomplication.GlucoseValue.updateall();
+         }
 
 
 		if(Natives.getJugglucobroadcast())
@@ -258,7 +261,7 @@ static void endtalk() {
 			nexttime=tim+mininterval;
 			if(!isWearable) {
 				if(Natives.getlibrelinkused()) XInfuus.sendGlucoseBroadcast(SerialNumber, mgdl, rate, timmsec);
-            if(Natives.geteverSensebroadcast()) EverSense.broadcastglucose(mgdl, rate, timmsec);
+				if(Natives.geteverSensebroadcast()) EverSense.broadcastglucose(mgdl, rate, timmsec);
 				//SendNSClient.broadcastglucose(mgdl, rate, timmsec);
 				}
 			if(Natives.getxbroadcast())

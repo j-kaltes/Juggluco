@@ -123,10 +123,10 @@ static jugglucotext nltext {
  .menustr0= {
 	"Kloon",
 	"Sensor",
-	"    Darkmode      ",
+	"  Darkmode      ",
         "Instellingen",
 	"Stop Alarm" },
-.menustr2= {"Datum",hourminstr, "Dag terug              ",nltext.amount},
+.menustr2= {"Datum",hourminstr, "Dag terug                    ",nltext.amount},
 #endif
 
 	.scanerrors={

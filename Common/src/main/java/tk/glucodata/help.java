@@ -102,6 +102,8 @@ public static   void basehelp(int res,Activity act,Consumer<Layout> okproc) {
 	helpview.setMovementMethod(LinkMovementMethod.getInstance());
  	    helpview.setLinksClickable(true);
            helpscroll.addView(helpview);
+       helpscroll.setVerticalScrollBarEnabled(Applic.scrollbar);
+      helpscroll.setScrollbarFadingEnabled(false);
 	   
            Button ok=new Button(act);
            ok.setText(R.string.ok);
@@ -161,6 +163,8 @@ public static   void basehelp(int res,Activity act,Consumer<Layout> okproc) {
 		helpview.setMovementMethod(LinkMovementMethod.getInstance());
  	    helpview.setLinksClickable(true);
            helpscroll.addView(helpview);
+       helpscroll.setVerticalScrollBarEnabled(Applic.scrollbar);
+      helpscroll.setScrollbarFadingEnabled(false);
 	   
            ok=new Button(act);
            ok.setText(R.string.ok);

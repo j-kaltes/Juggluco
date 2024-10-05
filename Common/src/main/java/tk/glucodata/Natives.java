@@ -72,7 +72,7 @@ public static native void startmeals();
 public static native void startsensors( );
 
 
-	public static native void setlocale(String loc,boolean hour24);
+	public static native void setlocale(String loc);
      public static native int step();
     public static native int badscan(int kind);
 //    public static native long lastpoll();
@@ -744,6 +744,16 @@ public static native String getUsedSensorName( );
 public static native float getthreshold( );
 public static native void setthreshold(float val);
 public static native void systembar(int left,int top,int right,int bottom);
+public static native void sethour24(boolean val);
+public static native boolean gethour24( );
+public static native void setComplicationArrowColor(int val);
+public static native int getComplicationArrowColor( );
+public static native void setComplicationTextColor(int val);
+public static native int getComplicationTextColor( );
+public static native void setComplicationBackgroundColor(int val);
+public static native int getComplicationBackgroundColor( );
+public static native void setComplicationTextBorderColor(int val);
+public static native int getComplicationTextBorderColor( );
 
 //public static native void sendxdripold();
 //s/^extern.*JNIEXPORT[         ]*\([a-zA-Z]*\)[ ]*JNICALL[      ]*fromjava(\([^)]*\)) *(JNIEnv[^,]*,[^,)]*[,)]\([^){]*\)[^a-zA-Z0-9]*$/public static native \1 \2(\3);/g

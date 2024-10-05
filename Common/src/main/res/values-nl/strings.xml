@@ -172,8 +172,8 @@
  <string name="wronglibrary">Library werkt niet goed, probeer een andere</string>
  <string name="installedlibrary">Library geïnstalleerd</string>
  <string name="cantextract">Kan %s niet uit apk halen, probeer een andere apk</string>
- <string name="connectwithsensor">Voor verbinding met sensor</string>
- <string name="exchangedata">Om data uit te wisselen</string>
+<string name="connectwithsensor">Actief v. sensorverbinding</string>
+<string name="exchangedata">Actief voor dataconnectie</string>
  <string name="nonewvalue">"Geen nieuwe waarde since "</string>
  <string name="lowglucose">" Laag Glucose!"</string>
  <string name="highglucose">" Hoog Glucose!"</string>
@@ -324,4 +324,14 @@
  <string name="floatjuggluco">Boven</string>
  <string name="threshold">Drempel</string>
  <string name="untouchablequestion">Zwevende glucose ontastbaar maken?</string>
+
+<string name="hour12">12u</string>
+<string name="complications">Complicaties</string>
+<string name="colors_style_setting_description">Watchface-kleur</string>
+<string name="glucosenumbercomplicationlabel">Glucosewaarde</string>
+<string name="glucosearrowcomplicationlabel">Glucosepijl</string>
+<string name="glucosearrowvaluecomplicationlabel">Waarde + pijl</string>
+<string name="text">Tekst</string>
+<string name="arrow">Pijl</string>
+
 </resources>

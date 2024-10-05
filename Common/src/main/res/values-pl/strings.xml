@@ -82,7 +82,7 @@
  <string name="invertscreen">Odwróć ekran</string>
  <string name="nfcsound">Dźwięk NFC</string>
  <string name="manuallyscale">Ręczne skalowanie</string>
- <string name="time">Osi czasu</string>
+ <string name="time">Czas</string>
  <string name="glucose">Osi gluk.</string>
  <string name="sensorviabluetooth">Sensor przez bluetooth</string>
  <string name="sensorviabluetoothon">W przypadku alarmów w urządzeniach nieobsługujących klonowania należy włączyć opcję „Sensor przez bluetooth”</string>
@@ -216,6 +216,7 @@
  <string name="floatglucoseshort">@string/floatglucose</string>
 
  <string name="fontsize">Rozmiar czcionki</string>
+ <string name="fontsizeshort">Rozmiar</string>
  <string name="fonttoolarge">Zbyt duży rozmiar czcionki: maks =</string>
  <string name="foreground">Pierwszy plan</string>
  <string name="background">Tło</string>

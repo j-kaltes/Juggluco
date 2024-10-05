@@ -62,6 +62,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.RadioButton;
 import android.widget.ScrollView;
@@ -141,9 +142,16 @@ void EnableIntentScanning(boolean val) {
 static private Settings thisone=null;
 public static void set(MainActivity act) {
 	act.lightBars(false);
-	act.showui=true;
-    	act.showSystemUI();
-	(thisone=new Settings()).makesettings(act);
+	thisone=new Settings();
+
+	if(!isWearable&&!Natives.getsystemUI()) {
+		act.showui=true;
+		act.showSystemUI();
+		thisone.makesettings(act);
+		}
+	else
+		thisone.makesettingsin(act);
+
 	}
 private void makesettingsin(MainActivity act) {
     	activity=act;
@@ -163,8 +171,7 @@ private void makesettingsin(MainActivity act) {
 		});
 }
 private void makesettings(MainActivity act) {
-	Applic.app.getHandler().postDelayed( ()->{
-		makesettingsin(act);},1);
+	Applic.app.getHandler().postDelayed( ()->{ makesettingsin(act);},1);
 		
 }
 
@@ -204,12 +211,18 @@ void finish() {
 	removeContentView(settinglayout);
 	thisone=null;
 
+
+	if(!isWearable) {
 	activity.showui=false;
 //   activity.hideSystemUI();
-	Applic.app.getHandler().postDelayed( ()->{
-				activity.hideSystemUI();
-				},1);
-		activity.requestRender();
+
+	if(!Natives.getsystemUI()) {
+		Applic.app.getHandler().postDelayed( ()->{
+					activity.hideSystemUI();
+					},1);
+		}
+		}
+	activity.requestRender();
 	}
 
 //    Button deletelabel;
@@ -225,7 +238,8 @@ static int getbackgroundcolor(Context context) {
         return Color.RED;
 }
 
-HorizontalScrollView settinglayout=null;
+//HorizontalScrollView settinglayout=null;
+FrameLayout settinglayout=null;
     RadioButton mmolL;
     RadioButton mgdl;
 
@@ -373,10 +387,6 @@ static public void alarmsettings(MainActivity context,View parview,boolean[] iss
 
 	var Save=getbutton(context,R.string.save);
 	var Cancel=getbutton(context,R.string.cancel);
-/*        CheckBox toucheverywhere = new CheckBox(context);
-	toucheverywhere.setText(R.string.offtouch);
-	toucheverywhere.setChecked(Natives.gettoucheverywhere());
-	*/
 	View[][] views;
 	if(isWearable) {
 		var ala=getlabel(context,R.string.alarms);
@@ -388,7 +398,7 @@ new View[]{isvalue},new View[]{ringisvalue,Cancel},new View[]{usealarm},new View
 //new View[]{isvalue},new View[]{ringisvalue},new View[]{Cancel,Save}, new View[] {toucheverywhere}};
 		}
 	else {
-        	View[] lostrow={lossalarm,losswait,min,ringlossalarm};
+      View[] lostrow={lossalarm,losswait,min,ringlossalarm};
 		View[] row6={usealarm,isvalue, ringisvalue};
 		View[] rowshow={help,Cancel,Save};
 		views=new View[][]{lowalarm,highalarm,lostrow,row6,rowshow};
@@ -399,12 +409,16 @@ new View[]{isvalue},new View[]{ringisvalue,Cancel},new View[]{usealarm},new View
 		int[] ret={w,h};
 		return ret;
 		},views);
-  layout.setPadding(MainActivity.systembarLeft,MainActivity.systembarTop,MainActivity.systembarRight,MainActivity.systembarBottom);
+   if(isWearable)
+       layout.setPadding(0,0,0,0);
+     else
+        layout.setPadding(MainActivity.systembarLeft,MainActivity.systembarTop,MainActivity.systembarRight,MainActivity.systembarBottom);
 	var scroll=new ScrollView(context);	
 	scroll.addView(layout);
 	scroll.setFillViewport(true);
 	scroll.setSmoothScrollingEnabled(false);
-        scroll.setVerticalScrollBarEnabled(false);
+   scroll.setScrollbarFadingEnabled(false);
+   scroll.setVerticalScrollBarEnabled(Applic.scrollbar);
 	lay=scroll;
 	/*
 	if(isWearable) {
@@ -794,6 +808,10 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 	Button numalarm=getbutton(context,R.string.remindersname);
 	Button advanced=null;
 
+    var hour12=getcheckbox(context,R.string.hour12,!Natives.gethour24());
+	hour12.setOnCheckedChangeListener( (buttonView,  isChecked) -> {
+		Applic.sethour24(!isChecked);
+		});
 
 	View[][] views;
 	final String advhelp=isWearable?null:Natives.advanced();
@@ -801,6 +819,13 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 	       var fixed=getcheckbox(context,R.string.clampnow,Natives.getcurrentRelative());
 		fixed.setOnCheckedChangeListener( (buttonView,  isChecked) -> Natives.setcurrentRelative(isChecked));
 	if(isWearable) {
+		Button complications;
+		if(BuildConfig.minSDK>=26) {
+			complications = getbutton(context, R.string.complications);
+			complications.setOnClickListener(v -> tk.glucodata.glucosecomplication.ColorConfig.show(context, thelayout[0]));
+		}
+
+	       
 
 	       var uploader=getbutton(context,R.string.uploader);
 	       var floatconfig=getbutton(context,R.string.floatglucoseshort);
@@ -815,7 +840,15 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 			View[] rowglu=new View[]{bluetooth};
 
 			View[] camornum=new View[] {alarmbut,numalarm};
-			views=new View[][]{new View[]{getlabel(context,R.string.unit)}, row0, row1,new View[]{scalelabel},new View[]{fixatex,fixatey}, row2, new View[]{threslabel,threshold}, new View[]{levelleft},hasnfc?(new View[]{globalscan,nfcsound}):null, new View[]{xdripbroadcast},new View[]{jugglucobroadcast},new View[]{fixed,uploader},new View[]{floatconfig,floatglucose},camornum,rowglu,new View[]{colbut,display},new View[]{langspin},new View[]{cancel,ok},new View[] {getlabel(context,BuildConfig.BUILD_TIME)},new View[]{getlabel(context,BuildConfig.VERSION_NAME)},new View[]{getlabel(context,codestr) }};;
+		if(BuildConfig.minSDK>=26) {
+			views = new View[][]{new View[]{getlabel(context, R.string.unit)}, row0, row1, new View[]{scalelabel}, new View[]{fixatex, fixatey}, row2, new View[]{threslabel, threshold}, new View[]{levelleft}, hasnfc ? (new View[]{globalscan, nfcsound}) : null, new View[]{xdripbroadcast}, new View[]{jugglucobroadcast}, new View[]{fixed, uploader}, new View[]{floatconfig, floatglucose}, camornum, rowglu, new View[]{colbut, display}, new View[]{hour12, langspin}, new View[]{cancel, ok}, new View[]{complications}, new View[]{getlabel(context, BuildConfig.BUILD_TIME)}, new View[]{getlabel(context, BuildConfig.VERSION_NAME)}, new View[]{getlabel(context, codestr)}};
+//			views=  new View[][]{new View[]{getlabel(context,R.string.unit)}, row0, row1,new View[]{scalelabel},new View[]{fixatex,fixatey}, row2, new View[]{threslabel,threshold}, new View[]{levelleft},hasnfc?(new View[]{globalscan,nfcsound}):null, new View[]{xdripbroadcast},new View[]{jugglucobroadcast},new View[]{fixed,uploader},new View[]{floatconfig,floatglucose},camornum,rowglu,new View[]{colbut,display},new View[]{hour12,langspin},new View[]{cancel,ok},new View[]{complications},new View[] {getlabel(context,BuildConfig.BUILD_TIME)},new View[]{getlabel(context,BuildConfig.VERSION_NAME)},new View[]{getlabel(context,codestr) }};;
+			;
+		}
+		else{
+			views = new View[][]{new View[]{getlabel(context, R.string.unit)}, row0, row1, new View[]{scalelabel}, new View[]{fixatex, fixatey}, row2, new View[]{threslabel, threshold}, new View[]{levelleft}, hasnfc ? (new View[]{globalscan, nfcsound}) : null, new View[]{xdripbroadcast}, new View[]{jugglucobroadcast}, new View[]{fixed, uploader}, new View[]{floatconfig, floatglucose}, camornum, rowglu, new View[]{colbut, display}, new View[]{hour12, langspin}, new View[]{cancel, ok}, new View[]{getlabel(context, BuildConfig.BUILD_TIME)}, new View[]{getlabel(context, BuildConfig.VERSION_NAME)}, new View[]{getlabel(context, codestr)}};
+			;
+		}
 	       uploader.setOnClickListener(v-> tk.glucodata.NightPost.config(context,thelayout[0]));
 		}
 	else {
@@ -852,7 +885,7 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 			:
 			new View[]{showalways,libreview};
 		View[] rowglu=new View[]{ bluetooth,floatconfig,alarmbut};
-		row8=new View[]{changelabels,langspin,numalarm,colbut};
+		row8=new View[]{changelabels,hour12,langspin,numalarm,colbut};
 		views=new View[][]{row0, row1,new View[]{scalelabel,fixatex,fixatey}, row2,new View[]{levelleft,threslabel,threshold,camera,reverseorientation},
 
 		hasnfc?new View[]{nfcsound, globalscan}:null,librerow,new View[] {librelinkbroadcast,everSensebroadcast, xdripbroadcast ,jugglucobroadcast},new View[] {webserver,iob,fixed,uploader }, rowglu,row8,row9};
@@ -942,36 +975,45 @@ private	void mksettings(MainActivity context,boolean[] issaved) {
 			);
 
         lay.setBackgroundColor(colorwindowbackground);
-	NestedScrollView scroller=new NestedScrollView(context);
-	scroller.addView(lay);
-	scroller.setSmoothScrollingEnabled(false);
-        scroller.setVerticalScrollBarEnabled(false);
-	int width=GlucoseCurve.getwidth();
-	int heightU=GlucoseCurve.getheight();
+//	NestedScrollView scroller=new NestedScrollView(context);
+
+//	int width=GlucoseCurve.getwidth();
+//	int heightU=GlucoseCurve.getheight();
 	//scroller.setMinimumWidth(width);
+var	horlayout= new HorizontalScrollView(context);
+	horlayout.addView(lay);
+//	horlayout.setSmoothScrollingEnabled(false);
+//   horlayout.setVerticalScrollBarEnabled(Applic.scrollbar);
+	horlayout.setHorizontalScrollBarEnabled(false);
+//   horlayout.setScrollbarFadingEnabled(false);
+	//horlayout.setMinimumHeight(heightU);
+	horlayout.setFillViewport(true);
+   horlayout.setPadding(0,0,0,0);
+
+	ScrollView scroller=new ScrollView(context);
+	scroller.addView(horlayout);
+	scroller.setSmoothScrollingEnabled(false);
+   scroller.setVerticalScrollBarEnabled(Applic.scrollbar);
+//	scroller.setHorizontalScrollBarEnabled(Applic.horiScrollbar);
+   scroller.setScrollbarFadingEnabled(false);//Crash with NestedScrollView
 	scroller.setFillViewport(true);
-	settinglayout= new HorizontalScrollView(context);
-	settinglayout.addView(scroller);
-	settinglayout.setSmoothScrollingEnabled(false);
-      settinglayout.setVerticalScrollBarEnabled(false);
-	settinglayout.setHorizontalScrollBarEnabled(false);
-	//settinglayout.setMinimumHeight(heightU);
-	settinglayout.setFillViewport(true);
+	scroller.setPadding(0,0,0,0);
 
-	final	int laywidth=MATCH_PARENT;
-	final   int pad=(int)(tk.glucodata.GlucoseCurve.metrics.density*7.0);
-//	   lay.setPadding(pad,pad*2,pad,pad);
-	   lay.setPadding(MainActivity.systembarLeft+pad,MainActivity.systembarTop,pad+MainActivity.systembarRight,pad+MainActivity.systembarBottom);
+   settinglayout=scroller;
 
-  // scroll.setPadding(0,10*MainActivity.systembarTop,0,0);
-//		lay.setPadding(pad,pad*2,pad,pad*6);
 
 	if(isWearable) {
+	   lay.setPadding(0,0,0,0);
 		display.setOnClickListener(v -> {
 			tk.glucodata.Display.display(context, settinglayout);
 		});
 		}
+     else {
+	final   int pad=(int)(tk.glucodata.GlucoseCurve.metrics.density*7.0);
+	   lay.setPadding(MainActivity.systembarLeft+pad,MainActivity.systembarTop,pad+MainActivity.systembarRight,pad+MainActivity.systembarBottom);
+      }
 
+	final	int laywidth=MATCH_PARENT;
 	 context.addContentView(settinglayout, new ViewGroup.LayoutParams( laywidth ,MATCH_PARENT));
 	numalarm.setOnClickListener(v-> {
 		new tk.glucodata.setNumAlarm().mkviews(context,settinglayout);

@@ -142,7 +142,7 @@ static private void  getselected(MainActivity context, View parent,String title,
 		scroll.addView(layout);
 		scroll.setFillViewport(true);
 		scroll.setSmoothScrollingEnabled(false);
-		scroll.setVerticalScrollBarEnabled(false);
+		scroll.setVerticalScrollBarEnabled(Applic.scrollbar);
 		theview=scroll;
 	  	}
 	var laysize=isWearable?MATCH_PARENT:WRAP_CONTENT;

@@ -420,7 +420,9 @@ private fun	showglucose(canvas:Canvas,glucosePaint:Paint,agePaint:Paint,getxin:F
 		var getx=getxin
 		    Log.i(LOG_ID,"glucose=${glucose.value} time=${glucose.time}")
 		     var age:Int=(unixtime-glucose.time).toInt()
-		     val oldage=(60.0f*5.0f)
+//		     val oldage=(60.0f*5.0f)
+
+     		     val oldage=tk.glucodata.Notify.glucosetimeoutSEC
 		   if(age<oldage) {
 		   	with(canvas) {
 			    if(age<0) age=0

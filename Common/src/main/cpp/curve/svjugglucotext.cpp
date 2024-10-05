@@ -117,7 +117,7 @@ jugglucotext svtext {
     .menustr2= {
       "Datum  ",
       hourminstr,
-      "Dag tillbaka            ",
+      "Dag tillbaka                 ",
       "Värde"
     },
 #endif

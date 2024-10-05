@@ -119,7 +119,9 @@ inline int mktmmin(const struct tm *tmptr) {
 inline int datestr2(const time_t tim,char *buf) {
 	struct tm tmbuf;
 	 struct tm *stm=localtime_r(&tim,&tmbuf);
-	return sprintf(buf,"%02d-%02d-%d %02d:%02d",stm->tm_mday,stm->tm_mon+1,1900+stm->tm_year,stm->tm_hour,mktmmin(stm));
+	int len=sprintf(buf,"%02d-%02d-%d ",stm->tm_mday,stm->tm_mon+1,1900+stm->tm_year);
+   len+=mktime(stm->tm_hour,mktmmin(stm),buf+len);
+   return len;
 	}
 
 template<typename T>   bool searchhit(const T *ptr); 

@@ -136,7 +136,7 @@ static jugglucotext ittext {
 	"Impostazione",
 	"Stop Allarme"
 	 },
-   .menustr2= {"Data",hourminstr,"Giorno dietro       ",ittext.amount},
+   .menustr2= {"Data",hourminstr,"Giorno dietro             ",ittext.amount},
 #endif
 	.scanerrors={
 		{"Scan Error (%d)","Riprova"},

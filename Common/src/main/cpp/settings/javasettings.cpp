@@ -1636,3 +1636,52 @@ extern "C" JNIEXPORT jfloat  JNICALL   fromjava(getthreshold)(JNIEnv *env, jclas
 extern "C" JNIEXPORT void  JNICALL   fromjava(setthreshold)(JNIEnv *env, jclass cl,jfloat val) {
 	settings->data()->threshold=val;
 	}
+
+extern bool hour24clock;
+void settimefont() ;
+
+void inithour24() {
+	hour24clock=settings->data()->hour24;
+	settimefont() ;
+	}
+extern "C" JNIEXPORT void  JNICALL   fromjava(sethour24)(JNIEnv *env, jclass cl,jboolean val) {
+	settings->data()->hour24=val;
+	hour24clock=val;
+	settimefont() ;
+	}
+extern "C" JNIEXPORT jboolean  JNICALL   fromjava(gethour24)(JNIEnv *env, jclass cl) {
+	return settings->data()->hour24;
+	}
+
+
+#ifdef WEAROS
+extern "C" JNIEXPORT void  JNICALL   fromjava(setComplicationArrowColor)(JNIEnv *env, jclass cl,jint val) {
+	settings->data()->ComplicationArrowColor=val;
+	}
+extern "C" JNIEXPORT jint  JNICALL   fromjava(getComplicationArrowColor)(JNIEnv *env, jclass cl) {
+	return settings->data()->ComplicationArrowColor;
+	}
+extern "C" JNIEXPORT void  JNICALL   fromjava(setComplicationTextColor)(JNIEnv *env, jclass cl,jint val) {
+	settings->data()->ComplicationTextColor=val;
+	}
+extern "C" JNIEXPORT jint  JNICALL   fromjava(getComplicationTextColor)(JNIEnv *env, jclass cl) {
+	return settings->data()->ComplicationTextColor;
+	}
+extern "C" JNIEXPORT void  JNICALL   fromjava(setComplicationBackgroundColor)(JNIEnv *env, jclass cl,jint val) {
+	settings->data()->ComplicationBackgroundColor=val;
+	}
+extern "C" JNIEXPORT jint  JNICALL   fromjava(getComplicationBackgroundColor)(JNIEnv *env, jclass cl) {
+	return settings->data()->ComplicationBackgroundColor;
+	}
+
+extern "C" JNIEXPORT void  JNICALL   fromjava(setComplicationTextBorderColor)(JNIEnv *env, jclass cl,jint val) {
+	settings->data()->ComplicationTextBorderColor=val;
+	}
+extern "C" JNIEXPORT jint  JNICALL   fromjava(getComplicationTextBorderColor)(JNIEnv *env, jclass cl) {
+	return settings->data()->ComplicationTextBorderColor;
+	}
+
+
+
+
+#endif

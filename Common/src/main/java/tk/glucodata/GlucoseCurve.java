@@ -106,7 +106,7 @@ static int reopennr=0;
     Layout search;
     Dialogs dialogs;
     private static final String LOG_ID = "GlucoseCurve";
-static    float smallfontsize;
+static   public float smallfontsize;
     Calendar cal = Calendar.getInstance();
  final   private ScaleGestureDetector mScaleDetector;
  final   private GestureDetector mGestureDetector;
@@ -121,6 +121,7 @@ NumberView  numberview= new NumberView();
 
 Layout numcontrol=null;
 void startsearch() {
+if(!isWearable) {
     MainActivity activity = (MainActivity) getContext();
     if(searchcontrol!=null) {
 	Natives.stopsearch();
@@ -153,6 +154,7 @@ void startsearch() {
 		Menus.show(activity);
 
 	} );
+    }
     }
 
 
@@ -332,17 +334,6 @@ static public float getDensity() {
 	setEGLConfigChooser(8, 8, 8, 8, 16, 1);
 	setRenderer(render);
 	setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
-/*	while(true) {
-		try {/*
-/*			break;
-		}
-		catch(Throwable e) {
-			Log.stack(LOG_ID,"OpenGL init",e);
-			}
-
-		}; */
-
-
         metrics= getResources().getDisplayMetrics();
 	dialogs=new Dialogs(metrics.density);
 
@@ -659,6 +650,19 @@ void startlibrelink(String lang) {
 
 private int[] minutes={-1,-1};
 
+
+static String mktime(int hour,int min) {
+	 if(Applic.hour24)  {
+                return String.format(usedlocale,"%02d:%02d", hour, min);
+		}
+	else {
+            var daypart = (hour >= 12)?"pm":"am";
+            var hour12 = hour % 12;
+            if(hour12 == 0) hour12 = 12;
+            return   String.format(usedlocale,"%d:%02d%s", hour12, min,daypart);
+	    }
+    }
+
 private void mktimedialog( Button but,final int num ,View parent) {
         but.setOnClickListener(
                 v->  {
@@ -680,7 +684,7 @@ private void mktimedialog( Button but,final int num ,View parent) {
 		numberview.gettimepicker((MainActivity)getContext(),starthour, startmin,
 		(hour,min) -> {
 			TextView text=((TextView) v);
-            text.setText(String.format(usedlocale,"%02d:%02d", hour, min));
+                        text.setText(mktime( hour, min));
 //			v.setBackgroundColor(Color.RED);
 			text.setTextColor( Color.RED);
 			text.setTypeface( null,Typeface.BOLD);
@@ -718,7 +722,8 @@ static void reopener() {
 	reopennr=0;
 	}
 int labelsel=-1;
-    private void clearsearch(View view) {
+void clearsearch(View view) {
+if(!isWearable) {
     if(mealquantity!=null) {
 	     mealquantity.setText("");
 	     mealingredient.setText("");
@@ -730,8 +735,14 @@ int labelsel=-1;
         scansearch.setChecked(true);
         streamsearch.setChecked(true);
         historysearch.setChecked(true);
-        fromtime.setText("00:00");
-        totime.setText("23:59");
+	if(Applic.hour24)  {
+		fromtime.setText("00:00");
+		totime.setText("23:59");
+		}
+	else {
+		fromtime.setText("12:00am");
+		totime.setText("12:59pm");
+		}
 	fromtime.setTextColor(oldColors);
 	totime.setTextColor(oldColors);
 	totime.setTextSize(COMPLEX_UNIT_PX,oldsize);
@@ -744,6 +755,7 @@ int labelsel=-1;
 //	above.requestFocus();
 	under.requestFocus();
 	editfocus.setedittext(under);
+	}
     }
 	  View searchcontrol=null;
 //    void search(View view) {
@@ -1019,6 +1031,9 @@ void mkmealsearch(MainActivity act) {
 	}
 
 private Layout getsearchlayout(MainActivity context) {
+if(isWearable)
+return null;
+else {
     editfocus focus=new editfocus();
 		if(smallScreen) {
 			under=geteditwearos(context);
@@ -1148,6 +1163,7 @@ if(!smallScreen) {
 //       editfocus.setedittext(under);
 
     return layout;
+    }
 }
 
 

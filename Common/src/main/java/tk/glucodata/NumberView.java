@@ -69,6 +69,8 @@ import static android.widget.Spinner.MODE_DROPDOWN;
 import static java.lang.System.currentTimeMillis;
 //import static tk.glucodata.Applic.smallScreen;
 import static tk.glucodata.Applic.isWearable;
+import static tk.glucodata.Applic.systemtimeformat;
+import static tk.glucodata.GlucoseCurve.mktime;
 import static tk.glucodata.MainActivity.systembarLeft;
 import static tk.glucodata.MainActivity.systembarRight;
 import static tk.glucodata.RingTones.EnableControls;
@@ -167,6 +169,17 @@ final private int[] newmealptr={0};
 final private Layout[] mealview={null};
 private long lasttime=0L;
 private TextView messagetext;
+
+//public static String minhourstr(Date dat) {
+public static String minhourstr(long mmsec) {
+   if(systemtimeformat())
+      return Notify.timef.format(new Date(mmsec));
+   else {
+      Calendar cal = Calendar.getInstance();
+      cal.setTimeInMillis(mmsec);
+      return mktime(cal.get(Calendar.HOUR_OF_DAY),cal.get(Calendar.MINUTE));
+      }
+   }
 public   View addnumberview(MainActivity context,final int bron,final long time,final float value,final int type,final int tmpmealptr) {
     if(newnumview==null) {
         datebutton = new Button(context);
@@ -288,6 +301,7 @@ public   View addnumberview(MainActivity context,final int bron,final long time,
 	if(isWearable) {
 		ScrollView hori=new ScrollView(context);
 		hori.setFillViewport(true);
+      hori.setScrollbarFadingEnabled(false);
 		hori.addView(layout);
 		newnumview=hori;
 
@@ -369,7 +383,8 @@ public   View addnumberview(MainActivity context,final int bron,final long time,
 	lasttime=time;
 	Date dat = new Date(time);
 	datebutton.setText(DateFormat.getDateInstance(DateFormat.DEFAULT).format(dat));
-        timebutton.setText(DateFormat.getTimeInstance(DateFormat.SHORT).format(dat));
+//     timebutton.setText(DateFormat.getTimeInstance(DateFormat.SHORT).format(dat));
+     timebutton.setText(minhourstr(time));
 	if(value< Float.MAX_VALUE)
 		valueedit.setText(String.valueOf(value));
 	else
@@ -721,7 +736,7 @@ public void gettimepicker(MainActivity activity,int hourin, int minin, ObjIntCon
    settime=timeset;
     if(timepicker==null) {
         pick =new TimePicker(activity);
-        pick.setIs24HourView( android.text.format.DateFormat.is24HourFormat(activity));
+//        pick.setIs24HourView( android.text.format.DateFormat.is24HourFormat(activity));
         Button cancel=new Button(activity);
         cancel.setText(R.string.cancel);
         cancel.setOnClickListener(vi -> { 
@@ -790,6 +805,7 @@ public void gettimepicker(MainActivity activity,int hourin, int minin, ObjIntCon
         timepicker.setVisibility(VISIBLE);
 	timepicker.bringToFront();
 	}
+     pick.setIs24HourView(Applic.hour24);
 activity.setonback(
 		() -> {
 			onclose.run();

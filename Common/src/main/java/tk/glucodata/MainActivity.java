@@ -44,6 +44,7 @@ import static tk.glucodata.GlucoseCurve.STEPBACK;
 import static tk.glucodata.Log.showbytes;
 import static tk.glucodata.Natives.getInvertColors;
 import static tk.glucodata.Natives.hasSibionics;
+import static tk.glucodata.Natives.setShownintro;
 import static tk.glucodata.Natives.wakelibreview;
 import static tk.glucodata.help.hidekeyboard;
 import static tk.glucodata.settings.Settings.removeContentView;
@@ -156,31 +157,36 @@ void startdisplay() {
 	app.setbackgroundcolor(this) ;
 	if(Applic.Nativesloaded)
 	    app.needsnatives() ;
+
 	curve = new GlucoseCurve(this);
+   Log.i(LOG_ID,"After curve = new GlucoseCurve(this);");
    if(!isWearable) {
       if(Build.VERSION.SDK_INT >= 30) {
          setOnApplyWindowInsetsListener(curve,(v, windowInsets) -> {
-          Insets insets = /*windowInsets.getInsets(WindowInsetsCompat.Type.statusBars());
-            Log.i(LOG_ID, "statusBars: left="+insets.left+ " right="+insets.right+ " bottom="+insets.bottom+ " top="+insets.top);
+         setsizes(this);
+         if(screenwidth>= screenheight) {
+             Insets  insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
+             Log.i(LOG_ID, "systemBars: left="+insets.left+ " right="+insets.right+ " bottom="+insets.bottom+ " top="+insets.top);
+             Natives.systembar(insets.left, insets.top, insets.right, insets.bottom);
 
-           insets = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars());
-            Log.i(LOG_ID, "navigationBars: left="+insets.left+ " right="+insets.right+ " bottom="+insets.bottom+ " top="+insets.top); */
-           insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
-            Log.i(LOG_ID, "systemBars: left="+insets.left+ " right="+insets.right+ " bottom="+insets.bottom+ " top="+insets.top);
-          Natives.systembar(insets.left, insets.top, insets.right, insets.bottom);
+            systembarLeft=insets.left;
+            systembarTop=insets.top;
+            systembarRight=insets.right;
+            systembarBottom=insets.bottom;
 
-         systembarLeft=insets.left;
-         systembarTop=insets.top;
-         systembarRight=insets.right;
-         systembarBottom=insets.bottom;
-
-          requestRender();
+             requestRender();
+             if(getlibrary.showintro) {
+               getlibrary.showintro=false;
+               help.help(R.string.introhelp,this,l->setShownintro(true));
+               }
+               }
             return windowInsets;
       });
     // showSystemBarsAppearance();
       }
       lightBars(!getInvertColors( ));
       }
+
 
 	setContentView(curve);
 
@@ -199,7 +205,7 @@ void startdisplay() {
        Log.stack(LOG_ID ,mess,error);
    }
 
-       getlibrary.getlibrary(this);//after setfilesdir for settings
+     getlibrary.getlibrary(this);//after setfilesdir for settings
      handleIntent(getIntent());
 	final int unit=Natives.getunit();
 	if(!(unit==1||unit==2)) {
@@ -209,7 +215,7 @@ void startdisplay() {
 	var lang=getString(R.string.language);
 	Log.i(LOG_ID,"curlang="+Applic.curlang+" newlang="+lang+" locale="+util.getlocale().getLanguage());
 	if(!lang.equals(Applic.curlang)) {
-		Natives.setlocale(lang,(Applic.hour24= DateFormat.is24HourFormat(Applic.app)));
+		Natives.setlocale(lang);
 		Applic.curlang=lang;
 		if(Talker.istalking())	
 			SuperGattCallback.newtalker(this);
@@ -466,13 +472,15 @@ try {
         mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
     }
 
-    if (mNfcAdapter == null) {
-    	if(askNFC) {
-		Log.i(LOG_ID, "No NFC adapter found!");
-		Applic.argToaster(this, getResources().getString(R.string.error_nfc_device_not_supported), Toast.LENGTH_SHORT);
-		askNFC=false;
-		return;
-		}
+    if(mNfcAdapter == null) {
+	    if(!isWearable) {
+         if(askNFC) {
+            Log.i(LOG_ID, "No NFC adapter found!");
+            Applic.argToaster(this, getResources().getString(R.string.error_nfc_device_not_supported), Toast.LENGTH_SHORT);
+            askNFC=false;
+            return;
+            }
+        }
     } else {
         if (!mNfcAdapter.isEnabled()) {
 	    if(!isWearable) {
@@ -618,6 +626,8 @@ static boolean tocalendarapp=false;
 				talkbackoff();
 			}
 		}
+
+ //Notify.testnot(); 
     }
 
 long nexttime= 0L;

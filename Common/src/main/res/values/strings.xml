@@ -171,8 +171,8 @@
  <string name="wronglibrary">Library not functioning properly, try a different one</string>
  <string name="installedlibrary">Installed library</string>
  <string name="cantextract">Can\'t extract %s, try a different apk</string>
- <string name="connectwithsensor">To connect with sensor</string>
- <string name="exchangedata">To exchange data</string>
+ <string name="connectwithsensor">Runs to connect to sensor</string>
+ <string name="exchangedata">Runs to exchange data</string>
  <string name="nonewvalue">"No new value since "</string>
  <string name="lowglucose">" Low Glucose!"</string>
  <string name="highglucose">" High Glucose!"</string>
@@ -216,6 +216,7 @@
  <string name="floatglucoseshort">@string/floatglucose</string>
 
  <string name="fontsize">Font size</string>
+ <string name="fontsizeshort">@string/fontsize</string>
  <string name="fonttoolarge">Font size too large: max=</string>
  <string name="foreground">Foreground</string>
  <string name="background">Background</string>
@@ -345,4 +346,14 @@
     <string name="everSensebroadcast">EverSense</string>
  <string name="threshold">Threshold</string>
  <string name="untouchablequestion">Make floating glucose untouchable?</string>
+
+ <string name="hour12">12h</string>
+<string name="complications">Complications</string>
+    <string name="colors_style_setting_description">Watchface color</string>
+   <string name="glucosenumbercomplicationlabel">Glucose value</string>
+   <string name="glucosearrowcomplicationlabel">Glucose arrow</string>
+   <string name="glucosearrowvaluecomplicationlabel">Value + arrow</string>
+   <string name="text">Text</string>
+   <string name="arrow">Arrow</string>
+
 </resources>
