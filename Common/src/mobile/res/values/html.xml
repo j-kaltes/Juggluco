@@ -1719,18 +1719,24 @@ point until which all data is already present on the phone. Hereafter
 press “<i>Save</i>” and then “<i>Close</i>”. Unset “<i>Mirror
 sends amounts</i>”.</p>
 <h2 class="western"><strong>Watch face</strong></h2>
-<p>Juggluco for Wear OS includes a watch face that shows your current
-glucose level besides the time and up to four complications. To make
-use of it you have to select this watch face for example in your
-watch companion app under &quot;downloaded&quot;. Normally you will
-see the last glucose value when the screen wakes up. When the display
-is in ambient (always on) mode, the glucose value is only updated
-when the minute indicator is increased or you press a button or raise
-your arm. So the displayed value can be up to one minute delayed.</p>
-<p>There is also a complication that uses the Glucodata broadcast of
-the WearOS version to display the glucose value in every watch face
-that accepts the complication:
-<a href="https://github.com/pachi81/GlucoDataHandler/releases">https://github.com/pachi81/GlucoDataHandler/releases</a></p>
+<p style="margin-bottom: 0in">Juggluco for Wear OS includes a watch
+face that displays your current glucose level alongside the time and
+up to four complications. To use it, you will need to select this
+watch face in, for example, your watch companion app under
+&quot;downloaded&quot;. Normally, you will see the last glucose value
+when the screen wakes up. When the screen is in ambient (always on)
+mode, the glucose value is only updated when the minute indicator is
+raised, or when you press a button or raise your arm. So the
+displayed value can be delayed by up to one minute. The watch face
+cannot be used under WearOS 5 (Samsung Galaxy Watch 7 and Watch
+Ultra, Pixel watch 3), as WearOS 5 does not allow programmed watch
+faces in an effort to conserve battery life.</p>
+<h2 class="western">Complication</h2>
+<p>Juggluco 8.2.0 and higher contains a glucose value, glucose arrow
+and arrow+value complication that can also be used under WearOS 5.
+This can be used with every watch face that accepts a small or large
+image complication.</p>
+<h2 class="western">Floating glucose</h2>
 <p>A third option in to turn on <i>Floating Glucose</i> in Juggluco\'s
 settings on the watch. When Juggluco has the right permissions, a
 glucose value is displayed over other apps. This way you can see your

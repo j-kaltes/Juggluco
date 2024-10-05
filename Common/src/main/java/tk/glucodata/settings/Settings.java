@@ -263,7 +263,7 @@ static View[] mkalarm(MainActivity context,String label1,boolean show,Float valu
          yeslow.setChecked(true);
 	    }
    else {
-            ring.setVisibility(INVISIBLE);
+        ring.setVisibility(INVISIBLE);
 	    alow.setVisibility(INVISIBLE);
 	    }
 
@@ -275,7 +275,7 @@ yeslow.setOnCheckedChangeListener(
             		ring.setVisibility(VISIBLE);
 			}
 		else {
-            	    ring.setVisibility(INVISIBLE);
+            ring.setVisibility(INVISIBLE);
 		    alow.setVisibility(INVISIBLE);
 		    }
     });

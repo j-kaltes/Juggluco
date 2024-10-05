@@ -72,7 +72,10 @@ android {
         buildConfigField 'int', 'minSDK', "$minSdk"
         compileSdk 33
         applicationId "tk.glucodata"
-	     versionName '8.2.0'
+         manifestPlaceholders["debuggable"] = "true"
+         manifestPlaceholders["requireWatch"] = "false"
+
+	     versionName '8.2.1'
 //	multiDexEnabled true
 
         buildConfigField 'String', 'BUILD_TIME', 'new java.text.SimpleDateFormat("HH:mm:ss dd-MMM-yyyy").format(new java.util.Date(' + System.currentTimeMillis() + 'L))'
@@ -106,8 +109,8 @@ android {
             //	targetSdk 26
 	//******  Zet op rollout op 100% ******
             	dimension 'libreVersion'
-		versionCode                                              479                                                                                         //LIBRE2ONLY
-	//	versionName '8.2.0-no3'
+		versionCode                                               480                                                                                           //LIBRE2ONLY
+	//	versionName '8.2.1-no3'
 		versionNameSuffix '-no3'
             buildConfigField 'int', 'libreVersion', '2'
 		    externalNativeBuild.cmake {
@@ -125,7 +128,7 @@ android {
 //	   minSdk 23
             dimension 'libreVersion'
 		versionNameSuffix '-li3'
-		versionCode                                             479                                                                                         //LIBRE3
+		versionCode                                              480                                                                                           //LIBRE3
 	//******  Zet op rollout op 100% ******
 
            	buildConfigField 'int', 'libreVersion', '3'
@@ -141,7 +144,7 @@ android {
 		minSdkVersion 21
             	dimension 'SiBionics'
 		versionNameSuffix '-si'
-		versionCode                                        479                                                                                      
+		versionCode                                         480                                                                                        
 	        buildConfigField 'int', 'SiBionics', '1'
 	         externalNativeBuild.cmake {
 			cppFlags "   -DSIBIONICS=1 "
@@ -149,7 +152,7 @@ android {
 		}
         nosi {
             	dimension 'SiBionics'
-		versionCode                                              479                                                                                      
+		versionCode                                               480                                                                                        
 		versionNameSuffix '-nosi'
 	        buildConfigField 'int', 'SiBionics', '0'
 	         externalNativeBuild.cmake {
@@ -161,12 +164,13 @@ android {
 //           targetSdk 31
 
             // targetSdk 30
+
             dimension 'wearos'
 		minSdk 26
         buildConfigField 'int', 'minSDK', "$minSdk"
-		versionCode                                             479                                                                                         //WATCH
+		versionCode                                              480                                                                                           //WATCH
 	//******  Zet op rollout op 100% ******
-		//versionName '8.2.0-wear'
+		//versionName '8.2.1-wear'
 		versionNameSuffix '-wear'
 		signingConfig signingConfigs.alg
 
@@ -187,8 +191,8 @@ android {
 
 //        minSdk 19
             dimension 'wearos'
-		versionCode                                             479                                                                                         //WATCH
-		//versionName '8.2.0-small'
+		versionCode                                              480                                                                                           //WATCH
+		//versionName '8.2.1-small'
 		versionNameSuffix '-small'
 		signingConfig signingConfigs.alg
 
@@ -237,6 +241,8 @@ buildTypes {
             signingConfig signingConfigs.alg
             minifyEnabled true 
 	    shrinkResources true
+         manifestPlaceholders["requireWatch"] = "false"
+         manifestPlaceholders["debuggable"] = "true"
 
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro', 'proguard-rules.my', 'proguard-rules.log'
 
@@ -262,6 +268,9 @@ buildTypes {
             jniDebuggable false
             debuggable false
 
+         manifestPlaceholders["requireWatch"] = "false"
+         manifestPlaceholders["debuggable"] = "true"
+
         buildConfigField 'int', 'doLog', '0'
             buildConfigField 'int', 'isRelease', '1'
         buildConfigField 'int', 'isReleaseID', '1'
@@ -273,6 +282,8 @@ buildTypes {
                 }
         }
         debugdub {
+         manifestPlaceholders["requireWatch"] = "false"
+         manifestPlaceholders["debuggable"] = "true"
             signingConfig signingConfigs.alg
             minifyEnabled  false
             jniDebuggable true
@@ -287,6 +298,8 @@ buildTypes {
             debuggable true
         }
         release2 {
+         manifestPlaceholders["requireWatch"] = "false"
+         manifestPlaceholders["debuggable"] = "true"
             versionNameSuffix 'release2'
 	    applicationIdSuffix ".debug"
 
@@ -307,6 +320,8 @@ buildTypes {
                 }
             }
         release2log {
+         manifestPlaceholders["requireWatch"] = "false"
+         manifestPlaceholders["debuggable"] = "true"
             versionNameSuffix 'release2log'
 	    applicationIdSuffix ".debug"
 
@@ -327,6 +342,8 @@ buildTypes {
             	}
             }
         debug {
+         manifestPlaceholders["requireWatch"] = "false"
+         manifestPlaceholders["debuggable"] = "true"
 	    applicationIdSuffix ".debug"
             versionNameSuffix 'DEBUG'
 
@@ -345,6 +362,8 @@ buildTypes {
             minifyEnabled  false
         }
         releasedebug {
+         manifestPlaceholders["requireWatch"] = "false"
+         manifestPlaceholders["debuggable"] = "true"
             versionNameSuffix 'releasedebug'
             signingConfig signingConfigs.alg
             minifyEnabled true 
@@ -363,6 +382,8 @@ buildTypes {
                 }
         }
         debug2 {
+         manifestPlaceholders["requireWatch"] = "false"
+         manifestPlaceholders["debuggable"] = "true"
             versionNameSuffix 'debug2'
 	  //  debuggable true		
            // jniDebuggable true
@@ -378,6 +399,8 @@ buildTypes {
 	    	}
         }
         debug3 {
+         manifestPlaceholders["requireWatch"] = "false"
+         manifestPlaceholders["debuggable"] = "true"
             signingConfig signingConfigs.alg
             minifyEnabled  false
             buildConfigField 'int', 'isReleaseID', '1'
@@ -502,7 +525,7 @@ dependencies {
     implementation "androidx.appcompat:appcompat:$APPCOMPAT"
     implementation 'androidx.activity:activity:1.9.2'
 	implementation 'androidx.core:core:1.13.1'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0'
+   implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0'
     implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.0.20'
     implementation 'org.jetbrains.kotlin:kotlin-stdlib:2.0.20'

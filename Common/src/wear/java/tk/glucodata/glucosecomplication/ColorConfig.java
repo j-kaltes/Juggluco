@@ -190,7 +190,8 @@ static public   void show(MainActivity context, View view) {
       //layout.addView(view, new ViewGroup.LayoutParams((int)(width*0.72), (int)(height*0.72)));
    view.setLayoutParams( new ViewGroup.LayoutParams((int)(width*0.72), (int)(height*0.72)));
    var density=tk.glucodata.GlucoseCurve.metrics.density;
-   preview.setPadding(0,(int)(density*30.0),0,0);
+   preview.setPadding(0,(int)(density*18.0),0,0);
+//   preview.setPadding(0,(int)(density*30.0),0,0);
 /*	allradio[1].setPadding(0,0,0,0);
 	allradio[2].setPadding(0,0,(int)(density*22.0),0); */
 

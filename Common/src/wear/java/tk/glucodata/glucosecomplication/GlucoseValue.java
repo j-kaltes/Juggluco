@@ -54,8 +54,6 @@ final static private float density= mapheight/70.0f;
    final private Typeface normaltype, boldtype;
 //    final private Paint agePaint=new Paint();
 GlucoseValue() {
-   final  int whiteonblack=2;
-   boolean givetime=false;
      fontsize=mapwidth*0.63f;
    glucosePaint.setTextAlign(Paint.Align.CENTER);
   glucosePaint.setTextSize(fontsize);
@@ -229,8 +227,8 @@ Bitmap previewbitmap() {
         int index;
         final var glucose = Natives.lastglucose();
          var now = System.currentTimeMillis();
-        long  time = glucose.time * 1000L;
-        if(glucose != null&&(now-time)<tk.glucodata.Notify.glucosetimeout) {
+        long  time;
+        if(glucose != null&&((time = glucose.time * 1000L)!=0L&&(now-time)<tk.glucodata.Notify.glucosetimeout)) {
             value = glucose.value;
             index = glucose.index;
             rate = glucose.rate;
