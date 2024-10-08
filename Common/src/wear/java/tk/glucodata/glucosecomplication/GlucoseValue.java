@@ -40,9 +40,12 @@ import tk.glucodata.R;
 public class GlucoseValue {
 final private static String LOG_ID="GlucoseValue";
 //64 good
-final static float mapwidth=100,mapheight=100;
-final static float half=0.5f*mapwidth;
-final static private float density= mapheight/70.0f;
+//final static float mapwidth=512,mapheight=512;
+//final static float mapwidth=100,mapheight=100;
+final  float mapwidth;
+final float mapheight;
+final  float half;
+final  private float density;
     final private float timeoffy;
     final private float numoffy;
     final private float timesize;
@@ -53,20 +56,24 @@ final static private float density= mapheight/70.0f;
     final private Paint glucosePaint=new Paint();
    final private Typeface normaltype, boldtype;
 //    final private Paint agePaint=new Paint();
-GlucoseValue() {
+GlucoseValue(int w,int h) {
+	mapwidth=w;
+	mapheight=h;
+    half=0.5f*mapwidth;
+    density= mapheight/70.0f;
      fontsize=mapwidth*0.63f;
    glucosePaint.setTextAlign(Paint.Align.CENTER);
   glucosePaint.setTextSize(fontsize);
   //agePaint.setARGB(0xFF,0xFF,0,0xFF);
+  timesize=mapwidth*0.15f;
+  numoffy=mapwidth*0.12f;
      if(Applic.hour24) {
-        timesize=mapwidth*0.15f;
         timeoffy=mapwidth*0.036f;
-        numoffy=mapwidth*0.12f;
       }
       else {
-        timesize=mapwidth*0.11f;
-        timeoffy=mapwidth*0.048f;
-        numoffy=mapwidth*0.1f;
+    //    timesize=mapwidth*0.11f;
+        timeoffy=mapwidth*0.066f;
+   //     numoffy=mapwidth*0.1f;
       }
 
    Log.i(LOG_ID,"fontsize="+fontsize+" timesize="+timesize);

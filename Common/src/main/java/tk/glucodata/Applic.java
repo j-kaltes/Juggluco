@@ -229,6 +229,7 @@ public void onConfigurationChanged(Configuration newConfig) {
 
 static private void setjavahour24(boolean val) {
 	Applic.hour24=val;
+	Notify.timef = java.text.DateFormat.getTimeInstance(java.text.DateFormat.SHORT);
 	hasSystemtimeformat=DateFormat.is24HourFormat(app)==hour24;
       if(!isWearable) {
          var main=MainActivity.thisone;
@@ -595,7 +596,11 @@ static float headfontsize;
 
 boolean needsnatives() {
 	final var res=getResources();
-        GlucoseCurve.metrics= res.getDisplayMetrics();
+        var metrics=GlucoseCurve.metrics= res.getDisplayMetrics();
+        MainActivity.screenheight= metrics.heightPixels; 
+      MainActivity.screenwidth= metrics.widthPixels;
+        Log.i(LOG_ID,"heightPixels="+GlucoseCurve.metrics.heightPixels+" widthPixels="+GlucoseCurve.metrics.widthPixels);
+
 	var newinitscreenwidth= Math.max(GlucoseCurve.metrics.heightPixels,GlucoseCurve.metrics.widthPixels);
 	if(newinitscreenwidth==initscreenwidth)
 		return false;

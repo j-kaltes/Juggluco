@@ -78,10 +78,10 @@ sealed class ComplicationConfig(val id: Int, val supportedTypes: List<Complicati
         listOf(
             ComplicationType.EMPTY,
             ComplicationType.LONG_TEXT,
+            ComplicationType.SHORT_TEXT,
             ComplicationType.PHOTO_IMAGE,
             ComplicationType.RANGED_VALUE,
             ComplicationType.SMALL_IMAGE,
-            ComplicationType.SHORT_TEXT,
             ComplicationType.MONOCHROMATIC_IMAGE
         )
     )
@@ -91,8 +91,8 @@ sealed class ComplicationConfig(val id: Int, val supportedTypes: List<Complicati
         listOf(
             ComplicationType.EMPTY,
             ComplicationType.RANGED_VALUE,
-            ComplicationType.MONOCHROMATIC_IMAGE,
             ComplicationType.SHORT_TEXT,
+            ComplicationType.MONOCHROMATIC_IMAGE,
             ComplicationType.SMALL_IMAGE,
 	    ComplicationType.LONG_TEXT,
 	    ComplicationType.PHOTO_IMAGE,
@@ -104,10 +104,10 @@ sealed class ComplicationConfig(val id: Int, val supportedTypes: List<Complicati
         listOf(
             ComplicationType.EMPTY,
             ComplicationType.RANGED_VALUE,
-            ComplicationType.MONOCHROMATIC_IMAGE,
-            ComplicationType.SMALL_IMAGE,
-             ComplicationType.PHOTO_IMAGE,
             ComplicationType.SHORT_TEXT,
+            ComplicationType.PHOTO_IMAGE,
+            ComplicationType.SMALL_IMAGE,
+            ComplicationType.MONOCHROMATIC_IMAGE,
             ComplicationType.LONG_TEXT
         )
     )

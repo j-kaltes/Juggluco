@@ -18,11 +18,13 @@ import androidx.wear.watchface.complications.datasource.ComplicationRequest
 import androidx.wear.watchface.complications.datasource.SuspendingComplicationDataSourceService
 import tk.glucodata.Applic
 import tk.glucodata.Log
+import tk.glucodata.MainActivity
 import tk.glucodata.Natives
 import tk.glucodata.Notify
+import java.lang.Math.min
 
 class ArrowValueDataSourceService: SuspendingComplicationDataSourceService()  {
-private val glview= GlucoseValue()
+private var glview: GlucoseValue? =null
 
     override fun onComplicationActivated( complicationInstanceId: Int, type: ComplicationType) {
         Log.d(LOG_ID, "onComplicationActivated(): $complicationInstanceId")
@@ -30,9 +32,28 @@ private val glview= GlucoseValue()
     override fun onComplicationDeactivated(complicationInstanceId: Int) {
         Log.d(LOG_ID, "onComplicationDeactivated(): $complicationInstanceId")
     }
-
+fun getview(type: ComplicationType):GlucoseValue {
+     if(glview==null) {
+        val width:Int
+        val height:Int
+         if(type==PHOTO_IMAGE ) {
+             val size= kotlin.math.min(MainActivity.screenheight, MainActivity.screenwidth)
+               height=size
+                width=size
+ //            height= MainActivity.screenheight
+  //           width=MainActivity.screenwidth
+             }
+           else {
+             width = 100
+             height = 100
+            }
+         glview= GlucoseValue(width,height)
+         }
+      return glview as GlucoseValue;
+      }
     override fun getPreviewData(type: ComplicationType): ComplicationData {
-	val icon=Icon.createWithBitmap( glview.previewbitmap())
+
+	val icon=Icon.createWithBitmap( getview(type).previewbitmap())
         return when (type) {
         /*
          MONOCHROMATIC_IMAGE -> {
@@ -73,20 +94,20 @@ private val glview= GlucoseValue()
         Log.d(LOG_ID, "onComplicationRequest() id: ${request.complicationInstanceId}")
 
         val complicationPendingIntent = Notify.mkpending();
-
+    val type=        request.complicationType
       val glucose = Natives.lastglucose()
       val bitmap=
       if(glucose==null) {
          Log.i(LOG_ID,"glucose==null") 
-	      glview.getnovalue()
+	      getview(type).getnovalue()
          }
 	else {
          Log.i(LOG_ID,"glucose==${glucose.value}") 
-	glview.getArrowValueBitmap(glucose.value,glucose.time*1000L,glucose.index,glucose.rate)
+      getview(type).getArrowValueBitmap(glucose.value,glucose.time*1000L,glucose.index,glucose.rate)
 	}
 
 	val image=Icon.createWithBitmap(bitmap)
-    return when (request.complicationType) {
+    return when (type) {
         /* MONOCHROMATIC_IMAGE -> {
             Log.i(LOG_ID,"MonochromaticImage")
             MonochromaticImageComplicationData.Builder(
@@ -102,7 +123,7 @@ private val glview= GlucoseValue()
 //		setAmbientImage(Icon ambientImage) ??
 			    }
             else -> {
-                Log.w(LOG_ID, "Unexpected complication type ${request.complicationType}")
+                Log.w(LOG_ID, "Unexpected complication type $type")
                 null
             }
             }

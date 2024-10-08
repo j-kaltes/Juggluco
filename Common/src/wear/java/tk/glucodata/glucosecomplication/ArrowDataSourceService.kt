@@ -18,7 +18,7 @@ import tk.glucodata.Natives
 import tk.glucodata.Notify
 
 class ArrowDataSourceService: SuspendingComplicationDataSourceService()  {
-private val glview= GlucoseValue()
+private val glview= GlucoseValue(100,100)
 
     override fun onComplicationActivated( complicationInstanceId: Int, type: ComplicationType) {
         Log.d(LOG_ID, "onComplicationActivated(): $complicationInstanceId")

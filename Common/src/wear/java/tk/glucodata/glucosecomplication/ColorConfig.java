@@ -160,7 +160,7 @@ static public   void show(MainActivity context, View view) {
       };
 
    static public void showcolors(MainActivity act,CheckBox def) {
-      var glview=new GlucoseValue();
+      var glview=new GlucoseValue(150,150);
       int coltype=radiosel;
       int initialColor=getcolordef(coltype);
       int height= GlucoseCurve.getheight();

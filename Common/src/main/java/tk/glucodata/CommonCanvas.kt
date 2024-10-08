@@ -144,6 +144,12 @@ private fun paintArrow( canvas: Canvas, paint: Paint, density: Float, rate: Floa
 		val rate=0.0f;
 		paintArrow(canvas, paint, density, rate, 0.0, half, height, half);
 		}
+
+/*{{x -> -((2 h w)/Sqrt[16 h^2 + 9 rate^2 w^2]), 
+  y -> -((3 h rate w)/(2 Sqrt[16 h^2 + 9 rate^2 w^2]))}, {x -> (
+   2 h w)/Sqrt[16 h^2 + 9 rate^2 w^2], 
+  y -> (3 h rate w)/(2 Sqrt[16 h^2 + 9 rate^2 w^2])}} */
+
 		@JvmStatic
 		public fun drawarrowcircle(
 			canvas: Canvas,
@@ -152,16 +158,19 @@ private fun paintArrow( canvas: Canvas, paint: Paint, density: Float, rate: Floa
 			ratein: Float
 		): Boolean {
 			if (!ratein.isNaN()) {
-				val height: Double = canvas.height.toDouble(); //assume square
-				val rate = Natives.thresholdchange(ratein);
-				val common = 1.0 / sqrt(16.0 + 9.0 * rate.pow(2));
-				val xcom = (2.0 * height * common);
-				val half = height * .5;
-				val x1 = half - xcom;
-				val ycom = (3 * half * rate * common);
-				val y1 = half + ycom;
-				val x2 = half + xcom;
-				val y2 = half - ycom;
+				val height: Double = canvas.height.toDouble();
+				val width: Double = canvas.width.toDouble()
+				val rate = Natives.thresholdchange(ratein)
+//				val common = 1.0 / sqrt(16.0 + 9.0 * rate.pow(2));
+				val common =  width*height/sqrt(16*height.pow(2.0)+9 * rate.pow(2)*width.pow(2))
+				val xcom = (2.0 * common);
+				val halfW = width * .5;
+				val x1 = halfW - xcom;
+				val x2 = halfW + xcom;
+				val ycom = (1.5 * rate * common);
+				val halfH = height * .5;
+				val y1 = halfH + ycom;
+				val y2 = halfH - ycom;
 				paintArrow(canvas, paint, density, rate, x1, y1, x2, y2);
 				return true
 			}
