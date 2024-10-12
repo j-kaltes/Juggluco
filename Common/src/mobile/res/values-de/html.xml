@@ -2483,7 +2483,7 @@ Glukosewert angefordert wird, sobald er verfügbar ist.&nbsp;Datenfelder
 und Zifferblätter wären die ideale Lösung, aber die von Garmin
 auferlegten Einschränkungen machen sie wenig wert.</p>
 <p>Laut einem Benutzer gibt es auch ein Watchface für&nbsp;<strong>Fitbit-</strong>&nbsp;Uhren,
-das mit dem xDrip-Webserver funktioniert:&nbsp;<a href="https://glancewatchface.com/">https://glancewatchface.com</a></p>
+das mit dem Webserver in Juggluco funktioniert:&nbsp;<a href="https://glancewatchface.com/">https://glancewatchface.com</a></p>
 <p>Weitere Informationen zur Webserver-Schnittstelle finden Sie
 unter&nbsp;<a href="https://www.juggluco.nl/Juggluco/webserver.html">https://www.juggluco.nl/Juggluco/webserver.html</a></p>
 <p><strong>local only</strong>&nbsp;: akzeptiert nur Verbindungen von

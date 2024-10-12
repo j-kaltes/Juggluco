@@ -333,5 +333,6 @@
 <string name="glucosearrowvaluecomplicationlabel">Waarde + pijl</string>
 <string name="text">Tekst</string>
 <string name="arrow">Pijl</string>
+   <string name="notalldata">LETOP: “Ontvang van” niet aangevinkt, zonder alle data te zenden.</string>
 
 </resources>

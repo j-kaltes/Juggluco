@@ -1511,7 +1511,7 @@ glucose waarden opvraagt net na het binnenkomen van een nieuwe
 glucose waarden bij Juggluco is. Volgens een gebruiker bestaat er ook
 een wijzerplaat (watch face) for </span></font><font size="3" style="font-size: 12pt"><span lang="nl-NL"><b>Fitbit</b></span></font><font size="3" style="font-size: 12pt">
 </font><font size="3" style="font-size: 12pt"><span lang="nl-NL">horloges
-dat werkt met de xDrip webserver: <a class="western" href="https://glancewatchface.com/">https://glancewatchface.com</a></span></font></p>
+dat werkt met de webserver in Juggluco: <a class="western" href="https://glancewatchface.com/">https://glancewatchface.com</a></span></font></p>
 <p><font size="3" style="font-size: 12pt"><b>local only</b>: server
 accepteert enkel verbindingen van localhost (127.0.0.1). Als je het
 uitzet kunnen ook andere hosts gebruik maken van de server. Als de

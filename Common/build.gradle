@@ -67,10 +67,10 @@ android {
 
     defaultConfig {
         minSdk        MINSDK
-        targetSdk 34
+        targetSdk 35
         buildConfigField 'int', 'targetSDK', "$targetSdk"
         buildConfigField 'int', 'minSDK', "$minSdk"
-        compileSdk 33
+        compileSdk 35
         applicationId "tk.glucodata"
          manifestPlaceholders["debuggable"] = "true"
          manifestPlaceholders["requireWatch"] = "false"
@@ -87,6 +87,8 @@ android {
                 version "3.22.1"
 //		cppFlags  " -DAPPID=\\\"$applicationId\\\"   -DAPPVERSION=\\\"$versionName\\\" "
 		cppFlags  " -DAPPID=\"quotes($applicationId)\"   -DAPPVERSION=\"quotes($versionName)\" "
+        arguments "-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON"
+
 
             }
         }

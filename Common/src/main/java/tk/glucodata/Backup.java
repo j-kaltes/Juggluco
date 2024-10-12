@@ -441,6 +441,9 @@ void makehostview(MainActivity act) {
 			Applic.argToaster(act,R.string.allsentnoreceive ,Toast.LENGTH_LONG);
 			return;
 			}		
+		if(!receiver&& !(Amounts.isChecked()&& Stream.isChecked()&& Scans.isChecked())) {
+			Applic.argToaster(act,R.string.notalldata ,Toast.LENGTH_LONG);
+			}		
 		hidekeyboard(act); //USE
 		int hostnr=Natives.backuphostNr( );
 		String[] names=new String[editIPs.length];

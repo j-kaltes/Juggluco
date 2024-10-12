@@ -51,6 +51,11 @@ target_include_directories(g PRIVATE ${NANOVG}  ${INCLUDESELF} ${INCLUDESELF}/sh
 target_compile_definitions( g  PRIVATE  -DWEAROS_MESSAGES=1 -DDONTSCALESTROKEWIDTH  -DLIBRENUMBERS=1 )
 
 add_link_options(-g  )
+target_link_options(g PRIVATE "-Wl,-z,max-page-size=16384")
+#target_link_options(${CMAKE_PROJECT_NAME} PRIVATE "-Wl,-z,max-page-size=16384")
+
+
+
 
 
 target_link_libraries( g   c++_static c ${log-lib} ${OPENGL_LIB} android EGL m atomic z dl)

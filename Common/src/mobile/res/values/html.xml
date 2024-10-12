@@ -1520,7 +1520,7 @@ of little value. </span>
 </p>
 <p style="line-height: 100%; margin-bottom: 0in"><span lang="en-US">According
 to a user there exist also a watch face for </span><span lang="en-US"><b>Fitbit</b></span>
-<span lang="en-US">watches that works with the xDrip webserver:
+<span lang="en-US">watches that works with the web server in Juggluco:
 <a href="https://glancewatchface.com/">https://glancewatchface.com</a></span></p>
 <p style="line-height: 100%; margin-bottom: 0in"><span lang="en-US">For
 more information on the web server interface see

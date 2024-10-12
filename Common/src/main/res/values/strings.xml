@@ -355,5 +355,5 @@
    <string name="glucosearrowvaluecomplicationlabel">Value + arrow</string>
    <string name="text">Text</string>
    <string name="arrow">Arrow</string>
-
+   <string name="notalldata">WARNING: “Receive from” not set, without sending all data.</string>
 </resources>

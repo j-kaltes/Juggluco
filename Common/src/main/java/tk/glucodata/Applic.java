@@ -597,41 +597,35 @@ static float headfontsize;
 boolean needsnatives() {
 	final var res=getResources();
         var metrics=GlucoseCurve.metrics= res.getDisplayMetrics();
+
         MainActivity.screenheight= metrics.heightPixels; 
       MainActivity.screenwidth= metrics.widthPixels;
         Log.i(LOG_ID,"heightPixels="+GlucoseCurve.metrics.heightPixels+" widthPixels="+GlucoseCurve.metrics.widthPixels);
-
 	var newinitscreenwidth= Math.max(GlucoseCurve.metrics.heightPixels,GlucoseCurve.metrics.widthPixels);
-	if(newinitscreenwidth==initscreenwidth)
-		return false;
-       Log.i(LOG_ID,"needsnatives");
-	initscreenwidth=newinitscreenwidth;
-
-        headfontsize = res.getDimension(R.dimen.abc_text_size_display_4_material);
-	Notify.glucosesize=Applic.app.headfontsize*.35f;
-		
-
-
-        final float menufontsize = res.getDimension(R.dimen.abc_text_size_menu_material);
-        smallfontsize = res.getDimension(R.dimen.abc_text_size_small_material);
-        Natives.setfontsize(smallfontsize, menufontsize, GlucoseCurve.metrics.density, headfontsize);
-   final double screensize=(newinitscreenwidth/menufontsize);
-     Log.i(LOG_ID,"initscreenwidth="+newinitscreenwidth);
-     Log.i(LOG_ID,"menufontsize="+menufontsize);
-     Log.i(LOG_ID,"screensize="+screensize);
-//	boolean smallsize=((initscreenwidth/smallfontsize)<44.69);
-	final boolean smallsize=screensize<34.0;
-//	final boolean smallsize=screensize<31;
-//	boolean smallsize=false;
 	boolean ret;
-	if(smallsize!= NumberView.smallScreen) {
-		NumberView.smallScreen=smallsize;
-		ret=true;
+	if(newinitscreenwidth!=initscreenwidth)  {
+		final float menufontsize = res.getDimension(R.dimen.abc_text_size_menu_material);
+	       Log.i(LOG_ID,"needsnatives");
+		initscreenwidth=newinitscreenwidth;
+	   	final double screensize=(newinitscreenwidth/menufontsize);
+	     Log.i(LOG_ID,"initscreenwidth="+newinitscreenwidth);
+	     Log.i(LOG_ID,"menufontsize="+menufontsize);
+	     Log.i(LOG_ID,"screensize="+screensize);
+		final boolean smallsize=screensize<34.0;
+		if(smallsize!= NumberView.smallScreen) {
+			NumberView.smallScreen=smallsize;
+			ret=true;
+			}
+		else
+			ret=false;
+		headfontsize = res.getDimension(R.dimen.abc_text_size_display_4_material);
+		Notify.glucosesize= headfontsize*.35f;
+		smallfontsize = res.getDimension(R.dimen.abc_text_size_small_material);
+		Natives.setfontsize(smallfontsize, menufontsize, GlucoseCurve.metrics.density, headfontsize);
 		}
 	else
 		ret=false;
-		
-   Notify.mkpaint();
+        Notify.mkpaint();
 	return ret;
 	}
    /*

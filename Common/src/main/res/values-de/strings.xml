@@ -337,4 +337,6 @@
 <string name="glucosearrowvaluecomplicationlabel">Wert + Pfeil</string>
 <string name="text">Text</string>
 <string name="arrow">Pfeil</string>
+
+   <string name="notalldata">ACHTUNG: „Empfangen von“ nicht eingestellt, ohne alle Daten zu senden.</string>
 </resources>

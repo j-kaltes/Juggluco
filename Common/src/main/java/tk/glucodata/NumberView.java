@@ -732,6 +732,7 @@ void gettimeview(MainActivity activity,Runnable parent) {
 	gettimepicker(activity,h,m,numsettime,parent);
 	}
 	@SuppressWarnings("deprecation")
+Layout buttonlay;
 public void gettimepicker(MainActivity activity,int hourin, int minin, ObjIntConsumer<Integer> timeset,Runnable onclose) {
    settime=timeset;
     if(timepicker==null) {
@@ -763,14 +764,15 @@ public void gettimepicker(MainActivity activity,int hourin, int minin, ObjIntCon
 		views=new View[][]{new View[]{pick},new View[]{cancel,ok}};
 		}
 	else {
-		Layout buttonlay=new Layout(activity,new View[] {cancel},new View[]{ok});
-		buttonlay.setLayoutParams(new ViewGroup.LayoutParams(   ViewGroup.LayoutParams.WRAP_CONTENT, MATCH_PARENT));
+		buttonlay=new Layout(activity,new View[] {cancel},new View[]{ok});
+		buttonlay.setLayoutParams(new ViewGroup.LayoutParams(  WRAP_CONTENT , ViewGroup.LayoutParams.MATCH_PARENT));
+	//	buttonlay.setlayoutparams(new viewgroup.layoutparams(   viewgroup.layoutparams.wrap_content, match_parent));
 	  views=new View[][] {new View[] {pick,buttonlay}};
-      pick.setPadding(systembarLeft,MainActivity.systembarTop,0,MainActivity.systembarBottom);
-      buttonlay.setPadding(0,MainActivity.systembarTop/2, systembarRight,MainActivity.systembarBottom);
+    //  buttonlay.setPadding(0,MainActivity.systembarTop/2, systembarRight,MainActivity.systembarBottom);
 	 };
 //		buttonlay.setBackgroundColor( RED);
 	pick.setLayoutParams(new ViewGroup.LayoutParams(smallScreen?WRAP_CONTENT:MATCH_PARENT , ViewGroup.LayoutParams.WRAP_CONTENT));
+//	pick.setLayoutParams(new ViewGroup.LayoutParams(WRAP_CONTENT , ViewGroup.LayoutParams.WRAP_CONTENT));
         Layout layout=new Layout(activity,
 				(lay, w, h)-> {
 					activity.hideSystemUI();
@@ -793,18 +795,26 @@ public void gettimepicker(MainActivity activity,int hourin, int minin, ObjIntCon
 					return new int[]{w, h};
 				}, views);
 
-	if(smallScreen) 
-      layout.setPadding(systembarLeft,MainActivity.systembarTop, systembarRight,MainActivity.systembarBottom);
 
 		layout.setBackgroundColor( Applic.backgroundcolor);
         activity.addContentView(layout,  new ViewGroup.LayoutParams(smallScreen?WRAP_CONTENT:MATCH_PARENT, smallScreen?WRAP_CONTENT:MATCH_PARENT));
+    //    activity.addContentView(layout,  new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
         timepicker=layout;
     }
     else {
 	timepicker.requestLayout();
-        timepicker.setVisibility(VISIBLE);
+    timepicker.setVisibility(VISIBLE);
 	timepicker.bringToFront();
 	}
+
+  //    timepicker.setPadding(systembarLeft,MainActivity.systembarTop, systembarRight,MainActivity.systembarBottom);
+	if(smallScreen) timepicker.setPadding(systembarLeft,MainActivity.systembarTop, systembarRight,MainActivity.systembarBottom);
+// timepicker.setPadding(systembarLeft,MainActivity.systembarTop, systembarRight,MainActivity.systembarBottom);
+else  {
+      pick.setPadding(systembarLeft,MainActivity.systembarTop,0,MainActivity.systembarBottom);
+     buttonlay.setPadding(0,MainActivity.systembarTop/2, systembarRight,MainActivity.systembarBottom);
+     }
+
      pick.setIs24HourView(Applic.hour24);
 activity.setonback(
 		() -> {
