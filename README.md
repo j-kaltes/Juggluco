@@ -15,6 +15,7 @@ WARNING: Glucose sensors are not always accurate. When a glucose reading disagre
 <h1>WearOS</h1>
 To make Juggluco for WearOS work, you first make the sensor work with Juggluco on the companion phone of the watch. Ensure that WIFI and Bluetooth are turned on on both phone and watch and Juggluco is installed on the watch and running. Then in Juggluco on the phone press left menu→WearOS config→Init watch app. Wait until Juggluco on the watch is receiving glucose values every minute from Juggluco on the phone. On WearOS 4 and lower you can use the watch face contained in Juggluco to display the glucose value. Under all version of WearOS, you can use a glucose complication contained in Juggluco. It can be added to watch faces that contain a small image complication slot.
 To directly connect the sensor with the watch set left menu→Watch→WearOS config→”Direct sensor-watch connection”. Bluetooth has problems with going through water and your body contains a lot of water. Probably because of that, the connection between sensor and watch is better when you wear your watch on the same arm as the sensor.
+
 ## BUILD Juggluco
 The following files need to be added to build Juggluco and can be found by unzipping an Arm/Arm64/x86/x86_64 Juggluco apk from
 https://www.juggluco.nl/Juggluco/download.html
