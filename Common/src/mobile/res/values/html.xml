@@ -332,7 +332,8 @@ Android 6,7 and 7.1 and location permission is still needed for them.</p>
 <![CDATA[
 
     <p style="line-height: 115%; margin-bottom: 0in"> <font color="#ffffff"><font
-          face="Cambria, serif"><font style="font-size: 14pt" size="4"><b>Juggluco</b></font></font>
+          face="Cambria, serif"><font style="font-size: 14pt" size="4"><b><a href="https://www.juggluco.nl">Juggluco</a></b></font></font>
+
         is an applet for the control of blood glucose by people with diabetes.
         It can scan Freestyle Libre (0 and 2) sensors (via NFC) and receive (via
         Bluetooth) glucose values from <font color="#4f81bd"><font face="Calibri, serif"><i><b>Freestyle
