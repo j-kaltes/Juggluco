@@ -67,15 +67,15 @@ android {
 
     defaultConfig {
         minSdk        MINSDK
-        targetSdk 35
+        targetSdk 34
         buildConfigField 'int', 'targetSDK', "$targetSdk"
         buildConfigField 'int', 'minSDK', "$minSdk"
         compileSdk 35
         applicationId "tk.glucodata"
-         manifestPlaceholders["debuggable"] = "true"
-         manifestPlaceholders["requireWatch"] = "false"
+         manifestPlaceholders["debuggable"] = "false"
+         manifestPlaceholders["requireWatch"] = "true"
 
-	     versionName '8.2.2'
+	     versionName '8.2.3'
 //	multiDexEnabled true
 
         buildConfigField 'String', 'BUILD_TIME', 'new java.text.SimpleDateFormat("HH:mm:ss dd-MMM-yyyy").format(new java.util.Date(' + System.currentTimeMillis() + 'L))'
@@ -111,8 +111,8 @@ android {
             //	targetSdk 26
 	//******  Zet op rollout op 100% ******
             	dimension 'libreVersion'
-		versionCode                                               480                                                                                           //LIBRE2ONLY
-	//	versionName '8.2.2-no3'
+		versionCode                                                 480                                                                                               //LIBRE2ONLY
+	//	versionName '8.2.3-no3'
 		versionNameSuffix '-no3'
             buildConfigField 'int', 'libreVersion', '2'
 		    externalNativeBuild.cmake {
@@ -130,7 +130,7 @@ android {
 //	   minSdk 23
             dimension 'libreVersion'
 		versionNameSuffix '-li3'
-		versionCode                                              480                                                                                           //LIBRE3
+		versionCode                                                481                                                                                               //LIBRE3
 	//******  Zet op rollout op 100% ******
 
            	buildConfigField 'int', 'libreVersion', '3'
@@ -146,7 +146,7 @@ android {
 		minSdkVersion 21
             	dimension 'SiBionics'
 		versionNameSuffix '-si'
-		versionCode                                         480                                                                                        
+		versionCode                                           481                                                                                            
 	        buildConfigField 'int', 'SiBionics', '1'
 	         externalNativeBuild.cmake {
 			cppFlags "   -DSIBIONICS=1 "
@@ -154,7 +154,7 @@ android {
 		}
         nosi {
             	dimension 'SiBionics'
-		versionCode                                               480                                                                                        
+		versionCode                                                 480                                                                                            
 		versionNameSuffix '-nosi'
 	        buildConfigField 'int', 'SiBionics', '0'
 	         externalNativeBuild.cmake {
@@ -170,9 +170,9 @@ android {
             dimension 'wearos'
 		minSdk 26
         buildConfigField 'int', 'minSDK', "$minSdk"
-		versionCode                                              480                                                                                           //WATCH
+		versionCode                                                482                                                                                               //WATCH
 	//******  Zet op rollout op 100% ******
-		//versionName '8.2.2-wear'
+		//versionName '8.2.3-wear'
 		versionNameSuffix '-wear'
 		signingConfig signingConfigs.alg
 
@@ -193,8 +193,8 @@ android {
 
 //        minSdk 19
             dimension 'wearos'
-		versionCode                                              480                                                                                           //WATCH
-		//versionName '8.2.2-small'
+		versionCode                                                482                                                                                               //WATCH
+		//versionName '8.2.3-small'
 		versionNameSuffix '-small'
 		signingConfig signingConfigs.alg
 

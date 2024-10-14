@@ -1,4 +1,3 @@
-in timepicker overlap knoppen
 Procompiled share libraries don't run under Android 15 TargetSDK=35 with 16kb
 On Android 15, is notification only shown after restart of Juggluco
 Have to scroll down in settings. 
