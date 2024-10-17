@@ -1,0 +1,20 @@
+.gradle/
+.idea/
+Common/.cxx/
+build/
+jniLibs/
+local.properties
+
+# Directories for signed APKs:
+Common/mobileLibre3Nosi/
+Common/mobileLibre3Si/
+Common/mobileLibreOldNosi/
+Common/mobileLibreOldSi/
+Common/smallLibre3Nosi/
+Common/smallLibre3Si/
+Common/smallLibreOldNosi/
+Common/smallLibreOldSi/
+Common/wearLibre3Nosi/
+Common/wearLibre3Si/
+Common/wearLibreOldNosi/
+Common/wearLibreOldSi/

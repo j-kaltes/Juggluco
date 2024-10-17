@@ -209,18 +209,6 @@ Write Mirror connection guide.
 
 Move in glucose in Status bar
 
-Add the following lines to your proguard configuration.
-
--renamesourcefileattribute SourceFile
--keepattributes SourceFile,LineNumberTable
-Now your stack traces will include line numbers, and by using the retrace tool that ships with proguard (included in the Android SDK), you are able to debug like normal.
-
-Note that even if you didn't use these two configuration options, retrace still can output useful information provided you have the mappings file, albeit not totally unambiguously.
-
-Note: the file with the mappings is produced by the proguard configuration option:
-
- -printmapping outputfile.txt
-
 Bluetooth scan naar Libre3 sensors kan enkel op device address.
 NFC text weg
 Iets met events

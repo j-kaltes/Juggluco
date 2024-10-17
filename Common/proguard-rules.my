@@ -36,8 +36,3 @@
 -whyareyoukeeping class com.google.firebase.*
 -whyareyoukeeping class com.google.android.gms.auth.api.signin.*
 -whyareyoukeeping class com.google.android.gms.dynamite.*
-
--renamesourcefileattribute SourceFile
--keepattributes SourceFile,LineNumberTable
--printmapping printmappingout.txt
-
