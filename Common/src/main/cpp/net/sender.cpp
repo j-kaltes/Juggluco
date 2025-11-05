@@ -56,19 +56,19 @@
 using namespace std;
 #include "mirrorerror.h"
 
-void   sendpassinit(int sock,passhost_t *host,crypt_t *ctx) {
+void   Connect::sendpassinit(passhost_t *host,crypt_t *ctx) {
    constexpr int makelen=8;
    uint8_t nonce[ASCON_AEAD_NONCE_LEN];
    constexpr int takelen=ASCON_AEAD_NONCE_LEN-makelen;
    uint8_t *takestart=nonce+makelen;
        makerandom(nonce, makelen);
-   if(int didsend=sendni(sock,nonce,makelen);didsend!=makelen) {
-      flerrortag("sendpassinit send sock=%d ret=%d\n",sock,didsend);
+   if(int didsend=sendni(nonce,makelen);didsend!=makelen) {
+      flerrortag("sendpassinit send getIdent()=%d ret=%d\n",getIdent(),didsend);
       return;
       }
-   int len=recvni(sock,takestart,takelen);
+   int len=recvni(takestart,takelen);
    if(len!=takelen) {
-      flerrortag("sendpassinit sock=%d recv len=%d\n",sock,len);
+      flerrortag("sendpassinit getIdent()=%d recv len=%d\n",sock,len);
       return;
       }
         ascon_aead128a_init(ctx, host->pass.data(),nonce);   
@@ -117,7 +117,7 @@ static auto getsendmagic() {
 std::array<unsigned char,sizeof(sendmagic)>  sendmagicspec=getsendmagic();
 
 
-static int testsendmagic(passhost_t *pass,int sock) {
+ int Connect::testsendmagic(passhost_t *pass) {
    #include "receivemagic.h"
    decltype(sendmagicspec) *magicptr;
 
@@ -129,7 +129,7 @@ static int testsendmagic(passhost_t *pass,int sock) {
       }
    else
       magicptr=&sendmagicspec;
-   if(sendni(sock,magicptr->data(),magicptr->size())!=magicptr->size()) {
+   if(sendni(magicptr->data(),magicptr->size())!=magicptr->size()) {
       char *buf=getmirrorerror(pass);
       int waser=errno;
       constexpr const char mess[]="send magic failed: ";
@@ -139,11 +139,11 @@ static int testsendmagic(passhost_t *pass,int sock) {
       LOGGERTAG("%s\n",buf);
       return 1;
       }
-constexpr const int recsize=sizeof(receivemagic);
+   constexpr const int recsize=sizeof(receivemagic);
    char buf[recsize];
    LOGARTAG("before recv magic");
    int gotlen;
-   if((gotlen=recvni(sock,buf,recsize))!=recsize) {
+   if((gotlen=recvni(buf,recsize))!=recsize) {
       char *ptr=getmirrorerror(pass);
       int waser=errno;
       int len=snprintf(ptr,maxmirrortext,"magic recv()=%d!=%d: ",gotlen,(int)recsize);
@@ -159,9 +159,7 @@ constexpr const int recsize=sizeof(receivemagic);
       LOGGERN(wrong,sizeof(wrong)-1);
       return 3;
       }
-   LOGGERTAG("testsendmagic %d success\n",sock);
-//extern void   setreceiverversion(uint8_t version) ;
-//   setreceiverversion(buf[recsize-1]);
+   LOGGERTAG("testsendmagic %d success\n",getIdent());
    if(!buf[recsize-1]) {
       extern void resethost(passhost_t &host) ;
       resethost(*pass);
@@ -209,22 +207,24 @@ bool sendtype(int sock,char type) {
       return false;
       }
    return true;
-        }
+   }
 
 
 extern char *getmirrorerror(const passhost_t *pass);
-
-static int shakehands(passhost_t *pass,int &sock,char stype) {
-   LOGGERTAG("shakehands connection %d\n",sock);
+void settimeouts(int sock) {
    struct timeval tv;
    tv.tv_usec = 0;
    tv.tv_sec = 60*3;
    setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv, sizeof tv);
    setsockopt(sock, SOL_SOCKET, SO_SNDTIMEO , (const char*)&tv, sizeof tv);
+   }
+
+ int Connect::shakehands(passhost_t *pass,char stype) {
+   LOGGERTAG("shakehands connection %d\n",getIdent());
    if(pass->hasname) {
       const char *name= pass->getname();
-      LOGGERTAG("sendni(%d,%s,)\n",sock,name);
-      if(sendni(sock,name,pass->maxnamelen)!=pass->maxnamelen) {
+      LOGGERTAG("sendni(%d,%s,)\n",getIdent(),name);
+      if(sendni(name,pass->maxnamelen)!=pass->maxnamelen) {
          char err[]="send name";
          saveerror(pass,err);
          LOGGER("%s",getmirrorerror(pass));
@@ -233,7 +233,7 @@ static int shakehands(passhost_t *pass,int &sock,char stype) {
       
       }
    int magret;
-   if((magret=testsendmagic(pass,sock)))  {
+   if((magret=testsendmagic(pass)))  {
       if(magret==2)  {
          if(pass->hasname) {
             savemessage(pass,"Sender with label %s rejected by receiver",pass->getname());
@@ -243,11 +243,11 @@ static int shakehands(passhost_t *pass,int &sock,char stype) {
       return -1;
       }
    if(stype) {
-      sendtype(sock,stype);
+      sendtype(stype);
       }
       
-   LOGGERTAG("sock=%d\n",sock);
-   return sock;
+   LOGGERTAG("getIdent()=%d\n",sock);
+   return 1;
    }
 /*
 sockaddr myname;
@@ -266,7 +266,7 @@ void getmyname(int sock) {
    } 
    */
 
-static int connectone( const struct sockaddr_in6  *sin, int &sock,char stype,passhost_t *pass,struct pollfd    *cons,int&use
+int TCPConnect::connectone( const struct sockaddr_in6  *sin, int &sock,char stype,passhost_t *pass,struct pollfd    *cons,int&use
 #if defined(WEAROS_MESSAGES)
       ,bool &activate
 #endif
@@ -301,12 +301,13 @@ static int connectone( const struct sockaddr_in6  *sin, int &sock,char stype,pas
 #endif
       block(so);
       sock=so;
-      if(int ret=shakehands(pass,sock,stype);ret>=0) {
+      settimeouts(sock);
+      if(shakehands(pass,stype)>=0) {
          LOGGERTAG("before poll %d\n",sock);
          for(int w=0;w<use;w++) {
             sockclose(cons[w].fd);
             }
-         return ret;
+         return sock;
          }
       sockclose(so);
       sock=-1;
@@ -315,7 +316,7 @@ static int connectone( const struct sockaddr_in6  *sin, int &sock,char stype,pas
    return -1;
    }
 
-static int makeconnection2(passhost_t *pass,int &sock,char stype) {
+int TCPConnect::makeconnection2(passhost_t *pass,char stype) {
 #ifdef WEAROS_MESSAGES
 destruct dest([pass]() {
    if(pass->wearos) {
@@ -328,8 +329,8 @@ dest.active=false;
 bool activate=true;
 #endif
    int use=0;
-
-   sock=-1;
+  setSock(-1);
+//   sock=-1;
 
    struct pollfd    cons[10];
    if(pass->hashostname()) { 
@@ -490,8 +491,8 @@ bool activate=true;
          if(cons[i].revents & POLLOUT){
             sock=cons[i].fd;
             block(sock);
-            int ret;
-            if((ret=shakehands(pass,sock,stype))>=0) {
+            settimeouts(sock);
+            if(shakehands(pass,stype)>=0) {
                for(int w=0;w<newuse;w++) {
                   sockclose(cons[w].fd);
                   }
@@ -502,7 +503,7 @@ bool activate=true;
 #ifdef WEAROS_MESSAGES
                dest.active=false;
 #endif
-               return ret;   
+               return sock;   
                }
             int so=sock;
             sock=-1;
@@ -527,13 +528,13 @@ bool activate=true;
    return -1;
    }
 
-int makeconnection(passhost_t *pass,int &sock,crypt_t*ctx,char stype) {
-   int res=makeconnection2(pass,sock,stype);
+int Connect::makeconnection(passhost_t *pass,crypt_t*ctx,char stype) {
+   int res=makeconnection2(pass,stype);
    if(res>=0) {
       const auto tag=get_owner_tag(res);
       *getmirrorerror(pass)='\0';
       if(ctx)
-         sendpassinit(sock,pass,ctx);
+         sendpassinit(pass,ctx);
       }
    return res;
    }

@@ -25,6 +25,7 @@ std::vector<Numdata*> numdatas;
 
 #include "net/passhost.hpp"
 #include "net/makerandom.hpp"
+#include "Connect.hpp"
 extern void makenightswitch();
 void prunenums() {
     for(auto *num:numdatas) {
@@ -60,15 +61,15 @@ void makenightswitch() {
      //prunenums();
    }
 //bool update(int sock,int &len, struct numspan *ch) 
-int updatenums(crypt_t*pass,int sock,struct changednums *nums,int ind) {
+int updatenums(crypt_t*pass,Connect *connect,struct changednums *nums,int ind) {
    int ret=0;
    for(int i=0;i<numdatas.size();i++) {
-      if(int subret=numdatas[i]->update(pass,sock,nums,ind)) 
+      if(int subret=numdatas[i]->update(pass,connect,nums,ind)) 
          ret|=subret;
       else
          return 0;
       }
-   if(int did=meals->datameal()->updatemeal(pass,sock,nums[1].lastmeal)) {
+   if(int did=meals->datameal()->updatemeal(pass,connect,nums[1].lastmeal)) {
       return ret|did;
       }
    return 0;
@@ -106,10 +107,10 @@ bool backupnuminit(const numinit *numst) {
    return numdatas[(bool)(numst->ident)]->numbackupinit(numst);
    }
 
-bool numsbackupsendinit(crypt_t*pass,int sock,struct changednums *nuall,uint32_t starttime) {
-   LOGGER("numsbackupsendinit sock=%d starttime=%u  numdatas.size()=%d\n",sock,starttime,numdatas.size());
+bool numsbackupsendinit(crypt_t*pass,Connect *connect,struct changednums *nuall,uint32_t starttime) {
+   LOGGER("numsbackupsendinit sock=%d starttime=%u  numdatas.size()=%d\n",connect->getIdent(),starttime,numdatas.size());
    for(auto*el:numdatas) 
-      if(!el->backupsendinit(pass,sock,nuall,starttime) )
+      if(!el->backupsendinit(pass,connect,nuall,starttime) )
          return false;
    return true;
    }

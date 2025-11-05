@@ -44,14 +44,14 @@
 
 #include "aligner.hpp"
 
-bool receivecrypt(int sock,crypt_t *ctx,uint8_t *uit) {
+bool Connect::receivecrypt(crypt_t *ctx,uint8_t *uit) {
 	constexpr int taglen=16;
 	const int alllen=taglen+4;
 	uint8_t buf[alllen];
 	uint8_t *start=buf+taglen;
-	if(int len=recvni(sock,buf,alllen);len!=alllen) {
-		LOGGERTAG("receivecrypt %d, shutdown %d\n",len,sock);
-		::shutdown(sock,SHUT_RDWR);
+	if(int len=recvni(buf,alllen);len!=alllen) {
+		LOGGERTAG("receivecrypt %d, shutdown %d\n",len,getIdent());
+		shutdown();
 		return false;
 		}
 	int res=ascon_aead128a_decrypt_update(ctx, uit, start, 4);
@@ -59,7 +59,7 @@ bool receivecrypt(int sock,crypt_t *ctx,uint8_t *uit) {
 	res += ascon_aead128a_decrypt_final( ctx,uit+res, &is_tag_valid, buf, taglen);
 	return is_tag_valid;
 	}
-int16_t sendopen(crypt_t *pass,int sock,std::string_view name) {
+int16_t Connect::sendopen(crypt_t *pass,std::string_view name) {
 	const int namelen=name.size();
 	const int buflen=aligner<4>(sizeof(fileopen)+namelen+1);
 	alignas(alignof(fileopen)) senddata_t buf[buflen];
@@ -68,25 +68,23 @@ int16_t sendopen(crypt_t *pass,int sock,std::string_view name) {
 	command->len=namelen;
 	memcpy(command->name,name.data(),namelen);
 	command->name[namelen]='\0';
-//	puts(command->name);
 	LOGGERTAG("sendopen %s ",name.data());
-	bool noacksendcommand(crypt_t*,int sock ,const unsigned char *buf,int buflen) ;
-	if(!noacksendcommand(pass,sock ,buf,buflen)) {
+	if(!noacksendcommand(pass,buf,buflen)) {
 		LOGGERTAG("open %s failed\n",name.data());	
 		return -1;
 		}
 	LOGARTAG("sendopen after sendcommand");
 	if(pass) {	
-		 if(!receivecrypt(sock,pass,buf))  {
+		 if(!receivecrypt(pass,buf))  {
 		 	LOGARTAG("invalid tag");
 		 	return -1;
 			}
 		}
 	else  {
-		if(int len=recvni(sock,buf,4);len!=4) {
+		if(int len=recvni(buf,4);len!=4) {
 			if(len==-1) {
-				flerrortag(" recv(,,%d,)==-1,shutdown %d",buflen,sock);
-				::shutdown(sock,SHUT_RDWR);
+				flerrortag(" recv(,,%d,)==-1,shutdown %d",buflen,getIdent());
+				shutdown();
 				}
 			else
 				LOGGERTAG(" wrong size %d\n",len);
@@ -130,14 +128,14 @@ senddata_t *datacom(unsigned char *bufin,int16_t han,uint32_t off,uint32_t len,c
 	}
 
 
-bool noacksendcommand(int sock ,const unsigned char *buf,int buflen) {
+bool Connect::noacksendcommand(const unsigned char *buf,int buflen) {
 	int itlen,left=buflen;
-	LOGGERTAG("sock=%d noacksendcommand len=%d\n",sock,buflen);
-	for(const unsigned char *it=buf;(itlen=sendni(sock,it,left))<left;) {
+	LOGGERTAG("getIdent()=%d noacksendcommand len=%d\n",getIdent(),buflen);
+	for(const unsigned char *it=buf;(itlen=sendni(it,left))<left;) {
 		LOGGERTAG("len=%d\n",itlen);
 		if(itlen<0) {
-			flerrortag("noacksendcommand send %d\n",sock);
-			::shutdown(sock,SHUT_RDWR);
+			flerrortag("noacksendcommand send %d\n",getIdent());
+			shutdown();
 			return false;
 			}
 		it+=itlen;
@@ -146,12 +144,12 @@ bool noacksendcommand(int sock ,const unsigned char *buf,int buflen) {
 	LOGARTAG("success noacksendcommand");
 	return true;
 	}
-bool getack(int sock) {
+bool Connect::getack() {
 	uint32_t ans=5;
 	LOGARTAG("getack");
-	if(int len=recvni(sock,&ans,sizeof(ans));len!=sizeof(ans)) {
-		flerrortag("%d ans %d\n",sock,len);
-		::shutdown(sock,SHUT_RDWR);
+	if(int len=recvni(&ans,sizeof(ans));len!=sizeof(ans)) {
+		flerrortag("%d ans %d\n",getIdent(),len);
+		shutdown();
 		return false;
 		}
 	if(ans!=ackres) {
@@ -161,8 +159,8 @@ bool getack(int sock) {
 	LOGARTAG("getack success");
 	return true;
 	}
-bool sendcommand(int sock ,const unsigned char *buf,int buflen) {
-	if(!noacksendcommand(sock ,buf, buflen) )
+bool Connect::sendcommand(const unsigned char *buf,int buflen) {
+	if(!noacksendcommand(buf, buflen) )
 		return false;
 	const int alin=aligner<4>(buflen);
 	const sendack ack;
@@ -171,7 +169,7 @@ bool sendcommand(int sock ,const unsigned char *buf,int buflen) {
 	    uint8_t ackbuf[over+sizeof(sendack)];
 	    *reinterpret_cast<sendack*>(ackbuf+over)=ack;
          LOGGER("sendack buflen=%d acklen=%d\n",buflen,sizeof(ackbuf));
-		if(sendni(sock,&ackbuf,sizeof(ackbuf))!=sizeof(ackbuf)) {
+		if(sendni(&ackbuf,sizeof(ackbuf))!=sizeof(ackbuf)) {
 			lerrortag("sendcommand send(ackbuf...) failed");
 			return false;
 			}
@@ -179,19 +177,19 @@ bool sendcommand(int sock ,const unsigned char *buf,int buflen) {
 	}
 	else {
         LOGGER("sendack buflen=%d acklen=%d\n",buflen,sizeof(ack));
-		if(sendni(sock,&ack,sizeof(ack))!=sizeof(ack)) {
+		if(sendni(&ack,sizeof(ack))!=sizeof(ack)) {
 			lerrortag("sendcommand send(ack..) failed");
 			return false;
 			}
         }
-	return getack(sock);
+	return getack();
 	}
 struct com_t {
 	uint16_t com;
 	int16_t han;
 	}; 
 #include "receive.hpp"
-bool sendfile(int sock,crypt_t *pass,const char *filename,uint32_t off,uint32_t len) {
+bool Connect::sendfile(crypt_t *pass,const char *filename,uint32_t off,uint32_t len) {
 	LOGGERTAG("sendfile %s %u %u ",filename,off,len);
  	int totlen=aligner<alignof(dataonly)>(sizeof(dataonly)+len);
 	std::unique_ptr<senddata_t[],ardeleter<4,senddata_t>> destructptr(new(std::align_val_t(4),std::nothrow) senddata_t[totlen],ardeleter<4,senddata_t>());
@@ -214,13 +212,13 @@ extern getdata filedata;
 		data->len=-1;
 		}
 	filedata.close(fp);
-	return noacksendcommand(pass,sock,destructptr.get(),totlen);
+	return noacksendcommand(pass,destructptr.get(),totlen);
 	}
 	
 	
 
-bool sendcommandpass(ascon_aead_ctx_t *ctx,int sock ,const unsigned char *buf,int buflen,bool askack) {
-	LOGGERTAG("sendcommandpass %d %d\n",sock,buflen);
+bool Connect::sendcommandpass(ascon_aead_ctx_t *ctx,const unsigned char *buf,int buflen,bool askack) {
+	LOGGERTAG("sendcommandpass %d %d\n",getIdent(),buflen);
 	constexpr int taglen=16;
 	sendack ack;
 	int havelen=sizeof(int)+buflen;
@@ -254,24 +252,24 @@ bool sendcommandpass(ascon_aead_ctx_t *ctx,int sock ,const unsigned char *buf,in
 	if(erbij>0)
 		new_ct_bytes += ascon_aead128a_encrypt_update(ctx, startdata+new_ct_bytes, reinterpret_cast<const uint8_t *>(zeros), erbij);
 	ascon_aead128a_encrypt_final(ctx, startdata + new_ct_bytes, allbuf, taglen);
-	if(!noacksendcommand(sock,allbuf,totlen))  {
+	if(!noacksendcommand(allbuf,totlen))  {
 		return false;
 		}
 	if(askack)
-		return getack(sock);
+		return getack();
 	return true;
 	}
-bool sendcommand(crypt_t *pass,int sock ,const unsigned char *buf,int buflen) {
+bool Connect::sendcommand(crypt_t *pass,const unsigned char *buf,int buflen) {
 	if(!pass)
-		return sendcommand(sock,buf,buflen);
+		return sendcommand(buf,buflen);
 	else
-		return sendcommandpass(pass,sock,buf,buflen,true);
+		return sendcommandpass(pass,buf,buflen,true);
 	}
-bool noacksendcommand(crypt_t *pass,int sock ,const unsigned char *buf,int buflen) {
+bool Connect::noacksendcommand(crypt_t *pass,const unsigned char *buf,int buflen) {
 	if(!pass)
-		return noacksendcommand(sock,buf,buflen);
+		return noacksendcommand(buf,buflen);
 	else
-		return sendcommandpass(pass,sock,buf,buflen,false);
+		return sendcommandpass(pass,buf,buflen,false);
 	}
 
 
@@ -283,120 +281,68 @@ senddata_t* closecom(unsigned char *bufin,int16_t han) {
 	*reinterpret_cast<struct com_t*>(buf)= {sclose,han};
 	return buf+ sizeof(struct com_t);	
 	}
-bool sendone(crypt_t *pass,const int sock, const uint32_t com) {
+bool Connect::sendone(crypt_t *pass, const uint32_t com) {
 	LOGGERTAG("sendone %d\n",com);
-	return sendcommand(pass,sock,reinterpret_cast<const senddata_t *>(&com),4);
+	return sendcommand(pass,reinterpret_cast<const senddata_t *>(&com),4);
 	}
-bool noacksendone(crypt_t *pass,const int sock, const uint32_t com) {
+bool Connect::noacksendone(crypt_t *pass, const uint32_t com) {
 	LOGGERTAG("noacksendone %d\n",com);
-	return  noacksendcommand(pass,sock ,reinterpret_cast<const senddata_t *>(&com),4);
+	return  noacksendcommand(pass,reinterpret_cast<const senddata_t *>(&com),4);
 	}
 	
-bool sendbackupstop(crypt_t *pass,const int sock) {
-	return  noacksendone(pass,sock, sbackupstop) ;
+bool Connect::sendbackupstop(crypt_t *pass) {
+	return  noacksendone(pass, sbackupstop) ;
 	}
-bool sendResetDevices(crypt_t *pass,const int sock) {
-	const bool ret= noacksendone(pass, sock, sresetdevices) ;
-	LOGGER("sendResetDevices(pass,%d)=%d\n",sock,ret);
+bool Connect::sendResetDevices(crypt_t *pass) {
+	const bool ret= noacksendone(pass, sresetdevices) ;
+	LOGGER("sendResetDevices(pass,%d)=%d\n",getIdent(),ret);
 	return ret;
 	}
-bool sendbackup(crypt_t *pass,const int sock) {
-	return noacksendone(pass,sock,sbackup);
+bool Connect::sendbackup(crypt_t *pass) {
+	return noacksendone(pass,sbackup);
 	}
-bool sendwakeupstream(crypt_t *pass,const int sock) {
-	return noacksendone(pass,sock,swakeupstream);
+bool Connect::sendwakeupstream(crypt_t *pass) {
+	return noacksendone(pass,swakeupstream);
 	}
 	/*
 bool sendrenum(crypt_t *pass,const int sock) {
 	return sendone(pass,sock,srenum);
 	} */
-bool sendrender(crypt_t *pass,const int sock) {
-	return sendone(pass,sock,srender);
+bool Connect::sendrender(crypt_t *pass) {
+	return sendone(pass,srender);
 	}
 
-static bool    senduint16(crypt_t*pass,int sock,uint16_t com,uint16_t arg) {
+ bool    Connect::senduint16(crypt_t*pass,uint16_t com,uint16_t arg) {
     uint16_t_arg_struct data{com,arg};
-    return sendcommand(pass,sock,reinterpret_cast<uint8_t*>(&data),sizeof(data));
+    return sendcommand(pass,reinterpret_cast<uint8_t*>(&data),sizeof(data));
     }
-bool sendStartSendCalibrate(crypt_t *pass,const int sock,const uint16_t sensorindex) {
-    LOGGERTAG("sendStartSendCalibrate sock=%d sensorindex=%hd\n",sock,sensorindex);
-    return senduint16(pass,sock,sStartSendCalibrate,sensorindex);
+bool Connect::sendStartSendCalibrate(crypt_t *pass,const uint16_t sensorindex) {
+    LOGGERTAG("sendStartSendCalibrate getIdent()=%d sensorindex=%hd\n",getIdent(),sensorindex);
+    return senduint16(pass,sStartSendCalibrate,sensorindex);
     }
-bool sendBlueWatch(crypt_t *pass,const int sock,int8_t stream,int8_t nums) {
-    LOGGERTAG("sendBlueWatch sock=%d stream=%d nums=%d\n",sock,stream,nums);
+bool Connect::sendBlueWatch(crypt_t *pass,int8_t stream,int8_t nums) {
+    LOGGERTAG("sendBlueWatch getIdent()=%d stream=%d nums=%d\n",getIdent(),stream,nums);
     bluewatchstruct data{
          .com=sBlueWatch,
          .stream=stream,
          .nums=nums
          };
-    return sendcommand(pass,sock,reinterpret_cast<uint8_t*>(&data),sizeof(data));
+    return sendcommand(pass,reinterpret_cast<uint8_t*>(&data),sizeof(data));
     }
 
-bool sendshowglucose(crypt_t *pass,const int sock,const uint16_t sensorindex) {
+bool Connect::sendshowglucose(crypt_t *pass,const uint16_t sensorindex) {
 	struct renderstruct rend{sglucose,sensorindex};
-	LOGGERTAG("sendshowglucose(pass,%d,%d)\n",sock,sensorindex);
-	return sendcommand(pass,sock,reinterpret_cast<const senddata_t *>(&rend),sizeof(struct renderstruct));
+	LOGGERTAG("sendshowglucose(pass,%d,%d)\n",getIdent(),sensorindex);
+	return sendcommand(pass,reinterpret_cast<const senddata_t *>(&rend),sizeof(struct renderstruct));
 	}
-bool sendrender(crypt_t *pass,const int sock,const uint16_t type) {
+bool Connect::sendrender(crypt_t *pass,const uint16_t type) {
 	struct renderstruct rend{srender,type};
-	LOGGERTAG("sendrender(pass,%d,%d)\n",sock,type);
-	return sendcommand(pass,sock,reinterpret_cast<const senddata_t *>(&rend),sizeof(struct renderstruct));
-/*
-	const uint32_t com=srender;
-	return sendcommand(sock,reinterpret_cast<const senddata_t *>(&com),4);*/
+	LOGGERTAG("sendrender(pass,%d,%d)\n",getIdent(),type);
+	return sendcommand(pass,reinterpret_cast<const senddata_t *>(&rend),sizeof(struct renderstruct));
 	}
 	
-/*	
-bool oldsenddata(crypt_t *pass,const int sock,const std::vector<subdata>&data,const std::string_view naar) {
-	LOGARTAG("oldsenddata vect");
-	if(data.size()==0)
-		return true;
- 	if(int16_t han=sendopen(pass,sock,naar);han>0) {
-		int buflen=closesize();
-		for(auto &el:data) {
-			buflen+=datasize(el.datalen);	
-			}
-	        std::unique_ptr<senddata_t[],ardeleter<4,senddata_t>> destructptr(new(std::align_val_t(4),std::nothrow) senddata_t[buflen],ardeleter<4,senddata_t>());
-		senddata_t *buf=destructptr.get(),*ptr=buf;
-		if(!buf) {
-			sleep(1);
-			return false;
-			}
-		for(auto &el:data) {
-			ptr=datacom(ptr,han,el.offset,el.datalen,el.data); 
-			}
-#ifndef NDEBUG
-		auto endcom=
-#endif
-		closecom(ptr,han);
-		assert(endcom==(buflen+buf));
-		return sendcommand(pass,sock,buf,buflen);
-		}
-	return false;
-	}
-bool oldsenddata(crypt_t *pass,const int sock,const int offset,const senddata_t *data,const int datalen,const string_view naar) {
-	LOGARTAG("oldsenddata");
- 	if(int16_t han=sendopen(pass,sock,naar);han>0) {
-		int buflen=datasize(datalen)+closesize();
-	        std::unique_ptr<senddata_t[],ardeleter<4,senddata_t>> ptr(new(std::align_val_t(4),std::nothrow) senddata_t[buflen],ardeleter<4,senddata_t>());
-		senddata_t *buf=ptr.get();
-		if(!buf) {
-			sleep(1);
-			return false;
-			}
-		auto tus=datacom(buf,han,offset,datalen,data); 
-#ifndef NDEBUG
-		auto endcom=
-#endif
-		closecom(tus,han);
-		assert(endcom==(buflen+buf));
-		return sendcommand(pass,sock,buf,buflen);
-		}
-	return false;	
-	}
-*/
 
-bool newsenddata(crypt_t *pass,const int sock,const std::vector<subdata>&data,const std::string_view naar,uint16_t dowith,const uint8_t *extra,int extralen) {
+bool Connect::newsenddata(crypt_t *pass,const std::vector<subdata>&data,const std::string_view naar,uint16_t dowith,const uint8_t *extra,int extralen) {
 	if(data.size()==0)
 		return true;
 	const int elnr= data.size();
@@ -435,36 +381,22 @@ bool newsenddata(crypt_t *pass,const int sock,const std::vector<subdata>&data,co
 		}
 	stru->totlen=buflen;	
 	LOGGERTAG("senddata vect %s elnr=%d namelen=%d buflen=%d ptr-buf=%d extralen=%d dowith=%d\n",naar.data(),elnr,namelen,buflen,(int) (ptr-buf),extralen,dowith);
-	return sendcommand(pass,sock,buf,buflen);
+	return sendcommand(pass,buf,buflen);
 	}
 
-bool newsenddata(crypt_t *pass,const int sock,const int offset,const senddata_t *data,const int datalen,const string_view naar,uint16_t dowith,const uint8_t *extra,int extralen) {
+bool Connect::newsenddata(crypt_t *pass,const int offset,const senddata_t *data,const int datalen,const string_view naar,uint16_t dowith,const uint8_t *extra,int extralen) {
 	std::vector<subdata> vect;
 	vect.reserve(1);
 	vect.push_back({data,offset,datalen});
-	return  senddata(pass,sock,vect,naar,dowith,extra,extralen);
+	return  senddata(pass,vect,naar,dowith,extra,extralen);
 	}
 
-bool senddata(crypt_t *pass,const int sock,const std::vector<subdata>&data,const std::string_view naar,uint16_t dowith,const uint8_t *extra,int extralen) {
-	return newsenddata(pass,sock,data,naar,dowith,extra,extralen) ;
+bool Connect::senddata(crypt_t *pass,const std::vector<subdata>&data,const std::string_view naar,uint16_t dowith,const uint8_t *extra,int extralen) {
+	return newsenddata(pass,data,naar,dowith,extra,extralen) ;
 	}
-//static thread_local uint8_t receiverversion=0;
-bool senddata(crypt_t *pass,const int sock,const int offset,const senddata_t *data,const int datalen,const string_view naar,uint16_t dowith,const uint8_t *extra,int extralen) {
-		return newsenddata(pass,sock,offset,data,datalen,naar,dowith,extra,extralen) ;
+bool Connect::senddata(crypt_t *pass,const int offset,const senddata_t *data,const int datalen,const string_view naar,uint16_t dowith,const uint8_t *extra,int extralen) {
+		return newsenddata(pass,offset,data,datalen,naar,dowith,extra,extralen) ;
 	}
-	/*
-bool senddata(crypt_t *pass,const int sock,const int offset,const senddata_t *data,const int datalen,const string_view naar) {
- 	if(int16_t han=sendopen(pass,sock,naar);han>0) {
-		int buflen=datasize(datalen)+closesize();
-	        std::unique_ptr<senddata_t[],ardeleter<4,senddata_t>> ptr(new(std::align_val_t(4)) senddata_t[buflen],ardeleter<4,senddata_t>());
-		senddata_t *buf=ptr.get();
-		auto tus=datacom(buf,han,offset,datalen,data); 
-		auto endcom=closecom(tus,han);
-		assert(endcom==(buflen+buf));
-		return sendcommand(pass,sock,buf,buflen);
-		}
-	return false;	
-	} */
 
 	#ifdef MAIN
 bool sendcommands(int sock) {

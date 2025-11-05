@@ -1104,14 +1104,14 @@ void convertlast() {
       }
    }
 
-   bool setbackuptime(crypt_t *pass, const int sock, const int ind, const uint32_t starttime,uint16_t &starttimeindex) {
+   bool setbackuptime(crypt_t *pass, const Connect *connect, const int ind, const uint32_t starttime,uint16_t &starttimeindex) {
       int nr=last()+1;
       if(starttimeindex>nr)
             starttimeindex=nr;
       while(starttimeindex>0) {
          auto newindex=starttimeindex-1;
          if(SensorGlucoseData *hist = getSensorData(newindex)) {
-            if(!hist->setbackuptime(pass, sock, ind, starttime))
+            if(!hist->setbackuptime(pass, connect, ind, starttime))
                return false;
             }
          else   {
@@ -1128,11 +1128,11 @@ inline static constexpr const   std::string_view sensorfile{"sensors/sensors.dat
 
 
 
-int writeStartime(crypt_t *pass, const int sock, const int sensorindex) {
+int writeStartime(crypt_t *pass, const Connect *connect, const int sensorindex) {
     const uint8_t *starttimeptr=reinterpret_cast<uint8_t *>(&getsensor(sensorindex)->starttime);
          const uint8_t *startdata=reinterpret_cast<uint8_t*>(map.data());
          const int offset=starttimeptr-startdata;
-   if(!senddata(pass,sock,offset,starttimeptr,sizeof(uint32_t), sensorfile)) {
+   if(!connect->senddata(pass,offset,starttimeptr,sizeof(uint32_t), sensorfile)) {
                LOGAR("writeStartime: sending starttime failed");
                return 0;
                }
@@ -1140,7 +1140,7 @@ int writeStartime(crypt_t *pass, const int sock, const int sensorindex) {
           return 1;
           }
 
-int sendCalibrates(crypt_t *pass, const int sock,int ind,uint16_t &startSendCalibrate) {
+int sendCalibrates(crypt_t *pass, const Connect *connect,int ind,uint16_t &startSendCalibrate) {
       const int lastsens=last();
       const int first=startSendCalibrate;
       if(lastsens<first)
@@ -1149,7 +1149,7 @@ int sendCalibrates(crypt_t *pass, const int sock,int ind,uint16_t &startSendCali
      std::lock_guard<std::mutex> lock(caliMutex);
       int did=0;
       for(int sindex=first;sindex<=lastsens;++sindex) {
-           int res=getSensorData(sindex)->updateCali(pass, sock,ind,sindex);
+           int res=getSensorData(sindex)->updateCali(pass, connect,ind,sindex);
            if(!res)
                 return 0;
             did|=res;
@@ -1157,9 +1157,9 @@ int sendCalibrates(crypt_t *pass, const int sock,int ind,uint16_t &startSendCali
        startSendCalibrate=lastsens;
        return did;
       }
-   int update(crypt_t *pass, const int sock, const int ind, int &startupdate, int &firstsensor,
+   int update(crypt_t *pass, const Connect *connect, const int ind, int &startupdate, int &firstsensor,
             const bool upstream, const bool upscan, const bool restoreinfo,const bool resetdevices) {
-      LOGGER("Sensoren::update firstsensor=%d sock=%d ind=%d resetdevices=%d\n", firstsensor, sock, ind,resetdevices);
+      LOGGER("Sensoren::update firstsensor=%d sock=%d ind=%d resetdevices=%d\n", firstsensor, getIdent(), ind,resetdevices);
       int changed = INT_MAX;
       int did = 2;
 
@@ -1188,7 +1188,7 @@ int sendCalibrates(crypt_t *pass, const int sock,int ind,uint16_t &startSendCali
                }
 
             if(upstream) {
-               const int resstream = hist->updatestream(pass, sock, ind, i,0);
+               const int resstream = hist->updatestream(pass, connect, ind, i,0);
                switch (resstream) {
                   case 0: return did&0x4;
 //                  case 1: 
@@ -1199,7 +1199,7 @@ int sendCalibrates(crypt_t *pass, const int sock,int ind,uint16_t &startSendCali
 #endif
                did |= resstream;
                if(hist->isSibionics()) {
-                  int jsonres=hist->sendSibionicsState(pass,sock,ind); //TODO send less often
+                  int jsonres=hist->sendSibionicsState(pass,connect,ind); //TODO send less often
                   if(!jsonres) {
                      return did&0x4;
                      }
@@ -1208,7 +1208,7 @@ int sendCalibrates(crypt_t *pass, const int sock,int ind,uint16_t &startSendCali
                }
 
             if(upscan) {
-               const int resscan = hist->updatescan(pass, sock, ind, i,i>=startupdate,upstream);
+               const int resscan = hist->updatescan(pass, connect, ind, i,i>=startupdate,upstream);
                switch(resscan) {
                   case 0: return did&0x4;
                   case 5:  
@@ -1247,7 +1247,7 @@ int sendCalibrates(crypt_t *pass, const int sock,int ind,uint16_t &startSendCali
             }
          vect.push_back({reinterpret_cast<const senddata_t*>(begin+changed)+subtract,static_cast<int>(changed*sizeof(begin[0]))+subtract,static_cast<int>((afterend-changed)*sizeof(begin[0]))-subtract});
 
-         if(!senddata(pass, sock, vect , sensorfile))
+         if(!connect->senddata(pass,  vect , sensorfile))
             return did&0x4;
 
 /*
@@ -1257,20 +1257,18 @@ int sendCalibrates(crypt_t *pass, const int sock,int ind,uint16_t &startSendCali
 
          did = 1;
          if(newdevices)  {
-            extern bool sendResetDevices(crypt_t *pass,const int sock) ;
-            if(!sendResetDevices(pass,sock)) {
-               LOGGER("GLU %s: sendResetDevices(pass,sock) failed\n",shortsensorname()->data());
+            if(!connect->sendResetDevices(pass)) {
+               LOGGER("GLU %s: sendResetDevices(pass) failed\n",shortsensorname()->data());
                return did&0x4;
                }
             else {
-               LOGGER("GLU %s: sendResetDevices(pass,sock)\n",shortsensorname()->data());
+               LOGGER("GLU %s: sendResetDevices(pass)\n",shortsensorname()->data());
                }
             }
          }
 #ifdef SENDSHOW
       if(lastlast >= 0) {
-         bool sendshowglucose(crypt_t *pass, const int sock, const uint16_t sensorindex);
-         if (!sendshowglucose(pass, sock, lastlast))
+         if (!connect->sendshowglucose(pass,  lastlast))
             return did&0x4;
       }   
 #endif
@@ -1280,7 +1278,7 @@ int sendCalibrates(crypt_t *pass, const int sock,int ind,uint16_t &startSendCali
       return did;
    }
 
-   int update(crypt_t *pass, const int sock, const int ind, int &firstsensor,int otheralso,
+   int update(crypt_t *pass, const Connect *connect, const int ind, int &firstsensor,int otheralso,
             int (SensorGlucoseData::*proc)(crypt_t *, int, int, int,int)) {
       uint32_t now = time(NULL);
       int did = 2;
@@ -1292,7 +1290,7 @@ int sendCalibrates(crypt_t *pass, const int sock,int ind,uint16_t &startSendCali
             if(SensorGlucoseData *hist = getSensorData(i)) {
                 if(hist->error())
                         continue;
-                int subdid = (hist->*proc)(pass, sock, ind, i,otheralso);
+                int subdid = (hist->*proc)(pass, connect, ind, i,otheralso);
                 if (!subdid) return 0;
                 did |= subdid;
                 }
@@ -1302,14 +1300,14 @@ int sendCalibrates(crypt_t *pass, const int sock,int ind,uint16_t &startSendCali
    }
    
 
-   int updatescanss(crypt_t *pass, const int sock, const int ind, int &firstsensor,int streamalso) {
-        LOGGER("updatescanss sock=%d ind=%d\n",sock,ind);
-      return update(pass, sock, ind, firstsensor, streamalso,&SensorGlucoseData::updatescanalg);
+   int updatescanss(crypt_t *pass, const Connect *connect, const int ind, int &firstsensor,int streamalso) {
+        LOGGER("updatescanss sock=%d ind=%d\n",getIdent(),ind);
+      return update(pass, connect, ind, firstsensor, streamalso,&SensorGlucoseData::updatescanalg);
    }
 
-   int updatestreams(crypt_t *pass, const int sock, const int ind, int &firstsensor,int scanalso) {
-        LOGGER("updatestreams sock=%d ind=%d\n",sock,ind);
-      int res = update(pass, sock, ind, firstsensor,scanalso, &SensorGlucoseData::updatestream);
+   int updatestreams(crypt_t *pass, const Connect *connect, const int ind, int &firstsensor,int scanalso) {
+        LOGGER("updatestreams sock=%d ind=%d\n",getIdent(),ind);
+      int res = update(pass, connect, ind, firstsensor,scanalso, &SensorGlucoseData::updatestream);
 
       return res;
    }

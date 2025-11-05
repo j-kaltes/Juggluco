@@ -22,6 +22,7 @@
 package tk.glucodata;
 
 import android.annotation.SuppressLint;
+import android.app.PendingIntent;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCharacteristic;
@@ -37,23 +38,30 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+import static android.bluetooth.BluetoothGatt.CONNECTION_PRIORITY_BALANCED;
+import static android.bluetooth.BluetoothGatt.CONNECTION_PRIORITY_HIGH;
 import static android.bluetooth.BluetoothGatt.GATT_SUCCESS;
 import static android.bluetooth.BluetoothProfile.STATE_CONNECTED;
 import static android.bluetooth.BluetoothProfile.STATE_DISCONNECTED;
 import static android.content.Context.POWER_SERVICE;
 import static java.lang.System.arraycopy;
 import static java.util.Arrays.copyOfRange;
+import static java.util.Objects.isNull;
 import static tk.glucodata.Applic.app;
+import static tk.glucodata.Applic.isWearable;
+import static tk.glucodata.DexGattCallback.setalarm;
 import static tk.glucodata.Log.doLog;
+import static tk.glucodata.LossOfSensorAlarm.cancelalarm;
 import static tk.glucodata.Natives.endcrypt;
 import static tk.glucodata.Natives.initcrypt;
 import static tk.glucodata.Natives.intDecrypt;
 import static tk.glucodata.Natives.intEncrypt;
 import static tk.glucodata.Log.showbytes;
+import static tk.glucodata.util.sleep;
 
 
 public class Libre3GattCallback extends SuperGattCallback {
-    static final private boolean doTEST=false;
+    static final private boolean doTEST=false; //TODO
     static private final String LOG_ID = "Libre3GattCallback";
     private boolean shouldenablegattCharCommandResponse = false;
     private boolean isServicesDiscovered = false;
@@ -77,6 +85,7 @@ private  final void info(String in) {
 void free() {
     super.free();
     {if(doLog) {Log.i(LOG_ID, SerialNumber + ": "+"free");};};
+    cancelalarm();
     var tmp=cryptptr;
     cryptptr=0L;
     endcrypt(tmp);
@@ -123,7 +132,7 @@ private final void checkBluetoothGatt(BluetoothGatt bluetoothGatt) {
     }
 
 //    private boolean wasConnected = false;
-
+private boolean connected=false;
     @SuppressLint("MissingPermission")
     @Override 
     public void onConnectionStateChange(BluetoothGatt bluetoothGatt, int status, int newState) {
@@ -140,8 +149,10 @@ private final void checkBluetoothGatt(BluetoothGatt bluetoothGatt) {
                         }
          long tim = System.currentTimeMillis();
         if(newState == STATE_CONNECTED) {
+            //resetGlucose=0; 
+            connected=true;
             setpriority(bluetoothGatt);
-              constatchange[0] = tim;
+            constatchange[0] = tim;
             //wasConnected = true;
             if (!isServicesDiscovered||!getservices()) {
                 if(!mBluetoothGatt.discoverServices()) {
@@ -152,25 +163,29 @@ private final void checkBluetoothGatt(BluetoothGatt bluetoothGatt) {
                     }
 
             } 
-            } else if (newState == STATE_DISCONNECTED) {
+        } else if (newState == STATE_DISCONNECTED) {
+                connected=false;
+                cancelretrytimer();
                 Log.e(LOG_ID, SerialNumber + ": "+ "onConnectionStateChange ERROR: disconnected with status : " + status);
                // libre3BLESensor.access$600(libre3BLESensor.this, status);
-         constatchange[1] = tim;
-        setConStatus(status);
-        if(lastphase5) {
-            if(status==19) {
-                isPreAuthorized=false;
-                Natives.setLibre3kAuth(sensorptr,null);
+            constatchange[1] = tim;
+            setConStatus(status);
+            if(lastphase5) {
+                if(status==19) {
+                    if((tim-datatime)>60000) {
+                        isPreAuthorized=false;
+                        Natives.setLibre3kAuth(sensorptr,null);
+                        }
+                     }
+                }  
+            if(!stop)  {
+                 realdisconnected(bluetoothGatt,status,tim);
+                 }
+            else {
+                bluetoothGatt.close();
+                mBluetoothGatt = null;
                 }
-            } 
-        if(!stop)  {
-             realdisconnected(bluetoothGatt,status);
-             }
-        else {
-            bluetoothGatt.close();
-            mBluetoothGatt = null;
-            }
-            }
+                }
         }
 
         @Override 
@@ -202,9 +217,13 @@ private final void checkBluetoothGatt(BluetoothGatt bluetoothGatt) {
             }
         readrssi=rssi;
         if(shouldenablegattCharCommandResponse) {
+            Log.i(LOG_ID,"onReadRemoteRssi "+rssi+" ablegattCharCommandResponse");
             checkBluetoothGatt(bluetoothGatt);
             enablegattCharCommandResponse();
             shouldenablegattCharCommandResponse=false;
+            }
+        else {
+            Log.i(LOG_ID,"onReadRemoteRssi "+rssi+" not ablegattCharCommandResponse");
             }
         }
 
@@ -229,7 +248,6 @@ private   int rdtBytes =0;
 private        int rdtSequence = 0;
 private  int rdtLength =0;
 private    byte[] rdtData;
-//libre3BLESensor.access$1200(libre3BLESensor.this, bluetoothGattCharacteristic)
     int getsecdata(byte[] value) {
         if (value.length < 1) {
         var message="getsecdata unknown command length=" + value.length;
@@ -254,15 +272,12 @@ private    byte[] rdtData;
         rdtSequence = i2;
         return rdtLength - i3;
     }
-  //  libre3BLESensor.access$1400(libre3blesensor3, new MSLibre3ChallengeDataReadEvent(libre3blesensor3.rdtData));
 private final byte[] r1=new byte[16];
 private final byte[] r2=new byte[16];
 private final byte[] nonce1=new byte[7];
 
 private  void    randomr2() {
-//      (new SecureRandom()).nextBytes(r2);
       Random.fillbytes(r2);
-    //vul r2 met random bytes
     }
 private void setr1none(byte[] rdtData) {
     {if(doLog) {Log.i(LOG_ID, SerialNumber + ": "+"setr1none");};};
@@ -439,29 +454,27 @@ private void onCharacteristicChanged33(BluetoothGatt gatt, BluetoothGattCharacte
            wakelock.acquire();
             UUID uuid = characteristic.getUuid();
 //      {if(doLog){      showbytes(LOG_ID+" onCharacteristicChanged Start "+uuid.toString(), value);};}
-            if (uuid.equals(LIBRE3_CHAR_GLUCOSE_DATA)) {
-            logcharacter(uuid,charglucosedata,value);
+            if(uuid.equals(LIBRE3_CHAR_GLUCOSE_DATA)) {
+                logcharacter(uuid,charglucosedata,value);
                 glucose_data(value);
             } else if (uuid.equals(LIBRE3_CHAR_PATCH_STATUS)) {
                 logcharacter(uuid,"CHAR_PATCH_STATUS",value);
-        receivedpatchstatus(value);
-            } else if (uuid.equals(LIBRE3_CHAR_HISTORIC_DATA)) {
+                receivedpatchstatus(value);
+            } else if(uuid.equals(LIBRE3_CHAR_HISTORIC_DATA)) {
                 logcharacter(uuid,"CHAR_HISTORIC_DATA",value);
                 save_history(value);
-            } else if (uuid.equals(LIBRE3_CHAR_PATCH_CONTROL)) {
+            } else if(uuid.equals(LIBRE3_CHAR_PATCH_CONTROL)) {
                 logcharacter(uuid,"CHAR_PATCH_CONTROL",value);
-        access1100(value);
-            } else if (uuid.equals(LIBRE3_SEC_CHAR_CERT_DATA)) {
+                access1100(value);
+            } else if(uuid.equals(LIBRE3_SEC_CHAR_CERT_DATA)) {
                 logcharacter(uuid,"SEC_CHAR_CERT_DATA",value);
-                if (getsecdata(value) <= 0) {
-           receivedCERT_DATA();
-                  //  libre3BLESensor.access$1400(libre3blesensor2, new MSLibre3CertificateReadEvent(libre3blesensor2.rdtData));
+                if(getsecdata(value) <= 0) {
+                   receivedCERT_DATA();
                 }
             } else if (uuid.equals(LIBRE3_SEC_CHAR_CHALLENGE_DATA)) {
                 logcharacter(uuid,"SEC_CHAR_CHALLENGE_DATA",value);
-                if (getsecdata(value) <= 0) {
-            receivedCHALLENGE_DATA();
-                  //  libre3BLESensor.access$1400(libre3blesensor3, new MSLibre3ChallengeDataReadEvent(libre3blesensor3.rdtData));
+                if(getsecdata(value) <= 0) {
+                    receivedCHALLENGE_DATA();
                 }
             } else if (uuid.equals(LIBRE3_SEC_CHAR_COMMAND_RESPONSE)) {
                 logcharacter(uuid,"SEC_CHAR_COMMAND_RESPONSE",value);
@@ -471,11 +484,8 @@ private void onCharacteristicChanged33(BluetoothGatt gatt, BluetoothGattCharacte
                 logcharacter(uuid,"CHAR_EVENT_LOG",value);
         logevent(value);
             } else if (uuid.equals(LIBRE3_CHAR_FACTORY_DATA)) {
-               // libre3BLESensor.access$1700(libre3BLESensor.this, bluetoothGattCharacteristic);
-        //        access1700(value) ;
                 logcharacter(uuid,"CHAR_FACTORY_DATA",value);
             } else if (uuid.equals(LIBRE3_CHAR_CLINICAL_DATA)) {
-//                libre3BLESensor libre3blesensor4 = libre3BLESensor.this; libre3BLESensor.access$1800(libre3blesensor4, bluetoothGattCharacteristic);
                 logcharacter(uuid,"CHAR_CLINICAL_DATA",value);
                 fast_data(value);
             } else {
@@ -496,8 +506,7 @@ private    void fast_data(byte[] encryp) {
     byte[] decr=intDecrypt(cryptptr,5,encryp);
         if (decr == null) {
             info("fast_data decrypt went wrong"); 
-        dodisconnect(mBluetoothGatt); 
-
+            dodisconnect(mBluetoothGatt); 
         } else {
             Natives.saveLibre3fastData(sensorptr, decr);
         }
@@ -527,6 +536,7 @@ private void handleMSLibre3SecurityNotificationsEnabledEvent() {
             else  {
                 {if(doLog) {Log.i(LOG_ID, SerialNumber + ": "+"exportedKAuth!=null");};};
                 isPreAuthorized=true;
+                sendSecurityCommand(17);
                 }
             }
         }
@@ -559,39 +569,37 @@ private void init() {
 
 //private    boolean sendEphemeralKeys=false;
 @SuppressLint("MissingPermission")
-private void realdisconnected(BluetoothGatt bluetoothGatt,int status) {
-    //sendEphemeralKeys=false;
+private PendingIntent onalarm=null;
+
+private void realdisconnected(BluetoothGatt bluetoothGatt,int status,long tim) {
     {if(doLog) {Log.i(LOG_ID, SerialNumber + ": "+"disconnected "+status);};};
-    /*
-    timerPatchStatus=0x0 ;
-    timerReading=0x0 ;
-    timerAuthentication=0x0 ;
-    timerRSSI=0x0 ;
-    pendingTermination=0;
-    terminateReason=0;
-    inShutdown=0;
-    shutdownEvent=0x0 ;
-    timerCommandRetry=0x0 ; */
     oneMinuteReadingSize=0;
-//    oneMinutePacketNumber=0;
-    //historicalRecordCount=0;
-//    rssiCompletionEvent=0x0 ;
-//    currentControlCommand=0;
     backFillInProgress=false;
     shouldenablegattCharCommandResponse=false;
-//    endcrypt(cryptptr); cryptptr=0L;
     isServicesDiscovered=false;
     init();
     wrotecharacter=false;
     sendqueue.clear();
-    if(autoconnect&&status!=19) {
+//    if(autoconnect&&status!=19) 
+    if(autoconnect) {
         bluetoothGatt.connect();
         return;
         }
     else {
         bluetoothGatt.close();
         mBluetoothGatt = null;
-        connectDevice(0);//TODO:  What if it fails?
+        if(isWearable&&Natives.getDisconnectSensor()) {
+            final long alreadywaited = tim - datatime;
+            final long mmsectimebetween = 60 * 1000;
+            long stillwait = mmsectimebetween - alreadywaited - 55000;
+            if(doLog) {Log.i(LOG_ID, "alreadywaited=" + alreadywaited + " stillwait=" + stillwait);};
+            if(stillwait>0)
+                onalarm=setalarm(tim+stillwait,onalarm,SerialNumber);
+             else
+                connectDevice(0);
+             }
+         else
+                connectDevice(0);
         }
     }
 
@@ -611,13 +619,40 @@ private  void  setfailure(String str) {
     wrotepass[1]= System.currentTimeMillis();
     handshake =str;
     }
+
+       /*
+private void tryer(Supplier<Boolean> worked) {
+        if(worked.get())
+            return;
+        Applic.scheduler.schedule(() -> { 
+             for(int i=0;i<16;i++) {
+                  if(!connected) {
+                       {if(doLog) {Log.i(LOG_ID,"tryer stops not connected");};};
+                      return;
+                      }
+                  if(worked.get()) return; 
+                  sleep(20) ;
+                 } }, 20, TimeUnit.MILLISECONDS);
+       }
+private int resetGlucose=0;
+private void resetGlucoseCharacter(BluetoothGatt bluetoothGatt) {
+        if(isNull(bluetoothGatt)) {
+            return;
+            }
+        final var  characteristic=gattCharGlucoseData;
+        resetGlucose=1;
+        tryer(()-> disableNoCheck(bluetoothGatt, characteristic));
+        } */
 private void handleonDescriptorWrite(BluetoothGattCharacteristic characteristic) {
         final var uuid = characteristic.getUuid();
     String struuid=uuid.toString();
     {if(doLog) {Log.i(LOG_ID, SerialNumber + ": "+"handleonDescriptorWrite "+struuid);};};
      long timmsec = System.currentTimeMillis();
      setsuccess(timmsec,struuid);
-        if (LIBRE3_CHAR_PATCH_CONTROL.equals(uuid)) {
+  /*  if(false) {
+        }
+    else { */
+        if(LIBRE3_CHAR_PATCH_CONTROL.equals(uuid)) {
             enableNotification(mBluetoothGatt, gattCharEventLog);
         } else {
             if (LIBRE3_CHAR_EVENT_LOG.equals(uuid)) {
@@ -634,17 +669,15 @@ private void handleonDescriptorWrite(BluetoothGattCharacteristic characteristic)
                         } else {
                             if (LIBRE3_CHAR_GLUCOSE_DATA.equals(uuid)) {
                                 asknotification(gattCharPatchStatus);
+                            /*
+                               switch(resetGlucose) {
+                                case 0: asknotification(gattCharPatchStatus);break;
+                                case 1: asknotification(gattCharGlucoseData);++resetGlucose;break;
+                                default: resetGlucose=0; break;
+                                };
+                                */
                             } else {
                                 if (LIBRE3_CHAR_PATCH_STATUS.equals(uuid)) {
-                /*
-                                    if (workoffEvents()) {
-                                        sendevent(new MSLibre3NotificationEnabledEvent());
-                                        if (timerReading != null) {
-                                            timerReading.cancel();
-                                            timerReading = AppTimer.Timeout(90000L, 1, this);
-                                        }
-                                    }
-                */
                                 } else {
                                     if (LIBRE3_SEC_CHAR_COMMAND_RESPONSE.equals(uuid)) {
                                         enableNotification(mBluetoothGatt, gattCharCertificateData);
@@ -685,10 +718,9 @@ void access1700(byte[] value) {
         }
 */
 private void access1100(byte[] value) {
- //       byte[] decr=com.adc.trident.app.frameworks.mobileservices.libre3.security.Libre3BCSecurityContext::decrypt(1,value);
         byte[] decr=intDecrypt(cryptptr,1,value); //USED for what??
     {if(doLog){showbytes(LOG_ID+" "+ SerialNumber +" access1100",decr);};}
-//        bluetoothGattCharacteristic.setValue(decr);//Slaat nergens op
+//    gattCharPatchDataControl.setValue(decr);//Slaat nergens op TODO: remove
 /*
         switch(currentControlCommand) {
             case 1: {
@@ -700,7 +732,23 @@ private void access1100(byte[] value) {
             }; */
     backFillInProgress=false;
     wrotecharacter=false;
-    fromqueue();
+    if(sendqueue.isEmpty()) {
+        Log.i(LOG_ID,"access1100 !fromqueue");
+       if(isWearable) {
+            if(Natives.getDisconnectSensor())
+                disconnect();  
+            }
+/*          if(isWearable) {
+                  mBluetoothGatt.requestConnectionPriority(balanced?CONNECTION_PRIORITY_BALANCED:CONNECTION_PRIORITY_HIGH);
+                  balanced=!balanced;
+                  } */
+//        mBluetoothGatt.connect();
+
+//           if(isWearable) resetGlucoseCharacter(mBluetoothGatt);
+        }
+    else {
+        fromqueue();
+        }
     }
 
 private    void preparedata(byte[] value) {
@@ -899,7 +947,7 @@ private boolean    lastphase5=false;
             return false;
         }
         isServicesDiscovered = true;
-    shouldenablegattCharCommandResponse=true;
+        shouldenablegattCharCommandResponse=true;
         this.mBluetoothGatt.readRemoteRssi();
        {if(doLog) {Log.i(LOG_ID, SerialNumber + ": "+"getservices success");};};
        return true;
@@ -912,6 +960,7 @@ private boolean    lastphase5=false;
     private final byte[] oneMinuteRawData = new byte[35];
 
     @SuppressLint("MissingPermission")
+private long datatime=0L;
 private    void glucose_data(byte[] value) {
         if(doLog) {Log.i(LOG_ID, SerialNumber + ": "+"start glucose_data");};
         int len = value.length;
@@ -928,8 +977,7 @@ private    void glucose_data(byte[] value) {
                }
            long res=Natives.saveLibre3MinuteL(this.sensorptr, decr);
            handleGlucoseResult(res,timmsec);
-
-
+           datatime=timmsec;
            this.mBluetoothGatt.readRemoteRssi();
            }
         if(doLog) {Log.i(LOG_ID, SerialNumber + ": "+"end glucose_data");};
@@ -938,17 +986,23 @@ private    void glucose_data(byte[] value) {
 private ScheduledFuture<?> retrytimer=null;
 private void setretrytimer() {
     if(retrytimer==null) {
-        {if(doLog) {Log.i(LOG_ID, SerialNumber + ": "+"set timer");};};
-    retrytimer=Applic.scheduler.schedule(()-> { 
-        retrytimer=null;
-        {if(doLog) {Log.i(LOG_ID, SerialNumber + ": "+"timer went off");};};
-        fromqueue(); 
-        }, 5, TimeUnit.SECONDS);
+        if(doLog) {Log.i(LOG_ID, SerialNumber + ": "+"set timer");};
+        retrytimer=Applic.scheduler.schedule(()-> { 
+            retrytimer=null;
+            if(connected) {
+                if(doLog) {Log.i(LOG_ID, SerialNumber + ": "+"timer went off");};
+                fromqueue(); 
+                }
+            else {
+                if(doLog) {Log.i(LOG_ID, SerialNumber + ": "+"timer went off NOT connected");};
+                }
+            }, 20, TimeUnit.MILLISECONDS);
         }
     else
         {if(doLog) {Log.i(LOG_ID, SerialNumber + ": "+"already timer");};};
     }
 private void cancelretrytimer() {
+    Log.i(LOG_ID,"cancelretrytimer()");
     var tmp=retrytimer;
     retrytimer=null;
     if(tmp!=null) {
@@ -997,46 +1051,10 @@ private boolean fromqueue() {
 //unlock
       return true; 
     }
-/*
-void fromqueue() {
-    if(!pendingTermination) {
-        commandQueLock.lock();
-         try {
-         if(controlCommandQue.isEmpty())
-            currentControlCommand=0;
-        else {
-            Set<Map.Entry<Integer,byte[]>> assign= controlCommandQue.entrySet();
-            for(var el:assign) {
-                currentControlCommand=el.getKey();
-                if(sendcommand(el.getValue())) {
-                    controlCommandQue.remove( currentControlCommand);
-                    }
-                else {
-                //WHAT?
-                    }
-
-                }
-
-            }
-        } finally {
-           lock.unlock()
-         }
-        }
-        }
-*/
 
 
 
-//access$700
 private boolean backFillInProgress=false;
-//private int backFillStartLifeCount=0;
-//private int        backFillStartHistoricLifeCount= 0;
-
-//int lastLifeCountReceived=0;
-//int lastHistoricLifeCountReceived=0;
-
-//private boolean isWaitingForPatchStatus=true;
-//    boolean firstConnect=false; //true als net geactiveerd met NFC
 private void fillHistory(int backFillStartHistoricLifeCount) {
         int lastHistoricLifeCountReceived=Natives.getlastHistoricLifeCountReceived(sensorptr);
         if(backFillStartHistoricLifeCount<=lastHistoricLifeCountReceived) {
@@ -1046,7 +1064,6 @@ private void fillHistory(int backFillStartHistoricLifeCount) {
             {if(doLog) {Log.i(LOG_ID, SerialNumber + ": "+"get History: lastHistoricLifeCountReceived ("+lastHistoricLifeCountReceived+")<backFillStartHistoricLifeCount ("+backFillStartHistoricLifeCount +")");};};
             int takelast=Math.max(lastHistoricLifeCountReceived,5);
             byte[] command=Natives.libre3ControlHistory(1, takelast);
-        //    currentControlCommand=1;
             if(qsendcommand(command))
                 backFillInProgress=true;
             }
@@ -1057,18 +1074,13 @@ private void    fillClinical(int backFillStartLifeCount) {
 
       if(lastLifeCountReceived<backFillStartLifeCount) {
         var command=Natives.libre3ClinicalControl(1,lastLifeCountReceived);
-    //    currentControlCommand=2;
         if(qsendcommand(command))
             backFillInProgress=true;
         }
     }
 private void receivedpatchstatus(byte[] value) {
     {if(doLog) {Log.i(LOG_ID, SerialNumber + ": "+"receivedpatchstatus");};};
-//    com.adc.trident.app.frameworks.mobileservices.libre3.libre3BLESensor.timerPatchStatus=null;
-//    byte[] value=character.getValue();
     byte[] decr= intDecrypt(cryptptr,2,value);
-//         var status=new com.adc.trident.app.frameworks.mobileservices.libre3.libre3DPCRLInterface$ABT_PatchStatus(this);
- //       int ret=com.adc.trident.app.frameworks.mobileservices.libre3.libre3DPCRLInterface::DPProcessPatchStatus(decr,status);
     int res=Natives.libre3processpatchstatus(sensorptr,decr);
     short currentLifeCount= (short) (res&0xFFFF);
     short index= (short) (res>>16);
@@ -1077,12 +1089,6 @@ private void receivedpatchstatus(byte[] value) {
         Log.e(LOG_ID, SerialNumber + ": "+"currentLifeCount<0");
         return;
         }
-        /*
-    if(isNotificationSuspended) {
-        pendingEvents.add(MSLibre3PatchStatusEvent);
-        }
-    currentGlucoseDateTime=com.adc.trident.app.frameworks.core.AppClock.getCurrentTime();
-    */
     if(!backFillInProgress) {
         int backFillStartLifeCount=currentLifeCount;
         int backFillStartHistoricLifeCount= ((backFillStartLifeCount-16)/5)*5;
@@ -1091,7 +1097,6 @@ private void receivedpatchstatus(byte[] value) {
     if(!doTEST) {    
         int getevent=index+1;
         if(getevent>lastEventReceived) {
-    //        var command=new byte[7]; DPGetEventLogCommand(lastEventReceived,command);
             byte[] command=Natives.libre3EventLogControl(lastEventReceived);
             qsendcommand(command);
             } 

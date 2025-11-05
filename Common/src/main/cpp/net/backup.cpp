@@ -69,7 +69,7 @@ char servererrorbuf[maxservererror]="";
 #define serverprint(...) snprintf( servererrorbuf,maxservererror,__VA_ARGS__)
 #define servererror(...) savebuferror(servererrorbuf,maxservererror,__VA_ARGS__)
 static bool serverloop(int sock, passhost_t *hosts,int &hostlen,int *socks)  ;
-static bool startserver(char *port, passhost_t *hosts,int *hostlen,int *socks,bool *shutdownreceiver) {
+static bool startserver(char *port, passhost_t *hosts,int *hostlen,bool *shutdownreceiver) {
     constexpr const char receiver[]{"RECEIVER"};
 #ifndef HAVE_NOPRCTL
     prctl(PR_SET_NAME, receiver, 0, 0, 0);
@@ -138,7 +138,7 @@ static bool startserver(char *port, passhost_t *hosts,int *hostlen,int *socks,bo
             return false;
             }
         }
-    serverloop(sock,hosts,*hostlen,socks);
+    serverloop(sock,hosts,*hostlen);
     if(*shutdownreceiver) {
         LOGARTAG("stop server");
         return true;
@@ -274,13 +274,13 @@ bool testhostname(const char *hostname,const struct sockaddr *addr) {
     return false;
    }
 
-static bool testreceivemagic(passhost_t *pass,int sock) {
+ bool Connect::testreceivemagic(passhost_t *pass) {
 #include "receivemagic.h"
 #include "sendmagic.hpp"
     constexpr int buflen=1024;
     char buf[buflen];
     int res;
-    if((res =recvni(sock,buf,buflen))==sendmagicspec.size()) {
+    if((res =r_recvni(buf,buflen))==sendmagicspec.size()) {
         const int testlen=sendmagicspec.size()-4;
         if(!memcmp(buf,sendmagicspec.data(),testlen)) { 
             if(!memcmp(buf+testlen,sendmagicspec.end()-4,3)) {
@@ -299,7 +299,7 @@ static bool testreceivemagic(passhost_t *pass,int sock) {
                 else {
                     magicptr=receivemagic;
                     }
-                if(sendni(sock,magicptr,reclen)==reclen) {
+                if(r_sendni(magicptr,reclen)==reclen) {
                     LOGARTAG("receivemagic success");
                     if(!buf[sendmagicspec.size()-1]) {
                         LOGGERTAG("testreceivemagic zerolast %s\n",pass->getnameif());
@@ -312,18 +312,18 @@ static bool testreceivemagic(passhost_t *pass,int sock) {
 
                     }
                 else {
-                    saveerror(pass,"sendmagic %d",sock);
+                    saveerror(pass,"receivemagic %d",getIdent());
                     LOGGERTAG("%s\n",getmirrorerror(pass));
                     }
                 }
             }
         else  {
-            saveerror(pass,"wrong  magic %d",sock);
+            saveerror(pass,"wrong  magic %d",getIdent());
             LOGGERTAG("%s\n",getmirrorerror(pass));
             }
         }
     else    {
-        saveerror(pass,"testreceivemagic recvni(%d..)=%d\n",sock,res);
+        saveerror(pass,"testreceivemagic recvni(%d..)=%d\n",getIdent(),res);
         LOGGERTAG("%s\n",getmirrorerror(pass));
         }
     return false;
@@ -386,7 +386,7 @@ extern void receivetimeout(int sock,int secs) ;
      receivetimeout(new_fd,0);
      }
 
-static void receiverthread(int sock,passhost_t *host,const int allindex) {
+static void receiverthread(passhost_t *host,const int allindex) {
       char buf[17];
       snprintf(buf,17,"receiver %d",allindex);
 #ifndef HAVE_NOPRCTL
@@ -394,18 +394,18 @@ static void receiverthread(int sock,passhost_t *host,const int allindex) {
 #endif
 
 
-    LOGGERTAG("receiverthread %d %s\n",sock,buf);
-    bool    getcommands(int,passhost_t *);
-    if(getcommands(sock,host)) {
-        LOGGERTAG("open return receiverthread %d\n",sock);
+    LOGGERTAG("receiverthread %d %s\n",con->getSock(),buf);
+    TCPConnect *con=connections[allindex];
+    if(con->getcommands(host)) {
+        LOGGERTAG("open return receiverthread %d\n",con->getSock());
         return;
         }
-    LOGGERTAG("shutdown(%d)\n",sock);
-    shutdown(sock,SHUT_RDWR);
+    LOGGERTAG("shutdown(%d)\n",con->getSock());
+    shutdown(con->getSock();,SHUT_RDWR);
     }
 
 
-bool serverloop(int serversock, passhost_t *hosts,int &hostlen,int *socks)  {
+bool serverloop(int serversock, passhost_t *hosts,int &hostlen)  {
 globalsocket=serversock;
     while(true) {  // main accept() loop
          struct sockaddr_in6 their_addr;
@@ -493,6 +493,7 @@ globalsocket=serversock;
                         if((host.passive())&&host.hasname&&!memcmp(host.getname(),name,passhost_t::maxnamelen)) { 
                              if(!host.noip) {
                                 bool nothostreg=!host.hasip(addrptr)&&(!host.detect||!host.addiphasfamport(addrptr));
+
                                 if(nothostreg) {
                                    serverprint("label %s host %d wrong ip",name,h);
                                    LOGGERTAG("%s\n",servererrorbuf);
@@ -526,9 +527,11 @@ globalsocket=serversock;
     RIGHTHOST:
          {
 //           const int keepidle = 10*60;
-
-        if(!testreceivemagic(hit,new_fd)) {
-            sockclose(new_fd);
+        int allindex=hit-hosts;
+        TCPConnect *con=(TCPConnect *)connections[allindex];
+        con->setReceiverSock(new_FD);
+        if(!con->testreceivemagic(hit)) {
+            con->closeReceiverConnection();
             continue;
             }
     *servererrorbuf='\0';
@@ -541,7 +544,7 @@ globalsocket=serversock;
             char ant=SENDPASSIVE;
             extern bool sendall(const passhost_t *host);
             if(hit->receivedatafrom()&&!sendall(hit)) {
-                if(recvni(new_fd, &ant, 1)!=1) {
+                if(con->r_recvni(&ant, 1)!=1) {
                       LOGARTAG("No send/recv distinction");
                       }
                 else {
@@ -549,8 +552,7 @@ globalsocket=serversock;
                     }
                 }
             if(ant==SENDPASSIVE) {
-                void passivesender(int sock,passhost_t *pass) ;
-                passivesender(new_fd,hit);
+                con->passivesender(hit);
                 continue;
                 }
          else {
@@ -562,26 +564,17 @@ globalsocket=serversock;
             }
 
         receiversockopt(new_fd) ;
-        const int pos=hit-hosts;
-        int oldsock=socks[pos];
-        if(oldsock>=0&&oldsock!=new_fd) {
-            socks[pos]=-1;
-            LOGGERTAG("%d close(%d) prev\n",pos, oldsock);
-            shutdown(oldsock,SHUT_RDWR);
-            sockclose(oldsock);
-            }
-        socks[pos]=new_fd;
-        std::thread  handlecon(receiverthread,new_fd,hit,pos);
+        std::thread  handlecon(receiverthread,hit,allindex);
         handlecon.detach();
         }
         }
     }
-void startreceiver(const char *port,passhost_t *hosts,int &hostlen,int *socks) {
+void startreceiver(const char *port,passhost_t *hosts,int &hostlen) {
     globalsocket=-1;
     int len=strlen(port)+1;
     char *portcp=new char[len];
     memcpy(portcp,port,len);
-    std::thread backup(startserver,portcp,hosts,&hostlen,socks,shutdownreceiver=new bool[1]());
+    std::thread backup(startserver,portcp,hosts,&hostlen,shutdownreceiver=new bool[1]());
     backup.detach(); 
     }
 #ifdef MAIN

@@ -103,14 +103,14 @@ int updateone::update() {
     if(getsock()<0)
         return 0;
     crypt_t *pass=getcrypt();
+    Connect *connect=getConnect();    
 
     bool sendsensors=(sendstream||sendscans) ;
     int ret =0;
     LOGGER("updateone::update starttime=%d\n",starttime);
 #ifdef WEAROS
     if(blueWatch) {
-        extern bool sendBlueWatch(crypt_t *pass,const int sock,int8_t stream,int8_t nums);
-        if(!sendBlueWatch(pass,getsock(),sendstream,sendnums)) 
+        if(!connect->sendBlueWatch(pass,sendstream,sendnums)) 
             return 0;
          backup->getupdatedata()->allhosts[allindex].receivefrom=3;
          blueWatch=false;
@@ -122,12 +122,12 @@ int updateone::update() {
                 LOGAR("sendnums==true 2*lastlastpos==0");
                 if(starttime==1)  {
                     for(auto el:numdatas)
-                        if(! el->sendbackupinit(pass,getsock(),nums) )
+                        if(! el->sendbackupinit(pass,connect,nums) )
                             return 0;
                     }
                 else   {
-                    bool numsbackupsendinit(crypt_t*pass,int sock,struct changednums *nuall,uint32_t starttime) ;
-                    if(!numsbackupsendinit(pass,getsock(),nums, starttime) )
+                    bool numsbackupsendinit(crypt_t*pass,Connect *,struct changednums *nuall,uint32_t starttime) ;
+                    if(!numsbackupsendinit(pass,connect,nums, starttime) )
                         return 0;
                     startSendCalibrate=sensors->firstafter(starttime);
                     const int last=sensors->last();
@@ -147,7 +147,7 @@ int updateone::update() {
 
         if(starttime!=1)  {
             if(sendsensors) {
-                if( !sensors->setbackuptime(pass, getsock(),ind,starttime,starttimeindex))  {
+                if( !sensors->setbackuptime(pass, connect,ind,starttime,starttimeindex))  {
                     LOGAR("updateone::update failed");
                     return 0;
                     }
@@ -166,7 +166,7 @@ int updateone::update() {
         return 0;
     ret|=subdid;
     if(sendsensors) {
-        subdid=sensors->update(pass,getsock(),ind,startsensors,firstsensor,sendstream,sendscans,restore,resetdevices);
+        subdid=sensors->update(pass,connect,ind,startsensors,firstsensor,sendstream,sendscans,restore,resetdevices);
         if(subdid&4) {
             resetdevices=true;
             subdid&=3;
@@ -189,7 +189,7 @@ int updateone::update() {
             constexpr const int  sharedstart=offsetof(Tings, update);
             constexpr const int len=offsetof(Tings,mealvar )+1-sharedstart;
             vect.push_back({reinterpret_cast<const senddata_t *>( settings->data())+sharedstart,sharedstart,len});
-            if(!senddata(pass,getsock(),vect,settingsdat) ) 
+            if(!connect->senddata(pass,vect,settingsdat) ) 
                 return 0;
             }
         ret=1;
@@ -207,10 +207,10 @@ int updateone::update() {
         return 0;
 #endif
     uptodate(allindex) ;
-    if(!noacksendone(pass,getsock(), suptodate))
+    if(!connect->noacksendone(pass, suptodate))
         return 0;
     if(resetdevices) {
-        if(!sendResetDevices(pass,getsock()) ) {
+        if(!connect->sendResetDevices(pass) ) {
             LOGGER("sendResetDevices(%p,%d) failed\n",pass,getsock() );
             return 0;
             }
@@ -221,7 +221,7 @@ int updateone::update() {
 //    return sendrender(getsock());
     }
     
-extern int  updatenums(crypt_t *,int sock,struct changednums *nums,int);
+extern int  updatenums(crypt_t *,Connect *,struct changednums *nums,int);
 
 int     updateone::updatenums() {
     if(!sendnums)
@@ -229,21 +229,21 @@ int     updateone::updatenums() {
     if(starttime) {
         return update();
         }
-    int soc=getsock();
-    if(soc<0)
+    Connect *connect=getConnect();
+    if(!connect->isConnected())
         return 0;
     if(!sendjugglucoid) {
         LOGAR("updatenums sendjugglucoid");
         const int offset=offsetof(Tings,jugglucoID);
         const auto *data=reinterpret_cast<const senddata_t*>(&settings->data()->jugglucoID);
         const int len=sizeof(Tings::jugglucoID);
-        if(!senddata(getcrypt(),soc,offset,data,len,settingsdat) )  {
+        if(!connect->senddata(getcrypt(),offset,data,len,settingsdat) )  {
             LOGAR("updatenums sendjugglucoid error");
             return 0;
             }
         sendjugglucoid=true;
         }
-    if(int did= ::updatenums(getcrypt(),getsock(),nums,ind))  {
+    if(int did= ::updatenums(getcrypt(),connect,nums,ind))  {
         return sendCalibrate()|did;
         }
     return 0; 
@@ -255,9 +255,10 @@ int  updateone::updatestreamu() {
     if(starttime) {
         return update();
         }
-    if(getsock()<0)
+    Connect *connect=getConnect();
+    if(!connect->isConnected())
         return 0;
-    return sensors->updatestreams(getcrypt(),getsock(),ind,firstsensor,sendscans?2:1);
+    return sensors->updatestreams(getcrypt(),connect,ind,firstsensor,sendscans?2:1);
      } 
 int updateone::updatescansu() {
     if(!sendscans)
@@ -265,9 +266,10 @@ int updateone::updatescansu() {
     if(starttime) {
         return update();
         }
-    if(getsock()<0)
+    Connect *connect=getConnect();
+    if(!connect->isConnected())
         return 0;
-    return sensors->updatescanss(getcrypt(),getsock(),ind,firstsensor,sendstream);
+    return sensors->updatescanss(getcrypt(),connect,ind,firstsensor,sendstream);
      } 
 void wakeupall(){
     if(backup) {
@@ -339,7 +341,7 @@ void    updateone::open() {
     {
         if(host->sendpassive) 
             return;
-        makeconnection(host,getsock(),getcrypt(),saysender(host));
+       connections[allindex]->makeconnection(host,getcrypt(),saysender(host));
 
     }
     if(getsock()>=0) {
@@ -351,7 +353,6 @@ void    updateone::open() {
 
 
 
-bool turnreceiver(int sock,passhost_t *hostptr,crypt_t *ctxptr) ;
 
 static void sendup(passhost_t *hostptr) {
     const bool haspas= hostptr->haspass();
@@ -362,17 +363,19 @@ static void sendup(passhost_t *hostptr) {
 #ifndef HAVE_NOPRCTL
         prctl(PR_SET_NAME, "wake sender", 0, 0, 0);
 #endif
-    if(int sock;makeconnection(hostptr,sock,ctxptr,saysender(hostptr))>=0) {
+     int allindex=hostptr-backup->getupdatedata()->allhosts;
+     TCPConnect *connect=(TCPConnect*)connections[allindex];
+    if(connect->makeconnection(hostptr,ctxptr,saysender(hostptr))>=0) {
+        int sock=connect->getSock();
         sendtimeout(sock,60*5);
         receivetimeout(sock,0);
-        if(sendbackup(ctxptr,sock)) {
-
+        if(connect->sendbackup(ctxptr)) {
             LOGGER("sendup success %d\n",sock);    
             }
         else
             LOGGER("%d: failure %d\n",agettid(),sock);    
-
-        sockclose(sock);
+        connect->closeConnection();
+///        sockclose(sock);
         }
     }
 
@@ -441,34 +444,29 @@ void activereceivethread(int allindex,passhost_t *pass) {
             }
         current=active_receive[h]->dobackup;
         if(current&Backup::wakeend) {
-            int sockwas=hostsocks[allindex];
-            hostsocks[allindex]=-1;
-            sockclose(sockwas);
+            connections[allindex]->closeConnection();
             delete active_receive[h];
             active_receive[h]=nullptr;
             LOGGER("end activereceivethread close(%d)\n",sockwas);
             return;
             }
-        int &sock=hostsocks[allindex];
+        int &sock=(TCPConnect *)connections[allindex]->getSock();;
 #ifdef WEAROS_MESSAGES
     if(!pass->wearos||!wearmessages[allindex])  //TODO use it?
 #endif  
     {
-        if(makeconnection(pass,sock,ctxptr,sayactivereceive(pass))<0) {
+        if(connections[allindex]->makeconnection(pass,ctxptr,sayactivereceive(pass))<0) {
             continue;
             }
 //        status.hassocket=true;
         void    receiversockopt(int sock) ;
         receiversockopt(sock) ;
-        bool    activegetcommands(int sock,passhost_t *host,crypt_t *ctx) ;
         LOGAR("before activegetcommands");
-        activegetcommands(sock,pass,ctxptr); 
+        connections[allindex]->activegetcommands(pass,ctxptr); 
         LOGGER("after activegetcommands close(%d)\n",sock);
         sockclose(sock);
-//        status.hassocket=false;
         sock=-1;
     }
-//        if(ctxptr) ascon_aead_cleanup(ctxptr);
 
         }
     }
@@ -553,51 +551,38 @@ void updatedata::wakestreamsender() {
     }
 
 
-void passivesender(int sock,passhost_t *pass)  {
-    LOGGER("passivesender %d\n",sock);
+void Connect::passivesender(passhost_t *pass)  {
+    LOGGER("passivesender %d\n",getIdent());
      if(!networkpresent) {
          LOGGER("!networkpresent close and return sock=%d\n",sock);
-        sockclose(sock);
+        closeConnection();
         return;
         }
     int h=pass->index;
     updateone &host=backup->getupdatedata()->tosend[h];
     LOGAR("passivesender got host");
     if(h>=0&&backup->con_vars[h]) {
-        int oldsock=host.getsock();
-        if(oldsock>=0) {
-            LOGGER("passivesender shutdown oldsock %d\n",oldsock);
-            host.setsock(-1);
-            ::shutdown(oldsock,SHUT_RDWR);
-            sockclose(oldsock);
-            }
+        int allindex=pass-backup->getupdatedata()->allhosts;
+        closeConnection();
         const bool haspas= pass->haspass();
         if(haspas) {
             LOGAR("passivesender  haspas true");
-            bool    receivepassinit(int ,passhost_t *,crypt_t *);
-            if(!receivepassinit(sock,pass,host.getcrypt()))  {
-                LOGGER("close(%d)\n",sock);
-                sockclose(sock);
+            if(!receivepassinit(host.getcrypt()))  {
+                LOGGER("close(%d)\n",getIdent());
+                closeConnection();
                 return ;
                 }
             }
         else
             LOGAR("passivesender  haspas false");
-
-        receivetimeout(sock,60) ;
-        sendtimeout(sock,60*5);
-        host.setsock(sock); 
-//        mirrorstatus[host.allindex].sendor.hassocket=true;
+          
+        setSenderTimeouts();
+//        host.setsock(sock); 
         LOGGER("wakebackup con_vars[%d]\n",h);
          backup->con_vars[h]->wakebackup(Backup::wakeall);
          }
     }
 
-/*
-    int h=pass->index;
-    updateone &host=backup->getupdatedata()->tosend[h];
-    host.close();
-    host.setsock(sock); */
     
 
 

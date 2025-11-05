@@ -36,7 +36,10 @@
 #include <stdlib.h>
 
 #include <jni.h>
+#include "TCPConnect.hpp"
 #include "myfdsan.h"
+
+Connect *connections[maxallhosts];
 inline int mytag() {
    return 0;
    }
@@ -66,15 +69,6 @@ constexpr const char defaultport[]{
 #ifdef WEAROS_MESSAGES
 extern bool wearmessages[];
 #endif
-/*
-inline void closesock(int &sock) {
-    if(sock>=0) {
-        LOGGER("%d ",sock);
-        ::shutdown(sock,SHUT_RDWR);
-        sock=-1;
-        }
-    }
-    */
 #ifndef TESTMENU
 #include <mutex>
 extern std::mutex change_host_mutex;
@@ -103,7 +97,7 @@ struct changednums {
         lastlastpos=0;
         }
     };
-int  updatenums(crypt_t *,int sock,struct changednums *nums);
+int  updatenums(crypt_t *,Connect *connect,struct changednums *nums);
 inline static constexpr const char backupdat[]="backup.dat";
 inline static constexpr const char orbackup[] ="orbackup.dat";
 extern int hostsocks[];
@@ -161,23 +155,26 @@ struct updateone {
         }
     
     crypt_t *getcrypt() const; 
+
+auto *getConnect()  {
+        return connections[allindex];
+        }
     int &getsock() const {
-        return sendsocks[ind];
+//        return sendsocks[ind];
+        ((TCPConnect *)getConnect())->getSendSock();
         }
     void setsock(int val) const {
-        sendsocks[ind]=val;
+        ((TCPConnect *)getConnect())->setSendSock(val);
+      //  sendsocks[ind]=val;
         }
 void    open() ;
 void close() {    
        const int so= getsock();
        LOGGER("updateone close(%d)\n",so);
        if(so>=0) {
-//        mirrorstatus[allindex].sensor.hassocket=false;
          setsock(-1);
-//         if(get_owner_tag(so)==mytag()) 
-            ::sockclose(so);
+         ::sockclose(so);
          if(crypt_t *ctx=getcrypt()) {
-//            LOGGER("ascon_aead_cleanup(%p)\n",ctx);
             ascon_aead_cleanup(ctx);
             }
         }
@@ -207,7 +204,6 @@ struct updatedata {
     void wakesender() ;
     void wakestreamsender();
     };
-
 class  Backup {
 
 Mmap<unsigned char> mapdata;
@@ -245,6 +241,7 @@ const struct updatedata* getupdatedata() const {return reinterpret_cast<const st
 bool getshouldaskfordata() {
     const int len=getupdatedata()->hostnr;
     for(int i=0;i<len;i++) {
+        connections[i]=new TCPConnect;
         if(getupdatedata()->allhosts[i].receivefrom==3)
             return true;
         }
@@ -394,7 +391,7 @@ void startreceiver(bool always=false) {
     if(receiveractive()&&!always)
         return;
     ::stopreceiver();
-    ::startreceiver(getupdatedata()->port,getupdatedata()->allhosts,getupdatedata()->hostnr,hostsocks);
+    ::startreceiver(getupdatedata()->port,getupdatedata()->allhosts,getupdatedata()->hostnr);
     }
 void stopreceiver() {
     ::stopreceiver() ;
@@ -1076,11 +1073,14 @@ void closeallsocks() {
     }
 void closesocksone(int allindex,passhost_t *host) {
     LOGGER("closesocksone %d\n",allindex);
+    Connect *connect=connections[allindex];
+    connect->shutdown();
+    /*
     int sock=hostsocks[allindex];
     if(sock>=0) {
         hostsocks[allindex]=-1;
         ::shutdown(sock,SHUT_RDWR);
-        }
+        } */
      int ind=host->index;
      if(ind>=0) {
         int ssock=sendsocks[ind];
@@ -1097,15 +1097,14 @@ bool sendwakesender(int h) {
     updateone &shost=getupdatedata()->tosend[h];
     shost.close();
     shost.open();
-    return sendbackup(shost.getcrypt(),shost.getsock());
+    return shost.getConnect()->sendbackup(shost.getcrypt());
     }
 
 bool sendwakestreamsender(int h) {
     updateone &shost=getupdatedata()->tosend[h];
     shost.close();
     shost.open();
-    extern    bool sendwakeupstream(crypt_t *pass,const int sock);
-    return sendwakeupstream(shost.getcrypt(),shost.getsock());
+    return shost.getConnect()->sendwakeupstream(shost.getcrypt());
     }
     /*
 extern int updateproc(condvar_t *varsptr,uintptr_t cond,updateone &shost,int  (updateone::*proc)( )) ;

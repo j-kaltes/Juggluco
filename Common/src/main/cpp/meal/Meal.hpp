@@ -130,7 +130,7 @@ void updatelastmeal(int last) {
             nu->lastmeal=last;
         }
     }
-int updatemeal( crypt_t*pass,int sock,uint32_t &lastmeal) {
+int updatemeal( crypt_t*pass,Connect *connect,uint32_t &lastmeal) {
     uint32_t startmeal=std::min(lastmeal,gotlastmeal);
     LOGGER("updatemeal lastmeal=%u gotlastmeal=%u startmeal=%d mealindex=%d\n",lastmeal,gotlastmeal,startmeal,mealindex);
     auto wasmealindex=mealindex;
@@ -143,7 +143,7 @@ int updatemeal( crypt_t*pass,int sock,uint32_t &lastmeal) {
         vect.push_back({reinterpret_cast<const uint8_t*>(&mealindex),startind,(int)(offsetof(mealdata,units)-startind+unitnr*sizeof(units[0]))});
         vect.push_back({reinterpret_cast<uint8_t*>(&ingredients),(int)offsetof(mealdata,ingredients),(int)(ingredientnr*sizeof(ingredients[0]))});
         vect.push_back({reinterpret_cast<uint8_t*>(themeals+startmeal),(int)(offsetof(mealdata,themeals)+startmeal*sizeof(themeals[0])),(int)((mealindex-startmeal)*sizeof(themeals[0]))});
-        if(!senddata(pass,sock,vect,mealsdat) ) {
+        if(!connect->senddata(pass,vect,mealsdat) ) {
             LOGAR("updatemeal failed");
             return 0;
             }

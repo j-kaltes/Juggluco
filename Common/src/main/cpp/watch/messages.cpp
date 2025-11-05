@@ -37,6 +37,7 @@
 #include "destruct.hpp"
 #include "datbackup.hpp"
 #include "net/netstuff.hpp"
+#include "TCPConnect.hpp"
 /*
 struct wearmessage {
    int32_t len;
@@ -290,11 +291,6 @@ void tobluetooth(int hostnr,bool sender,int *sockin, int *sockother,std::binary_
          LOGGERTAG("%d %d Return from thread\n",hostnr,sender);
          return;
        }
-    /*
-        while(!(status.sendmessage=sendmessage(phonehost,phonesender,buf,inlen))) {
-        LOGGERTAG("sendmessage failed %d %d #%d\n",phonehost,phonesender,inlen);
-        sleep(20);
-        } */
         }
     }
 void closesock(int &sock) {
@@ -305,7 +301,7 @@ void closesock(int &sock) {
         sockclose(tmpsock);
         }
 }
-extern    bool    getcommandsnopass(int sock,passhost_t *host); //TODO password?
+//extern    bool    getcommandsnopass(int sock,passhost_t *host); //TODO password?
 extern bool    getcommands(int,passhost_t *);
 extern    void receiversockopt(int new_fd);
 
@@ -332,33 +328,34 @@ static void messagereceivecommands(passhost_t *pass) {
         LOGGERN(buf,len);
         }
         messagereceiversockets[index]=sockpair[0];
+        TCPConnect *connect=static_cast<TCPConnect *>(connections[index]);
 
         std::binary_semaphore waitstarted(0);
-        std::thread th(tobluetooth,index,false,    &messagereceiversockets[index],hostsocks+index,&waitstarted); //TODO handshake?
+        std::thread th(tobluetooth,index,false,    &messagereceiversockets[index],&connect->getSock(),&waitstarted); //TODO handshake?
         waitstarted.acquire();
-
+/*
         int &recsock=hostsocks[index];
         if(recsock!=-1)
             closesock(recsock);
 
-        recsock= sockpair[1];
+        recsock= sockpair[1]; */
+        int recsock= sockpair[1]; 
+        connect->setSock(recksock);
         receiversockopt(recsock);
 
 #ifdef ENCRYPTMESSAGES 
         LOGARTAG("Encrypt getcommands");
     
-        getcommands
+        connect->getcommands
 #else
-        getcommandsnopass
+        connect->getcommandsnopass
 #endif
-        (recsock,pass);
+        (pass);
 
         LOGGERTAG("%d message join\n",index);
         shutdown(messagereceiversockets[index],SHUT_RDWR);
         th.join();
-        if(recsock!=-1) {
-            closesock(recsock);
-            }
+        connect->closeConnection();
         LOGSTRINGTAG("try again\n");
          }
     LOGGERTAG("messagereceivecommands wearmessages[%d]==false\n",index);
@@ -381,7 +378,7 @@ void startmessagereceivers(Backup *backup) {
     } */
 
 
-extern void   sendpassinit(int sock,passhost_t *host,crypt_t *ctx);
+//extern void   sendpassinit(int sock,passhost_t *host,crypt_t *ctx);
 int messagemakeconnection(passhost_t *pass,int &sock,crypt_t*ctx,char stype) {
     const int index=pass-getBackupHosts().data();
     if(messagesendersockets[index]!=-1) {

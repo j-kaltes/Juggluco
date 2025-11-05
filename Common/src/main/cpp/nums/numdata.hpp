@@ -1202,10 +1202,10 @@ struct ardeleter { // deleter
     }
 };
 
-static bool    sendlastpos(crypt_t*pass,int sock,uint16_t dbase,uint32_t lastpo) {
+static bool    sendlastpos(crypt_t*pass,Connect *connect,uint16_t dbase,uint32_t lastpo) {
     LOGGERTAG("sendlastpos %hd %u\n",dbase,lastpo);
     lastpos_t data{snumnr,dbase,lastpo}; 
-    return sendcommand(pass,sock,reinterpret_cast<uint8_t*>(&data),sizeof(data));
+    return connect->sendcommand(pass,reinterpret_cast<uint8_t*>(&data),sizeof(data));
     }
 
 //std::unique_ptr<char[]> newnumsfile;
@@ -1242,7 +1242,7 @@ bool numbackupinit(const numinit *nums) {
     return true;
     }
 
-bool sendbackupinit(crypt_t*pass,int sock,struct changednums *nuall) {
+bool sendbackupinit(crypt_t*pass,Connect *connect,struct changednums *nuall) {
 
  {     NUMLOCKGUARD
     LOGARTAG("sendbackupinit start NUMLOCKGUARD");
@@ -1256,7 +1256,7 @@ bool sendbackupinit(crypt_t*pass,int sock,struct changednums *nuall) {
     }
 
     numinit gegs{.first=static_cast<uint32_t>(getfirstpos()),.ident=ident};
-     if(!sendcommand(pass, sock ,reinterpret_cast<uint8_t*>(&gegs),sizeof(gegs))) {
+     if(!connect->sendcommand(pass, reinterpret_cast<uint8_t*>(&gegs),sizeof(gegs))) {
         LOGARTAG("sendbackupinit failure");
         return false;
         }
@@ -1264,17 +1264,17 @@ bool sendbackupinit(crypt_t*pass,int sock,struct changednums *nuall) {
 //    nuall->init=false;
     return true;
     }
-bool backupsendinit(crypt_t*pass,int sock,struct changednums *nuall,uint32_t starttime) {
+bool backupsendinit(crypt_t*pass,Connect *connect,struct changednums *nuall,uint32_t starttime) {
     const int index=getindex();
     LOGGERTAG("NUM%d: backupsendinit %u\n",index,starttime);
 
     if(starttime&&(getfirstpos()!=getlastpos()))  {
         asklastnum ask{.dbase=(bool)ident};
-         if(!noacksendcommand(pass,sock,reinterpret_cast<uint8_t*>(&ask),sizeof(ask))) {
+         if(!connect->noacksendcommand(pass,reinterpret_cast<uint8_t*>(&ask),sizeof(ask))) {
              LOGARTAG("NUM: noacksendcommand asklastnum failed");
             return false;
             }
-        auto ret=receivedata(sock, pass,sizeof(int));
+        auto ret=connect->receivedata( pass,sizeof(int));
         int *posptr=reinterpret_cast<int*>(ret.get());
         if(!posptr) {
             LOGARTAG("NUM: receivedata==null");
@@ -1306,7 +1306,7 @@ bool backupsendinit(crypt_t*pass,int sock,struct changednums *nuall,uint32_t sta
         }
     STARTOVER:
     LOGARTAG("NUM: zero start");
-    return sendbackupinit(pass,sock,nuall);
+    return sendbackupinit(pass,connect,nuall);
     }
 private:
 uint32_t findEarlymeal(int pos) const {
@@ -1324,7 +1324,7 @@ uint32_t findEarlymeal(int pos) const {
     }
 public:
 static inline constexpr const int intinnum=(sizeof(Num)/sizeof(uint32_t));
-int update(crypt_t*pass,int sock,struct changednums *nuall,int ind) {
+int update(crypt_t*pass,Connect *connect,struct changednums *nuall,int ind) {
 //     NUMLOCKGUARD
     nummutexupdate.lock();
     updatebusy[ind]=false; //Otherwise it has lock in network operation and which can lead to an ANR kill off app.
@@ -1356,7 +1356,7 @@ int update(crypt_t*pass,int sock,struct changednums *nuall,int ind) {
             }
         else {
             LOGGERTAG("ind=%d dbase=%d lastlastpos (%d) !=endpos (%d)\n",ind,dbase,nu->lastlastpos,endpos);
-            if(!sendlastpos(pass,sock,dbase,endpos))  {
+            if(!sendlastpos(pass,connect,dbase,endpos))  {
                 return 0;
                 }
             ret=1;
@@ -1390,7 +1390,7 @@ int update(crypt_t*pass,int sock,struct changednums *nuall,int ind) {
                 }
             }
         nummutexupdate.unlock();
-         if(!sendcommand(pass, sock ,destructptr.get(),totlen)) {
+         if(!connect->sendcommand(pass, destructptr.get(),totlen)) {
             LOGGERTAG("update sendcommand failed dbase=%d totlen=%d\n",dbase,totlen);
              return 0;
              }
