@@ -562,6 +562,9 @@ int    JCurve::badscanMessage(NVGcontext* avg,int kind) {
             LOGGER("javabadscan    %d: \n",kind);
             const int scerror= kind&0xff;
             switch(scerror) {
+                case 0xF8: {
+                        errorpair(avg,usedtext->libre3zeroID);
+                        };break;
                 case 0xF9: {
                     showerror(avg,usedtext->nolibre3.first,usedtext->needsandroid8);
                     };break;

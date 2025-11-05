@@ -196,6 +196,8 @@ R"(Debería ser el mismo que cuando se activa el sensor. Use el menú izquierdo-
 .unknownNFC={"Error de escaneo NFC no reconocido",
 "Inténtelo de nuevo"},
 .nolibre3={"Sensor FreeStyle Libre 3",
+.libre3zeroID={"Error, zero account ID?",
+	R"(Use Left menu->Settings->Exchange data->Libreview->"Get Account ID" to set a non-zero account ID.)"},
 .needsandroid8="Needs minimally Android 8"sv,
 "Descargue la versión correcta de https://www.juggluco.nl/download.html"},
 #ifndef WEAROS

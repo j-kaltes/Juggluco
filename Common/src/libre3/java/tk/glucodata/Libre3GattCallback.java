@@ -170,13 +170,14 @@ private boolean connected=false;
                // libre3BLESensor.access$600(libre3BLESensor.this, status);
          constatchange[1] = tim;
         setConStatus(status);
-/*        if(lastphase5) {
+        if(lastphase5) {
             if(status==19) {
-                isPreAuthorized=false;
-                Natives.setLibre3kAuth(sensorptr,null);
-                }
-
-            }  */
+                if((tim-datatime)>=59000) {
+                    isPreAuthorized=false;
+                    Natives.setLibre3kAuth(sensorptr,null);
+                    }
+                 }
+            }  
         if(!stop)  {
              realdisconnected(bluetoothGatt,status,tim);
              }

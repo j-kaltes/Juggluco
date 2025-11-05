@@ -62,6 +62,8 @@ inline int getpagesize(void) {
 #include "settings/settings.hpp"
 #include "timevalues.h"
 #include "calibrate/CaliPara.hpp"
+inline  constexpr const int maxdexcount=3025 ;
+inline constexpr const int youngsensorsecs=2*60*60;
 inline    constexpr const char rawstream[]="rawstream.dat";
 #include <string_view>
 extern std::string_view globalbasedir;
@@ -717,16 +719,11 @@ uint32_t expectedEndTime() const {
      }
     
 uint32_t getmaxtime() const {
-/*
-    if(isLibre3()) {
-#ifndef NDEBUG
-        return 16*24*60*60+getstarttime();
-#else
-        return (14*24 + 2)*60*60+getstarttime();
-    #endif
-        }
-    else */
+#if  1
    const int hours= isSibionics1()?maxSIhours:((isAccuChek()?maxdaysAccu:getinfo()->days)*24);
+#else
+   const int hours= isSibionics1()?maxSIhours:((isAccuChek()?maxdaysAccu:getinfo()->days+1)*24);
+#endif
     return hours*60*60+getstarttime();
     }
 uint32_t getstarttime() const {
@@ -804,8 +801,10 @@ void saveel(int pos,time_t tin,uint16_t id, uint16_t const (&glu)[N]) {
 
 
 bool savenewhistory(int pos, int lifeCount, uint16_t mgL) {
-    if(!timelastcurrent)
+/*
+    if(!timelastcurrent) {
          return false;
+         } */
     Glucose *item=getglucose(pos);
     if(item->id==lifeCount&&item->glu[1]==mgL) {
 
@@ -1116,7 +1115,10 @@ static bool mkdatabase3(string_view sensordir,time_t start,uint32_t pin,const ch
                 return false;
             }
         }
-       Info inf{.starttime=(uint32_t)start,.lastscantime=(uint32_t)time(nullptr),.starthistory=0,.endhistory=0,.scancount=0,.startid=0,.interval=interval5,.dupl=3,.days=15 ,.pin=pin,.lastLifeCountReceived=1,.wearduration2=wearduration,.warmup2=static_cast<uint8_t>(warmup),.pollcount=0, .lockcount=0};
+       constexpr const int minperday=60*24;
+       const uint8_t  days=(wearduration+minperday-1)/minperday+1;
+       LOGGER("mkdatabase days=%d\n",days);
+       Info inf{.starttime=(uint32_t)start,.lastscantime=(uint32_t)time(nullptr),.starthistory=0,.endhistory=0,.scancount=0,.startid=0,.interval=interval5,.dupl=3,.days=days,.pin=pin,.lastLifeCountReceived=1,.wearduration2=wearduration,.warmup2=static_cast<uint8_t>(warmup),.pollcount=0, .lockcount=0};
     if(address)
         strcpy(inf.deviceaddress,address);
     else
@@ -2184,7 +2186,13 @@ int updatescanalg(crypt_t *pass,int sock,int  ind,int sensorindex,int alsostream
 int lastlifecount=0;
 time_t timelastcurrent=0;
 time_t lifeCount2time(uint32_t lifecount) {
-    auto uit=timelastcurrent-60LL*(lastlifecount-(int64_t)lifecount);
+    time_t uit;
+    if(lastlifecount) {
+        uit=timelastcurrent-60LL*(lastlifecount-(int64_t)lifecount);
+        }
+    else {
+        uit=getstarttime()+60LL*(lifecount+1);
+        }
     LOGGER("timelastcurrent=%ld lastlifecount=%d lifeCount2time(lifecount=%d)=%lld\n", timelastcurrent,lastlifecount,lifecount,uit);
     return uit;
     }
@@ -2290,6 +2298,37 @@ int getLastIndex() const {
                 }
         return -1;
         }
+
+
+bool hasData(uint32_t nu) const {
+        if(isAccuChek()) {
+            if(pollcount()>=4000)
+                    return false;
+            }
+       else {
+        if(isDexcom()) {
+            if(pollcount()>=maxdexcount)
+                    return false;
+            }
+          else {
+          /*
+             if(isLibre3()) {
+                    if(pollcount()>=getinfo()->wearduration2)
+                        return false;
+                    }
+              else
+              */
+              {
+                    return false;
+                    }
+              }
+           }
+    const uint32_t diff=nu-lastused();
+    const bool res= diff < youngsensorsecs;
+    LOGGER("hasData nu=%d lastused=%d diff=%d return=%d\n",nu,lastused(),diff,res);
+     return res;
+    }
+//         return ((isAccuChek()&&pollcount()<4000)||(isDexcom()&&pollcount()<maxdexcount))&& (nu-lastused())< youngsensorsecs
 };
 
 struct lastscan_t {

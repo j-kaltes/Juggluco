@@ -167,6 +167,8 @@ jugglucotext svtext {
 .nolibre3={
   "FreeStyle Libre 3 sensor",
 	"Ladda ner rätt version från https://www.juggluco.nl/download.html"},
+.libre3zeroID={"Error, zero account ID?",
+	R"(Use Left menu->Settings->Exchange data->Libreview->"Get Account ID" to set a non-zero account ID.)"},
 .needsandroid8="Needs minimally Android 8"sv,
 #ifndef WEAROS
 	.advancedstart= R"(<h1>Modifierad enhet</h1>

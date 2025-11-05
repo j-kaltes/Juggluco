@@ -186,6 +186,8 @@ trtext.amount},
         "Tekrar Deneyin"},
 .nolibre3={"FreeStyle Libre 3 sensor",
         "Doğru sürümü https://www.juggluco.nl/download.html adresinden indirin"},
+.libre3zeroID={"Error, zero account ID?",
+	R"(Use Left menu->Settings->Exchange data->Libreview->"Get Account ID" to set a non-zero account ID.)"},
 .needsandroid8="En az Android 8 gerekir."sv,
 #ifndef WEAROS
         .advancedstart= R"(<h1>Değiştirilmiş Cihaz</h1>

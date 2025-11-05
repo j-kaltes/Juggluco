@@ -157,6 +157,8 @@ jugglucotext zhtext {
         "再试一次"},
     .nolibre3 = {"FreeStyle Libre 3 传感器",
         "从 https://www.juggluco.nl/download.html 下载正确的版本"},
+.libre3zeroID={"Error, zero account ID?",
+	R"(Use Left menu->Settings->Exchange data->Libreview->"Get Account ID" to set a non-zero account ID.)"},
 .needsandroid8="Needs minimally Android 8"sv,
 
 #ifndef WEAROS

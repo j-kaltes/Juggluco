@@ -166,6 +166,8 @@ R"(Moet hetzelfde zijn als bij het activeren van de sensor. Gebruik Linkermenu->
 .libre3scansuccess= {"FreeStyle Libre 3-sensor", "Glucosewaarden worden nu ontvangen door Juggluco"},
 .unknownNFC={"Onbekende NFC-scanfout", "Probeer het opnieuw"},
 .nolibre3={"FreeStyle Libre 3-sensor","Download de juiste versie van https://www.juggluco.nl/download.html"},
+.libre3zeroID={"Fout, nul account-ID?",
+R"(Gebruik Linkermenu->Instellingen->Deel gegevens->Libreview->"Account-ID ophalen" voor het invoeren van een account ID.)"},
 .needsandroid8="Needs minimally Android 8"sv,
 #ifndef WEAROS
 	.advancedstart= R"(<h1>Veranderd apparaat</h1>

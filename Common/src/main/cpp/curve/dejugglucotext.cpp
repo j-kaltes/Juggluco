@@ -170,6 +170,7 @@ detext.newamount,
 .unknownNFC={"Unerkannter NFC-Scanfehler", "Versuchen Sie es erneut"},
 
 .nolibre3={"FreeStyle Libre 3 Sensor","Holen Sie sich die richtige Version von https://www.juggluco.nl/download.html"},
+.libre3zeroID={"Fehler: Konto-ID null?",R"(Verwenden Sie Linkes Menü->Einstellungen->Daten austauschen->Libreview->"Konto-ID erhalten", um eine Konto-ID ungleich null festzulegen.)"},
 .needsandroid8="Needs minimally Android 8"sv,
 #ifndef WEAROS
 .advancedstart= R"(<h1>Geändertes Gerät</h1>

@@ -33,8 +33,6 @@
 using namespace std;
 //char sensorid[]="E007-0M0063KNUJ0";
 //#define sensorid "E007-0M0063KNUJ0"xxxxxx
-inline  constexpr const int maxdexcount=3025 ;
-inline constexpr const int youngsensorsecs=2*60*60;
 inline constexpr const int sensornamelen=16;
 #include "gltype.hpp"
 class SensorGlucoseData;
@@ -676,7 +674,7 @@ template <typename F>
                 }
              
              if(sensor.maxtime() <= oldsecs) {
-                LOGGER("%s old\n", showsensorname(i));
+                LOGGER("sensorsInPeriod %s old %u\n", showsensorname(i), sensor.maxtime());
                 break;
                 } 
 
@@ -875,8 +873,9 @@ template <typename F>
       sensorlist()[ind].present = 1;
       uint32_t maxtime = thishist->getmaxtime();
       if(maxtime < nu) {
-         if(((thishist->isAccuChek()&&thishist->pollcount()<4000)||(thishist->isDexcom()&&thishist->pollcount()<maxdexcount))&&(nu-sensorlist()[ind].endtime)< youngsensorsecs) {
-         return true;
+         //if(((thishist->isAccuChek()&&thishist->pollcount()<4000)||(thishist->isDexcom()&&thishist->pollcount()<maxdexcount))&&(nu-sensorlist()[ind].endtime)< youngsensorsecs) 
+         if(thishist->hasData(nu)) {
+            return true;
             }
          else {
              LOGGER("%s finished was %d set to 1\n", sensorlist()[ind].name, sensorlist()[ind].finished);
@@ -884,7 +883,7 @@ template <typename F>
             }
          }
        sensorlist()[ind].endtime = thishist->lastused();
-    }
+        }
           // "TODO test on presence"
           return true;
      }
@@ -970,7 +969,7 @@ template <typename F>
                    }
 
                 if(sensor.maxtime() <= oldsecs) {
-                   LOGGER("%s old\n", showsensorname(i));
+                   LOGGER("blueactive %s old %u\n", showsensorname(i),sensor.maxtime());
                    break;
                    } 
                 const SensorGlucoseData *hist = getSensorData(i);
@@ -980,7 +979,7 @@ template <typename F>
                    }
                const auto sensmax=hist->getmaxtime() ;
                 if(sensmax<=nu) {
-                      LOGGER("%s old\n", showsensorname(i));
+                      LOGGER("blueactive %s old sensmax=%u\n", showsensorname(i),sensmax);
                       if(sensmax<oldsecs)
                          break;
                       continue;

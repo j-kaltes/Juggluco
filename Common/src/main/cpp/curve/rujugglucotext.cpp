@@ -201,6 +201,8 @@ rutext.amount},
 			"Попробуйте еще"},
 .nolibre3={"FreeStyle Libre 3 датчик",
 	"Загрузите правильную версию с сайта https://www.juggluco.nl/download.html"},
+.libre3zeroID={"Error, zero account ID?",
+	R"(Use Left menu->Settings->Exchange data->Libreview->"Get Account ID" to set a non-zero account ID.)"},
 .needsandroid8="Needs minimally Android 8"sv,
 #ifndef WEAROS
 	.advancedstart= R"(<h1>Модифицированное устройство, телефон с ROOT</h1>
