@@ -172,8 +172,8 @@ extern "C" JNIEXPORT void JNICALL   fromjava(setSensorptrSiSubtype)(JNIEnv *env,
    sendsiScan(usedhist);
    LOGAR("sendsiScan(usedhist)");
    if(backup)
-       backup->wakebackup(Backup::wakeall);
-   LOGAR("wakebackup(Backup::wakeall)");
+       backup->wakebackup(wakeall);
+   LOGAR("wakebackup(wakeall)");
 
    }
 extern "C" JNIEXPORT jint JNICALL   fromjava(getSiSubtype)(JNIEnv *env, jclass cl,jlong dataptr) {
@@ -205,8 +205,8 @@ extern "C" JNIEXPORT void JNICALL   fromjava(setSiSubtype)(JNIEnv *env, jclass c
    sendsiScan(usedhist);
    LOGAR("sendsiScan(usedhist)");
    if(backup)
-       backup->wakebackup(Backup::wakeall);
-   LOGAR("wakebackup(Backup::wakeall)");
+       backup->wakebackup(wakeall);
+   LOGAR("wakebackup(wakeall)");
 
    }
 */
@@ -389,7 +389,7 @@ jlong SiContext::processData2(SensorGlucoseData *sens,time_t nowsecs,data_t *dat
                         if(algcontext)
                             savejson(sens,sens->statefile,index,algcontext,getjson2);
                         } */
-                     backup->wakebackup(Backup::wakestream);
+                     backup->wakebackup(wakestream);
                      extern void wakewithcurrent();
                      wakewithcurrent();
 
@@ -402,7 +402,7 @@ jlong SiContext::processData2(SensorGlucoseData *sens,time_t nowsecs,data_t *dat
 /*                   if(!(index%500)) {
                         if(algcontext) {
                            // savejson(sens,sens->statefile,index,algcontext,getjson2);
-                            backup->wakebackup(Backup::wakestream);
+                            backup->wakebackup(wakestream);
                             }
                         } */
                       sens->receivehistory=nowsecs;

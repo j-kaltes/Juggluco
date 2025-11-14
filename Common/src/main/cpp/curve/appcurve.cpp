@@ -562,6 +562,9 @@ int    JCurve::badscanMessage(NVGcontext* avg,int kind) {
             LOGGER("javabadscan    %d: \n",kind);
             const int scerror= kind&0xff;
             switch(scerror) {
+                case 0xF8: {
+                        errorpair(avg,usedtext->libre3zeroID);
+                        };break;
                 case 0xF9: {
                     showerror(avg,usedtext->nolibre3.first,usedtext->needsandroid8);
                     };break;
@@ -944,11 +947,7 @@ void JCurve::numpagenum(const uint32_t tim) {
     time_t tims=tim;
     LOGGER("nrcolumns=%d percol=%d onpage=%d %s",nrcolumns,percol,onpage,ctime(&tims));
     #endif
-    for(int tever=tot%onpage
-#ifndef NOLOG
-    , niets=LOGGER("tever=%d\n",tever)
-#endif
-    ;tever>0;--tever) {
+    for(int tever=tot%onpage;tever>0;--tever) {
         ifindnewest(numiters,basecount,notvali);
         };
     int newest;

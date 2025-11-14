@@ -815,6 +815,14 @@ extern "C" JNIEXPORT void  JNICALL   fromjava(setlibrepass)(JNIEnv *env, jclass 
     char tmp[37];
     env->GetStringUTFRegion(jpass, 0,jlen, tmp);
     jint len = env->GetStringUTFLength( jpass);
+    for(int i=0;i<len;++i) {
+        if(tmp[i]=='"') {
+            memmove(tmp+1,tmp,len-i);
+            tmp[i]='\\';
+            ++i;
+            ++len;
+            }
+        }
     mix(mixpass, reinterpret_cast<uint8_t *>(tmp), reinterpret_cast<uint8_t *>(settings->data()->librepass), len);
     settings->data()->librepasslen=len;
      }
@@ -1498,7 +1506,7 @@ int savedoses(NovoPen *pen,uint32_t reftime,uint8_t *bytes,int len) {
         ++savednr;
         }
     setnumchanged(now);
-    backup->wakebackup(Backup::wakenums);    
+    backup->wakebackup(wakenums);    
     return savednr;
     }
 extern "C" JNIEXPORT jboolean  JNICALL   fromjava(oldnovopenvalue)(JNIEnv *env, jclass cl,jlong referencetime,jstring jserial,jbyteArray jrawdoses) {

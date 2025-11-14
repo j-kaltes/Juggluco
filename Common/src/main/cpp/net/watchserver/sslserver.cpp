@@ -26,7 +26,7 @@ char privatekey[]="privkey.pem";
 #ifdef USE_SSL
 #include <stdlib.h>
 #include <dlfcn.h>
-#ifdef JUGGLUCO_APP
+#ifdef __ANDROID_API__
 #include <android/dlext.h>
 #define DLSYMS_SSL 1
 #endif
@@ -120,7 +120,7 @@ extern void *openssl();
 extern void * dlopener(std::string_view filename,int flags);
 std::string loadsslfunctions() {
 #ifdef DLSYMS_SSL
-   #ifndef  JUGGLUCO_APP
+   #ifndef  __ANDROID_API__
    char cryptolib[]="libcrypto.so.3";
    void* cryptohandle;
    if(!(cryptohandle=dlopener(cryptolib, RTLD_NOW))&&(cryptolib[12]='\0', !(cryptohandle=dlopener(cryptolib, RTLD_NOW)))) {
@@ -141,7 +141,7 @@ std::string loadsslfunctions() {
         return std::string("hgetsym ERR_print_errors_cb fails");
       }
 
-#ifndef JUGGLUCO_APP
+#ifndef __ANDROID_API__
    char libssl[]="libssl.so.3";
    const char *libname=libssl;
      void *handle;

@@ -31,7 +31,6 @@ extern "C" JNIEXPORT jboolean JNICALL   fromjava(getCalibrator)(JNIEnv *env, jcl
     env->SetDoubleField(jcalip,jb,gconvert(item.b*10));
     return true;
     }
-extern void wakeupall();
 extern void setCalibrates(uint16_t sensorindex) ;
 extern "C" JNIEXPORT jboolean JNICALL   fromjava(removeCalibrator)(JNIEnv *env, jclass cl,jlong sensorptr,jint pos) {
     if(!sensorptr)

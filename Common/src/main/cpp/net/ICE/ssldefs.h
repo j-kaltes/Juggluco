@@ -1,0 +1,31 @@
+#define SSL_write SSL_writeptr
+#define SSL_set_fd SSL_set_fdptr
+#define SSL_read SSL_readptr
+#define SSL_get_error SSL_get_errorptr
+#define SSL_CTX_new SSL_CTX_newptr
+#define SSL_new SSL_newptr
+#define SSL_CTX_set_default_verify_paths SSL_CTX_set_default_verify_pathsptr
+#define SSL_connect SSL_connectptr
+#define SSL_get_peer_certificate SSL_get_peer_certificateptr
+#define SSL_get_verify_result SSL_get_verify_resultptr
+#define SSL_free SSL_freeptr
+#define SSL_CTX_free SSL_CTX_freeptr
+#define SSL_set_verify SSL_set_verifyptr
+#define SSL_set_verify_depth SSL_set_verify_depthptr
+#define SSL_get_ex_data_X509_STORE_CTX_idx SSL_get_ex_data_X509_STORE_CTX_idxptr
+#define SSL_library_init SSL_library_initptr
+#define SSL_load_error_strings SSL_load_error_stringsptr
+#define SSL_CTX_get_cert_store SSL_CTX_get_cert_storeptr
+#define SSL_CTX_set_verify SSL_CTX_set_verifyptr
+#define SSL_get_current_cipher SSL_get_current_cipherptr
+#define SSL_CIPHER_get_name SSL_CIPHER_get_nameptr
+#define SSL_CTX_load_verify_locations SSL_CTX_load_verify_locationsptr
+
+#define SSL_set_tlsext_host_name SSL_set_tlsext_host_nameptr
+#define SSL_ctrl SSL_ctrlptr
+
+#define TLS_client_method TLS_client_methodptr
+#define SSLv23_client_method SSLv23_client_methodptr
+#define SSL_shutdown SSL_shutdownptr
+
+

@@ -162,10 +162,12 @@ bool sensorexports(myfilep handle, const FG& proc,const FP& print,uint32_t start
 			const T *beg=&scans.begin()[0];
 			const T *en=&scans.end()[0];
 			#ifndef NOLOG
-			if(beg!=en)
+			if(beg!=en) {
 				LOGGERTAG("h%d %u\n",index,beg->gettime());
-			else
+                                }
+			else {
 				LOGGERTAG("h%d\n",index);
+                                }
 			#endif	
 			iters[i++]={.startall=scans.startall(),.iter=beg,.begin=beg,.end=en-1,.bytes=sizeof(T),.index=index};
 			}

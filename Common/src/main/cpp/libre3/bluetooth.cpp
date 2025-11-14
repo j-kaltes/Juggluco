@@ -248,7 +248,7 @@ extern "C" JNIEXPORT  jlong JNICALL fromjava(saveLibre3MinuteL)(JNIEnv *env, jcl
 	jlong res=save3current(sens,minptr);
 	save3history(sens,minptr);
 
-	backup->wakebackup(Backup::wakestream);
+	backup->wakebackup(wakestream);
 	wakewithcurrent();
 
 	return res;
@@ -327,7 +327,7 @@ extern "C" JNIEXPORT  jboolean JNICALL fromjava(saveLibre3fastData)(JNIEnv *env,
 				sens->savepollallIDs<60>(wastime,lifecount,curval,0,NAN);
 				sens->backstream(lifecount);
 				if(lifecount>=(sens->pollcount()-2))
-					backup->wakebackup(Backup::wakestream);
+					backup->wakebackup(wakestream);
 				}
 			else {
 				LOGGER("fastdata invalid lifecount=%d curval=%.1f\n",lifecount,curval/convfactordL);
@@ -376,7 +376,7 @@ static bool saveLibre3History(SensorGlucoseData *sens, const jbyte *history,cons
 	sens->updateHistsorylifecount(lastsave);
 	if(++lastsave>sens->getScanendhistory())
 		sens->setendhistory(lastsave);
-//	backup->wakebackup(Backup::wakescan);
+//	backup->wakebackup(wakescan);
 	return true;
 	}
 

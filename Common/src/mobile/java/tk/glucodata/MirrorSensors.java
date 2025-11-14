@@ -65,6 +65,7 @@ private static void confirmFinish(MainActivity act,long ptr) {
     builder.setTitle(serial).setMessage(R.string.finishsensormessage).
       setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
          public void onClick(DialogInterface dialog, int id) {
+               Log.i(LOG_ID,"confirmFinish");
                 Natives.finishfromSensorptr(ptr);
                 act.requestRender();
                 MainActivity.doonback();

@@ -33,8 +33,6 @@
 using namespace std;
 //char sensorid[]="E007-0M0063KNUJ0";
 //#define sensorid "E007-0M0063KNUJ0"xxxxxx
-inline  constexpr const int maxdexcount=3025 ;
-inline constexpr const int youngsensorsecs=2*60*60;
 inline constexpr const int sensornamelen=16;
 #include "gltype.hpp"
 class SensorGlucoseData;
@@ -676,7 +674,7 @@ template <typename F>
                 }
              
              if(sensor.maxtime() <= oldsecs) {
-                LOGGER("%s old\n", showsensorname(i));
+                LOGGER("sensorsInPeriod %s old %u\n", showsensorname(i), sensor.maxtime());
                 break;
                 } 
 
@@ -875,8 +873,9 @@ template <typename F>
       sensorlist()[ind].present = 1;
       uint32_t maxtime = thishist->getmaxtime();
       if(maxtime < nu) {
-         if(((thishist->isAccuChek()&&thishist->pollcount()<4000)||(thishist->isDexcom()&&thishist->pollcount()<maxdexcount))&&(nu-sensorlist()[ind].endtime)< youngsensorsecs) {
-         return true;
+         //if(((thishist->isAccuChek()&&thishist->pollcount()<4000)||(thishist->isDexcom()&&thishist->pollcount()<maxdexcount))&&(nu-sensorlist()[ind].endtime)< youngsensorsecs) 
+         if(thishist->hasData(nu)) {
+            return true;
             }
          else {
              LOGGER("%s finished was %d set to 1\n", sensorlist()[ind].name, sensorlist()[ind].finished);
@@ -884,7 +883,7 @@ template <typename F>
             }
          }
        sensorlist()[ind].endtime = thishist->lastused();
-    }
+        }
           // "TODO test on presence"
           return true;
      }
@@ -970,7 +969,7 @@ template <typename F>
                    }
 
                 if(sensor.maxtime() <= oldsecs) {
-                   LOGGER("%s old\n", showsensorname(i));
+                   LOGGER("blueactive %s old %u\n", showsensorname(i),sensor.maxtime());
                    break;
                    } 
                 const SensorGlucoseData *hist = getSensorData(i);
@@ -980,7 +979,7 @@ template <typename F>
                    }
                const auto sensmax=hist->getmaxtime() ;
                 if(sensmax<=nu) {
-                      LOGGER("%s old\n", showsensorname(i));
+                      LOGGER("blueactive %s old sensmax=%u\n", showsensorname(i),sensmax);
                       if(sensmax<oldsecs)
                          break;
                       continue;
@@ -1104,7 +1103,7 @@ void convertlast() {
       }
    }
 
-   bool setbackuptime(crypt_t *pass, const Connect *connect, const int ind, const uint32_t starttime,uint16_t &starttimeindex) {
+   bool setbackuptime(crypt_t *pass, Connect *connect, const int ind, const uint32_t starttime,uint16_t &starttimeindex) {
       int nr=last()+1;
       if(starttimeindex>nr)
             starttimeindex=nr;
@@ -1128,7 +1127,7 @@ inline static constexpr const   std::string_view sensorfile{"sensors/sensors.dat
 
 
 
-int writeStartime(crypt_t *pass, const Connect *connect, const int sensorindex) {
+int writeStartime(crypt_t *pass,  Connect *connect, const int sensorindex) {
     const uint8_t *starttimeptr=reinterpret_cast<uint8_t *>(&getsensor(sensorindex)->starttime);
          const uint8_t *startdata=reinterpret_cast<uint8_t*>(map.data());
          const int offset=starttimeptr-startdata;
@@ -1140,7 +1139,7 @@ int writeStartime(crypt_t *pass, const Connect *connect, const int sensorindex) 
           return 1;
           }
 
-int sendCalibrates(crypt_t *pass, const Connect *connect,int ind,uint16_t &startSendCalibrate) {
+int sendCalibrates(crypt_t *pass, Connect *connect,int ind,uint16_t &startSendCalibrate) {
       const int lastsens=last();
       const int first=startSendCalibrate;
       if(lastsens<first)
@@ -1157,9 +1156,9 @@ int sendCalibrates(crypt_t *pass, const Connect *connect,int ind,uint16_t &start
        startSendCalibrate=lastsens;
        return did;
       }
-   int update(crypt_t *pass, const Connect *connect, const int ind, int &startupdate, int &firstsensor,
+   int update(crypt_t *pass, Connect *connect, const int ind, int &startupdate, int &firstsensor,
             const bool upstream, const bool upscan, const bool restoreinfo,const bool resetdevices) {
-      LOGGER("Sensoren::update firstsensor=%d sock=%d ind=%d resetdevices=%d\n", firstsensor, getIdent(), ind,resetdevices);
+      LOGGER("Sensoren::update firstsensor=%d sock=%d ind=%d resetdevices=%d\n", firstsensor, connect->getSenderIdent(), ind,resetdevices);
       int changed = INT_MAX;
       int did = 2;
 
@@ -1278,8 +1277,8 @@ int sendCalibrates(crypt_t *pass, const Connect *connect,int ind,uint16_t &start
       return did;
    }
 
-   int update(crypt_t *pass, const Connect *connect, const int ind, int &firstsensor,int otheralso,
-            int (SensorGlucoseData::*proc)(crypt_t *, int, int, int,int)) {
+   int update(crypt_t *pass,  Connect *connect, const int ind, int &firstsensor,int otheralso,
+            int (SensorGlucoseData::*proc)(crypt_t *, Connect *, int, int,int)) {
       uint32_t now = time(NULL);
       int did = 2;
       for (int i = last(); i >= firstsensor; i--) {
@@ -1300,13 +1299,13 @@ int sendCalibrates(crypt_t *pass, const Connect *connect,int ind,uint16_t &start
    }
    
 
-   int updatescanss(crypt_t *pass, const Connect *connect, const int ind, int &firstsensor,int streamalso) {
-        LOGGER("updatescanss sock=%d ind=%d\n",getIdent(),ind);
+   int updatescanss(crypt_t *pass,  Connect *connect, const int ind, int &firstsensor,int streamalso) {
+        LOGGER("updatescanss sock=%d ind=%d\n",connect->getSenderIdent(),ind);
       return update(pass, connect, ind, firstsensor, streamalso,&SensorGlucoseData::updatescanalg);
    }
 
-   int updatestreams(crypt_t *pass, const Connect *connect, const int ind, int &firstsensor,int scanalso) {
-        LOGGER("updatestreams sock=%d ind=%d\n",getIdent(),ind);
+   int updatestreams(crypt_t *pass,  Connect *connect, const int ind, int &firstsensor,int scanalso) {
+        LOGGER("updatestreams sock=%d ind=%d\n",connect->getSenderIdent(),ind);
       int res = update(pass, connect, ind, firstsensor,scanalso, &SensorGlucoseData::updatestream);
 
       return res;

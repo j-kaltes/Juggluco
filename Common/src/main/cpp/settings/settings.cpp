@@ -489,7 +489,7 @@ void setupnetwork() {
                 }
 
         backup->getupdatedata()->wakesender();
-        backup->wakebackup(Backup::wakeall);
+        backup->wakebackup(wakeall);
 //        backup->wakebackup();
 
        }

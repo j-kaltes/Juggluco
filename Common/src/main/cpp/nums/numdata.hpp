@@ -637,7 +637,7 @@ void numsave( const uint32_t time, const float32_t value, const uint32_t type,co
     if(Num *num=numsaveonly(time,  value,  type, mealptrin)) {
         addCalibration( time, type,num,this);
         if(backup)
-            backup->wakebackup(Backup::wakenums);
+            backup->wakebackup(wakenums);
         setnumchanged();
         }
      }
@@ -1095,7 +1095,7 @@ void updatesizeon() {
     
 void updatesize() {
 //    updatesizeon();
-//    backup->wakebackup(Backup::wakenums);
+//    backup->wakebackup(wakenums);
     }
 private:
 #ifdef LOCKNUM
@@ -1160,7 +1160,7 @@ void updateposnowake(int pos,int end) {
 void updatepos(int pos,int end) {
     if(backup) {
         updateposnowake(pos,end);
-        backup->wakebackup(Backup::wakenums);
+        backup->wakebackup(wakenums);
 
     //wakeuploader();
     //wakeaftermin(1);
@@ -1270,7 +1270,7 @@ bool backupsendinit(crypt_t*pass,Connect *connect,struct changednums *nuall,uint
 
     if(starttime&&(getfirstpos()!=getlastpos()))  {
         asklastnum ask{.dbase=(bool)ident};
-         if(!connect->noacksendcommand(pass,reinterpret_cast<uint8_t*>(&ask),sizeof(ask))) {
+         if(!connect->s_noacksendcommand(pass,reinterpret_cast<uint8_t*>(&ask),sizeof(ask))) {
              LOGARTAG("NUM: noacksendcommand asklastnum failed");
             return false;
             }
@@ -1456,7 +1456,7 @@ bool backupnums(const struct numsend* innums) {
     setlastpolledpos(newlastpos); 
     
     if(backup)
-        backup->wakebackup(Backup::wakenums);
+        backup->wakebackup(wakenums);
     //wakeuploader();
     //wakeaftermin(1);
     extern void toGarmin(int );

@@ -184,6 +184,8 @@ hourminstr, "Dzień wstecz              ",pltext.amount},
 	"Spróbuj ponownie"},
 .nolibre3={"Sensor FreeStyle Libre 3",
 	"Pobierz poprawną wersję ze strony https://www.juggluco.nl/download.html"},
+.libre3zeroID={"Error, zero account ID?",
+	R"(Use Left menu->Settings->Exchange data->Libreview->"Get Account ID" to set a non-zero account ID.)"},
 .needsandroid8="Wymaga co najmniej systemu Android 8 "sv,
 #ifndef WEAROS
 	.advancedstart= R"(<h1>Urządzenie zmodyfikowane</h1>

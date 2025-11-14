@@ -105,7 +105,7 @@ extern "C" JNIEXPORT jboolean JNICALL   fromjava(GlucoseMeterSave)(JNIEnv *env, 
             if(abs((int)(now-timcorrected))<60)  {
                 addCalibration( timcorrected,bloodvar,num,numda);
                 if(backup)
-                    backup->wakebackup(Backup::wakenums);
+                    backup->wakebackup(wakenums);
                 setnumchanged(now);
                 ret=true;
                 }

@@ -6,8 +6,16 @@
 #include "passhost.hpp"
 #include "crypt.h"
 #include "backup.hpp"
-
 class Connect {
+protected:
+    int allindex;
+public:
+    bool receiving=false;
+    Connect(int index):allindex(index) {}
+
+virtual void setindex(int index) {
+        allindex=index; 
+        }
     bool testreceivemagic(passhost_t *pass);
     bool sendcrypt(crypt_t *ctx,uint8_t *data,int datalen);
     bool openfile(crypt_t *ctx,const char *name);
@@ -21,16 +29,15 @@ class Connect {
     bool    receivepassinit(passhost_t *host,ascon_aead_ctx_t *ctx);
     bool    getcommandspassinit(passhost_t *host);
     bool    getcommands(passhost_t *host);
-    bool    activegetcommands(asshost_t *host,crypt_t *ctx);
+    bool    activegetcommands(passhost_t *host,crypt_t *ctx);
     bool receivecrypt(crypt_t *ctx,uint8_t *uit);
     int16_t sendopen(crypt_t *pass,std::string_view name);
-    bool noacksendcommand(const unsigned char *buf,int buflen);
     bool getack();
     bool sendcommand(const unsigned char *buf,int buflen);
     bool sendfile(crypt_t *pass,const char *filename,uint32_t off,uint32_t len);
     bool sendcommandpass(ascon_aead_ctx_t *ctx,const unsigned char *buf,int buflen,bool askack);
     bool sendcommand(crypt_t *pass,const unsigned char *buf,int buflen);
-    bool noacksendcommand(crypt_t *pass,const unsigned char *buf,int buflen);
+//    bool noacksendcommand(crypt_t *pass,const unsigned char *buf,int buflen);
     bool sendone(crypt_t *pass, const uint32_t com);
     bool noacksendone(crypt_t *pass, const uint32_t com);
     bool sendbackupstop(crypt_t *pass);
@@ -43,23 +50,57 @@ class Connect {
     bool sendBlueWatch(crypt_t *pass,int8_t stream,int8_t nums);
     bool sendshowglucose(crypt_t *pass,const uint16_t sensorindex);
     bool sendrender(crypt_t *pass,const uint16_t type);
-    bool newsenddata(crypt_t *pass,const std::vector<subdata>&data,const std::string_view naar,uint16_t dowith,const uint8_t *extra,int extralen);
-    bool newsenddata(crypt_t *pass,const int offset,const senddata_t *data,const int datalen,const string_view naar,uint16_t dowith,const uint8_t *extra,int extralen);
-    bool senddata(crypt_t *pass,const std::vector<subdata>&data,const std::string_view naar,uint16_t dowith,const uint8_t *extra,int extralen);
-    bool senddata(crypt_t *pass,const int offset,const senddata_t *data,const int datalen,const string_view naar,uint16_t dowith,const uint8_t *extra,int extralen);
+   // bool newsenddata(crypt_t *pass,const std::vector<subdata>&data,const std::string_view naar,uint16_t dowith,const uint8_t *extra,int extralen);
+   // bool newsenddata(crypt_t *pass,const int offset,const senddata_t *data,const int datalen,const string_view naar,uint16_t dowith,const uint8_t *extra,int extralen);
+
+ bool senddata(crypt_t *pass,const std::vector<subdata>&data,const std::string_view naar,uint16_t dowith=0,const uint8_t *extra=nullptr, int extralen=0) ;
+    bool senddata(crypt_t *pass,const int offset,const senddata_t *data,const int datalen,const std::string_view naar,uint16_t dowith=0,const uint8_t *extra=nullptr,int extralen=0) ;
     void   sendpassinit(passhost_t *host,crypt_t *ctx);
     int testsendmagic(passhost_t *pass);
     int shakehands(passhost_t *pass,char stype);
     int makeconnection(passhost_t *pass,crypt_t*ctx,char stype);
    bool    getcommandsnopass(passhost_t *host) ;
-void passivesender(passhost_t *pass)  ;
+bool sendtype(char type);
+bool receiveConnect(passhost_t *hostptr);
 
  virtual int makeconnection2(passhost_t *pass,char stype)=0;
- virtual ssize_t  sendni(const void *buf, size_t len)=0; 
- virtual ssize_t  recvni(void *buf, size_t len)=0;
- virtual void shutdown()=0;
- virtual    void  closeConnection() =0;
- virtual  int  getIdent() const =0;
- virtual  bool  isConnected() const =0;
-virtual void setTimeouts() override =0;
+ virtual ssize_t  r_sendni(const void *buf, size_t len)=0; 
+ virtual ssize_t  r_recvni(void *buf, size_t len)=0;
+ virtual ssize_t  s_sendni(const void *buf, size_t len)=0; 
+ virtual ssize_t  s_recvni(void *buf, size_t len)=0;
+ virtual void shutdownReceiver()=0;
+ virtual void shutdownSender()=0;
+ virtual void restartReceiver()=0;
+ virtual void restartSender()=0;
+
+ virtual    void  closeReceiverConnection() =0;
+ virtual    void  closeSenderConnection() =0;
+ virtual  int  getSenderIdent() const =0;
+ virtual  int  getReceiverIdent() const =0;
+ virtual  bool  isConnectedReceiver() const =0;
+ virtual  bool  isConnectedSender() const =0;
+virtual void setSenderTimeouts()  =0;
+virtual void setReceiverTimeouts()  =0;
+virtual void endConnection()  =0;
+
+template <typename T> bool senddata(crypt_t *pass,const int offset,const T *startin,const T* endin,const std::string_view naar,uint16_t dowith=0,const uint8_t *extra=nullptr, int extralen=0) {
+	const senddata_t *start=reinterpret_cast<const senddata_t*>(startin);	
+	const senddata_t *end=reinterpret_cast<const senddata_t*>(endin);	
+	int len=end-start;
+	return senddata(pass,offset*sizeof(T),start,len,naar,dowith);
+	}
+
+
+typedef	bool (Connect::*noacksendcommand_type)(const unsigned char *,int );
+template <noacksendcommand_type noacksendcommand>
+bool gensendcommandpass(ascon_aead_ctx_t *ctx,const unsigned char *buf,int buflen,bool (Connect::*getack)()) ;
+bool s_sendcommandpass(ascon_aead_ctx_t *ctx,const unsigned char *buf,int buflen,bool askack);
+bool s_noacksendcommand(crypt_t *pass,const unsigned char *buf,int buflen) ;
+bool s_noacksendcommandonly(const unsigned char *buf,int buflen);
+bool r_noacksendcommand(crypt_t *pass,const unsigned char *buf,int buflen);
+typedef ssize_t  (Connect::*sendni_type)(const void *, size_t );
+typedef int (Connect::*getIdent_type)() const;
+template<sendni_type sendni,getIdent_type getIdent>
+bool noacksendcommand(const unsigned char *buf,int buflen) ;
+virtual ~Connect() = default;
 };

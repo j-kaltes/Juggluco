@@ -430,7 +430,7 @@ static int getmynetinfo(const char *id,jboolean create,jint watchHasSensor,jbool
            }
         if(usedversion&&setnums) {
             if(wearhost->index>=0) {
-                backup->con_vars[wearhost->index]->wakebackuponly(Backup::wakestop);
+                backup->con_vars[wearhost->index]->wakebackuponly(wakestop);
                 auto &sendhost= getsendto(index);
                 bool sendnums=setnums<0;
                 sendhost.sendnums=sendnums;
@@ -929,7 +929,7 @@ void watchBluetoothThread(passhost_t *host,jboolean sensor,jboolean amounts) {
     backup->changehost(index,nullptr,(jobjectArray)names,len,true,portstr,sendnums, sendstream, sendscans,false, receive,activeonly ,backup->getpass(index).data(),lasttime,passiveonly,host->getname(),false,true);
 
     getsendto(index).blueWatch=true;
-    backup->wakebackup(Backup::wakestream);
+    backup->wakebackup(wakestream);
     }
     
 extern "C" JNIEXPORT void  JNICALL   fromjava(watchBluetooth)(JNIEnv *env, jclass cl,jstring jident,jboolean sensor,jboolean amounts) {

@@ -154,8 +154,10 @@ R"(
 )" << progname<<R"( [-d dir] -R n : remove n-th connection
 )" << progname<<R"( [-d dir] -Z n : resend data to n-th connection
 )" << progname<<R"( [-d dir] -q n : display QR for n-th connection. Scan with left menu->Photo in Juggluco.
-)" << progname<<R"( [-d dir] -q r : Generate receiving connection and display its QR. Scan with left menu->Photo in sending Juggluco.
-)" << progname<<R"( [-d dir] -q s : Generate sending connection and display its QR. Scan with left menu->Photo in receiving Juggluco.
+)" << progname<<R"( [-d dir] -q r : HOMENET: Generate receiving connection and display its QR. Scan with left menu->Photo in sending Juggluco.
+)" << progname<<R"( [-d dir] -q s : HOMENET: Generate sending connection and display its QR. Scan with left menu->Photo in receiving Juggluco.
+)" << progname<<R"( [-d dir] -q R : INTERNET: Generate receiving connection and display its QR. Scan with left menu->Photo in sending Juggluco.
+)" << progname<<R"( [-d dir] -q S : INTERNET: Generate sending connection and display its QR. Scan with left menu->Photo in receiving Juggluco.
 
 )" << progname<<R"( -v  : version
 
@@ -261,24 +263,31 @@ int   listconnections() {
     for(int h=0;h<hostnr;h++) {
         cout<<h+1<<": ";
         const passhost_t &host=backup->getupdatedata()->allhosts[h];
-        cout<< (host.hasname?host.getname():"")<<(host.noip?" don't test IP,":" test IP,")<<(host.detect?" detect,":" ")<< (host.receivefrom&2?" receiver":"")<<(getpassive(h)?" passiveonly ":" ")<<(getactive(h)?" active only ":"")<<(host.haspass()?backup->getpass(h).data():"no pass");
-        const int len=host.nr;
-        if(len>0) {
-            cout << ", port="<< ntohs(host.ips[0].sin6_port);
+        if(host.ICE) {
+            cout<<"ICE label:"<<host.getICEname().data()<<" side="<<host.side<<" label="<< (host.hasname?host.getname():"")<<(host.receivefrom&2?" receiver ":" ")<<(host.haspass()?backup->getpass(h).data():"no pass");
             }
-        int sin=host.index;
-        if(sin>=0) {
+        else {
+            cout<< (host.hasname?host.getname():"")<<(host.noip?" don't test IP,":" test IP,")<<(host.detect?" detect,":" ")<< (host.receivefrom&2?" receiver":"")<<(getpassive(h)?" passiveonly ":" ")<<(getactive(h)?" active only ":"")<<(host.haspass()?backup->getpass(h).data():"no pass");
+            const int len=host.nr;
+            if(len>0) {
+                cout << ", port="<< ntohs(host.ips[0].sin6_port);
+                }
+           }
+        if(int sin=host.index;sin>=0) {
             const updateone &sto=backup->getupdatedata()->tosend[sin];
             const bool sen=sto.sendnums || sto.sendstream|| sto.sendscans;
             if(sen) 
                 cout<<" send " <<(sto.sendnums?"nums ":"")<<(sto.sendscans?"scans ":"")<<(sto.sendstream?"stream ":"");
             }
-        for(int i=0;i<len;i++) {
-            namehost name(host.ips+i);
-            cout<<" "<<name.data();
-            }
+        if(!host.ICE) {
+            const int len=host.nr;
+            for(int i=0;i<len;i++) {
+                namehost name(host.ips+i);
+                cout<<" "<<name.data();
+                }
+             }
         cout<<endl;
-        }
+         }
     return 1234;
     }
 int clearhosts() {
@@ -324,6 +333,8 @@ template <int N> bool setlabeltype(bool night,const int (&types)[N]) {
 extern bool dumpQR(int pos);
 extern bool mkAutodumpQRReceiver() ;
 extern bool mkAutodumpQRSender() ;
+extern bool mkAutoICEQRReceiver() ;
+extern bool mkAutoICEQRSender() ;
 int readconfig(int argc, char **argv) {
     bool receive=false,detect=false,signal=false,nums=false,scans=false,stream=false;
     bool list=false,clear=false;
@@ -349,6 +360,9 @@ int httpport=0;
 int labeltype[maxvarnr]{};
 uint32_t starttime=0,endtime=UINT32_MAX;
 bool night=true;
+bool ice=false;
+const char *ICElabel=nullptr;
+bool side;
 /*
 Not used:
 D E F I J K O Q T U V Y 
@@ -356,7 +370,7 @@ f j q u y
 */
 const char *autoQR=nullptr;
 char *api_secret=nullptr,*sslport=nullptr;
-           for(int opt;(opt = getopt(argc, argv, "W:k::q:V::Z:o:e::g:p:d:lcX::x::ransvibAPw:hN:S:B:H:m:GMR:L:C:0:1:2:3:4:5:6:7:8:9:t::")) != -1;) {
+           for(int opt;(opt = getopt(argc, argv, "I:W:k::q:V::Z:o:e::g:p:d:lcX::x::ransvibAPw:hN:S:B:H:m:GMR:L:C:0:1:2:3:4:5:6:7:8:9:t::")) != -1;) {
            if(opt>='0'&&opt<='9') {
             int num=opt-'0';
             if(optarg[0]>='0'&&optarg[0]<='9') {
@@ -371,6 +385,29 @@ char *api_secret=nullptr,*sslport=nullptr;
             }
         else {
            switch (opt) {
+                case'I': {ice=true;
+                    auto errormessage{[](const char *optarg){
+                                cerr<<"Unknown arg: "<<optarg<<endl;;
+                                cerr<<"Argument to -I should be 0 or 1 followed by : plus a label used only for this connection\n";
+                                cerr<<"by noone else. For example -I0:ThisIsSpecificForThisConnectionAndForMeAmongAllJugglucoUsers\n";
+                                cerr<<"On the otherside it needs to be the opposide\n";
+                                return 10;
+                                }};
+                        switch(optarg[0]) {
+                            case '0': side=false;break;
+                            case '1': side=true;break;
+                            default: {
+                                errormessage(optarg);
+                                return 10;
+                                }
+                            };
+                         if(optarg[1]!=':') {
+                                errormessage(optarg);
+                                return 10;
+                                }
+                        ICElabel=optarg+2;
+                        };
+                        break;
                 case 'k':
 
                     if(optarg) {
@@ -530,13 +567,10 @@ char *api_secret=nullptr,*sslport=nullptr;
                     }
 
                 break;
-
-
-
                default: help(argv[0]); return 4;
                }
                }
-           }
+           };
 static constexpr const    char defaultname[]="jugglucodata";
     std::string_view uitdir;
     if(!dir) {
@@ -637,7 +671,7 @@ static constexpr const    char defaultname[]="jugglucodata";
     if(argc==1)
         return 0;
     if(autoQR) {
-        const char type=tolower(*autoQR);
+        const char type=*autoQR;
         switch(type) {
             case 's':
                 if(mkAutodumpQRSender()) {
@@ -651,6 +685,24 @@ static constexpr const    char defaultname[]="jugglucodata";
             case 'r':
                 if(mkAutodumpQRReceiver()) {
                     LOGAR("Autogenerate Receiver with QR successfull");
+                    }
+                else {
+                    cerr<<"Autogenerate Receiver with QR failed"<<endl;
+                    return 14;
+                    }
+                 break;
+            case 'S':
+                if(mkAutoICEQRSender()) {
+                    LOGAR("Autogenerate ICE Sender with QR successfull");
+                    }
+                else {
+                    cerr<<"Autogenerate Sender with QR failed"<<endl;
+                    return 14;
+                    }
+                 break;
+            case 'R':
+                if(mkAutoICEQRReceiver()) {
+                    LOGAR("Autogenerate ICE Receiver with QR successfull");
                     }
                 else {
                     cerr<<"Autogenerate Receiver with QR failed"<<endl;
@@ -749,15 +801,23 @@ static constexpr const    char defaultname[]="jugglucodata";
         return 0;
         }
     else {
-           if (activeonly&&optind >= argc) {
+           if(activeonly&&optind >= argc) {
                cerr<< "No IPS specified\n";
-           return 5;
+                return 5;
                }
      uint32_t starttime=0;
-    if(int er=backup->changehost(changer<0?hostnr:changer,nullptr,reinterpret_cast<jobjectArray>(argv+optind ),argc-optind, detect,port,nums,stream,scans,false,receive,activeonly,password,starttime,passiveonly,label,testip,false) <0) {
-        cerr<<"changehost failed\n";
-        return er;
+     if(ice) {
+        if(int er=backup->changeICEhost(ICElabel,changer<0?hostnr:changer,nums,stream,scans,receive,password,starttime,label,side,false) <0) {
+            cerr<<"changeICEhost failed\n";
+            return er;
+            }
         }
+     else {
+        if(int er=backup->changehost(changer<0?hostnr:changer,nullptr,reinterpret_cast<jobjectArray>(argv+optind ),argc-optind, detect,port,nums,stream,scans,false,receive,activeonly,password,starttime,passiveonly,label,testip,false) <0) {
+            cerr<<"changehost failed\n";
+            return er;
+            }
+         }
         }
     return 1234;
        }
@@ -765,7 +825,7 @@ static constexpr const    char defaultname[]="jugglucodata";
 void sighandler(int sig) { }
 static void wakeup() {
     backup->getupdatedata()->wakesender();
-    backup->wakebackup(Backup::wakeall);
+    backup->wakebackup(wakeall);
     //    backup->wakebackup();
     }
 void exitproc() {
@@ -895,7 +955,6 @@ jugglucotext engtext {
       */
 void setfloatptr() {
         }
-void removelibs() {}
 /*
 extern std::string_view dRELEASE;
 extern std::string_view dMANUFACTURER;

@@ -148,7 +148,7 @@ void actual(SensorGlucoseData *sens,jlong *timeres,const int sensorindex) const 
       sens->saveDexFuture(index, wastime,getpredictedmgdL());
       const auto rate=getRateofChange();
       sens->consecutivelifecount();
-      backup->wakebackup(Backup::wakestream);
+      backup->wakebackup(wakestream);
       wakewithcurrent();
       if((nowsec-wastime)<maxbluetoothage) {
          sens->sensorerror=false;
@@ -364,7 +364,7 @@ void backfill(SensorGlucoseData *sens) const {
         if(id < sens->getbroadcastfrom()) sens->setbroadcastfrom(id);
         sens->backstream(id);
         /*   if(id>=(sens->pollcount()-2)) {
-              backup->wakebackup(Backup::wakestream);
+              backup->wakebackup(wakestream);
               }*/
         sens->fastupdatelifecount(id);
     } else {
@@ -681,7 +681,7 @@ Doesn't seem to be usefull. When there are muliple sensor it is not the case tha
    }
 #include "EverSense.hpp"
 extern "C" JNIEXPORT void JNICALL   fromjava(dexEndBackfill)(JNIEnv *env, jclass cl,jlong dataptr) {
-      backup->wakebackup(Backup::wakestream);
+      backup->wakebackup(wakestream);
 #ifdef     OLDEVERSENSE
 	if(!settings->data()->everSenseBroadcast.nr)
          return;

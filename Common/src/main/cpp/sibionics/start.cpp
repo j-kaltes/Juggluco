@@ -72,7 +72,7 @@ extern "C" JNIEXPORT jstring JNICALL   fromjava(addSIscangetName)(JNIEnv *env, j
       LOGGER("addSIscangetName(%s)=%s\n",gegs,name);
       sendstreaming(sens);  //TODO??
       backup->resendResetDevices();
-      backup->wakebackup(Backup::wakeall);
+      backup->wakebackup(wakeall);
       return env->NewStringUTF(name);
       }
    else {
@@ -103,7 +103,7 @@ extern "C" JNIEXPORT void JNICALL   fromjava(siSaveDeviceName)(JNIEnv *env, jcla
   name[len]='\0';
   sendstreaming(sens);  
   backup->resendResetDevices();
-  backup->wakebackup(Backup::wakeall);
+  backup->wakebackup(wakeall);
   // sendstreaming(sens);  
    }
 extern "C" JNIEXPORT void  JNICALL   fromjava(setSensorptrResetSibionics2)(JNIEnv *env, jclass cl,jlong sensorptr,jboolean val) {
@@ -163,7 +163,7 @@ extern "C" JNIEXPORT jboolean JNICALL   fromjava(siSensorptrTransmitterScan)(JNI
    LOGGER("siSensorptrTransmitterScan %s\n",name);
   sendstreaming(sens);  
   backup->resendResetDevices();
-  backup->wakebackup(Backup::wakeall);
+  backup->wakebackup(wakeall);
    return true;
    }
 /*

@@ -121,6 +121,10 @@ extern int makeHomeBackupReceiver() ;
 extern int makeHomeBackupSender() ;
 extern bool mkAutodumpQRReceiver() ;
 extern bool mkAutodumpQRSender() ;
+extern bool mkAutoICEQRReceiver() ;
+extern bool mkAutoICEQRSender() ;
+extern int makeICEreceiver() ;
+extern int makeICEsender() ;
 bool mkAutodumpQRReceiver() {
     const int pos=makeHomeBackupReceiver(); 
       if(pos<0) {
@@ -131,6 +135,22 @@ bool mkAutodumpQRReceiver() {
     }
 bool mkAutodumpQRSender() {
     const int pos=makeHomeBackupSender(); 
+      if(pos<0) {
+        fprintf(stderr,"Can't auto generate Sender connection\n");
+        return false;
+        }
+    return  dumpQR(pos);
+    }
+bool mkAutoICEQRReceiver() {
+    const int pos=makeICEreceiver(); 
+      if(pos<0) {
+        fprintf(stderr,"Can't auto generate Receiver connection\n");
+        return false;
+        }
+    return  dumpQR(pos);
+    }
+bool mkAutoICEQRSender() {
+    const int pos=makeICEsender(); 
       if(pos<0) {
         fprintf(stderr,"Can't auto generate Sender connection\n");
         return false;

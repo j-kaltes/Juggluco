@@ -53,9 +53,9 @@ getdata filedata;
     uint8_t *start=buf+taglen;
     size_t wrote= ascon_aead128a_encrypt_update(ctx, start,data ,datalen);
     ascon_aead128a_encrypt_final(ctx, start + wrote, buf, taglen);
-    if(sendni(buf,sizeof(buf))!=sizeof(buf)) {
-        flerrortag("sendcrypt send shutdown %d",getIdent());
-        shutdown();
+    if(r_sendni(buf,sizeof(buf))!=sizeof(buf)) {
+        flerrortag("sendcrypt send restartReceiver %d",getReceiverIdent());
+        restartReceiver();
         return false;
         }
     return true;
@@ -69,17 +69,17 @@ getdata filedata;
     if(ctx) {
         if(!sendcrypt(ctx, reinterpret_cast<uint8_t*>(sendfp),sizeof(sendfp)))  {
             filedata.close(fp); 
-            LOGGERTAG("openfile shutdown %d\n",getIdent());
-            shutdown();
+            LOGGERTAG("openfile restartReceiver %d\n",getReceiverIdent());
+            restartReceiver();
             return false;
             }
 
         }
     else  {
-        if(sendni(sendfp,sizeof(sendfp))!=sizeof(sendfp)) {
-            lerrortag("openfile send +shutdown %d\n");
+        if(r_sendni(sendfp,sizeof(sendfp))!=sizeof(sendfp)) {
+            lerrortag("openfile send +restartReceiver %d\n");
             filedata.close(fp); 
-            shutdown();
+            restartReceiver();
             return false;
             }
         }
@@ -120,9 +120,15 @@ static bool updateDevices() {
     return  javaUpdateDevices();
     }
 
-
-
-
+/*
+bool Connect::r_noacksendcommandonly(const unsigned char *buf,int buflen) {
+        return noacksendcommand<&Connect::r_sendni,&Connect::getReceiverIdent>(buf, buflen);
+        }
+*/
+/*
+bool Connect::s_sendcommandpass(ascon_aead_ctx_t *ctx,const unsigned char *buf,int buflen,bool askack) {
+        return gensendcommandpass<&Connect::s_noacksendcommandonly>(ctx,buf, buflen, askack?&Connect::getack:nullptr);
+        } */
 extern bool setBlueWatch(passhost_t *host,int sensor,int nums) ;
 
 
@@ -138,7 +144,7 @@ for(int it=0;it<len;) {
         }
     senddata_t *data=datain+it;
     uint16_t *us=reinterpret_cast<uint16_t*>(data),command=*us;
-    LOGGERTAG("%d com=%s (%d) %d\n",getIdent(),command<size(comlabels)?comlabels[command]:"error",command,it);
+    LOGGERTAG("%d com=%s (%d) %d\n",getReceiverIdent(),command<size(comlabels)?comlabels[command]:"error",command,it);
  
     bool ret=false;
     if(!(host->receivefrom&2)&&command!=sBlueWatch&&command!=sbackupstop&&command!=swakeupstream&&command!=sbackup&&command!=sack)  {
@@ -156,7 +162,7 @@ for(int it=0;it<len;) {
             if(it>len) {
                 return {it,comlen};
                 }
-            if(sendni(&ackres,sizeof(ackres))!=sizeof(ackres)) 
+            if(r_sendni(&ackres,sizeof(ackres))!=sizeof(ackres)) 
                 return {-1,0};
             LOGARTAG("ack send");
             ret=true;
@@ -301,10 +307,9 @@ extern                bool updateDevices() ;
             if(it>len) {
                 return {it,comlen};
                 }
-
             extern void wakeupall();
             wakeupall();
-                        break;
+            break;
         case swakeupstream: 
             ret=true;
             comlen=4;
@@ -326,7 +331,6 @@ extern                bool updateDevices() ;
             if(it>ask->len) {
                 return {it,aligner<4>(minlen+ask->namelen)};
                 }
-            bool sendfile(crypt_t *pass,const char *filename,uint32_t off,uint32_t len);
             ret=sendfile(ctx,ask->name,ask->off,ask->len);
             };
             break;
@@ -341,7 +345,7 @@ extern                bool updateDevices() ;
             int last=sendlastnum(asklast->dbase);
             if(last<0)
                 return {-1,0};
-            ret=noacksendcommand(ctx, reinterpret_cast<uint8_t*>(&last),sizeof(last)) ;
+            ret=r_noacksendcommand(ctx, reinterpret_cast<uint8_t*>(&last),sizeof(last)) ;
             }; break;
 
         case sfileonce:
@@ -389,7 +393,7 @@ bool    Connect::getcommandsnopass(passhost_t *host) {
     status.running(true);
     destruct _dest([&status]{status.running(false);});
 
-    LOGGER("getcommandsnopass sock=%d\n",getIdent());
+    LOGGER("getcommandsnopass sock=%d\n",getReceiverIdent());
     int start=0;
     int maxcom =1024*1024;
     std::unique_ptr<senddata_t[],senddata_deleter> ptr(new (maxalign,std::nothrow) senddata_t [maxcom],senddata_deleter());
@@ -402,15 +406,15 @@ bool    Connect::getcommandsnopass(passhost_t *host) {
 
     while(true) {
         LOGARTAG("voor recv");
-        int len=recvni(com+start,maxcom-start);
-        LOGGERTAG("getIdent()=%d recv len=%d\n",getIdent(),len);
+        int len=r_recvni(com+start,maxcom-start);
+        LOGGERTAG("getReceiverIdent()=%d recv len=%d\n",getReceiverIdent(),len);
         switch(len) { 
             case 0: {
-                LOGGERTAG("closed getIdent()=%d\n",getIdent());
+                LOGGERTAG("closed getReceiverIdent()=%d\n",getReceiverIdent());
                 return false;
                 };
             case -1: {
-                flerrortag("recv getIdent()=%d\n",getIdent());
+                flerrortag("recv getReceiverIdent()=%d\n",getReceiverIdent());
                 return false;
                 }
             default:
@@ -480,22 +484,22 @@ constexpr int MAXDATA=1024*1024*256;
         LOGAR("getcom");
         constexpr const int taglen=16;
         uint8_t tag[taglen];
-        if(int getlen=recvni(tag,taglen);getlen!=taglen) {
+        if(int getlen=r_recvni(tag,taglen);getlen!=taglen) {
             LOGGERTAG("recv tag %d\n",getlen);
             return false;
             }
         LOGARTAG("got tag");
         constexpr int testlen=16;
         senddata_t start[testlen];
-        const int len1=recvni(start,testlen);
+        const int len1=r_recvni(start,testlen);
         switch(len1) {
             case 0: {
             LOGARTAG("recv==0");
             return false;
             };
             case -1: {
-                flerrortag("error recv, shutdown %d\n",getIdent());
-                shutdown();
+                flerrortag("error recv, restartReceiver %d\n",getReceiverIdent());
+                restartReceiver();
                 return false;
                 }
             };
@@ -545,7 +549,7 @@ constexpr int MAXDATA=1024*1024*256;
         int len=0;
         LOGARTAG("voor recv");
         for(;len<bijlen;) {
-            int bij=recvni(incrypt+len,bijlen-len);
+            int bij=r_recvni(incrypt+len,bijlen-len);
             switch(bij) {
                 case 0: {
                 LOGARTAG("2: recv==0");
@@ -582,7 +586,7 @@ constexpr int MAXDATA=1024*1024*256;
 template <int nr>
 using unique_al= std::unique_ptr<uint8_t[],ardeleter<nr,uint8_t>> ;
  unique_al<4> Connect::receivedatanopass(const int totlen) {
-    LOGGERTAG("receivedatanopass(%d,%d)\n",getIdent(),totlen);
+    LOGGERTAG("receivedatanopass(%d,%d)\n",getReceiverIdent(),totlen);
     uint8_t *buf=new(std::align_val_t(4),std::nothrow) uint8_t[totlen];
     if(!buf) {
         sleep(1);
@@ -590,7 +594,7 @@ using unique_al= std::unique_ptr<uint8_t[],ardeleter<nr,uint8_t>> ;
         }
     unique_al<4> destructptr(buf,ardeleter<4,uint8_t>());
     for(int took=0,bij;took<totlen;took+=bij) {
-        bij=recvni(buf+took,totlen-took);
+        bij=r_recvni(buf+took,totlen-took);
         switch(bij) {
             case -1:lerrortag("recv");return unique_al<4>(nullptr);
             case 0:LOGARTAG("recv==0"); return unique_al<4>(nullptr);
@@ -621,8 +625,8 @@ unique_al<4>  Connect::receivedatapass(crypt_t *ctx,int messlen) {
         }
     unique_al<4> destructptr(buf,ardeleter<4,uint8_t>());
     uint8_t *start=buf+taglen;
-    if(int len=recvni(buf,totlen);len!=totlen) {
-        flerrortag("recv(%d,,%d)!=%d",getIdent(),totlen,len);
+    if(int len=r_recvni(buf,totlen);len!=totlen) {
+        flerrortag("recv(%d,,%d)!=%d",getReceiverIdent(),totlen,len);
         return unique_al<4>(nullptr);
         }
     uint8_t *tmpbuf=new(std::align_val_t(4),std::nothrow) uint8_t[takelen];
@@ -662,7 +666,7 @@ inline void show(uint8_t *dat,int len) {
     */
 
 bool    Connect::receivepassinit(passhost_t *host,ascon_aead_ctx_t *ctx) {
-    LOGGERTAG("getIdent()=%d receivepassinit %s\n",getIdent(),host->getnameif());
+    LOGGERTAG("getReceiverIdent()=%d receivepassinit %s\n",getReceiverIdent(),host->getnameif());
     constexpr int takelen=8;
     uint8_t nonce[ASCON_AEAD_NONCE_LEN];
     int len=r_recvni(nonce,takelen);
@@ -684,7 +688,7 @@ bool    Connect::receivepassinit(passhost_t *host,ascon_aead_ctx_t *ctx) {
     else {
         LOGAR("ctx==null");
         }
-    LOGGERTAG("end getIdent()=%d receivepassinit\n",getIdent());
+    LOGGERTAG("end getReceiverIdent()=%d receivepassinit\n",getReceiverIdent());
     return true;
     }
 
@@ -699,14 +703,14 @@ bool    Connect::receivepassinit(passhost_t *host,ascon_aead_ctx_t *ctx) {
     return ret;
     }
 bool    Connect::getcommands(passhost_t *host) {
-      LOGGERTAG("getcommands(%d)\n",getIdent());
+      LOGGERTAG("getcommands(%d)\n",getReceiverIdent());
     if(host->haspass())
         return getcommandspassinit(host);
     else {
         return getcommandsnopass(host);
         }
     }
-bool    Connect::activegetcommands(asshost_t *host,crypt_t *ctx) {
+bool    Connect::activegetcommands(passhost_t *host,crypt_t *ctx) {
     if(ctx) {
         bool res=getcom(host,ctx);
         ascon_aead_cleanup(ctx);
@@ -774,6 +778,34 @@ static bool savefileonce(const struct fileonce_t *gegs) {
 #endif
     return true;
     }
+
+#include "receive.hpp"
+bool Connect::sendfile(crypt_t *pass,const char *filename,uint32_t off,uint32_t len) {
+    LOGGERTAG("sendfile %s %u %u ",filename,off,len);
+     int totlen=aligner<alignof(dataonly)>(sizeof(dataonly)+len);
+    std::unique_ptr<senddata_t[],ardeleter<4,senddata_t>> destructptr(new(std::align_val_t(4),std::nothrow) senddata_t[totlen],ardeleter<4,senddata_t>());
+    struct dataonly* data=reinterpret_cast<struct dataonly*>(destructptr.get());
+    if(!data) {
+        sleep(1);
+        return false;
+        }
+extern getdata filedata;
+    int fp=filedata.openread(filename),got=-4;
+
+    if(fp>=0&&(off==0||(got=lseek(fp,off,SEEK_SET))==off)) {
+        errno=0;
+        data->len=read(fp,data->data,len);
+        if(len!=data->len)
+            flerrortag("read(%d)=%d",len,data->len);
+        }
+    else {
+        flerrortag("fp=%d got=%d\n",fp,got);
+        data->len=-1;
+        }
+    filedata.close(fp);
+    return r_noacksendcommand(pass,destructptr.get(),totlen);
+    }
+
 /*
 bool turnreceiver(int sock,passhost_t *hostptr,crypt_t *ctxptr) {
     if(ctxptr) {

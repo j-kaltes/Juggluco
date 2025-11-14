@@ -195,6 +195,8 @@ iwtext.newamount,
 	"ערכי גלוקוז יתקבלו כעת על ידי Juggluco"},
 .unknownNFC={"שגיאת סריקת NFC לא מזוהה", "נסה שוב"},
 .nolibre3={"חיישן FreeStyle Libre 3","לא נתמך על ידי גרסה זו של Juggluco"},
+.libre3zeroID={"Error, zero account ID?",
+	R"(Use Left menu->Settings->Exchange data->Libreview->"Get Account ID" to set a non-zero account ID.)"},
 .needsandroid8="Needs minimally Android 8"sv,
 
 

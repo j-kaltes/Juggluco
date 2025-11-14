@@ -270,7 +270,7 @@ static     const int waitsig=60;
         logs.lastdata(); 
         }
     LOGSTRING("after lastdata()\n");
-    destruct _back([](){ backup->wakebackup(Backup::wakeall);});
+    destruct _back([](){ backup->wakebackup(wakeall);});
     int ret=2<<16;
     if(alg==Initialized) {
         LOGSTRING("Initialized\n");
@@ -464,7 +464,7 @@ static void finishsensor(SensorGlucoseData*sensorptr,int sensorindex) {
     sensors->finishsensor(sensorindex);
     setstreaming(sensorptr); 
     setusedsensors();
-    backup->wakebackup(Backup::wakeall);
+    backup->wakebackup(wakeall);
     }
 extern "C" JNIEXPORT void JNICALL   fromjava(finishSensor)(JNIEnv *env, jclass cl,jlong dataptr) {
     streamdata *sdata=reinterpret_cast<streamdata *>(dataptr);
@@ -764,7 +764,7 @@ extern "C" JNIEXPORT void JNICALL   fromjava(resetbluetooth)(JNIEnv *envin, jcla
     int maxint=backup->getupdatedata()->sendnr;
     LOGGER("resetbluetooth %d\n",maxint);
     usedhist->sendbluetoothOn(maxint);
-    backup->wakebackup(Backup::wakestream);
+    backup->wakebackup(wakestream);
     }
 
 extern "C" JNIEXPORT jbyteArray JNICALL   fromjava(sensorUnlockKey)(JNIEnv *envin, jclass cl,jlong dataptr) {
@@ -1008,7 +1008,7 @@ extern "C" JNIEXPORT jlong JNICALL   fromjava(processTooth)(JNIEnv *envin, jclas
                 backup->resensordata(sdata->sensorindex);
                 }
 
-            backup->wakebackup(Backup::wakestream);
+            backup->wakebackup(wakestream);
             wakewithcurrent();
 
             return res;
@@ -1420,7 +1420,7 @@ void    sendsiScan(SensorGlucoseData *hist) {
 
 void    sendstreaming(SensorGlucoseData *hist) {
         setstreaming(hist);
-        backup->wakebackup(Backup::wakeall);
+        backup->wakebackup(wakeall);
         }
 
 

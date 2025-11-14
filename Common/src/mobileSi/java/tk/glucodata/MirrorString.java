@@ -51,10 +51,24 @@ static String makestring(String[] names,int nr,boolean detect,String port,boolea
     static void fromstring(String jsonstr,MainActivity act) {
         try {
             JSONObject json =new JSONObject(jsonstr);
-            String[] names=fromjsonArray(json.getJSONArray("names"));
-            int nr=json.getInt("nr");
-            boolean detect=json.optBoolean("detect",false);
-            String port=json.getString("port");
+            String ICElabel=json.isNull("ICElabel")?null:json.getString("ICElabel");
+            boolean side=json.optBoolean("side",false);
+            String[] names;
+            int nr;
+            boolean detect;
+            String port;
+            if(ICElabel==null) {
+                names=fromjsonArray(json.getJSONArray("names"));
+                nr=json.getInt("nr");
+                detect=json.optBoolean("detect",false);
+                port=json.getString("port");
+                }
+            else {
+                names=null;
+                nr=0;
+                detect=false;
+                port="0";
+                }
             boolean nums=json.optBoolean("nums",false);
             boolean stream=json.optBoolean("stream",false);
             boolean scans=json.optBoolean("scans",false);
@@ -62,13 +76,12 @@ static String makestring(String[] names,int nr,boolean detect,String port,boolea
             boolean activeonly=json.optBoolean("activeonly",false);
             boolean passiveonly=json.optBoolean("passiveonly",false);
             String pass=json.isNull("pass")?null:json.getString("pass");
-        //    long starttime=json.getLong("starttime");
            long starttime=0L;
             String label=json.isNull("label")?null:json.getString("label");
             boolean testip=json.optBoolean("testip",false);
             boolean hasname=json.optBoolean("hasname",false);
             Runnable save=()-> {
-               int pos=Natives.changebackuphost(-1,names,nr,detect,port, nums,stream,scans,false,receive,activeonly,passiveonly,pass,starttime,label,testip,hasname);
+               int pos=Natives.changebackuphost(-1,names,nr,detect,port, nums,stream,scans,false,receive,activeonly,passiveonly,pass,starttime,label,testip,hasname,ICElabel,side);
                if(pos<0) {
                       String mess=changehostError(act,pos);
                       Log.i(LOG_ID,mess);

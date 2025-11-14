@@ -111,6 +111,7 @@ private static void asktransmitter(MainActivity act,String name,long sensorptr) 
          return new int[] {w,h};
            },new View[]{title},new View[]{message},new View[]{cancel,reset,ok});
     ok.setOnClickListener(v-> {
+        MainActivity.poponback();
         removeContentView(layout);
         Natives.setSensorptrResetSibionics2(sensorptr,reset.isChecked());
         scanner(act,REQUEST_BARCODE_SIB2,sensorptr);

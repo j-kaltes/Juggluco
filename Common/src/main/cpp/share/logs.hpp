@@ -27,6 +27,8 @@
 #endif
 #endif
 //#define LOGGER(...)  { fprintf(errorlogfile,__VA_ARGS__); fflush(errorlogfile); }
+#include <sys/time.h>
+
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdarg.h>
@@ -131,11 +133,11 @@ inline void flerror(const char* fmt, ...){
 
 #else
 #ifdef __cplusplus
-#define LOGGER(pformat,...) logprint("%lu %d " pformat ,::time(nullptr), getTid(), __VA_ARGS__ )
-#define LOGSTRING(pformat) logprint("%lu %d " pformat ,::time(nullptr), getTid())
+#define LOGGER(pformat,...) { struct timeval tv; gettimeofday(&tv,nullptr); logprint("%lu.%03d %d " pformat ,tv.tv_sec,(int)(tv.tv_usec/1000), getTid(), __VA_ARGS__ ); }
+#define LOGSTRING(pformat) { struct timeval tv; gettimeofday(&tv,nullptr); logprint("%lu.%03d %d " pformat ,tv.tv_sec,(int)(tv.tv_usec/1000), getTid()); }
 #else
-#define LOGGER(pformat,...) logprint("%lu %d " pformat ,time(NULL), getTid(), __VA_ARGS__ )
-#define LOGSTRING(pformat) logprint("%lu %d " pformat ,time(NULL), getTid())
+#define LOGGER(pformat,...) { struct timeval tv; gettimeofday(&tv,NULL); logprint("%lu.%03d %d " pformat ,tv.tv_sec,(int)(tv.tv_usec/1000), getTid(), __VA_ARGS__ ); }
+#define LOGSTRING(pformat) { struct timeval tv; gettimeofday(&tv,NULL); logprint("%lu.%03d %d " pformat ,tv.tv_sec,(int)(tv.tv_usec/1000), getTid()); }
 #endif
 
 

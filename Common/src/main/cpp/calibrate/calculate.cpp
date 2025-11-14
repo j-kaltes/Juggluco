@@ -399,7 +399,7 @@ static void calibrateIndices(const vector<int> &sens,uint32_t oldtime,uint32_t t
         setCalibrates(*std::ranges::min_element(sens));
         extern void render(); 
         render(); 
-        backup->wakebackup(Backup::wakenums);
+        backup->wakebackup(wakenums);
     }
 static void threadCalibration(uint32_t oldtime,uint32_t tim,const Num *num,const Numdata *numdata) {
     vector<int> sens=sensors->sensorsInPeriod(tim-5*60, tim+5*60);

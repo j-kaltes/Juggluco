@@ -28,6 +28,7 @@
 #include <string.h>
 #include <charconv>
 #include <sys/uio.h>
+#include <sys/time.h>
 
 //#undef NOLOG
 #include "logs.hpp"
@@ -163,7 +164,9 @@ int vloggert( const char *format, va_list args) {
 		logging now;
 		constexpr const int size=4096;
 		char str[size];
-		int start=std::sprintf(str,"%lu %ld ",time(nullptr), (long)syscall(SYS_gettid));
+        struct timeval tv;
+        gettimeofday(&tv,nullptr);
+		int start=std::sprintf(str,"%lu.%03d %ld ",tv.tv_sec,(int)(tv.tv_usec/1000), (long)syscall(SYS_gettid));
 	       int ret= std::vsnprintf(str+start, size-start, format, args);
 	       if(ret<=0) {
 			return ret;
@@ -234,7 +237,9 @@ void flerror(const char* fmt, ...){
 	va_end(args);
 	constexpr const int maxuitbuf=200;
 	char uitbuf[maxuitbuf];
-	int len=snprintf(uitbuf,maxuitbuf,"%lu %ld %s: %s\n",::time(nullptr), syscall(SYS_gettid), buf,strerror(waser));
+    struct timeval tv;
+    gettimeofday(&tv,nullptr);
+	int len=snprintf(uitbuf,maxuitbuf,"%lu.%03d %ld %s: %s\n",tv.tv_sec,(int)(tv.tv_usec/1000), syscall(SYS_gettid), buf,strerror(waser));
 	logwriter(uitbuf,len);
 	}
 
@@ -244,7 +249,9 @@ void LOGGERNO(const char *buf,int len,bool endl) {
 			return ;
 		logging now;
         char timegitbuf[50];
-        const size_t start=snprintf(timegitbuf,50,"%lu %ld ",time(nullptr), (long)syscall(SYS_gettid));
+        struct timeval tv;
+        gettimeofday(&tv,nullptr);
+        const size_t start=snprintf(timegitbuf,50,"%lu.%03d %ld ",tv.tv_sec,(int)(tv.tv_usec/1000), (long)syscall(SYS_gettid));
         static char nl[]{"\n"};
         const int arlen=2+endl; 
          const struct iovec ar[3] {{( void*)timegitbuf,start},{( void*)buf,(size_t)len},{( void*)nl,sizeof(nl)-1}};

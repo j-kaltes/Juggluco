@@ -345,7 +345,7 @@ constexpr const int            maxitems=10440;
     }
 
 #include "datbackup.hpp"
-Backup::condvar_t  uploadercondition;
+condvar_t  uploadercondition;
 bool uploaderrunning=false;
 
 extern bool networkpresent;
@@ -373,7 +373,7 @@ static void uploaderthread() {
                         uploadercondition.backupcond.wait_until(lck, now + std::chrono::minutes(waitmin));
             LOGGER("UPLOADER after lock %stimeout\n",(status==std::cv_status::no_timeout)?"no-":"");
             }
-        if(uploadercondition.dobackup&Backup::wakeend) {
+        if(uploadercondition.dobackup&wakeend) {
             uploadercondition.dobackup=0;
             uploaderrunning=false;
             LOGSTRING("end uploaderthread\n");
@@ -382,13 +382,13 @@ static void uploaderthread() {
         const auto current=uploadercondition.dobackup;
         uploadercondition.dobackup=0;
         bool useV3=settings->data()->nightscoutV3;
-        if(current&(Backup::wakestream|Backup::wakeall)) {
+        if(current&(wakestream|wakeall)) {
             if(!(useV3?uploadCGM3():uploadCGM())) {
                 waitmin=15;
                 continue;
                 }
             }
-        if(current&(Backup::wakenums|Backup::wakeall)) {
+        if(current&(wakenums|wakeall)) {
             if(!uploadtreatments(useV3)) {
                 waitmin=15;
                 continue;
@@ -400,11 +400,11 @@ static void uploaderthread() {
 
 void wakeuploader() {
     if(uploaderrunning) 
-        uploadercondition.wakebackup(Backup::wakeall);
+        uploadercondition.wakebackup(wakeall);
     }
 void wakestreamuploader() {
     if(uploaderrunning) 
-        uploadercondition.wakebackup(Backup::wakestream);
+        uploadercondition.wakebackup(wakestream);
     }
 #include "fromjava.h"    
 extern "C" JNIEXPORT void JNICALL fromjava(wakeuploader) (JNIEnv *env, jclass clazz) {
@@ -416,7 +416,7 @@ extern "C" JNIEXPORT void JNICALL fromjava(resetuploader) (JNIEnv *env, jclass c
 
 void enduploaderthread() {
     if(uploaderrunning) {
-        uploadercondition.wakebackup(Backup::wakeend);
+        uploadercondition.wakebackup(wakeend);
         }
     }
 void startuploaderthread() {

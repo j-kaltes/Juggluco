@@ -46,6 +46,8 @@
 #include "destruct.hpp"
 #include "logs.hpp"
 #include "myfdsan.h"
+#include "TCPConnect.hpp"
+extern Connect *connections[];
 #ifndef LOGGER
 #define LOGGER(...) fprintf(stderr,__VA_ARGS__)
 #endif
@@ -68,7 +70,7 @@ constexpr const int maxservererror=200;
 char servererrorbuf[maxservererror]="";
 #define serverprint(...) snprintf( servererrorbuf,maxservererror,__VA_ARGS__)
 #define servererror(...) savebuferror(servererrorbuf,maxservererror,__VA_ARGS__)
-static bool serverloop(int sock, passhost_t *hosts,int &hostlen,int *socks)  ;
+static bool serverloop(int sock, passhost_t *hosts,int &hostlen)  ;
 static bool startserver(char *port, passhost_t *hosts,int *hostlen,bool *shutdownreceiver) {
     constexpr const char receiver[]{"RECEIVER"};
 #ifndef HAVE_NOPRCTL
@@ -312,18 +314,18 @@ bool testhostname(const char *hostname,const struct sockaddr *addr) {
 
                     }
                 else {
-                    saveerror(pass,"receivemagic %d",getIdent());
+                    saveerror(pass,"receivemagic ERROR %d",getReceiverIdent());
                     LOGGERTAG("%s\n",getmirrorerror(pass));
                     }
                 }
             }
         else  {
-            saveerror(pass,"wrong  magic %d",getIdent());
+            saveerror(pass,"wrong  magic %d",getReceiverIdent());
             LOGGERTAG("%s\n",getmirrorerror(pass));
             }
         }
     else    {
-        saveerror(pass,"testreceivemagic recvni(%d..)=%d\n",getIdent(),res);
+        saveerror(pass,"testreceivemagic error recvni(%d..)=%d\n",getReceiverIdent(),res);
         LOGGERTAG("%s\n",getmirrorerror(pass));
         }
     return false;
@@ -386,7 +388,7 @@ extern void receivetimeout(int sock,int secs) ;
      receivetimeout(new_fd,0);
      }
 
-static void receiverthread(passhost_t *host,const int allindex) {
+void receiverthread(passhost_t *host,const int allindex) {
       char buf[17];
       snprintf(buf,17,"receiver %d",allindex);
 #ifndef HAVE_NOPRCTL
@@ -394,14 +396,16 @@ static void receiverthread(passhost_t *host,const int allindex) {
 #endif
 
 
-    LOGGERTAG("receiverthread %d %s\n",con->getSock(),buf);
-    TCPConnect *con=connections[allindex];
+    Connect *con=connections[allindex];
+    con->receiving=true;
+    destruct _{[con]{ con->receiving=false;}};
+    LOGGERTAG("receiverthread %d %s\n",con->getReceiverIdent(),buf);
     if(con->getcommands(host)) {
-        LOGGERTAG("open return receiverthread %d\n",con->getSock());
+        LOGGERTAG("open return receiverthread %d\n",con->getReceiverIdent());
         return;
         }
-    LOGGERTAG("shutdown(%d)\n",con->getSock());
-    shutdown(con->getSock();,SHUT_RDWR);
+    LOGGERTAG("shutdown(%d)\n",con->getReceiverIdent());
+    con->shutdownReceiver();
     }
 
 
@@ -481,21 +485,21 @@ globalsocket=serversock;
                      }
                 }
             if(hasname) {
-                char name[passhost_t::maxnamelen];
+                char labelstr[passhost_t::maxnamelen];
                 int rlen;
-                if((rlen=recvni(new_fd,name,passhost_t::maxnamelen))==passhost_t::maxnamelen) {
-                    serverprint(R"(host tries to connect, label="%s")",name);
+                if((rlen=recvni(new_fd,labelstr,passhost_t::maxnamelen))==passhost_t::maxnamelen) {
+                    serverprint(R"(host %s tries to connect, label="%s")",(const char *)name,labelstr);
                     LOGGERTAG("%s\n",servererrorbuf);
                     for(int h=0;h<hostlen;h++) {
                         passhost_t& host=hosts[h];
                         if(host.deactivated)
                             continue;
-                        if((host.passive())&&host.hasname&&!memcmp(host.getname(),name,passhost_t::maxnamelen)) { 
+                        if((host.passive())&&host.hasname&&!memcmp(host.getname(),labelstr,passhost_t::maxnamelen)) { 
                              if(!host.noip) {
                                 bool nothostreg=!host.hasip(addrptr)&&(!host.detect||!host.addiphasfamport(addrptr));
 
                                 if(nothostreg) {
-                                   serverprint("label %s host %d wrong ip",name,h);
+                                   serverprint("label %s host %d wrong ip",labelstr,h);
                                    LOGGERTAG("%s\n",servererrorbuf);
                                    continue;
                                    }
@@ -514,8 +518,8 @@ globalsocket=serversock;
                     }
                 else {
                     const int ind= rlen>0?(rlen>passhost_t::maxnamelen?(passhost_t::maxnamelen-1):rlen):0;
-                    name[ind]='\0';
-                    serverprint("recvni(%d,%s)==%d!=%d\n",new_fd,name,rlen,passhost_t::maxnamelen);
+                    labelstr[ind]='\0';
+                    serverprint("recvni(%d,%s)==%d!=%d\n",new_fd,labelstr,rlen,passhost_t::maxnamelen);
                     LOGGERTAG("%s\n",servererrorbuf);
                     }
 
@@ -529,9 +533,17 @@ globalsocket=serversock;
 //           const int keepidle = 10*60;
         int allindex=hit-hosts;
         TCPConnect *con=(TCPConnect *)connections[allindex];
-        con->setReceiverSock(new_FD);
+        if(!con) {
+            sockclose(new_fd);
+            continue;
+            }
+        int &sock=con->getReceiverSock();
+        int oldsock=sock;
+        sock=-1;
+        con->setReceiverSock(new_fd);
         if(!con->testreceivemagic(hit)) {
             con->closeReceiverConnection();
+            sock=oldsock;
             continue;
             }
     *servererrorbuf='\0';
@@ -552,7 +564,10 @@ globalsocket=serversock;
                     }
                 }
             if(ant==SENDPASSIVE) {
-                con->passivesender(hit);
+                
+//                con->setSenderSock(new_fd);
+ //               sock=oldsock;
+                con->passivesender(hit,sock,oldsock);
                 continue;
                 }
          else {
@@ -562,7 +577,7 @@ globalsocket=serversock;
             }
 
             }
-
+        close(oldsock);
         receiversockopt(new_fd) ;
         std::thread  handlecon(receiverthread,hit,allindex);
         handlecon.detach();
@@ -577,6 +592,34 @@ void startreceiver(const char *port,passhost_t *hosts,int &hostlen) {
     std::thread backup(startserver,portcp,hosts,&hostlen,shutdownreceiver=new bool[1]());
     backup.detach(); 
     }
+
+
+
+bool Connect::receiveConnect(passhost_t *hostptr) {
+        char labelstr[passhost_t::maxnamelen];
+        int rlen;
+        if((rlen=r_recvni(labelstr,passhost_t::maxnamelen))==passhost_t::maxnamelen) {
+            if(memcmp(hostptr->getname(),labelstr,passhost_t::maxnamelen)) { 
+                LOGGER("receiveConnect: label different here %s there %s\n",hostptr->getname(),labelstr);
+                closeReceiverConnection();
+                return false;
+                }
+            if(!testreceivemagic(hostptr)) {
+                LOGGER("receiveConnect: %s magic failed\n",labelstr);
+                closeReceiverConnection();
+                return false;
+                }
+            LOGGER("Receiver %.*s connected\n",rlen,labelstr);
+            return true;
+            }
+        else {
+                LOGGER("receiveConnect %s: can't get label r_recvni()=%d\n",hostptr->getname(),rlen);
+                closeReceiverConnection();
+                return false;
+                }
+        }
+
+
 #ifdef MAIN
 
 //s/\([A-Z]\+\)/printf(\"\1=%d\\n\",\1);/g

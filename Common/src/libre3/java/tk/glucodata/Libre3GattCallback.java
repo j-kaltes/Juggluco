@@ -163,29 +163,29 @@ private boolean connected=false;
                     }
 
             } 
-        } else if (newState == STATE_DISCONNECTED) {
+            } else if (newState == STATE_DISCONNECTED) {
                 connected=false;
                 cancelretrytimer();
                 Log.e(LOG_ID, SerialNumber + ": "+ "onConnectionStateChange ERROR: disconnected with status : " + status);
                // libre3BLESensor.access$600(libre3BLESensor.this, status);
-            constatchange[1] = tim;
-            setConStatus(status);
-            if(lastphase5) {
-                if(status==19) {
-                    if((tim-datatime)>60000) {
-                        isPreAuthorized=false;
-                        Natives.setLibre3kAuth(sensorptr,null);
-                        }
-                     }
-                }  
-            if(!stop)  {
-                 realdisconnected(bluetoothGatt,status,tim);
+         constatchange[1] = tim;
+        setConStatus(status);
+        if(lastphase5) {
+            if(status==19) {
+                if((tim-datatime)>=59000) {
+                    isPreAuthorized=false;
+                    Natives.setLibre3kAuth(sensorptr,null);
+                    }
                  }
-            else {
-                bluetoothGatt.close();
-                mBluetoothGatt = null;
-                }
-                }
+            }  
+        if(!stop)  {
+             realdisconnected(bluetoothGatt,status,tim);
+             }
+        else {
+            bluetoothGatt.close();
+            mBluetoothGatt = null;
+            }
+            }
         }
 
         @Override 

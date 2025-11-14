@@ -184,7 +184,7 @@ jlong SiContext::processData(SensorGlucoseData *sens,time_t nowsecs,int8_t *data
                         }
                    auto res=glucoseback(eventTime,mgdL,change,sens);
 //                   if(!(index%5)) savejson(sens,sens->statefile,index,algcontext,getjson3);
-                    backup->wakebackup(Backup::wakestream);
+                    backup->wakebackup(wakestream);
                   extern void wakewithcurrent();
                      wakewithcurrent();
 
@@ -196,7 +196,7 @@ jlong SiContext::processData(SensorGlucoseData *sens,time_t nowsecs,int8_t *data
                  else {
 /*                   if(!infuture&&!(index%500)) {
                         savejson(sens,sens->statefile,index,algcontext,getjson3);
-                        backup->wakebackup(Backup::wakestream);
+                        backup->wakebackup(wakestream);
                         } */
                       sens->receivehistory=nowsecs;
                      }

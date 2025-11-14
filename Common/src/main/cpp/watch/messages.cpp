@@ -37,7 +37,7 @@
 #include "destruct.hpp"
 #include "datbackup.hpp"
 #include "net/netstuff.hpp"
-#include "TCPConnect.hpp"
+#include "net/TCPConnect.hpp"
 /*
 struct wearmessage {
    int32_t len;
@@ -293,6 +293,7 @@ void tobluetooth(int hostnr,bool sender,int *sockin, int *sockother,std::binary_
        }
         }
     }
+    /*
 void closesock(int &sock) {
     int tmpsock=sock;
     if(tmpsock!=-1) {
@@ -300,7 +301,8 @@ void closesock(int &sock) {
         shutdown(tmpsock,SHUT_RDWR);
         sockclose(tmpsock);
         }
-}
+    }
+    */
 //extern    bool    getcommandsnopass(int sock,passhost_t *host); //TODO password?
 extern bool    getcommands(int,passhost_t *);
 extern    void receiversockopt(int new_fd);
@@ -331,7 +333,7 @@ static void messagereceivecommands(passhost_t *pass) {
         TCPConnect *connect=static_cast<TCPConnect *>(connections[index]);
 
         std::binary_semaphore waitstarted(0);
-        std::thread th(tobluetooth,index,false,    &messagereceiversockets[index],&connect->getSock(),&waitstarted); //TODO handshake?
+        std::thread th(tobluetooth,index,false,    &messagereceiversockets[index],&connect->getReceiverSock(),&waitstarted); //TODO handshake?
         waitstarted.acquire();
 /*
         int &recsock=hostsocks[index];
@@ -340,7 +342,7 @@ static void messagereceivecommands(passhost_t *pass) {
 
         recsock= sockpair[1]; */
         int recsock= sockpair[1]; 
-        connect->setSock(recksock);
+        connect->setReceiverSock(recsock);
         receiversockopt(recsock);
 
 #ifdef ENCRYPTMESSAGES 
@@ -355,7 +357,7 @@ static void messagereceivecommands(passhost_t *pass) {
         LOGGERTAG("%d message join\n",index);
         shutdown(messagereceiversockets[index],SHUT_RDWR);
         th.join();
-        connect->closeConnection();
+        connect->closeReceiverConnection();
         LOGSTRINGTAG("try again\n");
          }
     LOGGERTAG("messagereceivecommands wearmessages[%d]==false\n",index);

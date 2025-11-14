@@ -47,6 +47,7 @@
 #include "crypt.h"
 #include "makerandom.hpp"
 #include "myfdsan.h"
+#include "TCPConnect.hpp"
 #define lerrortag(...) lerror("sender: " __VA_ARGS__)
 #define LOGGERTAG(...) LOGGER("sender: " __VA_ARGS__)
 #define LOGARTAG(...) LOGAR("sender: " __VA_ARGS__)
@@ -62,13 +63,13 @@ void   Connect::sendpassinit(passhost_t *host,crypt_t *ctx) {
    constexpr int takelen=ASCON_AEAD_NONCE_LEN-makelen;
    uint8_t *takestart=nonce+makelen;
        makerandom(nonce, makelen);
-   if(int didsend=sendni(nonce,makelen);didsend!=makelen) {
-      flerrortag("sendpassinit send getIdent()=%d ret=%d\n",getIdent(),didsend);
+   if(int didsend=s_sendni(nonce,makelen);didsend!=makelen) {
+      flerrortag("sendpassinit send getSenderIdent()=%d ret=%d\n",getSenderIdent(),didsend);
       return;
       }
-   int len=recvni(takestart,takelen);
+   int len=s_recvni(takestart,takelen);
    if(len!=takelen) {
-      flerrortag("sendpassinit getIdent()=%d recv len=%d\n",sock,len);
+      flerrortag("sendpassinit getSenderIdent()=%d recv len=%d\n",getSenderIdent(),len);
       return;
       }
         ascon_aead128a_init(ctx, host->pass.data(),nonce);   
@@ -129,7 +130,7 @@ std::array<unsigned char,sizeof(sendmagic)>  sendmagicspec=getsendmagic();
       }
    else
       magicptr=&sendmagicspec;
-   if(sendni(magicptr->data(),magicptr->size())!=magicptr->size()) {
+   if(s_sendni(magicptr->data(),magicptr->size())!=magicptr->size()) {
       char *buf=getmirrorerror(pass);
       int waser=errno;
       constexpr const char mess[]="send magic failed: ";
@@ -143,7 +144,7 @@ std::array<unsigned char,sizeof(sendmagic)>  sendmagicspec=getsendmagic();
    char buf[recsize];
    LOGARTAG("before recv magic");
    int gotlen;
-   if((gotlen=recvni(buf,recsize))!=recsize) {
+   if((gotlen=s_recvni(buf,recsize))!=recsize) {
       char *ptr=getmirrorerror(pass);
       int waser=errno;
       int len=snprintf(ptr,maxmirrortext,"magic recv()=%d!=%d: ",gotlen,(int)recsize);
@@ -159,7 +160,7 @@ std::array<unsigned char,sizeof(sendmagic)>  sendmagicspec=getsendmagic();
       LOGGERN(wrong,sizeof(wrong)-1);
       return 3;
       }
-   LOGGERTAG("testsendmagic %d success\n",getIdent());
+   LOGGERTAG("testsendmagic %d success\n",getSenderIdent());
    if(!buf[recsize-1]) {
       extern void resethost(passhost_t &host) ;
       resethost(*pass);
@@ -200,10 +201,10 @@ void sendtimeout(int sock,int secs) {
 //extern void getmyname(int sock) ;
 
 
-bool sendtype(int sock,char type) {
-   LOGGERTAG("sendtype(%d,%d)\n",sock,type);
+bool Connect::sendtype(char type) {
+   LOGGERTAG("sendtype(%d,%d)\n",getSenderIdent(),type);
    char ant=type;
-   if(sendni(sock,&ant,1)!=1) {
+   if(s_sendni(&ant,1)!=1) {
       return false;
       }
    return true;
@@ -220,14 +221,14 @@ void settimeouts(int sock) {
    }
 
  int Connect::shakehands(passhost_t *pass,char stype) {
-   LOGGERTAG("shakehands connection %d\n",getIdent());
+   LOGGERTAG("shakehands connection %d\n",getSenderIdent());
    if(pass->hasname) {
       const char *name= pass->getname();
-      LOGGERTAG("sendni(%d,%s,)\n",getIdent(),name);
-      if(sendni(name,pass->maxnamelen)!=pass->maxnamelen) {
-         char err[]="send name";
+      LOGGERTAG("sendni(%d,%s,)\n",getSenderIdent(),name);
+      if(s_sendni(name,pass->maxnamelen)!=pass->maxnamelen) {
+         char err[]="s_sendni name error";
          saveerror(pass,err);
-         LOGGER("%s",getmirrorerror(pass));
+         LOGGER("%s\n",getmirrorerror(pass));
          return -1;
          }
       
@@ -246,7 +247,7 @@ void settimeouts(int sock) {
       sendtype(stype);
       }
       
-   LOGGERTAG("getIdent()=%d\n",sock);
+   LOGGERTAG("getSenderIdent()=%d\n",getSenderIdent());
    return 1;
    }
 /*
@@ -329,9 +330,8 @@ dest.active=false;
 bool activate=true;
 #endif
    int use=0;
-  setSock(-1);
-//   sock=-1;
-
+    closeSenderConnection(); 
+    int   &sock=getSenderSock();
    struct pollfd    cons[10];
    if(pass->hashostname()) { 
              struct addrinfo hints{.ai_flags=AI_ADDRCONFIG,.ai_family=AF_UNSPEC,.ai_socktype=SOCK_STREAM};
@@ -436,7 +436,7 @@ bool activate=true;
             savemessage(pass,"poll timeout");
             #ifndef NOLOG
             char *ptr=getmirrorerror(pass);
-            LOGGERTAG("%s",ptr);
+            LOGGERTAG("%s\n",ptr);
             #endif
             return -1;
             }
@@ -492,7 +492,8 @@ bool activate=true;
             sock=cons[i].fd;
             block(sock);
             settimeouts(sock);
-            if(shakehands(pass,stype)>=0) {
+            int ret;
+            if((ret=shakehands(pass,stype))>=0) {
                for(int w=0;w<newuse;w++) {
                   sockclose(cons[w].fd);
                   }

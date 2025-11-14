@@ -103,7 +103,7 @@ jlong mkres(SensorGlucoseData *sens,uint32_t timsec,uint32_t eventTime, int min,
         sens->receivehistory=timsec;
         res=1LL;
         }
-     backup->wakebackup(Backup::wakestream);
+     backup->wakebackup(wakestream);
      return res;
     }
 extern "C" JNIEXPORT jlong JNICALL   fromjava(accuProcessData)(JNIEnv *env, jclass cl,jlong dataptr,jbyteArray value,jlong mmsec) {
@@ -129,6 +129,7 @@ extern "C" JNIEXPORT jlong JNICALL   fromjava(accuProcessData)(JNIEnv *env, jcla
     const AccuData *accu=reinterpret_cast<const AccuData *>(bluedata.data());
     if(accu->start[0]!=0x0D||accu->start[1]!=0x43) {
 //        0E C3 FF 07  AF 46  08 02  FF 07 FF 07  EA 5C
+//        0E C3 FF 07  FE 01  08 03  FF 07 FF 07 86 E8
         const uint8_t *start=accu->start;
         if(start[0]==0x0E&&start[1]==0xC3) {
             constexpr const auto isFF07{[](const uint8_t *data){
@@ -221,7 +222,7 @@ extern "C" JNIEXPORT jlong JNICALL   fromjava(accuProcessData)(JNIEnv *env, jcla
         sens->receivehistory=timsec;
         res=1LL;
         }
-     backup->wakebackup(Backup::wakestream);
+     backup->wakebackup(wakestream);
 */
     return mkres(sens,timsec,eventTime,accu-> min, mgdL, abbotttrend, change);
     }

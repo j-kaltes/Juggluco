@@ -1,0 +1,3 @@
+[submodule "Common/src/main/cpp/libjuice"]
+	path = Common/src/main/cpp/libjuice
+	url = https://github.com/paullouisageneau/libjuice.git

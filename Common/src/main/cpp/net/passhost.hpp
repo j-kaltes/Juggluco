@@ -74,7 +74,9 @@ false	  	false	  	0
 	bool sendpassive:1;  // send to named host passive only
 	bool hasname:1;
 	bool noip:1;
-	uint16_t reserved:15;
+	uint16_t reserved:13;
+    bool side:1;
+    bool ICE:1;
 	bool deactivated:1;
 	bool hashostname() const {
 		return hostname;
@@ -94,6 +96,16 @@ false	  	false	  	0
 	void setportwithhostname(int port)  {	
 		 reinterpret_cast<hostnamedata*>(ips)->port=port;
 		 }
+    void setICEname(std::string_view name) {
+		int len=std::min(name.size(),sizeof(hostnamedata::name)-1);
+		char *doel=reinterpret_cast<hostnamedata*>(ips)->name;
+		memcpy(doel,name.data(),len);
+		doel[len]='\0';
+		reinterpret_cast<hostnamedata*>(ips)->port=len;
+        }
+    std::string_view getICEname() const {
+        return {reinterpret_cast<const hostnamedata*>(ips)->name, reinterpret_cast<const hostnamedata*>(ips)->port};
+        }
 	uint16_t getport() const {	
 		if(hostname) {
 			return reinterpret_cast<const hostnamedata*>(ips)->port;
@@ -130,12 +142,12 @@ const char *getname() const {
 const char *getnameif() const {
 	return hasname?getname():"%NONAME%";
 	}
-void setname(const char *label)  {
+void setnameGen(const char *label,const void *padding)  {
 	hasname=true;
 	char *name=reinterpret_cast<char *>(ips+maxip-1);
 	for(int i=0;i<maxnamelen;i++) {
 		if(!label[i]) {
-			memcpy(name+i,zeros,maxnamelen-i);
+			memcpy(name+i,padding,maxnamelen-i);
 			LOGGER("setname(%s)\n",name);
 			return;
 			}
@@ -143,6 +155,14 @@ void setname(const char *label)  {
 		}
 	 LOGGER("setname(%s)\n",name);
 	}
+void setname(const char *label)  {
+        setnameGen(label,zeros);
+	}
+        /*
+void setnameX(const char *label)  {
+        setnameGen(label,xes);
+	} */
+        
 bool	haspass() const {
 	const uint64_t *p=reinterpret_cast<const uint64_t *>(&pass);
 	return *p||p[1];
@@ -194,7 +214,7 @@ bool putip(const struct sockaddr *addrptr) {
 };
 
 #include <string_view>
-extern void startreceiver(const char *port, passhost_t *hosts,int &hostlen,int *socks) ;
+extern void startreceiver(const char *port, passhost_t *hosts,int &hostlen) ;
 extern void stopreceiver() ;
 
 #include <string.h>

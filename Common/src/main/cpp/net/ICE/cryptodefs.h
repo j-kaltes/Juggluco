@@ -1,0 +1,22 @@
+#define ERR_reason_error_string ERR_reason_error_stringptr
+#define ERR_error_string_n ERR_error_string_nptr
+#define ERR_print_errors_cb ERR_print_errors_cbptr
+#define X509_STORE_CTX_get_current_cert X509_STORE_CTX_get_current_certptr
+#define X509_STORE_CTX_get_error X509_STORE_CTX_get_errorptr
+#define X509_STORE_CTX_get_error_depth X509_STORE_CTX_get_error_depthptr
+#define X509_NAME_oneline X509_NAME_onelineptr
+#define X509_get_subject_name X509_get_subject_nameptr
+#define X509_STORE_CTX_get_ex_data X509_STORE_CTX_get_ex_dataptr
+#define X509_verify_cert_error_string X509_verify_cert_error_stringptr
+#define X509_free X509_freeptr
+#define d2i_X509_fp d2i_X509_fpptr
+#define X509_STORE_add_cert X509_STORE_add_certptr
+#define ERR_get_error ERR_get_errorptr
+
+
+
+
+
+
+
+

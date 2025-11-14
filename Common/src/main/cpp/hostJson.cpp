@@ -62,38 +62,45 @@ std::string mkbackjson(int pos) {
     uit.reserve(1024);
     auto inserter=std::back_inserter(uit);
     const passhost_t &host=back.allhosts[pos];
-    if(!host.hashostname()) {
-        const int maxi=passhost_t::maxip-host.hasname;
-        alignas (namehost) uint8_t buf[maxi*sizeof(namehost)];
-        namehost *ips=reinterpret_cast<namehost*>(buf); //skip constructor
-        bool haswlan;
-        int ipnr=getownips(ips,maxi,haswlan);
-        inserter=std::format_to( inserter,R"({{"nr":{},"names":[)",ipnr);
-        if(ipnr>0) {
-            for(int i=0;;) {
-                const char *start=ips[i].data();
-                inserter=std::format_to( inserter,R"("{}")",start);
-                if(++i>=ipnr) 
-                    break;
-                *inserter++=',';
-                }
-            }
-        if(ipnr||host.getActive()) {
-            char detect[]=R"(],"detect":false)";
-            inserter=std::copy(std::begin(detect),std::end(detect)-1,inserter);
-            }
-        else {
-            char detect[]=R"(],"detect":true)";
-            inserter=std::copy(std::begin(detect),std::end(detect)-1,inserter);
-            }
-//        inserter=insertbool(inserter, "hasname",false);
+    if(host.ICE) {
+          inserter=std::format_to(inserter,R"({{"ICElabel":"{}")",escape(host.getICEname()));
+//          inserter=std::format_to( inserter,R"(,"label":"{}")",escape(host.getname()));
+//          inserter=std::format_to(inserter,R"({"ICElabel":"{}")",escape(host.getname()));
+          inserter=insertbool(inserter, "side",!host.side);
         }
      else {
-          char empty[]=R"({"nr":0,"names":[],"detect":true)";
-          inserter=std::copy(std::begin(empty),std::end(empty)-1,inserter);
-          inserter=insertbool(inserter, "hasname",true);
-        }
-    inserter=std::format_to( inserter,R"(,"port":{})",(char *)back.port);
+        if(!host.hashostname()) {
+            const int maxi=passhost_t::maxip-host.hasname;
+            alignas (namehost) uint8_t buf[maxi*sizeof(namehost)];
+            namehost *ips=reinterpret_cast<namehost*>(buf); //skip constructor
+            bool haswlan;
+            int ipnr=getownips(ips,maxi,haswlan);
+            inserter=std::format_to( inserter,R"({{"nr":{},"names":[)",ipnr);
+            if(ipnr>0) {
+                for(int i=0;;) {
+                    const char *start=ips[i].data();
+                    inserter=std::format_to( inserter,R"("{}")",start);
+                    if(++i>=ipnr) 
+                        break;
+                    *inserter++=',';
+                    }
+                }
+            if(ipnr||host.getActive()) {
+                char detect[]=R"(],"detect":false)";
+                inserter=std::copy(std::begin(detect),std::end(detect)-1,inserter);
+                }
+            else {
+                char detect[]=R"(],"detect":true)";
+                inserter=std::copy(std::begin(detect),std::end(detect)-1,inserter);
+                }
+            }
+         else {
+              char empty[]=R"({"nr":0,"names":[],"detect":true)";
+              inserter=std::copy(std::begin(empty),std::end(empty)-1,inserter);
+              inserter=insertbool(inserter, "hasname",true);
+            }
+        inserter=std::format_to( inserter,R"(,"port":{})",(char *)back.port);
+         }
     if(host.receivedatafrom()) {
         int sendindex=host.index;
         if(sendindex>=0) {
@@ -108,38 +115,26 @@ std::string mkbackjson(int pos) {
             inserter=insertbool(inserter, "nums",true);
             inserter=insertbool(inserter, "scans",true);
             inserter=insertbool(inserter, "stream",true);
-//            inserter=insertbool(inserter, "receive",false);
              }
          }
      else {
-/*            inserter=insertbool(inserter, "nums",false);
-            inserter=insertbool(inserter, "scans",false);
-            inserter=insertbool(inserter, "stream",false); */
-
             inserter=insertbool(inserter, "receive",true);
             } 
-        
+      if(!host.ICE) { 
         LOGGER("getActive=%d getPassive=%d\n",host.getActive(),host.getPassive());
         inserter=insertbool(inserter,"activeonly",!host.getActive()&&host.getPassive());
         inserter=insertbool(inserter,"passiveonly",host.getActive());
-        if(host.haspass()) 
-            inserter=std::format_to( inserter,R"(,"pass":"{}")", escape(Backup::passback(host.pass).data()));
-        else {
-    //       const char passw[]=R"(,"pass":NULL)";
-     //       inserter=std::copy(std::begin(passw),std::end(passw)-1,inserter);
-            }
-        if(host.hasname) {
-            inserter=std::format_to( inserter,R"(,"label":"{}")",escape(host.getname()));
-           // inserter=insertbool(inserter, "testip",false);
-            }
-        else {
-      //     const char noname[]=R"(,"label":NULL)";
-       //   inserter=std::copy(std::begin(noname),std::end(noname)-1,inserter);
-            inserter=insertbool(inserter, "testip",true);
-            }
+        }
+    if(host.haspass()) 
+        inserter=std::format_to( inserter,R"(,"pass":"{}")", escape(Backup::passback(host.pass).data()));
+    if(host.hasname) {
+        inserter=std::format_to( inserter,R"(,"label":"{}")",escape(host.getname()));
+        }
+    else {
+        inserter=insertbool(inserter, "testip",true);
+        }
    const char mirrorJuggluco[]=R"(} MirrorJuggluco)";
    inserter=std::copy(std::begin(mirrorJuggluco),std::end(mirrorJuggluco)-1,inserter);
-  // *inserter='\0';
     LOGGERN(uit.data(),uit.size());
     LOGGER("size=%d\n",uit.size());
     return uit;
@@ -179,6 +174,42 @@ int makeHomeBackupReceiver() {
      jint res=backup->changehost(pos,nullptr,nullptr,0,detect,std::string_view(nullptr,0),nums,stream,scans,false,receiver,activeonly,std::string_view(passstr,passlen),starttime,passiveonly,label,testip,true,hashostname);
      return res;
      }
+
+
+int makeICEsender() {
+    const int passlen=16;
+    char passstr[passlen+1];
+    makepass(passstr,passlen);
+    char label[17]="ICE";
+    makepass(label+3,13);
+    label[16]='\0';
+    char ICElabel[33];
+    makepass(ICElabel,32);
+    ICElabel[32]='\0';
+    int pos=-1;
+    bool nums=true,scans=true,stream=true;
+    bool receive=false;
+    uint32_t  starttime=0L;
+    bool side=0;
+    return backup->changeICEhost(ICElabel,pos,nums,stream,scans,receive,string_view(passstr,passlen), starttime,label,side,true);
+    }
+int makeICEreceiver() {
+    const int passlen=16;
+    char passstr[passlen+1];
+    makepass(passstr,passlen);
+    char label[17]="ICE";
+    makepass(label+3,13);
+    label[16]='\0';
+    char ICElabel[33];
+    makepass(ICElabel,32);
+    ICElabel[32]='\0';
+    int pos=-1;
+    bool nums=false,scans=false,stream=false;
+    bool receive=true;
+    uint32_t  starttime=0L;
+    bool side=1;
+    return backup->changeICEhost(ICElabel,pos,nums,stream,scans,receive,string_view(passstr,passlen), starttime,label,side,true);
+    }
 #endif
 
 #include "net/makerandom.hpp"

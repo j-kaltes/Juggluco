@@ -532,7 +532,7 @@ std::string_view getdeltaname(float rate) {
     return getdeltanamefromindex(getdeltaindex(rate));
     }
 
-int writeStartime(crypt_t *pass, const Connect *connect, const int sensorindex) {
+int writeStartime(crypt_t *pass,  Connect *connect, const int sensorindex) {
     return sensors->writeStartime(pass, connect,sensorindex);
     }
 

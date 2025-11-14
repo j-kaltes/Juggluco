@@ -58,6 +58,7 @@ import static tk.glucodata.MainActivity.systembarBottom;
 import static tk.glucodata.MainActivity.systembarLeft;
 import static tk.glucodata.MainActivity.systembarRight;
 import static tk.glucodata.MainActivity.systembarTop;
+import static tk.glucodata.Natives.getlibreAccountIDnumber;
 import static tk.glucodata.settings.Settings.removeContentView;
 import static tk.glucodata.util.getbutton;
 import static tk.glucodata.util.getlabel;
@@ -147,6 +148,16 @@ static private int[] libre3scan(GlucoseCurve curve,MainActivity main, Vibrator v
           if(libreVersion == 3) {
             if(streamptr>=0L&&streamptr<7L) {
                 switch((int)(streamptr&0xFFFFFFF)) {
+                    case 0: {
+                            if(getlibreAccountIDnumber()==0) {
+                                if(doLog) Log.i(LOG_ID,"zero account ID"); 
+                                ret=0xF8;
+                                }
+                            else {
+                                if(doLog) Log.i(LOG_ID,"streamptr==0"); 
+                                ret=0xFA;
+                                }
+                            };break;
                     case 1: {
                         {if(doLog) {Log.i(LOG_ID,"streamptr==1");};};
                         ret=0xFB;
@@ -162,8 +173,8 @@ static private int[] libre3scan(GlucoseCurve curve,MainActivity main, Vibrator v
                         break;
                         }
                     default: {
-                         if(streamptr>=0L&&streamptr<4L) {
-                            {if(doLog) {Log.i(LOG_ID,"p<streamptr<4");};};
+                         if(streamptr>0L&&streamptr<4L) {
+                            {if(doLog) {Log.i(LOG_ID,"0<streamptr<4");};};
                               ret=0xFA;
                               }
                         }

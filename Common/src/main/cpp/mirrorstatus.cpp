@@ -24,6 +24,8 @@
 #include "mirrorstatus.hpp"
 #include "net/netstuff.hpp"
 #include "mirrorerror.h"
+#include "net/Connect.hpp"
+extern Connect *connections[];
 extern std::array<int,maxallhosts>   messagesendersockets;
 extern std::array<int,maxallhosts>   messagereceiversockets;
 extern std::array<int,maxallhosts>             us2peers;
@@ -89,7 +91,8 @@ const char *const * const sendptr=sendmessagestrbase+1;
 		sendscans=send.sendscans;
 
 		}
-	int receivesock=hostsocks[allindex];
+         Connect *con=connections[allindex];
+	int receivesock=con->getReceiverIdent();
 extern bool getpassive(int pos);
 extern bool getactive(int pos); 
       const bool ispassive= getpassive(allindex);

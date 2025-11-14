@@ -1,4 +1,3 @@
-
 #pragma once
 #ifdef __ANDROID_API__
 #include <dlfcn.h>
@@ -58,3 +57,11 @@ inline void sockclose(int sock) {
 #define exchange_owner_tag(fd, expected_tag,  new_tag)
 #define sockclose(sock) close(sock)
 #endif
+inline void closesock(int &sock) {
+    int tmpsock=sock;
+    if(tmpsock!=-1) {
+        sock=-1;
+        shutdown(tmpsock,SHUT_RDWR);
+        sockclose(tmpsock);
+        }
+    }

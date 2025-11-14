@@ -890,7 +890,7 @@ extern JNIEnv *getenv();
 
 #include "datbackup.hpp"
 
-Backup::condvar_t  librecondition;
+condvar_t  librecondition;
 void initlibreviewjni(JNIEnv *env) {
     const char librclassstr[]="tk/glucodata/Libreview";
     if(jclass cl=env->FindClass(librclassstr)) {
@@ -1068,7 +1068,7 @@ void libreviewthread() {
             }
         if(!librecondition.dobackup)
             continue;
-        if(librecondition.dobackup&Backup::wakeend) {
+        if(librecondition.dobackup&wakeend) {
             librecondition.dobackup=0;
             libreviewrunning=false;
             LOGAR("end libreviewthread");
@@ -1078,7 +1078,7 @@ void libreviewthread() {
         const int newcurrent2=askhasnewcurrent2(nu);
         const bool hasnewcurrent3=askhasnewcurrent3(nu)>=0;
         const bool hasnewcurrent=newcurrent2>=0||hasnewcurrent3;
-        if((librecondition.dobackup&Backup::wakeall)||(hasnewcurrent&&(librecondition.dobackup&Backup::wakestream))) {
+        if((librecondition.dobackup&wakeall)||(hasnewcurrent&&(librecondition.dobackup&wakestream))) {
             librecondition.dobackup=0;
             if(askforaccount||settings->data()->haslibre3) {
                 LOGAR("Libreview: haslibre3");
@@ -1149,19 +1149,19 @@ void wakeaftermin(const int waitmin) {
                 }
              }
         LOGGER("wakeaftermin(%d)\n",waitmin);
-        librecondition.wakebackup(Backup::wakeall);
+        librecondition.wakebackup(wakeall);
         }
     else {
         LOGAR("wakeaftermin: no thread running");
-        librecondition.dobackup=Backup::wakeall;
+        librecondition.dobackup=wakeall;
         }
  }
 void wakelibrecurrent() {
     if(libreviewrunning) {
-        librecondition.wakebackup(Backup::wakestream);
+        librecondition.wakebackup(wakestream);
         }
     else
-        librecondition.dobackup=Backup::wakestream;
+        librecondition.dobackup=wakestream;
     }
 
 
@@ -1337,7 +1337,7 @@ void startlibrethread() {
     }
 void endlibrethread() {
     if(libreviewrunning) {
-        librecondition.wakebackup(Backup::wakeend);
+        librecondition.wakebackup(wakeend);
         }
     }
 extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getuselibreview)(JNIEnv *env, jclass cl) {
@@ -1366,7 +1366,7 @@ extern "C" JNIEXPORT void  JNICALL   fromjava(askServerforAccountID)(JNIEnv *env
     settings->data()->uselibre=true; 
     settings->data()->libreinit3=false;
     //settings->data()->libreinit=false;
-//    librecondition.dobackup=Backup::wakeall;
+//    librecondition.dobackup=wakeall;
     startlibrethread();
     wakeaftermin(0);
      }

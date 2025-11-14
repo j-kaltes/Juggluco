@@ -155,6 +155,8 @@ jugglucotext uktext {
 .libre3scansuccess= {"FreeStyle Libre 3 датчик", "Тепер Juggluco отримуватиме значення глюкози"},
 .unknownNFC={"Нерозпізнана помилка сканування NFC", "Спробуйте знову"},
 .nolibre3={"FreeStyle Libre 3 датчик","Не підтримується цією версією Juggluco"},
+.libre3zeroID={"Error, zero account ID?",
+	R"(Use Left menu->Settings->Exchange data->Libreview->"Get Account ID" to set a non-zero account ID.)"},
 .needsandroid8="Needs minimally Android 8"sv,
 #ifndef WEAROS
 	.advancedstart= R"(<h1>Модифікований пристрій</h1>

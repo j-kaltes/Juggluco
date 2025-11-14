@@ -28,7 +28,8 @@
 #include <errno.h>
 #include "logs.hpp"       
 
-constexpr const uint64_t zeros[]={0,0,0,0,0,0,0,0,0,0,0,0};
+constexpr const uint64_t zeros[]={0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+constexpr const char xes[]={'X','X','X','X','X','X','X','X','X','X','X','X','X','X','X','X'};
 class namehost {
 char name[INET6_ADDRSTRLEN];
 public:

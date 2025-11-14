@@ -25,7 +25,7 @@ std::vector<Numdata*> numdatas;
 
 #include "net/passhost.hpp"
 #include "net/makerandom.hpp"
-#include "Connect.hpp"
+#include "net/Connect.hpp"
 extern void makenightswitch();
 void prunenums() {
     for(auto *num:numdatas) {
@@ -108,7 +108,7 @@ bool backupnuminit(const numinit *numst) {
    }
 
 bool numsbackupsendinit(crypt_t*pass,Connect *connect,struct changednums *nuall,uint32_t starttime) {
-   LOGGER("numsbackupsendinit sock=%d starttime=%u  numdatas.size()=%d\n",connect->getIdent(),starttime,numdatas.size());
+   LOGGER("numsbackupsendinit sock=%d starttime=%u  numdatas.size()=%d\n",connect->getSenderIdent(),starttime,numdatas.size());
    for(auto*el:numdatas) 
       if(!el->backupsendinit(pass,connect,nuall,starttime) )
          return false;

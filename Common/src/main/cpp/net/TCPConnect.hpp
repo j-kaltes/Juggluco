@@ -1,39 +1,36 @@
 #pragma once
 #include "logs.hpp"
-#include "Connect.hpp"
 #include <sys/socket.h>
-
+#include "netstuff.hpp"
+#include "myfdsan.h"
+#include "Connect.hpp"
 class TCPConnect: public Connect {
-int sock;
+using Connect::Connect;
+int senderSock=-1;
+int receiverSock=-1;
+
+void setTimeouts(int sock)  {
+        LOGAR("TCPConnect::setTimeouts");
+        if(sock>=0) {
+            receivetimeout(sock,60) ;
+            sendtimeout(sock,60*5);
+            }
+        }
 public:
+template <typename Self>
+auto &getReceiverSock( this Self&& self) {
+        return self.receiverSock;
+        }
+template <typename Self>
+auto &getSenderSock( this Self&& self) {
+        return self.senderSock;
+        }
 int connectone( const struct sockaddr_in6  *sin, int &sock,char stype,passhost_t *pass,struct pollfd    *cons,int&use
 #if defined(WEAROS_MESSAGES)
       ,bool &activate
 #endif
             );
 virtual int makeconnection2(passhost_t *pass,char stype) override;
-ssize_t  sendni(int sockfd,const void *buf, size_t len) {
- 	int waslen;
-	while((waslen=send(sockfd,buf,len,0))==-1) {
-		if(errno!=EINTR)
-			return -1;
-		LOGGER("sendni retry %zd\n",len);
-		}
-	return waslen;
-	}
-
-ssize_t  recvni(int sockfd,void *buf, size_t len)  {
-    int waslen;
-    int inter=0;
-    while((waslen=recv(sockfd,buf,len,0))==-1) {
-            int erwas=errno;
-            flerror("recv(%d,buf,%zd)",sockfd,len);
-            if(erwas!=EINTR||inter>20)
-                    return -1;
-            ++inter;
-            }
-    return waslen;
-    }
 
 virtual ssize_t  r_sendni(const void *buf, size_t len) override{
         return sendni(getReceiverSock(),buf,len);
@@ -47,7 +44,18 @@ virtual ssize_t  s_sendni(const void *buf, size_t len) override{
 virtual ssize_t  s_recvni(void *buf, size_t len) override {
         return recvni(getSenderSock(),buf,len);
         }
-
+virtual void shutdownReceiver() override {
+            shutdown(getReceiverSock(),SHUT_RDWR);
+        }
+virtual void shutdownSender() override {
+            shutdown(getSenderSock(),SHUT_RDWR);
+        }
+virtual void restartReceiver() override {
+            shutdownReceiver();
+        }
+virtual void restartSender() override {
+         shutdownSender();
+        }
 
   void  setSock(int &sock,int newsock) {
         int oldsock=sock;
@@ -64,9 +72,7 @@ void setReceiverSock(int newsock) {
 virtual  void  closeReceiverConnection() override {
         ::closesock(getReceiverSock());
       }
-int &getReceiverSock() {
-        return receiverSock;
-        }
+
 
 void setSenderSock(int newsock) {
         setSock(getSenderSock(),newsock);
@@ -74,21 +80,31 @@ void setSenderSock(int newsock) {
 virtual  void  closeSenderConnection() override {
         ::closesock(getSenderSock());
       }
-int &getSenderSock() {
-        return senderSock;
-        }
-virtual  int  getIdent() const override {
-    return getSock();
+virtual  int  getReceiverIdent() const override {
+    return getReceiverSock();
+    };
+virtual  int  getSenderIdent() const override {
+    return getSenderSock();
     };
 
 
- virtual  bool  isConnected() const override {
-        return getSock()>=0;
+ virtual  bool  isConnectedReceiver() const override {
+        return getReceiverSock()>=0;
         };
- void setTimeouts(int sock)  {
-        receivetimeout(sock,60) ;
-        sendtimeout(sock,60*5);
-        }
-virtual void setTimeouts() override {
- }
+ virtual  bool  isConnectedSender() const override {
+        return getSenderSock()>=0;
+        };
+virtual void setReceiverTimeouts() override {
+    setTimeouts(receiverSock);
+    }
+virtual void setSenderTimeouts() override {
+    setTimeouts(senderSock)  ;
+    }
+
+virtual void endConnection() override { 
+     closeReceiverConnection(); 
+     closeSenderConnection(); 
+     }
+void passivesender(passhost_t *pass,int &recsock,int oldrecsock) ;
+ };
 

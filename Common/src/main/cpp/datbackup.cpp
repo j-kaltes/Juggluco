@@ -21,6 +21,7 @@
 
 #include "datbackup.hpp"
 #include "nums/numdata.hpp"
+#include "net/Connect.hpp"
 void receivetimeout(int sock,int secs) ;
 void sendtimeout(int sock,int secs) ;
 extern bool sendResetDevices(crypt_t *pass,const int sock) ;
@@ -52,7 +53,7 @@ int updateone::updateiob() {
            const auto endinsulin=offsetof(Tings,iobupdate)+sizeof(Tings::iobupdate);
            LOGGER("updateiob start=%zd end=%zd\n",startinsulin,endinsulin);
            vect.push_back({reinterpret_cast<const senddata_t *>(settings->data()->insulintypes),startinsulin,endinsulin-startinsulin});
-           if(!senddata(pass,getsock(),vect,settingsdat) )
+           if(!getConnect()->senddata(pass,vect,settingsdat) )
                     return 0;
             iobupdated=iobupdate;
             return 1;
@@ -62,7 +63,7 @@ int updateone::updateiob() {
 
 
 int updateone::sendCalibrate() {
-    return sensors->sendCalibrates(getcrypt(), getsock(),ind,startSendCalibrate);
+    return sensors->sendCalibrates(getcrypt(), getConnect(),ind,startSendCalibrate);
     }
 
 
@@ -91,7 +92,7 @@ int updateone::numbertypes() {
        LOGGER("librenums start=%zd end=%zd\n",startnight,endnight);
        vect.push_back({reinterpret_cast<const senddata_t *>(settings->data()->librenums),startnight,endnight-startnight});
        }
-   if(!senddata(getcrypt(),getsock(),vect,settingsdat) )
+   if(!getConnect()->senddata(getcrypt(),vect,settingsdat) )
         return 0;
     sendLibre=false;
     sendNight=false;
@@ -100,10 +101,10 @@ int updateone::numbertypes() {
 #endif
 
 int updateone::update() {
-    if(getsock()<0)
+    Connect *connect=getConnect();    
+    if(!connect->isConnectedSender())
         return 0;
     crypt_t *pass=getcrypt();
-    Connect *connect=getConnect();    
 
     bool sendsensors=(sendstream||sendscans) ;
     int ret =0;
@@ -211,14 +212,13 @@ int updateone::update() {
         return 0;
     if(resetdevices) {
         if(!connect->sendResetDevices(pass) ) {
-            LOGGER("sendResetDevices(%p,%d) failed\n",pass,getsock() );
+            LOGGER("sendResetDevices(%p,%d) failed\n",pass,connect->getSenderIdent() );
             return 0;
             }
         ret=1;
         resetdevices=false;
         }
     return ret;
-//    return sendrender(getsock());
     }
     
 extern int  updatenums(crypt_t *,Connect *,struct changednums *nums,int);
@@ -230,7 +230,7 @@ int     updateone::updatenums() {
         return update();
         }
     Connect *connect=getConnect();
-    if(!connect->isConnected())
+    if(!connect->isConnectedSender())
         return 0;
     if(!sendjugglucoid) {
         LOGAR("updatenums sendjugglucoid");
@@ -256,7 +256,7 @@ int  updateone::updatestreamu() {
         return update();
         }
     Connect *connect=getConnect();
-    if(!connect->isConnected())
+    if(!connect->isConnectedSender())
         return 0;
     return sensors->updatestreams(getcrypt(),connect,ind,firstsensor,sendscans?2:1);
      } 
@@ -267,28 +267,28 @@ int updateone::updatescansu() {
         return update();
         }
     Connect *connect=getConnect();
-    if(!connect->isConnected())
+    if(!connect->isConnectedSender())
         return 0;
     return sensors->updatescanss(getcrypt(),connect,ind,firstsensor,sendstream);
      } 
 void wakeupall(){
     if(backup) {
         LOGAR("wakeupall");
-        backup->wakebackup(Backup::wakeall|Backup::wakereconnect);
+        backup->wakebackup(wakeall|wakereconnect);
         }
     }
 void wakeupstream(){
     if(backup) {
         LOGAR("wakeupstream");
-        backup->wakebackup(Backup::wakestream|Backup::wakereconnect);
+        backup->wakebackup(wakestream|wakereconnect);
         }
     }
 bool networkpresent=false;
 
 
-int hostsocks[maxallhosts]{-1,-1,-1,-1,-1,-1,-1,-1};
+//int hostsocks[maxallhosts]{-1,-1,-1,-1,-1,-1,-1,-1};
 uint32_t lastuptodate[maxallhosts]={};
-std::vector<int> sendsocks;
+//std::vector<int> sendsocks;
 std::vector<crypt_t *> crypts;
 Backup *backup=nullptr;
 #define SENDPASSIVE 1
@@ -341,14 +341,15 @@ void    updateone::open() {
     {
         if(host->sendpassive) 
             return;
-       connections[allindex]->makeconnection(host,getcrypt(),saysender(host));
+       auto *con=connections[allindex];
+       if(con)
+           con->makeconnection(host,getcrypt(),saysender(host));
 
     }
-    if(getsock()>=0) {
-        LOGGER("updateone::open()=%d\n",getsock());
-        receivetimeout(getsock(),60);
-        sendtimeout(getsock(),60*5);
-        }
+   auto *con=connections[allindex];
+   if(con)
+        con->setSenderTimeouts();
+    LOGGER("updateone::open()=%d\n",connections[allindex]->getSenderIdent());
     }
 
 
@@ -364,23 +365,31 @@ static void sendup(passhost_t *hostptr) {
         prctl(PR_SET_NAME, "wake sender", 0, 0, 0);
 #endif
      int allindex=hostptr-backup->getupdatedata()->allhosts;
-     TCPConnect *connect=(TCPConnect*)connections[allindex];
-    if(connect->makeconnection(hostptr,ctxptr,saysender(hostptr))>=0) {
-        int sock=connect->getSock();
-        sendtimeout(sock,60*5);
-        receivetimeout(sock,0);
-        if(connect->sendbackup(ctxptr)) {
-            LOGGER("sendup success %d\n",sock);    
+
+     Connect *connect=connections[allindex];
+    if(connect&&connect->makeconnection(hostptr,ctxptr,saysender(hostptr))>=0) {
+        if(!hostptr->ICE) {
+            int sock=static_cast<TCPConnect*>(connect)->getSenderSock();
+            sendtimeout(sock,60*5);
+            receivetimeout(sock,0);
             }
-        else
-            LOGGER("%d: failure %d\n",agettid(),sock);    
-        connect->closeConnection();
+        if(connect->sendbackup(ctxptr)) {
+            connect=connections[allindex];
+            LOGGER("sendup success %d\n",connect?connect->getSenderIdent():-1);    
+            }
+        else {
+            connect=connections[allindex];
+            LOGGER("%d: failure %d\n",agettid(),connect?connect->getSenderIdent():-1);    
+            }
+        if(!hostptr->ICE&&(connect=connections[allindex]))
+            connect->closeSenderConnection();
 ///        sockclose(sock);
         }
     }
 
-extern std::vector<Backup::condvar_t*> active_receive;
-std::vector<Backup::condvar_t*> active_receive;
+condvar_t* active_receive[maxallhosts];
+int active_receivenr=0;
+
 #include <chrono>
 using namespace std::chrono_literals;
 void activereceivethread(int allindex,passhost_t *pass) {
@@ -392,8 +401,8 @@ void activereceivethread(int allindex,passhost_t *pass) {
         LOGGER("activereceivethread h(%d)<0\n", h);
         return;
     }
-    if(h >= active_receive.size()) {
-        LOGGER("activereceivethread h(%d)>=active_receive.size()(%zd)\n", h, active_receive.size());
+    if(h >= active_receivenr) {
+        LOGGER("activereceivethread h(%d)>=active_receivenr(%zd)\n", h, active_receivenr);
         return;
     }
     if(!active_receive[h]) {
@@ -435,38 +444,74 @@ void activereceivethread(int allindex,passhost_t *pass) {
    else   
 #endif  
         {
+           LOGGER("activereceivethread before wait_for %d %p\n",h ,active_receive[h]);
+
 #ifndef NOLOG
             auto status=
 #endif
-                active_receive[h]->backupcond.wait_for(lck,std::chrono::seconds(waitsec));    //Inreality much longer if phone is in doze mode.
+                active_receive[h]->backupcond.wait_for(lck,std::chrono::seconds(waitsec));    //In reality much longer if phone is in doze mode.
             LOGGER("R-active after lock %stimeout\n",(status==std::cv_status::no_timeout)?"no-":"");
             }
             }
-        current=active_receive[h]->dobackup;
-        if(current&Backup::wakeend) {
-            connections[allindex]->closeConnection();
+       LOGGER("before if(!active_receive[%d]) %p \n",h,active_receive[h]);
+       if(h>=active_receivenr||!active_receive[h]) {
+            LOGGER("active_receive[%d]==0, return\n",h);
+            return;
+          }
+       current=active_receive[h]->dobackup;
+       LOGAR("after current=active_receive[h]->dobackup;");
+       TCPConnect *con=static_cast<TCPConnect*>(connections[allindex]);
+       LOGAR("after TCPConnect *con=static_cast<TCPConnect*>(connections[allindex]);");
+        if(!con||current&wakeend) {
+            if(con) {
+                int recsock=con->getReceiverSock(); 
+                con->closeReceiverConnection();
+                LOGGER("end activereceivethread %d close(%d)\n",h,recsock);
+                }
+            else
+                LOGGER("end activereceivethread %d \n",h);
+            LOGAR("before delete");
             delete active_receive[h];
+            LOGAR("after delete");
             active_receive[h]=nullptr;
-            LOGGER("end activereceivethread close(%d)\n",sockwas);
+            LOGAR("return");
             return;
             }
-        int &sock=(TCPConnect *)connections[allindex]->getSock();;
+        
+        int &sock=con->getSenderSock();;
+        int wassock=sock;
+        sock=-1;
 #ifdef WEAROS_MESSAGES
     if(!pass->wearos||!wearmessages[allindex])  //TODO use it?
 #endif  
     {
-        if(connections[allindex]->makeconnection(pass,ctxptr,sayactivereceive(pass))<0) {
+        auto *con=static_cast<TCPConnect*>(connections[allindex]);
+        if(!con) {
+            return;
+            }
+        if(con->makeconnection(pass,ctxptr,sayactivereceive(pass))<0) {
             continue;
             }
 //        status.hassocket=true;
+     
+        con->setReceiverSock(sock);;
+        sock=wassock;
         void    receiversockopt(int sock) ;
         receiversockopt(sock) ;
         LOGAR("before activegetcommands");
-        connections[allindex]->activegetcommands(pass,ctxptr); 
-        LOGGER("after activegetcommands close(%d)\n",sock);
-        sockclose(sock);
-        sock=-1;
-    }
+        auto *con2=connections[allindex];
+        if(!con2) {
+            return;
+            }
+        con2->activegetcommands(pass,ctxptr);
+        if(connections[allindex]) {
+            LOGGER("after activegetcommands close(%d)\n",sock);
+            sockclose(sock);
+            }
+         else {
+            LOGAR("after activegetcommands");
+            }
+        }
 
         }
     }
@@ -489,7 +534,7 @@ void updatedata::wakesender() {
             auto ind=host.activereceive-1;
             LOGGER("active %d\n",ind);
             if(active_receive[ind])  {
-                active_receive[ind]->wakebackup(Backup::wakeall);
+                active_receive[ind]->wakebackup(wakeall);
                 }
             }
         else {
@@ -507,7 +552,7 @@ void updatedata::wakesender() {
                 else {
                     if(host.index>=0&&backup->con_vars[host.index])  {
                         LOGGER("con_vars[%d]->wakebackup\n",host.index);
-                          backup->con_vars[host.index]->wakebackup(Backup::wakesend);
+                          backup->con_vars[host.index]->wakebackup(wakesend);
                           }
                           
                     }
@@ -531,7 +576,7 @@ void updatedata::wakestreamsender() {
             auto ind=host.activereceive-1;
             LOGGER("active %d\n",ind);
             if(active_receive[ind])
-                active_receive[ind]->wakebackup(Backup::wakestream);
+                active_receive[ind]->wakebackup(wakestream);
             }
         else {
             if(host.receivefrom==3&&host.index<0) {
@@ -541,7 +586,7 @@ void updatedata::wakestreamsender() {
             else {
                 if(host.index>=0&&backup->con_vars[host.index]) {
                     LOGGER("host.index=%d\n",host.index);
-                      backup->con_vars[host.index]->wakebackup(Backup::wakestreamsend);
+                      backup->con_vars[host.index]->wakebackup(wakestreamsend);
                       }
                       
                 }
@@ -551,36 +596,41 @@ void updatedata::wakestreamsender() {
     }
 
 
-void Connect::passivesender(passhost_t *pass)  {
-    LOGGER("passivesender %d\n",getIdent());
+void TCPConnect::passivesender(passhost_t *pass,int &recsock,int oldrecsock)  {
+    LOGGER("passivesender %d\n",getReceiverIdent());
      if(!networkpresent) {
-         LOGGER("!networkpresent close and return sock=%d\n",sock);
-        closeConnection();
+        LOGGER("!networkpresent close and return sock=%d\n",getSenderIdent());
+        closeSenderConnection();
+        closeReceiverConnection();
         return;
         }
     int h=pass->index;
     updateone &host=backup->getupdatedata()->tosend[h];
     LOGAR("passivesender got host");
     if(h>=0&&backup->con_vars[h]) {
-        int allindex=pass-backup->getupdatedata()->allhosts;
-        closeConnection();
         const bool haspas= pass->haspass();
         if(haspas) {
             LOGAR("passivesender  haspas true");
-            if(!receivepassinit(host.getcrypt()))  {
-                LOGGER("close(%d)\n",getIdent());
-                closeConnection();
+            if(!receivepassinit(pass,host.getcrypt()))  {
+                LOGGER("close(%d)\n",getReceiverIdent());
+                closeReceiverConnection();
+                closeSenderConnection();
                 return ;
                 }
             }
         else
             LOGAR("passivesender  haspas false");
-          
+         
+        setSenderSock(recsock);
+        recsock=oldrecsock;
         setSenderTimeouts();
 //        host.setsock(sock); 
         LOGGER("wakebackup con_vars[%d]\n",h);
-         backup->con_vars[h]->wakebackup(Backup::wakeall);
+         backup->con_vars[h]->wakebackup(wakeall);
          }
+     else {
+         LOGGER("passivesender h>=0&&backup->con_vars[h] failed h=%d\n",h);
+       }
     }
 
     
@@ -706,4 +756,163 @@ void setCalibrates(uint16_t sensorindex) {
         if(host.sendnums)
             host.setCalibrate(sensorindex);
         }
+    }
+
+Connect *connections[maxallhosts];
+
+
+#include "net/ICE/ICEConnect.hpp"
+Backup::Backup(std::string_view base): mapdata(base,backupdat,sizeof(struct updatedata)), con_vars((resetindices(),getupdatedata()->sendnr)) {
+   const int len=getupdatedata()->hostnr;
+   auto *allhosts=getupdatedata()->allhosts;
+   for(int i=0;i<len;++i) {
+     auto *host= allhosts+i;
+      if(host->ICE)
+          connections[i]=new ICEConnect(i,host->side);
+      else
+          connections[i]=new TCPConnect(i);
+      }
+  // sendsocks.reserve(getupdatedata()->sendnr);
+   crypts.reserve(getupdatedata()->sendnr);
+   for(int i=0;i<getupdatedata()->sendnr;i++) {
+       //sendsocks.push_back(-1);
+       auto &host=getupdatedata()->tosend[i];
+       if(settings->data()->initVersion<31) { 
+          LOGGER("%d set sendjugglucoid=false\n",i);
+          host.sendjugglucoid=false;
+#ifndef WEAROS
+          if(getupdatedata()->allhosts[host.allindex].wearos) {
+              if(settings->data()->sendnumbers)
+                    host.sendLibre=true;
+              if(settings->data()->saytreatments ||settings->data()->postTreatments)
+                    host.sendNight=true;
+            }
+#endif
+          }
+       if(getupdatedata()->allhosts[host.allindex].haspass()) {
+           auto cry=new crypt_t();
+           LOGGER("crypts[%d]=%p=new crypt_t()\n",i,cry);
+           crypts.push_back(cry);
+           }
+       else  {
+           LOGGER("crypts[%d]=nullptr\n",i);
+           crypts.push_back(nullptr);
+           }
+       }
+
+
+
+   startactivereceivers();
+   if(!getupdatedata()->port[0])
+       strcpy(getupdatedata()->port,defaultport );
+
+   void    backupbase(string_view basedir);
+   backupbase(globalbasedir);
+   for(int i=0;i<len;i++) {
+       if(getupdatedata()->allhosts[i].passive()) {
+           startreceiver(false);
+           break;
+           }
+       }
+
+
+   shouldaskfordata=getshouldaskfordata();
+   }
+
+int Backup::changeICEhost(const char *ICElabel,int index,const bool sendnums,const bool sendstream,const bool sendscans,const bool receive,string_view pass,uint32_t starttime,const char *label,bool side,bool startthreads) {
+    const int hostnr=getupdatedata()->hostnr;
+    LOGGER("hostnr=%d changeICEhost(%d,sendnums=%d,sendstream=%d,sendscans=%d,receive=%d,label=%s \n",hostnr,index,sendnums,sendstream,sendscans,receive,label);
+    if(index<0) 
+        index=hostnr;
+    if(index>=maxallhosts)  {
+        LOGAR("changeICEhost: index>=maxallhosts");
+        return -3;
+        }
+    struct oldnet {
+        bool wasnet=networkpresent;
+        oldnet() {
+            networkpresent=false;
+            }
+        ~oldnet() {
+            if(!networkpresent)
+                networkpresent=wasnet;
+            };
+        };
+    struct oldnet desnet;
+    const bool newhost=(index==hostnr);
+    const bool sendto= sendnums|| sendstream|| sendscans;
+    int tohost;
+    bool newthread=false;
+    auto &thehost=getupdatedata()->allhosts[index];
+    LOGGER("changeICEhost newhost=%d thehost.index=%d\n",newhost,thehost.index);
+    thehost.sendpassive=false;
+    thehost.hostname=false;
+    if(sendto) {
+        if(newhost||thehost.index==-1) {  //Fout??
+            tohost=getupdatedata()->sendnr;
+            if(tohost>=maxsendtohost) {
+                LOGGER("changeICEhost: tohost(%d)>=maxsendtohost(%d)\n",tohost,maxsendtohost);
+                return -4;
+                }
+            thehost.index=tohost;
+            newthread=true;
+            }
+        else  {
+            tohost=thehost.index;
+            }
+
+        changereceiver(index,tohost,sendnums,sendstream,sendscans,false,pass.size(),starttime);
+        }
+    else {
+        tohost=0;
+        int sendindex=thehost.index;
+        if(!newhost) {
+            if(sendindex>=0) {
+                deletestart(sendindex);
+                thehost.index=-1;
+                deleteend(sendindex); 
+                setindices(index);
+                }
+            }
+        thehost.index=-1;
+        }
+    thehost.side=side;
+    if(!newhost) {  
+        if(thehost.ICE) {
+            goto keepICE;
+            }
+        delete connections[index];
+        }
+    thehost.ICE=true;
+    connections[index]=new ICEConnect(index,side);
+    keepICE:
+    thehost.setname(label);
+    thehost.setICEname(ICElabel);
+    thehost.noip=true;
+    lastuptodate[index]=0;
+    thehost.receivefrom=receive?3:1;
+    LOGGER("changeICEhost receivefrom=%d\n", thehost.receivefrom);
+    setpass( thehost.pass,pass);
+    thehost.deactivated=false;
+    thehost.wearos=false;
+    if(newhost)  {
+        ++(getupdatedata()->hostnr);
+        LOGGER("new host %s ++hostnr=%d\n",thehost.getnameif(),getupdatedata()->hostnr);
+        thehost.newconnection=true;
+        }
+
+    deupdated(); 
+    closesocksone(index,getupdatedata()->allhosts+index);
+    if(startthreads) {
+        if(newthread)
+            startthread(index,tohost);
+        }
+    thehost.activereceive=0;
+    shouldaskfordata=getshouldaskfordata();
+    #ifdef WEAROS_MESSAGES
+    extern    void clearnetworkcache();
+    clearnetworkcache();
+    #endif
+    LOGGER("changeICEhost=%d\n",index);
+    return index;
     }
