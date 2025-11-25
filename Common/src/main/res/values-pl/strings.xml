@@ -341,7 +341,7 @@
  <string name="mgdL">mg/dL</string>
  <string name="interval">Przerwa</string>
  <string name="off">Wyłącz</string>
- <string name="shortoff">Wyłącz</string>
+ <string name="shortoff">Wył</string>
  <string name="streamingenabled">&quot; Przesył strumienia aktywny&quot;</string>
  <string name="streamingnotenabled">&quot; Przesył strumienia nieaktywny&quot;</string>
     <string name="everSensebroadcast">Transmisja EverSense</string>
