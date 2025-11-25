@@ -171,7 +171,7 @@
  <string name="installedlibrary">Zainstalowana biblioteka</string>
  <string name="cantextract">Nie można wyodrębnić %s, spróbuj innego pliku apk</string>
  <string name="connectwithsensor">Łączenie z sensorem</string>
- <string name="exchangedata">Przesył danychh</string>
+ <string name="exchangedata">Przesył danych</string>
  <string name="nonewvalue">&quot;Brak nowej wartości od &quot;</string>
  <string name="lowglucose">&quot; Hipoglikemia!&quot;</string>
  <string name="highglucose">&quot; Hiperglikemia!&quot;</string>
