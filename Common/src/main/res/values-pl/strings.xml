@@ -23,7 +23,7 @@
     <string name="scan_permission">Uprawnienie</string>
     <string name="scanname">Skan</string>
     <string name="scansname">Skany</string>
-    <string name="historyname">Rozpoznanie</string>
+    <string name="historyname">Historia</string>
     <string name="streamname">Strumień</string>
     <string name="resetname">Zresetuj</string>
     <string name="helpname">Pomoc</string>
