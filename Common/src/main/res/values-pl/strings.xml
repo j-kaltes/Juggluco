@@ -6,7 +6,7 @@
     <string name="ok">OK</string>
     <string name="cancel">Anuluj</string>
 
-    <string name="garmin_initialization_error">&quot;Włączenie Garmin connect SDK nie udało się: &quot;</string>
+    <string name="garmin_initialization_error">"Włączenie Garmin connect SDK nie udało się: "</string>
 
     <string name="error_nfc_device_not_supported">Skanowanie niemożliwe, na tym urządzeniu brak NFC</string>
     <string name="error_nfc_disabled">NFC wyłączone, można je włączyć w ustawieniach.</string>
@@ -43,7 +43,7 @@
     <string name="activeonly">Tr. aktywny</string>
     <string name="both">Oba</string>
     <string name="receivefrom">Odbieraj</string>
-    <string name="datapresentuntil">&quot;Dane obecne na odbiorniku do momentu: &quot;</string>
+    <string name="datapresentuntil">"Dane obecne na odbiorniku do momentu: "</string>
     <string name="visible">Pokaż</string>
     <string name="password">Hasło</string>
     <string name="delete">Usuń</string>
@@ -62,19 +62,19 @@
  <string name="offtouch">Wył. dotyk</string>
  <string name="glucosestatusbar">Wartość glikemii w pasku stanu</string>
  <string name="lowglucosealarm">Alarm dla hipoglikemii</string>
- <string name="numlabel">&quot;Etykieta: &quot;</string>
- <string name="roundto">Zaokrąglaj do: &quot;</string>
- <string name="weight">&quot;Waga: &quot;</string>
+ <string name="numlabel">"Etykieta: "</string>
+ <string name="roundto">Zaokrąglaj do: "</string>
+ <string name="weight">"Waga: "</string>
  <string name="ringtonename">Dzwonek</string>
  <string name="highglucosealarm">Alarm dla hiperglikemii</string>
  <string name="valueavailablenotification">Powiadomienie o ponownie dostępnej wartości glukozy</string>
  <string name="lossofsignalalarm">Alarm utraty sygnału po</string>
- <string name="cantsetminutes">&quot;Nie można ustawić minut na &quot;</string>
+ <string name="cantsetminutes">"Nie można ustawić minut na "</string>
   <string name="minutes">minut(y)</string>
  <string name="toolarg">zbyt długo</string>
- <string name="targetrange">&quot;Zakres docelowy: &quot;</string>
- <string name="graphrange">&quot;Zakres wykresu: &quot;</string>
- <string name="unit">&quot;Jednostka: &quot;</string>
+ <string name="targetrange">"Zakres docelowy: "</string>
+ <string name="graphrange">"Zakres wykresu: "</string>
+ <string name="unit">"Jednostka: "</string>
  <string name="glucoseaxisleft">Oś glukozy po LEWEJ</string>
  <string name="startsapp">Skanowanie uruchamia aplikację</string>
  <string name="patchedlibrebroadcast">Patched Libre</string>
@@ -119,7 +119,7 @@
  <string name="watchappinstalled">Aplikacja zainstalowana na zegarku</string>
  <string name="error">Błąd</string>
  <string name="additem">Dodaj pozycję</string>
- <string name="round">&quot;Zaokr.&quot;</string>
+ <string name="round">"Zaokr."</string>
  <string name="repeat">Powtórz</string>
  <string name="ingredient">Składnik:</string>
  <string name="select">Wybierz</string>
@@ -128,7 +128,7 @@
  <string name="total">Razem:</string>
  <string name="mealtotal">Posiłek ogółem:</string>
  <string name="quantity">Ilość</string>
- <string name="per">&quot; na &quot;</string>
+ <string name="per">" na "</string>
  <string name="specifyingredient">Musisz określić składnik</string>
  <string name="specifyhowmuch">Musisz określić, ile</string>
  <string name="define">Zdefiniuj</string>
@@ -164,7 +164,7 @@
  <string name="failedbyexception">Błąd w drodze wyjątku</string>
  <string name="nodata">Brak danych</string>
  <string name="addsensorenddate">Dodaj termin zakończenia działania sensora do kalendarza</string>
- <string name="enddatesensor">&quot;Koniec działania sensora &quot;</string>
+ <string name="enddatesensor">"Koniec działania sensora "</string>
  <string name="open">Otwórz</string>
  <string name="withoutsensor">Bez sensora</string>
  <string name="wronglibrary">Biblioteka nie działa prawidłowo, spróbuj innej</string>
@@ -172,9 +172,9 @@
  <string name="cantextract">Nie można wyodrębnić %s, spróbuj innego pliku apk</string>
  <string name="connectwithsensor">Łączenie z sensorem</string>
  <string name="exchangedata">Przesył danych</string>
- <string name="nonewvalue">&quot;Brak nowej wartości od &quot;</string>
- <string name="lowglucose">&quot; Hipoglikemia!&quot;</string>
- <string name="highglucose">&quot; Hiperglikemia!&quot;</string>
+ <string name="nonewvalue">"Brak nowej wartości od "</string>
+ <string name="lowglucose">" Hipoglikemia!"</string>
+ <string name="highglucose">" Hiperglikemia!"</string>
  <string name="lowglucoseshort">@string/lowglucose</string>
  <string name="highglucoseshort">@string/highglucose</string>
  <string name="sendto">Wysyłaj</string>
@@ -184,13 +184,13 @@
  <string name="duractionsec">Czas trwania (sek):</string>
  <string name="duraction">Czas trwania:</string>
  <string name="sec">sek</string>
- <string name="notentered">&quot; nie wpisano&quot;</string>
- <string name="spacedand">&quot; i &quot;</string>
+ <string name="notentered">" nie wpisano"</string>
+ <string name="spacedand">" i "</string>
     <string name="disturb">N. przeszk</string>
     <string name="uselibreview">Wysyłaj do Libreview</string>
     <string name="libreviewname">Libreview</string>
     <string name="sendnow">Wyślij teraz</string>
-    <string name="blueormirror">Należy włączyć &quot;Sensor przez Bluetooth&quot; lub skonfigurować to urządzenie jako klonujące</string>
+    <string name="blueormirror">Należy włączyć "Sensor przez Bluetooth" lub skonfigurować to urządzenie jako klonujące</string>
     <string name="vibrationname">Wibracje</string>
     <string name="high_priority">Turbo</string>
     <string name="darkmode">Tr. ciemny</string>
@@ -241,9 +241,9 @@
  <string name="password36">Maksymalna długość hasła to 36 znaków</string>
  <string name="fromlibreview">Z Libreview</string>
  <string name="manual">Ręcznie</string>
-<string name="noaccountidspecified">&quot; Nie określono identyfikatora konta&quot;</string>
-<string name="wrongformat">&quot;Nieprawidłowy format&quot;</string>
-<string name="noapplisteningto">&quot;Żadna aplikacja nie nasłuchuje &quot;</string>
+<string name="noaccountidspecified">" Nie określono identyfikatora konta"</string>
+<string name="wrongformat">"Nieprawidłowy format"</string>
+<string name="noapplisteningto">"Żadna aplikacja nie nasłuchuje "</string>
 <string name="secret">api_secret</string>
 <string name="withoutsaving">Wyjść bez zapisania?</string>
 <string name="active">Aktywuj</string>
@@ -253,18 +253,18 @@
 	<string name="privatekey">Klucz prywatny</string>
 <string name="localonly">Tylko lokalnie</string>
 <string name="toolongsecret">: api_secret zbyt długi. Maks =</string>
-<string name="invalidport">&quot;nieprawidłowy numer portu&quot;</string>
-<string name="newsecret">&quot;nowe api_secret: &quot;</string>
-<string name="newport">&quot;nowy port =&quot;</string>
+<string name="invalidport">"nieprawidłowy numer portu"</string>
+<string name="newsecret">"nowe api_secret: "</string>
+<string name="newport">"nowy port ="</string>
 <string name="webserver">Serwer sieciowy</string>
 <string name="treatments">Wysyłaj wartości</string>
 <string name="android13">Android</string>
     <string name="wentwrong">Coś poszło nie tak</string>
-    <string name="dosis">&quot; dawka &quot;</string>
-    <string name="doses">&quot; dawki/-ek &quot;</string>
+    <string name="dosis">" dawka "</string>
+    <string name="doses">" dawki/-ek "</string>
  <string name="penfailed">Odczyt pena do insuliny nie powiódł się. Spróbuj ponownie.</string>
- <string name="changeinsulin">&quot;Zmień typ insuliny na &quot;</string>
-    <string name="type">&quot;Typ: &quot;</string>
+ <string name="changeinsulin">"Zmień typ insuliny na "</string>
+    <string name="type">"Typ: "</string>
     <string name="dosesprior">Dodaj dawki tylko po:</string>
     <string name="modify">Zmień</string>
     <string name="notsynced">Nie zsynchronizowano</string>
@@ -307,22 +307,22 @@
  <string name="speakglucose">Mów wartość glikemii na głos</string>
     <string name="notfound">Nie znaleziono</string>
  <string name="no_ringtone_picker_found">Nie znaleziono aplikacji do wybierania dzwonków</string>
- <string name="can_t_play">&quot;Nie mogę odtworzyć&quot;</string>
- <string name="seconds">&quot; sekund(y)&quot;</string>
- <string name="duration_can_t_be_negative">&quot;Czas trwania nie może być ujemny: &quot;</string>
- <string name="too_large_maximum_65535">&quot; za duży, maksymalnie=65535, &quot;</string>
- <string name="too_large">&quot; za duży&quot;</string>
+ <string name="can_t_play">"Nie mogę odtworzyć"</string>
+ <string name="seconds">" sekund(y)"</string>
+ <string name="duration_can_t_be_negative">"Czas trwania nie może być ujemny: "</string>
+ <string name="too_large_maximum_65535">" za duży, maksymalnie=65535, "</string>
+ <string name="too_large">" za duży"</string>
  <string name="can_t_use_specification">Nie można użyć specyfikacji</string>
  <string name="turn_on_nearby_devices_permission">Włącz uprawnienie SKANOWANIE URZĄDZEŃ W POBLIŻU</string>
     <string name="enable_bluetooth">Włącz Bluetooth</string>
  <string name="turn_on_location_permission">Włącz uprawnienia lokalizacji</string>
  <string name="bluetooth_is_turned_off">Bluetooth jest wyłączony</string>
- <string name="allsentnoreceive">Gdy wszystko jest wysyłane do hosta, opcja \&quot;Odbieraj\&quot; powinna być wyłączona.</string>
+ <string name="allsentnoreceive">Gdy wszystko jest wysyłane do hosta, opcja \"Odbieraj\" powinna być wyłączona.</string>
  <string name="nomirrorport">Numer portu powinien różnić się od numeru portu klona</string>
  <string name="nohttpport">Numer portu powinien różnić się od portu http</string>
-<string name="ready_in">&quot; gotowy za &quot;</string>
+<string name="ready_in">" gotowy za "</string>
 <string name="ready_for_use">Sensor gotowy do użycia</string>
-<string name="endstime">&quot; kończy się w tym momencie&quot;</string>
+<string name="endstime">" kończy się w tym momencie"</string>
 <string name="triednothing">Nie podjęto żadnej próby</string>
 <string name="success">Powodzenie</string>
 <string name="resendwarning">Wszystkie dane zostaną przesłane ponownie, co wymaga czasu i może mieć konsekwencje dla Libreview i Kerfstok.</string>
@@ -331,7 +331,7 @@
 <string name="senthosts">Juggluco wysyła do maksymalnie 6 hostów</string>
     <string name="hostname">nazwa hosta</string>
    <string name="clampnow">Zawsze teraz</string>
-    <string name="sendfrom">&quot;Wysyłaj od: &quot;</string>
+    <string name="sendfrom">"Wysyłaj od: "</string>
  <string name="changestartbutton">Zmień początek</string>
  <string name="floatjuggluco">Wyżej</string>
  <string name="uploader">Przesył do NS</string>
@@ -342,8 +342,8 @@
  <string name="interval">Przerwa</string>
  <string name="off">Wyłącz</string>
  <string name="shortoff">Wył</string>
- <string name="streamingenabled">&quot; Przesył strumienia aktywny&quot;</string>
- <string name="streamingnotenabled">&quot; Przesył strumienia nieaktywny&quot;</string>
+ <string name="streamingenabled">" Przesył strumienia aktywny"</string>
+ <string name="streamingnotenabled">" Przesył strumienia nieaktywny"</string>
     <string name="everSensebroadcast">Transmisja EverSense</string>
  <string name="threshold">Próg</string>
  <string name="untouchablequestion">Pływająca glukoza ma być niedotykalna?</string>
@@ -361,7 +361,7 @@
 
    <string name="text">Tekst</string>
    <string name="arrow">Strzałka</string>
-   <string name="notalldata">OSTRZEŻENIE: Opcja &quot;Odbieraj&quot; nie jest włączona, ale niektóre typy danych nie są wysyłane.</string>
+   <string name="notalldata">OSTRZEŻENIE: Opcja "Odbieraj" nie jest włączona, ale niektóre typy danych nie są wysyłane.</string>
   <string name="libresetalllabels">Najpierw dla każdej etykiety określ, co należy z nią zrobić.</string>
    <string name="photo">Zeskanuj kod</string>
    <string name="photomessage">Zeskanuj kod kreskowy sensora Dexcom G7/ONE+ lub Sibionics GS1 albo kod QR urządzenia klona.</string>
@@ -370,7 +370,7 @@
    <string name="initializing">Uruchomienie</string> 
    <string name="startjuggluco">Juggluco uruchomione na telefonie?\n\nWIFI i Bluetooth włączone?</string> 
    <string name="connected">Połączono!</string> 
-   <string name="useclose">Przycisk zamknij</string> 
+   <string name="useclose">Przycisk "zamknij"</string> 
    <string name="alarmclock">\u23F0</string> 
    <string name="filesize">Rozmiar pliku</string> 
    <string name="logging">Zapisywanie logów</string> 
@@ -386,7 +386,7 @@
     <string name="chsibionics">Sibionics Chiny - com.sisensing.sisensingcgm</string>
     <string name="hematonix">Hematonix - com.sisensing.rusibionics</string>
     <string name="sibionics2">Sibionics 2/Split - com.sisensing.eco</string>
-    <string name="datapresent">&quot;Dane obecne: &quot;</string>
+    <string name="datapresent">"Dane obecne: "</string>
     <string name="overwrite">Nadpisać?</string>
     <string name="autoqr">Auto QR</string>
     <string name="autoqrmessage">Prześlij dane z tego telefonu do innego telefonu w sieci domowej. Naciśnięcie przycisku OK spowoduje wygenerowanie połączenia na tym telefonie i wyświetlenie kodu QR, który można zeskanować za pomocą innego urządzenia z systemem Android. Zeskanowanie kodu QR za pomocą lewego menu→Zdjęcie na drugim telefonie spowoduje wygenerowanie połączenia, dzięki któremu telefon będzie odbierał wszystkie dane z tego telefonu.</string>
@@ -394,14 +394,14 @@
     <string name="googlescan">Skanowanie Google</string>
     <string name="usedweight">UWAGA: waga (%.1f) nie 0</string>
 
- <string name="verylowglucose">&quot; Poziom bardzo NISKI!!&quot;</string>
- <string name="veryhighglucose">&quot; Poziom bardzo WYSOKI!&quot;</string>
+ <string name="verylowglucose">" Poziom bardzo NISKI!!"</string>
+ <string name="veryhighglucose">" Poziom bardzo WYSOKI!"</string>
 
- <string name="verylowglucoseshort">&quot; HIPOGLIKEMIA!!&quot;</string>
- <string name="veryhighglucoseshort">&quot; HIPERGLIKEMIA!!&quot;</string>
+ <string name="verylowglucoseshort">" HIPOGLIKEMIA!!"</string>
+ <string name="veryhighglucoseshort">" HIPERGLIKEMIA!!"</string>
 
- <string name="prelowglucose">&quot; SPADEK glikemii!&quot;</string>
- <string name="prehighglucose">&quot; WZROST glikemii!&quot;</string>
+ <string name="prelowglucose">" SPADEK glikemii!"</string>
+ <string name="prehighglucose">" WZROST glikemii!"</string>
 
  <string name="verylowglucosealarm">Alarm dla bardzo niskiego poziomu glikemii</string>
  <string name="veryhighglucosealarm">Alarm dla bardzo wysokiego poziomu glikemii</string>
@@ -409,12 +409,12 @@
  <string name="prelowglucosealarm">Alarm dla spadku glikemii poniżej poziomu</string>
  <string name="prehighglucosealarm">Alarm dla wzrostu glikemii powyżej poziomu</string>
     <string name="schedules">Harmonogramy</string>
-    <string name="profile">&quot;Profil &quot;</string>
+    <string name="profile">"Profil "</string>
  <string name="lossofsignal">Utrata sygnału</string>
  <string name="valuenotification">Powiadomienie o wartości</string>
  <string name="nothing"></string>
  <string name="scantranstitle">Zeskanuj kod kreskowy NADAJNIKA</string>
- <string name="scantransmessage">Kod kreskowy sensora Sibionics 2 został pomyślnie zeskanowany. \nZeskanuj teraz kod kreskowy nadajnika.&quot;</string>
+ <string name="scantransmessage">Kod kreskowy sensora Sibionics 2 został pomyślnie zeskanowany. \nZeskanuj teraz kod kreskowy nadajnika."</string>
  <string name="mirrorscansucces">Pomyślnie dodano połączenie do lewego środkowego menu→Klonowanie.</string>
  <string name="resettitle">Zresetuj</string>
  <string name="resetmessage">Czyści pamięć nadajnika. Należy nacisnąć przed użyciem nowego sensora w już używanym nadajniku.</string>
@@ -433,13 +433,13 @@
  <string name="allvalues">Wszystkie wartości</string>
  <string name="writedown">Zapisz!</string>
  <string name="switchtowatch">Przełącz</string>
- <string name="last">&quot;Ostatni: &quot;</string>
- <string name="bloodafter">&quot;Dodaj tylko odczyty glukozy z okresu po: &quot;</string>
- <string name="specifyblood">&quot;Najpierw wybierz etykietę dla wyniku poziomu glukozy we krwi&quot;</string>
- <string name="meterlist">&quot;Glukometry&quot;</string>
- <string name="finddevices">&quot;Wyszukaj urządzenia&quot;</string>
- <string name="nonewdata">&quot;Brak nowych danych&quot;</string>
- <string name="newdata">&quot;Nowe dane&quot;</string>
+ <string name="last">"Ostatni: "</string>
+ <string name="bloodafter">"Dodaj tylko odczyty glukozy z okresu po: "</string>
+ <string name="specifyblood">"Najpierw wybierz etykietę dla wyniku poziomu glukozy we krwi"</string>
+ <string name="meterlist">"Glukometry"</string>
+ <string name="finddevices">"Wyszukaj urządzenia"</string>
+ <string name="nonewdata">"Brak nowych danych"</string>
+ <string name="newdata">"Nowe dane"</string>
 <string name="isconnected">Połączony</string> 
 <string name="isdisconnected">Odłączony</string> 
 <string name="phone">telefon</string>
