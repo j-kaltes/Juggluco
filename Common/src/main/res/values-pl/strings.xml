@@ -77,7 +77,7 @@
  <string name="unit">&quot;Jednostka: &quot;</string>
  <string name="glucoseaxisleft">Oś glukozy po LEWEJ</string>
  <string name="startsapp">Skanowanie uruchamia aplikację</string>
- <string name="patchedlibrebroadcast">Wysyłaj do xDrip</string>
+ <string name="patchedlibrebroadcast">Patched Libre</string>
  <string name="disablecamerakey">Wyłącz przycisk aparatu</string>
  <string name="invertscreen">Odwróć ekran</string>
  <string name="nfcsound">Dźwięk NFC</string>
@@ -169,9 +169,9 @@
  <string name="withoutsensor">Bez sensora</string>
  <string name="wronglibrary">Biblioteka nie działa prawidłowo, spróbuj innej</string>
  <string name="installedlibrary">Zainstalowana biblioteka</string>
- <string name="cantextract">Nie można wyodrębnić %s, spróbuj innego apk</string>
- <string name="connectwithsensor">Działania w celu podłączenia z sensorem</string>
- <string name="exchangedata">Działania w celu przesyłania danych</string>
+ <string name="cantextract">Nie można wyodrębnić %s, spróbuj innego pliku apk</string>
+ <string name="connectwithsensor">Łączenie z sensorem</string>
+ <string name="exchangedata">Przesył danychh</string>
  <string name="nonewvalue">&quot;Brak nowej wartości od &quot;</string>
  <string name="lowglucose">&quot; Hipoglikemia!&quot;</string>
  <string name="highglucose">&quot; Hiperglikemia!&quot;</string>
@@ -197,7 +197,7 @@
     <string name="multiply">Pomnóż przez:</string>
     <string name="rapidinsulin">Insulina szybkodziałająca</string>
  <string name="longinsulin">Insulina długodziałająca</string>
-    <string name="comments">Uwagi</string>
+    <string name="comments">Notatki</string>
  <string name="dontsend">Nie wysyłaj</string>
  <string name="sendamounts">Wysyłaj wartości</string>
  <string name="resendquestion">Przesłać dane ponownie?</string>
@@ -209,8 +209,8 @@
  <string name="wifi">Wifi</string>
  <string name="heartrate">Tętno</string>
  <string name="xdripbroadcast">Transm. jak z xDrip</string>
- <string name="sensorpermission">Uprawnienie do dostępu do czujników</string>
- <string name="sensorpermissionmessage">potrzebne do wyświetlania tętna. Ustaw je w Ustawieniach urządzenia, Aplikacje, Uprawnienia, Juggluco</string>
+ <string name="sensorpermission">Uprawnienie do dostępu do czujników potrzebne do wyświetlania tętna.</string>
+ <string name="sensorpermissionmessage">Ustaw je w Ustawieniach urządzenia, Aplikacje, Uprawnienia, Juggluco</string>
  <string name="floatglucose">Pływ. gluk.</string>
  <string name="floatglucoseshort">@string/floatglucose</string>
 
@@ -334,8 +334,8 @@
     <string name="sendfrom">&quot;Wysyłaj od: &quot;</string>
  <string name="changestartbutton">Zmień początek</string>
  <string name="floatjuggluco">Wyżej</string>
- <string name="uploader">Uploader</string>
- <string name="upload">Przesył do NS</string>
+ <string name="uploader">Przesył do NS</string>
+ <string name="upload">Prześlij</string>
  <string name="sibionics">Sibionics</string>
  <string name="mmolL">mmol/L</string>
  <string name="mgdL">mg/dL</string>
@@ -368,7 +368,7 @@
    <string name="exchanges">Przesył danych</string>
    <string name="dexfuture">Przewidywanie (Dexcom)</string>
    <string name="initializing">Uruchomienie</string> 
-   <string name="startjuggluco">Juggluco uruchomione na telefonie? WIFI i Bluetooth włączone?</string> 
+   <string name="startjuggluco">Juggluco uruchomione na telefonie?\n\nWIFI i Bluetooth włączone?</string> 
    <string name="connected">Połączono!</string> 
    <string name="useclose">Przycisk zamknij</string> 
    <string name="alarmclock">\u23F0</string> 
