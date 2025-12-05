@@ -1760,7 +1760,7 @@ dataonlyptr  getfromfile(crypt_t *pass,Connect *connect, std::string_view filena
         LOGAR("GLU:  !noacksendcommand");
         return dataonlyptr(nullptr); 
         }
-    return connect->receivedataonly(pass, asklen);
+    return connect->receivedataonly_s(pass, asklen);
 
     };
 
@@ -1857,10 +1857,10 @@ bool setbackuptime(crypt_t *pass,Connect *connect,int ind,uint32_t starttime) {
             uint32_t scanstart=
 #endif
             getinfo()->update[ind].scanstart=(scantime<starttime)?scanend:getbackuptimescan(starttime);
-            LOGGER("GLU: scanstart=%d scancount=%d\n",scanstart,scanend);
+            LOGGER("GLU: ind=%d scanstart=%d scancount=%d\n",ind,scanstart,scanend);
             }
         else {
-            LOGGER("GLU scanstart=%d\n",getinfo()->update[ind].scanstart);
+            LOGGER("GLU ind=%d scanstart=%d\n",ind,getinfo()->update[ind].scanstart);
             }
         if(getinfo()->update[ind].histstart==0) { //TODO why only when it is zero?
         //Why not just the from the position with that time here?
@@ -1873,10 +1873,10 @@ bool setbackuptime(crypt_t *pass,Connect *connect,int ind,uint32_t starttime) {
 #endif
             getinfo()->update[ind].histstart= (histpos=posearlier(histend,starttime)>=0)?histpos:getbackuptimehistory(starttime);
 
-            LOGGER("GLU: hist start=%d endhistory=%d\n",histstart,histend);
+            LOGGER("GLU: ind=%d hist start=%d endhistory=%d\n",ind,histstart,histend);
             }
         else {
-            LOGGER("GLU histstart=%d\n",getinfo()->update[ind].histstart);
+            LOGGER("GLU ind=%d histstart=%d\n",ind,getinfo()->update[ind].histstart);
             }
         if(getinfo()->update[ind].streamstart==0) {
 #ifndef NOLOG
@@ -1886,10 +1886,10 @@ bool setbackuptime(crypt_t *pass,Connect *connect,int ind,uint32_t starttime) {
             uint32_t streamstart=
 #endif
             getinfo()->update[ind].streamstart=getbackuptimestream(starttime);
-            LOGGER("GLU: %s streamstart=%d streamend=%d\n", showsensorname().data(),streamstart,streamend);
+            LOGGER("GLU: ind=%d %s streamstart=%d streamend=%d\n", ind,showsensorname().data(),streamstart,streamend);
             }
         else {
-            LOGGER("GLU: %s streamstart=%d\n", showsensorname().data(),getinfo()->update[ind].streamstart);
+            LOGGER("GLU: ind=%d  %s streamstart=%d\n",ind, showsensorname().data(),getinfo()->update[ind].streamstart);
             }
         }
     return true;
@@ -2020,11 +2020,11 @@ int updatestream(crypt_t *pass,Connect *connect,int ind,int sensindex,int sendsc
 #ifndef NOLOG
         const struct ScanData *fn=startstreambuf+streamstart;
         time_t tim=fn->t;
-        LOGGER("GLU: streamstart=%d streamend=%d %s %.1f (%d) dowith=%d %s",streamstart,streamend,polluit.data(),fn->g/convfactordL,fn->g,cmd,ctime(&tim));
+        LOGGER("GLU: ind=%d streamstart=%d streamend=%d %s %.1f (%d) dowith=%d %s",ind,streamstart,streamend,polluit.data(),fn->g/convfactordL,fn->g,cmd,ctime(&tim));
 #endif
 
         if(!connect->senddata(pass,streamstart,startstreambuf+streamstart,startstreambuf+streamend,polluit)) {
-            LOGSTRING("GLU: senddata polls.dat failed\n");
+            LOGGER("GLU: ind=%d senddata %s failed\n",ind,polluit.data());
             return 0;
             }
 
@@ -2121,7 +2121,7 @@ int updatestream(crypt_t *pass,Connect *connect,int ind,int sensindex,int sendsc
             }
 
         if(!getinfo()->update[ind].changedstreamstart) {
-            LOGGER("streamstart=%d\n",streamend);
+            LOGGER("ind=%d updatestream new streamstart=%d\n",ind,streamend);
             getinfo()->update[ind].streamstart=streamend;
 
             }

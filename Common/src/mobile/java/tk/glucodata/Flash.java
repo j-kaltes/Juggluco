@@ -62,7 +62,7 @@ static private final String LOG_ID="Flash";
             }
             catch(Throwable e) {
 		       mCamera=null;
-                    e.printStackTrace();
+               Log.stack(LOG_ID,"oldflash",e);
             }
         }
        @SuppressWarnings("deprecation")
@@ -78,7 +78,7 @@ static private final String LOG_ID="Flash";
                 mCamera.setParameters(parameters);
                 mCamera.startPreview();
             }catch (Throwable e) {
-               e.printStackTrace();
+                Log.stack(LOG_ID,"on",e);
             }
         }
 
@@ -96,7 +96,7 @@ static private final String LOG_ID="Flash";
                 mCamera.setParameters(parameters);
                 mCamera.stopPreview();
             } catch (Throwable e) {
-                e.printStackTrace();
+                Log.stack(LOG_ID,"off",e);
             }
         }
 
@@ -141,8 +141,8 @@ static    class flash23 implements Flasher {
                     }
 
                 }
-            } catch (CameraAccessException e) {
-                    e.printStackTrace();
+            } catch (Throwable e) {
+                    Log.stack(LOG_ID,"flash23",e);
             }
         }
         @RequiresApi(api = Build.VERSION_CODES.M)
@@ -157,7 +157,7 @@ static    class flash23 implements Flasher {
 		 	}
             }
             catch(Throwable e) {
-                    e.printStackTrace();
+                    Log.stack(LOG_ID,"set",e);
             }
         }
         @RequiresApi(api = Build.VERSION_CODES.M)
@@ -184,7 +184,7 @@ static public boolean hasFlash(Context context) {
         }
 	}
 	catch(Throwable e) {
-            e.printStackTrace();
+         Log.stack(LOG_ID,"hasFlash",e);
             return false;
 		}
     }

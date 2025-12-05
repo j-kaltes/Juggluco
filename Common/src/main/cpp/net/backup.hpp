@@ -78,11 +78,13 @@ struct arcastdeleter { // deleter
 typedef std::unique_ptr<dataonly,arcastdeleter<4,dataonly>>  dataonlyptr;
 //dataonlyptr receivedatanopass(int sock,const int len); 
 #include "aligner.hpp"
+/*
 template <int nr>
 using unique_al= std::unique_ptr<uint8_t[],ardeleter<nr,uint8_t>> ;
 unique_al<4> receivedata(int sock, crypt_t *ctx,const int len) ;
 
 dataonlyptr receivedataonly(int sock, crypt_t *ctx,const int len) ;
+*/
 bool receiveractive();
 constexpr const int streamupdatebit=1<<15;
 constexpr const int starthistoryupdate=1<<14;

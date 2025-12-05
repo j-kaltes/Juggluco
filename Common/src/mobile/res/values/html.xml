@@ -20,11 +20,7 @@ default sound.</p>
 Select a ringtone. On some Samsung phone the preinstalled ringtone
 picker app crashes, so you have to install a different ringtone app
 that can be used by other apps, for example:
-<a href="https://play.google.com/store/apps/details?id=com.centralparkapps.ringo.ringtones">https://play.google.com/store/apps/details?id=com.centralparkapps.ringo.ringtones</a>,
-<a href="https://apkcombo.com/ringtone-picker/de.kumpewo.ringtones">https://apkcombo.com/ringtone-picker/de.kumpewo.ringtones</a>
-or
-<a href="https://www.apkmonk.com/app/com.hlidskialf.android.tonepicker">https://www.apkmonk.com/app/com.hlidskialf.android.tonepicker</a>
-</p>
+<a href="https://play.google.com/store/apps/details?id=com.centralparkapps.ringo.ringtones">https://play.google.com/store/apps/details?id=com.centralparkapps.ringo.ringtones</a> or <a href="https://apkcombo.com/ringtone-picker/de.kumpewo.ringtones">https://apkcombo.com/ringtone-picker/de.kumpewo.ringtones</a></p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>Vibrate</b>:
 Vibrate</p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>Disturb</b>: If
@@ -184,7 +180,7 @@ pointer.</p>
 <string name="addconnection" >
 <![CDATA[
 <p><a href="https://www.juggluco.nl/Jugglucohelp/be/addconnection.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/addconnection.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/addconnection.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/addconnection.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/addconnection.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/addconnection.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/addconnection.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/addconnection.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/sv/addconnection.html">sv</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/addconnection.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/addconnection.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/addconnection.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/addconnection.html?lang=en">en</a>&emsp;&emsp;</p><h1>Add connection</h1>
-<p style="line-height: 100%; margin-bottom: 0in">Specify a connection
+<p style="line-height: 100%; margin-bottom: 0cm">Specify a connection
 with another instance of Juggluco. Juggluco on one device sends via
 IP/TCP data to a Juggluco on another device. To establish a
 connection, one of the Juggluco\'s has to listen on a port and the
@@ -199,71 +195,72 @@ otherwise leave &quot;<b>Both</b>&quot; checked. The Juggluco on the
 other side should specify <i>Passive only </i>if you select here
 <i>Active only</i> and <i>Active only</i> if you select here <i>Passive</i>
 <i>only</i> and <i>Both</i> if you select here <i>Both</i>.</p>
-<p style="line-height: 100%; margin-bottom: 0in">If this instance of
+<p style="line-height: 100%; margin-bottom: 0cm">If this instance of
 Juggluco actively makes contact, you should specify the IP(s) it
 should contact with. If that host has multiple IPs, you specify more
 than one; for example when two devices are sometimes connected via a
 home network and sometimes directly as portable hotspot. 
 </p>
-<p style="line-height: 100%; margin-bottom: 0in"><b>WARNING: Never
+<p style="line-height: 100%; margin-bottom: 0cm"><b>WARNING: Never
 specify the IPs of multiple devices, in that case they will each
 receive only part of the data. </b>
 </p>
-<p style="line-height: 100%; margin-bottom: 0in"><b>hostname</b>:
+<p style="line-height: 100%; margin-bottom: 0cm"><b>hostname</b>:
 Specify one hostname instead of IPs. This will make the connection
 dependent on a nameserver thus slower and under influence of
 disruption of the nameserver connection. This should only be turned
 on in case you can’t get configure a static IP and the hostname is
 automatically assigned to the dynamic IP.</p>
-<p style="line-height: 100%; margin-bottom: 0in">In all cases except
+<p style="line-height: 100%; margin-bottom: 0cm">In all cases except
 \'Active only\', you can select \'<b>Detect</b>\'; in this case Juggluco
 saves the first IP contacting Juggluco as the IP of the other side.
 Verifying if the right device is making contact can in two ways:
 Select \'<b>Test IP</b>\' to test the IP. If you select <b>Test Label</b>,
 a contact is only established if both sides have specified the same
 label.</p>
-<p style="line-height: 100%; margin-bottom: 0in">Select <b>receive
+<p style="line-height: 100%; margin-bottom: 0cm">Select <b>receive
 from</b> if you want this app to function as mirror app. 
 </p>
-<p style="line-height: 100%; margin-bottom: 0in">If you want this
+<p style="line-height: 100%; margin-bottom: 0cm">If you want this
 device to be the <b>sender</b> of data, you have to specify which
 data to send.</p>
-<p style="line-height: 100%; margin-bottom: 0in"><b>Amounts</b>:
+<p style="line-height: 100%; margin-bottom: 0cm"><b>Amounts</b>:
 dose, food and sport data you have specified.</p>
-<p style="line-height: 100%; margin-bottom: 0in"><b>Scans</b>: data
+<p style="line-height: 100%; margin-bottom: 0cm"><b>Scans</b>: data
 received by scanning the sensor (scans and history under Libre2,
 under Libre3 only data needed to access the sensor via Bluetooth).</p>
-<p style="line-height: 100%; margin-bottom: 0in"><b>Stream</b>: the
+<p style="line-height: 100%; margin-bottom: 0cm"><b>Stream</b>: the
 data received by Bluetooth. Under Libre3 this includes history data.</p>
-<p style="line-height: 100%; margin-bottom: 0in">Sometimes some data
+<p style="line-height: 100%; margin-bottom: 0cm">Sometimes some data
 is already present on the receiving device. You can specify until
 when this data is present:</p>
-<p style="line-height: 100%; margin-bottom: 0in"><i>Start: </i>no
+<p style="line-height: 100%; margin-bottom: 0cm"><i>Start: </i>no
 data present</p>
-<p style="line-height: 100%; margin-bottom: 0in"><i>Now: </i>all data
+<p style="line-height: 100%; margin-bottom: 0cm"><i>Now: </i>all data
 present</p>
-<p style="line-height: 100%; margin-bottom: 0in">Or a specific date
+<p style="line-height: 100%; margin-bottom: 0cm">Or a specific date
 determined by the begin position of the screen.</p>
-<p style="line-height: 100%; margin-bottom: 0in">When a data source
+<p style="line-height: 100%; margin-bottom: 0cm">When a data source
 is added to an existing connection, the start date determined only
 the added data source. For example if Scans and Streams were already
 sent to the host, and Amounts are now added, the start date only
-determines the Amounts to send.
+determines the Amounts to send. 
 </p>
-<p style="line-height: 100%; margin-bottom: 0in">In case two devices
+<p style="line-height: 100%; margin-bottom: 0cm">In case two devices
 are connected via an insecure connection, data can be signed and
 encrypted by specifying the same (maximal) 16-character <b>password</b>
 on both sides of the connection. Select <b>Save</b> to save what you
 have specified. <b>Delete</b> will delete this connection
 specification.</p>
-<p><b><a href="https://www.juggluco.nl/Jugglucohelp/QRmirror.html">QR</a></b>: Create the other side of the connection by scanning a QR code.</p>
-<p style="line-height: 100%; margin-bottom: 0in">In the simplest
+<p><a href="https://www.juggluco.nl/Jugglucohelp/QRmirror.html"><b>QR</b></a>:
+Create the other side of the connection by scanning a QR code.</p>
+<p style="line-height: 100%; margin-bottom: 0cm">In the simplest
 situation all connections belong to your home network, so you can use
 local IPs. You can also connect over the internet via Wi-Fi, in that
 case you should consult you modem manual on how to forward an
 external port to an IP and port on you home network. 
 </p>
-<p style="line-height: 100%; margin-bottom: 0in">Two smartphones
+<p style="line-height: 100%; margin-bottom: 0cm">Two smartphones
 connected via a mobile data connection over internet can directly
 connect with each other, if one of them can listen on a network port.
 If both can\'t (for example if neither has an individual IP), they can
@@ -273,11 +270,11 @@ connected to the internet via a modem. Another possibility is to run
 a command line program belonging to Juggluco on a computer (e.g. your
 PC or Amazon AWS):
 <a href="https://www.juggluco.nl/Juggluco/cmdline/index.html">https://www.juggluco.nl/Juggluco/cmdline/index.html</a></p>
-<p style="line-height: 100%; margin-bottom: 0in">Port forwarding
+<p style="line-height: 100%; margin-bottom: 0cm">Port forwarding
 tutorials:</p>
-<p style="line-height: 100%; margin-bottom: 0in"><a href="https://portforward.com/how-to-port-forward/">https://portforward.com/how-to-port-forward/</a></p>
-<p style="line-height: 100%; margin-bottom: 0in"><a href="https://stevessmarthomeguide.com/understanding-port-forwarding/">https://stevessmarthomeguide.com/understanding-port-forwarding/</a></p>
-<p style="line-height: 100%; margin-bottom: 0in">It is possible to
+<p style="line-height: 100%; margin-bottom: 0cm"><a href="https://portforward.com/how-to-port-forward/">https://portforward.com/how-to-port-forward/</a></p>
+<p style="line-height: 100%; margin-bottom: 0cm"><a href="https://stevessmarthomeguide.com/understanding-port-forwarding/">https://stevessmarthomeguide.com/understanding-port-forwarding/</a></p>
+<p style="line-height: 100%; margin-bottom: 0cm">It is possible to
 receive glucose values via Bluetooth on a device without NFC (see
 <a href="https://www.juggluco.nl/Juggluco/mirror">https://www.juggluco.nl/Juggluco/mirror</a>):
 Initialize the sensor via NFC on the NFC device and then send the
@@ -293,8 +290,26 @@ the Stream data back to the NFC device and the scan data back to the
 non-NFC device. Otherwise, the data will get out of sync leading to
 old authentication data being used or new data being overwritten with
 old data.</p>
-<p style="line-height: 100%; margin-bottom: 0in">The Amounts data is
+<p style="line-height: 100%; margin-bottom: 0cm">The Amounts data is
 totally independent.</p>
+<h2 class="western">ICE</h2>
+<p>A totally different way to form a connection is ICE (Interactive
+Connectivity Establishment). It makes it possible to form a
+connection between two exemplars of Juggluco without doing any port
+forwarding. In most cases two phones get a direct connection without
+any server in between. In some instances this is not possible and is
+a TURN server needed. A TURN server can be specified in left middle
+menu→Mirror→<a href="https://www.juggluco.nl/Jugglucohelp/turnservers.html">TURN
+server</a>. In other cases servers are only needed to bring the two
+phones together. For this, you need to specify a “<b>ICE label</b>”
+that is only shared by both sides of the connection, but not used by
+another other user of Juggluco. One side of the connection should
+specify <b>0</b> the other <b>1</b>. Also, a <b>label</b> needs to be
+shared by both sides of the connection, but this has only to be
+unique on these phones. Instead of specifying everything here, you
+can use left middle menu→Mirror→<a href="https://www.juggluco.nl/Jugglucohelp/autoqrmessage.html">AutoQR</a>
+to automatically generate a connection and scan a QR code with the
+phone at the other side of the connection.</p>
 <h2 class="western">Network problems</h2>
 <p>A strict complementary specification on both sides of the
 connection is necessary. One simple omission can make data
@@ -1020,6 +1035,8 @@ have again do one or all of the following one or multiple times:</p>
 	<li><p style="line-height: 100%; margin-bottom: 0in">Reboot the
 	phone.</p></li>
 </ul>
+<p>
+I had the following problem: 6 days after updating Garmin Connect to 5.19, Kerfstok only received messages from Juggluco, but Juggluco didn’t receive any message from Kerfstok. Status information was not available and Reinit didn’t start Kerfstok. Rebooting the phone, Kerfstok or force stopping Garmin Connect didn’t solve it. After installing Garmin Connect 5.18 it worked again. Thereafter, I updated to Connect 5.19 and it continued to work. What was the problem?</p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>Refresh</b>
 rewrites this dialog with new information (e.g. after Reinit or
 Sync).</p>
@@ -2778,27 +2795,25 @@ view information.</p>
 </string>
 <string name="QRmirror" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/de/QRmirror.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/QRmirror.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/QRmirror.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/QRmirror.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/QRmirror.html?lang=en">en</a>&emsp;&emsp;</p>
-<h1>QR mirror</h1>
-<p lang="en-US" style="line-height: 100%; margin-bottom: 0in">You can
-configure the other side of a mirror connection by scanning a QR code
-with left menu → Photo on the other phone.</p>
-<p lang="en-US" style="line-height: 100%; margin-bottom: 0in">With
-left middle menu→Mirror→Auto QR, both sides of the connection are
+<p><a href="https://www.juggluco.nl/Jugglucohelp/de/QRmirror.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/QRmirror.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/QRmirror.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/QRmirror.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/QRmirror.html?lang=en">en</a>&emsp;&emsp;</p><h1>QR mirror</h1>
+<p style="line-height: 100%; margin-bottom: 0cm">You can configure
+the other side of a mirror connection by scanning a QR code with left
+menu → Photo on the other phone.</p>
+<p style="line-height: 100%; margin-bottom: 0cm">With left middle
+menu→Mirror→Auto QR, both sides of the connection are
 automatically generated. You can use it to send all data from this
 phone to another phone.</p>
-<p lang="en-US" style="line-height: 100%; margin-bottom: 0in">This
-way accidentally a lot of connections can be generated. You can
-delete them by touching it and pressing <i>Modify</i> and then
-<i>Delete</i>.</p>
-<p lang="en-US" style="line-height: 100%; margin-bottom: 0in">Use
-left middle menu→Mirror→Add Connection → QR to manually
-configure one side of the connection on one phone and configure the
-other side by scanning the QR code.</p>
-<p style="line-height: 100%; margin-bottom: 0in"><br/>
+<p style="line-height: 100%; margin-bottom: 0cm">This way
+accidentally a lot of connections can be generated. You can delete
+them by touching it and pressing <i>Modify</i> and then <i>Delete</i>.</p>
+<p style="line-height: 100%; margin-bottom: 0cm">Use left middle
+menu→Mirror→Add Connection → QR to manually configure one side
+of the connection on one phone and configure the other side by
+scanning the QR code.</p>
+<p style="line-height: 100%; margin-bottom: 0cm"><br/>
 
 </p>
-<p style="line-height: 100%; margin-bottom: 0in"><br/>
+<p style="line-height: 100%; margin-bottom: 0cm"><br/>
 
 </p>
 ]]>
@@ -3032,6 +3047,78 @@ not use it.</p>
 <p>If you have a Contour next ONE glucose meter, you can also scan
 the data matrix with left menu→Photo instead of selecting it from
 this list.</p>
+]]>
+</string>
+<string name="turnservers" >
+<![CDATA[
+<p><a href="https://www.juggluco.nl/Jugglucohelp/de/turnservers.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/turnservers.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/turnservers.html?lang=en">en</a>&emsp;&emsp;</p><p align="center" style="line-height: 100%; margin-top: 0.17in; margin-bottom: 0.08in; page-break-after: avoid">
+<font face="Liberation Sans, sans-serif"><font size="6" style="font-size: 28pt"><b>Turn
+server</b></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0in">An ICE connection
+will be used when generating an autoQR connection over the internet
+or when setting ICE when manually specifying a connection 
+</p>
+<p style="line-height: 100%; margin-bottom: 0in">When Interactive
+Connectivity Establishment (ICE) fails to form a direct connection
+between two instance of Juggluco, a turn server can be used to relay
+between them. 
+</p>
+<p style="line-height: 100%; margin-bottom: 0in">In this screen, you
+can specify such a turn server. When you don’t specify anything,
+some default servers are used, but they could possibly not handle all
+traffic and are restricted in the total amount of traffic allowed. So
+to be certain of a fast and reliable connection, you can better
+specify another Turn server.</p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+<p style="line-height: 100%; margin-bottom: 0in">Free turn servers:</p>
+<p style="line-height: 100%; margin-bottom: 0in"><a href="https://www.metered.ca/tools/openrelay/">https://www.metered.ca/tools/openrelay</a></p>
+<p style="line-height: 100%; margin-bottom: 0in"><a href="https://www.expressturn.com/">https://www.expressturn.com</a></p>
+<p style="line-height: 100%; margin-bottom: 0in"><a href="https://xirsys.com/">https://xirsys.com</a></p>
+<p style="line-height: 100%; margin-bottom: 0in"><a href="https://www.twilio.com/en-us/stun-turn">https://www.twilio.com/en-us/stun-turn</a></p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+<p style="line-height: 100%; margin-bottom: 0in"><br/>
+
+</p>
+]]>
+</string>
+<string name="autoqrmessage" >
+<![CDATA[
+<p><a href="https://www.juggluco.nl/Jugglucohelp/de/autoqrmessage.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/autoqrmessage.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/autoqrmessage.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/autoqrmessage.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/autoqrmessage.html?lang=en">en</a>&emsp;&emsp;</p><h1>AutoQR</h1>
+<p>Generates a connection on this phone and display a QR code that
+can be scanned by another Android device. Scanning the QR code with
+left menu→Photo on the other phone will generate a connection, by
+which it will receive or send all data from or to this phone.</p>
+<p style="line-height: 100%; margin-bottom: 0cm"><b>Send to</b>: Send
+from this phone to another phone. This phone contains the data, the
+phone that scans the QR will receive the data via this connection.</p>
+<p style="line-height: 100%; margin-bottom: 0cm"><b>Receive from</b>:
+The current phone receives the data from the other phone that scans
+the QR code.</p>
+<p style="line-height: 100%; margin-bottom: 0cm"><b>Home net</b>:
+Generate a connection that is only usable when both phones are
+connected to the current modem.</p>
+<p style="line-height: 100%; margin-bottom: 0cm"><span lang="en-US"><b>Internet</b></span><span lang="en-US">:
+Generate a connection that is also usable over the internet. This
+makes use of ICE (Interactive Connectivity Establishment). Sometimes
+a direct connection is impossible, in that case a TURN-server is
+used. You can specify a TURN-server in left middle menu→Mirror→<a href="https://www.juggluco.nl/Jugglucohelp/turnservers.html">Turn
+server</a>.</span></p>
+<p style="line-height: 100%; margin-bottom: 0cm"><br/>
+
+</p>
+<p style="line-height: 100%; margin-bottom: 0cm"><br/>
+
+</p>
 ]]>
 </string>
 </resources>

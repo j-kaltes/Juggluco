@@ -354,9 +354,6 @@
     <string name="not">Nicht</string>
     <string name="datapresent">"Daten vorhanden: "</string>
 <string name="overwrite">Überschreiben?</string>
-  <string name="autoqrmessage">Daten von diesem Telefon an ein anderes Telefon in Ihrem Heimnetzwerk senden.
-Durch Drücken von „OK“ wird eine Verbindung auf diesem Telefon hergestellt und ein QR-Code angezeigt, der von einem anderen Android-Gerät gescannt werden kann. Durch Scannen des QR-Codes über das linke Menü → „Foto“ auf dem anderen Telefon wird eine Verbindung hergestellt, über die alle Daten von diesem Telefon empfangen werden.</string>
-
 <string name="usedweight">WARNUNG: Gewicht (%.1f) größer als 0</string>
 
 <string name="verylowglucose">" Sehr niedriger Glukose!"</string>
@@ -410,5 +407,14 @@ Durch Drücken von „OK“ wird eine Verbindung auf diesem Telefon hergestellt 
 <string name="directsensor">Direkte Sensor-</string>
 <string name="enternums">Mengen eingeben auf</string>
   <string name="connectionl">Verbindung</string>
+<string name="disconnectsensor">Bug</string>
+<string name="internet">Internet</string>
+<string name="homenet">Heimnetz</string>
+<string name="ICE">ICE</string>
+<string name="zero">0</string>
+<string name="one">1</string>
+<string name="icelabel">ICE label</string>
+<string name="username">Username</string>
+<string name="turnserver">Turn Server</string>
 </resources>
 

@@ -1,3 +1,23 @@
+/*      This file is part of Juggluco, an Android app to receive and display         */
+/*      glucose values from Freestyle Libre 2, Libre 3, Dexcom G7/ONE+,              */
+/*      Sibionics GS1Sb and Accu-Chek SmartGuide sensors.                            */
+/*                                                                                   */
+/*      Copyright (C) 2021 Jaap Korthals Altes <jaapkorthalsaltes@gmail.com>         */
+/*                                                                                   */
+/*      Juggluco is free software: you can redistribute it and/or modify             */
+/*      it under the terms of the GNU General Public License as published            */
+/*      by the Free Software Foundation, either version 3 of the License, or         */
+/*      (at your option) any later version.                                          */
+/*                                                                                   */
+/*      Juggluco is distributed in the hope that it will be useful, but              */
+/*      WITHOUT ANY WARRANTY; without even the implied warranty of                   */
+/*      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                         */
+/*      See the GNU General Public License for more details.                         */
+/*                                                                                   */
+/*      You should have received a copy of the GNU General Public License            */
+/*      along with Juggluco. If not, see <https://www.gnu.org/licenses/>.            */
+/*                                                                                   */
+/*      Fri Nov 21 11:08:14 CET 2025                                                 */
 
 
 #include <iostream>
@@ -10,6 +30,10 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <netdb.h>
+#include <netinet/in.h>
+#include <netinet/ip.h>
+#include <netinet/tcp.h>
+#include <sys/ioctl.h>
 
 #include <openssl/ssl.h>
 #include <openssl/x509.h>
@@ -24,12 +48,18 @@
 #include "inout.hpp"
 #include "strconcat.hpp"
 //#define MAIN 1
-
-//#define LOGGERHTTPS(...) LOGGER("HTTPS: " __VA_ARGS__)
-//#define LOGARHTTPS(...) LOGAR("HTTPS: " __VA_ARGS__)
-
+#define LOGHTTPS
+#ifdef LOGHTTPS
+#define LOGGERHTTPS(...) LOGGER("HTTPS: " __VA_ARGS__)
+#define LOGARHTTPS(...) LOGAR("HTTPS: " __VA_ARGS__)
+#define flerrorHTTPS(...) flerror("HTTPS: " __VA_ARGS__)
+#else
 #define LOGGERHTTPS(...) 
 #define LOGARHTTPS(...) 
+#define flerrorHTTPS(...) 
+#endif
+//#define LOGGERHTTPS(...) 
+//#define LOGARHTTPS(...) 
 
 using namespace std::literals;
 
@@ -39,6 +69,8 @@ using namespace std::literals;
 #endif
 
 #ifdef DLSYMS_SSL 
+#undef SSLv23_client_method
+#undef SSLv23_method
 typedef int (*SSL_verify_cb)(int preverify_ok, X509_STORE_CTX *x509_ctx);
 #include <dlfcn.h>
 extern void* opencrypto();
@@ -91,9 +123,13 @@ static bool doinitcryptofuncs() {
         }
     #include "sslsyms.h"
 
-    if(!TLS_client_methodptr)
-        TLS_client_methodptr=SSLv23_client_methodptr;
-   LOGARHTTPS("doinitcryptofuncs end");
+    if(!TLS_client_methodptr) {
+        if(SSLv23_client_methodptr)
+            TLS_client_methodptr=SSLv23_client_methodptr;
+        else
+            TLS_client_methodptr=SSLv23_methodptr;
+        }
+   LOGGERHTTPS("doinitcryptofuncs end TLS_client_methodptr=%p\n",TLS_client_methodptr);
     return true;
    }
 #include "cryptodefs.h"
@@ -101,6 +137,7 @@ static bool doinitcryptofuncs() {
 #endif
 
 static int logcallback(const char *str, size_t len, void *u) {
+    LOGGERHTTPS("logcallback(%.*s,%d,%p)\n",len,str,len,u );
     std::string *uit=(std::string *)u;
     uit->append(str,len);
     return 0;
@@ -108,10 +145,12 @@ static int logcallback(const char *str, size_t len, void *u) {
 
 
 std::string get_openssl_error_string() {
-    std::string uit;
-	ERR_print_errors_cb(logcallback,&uit);
+    std::string uit("");
+
+    LOGGERHTTPS("ERR_print_errors_cbptr=%p\n", ERR_print_errors_cb);
+    ERR_print_errors_cb(logcallback,&uit);
     return uit;
-	}
+    }
 // Load Android system CA certs (DER format) into the given X509_STORE
 static bool load_android_cacerts(SSL_CTX* ctx) {
 #ifndef READ_CACERTS
@@ -138,8 +177,57 @@ static bool load_android_cacerts(SSL_CTX* ctx) {
         }
 #endif
 }
+/*
+       int flag = 1;
+   setsockopt(sock, IPPROTO_TCP, TCP_NODELAY, &flag, sizeof(flag));
+   struct linger l = { .l_onoff = 0, .l_linger = 0 };
+   setsockopt(sock, SOL_SOCKET, SO_LINGER, &l, sizeof(l));
+*/
 
+static void sockopt(int new_fd) {
+//    LOGGER("sockopt(%d)\n",new_fd);
+       const int keepalive = 1;
+       if(setsockopt(new_fd, SOL_SOCKET, SO_KEEPALIVE, &keepalive, sizeof(keepalive)) < 0) {
+        flerror("setsockopt(%d,SO_KEEPALIVE, ) failed",new_fd);
+         }
+      int retalive=-4;
+    socklen_t retlen=sizeof(retalive);    
 
+       if(getsockopt(new_fd, SOL_SOCKET, SO_KEEPALIVE, &retalive, &retlen) < 0) {
+        flerror("getsockopt(%d,SO_KEEPALIVE, ) failed",new_fd);
+         }
+//    else LOGGER("KEEPALIVE=%d\n",retalive);
+       const int keepcnt = 1;
+    if(setsockopt(new_fd, IPPROTO_TCP, TCP_KEEPCNT, &keepcnt, sizeof(keepcnt))<0) {
+        flerror("setsockopt(%d,TCP_KEEPCNT ) failed",new_fd);
+        }
+    retlen=sizeof(retalive);    
+    if(getsockopt(new_fd, IPPROTO_TCP, TCP_KEEPCNT, &retalive, &retlen)<0) {
+        flerror("getsockopt(%d,TCP_KEEPCNT ) failed",new_fd);
+        }
+//       else LOGGER("KEEPCNT=%d\n",retalive);
+//       if(setsockopt(new_fd, IPPROTO_TCP, TCP_SYNCNT, keepcnt)<0)  {
+ //       flerror("setsockopt(%d,TCP_SYNCNT) failed",new_fd); }
+       const int keepidle = 10;
+       if(setsockopt(new_fd, IPPROTO_TCP, TCP_KEEPIDLE, &keepidle, sizeof(keepidle)) < 0) {
+        flerror("setsockopt(%d,TCP_KEEPIDLE, ) failed",new_fd);
+         }
+    retlen=sizeof(retalive);    
+
+       if(getsockopt(new_fd, IPPROTO_TCP, TCP_KEEPIDLE, &retalive, &retlen) < 0) {
+        flerror("getsockopt(%d,TCP_KEEPIDLE, ) failed",new_fd);
+         }
+//    else LOGGER("KEEPIDLE=%d\n",retalive);
+       const int keepintvl = 10;
+       if(setsockopt(new_fd, IPPROTO_TCP, TCP_KEEPINTVL, &keepintvl, sizeof(keepintvl)) < 0) {
+        flerror("setsockopt(%d,TCP_KEEPINTVL, ) failed",new_fd);
+         }
+    retlen=sizeof(retalive);    
+       if(getsockopt(new_fd, IPPROTO_TCP, TCP_KEEPINTVL, &retalive, &retlen) < 0) {
+        flerror("getsockopt(%d,TCP_KEEPINTVL, ) failed",new_fd);
+         }
+//    else LOGGER("KEEPINTVL=%d\n",retalive);
+     }
 
 // Create a TCP connection to host:port
 static int tcp_connect(const char *host, int port) {
@@ -152,7 +240,9 @@ static int tcp_connect(const char *host, int port) {
         return -1;
         }
     destruct _{[res]{ freeaddrinfo(res);}};
+    LOGARHTTPS("Before socket");
     int sock = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
+    LOGGERHTTPS("After socket sock=%d\n",sock);
     if(sock < 0) {
         lerror("socket");
         return -1;
@@ -162,6 +252,9 @@ static int tcp_connect(const char *host, int port) {
         close(sock);
         return -1;
        }
+    sockopt(sock);
+    int flag = 1;
+    setsockopt(sock, IPPROTO_TCP, TCP_NODELAY, &flag, sizeof(flag));
     return sock;
     }
 
@@ -172,7 +265,7 @@ static int tcp_connect(const char *host, int port) {
 #define SSL_CTRL_SET_TLSEXT_HOSTNAME            55
 static int SSL_set_tlsext_host_name2(const SSL *s, const char *name) {
     if(SSL_set_tlsext_host_nameptr)
-        return  SSL_set_tlsext_host_name(s, name) ;
+        return  SSL_set_tlsext_host_nameptr(s, name) ;
     return  SSL_ctrl((SSL*)s,SSL_CTRL_SET_TLSEXT_HOSTNAME,TLSEXT_NAMETYPE_host_name,(void *)name);
 
      }
@@ -198,6 +291,7 @@ static int SSL_set_tlsext_host_name2(const SSL *s, const char *name) {
              return contex;
              }
      ContextHTTPS::~ContextHTTPS() {
+        LOGARHTTPS("SSL_CTX_free(ctx)");
         SSL_CTX_free(ctx);
         }
 bool ContextHTTPS::initLibrary() {
@@ -313,6 +407,51 @@ static int SSLwritefull(SSL* ssl, const char *dataptr,const int buflen) {
     }
 */
 
+
+
+static void shutdowner(int sock,SSL* ssl) {
+   int flag = 1;
+   setsockopt(sock, IPPROTO_TCP, TCP_NODELAY, &flag, sizeof(flag));
+/*   struct linger l = { .l_onoff = 0, .l_linger = 0 };
+   setsockopt(sock, SOL_SOCKET, SO_LINGER, &l, sizeof(l)); */
+  for(int i=0;i<10;++i) { 
+       int outq = 0;
+        if(ioctl(sock, TIOCOUTQ, &outq) == 0) {
+            LOGGERHTTPS("SIOCOUTQ = %d bytes\n", outq);
+            if(outq==0)
+                break;
+            }
+        else {
+            flerrorHTTPS("ioctl(sock, TIOCOUTQ, &outq)): ");
+            break;
+            }
+       
+        usleep(500000);
+        }
+    /*
+    struct tcp_info ti;
+    socklen_t len = sizeof(ti);
+    if(getsockopt(sock, IPPROTO_TCP, TCP_INFO, &ti, &len) == 0) {
+        LOGGERHTTPS("tcpi_state=%u tcpi_retransmits=%u tcpi_rto=%u tcpi_snd_mss=%u tcpi_rtt=%u\n",ti.tcpi_state, ti.tcpi_retransmits, ti.tcpi_rto, ti.tcpi_snd_mss, ti.tcpi_rtt);
+        } */
+   for(int i=0;i<5;++i) {
+       int res=SSL_shutdown(ssl);
+       LOGGERHTTPS("SSL_shutdown=%d\n",res);
+       if(res) {
+           if(res==-1) {
+                unsigned long err;
+                while ((err = ERR_get_error()) != 0) {
+                    char buf[256];
+                    ERR_error_string_n(err, buf, sizeof(buf));
+                    LOGGERHTTPS("OpenSSL error: %s (0x%lx)\n", buf, err);
+                    }
+                }
+             break;
+             }
+         usleep(1000*500);
+         }
+      }
+
 std::pair<std::vector<char>,int> ContextHTTPS::request(const std::string_view host,int port,const std::string_view path,const std::string_view TYPE,const std::span<const char> input) {
     std::vector<char> uit;   
     int sock = tcp_connect(host.data(), port);
@@ -320,56 +459,49 @@ std::pair<std::vector<char>,int> ContextHTTPS::request(const std::string_view ho
         return {uit,-1};
     }
     SSL* ssl = SSL_new(ctx);
+    LOGGERHTTPS("after SSL_new(ctx)=%p\n",ssl);
+
     destruct _{[ssl,sock]{ 
-       SSL_shutdown(ssl);
-       SSL_free(ssl);
+       shutdowner(sock,ssl);
+       shutdown(sock,SHUT_RDWR);
        close(sock);
+       SSL_free(ssl);
+       LOGGERHTTPS("close(%d)\n",sock);
         }};
     SSL_set_fd(ssl, sock);
     SSL_set_tlsext_host_name2(ssl, host.data());  // SNI
 
-    if(SSL_connect(ssl) != 1) {
-       LOGGERHTTPS("SSL handshake failed: %s\n", get_openssl_error_string().data());
+    LOGARHTTPS("before SSL_connect");
+    auto conres=SSL_connect(ssl);
+    LOGGERHTTPS("after SSL_connect conres=%d\n",conres);
+    if(conres != 1) {
+       const std:: string mess=get_openssl_error_string();
+       LOGGERHTTPS("SSL handshake failed: %s\n", mess.c_str());
         return {uit,-1};
        }
-
-    LOGGERHTTPS("Connected with cipher: %s\n",SSL_get_cipher(ssl)) ;
-
-    // Verify certificate
     long verify_result = SSL_get_verify_result(ssl);
     if (verify_result != X509_V_OK) {
        LOGGERHTTPS("Certificate verification failed: %s\n", X509_verify_cert_error_string(verify_result)); 
-    } else {
-        LOGARHTTPS("Server certificate verified successfully!");
-    }
-
-    // Send a simple HTTPS request
-
-//    const char alivebuf[]{"\r\nConnection: Keep-Alive\r\nKeep-Alive: timeout=10, max=200\r\n\r\n"}; //Hangs in read and write
+    }; 
     const char closebuf[]{"\r\nConnection: close\r\n\r\n"};
-    strconcat req {"",TYPE , " "sv,path," HTTP/1.1\r\nHost: "sv , host , "\r\nContent-Length: "sv,std::to_string(input.size()), closebuf};
+    strconcat req {""sv,TYPE , " "sv,path," HTTP/1.1\r\nHost: "sv , host , "\r\nContent-Length: "sv,std::to_string(input.size()), closebuf};
 
-//    strconcat req {"",TYPE , " "sv,path," HTTP/1.1\r\nHost: "sv , host , "\r\nContent-Length: "sv,std::to_string(input.size()), "\r\nConnection: close\r\n\r\n"sv};
-    char *request=req.data();
-    LOGGERHTTPS("connect %s\n",request);
+    LOGGERHTTPS("connect %.*s %.*s\n",TYPE.size(),TYPE.data(),path.size(),path.data());
+    const char *request=req.data();
    int requestsize=req.size();
-    constexpr const int maxdata=  16*1024;
+    const int maxdata=  std::max((int)(input.size()+requestsize),16*1024);
     Mmap<char> data(maxdata);
     char *dataptr=data.data();
     memcpy(dataptr,request,requestsize);
-//    SSL_write(ssl, request, requestsize);
     if(input.size()>0) {
         memcpy(dataptr+requestsize, input.data(), input.size());
         requestsize+=input.size();
        }
-
-   //SSLwritefull(ssl, dataptr, requestsize);
    SSL_write(ssl, dataptr, requestsize);
    SSL_write(ssl, "", 0);
    LOGGERHTTPS("after SSL_write %d\n", requestsize);
-   //int n=SSLreadfull(ssl, dataptr,maxdata);
    int n=SSL_read(ssl, dataptr,maxdata);
-   LOGGERHTTPS("after SSL_read(*)=%d\n", n);
+   LOGGERHTTPS("after SSL_read=%d\n", n);
    char *enddata=dataptr+n;
    int   status_code=-1;
    char *startpos;
@@ -379,7 +511,7 @@ std::pair<std::vector<char>,int> ContextHTTPS::request(const std::string_view ho
         }
     else {
         error=true;
-        LOGGERHTTPS("no space in %s len=%d\n",dataptr,n);
+        LOGGERHTTPS("no space in #%s# len=%d\n",dataptr,n);
         return {uit,-1};
         }
     LOGGERHTTPS("Status Code=%d\n",status_code);
@@ -402,7 +534,7 @@ std::pair<std::vector<char>,int> ContextHTTPS::request(const std::string_view ho
         #ifdef __cpp_lib_containers_ranges
                 uit.append_range(std::span<char>(dataptr,n));
                 #else
-                  uit.insert(uit.end(), dataptr, dataptr+len);
+                  uit.insert(uit.end(), dataptr, dataptr+n);
                   #endif
                 } while(n==maxdata);
             }

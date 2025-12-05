@@ -390,9 +390,6 @@
     <string name="datapresent">"Data present: "</string>
     <string name="overwrite">Overwrite?</string>
     <string name="autoqr">Auto QR</string>
-    <string name="autoqrmessage">
-Send data from this phone to another phone on your home network.
-Pressing OK will generate a connection on this phone and display a QR code that can be scanned by another Android device. Scanning the QR code with left menu→Photo on the other phone will generate a connection, by which it will receive all data from this phone.</string>
     
     <string name="googlescan">Google scan</string>
     <string name="usedweight">WARNING: weight (%.1f) not 0</string>
@@ -451,4 +448,12 @@ Pressing OK will generate a connection on this phone and display a QR code that 
 <string name="enternums">Enter amounts on</string>
 <string name="connectionl">connection</string>
 <string name="disconnectsensor">Bug</string>
+<string name="internet">Internet</string>
+<string name="homenet">Home net</string>
+<string name="ICE">ICE</string>
+<string name="zero">0</string>
+<string name="one">1</string>
+<string name="icelabel">ICE label</string>
+<string name="username">Username</string>
+<string name="turnserver">Turn Server</string>
 </resources>

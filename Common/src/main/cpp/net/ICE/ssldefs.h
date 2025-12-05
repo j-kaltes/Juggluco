@@ -26,6 +26,8 @@
 
 #define TLS_client_method TLS_client_methodptr
 #define SSLv23_client_method SSLv23_client_methodptr
+#define SSLv23_method SSLv23_methodptr
+
 #define SSL_shutdown SSL_shutdownptr
 
 

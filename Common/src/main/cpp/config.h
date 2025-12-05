@@ -24,6 +24,7 @@
 //#define USE_RUSSIAN 1
 //#define SPANISH 1
 #define quotes(x) #x
+#define xquotes(x) quotes(x)
 #undef NDEBUG
 #ifndef NDK_DEBUG
 #define NDEBUG 1
@@ -93,3 +94,4 @@
 #ifndef JUGGLUCO_APP
 #define DONTTALK  
 #endif
+#define LOGALL

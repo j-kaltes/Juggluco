@@ -121,7 +121,7 @@ std::array<unsigned char,sizeof(sendmagic)>  sendmagicspec=getsendmagic();
  int Connect::testsendmagic(passhost_t *pass) {
    #include "receivemagic.h"
    decltype(sendmagicspec) *magicptr;
-
+   LOGARTAG("testsendmagic");
    if(pass->receivedatafrom()&&pass->newconnection) {
       magicptr=(decltype(sendmagicspec) *)alloca(sizeof(sendmagicspec));
       *magicptr=sendmagicspec;   
@@ -133,7 +133,7 @@ std::array<unsigned char,sizeof(sendmagic)>  sendmagicspec=getsendmagic();
    if(s_sendni(magicptr->data(),magicptr->size())!=magicptr->size()) {
       char *buf=getmirrorerror(pass);
       int waser=errno;
-      constexpr const char mess[]="send magic failed: ";
+      constexpr const char mess[]="testsendmagic: send magic failed: ";
       constexpr const int len=sizeof(mess)-1;
       memcpy(buf,mess,len);
       strerror_r(waser, buf+len, maxmirrortext-len);
@@ -142,19 +142,19 @@ std::array<unsigned char,sizeof(sendmagic)>  sendmagicspec=getsendmagic();
       }
    constexpr const int recsize=sizeof(receivemagic);
    char buf[recsize];
-   LOGARTAG("before recv magic");
+   LOGARTAG("testsendmagic before recv magic");
    int gotlen;
    if((gotlen=s_recvni(buf,recsize))!=recsize) {
       char *ptr=getmirrorerror(pass);
       int waser=errno;
-      int len=snprintf(ptr,maxmirrortext,"magic recv()=%d!=%d: ",gotlen,(int)recsize);
+      int len=snprintf(ptr,maxmirrortext,"testsendmagic: magic recv()=%d!=%d: ",gotlen,(int)recsize);
       strerror_r(waser, ptr+len, maxmirrortext-len);
       LOGGERTAG("%s\n",ptr);
       return 2;
       }
-   LOGARTAG("after recv magic");
+   LOGARTAG("testsendmagic: after recv magic");
    if(memcmp(buf,receivemagic,recsize-4)) {//4 less for version info
-      char wrong[]="Wrong magic";
+      char wrong[]="testsendmagic: Wrong magic";
       char *buf=getmirrorerror(pass);
       memcpy(buf,wrong,sizeof(wrong));
       LOGGERN(wrong,sizeof(wrong)-1);
@@ -193,7 +193,7 @@ void sendtimeout(int sock,int secs) {
    flerrortag("getsockopt(%d,TCP_USER_TIMEOUT, ) failed",sock);
       }
  else {
-     LOGGER("USER_TIMEOUT=%d\n",retalive);
+     LOGGERTAG("USER_TIMEOUT=%d\n",retalive);
      }
 
 
@@ -228,7 +228,7 @@ void settimeouts(int sock) {
       if(s_sendni(name,pass->maxnamelen)!=pass->maxnamelen) {
          char err[]="s_sendni name error";
          saveerror(pass,err);
-         LOGGER("%s\n",getmirrorerror(pass));
+         LOGGERTAG("%s\n",getmirrorerror(pass));
          return -1;
          }
       

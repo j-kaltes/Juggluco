@@ -583,10 +583,10 @@ constexpr int MAXDATA=1024*1024*256;
         status.ininterpret=false;
         }    
     }
-template <int nr>
-using unique_al= std::unique_ptr<uint8_t[],ardeleter<nr,uint8_t>> ;
- unique_al<4> Connect::receivedatanopass(const int totlen) {
-    LOGGERTAG("receivedatanopass(%d,%d)\n",getReceiverIdent(),totlen);
+
+template<Connect::recvni_type recvni,Connect::getIdent_type getIdent>
+ unique_al<4> Connect::receivedatanopassalg(const int totlen) {
+    LOGGERTAG("receivedatanopass(%d,%d)\n",(this->*getIdent)(),totlen);
     uint8_t *buf=new(std::align_val_t(4),std::nothrow) uint8_t[totlen];
     if(!buf) {
         sleep(1);
@@ -594,7 +594,7 @@ using unique_al= std::unique_ptr<uint8_t[],ardeleter<nr,uint8_t>> ;
         }
     unique_al<4> destructptr(buf,ardeleter<4,uint8_t>());
     for(int took=0,bij;took<totlen;took+=bij) {
-        bij=r_recvni(buf+took,totlen-took);
+        bij=(this->*recvni)(buf+took,totlen-took);
         switch(bij) {
             case -1:lerrortag("recv");return unique_al<4>(nullptr);
             case 0:LOGARTAG("recv==0"); return unique_al<4>(nullptr);
@@ -604,15 +604,23 @@ using unique_al= std::unique_ptr<uint8_t[],ardeleter<nr,uint8_t>> ;
         }
     return destructptr;
     }
-
-dataonlyptr Connect::receivedataonly(crypt_t *ctx,const int len) {
+    /*
+ unique_al<4> Connect::receivedatanopass_r(const int totlen) {
+    return receivedatanopassalg<&Connect::r_recvni,&Connect::getReceiverIdent>( totlen);
+    }
+ unique_al<4> Connect::receivedatanopass_s(const int totlen) {
+    return receivedatanopassalg<&Connect::s_recvni,&Connect::getSenderIdent>( totlen);
+    }
+*/
+dataonlyptr Connect::receivedataonly_s(crypt_t *ctx,const int len) {
      int totlen=aligner<alignof(dataonly)>(sizeof(dataonly)+len);
-    auto dat=receivedata(ctx, totlen) ;
+    auto dat=receivedata_s(ctx, totlen) ;
     dataonlyptr destructptr(reinterpret_cast<dataonly*>(dat.get()),arcastdeleter<4,dataonly>());
     dat.release();
     return destructptr;
     }
-unique_al<4>  Connect::receivedatapass(crypt_t *ctx,int messlen) {
+template<Connect::recvni_type recvni,Connect::getIdent_type getIdent>
+unique_al<4>  Connect::receivedatapass_alg(crypt_t *ctx,int messlen) {
     int havelen=sizeof(int)+messlen;
     const int takelen= (havelen<16)?16:havelen;
     constexpr int taglen=16;
@@ -625,8 +633,8 @@ unique_al<4>  Connect::receivedatapass(crypt_t *ctx,int messlen) {
         }
     unique_al<4> destructptr(buf,ardeleter<4,uint8_t>());
     uint8_t *start=buf+taglen;
-    if(int len=r_recvni(buf,totlen);len!=totlen) {
-        flerrortag("recv(%d,,%d)!=%d",getReceiverIdent(),totlen,len);
+    if(int len=(this->*recvni)(buf,totlen);len!=totlen) {
+        flerrortag("recv(%d,,%d)!=%d",(this->*getIdent)(),totlen,len);
         return unique_al<4>(nullptr);
         }
     uint8_t *tmpbuf=new(std::align_val_t(4),std::nothrow) uint8_t[takelen];
@@ -652,12 +660,23 @@ unique_al<4>  Connect::receivedatapass(crypt_t *ctx,int messlen) {
     memcpy(uit,tmpbuf+sizeof(int),messlen);
     return uitu;
     }
-unique_al<4> Connect::receivedata( crypt_t *ctx,const int len) {
-    if(ctx==nullptr) 
-        return receivedatanopass(len);
-    else return receivedatapass( ctx, len) ;
+    /*(
+unique_al<4>  Connect::receivedatapass_r(crypt_t *ctx,int messlen) {
+    return Connect::receivedatapass_alg<&Connect::r_recvni,&Connect::getReceiverIdent>(crypt_t *ctx,int messlen) ;
     }
-/*
+unique_al<4>  Connect::receivedatapass_s(crypt_t *ctx,int messlen) {
+    return Connect::receivedatapass_alg<&Connect::s_recvni,&Connect::getSenderIdent>(crypt_t *ctx,int messlen) ;
+    } 
+unique_al<4> Connect::receivedata_r( crypt_t *ctx,const int len) {
+    if(ctx==nullptr) 
+        return receivedatanopass_r(len);
+    else return receivedatapass_r( ctx, len) ;
+    }
+unique_al<4> Connect::receivedata_s( crypt_t *ctx,const int len) {
+    if(ctx==nullptr) 
+        return receivedatanopass_s(len);
+    else return receivedatapass_s( ctx, len) ;
+    }
 inline void show(uint8_t *dat,int len) {
     for(int i=0;i<len;i++)
         fprintf(stderr,"%x ",dat[i]);

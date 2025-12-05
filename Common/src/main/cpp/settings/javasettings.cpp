@@ -633,13 +633,20 @@ extern "C" JNIEXPORT void  JNICALL   fromjava(setfixatey)(JNIEnv *env, jclass cl
     }
 extern int carbotype;
 extern "C" JNIEXPORT void  JNICALL   fromjava(setmealvar)(JNIEnv *env, jclass cl,jbyte val) {
-     carbotype=val;
+    const int count=settings->getlabelcount();
+    if(val>=count)
+        val=-1;
+    carbotype=val;
     settings->data()->mealvar=val;
     settings->updated();
     }
  
 extern "C" JNIEXPORT jbyte  JNICALL   fromjava(getmealvar)(JNIEnv *env, jclass cl) {
-    return settings->data()->mealvar;
+    const int count=settings->getlabelcount();
+    jbyte mealvar=settings->data()->mealvar;
+    if(mealvar<0|| mealvar>count)
+        return count;
+    return mealvar;
     }
 
 

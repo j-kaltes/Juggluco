@@ -24,9 +24,10 @@
 #include <cstring>
 #include "settings/settings.hpp"
 #include "settings/mixpass.hpp"
+#include "librelog.hpp"
 
 jbyteArray  getlibre3puttext(JNIEnv *env, const char *sensorname) {
-	LOGGER("getlibre3puttext(%s)\n",sensorname);
+	LIBRELOGGER("getlibre3puttext(%s)\n",sensorname);
 static const char puttextstart[]=R"({
   "DateOfBirth": "%d",
   "DomainData": "{\n \"activeSensor\" : \"%s\"\n}",
@@ -64,7 +65,7 @@ int endpos=sprintf(puttext,puttextstart,
 #define EXTRA 0
 #endif
 jbyteArray getlibre2puttext(JNIEnv *env, const char *sensorname) {
-	LOGGER("getlibre2puttext(%s)\n",sensorname);
+	LIBRELOGGER("getlibre2puttext(%s)\n",sensorname);
 	static constexpr const char putlibre2start[]=R"({"DomainData":"{\"activeSensor\":\"%s\"}","UserToken":")";
 	static constexpr const char putlibre2end[]=R"(","Domain":"Libreview","GatewayType":"FSLibreLink.Android"})";
 

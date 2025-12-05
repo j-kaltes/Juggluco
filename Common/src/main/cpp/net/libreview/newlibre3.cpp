@@ -38,6 +38,7 @@
 #include "librenumbers.hpp"
 #endif
 
+#include "librelog.hpp"
 
 extern char *localestr;
 
@@ -236,7 +237,7 @@ bool getisviewed(time_t wastime) {
 	{
 		int diff=((long long)wastime-lastviewtime);
 		viewed=abs(diff)<60;
-		LOGGER("diff=%d viewed=%d\n",diff,viewed);
+		LIBRELOGGER("diff=%d viewed=%d\n",diff,viewed);
 		if(viewed) {
 //			nexttimeviewed=wastime+betweenviews;
 			return true;
@@ -267,13 +268,13 @@ static int sendallcurrent(uint32_t nu,SensorGlucoseData *sens,char *buf,int *las
 	int pollstart= sens->getinfo()->pollstart;
 //	 int ends=sens->getinfo()->lastLifeCountReceived;
 	int		ends=sens->pollcount()-1;
-	LOGGER("%s pollstart=%d libreviewScan=%d ends=%d\n",sens->showsensorname().data(),pollstart,start,ends);
+	LIBRELOGGER("%s pollstart=%d libreviewScan=%d ends=%d\n",sens->showsensorname().data(),pollstart,start,ends);
 //	if(ends==0) {
 //		}
 	*lastsend=ends;	
 	if(start<pollstart)
 		start=pollstart;
-	LOGGER("start=%d ends=%d\n",start,ends);
+	LIBRELOGGER("start=%d ends=%d\n",start,ends);
 	if(start>ends)
 		return 0;
 	const ScanData *startstream=sens->beginpolls();
@@ -290,7 +291,7 @@ static int sendallcurrent(uint32_t nu,SensorGlucoseData *sens,char *buf,int *las
 int allhistory(SensorGlucoseData *sens,char *buf,uint32_t *lasttime,int *nextnum) { //TODO remember endpos and set notsend=endpos+1
 	const int endpos=sens->getinfo()->lastHistoricLifeCountReceivedPos;
 	const int notsend=sens->getinfo()->libreviewnotsend;
-	LOGGER("lastHistoricLifeCountReceivedPos=%d libreviewnotsend=%d\n",endpos, notsend);
+	LIBRELOGGER("lastHistoricLifeCountReceivedPos=%d libreviewnotsend=%d\n",endpos, notsend);
 	if(endpos<notsend)
 		return 0;
 	int pos=0;
@@ -337,7 +338,7 @@ bool sendlibre3viewdata(bool hasnewcurrent,uint32_t nu) {
 	int lastsensor=sensors->last();
 	int inhistory=0;
 	if(lastsensor<startsensor)	{
-		LOGGER("sendlibre3viewdata: lastsensor(%d)<startsensor(%d)\n",lastsensor,startsensor);
+		LIBRELOGGER("sendlibre3viewdata: lastsensor(%d)<startsensor(%d)\n",lastsensor,startsensor);
 		if(!sendnumbers3())
 			return true;
 		}
@@ -359,7 +360,7 @@ bool sendlibre3viewdata(bool hasnewcurrent,uint32_t nu) {
 	const uint32_t oldtimer=(fromtime?fromtime:nu)-day15secs;
 #ifndef NOLOG
 	const time_t tim=oldtimer;
-	LOGGER("Start sendlibre3viewdata startlibre3view=%d lastsensor=%d from=%s",startsensor,lastsensor,ctime(&tim));
+	LIBRELOGGER("Start sendlibre3viewdata startlibre3view=%d lastsensor=%d from=%s",startsensor,lastsensor,ctime(&tim));
 #endif
     int usedsensors=0;
 	for(int i=startsensor;i<=lastsensor;i++) {
@@ -379,7 +380,7 @@ bool sendlibre3viewdata(bool hasnewcurrent,uint32_t nu) {
 				inhistory+=add;
                 if(usedsensors>=4) {
                     lastsensor=i; 
-                    LOGGER("sendlibre3viewdata 4 sensors is enough lastsensor=%d\n",i);
+                    LIBRELOGGER("sendlibre3viewdata 4 sensors is enough lastsensor=%d\n",i);
                     break;
                     }
 				}
@@ -400,13 +401,13 @@ bool sendlibre3viewdata(bool hasnewcurrent,uint32_t nu) {
 #ifdef LIBRENUMBERS
 Numbers<libre3> numbers; //TODO: test on Libre3nums?
 int bytesnumbers=numbers.spaceneeded();
-LOGGER("numbers.spaceneeded()=%d\n",bytesnumbers);
+LIBRELOGGER("numbers.spaceneeded()=%d\n",bytesnumbers);
 
 #else
 constexpr const int  bytesnumbers=0;
 #endif
 	lastsensor=lastlibre3;
-LOGGER("startsensor=%d lastsensor=%d\n",startsensor,lastsensor);
+LIBRELOGGER("startsensor=%d lastsensor=%d\n",startsensor,lastsensor);
 SensorGlucoseData *lastsensdata=(lastsensor<0)?nullptr:sensors->getSensorData(lastsensor); //TODO later?
 
 	if(bytesnumbers==0&&inhistory<=0) {
@@ -426,10 +427,10 @@ constexpr int restsize=2300;
 
 int totalsize= bytesnumbers+restsize+usertokenlen+incurrent*onecurrentsize+inhistory*onehistorysize+1;
 
-LOGGER("inhistory=%d incurrent=%d totalsize=%d\n",inhistory,incurrent,totalsize);
+LIBRELOGGER("inhistory=%d incurrent=%d totalsize=%d\n",inhistory,incurrent,totalsize);
 char *buf= new(std::nothrow)  char[totalsize];
 if(!buf) {
-	LOGSTRING("libreview3: new failed\n");
+	LIBRELOGAR("libreview3: new failed");
 	return false;
 	}
 std::unique_ptr<char[]> deleter(buf);
@@ -525,19 +526,19 @@ memcpy(uitptr, settings->data()->libreviewUserToken3,usertokenlen);
 uitptr+=usertokenlen;
 addstrview(uitptr,afterUserToken);
 int uitlen=uitptr-buf;
-LOGGER("END sendlibre3viewdata uitlen=%d\n",uitlen);
+LIBRELOGGER("END sendlibre3viewdata uitlen=%d\n",uitlen);
 buf[uitlen]='\n';
-logwriter(buf,uitlen+1);
+LIBRElogwriter(buf,uitlen+1);
 int nextsensor=(wrotecurrent>0)?lastsensor:lastwrote;
 if(nextsensor<0) {
-	LOGSTRING("nextsensor<0\n");
+	LIBRELOGAR("nextsensor<0");
 	if(!numbers.didsend())
 		return true;
 	}
 #ifndef NOREALSEND
 bool datasend=libresendmeasurements(true,buf,uitlen);
 if(datasend) {
-	LOGSTRING("libresendmeasurements libre3 success\n");
+	LIBRELOGAR("libresendmeasurements libre3 success");
 	numbers.onSuccess();
 //	int nextsensor=(wrotecurrent>0)?lastsensor:lastwrote;
 	if(nextsensor>=0) {
@@ -560,9 +561,9 @@ if(datasend) {
 		}
 	return true;
 	} 
-LOGSTRING("libresendmeasurements libre3 failed\n");
+LIBRELOGAR("libresendmeasurements libre3 failed");
 #else
-LOGSTRING("libresendmeasurements libre3 NOREALSEND\n");
+LIBRELOGAR("libresendmeasurements libre3 NOREALSEND");
 #endif
 return false;
 	}

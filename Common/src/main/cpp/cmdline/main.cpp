@@ -151,6 +151,7 @@ R"(
 )" << progname<<R"( [-d dir] -M : mmol/L
 )" << progname<<R"( [-d dir] -G : mg/dL
 )" << progname<<R"( [-d dir] -k[-+] : Calibrate 
+)" << progname<<R"( [-d dir] -Dn[-+] : Deactivate (+) or reactivate(-)  n-th connection
 )" << progname<<R"( [-d dir] -R n : remove n-th connection
 )" << progname<<R"( [-d dir] -Z n : resend data to n-th connection
 )" << progname<<R"( [-d dir] -q n : display QR for n-th connection. Scan with left menu->Photo in Juggluco.
@@ -158,7 +159,10 @@ R"(
 )" << progname<<R"( [-d dir] -q s : HOMENET: Generate sending connection and display its QR. Scan with left menu->Photo in receiving Juggluco.
 )" << progname<<R"( [-d dir] -q R : INTERNET: Generate receiving connection and display its QR. Scan with left menu->Photo in sending Juggluco.
 )" << progname<<R"( [-d dir] -q S : INTERNET: Generate sending connection and display its QR. Scan with left menu->Photo in receiving Juggluco.
-
+)" << progname<<R"( [-d dir] -I[01]:aICElabel : Generate a ICE connection. aICElabel is an arbitrary label that no one else should use, 
+                        except for the other side of the connection. One side should use 0, the other 1. 
+                        For example -I0:NobodyElseWillSayThis should be paired with -I1:NobodyElseWillSayThis. 
+                        An ICE connection connects two devices over the internet without the need for port forwarding.
 )" << progname<<R"( -v  : version
 
 )"<< progname<<R"( [-d dir] OPTIONS IP1,IP2 ...  : Specify connection with IP(s).
@@ -264,10 +268,11 @@ int   listconnections() {
         cout<<h+1<<": ";
         const passhost_t &host=backup->getupdatedata()->allhosts[h];
         if(host.ICE) {
-            cout<<"ICE label:"<<host.getICEname().data()<<" side="<<host.side<<" label="<< (host.hasname?host.getname():"")<<(host.receivefrom&2?" receiver ":" ")<<(host.haspass()?backup->getpass(h).data():"no pass");
+            cout<<"ICE label:"<<host.getICEname().data()<<" side="<<host.side<<" label="<< (host.hasname?host.getname():"")<<(host.receivefrom&2?" receiver ":" ")<<(host.haspass()?backup->getpass(h).data():"no pass")<<(host.deactivated?" DEACTIVATED":"");
             }
         else {
-            cout<< (host.hasname?host.getname():"")<<(host.noip?" don't test IP,":" test IP,")<<(host.detect?" detect,":" ")<< (host.receivefrom&2?" receiver":"")<<(getpassive(h)?" passiveonly ":" ")<<(getactive(h)?" active only ":"")<<(host.haspass()?backup->getpass(h).data():"no pass");
+            cout<< (host.hasname?host.getname():"")<<(host.noip?" don't test IP,":" test IP,")<<(host.detect?" detect,":" ")<< (host.receivefrom&2?" receiver":"")<<(getpassive(h)?" passiveonly ":" ")<<(getactive(h)?" active only ":"")<<(host.haspass()?backup->getpass(h).data():"no pass"
+)<<(host.deactivated?" DEACTIVATED":"");
             const int len=host.nr;
             if(len>0) {
                 cout << ", port="<< ntohs(host.ips[0].sin6_port);
@@ -353,7 +358,7 @@ const char *label=nullptr;
 bool xremote=false,activeonly=false,passiveonly=false,testip=true
 
 ;
-int xdripserver=-1,use_ssl=-1,give_treatments=-1,calibrate=0;
+int xdripserver=-1,use_ssl=-1,give_treatments=-1,calibrate=0,deactivate=-1,connection=-1;
 int changer=-1;
 int unit=0;
 int httpport=0;
@@ -370,7 +375,7 @@ f j q u y
 */
 const char *autoQR=nullptr;
 char *api_secret=nullptr,*sslport=nullptr;
-           for(int opt;(opt = getopt(argc, argv, "I:W:k::q:V::Z:o:e::g:p:d:lcX::x::ransvibAPw:hN:S:B:H:m:GMR:L:C:0:1:2:3:4:5:6:7:8:9:t::")) != -1;) {
+           for(int opt;(opt = getopt(argc, argv, "D:I:W:k::q:V::Z:o:e::g:p:d:lcX::x::ransvibAPw:hN:S:B:H:m:GMR:L:C:0:1:2:3:4:5:6:7:8:9:t::")) != -1;) {
            if(opt>='0'&&opt<='9') {
             int num=opt-'0';
             if(optarg[0]>='0'&&optarg[0]<='9') {
@@ -385,6 +390,7 @@ char *api_secret=nullptr,*sslport=nullptr;
             }
         else {
            switch (opt) {
+
                 case'I': {ice=true;
                     auto errormessage{[](const char *optarg){
                                 cerr<<"Unknown arg: "<<optarg<<endl;;
@@ -525,9 +531,34 @@ char *api_secret=nullptr,*sslport=nullptr;
                case 'm': mealexport=optarg;break;
             case 'g': api_secret=optarg;break;  //api_secret;
             case 'o': sslport=optarg;break;  ///sslport
+            case 'D':  {
+                    auto  error {[](const char *optarg) {
+                            cerr<<"Unknown arg: "<<optarg<<endl;;
+                            cerr<<"Argument to -D should be a connection number followed by + (deactivate) or - (don't deactivate)\n";
+                            return 10;
+                            }};
+                    #define toshort(x) x[0]|(x[1]<<8)
+
+                    cout<<"Deactivate: "<<optarg<<endl;
+                    auto const *minplus= optarg+1;
+                    const short arg=toshort( minplus);
+                    switch(arg) {
+                        case toshort("+"): deactivate=1;;break;
+                        case toshort("-"): deactivate=0;;break;
+                        default:
+                            error(optarg);
+                            return 10;
+                        };
+                    if(!isdigit(*optarg)) {
+                        error(optarg);
+                        return 10;
+                        }
+                    connection=*optarg-'0';
+                    --connection;
+                    };
+                break;
             case 'e': 
                 if(optarg) {
-                    #define toshort(x) x[0]|(x[1]<<8)
 
                     cout<<"use_ssl:"<<optarg<<':'<<endl;
                     const short arg=toshort( optarg);
@@ -748,6 +779,19 @@ static constexpr const    char defaultname[]="jugglucodata";
             backup->deletehost(rmindex);
             return 1234;
             }
+        if(deactivate>=0)  {
+            if(connection<0||connection>=hostnr) {
+                cerr<<"Argument to -D now "<<(connection+1)<<" should refer to an existing connection"<<endl;
+                return 9;
+                }
+extern void setDeactivated(int index,bool deactive) ;
+           setDeactivated(connection,deactivate);
+            if(deactivate)
+                cout<<"deactivated connection "<<(connection+1)<<endl;
+            else
+                cout<<"reactivated connection "<<(connection+1)<<endl;
+            return 1234;
+            }
         if(port.size()) {
             memcpy(backup->getupdatedata()->port,port.data(),port.size());
             backup->getupdatedata()->port[port.size()]='\0';
@@ -873,7 +917,7 @@ extern void     processglucosevalue(int sendindex,int newstart) ;
 void     processglucosevalue(int sendindex,int newstart) {
     if(!sensors)
         return;
-    LOGGER("processglucosevalue %d %d\n", sendindex,newstart);
+    LOGGER("processglucosevalue sendindex=%d newstart=%d\n", sendindex,newstart);
     if(SensorGlucoseData *hist=sensors->getSensorData(sendindex)) {
         if(newstart>=0) {
             LOGGER("newstart=%d\n",newstart);

@@ -8,9 +8,9 @@
 #include <unistd.h>
 #include <string>
 #include <string_view>
-#include "strconcat.hpp"
 #include "logs.hpp"
 #include "inout.hpp"
+#include "strconcat.hpp"
 typedef struct android_namespace_t* (*android_get_exported_namespace_t)(const char*) ;
 
 
@@ -19,13 +19,6 @@ typedef struct android_namespace_t * (*android_create_namespace_t)(
     const char* permitted_when_isolated_path, struct android_namespace_t* parent);
 
 void (*ERR_print_errors_cbptr)(int (*cb)(const char *str, size_t len, void *u), void *u);
-int logcallback(const char *str, size_t len, void *u) {
-#ifndef NOLOG
-	const char *format=(const char *)u;
-	loggert(format,str);
-#endif
-	return 0;
-	}
 
 extern std::string_view globalbasedir;
 
@@ -133,7 +126,7 @@ if(android_create_namespace) {
 			LOGGER("android_dlopen_ext %s\n",dlerror());
 		}
 	else {
-		LOGSTRING("android_create_namespace failed\n");
+		LOGAR("android_create_namespace failed");
 		}
 	}
 else {

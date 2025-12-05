@@ -76,12 +76,14 @@ import static android.view.View.GONE;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static tk.glucodata.Applic.backgroundcolor;
 import static tk.glucodata.Applic.isWearable;
 import static tk.glucodata.BuildConfig.isReleaseID;
 import static tk.glucodata.GlucoseCurve.width;
 import static tk.glucodata.Log.doLog;
 import static tk.glucodata.Natives.getBlueMessage;
+import static tk.glucodata.Natives.getICEside;
 import static tk.glucodata.Natives.getInvertColors;
 import static tk.glucodata.Natives.getWifi;
 import static tk.glucodata.Natives.getbackJson;
@@ -91,6 +93,7 @@ import static tk.glucodata.Natives.mirrorStatus;
 import static tk.glucodata.RingTones.EnableControls;
 import static tk.glucodata.Specific.useclose;
 import static tk.glucodata.UseWifi.usewifi;
+import static tk.glucodata.help.help;
 import static tk.glucodata.help.hidekeyboard;
 import static tk.glucodata.Applic.isRelease;
 import static tk.glucodata.settings.Settings.removeContentView;
@@ -98,6 +101,7 @@ import static tk.glucodata.util.getbutton;
 import static tk.glucodata.util.getcheckbox;
 import static tk.glucodata.util.getlabel;
 import static tk.glucodata.settings.Settings.editoptions;
+import static tk.glucodata.util.getradiobutton;
 import static tk.glucodata.util.sethtml;
 
 //import org.w3c.dom.Text;
@@ -315,7 +319,81 @@ static public String changehostError(MainActivity act,int pos) {
                }
            }).show().setCanceledOnTouchOutside(false);
       }
+
+
+boolean makeQR(MainActivity act,int pos) {
+        if(pos<0) {
+                var mess= changehostError(act,pos);
+                 Applic.argToaster(act,mess,Toast.LENGTH_SHORT);
+                 return false;
+                }
+          else {
+                hostadapt.notifyItemInserted(pos);
+                var jsonstr= getbackJson(pos);
+                QRmake.show(act,jsonstr);
+                return true;
+                }
+         }
+
+void makeAutoQR(MainActivity act,View parent) {
+      EnableControls(parent,false);
+      var cancel=getbutton(act,R.string.cancel);
+      var title=getlabel(act, R.string.autoqr);
+      var help=getbutton(act,R.string.helpname);
+      var send=getlabel(act,R.string.sendto);
+      var homenetS=getbutton(act,R.string.homenet);
+      var internetS=getbutton(act,R.string.internet);
+      var receive=getlabel(act,R.string.receivefrom);
+      var homenetR=getbutton(act,R.string.homenet);
+      var internetR=getbutton(act,R.string.internet);
+      help.setOnClickListener(v-> {
+            help(R.string.autoqrmessage,act);
+        });
+      var layout=new Layout(act, new View[]{ title},new View[]{send},new View[]{homenetS,internetS},new View[]{receive},new View[]{homenetR,internetR},new View[] {help,cancel});
+      layout.setPadding((int)(GlucoseCurve.metrics.density*4.0),(int)(GlucoseCurve.metrics.density*4.0),(int)(GlucoseCurve.metrics.density*4.0),(int)(GlucoseCurve.metrics.density*4));
+      layout.setBackgroundColor(backgroundcolor);
+      layout.measure(WRAP_CONTENT, WRAP_CONTENT);
+      layout.setX((GlucoseCurve.getwidth()-layout.getMeasuredWidth()+MainActivity.systembarLeft-MainActivity.systembarRight)*.5f);
+      layout.setY( (GlucoseCurve.getheight()-layout.getMeasuredHeight() +MainActivity.systembarTop-MainActivity.systembarBottom)*.5f);
+      act.addContentView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+      layout.setBackgroundResource(R.drawable.dialogbackground);
+      Runnable closerun=()->{
+         removeContentView(layout);
+         EnableControls(parent,true);
+         };
+
+      MainActivity.setonback(()->{
+        closerun.run();
+         });
+      cancel.setOnClickListener(v-> {
+        MainActivity.doonback();
+        });
+      homenetS.setOnClickListener(v-> {
+            MainActivity.poponback();
+            makeQR(act,Natives.makeHomeSender());
+            closerun.run();
+            });
+      internetS.setOnClickListener(v-> {
+            MainActivity.poponback();
+            makeQR(act,Natives.makeICESender());
+            closerun.run();
+            });
+      homenetR.setOnClickListener(v-> {
+            MainActivity.poponback();
+            makeQR(act,Natives.makeHomeReceiver());
+            closerun.run();
+            });
+      internetR.setOnClickListener(v-> {
+            MainActivity.poponback();
+            makeQR(act,Natives.makeICEReceiver());
+            closerun.run();
+            });
+    };
+RadioButton one;
+EditText ICElabel;
+CheckBox ICE;
    void makehostview(MainActivity act) {
+      ICE=getcheckbox(act,R.string.ICE, true);
       for(int i=0;i<editIPs.length;i++) {
          editIPs[i]=new EditText(act);
          editIPs[i].setMinEms(6);
@@ -323,6 +401,16 @@ static public String changehostError(MainActivity act,int pos) {
          editIPs[i].setImeOptions(editoptions);
          setColorFilter(editIPs[i].getBackground().mutate(),agetColor(act,android.R.color.holo_blue_light));
          }
+     RadioButton zero=getradiobutton(act, R.string.zero);
+     one=getradiobutton(act, R.string.one);
+     var sides=new RadioButton[]{zero,one};
+     setradio(sides);
+     zero.setChecked(true);
+     var ICElabellabel=getlabel(act,R.string.icelabel);
+     ICElabel = new EditText(act);
+     ICElabel.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+     ICElabel.setImeOptions(editoptions);
+     ICElabel.setMinEms(16);
       portedit=new EditText(act);
       portedit.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
       portedit.setImeOptions(editoptions);
@@ -449,7 +537,7 @@ static public String changehostError(MainActivity act,int pos) {
          restore.setVisibility(GONE);
 
       Button Help=getbutton(act,R.string.helpname);
-      Help.setOnClickListener(v-> help.help(R.string.addconnection,act));
+      Help.setOnClickListener(v-> help(R.string.addconnection,act));
 
       Button delete=getbutton(act,act.getString(R.string.delete));
       Button Close=getbutton(act,R.string.cancel);
@@ -491,31 +579,37 @@ static public String changehostError(MainActivity act,int pos) {
             }        
          hidekeyboard(act); //USE
          int hostnr=Natives.backuphostNr( );
-         String[] names=new String[editIPs.length];
+         boolean ice=ICE.isChecked();
          int struse=0;
-         if(testip.isChecked()||!passiveonly.isChecked()) {
-            for (EditText editText : editIPs) {
-               String name = editText.getText().toString();
-               if (name.length() != 0) {
-                  names[struse++] = name;
-               }
-            }
-            }
+         String[] names=null;
          final boolean dodetect= detect.isChecked()&&!activeonly.isChecked();
-         int ipmax=editIPs.length-(dodetect?1:0)-(haslabel.isChecked()?1:0);
-         if(struse>=ipmax)
-            struse=ipmax;
-
-         if((testip.isChecked()&&!dodetect)||activeonly.isChecked()) {
-            if(struse==0) {
-               Applic.argToaster(act, R.string.specifyip,Toast.LENGTH_SHORT);
-               return -15;
-               }
+         if(ice) {
             }
+         else {
+             names=new String[editIPs.length];
+             if(testip.isChecked()||!passiveonly.isChecked()) {
+                for (EditText editText : editIPs) {
+                   String name = editText.getText().toString();
+                   if (name.length() != 0) {
+                      names[struse++] = name;
+                   }
+                }
+                }
+             int ipmax=editIPs.length-(dodetect?1:0)-(haslabel.isChecked()?1:0);
+             if(struse>=ipmax)
+                struse=ipmax;
+             if((testip.isChecked()&&!dodetect)||activeonly.isChecked()) {
+                if(struse==0) {
+                   Applic.argToaster(act, R.string.specifyip,Toast.LENGTH_SHORT);
+                   return -15;
+                   }
+                }
+              }
+
 
          long starttime=(alldata.getVisibility()!=VISIBLE||alldata.isChecked())?0L:(fromnow.isChecked()? System.currentTimeMillis():Natives.getstarttime())/1000L;
 
-         int pos=Natives.changebackuphost(hostindex,names,struse,dodetect,portedit.getText().toString(), Amounts.isChecked(),Stream.isChecked(),Scans.isChecked(),restore.isChecked(),receiver,activeonly.isChecked(),passiveonly.isChecked(),Password.isChecked()?editpass.getText().toString():null,starttime,haslabel.isChecked()?label.getText().toString():null,testip.isChecked(),checkhostname.isChecked(),null,false);
+         int pos=Natives.changebackuphost(hostindex,names,struse,dodetect,portedit.getText().toString(), Amounts.isChecked(),Stream.isChecked(),Scans.isChecked(),restore.isChecked(),receiver,activeonly.isChecked(),passiveonly.isChecked(),Password.isChecked()?editpass.getText().toString():null,starttime,haslabel.isChecked()?label.getText().toString():null,testip.isChecked(),checkhostname.isChecked(),ICElabel.getText().toString(),one.isChecked());
 
          if(pos<0) {
             String mess=changehostError(act, pos);
@@ -533,8 +627,6 @@ static public String changehostError(MainActivity act,int pos) {
             }
          else
             hostadapt.notifyItemChanged(pos);
-   //         hostview.setVisibility(GONE);
-         //alarms.setEnabled( Natives.isreceiving( ));
          return pos;
          };
       save.setOnClickListener(v->{
@@ -553,10 +645,8 @@ static public String changehostError(MainActivity act,int pos) {
          });
       CheckBox[] boxes={Amounts,Scans,Stream,restore};
        CompoundButton.OnCheckedChangeListener needport =(buttonView, isChecked)-> {
-         //if(!isasender) 
          if(sendchecked==null)
             return;
-
          var vis=INVISIBLE;
          for(int i=0;i<3;i++) {
             if(!sendchecked[i]&&boxes[i].isChecked()) {
@@ -571,10 +661,11 @@ static public String changehostError(MainActivity act,int pos) {
          }
      hostview=new ScrollView(act);
       visible.setPadding(0,0,(int)(GlucoseCurve.metrics.density*5.0),0);
-     // editpass.setPadding(0,0,0,0);
-
+    var iceviews=new View[]{ICE,ICElabellabel,ICElabel,zero,one};
       Sendlabel.setPadding((int)(GlucoseCurve.metrics.density*10.0),0,0,0);
    Stream.setPadding(0,0,(int)(GlucoseCurve.metrics.density*5.0),0);
+    var firstrow=new View[]{Portlabel, portedit, checkhostname,IPslabel, detect};
+    var directions=new View[]{passiveonly, activeonly, both};
       Layout layout;
       if(isWearable) {
          getMargins(save).topMargin=(int)(GlucoseCurve.metrics.density*5.0);
@@ -583,7 +674,7 @@ static public String changehostError(MainActivity act,int pos) {
             final int[] ret={w,h};
             return ret;
 
-         }, new View[]{ Portlabel},new View[] {portedit},new View[]{checkhostname},new View[]{new Space(act),IPslabel,detect,new Space(act)}, new View[]{editIPs[0]},new View[]{editIPs[1]},editIPs.length>=3?new View[]{editIPs[2]}:null,editIPs.length>=4?new View[]{editIPs[3]}:null ,new View[] {testip},new View[] {haslabel},new View[]{label},
+         }, new View[]{ICE},new View[]{ Portlabel},new View[] {portedit},new View[]{checkhostname},new View[]{new Space(act),IPslabel,detect,new Space(act)},new View[]{ICElabellabel},new View[]{ICElabel},sides, new View[]{editIPs[0]},new View[]{editIPs[1]},editIPs.length>=3?new View[]{editIPs[2]}:null,editIPs.length>=4?new View[]{editIPs[3]}:null ,new View[] {testip},new View[] {haslabel},new View[]{label},
                new View[]{passiveonly},new View[]{activeonly},new View[]{both},new View[] {receive},new View[] {Sendlabel,Stream},new View[]{Scans,Amounts},new View[]{startlabel},new View[]{alldata,fromnow},new View[]{screenpos} ,new View[]{Password },new View[]{editpass,visible},new View[]{delete,Close},new View[] {reset},new View[]{save});
 
       layout.setPadding((int)(GlucoseCurve.metrics.density*4.0),0,(int)(GlucoseCurve.metrics.density*10.0),(int)(GlucoseCurve.metrics.density*4));
@@ -596,10 +687,9 @@ static public String changehostError(MainActivity act,int pos) {
             final int[] ret = {w, h};
             return ret;
 
-         }, new View[]{Portlabel, portedit, checkhostname,IPslabel, detect}, editIPs, new View[]{testip, haslabel, label},
-               new View[]{passiveonly, activeonly, both}, new View[]{receive, Sendlabel, Amounts, Scans, Stream, restore}, fromrow, withqr, new View[]{delete, Close, reset, Help, save});
+         }, firstrow,new View[]{ICE,ICElabellabel,ICElabel,zero,one},editIPs, new View[]{testip, haslabel, label},
+               directions, new View[]{receive, Sendlabel, Amounts, Scans, Stream, restore}, fromrow, withqr, new View[]{delete, Close, reset, Help, save});
 
-          // layout.setPadding(0, MainActivity.systembarTop/2,0,0);
          var sidepad=(int)(GlucoseCurve.metrics.density*8.0);
          layout.setPadding(MainActivity.systembarLeft+sidepad,MainActivity.systembarTop/2,sidepad+MainActivity.systembarRight,MainActivity.systembarBottom);
 
@@ -607,14 +697,34 @@ static public String changehostError(MainActivity act,int pos) {
       Close.setOnClickListener(v-> act.doonback());
       hostview.addView(layout);
       hostview.setFillViewport(true);
-   //    hostview.setSmoothScrollingEnabled(false);
       hostview.setSmoothScrollingEnabled(true);
        hostview.setVerticalScrollBarEnabled(Applic.scrollbar);
        hostview.setScrollbarFadingEnabled(true);
-   //    act.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE|WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-           act.addContentView(hostview, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT));
-           hostview.setBackgroundColor(backgroundcolor);
+       act.addContentView(hostview, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT));
+       hostview.setBackgroundColor(backgroundcolor);
+    Consumer<Boolean> setICE=(isChecked) -> {
+            final int vis=isChecked?VISIBLE:hide;
+            for(int i=1;i<iceviews.length;++i) {
+                iceviews[i].setVisibility(vis);
+                }
+            final int notvis=!isChecked?VISIBLE:hide;
+            for(var el:firstrow) {
+                el.setVisibility(notvis);
+                }
+            for(var el:editIPs) {
+                el.setVisibility(notvis);
+                }
+            for(var el:directions) {
+                el.setVisibility(notvis);
+                }
+            testip.setVisibility(notvis);
+            };
 
+      ICE.setOnCheckedChangeListener( (buttonView,  isChecked)-> {
+            setICE.accept(isChecked);
+            });
+     ICE.setChecked(false);
+      // setICE.accept(false);
       }
    void changehostview(MainActivity act,final int index,String[] names,boolean dodetect,String port,String pass,View parent) {
          parent.setVisibility(GONE);
@@ -622,7 +732,7 @@ static public String changehostError(MainActivity act,int pos) {
          makehostview(act);
       else {
          hostview.setVisibility(VISIBLE);
-            hostview.bringToFront();
+         hostview.bringToFront();
          visible.setChecked(false);
          }
       act.setonback(() -> {
@@ -631,23 +741,19 @@ static public String changehostError(MainActivity act,int pos) {
             hostview.setVisibility(GONE);
             });
       boolean stream,scans,amounts;
-          if(names!=null) {
-            stream=Natives.getbackuphoststream(index);
-             scans=Natives.getbackuphostscans(index);
-             amounts=Natives.getbackuphostnums(index);
+      String ICElabelstr=Natives.getICElabel(index);
+      boolean hasICE=ICElabelstr!=null;
+
+      boolean isnew=names==null&&!hasICE;
+      String labelstr=null;
+      if(!isnew) {
+         stream=Natives.getbackuphoststream(index);
+         scans=Natives.getbackuphostscans(index);
+         amounts=Natives.getbackuphostnums(index);
          int recnum=Natives.getbackuphostreceive(index);
          boolean doreceive= (recnum&2)!=0;
-             receive.setChecked(doreceive);
-         final boolean dotestip=Natives.getbackuptestip(index);
-         final boolean ispassive=Natives.getbackuphostpassive(index);
-         testip.setChecked(dotestip);
-         final var vis=(ispassive&&!dotestip)?hide:VISIBLE;
-            detect.setChecked(dodetect);
-
-
-
-
-         final String labelstr=Natives.getbackuplabel(index);
+         receive.setChecked(doreceive);
+         labelstr=Natives.getbackuplabel(index);
          if(labelstr!=null) {
             label.setText(labelstr);
             haslabel.setChecked(true); 
@@ -657,43 +763,51 @@ static public String changehostError(MainActivity act,int pos) {
             haslabel.setChecked(false); 
             label.setVisibility(hide);
             }
-         final boolean hasHostname=getbackupHasHostname(index);
-         int maxhosts=hasHostname?1:(editIPs.length-(dodetect?1:0)-(labelstr==null?0:1));
-            for(int i=0;i<Math.min(names.length,maxhosts);i++) {
-               editIPs[i].setText(names[i]);
-            }
-            for(int i=0;i<maxhosts;i++)
-                   editIPs[i].setVisibility(vis);
-            boolean isactiveonly =Natives.getbackuphostactive(index);
-            detect.setVisibility((ispassive&&!dotestip||isactiveonly)?hide:VISIBLE);
-         if(isactiveonly)
-            activeonly.setChecked(true);
-         else {
-            if(ispassive) {
-               passiveonly.setChecked(true);
-               }
-            else
-               both.setChecked(true);
-            }
-         boolean iswearos=isWearOS(index);
-         {if(doLog) {Log.i(LOG_ID,(labelstr!=null?labelstr:"")+" Iswearos("+index+")="+iswearos);};};
+          if(!isnew&&!hasICE) {
+             final boolean dotestip=Natives.getbackuptestip(index);
+             final boolean ispassive=Natives.getbackuphostpassive(index);
+             testip.setChecked(dotestip);
+             final var vis=(ispassive&&!dotestip)?hide:VISIBLE;
+             detect.setChecked(dodetect);
+             final boolean hasHostname=getbackupHasHostname(index);
+             int maxhosts=hasHostname?1:(editIPs.length-(dodetect?1:0)-(labelstr==null?0:1));
+              for(int i=0;i<Math.min(names.length,maxhosts);i++) {
+                   editIPs[i].setText(names[i]);
+                }
+                for(int i=0;i<maxhosts;i++)
+                       editIPs[i].setVisibility(vis);
+                boolean isactiveonly =Natives.getbackuphostactive(index);
+                detect.setVisibility((ispassive&&!dotestip||isactiveonly)?hide:VISIBLE);
+             if(isactiveonly)
+                activeonly.setChecked(true);
+             else {
+                if(ispassive) {
+                   passiveonly.setChecked(true);
+                   }
+                else
+                   both.setChecked(true);
+                }
+             boolean iswearos=isWearOS(index);
+             {if(doLog) {Log.i(LOG_ID,(labelstr!=null?labelstr:"")+" Iswearos("+index+")="+iswearos);};};
 
-         checkhostname.setChecked(hasHostname);
-         }
+             checkhostname.setChecked(hasHostname);
+             }
+          }
       else {
-          stream=false;scans=false;amounts=false;
-
-         checkhostname.setChecked(false);
+         stream=false;scans=false;amounts=false;
+         haslabel.setChecked(false);
          receive.setChecked(false);
+         label.setVisibility(hide);
+         label.setText("");
+         }
+      if(isnew||hasICE) {
+         checkhostname.setChecked(false);
          detect.setChecked(false);
          both.setChecked(true);
          testip.setChecked(true);
-         haslabel.setChecked(false);
-         label.setVisibility(hide);
-         label.setText("");
           } 
 
-          Stream.setChecked(stream); Scans.setChecked(scans); Amounts.setChecked(amounts);
+      Stream.setChecked(stream); Scans.setChecked(scans); Amounts.setChecked(amounts);
       isasender=stream||scans||amounts;
       sendchecked=new boolean[]{amounts,scans,stream};
       sendfrom[2].setText( tk.glucodata.util.timestring(Natives.getstarttime()));
@@ -703,12 +817,21 @@ static public String changehostError(MainActivity act,int pos) {
       else {
          reset.setVisibility(VISIBLE);
          }
-      
-
       sendfrom[0].setChecked(true);
       for(View v:fromrow) v.setVisibility(GONE);
-      for(int i=names==null?0:names.length;i<editIPs.length;i++) editIPs[i].setText("");
-      portedit.setText(port);
+      if(!hasICE) {
+          for(int i=names==null?0:names.length;i<editIPs.length;i++) editIPs[i].setText("");
+          portedit.setText(port);
+          ICE.setChecked(false);
+          ICElabel.setText("");
+          one.setChecked(false);
+          }
+      else {
+        ICElabel.setText(ICElabelstr);
+        boolean side= getICEside(index);
+        one.setChecked(side);
+        ICE.setChecked(true);
+        }
       if(pass!=null&&pass.length()>0) {
           editpass.setText(pass);
           Password.setChecked(true);
@@ -719,7 +842,8 @@ static public String changehostError(MainActivity act,int pos) {
          Password.setChecked(false);
          editpass.setVisibility(hide);
          }
-        hostindex=index;
+
+      hostindex=index;
       }
    void changehostview(MainActivity act,int index,View parent) {
       String[] names=Natives.getbackupIPs(index);
@@ -802,7 +926,7 @@ static public String changehostError(MainActivity act,int pos) {
             }
 
       modify.setOnClickListener(v->     changehostview(act,pos,layall));
-      final var lpar=isWearable?MATCH_PARENT:ViewGroup.LayoutParams.WRAP_CONTENT;
+      final var lpar=isWearable?MATCH_PARENT: WRAP_CONTENT;
       act.addContentView(layall, new ViewGroup.LayoutParams(lpar,lpar));
       Runnable closerun= ()-> {
          removeContentView(layall);
@@ -853,7 +977,7 @@ static public String changehostError(MainActivity act,int pos) {
      Button hosts=getbutton(act,R.string.addconnectionbutton);
      Button Help=getbutton(act,R.string.helpname);
       Help.setOnClickListener(v->
-         help.help(R.string.connectionoverview,act) );
+         help(R.string.connectionoverview,act) );
 
      Button Sync=getbutton(act,act.getString(R.string.sync));
       Sync.setOnClickListener(v-> Applic.wakemirrors());
@@ -904,6 +1028,7 @@ static public String changehostError(MainActivity act,int pos) {
 
       var errstr=Natives.serverError();
       var errorrow=errstr.length()>0?new View[]{getlabel(act,errstr)}:null;
+      var turnserver=getbutton(act,R.string.turnserver);
       if(isWearable) {
          CheckBox wifi=getcheckbox(act,act.getString(R.string.wifi),getWifi());
          wifi.setOnCheckedChangeListener( (buttonView,  isChecked)-> {
@@ -942,28 +1067,18 @@ static public String changehostError(MainActivity act,int pos) {
         Button autoqr;
          if(BuildConfig.minSDK>=20) {
              autoqr=getbutton(act,R.string.autoqr);
-             autoqr.setOnClickListener(v-> {
-            Confirm.ask(act,act.getString(R.string.autoqr),act.getString(R.string.autoqrmessage),()-> {
-                int pos=Natives.makeHomeCopy();
-                if(pos<0) {
-                        var mess= changehostError(act,pos);
-                         Applic.argToaster(act,mess,Toast.LENGTH_SHORT);
-                        }
-                  else {
-                        hostadapt.notifyItemInserted(pos);
-                        var jsonstr= getbackJson(pos);
-                        QRmake.show(act,jsonstr);
-                        }
-
-                });
-                });
             }
          else {
             autoqr=null;
             }
          getMargins(Help).leftMargin=getMargins(Cancel).rightMargin=(int)(GlucoseCurve.metrics.density*20.0f);
          var withqr=BuildConfig.minSDK>=20?new View[]{Help,autoqr,hosts,Cancel}:new View[]{Help,hosts,Cancel};
-         var layout=new Layout(act, new View[]{ip,blpan,p2p,labport,portview,Save},new View[]{recycle},new View[] {battery,Sync,reinit,staticnum},errorrow,withqr);
+         var layout=new Layout(act, new View[]{ip,blpan,p2p,labport,portview,Save,turnserver},new View[]{recycle},new View[] {battery,Sync,reinit,staticnum},errorrow,withqr);
+        if(BuildConfig.minSDK>=20) {
+            autoqr.setOnClickListener(v -> {
+                makeAutoQR(act, layout);
+                });
+          };
 
        var density=GlucoseCurve.metrics.density;
       layout.setPadding(MainActivity.systembarLeft+(int)(density*10),MainActivity.systembarTop/2,MainActivity.systembarRight+(int)(density*10),MainActivity.systembarBottom+(int)(density*3));
@@ -980,11 +1095,14 @@ static public String changehostError(MainActivity act,int pos) {
          hidekeyboard(act);
       });
 
+      turnserver.setOnClickListener(v->  {
+        TurnServer.show(act,lay);
+         });
          //alarms.setOnClickListener(v-> tk.glucodata.settings.Settings.alarmsettings(act,lay,issaved));
          hosts.setOnClickListener(v-> addhostview(act,lay));
       hostadapt = new HostViewAdapter(lay); //USE
       recycle.setAdapter(hostadapt);
-      recycle.setLayoutParams(new ViewGroup.LayoutParams(  MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+      recycle.setLayoutParams(new ViewGroup.LayoutParams(  MATCH_PARENT, WRAP_CONTENT));
       Runnable closerun= ()-> {
           if(lightback) act.lightBars(!getInvertColors( ));
          if(hostview!=null)
@@ -1049,7 +1167,7 @@ static public String changehostError(MainActivity act,int pos) {
           view.setAccessibilityDelegate(tk.glucodata.Layout.accessDeli);
    //        view.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24f);
             // view.setTextSize(TypedValue.COMPLEX_UNIT_PX,Applic.largefontsize);
-         view.setLayoutParams(new ViewGroup.LayoutParams(  ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+         view.setLayoutParams(new ViewGroup.LayoutParams(  ViewGroup.LayoutParams.MATCH_PARENT, WRAP_CONTENT));
          if(isWearable) {
             final var af=(int)(GlucoseCurve.metrics.density*12.0);
              view.setGravity(Gravity.CENTER);
@@ -1087,6 +1205,8 @@ static public String changehostError(MainActivity act,int pos) {
          boolean doreceive= (recnum&2)!=0;
          if(off)
              text.setPaintFlags(text.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+         else
+             text.setPaintFlags(text.getPaintFlags() & ~Paint.STRIKE_THRU_TEXT_FLAG);
          if(label!=null) {
             sb.append(label);
             sb.append(" ");

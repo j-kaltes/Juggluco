@@ -1,5 +1,6 @@
 symtest(ERR_reason_error_string);
 symtest(ERR_error_string_n);
+symtest(ERR_print_errors_cb);
 symtest(X509_STORE_CTX_get_current_cert);
 symtest(X509_STORE_CTX_get_error);
 symtest(X509_STORE_CTX_get_error_depth);

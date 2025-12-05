@@ -155,7 +155,7 @@ bool Connect::noacksendcommand(const unsigned char *buf,int buflen) {
 	for(const unsigned char *it=buf;(itlen=(this->*sendni)(it,left))<left;) {
 		LOGGERTAG("noacksendcommand sendni(%p,%d)=%d\n",it,left,itlen);
 		if(itlen<0) {
-			flerrortag("noacksendcommand send %d\n",(this->*getIdent)());
+			flerrortag("noacksendcommand send failed %d\n",(this->*getIdent)());
 			restartSender();
 			return false;
 			}

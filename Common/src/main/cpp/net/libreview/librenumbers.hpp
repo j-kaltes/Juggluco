@@ -32,6 +32,7 @@
 //#define OWNLOGGER 1
 #include "../../inout.hpp"
 #include "../../nums/numdata.hpp"
+#include "librelog.hpp"
 /*
 inline  int loggert( const char* fmt, ...) {
         va_list args;
@@ -238,7 +239,7 @@ public:
 		int getlen=snprintf(labelptr,over,R"( %g")",n.value);
 		const int totlen= getlen+startlen;
 		int len= writenote(ptr,std::string_view(label,totlen),recordnum,n.time, del);
-		LOGGERN(label,totlen);
+		LIBRELOGGERN(label,totlen);
 		ptr+=len;
 		}
 	}
@@ -247,7 +248,7 @@ public:
  void insulinel(char *&ptr,const Num &n,Libregeg *ids,bool del=false) {
  /*	if(logall) {
 		time_t tim=n.time;
-		LOGGER("insulinel type=%d %.1f %d %s",n.type,n.value,tim,ctime(&tim));
+		LIBRELOGGER("insulinel type=%d %.1f %d %s",n.type,n.value,tim,ctime(&tim));
 		} */
 	if(n.value!=0.0f) {
 		auto rapid=rapidWeight(n.type);
@@ -287,7 +288,7 @@ public:
 
 template <void (Numbers::*fun)(char *&,const Num &,Libregeg *,bool)>
  int writespan(char *buf,std::span<const Num> nums,Libregeg *ids,bool del=false) {
- 	LOGGER("writespan(del=%d\n",del);
+ 	LIBRELOGGER("writespan(del=%d\n",del);
 	char *ptr=buf;
 	for(const auto &n:nums) {
 		(this->*fun)(ptr,n,ids,del);
@@ -297,11 +298,11 @@ template <void (Numbers::*fun)(char *&,const Num &,Libregeg *,bool)>
 
 template <void (Numbers::*fun)(char *&,const Num &,Libregeg *,bool)>
  int writeindex(char *buf,std::span<int32_t> indices,Libregeg *ids) {
- 	LOGSTRING("writeindex\n");
+ 	LIBRELOGAR("writeindex");
 	char *ptr=buf;
 	for(auto index:indices) {
 		if(index>=0) {
-			LOGGER("getnum(%d)\n",index);
+			LIBRELOGGER("getnum(%d)\n",index);
 			const Num &n=ids->getnum(index);
 			(this->*fun)(ptr,n,ids,false);
 			}
@@ -315,7 +316,7 @@ bool didwrite=false;
 
 int nextlibrenr() {
 	const int ret= libreNR++;
-//	LOGGER("nextlibrenr()=%d\n",ret);
+//	LIBRELOGGER("nextlibrenr()=%d\n",ret);
 	return ret;
 	}
 public:
@@ -346,24 +347,24 @@ bool didsend() {
 void onSuccess() { 
 	if(dontSendNumbers())
 		return;
-	LOGSTRING("Numbers::onSuccess\n");	
+	LIBRELOGAR("Numbers::onSuccess");	
 	settings->data()->libredeletednr=0;
 	const int nnr=numdatas.size();
 	for(int i=0;i<nnr;i++) {
 		Numdata*numdat=numdatas[i];
 		numdat->getlibrechangednr()=0;
 		numdat->getlibresend()=ids[i].lastpos;
-		LOGGER("numdat->getlibresend()=%d should be %d\n",numdat->getlibresend(),ids[i].lastpos);
+		LIBRELOGGER("numdat->getlibresend()=%d should be %d\n",numdat->getlibresend(),ids[i].lastpos);
 
 		}
  	librenr()=libreNR;
-	LOGGER("next libreNR=%d\n",libreNR);
+	LIBRELOGGER("next libreNR=%d\n",libreNR);
 	}
 
 Numbers():ids(new Libregeg[numdatas.size()]),libreNR(librenr()) {
 	if(dontSendNumbers())
 		return;
-	LOGGER("libreNR=%d\n",libreNR);
+	LIBRELOGGER("libreNR=%d\n",libreNR);
 	const int nnr= numdatas.size();
 	const uint32_t starttime= settings->data()->startlibretime;
 	const uint32_t from =starttime?starttime:(time(nullptr)-librekeepsecs);
@@ -392,7 +393,7 @@ template <void (Numbers::*fun)(char *&,const Num &,Libregeg *,bool)>
 		ptr+=writespan<fun>(ptr,{deleted,nrdeleted},nullptr,true);
 		}
 	const int nnr=numdatas.size();
-	LOGSTRING("write all\n");
+	LIBRELOGAR("write all");
 	for(int i=0;i<nnr;i++) {
 		const auto lastpos=ids[i].lastpos;
 		if(lastpos>0) {
@@ -404,10 +405,10 @@ template <void (Numbers::*fun)(char *&,const Num &,Libregeg *,bool)>
 				ptr+=writeindex<fun>(ptr,{changes,changenr},ids+i);
 				}
 			int32_t sendnr=ids[i].libresendnr;;
-			LOGGER("%d: changenr=%zu lastpos=%d numdat->nextlibresend(from)=%d\n",i,changenr,lastpos,sendnr);
+			LIBRELOGGER("%d: changenr=%zu lastpos=%d numdat->nextlibresend(from)=%d\n",i,changenr,lastpos,sendnr);
 			if(lastpos>sendnr) {
 				const size_t nownr=lastpos-sendnr;
-				LOGGER("nownr=%zu\n",nownr);
+				LIBRELOGGER("nownr=%zu\n",nownr);
 				const Num *nums= ids[i].start;
 				ptr+=writespan<fun>(ptr,{nums+sendnr,nownr},ids+i,false);
 				}

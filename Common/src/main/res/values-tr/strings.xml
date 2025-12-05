@@ -377,9 +377,6 @@
     <string name="datapresent">"Veri Mevcut: "</string>
     <string name="overwrite">Üzerine Yazılsın Mı?</string>
     <string name="autoqr">Otomatik QR</string>
-    <string name="autoqrmessage">
-Bu telefondan ev ağınızdaki başka bir telefona veri gönderebilirsiniz.
-Tamam\'a basmak bağlantı için QR kod görüntüleyecektir. QR kodu diğer telefonda Sol Menü → Fotoğraf ile taradığınızda bağlantı kurulacak ve bu telefondan tüm verileri alacaktır.</string>
     
     <string name="googlescan">Google Tarama</string>
 

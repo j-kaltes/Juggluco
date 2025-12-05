@@ -52,7 +52,8 @@ using namespace std::literals;
 #else
 #define FATAL(...)  fprintf(stderr,__VA_ARGS__)
 #endif
-
+#define CURVELOGGER(...)
+#define CURVELOGAR(...)
 
 #include "curve.hpp"
 
@@ -60,7 +61,7 @@ using namespace std::literals;
 //#define FILEDIR "/sdcard/libre2/"
 //#include "Glucograph.h"
 #include "logs.hpp"
-//#define LOGGER(...)  __android_log_print(ANDROID_LOG_VERBOSE, LOG_TAG, __VA_ARGS__)
+//#define CURVELOGGER(...)  __android_log_print(ANDROID_LOG_VERBOSE, LOG_TAG, __VA_ARGS__)
 #include "settings/settings.hpp"
 
 #include "SensorGlucoseData.hpp"
@@ -168,9 +169,9 @@ bool hebrew() ;
 #endif
 extern jugglucotext zhtext; 
 void    JCurve::initfont(NVGcontext* avg) { 
-LOGAR("initfont");
+CURVELOGAR("initfont");
 if(!avg) {
-    LOGAR("avg==null");
+    CURVELOGAR("avg==null");
     return;
     }
 thevg=avg;
@@ -183,10 +184,10 @@ if(usedtext==&zhtext) {
 #endif
 
     ))) {
-      LOGAR("font NotoSansCJK-Regular failed");
+      CURVELOGAR("font NotoSansCJK-Regular failed");
 #ifdef JUGGLUCO_APP
        if(-1==(font=whitefont=blackfont = nvgCreateFont(avg, "dance-bold", fontpath "DroidSansFallback.ttf")))  {
-            LOGAR("font DroidSansFallback.ttf failed");
+            CURVELOGAR("font DroidSansFallback.ttf failed");
 #else 
         {
 #endif
@@ -212,7 +213,7 @@ if(usedtext==&zhtext) {
 
 
     ))) {
-      LOGAR("menufont NotoSerifCJK-Regular failed");
+      CURVELOGAR("menufont NotoSerifCJK-Regular failed");
        if(-1==(menufont = nvgCreateFont(avg, "regular",
 
 #ifdef JUGGLUCO_APP
@@ -221,7 +222,7 @@ if(usedtext==&zhtext) {
 "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc"
 #endif
        ))) {
-         LOGAR("menufont NotoSansCJK-Regular failed");
+         CURVELOGAR("menufont NotoSansCJK-Regular failed");
          if(-1==(menufont = nvgCreateFont(avg, "regular",
 #ifdef JUGGLUCO_APP
          fontpath "DroidSansFallback.ttf"
@@ -229,7 +230,7 @@ if(usedtext==&zhtext) {
         "/usr/share/fonts-droid-fallback/truetype/DroidSansFallback.ttf"
 #endif
          )))  {
-               LOGAR("font DroidSansFallback failed");
+               CURVELOGAR("font DroidSansFallback failed");
                }
          }
 
@@ -292,10 +293,10 @@ fontpath "Roboto-Regular.ttf",
 
     for(const char *name:standardfonts)  {
         if((blackfont = nvgCreateFont(avg, "dance-bold", name))!=-1) {
-            LOGGER("blackfont %s succeeded\n",name);
+            CURVELOGGER("blackfont %s succeeded\n",name);
             break;
             }
-        LOGGER("blackfont %s failed\n",name);
+        CURVELOGGER("blackfont %s failed\n",name);
         }
 if(blackfont==-1) {
     FATAL("all fonts failed: tried: ");
@@ -315,7 +316,7 @@ if(blackfont==-1) {
 //"/usr/local/Wolfram/Wolfram/14.2/SystemFiles/Fonts/TrueType/Roboto-Regular.ttf"
 #endif
     ))==-1) {
-        LOGAR("white font failed");
+        CURVELOGAR("white font failed");
         whitefont=blackfont;
         }
 #else
@@ -334,10 +335,10 @@ fontpath "DroidSans.ttf"
     int fallback;
     for(const char *name:menufonts)  {
         if((fallback = nvgCreateFont(avg, "regular", name))!=-1) {
-            LOGGER("menufont %s succeeded\n",name);
+            CURVELOGGER("menufont %s succeeded\n",name);
             break;
             }
-        LOGGER("menufont %s failed\n",name);
+        CURVELOGGER("menufont %s failed\n",name);
         }
 #ifdef MENUARROWS
     menufont=nvgCreateFontMem(avg, "regular", (unsigned char *)fontfile, sizeof(fontfile), 0);
@@ -367,7 +368,7 @@ fontpath "DroidSans.ttf"
     nvgTextBounds(avg, 0,  0, timestring,timestring+sizeof(timestring)-1, bounds.array);
     timelen=bounds.xmax-bounds.xmin;
     timeheight=bounds.ymax-bounds.ymin;
-   LOGGER("timeheight=%f timelen=%f\n",timeheight,timelen);
+   CURVELOGGER("timeheight=%f timelen=%f\n",timeheight,timelen);
 
     const char listitem[]="39-08-2028 09-59 RRRRRRRRRRR 999.9";     
     nvgTextBounds(avg, 0,  0, listitem,listitem+sizeof(listitem)-1, bounds.array);
@@ -383,7 +384,7 @@ fontpath "DroidSans.ttf"
      sensorbounds.bottom-=sensorbounds.top;
      sensorbounds.left-=xhalf;
      sensorbounds.top-=yhalf;
-     LOGGER("sensorbounds.left=%.1f\n",sensorbounds.left);
+     CURVELOGGER("sensorbounds.left=%.1f\n",sensorbounds.left);
     valuesize=sensorbounds.right*2;
 #ifdef JUGGLUCO_APP
      fixatex=settings->data()->fixatex;
@@ -409,7 +410,7 @@ const float head=headin
 *0.7
 #endif
 ;
-LOGGER("setfontsize density=%.1f, head=%.1f, small=%.1f menu=%.1f\n",(double)density,(double)head,(double)small,menu); 
+CURVELOGGER("setfontsize density=%.1f, head=%.1f, small=%.1f menu=%.1f\n",(double)density,(double)head,(double)small,menu); 
 smallsize=small;
 menusize=menu;
 this->density=density;
@@ -463,10 +464,10 @@ std::vector<pair<const ScanData*,const ScanData*>> getsensorranges(uint32_t star
     vector<pair<const ScanData*,const ScanData*>> polldata;
     polldata.reserve(hists.size());
     uint32_t timeiter=start;
-    LOGAR("start getsensorranges: ");
+    CURVELOGAR("start getsensorranges: ");
     for(int i=hists.size()-1;i>=0&&timeiter<endt;i--)  {
         auto his=sensors->getSensorData(hists[i]);
-        LOGGER("sensor %s\n",his->showsensorname().data());
+        CURVELOGGER("sensor %s\n",his->showsensorname().data());
         std::span<const ScanData>     poll=his->getPolldata();
 #if !defined(NDEBUG)&&defined(JUGGLUCO_APP)
         auto wastimeiter=timeiter;
@@ -509,7 +510,7 @@ std::vector<pair<const ScanData*,const ScanData*>> getsensorranges(uint32_t star
         polldata.push_back(ran);
         }
 
-    LOGAR("end getsensorranges: ");
+    CURVELOGAR("end getsensorranges: ");
     return polldata;
     }
     */
@@ -519,12 +520,12 @@ std::vector<pair<const ScanData*,const ScanData*>> getsensorranges(uint32_t star
     vector<pair<const ScanData*,const ScanData*>> polldata;
     polldata.reserve(hists.size());
     uint32_t timeiter=start;
-    LOGAR("start getsensorranges: ");
+    CURVELOGAR("start getsensorranges: ");
 
     auto califunc=calibratePast?makecalibratedback:makecalibrated;
     for(int i=hists.size()-1;i>=0&&timeiter<endt;i--)  {
         auto his=sensors->getSensorData(hists[i]);
-        LOGGER("sensor %s\n",his->showsensorname().data());
+        CURVELOGGER("sensor %s\n",his->showsensorname().data());
         std::span<const ScanData>     poll=his->getPolldata();
         auto ran=getScanRange(poll.data(),poll.size(),timeiter,endt);
         if(ran.first==ran.second)
@@ -548,7 +549,7 @@ std::vector<pair<const ScanData*,const ScanData*>> getsensorranges(uint32_t star
             polldata.push_back(ran);
         }
 
-    LOGAR("end getsensorranges: ");
+    CURVELOGAR("end getsensorranges: ");
     return polldata;
     }
 //static uint32_t pollgapdist=5*60;
@@ -624,7 +625,7 @@ extern vector<NumDisplay*> numdatas;
 #endif
 
         selshown=true;
-        LOGGER("glucosepointinfo %s %ud %f\n",buf,tim,posx);
+        CURVELOGGER("glucosepointinfo %s %ud %f\n",buf,tim,posx);
         return true;
         }
     return false;
@@ -753,7 +754,7 @@ template <class TX,class TY> void JCurve::showlineScan(NVGcontext* avg,const Sca
             const auto posx= transx(tim),posy=transy(glu);
 /*#ifndef NOLOG
 time_t ttim=tim;
-            LOGGER("showlineScan posx=%f tim=%ud %s",posx,tim,ctime(&ttim));
+            CURVELOGGER("showlineScan posx=%f tim=%ud %s",posx,tim,ctime(&ttim));
 #endif */
 
             if(!restart&&tim>late) {
@@ -802,7 +803,7 @@ time_t ttim=tim;
 pair<int32_t,int32_t> histPositions(const SensorGlucoseData  * hist, const uint32_t starttime, const uint32_t endtime) {
     int32_t firstmog=hist->getstarthistory();
     int32_t lastmog= hist->getAllendhistory()-1;
-    LOGGER("histPositions first=%d last=%d\n",firstmog,lastmog);
+    CURVELOGGER("histPositions first=%d last=%d\n",firstmog,lastmog);
     if(firstmog>=lastmog)
         return {firstmog,lastmog};
     uint32_t begin=hist->getstarttime();
@@ -919,7 +920,7 @@ uint32_t maxtime() {
     const uint32_t sent= sensors->timelastdata(); 
     #ifndef NOLOG
     time_t tim=sent;
-    LOGGER("sensors->timelastdata()=%u %s",sent,ctime(&tim));
+    CURVELOGGER("sensors->timelastdata()=%u %s",sent,ctime(&tim));
     #endif
     return max(numt,sent);
     }
@@ -941,7 +942,7 @@ uint32_t mintime() {
    uint32_t tim= min(numt,sent);
    #ifndef NOLOG
    time_t t=tim;
-   LOGGER("mintime=%d %s",tim,ctime(&t));
+   CURVELOGGER("mintime=%d %s",tim,ctime(&t));
    #endif
    return tim;
     }
@@ -959,11 +960,11 @@ void JCurve::setdiffcurrent() {
         }
      else
         doclamp=true;
-    LOGGER("now=%u starttime=%u diffcurrent=%d doclamp=%d\n",now,starttime,diffcurrent,doclamp);
+    CURVELOGGER("now=%u starttime=%u diffcurrent=%d doclamp=%d\n",now,starttime,diffcurrent,doclamp);
      return;
     }
 void JCurve::setstarttime(uint32_t newstart) {
-    LOGGER("setstarttime(%u) nowclamp=%d\n",newstart,nowclamp);
+    CURVELOGGER("setstarttime(%u) nowclamp=%d\n",newstart,nowclamp);
     starttime=newstart;
     if(nowclamp) {
         setdiffcurrent();
@@ -971,7 +972,7 @@ void JCurve::setstarttime(uint32_t newstart) {
     }
 uint32_t JCurve::maxstarttime() {
     float duraf=((float)valuesize/dwidth);
-    LOGGER("dwidth=%f valuesize=%f duraf=%f\n",(double)dwidth,(double)valuesize,(double)duraf);
+    CURVELOGGER("dwidth=%f valuesize=%f duraf=%f\n",(double)dwidth,(double)valuesize,(double)duraf);
     float subtr=0.91 - duraf*1.2f;
     return time(nullptr)-subtr*duration;
     }
@@ -1005,8 +1006,8 @@ pair<float,float>    JCurve::drawtrender(NVGcontext* avg,const std::array<uint16
     const float lowval=*minel;
     const float highval=*maxel;
     const float mid=(lowval+highval)/2.0;
-    LOGGER("width=%.0f, height=%.0f\n",w,h);
-    LOGGER("low=%.0f,high=%.0f,mid=%.0f\n",lowval,highval,mid);
+    CURVELOGGER("width=%.0f, height=%.0f\n",w,h);
+    CURVELOGGER("low=%.0f,high=%.0f,mid=%.0f\n",lowval,highval,mid);
     constexpr float hglurange=2*convfactor;
     const auto gety=[y,h,mid](const short val)->float  { return y+h/2.0-(((val-mid)/hglurange)*h);};
     const int step=w/(trend::num-1);
@@ -1022,7 +1023,7 @@ pair<float,float>    JCurve::drawtrender(NVGcontext* avg,const std::array<uint16
     float pos0=gety(glu0);
     float posx= x+i*step;
      nvgMoveTo(avg,posx ,pos0);
-    LOGGER("%.1f (%hi) (%.0f,%.0f)\n",glu0/convfactor,glu0,posx,pos0);
+    CURVELOGGER("%.1f (%hi) (%.0f,%.0f)\n",glu0/convfactor,glu0,posx,pos0);
     posx+=step;
     float posy=0.0f;
     i++;
@@ -1030,7 +1031,7 @@ pair<float,float>    JCurve::drawtrender(NVGcontext* avg,const std::array<uint16
         short glu=trend[i];
         if(glu) {
             posy=gety(glu);
-            LOGGER("%.1f (%hi) (%.0f,%.0f)\n",glu/convfactor,glu,posx,posy);
+            CURVELOGGER("%.1f (%hi) (%.0f,%.0f)\n",glu/convfactor,glu,posx,posy);
             nvgLineTo( avg,posx ,posy);
             }
         }
@@ -1111,7 +1112,7 @@ template <class LT> void    JCurve::glucoselines(NVGcontext* avg,const float las
   const    uint32_t startl=0;
   
     const float endline=last;
-//    LOGGER("glucoselines: unit=%f unit2=%f step=%d (%g) startl=%d (%g)\n",unit,unit2,step,::gconvert(step,glunit),startl,::gconvert(startl,glunit));
+//    CURVELOGGER("glucoselines: unit=%f unit2=%f step=%d (%g) startl=%d (%g)\n",unit,unit2,step,::gconvert(step,glunit),startl,::gconvert(startl,glunit));
 #ifdef WEAROS
    const auto endlevel=dheight-smallfontlineheight;
    const auto startlevel=2.5*smallfontlineheight;
@@ -1165,7 +1166,7 @@ template <class LT> const displaytime JCurve::getdisplaytime(const uint32_t nu,c
     if((last>nu)&&(2*(last-nu))>tstep)
         last=nu;
 
-    LOGGER("getdisplaytime xscale=%f %u %u %u\n",xscale,tstep,first,last);
+    CURVELOGGER("getdisplaytime xscale=%f %u %u %u\n",xscale,tstep,first,last);
     return {tstep,first,last};
 }
 
@@ -1216,7 +1217,7 @@ if(nocutoff) {
          float over=straal-timeY;
          lower=straal-sqrt(pow(straal,2)-pow(over,2))+timelen*.4f;
          upper=dwidth-lower;
-         LOGGER("lower=%f upper=%f over=%f\n",lower,upper,over);
+         CURVELOGGER("lower=%f upper=%f over=%f\n",lower,upper,over);
       }
 #endif
       }
@@ -1277,7 +1278,7 @@ template <class LT> void    JCurve::epochlines(NVGcontext* avg,uint32_t first,ui
         nvgStrokeColor(avg, *getblack());
         for(time_t t=start;t<last;t+=(24*60*60)) {
             float dtim=transx(t);
-        //    LOGGER("%ld\n",t);
+        //    CURVELOGGER("%ld\n",t);
             nvgBeginPath(avg);
             nvgMoveTo(avg,dtim ,0) ;
             nvgLineTo( avg, dtim,dheight);
@@ -1287,7 +1288,7 @@ template <class LT> void    JCurve::epochlines(NVGcontext* avg,uint32_t first,ui
         nvgStrokeColor(avg, *getthreehour());
         const int inthree=hour%3;
         start=startin+(inthree?((3-inthree)*60*60):0);
-        LOGGER("startin=%ld start=%ld last=%d inthree=%d\n",startin,start,last, inthree);
+        CURVELOGGER("startin=%ld start=%ld last=%d inthree=%d\n",startin,start,last, inthree);
         for(time_t t=start;t<last;t+=(3*60*60)) {
             float dtim=transx(t);
             nvgBeginPath(avg);
@@ -1370,7 +1371,7 @@ void    JCurve::drawarrow(NVGcontext* avg, float rate,float getx,float gety) {
 
 
 int JCurve::largedaystr(const time_t tim,char *buf) {
-        LOGAR("largedaystr");
+        CURVELOGAR("largedaystr");
     struct tm stmbuf;
     localtime_r(&tim,&stmbuf);
    int len=mkhourminstr(stmbuf.tm_hour,mktmmin(&stmbuf),buf);
@@ -1385,7 +1386,7 @@ int JCurve::largedaystr(const time_t tim,char *buf) {
 
 
 void       JCurve::showbluevalue(NVGcontext* avg,const time_t nu,const int xpos,std::vector<int> &used) {
-LOGGER("showbluevalue %zd\n",used.size());
+CURVELOGGER("showbluevalue %zd\n",used.size());
         nvgFontSize(avg, smallsize);
         nvgFillColor(avg, *getblack());
 
@@ -1466,7 +1467,7 @@ if(showcurrentdate) {
         }
 #endif
 
-        LOGGER("xpos=%d dwidth=%.1f headsize=%.1f density=%.1f getx=%.1f timex=%.1f\n",xpos,dwidth,headsize, density,getx,timex);
+        CURVELOGGER("xpos=%d dwidth=%.1f headsize=%.1f density=%.1f getx=%.1f timex=%.1f\n",xpos,dwidth,headsize, density,getx,timex);
         }
       }
     showlastsstream(avg,nu, getx,used) ;
@@ -1501,7 +1502,7 @@ if(showcurrentdate) {
         
 
 void        JCurve::showdates(NVGcontext* avg,time_t nu,uint32_t starttime,time_t endtime) {
-   LOGGER("duration=%d\n",duration);
+   CURVELOGGER("duration=%d\n",duration);
     int32_t timdis=nu-starttime;
 constexpr const int grens=
 #ifdef WEAROS
@@ -1510,9 +1511,9 @@ constexpr const int grens=
 3
 #endif
 ;
-LOGGER("timdis=%d duration=%d grens=%d\n",timdis,duration,grens);
+CURVELOGGER("timdis=%d duration=%d grens=%d\n",timdis,duration,grens);
 if(timdis>0&&((duration/timdis)<grens)) {
-       LOGGER("timdis=%d larger than zero\n",timdis);
+       CURVELOGGER("timdis=%d larger than zero\n",timdis);
         const float datehigh=smallfontlineheight*
 #ifdef WEAROS
         //.71;
@@ -1560,7 +1561,7 @@ if(timdis>0&&((duration/timdis)<grens)) {
         nvgText(avg,xpos ,datehigh+statusbarheight, tbuf, tbuf+timelen);
 #endif
 
-        LOGGER("displaytime %s\n",tbuf);
+        CURVELOGGER("displaytime %s\n",tbuf);
 #ifndef WEAROS
        const auto showendtime=endtime-2*60;
         if(nu>=endtime) {
@@ -1621,7 +1622,7 @@ int    JCurve::displaycurve(NVGcontext* avg,time_t nu) {
             );
             
     histlen=hists.size();
-    LOGGER("displaycurve histlen=%d doclamp=%d starttime=%u\n",histlen,doclamp,starttime2);
+    CURVELOGGER("displaycurve histlen=%d doclamp=%d starttime=%u\n",histlen,doclamp,starttime2);
     delete[] scanranges;
     scanranges=new pair<const ScanData *,const ScanData*> [histlen];
     delete[] pollranges;
@@ -1631,7 +1632,7 @@ int    JCurve::displaycurve(NVGcontext* avg,time_t nu) {
 #ifdef SI5MIN
    bool sibionics[histlen];
 #endif
-    LOGAR("before getranges");
+    CURVELOGAR("before getranges");
 #ifdef NOCUTOFF
    if(histlen)
       nocutoff=false;
@@ -1640,12 +1641,12 @@ int    JCurve::displaycurve(NVGcontext* avg,time_t nu) {
     for(int i=histlen-1;i>=0;--i) {
         auto his=sensors->getSensorData(hists[i]);
         if(!his)  {
-            LOGAR("getSensorData==null");
+            CURVELOGAR("getSensorData==null");
             sleep(1);
             return 0;
             }
-        LOGGER("sensor %s\n",his->showsensorname().data());
-            //LOGGER("%s\n",his->othershortsensorname()->data());
+        CURVELOGGER("sensor %s\n",his->showsensorname().data());
+            //CURVELOGGER("%s\n",his->othershortsensorname()->data());
         std::span<const ScanData>     scan;
         //if(showscans) 
         {
@@ -1692,30 +1693,30 @@ int    JCurve::displaycurve(NVGcontext* avg,time_t nu) {
                 el={};
                 }
         }
-    LOGGER("Before numdatas[i]->getInRange(%u,%u)\n",starttime2,endtime);
+    CURVELOGGER("Before numdatas[i]->getInRange(%u,%u)\n",starttime2,endtime);
     for(int i=0;i< numdatas.size();i++) 
         extrums[i]=numdatas[i]->getInRange(starttime2, endtime) ;
 
     const pair<const ScanData *,const ScanData*> *scanpoll[]= {scanranges,pollranges,caliSpans};
-    LOGAR("Before getextremes");
+    CURVELOGAR("Before getextremes");
     if((setend<starttime2||settime>=endtime)) {
        auto extr=getextremes(hists,scanpoll,std::size(scanpoll),histpositions);
        for(int i=0;i<numdatas.size();i++)  {
-            LOGGER("%d before extremenums \n",i);
+            CURVELOGGER("%d before extremenums \n",i);
             extr  = numdatas[i]->extremenums(*this,extr);
             }
        setextremes(extr) ;
        }
-    LOGAR("before gettrans");
+    CURVELOGAR("before gettrans");
     int  gmax = gmin+grange;
     const auto [transx,transy]= gettrans(starttime2, endtime);
 displaytime disp=getdisplaytime(nu,starttime2,endtime, transx);
     const float dlast=nu<endtime?transx(disp.last):dleft+dwidth;
-    LOGAR("before showsaverange");
+    CURVELOGAR("before showsaverange");
     showsaverange(avg,dlast,transy(settings->targetlow()),transy(settings->targethigh()));
 
     nvgFontSize(avg, smallsize);
-    LOGAR("before showNums");
+    CURVELOGAR("before showNums");
     const int catnr=settings->getlabelcount();
 
     showdates(avg,nu,starttime2,endtime) ;
@@ -1728,7 +1729,7 @@ displaytime disp=getdisplaytime(nu,starttime2,endtime, transx);
 
 //        nvgCircle(avg, posx,posy,foundPointRadius);
 
-    LOGAR("before showhistories");
+    CURVELOGAR("before showhistories");
     const int colorsleft=nrcolors-catnr;
     const auto segcolor=[catnr,colorsleft,colorseg=colorsleft/4](int index,int seg) {
          return catnr+(index+colorseg*seg)%colorsleft;
@@ -1741,7 +1742,7 @@ displaytime disp=getdisplaytime(nu,starttime2,endtime, transx);
              histcurve(avg,sensors->getSensorData(index), histpositions[i].first, histpositions[i].second,transx,transy,colorindex); 
              }
         }
-    LOGAR("before showcalibrated");
+    CURVELOGAR("before showcalibrated");
     if(showcalibrated)   {
         nvgStrokeWidth(avg, pollCurveStrokeWidth);
         for(int i=histlen-1;i>=0;i--) {
@@ -1762,7 +1763,7 @@ displaytime disp=getdisplaytime(nu,starttime2,endtime, transx);
                 }
             }
         }
-    LOGAR("before showstream");
+    CURVELOGAR("before showstream");
     if(showstream)   {
         nvgStrokeWidth(avg, pollCurveStrokeWidth);
         for(int i=histlen-1;i>=0;i--) {
@@ -1776,7 +1777,7 @@ displaytime disp=getdisplaytime(nu,starttime2,endtime, transx);
             showlineScan(avg,pollranges[i].first,pollranges[i].second,transx,transy,colorindex,search);
              }
         }
-    LOGAR("before showscans");
+    CURVELOGAR("before showscans");
     if(showscans) {
         for(int i=histlen-1;i>=0;i--) {
             const int index=hists[i];
@@ -1785,7 +1786,7 @@ displaytime disp=getdisplaytime(nu,starttime2,endtime, transx);
             }
          }
 
-    LOGGER("before showsnums catnr=%d\n",catnr);
+    CURVELOGGER("before showsnums catnr=%d\n",catnr);
     if(catnr>0&&(shownumbers||showmeals))  {
         bool was[catnr];
         memset(was,'\0',sizeof(was));
@@ -1795,10 +1796,10 @@ displaytime disp=getdisplaytime(nu,starttime2,endtime, transx);
 
     if(nu<endtime&&(dwidth-smallfontlineheight)>nupos) {
         showbluevalue(avg,nu, nupos,usedsensors);
-        LOGAR("end display curve value");
+        CURVELOGAR("end display curve value");
         }
     else  {
-        LOGAR("end display no value");
+        CURVELOGAR("end display no value");
 #ifndef DONTTALK
         shownglucose.resize(0);
 #endif
@@ -1843,7 +1844,7 @@ int *numheights=nullptr;
 void mkheights() {
     if(!settings)
         return;
-    LOGAR("mkheights() ");
+    CURVELOGAR("mkheights() ");
     const int maxl= settings->getlabelcount();
     delete[] numheights;
     numheights=new int[maxl];
@@ -1912,7 +1913,7 @@ bool hebrew() {
 
 #include "destruct.hpp"
 void     JCurve::setlocale(NVGcontext* avg,const char *localestrbuf,const size_t len) {
-    LOGGER("locale=%s\n",localestrbuf);
+    CURVELOGGER("locale=%s\n",localestrbuf);
     localestr={localestrbuf,len};
     uint16_t langid=mklanguagenumlow(localestrbuf);
     const auto *text=language::gettext(langid);
@@ -1940,11 +1941,11 @@ void     JCurve::setlocale(NVGcontext* avg,const char *localestrbuf,const size_t
 
 
 void  JCurve::calccurvegegs() {
-    LOGAR("start calccurvegegs");
+    CURVELOGAR("start calccurvegegs");
     mkheights(); 
     starttime=maxtime()-4*duration/5;
     setusedsensors();
-    LOGAR("end calccurvegegs");
+    CURVELOGAR("end calccurvegegs");
     }
 
 
@@ -1982,7 +1983,7 @@ int64_t openNums(std::string_view numpath,int64_t ident) {
         
         }
     
-    LOGGER("index=%d numdir=%s ptr=%p\n",index,numpath.data(),numdata);
+    CURVELOGGER("index=%d numdir=%s ptr=%p\n",index,numpath.data(),numdata);
     return reinterpret_cast<int64_t>(numdata);
     }
 
@@ -2004,7 +2005,7 @@ void    JCurve::startstepNVG(NVGcontext* avg,int width, int height) {
 
 
  void    JCurve::showlastsstream(NVGcontext* avg,const time_t nu,const float getx,std::vector<int> &used ) {
-//LOGGER("showlaststream %d\n",used.size());
+//CURVELOGGER("showlaststream %d\n",used.size());
     const auto usedsize=used.size();
 #ifdef JUGGLUCO_APP
     int success=false;
@@ -2035,10 +2036,10 @@ void    JCurve::startstepNVG(NVGcontext* avg,int width, int height) {
 #endif
         const ScanData *poll=hist->lastValidStream();
         if(poll) {
-            LOGAR("poll!=null");
+            CURVELOGAR("poll!=null");
             int age=nu-poll->t;
             if(age<maxbluetoothage) {
-                LOGAR("age<maxbluetoothage");
+                CURVELOGAR("age<maxbluetoothage");
 #ifdef JUGGLUCO_APP
                 failures=0;
 #endif
@@ -2064,7 +2065,7 @@ void    JCurve::startstepNVG(NVGcontext* avg,int width, int height) {
 
 #ifdef NOTALLVIES
                                 nexttimeviewed=poll->t+betweenviews;
-                                LOGGER("add %d nextime=%s",addnum,ctime(&nexttimeviewed));
+                                CURVELOGGER("add %d nextime=%s",addnum,ctime(&nexttimeviewed));
 #endif
                                 }
                             }
@@ -2074,7 +2075,7 @@ void    JCurve::startstepNVG(NVGcontext* avg,int width, int height) {
                 }
 #ifdef JUGGLUCO_APP
             else {
-                LOGAR("age>=maxbluetoothage");
+                CURVELOGAR("age>=maxbluetoothage");
                 switch(showerrorvalue(avg,hist,nu,getx,gety,i)) {
                     case 1: neterror=true;break;
                     case 2: usebluetoothoff=true;break;
@@ -2088,11 +2089,11 @@ void    JCurve::startstepNVG(NVGcontext* avg,int width, int height) {
                             otherproblem=true;
                         }
                     };
-                LOGAR("AFgter showerrorvalue(hist,nu,getx,gety)) ");
+                CURVELOGAR("AFgter showerrorvalue(hist,nu,getx,gety)) ");
                 }
             }
         else {
-            LOGAR("poll==null");
+            CURVELOGAR("poll==null");
 
 #ifndef NOTCHINESE
          if(hist->notchinese()) {
@@ -2107,7 +2108,7 @@ void    JCurve::startstepNVG(NVGcontext* avg,int width, int height) {
            auto wait= nu-starttime;
            const int warmup=hist->getWarmupMIN(); 
            blueperm=bluePermission();
-           LOGGER("waited=%lu warmup=%d starttime=%lu %s blueperm=%d\n",wait,warmup,starttime,ctime(&starttime),blueperm);
+           CURVELOGGER("waited=%lu warmup=%d starttime=%lu %s blueperm=%d\n",wait,warmup,starttime,ctime(&starttime),blueperm);
            bool bluescanner=hist->isSibionics()||hist->isDexcom();
            if(bluescanner&&blueperm<2&&!hasnetwork()) { 
                  float usegetx=getx-headsize/3;
@@ -2141,7 +2142,7 @@ void    JCurve::startstepNVG(NVGcontext* avg,int width, int height) {
                 }
              else {
                 const bool isInitialised=(!hist->isLibre2())||sensors->getsensor(sensorindex)->initialized;
-                LOGGER("wait<(%d*60) isInitialised=%d\n",warmup,isInitialised);
+                CURVELOGGER("wait<(%d*60) isInitialised=%d\n",warmup,isInitialised);
                 static char buf[256];
                 int minutes=warmup-(wait/60);
                 ends=sprintf(buf,isInitialised?usedtext->readysec.data():usedtext->readysecEnable.data(),minutes);
@@ -2156,14 +2157,14 @@ void    JCurve::startstepNVG(NVGcontext* avg,int width, int height) {
 #endif
              }
            else   {
-               LOGAR("age>=maxbluetoothage");
+               CURVELOGAR("age>=maxbluetoothage");
                switch(showerrorvalue(avg,hist,nu,getx,gety,i)) { //TODO: integrate with same above
                    case 1: neterror=true;break;
                    case 2: usebluetoothoff=true;break;
                    case 3: bluetoothoff=true;break;
                    default: otherproblem=true;
                    };
-               LOGAR("Afgter showerrorvalue(hist,nu,getx,gety)) ");
+               CURVELOGAR("Afgter showerrorvalue(hist,nu,getx,gety)) ");
                }
              }
             }
@@ -2176,7 +2177,7 @@ void    JCurve::startstepNVG(NVGcontext* avg,int width, int height) {
 #ifndef DONTTALK
         shownglucose.resize(1);
 #endif
-        LOGAR("showlastsstream: !success&&!otherproblem");
+        CURVELOGAR("showlastsstream: !success&&!otherproblem");
         int newgetx=getx-headsize/3;
         nvgTextAlign(avg,NVG_ALIGN_LEFT|NVG_ALIGN_MIDDLE);
         nvgFontSize(avg,headsize/4 );
@@ -2193,7 +2194,7 @@ void    JCurve::startstepNVG(NVGcontext* avg,int width, int height) {
             }
         else { 
              if(usebluetoothoff) {
-                LOGAR("showlastsstream: usebluetoothoff");
+                CURVELOGAR("showlastsstream: usebluetoothoff");
                 nvgTextBox(avg,newgetx ,gety, getboxwidth(newgetx),usedtext->useBluetoothOff.begin(), usedtext->useBluetoothOff.end());
 #ifndef DONTTALK
                 shownglucose[i].glucosevalue=0;
@@ -2203,7 +2204,7 @@ void    JCurve::startstepNVG(NVGcontext* avg,int width, int height) {
 #endif
            }
            else {
-             LOGGER("blueperm=%d\n",blueperm);
+             CURVELOGGER("blueperm=%d\n",blueperm);
                 if(blueperm<1) { 
                     const std::string_view perm=blueperm==1?usedtext->nolocationpermission:usedtext->nonearbydevicespermission;
                     nvgTextBox(avg,newgetx ,gety, getboxwidth(newgetx),perm.begin(), perm.end());
@@ -2229,10 +2230,10 @@ void    JCurve::startstepNVG(NVGcontext* avg,int width, int height) {
                 }
         }
     if(failures>2) {
-        LOGAR("failures>3" );
+        CURVELOGAR("failures>3" );
         for(int i=0;i<used.size();i++) {
             if(SensorGlucoseData *hist=sensors->getSensorData(used[i])) {
-                LOGAR("set waiting=true");
+                CURVELOGAR("set waiting=true");
             hist->waiting=true;
                 }
             }
@@ -2242,7 +2243,7 @@ void    JCurve::startstepNVG(NVGcontext* avg,int width, int height) {
     }
 #endif
 
-    LOGAR(" end showlastsstream");
+    CURVELOGAR(" end showlastsstream");
     }
 /*
 int    JCurve::showLargevalue(NVGcontext* avg, int index,float getx,float gety,float convglucose,const ScanData *poll) {
@@ -2270,7 +2271,7 @@ int    JCurve::showLargevalue(NVGcontext* avg, int index,float getx,float gety,f
 */
  void    JCurve::showvalue(NVGcontext* avg, const ScanData *poll,const SensorGlucoseData *hist, float getx,float gety,int index,uint32_t nu) {
     const auto sensorname=hist->othershortsensorname();
-    LOGGER("showvalue %s\n",sensorname.data());
+    CURVELOGGER("showvalue %s\n",sensorname.data());
     float sensory= gety+headsize/3.1;
     nvgFillColor(avg, *getblack());
     nvgFontSize(avg,mediumfont );

@@ -822,7 +822,13 @@ public static native void setSiSubtype(long dataptr,int type);
 
 public static native byte[] getSIResetBytes( );
 public static native String getbackJson(int pos);
-public static native int makeHomeCopy();
+public static native int makeHomeSender( );
+public static native int makeHomeReceiver( );
+public static native int makeICESender( );
+public static native int makeICEReceiver( );
+
+
+
 public static native void setGoogleScan(boolean val);
 public static native boolean getGoogleScan( );
     
@@ -928,7 +934,28 @@ public static native int GlucoseMeterHasIndex(String deviceName);
 public static native void setDisconnectSensor(boolean val);
 public static native boolean getDisconnectSensor( );
 public static native long getSensorEndData(String sensor);
+
+public static native String getICElabel(int pos);
+public static native boolean getICEside(int pos);
+
+
+public static native void deleteTurnServer(int pos);
+public static native String getTurnHost(int pos);
+public static native String getTurnUser(int pos);
+public static native String getTurnPassword(int pos);
+public static native int getTurnPort(int pos);
+public static native void setTurnHost(int pos,String jhost);
+public static native void setTurnUser(int pos,String juser);
+public static native void setTurnPassword(int pos,String jpassword);
+public static native void setTurnPort(int pos,int port);
+
+public static native int TurnServerNR();
+
 //s/^[	 ]*extern.*JNIEXPORT[         ]*\([a-zA-Z]*\)[ ]*JNICALL[      ]*fromjava(\([^)]*\)) *(JNIEnv[^,]*,[^,)]*[,)]\([^){]*\)[^a-zA-Z0-9]*$/public static native \1 \2(\3);/g
+
+
+
+
 }
 
 

@@ -1463,6 +1463,7 @@ extern                void wakewithcurrent();
                  }
              }
          else {
+             settings->data()->nobluetooth=true;
              LOGGER("processglucosevalue no sensor %d\n",sendindex);
 #ifdef WEAROS
 //              static int wassensor=(settings->setranges(3*180,12*180,39*18,10*180),-1);

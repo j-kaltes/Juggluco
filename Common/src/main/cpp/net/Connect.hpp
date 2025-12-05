@@ -1,20 +1,45 @@
+/*      This file is part of Juggluco, an Android app to receive and display         */
+/*      glucose values from Freestyle Libre 2, Libre 3, Dexcom G7/ONE+,              */
+/*      Sibionics GS1Sb and Accu-Chek SmartGuide sensors.                            */
+/*                                                                                   */
+/*      Copyright (C) 2021 Jaap Korthals Altes <jaapkorthalsaltes@gmail.com>         */
+/*                                                                                   */
+/*      Juggluco is free software: you can redistribute it and/or modify             */
+/*      it under the terms of the GNU General Public License as published            */
+/*      by the Free Software Foundation, either version 3 of the License, or         */
+/*      (at your option) any later version.                                          */
+/*                                                                                   */
+/*      Juggluco is distributed in the hope that it will be useful, but              */
+/*      WITHOUT ANY WARRANTY; without even the implied warranty of                   */
+/*      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                         */
+/*      See the GNU General Public License for more details.                         */
+/*                                                                                   */
+/*      You should have received a copy of the GNU General Public License            */
+/*      along with Juggluco. If not, see <https://www.gnu.org/licenses/>.            */
+/*                                                                                   */
+/*      Fri Nov 21 11:12:24 CET 2025                                                 */
 #pragma once
 
 #include <stdint.h>
 #include <vector>
+#include <atomic>
 #include <string_view>
 #include "passhost.hpp"
 #include "crypt.h"
 #include "backup.hpp"
+template<int nr> using unique_al= std::unique_ptr<uint8_t[],ardeleter<nr,uint8_t>> ;
 class Connect {
 protected:
-    int allindex;
 public:
+  std::atomic_flag senduprunning{};
+    int allindex;
+   bool finish=false;
     bool receiving=false;
     Connect(int index):allindex(index) {}
 
-virtual void setindex(int index) {
+virtual int setindex(int index) {
         allindex=index; 
+        return 1;
         }
     bool testreceivemagic(passhost_t *pass);
     bool sendcrypt(crypt_t *ctx,uint8_t *data,int datalen);
@@ -22,10 +47,11 @@ virtual void setindex(int index) {
     std::pair<int,int> interpret(passhost_t *host,crypt_t *ctx,senddata_t *datain,int len);
     int interpretcommands(passhost_t *host,crypt_t *ctx,senddata_t *com,int totlen);
     bool getcom( passhost_t *host,ascon_aead_ctx_t *ctx);
-    unique_al<4> receivedatanopass(const int totlen);
-    dataonlyptr receivedataonly(crypt_t *ctx,const int len);
+//    unique_al<4> receivedatanopass(const int totlen);
+//    dataonlyptr receivedataonly(crypt_t *ctx,const int len);
+    dataonlyptr receivedataonly_s(crypt_t *ctx,const int len);
     unique_al<4>  receivedatapass(crypt_t *ctx,int messlen);
-    unique_al<4> receivedata( crypt_t *ctx,const int len);
+//    unique_al<4> receivedata( crypt_t *ctx,const int len);
     bool    receivepassinit(passhost_t *host,ascon_aead_ctx_t *ctx);
     bool    getcommandspassinit(passhost_t *host);
     bool    getcommands(passhost_t *host);
@@ -98,9 +124,38 @@ bool s_sendcommandpass(ascon_aead_ctx_t *ctx,const unsigned char *buf,int buflen
 bool s_noacksendcommand(crypt_t *pass,const unsigned char *buf,int buflen) ;
 bool s_noacksendcommandonly(const unsigned char *buf,int buflen);
 bool r_noacksendcommand(crypt_t *pass,const unsigned char *buf,int buflen);
+typedef ssize_t  (Connect::*recvni_type)(void *, size_t );
 typedef ssize_t  (Connect::*sendni_type)(const void *, size_t );
 typedef int (Connect::*getIdent_type)() const;
 template<sendni_type sendni,getIdent_type getIdent>
 bool noacksendcommand(const unsigned char *buf,int buflen) ;
+template<recvni_type recvni,getIdent_type getIdent> unique_al<4>  receivedatapass_alg(crypt_t *ctx,int messlen) ;
+unique_al<4>  receivedatapass_r(crypt_t *ctx,int messlen) {
+    return receivedatapass_alg<&Connect::r_recvni,&Connect::getReceiverIdent>(ctx, messlen) ;
+    }
+unique_al<4>  receivedatapass_s(crypt_t *ctx,int messlen) {
+    return receivedatapass_alg<&Connect::s_recvni,&Connect::getSenderIdent>(ctx, messlen) ;
+    }
+
+unique_al<4> receivedata_r( crypt_t *ctx,const int len) {
+    if(ctx==nullptr) 
+        return receivedatanopass_r(len);
+    else return receivedatapass_r( ctx, len) ;
+    }
+unique_al<4> receivedata_s( crypt_t *ctx,const int len) {
+    if(ctx==nullptr) 
+        return receivedatanopass_s(len);
+    else return receivedatapass_s( ctx, len) ;
+    }
+
+template<recvni_type recvni,getIdent_type getIdent> unique_al<4> receivedatanopassalg(const int totlen);
+
+ unique_al<4> receivedatanopass_r(const int totlen) {
+    return receivedatanopassalg<&Connect::r_recvni,&Connect::getReceiverIdent>( totlen);
+    }
+ unique_al<4> receivedatanopass_s(const int totlen) {
+    return receivedatanopassalg<&Connect::s_recvni,&Connect::getSenderIdent>( totlen);
+    }
+
 virtual ~Connect() = default;
 };

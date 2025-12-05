@@ -1,3 +1,6 @@
+Naar horloge wordt gezonden, maar niet van.
+Nums worden ook niet naar horloge gezonden, glucose wel.
+Bij eerst initialisatie watch, staat some messages aan en werkt het niet. Na restart van beide apps, werkt het.
 Always gen2 with Libre2Plus?
 
 Talk->Test on WearOS is terrible slow

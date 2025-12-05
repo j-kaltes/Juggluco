@@ -22,10 +22,7 @@ Beltoon die je krijg als je zelf geen beltoon selecteert.</p>
 Selecteer een beltoon. Op sommige Samsung smartphones is aan
 crashende ringtone picker app gepreïnstalleerd, zodat je een andere
 ringtone picker app moet installeren, bijvoorbeeld:
-<a href="https://play.google.com/store/apps/details?id=com.centralparkapps.ringo.ringtones">https://play.google.com/store/apps/details?id=com.centralparkapps.ringo.ringtones</a>,
-<a href="https://apkcombo.com/ringtone-picker/de.kumpewo.ringtones">https://apkcombo.com/ringtone-picker/de.kumpewo.ringtones</a>
-of <a href="https://www.apkmonk.com/app/com.hlidskialf.android.tonepicker">https://www.apkmonk.com/app/com.hlidskialf.android.tonepicker</a>
-</p>
+<a href="https://play.google.com/store/apps/details?id=com.centralparkapps.ringo.ringtones">https://play.google.com/store/apps/details?id=com.centralparkapps.ringo.ringtones</a> of <a href="https://apkcombo.com/ringtone-picker/de.kumpewo.ringtones">https://apkcombo.com/ringtone-picker/de.kumpewo.ringtones</a></p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>Trillen</b>:
 Alarm door trilling</p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>Storen</b>: Maak
@@ -172,7 +169,7 @@ bewegen) kunnen worden gesimuleerd door een toets in te drukken
 <string name="addconnection" >
 <![CDATA[
 <p><a href="https://www.juggluco.nl/Jugglucohelp/be/addconnection.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/addconnection.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/addconnection.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/addconnection.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/addconnection.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/addconnection.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/addconnection.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/addconnection.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/sv/addconnection.html">sv</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/addconnection.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/addconnection.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/addconnection.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/addconnection.html?lang=en">en</a>&emsp;&emsp;</p><h1 class="western">Verbinding toevoegen</h1>
-<p style="line-height: 100%; margin-bottom: 0in">Specificeer een
+<p style="line-height: 100%; margin-bottom: 0cm">Specificeer een
 verbinding met een ander exemplaar van Juggluco; Juggluco op een
 apparaat zendt data via IP/TCP naar Juggluco op een ander apparaat.
 Om een verbinding te vormen moet een van de Juggluco’s luisteren op
@@ -181,7 +178,7 @@ poort. De poort van de Juggluco die je nu gebruikt stond in het
 vorige schermpje (linker midden menu→ Kloon). In het huidige
 schermpje wordt de poort aangegeven waarmee deze Juggluco contact
 maakt als het zelf actief contact maakt.</p>
-<p style="line-height: 100%; margin-bottom: 0in">Als het exemplaar
+<p style="line-height: 100%; margin-bottom: 0cm">Als het exemplaar
 van Juggluco dat je nu gebruikt niet kan luisteren op een poort,
 selecteer “<b>Active Only</b>“. Als de andere kant niet kan
 luisteren op een poort, selecteer “<b>Passive only</b>”, in
@@ -190,7 +187,7 @@ andere kant moet het omgekeerde aangeven: <i>Passive only</i> als
 hier <i>Active only</i> werd aangegeven, <i>Active only</i> als hier
 <i>Passive only</i> werd aangegeven en <i>Beide</i> als hier <i>Beide</i>
 werd aangegeven.</p>
-<p style="line-height: 100%; margin-bottom: 0in">Als het huidige
+<p style="line-height: 100%; margin-bottom: 0cm">Als het huidige
 exemplaar van Juggluco actief contact maakt, moet de IP aangegeven
 worden. Als dat apparaat meerdere IPs heeft geef er dan meer aan. Het
 kan bijvoorbeeld zijn dat de verbinding thuis via het thuis netwerk
@@ -198,63 +195,65 @@ gaat en op andere plaatsen via een persoonlijke hotspot. Geef nooit
 de IPs van meerdere apparaten; in dat geval wordt een gedeelte van de
 data verzonden naar het ene en een ander gedeelte naar het andere
 apparaat.</p>
-<p style="line-height: 100%; margin-bottom: 0in">hostname: Geef één
+<p style="line-height: 100%; margin-bottom: 0cm">hostname: Geef één
 hostnaam op in plaats van IP\'s. Hierdoor wordt de verbinding
 afhankelijk van een nameserver en dus langzamer en onder invloed van
 verstoring van de nameserververbinding. Dit moet alleen worden
 ingeschakeld als je geen statisch IP-adres kunt configureren en deze
 hostnaam automatisch aan het dynamische IP-adres wordt toegewezen.</p>
-<p style="line-height: 100%; margin-bottom: 0in">In alle gevallen op
+<p style="line-height: 100%; margin-bottom: 0cm">In alle gevallen op
 “Active only” na, kun je Detecteer aanvinken; in dat geval slaat
 Juggluco de eerste IP op die contact maakt met Juggluco.</p>
-<p style="line-height: 100%; margin-bottom: 0in">Op twee manieren kan
+<p style="line-height: 100%; margin-bottom: 0cm">Op twee manieren kan
 bepaald worden wie contact maakt:</p>
 <ul>
-	<li><p style="line-height: 100%; margin-bottom: 0in">Selecteer “<b>Test
-	IP</b>” om te testen op de IP;</p>
-	<li><p style="line-height: 100%; margin-bottom: 0in">Selecteer “<b>Test
+	<li><p style="line-height: 100%; margin-bottom: 0cm">Selecteer “<b>Test
+	IP</b>” om te testen op de IP;</p></li>
+	<li><p style="line-height: 100%; margin-bottom: 0cm">Selecteer “<b>Test
 	Label</b>” om enkel een verbinding te vormen als de andere kant
-	hetzelfde label aangegeven heeft.</p>
+	hetzelfde label aangegeven heeft.</p></li>
 </ul>
-<p style="line-height: 100%; margin-bottom: 0in">De verbinding kan
+<p style="line-height: 100%; margin-bottom: 0cm">De verbinding kan
 gebruikt worden om te ontvangen of te zenden. Selecteer “<b>Ontvang
 van</b>” om data te ontvangen van deze verbinding. Om te zenden
 naar deze verbinding, moet je aangeven welke data verzonden wordt:</p>
-<p style="line-height: 100%; margin-bottom: 0in"><b>Hoeveelheden</b>:
+<p style="line-height: 100%; margin-bottom: 0cm"><b>Hoeveelheden</b>:
 dosis, eet en sport data;</p>
-<p style="line-height: 100%; margin-bottom: 0in"><b>Scans</b>: data
+<p style="line-height: 100%; margin-bottom: 0cm"><b>Scans</b>: data
 ontvangen door de sensor te scannen (scans en history);</p>
-<p style="line-height: 100%; margin-bottom: 0in"><b>Stream</b>: data
+<p style="line-height: 100%; margin-bottom: 0cm"><b>Stream</b>: data
 ontvangen via Bluetooth van de sensoren.</p>
-<p style="line-height: 100%; margin-bottom: 0in">Soms is er al data
+<p style="line-height: 100%; margin-bottom: 0cm">Soms is er al data
 aanwezig op het ontvangende apparaat. Aangegeven kan worden tot welke
 datum deze data aanwezig is.</p>
-<p style="line-height: 100%; margin-bottom: 0in"><b>Begin</b>: geen
+<p style="line-height: 100%; margin-bottom: 0cm"><b>Begin</b>: geen
 data aanwezig</p>
-<p style="line-height: 100%; margin-bottom: 0in"><b>Nu</b>: alle data
+<p style="line-height: 100%; margin-bottom: 0cm"><b>Nu</b>: alle data
 aanwezig</p>
-<p style="line-height: 100%; margin-bottom: 0in">Een <b>specifieke
+<p style="line-height: 100%; margin-bottom: 0cm">Een <b>specifieke
 datum</b> bepaald door de beginpositie van het scherm.</p>
-<p style="line-height: 100%; margin-bottom: 0in">Als een data bron
+<p style="line-height: 100%; margin-bottom: 0cm">Als een data bron
 wordt toegevoegd aan een bestaande verbinding, betaald deze datum
 enkel de toegevoegde data bron. Bijvoorbeeld, als <i>Scans</i> en
 <i>Stream</i> al naar deze verbinding verzonden worden en
 <i>Hoeveelheden</i> wordt toegevoegd, bepaald deze datum enkel vanaf
 welke datum <i>Hoeveelheden</i> verzonden worden.</p>
-<p style="line-height: 100%; margin-bottom: 0in">In het geval dat
+<p style="line-height: 100%; margin-bottom: 0cm">In het geval dat
 twee apparaten verbonden zijn via een onveilige verbinding, kan de
 data versleuteld en ondertekend worden door aan beide zeiden
 hetzelfde (maximaal) 16-letterige <b>wachtwoord</b> aan te geven.</p>
-<p><b><a href="https://www.juggluco.nl/Jugglucohelp/nl/QRmirror.html">QR</a></b>: Maak de andere kant van de verbinding door een QR-code te scannen met de andere telefoon.</p>
+<p><a href="https://www.juggluco.nl/Jugglucohelp/nl/QRmirror.html"><b>QR</b></a>:
+Maak de andere kant van de verbinding door een QR-code te scannen met
+de andere telefoon.</p>
 <h2 class="western">Via internet</h2>
-<p style="line-height: 100%; margin-bottom: 0in">In de eenvoudigste
+<p style="line-height: 100%; margin-bottom: 0cm">In de eenvoudigste
 situatie horen alle verbindingen tot je thuis netwerk en kunnen
 lokale IPs gebruikt worden. Het is ook mogelijk over internet via
 Wi-Fi een verbinding te vormen. In dat geval moet je de handleiding
 van je modem nazien om uit te vinden hoe een externe poort
 doorverwezen (<span lang="en-GB">forwarded</span>) kan worden naar
 een IP en poort binnen je thuis netwerk.</p>
-<p style="line-height: 100%; margin-bottom: 0in">Twee smartphones
+<p style="line-height: 100%; margin-bottom: 0cm">Twee smartphones
 verbonden via een mobiele data verbinding over internet, kunnen
 rechtstreeks met elkaar verbonden worden, als een van hen op een
 netwerk poort kan luisteren. Als geen van beide die mogelijkheid
@@ -265,29 +264,29 @@ smartphones daarmee te verbinden. Een andere mogelijkheid is een
 command line programmaatje behorende tot Juggluco op een computer te
 draaien (bijvoorbeeld je PC or Amazon AWS):
 <a href="https://www.juggluco.nl/Juggluco/cmdline/index.html">https://www.juggluco.nl/Juggluco/cmdline/index.html</a></p>
-<p style="line-height: 100%; margin-bottom: 0in">Voor een poort
+<p style="line-height: 100%; margin-bottom: 0cm">Voor een poort
 forwarding handleiding, zie: 
 </p>
-<p style="line-height: 100%; margin-bottom: 0in"><a href="https://portforward.com/how-to-port-forward/">https://portforward.com/how-to-port-forward/</a></p>
-<p style="line-height: 100%; margin-bottom: 0in"><a href="https://stevessmarthomeguide.com/understanding-port-forwarding/">https://stevessmarthomeguide.com/understanding-port-forwarding/</a></p>
+<p style="line-height: 100%; margin-bottom: 0cm"><a href="https://portforward.com/how-to-port-forward/">https://portforward.com/how-to-port-forward/</a></p>
+<p style="line-height: 100%; margin-bottom: 0cm"><a href="https://stevessmarthomeguide.com/understanding-port-forwarding/">https://stevessmarthomeguide.com/understanding-port-forwarding/</a></p>
 <h2 class="western">Bluetooth zonder NFC</h2>
-<p style="line-height: 100%; margin-bottom: 0in">Het is mogelijk
+<p style="line-height: 100%; margin-bottom: 0cm">Het is mogelijk
 glucose waarden via Bluetooth te ontvangen, op een apparaat zonder
 NFC, op de volgende manier:</p>
 <ul>
-	<li><p style="line-height: 100%; margin-bottom: 0in">Initialiseer de
-	sensor via NFC op een apparaat met NFC;</p>
-	<li><p style="line-height: 100%; margin-bottom: 0in">Zendt de scan
-	en stream data naar het apparaat zonder NFC;</p>
-	<li><p style="line-height: 100%; margin-bottom: 0in">Keer de
-	richting van de stream data om in de betreffende kloon verbindingen;</p>
-	<li><p style="line-height: 100%; margin-bottom: 0in">Zet “sensor
+	<li><p style="line-height: 100%; margin-bottom: 0cm">Initialiseer de
+	sensor via NFC op een apparaat met NFC;</p></li>
+	<li><p style="line-height: 100%; margin-bottom: 0cm">Zendt de scan
+	en stream data naar het apparaat zonder NFC;</p></li>
+	<li><p style="line-height: 100%; margin-bottom: 0cm">Keer de
+	richting van de stream data om in de betreffende kloon verbindingen;</p></li>
+	<li><p style="line-height: 100%; margin-bottom: 0cm">Zet “sensor
 	via Bluetooth” UIT in het apparaat met NFC en AAN in het apparaat
-	zonder NFC;</p>
-	<li><p style="line-height: 100%; margin-bottom: 0in">Zet Bluetooth
-	aan in het apparaat zonder NFC.</p>
+	zonder NFC;</p></li>
+	<li><p style="line-height: 100%; margin-bottom: 0cm">Zet Bluetooth
+	aan in het apparaat zonder NFC.</p></li>
 </ul>
-<p style="line-height: 100%; margin-bottom: 0in">In deze opzet scan
+<p style="line-height: 100%; margin-bottom: 0cm">In deze opzet scan
 je met een apparaat en ontvangt een ander apparaat glucose waarden
 via Bluetooth, maar in beide apparaten moet alle sensor data aanwezig
 zijn, dus beide apparaten moeten zowel scan als stream data
@@ -295,26 +294,46 @@ ontvangen. Je moet altijd stream data terugzenden naar het
 NFC-apparaat en scan data naar het apparaat zonder NFC, anders kan
 oude authenticatie data gebruikt worden of nieuwe gegevens
 overschreven worden met oude.</p>
-<p style="line-height: 100%; margin-bottom: 0in">De hoeveelheden
+<p style="line-height: 100%; margin-bottom: 0cm">De hoeveelheden
 hoeven niet overgezonden te worden.</p>
+<h2 class="western">ICE</h2>
+<p>Een totaal andere manier om een verbinding tot stand te brengen is
+ICE (Interactive Connectivity Establishment). Hiermee is het mogelijk
+om een verbinding tot stand te brengen tussen twee
+Juggluco-exemplaren zonder port forwarding. In de meeste gevallen
+krijgen twee telefoons een directe verbinding zonder server ertussen.
+In sommige gevallen is dit niet mogelijk en is een TURN-server nodig.
+Een TURN-server kan worden opgegeven via linker midden menu→Kloon→
+<a href="https://www.juggluco.nl/Jugglucohelp/turnservers.html">TURN-server</a>.
+In andere gevallen zijn servers alleen nodig om de twee telefoons met
+elkaar in contact te brengen. Hiervoor moet je een &quot;<b>ICE-label</b>&quot;
+opgeven dat alleen door beide kanten van de verbinding wordt gedeeld,
+maar niet door een andere gebruiker van Juggluco wordt gebruikt. Aan
+de ene kant van de verbinding moet <b>0</b> worden opgegeven en aan
+de andere kant <b>1.</b> Ook moet een <b>label</b> door beide kanten
+van de verbinding worden gedeeld, maar dit hoeft alleen uniek te zijn
+op deze telefoons. In plaats van hier alles op te geven, kun je
+linker midden menu→Kloon→ <a href="https://www.juggluco.nl/Jugglucohelp/autoqrmessage.html">AutoQR</a>
+gebruiken om automatisch een verbinding te genereren en een QR-code
+te scannen met de telefoon aan de andere kant van de verbinding.</p>
 <h1 class="western">Netwerk problemen</h1>
-<p style="line-height: 100%; margin-bottom: 0in">De
+<p style="line-height: 100%; margin-bottom: 0cm">De
 netwerkspecificatie aan beide zijden, moet precies aansluiten; een
 enkele afwijking kan de overdracht onmogelijk maken.</p>
-<p style="line-height: 100%; margin-bottom: 0in">Het kan zijn dat de
+<p style="line-height: 100%; margin-bottom: 0cm">Het kan zijn dat de
 verbinding vast loopt en gereset moet worden door WIFI uit en aan te
 zetten (soms moet het meerdere keren gebeuren voordat het netwerk
 weer werkt). Ook moet weleens op Sync gedrukt worden.</p>
-<p style="line-height: 100%; margin-bottom: 0in">Het veranderen van
+<p style="line-height: 100%; margin-bottom: 0cm">Het veranderen van
 een activeonly-passiveonly verbinding naar beide of andersom kan
 uitmaken. Een horloge-smartphone verbinding over Bluetooth werkt
 bijvoorbeeld enkel als het horloge <i>activeonly</i> is en de
 smartphone <i>passsiveonly</i>. Over mijn WIFI thuis netwerk, werkt
 <i>beide</i> ook.</p>
-<p style="line-height: 100%; margin-bottom: 0in">Er moet rekening mee
+<p style="line-height: 100%; margin-bottom: 0cm">Er moet rekening mee
 worden gehouden dat IPs veranderen als de netwerkverbinding
 verandert.</p>
-<p style="line-height: 100%; margin-bottom: 0in">Een verbinding via
+<p style="line-height: 100%; margin-bottom: 0cm">Een verbinding via
 het thuis netwerk gebruikt andere IPs dan een verbinding via een
 persoonlijke hotspot.</p>
 ]]>
@@ -984,6 +1003,7 @@ handelingen uitvoeren, een of meerdere keren:</p>
 	<li><p style="line-height: 100%; margin-bottom: 0in">Reboot the
 	telefoon.</p></li>
 </ul>
+<p>Ik had het volgende probleem: 6 dagen na de update van Garmin Connect naar 5.19 ontving Kerfstok alleen berichten van Juggluco, maar Juggluco ontving geen berichten van Kerfstok. Statusinformatie was niet beschikbaar en Reinit startte Kerfstok niet op. Het opnieuw opstarten van de telefoon, Kerfstok of het geforceerd stoppen van Garmin Connect loste het probleem niet op. Na de installatie van Garmin Connect 5.18 werkte het weer. Daarna heb ik geüpdatet naar Connect 5.19 en bleef het werken. Wat was het probleem?</p>
 <p style="line-height: 100%; margin-bottom: 0in"><b>Sync</b>:
 Hoeveelheden die nog niet verzonden zijn worden hiermee tussen
 horloge en telefoon uitgewisseld. Normaal hoeft hiervan geen gebruik
@@ -3091,6 +3111,37 @@ uit deze lijst te selecteren.</p>
 <br/>
 
 </p>
+]]>
+</string>
+<string name="turnservers" >
+<![CDATA[
+<p><a href="https://www.juggluco.nl/Jugglucohelp/de/turnservers.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/turnservers.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/turnservers.html?lang=en">en</a>&emsp;&emsp;</p><p align="center" style="line-height: 100%; margin-top: 0.17in; margin-bottom: 0.08in; page-break-after: avoid">
+<font face="Liberation Sans, sans-serif"><font size="6" style="font-size: 28pt"><b><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">TURN-Server</font></font></b></font></font></p>
+<p style="line-height: 100%; margin-bottom: 0in"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">Een ICE-verbinding wordt gebruikt na het genereren van een autoQR-verbinding via internet of bij het instellen van ICE bij het handmatig opgeven van een verbinding 
+</font></font></p>
+<p style="line-height: 100%; margin-bottom: 0in"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">Wanneer Interactive Connectivity Establishment (ICE) er niet in slaagt een directe verbinding tot stand te brengen tussen twee instanties van Juggluco, kan een TURN-server worden gebruikt om de verbinding tussen de twee instanties tot stand te brengen. 
+</font></font></p>
+<p style="line-height: 100%; margin-bottom: 0in"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">In dit scherm kun je zo\'n TURN-server opgeven. Als je niets opgeeft, worden er standaardservers gebruikt, maar deze kunnen mogelijk niet al het verkeer verwerken en zijn beperkt in de totale toegestane hoeveelheid verkeer. Om zeker te zijn van een snelle en betrouwbare verbinding, kun je beter een andere TURN-server opgeven.</font></font></p>
+<p style="line-height: 100%; margin-bottom: 0in"><br>
+
+</p>
+<p style="line-height: 100%; margin-bottom: 0in"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">Gratis TURN-servers:</font></font></p>
+<p style="line-height: 100%; margin-bottom: 0in"><a href="https://www.metered.ca/tools/openrelay/"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">https://www.metered.ca/tools/openrelay</font></font></a></p>
+<p style="line-height: 100%; margin-bottom: 0in"><a href="https://www.expressturn.com/"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">https://www.expressturn.com</font></font></a></p>
+<p style="line-height: 100%; margin-bottom: 0in"><a href="https://xirsys.com/"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">https://xirsys.com</font></font></a></p>
+<p style="line-height: 100%; margin-bottom: 0in"><a href="https://www.twilio.com/en-us/stun-turn"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">https://www.twilio.com/en-us/stun-turn</font></font></a></p>
+<p style="line-height: 100%; margin-bottom: 0in"><br>
+
+</p>
+<p style="line-height: 100%; margin-bottom: 0in"><br>
+
+</p>
+<p style="line-height: 100%; margin-bottom: 0in"><br>
+
+</p>
+<p style="line-height: 100%; margin-bottom: 0in"><br>
+
+
 ]]>
 </string>
 </resources>

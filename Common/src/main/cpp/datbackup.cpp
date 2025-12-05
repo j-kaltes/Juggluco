@@ -43,6 +43,25 @@ void uptodate(passhost_t *host) {
     if(backup)
         uptodate(host-backup->getupdatedata()->allhosts);
     }
+
+
+void setConnectTime(const int allindex,uint32_t tim) {
+   backup->getupdatedata()->lastused[allindex]=tim;
+   }
+void setConnectTime(const passhost_t *host,uint32_t tim) {
+   setConnectTime(host-backup->getupdatedata()->allhosts,tim);
+   };
+uint32_t getConnectTime(const int allindex) {
+   return backup->getupdatedata()->lastused[allindex];
+   }
+uint32_t getConnectTime(const passhost_t *host) {
+   return getConnectTime(host-backup->getupdatedata()->allhosts);
+   };
+/*
+void deactivateHost(int index,bool deactive) { 
+    backup->deactivateHost(index,deactive);
+    } */
+
 int updateone::updateiob() {
     const auto iobupdate=settings->data()->iobupdate;
     if(iobupdate>iobupdated ) {
@@ -346,10 +365,14 @@ void    updateone::open() {
            con->makeconnection(host,getcrypt(),saysender(host));
 
     }
-   auto *con=connections[allindex];
-   if(con)
+   ;
+   if(auto *con=connections[allindex]) {
         con->setSenderTimeouts();
-    LOGGER("updateone::open()=%d\n",connections[allindex]->getSenderIdent());
+        LOGGER("updateone::open()=%d\n",connections[allindex]->getSenderIdent());
+        }
+   else {
+      LOGGER("updateone::open() connections[%d]==null\n",allindex);
+      }
     }
 
 
@@ -367,24 +390,32 @@ static void sendup(passhost_t *hostptr) {
      int allindex=hostptr-backup->getupdatedata()->allhosts;
 
      Connect *connect=connections[allindex];
-    if(connect&&connect->makeconnection(hostptr,ctxptr,saysender(hostptr))>=0) {
-        if(!hostptr->ICE) {
-            int sock=static_cast<TCPConnect*>(connect)->getSenderSock();
-            sendtimeout(sock,60*5);
-            receivetimeout(sock,0);
+     if(connect) {
+        destruct _{[connect,allindex] {
+           connect->senduprunning.clear();
+           LOGGER("makeWakeThread: %d senduprunning.clear()\n",allindex);
+            }};
+         connect->shutdownSender();
+         connect->shutdownReceiver();
+         sleep(1);
+        if(connect->makeconnection(hostptr,ctxptr,saysender(hostptr))>=0) {
+            if(!hostptr->ICE) {
+                int sock=static_cast<TCPConnect*>(connect)->getSenderSock();
+                sendtimeout(sock,60*5);
+                receivetimeout(sock,0);
+                }
+            if(connect->sendbackup(ctxptr)) {
+                connect=connections[allindex];
+                LOGGER("sendup success %d\n",connect?connect->getSenderIdent():-1);    
+                }
+            else {
+                connect=connections[allindex];
+                LOGGER("%d: failure %d\n",agettid(),connect?connect->getSenderIdent():-1);    
+                }
+            if(!hostptr->ICE&&(connect=connections[allindex]))
+                connect->closeSenderConnection();
             }
-        if(connect->sendbackup(ctxptr)) {
-            connect=connections[allindex];
-            LOGGER("sendup success %d\n",connect?connect->getSenderIdent():-1);    
             }
-        else {
-            connect=connections[allindex];
-            LOGGER("%d: failure %d\n",agettid(),connect?connect->getSenderIdent():-1);    
-            }
-        if(!hostptr->ICE&&(connect=connections[allindex]))
-            connect->closeSenderConnection();
-///        sockclose(sock);
-        }
     }
 
 condvar_t* active_receive[maxallhosts];
@@ -518,6 +549,24 @@ void activereceivethread(int allindex,passhost_t *pass) {
 bool hasnetwork() {
     return     backup&&backup->gethostnr()>0;
     }
+
+
+void       makeWakeThread(int allindex,passhost_t *hostptr) {
+    auto *con=connections[allindex];
+    if(!con)  {
+        LOGGER("makeWakeThread: connections[%d]==NULL\n",allindex);
+        return;
+    }
+    if(con->senduprunning.test_and_set()) {
+        LOGGER("makeWakeThread: sendup %d already running\n",allindex);
+        return;
+    }
+    else {
+        LOGGER("makeWakeThread: %d senduprunning set\n",allindex);
+        }
+    std::thread wake(sendup,hostptr);
+    wake.detach();
+}
 void updatedata::wakesender() {
     LOGAR("wakesender");
     for(int i=0;i<hostnr;i++) {
@@ -545,8 +594,7 @@ void updatedata::wakesender() {
                 }  else
     #endif
                 {    
-                    std::thread wake(sendup,&host);
-                    wake.detach();
+                    makeWakeThread(i,&host);
                     }
                     }
                 else {
@@ -559,6 +607,15 @@ void updatedata::wakesender() {
             }
             }
        }
+    }
+
+
+extern void setDeactivated(int index,bool deactive) ;
+void setDeactivated(int index,bool deactive) {
+    auto &host=backup->getupdatedata()->allhosts[index];
+    host.deactivated=deactive;
+    if(!deactive)
+        setConnectTime(index,0);
     }
 void updatedata::wakestreamsender() {
     LOGAR("wakestreamsender");
@@ -580,8 +637,7 @@ void updatedata::wakestreamsender() {
             }
         else {
             if(host.receivefrom==3&&host.index<0) {
-                std::thread wake(sendup,&host);
-                wake.detach();
+                makeWakeThread(i,&host);
                 }
             else {
                 if(host.index>=0&&backup->con_vars[host.index]) {
@@ -768,7 +824,7 @@ Backup::Backup(std::string_view base): mapdata(base,backupdat,sizeof(struct upda
    for(int i=0;i<len;++i) {
      auto *host= allhosts+i;
       if(host->ICE)
-          connections[i]=new ICEConnect(i,host->side);
+          connections[i]=new ICEConnect(i,*host);
       else
           connections[i]=new TCPConnect(i);
       }
@@ -819,6 +875,7 @@ Backup::Backup(std::string_view base): mapdata(base,backupdat,sizeof(struct upda
    shouldaskfordata=getshouldaskfordata();
    }
 
+extern void startICEReceiver(passhost_t *host,ICEConnect *con);
 int Backup::changeICEhost(const char *ICElabel,int index,const bool sendnums,const bool sendstream,const bool sendscans,const bool receive,string_view pass,uint32_t starttime,const char *label,bool side,bool startthreads) {
     const int hostnr=getupdatedata()->hostnr;
     LOGGER("hostnr=%d changeICEhost(%d,sendnums=%d,sendstream=%d,sendscans=%d,receive=%d,label=%s \n",hostnr,index,sendnums,sendstream,sendscans,receive,label);
@@ -877,42 +934,54 @@ int Backup::changeICEhost(const char *ICElabel,int index,const bool sendnums,con
         thehost.index=-1;
         }
     thehost.side=side;
+    thehost.setname(label);
+    thehost.setICEname(ICElabel);
+    thehost.noip=true;
+    thehost.receivefrom=receive?3:1;
+    thehost.deactivated=false;
+    thehost.wearos=false;
+    thehost.activereceive=0;
+
+    setpass( thehost.pass,pass);
+
+    LOGGER("changeICEhost receivefrom=%d\n", thehost.receivefrom);
+    ICEConnect  *con;
     if(!newhost) {  
         if(thehost.ICE) {
+            con=static_cast<ICEConnect*>(connections[index]);
+            con->setindex(index);
+            con->side=side;
             goto keepICE;
             }
         delete connections[index];
         }
     thehost.ICE=true;
-    connections[index]=new ICEConnect(index,side);
+    con= new ICEConnect(index,thehost);
+    connections[index]=con;
     keepICE:
-    thehost.setname(label);
-    thehost.setICEname(ICElabel);
-    thehost.noip=true;
     lastuptodate[index]=0;
-    thehost.receivefrom=receive?3:1;
-    LOGGER("changeICEhost receivefrom=%d\n", thehost.receivefrom);
-    setpass( thehost.pass,pass);
-    thehost.deactivated=false;
-    thehost.wearos=false;
+    setConnectTime(index,0);
     if(newhost)  {
         ++(getupdatedata()->hostnr);
         LOGGER("new host %s ++hostnr=%d\n",thehost.getnameif(),getupdatedata()->hostnr);
         thehost.newconnection=true;
         }
-
     deupdated(); 
     closesocksone(index,getupdatedata()->allhosts+index);
     if(startthreads) {
         if(newthread)
             startthread(index,tohost);
         }
-    thehost.activereceive=0;
     shouldaskfordata=getshouldaskfordata();
     #ifdef WEAROS_MESSAGES
     extern    void clearnetworkcache();
     clearnetworkcache();
     #endif
+    /*
+    if(!sendto) {
+        startICEReceiver(&thehost,con);
+        } */
+    startReceiverThread(index);
     LOGGER("changeICEhost=%d\n",index);
     return index;
     }

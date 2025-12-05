@@ -44,12 +44,13 @@ inline int mytag() {
    return 0;
    }
 
+extern void  startReceiverThread(int i);
 extern void setBlueMessage(int ident,bool val);
 constexpr const char defaultport[]{
-#ifdef RELEASEID
-"8795"
+#ifdef MIRRORPORT
+xquotes(MIRRORPORT)
 #else
-"9113"
+"9996"
 #endif
 
 };
@@ -74,6 +75,7 @@ extern bool wearmessages[];
 extern std::mutex change_host_mutex;
 #endif
 
+extern void setConnectTime(const int allindex,uint32_t tim);
 extern Connect *connections[];
 extern bool networkpresent;
 class Backup;
@@ -205,6 +207,12 @@ int sendCalibrate();
     };
 
 #include "maxsendtohost.h"
+struct TurnServer {
+    uint16_t port;
+    char hostname[254];
+    char username[256];
+    char password[256];
+    };
 struct updatedata {
     int32_t hostnr;
     uint32_t receive;
@@ -214,7 +222,9 @@ struct updatedata {
     uint8_t sendnr;
     passhost_t allhosts[maxallhosts];
     updateone tosend[maxsendtohost];
-
+    uint32_t lastused[maxallhosts];
+    int32_t NRturnserver;
+    TurnServer  turnserver[4];
     void wakesender() ;
     void wakestreamsender();
     };
@@ -483,27 +493,21 @@ void setindices(int start) {
 void deletehost(int index) {
     if(index>=getupdatedata()->hostnr)
         return;
+    bool wasnet=networkpresent;
+     networkpresent=false;
     LOGGER("deletehost(%d)\n",index);
+    for(int it=index;it<getupdatedata()->hostnr;++it) {
+         auto *con=connections[it];
+         if(con) {
+            con->finish=true;
+            con->endConnection();
+            }
+        }
     auto &thehost=getupdatedata()->allhosts[index];
     if(thehost.activereceive) {
         endactivereceive(index); 
         }
-    if(getupdatedata()->allhosts[index].receivefrom) {
-        if(auto *con=connections[index])
-                con->endConnection();
-        /*
-        int sock=hostsocks[index];
-        if(sock>=0) {
-            LOGGER("%d: close(%d)\n",index,sock);
-            ::shutdown(sock,SHUT_RDWR);
-        // if(get_owner_tag(sock)==mytag()) 
-            ::sockclose(sock);
-            hostsocks[index]=-1;
-            }
-            */
-        }
-    bool wasnet=networkpresent;
-     networkpresent=false;
+    sleep(1);
     const int sendindex=getupdatedata()->allhosts[index].index;
     if(sendindex>=0) {
         deletestart(sendindex);
@@ -512,6 +516,7 @@ void deletehost(int index) {
         LOGGER("--hostnr %d\n",getupdatedata()->hostnr);
         int fromend= getupdatedata()->hostnr-index;
         memmove( getupdatedata()->allhosts+index,getupdatedata()->allhosts+index+1,fromend*sizeof(getupdatedata()->allhosts[0]));
+        memmove( getupdatedata()->lastused+index,getupdatedata()->lastused+index+1,fromend*sizeof(getupdatedata()->lastused[0]));
 //        memmove(  hostsocks+index, hostsocks+index+1,fromend*sizeof(hostsocks[0]));
         memmove(  lastuptodate+index, lastuptodate+index+1,fromend*sizeof(lastuptodate[0]));
         memmove(  connections+index, connections+index+1,fromend*sizeof(connections[0]));
@@ -526,11 +531,15 @@ void deletehost(int index) {
         getupdatedata()->sendnr=0;
         stopreceiver();
         }
-    setindices(index);
-     if(!networkpresent)
-        networkpresent=wasnet;
     delete connections[getupdatedata()->hostnr];
     connections[getupdatedata()->hostnr]=nullptr;
+    setindices(index);
+    for(int i=index;i<getupdatedata()->hostnr;++i) {
+        connections[i]->finish=false;
+        connections[i]->setindex(i);
+        }
+     if(!networkpresent)
+        networkpresent=wasnet;
     }
 void clearhost(int index) {
     LOGGER("clearhost(%d)\n",index);
@@ -860,6 +869,7 @@ int changehost(int index,JNIEnv *env,jobjectArray jnames,int nr,bool detect,stri
         }
     if(!newhost) {  
         if(!thehost.ICE) {
+            connections[index]->setindex( index);
             goto keepTCP;
             }
         delete connections[index];
@@ -963,6 +973,7 @@ false             false          0
         LOGGER("wearos(%d)=%d\n", index,thehost.wearos);
         }
 
+    setConnectTime(index,0);
     deupdated(); 
 
     closesocksone(index,getupdatedata()->allhosts+index);
@@ -1021,49 +1032,40 @@ void deactivateHost(int index,bool deactive) {
 
     if(host.deactivated==deactive)
         return;
+#ifdef JUGGLUCO_APP
     if(host.wearos)
         setBlueMessage(index,false);
+#endif
     host.deactivated=deactive;
+    Connect *con=connections[index];
     if(deactive) {
-        Connect *con=connections[index];
+        if(con) {
+                con->finish=true;
+                }
         if(host.activereceive) {
             active_receive[host.activereceive-1]->wakebackup(wakeend);
             if(con) {
                 LOGGER("stop active receive     shutdown(%d)\n",con->getReceiverIdent());
                 con->shutdownReceiver();
                 }
-//            ::shutdown(hostsocks[index],SHUT_RDWR);
-            }
-        else {
-            if(host.receivefrom) {
-                if(con)
-                    con->endConnection();
-                /*(
-                int sock=hostsocks[index];
-                if(sock>=0) {
-                    LOGGER("%d: close(%d)\n",index,sock);
-                        ::shutdown(sock,SHUT_RDWR);
-    //             if(get_owner_tag(sock)==mytag()) 
-                         ::sockclose(sock);
-                        hostsocks[index]=-1;
-                        } */
-                }
             }
         int sin=host.index;
         if(sin>=0) {
-//               const int sock= getupdatedata()->tosend[sin].getsock();
-
                if(con_vars[sin])
-                con_vars[sin]->wakebackuponly(wakestop|wakeend);
-               if(auto *con=connections[index]) {
+                    con_vars[sin]->wakebackuponly(wakestop|wakeend);
+               if(con) {
                    LOGGER(" shutdown %d\n",con->getSenderIdent());
                    con->shutdownSender();
                    }
- //           ::shutdown(sock,SHUT_RDWR);
             }
-
+        if(con)
+            con->endConnection();
         }
     else {
+        if(con) {
+                con->finish=false;
+                }
+      setConnectTime(index,0);
         if(host.index>=0)
             startthread(index,host.index);
         if(host.activereceive) {
@@ -1146,7 +1148,19 @@ bool sendwakesender(int h) {
     updateone &shost=getupdatedata()->tosend[h];
     shost.close();
     shost.open();
-    return shost.getConnect()->sendbackup(shost.getcrypt());
+    if(auto *con=shost.getConnect()) {
+        if(con->finish) {
+            LOGGER("sendwakesenser: %d finish\n",h);
+            return false;
+            }
+        if(con->allindex!=shost.allindex) {
+                LOGGER("sendwakesender %d allindex different\n",h);
+                return false;
+                }
+        return con->sendbackup(shost.getcrypt());
+        }
+    LOGAR("sendwakesender shost.getConnect()==null");
+     return false;
     }
 
 bool sendwakestreamsender(int h) {
@@ -1154,7 +1168,19 @@ bool sendwakestreamsender(int h) {
     updateone &shost=getupdatedata()->tosend[h];
     shost.close();
     shost.open();
-    return shost.getConnect()->sendwakeupstream(shost.getcrypt());
+    if(auto *con=shost.getConnect()) {
+        if(con->finish) {
+            LOGGER("sendwakestreamsender: %d finish\n",h);
+            return false;
+            }
+        if(con->allindex!=shost.allindex) {
+                LOGGER("sendwakestreamsender %d allindex different\n",h);
+                return false;
+                }
+        return con->sendwakeupstream(shost.getcrypt());
+        }
+    LOGAR("sendwakestreamsender shost.getConnect()==null");
+     return false;
     }
 
 
@@ -1184,6 +1210,10 @@ void backupthread(int allindex,int sendindex) {
        while(true) {
           if(doend(sendindex)) 
             return;
+        if(!con_vars[sendindex]) { 
+                LOGGER("con_vars[%d]==null\n",sendindex);
+                return;
+                }
          if(!con_vars[sendindex]->dobackup) {
             status.locked=true;
             lockwait(current,sendindex);
@@ -1304,12 +1334,16 @@ void        doupdates(const uintptr_t current,const int h) {
         }
 void lockwait(uintptr_t &current,int h) {
     LOGGER("%d before lock\n",h)    ;
-        std::unique_lock<std::mutex> lck(con_vars[h]->backupmutex);
-        con_vars[h]->dobackup=con_vars[h]->dobackup&~current;
-        con_vars[h]->backupcond.wait(lck, [h] {return backup->con_vars[h]->dobackup; });   
-        current=con_vars[h]->dobackup;
-        auto *con=connections[getupdatedata()->tosend[h].allindex];
-      LOGGER("%d after lock sock=%d\n",h,con?con->getSenderIdent():-1)    ;
+    std::unique_lock<std::mutex> lck(con_vars[h]->backupmutex);
+    LOGGER("%d after lock\n",h)    ;
+    con_vars[h]->dobackup=con_vars[h]->dobackup&~current;
+    LOGGER("%d dobackup=%d\n",h,con_vars[h]->dobackup)    ;
+    con_vars[h]->backupcond.wait(lck, [h] {return backup->con_vars[h]->dobackup; });   
+    LOGGER("%d afterwait\n",h)    ;
+    current=con_vars[h]->dobackup;
+    LOGGER("%d after current=\n",h)    ;
+    auto *con=connections[getupdatedata()->tosend[h].allindex];
+   LOGGER("%d after con=connections[]=%d\n",h,con?con->getSenderIdent():-1)    ;
     }
 
 //void streambackup(int index) { wakebackup(wakestream); }
@@ -1385,6 +1419,9 @@ static void startbackup(std::string_view globalbasedir) {
             auto &host=backup->getupdatedata()->allhosts[i];
             int index=host.index;
             LOGGER("index=%d\n",index);
+            if(host.ICE&&!host.deactivated) {
+                startReceiverThread(i);
+                }
             if(index>=maxsend) {
                 LOGGER("allhosts[i].index %d >= %d sendnr\n",index,maxsend);
                 host.index=-1;
@@ -1440,7 +1477,7 @@ inline std::span<passhost_t> getHosts() {
 inline std::span<passhost_t> getBackupHosts() {
     return backup-> getHosts();
     }
-inline int gethostindex(passhost_t *host) {
+inline int gethostindex(const passhost_t *host) {
     return host-getBackupHosts().data();
     }
 

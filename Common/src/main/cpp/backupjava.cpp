@@ -153,7 +153,7 @@ extern "C" JNIEXPORT jboolean JNICALL   fromjava(resetbylabel)(JNIEnv *env, jcla
     }
 #endif
 const char *gethostlabel(int pos) {
-    if(!backup||pos>=backup->gethostnr())
+    if(!backup||pos<0||pos>=backup->gethostnr())
         return nullptr;
     const passhost_t &host=backup->getupdatedata()->allhosts[pos];
     if(!host.hasname)
@@ -173,6 +173,22 @@ extern "C" JNIEXPORT jstring JNICALL   fromjava(getbackuplabel)(JNIEnv *envin, j
     if(const char *label=gethostlabel(pos))
         return myNewStringUTF(envin,label);
     return nullptr;
+    }
+
+extern "C" JNIEXPORT jstring JNICALL   fromjava(getICElabel)(JNIEnv *env, jclass cl,jint pos) {
+    if(!backup||pos<0||pos>=backup->gethostnr())
+        return nullptr;
+    const passhost_t &host=backup->getupdatedata()->allhosts[pos];
+    if(!host.ICE)
+        return nullptr;
+    std::string_view label=host.getICEname();
+    return myNewStringUTF(env,label);
+    }
+extern "C" JNIEXPORT jboolean JNICALL   fromjava(getICEside)(JNIEnv *env, jclass cl,jint pos) {
+    if(!backup||pos<0||pos>=backup->gethostnr())
+        return false;
+    const passhost_t &host=backup->getupdatedata()->allhosts[pos];
+    return host.side;
     }
 extern "C" JNIEXPORT jstring JNICALL   fromjava(getbackuppassword)(JNIEnv *envin, jclass cl,jint pos) {
     if(!backup||pos>=backup->gethostnr())
@@ -247,7 +263,6 @@ extern "C" JNIEXPORT void JNICALL   fromjava(setreceiveport)(JNIEnv *env, jclass
         if(backup->getupdatedata()->port[portlen]||memcmp(newport, backup->getupdatedata()->port,portlen)) {
             memcpy(backup->getupdatedata()->port,newport,portlen);
             backup->getupdatedata()->port[portlen]='\0';
-    //        backup->stopreceiver();
             backup->startreceiver(true);
             }
         }
@@ -437,7 +452,64 @@ extern "C" JNIEXPORT jstring JNICALL   fromjava(getbackJson)(JNIEnv *envin, jcla
     return myNewStringUTF(envin,jsonstr.data());
     }
 extern int makeHomeBackupSender();
-extern "C" JNIEXPORT jint JNICALL   fromjava(makeHomeCopy)(JNIEnv *envin, jclass cl) {
+extern "C" JNIEXPORT jint JNICALL   fromjava(makeHomeSender)(JNIEnv *envin, jclass cl) {
     return  makeHomeBackupSender();
      }
+extern int makeICEsender();
+extern "C" JNIEXPORT jint JNICALL   fromjava(makeICESender)(JNIEnv *envin, jclass cl) {
+    return makeICEsender();
+     }
+extern int makeHomeBackupReceiver();
+extern "C" JNIEXPORT jint JNICALL   fromjava(makeHomeReceiver)(JNIEnv *envin, jclass cl) {
+    return  makeHomeBackupReceiver();
+     }
+extern int makeICEreceiver();
+extern "C" JNIEXPORT jint JNICALL   fromjava(makeICEReceiver)(JNIEnv *envin, jclass cl) {
+    return makeICEreceiver();
+     }
+
 #endif
+
+extern "C" JNIEXPORT jstring JNICALL   fromjava(getTurnHost)(JNIEnv *env, jclass cl,jint pos) {
+    return env->NewStringUTF(backup->getupdatedata()->turnserver[pos].hostname);
+    }
+extern "C" JNIEXPORT jstring JNICALL   fromjava(getTurnUser)(JNIEnv *env, jclass cl,jint pos) {
+    return env->NewStringUTF(backup->getupdatedata()->turnserver[pos].username);
+    }
+extern "C" JNIEXPORT jstring JNICALL   fromjava(getTurnPassword)(JNIEnv *env, jclass cl,jint pos) {
+    return env->NewStringUTF(backup->getupdatedata()->turnserver[pos].password);
+    }
+extern "C" JNIEXPORT jint JNICALL   fromjava(getTurnPort)(JNIEnv *env, jclass cl,jint pos) {
+    return backup->getupdatedata()->turnserver[pos].port;
+    }
+
+extern "C" JNIEXPORT void JNICALL   fromjava(setTurnHost)(JNIEnv *env, jclass cl,jint pos,jstring jhost) {
+   jint hostlen= env->GetStringUTFLength( jhost);
+   jint jlen = env->GetStringLength( jhost);
+   env->GetStringUTFRegion( jhost, 0,jlen,backup->getupdatedata()->turnserver[pos].hostname); 
+   backup->getupdatedata()->turnserver[pos].hostname[hostlen]='\0';
+  backup->getupdatedata()->NRturnserver=1;
+   }
+
+extern "C" JNIEXPORT void JNICALL   fromjava(deleteTurnServer)(JNIEnv *env, jclass cl,jint pos) {
+    backup->getupdatedata()->NRturnserver=0;
+    }
+extern "C" JNIEXPORT jint JNICALL   fromjava(TurnServerNR)(JNIEnv *env, jclass cl) {
+    return backup->getupdatedata()->NRturnserver;
+    }
+extern "C" JNIEXPORT void JNICALL   fromjava(setTurnUser)(JNIEnv *env, jclass cl,jint pos,jstring juser) {
+   jint userlen= env->GetStringUTFLength( juser);
+   jint jlen = env->GetStringLength( juser);
+   env->GetStringUTFRegion( juser, 0,jlen,backup->getupdatedata()->turnserver[pos].username); 
+   backup->getupdatedata()->turnserver[pos].username[userlen]='\0';
+   }
+extern "C" JNIEXPORT void JNICALL   fromjava(setTurnPassword)(JNIEnv *env, jclass cl,jint pos,jstring jpassword) {
+   jint passwordlen= env->GetStringUTFLength( jpassword);
+   jint jlen = env->GetStringLength( jpassword);
+   env->GetStringUTFRegion( jpassword, 0,jlen,backup->getupdatedata()->turnserver[pos].password); 
+   backup->getupdatedata()->turnserver[pos].password[passwordlen]='\0';
+   }
+
+extern "C" JNIEXPORT void JNICALL   fromjava(setTurnPort)(JNIEnv *env, jclass cl,jint pos,jint port) {
+    backup->getupdatedata()->turnserver[pos].port=port;
+    }

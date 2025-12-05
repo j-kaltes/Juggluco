@@ -26,6 +26,8 @@ long (*SSL_ctrlptr)(SSL *ssl, int cmd, long larg, void *parg);
 
 const SSL_METHOD *(*TLS_client_methodptr)(void);
 const SSL_METHOD *(*SSLv23_client_methodptr)(void);
+const SSL_METHOD *(*SSLv23_methodptr)(void);
+
 int (*SSL_shutdownptr)(SSL *ssl);
 
 

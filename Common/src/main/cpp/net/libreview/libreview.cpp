@@ -35,6 +35,7 @@
 #ifdef LIBRENUMBERS
 #include "librenumbers.hpp"
 #endif
+#include "librelog.hpp"
 constexpr const int DEBUGLEN=0;
 constexpr const int EXTRALEN=
 
@@ -190,12 +191,12 @@ static LibreHist  librehistory(SensorGlucoseData *sensdata,uint32_t starttime,ui
     const int notsend=sensdata->getinfo()->libreviewnotsend;
 #ifndef NOLOG
     const time_t tim=starttime;
-    LOGGER("%s librehistory notsend=%d from %s",sensdata->shortsensorname()->data(),notsend,ctime(&tim));
+    LIBRELOGGER("%s librehistory notsend=%d from %s",sensdata->shortsensorname()->data(),notsend,ctime(&tim));
 #endif
     const std::span<const ScanData> stream=sensdata->getPolldata() ;
     uint32_t streamlen= stream.size();
     if(streamlen<1||streamlen<=notsend) {
-        LOGGER("no hist: streamlen=%d\n",streamlen);
+        LIBRELOGGER("no hist: streamlen=%d\n",streamlen);
         return {.notsend=streamlen};
         }
     const int lastpos= streamlen-1;
@@ -203,7 +204,7 @@ static LibreHist  librehistory(SensorGlucoseData *sensdata,uint32_t starttime,ui
     const ScanData *firststream=&stream[notsend];
     while(!laststream->valid(lastpos)) {
         if(--laststream<firststream) {
-            LOGAR("no hist: no data");
+            LIBRELOGAR("no hist: no data");
             return {.notsend=streamlen};
             }
         }
@@ -216,7 +217,7 @@ static LibreHist  librehistory(SensorGlucoseData *sensdata,uint32_t starttime,ui
         while(true) {
             --laststream;
             if(laststream<firststream) {
-                LOGAR("no librehist no whole period");
+                LIBRELOGAR("no librehist no whole period");
                 return {.notsend=static_cast<uint32_t>(notsend)};
                 }
             if(laststream->valid()) {
@@ -228,7 +229,7 @@ static LibreHist  librehistory(SensorGlucoseData *sensdata,uint32_t starttime,ui
                 }
             }
         }
-    LOGGER("laststreadid=%d\n",laststreamid);
+    LIBRELOGGER("laststreadid=%d\n",laststreamid);
     streamlen=laststream-&stream[0]+1;
     size_t leftstream=streamlen-notsend;
     const ScanData *found=(firststream->t<starttime)?sensdata->firstnotless({firststream,leftstream},starttime):firststream;
@@ -241,7 +242,7 @@ static LibreHist  librehistory(SensorGlucoseData *sensdata,uint32_t starttime,ui
         }
     while(true) {
         if(found>laststream)  {
-            LOGGER("found>laststream .notsend=%d\n",streamlen);
+            LIBRELOGGER("found>laststream .notsend=%d\n",streamlen);
             return {.notsend=streamlen};
             }
         if(found->valid()) 
@@ -255,14 +256,14 @@ static LibreHist  librehistory(SensorGlucoseData *sensdata,uint32_t starttime,ui
 
     int id=previd+periodmin;
     int firstid=previd+periodright+1;
-//    LOGGER("id=%d\n",id);
+//    LIBRELOGGER("id=%d\n",id);
     while(true) {
         if(found->id>=firstid)    
             break;
         while(true) {
             ++found;
             if(found>laststream)  {
-                LOGGER("found >laststream notsend=%d\n",streamlen);
+                LIBRELOGGER("found >laststream notsend=%d\n",streamlen);
                 return {.notsend=streamlen};
                 }
             if(found->valid()) 
@@ -273,7 +274,7 @@ static LibreHist  librehistory(SensorGlucoseData *sensdata,uint32_t starttime,ui
 
     int datalen=1+(laststreamid-previd)/periodmin;
     if(datalen<=0) {
-        LOGGER("datalen=%d\n",datalen);
+        LIBRELOGGER("datalen=%d\n",datalen);
         return {.notsend=streamlen};
         }
     LibreHistEl *list=new LibreHistEl[datalen];
@@ -289,7 +290,7 @@ static LibreHist  librehistory(SensorGlucoseData *sensdata,uint32_t starttime,ui
         if(nextid>laststreamid)
             break;
         for(;iter->id<=nextid;) {
-    //        LOGGER("id %d\n",iter->id);
+    //        LIBRELOGGER("id %d\n",iter->id);
             timesum+=iter->t;
             glusum+=iter->g;
             useddata=iter;
@@ -304,7 +305,7 @@ static LibreHist  librehistory(SensorGlucoseData *sensdata,uint32_t starttime,ui
             list[datuit].ti=timesum/num;
             list[datuit].mgdL=(int16_t) round(glusum/num);
             list[datuit++].id=id;    
-        //    LOGGER("in id=%d\n",id);
+        //    LIBRELOGGER("in id=%d\n",id);
             }
         id+=periodmin;
         }
@@ -312,15 +313,12 @@ static LibreHist  librehistory(SensorGlucoseData *sensdata,uint32_t starttime,ui
     const int64_t histor=libreviewHistor(sensdata->shortsensorname());
     uint32_t newnotsend=useddata-stream.data()+1;
     const uint32_t notsendHistory=datuit?((list[datuit-1].id/15)+1):0;
-    LOGGER("send %d data notsend=%d notsendHistory=%d\n",datuit,newnotsend,notsendHistory);
+    LIBRELOGGER("send %d data notsend=%d notsendHistory=%d\n",datuit,newnotsend,notsendHistory);
 
     return {.histor=histor,.list=list,.size=datuit,.starttime=sensdata->getstarttime(),.msec=0,.notsend=newnotsend,.notsendHistory=notsendHistory,.sendstart=sensdata->getinfo()->sendsensorstart };
     }
 
 
-
-//{"type":"com.abbottdiabetescare.informatics.sensorstart","extendedProperties":{"factoryTimestamp":"2023-09-09T20:16:00.000Z","gmin":"40","gmax":"500","latejoin":"false","puckGen":"3","wearDuration":"20160","warmupTime":"60","isStreaming":"true","productType":"3"},"recordNumber":-6629287740365012992,"timestamp":"2023-09-09T22:16:00.000+02:00"}
-//{"type":"com.abbottdiabetescare.informatics.sensorstart","extendedProperties":{"factoryTimestamp":"2023-09-09T20:16:00.000Z","gmin":"40","gmax":"500","latejoin":"false","puckGen":"3","wearDuration":"20160","warmupTime":"60","isStreaming":"true","productType":"3"},"recordNumber":-6629287740365012992,"timestamp":"2023-09-09T22:16:00.000+02:00"}
 static int mksensorstart(int64_t recordnumbermask, time_t starttime,int msec,char *buf) {
     static constexpr const char start[]=R"({"type":"com.abbottdiabetescare.informatics.sensorstart","extendedProperties":{"factoryTimestamp":")";
     static constexpr const int startlen=sizeof(start)-1;
@@ -363,7 +361,6 @@ static int writelist(const LibreHist *list,const int len,char *buf,int (*func)(c
                 }
             }
         }
-//    if(bufptr!=buf) --bufptr;
     return bufptr-buf;
     }
 static int makesensorstarts(const LibreHist *list,const int len,char *buf) {
@@ -399,19 +396,19 @@ bool putwhenneeded(bool libre3,SensorGlucoseData *sensdata) {
         const char *sensorid= sensdata->showsensorname().data();
         if(nu<sensdata->officialendtime()) {
             if(!(sensdata->getinfo()->putsensor=putsensor(libre3,sensorid))) {
-                LOGGER("putsensor %s failed\n",sensorid);
+                LIBRELOGGER("putsensor %s failed\n",sensorid);
                 return false;
                 }
-            LOGGER("putsensor %s succeeded\n",sensorid);
+            LIBRELOGGER("putsensor %s succeeded\n",sensorid);
             return true;
             }
         else  {
-            LOGGER("putsensor %s not done, old sensor %s",sensorid,ctime(&nu));
+            LIBRELOGGER("putsensor %s not done, old sensor %s",sensorid,ctime(&nu));
             return true;
             }
         }
     else {
-        LOGAR("putsensor already done");
+        LIBRELOGAR("putsensor already done");
         return true;
         }
     }
@@ -446,18 +443,18 @@ static void addoldcurrents(char *&uitptr,const SensorGlucoseData *sens,int start
     }
 static int addcurrents(char *&uitptr,time_t nu,const SensorGlucoseData *sens) { 
     if(!sens)  {
-        LOGAR("addcurrents: SensorGlucoseData==null");
+        LIBRELOGAR("addcurrents: SensorGlucoseData==null");
         return -1;
         }
      int start=sens->getinfo()->libreCurrentIter;
     int pollstart= sens->getinfo()->pollstart;
     int        ends=sens->pollcount()-1;
-    LOGGER("%s pollstart=%d libreCurrentIter=%d ends=%d\n",sens->showsensorname().data(),pollstart,start,ends);
+    LIBRELOGGER("%s pollstart=%d libreCurrentIter=%d ends=%d\n",sens->showsensorname().data(),pollstart,start,ends);
     if(start<pollstart)
         start=pollstart;
-    LOGGER("start=%d ends=%d\n",start,ends);
+    LIBRELOGGER("start=%d ends=%d\n",start,ends);
     if(start>ends) {
-        LOGAR("addcurrents: start>ends");
+        LIBRELOGAR("addcurrents: start>ends");
         return ends;
         }
     const time_t old=nu-5*60;
@@ -477,27 +474,6 @@ extern jobject glucosecurve;
             if(glucosecurve) {
                isViewed=true;
             }
-            /*
-            else {
-               if(!viewed.empty()) {
-                  int previd=viewed.back();
-                  const ScanData *prev=startstream+previd;
-                  if(((long long)wastime-prev->gettime())<
-   #ifdef NOTALLVIES
-   betweenviews
-   #else
-                  60
-   #endif
-                  ) {
-                     LOGGER("previd=%d near %d\n",previd,i);
-                     isViewed=true;
-                     id=previd;
-                     }
-                  else {
-                     LOGGER("previd=%d %x near %d %x\n",previd,prev->gettime(),i,wastime);
-                     }
-                  }
-               }*/
                 }
             uitptr=onecurrent(*el,i,uitptr,isViewed);
             *uitptr++=',';
@@ -523,11 +499,11 @@ return true;
 
 #ifndef NOLOG
     time_t tim=starttime;
-    LOGGER("start %d sensors sendlibreviewdata librekeepsecs=%d from %s",senslen,librekeepsecs,ctime(&tim));
+    LIBRELOGGER("start %d sensors sendlibreviewdata librekeepsecs=%d from %s",senslen,librekeepsecs,ctime(&tim));
 #endif
 
     if(senslen<=0) {
-        LOGAR("not sensors in period");
+        LIBRELOGAR("not sensors in period");
         return true;
         }
 
@@ -550,11 +526,11 @@ int startsensor=0;
         if(!info->libreviewsendall) {
             if(sensdata->isLibre2()) {
             if(info->libreStarttime) {
-               LOGGER("set starttimeiter=%d=libreStarttime=%d\n", starttimeiter,info->libreStarttime);
+               LIBRELOGGER("set starttimeiter=%d=libreStarttime=%d\n", starttimeiter,info->libreStarttime);
                starttimeiter=info->libreStarttime;
                }
             else {
-               LOGGER("set libreStarttime=%d\n", starttimeiter);
+               LIBRELOGGER("set libreStarttime=%d\n", starttimeiter);
                info->libreStarttime=starttimeiter;
                }
                 const bool userealhistory=  (info->startedwithStreamhistory&&( info->libreviewnotsendHistory>= info->startedwithStreamhistory||info->startedwithStreamhistory==1))
@@ -579,12 +555,12 @@ int startsensor=0;
                         info->newscan=true;
                         lastscan=scanoff+startid;
                         }
-                    LOGGER("startedwithStreamhistory=%d scanoff=%d startid=%d lastscan=%d scancount=%d\n",info->startedwithStreamhistory,scanoff,startid,lastscan,sensdata->scancount());
+                    LIBRELOGGER("startedwithStreamhistory=%d scanoff=%d startid=%d lastscan=%d scancount=%d\n",info->startedwithStreamhistory,scanoff,startid,lastscan,sensdata->scancount());
                     nrscans+=(sensdata->scancount() -lastscan);
 
                     if(usedsensor>5) {
                         startsensor=i;
-                        LOGGER("usedsensor=%d startsensor=%d\n",i);
+                        LIBRELOGGER("usedsensor=%d startsensor=%d\n",i);
                         break;
                         }
                     ++usedsensor;
@@ -610,13 +586,13 @@ int startsensor=0;
     #ifdef LIBRENUMBERS
     Numbers<libre2> numbers;
     int bytesnumbers=numbers.spaceneeded();
-    LOGGER("startsensor=%d numbers.spaceneeded()=%d\n",startsensor,bytesnumbers);
+    LIBRELOGGER("startsensor=%d numbers.spaceneeded()=%d\n",startsensor,bytesnumbers);
 
     #else
     constexpr const int  bytesnumbers=0;
     #endif
         if(!nrscans&&!histtotal&&!bytesnumbers&&!hasnewcurrent) {
-            LOGAR("libreview not needed");
+            LIBRELOGAR("libreview not needed");
             return true;
             }
 
@@ -652,7 +628,6 @@ int startsensor=0;
     afterlow.size()+10+
     afterhigh.size()+4+
     aftertimeformat.size()+6+timeuitlen+
-    //s/addstrview(uitptr,\(.*\));/\1.size()+/g
     (
     aftercurrenttime.size()+ 
     dMODEL.size()+
@@ -672,12 +647,12 @@ int startsensor=0;
     #ifndef NOLOG
 
     //time_t stim=scantime;
-        LOGGER("usertokenlen=%d histtotal=%d histelUitlen=%d senslen=%d nrscans=%u scanelsize=%d totallen=%d nu=%u \n",usertokenlen,histtotal,histelUitlen,senslen,nrscans,scanelsize,totallen,nu);
+        LIBRELOGGER("usertokenlen=%d histtotal=%d histelUitlen=%d senslen=%d nrscans=%u scanelsize=%d totallen=%d nu=%u \n",usertokenlen,histtotal,histelUitlen,senslen,nrscans,scanelsize,totallen,nu);
     #endif
         char *uitbuf=new(std::nothrow) char[totallen+EXTRALEN*100+DEBUGLEN];
 
         if(!uitbuf) {
-            LOGGER("libreview: new char[%d] failed\n",totallen+EXTRALEN*100);
+            LIBRELOGGER("libreview: new char[%d] failed\n",totallen+EXTRALEN*100);
             return false;
             }
          std::unique_ptr<char[]> bufdeleter(uitbuf);
@@ -748,9 +723,9 @@ int startsensor=0;
         if(uitptr!=startptr)
             --uitptr;
         addstrview(uitptr,afterlocalstartime);
-        LOGAR("before numbers.writeallinsulin(uitptr)");
+        LIBRELOGAR("before numbers.writeallinsulin(uitptr)");
         uitptr+=numbers.writeallinsulin(uitptr);
-        LOGAR("after numbers.writeallinsulin(uitptr)");
+        LIBRELOGAR("after numbers.writeallinsulin(uitptr)");
         addstrview(uitptr,afterinsulin);
 
         if(histtotal) {
@@ -758,7 +733,7 @@ int startsensor=0;
             }
         addstrview(uitptr, afterhists);
 
-        LOGGER("before getscans len=%ld\n",uitptr-uitbuf);
+        LIBRELOGGER("before getscans len=%ld\n",uitptr-uitbuf);
 
         int scanids[senslen];
         int scansiter=0;
@@ -778,7 +753,7 @@ int startsensor=0;
                 if(startid) {
                     starttimeiter=0;
                     }
-                LOGGER("scanoff=%d startid=%d end=%d\n",scanoff,startid,scans.size());
+                LIBRELOGGER("scanoff=%d startid=%d end=%d\n",scanoff,startid,scans.size());
                 for(const ScanData *iter=&scans[scanoff+startid];iter<endscans;++iter) {
                     ++id;
                     if(iter->valid()&&iter->gettime()>starttimeiter) {
@@ -795,31 +770,30 @@ int startsensor=0;
             }
         if(uitptr>wasuit)
             --uitptr;
-        LOGGER("scancount=%d after getscans len=%ld\n",scansiter,uitptr-uitbuf);
+        LIBRELOGGER("scancount=%d after getscans len=%ld\n",scansiter,uitptr-uitbuf);
         }
     addstrview(uitptr, afterscans);
-    LOGGER("usertoken=%d len=%ld\n",usertokenlen,uitptr-uitbuf);
+    LIBRELOGGER("usertoken=%d len=%ld\n",usertokenlen,uitptr-uitbuf);
     memcpy(uitptr, settings->data()->libreviewUserToken,usertokenlen);
     uitptr+=usertokenlen;
-    LOGGER("after usertoken len=%ld\n",uitptr-uitbuf);
+    LIBRELOGGER("after usertoken len=%ld\n",uitptr-uitbuf);
     addstrview(uitptr, aftertoken);
     *uitptr++='\0';
     const int uitlen=uitptr-uitbuf-1;
-//    write(STDOUT_FILENO,uitbuf,uitlen);
-    LOGGER("uitlen=%d\n",uitlen);
-    logwriter(uitbuf,uitlen);
+    LIBRELOGGER("uitlen=%d\n",uitlen);
+    LIBRElogwriter(uitbuf,uitlen);
     if(!currentToSend&&scansiter==0&&!histtotal&&!bytesnumbers) {
-        LOGAR("Nothing to write to libreview");
+        LIBRELOGAR("Nothing to write to libreview");
         return true;
         }
 //#define  NOREALSEND 1
 #ifdef NOREALSEND
     bool datasend=false;
-    LOGAR("libresendmeasurements not send");
+    LIBRELOGAR("libresendmeasurements not send");
 #else
     bool datasend=libresendmeasurements(false,uitbuf,uitlen);
     if(datasend) {
-        LOGAR("libresendmeasurements success");
+        LIBRELOGAR("libresendmeasurements success");
         numbers.onSuccess();
         if(currentsend>0) {
            currentsensor->getinfo()->libreCurrentIter=currentsend+1;
@@ -864,7 +838,7 @@ int startsensor=0;
 
                         #ifndef NOLOG
                         time_t tim=settings->data()->lastlibretime;
-                        LOGGER("last item was %s",ctime(&tim));
+                        LIBRELOGGER("last item was %s",ctime(&tim));
                         #endif
                         break;
                         }
@@ -872,15 +846,15 @@ int startsensor=0;
                 if(lastlibre2>=0) {
                     settings->data()->startlibreview=sensints[lastlibre2];
                     }
-                LOGGER("settings->data()->startlibreview=%d\n",settings->data()->startlibreview);
+                LIBRELOGGER("settings->data()->startlibreview=%d\n",settings->data()->startlibreview);
                 }
             else {
-                LOGGER("last=%d startsensor=%d nothing send\n",last,startsensor);
+                LIBRELOGGER("last=%d startsensor=%d nothing send\n",last,startsensor);
                 }
             }
         }
     else
-        LOGAR("libresendmeasurements failure");
+        LIBRELOGAR("libresendmeasurements failure");
 #endif    
     return datasend;
     }
@@ -894,12 +868,12 @@ condvar_t  librecondition;
 void initlibreviewjni(JNIEnv *env) {
     const char librclassstr[]="tk/glucodata/Libreview";
     if(jclass cl=env->FindClass(librclassstr)) {
-              LOGGER("found %s\n",librclassstr);
+              LIBRELOGGER("found %s\n",librclassstr);
         libreviewclass=(jclass)env->NewGlobalRef(cl);
            env->DeleteLocalRef(cl);
            }
       else  {
-          LOGGER("FindClass(%s) failed\n",librclassstr);
+          LIBRELOGGER("FindClass(%s) failed\n",librclassstr);
           }
        }
 static bool initlibreconfig(bool libre3,bool restart) {
@@ -932,12 +906,12 @@ static bool askforaccount=false;
 extern bool networkpresent;
 static int askhasnewcurrent2(time_t nu) {
     if(!settings->data()->LibreCurrentOnly) { 
-        LOGSTRING("LibreCurrentOnly==false\n");
+        LIBRELOGAR("LibreCurrentOnly==false");
         return -1;
         }
     const auto *lastsensor=sensors->getSensorData(-1);
     if(!lastsensor)  {
-        LOGAR("no sensor");
+        LIBRELOGAR("no sensor");
         return -1;
         }
     const int last=sensors->last();
@@ -973,12 +947,12 @@ static int askhasnewcurrent2(time_t nu) {
     }
 static int askhasnewcurrent3(time_t nu) {
     if(!settings->data()->LibreCurrentOnly) { 
-        LOGSTRING("LibreCurrentOnly==false\n");
+        LIBRELOGAR("LibreCurrentOnly==false");
         return -1;
         }
     const auto *lastsensor=sensors->getSensorData(-1);
     if(!lastsensor)  {
-        LOGAR("no sensor");
+        LIBRELOGAR("no sensor");
         return -1;
         }
     const int last=sensors->last();
@@ -1015,12 +989,12 @@ static int askhasnewcurrent3(time_t nu) {
 /*
 int askhasnewcurrent(time_t nu) {
     if(!settings->data()->LibreCurrentOnly) { 
-        LOGSTRING("LibreCurrentOnly==false\n");
+        LIBRELOGAR("LibreCurrentOnly==false");
         return -1;
         }
     const auto *lastsensor=sensors->getSensorData(-1);
     if(!lastsensor)  {
-        LOGAR("no sensor");
+        LIBRELOGAR("no sensor");
         return -1;
         }
     const int last=sensors->last();
@@ -1045,10 +1019,10 @@ int askhasnewcurrent(time_t nu) {
 void libreviewthread() {
     sensors->setversions();
 //    settings->data()->libreinit3=false;
-    LOGGER("libreinit3=%d\n", settings->data()->libreinit3);
+    LIBRELOGGER("libreinit3=%d\n", settings->data()->libreinit3);
     libreviewrunning=true;
     const char view[]{"VIEW"};
-    LOGGERN(view,sizeof(view)-1);
+    LIBRELOGGERN(view,sizeof(view)-1);
    prctl(PR_SET_NAME, view, 0, 0, 0);
     int waitmin=10;
     while(true) {
@@ -1058,20 +1032,20 @@ void libreviewthread() {
                 waitmin=60;
                 }
                 std::unique_lock<std::mutex> lck(librecondition.backupmutex);
-            LOGGER("VIEW before lock waitmin=%d\n",waitmin);
+            LIBRELOGGER("VIEW before lock waitmin=%d\n",waitmin);
              auto now = std::chrono::system_clock::now();
             #ifndef NOLOG
             auto status=
             #endif
                         librecondition.backupcond.wait_until(lck, now + std::chrono::minutes(waitmin));
-            LOGGER("VIEW after lock %stimeout\n",(status==std::cv_status::no_timeout)?"no-":"");
+            LIBRELOGGER("VIEW after lock %stimeout\n",(status==std::cv_status::no_timeout)?"no-":"");
             }
         if(!librecondition.dobackup)
             continue;
         if(librecondition.dobackup&wakeend) {
             librecondition.dobackup=0;
             libreviewrunning=false;
-            LOGAR("end libreviewthread");
+            LIBRELOGAR("end libreviewthread");
             return;
             }
          const   time_t nu=time(nullptr);
@@ -1081,21 +1055,21 @@ void libreviewthread() {
         if((librecondition.dobackup&wakeall)||(hasnewcurrent&&(librecondition.dobackup&wakestream))) {
             librecondition.dobackup=0;
             if(askforaccount||settings->data()->haslibre3) {
-                LOGAR("Libreview: haslibre3");
+                LIBRELOGAR("Libreview: haslibre3");
                 if((!settings->data()->libreinit3)){
                     if(!(settings->data()->libreinit3=initlibreconfig(true,alwaysnewstatus3))) {
                         alwaysnewstatus3=false;
-                        LOGAR("initlibreconfig failed");
+                        LIBRELOGAR("initlibreconfig failed");
                         continue;
                         }
-                    LOGGER("initlibreconfig success %d\n",settings->data()->libreinit3);
+                    LIBRELOGGER("initlibreconfig success %d\n",settings->data()->libreinit3);
                     alwaysnewstatus3=false;
                     }
                 if(!settings->data()->sendtolibreview) {
                     askforaccount=false;
                     settings->data()->uselibre=false;
                     libreviewrunning=false;
-                    LOGAR("end libreview thread, account id only");
+                    LIBRELOGAR("end libreview thread, account id only");
                     return;
                     }
                 if(sendlibre3viewdata(hasnewcurrent3,nu)) {
@@ -1106,11 +1080,11 @@ void libreviewthread() {
                     }
                 }
             if(settings->data()->haslibre2) {
-                LOGAR("Libreview: haslibre2");
+                LIBRELOGAR("Libreview: haslibre2");
                 if(!settings->data()->libreinit){
                     if(!(settings->data()->libreinit=initlibreconfig(false,alwaysnewstatus))) {
                         alwaysnewstatus=false;
-                        LOGAR("initlibreconfig failed");
+                        LIBRELOGAR("initlibreconfig failed");
                         continue;
                         }
                     alwaysnewstatus=false;
@@ -1119,7 +1093,7 @@ void libreviewthread() {
                     askforaccount=false;
                     settings->data()->uselibre=false;
                     libreviewrunning=false;
-                    LOGAR("end libreview thread, account id only");
+                    LIBRELOGAR("end libreview thread, account id only");
                     return;
                     }
 
@@ -1144,15 +1118,15 @@ void wakeaftermin(const int waitmin) {
              uint32_t now=time(nullptr);
              uint32_t prevwake=settings->data()->lastlibretime;
              if((now-prevwake)<60*waitmin) {
-                LOGGER("wakeaftermin(%d) too early\n",waitmin);
+                LIBRELOGGER("wakeaftermin(%d) too early\n",waitmin);
                  return;
                 }
              }
-        LOGGER("wakeaftermin(%d)\n",waitmin);
+        LIBRELOGGER("wakeaftermin(%d)\n",waitmin);
         librecondition.wakebackup(wakeall);
         }
     else {
-        LOGAR("wakeaftermin: no thread running");
+        LIBRELOGAR("wakeaftermin: no thread running");
         librecondition.dobackup=wakeall;
         }
  }
@@ -1202,7 +1176,7 @@ void clearfromDate(const uint32_t starttime, bool initall=true) {
     const int lastsens=sensors->last();
     #ifndef NOLOG
     const time_t tim=starttime;
-    LOGGER("clearfromDate last sensor=%d starttime=%s",lastsens,ctime(&tim));
+    LIBRELOGGER("clearfromDate last sensor=%d starttime=%s",lastsens,ctime(&tim));
     #endif
     if(lastsens>=0) {
         for(int i=0;i<index;i++) {    
@@ -1221,7 +1195,7 @@ void clearfromDate(const uint32_t starttime, bool initall=true) {
             info->libreviewnotsend=histpos; //Volgend history
             info->libreviewScan=streampos;// geef waarde van Stream op startijd
 #ifndef NOLOG
-            LOGGER("clearfromDate Libre3 index=%d notsend=%d stream=%d from=%s",index,histpos,streampos,ctime(&tim));
+            LIBRELOGGER("clearfromDate Libre3 index=%d notsend=%d stream=%d from=%s",index,histpos,streampos,ctime(&tim));
 #endif
             }
         else {
@@ -1236,7 +1210,7 @@ void clearfromDate(const uint32_t starttime, bool initall=true) {
             info->libreviewnotsendHistory=histpos;
    #ifndef NOLOG
             const time_t tim=starttime;
-            LOGGER("clearfromDate Libre2 index=%d notsend=%d stream=%d scanpos=%d from=%s",index,histpos,streampos,scanpos,ctime(&tim));
+            LIBRELOGGER("clearfromDate Libre2 index=%d notsend=%d stream=%d scanpos=%d from=%s",index,histpos,streampos,scanpos,ctime(&tim));
    #endif
             }
          }
@@ -1255,7 +1229,7 @@ void clearfromDate(const uint32_t starttime, bool initall=true) {
                 info->scanoff=0;
                 }
             else {
-                LOGGER("No Libre or null: getSensorData(%d)\n",i);
+                LIBRELOGGER("No Libre or null: getSensorData(%d)\n",i);
                 }
             };
 
@@ -1316,7 +1290,7 @@ extern "C" JNIEXPORT void JNICALL fromjava(wakelibreview) (JNIEnv *env, jclass c
     if(networkpresent)
         wakeaftermin(minutes) ;
     else {
-        LOGAR("wakelibreview netwerkpresent==false");
+        LIBRELOGAR("wakelibreview netwerkpresent==false");
         }
     }
 /*
@@ -1329,7 +1303,7 @@ static bool isstarted=started();
 #define srand(x)
 void startlibrethread() {
     if(!libreviewrunning) {
-        LOGAR("startlibrethread()");
+        LIBRELOGAR("startlibrethread()");
         srand(time(nullptr));
         std::thread libre(libreviewthread);
         libre.detach();
@@ -1385,7 +1359,7 @@ std::string_view getjstring(JNIEnv *env,jstring jstr)  {
     }
 //extern "C" JNIEXPORT void JNICALL fromjava(setDevice) (JNIEnv *env, jclass clazz, jstring jMANUFACTURER, jstring jMODEL, jstring jRELEASE) { 
 extern "C" JNIEXPORT void JNICALL fromjava(setDevice) (JNIEnv *env, jclass clazz, jstring jMANUFACTURER, jstring jMODEL, int SDK_INTin) { 
-    LOGAR("setDevice");
+    LIBRELOGAR("setDevice");
     if(jMANUFACTURER) {
         delete[] dMANUFACTURER.data(); //Ever called twice?
         dMANUFACTURER=getjstring(env,jMANUFACTURER);

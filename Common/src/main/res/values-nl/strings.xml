@@ -349,8 +349,6 @@
     <string name="not">Niet</string>
     <string name="datapresent">"Gegevens aanwezig: "</string>
 <string name="overwrite">Overschrijven?</string>
-<string name="autoqrmessage">Verzendt gegevens van deze telefoon naar een andere telefoon in je thuisnetwerk.
-Als je op OK drukt, wordt er een verbinding gemaakt op deze telefoon en wordt er een QR-code weergegeven die door een ander Android-apparaat kan worden gescand. Scan de QR-code met het linkermenu → Foto op de andere telefoon om een verbinding te maken, waarmee alle gegevens van deze telefoon worden ontvangen.</string>
 
     <string name="usedweight">LETOP: gewicht (%.1f) groter dan 0</string>
 

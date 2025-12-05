@@ -1274,7 +1274,7 @@ bool backupsendinit(crypt_t*pass,Connect *connect,struct changednums *nuall,uint
              LOGARTAG("NUM: noacksendcommand asklastnum failed");
             return false;
             }
-        auto ret=connect->receivedata( pass,sizeof(int));
+        auto ret=connect->receivedata_s( pass,sizeof(int));
         int *posptr=reinterpret_cast<int*>(ret.get());
         if(!posptr) {
             LOGARTAG("NUM: receivedata==null");

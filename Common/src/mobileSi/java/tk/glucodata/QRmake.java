@@ -64,9 +64,10 @@ public static void show(MainActivity act, String code) {
      var image=new ImageView(act);
      int height= GlucoseCurve.getheight()-MainActivity.systembarTop-MainActivity.systembarBottom;
      int width=GlucoseCurve.getwidth()-MainActivity.systembarLeft-MainActivity.systembarRight;
-//     int qrHeight=(int)(height*.95f);
-     int qrHeight=height;
      int qrWidth=(int)(width*.7f);
+     int qrHeight=Math.min(qrWidth,height);
+
+//     int qrWidth=(int)(width*.7f);
      try {
          image.setImageBitmap(bitmap(code,qrHeight,qrHeight));
          }
@@ -77,24 +78,16 @@ public static void show(MainActivity act, String code) {
      close.setOnClickListener(v -> {
         MainActivity.doonback();
         });
- //     var marg =Layout.getMargins(image);
-  //    marg.topMargin=(int)((height-qrHeight)*.5f);
-   //   marg.leftMargin=(int)((width-qrWidth)*.5f);
-//      var marg =Layout.getMargins(close);
    final var help=getbutton(act,R.string.helpname);
    help.setOnClickListener(v-> help(R.string.QRmirror,act));
    var buttonlayout=new Layout(act,(x, w, h)->{
          return new int[] {w,h};
            },new View[]{help},new View[]{close});
-   // buttonlayout.usebaseline=false;
 
-        buttonlayout.setLayoutParams(new ViewGroup.LayoutParams(MATCH_PARENT , MATCH_PARENT));
+     buttonlayout.setLayoutParams(new ViewGroup.LayoutParams(MATCH_PARENT , MATCH_PARENT));
      Layout.getMargins(close).bottomMargin=(int)(height*.35f);
      Layout.getMargins(help).topMargin=(int)(height*.15f);
-     // marg.topMargin=
      var layout=new Layout(act,(x, w, h)->{
-        // x.setX((width-w)*.5f);
-         //x.setY((height-h)*.5f);
          return new int[] {w,h};
            },new View[]{image,buttonlayout});
       layout.setBackgroundColor( Applic.backgroundcolor);

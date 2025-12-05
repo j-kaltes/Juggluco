@@ -162,7 +162,9 @@ inline void lerror(const char *str) {
 	int waser=errno;
 	fprintf(stderr,"%s: %s\n",(char *)str,strerror(waser));
 	}
-inline void flerror(const char* fmt, ...){
+inline void flerror(const char* fmt, ...){      
+        
+//	LOGGER("%s: %s\n",(char *)str,strerror(waser));
 	}
 #else //NOTAPP
 #define lerror( ...) donothing
@@ -185,11 +187,7 @@ void LOGGERNO(const char *buf,int len,bool endl) ;
 
 inline void lerror(const char *str) {
 	int waser=errno;
-#ifdef NOTAPP
-	fprintf(stderr,"%s: %s\n",(char *)str,strerror(waser));
-#else
 	LOGGER("%s: %s\n",(char *)str,strerror(waser));
-#endif
 	}
 void flerror(const char* fmt, ...) __attribute__((format(printf, 1, 2)))   ;
 /*

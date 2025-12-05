@@ -1748,9 +1748,7 @@ seçici uygulaması çöker, bu nedenle diğer uygulamalar tarafından
 kullanılabilen farklı bir zil sesi uygulaması yüklemeniz gerekir.
 Örneğin:
 <a href="https://play.google.com/store/apps/details?id=com.centralparkapps.ringo.ringtones">https://play.google.com/store/apps/details?id=com.centralparkapps.ringo.ringtones</a>,
-<a href="https://apkcombo.com/ringtone-picker/de.kumpewo.ringtones">https://apkcombo.com/ringtone-picker/de.kumpewo.ringtones</a>
-veya <a href="https://www.apkmonk.com/app/com.hlidskialf.android.tonepicker">https://www.apkmonk.com/app/com.hlidskialf.android.tonepicker</a>
-</p>
+<a href="https://apkcombo.com/ringtone-picker/de.kumpewo.ringtones">https://apkcombo.com/ringtone-picker/de.kumpewo.ringtones</a></p>
 <p style="line-height: 100%; margin-bottom: 0cm"><b>Titreşim</b>:
 Titreşim etkin.</p>
 <p style="line-height: 100%; margin-bottom: 0cm"><b>Rahatsız </b><b>E</b><b>tme</b>:
@@ -2989,6 +2987,18 @@ basarak silebilirsiniz.</p>
 kullanarak telefonda bağlantının bir tarafını manuel olarak
 yapılandırın ve diğer tarafı QR kodunu tarayarak yapılandırın.</p>
 <p style="line-height: 100%; margin-bottom: 0cm"><br/>
+
+</p>
+]]>
+</string>
+<string name="autoqrmessage" >
+<![CDATA[
+<p><a href="https://www.juggluco.nl/Jugglucohelp/de/autoqrmessage.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/autoqrmessage.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/autoqrmessage.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/autoqrmessage.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/autoqrmessage.html?lang=en">en</a>&emsp;&emsp;</p>Bu telefondan ev ağınızdaki başka bir telefona veri gönderebilirsiniz.
+Tamam\\\'a basmak bağlantı için QR kod görüntüleyecektir. QR kodu diğer telefonda Sol Menü → Fotoğraf ile taradığınızda bağlantı kurulacak ve bu telefondan tüm verileri alacaktır.</p>
+
+
+<p><br/>
+<br/>
 
 </p>
 ]]>

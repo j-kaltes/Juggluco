@@ -26,6 +26,8 @@ symtest(SSL_ctrl);
 
 symtest(TLS_client_method);
 symtest(SSLv23_client_method);
+symtest(SSLv23_method);
+
 symtest(SSL_shutdown);
 
 

@@ -400,8 +400,9 @@ static boolean bluetoothIsEnabled() {
 
 
 static public void sensorEnded(String str) {
-   if(blueone!=null)
+   if(blueone!=null)  {
       blueone.removeDevice(str) ;
+      }
     }
 
 
@@ -519,7 +520,11 @@ private void removeDevice(String str) {
             {if(doLog) {Log.i(LOG_ID,"removeDevice "+ gatt.SerialNumber);};};
             gatt.free();
             gattcallbacks.remove(i);
-            Natives.setmaxsensors(gattcallbacks.size());
+            final int len=gattcallbacks.size();
+            Natives.setmaxsensors(len);
+            if(len==0) {
+                LossOfSensorAlarm.cancelalarm();
+                }
             for(;i<gattcallbacks.size();++i) {
                 gatt= gattcallbacks.get(i);
                 gatt.stopHealth=false;

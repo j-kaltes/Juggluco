@@ -282,6 +282,7 @@ bool testhostname(const char *hostname,const struct sockaddr *addr) {
     constexpr int buflen=1024;
     char buf[buflen];
     int res;
+    LOGARTAG("testreceivemagic");
     if((res =r_recvni(buf,buflen))==sendmagicspec.size()) {
         const int testlen=sendmagicspec.size()-4;
         if(!memcmp(buf,sendmagicspec.data(),testlen)) { 
@@ -320,12 +321,12 @@ bool testhostname(const char *hostname,const struct sockaddr *addr) {
                 }
             }
         else  {
-            saveerror(pass,"wrong  magic %d",getReceiverIdent());
+            saveerror(pass,"receivemagic wrong  magic %d",getReceiverIdent());
             LOGGERTAG("%s\n",getmirrorerror(pass));
             }
         }
     else    {
-        saveerror(pass,"testreceivemagic error recvni(%d..)=%d\n",getReceiverIdent(),res);
+        saveerror(pass,"testreceivemagic error recvni(%d..)=%d != %d\n",getReceiverIdent(),res, sendmagicspec.size() );
         LOGGERTAG("%s\n",getmirrorerror(pass));
         }
     return false;

@@ -139,10 +139,6 @@ void mkchangelabel(MainActivity context,Runnable onsave,View parent) {
             int pos=(labelpos>=0) ? labelpos:labels.size()-1;
             if(wei>0.0)  {
                   Toast.makeText(context,String.format(Applic.usedlocale,context.getString(R.string.usedweight),wei), Toast.LENGTH_LONG).show();
-  //              var to=Toast.makeText(context,String.format(Applic.usedlocale,context.getString(R.string.usedweight),wei), Toast.LENGTH_LONG);
-//                to.setGravity(Gravity.CENTER_VERTICAL |Gravity.CENTER_HORIZONTAL,0,0);
-//                to.setGravity(Gravity.TOP|Gravity.LEFT, 0, 0);
- //               to.show();
                 }
             if(!Natives.setlabel(pos,name,pr,wei)) {
                 Applic.argToaster(context, name+context.getString(R.string.toolarg), Toast.LENGTH_SHORT);
@@ -158,11 +154,11 @@ void mkchangelabel(MainActivity context,Runnable onsave,View parent) {
                     }
 
                 }
-             tk.glucodata.help.hidekeyboard(activity) ;
+            tk.glucodata.help.hidekeyboard(activity) ;
 
-               editlabel.setVisibility(GONE);
+            editlabel.setVisibility(GONE);
             adapt.notifyDataSetChanged();
-                EnableControls(parent,true);
+            EnableControls(parent,true);
             onsave.run();
             context.poponback();
             } );
@@ -175,7 +171,7 @@ void mkchangelabel(MainActivity context,Runnable onsave,View parent) {
 
 
     context.setonback(() -> {
-         tk.glucodata.help.hidekeyboard(activity) ;
+        tk.glucodata.help.hidekeyboard(activity) ;
         editlabel.setVisibility(GONE);
         EnableControls(parent,true);
         if(editlabel!=null) removeContentView(editlabel) ;
@@ -230,7 +226,7 @@ void    mklabellayout(View parent ) {
     final int minheight= GlucoseCurve.dpToPx(48);
     spinner.setMinimumHeight(minheight);
     avoidSpinnerDropdownFocus(spinner);
-    LabelAdapter<String> numspinadapt=new LabelAdapter<String>(context,Natives.getLabels(),1);
+    LabelAdapter<String> numspinadapt=new LabelAdapter<String>(context,Natives.getLabels(),0);
     spinner.setAdapter(numspinadapt);
     spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
         @Override

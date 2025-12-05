@@ -1,4 +1,5 @@
-
+#include "logs.hpp"
+extern int logcallback(const char *str, size_t len, void *u) ;
 #ifndef WEAROS
 char fullchainfileonly[]="fullchain.pem";
 char privatekey[]="privkey.pem";
@@ -34,17 +35,22 @@ char privatekey[]="privkey.pem";
 
 #include <string>
 #include <string_view>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <netinet/ip.h>
+#include <netinet/tcp.h>
+#include <sys/ioctl.h>
 #ifndef HAVE_NOPRCTL
 #include <sys/prctl.h>
 #endif
 #include "strconcat.hpp"
-#include "logs.hpp"
 #include "inout.hpp"
 #include "watchserver.hpp"
 #include "destruct.hpp"
 #ifdef DLSYMS_SSL
 #include "openssl/ssl.h"
 #include "openssl/err.h"
+#undef SSLv23_method
 static const SSL_METHOD *(*TheMethod)(void);
 static int (*SSL_library_initptr)(void)=NULL;
 static void (*OPENSSL_add_all_algorithms_noconfptr)(void)=NULL;
@@ -61,10 +67,16 @@ static void (*SSL_freeptr)(SSL *ssl);
 static SSL *(*SSL_newptr)(SSL_CTX *ctx);
 static int (*SSL_set_fdptr)(SSL *ssl, int fd);
 static void (*SSL_CTX_freeptr)(SSL_CTX *ctx);
+static int (*SSL_shutdownptr)(SSL *ssl);
+static    unsigned long (*ERR_get_errorptr)(void);
+static void (*ERR_error_string_nptr)(unsigned long e, char *buf, size_t len);
+
 extern void (*ERR_print_errors_cbptr)(int (*cb)(const char *str, size_t len, void *u), void *u);
+
 #else
 #include <openssl/ssl.h>
 #include <openssl/err.h>
+
 #define TheMethod SSLv23_method
 #define SSL_library_initptr SSL_library_init
 #define OPENSSL_add_all_algorithms_noconfptr OPENSSL_add_all_algorithms_noconf
@@ -82,9 +94,11 @@ extern void (*ERR_print_errors_cbptr)(int (*cb)(const char *str, size_t len, voi
 #define SSL_set_fdptr SSL_set_fd
 #define SSL_CTX_freeptr SSL_CTX_free
 #define ERR_print_errors_cbptr ERR_print_errors_cb
+#define SSL_shutdownptr  SSL_shutdown
+#define ERR_get_errorptr ERR_get_error
+#define ERR_error_string_nptr ERR_error_string_n
 #endif
 
-extern int logcallback(const char *str, size_t len, void *u) ;
 void  sslerror(const char *format) {
 	ERR_print_errors_cbptr(logcallback,(void*)format);
 	}
@@ -140,7 +154,14 @@ std::string loadsslfunctions() {
         dlclose(cryptohandle);
         return std::string("hgetsym ERR_print_errors_cb fails");
       }
-
+   if(!(hgetsym(cryptohandle,ERR_get_error))) {
+        dlclose(cryptohandle);
+        return std::string("hgetsym ERR_get_error fails");
+      }
+   if(!(hgetsym(cryptohandle,ERR_error_string_n))) {
+        dlclose(cryptohandle);
+        return std::string("hgetsym ERR_error_string_n fails");
+      }
 #ifndef __ANDROID_API__
    char libssl[]="libssl.so.3";
    const char *libname=libssl;
@@ -184,6 +205,8 @@ std::string loadsslfunctions() {
    symtest(SSL_new);
    symtest(SSL_set_fd);
    symtest(SSL_CTX_free);
+   symtest(SSL_shutdown);
+
 #endif
    return "";
  }
@@ -226,28 +249,68 @@ extern void sendtimeout(int sock,int secs);
 extern void receivetimeout(int sock,int secs) ;
 
 void handlewatchsecure(int sock) {
-   destruct _des([sock]{close(sock);});
 	static SSL_CTX *ctx=globalctx;
-	if(!ctx)
+	if(!ctx) {
+       shutdown(sock,SHUT_RDWR);
+       close(sock);
 		return;
+        }
    const char threadname[17]="ssl watchconnect";
 #ifndef HAVE_NOPRCTL
    prctl(PR_SET_NAME, threadname, 0, 0, 0);
 #endif
    LOGGER("handlewatchsecure %d\n",sock);
    SSL *ssl=SSL_newptr(ctx);  
-	if(!ssl)
-		return;
- 	receivetimeout(sock,60);
- 	sendtimeout(sock,5*60);
+	if(!ssl) {
+       shutdown(sock,SHUT_RDWR);
+       close(sock);
+	   return;
+       }
+   destruct _des{[sock,ssl]{
+        shutdown(sock,SHUT_RDWR);
+        close(sock);
+        SSL_freeptr(ssl);  
+        LOGGER("handlewatchsecure close(%d)\n",sock);
+        }};
+   receivetimeout(sock,60);
+   sendtimeout(sock,5*60);
    SSL_set_fdptr(ssl, sock); 
    if(SSL_acceptptr(ssl)<0)   { 
-        sslerror("SSL_accept: %s");
-    	SSL_freeptr(ssl);  
+      sslerror("SSL_accept: %s");
       return;
       }
 	securewatchcommands(ssl);
-   SSL_freeptr(ssl);  
+   SSL_writeptr(ssl, "", 0);
+  for(int i=0;i<10;++i) { 
+       int outq = 0;
+        if(ioctl(sock, TIOCOUTQ, &outq) == 0) {
+            LOGGER("SIOCOUTQ = %d bytes\n", outq);
+            if(outq==0)
+                break;
+            }
+        else {
+            flerror("ioctl(sock, TIOCOUTQ, &outq)): ");
+            break;
+            }
+       
+        usleep(500000);
+        }
+   for(int i=0;i<5;++i) {
+       int res=SSL_shutdownptr(ssl);
+       LOGGER("SSL_shutdown=%d\n",res);
+       if(res) {
+           if(res==-1) {
+                unsigned long err;
+                while ((err = ERR_get_errorptr()) != 0) {
+                    char buf[256];
+                    ERR_error_string_nptr(err, buf, sizeof(buf));
+                    LOGGER("OpenSSL error: %s (0x%lx)\n", buf, err);
+                    }
+                }
+             break;
+             }
+         usleep(1000*500);
+         }
 	}
 
  #include <openssl/err.h>
@@ -360,3 +423,11 @@ else {
 */
 #endif
 #endif
+
+int logcallback(const char *str, size_t len, void *u) {
+#ifndef NOLOG
+	const char *format=(const char *)u;
+	loggert(format,str);
+#endif
+	return 0;
+	}

@@ -345,6 +345,8 @@ private static void dontusebluetooth() {
     if(Natives.backuphostNr( )<=0) {
         keeprunning.stop();
         }
+               //  act.setbluetoothmain( isChecked);
+//    Natives.setusebluetooth(false);
     }
 
 
@@ -728,19 +730,25 @@ static void doglucose(String SerialNumber, int mgdl, float gl, float rate, int a
     }
 @Keep
 static boolean updateDevices() { //Rename to reset
-     final var blue=  tk.glucodata.SensorBluetooth.blueone;
-     if(blue!=null) {
+     if(Natives.getusebluetooth()) {
+         final var blue=  tk.glucodata.SensorBluetooth.blueone;
+         if(blue!=null) {
            if(blue.updateDevicers()) {
-        var main=MainActivity.thisone;
-        if(main!=null)
-            main.finepermission();
-         }
-          return true;
-      }
-    Log.e(LOG_ID,"tk.glucodata.SensorBluetooth.blueone==null");
-    return false;
+                var main=MainActivity.thisone;
+                if(main!=null)
+                    main.finepermission();
+                 }
+              return true;
+             }
+        Log.e(LOG_ID,"tk.glucodata.SensorBluetooth.blueone==null");
+        return false;
+        }
+    else {
+        Applic.dontusebluetooth();
+        return false;
+        }
      }
-        /*
+/*
 @Keep
 static boolean updateDevices() { //Rename to reset
     if(tk.glucodata.SensorBluetooth.blueone!=null) {

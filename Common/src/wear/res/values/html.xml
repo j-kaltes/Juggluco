@@ -38,6 +38,8 @@ To modify, change the html files in https://github.com/j-kaltes/Jugglucohelp -->
 <string name="schedulehelp" ></string>
 <string name="calibrationhelp" ></string>
 <string name="calibrationslist" ></string>
+<string name="autoqrmessage" ></string>
+<string name="turnservers" ></string>
 <string name="IOBhelp" >First specify the rapid acting insulin label in left menu→Settings→Display→IOB on your phone. This setting will be sent to the watch along with the amounts.</string>
 <string name="staticnum" >
 <![CDATA[

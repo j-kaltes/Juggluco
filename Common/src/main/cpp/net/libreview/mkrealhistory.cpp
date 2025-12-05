@@ -1,5 +1,6 @@
 #include "LibreHist.hpp"
 #include "libreview.hpp"
+#include "librelog.hpp"
 /*
 bool startedwithStreamhistory(const SensorGlucoseData *sensdata) {
 	const bool userealhistory= (sensdata->getinfo()->libreviewnotsendHistory>= sensdata->getinfo()->startedwithStreamhistory)||!sensdata->pollcount();
@@ -7,7 +8,7 @@ bool startedwithStreamhistory(const SensorGlucoseData *sensdata) {
 void switchrealhistory(SensorGlucoseData *sensdata,bool torealhistory) {
 	if(torealhistory) {
 		if(!sensdata->getinfo()->realHistory) {
-			LOGAR("switchrealhistory ON");
+			LIBRELOGAR("switchrealhistory ON");
 			const std::span<const ScanData> stream=sensdata->getPolldata() ;
 			int histnum=4;
 			int notsend=sensdata->getinfo()->libreviewnotsend;
@@ -18,19 +19,19 @@ void switchrealhistory(SensorGlucoseData *sensdata,bool torealhistory) {
 						constexpr int periodmin=15;
 						constexpr int periodright=15/2;
 						histnum=1+(last->id + periodright-1)/periodmin;
-						LOGGER("last->valid id=%d\n",last->id);
+						LIBRELOGGER("last->valid id=%d\n",last->id);
 						break;
 						}
 					}
 				}
 			sensdata->getinfo()->libreviewnotsendHistory=histnum;
-			LOGGER("libreviewnotsend=%d\n",sensdata->getinfo()->libreviewnotsendHistory);
+			LIBRELOGGER("libreviewnotsend=%d\n",sensdata->getinfo()->libreviewnotsendHistory);
 			sensdata->getinfo()->realHistory=true;
 			}
 		}
 	else {
 		if(sensdata->getinfo()->realHistory) {
-			LOGAR("switchrealhistory OFF");
+			LIBRELOGAR("switchrealhistory OFF");
 			int lastid=0;
 			int notsend=sensdata->getinfo()->libreviewnotsendHistory;
 			if(notsend>0) {
@@ -52,7 +53,7 @@ void switchrealhistory(SensorGlucoseData *sensdata,bool torealhistory) {
 						}
 					}
 				}
-			LOGGER("lastid=%d libreviewnotsend old=%d new=%d\n",lastid,notsend,nownotsend);
+			LIBRELOGGER("lastid=%d libreviewnotsend old=%d new=%d\n",lastid,notsend,nownotsend);
 			sensdata->getinfo()->libreviewnotsend=nownotsend;
 			sensdata->getinfo()->realHistory=false;
 			}
@@ -65,7 +66,7 @@ LibreHist  libreRealHistory(SensorGlucoseData *sens,uint32_t starttime,uint32_t 
 	const uint32_t endpos=sens->getAllendhistory();
 #ifndef NOLOG
 	time_t tim=starttime;
-	LOGGER("libreRealHistory %s getAllendhistory=%d libreviewnotsendHistory=%d from %s", sens->shortsensorname()->data(), endpos, notsend,ctime(&tim));
+	LIBRELOGGER("libreRealHistory %s getAllendhistory=%d libreviewnotsendHistory=%d from %s", sens->shortsensorname()->data(), endpos, notsend,ctime(&tim));
 #endif
 	auto iter=notsend;
 	auto *info=sens->getinfo();
@@ -91,7 +92,7 @@ LibreHist  libreRealHistory(SensorGlucoseData *sens,uint32_t starttime,uint32_t 
 			list[uitit++]={.ti=gl->gettime(),.mgdL=gl->getmgdL(),.id=(uint16_t)(gl->getid())};
 			}
 		}
-	LOGGER("startit=%d nr=%d\n",startit,uitit);
+	LIBRELOGGER("startit=%d nr=%d\n",startit,uitit);
 	extern int64_t libreviewHistor(const sensorname_t *sensorid) ;
 	const int64_t histor=libreviewHistor(sens->shortsensorname());
 	return {.histor=histor,.list=list,.size=uitit,.starttime=sens->getstarttime(),.msec=0,.notsendHistory=endpos,.sendstart=sens->getinfo()->sendsensorstart };
