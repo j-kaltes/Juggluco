@@ -389,7 +389,6 @@
     <string name="datapresent">"Dane obecne: "</string>
     <string name="overwrite">Nadpisać?</string>
     <string name="autoqr">Auto QR</string>
-    <string name="autoqrmessage">Prześlij dane z tego telefonu do innego telefonu w sieci domowej. Naciśnięcie przycisku OK spowoduje wygenerowanie połączenia na tym telefonie i wyświetlenie kodu QR, który można zeskanować za pomocą innego urządzenia z systemem Android. Zeskanowanie kodu QR za pomocą lewego menu→Zdjęcie na drugim telefonie spowoduje wygenerowanie połączenia, dzięki któremu telefon będzie odbierał wszystkie dane z tego telefonu.</string>
     
     <string name="googlescan">Skanowanie Google</string>
     <string name="usedweight">UWAGA: waga (%.1f) nie 0</string>
