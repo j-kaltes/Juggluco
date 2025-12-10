@@ -338,7 +338,7 @@ boolean makeQR(MainActivity act,int pos) {
 void makeAutoQR(MainActivity act,View parent) {
       EnableControls(parent,false);
       var cancel=getbutton(act,R.string.cancel);
-      var title=getlabel(act, R.string.autoqr);
+     // var title=getlabel(act, R.string.autoqr);
       var help=getbutton(act,R.string.helpname);
       var send=getlabel(act,R.string.sendto);
       var homenetS=getbutton(act,R.string.homenet);
@@ -349,7 +349,7 @@ void makeAutoQR(MainActivity act,View parent) {
       help.setOnClickListener(v-> {
             help(R.string.autoqrmessage,act);
         });
-      var layout=new Layout(act, new View[]{ title},new View[]{send},new View[]{homenetS,internetS},new View[]{receive},new View[]{homenetR,internetR},new View[] {help,cancel});
+      var layout=new Layout(act, new View[]{send},new View[]{homenetS,internetS},new View[]{receive},new View[]{homenetR,internetR},new View[] {help,cancel});
       layout.setPadding((int)(GlucoseCurve.metrics.density*4.0),(int)(GlucoseCurve.metrics.density*4.0),(int)(GlucoseCurve.metrics.density*4.0),(int)(GlucoseCurve.metrics.density*4));
       layout.setBackgroundColor(backgroundcolor);
       layout.measure(WRAP_CONTENT, WRAP_CONTENT);
@@ -608,8 +608,8 @@ CheckBox ICE;
 
 
          long starttime=(alldata.getVisibility()!=VISIBLE||alldata.isChecked())?0L:(fromnow.isChecked()? System.currentTimeMillis():Natives.getstarttime())/1000L;
-
-         int pos=Natives.changebackuphost(hostindex,names,struse,dodetect,portedit.getText().toString(), Amounts.isChecked(),Stream.isChecked(),Scans.isChecked(),restore.isChecked(),receiver,activeonly.isChecked(),passiveonly.isChecked(),Password.isChecked()?editpass.getText().toString():null,starttime,haslabel.isChecked()?label.getText().toString():null,testip.isChecked(),checkhostname.isChecked(),ICElabel.getText().toString(),one.isChecked());
+         final var ICEstring=ICElabel.getText().toString();
+         int pos=Natives.changebackuphost(hostindex,names,struse,dodetect,portedit.getText().toString(), Amounts.isChecked(),Stream.isChecked(),Scans.isChecked(),restore.isChecked(),receiver,activeonly.isChecked(),passiveonly.isChecked(),Password.isChecked()?editpass.getText().toString():null,starttime,haslabel.isChecked()?label.getText().toString():null,testip.isChecked(),checkhostname.isChecked(), ICE.isChecked()?ICEstring:null,one.isChecked());
 
          if(pos<0) {
             String mess=changehostError(act, pos);
@@ -1203,6 +1203,7 @@ CheckBox ICE;
          int recnum=Natives.getbackuphostreceive(pos);
          boolean off=Natives.getHostDeactivated(pos);
          boolean doreceive= (recnum&2)!=0;
+         String ICElabelstr=Natives.getICElabel(pos);
          if(off)
              text.setPaintFlags(text.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
          else
@@ -1212,12 +1213,17 @@ CheckBox ICE;
             sb.append(" ");
             }
    if(!isWearable) {
-           sb.append((names!=null&&names.length!=0)?names[0]:(Natives.detectIP(pos)?"Detect":"---"));
-           if(!passive) {
-              sb.append(" ");
-              sb.append(port);
-              }
-           sb.append(' ');
+          if(ICElabelstr==null) {
+               sb.append((names!=null&&names.length!=0)?names[0]:(Natives.detectIP(pos)?"Detect":"---"));
+               if(!passive) {
+                  sb.append(" ");
+                  sb.append(port);
+                  }
+               sb.append(' ');
+               }
+            else {
+                  sb.append(" ICE ");
+                }
            }
           if(amounts) {
               sb.append("n");

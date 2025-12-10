@@ -88,7 +88,9 @@ struct ICE_data {
     bool doSend=false;
 //    std::atomic_flag doSend{};
  inline void certain_try_acquire(bool &flag) {
+#ifndef NOLOG
      bool old=flag;
+#endif
      flag=false;
      LOGGER("certain_try_acquire flag was %d now %d\n",old,flag);
      }
@@ -106,12 +108,13 @@ struct ICE_data {
                 return;
                 }
         assert(databuf.size()==len);
+        {std::lock_guard<std::mutex> lck( receiveMutex);
         datalen=len;
-        std::lock_guard<std::mutex> lck( receiveMutex);
         receiveCond.notify_one();
         }
+        }
      void notifyReceive() {
-        std::lock_guard<std::mutex> lck( receiveMutex);
+ //       std::lock_guard<std::mutex> lck( receiveMutex);
         receiveCond.notify_one();
         }
     int receive(juice_agent_t *agent,char *buf, const int maxbuf);

@@ -690,15 +690,23 @@ bool    Connect::receivepassinit(passhost_t *host,ascon_aead_ctx_t *ctx) {
     uint8_t nonce[ASCON_AEAD_NONCE_LEN];
     int len=r_recvni(nonce,takelen);
     if(len!=takelen) {
-        lerrortag("recv");
+        if(len<0) 
+            flerrortag("receivepassinit: recv %d",len);
+        else {
+            LOGGERTAG("receivepassinit: recv()=%d!=%d\n",len,takelen);
+            }
         return false;
         }
     
     constexpr int makelen=ASCON_AEAD_NONCE_LEN-takelen;
     uint8_t *makestart=nonce+takelen;
        makerandom(makestart, makelen);    
-       if(r_sendni(makestart,makelen)!=makelen) {
-        lerrortag("receivepassinit send");
+       if((len=r_sendni(makestart,makelen))!=makelen) {
+         if(len<=0) {
+            flerrortag("receivepassinit send=%d",len);
+            }
+        else
+            LOGGERTAG("receivepassinit send=%d != %d",len,makelen);
         return false;
         }
     if(ctx) {

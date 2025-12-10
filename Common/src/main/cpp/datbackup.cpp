@@ -495,7 +495,9 @@ void activereceivethread(int allindex,passhost_t *pass) {
        LOGAR("after TCPConnect *con=static_cast<TCPConnect*>(connections[allindex]);");
         if(!con||current&wakeend) {
             if(con) {
-                int recsock=con->getReceiverSock(); 
+#ifndef NOLOG
+                int recsock= con->getReceiverSock(); 
+#endif
                 con->closeReceiverConnection();
                 LOGGER("end activereceivethread %d close(%d)\n",h,recsock);
                 }

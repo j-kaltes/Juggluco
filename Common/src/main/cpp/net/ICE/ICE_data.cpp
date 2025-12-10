@@ -128,7 +128,9 @@ void ICE_data::ackeddata(juice_agent_t *agent,udp_header  *head) {
           uint32_t rel_msec=getRelMsec(starttime) ;
           int RTT=rel_msec-head->rel_msec;
           acknowledged[index]=true;
+#ifndef NOLOG
           auto oldRTO=RTO;
+#endif
           setRTO(RTT);
           if(head->fin) {
             ++nextAck;
@@ -665,13 +667,14 @@ int ICE_data::receive(juice_agent_t *agent,char *buf, const int maxbuf) {
            resetReceive();
            return -1;
            }
-        std::unique_lock<std::mutex> lck( receiveMutex);
         intmax_t waittime=RTO*100*timesRTO;
         int asked=0;
-        uint32_t timebegin=time(nullptr);
+        uint32_t beginReceive=time(nullptr);
         while(true) {
             LOGGERICE("side=%d ICE_data::receive before wait_for %d microsecs\n",side,waittime);
-            receiveCond.wait_for(lck,std::chrono::microseconds(waittime), [this,agent,&waittime,&asked]{
+            {
+            std::unique_lock<std::mutex> lck(receiveMutex);
+            receiveCond.wait_for(lck,std::chrono::microseconds(waittime), [this,agent,&waittime,&asked,beginReceive,&lck]{
                 if(shutdown) {
                     LOGGERICE("allindex=%d side=%d receive: wait_for shutdown\n",allindex,side);
                     return true;
@@ -682,13 +685,18 @@ int ICE_data::receive(juice_agent_t *agent,char *buf, const int maxbuf) {
                     ICEConnect *con=static_cast<ICEConnect *>(connections[allindex]);
                     if(con->isConnected)  {
                            if(asked>10) {
-                                if((time(nullptr)-timebegin)>5*60)
+                                if((time(nullptr)-beginReceive)>3*60) {
+                                    LOGGERICE("allindex=%d receive: askedData 11 times\n", allindex);
+                                    lck.unlock();
                                     con->endConnection();
+                                    lck.lock();
                                     return true;
                                     }
                                 }
                            waittime=RTO*100*10;
+                           lck.unlock();
                            askdata(agent);
+                           lck.lock();
                            ++asked;
                            if(shutdown) {
                                 LOGGERICE("%d receive: askdata shutdown\n",side);
@@ -696,16 +704,17 @@ int ICE_data::receive(juice_agent_t *agent,char *buf, const int maxbuf) {
                                 }
                            }
                     else {
-                        LOGGER("allindex=%d side=%d receive:~isConnected\n",allindex,side);
+                        LOGGER("receive: allindex=%d side=%d receive:~isConnected\n",allindex,side);
                         waittime=5*60*1000*1000;
                         }
                     }
                  else {
-                      LOGGER("allindex=%d side=%d !askdata\n",allindex,side);
+                      LOGGER("receive: allindex=%d side=%d askedData\n",allindex,side);
                       waittime=5*60*1000*1000;
                       }
                  return datalen>offset;
                  });
+                 }
                if(shutdown) {
                     return -1;
                     }

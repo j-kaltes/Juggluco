@@ -868,12 +868,18 @@ int changehost(int index,JNIEnv *env,jobjectArray jnames,int nr,bool detect,stri
         thehost.index=-1;
         }
     if(!newhost) {  
-        if(!thehost.ICE) {
-            connections[index]->setindex( index);
-            goto keepTCP;
+        if(auto *con=connections[index]) {
+            if(!thehost.ICE) {
+                con->setindex( index);
+                goto keepTCP;
+                }
+            con->finish=true;
+            con->endConnection();
+            sleep(1);
+            delete con;
             }
-        delete connections[index];
         }
+
     connections[index]=new TCPConnect(index);
     thehost.ICE=false;
     keepTCP:
@@ -1187,10 +1193,9 @@ bool sendwakestreamsender(int h) {
 void backupthread(int allindex,int sendindex) {
 #ifndef NOLOG
     auto &host=getupdatedata()->tosend[sendindex];
-#endif
    auto *con=connections[allindex];
-    LOGGER("%d backupthread, wearos=%d con_vars=%p sock=%i %p\n", allindex,getupdatedata()->allhosts[allindex].wearos,
-        con_vars[sendindex],con?con->getSenderIdent():-1,host.getcrypt());
+    LOGGER("%d backupthread, wearos=%d con_vars=%p sock=%i %p\n", allindex,getupdatedata()->allhosts[allindex].wearos, con_vars[sendindex],con?con->getSenderIdent():-1,host.getcrypt());
+#endif
 //    const int sendindex=getupdatedata()->allhosts[allindex].index;
     const bool passive=getupdatedata()->allhosts[allindex].sendpassive;
 
@@ -1341,9 +1346,12 @@ void lockwait(uintptr_t &current,int h) {
     con_vars[h]->backupcond.wait(lck, [h] {return backup->con_vars[h]->dobackup; });   
     LOGGER("%d afterwait\n",h)    ;
     current=con_vars[h]->dobackup;
+    #ifndef NOLOG
     LOGGER("%d after current=\n",h)    ;
-    auto *con=connections[getupdatedata()->tosend[h].allindex];
-   LOGGER("%d after con=connections[]=%d\n",h,con?con->getSenderIdent():-1)    ;
+    int allindex=getupdatedata()->tosend[h].allindex;
+    auto *con=connections[allindex];
+   LOGGER("%d after connections[%d]=%p eSenderIdent=%d\n",h,allindex,con,con?con->getSenderIdent():-1)    ;
+   #endif
     }
 
 //void streambackup(int index) { wakebackup(wakestream); }

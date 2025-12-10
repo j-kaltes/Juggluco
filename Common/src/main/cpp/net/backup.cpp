@@ -578,8 +578,12 @@ globalsocket=serversock;
             }
 
             }
+
+        shutdown(oldsock,SHUT_RDWR);
+        sleep(1);
         close(oldsock);
         receiversockopt(new_fd) ;
+        LOGGER("serverloop oldsock=%d newsock=%d\n",oldsock,new_fd);
         std::thread  handlecon(receiverthread,hit,allindex);
         handlecon.detach();
         }

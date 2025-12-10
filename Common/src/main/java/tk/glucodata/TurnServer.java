@@ -120,10 +120,17 @@ public static void show(Activity context,View parent) {
     var layout=new Layout(context,(l,w,h)-> {
         return new int[] {w,h};
         },new View[]{hostname,hostedit,portname,portedit},new View[]{username,useredit,password,passedit} ,new View[]{cancel,Help,delete,save} );
-    layout.setPadding(laypad*2,laypad,laypad*2,laypad);
 
+    var params =new ViewGroup.MarginLayoutParams(MATCH_PARENT, WRAP_CONTENT);
+//    var laypad=(int)(GlucoseCurve.metrics.density*4.0);
+    params.leftMargin= MainActivity.systembarLeft;
+    params.topMargin= MainActivity.systembarTop*3/4;
+    params.rightMargin=MainActivity.systembarRight;
+    params.bottomMargin=MainActivity.systembarBottom;
+
+   layout.setPadding(laypad*2,0,laypad*2,0);
     layout.setBackgroundResource(R.drawable.dialogbackground);
-    context.addContentView(layout, new ViewGroup.LayoutParams(MATCH_PARENT, WRAP_CONTENT));
+    context.addContentView(layout, params);
      MainActivity.setonback( () -> {
         EnableControls(parent,true);
         removeContentView(layout); 

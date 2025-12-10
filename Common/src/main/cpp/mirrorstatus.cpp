@@ -30,27 +30,20 @@ extern std::array<int,maxallhosts>   messagesendersockets;
 extern std::array<int,maxallhosts>   messagereceiversockets;
 extern std::array<int,maxallhosts>             us2peers;
 extern mirrorstatus_t mirrorstatus[maxallhosts];
-
+#include "deleter.hpp"
 //constexpr const int maxmirrortext=200;
 extern char *getmirrorerror(const passhost_t *pass);
-struct deleter {
-const char *ptr;
-deleter(const char ptr[]): ptr(ptr){};
-   void operator()(const char p[]) const {
-   	if(p!=ptr)
-		delete[] p;
-    }
-};
-
+extern std::unique_ptr<const char[],deleter> ICEstatus(int allindex);
 std::unique_ptr<const char[],deleter> getnetstatus(int allindex)  {
-	constexpr const char boolstr[][6]={"false","true"};
-	constexpr const char errormessage[]=R"(<h1>Error</h1>)";
 
 	if(allindex<0||allindex>=backup->getupdatedata()->hostnr) {
 		return std::unique_ptr<const char[],deleter>(errormessage,deleter(errormessage));
 		}
-		passhost_t &host= getBackupHosts()[allindex];
-		mirrorstatus_t &status=mirrorstatus[allindex];
+        passhost_t &host= getBackupHosts()[allindex];
+        if(host.ICE) {
+                return ICEstatus(allindex);
+                }
+        mirrorstatus_t &status=mirrorstatus[allindex];
 constexpr	const char *sendmessagestrbase[]={"not done","failed","success"};
 const char *const * const sendptr=sendmessagestrbase+1;
 	int sendsock=-1;
@@ -92,7 +85,7 @@ const char *const * const sendptr=sendmessagestrbase+1;
 
 		}
          Connect *con=connections[allindex];
-	int receivesock=con->getReceiverIdent();
+	int receivesock=con?con->getReceiverIdent():-1;
 extern bool getpassive(int pos);
 extern bool getactive(int pos); 
       const bool ispassive= getpassive(allindex);

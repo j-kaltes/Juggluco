@@ -84,6 +84,9 @@ static bool stillworking(int allindex)  {
     if(!res)  {
         LOGGERICE("stillworking(%d)=%d\n",allindex,res);
         }
+   else {
+        return getBackupHosts()[allindex].ICE;
+        }
     return res;
     }
 const char *juiceErrorString(int error) {
@@ -148,7 +151,10 @@ static void getAddressesThread(juice_agent *agent,std::string_view commonLabel,b
                 if(resbody.size()>= (sizeof(BackDescription )+20)) {
                     errors=0;
                     const BackDescription *other=reinterpret_cast<const BackDescription *>(resbody.data());
-                    int res=juice_add_remote_candidate(agent, other->description);
+                    #ifndef NOLOG
+                    int res=
+                    #endif
+                    juice_add_remote_candidate(agent, other->description);
                     LOGGERICE("%s %d: getaddress %s res=%d\n",commonLabel.data(),side,other->description,res);
                     }
                  else {
@@ -266,7 +272,7 @@ static bool diagnostics(juice_agent *agent,const char *name,bool side) {
     // Retrieve addresses
     char localAddr[JUICE_MAX_ADDRESS_STRING_LEN];
     char remoteAddr[JUICE_MAX_ADDRESS_STRING_LEN];
-    if (int res=juice_get_selected_addresses(agent, localAddr, JUICE_MAX_ADDRESS_STRING_LEN, remoteAddr, JUICE_MAX_ADDRESS_STRING_LEN);res == 0) {
+    if (int res=juice_get_selected_addresses_inc_type(agent, localAddr, JUICE_MAX_ADDRESS_STRING_LEN, remoteAddr, JUICE_MAX_ADDRESS_STRING_LEN);res == 0) {
         LOGGERICE("%s %d: Local address: %s\n", name,side,localAddr);
         LOGGERICE("%s %d: Remote address: %s\n", name,side,remoteAddr);
     }
@@ -299,6 +305,7 @@ static void on_state_changed1(juice_agent_t *agent, juice_state_t state, void *u
     const passhost_t &host= getBackupHosts()[allindex];
     LOGGERICE("%s %d State: %s\n", host.getICEname().data(),host.side,juice_state_to_string(state));
     ICEConnect *con=static_cast<ICEConnect*>(connections[allindex]);
+    con->state=state;
     switch(state) {
         case	JUICE_STATE_GATHERING:
         case	JUICE_STATE_CONNECTING:
@@ -308,6 +315,7 @@ static void on_state_changed1(juice_agent_t *agent, juice_state_t state, void *u
             setConnectTime(allindex,0);
             con->setConnected();
             con->agent.store(agent);
+            con->connectTime=time(nullptr);
             struct CONNECTED {
                 static void thread( juice_agent_t *agent, int allindex) {
                    LOGGERICE("start CONNECT::thread allindex=%d\n",allindex);
@@ -398,6 +406,10 @@ void ICEConnect::receiverThread(int argindex) {
             LOGARICE("receiverThread: allindex changed, return");
             return;
             }
+         if(!host.ICE) {
+            LOGARICE("receiverThread: not ICE, return");
+            return;
+            }
         if(finish) {
             LOGARICE("Finish receiverThread");
             return;
@@ -431,16 +443,16 @@ void ICEConnect::receiverThread(int argindex) {
                 switch(connect(&host)) {
                     case 1: {
                            LOGGERICE("side=%d receiverThread: connected\n",host.side);
-                           waitsec=1;
+                           waitsec=2*60;
                            continue;
                            };
                     case -2:
                         LOGGERICE("side=%d receiverThread: connect continue old agent\n",host.side);
-                        waitsec=1;
+                        waitsec=4;
                         continue;
                     case 0:
                         LOGGERICE("side=%d receiverThread: already connecting\n",host.side);
-                        waitsec=2*60;
+                        waitsec=3*60;
                         continue;
                     case -1: 
                         LOGGERICE("side=%d receiverThread: error retry\n",host.side);
@@ -476,14 +488,20 @@ static  void juice_logger(juice_log_level_t level, const char *message) {
         }
 //juice_log_level_t juice_log_level=JUICE_LOG_LEVEL_DEBUG;
 //juice_log_level_t juice_log_level=JUICE_LOG_LEVEL_VERBOSE;
-juice_log_level_t juice_log_level=JUICE_LOG_LEVEL_WARN;
 //   juice_set_log_level(JUICE_LOG_LEVEL_WARN);
-juice_agent *createAgent(int allindex) {
-   juice_set_log_level(juice_log_level);
-   juice_set_log_handler(&juice_logger);
 
+class initJuice {
+  public:
+  initJuice() {
+        LOGAR("initJuice()");
+         juice_set_log_handler(&juice_logger);
+         juice_set_log_level(juice_log_level);
+         };
+     };
+initJuice el;
+
+juice_agent *createAgent(int allindex) {
    LOGGER("createAgent(%d)\n",allindex);
-                        
           
 static constexpr const  juice_turn_server_t default_turn_servers[]{
     #include "turnservers.hpp"
@@ -531,7 +549,7 @@ static bool waitonDescription(juice_agent *agent,std::string_view commonLabel,in
         if(code== 200) {
             if(resbody.size()>= (sizeof(BackDescription )+20)) {
                 const BackDescription *other=reinterpret_cast<const BackDescription *>(resbody.data());
-                LOGGERICE("getdescription SUCCESS: %s %d: Remote description in:\n%s\n",commonLabel.data(),side,other->description);
+                LOGGERICE("getdescription SUCCESS: %s %d: Remote description in:\n%*.s\n",commonLabel.data(),side,resbody.size()-offsetof(BackDescription,description),other->description);
                 juice_set_remote_description(agent, other->description);
                 return true;
                 }
@@ -597,6 +615,7 @@ bool initAgent(juice_agent *agent,int allindex) {
         }
     bool side=host.side;
     if(side!=givefirst) {
+        con->phase=GetDescription;
         if(!waitonDescription(agent,commonLabel,side,hostname)) {
            LOGGERICE("initAgent %s %d: waitonDescription failed\n",commonLabel.data(),side);
             return false;
@@ -604,6 +623,7 @@ bool initAgent(juice_agent *agent,int allindex) {
       if(!stillworking(allindex))
         return false;
       }
+    con->phase=PutDescription;
     if(!putDescription(allindex,agent, commonLabel, side,hostname)) { 
         LOGGERICE("initAgent %s %d: putDescription failed\n",commonLabel.data(),side);
         return false;
@@ -613,6 +633,7 @@ bool initAgent(juice_agent *agent,int allindex) {
 
     std::jthread receive{getAddressesThread,agent,commonLabel,side,hostname};
     LOGGERICE("initAgent %s %d: Before juice_gather_candidates\n",commonLabel.data(),side);
+    con->phase=GatherCandidates;
     int ret=juice_gather_candidates(agent);
     if(!stillworking(allindex))
         return false;

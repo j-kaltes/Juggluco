@@ -315,7 +315,7 @@ bool ContextHTTPS::initLibrary() {
         }
 //s/^ssl.h:# define \([^	 ]*\)[	 ]*\([0-9]\+\)[^0-9]*$/case \1: return "\1";/g
 //s/^ssl.h:# define \([^	 ]*\)[	 ]*\([0-9]\+\)[^0-9]*$/case \2: return "\1";/g
-
+#ifndef NOLOG
 static const char *geterrorstring(int error) {
     switch(error) {
         case 0: return "SSL_ERROR_NONE";
@@ -333,7 +333,7 @@ static const char *geterrorstring(int error) {
         default: return "SSL_UNKNOWN_ERROR";
         }
 }
-
+#endif
 
 static int SSLreadfull(SSL* ssl, char *dataptr,const int buflen) {
     LOGGERHTTPS("start SSLreadfull %d\n", buflen);
