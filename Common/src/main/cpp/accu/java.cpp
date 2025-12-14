@@ -118,12 +118,13 @@ extern "C" JNIEXPORT jlong JNICALL   fromjava(accuProcessData)(JNIEnv *env, jcla
           return 1LL;
          }
      const auto arlen=env->GetArrayLength(value);
+    const uint32_t timsec=mmsec/1000L;
      if(arlen<sizeof(AccuData))  {
         LOGGER("accuProcessData size  value %d < AccuData %d\n",arlen,sizeof(AccuData));
         sens->sensorerror=true;
+        sens->sensorErrorTime=timsec;
         return 0LL;
         }
-    const uint32_t timsec=mmsec/1000L;
     const CritAr  bluedata(env,value);
     const uint32_t starttime=sens->getinfo()->starttime;
     const AccuData *accu=reinterpret_cast<const AccuData *>(bluedata.data());
@@ -138,6 +139,7 @@ extern "C" JNIEXPORT jlong JNICALL   fromjava(accuProcessData)(JNIEnv *env, jcla
             if(isFF07(start+2)&&isFF07(start+8)&&isFF07(start+10)) {
                 LOGGER("accuProcessData sensor error id=%d\n",accu->min);
                 sens->sensorerror=true;
+                sens->sensorErrorTime=timsec;
                 return 0LL;
                }
             }
@@ -165,9 +167,10 @@ extern "C" JNIEXPORT jlong JNICALL   fromjava(accuProcessData)(JNIEnv *env, jcla
                         if (diff >= 5 && diff < 30 && last->getmgdL() < 120) {
                             const uint32_t eventTime = low->getTime(starttime);
                             constexpr const uint32_t mgdL = 39;
+                            /*
                             if((timsec-eventTime)<maxbluetoothage) {
                                 sens->sensorerror=false;
-                                }
+                                } */
                             return mkres(sens, timsec, eventTime, min, mgdL, 0, NAN);
                             }
                         }
@@ -176,6 +179,7 @@ extern "C" JNIEXPORT jlong JNICALL   fromjava(accuProcessData)(JNIEnv *env, jcla
             }
 //0F E3 02 08 E5 15 08 02 40 F0 FF 38 00 64 27
 //0F E3 02 08 EA 15 08 02 40 BF EF 0E 00 E5 72
+       sens->sensorErrorTime=timsec;
         sens->sensorerror=true;
         return 0LL;
         }
@@ -190,6 +194,7 @@ extern "C" JNIEXPORT jlong JNICALL   fromjava(accuProcessData)(JNIEnv *env, jcla
     if(mgdL<39||mgdL>401) { //Ever used?
         LOGGER("accuProcessData: ERROR min=%d value %d mg/dL %.1f mmol/L\n",accu->min,mgdL,mgdLf/18.0);
         if((timsec-eventTime)<maxbluetoothage) {
+            sens->sensorErrorTime=timsec;
             sens->sensorerror=true;
             return 0LL;
             }

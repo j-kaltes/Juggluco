@@ -48,7 +48,7 @@
 #include "inout.hpp"
 #include "strconcat.hpp"
 //#define MAIN 1
-#define LOGHTTPS
+//#define LOGHTTPS
 #ifdef LOGHTTPS
 #define LOGGERHTTPS(...) LOGGER("HTTPS: " __VA_ARGS__)
 #define LOGARHTTPS(...) LOGAR("HTTPS: " __VA_ARGS__)
@@ -452,7 +452,7 @@ static void shutdowner(int sock,SSL* ssl) {
          }
       }
 
-std::pair<std::vector<char>,int> ContextHTTPS::request(const std::string_view host,int port,const std::string_view path,const std::string_view TYPE,const std::span<const char> input) {
+std::pair<std::vector<char>,int> ContextHTTPS::request(const std::string_view host,int port,const std::string_view path,const std::string_view TYPE,const std::span<const char> input, const std::string_view header) {
     std::vector<char> uit;   
     int sock = tcp_connect(host.data(), port);
     if (sock < 0) {
@@ -484,7 +484,7 @@ std::pair<std::vector<char>,int> ContextHTTPS::request(const std::string_view ho
        LOGGERHTTPS("Certificate verification failed: %s\n", X509_verify_cert_error_string(verify_result)); 
     }; 
     const char closebuf[]{"\r\nConnection: close\r\n\r\n"};
-    strconcat req {""sv,TYPE , " "sv,path," HTTP/1.1\r\nHost: "sv , host , "\r\nContent-Length: "sv,std::to_string(input.size()), closebuf};
+    strconcat req {""sv,TYPE , " "sv,path," HTTP/1.1\r\nHost: "sv , host , "\r\nContent-Length: "sv,std::to_string(input.size()), header,closebuf};
 
     LOGGERHTTPS("connect %.*s %.*s\n",TYPE.size(),TYPE.data(),path.size(),path.data());
     const char *request=req.data();

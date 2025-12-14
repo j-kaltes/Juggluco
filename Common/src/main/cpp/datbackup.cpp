@@ -867,7 +867,7 @@ Backup::Backup(std::string_view base): mapdata(base,backupdat,sizeof(struct upda
    void    backupbase(string_view basedir);
    backupbase(globalbasedir);
    for(int i=0;i<len;i++) {
-       if(getupdatedata()->allhosts[i].passive()) {
+       if(!getupdatedata()->allhosts[i].ICE&&getupdatedata()->allhosts[i].passive()) {
            startreceiver(false);
            break;
            }

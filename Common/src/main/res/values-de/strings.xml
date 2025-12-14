@@ -416,5 +416,6 @@
 <string name="icelabel">ICE label</string>
 <string name="username">Username</string>
 <string name="turnserver">Turn Server</string>
+ <string name="ICElabeltooshort">FEHLER: Das ICE-Label sollte mindestens 16 Byte lang sein</string>
 </resources>
 

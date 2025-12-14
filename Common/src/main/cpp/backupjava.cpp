@@ -483,16 +483,22 @@ extern "C" JNIEXPORT jint JNICALL   fromjava(getTurnPort)(JNIEnv *env, jclass cl
     return backup->getupdatedata()->turnserver[pos].port;
     }
 
+
+extern void   recreateAgents();
+
 extern "C" JNIEXPORT void JNICALL   fromjava(setTurnHost)(JNIEnv *env, jclass cl,jint pos,jstring jhost) {
    jint hostlen= env->GetStringUTFLength( jhost);
    jint jlen = env->GetStringLength( jhost);
    env->GetStringUTFRegion( jhost, 0,jlen,backup->getupdatedata()->turnserver[pos].hostname); 
    backup->getupdatedata()->turnserver[pos].hostname[hostlen]='\0';
   backup->getupdatedata()->NRturnserver=1;
+   recreateAgents();
+
    }
 
 extern "C" JNIEXPORT void JNICALL   fromjava(deleteTurnServer)(JNIEnv *env, jclass cl,jint pos) {
     backup->getupdatedata()->NRturnserver=0;
+    recreateAgents();
     }
 extern "C" JNIEXPORT jint JNICALL   fromjava(TurnServerNR)(JNIEnv *env, jclass cl) {
     return backup->getupdatedata()->NRturnserver;

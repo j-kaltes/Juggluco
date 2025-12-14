@@ -471,7 +471,7 @@ std::chrono::duration_cast<std::chrono::milliseconds>(waited).count(),
 std::chrono::duration_cast<std::chrono::milliseconds>(waittime).count());
 
                         if(waited>waittime) {
-                             if(waited>std::chrono::seconds(10)) {
+                             if(waited>std::chrono::microseconds(RTO*timesRTO*100*16)) {
                                     LOGGERICE("%d senddata endConnection b\n",side);
                                     con->endConnection();
                                     return -1;
@@ -548,7 +548,7 @@ std::chrono::duration_cast<std::chrono::milliseconds>(waittime).count());
                 auto newnow = std::chrono::system_clock::now();
                 if(newnow>=endwait) {
                        LOGGER("trans_id=%d RTO=%d waittime=%d final took too long\n",trans_id,RTO,waittime);
-                       if((newnow-now)>std::chrono::seconds(10)) {
+                       if((newnow-now)> std::chrono::microseconds(RTO*timesRTO*100*16)) {
                             LOGGERICE("%d senddata endConnection c\n",side);
                             con->endConnection();
                             return -1;
@@ -615,7 +615,7 @@ void ICE_data::sendshutDown(juice_agent_t *agent) {
             if(!sendWithError(agent, reinterpret_cast<const char *>(&head),sizeof(udp_header))) {
                 return;
                 }
-            usleep(RTO*100);
+            usleep(RTO*100*(i+1));
             }
        LOGGERICE("end sendshutDown(%p) allindex=%d sendShutDown=%d\n",agent,allindex,sendShutdown);
     }
@@ -649,7 +649,7 @@ void ICE_data::end(juice_agent_t *agent) {
             udp_header  head{.rel_msec=rel_msec,.com=END,.side=side,.ack=false,.trans_id=send_trans_id};
             if(!sendWithError(agent, reinterpret_cast<const char *>(&head),sizeof(udp_header)))
                     return;
-            usleep(RTO*100);
+            usleep(RTO*100*(i+1));
             }
          LOGGERICE("end ICE_data::end  side=%d\n",side);
         }
@@ -693,11 +693,11 @@ int ICE_data::receive(juice_agent_t *agent,char *buf, const int maxbuf) {
                                     return true;
                                     }
                                 }
-                           waittime=RTO*100*10;
                            lck.unlock();
                            askdata(agent);
                            lck.lock();
                            ++asked;
+                           waittime=RTO*100*asked*2;
                            if(shutdown) {
                                 LOGGERICE("%d receive: askdata shutdown\n",side);
                                 return true;

@@ -35,11 +35,14 @@ public:
     static ContextHTTPS &getContext() ;
     ContextHTTPS();
     ~ContextHTTPS();
-std::pair<std::vector<char>,int>  request(const std::string_view host,int port,const std::string_view path,const std::string_view TYPE,const std::span<const char> input) ;
-std::pair<std::vector<char>,int>   getRequest(const std::string_view host,int port,const std::string_view path,const std::span<const char> input={})  {
-    return  request(host, port,path,"GET"s, input) ;
+std::pair<std::vector<char>,int>request(const std::string_view host,int port,const std::string_view path,const std::string_view TYPE,const std::span<const char> input, const std::string_view header={});
+std::pair<std::vector<char>,int>   getRequest(const std::string_view host,int port,const std::string_view path,const std::span<const char> input={}, const std::string_view header={})  {
+    return  request(host, port,path,"GET"sv, input,header) ;
     }
-std::pair<std::vector<char>,int>  putRequest(const std::string_view host,int port,const std::string_view path,const std::span<const char> input={})  {
-    return  request(host, port,path,"PUT"s, input) ;
+std::pair<std::vector<char>,int>  putRequest(const std::string_view host,int port,const std::string_view path,const std::span<const char> input={}, const std::string_view header={})  {
+    return  request(host, port,path,"PUT"sv, input,header) ;
+    }
+std::pair<std::vector<char>,int>  postRequest(const std::string_view host,int port,const std::string_view path,const std::span<const char> input={}, const std::string_view header={})  {
+    return  request(host, port,path,"POST"sv, input,header) ;
     }
  };

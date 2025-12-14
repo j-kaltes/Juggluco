@@ -21,11 +21,9 @@
 
 package tk.glucodata;
 
-import android.annotation.SuppressLint;
 import androidx.appcompat.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.res.TypedArray;
 import android.graphics.BlendMode;
 import android.graphics.BlendModeColorFilter;
 import android.graphics.Paint;
@@ -36,12 +34,10 @@ import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
-import android.text.method.ScrollingMovementMethod;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -53,24 +49,19 @@ import android.widget.Space;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Locale;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
-import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import static tk.glucodata.Layout.getMargins;
-import static android.graphics.Color.WHITE;
-import static android.graphics.Color.GREEN;
 import static android.graphics.Color.YELLOW;
 import static android.view.View.GONE;
 import static android.view.View.INVISIBLE;
@@ -80,9 +71,7 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static tk.glucodata.Applic.backgroundcolor;
 import static tk.glucodata.Applic.isWearable;
 import static tk.glucodata.BuildConfig.isReleaseID;
-import static tk.glucodata.GlucoseCurve.width;
 import static tk.glucodata.Log.doLog;
-import static tk.glucodata.Natives.getBlueMessage;
 import static tk.glucodata.Natives.getICEside;
 import static tk.glucodata.Natives.getInvertColors;
 import static tk.glucodata.Natives.getWifi;
@@ -95,7 +84,6 @@ import static tk.glucodata.Specific.useclose;
 import static tk.glucodata.UseWifi.usewifi;
 import static tk.glucodata.help.help;
 import static tk.glucodata.help.hidekeyboard;
-import static tk.glucodata.Applic.isRelease;
 import static tk.glucodata.settings.Settings.removeContentView;
 import static tk.glucodata.util.getbutton;
 import static tk.glucodata.util.getcheckbox;
@@ -466,7 +454,7 @@ CheckBox ICE;
             final int vis=isChecked?VISIBLE:hide;
             label.setVisibility(vis);
             label.requestFocus();
-            if(checkhostname.isChecked())
+            if(checkhostname.isChecked()||ICE.isChecked())
                return;
             final int vis2=isChecked?hide:VISIBLE;
             final int lastip=editIPs.length-(detect.isChecked()?1:0)-1;
@@ -583,7 +571,12 @@ CheckBox ICE;
          int struse=0;
          String[] names=null;
          final boolean dodetect= detect.isChecked()&&!activeonly.isChecked();
+         final var ICEstring=ICElabel.getText().toString();
          if(ice) {
+            if(ICEstring.length()<16) {
+                Applic.argToaster(act,R.string.ICElabeltooshort,Toast.LENGTH_LONG);
+                return -16;
+                }
             }
          else {
              names=new String[editIPs.length];
@@ -608,8 +601,7 @@ CheckBox ICE;
 
 
          long starttime=(alldata.getVisibility()!=VISIBLE||alldata.isChecked())?0L:(fromnow.isChecked()? System.currentTimeMillis():Natives.getstarttime())/1000L;
-         final var ICEstring=ICElabel.getText().toString();
-         int pos=Natives.changebackuphost(hostindex,names,struse,dodetect,portedit.getText().toString(), Amounts.isChecked(),Stream.isChecked(),Scans.isChecked(),restore.isChecked(),receiver,activeonly.isChecked(),passiveonly.isChecked(),Password.isChecked()?editpass.getText().toString():null,starttime,haslabel.isChecked()?label.getText().toString():null,testip.isChecked(),checkhostname.isChecked(), ICE.isChecked()?ICEstring:null,one.isChecked());
+         int pos=Natives.changebackuphost(hostindex,names,struse,dodetect,portedit.getText().toString(), Amounts.isChecked(),Stream.isChecked(),Scans.isChecked(),restore.isChecked(),receiver,activeonly.isChecked(),passiveonly.isChecked(),Password.isChecked()?editpass.getText().toString():null,starttime,haslabel.isChecked()?label.getText().toString():null,testip.isChecked(),checkhostname.isChecked(), ice?ICEstring:null,one.isChecked());
 
          if(pos<0) {
             String mess=changehostError(act, pos);
@@ -711,9 +703,9 @@ CheckBox ICE;
             for(var el:firstrow) {
                 el.setVisibility(notvis);
                 }
-            for(var el:editIPs) {
-                el.setVisibility(notvis);
-                }
+            final int nrips=editIPs.length-(detect.isChecked()?1:0)-(haslabel.isChecked()?1:0);
+            for(var i=0;i<nrips;++i)
+               editIPs[i].setVisibility(notvis);
             for(var el:directions) {
                 el.setVisibility(notvis);
                 }
@@ -1204,6 +1196,10 @@ CheckBox ICE;
          boolean off=Natives.getHostDeactivated(pos);
          boolean doreceive= (recnum&2)!=0;
          String ICElabelstr=Natives.getICElabel(pos);
+      if(ICElabelstr!=null&&ICElabelstr.length()<16) {
+           text.setText(R.string.ICElabeltooshort);
+           }
+       else  {
          if(off)
              text.setPaintFlags(text.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
          else
@@ -1212,7 +1208,7 @@ CheckBox ICE;
             sb.append(label);
             sb.append(" ");
             }
-   if(!isWearable) {
+       if(!isWearable) {
           if(ICElabelstr==null) {
                sb.append((names!=null&&names.length!=0)?names[0]:(Natives.detectIP(pos)?"Detect":"---"));
                if(!passive) {
@@ -1243,8 +1239,8 @@ CheckBox ICE;
             sb.append("   \u21CB ").append(str);
             }
          text.setText(sb);
-
-          }
+         }
+      }
            @Override
            public int getItemCount() {
          return Natives.backuphostNr( );

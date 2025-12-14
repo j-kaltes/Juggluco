@@ -26,6 +26,7 @@ import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static tk.glucodata.Backup.getnumedit;
 import static tk.glucodata.RingTones.EnableControls;
+import static tk.glucodata.help.hidekeyboard;
 import static tk.glucodata.settings.Settings.editoptions;
 import static tk.glucodata.settings.Settings.removeContentView;
 import static tk.glucodata.util.getbutton;
@@ -134,6 +135,7 @@ public static void show(Activity context,View parent) {
      MainActivity.setonback( () -> {
         EnableControls(parent,true);
         removeContentView(layout); 
+        hidekeyboard(context);
         });
     cancel.setOnClickListener( v -> { MainActivity.doonback(); });
     }

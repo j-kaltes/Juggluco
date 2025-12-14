@@ -58,6 +58,7 @@ constexpr const int maxconnectionunused=24*60*60;
 extern uint32_t getConnectTime(const int allindex);
 extern void setConnectTime(const int allindex,uint32_t tim);
 constexpr const std::string_view hostnames[]{
+//List of hostnames to Juggluco connect: https://github.com/j-kaltes/jugglucoconnect
 #include "jugglucoconnect.h"
 };
 constexpr int nrhostnames=std::size(hostnames);
@@ -440,6 +441,10 @@ void ICEConnect::receiverThread(int argindex) {
                     LOGARICE("2: Finish done thread");
                     return;
                     }
+                if(argindex!=allindex) {
+                    LOGARICE("receiverThread: allindex changed 2, return");
+                    return;
+                    }
                 switch(connect(&host)) {
                     case 1: {
                            LOGGERICE("side=%d receiverThread: connected\n",host.side);
@@ -498,52 +503,135 @@ class initJuice {
          juice_set_log_level(juice_log_level);
          };
      };
-initJuice el;
 
+static std::pair<const char *,const char *> getloginpass(char *twiliooutput,const int len) {
+     char *endstr=twiliooutput+len;
+     char *startsearch=endstr-300;
+    std::string_view  password{R"("password": ")"};
+    if(auto *pos=std::search(startsearch,endstr,&password[0],password.end());pos!=endstr) {
+        char *pass=pos+password.size();
+        char *endpass=std::find(pass,endstr,'"');
+        if(endpass==endstr) {
+                LOGAR(R"(ERROR: password no ending ")");
+                return {};
+                }
+        *endpass++='\0';
+        std::string_view  username{R"("username": ")"};
+        if(auto *pos=std::search(startsearch,endstr,&username[0],username.end());pos!=endstr) {
+            char *user=pos+username.size();
+            char *enduser=std::find(user,endstr,'"');
+            if(enduser==endstr) {
+                    LOGAR(R"(ERROR username no ending ")");
+                    return {};
+                    }
+            *enduser++='\0';
+            return {user,pass};
+            }
+        }
+     return {};
+    }
+extern time_t oldTwilioTimes;
+time_t oldTwilioTimes=0;
+#include "twilio.hpp"
+//contains:
+//#define   TWILIOACCOUNT  //       TWILIO_ACCOUNT_SID
+//#define USERPASSBASE64  //base64 TWILIO_ACCOUNT_SID:TWILIO_AUTH_TOKEN
 juice_agent *createAgent(int allindex) {
-   LOGGER("createAgent(%d)\n",allindex);
-          
-static constexpr const  juice_turn_server_t default_turn_servers[]{
-    #include "turnservers.hpp"
-         } ;
-static constexpr const  int defaultservercount=std::size(default_turn_servers);
-const juice_turn_server_t *turn_servers;
-int servercount;
+    static initJuice el;
+    LOGGER("createAgent(%d)\n",allindex);
+              
+    static   juice_turn_server_t default_turn_servers[]{
+        #include "turnservers.hpp"
+        /*
+        for example:
+        {
+        .host="relay1.expressturn.com",
+        .username="efPU52K4SLOQ34W2QY",
+        .password="1TJPNFxHKXrZfelz",
+        .port=3480
+        } */
+         };
 
-juice_turn_server_t conf_server;
-if(backup->getupdatedata()->NRturnserver) {
-    conf_server.host=backup->getupdatedata()->turnserver[0].hostname;
-    conf_server.username=backup->getupdatedata()->turnserver[0].username;
-    conf_server.password=backup->getupdatedata()->turnserver[0].password;
-    conf_server.port=backup->getupdatedata()->turnserver[0].port;
-    servercount=1;
-    turn_servers=&conf_server;
+    static constexpr const  int defaultservercount=sizeof(default_turn_servers)/sizeof(default_turn_servers[0]);
+    const juice_turn_server_t *turn_servers;
+    int servercount;
+
+    juice_turn_server_t conf_server;
+    if(backup->getupdatedata()->NRturnserver) {
+        conf_server.host=backup->getupdatedata()->turnserver[0].hostname;
+        conf_server.username=backup->getupdatedata()->turnserver[0].username;
+        conf_server.password=backup->getupdatedata()->turnserver[0].password;
+        conf_server.port=backup->getupdatedata()->turnserver[0].port;
+        servercount=1;
+        turn_servers=&conf_server;
+        }
+    else {
+        servercount=defaultservercount;
+        turn_servers=default_turn_servers;
+        {
+        static std::mutex mut;
+        std::lock_guard<std::mutex> lck(mut);
+        auto now=time(nullptr);
+        if(now>=oldTwilioTimes) {
+                const auto url{"https://api.twilio.com/2010-04-01/Accounts/" TWILIOACCOUNT  "/Tokens.json"sv};
+                const std::span<const char> input{(const char *)nullptr,0};
+                const std::string_view header{"\r\nAuthorization: Basic " USERPASSBASE64 };
+                auto [resbody,code]=ContextHTTPS::getContext().postRequest("api.twilio.com",443,url,input,header);
+                if(code==201) {
+                     auto [user,pass]=getloginpass(resbody.data(),resbody.size());
+                     LOGGER("TWILIO: user=%s pass=%s\n",user,pass);
+                     static std::string username;
+                     static std::string password;
+                     username=user;
+                     password=pass;
+                     oldTwilioTimes=now+24*60*60;
+                     default_turn_servers[2].username=username.data();
+                     default_turn_servers[2].password=password.data();
+                     }
+               else {
+                  LOGGER("TWILIO ERROR: code=%d\n",code);
+                  }
+                 }
+           }
+        }
+      juice_config_t config1{
+            .concurrency_mode=JUICE_CONCURRENCY_MODE_THREAD,
+            .stun_server_host = "stun.l.google.com",
+            .stun_server_port = 19302,
+            .turn_servers=(juice_turn_server_t*)  turn_servers,
+            .turn_servers_count=servercount,  
+            .cb_state_changed = on_state_changed1,
+            .cb_candidate = on_candidate1,
+            .cb_gathering_done = on_gathering_done1,
+            .cb_recv = on_recv1,
+            .user_ptr=(void*)(long)allindex
+            };
+       auto*ret= juice_create(&config1);
+       LOGGER("end createAgent(%d)=%p\n",allindex,ret);
+       return ret;
+      };
+
+extern void   recreateAgents();
+void   recreateAgents() {
+    LOGAR("recreateAgents()");
+    const int hostnr=backup->getupdatedata()->hostnr;
+    for(int index=0;index<hostnr;++index) {
+        const passhost_t &host= getBackupHosts()[index];
+        if(host.ICE) {
+            if(ICEConnect *con=static_cast<ICEConnect *>(connections[index]))
+                       con->recreateAgent=true;
+            }
+        }
     }
-else {
-    servercount=defaultservercount;
-    turn_servers=default_turn_servers;
-    }
-    juice_config_t config1{
-        .concurrency_mode=JUICE_CONCURRENCY_MODE_THREAD,
-        .stun_server_host = "stun.l.google.com",
-        .stun_server_port = 19302,
-        .turn_servers=(juice_turn_server_t*)  turn_servers,
-        .turn_servers_count=servercount,  
-        .cb_state_changed = on_state_changed1,
-        .cb_candidate = on_candidate1,
-        .cb_gathering_done = on_gathering_done1,
-        .cb_recv = on_recv1,
-        .user_ptr=(void*)(long)allindex
-        };
-   auto*ret= juice_create(&config1);
-   LOGGER("end createAgent(%d)=%p\n",allindex,ret);
-   return ret;
-  };
 static std::string_view description="/description";
 
 static bool waitonDescription(juice_agent *agent,std::string_view commonLabel,int side,std::string_view hostname) {
     CreateAgentData sdpdata(commonLabel,side,"");
     LOGGERICE("getdescription %s\n",sdpdata.data());
+    if(commonLabel.size()<10) { //TODO: becomes 16 later
+        LOGGERICE("getdescription: ERROR %s size=%d side=%d\n",commonLabel.data(),commonLabel.size(),side);
+        return false;
+        }
     while(true) {
         auto [resbody,code]=ContextHTTPS::getContext().getRequest(hostname,port,description,sdpdata.getSpan());
         if(code== 200) {
@@ -573,6 +661,10 @@ static  bool putDescription(int allindex,juice_agent *agent,std::string_view com
         }
      con->sdplen=strlen(con->sdp);
     CreateAgentData sdpdata(commonLabel,side,con->sdp,con->sdplen);
+    if(commonLabel.size()<10) { //TODO: becomes 16 later
+        LOGGERICE("putdescription: ERROR %s size=%d side=%d\n",commonLabel.data(),commonLabel.size(),side);
+        return false;
+        }
     while(true) {
             LOGGERICE("putdescription: %s %d: Local description:\n%s\n",commonLabel.data(),side, con->sdp);
             auto [resbody,code]=ContextHTTPS::getContext().putRequest(hostname,port,description,std::span((const char *)sdpdata.data(),sdpdata.size()));

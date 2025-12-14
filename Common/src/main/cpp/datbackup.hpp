@@ -1076,7 +1076,9 @@ void deactivateHost(int index,bool deactive) {
             startthread(index,host.index);
         if(host.activereceive) {
             setactivereceive(index,&host);
-            }
+               }
+       if(host.ICE)
+            startReceiverThread(index);
         }
     }
 void notupdatedsettings() {

@@ -108,6 +108,9 @@ virtual int setindex(int in) override{
         icedata[0].allindex=in;
         return Connect::setindex(in);
         }
+#ifdef RESETAGENT
+       bool recreateAgent=false;
+#endif
  int newConnection(int allindex) {
         setindex(allindex);
         if(initrunning.test_and_set()) {
@@ -119,8 +122,17 @@ virtual int setindex(int in) override{
         destruct _{[this]{initrunning.clear();}};
         auto wasagent=agent.exchange(nullptr);
 
-#ifndef RESETAGENT
-        if(wasagent)  {
+#ifdef RESETAGENT
+       extern time_t oldTwilioTimes;
+       if(recreateAgent||time(nullptr)>oldTwilioTimes) {
+          extern void   recreateAgents();
+          if(!recreateAgent)
+              recreateAgents();
+          recreateAgent=false;
+#else 
+        {
+#endif
+        if(wasagent) {
             LOGGER("1: juice_destroy(%p)\n",wasagent);
             #ifndef NOLOG
             juice_set_log_level(JUICE_LOG_LEVEL_VERBOSE);
@@ -129,8 +141,9 @@ virtual int setindex(int in) override{
             #ifndef NOLOG
             juice_set_log_level(juice_log_level);
             #endif
+            wasagent=nullptr;
             }
-#endif
+          }
         icedata[1].reCreated(); 
         icedata[0].reCreated(); 
         resetStart();
@@ -151,7 +164,7 @@ virtual int setindex(int in) override{
        if(!initAgent(theagent,allindex)) {
                 phase=FailedInitAgent;
 //                auto wasagent=agent; agent=nullptr;
-                LOGGER("end ICEConnect::newConnection failed allindex=%d, juice_destroy(%p)\n",allindex,wasagent);
+                LOGGER("end ICEConnect::newConnection failed allindex=%d, juice_destroy(%p)\n",allindex,theagent);
                 if(theagent) {
             #ifndef NOLOG
                     juice_set_log_level(JUICE_LOG_LEVEL_VERBOSE);
@@ -226,8 +239,8 @@ int  connect(const passhost_t *pass) {
             return newConnection(index);
             }
         if(index!=allindex)   {
-            LOGGERICE("%s %d: ICE::Connect::connect allindex old=%d new=$d\n",pass->getICEname().data(),pass->side,allindex,index);
-            return newConnection(index);
+            LOGGERICE("%s %d: ICE::Connect::connect allindex old=%d new=%d\n",pass->getICEname().data(),pass->side,allindex,index);
+            return -2;
             }
         if(!isConnected)   {
             LOGGERICE("allindex=%d %s %d: ICE::Connect::connect !isConnection\n",allindex,pass->getICEname().data(),pass->side);

@@ -330,7 +330,7 @@
 <string name="parseip">Error parsing IP</string>
 <string name="toomanyhosts">Maximal number of hosts exceeded</string>
 <string name="senthosts">Juggluco sends to maximal 6 hosts</string>
-    <string name="hostname">hostname</string>
+    <string name="hostname">Hostname</string>
    <string name="clampnow">Now clamp</string>
     <string name="sendfrom">"Send from: "</string>
  <string name="changestartbutton">Change start</string>
@@ -456,4 +456,5 @@
 <string name="icelabel">ICE label</string>
 <string name="username">Username</string>
 <string name="turnserver">Turn Server</string>
+ <string name="ICElabeltooshort">ERROR: ICE label should be minimally 16 bytes</string>
 </resources>
