@@ -307,7 +307,7 @@ buildTypes {
             debuggable false
             externalNativeBuild.cmake {
 //                 arguments "-DANDROID_SANITIZE=hwaddress"
-                cppFlags "$CPPSTD","-DRELEASEID=1","-DRELEASE=1","-DNORAWSTREAM=1" , "-DRELEASEDIR=1", "-DSCANLOG=1","-DMIRRORPORT=8795"
+                cppFlags "$CPPSTD","-DRELEASEID=1","-DRELEASE=1","-DNORAWSTREAM=1" , "-DRELEASEDIR=1", "-DSCANLOG=1", "-DMIRRORPORT=8795"
                 cFlags "-DRELEASEID=1","-DRELEASE=1","-DNORAWSTREAM=1" , "-DRELEASEDIR=1", "-DSCANLOG=1"
 
 
@@ -320,7 +320,7 @@ buildTypes {
             minifyEnabled true 
         shrinkResources true
 
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro', 'proguard-rules.my', 'proguard-rules.log',"-DMIRRORPORT=9343"
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro', 'proguard-rules.my', 'proguard-rules.log'
 
         buildConfigField 'int', 'doLog', '1'
             buildConfigField 'int', 'isRelease', '1'
