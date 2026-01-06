@@ -74,6 +74,12 @@ struct  Searchgegs {
             }
         return false;
         }
+    bool operator() (uint32_t tim,const int mgL) const {
+        if(mgL>=under&&mgL<=above&&righttime(tim)) {
+            return  true;
+            }
+        return false;
+        }
     bool operator() (const Glucose *g) const {
         if(!g||!g->valid())
             return false;

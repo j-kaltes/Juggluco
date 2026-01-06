@@ -457,7 +457,7 @@ extern "C" JNIEXPORT int JNICALL fromjava(setfilesdir)(JNIEnv *env, jclass clazz
       }
    auto res= setfilesdir({filesdirbuf,filesdirlen},country);
    appcurve.setunit(settings->data()->unit);
-   appcurve.showcalibrated=settings->data()->DoCalibrate;
+   appcurve.showcalibratedstream=settings->data()->DoCalibrate;
    appcurve.allvalues=settings->data()->AllValues;
    return res;
    }
@@ -734,7 +734,8 @@ defdisplay(meals)
 defdisplay(histories)
 defdisplay(stream)
 defdisplay(numbers)
-defdisplay(calibrated)
+defdisplay(calibratedstream)
+defdisplay(calibratedhistories)
 #ifdef WEAROS
 void setInitText(const char *message) {
    getenv()->CallStaticVoidMethod(JNIApplic,jsetinittext,getenv()->NewStringUTF(message));

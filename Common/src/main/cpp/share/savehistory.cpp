@@ -28,72 +28,72 @@ bool saveSputnik_PG2(const jniHistory &hist,time_t nutime,int nuid,const nfcdata
      jint len=hist.size();
     LOGGER("saveSputnik_PG2 size=%d\n",len);
     if(len<=0)
-    	return false;
-decltype(auto)  first=hist.get(0);
+        return false;
+    decltype(auto)  first=hist.get(0);
     int fid=first.getId();
     int pos=int(round(fid/ save.getmininterval()));
     int start,topos;
     int lastpos=save.getlastpos(pos);
     if(pos>=lastpos) {
-    	topos=pos;
-	start=0;
-	if(save.getstarthistory()<=0) {
-		save.setstarthistory(topos);
-		}
-	}
+        topos=pos;
+        start=0;
+        if(save.getstarthistory()<=0) {
+            save.setstarthistory(topos);
+            }
+        }
     else {
-    	topos=lastpos;
-	start=lastpos-pos;
-	}
-int uselen=std::min(history::num,len);
-int lastgood=topos-1;
-int firstchanged=-1;
-LOGGER("start=%d end=%d\n",start,uselen);
+        topos=lastpos;
+        start=lastpos-pos;
+        }
+    int uselen=std::min(history::num,len);
+    int lastgood=topos-1;
+    int firstchanged=-1;
+    LOGGER("start=%d end=%d\n",start,uselen);
     for(int i=start;i<uselen;i++,topos++) {
-	GlucoseValue gluv=hist.get(i);
-	Glucose *item=save.getglucose(topos);
-	if(!item->isStreamed()) {
-		uint16_t gv=10*gluv.getValue();//Same unit as raw
-		uint16_t id=gluv.getId();
-		uint32_t was=nutime-(nuid-id)*60;
+    GlucoseValue gluv=hist.get(i);
+    Glucose *item=save.getglucose(topos);
+    if(!item->isStreamed()) {
+        uint16_t gv=10*gluv.getValue();//Same unit as raw
+        uint16_t id=gluv.getId();
+        uint32_t was=nutime-(nuid-id)*60;
 
-		uint16_t const 	rawel= nfcptr?nfcptr->gethistoryglucose(i):0;
+        uint16_t const     rawel= nfcptr?nfcptr->gethistoryglucose(i):0;
 
-		int idpos=int(round(id/(double)save.getmininterval()));
-		if(topos!=idpos) {
-			LOGGER("GLU: savehistory %d!=%d\n",topos,idpos);
-			continue;
-			}
-		*item={.time=was,.id=id};
-		item->glu[0]=rawel;item->glu[1]=gv;
-		if(firstchanged<0)
-			firstchanged=topos;
+        int idpos=int(round(id/(double)save.getmininterval()));
+        if(topos!=idpos) {
+            LOGGER("GLU: savehistory %d!=%d\n",topos,idpos);
+            continue;
+            }
+        *item={.time=was,.id=id};
+        item->glu[0]=rawel;item->glu[1]=gv;
+        if(firstchanged<0)
+            firstchanged=topos;
 #ifndef NOLOG
-		time_t tim=item->gettime();
-		LOGGER("add %d %.1f %s",item->getid(),(float) item->getmgdL()/convfactordL,ctime(&tim));
+        time_t tim=item->gettime();
+        LOGGER("add %d %.1f %s",item->getid(),(float) item->getmgdL()/convfactordL,ctime(&tim));
 #endif
-		}
-	else {
+        }
+    else {
 #ifndef NOLOG
-		time_t tim=item->gettime();	
-		LOGGER("already streamed %d %.1f %s",item->getid(),(float)item->getmgdL()/convfactordL,ctime(&tim));
+        time_t tim=item->gettime();    
+        LOGGER("already streamed %d %.1f %s",item->getid(),(float)item->getmgdL()/convfactordL,ctime(&tim));
 #endif
-		}
-	if(!gluv.getQuality())
-		lastgood=topos;
-    	}
+        }
+    if(!gluv.getQuality())
+        lastgood=topos;
+        }
 save.setendScanhistory(lastgood+1);
 if(save.getStreamendhistory()) {
-	if(firstchanged!=-1) {
-		int maxint=backup->getupdatedata()->sendnr;
-		save.setstarthistback(maxint,firstchanged);
-		const auto first=std::max((uint16_t)firstchanged,save.getinfo()->startedwithStreamhistory);
-		if(save.getinfo()->libreviewnotsendHistory>first) {
-			LOGGER("libreviewnotsendHistory=%d\n",first);
-			save.getinfo()->libreviewnotsendHistory=first; 
-			}
-		}
-	}
+    if(firstchanged!=-1) {
+        int maxint=backup->getupdatedata()->sendnr;
+        save.setstarthistback(maxint,firstchanged);
+        const auto first=std::max((uint16_t)firstchanged,save.getinfo()->startedwithStreamhistory);
+        if(save.getinfo()->libreviewnotsendHistory>first) {
+            LOGGER("libreviewnotsendHistory=%d\n",first);
+            save.getinfo()->libreviewnotsendHistory=first; 
+            }
+        }
+    }
 
 return true;
 }
@@ -101,61 +101,61 @@ return true;
 extern std::vector<int> usedsensors;
 extern void setusedsensors();
 void setstartedwithStreamhistory() {
-	if(SensorGlucoseData *sens=sensors->getSensorData()) {
-		if(sens->isLibre2()&&!sens->getinfo()->startedwithStreamhistory) {
-			sens->getinfo()->startedwithStreamhistory=std::max(sens->getinfo()->endhistory,1);
-			}
-		}
-	if(settings->data()->streamHistLib)  {
-		return;
-		}
-	setusedsensors();
-	for(int index:usedsensors) {
-		  SensorGlucoseData *sens=sensors->getSensorData(index );
-		  if(sens&&sens->isLibre2()) {
-			sens->getinfo()->startedwithStreamhistory=std::max(sens->getinfo()->endhistory,1);
-			}
-		}
-	settings->data()->streamHistLib=true;
-	}
+    if(SensorGlucoseData *sens=sensors->getSensorData()) {
+        if(sens->isLibre2()&&!sens->getinfo()->startedwithStreamhistory) {
+            sens->getinfo()->startedwithStreamhistory=std::max(sens->getinfo()->endhistory,1);
+            }
+        }
+    if(settings->data()->streamHistLib)  {
+        return;
+        }
+    setusedsensors();
+    for(int index:usedsensors) {
+          SensorGlucoseData *sens=sensors->getSensorData(index );
+          if(sens&&sens->isLibre2()) {
+            sens->getinfo()->startedwithStreamhistory=std::max(sens->getinfo()->endhistory,1);
+            }
+        }
+    settings->data()->streamHistLib=true;
+    }
 void setendedwithStreamhistory() {
-	if(!settings->data()->streamHistLib) 
-		return;
-	setusedsensors();
-	for(int index:usedsensors) {
-		  SensorGlucoseData *sens=sensors->getSensorData(index );
-		  if(sens&&sens->isLibre2()) {
-			sens->getinfo()->startedwithStreamhistory=0;
-			}
-		}
-	settings->data()->streamHistLib=false;
-	}
+    if(!settings->data()->streamHistLib) 
+        return;
+    setusedsensors();
+    for(int index:usedsensors) {
+          SensorGlucoseData *sens=sensors->getSensorData(index );
+          if(sens&&sens->isLibre2()) {
+            sens->getinfo()->startedwithStreamhistory=0;
+            }
+        }
+    settings->data()->streamHistLib=false;
+    }
 extern bool addStreamHistory(const jniHistory &hist,time_t nutime,int nuid, SensorGlucoseData &save) ;
 bool addStreamHistory(const jniHistory &hist,time_t nutime,int nuid, SensorGlucoseData &save) { 
-	jint len=hist.size();
-	LOGGER("addStreamHistory size=%d\n",len);
-	if(len<2)  {
-		return false;
-		}
-	int endhist=save.getAllendhistory();
-	GlucoseValue   histvalue=hist.get(len-2);
-	if(!histvalue.valid()) {
-		LOGAR("not valid");
-		return false;
-		}
-	int id=histvalue.getId();
-	int pos=int(round(id/ save.getmininterval()));
-	if(pos<endhist)  {
-		LOGAR("old value");
-		return false;
-		}
-	uint16_t gv=10*histvalue.getValue();//Same unit as raw
-	time_t was=nutime-(nuid-id)*60;
-	LOGGER("glucose id=%d %.1f (%d) %ld %s",id,gv/180.0f,gv,was,ctime(&was));
-	save.saveel(pos,was,id, {0,gv,0x4000});
-	save.setendStreamhistory(pos+1);
-	if(!save.getstarthistory()) {
-		save.setstarthistory(pos);
-		}
-	return true;
-	}
+    jint len=hist.size();
+    LOGGER("addStreamHistory size=%d\n",len);
+    if(len<2)  {
+        return false;
+        }
+    int endhist=save.getAllendhistory();
+    GlucoseValue   histvalue=hist.get(len-2);
+    if(!histvalue.valid()) {
+        LOGAR("not valid");
+        return false;
+        }
+    int id=histvalue.getId();
+    int pos=int(round(id/ save.getmininterval()));
+    if(pos<endhist)  {
+        LOGAR("old value");
+        return false;
+        }
+    uint16_t gv=10*histvalue.getValue();//Same unit as raw
+    time_t was=nutime-(nuid-id)*60;
+    LOGGER("glucose id=%d %.1f (%d) %ld %s",id,gv/180.0f,gv,was,ctime(&was));
+    save.saveel(pos,was,id, {0,gv,0x4000});
+    save.setendStreamhistory(pos+1);
+    if(!save.getstarthistory()) {
+        save.setstarthistory(pos);
+        }
+    return true;
+    }

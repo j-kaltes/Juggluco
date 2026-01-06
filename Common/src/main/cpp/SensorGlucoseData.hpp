@@ -63,6 +63,10 @@ inline int getpagesize(void) {
 #include "timevalues.h"
 #include "calibrate/CaliPara.hpp"
 #include "net/Connect.hpp"
+
+inline constexpr const char sensorInfoStr[]="sensorInfo";
+inline constexpr const char generatedStr[]="generated";
+
 inline  constexpr const int maxdexcount=3025 ;
 inline constexpr const int youngsensorsecs=2*60*60;
 inline    constexpr const char rawstream[]="rawstream.dat";
@@ -79,6 +83,7 @@ constexpr int maxdays=46;
 constexpr const int maxdaysDex=12;
 
 constexpr const int maxdaysAccu=15;
+constexpr const int maxdaysAir=16;
 
 constexpr const int stdMaxDaysSI=24;
 constexpr const int maxdaysSI=
@@ -103,6 +108,34 @@ maxdaysSI*24
 #endif
 ; */
 
+struct careSenseAirScan_t {
+    char start[3];
+    char gtin[14];
+    char tus17[2];
+    char expiry[6];
+    char tus21[2];
+    char serial[12];
+    char start2[4];
+    char pinCode[6];
+    char start3[4];
+    char sensorCode[16];
+    std::string_view getgtin() const {
+        return {gtin,sizeof(gtin)};
+        };
+    std::string_view getexpiry() const {
+        return {expiry,sizeof(expiry)};
+        };
+    std::string_view getserial() const {
+        return {serial,sizeof(serial)};
+        };
+    std::string_view getpinCode() const {
+        return {pinCode,sizeof(pinCode)};
+        };
+    std::string_view getsensorCode() const {
+        return {sensorCode,sizeof(sensorCode)};
+        };
+
+    };
 #ifdef SKIPTRIEDOFTEN
 typedef  std::array<char,18> address_t;
 #endif
@@ -160,6 +193,7 @@ struct Glucose {
     uint16_t getmgdL() const { return glu[1]/10;};
     uint32_t gettime() const {return time;};
     uint32_t getid() const {return id;};
+    float getmmolL() const { return getmgdL()/convfactordL;};
     float inappunit() const {
        return ::gconvert(getsputnik());
         }
@@ -184,12 +218,139 @@ struct Glucose {
         return glu[1]&&glu[1]>380&&glu[1]<5020&&id>=0&&time>1598911200u&&time<2145909600u;
         }
 };
+struct Calibraties {
+    CaliPara caliPara[maxcaliNr];
+    uint32_t caliNr;
+    uint32_t caliUpdated[std::max(maxsendtohost,8)];
 
+    uint32_t lastCalibrated() const {
+            if(!caliNr)
+                    return 0;
+            return caliPara[caliNr-1].time;
+            }
+    int     caliPosAfter(const uint32_t time) {
+        const uint32_t nr=caliNr;
+        if(!nr)  {
+            LOGGER("caliPosAfter(%u) no calibrators\n",time);
+            return 0;
+            }
+        const CaliPara *first = caliPara;
+        extern const CaliPara *getCaliBefore(const CaliPara *first,const CaliPara *end,uint32_t time);
+        if(const CaliPara *cali=getCaliBefore( first,first+nr,time)) {
+            int pos=cali-first+1;
+            LOGGER("caliPosAfter(%u)=%d\n",time,pos);
+            return pos;
+            }
+        LOGGER("caliPosAfter(%u) no calibrator before time\n",time);
+        return 0;
+        }
+    void updateCaliTime(int ind, const uint32_t time) {
+            caliUpdated[ind]=caliPosAfter(time);
+            }
+
+    void updateCaliUpdated(uint32_t val) {
+        const int maxind=getgetsendnr();
+        if(maxind>0) {
+            for(int i=0;i<maxind;++i) {
+                auto &el=caliUpdated[i];
+                if(val<el)
+                    el=val;
+                }
+             }
+        }
+
+
+
+    int addCali(uint32_t tim, float weight,double a, double b) {
+            if(caliNr<maxcaliNr) {
+                LOGGER("%d addCali(%u,%f,%f)\n",caliNr,tim,a,b);
+                int it=caliNr-1;
+                for(;it>=0&&caliPara[it].time>=tim;--it) 
+                    ;
+                ++it; 
+                if(it<caliNr) {
+                   if(caliPara[it].time!=tim) {
+                        memmove(caliPara+it+1,caliPara+it,(caliNr-it)*sizeof(caliPara[0]));
+                        ++caliNr;
+                        }
+                    else {
+                       int it2=it+1;
+                       for(;it2<caliNr&&caliPara[it2].time==tim;++it2)
+                            ;
+                       --it2;
+                       if(it2>it) { //Remove duplicates
+                            int len=it2-it;
+                            memmove(caliPara+it+1,caliPara+it2+1,len*sizeof(caliPara[0]));
+                            caliNr-=len;
+                            }
+                      }
+                    updateCaliUpdated(it);
+                    }
+                 else {
+                    ++caliNr;
+                    }
+
+                caliPara[it]={tim,weight,a,b};
+                return it;
+                }
+            else {
+                LOGGER("Can't add %d==maxcaliNr addCali(%u,%f,%f)\n",caliNr,tim,a,b);
+                return -1;
+                }
+            }
+
+    bool removeCaliPos(int pos) {
+            if(pos>=caliNr) {
+                    LOGGER("removeCaliPos(%d) >= caliNr(%d)\n",pos,caliNr);
+                    return false;
+                    }
+            --caliNr;
+            if(pos<caliNr) {
+                    LOGGER("removeCaliPos(%d) move new CaliNr=%d\n",pos,caliNr);
+                    memmove(caliPara+pos,caliPara+pos+1,sizeof(caliPara[0])*(caliNr-pos));
+                    updateCaliUpdated(pos);
+                    }
+              else {
+                    LOGGER("removeCaliPos(%d) last\n",pos);
+                    }
+            return true;
+            }
+    int  removeCali(uint32_t tim) {
+         CaliPara *last=caliPara+caliNr-1;
+         if(last->time==tim) {
+            LOGGER("removeCali(%u) last\n",tim);
+            do {
+                --caliNr;
+                } while(caliNr>0&&caliPara[caliNr-1].time==tim);
+            return caliNr;
+            }
+         for(CaliPara *iter=last-1;iter>=caliPara;--iter) {
+            if(iter->time>tim)
+                    continue;
+            if(iter->time==tim) {
+                    CaliPara *first=iter-1;
+                    while(first>=caliPara&&first->time==tim)
+                            --first;
+                    const int rmlen=iter-first;
+                    ++first;
+                    const int removedpos= first-caliPara;
+                    LOGGER("removeCali(%u) pos %d len=%d\n",tim,removedpos,rmlen);
+                    memmove(first,first+rmlen,reinterpret_cast<uint8_t*>(last)-reinterpret_cast<uint8_t*>(iter));
+                    caliNr-=rmlen;
+                    updateCaliUpdated(removedpos);
+                    return removedpos;
+                    }
+              LOGGER("removeCali(%u) not found\n",tim);
+              return iter-caliPara+1;
+            }
+          return 0;
+          }
+ };
 class SensorGlucoseData {
 bool haserror=false;
-string sensordir;
 //inline static  const string basedir{FILEDIR};
 public:
+string sensordir;
 inline static const int blocksize=sysconf(_SC_PAGESIZE);
 private:
 static constexpr uint16_t defaultinterval=15*60;
@@ -237,6 +398,9 @@ struct {
       uint16_t wearduration2;
       uint8_t warmup2;
    };
+struct {
+      uint16_t askEarlier;
+        };
    };
 union {
    struct { //Libre 2
@@ -277,7 +441,8 @@ double pollinterval;
 uint32_t lockcount;
 int8_t streamingIsEnabled;
 int8_t patchState;
-uint16_t reserved4:14;
+uint16_t reserved4:13;
+uint16_t air:1;
 uint16_t accuChek:1;
 bool auth12:1;
 char deviceaddress[deviceaddresslen];
@@ -300,6 +465,10 @@ bool putsensor:1;
 updatestate update[std::max(maxsendtohost,8)];
 union {
    uint8_t kAuth[149];
+   struct {
+           careSenseAirScan_t airData;
+           char8_t reservedAir[149-sizeof(careSenseAirScan_t)];
+           } __attribute__ ((packed)); //sizeof=4 element and non multiple of 4
    struct {
       uint32_t siIdlen;
       char8_t siId[68];
@@ -328,137 +497,11 @@ union {
     }; //end union
 uint32_t libreStarttime;
 uint32_t reserved3;
-CaliPara caliPara[maxcaliNr];
-uint32_t caliNr;
-uint32_t caliUpdated[std::max(maxsendtohost,8)];
-
-uint32_t lastCalibrated() const {
-        if(!caliNr)
-                return 0;
-        return caliPara[caliNr-1].time;
-        }
-int     caliPosAfter(const uint32_t time) {
-    const uint32_t nr=caliNr;
-    if(!nr)  {
-        LOGGER("caliPosAfter(%u) no calibrators\n",time);
-        return 0;
-        }
-    const CaliPara *first = caliPara;
-    extern const CaliPara *getCaliBefore(const CaliPara *first,const CaliPara *end,uint32_t time);
-    if(const CaliPara *cali=getCaliBefore( first,first+nr,time)) {
-        int pos=cali-first+1;
-        LOGGER("caliPosAfter(%u)=%d\n",time,pos);
-        return pos;
-        }
-    LOGGER("caliPosAfter(%u) no calibrator before time\n",time);
-    return 0;
-    }
-void updateCaliTime(int ind, const uint32_t time) {
-        caliUpdated[ind]=caliPosAfter(time);
-        }
-
-void updateCaliUpdated(uint32_t val) {
-    const int maxind=getgetsendnr();
-    if(maxind>0) {
-        for(int i=0;i<maxind;++i) {
-            auto &el=caliUpdated[i];
-            if(val<el)
-                el=val;
-            }
-         }
-    }
-
-
-
-int addCali(uint32_t tim, float weight,double a, double b) {
-        if(caliNr<maxcaliNr) {
-            LOGGER("%d addCali(%u,%f,%f)\n",caliNr,tim,a,b);
-            int it=caliNr-1;
-            for(;it>=0&&caliPara[it].time>=tim;--it) 
-                ;
-            ++it; 
-            if(it<caliNr) {
-               if(caliPara[it].time!=tim) {
-                    memmove(caliPara+it+1,caliPara+it,(caliNr-it)*sizeof(caliPara[0]));
-                    ++caliNr;
-                    }
-                else {
-                   int it2=it+1;
-                   for(;it2<caliNr&&caliPara[it2].time==tim;++it2)
-                        ;
-                   --it2;
-                   if(it2>it) { //Remove duplicates
-                        int len=it2-it;
-                        memmove(caliPara+it+1,caliPara+it2+1,len*sizeof(caliPara[0]));
-                        caliNr-=len;
-                        }
-                  }
-                updateCaliUpdated(it);
-                }
-             else {
-                ++caliNr;
-                }
-
-            caliPara[it]={tim,weight,a,b};
-            return it;
-            }
-        else {
-            LOGGER("Can't add %d==maxcaliNr addCali(%u,%f,%f)\n",caliNr,tim,a,b);
-            return -1;
-            }
-        }
-
-bool removeCaliPos(int pos) {
-        if(pos>=caliNr) {
-                LOGGER("removeCaliPos(%d) >= caliNr(%d)\n",pos,caliNr);
-                return false;
-                }
-        --caliNr;
-        if(pos<caliNr) {
-                LOGGER("removeCaliPos(%d) move new CaliNr=%d\n",pos,caliNr);
-                memmove(caliPara+pos,caliPara+pos+1,sizeof(caliPara[0])*(caliNr-pos));
-                updateCaliUpdated(pos);
-                }
-          else {
-                LOGGER("removeCaliPos(%d) last\n",pos);
-                }
-        return true;
-        }
-int  removeCali(uint32_t tim) {
-     CaliPara *last=caliPara+caliNr-1;
-     if(last->time==tim) {
-        LOGGER("removeCali(%u) last\n",tim);
-        do {
-            --caliNr;
-            } while(caliNr>0&&caliPara[caliNr-1].time==tim);
-        return caliNr;
-        }
-     for(CaliPara *iter=last-1;iter>=caliPara;--iter) {
-        if(iter->time>tim)
-                continue;
-        if(iter->time==tim) {
-                CaliPara *first=iter-1;
-                while(first>=caliPara&&first->time==tim)
-                        --first;
-                const int rmlen=iter-first;
-                ++first;
-                const int removedpos= first-caliPara;
-                LOGGER("removeCali(%u) pos %d len=%d\n",tim,removedpos,rmlen);
-                memmove(first,first+rmlen,reinterpret_cast<uint8_t*>(last)-reinterpret_cast<uint8_t*>(iter));
-                caliNr-=rmlen;
-                updateCaliUpdated(removedpos);
-                return removedpos;
-                }
-          LOGGER("removeCali(%u) not found\n",tim);
-          return iter-caliPara+1;
-        }
-      return 0;
-      }
-
+Calibraties calis[2];
 
 void clearLibreSendEnd(int start) {
     const int len=(int)sizeof(sendLibre)-start*sizeof(sendLibre[0]);
-    LOGGER("clearLibreSendEnd(%d) sizeof(sendLibre)=%d len=%d\n",start,sizeof(sendLibre),len);
+    LOGGER("clearLibreSendEnd(%d) sizeof(sendLibre)=%zd len=%d\n",start,sizeof(sendLibre),len);
     if(len>0)
         bzero(sendLibre+start,len);
     }
@@ -568,6 +611,8 @@ int getSensorgen2() const {
                 return 0x10;
         if(isAccuChek())
                 return 0x20;
+        if(isAir())
+                return 0x30;
         if(getinfo()->interval==interval5)
                 return 3;
          return 2;
@@ -597,7 +642,7 @@ const int32_t maxpos() const {
   }
 
  int streamperhour() const {
-      if(isAccuChek()||isDexcom())
+      if(isAccuChek()||isDexcom()||isAir())
         return 12;
     else return 60;
      }
@@ -618,19 +663,23 @@ int streamingIsEnabled() const{
 void setbluetoothOn(int val) {
     getinfo()->streamingIsEnabled=val;
     }
-uint32_t getfirsttime() const {
-    if(isLibre()) {
-       uint32_t locfirstpos=getstarthistory()+1;
-       for(int pos=locfirstpos,end=std::min(getAllendhistory(),maxpos());pos<end;pos++) {
-           int16_t id =getid(pos);
-           uint32_t tim=timeatpos(pos);
-           if(id&&tim)
-               return tim;
-           }
-       LOGGER("%s: no history\n",shortsensorname()->data());
-       }
 
-    return  firstpolltime();
+
+uint32_t getfirsttimehistory() const {
+    if(isLibre()||isAir())  {
+        uint32_t locfirstpos=getstarthistory();
+        for(int pos=locfirstpos,end=std::min(getAllendhistory(),maxpos());pos<end;pos++) {
+           const Glucose *item=getglucose(pos);
+           if(item->getid()) {
+               if(const uint32_t tim=item->gettime())
+                       return tim;
+               }
+           }
+        }
+    return UINT32_MAX;
+    }
+uint32_t getfirsttime() const {
+    return  std::min(firstpolltime(),getfirsttimehistory());
     }
 /*void checkhistory(std::ostream &os) {
     int interval=getinterval();
@@ -679,7 +728,7 @@ const int perhour() const {
     return 60/getmininterval();
     }
 int getweardurationMIN() const {
-   const int wear=(isLibre2()||isDexcom()||isAccuChek())?getinfo()->wearduration:getinfo()->wearduration2;
+   const int wear=(isLibre2()||isDexcom()||isAccuChek()||isAir())?getinfo()->wearduration:getinfo()->wearduration2;
    if(wear)
          return wear;
    return 14*24*60;
@@ -689,7 +738,7 @@ int getweardurationSEC() const {
    }
 
 int getWarmupMIN() const {
-   const int warmup=(isLibre2()||isAccuChek()||isDexcom())?getinfo()->warmup:getinfo()->warmup2;
+   const int warmup=(isLibre2()||isAccuChek()||isDexcom()||isAir())?getinfo()->warmup:getinfo()->warmup2;
    if(warmup)
          return warmup;
    return 60;
@@ -711,7 +760,7 @@ int expectedWearDuration() const {
             };
         return (maxSIhours*60-19)*60;
         }
-    if(isLibre3()||isAccuChek())
+    if(isLibre3()||isAccuChek()||isAir())
         return getweardurationSEC();
     return getweardurationSEC()+12*60*60;
     }
@@ -956,7 +1005,7 @@ bool hasbluetooth() const {
     return getinfo()->bluestart!=bluestartunknown;
     }
 bool canusestreaming() const {
-     return  isAccuChek()||isSibionics()||isLibre3()||hasbluetooth()||isDexcom();
+     return  isAccuChek()||isSibionics()||isLibre3()||isAir()||hasbluetooth()||isDexcom();
  //    return  hasbluetooth();
     }
 const std::string_view othershortsensorname() const {
@@ -993,6 +1042,12 @@ typedef std::array<char,16>  longsensorname_t;
      else  {
          if(isLibre3()) 
              return std::string_view(sensordir.data()+sensordir.length()-9,9);
+         else {
+            if(isAir()) {
+             return std::string_view(sensordir.data()+sensordir.length()-12,12);
+                }
+            }
+                
          }
      return std::string_view(shortsensorname()->data(),11);
     }
@@ -1081,21 +1136,27 @@ E07A-000T3YL1R50
     return getinfo()->dexcom;
     }
  bool isLibre3() const {
-    return !isAccuChek()&&!isSibionics()&&!isDexcom()&&(getinfo()->interval==interval5);
+    return !isAir()&&!isAccuChek()&&!isSibionics()&&!isDexcom()&&(getinfo()->interval==interval5);
     }
  bool isLibre2() const {
-   return !(isAccuChek()||isSibionics()||isDexcom()||getinfo()->interval==interval5);
+   return !(isAccuChek()||isSibionics()||isDexcom()||isAir()||getinfo()->interval==interval5);
    }
 bool isLibre() const {
-    return !(isSibionics()||isDexcom()||isAccuChek());
+    return !(isSibionics()||isDexcom()||isAccuChek()||isAir());
     }
 bool isAccuChek() const {
     return getinfo()->accuChek;
     }
-int streaminterval() const {
-    const int res=(isDexcom()||isAccuChek())?5:1;
-    LOGGER("streaminterval()=%d\n",res);
+bool isAir() const {
+    return getinfo()->air;
+    }
+int getminstreaminterval() const {
+    const int res=(isDexcom()||isAccuChek()||isAir())?5:1;
+    LOGGER("getminstreaminterval()=%d\n",res);
     return res;
+    }
+int getsecstreaminterval() const {
+    return 60*getminstreaminterval();
     }
     /*
  bool libreviewable() const {
@@ -1166,7 +1227,25 @@ static bool mkdatabaseSI(string_view sensordir,string_view sensorgegs,uint32_t n
 
     return true;
     }
-#endif
+static bool mkdatabaseAir(string_view sensordir,string_view sensorgegs,uint32_t now) {
+   LOGGER("mkdatabasAir %s,%s\n",sensordir.data(),sensorgegs.data());
+    mkdir(sensordir.data(),0700);
+    pathconcat infoname(sensordir,infopdat);
+    if(access(infoname,F_OK)!=-1)  {
+        Readall<uint8_t> inf(infoname);
+        if(inf.data()&&inf.size()>=sizeof(Info)) {
+            const Info *in=reinterpret_cast<const Info*>(inf.data());
+            if(in->pollcount&&in->starttime>1700000000&&in->dupl>0&&in->accuChek)
+                return false;
+            }
+        }
+    uint32_t start=now;
+    Info inf{.starttime=(uint32_t)start,.lastscantime=(uint32_t)start,.starthistory=0,.endhistory=0,.scancount=0,.startid=0,.interval=interval5,.dupl=3,.days=maxdaysAir ,.warmup=30,.wearduration=21600,.lastLifeCountReceived=1,.askEarlier=0,.pollcount=0,.lockcount=0,.air=true};
+    memcpy(&inf.airData,sensorgegs.data(),sensorgegs.size());
+    writeall(infoname,&inf,sizeof(inf));
+
+    return true;
+    }
 static bool mkdatabaseAccu(string_view sensordir,string_view sensorgegs,uint32_t now) {
    LOGGER("mkdatabaseAccu %s,%s\n",sensordir.data(),sensorgegs.data());
     mkdir(sensordir.data(),0700);
@@ -1188,7 +1267,7 @@ static bool mkdatabaseAccu(string_view sensordir,string_view sensorgegs,uint32_t
 
     return true;
     };
-
+#endif
 #ifdef DEXCOM
 static bool mkdatabaseDex(string_view sensordir,string_view sensorgegs,uint32_t now) {
    LOGGER("mkdatabaseDex %s,%s\n",sensordir.data(),sensorgegs.data());
@@ -1328,7 +1407,10 @@ specstart(spec),
 #endif
 ,sensorIndex(sensorindex)
 {
+#ifndef NOLOG
 LOGGER("%p=SensorGlucoseData(%s)\n",this, baseuit.data());
+//    getinfo()->askEarlier=0;
+#endif
 if(error()) {
     LOGGER("SensorGlucoseData %s %s Error\n",sensordir.data(),baseuit.data());
     return;
@@ -1353,7 +1435,7 @@ if(const ScanData *last=lastpoll()) {
             }
         }
     }
-   if(!(isAccuChek()||isSibionics()||isDexcom())) {
+   if(!(isAccuChek()||isSibionics()||isDexcom()||isAir())) {
       LOGGER("getinfo()->lastHistoricLifeCountReceivedPos=%d\n", getinfo()->lastHistoricLifeCountReceivedPos);
       if(!getinfo()->lastHistoricLifeCountReceivedPos) getinfo()->lastHistoricLifeCountReceivedPos=12;
       LOGGER("SensorGlucoseData %s %s scansize=%zu\n",sensordir.data(),scanpath.data(),scansize);
@@ -1496,8 +1578,16 @@ bool savepoll(time_t tim,int id,int glu,int trend,float change) {
     return true;
     }
 
-void savestreamonly(time_t tim,int id,int glu,int trend,float change) {
-    saveglucosedata(polls,getinfo()->pollcount,tim, id, glu, trend, change);
+bool savestreamonly(time_t tim,int id,int glu,int trend,float change) {
+     const int count=getinfo()->pollcount;
+     if(count>0) {
+             const int prev=count-1;
+             if(polls[prev].id>=id)
+                return false;
+             }
+     polls[count]={static_cast<uint32_t>(tim),id,glu,trend,change};
+     ++getinfo()->pollcount;
+     return true;
     }
 
 void savestream(time_t tim,int id,int glu,int trend,float change) {
@@ -1615,11 +1705,11 @@ void consecutivehistorylifecount() {
     if(newrec>0)
         getinfo()->lastHistoricLifeCountReceivedPos=newrec;
     }
-void updateHistsorylifecount(int newpos) {
+void updateHistorylifecount(int newpos) {
     if(getinfo()->lastHistoricLifeCountReceivedPos<newpos) {
         getinfo()->lastHistoricLifeCountReceivedPos=newpos;
         }
-    LOGGER(" updateHistsorylifecount(%d) getinfo()->lastHistoricLifeCountReceivedPos=%d\n",newpos,
+    LOGGER(" updateHistorylifecount(%d) getinfo()->lastHistoricLifeCountReceivedPos=%d\n",newpos,
         getinfo()->lastHistoricLifeCountReceivedPos);
     }
 
@@ -1710,7 +1800,8 @@ uint32_t lastused() const {
 
 void updateinit(const int ind) {
     getinfo()->update[ind]={};    
-    getinfo()->caliUpdated[ind]={};
+    getinfo()->calis[0].caliUpdated[ind]={};
+    getinfo()->calis[1].caliUpdated[ind]={};
     }
 
 
@@ -1968,7 +2059,7 @@ sendscan:
 2: also via scan
 */
 private:
-int sendSistate(const pathconcat *sfile, crypt_t *pass,Connect *connect)  {
+int sendMirrorFile(const pathconcat *sfile, crypt_t *pass,Connect *connect)  {
     const char *statename=sfile->data();
     Readall<unsigned char> stateBytes(statename);
     if(!stateBytes.data()||!stateBytes.size()) {
@@ -1987,17 +2078,32 @@ public:
 int sendSibionicsState(crypt_t *pass,Connect *connect,int ind)  {
     int waslock=getinfo()->lockcount;
     if(getinfo()->update[ind].rawstreamstart<waslock) {
-        int res=sendSistate(&binstatefile,pass,connect);
-        /*
-        if(res==2) {
-            res=sendSistate(&statefile,pass,sock);
-           } */
+        int res=sendMirrorFile(&binstatefile,pass,connect);
         if(res==1) {
             getinfo()->update[ind].rawstreamstart=waslock;
             }
         return res;    
         }
     return 2;
+    }
+int sendGeneratedAir(crypt_t *pass,Connect *connect,int ind)  {
+    int wascount=getinfo()->pollcount;
+    if(getinfo()->update[ind].rawstreamstart<wascount) {
+        const pathconcat sensfile(sensordir,generatedStr);
+        int res=sendMirrorFile(&sensfile,pass,connect);
+        if(res==1) {
+            getinfo()->update[ind].rawstreamstart=wascount;
+            }
+        return res;    
+        }
+    return 2;
+    }
+
+int updateBeforeSwitch(crypt_t *pass,Connect *connect,int ind,int sensindex,int sendscan)  {
+    if(isAir()) {
+        return sendGeneratedAir(pass,connect,ind);
+        }
+     return 2;
     }
 
 int updatestream(crypt_t *pass,Connect *connect,int ind,int sensindex,int sendscan)  {
@@ -2092,13 +2198,26 @@ int updatestream(crypt_t *pass,Connect *connect,int ind,int sensindex,int sendsc
                  }
             }
          else {
-             if(isDexcom()&&!getinfo()->update[ind].siStream&&pollcount()) {
-                   updateStarttime=true;
-               LOGAR("updateStream send starttime");
-                   vect.push_back({reinterpret_cast<const senddata_t *>(&getinfo()->starttime),offsetof(Info,starttime),4});
-                   vect.push_back({reinterpret_cast<const senddata_t *>(getinfo()->DexDeviceName),offsetof(Info,DexDeviceName),12});
-                   vect.push_back({reinterpret_cast<const senddata_t *>(getinfo()->deviceaddress),offsetof(Info,deviceaddress),deviceaddresslen});
+             if(isAir()) {
+                 if(!getinfo()->update[ind].siStream&&pollcount()) {
+                     updateStarttime=true;
+                     LOGAR("updateStream send starttime");
+                     const pathconcat sensfile(sensordir,sensorInfoStr);
+                     int res=sendMirrorFile(&sensfile, pass,connect);
+                     if(!res)
+                        return res;
+                     vect.push_back({reinterpret_cast<const senddata_t *>(&getinfo()->starttime),offsetof(Info,starttime),4});
+                     }
                 }
+             else {
+                 if(isDexcom()&&!getinfo()->update[ind].siStream&&pollcount()) {
+                       updateStarttime=true;
+                   LOGAR("updateStream send starttime");
+                       vect.push_back({reinterpret_cast<const senddata_t *>(&getinfo()->starttime),offsetof(Info,starttime),4});
+                       vect.push_back({reinterpret_cast<const senddata_t *>(getinfo()->DexDeviceName),offsetof(Info,DexDeviceName),12});
+                       vect.push_back({reinterpret_cast<const senddata_t *>(getinfo()->deviceaddress),offsetof(Info,deviceaddress),deviceaddresslen});
+                    }
+                 }
               }
          if(wrotehistory) {
                vect.push_back({reinterpret_cast<const senddata_t *>(&endinfo),offsetof(Info,endStreamhistory),sizeof(endinfo)});
@@ -2129,7 +2248,7 @@ int updatestream(crypt_t *pass,Connect *connect,int ind,int sensindex,int sendsc
             LOGSTRING("startchanged\n");
             }
         if(sendhiststart) getinfo()->update[ind].sendhiststart=false;
-        if(isLibre3()||isDexcom()) {
+        if(isLibre3()||isDexcom()||isAir()) {
             int endhistory=getScanendhistory();    
             if(oldsendhistory(pass,connect,ind,sensindex,true,endhistory))
                 return 1;
@@ -2175,7 +2294,7 @@ time_t lifeCount2time(uint32_t lifecount) {
     else {
         uit=getstarttime()+60LL*(lifecount+1);
         }
-    LOGGER("timelastcurrent=%ld lastlifecount=%d lifeCount2time(lifecount=%d)=%lld\n", timelastcurrent,lastlifecount,lifecount,uit);
+    LOGGER("timelastcurrent=%ld lastlifecount=%d lifeCount2time(lifecount=%d)=%lld\n", timelastcurrent,lastlifecount,lifecount,(long long)uit);
     return uit;
     }
 
@@ -2192,7 +2311,12 @@ int getSiIndex() const {
 void setSiIndex(int index)  {
     getinfo()->lockcount=index;
     }
-
+int getLastAir() const {
+    return getinfo()->lockcount;
+    }
+void setLastAir(int index) {
+    getinfo()->lockcount=index;
+   }
 uint32_t receivehistory=0;
 int retried=0;
 bool scannedAddress=false;
@@ -2240,38 +2364,44 @@ int siAddedIndex(int index) const {
 
 void resetSiIndex();
 
+    void updateCaliTime(int ind, const uint32_t time) {
+        for(int i=0;i<2;++i)
+                getinfo()->calis[0].updateCaliTime( ind, time);
+        }
 int updateCali(crypt_t *pass,Connect *connect,int ind,int sensorindex)  {
-     uint32_t wascaliNr=getinfo()->caliNr;
-     uint32_t updatefrom=getinfo()->caliUpdated[ind];
-     if(updatefrom==wascaliNr)
-        return 2;
-     std::vector<subdata> vect;
-     if(updatefrom<wascaliNr) {
-        vect.reserve(2);
-        int caliStart=offsetof(Info,caliPara)+sizeof(Info::caliPara[0])*updatefrom;
-        int caliEnd=offsetof(Info,caliPara) +sizeof(Info::caliPara[0])*wascaliNr;
+     int res=0;
+     for(int i=0;i<2;++i) {
+             uint32_t wascaliNr=getinfo()->calis[i].caliNr;
+             uint32_t updatefrom=getinfo()->calis[i].caliUpdated[ind];
+             if(updatefrom==wascaliNr) {
+                res|=2; ;
+                continue;
+                }
+             std::vector<subdata> vect;
+             if(updatefrom<wascaliNr) {
+                vect.reserve(2);
+                int offsetcaliPara=offsetof(Info,calis[0].caliPara)+sizeof(Info::calis[0])*i;
+                int caliStart=offsetcaliPara+sizeof(Info::calis[0].caliPara[0])*updatefrom;
+                int caliEnd= offsetcaliPara+sizeof(Info::calis[0].caliPara[0])*wascaliNr;
 
-        vect.push_back({meminfo.data()+caliStart,caliStart,caliEnd-caliStart});
-        }
-     else {
-        vect.reserve(1);
-        }
-     vect.push_back({reinterpret_cast<const senddata_t *>(&wascaliNr),offsetof(Info,caliNr),4});
-    const uint16_t calibratedstartcmd=startcalibratedupdate|sensorindex;
-    if(!connect->senddata(pass,vect, infopath,calibratedstartcmd, reinterpret_cast<const uint8_t *>(&updatefrom),sizeof(updatefrom))) {
-      LOGAR("updateCali: senddata info.data failed");
-      return 0;
-     }
-     LOGGER("updateCali sock=%d ind=%d sensorindex=%d caliNR=%u updatefrom=%u\n",connect->getSenderIdent(),ind,sensorindex,wascaliNr,updatefrom);
-     getinfo()->caliUpdated[ind]=wascaliNr;
-     return 1;
- }
-int addCali(uint32_t tim,float weight,double a, double b) {
-        return getinfo()->addCali(tim,weight,a,b);
-        }
-int removeCali(uint32_t tim) {
-        return getinfo()->removeCali(tim);
-        }
+                vect.push_back({meminfo.data()+caliStart,caliStart,caliEnd-caliStart});
+                }
+             else {
+                vect.reserve(1);
+                }
+             int offsetofcalNR=offsetof(Info,calis[0].caliNr)+sizeof(Info::calis[0])*i;
+             vect.push_back({reinterpret_cast<const senddata_t *>(&wascaliNr),offsetofcalNR,4});
+            const uint16_t calibratedstartcmd=startcalibratedupdate|sensorindex;
+            if(!connect->senddata(pass,vect, infopath,calibratedstartcmd, reinterpret_cast<const uint8_t *>(&updatefrom),sizeof(updatefrom))) {
+              LOGAR("updateCali: senddata info.data failed");
+              return 0;
+             }
+             LOGGER("updateCali sock=%d ind=%d sensorindex=%d caliNR=%u updatefrom=%u\n",connect->getSenderIdent(),ind,sensorindex,wascaliNr,updatefrom);
+             getinfo()->calis[i].caliUpdated[ind]=wascaliNr;
+             res|=1;;
+             }
+      return res;
+    }
 bool hide=false;
 
 int getLastIndex() const {
@@ -2293,6 +2423,10 @@ bool hasData(uint32_t nu) const {
                     return false;
             }
           else {
+            if(isAir()) {
+                if(pollcount()>4320)
+                    return false;
+                }
           /*
              if(isLibre3()) {
                     if(pollcount()>=getinfo()->wearduration2)
@@ -2311,8 +2445,15 @@ bool hasData(uint32_t nu) const {
      return res;
     }
 //         return ((isAccuChek()&&pollcount()<4000)||(isDexcom()&&pollcount()<maxdexcount))&& (nu-lastused())< youngsensorsecs
+bool hasHistory() const {
+     return isLibre()||(isDexcom()&&settings->data()->dexcomPredict)||isAir();
+     };
+int getStreamIdDistance() const {
+    if(isAir()||isAccuChek())
+        return 5;
+    return 1;
+    }
 };
-
 struct lastscan_t {
     int sensorindex;
     const ScanData *scan;

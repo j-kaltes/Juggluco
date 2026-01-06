@@ -308,6 +308,7 @@ extern                bool updateDevices() ;
                 return {it,comlen};
                 }
             extern void wakeupall();
+            LOGGER("getcommands wakeupall %d\n",command);
             wakeupall();
             break;
         case swakeupstream: 

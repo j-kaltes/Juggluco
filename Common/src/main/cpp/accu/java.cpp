@@ -85,26 +85,28 @@ float makearrow(const SensorGlucoseData *sens,float mgdL,uint32_t was)  {
 extern jlong glucoseback(uint32_t nu,uint32_t glval,float drate,SensorGlucoseData *hist);
 
 jlong mkres(SensorGlucoseData *sens,uint32_t timsec,uint32_t eventTime, int min,int mgdL, int abbotttrend, float change){
-    sens->savestreamonly(eventTime,min,mgdL,abbotttrend, change);
-    jlong res;
-    if((timsec-eventTime)<maxbluetoothage) {
-         sens->sensorerror=false;
-         const int sensorindex=sens->sensorIndex;
-         sensor *sensor=sensors->getsensor(sensorindex);
-         if(sensor->finished) {
-                LOGGER("accuProcessData finished was %d becomes 0\n", sensor->finished);
-                sensor->finished=0;
-                backup->resensordata(sensorindex);
+    if(sens->savestreamonly(eventTime,min,mgdL,abbotttrend, change)) {
+            jlong res;
+            if((timsec-eventTime)<maxbluetoothage) {
+                 sens->sensorerror=false;
+                 const int sensorindex=sens->sensorIndex;
+                 sensor *sensor=sensors->getsensor(sensorindex);
+                 if(sensor->finished) {
+                        LOGGER("mkres %s finished was %d becomes 0\n", sens->showsensorname().data(),sensor->finished);
+                        sensor->finished=0;
+                        backup->resensordata(sensorindex);
+                        }
+                 res=glucoseback(eventTime,mgdL,change,sens);
+                 wakewithcurrent();
+                 }
+              else {
+                sens->receivehistory=timsec;
+                res=1LL;
                 }
-         res=glucoseback(eventTime,mgdL,change,sens);
-         wakewithcurrent();
-         }
-      else {
-        sens->receivehistory=timsec;
-        res=1LL;
-        }
-     backup->wakebackup(wakestream);
-     return res;
+             backup->wakebackup(wakestream);
+             return res;
+             }
+     return 0LL;
     }
 extern "C" JNIEXPORT jlong JNICALL   fromjava(accuProcessData)(JNIEnv *env, jclass cl,jlong dataptr,jbyteArray value,jlong mmsec) {
     if(!value) {
@@ -191,6 +193,7 @@ extern "C" JNIEXPORT jlong JNICALL   fromjava(accuProcessData)(JNIEnv *env, jcla
         }
     float mgdLf=accu->mgdL();
     uint32_t mgdL= std::round(mgdLf);
+    /*
     if(mgdL<39||mgdL>401) { //Ever used?
         LOGGER("accuProcessData: ERROR min=%d value %d mg/dL %.1f mmol/L\n",accu->min,mgdL,mgdLf/18.0);
         if((timsec-eventTime)<maxbluetoothage) {
@@ -199,7 +202,7 @@ extern "C" JNIEXPORT jlong JNICALL   fromjava(accuProcessData)(JNIEnv *env, jcla
             return 0LL;
             }
         return 1LL;
-        }
+        } */
    // float change=makearrow(sens, mgdLf,eventTime) ;
     float change=accu->getTrend() ;
     int abbotttrend=rate2changeindex(change);
@@ -208,27 +211,6 @@ extern "C" JNIEXPORT jlong JNICALL   fromjava(accuProcessData)(JNIEnv *env, jcla
     const char *label=abbotttrend<6?GlucoseNow::trendString[abbotttrend]:"Error";
     LOGGER("accuProcessData glucose id=%d %.1f mg/dL %.1f mmol/L rate=%.2f label=%s CGMQuality=%d %s",accu->min, mgdLf, mgdLf/18.0f,change,label,accu->CGMQuality,ctime(&tim));
     #endif
-/*
-    sens->savestreamonly(eventTime,accu->min,mgdL,abbotttrend, change);
-    jlong res;
-    if((timsec-eventTime)<maxbluetoothage) {
-         sens->sensorerror=false;
-         const int sensorindex=sdata->sensorindex;
-         sensor *sensor=sensors->getsensor(sensorindex);
-         if(sensor->finished) {
-                LOGGER("accuProcessData finished was %d becomes 0\n", sensor->finished);
-                sensor->finished=0;
-                backup->resensordata(sensorindex);
-                }
-         res=glucoseback(eventTime,mgdL,change,sens);
-         wakewithcurrent();
-         }
-      else {
-        sens->receivehistory=timsec;
-        res=1LL;
-        }
-     backup->wakebackup(wakestream);
-*/
     return mkres(sens,timsec,eventTime,accu-> min, mgdL, abbotttrend, change);
     }
 extern "C" JNIEXPORT jbyteArray JNICALL   fromjava(accuAskValues)(JNIEnv *env, jclass cl,jlong dataptr) {

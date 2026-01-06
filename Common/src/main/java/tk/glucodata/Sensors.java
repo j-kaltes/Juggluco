@@ -31,7 +31,8 @@ TextView textview;
 long sensorptr;
 void setSensorptr(long sensorptr) {
     this.sensorptr=sensorptr;
-     boolean hasCali=Natives.calibrateNR( sensorptr)>0;;
+     boolean hasCali=Natives.calibrateNR( sensorptr,0)>0||Natives.calibrateNR( sensorptr,1)>0;
+
      if(hasCali) {
           calview.setVisibility(VISIBLE);
           }

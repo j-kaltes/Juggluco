@@ -25,7 +25,6 @@ package tk.glucodata;
 import static tk.glucodata.Applic.Toaster;
 import static tk.glucodata.Applic.isWearable;
 import static tk.glucodata.Applic.useZXing;
-import static tk.glucodata.InsulinTypeHolder.getradiobutton;
 import static tk.glucodata.Log.doLog;
 import static tk.glucodata.MainActivity.REQUEST_BARCODE;
 import static tk.glucodata.MainActivity.REQUEST_BARCODE_SIB2;
@@ -36,6 +35,7 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static tk.glucodata.util.getlabel;
 import static tk.glucodata.util.getbutton;
 import static tk.glucodata.util.getcheckbox;
+import static tk.glucodata.util.getradiobuttonId;
 
 
 
@@ -133,10 +133,10 @@ private static void selectType(String name,long sensorptr,MainActivity act) {
 
     var group=new RadioGroup(act);
     int id=0;
-    group.addView(getradiobutton(act,R.string.eusibionics,id++));
-    group.addView(getradiobutton(act,R.string.hematonix,id++));
-    group.addView(getradiobutton(act,R.string.chsibionics,id++));
-    group.addView(getradiobutton(act,R.string.sibionics2,id));
+    group.addView(getradiobuttonId(act,R.string.eusibionics,id++));
+    group.addView(getradiobuttonId(act,R.string.hematonix,id++));
+    group.addView(getradiobuttonId(act,R.string.chsibionics,id++));
+    group.addView(getradiobuttonId(act,R.string.sibionics2,id));
     group.check(subtype);
    var ok=getbutton(act, R.string.ok);
     int height = GlucoseCurve.getheight();

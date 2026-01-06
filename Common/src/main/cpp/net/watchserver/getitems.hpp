@@ -1,5 +1,6 @@
 #pragma once
 #include "sensoren.hpp"
+#include "calibrate/Calibrator.hpp"
 extern Sensoren *sensors;
 
 
@@ -46,7 +47,7 @@ uint32_t getitems(char *&outiter,const int  datnr,uint32_t newer,uint32_t older,
 		auto *sensorname= sens->shortsensorname();
 		LOGGER("getStreamSensor(%d) %s pollcount=%d\n",sensorid+1,sensorname->data(),sens->pollcount());
 		const ScanData *first=&gdata.begin()[0];
-
+                auto cali=make_calibrator<ScanData>(sens);
 
 
 		for(;datit<datnr;datit++,iter--) {
@@ -75,8 +76,7 @@ uint32_t getitems(char *&outiter,const int  datnr,uint32_t newer,uint32_t older,
                         ScanData calitem;
                         const ScanData *itemptr;
                         double calibrated;
-extern double     calibrateONE(const SensorGlucoseData *sens,const ScanData &value);
-                        if(settings->data()->DoCalibrate&&(calibrated=calibrateONE(sens,*iter),!isnan(calibrated))) {
+                        if(settings->data()->DoCalibrate&&(calibrated=cali.calibrateONE(*iter),!isnan(calibrated))) {
                                 calitem=*iter;
                                 calitem.g=round(calibrated);
                                 itemptr=&calitem;

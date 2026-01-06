@@ -285,10 +285,10 @@ struct Tings {
     char _nullchar1;
     uint8_t librecountry;
     
-    int8_t reserved1:1;
+    bool showcalibratedhistories:1;
     bool DisconnectSensor:1;
 
-    bool showcalibrated:1;
+    bool showcalibratedstream:1;
     bool showscans:1;
     bool showstream:1;
 
@@ -445,7 +445,8 @@ auto *giveGlucoseMeter(this Self&& self,std::string_view deviceName)  {
      return meter;
      }
 void defaultshows() {
-    showcalibrated=false;
+    showcalibratedstream=false;
+    showcalibratedhistories=false;
     showscans=true;
     showstream=true;
     showhistories=true;

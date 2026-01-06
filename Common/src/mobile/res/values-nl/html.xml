@@ -2932,7 +2932,7 @@ toegepast op alle glucosewaarden van deze sensor.
 </p>
 <p><i><b>Helling wijzigen:</b></i></p>
 <p style="font-variant: normal; font-style: normal; font-weight: normal">
-Als &quot;Helling<i> wijzigen</i>&quot; niet is aangevinkt, wordt
+Als &quot;Helling <i>wijzigen</i>&quot; niet is aangevinkt, wordt
 slechts een bepaalde waarde toegevoegd aan of afgetrokken van elke
 sensorglucosewaarde om de gekalibreerde glucosewaarde te verkrijgen.
 De relatie tussen de gekalibreerde waarde en de sensorwaarde is:</p>
@@ -2941,20 +2941,11 @@ glucose = SensorGlucose + b</b></p>
 <p style="font-variant: normal; font-style: normal; font-weight: normal">
 De waarde van b wordt bepaald door kalibratie.</p>
 <p style="font-variant: normal; font-style: normal; font-weight: normal">
-Als “<i>Helling </i><i>wijzigen</i>” is aangevinkt, wordt de
-relatie:</p>
+Als “<i>Helling wijzigen</i>” is aangevinkt, wordt de relatie:</p>
 <p style="font-variant: normal; font-style: normal"><b>Gekalibreerde
 glucose = a * SensorGlucose + b</b></p>
-<p>Waarbij <b>a</b> kan verschillen van 1. Dit type kalibratie is
-alleen mogelijk wanneer er voldoende bloedglucosemetingen worden
-gedaan met waarden die alle sensorglucosewaarden vertegenwoordigen.
-Wanneer bijvoorbeeld alle glucosemetingen werden gedaan toen de
-glucosewaarde rond de 5 mmol/L lag en de sensorwaarden variëren van
-3 mmol/L tot 10 mmol/L, zijn deze waarden niet divers genoeg om de
-waarde van <b>a</b> af te leiden. Juggluco controleert zelf of er
-voldoende waarden zijn (aantal &gt;=3) en of er voldoende variantie
-is (standaarddeviatie bloedglucose &gt; 0,62 * standaarddeviatie
-CGM-glucose).</p>
+<p>Waarbij <b>a</b> kan verschillen van 1. 
+</p>
 <p>Juggluco weegt glucosemetingen afhankelijk van hun ouderdom. De
 huidige glucosewaarde heeft een gewicht van 1, oudere glucosewaarden
 hebben een lager gewicht. De kalibratie wordt ook gewogen, zodat een
@@ -2965,6 +2956,12 @@ hoeveel gewicht aan de kalibratie wordt toegekend. Bij meer (recente)
 bloedglucosemetingen worden de gekalibreerde glucosewaarden meer
 gekanteld naar de beste fit die uit deze metingen wordt afgeleid
 tussen bloedglucose en CGM-glucose.</p>
+<p>History waarden kunnen op het moment van meting niet direct worden
+gekalibreerd. De kalibratie van de waarden is geprogrammeerd om 21
+minuten later te worden uitgevoerd voor Libre-sensoren en 31 minuten
+later voor CareSense Air-sensoren, maar gebeurt vaak later. Ook wordt
+de streamkalibratie op een later tijdstip herhaald, zodat de volgende
+CGM kan worden gebruikt.</p>
 <p><i><b>Actief</b></i> :</p>
 <p>Wanneer <i>actief</i> is aangevinkt, worden de gekalibreerde
 glucosewaarden gebruikt voor alarmen, Broadcasts, Health Connect, de
@@ -2974,16 +2971,17 @@ Juggluco wordt de gekalibreerde waarde in grote letters weergegeven,
 met de ongekalibreerde waarde erna in kleine letters. Deze waarde
 wordt nooit gebruikt voor verzending naar Libreview of toegepast op
 scans of historische waarden.</p>
-<p>Je kunt de gekalibreerde glucosewaarden altijd bekijken via recher
-midden menu→Gekalibreerd.</p>
-<p><b><i>Alle waarden</i>:</b> Voor bepaalde
-waarden is er geen gekalibreerde waarde. De curve met gekalibreerde
-waarden (ingeschakeld met rechter midden menu → Gekalibreerd) toont
-niets als &quot;<i>Alle waarden</i>&quot; niet is aangevinkt. Als
-&quot;<i>Alle waarden</i>&quot; wel is aangevinkt, wordt de
-ongekalibreerde waarde weergegeven. Op deze manier kun je rechter
-midden menu → Stream uitschakelen en toch alle waarden zien.</p>
-
+<p>De weergave van de curve van gekalibreerde glucosewaarden wordt
+ingeschakeld in het rechter middenmenu, vóór \'Stream\' en \'History\'.
+De ruwe waarden kunnen worden in- en uitgeschakeld met het
+selectievakje na \'Stream\' en \'History\'.</p>
+<p><i><b>Alle waarden</b></i><b>:</b> Voor bepaalde waarden is er
+geen gekalibreerde waarde. De curve met gekalibreerde waarden
+(ingeschakeld met rechter midden menu → Gekalibreerd) toont niets
+als &quot;<i>Alle waarden</i>&quot; niet is aangevinkt. Als &quot;<i>Alle
+waarden</i>&quot; wel is aangevinkt, wordt de ongekalibreerde waarde
+weergegeven. Op deze manier kun je rechter midden menu → Stream
+uitschakelen en toch alle waarden zien.</p>
 <p><br/>
 <br/>
 
@@ -2997,21 +2995,32 @@ midden menu → Stream uitschakelen en toch alle waarden zien.</p>
 <string name="calibrationslist" >
 <![CDATA[
 <p><a href="https://www.juggluco.nl/Jugglucohelp/de/calibrationslist.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/calibrationslist.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/calibrationslist.html?lang=en">en</a>&emsp;&emsp;</p><h1>Kalibraties</h1>
-<p style="line-height: 100%; margin-bottom: 0in">Toont de kalibraties
+<p style="line-height: 100%; margin-bottom: 0cm">Toont de kalibraties
 die voor deze sensor zijn uitgevoerd. Elke kalibratie bestaat uit het
 tijdstip waarop deze is uitgevoerd en de helling (a) en intercept b
 van de relatie tussen de bloedglucose en de sensorglucose:</p>
-<p style="line-height: 100%; margin-bottom: 0in">Bloedglucose = a *
+<p style="line-height: 100%; margin-bottom: 0cm">Bloedglucose = a *
 SensorGlucose + b</p>
-<p style="line-height: 100%; margin-bottom: 0in">Wanneer &quot;Helling
+<p style="line-height: 100%; margin-bottom: 0cm">Wanneer &quot;Helling
 wijzigen&quot; niet is aangevinkt in linkermenu → Instellingen →
-Kalibratie of wanneer er te weinig vingerprikmetingen zijn of de
-vingerprikmetingen niet voldoende uiteenlopen, geldt a=1. Zo wordt
-alleen b bepaald.</p>
-<p style="line-height: 100%; margin-bottom: 0in">Door de kalibratie
+Kalibratie, geldt a=1. Zo wordt alleen b bepaald.</p>
+<p style="line-height: 100%; margin-bottom: 0cm"><b>Stream</b>: toont
+kalibraties van stream-waarden. Stream is de waarde die wordt
+weergegeven op het moment van de meting zelf en wordt gebruikt voor
+alarmen en Broadcasts.</p>
+<p style="line-height: 100%; margin-bottom: 0cm"><b>History</b>:
+toont kalibraties van history-waarden (alleen beschikbaar in
+Freestyle Libre en CareSens Air). History waarden zijn aangepaste
+waarden die achteraf zijn samengesteld zoals ze worden weergegeven in
+de Librelink- en CareSens Air-apps.</p>
+<p style="line-height: 100%; margin-bottom: 0cm">Het weergeven van
+gekalibreerde curven kan worden in- en uitgeschakeld in het rechter
+middenmenu vóór &quot;<i>Stream</i>&quot; en &quot;<i>History</i>&quot;.
+</p>
+<p style="line-height: 100%; margin-bottom: 0cm">Door de kalibratie
 aan te raken, ga je naar de kalibratietijd. Door op &quot;<b>Verwijderen</b>&quot;
 te tikken, verwijdert je de kalibratie.</p>
-<p style="line-height: 100%; margin-bottom: 0in"><b>Instellingen</b>:
+<p style="line-height: 100%; margin-bottom: 0cm"><b>Instellingen</b>:
 Een andere manier om naar linker menu →Instellingen→Kalibratie te
 gaan.</p>
 <p><br/>

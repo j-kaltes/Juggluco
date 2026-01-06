@@ -347,6 +347,7 @@ private void   processchanged(byte[] value) {
         } 
    if(res==1L) {
          sensorstartmsec=Natives.getSensorStartmsec(dataptr);
+         Applic.app.redraw();
          return;
          }
     if(res==4L) {

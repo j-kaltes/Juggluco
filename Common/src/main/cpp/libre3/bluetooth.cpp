@@ -160,10 +160,9 @@ static void save3history(SensorGlucoseData *sens, const oneminute *minptr) {
 
 
 extern jlong glucoseback(uint32_t nu,uint32_t glval,float drate,SensorGlucoseData *hist) ;
-static jlong save3current(SensorGlucoseData *sens, const oneminute *minptr) {
+static jlong save3current(SensorGlucoseData *sens, const oneminute *minptr,uint32_t now) {
 	auto curval= minptr->readingMgDl;
 	jlong res=0LL;
-	const	auto now=time(nullptr);
 	sens->timelastcurrent=now;
 	sens->lastlifecount=minptr->lifeCount;
 	if(validglucosevalue(curval)) {
@@ -219,7 +218,7 @@ extern "C" JNIEXPORT jbyteArray JNICALL fromjava(getpin)(JNIEnv *env, jclass thi
 
 
 extern				void wakewithcurrent();
-extern "C" JNIEXPORT  jlong JNICALL fromjava(saveLibre3MinuteL)(JNIEnv *env, jclass thiz, jlong sensorptr,jbyteArray jmindata) {
+extern "C" JNIEXPORT  jlong JNICALL fromjava(saveLibre3MinuteL)(JNIEnv *env, jclass thiz, jlong sensorptr,jbyteArray jmindata,jlong msec) {
 	SensorGlucoseData *sens=reinterpret_cast<SensorGlucoseData *>(sensorptr);
 	if(!sens) {
 		LOGAR("saveLibre3Minute sensorptr==null");
@@ -245,7 +244,8 @@ extern "C" JNIEXPORT  jlong JNICALL fromjava(saveLibre3MinuteL)(JNIEnv *env, jcl
 	destruct _dest([env,jmindata,mindata](){env->ReleasePrimitiveArrayCritical(jmindata,const_cast<jbyte*>(mindata), JNI_ABORT);});
 
 	const oneminute *minptr=reinterpret_cast<const oneminute*>(mindata);
-	jlong res=save3current(sens,minptr);
+    const uint32_t nowsec=msec/1000L;
+	jlong res=save3current(sens,minptr,nowsec);
 	save3history(sens,minptr);
 
 	backup->wakebackup(wakestream);
@@ -373,7 +373,7 @@ static bool saveLibre3History(SensorGlucoseData *sens, const jbyte *history,cons
 		
 		 }
 
-	sens->updateHistsorylifecount(lastsave);
+	sens->updateHistorylifecount(lastsave);
 	if(++lastsave>sens->getScanendhistory())
 		sens->setendhistory(lastsave);
 //	backup->wakebackup(wakescan);

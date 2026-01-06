@@ -411,7 +411,7 @@ static boolean postmeasurements(boolean libre3,byte[] measurementdata) {
                            return false;
                         };break;
                      default: {
-                        librestatus="postmeasurements2 status="+code+" reason="+reason;
+                        librestatus="postmeasurements1 status="+status+" reason="+reason;
                         return false;
                         }
 
@@ -420,7 +420,7 @@ static boolean postmeasurements(boolean libre3,byte[] measurementdata) {
                   continue;
                   }
                }
-            librestatus="postmeasurements status="+code+" reason="+reason;
+            librestatus="postmeasurements2 status="+status+" reason="+reason;
             return false;
             }
          posttime=nowstr;

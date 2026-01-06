@@ -137,7 +137,7 @@ jugglucotext pttext {
 				"Float        "
                 },
 
-	.menustr2= {"Calibrated", "Scans","Stream","Histórico","Valores","Refeições","Modo escuro        "},
+	.menustr2= {"Último Scan","Scans","Stream","Histórico","Valores","Refeições","Modo escuro        "},
         .menustr3= {hourminstr,"Procurar","Data","Dia anterior","Dia seguinte","Semana anterior","Semana seguinte"},
 #endif //INJUGGLUCO
 #else

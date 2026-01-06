@@ -84,6 +84,7 @@ import tk.glucodata.settings.Broadcasts;
 //import static tk.glucodata.MessageSender.messagesender;
 
 public class Applic extends Application {
+static final boolean TEST=doLog;
 static final boolean ALLGALAXY=true;
 static final boolean hasNotChinese=true;
 public static final  boolean scrollbar=true;
@@ -651,8 +652,7 @@ public static void  removescreenupdater(Runnable up) {
 //    updater=up;
     }
 static void updatescreen() {
-    if(app.curve != null)
-        app.curve.requestRender();
+    app.redraw();
     for(var el:updaters)
         el.run();
     updaters.clear();
@@ -774,6 +774,11 @@ public static void wakemirrors() {
     {if(doLog) {Log.i(LOG_ID,"wakemirrors");};};
     MessageSender.sendwake();
     Natives.wakebackup();
+    }
+public static void switchSync() {
+    {if(doLog) {Log.i(LOG_ID,"switchSync");};};
+    MessageSender.sendwake();
+    Natives.switchSync( );
     }
 @Keep 
 static public void resetWearOS() {

@@ -441,10 +441,13 @@ private int phase=0;
         {if(doLog) {Log.i(LOG_ID, "onConnectionUpdated interval=" + interval + " latency=" + latency + " timeout=" + timeout + " status=" + status);};};
     }
 
+private int redrawer=0;
 private  void    processChanged(byte[] value) {
   long timmsec=System.currentTimeMillis();
   long res=Natives.accuProcessData(dataptr, value,timmsec);
   if(res==1L) {
+      if(redrawer++%15==13)
+            Applic.app.redraw();
      return;
     };
   handleGlucoseResult(res,timmsec);

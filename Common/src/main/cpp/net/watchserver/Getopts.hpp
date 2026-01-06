@@ -13,6 +13,7 @@ struct Getopts {
 
     bool streammode=false;
     bool calibratedmode=false;
+    bool calibratedhistorymode=false;
     bool allvaluesmode=false;
     bool scansmode=false;
     bool mealsmode=false;
@@ -55,6 +56,10 @@ template <int diff=60*10>
                 }
         if(calibratedmode!=other.calibratedmode) {
                 LOGGER("aboutequal: calibratedmode diffferent %d!=%d\n",calibratedmode,other.calibratedmode);
+                return false;
+                }
+        if(calibratedhistorymode!=other.calibratedhistorymode) {
+                LOGGER("aboutequal: calibratedhistorymode diffferent %d!=%d\n",calibratedhistorymode,other.calibratedhistorymode);
                 return false;
                 }
         if(allvaluesmode!=other.allvaluesmode) {

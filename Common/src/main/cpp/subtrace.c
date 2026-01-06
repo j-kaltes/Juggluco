@@ -920,22 +920,6 @@
 
 
 
-    jobjectArray  subNewObjectArray(JNIEnv*env,jsize  jsize1,jclass  jclass2,jobject  jobject3) {
-   SUBLOGAR("NewObjectArray");
-
-   }
-
-
-    jobject      subGetObjectArrayElement(JNIEnv*env,jobjectArray  jobjectArray1,jsize  jsize2) {
-   SUBLOGAR("GetObjectArrayElement");
-
-   }
-
-
-    void         subSetObjectArrayElement(JNIEnv*env,jobjectArray  jobjectArray1,jsize  jsize2,jobject  jobject3) {
-   SUBLOGAR("SetObjectArrayElement");
-
-   }
 
 
     jbooleanArray  subNewBooleanArray(JNIEnv*env,jsize  jsize1) {

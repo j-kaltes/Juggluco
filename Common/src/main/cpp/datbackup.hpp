@@ -39,7 +39,7 @@
 #include "net/TCPConnect.hpp"
 #include "myfdsan.h"
 
-#include "logvector.hpp"
+//#include "logvector.hpp"
 inline int mytag() {
    return 0;
    }
@@ -116,7 +116,8 @@ struct updateone {
     int startsensors;//vanwaaraf sensors.dat updaten
 
     uint8_t backupupdated;
-    uint8_t reserved1;
+    uint8_t countSync:4;
+    uint8_t reserved1:4;
     uint16_t iobupdated;
     uint32_t updatesettings;
 
@@ -204,6 +205,7 @@ int update();
 int updateiob();
 int numbertypes();
 int sendCalibrate();
+int updateBeforeSwitch() ;
     };
 
 #include "maxsendtohost.h"
@@ -213,6 +215,17 @@ struct TurnServer {
     char username[256];
     char password[256];
     };
+static constexpr const uintptr_t wakestream=1;
+static constexpr const uintptr_t wakescan=2;
+static constexpr const uintptr_t wakenums=4;
+static constexpr const uintptr_t wakeall=8;
+static constexpr const uintptr_t wakestop=16;
+static constexpr const uintptr_t wakeother=32;
+static constexpr const uintptr_t wakeend=64;
+static constexpr const uintptr_t wakesend=128;
+static constexpr const uintptr_t wakereconnect=256;
+static constexpr const uintptr_t wakestreamsend=512;
+static constexpr const uintptr_t wakeUpSwitch=1024;
 struct updatedata {
     int32_t hostnr;
     uint32_t receive;
@@ -225,20 +238,10 @@ struct updatedata {
     uint32_t lastused[maxallhosts];
     int32_t NRturnserver;
     TurnServer  turnserver[4];
-    void wakesender() ;
+    void wakesender(uintptr_t kind=wakeall) ;
     void wakestreamsender();
     };
 
-static constexpr const uintptr_t wakestream=1;
-static constexpr const uintptr_t wakescan=2;
-static constexpr const uintptr_t wakenums=4;
-static constexpr const uintptr_t wakeall=8;
-static constexpr const uintptr_t wakestop=16;
-static constexpr const uintptr_t wakeother=32;
-static constexpr const uintptr_t wakeend=64;
-static constexpr const uintptr_t wakesend=128;
-static constexpr const uintptr_t wakereconnect=256;
-static constexpr const uintptr_t wakestreamsend=512;
 struct  condvar_t {
     uintptr_t dobackup=0;
     std::mutex backupmutex;
@@ -1193,8 +1196,8 @@ bool sendwakestreamsender(int h) {
 
 
 void backupthread(int allindex,int sendindex) {
-#ifndef NOLOG
     auto &host=getupdatedata()->tosend[sendindex];
+#ifndef NOLOG
    auto *con=connections[allindex];
     LOGGER("%d backupthread, wearos=%d con_vars=%p sock=%i %p\n", allindex,getupdatedata()->allhosts[allindex].wearos, con_vars[sendindex],con?con->getSenderIdent():-1,host.getcrypt());
 #endif
@@ -1233,9 +1236,8 @@ void backupthread(int allindex,int sendindex) {
          if(!passive) {
             notpassive(current,sendindex);
             }
-         static int count=0;
          if(current==wakestream) {
-            if(count++%5==4) {
+            if(host.countSync++%5==4) {
                current=wakeall;
                }
             }
@@ -1328,12 +1330,15 @@ int updateproc(condvar_t *varsptr,uintptr_t cond,updateone &shost,int  (updateon
     }
 
 void        doupdates(const uintptr_t current,const int h) { 
-        int didnums=0,didstream=0,didscans=0,didupdate=0;
+        LOGGER("doupdates(%x,%d)\n",current,h);
+        int didnums=0,didstream=0,didscans=0,didupdate=0,didUpSwitch=0;
         (didnums=updateproc(con_vars[h],current&wakenums,getupdatedata()->tosend[h],&updateone::updatenums))&&
             (didstream=    updateproc(con_vars[h],current&wakestream,getupdatedata()->tosend[h],&updateone::updatestreamu))&&
             (didscans=        updateproc(con_vars[h],current&wakescan,getupdatedata()->tosend[h],&updateone::updatescansu))&&
+            (didUpSwitch=        updateproc(con_vars[h],current&wakeUpSwitch,getupdatedata()->tosend[h],&updateone::updateBeforeSwitch))&&
             (didupdate=        updateproc(con_vars[h],current&wakeall,getupdatedata()->tosend[h],&updateone::update));
-        const uint16_t command=((didnums&1)?wakenums:0)|(didstream&1?wakestream:0)|(didscans&1?wakescan:0)|(didupdate&1?wakeall:0);
+        const uint16_t command=((didnums&1)?wakenums:0)|(didstream&1?wakestream:0)|(didscans&1?wakescan:0)|(didupdate&1?wakeall:0)|
+(didUpSwitch&1?wakeUpSwitch:0);
         if(command) {
             auto &host=getupdatedata()->tosend[h];
             host.getConnect()->sendrender(host.getcrypt(),command);
@@ -1385,10 +1390,11 @@ void wakebackup(myuintptr_t kind=wakeall){
         }
     else
         nr=getupdatedata()->sendnr;
-      for(int i=0;i<nr;i++) {
+    for(int i=0;i<nr;i++) {
         auto *el=con_vars[i];
           if(el)  {
             bool doe; 
+
             if(networkpresent)  {
                 doe=true;
                 }

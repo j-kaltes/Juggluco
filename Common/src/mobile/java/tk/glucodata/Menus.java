@@ -69,7 +69,6 @@ import static tk.glucodata.Applic.isWearable;
 import static tk.glucodata.Log.doLog;
 import static tk.glucodata.MainActivity.REQUEST_BARCODE;
 import static tk.glucodata.Natives.getInvertColors;
-import static tk.glucodata.Natives.getshowcalibrated;
 import static tk.glucodata.Natives.getshowscans;
 import static tk.glucodata.Natives.getsystemui;
 import static tk.glucodata.Natives.setsystemui;
@@ -209,37 +208,47 @@ static public void show(MainActivity act) {
 	}); 
 	glucosefloatview.setChecked(Natives.getfloatglucose());
 
-/*        var lastscanview=view.findViewById(R.id.lastscan);lastscanview.setOnClickListener(v ->{
+        var lastscanview=view.findViewById(R.id.lastscan);lastscanview.setOnClickListener(v ->{
 		if(Natives.showlastscan()) {
                act.lightBars(!getInvertColors( ));
 			removeContentView(view);
 			act.requestRender();
 			}
-	});  */
-
-        CheckBox calibratedview=view.findViewById(R.id.calibrated);
-        calibratedview.setOnCheckedChangeListener( (buttonView,  isChecked)->{
-            Natives.setshowcalibrated(isChecked);
-            act.requestRender();
-            }); 
- 	    calibratedview.setChecked(getshowcalibrated()) ;
+	}); 
 
         CheckBox scansview=view.findViewById(R.id.scans);scansview.setOnCheckedChangeListener( (buttonView,  isChecked)->{
 		Natives.setshowscans(isChecked);
 				act.requestRender();
 		}); 
  	scansview.setChecked(getshowscans()) ;
-        CheckBox streamview=view.findViewById(R.id.stream);streamview.setOnCheckedChangeListener( (buttonView,  isChecked)->{
+
+    CheckBox streamview=view.findViewById(R.id.stream);streamview.setOnCheckedChangeListener( (buttonView,  isChecked)->{
 		Natives.setshowstream(isChecked);
 				act.requestRender();
 		}); 
 	streamview.setChecked(Natives.getshowstream() );
 
-        CheckBox historyview=view.findViewById(R.id.history);historyview.setOnCheckedChangeListener( (buttonView,  isChecked)->{
+
+    CheckBox calibratedstreamview=view.findViewById(R.id.calibratedstream);calibratedstreamview.setOnCheckedChangeListener( (buttonView,  isChecked)->{
+		Natives.setshowcalibratedstream(isChecked);
+				act.requestRender();
+		}); 
+	calibratedstreamview.setChecked(Natives.getshowcalibratedstream() );
+
+     CheckBox calibratedhistoryview=view.findViewById(R.id.calibratedhistory);
+     calibratedhistoryview.setOnCheckedChangeListener( (buttonView,  isChecked)->{
+             Natives.setshowcalibratedhistories(isChecked); 
+			act.requestRender();
+	        }); 
+	calibratedhistoryview.setChecked(Natives.getshowcalibratedhistories()) ;
+
+     CheckBox historyview=view.findViewById(R.id.history);
+     historyview.setOnCheckedChangeListener( (buttonView,  isChecked)->{
 		 Natives.setshowhistories(isChecked); 
 				act.requestRender();
 	}); 
 	historyview.setChecked(Natives.getshowhistories()) ;
+
         CheckBox amountsview=view.findViewById(R.id.amounts);amountsview.setOnCheckedChangeListener( (buttonView,  isChecked)->{
 	 Natives.setshownumbers(isChecked); 
 				act.requestRender();

@@ -117,12 +117,12 @@ auto    distance(Cont & w,Cont & x, Cont & y,int nr) {
         return tot; 
         }
 template <typename Cont>
-inline static void printvector(std::string_view name,Cont &x) {
+inline static void printvector(const char *other,std::string_view name,Cont &x) {
 #ifndef NOLOG
     constexpr const int maxbuf=1024;
     int index=0;
     char buf[maxbuf];
-    index+=snprintf(buf+index,maxbuf-index,"%s= ",name.data());
+    index+=snprintf(buf+index,maxbuf-index,"%s %s= ",other,name.data());
     for(auto el:x) {
         index+=snprintf(buf+index,maxbuf-index,"%.2f ",el);
         }
@@ -161,6 +161,32 @@ inline std::pair<long double,int> mean_mgdL(Cont &data) {
      return {sum/count,count};
     }
 
+template <typename Sens,typename DT>
+inline std::pair<long double,int> mean_mgdL(Sens *sens,int start,int end) {
+    double long sum{};
+    int count{};
+    for(int i=start;i<end;++i) {
+        auto &el=*getdata<DT>(sens,i); 
+        if(valid(el)) {
+            ++count;
+            sum+=getmgdL(el);
+            }
+         
+        }
+     return {sum/count,count};
+    }
+template <typename Sens,typename DT>
+inline long double variance_mgdL(Sens *sens,long double mean,int countMin1,int start, int end) {
+    double long sum{};
+    for(int i=start;i<end;++i) {
+        auto &el=*getdata<DT>(sens,i); 
+        if(valid(el)) {
+            sum+=square(getmgdL(el)-mean);
+            }
+        }
+     return sum/countMin1;
+    }
+
 template <typename Cont>
 inline long double variance_mgdL(long double mean,int countMin1,Cont& data) {
     double long sum{};
@@ -174,5 +200,25 @@ inline long double variance_mgdL(long double mean,int countMin1,Cont& data) {
 template <typename Cont>
 inline long double sd_mgdL(long double mean,int countMin1,Cont &data) {
     return sqrt(variance_mgdL(mean,countMin1,data));
+    }
+
+template <typename Sens,typename DT>
+inline long double sd_mgdL(Sens *sens,long double mean,int countMin1,int start,int end) {
+    return sqrt(variance_mgdL<Sens,DT>(sens,mean,countMin1,start,end));
+    }
+
+template <typename Cont>
+inline long double sd_mgdL(Cont &data) {
+     const auto [mean,countMin1]=mean_mgdL(data);
+    return sqrt(variance_mgdL(mean,countMin1,data));
+    }
+
+
+template <typename Sens,typename DT>
+inline long double sd_mgdL(Sens *sens) {
+    int start=getfirstpos<DT>(sens);
+    int end=getlastpos<DT>(sens);
+     const auto [mean,countMin1]=mean_mgdL<Sens,DT>(sens,start,end);
+    return sqrt(variance_mgdL<Sens,DT>(sens,mean,countMin1,start,end));
     }
 

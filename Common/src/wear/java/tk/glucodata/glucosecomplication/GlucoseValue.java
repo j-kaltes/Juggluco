@@ -129,7 +129,7 @@ GlucoseValue(int w,int h) {
 
 //   glucosePaint.setTypeface(normaltype);
    }
-int wasbackground=0;
+//int wasbackground=0;
 static int newbackground=1;
 private void setcolor() {
     final int background=Natives.getComplicationBackgroundColor( );
@@ -137,13 +137,14 @@ private void setcolor() {
 	   canvas.drawColor(background);
     else
       canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-    wasbackground=newbackground;
+   // wasbackground=newbackground;
      }
 
 void  setbackground() {
-	if(wasbackground!=newbackground) {
+/*	if(wasbackground!=newbackground) {
 		setcolor();
-		}
+		} */
+        setcolor();
 	}
 float  drawcenter(String value) {
        var bounds=new Rect();

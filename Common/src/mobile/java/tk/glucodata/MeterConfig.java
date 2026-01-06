@@ -138,7 +138,8 @@ static void config(MainActivity context, int meterIndex, View parent, BluetoothD
       Log.i(LOG_ID,"save");
       context.finepermission();
       Natives.GlucoseMeterSetLastTime(meterIndex,newtime[0]);
-      BluetoothGlucoseMeter.addDevice(meterIndex,device);
+      if(device!=null)
+              BluetoothGlucoseMeter.addDevice(meterIndex,device);
       });
    cancel.setOnClickListener(v -> {
            MainActivity.doonback();

@@ -108,7 +108,7 @@ jugglucotext uktext {
 		"Плавати        "
 		},
 
-	.menustr2= {"Calibrated",
+	.menustr2= {"Останнє скан.",
 	    "Скани",
 	    "Потік",
 	    "Історія",

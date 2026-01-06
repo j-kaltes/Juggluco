@@ -1,3 +1,11 @@
+Te vaak verbinden met server als het niet werkt?
+What is this in jugglucoconnect?:
+1765921227.228 2139747 before SSL_shutdown rbio fd=12
+1765921227.228 2139747 SIOCOUTQ = 0 bytes
+1765921227.228 2139747 SSL_shutdown=-1
+1765921227.228 2139747 OpenSSL error: error:0A00010F:SSL routines::bad length (0xa00010f)
+1765921227.228 2139747 OpenSSL error: error:0A000197:SSL routines::shutdown while in init (0xa000197)
+
 Naar horloge wordt gezonden, maar niet van.
 Nums worden ook niet naar horloge gezonden, glucose wel.
 Bij eerst initialisatie watch, staat some messages aan en werkt het niet. Na restart van beide apps, werkt het.

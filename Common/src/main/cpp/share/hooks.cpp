@@ -131,7 +131,6 @@ extern "C" pid_t  VISIBLE Fork(void) {
 	LOGAR("nepfork()");
 	return childpid;
 	}
-
 extern "C" int  VISIBLE Pipe(int pipefd[2]) {
 //	typedef  int (*pipe_t)(int [2]); static pipe_t pi=(pipe_t)useddlvsym(RTLD_NEXT,"pipe",nullptr); int  ret=pi(pipefd);
 	int ret=sys_pipe2(pipefd,0);

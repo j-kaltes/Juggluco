@@ -129,7 +129,7 @@ const jugglucotext engtext {
 		"Talk",
 		"Float        "
 		},
-	.menustr2= {"Calibrated",
+	.menustr2= {"Last Scan",
 	"Scans",
 	"Stream",
 	"History",

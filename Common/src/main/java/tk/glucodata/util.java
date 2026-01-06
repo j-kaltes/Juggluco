@@ -126,6 +126,13 @@ public static  RadioButton getradiobutton(Context context, int res) {
          radio.setText(res);
          return radio;
          }
+
+public static RadioButton getradiobuttonId(Context context, int res, int id) {
+         var radio=new RadioButton(context);
+         radio.setText(res);
+         radio.setId(id);
+         return radio;
+         }
 	/*
 static public String getlanguage(Context context) {
 	return context.getString(R.string.language);

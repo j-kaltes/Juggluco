@@ -130,7 +130,7 @@ jugglucotext frtext {
 		"Parler",
 		"Flotter        "
 		},
-	.menustr2= {"Calibrated", "Scans","Flux","Historique","Quantités","Repas","Mode sombre        "},
+	.menustr2= {"Dernier scan", "Scans","Flux","Historique","Quantités","Repas","Mode sombre        "},
 	.menustr3= {hourminstr,"Rechercher","Date","Jour avant","Jour après","Semaine avant","Semaine après"},
 #endif //INJUGGLUCO
 #else

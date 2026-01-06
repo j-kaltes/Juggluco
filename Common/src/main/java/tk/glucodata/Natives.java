@@ -476,8 +476,10 @@ public static native boolean getshowhistories();
 public static native boolean getshowstream();
 public static native boolean getshownumbers();
 
-public static native boolean getshowcalibrated();
-public static native void setshowcalibrated(boolean val);
+public static native boolean getshowcalibratedstream();
+public static native void setshowcalibratedstream(boolean val);
+public static native boolean getshowcalibratedhistories();
+public static native void setshowcalibratedhistories(boolean val);
 
 public static native boolean getshowmeals();
 public static native void setshowmeals(boolean val);
@@ -555,7 +557,7 @@ public static native long interpret3NFC2(byte[] nfc1,byte[] b,long time);
 public static native long getLibre3secs(byte[]  nfc1ar);
 public static native long getLibre3Sensorptr(String sensorid,long starttime);
 public static native long getLibre3SensorptrPD(String sensorid,long starttime,byte[] pin,String deviceaddress);
-public static native long saveLibre3MinuteL(long sensorptr,byte[] mindata);
+public static native long saveLibre3MinuteL(long sensorptr,byte[] mindata,long nowmsec);
 public static native boolean saveLibre3fastData(long sensorptr,byte[] mindata);
 public static native boolean saveLibre3History(long sensorptr,byte[] mindata);
 public static native int libre3EventLog(long sensorptr,byte[] logs);
@@ -862,9 +864,9 @@ public static native void setbloodvar(byte val);
 public static native byte getbloodvar( );
 public static native boolean hitexclude(long ptr);
 
-public static native int calibrateNR(long sensorptr);
-public static native boolean getCalibrator(long sensorptr,int pos,CaliPara calip);
-public static native boolean removeCalibrator(long sensorptr,int pos);
+public static native int calibrateNR(long sensorptr,int which);
+public static native boolean getCalibrator(long sensorptr,int which,int pos,CaliPara calip);
+public static native boolean removeCalibrator(long sensorptr,int which,int pos);
 //public static native float calibrateNow(long dataptr,float mgdL);
 
 public static native void setDoCalibrate(boolean val);
@@ -951,6 +953,17 @@ public static native void setTurnPort(int pos,int port);
 
 public static native int TurnServerNR();
 
+public static native long airProcessData(long dataptr,byte[] value,long[] msecptr);
+public static native void airSetNumberNew(long dataptr,int nr);
+
+public static native int airGetLast(long dataptr);
+public static native boolean airSaveSensorInfo(long dataptr,byte[] value);
+public static native boolean airSaveSensorInfo2(long dataptr,byte[] value);
+public static native void airSaveStartSensor(long dataptr, float eapp,float vref,int elapsedSecs);
+
+public static native byte[] airGetPin(long dataptr);
+
+public static native void switchSync( );
 //s/^[	 ]*extern.*JNIEXPORT[         ]*\([a-zA-Z]*\)[ ]*JNICALL[      ]*fromjava(\([^)]*\)) *(JNIEnv[^,]*,[^,)]*[,)]\([^){]*\)[^a-zA-Z0-9]*$/public static native \1 \2(\3);/g
 
 

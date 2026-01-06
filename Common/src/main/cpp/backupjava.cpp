@@ -382,6 +382,15 @@ extern "C" JNIEXPORT void JNICALL   fromjava(networkpresent)(JNIEnv *env, jclass
 #endif
     LOGAR("end networkpresend");
     }
+
+extern "C" JNIEXPORT void JNICALL   fromjava(switchSync)(JNIEnv *env, jclass cl) {
+     networkpresent=true;
+     LOGAR("switchSync");
+     backup->wakebackup(wakeUpSwitch|wakeall);
+     backup->getupdatedata()->wakesender(wakeUpSwitch|wakeall);
+    }
+
+//void wakebackup(myuintptr_t kind=wakeall,bool sendwake=false){
 void resetnetwork() {
     LOGSTRING("resetnetwork\n");
     if(backup) {

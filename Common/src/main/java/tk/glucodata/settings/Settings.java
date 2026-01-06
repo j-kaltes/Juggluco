@@ -43,7 +43,7 @@ import static tk.glucodata.Log.doLog;
 import static tk.glucodata.Natives.getInvertColors;
 import static tk.glucodata.Natives.getRTL;
 import static tk.glucodata.Natives.getScheduleProfile;
-import static tk.glucodata.Natives.getshowcalibrated;
+import static tk.glucodata.Natives.getshowcalibratedstream;
 import static tk.glucodata.Natives.getshowhistories;
 import static tk.glucodata.Natives.getshownumbers;
 import static tk.glucodata.Natives.getshowscans;
@@ -1048,12 +1048,12 @@ static private void displaysettings(MainActivity context,Settings settings) {
    //      Button display=getbutton(context,context.getString(R.string.display));
    /*
      var Scans=getcheckbox(context,R.string.scansname,getshowscans()) ;
-     var Calibrated=getcheckbox(context,R.string.calibrated,getshowcalibrated()) ;
+     var Calibrated=getcheckbox(context,R.string.calibrated,getshowcalibratedstream()) ;
      var History=getcheckbox(context,R.string.historyname,getshowhistories()) ;
      var Stream=getcheckbox(context,R.string.streamname,getshowstream()) ;
      var Amounts=getcheckbox(context,R.string.amountshort,getshownumbers()) ;
 
-Calibrated.setOnCheckedChangeListener( (buttonView,  isChecked) -> { Natives.setshowcalibrated(isChecked); });
+Calibrated.setOnCheckedChangeListener( (buttonView,  isChecked) -> { Natives.setshowcalibratedstream(isChecked); });
 Scans.setOnCheckedChangeListener( (buttonView,  isChecked) -> { Natives.setshowscans(isChecked); });
     History.setOnCheckedChangeListener( (buttonView,  isChecked) -> { Natives.setshowhistories(isChecked); });
     Stream.setOnCheckedChangeListener( (buttonView,  isChecked) -> { Natives.setshowstream(isChecked); });

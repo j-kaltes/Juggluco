@@ -243,7 +243,7 @@ extern "C" JNIEXPORT  jbyteArray  JNICALL   fromjava(getDexbackfillcmd)(JNIEnv *
           }
         #ifndef NOLOG
         char buf1[27],buf2[27];
-        LOGGER("getDexbackfillcmd %d-%d %.23s-%23s\n",end,start,ctime_r(&starts,buf1), ctime_r(&ends,buf2));
+        LOGGER("getDexbackfillcmd %d-%d %.23s-%.23s\n",end,start,ctime_r(&starts,buf1), ctime_r(&ends,buf2));
         #endif
         }
       else  {

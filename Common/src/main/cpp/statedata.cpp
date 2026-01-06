@@ -28,7 +28,6 @@
 #include "inout.hpp"
 #include "timestr.h"
 
-#define VISIBLE __attribute__((__visibility__("default")))
 //template<>  data_t *data_t::newex(int len);
 //template<> gegs<T> * gegs<T>::newex(int len) {
 extern time_t totime_t(std::string_view inp) ;

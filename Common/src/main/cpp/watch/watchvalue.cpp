@@ -74,7 +74,7 @@ std::pair<const SensorGlucoseData *,int> getlaststream(const uint32_t nu) {
     for(int i=0;i<total ;i++) {
         const int index=usedsensors[i];
         const SensorGlucoseData *hist=sensors->getSensorData(index);
-        const int hiermin=hist->streaminterval();
+        const int hiermin=hist->getminstreaminterval();
         if(hiermin<minutes)
             minutes=hiermin;
         const ScanData *poll=hist->lastValidStream();
@@ -108,9 +108,8 @@ extern "C" JNIEXPORT jlong  JNICALL   fromjava(lastglucosetime)(JNIEnv *env, jcl
 
 int getglucosestr(double nonconvert,char *glucosestr,int maxglucosestr,int glucosehighest) ;
 
-
+#include "calibrate/Calibrator.hpp"
 extern float threshold(float drate);
-extern double     calibrateNow(const SensorGlucoseData *sens,const ScanData &value);
 extern "C" JNIEXPORT jobject  JNICALL   fromjava(lastglucose)(JNIEnv *env, jclass cl) {
 //    const uint32_t nu=time(nullptr);
     const auto [hist,index]=getlaststream(maxwatchage);
@@ -128,7 +127,8 @@ extern "C" JNIEXPORT jobject  JNICALL   fromjava(lastglucose)(JNIEnv *env, jclas
         return nullptr;
         }
     double nonconvert;
-    if(double cali=calibrateNow(hist,*poll);!isnan(cali)) {
+    auto calibrate= make_calibrator<ScanData>(hist);
+    if(double cali=calibrate.calibrateNow(*poll);!isnan(cali)) {
         nonconvert=cali;
         }
      else {

@@ -107,8 +107,7 @@ jugglucotext betext {
 		"Размаўляць",
 		"Парыць      "
 		},
-	.menustr2= 
-    {"Calibrated",
+	.menustr2= {"Апошняе скан.",
 	    "Сканы",
 	    "Паток",
 	    "Гісторыя",

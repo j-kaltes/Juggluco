@@ -96,7 +96,7 @@ static public void reconnectall() {
             shouldnotscan=(cb.reconnect(now)&&shouldnotscan);
             }
        if(!shouldnotscan)  {
-            if(wasblue.mBluetoothManager!=null) {
+            if(mBluetoothManager!=null) {
                  wasblue.stopScan(false);
                  wasblue.scanStarter(0L);
                  }
@@ -149,7 +149,7 @@ private SuperGattCallback  getCallback(BluetoothDevice device) {
             }
         String address = device.getAddress();
         for (var cb : gattcallbacks) {
-            if (cb.mActiveDeviceAddress != null && address.equals(cb.mActiveDeviceAddress))
+            if (address.equals(cb.mActiveDeviceAddress))
                 return cb;
             if(cb.matchDeviceName(deviceName,address)) {
                 cb.mDeviceName=deviceName;
@@ -758,6 +758,9 @@ SuperGattCallback getGattCallback(String name, long dataptr) {
             if(vers==0x20) {
                 return new AccuGattCallback(name, dataptr);
                 }
+            if(vers==0x30) {
+                return new AirGattCallback(name, dataptr);
+                }
             }
         if(tk.glucodata.BuildConfig.SiBionics==1) {
             if(vers==0x10) {
@@ -947,8 +950,51 @@ private void addPairingRequestReceiver() {
     try {
          pairingRequestReceiver = new BroadcastReceiver() {
             @Override
-            public void onReceive(Context context, Intent intent) {
-                {if(doLog) {Log.i(LOG_ID,"onReceive ACTION_PAIRING_REQUEST");};};
+    public void onReceive(Context context, Intent intent) {
+        try {
+        if(doLog)
+                Log.i(LOG_ID,"onReceive ACTION_PAIRING_REQUEST");;
+        final BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+        if(doLog)
+            Log.i(LOG_ID,"PAIRING_REQUEST got device");
+        final var tmp=blueone;
+        if(tmp==null) {
+            {if(doLog) {Log.i(LOG_ID,"Pairing: no SensorBluetooth");};};
+            return;
+            }
+        if(device==null) {
+            Log.e(LOG_ID,"Pairing: BluetoothDevice.EXTRA_DEVICE ==null");
+            return ;
+            }
+        String address=device.getAddress();
+        if(address==null) {
+            Log.e(LOG_ID,"Pairing: device.getAddress()==null");
+            return;
+            }
+        if(doLog)
+            Log.i(LOG_ID,"PAIRING_REQUEST "+address);
+        final String action = intent.getAction();
+        if(action==null) {
+            Log.e(LOG_ID,"Pairing: action==null");
+            return;
+            }
+        Log.i(LOG_ID,"PAIRING_REQUEST "+action);
+        for(var cb: tmp.gattcallbacks)     {
+            if(cb.mActiveDeviceAddress!=null) {
+                if(address.equals(cb.mActiveDeviceAddress)) {
+                    if(cb.pairingRequest())
+                        abortBroadcast();
+                    return;
+                    }
+                }
+            }
+        if(doLog) {Log.i(LOG_ID,"Pairing: no sensor matches address "+address);};
+
+        } catch(Throwable th) {
+            Log.stack(LOG_ID,"PAIRING_REQUEST",th);
+            }
+
+
             }
         };
          Applic.app.registerReceiver(pairingRequestReceiver, new IntentFilter(BluetoothDevice.ACTION_PAIRING_REQUEST));
@@ -976,8 +1022,8 @@ private void removePairingRequestReceiver() {
 private void addReceivers() {
    addBluetoothStateReceiver();
    addBondStateReceiver() ;
-   if(Build.VERSION.SDK_INT <26)
-        addPairingRequestReceiver();
+//   if(Build.VERSION.SDK_INT <26)
+   addPairingRequestReceiver();
     }
 private void removeReceivers() {
    removeBluetoothStateReceiver();

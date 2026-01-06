@@ -100,7 +100,8 @@ jugglucotext svtext {
 		"Flytande     "
 		},
 
-	.menustr2= {"Calibrated",
+	.menustr2= {
+    "Senaste skanning",
     "Skanningar",
     "Strömmade",
     "Historik",

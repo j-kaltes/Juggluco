@@ -127,7 +127,7 @@ jugglucotext pltext {
 		"Na głos",
 		"Pływ. wart."
 		},
-	.menustr2= {"Calibrated",
+	.menustr2= {"Ostatni odczyt",
 	"Skany",
 	"Strumień",
 	"Historia",

@@ -330,11 +330,33 @@ jfieldID     subGetFieldID(JNIEnv*env,jclass  jclass1,const char * name,const ch
    return reinterpret_cast<jfieldID>(subGetStaticMethodID(env , jclass1, name, sig) );
    }
 extern "C" jclass      subGetObjectClass(JNIEnv*, jobject ob) {
-    subLOGAR("subGetObjectClass");
     algobj *co=(algobj *)ob;
-    return  (jclass)co->cl;
+    auto ret= (jclass)co->cl;
+    subLOGGER("subGetObjectClass(%p)=%p\n",ob,ret);
+    return ret;
     }
+extern "C" jobjectArray  subNewObjectArray(JNIEnv*env,jsize  jsize1,jclass  jclass2,jobject  jobject3) {
 
+    auto ret=(jobjectArray) gegs<jobject>::newex(jsize1);
+//   auto ret=(jobjectArray)new  jobject[jsize1];
+   subLOGGER("NewObjectArray(%d,%p,%p)=%p\n",jsize1,jclass2,jobject3,ret);
+   return ret;
+   }
+
+
+extern "C"    jobject      subGetObjectArrayElement(JNIEnv*env,jobjectArray  jobjectArray1,jsize  el) {
+   jobject ret= reinterpret_cast<gegs<jobject>*>(jobjectArray1)->data()[el];
+//   jobject ret=((jobject*)jobjectArray1)[el];
+   subLOGGER("GetObjectArrayElement(%p,%d)=%p\n",jobjectArray1,el,ret);
+   return ret;
+   }
+
+
+ extern "C"       void         subSetObjectArrayElement(JNIEnv*env,jobjectArray  jobjectArray1,jsize  el,jobject  jobject3) {
+   subLOGGER("SetObjectArrayElement(%p,%d,%p)\n",jobjectArray1,el,jobject3);
+   reinterpret_cast<gegs<jobject>*>(jobjectArray1)->data()[el]=jobject3;
+  // ((jobject*)jobjectArray1)[el]=jobject3;
+   }
           
 jobject     newpatchevent(va_list args) {
     jint id=     va_arg(args, jint);

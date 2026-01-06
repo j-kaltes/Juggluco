@@ -63,6 +63,7 @@
 #include "datestring.hpp"
 
 #include "common.hpp"
+#include "calibrate/Calibrator.hpp"
 #ifndef LOGGER
 #define LOGGER(...) fprintf(stderr,__VA_ARGS__)
 #endif
@@ -963,9 +964,8 @@ static bool givecurrent(std::string_view origin,recdata *outdata) {
    outdata->allbuf=new(std::nothrow) char[300+1024];
    if(!outdata->allbuf)
       return outofmemory(outdata);
-
-extern double     calibrateNow(const SensorGlucoseData *sens,const ScanData &value) ;
-   if(double   calibrated=calibrateNow(sens,*value);!isnan(calibrated)) {
+   auto cali=make_calibrator<ScanData>(sens); 
+   if(double   calibrated=cali.calibrateNow(*value);!isnan(calibrated)) {
          ScanData *tmp= (ScanData*)alloca(sizeof(ScanData));
          *tmp=*value;
          tmp->g=(int32_t) round(calibrated);
@@ -1147,9 +1147,9 @@ char *getdeltastr(char *start) {
    int timedif=4*62;
    auto nu=iter->gettime();
 
-extern double     calibrateNow(const SensorGlucoseData *sens,const ScanData &value) ;
   int nuval;
-   if(double   calibrated=calibrateNow(sens,*iter);!isnan(calibrated)) {
+  auto cali=make_calibrator<ScanData>(sens);
+   if(double   calibrated=cali.calibrateNow(*iter);!isnan(calibrated)) {
          nuval=(int)round(calibrated);
             }
    else 
@@ -1161,7 +1161,7 @@ extern double     calibrateNow(const SensorGlucoseData *sens,const ScanData &val
       auto wastime=iter->gettime();
       if(wastime<old) {
          int prevmgdl;
-         if(double   calibrated=calibrateNow(sens,*iter);!isnan(calibrated)) {
+         if(double   calibrated=cali.calibrateNow(*iter);!isnan(calibrated)) {
                 prevmgdl=(int)round(calibrated);
                }
          else
@@ -1196,9 +1196,9 @@ static char * givebgnow(char *start) {
          return start;
       }
    longlongtype mmsectime=iter->gettime()*1000LL;
-extern double     calibrateNow(const SensorGlucoseData *sens,const ScanData &value) ;
   int mgdl;
-   if(double   calibrated=calibrateNow(sens,*iter);!isnan(calibrated)) {
+  auto cali=make_calibrator<ScanData>(sens);
+   if(double   calibrated=cali.calibrateNow(*iter);!isnan(calibrated)) {
         mgdl=(int)round(calibrated); 
          }
      else
@@ -1688,6 +1688,10 @@ Getopts::Getopts(const char *posptr,int size,int defaultduration): unit(settings
          if(setitervar(iter, "amounts"sv, amountsmode))
             continue;
          if(setitervar(iter, "exclusive"sv, exclusivemode))
+            continue;
+         if(setitervar(iter, "calibratedstream"sv, calibratedmode))
+            continue;
+         if(setitervar(iter, "calibratedhistory"sv, calibratedhistorymode))
             continue;
          if(setitervar(iter, "calibrated"sv, calibratedmode))
             continue;

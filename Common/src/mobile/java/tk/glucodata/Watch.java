@@ -137,7 +137,7 @@ static public void show(MainActivity context) {
     if(useWearos) {
         var sender=tk.glucodata.MessageSender.getMessageSender();
             if(sender!=null) sender.finddevices();
-         Natives.networkpresent();
+         Natives.switchSync();
         }
 
     var wearbox=getcheckbox( context, "WearOS", useWearos);
@@ -154,7 +154,8 @@ static public void show(MainActivity context) {
                     var sender=tk.glucodata.MessageSender.getMessageSender();
                     if(sender!=null) sender.finddevices();
                     }
-                Natives.networkpresent();
+               // Natives.networkpresent();
+                Natives.switchSync();
                 }
             wearossettings.setVisibility(isChecked?VISIBLE:INVISIBLE);
              });

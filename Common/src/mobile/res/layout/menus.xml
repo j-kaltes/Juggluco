@@ -159,14 +159,14 @@
 
         />
 
-    <CheckBox
-        android:id="@+id/calibrated"
+    <Button
+        android:id="@+id/lastscan"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_row="0"
         android:layout_column="4"
         android:layout_columnWeight="1"
-        android:text="@string/calibrated" />
+        android:text="@string/last_scan" />
     <CheckBox
         android:id="@+id/scans"
         android:layout_width="wrap_content"
@@ -217,13 +217,23 @@
         android:text="@string/darkmode" />
 
 
-    <Space
-        android:layout_width="0dp"
+    <CheckBox
+        android:id="@+id/calibratedstream"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_row="2"
         android:layout_column="5"
-
         android:layout_columnWeight="1"
+        android:text="" />
 
-        />
+    <CheckBox
+        android:id="@+id/calibratedhistory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_row="3"
+        android:layout_column="5"
+        android:layout_columnWeight="1"
+        android:text="" />
 
     <Button
         android:id="@+id/now"

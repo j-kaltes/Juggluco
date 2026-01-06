@@ -39,6 +39,7 @@
 #include <sys/uio.h>
 #include <thread>
 #include <future>
+#include "calibrate/Calibrator.hpp"
 extern "C" {
 typedef void (*sighandler_t)(int);
 
@@ -401,18 +402,18 @@ extern "C" JNIEXPORT jlong JNICALL   fromjava(getsensorptr)(JNIEnv *env, jclass 
         }
     return reinterpret_cast<jlong>(sdata->hist);
     }
-double     calibrateONEtest(const SensorGlucoseData *sens,const ScanData &value);
 extern "C" JNIEXPORT jlong JNICALL   fromjava(streamfromSensorptr)(JNIEnv *env, jclass cl,jlong sensorptr,int pos) {
     const auto *sens=reinterpret_cast<const SensorGlucoseData*>(sensorptr); 
     const ScanData *start= sens->beginpolls();
     const int len=sens->pollcount();
+    auto cali=make_calibrator<ScanData>(sens);
     for(int i=pos;i<len;i++) {
         const ScanData *item=start+i;
         if(item->valid()) {
             for(++i;i<len&&!start[i].valid();i++) 
                 ;
             long mgdL;
-            if(double calibrated=calibrateONEtest(sens,*item);!isnan(calibrated)) {
+            if(double calibrated=cali.calibrateONEtest(*item);!isnan(calibrated)) {
                 mgdL=(long)round(calibrated);
                 }
              else
@@ -559,39 +560,44 @@ extern "C" JNIEXPORT jlong JNICALL   fromjava(getdataptr)(JNIEnv *env, jclass cl
       }
   else 
 #endif
-  {
+    {
 #ifdef DEXCOM
-    if(sens->isDexcom()) {
-      LOGGER("getdataptr(%s) Dexcom\n",sensor);
-      data = new dexcomstream(sensorindex,sens);
-     }
-else
-#endif
-{
-      if(sens->isLibre3()) {
-         LOGGER("getdataptr(%s) Libre3\n",sensor);
-         data= new libre3stream(sensorindex,sens);
-         }
-      else {
-#ifdef DEXCOM
-        if(sens->isAccuChek()) {
-                 LOGGER("getdataptr(%s) AccuChek\n",sensor);
-                 data=new accustream(sensorindex,sens);
-                }
-        else 
+        if (sens->isDexcom()) {
+            LOGGER("getdataptr(%s) Dexcom\n", sensor);
+            data = new dexcomstream(sensorindex, sens);
+        } else
 #endif
         {
-         LOGGER("getdataptr(%s) Libre2\n",sensor);
-         data=new libre2stream(sensorindex,sens);
-         if(streamHistory()) {
-            if(!sens->getinfo()->startedwithStreamhistory) {
-               sens->getinfo()->startedwithStreamhistory=std::max(sens->getinfo()->endhistory,1);
-               }
+            if (sens->isLibre3()) {
+                LOGGER("getdataptr(%s) Libre3\n", sensor);
+                data = new libre3stream(sensorindex, sens);
+            } else {
+#ifdef DEXCOM
+                if (sens->isAccuChek()) {
+                    LOGGER("getdataptr(%s) AccuChek\n", sensor);
+                    data = new accustream(sensorindex, sens);
+                } else {
+                    if (sens->isAir()) {
+                        LOGGER("getdataptr(%s) Air\n", sensor);
+                        data = new airstream(sensorindex, sens);
+                    } else
+#else
+                        {
+#endif
+                    {
+                        LOGGER("getdataptr(%s) Libre2\n", sensor);
+                        data = new libre2stream(sensorindex, sens);
+                        if (streamHistory()) {
+                            if (!sens->getinfo()->startedwithStreamhistory) {
+                                sens->getinfo()->startedwithStreamhistory = std::max(
+                                        sens->getinfo()->endhistory, 1);
+                            }
+                        }
+                    }
+                }
             }
-         }
-         }
         }
-      }
+    }
     if(data->good()) {
         LOGGER("getdataptr()=%p sens=%p\n",data,sens);
         return reinterpret_cast<jlong>(data);
@@ -899,13 +905,12 @@ extern "C" JNIEXPORT jfloat JNICALL   fromjava(thresholdchange)(JNIEnv *envin, j
     return threshold(drate);
     }
 
-extern double     calibrateNow(const SensorGlucoseData *sens,const uint32_t time, const double value) ;
 static jlong glucoselong(uint32_t nu,uint32_t glval,float drate,const SensorGlucoseData *hist) {
         if(!glval) 
             return 0LL;
         const jlong rate=roundl(((long double)drate)*1000LL);
-
-        const double cali=calibrateNow(hist,nu,glval);
+        auto calibrate= make_calibrator<ScanData>(hist);
+        const double cali=calibrate.calibrateNow(nu,glval);
         uint32_t mgL;
         if(!isnan(cali)) {
             mgL=(uint32_t)round(cali*10.0);

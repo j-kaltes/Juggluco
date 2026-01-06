@@ -13,9 +13,9 @@
 #include "misc.hpp"
 #include "JCurve.hpp"
 #include "gluconfig.hpp"
-extern double     calibrateNow(const SensorGlucoseData *sens,const ScanData &value);
-
+#include "calibrate/Calibrator.hpp"
 extern Sensoren *sensors;
+
 extern int *numheights;
 extern float tapx,tapy;
 extern void speak(const char *message) ;
@@ -169,7 +169,8 @@ int JCurve::typeatheight(const float h) {
   int getshow##x() {\
         return settings->data()->show##x;\
         }
-makeshows(calibrated)
+makeshows(calibratedstream)
+makeshows(calibratedhistories)
 makeshows(scans)
 makeshows(stream);
 makeshows(meals)
@@ -202,7 +203,7 @@ inline int64_t menuel(int menu,int item) {
     return menu+item*0x10LL;
     }
 #ifdef WEAROS
-int64_t JCurve::doehier(int menu,int item) {
+int64_t JCurve::doehier(int menu,int item,bool right) {
     switch(menu) {
         case 0: 
             switch(item) {
@@ -235,7 +236,7 @@ int64_t JCurve::doehier(int menu,int item) {
     return -1LL;
     }
 #else
-int64_t JCurve::doehier(int menu,int item) {
+int64_t JCurve::doehier(int menu,int item,bool right) {
     switch(menu) {
         case 0: 
             switch(item) {
@@ -269,32 +270,45 @@ int64_t JCurve::doehier(int menu,int item) {
                     nrmenu=0;
                     break;
                 };break;
-        case 2:
-            switch(item)     {
-            /*
-                case 0: {
-                    nrmenu=0;
-                    int lastsensor=sensors->lastscanned();
-                    if(lastsensor>=0) {
-                        const SensorGlucoseData *hist=sensors->getSensorData(lastsensor);
-                        if(hist) {
-                            const ScanData *scan= hist->lastscan();
-                            const uint32_t nu= time(nullptr);
-                            if(scan&&scan->valid()&&((nu-scan->t)<(60*60*5)))
-                                scantoshow={lastsensor,scan,nu};
-                            }
-                        }
-                    }; return -1ll; */
-                case 0:showcalibrated=!showcalibrated; setshowcalibrated(showcalibrated);return -1ll;
-                case 1:showscans=!showscans; setshowscans(showscans);return -1ll;
-                case 2:showstream=!showstream; setshowstream(showstream);return -1ll;
-                case 3:showhistories=!showhistories; setshowhistories(showhistories);return -1ll;
-                case 4: shownumbers=!shownumbers; setshownumbers(shownumbers);return -1ll;
-                case 5: showmeals=!showmeals; setshowmeals(showmeals);return -1ll;
+        case 2: {
+                    switch(item)     {
+                        case 0: {
+                            nrmenu=0;
+                            int lastsensor=sensors->lastscanned();
+                            if(lastsensor>=0) {
+                                const SensorGlucoseData *hist=sensors->getSensorData(lastsensor);
+                                if(hist) {
+                                    const ScanData *scan= hist->lastscan();
+                                    const uint32_t nu= time(nullptr);
+                                    if(scan&&scan->valid()&&((nu-scan->t)<(60*60*5)))
+                                        scantoshow={lastsensor,scan,nu};
+                                    }
+                                }
+                            }; return -1ll; 
+                        case 1:showscans=!showscans; setshowscans(showscans);return -1ll;
+                        case 2:
+                                if(right) {
+                                        showstream=!showstream; setshowstream(showstream);
+                                        return -1ll;
+                                        }
+                                 showcalibratedstream=!showcalibratedstream; setshowcalibratedstream(showcalibratedstream);
+                                 return -1ll;
+                        case 3: 
+                                if(right) {
+                                        showhistories=!showhistories; setshowhistories(showhistories);
+                                        return -1ll;
+                                        }
+                                showcalibratedhistories=!showcalibratedhistories; 
+                                setshowcalibratedhistories(showcalibratedhistories);
+                                return -1ll;
+                        case 4: shownumbers=!shownumbers; setshownumbers(shownumbers);return -1ll;
+                        case 5: showmeals=!showmeals; setshowmeals(showmeals);return -1ll;
 
-                case 6: invertcolors=!invertcolors; setinvertcolors(invertcolors) ; return menu+invertcolors*0x10;
-            break;//return -1ll;
-                };break;
+                        case 6: invertcolors=!invertcolors; setinvertcolors(invertcolors) ; return menu+invertcolors*0x10;
+                              break;//return -1ll;
+                        };
+                    break;
+                   }
         case 3: {
         nrmenu=0;
         switch(item) {
@@ -380,13 +394,15 @@ static int64_t menutap(float x,float y) {
         nrmenu=0;
         return -1LL;
         }
+    float mid=(menupos.left+menupos.right)/2;
+
     float dist=(menupos.bottom-menupos.top)/nrmenu;
     int item=(y-menupos.top)/dist;
     if(item>=0&&item<nrmenu) {
 
         LOGGER("menuitem %d\n",item);
     //    return doehier(getmenu(x),item);
-        return appcurve.doehier(selmenu,item);
+        return appcurve.doehier(selmenu,item,x>=mid);
         }
     nrmenu=0;
     return -1LL;    
@@ -696,6 +712,39 @@ bool JCurve::nearbyhistory( const float tapx,const float tapy,  const TX &transx
     return false;
     }
 
+#include "calibrate/Calibrate.hpp"
+template <class TX,class TY> 
+bool JCurve::nearbycalibratedhistory( const float tapx,const float tapy,  const TX &transx,  const TY &transy) {
+    for(int i=histlen-1;i>=0;i--) {
+      const int sensorindex= hists[i];
+        SensorGlucoseData *hist=sensors->getSensorData(sensorindex);
+        CalibrateBackward  cali(hist,1);
+        const auto [firstpos,lastpos]=histpositions[i];
+            for(auto pos=lastpos;pos>=firstpos;--pos) {
+                const Glucose *histglu=hist->getglucose(pos);
+                if(histglu->valid()) {
+                       const uint32_t tim=histglu->gettime();
+                       auto mgdL= histglu->getmgdL();
+                       double calibrated=cali.backvalue(tim,mgdL);
+                       if(isnan(calibrated)) {
+                                if(!allvalues) {
+                                       return false;
+                                       }
+                                calibrated=mgdL;
+                                }
+                        const uint32_t glu=std::round(calibrated*10.0);
+                        auto posx=transx(tim),posy=transy( glu);
+                        if(nearby(posx-tapx,posy-tapy,density)) {
+                                showhistory(hist,tapx,tapy);
+                                return true;
+                                }
+                    }
+
+                }
+        }
+    return false;
+    }
+
 #ifndef WEAROS
 static int largepausedaystr(const time_t tim,char *buf) {
         LOGAR("largepausedaystr");
@@ -780,6 +829,9 @@ int64_t JCurve::longpress(float x,float y) {
     if(showhistories&& nearbyhistory( x,y,  transx,  transy) ) {
         return 0LL;
         }
+    if(showcalibratedhistories&& nearbycalibratedhistory( x,y,  transx,  transy) ) {
+        return 0LL;
+        }
     if(showscans) {
         for(int i=histlen-1;i>=0;i--) {
             if(const ScanData *scan=nearbyscan(x,y,scanranges[i].first,scanranges[i].second,transx,transy,density)) {
@@ -801,16 +853,18 @@ int64_t JCurve::longpress(float x,float y) {
                 }
              }
          }
-    if(showcalibrated) {
-extern std::pair<const ScanData*,const ScanData*>      makecalibrated(const SensorGlucoseData *sens,const ScanData *input,ScanData *calibrated,int nr,bool allvalues);
-extern std::pair<const ScanData*,const ScanData*>      makecalibratedback(const SensorGlucoseData *sens,const ScanData *input,ScanData *calibrated,int nr,bool allvalues);
-        auto califunc=settings->data()->CalibratePast?makecalibratedback:makecalibrated;
+    if(showcalibratedstream) {
+        typedef decltype(make_calibrator<ScanData>( sensors->getSensorData(0))) CaliType;
+        auto califunc=settings->data()->CalibratePast?(&CaliType::makecalibratedback):(&CaliType::makecalibrated);
         for(int i=histlen-1;i>=0;i--) {
                 const int index= hists[i];
                 auto *sens=sensors->getSensorData(index);
                 const int nr=pollranges[i].second-pollranges[i].first;
                 ScanData calibrated[nr];
-                const auto span=califunc(sens,pollranges[i].first,calibrated,nr,allvalues);
+
+                auto cali=make_calibrator<ScanData>(sens);
+                const auto span=(cali.*califunc)(pollranges[i].first,calibrated,nr,allvalues);
+
                 if(const ScanData *poll=nearbyscan(x,y,span.first,span.second,transx,transy,density)) {
                     LOGGER("longpress poll %.1f\n",poll->g/convfactordL);
                     showhistory(sens,x,y);
@@ -1397,11 +1451,11 @@ void     processglucosevalue(int sendindex,int newstart) {
                hist->backstream(newstart);
                if(newstart<=hist->previousstream) {
                    hist->previousstream=newstart;
-                   sendEverSenseold(hist,5/hist->streaminterval());
+                   sendEverSenseold(hist,5/hist->getminstreaminterval());
                    return;
                    }
                if(hist->previousstream==-1) {
-                   sendEverSenseold(hist,5/hist->streaminterval());
+                   sendEverSenseold(hist,5/hist->getminstreaminterval());
                    }
                 hist->previousstream=newstart;
                 }
@@ -1421,7 +1475,9 @@ void     processglucosevalue(int sendindex,int newstart) {
                     int32_t mgdL;
                     uint32_t mgL;
                     float glu;
-                    if(double cali=calibrateNow(hist,*poll);isnan(cali)) {
+                   // Calibrator<ScanData> calibrator(hist);
+                    auto calibrator=make_calibrator<ScanData>(hist);
+                    if(double cali=calibrator.calibrateNow(*poll);isnan(cali)) {
                         mgdL=poll->getmgdL();
                         mgL=mgdL*10;
                         glu= gconvert(mgL);
@@ -1551,7 +1607,9 @@ void setnowmenu(time_t nu) {
                     }
                 if(lastin->t>(nu-maxbluetoothage)) {
                     double nonconvert;
-                    if(double cali=calibrateNow(sens,*lastin);!isnan(cali)) {
+                    //Calibrator<ScanData> calibrate(sens);
+                    auto calibrate=make_calibrator<ScanData>(sens);
+                    if(double cali=calibrate.calibrateNow(*lastin);!isnan(cali)) {
                         nonconvert=cali;
                         }
                     else {
@@ -1714,7 +1772,7 @@ void initopengl(float small,float menu,float density,float headin) {
             }
     appcurve.invertcolorsset(settings->data()->invertcolors);
 //    s/makeshows(\(.*\))/appcurve.show\1=settings->data()->show\1;/g
-    appcurve.showcalibrated=settings->data()->showcalibrated;
+    appcurve.showcalibratedstream=settings->data()->showcalibratedstream;
     appcurve.showscans=settings->data()->showscans;
     appcurve.showstream=settings->data()->showstream;;
     appcurve.showmeals=settings->data()->showmeals;
@@ -1729,6 +1787,8 @@ void initopengl(float small,float menu,float density,float headin) {
 
 const int *menuopt0[]={nullptr,nullptr,nullptr, nullptr,nullptr};
 const int **optionsmenu[]={menuopt0,nullptr};
+
+const int **preoptionsmenu[]={nullptr,nullptr};
 constexpr const int menulen[]={arsizer(jugglucotext::menustr0),arsizer(jugglucotext::menustr2)};
 int getmenulen(const int menu) {
     int len=menulen[menu];
@@ -1747,8 +1807,10 @@ const int *menuopt0[]={&showui,&menus,nullptr,nullptr,nullptr,nullptr,nullptr,nu
 
 
 const int *menuopt0b[]={nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr};
-const int *menuopt1[]={&appcurve.showcalibrated,&appcurve.showscans,&appcurve.showstream,&appcurve.showhistories,&appcurve.shownumbers,&appcurve.showmeals,&appcurve.invertcolors};
+const int *menuopt1[]={nullptr,&appcurve.showscans,&appcurve.showstream,&appcurve.showhistories,&appcurve.shownumbers,&appcurve.showmeals,&appcurve.invertcolors};
 const int **optionsmenu[]={menuopt0,menuopt0b,menuopt1,nullptr};
+const int *premenuopt1[]={nullptr,nullptr,&appcurve.showcalibratedstream,&appcurve.showcalibratedhistories,nullptr,nullptr,nullptr};
+const int **preoptionsmenu[]={nullptr,nullptr,premenuopt1,nullptr};
 #define arsizer(x) sizeof(x)/sizeof(x[0])
 constexpr const int menulen[]={arsizer(jugglucotext::menustr0),arsizer(jugglucotext::menustr1),arsizer(jugglucotext::menustr2),arsizer(jugglucotext::menustr3)};
 int getmenulen(const int menu) {
@@ -1872,6 +1934,7 @@ static bool speakmenutap(float x,float y) {
     }
 #endif
 
+extern bool hascalibrations;
  void    JCurve::showtext(NVGcontext* avg ,time_t nu,int menu) {
 LOGAR("showtext");
 #ifdef WEAROS
@@ -1893,20 +1956,28 @@ LOGAR("showtext");
     16
     #endif
     ;
+
+    bounds_t bounds;
+
+
      float xrand=randsize*density;
      float yrand=randsize*density;
-//    float menutextheight=density*48;
     float menuplace= dwidth/ maxmenu;
     float x=xrand+menu*menuplace,starty=yrand+statusbarheight,y=starty;
 
     nvgTextAlign(avg,NVG_ALIGN_LEFT|NVG_ALIGN_TOP);
 
-    bounds_t bounds;
 
     nvgFontFaceId(avg,menufont);
     nvgFontSize(avg, menusize);
+    constexpr    const char preset[]="✓  ";
+    constexpr        const char preunset[]="-     ";
+    constexpr int presetlen=sizeof(preset)-1;
+    static const float  prewidth=getsetlen(avg, 50,  50, preset,preset+presetlen, bounds);
+    const int **preoptions= hascalibrations?preoptionsmenu[menu]:nullptr;
+
+    const int prepend=preoptions?prewidth:0;
      nvgTextBounds(avg, x,  y, menuitem[0].data(),menuitem[0].data()+menuitem[0].size(), bounds.array);
-//    nvgText(avg, x,y, menuitem[0].data(), menuitem[0].data()+menuitem[0].size());
      float maxx=bounds.xmax;
      float maxwidth=bounds.xmax-bounds.xmin;
      for(int i=1;i<nrmenu;i++) {
@@ -1918,12 +1989,12 @@ LOGAR("showtext");
          if(maxwidthone>maxwidth)
              maxwidth=maxwidthone;
         }
+    maxwidth+=prepend;
+    maxx+=prepend;
     float height=y+bounds.ymax-bounds.ymin;
     nvgBeginPath(avg);
      nvgFillColor(avg, *getmenucolor());
-//     nvgFillColor(avg, white);
      float mwidth=maxx-x+2*xrand;
-//     float minmenu=128*density;
      float minmenu=
 #ifdef WEAROS
      80
@@ -1954,34 +2025,50 @@ if(menu==0) {
     }
 #endif
     y=starty;
-//     nvgFillColor(avg, *getwhite());
      nvgFillColor(avg, *getmenuforegroundcolor());
-//     nvgFillColor(avg, black);
+    if(preoptions) {
+         for(int i=0;i<nrmenu;i++) {
+             if(const int *optr=preoptions[i]) {
+                const char *op=*optr?preset:preunset;
+                nvgText(avg, x ,y,op ,op+presetlen );
+                }
+            y+=menutextheight;
+            }
+        }
+     const float textx=x+prepend;
+     y=starty;
      for(int i=0;i<nrmenu;i++) {
-        nvgText(avg, x,y, menuitem[i].data(), menuitem[i].data()+menuitem[i].size());
+        nvgText(avg, textx,y, menuitem[i].data(), menuitem[i].data()+menuitem[i].size());
         y+=menutextheight;
         }
 
     if(const int **options=optionsmenu[menu]) {
         y=starty;
-        const char set[]="[x]";
-        const char unset[]="[ ]";
-        constexpr int len=3;
+constexpr        const char setmark[]="[x] ";
+    constexpr    const char unsetmark[]="[  ]";
+//   constexpr     const char setmark[]="☑";
+//constexpr        const char unsetmark[]="☐";
+//        const char setmark[]="✅";
+      //  const char unsetmark[]="☐"; 
+  //      const char setmark[]="✔";
+   //     const char unsetmark[]="○";
+
+        constexpr int setmarklen=sizeof(unsetmark)-1;
         float xpos;
 #ifdef WEAROS
         if(menu==0) {
-            xpos=x;
+            xpos=textx;
             }
         else 
 #endif
         {
-        static const float  dlen=getsetlen(avg, x,  y, set,set+len, bounds);
+        static const float  dlen=getsetlen(avg, x,  y, setmark,setmark+setmarklen, bounds);
          xpos=x-2*xrand+mwidth-dlen;
          }
          for(int i=0;i<nrmenu;i++) {
              if(const int *optr=options[i]) {
-                const char *op=*optr?set:unset;
-                nvgText(avg, xpos ,y,op ,op+len );
+                const char *op=*optr?setmark:unsetmark;
+                nvgText(avg, xpos ,y,op ,op+setmarklen );
                 }
             y+=menutextheight;
             }

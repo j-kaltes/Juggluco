@@ -30,6 +30,7 @@ import android.bluetooth.BluetoothGattDescriptor;
 import android.content.Context;
 import android.os.Build;
 
+import java.lang.reflect.Method;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -438,6 +439,7 @@ protected void handleGlucoseResult(long res,long timmsec) {
         }
     }
 public void searchforDeviceAddress() {
+    removedBond=false;
     {if(doLog) {Log.i(LOG_ID,SerialNumber+" searchforDeviceAddress()");};};
     //setDeviceAddress(null);
     foundtime=0L;
@@ -698,7 +700,12 @@ public UUID getService()  {
    return null;
    }
 public void bonded()  {
+        Log.i(LOG_ID,"bonded()");
    }
+public boolean pairingRequest() {
+        Log.i(LOG_ID,"pairingRequest()");
+        return false;
+        }
 public String mygetDeviceName() {
     if(mDeviceName!=null)
        return mDeviceName;
@@ -730,4 +737,30 @@ static public String bondString(int bonded) {
         default->"BOND Unknown";
         };
     }
+
+protected boolean removedBond=false;
+protected void unbond() {
+        var device = mActiveBluetoothDevice;
+        if (device == null) {
+            var bluetoothGatt = mBluetoothGatt;
+            if (bluetoothGatt != null)
+                device = bluetoothGatt.getDevice();
+            if (device == null) {
+                Log.e(LOG_ID, "device==null");
+                return;
+            }
+        }
+        try {
+            Method method = device.getClass().getMethod("removeBond", (Class[]) null);
+            var result = (boolean) method.invoke(device, (Object[]) null);
+            if (result) {
+                removedBond=true;
+                {if(doLog) {Log.i(LOG_ID, "Removed bond");};};
+            }
+            return;
+        } catch (Throwable e) {
+            Log.stack(LOG_ID, "ERROR: could not remove bond", e);
+        }
+        }
+
 }

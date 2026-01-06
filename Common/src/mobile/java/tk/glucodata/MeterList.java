@@ -20,49 +20,26 @@
 /*      Sun Sep 21 14:02:17 CEST 2025                                                */
 package tk.glucodata;
 
-import static android.graphics.Color.YELLOW;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static tk.glucodata.Applic.backgroundcolor;
-import static tk.glucodata.Applic.isWearable;
 import static tk.glucodata.BluetoothGlucoseMeter.getExistingGatt;
-import static tk.glucodata.Natives.getCalibrator;
-import static tk.glucodata.Natives.getInvertColors;
-import static tk.glucodata.NumberView.smallScreen;
 import static tk.glucodata.RingTones.EnableControls;
 import static tk.glucodata.settings.Settings.removeContentView;
 import static tk.glucodata.util.getbutton;
-import static tk.glucodata.util.getlabel;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import java.text.DateFormat;
-import java.util.Date;
-import java.util.Locale;
-
-import tk.glucodata.Layout;
-import tk.glucodata.MainActivity;
-import tk.glucodata.Natives;
-import tk.glucodata.util;
-
-import static android.graphics.Color.RED;
-import static android.widget.LinearLayout.VERTICAL;
 
 public class MeterList {
 //  static private final String LOG_ID ="MeterList";
@@ -103,13 +80,16 @@ static final class MeterView extends Layout{
         text.setText(addtext);
          active.setChecked(a);
         }
-    MeterView(MainActivity act,TextView t,CheckBox b) {
+    MeterView(MainActivity act,View parent,TextView t,CheckBox b) {
         super(act,(l,w,h)->{
              return new int[] {w,h};
                },new View[]{t},new View[]{b});
         text=t;
         active=b;
         meterIndex=-1;
+        text.setOnClickListener( v -> { 
+            MeterConfig.config(act,meterIndex,parent,null);
+            });
         active.setOnCheckedChangeListener( (buttonView,  isChecked) -> {
             if(meterIndex>=0) {
                 if(Natives.GlucoseMeterSetActive(meterIndex,isChecked)) {
@@ -134,8 +114,8 @@ static final class MeterView extends Layout{
 
         }
 
-    MeterView(MainActivity act) {
-        this(act,new TextView(act),new CheckBox(act));
+    MeterView(MainActivity act,View parent) {
+        this(act,parent,new TextView(act),new CheckBox(act));
         }
     };
    static  class MeterListViewHolder extends RecyclerView.ViewHolder {
@@ -146,13 +126,15 @@ static final class MeterView extends Layout{
 
 
 public static  class MeterListViewAdapter extends RecyclerView.Adapter<MeterListViewHolder> {
-        MeterListViewAdapter() {
+        View layout;
+        MeterListViewAdapter(View par) {
+             layout=par;
             }
 
        @NonNull
       @Override
        public MeterListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-           MeterView view=new MeterView((MainActivity)parent.getContext());
+           MeterView view=new MeterView((MainActivity)parent.getContext(),layout);
            return new MeterListViewHolder(view);
        }
 
@@ -184,21 +166,21 @@ static public void show(MainActivity act, View parent) {
       recycle.setLayoutParams(new ViewGroup.LayoutParams(   ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
       var lin=new GridLayoutManager(act,2);
       recycle.setLayoutManager(lin);
-      var meteradapt = new MeterListViewAdapter();
-      recycle.setAdapter(meteradapt);
       var close=getbutton(act,R.string.closename);
       close.setOnClickListener( v -> { 
             MainActivity.doonback();
             });
       var devices=getbutton(act,R.string.finddevices);
-      devices.setOnClickListener( v -> { 
-            DeviceList.show(act,meteradapt);
-            });
        var help=getbutton(act,R.string.helpname);
         View[] firstrow=new View[]{help,devices,close};
       Layout layout=new Layout(act,(x,w,h)->{
              return new int[] {w,h};
                },new View[]{recycle},firstrow); 
+      var meteradapt = new MeterListViewAdapter(layout);
+      recycle.setAdapter(meteradapt);
+      devices.setOnClickListener( v -> { 
+            DeviceList.show(act,meteradapt);
+            });
         help.setOnClickListener(v-> tk.glucodata.help.help(R.string.GlucoseMeterList,act));
        layout.setBackgroundColor(backgroundcolor);
         float density=GlucoseCurve.metrics.density;

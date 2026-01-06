@@ -493,7 +493,6 @@ static boolean    createBond(BluetoothDevice device) {
  private static final byte[][] bondBytes = {{(byte) 0x06, (byte) 0x19}, 
  {(byte) 0xFF, (byte) 0x06, (byte) 0x01},
             {(byte) 0x06, (byte) 0x00}};
-private boolean removedBond=false;
  private void authenticate(byte[] value) {
     final var bondstate = mActiveBluetoothDevice.getBondState();
      if(bondstate!=BOND_BONDED) {
@@ -746,18 +745,24 @@ private    void getdata(byte[] value) {
     public void onCharacteristicChanged(@NonNull BluetoothGatt gatt, @NonNull BluetoothGattCharacteristic bluetoothGattCharacteristic, @NonNull byte[] value) {
         if(doLog)
             {if(doLog){Log.showbytes("DexGattCallback onCharacteristicChanged UUID: " + bluetoothGattCharacteristic.getUuid().toString(), value);};}
-        if (bluetoothGattCharacteristic.equals(charact[2])) {
+
+        if(bluetoothGattCharacteristic.equals(charact[0])) {
+            getdata(value);
+            return;
+            }
+        if(bluetoothGattCharacteristic.equals(charact[2])) {
             Natives.dexbackfill(dataptr, value);
             return;
-        }
+           }
 
-        if (bluetoothGattCharacteristic.equals(charact[3])) {
+        if(bluetoothGattCharacteristic.equals(charact[3])) {
             getcert(value);
-        } else if (bluetoothGattCharacteristic.equals(charact[1])) {
+            return;
+            }
+        if(bluetoothGattCharacteristic.equals(charact[1])) {
             authenticate(value);
-        } else if (bluetoothGattCharacteristic.equals(charact[0])) {
-            getdata(value);
-        }
+            return;
+            }
     }
 
     @Override // android.bluetooth.BluetoothGattCallback
@@ -801,30 +806,6 @@ private    void getdata(byte[] value) {
 //      if(triedsensors.contains(address)) return false;
         return Natives.dexCandidate(dataptr,aname,address);
         }
-
-    private void unbond() {
-        var device = mActiveBluetoothDevice;
-        if (device == null) {
-            var bluetoothGatt = mBluetoothGatt;
-            if (bluetoothGatt != null)
-                device = bluetoothGatt.getDevice();
-            if (device == null) {
-                Log.e(LOG_ID, "device==null");
-                return;
-            }
-        }
-        try {
-            Method method = device.getClass().getMethod("removeBond", (Class[]) null);
-            var result = (boolean) method.invoke(device, (Object[]) null);
-            if (result) {
-                removedBond=true;
-                {if(doLog) {Log.i(LOG_ID, "Removed bond");};};
-            }
-            return;
-        } catch (Throwable e) {
-            Log.stack(LOG_ID, "ERROR: could not remove bond", e);
-        }
-    }
 
     @Override
     public void free() {

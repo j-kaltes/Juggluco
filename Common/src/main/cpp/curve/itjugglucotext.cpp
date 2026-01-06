@@ -133,7 +133,7 @@ static jugglucotext ittext {
 		"Talk",
 		"Float       "
 		},
-	.menustr2= {"Calibrated","Scansioni","Flusso","Cronologia","Valori","Pasti","Modalità scura       "}, 
+	.menustr2= {"Ultima scansione","Scansioni","Flusso","Cronologia","Valori","Pasti","Modalità scura       "}, 
 	.menustr3= {hourminstr,"Cerca","Data","Giorno prima","Giorno dopo","Settimana prima","Settimana dopo"}, 
 #endif //INJUGGLUCO
 #else

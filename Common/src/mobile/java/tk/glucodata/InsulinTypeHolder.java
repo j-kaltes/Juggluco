@@ -65,30 +65,24 @@ import static tk.glucodata.settings.Settings.float2string;
 import static tk.glucodata.settings.Settings.removeContentView;
 import static tk.glucodata.util.getbutton;
 import static tk.glucodata.util.getlabel;
-
+import static tk.glucodata.util.getradiobuttonId;
 import java.util.ArrayList;
 
 
 public class InsulinTypeHolder extends RecyclerView.ViewHolder {
 
-public static RadioButton getradiobutton(Context context, int res, int id) {
-         var radio=new RadioButton(context);
-         radio.setText(res);
-         radio.setId(id);
-         return radio;
-         }
 
 private static void settype(MainActivity act, IOB.InsulinTypeAdapter adapter, int index,String name) {
     var group=new RadioGroup(act);
     int id=0;
-    group.addView(getradiobutton(act,R.string.not,id++));
-    group.addView(getradiobutton(act,R.string.humaninsulin,id++));
-    group.addView(getradiobutton(act,R.string.aspart,id++));
-    group.addView(getradiobutton(act,R.string.lispro,id++));
-    group.addView(getradiobutton(act,R.string.glulisine,id++));
-    group.addView(getradiobutton(act,R.string.fiasp,id++));
-    group.addView(getradiobutton(act,R.string.urli,id++));
-    group.addView(getradiobutton(act,R.string.afrezza,id));
+    group.addView(getradiobuttonId(act,R.string.not,id++));
+    group.addView(getradiobuttonId(act,R.string.humaninsulin,id++));
+    group.addView(getradiobuttonId(act,R.string.aspart,id++));
+    group.addView(getradiobuttonId(act,R.string.lispro,id++));
+    group.addView(getradiobuttonId(act,R.string.glulisine,id++));
+    group.addView(getradiobuttonId(act,R.string.fiasp,id++));
+    group.addView(getradiobuttonId(act,R.string.urli,id++));
+    group.addView(getradiobuttonId(act,R.string.afrezza,id));
 
     group.check(getInsulinType(index));
 

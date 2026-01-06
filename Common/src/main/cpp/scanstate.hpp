@@ -52,8 +52,8 @@ FAKE=3
 };
 class multimmap {
     const int maxdats;
-    int freepos;
     public:
+    int freepos;
     Mmap<unsigned char> map;
     int &datpos(int datnr) {
         return reinterpret_cast<int*>(map.data())[datnr];

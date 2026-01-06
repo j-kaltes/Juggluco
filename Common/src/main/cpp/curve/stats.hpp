@@ -49,7 +49,7 @@ static constexpr const	int levels[] {250,180,69,53};
 	double active;
 	uint32_t starttime=UINT32_MAX,endtime=0;
 
-template <class GlucoseEl> stats( std::vector<pair<const GlucoseEl*,const GlucoseEl*>> &polldata) {
+template <class GlucoseEl> stats( std::vector<GlucoseDataType<const GlucoseEl*,const GlucoseEl*>> &polldata) {
 		auto targetlow=settings->targetlow()/10-1;
 		auto targethigh=settings->targethigh()/10;
 		border[0]=targethigh;
@@ -59,7 +59,7 @@ template <class GlucoseEl> stats( std::vector<pair<const GlucoseEl*,const Glucos
 		uint32_t minint=30;
 		uint32_t prevtime=0;
 		totid=0;
-		for(auto [firstin,lastin]:polldata) {
+		for(auto [firstin,lastin,idDistance]:polldata) {
 			int previd=-1;
 			const GlucoseEl *start=firstvalid(firstin,lastin,prevtime+minint);
 			if(!start)
@@ -68,7 +68,7 @@ template <class GlucoseEl> stats( std::vector<pair<const GlucoseEl*,const Glucos
 				starttime=start->gettime();
 				}
 			const GlucoseEl *last=lastvalid(start,lastin-1);
-			int idint=last->getid()-start->getid();
+			int idint=(last->getid()-start->getid())/idDistance+1;
 			totid+=idint;
 			int32_t late= start->gettime()-(prevtime+60);
 			if(prevtime&&late>0) {
@@ -112,7 +112,7 @@ template <class GlucoseEl> stats( std::vector<pair<const GlucoseEl*,const Glucos
 			return ;
 		long double mean=total/count;
 		long double quadifsum=0;
-		for(auto [firstin,lastin]:polldata) {
+		for(auto [firstin,lastin,_]:polldata) {
 			const GlucoseEl *start=firstvalid(firstin,lastin,prevtime+minint);
 			if(!start)
 				continue;

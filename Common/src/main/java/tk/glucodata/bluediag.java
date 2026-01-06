@@ -188,7 +188,7 @@ void showinfo(final SuperGattCallback gatt,MainActivity act) {
         }
     else  {
       streamhistory.setVisibility(GONE);
-      alarmclock.setVisibility(gatt.sensorgen==0x40?VISIBLE:GONE);
+      alarmclock.setVisibility(gatt.sensorgen==0x30||gatt.sensorgen==0x40?VISIBLE:GONE);
       final boolean resetvis=gatt.sensorgen==0x10&&Natives.getSiSubtype(gatt.dataptr)==3;
       resetbutton.setVisibility(resetvis?VISIBLE:GONE);
       }

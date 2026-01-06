@@ -28,7 +28,7 @@ class Calibrate {
     const int nr;
     int iter;
 
-    Calibrate(const SensorGlucoseData *sens): cali(sens->getinfo()->caliPara),past(settings->data()->CalibratePast),nr(sens->getinfo()->caliNr)
+    Calibrate(const SensorGlucoseData *sens,int which): cali(sens->getinfo()->calis[which].caliPara),past(settings->data()->CalibratePast),nr(sens->getinfo()->calis[which].caliNr)
         {
         }
     public:
@@ -74,7 +74,7 @@ class Calibrate {
     };
 class CalibrateForward: public Calibrate {
 public:
-CalibrateForward(const SensorGlucoseData *sens):Calibrate(sens) { 
+CalibrateForward(const SensorGlucoseData *sens,int which):Calibrate(sens,which) {
     if(past)
         iter=nr-1;
      else
@@ -83,7 +83,7 @@ CalibrateForward(const SensorGlucoseData *sens):Calibrate(sens) {
  };
 class CalibrateBackward: public Calibrate {
 public:
-CalibrateBackward(const SensorGlucoseData *sens):Calibrate(sens) {
+CalibrateBackward(const SensorGlucoseData *sens,int which):Calibrate(sens,which) {
     iter=nr-1;
     }
 

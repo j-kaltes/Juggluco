@@ -7,7 +7,7 @@ import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static tk.glucodata.Applic.backgroundcolor;
 import static tk.glucodata.Applic.isWearable;
-import static tk.glucodata.Natives.setshowcalibrated;
+import static tk.glucodata.Natives.setshowcalibratedstream;
 import static tk.glucodata.Natives.setshowstream;
 import static tk.glucodata.NumberView.avoidSpinnerDropdownFocus;
 import static tk.glucodata.settings.Settings.removeContentView;
@@ -62,7 +62,7 @@ static public void show(MainActivity act,View parent) {
    docalibrate.setOnCheckedChangeListener( (buttonView,  isChecked)-> {
           Natives.setDoCalibrate(isChecked);
           if(isChecked) {
-            setshowcalibrated(true);
+            setshowcalibratedstream(true);
             }
           act.requestRender();
           });

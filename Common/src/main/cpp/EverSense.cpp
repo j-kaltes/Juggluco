@@ -29,8 +29,8 @@
 #include "SensorGlucoseData.hpp"
 #include "fromjava.h"
 #include "sensoren.hpp"
+#include "calibrate/Calibrator.hpp"
 extern Sensoren *sensors;
-double     calibrateONEtest(const SensorGlucoseData *sens,const ScanData &value);
 void toEverSense(JNIEnv *env,const SensorGlucoseData *sens,const std::span<const ScanData> stream,const int modulo) { 
    if(stream.size()) {
        for(const ScanData &el:stream) {
@@ -46,7 +46,8 @@ void toEverSense(JNIEnv *env,const SensorGlucoseData *sens,const std::span<const
            extern jmethodID  sendGlucoseBroadcast;
            const long long wastime= el.gettime()*1000LL;
            int mgdL;
-           if(double calibrated= calibrateONEtest(sens,el);!isnan(calibrated)) {
+           auto cali= make_calibrator<ScanData>(sens);
+           if(double calibrated= cali.calibrateONEtest(el);!isnan(calibrated)) {
                 mgdL=(int)round(calibrated);
                 }
            else {

@@ -80,7 +80,7 @@ jugglucotext zhtext {
         "悬浮窗        "
     },
 
-    .menustr2= {"Calibrated",
+    .menustr2 = {"最后一次扫描",
         "扫描数据",
         "蓝牙数据",
         "历史记录",

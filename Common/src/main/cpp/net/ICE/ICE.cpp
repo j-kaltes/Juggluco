@@ -625,7 +625,7 @@ void   recreateAgents() {
     }
 static std::string_view description="/description";
 
-static bool waitonDescription(juice_agent *agent,std::string_view commonLabel,int side,std::string_view hostname) {
+static bool waitonDescription(juice_agent *agent,int allindex,std::string_view commonLabel,int side,std::string_view hostname) {
     CreateAgentData sdpdata(commonLabel,side,"");
     LOGGERICE("getdescription %s\n",sdpdata.data());
     if(commonLabel.size()<10) { //TODO: becomes 16 later
@@ -649,6 +649,10 @@ static bool waitonDescription(juice_agent *agent,std::string_view commonLabel,in
          else {
             LOGGERICE("getdescription failure %s %d: %s returns code=%d\n",commonLabel.data(),side,sdpdata.data(),code); 
             sleep(20);
+            }
+        if((time(nullptr)-getConnectTime(allindex))>maxconnectionunused) {
+            backup->deactivateHost(allindex,true);
+            return false;
             }
         }
 //    return false;
@@ -685,6 +689,11 @@ static  bool putDescription(int allindex,juice_agent *agent,std::string_view com
                 LOGGERICE("putdescription: %s %d: Http error\n",commonLabel.data(),side);
                 sleep(20);
                 }
+
+        if((time(nullptr)-getConnectTime(allindex))>maxconnectionunused) {
+            backup->deactivateHost(allindex,true);
+            return false;
+            }
         }
     }
 
@@ -708,7 +717,7 @@ bool initAgent(juice_agent *agent,int allindex) {
     bool side=host.side;
     if(side!=givefirst) {
         con->phase=GetDescription;
-        if(!waitonDescription(agent,commonLabel,side,hostname)) {
+        if(!waitonDescription(agent,allindex,commonLabel,side,hostname)) {
            LOGGERICE("initAgent %s %d: waitonDescription failed\n",commonLabel.data(),side);
             return false;
         }

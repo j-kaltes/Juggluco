@@ -153,7 +153,7 @@ int updateone::update() {
                     const int last=sensors->last();
                     for(int it=startSendCalibrate;it<=last;++it) {
                         SensorGlucoseData *sens=sensors->getSensorData(it);
-                        sens->getinfo()->updateCaliTime(ind,starttime);
+                        sens->updateCaliTime(ind,starttime);
                         }
                     }
                 }
@@ -289,6 +289,18 @@ int updateone::updatescansu() {
     if(!connect->isConnectedSender())
         return 0;
     return sensors->updatescanss(getcrypt(),connect,ind,firstsensor,sendstream);
+     } 
+int updateone::updateBeforeSwitch() {
+     Connect *connect=getConnect();
+     if(!connect)
+            return 0;
+
+     if(!connect->isConnectedSender())
+            return 0;
+      LOGGER("ind=%d allindex=%d updateBeforeSwitch()\n",ind,allindex);
+      if(!sendstream)
+        return connect->sendrender(getcrypt(),wakeUpSwitch|wakeall);
+      return sensors->updateBeforeSwitch(getcrypt(), connect, ind, firstsensor,sendstream);
      } 
 void wakeupall(){
     if(backup) {
@@ -569,7 +581,7 @@ void       makeWakeThread(int allindex,passhost_t *hostptr) {
     std::thread wake(sendup,hostptr);
     wake.detach();
 }
-void updatedata::wakesender() {
+void updatedata::wakesender(uintptr_t kind) {
     LOGAR("wakesender");
     for(int i=0;i<hostnr;i++) {
         passhost_t &host=allhosts[i];
@@ -585,7 +597,7 @@ void updatedata::wakesender() {
             auto ind=host.activereceive-1;
             LOGGER("active %d\n",ind);
             if(active_receive[ind])  {
-                active_receive[ind]->wakebackup(wakeall);
+                active_receive[ind]->wakebackup(kind);
                 }
             }
         else {

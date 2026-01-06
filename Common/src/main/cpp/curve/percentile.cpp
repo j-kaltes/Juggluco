@@ -35,6 +35,8 @@
 #include "JCurve.hpp"
 using namespace std::literals;
 
+//typedef GlucoseDataType std::tuple<const ScanData*,const ScanData*,const SensorGlucoseData *>;
+#include "GlucoseDataType.hpp" 
 extern Sensoren *sensors;
 static    constexpr const int seconds_in_day=24*60*60;
 
@@ -485,8 +487,8 @@ void showpercentiles(NVGcontext* vg) {
 //constexpr const int maxdays=50;
 //uint16_t alldata[measuresperday*maxdays];
 
-static struct persgegs *matchedminutes( std::vector<pair<const ScanData*,const ScanData*>> *polldataptr,uint32_t starttime,uint32_t endtime,const jugglucotext *text) {
-    std::vector<pair<const ScanData*,const ScanData*>> &polldata=*polldataptr;
+static struct persgegs *matchedminutes( std::vector<GlucoseDataType<const ScanData*>> *polldataptr,uint32_t starttime,uint32_t endtime,const jugglucotext *text) {
+    std::vector<GlucoseDataType<const ScanData*>> &polldata=*polldataptr;
     const int days=ceilf(((float)(endtime-starttime))/seconds_in_day)+10;
     uint16_t  *uitdata=new uint16_t[measuresperday*days]();
     const constexpr int bucketsize=60;
@@ -499,7 +501,7 @@ static struct persgegs *matchedminutes( std::vector<pair<const ScanData*,const S
     constexpr const auto timetoid{ [](time_t tim) { return  getminutes(tim)%maxidents; }};
     int maxid=0;
     int previd=-1;
-    for(auto [firstin,lastin]:polldata) {
+    for(auto [firstin,lastin,_]:polldata) {
         const ScanData *start=firstvalid(firstin,lastin,nexttime);
         if(!start)
             continue;
@@ -563,7 +565,7 @@ static struct persgegs *matchedminutes( std::vector<pair<const ScanData*,const S
     return new persgegs(uitdata,lens,days,maxid,pollstart,polllast,text);
     }
 
-static struct persgegs * sortedmatched( std::vector<pair<const ScanData*,const ScanData*>> *polldataptr,const uint32_t start,const uint32_t endt,const jugglucotext *text) {
+static struct persgegs * sortedmatched( std::vector<GlucoseDataType<const ScanData*>> *polldataptr,const uint32_t start,const uint32_t endt,const jugglucotext *text) {
     persgegs *datastructptr=matchedminutes(polldataptr,start,endt,text) ;
     if(!datastructptr)     {
         return nullptr;
@@ -587,13 +589,12 @@ static struct persgegs * sortedmatched( std::vector<pair<const ScanData*,const S
     return datastructptr;
     }
 
-
-
-extern std::vector<pair<const ScanData*,const ScanData*>> getsensorranges(uint32_t start,uint32_t endt,bool calibrated,bool allvalues,bool calibratePast,std::vector<std::unique_ptr<ScanData []>> &calibrates ) ;
+extern std::vector<GlucoseDataType<const ScanData*>> getsensorranges(uint32_t start,uint32_t endt,bool calibrated,bool allvalues,bool calibratePast,std::vector<std::unique_ptr<ScanData []>> &calibrates );
+//extern std::vector<pair<const ScanData*,const ScanData*>> getsensorranges(uint32_t start,uint32_t endt,bool calibrated,bool allvalues,bool calibratePast,std::vector<std::unique_ptr<ScanData []>> &calibrates ) ;
 //extern std::vector<pair<const ScanData*,const ScanData*>> getsensorranges(uint32_t start,uint32_t endt) ;
 #ifdef JUGGLUCO_APP
 extern void visiblebutton();
-void makesummarygraph(std::vector<pair<const ScanData*,const ScanData*>> *polldataptr,uint32_t start,uint32_t endt) {
+void makesummarygraph(std::vector<GlucoseDataType<const ScanData*>> *polldataptr,uint32_t start,uint32_t endt) {
     if(globalpercptr!=nullptr)
         delete globalpercptr;
     globalpercptr=nullptr;
@@ -610,7 +611,7 @@ void makesummarygraph(std::vector<pair<const ScanData*,const ScanData*>> *pollda
     return;
     }
 #endif
-std::vector<pair<const ScanData*,const ScanData*>> polldata;
+std::vector<GlucoseDataType<const ScanData*>> polldata;
 
 static std::pair<uint32_t,uint32_t> percStartEnd(uint32_t endt,int days) {
 #ifndef NOLOG
@@ -1162,7 +1163,8 @@ std::span<char> getCurveImage(int startpos,Getopts &opts) {
     curveimage.shownumbers=opts.amountsmode;
     curveimage.invertcolorsset(opts.darkmode);
     curveimage.allvalues=opts.allvaluesmode;
-    curveimage.showcalibrated=opts.calibratedmode;
+    curveimage.showcalibratedstream=opts.calibratedmode;
+    curveimage.showcalibratedhistories=opts.calibratedhistorymode;
 
 
     curveimage.glow=curveimage.userunit2mgL(opts.glow);

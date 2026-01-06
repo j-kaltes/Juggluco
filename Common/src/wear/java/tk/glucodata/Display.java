@@ -21,7 +21,7 @@
 package tk.glucodata;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static tk.glucodata.Natives.getInvertColors;
-import static tk.glucodata.Natives.getshowcalibrated;
+import static tk.glucodata.Natives.getshowcalibratedstream;
 import static tk.glucodata.Natives.getshowhistories;
 import static tk.glucodata.Natives.getshownumbers;
 import static tk.glucodata.Natives.getshowscans;
@@ -39,7 +39,8 @@ class Display {
 static void show(MainActivity context) {
     var close=getbutton(context,R.string.closename);
      var Scans=getcheckbox(context,R.string.scansname,getshowscans()) ;
-     var Calibrated=getcheckbox(context,R.string.calibrated,getshowcalibrated()) ;
+     var CalibratedStream=getcheckbox(context,context.getString(R.string.streamname)+" "+context.getString(R.string.calibrated),getshowcalibratedstream()) ;
+     var CalibratedHistory=getcheckbox(context,context.getString(R.string.historyname)+" "+context.getString(R.string.calibrated), Natives.getshowcalibratedhistories());
      var History=getcheckbox(context,R.string.historyname,getshowhistories()) ;
      var Stream=getcheckbox(context,R.string.streamname,getshowstream()) ;
      var Amounts=getcheckbox(context,R.string.amountshort,getshownumbers()) ;
@@ -48,7 +49,8 @@ static void show(MainActivity context) {
         Natives.setInvertColors(isChecked);
         });
 
-Calibrated.setOnCheckedChangeListener( (buttonView,  isChecked) -> { Natives.setshowcalibrated(isChecked); });
+CalibratedStream.setOnCheckedChangeListener( (buttonView,  isChecked) -> { Natives.setshowcalibratedstream(isChecked); });
+CalibratedHistory.setOnCheckedChangeListener( (buttonView,  isChecked) -> { Natives.setshowcalibratedhistories(isChecked); });
 Scans.setOnCheckedChangeListener( (buttonView,  isChecked) -> { Natives.setshowscans(isChecked); });
     History.setOnCheckedChangeListener( (buttonView,  isChecked) -> { Natives.setshowhistories(isChecked); });
     Stream.setOnCheckedChangeListener( (buttonView,  isChecked) -> { Natives.setshowstream(isChecked); });
@@ -56,7 +58,7 @@ Scans.setOnCheckedChangeListener( (buttonView,  isChecked) -> { Natives.setshows
      var layout=new Layout(context, (l, w, h) -> {
             final int[] ret={w,h};
             return ret;
-     }, new View[]{Scans},new View[]{History},new View[]{Stream},new View[]{Calibrated},new View[]{Amounts},new View[]{darkmodeview},new View[]{close});
+     }, new View[]{Scans},new View[]{History},new View[]{CalibratedHistory},new View[]{Stream},new View[]{CalibratedStream},new View[]{Amounts},new View[]{darkmodeview},new View[]{close});
     layout.setBackgroundColor(Applic.backgroundcolor);
 
     var height=GlucoseCurve.getheight();

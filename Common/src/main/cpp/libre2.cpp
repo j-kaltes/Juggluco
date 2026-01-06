@@ -66,8 +66,8 @@ static jbyteArray genjtoken(JNIEnv *env) {
     const int len=std::size(tokenar);
     jbyteArray loc=env->NewByteArray(len);
     env->SetByteArrayRegion(loc, 0, len, (jbyte*)tokenar);
-        auto gl=    (jbyteArray) env->NewGlobalRef(loc);
-        env->DeleteLocalRef(loc);
+    auto gl=    (jbyteArray) env->NewGlobalRef(loc);
+    env->DeleteLocalRef(loc);
     return gl;
     }
 jbyteArray getjtoken(JNIEnv *env) {

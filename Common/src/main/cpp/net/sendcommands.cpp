@@ -338,7 +338,7 @@ bool Connect::sendshowglucose(crypt_t *pass,const uint16_t sensorindex) {
 	}
 bool Connect::sendrender(crypt_t *pass,const uint16_t type) {
 	struct renderstruct rend{srender,type};
-	LOGGERTAG("sendrender(pass,%d,%d)\n",getSenderIdent(),type);
+	LOGGERTAG("sendrender(pass,%d,%x)\n",getSenderIdent(),type);
 	return sendcommand(pass,reinterpret_cast<const senddata_t *>(&rend),sizeof(struct renderstruct));
 	}
 	

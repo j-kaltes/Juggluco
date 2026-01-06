@@ -449,11 +449,11 @@ private	void oldonCharacteristicChanged(byte[] value) {
                                     
                             }
                         } */
+					final long timmsec = System.currentTimeMillis();
 
 					pack1 = false;
 					pack2 = false;
 					System.arraycopy(value, 0, packet, 38, 8);
-					final long timmsec = System.currentTimeMillis();
 					final var newpacket= sensorgen==2?V2(773, tovalue, packet, null):packet;
 					if(newpacket!=null) {
 						long res = processTooth(dataptr, newpacket);

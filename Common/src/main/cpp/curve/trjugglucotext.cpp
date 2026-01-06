@@ -127,7 +127,7 @@ jugglucotext trtext {
                 "Seslendirme",
                 "Yüzen Glikoz       "
                 },
-	.menustr2= {"Calibrated",
+        .menustr2= {"Son Tarama",
         "Taramalar",
         "Akış",
         "Geçmiş",

@@ -28,7 +28,7 @@
 #include "scanstate.hpp"
 class SensorGlucoseData;
 #include "AlgorithmContext.hpp"
-template <typename T> struct gegs;
+template <typename T,int NR> struct gegs;
 typedef gegs<signed char> data_t;
 class SiContext {
 private:

@@ -2858,20 +2858,31 @@ specify in Alarm and Talk are specific for the active profile.</p>
 <string name="calibrationslist" >
 <![CDATA[
 <p><a href="https://www.juggluco.nl/Jugglucohelp/de/calibrationslist.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/calibrationslist.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/calibrationslist.html?lang=en">en</a>&emsp;&emsp;</p><h1>Calibrations</h1>
-<p style="line-height: 100%; margin-bottom: 0in">Shows the
+<p style="line-height: 100%; margin-bottom: 0cm">Shows the
 calibrations made for this sensor. Every calibration consists of the
 time it was made and the slope (a) and intercept b of the relation
 between the blood glucose and the sensor glucose:</p>
-<p style="line-height: 100%; margin-bottom: 0in">Blood
+<p style="line-height: 100%; margin-bottom: 0cm">Blood
 glucose=a*SensorGlucose+b</p>
-<p style="line-height: 100%; margin-bottom: 0in">When “change
-slope” is not set in left menu→Settings→<a href="https://www.juggluco.nl/Jugglucohelp/calibrationhelp.html">Calibration</a>, or when there are too few finger prick measurements or the finger prick
-measurements aren’t diverse enough a=1. So that only b is
-determined.</p>
-<p style="line-height: 100%; margin-bottom: 0in">Touching the
+<p style="line-height: 100%; margin-bottom: 0cm">When “change
+slope” is not set in left menu→Settings→<a href="https://www.juggluco.nl/Jugglucohelp/calibrationhelp.html">Calibration</a>,
+a=1. So that only b is determined.</p>
+<p style="line-height: 100%; margin-bottom: 0cm"><b>Stream</b>: show
+calibrations of stream values. Stream is the value shown at the
+moment of the measurement itself and used for alarms and broadcasts.</p>
+<p style="line-height: 100%; margin-bottom: 0cm"><b>History</b>: show
+calibrations of history values (only present on Freestyle Libre and
+CareSens Air). History values are modified values constructed after
+the fact as they are displayed in the Librelink and CareSens Air
+apps.</p>
+<p style="line-height: 100%; margin-bottom: 0cm">The display of
+calibrated curves can be switched on and off in the right middle menu
+before “<i>Stream</i>” and “<i>History</i>”. 
+</p>
+<p style="line-height: 100%; margin-bottom: 0cm">Touching the
 calibration moves to the calibration time. Touching “<b>Delete</b>”
 removes the calibration.</p>
-<p style="line-height: 100%; margin-bottom: 0in"><b>Settings</b>:
+<p style="line-height: 100%; margin-bottom: 0cm"><b>Settings</b>:
 Other way to get to left menu-&gt;Settings-&gt;<a href="https://www.juggluco.nl/Jugglucohelp/calibrationhelp.html">Calibration</a>.</p>
 <p><br/>
 <br/>
@@ -2898,9 +2909,9 @@ be automatically excluded.</p>
 for calibration because the glucose level is not steady. All other
 values should not be excluded, even when you think that the sensor
 don’t need to be calibrated. When you don’t want to calibrate,
-unset “Active” and unset right middle menu→Calibrated. This way
-all appropriate glucose values are used for calibration, not only
-those that don’t agree.</p>
+unset “Active” and unset right middle menu→Calibrated. This
+way, all appropriate glucose values are used for calibration, not
+only those that don’t agree.</p>
 <p>Every new finger prick that is not excluded gives a new
 calibration. You can view the calibrations made by pressing
 <a href="https://www.juggluco.nl/Jugglucohelp/calibrationslist.html">“Calibrations”</a>
@@ -2921,20 +2932,20 @@ sensor value is:</p>
 <p style="font-variant: normal; font-style: normal"><b>Calibrated
 glucose=SensorGlucose + b</b></p>
 <p style="font-variant: normal; font-style: normal; font-weight: normal">
-The value of b is determined by calibration.</p>
+The value of b is determined by calibration. If you use this setting,
+you shouldn’t calibrate using high glucose values because the
+deduced value of b will be too large for small glucose values.
+Calibrating high values also doesn’t make much sense, because the
+difference between high and very high isn’t that important.</p>
 <p style="font-variant: normal; font-style: normal; font-weight: normal">
 If “<i>Change slope</i>” is set the relation becomes:</p>
 <p style="font-variant: normal; font-style: normal"><b>Calibrated
 glucose=a * SensorGlucose + b</b></p>
-<p>Whereby <b>a</b> can be different from 1. This kind of calibration
-is only possible when enough blood glucose measurements are made with
-values representing all sensor glucose levels. When if example all
-glucose measurements were made when the glucose value was around 90
-mg/dL (5 mmol/L) and the sensor values are spread from 54 mg/dL to
-180 mg/dL (3 mmol/L to 10 mmol/L) these values are not diverse enough
-to infer the value of <b>a</b>. Juggluco itself checks if there are
-enough values (count &gt;=3) and there is enough variance (standard
-deviation blood glucose &gt; 0.62 * standard deviation CGM glucose).</p>
+<p>Whereby <b>a</b> can be different from 1. Having diverse
+calibrations is important. If example all glucose measurements were
+made when the glucose value was around 90 mg/dL (5 mmol/L) and the
+sensor values are spread from 54 mg/dL to 180 mg/dL (3 mmol/L to 10
+mmol/L) these values are not diverse enough to infer the value of <b>a</b>.</p>
 <p>Juggluco weights glucose measurements dependent on how old they
 are. The current glucose value has weight=1, older glucose values
 have a smaller weight. The calibration is also weighted so that an
@@ -2945,21 +2956,28 @@ much weight is given to the calibration. With more (recent) blood
 glucose measurements, the calibrated glucose values are tilted more
 to the best fit inferred between blood glucose and CGM glucose from
 these measurements.</p>
+<p>History values can’t be calibrated at the moment itself. The
+calibration of values is programmed to be executed 21 minutes later
+for Libre and 31 minutes later for CareSense Air sensors, but it
+often happens later than that. Also, the stream calibration is
+repeated at a later time so that the next CGM can be used.</p>
 <p><i><b>Active</b></i>:</p>
 <p>When active is set, the calibrated glucose values are used for
 alarms, broadcasts, Health connect, the Nightscout/xDrip webserver in
 Juggluco, glucose values send to watches and floating glucose. On the
 right side of Juggluco the calibrated value is displayed in large
 font with the uncalibrated value after it in small font. It is never
-used for sending to Libreview or applied to scans or history values.</p>
-<p>The calibrated glucose values can always be viewed by switching on
-right middle menu→Calibrated.</p>
+used for sending to Libreview.</p>
+<p>The display of the curve of calibrated glucose values is switched
+on right middle menu before “Stream” and “History”. The raw
+values are switch on and off by the checkbox after “Stream” and
+“History”.</p>
 <p><i><b>All values</b></i><b>:</b> For certain values there is no
-calibrated value. The curve of calibrated values (switched on with
-right middle menu→Calibrated) will show nothing, if “<i>All
-values</i>” is not checked. If “<i>All values</i>” is checked,
-it will show the uncalibrated value. This way you can switch off
-right middle menu→Stream and still see all values.</p>
+calibrated value. The curve of calibrated values will show nothing,
+if “<i>All values</i>” is not checked. If “<i>All values</i>”
+is checked, it will show the uncalibrated value. This way you can
+switch off the raw values in right middle menu→Stream and still see
+all values.</p>
 <p><br/>
 <br/>
 

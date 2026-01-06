@@ -118,7 +118,7 @@ static const ScanData * findScan(const ScanData *start,const ScanData *en) {
  }
 
 static const ScanData * findCalibratedScan(const SensorGlucoseData  *sens,const ScanData *start,const ScanData *en) {
-  CalibrateBackward  cali(sens); 
+  CalibrateBackward  cali(sens,0); 
   if(!cali.size())
       return nullptr;
   for(const ScanData *it=en-1;it>=start;--it) {
@@ -275,7 +275,7 @@ uint32_t JCurve::glucosesearch(uint32_t starttime,uint32_t endtime) {
     }
 
 static const ScanData * findforwardCalibratedScan(const SensorGlucoseData  *sens, const ScanData *start,const ScanData *en) {
-  CalibrateForward  cali(sens); 
+  CalibrateForward  cali(sens,0); 
   if(!cali.size())
      return nullptr;
   for(const ScanData *it=start;it<en;++it) {

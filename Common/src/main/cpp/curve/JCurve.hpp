@@ -94,7 +94,8 @@ int statusbarleft=0,statusbarright=0;
 int startincolors=0;
 int lasttouchedcolor=-1;
 int showstream=1;
-int showcalibrated=0;
+int showcalibratedstream=0;
+int showcalibratedhistories=0;
 
 int showscans=1;
 int showhistories=1;
@@ -161,6 +162,8 @@ void setdiffcurrent(bool val) {
     template <class TX,class TY> void    showScan(NVGcontext* avg,const ScanData *low,const ScanData *high,  const TX &transx,  const TY &transy,const int colorindex);
      void    makecircle(NVGcontext* avg,float posx,float posy);
     template <class TX,class TY> void    histcurve(NVGcontext* avg,const SensorGlucoseData  * hist, const int32_t firstpos, const int32_t lastpos,const TX &xtrans,const TY &ytrans,const int colorindex);
+
+template <class TX,class TY> void    calihistcurve(NVGcontext* avg,const SensorGlucoseData  * hist, const int32_t firstpos, const int32_t lastpos,const TX &xtrans,const TY &ytrans,const int colorindex) ;
     std::pair<float,float>    drawtrender(NVGcontext* avg,const std::array<uint16_t,16> &trend,const float x,const float y,const float w,const float h);
     void    showok(NVGcontext* avg,bool good,bool up);
      bool           showerror(NVGcontext* avg,const std::string_view str1,const std::string_view str2);
@@ -245,6 +248,7 @@ int translate(float dx,float dy,float yold,float y) ;
 void xscaleGesture(float scalex,float midx) ;
 std::pair<int,int> getextremes(const std::vector<int> &hists, const std::pair<const ScanData *,const ScanData*> **scanranges, int scannr,const std::pair<int32_t,int32_t> *histpositions) ;
 template <class TX,class TY> bool nearbyhistory( const float tapx,const float tapy,  const TX &transx,  const TY &transy) ;
+template <class TX,class TY> bool nearbycalibratedhistory( const float tapx,const float tapy,  const TX &transx,  const TY &transy);
 void highlightnum(const Num *num) ;
 int nextpast() ;
 int nextforward() ;
@@ -254,7 +258,7 @@ int searchcommando(int type, float under,float above,int frommin,int tomin,bool 
 uint32_t glucoseforwardsearch(uint32_t starttime,uint32_t endtime) ;
 void prevdays(int nr);
 void nextdays(int nr) ;
-int64_t doehier(int menu,int item) ;
+int64_t doehier(int menu,int item,bool) ;
 void endnumlist();
 void	shower(NVGcontext* vg,const Num *num,const float xpos,const float xend,const float ypos) ;
 template <typename F> void numscreen(NVGcontext* vg, const F & col);

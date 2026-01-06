@@ -136,7 +136,6 @@ private boolean connected=false;
     @SuppressLint("MissingPermission")
     @Override 
     public void onConnectionStateChange(BluetoothGatt bluetoothGatt, int status, int newState) {
-        checkBluetoothGatt(bluetoothGatt);
 
 
         if(stop) {
@@ -144,6 +143,7 @@ private boolean connected=false;
             return;
             }
         if(doLog) {
+             checkBluetoothGatt(bluetoothGatt);
                         String[] state = {"DISCONNECTED", "CONNECTING", "CONNECTED", "DISCONNECTING"};
                         {if(doLog) {Log.i(LOG_ID, SerialNumber + ": "+ " onConnectionStateChange, status:" + status + ", state: " + (newState < state.length ? state[newState] : newState));};};
                         }
@@ -435,7 +435,7 @@ private    void save_history(byte[] value) {
     }
 @Override 
 public void onCharacteristicChanged(BluetoothGatt bluetoothGatt, BluetoothGattCharacteristic bluetoothGattCharacteristic) {
-
+    if(doLog)
         checkBluetoothGatt(bluetoothGatt);
     onCharacteristicChanged33(bluetoothGatt, bluetoothGattCharacteristic, bluetoothGattCharacteristic.getValue());
     }
@@ -449,14 +449,16 @@ private  void logcharacter(UUID uuid,String str,byte[] value) {
             {if(doLog){showbytes(LOG_ID+ " "+SerialNumber +" onCharacteristicChanged  "+uuid.toString()+" "+str, value);};}
         }
 private void onCharacteristicChanged33(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, byte[] value) {
+       final long nowmsec= System.currentTimeMillis();
        var wakelock=    Applic.usewakelock?(((PowerManager) app.getSystemService(POWER_SERVICE)).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Juggluco::Libre3")):null;
        if(wakelock!=null)
            wakelock.acquire();
+
             UUID uuid = characteristic.getUuid();
 //      {if(doLog){      showbytes(LOG_ID+" onCharacteristicChanged Start "+uuid.toString(), value);};}
             if(uuid.equals(LIBRE3_CHAR_GLUCOSE_DATA)) {
                 logcharacter(uuid,charglucosedata,value);
-                glucose_data(value);
+                glucose_data(value,nowmsec);
             } else if (uuid.equals(LIBRE3_CHAR_PATCH_STATUS)) {
                 logcharacter(uuid,"CHAR_PATCH_STATUS",value);
                 receivedpatchstatus(value);
@@ -490,9 +492,9 @@ private void onCharacteristicChanged33(BluetoothGatt gatt, BluetoothGattCharacte
                 fast_data(value);
             } else {
                 logcharacter(uuid,"Unknown",value);
-         dodisconnect(mBluetoothGatt);
-         disconnected(1042);
-            }
+                dodisconnect(mBluetoothGatt);
+                disconnected(1042);
+                }
        if(wakelock!=null)
         wakelock.release();
     {if(doLog) {Log.i(LOG_ID, SerialNumber + ": "+"onCharacteristicChanged end");};};
@@ -961,21 +963,20 @@ private boolean    lastphase5=false;
 
     @SuppressLint("MissingPermission")
 private long datatime=0L;
-private    void glucose_data(byte[] value) {
+private    void glucose_data(byte[] value,long timmsec) {
         if(doLog) {Log.i(LOG_ID, SerialNumber + ": "+"start glucose_data");};
         int len = value.length;
 
         System.arraycopy(value, 0, this.oneMinuteRawData, this.oneMinuteReadingSize, len);
         oneMinuteReadingSize +=len;
         if(oneMinuteReadingSize >= oneMinuteRawData.length) {
-           long timmsec = System.currentTimeMillis();
            this.oneMinuteReadingSize = 0;
            byte[] decr = intDecrypt(cryptptr,3, oneMinuteRawData);
            if(decr == null) {
                 Log.e(LOG_ID, SerialNumber + ": "+"intDecrypt(cryptptr,3, oneMinuteRawData)==null");
                 return;
                }
-           long res=Natives.saveLibre3MinuteL(this.sensorptr, decr);
+           long res=Natives.saveLibre3MinuteL(this.sensorptr, decr,timmsec);
            handleGlucoseResult(res,timmsec);
            datatime=timmsec;
            this.mBluetoothGatt.readRemoteRssi();

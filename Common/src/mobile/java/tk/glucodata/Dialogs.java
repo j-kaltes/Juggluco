@@ -49,6 +49,7 @@ import static tk.glucodata.NumberView.geteditview;
 import static tk.glucodata.NumberView.geteditwearos;
 import static tk.glucodata.NumberView.smallScreen;
 import static tk.glucodata.util.getbutton;
+import static tk.glucodata.util.getcheckbox;
 import static tk.glucodata.util.getlabel;
 
 import java.text.DateFormat;
@@ -64,6 +65,7 @@ private    final static String LOG_ID="Dialogs";
 private float density;
 private ViewGroup exportscreen=null;
  TextView exportlabel=null;
+ private boolean isCalibrated=true;
 Dialogs(float density) {
     this.density=density;
     }
@@ -83,7 +85,7 @@ private Button exportbutton(MainActivity activity,String label, int type) {
             switch(type) {
                 case 4: algexporter(activity,   type,label,".html",daynr);break;
                 case 5: algexporter(activity,type,label,".csv",daynr);break;
-                default: exporter( activity,  type,label,daynr);
+                default: exporter( activity,  type|8,label,daynr);
                 };
             });
     return but;
@@ -142,25 +144,27 @@ public void showexport(MainActivity activity,int width,int height,View parent) {
         Button close=new Button(activity);
         close.setText(R.string.closename);
         close.setOnClickListener(v-> activity.doonback());
-        View[] gviews={scan,hist,stream};
-        View[] lviews={num,meals,close};
+        var calibrated=getcheckbox(activity,R.string.calibrated, isCalibrated);
+        calibrated.setOnCheckedChangeListener( (buttonView,  isChecked) ->  { isCalibrated=isChecked; });
+        View[] gviews={hist,stream,calibrated};
+        View[] lviews={scan,num,meals,close};
         exportscreen=new Layout(activity, (l, w, h) -> {
             int wid = GlucoseCurve.getwidth();
             if(!smallScreen) {
                 int hei = GlucoseCurve.getheight();
                 if(hei>h&&wid>w) {
-                       int half= wid / 2;
-                       int af=(half-w)/4;
-                    l.setX(half - w-af);
+                    int half= wid / 2;
+                    int af=(half-w)/4;
+                    l.setX(half - w-af +MainActivity.systembarLeft);
                     l.setY((hei - h) / 2);
                     }
                    else {
-                    l.setX(0);
+                    l.setX(MainActivity.systembarLeft);
                     l.setY(MainActivity.systembarTop*3/4);
                     }
                    }
             else {
-                 l.setX((wid-w)/2);
+                 l.setX((int)(MainActivity.systembarLeft+(wid-w-MainActivity.systembarLeft-MainActivity.systembarRight)*.5f));
                 l.setY(MainActivity.systembarTop*3/4);
                  }
                return new int[] {w,h};

@@ -147,8 +147,7 @@ int nightuploadTreatments3(const char *data,int len) {
     return nightupload(jnightuploadTreatments3url,data,len,false);
     }
 
-
-extern double     calibrateONEtest(const SensorGlucoseData *sens,const ScanData &value);
+#include "calibrate/Calibrator.hpp"
 //extern int Tdatestring(time_t tim,char *buf) ;
 #include "datestring.hpp"
 extern double getdelta(float change);
@@ -156,7 +155,8 @@ extern std::string_view getdeltaname(float change);
 template <class T> int mkuploaditem(SensorGlucoseData *sens,char *buf,const char *sensorname,const T &item) {
     const time_t tim=item.gettime();
     int mgdL;
-    if(double calibrated=calibrateONEtest(sens,item);!isnan(calibrated)) {
+    auto cali= make_calibrator<ScanData>(sens);
+    if(double calibrated=cali.calibrateONEtest(item);!isnan(calibrated)) {
         mgdL=(int)round(calibrated);
          }
     else
@@ -209,6 +209,7 @@ static bool uploadCGM3() {
     int newstartsensor=startsensor;
     for(int sensorid=last;sensorid>=startsensor;--sensorid) {
         if(SensorGlucoseData *sens=sensors->getSensorData(sensorid)) {
+            auto cali= make_calibrator<ScanData>(sens);
             std::span<const ScanData> gdata=sens->getPolldata();
             const sensorname_t *sensorname=sens->shortsensorname();
             int len=gdata.size();
@@ -225,7 +226,7 @@ static bool uploadCGM3() {
 extern char * writev3entry(char *outin,const ScanData *val, const sensorname_t *sensorname,bool server=true);
 
                         const char *ptr;
-                        if(double calibrated=calibrateONEtest(sens,*el);!isnan(calibrated)) {
+                        if(double calibrated=cali.calibrateONEtest(*el);!isnan(calibrated)) {
                             ScanData newel=*el;
                             newel.g=(int32_t)round(calibrated);
                             ptr=writev3entry(buf,&newel, sensorname,false);

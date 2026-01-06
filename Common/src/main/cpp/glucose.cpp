@@ -36,12 +36,14 @@ void SensorGlucoseData::backhistory(int pos) {
     }
 void SensorGlucoseData::backcalibrated(int pos) {
     const int maxind=backup->getupdatedata()->sendnr;
-    auto *caliUpdated=getinfo()->caliUpdated;
-    for(int i=0;i<maxind;i++) {
-        if(pos<caliUpdated[i]) {
-            caliUpdated[i]=pos;
-            }
-        }
+    for(int cali=0;cali<2;++cali) {
+            auto *caliUpdated=getinfo()->calis[cali].caliUpdated;
+            for(int i=0;i<maxind;i++) {
+                if(pos<caliUpdated[i]) {
+                    caliUpdated[i]=pos;
+                    }
+                }
+           }
     }
 void SensorGlucoseData::backstream(int pos) {
     const int maxind=backup->getupdatedata()->sendnr;
@@ -242,6 +244,31 @@ int SensorGlucoseData::updatescan(crypt_t *pass,Connect *connect,int ind,int sen
               return 2;
               }
         else {
+          if(isAir()) {
+                if(!getinfo()->update[ind].siScan&& getinfo()->airData.pinCode[0]) {
+                        std::vector<subdata> vect;
+                        vect.reserve(3);
+                        vect.push_back({meminfo.data(),0,offsetof(Info,lastHistoricLifeCountReceivedPos)});
+                        constexpr const int airsize=sizeof(uint16_t);
+                        constexpr const int offdevice=offsetof(Info,deviceaddress)-airsize;
+                        vect.push_back({meminfo.data()+offdevice,offdevice,airsize});
+                        vect.push_back({meminfo.data()+offsetof(Info,airData),offsetof(Info,airData),sizeof(Info::airData)});
+                        if(!connect->senddata(pass,vect, infopath)) {
+                            LOGSTRING("GLU: senddata info.data failed\n");
+                            return 0;
+                             }
+                        getinfo()->update[ind].siScan=true;
+                        return 5;
+                        }
+                else {
+                    if(getinfo()->update[ind].sendstreaming) {
+                        getinfo()->update[ind].sendstreaming=false;
+                        return 5;
+                        }
+                    }
+                return 2;
+                }
+        else {
 
     bool did=false;
     constexpr const int startinfolen=offsetof(Info, pollcount);
@@ -374,6 +401,8 @@ int SensorGlucoseData::updatescan(crypt_t *pass,Connect *connect,int ind,int sen
     return 2;
        }
        }
+
+       }
        }
     }
 template <typename It,typename T>
@@ -460,7 +489,7 @@ void     setbackupstart(int sendindex,int newstart, void (SensorGlucoseData::*fu
     if(!sensors)
         return;
     if(newstart<0) 
-        return;
+        return ;
     if(SensorGlucoseData *hist=sensors->getSensorData(sendindex)) {
         (hist->*func)(newstart);
         }
@@ -474,9 +503,12 @@ void     sethistorystart(int sendindex,int newstart) {
         LOGGER("sethistorystart(%d,%d)\n",sendindex,newstart);
         setbackupstart(sendindex,newstart,&SensorGlucoseData::backhistory);
         }
+
+extern void setCalibrates(uint16_t sensorindex) ;
 void     setcalibratedstart(int sendindex,int newstart) {
         LOGGER("setcalibratedstart(%d,%d)\n",sendindex,newstart);
         setbackupstart(sendindex,newstart,&SensorGlucoseData::backcalibrated);
+        setCalibrates(sendindex);
         }
 /*
 void     sethistorystart(int sendindex,int newstart) {
@@ -601,3 +633,7 @@ void SensorGlucoseData::resetSiIndex() {
                 const int maxint=backup->getupdatedata()->sendnr;
                 setrawstreamstart(maxint,0);
                 }
+
+#define VISIBLE __attribute__((__visibility__("default")))
+extern "C" void VISIBLE A_library_belonging_to_Juggluco_by_Jaap_Korthals_Altes() {
+    };

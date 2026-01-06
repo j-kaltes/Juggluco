@@ -65,6 +65,10 @@ extern "C" JNIEXPORT jbyteArray JNICALL   fromjava(careSenseTimeCMD)(JNIEnv *env
 extern void addCalibration(uint32_t tim,int type,Num *num,const Numdata *numdata) ;
 extern void    setnumchanged(uint32_t tim);
 extern "C" JNIEXPORT jboolean JNICALL   fromjava(GlucoseMeterSave)(JNIEnv *env, jclass cl,jint meterIndex,jbyteArray value) {
+    if(settings->staticnum()) {
+        LOGAR("GlucoseMeterSave: staticnum don't save");
+        return false;
+        }
     const auto bloodvar=settings->data()->bloodvar;
     if(bloodvar>=maxvarnr) {
         LOGAR("GlucoseMeterSave: no bloodvar set");

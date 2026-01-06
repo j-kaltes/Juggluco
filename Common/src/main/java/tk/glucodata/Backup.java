@@ -972,7 +972,9 @@ CheckBox ICE;
          help(R.string.connectionoverview,act) );
 
      Button Sync=getbutton(act,act.getString(R.string.sync));
-      Sync.setOnClickListener(v-> Applic.wakemirrors());
+      Sync.setOnClickListener(v-> {
+          Applic.switchSync();
+          });
      Button reinit=getbutton(act,R.string.reinit);
       reinit.setOnClickListener(v-> {
       MessageSender.reinit();
