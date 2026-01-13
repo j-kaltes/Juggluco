@@ -1,3 +1,4 @@
+#ifndef WEAROS
 #include "config.h"
 #include "JCurve.hpp"
 
@@ -118,15 +119,17 @@ static const ScanData * findScan(const ScanData *start,const ScanData *en) {
  }
 
 static const ScanData * findCalibratedScan(const SensorGlucoseData  *sens,const ScanData *start,const ScanData *en) {
-  CalibrateBackward  cali(sens,0); 
+  CalibrateBackward<ScanData>  cali(sens,settings->data()->CalibratePast); 
   if(!cali.size())
       return nullptr;
   for(const ScanData *it=en-1;it>=start;--it) {
-        double  calValue=cali.backvalue(*it);
-        if(isnan(calValue))
-            return nullptr;
-        if(searchdata(it,calValue))
-            return it;
+        if(it->valid()) {
+            double  calValue=cali.backvalue(*it);
+            if(isnan(calValue))
+                return nullptr;
+            if(searchdata(it,calValue))
+                return it;
+            }
         }
    return nullptr;
  }
@@ -135,6 +138,24 @@ static const Glucose * findhistory(const SensorGlucoseData  * hist, const uint32
         const Glucose *g=hist->getglucose(pos);
         if(searchdata(g))
             return g;
+
+        }
+    return nullptr;
+    }
+static const Glucose * findCalibratedHistory(const SensorGlucoseData  * sens, const uint32_t firstpos, const uint32_t lastpos) {
+    CalibrateBackward<Glucose>  cali(sens,settings->data()->CalibratePast); 
+
+    if(!cali.size())
+              return nullptr;
+    for(auto pos=lastpos;pos>=firstpos;--pos)  {
+        const Glucose *g=sens->getglucose(pos);
+        if(g->valid()) {
+            double  calValue=cali.backvalue(*g);
+            if(isnan(calValue))
+                return nullptr;
+            if(searchdata(g,calValue))
+                return g;
+            }
 
         }
     return nullptr;
@@ -185,7 +206,7 @@ uint32_t JCurve::glucosesearch(uint32_t starttime,uint32_t endtime) {
                 goto skiphistory;
                 }
             if((searchdata.type&glucosetype)==glucosetype) {
-                if((searchdata.type&historysearchtype)==historysearchtype) {
+                if((searchdata.type&18)) {
                     int endpos;
                     if(tim<endtime)
                         endpos=lastpos;
@@ -214,12 +235,22 @@ uint32_t JCurve::glucosesearch(uint32_t starttime,uint32_t endtime) {
                         while(startpos<endpos&&    his->timeatpos(startpos)<hittime)
                             startpos++;
                         }
+                if((searchdata.type&historysearchtype)==historysearchtype) {
                      const Glucose *mog=findhistory(his,startpos,endpos); 
                      if(mog&&mog->gettime()>hittime) {
                         histhit=mog;
                         hittime=mog->gettime();
                         logglucose("glucosesearch mog ",mog);
                         }
+                       }
+                if((searchdata.type&calibratedHistorysearchtype)==calibratedHistorysearchtype) {
+                     const Glucose *mog=findCalibratedHistory(his,startpos,endpos); 
+                     if(mog&&mog->gettime()>hittime) {
+                        histhit=mog;
+                        hittime=mog->gettime();
+                        logglucose("glucosesearch mog ",mog);
+                        }
+                       }
                     }
                 skiphistory:
                 if((searchdata.type&scansearchtype)==scansearchtype) {
@@ -231,7 +262,7 @@ uint32_t JCurve::glucosesearch(uint32_t starttime,uint32_t endtime) {
                         hittime=mogscan->t;
                         }
                         }
-                if(searchdata.type&12) {
+                if(searchdata.type& (streamsearchtype|calibratedStreamsearchtype)) {
                     std::span<const ScanData>     scan=his->getPolldata();
                     auto [under,above] =getScanRange(scan.data(),scan.size(),hittime,endtime) ;
                     if((searchdata.type&streamsearchtype)==streamsearchtype) {
@@ -275,14 +306,16 @@ uint32_t JCurve::glucosesearch(uint32_t starttime,uint32_t endtime) {
     }
 
 static const ScanData * findforwardCalibratedScan(const SensorGlucoseData  *sens, const ScanData *start,const ScanData *en) {
-  CalibrateForward  cali(sens,0); 
+  CalibrateForward<ScanData>  cali(sens,settings->data()->CalibratePast); 
   if(!cali.size())
      return nullptr;
   for(const ScanData *it=start;it<en;++it) {
-        double  calValue=cali.value(*it);
-        if(!isnan(calValue)&&searchdata(it,calValue))
-            if(searchdata(it,calValue))
-                return it;
+        if(it->valid()) {
+            double  calValue=cali.forwardvalue(*it);
+            if(!isnan(calValue)&&searchdata(it,calValue))
+                if(searchdata(it,calValue))
+                    return it;
+            }
         }
    return nullptr;
  }
@@ -297,12 +330,28 @@ static const ScanData * findforwardScan(const ScanData *start,const ScanData *en
 static const Glucose * findforwardhistory(const SensorGlucoseData  * hist, const uint32_t firstpos, const uint32_t lastpos) {
     for(auto pos=firstpos;pos<=lastpos;++pos)  {
         const Glucose *g=hist->getglucose(pos);
-        if(searchdata(g))
-            return g;
-
+            if(searchdata(g))
+                return g;
         }
     return nullptr;
     }
+
+static const Glucose * findforwardCalibratedHistory(const SensorGlucoseData  * hist, const uint32_t firstpos, const uint32_t lastpos) {
+    CalibrateForward<Glucose>  cali(hist,settings->data()->CalibratePast); 
+
+    if(!cali.size())
+         return nullptr;
+    for(auto pos=firstpos;pos<=lastpos;++pos)  {
+        const Glucose *g=hist->getglucose(pos);
+        if(g->valid()) {
+            const double  calValue=cali.forwardvalue(*g);
+            if(searchdata(g,calValue))
+                return g;
+             }
+        }
+    return nullptr;
+    }
+
 
 uint32_t JCurve::glucoseforwardsearch(uint32_t starttime,uint32_t endtime) {
     uint32_t hittime=endtime;
@@ -335,7 +384,7 @@ uint32_t JCurve::glucoseforwardsearch(uint32_t starttime,uint32_t endtime) {
             goto skiphistory;
             }
 
-    if((searchdata.type&historysearchtype)==historysearchtype) {
+    if((searchdata.type&(historysearchtype|calibratedHistorysearchtype))) {
         int endpos;
         if(tim<hittime)
             endpos=lastpos;
@@ -364,12 +413,21 @@ uint32_t JCurve::glucoseforwardsearch(uint32_t starttime,uint32_t endtime) {
             while(startpos<endpos&&    his->timeatpos(startpos)<starttime)
                 startpos++;
             }
-         const Glucose *mog=findforwardhistory(his,startpos,endpos); 
-         if(mog&&mog->gettime()<hittime) {
-            histhit=mog;
-            hittime=mog->gettime();
-            }
-        }
+            if((searchdata.type&historysearchtype)==historysearchtype) {
+                 const Glucose *mog=findforwardhistory(his,startpos,endpos); 
+                 if(mog&&mog->gettime()<hittime) {
+                    histhit=mog;
+                    hittime=mog->gettime();
+                    }
+                }
+            if((searchdata.type&calibratedHistorysearchtype)==calibratedHistorysearchtype) {
+                 const Glucose *mog= findforwardCalibratedHistory(his,startpos,endpos);
+                 if(mog&&mog->gettime()<hittime) {
+                    histhit=mog;
+                    hittime=mog->gettime();
+                    }
+                }
+         }
     skiphistory:
     if((searchdata.type&scansearchtype)==scansearchtype) {
         const std::span<const ScanData>     scan=his->getScandata();
@@ -425,6 +483,7 @@ uint32_t JCurve::glucoseforwardsearch(uint32_t starttime,uint32_t endtime) {
 int JCurve::searchcommando(int type, float under,float above,int frommin,int tomin,bool forward,const char *regingr,float amount) {
 if(type&glucosetype) {
     searchdata={type ,backconvert(under), backconvert(above), frommin, tomin,0};
+    setsearchshow(type);
     return forward?glucoseforwardsearch(starttime, std::numeric_limits<uint32_t>::max()):glucosesearch(0,starttime+duration);
     }
 uint32_t  maxlab= settings->getlabelcount();
@@ -432,6 +491,7 @@ if(type>=maxlab)
     type=0x80000000;
 searchdata={ type, under, above, frommin, tomin,maxlab};
 if(regingr!=nullptr&&type==carbotype) {
+    showmeals=true;
     meals->datameal()->searchingredients(regingr,searchdata.ingredients);
     if(searchdata.ingredients.size()==0) {
         searchdata.type=nosearchtype;
@@ -439,8 +499,10 @@ if(regingr!=nullptr&&type==carbotype) {
         }
     searchdata.amount=amount;
     }
-else
+else {
+    shownumbers=true;
     searchdata.ingredients.clear();
+    }
 if(const Num *hit=forward?findforward<0>():findpast<1>()) {
     highlightnum(hit);
     return 0;
@@ -456,3 +518,4 @@ bool searchhit(const T *ptr) {
     }
 
 template   bool searchhit<Num>(const Num *ptr); 
+#endif

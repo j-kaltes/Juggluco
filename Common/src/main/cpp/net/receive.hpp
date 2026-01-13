@@ -22,17 +22,25 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include <filesystem>
 #include <iostream>
 #include <array>
+#include <unistd.h>
+
 #include "mkdirs.hpp"
 using namespace std;
+/*
+inline bool mksparsefile(int fp,int len) {
+    return pwrite(fp,"",1,len-1)==1;
+    } */
 
 #include "inout.hpp"
 class getdata {
 
 string basepath;
 public:
+const string &getbase() const {
+        return basepath;
+        }
 getdata() {}
 getdata(std::string_view name): basepath(name) {}
 void setpath(std::string_view name) {
@@ -69,8 +77,8 @@ bool mkfile(int fp,uint32_t len) {
     return false;
     }
    if(st.st_size<len) {
-    if(ftruncate(fp,len)) {
-        lerror("ftruncate");
+    if(!mksparsefile(fp,len)) {
+        lerror("mksparsefile");
         return false;
         }
     }
@@ -92,13 +100,14 @@ constexpr const int maxbytes=16;
     }
 
 bool savedata(int fp,uint32_t offset, uint32_t len,const unsigned char *data) {
-    if(lseek( fp, offset, SEEK_SET )!=offset) {
+/*    if(lseek( fp, offset, SEEK_SET )!=offset) {
        lerror("lseek");
        return false;
-       }
+       } */
     LOGGER("savedata fp=%d off=%u len=%u data=%s\n",fp,offset,len,(char *)loghex(data,len).data());    
-    if(write(fp,data,len)!=len) {
-       lerror("write");
+
+    if(pwrite(fp,data,len,offset)!=len) {
+       lerror("pwrite");
        return false;
        }
      return true;

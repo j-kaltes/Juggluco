@@ -811,13 +811,13 @@ new View[]{isvalue},new View[]{ringisvalue},new View[]{usealarm},new View[]{adva
     highalarm[2].setOnClickListener(v->{
         new tk.glucodata.RingTones(1).mkviews(context,context.getString(R.string.highglucosealarm),lay);
         });
-
+/*
     context.setonback(() -> {
         parview.setVisibility(VISIBLE);
         tk.glucodata.help.hidekeyboard(context);
         removeContentView(lay) ;
         });
-
+*/
     usealarm.setOnCheckedChangeListener( (buttonView,  isChecked) -> Natives.setUSEALARM(isChecked));
     BooleanSupplier saver=() -> {
       final boolean hasloss= lossalarm.isChecked();

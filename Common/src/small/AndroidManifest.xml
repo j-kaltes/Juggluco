@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
 
-    <uses-sdk tools:overrideLibrary="com.google.android.gms.common,com.google.android.gms.base,com.google.android.gms.tasks,androidx.profileinstaller,androidx.activity,androidx.recyclerview,androidx.startup,androidx.core.ktx,androidx.core,androidx.core.viewtree"/>
+    <uses-sdk
+        tools:overrideLibrary="androidx.navigationevent,com.google.android.gms.common,com.google.android.gms.base,com.google.android.gms.tasks,androidx.profileinstaller,androidx.activity,androidx.recyclerview,androidx.startup,androidx.core.ktx,androidx.core,androidx.core.viewtree"/>
 
 
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>

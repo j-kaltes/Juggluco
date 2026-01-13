@@ -49,7 +49,7 @@ static constexpr const	int levels[] {250,180,69,53};
 	double active;
 	uint32_t starttime=UINT32_MAX,endtime=0;
 
-template <class GlucoseEl> stats( std::vector<GlucoseDataType<const GlucoseEl*,const GlucoseEl*>> &polldata) {
+template <typename GlucoseIterator> stats( std::vector<GlucoseDataType<GlucoseIterator>> &polldata) {
 		auto targetlow=settings->targetlow()/10-1;
 		auto targethigh=settings->targethigh()/10;
 		border[0]=targethigh;
@@ -59,29 +59,39 @@ template <class GlucoseEl> stats( std::vector<GlucoseDataType<const GlucoseEl*,c
 		uint32_t minint=30;
 		uint32_t prevtime=0;
 		totid=0;
-		for(auto [firstin,lastin,idDistance]:polldata) {
+		for(auto [firstin,lastin,idDistance,calibrated,cali]:polldata) {
 			int previd=-1;
-			const GlucoseEl *start=firstvalid(firstin,lastin,prevtime+minint);
-			if(!start)
+			GlucoseIterator start=firstvalid(firstin,lastin,prevtime+minint);
+			if(start==lastin)
 				continue;
 			if(start->gettime()<starttime) {
 				starttime=start->gettime();
 				}
-			const GlucoseEl *last=lastvalid(start,lastin-1);
+			GlucoseIterator last=lastvalid(start,lastin-1);
 			int idint=(last->getid()-start->getid())/idDistance+1;
 			totid+=idint;
-			int32_t late= start->gettime()-(prevtime+60);
-			if(prevtime&&late>0) {
-				const uint32_t timeint=last->gettime()-start->gettime();
-				const int extraid=(uint64_t)late*idint/timeint;
-				totid+=extraid;
+			if(prevtime) {
+			    int32_t late= start->gettime()-(prevtime+60*idDistance);
+                if(late>0) {
+                    const uint32_t timeint=last->gettime()-start->gettime();
+                    if(timeint>0) {
+                        const int extraid=(uint64_t)late*idint/timeint;
+                        totid+=extraid;
+                        }
+                     }
 				}
 			for(auto it=start;it<=last;it++) {
 				if(!it->valid() ||it->getid()==previd)
 					continue;
 				previd=it->getid();
 
-				const int glu=it->getmgdL();
+				int glu;
+                if(double  calValue;calibrated&&!isnan(calValue=cali.forwardvalue(*it))) {
+                    glu=(int)std::round(calValue);
+                    }
+                else {
+                    glu=it->getmgdL();
+                    }
 				total+=glu;
 				int i=0;
 				for(;i<std::size(levels);i++) {
@@ -112,18 +122,25 @@ template <class GlucoseEl> stats( std::vector<GlucoseDataType<const GlucoseEl*,c
 			return ;
 		long double mean=total/count;
 		long double quadifsum=0;
-		for(auto [firstin,lastin,_]:polldata) {
-			const GlucoseEl *start=firstvalid(firstin,lastin,prevtime+minint);
-			if(!start)
+		for(auto [firstin,lastin,_distance,calibrated,cali]:polldata) {
+			GlucoseIterator start=firstvalid(firstin,lastin,prevtime+minint);
+			if(start==lastin)
 				continue;
-			const GlucoseEl *last=lastvalid(start,lastin-1);
+			GlucoseIterator last=lastvalid(start,lastin-1);
 			prevtime=last->gettime();
 			int previd=-1;
 			for(auto it=start;it<=last;it++) {
 				if(!it->valid() ||it->getid()==previd)
 					continue;
 				previd=it->getid();
-				const int glu=it->getmgdL();
+				int glu;
+
+            if(double  calValue;calibrated&&!isnan(calValue=cali.forwardvalue(*it))) {
+                glu=(int)std::round(calValue);
+                }
+            else {
+                glu=it->getmgdL();
+                }
 				long double dif=(glu-mean);
 				quadifsum+=dif*dif;
 				}

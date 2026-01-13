@@ -23,6 +23,5 @@ package tk.glucodata;
 
 
 class Stats {
-
 	static void mkstats(MainActivity act) { }
 }

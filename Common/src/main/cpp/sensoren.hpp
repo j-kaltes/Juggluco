@@ -499,6 +499,8 @@ static  bool dexcomEnd(const char *endcode) {
 
 //Scanned: 01040156300880101125031317260203211R000162641
 //(01)04015630088010 11 250313 17 260203(21)1R000162641    
+
+#ifdef SIBIONICS
 std::pair<int,SensorGlucoseData *> makeAirSensorindex(std::string_view scanned,uint32_t now) {
 
     if(sizeof(careSenseAirScan_t)!=scanned.size()) { 
@@ -619,7 +621,6 @@ std::pair<int,SensorGlucoseData *> makeAccuCheckSensorindex(std::string_view sca
    return {ind,getSensorData(ind)} ;
     }
 public:
-#ifdef SIBIONICS
 std::pair<int,SensorGlucoseData *> makeSIsensorindex(std::string_view gegsSI,uint32_t now) {
 #ifndef NOLOG
    LOGGER("makeSIsensorindex(%s) len=%zd\n",gegsSI.data(),gegsSI.size());
@@ -1119,6 +1120,9 @@ std::pair<int, uint32_t> lastused(uint32_t (SensorGlucoseData::*proc)(void) cons
    auto lastpolltime() {
       return lastused(&SensorGlucoseData::getlastpolltime);
    }
+   auto lasthistorytime() {
+      return lastused(&SensorGlucoseData::getlasttime);
+   }
 
 
 
@@ -1142,6 +1146,27 @@ std::pair<int, uint32_t> lastused(uint32_t (SensorGlucoseData::*proc)(void) cons
           }
       return (decltype(std::declval<SensorGlucoseData>().firstpolltime())) 0;
    }
+
+   auto firsthistorytime() {
+      int i=getstartindex(); 
+      if(i>=0) {
+          do {
+             sensor *sens=getsensor(i);
+              if(sens->next==0&&sens->prev==0)
+                  setindices();
+             if(sens->present) {
+                if(const SensorGlucoseData *hist = getSensorData(i)) {
+                   auto tim = hist->getfirsttimehistory();
+                   if (tim < UINT32_MAX)
+                      return tim;
+                   }
+                 }
+             i=sens->next;
+             } while(i!=LISTEND);
+          }
+      return (decltype(std::declval<SensorGlucoseData>().getfirsttimehistory())) 0;
+   }
+
 
    const SensorGlucoseData *laststreamsensor() {
     int i=getendindex();
@@ -1232,6 +1257,9 @@ int sendCalibrates(crypt_t *pass, Connect *connect,int ind,uint16_t &startSendCa
                 return 0;
             did|=res;
             }
+     /*  if(!connect->sendStartSendCalibrate(pass,first)) { TODO: needed?
+           return 0;
+          } */
        startSendCalibrate=lastsens;
        return did;
       }

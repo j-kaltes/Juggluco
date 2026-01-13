@@ -21,6 +21,7 @@
 package tk.glucodata;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static tk.glucodata.Natives.getInvertColors;
+import static tk.glucodata.Natives.getshowcalibratedscans;
 import static tk.glucodata.Natives.getshowcalibratedstream;
 import static tk.glucodata.Natives.getshowhistories;
 import static tk.glucodata.Natives.getshownumbers;
@@ -41,6 +42,7 @@ static void show(MainActivity context) {
      var Scans=getcheckbox(context,R.string.scansname,getshowscans()) ;
      var CalibratedStream=getcheckbox(context,context.getString(R.string.streamname)+" "+context.getString(R.string.calibrated),getshowcalibratedstream()) ;
      var CalibratedHistory=getcheckbox(context,context.getString(R.string.historyname)+" "+context.getString(R.string.calibrated), Natives.getshowcalibratedhistories());
+     var CalibratedScans=getcheckbox(context,context.getString(R.string.scansname)+" "+context.getString(R.string.calibrated),getshowcalibratedscans()) ;
      var History=getcheckbox(context,R.string.historyname,getshowhistories()) ;
      var Stream=getcheckbox(context,R.string.streamname,getshowstream()) ;
      var Amounts=getcheckbox(context,R.string.amountshort,getshownumbers()) ;
@@ -48,6 +50,7 @@ static void show(MainActivity context) {
     darkmodeview.setOnCheckedChangeListener( (buttonView, isChecked)->{
         Natives.setInvertColors(isChecked);
         });
+CalibratedScans.setOnCheckedChangeListener( (buttonView,  isChecked) -> { Natives.setshowcalibratedscans(isChecked); });
 
 CalibratedStream.setOnCheckedChangeListener( (buttonView,  isChecked) -> { Natives.setshowcalibratedstream(isChecked); });
 CalibratedHistory.setOnCheckedChangeListener( (buttonView,  isChecked) -> { Natives.setshowcalibratedhistories(isChecked); });
@@ -58,7 +61,7 @@ Scans.setOnCheckedChangeListener( (buttonView,  isChecked) -> { Natives.setshows
      var layout=new Layout(context, (l, w, h) -> {
             final int[] ret={w,h};
             return ret;
-     }, new View[]{Scans},new View[]{History},new View[]{CalibratedHistory},new View[]{Stream},new View[]{CalibratedStream},new View[]{Amounts},new View[]{darkmodeview},new View[]{close});
+     }, new View[]{Scans},new View[]{History},new View[]{Stream},new View[]{CalibratedScans},new View[]{CalibratedHistory},new View[]{CalibratedStream},new View[]{Amounts},new View[]{darkmodeview},new View[]{close});
     layout.setBackgroundColor(Applic.backgroundcolor);
 
     var height=GlucoseCurve.getheight();

@@ -2,6 +2,7 @@
 #include <math.h>
 #include "SensorGlucoseData.hpp"
 #include "fromjava.h"
+#include "datbackup.hpp"
 //#include "streamdata.hpp"
 
 
@@ -38,6 +39,7 @@ extern "C" JNIEXPORT jboolean JNICALL   fromjava(removeCalibrator)(JNIEnv *env, 
     auto *sensor=reinterpret_cast<SensorGlucoseData*>(sensorptr);
     if(sensor->getinfo()->calis[which].removeCaliPos(pos)) {
         setCalibrates(sensor->sensorIndex);
+        backup->wakebackup(wakenums);
         return true;
         }
     return false;

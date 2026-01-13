@@ -1430,32 +1430,32 @@ NovoPen   *getnovopen(JNIEnv *env,jstring jserial) {
     }
 
 struct dose_t {
-uint8_t reltime[4];
-uint16_t sign1;
-uint8_t units[2];
-uint32_t sign2;
-bool rightsign()const {
-    if((sign2&0xFFFFFF)!=8) {
-        LOGGER("sign2=%d!=8\n",sign2);
+    uint8_t reltime[4];
+    uint16_t sign1;
+    uint8_t units[2];
+    uint32_t sign2;
+    bool rightsign()const {
+        if((sign2&0xFFFFFF)!=8) {
+            LOGGER("sign2=%d!=8\n",sign2);
+            return false;
+            }
+        const int error=sign2&0xFF000000;
+        if(error) {
+            LOGGER("rightsign message=%d\n",error);
+            }
+        if(sign1==0x00FF)
+            return true;
+        LOGGER("sign1==%X!=0xFF",sign1);
         return false;
         }
-    const int error=sign2&0xFF000000;
-    if(error) {
-        LOGGER("rightsign message=%d\n",error);
+    uint32_t getreltime() const {
+        uint32_t uit;
+        std::reverse_copy(reltime,reltime+4,reinterpret_cast<uint8_t *>(&uit));
+        return uit;
         }
-    if(sign1==0x00FF)
-        return true;
-    LOGGER("sign1==%X!=0xFF",sign1);
-    return false;
-    }
-uint32_t getreltime() const {
-    uint32_t uit;
-    std::reverse_copy(reltime,reltime+4,reinterpret_cast<uint8_t *>(&uit));
-    return uit;
-    }
-float getvalue() const {
-    return float(units[0]<<8|units[1])*.1f;
-    }
+    float getvalue() const {
+        return float(units[0]<<8|units[1])*.1f;
+        }
 
 };
 
@@ -1493,7 +1493,7 @@ int savedoses(NovoPen *pen,uint32_t reftime,uint8_t *bytes,int len) {
             LOGGER("time=%u\n",time);
             continue;
             }
-        if(value>60) {
+        if(!isnormal(value)||value>60) {
             LOGGER("%.1f\n",value);
             continue;
             }
@@ -1852,16 +1852,16 @@ extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getDisconnectSensor)(JNIEnv *e
 
 
 std::string_view getjstring(JNIEnv *env,jstring jstr)  {
-	size_t strlen= env->GetStringUTFLength( jstr);
-	jint jstrlen = env->GetStringLength( jstr);
-	char *strbuf=new char[strlen+1];
-	env->GetStringUTFRegion( jstr, 0,jstrlen, strbuf);
-	strbuf[strlen]='\0';
-	return {strbuf,strlen};
-	}
+    size_t strlen= env->GetStringUTFLength( jstr);
+    jint jstrlen = env->GetStringLength( jstr);
+    char *strbuf=new char[strlen+1];
+    env->GetStringUTFRegion( jstr, 0,jstrlen, strbuf);
+    strbuf[strlen]='\0';
+    return {strbuf,strlen};
+    }
 extern "C" JNIEXPORT void JNICALL fromjava(setDevice) (JNIEnv *env, jclass clazz, jstring jMANUFACTURER, jstring jMODEL, int SDK_INTin) { 
    if(settings->data()->initVersion<36) { 
-	if(jMODEL) {
+    if(jMODEL) {
                 size_t strlen= env->GetStringUTFLength( jMODEL);
                 jint jMODELlen = env->GetStringLength( jMODEL);
                 char strbuf[strlen+1];
@@ -1879,11 +1879,11 @@ extern "C" JNIEXPORT void JNICALL fromjava(setDevice) (JNIEnv *env, jclass clazz
                         else {
                                 LOGGER("MODEL %s Samsung Watch4\n",strbuf);
                                 }
-		        }
+                }
                 else {
                         LOGGER("MODEL %s not Samsung\n",strbuf);
                     }
-	           }
+               }
         }
       }
 

@@ -76,6 +76,9 @@
 //#endif
 #ifndef WEAROS
 #define OLDEVERSENSE 1
+#ifdef JUGGLUCO_APP
+#define DOESSEARCH 1
+#endif
 #else
 //#define DONTTALK 1
 #endif

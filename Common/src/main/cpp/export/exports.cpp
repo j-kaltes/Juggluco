@@ -418,7 +418,7 @@ bool savemeals(FILE * handle,uint32_t starttime,uint32_t endtime) {
 #endif
 
 #ifdef JUGGLUCO_APP
-extern bool libreviewexport(int handle,uint32_t starttime,uint32_t endtime)  ;
+extern bool libreviewexport(int handle,uint32_t starttime,uint32_t endtime,const bool calibrate)  ;
 bool  exportdata(uint32_t starttimein, uint32_t duration,int intype,int fd,float days) {
 	uint32_t endtime=std::min(starttimein+duration,(uint32_t)time(nullptr));
 	uint32_t starttime=endtime-days*24*60*60;
@@ -426,21 +426,22 @@ bool  exportdata(uint32_t starttimein, uint32_t duration,int intype,int fd,float
     bool calibrated=intype&8;
 	switch(type) {
 		case 0: return exportnums(fd,starttime,endtime);	;
-		case 1: return exportscans<true>(fd, &SensorGlucoseData::scanInperiod,starttime,endtime);
+		case 1: return exportscans<true>(fd, &SensorGlucoseData::scanInperiod,starttime,endtime,INT_MAX,calibrated);
 		case 2: return exportscans<false>(fd, &SensorGlucoseData::streamInperiod,starttime,endtime,INT_MAX,calibrated);
 		case 3: return exporthistory(fd,starttime,endtime,INT_MAX,calibrated);
 #ifdef USE_MEAL
 		case 4: return allsavemeals(fd,starttime,endtime);
 #endif
-		case 5: return libreviewexport(fd,starttime,endtime);
+		case 5: return libreviewexport(fd,starttime,endtime,calibrated);
 		};
 	return false;
 	}
 #else
-template bool exportscans<true>(int handle,  CurData  (SensorGlucoseData::*proc)(const uint32_t,const uint32_t) const,uint32_t,uint32_t,int) ;
+template bool exportscans<true>(int handle,  CurData  (SensorGlucoseData::*proc)(const uint32_t,const uint32_t) const,uint32_t,uint32_t,int,bool) ;
 
-template bool exportscans<false>(int handle, CurData (SensorGlucoseData::*proc)(const uint32_t,const uint32_t) const,uint32_t,uint32_t,int) ;
+template bool exportscans<false>(int handle, CurData (SensorGlucoseData::*proc)(const uint32_t,const uint32_t) const,uint32_t,uint32_t,int,bool) ;
 #endif
+
 
 #include <stdio.h>
 #include <string.h>

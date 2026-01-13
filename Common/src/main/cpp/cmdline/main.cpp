@@ -66,14 +66,14 @@ bool  exportdata(const char *filename,P proc,Ts... args)  {
     return true;
     }
 
-extern bool libreviewexport(int handle,uint32_t starttime,uint32_t endtime);
-bool  libreviewexporter(const char *filename,uint32_t starttime,uint32_t endtime) {
+extern bool libreviewexport(int handle,uint32_t starttime,uint32_t endtime,const bool calibrate);
+bool  libreviewexporter(const char *filename,uint32_t starttime,uint32_t endtime,const bool calibrate) {
     int han=creat(filename, S_IRUSR| S_IWUSR);
     if(han<0) {
        cerr<<"Can't open "<<filename<<endl;
         return false;
     }
-     return  libreviewexport(han,starttime,endtime);
+     return  libreviewexport(han,starttime,endtime,calibrate);
     }
 
 extern bool allsavemeals(int handle,uint32_t starttime=0,uint32_t endtime=UINT32_MAX,int maxcount=INT_MAX);
@@ -144,8 +144,8 @@ R"(
 )"<<progname<<R"( [-d dir] -t[-+]: give treatments/amounts via Nightscout interface
 )"<<progname<<R"( [-d dir] -N filename: export nums 
 )"<<progname<<R"( [-d dir] -S filename: export scans 
-)"<<progname<<R"( [-d dir] -B filename: export stream 
-)" << progname<<R"( [-d dir] -H filename: export history 
+)"<<progname<<R"( [-d dir] -B filename: export stream. Add -K for calibrated values
+)" << progname<<R"( [-d dir] -H filename: export history. Add -K for calibrated values
 )"<<progname<<R"( [-d dir] -m filename: export meals 
 )"<<progname<<R"( [-d dir] -V filename: save in libreview format. Use -V without filename for setting categories for entered numbers. 
 )" << progname<<R"( [-d dir] -M : mmol/L
@@ -308,8 +308,8 @@ const char dirconf[]=".jugglucorc";
 //bool exportscans(int handle, const std::span<const ScanData>  (SensorGlucoseData::*proc)(void) const) ;
 
 template <bool repeatids>
-bool exportscans(int handle,  CurData  (SensorGlucoseData::*proc)(const uint32_t,const uint32_t) const,uint32_t starttime=0,uint32_t endtime=UINT32_MAX,int maxcount=INT_MAX) ;
-bool exporthistory(int handle,uint32_t starttime=0,uint32_t endtime=UINT32_MAX,int maxcount=INT_MAX) ;
+bool exportscans(int handle,  CurData  (SensorGlucoseData::*proc)(const uint32_t,const uint32_t) const,uint32_t starttime=0,uint32_t endtime=UINT32_MAX,int maxcount=INT_MAX,bool calibrated=false) ;
+bool exporthistory(int handle,uint32_t starttime=0,uint32_t endtime=UINT32_MAX,int maxcount=INT_MAX,bool calibrated=false) ;
 void showversion() {
 #include "version.h"
     cout<<"Version "<< APPVERSION <<endl;
@@ -367,7 +367,7 @@ uint32_t starttime=0,endtime=UINT32_MAX;
 bool night=true;
 bool ice=false;
 const char *ICElabel=nullptr;
-bool side;
+bool side,calibrated=false;
 /*
 Not used:
 D E F I J K O Q T U V Y 
@@ -375,7 +375,7 @@ f j q u y
 */
 const char *autoQR=nullptr;
 char *api_secret=nullptr,*sslport=nullptr;
-           for(int opt;(opt = getopt(argc, argv, "D:I:W:k::q:V::Z:o:e::g:p:d:lcX::x::ransvibAPw:hN:S:B:H:m:GMR:L:C:0:1:2:3:4:5:6:7:8:9:t::")) != -1;) {
+           for(int opt;(opt = getopt(argc, argv, "KD:I:W:k::q:V::Z:o:e::g:p:d:lcX::x::ransvibAPw:hN:S:B:H:m:GMR:L:C:0:1:2:3:4:5:6:7:8:9:t::")) != -1;) {
            if(opt>='0'&&opt<='9') {
             int num=opt-'0';
             if(optarg[0]>='0'&&optarg[0]<='9') {
@@ -390,6 +390,8 @@ char *api_secret=nullptr,*sslport=nullptr;
             }
         else {
            switch (opt) {
+                case 'K': calibrated=true;
+                    break;
 
                 case'I': {ice=true;
                     auto errormessage{[](const char *optarg){
@@ -809,23 +811,23 @@ extern void setDeactivated(int index,bool deactive) ;
             did=true;
             }
         if(historyexport)  {
-             if(!exportdata(historyexport,exporthistory,starttime,endtime,maxcount))
+             if(!exportdata(historyexport,exporthistory,starttime,endtime,maxcount,calibrated))
                 return 13;
             did=true;
 
             }
         if(libreviewexport)  {
-            if(!libreviewexporter(libreviewexport,starttime,endtime))
+            if(!libreviewexporter(libreviewexport,starttime,endtime,calibrated))
                 return 13;
             did=true;
             }
         if(scanexport) {
-            if(!exportdata(scanexport,exportscans<true>, &SensorGlucoseData::scanInperiod,starttime,endtime,maxcount))
+            if(!exportdata(scanexport,exportscans<true>, &SensorGlucoseData::scanInperiod,starttime,endtime,maxcount,calibrated))
                 return 13;
             did=true;
             }
         if(pollexport) {
-            if(!exportdata(pollexport,exportscans<false>, &SensorGlucoseData::streamInperiod,starttime,endtime,maxcount))
+            if(!exportdata(pollexport,exportscans<false>, &SensorGlucoseData::streamInperiod,starttime,endtime,maxcount,calibrated))
                 return 13;
             did=true;
             }

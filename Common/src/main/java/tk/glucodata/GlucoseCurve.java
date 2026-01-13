@@ -149,8 +149,8 @@ if(!isWearable) {
         searchspinner.setAdapter(searchspinadap);
         }
     search.setVisibility(View.VISIBLE);
-         if(labelsel==Natives.getmealvar())
-         mkmealsearch(activity);
+     if(labelsel==Natives.getmealvar())
+        mkmealsearch(activity);
     }
     if(!smallScreen)
         showkeyboard(activity);
@@ -219,7 +219,8 @@ void getnumcontrol(MainActivity activity) {
         selectnumbers();
         hidesave(scansearch);
         hidesave(streamsearch);
-        hidesave(calibratedsearch);
+        hidesave(streamcalibratedsearch);
+        hidesave(historycalibratedsearch);
         hidesave(historysearch);
            });
 //    s/\(first[^6]*.6\)/(int)(\1)/g
@@ -757,10 +758,11 @@ if(!isWearable) {
         above.setText("999");
         labelsel=searchspinner.getCount()-1;
         searchspinner.setSelection(labelsel);
-        scansearch.setChecked(true);
+        scansearch.setChecked(false);
         streamsearch.setChecked(true);
-        calibratedsearch.setChecked(true);
-        historysearch.setChecked(true);
+        streamcalibratedsearch.setChecked(false);
+        historycalibratedsearch.setChecked(false);
+        historysearch.setChecked(false);
     if(Applic.hour24)  {
         fromtime.setText("00:00");
         totime.setText("23:59");
@@ -809,7 +811,8 @@ void search(boolean forward) {
             if(ingsearch.length()==0)
                 ingsearch=null;
                 }
-           int glsearch=((historysearch.isChecked()?0x40000002:0)| (scansearch.isChecked()?0x40000001:0))|(streamsearch.isChecked()?0x40000004:0)| (calibratedsearch.isChecked()?0x40000008:0);
+           int glsearch=((historysearch.isChecked()?0x40000002:0)| (scansearch.isChecked()?0x40000001:0))|(streamsearch.isChecked()?0x40000004:0)| (streamcalibratedsearch.isChecked()?0x40000008:0)|(historycalibratedsearch.isChecked()?0x40000010:0);
+
 
        if(Natives.search(glsearch==0?labelsel:glsearch,funder,fabove,minutes[0],minutes[1],forward,ingsearch,ingamount)==0) {
 
@@ -897,7 +900,9 @@ void search(boolean forward) {
 
 //RadioButton numbers;
 
-    CheckBox scansearch,historysearch,streamsearch,calibratedsearch;
+    CheckBox scansearch,historysearch,streamsearch,streamcalibratedsearch, historycalibratedsearch;
+
+ 
 
     Button fromtime, totime;
 
@@ -919,12 +924,14 @@ void selectnumbers() {
             scansearch.setChecked(false);
             historysearch.setChecked(false);
             streamsearch.setChecked(false);
-            calibratedsearch.setChecked(false);
+            streamcalibratedsearch.setChecked(false);
+            historycalibratedsearch.setChecked(false);
        //     spinner.setVisibility(VISIBLE);
         }
 void glucoselisten(CompoundButton one) {
     one.setOnClickListener(v -> {
-        if(historysearch.isChecked()||scansearch.isChecked()||streamsearch.isChecked()||calibratedsearch.isChecked()) {
+        if(historysearch.isChecked()||scansearch.isChecked()||streamsearch.isChecked()||streamcalibratedsearch.isChecked() ||historycalibratedsearch.isChecked()) {
+
             labelsel=searchspinner.getCount()-1;
             searchspinner.setSelection(labelsel);
             }
@@ -943,10 +950,10 @@ if(searchspinner==null) {
 //        searchspinner=new Spinner(context, null,R.style.MySpinnerStyle );
 //        searchspinner=new Spinner(context,R.style.spinner_style);
 //        searchspinner=new Spinner(context,R.style.MySpinnerStyle2);
-
+/*
     int minheight=GlucoseCurve.dpToPx(48);
     searchspinner.setMinimumHeight(minheight);
-
+*/
     searchspinner.setContentDescription("Amount type selector");
    NumberView.avoidSpinnerDropdownFocus(searchspinner);
     searchspinadap= new LabelAdapter<String>(context,Natives.getLabels(),0);
@@ -1073,17 +1080,21 @@ else {
         else
             above= geteditview(context,focus);
     above.setMinWidth(editwidth);
-    scansearch=new CheckBox(context); scansearch.setText(R.string.scanname);
-     historysearch=new CheckBox(context); historysearch.setText(R.string.historyname);
-     streamsearch=new CheckBox(context); streamsearch.setText(R.string.streamname);
-     calibratedsearch=new CheckBox(context); calibratedsearch.setText(R.string.calibrated);
+    scansearch=new CheckBox(context); scansearch.setText(R.string.scansname);
+    final String historystr=context.getString(R.string.historyname);
+    final String streamstr=context.getString(R.string.streamname);
+    final String calibrated=context.getString(R.string.calibrated);
+     historysearch=new CheckBox(context); historysearch.setText(historystr);
+     streamsearch=new CheckBox(context); streamsearch.setText(streamstr);
+     streamcalibratedsearch=new CheckBox(context); streamcalibratedsearch.setText(streamstr+" "+calibrated);
+     historycalibratedsearch=new CheckBox(context); historycalibratedsearch.setText(historystr+" "+calibrated);
      
         glucoselisten(scansearch) ;
         glucoselisten(historysearch) ;
         glucoselisten(streamsearch) ;
-        glucoselisten(calibratedsearch) ;
-
-    getMargins(calibratedsearch).rightMargin=getMargins(streamsearch).rightMargin =(int)metrics.density*10;
+        glucoselisten(streamcalibratedsearch) ;
+        glucoselisten(historycalibratedsearch) ;
+getMargins(scansearch).rightMargin=getMargins(historycalibratedsearch).rightMargin=getMargins(streamcalibratedsearch).rightMargin=(int)metrics.density*10;
 
     fromtime =new Button(context); //fromtime.setText("00:00");
     TextView gline=new TextView(context);gline.setText(" - ");
@@ -1093,9 +1104,8 @@ else {
       oldsize=totime.getTextSize();
         Button clear=new Button(context);clear.setText(R.string.resetname);
 
-    View[] timeline={clear,fromtime,totime};
+    ImageButton helpbut=new ImageButton(context);
 
-        ImageButton helpbut=new ImageButton(context);
         helpbut.setImageResource( android.R.drawable.ic_menu_help);
 
     helpbut.setContentDescription(getContext().getString(R.string.helpname));
@@ -1105,7 +1115,6 @@ else {
         });
 
     Button cancel=new Button(context);cancel.setText(R.string.cancel);
-    View[] buttonline={getsearchspinner(context),under,line,above};
 
 
 
@@ -1125,7 +1134,6 @@ else {
         forward.setOnClickListener(v-> {
         search(true) ;});
 
-    View[] goline={backward,cancel,helpbut, forward};
 
     Layout layout=new Layout(context,(lay, w, h)->{
     int width=GlucoseCurve.getwidth();
@@ -1173,7 +1181,7 @@ if(!smallScreen) {
       {if(doLog) {Log.i(LOG_ID,"smallScreen search h="+h+" height="+height+" w="+w+" width="+width+" posx="+xpos+" posy="+ypos);};};
         }
         return new int[] {w,h};
-        },buttonline,new View[]{scansearch,calibratedsearch},new View[]{historysearch,streamsearch}, timeline,goline);
+        }, new View[]{clear,under,line,above},new View[]{getsearchspinner(context),scansearch},new View[]{historysearch,historycalibratedsearch},new View[]{streamsearch,streamcalibratedsearch},new View[]{fromtime,totime,helpbut},new View[] {backward,cancel, forward});
 
          mktimedialog( fromtime,0 ,layout);
       mktimedialog( totime,1 ,layout);

@@ -36,3 +36,10 @@ inline double calibrateValue(const CaliPara &cali ,const uint32_t time,const dou
             }
         return w*(value*cali.a+cali.b)+(1.0-w)*value;
         }
+
+template <typename T> 
+inline int getindex();
+template<>
+inline int getindex<ScanData>() { return 0; }
+template<>
+inline int getindex<Glucose>() { return 1; }

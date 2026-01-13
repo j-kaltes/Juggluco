@@ -27,13 +27,39 @@ class Calibrate {
     const bool past;
     const int nr;
     int iter;
-
-    Calibrate(const SensorGlucoseData *sens,int which): cali(sens->getinfo()->calis[which].caliPara),past(settings->data()->CalibratePast),nr(sens->getinfo()->calis[which].caliNr)
+    Calibrate(const SensorGlucoseData *sens,bool past, int which): cali(sens->getinfo()->calis[which].caliPara),past(past),nr(sens->getinfo()->calis[which].caliNr)
         {
         }
     public:
     int size() const {
         return nr;
+        }
+    double bothvalue(uint32_t time,int mgdL) { 
+        if(past) {
+            iter=nr-1;
+           } 
+        else {
+            if(cali[iter].time>=time) {
+                while(cali[iter].time>=time) {
+                    --iter;
+                    if(iter<0)
+                        return NAN;
+                    }
+                }
+            else {
+                int it=iter+1;
+                for(;it<nr&&cali[it].time<time;++it) {
+                    }
+               iter=it-1;
+                }
+            }
+        return calibrateValue(cali[iter],time,mgdL);
+        }
+    double bothvalue(const ScanData &el) { 
+        return bothvalue(el.gettime(),el.getmgdL());
+        }
+    double bothvalue(const Glucose &el) { 
+        return bothvalue(el.gettime(),el.getmgdL());
         }
     double backvalue(uint32_t time,int mgdL) { 
         if(!past) {
@@ -52,7 +78,10 @@ class Calibrate {
     double backvalue(const ScanData &el) { 
         return backvalue(el.gettime(),el.getmgdL());
         }
-    double value(uint32_t time,int mgdL) { 
+    double backvalue(const Glucose &el) { 
+        return backvalue(el.gettime(),el.getmgdL());
+        }
+    double forwardvalue(uint32_t time,int mgdL) { 
         if(!past) {
             if(cali[iter].time>=time)
                     return NAN;
@@ -67,24 +96,30 @@ class Calibrate {
                 }
         return calibrateValue(cali[iter],time,mgdL);
         }
-    double value(const ScanData &el) { 
-        return value(el.gettime(),el.getmgdL());
+    double forwardvalue(const ScanData &el) { 
+        return forwardvalue(el.gettime(),el.getmgdL());
+        }
+    double forwardvalue(const Glucose &el) { 
+        return forwardvalue(el.gettime(),el.getmgdL());
         }
 
     };
+template <typename DT>
 class CalibrateForward: public Calibrate {
-public:
-CalibrateForward(const SensorGlucoseData *sens,int which):Calibrate(sens,which) {
+CalibrateForward(const SensorGlucoseData *sens,bool past,int which):Calibrate(sens,past,which) {
     if(past)
         iter=nr-1;
      else
         iter=0;
     };
- };
-class CalibrateBackward: public Calibrate {
 public:
-CalibrateBackward(const SensorGlucoseData *sens,int which):Calibrate(sens,which) {
+        CalibrateForward(const SensorGlucoseData *sens,bool past):CalibrateForward(sens,past,getindex<DT>()) { }
+ };
+template <typename DT>
+class CalibrateBackward: public Calibrate {
+CalibrateBackward(const SensorGlucoseData *sens,bool past,int which):Calibrate(sens,past,which) {
     iter=nr-1;
     }
-
-};
+public:
+    CalibrateBackward(const SensorGlucoseData *sens,bool past):CalibrateBackward(sens,past,getindex<DT>()) { }
+   };

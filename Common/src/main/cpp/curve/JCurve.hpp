@@ -40,6 +40,7 @@ JCurve()=default;
 public:
 JCurve(int unit) {
         setunit(unit);
+        CalibratePast=settings->data()->CalibratePast;
         }
 float glow=0.0f,ghigh=0.0f;
 std::pair<const Num*,const Num*> extrums[maxnumsources];
@@ -96,9 +97,10 @@ int lasttouchedcolor=-1;
 int showstream=1;
 int showcalibratedstream=0;
 int showcalibratedhistories=0;
+int showcalibratedscans=0;
 
-int showscans=1;
-int showhistories=1;
+int showscans=0;
+int showhistories=0;
 int shownumbers=1;
 int showmeals=0;
 int invertcolors=0;
@@ -168,7 +170,8 @@ template <class TX,class TY> void    calihistcurve(NVGcontext* avg,const SensorG
     void    showok(NVGcontext* avg,bool good,bool up);
      bool           showerror(NVGcontext* avg,const std::string_view str1,const std::string_view str2);
      void           scanwait(NVGcontext* avg);
-     void       showscanner(NVGcontext* avg,const SensorGlucoseData *hist,int scanident,time_t nu);
+
+ void       showscanner(NVGcontext* avg,const SensorGlucoseData *hist,int scanident,time_t nu,bool calibrate);
     template <class LT> void    glucoselines(NVGcontext* avg,const float last,const float smallfontlineheight,const int gmax,const LT &transy,bool);
     template <class LT>
     void    timelines(NVGcontext* avg,const displaytime *disp, const LT &transx ,uint32_t nu);
@@ -370,6 +373,9 @@ bool hasHidden=false;
 void    showHideButton(NVGcontext* avg);
 void unhide();
 bool allvalues=false;
+bool CalibratePast=false;
+
+void setsearchshow(int type);
 };
 struct AppCurve:JCurve {
     AppCurve() { }

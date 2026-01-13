@@ -132,7 +132,7 @@ template <class TX,class TY> void NumDisplay::showNums(JCurve&jcurve, const TX &
 				}
 
 			int buflen=0;
-#ifdef JUGGLUCO_APP
+#ifdef DOESSEARCH
 			const bool hit=searchdata(it);
 			if(hit) {
 				nvgBeginPath(vg);

@@ -756,8 +756,29 @@ static std::pair<int,int> getstartinfo(const struct fileonce_t *gegs,const uint8
     LOGGERTAG("tothier=%d totlen=%d startpos=%d sendindex=%d\n",tothier,gegs->totlen,startpos,sendindex);
     return {sendindex,startpos};
     }    
+struct Caliback {
+    int sensorindex;
+    uint32_t updatefrom;
+    bool history;
+    };
+static Caliback  getcaliinfo(const struct fileonce_t *gegs,const uint8_t *start) {
+    int sendindex=gegs->dowith&0x3FFF;
+    const uint8_t *buf= reinterpret_cast<const uint8_t*>(gegs);
+    int tothier= aligner<4>(start-buf);
+    const uint8_t *data=buf+tothier;
+    int over=gegs->totlen-tothier;
+    if(over==sizeof(CaliUpdateFrom)) {
+        const CaliUpdateFrom *from=reinterpret_cast<const CaliUpdateFrom *>(data);
+        LOGGER("getcaliinfo CaliUpdateFrom sensorindex=%d startpos=%d history=%d\n",sendindex,
+        from->updatefrom,from->history);
+        return {sendindex, from->updatefrom,from->history};
+        }
+    int startpos=over==sizeof(int)?*reinterpret_cast<const int *>(data):-1;
+    LOGGERTAG("getcaliinfo OLD tothier=%d totlen=%d startpos=%d sendindex=%d\n",tothier,gegs->totlen,startpos,sendindex);
+    return {sendindex,(uint32_t)startpos,0};
+    }    
 void sethistorystart(int,int);
-void setcalibratedstart(int,int);
+void setcalibratedstart(int,int,bool);
 #ifdef WEAROS
 #include "curve/jugglucotext.hpp"
  extern void setInitText(const char *message);
@@ -766,6 +787,10 @@ static bool startedreceiving() {
        return true;
    }
 #endif
+/*
+#include        <filesystem>
+#include "strconcat.hpp"
+*/
 static bool savefileonce(const struct fileonce_t *gegs) {
     const int nr=gegs->nr;
     const uint8_t *start=reinterpret_cast<const uint8_t*>(&gegs->gegs[nr]);
@@ -774,6 +799,7 @@ static bool savefileonce(const struct fileonce_t *gegs) {
     LOGGERTAG("savefileonce %s %d show=%d\n",name,nr, (gegs->dowith&startcalibratedupdate));
     if(fp<0)
         return false;
+    {
     destruct des([fp](){filedata.close(fp);});
     start+=(gegs->namelen);
     for(int i=0;i<nr;i++) {
@@ -783,23 +809,35 @@ static bool savefileonce(const struct fileonce_t *gegs) {
             }
         start+=gegs->gegs[i].len;
         }
-        if((gegs->dowith&startcalibratedupdate)==startcalibratedupdate) {
-            const auto [sendindex,startpos]=getstartinfo(gegs,start);
-            setcalibratedstart(sendindex,startpos);
-            }
-         else {
-            if((gegs->dowith&streamupdatebit)==streamupdatebit) {
-                    const auto [sendindex,startpos]=getstartinfo(gegs,start);
-                    processglucosevalue(sendindex,startpos);
+//    fdatasync(fp);
+    }
+    if((gegs->dowith&startcalibratedupdate)==startcalibratedupdate) {
+        const auto [sendindex,startpos,history]= getcaliinfo(gegs,start);
+        setcalibratedstart(sendindex,startpos,history);
+/*
+        int namelen=gegs->namelen-1;
+        pathconcat fullpathin{filedata.getbase(),std::string_view(name,namelen)};
+        strconcat fullpathout{"",fullpathin,"tmp"};
+        const auto copyOptions = std::filesystem::copy_options::overwrite_existing;
+        std::error_code errorcode;
+        std::filesystem::path in(fullpathin.begin(),fullpathin.end());
+        std::filesystem::path out(fullpathout.begin(),fullpathout.end());
+        std::filesystem::copy_file(in,out,copyOptions,errorcode );
+        LOGGER("copy_file %s %s\n",fullpathin.data(),fullpathout.data()); */
+        }
+     else {
+        if((gegs->dowith&streamupdatebit)==streamupdatebit) {
+                const auto [sendindex,startpos]=getstartinfo(gegs,start);
+                processglucosevalue(sendindex,startpos);
 
-                    }
-            else {
-                    if((gegs->dowith&starthistoryupdate)==starthistoryupdate) {
-                            const auto [sendindex,startpos]=getstartinfo(gegs,start);
-                            sethistorystart(sendindex,startpos);
-                            }
-                 }
-            }
+                }
+        else {
+                if((gegs->dowith&starthistoryupdate)==starthistoryupdate) {
+                        const auto [sendindex,startpos]=getstartinfo(gegs,start);
+                        sethistorystart(sendindex,startpos);
+                        }
+             }
+        }
     LOGARTAG("savedata success");
 #ifdef WEAROS
    static const bool res=startedreceiving();

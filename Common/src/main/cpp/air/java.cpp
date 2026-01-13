@@ -1,3 +1,4 @@
+#ifdef SIBIONICS
 /*      This file is part of Juggluco, an Android app to receive and display         */
 /*      glucose values from Freestyle Libre 2, Libre 3, Dexcom G7/ONE+,              */
 /*      Sibionics GS1Sb and Accu-Chek SmartGuide sensors.                            */
@@ -284,6 +285,8 @@ jlong airProcessData(airstream *sdata,const jbyte *indata,int arlen,jlong *timer
      else {
             LOGGER("airProcessData: air->deviceErrorCode=%d\n",air->deviceErrorCode);
         }
+    sens->sensorerror=true;
+    sens->sensorErrorTime=nowsec;
     return 0LL;
     }
 //s/Digit(1[^"]*""[^"]*,"\([a-zA-Z0-9_]*\)",.*$/uint8_t \1;/g
@@ -429,3 +432,5 @@ extern "C" JNIEXPORT jbyteArray JNICALL  fromjava(airGetPin)(JNIEnv *env, jclass
    return uit;
    }
 
+
+#endif

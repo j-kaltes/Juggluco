@@ -89,7 +89,7 @@ std::string_view getUserName() {
     }
 static int libreVersion=2;
 template <typename Printer>
-bool libreviewCGMexport(const uint32_t starttime,const uint32_t endtime,const bool header,const int unit,const bool overlap,const Printer &printer) {    
+bool libreviewCGMexport(const uint32_t starttime,const uint32_t endtime,const bool header,const int unit,const bool overlap,const bool calibrate,const Printer &printer) {    
 
     if(header) {
         const auto name=getUserName();
@@ -102,11 +102,14 @@ bool libreviewCGMexport(const uint32_t starttime,const uint32_t endtime,const bo
     LOGGER("libreviewCGMexport start time=%u endtime=%u %d indices overlap=%d\n",starttime,endtime,totsen,overlap);
     const int decimal=unit==1;
     uint32_t nextstart=starttime;
+
+    const bool CalibratePast=settings->data()->CalibratePast;
     for(int id=totsen-1;id>=0;--id) {
         const int index=indices[id];
         if(SensorGlucoseData *sens=sensors->getSensorData(index)) {
             const char *deviceID=getDeviceID(!sens->isLibre2()).data();
             if(sens->isDexcom()||sens->isSibionics()) {
+                CalibrateForward<ScanData> cali(sens, CalibratePast);
                 const int librev=3;
                 libreVersion=librev;
                 int mod=sens->isSibionics()?5:1;
@@ -116,13 +119,22 @@ bool libreviewCGMexport(const uint32_t starttime,const uint32_t endtime,const bo
                     if(!(iter->getid()%mod)&&iter->valid()) {
                          time_t tim=iter->gettime();
                          nextstart=tim;
-                         float value=gconvert(iter->getsputnik(),unit);
+
+    int mgL;
+    if(double calibrated;calibrate&&!isnan(calibrated=cali.forwardvalue(*iter))) {
+        mgL=(int)round(calibrated*10.0);
+         }
+    else
+        mgL=iter->getmgL();
+
+                         float value=gconvert(mgL,unit);
                          if(!printhistory(librev,deviceID,tim,value,decimal,printer))
                                 return false;
                           }
                        }
                  }
             else {
+                CalibrateForward<Glucose> cali(sens, CalibratePast);
                  bool isLibre3=(sens->getinfo()->interval==SensorGlucoseData::interval5);
                 const int librev=isLibre3?3:(sens->shortsensorname()->data()[0]=='0'?1:2);
                 libreVersion=librev;
@@ -130,7 +142,16 @@ bool libreviewCGMexport(const uint32_t starttime,const uint32_t endtime,const bo
                  const int endpos=sens->getfirstnotbeforetime(endtime);
                  for(int pos=startpos;pos<endpos;pos++) {
                     const Glucose *gl = sens->getglucose(pos);
-                    const float value=gconvert(gl->getsputnik(),unit);
+
+    int mgL;
+    if(double calibrated;calibrate&&!isnan(calibrated=cali.forwardvalue(*gl))) {
+        mgL=(int)round(calibrated*10.0);
+         }
+    else
+        mgL=gl->getmgL();
+
+                    const     float value=gconvert(mgL,unit);
+
                     const time_t tim= gl->gettime();
                     nextstart=tim;
                     if(gl->valid())
@@ -175,6 +196,8 @@ bool writenum(int libreversion,const char *deviceid,const Num *num,const Printer
         return true;
     if(!librestartline(libreversion,deviceid,num->time,printer))
         return false;
+    if(kind!=4&&!isnormal(num->value))
+        return false;
     switch(kind) {
        case 1: return printrapid(num->value,printer);
        case 2: return printlong(num->value,printer);
@@ -201,12 +224,12 @@ bool librenumexport(uint32_t starttime,uint32_t endtime,const Printer &printer) 
     }
 
 template <typename Printer>
-bool libreviewexport(uint32_t starttime,uint32_t endtime,bool header,int unit,bool overlap,const Printer &printer) {    
-        return libreviewCGMexport(starttime,endtime,header,unit,overlap,printer)&&
+bool libreviewexport(uint32_t starttime,uint32_t endtime,bool header,int unit,bool overlap,const bool calibrate,const Printer &printer) {    
+        return libreviewCGMexport(starttime,endtime,header,unit,overlap,calibrate,printer)&&
             librenumexport(starttime,endtime,printer) ;   
         }
 
-bool libreviewexport(int handle,uint32_t starttime,uint32_t endtime) {    
+bool libreviewexport(int handle,uint32_t starttime,uint32_t endtime,const bool calibrate) {    
         FILE *fp=fdopen(handle,"w");
         if(!fp) {
             LOGAR("libreviewexport: fdopen failed");
@@ -215,12 +238,12 @@ bool libreviewexport(int handle,uint32_t starttime,uint32_t endtime) {
             }
         destruct _{[fp]{fclose(fp);}};
         const int unit=settings->data()->unit;
-        return libreviewexport(starttime,endtime,true,unit,false,[fp](auto ...args) {
+        return libreviewexport(starttime,endtime,true,unit,false,calibrate,[fp](auto ...args) {
                 return fprintf(fp,args...)>0;
                 });
          }
 
-std::span<char> libreviewweb(int startpos, int startlen, uint32_t starttime, uint32_t endtime,bool header,int unit,bool overlap,int maxcount=INT_MAX,bool=false) {
+std::span<char> libreviewweb(int startpos, int startlen, uint32_t starttime, uint32_t endtime,bool header,int unit,bool overlap,int maxcount=INT_MAX,bool calibrate=false) {
     struct {
         char *buf;
         int max;
@@ -228,7 +251,7 @@ std::span<char> libreviewweb(int startpos, int startlen, uint32_t starttime, uin
         } printdata{new(std::nothrow) char [startlen],startlen,startpos};
     if(!printdata.buf)
         return {(char *)nullptr,(size_t)0};
-     if(!libreviewexport(starttime,endtime,header,unit,overlap,[&printdata](auto ...args) {
+     if(!libreviewexport(starttime,endtime,header,unit,overlap,calibrate,[&printdata](auto ...args) {
             while(true) {
                 int left=printdata.max-printdata.iter; 
                 int wrote=snprintf(printdata.buf+printdata.iter,left,args...);

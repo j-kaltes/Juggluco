@@ -406,7 +406,7 @@ public static native void setlastcolor(int color);
 public static native int getlastcolor();
 
 public static native void summarygraph(boolean val);
-public static native void analysedays(int days);
+public static native boolean analysedays(int days,boolean history);
 public static native void endstats( );
 public static native boolean setgarminid(String id);
 public static native String getgarminid( );
@@ -480,6 +480,9 @@ public static native boolean getshowcalibratedstream();
 public static native void setshowcalibratedstream(boolean val);
 public static native boolean getshowcalibratedhistories();
 public static native void setshowcalibratedhistories(boolean val);
+
+public static native boolean getshowcalibratedscans();
+public static native void setshowcalibratedscans(boolean val);
 
 public static native boolean getshowmeals();
 public static native void setshowmeals(boolean val);
@@ -859,6 +862,8 @@ public static native int getSoundType( );
 //public static native boolean siTransmitterScan(long dataptr,String scancode);
 public static native long percentileEndtime(int days);
 public static native int getAnalysedays( );
+
+public static native boolean getAnalysehistory( );
 public static native void onCreate();
 public static native void setbloodvar(byte val);
 public static native byte getbloodvar( );

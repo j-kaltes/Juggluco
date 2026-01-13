@@ -30,8 +30,6 @@ import android.os.Build;
 import android.text.InputType;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.accessibility.AccessibilityEvent;
-import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -111,19 +109,6 @@ static public void EnableControls(View view,boolean enable){
 	else
 		subEnableControls(view,enable);
 	}
-	/*
-static private	View.AccessibilityDelegate  accessDeli=
-	new View.AccessibilityDelegate () {
-		@Override
-		public void onInitializeAccessibilityNodeInfo( View host,
-													  AccessibilityNodeInfo info) {
-
-			{if(doLog) {Log.i(LOG_ID,"onInitializeAccessibilityNodeInfo");};};
-		}
-
-
-	};
-*/
 
 static private void subEnableControls(View view,boolean enable){
 	view.setEnabled(enable);

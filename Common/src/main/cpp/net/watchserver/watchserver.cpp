@@ -1693,9 +1693,13 @@ Getopts::Getopts(const char *posptr,int size,int defaultduration): unit(settings
             continue;
          if(setitervar(iter, "calibratedhistory"sv, calibratedhistorymode))
             continue;
+         if(setitervar(iter, "calibratedscans"sv, calibratedscansmode))
+            continue;
          if(setitervar(iter, "calibrated"sv, calibratedmode))
             continue;
          if(setitervar(iter, "allvalues"sv, allvaluesmode))
+            continue;
+         if(setitervar(iter, "pastvalues"sv, pastvaluesmode))
             continue;
                         {
          std::string_view langstr="hl="sv;
@@ -1787,8 +1791,9 @@ auto strarcmp(const T (&ar)[N],const T1 *ptr) {
     static_assert(sizeof(T)==sizeof(T1));
     return memcmp(ar,ptr,N-1)||isalnum(ptr[N-1]);
     }
-extern std::span<char> getStatImage(int startpos,Getopts&opts) ;
 
+extern std::span<char> getStatImageHistory(int startpos,Getopts &opts) ;
+extern std::span<char> getStatImageStream(int startpos,Getopts &opts);
 //extern std::span<char> getSummaryImage(int startpos,Getopts&opts) ;
 
 extern std::span<char> getCurveImage(int startpos,Getopts&opts) ;
@@ -1825,7 +1830,8 @@ static bool givereloadimage(recdata *outdata) {
     }
     */
 bool givestats(Getopts &opts,std::string_view origin,recdata *outdata) {
-    return makeimage(opts,origin,outdata,getStatImage);
+    const bool history=opts.historymode||opts.calibratedhistorymode;
+    return makeimage(opts,origin,outdata,history?getStatImageHistory:getStatImageStream);
     }
 extern bool givesummarygraph(Getopts &opts,std::string_view origin,recdata *outdata);
 
@@ -1844,17 +1850,30 @@ static int dayssize(int days) {
 extern int getminutes(time_t tim);
 
 static bool givereport(Getopts &opts,std::string_view hostname,bool secure,std::string_view origin,recdata *outdata) {
-   if(!(opts.calibratedmode||opts.streammode)) {
-        if(settings->data()->DoCalibrate) {
-                opts.calibratedmode=true;
+   bool calibrate=opts.calibratedscansmode||
+   opts.calibratedhistorymode||opts.calibratedmode;
+   if(calibrate)
                 opts.allvaluesmode=true;
-                }
-        }
-    const uint32_t endtime=opts.end-1; //otherwise the whole end day is shown when a startday is specified
+  else {
+       if(!(opts.historymode||opts.streammode)) {
+            if(settings->data()->DoCalibrate) {
+                    opts.calibratedmode=true;
+                    opts.allvaluesmode=true;
+                    }
+            }
+       }
+    uint32_t endtime=opts.end-1; //otherwise the whole end day is shown when a startday is specified
     const bool darkmode=opts.darkmode;
     const int days=opts.days();
     if(endtime<1577829600u) {
         return false;
+        }
+    const bool history=opts.historymode||opts.calibratedhistorymode;
+   const uint32_t firsttime=history?sensors->firsthistorytime():sensors->firstpolltime();
+   if(endtime<firsttime)
+           return false;
+    if(opts.start<firsttime) { 
+        endtime=firsttime+days*24*60*60;
         }
     LOGGER("mkreport(endtime=%u,days=%d,darkmode=%d,hostname=%s,secure=%d,origin=%d,..)\n",endtime,days,darkmode,hostname.data(),secure,origin.data());
     const AddHost addhost(hostname,secure);
@@ -1886,13 +1905,16 @@ static bool givereport(Getopts &opts,std::string_view hostname,bool secure,std::
     static constexpr const  char stats[] { R"(/x/stats?endtime=)"};
     static constexpr const  char daysstr[] { R"(&days=)"};
     static constexpr const  char darkstr[] { R"(&darkmode)"};
-    static constexpr const  char scansstr[] { R"(&scansmode)"};
-    static constexpr const  char amountsstr[] { R"(&amountsmode)"};
-    static constexpr const  char streamstr[] { R"(&streammode)"};
-    static constexpr const  char calibratedstr[] { R"(&calibratedmode)"};
-    static constexpr const  char allvaluesstr[] { R"(&allvaluesmode)"};
-    static constexpr const  char historystr[] { R"(&historymode)"};
-    static constexpr const  char mealsstr[] { R"(&mealsmode)"};
+    static constexpr const  char scansstr[] { R"(&scans)"};
+    static constexpr const  char amountsstr[] { R"(&amounts)"};
+    static constexpr const  char streamstr[] { R"(&stream)"};
+    static constexpr const  char calibratedstr[] { R"(&calibratedstream)"};
+    static constexpr const  char calibratedhistorystr[] { R"(&calibratedhistory)"};
+    static constexpr const  char calibratedscansstr[] { R"(&calibratedscans)"};
+    static constexpr const  char allvaluesstr[] { R"(&allvalues)"};
+    static constexpr const  char pastvaluesstr[] { R"(&pastvalues)"};
+    static constexpr const  char historystr[] { R"(&history)"};
+    static constexpr const  char mealsstr[] { R"(&meals)"};
 
 
 
@@ -1957,7 +1979,10 @@ loadImages();
     +(opts.historymode?sizear(historystr):0)
     +(opts.streammode?sizear(streamstr):0)+
     +(opts.calibratedmode?sizear(calibratedstr):0)+
+    +(opts.calibratedhistorymode?sizear(calibratedhistorystr):0)+
+    +(opts.calibratedscansmode?sizear(calibratedscansstr):0)+
     +(opts.allvaluesmode?sizear(allvaluesstr):0)+
+    +(opts.pastvaluesmode?sizear(pastvaluesstr):0)+
 
     6+unitstr.size();
     constexpr const auto places=[](int get) {
@@ -1971,11 +1996,21 @@ sizear(aftergraphname)+text->summarygraph.size()+
     +addhost.size()+sizear(summarygraph)+timesize+sizear(daysstr)+dayslen+
   (darkmode?sizear(darkstr):0)+
   (opts.calibratedmode?sizear(calibratedstr):0)+
-  (opts.allvaluesmode?sizear(allvaluesstr):0)
+  (opts.calibratedhistorymode?sizear(calibratedhistorystr):0)+
+  (opts.calibratedscansmode?sizear(calibratedscansstr):0)+
+  (opts.historymode?sizear(historystr):0)+
+  (opts.streammode?sizear(streamstr):0)+
+  (opts.allvaluesmode?sizear(allvaluesstr):0) +
+  (opts.pastvaluesmode?sizear(pastvaluesstr):0) +
   +sizear(endsummary)+ unitstr.size();
     const int totsize=
 (opts.calibratedmode?sizear(calibratedstr):0)+
+(opts.streammode?sizear(streamstr):0)+
+(opts.historymode?sizear(historystr):0)+
+(opts.calibratedhistorymode?sizear(calibratedhistorystr):0)+
+(opts.calibratedscansmode?sizear(calibratedscansstr):0)+
   (opts.allvaluesmode?sizear(allvaluesstr):0)+
+  (opts.pastvaluesmode?sizear(pastvaluesstr):0)+
 
     (darkmode?((showdays+1)*sizear(darkstr)):0)+elsize*showdays+/*dayssize(showdays)+*/(sizear(daysstr)+dayslen)+sizear(starttext)+
 sizear(afterstatistics)+
@@ -1996,8 +2031,18 @@ sizear(afterstatistics)+
         addar(bufptr,darkstr);
     if(opts.calibratedmode)
         addar(bufptr,calibratedstr);
+    if(opts.calibratedhistorymode)
+        addar(bufptr,calibratedhistorystr);
+    if(opts.calibratedscansmode)
+        addar(bufptr,calibratedscansstr);
+    if(opts.historymode)
+        addar(bufptr,historystr);
+    if(opts.streammode)
+        addar(bufptr,streamstr);
     if(opts.allvaluesmode)
         addar(bufptr,allvaluesstr);
+    if(opts.pastvaluesmode)
+        addar(bufptr,pastvaluesstr);
      bufptr+=sprintf(bufptr,"&hl=%.2s",langstr);
     addstrview(bufptr,unitstr);
     addar(bufptr,startimage);
@@ -2012,8 +2057,18 @@ sizear(afterstatistics)+
         addar(bufptr,darkstr);
     if(opts.calibratedmode)
         addar(bufptr,calibratedstr);
+    if(opts.calibratedhistorymode)
+        addar(bufptr,calibratedhistorystr);
+    if(opts.calibratedscansmode)
+        addar(bufptr,calibratedscansstr);
+    if(opts.historymode)
+        addar(bufptr,historystr);
+    if(opts.streammode)
+        addar(bufptr,streamstr);
     if(opts.allvaluesmode)
         addar(bufptr,allvaluesstr);
+    if(opts.pastvaluesmode)
+        addar(bufptr,pastvaluesstr);
      bufptr+=sprintf(bufptr,"&hl=%.2s",langstr);
     addstrview(bufptr,unitstr);
     addar(bufptr,endsummary);
@@ -2027,7 +2082,10 @@ sizear(afterstatistics)+
             bufptr+=sprintf(bufptr,"%u",time);
             if(opts.streammode) addar(bufptr,streamstr);
             if(opts.calibratedmode) addar(bufptr,calibratedstr);
+            if(opts.calibratedhistorymode) addar(bufptr,calibratedhistorystr);
+            if(opts.calibratedscansmode) addar(bufptr,calibratedscansstr);
             if(opts.allvaluesmode) addar(bufptr,allvaluesstr);
+            if(opts.pastvaluesmode) addar(bufptr,pastvaluesstr);
             if(opts.scansmode) addar(bufptr,scansstr);
             if(opts.amountsmode) addar(bufptr,amountsstr);
             if(opts.mealsmode) addar(bufptr,mealsstr);
@@ -2124,7 +2182,10 @@ static bool jugglucos(const char * const input,int size, std::string_view hostna
          Getopts opts(posptr,size-typelen);
          const int startlen=((opts.end-opts.start)/(60*60))*perhour[i];
          constexpr const int startpos=152;
-         std::span<char> res=procs[i](startpos,startlen,opts.start,opts.end,opts.headermode,opts.unit,!opts.exclusivemode,opts.datnr,opts.calibratedmode);
+         bool calibrated=opts.calibratedmode||opts.calibratedhistorymode||opts.calibratedscansmode;
+
+
+         std::span<char> res=procs[i](startpos,startlen,opts.start,opts.end,opts.headermode,opts.unit,!opts.exclusivemode,opts.datnr,calibrated);
           if(!res.data()) {
                 return outofmemory(outdata);
                 }
@@ -3157,7 +3218,7 @@ extern int mkididV3(char *outiter,int base,int pos) ;
 char *writetreatmentv3(char *outiter,const int numbase,const int pos,const Num*num,uint32_t modified,bool invalid,int borderID) {
    const int typein=num->type;
    const int type=num->type&Numdata::otherbits;
-   if(typein<0||typein>=settings->varcount()||!settings->data()->Nightnums[type].kind) {
+   if(typein<0||typein>=settings->varcount()||!settings->data()->Nightnums[type].kind||!isnormal(num->value)) {
       if(!invalid||!(typein&Numdata::removedbit))
          return outiter;
       }

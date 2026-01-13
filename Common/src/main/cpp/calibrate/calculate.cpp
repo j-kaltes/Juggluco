@@ -35,11 +35,15 @@ extern vector<Numdata*> numdatas;
 template <typename DT> const DT *getdata(const SensorGlucoseData *sens,int pos);
 template<>
 const ScanData *getdata<const ScanData>(const SensorGlucoseData *sens,int pos) {
-    return sens->beginpolls()+pos;
+    if(sens->pollcount()>0)
+        return sens->beginpolls()+pos;
+    else
+       return sens->beginscans()+pos;
+       
     }
 template<>
 const ScanData *getdata<ScanData>(const SensorGlucoseData *sens,int pos) {
-    return sens->beginpolls()+pos;
+    return getdata<const ScanData>(sens,pos);
     }
 template<>
 const Glucose *getdata<Glucose>(const SensorGlucoseData *sens,int pos) {
@@ -210,12 +214,7 @@ template<> int getinterval<ScanData>(const SensorGlucoseData *sens) {
     return sens->getsecstreaminterval();
     }
 template <typename DT>
-static bool notSuitable(const SensorGlucoseData *sens,uint32_t numtim,int startsen,int endsen,int valuepos,const DT *value,int maxdifference) {
-        const int64_t sensLater=((int64_t)value->gettime())-numtim;
-        if(sensLater>maxdifference) {
-                LOGGER("too late sensor %u, blood %d %lld\n",value->gettime(),numtim,sensLater);
-                return true;
-                }
+static bool notSuitable(const SensorGlucoseData *sens,int startsen,int endsen,int valuepos,const DT *value) {
         if(wrongChange(value)) return true;
         return wrongNeighbours(sens,startsen,endsen,valuepos,value);
         }
@@ -227,7 +226,7 @@ std::pair<int,const DT*> findNextCGM(const SensorGlucoseData *sens,int startsen,
             return {-2,nullptr};
             }
         auto [posafter,after]=firstnotless<DT>(sens,startsen,endsen,numtim);
-        if(posafter>=endsen)  {
+        if(posafter>=endsen||(after->gettime()-numtim)>maxdiff)  {
             do{
               --posafter;
               if(posafter<=startsen) {
@@ -245,7 +244,8 @@ std::pair<int,const DT*> findNextCGM(const SensorGlucoseData *sens,int startsen,
     #endif
             return {-2,nullptr};
             }
-        if(notSuitable<DT>(sens,numtim,startsen,endsen,posafter,after,maxdiff)) {
+
+        if(notSuitable<DT>(sens,startsen,endsen,posafter,after)) {
             return {-1,nullptr};
             }
         #ifndef NOLOG
@@ -259,12 +259,17 @@ std::pair<int,const DT*> findNextCGM(const SensorGlucoseData *sens,int startsen,
 template<typename DT> int getfirstpos(const SensorGlucoseData *sens);
 template<>
 int getfirstpos<ScanData>(const SensorGlucoseData *sens) {
-    return sens->getinfo()->pollstart;
+    if(sens->pollcount()>0)
+        return sens->getinfo()->pollstart;
+     return 0;
+
     }
 template<typename DT> int getlastpos(const SensorGlucoseData *sens);
 template<>
 int getlastpos<ScanData>(const SensorGlucoseData *sens) {
-    return sens->pollcount();
+    if(sens->pollcount()>0)
+        return sens->pollcount();
+    return sens->scancount();
     }
 
 template<>
@@ -332,7 +337,9 @@ bool shouldexclude(const uint32_t tim) {
 template <typename DT>  uint32_t getfirsttime(const SensorGlucoseData *sens);
 template <> 
  uint32_t    getfirsttime<ScanData>(const SensorGlucoseData *sens) {
-       return sens->firstpolltime();
+        if(sens->pollcount())
+               return sens->firstpolltime();
+       return sens->firstscantime();
     }
 template <> 
 uint32_t getfirsttime<Glucose>(const SensorGlucoseData *sens) {
@@ -400,7 +407,7 @@ template <typename DT> CalcPara calculate(const SensorGlucoseData *sens, const u
                         continue;
                     uint32_t timebefore=before->gettime(); 
                     int diff=(numtim-timebefore);
-                    if((numtim-timebefore)>maxdiff) {
+                    if(diff>maxdiff) {
                         LOGGER("%s: too far before %u numtime %u diff=%d maxdiff=%d\n",name,timebefore,numtim,diff,maxdiff);
                         continue;
                         }
@@ -437,7 +444,10 @@ template <typename DT> CalcPara calculate(const SensorGlucoseData *sens, const u
                 //double reweight=1.04348 - 0.00108696 *bloodmgdL;
                 //double reweight= 0.160911 *log(540 - bloodmgdL); //Less weigth for high glucose values
                 //double reweight=1/(1 + pow(log(1 + exp(1/80 (g-140))),2));
-                double reweight= 1.0/(1.0 + 0.591716 * pow(log(0.0536647* (18.6342 + exp(0.01625 *bloodmgdL))),2)); //  =1/(1 + pow(log(1 + exp(1/80 (g-140))),2));
+                //double reweight= 1.0/(1.0 + 0.591716 * pow(log(0.0536647* (18.6342 + exp(0.01625 *bloodmgdL))),2)); //  =1/(1 + pow(log(1 + exp(1/80 (g-140))),2));
+                double reweight= 0.626088 - 0.000652176 *bloodmgdL + 
+                1/(2.5 + 1.47929 *pow(log(0.0536647* (18.6342 + exp(0.01625 *bloodmgdL))),2)); 
+
                 double reweighted=weight*reweight;
 
                 w.push_back(reweighted);

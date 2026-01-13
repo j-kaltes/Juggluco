@@ -5,13 +5,7 @@
 #include "SensorGlucoseData.hpp"
 #include "nums/numdata.hpp"
 
-  static constexpr const int glucosetype=0x40000000;//std::numeric_limits<int>::max();
-  static constexpr const int nosearchtype=0x20000000;//std::numeric_limits<int>::max();
-    static constexpr const int historysearchtype=2|glucosetype;
-    static constexpr const int scansearchtype=1|glucosetype;
-    static constexpr const int streamsearchtype=4|glucosetype;
-    static constexpr const int calibratedStreamsearchtype=8|glucosetype;
-
+#include "searchtypes.hpp"
 struct  Searchgegs {
     int type;float under;float above;int frommin; int tomin;
     uint32_t count;
@@ -85,6 +79,15 @@ struct  Searchgegs {
             return false;
         uint32_t glu=g->getsputnik();
 
+        if(glu>=under&&glu<=above&&righttime(g->gettime())) {
+            return  true;
+            }
+        return false;
+        }
+    bool operator() (const Glucose *g,float value) const {
+        if(!g||!g->valid())
+            return false;
+        uint32_t glu=value*10.0;
         if(glu>=under&&glu<=above&&righttime(g->gettime())) {
             return  true;
             }

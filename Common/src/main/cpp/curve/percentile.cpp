@@ -33,10 +33,13 @@
 #include "jugglucotext.hpp"
 
 #include "JCurve.hpp"
+
 using namespace std::literals;
 
-//typedef GlucoseDataType std::tuple<const ScanData*,const ScanData*,const SensorGlucoseData *>;
+//typedef GlucoseDataType std::tuple<StreamIterator,StreamIterator,const SensorGlucoseData *>;
 #include "GlucoseDataType.hpp" 
+
+#include "getsensorranges.hpp"
 extern Sensoren *sensors;
 static    constexpr const int seconds_in_day=24*60*60;
 
@@ -59,18 +62,18 @@ void datainterval(JCurve &jcurve,NVGcontext* vg,float x, float y,uint32_t start,
         nvgText(vg, x,y,buf,buf+len);
         }
 
-static constexpr const int measuresperday=24*60;
+//static constexpr const int measuresperday=24*60;
 
-template <class GlucoseEl> static const GlucoseEl *firstvalid(const GlucoseEl *start,const GlucoseEl *last,uint32_t nexttime) {
+template <class GlucoseIterator> static const GlucoseIterator firstvalid(GlucoseIterator start,const GlucoseIterator last,uint32_t nexttime) {
     while(!start->valid()||start->gettime()<nexttime) {
         ++start;
         if(start>=last)
-            return nullptr;
+            return last;
         }
     return start;
     }
 
-template <class GlucoseEl> static const GlucoseEl *lastvalid(const GlucoseEl *first,const GlucoseEl *last)  { //TODO: DOESN"T work with HISTORY
+template <class GlucoseIterator> static const GlucoseIterator lastvalid(const GlucoseIterator first,GlucoseIterator last)  { //TODO: DOESN"T work with HISTORY
     while(!last->valid()) {
         --last;
         if(last==first)
@@ -106,6 +109,8 @@ int getminutes(time_t tim) {
     */
 
 filter<8> bino;
+//filter<4> bino;
+//filter<3> bino;
 //filter<4> bino4;
 //filter<13> bino10;
 //int16_t *m50perc2=nullptr;
@@ -125,13 +130,16 @@ uint16_t *m50=nullptr;
 uint32_t pollstart,polllast;
 uint32_t startday,endday;
 const jugglucotext *usedtext;
+bool doSmooth=false;
+const int minperstep;
+const  int maxids;
 public:
 persgegs & operator= (const persgegs &) = delete;
 persgegs & operator= ( persgegs &&) = delete;
 persgegs( persgegs & ) = delete;    
 persgegs( persgegs && ) = delete;    
 // persgegs() {}
- persgegs(uint16_t *dat,int *l,int days,int nr,uint32_t pollstart,uint32_t polllast,const jugglucotext *text):data(dat),lens(l),days(days),idnr(nr),pollstart(pollstart), polllast(polllast),usedtext(text) {}
+ persgegs(uint16_t *dat,int *l,int days,int nr,uint32_t pollstart,uint32_t polllast,const jugglucotext *text,int minperstep,int maxids):data(dat),lens(l),days(days),idnr(nr),pollstart(pollstart), polllast(polllast),usedtext(text),doSmooth(minperstep<5),minperstep(minperstep),maxids(maxids) {}
  void remove(roundtype &var) {
      delete var.first;
      delete var.second;
@@ -172,14 +180,16 @@ void compare(const uint16_t *ar1,const uint16_t *ar2) {
         return id;
 //        return (id+minutes)%idnr;
         }
-
 uint16_t    *mkpercentile(const float frac) const { 
         uint16_t*ar    =new uint16_t[idnr];
         for(int i=0;i<idnr;i++)
             ar[i]=percentile(i,frac);
-        uint16_t *res=bino.smoothar(ar,idnr);
-        delete[] ar;
-        return res;
+        if(doSmooth) {
+            uint16_t *res=bino.smoothar(ar,idnr);
+            delete[] ar;
+            return res;
+            }
+        return ar;
         }
 
 roundtype mkroundpercentile(const float frac) const { 
@@ -240,18 +250,50 @@ roundtype mkroundpercentile(const float frac) const {
         max=maxin;
         }
     int isplace(const int start,const int end,const float move,float density,float timelen) const {    
-        
+        LOGGER("inplace(start=%d,end=%d,move=%.2f,density=%.2f,timelen=%.2f)\n", start,end,move, density, timelen) ;  
         const float minsize=timelen*1.4+5*density;
-        const int af=minsize/move;
+        const int af=std::ceil(minsize/move);
         const int mid=(end+start)/2;
-        const int afmidend=(10*density+timelen*.22)/move;
-        const int afend=(10*density)/move;
+        const int afmidend=std::ceil((10*density+timelen*.22)/move);
+        const int afend=std::ceil((10*density)/move);
         const uint16_t *p100=f0.second;
         const uint16_t *beg=p100+start;
         const uint16_t *midar=p100+mid;
-        const uint16_t *el1=std::min_element(beg+af,midar-afmidend);
-        const uint16_t *el2=std::min_element(midar+af,p100+end-afend);
-        const uint16_t *el=*el1<*el2?el1:el2;
+       
+        const uint16_t *el1start=beg+af;
+        const uint16_t *el1end=midar-afmidend;
+        LOGGER("inplace: el1=min_element(%d,%d)\n",el1start-p100,el1end-p100);
+        const uint16_t *el1;
+        if(el1end>el1start) {
+            el1=std::min_element(el1start,el1end);
+            }
+        else
+            el1=nullptr;
+        const uint16_t *el2start=midar+af;
+        const uint16_t *el2end= p100+end-afend;
+        LOGGER("inplace: el2=min_element(%d,%d)\n",el2start-p100,el2end-p100);
+        const uint16_t *el2;
+        if(el2end>el2start) {
+            el2=std::min_element(el2start,el2end);
+            }
+        else
+            el2=nullptr;
+        const uint16_t *el=!el1?el2:(!el2?el1:(*el1<*el2?el1:el2));
+        return el-beg;
+        }
+
+
+
+    int isplacefromleft(const int start,const int end,const float move,float density,float timelen) const {    
+        
+        const float minsize=timelen*1.4+5*density;
+        const int af=minsize/move;
+        const int afmidend=(10*density+timelen*.4)/move;
+        const int afend=(10*density)/move;
+        const uint16_t *p100=f0.second;
+        const uint16_t *beg=p100+start;
+        const uint16_t *el=std::min_element(beg+af+afmidend,p100+end-afend);
+//        const uint16_t *el=std::min_element(beg+(int)timelen,p100+end-afend);
         return el-beg;
         }
 public:
@@ -265,22 +307,21 @@ void mkfracs() {
 //    compare(f10.second,f0.second);
     }
 template <typename  T>
-void showpercentile(NVGcontext* vg,JCurve &jcurve, T frac,const int startid,const int endid) {
-    if(showforwardpercentile(vg,jcurve,frac,startid,endid))
+void showpercentile(NVGcontext* vg,JCurve &jcurve, T frac,const int startid,const int endid,float placeback,float move) {
+    if(showforwardpercentile(vg,jcurve,frac,startid,endid,placeback,move))
         nvgStroke(vg);
     };
-
+/*
 const float getidstep(int dwidth,const int showids) const {
     return ((float)(dwidth))/(showids-1);
-    }
-inline constexpr const static int maxids=60*24;
+    } */
 int reindex(const int index) const {
 //    return (index+maxids)%maxids;
     return index%maxids;
     }
-bool showforwardpercentile(NVGcontext* vg,JCurve &jcurve,const uint16_t *perar,const int startid,const int endid) const {
-    int showids=endid-startid;
-    const float move=getidstep(jcurve.dwidth,showids);
+bool showforwardpercentile(NVGcontext* vg,JCurve &jcurve,const uint16_t *perar,const int startid,const int endid,float placeback,float move) const {
+//    int showids=endid-startid;
+//    const float move=getidstep(jcurve.dwidth,showids);
     int ma=getmax();
     int mi=getmin();
     int hi=ma-mi;
@@ -290,8 +331,8 @@ bool showforwardpercentile(NVGcontext* vg,JCurve &jcurve,const uint16_t *perar,c
     auto y=[dheight,unit,mi](int gl) {
         return dheight-(gl-mi)*unit;
         };
-    auto x=[move,startid](int pos) {
-        return (pos-startid)*move;
+    auto x=[move,startid,placeback](int pos) {
+        return (pos-startid)*move-placeback;
         };
     int i=startid;
     const int lastid=endid-1;
@@ -305,16 +346,18 @@ bool showforwardpercentile(NVGcontext* vg,JCurve &jcurve,const uint16_t *perar,c
     nvgMoveTo(vg, x1,y1);
     for(;i<endid;i++) {
         if(int glu= perar[reindex(i)]) {
-            int  x1= x(i);
-            int y1= y(glu);
+            float  x1= x(i);
+            float y1= y(glu);
             nvgLineTo( vg,x1,y1);
+           // LOGGER("%d: x=%.2f\n",i,x1);
+
             }
         }
     return true;
     }
-void showbackpercentile(NVGcontext* vg,JCurve &jcurve,const uint16_t *ar,int startid,int endid) const {
-    int showids=endid-startid;
-    const float move=getidstep(jcurve.dwidth,showids);
+void showbackpercentile(NVGcontext* vg,JCurve &jcurve,const uint16_t *ar,int startid,int endid,float placeback,float move) const {
+//    int showids=endid-startid;
+//    const float move=getidstep(jcurve.dwidth,showids);
     int ma=getmax();
     int mi=getmin();
     int hi=ma-mi;
@@ -323,8 +366,8 @@ void showbackpercentile(NVGcontext* vg,JCurve &jcurve,const uint16_t *ar,int sta
     auto y=[dheight,unit,mi](int gl) {
         return dheight-(gl-mi)*unit;
         };
-    auto x=[move,startid](int pos) {
-        return (pos-startid)*move;
+    auto x=[move,startid,placeback](int pos) {
+        return (pos-startid)*move-placeback;
         };
     for(int i=endid-1;i>=startid;i--) {
         if(int glu=ar[reindex(i)]) {
@@ -336,9 +379,9 @@ void showbackpercentile(NVGcontext* vg,JCurve &jcurve,const uint16_t *ar,int sta
         }
     }
     
-void showround(NVGcontext* vg,JCurve &jcurve,roundtype dat,const int startid,const int endid) const {
-        if(showforwardpercentile(vg,jcurve,dat.first, startid, endid)) {
-            showbackpercentile(vg,jcurve,dat.second,startid,endid);
+void showround(NVGcontext* vg,JCurve &jcurve,roundtype dat,const int startid,const int endid,float placeback,float move) const {
+        if(showforwardpercentile(vg,jcurve,dat.first, startid, endid,placeback,move)) {
+            showbackpercentile(vg,jcurve,dat.second,startid,endid,placeback,move);
             nvgClosePath(vg);
             nvgFill(vg);
             }
@@ -346,9 +389,10 @@ void showround(NVGcontext* vg,JCurve &jcurve,roundtype dat,const int startid,con
 int effectmin(int min) const {
     return (idnr*min)/(60*24);
     }
+    /*
 int gettimemin(time_t tim) const {
     return effectmin(getminutes(tim));
-    }
+    } */
 
 static constexpr auto lighttest=hexcoloralpha(0x5087CEFA);
 //static constexpr auto lighttest=hexcolor(0xF0F8FF);
@@ -395,6 +439,7 @@ void showpercentiles(NVGcontext* vg,JCurve &jcurve) {
                 }
         else {
                 const uint32_t laststart=endday-jcurve.duration+30*60;
+//                const uint32_t laststart=endday-jcurve.duration+24*60*60;
                 if(starttime>laststart)
                         jcurve.setstarttime(laststart);
                 }
@@ -403,15 +448,25 @@ void showpercentiles(NVGcontext* vg,JCurve &jcurve) {
         uint32_t starter=jcurve.starttime-startday;
         auto &globalperc=*this;
         const int startid=globalperc.effectmin(starter/60);
-        const int showids=globalperc.effectmin(jcurve.duration/60);
+        const uint32_t startidtime=startid*minperstep*60;
+        const int timeback=starter-startidtime;
+        const float placeback=jcurve.dwidth*timeback/jcurve.duration;
+
+        const double staridf=(idnr*starter)/(60.0*24.0*60.0);
+
+        int showids=globalperc.effectmin((jcurve.duration+timeback)/60+minperstep-1);
+        const float move=(minperstep*60.0f*jcurve.dwidth/jcurve.duration);
+//        getidstep(jcurve.dwidth,showids);
+        ++showids;
+
         const int endid=startid+showids;
-        LOGGER("startid=%d, endid=%d, showids=%d\n",startid,endid,showids);
-        const float move=getidstep(jcurve.dwidth,showids);
-        int pos=isplace(startid,std::min(endid,maxids),move,jcurve.density,jcurve.timelen);
+        const float placeback2=(staridf-startid)*move;
+        LOGGER("showpercentiles starttime=%zu startidtime=%zu duration=%zu endidtime=%zu startid=%d, endid=%d, showids=%d move=%.2f timeback=%d placeback=%2.f placeback2=%.2f\n",starttime,startidtime,jcurve.duration,endid*minperstep*60,startid,endid,showids,move,timeback,placeback,placeback2);
+        int pos= (this->*((settings->data()->levelleft)?&persgegs::isplacefromleft:&persgegs::isplace))(startid,std::min(endid,maxids),move,jcurve.density,jcurve.timelen);
 
         nvgFillColor(vg, lighttest);
-        showround(vg,jcurve,f0,startid,endid);
-        float startpos=move*pos;;    
+        showround(vg,jcurve,f0,startid,endid,placeback,move);
+        float startpos=move*pos-placeback;;    
         auto smallfontlineheight=jcurve.smallfontlineheight;
         auto density=jcurve.density;
         auto statusbarheight=jcurve.statusbarheight;
@@ -422,20 +477,20 @@ void showpercentiles(NVGcontext* vg,JCurve &jcurve) {
         nvgFill(vg);
 
         nvgFillColor(vg, midlight);
-        showround(vg,jcurve,f10,startid,endid);
+        showround(vg,jcurve,f10,startid,endid,placeback,move);
         ypos+=smallfontlineheight;
         nvgBeginPath(vg);
         nvgRect(vg, startpos, ypos,afm , afm);
         nvgFill(vg);
         nvgFillColor(vg, midblue);
-        showround(vg,jcurve,f25,startid,endid);
+        showround(vg,jcurve,f25,startid,endid,placeback,move);
         ypos+=smallfontlineheight;
         nvgBeginPath(vg);
         nvgRect(vg, startpos, ypos,afm , afm);
         nvgFill(vg);
         nvgStrokeColor(vg, *jcurve.getblack());
         nvgStrokeWidth(vg, jcurve.pollCurveStrokeWidth); 
-        globalperc.showpercentile(vg,jcurve,m50,startid,endid);
+        globalperc.showpercentile(vg,jcurve,m50,startid,endid,placeback,move);
         float linepos=ystart;
         nvgBeginPath(vg);
         nvgMoveTo(vg, startpos,linepos);
@@ -463,50 +518,46 @@ void showpercentiles(NVGcontext* vg,JCurve &jcurve) {
         
         }
     };
-struct persgegs *globalpercptr=nullptr;
-
-
 
 #include "stats.hpp"
 #ifdef JUGGLUCO_APP
-std::unique_ptr<struct stats> statptr;
-extern void showstats(NVGcontext* vg,JCurve&,stats *stat,const jugglucotext *text) ;
-
-bool showsummarygraph=false;
-void showpercentiles(NVGcontext* vg) {
-    struct stats *st=statptr.get();
-    if(st) {
-        if(showsummarygraph&&globalpercptr) 
-            globalpercptr->showpercentiles(vg,appcurve); 
-
-        else
-            showstats(vg,appcurve,st,usedtext);
-        }
-    }
 #endif
 //constexpr const int maxdays=50;
 //uint16_t alldata[measuresperday*maxdays];
-
-static struct persgegs *matchedminutes( std::vector<GlucoseDataType<const ScanData*>> *polldataptr,uint32_t starttime,uint32_t endtime,const jugglucotext *text) {
-    std::vector<GlucoseDataType<const ScanData*>> &polldata=*polldataptr;
+template <typename GlucoseIterator>
+static struct persgegs *matchedminutes( std::vector<GlucoseDataType<GlucoseIterator>> *polldataptr,uint32_t starttime,uint32_t endtime,const jugglucotext *text) {
+    std::vector<GlucoseDataType<GlucoseIterator>> &polldata=*polldataptr;
+    int maxdist=0;
+    for(auto [_a,_b,dist,_cal,_]:polldata) { 
+        if(dist>maxdist)
+            maxdist=dist;
+        }
+    if(maxdist==0) {
+        LOGAR("matchedminutes: maxdist==0");
+        return nullptr;
+        }
+    int measuresperday=24*60/maxdist;
+    LOGGER("matchedminutes maxdist=%d measuresperday=%d\n",maxdist, measuresperday);
     const int days=ceilf(((float)(endtime-starttime))/seconds_in_day)+10;
     uint16_t  *uitdata=new uint16_t[measuresperday*days]();
-    const constexpr int bucketsize=60;
-    const constexpr uint32_t maxidents= seconds_in_day/bucketsize;
+    const int bucketsize=60*maxdist;
+    const int nearlytwo=2*bucketsize-10;
+    const int mindistance=50*maxdist;
+    const uint32_t maxidents= seconds_in_day/bucketsize;
     int  *lens=new int[measuresperday]();
     int prevsaidid=-1;
     int prevglucose=0;
     uint32_t prevtime=starttime,nexttime=0;
     uint32_t pollstart=UINT_MAX, polllast=0;
-    constexpr const auto timetoid{ [](time_t tim) { return  getminutes(tim)%maxidents; }};
+    const auto timetoid{ [maxidents,maxdist](time_t tim) { return  (getminutes(tim)/maxdist)%maxidents; }};
     int maxid=0;
     int previd=-1;
-    for(auto [firstin,lastin,_]:polldata) {
-        const ScanData *start=firstvalid(firstin,lastin,nexttime);
-        if(!start)
+    for(auto [firstin,lastin,_a,calibrated,cali]:polldata) {
+        auto start=firstvalid(firstin,lastin,nexttime);
+        if(start==lastin)
             continue;
-        const ScanData *last=lastvalid(start,lastin-1);
-        const ScanData *it=start;
+        auto last=lastvalid(start,lastin-1);
+        auto it=start;
         if(start->gettime()<pollstart)
             pollstart=start->gettime();
         if(last->gettime()>polllast)
@@ -515,25 +566,35 @@ static struct persgegs *matchedminutes( std::vector<GlucoseDataType<const ScanDa
         prevsaidid=-1;
         for(;it<=last;it++) {
             if(!it->valid()) {
-                LOGAR("invalid");
+                LOGAR("matchedminutes invalid");
                 continue;
                 }
             const int saidid=it->getid();
             if(saidid==prevsaidid) {
-                PERSlogprint("dub %d==%d\n",saidid,prevsaidid);
+                PERSlogprint("matchedminutes dub %d==%d\n",saidid,prevsaidid);
                 continue;
                 }
             uint32_t ittime=it->gettime();
+            if(ittime<nexttime) {
+                PERSlogprint("matchedminutes too early nexttime=%zd thistime=%zd %.1f id=%d\n",nexttime,ittime,it->getmmolL(),it->getid());
+                continue;
+                }
             prevsaidid=saidid;
             int id=timetoid(ittime);
             if(id==previd) {
+                PERSlogprint("matchedminutes id==previd prevtime %zu time %zu\n",prevtime,ittime);
                 id=(previd+1)%maxidents;
                 }
             previd=id;
-            const int glu=it->getsputnik();
+            int glu;
+            if(double  calValue;calibrated&&!isnan(calValue=cali.forwardvalue(*it))) {
+                glu=(int)std::round(calValue*10.0);
+                }
+            else {
+                glu=it->getmgL();
+                }
 
-            
-            if(prevglucose&&ittime>=(prevtime+110)) {
+            if(prevglucose&&ittime>=(prevtime+nearlytwo)) {
                 const float afst=(ittime-prevtime);
                 if(afst>bucketsize&&afst<15*bucketsize) { 
                     const float d=((float)glu-prevglucose)/afst;
@@ -542,30 +603,29 @@ static struct persgegs *matchedminutes( std::vector<GlucoseDataType<const ScanDa
                         if(tusid==id)
                             break;
                         const uint16_t tusglu=round(prevglucose+i*d);
-                        PERSlogprint("tusglu=%d\n",tusglu);
+                        PERSlogprint("matchedminutes tusglu=%d\n",tusglu);
                         uitdata[tusid*days+lens[tusid]++]=tusglu;
                         }
                     }
                 } 
-    //        previd=id;
             prevtime=ittime;
             prevglucose=glu;
             uitdata[id*days+lens[id]++]=glu;
             if(id>maxid)
                 maxid=id;
+             nexttime=prevtime+mindistance;
             }
-        nexttime=prevtime+30;
         }
     int count= std::reduce( lens, lens+ ++maxid);
-    if(count<11000)  {
-        LOGGER("matchedminutes count=%d<11000\n",count);
+    if((count*maxdist)<11000)  {
+        LOGGER("matchedminutes count=%d<11000\n",count*maxdist);
         return nullptr;
         }
     LOGAR("end matchedminutes");
-    return new persgegs(uitdata,lens,days,maxid,pollstart,polllast,text);
+    return new persgegs(uitdata,lens,days,maxid,pollstart,polllast,text,maxdist,maxidents);
     }
-
-static struct persgegs * sortedmatched( std::vector<GlucoseDataType<const ScanData*>> *polldataptr,const uint32_t start,const uint32_t endt,const jugglucotext *text) {
+template <typename GlucoseIterator>
+static struct persgegs * sortedmatched( std::vector<GlucoseDataType<GlucoseIterator>> *polldataptr,const uint32_t start,const uint32_t endt,const jugglucotext *text) {
     persgegs *datastructptr=matchedminutes(polldataptr,start,endt,text) ;
     if(!datastructptr)     {
         return nullptr;
@@ -588,40 +648,16 @@ static struct persgegs * sortedmatched( std::vector<GlucoseDataType<const ScanDa
     LOGAR("end sortedmatched");
     return datastructptr;
     }
-
-extern std::vector<GlucoseDataType<const ScanData*>> getsensorranges(uint32_t start,uint32_t endt,bool calibrated,bool allvalues,bool calibratePast,std::vector<std::unique_ptr<ScanData []>> &calibrates );
-//extern std::vector<pair<const ScanData*,const ScanData*>> getsensorranges(uint32_t start,uint32_t endt,bool calibrated,bool allvalues,bool calibratePast,std::vector<std::unique_ptr<ScanData []>> &calibrates ) ;
-//extern std::vector<pair<const ScanData*,const ScanData*>> getsensorranges(uint32_t start,uint32_t endt) ;
-#ifdef JUGGLUCO_APP
-extern void visiblebutton();
-void makesummarygraph(std::vector<GlucoseDataType<const ScanData*>> *polldataptr,uint32_t start,uint32_t endt) {
-    if(globalpercptr!=nullptr)
-        delete globalpercptr;
-    globalpercptr=nullptr;
-
-    if(!(globalpercptr=sortedmatched(polldataptr,start,endt,usedtext)))
-        return;
-    uint32_t startday=appcurve.starttime-getminutes(appcurve.starttime)*60;
-    globalpercptr->startday=startday;
-    globalpercptr->endday=startday+seconds_in_day;
-    appcurve.setend=0;
-
-    visiblebutton() ;
-    LOGAR("end makesummarygraph");
-    return;
-    }
-#endif
-std::vector<GlucoseDataType<const ScanData*>> polldata;
-
-static std::pair<uint32_t,uint32_t> percStartEnd(uint32_t endt,int days) {
+typedef const ScanData* StreamIterator;
+extern std::vector<GlucoseDataType<const ScanData*>> getsensorStreamranges(uint32_t start,uint32_t endt,bool calibrated,bool calibratePast);
+extern  std::vector<GlucoseDataType<HistoryIterator>> getsensorHistoryranges(uint32_t start,uint32_t endt,bool,bool calibratePast) ;
+static std::pair<uint32_t,uint32_t> makepercStartEnd(uint32_t firsttime,uint32_t lasttime,uint32_t endt,int days) {
 #ifndef NOLOG
     const uint32_t endtin=endt;
     const int daysin=days;
 #endif
-    auto firsttime=sensors->firstpolltime();
     if(!firsttime)
         return {0,0};
-    auto [_id,lasttime]=sensors->lastpolltime();
     int maxdays=1+(lasttime-firsttime)/(60*60*24);
     if(days>maxdays)
         days=maxdays;
@@ -635,36 +671,148 @@ static std::pair<uint32_t,uint32_t> percStartEnd(uint32_t endt,int days) {
     LOGGER("percStartEnd(%u,%d)=[%u,%u]\n",endtin,daysin,start,endt);
     return {start,endt};
     }
+template<typename DT>   std::pair<uint32_t,uint32_t> percStartEnd(uint32_t endt,int days) ;
+template<>   std::pair<uint32_t,uint32_t> percStartEnd<ScanData>(uint32_t endt,int days) {
+    auto firsttime=sensors->firstpolltime();
+    if(!firsttime)
+        return {0,0};
+    auto [_id,lasttime]=sensors->lastpolltime();
+    return makepercStartEnd(firsttime,lasttime,endt,days);
+    }
+template<>  std::pair<uint32_t,uint32_t> percStartEnd<Glucose>(uint32_t endt,int days) {
+    auto firsttime=sensors->firsthistorytime();
+    if(!firsttime)
+        return {0,0};
+    auto [_id,lasttime]=sensors->lasthistorytime();
+    return makepercStartEnd(firsttime,lasttime,endt,days);
+    }
+
+#include "net/watchserver/Getopts.hpp"
+#include "net/watchserver/watchserver.hpp"
+#include "CircularArray.hpp"
+#include "secs.h"
+
+constexpr float devidewith=3;
+constexpr  int winWidth = 1536*3/devidewith;
+constexpr   int winHeight = 1080/devidewith;
+template <typename  DT> std::pair<uint32_t,uint32_t> percStartEndopt(Getopts &opts) {
+    if(!opts.width)
+        opts.width=winWidth;
+    if(!opts.height)
+        opts.height=winHeight;
+ 
+    uint32_t endsecs=opts.end;
+    uint32_t startsecs=opts.start;
+    constexpr int showdur=daysecs;
+    int days=(endsecs-startsecs+showdur-1)/showdur;
+    return percStartEnd<DT>(endsecs,days);
+    }
 
 #ifdef JUGGLUCO_APP
+
+struct persgegs *globalpercptr=nullptr;
+
+
+std::unique_ptr<struct stats> statptr;
+extern void showstats(NVGcontext* vg,JCurve&,stats *stat,const jugglucotext *text) ;
+
+bool showsummarygraph=false;
+void graphpercentiles(NVGcontext* vg) {
+    struct stats *st=statptr.get();
+    if(st) {
+        if(showsummarygraph&&globalpercptr) 
+            globalpercptr->showpercentiles(vg,appcurve); 
+
+        else
+            showstats(vg,appcurve,st,usedtext);
+        }
+    }
+extern void visiblebutton();
+#include <atomic>
+template <typename GlucoseIterator>
+void makesummarygraph(uint32_t start,uint32_t endt, std::vector<GlucoseDataType<GlucoseIterator>> *polldata, std::atomic_flag *readyptr) {
+    destruct _{[polldata,readyptr] {
+            LOGAR("makesummarygraph before wait");
+            readyptr->wait(false);
+            LOGAR("makesummarygraph after wait");
+            delete polldata;
+            delete readyptr;
+            }
+        }; 
+
+    if(globalpercptr!=nullptr)
+        delete globalpercptr;
+    globalpercptr=nullptr;
+
+    
+    if(!(globalpercptr=sortedmatched(polldata,start,endt,usedtext)))
+        return;
+    uint32_t startday=appcurve.starttime-getminutes(appcurve.starttime)*60;
+    globalpercptr->startday=startday;
+    globalpercptr->endday=startday+seconds_in_day;
+    appcurve.setend=0;
+
+    visiblebutton() ;
+    return;
+    }
+#endif
+
+template<typename Iter>
+using IterType=std::remove_cvref_t<decltype(*std::declval<Iter>())>;
+#ifdef JUGGLUCO_APP
 static uint32_t statisticsendtime;
-static std::vector<std::unique_ptr<ScanData []>> globalcalibrates;
+
+//std::vector<GlucoseDataType<StreamIterator>> globalpolldata;
+
+template<typename Iterator>
 bool mkpercentiles(int days) {
     showsummarygraph=false;
-    const auto [start,endt]=percStartEnd(statisticsendtime,days);
+    const auto [start,endt]=percStartEnd<IterType<Iterator>>(statisticsendtime,days);
     if(start>=endt) return false;
-    polldata.clear();
-    globalcalibrates.clear();
-
+    auto *polldata= new std::vector<GlucoseDataType<Iterator>>; //deleted in makesummarygraph
     bool calibrated=settings->data()->DoCalibrate;
-    bool allvalues=true;
     bool calibratePast=settings->data()->CalibratePast;
-    polldata=getsensorranges(start,endt,calibrated,allvalues,calibratePast,globalcalibrates);
-    if(polldata.size()<=0)
+    getsensorranges<Iterator>(start,endt,calibrated,calibratePast,polldata);
+    if(polldata->size()<=0) {
+        LOGGER("mkpercentiles(%d)  no data\n",days);
+        delete polldata;
         return false;
-    std::thread graph(makesummarygraph,&polldata, start, endt);
+        }
+    std::atomic_flag *readyptr=new std::atomic_flag{};
+
+    std::thread graph(makesummarygraph<Iterator>, start, endt,polldata,readyptr);
     graph.detach();
-    statptr=std::make_unique<struct stats>(polldata);
+    statptr=std::make_unique<struct stats>(*polldata);
+    readyptr->test_and_set();
+    readyptr->notify_all();
     showpers=true;
     LOGGER("end mkpercentiles(%d)\n",days); 
     return true;
     }
+static bool mkpercentiles2(int days,bool history) {
+    if(history) 
+        return mkpercentiles<HistoryIterator>( days);
+    else
+        return mkpercentiles<StreamIterator>( days);
+    }
 
-extern bool makepercetages() ;
 int daystoanalyse=20;
+bool showhistory=false;
+bool mkpercentiles(int days,bool showhist) {
+    bool ret=mkpercentiles2(daystoanalyse,showhist);
+    if(!ret) {
+         ret=mkpercentiles2(daystoanalyse,!showhist);
+         if(ret) {
+                showhistory=!showhist;
+                }
+        }
+    return ret;
+   }
+extern bool makepercetages() ;
 bool makepercetages() {
     statisticsendtime=appcurve.starttime+appcurve.duration;
-    return mkpercentiles(daystoanalyse);
+//    return mkpercentiles<StreamIterator>(daystoanalyse);
+    return mkpercentiles(daystoanalyse,showhistory);
     }
 #endif
 #include "settings/settings.hpp"
@@ -937,9 +1085,6 @@ void startsummarythread() {
 void stopsummarythread() {
     }
 
-#include "net/watchserver/Getopts.hpp"
-#include "net/watchserver/watchserver.hpp"
-#include "CircularArray.hpp"
 
 struct PercentileGraph {
         Getopts opts; 
@@ -1024,11 +1169,91 @@ bool hassummary(Getopts &opts) {
 */
 //static bool givepercentiles(Getopts &opts,recdata *outdata);
 
+template <typename DT>
+static  char * givepercentiles(Getopts &opts,uint32_t start, uint32_t endt,recdata *outdata,std::string_view origin) {
+#ifndef NOLOG
+    const auto started=clock();
+#endif
+    constexpr int showdur=daysecs;
+    if(start>=endt) {
+        LOGAR("givepercentiles: start>=endt");
+        return nullptr;
+        }
 
-static  char * givepercentiles(Getopts &opts,uint32_t start, uint32_t endt,recdata *outdata,std::string_view origin) ;
-static std::pair<uint32_t,uint32_t> percStartEnd(Getopts &opts);
+//    bool calibratePast=settings->data()->CalibratePast;
+    bool calibratePast=true;
+    std::vector<GlucoseDataType<DT>> stream;
+    getsensorranges<DT>(start,endt,opts.calibratedmode,calibratePast,&stream);
+
+    if(stream.size()<=0) {
+        LOGAR("givepercentiles: stream.size()<=0");
+        return nullptr;
+        }
+    const auto *text=language::gettext(opts.lang);
+    auto percptr=sortedmatched(&stream,start,endt,text);
+    if(!percptr)  {
+        LOGAR("sortedmatched==null");
+        return nullptr;
+        }
+    int width=opts.width;
+    int height=opts.height;
+    uint32_t starttime=endt-showdur;
+    uint32_t startday=starttime-getminutes(starttime)*60;
+    JCurve perscurve(opts.unit?opts.unit:settings->data()->unit);
+    perscurve.duration=showdur;
+    perscurve.starttime=startday;
+    bool darkmode=opts.darkmode;
+    perscurve.dheight=height;
+    perscurve.dwidth=width;
+    perscurve.invertcolorsset(darkmode);
+
+    perscurve.usedtext=text;
+    percptr->startday=startday;
+    percptr->endday=startday+seconds_in_day;
+    perscurve.setend=0;
+
+
+    double multiply=height/800.0;
+    LOGGER("multiply=%f\n",multiply);
+    //perscurve.setfontsize(38.5f*multiply,44.0f*multiply,2.8f*multiply,308.0f*multiply); 
+    perscurve.setfontsize(38.5*multiply,44.0*multiply,2.8*multiply,250.0*multiply);
+    auto vg = nvgCreateRT(0, width, height);
+    destruct _{[vg]{nvgDeleteRT(vg);}};
+    perscurve.initfont(vg);
+
+    backgroundcolor(vg,*perscurve.getwhite());
+
+    perscurve.startstepNVG(vg,width,height);
+
+    percptr->showpercentiles(vg,perscurve); 
+    LOGAR("givepercentiles: after showpercentiles");
+    delete percptr;
+    nvgEndFrame(vg);
+    unsigned char *rgba = nvgReadPixelsRT(vg);
+    constexpr const int startpos=152;
+    int len;
+    char *imagestart = reinterpret_cast<char *>(stbi_write_png_to_mem(startpos,rgba, width*4, width, height, 4, &len));
+    if(!imagestart) {
+        LOGAR("givepercentiles: no image");
+        return nullptr;
+        }
+    delete[] outdata->allbuf;
+    outdata->allbuf=imagestart-startpos;
+    char *imageend=imagestart+len;
+    constexpr const std::string_view imagetype{"image/png"sv};
+    LOGAR("givepercentiles before mktypeheader");
+    mktypeheader(imagestart,imageend,false,outdata,imagetype,origin);
+#ifndef NOLOG
+    const auto stopped=clock();
+    double clockduration=((( long double)stopped-started)*1000)/CLOCKS_PER_SEC;
+    LOGGER("end givepercentiles start=%u end=%u darkmode=%d loadtime=%lf lang=%.2s\n", opts.start, opts.end, darkmode,clockduration,(const char *)&opts.lang);
+#endif
+    return imagestart;
+    }
+
 bool givesummarygraph(Getopts &opts,std::string_view origin,recdata *outdata) {
-    const auto [startt,endt]=percStartEnd(opts);
+    const bool history=opts.historymode||opts.calibratedhistorymode;
+    const auto [startt,endt]=(history?percStartEndopt<Glucose>:percStartEndopt<ScanData>)(opts);
     if(startt>=endt) {
         LOGAR("givesummarygraph no data");
         return false;
@@ -1045,7 +1270,8 @@ bool givesummarygraph(Getopts &opts,std::string_view origin,recdata *outdata) {
         LOGGER("givesummarygraph: found result opts.start=%u opts.end=%u\n",opts.start,opts.end);
         return true;
         }
-    if(char *startimage=givepercentiles(opts,startt,endt,outdata,origin)) {
+    if(char *startimage=
+(history?givepercentiles<HistoryIterator>:givepercentiles<const ScanData *>)(opts,startt,endt,outdata,origin)) {
           LOGGER("persimages.emplace_back %p\n", outdata->allbuf);
               {
               const std::lock_guard<std::mutex> lock(persimages.mutex);
@@ -1057,14 +1283,17 @@ bool givesummarygraph(Getopts &opts,std::string_view origin,recdata *outdata) {
     return false;
     }
 
-constexpr float devidewith=3;
-constexpr  int winWidth = 1536*3/devidewith;
-constexpr   int winHeight = 1080/devidewith;
-
-
-
+/*
+template <typename DT>
+std::vector<GlucoseDataType<DT>> getsensorrangesAlg(uint32_t start,uint32_t endt,bool calibrated,bool allvalues,bool calibratePast,std::vector<std::unique_ptr<ScanData []>> &calibrates );
+template<> std::vector<GlucoseDataType<const ScanData *>> getsensorrangesAlg<const ScanData*>(uint32_t start,uint32_t endt,bool calibrated,bool allvalues,bool calibratePast,std::vector<std::unique_ptr<ScanData []>> &calibrates ) {
+    return getsensorranges(start,endt,calibrated,allvalues,calibratePast,calibrates);
+    }
+template<> std::vector<GlucoseDataType<HistoryIterator>> getsensorrangesAlg<HistoryIterator>(uint32_t start,uint32_t endt,bool calibrated,bool allvalues,bool calibratePast,std::vector<std::unique_ptr<ScanData []>> &calibrates ) {
+    return getsensorHistoryranges(start, endt,calibrated,calibratePast);
+    } */
+template <typename DT>
 std::span<char> getStatImage(int startpos,Getopts &opts) {
-//    const bool has=hassummary(opts);
     JCurve statimage(opts.unit?opts.unit:settings->data()->unit);
     uint32_t startsecs=opts.start;
     uint32_t endsecs=opts.end;
@@ -1072,18 +1301,18 @@ std::span<char> getStatImage(int startpos,Getopts &opts) {
     int duration=statimage.duration=24*60*60;
     statimage.starttime=endsecs-duration;
     int days=(endsecs-startsecs+duration-1)/duration;
-    const auto [start,endt]=percStartEnd(endsecs,days);
+    const auto [start,endt]=percStartEnd<IterType<DT>>(endsecs,days);
     LOGGER("getStatImage %d %d days=%d\n",start,endt,days);
     if(start>=endt)
         return {(char *)nullptr,0};
-    std::vector<std::unique_ptr<ScanData []>> calibrates;
     bool calibratePast=settings->data()->CalibratePast;
-    auto stream=getsensorranges(start,endt,opts.calibratedmode,opts.allvaluesmode,calibratePast,calibrates);
+    bool calibrated= opts.calibratedmode||opts.calibratedhistorymode;
+    std::vector<GlucoseDataType<DT>> stream;
+    getsensorranges<DT>(start,endt,calibrated,calibratePast,&stream);
     if(stream.size()<=0)
         return {(char *)nullptr,0};
     const auto *text=language::gettext(opts.lang);
     statimage.usedtext=text;
-//    constexpr int winHeight=640*mult;
     const int winHeight=opts.height?opts.height:256;
     const int winWidth=opts.width?opts.width:768;
     const double mult=winHeight/512.0;
@@ -1092,7 +1321,6 @@ std::span<char> getStatImage(int startpos,Getopts &opts) {
     destruct _{[vg]{nvgDeleteRT(vg);}};
     statimage.dheight=winHeight;
     statimage.dwidth=winWidth;
-    //statimage.setfontsize(38.5*mult,44.0*mult,2.8*mult,308.0*mult); 
     statimage.setfontsize(38.5*mult,44.0*mult,2.8*mult,250.0*mult);
  
     statimage.initfont(vg);
@@ -1103,10 +1331,16 @@ std::span<char> getStatImage(int startpos,Getopts &opts) {
     nvgEndFrame(vg);
     unsigned char *rgba = nvgReadPixelsRT(vg);
     int len=0;
-   unsigned char *png = stbi_write_png_to_mem(startpos,rgba, winWidth*4, winWidth, winHeight, 4, &len);
+    unsigned char *png = stbi_write_png_to_mem(startpos,rgba, winWidth*4, winWidth, winHeight, 4, &len);
     return {(char *)png,static_cast<std::size_t>(len)};
     }
 
+std::span<char> getStatImageHistory(int startpos,Getopts &opts) {
+        return getStatImage<HistoryIterator>(startpos,opts);
+        } 
+std::span<char> getStatImageStream(int startpos,Getopts &opts) {
+        return getStatImage<const ScanData*>(startpos,opts);
+        } 
 
 
 static NVGcontext* getfilevg(JCurve &curveimage,int width,int height) {
@@ -1139,7 +1373,8 @@ std::span<char> getCurveImage(int startpos,Getopts &opts) {
     int width=opts.width?opts.width:winWidth;
     int height=opts.height?opts.height:winHeight;
   
-  if(!(opts.calibratedmode||opts.streammode||opts.scansmode||opts.historymode||opts.amountsmode||opts.mealsmode)) {
+  if(!(opts.calibratedmode|| opts.calibratedhistorymode||opts.streammode||opts.scansmode||opts.historymode||opts.amountsmode||opts.mealsmode)) {
+        LOGAR("getCurveImage: no settings");
         if(settings->data()->DoCalibrate) {
                 opts.calibratedmode=true;
                 opts.allvaluesmode=true;
@@ -1165,11 +1400,12 @@ std::span<char> getCurveImage(int startpos,Getopts &opts) {
     curveimage.allvalues=opts.allvaluesmode;
     curveimage.showcalibratedstream=opts.calibratedmode;
     curveimage.showcalibratedhistories=opts.calibratedhistorymode;
-
+    curveimage.showcalibratedscans=opts.calibratedscansmode;
+    
 
     curveimage.glow=curveimage.userunit2mgL(opts.glow);
     curveimage.ghigh=curveimage.userunit2mgL(opts.ghigh);
-    LOGGER("getCurveImage start=%u end=%u width=%d height=%d\n", startsecs, endsecs,width,height);
+    LOGGER("getCurveImage start=%u end=%u width=%d height=%d calibratedmode=%d calibratedhistorymode=%d\n", startsecs, endsecs,width,height,opts.calibratedmode,opts.calibratedhistorymode);
     NVGcontext* vg=getfilevg(curveimage,width,height);
     destruct _{[vg]{nvgDeleteRT(vg);}};
     curveimage.starttime=startsecs; 
@@ -1186,21 +1422,7 @@ std::span<char> getCurveImage(int startpos,Getopts &opts) {
     }
 
 
-#include "secs.h"
-
-static std::pair<uint32_t,uint32_t> percStartEnd(Getopts &opts) {
-    if(!opts.width)
-        opts.width=winWidth;
-    if(!opts.height)
-        opts.height=winHeight;
- 
-    uint32_t endsecs=opts.end;
-    uint32_t startsecs=opts.start;
-    constexpr int showdur=daysecs;
-    int days=(endsecs-startsecs+showdur-1)/showdur;
-    return percStartEnd(endsecs,days);
-    }
-
+/*
 static  char * givepercentiles(Getopts &opts,uint32_t start, uint32_t endt,recdata *outdata,std::string_view origin) {
 #ifndef NOLOG
     const auto started=clock();
@@ -1279,5 +1501,7 @@ static  char * givepercentiles(Getopts &opts,uint32_t start, uint32_t endt,recda
 #endif
     return imagestart;
     }
+
+*/
 #endif
 

@@ -36,12 +36,6 @@ struct CalcPara {
 template <typename DT> CalcPara calculate(const SensorGlucoseData *sens, const uint32_t newtime);
 extern template  CalcPara calculate<ScanData>(const SensorGlucoseData *sens, const uint32_t newtime);
 extern template  CalcPara calculate<Glucose>(const SensorGlucoseData *sens, const uint32_t newtime);
-template <typename T> 
-inline int getindex();
-template<>
-inline int getindex<ScanData>() { return 0; }
-template<>
-inline int getindex<Glucose>() { return 1; }
 template <typename DT,typename Sens,typename Cali>
 struct Calibrator {
     Cali &cali;

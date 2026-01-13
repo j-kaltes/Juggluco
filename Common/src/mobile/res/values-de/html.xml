@@ -963,31 +963,38 @@ verwendet werden. Zeichen werden UTF8 codiert.</p>
 <p>Die Bedeutung der Spalten finden Sie unter
 <a href="https://www.juggluco.nl/Juggluco/webserver.html">https://www.juggluco.nl/Juggluco/webserver.html</a>
 .</p>
-<p><strong>Tage</strong> : Ab Juggluco 7.1.0 können Sie die Anzahl
+<p><strong>Tage</strong>: Ab Juggluco 7.1.0 können Sie die Anzahl
 der zu speichernden Tage auswählen. Das Enddatum ist der rechte Rand
 des Bildschirms. Wenn Sie frühere Daten in Juggluco anzeigen, werden
-nur alte Daten exportiert (dasselbe wie im linken mittleren Menü -&gt; <a href="https://www.juggluco.nl/Jugglucohelp/de/stathelp.html">Statistiken</a>).</p>
+nur alte Daten exportiert (dasselbe wie im linken mittleren Menü -&gt;
+<a href="https://www.juggluco.nl/Jugglucohelp/de/stathelp.html">Statistiken</a>).</p>
+<p><b>Kalibriert</b>: Kalibrierte Werte speichern. Mit dieser
+Einstellung speichern <i>Scans</i>, <i>Stream</i> und <i>History</i>
+für alle Elemente sowohl den kalibrierten als auch den Rohwert. Im
+Libreview-Format wird, falls verfügbar, nur der kalibrierte Wert
+gespeichert, andernfalls der unkalibrierte Wert.</p>
 <p>Ab Juggluco 7.1.0 ist es auch möglich, diese Daten über den
-Webserver in Juggluco zu empfangen (Linkes
-Menü-&gt;Einstellungen-&gt;Daten austauschen-&gt;<a href="https://www.juggluco.nl/Jugglucohelp/de/Nightscouthelp.html">Webserver</a>), siehe
-<a href="https://www.juggluco.nl/Juggluco/webserver.html">https://www.juggluco.nl/Juggluco/webserver.html</a></p>
-<p><b>Libreview</b> : Daten im
-Libreview-Format speichern. Dies ermöglicht den Import von Daten von
-Nicht-Freestyle-Libre-Sensoren in Programme und Webdienste, die
-dieses Format benötigen. Für Dexcom-Sensoren werden die
-5-Minuten-Werte gespeichert, für Sibionics-Sensoren alle 5 Minuten
-ein Stream-Wert. Auch die Historywerte der Libre-Sensoren 0, 2 und 3
-werden gespeichert. Insulindosen, Kohlenhydrate und Bemerkungen
-werden erst gespeichert, nachdem Sie diesen <a href="https://www.juggluco.nl/Jugglucohelp/de/setlibrenumtype.html">Kategorien</a> unter linkem
-Menü → Einstellungen → Daten austauschen → Libreview → <a href="https://www.juggluco.nl/Jugglucohelp/de/librenumhelp.html">Mengen senden</a> Etiketten zugewiesen haben.</p>
-<p style="line-height: 100%; margin-bottom: 0in"><br/>
+Webserver in Juggluco zu empfangen (Linkes Menü-&gt;Einstellungen-&gt;Daten
+austauschen-&gt;<a href="https://www.juggluco.nl/Jugglucohelp/de/Nightscouthelp.html">Webserver</a>),
+siehe <a href="https://www.juggluco.nl/Juggluco/webserver.html">https://www.juggluco.nl/Juggluco/webserver.html</a></p>
+<p><b>Libreview</b>: Daten im Libreview-Format speichern. Dies
+ermöglicht den Import von Daten von Nicht-Freestyle-Libre-Sensoren
+in Programme und Webdienste, die dieses Format benötigen. Für
+Dexcom-Sensoren werden die 5-Minuten-Werte gespeichert, für
+Sibionics-Sensoren alle 5 Minuten ein Stream-Wert. Auch die
+Historywerte der Libre-Sensoren 0, 2 und 3 werden gespeichert.
+Insulindosen, Kohlenhydrate und Bemerkungen werden erst gespeichert,
+nachdem Sie diesen <a href="https://www.juggluco.nl/Jugglucohelp/de/setlibrenumtype.html">Kategorien</a>
+unter linkem Menü → Einstellungen → Daten austauschen →
+Libreview → <a href="https://www.juggluco.nl/Jugglucohelp/de/librenumhelp.html">Mengen
+senden</a> Etiketten zugewiesen haben.</p>
+<p style="line-height: 100%; margin-bottom: 0cm"><br/>
 
 </p>
 <p><br/>
 <br/>
 
 </p>
-
 ]]>
 </string>
 <string name="introhelp" >
@@ -995,7 +1002,7 @@ Menü → Einstellungen → Daten austauschen → Libreview → <a href="https:/
 <p><a href="https://www.juggluco.nl/Jugglucohelp/be/introhelp.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/introhelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/introhelp.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/introhelp.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/introhelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/introhelp.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/introhelp.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/introhelp.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/introhelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/introhelp.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/introhelp.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/introhelp.html?lang=en">en</a>&emsp;&emsp;</p>
 <p><font face="Times New Roman" size="4" style="font-size: 14pt">
 <a href="https://www.juggluco.nl/"><b>Juggluco</b></a> ist ein Applet zur Blutzuckerkontrolle bei Diabetikern. Es kann Freestyle Libre (0 und 2) Sensoren (über NFC) scannen und (über
-Bluetooth) Glukosewerte von<i><b>Freestyle Libre 2</b></i>, <b><i>2+</i></b>, <b><i>3</i></b>, <b><i>3+</i></b>, <i><b>Sibionics GS1Sb</b></i>, <i><b>Dexcom G7/ONE+</b></i> und <i><b>Accu-Chek SmartGuide</b></i> Sensoren empfangen.</p>
+Bluetooth) Glukosewerte von<i><b>Freestyle Libre 2</b></i>, <b><i>2+</i></b>, <b><i>3</i></b>, <b><i>3+</i></b>, <i><b>Sibionics GS1Sb</b></i>, <i><b>Dexcom G7/ONE+</b></i>, <i><b>Accu-Chek SmartGuide</b></i> und <i><b>CareSens Air</b></i> Sensoren empfangen.</p>
 <p style="line-height: 115%; margin-bottom: 0cm">Wenn das Programm zum ersten Mal ausgeführt wird, können Sie einen
 Freestyle Libre <b>2</b> Sensor scannen, indem Sie ihn an den NFC-Sensor Ihres Smartphones
 halten. Anschließend versucht Juggluco, eine Bluetooth-Verbindung
@@ -1008,8 +1015,7 @@ Sensors verwendet haben , auf <a href="https://www.juggluco.nl/Jugglucohelp/geta
 Sie scannen. Es ist nicht möglich, einen Libre 3-Sensor zu
 übernehmen, der mit dem FreeStyle Libre 3-Lesegerät gestartet
 wurde.</p>
-<p>Um eine Verbindung zu <i><b>Sibionics GS1Sb-</b></i> , <i><b>Dexcom G7/ONE+-</b></i> und <i><b>Accu-Chek SmartGuide-</b></i>
-Sensoren herzustellen, müssen Sie deren Datenmatrix mit dem linken
+<p>Um eine Verbindung zu <i><b>Sibionics GS1Sb</b></i> , <i><b>Dexcom G7/ONE+</b></i>, <i><b>Accu-Chek SmartGuide</b></i> und <i><b>CareSens Air</b></i> Sensoren herzustellen, müssen Sie deren Datenmatrix mit dem linken
 Menü-&gt;Foto scannen. Dexcom G7/ONE+-Sensoren werden über
 Bluetooth gekoppelt, was Sie bei den meisten Telefonen akzeptieren
 müssen. Sie müssen sehr schnell zustimmen, sonst müssen Sie

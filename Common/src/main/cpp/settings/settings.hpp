@@ -401,7 +401,8 @@ struct Tings {
 
     struct ring extraAlarms[maxextraalarms];
     int32_t soundtype;
-    int32_t reserved3;
+    int32_t reserved3:31;
+    bool  showcalibratedscans:1;
     float64_t loadtime;
     uint32_t glucoseMeterNR;
     uint32_t reserved4;

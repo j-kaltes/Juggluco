@@ -347,9 +347,8 @@ is an applet for the control of blood glucose by people with
 diabetes. It can scan Freestyle Libre (0 and 2) sensors (via NFC) and
 receive (via Bluetooth) glucose values from </font><font color="#4f81bd"><i><b>Freestyle
 Libre 2</i></b></font><font color="#ffffff">,</font> <font color="#4f81bd"><i><b>2+</b></i></font><font color="#ffffff">,</font> <font color="#4f81bd"><i><b>3</b></i></font><font color="#ffffff">,</font> <font color="#4f81bd"><i><b>3+</b></i></font><font color="#ffffff">,</font> <font color="#4f81bd"><i><b>Sibionics GS1Sb</b></i></font><font color="#ffffff">,
-</font><font color="#4f81bd"><i><b>Dexcom G7/ONE+</b></i></font><font color="#ffffff">
-and </font><font color="#4f81bd"><i><b>Accu-Chek SmartGuide</b></i></font><font color="#ffffff">
-sensors.</font></p>
+</font><font color="#4f81bd"><i><b>Dexcom G7/ONE+</b></i></font><font color="#ffffff">, </font><font color="#4f81bd"><i><b>Accu-Chek SmartGuide</b></i></font><font color="#ffffff"> and
+</font><font color="#4f81bd"><i><b>CareSens Air</b></i></font><font color="#ffffff"> sensors.</font></p>
 <p style="line-height: 115%; margin-bottom: 0cm"><font color="#ffffff">When
 the program is run for the first time, you can scan a Freestyle Libre
 </font><font color="#ffffff"><b>2</b></font><font color="#ffffff">
@@ -365,10 +364,7 @@ Account ID&quot;</a> and wait for the Account ID to arrive before
 scanning.  </font><font color="#ffffff">It is not possible to take
 over a Libre 3 sensor started with FreeStyle Libre 3 reader or the
 USA Libre app for both Libre 2 and Libre 3. All mentioned sensors can be used with Juggluco when they are not activated by another app.</font></p>
-<p><font color="#ffffff">To connect to <font color="#4f81bd"><i><b>Sibionics
-GS1Sb</b></i></font>, <font color="#4f81bd"><i><b>Dexcom G7/ONE+</b></i></font>
-and <font color="#4f81bd"><i><b>Accu-Chek SmartGuide</b></i></font>
-sensors you need to scan their data matrix with left menu-&gt;Photo.
+<p><font color="#ffffff">To connect to <font color="#4f81bd"><i><b>Sibionics GS1Sb</b></i></font>, <font color="#4f81bd"><i><b>Dexcom G7/ONE+</b></i></font>, <font color="#4f81bd"><i><b>Accu-Chek SmartGuide</b></i></font> and <font color="#4f81bd"><i><b>CareSens Air</b></i></font> sensors you need to scan their data matrix with left menu-&gt;Photo.
 Dexcom G7/ONE+ sensors are paired via Bluetooth, which you have to
 accept on most phones. Agreeing you have to do very fast otherwise
 you have to wait another 5 minutes. So prevent the screen from
@@ -644,46 +640,55 @@ talkback. Close can be used to exit</span></font><font color="#ffffff">
 <string name="searchhelp" >
 <![CDATA[
 <p><a href="https://www.juggluco.nl/Jugglucohelp/be/searchhelp.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/searchhelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/searchhelp.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/searchhelp.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/searchhelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/searchhelp.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/searchhelp.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/searchhelp.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/searchhelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/searchhelp.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/searchhelp.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/searchhelp.html?lang=en">en</a>&emsp;&emsp;</p><h1>Search</h1>
-<p style="line-height: 115%; margin-bottom: 0in">Search can be used
+<p style="line-height: 115%; margin-bottom: 0cm">Search can be used
 to find glucose values and entered numbers.</p>
-<p style="line-height: 115%; margin-bottom: 0in"><span lang="en-US">You
+<p style="line-height: 115%; margin-bottom: 0cm"><span lang="en-US">You
 search for values </span><font color="#4f81bd"><font face="Cambria, serif"><font size="3" style="font-size: 13pt"><span lang="en-US"><b>between
 the given numbers</b></span></font></font></font><span lang="en-US">.
 For example: 10 – 999 to search for values between 10 and 999.</span></p>
-<p style="line-height: 115%; margin-bottom: 0in">Glucose values are
+<p style="line-height: 115%; margin-bottom: 0cm">Glucose values are
 separated in Scan, History and Stream.</p>
-<p style="line-height: 115%; margin-bottom: 0in"><font color="#4f81bd"><font face="Cambria, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: 0.8pt"><span lang="en-US"><i>Scan</i></span></span></font></font></font><span lang="en-US">:
-value shown immediately after scanning.</span></p>
-<p style="line-height: 115%; margin-bottom: 0in"><font color="#4f81bd"><font face="Cambria, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: 0.8pt"><span lang="en-US"><i>History</i></span></span></font></font></font><span lang="en-US">:
-Periodic measurements saved on the sensor and transferred to this
-app. Freestyle Libre 2 sensors save every 15 minute a value and
-transfer them by NFC to this app. Freestyle Libre 3 sensors, save
-every 5 minutes a value and transfer them via Bluetooth.</span></p>
-<p style="line-height: 115%; margin-bottom: 0in"><font color="#4f81bd"><font face="Cambria, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: 0.8pt"><span lang="en-US"><i>Stream</i></span></span></font></font></font><span lang="en-US">:
-1 minute periodic measurements sent by Bluetooth from the Freestyle
-Libre 2 sensor to this app.</span></p>
-<p style="line-height: 115%; margin-bottom: 0in"><span lang="en-US">If
+<p style="line-height: 115%; margin-bottom: 0cm"><font color="#4f81bd"><font face="Cambria, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: 0.8pt"><span lang="en-US"><i>Scan</i></span></span></font></font></font><span lang="en-US">:
+value shown immediately after scanning. </span><span lang="en-US">Search
+for raw scans.</span></p>
+<p style="line-height: 115%; margin-bottom: 0cm"><font color="#4f81bd"><font face="Cambria, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: 0.8pt"><span lang="en-US"><i>History</i></span></span></font></font></font><span lang="en-US">:
+</span><span lang="en-US">Search for raw history values. (</span><span lang="en-US">Periodic
+measurements saved on the sensor and transferred to this app.
+Freestyle Libre 2 sensors save every 15 minute a value and transfer
+them by NFC to this app. Freestyle Libre 3 sensors, save every 5
+minutes a value and transfer them via Bluetooth.</span><span lang="en-US">)</span></p>
+<p style="line-height: 115%; margin-bottom: 0cm"><font color="#4f81bd"><font face="Cambria, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: 0.8pt"><span lang="en-US"><i>History
+Calibrated</i></span></span></font></font></font><span lang="en-US">:
+Search for calibrated history values.</span></p>
+<p style="line-height: 115%; margin-bottom: 0cm"><font color="#4f81bd"><font face="Cambria, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: 0.8pt"><span lang="en-US"><i>Stream</i></span></span></font></font></font><span lang="en-US">:
+</span><span lang="en-US">Search for raw stream values (</span><span lang="en-US">1
+minute periodic measurements sent by Bluetooth from the Freestyle
+Libre 2 sensor to this app</span><span lang="en-US">)</span><span lang="en-US">.</span></p>
+<p style="line-height: 115%; margin-bottom: 0cm"><font color="#4f81bd"><font face="Cambria, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: 0.8pt"><span lang="en-US"><i>Stream
+</i></span></span></font></font></font><font color="#4f81bd"><font face="Cambria, serif"><font size="3" style="font-size: 12pt"><span style="letter-spacing: 0.8pt"><span lang="en-US"><i>Calibrated:
+</i></span></span></font></font></font><span lang="en-US">Search for
+calibrated stream values.</span></p>
+<p style="line-height: 115%; margin-bottom: 0cm"><span lang="en-US">If</span><span lang="en-US">
 you have entered insulin, consumption</span> <span lang="en-US">or
 activity data, you can search for them by selecting the corresponding
 </span><font color="#4f81bd"><font face="Cambria, serif"><font size="3" style="font-size: 13pt"><span lang="en-US"><b>label</b></span></font></font></font>
 <span lang="en-US">in the spinner and specify the range of numbers
 interested in: for example cycling between 50 and 100.</span></p>
-<p style="line-height: 115%; margin-bottom: 0in"><span lang="en-US">You
+<p style="line-height: 115%; margin-bottom: 0cm"><span lang="en-US">You
 can also specify the </span><font color="#365f91"><font face="Cambria, serif"><font size="4" style="font-size: 14pt"><span lang="en-US"><b>time
 of day</b></span></font></font></font> <span lang="en-US">you are
 interested in. If you are interested in hypos between 22:00 in the
-evening and 07:00 in the morning, you press on the first time </span><span lang="en-US">display
-</span><span lang="en-US">(displayed 00:00 at start) and change it to
-22:00 and change the second </span><span lang="en-US">time display </span><span lang="en-US">to
-07:00 (You also have to select Stream and/or History and specify a
-value range from 0 to 3.9 mmol/L (70 mg/dL)).</span></p>
-<p style="line-height: 115%; margin-bottom: 0in"><span lang="en-US">Touching
+evening and 07:00 in the morning, you press on the first time display
+(displayed 00:00 at start) and change it to 22:00 and change the
+second time display to 07:00 (You also have to select Stream and/or
+History and specify a value range from 0 to 3.9 mmol/L (70 mg/dL)).</span></p>
+<p style="line-height: 115%; margin-bottom: 0cm"><span lang="en-US">Touching
 an </span><font color="#4f81bd"><font face="Cambria, serif"><span lang="en-US"><b>arrow</b></span></font></font>
 <span lang="en-US">starts searching in the given direction. </span>
 </p>
-<p style="line-height: 115%; margin-bottom: 0in"><font color="#4f81bd"><font face="Cambria, serif"><font size="3" style="font-size: 13pt"><span lang="en-US"><b>Reset</b></span></font></font></font>
+<p style="line-height: 115%; margin-bottom: 0cm"><font color="#4f81bd"><font face="Cambria, serif"><font size="3" style="font-size: 13pt"><span lang="en-US"><b>Reset</b></span></font></font></font>
 <span lang="en-US">sets all search values to what they were at start.</span></p>
-<p style="line-height: 115%; margin-bottom: 0in"><span lang="en-US">In
+<p style="line-height: 115%; margin-bottom: 0cm"><span lang="en-US">In
 </span><span lang="en-US"><i>Settings</i></span> <span lang="en-US">under
 </span><span lang="en-US"><i>number labels </i></span>you can select
 which label (e.g. <i>Carbohydra</i>) is associated with meals. If you
@@ -2412,30 +2417,46 @@ deleted in Left menu-&gt;Settings-&gt;&quot;<a href="https://www.juggluco.nl/Jug
 <![CDATA[
 <p><a href="https://www.juggluco.nl/Jugglucohelp/be/helpexport.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/helpexport.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/helpexport.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/helpexport.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/helpexport.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/helpexport.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/helpexport.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/helpexport.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/helpexport.html?lang=en">en</a>&emsp;&emsp;</p><h1>Export</h1>
 <p>Export data from Juggluco to a file.</p>
-<p>Meals are saved in html. All other data is saved in .tsv
-(<a href="https://en.wikipedia.org/wiki/Tab-separated_values">Tab-separated
+<p><span lang="en-US">Meals are saved in html. All other data is
+saved in .tsv (<a href="https://en.wikipedia.org/wiki/Tab-separated_values">Tab-separated
 values</a>). This can be loaded in programs like LibreOffice Calc,
 Microsoft Excel, Mathematica or R. It is a kind of .csv with tabs
-instead of commas used to separate items. UTF-8 encoding is used.</p>
-<p>The meaning of the columns can be found at
-<a href="https://www.juggluco.nl/Juggluco/webserver.html">https://www.juggluco.nl/Juggluco/webserver.html</a>.</p>
-<p><b>Days</b>: Starting with Juggluco 7.1.0, you can select the
-number of days to save. The end date is the right border of the
-screen. Thus if you view past data in Juggluco, only old data is
-exported (the same as in left middle menu-&gt;<a href="https://www.juggluco.nl/Jugglucohelp/stathelp.html">Statistics</a>).</p>
-<p>Starting with Juggluco 7.1.0, it is also possible to receive these
-data via the web server in Juggluco (Left menu-&gt;Settings-&gt;<a href="https://www.juggluco.nl/Jugglucohelp/exchangehelp.html">Exchange data</a>-&gt;Web server), see <a href="https://www.juggluco.nl/Juggluco/webserver.html">https://www.juggluco.nl/Juggluco/webserver.html</a></p>
-<b>Libreview</b>: Save data in Libreview format. This makes in possible to
-import data from non-Freestyle Libre sensors in programs and web
-services that require that format. For Dexcom sensors the 5 minutes
-values are saved and for Sibionics sensors one stream value every 5
-minutes. It also saves the history values of Libre 0,2 and 3 sensors. This will only save
-Insulin doses, carbohydrate and remarks, after you have <a href="https://www.juggluco.nl/Jugglucohelp/setlibrenumtype.html">assigned
+instead of commas used to separate items. UTF-8 encoding is used.</span></p>
+<p><span lang="en-US">The meaning of the columns can be found at
+<a href="https://www.juggluco.nl/Juggluco/webserver.html">https://www.juggluco.nl/Juggluco/webserver.html</a>.</span></p>
+<p><span lang="en-US"><b>Days</b></span><span lang="en-US">: Starting
+with Juggluco 7.1.0, you can select the number of days to save. The
+end date is the right border of the screen. Thus, if you view past
+data in Juggluco, only old data is exported (the same as in left
+middle menu→<a href="https://www.juggluco.nl/Jugglucohelp/stathelp.html">Statistics</a>).</span></p>
+<p><b>Calibrated</b>: Save calibrated values. With this setting,
+<i>Scans</i>, <i>Stream</i> and <i>History</i> save for all items
+both the calibrated and raw value. In Libreview format, only the
+calibrated value is saved if available, otherwise the uncalibrated
+(raw) value.</p>
+<p><span lang="en-US">Starting with Juggluco 7.1.0, it is also
+possible to receive these data via the web server in Juggluco (Left
+menu-&gt;Settings-&gt;<a href="https://www.juggluco.nl/Jugglucohelp/exchangehelp.html">Exchange
+data</a>-&gt;Web server), see
+<a href="https://www.juggluco.nl/Juggluco/webserver.html">https://www.juggluco.nl/Juggluco/webserver.html</a></span></p>
+<p><span lang="en-US"><b>Libreview</b></span><span lang="en-US">:
+Save data in Libreview format. This makes in possible to import data
+from non-Freestyle Libre sensors in programs and web services that
+require that format. For Dexcom sensors the 5 minutes values are
+saved and for Sibionics sensors one stream value every 5 minutes. It
+also saves the history values of Libre 0,2 and 3 sensors. This will
+only save Insulin doses, carbohydrate and remarks, after you have
+<a href="https://www.juggluco.nl/Jugglucohelp/setlibrenumtype.html">assigned
 labels</a> to these categories under left menu→Settings→Exchange
 data→ Libreview→<a href="https://www.juggluco.nl/Jugglucohelp/librenumhelp.html">Send
-Amounts</a>.</p>
-<p style="line-height: 100%; margin-bottom: 0in"><br/>
+Amounts</a>.</span></p>
+<p style="line-height: 100%; margin-bottom: 0cm"><br/>
 
+</p>
+<p><br/>
+<br/>
+
+</p>
 <p><br/>
 <br/>
 

@@ -209,7 +209,7 @@ static std::string_view getmealtype(const Num &num) {
 //TODO: sort to be deleted items on librenr
 public:
  void foodel(char *&ptr,const Num &n,Libregeg *ids,bool del=false) {
-	if(n.value!=0.0f) {
+	if(isnormal(n.value)) {
 		auto carbo=carboWeight(n.type);
 		if(carbo!=0.0f) {
 			auto recordnum=mkid<food>(del?n.librenr:ids->addnum(n,nextlibrenr()));
@@ -250,7 +250,7 @@ public:
 		time_t tim=n.time;
 		LIBRELOGGER("insulinel type=%d %.1f %d %s",n.type,n.value,tim,ctime(&tim));
 		} */
-	if(n.value!=0.0f) {
+	if(isnormal(n.value)) {
 		auto rapid=rapidWeight(n.type);
 		if(rapid!=0.0f) {
 			static constexpr const std::string_view	rapidname{"RapidActing"};

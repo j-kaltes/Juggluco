@@ -31,6 +31,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import static tk.glucodata.Layout.getMargins;
 import static android.view.View.INVISIBLE;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static tk.glucodata.Log.doLog;
@@ -40,11 +41,12 @@ import static tk.glucodata.NumberView.geteditwearos;
 import static tk.glucodata.NumberView.smallScreen;
 import static tk.glucodata.settings.Settings.removeContentView;
 import static tk.glucodata.util.getbutton;
+import static tk.glucodata.util.getcheckbox;
 import static tk.glucodata.util.getlabel;
 
 class Stats {
 private static final String LOG_ID="Stats";
-static private void askdays(MainActivity act) {
+static private void askdays(MainActivity act,boolean history) {
    var label=getlabel(act,act.getString(R.string.days));
 
    int pad= (int)(tk.glucodata.GlucoseCurve.metrics.density*8);
@@ -114,7 +116,7 @@ final Runnable closeonback=()-> {
       act.poponback();   
       act.curve.statspresent=false;
       act.curve.summarybutton=null;
-      Natives.analysedays(get);
+      Natives.analysedays(get,history);
       removeContentView(layout);
       if(smallScreen) {
          help.hidekeyboard(act);
@@ -127,16 +129,19 @@ final Runnable closeonback=()-> {
    act.setonback(closeonback);
    }
 
-private static void webPercentiles(Context context, int days) {
+private static void webPercentiles(Context context, int days,boolean history) {
     final long endtime=Natives.percentileEndtime(days);
 	final String key=Natives.getApiSecret();
     final String addkey=(key!=null&&!key.isEmpty())?key+"/":"";
-    final String url="http://127.0.0.1:17580/"+addkey+"x/report?days="+days+"&endtime="+endtime;
+    final String type=(Natives.getDoCalibrate()?"&calibrated":"&")+(history?"history":"stream");
+    final String url="http://127.0.0.1:17580/"+addkey+"x/report?amounts&days="+days+"&endtime="+endtime+type;
     var intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
     context.startActivity(intent);
     }
-   static void mkstats(MainActivity act) {
-      act.clearonback();
+
+static void mkstats(MainActivity act) {
+     boolean showhistory=Natives.getAnalysehistory();
+      MainActivity.clearonback();
 
         var stats=getbutton(act,R.string.save);
 
@@ -144,6 +149,8 @@ private static void webPercentiles(Context context, int days) {
       Button Help = getbutton(act, R.string.helpname);
       Button Close = getbutton(act, R.string.closename);
       Button Days = getbutton(act, R.string.days);
+      var history = getcheckbox(act, R.string.historyname,showhistory);
+      getMargins(history).rightMargin=(int)(GlucoseCurve.metrics.density*5.0);
       Button Curve = getbutton(act, R.string.summarygraph);
       Layout layout = new Layout(act, (l, w, h) -> {
          int height = GlucoseCurve.getheight();
@@ -152,7 +159,9 @@ private static void webPercentiles(Context context, int days) {
 
          if(height>h) l.setY((height - h -MainActivity. systembarBottom));
          return new int[]{w, h};
-      }, new View[]{Days, Help, Close,stats, Curve});
+      }, new View[]{history,Days, Help},new View[]{Close,stats, Curve});
+
+      layout.setBackgroundColor(Applic.backgroundcolor);
       if(!act.curve.statspresent)
          Curve.setVisibility(INVISIBLE);
       act.curve.summarybutton=Curve;
@@ -181,10 +190,35 @@ private static void webPercentiles(Context context, int days) {
                     });
       Days.setOnClickListener(v -> {
          act.poponback();
-         askdays(act);
+         askdays(act,history.isChecked());
          removeContentView(layout);
       });
+     boolean[] dontswitch={false};
+      history.setOnCheckedChangeListener( (buttonView,  isChecked)->  {
+             // act.poponback();
+             // removeContentView(layout);
+             if(dontswitch[0])
+                return;
+              act.curve.summarybutton=Curve;
+              Curve.setVisibility(INVISIBLE);
+              act.curve.statspresent=false;
+//              act.curve.summarybutton=null;
+              Natives.analysedays(-1,isChecked);
+              final boolean usehistory=Natives.getAnalysehistory();
+              if(usehistory!=isChecked) {
+                    Applic.argToaster(act,usehistory?"No Stream values":"No History values", Toast.LENGTH_SHORT);
+                    dontswitch[0]=true;
+                    history.setChecked(usehistory);
+                    dontswitch[0]=false;
+                    }
+              act.requestRender();
+             // mkstats(act);
+               }
+             );
       Curve.setOnClickListener(v -> {
+         boolean hist= history.isChecked();
+         Log.i(LOG_ID,"history.isChecked()="+hist);
+
          act.poponback();
          act.setonback(()-> {
             Natives.summarygraph(false);
@@ -198,7 +232,7 @@ private static void webPercentiles(Context context, int days) {
 
         stats.setOnClickListener(v->  {
             if(Natives.getusexdripwebserver() ) {
-                webPercentiles(act,Natives.getAnalysedays());
+                webPercentiles(act,Natives.getAnalysedays(),history.isChecked());
                 }
             else {
                     Confirm.message(act,"Web server needed","Go to left menu->Settings->Exchange data->Web server to activate webserver",()->{}); 

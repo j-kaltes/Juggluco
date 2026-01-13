@@ -143,6 +143,7 @@ struct ScanData {uint32_t t;int32_t id;int32_t g;int32_t tr;float ch;
  uint16_t getmgdL() const { return g;};
  float getmmolL() const { return g/convfactordL;};
  uint16_t getsputnik() const { return g*10;};
+    uint16_t getmgL() const { return getsputnik();};
 float getchange() const {
     return ch;
     }
@@ -190,6 +191,7 @@ struct Glucose {
     uint16_t glu[];
     uint16_t getraw() const { return glu[0];};
     uint16_t getsputnik() const { return glu[1];};
+    uint16_t getmgL() const { return getsputnik();};
     uint16_t getmgdL() const { return glu[1]/10;};
     uint32_t gettime() const {return time;};
     uint32_t getid() const {return id;};
@@ -222,6 +224,7 @@ struct Calibraties {
     CaliPara caliPara[maxcaliNr];
     uint32_t caliNr;
     uint32_t caliUpdated[std::max(maxsendtohost,8)];
+    uint32_t LastextraUNUSED;
 
     uint32_t lastCalibrated() const {
             if(!caliNr)
@@ -345,7 +348,8 @@ struct Calibraties {
             }
           return 0;
           }
- };
+ } ;//__attribute__ ((packed)) ;
+
 class SensorGlucoseData {
 bool haserror=false;
 //inline static  const string basedir{FILEDIR};
@@ -498,6 +502,7 @@ union {
 uint32_t libreStarttime;
 uint32_t reserved3;
 Calibraties calis[2];
+uint32_t LastReserved;
 
 void clearLibreSendEnd(int start) {
     const int len=(int)sizeof(sendLibre)-start*sizeof(sendLibre[0]);
@@ -1530,6 +1535,13 @@ uint32_t firstpolltime() const {
             return start[i].t;    
     return UINT32_MAX;
     }
+uint32_t firstscantime() const {
+    const ScanData* start= scans.data();
+    for(int i=0;i<scancount();i++)
+        if(start[i].valid(i))
+            return start[i].t;  
+    return UINT32_MAX;
+    }
 int scancount() const {
     return getinfo()->scancount;
     }
@@ -1922,7 +1934,7 @@ void setbackuptime(int ind,uint32_t starttime) {
      }
      */
 void backhistory(int pos) ;
-void backcalibrated(int pos);
+void backcalibrated(int pos,bool history);
 void backstream(int pos) ;
 
 bool setbackuptime(crypt_t *pass,Connect *connect,int ind,uint32_t starttime) {
@@ -2368,6 +2380,8 @@ void resetSiIndex();
         for(int i=0;i<2;++i)
                 getinfo()->calis[0].updateCaliTime( ind, time);
         }
+
+
 int updateCali(crypt_t *pass,Connect *connect,int ind,int sensorindex)  {
      int res=0;
      for(int i=0;i<2;++i) {
@@ -2392,11 +2406,12 @@ int updateCali(crypt_t *pass,Connect *connect,int ind,int sensorindex)  {
              int offsetofcalNR=offsetof(Info,calis[0].caliNr)+sizeof(Info::calis[0])*i;
              vect.push_back({reinterpret_cast<const senddata_t *>(&wascaliNr),offsetofcalNR,4});
             const uint16_t calibratedstartcmd=startcalibratedupdate|sensorindex;
-            if(!connect->senddata(pass,vect, infopath,calibratedstartcmd, reinterpret_cast<const uint8_t *>(&updatefrom),sizeof(updatefrom))) {
+            CaliUpdateFrom from{.updatefrom=updatefrom,.history=(bool)i};
+            if(!connect->senddata(pass,vect, infopath,calibratedstartcmd, reinterpret_cast<const uint8_t *>(&from),sizeof(from))) {
               LOGAR("updateCali: senddata info.data failed");
               return 0;
              }
-             LOGGER("updateCali sock=%d ind=%d sensorindex=%d caliNR=%u updatefrom=%u\n",connect->getSenderIdent(),ind,sensorindex,wascaliNr,updatefrom);
+             LOGGER("updateCali %d sock=%d ind=%d sensorindex=%d caliNR=%u updatefrom=%u\n",i,connect->getSenderIdent(),ind,sensorindex,wascaliNr,updatefrom);
              getinfo()->calis[i].caliUpdated[ind]=wascaliNr;
              res|=1;;
              }
@@ -2458,6 +2473,78 @@ struct lastscan_t {
     int sensorindex;
     const ScanData *scan;
     uint32_t showtime;
+    bool calibrate;
     };
 //#endif
+
+#include "calibrate/Calibrate.hpp"
+struct HistoryIterator 
+{
+    using iterator_category = std::random_access_iterator_tag;
+    using difference_type   = std::ptrdiff_t;
+    using value_type        = Glucose;
+    using pointer           = value_type*;  // or also value_type*
+    using reference         = value_type&;  // or also value_type&
+    HistoryIterator(SensorGlucoseData *sens,int index=0):sens(sens),index(index)  { }
+
+    reference operator*() const { 
+        return *sens->getglucose(index); 
+        }
+    pointer operator->() { 
+        return sens->getglucose(index); 
+        }
+
+    HistoryIterator& operator++() { 
+        ++index; 
+        return *this;
+        }  
+
+    HistoryIterator operator++(int) { 
+        ++index;
+        return HistoryIterator(sens,index-1); 
+        }
+    HistoryIterator& operator--() { 
+        --index; 
+        return *this;
+        }  
+
+    HistoryIterator operator--(int) { 
+        --index;
+        return HistoryIterator(sens,index+1); 
+        }
+   HistoryIterator& operator +=(int n) {
+        index+=n; 
+        return *this;
+        }
+   HistoryIterator& operator -=(int n) {
+        index-=n; 
+        return *this;
+        }
+    difference_type    operator-(const HistoryIterator &other) const {
+        return index-other.index; 
+        }
+    HistoryIterator  operator+(int n) const {
+        return HistoryIterator(sens,index+n); 
+        }
+    HistoryIterator  operator-(int n) const {
+        return HistoryIterator(sens,index-n); 
+        }
+    reference operator[](int i) {
+            return *sens->getglucose(index+i);
+            }
+    reference operator[](int i) const {
+            return *sens->getglucose(index+i);
+            }
+
+    friend bool operator== (const HistoryIterator& a, const HistoryIterator& b) { return a.sens == b.sens&&a.index==b.index; };
+    friend bool operator!= (const HistoryIterator& a, const HistoryIterator& b) { return !(a==b); };     
+    friend bool operator> (const HistoryIterator& a, const HistoryIterator& b) { return a.index>b.index; };
+    friend bool operator< (const HistoryIterator& a, const HistoryIterator& b) { return a.index<b.index; };
+    friend bool operator<= (const HistoryIterator& a, const HistoryIterator& b) { return a.index<=b.index; };
+    friend bool operator>= (const HistoryIterator& a, const HistoryIterator& b) { return a.index>=b.index; };
+
+private:
+   SensorGlucoseData *sens;
+   int index;
+};
 

@@ -4,7 +4,7 @@
 #ifdef WEAROS
 #define NOLEFT
 #define NOCUTOFF 1
-#endif 
+#endif
 
 #ifndef NOLOG
 //#define TEST 1
@@ -516,14 +516,14 @@ std::vector<pair<const ScanData*,const ScanData*>> getsensorranges(uint32_t star
     */
 
 #include "GlucoseDataType.hpp" 
-
+/*
 std::vector<GlucoseDataType<const ScanData*>> getsensorranges(uint32_t start,uint32_t endt,bool calibrated,bool allvalues,bool calibratePast,std::vector<std::unique_ptr<ScanData []>> &calibrates ) {
     auto hists= sensors->sensorsInPeriod(start,endt) ;
     std::vector<GlucoseDataType<const ScanData*>>  polldata;
     polldata.reserve(hists.size());
     uint32_t timeiter=start;
     CURVELOGAR("start getsensorranges: ");
-typedef decltype(make_calibrator<ScanData>( sensors->getSensorData(0))) CaliType;
+    typedef decltype(make_calibrator<ScanData>( sensors->getSensorData(0))) CaliType;
     auto califunc=calibratePast?(&CaliType::makecalibratedback):(&CaliType::makecalibrated);
     for(int i=hists.size()-1;i>=0&&timeiter<endt;i--)  {
         auto his=sensors->getSensorData(hists[i]);
@@ -543,20 +543,76 @@ typedef decltype(make_calibrator<ScanData>( sensors->getSensorData(0))) CaliType
             int len=ran.second-ran.first;
             ScanData *calibuf=new ScanData[len];
             calibrates.emplace_back(calibuf);
-           // Calibrator cali(his);
             auto cali=make_calibrator<ScanData>(his);
             auto res=(cali.*califunc)(ran.first,calibuf,len,allvalues);
 
             if(res.first&&res.first!=res.second)
-                polldata.push_back({res.first,res.second,his->getStreamIdDistance()});
+                polldata.push_back({res.first,res.second,his->getStreamIdDistance(),false,{his,calibratePast}});
             }
         else
-            polldata.push_back({ran.first,ran.second,his->getStreamIdDistance() });
+            polldata.push_back({ran.first,ran.second,his->getStreamIdDistance(),false,{his,calibratePast} });
         }
 
     CURVELOGAR("end getsensorranges: ");
     return polldata;
     }
+*/
+
+template <typename IterType>
+void getsensorranges(uint32_t start,uint32_t endt,bool calibrated,bool calibratePast,std::vector<GlucoseDataType<IterType>> *polldataptr);
+template<> void getsensorranges<const ScanData*>(uint32_t start,uint32_t endt,bool calibrated,bool calibratePast,std::vector<GlucoseDataType<const ScanData*>> *polldataptr) {
+    auto &polldata=*polldataptr;
+    auto hists= sensors->sensorsInPeriod(start,endt) ;
+    polldata.reserve(hists.size());
+    uint32_t timeiter=start;
+    CURVELOGAR("start getsensorranges: ");
+    for(int i=hists.size()-1;i>=0&&timeiter<endt;i--)  {
+        auto his=sensors->getSensorData(hists[i]);
+        CURVELOGGER("sensor %s\n",his->showsensorname().data());
+        std::span<const ScanData>     poll=his->getPolldata();
+        auto ran=getScanRange(poll.data(),poll.size(),timeiter,endt);
+        if(ran.first==ran.second)
+            continue;
+        for(const ScanData *striter=ran.second-1;striter>=ran.first;striter--) {
+            if(striter->valid())    {
+                timeiter=striter->t;
+                ran.second=striter+1;
+                break;
+                }
+            }
+            polldata.push_back({ran.first,ran.second,his->getStreamIdDistance(),calibrated,{his,calibratePast} });
+        }
+
+    CURVELOGAR("end getsensorranges: ");
+    }
+pair<int32_t,int32_t> histPositions(const SensorGlucoseData  * hist, const uint32_t starttime, const uint32_t endtime) ;
+template<> void getsensorranges<HistoryIterator>(uint32_t start,uint32_t endt,bool calibrated,bool calibratePast,std::vector<GlucoseDataType<HistoryIterator>> *historydataptr ) {
+    auto &historydata=*historydataptr;
+    auto hists= sensors->sensorsInPeriod(start,endt) ;
+    historydata.reserve(hists.size());
+    uint32_t timeiter=start;
+    CURVELOGAR("start getsensorHistoryranges: ");
+    for(int i=hists.size()-1;i>=0&&timeiter<endt;i--)  {
+        auto his=sensors->getSensorData(hists[i]);
+        auto ran= histPositions(his, timeiter,  endt); 
+        CURVELOGGER("getsensorHistoryranges %s %d-%d\n",his->showsensorname().data(),ran.first,ran.second);
+        if(ran.first==ran.second)
+            continue;
+        for( int striter=ran.second-1;striter>=ran.first;striter--) {
+            Glucose *gl=his->getglucose(striter);
+            if(gl->valid())    {
+                timeiter=gl->gettime();
+                ran.second=striter+1;
+                break;
+                }
+            }
+        historydata.push_back({{his,ran.first},{his,ran.second},his->getmininterval() ,calibrated,{his,calibratePast}});
+        }
+
+    CURVELOGAR("end getsensorHistoryranges");
+    }
+
+
 //static uint32_t pollgapdist=5*60;
 static uint32_t pollgapdist=330;
 pair<const ScanData*,const ScanData*> getScanRangeRuim(const ScanData *scan,const int len,const uint32_t start,const uint32_t end) {
@@ -647,7 +703,7 @@ template <class TX,class TY>   void  JCurve::showScan(NVGcontext* avg,const Scan
 
     nvgFillColor(avg,*getcolor(colorindex));
     nvgBeginPath(avg);
-#ifdef JUGGLUCO_APP
+#ifdef DOESSEARCH
     bool search=scansearchtype==(scansearchtype&searchdata.type);
 #endif
     for(const ScanData *it=low;it!=high;it++) {
@@ -655,7 +711,7 @@ template <class TX,class TY>   void  JCurve::showScan(NVGcontext* avg,const Scan
             const uint32_t tim= it->t;
             const auto glu=it->g*10;
             const auto posx= transx(tim),posy=transy(glu);
-#ifdef JUGGLUCO_APP
+#ifdef DOESSEARCH
             if(search&&searchdata(it)) 
                 nvgCircle(avg, posx,posy,foundPointRadius);
             else 
@@ -685,7 +741,8 @@ template <class TX,class TY> void JCurve::showlineScan(NVGcontext* avg,const Sca
    uint32_t dif=pollgapdist;
 #endif
 
-#ifdef JUGGLUCO_APP
+
+#ifdef DOESSEARCH
     if(search) {
         nvgBeginPath(avg);
         nvgStrokeColor(avg, *getyellow()); nvgFillColor(avg, *getyellow());
@@ -844,7 +901,7 @@ template <class TX,class TY> void    JCurve::calihistcurve(NVGcontext* avg,const
     nvgFillColor(avg,*col);
      bool restart=true;
      float startx=-3000.0f,starty=-3000.0f;
-    CalibrateBackward  cali(hist,1);
+    CalibrateBackward<Glucose>  cali(hist,CalibratePast);
     for(auto pos=lastpos;pos>=firstpos;--pos) {
         const Glucose *histglu=hist->getglucose(pos);
         if(histglu->valid()) {
@@ -907,9 +964,9 @@ template <class TX,class TY> void    JCurve::calihistcurve(NVGcontext* avg,const
             nvgFill(avg);
             }
         }
-#ifdef JUGGLUCO_APP
-    if((searchdata.type&historysearchtype)==historysearchtype) {
-        CalibrateBackward  calibrate(hist,1);
+#ifdef DOESSEARCH
+    if((searchdata.type&calibratedHistorysearchtype)==calibratedHistorysearchtype) {
+        CalibrateBackward<Glucose>  calibrate(hist,CalibratePast);
         nvgBeginPath(avg);
         for(auto pos=lastpos;pos>=firstpos;--pos) {
             const Glucose *glu=hist->getglucose(pos);
@@ -997,7 +1054,7 @@ template <class TX,class TY> void    JCurve::histcurve(NVGcontext* avg,const Sen
             nvgFill(avg);
             }
         }
-#ifdef JUGGLUCO_APP
+#ifdef DOESSEARCH
     if((searchdata.type&historysearchtype)==historysearchtype) {
         nvgBeginPath(avg);
         for(auto pos=firstpos;pos<=lastpos;pos++) {
@@ -1777,8 +1834,8 @@ int    JCurve::displaycurve(NVGcontext* avg,time_t nu) {
        else
             histpositions[i]= {0,0}; 
          }
-    std::unique_ptr<ScanData []> calibrated[histlen];
-    std::pair<const ScanData*,const ScanData*> caliSpans[histlen];
+    std::unique_ptr<ScanData []> calibratedStream[histlen];
+    std::pair<const ScanData*,const ScanData*> caliStreamSpans[histlen];
     if(showcalibratedstream)   {
         typedef decltype(make_calibrator<ScanData>( (const SensorGlucoseData*)nullptr)) CaliType;
         auto califunc=settings->data()->CalibratePast?(&CaliType::makecalibratedback):(&CaliType::makecalibrated);
@@ -1786,18 +1843,43 @@ int    JCurve::displaycurve(NVGcontext* avg,time_t nu) {
             const int index= hists[i];
             const auto *sens=sensors->getSensorData(index);
             if(const int nr=pollranges[i].second-pollranges[i].first;nr>0) {
+                LOGGER("pollranges nr=%d\n",nr);
                 ScanData*calidata=new ScanData[nr];
-                calibrated[i].reset(calidata);
+                calibratedStream[i].reset(calidata);
                 auto cali=make_calibrator<ScanData>(sens);
-                caliSpans[i]=(cali.*califunc)(pollranges[i].first,calidata,nr,allvalues);
+                caliStreamSpans[i]=(cali.*califunc)(pollranges[i].first,calidata,nr,allvalues);
                 }
              else {
-                caliSpans[i]={};
+                caliStreamSpans[i]={};
                 }
             }
          }
      else {
-        for(auto &el:caliSpans) {
+        for(auto &el:caliStreamSpans) {
+                el={};
+                }
+        }
+    std::unique_ptr<ScanData []> calibratedScans[histlen];
+    std::pair<const ScanData*,const ScanData*> caliScansSpans[histlen];
+    if(showcalibratedscans)   {
+        typedef decltype(make_calibrator<ScanData>( (const SensorGlucoseData*)nullptr)) CaliType;
+        auto califunc=settings->data()->CalibratePast?(&CaliType::makecalibratedback):(&CaliType::makecalibrated);
+        for(int i=histlen-1;i>=0;i--) {
+            const int index= hists[i];
+            const auto *sens=sensors->getSensorData(index);
+            if(const int nr=scanranges[i].second-scanranges[i].first;nr>0) {
+                ScanData*calidata=new ScanData[nr];
+                calibratedScans[i].reset(calidata);
+                auto cali=make_calibrator<ScanData>(sens);
+                caliScansSpans[i]=(cali.*califunc)(scanranges[i].first,calidata,nr,allvalues);
+                }
+             else {
+                caliScansSpans[i]={};
+                }
+            }
+         }
+     else {
+        for(auto &el:caliScansSpans) {
                 el={};
                 }
         }
@@ -1805,7 +1887,7 @@ int    JCurve::displaycurve(NVGcontext* avg,time_t nu) {
     for(int i=0;i< numdatas.size();i++) 
         extrums[i]=numdatas[i]->getInRange(starttime2, endtime) ;
 
-    const pair<const ScanData *,const ScanData*> *scanpoll[]= {scanranges,pollranges,caliSpans};
+    const pair<const ScanData *,const ScanData*> *scanpoll[]= {scanranges,pollranges,caliStreamSpans,caliScansSpans};
     CURVELOGAR("Before getextremes");
     if((setend<starttime2||settime>=endtime)) {
        auto extr=getextremes(hists,scanpoll,std::size(scanpoll),histpositions);
@@ -1858,30 +1940,31 @@ displaytime disp=getdisplaytime(nu,starttime2,endtime, transx);
              calihistcurve(avg,sensors->getSensorData(index), histpositions[i].first, histpositions[i].second,transx,transy,colorindex); 
              }
         }
-    CURVELOGAR("before showcalibratedstream");
+    CURVELOGGER("before showcalibratedstream %d\n",showcalibratedstream);
     if(showcalibratedstream)   {
         nvgStrokeWidth(avg, pollCurveStrokeWidth);
         for(int i=histlen-1;i>=0;i--) {
-            const int index= hists[i];
-            const int colorindex=segcolor(index,3);
-            #ifdef JUGGLUCO_APP
+            const auto cali=caliStreamSpans[i];
+            if(cali.second>cali.first) {
+                 const int index= hists[i];
+                 const int colorindex=segcolor(index,3);
+
+#ifdef DOESSEARCH
                 bool search=calibratedStreamsearchtype==(calibratedStreamsearchtype&searchdata.type);
             #else 
                 bool search=false;
             #endif
-            const auto cali=caliSpans[i];
-            if(cali.second>cali.first) {
                 showlineScan(avg,cali.first,cali.second,transx,transy,colorindex,search);
                 }
             }
         }
-    CURVELOGAR("before showstream");
+    CURVELOGGER("before showstream %d\n",showstream);
     if(showstream)   {
         nvgStrokeWidth(avg, pollCurveStrokeWidth);
         for(int i=histlen-1;i>=0;i--) {
             const int index= hists[i];
             int colorindex=segcolor(index,0);
-            #ifdef JUGGLUCO_APP
+#ifdef DOESSEARCH
                 bool search=streamsearchtype==(streamsearchtype&searchdata.type);
             #else 
                 bool search=false;
@@ -1889,7 +1972,19 @@ displaytime disp=getdisplaytime(nu,starttime2,endtime, transx);
             showlineScan(avg,pollranges[i].first,pollranges[i].second,transx,transy,colorindex,search);
              }
         }
-    CURVELOGAR("before showscans");
+    CURVELOGGER("before showcalibratedscans %d\n",showcalibratedscans);
+    if(showcalibratedscans)   {
+        nvgStrokeWidth(avg, pollCurveStrokeWidth);
+        for(int i=histlen-1;i>=0;i--) {
+            const auto cali=caliScansSpans[i];
+            if(cali.second>cali.first) {
+                const int index= hists[i];
+                const int colorindex=segcolor(index,5);
+                showScan(avg,cali.first,cali.second,transx,transy,colorindex);
+                }
+            }
+        }
+    CURVELOGGER("before showscans %d\n",showscans);
     if(showscans) {
         for(int i=histlen-1;i>=0;i--) {
             const int index=hists[i];
@@ -2247,7 +2342,7 @@ void    JCurve::startstepNVG(NVGcontext* avg,int width, int height) {
              getboxwidth(usegetx);
              const char *bufptr;
              int ends;
-             if((hist->isSibionics()||(hist->isDexcom()&&!hist->sensorerror))){
+             if((hist->isAccuChek()||hist->isAir()||hist->isSibionics()||hist->isDexcom())&&!hist->sensorerror){
                   const auto siwait=usedtext->waitingforconnection;
                   bufptr=siwait.data();
                   ends=siwait.size();

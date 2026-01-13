@@ -89,7 +89,7 @@ bool alarmongoing=false;
           }
     numlist=0;
     const SensorGlucoseData *hist=sensors->getSensorData(scantoshow.sensorindex);
-    showscanner(avg,hist,scantoshow.scan-hist->beginscans(),nu) ;
+    showscanner(avg,hist,scantoshow.scan-hist->beginscans(),nu,scantoshow.calibrate) ;
     return 1;
     }
 
@@ -169,6 +169,7 @@ int JCurve::typeatheight(const float h) {
   int getshow##x() {\
         return settings->data()->show##x;\
         }
+makeshows(calibratedscans)
 makeshows(calibratedstream)
 makeshows(calibratedhistories)
 makeshows(scans)
@@ -178,7 +179,7 @@ makeshows(numbers)
 makeshows(histories)
 #ifndef WEAROS
 extern bool showpers;
-extern void showpercentiles(NVGcontext* avg) ;
+extern void graphpercentiles(NVGcontext* avg) ;
 #endif
 int getalarmcode(const uint32_t glval,float drate,SensorGlucoseData *hist) ;
 extern void     processglucosevalue(int sendindex,int newstart) ;
@@ -281,11 +282,19 @@ int64_t JCurve::doehier(int menu,int item,bool right) {
                                     const ScanData *scan= hist->lastscan();
                                     const uint32_t nu= time(nullptr);
                                     if(scan&&scan->valid()&&((nu-scan->t)<(60*60*5)))
-                                        scantoshow={lastsensor,scan,nu};
+                                        scantoshow={lastsensor,scan,nu,settings->data()->DoCalibrate};
                                     }
                                 }
                             }; return -1ll; 
-                        case 1:showscans=!showscans; setshowscans(showscans);return -1ll;
+                        case 1:
+                                if(right) {
+                                    showscans=!showscans; setshowscans(showscans);
+                                    }
+                                else {
+                                  showcalibratedscans=!showcalibratedscans; 
+                                  setshowcalibratedscans(showcalibratedscans);
+                                  }
+                            return -1ll;
                         case 2:
                                 if(right) {
                                         showstream=!showstream; setshowstream(showstream);
@@ -535,7 +544,7 @@ int64_t JCurve::screentap(float x,float y) {
 extern bool showsummarygraph;
         if(showsummarygraph) {
             showsummarygraph=false;
-                  fixatey=settings->data()->fixatey;
+            fixatey=settings->data()->fixatey;
             return 1+4*0x10;
             }
         }
@@ -718,7 +727,7 @@ bool JCurve::nearbycalibratedhistory( const float tapx,const float tapy,  const 
     for(int i=histlen-1;i>=0;i--) {
       const int sensorindex= hists[i];
         SensorGlucoseData *hist=sensors->getSensorData(sensorindex);
-        CalibrateBackward  cali(hist,1);
+        CalibrateBackward<Glucose>  cali(hist,CalibratePast);
         const auto [firstpos,lastpos]=histpositions[i];
             for(auto pos=lastpos;pos>=firstpos;--pos) {
                 const Glucose *histglu=hist->getglucose(pos);
@@ -837,8 +846,33 @@ int64_t JCurve::longpress(float x,float y) {
             if(const ScanData *scan=nearbyscan(x,y,scanranges[i].first,scanranges[i].second,transx,transy,density)) {
                 LOGGER("longpress scan %.1f\n",scan->g/convfactordL);
                 int index=hists[i];
-                scantoshow={index,scan,static_cast<uint32_t>(time(nullptr))};
+                scantoshow={index,scan,static_cast<uint32_t>(time(nullptr)),false};
                 return 0LL;
+                }
+             }
+         }
+    if(showcalibratedscans) {
+        typedef decltype(make_calibrator<ScanData>( sensors->getSensorData(0))) CaliType;
+        auto califunc=settings->data()->CalibratePast?(&CaliType::makecalibratedback):(&CaliType::makecalibrated);
+        for(int i=histlen-1;i>=0;i--) {
+            const int nr=scanranges[i].second-scanranges[i].first;
+            if(nr>0) {
+                const int index= hists[i];
+                auto *sens=sensors->getSensorData(index);
+                ScanData calibrated[nr];
+
+                auto cali=make_calibrator<ScanData>(sens);
+                const auto span=(cali.*califunc)(scanranges[i].first,calibrated,nr,allvalues);
+
+                if(const ScanData *scan=nearbyscan(x,y,span.first,span.second,transx,transy,density)) {
+                    LOGGER("longpress scan %.1f\n",scan->g/convfactordL);
+                    int pos=scan-span.first;
+                    const ScanData *notcal=scanranges[i].first+pos;
+                    while(notcal->getid()<scan->getid()||notcal->gettime()<scan->gettime())
+                        ++notcal;
+                    scantoshow={index,notcal,static_cast<uint32_t>(time(nullptr)),true};
+                    return 0LL;
+                    }
                 }
              }
          }
@@ -857,18 +891,20 @@ int64_t JCurve::longpress(float x,float y) {
         typedef decltype(make_calibrator<ScanData>( sensors->getSensorData(0))) CaliType;
         auto califunc=settings->data()->CalibratePast?(&CaliType::makecalibratedback):(&CaliType::makecalibrated);
         for(int i=histlen-1;i>=0;i--) {
-                const int index= hists[i];
-                auto *sens=sensors->getSensorData(index);
                 const int nr=pollranges[i].second-pollranges[i].first;
-                ScanData calibrated[nr];
+                if(nr>0) {
+                    const int index= hists[i];
+                    auto *sens=sensors->getSensorData(index);
+                    ScanData calibrated[nr];
 
-                auto cali=make_calibrator<ScanData>(sens);
-                const auto span=(cali.*califunc)(pollranges[i].first,calibrated,nr,allvalues);
+                    auto cali=make_calibrator<ScanData>(sens);
+                    const auto span=(cali.*califunc)(pollranges[i].first,calibrated,nr,allvalues);
 
-                if(const ScanData *poll=nearbyscan(x,y,span.first,span.second,transx,transy,density)) {
-                    LOGGER("longpress poll %.1f\n",poll->g/convfactordL);
-                    showhistory(sens,x,y);
-                    return 0LL;
+                    if(const ScanData *poll=nearbyscan(x,y,span.first,span.second,transx,transy,density)) {
+                        LOGGER("longpress poll %.1f\n",poll->g/convfactordL);
+                        showhistory(sens,x,y);
+                        return 0LL;
+                        }
                     }
                  }
          }
@@ -1618,7 +1654,7 @@ void setnowmenu(time_t nu) {
 const int  trend=lastin->tr;
 //const int  trend=5;
 
-constexpr const char arrows[][sizeof("→")]{"",
+constexpr const char arrows[][sizeof("→")]{"   ",
 "↓",
 "↘",
 "→",
@@ -1772,7 +1808,9 @@ void initopengl(float small,float menu,float density,float headin) {
             }
     appcurve.invertcolorsset(settings->data()->invertcolors);
 //    s/makeshows(\(.*\))/appcurve.show\1=settings->data()->show\1;/g
+    appcurve.showcalibratedscans=settings->data()->showcalibratedscans;
     appcurve.showcalibratedstream=settings->data()->showcalibratedstream;
+    appcurve.showcalibratedhistories=settings->data()->showcalibratedhistories;
     appcurve.showscans=settings->data()->showscans;
     appcurve.showstream=settings->data()->showstream;;
     appcurve.showmeals=settings->data()->showmeals;
@@ -1809,7 +1847,7 @@ const int *menuopt0[]={&showui,&menus,nullptr,nullptr,nullptr,nullptr,nullptr,nu
 const int *menuopt0b[]={nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr};
 const int *menuopt1[]={nullptr,&appcurve.showscans,&appcurve.showstream,&appcurve.showhistories,&appcurve.shownumbers,&appcurve.showmeals,&appcurve.invertcolors};
 const int **optionsmenu[]={menuopt0,menuopt0b,menuopt1,nullptr};
-const int *premenuopt1[]={nullptr,nullptr,&appcurve.showcalibratedstream,&appcurve.showcalibratedhistories,nullptr,nullptr,nullptr};
+const int *premenuopt1[]={nullptr,&appcurve.showcalibratedscans,&appcurve.showcalibratedstream,&appcurve.showcalibratedhistories,nullptr,nullptr,nullptr};
 const int **preoptionsmenu[]={nullptr,nullptr,premenuopt1,nullptr};
 #define arsizer(x) sizeof(x)/sizeof(x[0])
 constexpr const int menulen[]={arsizer(jugglucotext::menustr0),arsizer(jugglucotext::menustr1),arsizer(jugglucotext::menustr2),arsizer(jugglucotext::menustr3)};
@@ -1843,7 +1881,7 @@ int getmenu(int tapx,float dwidth) {
     startstep(avg,*getwhite());
 #ifndef WEAROS
     if(showpers) {
-        showpercentiles(avg);
+        graphpercentiles(avg);
         }
     else 
 #endif
@@ -2125,7 +2163,7 @@ int getglucosestr(double nonconvert,char *glucosestr,int maxglucosestr,int gluco
     }
 
 
- void       JCurve::showscanner(NVGcontext* avg,const SensorGlucoseData *hist,int scanident,time_t nu) {
+ void       JCurve::showscanner(NVGcontext* avg,const SensorGlucoseData *hist,int scanident,time_t nu,bool calibrate) {
     const ScanData &last=*hist->getscan(scanident);
     const bool isold=(nu-last.t)>=maxbluetoothage;
     startstep(avg,isold?getoldcolor():*getwhite());
@@ -2141,7 +2179,16 @@ int getglucosestr(double nonconvert,char *glucosestr,int maxglucosestr,int gluco
    buf[len++]=' ';
     char *buf1=buf+len;
     --len;
-    const int32_t gluval=last.g;
+   int32_t  gluval=last.getmgdL() ;
+   if(calibrate) {
+        auto cali= make_calibrator<ScanData>(hist);
+        if(double calibrated=cali.calibrateONE(last.t,gluval);!isnan(calibrated)) { 
+              gluval=std::round(calibrated);
+              }
+        }
+
+
+
     int len1;
     float endtime=x,sensleft=0.0f;
 
@@ -2233,7 +2280,7 @@ int getglucosestr(double nonconvert,char *glucosestr,int maxglucosestr,int gluco
         }
 #endif
 
-    showok( avg,(last.g>70&&last.g<=140), ((y-dtop)<(dheight/2))?false:true);
+    showok( avg,(gluval>700&&gluval<=1400), ((y-dtop)<(dheight/2))?false:true);
     }
 
 
@@ -2365,3 +2412,21 @@ extern bool  showtextbox(JCurve *,NVGcontext* avg) ;
     }
 
 AppCurve appcurve;
+#ifndef WEAROS
+#include "searchtypes.hpp"
+void JCurve::setsearchshow(int type) {
+        type&=~glucosetype;
+        LOGGER("setsearchshow(%x)\n",type);
+//s/show\(.*\)=.*$/{& setshow\1(true);}/g
+        if(type&historysearchtype)
+                {showhistories=true; setshowhistories(true);}
+        if(type&scansearchtype)
+                {showscans=true; setshowscans(true);}
+        if(type&streamsearchtype)
+                {showstream=true; setshowstream(true);}
+        if(type&calibratedStreamsearchtype)
+                {showcalibratedstream=true; setshowcalibratedstream(true);}
+        if(type&calibratedHistorysearchtype)
+                {showcalibratedhistories=true; setshowcalibratedhistories(true);}
+        }
+#endif

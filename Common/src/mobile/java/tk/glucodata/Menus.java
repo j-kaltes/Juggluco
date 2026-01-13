@@ -24,47 +24,13 @@
 
 package tk.glucodata;
 
-import android.app.Activity;
-import androidx.appcompat.app.AlertDialog;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothManager;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.graphics.Paint;
-import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.HorizontalScrollView;
-import android.widget.Spinner;
-import android.widget.TextView;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Locale;
-import java.util.concurrent.TimeUnit;
-
-import androidx.annotation.Keep;
-
-import static android.bluetooth.BluetoothGatt.CONNECTION_PRIORITY_BALANCED;
-import static android.bluetooth.BluetoothGatt.CONNECTION_PRIORITY_HIGH;
-import static android.graphics.Color.BLACK;
-import static android.graphics.Color.BLUE;
-import static android.graphics.Color.RED;
-import static android.graphics.Color.WHITE;
-import static android.graphics.Color.YELLOW;
-import static android.view.View.GONE;
-import static android.view.View.INVISIBLE;
-import static android.view.View.VISIBLE;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
-import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static tk.glucodata.Applic.isWearable;
 import static tk.glucodata.Log.doLog;
 import static tk.glucodata.MainActivity.REQUEST_BARCODE;
@@ -72,9 +38,7 @@ import static tk.glucodata.Natives.getInvertColors;
 import static tk.glucodata.Natives.getshowscans;
 import static tk.glucodata.Natives.getsystemui;
 import static tk.glucodata.Natives.setsystemui;
-import static tk.glucodata.NumberView.avoidSpinnerDropdownFocus;
 import static tk.glucodata.NumberView.smallScreen;
-import static tk.glucodata.help.help;
 import static tk.glucodata.settings.Settings.removeContentView;
 
 import tk.glucodata.settings.Settings;
@@ -197,6 +161,7 @@ static public void show(MainActivity act) {
 				act.requestRender();
 				Stats.mkstats(act);
 				}
+
 		}
 
 			);

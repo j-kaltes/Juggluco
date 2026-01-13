@@ -89,3 +89,8 @@ bool receiveractive();
 constexpr const int streamupdatebit=1<<15;
 constexpr const int starthistoryupdate=1<<14;
 constexpr const int startcalibratedupdate=3<<14;
+
+struct  CaliUpdateFrom {
+    uint32_t updatefrom;
+    bool history;
+    } __attribute__ ((packed)); 

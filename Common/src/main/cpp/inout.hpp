@@ -303,11 +303,14 @@ void shrink(size_t siz) {
 //operator  span<char>() { return span<char>{all,len};}
 };
 
+inline bool mksparsefile(int fp,int len) {
+    return pwrite(fp,"",1,len-1)==1;
+    }
+
 template <class T> class Mmap {
 protected:
 size_t  len;
 void *buf;
-
 
 void *mopen(const char *filename,bool *created=nullptr) {
      if(!filename)
@@ -324,8 +327,8 @@ void *mopen(const char *filename,bool *created=nullptr) {
             return nullptr;
             }
     if(len && st.st_size<len) {
-        if(ftruncate(fp,len)) {
-            lerror("ftruncate");
+        if(!mksparsefile(fp,len)) {
+            lerror("mkspacefile");
             close(fp);
             return nullptr;
             }
@@ -337,6 +340,7 @@ void *mopen(const char *filename,bool *created=nullptr) {
          if(created)
             *created=false;
         }
+//     posix_fallocate(fp,0,len);
      void *mmapbuf=mmap(NULL, len, PROT_READ |PROT_WRITE,MAP_SHARED, fp, 0);
      close(fp);
      if(mmapbuf== MAP_FAILED) {

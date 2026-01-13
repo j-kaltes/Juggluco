@@ -36,6 +36,7 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static tk.glucodata.Log.doLog;
 
 public class Layout extends ViewGroup {
+/*
 static View.AccessibilityDelegate  accessDeli=new View.AccessibilityDelegate () {
         @Override
         public void onInitializeAccessibilityNodeInfo( View host, AccessibilityNodeInfo info) {
@@ -52,7 +53,27 @@ static View.AccessibilityDelegate  accessDeli=new View.AccessibilityDelegate () 
 
 
 
-    };
+    }; */
+static View.AccessibilityDelegate accessDeli = new View.AccessibilityDelegate() {
+    @Override
+    public void onInitializeAccessibilityNodeInfo(View host, AccessibilityNodeInfo info) {
+        super.onInitializeAccessibilityNodeInfo(host, info);
+        boolean showinfo=host.isEnabled() && host.getVisibility() == View.VISIBLE;
+
+        if (doLog)      {
+                String message = (host instanceof TextView)
+                        ? ((TextView) host).getText().toString()
+                        : host.toString();
+            Log.i(LOG_ID, (showinfo ? "SHOW" : "HIDE") + " onInitializeAccessibilityNodeInfo " + message);
+                }
+
+        if (!showinfo) {
+            info.setVisibleToUser(false);
+            info.setContentDescription(null);
+        }
+    }
+};
+
 //    public Layout(Context context) { super(context); } public Layout(Context context, AttributeSet attrs) { super(context, attrs); } public Layout(Context context, AttributeSet attrs, int defStyle) { super(context, attrs, defStyle); } 
 private static final String LOG_ID="Layout";
 
@@ -222,8 +243,9 @@ boolean usebaseline=true;
 int rowmax;
 int totHeight;
 int maxHeight; 
-@Override
-protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+
+
+private int[] domeasure(int widthMeasureSpec, int heightMeasureSpec) {
    totHeight =  getPaddingTop() + getPaddingBottom();
    maxHeight=0; 
    rowmax=-1;
@@ -243,17 +265,53 @@ protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
             maxWidth=el;
       }
    maxWidth+=getPaddingLeft() + getPaddingRight();
-    if(totHeight< getSuggestedMinimumHeight())
-        totHeight = getSuggestedMinimumHeight();
     maxWidth = Math.max(maxWidth, getSuggestedMinimumWidth());
    int    prevrw = resolveSizeAndState(maxWidth, widthMeasureSpec, 0);
 
+    if(totHeight< getSuggestedMinimumHeight())
+        totHeight = getSuggestedMinimumHeight();
      int prevrh=resolveSizeAndState(totHeight, heightMeasureSpec, 0);
-        int[] make=placer.place(this,prevrw,prevrh);
-    if(make!=null&&make.length==2)
-        setMeasuredDimension(make[0],make[1]);
-    else
-        setMeasuredDimension(prevrw,prevrh);
+    int[] make=placer.place(this,prevrw,prevrh);
+    if(make!=null&&make.length==2) {
+        Log.i(LOG_ID,"domeasure make[0]="+make[0]+ " make[1]="+make[1]);
+        return make;
+        }
+     else  {
+        Log.i(LOG_ID,"domeasure prevrh="+prevrh+ " prevrw="+prevrw);
+        return  new int[] {prevrw,prevrh};
+        }
+    }
+
+boolean useMatch=false;
+@Override
+protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+   Log.i(LOG_ID,"onMeasure "+widthMeasureSpec);
+   int[] res=domeasure(widthMeasureSpec, heightMeasureSpec);
+ 
+    if(useMatch) {
+       boolean hasmatch=false;
+       int usewidth=res[0]-(getPaddingLeft() + getPaddingRight());
+
+       for(int i=0;i<rownr;i++) {
+             var child=matchparent[i];
+             if(child!=null) {
+                 var  params=child.getLayoutParams();
+                 if(params instanceof ViewGroup.MarginLayoutParams) {
+                    var margins=(ViewGroup.MarginLayoutParams)params;
+                    params.width=usewidth-(margins.leftMargin+margins.rightMargin);
+                    }
+                 else
+                     params.width=usewidth;
+                 child.setLayoutParams(params);
+                hasmatch=true;
+                }
+            }
+        if(hasmatch) {
+            res=domeasure( widthMeasureSpec,  heightMeasureSpec);
+            }  
+        }
+    Log.i(LOG_ID,"onMeasure prevrh="+res[0]+ " prevrw="+res[1]);
+    setMeasuredDimension(res[0],res[1]);
     }
 /*
     Als het aantal in rij 1 is,
@@ -318,12 +376,16 @@ final int layrow(final int top,final int start,final int row,final int maxheight
             left=hierleft+leftmargin;
             }
        else {
-          width = childWidth(child);
+            width = childWidth(child);
             left=(maxwidth-width)/2+ getPaddingLeft()+leftmargin;
              }
        final int childtop=top+topmargin;
        final var childheight=childHeight(child);
-       child.layout(left, childtop, left + width, childtop+Math.min(childheight,maxheight));
+       final var useheight=Math.min(childheight,maxheight);
+        Log.i(LOG_ID,"child width="+width+" childwidth="+childWidth(child));
+//       child.setMinimumHeight(useheight);
+//        measureChild(child,width, useheight);
+       child.layout(left, childtop, left + width, childtop+useheight);
        return top+Math.min(childheight+bottommargin+topmargin,maxheight);
        }
   int left =hierleft; 

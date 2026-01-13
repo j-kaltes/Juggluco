@@ -403,9 +403,9 @@ static void sendup(passhost_t *hostptr) {
 
      Connect *connect=connections[allindex];
      if(connect) {
-        destruct _{[connect,allindex] {
+        destruct _{[connect] {
            connect->senduprunning.clear();
-           LOGGER("makeWakeThread: %d senduprunning.clear()\n",allindex);
+           LOGGER("makeWakeThread: %d senduprunning.clear()\n",connect->allindex);
             }};
          connect->shutdownSender();
          connect->shutdownReceiver();

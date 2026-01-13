@@ -34,16 +34,14 @@ void SensorGlucoseData::backhistory(int pos) {
         }
 
     }
-void SensorGlucoseData::backcalibrated(int pos) {
+void SensorGlucoseData::backcalibrated(int pos,bool cali) {
     const int maxind=backup->getupdatedata()->sendnr;
-    for(int cali=0;cali<2;++cali) {
-            auto *caliUpdated=getinfo()->calis[cali].caliUpdated;
-            for(int i=0;i<maxind;i++) {
-                if(pos<caliUpdated[i]) {
-                    caliUpdated[i]=pos;
-                    }
-                }
-           }
+    auto *caliUpdated=getinfo()->calis[cali].caliUpdated;
+    for(int i=0;i<maxind;i++) {
+        if(pos<caliUpdated[i]) {
+            caliUpdated[i]=pos;
+            }
+        }
     }
 void SensorGlucoseData::backstream(int pos) {
     const int maxind=backup->getupdatedata()->sendnr;
@@ -505,11 +503,13 @@ void     sethistorystart(int sendindex,int newstart) {
         }
 
 extern void setCalibrates(uint16_t sensorindex) ;
-void     setcalibratedstart(int sendindex,int newstart) {
-        LOGGER("setcalibratedstart(%d,%d)\n",sendindex,newstart);
-        setbackupstart(sendindex,newstart,&SensorGlucoseData::backcalibrated);
-        setCalibrates(sendindex);
+void     setcalibratedstart(int sendindex,int newstart,bool history) {
+    LOGGER("setcalibratedstart(sensorinidex=%d,newstart=%d,history=%d)\n",sendindex,newstart,history);
+    if(SensorGlucoseData *hist=sensors->getSensorData(sendindex)) {
+        hist->backcalibrated(newstart,history);
         }
+     setCalibrates(sendindex);
+     }
 /*
 void     sethistorystart(int sendindex,int newstart) {
     if(!settings)

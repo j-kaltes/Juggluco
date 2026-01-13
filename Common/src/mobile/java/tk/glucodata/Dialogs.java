@@ -40,6 +40,7 @@ import static android.text.Layout.BREAK_STRATEGY_HIGH_QUALITY;
 import static android.view.View.GONE;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 import static java.lang.System.currentTimeMillis;
@@ -65,7 +66,7 @@ private    final static String LOG_ID="Dialogs";
 private float density;
 private ViewGroup exportscreen=null;
  TextView exportlabel=null;
- private boolean isCalibrated=true;
+ private boolean isCalibrated=Natives.getDoCalibrate();
 Dialogs(float density) {
     this.density=density;
     }
@@ -84,8 +85,8 @@ private Button exportbutton(MainActivity activity,String label, int type) {
                 };
             switch(type) {
                 case 4: algexporter(activity,   type,label,".html",daynr);break;
-                case 5: algexporter(activity,type,label,".csv",daynr);break;
-                default: exporter( activity,  type|8,label,daynr);
+                case 5: algexporter(activity,type|(isCalibrated?8:0),label,".csv",daynr);break;
+                default: exporter( activity,  type|(isCalibrated?8:0),label,daynr);
                 };
             });
     return but;
@@ -133,7 +134,8 @@ public void showexport(MainActivity activity,int width,int height,View parent) {
         exportlabel.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE);
 
         
-        exportlabel.setLayoutParams(new ViewGroup.LayoutParams(  (int)(width*(smallScreen?0.6f:.43f)), WRAP_CONTENT));
+   //     exportlabel.setLayoutParams(new ViewGroup.LayoutParams(  (int)(width*(smallScreen?0.6f:.33f)), WRAP_CONTENT));
+        exportlabel.setLayoutParams(new ViewGroup.LayoutParams(  MATCH_PARENT, WRAP_CONTENT));
         exportlabel.setSingleLine(false);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             exportlabel.setBreakStrategy(BREAK_STRATEGY_SIMPLE);
@@ -145,9 +147,9 @@ public void showexport(MainActivity activity,int width,int height,View parent) {
         close.setText(R.string.closename);
         close.setOnClickListener(v-> activity.doonback());
         var calibrated=getcheckbox(activity,R.string.calibrated, isCalibrated);
-        calibrated.setOnCheckedChangeListener( (buttonView,  isChecked) ->  { isCalibrated=isChecked; });
-        View[] gviews={hist,stream,calibrated};
-        View[] lviews={scan,num,meals,close};
+        calibrated.setOnCheckedChangeListener( (buttonView,  isChecked) ->  { 
+            isCalibrated=isChecked; 
+            });
         exportscreen=new Layout(activity, (l, w, h) -> {
             int wid = GlucoseCurve.getwidth();
             if(!smallScreen) {
@@ -168,7 +170,14 @@ public void showexport(MainActivity activity,int width,int height,View parent) {
                 l.setY(MainActivity.systembarTop*3/4);
                  }
                return new int[] {w,h};
-            }, new View[] {libreview,help,daylabel,days},gviews,new View[]{exportlabel},lviews);
+            }, 
+            new View[] {calibrated,daylabel,days},
+             new View[] {scan,hist,stream},
+             new View[] {num,meals,libreview},
+            new View[]{exportlabel},
+             new View[] {help,close}
+            );
+        ((Layout)exportscreen).useMatch=true;
         exportscreen.setPadding(rand,rand,rand,rand);
         exportscreen.setBackgroundColor( Applic.backgroundcolor);
         activity.addContentView(exportscreen, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));

@@ -224,14 +224,14 @@ static public void show(MainActivity act,View parent) {
 
 
 
-    var leftlayout=new Layout(act,(l, w, h)-> { return new int[] {w,h}; },new View[]{sizelabel},new View[]{fontsizeview},new View[]{foregroundbutton,touchable}, new View[]{backgroundbutton,transparant},new View[]{hide,timeshow,floatglucose},new View[]{Help,close});
+    var leftlayout=new Layout(act,new View[]{sizelabel},new View[]{fontsizeview},new View[]{foregroundbutton,touchable}, new View[]{backgroundbutton,transparant},new View[]{hide,timeshow,floatglucose},new View[]{Help,close});
     leftlayout.setLayoutParams( new ViewGroup.LayoutParams(WRAP_CONTENT,MATCH_PARENT));
     view.setLayoutParams( new ViewGroup.LayoutParams(MATCH_PARENT,MATCH_PARENT));
    final var density= tk.glucodata.GlucoseCurve.metrics.density;
    view.setPadding(0,MainActivity.systembarTop+ (int)(density*10) ,0,0);
    getMargins(close).rightMargin=(int)(GlucoseCurve.metrics.density*20.0f);
    leftlayout.setPadding(0,MainActivity.systembarTop/2+ (int)(density*5) ,0,0);
-     layout=new Layout(act,(l,w,h)-> { return new int[] {w,h}; }, new View[]{view,leftlayout});
+     layout=new Layout(act, new View[]{view,leftlayout});
 
       layout.setPadding(MainActivity.systembarLeft+(int)(density*10),0,MainActivity.systembarRight+(int)(density*12),MainActivity.systembarBottom+(int)(density*5));
     layout.setBackgroundColor(Applic.backgroundcolor);
