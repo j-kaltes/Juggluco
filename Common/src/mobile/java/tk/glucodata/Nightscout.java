@@ -247,41 +247,41 @@ public static void show(Activity context,View parent) {
 	context.addContentView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
 	Runnable[] closeproc={null};
 
-		closeproc[0]=()-> {
-		 var newkey=editkey.getText().toString();
-		setonback(closeproc[0]);
-		 Runnable okproc= () -> {
-         poponback();
-			EnableControls(parent,true);
-			hidekeyboard(context);
-			removeContentView(layout); 
-			};
-		 if(newkey.equals(oldkey[0])) {
-			 var portstr=portview.getText().toString();
-			 int portnum=0;
-			 try {
-				portnum=Integer.parseInt(portstr);
-				}
-			catch(Throwable e) {
-				Log.stack(LOG_ID,"parseInt", e);
-				};
-			if(portnum== Natives.getsslport()) {
-				 var intervalstr=intervalview.getText().toString();
-				 int intervalnum=0;
-				 try {
-					intervalnum=Integer.parseInt(intervalstr);
-					}
-				catch(Throwable e) {
-					Log.stack(LOG_ID,"parseInt", e);
-					};
-				if(intervalnum==Natives.getinterval())  {
-					okproc.run();
-					return;
-					}
-				}
-			}
-		Confirm.ask(context,context.getString(R.string.withoutsaving),"",okproc);
-		};
+        closeproc[0]=()-> {
+                         var newkey=editkey.getText().toString();
+                        setonback(closeproc[0]);
+                         Runnable okproc= () -> {
+                                poponback();
+                                EnableControls(parent,true);
+                                hidekeyboard(context);
+                                removeContentView(layout); 
+                                };
+                         if(newkey.equals(oldkey[0])) {
+                                 var portstr=portview.getText().toString();
+                                 int portnum=0;
+                                 try {
+                                        portnum=Integer.parseInt(portstr);
+                                        }
+                                catch(Throwable e) {
+                                        Log.stack(LOG_ID,"parseInt", e);
+                                        };
+                                if(portnum== Natives.getsslport()) {
+                                         var intervalstr=intervalview.getText().toString();
+                                         int intervalnum=0;
+                                         try {
+                                                intervalnum=Integer.parseInt(intervalstr);
+                                                }
+                                        catch(Throwable e) {
+                                                Log.stack(LOG_ID,"parseInt", e);
+                                                };
+                                        if(intervalnum==Natives.getinterval())  {
+                                                okproc.run();
+                                                return;
+                                                }
+                                        }
+                                }
+                        Confirm.ask(context,context.getString(R.string.withoutsaving),"",okproc);
+                        };
 
 	setonback( closeproc[0]);
 	Close.setOnClickListener(

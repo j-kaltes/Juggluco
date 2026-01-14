@@ -2461,8 +2461,11 @@ bool hasData(uint32_t nu) const {
     }
 //         return ((isAccuChek()&&pollcount()<4000)||(isDexcom()&&pollcount()<maxdexcount))&& (nu-lastused())< youngsensorsecs
 bool hasHistory() const {
-     return isLibre()||(isDexcom()&&settings->data()->dexcomPredict)||isAir();
+     return hasRealHistory()||(isDexcom()&&settings->data()->dexcomPredict);
      };
+bool hasRealHistory() const {
+     return isLibre()||isAir();
+     }
 int getStreamIdDistance() const {
     if(isAir()||isAccuChek())
         return 5;
@@ -2477,7 +2480,6 @@ struct lastscan_t {
     };
 //#endif
 
-#include "calibrate/Calibrate.hpp"
 struct HistoryIterator 
 {
     using iterator_category = std::random_access_iterator_tag;

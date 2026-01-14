@@ -291,6 +291,7 @@ int shouldexclude(const uint32_t time) {
         return true;
         }
    bool hasValue=false;
+   LOGGER("shouldexclude around time %u %d indices\n",time,indices.size());
     for(int index:indices) {
         auto *sens=sensors->getSensorData(index);
        const int maxdiff=std::max(getinterval<DT>(sens),3*60);
@@ -360,8 +361,8 @@ template <typename DT> CalcPara calculate(const SensorGlucoseData *sens, const u
     const int minmgdL=sens->getminmgdL();
     const int maxmgdL=sens->getmaxmgdL();
     bool firstcalibration=true;
+    LOGGER("calculate %s %s  firstpos=%d endpos=%d\n",name,sens->showsensorname().data(),startsen,endsen);
     for(const Numdata *numdata:numdatas) {
-        LOGGER("%s calculate firstpos=%d endpos=%d\n",name,startsen,endsen);
         const Num* endnum=numdata->firstAfter(newtime);
         const Num* begnum=numdata->begin();
         for(const Num *num=endnum-1;num>=begnum;--num) {
@@ -624,11 +625,8 @@ extern Numdata *getherenums();
 static void calibrateLastThread() {
     const int bloodvar=settings->data()->bloodvar;
     time_t now=time(nullptr);
-#ifndef NOLOG
-    vector<int> sensindices=sensors->sensorsInPeriod(now-60*24*60*60, now);
-#else
     vector<int> sensindices=sensors->sensorsInPeriod(now-60*60, now);
-#endif
+
     if(sensindices.size()<=0) {
         LOGAR("calibrateLast  no sensors");
         return;
@@ -656,7 +654,7 @@ static void calibrateLastThread() {
                 continue;
             if(it->gettime()<previoustime) {
                 LOGGER("calibrateLast %u before previoustime %u\n",it->gettime(),previoustime);
-                return;
+                break;
                 }
             if(it->calibrator(bloodvar)) {
                 uint32_t wastime=it->gettime();
@@ -665,8 +663,7 @@ static void calibrateLastThread() {
                     allminwait=minwait;
                     allwastime=wastime;
                     }
-                if(success)
-                    break;
+                if(success) break;
                 }
             }
         if(allminwait>0) {
@@ -684,6 +681,7 @@ static void calibrateLastThread() {
             }
          break;
          };
+    LOGAR("end calibrateLast");
     }
 
 void calibrateLast() {

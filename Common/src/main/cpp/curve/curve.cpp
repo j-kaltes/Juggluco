@@ -594,6 +594,8 @@ template<> void getsensorranges<HistoryIterator>(uint32_t start,uint32_t endt,bo
     CURVELOGAR("start getsensorHistoryranges: ");
     for(int i=hists.size()-1;i>=0&&timeiter<endt;i--)  {
         auto his=sensors->getSensorData(hists[i]);
+        if(!his->hasRealHistory())
+            continue;
         auto ran= histPositions(his, timeiter,  endt); 
         CURVELOGGER("getsensorHistoryranges %s %d-%d\n",his->showsensorname().data(),ran.first,ran.second);
         if(ran.first==ran.second)

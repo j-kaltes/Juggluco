@@ -168,7 +168,8 @@ class GarminStatus {
 
 		});
 		Cancel.setOnClickListener(
-				v -> context.doonback());
+				v -> context.doonback()
+                                );
 		Save.setOnClickListener(
 				v -> {
 					boolean changed = false;
@@ -289,11 +290,13 @@ class GarminStatus {
 
 		ok.setOnClickListener(
 				v -> {
-   				EnableControls(parentlayout,true);
 				 context.doonback();
 				}
 			);
-		context.setonback(() -> removeContentView(layout));
+		context.setonback(() ->  {
+                        EnableControls(parentlayout,true);
+                        removeContentView(layout);
+                        });
 		show();
 	}
 

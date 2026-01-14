@@ -225,10 +225,7 @@ static public void show(MainActivity context,View parent) {
             else {
                 {if(doLog) {Log.i(LOG_ID,"nodenumptr[0]="+nodenumptr[0]);};};
                 }
-        context.poponback();
-        EnableControls(parent,true);
-        removeContentView(layout);
-        context.hideSystemUI(); 
+        context.doonback();
         }
         );
 
@@ -261,6 +258,7 @@ static public void show(MainActivity context,View parent) {
          });
 */
     context.setonback(()-> { 
+        EnableControls(parent,true);
         removeContentView(layout);
         context.hideSystemUI(); }
         );
