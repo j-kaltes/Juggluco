@@ -410,8 +410,11 @@ extern "C" JNIEXPORT jlong JNICALL   fromjava(streamfromSensorptr)(JNIEnv *env, 
     for(int i=pos;i<len;i++) {
         const ScanData *item=start+i;
         if(item->valid()) {
-            for(++i;i<len&&!start[i].valid();i++) 
+            for(++i;i<len&&!start[i].valid();i++)  {
                 ;
+                }
+            if(i==len)
+                break;
             long mgdL;
             if(double calibrated=cali.calibrateONEtest(*item);!isnan(calibrated)) {
                 mgdL=(long)round(calibrated);

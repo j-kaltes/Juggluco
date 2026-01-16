@@ -85,7 +85,8 @@ static private void updateAppWidget(Context context, AppWidgetManager appWidgetM
          widthdip=200;
       else
          widthdip=width;
-      } if(widthdip!=width) {
+      } 
+  if(widthdip!=width) {
       setWidth(widthdip);
       }
    RemoteViews  views;

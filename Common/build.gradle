@@ -24,7 +24,7 @@ else {
       ndkver = '29.0.14206865'
       APPCOMPAT = '1.7.1'
       GMSWEAR = '19.0.0'
-     GMSBASE = '18.9.0'
+     GMSBASE = '18.10.0'
       MINSDK = 21
     TARGETSDK = 35
    CPPSTD = "-std=gnu++26"
@@ -86,7 +86,7 @@ android {
         //compileSdk 36
         applicationId "tk.glucodata"
 
-         versionName '10.6.1'
+         versionName '10.6.2'
 //    multiDexEnabled true
 
         buildConfigField 'String', 'BUILD_TIME', 'new java.text.SimpleDateFormat("HH:mm:ss dd-MMM-yyyy").format(new java.util.Date(' + System.currentTimeMillis() + 'L))'
@@ -163,8 +163,8 @@ flavorDimensions = ['wearos','libreVersion','SiBionics', 'DexCom','Google']
         libreOld {
     //******  Zet op rollout op 100% ******
             dimension 'libreVersion'
-            versionCode 857 //LIBRE2ONLY
-         //    versionName '10.6.1-no3'
+            versionCode 860 //LIBRE2ONLY
+         //    versionName '10.6.2-no3'
             versionNameSuffix '-no3'
             buildConfigField 'int', 'libreVersion', '2'
             externalNativeBuild.cmake {
@@ -177,7 +177,7 @@ flavorDimensions = ['wearos','libreVersion','SiBionics', 'DexCom','Google']
 //       minSdk 23
             dimension 'libreVersion'
         versionNameSuffix '-li3'
-        versionCode 858 //LIBRE3
+        versionCode 861 //LIBRE3
     //******  Zet op rollout op 100% ******
 
                buildConfigField 'int', 'libreVersion', '3'
@@ -192,7 +192,7 @@ flavorDimensions = ['wearos','libreVersion','SiBionics', 'DexCom','Google']
         si {
       dimension 'SiBionics'
         versionNameSuffix '-si'
-        versionCode 858 
+        versionCode 861 
        buildConfigField 'int', 'SiBionics', '1'
        externalNativeBuild.cmake {
          cppFlags "   -DSIBIONICS=1 "
@@ -201,7 +201,7 @@ flavorDimensions = ['wearos','libreVersion','SiBionics', 'DexCom','Google']
         }
         nosi {
             dimension 'SiBionics'
-         versionCode 857 
+         versionCode 860 
          versionNameSuffix '-nosi'
           buildConfigField 'int', 'SiBionics', '0'
           externalNativeBuild.cmake {
@@ -219,9 +219,9 @@ flavorDimensions = ['wearos','libreVersion','SiBionics', 'DexCom','Google']
         minSdkVersion 26
         buildConfigField 'int', 'minSDK', "$minSdk"
         manifestPlaceholders["minSDK"] = "$minSdk"
-        versionCode 859 //WATCH
+        versionCode 862 //WATCH
     //******  Zet op rollout op 100% ******
-        //versionName '10.6.1-wear'
+        //versionName '10.6.2-wear'
         versionNameSuffix '-wear'
         signingConfig signingConfigs.alg
 
@@ -243,8 +243,8 @@ flavorDimensions = ['wearos','libreVersion','SiBionics', 'DexCom','Google']
 
 //        minSdk 19
             dimension 'wearos'
-        versionCode 859 //WATCH
-        //versionName '10.6.1-small'
+        versionCode 862 //WATCH
+        //versionName '10.6.2-small'
         versionNameSuffix '-small'
         signingConfig signingConfigs.alg
 

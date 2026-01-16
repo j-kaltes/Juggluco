@@ -476,13 +476,13 @@ public static native boolean getshowhistories();
 public static native boolean getshowstream();
 public static native boolean getshownumbers();
 
+public static native boolean getshowcalibratedscans();
+public static native void setshowcalibratedscans(boolean val);
 public static native boolean getshowcalibratedstream();
 public static native void setshowcalibratedstream(boolean val);
 public static native boolean getshowcalibratedhistories();
 public static native void setshowcalibratedhistories(boolean val);
 
-public static native boolean getshowcalibratedscans();
-public static native void setshowcalibratedscans(boolean val);
 
 public static native boolean getshowmeals();
 public static native void setshowmeals(boolean val);

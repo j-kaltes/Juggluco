@@ -30,7 +30,6 @@
 #include "sensoren.hpp"
 #include "calibrateValue.hpp"
 constexpr const int maxdifference=3*60;
-extern bool shouldexclude(const uint32_t time) ;
 extern vector<Numdata*> numdatas;
 template <typename DT> const DT *getdata(const SensorGlucoseData *sens,int pos);
 template<>
@@ -281,8 +280,34 @@ int getlastpos<Glucose>(const SensorGlucoseData *sens) {
     return sens->getAllendhistory();
     }
 
+
 template <typename DT>
-int shouldexclude(const uint32_t time) {
+int excludeone(const uint32_t time,const SensorGlucoseData *sens) {
+    const int maxdiff=std::max(getinterval<DT>(sens),3*60);
+    int firstpos=getfirstpos<DT>(sens);
+    int lastpos=getlastpos<DT>(sens);
+    if(lastpos>firstpos) {
+        const auto [posel,el]=findNextCGM<DT>(sens,firstpos,lastpos,time,maxdiff);
+        if(posel<=-2)
+            return -1;
+        if(el) {
+               const int mgdL=el->getmgdL();
+               if(mgdL>=sens->getminmgdL()&&mgdL<=sens->getmaxmgdL())  {
+                    LOGGER("shouldexclude: sensors don't exclude %u %.1f\n",el->gettime(),mgdL/18.0f);
+                    return 0;
+                    }
+               else {
+                    LOGGER("shouldexclude: %d out of range\n",mgdL);
+                    }
+                }
+         else {
+            return 1; 
+            }
+       }
+    return -1;
+    }
+
+bool shouldexclude(const uint32_t time) {
    uint32_t starttime=time-maxdifference;
    uint32_t endtime=time+maxdifference;
    vector<int> indices=sensors->sensorsInPeriod(starttime, endtime);
@@ -290,51 +315,24 @@ int shouldexclude(const uint32_t time) {
         LOGGER("shouldexclude: no sensors between %u and %u\n",starttime,endtime);
         return true;
         }
-   bool hasValue=false;
    LOGGER("shouldexclude around time %u %d indices\n",time,indices.size());
     for(int index:indices) {
         auto *sens=sensors->getSensorData(index);
-       const int maxdiff=std::max(getinterval<DT>(sens),3*60);
-        int firstpos=getfirstpos<DT>(sens);
-        int lastpos=getlastpos<DT>(sens);
-        if(lastpos>firstpos) {
-            const auto [posel,el]=findNextCGM<DT>(sens,firstpos,lastpos,time,maxdiff);
-            if(posel>-2) {
-                hasValue=true;
-                if(el) {
-                    const int mgdL=el->getmgdL();
-                    if(mgdL>=sens->getminmgdL()&&mgdL<=sens->getmaxmgdL())  {
-                        LOGGER("shouldexclude:  %u - %u nrsensors=%d don't exclude\n",starttime,endtime,indices.size());
-                        return false;
-                        }
-                     else {
-                        LOGGER("shouldexclude: %d out of range\n",mgdL);
-                        }
-                    }
-               }
-          }
-
+        int res1=excludeone<ScanData>(time,sens);
+        if(res1==1)
+               return true;
+        int res2=excludeone<Glucose>(time,sens);
+        if(res2==1)
+            return true;
+        if(!res1||!res2) 
+            return false;
         }
-    if(hasValue) {
-          LOGGER("shouldexclude:  %u - %u nrsensors=%d wrong\n",starttime,endtime,indices.size());
-          return -1;
-          }
     LOGGER("shouldexclude:  %u - %u nrsensors=%d nodata\n",starttime,endtime,indices.size());
-     return -2;
-    }
-
-template  int shouldexclude<ScanData>(const uint32_t time);
-
-
-bool shouldexclude(const uint32_t tim) {
-    if(int res=shouldexclude<ScanData>(tim))  {
-      int res2;
-        if(res>0||((res2=shouldexclude<Glucose>(tim))&&res!=-2&&res!=-2)) {
-                return true;
-              } 
-        }
     return false;
     }
+
+
+
 template <typename DT>  uint32_t getfirsttime(const SensorGlucoseData *sens);
 template <> 
  uint32_t    getfirsttime<ScanData>(const SensorGlucoseData *sens) {
@@ -483,14 +481,14 @@ template <typename DT> CalcPara calculate(const SensorGlucoseData *sens, const u
             ++nr;
             }
         double preA=getA(w,x,y,nr);
-        double a=moderateA(preA,totweight,2.0);
+        double a=moderateA(preA,totweight,2.4);
         double preB=getB(w,x,y,nr);
-        double b=moderateB(preB,totweight,2.0);
+        double b=moderateB(preB,totweight,2.4);
         LOGGER("calibrate: preA=%.2f a=%.2f preB=%.2f b=%.2f\n",preA,a,preB,b);
         return {a,b,(float)totweight}; 
         }
      double preB=distance(w,x,y, nr)/totweight;
-     double b =moderateB(preB,totweight,2.0);
+     double b =moderateB(preB,totweight,2.4);
      LOGGER("calibrate: preB=%.2f b=%.2f\n",preB,b);
      return {1.0,b,(float)totweight};
     }
@@ -643,13 +641,13 @@ static void calibrateLastThread() {
         if(tim>previoustime)
             previoustime=tim;
         }
-    const Numdata *numdata=getherenums();
+   Numdata *numdata=getherenums();
     while(true) { 
-        const Num *start=numdata->begin();
-        const Num *ends=numdata->end();
+         Num *start=numdata->begin();
+         Num *ends=numdata->end();
         int allminwait=0;
         uint32_t allwastime;
-        for(const Num*it=ends-1;it>=start;--it) {
+        for(Num*it=ends-1;it>=start;--it) {
             if(!numdata->valid(it))
                 continue;
             if(it->gettime()<previoustime) {
@@ -658,6 +656,11 @@ static void calibrateLastThread() {
                 }
             if(it->calibrator(bloodvar)) {
                 uint32_t wastime=it->gettime();
+                if(shouldexclude(wastime))  {
+                        removeCalibration(wastime);
+                        it->exclude=true;
+                        continue;
+                        }
                 const auto [minwait,success]=calibrateIndices2(sensindices, 0, wastime,it,numdata);
                 if(minwait>allminwait)  {
                     allminwait=minwait;

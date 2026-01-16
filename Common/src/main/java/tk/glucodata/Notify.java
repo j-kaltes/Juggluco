@@ -233,7 +233,7 @@ static public Ringtone mkrings(String uristr,int kind) {
 
 final  static boolean whiteonblack=false;
 @ColorInt  public static int foregroundcolor=BLACK;
-static public float glucosesize;
+static public float glucosesize=117.6f;
 static RemoteGlucose arrowNotify;
 
     static void mkpaint() {
@@ -353,11 +353,11 @@ static public String glucosestr(float gl) {
     boolean hasvalue=false;
 
 
-void showglucose(notGlucose strgl,float gl) {
+      /*
+private void showglucose(notGlucose strgl,float gl) {
         var message= format(usedlocale,glucoseformat,gl);
         arrowglucosenotification(2,gl, message,strgl,GLUCOSENOTIFICATION ,true);
         }
-      /*
 void overwriteglucose() {
   
     var strgl=SuperGattCallback.previousglucose;
@@ -747,8 +747,9 @@ static private String getglstring(float glvalue,int sensorgen2) {
          return "27.8<" ;
          }
        var glstr=format(Applic.usedlocale,Notify.pureglucoseformat, glvalue);
-       if(glstr.charAt(glstr.length()-1)=='0') 
-               glstr=glstr.substring(0, glstr.length()-2);
+       final int len=glstr.length();
+       if(glstr.charAt(len-1)=='0') 
+               glstr=glstr.substring(0, len-2);
         return glstr;
        }
    else {
@@ -1059,7 +1060,7 @@ static void test2() {
     SuperGattCallback.dowithglucose("Serialnumber", (int)(gl*18f), gl,rate, 0,System.currentTimeMillis()) ;
     } */
 
- public void  arrowplacelargenotification(int kind,float glvalue,String message,notGlucose glucose,String type,boolean once) {
+private  void  arrowplacelargenotification(int kind,float glvalue,String message,notGlucose glucose,String type,boolean once) {
         hasvalue=true;
     fornotify(makearrownotification(kind,glvalue,message,glucose,type,once));
 

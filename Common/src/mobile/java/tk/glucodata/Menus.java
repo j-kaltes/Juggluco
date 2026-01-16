@@ -193,6 +193,12 @@ static public void show(MainActivity act) {
 		}); 
 	streamview.setChecked(Natives.getshowstream() );
 
+    CheckBox calibratedscansview=view.findViewById(R.id.calibratedscans);calibratedscansview.setOnCheckedChangeListener( (buttonView,  isChecked)->{
+		Natives.setshowcalibratedscans(isChecked);
+				act.requestRender();
+		}); 
+	calibratedscansview.setChecked(Natives.getshowcalibratedscans() );
+
 
     CheckBox calibratedstreamview=view.findViewById(R.id.calibratedstream);calibratedstreamview.setOnCheckedChangeListener( (buttonView,  isChecked)->{
 		Natives.setshowcalibratedstream(isChecked);

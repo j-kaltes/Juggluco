@@ -249,8 +249,8 @@ roundtype mkroundpercentile(const float frac) const {
         min=minin;
         max=maxin;
         }
-    int isplace(const int start,const int end,const float move,float density,float timelen) const {    
-        LOGGER("inplace(start=%d,end=%d,move=%.2f,density=%.2f,timelen=%.2f)\n", start,end,move, density, timelen) ;  
+    int isplace(const int start,const int end,const float move,float density,float timelen,float placeback) const {    
+        LOGGER("isplace(start=%d,end=%d,move=%.2f,density=%.2f,timelen=%.2f)\n", start,end,move, density, timelen) ;  
         const float minsize=timelen*1.4+5*density;
         const int af=std::ceil(minsize/move);
         const int mid=(end+start)/2;
@@ -284,11 +284,11 @@ roundtype mkroundpercentile(const float frac) const {
 
 
 
-    int isplacefromleft(const int start,const int end,const float move,float density,float timelen) const {    
+    int isplacefromleft(const int start,const int end,const float move,float density,float timelen,float placeback) const {    
         
         const float minsize=timelen*1.4+5*density;
         const int af=minsize/move;
-        const int afmidend=(10*density+timelen*.4)/move;
+        const int afmidend=(10*density+timelen*.6+placeback)/move;
         const int afend=(10*density)/move;
         const uint16_t *p100=f0.second;
         const uint16_t *beg=p100+start;
@@ -462,7 +462,7 @@ void showpercentiles(NVGcontext* vg,JCurve &jcurve) {
         const int endid=startid+showids;
         const float placeback2=(staridf-startid)*move;
         LOGGER("showpercentiles starttime=%zu startidtime=%zu duration=%zu endidtime=%zu startid=%d, endid=%d, showids=%d move=%.2f timeback=%d placeback=%2.f placeback2=%.2f\n",starttime,startidtime,jcurve.duration,endid*minperstep*60,startid,endid,showids,move,timeback,placeback,placeback2);
-        int pos= (this->*((settings->data()->levelleft)?&persgegs::isplacefromleft:&persgegs::isplace))(startid,std::min(endid,maxids),move,jcurve.density,jcurve.timelen);
+        int pos= (this->*((settings->data()->levelleft)?&persgegs::isplacefromleft:&persgegs::isplace))(startid,std::min(endid,maxids),move,jcurve.density,jcurve.timelen,placeback);
 
         nvgFillColor(vg, lighttest);
         showround(vg,jcurve,f0,startid,endid,placeback,move);
@@ -1181,7 +1181,7 @@ static  char * givepercentiles(Getopts &opts,uint32_t start, uint32_t endt,recda
         }
 
 //    bool calibratePast=settings->data()->CalibratePast;
-    bool calibratePast=true;
+    bool calibratePast=opts.pastvaluesmode;
     std::vector<GlucoseDataType<DT>> stream;
     getsensorranges<DT>(start,endt,opts.calibratedmode,calibratePast,&stream);
 
@@ -1305,7 +1305,8 @@ std::span<char> getStatImage(int startpos,Getopts &opts) {
     LOGGER("getStatImage %d %d days=%d\n",start,endt,days);
     if(start>=endt)
         return {(char *)nullptr,0};
-    bool calibratePast=settings->data()->CalibratePast;
+    //bool calibratePast=settings->data()->CalibratePast;
+    bool calibratePast=opts.pastvaluesmode;
     bool calibrated= opts.calibratedmode||opts.calibratedhistorymode;
     std::vector<GlucoseDataType<DT>> stream;
     getsensorranges<DT>(start,endt,calibrated,calibratePast,&stream);
@@ -1373,7 +1374,7 @@ std::span<char> getCurveImage(int startpos,Getopts &opts) {
     int width=opts.width?opts.width:winWidth;
     int height=opts.height?opts.height:winHeight;
   
-  if(!(opts.calibratedmode|| opts.calibratedhistorymode||opts.streammode||opts.scansmode||opts.historymode||opts.amountsmode||opts.mealsmode)) {
+  if(!(opts.calibratedmode|| opts.calibratedhistorymode||opts.streammode||opts.calibratedscansmode||opts.scansmode||opts.historymode||opts.amountsmode||opts.mealsmode)) {
         LOGAR("getCurveImage: no settings");
         if(settings->data()->DoCalibrate) {
                 opts.calibratedmode=true;

@@ -686,8 +686,13 @@ boolean needsnatives() {
      {if(doLog) {Log.i(LOG_ID,"initscreenwidth="+newinitscreenwidth);};};
      {if(doLog) {Log.i(LOG_ID,"menufontsize="+menufontsize);};};
      {if(doLog) {Log.i(LOG_ID,"screensize="+screensize);};};
+
      headfontsize = res.getDimension(R.dimen.abc_text_size_display_4_material);
+     if(headfontsize<=1.0||Float.isNaN(headfontsize)||Float.isInfinite(headfontsize)) {
+         headfontsize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 112, metrics);
+        }
      Notify.glucosesize= headfontsize*.35f;
+     if(doLog) {Log.i(LOG_ID,"headfontsize="+headfontsize+" glucosesize="+Notify.glucosesize);};;
      smallfontsize = res.getDimension(R.dimen.abc_text_size_small_material);
      largefontsize = res.getDimension(R.dimen.abc_text_size_large_material);
      mediumfontsize = res.getDimension(R.dimen.abc_text_size_medium_material);

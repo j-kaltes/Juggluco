@@ -113,7 +113,7 @@ void showsensorinfo(String text,long sensorptr) {
         Sensors.show((MainActivity )getContext(),text,sensorptr);
         });
     }
-static View[] reopen=new View[5];
+static View[] reopen=new View[8]; //6 needed
 static int reopennr=0;
     //    SearchLayout search;
     Layout search;
@@ -172,7 +172,7 @@ if(!isWearable) {
 
 
 
-static void hidesave(View v) {
+private final static void hidesave(View v) {
     if(v.getVisibility()==VISIBLE) {
         reopen[reopennr++]=v;
         v.setVisibility(INVISIBLE);
@@ -213,7 +213,7 @@ void getnumcontrol(MainActivity activity) {
         search.setContentDescription("Search");
 //     search.setImageResource( android.R.attr.actionModeWebSearchDrawable);
 
-           search.setOnClickListener(v-> {
+       search.setOnClickListener(v-> {
            hidesave(numcontrol);
         startsearch();
         selectnumbers();
