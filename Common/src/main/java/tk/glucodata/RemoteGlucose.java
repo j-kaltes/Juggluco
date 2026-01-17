@@ -158,7 +158,6 @@ final RemoteViews arrowremote(int kind, notGlucose glucose,final boolean alarm) 
       }
        }
    else {
-      //var timestr= DateFormat.getTimeInstance(DateFormat.SHORT).format(new Date(glucose.time));
       var timestr= minhourstr(glucose.time);
       glucosePaint.setTextSize(timesize);
       canvas.drawText(timestr, usedensity*16, gety+timeHeight, glucosePaint);

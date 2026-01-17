@@ -43,7 +43,7 @@ char privatekey[]="privkey.pem";
 #ifndef HAVE_NOPRCTL
 #include <sys/prctl.h>
 #endif
-#include "strconcat.hpp"
+#include "strsepconcat.hpp"
 #include "inout.hpp"
 #include "watchserver.hpp"
 #include "destruct.hpp"

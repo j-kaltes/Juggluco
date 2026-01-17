@@ -413,8 +413,6 @@ extern "C" JNIEXPORT jlong JNICALL   fromjava(streamfromSensorptr)(JNIEnv *env, 
             for(++i;i<len&&!start[i].valid();i++)  {
                 ;
                 }
-            if(i==len)
-                break;
             long mgdL;
             if(double calibrated=cali.calibrateONEtest(*item);!isnan(calibrated)) {
                 mgdL=(long)round(calibrated);
@@ -749,8 +747,8 @@ extern "C" JNIEXPORT jstring JNICALL   fromjava(getDeviceAddress)(JNIEnv *envin,
     LOGGER("getDeviceAddress()=%s\n",address);
     return envin->NewStringUTF(address);
     }
-#include "strconcat.hpp"
-extern    strconcat getsensortext(const SensorGlucoseData *hist);
+#include "strsepconcat.hpp"
+extern    strsepconcat getsensortext(const SensorGlucoseData *hist);
 extern "C" JNIEXPORT jstring JNICALL   fromjava(getsensortext)(JNIEnv *envin, jclass cl,jlong dataptr) {
    const streamdata *str=reinterpret_cast<const streamdata *>(dataptr);
     const SensorGlucoseData *usedhist= str->hist;

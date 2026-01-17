@@ -789,7 +789,7 @@ static bool startedreceiving() {
 #endif
 /*
 #include        <filesystem>
-#include "strconcat.hpp"
+#include "strsepconcat.hpp"
 */
 static bool savefileonce(const struct fileonce_t *gegs) {
     const int nr=gegs->nr;
@@ -817,7 +817,7 @@ static bool savefileonce(const struct fileonce_t *gegs) {
 /*
         int namelen=gegs->namelen-1;
         pathconcat fullpathin{filedata.getbase(),std::string_view(name,namelen)};
-        strconcat fullpathout{"",fullpathin,"tmp"};
+        strsepconcat fullpathout{"",fullpathin,"tmp"};
         const auto copyOptions = std::filesystem::copy_options::overwrite_existing;
         std::error_code errorcode;
         std::filesystem::path in(fullpathin.begin(),fullpathin.end());

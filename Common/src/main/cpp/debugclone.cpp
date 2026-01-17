@@ -108,12 +108,12 @@ bool inited=initstr();
 #include "inout.hpp"
 
 
-#include "strconcat.hpp"
+#include "strsepconcat.hpp"
 extern std::string_view libdirname;
 #ifdef LIBRE3
-static strconcat libre3lib;
+static strsepconcat libre3lib;
 #endif
-//strconcat libre3lib("",R"(package:)",libdirname,"/libinit.so\n");
+//strsepconcat libre3lib("",R"(package:)",libdirname,"/libinit.so\n");
 using namespace std;
 #include "logs.hpp"
 #include "openat.hpp"
@@ -1024,7 +1024,7 @@ for (;;) {
 
 static bool beforedebug() {
 #ifdef LIBRE3
- libre3lib=strconcat("",R"(package:)",libdirname,"/libinit.so\n");
+ libre3lib=strsepconcat("",R"(package:)",libdirname,"/libinit.so\n");
  LOGGER("libre3lib=%s",libre3lib.data());
 #endif
        if(prctl(PR_SET_DUMPABLE, 1, 0, 0, 0) < 0)  {

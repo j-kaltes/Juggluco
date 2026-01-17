@@ -10,7 +10,7 @@
 #include <string_view>
 #include "logs.hpp"
 #include "inout.hpp"
-#include "strconcat.hpp"
+#include "strsepconcat.hpp"
 typedef struct android_namespace_t* (*android_get_exported_namespace_t)(const char*) ;
 
 

@@ -97,14 +97,14 @@ struct {
     float x=-300.0f,y=-300.0f;
     std::chrono::time_point<std::chrono::steady_clock>  time;
 } prevtouch;
-#include "strconcat.hpp"
+#include "strsepconcat.hpp"
 class histgegs {
    //const int sensorindex;
     const SensorGlucoseData *hist;
     time_t nu;
 public:
 #ifndef DONTTALK
-strconcat text;
+strsepconcat text;
 #endif
     histgegs(const SensorGlucoseData *hist): hist(hist)/*,glu(glu),tim(tim)*/,nu(time(nullptr))
 #ifndef DONTTALK
@@ -116,7 +116,7 @@ strconcat text;
     prevtouch.time = chrono::steady_clock::now();
     LOGGER("histgegs %s",ctime(&nu));
     } 
-strconcat  getsensorhelp(string_view starttext,string_view name1,string_view name2,string_view sep1,string_view sep2,string_view endstr="") {
+strsepconcat  getsensorhelp(string_view starttext,string_view name1,string_view name2,string_view sep1,string_view sep2,string_view endstr="") {
     char starts[50],ends[50],pends[50];
 //   const sensor *sensor=sensors->getsensor(sensorindex);
     time_t stime=hist->getstarttime(),etime= hist->officialendtime();
@@ -125,7 +125,7 @@ strconcat  getsensorhelp(string_view starttext,string_view name1,string_view nam
     char lastscanbuf[50],lastpollbuf[50];
     time_t lastscan=hist->getlastscantime();
     time_t lastpolltime=hist->getlastpolltime();
-    return strconcat(string_view(""),starttext ,name1,hist->showsensorname(),name2,usedtext->sensorstarted,sep2,string_view(starts, appcurve.datestr(stime,starts)),!hist->isLibre2()?"":sep1,!hist->isLibre2()?"":usedtext->lastscanned,!hist->isLibre2()?"":sep2,!hist->isLibre2()?"":string_view(lastscanbuf,appcurve.datestr(lastscan,lastscanbuf)),lastpolltime>0?strconcat(string_view(""),sep1,usedtext->laststream,sep2):"",lastpolltime>0?string_view(lastpollbuf,appcurve.datestr(lastpolltime,lastpollbuf)):"",nu<etime?strconcat(string_view(""),sep1,usedtext->sensorends,sep2):"",
+    return strsepconcat(string_view(""),starttext ,name1,hist->showsensorname(),name2,usedtext->sensorstarted,sep2,string_view(starts, appcurve.datestr(stime,starts)),!hist->isLibre2()?"":sep1,!hist->isLibre2()?"":usedtext->lastscanned,!hist->isLibre2()?"":sep2,!hist->isLibre2()?"":string_view(lastscanbuf,appcurve.datestr(lastscan,lastscanbuf)),lastpolltime>0?strsepconcat(string_view(""),sep1,usedtext->laststream,sep2):"",lastpolltime>0?string_view(lastpollbuf,appcurve.datestr(lastpolltime,lastpollbuf)):"",nu<etime?strsepconcat(string_view(""),sep1,usedtext->sensorends,sep2):"",
 nu<etime?string_view(ends, appcurve.datestr(etime,ends)):string_view("",0),sep1,usedtext->sensorexpectedend,sep2,string_view(pends, appcurve.datestr(reallends,pends)),endstr);;
     }
 #ifndef DONTTALK
@@ -655,7 +655,7 @@ int    JCurve::badscanMessage(NVGcontext* avg,int kind) {
 #include "displayer.hpp"
 std::unique_ptr<histgegs> displayer;
 #endif
-strconcat getsensortext(const SensorGlucoseData *hist) {
+strsepconcat getsensortext(const SensorGlucoseData *hist) {
         if((hist->isDexcom()||hist->isSibionics())&&hist->unused()) {
             return {"",R"(<h1>)",hist->showsensorname(),R"(</h1><p>)",usedtext->waitingforconnection,"</p>"};
             }

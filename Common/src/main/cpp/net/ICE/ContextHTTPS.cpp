@@ -46,7 +46,7 @@
 #define lerror(...) perror(__VA_ARGS__) */
 #include "logs.hpp"
 #include "inout.hpp"
-#include "strconcat.hpp"
+#include "strsepconcat.hpp"
 //#define MAIN 1
 //#define LOGHTTPS
 #ifdef LOGHTTPS
@@ -484,7 +484,7 @@ std::pair<std::vector<char>,int> ContextHTTPS::request(const std::string_view ho
        LOGGERHTTPS("Certificate verification failed: %s\n", X509_verify_cert_error_string(verify_result)); 
     }; 
     const char closebuf[]{"\r\nConnection: close\r\n\r\n"};
-    strconcat req {""sv,TYPE , " "sv,path," HTTP/1.1\r\nHost: "sv , host , "\r\nContent-Length: "sv,std::to_string(input.size()), header,closebuf};
+    strsepconcat req {""sv,TYPE , " "sv,path," HTTP/1.1\r\nHost: "sv , host , "\r\nContent-Length: "sv,std::to_string(input.size()), header,closebuf};
 
     LOGGERHTTPS("connect %.*s %.*s\n",TYPE.size(),TYPE.data(),path.size(),path.data());
     const char *request=req.data();

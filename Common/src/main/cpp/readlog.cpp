@@ -32,7 +32,7 @@
 using namespace std;
 #undef LOGGER
 #define LOGGER(...)   fprintf(stderr,__VA_ARGS__)
-#include "strconcat.hpp"
+#include "strsepconcat.hpp"
 using namespace std;
 int    timestr(char *buf,time_t tim) {
         struct tm tmbuf;
@@ -47,7 +47,7 @@ int    timestr(char *buf,time_t tim) {
 
 void retimelog(const char *name) {
 	ifstream inp(name);
-	strconcat outfile("",name,".out");
+	strsepconcat outfile("",name,".out");
 	ofstream outp(outfile);
 	while(inp) {
 		string input;

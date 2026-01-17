@@ -497,6 +497,10 @@ public fun sendDatawithInt(ident: Int, data: ByteArray) {
                 return
             }
             val times = sender.nexttimes
+            if(times==null) {
+                Log.e(LOG_ID,"insendnetinfo: times==null");
+                return;
+                }
             val nextnetinfo = nu + netwait
             val num = nodes.size
             for(i in 0 until num) {

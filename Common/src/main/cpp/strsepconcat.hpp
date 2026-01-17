@@ -27,7 +27,7 @@
 #endif
 #include "sizear.hpp"
 using namespace std;
-class strconcat {
+class strsepconcat {
 char *name;
 int namelen;
 public:
@@ -51,41 +51,41 @@ template<typename T,typename ...Ts> char *	nstrconcat(int len,string_view sep,  
 	memcpy(ptr+len,asstr,en);
 	return ptr;
 	}
-strconcat():name(nullptr),namelen(0) {}
+strsepconcat():name(nullptr),namelen(0) {}
 template <typename ...Ts>
-strconcat(string_view sep,  Ts &&... args) {
+strsepconcat(string_view sep,  Ts &&... args) {
 	name=nstrconcat(0,sep,args ...);
 	}
-strconcat(strconcat &&in) noexcept :name(in.name),namelen(in.namelen) { 
+strsepconcat(strsepconcat &&in) noexcept :name(in.name),namelen(in.namelen) { 
 	in.name=nullptr;
 	in.namelen=0;
-	LOGGER("strconcat( strconcat &&in=%s)\n",name);
+	LOGGER("strsepconcat( strsepconcat &&in=%s)\n",name);
 }
-strconcat(const strconcat &&in) noexcept:strconcat( std::move(const_cast<strconcat &&>(in))) { 
-	LOGGER("strconcat( const strconcat &&in=%s)\n",name);
+strsepconcat(const strsepconcat &&in) noexcept:strsepconcat( std::move(const_cast<strsepconcat &&>(in))) { 
+	LOGGER("strsepconcat( const strsepconcat &&in=%s)\n",name);
 }
-strconcat( strconcat &in):name(new char[in.namelen]),namelen(in.namelen) { 
+strsepconcat( strsepconcat &in):name(new char[in.namelen]),namelen(in.namelen) { 
 	memcpy(name,in.name,in.namelen);
-	LOGGER("strconcat( strconcat &in=%s)\n",name);
+	LOGGER("strsepconcat( strsepconcat &in=%s)\n",name);
 }
-strconcat &operator=(strconcat &&in) {
-	LOGGER("strconcat &operator=(strconcat &&in %s) {\n",in.name);
+strsepconcat &operator=(strsepconcat &&in) {
+	LOGGER("strsepconcat &operator=(strsepconcat &&in %s) {\n",in.name);
 	std::swap(name,in.name);
 	std::swap(namelen,in.namelen);
 	return *this;
 	}
-strconcat &operator=(const strconcat &&in) {
-	return operator=(std::move(const_cast<strconcat &&>(in)));
+strsepconcat &operator=(const strsepconcat &&in) {
+	return operator=(std::move(const_cast<strsepconcat &&>(in)));
 	}
-strconcat &operator=(strconcat &in) {
-	LOGGER("strconcat &operator=(strconcat &in %s) {\n",in.name);
+strsepconcat &operator=(strsepconcat &in) {
+	LOGGER("strsepconcat &operator=(strsepconcat &in %s) {\n",in.name);
 	delete[] name;
 	name=new char[in.namelen];
 	namelen=in.namelen;
 	memcpy(name,in.name,namelen);
 	return *this;
 	}
-~strconcat() {
+~strsepconcat() {
 	delete[] name;
 	}
 operator const string_view() const {
