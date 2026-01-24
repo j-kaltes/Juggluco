@@ -247,6 +247,8 @@ void flingX(float vol) ;
 void  calccurvegegs();
 void prevscr() ;
 void  nextscr() ;
+
+int mouseScale(float dx,float xold,float x);
 int translate(float dx,float dy,float yold,float y) ;
 void xscaleGesture(float scalex,float midx) ;
 std::pair<int,int> getextremes(const std::vector<int> &hists, const std::pair<const ScanData *,const ScanData*> **scanranges, int scannr,const std::pair<int32_t,int32_t> *histpositions) ;

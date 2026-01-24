@@ -19,7 +19,6 @@
 #include <stdio.h>
 #include <math.h>
 #include <memory.h>
-
 #include "nanovg.h"
 #define FONTSTASH_IMPLEMENTATION
 #include "fontstash.h"
@@ -2849,6 +2848,8 @@ float nvgTextBounds(NVGcontext* ctx, float x, float y, const char* string, const
 		bounds[2] *= invscale;
 		bounds[3] *= invscale;
 	}
+
+
 	return width * invscale;
 }
 

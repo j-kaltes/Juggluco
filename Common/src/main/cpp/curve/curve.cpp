@@ -1934,6 +1934,7 @@ displaytime disp=getdisplaytime(nu,starttime2,endtime, transx);
              histcurve(avg,sensors->getSensorData(index), histpositions[i].first, histpositions[i].second,transx,transy,colorindex); 
              }
         }
+
     if(showcalibratedhistories) {
         nvgStrokeWidth(avg, historyStrokeWidth);
         for(int i=histlen-1;i>=0;i--) {

@@ -1849,19 +1849,37 @@ static int dayssize(int days) {
     } */
 extern int getminutes(time_t tim);
 
+
+
 static bool givereport(Getopts &opts,std::string_view hostname,bool secure,std::string_view origin,recdata *outdata) {
-   bool calibrate=opts.calibratedscansmode||
-   opts.calibratedhistorymode||opts.calibratedmode;
-   if(calibrate)
-                opts.allvaluesmode=true;
-  else {
-       if(!(opts.historymode||opts.streammode)) {
-            if(settings->data()->DoCalibrate) {
-                    opts.calibratedmode=true;
+    bool hasmode=false;
+    if(!opts.historymode){
+        if(opts.calibratedhistorymode) {
                     opts.allvaluesmode=true;
                     }
-            }
-       }
+        }
+    else
+          hasmode=true;
+
+    if(!opts.streammode){
+        if(opts.calibratedmode)
+                    opts.allvaluesmode=true;
+        }
+    else
+          hasmode=true;
+    if(!opts.scansmode){
+        if(opts.calibratedscansmode) {
+                    opts.allvaluesmode=true;
+                    }
+        }
+    else
+          hasmode=true;
+    if(!(hasmode|| opts.allvaluesmode)) {
+          if(settings->data()->DoCalibrate) {
+                    opts.allvaluesmode=true;
+                    }
+        }
+
     uint32_t endtime=opts.end-1; //otherwise the whole end day is shown when a startday is specified
     const bool darkmode=opts.darkmode;
     const int days=opts.days();

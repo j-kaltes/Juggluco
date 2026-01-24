@@ -1586,6 +1586,7 @@ float fonsTextBounds(FONScontext* stash,
 		bounds[2] = maxx;
 		bounds[3] = maxy;
 	}
+//  fprintf(stderr,"fonsTextBounds cp=%u xadv=%d xoff=%d\n", codepoint, glyph->xadv, glyph->xoff);
 
 	return advance;
 }

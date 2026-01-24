@@ -1204,6 +1204,24 @@ bool                numpageforward() ;
 
 bool numpagepast() ;
 
+int JCurve::mouseScale(float dx,float xold,float x) {
+     float grens=dwidth/2.0;
+     auto startduration=duration;
+     auto move=dx*80;
+//     auto move=x-xold;
+    
+//     LOGGER("mouseScale(%.2f,%.2f,%.2f) duration van %d naar %d width=%.2f starttime=%u\n",dx,xold,x,startduration,duration,dwidth,starttime);
+     if(xold<grens) {
+        starttime+=move;
+        duration-=2*move;
+        }
+    else {
+        starttime-=move;
+        duration+=2*move;
+        }
+     begrenstijd() ;
+     return 1;
+     };
 int JCurve::translate(float dx,float dy,float yold,float y) {
 static bool ybezig=false;
     auto absdy=fabsf(dy);

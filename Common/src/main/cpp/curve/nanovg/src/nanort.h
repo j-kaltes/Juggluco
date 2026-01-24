@@ -1625,6 +1625,7 @@ bool BVHAccel::Dump(const char *filename) {
   unsigned long long numIndices = indices_.size();
   size_t r = fwrite(&numNodes, sizeof(unsigned long long), 1, fp);
   assert(r == 1);
+  (void)r;
 
   r = fwrite(&nodes_.at(0), sizeof(BVHNode), numNodes, fp);
   assert(r == numNodes);
@@ -1652,6 +1653,7 @@ bool BVHAccel::Load(const char *filename) {
 
   size_t r = fread(&numNodes, sizeof(unsigned long long), 1, fp);
   assert(r == 1);
+  (void) r;
   assert(numNodes > 0);
 
   nodes_.resize(numNodes);

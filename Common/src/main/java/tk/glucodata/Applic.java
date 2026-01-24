@@ -672,7 +672,7 @@ boolean needsnatives() {
   boolean ret;
   menufontsize = res.getDimension(R.dimen.abc_text_size_menu_material);
   final double screensize=(newinitscreenwidth/menufontsize);
-  final boolean smallsize=screensize<34.0;
+  final boolean smallsize=screensize<34.5;
    if(smallsize!= NumberView.smallScreen) {
                 NumberView.smallScreen=smallsize;
                 if(curve!=null) {

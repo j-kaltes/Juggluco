@@ -483,6 +483,9 @@ extern "C" JNIEXPORT void JNICALL fromjava(flingX) (JNIEnv *env, jclass clazz,jf
 extern "C" JNIEXPORT jint JNICALL fromjava(translate) (JNIEnv *env, jclass clazz,jfloat dx,jfloat dy,jfloat yold,jfloat y) {
  return appcurve.translate(dx,dy,yold,y);
  }
+extern "C" JNIEXPORT jint JNICALL fromjava(mouseScale)(JNIEnv *env, jclass clazz,jfloat dx,jfloat xold, jfloat x){
+ return  appcurve.mouseScale(dx,xold,x);
+ }
 
 void xscaleGesture(float scalex,float midx);
 extern "C" JNIEXPORT void JNICALL fromjava(xscale) (JNIEnv *env, jclass clazz,jfloat scalex,jfloat midx) {

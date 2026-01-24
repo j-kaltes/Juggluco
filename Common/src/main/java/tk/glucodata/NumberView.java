@@ -90,6 +90,7 @@ import static tk.glucodata.util.getlabel;
 
 
 public class NumberView {
+private static final boolean SmallShowKeyboard=false;
 public static  boolean smallScreen=false;
 final private static String LOG_ID="NumberView";
 Calendar cal = Calendar.getInstance();
@@ -439,13 +440,19 @@ public   View addnumberview(MainActivity context,final int bron,final long time,
                     valueedit.setText(Float.toString(carb));
                 newmealptr[0]=mealptr;
             },()->{
+                EnableControls(newnumview,true);
+                valueedit.requestFocus();
+
                 if(!smallScreen) {
-                    showkeyboard(context);
+                    if(SmallShowKeyboard)
+                            showkeyboard(context);
                     editfocus.setedittext(valueedit);
                     }
+               else {
+                    tk.glucodata.help.showkeyboard(context,valueedit);
+                  }
 
             //    newnumview.setVisibility(VISIBLE);
-            EnableControls(newnumview,true);
                 mealview[0]=null;
 
                 }    );
@@ -635,6 +642,12 @@ public View addnumberview(MainActivity context) {
         }
     View lay=  addnumberview(context,1,currentTimeMillis(),Float.MAX_VALUE,0,-1);
     setmealbutton(0,1, 0,shouldexclude) ;
+    
+if(SmallShowKeyboard&&smallScreen) {
+    valueedit.requestFocus();
+    tk.glucodata.help.showkeyboard(context,valueedit);
+  }
+else
     spinner.performClick();
     nodelete();
     thetime=-1;

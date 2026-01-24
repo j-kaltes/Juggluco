@@ -335,6 +335,7 @@ public static void hidekeyboard(Activity activity) {
             imm.hideSoftInputFromWindow(focus.getWindowToken(), 0);
         }
 public static void showkeyboard(Activity activity,View focus) {
+        Log.i(LOG_ID,"showkeyboard");
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(INPUT_METHOD_SERVICE);
             imm.showSoftInput(focus, 0);
         }

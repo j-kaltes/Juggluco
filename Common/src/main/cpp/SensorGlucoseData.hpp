@@ -1989,7 +1989,7 @@ bool setbackuptime(crypt_t *pass,Connect *connect,int ind,uint32_t starttime) {
             uint32_t streamstart=
 #endif
             getinfo()->update[ind].streamstart=getbackuptimestream(starttime);
-            LOGGER("GLU: ind=%d %s streamstart=%d streamend=%d\n", ind,showsensorname().data(),streamstart,streamend);
+            LOGGER("GLU: from getbackuptimestream ind=%d %s streamstart=%d streamend=%d\n", ind,showsensorname().data(),streamstart,streamend);
             }
         else {
             LOGGER("GLU: ind=%d  %s streamstart=%d\n",ind, showsensorname().data(),getinfo()->update[ind].streamstart);

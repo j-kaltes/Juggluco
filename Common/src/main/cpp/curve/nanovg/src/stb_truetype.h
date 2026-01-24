@@ -433,7 +433,14 @@ int main(int arg, char **argv)
    typedef char stbtt__check_size16[sizeof(stbtt_int16)==2 ? 1 : -1];
 
    // e.g. #define your own STBTT_ifloor/STBTT_iceil() to avoid math.h
+   #if defined(DOLOG)
    #include "logs.hpp"
+   #else
+   #undef LOGGER
+   #undef LOGAR
+   #define LOGGER(...)
+   #define LOGAR(...)
+   #endif
    #ifndef STBTT_ifloor
    #include <math.h>
    #define STBTT_ifloor(x)   ((int) floor(x))

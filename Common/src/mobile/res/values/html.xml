@@ -167,11 +167,11 @@ and see <a class="western" href="https://www.juggluco.nl/Juggluco/index.html#mir
 <p>You can run the Android Juggluco app on a Windows, Macintosh or
 Linux computer with the help of an Android Emulator (for example
 <a class="western" href="https://www.genymotion.com/">Genymotion</a>).
+If you use Linux (for example Ubuntu under MS Windows), you can also use <a href="https://docs.waydro.id">Waydroid</a>.
 The Juggluco on the emulator receives the data via a Mirror
-connection from an Android phone connected to the sensor. Pinch
+connection from an Android phone connected to the sensor. Under the android Studio Android emulator and Genymotion, Pinch
 movements (moving two fingers to or from each other) can be simulated
-by pressing a key (Control in Genymotion) while moving the mouse
-pointer.</p>
+by pressing the Control key while moving the mouse pointer. Waydroid doesn\'t support this, but Juggluco does implement it for itself alone.</p>
 <p style="line-height: 100%; margin-bottom: 0in"><br/>
 
 </p>
@@ -697,6 +697,9 @@ button emerges. After touching, you can enter a meal out of its
 ingredients. If you select this label here in the spinner, a box
 emerges at the top of the screen where you can specify an ingredient
 to search for and optionally the minimal amount of that ingredient.</p>
+<p>
+<br>
+</p>
 ]]>
 </string>
 <string name="shortcuthelp" >
@@ -2461,6 +2464,7 @@ Amounts</a>.</span></p>
 <br/>
 
 </p>
+
 ]]>
 </string>
 <string name="newamount" >

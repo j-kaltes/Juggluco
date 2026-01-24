@@ -153,7 +153,7 @@ template <typename GlucoseIterator> stats( std::vector<GlucoseDataType<GlucoseIt
 		EA1Cmmol=round(( EA1Cper- 2.15)*10.929);
 
 		this->mean=mean;
-		logprint("stats::stats mean=%Lf, sd=%1f vc=%1f starttime=%u endtime=%u\n",mean,sd,vc,starttime,endtime);
+		LOGGER("stats::stats mean=%Lf, sd=%1f vc=%1f starttime=%u endtime=%u\n",mean,sd,vc,starttime,endtime);
 		}
 	void  showbar(NVGcontext* vg,JCurve &) ;
 	void otherstats(NVGcontext* vg,JCurve&) ;

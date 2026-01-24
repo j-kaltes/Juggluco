@@ -650,7 +650,8 @@ static bool waitonDescription(juice_agent *agent,int allindex,std::string_view c
             LOGGERICE("getdescription failure %s %d: %s returns code=%d\n",commonLabel.data(),side,sdpdata.data(),code); 
             sleep(20);
             }
-        if((time(nullptr)-getConnectTime(allindex))>maxconnectionunused) {
+        const auto lastfailedtime=getConnectTime(allindex);
+        if(lastfailedtime&&(time(nullptr)-lastfailedtime)>maxconnectionunused) {
             backup->deactivateHost(allindex,true);
             return false;
             }
@@ -690,7 +691,8 @@ static  bool putDescription(int allindex,juice_agent *agent,std::string_view com
                 sleep(20);
                 }
 
-        if((time(nullptr)-getConnectTime(allindex))>maxconnectionunused) {
+        const auto lastfailedtime=getConnectTime(allindex);
+        if(lastfailedtime&&(time(nullptr)-lastfailedtime)>maxconnectionunused) {
             backup->deactivateHost(allindex,true);
             return false;
             }

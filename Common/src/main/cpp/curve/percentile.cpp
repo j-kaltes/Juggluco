@@ -566,7 +566,7 @@ static struct persgegs *matchedminutes( std::vector<GlucoseDataType<GlucoseItera
         prevsaidid=-1;
         for(;it<=last;it++) {
             if(!it->valid()) {
-                LOGAR("matchedminutes invalid");
+                LOGGER("matchedminutes invalid %d id=%d time=%u\n",it-firstin,it->getid(),it->gettime());
                 continue;
                 }
             const int saidid=it->getid();
@@ -689,7 +689,6 @@ template<>  std::pair<uint32_t,uint32_t> percStartEnd<Glucose>(uint32_t endt,int
 
 #include "net/watchserver/Getopts.hpp"
 #include "net/watchserver/watchserver.hpp"
-#include "CircularArray.hpp"
 #include "secs.h"
 
 constexpr float devidewith=3;
@@ -1085,6 +1084,9 @@ void startsummarythread() {
 void stopsummarythread() {
     }
 
+#ifdef CATCHGRAPH
+
+#include "CircularArray.hpp"
 
 struct PercentileGraph {
         Getopts opts; 
@@ -1140,12 +1142,13 @@ PercentileGraph *get(Getopts &opt,bool absolute) {
 };
 extern PersImages persimages;
 PersImages persimages;
+#endif
 extern void mktypeheader(char *outstart,char *outiter,const bool headonly,recdata *outdata,std::string_view type,std::string_view origin);
 
 extern bool givesummarygraph(Getopts &opts,std::string_view origin,recdata *outdata);
-static std::vector<Getopts> newopts;
 
     /*
+static std::vector<Getopts> newopts;
 bool hassummary(Getopts &opts) {
     return false;
     }
@@ -1168,7 +1171,8 @@ bool hassummary(Getopts &opts) {
         }
 */
 //static bool givepercentiles(Getopts &opts,recdata *outdata);
-
+constexpr const int vgnRTflags=0;
+//constexpr const int vgnRTflags=NVG_ANTIALIAS;
 template <typename DT>
 static  char * givepercentiles(Getopts &opts,uint32_t start, uint32_t endt,recdata *outdata,std::string_view origin) {
 #ifndef NOLOG
@@ -1217,7 +1221,7 @@ static  char * givepercentiles(Getopts &opts,uint32_t start, uint32_t endt,recda
     LOGGER("multiply=%f\n",multiply);
     //perscurve.setfontsize(38.5f*multiply,44.0f*multiply,2.8f*multiply,308.0f*multiply); 
     perscurve.setfontsize(38.5*multiply,44.0*multiply,2.8*multiply,250.0*multiply);
-    auto vg = nvgCreateRT(0, width, height);
+    auto vg = nvgCreateRT(vgnRTflags, width, height);
     destruct _{[vg]{nvgDeleteRT(vg);}};
     perscurve.initfont(vg);
 
@@ -1225,11 +1229,14 @@ static  char * givepercentiles(Getopts &opts,uint32_t start, uint32_t endt,recda
 
     perscurve.startstepNVG(vg,width,height);
 
+    LOGAR("givepercentiles: before showpercentiles");
     percptr->showpercentiles(vg,perscurve); 
     LOGAR("givepercentiles: after showpercentiles");
     delete percptr;
     nvgEndFrame(vg);
+    LOGAR("givepercentiles: before nvgReadPixelsRT");
     unsigned char *rgba = nvgReadPixelsRT(vg);
+    LOGAR("givepercentiles: after nvgReadPixelsRT");
     constexpr const int startpos=152;
     int len;
     char *imagestart = reinterpret_cast<char *>(stbi_write_png_to_mem(startpos,rgba, width*4, width, height, 4, &len));
@@ -1237,6 +1244,7 @@ static  char * givepercentiles(Getopts &opts,uint32_t start, uint32_t endt,recda
         LOGAR("givepercentiles: no image");
         return nullptr;
         }
+    LOGAR("givepercentiles: after stbi_write_png_to_mem");
     delete[] outdata->allbuf;
     outdata->allbuf=imagestart-startpos;
     char *imageend=imagestart+len;
@@ -1260,8 +1268,10 @@ bool givesummarygraph(Getopts &opts,std::string_view origin,recdata *outdata) {
         }
 //   LOGGER("opts.end=%u endt=%d diff=%d
    opts.start=startt;
-   const bool absolute=(opts.end-endt)>(10*60);
    opts.end=endt;
+
+#ifdef CATCHGRAPH
+   const bool absolute=(opts.end-endt)>(10*60);
     if(PercentileGraph *hit=persimages.get(opts,absolute)) {
         const auto &rec=hit->image;
         LOGGER("persimages.get %p\n", rec.allbuf);
@@ -1270,13 +1280,16 @@ bool givesummarygraph(Getopts &opts,std::string_view origin,recdata *outdata) {
         LOGGER("givesummarygraph: found result opts.start=%u opts.end=%u\n",opts.start,opts.end);
         return true;
         }
+#endif
     if(char *startimage=
 (history?givepercentiles<HistoryIterator>:givepercentiles<const ScanData *>)(opts,startt,endt,outdata,origin)) {
+#ifdef CATCHGRAPH
           LOGGER("persimages.emplace_back %p\n", outdata->allbuf);
               {
               const std::lock_guard<std::mutex> lock(persimages.mutex);
               persimages.emplace_back(opts,*outdata,startimage);
               }
+#endif
           outdata->allbuf=nullptr;
           return true;
           }
@@ -1317,8 +1330,8 @@ std::span<char> getStatImage(int startpos,Getopts &opts) {
     const int winHeight=opts.height?opts.height:256;
     const int winWidth=opts.width?opts.width:768;
     const double mult=winHeight/512.0;
-    LOGGER("getStatImage %d %d days=%d width=%f height=%f mult=%f\n",start,endt,days,winWidth,winHeight,mult);
-    auto vg = nvgCreateRT(0, winWidth, winHeight);
+    LOGGER("getStatImage %d %d days=%d width=%d height=%d mult=%f\n",start,endt,days,winWidth,winHeight,mult);
+    auto vg = nvgCreateRT(vgnRTflags, winWidth, winHeight);
     destruct _{[vg]{nvgDeleteRT(vg);}};
     statimage.dheight=winHeight;
     statimage.dwidth=winWidth;
@@ -1348,7 +1361,7 @@ static NVGcontext* getfilevg(JCurve &curveimage,int width,int height) {
     double multiply=height/800.0;
     LOGGER("multiply=%f\n",multiply);
 //constexpr   int winHeight = 1080/devidewith;
-    auto vg = nvgCreateRT(0, width, height);
+    auto vg = nvgCreateRT(vgnRTflags, width, height);
     curveimage.dheight=height;
     curveimage.dwidth=width;
 //    curveimage.setfontsize(38.5f*multiply,44.0f*multiply,2.8f*multiply,308.0f*multiply);
@@ -1408,6 +1421,10 @@ std::span<char> getCurveImage(int startpos,Getopts &opts) {
     curveimage.ghigh=curveimage.userunit2mgL(opts.ghigh);
     LOGGER("getCurveImage start=%u end=%u width=%d height=%d calibratedmode=%d calibratedhistorymode=%d\n", startsecs, endsecs,width,height,opts.calibratedmode,opts.calibratedhistorymode);
     NVGcontext* vg=getfilevg(curveimage,width,height);
+
+//    curveimage.historyStrokeWidth*=1.2;
+ //   curveimage.pollCurveStrokeWidth*=1.2;
+    curveimage.pointRadius*=1.2;
     destruct _{[vg]{nvgDeleteRT(vg);}};
     curveimage.starttime=startsecs; 
     curveimage.duration=endsecs-startsecs;

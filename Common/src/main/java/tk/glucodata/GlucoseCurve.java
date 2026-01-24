@@ -31,6 +31,8 @@ import android.text.InputType;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.GestureDetector;
+import android.view.InputDevice;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.SurfaceHolder;
@@ -584,9 +586,16 @@ void startlibrelink(String lang) {
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
 //          {if(doLog) {Log.i(LOG_ID,"onScroll dX="+distanceX+" dY="+distanceY);};};
         if(down) {
-            if((render.stepresult&STEPBACK)==0)
-                if(Natives.translate(distanceX, distanceY, e1.getRawY(), e2.getRawY())!=0)
-                    requestRender();
+            if((render.stepresult&STEPBACK)==0)  {
+                if(e1.isFromSource(InputDevice.SOURCE_MOUSE) && e1.isButtonPressed(MotionEvent.BUTTON_PRIMARY) && (e1.getMetaState() & KeyEvent.META_CTRL_ON)==KeyEvent.META_CTRL_ON){
+                   if(Natives.mouseScale(distanceX,e1.getRawX(), e2.getRawX())!=0)
+                        requestRender();
+                   }
+                else {
+                    if(Natives.translate(distanceX, distanceY, e1.getRawY(), e2.getRawY())!=0)
+                        requestRender();
+                        }
+                    }
             return true;
             }
         return false;

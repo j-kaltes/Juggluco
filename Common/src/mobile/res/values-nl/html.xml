@@ -163,7 +163,7 @@ De Juggluco op de emulator ontvangt de gegevens via een
 Kloon-verbinding van een Android-telefoon die op de sensor is
 aangesloten. Knijpbewegingen (twee vingers naar of van elkaar
 bewegen) kunnen worden gesimuleerd door een toets in te drukken
-(Control in Genymotion) terwijl de muis wordt bewogen.</p>
+(Control in Genymotion) terwijl de muis wordt bewogen. Onder Linux kun je ook <a href="https://docs.waydro.id">Waydroid</a> gebruiken.</p>
 ]]>
 </string>
 <string name="addconnection" >

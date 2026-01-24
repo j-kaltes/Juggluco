@@ -86,6 +86,7 @@ public static native void startsensors( );
      public static native void nextday(int day);
 //       public static native void savestate();
     public static native int translate(float dx,float dy,float yold,float y);
+    public static native int mouseScale(float dx,float xold, float x);
     public static native void flingX(float vol);
     public static native void xscale(float scalex, float midx);
     public static native boolean isbutton(float x, float y);
