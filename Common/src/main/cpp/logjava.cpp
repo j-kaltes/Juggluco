@@ -135,7 +135,7 @@ static bool copyfile(const char *infile,int out) {
    auto outlen= sendfile(out, in, nullptr,len);
     bool suc=outlen==len;
    if(!suc)  {
-       flerror("sendfile(%d,%d (%s) ,null,%lld)=%zd",out,in,infile,len,outlen);
+       flerror("sendfile(%d,%d (%s) ,null,%ld)=%zd",out,in,infile,len,outlen);
        }
     return suc; 
 #else

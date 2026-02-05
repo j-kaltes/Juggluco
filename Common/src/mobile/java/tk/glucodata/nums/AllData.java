@@ -217,7 +217,7 @@ void clearsyncgegs() {
 
 private void setSendlast(int base) {
     long ptr=numio.numptrs[base];
-	int last=Natives.getlastNum(ptr); 
+    int last=Natives.getlastNum(ptr); 
     int back=Math.max(0,last-20);
     {if(doLog) {Log.i(LOG_ID,base+" setSendlast last="+last+" back="+back);};};
     Natives.setchangedNum(ptr,back);
@@ -322,149 +322,154 @@ public void onMessageReceived(IQDevice device, IQApp app, List<Object> message, 
    return;
     }
 
-    for (Object o : message) {
-   if (!(o instanceof List<?>)) {
-       Log.e(LOG_ID,"onMessageReceived  no instance of List<?>: " + o.getClass().getName());
-       continue;
-   }
-   receivedmessage=System.currentTimeMillis();
+   for (Object o : message) {
+       if(!(o instanceof List<?>)) {
+           Log.e(LOG_ID,"onMessageReceived  no instance of List<?>: " + o.getClass().getName());
+           continue;
+           }
+       receivedmessage=System.currentTimeMillis();
 
-    List<?> li = (List<?>) o;
-   int kind=(Integer) li.get(0);
-  log("onMessageReceived " + kind);
-    switch (li.size()) {
-       case 1:
-       case 2:
-           switch(kind) {
-              case GOTSTOPALARM:
-              case COLORBLACK:break;
-              case RECEIVEDPRECISION:
-                Natives.setshouldsendlabels(false);
-                break;
-              case DIDSETENDNUM:break;
-              case GOTGLUCOSE:gotgotglucose=true;break;
-              case RECEIVEDCUTS: Natives.setsendcuts(false);break;
-/*              case RECEIVEDUNITS: 
-                 {if(doLog) {Log.i(LOG_ID,"RECEIVEDUNITS");};};
-                 setSending(false);
-                 sync();
-                 return; */
-    //           case RECEIVEDLABELS:Natives.havesendlabels();
-              case START: 
-                 setSending(false);
-                 if(li.size()==1||((Boolean)li.get(1))==false) {
-                     if(startglucose())
-                         return;
-                       }
-                 else {
-                    givebase0nums();
-                    return;
-                    }
-                 break;
-              case STOP: stopglucose();break;
-              case STRING: infostr = (String) li.get(1); break;
-              case SENDERROR:senderror((Integer) li.get(1));break;
-              case STOPALARM: Notify.stopalarmnotsend(false);break;
-//              case ASKLOWEST: givebase0nums();break;
-              };
+       List<?> li = (List<?>) o;
+       var firstel= li.get(0);
+       if(!(firstel instanceof Integer)) {
+           Log.i(LOG_ID,"onMessageReceived head list is "+firstel.getClass().getName()+" expected Integer");
+           continue;
+           }
+       int kind=(Integer) firstel;
+       log("onMessageReceived " + kind);
+        switch (li.size()) {
+           case 1:
+           case 2:
+               switch(kind) {
+                  case GOTSTOPALARM:
+                  case COLORBLACK:break;
+                  case RECEIVEDPRECISION:
+                    Natives.setshouldsendlabels(false);
+                    break;
+                  case DIDSETENDNUM:break;
+                  case GOTGLUCOSE:gotgotglucose=true;break;
+                  case RECEIVEDCUTS: Natives.setsendcuts(false);break;
+    /*              case RECEIVEDUNITS: 
+                     {if(doLog) {Log.i(LOG_ID,"RECEIVEDUNITS");};};
+                     setSending(false);
+                     sync();
+                     return; */
+        //           case RECEIVEDLABELS:Natives.havesendlabels();
+                  case START: 
+                     setSending(false);
+                     if(li.size()==1||((Boolean)li.get(1))==false) {
+                         if(startglucose())
+                             return;
+                           }
+                     else {
+                        givebase0nums();
+                        return;
+                        }
+                     break;
+                  case STOP: stopglucose();break;
+                  case STRING: infostr = (String) li.get(1); break;
+                  case SENDERROR:senderror((Integer) li.get(1));break;
+                  case STOPALARM: Notify.stopalarmnotsend(false);break;
+    //              case ASKLOWEST: givebase0nums();break;
+                  };
 
-              break;
+                  break;
 
-   case 3: {
-       int base =(Integer) li.get(1);
-      int num=(Integer)li.get(2);
-      switch(kind) {
-    //          case HAVENUMS:    sendmessage(Arrays.asList(NUMS, base,getlastnum(base))); break;
-          case SETENDNUM:{
-             numio.setlastnum(base,num);
-             };break;
-          case DELETE: {
-             log("DELETE "+base+" "+num);
-             numio.delete(base,num);
-             Applic.app.redraw();
-             realsendmessage(Arrays.asList(DELETED,base, num)); 
-             return;
-             }
-          case NOMORENUMS: {
-             int last=(Integer)li.get(2);
-             log("NOMORENUMS "+base+ " "+last);
-             numio.updated(base,last);
-             Applic.app.redraw();
-
-             }
-             ;break;
-          };
-      };break;
-   case 4: {
-//   Communications.transmit([GOTNUMS,base,begin,end],
-       int base=(Integer)li.get(1);
-       int begin = (Integer) li.get(2), end = (Integer) li.get(3);
-       switch (kind) {
-          case DELETED: 
-              log("DELETED "+base+" "+begin+"-"+end); 
-              break;
-          case GOTNUMS: {
-              if(!backchanged[base])
-                 Natives.setchangedNumLater(numio.numptrs[base],end);
-              final var sgoal=sendgoal[base];
-              log("GOTNUMS "+base+ " "+begin+"-"+end+" sendgoal="+sgoal);
-              if(sgoal > end) {
-                 putnums(base,end, sgoal);
+       case 3: {
+           int base =(Integer) li.get(1);
+          int num=(Integer)li.get(2);
+          switch(kind) {
+        //          case HAVENUMS:    sendmessage(Arrays.asList(NUMS, base,getlastnum(base))); break;
+              case SETENDNUM:{
+                 numio.setlastnum(base,num);
+                 };break;
+              case DELETE: {
+                 log("DELETE "+base+" "+num);
+                 numio.delete(base,num);
+                 Applic.app.redraw();
+                 realsendmessage(Arrays.asList(DELETED,base, num)); 
                  return;
                  }
-              else {
-                 sendgoal[base]=0;
-                 if(base==0) {
-                    if(Natives.shouldsendlabels())  {
-                       setSending(false);
-                       sendlabels();
-                       return;
-                       }
-                    }
+              case NOMORENUMS: {
+                 int last=(Integer)li.get(2);
+                 log("NOMORENUMS "+base+ " "+last);
+                 numio.updated(base,last);
+                 Applic.app.redraw();
+
                  }
-          }
-          ;
-          break;
-       }
-       }; break;
+                 ;break;
+              };
+          };break;
+       case 4: {
+    //   Communications.transmit([GOTNUMS,base,begin,end],
+           int base=(Integer)li.get(1);
+           int begin = (Integer) li.get(2), end = (Integer) li.get(3);
+           switch (kind) {
+              case DELETED: 
+                  log("DELETED "+base+" "+begin+"-"+end); 
+                  break;
+              case GOTNUMS: {
+                  if(!backchanged[base])
+                     Natives.setchangedNumLater(numio.numptrs[base],end);
+                  final var sgoal=sendgoal[base];
+                  log("GOTNUMS "+base+ " "+begin+"-"+end+" sendgoal="+sgoal);
+                  if(sgoal > end) {
+                     putnums(base,end, sgoal);
+                     return;
+                     }
+                  else {
+                     sendgoal[base]=0;
+                     if(base==0) {
+                        if(Natives.shouldsendlabels())  {
+                           setSending(false);
+                           sendlabels();
+                           return;
+                           }
+                        }
+                     }
+              }
+              ;
+              break;
+           }
+           }; break;
 
-   case 5: 
-       int type = kind;
-       int base= (Integer) li.get(1);
-       int size = (Integer) li.get(2);
-       int  end= (Integer) li.get(3);
-   switch (type) {
-       case HAVENUMS:    
-          log("HAVENUMS "+ base+" "+size+" "+end);
-          if((end- size)>numio.getlastnum(base)) {
-             realgetnums(base) ;
-             return;
-             }
+       case 5: 
+           int type = kind;
+           int base= (Integer) li.get(1);
+           int size = (Integer) li.get(2);
+           int  end= (Integer) li.get(3);
+       switch (type) {
+           case HAVENUMS:    
+              log("HAVENUMS "+ base+" "+size+" "+end);
+              if((end- size)>numio.getlastnum(base)) {
+                 realgetnums(base) ;
+                 return;
+                 }
 
-       case NUMS: {
-          log("NUMS "+ base+" "+size+" "+end);
-          List<Object> gegs = (List<Object>) li.get(4);
-          log("mess: "+gegs);
-           if (size != gegs.size()) {
-             errorm("input said " + size + " got " + gegs.size());
-             continue;
-             }
-         int datiter = end - gegs.size(),start=datiter;
-          ListIterator<List<Number>> iter = ((List<List<Number>>) li.get(4)).listIterator();
-          while (iter.hasNext())
-             numio.writeAr(base,datiter++, iter.next());
-          
-          numio.updatedstartend(base,start,datiter);
-          realsendmessage(Arrays.asList(MORENUMS,base, datiter));
-          return;
-          }
-      } ; break;
-   default:
-       errorm("Don't know messages of size="+  li.size());
-       break;
-    }
-    ;
-    }
+           case NUMS: {
+              log("NUMS "+ base+" "+size+" "+end);
+              List<Object> gegs = (List<Object>) li.get(4);
+              log("mess: "+gegs);
+               if (size != gegs.size()) {
+                 errorm("input said " + size + " got " + gegs.size());
+                 continue;
+                 }
+             int datiter = end - gegs.size(),start=datiter;
+              ListIterator<List<Number>> iter = ((List<List<Number>>) li.get(4)).listIterator();
+              while (iter.hasNext())
+                 numio.writeAr(base,datiter++, iter.next());
+              
+              numio.updatedstartend(base,start,datiter);
+              realsendmessage(Arrays.asList(MORENUMS,base, datiter));
+              return;
+              }
+          } ; break;
+       default:
+           errorm("Don't know messages of size="+  li.size());
+           break;
+        }
+        ;
+        }
    nextmessage();
 }
 

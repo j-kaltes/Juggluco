@@ -23,29 +23,34 @@ void (*ERR_print_errors_cbptr)(int (*cb)(const char *str, size_t len, void *u), 
 extern std::string_view globalbasedir;
 
 #ifdef __ANDROID_API__
-	#if defined(__aarch64__) || defined(__x86_64__) 
-	const char *systembase[]={"/system/lib64"};
-	#else
-	const char *systembase[]={"/system/lib"};
+	#if defined(__aarch64__)
+	std::string_view systembase[]={"","/system/lib64","/system/lib64/arm64"};
+//	std::string_view systembase[]={"/system/lib64"};
+    #elif defined(__x86_64__) 
+	std::string_view systembase[]={"","/system/lib64"};
+	#elif defined(__arm__)
+	std::string_view systembase[]={"","/system/lib","/system/lib/arm"};
+    #else
+	std::string_view systembase[]={"","/system/lib"};
 	#endif
 #else
 	#if defined(__x86_64__) 
-	const char *systembase[]={"/usr/lib/x86_64-linux-gnu","/usr/lib64","/usr/lib"};
+	std::string_view systembase[]={"","/usr/lib/x86_64-linux-gnu","/usr/lib64","/usr/lib"};
 
 	#elif defined(__i386__)
-	const char *systembase[]={"/usr/lib/i386-linux-gnu","/usr/lib32","/usr/lib"};
+	std::string_view systembase[]={"","/usr/lib/i386-linux-gnu","/usr/lib32","/usr/lib"};
 	#elif defined(__aarch64__) 
-    const char *systembase[]={"/usr/lib/aarch64-linux-gnu","/usr/lib64","/usr/lib"};
+    std::string_view systembase[]={"","/usr/lib/aarch64-linux-gnu","/usr/lib64","/usr/lib"};
 	#elif defined(__arm__)
-	const char *systembase[]={"/usr/lib/arm-linux-gnueabihf","/usr/lib32","/usr/lib"};
+	std::string_view systembase[]={"","/usr/lib/arm-linux-gnueabihf","/usr/lib32","/usr/lib"};
     #elif defined(__powerpc)|| defined(__powerpc__)|| defined(__powerpc64__)|| defined(__POWERPC__)|| defined(__ppc__)|| defined(__ppc64__)|| defined(__PPC__)|| defined(__PPC64__)|| defined(_ARCH_PPC)|| defined(_ARCH_PPC64)
-    const char *systembase[]={"/usr/lib/powerpc64le-linux-gnu","/usr/lib64","/usr/lib"};
+    std::string_view systembase[]={"","/usr/lib/powerpc64le-linux-gnu","/usr/lib64","/usr/lib"};
     #elif defined(__hppa__)
-    const char *systembase[]={"/usr/lib/riscv64-linux-gnu","/usr/lib64","/usr/lib"};
+    std::string_view systembase[]={"","/usr/lib/riscv64-linux-gnu","/usr/lib64","/usr/lib"};
     #elif defined(__s390x__) || defined(__zarch__) ||defined(__s390__)
-    const char *systembase[]={"/usr/lib/s390x-linux-gnu","/usr/lib64","/usr/lib"};
+    std::string_view systembase[]={"","/usr/lib/s390x-linux-gnu","/usr/lib64","/usr/lib"};
     #else
-	const char *systembase[]={"/usr/lib","/usr/lib64","/usr/lib32"};
+	std::string_view systembase[]={"","/usr/lib","/usr/lib64","/usr/lib32"};
 	#endif
 #endif
 
@@ -56,7 +61,8 @@ static constexpr const char libssl[]="libssl.so"      ;
 #ifdef JUGGLUCO_APP 
         static void rmlib(std::string_view filename) {
            pathconcat localname(globalbasedir,filename);
-           const char *name=localname.data();
+           std::string_view nameview=localname.data();
+           const char *name=nameview.data();
            if(unlink(name)) {
             flerror("unlink %s",name);
             }
@@ -89,10 +95,11 @@ char errorm[maxerr];
 int errpos=0;
 
 #endif
-for(const char *base:systembase) {
+for(auto base:systembase) {
 	pathconcat sysname(base,filename);
-	if(void *handle=DLOPEN(sysname.data(),flags)) {
-		LOGGER("dlopen %s\n", sysname.data());
+    const char * path=(base.size()?sysname.data():filename.data());
+	if(void *handle=DLOPEN(path,flags)) {
+		LOGGER("dlopen %s\n", path);
 		return handle;
 		}
 #if !defined(__ANDROID_API__) || !defined(NOLOG)
@@ -135,20 +142,24 @@ else {
 #endif	
 
 #ifdef __ANDROID_API__
-pathconcat sysname(systembase[0],filename);
-Readall file(sysname.data());
-if(!file) {
-	flerror("%s\n",sysname.data());
-	return nullptr;
-	}
-if(!writeall(localname.data(),file.data(),file.size())) {
-	return nullptr;
-	}
-
-return dlopen(localname.data(),flags);
-#else
-return nullptr;
+bool success=false;
+for(auto base:systembase) {
+	pathconcat sysname(base,filename);
+    const char * path=(base[0]?sysname.data():filename.data());
+    Readall file(path);
+    if(!file) {
+        flerror("%s\n",sysname.data());
+        continue;
+        }
+    if(!writeall(localname.data(),file.data(),file.size())) {
+        return nullptr;
+        }
+     success=true;
+     }
+if(success)
+    return dlopen(localname.data(),flags);
 #endif
+return nullptr;
 
 }
 

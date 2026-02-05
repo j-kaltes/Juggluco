@@ -243,10 +243,18 @@ jlong airProcessData(airstream *sdata,const jbyte *indata,int arlen,jlong *timer
                 mtime=nowsec;
             }
        const int idnow=air->sequenceNumber;
+#ifdef AIR_STACK
        air_input input{.data={.sequence_number=static_cast<uint16_t>(idnow),.measurement_time=mtime,.glucose_array=air->glucose_array,.temperature=air->temperature/100.0}};
-       showm(&input.data);
        air1_opcal4_output_t output{};
        air1_opcal4_debug_t debug{};
+#else
+     air_input &input=sdata->input;
+        input={.data={.sequence_number=static_cast<uint16_t>(idnow),.measurement_time=mtime,.glucose_array=air->glucose_array,.temperature=air->temperature/100.0}};
+       air1_opcal4_output_t &output=sdata->output; sdata->output={};
+       air1_opcal4_debug_t &debug=sdata->debug; sdata->debug={};
+#endif
+       showm(&input.data);
+
        DeviceInfo3Obj *deviceInfo=sdata->sensorInfo.data();
 
        unsigned char res=air1_opcal4_algorithm(reinterpret_cast<air1_opcal4_device_info_t *>(deviceInfo), &input.cgm_input, &input.empty, sdata->generated.data(), &output, &debug);

@@ -116,6 +116,7 @@ public static   void basehelp(int res,Activity act,Consumer<ViewGroup> okproc) {
          helpview.setLinksClickable(true);
        helpscroll.setVerticalScrollBarEnabled(Applic.scrollbar);
       helpscroll.setScrollbarFadingEnabled(true);
+        helpscroll.setFillViewport(true);
        
        Button ok=new Button(act);
        ViewGroup helplayout;
@@ -197,6 +198,7 @@ public static   void help(String text,Activity act,Consumer<ViewGroup>  okproc,P
          whelpview=new WeakReference<TextView>(helpview);
          helpview.setMovementMethod(LinkMovementMethod.getInstance());
 
+        helpscroll.setFillViewport(true);
      //helpview.setMovementMethod(null);
          helpview.setLinksClickable(true);
          helpscroll.setVerticalScrollBarEnabled(Applic.scrollbar);
@@ -227,23 +229,28 @@ public static   void help(String text,Activity act,Consumer<ViewGroup>  okproc,P
          Layout.getMargins(ok).topMargin=systembarTop;
            int pad=(int)(GlucoseCurve.getDensity()*7.0);
            helpview.setPadding(pad,pad+systembarTop,pad,pad+systembarBottom);
-           helpview.setBackgroundResource(R.drawable.helpbackground);
+         helpview.setBackgroundResource(R.drawable.helpbackground);
 
-           var marg=Layout.getMargins(helpview);
+//           var marg=Layout.getMargins(helpview);
            ///marg.bottomMargin=(int)(GlucoseCurve.getheight()*.1f);
-          // helpscroll.setFillViewport(true);
-         helpscroll.addView(helpview,marg);
+//          helpscroll.setFillViewport(true);
+         helpscroll.addView(helpview, new ViewGroup.LayoutParams( MATCH_PARENT,MATCH_PARENT));
+         //helpscroll.setLayoutParams( new ViewGroup.LayoutParams( MATCH_PARENT,MATCH_PARENT));
+         helplayout=helpscroll;
+/*
          helplayout=new Layout(act, (l,w,h)-> {
 //             var af=MainActivity.systembarTop*3/4;
  //              l.setY(af);
              return place.place(l,w,h );
-            },new View[]{helpscroll});//,new View[]{ok});
+            },new View[]{helpscroll});//,new View[]{ok}); */
  //         helplayout.setBackgroundResource(R.drawable.helpbackground);
+//           helplayout.setBackgroundColor(backgroundcolor);
+
         params.setMargins(
             MainActivity.systembarLeft,
-            0,
+        0,//    MainActivity.systembarTop*3/4,
             MainActivity.systembarRight,
-          0 
+         0//  MainActivity.systembarBottom*3/4
         );
          helplayout.setLayoutParams(params);
         helplayout.requestLayout();
@@ -259,15 +266,10 @@ public static   void help(String text,Activity act,Consumer<ViewGroup>  okproc,P
            if(!isWearable) {
                ok.setVisibility(VISIBLE);
                ok.bringToFront();
-                ViewGroup.MarginLayoutParams marg = (ViewGroup.MarginLayoutParams) helplayout.getLayoutParams();
+               ViewGroup.MarginLayoutParams marg = (ViewGroup.MarginLayoutParams) helplayout.getLayoutParams();
                  marg.width=params.width; 
                  marg.height=params.height; 
-                marg.setMargins(
-                    MainActivity.systembarLeft,
-                    0,
-                    MainActivity.systembarRight,
-                   0//MainActivity.systembarBottom*3/4
-                );
+                marg.setMargins( MainActivity.systembarLeft, 0, MainActivity.systembarRight, 0 );
                  helplayout.setLayoutParams(marg);
                 helplayout.requestLayout();
                 }
@@ -319,7 +321,7 @@ public static   void help(String text,Activity act,Consumer<ViewGroup>  okproc,P
     public static   void help(String text,Activity act,Consumer<ViewGroup>  okproc) {
      help( text, act, okproc,(v,w,h)-> {
          return new int[] {w,h};
-        }, new ViewGroup.MarginLayoutParams(MATCH_PARENT, WRAP_CONTENT));
+        }, new ViewGroup.MarginLayoutParams(MATCH_PARENT, MATCH_PARENT));
     }
 public static   void help(String text,Activity act) {
     help(text,act,l->{});

@@ -62,15 +62,15 @@
 #define REALPATH 1
 
 
-#if defined(NEWUS) 
-	#ifdef ALWAYSPATH 
-	#define NEEDSPATH 1
-	#endif
-#endif
-
-#if defined(LIBRE3)
-#define NEEDSPATH 1
-#endif
+//#if defined(NEWUS) 
+//	#ifdef ALWAYSPATH 
+//	#define NEEDSPATH 1
+//	#endif
+//#endif
+//
+//#if defined(LIBRE3)
+//#define NEEDSPATH 1
+//#endif
 //#ifndef NOLOG
 //#define SIHISTORY 1
 //#endif

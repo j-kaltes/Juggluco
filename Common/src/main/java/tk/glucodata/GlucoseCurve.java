@@ -1253,7 +1253,7 @@ if(!isWearable) {
     String about=activity.getString(R.string.about)+"<p>Version Code: "+ BuildConfig.VERSION_CODE+"<br>Version Name: "+ 
         BuildConfig.VERSION_NAME +"<br>"+Natives.getCPUarch()+"<br>Build time: "+ BuildConfig.BUILD_TIME +"</p>";
     
-    help.help(about, activity);
+    help.help(about, activity,l->{});
     }
     }
 void removeviews() {

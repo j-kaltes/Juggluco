@@ -1555,7 +1555,8 @@ void     processglucosevalue(int sendindex,int newstart) {
                          senso->finished=0;
                          backup->resensordata(sendindex);
                          }
-                     settings->data()->nobluetooth=true;
+//                     settings->data()->nobluetooth=true;
+                     settings->setusebluetooth(false);
                      float rate=poll->ch;
 extern void telldoglucose(const char *name,int32_t mgdl,float glu,float rate,int alarm,int64_t mmsec,bool wasnoblue,int64_t startmsec,intptr_t sensorptr,int sensorgen);
 
@@ -1573,7 +1574,7 @@ extern                void wakewithcurrent();
                  }
              }
          else {
-             settings->data()->nobluetooth=true;
+             settings->setusebluetooth(false);
              LOGGER("processglucosevalue no sensor %d\n",sendindex);
 #ifdef WEAROS
 //              static int wassensor=(settings->setranges(3*180,12*180,39*18,10*180),-1);

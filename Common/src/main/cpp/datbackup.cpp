@@ -981,7 +981,7 @@ int Backup::changeICEhost(const char *ICElabel,int index,const bool sendnums,con
         thehost.newconnection=true;
         }
     deupdated(); 
-    closesocksone(index,getupdatedata()->allhosts+index);
+    closesocksone(index);
     if(startthreads) {
         if(newthread)
             startthread(index,tohost);

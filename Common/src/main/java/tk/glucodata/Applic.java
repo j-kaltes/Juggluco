@@ -340,7 +340,7 @@ public static void updateservice(Context context,boolean usebluetooth) {
         else
             keeprunning.stop();
         }
-private static void dontusebluetooth() {
+static void dontusebluetooth() {
     {if(doLog) {Log.i(LOG_ID,"dontusebluetooth()");};};
     SensorBluetooth.destructor();
     if(Natives.backuphostNr( )<=0) {
@@ -906,6 +906,7 @@ static public void startMain() {
 @Keep
 static boolean switchbluetooth(String name,byte[] netinfo,boolean watchBluetooth) {
 if(!isWearable) {
+    Log.i(LOG_ID,"switchbluetooth "+name+" watchBluetooth="+watchBluetooth);
     if(netinfo!=null) {
         var sender=tk.glucodata.MessageSender.getMessageSender();
         if(sender!=null) {

@@ -130,7 +130,7 @@ return sprintf(buf,entry, factime,num,stamp, value);
 
 
 #ifdef NDEBUG
-#define EXTRATIME 5
+#define EXTRATIME 15
 #else
 #define EXTRATIME 0
 #endif

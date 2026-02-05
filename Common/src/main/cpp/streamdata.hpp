@@ -32,6 +32,11 @@ struct airstream:streamdata {
         int tmptot=0;
         int ininfo=0;
         int errors=0;
+#ifndef AIR_STACK
+       air_input input;
+       air1_opcal4_output_t output;
+       air1_opcal4_debug_t debug;
+#endif
         airstream(int sensindex,SensorGlucoseData *sens): streamdata(0x30, sensindex,sens),
                                 sensorInfo(hist->sensordir,sensorInfoStr,1,[](DeviceInfo3Obj *gegs){ *gegs={}; }),
                                 generated(hist->sensordir,generatedStr,1)

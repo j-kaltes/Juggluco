@@ -985,7 +985,7 @@ false             false          0
     setConnectTime(index,0);
     deupdated(); 
 
-    closesocksone(index,getupdatedata()->allhosts+index);
+    closesocksone(index);
     if(startthreads) {
         if(newthread)
             startthread(index,tohost);
@@ -1129,7 +1129,7 @@ void endAllConnections() {
             }
         }
      }
-void closesocksone(int allindex,passhost_t *host) {
+void closesocksone(int allindex) {
     LOGGER("closesocksone %d\n",allindex);
     if(Connect *connect=connections[allindex]) {
         connect->shutdownReceiver();
@@ -1349,12 +1349,12 @@ void lockwait(uintptr_t &current,int h) {
     std::unique_lock<std::mutex> lck(con_vars[h]->backupmutex);
     LOGGER("%d after lock\n",h)    ;
     con_vars[h]->dobackup=con_vars[h]->dobackup&~current;
-    LOGGER("%d dobackup=%d\n",h,con_vars[h]->dobackup)    ;
+    LOGGER("%d dobackup=%lu\n",h,con_vars[h]->dobackup)    ;
     con_vars[h]->backupcond.wait(lck, [h] {return backup->con_vars[h]->dobackup; });   
     LOGGER("%d afterwait\n",h)    ;
     current=con_vars[h]->dobackup;
     #ifndef NOLOG
-    LOGGER("%d after current=\n",h)    ;
+    LOGGER("%d after current=%lu\n",h,current)    ;
     int allindex=getupdatedata()->tosend[h].allindex;
     auto *con=connections[allindex];
    LOGGER("%d after connections[%d]=%p eSenderIdent=%d\n",h,allindex,con,con?con->getSenderIdent():-1)    ;

@@ -86,7 +86,7 @@ android {
         //compileSdk 36
         applicationId "tk.glucodata"
 
-         versionName '10.6.4'
+         versionName '10.6.6'
 //    multiDexEnabled true
 
         buildConfigField 'String', 'BUILD_TIME', 'new java.text.SimpleDateFormat("HH:mm:ss dd-MMM-yyyy").format(new java.util.Date(' + System.currentTimeMillis() + 'L))'
@@ -105,7 +105,7 @@ android {
         }
 //    resourceConfigurations += ["en", "nl", "fr","it", "de", "pl", "pt","be","uk"]
     //ndk { abiFilters  'armeabi-v7a' }
-       ndk { abiFilters  'arm64-v8a' }
+      // ndk { abiFilters  'arm64-v8a' }
         signingConfig signingConfigs.alg
     //buildToolsVersion '33.0.0'
     }
@@ -163,8 +163,8 @@ flavorDimensions = ['wearos','libreVersion','SiBionics', 'DexCom','Google']
         libreOld {
     //******  Zet op rollout op 100% ******
             dimension 'libreVersion'
-            versionCode 862 //LIBRE2ONLY
-         //    versionName '10.6.4-no3'
+            versionCode 863 //LIBRE2ONLY
+         //    versionName '10.6.6-no3'
             versionNameSuffix '-no3'
             buildConfigField 'int', 'libreVersion', '2'
             externalNativeBuild.cmake {
@@ -177,7 +177,7 @@ flavorDimensions = ['wearos','libreVersion','SiBionics', 'DexCom','Google']
 //       minSdk 23
             dimension 'libreVersion'
         versionNameSuffix '-li3'
-        versionCode 863 //LIBRE3
+        versionCode 864 //LIBRE3
     //******  Zet op rollout op 100% ******
 
                buildConfigField 'int', 'libreVersion', '3'
@@ -192,7 +192,7 @@ flavorDimensions = ['wearos','libreVersion','SiBionics', 'DexCom','Google']
         si {
       dimension 'SiBionics'
         versionNameSuffix '-si'
-        versionCode 863 
+        versionCode 864 
        buildConfigField 'int', 'SiBionics', '1'
        externalNativeBuild.cmake {
          cppFlags "   -DSIBIONICS=1 "
@@ -201,7 +201,7 @@ flavorDimensions = ['wearos','libreVersion','SiBionics', 'DexCom','Google']
         }
         nosi {
             dimension 'SiBionics'
-         versionCode 862 
+         versionCode 863 
          versionNameSuffix '-nosi'
           buildConfigField 'int', 'SiBionics', '0'
           externalNativeBuild.cmake {
@@ -219,9 +219,9 @@ flavorDimensions = ['wearos','libreVersion','SiBionics', 'DexCom','Google']
         minSdkVersion 26
         buildConfigField 'int', 'minSDK', "$minSdk"
         manifestPlaceholders["minSDK"] = "$minSdk"
-        versionCode 864 //WATCH
+        versionCode 865 //WATCH
     //******  Zet op rollout op 100% ******
-        //versionName '10.6.4-wear'
+        //versionName '10.6.6-wear'
         versionNameSuffix '-wear'
         signingConfig signingConfigs.alg
 
@@ -243,8 +243,8 @@ flavorDimensions = ['wearos','libreVersion','SiBionics', 'DexCom','Google']
 
 //        minSdk 19
             dimension 'wearos'
-        versionCode 864 //WATCH
-        //versionName '10.6.4-small'
+        versionCode 865 //WATCH
+        //versionName '10.6.6-small'
         versionNameSuffix '-small'
         signingConfig signingConfigs.alg
 
@@ -624,7 +624,7 @@ dependencies {
   implementation 'com.android.support:support-annotations:28.0.0'
 
     implementation "androidx.appcompat:appcompat:$APPCOMPAT"
-    implementation 'androidx.activity:activity:1.12.2'
+    implementation 'androidx.activity:activity:1.12.3'
     implementation 'androidx.core:core:1.17.0'
    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2'
@@ -642,7 +642,7 @@ dependencies {
   // implementation 'com.google.android.gms:play-services-wearable:10.2.0' Needed for China? https://developer.android.com/training/wearables/creating-app-china#data-layer
 
 
-    wearImplementation 'androidx.activity:activity-ktx:1.12.2'
+    wearImplementation 'androidx.activity:activity-ktx:1.12.3'
     wearImplementation 'androidx.constraintlayout:constraintlayout:2.2.1'
     wearImplementation 'com.google.android.material:material:1.13.0'
     wearImplementation 'androidx.databinding:viewbinding:9.0.0'

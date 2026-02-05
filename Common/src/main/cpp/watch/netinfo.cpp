@@ -47,6 +47,7 @@ extern bool getactive(int pos) ;
 extern bool getownip(struct sockaddr_in6 *outip);
 static constexpr const uint8_t thisversion=2;
 static uint8_t usedversion=thisversion;
+static bool connectionbusy[maxallhosts]{};
 struct netinfo {
     struct sockaddr_in6 ip;
     bool watchsensor:1;
@@ -274,7 +275,7 @@ static bool hasDirectWatchConnection(const passhost_t *wearhost) {
         return false;
     if constexpr(iswatchapp()) {
            LOGGERTAG("is watch isSender=%d\n",wearhost->isSender());
-            if(wearhost->isSender()&&getsendto(wearhost).sendstream)  {
+           if(wearhost->isSender()&&getsendto(wearhost).sendstream)  {
                 LOGARTAG("watch sender");
                 return true;
                 }
@@ -284,7 +285,7 @@ static bool hasDirectWatchConnection(const passhost_t *wearhost) {
                 }
            }
     else {
-                LOGGERTAG("is no watch isSender=%d\n",wearhost->isSender());
+        LOGGERTAG("is no watch isSender=%d\n",wearhost->isSender());
         if(wearhost->isSender()&&getsendto(wearhost).sendstream) {
             LOGARTAG("watch no sender");
             return false;
@@ -382,6 +383,8 @@ static int getmynetinfo(const char *id,jboolean create,jint watchHasSensor,jbool
         }
     struct updatedata *update=backup->getupdatedata();
     int index=wearhost-update->allhosts;
+   connectionbusy[index]=true;
+   destruct _{[index]{ connectionbusy[index]=false;}};
     info.index=index;
     info.setpass=false;;
     if(usedversion) {
@@ -566,10 +569,13 @@ extern "C" JNIEXPORT jboolean  JNICALL   fromjava(setmynetinfo)(JNIEnv *env, jcl
     if(!host) return false;
    networkpresent=false;
     destruct _niets {[]() { networkpresent=true;}};
-   backup->closeallsocks();
    struct updatedata *update=backup->getupdatedata();
     passhost_t *allhosts=update->allhosts;
    int index=host-allhosts;
+   connectionbusy[index]=true;
+   destruct _{[index]{ connectionbusy[index]=false;}};
+//   std::jthread th{Backup::closesocksone,backup,index};
+   backup->closesocksone(index);
    const char *infolabel=usedversion?info->newlabel:reinterpret_cast<const netinfo *>(info)->label;
    LOGGERTAG("setmynetinfo %s usedversion=%d infolabel=%s galaxy=%d watchsensor=%d\n",id,usedversion,infolabel,galaxy,info->watchsensor);
     host->setname(infolabel);
@@ -595,7 +601,7 @@ extern "C" JNIEXPORT jboolean  JNICALL   fromjava(setmynetinfo)(JNIEnv *env, jcl
                     memcpy(host->pass.data(),info->pass.data(),info->pass.size());
                     LOGARTAG("setpass");
                     backup->setcrypt(host);
-                    backup->closesocksone(index,host);
+                    backup->closesocksone(index);
                     }
                 }
 //             if(info->version>=3) usedversion=4;
@@ -628,7 +634,8 @@ extern "C" JNIEXPORT jboolean  JNICALL   fromjava(setmynetinfo)(JNIEnv *env, jcl
         LOGARTAG("is watch");
     
         if(info->watchsensor) {
-            settings->data()->nobluetooth=false;
+           // settings->data()->nobluetooth=false;
+              settings->setusebluetooth(true);
 //            bool sendnums=false;
             if(!host->isSender()||!getsendto(index).sendstream||getsendto(index).sendnums==info->sendnums) {
 
@@ -655,7 +662,8 @@ extern "C" JNIEXPORT jboolean  JNICALL   fromjava(setmynetinfo)(JNIEnv *env, jcl
                 }
         }
     else {
-        settings->data()->nobluetooth=true;
+//        settings->data()->nobluetooth=true;
+        settings->setusebluetooth(false);
         const bool sendnums=!info->sendnums;
         if(host->isSender()) {
              const updateone &updat=getsendto(host);
@@ -698,7 +706,8 @@ extern "C" JNIEXPORT jboolean  JNICALL   fromjava(setmynetinfo)(JNIEnv *env, jcl
     else { 
         LOGGER("is no watch watchsensor=%d sendstream=%d\n",info->watchsensor,host->isSender()&&getsendto(host).sendstream);
         if(info->watchsensor) {
-            settings->data()->nobluetooth=true;
+          //  settings->data()->nobluetooth=true;
+           settings->setusebluetooth(false);
             if(host->isSender()) {
                 getsendto(host).sendstream=false;
                 getsendto(host).sendnums=!info->sendnums;
@@ -806,11 +815,24 @@ extern "C" JNIEXPORT jint  JNICALL   fromjava(directsensorwatch)(JNIEnv *env, jc
 
     if(passhost_t *host=getwearoshost(false,id,true)) {
         int index=hostindex(host);
+        if(connectionbusy[index]) {
+                LOGGER("directsensorwatch connectionbusy[%d]\n",index);
+                return -1;
+                }
         uint32_t nu=time(nullptr);
         long last=lastuptodate[index];
         if((nu-last)>3*60)
             return -1;
-        return hasDirectWatchConnection(host);
+
+        connectionbusy[index]=true;
+        destruct _{[index]{ connectionbusy[index]=false;}};
+        bool direct=hasDirectWatchConnection(host);
+        /*
+         if(!direct&&settings->data()->nobluetooth) {
+            LOGGER("directsensorwatch index=%d not direct, but not phone so other watch\n",index);
+            return -1;
+            } */
+        return direct;
         }
     return -1;
        }
@@ -907,6 +929,8 @@ void watchBluetoothThread(passhost_t *host,jboolean sensor,jboolean amounts) {
     if(amounts)
         settings->data()->nochangenum=false;
     int index=host- backup->getupdatedata()->allhosts;
+   connectionbusy[index]=true;
+   destruct _{[index]{ connectionbusy[index]=false;}};
     const uint16_t port=host->getport();
     bool sendnums=amounts;
     bool sendstream=sensor;

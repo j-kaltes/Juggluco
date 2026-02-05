@@ -65,6 +65,8 @@ import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
+import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 import static tk.glucodata.Applic.isWearable;
 import static tk.glucodata.Log.doLog;
 import static tk.glucodata.NumberView.avoidSpinnerDropdownFocus;
@@ -834,14 +836,36 @@ private void show(MainActivity act,View view) {
 
   }
 static void start(MainActivity act) {
-       final ArrayList<SuperGattCallback> gatts=SensorBluetooth.mygatts();
-       if(gatts == null || gatts.size() == 0) {
-          if(isWearable)
-              Specific.wearnosensors(act);
-          else
-              MirrorSensors.show(act);
-          return;
-          } 
+       boolean use=Natives.getusebluetooth();
+       ArrayList<SuperGattCallback> gatts=SensorBluetooth.mygatts();
+       if(isNull(gatts) || gatts.isEmpty()) {
+           if(doLog) {
+                 Log.i(LOG_ID,"start no gatts "+( use?"":"no ")+"use Bluetooth");
+                 }
+            do {
+                  if(use)  {
+                        Applic.app.initbluetooth(true,act,true);
+                        gatts=SensorBluetooth.mygatts();
+                        if(nonNull(gatts) && !gatts.isEmpty()) {
+                            break;
+                            }
+
+                        }
+                  if(isWearable)
+                      Specific.wearnosensors(act);
+                  else
+                      MirrorSensors.show(act);
+                  return;
+                }  while(false);
+           } 
+
+         if(doLog) {
+             Log.i(LOG_ID,"start has gatts "+( use?"":"no ")+"use Bluetooth");
+             }
+        if(!use) {
+            Applic.dontusebluetooth();
+            start(act);
+            }
         new bluediag(act,gatts);
         }
 };

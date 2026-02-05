@@ -311,6 +311,7 @@ private void challenge67() {
     arraycopy(rdtData,0,first,0,60);
     arraycopy(rdtData,60,nonce,0,7);
     byte[] decr=Natives.processbar(8,nonce,first);
+    Log.showbytes("challenge67 decr",decr);
     var backr2=copyOfRange(decr,0,16);
     if(!java.util.Arrays.equals(r2,backr2)) {
         {if(doLog) {Log.i(LOG_ID, SerialNumber + ": "+"r2!=backr2");};};
@@ -327,6 +328,7 @@ private void challenge67() {
     var ivEnc=copyOfRange(decr,48,56);
 //    byte[] AuthKey=ECDHCrypto.exportAuthorizationKey();
     byte[] AuthKey=Natives.processbar(9,null,null);
+    Log.showbytes("challenge67 AuthKey",AuthKey);
     //securityContext=new BCrypt(kEnc,ivEnc);
     cryptptr=initcrypt(cryptptr,kEnc,ivEnc);
     Natives.setLibre3kAuth(sensorptr,AuthKey);

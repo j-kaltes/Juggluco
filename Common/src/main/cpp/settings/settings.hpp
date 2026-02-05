@@ -1204,6 +1204,10 @@ Insulin getIOBtype(uint32_t type) const {
     }
 
 void  setIOBtype();
+void setusebluetooth(bool on) {
+        LOGGER("settings->setusebluetooth(%d)\n",on);
+        data()->nobluetooth=!on;
+        }
 };
 
 inline float gconvert(const float mgperL) {

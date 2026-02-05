@@ -399,7 +399,8 @@ extern "C" JNIEXPORT void  JNICALL   fromjava(setnrshortcuts)(JNIEnv *env, jclas
 extern "C" JNIEXPORT void  JNICALL   fromjava(setnodebug)(JNIEnv *env, jclass cl,jboolean val) {
     LOGGER("setnodebug(%d)\n",val);
     settings->setnodebug(val);
-    settings->data()->nobluetooth=false;
+//    settings->data()->nobluetooth=false;
+     settings->setusebluetooth(true);
     }
 
 extern "C" JNIEXPORT void  JNICALL   fromjava(sethaslibrary)(JNIEnv *env, jclass cl,jboolean val) {
@@ -454,14 +455,20 @@ extern "C" JNIEXPORT jboolean  JNICALL   fromjava(gethasgarmin)(JNIEnv *env, jcl
 extern "C" JNIEXPORT void  JNICALL   fromjava(sethasgarmin)(JNIEnv *env, jclass cl,jboolean val) {
     settings->data()->hasgarmin=val;
     }
+
+
 extern "C" JNIEXPORT void  JNICALL   fromjava(setusebluetooth)(JNIEnv *env, jclass cl,jboolean val) {
 //    settings->sensorerror=false;
-    settings->data()->nobluetooth=!val;
+    LOGGER("setusebluetooth(%d)\n",val);
+//    settings->data()->nobluetooth=!val;
+     settings->setusebluetooth(val);
     }
 extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getusebluetooth)(JNIEnv *env, jclass cl) {
     if(!settings||!settings->data())
         return true;
-    return !settings->data()->nobluetooth;
+    jboolean use=!settings->data()->nobluetooth;
+    LOGGER("getusebluetooth()=%d\n",use);
+    return use;
     }    
 extern "C" JNIEXPORT jboolean  JNICALL   fromjava(streamingAllowed)(JNIEnv *env, jclass cl) {
     if(fromjava(getusebluetooth)(env,cl))
@@ -819,7 +826,7 @@ extern "C" JNIEXPORT jstring  JNICALL   fromjava(getlibreemail)(JNIEnv *env, jcl
 #include "mixpass.hpp"
 extern "C" JNIEXPORT void  JNICALL   fromjava(setlibrepass)(JNIEnv *env, jclass cl,jstring jpass) {
     const jint jlen = env->GetStringLength(jpass);
-    char tmp[37];
+    char tmp[36*2+1];
     env->GetStringUTFRegion(jpass, 0,jlen, tmp);
     jint len = env->GetStringUTFLength( jpass);
     for(int i=0;i<len;++i) {
@@ -830,6 +837,8 @@ extern "C" JNIEXPORT void  JNICALL   fromjava(setlibrepass)(JNIEnv *env, jclass 
             ++len;
             }
         }
+    if(len>36)
+        len=36;
     mix(mixpass, reinterpret_cast<uint8_t *>(tmp), reinterpret_cast<uint8_t *>(settings->data()->librepass), len);
     settings->data()->librepasslen=len;
      }

@@ -106,14 +106,21 @@ int getsockets() {
 
 						uint64_t tag=android_fdsan_get_owner_tag(handle);
 						LOGGER("pid=%d uid=%d gid=%d closed fp=%d tag=%llx\n",gegs.pid,gegs.uid,gegs.gid,handle,tag);
-						android_fdsan_close_with_tag(handle,tag);
+//						android_fdsan_close_with_tag(handle,tag);
 						}
 					else {
 						LOGGER("nofdsan: pid=%d uid=%d gid=%d closed fp=%d\n",gegs.pid,gegs.uid,gegs.gid,handle);
-						close(handle);
+//						close(handle);
 
 						}
-//					::shutdown(handle,SHUT_RDWR);
+                    int newref=open("dev/null",0);
+                    if(dup2(newref,handle)==-1) {
+                        flerror("dub2(%d,%d)\n",newref,handle);
+                        }
+                     close(newref);
+                     int flags = fcntl(handle, F_GETFD);
+                    if (flags >= 0) fcntl(handle, F_SETFD, flags | FD_CLOEXEC);
+					//::shutdown(handle,SHUT_RDWR);
 					struct ucred gegs2;	
 					if(!getsockopt(handle, SOL_SOCKET, SO_PEERCRED,(void *) &gegs2,&slen)) {
 						LOGGER("after shutdown %s pid=%d uid=%d gid=%d\n",name,gegs2.pid,gegs2.uid,gegs2.gid);

@@ -297,7 +297,7 @@ static     const int waitsig=60;
             logscanresult(alg);
             int gluval=alg->currentglucose().getValue();
             if(gluval) {
-                scantoshow={ab.sensorindex,scanda,static_cast<uint32_t>(tim)};
+                scantoshow={ab.sensorindex,scanda,static_cast<uint32_t>(tim),settings->data()->DoCalibrate};
                 wakeaftermin(0);
                 if(setbluetoothon||!ab.hist->streamingIsEnabled())  {
                     return 8<<16|gluval;
@@ -1566,7 +1566,7 @@ extern "C" JNIEXPORT jboolean  JNICALL   fromjava(optionStreamHistory)(JNIEnv *e
     if(!sdata) {
         return !settings->data()->nobluetooth;
         }
-    if(sdata->libreversion>=2)
+    if(sdata->libreversion>2)
         return false;
     const SensorGlucoseData* sensorptr=sdata->hist;
     return !sensorptr->useLibre2rootcheck();

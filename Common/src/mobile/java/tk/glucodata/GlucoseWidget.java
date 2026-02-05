@@ -69,10 +69,15 @@ static private RemoteViews remoteMessage(String message) {
     }
 static private long oldage=glucosetimeout;
 static private void showviews(RemoteViews views,int rId,AppWidgetManager appWidgetManager, int appWidgetId) {
-    Intent intent = new Intent(Applic.app, MainActivity.class);
-    PendingIntent pendingIntent = PendingIntent.getActivity(Applic.app, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT|penmutable);
-    views.setOnClickPendingIntent(rId, pendingIntent);
-    appWidgetManager.updateAppWidget(appWidgetId, views);
+    try {
+        Intent intent = new Intent(Applic.app, MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(Applic.app, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT|penmutable);
+        views.setOnClickPendingIntent(rId, pendingIntent);
+        appWidgetManager.updateAppWidget(appWidgetId, views);
+        }
+    catch (Throwable th) {
+        Log.stack(LOG_ID,"showviews",th);
+        }
    }
 static private void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
    var widgetInfo=appWidgetManager.getAppWidgetOptions(appWidgetId);

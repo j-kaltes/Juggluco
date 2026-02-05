@@ -137,13 +137,13 @@ extern "C" JNIEXPORT jobject  JNICALL   fromjava(lastglucose)(JNIEnv *env, jclas
     const int maxbuf=20;
     char buf[maxbuf];
     getglucosestr(nonconvert,buf,maxbuf, hist->getmaxmgdL());
-    const char glucoseclass[]= javapackage "strGlucose";
+    static constexpr const char glucoseclass[]= javapackage "strGlucose";
     static  jclass  item=  (jclass) env->NewGlobalRef(env->FindClass(glucoseclass));
     if(!item) {
         LOGGERTAG("FindClass(%s) failed\n",glucoseclass);
         return nullptr;
         }
-    const char glsig[]= "(JLjava/lang/String;Ljava/lang/String;FII)V";
+    static constexpr const char glsig[]= "(JLjava/lang/String;Ljava/lang/String;FII)V";
     static jmethodID iconstruct = env->GetMethodID(item,"<init>",glsig);
     if(!iconstruct) {
         LOGGERTAG("GetMethodID(item,<init>,%s) failed\n", glsig);

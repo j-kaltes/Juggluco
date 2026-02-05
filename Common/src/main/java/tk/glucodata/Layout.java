@@ -273,11 +273,11 @@ private int[] domeasure(int widthMeasureSpec, int heightMeasureSpec) {
      int prevrh=resolveSizeAndState(totHeight, heightMeasureSpec, 0);
     int[] make=placer.place(this,prevrw,prevrh);
     if(make!=null&&make.length==2) {
-        Log.i(LOG_ID,"domeasure make[0]="+make[0]+ " make[1]="+make[1]);
+        //Log.i(LOG_ID,"domeasure make[0]="+make[0]+ " make[1]="+make[1]);
         return make;
         }
      else  {
-        Log.i(LOG_ID,"domeasure prevrh="+prevrh+ " prevrw="+prevrw);
+        //Log.i(LOG_ID,"domeasure prevrh="+prevrh+ " prevrw="+prevrw);
         return  new int[] {prevrw,prevrh};
         }
     }
@@ -285,7 +285,7 @@ private int[] domeasure(int widthMeasureSpec, int heightMeasureSpec) {
 boolean useMatch=false;
 @Override
 protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-   Log.i(LOG_ID,"onMeasure "+widthMeasureSpec);
+   //Log.i(LOG_ID,"onMeasure "+widthMeasureSpec);
    int[] res=domeasure(widthMeasureSpec, heightMeasureSpec);
  
     if(useMatch) {
@@ -310,7 +310,7 @@ protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
             res=domeasure( widthMeasureSpec,  heightMeasureSpec);
             }  
         }
-    Log.i(LOG_ID,"onMeasure prevrh="+res[0]+ " prevrw="+res[1]);
+    //Log.i(LOG_ID,"onMeasure prevrh="+res[0]+ " prevrw="+res[1]);
     setMeasuredDimension(res[0],res[1]);
     }
 /*
@@ -382,7 +382,7 @@ final int layrow(final int top,final int start,final int row,final int maxheight
        final int childtop=top+topmargin;
        final var childheight=childHeight(child);
        final var useheight=Math.min(childheight,maxheight);
-        Log.i(LOG_ID,"child width="+width+" childwidth="+childWidth(child));
+      //  Log.i(LOG_ID,"child width="+width+" childwidth="+childWidth(child));
 //       child.setMinimumHeight(useheight);
 //        measureChild(child,width, useheight);
        child.layout(left, childtop, left + width, childtop+useheight);

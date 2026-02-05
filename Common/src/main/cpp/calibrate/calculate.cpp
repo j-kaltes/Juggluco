@@ -593,7 +593,7 @@ static std::pair<int,bool> calibrateIndices2(const vector<int> &sens,uint32_t ol
         backup->wakebackup(wakenums);
         return {minwait*60,allsuccess};
     }
-static void calibrateIndices(const vector<int> &sens,uint32_t oldtime,uint32_t tim,const Num *num,const Numdata *numdata) {
+static void calibrateIndices(const vector<int> &sens,uint32_t oldtime,uint32_t tim, Num *num,const Numdata *numdata) {
     const auto [minwait,_]=calibrateIndices2(sens,oldtime,tim,num,numdata);
     const uint32_t now=time(nullptr);
     const int  ago=now-tim;
@@ -601,10 +601,25 @@ static void calibrateIndices(const vector<int> &sens,uint32_t oldtime,uint32_t t
       if(ago<minwait) {
             std::this_thread::sleep_for(std::chrono::seconds(minwait-ago));
             LOGAR("calibrateIndices after sleep");
+            if(tim!=num->gettime()) {
+                LOGGER("calibrateIndices time changed %u!=%u",tim,num->gettime());
+                return;
+                }
+          const int bloodvar=settings->data()->bloodvar;
+            if(!num->calibrator(bloodvar)) {
+                LOGGER("calibrateIndices not blood %u\n",tim);
+                return;
+                }
+            if(shouldexclude(tim))  {
+                LOGGER("calibrateIndices  exclude %u\n",tim);
+                removeCalibration(tim);
+                num->exclude=true;
+                return;
+                }
             calibrateIndices2(sens, oldtime, tim,num,numdata);
            }
     }
-static void threadCalibration(uint32_t oldtime,uint32_t tim,const Num *num,const Numdata *numdata) {
+static void threadCalibration(uint32_t oldtime,uint32_t tim, Num *num,const Numdata *numdata) {
     vector<int> sens=sensors->sensorsInPeriod(tim-5*60, tim+5*60);
     if(sens.size()) {
         #ifndef HAVE_NOPRCTL

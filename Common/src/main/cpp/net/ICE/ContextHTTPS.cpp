@@ -278,6 +278,10 @@ static int SSL_set_tlsext_host_name2(const SSL *s, const char *name) {
     ContextHTTPS::ContextHTTPS(){
         LOGARHTTPS("ContextHTTPS()");
         static bool initlib=initLibrary();
+        if(!initlib) {
+            error=true;
+            return;
+            }
         ctx=SSL_CTX_new(TLS_client_method());
         if (!ctx) {
             LOGARHTTPS("Failed to create SSL_CTX");
@@ -292,7 +296,8 @@ static int SSL_set_tlsext_host_name2(const SSL *s, const char *name) {
              }
      ContextHTTPS::~ContextHTTPS() {
         LOGARHTTPS("SSL_CTX_free(ctx)");
-        SSL_CTX_free(ctx);
+        if(ctx)
+            SSL_CTX_free(ctx);
         }
 bool ContextHTTPS::initLibrary() {
 
@@ -454,6 +459,9 @@ static void shutdowner(int sock,SSL* ssl) {
 
 std::pair<std::vector<char>,int> ContextHTTPS::request(const std::string_view host,int port,const std::string_view path,const std::string_view TYPE,const std::span<const char> input, const std::string_view header) {
     std::vector<char> uit;   
+    if(error) {
+        return {uit,-1};
+        }
     int sock = tcp_connect(host.data(), port);
     if (sock < 0) {
         return {uit,-1};

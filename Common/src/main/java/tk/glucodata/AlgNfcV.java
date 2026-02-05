@@ -173,29 +173,25 @@ static private byte[] wholenfccmdtimes(final Tag tag, final byte[] cmd,int times
             byte[] infodata = null;
             int it = times;
             do {
-            try {
-                infodata = nfcvTag.transceive(cmd);
-                } 
-            catch(Throwable  error) {
-                String mess=error!=null?error.toString():null;
-                if(mess==null) {
-                    mess="error";
+                try {
+                    infodata = nfcvTag.transceive(cmd);
+                    } 
+                catch(Throwable  error) {
+                    if(doLog) {Log.stack(LOG_ID,"transceive",error);};
+                    if(System.currentTimeMillis() > endReadingTime) {
+                        if(doLog) {Log.i(LOG_ID, "tag read timeout " + System.currentTimeMillis());};
+                        return null;
+                        }
                     }
-                {if(doLog) {Log.i(LOG_ID,"transceive "+ mess);};};
-                 if ((System.currentTimeMillis() > endReadingTime)) {
-                    {if(doLog) {Log.i(LOG_ID, "tag read timeout " + System.currentTimeMillis());};};
-                    return null;
+                if(goodnfc(infodata))  {
+                    return infodata;
                     }
-                }
-            if(goodnfc(infodata))  {
-                return infodata;
-                }
             } while (--it != 0);
             {if(doLog) {Log.i(LOG_ID, "tried "+times+" times");};};
             return null;
         } 
         catch (Exception e) {
-            {if(doLog) {Log.i(LOG_ID,"connect: "+ e.toString());};};
+            if(doLog) {Log.stack(LOG_ID,"connect",e);};
             } 
         finally {
             try {

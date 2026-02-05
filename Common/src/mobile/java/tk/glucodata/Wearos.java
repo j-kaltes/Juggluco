@@ -21,40 +21,30 @@
 
 package tk.glucodata;
 
-import androidx.appcompat.app.AlertDialog;
-import android.app.Application;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.pm.PackageManager;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.RadioButton;
-import android.widget.Space;
-import android.widget.Spinner;
-import android.widget.Toast;
-
-import com.google.android.gms.wearable.Node;
-
-import java.util.ArrayList;
-
-import static android.view.View.INVISIBLE;
-import static android.view.View.VISIBLE;
 import static android.view.View.GONE;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static tk.glucodata.Log.doLog;
 import static tk.glucodata.MessageSender.isGalaxy;
-import static tk.glucodata.Natives.setBlueMessage;
 import static tk.glucodata.NumberView.avoidSpinnerDropdownFocus;
 import static tk.glucodata.RingTones.EnableControls;
 import static tk.glucodata.settings.Settings.removeContentView;
 import static tk.glucodata.util.getbutton;
-import static tk.glucodata.util.getcheckbox;
 import static tk.glucodata.util.getlabel;
 import static tk.glucodata.util.getradiobutton;
+
+import android.content.DialogInterface;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.RadioButton;
+import android.widget.Spinner;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
+
+import com.google.android.gms.wearable.Node;
+
+import java.util.ArrayList;
 
 
 class Wearos {
@@ -95,38 +85,49 @@ static Spinner mkspinner(MainActivity context, ArrayList<Node> nodeslist,IntCons
     }
 
 
-static void remake( RadioButton[] sensordirect, RadioButton[] nswitch,  Node node) {
+static void remake(RadioButton[] sensordirect, RadioButton[] nswitch,  Node node) {
     int dirval,numsval;
     if(node==null) {
         dirval=-1;
         numsval=-1;
+        if(doLog)
+            Log.i(LOG_ID,"remake node=null");
         }
     else {
         String name=makenodename(node);
         dirval=Natives.directsensorwatch(name);
         numsval=Natives.hasWatchNums(name);
+        if(dirval==0&&!Natives.getusebluetooth()) {
+            dirval=-1;
+            numsval=-1;
+            }
+        if(doLog)
+            Log.i(LOG_ID,"remake node="+name);
         }
     if(dirval<0)  {
         for(var v:sensordirect) {
             v.setEnabled(false);
+            v.setChecked(false);
             }
         }
     else  {
+        sensordirect[0].setChecked(dirval==0);
+        sensordirect[1].setChecked(dirval!=0);
         for(var v:sensordirect) {
             v.setEnabled(true);
             }
-        sensordirect[0].setChecked(dirval==0);
-        sensordirect[1].setChecked(dirval!=0);
         }
     if(numsval<0)  {
-        for(var n:nswitch)
+        for(var n:nswitch) {
             n.setEnabled(false);
+            n.setChecked(false);
+            }
         }
     else  {
-        for(var n:nswitch)
-            n.setEnabled(true);
         nswitch[0].setChecked(numsval==0);
         nswitch[1].setChecked(numsval!=0);
+        for(var n:nswitch)
+            n.setEnabled(true);
         }
         /*
     if(dirval==1) {
@@ -151,8 +152,8 @@ static public void show(MainActivity context,View parent) {
         connection.setVisibility(GONE);
     var sphone=getradiobutton(context, R.string.phone);
     var swatch=getradiobutton(context, R.string.watch);
-    RadioButton[]sswitch={sphone,swatch}; 
-    Backup.setradio(sswitch);
+    RadioButton[] sswitch={sphone,swatch};
+
 
 
     var enternums=getlabel(context, R.string.enternums);
@@ -160,7 +161,6 @@ static public void show(MainActivity context,View parent) {
     var nphone=getradiobutton(context, R.string.phone);
     var nwatch=getradiobutton(context, R.string.watch);
     RadioButton[]nswitch={nphone,nwatch}; 
-    Backup.setradio(nswitch);
     var Ok=getbutton(context,R.string.closename);
     var Help=getbutton(context,R.string.helpname);
     Help.setOnClickListener(v-> help.helplight(R.string.wearosinfo,context));
@@ -178,6 +178,15 @@ static public void show(MainActivity context,View parent) {
                 if(nodeslist!=null&&nodeslist.size()>pos) {
                     Node node=pos<0?null:nodeslist.get(pos);
                     remake(sswitch, nswitch,   node);
+                    defaults.setEnabled(true);
+                    if(node!=null) {  
+                       Consumer<View> switched= v-> {
+                            defaults.setEnabled(false);
+                          };
+                        Object[] switcher={switched}; 
+                        Backup.setradiotest(nswitch,switcher);
+                        Backup.setradiotest(sswitch,switcher);
+                        }
                     }
                 }
             catch(Throwable e) {
@@ -194,10 +203,20 @@ static public void show(MainActivity context,View parent) {
     nwatch.setPadding(0,0,off,0);
 
    setpos.accept(nodenumptr[0]);
+   /*
+   Consumer<View> switched= v-> {
+        defaults.setEnabled(false);
+     // defaults.setVisibility(GONE);
+      };
+    Object[] switcher={switched}; */
    if(nodeslist==null||nodeslist.isEmpty()) {
      // start.setVisibility(GONE);
       defaults.setVisibility(GONE);
       }
+
+ Layout.getMargins(spin).bottomMargin= (int)(density*20.0);
+ Layout.getMargins(enternums).bottomMargin= Layout.getMargins(nphone).bottomMargin= Layout.getMargins(nwatch).bottomMargin=(int)(density*20.0);
+ Layout.getMargins(Ok).topMargin= Layout.getMargins(defaults).topMargin= Layout.getMargins(Help).topMargin=(int)(density*20.0);
     var layout=new Layout(context,(l,w,h)-> {
         var width=GlucoseCurve.getwidth();
         var height=GlucoseCurve.getheight();
@@ -206,25 +225,35 @@ static public void show(MainActivity context,View parent) {
         if(height>h)
             l.setY((height-h)/2);
         return new int[] {w,h};
-        }, new View[]{spin},new View[]{enternums,nphone,nwatch},new View[]{direct,sphone,swatch,connection},new View[]{defaults},new View[]{Help,Ok} );
+        }, new View[]{spin},new View[]{enternums,nphone,nwatch},new View[]{direct,sphone,swatch,connection},new View[]{Help,defaults,Ok} );
     int laypad=(int)(density*4.0);
     layout.setPadding(laypad*2,laypad*2,laypad*2,laypad);
 
     layout.setBackgroundResource(R.drawable.dialogbackground);
     context.addContentView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
     Ok.setOnClickListener(v -> {
-        final  var watchnums=nwatch.isChecked();
-        final boolean watchdirect=swatch.isChecked(); 
-        if(nodenumptr[0]>=0) {
-                var node=nodeslist.get(nodenumptr[0]);
-                var name=makenodename(node);
-                {if(doLog) {Log.i(LOG_ID,"watch nums  "+name+" "+watchnums);};};
-                byte[] netinfo=Natives.getmynetinfo(name,true,watchdirect?1:-1,isGalaxy(node),watchnums?1:-1);
-                Applic.switchbluetooth(name,netinfo,watchdirect);
+        if(swatch.isEnabled()) {
+            if(defaults.isEnabled()) {
+                if(doLog) {Log.i(LOG_ID,"default enabled, so do not save");};
                 }
-            else {
-                {if(doLog) {Log.i(LOG_ID,"nodenumptr[0]="+nodenumptr[0]);};};
-                }
+             else {
+                final  var watchnums=nwatch.isChecked();
+                final boolean watchdirect=swatch.isChecked(); 
+                if(nodenumptr[0]>=0) {
+                        var node=nodeslist.get(nodenumptr[0]);
+                        var name=makenodename(node);
+                        {if(doLog) {Log.i(LOG_ID,"watch nums  "+name+" "+watchnums+" direct"+watchdirect);};};
+                        byte[] netinfo=Natives.getmynetinfo(name,true,watchdirect?1:-1,isGalaxy(node),watchnums?1:-1);
+                        Applic.switchbluetooth(name,netinfo,watchdirect);
+                        }
+                    else {
+                        {if(doLog) {Log.i(LOG_ID,"nodenumptr[0]="+nodenumptr[0]);};};
+                        }
+                   }
+                 }
+        else {
+            if(doLog) {Log.i(LOG_ID,"Not Enabled");};
+            }
         context.doonback();
         }
         );
@@ -241,6 +270,7 @@ static public void show(MainActivity context,View parent) {
                     Natives.setWearosdefaults(name,isGalaxy(nod));
                     var main=MainActivity.thisone;
                     Applic.setbluetooth(main==null?Applic.app:main,true);
+                    context.doonback();
                     };
                 if(Natives.directsensorwatch(name)<0) {
                     confirmunsynced(context,setdef);

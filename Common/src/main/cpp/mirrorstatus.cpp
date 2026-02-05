@@ -32,6 +32,11 @@ extern std::array<int,maxallhosts>             us2peers;
 extern mirrorstatus_t mirrorstatus[maxallhosts];
 #include "deleter.hpp"
 //constexpr const int maxmirrortext=200;
+#ifdef NOLOG
+static constexpr const int RELEASEEXTRA=50;
+#else
+static constexpr const int RELEASEEXTRA=0;
+#endif
 extern char *getmirrorerror(const passhost_t *pass);
 extern std::unique_ptr<const char[],deleter> ICEstatus(int allindex);
 std::unique_ptr<const char[],deleter> getnetstatus(int allindex)  {
@@ -99,7 +104,7 @@ extern bool getactive(int pos);
 	
 
 	static char format[]=R"(<h1>Connection %d: %s</h1><p>%s <i>%s</i><br>Send to: %s%s%s running=%s socket=%d locked=%s<br>Receive from: %s %d %s socket=%d wait for commands: %s, interpret: %s</p>  <p><b>WearOS</b><br>messages=%s<br>Sender:<br>to bluetooth running=%d received=%s  sendmessage: %s<br>messagesendersocket=%d<br>Receiver:<br>to bluetooth running=%d received=%s  sendmessage: %s<br>messagereceiversocket=%d<br>otherside index=%d</p>)";
-	const int maxbuf=sizeof(format)+12*5+2*8+2+passhost_t::maxnamelen+100+20+maxmirrortext+40;
+	const int maxbuf=sizeof(format)+12*5+2*8+2+passhost_t::maxnamelen+100+20+maxmirrortext+40+RELEASEEXTRA;
 	char *buf=new(nothrow) char[maxbuf];
 		if(!buf)  {
 			return std::unique_ptr<const char[],deleter>((char *)errormessage,deleter(errormessage));
@@ -133,7 +138,6 @@ messagereceiversockets[allindex],
    const char *errorstr=getmirrorerror(&host);
    int errlen=strlen(errorstr);
 	memcpy(buf+buflen,errorstr,errlen+1);
-//   strcpy(buf+buflen+errlen,"<br>");
    return std::unique_ptr<const char[],deleter> (buf,deleter(nullptr));
 
 	}

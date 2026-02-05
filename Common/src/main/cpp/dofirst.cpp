@@ -48,7 +48,6 @@ static const char *owerjslkdfjlsdQQ(void) {
     return(dl_info.dli_fname);
 } */
 extern int setenv(const char *name, const char *value, int overwrite);
-
 extern std::string_view globalbasedir;
 static bool	getpathworks() {
 	pathconcat testprog(globalbasedir,"testprog");
@@ -64,7 +63,6 @@ static bool	getpathworks() {
 	unlink(testprog.data());
 	return !err;
 	}
-
 
 /*
 	if(setenv("PATH", bindirstr, 1)) {
