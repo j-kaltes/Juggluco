@@ -59,6 +59,7 @@ import tk.glucodata.Natives;
 import tk.glucodata.R;
 import tk.glucodata.SendLikexDrip;
 import tk.glucodata.XInfuus;
+import tk.glucodata.mqtt.MqttPublisher;
 
 public class Broadcasts {
 static private  ArrayList<String> actionListeners(String action) {
@@ -254,6 +255,27 @@ static public void seteverSensereceivers(MainActivity context,View settingsview,
 			}
 		);
 	}
+
+static public void setMqttEnabled(MainActivity context, View settingsview, CheckBox box, boolean[] dont) {
+	boolean currentlyEnabled = Natives.getMqttEnabled();
+	boolean newEnabled = !currentlyEnabled;
+	
+	// Toggle the MQTT enabled state
+	Natives.setMqttEnabled(newEnabled);
+	box.setChecked(newEnabled);
+	dont[0] = false;
+	
+	// Connect or disconnect based on new state
+	MqttPublisher publisher = MqttPublisher.getInstance();
+	if (newEnabled) {
+		publisher.connect();
+		Applic.argToaster(context, "MQTT enabled - connecting...", Toast.LENGTH_SHORT);
+	} else {
+		publisher.disconnect();
+		Applic.argToaster(context, "MQTT disabled", Toast.LENGTH_SHORT);
+	}
+}
+
 static public void updateall() {
 	if(Natives.getxbroadcast()) {
 		var xlis=actionListeners(SendLikexDrip.ACTION);
