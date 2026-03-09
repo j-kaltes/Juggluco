@@ -823,7 +823,7 @@ Settings(const char *settingsname,const char *base,const char *country): Mmap(se
                                      data()->systemUI=true;
                                      }
                                   data()->setdefault();
-
+                                  data()->streamHistory=true;
                                   };
                                data()->flash=false;
                                }
