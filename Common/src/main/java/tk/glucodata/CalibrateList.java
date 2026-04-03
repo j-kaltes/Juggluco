@@ -22,6 +22,7 @@ package tk.glucodata;
 
 import static android.view.Gravity.CENTER;
 import static android.view.View.GONE;
+import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
@@ -29,6 +30,7 @@ import static tk.glucodata.Applic.backgroundcolor;
 import static tk.glucodata.Applic.isWearable;
 import static tk.glucodata.Natives.getCalibrator;
 import static tk.glucodata.Natives.getInvertColors;
+import static tk.glucodata.Natives.hasHistory;
 import static tk.glucodata.settings.Settings.removeContentView;
 import static tk.glucodata.util.getbutton;
 import static tk.glucodata.util.getlabel;
@@ -170,13 +172,14 @@ static  class CaliListViewAdapter extends RecyclerView.Adapter<CaliListViewHolde
 
                 var   stream=getradiobuttonId(act,R.string.streamname,0);
                 stream.setChecked(true);
-                var   history=getradiobuttonId(act,R.string.historyname,1);
                 group.addView(stream);
-                group.addView(history);
-                group.setOnCheckedChangeListener((g,id) -> {
-                    setWhich(id);
-                    });
-//                group.check(0);
+                if(hasHistory(sensorptr)) {
+                    var   history=getradiobuttonId(act,R.string.historyname,1);
+                    group.addView(history);
+                    group.setOnCheckedChangeListener((g,id) -> {
+                        setWhich(id);
+                        });
+                    }
                 group.setPadding((int)(GlucoseCurve.getwidth()*.04),0,0,0);
                 return new CaliListViewHolder(group);
                 }
@@ -296,22 +299,27 @@ static void show(MainActivity act, long sensorptr,View parent) {
      else {
       var close=getbutton(act,R.string.closename);
      var   stream=getradiobutton(act,R.string.streamname);
-     var   history=getradiobutton(act,R.string.historyname);
      stream.setChecked(true);
-        stream.setOnCheckedChangeListener( (buttonView,  isChecked) -> {
-            Log.i(LOG_ID,"stream "+isChecked);
-            history.setChecked(!isChecked);
-            if(isChecked) {
-                caliadapt.setWhich(0);
-                }
-            });
-        history.setOnCheckedChangeListener( (buttonView,  isChecked) -> {
-            Log.i(LOG_ID,"history "+isChecked);
-            stream.setChecked(!isChecked);
-            if(isChecked) {
-                caliadapt.setWhich(1);
-                }
-            });
+     var   history=getradiobutton(act,R.string.historyname);
+     if(hasHistory(sensorptr)) {
+            stream.setOnCheckedChangeListener( (buttonView,  isChecked) -> {
+                Log.i(LOG_ID,"stream "+isChecked);
+                history.setChecked(!isChecked);
+                if(isChecked) {
+                    caliadapt.setWhich(0);
+                    }
+                });
+            history.setOnCheckedChangeListener( (buttonView,  isChecked) -> {
+                Log.i(LOG_ID,"history "+isChecked);
+                stream.setChecked(!isChecked);
+                if(isChecked) {
+                    caliadapt.setWhich(1);
+                    }
+                });
+              }
+       else {
+        history.setVisibility(INVISIBLE);
+          }
       close.setOnClickListener( v -> { 
             MainActivity.doonback();
             });

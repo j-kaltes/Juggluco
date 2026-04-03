@@ -55,13 +55,13 @@ public    void handlealarm() {
                 if(doLog) {Log.i(LOG_ID, "handlealarm notify");};
                 nexttime = (afterwait < tryagain)  ? afterwait : tryagain;
             } else {
-                if(!saidloss) {
+                if(!Natives.lossSignalAlreadyHeard()) {
                     if(doLog) {Log.i(LOG_ID, "handlealarm alarm");};
                     long lasttime=Natives.lastglucosetime( );
                     if(lasttime!=0L)
                         wastime=lasttime;
                     Notify.onenot.lossalarm(wastime);
-                    saidloss = true;
+//                    saidloss = true;
                     }
                else {
                     if(doLog) {Log.i(LOG_ID, "handlealarm saidloss==true");};

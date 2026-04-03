@@ -464,12 +464,12 @@ private void afterReads(BluetoothGatt bluetoothGatt) {
           showCharacter("onCharacteristicWrite " + bluetoothGatt.getDevice().getAddress() + " status:" + status + " ", bluetoothGattCharacteristic);
          receiveNotes=status==GATT_SUCCESS ;
     }
-
+/*
     @SuppressWarnings("unused")
     public void onConnectionUpdated(BluetoothGatt gatt, int interval, int latency, int timeout, int status) {
         {if(doLog) {Log.i(LOG_ID, "onConnectionUpdated interval=" + interval + " latency=" + latency + " timeout=" + timeout + " status=" + status);};};
     }
-
+*/
 
 
 

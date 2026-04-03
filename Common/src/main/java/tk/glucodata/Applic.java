@@ -25,13 +25,11 @@ package tk.glucodata;
 import static android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_DISABLED;
 import static android.graphics.Color.BLACK;
 import static android.graphics.Color.RED;
-import static android.graphics.Color.BLUE;
 import static android.graphics.Color.WHITE;
 import static android.net.NetworkCapabilities.TRANSPORT_BLUETOOTH;
 import static android.net.NetworkCapabilities.TRANSPORT_WIFI;
 import static android.net.NetworkCapabilities.TRANSPORT_WIFI_AWARE;
 import static android.provider.Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS;
-import static android.view.View.INVISIBLE;
 //import java.text.DateFormat;
 import static java.lang.String.format;
 import static java.util.Locale.US;
@@ -40,7 +38,6 @@ import static tk.glucodata.GlucoseCurve.smallfontsize;
 import static tk.glucodata.Log.doLog;
 import static tk.glucodata.MessageSender.initwearos;
 import static tk.glucodata.Natives.hasData;
-import static tk.glucodata.SuperGattCallback.endtalk;
 import static tk.glucodata.util.getlocale;
 
 import android.Manifest;
@@ -69,8 +66,10 @@ import android.widget.Toast;
 
 import androidx.annotation.Keep;
 import androidx.annotation.MainThread;
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.concurrent.Executors;
@@ -104,6 +103,7 @@ static public final boolean useZXing= BuildConfig.noZXing==0;
 static public final boolean includeLib= true;
 static public final boolean isRelease= BuildConfig.isRelease==1;
 //static public final boolean isRelease= !BuildConfig.DEBUG;
+
 static final String JUGGLUCOIDENT=isWearable?"juggluco":"jugglucowatch";
 public static final Locale usedlocale=US;
 static boolean setremoveviews=false;
@@ -138,12 +138,15 @@ static public Context getContext() {
       return app;
       }
 static public void Toaster(String mess) {
-    RunOnUiThread(()-> { Applic.argToaster(app,mess, Toast.LENGTH_SHORT);}) ;
+    RunOnUiThread(()-> Applic.argToaster(app,mess, Toast.LENGTH_SHORT)) ;
     }
     static public void Toaster(int res) {
         RunOnUiThread(()-> { Applic.argToaster(app,res, Toast.LENGTH_SHORT);}) ;
     }
 
+static public void Toast(String mess,int duraction) {
+    RunOnUiThread(()-> { Applic.argToaster(app,mess, duraction);}) ;
+    }
 static public    void argToaster(Context context,int res,int duration) {
      argToaster(context,context.getString(res), duration);
 }
@@ -231,7 +234,7 @@ private static void setlanguage() {
      }
 
 @Override
-public void onConfigurationChanged(Configuration newConfig) {
+public void onConfigurationChanged(@NonNull Configuration newConfig) {
    super.onConfigurationChanged(newConfig);
    if(Nativesloaded)  {
         needsnatives();
@@ -363,15 +366,28 @@ static     void explicit(Context context) {
         var name=context.getPackageName();
         if(pm.isIgnoringBatteryOptimizations(name))
             return;
-         Intent intent = new Intent(ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
-         intent.setData(Uri.parse("package:" + name));
+        Intent intent;
+        if(isHarmonyOS()) {
+             intent = new Intent("android.intent.action.MAIN");
+             intent.addCategory("android.intent.category.LAUNCHER");
+             intent.setComponent(new ComponentName("com.android.settings", "com.android.settings.Settings$HighPowerApplicationsActivity"));
+             }
+        else {
+            intent = new Intent(ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+            intent.setData(Uri.parse("package:" + name));
+            }
         context.startActivity(intent);
         } catch(Throwable e) {
             Log.stack(LOG_ID,"explicit",e);
             }
         }
     }
+private boolean netstarted=false;
 void initbluetooth(boolean usebluetooth,Context context,boolean frommain) {
+    if(!netstarted) {
+        initializeNet(); 
+        netstarted=true;
+        }
     usingbluetooth=usebluetooth;
     if(doLog) {Log.i(LOG_ID,"initbluetooth "+usebluetooth);};
     if(!isWearable) {
@@ -385,8 +401,13 @@ void initbluetooth(boolean usebluetooth,Context context,boolean frommain) {
                 {if(doLog) {Log.i(LOG_ID,"keeprunning started");};}
             else
                 {if(doLog) {Log.i(LOG_ID,"keeprunning not started="+keeprunning.started);};};
-            if(frommain)
-                ((MainActivity)context).askNotify();
+            MainActivity act= frommain?((MainActivity)context):getActivity();
+            if(act!=null) {
+               act.askNotify();
+                }
+            else {
+                Log.i(LOG_ID,"can't askNotify, no MainActivity");
+                }
             }
         }
     SensorBluetooth.start(usebluetooth);
@@ -443,12 +464,21 @@ static public boolean useWearos() {
     else
         return MessageReceiverEnabled();
     }
-private void initialize() {
+private void initializeNet() {
+      Natives.startthreads();
+      if(doLog) {Log.i(LOG_ID,"after startthreads");};
+        if(isWearable) {
+            if(Natives.getWifi())
+                UseWifi.usewifi();
+            }
+        if(tk.glucodata.Applic.useWearos()) {
+            initwearos(this);
+            }
         if (android.os.Build.VERSION.SDK_INT >=  android.os.Build.VERSION_CODES.LOLLIPOP) {
             ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
             connectivityManager.registerNetworkCallback((new NetworkRequest.Builder()).build(), new ConnectivityManager.NetworkCallback() {
         @Override
-        public void onAvailable(Network network) {
+        public void onAvailable(@NonNull Network network) {
            hasonAvailable=true;
            {if(doLog) {Log.i(LOG_ID, "network: onAvailable(" + network+")");};};
            if(useWearos()||hasip()) {
@@ -502,7 +532,23 @@ private void initialize() {
         }
     else
         Natives.networkpresent();
-}
+
+      if(isWearable&&!(dataAtStart=hasData())) {
+          final ScheduledFuture<?>[] askstarthandle={null};
+            askstarthandle[0] = scheduler.scheduleWithFixedDelay(()->{
+             if(initStarted) {
+                 if(askstarthandle[0]!=null)
+                       askstarthandle[0].cancel(false);
+               return;
+               }
+             else
+                MessageSender.sendaskforstart();
+              }, 4, 30,TimeUnit.SECONDS);
+          }
+        else 
+           MessageSender.sendnetinfo();
+    initbroadcasts();
+  }
 
 
 
@@ -567,36 +613,15 @@ boolean initproc() {
     if(!initproccalled) {
         if(!numio.setlibrary(this))
             return false;
-        if(isWearable) {
-            if(Natives.getWifi())
-                UseWifi.usewifi();
-            }
-        if(tk.glucodata.Applic.useWearos()) {
-            initwearos(this);
-            }
         needsnatives();
         {if(doLog) {Log.i("Applic","initproc width="+initscreenwidth);};};
         libre3init.init();
         SuperGattCallback.initAlarmTalk();
-        initialize();
+       // initializeNet();
         NumAlarm.handlealarm(this);
         Maintenance.setMaintenancealarm(this);
-        initbroadcasts();
+       // initbroadcasts();
         initproccalled=true;
-        if(isWearable&&!(dataAtStart=hasData())) {
-          final ScheduledFuture<?>[] askstarthandle={null};
-            askstarthandle[0] = scheduler.scheduleWithFixedDelay(()->{
-             if(initStarted) {
-                 if(askstarthandle[0]!=null)
-                       askstarthandle[0].cancel(false);
-               return;
-               }
-             else
-                MessageSender.sendaskforstart();
-              }, 4, 30,TimeUnit.SECONDS);
-          }
-        else 
-           MessageSender.sendnetinfo();
         Specific.start(this);
         if(isWearable) {
              tk.glucodata.glucosecomplication.GlucoseValue.updateall();
@@ -903,24 +928,54 @@ static public void startMain() {
         }
       }
 
-@Keep
-static boolean switchbluetooth(String name,byte[] netinfo,boolean watchBluetooth) {
-if(!isWearable) {
-    Log.i(LOG_ID,"switchbluetooth "+name+" watchBluetooth="+watchBluetooth);
-    if(netinfo!=null) {
-        var sender=tk.glucodata.MessageSender.getMessageSender();
-        if(sender!=null) {
-            sender.sendnetinfo(name,netinfo);
-            sender.sendbluetooth(name,watchBluetooth);
-            var main=MainActivity.thisone;
-            boolean here= !watchBluetooth;
-            Applic.setbluetooth(main==null?Applic.app:main,here);
-            return true;
-            }
-        }
-      }
+
+static boolean sendbluetooth(String name,byte[] netinfo,boolean watchBluetooth) {
+        if(!isWearable) {
+            Log.i(LOG_ID,"switchbluetooth "+name+" watchBluetooth="+watchBluetooth);
+            if(netinfo!=null) {
+                var sender=tk.glucodata.MessageSender.getMessageSender();
+                if(sender!=null) {
+                    sender.sendnetinfo(name,netinfo);
+                    sender.sendbluetooth(name,watchBluetooth);
+                    return true;
+                    }
+                }
+              }
     return false;
    }
+
+
+@Keep
+static boolean switchbluetooth(String name,byte[] netinfo,boolean watchBluetooth) {
+        if(!isWearable) {
+            Log.i(LOG_ID,"switchbluetooth "+name+" watchBluetooth="+watchBluetooth);
+            if(sendbluetooth(name,netinfo,watchBluetooth)) {
+                    var main=MainActivity.thisone;
+                    boolean here= !watchBluetooth;
+                    Applic.setbluetooth(main==null?Applic.app:main,here);
+                    return true;
+                    }
+              }
+    return false;
+   }
+
+
+
+private static boolean isHarmonyOS() {
+        try {
+            Class<?> cls = Class.forName("com.huawei.system.BuildEx");
+            Method method = cls.getMethod("getOsBrand", new Class[0]);
+            if(method==null)
+                return false;
+            var os=method.invoke(cls, new Object[0]);
+            if(os==null)
+                return false;
+            return "harmony".equals(os);
+        } catch (Throwable e) {
+            Log.stack(LOG_ID,"isHarmonyOS",e);
+            return false;
+        }
+    }
 
 }
 

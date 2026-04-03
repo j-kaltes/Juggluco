@@ -853,13 +853,13 @@ constexpr const NVGcolor cols[]={orange,yellow,mediumseagreen,redinit,brown};
     nvgFillColor(vg, *jcurve.getblack());
     yleg=starty+rowheight;
     xleg-=afm*.5;
-#ifndef NDEBUG
+#if 0
     float xnumpos=dwidth/3+jcurve.dleft-jcurve.smallsize;
 #endif
     for(int i=0;i<5;i++)     { 
         const int perlen=snprintf(perbuf,maxbuf,perform,pers[i]*100);
         nvgText(vg, xleg,yleg,perbuf,perbuf+perlen);
-#ifndef NDEBUG
+#if 0
         {
         const int perlen=snprintf(perbuf,maxbuf,"%d",counts[i]);
         nvgText(vg, xnumpos,yleg,perbuf,perbuf+perlen);

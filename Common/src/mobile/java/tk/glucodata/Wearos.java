@@ -23,6 +23,7 @@ package tk.glucodata;
 
 import static android.view.View.GONE;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
+import static tk.glucodata.Applic.sendbluetooth;
 import static tk.glucodata.Log.doLog;
 import static tk.glucodata.MessageSender.isGalaxy;
 import static tk.glucodata.NumberView.avoidSpinnerDropdownFocus;
@@ -85,7 +86,7 @@ static Spinner mkspinner(MainActivity context, ArrayList<Node> nodeslist,IntCons
     }
 
 
-static void remake(RadioButton[] sensordirect, RadioButton[] nswitch,  Node node) {
+static void remake(RadioButton[] sensordirect, RadioButton[] nswitch,  Node node,boolean[] direct) {
     int dirval,numsval;
     if(node==null) {
         dirval=-1;
@@ -109,10 +110,13 @@ static void remake(RadioButton[] sensordirect, RadioButton[] nswitch,  Node node
             v.setEnabled(false);
             v.setChecked(false);
             }
+        direct[0]=false;
         }
     else  {
+        boolean watchsensor=dirval!=0; 
         sensordirect[0].setChecked(dirval==0);
-        sensordirect[1].setChecked(dirval!=0);
+        sensordirect[1].setChecked(watchsensor);
+        direct[0]=watchsensor;
         for(var v:sensordirect) {
             v.setEnabled(true);
             }
@@ -172,12 +176,13 @@ static public void show(MainActivity context,View parent) {
           }
        }
    final var nodeslist=nodeslistin;
+   boolean[] watchsensor={false};
    IntConsumer setpos= pos-> {
             try {
                 nodenumptr[0]=pos;
                 if(nodeslist!=null&&nodeslist.size()>pos) {
                     Node node=pos<0?null:nodeslist.get(pos);
-                    remake(sswitch, nswitch,   node);
+                    remake(sswitch, nswitch,   node,watchsensor);
                     defaults.setEnabled(true);
                     if(node!=null) {  
                        Consumer<View> switched= v-> {
@@ -203,14 +208,7 @@ static public void show(MainActivity context,View parent) {
     nwatch.setPadding(0,0,off,0);
 
    setpos.accept(nodenumptr[0]);
-   /*
-   Consumer<View> switched= v-> {
-        defaults.setEnabled(false);
-     // defaults.setVisibility(GONE);
-      };
-    Object[] switcher={switched}; */
    if(nodeslist==null||nodeslist.isEmpty()) {
-     // start.setVisibility(GONE);
       defaults.setVisibility(GONE);
       }
 
@@ -242,9 +240,32 @@ static public void show(MainActivity context,View parent) {
                 if(nodenumptr[0]>=0) {
                         var node=nodeslist.get(nodenumptr[0]);
                         var name=makenodename(node);
-                        {if(doLog) {Log.i(LOG_ID,"watch nums  "+name+" "+watchnums+" direct"+watchdirect);};};
+                        final boolean wasdirect=watchsensor[0]; 
+                        {if(doLog) {Log.i(LOG_ID,"watch "+name+" "+"nums "+watchnums+" direct "+watchdirect+ " was "+wasdirect);};};
                         byte[] netinfo=Natives.getmynetinfo(name,true,watchdirect?1:-1,isGalaxy(node),watchnums?1:-1);
-                        Applic.switchbluetooth(name,netinfo,watchdirect);
+                        Runnable doswitch=()-> {
+                            Applic.switchbluetooth(name,netinfo,watchdirect);
+                            };
+                        if(Natives.hasAidexX()) {
+                            if(!wasdirect&&watchdirect) {
+                                SensorBluetooth.afterUnpair(context,res->doswitch.run());
+                                }
+                            else {
+                                if(wasdirect&&!watchdirect)  {
+                                   if(sendbluetooth( name,netinfo,false)) {
+                                        var unpair=new UnpairOverlayHost(context,R.string.releasingsensor);
+                                        unpair.postMessage(context.getString(R.string.unpairingwatch));
+                                        context.unpairer=unpair;
+                                        context.doswitch=()->Applic.setbluetooth(context,true);
+                                        }
+                                    }
+                                else
+                                    doswitch.run();
+                                }
+                            }
+                        else {
+                            doswitch.run();
+                            }
                         }
                     else {
                         {if(doLog) {Log.i(LOG_ID,"nodenumptr[0]="+nodenumptr[0]);};};

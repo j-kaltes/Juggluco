@@ -1206,7 +1206,7 @@ bool numpagepast() ;
 
 int JCurve::mouseScale(float dx,float xold,float x) {
      float grens=dwidth/2.0;
-     auto startduration=duration;
+//     auto startduration=duration;
      auto move=dx*80;
 //     auto move=x-xold;
     
@@ -1526,6 +1526,21 @@ void     processglucosevalue(int sendindex,int newstart) {
                  if(dif<maxbluetoothage) {
                      if(!usedsensors.size())
                          setusedsensors(nutime);
+
+
+
+                    const time_t starttime=hist->getstarttime();
+                    const uint8_t manualwarmup=hist->getinfo()->manualwarmup;
+                    if(manualwarmup) {
+                        const int waited=tim-starttime;
+                        if(waited<(manualwarmup*60)) {
+                            LOGGER("processglucosevalue in warmup period warmup period=%d minutes starttime=%u waited=%d\n",manualwarmup,starttime,waited);
+                            return; 
+                            }
+                        }
+
+
+
                     int32_t mgdL;
                     uint32_t mgL;
                     float glu;
@@ -1547,9 +1562,9 @@ void     processglucosevalue(int sendindex,int newstart) {
                      
                      sensor *senso=sensors->getsensor(sendindex);
                      bool wasnoblue=settings->data()->nobluetooth;
-                     int64_t startsensor=hist->getstarttime()*1000LL;
                      const intptr_t  sensorptr=dohealth(sendindex)?reinterpret_cast<intptr_t>(hist):0LL;
                      const int sensorgen=hist->getSensorgen2();
+                    int64_t startsensor=starttime*1000LL;
                      LOGGER("processglucosevalue finished=%d,doglucose(%s,%d,%f,%f,%d,%lld,%d,%lld,%p,%i)\n", senso->finished,hist->shortsensorname()->data(),mgdL,glu,poll->ch,alarm,tim*1000LL,wasnoblue,startsensor,sensorptr,sensorgen);
                      if(senso->finished) {
                          senso->finished=0;
@@ -2351,7 +2366,7 @@ int getglucosestr(double nonconvert,char *glucosestr,int maxglucosestr,int gluco
                     }
                 else {
                    int state=sens->getinfo()->patchState;
-                    if(state&&state!=4){
+                    if(state&&state!=4&&sens->isLibre3()){
                         const auto format= state>4?usedtext->endedformat:usedtext->notreadyformat;
                         static char buf[256];
                         int len=snprintf(buf,sizeof(buf)-1,format.data(),sens->showsensorname().data(),state);

@@ -25,6 +25,7 @@
 
     <string name="title_activity_watch_face_config">Configuration</string>
     <string name="talkhelp" />
-
+    <string name="heart_rate_attribution_label">Heart Rate Sensor Access</string>
+<string name="default_wf_token">OV4vqOP1wLB6aSSg548UoZRXSoHfz3fMVLOl5ds1sv4=:MS4wLjA=</string>
 
 </resources>

@@ -50,4 +50,8 @@ public class Specific {
 	static public  void setclose(boolean c) { }
 
 static void wearnosensors(Object act) { };
+
+static void onCreate(Object act) { }
+
+static void installwatchface(Object context) { }
 };

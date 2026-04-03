@@ -211,8 +211,8 @@ if(true) {
 
    startsensors( );
    startmeals();
-   Natives.startthreads();
-   {if(doLog) {Log.i(LOG_ID,"after startthreads");};};
+//   Natives.startthreads();
+ //  {if(doLog) {Log.i(LOG_ID,"after startthreads");};};
    numptrs[1]=Natives.openNums("here",0L);
    newhit=Natives.newhit();
    numptrs[0]=Natives.openNums(datadir,-1L); //order important!!

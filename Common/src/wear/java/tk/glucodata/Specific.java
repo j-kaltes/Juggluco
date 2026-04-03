@@ -21,40 +21,20 @@
 
 package tk.glucodata;
 
-import static android.text.Html.TO_HTML_PARAGRAPH_LINES_CONSECUTIVE;
-import static android.text.Html.fromHtml;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
-import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
-import static tk.glucodata.Applic.backgroundcolor;
 import static tk.glucodata.settings.Settings.removeContentView;
-import static tk.glucodata.util.getbutton;
-import static tk.glucodata.util.getlabel;
-import static tk.glucodata.Log.doLog;
-import static android.view.View.GONE;
 
 import android.content.Context;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothManager;
 
 import android.annotation.SuppressLint;
-import android.text.method.ScrollingMovementMethod;
-import android.util.TypedValue;
-import android.view.Gravity;
-import android.view.View;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.splashscreen.SplashScreen;
-import androidx.wear.widget.CurvedTextView;
-import androidx.wear.widget.WearableLinearLayoutManager;
-import androidx.wear.widget.WearableRecyclerView;
-
-import static tk.glucodata.util.getbutton;
-import static tk.glucodata.util.getcheckbox;
-import static tk.glucodata.util.getlabel;
-
-import static tk.glucodata.Applic.isWearable;
 
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -106,5 +86,37 @@ static public void setclose(boolean val) {
 
 static void wearnosensors(MainActivity act) {
     Switch.wearnosensors(act);
+    }
+public static boolean isPackageInstalled(Context context, String packageName) {
+    PackageManager pm = context.getPackageManager();
+    try {
+        if(Build.VERSION.SDK_INT >= 33) {
+            pm.getPackageInfo(packageName, PackageManager.PackageInfoFlags.of(0));
+           } 
+        else {
+           pm.getPackageInfo(packageName, 0);
+           }
+        return true;
+        } 
+    catch(Throwable th) {
+        Log.stack(LOG_ID,"getPackageInfo",th);
+        return false;
+        }
+  }
+
+private static void playGoogle(Context context,String packageName) {
+    var intent = new Intent(Intent.ACTION_VIEW);
+    intent.setData(Uri.parse("https://play.google.com/store/apps/details?id="+packageName));
+    intent.setPackage("com.android.vending");
+    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    context.startActivity(intent);
+   }
+private static final String watchface="tk.glucodata.watchfacepush.watchface2";
+//private static final String watchface="au.gondwanasoftware.timeandtrack";
+static void installwatchface(Context context) {
+    if(Natives.getaskedWatchFace()) { return; }
+    if(isPackageInstalled(context, watchface)) { return; }
+    playGoogle(context,watchface); 
+    Natives.setaskedWatchFace(true);
     }
 };

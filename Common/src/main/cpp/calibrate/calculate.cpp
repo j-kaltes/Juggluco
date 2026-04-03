@@ -259,7 +259,7 @@ template<typename DT> int getfirstpos(const SensorGlucoseData *sens);
 template<>
 int getfirstpos<ScanData>(const SensorGlucoseData *sens) {
     if(sens->pollcount()>0)
-        return sens->getinfo()->pollstart;
+        return sens->getStreamStart();
      return 0;
 
     }

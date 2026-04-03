@@ -32,14 +32,14 @@ void prunenums() {
         num->prunenums();
         }
     }
-
 void makenightswitch() {
+  LOGAR("makenightswitch");
    if(settings->data()->initVersion<28) {
       if(settings->data()->initVersion<26) {
          if(settings->data()->initVersion<25) {
             if(settings->data()->initVersion<24) {
                if(settings->data()->initVersion<23) {
-                  LOGAR("makenightswitch");
+      //            LOGAR("makenightswitch");
                   settings->data()->postTreatments=false;
                   for(auto *num:numdatas) {
                      num->getnightSwitch() =num->getlastpos();
@@ -59,6 +59,10 @@ void makenightswitch() {
 //     settings->data()->initVersion=28;
         }
      //prunenums();
+#ifndef NOLOG
+extern void checker();
+   checker();
+#endif
    }
 //bool update(int sock,int &len, struct numspan *ch) 
 int updatenums(crypt_t*pass,Connect *connect,struct changednums *nums,int ind) {

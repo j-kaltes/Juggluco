@@ -32,6 +32,7 @@ import tk.glucodata.MessageSender.Companion.isGalaxy
 import tk.glucodata.MessageSender.Companion.sendnetinfo
 import tk.glucodata.Natives
 import tk.glucodata.Natives.setWearosdefaults
+import tk.glucodata.SensorBluetooth.unpairWatch
 
 class MessageReceiver: WearableListenerService() {
     override fun onMessageReceived(messageEvent: MessageEvent) {
@@ -50,7 +51,12 @@ class MessageReceiver: WearableListenerService() {
                  if(doLog) {Log.i(LOG_ID,"path==MessageSender.DEFAULTS_PATH "+source );}
                   setWearosdefaults(source,true);
                    val context=if(MainActivity.thisone==null)Applic.app;else MainActivity.thisone;
-                   Applic.setbluetooth(context,false)
+                   if(Natives.hasAidexX()) {
+                        val sourceId = messageEvent.getSourceNodeId()
+                        unpairWatch(context,sourceId,sender);
+                        }
+                     else
+                       Applic.setbluetooth(context,false)
                  }
             MessageSender.WAKE_PATH -> {
                 Natives.wakehereonly()
@@ -122,10 +128,47 @@ class MessageReceiver: WearableListenerService() {
                 Natives.setBlueMessage(name,on)
                 }
              MessageSender.BLUETOOTH_PATH -> {
-                val context=if(MainActivity.thisone==null)Applic.app;else MainActivity.thisone;
-                val on=booldata(data)
-                if(tk.glucodata.Log.doLog) {Log.i(LOG_ID,"set bluetooth $on  ${data[0]}");}
-                Applic.setbluetooth(context,on )
+               if(isWearable) {
+                    val context=if(MainActivity.thisone==null)Applic.app;else MainActivity.thisone;
+                    val on=booldata(data)
+                    if(tk.glucodata.Log.doLog) {Log.i(LOG_ID,"set bluetooth $on  ${data[0]}");}
+                    if(!on&&Natives.hasAidexX()) {
+                            val sourceId = messageEvent.getSourceNodeId()
+                            val sender = tk.glucodata.MessageSender.getMessageSender()
+                            if (sender == null) {
+                                Log.d(LOG_ID, "5: messagesender==null")
+                                return
+                            }
+                            unpairWatch(context,sourceId,sender);
+                            }
+                         else
+                           Applic.setbluetooth(context,false)
+                        }
+
+                }
+             MessageSender.UNPAIR_PATH -> {
+             if(!isWearable) {
+                        val context=MainActivity.thisone;
+                        if(context==null) {
+                            Log.i(LOG_ID,"unpair no MainActivity")
+                            return
+                            }
+                        val on=booldata(data)
+                        if(tk.glucodata.Log.doLog) {Log.i(LOG_ID,"set unpair $on  ${data[0]}");}
+                        val unpair=context.unpairer;
+                        if(unpair!=null) {
+                            val mess=context.getString(R.string.unpairingwatch) +context.getString(if(on) R.string.successful else R.string.failed)
+                            Log.i(LOG_ID,mess)
+                            unpair.postFinished(mess, on);
+                            unpair.postCloser();
+                            context.unpairer=null;
+                            var doswitch=context.doswitch;
+                            if(doswitch!=null) {
+                                doswitch.run();
+                                context.doswitch=null;
+                                }
+                            }
+                        }
                 }
              MessageSender.ASKFORSTART_PATH -> {
                  if(!isWearable) {

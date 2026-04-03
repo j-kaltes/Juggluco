@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.wear.widget.BoxInsetLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/unpairOverlay"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#CC000000"
+    android:clickable="true"
+    android:focusable="true"
+    android:padding="10dp"
+    android:visibility="gone">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        app:layout_boxedEdges="all">
+
+        <ProgressBar
+            android:id="@+id/unpairSpinner"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:indeterminate="true" />
+
+        <TextView
+            android:id="@+id/unpairTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:text="@string/releasingsensor" 
+            android:textColor="@android:color/white"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/unpairMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:gravity="center"
+            android:maxLines="3"
+            android:ellipsize="end"
+            android:text="@string/connecttosensor" 
+            android:textColor="#DDFFFFFF"
+            android:textSize="12sp"
+            android:accessibilityLiveRegion="polite" />
+
+        <Button
+            android:id="@+id/unpairCloseButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp"
+            android:text="@string/closename" 
+            android:textAllCaps="false"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+</androidx.wear.widget.BoxInsetLayout>

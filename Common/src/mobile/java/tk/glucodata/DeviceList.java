@@ -20,55 +20,28 @@
 /*      Sun Sep 21 14:02:17 CEST 2025                                                */
 package tk.glucodata;
 
-import static android.graphics.Color.YELLOW;
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
-import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static tk.glucodata.Applic.backgroundcolor;
-import static tk.glucodata.Applic.isWearable;
 import static tk.glucodata.BluetoothGlucoseMeter.startAdapterScanner;
 import static tk.glucodata.Natives.GlucoseMeterHasIndex;
-import static tk.glucodata.Natives.getCalibrator;
-import static tk.glucodata.Natives.getInvertColors;
 import static tk.glucodata.NumberView.smallScreen;
 import static tk.glucodata.settings.Settings.removeContentView;
 import static tk.glucodata.util.getbutton;
-import static tk.glucodata.util.getlabel;
+import static tk.glucodata.util.getcheckbox;
 
 import static tk.glucodata.Log.doLog;
 
-import android.bluetooth.BluetoothDevice;
-import android.content.Context;
 import android.graphics.Color;
 import android.text.SpannableString;
-import android.text.style.BackgroundColorSpan;
 import android.text.style.ForegroundColorSpan;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import java.text.DateFormat;
-import java.util.Date;
-import java.util.Locale;
-
-import tk.glucodata.Layout;
-import tk.glucodata.MainActivity;
-import tk.glucodata.Natives;
-import tk.glucodata.util;
-
-import static android.graphics.Color.RED;
-import static android.widget.LinearLayout.VERTICAL;
 
 public class DeviceList {
   static private final String LOG_ID ="DeviceList";
@@ -82,16 +55,23 @@ public class DeviceList {
              if(scan!=null) {
                  if(pos<scan.deviceNames.size()) {
                      String deviceName=scan.deviceNames.get(pos);
-                     var device=scan.devices.get(pos);
-                     int meterIndex=Natives.GlucoseMeterGetIndex(deviceName);
-                     if(doLog)
-                         Log.i(LOG_ID,deviceName+" getId()="+view.getId()+" pos="+pos+" meterIndex="+meterIndex);
-                     if(meterIndex>=0) {
-                        MeterConfig.config((MainActivity)view.getContext(),meterIndex,parent,device);
+                     if(deviceName.startsWith(AidexXGattCallback.startAidexX)) {
+                       AidexXGattCallback.addbyDeviceName((MainActivity) view.getContext(),deviceName);
+                        while(MainActivity.doonback())
+                                ;
                         }
                      else {
-                        Applic.Toaster("Adding meter "+deviceName+" failed");
-                        }
+                         var device=scan.devices.get(pos);
+                         int meterIndex=Natives.GlucoseMeterGetIndex(deviceName);
+                         if(doLog)
+                             Log.i(LOG_ID,deviceName+" getId()="+view.getId()+" pos="+pos+" meterIndex="+meterIndex);
+                         if(meterIndex>=0) {
+                            MeterConfig.config((MainActivity)view.getContext(),meterIndex,parent,device,null);
+                            }
+                         else {
+                            Applic.Toaster("Adding meter "+deviceName+" failed");
+                            }
+                         }
                      }
                   else {
                     Log.e(LOG_ID,"pos "+pos+" >=deviceNames "+ scan.deviceNames.size());
@@ -120,7 +100,17 @@ String newname;
            return new DeviceListViewHolder((TextView)view,this.parent);
        }
 
-
+private final SpannableString newcolor(String nameaddress) {
+         SpannableString str = new SpannableString(nameaddress+"\t"+newname);
+         int spanlength=str.length();
+         int newlen=newname.length();
+         str.setSpan(new ForegroundColorSpan(Color.YELLOW), spanlength-newlen,spanlength, 0);
+         return str;
+         }
+static private int aidexXindex(String name) {
+    String serial="x"+name.substring(name.length()-10);
+    return Natives.sensorIndex(serial);
+    }
       @Override
       public void onBindViewHolder(final DeviceListViewHolder holder, int pos) {
              TextView text=(TextView)holder.itemView;
@@ -128,17 +118,13 @@ String newname;
              var scan=BluetoothGlucoseMeter.scanner;
              var device=scan.devices.get(pos);
              var name=scan.deviceNames.get(pos);
-             int index=GlucoseMeterHasIndex(name);
              String nameaddress=name+"\n"+device.getAddress();
-             if(index<0) {
-                 SpannableString str = new SpannableString(nameaddress+"\t"+newname);
-                 int spanlength=str.length();
-                 int newlen=newname.length();
-                 str.setSpan(new ForegroundColorSpan(Color.YELLOW), spanlength-newlen,spanlength, 0);
-                 text.setText(str);
-                 }
-            else
-                 text.setText(nameaddress);
+             int index= name.startsWith(AidexXGattCallback.startAidexX)?aidexXindex(name):GlucoseMeterHasIndex(name);
+                 if(index<0) {
+                     text.setText(newcolor(nameaddress));
+                     }
+                else
+                     text.setText(nameaddress);
           }
            @Override
        public int getItemCount() {
@@ -149,6 +135,7 @@ String newname;
            }
 
    }
+static private boolean showAidexX=false;
 static public void show(MainActivity act, MeterList.MeterListViewAdapter meteradapt) {
       RecyclerView recycle = new RecyclerView(act);
       recycle.setHasFixedSize(true);
@@ -160,16 +147,22 @@ static public void show(MainActivity act, MeterList.MeterListViewAdapter meterad
             MainActivity.doonback();
             });
        var help=getbutton(act,R.string.helpname);
-        View[] firstrow=new View[]{help,close};
+      var aidex=getcheckbox(act,"AiDEX X",showAidexX);
+        View[] firstrow=new View[]{help,aidex,close};
       Layout layout=new Layout(act,(x,w,h)->{
              return new int[] {w,h};
-               },firstrow,new View[]{recycle}); 
-      var deviceadapt = new DeviceListViewAdapter(layout);
-      recycle.setAdapter(deviceadapt);
-      startAdapterScanner(deviceadapt );
-        help.setOnClickListener(v-> tk.glucodata.help.help(R.string.DeviceList,act));
-       layout.setBackgroundColor(backgroundcolor);
-        float density=GlucoseCurve.metrics.density;
+               },firstrow,new View[]{recycle});
+    var deviceadapt = new DeviceListViewAdapter(layout);
+    recycle.setAdapter(deviceadapt);
+    startAdapterScanner(deviceadapt,showAidexX);
+    aidex.setOnCheckedChangeListener((buttonView, isChecked) -> {
+        showAidexX=isChecked;
+        startAdapterScanner(deviceadapt,showAidexX);
+        deviceadapt.notifyDataSetChanged();
+        });
+     help.setOnClickListener(v-> tk.glucodata.help.help(R.string.DeviceList,act));
+     layout.setBackgroundColor(backgroundcolor);
+     float density=GlucoseCurve.metrics.density;
     layout.setPadding((int)(density*5.0)+MainActivity.systembarLeft,MainActivity.systembarTop,MainActivity.systembarRight+(int)(density*8.0),MainActivity.systembarBottom);
 
      act.addContentView(layout, new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));

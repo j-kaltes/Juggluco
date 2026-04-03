@@ -117,6 +117,8 @@ static bool updateDevices() {
     LOGAR("after deletelast()");
     sensors->setindices();
     backup->resendResetDevices();
+    sendstartsensors(sensors->last());
+     
     return  javaUpdateDevices();
     }
 

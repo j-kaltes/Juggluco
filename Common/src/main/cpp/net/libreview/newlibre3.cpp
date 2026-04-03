@@ -265,7 +265,7 @@ static int sendallcurrent(uint32_t nu,SensorGlucoseData *sens,char *buf,int *las
 	if(!sens)
 		return 0;
 	 int start=sens->getinfo()->libreviewScan;
-	int pollstart= sens->getinfo()->pollstart;
+	int pollstart= sens->getStreamStart();
 //	 int ends=sens->getinfo()->lastLifeCountReceived;
 	int		ends=sens->pollcount()-1;
 	LIBRELOGGER("%s pollstart=%d libreviewScan=%d ends=%d\n",sens->showsensorname().data(),pollstart,start,ends);

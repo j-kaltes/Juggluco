@@ -29,6 +29,7 @@
 #include "air.hpp"
 #include "jniclass.hpp"
 #include "glucose.hpp"
+#include "datbackup.hpp"
 
 
 extern void *openlib(std::string_view libname);
@@ -206,16 +207,16 @@ jlong airProcessData(airstream *sdata,const jbyte *indata,int arlen,jlong *timer
     if(air->reg0==0xC4) {
         const int newrecords=air->numRecords;
         sdata->setNumberNew(newrecords);
-        if(!newrecords&&!sens->getinfo()->askEarlier) {
+        if(!newrecords) {
             if(const ScanData *last=sens->lastpoll()) {
                 int lastid=sens->getLastAir();
                 int dataid=last->getid()/5;
                 int errortime=(lastid-dataid)*5*60;
                 int waiting=nowsec-last->gettime()-errortime;
                 LOGGER("getLastAir()=%d dataid=%d now=%u lastime=%u errortime=%u waiting=%d\n",lastid,dataid,nowsec,last->gettime(),errortime,waiting);
-                if(waiting>60*6) {
-                     LOGAR("set askEarlier=1");
-                     sens->getinfo()->askEarlier=1;
+                if(waiting>62*5) {
+                     ++sens->getinfo()->askEarlier;
+                     LOGGER("newrecords=0 set askEarlier=%d\n",sens->getinfo()->askEarlier);
                      return 2LL;
                      }
                 }
@@ -276,8 +277,10 @@ jlong airProcessData(airstream *sdata,const jbyte *indata,int arlen,jlong *timer
                 auto res=mkres(sens,nowsec,time,id, mgdL,  abbotttrend, trendrate);
                 if(!res) {
                     if(mgdL) {
-                        sens->getinfo()->askEarlier=0;
-                        LOGAR("set askEarlier=0");
+                        if(sens->getinfo()->askEarlier)
+                            --sens->getinfo()->askEarlier;
+
+                        LOGGER("set askEarlier=%d\n",sens->getinfo()->askEarlier);
                         res=2LL;
                         }
                     }
@@ -418,6 +421,7 @@ extern "C" JNIEXPORT void JNICALL   fromjava(airSaveStartSensor)(JNIEnv *env, jc
     DeviceInfo3Obj *sensorinfo=sdata->sensorInfo.data();
     uint32_t sensorstart=time(nullptr)-elapsedSecs;
     sensorinfo->sensor_start_time=sensorstart;
+    uint32_t wasstart=sens->getinfo()->starttime;
     sens->getinfo()->starttime=sensorstart;
     sensorinfo->eapp=eapp;
     sensorinfo->vref=vref;
@@ -425,6 +429,12 @@ extern "C" JNIEXPORT void JNICALL   fromjava(airSaveStartSensor)(JNIEnv *env, jc
     time_t time=sensorstart;
     LOGGER("airSaveStartSensor eapp=%f vref=%f elapsedSeconds=%d starttime=%lu %s",eapp,vref,elapsedSecs,sensorstart,ctime(&time));
     #endif
+    if(abs((int)(wasstart-sensorstart))>30) {
+           const int sensorindex=sens->sensorIndex;
+           sensors->getsensor(sensorindex)->starttime=sensorstart;
+           sensors->setindices();
+           backup->resendResetDevices(&updateone::sendstream);
+        }
     } 
 extern "C" JNIEXPORT jbyteArray JNICALL  fromjava(airGetPin)(JNIEnv *env, jclass cl,jlong dataptr){
      airstream *sdata=reinterpret_cast<airstream *>(dataptr);

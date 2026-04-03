@@ -406,10 +406,21 @@ static public synchronized void scan(GlucoseCurve curve,Tag tag) {
 static private void newsensor(Activity act,String text,String name) {
     if(!isWearable) {
         XInfuus.sendSensorActivateBroadcast(act, name, Natives.laststarttime());
-    }
+        }
 
-    var metrics= act.getResources().getDisplayMetrics();
+  /*  var metrics= act.getResources().getDisplayMetrics();
     int width= metrics.widthPixels;
+    int height=metrics.heightPixels; */
+    int widthin=GlucoseCurve.getwidth();
+    int heightin=GlucoseCurve.getheight();
+    if(heightin>widthin) {
+        Log.i(LOG_ID,"newsensor exchange height-width");
+        int tmp=widthin;
+        widthin=heightin;
+        heightin=tmp;
+        }
+    final int height=heightin;
+    final int width=widthin;
     int pad=width/30;
     {if(doLog) {Log.i(LOG_ID,"newsensor "+name);};};
     act.runOnUiThread(() -> {
@@ -435,7 +446,7 @@ static private void newsensor(Activity act,String text,String name) {
            int wid=GlucoseCurve.getwidth()- systembarRight-systembarLeft;
             if(wid>w)
                 l.setX((wid-w)*.5f+systembarLeft);
-            var hei=metrics.heightPixels-systembarBottom;
+            var hei=height-systembarBottom;
             if(hei>h) {
                 l.setY((hei-h)*.5f);
                 }

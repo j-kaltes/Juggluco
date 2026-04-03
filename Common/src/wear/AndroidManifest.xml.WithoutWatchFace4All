@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?> <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <uses-sdk xmlns:tools="http://schemas.android.com/tools" tools:overrideLibrary="androidx.wear.watchfacepush" />
+
+<queries>
+    <intent>
+        <action android:name="com.google.wear.ACTION_PUSH_WATCH_FACES" />
+    </intent>
+</queries>
+<queries>
+        <package android:name="tk.glucodata.watchfacepush.watchface2" />
+</queries>
+<uses-permission android:name="com.google.wear.permission.SET_PUSHED_WATCH_FACE_AS_ACTIVE" />
+<uses-permission android:name="com.google.wear.permission.PUSH_WATCH_FACES" />
+
+
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.BODY_SENSORS"/>
+    <uses-permission android:name="android.permission.BODY_SENSORS_BACKGROUND "/>
+    <uses-permission android:name="com.google.android.permission.PROVIDE_BACKGROUND" />
+    <uses-permission android:name="com.google.android.wearable.permission.RECEIVE_COMPLICATION_DATA" />
+    <uses-permission android:name="com.google.android.wearable.permission.RECEIVE_COMPLICATION_DATA_PRIVILEGED" />
+<!--    <uses-feature android:name="android.hardware.type.watch" android:required="false" /> -->
+    <uses-feature android:name="android.hardware.type.watch" android:required="${requireWatch}" />
+    <uses-feature android:name="com.google.android.wearable" android:required="false" />
+
+    <!-- android:debuggable="true" -->
+    <application android:name=".Applic" android:theme="@style/Theme.appstart"
+        android:icon="@mipmap/ic_launcher">
+        <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
+
+   <uses-library
+            android:name="wear-sdk"
+            android:required="false"
+            tools:node="replace" />
+
+
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name"
+            android:launchMode="singleTask" />
+
+        <meta-data android:name="com.google.android.wearable.standalone" android:value="true" />
+
+        <uses-library android:name="com.google.android.wearable" android:required="false" />
+
+
+
+        <activity
+            android:name="tk.glucodata.watchface.editor.WatchFaceConfigActivity"
+            android:exported="true"
+            android:label="@string/title_activity_watch_face_config"
+	    >
+
+            <intent-filter>
+                <action android:name="androidx.wear.watchface.editor.action.WATCH_FACE_EDITOR" />
+
+                <category android:name="com.google.android.wearable.watchface.category.WEARABLE_CONFIGURATION" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+	 <service
+            android:name=".MessageReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
+                <data android:host="*" android:pathPrefix="/bluetooth" android:scheme="wear" />
+                <data android:host="*" android:pathPrefix="/data" android:scheme="wear" />
+                <data android:host="*" android:pathPrefix="/defaults" android:scheme="wear" />
+                <data android:host="*" android:pathPrefix="/messages" android:scheme="wear" />
+                <data android:host="*" android:pathPrefix="/netinfo" android:scheme="wear" />
+                <data android:host="*" android:pathPrefix="/settings" android:scheme="wear" />
+                <data android:host="*" android:pathPrefix="/start" android:scheme="wear" />
+                <data android:host="*" android:pathPrefix="/wake" android:scheme="wear" />
+                <data android:host="*" android:pathPrefix="/wakestream" android:scheme="wear" />
+            </intent-filter>
+         </service>
+
+      <!--  android:icon="@drawable/ic_launcher" -->
+  <service
+            android:name=".glucosecomplication.ArrowDataSourceService"
+            android:exported="true"
+
+            android:icon="@drawable/arrowblackwhite"
+            android:label="@string/glucosearrowcomplicationlabel"
+            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
+            <intent-filter>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="SMALL_IMAGE" />
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="600" />
+        </service>
+  <service
+            android:name=".glucosecomplication.NumberDataSourceService"
+            android:exported="true"
+
+            android:icon="@drawable/valuemgdl"
+            android:label="@string/glucosenumbercomplicationlabel"
+            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
+            <intent-filter>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="SMALL_IMAGE" />
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="600" />
+        </service>
+  <service android:name=".glucosecomplication.ArrowValueDataSourceService"
+            android:exported="true"
+
+            android:icon="@drawable/valuearrow"
+            android:label="@string/glucosearrowvaluecomplicationlabel"
+            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
+            <intent-filter>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="LARGE_IMAGE,SMALL_IMAGE" />
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="600" />
+        </service>
+
+  <service android:name=".glucosecomplication.IconArrowDataSourceService"
+            android:exported="true"
+
+            android:icon="@drawable/arrowtime"
+            android:label="@string/glucosearrowiconcomplicationlabel"
+            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
+            <intent-filter>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="ICON"/>
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="600" />
+        </service>
+  <service android:name=".glucosecomplication.IconValueDataSourceService"
+            android:exported="true"
+
+            android:icon="@drawable/number"
+            android:label="@string/glucosevalueiconcomplicationlabel"
+            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
+            <intent-filter>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="ICON"/>
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="600" />
+        </service>
+  <service android:name=".glucosecomplication.ShortArrowValueDataSourceService"
+            android:exported="true"
+
+            android:icon="@drawable/shorttext"
+            android:label="@string/glucoseshortcomplicationlabel"
+            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
+            <intent-filter>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="SHORT_TEXT"/>
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="600" />
+        </service>
+
+
+
+        
+    <meta-data 
+        android:name="com.google.android.wearable.marketplace.DEFAULT_WATCHFACE_VALIDATION_TOKEN" 
+        android:value="@string/default_wf_token" />
+
+
+
+    </application>
+</manifest>

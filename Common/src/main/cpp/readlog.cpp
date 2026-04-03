@@ -44,8 +44,19 @@ int    timestr(char *buf,time_t tim) {
                 return sizeof(fout)-1;
                 }
     }
+//03-16 16:35:08
+int    logcattimestr(char *buf,time_t tim) {
+        struct tm tmbuf;
+        if(localtime_r(&tim,&tmbuf))
+                return sprintf(buf,"%02d-%02d %02d:%02d:%02d",tmbuf.tm_mon+1,tmbuf.tm_mday,tmbuf.tm_hour,tmbuf.tm_min,tmbuf.tm_sec);
+        else {
+                const char fout[]="localtime-failed!!!";
+                memcpy(buf,fout,sizeof(fout));
+                return sizeof(fout)-1;
+                }
+    }
 
-void retimelog(const char *name) {
+void retimelog(const char *name,bool logcat) {
 	ifstream inp(name);
 	strsepconcat outfile("",name,".out");
 	ofstream outp(outfile);
@@ -61,7 +72,7 @@ void retimelog(const char *name) {
 			time_t tim=strtoul(dat,&endptr,10);
 			if(endptr==dat+endpos&&tim>1598911200u&&tim<1914444000u) {
 				char buf[25];
-				int end=timestr(buf,tim);
+				int end=(logcat?logcattimestr:timestr)(buf,tim);
 				outp<<buf<<was<<dat+endpos+1<<endl;
 				}
 			else {
@@ -79,10 +90,20 @@ if(argc<2) {
 	cerr<<"Usage: "<<argv[0]<<" file1 [file2...file-n]\nConverts unixtime to time string at start of line\n";
 	exit(0);
 	}
+int starti;
+bool logcat;
+if(!strcmp(argv[1],"-l")) {
+    starti=2;
+    logcat=true;
+    }
+ else {
+    starti=1;
+    logcat=false;
+    }
 int nr=std::min(argc-1,omp_get_num_procs());
 #pragma omp parallel for num_threads(nr)
-for(int i=1;i<argc;i++) {
-	retimelog(argv[i]);
+for(int i=starti;i<argc;i++) {
+	retimelog(argv[i],logcat);
 	}
 
 }

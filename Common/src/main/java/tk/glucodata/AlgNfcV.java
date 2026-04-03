@@ -176,6 +176,14 @@ static private byte[] wholenfccmdtimes(final Tag tag, final byte[] cmd,int times
                 try {
                     infodata = nfcvTag.transceive(cmd);
                     } 
+                catch(SecurityException e) {
+                    if(doLog) {Log.stack(LOG_ID,"transceive",e);};
+                    return null;
+                    }
+                catch(android.nfc.TagLostException e) {
+                    if(doLog) {Log.stack(LOG_ID,"transceive",e);};
+                    return null;
+                    }
                 catch(Throwable  error) {
                     if(doLog) {Log.stack(LOG_ID,"transceive",error);};
                     if(System.currentTimeMillis() > endReadingTime) {
@@ -187,9 +195,17 @@ static private byte[] wholenfccmdtimes(final Tag tag, final byte[] cmd,int times
                     return infodata;
                     }
             } while (--it != 0);
-            {if(doLog) {Log.i(LOG_ID, "tried "+times+" times");};};
+            if(doLog) {Log.i(LOG_ID, "tried "+times+" times");};
             return null;
         } 
+        catch(SecurityException e) {
+            if(doLog) {Log.stack(LOG_ID,"connect",e);};
+            return null;
+            }
+        catch(android.nfc.TagLostException e) {
+            if(doLog) {Log.stack(LOG_ID,"connect",e);};
+            return null;
+            }
         catch (Exception e) {
             if(doLog) {Log.stack(LOG_ID,"connect",e);};
             } 
@@ -200,7 +216,7 @@ static private byte[] wholenfccmdtimes(final Tag tag, final byte[] cmd,int times
             } catch (Exception e) {
                Log.stack(LOG_ID, "Error closing tag ", e);
             }
-        }
+          }
         }
         return null;
     }

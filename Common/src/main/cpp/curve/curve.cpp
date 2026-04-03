@@ -1108,7 +1108,13 @@ uint32_t mintime() {
    time_t t=tim;
    CURVELOGGER("mintime=%d %s",tim,ctime(&t));
    #endif
+   if(sent==UINT32_MAX)
+        tim=time(nullptr);
    return tim;
+    }
+uint32_t JCurve::minstarttime() {
+    uint32_t mini=mintime();
+    return mini-duration;
     }
 
 //uint32_t starttime;
@@ -1139,13 +1145,6 @@ uint32_t JCurve::maxstarttime() {
     CURVELOGGER("dwidth=%f valuesize=%f duraf=%f\n",(double)dwidth,(double)valuesize,(double)duraf);
     float subtr=0.91 - duraf*1.2f;
     return time(nullptr)-subtr*duration;
-    }
-uint32_t JCurve::minstarttime() {
-    uint32_t mini=mintime();
-    if(mini<duration)
-        return mini;
-
-    return mini-duration/2;
     }
 void JCurve::begrenstijd() {
     auto maxstart= maxstarttime();
@@ -2244,6 +2243,30 @@ void    JCurve::startstepNVG(NVGcontext* avg,int width, int height) {
 #else
         float gety=smallsize*1.4f+dtop+(dheight-smallsize*.8f)*yh/(usedsize*2.0f);
 #endif
+
+        uint8_t manualwarmup=hist->getinfo()->manualwarmup;
+        if(manualwarmup) {
+            time_t starttime=hist->getstarttime();
+            int waited=nu-starttime;
+
+            if(waited<(manualwarmup*60)) {
+                float usegetx=getx-headsize/3;
+                static char buf[256];
+                const char *bufptr=buf;
+                int waitedminutes=waited/60;
+                int ends=sprintf(buf,usedtext->readysec.data(),manualwarmup-waitedminutes);
+                 nvgTextBox(avg,  usegetx, gety, getboxwidth(usegetx), bufptr,bufptr+ends);
+    #ifndef DONTTALK
+                 shownglucose[i].errortext=bufptr;
+                 shownglucose[i].glucosevalue=0;
+                 shownglucose[i].glucosevaluex=usegetx;
+                 shownglucose[i].glucosevaluey=gety+headsize*.5;
+    #endif
+                continue; 
+                 }
+                 
+            }
+
         const ScanData *poll=hist->lastValidStream();
         if(poll) {
             CURVELOGAR("poll!=null");

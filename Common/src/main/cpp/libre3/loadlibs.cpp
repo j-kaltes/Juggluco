@@ -93,7 +93,7 @@ void changelib(uint8_t *from) {
         hexstr isnow(start,4);
    if(!memcmp(start,was,4)) 
         {
-        LOGGER("Sign de same =%s\n",isnow.str());
+        LOGGER("Sign the same =%s\n",isnow.str());
 #ifdef CHANGECODE
         Unprotect unpr(start,4);
         uint8_t nop[]={0xE0,0x03,0x00,0xAA};
@@ -115,7 +115,7 @@ void changelib(uint8_t *from) {
 #endif
    if(!memcmp(start,was,4)) 
         {
-        LOGGER("Sign de same =%s\n",isnow.str());
+        LOGGER("Sign the same =%s\n",isnow.str());
 #ifdef CHANGECODE
         Unprotect unpr(start,4);
         uint8_t nop[]={0xE0,0x03,0x00,0xAA};
@@ -192,7 +192,7 @@ static bool loadECDHCrypto(const bool changelib) {
         hexstr isnow(start,4);
    if(!memcmp(start,was,4)) 
         {
-        LOGGER("Sign de same =%s\n",isnow.str());
+        LOGGER("Sign the same =%s\n",isnow.str());
 #ifdef CHANGECODE
         Unprotect unpr(start,4);
         uint8_t nop[]={0xE0,0x03,0x00,0xAA};

@@ -98,6 +98,10 @@ extern "C" JNIEXPORT jboolean JNICALL   fromjava(siNotchinese)(JNIEnv *env, jcla
 	const SensorGlucoseData *usedhist=reinterpret_cast<streamdata *>(dataptr)->hist ; 
 	if(!usedhist)
 		return false;
+   if(usedhist==Sensoren::isdeleted)  {
+        LOGAR("siNotchinese isdeleted");
+        return false;
+        }
 	return usedhist->notchinese();
    }
    

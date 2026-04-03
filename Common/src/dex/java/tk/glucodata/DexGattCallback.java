@@ -124,7 +124,7 @@ private void docmd0(BluetoothGatt bluetoothGatt) {
                 return;
             } 
          if(characteristic.equals(charact[0])) {
-               final byte[] com={0x4E}; ///Ask for glucose
+               final byte[] com={(byte)0x4E}; ///Ask for glucose
                charact[0].setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT);
                write(0,com);  
                return;
@@ -418,12 +418,12 @@ private void sendcertthread() {
 //        {if(doLog) {Log.d(LOG_ID, bluetoothGatt.getDevice().getAddress() + " onCharacteristicWrite, status:" + status + " UUID:" + bluetoothGattCharacteristic.getUuid().toString());};};
         showCharacter("onCharacteristicWrite " + bluetoothGatt.getDevice().getAddress() + " status:" + status + " ", bluetoothGattCharacteristic);
     }
-
+/*
     @SuppressWarnings("unused")
     public void onConnectionUpdated(BluetoothGatt gatt, int interval, int latency, int timeout, int status) {
         {if(doLog) {Log.i(LOG_ID, "onConnectionUpdated interval=" + interval + " latency=" + latency + " timeout=" + timeout + " status=" + status);};};
     }
-
+*/
 
     private void requestAuth() {
         {if(doLog) {Log.i(LOG_ID,"requestAuth()");};};
@@ -695,7 +695,7 @@ private    void getdatacmd() {
 
     private void sendkeychallenge() {
        phase = SendKeyChallenge;
-       {if(doLog) {Log.i(LOG_ID,"sendkeychallenge");};};
+       if(doLog) {Log.i(LOG_ID,"sendkeychallenge");};
         certinbufiter = 0;
         certinbuf = new byte[64];
         byte[] buf = new byte[17];

@@ -182,16 +182,27 @@ jlong SiContext::processData(SensorGlucoseData *sens,time_t nowsecs,int8_t *data
                         LOGGER("SIprocess finished=%d\n", sensor->finished);
                         backup->resensordata(sensorindex);
                         }
-                   auto res=glucoseback(eventTime,mgdL,change,sens);
-//                   if(!(index%5)) savejson(sens,sens->statefile,index,algcontext,getjson3);
-                    backup->wakebackup(wakestream);
-                  extern void wakewithcurrent();
-                     wakewithcurrent();
+                    uint32_t starttime=sens->getinfo()->starttime;
+                    uint32_t warminutes=sens->getinfo()->manualwarmup;
+                    uint32_t endwarmup=starttime+warminutes*60;
+                    if(eventTime>endwarmup) {
+                           auto res=glucoseback(eventTime,mgdL,change,sens);
+        //                   if(!(index%5)) savejson(sens,sens->statefile,index,algcontext,getjson3);
+                            backup->wakebackup(wakestream);
+                          extern void wakewithcurrent();
+                             wakewithcurrent();
 
-#ifdef OLDEVERSENSE 
-                     sendEverSenseold(sens,5);
-#endif
-                     return res;
+        #ifdef OLDEVERSENSE 
+                             sendEverSenseold(sens,5);
+        #endif
+                             return res;
+                             }
+                     else {
+                            if(!sens->getinfo()->redoAll) {
+                                sens->getinfo()->warmupstartpos=std::min((int)sens->getinfo()->pollcount-1,0);
+                                }
+
+                         }
                     }
                  else {
 /*                   if(!infuture&&!(index%500)) {

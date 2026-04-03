@@ -60,7 +60,7 @@ public    void handlealarm() {
                 SuperGattCallback.previousglucose=null;
                 nexttime = (afterwait < tryagain)  ? afterwait : tryagain;
             } else {
-                if(!saidloss) {
+                if(!Natives.lossSignalAlreadyHeard()) {
                     if(doLog) {Log.i(LOG_ID, "handlealarm alarm");};;
                     long lasttime=Natives.lastglucosetime( );
                     if(lasttime!=0L)
@@ -69,7 +69,7 @@ public    void handlealarm() {
                      if(SuperGattCallback.doWearInt)  {
                         WearInt.missingalarm(nu /*SIC, that what xDrip is doing*/);
                         }
-                    saidloss = true;
+                    //saidloss = true;
                     }
                  else {
                     Notify.onenot.oldnotification(wastime);

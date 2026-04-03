@@ -81,7 +81,7 @@ private const val FRAME_PERIOD_MS_DEFAULT: Long = 60000L
  * changes by user via [userStyleRepository.addUserStyleListener()].
  */
 class WatchRenderer(
-    private val context: Context,
+    private var context: Context,
     surfaceHolder: SurfaceHolder,
     watchState: WatchState,
     private val complicationSlotsManager: ComplicationSlotsManager,
@@ -142,6 +142,7 @@ val updater:Runnable= object: Runnable{
     private val sensorlist: SensorEventListener
     init {
         Log.i(LOG_ID,"init")
+        context=context.createAttributionContext("heartRateTracking")
         sensorlist=    object:SensorEventListener {
         override fun onAccuracyChanged( sensor: Sensor, accuracy: Int ): Unit {
 

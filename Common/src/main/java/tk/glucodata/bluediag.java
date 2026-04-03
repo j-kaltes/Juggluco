@@ -187,6 +187,7 @@ void showinfo(final SuperGattCallback gatt,MainActivity act) {
        streamhistory.setVisibility(VISIBLE);
       alarmclock.setVisibility(GONE);
       resetbutton.setVisibility(GONE);
+      divorcebutton.setVisibility(GONE);
         }
     else  {
       streamhistory.setVisibility(GONE);
@@ -196,15 +197,25 @@ void showinfo(final SuperGattCallback gatt,MainActivity act) {
       }
 
     starttimeV.setText(datestr(gatt.starttime));
+   if(gatt.sensorgen==0x50) {
+         clear.setVisibility(VISIBLE);
+         divorcebutton.setVisibility(VISIBLE);
+         } 
+    else {
+        clear.setVisibility(GONE);
+        divorcebutton.setVisibility(GONE);
+        }
     if(gatt.sensorgen<=2) {
-        if(gatt.streamingEnabled() )
+        if(gatt.streamingEnabled() ) {
             streaming.setText(R.string.streamingenabled);
+            }
         else
             streaming.setText(R.string.streamingnotenabled);
         }
     else {
-        if(gatt.streamingEnabled() )
-            streaming.setText(R.string.sensorstreamed);
+        if(gatt.streamingEnabled() ) {
+                streaming.setText(R.string.sensorstreamed);
+            }
         else
             streaming.setText(R.string.sensornotstreamed);
         }
@@ -281,6 +292,8 @@ CheckBox usebluetooth;
 boolean wasuse;
 CheckBox priority,streamhistory, alarmclock,disconnectsensor;
 Button resetbutton;
+Button divorcebutton;
+Button clear;
 
 Button locationpermission;
 TextView scanview;
@@ -499,6 +512,8 @@ bluediag(MainActivity act,final ArrayList<SuperGattCallback> gatts) {
     streamhistory=view.findViewById(R.id.streamhistory);
     alarmclock=view.findViewById(R.id.alarmclock);
     resetbutton=view.findViewById(R.id.resetbutton);
+    divorcebutton=view.findViewById(R.id.divorcebutton);
+    clear=view.findViewById(R.id.clear);
    alarmclock.setChecked(Natives.getalarmclock());
 if(!isWearable) {
     Button finish = view.findViewById(R.id.finish);
@@ -561,6 +576,40 @@ else {
 
     streamhistory.setOnCheckedChangeListener( (buttonView,  isChecked) -> Natives.setStreamHistory(isChecked) );
     alarmclock.setOnCheckedChangeListener( (buttonView,  isChecked) -> Natives.setalarmclock(isChecked) );
+    divorcebutton.setOnClickListener( v -> {
+            final SuperGattCallback gatt = gatts.get(gattselected);
+            if(gatt.sensorgen!=0x50) {
+                final String message="ERROR: divorcebutton on sensorgen="+gatt.sensorgen;
+                Log.i(LOG_ID,message);
+                Applic.Toaster(message);
+                }
+            Confirm.ask(act,gatt.SerialNumber,act.getString(R.string.divorcemessage),()-> {
+                var aid=(AidexXGattCallback)gatt;
+                aid.startUnpair( new UnpairOverlayHost(act,R.string.releasingsensor),res -> {
+                    aid.finishSensor();
+                    SensorBluetooth.sensorEnded(aid.SerialNumber);
+                    act.requestRender();
+                    return true;
+                    });
+                act.doonback();
+             });
+      });
+    clear.setOnClickListener( v -> {
+            final SuperGattCallback gatt = gatts.get(gattselected);
+            if(gatt.sensorgen!=0x50) {
+                final String message="ERROR: clear on sensorgen="+gatt.sensorgen;
+                Log.i(LOG_ID,message);
+                Applic.Toaster(message);
+                }
+            Confirm.ask(act,gatt.SerialNumber,act.getString(R.string.clearmessage),()-> {
+                var aid=(AidexXGattCallback)gatt;
+                aid.startClear( new UnpairOverlayHost(act,R.string.clearingmemory),res -> {
+                    act.requestRender();
+                    return true;
+                    });
+                act.doonback();
+             });
+      });
     resetbutton.setOnClickListener( v -> {
             Confirm.ask(act,act.getString(R.string.resettitle),act.getString(R.string.resetmessage),()-> {
                 final SuperGattCallback gatt = gatts.get(gattselected);
@@ -616,7 +665,7 @@ else {
                 else  {
                     returntoblue=true;
                     act.doonback();
-                    act.requestPermissions(noperm, act.LOCATION_PERMISSION_REQUEST_CODE);
+                    act.requestPermissions(noperm, act.BLUETOOTH_PERMISSION_REQUEST_CODE);
                     }
                 });
             }

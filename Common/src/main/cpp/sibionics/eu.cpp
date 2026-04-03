@@ -186,6 +186,11 @@ extern "C" JNIEXPORT jint JNICALL   fromjava(getSiSubtype)(JNIEnv *env, jclass c
        LOGAR("getSiSubtype usedhist==null");
        return -1;
        }
+
+   if(usedhist==Sensoren::isdeleted)  {
+        LOGAR("getSiSubtype isdeleted");
+        return -1;
+        }
    return  usedhist->siSubtype();
    }
    /*
@@ -378,26 +383,37 @@ jlong SiContext::processData2(SensorGlucoseData *sens,time_t nowsecs,data_t *dat
                sens->setSiIndex(index+1);
                sens->retried=0;
                if(!reindex)  {
-                     sens->sensorerror=false;
-                     if(sensor->finished) {
-                            sensor->finished=0;
-                            LOGGER("SIprocess finished=%d\n", sensor->finished);
-                            backup->resensordata(sensorindex);
-                            }
-                     auto res=glucoseback(eventTime,mgdL,change,sens);
-/*                     if(!(index%5))  {
-                        if(algcontext)
-                            savejson(sens,sens->statefile,index,algcontext,getjson2);
-                        } */
-                     backup->wakebackup(wakestream);
-                     extern void wakewithcurrent();
-                     wakewithcurrent();
+                    uint32_t starttime=sens->getinfo()->starttime;
+                    uint32_t warminutes=sens->getinfo()->manualwarmup;
+                    uint32_t endwarmup=starttime+warminutes*60;
+                    if(eventTime>endwarmup) {
+                         sens->sensorerror=false;
+                         if(sensor->finished) {
+                                sensor->finished=0;
+                                LOGGER("SIprocess finished=%d\n", sensor->finished);
+                                backup->resensordata(sensorindex);
+                                }
+                         auto res=glucoseback(eventTime,mgdL,change,sens);
+    /*                     if(!(index%5))  {
+                            if(algcontext)
+                                savejson(sens,sens->statefile,index,algcontext,getjson2);
+                            } */
+                         backup->wakebackup(wakestream);
+                         extern void wakewithcurrent();
+                         wakewithcurrent();
 
-    #ifdef OLDEVERSENSE
-                      sendEverSenseold(sens,5);
-    #endif
-                       return res;
-                      }
+        #ifdef OLDEVERSENSE
+                          sendEverSenseold(sens,5);
+        #endif
+                           return res;
+                          }
+                      else {
+                            if(!sens->getinfo()->redoAll) {
+                                sens->getinfo()->warmupstartpos=std::min((int)sens->getinfo()->pollcount-1,0);
+                                }
+                           
+                          }
+                         }
                else {
 /*                   if(!(index%500)) {
                         if(algcontext) {

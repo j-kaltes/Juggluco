@@ -1223,6 +1223,18 @@ public void onResume() {
 
     app.setcurve(this);
     app.setmintime();
+
+    if(!isWearable) {
+       if(SiBionics==1)  {
+            if(MainActivity.tocalendarapp) {
+                final String name=Natives.getUsedSensorName();
+                if(name!=null) {
+                    ScanNfcV.calendar((MainActivity)getContext(), 0, name);
+                    MainActivity.tocalendarapp=false;
+                    }
+                }
+            }
+       }
     }
 
 @Override

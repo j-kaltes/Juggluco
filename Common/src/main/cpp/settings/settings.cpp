@@ -18,11 +18,12 @@
 /*                                                                                   */
 /*      Fri Jan 27 12:36:58 CET 2023                                                 */
 /*
+*/
+/*
 #ifndef NOLOG //TODO remove
 #define NONOJVM 1
 #endif 
 */
-
 #include <signal.h>
 #include "logs.hpp"
 #include "datbackup.hpp"
@@ -272,7 +273,7 @@ static void doversionupdate() {
          if(settings->data()->initVersion<27) {
             if( settings->data()->initVersion<21) {
                sensors->onallsensors([](SensorGlucoseData *hist ) {
-                if(hist&&!hist->isSibionics()&&!hist->isDexcom()) {
+                if(hist&&hist->isLibre()) {
                   auto start=hist->getstarthistory();
                   if(start>4) {
                      for(int i=4;i<start;i++)  {

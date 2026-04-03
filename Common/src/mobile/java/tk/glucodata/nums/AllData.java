@@ -1024,7 +1024,18 @@ void register(Context context) {
                mConnectIQ.registerForAppEvents(devices.get(devused), mMyApp, IQlistener);
                usewatch=true;
             } catch (InvalidStateException e) {
-                Applic.argToaster(getApplication(), "ConnectIQ is not in a valid state", Toast.LENGTH_SHORT);
+                var mess="ConnectIQ is not in a valid state";
+                Applic.argToaster(getApplication(), mess, Toast.LENGTH_SHORT);
+                Log.stack(LOG_ID,mess,e);
+            }
+            /*
+            catch (ServiceUnavailableException e) {
+                var mess="Service unavailable";
+                Applic.argToaster(getApplication(), mess, Toast.LENGTH_SHORT);
+                Log.stack(LOG_ID,mess,e);
+            } */
+            catch (Throwable th) {
+                Log.stack(LOG_ID,"registerForAppEvents",th);
             }
         }
    }
@@ -1033,25 +1044,34 @@ void unregister() {
    usewatch=false;
    if(mConnectIQ!=null) {
       try {
-      if(devices!=null&&devices.size()>0) {
-            mConnectIQ.unregisterAllForEvents();
-           {if(doLog) {Log.d(LOG_ID,"unregisterAllForEvents");};};
-         if (mMyApp != null) {
-            {if(doLog) {Log.d(LOG_ID,"unregisterForApplicationEvents");};};
-             mConnectIQ.unregisterForApplicationEvents(devices.get(devused), mMyApp);
-         }
-         }
+          if(devices!=null&&devices.size()>0) {
+                mConnectIQ.unregisterAllForEvents();
+               if(doLog) {Log.d(LOG_ID,"unregisterAllForEvents");};
+             if (mMyApp != null) {
+                if(doLog) {Log.d(LOG_ID,"unregisterForApplicationEvents");};;
+                 mConnectIQ.unregisterForApplicationEvents(devices.get(devused), mMyApp);
+             }
+             }
 
           mConnectIQ.shutdown(getApplication());
       } catch (InvalidStateException e) {
-      }
+           Log.stack(LOG_ID,"InvalidStateException",e);
+          }
+      /*
+       catch (ServiceUnavailableException e) {
+           Log.stack(LOG_ID,"ServiceUnavailableException",e);
+          } */
+       catch (Throwable th) {
+         Log.stack(LOG_ID,"unregister",th);
+       }
       }
    }
 
 public void   onCleared() {
         try {
       numio.close();
-        } catch (Exception ex) {
+        } catch (Throwable th) {
+            Log.stack(LOG_ID,"onCleared",th);
         }
    finally {
       unregister();

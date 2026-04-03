@@ -1,3 +1,6 @@
+address 9113 already in use under WearOS, but no other juggluco running with that port. 
+Doesn't recognise already running.
+
 Te vaak verbinden met server als het niet werkt?
 What is this in jugglucoconnect?:
 1765921227.228 2139747 before SSL_shutdown rbio fd=12

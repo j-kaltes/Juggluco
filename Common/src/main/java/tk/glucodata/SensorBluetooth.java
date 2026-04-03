@@ -37,13 +37,16 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
 import android.os.ParcelUuid;
+import android.os.SystemClock;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import androidx.annotation.RequiresApi;
 
@@ -169,10 +172,10 @@ private SuperGattCallback  getCallback(BluetoothDevice device) {
 //long foundtime=0L;
 
 @SuppressLint("MissingPermission")
-private boolean checkdevice(BluetoothDevice device) {
+private boolean checkdevice(BluetoothDevice device,byte[] advertised) {
     try {
         SuperGattCallback cb = getCallback(device);
-        if (cb != null) {
+        if (cb != null&&cb.asAdvertised(advertised)) {
             boolean newdev = true;
             if(cb.foundtime == 0L) {
                 cb.foundtime = System.currentTimeMillis();
@@ -202,7 +205,7 @@ private boolean checkdevice(BluetoothDevice device) {
                 }
             return ret;
         }
-        {if(doLog) {Log.d(LOG_ID, "BLE unknown device");};};
+        if(doLog) {Log.d(LOG_ID, "BLE unknown device");};
         return false;
     } catch (Throwable e) {
         Log.stack(LOG_ID, "checkdevice", e);
@@ -231,7 +234,8 @@ class Scanner21 implements Scanner  {
             SensorBluetooth.this.stopScan(false);
             return true;
              }
-        return checkdevice(scanResult.getDevice());
+
+        return checkdevice(scanResult.getDevice(),scanResult.getScanRecord().getBytes());
         }
 //    private  boolean resultbusy=false;
 
@@ -267,7 +271,7 @@ class Scanner21 implements Scanner  {
               }
              }
          };
-private static final  boolean alwaysfilter=false;
+private static final  boolean alwaysfilter=true;
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     Scanner21() {
         ScanSettings.Builder builder = new ScanSettings.Builder();
@@ -353,7 +357,7 @@ class ArchScanner  implements Scanner {
    BluetoothAdapter.LeScanCallback mLeScanCallback= new BluetoothAdapter.LeScanCallback () {
         @Override
     public  void onLeScan (BluetoothDevice device, int rssi, byte[] scanRecord) {
-        checkdevice(device);
+        checkdevice(device,scanRecord);
         }
     }    ;
     public boolean init() {
@@ -392,11 +396,16 @@ final private Runnable mScanTimeoutRunnable = () -> {
 
 
 static boolean bluetoothIsEnabled() {
-        if (mBluetoothAdapter!= null) {
-            return  mBluetoothAdapter.isEnabled();
-        }
-        return false;
+if(mBluetoothAdapter!= null) {
+    return  mBluetoothAdapter.isEnabled();
     }
+   
+   if(!Natives.getusebluetooth()) {
+        return false;
+        }
+   start(true);
+   return  mBluetoothAdapter.isEnabled();
+   }
 
 
 static public void sensorEnded(String str) {
@@ -439,6 +448,42 @@ final private Runnable scanRunnable = new Runnable() {
 
   static private final   boolean scanOnUI=false;
 ScheduledFuture<?> scanFuture=null,timeoutFuture=null;
+
+private static final int MAX_SCAN_STARTS = 5;
+private static final long WINDOW_MS = 31_000L;
+static  final ArrayDeque<Long> scanStarts = new ArrayDeque<>();
+
+
+static long delayUntilScanAllowed() {
+    long now = SystemClock.elapsedRealtime();
+    while(!scanStarts.isEmpty() && (now - scanStarts.peekFirst()) >= WINDOW_MS) {
+        scanStarts.removeFirst();
+    }
+    if (scanStarts.size() < MAX_SCAN_STARTS) return 0L;
+
+    return WINDOW_MS - (now - scanStarts.peekFirst());
+}
+
+private void startScanGuarded() {
+    long delay = delayUntilScanAllowed();
+    if(delay > 0) {
+        Log.i(LOG_ID,"delayUntilScanAllowed()="+delay);
+        if(scanOnUI) {
+            Applic.getHandler().postDelayed(this::startScanGuarded, delay);
+             }
+         else {
+            scanFuture=Applic.scheduler.schedule(this::startScanGuarded, delay, TimeUnit.MILLISECONDS);
+            }
+        return;
+        }
+     final  long elapsed= SystemClock.elapsedRealtime();
+    scanStarts.addLast(elapsed);
+
+    scanRunnable.run();
+   // bluetoothLeScanner.startScan(scanCallback);
+   }
+
+
 private     boolean scanStarter(long delayMillis) {
       {if(doLog) {Log.i(LOG_ID,"scanStarter("+delayMillis+")");};};
       var main=MainActivity.thisone;
@@ -455,12 +500,12 @@ private     boolean scanStarter(long delayMillis) {
 
     if(scanOnUI) {
         if(delayMillis>0)
-            Applic.app.getHandler().postDelayed(scanRunnable , delayMillis);
+            Applic.getHandler().postDelayed(this::startScanGuarded,delayMillis);
         else
-            Applic.app.getHandler().post(scanRunnable);
+            Applic.getHandler().post(this::startScanGuarded);
         }
     else {
-        scanFuture=Applic.scheduler.schedule(scanRunnable, delayMillis, TimeUnit.MILLISECONDS);
+        scanFuture=Applic.scheduler.schedule(this::startScanGuarded, delayMillis, TimeUnit.MILLISECONDS);
         }
     return false;
     }
@@ -614,6 +659,17 @@ public void connectNamedDevice(String id,long delayMillis) {
             }
           }
         }
+       /*
+public void refreshNamedDevice(String id) {
+    Log.i(LOG_ID,"refreshNamedDevice "+id);
+      for(var cb: gattcallbacks)    {
+         if(id.equals(cb.SerialNumber)) {
+             if(cb instanceof Libre3GattCallback)
+                ((Libre3GattCallback) cb).doSomething() ;
+             return;
+            }
+          }
+        } */
 public boolean connectDevices(long delayMillis) {
     Log.i(LOG_ID,"connectDevices "+delayMillis);
     if(!bluetoothIsEnabled()) {
@@ -761,6 +817,9 @@ SuperGattCallback getGattCallback(String name, long dataptr) {
             if(vers==0x30) {
                 return new AirGattCallback(name, dataptr);
                 }
+            if(vers==0x50) {
+                return new AidexXGattCallback(name, dataptr);
+                }
             }
         if(tk.glucodata.BuildConfig.SiBionics==1) {
             if(vers==0x10) {
@@ -868,14 +927,12 @@ static public   void goscan() {
         if(doLog) {Log.v(LOG_ID,"SensorBluetooth");};
         SuperGattCallback.autoconnect=Natives.getAndroid13();
 
-//        SuperGattCallback.glucosealarms.setLossAlarm();
     }
 
 static void start(boolean usebluetooth) {
     final var sensors=Natives.activeSensors();
     final boolean hasSensors= sensors!=null&&sensors.length>0; 
     if(hasSensors) {
-//          if(!keeprunning.started) Notify.shownovalue();
             SuperGattCallback.glucosealarms.setLossAlarm();
             }
     if(doLog) {Log.v(LOG_ID,"SensorBluetooth.start("+usebluetooth+")");};
@@ -917,6 +974,7 @@ private void addBluetoothStateReceiver() {
             int intExtra = intent.getIntExtra("android.bluetooth.adapter.extra.STATE", -1);
             if (intExtra == BluetoothAdapter.STATE_OFF) {
                 {if(doLog) {Log.v(LOG_ID,"BLUETOOTH switched OFF");};};
+
                 // wasScanning=mScanning; 
                 SensorBluetooth.this.stopScan(false);
                 for(var cb: gattcallbacks)  {
@@ -926,6 +984,7 @@ private void addBluetoothStateReceiver() {
                         }
                     cb.close();
                     }
+                 scanStarts.clear();
                 if(keepBluetooth) mBluetoothAdapter.enable();
                 } 
             else if (intExtra == BluetoothAdapter.STATE_ON) {
@@ -1058,31 +1117,31 @@ private void addBondStateReceiver() {
             }
         for(var cb: tmp.gattcallbacks)     {
             if(cb.mActiveDeviceAddress!=null) {
-            if(address.equals(cb.mActiveDeviceAddress)) {
-               if(action.equals(ACTION_BOND_STATE_CHANGED)) {
-                  final int bondState = intent.getIntExtra(EXTRA_BOND_STATE, BluetoothDevice.ERROR);
-                  final int previousBondState = intent.getIntExtra(BluetoothDevice.EXTRA_PREVIOUS_BOND_STATE, -1);
-                  switch (bondState) {
-                        case BOND_BONDING:
-                            {if(doLog) {Log.i(LOG_ID,"Broadcast: BOND_BONDING "+address);};};
-                            break;
-                        case BOND_BONDED:
-                            {if(doLog) {Log.i(LOG_ID,"Broadcast: BOND_BONDED "+address);};};
-                            break;
-                        case BOND_NONE:
-                            {if(doLog) {Log.i(LOG_ID,"Broadcast: BOND_NONE "+address);};};
-                            break;
-                        case BluetoothDevice.ERROR:
-                            {if(doLog) {Log.i(LOG_ID,"Broadcast: ERROR "+address);};};
-                            break;
-                          default:
-                            {if(doLog) {Log.i(LOG_ID,"Broadcast: "+bondState+ " "+address);};};
-                        }
+                if(address.equals(cb.mActiveDeviceAddress)) {
+                   if(action.equals(ACTION_BOND_STATE_CHANGED)) {
+                      final int bondState = intent.getIntExtra(EXTRA_BOND_STATE, BluetoothDevice.ERROR);
+                      final int previousBondState = intent.getIntExtra(BluetoothDevice.EXTRA_PREVIOUS_BOND_STATE, -1);
+                      switch (bondState) {
+                            case BOND_BONDING:
+                                {if(doLog) {Log.i(LOG_ID,"Broadcast: BOND_BONDING "+address);};};
+                                break;
+                            case BOND_BONDED:
+                                {if(doLog) {Log.i(LOG_ID,"Broadcast: BOND_BONDED "+address);};};
+                                break;
+                            case BOND_NONE:
+                                {if(doLog) {Log.i(LOG_ID,"Broadcast: BOND_NONE "+address);};};
+                                break;
+                            case BluetoothDevice.ERROR:
+                                {if(doLog) {Log.i(LOG_ID,"Broadcast: ERROR "+address);};};
+                                break;
+                              default:
+                                {if(doLog) {Log.i(LOG_ID,"Broadcast: "+bondState+ " "+address);};};
+                            }
+                    }
+                    cb.bonded();
+                    return;
+                    }
                 }
-                cb.bonded();
-                return;
-                }
-            }
             }
         {if(doLog) {Log.i(LOG_ID,"Bond Broadcast: no sensor matches address "+address);};};
         }
@@ -1142,4 +1201,64 @@ private boolean initializeBluetooth() {
 
     return false;
     }
+    /*
+static boolean hasAidexX() {
+   var one=blueone;
+   if(one==null)
+      return false;
+    for(var cb: one.gattcallbacks)  {
+        if(cb.sensorgen==0x50)
+            return true;
+        };
+    return false;
+    } */
+static void afterUnpair(MainActivity act,BooleanConsumer runnable) {
+       
+       var one=blueone;
+       if(one!=null) {
+         var gatts=one.gattcallbacks;
+         int tot=gatts.size();
+        AidexXGattCallback[] ais=new AidexXGattCallback[tot];
+         int iter=0;
+         for(var cb: gatts)  {
+                if(cb.sensorgen==0x50)
+                    ais[iter++]=(AidexXGattCallback)cb;
+                };
+        if(iter>0) {
+            Log.i(LOG_ID,"afterUnpair iter="+iter+ " activity="+(act!=null));
+            var up=act!=null?new UnpairOverlayHost(act,R.string.releasingsensor):null;
+            if(iter==1) {
+                ais[0].startUnpair(up,res->{
+                    Log.i(LOG_ID,"unpair 1");
+                    runnable.accept(res);
+                    return true;
+                    });
+                }
+           else {
+             AtomicInteger remaining = new AtomicInteger(iter);
+             for(int i=0;i<iter;++i) {
+                ais[i].startUnpair(up,res ->{
+                    Log.i(LOG_ID,"unpair 2");
+                  if(remaining.decrementAndGet() == 0) {
+                     runnable.accept(res);
+                     return true;
+                     }
+                    return false;
+                     });
+
+                }
+               }
+            return;
+            }
+        }
+     runnable.accept(false);
+     }
+
+static void unpairWatch(Context context,String sourceId,MessageSender sender) {
+          afterUnpair(MainActivity.thisone,res-> {
+                                Log.i(LOG_ID,"unpairWatch "+sourceId);
+                                Applic.setbluetooth(context,false);
+                                sender.sendunpair(sourceId,res);
+                                });
+              }
 }

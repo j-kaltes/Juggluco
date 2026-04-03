@@ -133,7 +133,7 @@ private boolean discover(BluetoothGatt bluetoothGatt) {
             }
         }
     if(success)  {
-        if(doLog) Log.i(LOG_ID,"discover succesfull");
+        if(doLog) Log.i(LOG_ID,"discover successfull");
         tryer( ()->
             {
             return bluetoothGatt.readCharacteristic(ManufacturerNameChar);

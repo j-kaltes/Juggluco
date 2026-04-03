@@ -27,9 +27,11 @@
 #include <vector>
 #include <time.h>
 #include <limits.h>
+#include <array>
 #include "inout.hpp"
 #include "SensorGlucoseData.hpp"
 #include "settings/settings.hpp"
+#include "BarCode.hpp"
 using namespace std;
 //char sensorid[]="E007-0M0063KNUJ0";
 //#define sensorid "E007-0M0063KNUJ0"xxxxxx
@@ -73,6 +75,9 @@ uint32_t officialendTime() const {
 uint32_t largemaxtime() const {
    return maxtime()+60*60*24;
    }
+bool isPresent() const {
+    return true;
+    }
    } __attribute__ ((packed)) __attribute__ ((aligned (4))) ; /*always 32 bytes */
 
 
@@ -226,7 +231,7 @@ public:
              const sensor *sens=getsensor(i);
               if(sens->next==0&&sens->prev==0)
                   setindices();
-             if(sens->present) {
+             if(sens->isPresent()) {
                 if (const SensorGlucoseData *hist = getSensorData(i)) {
                    auto tim = hist->getfirsttime();
                    if (tim < first) {
@@ -239,8 +244,6 @@ public:
                 break;
           }
          }
-      if (first == UINT32_MAX)
-         return time(nullptr) - 24 * 60 * 60;
       return first;
    }
 
@@ -278,6 +281,7 @@ void   removeunused() {
   if(const int l=last();l>=0&&l<maxhist) {
          SensorGlucoseData *hist = getSensorData(l);
          if(hist&&hist->unused()) {
+            LOGGER("removeunused %i\n",l);
             if(removelinks(infoblockptr()->last--))
                 setindices();
             sendstartsensors(l); 
@@ -287,11 +291,15 @@ void   removeunused() {
          }
       }
 public:
+static int  deletedit;
+static SensorGlucoseData *isdeleted;
 void   deletelast() {
   if(const int l=last();l>=0&&l<maxhist) {
       auto *old=hist[l];
       LOGGER("maxhist=%d deletelast %d %p\n",maxhist,l,old);
       if(old&&old->unused()) {
+           isdeleted=old;
+           deletedit=l;
            LOGGER("deletelast before delete old (%p)\n",old);
 //           delete   old;
            std::destroy_at(old);
@@ -316,6 +324,7 @@ void   deletelast() {
       }
       const int32_t lastpos=infoblockptr()->last;
       SensorGlucoseData *histel = new SensorGlucoseData(pathconcat(inbasedir, name),lastpos);
+        
       hist[lastpos] = histel;
       LOGGER("hist[%d]=%p\n", lastpos,histel);
       sensorlist()[lastpos].starttime = histel->getstarttime();
@@ -373,6 +382,7 @@ int makelibre3sensorindex(std::string_view shortname,uint32_t starttime,const ui
    LOGGER("makelibre3sensor(%s,%u) %s",shortname.data(),starttime,ctime(&tim));
 #endif
 
+    removeunused();
    if(sensor *sensgegs = findsensorm(name.data()) ) {
       LOGGER("known sensor %s\n",sensgegs->showsensorname());
       const int   sensindex= sensgegs - sensorlist();
@@ -433,6 +443,13 @@ static auto namefromSIgegs(const char *gegs,const int len,bool hasnum) {
    }
 #endif
 #ifdef DEXCOM
+std::pair<int,SensorGlucoseData *> addSensorInitgetPair(const string_view name,int halfdays) {
+   const int ind=addsensor(name);
+   sensor *sen=getsensor(ind);
+   sen->initialized=true;
+   sen->halfdays=halfdays;
+   return {ind,getSensorData(ind)} ;
+   }
 std::pair<int,SensorGlucoseData *> makeDexComSensorindex(const char *pin,std::string_view gegs,uint32_t now) {
    std::array<char,16> name;
    if(gegs.size()==55) {
@@ -477,11 +494,7 @@ std::pair<int,SensorGlucoseData *> makeDexComSensorindex(const char *pin,std::st
        }
    const pathconcat sensordir(inbasedir,name);
    SensorGlucoseData::mkdatabaseDex(sensordir,gegs,now );
-   const int ind=addsensor(name);
-   sensor *sen=getsensor(ind);
-   sen->initialized=true;
-   sen->halfdays=maxdaysDex*2;
-   return {ind,getSensorData(ind)} ;
+   return addSensorInitgetPair(std::string_view(name.data(),16),maxdaysDex*2);
    }
 private:
 static  bool dexcomEnd(const char *endcode) {
@@ -499,12 +512,35 @@ static  bool dexcomEnd(const char *endcode) {
 
 //Scanned: 01040156300880101125031317260203211R000162641
 //(01)04015630088010 11 250313 17 260203(21)1R000162641    
+public:
+void useAgain(int sensindex) {
+       sensor &sensgegs=sensorlist()[sensindex];
+       sensgegs.finished=0;
+       void resensordata(int sensorindex) ;
+       resensordata(sensindex);
+       }
 
 #ifdef SIBIONICS
+private:
+std::pair<int,SensorGlucoseData *> getOldSensorPair(sensor *sensgegs,uint32_t now) {
+       const int   sensindex= sensgegs - sensorlist();
+       SensorGlucoseData *sens=getSensorData(sensindex) ;
+       sensgegs->finished=0;
+       auto *info= sens->getinfo();
+       //sendsiScan(sens);
+       info->lastscantime=now;
+       sendsiScan(sens);
+       void resensordata(int sensorindex) ;
+       resensordata(sensindex);
+       return {sensindex,sens};
+       }
+
+
+
 std::pair<int,SensorGlucoseData *> makeAirSensorindex(std::string_view scanned,uint32_t now) {
 
     if(sizeof(careSenseAirScan_t)!=scanned.size()) { 
-            LOGGER("makeAirSensorindex: wrong size %zd != %zd\n ",sizeof(careSenseAirScan_t),scanned.size());
+            LOGGER("makeAirSensorindex: wrong size %zd != %zd\n",sizeof(careSenseAirScan_t),scanned.size());
             return {};
         }
     const struct careSenseAirScan_t *scan=reinterpret_cast<const struct careSenseAirScan_t*>( scanned.data());
@@ -548,29 +584,15 @@ std::pair<int,SensorGlucoseData *> makeAirSensorindex(std::string_view scanned,u
         memcpy(longname+4,serial.data(),12);
         longname[16]='\0';
         LOGGER("makeAirSensorindex: longname: %s\n",longname);
-        std::string_view name{longname,16};
+    std::string_view name{longname,16};
+    removeunused();
    if(sensor *sensgegs = findsensorm(longname) ) {
        LOGGER("makeAirSensorindex: known sensor %s\n",sensgegs->showsensorname());
-       const int   sensindex= sensgegs - sensorlist();
-       SensorGlucoseData *sens=getSensorData(sensindex) ;
-       sensgegs->finished=0;
-       auto *info= sens->getinfo();
-       //sendsiScan(sens);
-
-       info->lastscantime=now;
-       if(!info->pollcount) info->starttime=now; //Not needed
-      sendsiScan(sens);
-       void resensordata(int sensorindex) ;
-       resensordata(sensindex);
-       return {sensindex,sens};
+      return getOldSensorPair(sensgegs,now);
        }
    const pathconcat sensordir(inbasedir,name);
    SensorGlucoseData::mkdatabaseAir(sensordir,scanned,now );
-   const int ind=addsensor(name);
-   sensor *sen=getsensor(ind);
-   sen->initialized=true;
-   sen->halfdays=maxdaysAir*2;
-   return {ind,getSensorData(ind)} ;
+   return addSensorInitgetPair(name,maxdaysAir*2);
 }
 
 struct accuScan {
@@ -597,6 +619,7 @@ std::pair<int,SensorGlucoseData *> makeAccuCheckSensorindex(std::string_view sca
    const accuScan *accu=reinterpret_cast<  const accuScan *>(scanned.data());
    LOGGER("AccuChek %.11s %.16s expiration year %.2s month %.2s day %.2s\n",accu->name,name.data(),accu->exYear,accu->exMonth,accu->exDay);
 #endif
+   removeunused();
    if(sensor *sensgegs = findsensorm(name.data()) ) {
        LOGGER("known sensor %s\n",sensgegs->showsensorname());
        const int   sensindex= sensgegs - sensorlist();
@@ -620,34 +643,8 @@ std::pair<int,SensorGlucoseData *> makeAccuCheckSensorindex(std::string_view sca
    sen->halfdays=maxdaysAccu*2;
    return {ind,getSensorData(ind)} ;
     }
-public:
-std::pair<int,SensorGlucoseData *> makeSIsensorindex(std::string_view gegsSI,uint32_t now) {
-#ifndef NOLOG
-   LOGGER("makeSIsensorindex(%s) len=%zd\n",gegsSI.data(),gegsSI.size());
-#endif
-    if(const auto res=makeAirSensorindex(gegsSI,now);res.second) {
-        return res;
-        }
-
-   bool hasnum=std::ranges::contains_subrange(gegsSI,sibionicsRecognition);
-   const auto *endcode=gegsSI.end();
-/*   bool hasnum=std::search(gegsSI.begin(),endcode,sibionicsRecognition.begin(),sibionicsRecognition.end())!=endcode;  */
-   if(!hasnum) {   
-     std::string_view si="(SI)";
-     if(gegsSI.size()<36||!std::ranges::contains_subrange(gegsSI,si)) {
-        if(dexcomEnd(endcode)) {
-            if(const auto res=makeDexComSensorindex(endcode-4,gegsSI,now);res.first>=0)
-                return res;
-            }
-         return makeAccuCheckSensorindex(gegsSI,now);
-         }
-      }
- if(gegsSI.size()==59) {
-        LOGAR("Transmitter tag");
-         return {-1,nullptr};
-        }
+std::pair<int,SensorGlucoseData *> makeSIsensorIndex(std::string_view gegsSI,uint32_t now,bool hasnum) {
    const auto name=namefromSIgegs(gegsSI.data(),gegsSI.size(),hasnum);
-
    removeunused();
    if(sensor *sensgegs = findsensorm(name.data()) ) {
       LOGGER("known sensor %s\n",sensgegs->showsensorname());
@@ -672,6 +669,71 @@ std::pair<int,SensorGlucoseData *> makeSIsensorindex(std::string_view gegsSI,uin
    sen->halfdays=maxdaysSI*2;
    return {ind,getSensorData(ind)} ;
    }
+public:
+std::pair<int,SensorGlucoseData *> makeAidexXSensorindex(const std::string_view serial,std::string_view gegsSI,uint32_t now) {
+    std::array<char,17> longname;
+    char *startname=&longname[0];
+    char *zero=&longname[16];
+    static constexpr const char aidex[]{"AiDEXx"};
+    static constexpr const int aidexlen=sizeof(aidex)-1;
+    const int left=16-serial.size();
+    memcpy(startname,aidex,aidexlen);
+    if(left>aidexlen) {
+        memset(startname+aidexlen,'x',left-aidexlen);
+        }
+    char *ptr=zero-serial.size();
+    memcpy(ptr,serial.data(),serial.size());
+   *zero='\0';
+   LOGGER("makeAidexXSensorindex %.*s\n",longname.size(),startname);
+   removeunused();
+   std::string_view name{startname,16};
+   if(sensor *sensgegs = findsensorm(longname.data()) ) {
+       LOGGER("makeAidexXSensorindex: known sensor %s\n",sensgegs->showsensorname());
+       return getOldSensorPair(sensgegs,now);
+       }
+   const pathconcat sensordir(inbasedir,longname);
+   SensorGlucoseData::mkdatabaseAidexX(sensordir,gegsSI,serial,now );
+   return addSensorInitgetPair(name,maxdaysAidexX*2);
+   }
+std::pair<int,SensorGlucoseData *> makePhotoScanSensorIndex(std::string_view gegsSI,uint32_t now) {
+   LOGGER("makePhotoScanSensorIndex(%s) len=%zd\n",gegsSI.data(),gegsSI.size());
+  BarCode barcode;
+  barcode.parseGs1(gegsSI);
+  #ifndef NOLOG
+  barcode.showscan();
+  #endif
+  {
+ const  union {
+      const char buf[8]{"6958590"};
+      std::array<char,7> aidexx;
+      };
+  if(aidexx==barcode.getManifacturer()) {
+    return makeAidexXSensorindex(barcode.Serial,gegsSI,now);
+    }
+  }
+  if(const auto res=makeAirSensorindex(gegsSI,now);res.second) {
+        return res;
+        }
+   bool hasnum=std::ranges::contains_subrange(gegsSI,sibionicsRecognition);
+   const auto *endcode=gegsSI.end();
+/*   bool hasnum=std::search(gegsSI.begin(),endcode,sibionicsRecognition.begin(),sibionicsRecognition.end())!=endcode;  */
+   if(!hasnum) {   
+     std::string_view si="(SI)";
+     if(gegsSI.size()<36||!std::ranges::contains_subrange(gegsSI,si)) {
+        if(dexcomEnd(endcode)) {
+            if(const auto res=makeDexComSensorindex(endcode-4,gegsSI,now);res.first>=0)
+                return res;
+            }
+         return makeAccuCheckSensorindex(gegsSI,now);
+         }
+      }
+ if(gegsSI.size()==59) {
+        LOGAR("Transmitter tag");
+         return {-1,nullptr};
+        }
+   return makeSIsensorIndex(gegsSI,now,hasnum);
+   }
+
 #endif
 #ifdef LIBRE3
 SensorGlucoseData *makelibre3sensor(std::string_view shortname,uint32_t starttime,const uint32_t pin,const char *deviceaddress,const uint32_t now) {
@@ -741,6 +803,7 @@ template <typename F>
       constexpr const int maxage=maxSIhours*60*60;
       const uint32_t oldsecs=maxage>=starttime?0:starttime-maxage;
       int endindex=getendindex();
+      LOGGER("sensorInPeriod endindex=%d\n",endindex);
       if(endindex>=0) {
           for(int prev,i = endindex;i!=LISTEND;i=prev) {
             auto &sensor=sensorlist()[i];
@@ -888,6 +951,11 @@ vector<SensorGlucoseData *> sensorsInPeriod(uint32_t starttime,uint32_t endtime)
               }
           LOGGER("getSensorData(%d) %s\n",ind,name);
           hist[ind] = new SensorGlucoseData( pathconcat(inbasedir, std::string_view(name, sensornamelen)),ind);
+          if(ind==deletedit) {
+                LOGAR("was deletedit");
+                deletedit=-1;
+                isdeleted=nullptr;
+                }
           LOGGER("hist[%d]=%p\n",ind,hist[ind]);
            }
       if(hist[ind]) {
@@ -941,8 +1009,9 @@ template <typename F>
   bool checkinfo(const int ind, uint32_t nu,F dont) {
   
      const SensorGlucoseData *thishist = getSensorData(ind);
-     if (!thishist) {
-       sensorlist()[ind].present = 0;
+     if(!thishist) {
+        LOGGER("checkinfo getSensorData(%d)==null\n",ind);
+       //sensorlist()[ind].present = 0;
        return false;
        }
      else {
@@ -958,7 +1027,7 @@ template <typename F>
             return true;
             }
          else {
-             LOGGER("%s finished was %d set to 1\n", sensorlist()[ind].name, sensorlist()[ind].finished);
+             LOGGER("checkinfo %s finished was %d set to 1\n", sensorlist()[ind].name, sensorlist()[ind].finished);
              sensorlist()[ind].finished=1;
             }
          }
@@ -1043,27 +1112,35 @@ template <typename F>
                 continue;
                 }
              if(sensor.endtime<newsecs) {
+             /*
                 if(!sensor.starttime) {
                    LOGGER("%d no starttime\n",i);
                    continue;
                    }
-
-                if(sensor.maxtime() <= oldsecs) {
-                   LOGGER("blueactive %s old %u\n", showsensorname(i),sensor.maxtime());
-                   break;
-                   } 
+*/
+              if(sensor.starttime) {
+                    if(sensor.maxtime() <= oldsecs) {
+                       LOGGER("blueactive %s old %u\n", showsensorname(i),sensor.maxtime());
+                       break;
+                       } 
+                    }
                 const SensorGlucoseData *hist = getSensorData(i);
                 if(!hist) {
                    LOGSTRING("hist==null\n");
                    continue;
                    }
-               const auto sensmax=hist->getmaxtime() ;
-                if(sensmax<=nu) {
-                      LOGGER("blueactive %s old sensmax=%u\n", showsensorname(i),sensmax);
-                      if(sensmax<oldsecs)
-                         break;
-                      continue;
-                      }
+                if(hist->getstarttime() ) {
+                   const auto sensmax=hist->getmaxtime() ;
+                    if(sensmax<=nu) {
+                          bool hasdata=hist->hasData(nu);
+                          if(!hasdata) {
+                                  LOGGER("blueactive %s old sensmax=%u hasdata=%d\n", showsensorname(i),sensmax,hasdata);
+                                  if(sensmax<oldsecs)
+                                     break;
+                                  continue;
+                                  }
+                          }
+                     }
                 const auto lasttime=hist->lastused() ;
                 bool canuse=hist-> canusestreaming() ;
                 LOGGER("%s: can %suse streaming, lasttime=%d\n",showsensorname(i),canuse?"":"not ",lasttime);
@@ -1134,7 +1211,7 @@ std::pair<int, uint32_t> lastused(uint32_t (SensorGlucoseData::*proc)(void) cons
              sensor *sens=getsensor(i);
               if(sens->next==0&&sens->prev==0)
                   setindices();
-             if(sens->present) {
+             if(sens->isPresent()) {
                 if(const SensorGlucoseData *hist = getSensorData(i)) {
                    auto tim = hist->firstpolltime();
                    if (tim < UINT32_MAX)
@@ -1154,7 +1231,7 @@ std::pair<int, uint32_t> lastused(uint32_t (SensorGlucoseData::*proc)(void) cons
              sensor *sens=getsensor(i);
               if(sens->next==0&&sens->prev==0)
                   setindices();
-             if(sens->present) {
+             if(sens->isPresent()) {
                 if(const SensorGlucoseData *hist = getSensorData(i)) {
                    auto tim = hist->getfirsttimehistory();
                    if (tim < UINT32_MAX)
@@ -1252,14 +1329,15 @@ int sendCalibrates(crypt_t *pass, Connect *connect,int ind,uint16_t &startSendCa
      std::lock_guard<std::mutex> lock(caliMutex);
       int did=0;
       for(int sindex=first;sindex<=lastsens;++sindex) {
-           int res=getSensorData(sindex)->updateCali(pass, connect,ind,sindex);
-           if(!res)
-                return 0;
-            did|=res;
+           if(SensorGlucoseData *sens=getSensorData(sindex)) {
+                if(sens->error())
+                    continue;
+               int res=sens->updateCali(pass, connect,ind,sindex);
+               if(!res)
+                    return 0;
+                did|=res;
+                }
             }
-     /*  if(!connect->sendStartSendCalibrate(pass,first)) { TODO: needed?
-           return 0;
-          } */
        startSendCalibrate=lastsens;
        return did;
       }
@@ -1617,7 +1695,7 @@ inline std::ostream& operator<<(std::ostream& os,const sensor &sens) {
    os<<(!sens.finished?"Not ":"")<<"Finished"<<endl;
    if(tim)
       os<<"endtime:\t"<<ctime(&tim);
-   os<<(!sens.present?"Not ":"")<<"Present"<<endl;
+   os<<(!sens.isPresent()?"Not ":"")<<"Present"<<endl;
         return os;
         }
 

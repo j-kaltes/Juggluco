@@ -34,6 +34,8 @@ import java.lang.reflect.Method;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+import android.bluetooth.BluetoothStatusCodes;
+
 import static android.bluetooth.BluetoothDevice.BOND_BONDED;
 import static android.bluetooth.BluetoothDevice.BOND_BONDING;
 import static android.bluetooth.BluetoothDevice.BOND_NONE;
@@ -51,6 +53,9 @@ import static tk.glucodata.Log.showbytes;
 import static tk.glucodata.Natives.thresholdchange;
 import static tk.glucodata.SensorBluetooth.blueone;
 
+import androidx.annotation.Keep;
+import androidx.annotation.NonNull;
+
 public abstract class SuperGattCallback extends BluetoothGattCallback {
 volatile protected    boolean stop=false;
 public static boolean doWearInt=false;
@@ -62,13 +67,14 @@ public static boolean doGadgetbridge=false;
 
          protected static final UUID mCharacteristicConfigDescriptor = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
 
-    protected static final UUID mCharacteristicUUID_BLELogin = UUID.fromString("0000f001-0000-1000-8000-00805f9b34fb");
+              public static final UUID LIBRE3_CHAR_BLE_LOGIN = UUID.fromString("0000f001-0000-1000-8000-00805f9b34fb");
+    protected static final UUID mCharacteristicUUID_BLELogin = LIBRE3_CHAR_BLE_LOGIN;
+//    protected static final UUID mCharacteristicUUID_BLELogin = UUID.fromString("0000f001-0000-1000-8000-00805f9b34fb");
     protected static final UUID mCharacteristicUUID_CompositeRawData = UUID.fromString("0000f002-0000-1000-8000-00805f9b34fb");
     public static final UUID LIBRE3_DATA_SERVICE = UUID.fromString("089810cc-ef89-11e9-81b4-2a2ae2dbcce4");
     public static final UUID SIG_SERVICE_DEVICE_INFO = UUID.fromString("0000180a-0000-1000-8000-00805f9b34fb");
     public static final UUID LIBRE3_SECURITY_SERVICE = UUID.fromString("0898203a-ef89-11e9-81b4-2a2ae2dbcce4");
     public static final UUID LIBRE3_DEBUG_SERVICE = UUID.fromString("08982400-ef89-11e9-81b4-2a2ae2dbcce4");
-    public static final UUID LIBRE3_CHAR_BLE_LOGIN = UUID.fromString("0000f001-0000-1000-8000-00805f9b34fb");
     public static final UUID LIBRE3_CHAR_PATCH_CONTROL = UUID.fromString("08981338-ef89-11e9-81b4-2a2ae2dbcce4");
     public static final UUID LIBRE3_CHAR_PATCH_STATUS = UUID.fromString("08981482-ef89-11e9-81b4-2a2ae2dbcce4");
     public static final UUID LIBRE3_CHAR_EVENT_LOG = UUID.fromString("08981bee-ef89-11e9-81b4-2a2ae2dbcce4");
@@ -625,11 +631,16 @@ private boolean used_priority=false;
 boolean disableNoCheck(BluetoothGatt gatt, BluetoothGattCharacteristic ch) {
         gatt.setCharacteristicNotification(ch, false);
         BluetoothGattDescriptor descriptor = ch.getDescriptor(mCharacteristicConfigDescriptor);
-        if(!descriptor.setValue(BluetoothGattDescriptor.DISABLE_NOTIFICATION_VALUE)) {
-            Log.e(LOG_ID, SerialNumber + " " + "descriptor.setValue())  failed");
-            return false;
-        }
-        return gatt.writeDescriptor(descriptor);
+        if(Build.VERSION.SDK_INT >= 33) {
+              return gatt.writeDescriptor(descriptor,BluetoothGattDescriptor.DISABLE_NOTIFICATION_VALUE)==BluetoothStatusCodes.SUCCESS;
+             }
+         else {
+            if(!descriptor.setValue(BluetoothGattDescriptor.DISABLE_NOTIFICATION_VALUE)) {
+                Log.e(LOG_ID, SerialNumber + " " + "descriptor.setValue())  failed");
+                return false;
+            }
+            return gatt.writeDescriptor(descriptor);
+            }
         }
     boolean    disablenotification(BluetoothGatt gatt, BluetoothGattCharacteristic ch) {
         if(isNull(gatt)) {
@@ -665,24 +676,35 @@ protected   boolean enableGattDescriptor(BluetoothGatt bluetoothGatt1, Bluetooth
 static   boolean enableGattDescriptornote(String note,BluetoothGatt bluetoothGatt1, BluetoothGattCharacteristic bluetoothGattCharacteristic,byte[] type) {
     try {
          BluetoothGattDescriptor descriptor = bluetoothGattCharacteristic.getDescriptor(mCharacteristicConfigDescriptor);
-         if(!descriptor.setValue(type)) {
-             Log.e(LOG_ID, note +" "+"descriptor.setValue())  failed");
-             return false;
-             }
          final int originalWriteType = bluetoothGattCharacteristic.getWriteType();
          bluetoothGattCharacteristic.setWriteType( BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT);
-         var success=bluetoothGatt1.writeDescriptor(descriptor);
-         bluetoothGattCharacteristic.setWriteType(originalWriteType);
-         if(!success) {
-             Log.e(LOG_ID, note +" "+"bluetoothGatt1.writeDescriptor(descriptor))  failed");
-             return success;
-             }
+        if(Build.VERSION.SDK_INT >= 33) {
+            int res= bluetoothGatt1.writeDescriptor(descriptor,type);
+             bluetoothGattCharacteristic.setWriteType(originalWriteType);
+            if(res!=BluetoothStatusCodes.SUCCESS) {
+                 Log.e(LOG_ID, note +" "+"bluetoothGatt1.writeDescriptor(descriptor))  failed "+res);
+                 return false;
+                 }
+           }
+         else {
+             if(!descriptor.setValue(type)) {
+                 Log.e(LOG_ID, note +" "+"descriptor.setValue())  failed");
+                 return false;
+                 }
+            boolean success=bluetoothGatt1.writeDescriptor(descriptor);
+            bluetoothGattCharacteristic.setWriteType(originalWriteType);
+            if(!success) {
+                 Log.e(LOG_ID, note +" "+"bluetoothGatt1.writeDescriptor(descriptor))  failed");
+                 return false;
+                 }
+ 
+            }
           if(doLog){showbytes(LOG_ID+" "+note +" "+    "enableNotification ",type);};
           if(!bluetoothGatt1.setCharacteristicNotification(bluetoothGattCharacteristic, type[0]!=0)) {
              Log.e(LOG_ID, note +" "+"setCharacteristicNotification("+bluetoothGattCharacteristic.getUuid().toString()+",true) failed");
              return false;
              }
-         return success;
+         return true;
          }
       catch(Throwable th) {
         Log.stack(LOG_ID,"enableGattDescriptor",th);
@@ -728,6 +750,20 @@ public void onPhyUpdate(BluetoothGatt gatt, int txPhy, int rxPhy, int status) {
     {if(doLog) {Log.i(LOG_ID,"onPhyUpdate txPhy="+txPhy+" rxPhy="+rxPhy+" status="+status);};};
     }
 
+
+@SuppressWarnings("unused")
+@Keep
+public void onConnectionUpdated(BluetoothGatt gatt, int interval, int latency, int timeout, int status) {
+        {if(doLog) {Log.i(LOG_ID, "onConnectionUpdated interval=" + interval + " latency=" + latency + " timeout=" + timeout + " status=" + status);};};
+    }
+@SuppressWarnings("unused")
+@Keep
+    public void onSubrateChange( @NonNull BluetoothGatt gatt,  int subrateMode,  int status) {
+     if(doLog) {
+        Log.i(LOG_ID,"onSubrateChange  subrateMode="+subrateMode+" status="+status);
+        }
+    }
+
 static public String bondString(int bonded) {
     return  switch(bonded) {
         case BOND_NONE-> "BOND_NONE";
@@ -762,5 +798,7 @@ protected void unbond() {
             Log.stack(LOG_ID, "ERROR: could not remove bond", e);
         }
         }
-
+boolean asAdvertised(byte[] bytes) {
+        return true;
+        }
 }

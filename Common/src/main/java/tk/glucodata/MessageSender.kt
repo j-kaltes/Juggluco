@@ -211,6 +211,12 @@ private fun nodeSendmessage(node:Node,path:String,data:ByteArray) {
     public fun sendbluetooth( name:String,on:Boolean) {
         sendbool(BLUETOOTH_PATH,name,on)
      }
+    public fun sendunpair( node:Node,on:Boolean) {
+         sendunpair(node.id,on);
+     }
+    public fun sendunpair( name:String,on:Boolean) {
+        sendbool(UNPAIR_PATH,name,on)
+     }
     private fun sendOnmessages( node:String,on:Boolean) {
         if(doLog) {Log.i(LOG_ID,"sendNameMessageOn($node,$on)");}
         sendbool(MESSAGES_PATH,node,on)
@@ -261,6 +267,7 @@ companion object {
     const val DEFAULTS_PATH = "/defaults"
     const val SETTINGS_PATH = "/settings"
     const val BLUETOOTH_PATH = "/bluetooth"
+    const val UNPAIR_PATH = "/unpair"
     const val DATA_PATH = "/data"
     const val MESSAGES_PATH = "/messages"
     val scope = CoroutineScope(Dispatchers.IO+SupervisorJob()  )

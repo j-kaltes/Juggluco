@@ -138,9 +138,9 @@ static public String getlanguage(Context context) {
 	return context.getString(R.string.language);
 	} */
         
-static void sleep(long mmsec) {
+static void sleep(long msec) {
    try {
-       Thread.sleep(mmsec);
+       Thread.sleep(msec);
    } catch (InterruptedException ie) {
        Thread.currentThread().interrupt();
    }

@@ -108,30 +108,34 @@ bool libreviewCGMexport(const uint32_t starttime,const uint32_t endtime,const bo
         const int index=indices[id];
         if(SensorGlucoseData *sens=sensors->getSensorData(index)) {
             const char *deviceID=getDeviceID(!sens->isLibre2()).data();
-            if(sens->isDexcom()||sens->isSibionics()) {
+            if(!sens->hasRealHistory()) {
                 CalibrateForward<ScanData> cali(sens, CalibratePast);
                 const int librev=3;
                 libreVersion=librev;
-                int mod=sens->isSibionics()?5:1;
+//                int mod=sens->isSibionics()?5:1;
                 const CurData  inper=sens->streamInperiod(nextstart, endtime); 
                 const ScanData *en=inper.end();
+                uint32_t prevtime=0;
                 for(const ScanData *iter=inper.begin();iter<en;++iter) {
-                    if(!(iter->getid()%mod)&&iter->valid()) {
-                         time_t tim=iter->gettime();
-                         nextstart=tim;
-
-    int mgL;
-    if(double calibrated;calibrate&&!isnan(calibrated=cali.forwardvalue(*iter))) {
-        mgL=(int)round(calibrated*10.0);
-         }
-    else
-        mgL=iter->getmgL();
+                    if(iter->valid()) {
+                         uint32_t tim=iter->gettime();
+                         if((tim-prevtime)<280)
+                                continue;
+                          prevtime=tim; 
+                          int mgL;
+                          if(double calibrated;calibrate&&!isnan(calibrated=cali.forwardvalue(*iter))) {
+                                mgL=(int)round(calibrated*10.0);
+                                 }
+                          else
+                                mgL=iter->getmgL();
 
                          float value=gconvert(mgL,unit);
                          if(!printhistory(librev,deviceID,tim,value,decimal,printer))
                                 return false;
                           }
                        }
+                  if(prevtime)
+                          nextstart=prevtime;
                  }
             else {
                 CalibrateForward<Glucose> cali(sens, CalibratePast);
@@ -194,9 +198,9 @@ bool writenum(int libreversion,const char *deviceid,const Num *num,const Printer
     const int kind=settings->data()->librenums[type].kind;
     if(kind<1||kind>4)
         return true;
-    if(!librestartline(libreversion,deviceid,num->time,printer))
-        return false;
     if(kind!=4&&!isnormal(num->value))
+        return true;
+    if(!librestartline(libreversion,deviceid,num->time,printer))
         return false;
     switch(kind) {
        case 1: return printrapid(num->value,printer);

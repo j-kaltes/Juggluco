@@ -202,7 +202,7 @@ detext.newamount,
 #endif //INJUGGLUCO
  ,.summarygraph="Überblick Graph"sv
 ,.logdays="Tage"sv
-,.unhide="Einblenden"sv
+,.unhide="Anzeigen"sv
 		}
 
 

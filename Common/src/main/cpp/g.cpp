@@ -400,6 +400,11 @@ extern "C" JNIEXPORT jlong JNICALL   fromjava(getsensorptr)(JNIEnv *env, jclass 
         
         return 0LL;
         }
+
+    if(sdata->hist==Sensoren::isdeleted)  {
+        LOGAR("getsensorptr isdeleted");
+        return 0LL;
+        }
     return reinterpret_cast<jlong>(sdata->hist);
     }
 extern "C" JNIEXPORT jlong JNICALL   fromjava(streamfromSensorptr)(JNIEnv *env, jclass cl,jlong sensorptr,int pos) {
@@ -424,11 +429,38 @@ extern "C" JNIEXPORT jlong JNICALL   fromjava(streamfromSensorptr)(JNIEnv *env, 
         }
     return ((jlong)len)<<48;
     }
+void    sendstreaming(SensorGlucoseData *hist) {
+    setstreaming(hist);
+    backup->wakebackup(wakeall);
+}
+extern "C" JNIEXPORT jboolean JNICALL   fromjava(useAgain)(JNIEnv *env, jclass cl,jlong sensorptr) {
+     auto *sens=reinterpret_cast<SensorGlucoseData*>(sensorptr);
+     sens->useAgain();
+     sensors->useAgain(sens->sensorIndex);
+     sendsiScan(sens);
+     sendstreaming(sens);  
+     backup->resendResetDevices();
+     backup->wakebackup(wakeall);
+     if(settings->data()->nobluetooth)  {
+         setusedsensors();
+         return false;
+         }
+     return true;
+     }
 extern "C" JNIEXPORT void JNICALL   fromjava(setHidefromSensorptr)(JNIEnv *env, jclass cl,jlong sensorptr,jboolean hide) {
     reinterpret_cast<SensorGlucoseData*>(sensorptr)->hide=hide;
      }
 extern "C" JNIEXPORT jboolean JNICALL   fromjava(getHidefromSensorptr)(JNIEnv *env, jclass cl,jlong sensorptr) {
     return reinterpret_cast<const SensorGlucoseData*>(sensorptr)->hide;
+     }
+extern "C" JNIEXPORT jboolean JNICALL   fromjava(hasHistory)(JNIEnv *env, jclass cl,jlong sensorptr) {
+    return reinterpret_cast<const SensorGlucoseData*>(sensorptr)->hasHistory();
+     }
+
+extern std::vector<int> usedsensors;
+extern "C" JNIEXPORT jboolean JNICALL   fromjava(activeSensor)(JNIEnv *env, jclass cl,jlong sensorptr) {
+    const int index= reinterpret_cast<const SensorGlucoseData*>(sensorptr)->sensorIndex;
+    return ranges::find(usedsensors, index) != usedsensors.end();
      }
 extern "C" JNIEXPORT void JNICALL   fromjava(healthConnectReset)(JNIEnv *env, jclass cl) {
     sensors->onallsensors([](SensorGlucoseData *sens) {
@@ -569,21 +601,31 @@ extern "C" JNIEXPORT jlong JNICALL   fromjava(getdataptr)(JNIEnv *env, jclass cl
         } else
 #endif
         {
+#ifdef LIBRE3
             if (sens->isLibre3()) {
                 LOGGER("getdataptr(%s) Libre3\n", sensor);
                 data = new libre3stream(sensorindex, sens);
-            } else {
+            } else 
+#endif
+
+            {
 #ifdef DEXCOM
                 if (sens->isAccuChek()) {
                     LOGGER("getdataptr(%s) AccuChek\n", sensor);
                     data = new accustream(sensorindex, sens);
                 } else {
-                    if (sens->isAir()) {
+                    if(sens->isAir()) {
                         LOGGER("getdataptr(%s) Air\n", sensor);
                         data = new airstream(sensorindex, sens);
-                    } else
+                        }
+                    else {
+                             if(sens->isAidexX()) {
+                                LOGGER("getdataptr(%s) AidexX\n", sensor);
+                                data = new aidexXstream(sensorindex, sens);
+                                }
+                     else
 #else
-                        {
+  {{
 #endif
                     {
                         LOGGER("getdataptr(%s) Libre2\n", sensor);
@@ -593,6 +635,7 @@ extern "C" JNIEXPORT jlong JNICALL   fromjava(getdataptr)(JNIEnv *env, jclass cl
                                 sens->getinfo()->startedwithStreamhistory = std::max(
                                         sens->getinfo()->endhistory, 1);
                             }
+                        }
                         }
                     }
                 }
@@ -608,13 +651,25 @@ extern "C" JNIEXPORT jlong JNICALL   fromjava(getdataptr)(JNIEnv *env, jclass cl
     return 0LL;
     }
 extern "C" JNIEXPORT void JNICALL   fromjava(freedataptr)(JNIEnv *envin, jclass cl,jlong dataptr) {
-    LOGGER("freedataptr(%p)\n",dataptr);
+    LOGGER("start freedataptr(%p)\n",dataptr);
     streamdata *sdata=reinterpret_cast<streamdata *>(dataptr);
+    auto *sens= sdata->hist;
+    while(sens->processing.test_and_set()) {
+           LOGGER("freedataptr(%p) processing flag set\n",dataptr);
+            sens->processing.wait(true);
+            };
     delete sdata;
+    sens->processing.clear();
+    LOGGER("end freedataptr(%p)\n",dataptr);
     }
 extern "C" JNIEXPORT jboolean  JNICALL   fromjava(askstreamingEnabled)(JNIEnv *env, jclass cl,jlong dataptr) {
    if(!dataptr) return false;
-    return reinterpret_cast<streamdata *>(dataptr)->hist ->streamingIsEnabled()==1; 
+    auto *sens=reinterpret_cast<streamdata *>(dataptr)->hist;
+    if(sens==Sensoren::isdeleted)  {
+        LOGAR("askstreamingEnabled isdeleted");
+        return false;
+        }
+    return sens->streamingIsEnabled()==1; 
     }
 
 #ifdef SKIPTRIEDOFTEN
@@ -663,20 +718,12 @@ extern "C" JNIEXPORT int JNICALL   fromjava(getSensorptrLibreVersion)(JNIEnv *en
     if(!sens) {
         return -1;
         }
-    if(sens->isSibionics()) {
-        return 0x10;
-        }
-    if(sens->isDexcom()) {
-        return 0x40;
-        }
-    if(sens->isLibre3()) {
-        return 3;
-        }
-    if(sens->isLibre3()) {
-        return 2;
-        }
-    return 0;
+    return sens->getSensorgen2();
     }
+
+
+
+
 extern "C" JNIEXPORT int JNICALL   fromjava(getLibreVersion)(JNIEnv *envin, jclass cl,jlong dataptr) {
     if(!dataptr)
         return 0;
@@ -724,6 +771,8 @@ extern "C" JNIEXPORT jstring JNICALL   fromjava(getShowSensorName)(JNIEnv *envin
     return envin->NewStringUTF(name);
     } */
 
+int  Sensoren::deletedit=-1;
+SensorGlucoseData *Sensoren::isdeleted=nullptr;
 extern "C" JNIEXPORT jstring JNICALL   fromjava(getDeviceAddress)(JNIEnv *envin, jclass cl,jlong dataptr,jboolean getnew) {
     LOGGER("getDeviceAddress(%p,%d)\n",dataptr,getnew);
     if(!dataptr) {
@@ -735,12 +784,20 @@ extern "C" JNIEXPORT jstring JNICALL   fromjava(getDeviceAddress)(JNIEnv *envin,
       LOGAR("getDeviceAddress() usedhist==null");
       return nullptr;
       }
+    if(usedhist==Sensoren::isdeleted)  {
+        LOGGER("getDeviceAddress()  %p deleted\n",usedhist);
+        return nullptr;
+        }
+    if(!usedhist->getinfo()) {
+      LOGAR("getDeviceAddress() getinfo()==null");
+      return nullptr;
+      }
     const char *address=usedhist->deviceaddress();
     if(!*address) {
       LOGAR("deviceaddress()==null");
       return nullptr;
       }
-    if(usedhist->isAccuChek()||(getnew&&!usedhist->scannedAddress&&!usedhist->isLibre())) {
+    if(usedhist->isAidexX()||usedhist->isAccuChek()||(getnew&&!usedhist->scannedAddress&&!usedhist->isLibre())) {
       LOGAR("getDeviceAddress() !libre getnew");
       return nullptr;
       }
@@ -946,6 +1003,7 @@ jlong glucoseback(uint32_t nu,uint32_t glval,float drate,SensorGlucoseData *hist
         hist->setbluetoothOn(1);
         auto res= glucoselong(nu,glval,drate,hist);
         hist->waiting=false;
+        settings->data()->lossSignalOff=false;
         return res;
         }
 
@@ -1044,7 +1102,6 @@ extern "C" JNIEXPORT jlong JNICALL   fromjava(laststarttime)(JNIEnv *envin, jcla
     return sensors->laststarttime();
     }
 
-extern std::vector<int> usedsensors;
 extern void setusedsensors() ;
 /*
 extern "C" JNIEXPORT jboolean  JNICALL   fromjava(hasSibionics)(JNIEnv *env, jclass cl) {
@@ -1068,7 +1125,17 @@ extern "C" JNIEXPORT jboolean  JNICALL   fromjava(hasNeedScan)(JNIEnv *env, jcla
           }
    return hasGlucoseMeters();
     } 
-#ifndef WEAROS
+extern "C" JNIEXPORT jboolean  JNICALL   fromjava(hasAidexX)(JNIEnv *env, jclass cl) {
+    setusedsensors();
+    const int len= usedsensors.size();
+     for(int i=0;i<len;i++) {
+         const int index=usedsensors[i];
+         const SensorGlucoseData *sens=sensors->getSensorData(index );
+         if(sens->isAidexX())
+            return true;
+          }
+    return false;
+    } 
 extern "C" JNIEXPORT jlongArray JNICALL   fromjava(activeSensorPtrs)(JNIEnv *env, jclass cl) {
     setusedsensors();
     const int len= usedsensors.size();
@@ -1099,7 +1166,6 @@ extern "C" JNIEXPORT void JNICALL   fromjava(finishfromSensorptr)(JNIEnv *env, j
     const int sensorindex=sensors->sensorindex(sens->sensorname()->data());
     finishsensor(sens,sensorindex);
     }
-#endif
 extern jclass JNIString;
 #ifdef LIBRE3
 extern "C" JNIEXPORT jobjectArray  JNICALL   fromjava(activeSensors)(JNIEnv *env, jclass cl) {
@@ -1424,10 +1490,6 @@ void    sendsiScan(SensorGlucoseData *hist) {
         }
 
 
-void    sendstreaming(SensorGlucoseData *hist) {
-        setstreaming(hist);
-        backup->wakebackup(wakeall);
-        }
 
 
 
@@ -1569,6 +1631,31 @@ extern "C" JNIEXPORT jboolean  JNICALL   fromjava(optionStreamHistory)(JNIEnv *e
     if(sdata->libreversion>2)
         return false;
     const SensorGlucoseData* sensorptr=sdata->hist;
+    if(sensorptr==Sensoren::isdeleted)  {
+        LOGAR("optionStreamHistory  isdeleted");
+        return false;
+        }
     return !sensorptr->useLibre2rootcheck();
 #endif
    }
+
+extern "C" JNIEXPORT jint JNICALL   fromjava(sensorIndex)(JNIEnv *env, jclass cl,jstring jsensor) {
+    if(!sensors) {
+        LOGAR("knownSensor ERROR: sensors==null");
+        return -1;
+      }
+    constexpr const  int shortsensorlen=11;
+    jint getlen= env->GetStringUTFLength( jsensor);
+    if(getlen!=shortsensorlen) {
+        LOGGER("knownSensor sensorlen=%d\n",getlen);
+        }    
+    char sensor[shortsensorlen+1];
+    env->GetStringUTFRegion( jsensor, 0,shortsensorlen, sensor);
+    sensor[sizeof(sensor)-1]='\0';
+
+    int sensorindex=sensors->sensorindexshort(sensor);
+    if(sensorindex<0) {
+      LOGGER("knownSensor ERROR: %s unknown sensor\n",sensor);
+      }
+    return sensorindex;
+    }

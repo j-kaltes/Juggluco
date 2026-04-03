@@ -45,7 +45,7 @@ import java.util.Locale;
 class MeterConfig {
 
     static private final String LOG_ID="MeterConfig";
-static void config(MainActivity context, int meterIndex, View parent, BluetoothDevice device) {
+static void config(MainActivity context, int meterIndex, View parent, BluetoothDevice device, MeterList.MeterListViewAdapter adapter) {
     if(parent!=null)
        EnableControls(parent,false);
     if(doLog)
@@ -145,6 +145,8 @@ static void config(MainActivity context, int meterIndex, View parent, BluetoothD
            MainActivity.doonback();
            Natives.GlucoseMeterSetActive(meterIndex,false); //TODO: only when new meter? Remove altogether?
            Applic.argToaster(context,"Glucose meter will not be used", Toast.LENGTH_LONG);
+           if(adapter!=null)
+               adapter.notifyDataSetChanged();
            });
    context.addContentView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
    }

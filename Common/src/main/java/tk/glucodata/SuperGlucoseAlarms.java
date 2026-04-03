@@ -41,11 +41,11 @@ public	static long waitmmsec() {
 	}
 
 
-boolean saidloss = false;
+//boolean saidloss = false;
 
 public  void setLossAlarm() {
     if(hasalarmloss()) {
-         saidloss = false;
+         //saidloss = false;
          final long nu = System.currentTimeMillis();
          SuperGattCallback.lastfoundL=nu;
 //         Libre2GattCallback.oldtime = nu + Notify.glucosetimeout;
@@ -56,7 +56,7 @@ public  void setLossAlarm() {
 public void setagealarm(final long numsec,long showtime) {
     Notify.stoplossalarm();
 
-    saidloss = false;
+    //saidloss = false;
     SuperGattCallback.lastfoundL=numsec;
    // Libre2GattCallback.oldtime = numsec + showtime;
     var oldtime = numsec + showtime;

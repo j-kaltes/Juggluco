@@ -92,6 +92,8 @@ import static tk.glucodata.settings.Settings.editoptions;
 import static tk.glucodata.util.getradiobutton;
 import static tk.glucodata.util.sethtml;
 
+import tk.glucodata.nums.numio;
+
 //import org.w3c.dom.Text;
 
 public class Backup {
@@ -367,14 +369,18 @@ void makeAutoQR(MainActivity act,View parent) {
             closerun.run();
             });
       homenetR.setOnClickListener(v-> {
-            MainActivity.poponback();
-            makeQR(act,Natives.makeHomeReceiver());
-            closerun.run();
+            dowhenasked(act,false,false,false,()-> {
+                MainActivity.poponback();
+                makeQR(act,Natives.makeHomeReceiver());
+                closerun.run();
+                });
             });
       internetR.setOnClickListener(v-> {
-            MainActivity.poponback();
-            makeQR(act,Natives.makeICEReceiver());
-            closerun.run();
+            dowhenasked(act,false,false,false,()-> {
+                MainActivity.poponback();
+                makeQR(act,Natives.makeICEReceiver());
+                closerun.run();
+                });
             });
     };
 RadioButton one;
@@ -1252,4 +1258,31 @@ CheckBox ICE;
    }
    boolean configchanged=false;
 
+static private String mkreceiveString(Context act,boolean nums, boolean scans, boolean stream) {
+        String type=""; 
+        if(!nums&& numio.hasNumdata()) {
+            type=act.getString(R.string.amountsname); 
+            }
+        if(!scans&&Natives.hasscans()) {
+            final var addstr=act.getString(R.string.scansname); 
+            if(!type.isEmpty())
+                type+=", "+addstr; 
+            else type=addstr; 
+            }
+        if(!stream&&Natives.hasstreamed( )) {
+            final var addstr=act.getString(R.string.streamname); 
+            if(!type.isEmpty())
+                type+=", "+addstr; 
+            else type=addstr; 
+            }
+        return type;
+       }
+static void dowhenasked(Context act,boolean nums,boolean scans,boolean stream, Runnable save) {
+        String type=mkreceiveString(act,nums,scans,stream) ; 
+        if(!type.isEmpty()) {
+                Confirm.ask(act,act.getString(R.string.datapresent)+type,act.getString(R.string.overwrite),save);
+                return;
+               } 
+         save.run();
+         }
 }

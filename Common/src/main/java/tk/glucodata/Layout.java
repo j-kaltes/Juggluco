@@ -29,6 +29,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityNodeInfo;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
@@ -53,7 +54,8 @@ static View.AccessibilityDelegate  accessDeli=new View.AccessibilityDelegate () 
 
 
 
-    }; */
+    };
+
 static View.AccessibilityDelegate accessDeli = new View.AccessibilityDelegate() {
     @Override
     public void onInitializeAccessibilityNodeInfo(View host, AccessibilityNodeInfo info) {
@@ -72,8 +74,35 @@ static View.AccessibilityDelegate accessDeli = new View.AccessibilityDelegate() 
             info.setContentDescription(null);
         }
     }
-};
+}; */
+static final View.AccessibilityDelegate accessDeli = new View.AccessibilityDelegate() {
+  @Override
+  public void onInitializeAccessibilityNodeInfo(View host, AccessibilityNodeInfo info) {
+    boolean showinfo = host.isEnabled() && host.getVisibility() == View.VISIBLE;
 
+    try {
+      super.onInitializeAccessibilityNodeInfo(host, info);
+    } catch (IllegalArgumentException e) {
+      // Workaround for buggy frameworks/services producing invalid checked state.
+      Log.i(LOG_ID,"accessDeli class="+host.getClass().getName()+" id="+ host.getId());
+      info.setClassName(host.getClass().getName());
+      info.setEnabled(host.isEnabled());
+      info.setVisibleToUser(host.getVisibility() == View.VISIBLE);
+
+      if (host instanceof TextView) info.setText(((TextView) host).getText());
+
+      if (host instanceof CompoundButton cb) {
+        info.setCheckable(true);
+        info.setChecked(cb.isChecked()); // boolean path
+      }
+    }
+
+    if (!showinfo) {
+      info.setVisibleToUser(false);
+      info.setContentDescription(null);
+    }
+  }
+};
 //    public Layout(Context context) { super(context); } public Layout(Context context, AttributeSet attrs) { super(context, attrs); } public Layout(Context context, AttributeSet attrs, int defStyle) { super(context, attrs, defStyle); } 
 private static final String LOG_ID="Layout";
 

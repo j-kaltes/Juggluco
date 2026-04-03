@@ -22,9 +22,6 @@
 package tk.glucodata;
 
 import static android.media.AudioAttributes.USAGE_ASSISTANCE_SONIFICATION;
-import static android.media.AudioAttributes.USAGE_NOTIFICATION;
-import static android.media.AudioAttributes.USAGE_UNKNOWN;
-import static android.media.AudioAttributes.USAGE_VOICE_COMMUNICATION;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static tk.glucodata.Applic.DontTalk;
@@ -37,9 +34,6 @@ import static tk.glucodata.Natives.getVoiceSpeed;
 import static tk.glucodata.Natives.getVoiceTalker;
 import static tk.glucodata.Natives.lastglucose;
 import static tk.glucodata.Natives.settouchtalk;
-import static tk.glucodata.Notify.notification_audio;
-import static tk.glucodata.NumberView.avoidSpinnerDropdownFocus;
-import static tk.glucodata.RingTones.EnableControls;
 import static tk.glucodata.settings.Settings.editoptions;
 import static tk.glucodata.settings.Settings.getGenSpin;
 import static tk.glucodata.settings.Settings.getProfileSpinner;
@@ -50,10 +44,7 @@ import static tk.glucodata.util.getbutton;
 import static tk.glucodata.util.getcheckbox;
 import static tk.glucodata.util.getlabel;
 import static tk.glucodata.util.getlocale;
-import static tk.glucodata.Notify.doTurnFocuson;
-import static tk.glucodata.Notify.doTurnFocusoff;
-import static tk.glucodata.Notify.audiofocusrequest;
-import android.app.Activity;
+
 import android.content.Context;
 import android.media.AudioAttributes;
 import android.media.AudioFocusRequest;
@@ -62,9 +53,7 @@ import android.os.Build;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
 import android.speech.tts.Voice;
-import android.text.Editable;
 import android.text.InputType;
-import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -234,7 +223,7 @@ if(!DontTalk) {
     });
     if(doLog) {Log.i(LOG_ID,"after new TextToSpeech");};
     if(android.os.Build.VERSION.SDK_INT >= minandroid)
-        engine.setAudioAttributes(notification_audio);
+        engine.setAudioAttributes(talk_audio);
         }
    }
 
@@ -263,10 +252,12 @@ static boolean notifyfocus=false;
 //private static final AudioAttributes notification_audio = (new AudioAttributes.Builder()) .setLegacyStreamType(TextToSpeech.Engine.DEFAULT_STREAM) .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH) .build(); 
 //private static final AudioAttributes notification_audio =(android.os.Build.VERSION.SDK_INT >= 21)?new AudioAttributes.Builder().setUsage(isWearable? USAGE_ASSISTANCE_SONIFICATION:USAGE_NOTIFICATION ) .build():null;
 //private static final AudioAttributes notification_audio = notification_audio;
+
+static AudioAttributes talk_audio;
 public void speak(String message, AudioAttributes attr) {
 if(!DontTalk) {
     if(android.os.Build.VERSION.SDK_INT >= minandroid) {
-        if(attr!=notification_audio) {
+        if(attr!=talk_audio) {
             engine.setAudioAttributes(attr);
            }
            }
@@ -274,8 +265,8 @@ if(!DontTalk) {
 //    engine.speak(message, TextToSpeech.QUEUE_FLUSH, null);
     speak(message);
     if(android.os.Build.VERSION.SDK_INT >= minandroid) {
-        if(attr!=notification_audio)
-            engine.setAudioAttributes(notification_audio);
+        if(attr!=talk_audio)
+            engine.setAudioAttributes(talk_audio);
          }
          }
     }
@@ -430,9 +421,9 @@ public static void config(MainActivity context) {
                      } else {
                          Natives.setSoundType(isWearable ? USAGE_ASSISTANCE_SONIFICATION : AudioAttributes.USAGE_NOTIFICATION);
                      }
-                     Notify.makenotification_audio();
-                        }
-                        );
+                     maketalk_audio();
+                      }
+                     );
                         
 
 
@@ -634,6 +625,64 @@ public static void config(MainActivity context) {
         context.addContentView(layout, new ViewGroup.LayoutParams(MATCH_PARENT,MATCH_PARENT));
         }
   }
+static public void maketalk_audio() {
+    if(android.os.Build.VERSION.SDK_INT >= 21) {
+        int type=Natives.getSoundType( );
+        Log.i(LOG_ID,"getSoundType()="+type);
+        if(type==0) {
+            type=isWearable? USAGE_ASSISTANCE_SONIFICATION: AudioAttributes.USAGE_NOTIFICATION;
+            } 
+        talk_audio=new AudioAttributes.Builder().setUsage(type).build();
+        if(android.os.Build.VERSION.SDK_INT >= 26) {
+                talkaudiofocusrequest = new AudioFocusRequest.Builder( AudioManager.AUDIOFOCUS_GAIN_TRANSIENT).setAudioAttributes( talk_audio ).build();
+                Log.i(LOG_ID, "audiofocusrequest  has value");
+                }
+         else {
+                talkaudiofocusrequest =null;
+                Log.i(LOG_ID, "audiofocusrequest=null");
+                }
+        }
+    else {
+                talk_audio=null;
+        }
+    }
+
+static private AudioFocusRequest talkaudiofocusrequest;
+static private boolean turnfocusoff=false;
+        static void doTurnFocusoff() {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                final var wasturnoff=turnfocusoff;
+                turnfocusoff=false;
+                if(wasturnoff) {
+                    Notify.audioManager.abandonAudioFocusRequest(talkaudiofocusrequest);
+                }
+            }
+        }
+
+        static void doTurnFocuson() {
+            if(android.os.Build.VERSION.SDK_INT >= 26) {
+                if(!turnfocusoff) {
+                    switch(Notify.audioManager.requestAudioFocus(talkaudiofocusrequest)) {
+                        case AudioManager.AUDIOFOCUS_REQUEST_FAILED:
+                            Log.i(LOG_ID,"REQUEST_FAILED");
+                            break;
+
+                        case AudioManager.AUDIOFOCUS_REQUEST_GRANTED:
+                            turnfocusoff=true;
+                            Log.i(LOG_ID,"REQUEST_GRANTED");
+                            break;
+                        case AudioManager.AUDIOFOCUS_REQUEST_DELAYED:
+                            Log.i(LOG_ID,"REQUEST_DELAYED");
+                            break;
+                    };
+                }
+            }
+        }
+
+
+static {
+ maketalk_audio();
+}
 }
 /*
 TODO

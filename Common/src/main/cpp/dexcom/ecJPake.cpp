@@ -57,7 +57,7 @@ static bool doinitcryptofuncs() {
    LOGAR("doinitcryptofuncs");
    #define hgetsym(handle,name) *((void **)&name##ptr)=dlsym(handle, #name)
    #define getsym(name) hgetsym(handle,name)
-   #define symtest(name) if(!(getsym(name))) { dlclose(handle);LOGGER(#name ": %s\n",dlerror());return false;}
+   #define symtest(name) if(!name##ptr&&!(getsym(name))) { dlclose(handle);LOGGER(#name ": %s\n",dlerror());return false;}
    void *handle=opencrypto();
    if(!handle)  {
       return false;

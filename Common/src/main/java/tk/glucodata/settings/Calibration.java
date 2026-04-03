@@ -95,11 +95,11 @@ static public void show(MainActivity act,View parent) {
     layout.setBackgroundColor(backgroundcolor);
     var height=    GlucoseCurve.getheight();
 //    layout.setPadding((int)(height*.02f),(int)(height*.11f), (int)(height*.05f), (int)(height*.11f));
-    layout.setPadding((int)(height*.02f),(int)(height*.105f), (int)(height*.05f), 0);
+    layout.setPadding((int)(height*.02f),(int)(height*.17f), (int)(height*.05f), 0);
     //Layout.getMargins(allvalues);
     //pasmarg.leftMargin=(int)(height*.07f);
     var pasmarg=Layout.getMargins(allvalues);
-    pasmarg.bottomMargin=(int)(height*.06f);
+    pasmarg.bottomMargin=(int)(height*.14f);
         var scroll=new ScrollView(act);
         scroll.addView(layout);
         scroll.setFillViewport(true);

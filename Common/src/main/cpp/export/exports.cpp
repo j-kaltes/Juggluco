@@ -285,7 +285,7 @@ bool fexporthistory(myfilep  handle,int unit,uint32_t starttime=0,uint32_t endti
 	for(int ind=totsen-1;ind>=0;--ind) {
 		const int index=indices[ind];
 		SensorGlucoseData *hist=sensors->getSensorData(index);
-		if(hist&&!hist->isSibionics()&&!hist->isDexcom()) {
+		if(hist&&hist->hasRealHistory()) {
 			const int start=hist->getfirstnotbeforetime(starttime);
 			const Glucose *beg= hist->getglucose(start);
 			const int allend=hist->getAllendhistory();

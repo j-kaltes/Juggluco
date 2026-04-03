@@ -417,5 +417,39 @@
 <string name="username">Username</string>
 <string name="turnserver">Turn Server</string>
  <string name="ICElabeltooshort">FEHLER: Das ICE-Label sollte mindestens 16 Byte lang sein</string>
+<string name="attr_ble_scan">Bluetooth-Glukosesensor-Scan</string>
+<string name="divorcename">Entkoppeln</string>
+<string name="divorcemessage">Soll der Sensor mit einem anderen Telefon oder einer anderen Smartwatch (anstatt diesem) verbunden werden?</string>
+<string name="unpairsuccess">Entkoppeln erfolgreich"</string>
+<string name="unpairfailed">Entkoppeln fehlgeschlagen"</string>
+<string name="warmup">Aufwärmen {0}</string>
+<string name="releasingsensor">Sensor wird freigegeben</string>
+<string name="sensorreleased">Sensor freigegeben</string>
+<string name="releasefailed">Freigabe fehlgeschlagen</string>
+<string name="timedout">Zeitüberschreitung</string>
+<string name="unpairing">"Entkopplung "</string>
+<string name="unpairingwatch">Entkopplung der Uhr "</string>
+
+<string name="failed">fehlgeschlagen</string>
+
+<string name="successful">erfolgreich</string>
+    <string name="use">Aktivieren</string>
+<string name="connecttosensor">Verbindung zum Sensor wird hergestellt…</string>
+
+<string name="clear">Löschen</string>
+
+<string name="clearingmemory">Sensorspeicher wird gelöscht</string>
+
+<string name="clearmessage">Sensor neu starten? Sensorspeicher löschen?</string>
+
+<string name="clearing">Löschen"</string>
+
+<string name="clearsuccess">Löschen erfolgreich"</string>
+
+<string name="clearfailed">Löschen fehlgeschlagen"</string>
+
+<string name="sensors">Sensoren</string>
+
 </resources>
+
 

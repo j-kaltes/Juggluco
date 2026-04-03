@@ -144,10 +144,15 @@ static void wearnosensors(MainActivity act) {
 
         });
     }
+
+    var sensors=getbutton(act,R.string.sensors);
+    sensors.setOnClickListener(v -> {
+            Sensors.show(act,"",0L);
+        });
   Layout layout = new Layout(act, (l, w, h) -> {
         int[] ret={w,h};
         return ret;
-        },new View[]{switcher},new View[]{bluestate},new View[]{usebluetooth},new View[]{close});
+        },new View[]{switcher},new View[]{bluestate},new View[]{usebluetooth},new View[]{sensors},new View[]{close});
     act.setonback(() -> {
             removeContentView(layout);
             });

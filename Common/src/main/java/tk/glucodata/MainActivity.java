@@ -50,6 +50,8 @@ import static tk.glucodata.Natives.wakelibreview;
 import static tk.glucodata.help.hidekeyboard;
 import static tk.glucodata.settings.Settings.removeContentView;
 
+import java.util.Arrays;
+
 import android.Manifest;
 import android.accessibilityservice.AccessibilityServiceInfo;
 import android.app.Activity;
@@ -132,14 +134,24 @@ private void startall() {
                if(!(unit==1||unit==2)) {
                       Applic.postDelayed(()->tk.glucodata.settings.Settings.set(this),1000L);
                       }
+               else  {
+                        if (android.os.Build.VERSION.SDK_INT >= 33) 
+                                   Above33.checkAndRestoreWatchFace(this);
+                       }
                 }
             else {
                Specific.initScreen(this);
                }
             }
+        else {
+             //  lightBars(!getInvertColors( ));
+                }
        }
    }
+
+static private boolean askedNotify=false;
 boolean askNotify() {
+      askedNotify=true;
       if(Build.VERSION.SDK_INT >=33)  {
         var perm= Manifest.permission.POST_NOTIFICATIONS;
         if(ContextCompat.checkSelfPermission(this, perm)!= PackageManager.PERMISSION_GRANTED)  {
@@ -156,6 +168,7 @@ boolean askNotify() {
             return false;
             }
         }
+   Log.i(LOG_ID,"askNotify explicit");
     explicit(this);
    return true;
     }
@@ -291,20 +304,28 @@ private void supportLTR() {
 private void supportRTL() {
     setDirection(new Locale("iw"));
     } */
-public void lightBars(boolean light) {
-      if(Build.VERSION.SDK_INT >= 30) {
-         var win=getWindow();
-         var view= win.getDecorView();
-         WindowInsetsControllerCompat windowInsetsController =WindowCompat.getInsetsController(win, view);
-         windowInsetsController.setAppearanceLightStatusBars(light);
-         windowInsetsController.setAppearanceLightNavigationBars(light);
-    // win.setNavigationBarColor(Color.TRANSPARENT);
-//     win.setNavigationBarColor(BLUE);
-//   {if(doLog) {Log.i(LOG_ID,"getNavigationBarColor()="+win.getNavigationBarColor());};};
- //  {if(doLog) {Log.i(LOG_ID,"isNavigationBarContrastEnforced() "+win.isNavigationBarContrastEnforced());};};
-      }
 
+private void reallightBars(boolean light) {
+   Log.i(LOG_ID,"lightBars "+ light);
+   if(Build.VERSION.SDK_INT >= 30) {
+     var win=getWindow();
+     var view= win.getDecorView();
+     WindowInsetsControllerCompat windowInsetsController =WindowCompat.getInsetsController(win, view);
+     windowInsetsController.setAppearanceLightStatusBars(light);
+     windowInsetsController.setAppearanceLightNavigationBars(light);
+     }
    }
+
+
+private boolean waslight=true;
+public void lightBars(boolean light) {
+   waslight=light;
+    reallightBars(light);
+   }
+private void waslightBars() {
+    reallightBars(waslight);
+    }
+
 //s/android.view.WindowInsetsController.\([A-Z_]*\),/if((status\&android.view.WindowInsetsController.\1)!=0)  {message+=" "+"\1";};/g
 //s/\([A-Z_]*\),/if((status\&android.view.WindowInsetsController.\1)!=0)  {message+=" "+"\1";};/g
     /*
@@ -343,8 +364,10 @@ void showSystemBarsAppearance() {
          }
         super.onCreate(savedInstanceState);
         if(Build.VERSION.SDK_INT >= 30)  {
-           if(!isWearable)
-               EdgeToEdge.enable(this);
+           if(!isWearable) {
+                WindowCompat.enableEdgeToEdge(getWindow());  
+               //EdgeToEdge.enable(this);
+               }
            }
       thisone=this;
       if(Applic.stopprogram >0){
@@ -502,7 +525,9 @@ try {
     final int flags=(Natives.nfcsound()?0:NfcAdapter.FLAG_READER_NO_PLATFORM_SOUNDS)|nfcflags; //=415. Activation of sensor was only possible if app not at the foreground, so I add some flags
     Log.i(LOG_ID,"mNfcAdapter.enableReaderMode(this, this,"+ flags+", null)"); 
 //    final int flags=NfcAdapter.FLAG_READER_NFC_V ;
-        mNfcAdapter.enableReaderMode(this, this, flags, null); 
+        Bundle opts = new Bundle();
+        opts.putInt(NfcAdapter.EXTRA_READER_PRESENCE_CHECK_DELAY, 250);
+        mNfcAdapter.enableReaderMode(this, this, flags, opts); 
         hasnfc=true;
         }
 
@@ -541,8 +566,13 @@ static boolean tocalendarapp=false;
         else
             {if(doLog) {Log.d(LOG_ID,"onResume no setnfc");};};
         }
+     if(!askedNotify) {
+        askNotify();
+        }
+
      return;
     }
+
     @Override
     protected void onStart() {
       super.onStart();
@@ -581,6 +611,7 @@ static boolean tocalendarapp=false;
          showsdialog=true;
         }
     if(!isWearable) {
+       waslightBars();
        if(SiBionics==1)  {
             if(tocalendarapp) {
                 final String name=Natives.getUsedSensorName();
@@ -615,6 +646,17 @@ static boolean tocalendarapp=false;
                 }
             }
         }
+     else {
+            if(!showsdialog) {
+                        if(tryHealth==5) {
+                                if(Build.VERSION.SDK_INT >=33&&Build.VERSION.SDK_INT <16) {
+                                        Specific.installwatchface(this);
+                                        }
+                                 tryHealth=0;
+                                 }
+
+                }
+         }
 
  //Notify.testnot(); 
     }
@@ -926,12 +968,12 @@ RunOnUiThread(() -> {
                     removeContentView(help.whelplayout.get()); //setContentView makes view inaccessable
                     help.whelplayout=null;
                     }
-                requestPermissions(noperm, LOCATION_PERMISSION_REQUEST_CODE);
+                requestPermissions(noperm, BLUETOOTH_PERMISSION_REQUEST_CODE);
                 });
                 break;
                 }
             else   {
-                requestPermissions( noperm, LOCATION_PERMISSION_REQUEST_CODE);
+                requestPermissions( noperm, BLUETOOTH_PERMISSION_REQUEST_CODE);
                 break;
                 }
             }
@@ -980,9 +1022,10 @@ public int flashpermission() {
 static public final int SENSOR_PERMISSION_REQUEST_CODE=0x23457;
 static final int FLASH_PERMISSION_REQUEST_CODE=0x11224;
 
-static final int LOCATION_PERMISSION_REQUEST_CODE=0x942365;
+static final int BLUETOOTH_PERMISSION_REQUEST_CODE=0x942365;
 private static final int NOTIFICATION_PERMISSION_REQUEST_CODE=0x8878;
 
+static final int WATCHFACE_PERMISSION_REQUEST_CODE=1001;
 //private final int STORAGE_PERMISSION_REQUEST_CODE=0x445533;
 private void hasLocationContinue() {
       if(Natives.getusebluetooth())  {
@@ -996,17 +1039,24 @@ private void hasLocationContinue() {
 public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
     super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     var granted=grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED;
+    Log.i(LOG_ID,"onRequestPermissionsResult("+requestCode+",["+String.join(",",permissions)+"],"+Arrays.toString(grantResults)+") "+(granted?"":"not ")+"granted");
     switch (requestCode) {
+         case WATCHFACE_PERMISSION_REQUEST_CODE:
+                if(isWearable&&android.os.Build.VERSION.SDK_INT >= 33) {
+                        Above33.setwatchface(this);
+                        };
+                break;
          case NOTIFICATION_PERMISSION_REQUEST_CODE: {
-            if (granted) {
-                {if(doLog) {Log.i(LOG_ID,"Required Notification permission");};};
+            if(granted) {
+                if(doLog) {Log.i(LOG_ID,"Notification permission granted");};
                 keeprunning.start(this);
+                Log.i(LOG_ID,"onRequestPermissionsResult explicit");
+                explicit(this);    
                 }
             else {
-                {if(doLog) {Log.i(LOG_ID,"Required NO Notification permission");};};
+                if(doLog) {Log.i(LOG_ID,"Notification permission NOT granted");};
                 }
 
-            explicit(this);    
              };break;
 /*
             case FLASH_PERMISSION_REQUEST_CODE: {
@@ -1018,8 +1068,8 @@ public void onRequestPermissionsResult(int requestCode, String[] permissions, in
                 useflash(false);
                 }
             } return; */
-        case LOCATION_PERMISSION_REQUEST_CODE:
-            {if(doLog) {Log.i(LOG_ID,"onRequestPermissionsResult(LOCATION_PERMISSION_REQUEST_CODE) "+granted);};};
+        case BLUETOOTH_PERMISSION_REQUEST_CODE:
+            {if(doLog) {Log.i(LOG_ID,"onRequestPermissionsResult(BLUETOOTH_PERMISSION_REQUEST_CODE) "+granted);};};
             if(granted) {
                 if(systemlocation())
                    hasLocationContinue();
@@ -1665,6 +1715,10 @@ private    GestureDetector mGestureDetector;
     mGestureDetector.onTouchEvent(event);
         return super.onTouchEvent(event);
     }     */
+
+boolean sensorsVisible=false;
+UnpairOverlayHost unpairer=null;
+Runnable doswitch=null;
 }
 
 

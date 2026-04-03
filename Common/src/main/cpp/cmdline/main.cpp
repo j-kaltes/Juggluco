@@ -375,7 +375,7 @@ f j q u y
 */
 const char *autoQR=nullptr;
 char *api_secret=nullptr,*sslport=nullptr;
-           for(int opt;(opt = getopt(argc, argv, "KD:I:W:k::q:V::Z:o:e::g:p:d:lcX::x::ransvibAPw:hN:S:B:H:m:GMR:L:C:0:1:2:3:4:5:6:7:8:9:t::")) != -1;) {
+           for(int opt;(opt = getopt(argc, argv, ":KD:I:W:k::q:V::Z:o:e::g:p:d:lcX::x::ransvibAPw:hN:S:B:H:m:GMR:L:C:0:1:2:3:4:5:6:7:8:9:t::")) != -1;) {
            if(opt>='0'&&opt<='9') {
             int num=opt-'0';
             if(optarg[0]>='0'&&optarg[0]<='9') {

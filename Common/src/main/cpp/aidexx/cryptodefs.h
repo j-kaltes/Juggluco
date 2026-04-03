@@ -1,0 +1,8 @@
+#define EVP_MD_CTX_new EVP_MD_CTX_newptr
+#define EVP_md5 EVP_md5ptr
+#define EVP_DigestInit_ex EVP_DigestInit_exptr
+#define EVP_DigestUpdate EVP_DigestUpdateptr
+#define EVP_DigestFinal_ex EVP_DigestFinal_exptr
+#define EVP_MD_CTX_free EVP_MD_CTX_freeptr
+#define AES_set_encrypt_key AES_set_encrypt_keyptr
+#define AES_cfb128_encrypt AES_cfb128_encryptptr

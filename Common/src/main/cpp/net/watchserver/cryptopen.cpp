@@ -87,7 +87,7 @@ pathconcat localname(globalbasedir,filename);
 if(void *handle=dlopen(localname.data(),flags)) {
 	return handle;
     }
-LOGGER("dlopen %s\n",dlerror());
+//LOGGER("dlopen %s\n",dlerror());
 #endif
 #if !defined(__ANDROID_API__) || !defined(NOLOG)
 constexpr const int maxerr=std::size(systembase)*300;

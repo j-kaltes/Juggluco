@@ -1,39 +1,49 @@
 plugins {
     id 'com.android.application'
-    id 'org.jetbrains.kotlin.android'
+//    id 'org.jetbrains.kotlin.android'
 //    id "io.freefair.lombok" version "8.0.0-rc2"
 }
 
-def task = gradle.startParameter.taskNames[0] ?: ""
+def requestedTasks = gradle.startParameter.taskNames
+def requestedTask = requestedTasks ? requestedTasks[0] : ""
 
 //def MINSDK = 19
-int MINSDK=19
+int MINSDK = 19
+def ndkver
+def APPCOMPAT
+def GMSBASE
+def GMSWEAR
+int TARGETSDK
+def CPPSTD
 
-//if(task.contains("LibreOldNosi")&&!task.contains("Wear")) {
+//if(requestedTask.contains("LibreOldNosi")&&!requestedTask.contains("Wear")) {
 if(false) {
     ndkver = '25.2.9519653'
-   APPCOMPAT = '1.6.1'
-     GMSBASE = '18.4.0'
-   GMSWEAR = '18.1.0'
+    APPCOMPAT = '1.6.1'
+    GMSBASE = '18.4.0'
+    GMSWEAR = '18.1.0'
     TARGETSDK = 35
-     MINSDK = 19
-   CPPSTD = "-std=gnu++2b"
-
-   }
-else {
-      ndkver = '29.0.14206865'
-      APPCOMPAT = '1.7.1'
-      GMSWEAR = '19.0.0'
-     GMSBASE = '18.10.0'
-      MINSDK = 21
+    MINSDK = 19
+    CPPSTD = "-std=gnu++2b"
+} else {
+    ndkver = '30.0.14904198'
+    APPCOMPAT = '1.7.1'
+    GMSWEAR = '19.0.0'
+    GMSBASE = '18.10.0'
+    MINSDK = 21
     TARGETSDK = 35
-   CPPSTD = "-std=gnu++26"
-       }
+    CPPSTD = "-std=gnu++26"
+}
 
-CMAKEVERSION = "4.1.2"
+def CMAKEVERSION = "4.1.2"
 android {
- buildFeatures.buildConfig = true
- namespace "tk.glucodata"
+    namespace = "tk.glucodata"
+
+    buildFeatures {
+        buildConfig = true
+        aidl = true
+        viewBinding = true
+    }
     externalNativeBuild {
         cmake {
             version "$CMAKEVERSION"
@@ -53,6 +63,9 @@ android {
             storePassword "$thepassword"
             keyAlias "$thekeyalias"
             keyPassword "$thekeypassword"
+            v1SigningEnabled = true
+            v2SigningEnabled = true
+            //v3SigningEnabled = true
         }
         }
     }
@@ -64,6 +77,9 @@ android {
                 storePassword "IDontKnow"
                 keyAlias "thealias"
                 keyPassword "IDontKnow"
+            v1SigningEnabled = true
+            v2SigningEnabled = true
+            //v3SigningEnabled = true
             }
         }
 
@@ -72,21 +88,18 @@ android {
 
 
     defaultConfig {
- //       minSdk        MINSDK
-//        minSdkVersion MINSDK
-
-        targetSdk  TARGETSDK
-//        targetSdk 24
-        buildConfigField 'int', 'targetSDK', "$targetSdk"
+        minSdk = MINSDK
+        targetSdk = TARGETSDK
+        buildConfigField 'int', 'targetSDK', TARGETSDK.toString()
   //      buildConfigField 'int', 'minSDK', "$minSdk"
-        manifestPlaceholders["minSDK"] = "$minSdk"
-        manifestPlaceholders["targetSDK"] = "$targetSdk"
+        manifestPlaceholders["minSDK"] = MINSDK.toString()
+        manifestPlaceholders["targetSDK"] = TARGETSDK.toString()
 
     //    buildConfigField 'int', 'noZXing', '1'
         //compileSdk 36
         applicationId "tk.glucodata"
 
-         versionName '10.6.6'
+         versionName '10.7.0'
 //    multiDexEnabled true
 
         buildConfigField 'String', 'BUILD_TIME', 'new java.text.SimpleDateFormat("HH:mm:ss dd-MMM-yyyy").format(new java.util.Date(' + System.currentTimeMillis() + 'L))'
@@ -98,7 +111,7 @@ android {
                 version "$CMAKEVERSION"
                 cppFlags  " -DAPPID=\"quotes($applicationId)\"   -DAPPVERSION=\"quotes($versionName)\" "
                 cFlags  " -DAPPID=\"quotes($applicationId)\"   -DAPPVERSION=\"quotes($versionName)\" "
-                arguments "-DJUGGLUCO_APP=TRUE -DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=TRUE"
+                arguments "-DJUGGLUCO_APP=TRUE -DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=TRUE   -DCMAKE_EXPORT_COMPILE_COMMANDS=ON "
 
 
             }
@@ -115,10 +128,9 @@ flavorDimensions = ['wearos','libreVersion','SiBionics', 'DexCom','Google']
 
     productFlavors {
         google {
-            minSdk 26
-            minSdkVersion 26
-            buildConfigField 'int', 'minSDK', "$minSdk"
-            manifestPlaceholders["minSDK"] = "$minSdk"
+            minSdk = 26
+            buildConfigField 'int', 'minSDK', '26'
+            manifestPlaceholders["minSDK"] = '26'
             dimension 'Google'
             versionNameSuffix '-g'
             buildConfigField 'int', 'Google', '1'
@@ -129,13 +141,12 @@ flavorDimensions = ['wearos','libreVersion','SiBionics', 'DexCom','Google']
         nogoogle {
             dimension 'Google'
             versionNameSuffix '-nog'
-            minSdk MINSDK
-            minSdkVersion MINSDK
+            minSdk = MINSDK
             //targetSdk 28 
-            targetSdk  TARGETSDK
-            buildConfigField 'int', 'targetSDK', "$targetSdk"
-            manifestPlaceholders["targetSDK"] = "$targetSdk"
-            buildConfigField 'int', 'minSDK', "$minSdk"
+            targetSdk = TARGETSDK
+            buildConfigField 'int', 'targetSDK', TARGETSDK.toString()
+            manifestPlaceholders["targetSDK"] = TARGETSDK.toString()
+            buildConfigField 'int', 'minSDK', MINSDK.toString()
             buildConfigField 'int', 'Google', '0'
             buildConfigField 'int', 'noZXing', '0'
              manifestPlaceholders["debuggable"] = "true"
@@ -163,8 +174,8 @@ flavorDimensions = ['wearos','libreVersion','SiBionics', 'DexCom','Google']
         libreOld {
     //******  Zet op rollout op 100% ******
             dimension 'libreVersion'
-            versionCode 863 //LIBRE2ONLY
-         //    versionName '10.6.6-no3'
+            versionCode 873 //LIBRE2ONLY
+         //    versionName '10.7.0-no3'
             versionNameSuffix '-no3'
             buildConfigField 'int', 'libreVersion', '2'
             externalNativeBuild.cmake {
@@ -177,7 +188,7 @@ flavorDimensions = ['wearos','libreVersion','SiBionics', 'DexCom','Google']
 //       minSdk 23
             dimension 'libreVersion'
         versionNameSuffix '-li3'
-        versionCode 864 //LIBRE3
+        versionCode 874 //LIBRE3
     //******  Zet op rollout op 100% ******
 
                buildConfigField 'int', 'libreVersion', '3'
@@ -192,7 +203,7 @@ flavorDimensions = ['wearos','libreVersion','SiBionics', 'DexCom','Google']
         si {
       dimension 'SiBionics'
         versionNameSuffix '-si'
-        versionCode 864 
+        versionCode 874 
        buildConfigField 'int', 'SiBionics', '1'
        externalNativeBuild.cmake {
          cppFlags "   -DSIBIONICS=1 "
@@ -201,7 +212,7 @@ flavorDimensions = ['wearos','libreVersion','SiBionics', 'DexCom','Google']
         }
         nosi {
             dimension 'SiBionics'
-         versionCode 863 
+         versionCode 873 
          versionNameSuffix '-nosi'
           buildConfigField 'int', 'SiBionics', '0'
           externalNativeBuild.cmake {
@@ -215,13 +226,12 @@ flavorDimensions = ['wearos','libreVersion','SiBionics', 'DexCom','Google']
             // targetSdk 30
 
             dimension 'wearos'
-        minSdk 26
-        minSdkVersion 26
-        buildConfigField 'int', 'minSDK', "$minSdk"
-        manifestPlaceholders["minSDK"] = "$minSdk"
-        versionCode 865 //WATCH
+        minSdk = 26
+        buildConfigField 'int', 'minSDK', '26'
+        manifestPlaceholders["minSDK"] = '26'
+        versionCode 875 //WATCH
     //******  Zet op rollout op 100% ******
-        //versionName '10.6.6-wear'
+        //versionName '10.7.0-wear'
         versionNameSuffix '-wear'
         signingConfig signingConfigs.alg
 
@@ -233,18 +243,14 @@ flavorDimensions = ['wearos','libreVersion','SiBionics', 'DexCom','Google']
                 cFlags " -DWEAROS=1  -DUSEDIN=1   "
 
                 }
-
-      buildFeatures {
-        viewBinding true
-        }
         }
 
         small {
 
 //        minSdk 19
             dimension 'wearos'
-        versionCode 865 //WATCH
-        //versionName '10.6.6-small'
+        versionCode 875 //WATCH
+        //versionName '10.7.0-small'
         versionNameSuffix '-small'
         signingConfig signingConfigs.alg
 
@@ -255,10 +261,6 @@ flavorDimensions = ['wearos','libreVersion','SiBionics', 'DexCom','Google']
                 cFlags " -DWEAROS=1  -DUSEDIN=1   "
 
                 }
-
-      buildFeatures {
-        viewBinding true
-        }
         }
        mobile {
 //        minSdk 19
@@ -523,9 +525,7 @@ buildTypes {
 
    ndkVersion "${ndkver}"
 
-    kotlinOptions {
-        jvmTarget =  JavaVersion.VERSION_17
-    }
+//    kotlinOptions { jvmTarget =  JavaVersion.VERSION_17 }
 
     packagingOptions {
         jniLibs {
@@ -545,11 +545,8 @@ buildTypes {
         includeInApk true
         includeInBundle true
     }
-    compileSdkVersion 'android-36.1'
-    buildToolsVersion '36.1.0'
-    buildFeatures {
-        aidl true
-    }
+    compileSdk 37
+    buildToolsVersion '37.0.0'
        sourceSets {
        mobileLibre3SiDexGoogle {
             java.srcDirs = ['src/mobileSi/java', 'src/mobileSiGoogle/java']
@@ -587,10 +584,11 @@ buildTypes {
 (variant.name.contains("wear")&&variant.name.contains("LibreOldNosiNodex"))
 
             ) {
-                variant.enabled = false
+                variant.enable = false
             }
         })
     }
+    compileSdkMinor 0
 }
 
 allprojects {
@@ -599,6 +597,14 @@ allprojects {
             options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
         }
     }
+}
+
+configurations {
+    mobileLibre3SiDexGoogleImplementation {}
+    mobileLibre3SiDexNogoogleImplementation {}
+    mobileLibreOldSiDexImplementation {}
+    mobileLibre3SiNodexImplementation {}
+    mobileLibreOldSiNodexImplementation {}
 }
 
 dependencies {
@@ -620,57 +626,59 @@ dependencies {
 
     implementation 'androidx.recyclerview:recyclerview:1.4.0'
     implementation 'androidx.startup:startup-runtime:1.2.0'
-    implementation 'androidx.core:core-ktx:1.17.0'
+    implementation 'androidx.core:core-ktx:1.18.0'
   implementation 'com.android.support:support-annotations:28.0.0'
 
     implementation "androidx.appcompat:appcompat:$APPCOMPAT"
-    implementation 'androidx.activity:activity:1.12.3'
-    implementation 'androidx.core:core:1.17.0'
+    implementation 'androidx.activity:activity:1.13.0'
+    implementation 'androidx.core:core:1.18.0'
    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2'
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.2.21'
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib:2.3.0'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.3.20'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:2.3.20'
     implementation "com.google.android.gms:play-services-base:$GMSBASE"
 //    implementation "com.google.android.gms:play-services-base:18.8.0"
  implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.10.2'
   mobileImplementation 'androidx.health.connect:connect-client:1.1.0'
 //  mobileImplementation files('/n/ojka/Downloads/ciq-companion-app-sdk-2.0.3.aar');
-  mobileImplementation 'com.garmin.connectiq:ciq-companion-app-sdk:2.3.0@aar'
+  mobileImplementation 'com.garmin.connectiq:ciq-companion-app-sdk:2.4.0@aar'
 
     compileOnly 'com.google.android.wearable:wearable:2.9.0'
     implementation "com.google.android.gms:play-services-wearable:$GMSWEAR"
   // implementation 'com.google.android.gms:play-services-wearable:10.2.0' Needed for China? https://developer.android.com/training/wearables/creating-app-china#data-layer
 
 
-    wearImplementation 'androidx.activity:activity-ktx:1.12.3'
+    wearImplementation 'androidx.activity:activity-ktx:1.13.0'
     wearImplementation 'androidx.constraintlayout:constraintlayout:2.2.1'
     wearImplementation 'com.google.android.material:material:1.13.0'
-    wearImplementation 'androidx.databinding:viewbinding:9.0.0'
-    wearImplementation 'androidx.core:core-ktx:1.17.0'
+    wearImplementation 'androidx.databinding:viewbinding:9.1.0'
+    wearImplementation 'androidx.core:core-ktx:1.18.0'
 
 
-    wearImplementation 'androidx.wear:wear:1.3.0'
+    wearImplementation 'androidx.wear:wear:1.4.0'
 
     wearImplementation 'androidx.percentlayout:percentlayout:1.0.0'
     wearImplementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
+    //wearImplementation "androidx.wear.watchface:watchface-client-guava:1.2.1"
+    //wearImplementation "com.google.guava:guava:31.1-android"
+    wearImplementation "androidx.wear.watchfacepush:watchfacepush:1.0.0-rc02"
+//    wearImplementation "androidx.wear.watchfacepush:watchfacepush-guava:1.0.0-rc01"
+    
+    // This is the bridge you need to use Kotlin suspend from Java
+    wearImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.10.2"
+
+
 
     wearImplementation 'androidx.wear.watchface:watchface-style:1.2.1'
-    wearImplementation 'androidx.wear.watchface:watchface-complications:1.2.1'
+    wearImplementation 'androidx.wear.watchface:watchface-complications:1.3.0'
     wearImplementation 'androidx.wear.watchface:watchface-editor:1.2.1'
     wearImplementation 'androidx.wear.watchface:watchface-client:1.2.1'
     wearImplementation 'androidx.wear.watchface:watchface:1.2.1'
     wearImplementation 'androidx.wear.watchface:watchface-complications-rendering:1.2.1'
-    wearImplementation 'androidx.wear.watchface:watchface-complications-data-source-ktx:1.2.1'
+    wearImplementation 'androidx.wear.watchface:watchface-complications-data-source-ktx:1.3.0'
      wearImplementation 'androidx.core:core-splashscreen:1.2.0'
-     wearImplementation 'androidx.wear.protolayout:protolayout-external-protobuf:1.3.0'
-configurations {
-mobileLibre3SiDexGoogleImplementation {}
-mobileLibre3SiDexNogoogleImplementation {}
-mobileLibreOldSiDexImplementation {}
-    mobileLibre3SiNodexImplementation {}
-    mobileLibreOldSiNodexImplementation {}
-}
+     wearImplementation 'androidx.wear.protolayout:protolayout-external-protobuf:1.4.0'
     mobileLibre3SiNodexImplementation 'com.google.android.gms:play-services-code-scanner:16.1.0'
     mobileLibre3SiNodexImplementation 'com.journeyapps:zxing-android-embedded:4.3.0'
     mobileLibreOldSiNodexImplementation 'com.google.android.gms:play-services-code-scanner:16.1.0'

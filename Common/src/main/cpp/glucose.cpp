@@ -182,7 +182,6 @@ int SensorGlucoseData::updatescan(crypt_t *pass,Connect *connect,int ind,int sen
             }
         return 2;
         }
-    else {
     if(isSibionics()) {
         LOGGER("GLU: Sibionics updatescan ind=%d sensorindex=%d\n",ind,sensorindex);
         if(!getinfo()->update[ind].siScan&&getinfo()->siIdlen>16&&getinfo()->siId[0]&&(siSubtype()!=3||getinfo()->siDeviceNamelen>3)) {
@@ -213,8 +212,8 @@ int SensorGlucoseData::updatescan(crypt_t *pass,Connect *connect,int ind,int sen
                 }
             }
         return 2;
-    } else  {
-        if(isAccuChek()) {
+    } 
+   if(isAccuChek()) {
              if(!getinfo()->update[ind].siScan&&getinfo()->siIdlen>16&&getinfo()->siId[0]) {
                 std::vector<subdata> vect;
                 vect.reserve(4);
@@ -241,32 +240,58 @@ int SensorGlucoseData::updatescan(crypt_t *pass,Connect *connect,int ind,int sen
                  }
               return 2;
               }
-        else {
-          if(isAir()) {
-                if(!getinfo()->update[ind].siScan&& getinfo()->airData.pinCode[0]) {
-                        std::vector<subdata> vect;
-                        vect.reserve(3);
-                        vect.push_back({meminfo.data(),0,offsetof(Info,lastHistoricLifeCountReceivedPos)});
-                        constexpr const int airsize=sizeof(uint16_t);
-                        constexpr const int offdevice=offsetof(Info,deviceaddress)-airsize;
-                        vect.push_back({meminfo.data()+offdevice,offdevice,airsize});
-                        vect.push_back({meminfo.data()+offsetof(Info,airData),offsetof(Info,airData),sizeof(Info::airData)});
-                        if(!connect->senddata(pass,vect, infopath)) {
-                            LOGSTRING("GLU: senddata info.data failed\n");
-                            return 0;
-                             }
-                        getinfo()->update[ind].siScan=true;
-                        return 5;
-                        }
-                else {
-                    if(getinfo()->update[ind].sendstreaming) {
-                        getinfo()->update[ind].sendstreaming=false;
-                        return 5;
-                        }
-                    }
-                return 2;
+  if(isAir()) {
+        if(!getinfo()->update[ind].siScan&& getinfo()->airData.pinCode[0]) {
+                std::vector<subdata> vect;
+                vect.reserve(3);
+                vect.push_back({meminfo.data(),0,offsetof(Info,lastHistoricLifeCountReceivedPos)});
+                constexpr const int airsize=sizeof(uint16_t);
+                constexpr const int offdevice=offsetof(Info,deviceaddress)-airsize;
+                vect.push_back({meminfo.data()+offdevice,offdevice,airsize});
+                vect.push_back({meminfo.data()+offsetof(Info,airData),offsetof(Info,airData),sizeof(Info::airData)});
+                if(!connect->senddata(pass,vect, infopath)) {
+                    LOGSTRING("GLU: senddata info.data failed\n");
+                    return 0;
+                     }
+                getinfo()->update[ind].siScan=true;
+                return 5;
                 }
         else {
+            if(getinfo()->update[ind].sendstreaming) {
+                getinfo()->update[ind].sendstreaming=false;
+                return 5;
+                }
+            }
+        return 2;
+        }
+  if(isAidexX()) {
+        if(!getinfo()->update[ind].siScan&&memcmp(getinfo()->aidexXdat.iv,zeros,16)) {
+                std::vector<subdata> vect;
+                vect.reserve(5);
+                vect.push_back({meminfo.data(),0,offsetof(Info,lastHistoricLifeCountReceivedPos)});
+                constexpr const int offmanualwarmup=offsetof(Info,manualwarmup);
+                vect.push_back({meminfo.data()+offmanualwarmup,offmanualwarmup,sizeof(uint16_t)});
+                constexpr const int ivoffset=offsetof(Info,aidexXdat.iv);
+                vect.push_back({meminfo.data()+ivoffset,ivoffset,16});
+                constexpr const int scanoffset=offsetof(Info,aidexXdat.scanlen);
+                vect.push_back({meminfo.data()+scanoffset,scanoffset,1+getinfo()->aidexXdat.scanlen});
+                constexpr const int offwarmupstartpos=offsetof(Info,warmupstartpos);
+                vect.push_back({meminfo.data()+offwarmupstartpos,offwarmupstartpos,sizeof(uint8_t)});
+                if(!connect->senddata(pass,vect, infopath)) {
+                    LOGSTRING("GLU: senddata info.data failed\n");
+                    return 0;
+                     }
+                getinfo()->update[ind].siScan=true;
+                return 5;
+                }
+        else {
+            if(getinfo()->update[ind].sendstreaming) {
+                getinfo()->update[ind].sendstreaming=false;
+                return 5;
+                }
+            }
+        return 2;
+        }
 
     bool did=false;
     constexpr const int startinfolen=offsetof(Info, pollcount);
@@ -397,11 +422,6 @@ int SensorGlucoseData::updatescan(crypt_t *pass,Connect *connect,int ind,int sen
         return 1;
           }
     return 2;
-       }
-       }
-
-       }
-       }
     }
 template <typename It,typename T>
 It    find_last(It beg, It en,T el) {

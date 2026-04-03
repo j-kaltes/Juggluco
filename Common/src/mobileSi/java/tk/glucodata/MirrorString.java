@@ -2,6 +2,7 @@ package tk.glucodata;
 
 import static tk.glucodata.Backup.changehostError;
 
+import android.content.Context;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -10,16 +11,10 @@ import org.json.JSONObject;
 
 import tk.glucodata.nums.numio;
 
+import static tk.glucodata.Backup.dowhenasked;
 
 class MirrorString {
 private static final String LOG_ID="MirrorString";
-static private JSONArray jsonArray(String[] args) {
-    var uit=new JSONArray(); 
-    for(var el:args) {
-        uit.put(el);
-        }
-    return uit;
-    }
 static private String[] fromjsonArray(JSONArray jar) throws JSONException {
      final int len=jar.length();
      String[] uit=new String[len];
@@ -29,6 +24,13 @@ static private String[] fromjsonArray(JSONArray jar) throws JSONException {
     return uit;
     }
     /*
+static private JSONArray jsonArray(String[] args) {
+    var uit=new JSONArray();
+    for(var el:args) {
+        uit.put(el);
+        }
+    return uit;
+    }
 static String makestring(String[] names,int nr,boolean detect,String port,boolean nums,boolean stream,boolean scans,boolean recover,boolean receive,boolean activeonly,boolean passiveonly,String pass,long starttime,String label,boolean testip,boolean hasname) throws JSONException {
         JSONObject json=new JSONObject();
         json.put("names",jsonArray(names));
@@ -48,6 +50,9 @@ static String makestring(String[] names,int nr,boolean detect,String port,boolea
         json.put("hasname",hasname);
         return json.toString()+" MirrorJuggluco";
         } */
+
+
+
     static void fromstring(String jsonstr,MainActivity act) {
         try {
             JSONObject json =new JSONObject(jsonstr);
@@ -93,28 +98,10 @@ static String makestring(String[] names,int nr,boolean detect,String port,boolea
                   }
                    };
             if(receive) {
-                String type=""; 
-                if(!nums&&numio.hasNumdata()) {
-                    type=act.getString(R.string.amountsname); 
-                    }
-                if(!scans&&Natives.hasscans()) {
-                    final var addstr=act.getString(R.string.scansname); 
-                    if(type.length()>0)
-                        type+=", "+addstr; 
-                    else type=addstr; 
-                    }
-                if(!stream&&Natives.hasstreamed( )) {
-                    final var addstr=act.getString(R.string.streamname); 
-                    if(type.length()>0)
-                        type+=", "+addstr; 
-                    else type=addstr; 
-                    }
-                if(type.length()>0) {
-                        Confirm.ask(act,act.getString(R.string.datapresent)+type,act.getString(R.string.overwrite),save);
-                        return;
-                       } 
+                 dowhenasked(act,nums,scans, stream, save);
                  }
-             save.run();
+             else
+                 save.run();
             ;
             }
          catch(Exception th) {

@@ -56,9 +56,28 @@ struct sistream:streamdata {
 #ifdef DEXCOM
 #include "dexcom/DexContext.hpp"
 struct dexcomstream:streamdata {
-   
-
     DexContext dexcontext;
     dexcomstream(int sensindex,SensorGlucoseData *sens): streamdata(0x40, sensindex,sens),dexcontext(sens){};
     };
+
+extern bool initAidexXcrypto();
+
+struct aidexXstream:streamdata {
+        uint8_t unpair=0;
+        bool unbonded=true;
+        uint8_t clear=0;
+        uint8_t time0=0;
+        aidexXstream(int sensindex,SensorGlucoseData *sens): streamdata(0x50, sensindex,sens){
+#if 0
+                uint8_t key[]{0xEF,0x6F,0x46,0xF3,0xE7,0x3B,0x56,0xC7,0x80,0x21,0x34,0x21,0x6F,0xD5,0xEB,0x73};
+                static_assert(sizeof(key)==16);
+                memcpy(sens->getinfo()->aidexXdat.keys[0].key,key,16);
+                sens->getinfo()->lastLifeCountReceived=4544;
+#endif
+                initAidexXcrypto();
+                };
+    };
+
+
+
 #endif 

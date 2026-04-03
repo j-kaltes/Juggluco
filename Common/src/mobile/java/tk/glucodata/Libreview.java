@@ -147,7 +147,7 @@ static boolean putsensor(boolean libre3,byte[] textbytes) {
       if(status!=0) {
          String reason=object.getString("reason");
          if(status==20) {
-            if("wrongDeviceInToken".equals(reason)) {
+            if(reason.contains("wrongDeviceInToken")) {
                switch(i) {
                   case 0:{
                   if(!postgetauth(libre3)) {
@@ -285,7 +285,7 @@ static boolean postgetauth(boolean libre3) {
             String poststatus="postgetauth: status="+status+" reason="+reason;
             Log.e(LOG_ID,poststatus);
             if(status==20) {
-               if("wrongDeviceForUser".equals(reason)) {
+               if(reason.contains("wrongDeviceForUser")) {
                   setdevice="true";
                   continue;   
                   }
@@ -397,7 +397,7 @@ static boolean postmeasurements(boolean libre3,byte[] measurementdata) {
             Log.e(LOG_ID,"Post with status "+status);
             String reason=object.getString("reason");
             if(status==20) {
-               if("wrongDeviceInToken".equals(reason)) {
+               if(reason.contains("wrongDeviceInToken")) {
                   switch(i) {
                      case 0:{
                         if(!postgetauth(libre3)) {

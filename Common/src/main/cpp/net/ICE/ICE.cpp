@@ -701,6 +701,8 @@ static  bool putDescription(int allindex,juice_agent *agent,std::string_view com
 
 
 bool initAgent(juice_agent *agent,int allindex) {
+    if(allindex>=backup->getupdatedata()->hostnr)
+        return false;
     const passhost_t &host= getBackupHosts()[allindex];
     std::string_view commonLabel=host.getICEname();
     ICEConnect *con=static_cast<ICEConnect *>(connections[allindex]);
@@ -713,7 +715,7 @@ bool initAgent(juice_agent *agent,int allindex) {
     else  {
         if((now-firstfailed)>maxconnectionunused) {
             backup->deactivateHost(allindex,true);
-            return -1;
+            return false;
             }
         }
     bool side=host.side;

@@ -1959,3 +1959,16 @@ extern "C" JNIEXPORT void  JNICALL   fromjava(onCreate)(JNIEnv *env, jclass cl) 
 
 
 
+
+extern "C" JNIEXPORT jboolean  JNICALL   fromjava(lossSignalAlreadyHeard)(JNIEnv *env, jclass cl) {
+    const bool off=settings->data()->lossSignalOff;
+    settings->data()->lossSignalOff=true;
+    return off;
+    }
+
+extern "C" JNIEXPORT void  JNICALL   fromjava(setaskedWatchFace)(JNIEnv *env, jclass cl,jboolean val) {
+    settings->data()->askedWatchFace=val;
+    }
+extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getaskedWatchFace)(JNIEnv *env, jclass cl) {
+    return settings->data()->askedWatchFace;
+    }

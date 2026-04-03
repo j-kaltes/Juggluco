@@ -447,7 +447,7 @@ static int addcurrents(char *&uitptr,time_t nu,const SensorGlucoseData *sens) {
         return -1;
         }
      int start=sens->getinfo()->libreCurrentIter;
-    int pollstart= sens->getinfo()->pollstart;
+    int pollstart= sens->getStreamStart();
     int        ends=sens->pollcount()-1;
     LIBRELOGGER("%s pollstart=%d libreCurrentIter=%d ends=%d\n",sens->showsensorname().data(),pollstart,start,ends);
     if(start<pollstart)
@@ -924,7 +924,7 @@ static int askhasnewcurrent2(time_t nu) {
         if(sens->getmaxtime()<nu)
             continue;
        int start=sens->getinfo()->libreCurrentIter;
-        const int pollstart= sens->getinfo()->pollstart;
+        const int pollstart= sens->getStreamStart();
         if(start<pollstart)
             start=pollstart;
         const int        ends=sens->pollcount()-1;
@@ -965,7 +965,7 @@ static int askhasnewcurrent3(time_t nu) {
         if(sens->getmaxtime()<nu)
             continue;
         int start=sens->getinfo()->libreviewScan;
-        const int pollstart= sens->getinfo()->pollstart;
+        const int pollstart= sens->getStreamStart();
         if(start<pollstart)
             start=pollstart;
         const int        ends=sens->pollcount()-1;
@@ -1005,7 +1005,7 @@ int askhasnewcurrent(time_t nu) {
       if(sens->isSibionics())
          continue;
          int start=sens->isLibre3()?sens->getinfo()->libreviewScan:sens->getinfo()->libreCurrentIter;
-        int pollstart= sens->getinfo()->pollstart;
+        int pollstart= sens->getStreamStart();
         if(start<pollstart)
             start=pollstart;
         const int        ends=sens->pollcount()-1;

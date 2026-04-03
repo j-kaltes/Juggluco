@@ -27,6 +27,7 @@ import static tk.glucodata.BluetoothGlucoseMeter.mBluetoothAdapter;
 import static tk.glucodata.BluetoothGlucoseMeter.mBluetoothManager;
 import static tk.glucodata.BluetoothGlucoseMeter.meterGatts;
 import static tk.glucodata.Log.doLog;
+import static tk.glucodata.SensorBluetooth.scanStarts;
 
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothDevice;
@@ -38,6 +39,7 @@ import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
 import android.os.Build;
 import android.os.ParcelUuid;
+import android.os.SystemClock;
 
 import androidx.annotation.RequiresApi;
 
@@ -48,6 +50,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 class MeterScanner  {
+   boolean takeAidexX=false;
    List<BluetoothDevice> devices=new ArrayList<BluetoothDevice>();
    List<String> deviceNames=new ArrayList<String>();
    private static final String LOG_ID="MeterScanner";
@@ -61,10 +64,15 @@ class MeterScanner  {
         knowName=false;
         adapter=adapt;
         }
+   void clear() {
+       devices=new ArrayList<BluetoothDevice>();
+       deviceNames=new ArrayList<String>();
+   }
+
    void reset() {
+        takeAidexX=false;
         knowName=true;
-     devices=new ArrayList<BluetoothDevice>();
-      deviceNames=new ArrayList<String>();
+        clear();
       adapter=null;
      }
    DeviceList.DeviceListViewAdapter adapter=null;
@@ -125,8 +133,7 @@ class MeterScanner  {
                 if(ret) stopScan(false);
                 if(newdev) {
                     return ret&&cb.connectActiveDevice(0);
-                    }
-                return ret;
+                    } return ret;
             }
             if(doLog) {Log.d(LOG_ID, "BLE unknown device");};;
             return false;
@@ -137,23 +144,31 @@ class MeterScanner  {
             return true;
         }
     }
-
 private void addDevice(BluetoothDevice device) {
         var name=device.getName();
         if(name==null) {
                 Log.i(LOG_ID,"addDevice skip: no name");
                 return;
                 }
-        if(deviceNames.contains(name)) {
-                Log.i(LOG_ID,"device already present "+name);
-                return;
-                }
-        Log.i(LOG_ID, "addDevice "+name);
-        devices.add(device);
-        deviceNames.add(name);
-        var adapt=adapter;
-        if(adapt!=null)
-            adapt.notifyDataSetChanged();
+                /*
+        boolean isaidexx=name.startsWith(AidexXGattCallback.startAidexX);
+        if(takeAidexX ^ !isaidexx) */
+
+         {
+                if(deviceNames.contains(name)) {
+                        Log.i(LOG_ID,"device already present "+name);
+                        return;
+                        }
+                    Log.i(LOG_ID, "addDevice "+name);
+                    devices.add(device);
+                    deviceNames.add(name);
+                    var adapt=adapter;
+                    if(adapt!=null)
+                        adapt.notifyDataSetChanged();
+                   }
+/*        else {
+            Log.i(LOG_ID,"addDevice: takeAidexX="+takeAidexX+" isAidexX="+isaidexx);
+            } */
         }
 
 
@@ -220,14 +235,21 @@ public boolean scanStarter()  {
            if(alwaysfilter||scanTries++%2==0) {
                mScanFilters=new ArrayList<>();
                if(doLog) {Log.d(LOG_ID,"SCAN: starting scan.");};
-               final UUID GLUCOSE_SERVICE =      UUID.fromString("00001808-0000-1000-8000-00805f9b34fb");
-               ScanFilter.Builder builder2 = new ScanFilter.Builder();
-               builder2.setServiceUuid(new ParcelUuid(GLUCOSE_SERVICE));
-               mScanFilters.add(builder2.build());
-               final var VERIO_F7A1_SERVICE = UUID.fromString("af9df7a1-e595-11e3-96b4-0002a5d5c51b");
-               builder2 = new ScanFilter.Builder();
-               builder2.setServiceUuid(new ParcelUuid(VERIO_F7A1_SERVICE));
-               mScanFilters.add(builder2.build());
+               if(takeAidexX) {
+                       var builder2 = new ScanFilter.Builder();
+                       builder2.setServiceUuid(new ParcelUuid(AidexXGattCallback.ScanServiceUUID));
+                       mScanFilters.add(builder2.build());
+                       }
+                else {
+                       final UUID GLUCOSE_SERVICE =      UUID.fromString("00001808-0000-1000-8000-00805f9b34fb");
+                       ScanFilter.Builder builder2 = new ScanFilter.Builder();
+                       builder2.setServiceUuid(new ParcelUuid(GLUCOSE_SERVICE));
+                       mScanFilters.add(builder2.build());
+                       final var VERIO_F7A1_SERVICE = UUID.fromString("af9df7a1-e595-11e3-96b4-0002a5d5c51b");
+                       builder2 = new ScanFilter.Builder();
+                       builder2.setServiceUuid(new ParcelUuid(VERIO_F7A1_SERVICE));
+                       mScanFilters.add(builder2.build());
+                       }
               }
            else {
                   mScanFilters=null;
@@ -302,8 +324,23 @@ final private Runnable scanRunnable = new Runnable() {
      }
 
  };
+
+
+private void startScanGuarded() {
+    long delay =SensorBluetooth.delayUntilScanAllowed();
+    if(delay > 0) {
+        scanFuture=Applic.scheduler.schedule(this::startScanGuarded, delay, TimeUnit.MILLISECONDS);
+        return;
+        }
+    final  long elapsed= SystemClock.elapsedRealtime();
+    scanStarts.addLast(elapsed);
+
+    scanRunnable.run();
+   }
+
 public     boolean scanStarter(long delayMillis) {
-    scanFuture=Applic.scheduler.schedule(scanRunnable, delayMillis, TimeUnit.MILLISECONDS);
+
+    scanFuture=Applic.scheduler.schedule(this::startScanGuarded, delayMillis, TimeUnit.MILLISECONDS);
     return false;
     }
 }

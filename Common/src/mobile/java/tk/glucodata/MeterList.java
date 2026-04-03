@@ -44,6 +44,7 @@ import androidx.recyclerview.widget.RecyclerView;
 public class MeterList {
 //  static private final String LOG_ID ="MeterList";
 static final class MeterView extends Layout{
+   MeterListViewAdapter adapter;
    int meterIndex;
    TextView text;
    CheckBox active;
@@ -80,7 +81,7 @@ static final class MeterView extends Layout{
         text.setText(addtext);
          active.setChecked(a);
         }
-    MeterView(MainActivity act,View parent,TextView t,CheckBox b) {
+    MeterView(MainActivity act,View parent,TextView t,CheckBox b, MeterListViewAdapter adapter) {
         super(act,(l,w,h)->{
              return new int[] {w,h};
                },new View[]{t},new View[]{b});
@@ -88,7 +89,7 @@ static final class MeterView extends Layout{
         active=b;
         meterIndex=-1;
         text.setOnClickListener( v -> { 
-            MeterConfig.config(act,meterIndex,parent,null);
+            MeterConfig.config(act,meterIndex,parent,null,adapter);
             });
         active.setOnCheckedChangeListener( (buttonView,  isChecked) -> {
             if(meterIndex>=0) {
@@ -114,8 +115,8 @@ static final class MeterView extends Layout{
 
         }
 
-    MeterView(MainActivity act,View parent) {
-        this(act,parent,new TextView(act),new CheckBox(act));
+    MeterView(MainActivity act,View parent,MeterListViewAdapter adapter) {
+        this(act,parent,new TextView(act),new CheckBox(act),adapter);
         }
     };
    static  class MeterListViewHolder extends RecyclerView.ViewHolder {
@@ -134,7 +135,7 @@ public static  class MeterListViewAdapter extends RecyclerView.Adapter<MeterList
        @NonNull
       @Override
        public MeterListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-           MeterView view=new MeterView((MainActivity)parent.getContext(),layout);
+           MeterView view=new MeterView((MainActivity)parent.getContext(),layout,this);
            return new MeterListViewHolder(view);
        }
 

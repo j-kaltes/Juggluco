@@ -2,6 +2,7 @@
 To modify, change the html files in https://github.com/j-kaltes/Jugglucohelp -->
 <resources>
 <string name="healthpermission" ></string>
+<string name="sensorinfo"></string>
 <string name="loghelp" ></string>
 <string name="displayhelp" ></string>
 <string name="ringtone" ></string>

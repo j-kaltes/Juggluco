@@ -22,7 +22,7 @@
 
 //#define USE_HEBREW 1
 //#define USE_RUSSIAN 1
-//#define SPANISH 1
+#define SPANISH 1
 #define quotes(x) #x
 #define xquotes(x) quotes(x)
 #undef NDEBUG

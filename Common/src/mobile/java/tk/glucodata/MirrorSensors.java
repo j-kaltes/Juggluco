@@ -87,7 +87,7 @@ static void show(MainActivity act) {
         return;
         }
     isVisible=true;
-    var sensors=new Sensors(act);
+    var sensors=new Sensors(act,false,false);
     var help=getbutton(act,R.string.helpname);
     help.setOnClickListener(v-> helplight(R.string.sensormirror,act));
     var finish=getbutton(act,R.string.finish);

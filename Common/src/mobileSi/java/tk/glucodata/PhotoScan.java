@@ -211,7 +211,7 @@ static void connectSensor(final String scantag,MainActivity act,int request,long
                            help.help(R.string.staticnum, act);
                             }
                         else
-                            MeterConfig.config(act,index,null,null); 
+                            MeterConfig.config(act,index,null,null,null);
                         return;
                         }
                      }

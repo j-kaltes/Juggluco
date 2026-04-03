@@ -96,6 +96,7 @@
                 <data android:host="*" android:pathPrefix="/wake" android:scheme="wear" />
                 <data android:host="*" android:pathPrefix="/wakestream" android:scheme="wear" />
                 <data android:host="*" android:pathPrefix="/askforstart" android:scheme="wear" />
+                <data android:host="*" android:pathPrefix="/unpair" android:scheme="wear" />
             </intent-filter>
         </service>
 

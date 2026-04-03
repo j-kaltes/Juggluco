@@ -153,11 +153,7 @@ static AudioAttributes notification_audio;
 static AudioFocusRequest audiofocusrequest;
 static public void makenotification_audio() {
     if(android.os.Build.VERSION.SDK_INT >= 21) {
-        int type=Natives.getSoundType( );
-        Log.i(LOG_ID,"getSoundType()="+type);
-        if(type==0) {
-            type=isWearable? USAGE_ASSISTANCE_SONIFICATION: AudioAttributes.USAGE_NOTIFICATION;
-            } 
+        var type=isWearable? USAGE_ASSISTANCE_SONIFICATION: AudioAttributes.USAGE_NOTIFICATION;
         notification_audio=new AudioAttributes.Builder().setUsage(type).build();
         if(android.os.Build.VERSION.SDK_INT >= 26) {
                 audiofocusrequest = new AudioFocusRequest.Builder( AudioManager.AUDIOFOCUS_GAIN_TRANSIENT).setAudioAttributes( notification_audio ).build();
@@ -173,7 +169,8 @@ static public void makenotification_audio() {
         }
     }
 
-static private AudioManager audioManager = (android.os.Build.VERSION.SDK_INT <26)?null:(AudioManager) Applic.getContext().getSystemService(Context.AUDIO_SERVICE);
+
+static  AudioManager audioManager = (android.os.Build.VERSION.SDK_INT <26)?null:(AudioManager) Applic.getContext().getSystemService(Context.AUDIO_SERVICE);
 static private boolean turnfocusoff=false;
         static void doTurnFocusoff() {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

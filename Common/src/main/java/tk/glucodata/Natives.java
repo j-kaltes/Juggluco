@@ -966,15 +966,43 @@ public static native int airGetLast(long dataptr);
 public static native boolean airSaveSensorInfo(long dataptr,byte[] value);
 public static native boolean airSaveSensorInfo2(long dataptr,byte[] value);
 public static native void airSaveStartSensor(long dataptr, float eapp,float vref,int elapsedSecs);
-
 public static native byte[] airGetPin(long dataptr);
 
-public static native void switchSync( );
+public static native void switchSync();
+
+public static native boolean aidexXSaveKey(long dataptr,byte[] value);
+public static native byte[] aidexXstartCommand( boolean haskey,long dataptr, byte[] value);
+public static native long aidexXscanBytes(long dataptr,byte[] value,long[] time);
+public static native byte[] aidexXprocessHistoryData(long dataptr,boolean bondednow,byte[] value);
+public static native long aidexXprocessCurrentData(long dataptr,byte[] value,long[] time);
+public static native boolean aidexHasKey(long dataptr);
+public static native void aidexXunpair(long dataptr);
+
+public static native int getManualWarmupMinutes(long sensorptr);
+public static native void setManualWarmupMinutes(long sensorptr,int min);
+
+public static native int getMinimalWarmup(long dataptr);
 //s/^[	 ]*extern.*JNIEXPORT[         ]*\([a-zA-Z]*\)[ ]*JNICALL[      ]*fromjava(\([^)]*\)) *(JNIEnv[^,]*,[^,)]*[,)]\([^){]*\)[^a-zA-Z0-9]*$/public static native \1 \2(\3);/g
 
+public static native boolean hasHistory(long sensorptr);
 
+public static native boolean hasAidexX();
+public static native byte[] aidexXaskKey(long dataptr);
+public static native String aidexXaddSensorByDeviceName(String serial);
 
+public static native int sensorIndex(String Sensor);
+public static native boolean lossSignalAlreadyHeard();
 
+//public static native byte[] aidexXunpairCommand(long dataptr );
+
+public static native boolean useAgain(long sensorptr);
+
+public static native boolean activeSensor(long sensorptr);
+
+public static native void aidexXclear(long dataptr);
+
+public static native void setaskedWatchFace(boolean val);
+public static native boolean getaskedWatchFace();
 }
 
 

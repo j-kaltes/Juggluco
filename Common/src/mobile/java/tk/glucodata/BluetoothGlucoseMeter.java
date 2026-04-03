@@ -261,13 +261,14 @@ public static void startScanner(long msec) {
             }
     scanner.scanStarter(msec);
     }
-public static void startAdapterScanner(DeviceList.DeviceListViewAdapter adapt ) {
+public static void startAdapterScanner(DeviceList.DeviceListViewAdapter adapt,boolean aidexx ) {
      if(scanner!=null) {
         scanner.stopScan(false);
         }
 
     initBluetooth();
     scanner=new MeterScanner(adapt);
+    scanner.takeAidexX=aidexx;
     scanner.scanStarter(0);
     }
 

@@ -191,7 +191,7 @@ uint32_t JCurve::glucosesearch(uint32_t starttime,uint32_t endtime) {
             int32_t lastpos= his->getAllendhistory()-1;
             uint32_t tim=0;
             int32_t firstpos = his->getstarthistory();
-            if(his->isDexcom()||his->isSibionics()) {
+            if(!his->hasRealHistory()) {
                 goto skiphistory;
                  }
             if(lastpos<firstpos) {
@@ -368,7 +368,7 @@ uint32_t JCurve::glucoseforwardsearch(uint32_t starttime,uint32_t endtime) {
         int32_t lastpos= his->getAllendhistory()-1;
         int32_t firstpos= his->getstarthistory();
         uint32_t tim=0;
-        if(his->isDexcom()||his->isSibionics()) {
+        if(!his->hasRealHistory()) {
                 goto skiphistory;
                  }
         if(lastpos<firstpos) {

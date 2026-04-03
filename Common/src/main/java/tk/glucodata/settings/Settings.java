@@ -129,7 +129,7 @@ import java.text.DecimalFormat;
 import java.util.Locale;
 
 public class Settings  {
-private final static boolean SPANISH=false;
+private final static boolean SPANISH=true;
 private final static String LOG_ID="Settings";
 MainActivity activity;
 
@@ -1430,7 +1430,8 @@ private    void mksettings(MainActivity context) {
 
        final   int pad=(int)(tk.glucodata.GlucoseCurve.metrics.density*7.0);
     if(isWearable) {
-       lay.setPadding((int)(tk.glucodata.GlucoseCurve.metrics.density*14.0),(int)(tk.glucodata.GlucoseCurve.metrics.density*11.0),(int)(tk.glucodata.GlucoseCurve.metrics.density*14.0),pad);
+   //   lay.setPadding((int)(tk.glucodata.GlucoseCurve.metrics.density*14.0),(int)(tk.glucodata.GlucoseCurve.metrics.density*11.0),(int)(tk.glucodata.GlucoseCurve.metrics.density*14.0),pad);
+      lay.setPadding((int)(tk.glucodata.GlucoseCurve.metrics.density*5.5),(int)(tk.glucodata.GlucoseCurve.metrics.density*11.0),(int)(tk.glucodata.GlucoseCurve.metrics.density*14.0),pad);
         }
      else {
        lay.setPadding(MainActivity.systembarLeft+pad,MainActivity.systembarTop*3/4,pad+MainActivity.systembarRight,pad+MainActivity.systembarBottom*3/4);

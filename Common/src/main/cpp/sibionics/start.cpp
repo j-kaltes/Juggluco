@@ -66,7 +66,7 @@ extern "C" JNIEXPORT jstring JNICALL   fromjava(addSIscangetName)(JNIEnv *env, j
    destruct   dest([jgegs,gegs,env]() {env->ReleaseStringUTFChars(jgegs, gegs);});
    const size_t gegslen= env->GetStringUTFLength( jgegs);
   std::string_view scangegs{gegs,gegslen};
-   auto [sensindex,sens]= sensors->makeSIsensorindex(scangegs,time(nullptr));
+   auto [sensindex,sens]= sensors->makePhotoScanSensorIndex(scangegs,time(nullptr));
    if(sens) {
       const char *name=sens->shortsensorname()->data();
       LOGGER("addSIscangetName(%s)=%s\n",gegs,name);
@@ -511,11 +511,17 @@ if(!dataptr) {
    return 0LL;
     }
  sistream *sdata=reinterpret_cast<sistream *>(dataptr);
+
   SensorGlucoseData *sens=sdata->hist;
   if(!sens) {
       LOGAR("SIprocessData SensorGlucoseData==null");
       return 0LL;
      }
+    if(sens->processing.test_and_set()) {
+        LOGAR("SIprocessData is processing");
+        return 0LL;
+        }
+    destruct _{[sens]{sens->processing.clear();}};
   uint32_t timsec=mmsec/1000L;
  data_t *bluedata=fromjbyteArray(envin,bluetoothdata);
  destruct _destbluedata([bluedata]{data_t::deleteex(bluedata);});

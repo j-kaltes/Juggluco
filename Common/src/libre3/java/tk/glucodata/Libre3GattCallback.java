@@ -22,27 +22,36 @@
 package tk.glucodata;
 
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Looper;
 import android.os.PowerManager;
 
 //import java.security.SecureRandom;
+import java.lang.reflect.Method;
 import java.util.Queue;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+import static android.app.PendingIntent.getBroadcast;
+import static android.bluetooth.BluetoothDevice.PHY_LE_1M_MASK;
+import static android.bluetooth.BluetoothDevice.PHY_OPTION_NO_PREFERRED;
 import static android.bluetooth.BluetoothGatt.CONNECTION_PRIORITY_BALANCED;
 import static android.bluetooth.BluetoothGatt.CONNECTION_PRIORITY_HIGH;
 import static android.bluetooth.BluetoothGatt.GATT_SUCCESS;
 import static android.bluetooth.BluetoothProfile.STATE_CONNECTED;
 import static android.bluetooth.BluetoothProfile.STATE_DISCONNECTED;
+import static android.content.Context.ALARM_SERVICE;
 import static android.content.Context.POWER_SERVICE;
 import static java.lang.System.arraycopy;
 import static java.util.Arrays.copyOfRange;
@@ -58,6 +67,9 @@ import static tk.glucodata.Natives.intDecrypt;
 import static tk.glucodata.Natives.intEncrypt;
 import static tk.glucodata.Log.showbytes;
 import static tk.glucodata.util.sleep;
+
+import androidx.annotation.Keep;
+import androidx.annotation.NonNull;
 
 
 public class Libre3GattCallback extends SuperGattCallback {
@@ -114,6 +126,54 @@ private final void checkBluetoothGatt(BluetoothGatt bluetoothGatt) {
             }
         }
     }
+
+/*
+private static boolean requestLeConnectionUpdateHidden(
+        BluetoothGatt gatt,
+        int minInterval,
+        int maxInterval,
+        int latency,
+        int timeout,
+        int minConnEventLen,
+        int maxConnEventLen) {
+    try {
+        Method m = BluetoothGatt.class.getDeclaredMethod(
+                "requestLeConnectionUpdate",
+                int.class, int.class, int.class, int.class, int.class, int.class);
+        m.setAccessible(true);
+        Object r = m.invoke( gatt, minInterval, maxInterval, latency, timeout, minConnEventLen, maxConnEventLen);
+        boolean ret= (r instanceof Boolean) && (Boolean) r;
+        Log.i(LOG_ID,"requestLeConnectionUpdate="+ret);
+        return ret;
+    } catch (Throwable t) {
+        Log.stack(LOG_ID, "requestLeConnectionUpdate failed", t);
+        return false;
+    }
+}
+*/
+
+@SuppressWarnings("unused")
+@Keep
+public void onConnectionUpdated(BluetoothGatt gatt, int interval, int latency, int timeout, int status) {
+        {if(doLog) {Log.i(LOG_ID, "onConnectionUpdated interval=" + interval + " latency=" + latency + " timeout=" + timeout + " status=" + status);};};
+       /* 
+        if(isWearable) {
+            if(++updated==2) {
+                requestLeConnectionUpdateHidden(gatt,315, 315, 4, 600, 0, 0);
+                }
+            } */
+      }
+
+@SuppressWarnings("unused")
+@Keep
+    public void onSubrateChange( @NonNull BluetoothGatt gatt,  int subrateMode,  int status) {
+     if(doLog) {
+        Log.i(LOG_ID,"onSubrateChange  subrateMode="+subrateMode+" status="+status);
+        }
+    }
+
+
+
     @Override 
     public void onCharacteristicRead(BluetoothGatt bluetoothGatt, BluetoothGattCharacteristic bluetoothGattCharacteristic, int i2) {
         checkBluetoothGatt(bluetoothGatt);
@@ -133,6 +193,7 @@ private final void checkBluetoothGatt(BluetoothGatt bluetoothGatt) {
 
 //    private boolean wasConnected = false;
 private boolean connected=false;
+//private int updated=0;
     @SuppressLint("MissingPermission")
     @Override 
     public void onConnectionStateChange(BluetoothGatt bluetoothGatt, int status, int newState) {
@@ -150,8 +211,12 @@ private boolean connected=false;
          long tim = System.currentTimeMillis();
         if(newState == STATE_CONNECTED) {
             //resetGlucose=0; 
+            //updated=0;
             connected=true;
             setpriority(bluetoothGatt);
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                bluetoothGatt.setPreferredPhy(PHY_LE_1M_MASK, PHY_LE_1M_MASK, PHY_OPTION_NO_PREFERRED);
+            }
             constatchange[0] = tim;
             //wasConnected = true;
             if (!isServicesDiscovered||!getservices()) {
@@ -164,27 +229,29 @@ private boolean connected=false;
 
             } 
             } else if (newState == STATE_DISCONNECTED) {
+
+//                cancelrefreshalarm();
                 connected=false;
                 cancelretrytimer();
                 Log.e(LOG_ID, SerialNumber + ": "+ "onConnectionStateChange ERROR: disconnected with status : " + status);
                // libre3BLESensor.access$600(libre3BLESensor.this, status);
-         constatchange[1] = tim;
-        setConStatus(status);
-        if(lastphase5) {
-            if(status==19) {
-                if((tim-datatime)>=59000) {
-                    isPreAuthorized=false;
-                    Natives.setLibre3kAuth(sensorptr,null);
-                    }
+            constatchange[1] = tim;
+            setConStatus(status);
+            if(lastphase5) {
+                if(status==19) {
+                    if((tim-datatime)>=59000) {
+                        isPreAuthorized=false;
+                        Natives.setLibre3kAuth(sensorptr,null);
+                        }
+                     }
+                }  
+            if(!stop)  {
+                 realdisconnected(bluetoothGatt,status,tim);
                  }
-            }  
-        if(!stop)  {
-             realdisconnected(bluetoothGatt,status,tim);
-             }
-        else {
-            bluetoothGatt.close();
-            mBluetoothGatt = null;
-            }
+            else {
+                bluetoothGatt.close();
+                mBluetoothGatt = null;
+                }
             }
         }
 
@@ -448,8 +515,8 @@ static final private String charglucosedata= "CHAR_GLUCOSE_DATA".intern();
 private  void logcharacter(UUID uuid,String str,byte[] value) {
         final long timmsec = System.currentTimeMillis();
        if(str!=charglucosedata) setsuccess(timmsec,str);
-            {if(doLog){showbytes(LOG_ID+ " "+SerialNumber +" onCharacteristicChanged  "+uuid.toString()+" "+str, value);};}
-        }
+       if(doLog){showbytes(LOG_ID+ " "+SerialNumber +" onCharacteristicChanged  "+uuid.toString()+" "+str, value);};}
+
 private void onCharacteristicChanged33(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, byte[] value) {
        final long nowmsec= System.currentTimeMillis();
        var wakelock=    Applic.usewakelock?(((PowerManager) app.getSystemService(POWER_SERVICE)).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Juggluco::Libre3")):null;
@@ -602,8 +669,8 @@ private void realdisconnected(BluetoothGatt bluetoothGatt,int status,long tim) {
              else
                 connectDevice(0);
              }
-         else
-                connectDevice(0);
+        else
+            connectDevice(0);
         }
     }
 
@@ -722,8 +789,10 @@ void access1700(byte[] value) {
         }
 */
 private void access1100(byte[] value) {
-        byte[] decr=intDecrypt(cryptptr,1,value); //USED for what??
-    {if(doLog){showbytes(LOG_ID+" "+ SerialNumber +" access1100",decr);};}
+    byte[] decr=intDecrypt(cryptptr,1,value); //USED for what??
+    if(doLog){showbytes(LOG_ID+" "+ SerialNumber +" access1100",decr);};
+    if(decr[0]==1)
+        Applic.app.redraw();
 //    gattCharPatchDataControl.setValue(decr);//Slaat nergens op TODO: remove
 /*
         switch(currentControlCommand) {
@@ -926,6 +995,7 @@ private boolean    lastphase5=false;
         for(BluetoothGattService bluetoothGattService : this.mBluetoothGatt.getServices()) {
             if (bluetoothGattService != null) {
                 UUID uuid = bluetoothGattService.getUuid();
+                Log.i(LOG_ID,"service "+uuid.toString());
                 if (z && uuid.equals(LIBRE3_DATA_SERVICE)) {
 //                    this.gattServiceADC = bluetoothGattService;
                     this.gattCharPatchDataControl = bluetoothGattService.getCharacteristic(LIBRE3_CHAR_PATCH_CONTROL);
@@ -1133,5 +1203,62 @@ public void setGattOptions(BluetoothGatt gatt) {
          BluetoothDevice.PHY_OPTION_NO_PREFERRED); 
         } */
 
+
+/*
+static private PendingIntent mkintents(Context context,String id,int alarmrequest) {
+       final int alarmflags;
+       if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+               alarmflags = PendingIntent.FLAG_IMMUTABLE;
+               }
+       else
+                alarmflags = 0;
+       Intent alarmintent = new Intent(context, RefreshReceiver.class);
+       alarmintent.setAction(id);
+       return getBroadcast(context, alarmrequest++, alarmintent, alarmflags);
+     }
+
+private PendingIntent refreshalarm=null;
+static private int alarmrequest=15;
+static  PendingIntent  setrefreshalarm2(long alarmtime,PendingIntent refreshalarm,String SerialNumber) {
+    try {
+            Context context=Applic.app;
+            if(refreshalarm==null)
+               refreshalarm= mkintents(context,SerialNumber,alarmrequest);
+            {if(doLog) {Log.i(LOG_ID,"set refreshalarm "+alarmtime);};};
+            AlarmManager manager= (AlarmManager) context.getSystemService(ALARM_SERVICE);
+            manager.setAlarmClock(new AlarmManager.AlarmClockInfo(alarmtime, refreshalarm), refreshalarm);
+            return refreshalarm;
+            }
+       catch(Throwable e) {
+           Log.stack(LOG_ID,"setrefreshalarm", e);
+           return null;
+           }
+    finally {
+        {if(doLog) {Log.i(LOG_ID,"after setrefreshalarm");};};
+        }
+    }
+void refreshalarm(long alarmtime) {
+        refreshalarm=setrefreshalarm2( alarmtime,refreshalarm, SerialNumber);
+        }
+private void cancelrefreshalarm() {
+    if(refreshalarm!=null) {
+        {if(doLog) {Log.i(LOG_ID,"cancelalarm");};};
+        AlarmManager manager= (AlarmManager) Applic.app.getSystemService(ALARM_SERVICE);
+        manager.cancel(refreshalarm);
+        refreshalarm=null;//TODO: ?????
+        }
+    }
+void doSomething() {
+    var bluetoothGatt = mBluetoothGatt;
+            if(bluetoothGatt != null)  {
+                Log.i(LOG_ID,"readDescriptor");
+                var charact= gattCharGlucoseData;
+                if(gattCharGlucoseData!=null) {
+                    BluetoothGattDescriptor descriptor = charact.getDescriptor(mCharacteristicConfigDescriptor);
+                    bluetoothGatt.readDescriptor(descriptor);
+                    }
+                }
+        }
+        */
 }
 

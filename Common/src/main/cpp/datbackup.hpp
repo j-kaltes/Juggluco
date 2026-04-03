@@ -44,6 +44,7 @@ inline int mytag() {
    return 0;
    }
 
+extern void    sendstartsensors(int startpos);
 extern void  startReceiverThread(int i);
 extern void setBlueMessage(int ident,bool val);
 constexpr const char defaultport[]{
@@ -352,6 +353,8 @@ void resensordata(int sensor)  {
          LOGGER("resensordata(%d)\n",sensor);
          return;
          }
+
+    sendstartsensors(sensor);
     for(int i=0;i<getupdatedata()->sendnr;i++) {
         auto &host=getupdatedata()->tosend[i];
         if(host.firstsensor>sensor)

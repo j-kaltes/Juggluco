@@ -277,9 +277,15 @@ extern "C" JNIEXPORT void JNICALL   fromjava(accuSetStartTime)(JNIEnv *env, jcla
 
 
     uint32_t now=time(nullptr);
-    sens->getinfo()->starttime=now-start->minback*60;
+    uint32_t newstarttime=now-start->minback*60;
+    if(abs((int)(newstarttime-sens->getinfo()->starttime))>20) {
+          const int sensorindex=sens->sensorIndex;
+           sensors->getsensor(sensorindex)->starttime=sens->getinfo()->starttime=newstarttime;
+           sensors->setindices();
+           backup->resendResetDevices(&updateone::sendstream);
+            }
     #ifndef NOLOG
-    const time_t starttime=sens->getinfo()->starttime;
+    const time_t starttime=newstarttime;
     LOGGER("accuSetStartTime minback=%d starttime=%u %s",start->minback,starttime,ctime(&starttime));
     #endif
     }

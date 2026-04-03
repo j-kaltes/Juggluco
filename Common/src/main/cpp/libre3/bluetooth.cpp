@@ -231,7 +231,9 @@ static jlong save3current(SensorGlucoseData *sens, const oneminute *minptr,uint3
     }
 extern "C" JNIEXPORT jint JNICALL fromjava(getlastLifeCountReceived)(JNIEnv *env, jclass thiz,jlong sensorptr) {
     if(SensorGlucoseData *sens=reinterpret_cast<SensorGlucoseData *>(sensorptr)) {
-        return sens->getinfo()->lastLifeCountReceived;
+        LOGGER("getlastLifeCountReceived()=%d\n", sens->getinfo()->lastLifeCountReceived);
+
+        return sens->getinfo()->lastLifeCountReceived+1;
         }
     return 0;
     }
@@ -269,11 +271,18 @@ extern "C" JNIEXPORT  jlong JNICALL fromjava(saveLibre3MinuteL)(JNIEnv *env, jcl
         LOGAR("saveLibre3Minute sensorptr==null");
         return 0LL;
         }
+    
     if(!jmindata)    {
         LOGAR("saveLibre3Minute jmindata==null");
         return 0LL;
         }
-
+   /* NOT needed
+    if(sens->processing.test_and_set()) {
+        LOGAR("saveLibre3Minute is processing");
+        return 0LL;
+        }
+    destruct _{[sens]{sens->processing.clear();}};
+    */
     const jint len = env->GetArrayLength(jmindata);
     if(len!=sizeof(oneminute)) {
         LOGAR("saveLibre3Minute length jmindata =0");
@@ -554,10 +563,12 @@ static jbyteArray comtojbyteArray(JNIEnv *env, const struct RequestData &con) {
     return uit;
     }
 extern "C" JNIEXPORT  jbyteArray JNICALL  fromjava(libre3ControlHistory)(JNIEnv *env, jclass thiz, jint arg,jint from) {
+    LOGGER("libre3ControlHistory(%d,%d)\n",arg,from);
     const ControlHistory com(arg,from);    
     return comtojbyteArray(env,com);
     }
 extern "C" JNIEXPORT  jbyteArray JNICALL  fromjava(libre3ClinicalControl)(JNIEnv *env, jclass thiz, jint arg,jint from) {
+    LOGGER("libre3ClinicalControl(%d,%d)\n",arg,from);
     const ClinicalControl com(arg,from);    
     return comtojbyteArray(env,com);
     }

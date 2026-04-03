@@ -418,12 +418,12 @@ globalsocket=serversock;
 
         struct sockaddr *addrptr= (struct sockaddr *)&their_addr;
         socklen_t sin_size = sizeof(their_addr) ;
-        LOGGERTAG("accept(%d,%p,%d)\n",serversock,addrptr,sin_size);
+        LOGGERTAG("serverloop: accept(%d,%p,%d)\n",serversock,addrptr,sin_size);
         int new_fd = accept(serversock, addrptr, &sin_size);
         LOGGERTAG("na accept(serversock=%d)=%d\n",serversock,new_fd);
         if(new_fd == -1) {
             int ern=errno;
-            servererror("accept %d",ern);
+            servererror("serverloop: accept %d",ern);
             LOGGERTAG("%s\n",servererrorbuf);
 
             switch(ern) {
@@ -434,8 +434,10 @@ globalsocket=serversock;
                 case ENOTSOCK:
                 case EOPNOTSUPP: 
                 sockclose(serversock);
-                if(serversock==globalsocket)
+                if(serversock==globalsocket) {
                     globalsocket=-1;
+                    }
+                LOGGER("ending server, globalsocket=%d\n",globalsocket);
                 return true;
                 } 
             continue;
@@ -590,7 +592,10 @@ globalsocket=serversock;
         }
     }
 void startreceiver(const char *port,passhost_t *hosts,int &hostlen) {
-    globalsocket=-1;
+    if(globalsocket!=-1) {
+        sleep(2);
+        globalsocket=-1;
+        }
     int len=strlen(port)+1;
     char *portcp=new char[len];
     memcpy(portcp,port,len);

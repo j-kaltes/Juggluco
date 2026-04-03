@@ -54,4 +54,5 @@ static public void setclose(boolean val) {
 static void wearnosensors(MainActivity act) {
     Switch.wearnosensors(act);
     }
+static void installwatchface(Object context) { }
 };

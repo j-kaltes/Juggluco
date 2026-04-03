@@ -403,5 +403,46 @@
 <string name="enternums">Voer hoeveelheden in op</string>
  <string name="connectionl">verbinding</string>
  <string name="ICElabeltooshort">FOUT: ICE label moet minimaal 16 bytes groot zijn</string>
+ <string name="attr_ble_scan">Bluetooth glucose sensor scannen</string>
+
+<string name="divorcename">Ontkoppelen</string>
+
+<string name="divorcemessage">Sensor toestaan verbinding te maken met een andere telefoon of horloge (in plaats van deze)?</string>
+
+<string name="unpairsuccess">"Ontkoppelen gelukt"</string>
+
+<string name="unpairfailed">"Ontkoppelen mislukt"</string>
+
+<string name="warmup">Opwarmen {0}</string>
+
+<string name="releasingsensor">Sensor vrijgeven</string>
+
+<string name="sensorreleased">Sensor vrijgegeven</string>
+
+<string name="releasefailed">Vrijgeven mislukt</string>
+<string name="timedout">Time-out</string>
+<string name="unpairing">"Ontkoppelen "</string>
+
+<string name="unpairingwatch">"Horloge ontkoppelen "</string>
+
+<string name="failed">mislukt</string>
+
+<string name="successful">geslaagd</string>
+    <string name="use">Activeren</string>
+    <string name="connecttosensor">Verbinding maken met sensor…</string>
+
+<string name="clear">Wissen</string>
+
+<string name="clearingmemory">Sensorgeheugen wissen</string>
+
+<string name="clearmessage">Sensor opnieuw opstarten? Sensorgeheugen wissen?</string>
+
+<string name="clearing">"Wissen "</string>
+
+<string name="clearsuccess">"Wissen geslaagd"</string>
+
+<string name="clearfailed">"Wissen mislukt"</string>
+
+<string name="sensors">Sensoren</string>
 </resources>
 
