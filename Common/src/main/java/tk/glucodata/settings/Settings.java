@@ -1464,6 +1464,7 @@ static private void exchanges(MainActivity context, View parent) {
   parent.setVisibility(GONE);
     final CheckBox xdripbroadcast = new CheckBox(context);
     final CheckBox jugglucobroadcast = new CheckBox(context);
+    final CheckBox mqttbroadcast = new CheckBox(context);
 
    if(isWearable)
       xdripbroadcast.setText("xDrip broadcast");
@@ -1475,6 +1476,11 @@ static private void exchanges(MainActivity context, View parent) {
    else
       jugglucobroadcast.setText("Glucodata broadcast");
     jugglucobroadcast.setChecked(Natives.getJugglucobroadcast());
+   if(isWearable)
+      mqttbroadcast.setText("MQTT");
+   else
+      mqttbroadcast.setText("MQTT Publishing");
+    mqttbroadcast.setChecked(Natives.getMqttEnabled());
    var mirrorview=getbutton(context,R.string.mirror);
    mirrorview.setOnClickListener(v ->{ (new Backup()).realmkbackupview(context,false); });
     Layout[] thelayout = {null};
@@ -1497,6 +1503,16 @@ static private void exchanges(MainActivity context, View parent) {
                     }
                 }
         );
+
+        final boolean[] mqttnothing = {false};
+        mqttbroadcast.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                    if (!mqttnothing[0]) {
+                        mqttnothing[0] = true;
+                        mqttbroadcast.setChecked(!isChecked);
+                        Broadcasts.setMqttEnabled(context, thelayout[0], mqttbroadcast, mqttnothing);
+                    }
+                }
+        );
    var ok = getbutton(context, R.string.closename);
     if(!useclose)
         ok.setVisibility(GONE);
@@ -1505,6 +1521,9 @@ static private void exchanges(MainActivity context, View parent) {
           context.doonback();
         });
    Layout lay;
+    var mqttconfig = getbutton(context, "MQTT Config");
+    mqttconfig.setOnClickListener(v -> showMqttConfig(context, thelayout[0]));
+
     if (isWearable) {
         var uploader = getbutton(context, R.string.upload);
         uploader.setOnClickListener(v -> tk.glucodata.NightPost.config(context, thelayout[0]));
@@ -1512,7 +1531,7 @@ static private void exchanges(MainActivity context, View parent) {
         lay = new Layout(context, (l, w, h) -> {
             int[] ret = {w, h};
             return ret;
-        },new View[]{xdripbroadcast},new View[]{uploader,mirrorview}  ,new View[]{jugglucobroadcast}, new View[]{ok});
+        },new View[]{xdripbroadcast},new View[]{mqttbroadcast, mqttconfig},new View[]{uploader,mirrorview}  ,new View[]{jugglucobroadcast}, new View[]{ok});
 
    final var density=tk.glucodata.GlucoseCurve.metrics.density;
         lay.setPadding((int)(density*8.0),(int)(density*25.0),(int)(density*8.0),(int)(density*2.0));
@@ -1597,7 +1616,7 @@ static private void exchanges(MainActivity context, View parent) {
         lay = new Layout(context, (l, w, h) -> {
             int[] ret = {w, h};
             return ret;
-        }, new View[]{everSensebroadcast,librelinkbroadcast},new View[]{xdripbroadcast, jugglucobroadcast}, new View[]{webserver, uploader, libreview}, (Build.VERSION.SDK_INT >= 28) ? new View[]{healthconnect,exportview,mirrorview} :new View[]{exportview,mirrorview},
+        }, new View[]{everSensebroadcast,librelinkbroadcast},new View[]{xdripbroadcast, jugglucobroadcast}, new View[]{mqttbroadcast, mqttconfig}, new View[]{webserver, uploader, libreview}, (Build.VERSION.SDK_INT >= 28) ? new View[]{healthconnect,exportview,mirrorview} :new View[]{exportview,mirrorview},
                 new View[]{help,meters, ok});
 
     final   int pad=(int)(tk.glucodata.GlucoseCurve.metrics.density*10.0);
@@ -1620,6 +1639,172 @@ static private void exchanges(MainActivity context, View parent) {
      parent.setVisibility(VISIBLE);
         removeContentView(lay) ;
         });
+}
+
+private static void showMqttConfig(MainActivity context, View parent) {
+    parent.setVisibility(GONE);
+    
+    tk.glucodata.mqtt.MqttConfig config = tk.glucodata.mqtt.MqttConfig.getInstance();
+    tk.glucodata.mqtt.MqttPublisher publisher = tk.glucodata.mqtt.MqttPublisher.getInstance();
+    
+    // Create input fields
+    final EditText brokerUrl = new EditText(context);
+    brokerUrl.setHint("Broker URL (e.g., tcp://localhost)");
+    brokerUrl.setText(config.getBrokerUrl());
+    brokerUrl.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_URI);
+    
+    final EditText port = new EditText(context);
+    port.setHint("Port (e.g., 1883)");
+    port.setText(String.valueOf(config.getPort()));
+    port.setInputType(InputType.TYPE_CLASS_NUMBER);
+    
+    final EditText username = new EditText(context);
+    username.setHint("Username (optional)");
+    String user = config.getUsername();
+    if (user != null) username.setText(user);
+    username.setInputType(InputType.TYPE_CLASS_TEXT);
+    
+    final EditText password = new EditText(context);
+    password.setHint("Password (optional)");
+    String pass = config.getPassword();
+    if (pass != null) password.setText(pass);
+    password.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+    
+    final EditText topicPrefix = new EditText(context);
+    topicPrefix.setHint("Topic Prefix");
+    topicPrefix.setText(config.getTopicPrefix());
+    topicPrefix.setInputType(InputType.TYPE_CLASS_TEXT);
+    
+    final CheckBox useWebSocket = getcheckbox(context, "Use WebSocket", config.isUseWebSocket());
+    final CheckBox retainMessages = getcheckbox(context, "Retain Messages", config.isRetain());
+    
+    // QoS Spinner
+    final Spinner qosSpinner = new Spinner(context);
+    String[] qosOptions = {"QoS 0 (At most once)", "QoS 1 (At least once)", "QoS 2 (Exactly once)"};
+    android.widget.ArrayAdapter<String> qosAdapter = new android.widget.ArrayAdapter<>(
+        context, android.R.layout.simple_spinner_item, qosOptions);
+    qosAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+    qosSpinner.setAdapter(qosAdapter);
+    qosSpinner.setSelection(config.getQos());
+    
+    // Status label
+    final TextView statusLabel = new TextView(context);
+    statusLabel.setText("Status: " + (publisher.isConnected() ? "Connected" : "Disconnected"));
+    statusLabel.setTextColor(publisher.isConnected() ? Color.GREEN : Color.RED);
+    
+    // Buttons
+    var testButton = getbutton(context, "Test Connection");
+    var saveButton = getbutton(context, R.string.save);
+    var cancelButton = getbutton(context, R.string.cancel);
+    
+    testButton.setOnClickListener(v -> {
+        try {
+            config.setBrokerUrl(brokerUrl.getText().toString());
+            config.setPort(Integer.parseInt(port.getText().toString()));
+            config.setUsername(username.getText().toString());
+            config.setPassword(password.getText().toString());
+            config.setTopicPrefix(topicPrefix.getText().toString());
+            config.setUseWebSocket(useWebSocket.isChecked());
+            config.setRetain(retainMessages.isChecked());
+            config.setQos(qosSpinner.getSelectedItemPosition());
+            
+            String error = config.validate();
+            if (error != null) {
+                Applic.argToaster(context, "Error: " + error, android.widget.Toast.LENGTH_LONG);
+                return;
+            }
+            
+            publisher.disconnect();
+            publisher.setStatusListener(new tk.glucodata.mqtt.MqttPublisher.ConnectionStatusListener() {
+                @Override
+                public void onConnected() {
+                    Applic.RunOnUiThread(() -> {
+                        statusLabel.setText("Status: Connected");
+                        statusLabel.setTextColor(Color.GREEN);
+                        Applic.argToaster(context, "MQTT Connected!", android.widget.Toast.LENGTH_SHORT);
+                    });
+                }
+                
+                @Override
+                public void onDisconnected() {
+                    Applic.RunOnUiThread(() -> {
+                        statusLabel.setText("Status: Disconnected");
+                        statusLabel.setTextColor(Color.RED);
+                    });
+                }
+                
+                @Override
+                public void onError(String error) {
+                    Applic.RunOnUiThread(() -> {
+                        statusLabel.setText("Status: Error");
+                        statusLabel.setTextColor(Color.RED);
+                        Applic.argToaster(context, "Error: " + error, android.widget.Toast.LENGTH_LONG);
+                    });
+                }
+            });
+            
+            publisher.connect();
+            Applic.argToaster(context, "Connecting...", android.widget.Toast.LENGTH_SHORT);
+            
+        } catch (NumberFormatException e) {
+            Applic.argToaster(context, "Invalid port number", android.widget.Toast.LENGTH_SHORT);
+        } catch (Exception e) {
+            Applic.argToaster(context, "Error: " + e.getMessage(), android.widget.Toast.LENGTH_LONG);
+        }
+    });
+    
+    saveButton.setOnClickListener(v -> {
+        try {
+            config.setBrokerUrl(brokerUrl.getText().toString());
+            config.setPort(Integer.parseInt(port.getText().toString()));
+            config.setUsername(username.getText().toString());
+            config.setPassword(password.getText().toString());
+            config.setTopicPrefix(topicPrefix.getText().toString());
+            config.setUseWebSocket(useWebSocket.isChecked());
+            config.setRetain(retainMessages.isChecked());
+            config.setQos(qosSpinner.getSelectedItemPosition());
+            
+            String error = config.validate();
+            if (error != null) {
+                Applic.argToaster(context, "Error: " + error, android.widget.Toast.LENGTH_LONG);
+                return;
+            }
+            
+            Applic.argToaster(context, "MQTT configuration saved", android.widget.Toast.LENGTH_SHORT);
+            context.doonback();
+            
+        } catch (NumberFormatException e) {
+            Applic.argToaster(context, "Invalid port number", android.widget.Toast.LENGTH_SHORT);
+        } catch (Exception e) {
+            Applic.argToaster(context, "Error: " + e.getMessage(), android.widget.Toast.LENGTH_LONG);
+        }
+    });
+    
+    cancelButton.setOnClickListener(v -> context.doonback());
+    
+    // Create layout
+    Layout lay = new Layout(context, (l, w, h) -> new int[]{w, h},
+        new View[]{getlabel(context, "MQTT Broker Configuration")},
+        new View[]{brokerUrl},
+        new View[]{port},
+        new View[]{username},
+        new View[]{password},
+        new View[]{topicPrefix},
+        new View[]{qosSpinner},
+        new View[]{useWebSocket, retainMessages},
+        new View[]{statusLabel},
+        new View[]{testButton, saveButton, cancelButton}
+    );
+    
+    final int pad = (int)(tk.glucodata.GlucoseCurve.metrics.density * 10.0);
+    lay.setPadding(pad, pad, pad, pad);
+    lay.setBackgroundColor(Applic.backgroundcolor);
+    context.addContentView(lay, new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
+    
+    context.setonback(() -> {
+        parent.setVisibility(VISIBLE);
+        removeContentView(lay);
+    });
 }
 
 

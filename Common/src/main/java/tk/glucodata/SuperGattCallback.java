@@ -22,6 +22,7 @@
 package tk.glucodata;
 
 import android.annotation.SuppressLint;
+import tk.glucodata.mqtt.MqttPublisher;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCallback;
@@ -368,6 +369,21 @@ static private int low(long tim,notGlucose    sglucose,float gl,float rate,int a
 
         if(Natives.getJugglucobroadcast())
             JugglucoSend.broadcastglucose(SerialNumber,mgdl,gl,rate,alarm,timmsec);
+        
+        // MQTT publishing
+        if(Natives.getMqttEnabled()) {
+            try {
+                String unit = Applic.unit == 0 ? "mmol/L" : "mg/dL";
+                String rateUnit = Applic.unit == 0 ? "mmol/L/min" : "mg/dL/min";
+                MqttPublisher.getInstance().publishGlucose(
+                    SerialNumber, mgdl, unit, timmsec, rate, rateUnit,
+                    alarm, sensorstartmsec, sensorgen
+                );
+            } catch (Exception e) {
+                if(doLog) Log.e("SuperGattCallback", "MQTT publish error: " + e.getMessage());
+            }
+        }
+        
         if(!isWearable) {
             app.numdata.sendglucose(SerialNumber, tim, gl, thresholdchange(rate), alarm|0x10);
             GlucoseWidget.update();

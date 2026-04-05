@@ -428,6 +428,8 @@ public static native boolean getxbroadcast();
 //public static native void setxbroadcast(boolean val);
 public static native boolean getJugglucobroadcast();
 //public static native void setJugglucobroadcast(boolean val);
+public static native boolean getMqttEnabled();
+//public static native void setMqttEnabled(boolean val);
 
 
 

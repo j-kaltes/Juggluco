@@ -165,6 +165,12 @@
                 android:name="autoStoreLocales"
                 android:value="true" />
         </service>
+
+        <!-- MQTT Service for glucose data publishing -->
+        <service
+            android:name="org.eclipse.paho.android.service.MqttService"
+            android:enabled="true"
+            android:exported="false" />
     </application>
 
 </manifest>
