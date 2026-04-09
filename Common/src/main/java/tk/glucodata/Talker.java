@@ -302,6 +302,7 @@ private static float progress2ratio(int progress) {
 private static View[] slider(MainActivity context,float init) {
     if(!DontTalk) {
         var speed=new SeekBar(context);
+     Applic.ifRTLseekbar(speed);
     //    speed.setMin(-25000);
         speed.setMax(50000);
         speed.setProgress(ratio2progress(init));
@@ -397,7 +398,7 @@ public static void config(MainActivity context) {
         var seplabel=getlabel(context,context.getString(R.string.secondsbetween));
         float density=GlucoseCurve.metrics.density;
         int pad=(int)(density*3);
-        seplabel.setPadding(pad*3,0,0,0);
+        seplabel.setPaddingRelative(pad*3,0,0,0);
         var speeds=slider(context,curspeed);
 
         var pitchs=slider(context,curpitch);
@@ -406,12 +407,12 @@ public static void config(MainActivity context) {
         var save=getbutton(context,R.string.save);
         var width= GlucoseCurve.getwidth();
         var speedlabel=getlabel(context,context.getString(R.string.speed));
-        speedlabel.setPadding(pad,0,pad*2,0);
+        speedlabel.setPaddingRelative(pad,0,pad*2,0);
         var pitchlabel=getlabel(context,context.getString(R.string.pitch));
-        pitchlabel.setPadding(pad,0,pad*2,0);
+        pitchlabel.setPaddingRelative(pad,0,pad*2,0);
         var voicelabel=getlabel(context,context.getString(R.string.talker));
         var active=getcheckbox(context,R.string.speakglucose, SuperGattCallback.dotalk);
-        active.setPadding(0,0,pad*3,0);
+        active.setPaddingRelative(0,0,pad*3,0);
 
         var mediasound=getcheckbox(context,"MEDIA", Natives.getSoundType( )==AudioAttributes.USAGE_MEDIA);
         mediasound.setOnCheckedChangeListener(
@@ -490,9 +491,9 @@ public static void config(MainActivity context) {
         if(isWearable) {
             int marg=(int)(width*.1f);
              Layout.getMargins(voicelabel).topMargin=marg;
-             Layout.getMargins(cancel).leftMargin=marg;
-             Layout.getMargins(test).rightMargin=marg;
-             Layout.getMargins(separation).rightMargin=marg;
+             Layout.getMargins(cancel).setMarginStart(marg);
+             Layout.getMargins(test).setMarginEnd(marg);
+             Layout.getMargins(separation).setMarginEnd(marg);
             var lay=new Layout(context,(l,w,h)-> {
                 return new int[] {w,h};
                 },
@@ -518,7 +519,10 @@ public static void config(MainActivity context) {
                 firstrow=new View[]{active,seplabel,separation,space};
               }
             var secondrow=new View[]{touchtalk, speakmessages, speakalarms };
-            Layout.getMargins(cancel).leftMargin=Layout.getMargins(save).rightMargin=(int)(width*.05f);
+            var marghor= (int)(width*.05f);
+
+            Layout.getMargins(cancel).setMarginStart(marghor);
+            Layout.getMargins(save).setMarginEnd(marghor);
             var helpview=getbutton(context,R.string.helpname);
             helpview.setOnClickListener(v-> help.help(R.string.talkhelp,context));
             layout= new Layout(context,(l,w,h)-> {
@@ -617,8 +621,8 @@ public static void config(MainActivity context) {
     //    context.addContentView(layout, new ViewGroup.LayoutParams(MATCH_PARENT, WRAP_CONTENT));
         var top=MainActivity.systembarTop;
          
-        var left=MainActivity.systembarLeft;
-          layout.setPadding(left+(int)(density*5.0),top,MainActivity.systembarRight+(int)(density*8.0),MainActivity.systembarBottom);
+        var left=MainActivity.systembarStart;
+          layout.setPaddingRelative(left+(int)(density*5.0),top,MainActivity.systembarEnd+(int)(density*8.0),MainActivity.systembarBottom);
     /*    var layheight=GlucoseCurve.getheight()-MainActivity.systembarBottom;
         var laywidth=GlucoseCurve.getwidth()-left-MainActivity.systembarRight;
         layout.setX(left); */

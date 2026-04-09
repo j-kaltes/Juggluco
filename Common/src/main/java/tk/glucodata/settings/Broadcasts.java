@@ -37,10 +37,12 @@ import static tk.glucodata.util.getlabel;
 
 import android.content.Context;
 import android.content.Intent;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.LinearInterpolator;
-import android.widget.CheckBox;
+
+import android.widget.FrameLayout;
 import android.widget.ScrollView;
 import android.widget.Scroller;
 import android.widget.Space;
@@ -49,6 +51,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import tk.glucodata.Applic;
+import tk.glucodata.CheckDirectionBox;
 import tk.glucodata.Consumer;
 import tk.glucodata.EverSense;
 import tk.glucodata.GlucoseCurve;
@@ -123,24 +126,29 @@ static private void  getselected(MainActivity context, View parent,String title,
 
         var layout = new Layout(context,
                 (l, w, h) -> {
+                /*
 			if(!isWearable) {
 				var width=getscreenwidth(context);
-				var height=getscreenheight(context);
 				if(width>w)
 					  l.setX(( width- w)/2);
 				if(height>h)
 					  l.setY(( height- h)/5);
 					 }
+                     */
 			return new int[] {w,h};
                 }, views);
 	if(len==0)
 		save.setVisibility(GONE);
 	View theview;
+    ViewGroup.LayoutParams layparams;
 	if(!isWearable) {
 	   layout.setBackgroundResource(R.drawable.dialogbackground);
 	   int pad=(int)(tk.glucodata.GlucoseCurve.metrics.density*5.0);
 	   layout.setPadding(pad,pad,pad*2,pad);
 	   theview=layout;
+       layparams =    new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.CENTER_HORIZONTAL);
+       var height=getscreenheight(context);
+       ((FrameLayout.LayoutParams) layparams).topMargin=height/6;
 	   }
 	  else {
 /*	   	int pad=(int)(getscreenwidth(context)*.16);
@@ -159,9 +167,10 @@ static private void  getselected(MainActivity context, View parent,String title,
 		scroll.setSmoothScrollingEnabled(false);
 		scroll.setVerticalScrollBarEnabled(Applic.scrollbar);
 		theview=scroll;
+	    final var laysize=MATCH_PARENT;
+        layparams=new ViewGroup.LayoutParams(laysize,laysize);
 	  	}
-	var laysize=isWearable?MATCH_PARENT:WRAP_CONTENT;
-        context.addContentView(theview, new ViewGroup.LayoutParams(laysize,laysize));
+    context.addContentView(theview, layparams);
 	Runnable closerun=()-> {
 		if(!isWearable)	EnableControls(parent,true);
 		removeContentView(theview) ;
@@ -176,14 +185,14 @@ static private void  getselected(MainActivity context, View parent,String title,
 		if(!isWearable)	EnableControls(parent,true);
 		int checked=0;
 		for(int i=startids;i<endlen;i++) {
-			CheckBox box=(CheckBox)views[i][0];
+			CheckDirectionBox box=(CheckDirectionBox)views[i][0];
 			if(box.isChecked())
 				++checked;
 			}
 		int uititer=0;
 		String[] newselect=new String[checked];
 		for(int i=startids;i<endlen;i++) {
-			CheckBox box=(CheckBox)views[i][0];
+			CheckDirectionBox box=(CheckDirectionBox)views[i][0];
 			if(box.isChecked()) {
 				newselect[uititer++]=box.getText().toString();
 				}
@@ -199,7 +208,7 @@ static private void  getselected(MainActivity context, View parent,String title,
 		EnableControls(parent,false);
 	}
 
-static public void setlibrereceivers(MainActivity context,View settingsview,CheckBox box,boolean[] dont) {
+static public void setlibrereceivers(MainActivity context,View settingsview, CheckDirectionBox box,boolean[] dont) {
 	var selected= Natives.librelinkRecepters();
 	var all=actionListeners(XInfuus.glucoseaction);
 	getselected(context,settingsview,"Patched Libre",selected, all,newselected-> {
@@ -213,7 +222,7 @@ static public void setlibrereceivers(MainActivity context,View settingsview,Chec
 		);
 	
 	}
-static public void setxdripreceivers(MainActivity context,View settingsview,CheckBox box,boolean[] dont) {
+static public void setxdripreceivers(MainActivity context,View settingsview,CheckDirectionBox box,boolean[] dont) {
 	var selected= Natives.xdripRecepters();
 	var all=actionListeners(SendLikexDrip.ACTION);
  	getselected(context,settingsview,"xDrip",selected, all,newselected-> {
@@ -227,7 +236,7 @@ static public void setxdripreceivers(MainActivity context,View settingsview,Chec
 		);
 	}
 
-static public void setglucodatareceivers(MainActivity context,View settingsview,CheckBox box,boolean[] dont) {
+static public void setglucodatareceivers(MainActivity context,View settingsview,CheckDirectionBox box,boolean[] dont) {
 	var all=actionListeners(JugglucoSend.ACTION);
 	var selected= Natives.glucodataRecepters();
  	getselected(context,settingsview,"Glucodata",selected, all,newselected-> {
@@ -241,7 +250,7 @@ static public void setglucodatareceivers(MainActivity context,View settingsview,
 		);
 	}
 
-static public void seteverSensereceivers(MainActivity context,View settingsview,CheckBox box,boolean[] dont) {
+static public void seteverSensereceivers(MainActivity context,View settingsview,CheckDirectionBox box,boolean[] dont) {
 	var all=actionListeners(EverSense.glucoseaction);
 	var selected= Natives.everSenseRecepters();
  	getselected(context,settingsview,"EverSense",selected, all,newselected-> {

@@ -758,7 +758,7 @@ const int perhour() const {
     return 60/getmininterval();
     }
 int getweardurationMIN() const {
-   const int wear=(isLibre2()||isDexcom()||isAccuChek()||isAir())?getinfo()->wearduration:getinfo()->wearduration2;
+   const int wear=(isLibre2()||isDexcom()||isAidexX()||isAccuChek()||isAir())?getinfo()->wearduration:getinfo()->wearduration2;
    if(wear)
          return wear;
    return 14*24*60;
@@ -1693,8 +1693,8 @@ bool saveStreamAgain(time_t tim,int id,int glu,int trend,float change) {
 void saveglucosedata(Mmap<ScanData> &streamscans,uint32_t &count,time_t tim,int id,int glu,int trend,float change) {
      streamscans[count++]={static_cast<uint32_t>(tim),id,glu,trend,change};
     }
-bool hasStreamID(const int id) const {
-    return polls[id].id==id&&polls[id].g;
+bool hasStreamID(const int id,const uint32_t eventtime) const {
+    return polls[id].id==id&&polls[id].g&&!isnan(polls[id].getchange())&&abs((int)(polls[id].gettime()-eventtime))<60;
     }
 
 template <int secs,bool libre3=true> int savepollallIDsonly(time_t tim,const int id,int glu,int trend,float change) {
@@ -1713,9 +1713,13 @@ template <int secs,bool libre3=true> int savepollallIDsonly(time_t tim,const int
                  }
                }
           }
+        
+      const ScanData *last=lastValidStream();
+      uint32_t lasttime=last?last->gettime():0;
       for(uint32_t timiter=startiter;count<id;++count,timiter+=secs)  {
-          if(!polls[count].t||polls[count].id!=count)
+          if(!polls[count].t||polls[count].t<lasttime||polls[count].id!=count)
               polls[count]={timiter,count,0,0,0.0};
+          lasttime=timiter;
           }
       if(!count) {
           getinfo()->pollstart=id;    
@@ -1784,7 +1788,7 @@ void updateHistorylifecount(int newpos) {
     if(getinfo()->lastHistoricLifeCountReceivedPos<newpos) {
         getinfo()->lastHistoricLifeCountReceivedPos=newpos;
         }
-    LOGGER(" updateHistorylifecount(%d) getinfo()->lastHistoricLifeCountReceivedPos=%d\n",newpos,
+    LOGGER("updateHistorylifecount(%d) getinfo()->lastHistoricLifeCountReceivedPos=%d\n",newpos,
         getinfo()->lastHistoricLifeCountReceivedPos);
     }
 
@@ -2222,6 +2226,7 @@ int updatestream(crypt_t *pass,Connect *connect,int ind,int sensindex,int sendsc
         std::vector<subdata> vect;
         bool wrotehistory=false;
         const bool sendhiststart=getinfo()->update[ind].sendhiststart;
+        int vectreserve;
         switch(sendscan) {
             case 1: {
                 memcpy(&endinfo,&getinfo()->endStreamhistory,sizeof(endinfo));
@@ -2230,11 +2235,11 @@ int updatestream(crypt_t *pass,Connect *connect,int ind,int sensindex,int sendsc
                     case 0: return 0;
                     case 1: {
                         wrotehistory=true;
-                        vect.reserve(3+sendhiststart);
+                        vectreserve=3+sendhiststart;
                         break;
                         };
                     default:
-                        vect.reserve(2+sendhiststart);
+                        vectreserve=2+sendhiststart;
 
                     };
                 };break;
@@ -2245,19 +2250,20 @@ int updatestream(crypt_t *pass,Connect *connect,int ind,int sensindex,int sendsc
                     case 0: return 0;
                     case 1: {
                         wrotehistory=true;
-                        vect.reserve(3+sendhiststart);
+                        vectreserve=3+sendhiststart;
                         break;
                         };
                     default:
-                    vect.reserve(2+sendhiststart);
+                    vectreserve=2+sendhiststart;
                     };
                 break;
                 }
             default: 
-                vect.reserve(2);
+                vectreserve=2;
                 break;
             };
-        vect.push_back({reinterpret_cast<uint8_t*>(&pollinfo),off,len});
+      vect.reserve(vectreserve+2);
+      vect.push_back({reinterpret_cast<uint8_t*>(&pollinfo),off,len});
       bool updateStarttime=false;
       if(isSibionics()) {
         if(!getinfo()->update[ind].siStream&&pollcount()>0&&getinfo()->siDeviceName[0]&&
@@ -2281,6 +2287,8 @@ int updatestream(crypt_t *pass,Connect *connect,int ind,int sensindex,int sendsc
                      LOGAR("updateStream AidexX send patchState");
                      vect.push_back({reinterpret_cast<const senddata_t *>(&getinfo()->patchState),offsetof(Info,patchState),1});
                      }
+
+               vect.push_back({reinterpret_cast<const senddata_t*>(&getinfo()->lastLifeCountReceived),offsetof(Info, lastLifeCountReceived),sizeof(uint16_t)});
               }
            else {
              if(isAccuChek()) {
@@ -2317,11 +2325,15 @@ int updatestream(crypt_t *pass,Connect *connect,int ind,int sensindex,int sendsc
                    }
                }
            }
+
+
+
          if(sendhiststart) {
             vect.push_back({reinterpret_cast<const senddata_t *>(&getinfo()->starthistory),offsetof(Info,starthistory),sizeof(getinfo()->starthistory)});
             }
 
-            vect.push_back({reinterpret_cast<const senddata_t *>(&getinfo()->broadcastfrom),offsetof(Info,broadcastfrom),sizeof(getinfo()->broadcastfrom)});
+          vect.push_back({reinterpret_cast<const senddata_t *>(&getinfo()->broadcastfrom),offsetof(Info,broadcastfrom),sizeof(getinfo()->broadcastfrom)});
+
          if(!connect->senddata(pass,vect, infopath,cmd,reinterpret_cast<const uint8_t *>(&streamstart),sizeof(streamstart))) {
             LOGSTRING("GLU: senddata info.data failed\n");
             return 0;

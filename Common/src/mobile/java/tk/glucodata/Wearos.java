@@ -34,9 +34,11 @@ import static tk.glucodata.util.getlabel;
 import static tk.glucodata.util.getradiobutton;
 
 import android.content.DialogInterface;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -86,7 +88,7 @@ static Spinner mkspinner(MainActivity context, ArrayList<Node> nodeslist,IntCons
     }
 
 
-static void remake(RadioButton[] sensordirect, RadioButton[] nswitch,  Node node,boolean[] direct) {
+static void remake(CheckDirectionRadio[] sensordirect, CheckDirectionRadio[] nswitch,  Node node,boolean[] direct) {
     int dirval,numsval;
     if(node==null) {
         dirval=-1;
@@ -156,7 +158,7 @@ static public void show(MainActivity context,View parent) {
         connection.setVisibility(GONE);
     var sphone=getradiobutton(context, R.string.phone);
     var swatch=getradiobutton(context, R.string.watch);
-    RadioButton[] sswitch={sphone,swatch};
+    CheckDirectionRadio[] sswitch={sphone,swatch};
 
 
 
@@ -164,7 +166,7 @@ static public void show(MainActivity context,View parent) {
 
     var nphone=getradiobutton(context, R.string.phone);
     var nwatch=getradiobutton(context, R.string.watch);
-    RadioButton[]nswitch={nphone,nwatch}; 
+    CheckDirectionRadio[]nswitch={nphone,nwatch}; 
     var Ok=getbutton(context,R.string.closename);
     var Help=getbutton(context,R.string.helpname);
     Help.setOnClickListener(v-> help.helplight(R.string.wearosinfo,context));
@@ -216,19 +218,30 @@ static public void show(MainActivity context,View parent) {
  Layout.getMargins(enternums).bottomMargin= Layout.getMargins(nphone).bottomMargin= Layout.getMargins(nwatch).bottomMargin=(int)(density*20.0);
  Layout.getMargins(Ok).topMargin= Layout.getMargins(defaults).topMargin= Layout.getMargins(Help).topMargin=(int)(density*20.0);
     var layout=new Layout(context,(l,w,h)-> {
+    /*
         var width=GlucoseCurve.getwidth();
         var height=GlucoseCurve.getheight();
         if(width>w)
             l.setX((width-w)/2);
         if(height>h)
             l.setY((height-h)/2);
+            */
         return new int[] {w,h};
         }, new View[]{spin},new View[]{enternums,nphone,nwatch},new View[]{direct,sphone,swatch,connection},new View[]{Help,defaults,Ok} );
     int laypad=(int)(density*4.0);
     layout.setPadding(laypad*2,laypad*2,laypad*2,laypad);
 
     layout.setBackgroundResource(R.drawable.dialogbackground);
-    context.addContentView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+
+    var  params =    
+            new FrameLayout.LayoutParams(
+                    WRAP_CONTENT,
+                    WRAP_CONTENT,
+                    Gravity.CENTER_HORIZONTAL| Gravity.CENTER);
+
+    context.addContentView(layout, params);
+    //context.addContentView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+//    layout.post(layout::requestLayout);
     Ok.setOnClickListener(v -> {
         if(swatch.isEnabled()) {
             if(defaults.isEnabled()) {

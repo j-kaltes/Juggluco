@@ -48,6 +48,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -121,10 +122,12 @@ void mkchangelabel(MainActivity context,Runnable onsave,View parent) {
         var editlabel = new Layout(context,
                 (l, w, h) -> {
             hideSystemUI();
+            /*
             var width=getscreenwidth(context);
             if(width>w)
                   l.setX(( width- w) *.6f);
           l.setY(MainActivity.systembarTop);
+          */
             return new int[] {w,h};
                 }, views);
     if(Natives.staticnum()) {
@@ -166,7 +169,9 @@ void mkchangelabel(MainActivity context,Runnable onsave,View parent) {
           editlabel.setBackgroundResource(R.drawable.dialogbackground);
        int pad=(int)(tk.glucodata.GlucoseCurve.metrics.density*5.0);
        editlabel.setPadding(pad,0,pad,0);
-        context.addContentView(editlabel, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+        var params= new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.CENTER_HORIZONTAL);
+        params.topMargin=MainActivity.systembarTop;
+        context.addContentView(editlabel, params);
 
 
 
@@ -249,7 +254,7 @@ void    mklabellayout(View parent ) {
     TextView menulabel=getlabel(context,context.getString(R.string.meal));
 //    spinner.clearAnimation();
     spinner.setSelection(Natives.getmealvar());
-    Layout.getMargins(spinner).rightMargin=(int)(tk.glucodata.GlucoseCurve.metrics.density*8.0);
+    Layout.getMargins(spinner).setMarginEnd((int)(tk.glucodata.GlucoseCurve.metrics.density*8.0));
     Button help=new Button(context);
     help.setOnClickListener(v->{help(R.string.labelhelp,context); });
     help.setText(R.string.helpname);
@@ -257,8 +262,8 @@ void    mklabellayout(View parent ) {
     butlay.setLayoutParams(new ViewGroup.LayoutParams(   ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
         recycle.setLayoutParams(new ViewGroup.LayoutParams(   ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
-    butlay.setPadding(0,MainActivity.systembarTop/2,MainActivity.systembarRight,MainActivity.systembarBottom);
-    recycle.setPadding(MainActivity.systembarLeft+(int)(tk.glucodata.GlucoseCurve.metrics.density*8.0),MainActivity.systembarTop,0,MainActivity.systembarBottom);
+    butlay.setPaddingRelative(0,MainActivity.systembarTop/2,MainActivity.systembarEnd,MainActivity.systembarBottom);
+    recycle.setPaddingRelative(MainActivity.systembarStart+(int)(tk.glucodata.GlucoseCurve.metrics.density*8.0),MainActivity.systembarTop,0,MainActivity.systembarBottom);
     final ViewGroup  labellayout=new Layout(context,(x,w,h)->{
                 hideSystemUI();
             return new int[] {w,h};

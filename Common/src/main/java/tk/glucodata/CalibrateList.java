@@ -28,6 +28,7 @@ import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static tk.glucodata.Applic.backgroundcolor;
 import static tk.glucodata.Applic.isWearable;
+import static tk.glucodata.GlucoseCurve.dpToPx;
 import static tk.glucodata.Natives.getCalibrator;
 import static tk.glucodata.Natives.getInvertColors;
 import static tk.glucodata.Natives.hasHistory;
@@ -39,6 +40,7 @@ import static tk.glucodata.util.getradiobuttonId;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -76,20 +78,61 @@ static class CalView extends LinearLayout {
         CalView(Context context,TextView time,TextView cali,Button delete) {
             super(context);
             setOrientation(VERTICAL);
+            setGravity(Gravity.CENTER_HORIZONTAL);
+              setLayoutParams(new ViewGroup.LayoutParams(  ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 //                super(context,(x,w,h)->{ Log.i(LOG_ID,"h="+h+" w="+w); return new int[] {w,h}; },new View[]{time},new View[]{cali},new View[]{delete}); 
                 this.time=time;
                 this.cali=cali;
                 this.delete=delete;
-                setLayoutParams(new ViewGroup.LayoutParams(  ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+
+
                 addView(time);
                 addView(cali);
+                /*
+                FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+                params.gravity = Gravity.CENTER|Gravity.CENTER_HORIZONTAL;
+                if(MainActivity.rtl)
+                         params.rightMargin= (int) (10*GlucoseCurve.metrics.density);
+                else
+                         params.leftMargin= (int) (10*GlucoseCurve.metrics.density);
+                */ 
+
                 addView(delete);
                 }
         static CalView getCalView(Context context) {
                 TextView time=new TextView(context);
+                time.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            ));
+                time.setTextDirection(View.TEXT_DIRECTION_RTL);
+                time.setGravity(Gravity.CENTER);
+
                 TextView cali=new TextView(context);
+                cali.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            ));
+                cali.setTextDirection(View.TEXT_DIRECTION_RTL);
+                cali.setGravity(Gravity.CENTER);
+                //time.setLayoutParams(params);
+                //cali.setLayoutParams(params);
                 Button delete = getbutton(context,R.string.delete);
-                delete.setLayoutParams(new ViewGroup.LayoutParams(  ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                LinearLayout.LayoutParams btnParams = new LinearLayout.LayoutParams(
+//                        LinearLayout.LayoutParams.MATCH_PARENT,
+
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                );
+                btnParams.gravity = Gravity.CENTER_HORIZONTAL;
+                delete.setLayoutParams(btnParams);
+//            delete.setMinWidth(0); delete.setMinimumWidth(0); delete.setPadding(dpToPx(16), delete.getPaddingTop(), dpToPx(16), delete.getPaddingBottom()); 
+                 delete.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                delete.setTextDirection(View.TEXT_DIRECTION_RTL);
+                delete.setGravity(Gravity.CENTER);
+               // delete.setLayoutParams(new ViewGroup.LayoutParams(  ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                //delete.setLayoutParams(params);
                 return new CalView(context,time,cali,delete);
                 }
         };
@@ -159,10 +202,10 @@ static  class CaliListViewAdapter extends RecyclerView.Adapter<CaliListViewHolde
                         });
                 var frame=new FrameLayout(act);
                 FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
-                params.gravity = Gravity.CENTER;
+                params.gravity = Gravity.CENTER;//|Gravity.CENTER_HORIZONTAL;
                 frame.setLayoutParams(params);
                 params =  new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
-                params.gravity = Gravity.CENTER;
+                params.gravity = Gravity.CENTER;//|Gravity.CENTER_HORIZONTAL;
                 frame.addView(close, params);
                 return new CaliListViewHolder(frame);
                 }
@@ -180,7 +223,7 @@ static  class CaliListViewAdapter extends RecyclerView.Adapter<CaliListViewHolde
                         setWhich(id);
                         });
                     }
-                group.setPadding((int)(GlucoseCurve.getwidth()*.04),0,0,0);
+                group.setPaddingRelative((int)(GlucoseCurve.getwidth()*.04),0,0,0);
                 return new CaliListViewHolder(group);
                 }
             }
@@ -212,22 +255,30 @@ private void fillItem(CaliListViewHolder  holder, int pos) {
                         while(MainActivity.doonback() )
                             ;
                     });
-                cali.cali.measure( ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
-                cali.delete.measure( ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+               // cali.cali.measure( ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+                //cali.delete.measure( ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
                 
-                int left=cali.cali.getMeasuredWidth()-cali.delete.getMeasuredWidth();
+                //int left=cali.cali.getMeasuredWidth()-cali.delete.getMeasuredWidth();
 
-                var mar=Layout.getMargins(cali.delete); 
+
                 if(isWearable) {
+                    /*
+                var mar=Layout.getMargins(cali.delete); 
                      mar.leftMargin= left/2;
                     mar.bottomMargin= (int)(5.0f*GlucoseCurve.metrics.density);
                    var width=GlucoseCurve.getwidth();
                     int horpad=(int)(0.4f*(width-cali.cali.getMeasuredWidth()));
                     cali.setPadding(horpad,0,0,0);
+                    */
                     }
                  else {
-                     mar.leftMargin= left*3/10;
-                    mar.bottomMargin= (int)(10*GlucoseCurve.metrics.density);
+/*
+                  if(MainActivity.rtl)
+                         mar.rightMargin= left*3/10;
+                  else
+                         mar.leftMargin= left*3/10;
+                         */
+//                    mar.bottomMargin= (int)(10*GlucoseCurve.metrics.density);
                         }
                 }
             }
@@ -336,7 +387,7 @@ static void show(MainActivity act, long sensorptr,View parent) {
         }
        layout.setBackgroundColor(backgroundcolor);
         float density=GlucoseCurve.metrics.density;
-    layout.setPadding((int)(density*5.0)+MainActivity.systembarLeft,MainActivity.systembarTop,MainActivity.systembarRight+(int)(density*8.0),MainActivity.systembarBottom);
+    layout.setPaddingRelative((int)(density*5.0)+MainActivity.systembarStart,MainActivity.systembarTop,MainActivity.systembarEnd+(int)(density*8.0),MainActivity.systembarBottom);
 
      act.addContentView(layout, new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
 //      act.addContentView(layout, new ViewGroup.LayoutParams( WRAP_CONTENT, WRAP_CONTENT));

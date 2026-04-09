@@ -1,323 +1,193 @@
 <?xml version="1.0" encoding="utf-8"?>
-<tk.glucodata.measuredgrid xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/grid"
+<HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/hori"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:columnCount="24"
-    android:paddingLeft="15dp"
-    android:useDefaultMargins="true">
+    android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/bluestate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_column="0"
-        android:layout_columnSpan="5"
-        android:layout_row="0"
-        android:text="" />
-  <Button
-	android:id="@+id/info"
-	android:layout_width="wrap_content"
-	android:layout_height="wrap_content"
-        android:layout_column="5"
-        android:layout_row="0"
-        android:layout_columnSpan="2"
-	android:text="@string/info" />
+<GridLayout 
+    android:id="@+id/grid"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:columnCount="21"
+    android:rowCount="8"
+    android:paddingEnd="2dp" 
+    android:paddingStart="15dp"
+    android:paddingTop="9dp"
+    android:paddingBottom="9dp"
+    android:useDefaultMargins="false">
 
-    <Button
-        android:id="@+id/finish"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_row="0"
-        android:layout_columnSpan="3"
-        android:layout_column="7"
-        android:text="@string/finish" />
+        <TextView
+            android:id="@+id/bluestate"
+            android:layout_column="0"
+            android:layout_row="0"
+            android:layout_columnSpan="5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
-    <CheckBox
-        android:id="@+id/streamhistory"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_row="0"
-        android:layout_columnSpan="4"
-        android:layout_column="10"
-        android:text="@string/streamhistory" />
+        <Button
+            android:id="@+id/info"
+            android:layout_column="5"
+            android:layout_row="0"
+            android:layout_columnSpan="2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/info" />
 
-      <CheckBox
-          android:id="@+id/alarmclock"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_row="0"
-          android:layout_columnSpan="4"
-          android:layout_column="10"
-          android:visibility="gone"
-          android:text="@string/alarmclock" />
-      <Button
-          android:id="@+id/resetbutton"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_row="0"
-          android:layout_columnSpan="4"
-          android:layout_column="10"
-          android:visibility="gone"
-          android:text="@string/resetname" />
-      <Button
-          android:id="@+id/divorcebutton"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_row="0"
-          android:layout_columnSpan="4"
-          android:layout_column="10"
-          android:visibility="gone"
-          android:text="@string/divorcename" />
-    <Button
-        android:id="@+id/locationpermission"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_row="0"
-        android:layout_columnSpan="4"
-        android:layout_column="14"
-        android:text="@string/scan_permission" />
+        <Button
+            android:id="@+id/finish"
+            android:layout_column="7"
+            android:layout_row="0"
+            android:layout_columnSpan="3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/finish" />
 
-
-    <TextView
-        android:id="@+id/scan"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_column="0"
-        android:layout_row="1"
-        android:layout_columnSpan="22"
-        android:text="" />
-
-    <Spinner
-        android:id="@+id/sensors"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_column="0"
-        android:layout_columnSpan="5"
-        android:layout_row="2" />
-    <TextView
-        android:id="@+id/deviceaddress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_row="2"
-        android:layout_column="5"
-        android:layout_columnSpan="3"
-        android:text="" />
-
-    <Button
-        android:id="@+id/forget"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_row="2"
-        android:layout_column="8"
-        android:layout_columnSpan="4"
-        android:text="@string/forget" />
-    <TextView
-        android:id="@+id/streaming"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_row="2"
-        android:layout_column="12"
-        android:layout_columnSpan="2"
-        android:text="" />
-    <Button
-        android:id="@+id/clear"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_row="2"
-        android:layout_column="14"
-        android:layout_columnSpan="2"
-        android:text="@string/clear" />
-
-    <TextView
-        android:id="@+id/stage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_column="0"
-        android:layout_columnSpan="4"
-        android:layout_row="3"
-        android:text="@string/stage" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_column="4"
-        android:layout_columnSpan="3"
-        android:layout_row="3"
-        android:text="@string/last_success" />
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_column="7"
-        android:layout_columnSpan="5"
-        android:layout_row="3"
-        android:text="@string/last_failure" />
-
-
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_column="12"
-        android:layout_columnSpan="7"
-        android:layout_row="3"
-        android:text="@string/failure_info" />
-
-
-    <TextView
-        android:id="@+id/connection"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-
-        android:layout_column="0"
-        android:layout_columnSpan="4"
-        android:layout_row="4"
-        android:text="@string/connection" />
-
-    <TextView
-        android:id="@+id/consuccess"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_column="4"
-        android:layout_columnSpan="3"
-        android:layout_row="4" />
-
-    <TextView
-        android:id="@+id/confail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_column="7"
-        android:layout_columnSpan="5"
-        android:layout_row="4" />
-
-    <TextView
-        android:id="@+id/constatus"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_column="12"
-        android:layout_columnSpan="7"
-        android:layout_row="4" />
-
-    <TextView
-        android:id="@+id/disconnectsensor"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_column="0"
-        android:layout_columnSpan="4"
-        android:layout_row="5"
-        android:text="@string/unlock_key" />
-
-    <TextView
-        android:id="@+id/keysuccess"
-        android:layout_width="wrap_content"
-        android:layout_columnSpan="3"
-        android:layout_height="wrap_content" />
-
-    <TextView
-        android:id="@+id/keyfailure"
-        android:layout_width="wrap_content"
-        android:layout_columnSpan="5"
-        android:layout_height="wrap_content" />
-
-    <TextView
-        android:id="@+id/keyinfo"
-        android:layout_width="wrap_content"
-        android:layout_columnSpan="7"
-        android:layout_height="wrap_content" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_column="0"
-        android:layout_columnSpan="4"
-        android:layout_row="6"
-        android:text="@string/glucose_value" />
-
-    <TextView
-        android:id="@+id/glucosesuccess"
-        android:layout_columnSpan="3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <TextView
-        android:id="@+id/glucosefailure"
-        android:layout_columnSpan="5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <TextView
-        android:id="@+id/glucoseinfo"
-        android:layout_columnSpan="7"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <Button
-        android:id="@+id/help"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_row="7"
-        android:layout_columnSpan="4"
-        android:layout_column="0"
-        android:text="@string/helpname" />
-    <CheckBox
-        android:id="@+id/usebluetooth"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-	android:layout_row="7"
-	android:layout_column="4"
-	android:layout_columnSpan="3"
-        android:text="@string/use_bluetooth" />
-
-    <Button
-        android:id="@+id/background"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_row="7"
-        android:layout_column="7"
-        android:layout_columnSpan="2"
-        android:text="@string/dozemode" />
-
-    <CheckBox
-        android:id="@+id/priority"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_row="7"
-        android:layout_column="10"
-        android:layout_columnSpan="3"
-        android:text="@string/high_priority" />
-
-    <CheckBox
-        android:id="@+id/android13"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_row="7"
-        android:layout_column="13"
-        android:layout_columnSpan="2"
-        android:text="@string/android13" />
-
-
-
-    <Button
-        android:id="@+id/close"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_row="7"
-        android:layout_column="15"
-        android:layout_columnSpan="4"
-        android:text="@string/closename" />
-    <TextView
-                android:id="@+id/rssi"
+        <FrameLayout
+            android:layout_column="10"
+            android:layout_row="0"
+            android:layout_columnSpan="4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <tk.glucodata.CheckDirectionBox
+                android:id="@+id/streamhistory"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_column="22"
-                android:layout_row="3"
-                android:rotation="-90"
-                android:text=""
-                android:layout_rowSpan="3"
-                android:layout_columnSpan="2" />
+                android:text="@string/streamhistory" />
+            <tk.glucodata.CheckDirectionBox
+                android:id="@+id/alarmclock"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:text="@string/alarmclock" />
+            <Button
+                android:id="@+id/resetbutton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:text="@string/resetname" />
+            <Button
+                android:id="@+id/divorcebutton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:text="@string/divorcename" />
+        </FrameLayout>
+
+        <Button
+            android:id="@+id/locationpermission"
+            android:layout_column="14"
+            android:layout_row="0"
+            android:layout_columnSpan="6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/scan_permission" />
+
+<TextView
+    android:id="@+id/scan"
+    android:layout_width="wrap_content" 
+    android:layout_height="wrap_content"
+    android:layout_column="0"
+    android:layout_row="1"
+    android:layout_columnSpan="19"
+    android:text="" />
+
+        <Spinner
+            android:id="@+id/sensors"
+            android:layout_column="0"
+            android:layout_row="2"
+            android:layout_columnSpan="5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/deviceaddress"
+            android:layout_column="5"
+            android:layout_row="2"
+            android:layout_columnSpan="3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/forget"
+            android:layout_column="8"
+            android:layout_row="2"
+            android:layout_columnSpan="4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/forget" />
+
+        <TextView
+            android:id="@+id/streaming"
+            android:layout_column="12"
+            android:layout_row="2"
+            android:layout_columnSpan="2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/clear"
+            android:layout_column="14"
+            android:layout_row="2"
+            android:layout_columnSpan="6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/clear" />
+
+        <TextView android:id="@+id/stage" android:layout_column="0" android:layout_row="3" android:layout_columnSpan="4" android:text="@string/stage" />
+        <TextView android:id="@+id/textView2" android:layout_column="4" android:layout_row="3" android:layout_columnSpan="3" android:text="@string/last_success" />
+        <TextView android:id="@+id/textView3" android:layout_column="7" android:layout_row="3" android:layout_columnSpan="5" android:text="@string/last_failure" />
+        <TextView android:id="@+id/textView4" android:layout_column="12" android:layout_row="3" android:layout_columnSpan="8" android:text="@string/failure_info" />
+
+        <TextView android:id="@+id/connection" android:layout_column="0" android:layout_row="4" android:layout_columnSpan="4" android:text="@string/connection" />
+        <TextView android:id="@+id/consuccess" android:layout_column="4" android:layout_row="4" android:layout_columnSpan="3" />
+        <TextView android:id="@+id/confail" android:layout_column="7" android:layout_row="4" android:layout_columnSpan="5" />
+
+        <TextView
+    android:id="@+id/constatus"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_column="12"
+    android:layout_columnSpan="7"
+    android:layout_row="4" />
+
+        <TextView  android:id="@+id/disconnectsensor" android:layout_column="0" android:layout_row="5" android:layout_columnSpan="4" android:text="@string/unlock_key" />
+        <TextView android:id="@+id/keysuccess" android:layout_column="4" android:layout_row="5" android:layout_columnSpan="3" />
+        <TextView android:id="@+id/keyfailure" android:layout_column="7" android:layout_row="5" android:layout_columnSpan="5" />
+        <TextView android:id="@+id/keyinfo" android:layout_column="12" android:layout_row="5" android:layout_columnSpan="8" android:layout_width="wrap_content" android:layout_gravity="fill_horizontal" />
+
+        <TextView android:layout_column="0" android:layout_row="6" android:layout_columnSpan="4" android:text="@string/glucose_value" />
+        <TextView android:id="@+id/glucosesuccess" android:layout_column="4" android:layout_row="6" android:layout_columnSpan="3" />
+        <TextView android:id="@+id/glucosefailure" android:layout_column="7" android:layout_row="6" android:layout_columnSpan="5" />
+        <TextView android:id="@+id/glucoseinfo" android:layout_column="12" android:layout_row="6" android:layout_columnSpan="8" android:layout_width="wrap_content" android:layout_gravity="fill_horizontal" />
+
+        <Button android:id="@+id/help" android:layout_column="0" android:layout_row="7" android:layout_columnSpan="4" android:text="@string/helpname" />
+        <tk.glucodata.CheckDirectionBox android:id="@+id/usebluetooth" android:layout_column="4" android:layout_row="7" android:layout_columnSpan="3" android:text="@string/use_bluetooth" />
+        <Button android:id="@+id/background" android:layout_column="7" android:layout_row="7" android:layout_columnSpan="3" android:text="@string/dozemode" />
+        <tk.glucodata.CheckDirectionBox android:id="@+id/priority" android:layout_column="10" android:layout_row="7" android:layout_columnSpan="3" android:text="@string/high_priority" />
+        <tk.glucodata.CheckDirectionBox android:id="@+id/android13" android:layout_column="13" android:layout_row="7" android:layout_columnSpan="2" android:text="@string/android13" />
+        <Button android:id="@+id/close" android:layout_column="15" android:layout_row="7" android:layout_columnSpan="5" android:text="@string/closename"
+
+        />
 
 
-</tk.glucodata.measuredgrid>
+
+
+
+<TextView
+    android:id="@+id/rssi"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_column="20"
+    android:layout_row="0"
+    android:layout_rowSpan="8"
+    android:layout_gravity="center_vertical|end"
+    android:rotation="-90"
+    android:padding="0dp"
+    android:textSize="10sp"
+    android:text="RSSI" />
+
+
+    </GridLayout>
+
+
+</HorizontalScrollView>

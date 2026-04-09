@@ -444,5 +444,11 @@
 <string name="clearfailed">"Wissen mislukt"</string>
 
 <string name="sensors">Sensoren</string>
+<string name="titlewebserverneed">Webserver nodig</string>
+
+<string name="messagewebserverneed">Ga naar het linkermenu -> Instellingen -> Deel gegevens -> Webserver om de webserver te activeren</string>
+<string name="nostreamvalues">Geen stream-waarden</string>
+
+<string name="nohistoryvalues">Geen history-waarden</string>
 </resources>
 

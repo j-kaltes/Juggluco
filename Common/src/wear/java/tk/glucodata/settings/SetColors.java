@@ -28,8 +28,10 @@ import tk.glucodata.Log;
 import static tk.glucodata.Log.doLog;
 import static tk.glucodata.Specific.useclose;
 
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import tk.glucodata.MainActivity;
 import tk.glucodata.Natives;
@@ -53,6 +55,7 @@ static void show(MainActivity act) {
             Natives.setlastcolor(c);
             tk.glucodata.Applic.app.redraw();
         }, v-> {
+        /*
     int afx,afy;
     if(Natives.getsystemUI()) {
          afy= MainActivity.systembarTop;
@@ -67,16 +70,26 @@ static void show(MainActivity act) {
          int w=v.getMeasuredWidth();    
          v.setX((int)(width*.97)-w);
          v.setY((height-h)*.5f);
+        */
         }
     );
     View view=dialog.getview();
     view.setBackgroundColor(Applic.backgroundcolor);
-    act.addContentView(view, new ViewGroup.LayoutParams((int)(width*0.65), (int)(height*0.65)));
+  //  act.addContentView(view, new ViewGroup.LayoutParams((int)(width*0.65), (int)(height*0.65)));
+
+        var params= new FrameLayout.LayoutParams((int)(width*0.65), (int)(height*0.65), Gravity.RIGHT| Gravity.CENTER);
+        params.rightMargin=(int)(width*.03f);
+        act.addContentView(view, params);
     var ok=useclose?getbutton(act,"Ok"):null;
     if(ok!=null) {
         ok.setOnClickListener(v->MainActivity.doonback());
-        act.addContentView(ok, new ViewGroup.LayoutParams(WRAP_CONTENT,WRAP_CONTENT));
-        ok.setX((int)(width*.45));
+        var okparams= new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.TOP|Gravity.CENTER_HORIZONTAL);
+        act.addContentView(ok, okparams);
+
+//        act.addContentView(ok, new ViewGroup.LayoutParams(WRAP_CONTENT,WRAP_CONTENT));
+
+ //       ok.setX((int)(width*.45));
+
         int padx=(int)(width*.04f);
         int pady=(int)(width*.015f);
         ok.setPadding(padx,pady,padx,pady);

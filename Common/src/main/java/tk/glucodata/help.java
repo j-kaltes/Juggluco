@@ -26,6 +26,7 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.os.Build;
 import android.text.method.LinkMovementMethod;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -45,6 +46,7 @@ import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static tk.glucodata.Applic.backgroundcolor;
 import static tk.glucodata.Applic.isWearable;
+import static tk.glucodata.Layout.getMargins;
 import static tk.glucodata.Log.doLog;
 import static tk.glucodata.MainActivity.doonback;
 import static tk.glucodata.MainActivity.poponback;
@@ -226,7 +228,7 @@ public static   void help(String text,Activity act,Consumer<ViewGroup>  okproc,P
     else  {
 //           var marg=Layout.getMargins(ok);
  //          marg.leftMargin=marg.rightMargin=marg.topMargin=marg.bottomMargin=0;
-         Layout.getMargins(ok).topMargin=systembarTop;
+         getMargins(ok).topMargin=systembarTop;
            int pad=(int)(GlucoseCurve.getDensity()*7.0);
            helpview.setPadding(pad,pad+systembarTop,pad,pad+systembarBottom);
          helpview.setBackgroundResource(R.drawable.helpbackground);
@@ -255,8 +257,14 @@ public static   void help(String text,Activity act,Consumer<ViewGroup>  okproc,P
          helplayout.setLayoutParams(params);
         helplayout.requestLayout();
         act.addContentView(helplayout, params);
-        act.addContentView(ok, new ViewGroup.LayoutParams( WRAP_CONTENT, WRAP_CONTENT));
-        ok.measure(WRAP_CONTENT, WRAP_CONTENT);
+
+//       var okmarg=getMargins(ok);
+       var  okparams =    new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, MainActivity.rtl?Gravity.LEFT:Gravity.RIGHT| Gravity.TOP);
+       okparams.topMargin=(int)(MainActivity.systembarTop*.71f);
+       okparams.rightMargin=MainActivity.systembarRight;
+       okparams.leftMargin=MainActivity.systembarLeft;
+        act.addContentView(ok, okparams);
+//        ok.measure(WRAP_CONTENT, WRAP_CONTENT);
           }
         whelplayout=new WeakReference<ViewGroup>(helplayout);
        }
@@ -278,22 +286,27 @@ public static   void help(String text,Activity act,Consumer<ViewGroup>  okproc,P
      if(isWearable)
              ok.setVisibility(useclose?View.VISIBLE:View.INVISIBLE);
      else {
-         ok.setY(MainActivity.systembarTop*.71f);
+       //  ok.setY(MainActivity.systembarTop*.71f);
          var width=GlucoseCurve.getwidth();
          if(width<=10)
               width=MainActivity.screenwidth;
-         int okwidth=ok.getMeasuredWidth();
-        float okx=width-okwidth-MainActivity.systembarRight - GlucoseCurve.getDensity();
-        ok.setX(okx);
-         {if(doLog) {Log.i(LOG_ID,"width="+width+" okx="+okx+" okwidth="+okwidth+" systembarRight="+ MainActivity.systembarRight );};};
+//         int okwidth=ok.getMeasuredWidth();
+//        float okx=width-okwidth-MainActivity.systembarRight - GlucoseCurve.getDensity();
+ //       ok.setX(okx);
+  //       {if(doLog) {Log.i(LOG_ID,"width="+width+" okx="+okx+" okwidth="+okwidth+" systembarRight="+ MainActivity.systembarRight );};};
          }
      //   ViewGroup.MarginLayoutParams marg = (ViewGroup.MarginLayoutParams) helplayout.getLayoutParams();
 //       whelpview.get().setText(Html.fromHtml(text));
+    TextView textview=whelpview.get();
+    if(MainActivity.rtl) {
+         textview.setGravity(Gravity.RIGHT);
+         textview.setTextDirection(View.TEXT_DIRECTION_RTL);
+         }
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-        whelpview.get().setText(fromHtml(text,TO_HTML_PARAGRAPH_LINES_CONSECUTIVE));
+        textview.setText(fromHtml(text,TO_HTML_PARAGRAPH_LINES_CONSECUTIVE));
     }
     else {
-        whelpview.get().setText(fromHtml(text));
+        textview.setText(fromHtml(text));
     }
 
      Runnable closerun=() -> {

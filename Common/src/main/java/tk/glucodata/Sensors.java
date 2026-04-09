@@ -40,11 +40,13 @@ import static tk.glucodata.util.getcheckbox;
 import android.graphics.Color;
 import android.os.Build;
 import android.text.method.LinkMovementMethod;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.CheckBox;
+
+import android.widget.FrameLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -56,7 +58,7 @@ import java.util.ArrayList;
 class Sensors {
     private static final String LOG_ID="sensors";
 ViewGroup viewgroup;
-CheckBox hide;
+CheckDirectionBox hide;
 Button calview;
 TextView textview;
 SeekBar warmupview;
@@ -151,6 +153,9 @@ Sensors(MainActivity act,boolean givehelp,boolean select) {
       String prefix=act.getString(R.string.warmup);
       minutes=new TextView(act);
       warmupview=new SeekBar(act);
+     Applic.ifRTLseekbar(warmupview);
+
+
       var marg=Layout.getMargins(warmupview);
      if(isWearable)
           warmupview.setPadding((int)(GlucoseCurve.metrics.density*10.0f),0,(int)(GlucoseCurve.metrics.density*10.0f),0);
@@ -295,18 +300,27 @@ static    void show(MainActivity act,String text, long sensorptr) {
          }
      else
             sensors.setSensorptr(sensorptr);
-    int param=isWearable?MATCH_PARENT:WRAP_CONTENT;
     var scroll=sensors.viewgroup;
+   ViewGroup.LayoutParams params;
     if(!isWearable) {
         scroll.setBackgroundResource(R.drawable.dialogbackground);
-        scroll.measure(WRAP_CONTENT, WRAP_CONTENT);
-        var width=GlucoseCurve.getwidth();
-        scroll.setX((width-scroll.getMeasuredWidth()+MainActivity.systembarLeft-MainActivity.systembarRight)*.5f);
+  //      scroll.measure(WRAP_CONTENT, WRAP_CONTENT);
+ //       var width=GlucoseCurve.getwidth();
+//        scroll.setX((width-scroll.getMeasuredWidth()+MainActivity.systembarLeft-MainActivity.systembarRight)*.5f);
+        params =
+            new FrameLayout.LayoutParams(
+                    WRAP_CONTENT,
+                    WRAP_CONTENT,
+                    Gravity.CENTER_HORIZONTAL);
         }
     else {
+         int param=isWearable?MATCH_PARENT:WRAP_CONTENT;
+         params=new ViewGroup.LayoutParams(param,param);
         scroll.setBackgroundColor(Applic.backgroundcolor);
         }
-    act.addContentView(sensors.viewgroup, new ViewGroup.LayoutParams(param,param));
+
+   act.addContentView(scroll, params);
+//    act.addContentView(sensors.viewgroup, new ViewGroup.LayoutParams(param,param));
     MainActivity.setonback(() -> {
             removeContentView(sensors.viewgroup);
             act.sensorsVisible=false;

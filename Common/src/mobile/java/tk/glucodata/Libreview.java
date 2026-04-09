@@ -28,10 +28,12 @@ import android.content.DialogInterface;
 import android.os.Build;
 import android.text.InputType;
 import android.text.method.PasswordTransformationMethod;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
+
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.Space;
 import android.widget.Toast;
 
@@ -592,9 +594,11 @@ private static void resendDateDialog(MainActivity context,View parent) {
    int[]  min={cal.get(Calendar.MINUTE)};
    var timebutton=getbutton(context,  String.format(Locale.US,"%02d:%02d",hour[0],min[0] ));
    var layout=new Layout(context,(x,w,h)->{
+   /*
          var width=GlucoseCurve.getwidth();
          x.setX((width-w)/2);
          x.setY(MainActivity.systembarTop);
+         */
          return new int[] {w,h};
            },new View[]{helpbutton,sendfrom},new View[]{datebutton,timebutton},new View[]{ok,cancel});
    timebutton.setOnClickListener(v-> {
@@ -623,7 +627,13 @@ private static void resendDateDialog(MainActivity context,View parent) {
       askclearlibreview(context,newtime[0],closeall);
       });
    cancel.setOnClickListener(v -> context.doonback());
-   context.addContentView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+    var  params =    
+            new FrameLayout.LayoutParams(
+                    WRAP_CONTENT,
+                    WRAP_CONTENT,
+                    Gravity.CENTER_HORIZONTAL);
+    params.topMargin=MainActivity.systembarTop;
+   context.addContentView(layout, params);
    }
 
 private static   void askclearlibreview(MainActivity context,long fromtime,Runnable r) {
@@ -664,7 +674,7 @@ private static void      confirmGetAccountID(MainActivity context) {
 
 
 
-private static void getAccountid(MainActivity context,    Predicate<Boolean> getgegs,View settingsview,CheckBox sendto,boolean[] donothing) {
+private static void getAccountid(MainActivity context,    Predicate<Boolean> getgegs,View settingsview,CheckDirectionBox sendto,boolean[] donothing) {
    var setmanually=Natives.manualLibreAccountIDnumber()!=-1L;
    var manual=getcheckbox(context,R.string.manual, setmanually);;
    var writedown=getlabel(context,R.string.writedown);
@@ -706,6 +716,7 @@ private static void getAccountid(MainActivity context,    Predicate<Boolean> get
    );
   manual.setPadding(0,0,(int)(tk.glucodata.GlucoseCurve.metrics.density*10),0);
   final Layout layout=new Layout(context, (lay, w, h) -> {
+  /*
       var height=GlucoseCurve.getheight();
       var width=GlucoseCurve.getwidth();
       if(w>=width||h>=height) {
@@ -715,13 +726,17 @@ private static void getAccountid(MainActivity context,    Predicate<Boolean> get
          lay.setX((width-w)/2); 
          };
       lay.setY(MainActivity.systembarTop);
+      */
       return new int[] {w,h};}, 
             new View[]{manual,editid,help},new View[]{writedown,fromlibreview,close,save});
 
       layout.setBackgroundResource(R.drawable.dialogbackground);
       int pad= (int)tk.glucodata.GlucoseCurve.metrics.density*7;
     layout.setPadding(pad,pad,pad,pad);
-   context.addContentView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+    var  params =    new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.CENTER_HORIZONTAL);
+    params.topMargin= MainActivity.systembarTop;
+
+    context.addContentView(layout, params);
    Runnable closerun=()-> {
       layout.setVisibility(GONE);
       removeContentView(layout);
@@ -768,7 +783,7 @@ private static void getAccountid(MainActivity context,    Predicate<Boolean> get
          });
    }
 //      Natives.askServerforAccountID();
-public static void  config(MainActivity act, View settingsview,CheckBox sendto,boolean[] donothing) {
+public static void  config(MainActivity act, View settingsview,CheckDirectionBox sendto,boolean[] donothing) {
    EnableControls(settingsview,false);
    var emaillabel=getlabel(act,R.string.email);
    var email=getedit(act, getlibreemail());
@@ -818,6 +833,7 @@ public static void  config(MainActivity act, View settingsview,CheckBox sendto,b
    var accountid=getlabel(act, String.valueOf(accountidnum));
    var getaccountid=getbutton(act,R.string.getaccountid);
    final Layout layout=new Layout(act, (lay, w, h) -> {
+   /*
       var height=GlucoseCurve.getheight();
       var width=GlucoseCurve.getwidth();
       if(w>=width||h>=height) {
@@ -827,6 +843,7 @@ public static void  config(MainActivity act, View settingsview,CheckBox sendto,b
             lay.setX((width-w)/2); 
             };
        lay.setY(MainActivity.systembarTop);
+       */
        return new int[] {w,h};}, 
                 new View[]{emaillabel,email},new View[]{passlabel,editpass,russia},new View[]{clear,accountid,getaccountid},new View[]{statusview},new View[]{ librecurrent,libreisviewed}, new View[]{sendtolibreview,numbers},new View[]{send,help,cancel,ok});
 
@@ -919,7 +936,13 @@ public static void  config(MainActivity act, View settingsview,CheckBox sendto,b
          layout.setBackgroundResource(R.drawable.dialogbackground);
          int pad= (int)tk.glucodata.GlucoseCurve.metrics.density*7;
       layout.setPadding(pad,0,pad,pad);
-      act.addContentView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+    var  params =    
+            new FrameLayout.LayoutParams(
+                    WRAP_CONTENT,
+                    WRAP_CONTENT,
+                    Gravity.CENTER_HORIZONTAL);
+    params.topMargin=MainActivity.systembarTop;
+   act.addContentView(layout, params);
    
    }
 

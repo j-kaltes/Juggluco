@@ -127,6 +127,7 @@ private static final String LOG_ID="Layout";
 static int[]  noneplacer(Layout l,int w,int h) {
      return new int[] {w,h};
     };
+
 void init(Context context,Placer placer,int nr) {
 //    setLayoutDirection(LAYOUT_DIRECTION_LTR);
         this.placer=placer;
@@ -139,27 +140,71 @@ void init(Context context,Placer placer,int nr) {
         super(context);
         init(context,placer,nr);
         }
-    public Layout(Context context, View [] ... rows) {
-    this(context,Layout::noneplacer,rows);
+public Layout(Context context, Object [] ... rows) {
+    this(context,true,Layout::noneplacer,rows);
     }
-    public Layout(Context context,Placer placer, View [] ... rows) {
-        super(context);
-        rownr= rows.length;
-    init(context,placer,rownr);
-        for(int i=0;i<rownr;i++) {
-      if(rows[i]!=null) {
-        for(View el:rows[i]) {
-        if(el!=null) {
-            el.setAccessibilityDelegate(accessDeli);
-            addView(el);
-            el.setTag(R.id.layoutrow,i);
-            }
-         }
-           }
-            rowend[i]=getChildCount();
-             }
+public Layout(Context context, boolean rev, Object [] ... rows) {
+    this(context,rev,Layout::noneplacer,rows);
+    }
 
+ private static Object[] arrayReverse(Object[] array) {
+     int len=array.length;
+     Object[] revview=new Object[len];
+     for(int i=0,uit=len-1;i<len;) {
+       revview[uit--] = array[i++];
+       }
+    return revview;
+   }
+
+private static Object[][] reverseAll(Object[][] views) {
+    int len= views.length;
+    var revviews=new Object[len][];
+    for(int i=0;i<len;++i) {
+        if(views[i]!=null) 
+            revviews[i]=arrayReverse(views[i]);
+        }
+    return revviews;
     }
+
+
+private void addRowChildren(Object[] rowobjects,int row) {
+          if(rowobjects!=null) {
+            for(Object obel:rowobjects) {
+                if(obel!=null) {
+                    if(obel instanceof View) {
+                        addEl((View) obel,row);
+                        }
+                    else {
+                        if(obel instanceof View[]) {
+                            for(var v: (View[])obel) {
+                                if(v!=null)
+                                    addEl(v,row);
+                                }
+                            }
+                        }
+                 }
+               }
+             }
+       rowend[row]=getChildCount();
+       }
+private void addEl(View el,int row) {
+        el.setAccessibilityDelegate(accessDeli);
+        addView(el);
+        el.setTag(R.id.layoutrow,row);
+        }
+public Layout(Context context,Placer placer, Object [] ... inrows) {
+    this(context,true,placer,inrows);
+    }
+public Layout(Context context,boolean rev,Placer placer, Object [] ... inrows) {
+        super(context);
+        Object[][] rows= (rev&&MainActivity.rtl)?reverseAll(inrows):inrows;
+        rownr= rows.length;
+        init(context,placer,rownr);
+        for(int i=0;i<rownr;i++) {
+          addRowChildren(rows[i],i);
+          }
+
+       }
     public void empty() {
         rownr=0;
     removeAllViews();
@@ -198,22 +243,21 @@ public View[] getrow(int index) {
         }
     return views;
     }
-public int addrow(View [] row) {
+public int addrow(boolean rev,Object[] inrow) {
+   final Object[]  row=(rev&&MainActivity.rtl)?arrayReverse(inrow):inrow;
    final int prevnr=rownr;
     if(rowend.length==rownr++) { 
         int[] oldrowend =rowend;
         reserve(rownr);
         System.arraycopy(oldrowend,0,rowend,0,prevnr);
         }
-    for(View el:row) {
-        if(el!=null) {
-            el.setAccessibilityDelegate(accessDeli);
-            addView(el);
-            el.setTag(R.id.layoutrow,prevnr);
-            }
-          }
-        rowend[prevnr]=getChildCount();
+
+    addRowChildren(row,prevnr);
+  
     return rownr;
+    }
+public int addrow(Object[] inrow) {
+    return addrow(true,inrow);
     }
 static private int childWidth(View child) {
       return  Math.max(child.getMinimumWidth(),child.getMeasuredWidth());

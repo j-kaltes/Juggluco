@@ -366,10 +366,6 @@ extern "C" JNIEXPORT  jboolean JNICALL fromjava(saveLibre3fastData)(JNIEnv *env,
         }
     const int lifecount=fastptr->lifeCount;
     if(lifecount>=0) {
-        if(sens->hasStreamID(lifecount)) {
-            LOGGER("Have fastdata %d already present\n",lifecount);
-            }
-        else {
             const auto curval= fastptr->readingMgDl;
             if(validglucosevalue(curval)) {
                 const auto wastime=sens->lifeCount2time(lifecount);
@@ -377,6 +373,11 @@ extern "C" JNIEXPORT  jboolean JNICALL fromjava(saveLibre3fastData)(JNIEnv *env,
                     LOGGER("low time %s",ctime(&wastime));
                     return false;
                     }
+                if(sens->hasStreamID(lifecount,wastime)) {
+                    LOGGER("Have fastdata %d already present\n",lifecount);
+                    return false;
+                    }
+
                 LOGAR("save fastdata");
                 sens->savepollallIDs<60>(wastime,lifecount,curval,0,NAN);
                 sens->backstream(lifecount);
@@ -387,7 +388,6 @@ extern "C" JNIEXPORT  jboolean JNICALL fromjava(saveLibre3fastData)(JNIEnv *env,
                 LOGGER("fastdata invalid lifecount=%d curval=%.1f\n",lifecount,curval/convfactordL);
                 }
             sens->fastupdatelifecount(lifecount);
-            }
         return true;
         }
     LOGGER("lifecount=%d\n",lifecount);

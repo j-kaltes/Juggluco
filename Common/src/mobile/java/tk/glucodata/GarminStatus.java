@@ -26,12 +26,14 @@ import android.net.Uri;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.text.Spanned;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.CheckBox;
+
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.Space;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -74,7 +76,7 @@ class GarminStatus {
 	TextView registeredview;
 	TextView restview;
 	//	TextView GarminStatusstr;
-	CheckBox glucose;
+	CheckDirectionBox glucose;
 	AllData alldata;
 	Button next;
 	Button sync;
@@ -91,7 +93,7 @@ class GarminStatus {
 		EnableControls(parent,false);
 		var idlabel = getlabel(context, "Garmin Watch app ID:");
 
-		var defaultapp = new CheckBox(context);
+		var defaultapp = new CheckDirectionBox(context);
 		defaultapp.setText(R.string.defaultname);
 		var editid = new EditText(context);
 		editid.setImeOptions(tk.glucodata.settings.Settings.editoptions);
@@ -146,10 +148,12 @@ class GarminStatus {
 		var Cancel = getbutton(context, R.string.cancel);
 
 		var layout = new Layout(context, (l, w, h) -> {
+        /*
 			var width = GlucoseCurve.getwidth();
 			if (width > w)
 				l.setX((width - w) / 2);
 			l.setY(0);
+            */
 			return new int[]{w, h};
 		}, new View[]{idlabel, defaultapp}, new View[]{editid}, new View[]{Cancel, Save});
 
@@ -159,7 +163,11 @@ class GarminStatus {
 
 
 	layout.setBackgroundResource(R.drawable.dialogbackground);
-		context.addContentView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+
+    var  params =    new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.CENTER_HORIZONTAL);
+
+    context.addContentView(layout, params);
+//		context.addContentView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
 		context.setonback(() -> {
 			EnableControls(parent,true);
 			removeContentView(layout);
@@ -251,7 +259,7 @@ class GarminStatus {
 		ok.setText(R.string.closename);
 		Button help = getbutton(context, R.string.helpname);
 		help.setOnClickListener(v -> helplight(R.string.kerfstok, context));
-		glucose = new CheckBox(context);
+		glucose = new CheckDirectionBox(context);
 		glucose.setText(R.string.glucose);
 		glucose.setChecked(alldata.sendtowatch);
 		glucose.setOnClickListener(
@@ -274,19 +282,25 @@ class GarminStatus {
 		config.setOnClickListener(v -> kerfstokconfig(context,alldata,layout,parentlayout));
 //		restview.setPadding(0,0,0,0);
 		layout = new Layout(context, (l, w, h) -> {
+        /*
 			var width = GlucoseCurve.getwidth();
 			var height = GlucoseCurve.getheight();
 			if (width > w && height > h) {
 				l.setX((width - w) / 2);
 				l.setY((height - h) / 2);
 			}
+            */
 			return new int[]{w, h};
 		}, new View[]{spinner, refresh}, new View[]{sdkreadyview, registeredview,help}, new View[]{restview,glucose}, new View[]{sync, next, reinit, config, ok}
 		);
 	layout.setBackgroundResource(R.drawable.dialogbackground);
 		int laypad = (int) (density * 4.0);
 		layout.setPadding(laypad * 2, laypad * 2, laypad * 2, laypad*2);
-		context.addContentView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+
+    var  params =    new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.CENTER|Gravity.CENTER_HORIZONTAL);
+
+    context.addContentView(layout, params);
+	//	context.addContentView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
 
 		ok.setOnClickListener(
 				v -> {
@@ -388,12 +402,14 @@ class GarminStatus {
 		Help.setOnClickListener(v-> helplight(tk.glucodata.R.string.garminconfig,context));
 		var Close = getbutton(context, R.string.closename);
 		var layout = new Layout(context, (l, w, h) -> {
+        /*
 			var width = GlucoseCurve.getwidth();
 			var height = GlucoseCurve.getheight();
 			if (width > w)
 				l.setX((width - w) / 2);
 			if (height > h)
 				l.setY((height - h) / 2);
+                */
 			return new int[]{w, h};
 		},new View[]{apppresent,setid}, new View[]{shortcuts, blackmode}, new View[]{Help, Close});
 
@@ -403,7 +419,11 @@ class GarminStatus {
 		setid.setOnClickListener(v -> setidview(context, alldata,layout,parentlayout));
 
 		layout.setBackgroundColor(Applic.backgroundcolor);
-		context.addContentView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+
+    var  params =    new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT,  Gravity.CENTER|Gravity.CENTER_HORIZONTAL);
+
+    context.addContentView(layout, params);
+	//	context.addContentView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
 		context.setonback(() -> {
 			EnableControls(parent,true);
 			removeContentView(layout);

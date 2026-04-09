@@ -24,7 +24,6 @@ import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
-import android.widget.CheckBox
 import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
@@ -135,7 +134,7 @@ class WatchFaceConfigActivity : ComponentActivity() {
         stateHolder.setComplication(EXTREMERIGHT_COMPLICATION_ID)
     }
 
-private var  heartratebox:CheckBox?=null
+private var  heartratebox:CheckDirectionBox?=null
 
 fun askpermission(perm:String) {
  requestPermissions(arrayOf(perm), SENSOR_REQUEST_CODE)
@@ -180,7 +179,7 @@ private val requestPermissionLauncher = registerForActivityResult(ActivityResult
     fun onClickHearRate(view: View) {
     Log.i(LOG_ID,"onClickHearRate")
       if(heartratebox==null) {
-        val box= view as CheckBox
+        val box= view as CheckDirectionBox
         val on=box.isChecked()
         if(on) {
             val bodies= Manifest.permission.BODY_SENSORS

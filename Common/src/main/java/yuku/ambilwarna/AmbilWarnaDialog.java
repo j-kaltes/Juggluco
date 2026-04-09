@@ -60,6 +60,10 @@ public interface LayoutView {
 		alpha = Color.alpha(color);
 
 		view = LayoutInflater.from(context).inflate(R.layout.ambilwarna_dialog, null);
+        view.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+//        view.setTextDirection(View.TEXT_DIRECTION_LTR);
+
+
 		viewHue = view.findViewById(R.id.ambilwarna_viewHue);
 		viewSatVal = (AmbilWarnaSquare) view.findViewById(R.id.ambilwarna_viewSatBri);
 		viewCursor = (ImageView) view.findViewById(R.id.ambilwarna_cursor);

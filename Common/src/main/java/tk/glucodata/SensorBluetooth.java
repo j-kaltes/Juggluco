@@ -396,15 +396,27 @@ final private Runnable mScanTimeoutRunnable = () -> {
 
 
 static boolean bluetoothIsEnabled() {
-if(mBluetoothAdapter!= null) {
-    return  mBluetoothAdapter.isEnabled();
+var adapt=mBluetoothAdapter;
+if(adapt!= null) {
+    return  adapt.isEnabled();
     }
    
    if(!Natives.getusebluetooth()) {
         return false;
         }
-   start(true);
-   return  mBluetoothAdapter.isEnabled();
+//   start(true);
+    if(mBluetoothManager ==null) {
+        if(blueone==null) {
+               blueone=new tk.glucodata.SensorBluetooth();
+            if(blueone==null)
+                 return false;
+              }
+        blueone.initializeBluetooth();
+        adapt=mBluetoothAdapter;
+        if(adapt!= null) 
+                return  adapt.isEnabled();
+        }
+     return false;
    }
 
 

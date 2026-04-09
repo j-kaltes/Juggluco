@@ -13,6 +13,12 @@
      <item name="android:buttonStyle">@style/mybuttonstyle</item>
     <item name="colorBackgroundFloating">@android:color/black</item>
      <item name="android:colorBackgroundFloating" tools:targetApi="23">@android:color/black</item>
+
+    <item name="android:checkboxStyle">@style/Widget.MyApp.CheckBox</item>
+
+    <!-- AppCompat / Material-inflated CheckBox -->
+    <item name="checkboxStyle">@style/Widget.MyApp.CheckBox</item>
+
     </style>
 
     <style name="Theme.appstart" parent="Theme.SplashScreen">
@@ -57,8 +63,12 @@
     </style>  -->
 
 
-
-
+<style name="Widget.MyApp.CheckBox" parent="@android:style/Widget.CompoundButton.CheckBox">
+    <item name="android:layoutDirection">locale</item>
+    <item name="android:textDirection">locale</item>
+    <item name="android:textAlignment">viewStart</item>
+    <item name="android:gravity">start|center_vertical</item>
+</style>
 
 
 </resources>

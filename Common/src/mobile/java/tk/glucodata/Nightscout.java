@@ -44,10 +44,12 @@ import android.net.Uri;
 import android.provider.DocumentsContract;
 import android.text.InputType;
 import android.text.method.PasswordTransformationMethod;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
+
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import java.io.File;
@@ -87,7 +89,7 @@ public static void show(Activity context,View parent) {
 	 editkey.setMinEms(12);
 	editkey.setText(key);
 
-       var visible = new CheckBox(context);
+       var visible = new CheckDirectionBox(context);
        //visible.setText(R.string.visible);
        visible.setButtonDrawable(R.drawable.password_visible);
 /*      visible.setMinimumWidth(0); visible.setMinWidth(0);*/
@@ -224,10 +226,11 @@ public static void show(Activity context,View parent) {
 	var errstr=Natives.nightError();
 	var errorrow=errstr.length()>0?new View[]{getlabel(context,errstr)}:null;
 	var layout=new Layout(context,(l,w,h)-> {
+        /*
 		var width= GlucoseCurve.getwidth();
 		if(width>w)
 			l.setX((width-w)/2);
-		l.setY(MainActivity.systembarTop);
+		l.setY(MainActivity.systembarTop); */
 		return new int[] {w,h};
 		},new View[]{secret,editkey,visible},new View[]{labport,portview,labinterval,intervalview} , new View[]{sslbox,privkey,chain,save},new View[]{local,httpport,treatments},errorrow,new View[]{Help,server,Close} );
 	treatments.setOnCheckedChangeListener( (buttonView,  isChecked) -> {
@@ -244,7 +247,15 @@ public static void show(Activity context,View parent) {
 	layout.setPadding(laypad*2,laypad,laypad*2,laypad);
 
 	layout.setBackgroundResource(R.drawable.dialogbackground);
-	context.addContentView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+
+    var  params =    
+            new FrameLayout.LayoutParams(
+                    WRAP_CONTENT,
+                    WRAP_CONTENT,
+                    Gravity.CENTER_HORIZONTAL);
+
+    context.addContentView(layout, params);
+//	context.addContentView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
 	Runnable[] closeproc={null};
 
         closeproc[0]=()-> {

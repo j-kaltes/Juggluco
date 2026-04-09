@@ -25,10 +25,12 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import static tk.glucodata.Layout.getMargins;
@@ -79,6 +81,7 @@ static private void askdays(MainActivity act,boolean history) {
       },new View[]{label,days},new View[]{Cancel,Ok});
         layout.setPadding(pad,pad,pad,pad);
    act.addContentView(layout,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+     layout.post(layout::requestLayout);
         layout.setBackgroundResource(R.drawable.dialogbackground);
    days.requestFocus();
    if(!smallScreen) {
@@ -153,11 +156,13 @@ static void mkstats(MainActivity act) {
       getMargins(history).rightMargin=(int)(GlucoseCurve.metrics.density*5.0);
       Button Curve = getbutton(act, R.string.summarygraph);
       Layout layout = new Layout(act, (l, w, h) -> {
+      /*
          int height = GlucoseCurve.getheight();
          int width = GlucoseCurve.getwidth();
          if(width>w) l.setX(width - w-MainActivity.systembarRight);
 
          if(height>h) l.setY((height - h -MainActivity. systembarBottom));
+         */
          return new int[]{w, h};
       }, new View[]{history,Days, Help},new View[]{Close,stats, Curve});
 
@@ -165,7 +170,12 @@ static void mkstats(MainActivity act) {
       if(!act.curve.statspresent)
          Curve.setVisibility(INVISIBLE);
       act.curve.summarybutton=Curve;
-      act.addContentView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+
+    var  params =    new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.BOTTOM| Gravity.RIGHT);
+    params.bottomMargin=MainActivity.systembarBottom;
+    params.rightMargin=MainActivity.systembarRight;
+      act.addContentView(layout, params);
+    //  act.addContentView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
     final Runnable closeonback=()-> {
              act.curve.statspresent=false;
              act.curve.summarybutton=null;
@@ -206,7 +216,7 @@ static void mkstats(MainActivity act) {
               Natives.analysedays(-1,isChecked);
               final boolean usehistory=Natives.getAnalysehistory();
               if(usehistory!=isChecked) {
-                    Applic.argToaster(act,usehistory?"No Stream values":"No History values", Toast.LENGTH_SHORT);
+                    Applic.argToaster(act,usehistory?R.string.nostreamvalues:R.string.nohistoryvalues, Toast.LENGTH_SHORT);
                     dontswitch[0]=true;
                     history.setChecked(usehistory);
                     dontswitch[0]=false;
@@ -235,7 +245,10 @@ static void mkstats(MainActivity act) {
                 webPercentiles(act,Natives.getAnalysedays(),history.isChecked());
                 }
             else {
-                    Confirm.message(act,"Web server needed","Go to left menu->Settings->Exchange data->Web server to activate webserver",()->{}); 
+                    Confirm.message(act,
+                        act.getString(R.string.titlewebserverneed),
+                        act.getString(R.string.messagewebserverneed)
+                        ,()->{}); 
                 }
             });
    }

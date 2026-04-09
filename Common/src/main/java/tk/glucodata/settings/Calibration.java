@@ -15,9 +15,11 @@ import static tk.glucodata.util.getbutton;
 import static tk.glucodata.util.getcheckbox;
 import static tk.glucodata.util.getlabel;
 
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 
@@ -33,8 +35,11 @@ public class Calibration  {
 
 
 static public void show(MainActivity act,View parent) {
-    if(parent!=null)
+    if(parent!=null)  {
            parent.setVisibility(GONE);
+           if(!isWearable)
+                    act.lightBars(!Natives.getInvertColors());
+            }
     Spinner spinner=new Spinner(act);
     avoidSpinnerDropdownFocus(spinner);
     LabelAdapter<String> numspinadapt=new LabelAdapter<String>(act, Natives.getLabels(),0);
@@ -51,7 +56,7 @@ static public void show(MainActivity act,View parent) {
    spinner.setSelection(Natives.getbloodvar());
    var bloodvar=getlabel(act,R.string.bloodvar);
     float density=GlucoseCurve.metrics.density;
-   bloodvar.setPadding((int)(density*10),0,(int)(4*density),0);
+   bloodvar.setPaddingRelative((int)(density*10),0,(int)(4*density),0);
    var close=getbutton(act, R.string.closename);
    var allvalues=getcheckbox(act,act.getString(R.string.allvalues),Natives.getAllValues());
    allvalues.setOnCheckedChangeListener( (buttonView,  isChecked)-> {
@@ -95,7 +100,7 @@ static public void show(MainActivity act,View parent) {
     layout.setBackgroundColor(backgroundcolor);
     var height=    GlucoseCurve.getheight();
 //    layout.setPadding((int)(height*.02f),(int)(height*.11f), (int)(height*.05f), (int)(height*.11f));
-    layout.setPadding((int)(height*.02f),(int)(height*.17f), (int)(height*.05f), 0);
+    layout.setPaddingRelative((int)(height*.02f),(int)(height*.17f), (int)(height*.05f), 0);
     //Layout.getMargins(allvalues);
     //pasmarg.leftMargin=(int)(height*.07f);
     var pasmarg=Layout.getMargins(allvalues);
@@ -114,18 +119,20 @@ static public void show(MainActivity act,View parent) {
   }
   else {
      layout.setBackgroundResource(R.drawable.dialogbackground);
-    layout.measure(WRAP_CONTENT, WRAP_CONTENT);
-    layout.setX( (GlucoseCurve.getwidth()-layout.getMeasuredWidth())*.5f);
-    layout.setY( (GlucoseCurve.getheight()-layout.getMeasuredHeight())*.5f);
-    act.addContentView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+    var  params =    new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.CENTER| Gravity.CENTER_HORIZONTAL);
+
+    act.addContentView(layout, params);
     int pad=(int)(density*5.0f);
     layout.setPadding(pad,pad,pad,pad);
 
     }
     final ViewGroup flayout=layout;
     MainActivity.setonback( () -> {
-      if(parent!=null)
-            parent.setVisibility(VISIBLE);
+      if(parent!=null)  {
+           parent.setVisibility(VISIBLE);
+           if(!isWearable)
+                    act.lightBars(false);
+            }
         removeContentView(flayout);
         });
 

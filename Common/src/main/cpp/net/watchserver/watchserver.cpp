@@ -1851,7 +1851,7 @@ extern int getminutes(time_t tim);
 
 
 
-static bool givereport(Getopts &opts,std::string_view hostname,bool secure,std::string_view origin,recdata *outdata) {
+static bool givereport(Getopts &opts,std::string_view hostname,uint16_t langin,bool secure,std::string_view origin,recdata *outdata) {
     bool hasmode=false;
     if(!opts.historymode){
         if(opts.calibratedhistorymode) {
@@ -1899,6 +1899,8 @@ static bool givereport(Getopts &opts,std::string_view hostname,bool secure,std::
 #define mklanguagenum2(a,b) a|b<<8
 #define mklanguagenum(lang) mklanguagenum2(lang[0],lang[1])
     decltype(auto) lang=opts.lang;
+    if(!lang)
+        lang=langin;
     char langstr[3];
     if(lang) {
         langstr[0]=lang&0xFF;
@@ -2131,7 +2133,7 @@ sizear(afterstatistics)+
     }
 
 extern bool isLargeCurve(Getopts &opts);
-static bool jugglucos(const char * const input,int size, std::string_view hostname, bool secure,std::string_view origin,recdata *outdata) {
+static bool jugglucos(const char * const input,int size, std::string_view hostname,uint16_t lang, bool secure,std::string_view origin,recdata *outdata) {
    const char *posptr=input;
     {constexpr const char summary[]="summarygraph";
     if(!strarcmp(summary,input)) {
@@ -2144,6 +2146,8 @@ static bool jugglucos(const char * const input,int size, std::string_view hostna
         time_t now=time(nullptr);
         if(opts.end>now)
             opts.end=now;
+        if(!opts.lang)
+            opts.lang=lang;
         return  givesummarygraph(opts,origin,outdata);
 //            return givereloadimage(outdata);
 //        return true;
@@ -2157,6 +2161,8 @@ static bool jugglucos(const char * const input,int size, std::string_view hostna
         if(isLargeCurve(opts)) {
             return toolarge(outdata);
             }
+        if(!opts.lang)
+            opts.lang=lang;
         return givestats(opts,origin,outdata);
         }
       }
@@ -2168,6 +2174,8 @@ static bool jugglucos(const char * const input,int size, std::string_view hostna
         if(isLargeCurve(opts)) {
             return toolarge(outdata);
             }
+        if(!opts.lang)
+            opts.lang=lang;
         return givecurve(opts,origin,outdata);
         }
       }
@@ -2177,7 +2185,7 @@ static bool jugglucos(const char * const input,int size, std::string_view hostna
         constexpr const int sumsize=(sizeof(report)-1);
         posptr+=sumsize;
         Getopts opts(posptr,size-sumsize,60*60*24*20);
-        return givereport(opts,hostname,secure,origin,outdata);
+        return givereport(opts,hostname,lang,secure,origin,outdata);
         }
     }
 
@@ -2249,6 +2257,7 @@ bool watchcommands(char *rbuf,int len,recdata *outdata,bool secure) {
    const int   api_len=sizeof(api_secret)-1;
    std::string_view hostname,origin,referer;
    const auth_t *authori=nullptr;
+   uint16_t lang=0;
    while((nl= std::find(start,ends,'\n'))!=ends) {
       if(!memcmp(start,reget,regetlen)) {
          const char *reststart=start+regetlen;
@@ -2285,18 +2294,15 @@ bool watchcommands(char *rbuf,int len,recdata *outdata,bool secure) {
                   LOGAR("Accepts json");
                   }
                else {
-/*                   constexpr const char encoding[]=R"(Accept-Encoding:)";
-                   constexpr const int encodelen= sizeof(encoding)-1;
-                  if(json&&!memcmp(start,encoding,encodelen)) {
-                     const char *type=start+encodelen;
-                     constexpr const std::string_view gzipstr="gzip";
-                     const char *hit=std::search(type,nl,gzipstr.begin(),gzipstr.end());
-                     if(hit!=nl) {
-                        gzip=true;
-                        LOGAR("Accepts gzip");
-                        }
+                   constexpr const char acceptLang[]=R"(Accept-Language: )";
+                   constexpr const int acceptLanglen= sizeof(acceptLang)-1;
+                  if(!memcmp(start,acceptLang,acceptLanglen)) {
+                     const char *name=start+acceptLanglen;
+extern std::unordered_map<uint16_t,const jugglucotext*> langmap;
+extern uint16_t choose_language( std::string_view accept_language, const std::unordered_map<uint16_t, const jugglucotext*>& langmap);
+                     lang=choose_language({name,static_cast<size_t>(nl-name-(nl[-1]==0x0D?1:0))},  langmap); 
                      }
-                  else  */{
+                  else  {
                   constexpr const char originnamestr[]="Origin: ";
                   constexpr const int originnamelen= sizeof(originnamestr)-1;
                   if(!memcmp(start,originnamestr,originnamelen)) {
@@ -2451,7 +2457,7 @@ std::string_view sgv="sgv.json";
 
       }
 if(!memcmp(jugglucocommand.data(),posptr,jugglucocommand.size())) {
-   return jugglucos(posptr+jugglucocommand.size(),toget.size()-jugglucocommand.size(),hostname,secure,origin,outdata);
+   return jugglucos(posptr+jugglucocommand.size(),toget.size()-jugglucocommand.size(),hostname,lang,secure,origin,outdata);
    }
 
 constexpr const std::string_view pebble="pebble";

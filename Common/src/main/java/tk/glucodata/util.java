@@ -28,7 +28,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.text.method.LinkMovementMethod;
 import android.widget.Button;
-import android.widget.CheckBox;
+
 import android.widget.TextView;
 
 import java.text.DateFormat;
@@ -53,13 +53,13 @@ static {
 static public String timestring(long tim) {
 		return dformat.format(new Date(tim));
 		}
-public static CheckBox getcheckbox(Context context, String label, boolean val) {
-	var check=new CheckBox(context);
+public static CheckDirectionBox getcheckbox(Context context, String label, boolean val) {
+	var check=new CheckDirectionBox(context);
 	check.setText(label);
 	check.setChecked(val);
 	return check;
 	}
-	public static CheckBox getcheckbox(Context context,int res, boolean val) {
+	public static CheckDirectionBox getcheckbox(Context context,int res, boolean val) {
 		return getcheckbox(context, context.getString(res),val);
 	}
 public static TextView getlabel(Context act, String text) {
@@ -121,14 +121,14 @@ static public Locale getlocale() {
 
 	}
 
-public static  RadioButton getradiobutton(Context context, int res) {
-         var radio=new RadioButton(context);
+public static  CheckDirectionRadio getradiobutton(Context context, int res) {
+         var radio=new CheckDirectionRadio(context);
          radio.setText(res);
          return radio;
          }
 
-public static RadioButton getradiobuttonId(Context context, int res, int id) {
-         var radio=new RadioButton(context);
+public static CheckDirectionRadio getradiobuttonId(Context context, int res, int id) {
+         var radio=new CheckDirectionRadio(context);
          radio.setText(res);
          radio.setId(id);
          return radio;

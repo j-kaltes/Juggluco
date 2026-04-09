@@ -21,6 +21,7 @@
 
 package tk.glucodata;
 import static android.view.View.GONE;
+import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static java.net.HttpURLConnection.HTTP_OK;
 
 import static tk.glucodata.Applic.isWearable;
@@ -45,11 +46,13 @@ import android.content.DialogInterface;
 import android.os.Build;
 import android.text.InputType;
 import android.text.method.PasswordTransformationMethod;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
+
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ScrollView;
 import android.widget.Space;
 import android.widget.Toast;
@@ -304,15 +307,15 @@ public static void  config(MainActivity act, View settingsview) {
     var wake=getbutton(act,act.getString(R.string.sendnow));
     wake.setOnClickListener(v-> Natives.wakeuploader());
     Button help;
-    CheckBox treatments=getcheckbox(act,R.string.sendamounts,Natives.getpostTreatments());
+    CheckDirectionBox treatments=getcheckbox(act,R.string.sendamounts,Natives.getpostTreatments());
     if(!isWearable) {
         help=getbutton(act,R.string.helpname);
         help.setOnClickListener(v-> help(R.string.NightPost,act));
         }
-    final CheckBox v3box=!isWearable?getcheckbox(act,"test V3",Natives.getnightscoutV3()):null;
+    final CheckDirectionBox v3box=!isWearable?getcheckbox(act,"test V3",Natives.getnightscoutV3()):null;
     boolean useuploader=Natives.getuseuploader();
     var activebox=getcheckbox(act,R.string.active,useuploader);
-       var visible = new CheckBox(act);
+       var visible = new CheckDirectionBox(act);
        visible.setButtonDrawable(R.drawable.password_visible);
       visible.setMinimumWidth(0);
       visible.setMinWidth(0);
@@ -341,6 +344,7 @@ public static void  config(MainActivity act, View settingsview) {
    }
       else {
     layout=new Layout(act, (lay, w, h) -> {
+/*
         var height=GlucoseCurve.getheight();
         var width=GlucoseCurve.getwidth();
                         if(w>=width||h>=height) {
@@ -351,14 +355,16 @@ public static void  config(MainActivity act, View settingsview) {
                                 };
 
             lay.setY(MainActivity.systembarTop);
+*/
                         return new int[] {w,h};}, new View[]{urllabel,url},new View[]{secretlabel,editsecret,visible},new View[]{statusview},new View[]{activebox,v3box,clear,wake},new View[]{treatments,help,cancel,save});
 
       }
-        int laypar;
         final View allview=isWearable?new ScrollView(act):layout;
+        ViewGroup.LayoutParams params;
         if(isWearable) {
             ((ScrollView)allview).addView(layout);
-            laypar=ViewGroup.LayoutParams.MATCH_PARENT;
+            int laypar=ViewGroup.LayoutParams.MATCH_PARENT;
+            params=new ViewGroup.LayoutParams(laypar,laypar);
             layout.setBackgroundColor(tk.glucodata.Applic.backgroundcolor);
            int allpad=  (int)tk.glucodata.GlucoseCurve.metrics.density*8;
             layout.setPadding(allpad,allpad,(int)(GlucoseCurve.metrics.density*12.0),allpad);
@@ -386,12 +392,15 @@ public static void  config(MainActivity act, View settingsview) {
 
                     };
                 });
-            laypar=ViewGroup.LayoutParams.WRAP_CONTENT;
+           // laypar=ViewGroup.LayoutParams.WRAP_CONTENT;
               allview.setBackgroundResource(R.drawable.dialogbackground);
                allview.setPadding(pad,pad,pad,pad);
+
+                params =    new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.CENTER_HORIZONTAL);
                }
 
-        act.addContentView(allview, new ViewGroup.LayoutParams(laypar,laypar));
+        act.addContentView(allview, params);
+        getMargins(allview).topMargin= MainActivity.systembarTop;
     Runnable closerun=()-> {
         allview.setVisibility(GONE);
         removeContentView(allview);

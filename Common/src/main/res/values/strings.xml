@@ -480,4 +480,9 @@
     <string name="clearsuccess">" Clear successful"</string>
     <string name="clearfailed">" Clear failed"</string>
     <string name="sensors">Sensors</string>
+    <string name="titlewebserverneed">Web server needed</string>
+    <string name="messagewebserverneed">Go to left menu->Settings->Exchange data->Web server to activate webserver</string>
+    <string name="nostreamvalues">No Stream values</string>
+    <string name="nohistoryvalues">No History values</string>
+
 </resources>

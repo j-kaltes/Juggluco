@@ -42,6 +42,7 @@ import static tk.glucodata.Layout.getMargins;
 
 import android.graphics.Color;
 import android.text.InputType;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -86,12 +87,13 @@ static public void show(MainActivity act,View view) {
   var  sizelabel=getlabel(act,fontstring);
   int maxfont=Math.min(height*7/10,width*4/10);
   int pad=height/14;
-  sizelabel.setPadding(pad,0,0,0);
+  sizelabel.setPaddingRelative(pad,0,0,0);
   int currentfont=Natives.getfloatingFontsize();
    if(currentfont<5||currentfont>(int)(screenheight*.8)) {
         currentfont=(int)Notify.glucosesize; 
         }
   SeekBar fontsizeview=new SeekBar(act);
+  Applic.ifRTLseekbar(fontsizeview);
   fontsizeview.setMax((int)((maxfont-5)*100.0));
   fontsizeview.setProgress((int)((currentfont-5)*100.0));
 //      var fwidth=(int)(width*0.8f);
@@ -123,7 +125,7 @@ static public void show(MainActivity act,View view) {
     sizeview.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
 
     sizeview.setText(fontsize+"");
-//    sizeview.setPadding(pad,0,0,0);
+//    sizeview.setPaddingRelative(pad,0,0,0);
   TextView.OnEditorActionListener  actlist= new TextView.OnEditorActionListener() {
                     @Override
                     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -157,7 +159,7 @@ static public void show(MainActivity act,View view) {
     var close=getbutton(act,R.string.closename);
        close.setIncludeFontPadding(false);
 
-//    close.setPadding(0,0,0,0);
+//    close.setPaddingRelative(0,0,0,0);
     var color=Natives.getfloatingbackground();
     boolean transp= Color.alpha(color)!=0xFF;
     var transparentview=getcheckbox(act,R.string.transparent,transp);
@@ -181,12 +183,12 @@ static public void show(MainActivity act,View view) {
         rewritefloating(act);
         });
 
-//    timeshow.setPadding(pad,0,0,0);
-    transparentview.setPadding(0,0,pad2,0);
+//    timeshow.setPaddingRelative(pad,0,0,0);
+    transparentview.setPaddingRelative(0,0,pad2,0);
 
     boolean[] hidden={Natives.gethidefloatinJuggluco()};
     var hide=getcheckbox(act,R.string.floatjuggluco, !hidden[0]);
-    hide.setPadding(0,0,(int)(tk.glucodata.GlucoseCurve.metrics.density*13f),0);
+    hide.setPaddingRelative(0,0,(int)(tk.glucodata.GlucoseCurve.metrics.density*13f),0);
     if(hidden[0]) {
         Floating.makefloat();
         }
@@ -198,15 +200,15 @@ static public void show(MainActivity act,View view) {
    var space2 = new Space(act); */
    
     var sidemargin=(int)(GlucoseCurve.getwidth()*0.015f);
-    getMargins(foreground).leftMargin=sidemargin;
-    getMargins(backgroundview).rightMargin=sidemargin;
-    getMargins(timeshow).leftMargin=(int)(GlucoseCurve.getwidth()*0.05f);
+    getMargins(foreground).setMarginStart(sidemargin);
+    getMargins(backgroundview).setMarginEnd(sidemargin);
+    getMargins(timeshow).setMarginEnd((int)(GlucoseCurve.getwidth()*0.05f));
 //    getMargins(hide).rightMargin=(int)(GlucoseCurve.getwidth()*0.08f);
    if(!useclose)
       close.setVisibility(GONE);
     Layout layout=new Layout(act,(l,w,h)-> { return new int[] {w,h}; },new View[]{touchable},new View[]{sizelabel},new View[]{ fontsizeview}, new View[]{foreground,backgroundview},new View[]{timeshow,hide},new View[]{transparentview},new View[]{close});
    int pad3=(int)(tk.glucodata.GlucoseCurve.metrics.density*5.0);
-    layout.setPadding(pad3,pad3,pad3,pad3*2);
+    layout.setPaddingRelative(pad3,pad3,pad3,pad3*2);
     transparentview.setOnCheckedChangeListener( (buttonView,  isChecked) -> {
         background=true;
         Floating.setbackgroundalpha(isChecked?0:0xff);
@@ -280,26 +282,22 @@ static public void showcolors(MainActivity act) {
     var ok=useclose?getbutton(act,"Ok"):null;
     if(ok!=null) {
         ok.setOnClickListener(v->MainActivity.doonback());
-        act.addContentView(ok, new ViewGroup.LayoutParams(WRAP_CONTENT,WRAP_CONTENT));
-        ok.setX((int)(width*.45));
+        //act.addContentView(ok, new ViewGroup.LayoutParams(WRAP_CONTENT,WRAP_CONTENT));
+
+        var okparams= new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.TOP|Gravity.CENTER_HORIZONTAL);
+        act.addContentView(ok, okparams);
+
+
+       // ok.setX((int)(width*.45));
         int padx=(int)(width*.04f);
         int pady=(int)(width*.015f);
-        ok.setPadding(padx,pady,padx,pady);
+        ok.setPaddingRelative(padx,pady,padx,pady);
         }
     act.setonback(()-> { 
         if(ok!=null)
             removeContentView(ok); 
         removeContentView(layout); });
 
-/*    Button noclose= act.findViewById(R.id.closeambi);
-     if(noclose!=null) {
-        noclose.setVisibility(GONE);
-        noclose.setText("");
-        Button nohelp= act.findViewById(R.id.helpambi);
-        nohelp.setText("");
-        nohelp.setVisibility(GONE);
-      }
-      */
     };
 }
 

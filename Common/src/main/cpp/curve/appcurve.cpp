@@ -23,12 +23,10 @@ static int nrmenu=0,selmenu=0;
 struct lastscan_t scantoshow={-1,nullptr}; 
 extern bool makepercetages() ;
 
+extern bool isRTL();
 extern bool hasnetwork();
 
 bool bluetoothEnabled();
-float                JCurve::getboxwidth(const float x) {
-                    return std::max((float)(dwidth-x-smallsize),dwidth*.25f);
-                    }
 #include "numdisplay.hpp"
 extern vector<NumDisplay*> numdatas;
 #include "numiter.hpp"
@@ -116,6 +114,7 @@ strsepconcat text;
     prevtouch.time = chrono::steady_clock::now();
     LOGGER("histgegs %s",ctime(&nu));
     } 
+
 strsepconcat  getsensorhelp(string_view starttext,string_view name1,string_view name2,string_view sep1,string_view sep2,string_view endstr="") {
     char starts[50],ends[50],pends[50];
 //   const sensor *sensor=sensors->getsensor(sensorindex);
@@ -125,14 +124,37 @@ strsepconcat  getsensorhelp(string_view starttext,string_view name1,string_view 
     char lastscanbuf[50],lastpollbuf[50];
     time_t lastscan=hist->getlastscantime();
     time_t lastpolltime=hist->getlastpolltime();
+    if(isRTL())  {
+        return strsepconcat(string_view(""),starttext ,name1,hist->showsensorname(),name2,
+
+
+           string_view(starts, appcurve.datestr(stime,starts)),sep2, usedtext->sensorstarted,
+
+           !hist->isLibre2()?"":sep1,
+           !hist->isLibre2()?"":string_view(lastscanbuf,appcurve.datestr(lastscan,lastscanbuf)),
+           !hist->isLibre2()?"":sep2,
+           !hist->isLibre2()?"":usedtext->lastscanned,
+
+                            (lastpolltime>0?strsepconcat(string_view(""),sep1,string_view(lastpollbuf,appcurve.datestr(lastpolltime,lastpollbuf)),sep2):""),lastpolltime>0?usedtext->laststream:"",
+
+                            ((nu<etime)?(strsepconcat(string_view(""),sep1,string_view(ends, appcurve.datestr(etime,ends)),sep2)):""),
+           nu<etime?usedtext->sensorends:"", 
+           sep1,
+           string_view(pends, appcurve.datestr(reallends,pends)),sep2, usedtext->sensorexpectedend,
+           endstr);;
+      }
+else  {
     return strsepconcat(string_view(""),starttext ,name1,hist->showsensorname(),name2,usedtext->sensorstarted,sep2,string_view(starts, appcurve.datestr(stime,starts)),!hist->isLibre2()?"":sep1,!hist->isLibre2()?"":usedtext->lastscanned,!hist->isLibre2()?"":sep2,!hist->isLibre2()?"":string_view(lastscanbuf,appcurve.datestr(lastscan,lastscanbuf)),lastpolltime>0?strsepconcat(string_view(""),sep1,usedtext->laststream,sep2):"",lastpolltime>0?string_view(lastpollbuf,appcurve.datestr(lastpolltime,lastpollbuf)):"",nu<etime?strsepconcat(string_view(""),sep1,usedtext->sensorends,sep2):"",
 nu<etime?string_view(ends, appcurve.datestr(etime,ends)):string_view("",0),sep1,usedtext->sensorexpectedend,sep2,string_view(pends, appcurve.datestr(reallends,pends)),endstr);;
+     }
     }
 #ifndef DONTTALK
+/*
 void speak() {
     LOGGER("speak %s\n",text.data());
     ::speak(text.data());
    }
+   */
 #endif
 
 };
@@ -382,12 +404,19 @@ void lognum(const Num *num) {
         }
 #endif    
 #ifndef DONTTALK
+static int verbosedate(struct tm *stm,char *buf,int maxbuf=256) {
+    const auto wdaynr= stm->tm_wday;
+    const char *dayname=usedtext->speakdaylabel[wdaynr];
+    int len=snprintf(buf,maxbuf,"%s %d ",dayname,stm->tm_mday);
+    len+=usedtext->spokenmonthlabel(stm->tm_mon,buf+len,maxbuf-len);
+    len+=snprintf(buf+len,maxbuf-len," %d",1900+stm->tm_year);
+    return len;
+//    return snprintf(buf,maxbuf,"%s %d %s %d",dayname,stm->tm_mday,usedtext->spokenmonthlabel(stm->tm_mon),1900+stm->tm_year);
+    }
 static int verbosedate(time_t tim,char *buf,int maxbuf=256) {
     struct tm tmbuf;
     struct tm *stm=localtime_r(&tim,&tmbuf);
-    const auto wdaynr= stm->tm_wday;
-    const char *dayname=usedtext->speakdaylabel[wdaynr];
-    return snprintf(buf,maxbuf,"%s %d %s %d",dayname,stm->tm_mday,usedtext->monthlabel[stm->tm_mon],1900+stm->tm_year);
+   return verbosedate(stm,buf, maxbuf);
     }
 static void speakdate(time_t tim) {
     constexpr const int maxbuf=256;
@@ -411,7 +440,7 @@ static int64_t menutap(float x,float y) {
 
         LOGGER("menuitem %d\n",item);
     //    return doehier(getmenu(x),item);
-        return appcurve.doehier(selmenu,item,x>=mid);
+        return appcurve.doehier(selmenu,item,isRTL()!=(x>=mid));
         }
     nrmenu=0;
     return -1LL;    
@@ -492,7 +521,15 @@ int64_t JCurve::screentap(float x,float y) {
                     } else {
                         const char *error=el.errortext;
                         if(error)  {
-                            speak(error);
+                            if(isRTL()) {
+                                constexpr const int maxbuf=256;
+                                char buf[maxbuf];
+                                rtl_to_logical_utf8(error, buf,maxbuf) ;
+                                speak(buf);
+                                }
+                             else  
+                                   speak(error);
+
                             return -1LL;
                             }
                     }
@@ -689,7 +726,7 @@ extern void callshowsensorinfo(const char *text,SensorGlucoseData *hist);
                         ,"").data(),hist);
 
 #ifndef DONTTALK
-                        if(speakout) gegs.speak();
+      //                  if(speakout) gegs.speak();
 #endif
 #else
                         ::prevtouch.x=tapx;
@@ -756,14 +793,16 @@ bool JCurve::nearbycalibratedhistory( const float tapx,const float tapy,  const 
 
 #ifndef WEAROS
 static int largepausedaystr(const time_t tim,char *buf) {
-        LOGAR("largepausedaystr");
-    struct tm stmbuf;
-    localtime_r(&tim,&stmbuf);
-     //return sprintf(buf,"%s %02d %s %d\n%02d:%02d",usedtext->speakdaylabel[stmbuf.tm_wday],stmbuf.tm_mday,usedtext->monthlabel[stmbuf.tm_mon],1900+stmbuf.tm_year,stmbuf.tm_hour,mktmmin(&stmbuf));
-     int len=sprintf(buf,"%s %02d %s %d\n",usedtext->speakdaylabel[stmbuf.tm_wday],stmbuf.tm_mday,usedtext->monthlabel[stmbuf.tm_mon],1900+stmbuf.tm_year);
+   LOGAR("largepausedaystr");
+   struct tm stmbuf;
+   localtime_r(&tim,&stmbuf);
+//   int len=sprintf(buf,"%s %02d %s %d\n",usedtext->speakdaylabel[stmbuf.tm_wday],stmbuf.tm_mday,usedtext->monthlabel[stmbuf.tm_mon],1900+stmbuf.tm_year);
+   int len=verbosedate(&stmbuf,buf);
+   buf[len++]='\n';
    len+=mktime(stmbuf.tm_hour,mktmmin(&stmbuf),buf+len);
    return len;
     }
+
 static void speaknum(const Num *num) {
     char buf[256];
     char *ptr=buf;
@@ -777,7 +816,7 @@ static void speaknum(const Num *num) {
 #ifndef NOLOG
     int len=
 #endif
-             largepausedaystr(num->gettime(),ptr);
+    largepausedaystr(num->gettime(),ptr);
     LOGGERN(buf,ptr-buf+len);
     speak(buf);
     }
@@ -1327,10 +1366,11 @@ constexpr const int minduration=10*60;
 
 
 void JCurve::prevscr() {
-    setstarttime(starttime-duration);
     auto minstart= minstarttime();
     if(starttime<minstart)
         setstarttime(minstart);
+    else
+        setstarttime(starttime-duration);
     }
 void  JCurve::nextscr() {
     setstarttime(starttime+duration);
@@ -1642,8 +1682,17 @@ static bool  inmenu(float x,float y) {
         *ptr++='\n';
         memcpy(ptr,str2.data(),str2.size());
         ptr[str2.size()]='\0';
-        LOGGER("speak %s\n",buf);
-        speak(buf);
+        if(isRTL()) {
+            const int maxsize=str1.size()+str2.size()+2+50;
+            char rtlbuf[maxsize];
+            rtl_to_logical_utf8(buf,rtlbuf,maxsize);
+            LOGGER("rtlspeak %s\n",rtlbuf);
+            speak(rtlbuf);
+            }
+         else {
+            LOGGER("speak %s\n",buf);
+            speak(buf);
+            }
 
         }
 
@@ -1813,26 +1862,6 @@ void    initopengl(int started)  {
      }
 
 bool openglstarted=false;
-/*extern "C" int nvgRecreateGLES2(NVGcontext* ctx) ;
-void initopengl(float small,float menu,float density,float headin) {
-    LOGAR("initopengl");
-    if(!openglstarted||genVG==nullptr||!nvgRecreateGLES2(genVG)) {
-        initopengl(openglstarted);
-        if(!openglstarted||appcurve.headsize!=headin||appcurve.smallsize!=small||appcurve.menusize!=menu||appcurve.density!=density) {
-            appcurve.setfontsize(small, menu, density, headin);
-            }
-        appcurve.invertcolorsset(settings->data()->invertcolors);
-        openglstarted=true;
-        appcurve.initfont(::genVG);    
-        }
-     else {
-        if(!openglstarted||appcurve.headsize!=headin||appcurve.smallsize!=small||appcurve.menusize!=menu||appcurve.density!=density) {
-            appcurve.setfontsize(small, menu, density, headin);
-            }
-//        nvgFontFaceId(genVG,appcurve.font);
-        LOGAR("nvgRecreateGLES2 succeeded!!");
-        }
-   } */
 
 void initopengl(float small,float menu,float density,float headin) {
     LOGAR("initopengl");
@@ -1841,7 +1870,6 @@ void initopengl(float small,float menu,float density,float headin) {
             appcurve.setfontsize(small, menu, density, headin);
             }
     appcurve.invertcolorsset(settings->data()->invertcolors);
-//    s/makeshows(\(.*\))/appcurve.show\1=settings->data()->show\1;/g
     appcurve.showcalibratedscans=settings->data()->showcalibratedscans;
     appcurve.showcalibratedstream=settings->data()->showcalibratedstream;
     appcurve.showcalibratedhistories=settings->data()->showcalibratedhistories;
@@ -1985,7 +2013,13 @@ static bool speakmenutap(float x,float y) {
     if(item>=0&&item<nrmenu) {
         LOGGER("menuitem selmenu=%d item=%d\n",selmenu,item);
         auto options=optionsmenu[selmenu];
-        const auto label=usedtext->menustr[selmenu][item];
+        std::string_view label=usedtext->menustr[selmenu][item];
+        constexpr const int maxlabelbuf=80;
+        char labelbuf[maxlabelbuf];
+        if(isRTL()) {
+            size_t len=rtl_to_logical_utf8(label.data(), labelbuf,maxlabelbuf) ;
+            label={labelbuf,len};
+            }
         if(!options||!options[item]) 
             speak(label.data());
         else {
@@ -2007,6 +2041,258 @@ static bool speakmenutap(float x,float y) {
 #endif
 
 extern bool hascalibrations;
+
+
+extern bool isRTL();
+
+void JCurve::showtext(NVGcontext* avg, time_t nu, int menu) {
+    LOGAR("showtext");
+#ifdef WEAROS
+    if(menu==1) {
+        setnowmenu(nu);
+//      setnewamount();
+    }
+#else
+    if(menu==3)
+        setnowmenu(nu);
+//  if(menu==1) setnewamount();
+#endif
+
+    const string_view *menuitem = usedtext->menustr[menu];
+    nrmenu = getmenulen(menu);
+
+    constexpr const float randsize =
+#ifdef WEAROS
+        10
+#else
+        16
+#endif
+    ;
+
+    bounds_t bounds;
+
+    const float xrand = randsize * density;
+    const float yrand = randsize * density;
+    const float menuplace = dwidth / maxmenu;
+    float x = xrand + menu * menuplace;
+    const float starty = yrand + statusbarheight;
+    float y = starty;
+
+    nvgFontFaceId(avg, menufont);
+    nvgFontSize(avg, menusize);
+
+    constexpr const char preset[]   = "✓  ";
+    constexpr const char preunset[] = "-     ";
+    constexpr int presetlen = sizeof(preset) - 1;
+
+    constexpr const char setmark[]   = "[x] ";
+    constexpr const char unsetmark[] = "[  ]";
+    constexpr int setmarklen   = sizeof(setmark) - 1;
+    constexpr int unsetmarklen = sizeof(unsetmark) - 1;
+
+    static const float prewidth =
+        getsetlen(avg, 50, 50, preset, preset + presetlen, bounds);
+    static const float optwidth =
+        getsetlen(avg, 50, 50, unsetmark, unsetmark + unsetmarklen, bounds);
+
+    const int **preoptions = hascalibrations ? preoptionsmenu[menu] : nullptr;
+    const int **options    = optionsmenu[menu];
+
+    const float prepend = preoptions ? prewidth : 0.0f;
+    const float append  = options    ? optwidth : 0.0f;
+    const float gap     = xrand * 0.5f;
+
+    // Measure main text width only.
+    nvgTextAlign(avg, NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
+
+    nvgTextBounds(avg, 0, y,
+        menuitem[0].data(), menuitem[0].data() + menuitem[0].size(),
+        bounds.array);
+
+    float maxtextwidth = bounds.xmax - bounds.xmin;
+
+    for(int i = 1; i < nrmenu; i++) {
+        y += menutextheight;
+        nvgTextBounds(avg, 0, y,
+            menuitem[i].data(), menuitem[i].data() + menuitem[i].size(),
+            bounds.array);
+
+        const float w = bounds.xmax - bounds.xmin;
+        if(w > maxtextwidth)
+            maxtextwidth = w;
+    }
+
+    float contentwidth = maxtextwidth;
+    if(preoptions)
+        contentwidth += prepend + gap;
+    if(options)
+        contentwidth += append + gap;
+
+    const float height = y + bounds.ymax - bounds.ymin;
+
+    nvgBeginPath(avg);
+    nvgFillColor(avg, *getmenucolor());
+
+    float mwidth = contentwidth + 2 * xrand;
+
+    const float minmenu =
+#ifdef WEAROS
+        80
+#else
+        128
+#endif
+        * density;
+
+    const float maxmenuwidth = 280 * density;
+
+    if(mwidth < minmenu)
+        mwidth = minmenu;
+    else if(mwidth > maxmenuwidth)
+        mwidth = maxmenuwidth;
+
+    x += (menuplace - mwidth) / 2;
+
+#ifdef WEAROS
+    if(menu == 0)
+        x += xrand;
+#endif
+
+    const float boxleft  = x - xrand;
+    const float boxright = boxleft + mwidth;
+
+    menupos = { boxleft, starty - yrand, boxright, height + yrand };
+    logmenupos();
+
+    nvgRect(avg, boxleft, starty - yrand, mwidth, height - starty + 2 * yrand);
+    nvgFill(avg);
+
+    const float contentleft  = boxleft + xrand;
+    const float contentright = boxright - xrand;
+
+    float prex  = 0.0f;
+    float textx = 0.0f;
+    float optx  = 0.0f;
+
+    int prealign  = NVG_ALIGN_LEFT  | NVG_ALIGN_TOP;
+    int textalign = NVG_ALIGN_LEFT  | NVG_ALIGN_TOP;
+    int optalign  = NVG_ALIGN_LEFT  | NVG_ALIGN_TOP;
+
+#ifdef WEAROS
+    // On the round screen, always align toward the center:
+    // left menu -> right aligned, right menu -> left aligned.
+    const bool leftmenu = ((boxleft + boxright) * 0.5f) < (dwidth * 0.5f);
+
+    if(leftmenu) {
+        // Right-aligned toward screen center.
+        textalign = NVG_ALIGN_RIGHT | NVG_ALIGN_TOP;
+        textx = contentright;
+
+        float curLeftOfText = contentright - maxtextwidth;
+
+        if(options) {
+            optalign = NVG_ALIGN_LEFT | NVG_ALIGN_TOP;
+            optx = curLeftOfText - gap - append;
+            curLeftOfText = optx;
+        }
+
+        if(preoptions) {
+            prealign = NVG_ALIGN_LEFT | NVG_ALIGN_TOP;
+            prex = curLeftOfText - gap - prepend;
+        }
+    } else {
+        // Left-aligned toward screen center.
+        textalign = NVG_ALIGN_LEFT | NVG_ALIGN_TOP;
+        textx = contentleft;
+
+        float curRightOfText = contentleft + maxtextwidth;
+
+        if(options) {
+            optalign = NVG_ALIGN_LEFT | NVG_ALIGN_TOP;
+            optx = curRightOfText + gap;
+            curRightOfText = optx + append;
+        }
+
+        if(preoptions) {
+            prealign = NVG_ALIGN_LEFT | NVG_ALIGN_TOP;
+            prex = curRightOfText + gap;
+        }
+    }
+#else
+
+    const bool rtl = isRTL();
+    if(rtl) {
+        // Reverse visual order: option | text | pre
+        if(options) {
+            optalign = NVG_ALIGN_LEFT | NVG_ALIGN_TOP;
+            optx = contentleft;
+        }
+
+        textalign = NVG_ALIGN_RIGHT | NVG_ALIGN_TOP;
+        textx = contentright - (preoptions ? (prepend + gap) : 0.0f);
+
+        if(preoptions) {
+            prealign = NVG_ALIGN_LEFT | NVG_ALIGN_TOP;
+            prex = contentright - prepend;
+        }
+    } else {
+        // Normal LTR visual order: pre | text | option
+        if(preoptions) {
+            prealign = NVG_ALIGN_LEFT | NVG_ALIGN_TOP;
+            prex = contentleft;
+        }
+
+        textalign = NVG_ALIGN_LEFT | NVG_ALIGN_TOP;
+        textx = contentleft + (preoptions ? (prepend + gap) : 0.0f);
+
+        if(options) {
+            optalign = NVG_ALIGN_LEFT | NVG_ALIGN_TOP;
+            optx = contentright - append;
+        }
+    }
+#endif
+
+    y = starty;
+    nvgFillColor(avg, *getmenuforegroundcolor());
+
+    if(preoptions) {
+        nvgTextAlign(avg, prealign);
+        for(int i = 0; i < nrmenu; i++) {
+            if(const int *optr = preoptions[i]) {
+                const char *op = *optr ? preset : preunset;
+                nvgText(avg, prex, y, op, op + presetlen);
+            }
+            y += menutextheight;
+        }
+    }
+
+    y = starty;
+    nvgTextAlign(avg, textalign);
+    for(int i = 0; i < nrmenu; i++) {
+        nvgText(avg, textx, y,
+            menuitem[i].data(),
+            menuitem[i].data() + menuitem[i].size());
+        y += menutextheight;
+    }
+
+    if(options) {
+        y = starty;
+        nvgTextAlign(avg, optalign);
+        for(int i = 0; i < nrmenu; i++) {
+            if(const int *optr = options[i]) {
+                if(*optr)
+                    nvgText(avg, optx, y, setmark, setmark + setmarklen);
+                else
+                    nvgText(avg, optx, y, unsetmark, unsetmark + unsetmarklen);
+            }
+            y += menutextheight;
+        }
+    }
+
+    LOGAR("end showtext");
+}
+
+
+/*
  void    JCurve::showtext(NVGcontext* avg ,time_t nu,int menu) {
 LOGAR("showtext");
 #ifdef WEAROS
@@ -2148,7 +2434,7 @@ constexpr        const char setmark[]="[x] ";
 
     LOGAR("end showtext");
     }
-
+*/
 void JCurve::withbottom() {
     extern const int maxmenulen;
     dheight=height-dtop-dbottom;
@@ -2464,3 +2750,13 @@ void JCurve::setsearchshow(int type) {
                 {showcalibratedhistories=true; setshowcalibratedhistories(true);}
         }
 #endif
+
+
+#include "scriptFonts.hpp"
+extern bool usedScript[];
+void loadscriptfonts(const char *name) {
+      const FontUse use{.vg=::genVG,.whitefont=appcurve.whitefont,.blackfont=appcurve.blackfont,.scriptEnabled=usedScript};
+      useFontsForName(use, name);
+      };
+
+

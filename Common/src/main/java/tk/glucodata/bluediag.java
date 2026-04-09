@@ -30,12 +30,15 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Paint;
 import android.os.Build;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.CheckBox;
+
+import android.widget.FrameLayout;
+import android.widget.GridLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -138,8 +141,10 @@ static void showsensormessage(String text,MainActivity act) {
     final var messview=getlabel(act,text);
     final var usebluetooth=getcheckbox(act, R.string.use_bluetooth,wasused);
     var layout=new Layout(act,(l,w,h)->{
+    /*
          l.setX((width-w)*.5f);
          l.setY((height-h)*.3f);
+         */
          return new int[] {w,h};
            },new View[]{messview},new View[]{usebluetooth,close});
     final int rand=(int)tk.glucodata.GlucoseCurve.metrics.density*15;
@@ -163,7 +168,9 @@ static void showsensormessage(String text,MainActivity act) {
              }
          });
 
-    act.addContentView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT,WRAP_CONTENT));
+    var  params = new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.CENTER| Gravity.CENTER_HORIZONTAL);
+//    params.topMargin=MainActivity.systembarTop;
+    act.addContentView(layout, params);
     }
 /*
 public static void showsensorinfo(String text,MainActivity act) {
@@ -222,11 +229,13 @@ void showinfo(final SuperGattCallback gatt,MainActivity act) {
     
 //    var visi=gatt.sensorgen==3?INVISIBLE:VISIBLE;
     final int rssi=gatt.readrssi;
-    if(rssi<0) {
-        rssiview.setText("Rssi = "+rssi);
-        }
-    else
-        rssiview.setText(""); 
+    if (rssi < 0) {
+        rssiview.setText("Rssi = " + rssi);
+        rssiview.setVisibility(VISIBLE);
+    } else {
+        rssiview.setText("");
+        rssiview.setVisibility(GONE);
+       }
          
     if(forget!=null)  {
 //        forget.setVisibility(visi);
@@ -288,9 +297,9 @@ TextView[] glucosetimes; TextView glucoseinfo;
 TextView bluestate;
 private BluetoothAdapter mBluetoothAdapter=null;
 //boolean setwakelock=false;
-CheckBox usebluetooth;
+CheckDirectionBox usebluetooth;
 boolean wasuse;
-CheckBox priority,streamhistory, alarmclock,disconnectsensor;
+CheckDirectionBox priority,streamhistory, alarmclock,disconnectsensor;
 Button resetbutton;
 Button divorcebutton;
 Button clear;
@@ -368,8 +377,10 @@ static void nosensors(MainActivity act) {
         streamhistory.setVisibility(GONE);
 help.setOnClickListener(v-> helplight(R.string.sensorhelp,act));
   Layout layout = new Layout(act, (l, w, h) -> {
+  /*
       l.setX((width-w)/2);
       l.setY((height-h)/2);
+      */
         int[] ret={w,h};
         return ret;
         },new View[]{bluestate},new View[]{usebluetooth},new View[]{streamhistory},new View[]{help,close});
@@ -384,10 +395,12 @@ help.setOnClickListener(v-> helplight(R.string.sensorhelp,act));
    int pads=(int)(GlucoseCurve.metrics.density*(isWearable?2:10));
    {if(doLog) {Log.i(LOG_ID,"density="+GlucoseCurve.metrics.density);};};
 
-      if(!isWearable)
-          bluestate.setPadding(pads,0,0,0);
+    if(!isWearable) bluestate.setPaddingRelative(pads,0,0,0);
    layout.setPadding(pads,pads,pads,pads);
-   act.addContentView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+
+    var  params = new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.CENTER|Gravity.CENTER_HORIZONTAL);
+//    params.topMargin=MainActivity.systembarTop;
+    act.addContentView(layout, params);
 
    }
    /*
@@ -464,7 +477,7 @@ bluediag(MainActivity act,final ArrayList<SuperGattCallback> gatts) {
     starttimeV=view.findViewById(R.id.stage);
     rssiview=view.findViewById(R.id.rssi);
     rssiview.setPadding(0,0,0,0);
-      CheckBox android13=view.findViewById(R.id.android13);
+      CheckDirectionBox android13=view.findViewById(R.id.android13);
       if(android13!=null) {
          android13.setChecked( SuperGattCallback.autoconnect);
          android13.setOnCheckedChangeListener( (buttonView,  isChecked) -> { SensorBluetooth.setAutoconnect(isChecked); });
@@ -475,7 +488,7 @@ bluediag(MainActivity act,final ArrayList<SuperGattCallback> gatts) {
     int width2=GlucoseCurve.getwidth();
     HorizontalScrollView addscroll2=null;
     if(isWearable) {
-        HorizontalScrollView scroll= view.findViewById(R.id.background);
+        HorizontalScrollView scroll= view.findViewById(R.id.hori);
         scroll.setSmoothScrollingEnabled(false);
       scroll.setVerticalScrollBarEnabled(false);
       scroll.setHorizontalScrollBarEnabled(Applic.horiScrollbar);
@@ -485,26 +498,22 @@ bluediag(MainActivity act,final ArrayList<SuperGattCallback> gatts) {
         {if(doLog) {Log.i(LOG_ID,"height="+height);};};
         }
     else {
-        measuredgrid grid=view.findViewById(R.id.grid);
+        HorizontalScrollView addscroll= view.findViewById(R.id.hori);
+        /*
+       GridLayout grid=view.findViewById(R.id.grid);
         final var addscroll= new HorizontalScrollView(act);
+//        var  horparams = new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.CENTER|Gravity.CENTER_HORIZONTAL);
+ //       addscroll.addView(grid,horparams);
         addscroll.addView(grid);
+*/
         addscroll.setSmoothScrollingEnabled(false);
        addscroll.setVerticalScrollBarEnabled(false);
         addscroll.setHorizontalScrollBarEnabled(Applic.horiScrollbar);
-        int heightU=GlucoseCurve.getheight();
-        addscroll.setMinimumHeight(heightU);
-        grid.setmeasure((l,w,h)-> {
-            int height=GlucoseCurve.getheight();
-            int width=GlucoseCurve.getwidth();
-            int y= height>h?((height-h)/2):0;
-            addscroll.setY(y);
-            int x=(width>w)?((width-w)/2):0;
-            addscroll.setX(x);
-                //    return new int[]{w,Math.min(h,height-y)};
-        }); 
+ //       int heightU=GlucoseCurve.getheight();
+//        addscroll.setMinimumHeight(heightU);
         addscroll2=addscroll;
 
-    }
+         }
 
     View showview=addscroll2!=null?addscroll2:view;
 
@@ -550,6 +559,8 @@ else {
     constatus.setTextIsSelectable(true);
     streaming=view.findViewById(R.id.streaming);
     address=view.findViewById(R.id.deviceaddress);
+    final int addressrand=(int)tk.glucodata.GlucoseCurve.metrics.density*5;
+    address.setPaddingRelative(0,0,addressrand,0);
     keytimes=new TextView[]{view.findViewById(R.id.keysuccess) , view.findViewById(R.id.keyfailure)}; keyinfo=view.findViewById(R.id.keyinfo);
     keyinfo.setTextIsSelectable(true);
     glucosetimes=new TextView[]{view.findViewById(R.id.glucosesuccess) , view.findViewById(R.id.glucosefailure)}; glucoseinfo=view.findViewById(R.id.glucoseinfo);
@@ -577,59 +588,66 @@ else {
     streamhistory.setOnCheckedChangeListener( (buttonView,  isChecked) -> Natives.setStreamHistory(isChecked) );
     alarmclock.setOnCheckedChangeListener( (buttonView,  isChecked) -> Natives.setalarmclock(isChecked) );
     divorcebutton.setOnClickListener( v -> {
-            final SuperGattCallback gatt = gatts.get(gattselected);
-            if(gatt.sensorgen!=0x50) {
-                final String message="ERROR: divorcebutton on sensorgen="+gatt.sensorgen;
-                Log.i(LOG_ID,message);
-                Applic.Toaster(message);
-                }
-            Confirm.ask(act,gatt.SerialNumber,act.getString(R.string.divorcemessage),()-> {
-                var aid=(AidexXGattCallback)gatt;
-                aid.startUnpair( new UnpairOverlayHost(act,R.string.releasingsensor),res -> {
-                    aid.finishSensor();
-                    SensorBluetooth.sensorEnded(aid.SerialNumber);
-                    act.requestRender();
-                    return true;
-                    });
-                act.doonback();
-             });
+            if(gatts!=null&&gattselected<gatts.size()) {
+                final SuperGattCallback gatt = gatts.get(gattselected);
+                if(gatt.sensorgen!=0x50) {
+                    final String message="ERROR: divorcebutton on sensorgen="+gatt.sensorgen;
+                    Log.i(LOG_ID,message);
+                    Applic.Toaster(message);
+                    }
+                Confirm.ask(act,gatt.SerialNumber,act.getString(R.string.divorcemessage),()-> {
+                    var aid=(AidexXGattCallback)gatt;
+                    aid.startUnpair( new UnpairOverlayHost(act,R.string.releasingsensor),res -> {
+                        aid.finishSensor();
+                        SensorBluetooth.sensorEnded(aid.SerialNumber);
+                        act.requestRender();
+                        return true;
+                        });
+                    act.doonback();
+                 });
+              }
       });
     clear.setOnClickListener( v -> {
-            final SuperGattCallback gatt = gatts.get(gattselected);
-            if(gatt.sensorgen!=0x50) {
-                final String message="ERROR: clear on sensorgen="+gatt.sensorgen;
-                Log.i(LOG_ID,message);
-                Applic.Toaster(message);
-                }
-            Confirm.ask(act,gatt.SerialNumber,act.getString(R.string.clearmessage),()-> {
-                var aid=(AidexXGattCallback)gatt;
-                aid.startClear( new UnpairOverlayHost(act,R.string.clearingmemory),res -> {
-                    act.requestRender();
-                    return true;
-                    });
-                act.doonback();
-             });
+            if(gatts!=null&&gattselected<gatts.size()) {
+                final SuperGattCallback gatt = gatts.get(gattselected);
+                if(gatt.sensorgen!=0x50) {
+                    final String message="ERROR: clear on sensorgen="+gatt.sensorgen;
+                    Log.i(LOG_ID,message);
+                    Applic.Toaster(message);
+                    }
+                Confirm.ask(act,gatt.SerialNumber,act.getString(R.string.clearmessage),()-> {
+                    var aid=(AidexXGattCallback)gatt;
+                    aid.startClear( new UnpairOverlayHost(act,R.string.clearingmemory),res -> {
+                        act.requestRender();
+                        return true;
+                        });
+                    act.doonback();
+                    }
+                  );
+             }
       });
     resetbutton.setOnClickListener( v -> {
             Confirm.ask(act,act.getString(R.string.resettitle),act.getString(R.string.resetmessage),()-> {
-                final SuperGattCallback gatt = gatts.get(gattselected);
-                if(gatt.sensorgen!=0x10) {
-                    final String message="ERROR: resetbutton on sensorgen="+gatt.sensorgen;
-                    Log.i(LOG_ID,message);
-                    Applic.Toaster(message);
-                    return;
+                if(gatts!=null&&gattselected<gatts.size()) {
+                    final SuperGattCallback gatt = gatts.get(gattselected);
+                    if(gatt.sensorgen!=0x10) {
+                        final String message="ERROR: resetbutton on sensorgen="+gatt.sensorgen;
+                        Log.i(LOG_ID,message);
+                        Applic.Toaster(message);
+                        return;
+                        }
+                     final int subtype=Natives.getSiSubtype(gatt.dataptr);
+                     if(subtype!=3) {
+                        final String message="ERROR: resetbutton on "+subtype;
+                        Log.i(LOG_ID,message);
+                        Applic.Toaster(message);
+                        return;
+                        }
+                    Log.i(LOG_ID,"resetbutton");
+                    Natives.setResetSibionics2(gatt.dataptr,true);
+    //                Log.showbytes("Reset Bytes",Natives.getSIResetBytes());
+                    Applic.Toaster("Resetted ");
                     }
-                 final int subtype=Natives.getSiSubtype(gatt.dataptr);
-                 if(subtype!=3) {
-                    final String message="ERROR: resetbutton on "+subtype;
-                    Log.i(LOG_ID,message);
-                    Applic.Toaster(message);
-                    return;
-                    }
-                Log.i(LOG_ID,"resetbutton");
-                Natives.setResetSibionics2(gatt.dataptr,true);
-//                Log.showbytes("Reset Bytes",Natives.getSIResetBytes());
-                Applic.Toaster("Resetted ");
                 });
             });
 
@@ -727,7 +745,17 @@ else {
 
       view.setBackgroundColor( Applic.backgroundcolor);
     show(act,showview);
-    act.addContentView(showview, new ViewGroup.LayoutParams( WRAP_CONTENT, WRAP_CONTENT));
+   // act.addContentView(showview, new ViewGroup.LayoutParams( WRAP_CONTENT, WRAP_CONTENT));
+
+
+//    var  params = new FrameLayout.LayoutParams( MATCH_PARENT, MATCH_PARENT, Gravity.CENTER|Gravity.CENTER_HORIZONTAL);
+    var  params = new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.CENTER|Gravity.CENTER_HORIZONTAL);
+   params.topMargin=(int)(MainActivity.systembarTop*.3f);
+   params.bottomMargin=(int)(MainActivity.systembarBottom*.3f);
+   params.leftMargin=(int)(MainActivity.systembarLeft*.3f);
+   params.rightMargin=(int)(MainActivity.systembarRight*.3f);
+    act.addContentView(showview, params);
+
     var scheduled=Applic.scheduler.scheduleAtFixedRate( ()-> {
        {if(doLog) {Log.i(LOG_ID,"scheduled");};};
         act.runOnUiThread( ()-> { 

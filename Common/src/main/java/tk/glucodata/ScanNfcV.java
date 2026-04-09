@@ -36,7 +36,7 @@ import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
+
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -430,7 +430,7 @@ static private void newsensor(Activity act,String text,String name) {
        if(!isWearable)
                tv.setTextSize(TypedValue.COMPLEX_UNIT_PX,Applic.largefontsize);
 
-        CheckBox calBox = new CheckBox(act);
+        CheckDirectionBox calBox = new CheckDirectionBox(act);
         calBox.setPadding(0,pad,0,pad);
         long timedata=Natives.getSensorEndData(name);
         final var endtime=   (timedata&0xFFFFFFFFL)*1000L;

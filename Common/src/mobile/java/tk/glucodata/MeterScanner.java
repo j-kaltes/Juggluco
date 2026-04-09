@@ -150,9 +150,6 @@ private void addDevice(BluetoothDevice device) {
                 Log.i(LOG_ID,"addDevice skip: no name");
                 return;
                 }
-                /*
-        boolean isaidexx=name.startsWith(AidexXGattCallback.startAidexX);
-        if(takeAidexX ^ !isaidexx) */
 
          {
                 if(deviceNames.contains(name)) {
@@ -166,9 +163,6 @@ private void addDevice(BluetoothDevice device) {
                     if(adapt!=null)
                         adapt.notifyDataSetChanged();
                    }
-/*        else {
-            Log.i(LOG_ID,"addDevice: takeAidexX="+takeAidexX+" isAidexX="+isaidexx);
-            } */
         }
 
 

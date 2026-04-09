@@ -572,14 +572,23 @@ if(retrywrite)  {
 
 
        // public boolean regionMatches(int toffset, String other, int ooffset, int len)
-public static final String  startAidexX="AiDEX X-";
+private static final String  startAidexX="AiDEX X-";
+private static final String  startLinX="LinX-";
+
+
+public static boolean hasDeviceName(String deviceName) {
+       return deviceName.startsWith(AidexXGattCallback.startLinX)||deviceName.startsWith(AidexXGattCallback.startAidexX) ;
+       }
+
     @Override
     public boolean matchDeviceName(String nameDevice, String address) {
+    /*
         if(!nameDevice.startsWith(startAidexX)) {
             Log.i(LOG_ID,"not Aidex X: "+nameDevice);
             return false;
             }
-        if(!nameDevice.regionMatches(8,SerialNumber, SerialNumber.length()-10, 10)) {
+            */
+        if(!nameDevice.regionMatches(nameDevice.length()-10,SerialNumber, SerialNumber.length()-10, 10)) {
             Log.i(LOG_ID,"Doesnt end with "+SerialNumber+" "+nameDevice);
             return false;
             }

@@ -895,6 +895,7 @@ constexpr const NVGcolor cols[]={orange,yellow,mediumseagreen,redinit,brown};
     }
 
 
+extern bool isRTL();
 void stats::otherstats(NVGcontext* vg,JCurve &jcurve,const jugglucotext *usedtext) {
      auto  statusbarleft=  jcurve.statusbarleft;
      auto  statusbarright=  jcurve.statusbarright;
@@ -924,8 +925,17 @@ void stats::otherstats(NVGcontext* vg,JCurve &jcurve,const jugglucotext *usedtex
 
     const int avlen= usedtext->averageglucose.size();
     char meanstr[avlen+5];
-    memcpy(meanstr, usedtext->averageglucose.data(),avlen);
-    int len=avlen+snprintf(meanstr+avlen,5,jcurve.gformat,::gconvert(mean*10,jcurve.glunit));
+    int len;
+    if(isRTL()) {
+          int numlen=snprintf(meanstr,5,jcurve.gformat,::gconvert(mean*10,jcurve.glunit));
+          memcpy(meanstr+numlen, usedtext->averageglucose.data(),avlen);
+          len=avlen+numlen;
+        }
+    else {
+            memcpy(meanstr, usedtext->averageglucose.data(),avlen);
+            len=avlen+snprintf(meanstr+avlen,5,jcurve.gformat,::gconvert(mean*10,jcurve.glunit));
+            }
+
     nvgText(vg, xpos,ypos,meanstr,meanstr+len);
     ypos+=rowheight;
     len=snprintf(buf,maxbuf,usedtext->EstimatedA1C, EA1Cper, EA1Cmmol);

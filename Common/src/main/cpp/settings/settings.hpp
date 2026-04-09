@@ -410,6 +410,11 @@ struct Tings {
     uint32_t reserved4;
     GlucoseMeter  glucosemeters[maxglucosemeters];
 
+
+
+
+
+
 template <typename Self>
 auto *getGlucoseMeter(this Self&& self,int index)  {
     decltype(&self.glucosemeters[0]) meter=nullptr;

@@ -96,7 +96,7 @@ jugglucotext rutext {
 	.SD="SD: %.2f",
 	.glucose_variability="Изменчивость уровня ГК: %.1f%%",
      .menustr0={
-		"System UI        ",
+		"System UI",
 		"Меню",
 		"Часы",
 		"Датчик",
@@ -120,10 +120,10 @@ jugglucotext rutext {
 		"Статистика",
 #ifdef INJUGGLUCO
 		"Озвучка",
-		"Плав. глюк.        "
+		"Плав. глюк."
 		},
 	.menustr2= {"Последний скан",
-	"Сканирование        ",
+	"Сканирование",
 	"Поток",
 	"История",
 	"Записи",
@@ -140,14 +140,14 @@ jugglucotext rutext {
 #else
  .amount="Значение",
  .menustr0= {
-	"            Зеркало",
+	"Зеркало",
 	"Датчик",
 	"Дисплей",
         "Настройки",
 	"Стоп тревога" },
-.menustr2= {"К дате  ",
+.menustr2= {"К дате",
 hourminstr,
-"День назад                ",
+"День назад",
 rutext.amount},
 #endif
 

@@ -28,11 +28,13 @@ import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.os.Build;
 import android.text.InputType;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
+
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ScrollView;
 import android.widget.Space;
 import android.widget.TextView;
@@ -67,7 +69,7 @@ public class RingTones {
  int duration,susp;
 // Ringtone ringtone;
  TextView name;
-CheckBox flashview;
+CheckDirectionBox flashview;
 //Button permission;
 private static final String LOG_ID="RingTones";
 
@@ -130,7 +132,7 @@ static private void subEnableControls(View view,boolean enable){
 		 name=getlabel(context,gettitle(context,uri,kind));
 		final int rand=Math.round(5*GlucoseCurve.metrics.density);
 		name.setPadding(rand,0,rand,0);
-		CheckBox def=new CheckBox(context);
+		CheckDirectionBox def=new CheckDirectionBox(context);
 		def.setText(R.string.defaultname);
 		final int minheight=GlucoseCurve.dpToPx(48);
 		def.setMinimumHeight(minheight);
@@ -182,23 +184,23 @@ static private void subEnableControls(View view,boolean enable){
 	duredit.setPadding(duredit.getPaddingLeft(),duredit.getPaddingTop(),duredit.getPaddingRight()+(int)(GlucoseCurve.metrics.density*20),duredit.getPaddingBottom());
 	 TextView waitlabel=getlabel(context,R.string.minuteddeactivated);
 		waitlabel.setPadding(rand*2,0,0,0);
-	 flashview=new CheckBox(context);
+	 flashview=new CheckDirectionBox(context);
 	 //permission=new Button(context);
 
 	final boolean hasflash= !isWearable && Flash.hasFlash(context);
-	CheckBox sound=new CheckBox(context);
+	CheckDirectionBox sound=new CheckDirectionBox(context);
 	sound.setText(R.string.soundname);
 	final boolean hassound= Natives.alarmhassound(kind);
 	sound.setChecked(hassound);
 
-	CheckBox vibration=new CheckBox(context);
+	CheckDirectionBox vibration=new CheckDirectionBox(context);
 	vibration.setPadding(0,0,rand*2,0);
 
 	vibration.setText(R.string.vibrationname);
 	final boolean hasvibration= Natives.alarmhasvibration(kind);
 	vibration.setChecked(hasvibration);
 
-	CheckBox disturb=new CheckBox(context);
+	CheckDirectionBox disturb=new CheckDirectionBox(context);
 	if(!isWearable) {
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -320,27 +322,32 @@ View[] durviews;
 	ScrollView scroll=new ScrollView(context);
 	lay=scroll;
 		Layout layout = new Layout(context, (l, w, h) -> {
+        /*
 		if(!isWearable) {
 			final var width=GlucoseCurve.getwidth();
 			if(width>w) {
 				lay.setX((width-w)/2);
 				}
 			}
+            */
 			return new int[]{w,h};}, views);
 		scroll.addView(layout);
+    ViewGroup.LayoutParams params;
 	if(isWearable)  {
 		lay.setBackgroundColor(tk.glucodata.Applic.backgroundcolor);
 //		 int laypad=(int)(GlucoseCurve.metrics.density*(hasname==1?20.0f:35.0f));
 		 int laypad=(int)(GlucoseCurve.metrics.density*14);
 		final int sidepad=(int)(GlucoseCurve.metrics.density*10.0f);
 		 layout.setPadding((int)(GlucoseCurve.metrics.density*13.0f),(int)(GlucoseCurve.metrics.density*7.0f),(int)(GlucoseCurve.metrics.density*13.0f),laypad);
+        params=new ViewGroup.LayoutParams(MATCH_PARENT,MATCH_PARENT);
 		 }
 	else {
 		lay.setBackgroundResource(R.drawable.dialogbackground);
 		 int laypad=(int)(GlucoseCurve.metrics.density*4.0f);
 		 lay.setPadding(laypad,0,laypad,laypad);
+          params =    new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.CENTER_HORIZONTAL);
 		 }
-	 context.addContentView(lay, isWearable?new ViewGroup.LayoutParams(MATCH_PARENT,MATCH_PARENT):new ViewGroup.LayoutParams(WRAP_CONTENT,WRAP_CONTENT));
+	 context.addContentView(lay, params);
 		Save.setOnClickListener(v->{
 			Notify.stopalarm();
 			try {

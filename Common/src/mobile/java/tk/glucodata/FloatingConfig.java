@@ -47,7 +47,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
-import android.widget.CheckBox;
+
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -105,6 +105,7 @@ static public void show(MainActivity act,View parent) {
                 }
 
    SeekBar fontsizeview=new SeekBar(act);
+     Applic.ifRTLseekbar(fontsizeview);
       fontsizeview.setMax((int)((maxfont-5)*100.0));
       fontsizeview.setProgress((int)((currentfont-5)*100.0));
 //      var fwidth=(int)(width*0.8f);
@@ -186,7 +187,7 @@ static public void show(MainActivity act,View parent) {
 //    CompoundButton foregroundswitch;
 
     Layout layout;
-    CheckBox floatglucose=new CheckBox(act);
+    CheckDirectionBox floatglucose=new CheckDirectionBox(act);
     floatglucose.setText(R.string.active);
     floatglucose.setChecked(Natives.getfloatglucose());
     floatglucose.setOnCheckedChangeListener( (buttonView,  isChecked) -> Floating.setfloatglucose(act,isChecked) ) ;
@@ -194,8 +195,8 @@ static public void show(MainActivity act,View parent) {
     Help.setOnClickListener(v-> help.help(R.string.floatingconfig,act));
 
 
-    var    foregroundbutton = new RadioButton(act);
-      var   backgroundbutton = new RadioButton(act);
+    var    foregroundbutton = new CheckDirectionRadio(act);
+      var   backgroundbutton = new CheckDirectionRadio(act);
         foregroundbutton.setText(R.string.foreground);
         backgroundbutton.setText(R.string.background);
     foregroundbutton.setChecked(!background);
@@ -203,8 +204,6 @@ static public void show(MainActivity act,View parent) {
     backgroundbutton.setTextColor(WHITE);
     foregroundbutton.setTextColor(WHITE);
 
-//    getMargins(backgroundbutton).rightMargin=getMargins(foregroundbutton).leftMargin=(int)(width*0.1);
-//    backgroundbutton.setChecked(background);
 
     var timeshow=getcheckbox(act,R.string.time,Floating.showtime);
     timeshow.setOnCheckedChangeListener( (buttonView,  isChecked) -> {
@@ -229,11 +228,21 @@ static public void show(MainActivity act,View parent) {
     view.setLayoutParams( new ViewGroup.LayoutParams(MATCH_PARENT,MATCH_PARENT));
    final var density= tk.glucodata.GlucoseCurve.metrics.density;
    view.setPadding(0,MainActivity.systembarTop+ (int)(density*10) ,0,0);
-   getMargins(close).rightMargin=(int)(GlucoseCurve.metrics.density*20.0f);
-   leftlayout.setPadding(0,MainActivity.systembarTop/2+ (int)(density*5) ,0,0);
-     layout=new Layout(act, new View[]{view,leftlayout});
+   getMargins(close).setMarginEnd((int)(GlucoseCurve.metrics.density*20.0f));
+   leftlayout.setPaddingRelative(0,MainActivity.systembarTop/2+ (int)(density*5) ,0,0);
+    layout=new Layout(act, new Object[]{new View[]{view,leftlayout}});
+    int addright,addleft;
+    if(MainActivity.rtl&&Applic.supportsRtl) {
+        addright=10;
+        addleft=12;
+        
+        } 
+    else {
+        addright=12;
+        addleft=10;
+        }
 
-      layout.setPadding(MainActivity.systembarLeft+(int)(density*10),0,MainActivity.systembarRight+(int)(density*12),MainActivity.systembarBottom+(int)(density*5));
+    layout.setPadding(MainActivity.systembarLeft+(int)(density*addleft),0,MainActivity.systembarRight+(int)(density*addright),MainActivity.systembarBottom+(int)(density*5));
     layout.setBackgroundColor(Applic.backgroundcolor);
     transparant.setOnCheckedChangeListener( (buttonView,  isChecked) -> {
         Floating.setbackgroundalpha(isChecked?0:0xff);

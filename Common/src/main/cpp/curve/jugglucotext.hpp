@@ -23,10 +23,12 @@
 #pragma once
 #include "config.h"
 #include  <utility>
+#include <string.h>
 #include <string_view>
 #include <span>
 #include <stdint.h>
 #include <unordered_map>
+#include "settings/rtl_label_converter.h"
 
 #define INJUGGLUCO JUGGLUCO_APP
 
@@ -145,6 +147,18 @@ std::string_view statisticsName() const {
     #endif
     }
 #endif
+int spokenmonthlabeldefault(int month,char *buf,int max) const {
+        int len=strlen(monthlabel[month]);
+        memcpy(buf,monthlabel[month],len+1);
+        return len;
+        }
+int spokenmonthlabelrtl(int month,char *buf,int max) const {
+        return  rtl_to_logical_utf8(monthlabel[month], buf,max) ;
+        }
+int (jugglucotext::*spokenmonthlabelptr)(int month,char *buf,int max) const = &jugglucotext::spokenmonthlabeldefault;
+int spokenmonthlabel(int month,char *buf,int max) const {
+        return (this->*spokenmonthlabelptr)(month,buf, max);
+        }
 };
 
 extern const jugglucotext *usedtext;
@@ -153,8 +167,9 @@ extern const jugglucotext engtext;
 #define mklanguagenum2(a,b) a|b<<8
 #define mklanguagenum(lang) mklanguagenum2(lang[0],lang[1])
 #define mklanguagenumlow(lang) mklanguagenum2(tolower(lang[0]),tolower(lang[1]))
+extern std::unordered_map<uint16_t,const jugglucotext*> langmap;
+inline   std::unordered_map<uint16_t,const jugglucotext*> langmap;
 class language {
-    inline static std::unordered_map<uint16_t,const jugglucotext*> langmap;
     public:
     language(const char *name,const jugglucotext *data) {
          langmap.insert({mklanguagenum(name),data});

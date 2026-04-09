@@ -37,8 +37,10 @@ import static android.content.pm.PackageManager.DONT_KILL_APP;
 import android.app.Application;
 import android.content.ComponentName;
 import android.content.pm.PackageManager;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 class Watch {
 static private final boolean TestBridge=BuildConfig.DEBUG;
@@ -169,10 +171,12 @@ static public void show(MainActivity context) {
         });
 
     var layout=new Layout(context,(l,w,h)-> {
+    /*
         var width= GlucoseCurve.getwidth();
         if(width>w)
             l.setX((width-w)/2);
       l.setY(MainActivity.systembarTop);
+*/
         return new int[] {w,h};
         },mibandrow,new View[] {notify,separate},new View[]{wearbox,wearossettings},new View[]{server,serverconfig},new View[]{kerfstok,status},new View[]{Help,Ok} );
     float density=GlucoseCurve.metrics.density;
@@ -180,7 +184,13 @@ static public void show(MainActivity context) {
     layout.setPadding(laypad*2,laypad*2,laypad*2,laypad);
 
     layout.setBackgroundColor( Applic.backgroundcolor);
-    context.addContentView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+    var  params =    
+            new FrameLayout.LayoutParams(
+                    WRAP_CONTENT,
+                    WRAP_CONTENT,
+                    Gravity.CENTER_HORIZONTAL| Gravity.CENTER);
+
+    context.addContentView(layout, params);
     status.setOnClickListener(v->{
             new GarminStatus(context,Applic.app.numdata,layout);
             });

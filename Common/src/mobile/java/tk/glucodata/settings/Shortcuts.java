@@ -26,11 +26,13 @@ import android.content.Context;
 import android.text.InputType;
 import android.text.method.DigitsKeyListener;
 
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -100,7 +102,7 @@ void addrow(Context act,int index) {
 		String values =  (String)el.get(1);
 		TextView value=getlabel(act,values);
 		value.setMinEms(4);
-		shortlist.addrow(new View[]{lab,value});
+		shortlist.addrow(false,new View[]{lab,value});
 		}
 private static final String LOG_ID="Shortcuts";
 void mkshortlist(Context act) {
@@ -108,10 +110,7 @@ void mkshortlist(Context act) {
 	shortcuts= Natives.getShortcuts();
 	 int len=shortcuts.size();
 	 {if(doLog) {Log.i(LOG_ID,"mkshortlist "+len);};};
-	 shortlist= new Layout(act,(l, w, h)->{
-
-			return new int[] {w,h};
-	 }, len);
+	 shortlist= new Layout(act,(l, w, h)->{ return new int[] {w,h}; }, len);
 	 for(int i=0;i<len;i++) {
 	 	addrow(act,i);
 	 	}
@@ -169,10 +168,10 @@ public void mkshortlistview(MainActivity act) {
      var top= MainActivity.systembarTop*3/4;
      shortlist.setPadding(0,top,0,0);
 		scroll.addView(shortlist);
-		Layout butview= new Layout(act,new View[]{add},new View[]{help},new View[]{cancel},new View[]{ok});
+		Layout butview= new Layout(act,false,new View[]{add},new View[]{help},new View[]{cancel},new View[]{ok});
 		butview.setLayoutParams(new ViewGroup.LayoutParams(   ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
    butview.setPadding(0,top,0,0);
-		shortlistview= new Layout(act,(a,w,h)->{
+		shortlistview= new Layout(act,false,(a,w,h)->{
 			hideSystemUI(act);
 			return new int[] {w,h}; },new View[]{scroll,butview});
    shortlistview.setPadding(MainActivity.systembarLeft,0,MainActivity.systembarRight,MainActivity.systembarBottom);
@@ -260,13 +259,14 @@ if(shortedit==null) {
 	cancel.setOnClickListener(v->{ 
 			act.doonback();
 			 }); 
-	shortedit=new Layout(act, (l, w, h) -> {
+	shortedit=new Layout(act, false,(l, w, h) -> {
 			hideSystemUI(act);
+                        /*
 			var width= getscreenwidth(act);
 			if(width>w)
 			    l.setX(( width- w)* 0.7f);
-          l.setY(MainActivity.systembarTop);
-
+                         l.setY(MainActivity.systembarTop);
+*/
 			return new int[] {w,h};
 			    }, new View[] {label,labedit},new View[] {value,valedit},new View[] {delete,cancel,save});
 //	shortedit.setBackgroundColor(tk.glucodata.Applic.backgroundcolor);
@@ -274,7 +274,12 @@ if(shortedit==null) {
 	      shortedit.setBackgroundResource(R.drawable.dialogbackground);
 	   int pad=(int)(tk.glucodata.GlucoseCurve.metrics.density*5.0);
 	   shortedit.setPadding(pad,0,pad,0);
-	act.addContentView(shortedit, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+
+    //var  params =    new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.CENTER|Gravity.CENTER_HORIZONTAL);
+        var params= new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.TOP| Gravity.CENTER_HORIZONTAL);
+        params.topMargin=MainActivity.systembarTop;
+//        params.leftMargin=MainActivity.systembarLeft;
+	act.addContentView(shortedit, params);
     }
     else {
         shortedit.setVisibility(VISIBLE);

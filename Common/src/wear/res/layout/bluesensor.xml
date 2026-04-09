@@ -9,7 +9,7 @@
     android:scrollbars="horizontal"
      android:fadeScrollbars="false"
     android:scrollbarStyle="insideInset"
-   android:id="@+id/background" >
+   android:id="@+id/hori" >
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/help"
@@ -23,17 +23,17 @@
 
 
         <android.widget.GridLayout
-            android:id="@+id/grid"
+            android:id="@+id/background"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:columnCount="13"
             android:paddingTop="18dp"
             android:paddingBottom="30dp"
-            android:paddingLeft="30dp"
-            android:paddingRight="8dp"
+            android:paddingStart="30dp"
+            android:paddingEnd="8dp"
 
             >
-            <CheckBox
+            <tk.glucodata.CheckDirectionBox
                 android:id="@+id/usebluetooth"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -47,11 +47,12 @@
                 android:layout_height="wrap_content"
                 android:layout_column="3"
                 android:layout_columnSpan="2"
-            android:paddingLeft="5dp"
+            android:paddingStart="0dp"
+            android:paddingEnd="5dp"
                 android:layout_row="0"
                 android:text="" />
 
-            <CheckBox
+            <tk.glucodata.CheckDirectionBox
                 android:id="@+id/streamhistory"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -59,7 +60,7 @@
                 android:layout_columnSpan="2"
                 android:layout_row="0"
                 android:text="@string/streamhistory" />
-            <CheckBox
+            <tk.glucodata.CheckDirectionBox
                 android:id="@+id/alarmclock"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -89,7 +90,7 @@
 
 
 
-            <CheckBox
+            <tk.glucodata.CheckDirectionBox
                 android:id="@+id/priority"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -97,7 +98,7 @@
                 android:layout_columnSpan="1"
                 android:layout_row="0"
                 android:text="@string/high_priority" />
-            <CheckBox
+            <tk.glucodata.CheckDirectionBox
                 android:id="@+id/disconnectsensor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -105,7 +106,7 @@
                 android:layout_columnSpan="1"
                 android:layout_row="0"
                 android:text="@string/disconnectsensor" />
-            <CheckBox
+            <tk.glucodata.CheckDirectionBox
                 android:id="@+id/android13"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -186,8 +187,8 @@
                 android:layout_column="2"
                 android:layout_columnSpan="2"
                 android:layout_row="3"
-		    android:paddingLeft="8dp"
-		    android:paddingRight="8dp"
+		    android:paddingStart="8dp"
+		    android:paddingEnd="8dp"
                 android:text="@string/last_success" />
 
 
@@ -198,8 +199,8 @@
                 android:layout_column="4"
                 android:layout_columnSpan="2"
                 android:layout_row="3"
-		    android:paddingLeft="8dp"
-		    android:paddingRight="8dp"
+		    android:paddingStart="8dp"
+		    android:paddingEnd="8dp"
                 android:text="@string/last_failure" />
 
 
@@ -209,8 +210,8 @@
                 android:layout_column="6"
                 android:layout_columnSpan="2"
                 android:layout_row="3"
-		    android:paddingLeft="8dp"
-		    android:paddingRight="8dp"
+		    android:paddingStart="8dp"
+		    android:paddingEnd="8dp"
                 android:text="@string/failure_info" />
             <Button
                 android:id="@+id/info"
@@ -226,7 +227,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
 
-		    android:paddingRight="8dp"
+		    android:paddingEnd="8dp"
                 android:layout_column="0"
                 android:layout_columnSpan="2"
                 android:layout_row="4"
@@ -236,8 +237,8 @@
                 android:id="@+id/consuccess"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-		    android:paddingLeft="8dp"
-		    android:paddingRight="8dp"
+		    android:paddingStart="8dp"
+		    android:paddingEnd="8dp"
                 android:layout_column="2"
                 android:layout_columnSpan="2"
                 android:layout_row="4" />
@@ -246,8 +247,8 @@
                 android:id="@+id/confail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-		    android:paddingLeft="8dp"
-		    android:paddingRight="8dp"
+		    android:paddingStart="8dp"
+		    android:paddingEnd="8dp"
                 android:layout_column="4"
                 android:layout_columnSpan="2"
                 android:layout_row="4" />
@@ -255,7 +256,7 @@
             <TextView
                 android:id="@+id/constatus"
                 android:layout_width="wrap_content"
-		    android:paddingLeft="8dp"
+		    android:paddingStart="8dp"
                 android:layout_height="wrap_content"
                 android:layout_column="6"
                 android:layout_columnSpan="2"
@@ -266,7 +267,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_column="0"
-		    android:paddingRight="8dp"
+		    android:paddingEnd="8dp"
                 android:layout_columnSpan="2"
                 android:layout_row="5"
                 android:text="@string/unlock_key" />
@@ -274,8 +275,8 @@
             <TextView
                 android:id="@+id/keysuccess"
                 android:layout_width="wrap_content"
-		    android:paddingLeft="8dp"
-		    android:paddingRight="8dp"
+		    android:paddingStart="8dp"
+		    android:paddingEnd="8dp"
                 android:layout_height="wrap_content"
                 android:layout_row="5"
                 android:layout_columnSpan="2" />
@@ -284,8 +285,8 @@
             <TextView
                 android:id="@+id/keyfailure"
                 android:layout_width="wrap_content"
-		    android:paddingLeft="8dp"
-		    android:paddingRight="8dp"
+		    android:paddingStart="8dp"
+		    android:paddingEnd="8dp"
                 android:layout_height="wrap_content"
                 android:layout_row="5"
                 android:layout_columnSpan="2" />
@@ -293,8 +294,8 @@
             <TextView
                 android:id="@+id/keyinfo"
                 android:layout_width="wrap_content"
-		    android:paddingLeft="8dp"
-		    android:paddingRight="8dp"
+		    android:paddingStart="8dp"
+		    android:paddingEnd="8dp"
                 android:layout_height="wrap_content"
                 android:layout_row="5"
                 android:layout_columnSpan="2" />
@@ -304,7 +305,7 @@
                 android:layout_height="wrap_content"
                 android:layout_column="0"
                 android:layout_columnSpan="2"
-		    android:paddingRight="8dp"
+		    android:paddingEnd="8dp"
                 android:layout_row="6"
                 android:text="@string/glucose_value" />
 
@@ -314,8 +315,8 @@
                 android:layout_height="wrap_content"
                 android:layout_column="2"
                 android:layout_row="6"
-		    android:paddingLeft="8dp"
-		    android:paddingRight="8dp"
+		    android:paddingStart="8dp"
+		    android:paddingEnd="8dp"
                 android:layout_columnSpan="2" />
 
             <TextView
@@ -324,8 +325,8 @@
                 android:layout_height="wrap_content"
                 android:layout_column="4"
                 android:layout_row="6"
-		    android:paddingLeft="8dp"
-		    android:paddingRight="8dp"
+		    android:paddingStart="8dp"
+		    android:paddingEnd="8dp"
                 android:layout_columnSpan="2" />
 
             <TextView
@@ -334,7 +335,7 @@
                 android:layout_height="wrap_content"
                 android:layout_column="6"
                 android:layout_row="6"
-		    android:paddingLeft="8dp"
+		    android:paddingStart="8dp"
                 android:layout_columnSpan="2" />
             <TextView
                 android:id="@+id/rssi"

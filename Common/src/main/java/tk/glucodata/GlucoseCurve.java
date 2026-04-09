@@ -40,7 +40,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.CheckBox;
+
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -297,7 +297,10 @@ void getnumcontrol(MainActivity activity) {
             return new int[] {w,over};
           },new View[]{first}, new View[]{back}, new View[]{search},new View[]{closecontrol}, new View[]{next}, new View[]{last}
           );
+
+//      numcontrol.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
            activity.addContentView(numcontrol, new ViewGroup.LayoutParams(WRAP_CONTENT,MATCH_PARENT));
+        numcontrol.post(numcontrol::requestLayout);
        }
       else
         numcontrol.setVisibility(VISIBLE);
@@ -892,6 +895,8 @@ void search(boolean forward) {
           return new int[] {w,h};
           },new View[]{prev},new View[] {closecontrol},new View[] {next});
                activity.addContentView(searchcontrol, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+             
+          searchcontrol.post(searchcontrol::requestLayout);
            }
 
            prev.setVisibility(VISIBLE);
@@ -907,9 +912,9 @@ void search(boolean forward) {
  
 // Disable spell check (hex strings look like words to Android)
 
-//RadioButton numbers;
+//CheckDirectionRadio numbers;
 
-    CheckBox scansearch,historysearch,streamsearch,streamcalibratedsearch, historycalibratedsearch;
+    CheckDirectionBox scansearch,historysearch,streamsearch,streamcalibratedsearch, historycalibratedsearch;
 
  
 
@@ -917,9 +922,9 @@ void search(boolean forward) {
 
 //https://gist.github.com/kakajika/a236ba721a5c0ad3c1446e16a7423a63
     /*
-void radiolisten( RadioButton one,RadioButton other) {
+void radiolisten( CheckDirectionRadio one,CheckDirectionRadio other) {
          one.setOnClickListener(v-> {
-             ((RadioButton) v).setChecked(true);
+             ((CheckDirectionRadio) v).setChecked(true);
              other.setChecked(false);
              if(numbers.isChecked())
                  spinner.setVisibility(VISIBLE);
@@ -1089,21 +1094,24 @@ else {
         else
             above= geteditview(context,focus);
     above.setMinWidth(editwidth);
-    scansearch=new CheckBox(context); scansearch.setText(R.string.scansname);
+    scansearch=new CheckDirectionBox(context); scansearch.setText(R.string.scansname);
     final String historystr=context.getString(R.string.historyname);
     final String streamstr=context.getString(R.string.streamname);
     final String calibrated=context.getString(R.string.calibrated);
-     historysearch=new CheckBox(context); historysearch.setText(historystr);
-     streamsearch=new CheckBox(context); streamsearch.setText(streamstr);
-     streamcalibratedsearch=new CheckBox(context); streamcalibratedsearch.setText(streamstr+" "+calibrated);
-     historycalibratedsearch=new CheckBox(context); historycalibratedsearch.setText(historystr+" "+calibrated);
+     historysearch=new CheckDirectionBox(context); historysearch.setText(historystr);
+     streamsearch=new CheckDirectionBox(context); streamsearch.setText(streamstr);
+     streamcalibratedsearch=new CheckDirectionBox(context); streamcalibratedsearch.setText(streamstr+" "+calibrated);
+     historycalibratedsearch=new CheckDirectionBox(context); historycalibratedsearch.setText(historystr+" "+calibrated);
      
         glucoselisten(scansearch) ;
         glucoselisten(historysearch) ;
         glucoselisten(streamsearch) ;
         glucoselisten(streamcalibratedsearch) ;
         glucoselisten(historycalibratedsearch) ;
-getMargins(scansearch).rightMargin=getMargins(historycalibratedsearch).rightMargin=getMargins(streamcalibratedsearch).rightMargin=(int)metrics.density*10;
+        var hormarg=(int)metrics.density*10;
+    getMargins(scansearch).setMarginEnd(hormarg);
+    getMargins(historycalibratedsearch).setMarginEnd(hormarg);
+    getMargins(streamcalibratedsearch).setMarginEnd(hormarg);
 
     fromtime =new Button(context); //fromtime.setText("00:00");
     TextView gline=new TextView(context);gline.setText(" - ");
@@ -1190,7 +1198,7 @@ if(!smallScreen) {
       {if(doLog) {Log.i(LOG_ID,"smallScreen search h="+h+" height="+height+" w="+w+" width="+width+" posx="+xpos+" posy="+ypos);};};
         }
         return new int[] {w,h};
-        }, new View[]{clear,under,line,above},new View[]{getsearchspinner(context),scansearch},new View[]{historysearch,historycalibratedsearch},new View[]{streamsearch,streamcalibratedsearch},new View[]{fromtime,totime,helpbut},new View[] {backward,cancel, forward});
+        }, new Object[]{clear,new View[]{under,line,above}},new View[]{getsearchspinner(context),scansearch},new View[]{historysearch,historycalibratedsearch},new View[]{streamsearch,streamcalibratedsearch},new View[]{fromtime,totime,helpbut},new Object[] {new View[]{backward,cancel, forward}});
 
          mktimedialog( fromtime,0 ,layout);
       mktimedialog( totime,1 ,layout);
@@ -1204,6 +1212,7 @@ if(!smallScreen) {
     
     clear.setOnClickListener(this::clearsearch );
     clearsearch(clear);
+     layout.post(layout::requestLayout);
 //       editfocus.setedittext(under);
 
     return layout;

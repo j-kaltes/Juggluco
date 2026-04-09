@@ -182,6 +182,8 @@ public void showexport(MainActivity activity,int width,int height,View parent) {
         exportscreen.setBackgroundColor( Applic.backgroundcolor);
         activity.addContentView(exportscreen, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
 //        exportlabel.requestFocus();
+
+         exportscreen.post(exportscreen::requestLayout);
         }
     else {
             exportscreen.setVisibility(VISIBLE);

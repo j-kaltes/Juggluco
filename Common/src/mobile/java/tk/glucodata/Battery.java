@@ -30,7 +30,7 @@ import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
+
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -60,7 +60,7 @@ if(!isWearable) {
 		Button Close=getbutton(context,R.string.closename);
 		TextView info=new TextView(context);
 
-		  final CheckBox battery = new CheckBox(context);
+		  final CheckDirectionBox battery = new CheckDirectionBox(context);
 
 		   int pad=(int)(GlucoseCurve.metrics.density*7.0);
 		   info.setPadding(pad,0,pad,0);
@@ -73,8 +73,11 @@ if(!isWearable) {
 		boolean isIgnoringBatteryOptimizations = pm.isIgnoringBatteryOptimizations(context.getPackageName());
 		battery.setChecked(isIgnoringBatteryOptimizations);
 		context.lightBars(false);
-        getMargins(battery).leftMargin=getMargins(Close).rightMargin=(int)(GlucoseCurve.getwidth()*.15f);
-		final Layout lay=new Layout(context, (l, w, h) -> {
+                final var hormarg=(int)(GlucoseCurve.getwidth()*.15f);
+
+                getMargins(battery).setMarginStart(hormarg);
+                getMargins(Close).setMarginEnd(hormarg);
+               final Layout lay=new Layout(context, (l, w, h) -> {
 /*			l.setY(MainActivity.systembarTop);
 			var newh=h-MainActivity.systembarTop; */
 			return new int[] {w,h}; }

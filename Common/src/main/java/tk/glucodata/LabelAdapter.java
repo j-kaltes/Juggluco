@@ -29,6 +29,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckedTextView;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
@@ -59,26 +60,29 @@ public List<T>  getarray() {
 
 @Override
 public View getDropDownView(int position, View convertView, ViewGroup parent) {
-      //{if(doLog) {Log.i(LOG_ID,"getDropDownView "+position);};};
+        CheckedTextView view;
         if (convertView == null) {
-            convertView = mInflater.inflate(android.R.layout.simple_spinner_dropdown_item, parent, false);
-           //  convertView.setBackgroundColor(Applic.backgroundcolor);
+            view = (CheckedTextView) mInflater.inflate(android.R.layout.simple_spinner_dropdown_item, parent, false);
            if(isWearable)
-                convertView.setBackgroundColor(BLACK);
+                view.setBackgroundColor(BLACK);
         }
-    
-    TextView text= ((TextView)(convertView.findViewById(android.R.id.text1)));
+        else
+               view = (CheckedTextView) convertView;
+
+    TextView text= ((TextView)(view.findViewById(android.R.id.text1)));
     if(position<ar.size()) {
         T str=ar.get(position);
         text.setText(str.toString());
         }
     else
         text.setText("Error!!");
+
     if(isWearable) {
         text.setGravity(Gravity.CENTER);
+        view.setGravity(Gravity.CENTER);
+        view.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         }
-    return convertView;
-
+    return view;
     }
 
     @Override

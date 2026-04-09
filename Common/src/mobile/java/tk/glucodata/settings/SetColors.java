@@ -28,9 +28,11 @@ import tk.glucodata.Applic;
 import tk.glucodata.GlucoseCurve;
 import tk.glucodata.Log;
 
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 
 import tk.glucodata.MainActivity;
 import tk.glucodata.Natives;
@@ -70,6 +72,7 @@ static void show(MainActivity act) {
             Natives.setlastcolor(c);
             tk.glucodata.Applic.app.redraw();
         }, v-> {
+      /* 
     int afx,afy;
     if(Natives.getsystemUI()) {
          afy= MainActivity.systembarTop;
@@ -90,17 +93,23 @@ static void show(MainActivity act) {
            v.setY(afy);
            v.setX(afx);
          }
+         */
         }
     );
     View view=dialog.getview();
     view.setBackgroundColor(Applic.backgroundcolor);
 
     if(isWearable) {
-        act.addContentView(view, new ViewGroup.LayoutParams((int)(width*0.65), (int)(height*0.65)));
+        var params= new FrameLayout.LayoutParams((int)(width*0.65), (int)(height*0.65), Gravity.RIGHT| Gravity.CENTER);
+        params.rightMargin=(int)(width*.03f);
+        act.addContentView(view, params);
 //        act.addContentView(view, new ViewGroup.LayoutParams((int)(width*0.65), (int)(height*0.75)));
         }
     else {
-        act.addContentView(view, new ViewGroup.LayoutParams(WRAP_CONTENT,WRAP_CONTENT));
+        var params= new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.LEFT|Gravity.TOP);
+        params.topMargin=MainActivity.systembarTop;
+        params.leftMargin=MainActivity.systembarLeft;
+        act.addContentView(view, params);
         Button close= act.findViewById(R.id.closeambi);
         Button help= act.findViewById(R.id.helpambi);
         if(close!=null) {

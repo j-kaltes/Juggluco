@@ -30,6 +30,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 
+
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static tk.glucodata.Applic.isWearable;
 import static tk.glucodata.Log.doLog;
@@ -50,6 +51,10 @@ static public void show(MainActivity act) {
 	on=true;
 	LayoutInflater flater= LayoutInflater.from(act);
 	View view = flater.inflate(R.layout.menus, null, false);
+      view.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+ //       view.setTextDirection(View.TEXT_DIRECTION_LTR);
+
+
 	view.setAccessibilityDelegate(Layout.accessDeli);
         view.setBackgroundColor( Applic.backgroundcolor);
       act.lightBars(false);

@@ -81,7 +81,7 @@ jugglucotext uktext {
 	.SD="SD: %.2f",
 	.glucose_variability="Варіабельність глюкози: %.1f%%",
      .menustr0={
-		"System UI        ",
+		"System UI",
 		"Меню",
 		"Дивитися",
 		"Датчик",
@@ -105,7 +105,7 @@ jugglucotext uktext {
 		"Статистика",
 #ifdef INJUGGLUCO
 		"Говорити",
-		"Плавати        "
+		"Плавати"
 		},
 
 	.menustr2= {"Останнє скан.",
@@ -114,19 +114,19 @@ jugglucotext uktext {
 	    "Історія",
 	    "Суми",
 	    "Їжа",
-	    "Dark mode        "},
+	"Dark mode"},
 	.menustr3= {hourminstr,"Пошук","Дата","День назад","Через день","Тиждень тому","Тиждень пізн"},
 #endif //INJUGGLUCO
 #else
  .amount="Сума",
  .menustr0= {
-	"        Клон",
+	"Клон",
 	"Датчик",
 	"Дисплей",
         "Налашт.",
 	"Стоп тривоги" },
 .menustr2= {"Дата",hourminstr,
-"День назад                ",uktext.amount},
+"День назад",uktext.amount},
 #endif
 
 #ifdef INJUGGLUCO

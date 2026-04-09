@@ -39,7 +39,6 @@ import tk.glucodata.GlucoseCurve;
 import tk.glucodata.MainActivity;
 import tk.glucodata.Natives;
 import tk.glucodata.R;
-import tk.glucodata.measuredgrid;
 
 import static android.view.View.GONE;
 import static android.view.View.INVISIBLE;

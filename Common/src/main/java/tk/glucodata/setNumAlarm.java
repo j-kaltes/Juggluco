@@ -140,11 +140,12 @@ if(genlayout==null) {
     else {
     	RecyclerView recycle = new RecyclerView(act);
     	    recycle.setLayoutParams(new ViewGroup.LayoutParams(  MATCH_PARENT, WRAP_CONTENT));
-         recycle.setPadding((int)(tk.glucodata.GlucoseCurve.metrics.density*15.0f),0,0,0);
+         recycle.setPaddingRelative((int)(tk.glucodata.GlucoseCurve.metrics.density*15.0f),0,0,0);
             LinearLayoutManager lin = new LinearLayoutManager(act);
             recycle.setLayoutManager(lin);
      views=new View[][]{new View[]{recycle},new View[]{ring,help,newone,ok}};
     genlayout= new Layout(act, (l, w, h) -> {
+    /*
     	if(!isWearable) {
     		var height=GlucoseCurve.getheight();
     		if(height>h)
@@ -153,6 +154,7 @@ if(genlayout==null) {
     		if(width>w)
     			l.setX((width-w)/2);
     		}
+            */
     	int[] ret={w,h};
     	return ret;
     	},views);
@@ -184,10 +186,13 @@ if(genlayout==null) {
 
     	}
     else {
-    	layparm=new ViewGroup.LayoutParams( WRAP_CONTENT, WRAP_CONTENT);
+    	layparm=  new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.BOTTOM| Gravity.CENTER_HORIZONTAL);
+        var height=GlucoseCurve.getheight();
+        ((FrameLayout.LayoutParams) layparm).bottomMargin=(int)(height*.1f);
     	}
 
         act.addContentView(genlayout,layparm);
+
         genlayout.setBackgroundColor(Applic.backgroundcolor);
     }
 else {
@@ -390,6 +395,7 @@ void  mkitemlayout(Activity act,View parent) {
     else
     	views=new View[][] {new View[] {spinner,value},new View[]{startbut,alarmbut},new View[]{Delete,Cancel,Save}};
     itemlayout= new Layout(act, (l, w, h) -> {
+    /*
     	var height=GlucoseCurve.getheight();
     	if(!isWearable)  {
          l.setY(MainActivity.systembarTop);
@@ -402,29 +408,21 @@ void  mkitemlayout(Activity act,View parent) {
          }
     	var width=GlucoseCurve.getwidth();
     	if(width>w) l.setX((width-w)/2);
+        */
     	int[] ret={w,h};
     	return ret;
     	}, views);
+  ViewGroup.LayoutParams layparm;
    if(isWearable) {
       if(useclose) {
-      /*
-         int butwidth=0;
-         startbut.setMinWidth(butwidth);
-        startbut.setMinimumWidth(butwidth);
-         alarmbut.setMinWidth(butwidth);
-        alarmbut.setMinimumWidth(butwidth);
-         Cancel.setMinWidth(butwidth);
-        Cancel.setMinimumWidth(butwidth);
-         Save.setMinWidth(butwidth);
-        Save.setMinimumWidth(butwidth);
-         Delete.setMinWidth(butwidth);
-        Delete.setMinimumWidth(butwidth); */
          var scroll=new ScrollView(act);
          scroll.setFillViewport(true);
          scroll.setSmoothScrollingEnabled(false);
          scroll.setScrollbarFadingEnabled(true);
          scroll.setVerticalScrollBarEnabled(true);
-         scroll.addView(itemlayout,new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+    	 var itempar=  new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.CENTER| Gravity.CENTER_HORIZONTAL);
+//         scroll.addView(itemlayout,new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+         scroll.addView(itemlayout,itempar);
          itemlayout.setPadding(0,(int)(tk.glucodata.GlucoseCurve.metrics.density*15.0f),0,0);
          itemlayout=scroll;
       }
@@ -434,7 +432,16 @@ void  mkitemlayout(Activity act,View parent) {
          itemlayout=frame;
          itemlayout.setBackgroundColor(Applic.backgroundcolor);
          }
+
+        layparm=new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT);
+//    	layparm=  new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.TOP| Gravity.CENTER_HORIZONTAL);
+//    	layparm=  new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.CENTER| Gravity.CENTER_HORIZONTAL);
       }
+    else  {
+    	layparm=  new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.TOP| Gravity.CENTER_HORIZONTAL);
+        var height=GlucoseCurve.getheight();
+        ((FrameLayout.LayoutParams) layparm).topMargin=MainActivity.systembarTop;
+        }
     layoutar[0]=itemlayout;
         //itemlayout.setBackgroundColor(Applic.backgroundcolor);
         if(!isWearable)
@@ -493,7 +500,10 @@ void  mkitemlayout(Activity act,View parent) {
       }
 
     );
-        act.addContentView(itemlayout,isWearable?new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT):new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+        //act.addContentView(itemlayout,isWearable?new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT):new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+
+
+        act.addContentView(itemlayout,layparm);
 ;
 
     }

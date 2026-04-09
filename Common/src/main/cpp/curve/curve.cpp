@@ -57,7 +57,7 @@ using namespace std::literals;
 
 
 #include "curve.hpp"
-
+#include "scriptFonts.hpp"
 #include "config.h"
 //#define FILEDIR "/sdcard/libre2/"
 //#include "Glucograph.h"
@@ -157,6 +157,7 @@ int showui=false;
 static enum FontType {
     CHINESE,
     HEBREW,
+    ARABIC,
     REST
     } chfontset=REST;
 //static bool chfontset=false;
@@ -168,6 +169,157 @@ bool hebrew() ;
 #define fontpath "/home/jka/Android/Sdk/platforms/android-29/data/fonts/"
 #endif
 extern jugglucotext zhtext; 
+extern jugglucotext artext; 
+
+
+#ifdef JUGGLUCO_APP
+static int getWhiteFont(NVGcontext* avg) {
+    return nvgCreateFont(avg, "regular", 
+#ifdef JUGGLUCO_APP
+    fontpath "Roboto-Regular.ttf"
+#else
+"/usr/share/fonts/truetype/roboto-fontface/roboto/Roboto-Regular.ttf"
+//"/usr/share/fonts/truetype/noto/NotoSerif-Regular.ttf"
+//"/usr/local/Wolfram/Wolfram/14.2/SystemFiles/Fonts/TrueType/Roboto-Regular.ttf"
+#endif
+    );
+    }
+static int getMenuFont(NVGcontext* avg) {
+        constexpr const char menufonts[][sizeof(fontpath "SourceSansPro-SemiBold.ttf")]={
+        fontpath "Roboto-Medium.ttf",
+        fontpath "SourceSansPro-SemiBold.ttf",
+        fontpath "NotoSerif.ttf",
+        fontpath "SourceSansPro-Regular.ttf",
+        fontpath "Roboto-Regular.ttf",
+        fontpath "DroidSans.ttf"
+        };
+            int onefont;
+            for(const char *name:menufonts)  {
+                if((onefont = nvgCreateFont(avg, "regular", name))!=-1) {
+                    CURVELOGGER("menufont %s succeeded\n",name);
+                    break;
+                    }
+                CURVELOGGER("menufont %s failed\n",name);
+                }
+        return onefont;
+        }
+#endif
+static int getBlackFont(NVGcontext* avg) {
+        int blackfont=-1;
+        constexpr const char standardfonts[][sizeof(
+        #ifdef JUGGLUCO_APP
+        fontpath "SourceSansPro-SemiBold.ttf"
+        #else
+        "/usr/share/fonts/truetype/roboto-fontface/roboto/Roboto-Regular.ttf"
+
+        #endif
+        )]= {
+        #ifndef JUGGLUCO_APP
+        "/usr/share/fonts/truetype/noto/NotoSans-Regular.ttf",
+        "/usr/share/fonts/truetype/roboto-fontface/roboto/Roboto-Regular.ttf",
+        "/usr/share/fonts/truetype/noto/NotoSerif-Regular.ttf",
+        #else
+        fontpath "Roboto-Black.ttf",
+        fontpath "SourceSansPro-Bold.ttf",
+        fontpath "NotoSerif-Bold.ttf",
+        fontpath "DroidSans-Bold.ttf",
+        fontpath "SourceSansPro-SemiBold.ttf",
+        fontpath "Roboto-Regular.ttf",
+        #endif
+        };
+
+
+            for(const char *name:standardfonts)  {
+                if((blackfont = nvgCreateFont(avg, "dance-bold", name))!=-1) {
+                    CURVELOGGER("blackfont %s succeeded\n",name);
+                    break;
+                    }
+                CURVELOGGER("blackfont %s failed\n",name);
+                }
+        if(blackfont==-1) {
+            FATAL("all fonts failed: tried: ");
+        #ifndef  JUGGLUCO_APP
+            for(const char *name:standardfonts)  {
+                    FATAL("%s\n",name);
+                    }
+        #endif
+            }
+
+        return blackfont;
+        }
+
+/*
+static int getArabicRegular(NVGcontext* avg) {
+        constexpr const char fonts[][sizeof(fontpath "NotoNaskhArabic-Regular.ttf")]
+        {
+        fontpath "NotoNaskhArabic-Regular.ttf",
+        fontpath "NotoNaskh-Regular.ttf",
+        fontpath  "DroidSansArabic.ttf"
+        };
+    for(const char *name:fonts)  {
+        if(int font = nvgCreateFont(avg, "regular", name);font!=-1) 
+                return font;
+        }
+    return  -1;
+    }
+static int getArabicBold(NVGcontext* avg) {
+        constexpr const char fonts[][sizeof(fontpath "NotoNaskhArabic-Bold.ttf")]
+        {
+        fontpath "NotoNaskhArabic-Bold.ttf",
+        fontpath "NotoNaskh-Bold.ttf",
+        fontpath  "DroidSansArabic.ttf"
+        };
+    for(const char *name:fonts)  {
+        if(int font = nvgCreateFont(avg, "dance-bold", name);font!=-1) 
+                return font;
+        }
+    return  -1;
+    }
+    */
+
+#ifdef JUGGLUCO_APP
+static int getArabicMenu(NVGcontext* avg) {
+        constexpr const char fonts[][sizeof(
+        #ifdef JUGGLUCO_APP
+        fontpath "NotoNaskhArabicUI-Regular.ttf"
+#else
+        "/usr/share/fonts/truetype/noto/NotoNaskhArabicUI-Regular.ttf"
+#endif
+        )]
+        {
+        #ifdef JUGGLUCO_APP
+        fontpath "NotoNaskhArabicUI-Regular.ttf",
+        fontpath "NotoNaskhUI-Regular.ttf",
+        fontpath  "DroidSansArabic.ttf"
+#else
+"/usr/share/fonts/truetype/noto/NotoNaskhArabicUI-Regular.ttf"
+#endif
+        };
+    for(const char *name:fonts)  {
+        if(int font = nvgCreateFont(avg, "regular", name);font!=-1) 
+                return font;
+        }
+    return  -1;
+    }
+
+#endif 
+bool usedScript[SCR_COUNT]{};
+
+
+bool initScriptFonts(const FontUse &fontuse) {
+   bool ret=false;
+   auto doinit{[](const FontUse &fontuse,bool&ret){
+            LOGAR("initScriptFonts");
+            int len=settings->getlabelcount();
+            for(int i=0;i<len;i++) {
+                   useFontsForName(fontuse, settings->getlabel(i).data());
+                   }
+            ret=true;
+            return true;
+            }};
+   const static bool init=doinit(fontuse,ret);;
+   return ret;
+   }
 void    JCurve::initfont(NVGcontext* avg) { 
 CURVELOGAR("initfont");
 if(!avg) {
@@ -175,33 +327,39 @@ if(!avg) {
     return;
     }
 thevg=avg;
-if(usedtext==&zhtext) {
-    if(-1==(font=whitefont=blackfont = nvgCreateFont(avg, "dance-bold",
+
+    font=blackfont = getBlackFont(avg);
 #ifdef JUGGLUCO_APP
-    fontpath "NotoSansCJK-Regular.ttc"
+    if((whitefont=getWhiteFont(avg))==-1) {
+        CURVELOGAR("white font failed");
+        whitefont=blackfont;
+        }
 #else
-    "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc"
+        whitefont=blackfont;
+#endif
+const FontUse fontuse{.vg=avg,.whitefont=whitefont,.blackfont=blackfont,.scriptEnabled=usedScript};
+if(usedtext==&artext) {
+
+//    nvgAddFallbackFontId(avg, blackfont,getArabicBold(avg)); 
+
+
+ //   nvgAddFallbackFontId(avg, whitefont,getArabicRegular(avg));
+     enableScript(fontuse, SCR_ARABIC);
+
+#ifdef JUGGLUCO_APP
+    menufont=nvgCreateFontMem(avg, "regular", (unsigned char *)fontfile, sizeof(fontfile), 0);
+    int fallback2 =getArabicMenu(avg);
+    nvgAddFallbackFontId(avg,menufont, getMenuFont(avg));
+    nvgAddFallbackFontId(avg, menufont,fallback2);
 #endif
 
-    ))) {
-      CURVELOGAR("font NotoSansCJK-Regular failed");
-#ifdef JUGGLUCO_APP
-       if(-1==(font=whitefont=blackfont = nvgCreateFont(avg, "dance-bold", fontpath "DroidSansFallback.ttf")))  {
-            CURVELOGAR("font DroidSansFallback.ttf failed");
-#else 
-        {
-#endif
-       if(-1==(font=whitefont=blackfont = nvgCreateFont(avg, "dance-bold", 
-#ifdef JUGGLUCO_APP
-    fontpath "NotoSerifCJK-Regular.ttc"
-#else
-"/usr/share/fonts/opentype/noto/NotoSerifCJK-Regular.ttc"
-#endif
-))) {
-            FATAL("font NotoSerifCJK-Regular.ttc failed");
-            }
-      }
-      }
+   chfontset=ARABIC;
+
+
+}
+else
+if(usedtext==&zhtext) {
+     enableScript(fontuse, SCR_CJK);
 #ifdef JUGGLUCO_APP
     if(-1==(menufont = nvgCreateFont(avg, "regular",
 
@@ -242,17 +400,7 @@ if(usedtext==&zhtext) {
 else  {
 
 #ifdef USE_HEBREW
-if(hebrew())  {
-    auto fallback = nvgCreateFont(avg, "dance-bold",fontpath "DroidSans.ttf");
-
-
-
-    font=whitefont=blackfont = nvgCreateFont(avg, "dance-bold",fontpath "NotoSansHebrew-Regular.ttf");
-    nvgAddFallbackFontId(avg, font,fallback);
-
-
-//    auto menufallback = nvgCreateFont(avg, "regular",fontpath "NotoSerif.ttf");
-
+     enableScript(fontuse, SCR_HEBREW);
 #ifdef JUGGLUCO_APP
     menufont=nvgCreateFontMem(avg, "regular", (unsigned char *)fontfile, sizeof(fontfile), 0);
     int fallback2 = nvgCreateFont(avg, "regular", fontpath "NotoSerifHebrew-Regular.ttf");
@@ -268,88 +416,23 @@ else
 #endif
 {
     chfontset=REST;
-constexpr const char standardfonts[][sizeof(
-#ifdef JUGGLUCO_APP
-fontpath "SourceSansPro-SemiBold.ttf"
-#else
-"/usr/share/fonts/truetype/roboto-fontface/roboto/Roboto-Regular.ttf"
 
-#endif
-)]= {
-#ifndef JUGGLUCO_APP
-"/usr/share/fonts/truetype/noto/NotoSans-Regular.ttf",
-"/usr/share/fonts/truetype/roboto-fontface/roboto/Roboto-Regular.ttf",
-"/usr/share/fonts/truetype/noto/NotoSerif-Regular.ttf",
-#else
-fontpath "Roboto-Black.ttf",
-fontpath "SourceSansPro-Bold.ttf",
-fontpath "NotoSerif-Bold.ttf",
-fontpath "DroidSans-Bold.ttf",
-fontpath "SourceSansPro-SemiBold.ttf",
-fontpath "Roboto-Regular.ttf",
-#endif
-};
-
-
-    for(const char *name:standardfonts)  {
-        if((blackfont = nvgCreateFont(avg, "dance-bold", name))!=-1) {
-            CURVELOGGER("blackfont %s succeeded\n",name);
-            break;
-            }
-        CURVELOGGER("blackfont %s failed\n",name);
-        }
-if(blackfont==-1) {
-    FATAL("all fonts failed: tried: ");
-#ifndef  JUGGLUCO_APP
-    for(const char *name:standardfonts)  {
-            FATAL("%s\n",name);
-            }
-#endif
-    }
 #ifdef JUGGLUCO_APP
-    if((whitefont= nvgCreateFont(avg, "dance-bold", 
-#ifdef JUGGLUCO_APP
-    fontpath "Roboto-Regular.ttf"
-#else
-"/usr/share/fonts/truetype/roboto-fontface/roboto/Roboto-Regular.ttf"
-//"/usr/share/fonts/truetype/noto/NotoSerif-Regular.ttf"
-//"/usr/local/Wolfram/Wolfram/14.2/SystemFiles/Fonts/TrueType/Roboto-Regular.ttf"
-#endif
-    ))==-1) {
-        CURVELOGAR("white font failed");
-        whitefont=blackfont;
-        }
-#else
-
-        whitefont=blackfont;
-#endif
-#ifdef JUGGLUCO_APP
-constexpr const char menufonts[][sizeof(fontpath "SourceSansPro-SemiBold.ttf")]={
-fontpath "Roboto-Medium.ttf",
-fontpath "SourceSansPro-SemiBold.ttf",
-fontpath "NotoSerif.ttf",
-fontpath "SourceSansPro-Regular.ttf",
-fontpath "Roboto-Regular.ttf",
-fontpath "DroidSans.ttf"
-};
-    int fallback;
-    for(const char *name:menufonts)  {
-        if((fallback = nvgCreateFont(avg, "regular", name))!=-1) {
-            CURVELOGGER("menufont %s succeeded\n",name);
-            break;
-            }
-        CURVELOGGER("menufont %s failed\n",name);
-        }
+int fallback=getMenuFont(avg);
 #ifdef MENUARROWS
     menufont=nvgCreateFontMem(avg, "regular", (unsigned char *)fontfile, sizeof(fontfile), 0);
     nvgAddFallbackFontId(avg,menufont, fallback);
 #endif
 #endif //JUGGLUCO_APP
+
     if(invertcolors)
         font=whitefont;
     else
         font=blackfont;
         }
+        }
+    if(!initScriptFonts(fontuse)) {
+        applyfonts(fontuse);
         }
 
     nvgFontFaceId(avg,font);
@@ -1108,7 +1191,8 @@ uint32_t mintime() {
    time_t t=tim;
    CURVELOGGER("mintime=%d %s",tim,ctime(&t));
    #endif
-   if(sent==UINT32_MAX)
+
+   if(tim==UINT32_MAX)
         tim=time(nullptr);
    return tim;
     }
@@ -1548,6 +1632,7 @@ int JCurve::largedaystr(const time_t tim,char *buf) {
 
 
 
+extern bool isRTL();
 void       JCurve::showbluevalue(NVGcontext* avg,const time_t nu,const int xpos,std::vector<int> &used) {
 CURVELOGGER("showbluevalue %zd\n",used.size());
         nvgFontSize(avg, smallsize);
@@ -1568,11 +1653,19 @@ CURVELOGGER("showbluevalue %zd\n",used.size());
                     const float timex=xpos+nowLineStrokeWidth;
                     constexpr int maxhead=80;
                     char head[maxhead];
+                    int tstart,end;
 
-                    memcpy(head,usedtext->sensorexpectedend.data(),usedtext->sensorexpectedend.size());
-                    const int tstart=usedtext->sensorexpectedend.size();
-                    char *endstr=head+tstart;
-                    int end= datestr(enddate,endstr); 
+                    if(isRTL()) {
+                            end= datestr(enddate,head); 
+                            memcpy(head+end,usedtext->sensorexpectedend.data(),usedtext->sensorexpectedend.size());
+                            tstart=usedtext->sensorexpectedend.size();
+                        }
+                    else {
+                            memcpy(head,usedtext->sensorexpectedend.data(),usedtext->sensorexpectedend.size());
+                            tstart=usedtext->sensorexpectedend.size();
+                            char *endstr=head+tstart;
+                            end= datestr(enddate,endstr); 
+                            }
                     nvgTranslate(avg, timex,down);
                     nvgRotate(avg,-NVG_PI/2.0);
                     nvgTextAlign(avg,NVG_ALIGN_CENTER|NVG_ALIGN_BOTTOM);
@@ -2136,12 +2229,18 @@ void     JCurve::setlocale(NVGcontext* avg,const char *localestrbuf,const size_t
                 }
             return;
 #endif
+        case mklanguagenum("AR"):
+        case mklanguagenum("ar"):
+            if(chfontset!=ARABIC) {
+                initfont(avg);
+                }
+            return; 
         case mklanguagenum("ZH"):
         case mklanguagenum("zh"):
             if(chfontset!=CHINESE) {
                 initfont(avg);
                 }
-            return; 
+            return;
         };
     if(chfontset!=REST) {
         initfont(avg);
@@ -2586,3 +2685,12 @@ int    JCurve::showLargevalue(NVGcontext* avg, int index,float getx,float gety,f
 
     }
 
+
+extern jugglucotext artext; 
+bool isRTL() {
+    return usedtext==&artext;
+    }
+
+float                JCurve::getboxwidth(const float x) {
+                    return std::max((float)(dwidth-x-smallsize),dwidth*.25f);
+                    }

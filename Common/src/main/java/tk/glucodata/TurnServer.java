@@ -73,7 +73,7 @@ public static void show(Activity context,View parent) {
    var password = getlabel(context,R.string.password);
    var laypad=(int)(GlucoseCurve.getDensity()*4.0f);
    var absent=Natives.TurnServerNR()==0;
-   password.setPadding(laypad*2,0,laypad,0);
+   password.setPaddingRelative(laypad*2,0,laypad,0);
    var username = getlabel(context,R.string.username);
    var hostname = getlabel(context,R.string.hostname);
    var portname = getlabel(context,R.string.port);

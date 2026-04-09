@@ -66,6 +66,7 @@
 
 
     <application
+        android:supportsRtl="true"
         android:name=".Applic"
         android:allowBackup="false"
         android:debuggable="${debuggable}"

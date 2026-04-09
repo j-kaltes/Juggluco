@@ -103,7 +103,7 @@ const jugglucotext estext {
 	.SD="DE: %.2f",
 	.glucose_variability="Variabilidad de la glucosa: %.1f%%",
      .menustr0={
-		"Interfaz sist.         ",
+		"Interfaz sist.",
 		"Menús",
 		"Reloj",
 		"Sensor",
@@ -129,15 +129,15 @@ const jugglucotext estext {
 		"Estadísticas",
 #ifdef INJUGGLUCO
 		"Hablar",
-		"Flotante     "
+		"Flotante"
 		},
 	.menustr2= {"Último esc.",
 	"Escaneos",
 	"Flujo",
 	"Historial",
-	"Cantidades    ",
+	"Cantidades",
 	"Comidas",
-	"Modo oscuro         "},
+	"Modo oscuro"},
 	.menustr3= {hourminstr,
 	"Buscar",
 	"Fecha",
@@ -149,14 +149,14 @@ const jugglucotext estext {
 #else
  .amount="Cantidad",
  .menustr0= {
-	"        Clon",
+	"Clon",
 	"Sensor",
 	"Pantalla",
     "Ajustes",
 	"Detener alarma" },
 .menustr2= {"Fecha ",
 hourminstr,
-"Día ant.                      ",
+"Día ant.",
 estext.amount},
 #endif //WEAROS
 #ifdef INJUGGLUCO

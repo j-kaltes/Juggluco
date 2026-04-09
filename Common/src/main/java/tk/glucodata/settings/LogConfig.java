@@ -2,6 +2,8 @@ package tk.glucodata.settings;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
+
+import android.view.Gravity;
 import android.view.ViewGroup.LayoutParams;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
@@ -15,6 +17,7 @@ import static tk.glucodata.util.getlabel;
 import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ScrollView;
 
 import tk.glucodata.Applic;
@@ -84,8 +87,8 @@ static void make(MainActivity act,View parent) {
        // var email=getbutton(act,"E-Mail");
         var close=getbutton(act,R.string.closename);
         View[] closerow;
-       int pararg;
        ViewGroup alllayout;
+    ViewGroup.LayoutParams params;
         if(isWearable) {
             closerow=new View[]{close};
             Layout layout = new Layout(act, (l, w, h) -> {
@@ -102,7 +105,8 @@ static void make(MainActivity act,View parent) {
            scroll.setVerticalScrollBarEnabled(Applic.scrollbar);
             alllayout=scroll;
             layout.setBackgroundColor(Applic.backgroundcolor);
-            pararg=MATCH_PARENT;
+            int pararg=MATCH_PARENT;
+            params=new ViewGroup.LayoutParams(pararg,pararg);
            final   int pad=(int)(tk.glucodata.GlucoseCurve.metrics.density*15.0);
            layout.setPadding(pad,pad,pad,pad);
             }
@@ -115,8 +119,10 @@ static void make(MainActivity act,View parent) {
              var width= GlucoseCurve.getwidth();
              var height=GlucoseCurve.getheight();
             Layout layout = new Layout(act, (l, w, h) -> {
+            /*
                  l.setX((width-w)*.5f);
                  l.setY((height-h)*.33f);
+                 */
                 int[] ret={w,h};
                 return ret;
                 },new View[]{trace,delete,save},new View[] {log,sizelabel,size},
@@ -124,12 +130,15 @@ static void make(MainActivity act,View parent) {
                 closerow);
             alllayout=layout;
             layout.setBackgroundResource(R.drawable.dialogbackground);
-            pararg= WRAP_CONTENT;
            final   int pad=(int)(tk.glucodata.GlucoseCurve.metrics.density*9.0);
            layout.setPadding(pad,pad,pad,pad);
+
+          params =    new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.CENTER|Gravity.CENTER_HORIZONTAL);
             }
 
-        act.addContentView(alllayout, new ViewGroup.LayoutParams(pararg,pararg));
+
+   // params.topMargin=MainActivity.systembarTop;
+        act.addContentView(alllayout, params);
         delete.setOnClickListener(v-> {
             Natives.zeroLog();
             MainActivity.poponback();

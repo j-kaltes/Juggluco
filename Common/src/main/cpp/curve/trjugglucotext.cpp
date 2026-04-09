@@ -99,7 +99,7 @@ jugglucotext trtext {
         .SD="SD: %.2f",
         .glucose_variability="Glikoz Değişkenliği: %.1f%%",
      .menustr0={
-                "Sistem Arayüzü        ",
+"Sistem Arayüzü",
                 "Menüler",
                 "Saat",
                 "Sensör",
@@ -125,7 +125,7 @@ jugglucotext trtext {
                 "İstatistikler",
 #ifdef INJUGGLUCO
                 "Seslendirme",
-                "Yüzen Glikoz       "
+"Yüzen Glikoz"
                 },
         .menustr2= {"Son Tarama",
         "Taramalar",
@@ -133,7 +133,7 @@ jugglucotext trtext {
         "Geçmiş",
         "Miktarlar",
         "Yemekler",
-        "Koyu Mod        "},
+"Koyu Mod"},
         .menustr3= {hourminstr,
         "Ara",
         "Tarih",
@@ -145,14 +145,14 @@ jugglucotext trtext {
 #else
  .amount="Miktar",
  .menustr0= {
-        "        Klon",
+"Klon",
         "Sensör",
         "Görüntü",
         "Ayarlar",
         "Alarmı Durdur" },
 .menustr2= {"Tarih  ",
 hourminstr,
-"Önceki Gün                  ",
+"Önceki Gün",
 trtext.amount},
 #endif
 

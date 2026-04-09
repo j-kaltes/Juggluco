@@ -670,14 +670,16 @@ std::pair<int,SensorGlucoseData *> makeSIsensorIndex(std::string_view gegsSI,uin
    return {ind,getSensorData(ind)} ;
    }
 public:
-std::pair<int,SensorGlucoseData *> makeAidexXSensorindex(const std::string_view serial,std::string_view gegsSI,uint32_t now) {
+
+inline static constexpr const char  nameLinX[]{"LinX_L"};
+std::pair<int,SensorGlucoseData *> makeAidexXSensorindex(const std::string_view serial,bool isLinx,std::string_view gegsSI,uint32_t now) {
     std::array<char,17> longname;
     char *startname=&longname[0];
     char *zero=&longname[16];
     static constexpr const char aidex[]{"AiDEXx"};
     static constexpr const int aidexlen=sizeof(aidex)-1;
     const int left=16-serial.size();
-    memcpy(startname,aidex,aidexlen);
+    memcpy(startname,isLinx?nameLinX:aidex,aidexlen);
     if(left>aidexlen) {
         memset(startname+aidexlen,'x',left-aidexlen);
         }
@@ -696,21 +698,30 @@ std::pair<int,SensorGlucoseData *> makeAidexXSensorindex(const std::string_view 
    return addSensorInitgetPair(name,maxdaysAidexX*2);
    }
 std::pair<int,SensorGlucoseData *> makePhotoScanSensorIndex(std::string_view gegsSI,uint32_t now) {
-   LOGGER("makePhotoScanSensorIndex(%s) len=%zd\n",gegsSI.data(),gegsSI.size());
+   LOGGER("makePhotoScanSensorIndex(%.*s) len=%zd\n",gegsSI.size(),gegsSI.data(),gegsSI.size());
   BarCode barcode;
-  barcode.parseGs1(gegsSI);
-  #ifndef NOLOG
-  barcode.showscan();
-  #endif
-  {
- const  union {
-      const char buf[8]{"6958590"};
-      std::array<char,7> aidexx;
-      };
-  if(aidexx==barcode.getManifacturer()) {
-    return makeAidexXSensorindex(barcode.Serial,gegsSI,now);
+  try {
+      barcode.parseGs1(gegsSI);
+      #ifndef NOLOG
+      barcode.showscan();
+      #endif
+      {
+     const  union {
+          const char buf[8]{"6958590"};
+          std::array<char,7> aidexx;
+          };
+      if(aidexx==barcode.getManifacturer()) {
+        static constexpr std::string_view LinxGTIN{"06958590309550"sv};
+        return makeAidexXSensorindex(barcode.Serial,LinxGTIN==barcode.GTIN,gegsSI,now);
+        }
+      }
+      }
+  catch (const std::exception& e) {
+         LOGGER("parseGs1 %.*s %s\n",gegsSI.size(),gegsSI.data(),e.what());
     }
-  }
+   catch(... ) {
+         LOGGER("Exception parseGs1 %.*s\n",gegsSI.size(),gegsSI.data());
+     }
   if(const auto res=makeAirSensorindex(gegsSI,now);res.second) {
         return res;
         }

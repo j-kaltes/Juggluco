@@ -100,7 +100,7 @@ jugglucotext detext {
 .SD="SD: %.2f",
 .glucose_variability="Glukosevariabilität: %.1f%%",
       .menustr0={
-"System UI       ",
+"System UI",
 "Menus",
 "Uhren",
 "Sensor",
@@ -125,22 +125,22 @@ detext.newamount,
 "Statistiken",
 #ifdef INJUGGLUCO
 "Sprechen",
-"Schweben       "
+"Schweben"
 },
-.menustr2= {"Letzter Scan","Scans","Stream","History","Mengen","Mahlzeiten","Dunkelmodus       "},
+.menustr2={"LetzterScan","Scans","Stream","History","Mengen","Mahlzeiten","Dunkelmodus"},
 .menustr3= {hourminstr,"Suche", "Datum", "Vortag", "Tag später", "Woche zurück", "Woche später"},
 
 #endif //INJUGGLUCO
 #else
   .amount="Menge",
   .menustr0= {
-"        Klon",
+"Klon",
 "Sensor",
 	"Anzeige",
          "Einstellen",
 "Stop Alarm" },
-.menustr2= {"Datum      ",hourminstr,
-"Vortag                         ",detext.amount},
+.menustr2={"Datum",hourminstr,
+"Vortag",detext.amount},
 #endif
 
 #ifdef INJUGGLUCO

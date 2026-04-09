@@ -56,11 +56,11 @@ static uint32_t id2time(const SensorGlucoseData *sens,int id) {
     }
 
 static bool savepast(SensorGlucoseData *sens,int id,int mgdL ) {
-    if(sens->hasStreamID(id)) {
+    const uint32_t eventtime=id2time(sens,id);
+    if(sens->hasStreamID(id,eventtime)) {
         LOGGER("savepast: %d %d mg/dL already present\n",id,mgdL);
         return false;
         }
-    int eventtime=id2time(sens,id);
     sens->savepollallIDsonly<60,false>(eventtime,id,mgdL,0,NAN);
     return true;
     }
@@ -222,6 +222,7 @@ extern "C" JNIEXPORT jlong JNICALL   fromjava(aidexXscanBytes)(JNIEnv *env, jcla
     CritArSave<jlong> timeres(env,jtimeres);
 
     sens->getinfo()->lastHistoricLifeCountReceivedPos=id;
+    LOGGER("lastHistoricLifeCountReceivedPos=%d\n",id);
     return saveGlucose(sens,cur->valid,id,cur->glucose,cur->trend,*timeres.data());
     } 
 
@@ -375,7 +376,7 @@ static jbyteArray  whenPresent( JNIEnv *env, SensorGlucoseData *sens) {
     return sizeZero(env);
 }
 
-static jbyteArray onceOld(JNIEnv *env, SensorGlucoseData *sens,const uint8_t *data,int len) { //TODO Check CRC?
+static jbyteArray onceOld(JNIEnv *env, SensorGlucoseData *sens,const uint8_t *data,int len) { 
     if(len<sizeof(LastPast)) {
         LOGGER("oldOnce %d<%d\n",len,sizeof(LastPast));
          return nullptr;
@@ -394,14 +395,17 @@ static jbyteArray onceOld(JNIEnv *env, SensorGlucoseData *sens,const uint8_t *da
        cur->log("onceOld"sv,start);
        #endif
         sens->getinfo()->lastHistoricLifeCountReceivedPos=minfromstart;
+        LOGGER("lastHistoricLifeCountReceivedPos=%d\n",minfromstart);
        }
     else {
         if(minfromstart<(count -1)) {
              LOGGER("minfromstart %d< count %d -1. set hasTime=false\n",minfromstart,count);
             sens->getinfo()->aidexXdat.hasTime=false;
             }
-        else
+        else {
             LOGGER("minfromstart %d< count %d\n",minfromstart,count);
+            sens->getinfo()->lastHistoricLifeCountReceivedPos=minfromstart;
+            }
         }
 
    if(!cur->minfromstart) {
@@ -415,6 +419,9 @@ static jbyteArray onceOld(JNIEnv *env, SensorGlucoseData *sens,const uint8_t *da
 //    auto nextid=sens->getinfo()->lastLifeCountReceived+1; 
 //    return askHistory(env, sens,nextid);
     return whenPresent(env,sens);
+
+  // auto nextid=sens->getinfo()->lastLifeCountReceived+1;
+   //return askHistory(env, sens,nextid);
  //  return askLastID(env,sens);
 /*    auto nextid=sens->getinfo()->lastLifeCountReceived; 
 
@@ -439,6 +446,7 @@ static jbyteArray lastValue(JNIEnv *env, SensorGlucoseData *sens,const uint8_t *
    int totalid=sens->siAddedIndex(lastOnSensor); 
    LOGGER("last on sensor %d totalid=%d\n",lastOnSensor,totalid);
 
+    LOGGER("lastHistoricLifeCountReceivedPos=%d\n",totalid);
     sens->getinfo()->lastHistoricLifeCountReceivedPos=totalid; 
     return whenPresent(env,sens);
     }
@@ -492,9 +500,6 @@ struct LocalStartTime {
 
 
 static uint8_t clearCMD[]{0xf3,0x8C,0x3E};
-static jbyteArray clearStorage(JNIEnv *env, SensorGlucoseData *sens) {
-    return getEncrypted(env,sens,clearCMD);
-    }
 
 static jbyteArray receiveLocalStarttime(JNIEnv *env, SensorGlucoseData *sens,aidexXstream *stream,bool unbonded,bool bondednow,const uint8_t *data,int len) {
     if(len<sizeof(LocalStartTime)) {
@@ -721,7 +726,7 @@ static jbyteArray deviceInfo(JNIEnv *env, SensorGlucoseData *sens,aidexXstream *
         case 1:
             return getEncrypted(env,sens,{0x31,0x01,0x8a,0x3b});
          case 0: 
-            if(sens->getinfo()->aidexXdat.hasTime)
+            if(sens->getinfo()->aidexXdat.hasTime&&!stream->unbonded)
                 return getEncrypted(env, sens, { 0x35, 0x01, 0x4e, 0xf7 });
         };
     return getEncrypted(env,sens,{0x21,0xb3,0xd5});
@@ -1019,14 +1024,14 @@ extern "C" JNIEXPORT jint JNICALL   fromjava(getMinimalWarmup)(JNIEnv *env, jcla
 //AiDEX X-22222A2WC8
 
 extern void    sendstreaming(SensorGlucoseData *hist);
+
 extern "C" JNIEXPORT jstring JNICALL   fromjava(aidexXaddSensorByDeviceName)(JNIEnv *env, jclass cl,jstring jdeviceName) {
    const char *deviceName = env->GetStringUTFChars( jdeviceName, NULL);
    destruct   dest([jdeviceName,deviceName,env]() {env->ReleaseStringUTFChars(jdeviceName, deviceName);});
    const size_t deviceNamelen= env->GetStringUTFLength( jdeviceName);
-//   constexpr const int start=8;
-   std::string_view scandeviceName{deviceName+8,deviceNamelen-8};
+   std::string_view scandeviceName{deviceName+deviceNamelen-10,10};
    const uint32_t now=time(nullptr);
-   auto [sensindex,sens]= sensors->makeAidexXSensorindex(scandeviceName,""sv,now);
+   auto [sensindex,sens]= sensors->makeAidexXSensorindex(scandeviceName,!memcmp(deviceName,Sensoren::nameLinX,sizeof(Sensoren::nameLinX)-1),""sv,now);
    if(sens) {
       const char *name=sens->shortsensorname()->data();
       LOGGER("addSensorByDeviceName(%s)=%s\n",deviceName,name);

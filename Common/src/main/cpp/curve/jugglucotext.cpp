@@ -101,7 +101,7 @@ const jugglucotext engtext {
 	.SD="SD: %.2f",
 	.glucose_variability="Glucose variability: %.1f%%",
      .menustr0={
-		"System UI        ",
+		"System UI",
 		"Menus",
 		"Watch",
 		"Sensor",
@@ -127,7 +127,7 @@ const jugglucotext engtext {
 		"Statistics",
 #ifdef INJUGGLUCO
 		"Talk",
-		"Float        "
+		"Float"
 		},
 	.menustr2= {"Last Scan",
 	"Scans",
@@ -135,7 +135,7 @@ const jugglucotext engtext {
 	"History",
 	"Amounts",
 	"Meals",
-	"Dark mode        "},
+	"Dark mode"},
 	.menustr3= {hourminstr,
 	"Search",
 	"Date",
@@ -152,9 +152,9 @@ const jugglucotext engtext {
 	"Display",
     "Settings",
 	"Stop Alarm" },
-.menustr2= {"Date  ",
+.menustr2= {"Date",
 hourminstr,
-"Day back                       ",
+"Day back",
 engtext.amount},
 #endif //WEAROS
 #ifdef INJUGGLUCO
@@ -237,3 +237,5 @@ void setuseeng() {
 LOGAR("setuse en");
  usedtext= &engtext;
  }*/
+
+//std::unordered_map<uint16_t,const jugglucotext*> langmap;

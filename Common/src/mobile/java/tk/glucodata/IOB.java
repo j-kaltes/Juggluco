@@ -111,7 +111,10 @@ public static void mkview(MainActivity act) {
            },new View[]{recycle},new View[]{help,iob,ok});
    lay.setBackgroundColor(Applic.backgroundcolor);
    final var density= tk.glucodata.GlucoseCurve.metrics.density;
-   getMargins(help).leftMargin=getMargins(ok).rightMargin=(int)(0.15f*GlucoseCurve.getwidth());
+   var hormarg=(int)(0.15f*GlucoseCurve.getwidth());
+
+   getMargins(help).setMarginStart(hormarg);
+   getMargins(ok).setMarginEnd(hormarg);   
    lay.setPadding(MainActivity.systembarLeft+(int)(density*10.0f),MainActivity.systembarTop,MainActivity.systembarRight+(int)(density*10.0f),MainActivity.systembarBottom);
     iob.setOnCheckedChangeListener( (buttonView,  isChecked) -> {
             if(!Natives.setIOB(isChecked)) {

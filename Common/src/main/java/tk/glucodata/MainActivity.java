@@ -87,6 +87,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
+import androidx.core.text.TextUtilsCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
@@ -98,6 +99,7 @@ import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.List;
+import java.util.Locale;
 
 //import androidx.activity.OnBackPressedCallback;
 //import androidx.activity.OnBackPressedDispatcher;
@@ -176,6 +178,8 @@ public static int systembarTop=0;
 public static int systembarBottom=0;
 public static int systembarLeft=0;
 public static int systembarRight=0;
+public static int systembarStart=0;
+public static int systembarEnd=0;
 //public static int navigationbarLeft=0;
 private void startdisplay() {
    if(doLog) {Log.i(LOG_ID,"startdisplay");};
@@ -199,7 +203,14 @@ private void startdisplay() {
             systembarTop=insets.top;
             systembarRight=insets.right;
             systembarBottom=insets.bottom;
-
+            if(rtl) {
+                systembarStart=systembarRight;
+                systembarEnd=systembarLeft;
+                }
+            else {
+                systembarStart=systembarLeft;
+                systembarEnd=systembarRight;
+                }
              requestRender();
              if(getlibrary.showintro) {
                getlibrary.showintro=false;
@@ -351,6 +362,14 @@ void showSystemBarsAppearance() {
         {if(doLog) {Log.i(LOG_ID, message);};};
     }
    } */
+static public boolean  rtl;
+  private void updateRtl(Configuration config) {
+        rtl = config.getLayoutDirection() == View.LAYOUT_DIRECTION_RTL;
+
+       // Locale locale = getResources().getConfiguration().getLocales().get(0);
+       // rtl = TextUtilsCompat.getLayoutDirectionFromLocale(locale) == View.LAYOUT_DIRECTION_RTL;
+        Log.i(LOG_ID,"rtl="+rtl);
+       }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         if(android.os.Build.VERSION.SDK_INT >= 21) {
@@ -363,6 +382,7 @@ void showSystemBarsAppearance() {
            Specific.splash(this);
          }
         super.onCreate(savedInstanceState);
+        updateRtl(getResources().getConfiguration());
         if(Build.VERSION.SDK_INT >= 30)  {
            if(!isWearable) {
                 WindowCompat.enableEdgeToEdge(getWindow());  
@@ -923,8 +943,9 @@ void removeconfig() {
 @Override
 public void onConfigurationChanged(Configuration newConfig) {
     super.onConfigurationChanged(newConfig);
-    {if(doLog) {Log.i(LOG_ID,"onConfigurationChanged height=" +newConfig.screenHeightDp+" width=" +newConfig.screenWidthDp + " sw="+newConfig.smallestScreenWidthDp);};};
-        removeconfig();
+    if(doLog) {Log.i(LOG_ID,"onConfigurationChanged height=" +newConfig.screenHeightDp+" width=" +newConfig.screenWidthDp + " sw="+newConfig.smallestScreenWidthDp);};
+    removeconfig();
+   updateRtl(newConfig);
    }
 public void requestRender() {
     if(curve!=null)

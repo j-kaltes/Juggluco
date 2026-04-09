@@ -47,7 +47,7 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
+
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -56,6 +56,8 @@ import android.widget.SeekBar;
 import android.widget.Space;
 
 import tk.glucodata.BackGesture;
+import tk.glucodata.CheckDirectionBox;
+import tk.glucodata.CheckDirectionRadio;
 import tk.glucodata.Log;
 import tk.glucodata.Applic;
 import tk.glucodata.GlucoseCurve;
@@ -108,12 +110,12 @@ public class ColorConfig {
          }
       }
 
-   private static void setradio(RadioButton[] radios,  CheckBox defbox) {
-         for(RadioButton but:radios) {
+   private static void setradio(CheckDirectionRadio[] radios,  CheckDirectionBox defbox) {
+         for(CheckDirectionRadio but:radios) {
             but.setOnCheckedChangeListener( (buttonView,  isChecked) -> {
                if(isChecked) {
                   int i=0;
-                  for(RadioButton b:radios)  {
+                  for(CheckDirectionRadio b:radios)  {
                       if(b==buttonView) {
                            radiosel=i;
                            int col=getcolor(i);
@@ -131,7 +133,7 @@ public class ColorConfig {
 static private int radiosel=0;
 static public   void show(MainActivity context, View view) {
 	   view.setVisibility(INVISIBLE);
-      var allradio=new RadioButton[names.length];
+      var allradio=new CheckDirectionRadio[names.length];
         for(int i=0;i<names.length;++i) 
             allradio[i]=getradiobutton(context,names[i]);
 
@@ -185,7 +187,7 @@ static public   void show(MainActivity context, View view) {
        context.addContentView(layout, new ViewGroup.LayoutParams(MATCH_PARENT,MATCH_PARENT));
       };
 
-static public void showcolors(MainActivity act,CheckBox def) {
+static public void showcolors(MainActivity act,CheckDirectionBox def) {
       var glview=new GlucoseValue(150,150);
       int coltype=radiosel;
       int initialColor=getcolordef(coltype);
@@ -215,6 +217,7 @@ static public void showcolors(MainActivity act,CheckBox def) {
    SeekBar fontsizeview;
    if(radiosel==1) {
       fontsizeview=new SeekBar(act);
+     Applic.ifRTLseekbar(fontsizeview);
 //      float maxfont=glview.fontsize;
 //      float currentfont= Math.min(maxfont, GlucoseValue.upperboundfontsize);
       int currentfont= (int)(GlucoseValue.fontFraction*1000);

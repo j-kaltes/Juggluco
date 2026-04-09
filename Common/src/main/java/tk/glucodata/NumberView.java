@@ -21,6 +21,7 @@
 
 package tk.glucodata;
 
+import android.view.Gravity;
 import android.widget.LinearLayout;
 import android.app.Activity;
 import androidx.appcompat.app.AlertDialog;
@@ -36,7 +37,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.CheckBox;
+
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -146,7 +147,7 @@ void closenumview() {
     }
 
 Button mealbutton;
-CheckBox excludebox;
+CheckDirectionBox excludebox;
 public void  addnumberview(MainActivity activity, long hitptr) {
     if(currentnum!=0L&&currentnum!=numio.newhit) 
             Natives.freehitptr(currentnum);
@@ -255,26 +256,22 @@ public   View addnumberview(MainActivity context,final int bron,final long time,
     if(isWearable) {
         int height=GlucoseCurve.getheight();
         int width=GlucoseCurve.getwidth();
-      getMargins(timebutton).rightMargin= getMargins(datebutton).leftMargin =(int)(width*0.08f);
-//      getMargins(timebutton).rightMargin=(int)(width*0.10f);
+        int hormarg= (int)(width*0.08f);
+        getMargins(timebutton).setMarginEnd(hormarg);
+        getMargins(datebutton).setMarginStart(hormarg); 
       if(useclose)  {
-   //      getMargins(deletebutton).rightMargin=getMargins(savebutton).leftMargin =(int)(width*0.05f);
-//      getMargins(deletebutton).rightMargin=getMargins(savebutton).leftMargin =(int)(width*0.12f);
           layout = new Layout(context, (lay,w,h) -> { 
           return new int[]{w,h}; }, new View[]{datebutton,timebutton} ,new View[]{getspinner(context), valueedit}, new View[]{excludebox},new View[]{messagetext,savebutton,deletebutton},new View[]{cancelbutton});
       }
       else {
- //     getMargins(deletebutton).bottomMargin=getMargins(savebutton).bottomMargin =(int)(width*0.12f);
        layout = new Layout(context, (lay,w,h) -> {
    return new int[]{w,h};
    }, new View[]{datebutton,timebutton} ,new View[]{getspinner(context), valueedit},new View[]{excludebox}, new View[]{messagetext,savebutton,deletebutton});
    }
 
-//       int sidepad=(int)(GlucoseCurve.metrics.density*20);
- //       layout.setPadding(sidepad,0,sidepad,0);
 
         if(true) {
-          layout.setPadding((int)(width*0.01f),(int)(height*.15f),(int)(width*0.01f),(int)(height*.01f));
+          layout.setPaddingRelative((int)(width*0.01f),(int)(height*.15f),(int)(width*0.01f),(int)(height*.01f));
            ScrollView scroll=new ScrollView(context);
            scroll.setFillViewport(true);
         scroll.setSmoothScrollingEnabled(false);
@@ -477,8 +474,7 @@ public   View addnumberview(MainActivity context,final int bron,final long time,
     source.setText( bron==1?"      ":"           \u231A         ");
     source.setTextAlignment( TEXT_ALIGNMENT_CENTER);
     int pads=(int)(GlucoseCurve.metrics.density*10);
-        source.setPadding(0,pads,0,pads);
-//    source.setPadding(0,0,0,0);
+        source.setPaddingRelative(0,pads,0,pads);
     if(!Natives.staticnum()) {
         messagetext.setVisibility(GONE);
         savebutton.setVisibility(VISIBLE);
@@ -606,20 +602,17 @@ void deletedialog(View v,int[] mealptr) {
 private void nodelete() {
     deletebutton.setVisibility(GONE);
     if(isWearable)
-        getMargins(savebutton).leftMargin =0;
+        getMargins(savebutton).setMarginStart(0);
     }
 
 private void seedelete() {
     deletebutton.setVisibility(VISIBLE);
     if(isWearable) {
         int width=GlucoseCurve.getwidth();
-         if(useclose)  {
-             getMargins(deletebutton).rightMargin=getMargins(savebutton).leftMargin =(int)(width*0.05f);
-             }
-         else {
-          getMargins(deletebutton).rightMargin=getMargins(savebutton).leftMargin =(int)(width*0.12f);
-            }
-         }
+        int hormarg=useclose?(int)(width*0.05f):(int)(width*0.12f);
+        getMargins(deletebutton).setMarginEnd(hormarg);
+        getMargins(savebutton).setMarginStart(hormarg);
+        }
     }
 public void addnumberwithmenu(MainActivity context,int mealptr) {
     if(currentnum!=0L)  {
@@ -766,7 +759,7 @@ public Layout getdateviewal(MainActivity activity, long date, Dater erdate) {
         dater.date(year,month,day);
 
         });
-    int laypar;
+   ViewGroup.LayoutParams datparams;
     if(isWearable) {
          if(!useclose)
             cancel.setVisibility(GONE);
@@ -774,12 +767,14 @@ public Layout getdateviewal(MainActivity activity, long date, Dater erdate) {
                 (lay, w, h)->{
             return new int[] {w,h};
                 },new View[]{cancel},new View[] {datepick},new View[] {ok});
-        laypar= MATCH_PARENT;
-       datepicker.setPadding(0,(int)(GlucoseCurve.metrics.density*5.0),0,(int)(GlucoseCurve.metrics.density*2.0));
+        int laypar= MATCH_PARENT;
+       datepicker.setPaddingRelative(0,(int)(GlucoseCurve.metrics.density*5.0),0,(int)(GlucoseCurve.metrics.density*2.0));
+       datparams=new ViewGroup.LayoutParams(laypar,laypar);
         }
     else {
         datepicker=new Layout(activity,
                 (lay, w, h)->{
+/*
             int height=GlucoseCurve.getheight();
             int width=GlucoseCurve.getwidth();
         if(w>width||h>height) {
@@ -790,14 +785,14 @@ public Layout getdateviewal(MainActivity activity, long date, Dater erdate) {
                     lay.setX((width-w)/2);
                     lay.setY((height-h)/2);
             }
-
+*/
             return new int[] {w,h};
                 },new View[] {datepick},new View[] {cancel,ok});
-        laypar= WRAP_CONTENT;
+        datparams =    new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.CENTER|Gravity.CENTER_HORIZONTAL);
         }
 
     datepicker.setBackgroundColor( Applic.app.backgroundcolor);
-       activity.addContentView(datepicker, new ViewGroup.LayoutParams(laypar,laypar));
+    activity.addContentView(datepicker, datparams);
     }
     else {
     {if(doLog) {Log.i(LOG_ID, " old");};};
@@ -927,6 +922,7 @@ else {
         Layout layout=new Layout(activity,
                 (lay, w, h)-> {
                     activity.hideSystemUI();
+                    /*
                     int wid = GlucoseCurve.getwidth();
                     if(w>=wid) {
                         lay.setX(0);
@@ -935,24 +931,28 @@ else {
                         int x=(wid-w)/2;
                         lay.setX(x);
                         {if(doLog) {Log.i(LOG_ID,"screen width="+wid+" w="+w+" x="+x);};};
-                        }
+                        } 
                     if(isWearable) {
                         int height = GlucoseCurve.getheight();
                         if(height>h) {
                                 lay.setY((height-h)/2);
                         }
-
+    
                     }
+                    */
                     return new int[]{w, h};
                 }, views);
 
 
         layout.setBackgroundColor( Applic.backgroundcolor);
-        activity.addContentView(layout,  new ViewGroup.LayoutParams(layparwidth,layparwidth));
     //    activity.addContentView(layout,  new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+    var  params =    new FrameLayout.LayoutParams(layparwidth,layparwidth, Gravity.CENTER_HORIZONTAL);
+
+    //l act.addContentView(layout, params);
+        activity.addContentView(layout,  params);
         timepicker=layout;
    if(isWearable)
-          layout.setPadding(0,(int)(GlucoseCurve.metrics.density*5.0),0,(int)(GlucoseCurve.metrics.density*2.0));
+          layout.setPaddingRelative(0,(int)(GlucoseCurve.metrics.density*5.0),0,(int)(GlucoseCurve.metrics.density*2.0));
     }
     else {
         Log.i(LOG_ID,"old gettimepicker");
@@ -961,13 +961,13 @@ else {
     timepicker.bringToFront();
     }
 
-  //    timepicker.setPadding(systembarLeft,MainActivity.systembarTop, systembarRight,MainActivity.systembarBottom);
+  //    timepicker.setPaddingRelative(systembarLeft,MainActivity.systembarTop, systembarRight,MainActivity.systembarBottom);
 if(!isWearable) {
     if(buttonsunder) 
-        timepicker.setPadding(systembarLeft,MainActivity.systembarTop, systembarRight,MainActivity.systembarBottom);
+        timepicker.setPaddingRelative(systembarLeft,MainActivity.systembarTop, systembarRight,MainActivity.systembarBottom);
    else  {
-         pick.setPadding(systembarLeft,MainActivity.systembarTop,0,MainActivity.systembarBottom);
-        //buttonlay.setPadding(0,MainActivity.systembarTop/2, systembarRight,MainActivity.systembarBottom);
+         pick.setPaddingRelative(systembarLeft,MainActivity.systembarTop,0,MainActivity.systembarBottom);
+        //buttonlay.setPaddingRelative(0,MainActivity.systembarTop/2, systembarRight,MainActivity.systembarBottom);
         }
      }
 
@@ -1188,6 +1188,7 @@ Layout getkeyboard(Context context) {
         }, views) ;
         
     layout.setBackgroundColor( Applic.backgroundcolor);
+    layout.post(layout::requestLayout);
     return layout;
     }
 

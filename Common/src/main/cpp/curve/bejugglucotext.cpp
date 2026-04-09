@@ -79,7 +79,7 @@ jugglucotext betext {
 	.SD="SD: %.2f",
 	.glucose_variability="Варыябельнасць глюкозы: %.1f%%",
      .menustr0={
-		"System UI      ",
+		"System UI",
 		"Меню",
 		"Глядзець",
 		"Датчык",
@@ -105,7 +105,7 @@ jugglucotext betext {
 		"Статыстыка",
 #ifdef INJUGGLUCO
 		"Размаўляць",
-		"Парыць      "
+		"Парыць"
 		},
 	.menustr2= {"Апошняе скан.",
 	    "Сканы",
@@ -113,19 +113,19 @@ jugglucotext betext {
 	    "Гісторыя",
 	    "Сумы",
 	    "Ежа",
-	    "Dark mode        "},
+	    "Dark mode"},
 	.menustr3= {hourminstr,"Пошук","Дата","Дзень назад","Праз дзень","Тыдзень таму","Праз тыдзень"},
 #endif //INJUGGLUCO
 #else
  .amount="Сума",
  .menustr0= {
-	"        Клон",
+	"Клон",
 	"Датчык",
 	"Дысплей",
         "Налады",
 	"Спыніць трывогу" },
 .menustr2= {"Дата",hourminstr,
-"Дзень назад              ",betext.amount},
+"Дзень назад",betext.amount},
 #endif
 #ifdef INJUGGLUCO
 

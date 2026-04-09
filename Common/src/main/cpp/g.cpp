@@ -652,6 +652,9 @@ extern "C" JNIEXPORT jlong JNICALL   fromjava(getdataptr)(JNIEnv *env, jclass cl
     }
 extern "C" JNIEXPORT void JNICALL   fromjava(freedataptr)(JNIEnv *envin, jclass cl,jlong dataptr) {
     LOGGER("start freedataptr(%p)\n",dataptr);
+    if(!dataptr) {
+        return;
+        }
     streamdata *sdata=reinterpret_cast<streamdata *>(dataptr);
     auto *sens= sdata->hist;
     while(sens->processing.test_and_set()) {
@@ -771,8 +774,6 @@ extern "C" JNIEXPORT jstring JNICALL   fromjava(getShowSensorName)(JNIEnv *envin
     return envin->NewStringUTF(name);
     } */
 
-int  Sensoren::deletedit=-1;
-SensorGlucoseData *Sensoren::isdeleted=nullptr;
 extern "C" JNIEXPORT jstring JNICALL   fromjava(getDeviceAddress)(JNIEnv *envin, jclass cl,jlong dataptr,jboolean getnew) {
     LOGGER("getDeviceAddress(%p,%d)\n",dataptr,getnew);
     if(!dataptr) {

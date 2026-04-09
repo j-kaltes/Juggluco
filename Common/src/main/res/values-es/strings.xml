@@ -390,7 +390,7 @@
     <string name="profile">"Perfil "</string>
     <string name="lossofsignal">Pérdida de señal</string>
     <string name="valuenotification">Notificación de valor</string>
-    <string name="nothing">Ninguno</string>
+    <string name="nothing"></string>
     <string name="scantranstitle">Escanea la matriz de datos del TRANSMISOR</string>
     <string name="scantransmessage">La matriz de datos del sensor Sibionics 2 se escaneó correctamente. \nAhora escanea la matriz de datos del transmisor."</string>
     <string name="mirrorscansucces">Conexión añadida correctamente al menú central izquierdo → Clon.</string>

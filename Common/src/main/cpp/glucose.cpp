@@ -657,3 +657,6 @@ void SensorGlucoseData::resetSiIndex() {
 #define VISIBLE __attribute__((__visibility__("default")))
 extern "C" void VISIBLE A_library_belonging_to_Juggluco_by_Jaap_Korthals_Altes() {
     };
+
+int  Sensoren::deletedit=-1;
+SensorGlucoseData *Sensoren::isdeleted=nullptr;

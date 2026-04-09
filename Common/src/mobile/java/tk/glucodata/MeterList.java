@@ -34,7 +34,7 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
+
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -47,7 +47,7 @@ static final class MeterView extends Layout{
    MeterListViewAdapter adapter;
    int meterIndex;
    TextView text;
-   CheckBox active;
+   CheckDirectionBox active;
    void setdata(int index) {
          meterIndex=index;
          String name=Natives.GlucoseMeterDeviceName(index);
@@ -81,7 +81,7 @@ static final class MeterView extends Layout{
         text.setText(addtext);
          active.setChecked(a);
         }
-    MeterView(MainActivity act,View parent,TextView t,CheckBox b, MeterListViewAdapter adapter) {
+    MeterView(MainActivity act,View parent,TextView t,CheckDirectionBox b, MeterListViewAdapter adapter) {
         super(act,(l,w,h)->{
              return new int[] {w,h};
                },new View[]{t},new View[]{b});
@@ -106,8 +106,8 @@ static final class MeterView extends Layout{
         active.setText(R.string.active);
         float density=GlucoseCurve.metrics.density;
         var marg=getMargins(active);
-        marg.leftMargin=0;
-        marg.rightMargin=(int)(density*10);
+        marg.setMarginStart(0);
+        marg.setMarginEnd((int)(density*10));
         int pad=(int)(5.0*density);
         setPadding(pad,pad,pad,(int)(density*8.0));
 
@@ -116,7 +116,7 @@ static final class MeterView extends Layout{
         }
 
     MeterView(MainActivity act,View parent,MeterListViewAdapter adapter) {
-        this(act,parent,new TextView(act),new CheckBox(act),adapter);
+        this(act,parent,new TextView(act),new CheckDirectionBox(act),adapter);
         }
     };
    static  class MeterListViewHolder extends RecyclerView.ViewHolder {
@@ -185,7 +185,16 @@ static public void show(MainActivity act, View parent) {
         help.setOnClickListener(v-> tk.glucodata.help.help(R.string.GlucoseMeterList,act));
        layout.setBackgroundColor(backgroundcolor);
         float density=GlucoseCurve.metrics.density;
-    layout.setPadding((int)(density*5.0)+MainActivity.systembarLeft,MainActivity.systembarTop,MainActivity.systembarRight+(int)(density*8.0),MainActivity.systembarBottom);
+        float addleft,addright;
+        if(MainActivity.rtl&&Applic.supportsRtl) {
+                addleft=8.0f;
+                addright=5.0f;
+                }
+         else {
+                addleft=5.0f;
+                addright=8.0f;
+                }
+    layout.setPadding((int)(density*addleft)+MainActivity.systembarLeft,MainActivity.systembarTop,MainActivity.systembarRight+(int)(density*addright),MainActivity.systembarBottom);
 
      act.addContentView(layout, new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
       MainActivity.setonback(()-> {

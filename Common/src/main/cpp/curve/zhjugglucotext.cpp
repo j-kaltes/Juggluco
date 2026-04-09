@@ -53,7 +53,7 @@ jugglucotext zhtext {
     .SD = "SD: %.2f",
     .glucose_variability = "葡萄糖变异性: %.1f%%",
     .menustr0 = {
-        "系统 UI        ",
+"系统 UI",
         "主菜单",
         "手表",
         "传感器",
@@ -77,7 +77,7 @@ jugglucotext zhtext {
         "统计",
 #ifdef INJUGGLUCO
         "播报",
-        "悬浮窗        "
+"悬浮窗"
     },
 
     .menustr2 = {"最后一次扫描",
@@ -86,7 +86,7 @@ jugglucotext zhtext {
         "历史记录",
         "标签数据",
         "餐饮",
-        "黑暗模式           "},
+"黑暗模式"},
     .menustr3 = {hourminstr,
         "搜索",
         "日期",
@@ -98,14 +98,14 @@ jugglucotext zhtext {
 #else
     .amount = "标签",
     .menustr0 = {
-        "        镜像",
+"镜像",
         "传感器",
         "显示",
         "设置",
         "停止警报" },
-    .menustr2 = {"日期  ",
+.menustr2 = {"日期",
         hourminstr,
-        "向后一天                       ",
+"向后一天",
         zhtext.amount},
 #endif
 

@@ -23,22 +23,25 @@ package tk.glucodata.settings;
 
 import android.app.Activity;
 import android.content.Context;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.GridLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.recyclerview.widget.RecyclerView;
 import tk.glucodata.Applic;
+import tk.glucodata.CheckDirectionRadio;
 import tk.glucodata.GlucoseCurve;
 import tk.glucodata.MainActivity;
 import tk.glucodata.Natives;
 import tk.glucodata.R;
-import tk.glucodata.measuredgrid;
 
 import static android.view.View.GONE;
 import static android.view.View.INVISIBLE;
@@ -70,12 +73,12 @@ public class LibreNumberHolder extends RecyclerView.ViewHolder {
 private static final String LOG_ID="LibreNumberHolder";
 /*
 RadioButton mkradiobutton(Context context, String label) {
-      var radio  = new RadioButton(context);
+      var radio  = new CheckDirectionRadio(context);
       radio.setText(label);
       return radio;
     } */
 int getid(View layout,int res) {
-    RadioButton longacting=layout.findViewById(res);
+    CheckDirectionRadio longacting=layout.findViewById(res);
     final int longid=longacting.getId();
     return longid;
     }
@@ -97,7 +100,10 @@ void sendoptions(View labelview,int pos) {
     layout.setBackgroundResource(R.drawable.dialogbackground);
     int laypad=(int)(GlucoseCurve.metrics.density*4.0f);
     layout.setPadding(laypad,0,laypad,laypad);
-    context.addContentView(layout, new ViewGroup.LayoutParams( WRAP_CONTENT, WRAP_CONTENT));
+
+    var  params =    new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.CENTER_HORIZONTAL);
+    params.topMargin=MainActivity.systembarTop;
+    context.addContentView(layout, params);
     Button close=layout.findViewById(R.id.close);
     Button save=layout.findViewById(R.id.save);
     TextView label=layout.findViewById(R.id.label);
@@ -107,8 +113,8 @@ void sendoptions(View labelview,int pos) {
     weight.setImeOptions(editoptions);
          Button help=layout.findViewById(R.id.help);
     help.setOnClickListener(v->{tk.glucodata.help.basehelp(context.getString(R.string.setlibrenumtype),context,l-> { } , (hv,w,h)-> {return new int[] { getwidth()-systembarLeft-systembarRight,getheight() - MainActivity.systembarTop*3/4- systembarBottom };} , new ViewGroup.MarginLayoutParams(MATCH_PARENT, MATCH_PARENT)); }); ;
-
-    measuredgrid grid=layout.findViewById(R.id.librenum);
+    GridLayout grid=layout.findViewById(R.id.librenum);
+    /*
     grid.setmeasure((l,w,h)-> {
         int height= getheight();
         int width= getwidth();
@@ -117,7 +123,7 @@ void sendoptions(View labelview,int pos) {
         l.setX(x);
             //    return new int[]{w,Math.min(h,height-MainActivity.systembarTop)};
     });
-
+*/
     if(kindids==null) {
          final int rapidactingid=getid(layout,R.id.rapidacting);
          final int longactingid=getid(layout,R.id.longacting);

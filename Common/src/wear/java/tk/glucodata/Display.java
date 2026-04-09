@@ -33,7 +33,7 @@ import static tk.glucodata.util.getcheckbox;
 
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
+
 import android.widget.ScrollView;
 
 class Display {
@@ -46,7 +46,7 @@ static void show(MainActivity context) {
      var History=getcheckbox(context,R.string.historyname,getshowhistories()) ;
      var Stream=getcheckbox(context,R.string.streamname,getshowstream()) ;
      var Amounts=getcheckbox(context,R.string.amountshort,getshownumbers()) ;
-    CheckBox darkmodeview=getcheckbox(context,R.string.darkmode,getInvertColors());
+    CheckDirectionBox darkmodeview=getcheckbox(context,R.string.darkmode,getInvertColors());
     darkmodeview.setOnCheckedChangeListener( (buttonView, isChecked)->{
         Natives.setInvertColors(isChecked);
         });

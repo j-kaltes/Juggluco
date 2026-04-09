@@ -26,7 +26,7 @@ import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
+
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -35,6 +35,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import tk.glucodata.Applic;
+import tk.glucodata.CheckDirectionBox;
 import tk.glucodata.Layout;
 import tk.glucodata.Log;
 import tk.glucodata.MainActivity;
@@ -105,7 +106,7 @@ static public class LibreNumberAdapter extends RecyclerView.Adapter<LibreNumberH
 
 
 
-public static void    mklayout(Activity context, int night, CheckBox donum, int[] donothing, View parent) {
+public static void    mklayout(Activity context, int night, CheckDirectionBox donum, int[] donothing, View parent) {
 	parent.setVisibility(INVISIBLE);
 	Button close = new Button(context);
 	close.setText(R.string.closename);

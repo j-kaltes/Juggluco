@@ -35,6 +35,7 @@ extern jstring myNewStringUTF(JNIEnv *env,const std::string_view str);
 #include "config.h"
 #include "datbackup.hpp"
 #include "fromjava.h"
+#include "rtl_label_converter.h"
 extern Backup *backup;
 //#define fromjava(x) Java_tk_glucodata_Natives_ ##x
 
@@ -230,6 +231,8 @@ extern "C" JNIEXPORT jboolean  JNICALL   fromjava(toCalendarApp)(JNIEnv *env, jc
     */
 
 extern void mkheights();
+
+extern void loadscriptfonts(const char *name);
 extern "C" JNIEXPORT jboolean  JNICALL   fromjava(setlabel)(JNIEnv *env, jclass cl,jint index,jstring jlabel, jfloat prec,jfloat weight) {
     if(index>=maxvarnr)
         return false;
@@ -238,8 +241,12 @@ extern "C" JNIEXPORT jboolean  JNICALL   fromjava(setlabel)(JNIEnv *env, jclass 
         return false;
 
     jint jlen = env->GetStringLength( jlabel);
-    env->GetStringUTFRegion(jlabel, 0,jlen, settings->data()->vars[index].name);
-    settings->data()->vars[index].name[len]='\0';
+    char label[12];
+    env->GetStringUTFRegion(jlabel, 0,jlen, label);
+    label[len]='\0';
+    rtl_to_visual_utf8(label,settings->data()->vars[index].name,12);
+//    env->GetStringUTFRegion(jlabel, 0,jlen, settings->data()->vars[index].name);
+//    settings->data()->vars[index].name[reslen]='\0';
     settings->data()->vars[index].prec=prec;
     settings->data()->vars[index].weight=settings->tomgperL(weight);
     if(index>=settings->varcount()||index<0)  {
@@ -247,6 +254,7 @@ extern "C" JNIEXPORT jboolean  JNICALL   fromjava(setlabel)(JNIEnv *env, jclass 
         mkheights() ;
         }
 
+    loadscriptfonts(label);
     settings->data()->sendlabels=true;
     settings->updated();
     return true;
@@ -344,7 +352,10 @@ extern "C" JNIEXPORT jobject  JNICALL   fromjava(getLabels)(JNIEnv *env, jclass 
      env->DeleteLocalRef(carlist);
 
      for(int i=0;i<len;i++) {
-             env->CallBooleanMethod(arlist,add, myNewStringUTF(env,settings->getlabel(i).data()));
+          constexpr const int maxlabel=12;
+           char label[maxlabel];
+           rtl_to_logical_utf8(settings->getlabel(i).data(),label,maxlabel);
+           env->CallBooleanMethod(arlist,add, myNewStringUTF(env,label));
           }
         env->CallBooleanMethod(arlist,add, env->NewStringUTF(""));
     return arlist;

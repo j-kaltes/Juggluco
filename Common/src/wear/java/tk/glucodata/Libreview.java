@@ -22,10 +22,10 @@
 package tk.glucodata;
 
 import android.view.View;
-import android.widget.CheckBox;
+
 
 public class Libreview  {
-public static void  config(MainActivity act, View lay, CheckBox box, boolean[] nothing) {
+public static void  config(MainActivity act, View lay, CheckDirectionBox box, boolean[] nothing) {
 	}
 
 }

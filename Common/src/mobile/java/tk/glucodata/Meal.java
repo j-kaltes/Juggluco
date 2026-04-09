@@ -33,9 +33,11 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.CheckBox;
+
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.GridLayout;
+import android.widget.HorizontalScrollView;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -137,19 +139,23 @@ static void askround(MainActivity act,Runnable runner ,View parent) {
     Button Cancel=getbutton(act,R.string.cancel);
     Layout lay=new Layout(act,(l,w,h)->{
 //        int height=GlucoseCurve.getheight();
+/*
         int width=GlucoseCurve.getwidth();
         l.setY(MainActivity.systembarTop);
         if(width>w)
             l.setX((width-w)/2);
         else
             l.setX(0);
-
+*/
         return new int[]{w,h};},new View[]{label,edit}    ,new View[]{Cancel,Save});
        int pad=(int)(tk.glucodata.GlucoseCurve.metrics.density*5.0);
        label.setPadding(pad,0,pad,0);
        lay.setPadding(pad,0,pad,0);
         lay.setBackgroundColor(Applic.backgroundcolor);
-    act.addContentView(lay, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+
+    var  params =    new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.CENTER_HORIZONTAL);
+    params.topMargin=MainActivity.systembarTop;
+    act.addContentView(lay, params);
     setonback(() -> {
         removeContentView(lay);
         help.hidekeyboard(act);
@@ -177,13 +183,10 @@ static Layout menuview(final NumberView numb, MainActivity act, int mealptr, Obj
         Help.setOnClickListener(v-> help.helplight(tk.glucodata.R.string.mealhelp,act));
     Button roundlabel=getbutton(act,act.getString(R.string.round)+Natives.getroundto());
 
-//    recycle.setLayoutParams(new ViewGroup.LayoutParams( WRAP_CONTENT , ViewGroup.LayoutParams.WRAP_CONTENT));
     recycle.setLayoutParams(new ViewGroup.LayoutParams( MATCH_PARENT , MATCH_PARENT));
     Button close=getbutton(act,R.string.closename);
     Button repeat=getbutton(act,R.string.repeat);
     float     carb=Natives.carbinmeal(mealptr);
-//    TextView total=getlabel(act,ondecimal(carb,10));
-//    int mealid=Natives.mealsNr();
     if(carb==0.0f)
         repeat.setVisibility(INVISIBLE);
     give.accept(carb,mealptr);
@@ -193,6 +196,7 @@ static Layout menuview(final NumberView numb, MainActivity act, int mealptr, Obj
         int height=GlucoseCurve.getheight();
 
     Layout lay=new Layout(act,(l,w,h)-> {
+    /*
         if(!smallScreen&&width>w) {
             if(numb.noroom)
                 l.setX(width-w);
@@ -202,10 +206,10 @@ static Layout menuview(final NumberView numb, MainActivity act, int mealptr, Obj
                 l.setX(half+bij );
                 }
                }
-
+*/
         return new int[]{w,h};
         },new View[]{roundlabel,repeat},new View[]{recycle},new View[] {add,Help,close});
-        lay.setY(MainActivity.systembarTop);
+    //    lay.setY(MainActivity.systembarTop);
     roundlabel.setOnClickListener(v-> 
         askround(act,()->{
         give.accept(carbar[0],mealptrar[0]);
@@ -213,7 +217,13 @@ static Layout menuview(final NumberView numb, MainActivity act, int mealptr, Obj
         },lay));
         lay.setBackgroundColor(Applic.backgroundcolor);
     lay.setMinimumWidth((width-MainActivity.systembarRight)/2);
-    act.addContentView(lay, smallScreen?new ViewGroup.LayoutParams(  MATCH_PARENT, (height-MainActivity.systembarTop)):new ViewGroup.LayoutParams(WRAP_CONTENT, (height-MainActivity.systembarTop-MainActivity.systembarBottom)));
+    //var  params =    new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.TOP|Gravity.RIGHT);
+//    var  params =    new FrameLayout.LayoutParams( WRAP_CONTENT, height-MainActivity.systembarTop-MainActivity.systembarBottom, Gravity.RIGHT);
+    var  params =    new FrameLayout.LayoutParams( WRAP_CONTENT, MATCH_PARENT, Gravity.RIGHT);
+    params.rightMargin=MainActivity.systembarRight;
+    params.topMargin=MainActivity.systembarTop*3/4;
+    act.addContentView(lay, params);
+//    act.addContentView(lay, smallScreen?new ViewGroup.LayoutParams(  MATCH_PARENT, (height-MainActivity.systembarTop)):new ViewGroup.LayoutParams(WRAP_CONTENT, (height-MainActivity.systembarTop-MainActivity.systembarBottom)));
     repeat.setOnClickListener(v->{
          removeContentView(lay);
          act.hideSystemUI();
@@ -396,6 +406,8 @@ static void menuitem(MainActivity act, NumberView numb, int mealptr, int pos, In
        int pad=(int)(tk.glucodata.GlucoseCurve.metrics.density*5.0);
        lay.setPadding(pad,0,pad,0);
     act.addContentView(lay, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+      lay.post(lay::requestLayout);
+
 //          lay.setBackgroundResource(R.drawable.dialogbackground);
         lay.setBackgroundColor(Applic.backgroundcolor);
 
@@ -506,11 +518,13 @@ static private void doSearchIngr(MainActivity act,View view,IngredientViewAdapte
     int width=GlucoseCurve.getwidth();
     var cancel=getbutton(act,R.string.cancel);
     var search=getbutton(act,R.string.search);
-    ingredient.setPadding((int)(tk.glucodata.GlucoseCurve.metrics.density*5.0),0,0,0);
+    ingredient.setPaddingRelative((int)(tk.glucodata.GlucoseCurve.metrics.density*5.0),0,0,0);
     var lay=new Layout(act,(l,w,h)-> {
+    /*
         l.setY(MainActivity.systembarTop*.75f);
         l.setX(MainActivity.systembarLeft);
         w=width-MainActivity.systembarLeft-MainActivity.systembarRight;
+        */
         return new int[]{w,h};
         },new View[]{ingredient,searchstr,search,cancel});
     lay.setBackgroundResource(R.drawable.helpbackground);
@@ -522,7 +536,14 @@ static private void doSearchIngr(MainActivity act,View view,IngredientViewAdapte
         hidekeyboard(act);
         });
     cancel.setOnClickListener(v->  doonback());
-    act.addContentView(lay, new ViewGroup.LayoutParams(width-MainActivity.systembarLeft-MainActivity.systembarRight ,WRAP_CONTENT));
+
+    //act.addContentView(lay, new ViewGroup.LayoutParams(width-MainActivity.systembarLeft-MainActivity.systembarRight ,WRAP_CONTENT));
+
+    var  params = new FrameLayout.LayoutParams(  MATCH_PARENT,WRAP_CONTENT, Gravity.TOP|Gravity.START);
+    params.topMargin=(int)(MainActivity.systembarTop*.75f);
+    params.setMarginStart(0);
+    params.setMarginEnd(MainActivity.systembarEnd);;
+   act.addContentView(lay, params);
     Runnable searchrun=()-> {
                 int[] res=Natives.searchIngredient(searchstr.getText().toString());
                 if(res!=null) {
@@ -556,7 +577,7 @@ static private void selectingredient(MainActivity act,NumberView numb,IntConsume
     recycle.setLayoutManager(lin);
     var add=getbutton(act,R.string.define);
     Button close=getbutton(act,R.string.closename);
-    CheckBox edit=new CheckBox(act);
+    CheckDirectionBox edit=new CheckDirectionBox(act);
     edit.setText(R.string.edit);
     var search=getbutton(act,R.string.search);
     recycle.setLayoutParams(new ViewGroup.LayoutParams(  MATCH_PARENT, MATCH_PARENT));
@@ -564,15 +585,18 @@ static private void selectingredient(MainActivity act,NumberView numb,IntConsume
     int width=GlucoseCurve.getwidth();
     int viewwidth=(int)(width*.56);
     recycle.setMinimumWidth(viewwidth);
-    int ypos=MainActivity.systembarTop*3/4;
+//    int ypos=MainActivity.systembarTop*3/4;
     Layout lay=new Layout(act,(l,w,h)-> {
+    /*
       var af=MainActivity.systembarTop*3/4;
         l.setY(af);
        l.setX((width-w)/2);
         return new int[]{w,h-af-MainActivity.systembarBottom};
+       */
+        return new int[]{w,h};
         },new View[]{recycle},new View[] {add,edit,search,close});
 
-    lay.setY(ypos);
+//    lay.setY(ypos);
 //    lay.setMinimumWidth(viewwidth);
     final int wasonback=MainActivity.onbacknr();
     IntConsumer hiercons=i-> {
@@ -598,8 +622,13 @@ static private void selectingredient(MainActivity act,NumberView numb,IntConsume
         });
 
 
-        lay.setBackgroundResource(R.drawable.dialogbackground);
-    act.addContentView(lay, new ViewGroup.LayoutParams(smallScreen?MATCH_PARENT:WRAP_CONTENT, height));
+    lay.setBackgroundResource(R.drawable.dialogbackground);
+
+//    act.addContentView(lay, new ViewGroup.LayoutParams(smallScreen?MATCH_PARENT:WRAP_CONTENT, height));
+    var  params =    new FrameLayout.LayoutParams( smallScreen?MATCH_PARENT:WRAP_CONTENT, MATCH_PARENT, Gravity.TOP|Gravity.CENTER_HORIZONTAL); 
+    params.topMargin=MainActivity.systembarTop*3/4;
+//    params.topMargin=0;
+    act.addContentView(lay, params);
     lay.invalidate();
     lay.setVisibility(VISIBLE);
     lay.bringToFront();
@@ -643,7 +672,7 @@ static void    defineingredient(MainActivity act ,IngredientViewAdapter  foodada
     EditText unit=new EditText(act);
         unit.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
         unit.setImeOptions(editoptions);
-        unit.setMinEms(4);
+        unit.setMinEms(2);
     TextView carblabel=getlabel(act,R.string.carbperunit);
     EditText carb=new EditText(act);
     carb.setMinEms(5);
@@ -699,21 +728,34 @@ static void    defineingredient(MainActivity act ,IngredientViewAdapter  foodada
         }
     else
         spinner.setVisibility(GONE);
-    Layout lay=new Layout(act,(l,w,h)-> {
+    Layout inlay=new Layout(act,(l,w,h)-> {
 //        int height=GlucoseCurve.getheight();
+/*
         int width=GlucoseCurve.getwidth();
         if(width>w)
             l.setX((width-w)/2);
         else
             l.setX(0);
         l.setY(MainActivity.systembarTop);
+        */
         return new int[]{w,h};
         },new View[]{namelabel,name,unitlabel,unit,spinner},new View[]{Database,carblabel,carb},new View[] {Cancel,Delete,Save});
+    final var lay= new HorizontalScrollView(act);
+    lay.addView(inlay, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT) );
+        lay.setSmoothScrollingEnabled(false);
+       lay.setVerticalScrollBarEnabled(false);
+        lay.setHorizontalScrollBarEnabled(Applic.horiScrollbar);
+        lay.setFillViewport(true);
 
        int pad=(int)(tk.glucodata.GlucoseCurve.metrics.density*5.0);
        lay.setPadding(pad,0,pad,pad/2);
       lay.setBackgroundResource(R.drawable.dialogbackground);
-    act.addContentView(lay, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+   // act.addContentView(lay, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+    var  params =    new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.CENTER_HORIZONTAL|Gravity.TOP);
+    params.topMargin=MainActivity.systembarTop;
+    params.leftMargin=MainActivity.systembarLeft/2;
+    params.rightMargin=MainActivity.systembarRight/2;
+     act.addContentView(lay, params);
 
     name.requestFocus();
     Save.setOnClickListener(v-> {
@@ -829,6 +871,7 @@ static Layout  fooddatabase(MainActivity act, TriConsumer<String,Float,String> g
     int fnr=Natives.foodnr();
     recycle.scrollToPosition(random.nextInt(fnr));
     Layout lay=new Layout(act,(l,w,h)->{
+    /*
         int width=GlucoseCurve.getwidth();
 //        l.setY(MainActivity.systembarTop);
         if(width>w) {
@@ -836,6 +879,7 @@ static Layout  fooddatabase(MainActivity act, TriConsumer<String,Float,String> g
                  }
         else
             l.setX(0);
+            */
     //    return new int[]{w,h-MainActivity.systembarTop};
         return new int[]{w,h};
 
@@ -844,6 +888,12 @@ static Layout  fooddatabase(MainActivity act, TriConsumer<String,Float,String> g
     //   lay.setPadding(pad,0,pad,0);
       lay.setPadding(MainActivity.systembarLeft,MainActivity.systembarTop/2,MainActivity.systembarRight,MainActivity.systembarBottom);
         lay.setBackgroundColor(Applic.backgroundcolor);
+    //act.addContentView(lay, new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
+/*
+    var  params =    new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.CENTER_HORIZONTAL);
+    params.topMargin=MainActivity.systembarTop;
+   context.addContentView(layout, params);
+   */
     act.addContentView(lay, new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
     searchstr.requestFocus();
     Help.setOnClickListener(v-> { 
@@ -887,7 +937,9 @@ static void    shownutrients(MainActivity act,int id,boolean showzero,TriConsume
         if((showzero&&el!=-1)||el>0)
             rows++;
         }
-    measuredgrid grid=new measuredgrid(act);
+    GridLayout grid=new GridLayout(act);
+      grid.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+      grid.setTextDirection(View.TEXT_DIRECTION_LTR);
         int cols=4;
         grid.setColumnCount(cols);
         grid.setRowCount(rows);
@@ -932,7 +984,7 @@ static void    shownutrients(MainActivity act,int id,boolean showzero,TriConsume
             grid.addView(un);
             }
         }
-        CheckBox zero=new CheckBox(act);
+        CheckDirectionBox zero=new CheckDirectionBox(act);
         zero.setText(R.string.showzero);
         zero.setChecked(showzero);
        zero.setPadding(0,0,0,0);
@@ -940,7 +992,7 @@ static void    shownutrients(MainActivity act,int id,boolean showzero,TriConsume
  int padzero=(int)    (GlucoseCurve.metrics.density*7.0);
     parzero.setMargins(padzero, 0, padzero, 0);
     ScrollView scroll=new ScrollView(act);
-    
+   /* 
     grid.setmeasure((l,w,h)-> {
         int height=GlucoseCurve.getheight();
         int width=GlucoseCurve.getwidth();
@@ -959,6 +1011,7 @@ static void    shownutrients(MainActivity act,int id,boolean showzero,TriConsume
         }
 
             });
+            */
     //      scroll.setPadding(0,0,0,MainActivity.systembarTop*3/4);
 
     Button Select=getbutton(act,R.string.select);
@@ -987,8 +1040,15 @@ static void    shownutrients(MainActivity act,int id,boolean showzero,TriConsume
     scroll.addView(grid);
     scroll.setSmoothScrollingEnabled(false);
         scroll.setVerticalScrollBarEnabled(Applic.scrollbar);
-    act.addContentView(scroll,new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
-        scroll.setBackgroundResource(R.drawable.dialogbackground);
+
+
+
+    //act.addContentView(scroll,new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+
+    var  params2 =    new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.CENTER_HORIZONTAL);
+    params2.topMargin=MainActivity.systembarTop;
+   act.addContentView(scroll, params2);
+    scroll.setBackgroundResource(R.drawable.dialogbackground);
     Close.setOnClickListener(v-> doonback());
     setonback(() -> {
         removeContentView(scroll);

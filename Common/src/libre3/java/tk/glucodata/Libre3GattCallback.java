@@ -214,9 +214,10 @@ private boolean connected=false;
             //updated=0;
             connected=true;
             setpriority(bluetoothGatt);
+            /*
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 bluetoothGatt.setPreferredPhy(PHY_LE_1M_MASK, PHY_LE_1M_MASK, PHY_OPTION_NO_PREFERRED);
-            }
+            } */
             constatchange[0] = tim;
             //wasConnected = true;
             if (!isServicesDiscovered||!getservices()) {

@@ -99,7 +99,7 @@ static jugglucotext nltext {
 
 
      .menustr0={
-		"System UI        ",
+		"System UI",
 		"Menus",
 		"Horloges",
 		"Sensor",
@@ -123,9 +123,9 @@ static jugglucotext nltext {
 		"Statistiek",
 #ifdef INJUGGLUCO
 		"Praat",
-		"Zweef        "
+		"Zweef"
 		},
-	.menustr2= {"Laatste scan","Scans","Stream","History","Hoeveelheden        ","Maaltijden","Dark mode"},
+	.menustr2= {"Laatste scan","Scans","Stream","History","Hoeveelheden","Maaltijden","Dark mode"},
 	.menustr3= {hourminstr,"Zoeken","Datum","Dag terug","Dag later","Week terug","Week later"},
 #endif
 #else

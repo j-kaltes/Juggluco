@@ -99,7 +99,7 @@ jugglucotext iwtext {
 .SD="SD: %.2f",
 .glucose_variability="שונות גלוקוז: %.1f%%",
       .menustr0={
-		"System UI           ",
+		"System UI",
 		"Menus",
 "שעון",
 "חיישן",

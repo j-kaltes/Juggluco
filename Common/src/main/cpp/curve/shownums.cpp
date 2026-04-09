@@ -64,7 +64,7 @@ template <typename F> void JCurve::columnfrombelow(NVGcontext* vg,int nr,const F
 void JCurve::initcolumns( NVGcontext* vg) {
 	nvgStrokeColor(vg, *getyellow());
 	nvgStrokeWidth(vg, hitStrokeWidth);
-	nvgFontFaceId(vg,menufont);
+	nvgFontFaceId(vg,font);
 	nvgFontSize(vg, menusize);
 	nvgFillColor(vg, *getblack()); 
 	}

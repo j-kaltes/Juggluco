@@ -180,7 +180,7 @@ public static native boolean isreceiving( );
   public static native void freehitptr(long hitptr);	
 
     
-    public static native ArrayList<String> getLabels();
+public static native ArrayList<String> getLabels();
 public static native float getPrecision(int i);
 
 //public static native void setranges(float glow, float ghigh, float tlow, float thigh);
@@ -1003,6 +1003,20 @@ public static native void aidexXclear(long dataptr);
 
 public static native void setaskedWatchFace(boolean val);
 public static native boolean getaskedWatchFace();
+
+/*
+public static boolean setlabel(int pos,String label, float prec,float weight) {
+    return setlabel(pos,RtlLabelConverter.visualForm(label), prec, weight);
+    }
+
+public static  ArrayList<String> getLabels() {
+    final var labs=getLabelsN();
+    final ArrayList<String> uit=new ArrayList<String>(labs.size());
+    for(var l:labs) {
+        uit.add(RtlLabelConverter.logicalForm(l));
+        }
+     return uit;
+    } */
 }
 
 

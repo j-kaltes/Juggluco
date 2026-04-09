@@ -450,6 +450,13 @@
 
 <string name="sensors">Sensoren</string>
 
+<string name="titlewebserverneed">Webserver benötigt</string>
+
+<string name="messagewebserverneed">Gehen Sie im linken Menü zu Einstellungen → Daten austauschen → Webserver, um den Webserver zu aktivieren</string>
+
+<string name="nostreamvalues">Keine Stream-werte</string>
+
+<string name="nohistoryvalues">Keine History-werte</string>
 </resources>
 
 

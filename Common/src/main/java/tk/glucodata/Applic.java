@@ -48,6 +48,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
@@ -62,6 +63,7 @@ import android.os.Looper;
 import android.os.PowerManager;
 import android.text.format.DateFormat;
 import android.util.TypedValue;
+import android.widget.SeekBar;
 import android.widget.Toast;
 
 import androidx.annotation.Keep;
@@ -83,6 +85,12 @@ import tk.glucodata.settings.Broadcasts;
 //import static tk.glucodata.MessageSender.messagesender;
 
 public class Applic extends Application {
+static  boolean supportsRtl;
+
+public static void ifRTLseekbar(SeekBar seekbar) {
+    if(MainActivity.rtl&&!supportsRtl)
+        seekbar.setScaleX(-1f);
+    }
 static final boolean TEST=doLog;
 static final boolean ALLGALAXY=true;
 static final boolean hasNotChinese=true;
@@ -645,6 +653,8 @@ public static    int stopprogram=0;
     @Override
     public void onCreate() {
         super.onCreate();
+
+    supportsRtl = (getContext().getApplicationInfo().flags & ApplicationInfo.FLAG_SUPPORTS_RTL) != 0;
     if(DiskSpace.check(this)) {
         initproc();
         }

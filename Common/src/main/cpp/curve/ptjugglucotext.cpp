@@ -110,7 +110,7 @@ jugglucotext pttext {
         .SD="SD: %.2f",
         .glucose_variability="Variabilidade da glicose: %.1f%%",
      .menustr0={
-                "UI do Sistema        ",
+                "UI do Sistema",
 		"Menus",
                 "Relógio",
                 "Sensor",
@@ -134,21 +134,21 @@ jugglucotext pttext {
                 "Estatísticas",
 #ifdef INJUGGLUCO
 				"Talk",
-				"Float        "
+				"Float"
                 },
 
-	.menustr2= {"Último Scan","Scans","Stream","Histórico","Valores","Refeições","Modo escuro        "},
+	.menustr2= {"Último Scan","Scans","Stream","Histórico","Valores","Refeições","Modo escuro"},
         .menustr3= {hourminstr,"Procurar","Data","Dia anterior","Dia seguinte","Semana anterior","Semana seguinte"},
 #endif //INJUGGLUCO
 #else
  .amount="Valor",
  .menustr0= {
-        "           Espelhar",
+"Espelhar",
         "Sensor",
 	"Exibir",
         "Definições",
         "Parar Alarme" },
-.menustr2= {"Data",hourminstr,"Dia anterior                 ",pttext.amount},
+.menustr2= {"Data",hourminstr,"Dia anterior",pttext.amount},
 #endif
 
 #ifdef INJUGGLUCO

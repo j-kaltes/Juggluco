@@ -168,7 +168,11 @@ template <class TX,class TY> void NumDisplay::showNums(JCurve&jcurve, const TX &
 
 #ifndef DONTTALK
 					if(speakout) {
-						sprintf(buf2,"\n%s\n%g",settings->getlabel(it->type).data(),it->value);
+                        std::string_view label=settings->getlabel(it->type);
+                        const int maxbuf= label.size()+5;
+                        char rtllabel[maxbuf];
+                        rtl_to_logical_utf8(label.data(), rtllabel,maxbuf) ;
+						sprintf(buf2,"\n%s\n%g",rtllabel,it->value);
 						speak(buf);
 						}
 #endif

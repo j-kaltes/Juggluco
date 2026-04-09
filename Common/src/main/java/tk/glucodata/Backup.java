@@ -39,10 +39,11 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
+
 import android.widget.CompoundButton;
 import android.widget.EditText;
 //import android.widget.HorizontalScrollView;
+import android.widget.FrameLayout;
 import android.widget.RadioButton;
 import android.widget.ScrollView;
 import android.widget.Space;
@@ -185,44 +186,44 @@ public class Backup {
    boolean[] sendchecked;
 
       private static final String defaultport= isReleaseID==1?"8795":"9113";
-      private    CheckBox Amounts =null;
-      private CheckBox Scans =null;
-      private CheckBox Stream =null,receive=null,detect=null,checkhostname;
-      private RadioButton activeonly=null,passiveonly=null,both=null;
+      private    CheckDirectionBox Amounts =null;
+      private CheckDirectionBox Scans =null;
+      private CheckDirectionBox Stream =null,receive=null,detect=null,checkhostname;
+      private CheckDirectionRadio activeonly=null,passiveonly=null,both=null;
       private final EditText[] editIPs={null,null,null,null};
       private EditText editpass=null;
       private EditText portedit=null;
       private ScrollView hostview=null;
-      private CheckBox Password;
+      private CheckDirectionBox Password;
       private Button reset=null;
-        private CheckBox testip,haslabel;
+        private CheckDirectionBox testip,haslabel;
       private   EditText label;
-   private RadioButton[] sendfrom;
+   private CheckDirectionRadio[] sendfrom;
    private View[] fromrow;
 
-    private CheckBox   visible;
+    private CheckDirectionBox   visible;
       int hostindex=-1;
 
-   public    static void setradio(RadioButton[] radios) {
-         for(RadioButton but:radios) {
+   public    static void setradio(CheckDirectionRadio[] radios) {
+         for(CheckDirectionRadio but:radios) {
          but.setOnCheckedChangeListener( (buttonView,  isChecked) -> {
             if(isChecked) {
-            for(RadioButton b:radios) 
+            for(CheckDirectionRadio b:radios) 
                 if(b!=buttonView)
                b.setChecked(false);
                }
             });
          }
         }
-      static void setradiotest(RadioButton[] radios,Object[] ap) {
-         for(RadioButton but:radios) {
+      static void setradiotest(CheckDirectionRadio[] radios,Object[] ap) {
+         for(CheckDirectionRadio but:radios) {
          but.setOnCheckedChangeListener( (buttonView,  isChecked) -> {
             if(isChecked) {
                for(var o:ap) {
                  var a = (Consumer<View>) o;
                   a.accept(buttonView);
                }
-            for(RadioButton b:radios) 
+            for(CheckDirectionRadio b:radios) 
                 if(b!=buttonView)
                b.setChecked(false);
                }
@@ -342,10 +343,12 @@ void makeAutoQR(MainActivity act,View parent) {
       var layout=new Layout(act, new View[]{send},new View[]{homenetS,internetS},new View[]{receive},new View[]{homenetR,internetR},new View[] {help,cancel});
       layout.setPadding((int)(GlucoseCurve.metrics.density*4.0),(int)(GlucoseCurve.metrics.density*4.0),(int)(GlucoseCurve.metrics.density*4.0),(int)(GlucoseCurve.metrics.density*4));
       layout.setBackgroundColor(backgroundcolor);
-      layout.measure(WRAP_CONTENT, WRAP_CONTENT);
-      layout.setX((GlucoseCurve.getwidth()-layout.getMeasuredWidth()+MainActivity.systembarLeft-MainActivity.systembarRight)*.5f);
-      layout.setY( (GlucoseCurve.getheight()-layout.getMeasuredHeight() +MainActivity.systembarTop-MainActivity.systembarBottom)*.5f);
-      act.addContentView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+    //  layout.measure(WRAP_CONTENT, WRAP_CONTENT);
+     // layout.setX((GlucoseCurve.getwidth()-layout.getMeasuredWidth()+MainActivity.systembarLeft-MainActivity.systembarRight)*.5f);
+     // layout.setY( (GlucoseCurve.getheight()-layout.getMeasuredHeight() +MainActivity.systembarTop-MainActivity.systembarBottom)*.5f);
+    var  params =    new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.CENTER|Gravity.CENTER_HORIZONTAL);
+
+      act.addContentView(layout, params);
       layout.setBackgroundResource(R.drawable.dialogbackground);
       Runnable closerun=()->{
          removeContentView(layout);
@@ -383,9 +386,9 @@ void makeAutoQR(MainActivity act,View parent) {
                 });
             });
     };
-RadioButton one;
+CheckDirectionRadio one;
 EditText ICElabel;
-CheckBox ICE;
+CheckDirectionBox ICE;
    void makehostview(MainActivity act) {
       ICE=getcheckbox(act,R.string.ICE, true);
       for(int i=0;i<editIPs.length;i++) {
@@ -395,9 +398,9 @@ CheckBox ICE;
          editIPs[i].setImeOptions(editoptions);
          setColorFilter(editIPs[i].getBackground().mutate(),agetColor(act,android.R.color.holo_blue_light));
          }
-     RadioButton zero=getradiobutton(act, R.string.zero);
+     CheckDirectionRadio zero=getradiobutton(act, R.string.zero);
      one=getradiobutton(act, R.string.one);
-     var sides=new RadioButton[]{zero,one};
+     var sides=new CheckDirectionRadio[]{zero,one};
      setradio(sides);
      zero.setChecked(true);
      var ICElabellabel=getlabel(act,R.string.icelabel);
@@ -411,7 +414,7 @@ CheckBox ICE;
       portedit.setMinEms(3);
       Button save=getbutton(act,R.string.save);
       TextView IPslabel=getlabel(act,R.string.ips);
-      detect = new CheckBox(act);
+      detect = new CheckDirectionBox(act);
       detect.setText(R.string.detect);
       detect.setOnCheckedChangeListener( (buttonView,  isChecked)-> {
             final int vis=isChecked?hide:VISIBLE;
@@ -420,9 +423,9 @@ CheckBox ICE;
             });
       detect.setVisibility(hide);
 
-      testip= new CheckBox(act); testip.setText(R.string.testip);
+      testip= new CheckDirectionBox(act); testip.setText(R.string.testip);
 
-      haslabel= new CheckBox(act); haslabel.setText(R.string.testlabel);
+      haslabel= new CheckDirectionBox(act); haslabel.setText(R.string.testlabel);
       label = new EditText(act);
            label.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
 
@@ -468,14 +471,14 @@ CheckBox ICE;
             });
 
          
-      passiveonly=new RadioButton(act);
+      passiveonly=new CheckDirectionRadio(act);
       passiveonly.setText(R.string.passiveonly);
       TextView Portlabel=getlabel(act,R.string.port);
-        activeonly = new RadioButton(act);
+        activeonly = new CheckDirectionRadio(act);
         activeonly.setText(R.string.activeonly);
-        both = new RadioButton(act);
+        both = new CheckDirectionRadio(act);
         both.setText(R.string.both);
-        RadioButton[] actives={passiveonly,activeonly,both};
+        CheckDirectionRadio[] actives={passiveonly,activeonly,both};
       Consumer<View> test1=
       buttonView-> {
          if(buttonView==activeonly)
@@ -508,25 +511,25 @@ CheckBox ICE;
          for(int i=0;i<ipnr;i++)
             editIPs[i].setVisibility(vis2);
          });
-      receive = new CheckBox(act);
+      receive = new CheckDirectionBox(act);
       receive.setText(R.string.receivefrom);
 
       TextView Sendlabel=getlabel(act,R.string.sendto);
 
-         Amounts = new CheckBox(act); Amounts.setText(R.string.amountsname);
-         Scans = new CheckBox(act); Scans.setText(R.string.scansname);
-         Stream = new CheckBox(act); Stream.setText(R.string.streamname);
-      RadioButton fromnow=new RadioButton(act);
-      RadioButton alldata=new RadioButton(act);
-      RadioButton screenpos=new RadioButton(act);
+         Amounts = new CheckDirectionBox(act); Amounts.setText(R.string.amountsname);
+         Scans = new CheckDirectionBox(act); Scans.setText(R.string.scansname);
+         Stream = new CheckDirectionBox(act); Stream.setText(R.string.streamname);
+      CheckDirectionRadio fromnow=new CheckDirectionRadio(act);
+      CheckDirectionRadio alldata=new CheckDirectionRadio(act);
+      CheckDirectionRadio screenpos=new CheckDirectionRadio(act);
       TextView startlabel=getlabel(act,act.getString(R.string.datapresentuntil));
          alldata.setText(R.string.start);
          fromnow.setText(R.string.now);
-      sendfrom=new RadioButton[]{alldata,fromnow,screenpos};
+      sendfrom=new CheckDirectionRadio[]{alldata,fromnow,screenpos};
        fromrow=new View[]{startlabel, alldata,fromnow,screenpos};
 
       setradio(sendfrom);
-      CheckBox restore=new CheckBox(act);restore.setText("Restore");
+      CheckDirectionBox restore=new CheckDirectionBox(act);restore.setText("Restore");
       if(!Natives.backuphasrestore( ))
          restore.setVisibility(GONE);
 
@@ -535,14 +538,14 @@ CheckBox ICE;
 
       Button delete=getbutton(act,act.getString(R.string.delete));
       Button Close=getbutton(act,R.string.cancel);
-          Password = new CheckBox(act); Password.setText(R.string.password);
+          Password = new CheckDirectionBox(act); Password.setText(R.string.password);
          Password.setChecked(true);
        editpass= new EditText(act);
            editpass.setImeOptions(editoptions);
            editpass.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
       editpass.setTransformationMethod(new PasswordTransformationMethod());
            editpass.setMinEms(6);
-          visible = new CheckBox(act);// visible.setText(R.string.visible);
+          visible = new CheckDirectionBox(act);// visible.setText(R.string.visible);
           visible.setButtonDrawable(R.drawable.password_visible);
    //      visible.setMinimumWidth(0); visible.setMinWidth(0);
       visible.setOnCheckedChangeListener( (buttonView,  isChecked)-> {
@@ -641,7 +644,7 @@ CheckBox ICE;
             resentconfirmation(act,hostindex);
             }
          });
-      CheckBox[] boxes={Amounts,Scans,Stream,restore};
+      CheckDirectionBox[] boxes={Amounts,Scans,Stream,restore};
        CompoundButton.OnCheckedChangeListener needport =(buttonView, isChecked)-> {
          if(sendchecked==null)
             return;
@@ -654,14 +657,14 @@ CheckBox ICE;
          for(View v:fromrow)
             v.setVisibility(vis);
          };
-      for(CheckBox vi:boxes) {
+      for(CheckDirectionBox vi:boxes) {
          vi.setOnCheckedChangeListener(needport);
          }
      hostview=new ScrollView(act);
-      visible.setPadding(0,0,(int)(GlucoseCurve.metrics.density*5.0),0);
+      visible.setPaddingRelative(0,0,(int)(GlucoseCurve.metrics.density*5.0),0);
     var iceviews=new View[]{ICE,ICElabellabel,ICElabel,zero,one};
-      Sendlabel.setPadding((int)(GlucoseCurve.metrics.density*10.0),0,0,0);
-   Stream.setPadding(0,0,(int)(GlucoseCurve.metrics.density*5.0),0);
+      Sendlabel.setPaddingRelative((int)(GlucoseCurve.metrics.density*10.0),0,0,0);
+   Stream.setPaddingRelative(0,0,(int)(GlucoseCurve.metrics.density*5.0),0);
     var firstrow=new View[]{Portlabel, portedit, checkhostname,IPslabel, detect};
     var directions=new View[]{passiveonly, activeonly, both};
       Layout layout;
@@ -675,10 +678,13 @@ CheckBox ICE;
          }, new View[]{ICE},new View[]{ Portlabel},new View[] {portedit},new View[]{checkhostname},new View[]{new Space(act),IPslabel,detect,new Space(act)},new View[]{ICElabellabel},new View[]{ICElabel},sides, new View[]{editIPs[0]},new View[]{editIPs[1]},editIPs.length>=3?new View[]{editIPs[2]}:null,editIPs.length>=4?new View[]{editIPs[3]}:null ,new View[] {testip},new View[] {haslabel},new View[]{label},
                new View[]{passiveonly},new View[]{activeonly},new View[]{both},new View[] {receive},new View[] {Sendlabel,Stream},new View[]{Scans,Amounts},new View[]{startlabel},new View[]{alldata,fromnow},new View[]{screenpos} ,new View[]{Password },new View[]{editpass,visible},new View[]{delete,Close},new View[] {reset},new View[]{save});
 
-      layout.setPadding((int)(GlucoseCurve.metrics.density*4.0),0,(int)(GlucoseCurve.metrics.density*10.0),(int)(GlucoseCurve.metrics.density*4));
+      layout.setPaddingRelative((int)(GlucoseCurve.metrics.density*4.0),0,(int)(GlucoseCurve.metrics.density*10.0),(int)(GlucoseCurve.metrics.density*4));
          }
       else {
-         getMargins(delete).leftMargin=getMargins(save).rightMargin=(int)(GlucoseCurve.metrics.density*20.0f);
+        var hormargin=(int)(GlucoseCurve.metrics.density*20.0f);
+
+         getMargins(delete).setMarginStart(hormargin);
+         getMargins(save).setMarginEnd(hormargin);;
         var withqr=BuildConfig.minSDK>=20?new View[]{Password, editpass, visible}:new View[]{Password, editpass, visible};
          layout = new Layout(act, (l, w, h) -> {
             hideSystemUI(act);
@@ -870,7 +876,7 @@ CheckBox ICE;
       sethtml(info, mirrorStatus(pos));
 
       ViewGroup layall;
-
+ViewGroup.LayoutParams params;
       if(isWearable) {
           if(!useclose) close.setVisibility(GONE);
          var space1=new Space(act);
@@ -879,7 +885,7 @@ CheckBox ICE;
    //      layout.round=true;
          layout.setBackgroundColor(Applic.backgroundcolor);
          var leftpad=(int)(GlucoseCurve.getwidth()*.1);
-         layout.setPadding(leftpad,leftpad,(int)(GlucoseCurve.getwidth()*0.08), leftpad*2);
+         layout.setPaddingRelative(leftpad,leftpad,(int)(GlucoseCurve.getwidth()*0.08), leftpad*2);
          var scroll= new ScrollView(act);
          scroll.setFillViewport(true);
          scroll.setVerticalScrollBarEnabled(true);
@@ -887,12 +893,14 @@ CheckBox ICE;
          scroll.setSmoothScrollingEnabled(true);
          scroll.addView(layout);
          layall=scroll;
+        params=new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT);
          }
       else {
            var modmar=Layout.getMargins(modify);
-           modmar.leftMargin=(int)(GlucoseCurve.metrics.density*10);
+           var hormar= (int)(GlucoseCurve.metrics.density*10);
+           modmar.setMarginStart(hormar);
            var closemar=Layout.getMargins(close);
-           closemar.rightMargin=(int)(GlucoseCurve.metrics.density*10);;
+           closemar.setMarginEnd(hormar);
            View[] firstrow;
            if(BuildConfig.minSDK>=20) {
                 Button qr=getbutton(act,"QR");
@@ -909,11 +917,13 @@ CheckBox ICE;
                     }
                                                                                                 
            Layout layout=new Layout(act, (l, w, h) -> {
+           /*
                 var x=GlucoseCurve.getwidth()-MainActivity.systembarRight-w;
                 if(x<MainActivity.systembarLeft)
                    x=MainActivity.systembarLeft;
                 l.setX(GlucoseCurve.getwidth()-MainActivity.systembarRight-w);
                 l.setY(MainActivity.systembarTop);
+                */
                 final int[] lret={w,h};
                 return lret;
                 },firstrow , new View[]{info});
@@ -921,11 +931,16 @@ CheckBox ICE;
             layout.setBackgroundResource(R.drawable.dialogbackground);
    //          layout.setRotation(90);
          layall=layout;
+           params =    new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.RIGHT);
             }
 
       modify.setOnClickListener(v->     changehostview(act,pos,layall));
-      final var lpar=isWearable?MATCH_PARENT: WRAP_CONTENT;
-      act.addContentView(layall, new ViewGroup.LayoutParams(lpar,lpar));
+//      final var lpar=isWearable?MATCH_PARENT: WRAP_CONTENT;
+      act.addContentView(layall, params);
+      var margs=getMargins(layall);
+      margs.topMargin=MainActivity.systembarTop*3/4;
+      margs.leftMargin=MainActivity.systembarLeft*3/4;
+      margs.rightMargin=MainActivity.systembarRight*3/4;
       Runnable closerun= ()-> {
          removeContentView(layall);
 
@@ -1002,7 +1017,7 @@ CheckBox ICE;
       LinearLayoutManager lin = new LinearLayoutManager(act);
       recycle.setLayoutManager(lin);
 
-      CheckBox staticnum = new CheckBox(act);
+      CheckDirectionBox staticnum = new CheckDirectionBox(act);
       staticnum.setOnCheckedChangeListener( (buttonView,  isChecked)-> {
         Natives.setstaticnum(isChecked);
         if(!isWearable) {
@@ -1030,7 +1045,7 @@ CheckBox ICE;
       var errorrow=errstr.length()>0?new View[]{getlabel(act,errstr)}:null;
       var turnserver=getbutton(act,R.string.turnserver);
       if(isWearable) {
-         CheckBox wifi=getcheckbox(act,act.getString(R.string.wifi),getWifi());
+         CheckDirectionBox wifi=getcheckbox(act,act.getString(R.string.wifi),getWifi());
          wifi.setOnCheckedChangeListener( (buttonView,  isChecked)-> {
             Natives.setWifi(isChecked);
             if(isChecked) {
@@ -1041,10 +1056,10 @@ CheckBox ICE;
             });
          if(!useclose) Cancel.setVisibility(INVISIBLE);
          final var width=GlucoseCurve.getwidth();
-         getMargins(labport).leftMargin=(int)(width*0.12);
-         getMargins(Save).rightMargin=(int)(width*0.12);
+         getMargins(labport).setMarginStart((int)(width*0.12));
+         getMargins(Save).setMarginEnd((int)(width*0.12));
          var margIP=getMargins(ip);
-         margIP.leftMargin=(int)(width*0.01);
+         margIP.setMarginStart((int)(width*0.01));
    //      if(doLog) ip.setText("2a01:59f:a075:b0d1:a4ef:afff:fec4:59f2");
          //final Layout layout=new Layout(act, new View[]{getlabel(act,act.getString(R.string.thishost))},new View[]{blpan},new View[]{p2p},new View[]{ip},new View[]{new Space(act),labport,portview,Save,new Space(act)},new View[]{recycle},new View[] {hosts},new View[]{staticnum},new View[]{Sync,reinit},new View[]{space1,wifi,alarms,space2},errorrow,new View[]{Cancel});
          final Layout layout=new Layout(act, new View[]{getlabel(act,act.getString(R.string.thishost))},new View[]{labport,portview,Save},new View[]{ip},new View[]{blpan},new View[]{p2p},new View[]{recycle},new View[] {hosts},new View[]{staticnum},new View[]{Sync,reinit},new View[]{wifi},errorrow,new View[]{Cancel});
@@ -1061,7 +1076,7 @@ CheckBox ICE;
          hori.addView(layout);
          lay=hori;
          int pad=(int)(GlucoseCurve.metrics.density*5);
-         layout.setPadding((int)(GlucoseCurve.metrics.density*6),pad,(int)(GlucoseCurve.metrics.density*9),pad);
+         layout.setPaddingRelative((int)(GlucoseCurve.metrics.density*6),pad,(int)(GlucoseCurve.metrics.density*9),pad);
          }
       else {
         Button autoqr;
@@ -1071,7 +1086,9 @@ CheckBox ICE;
          else {
             autoqr=null;
             }
-         getMargins(Help).leftMargin=getMargins(Cancel).rightMargin=(int)(GlucoseCurve.metrics.density*20.0f);
+         var hormarg=(int)(GlucoseCurve.metrics.density*20.0f);
+         getMargins(Help).setMarginStart(hormarg);
+         getMargins(Cancel).setMarginEnd(hormarg);
          var withqr=BuildConfig.minSDK>=20?new View[]{Help,autoqr,hosts,Cancel}:new View[]{Help,hosts,Cancel};
          var layout=new Layout(act, new View[]{ip,blpan,p2p,labport,portview,Save,turnserver},new View[]{recycle},new View[] {battery,Sync,reinit,staticnum},errorrow,withqr);
         if(BuildConfig.minSDK>=20) {
@@ -1082,10 +1099,8 @@ CheckBox ICE;
 
        var density=GlucoseCurve.metrics.density;
       layout.setPadding(MainActivity.systembarLeft+(int)(density*10),MainActivity.systembarTop/2,MainActivity.systembarRight+(int)(density*10),MainActivity.systembarBottom+(int)(density*3));
-       //  layout.setPadding(MainActivity.systembarLeft,MainActivity.systembarTop/2,MainActivity.systembarRight,MainActivity.systembarBottom);
 
           {if(doLog) {Log.i(LOG_ID,"density="+GlucoseCurve.metrics.density+" systembarTop="+ MainActivity.systembarTop+" systembarLeft="+ MainActivity.systembarLeft);};};
-      //    layout.setPadding(pad,MainActivity.systembarTop,MainActivity.systembarRight,MainActivity.systembarBottom);
          lay=layout;
          }
 
@@ -1178,9 +1193,7 @@ CheckBox ICE;
 //            view.setTextSize(TypedValue.COMPLEX_UNIT_PX,isWearable?Applic.mediumfontsize:Applic.largefontsize);
             view.setTextSize(TypedValue.COMPLEX_UNIT_PX,Applic.largefontsize);
              view.setGravity(Gravity.LEFT);
-             view.setPadding((int)(GlucoseCurve.metrics.density*10.0),0,0,af);
-          //   view.setPadding(0,0,0,af);
-             //view.setPadding(view.getPaddingLeft(),0,0,af);
+             view.setPaddingRelative((int)(GlucoseCurve.metrics.density*10.0),0,0,af);
              }
             view.setTextColor(YELLOW);
            return new HostViewHolder(view,pview);

@@ -59,7 +59,7 @@ void makenightswitch() {
 //     settings->data()->initVersion=28;
         }
      //prunenums();
-#ifndef NOLOG
+#if !defined(NOLOG) && defined( __ANDROID_API__)
 extern void checker();
    checker();
 #endif

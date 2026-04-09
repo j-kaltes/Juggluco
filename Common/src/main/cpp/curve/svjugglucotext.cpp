@@ -71,7 +71,7 @@ jugglucotext svtext {
 	.SD="SD: %.2f",
 	.glucose_variability="Glukos varians: %.1f%%",
      .menustr0={
-		"System UI        ",
+		"System UI",
 		"Menyer",
 		"Klocka",
 		"Sensor",
@@ -97,7 +97,7 @@ jugglucotext svtext {
 		"Statistik",
 #ifdef INJUGGLUCO
 		"Tal",
-		"Flytande     "
+		"Flytande"
 		},
 
 	.menustr2= {
@@ -107,7 +107,7 @@ jugglucotext svtext {
     "Historik",
     "Värden",
     "Måltider",
-    "Mörkt läge       "},
+"Mörkt läge"},
 	.menustr3= {hourminstr,
     "Sök",
     "Datum",
@@ -119,16 +119,16 @@ jugglucotext svtext {
 #else
    .amount="Värde",
    .menustr0= {
-      "           Spegling",
+"Spegling",
       "Sensor",
       "Visa",
-      "  Inställningar",
+"Inställningar",
       "Stoppa larm"
     },
     .menustr2= {
       "Datum  ",
       hourminstr,
-      "Dag tillbaka                 ",
+"Dag tillbaka",
       "Värde"
     },
 #endif

@@ -55,7 +55,7 @@ public class DeviceList {
              if(scan!=null) {
                  if(pos<scan.deviceNames.size()) {
                      String deviceName=scan.deviceNames.get(pos);
-                     if(deviceName.startsWith(AidexXGattCallback.startAidexX)) {
+                     if(AidexXGattCallback.hasDeviceName(deviceName)) {
                        AidexXGattCallback.addbyDeviceName((MainActivity) view.getContext(),deviceName);
                         while(MainActivity.doonback())
                                 ;
@@ -119,7 +119,7 @@ static private int aidexXindex(String name) {
              var device=scan.devices.get(pos);
              var name=scan.deviceNames.get(pos);
              String nameaddress=name+"\n"+device.getAddress();
-             int index= name.startsWith(AidexXGattCallback.startAidexX)?aidexXindex(name):GlucoseMeterHasIndex(name);
+             int index= AidexXGattCallback.hasDeviceName(name)?aidexXindex(name):GlucoseMeterHasIndex(name);
                  if(index<0) {
                      text.setText(newcolor(nameaddress));
                      }

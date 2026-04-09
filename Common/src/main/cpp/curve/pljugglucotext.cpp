@@ -99,7 +99,7 @@ jugglucotext pltext {
 	.SD="Odchylenie standardowe: %.2f",
 	.glucose_variability="Zmienność stęż. glukozy: %.1f%%",
      .menustr0={
-		"Integr. z sys.        ",
+		"Integr. z sys.",
 		"Całe menu",
 		"Zegarek",
 		"Sensor",
@@ -133,7 +133,7 @@ jugglucotext pltext {
 	"Historia",
 	"Wartości",
 	"Posiłki",
-   "Tryb ciemny        "},
+   "Tryb ciemny"},
 	.menustr3= {hourminstr,
 	"Wyszukaj",
 	"Data",
@@ -145,13 +145,13 @@ jugglucotext pltext {
 #else
  .amount="Wartość",
  .menustr0= {
-	"        Klon",
+	"Klon",
 	"Sensor",
 	"Ekran",
         "Ustawienia",
 	"Zatrzym. alarm"},
 .menustr2= {"Data",
-hourminstr, "Dzień wstecz              ",pltext.amount},
+hourminstr, "Dzień wstecz",pltext.amount},
 #endif
 
 #ifdef INJUGGLUCO
