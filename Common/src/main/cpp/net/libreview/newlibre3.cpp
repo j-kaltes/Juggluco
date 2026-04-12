@@ -255,7 +255,7 @@ static int addcurrent(char *buf,int64_t histor,const ScanData *el,bool &viewed) 
 	int64_t recordnum=mkhistrecord(histor,el->getid());
 	viewed=getisviewed(tim) ;
 	const char *isviewed=viewed?"true":"false";
-	return sprintf(buf,onecurrent, trendName[el->tr],isviewed,gmttime,recordnum,timestr,(float)el->getmgdL());
+	return sprintf(buf,onecurrent, trendName[el->gettrend()],isviewed,gmttime,recordnum,timestr,(float)el->getmgdL());
 	}
 //uint16_t lastLifeCountReceived;
 

@@ -889,20 +889,19 @@ template <class TX,class TY> void JCurve::showlineScan(NVGcontext* avg,const Sca
     bool restart=true;
     nvgBeginPath(avg);
     const NVGcolor *col=getcolor(colorindex);
+    const NVGcolor lowqualcol=nvgRGBAf2(col->r, col->g, col->b, col->a*0.45f);
     nvgStrokeColor(avg, *col);
     nvgFillColor(avg,*col);
     nvgStrokeWidth(avg, pollCurveStrokeWidth);
     uint32_t late=0;
     float startx=-1000,starty=-1000;
+    bool wasLowQuality=false;
     for(const ScanData *it=low;it!=high;it++) {
         if(it->valid()) {
             const uint32_t tim= it->t;
             const auto glu=it->g*10;
             const auto posx= transx(tim),posy=transy(glu);
-/*#ifndef NOLOG
-time_t ttim=tim;
-            CURVELOGGER("showlineScan posx=%f tim=%ud %s",posx,tim,ctime(&ttim));
-#endif */
+            const bool isLowQuality=(it->getquality()!=0);
 
             if(!restart&&tim>late) {
                 nvgStroke(avg);
@@ -913,7 +912,17 @@ time_t ttim=tim;
                      }
                 restart=true;
                 }
-            if(restart) {
+            if(!restart&&isLowQuality!=wasLowQuality) {
+                nvgStroke(avg);
+                nvgStrokeColor(avg, isLowQuality?lowqualcol:*col);
+                nvgFillColor(avg, isLowQuality?lowqualcol:*col);
+                nvgBeginPath(avg);
+                nvgMoveTo(avg, posx,posy);
+                startx=posx;starty=posy;
+                }
+            else if(restart) {
+                nvgStrokeColor(avg, isLowQuality?lowqualcol:*col);
+                nvgFillColor(avg, isLowQuality?lowqualcol:*col);
                 nvgBeginPath(avg);
                  nvgMoveTo(avg, posx,posy);
                  startx=posx,starty=posy;
@@ -924,6 +933,17 @@ time_t ttim=tim;
                 nvgLineTo( avg,posx,posy);
                 }
 
+            if(isLowQuality) {
+                nvgStroke(avg);
+                nvgBeginPath(avg);
+                nvgCircle(avg, posx,posy,pointRadius*0.8f);
+                nvgFill(avg);
+                nvgBeginPath(avg);
+                nvgMoveTo(avg, posx,posy);
+                startx=posx;starty=posy;
+                }
+
+            wasLowQuality=isLowQuality;
             late=tim+dif;
 
             if(glucosepointinfo(avg,tim,glu, posx, posy) ) {
@@ -2646,7 +2666,7 @@ int    JCurve::showLargevalue(NVGcontext* avg, int index,float getx,float gety,f
     #ifdef JUGGLUCO_APP
     #ifndef DONTTALK
         shownglucose[index].glucosevalue=convglucose;
-        shownglucose[index].glucosetrend=poll->tr;
+        shownglucose[index].glucosetrend=poll->gettrend();
 #endif
 #endif
          float valuex=getx-(convglucose>=10.0f?density*20.0f:0.0f);

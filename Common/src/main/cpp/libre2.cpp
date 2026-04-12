@@ -1371,9 +1371,12 @@ if(alg) {
         const int qual=gl.getQuality();
         int gid=gl.getId();
         LOGGER("processStream %d %d %.1f\n",gid,qual,gluc/convfactordL);
-        if(!qual&&gluc) {
-            if(hist->savepoll(nutime,gid,gluc,gl.trend(),gl.rate())) {
-                if(streamHistory()) {
+        if(gluc) {
+            if(qual) {
+                LOGGER("saving low quality reading: qual=%d gluc=%d id=%d\n",qual,gluc,gid);
+                }
+            if(hist->savepoll(nutime,gid,gluc,gl.trend(),gl.rate(),qual)) {
+                if(!qual&&streamHistory()) {
                          addStreamHistory(alg->history(), nutime,gid, *hist) ;
                     }
                 return alg;

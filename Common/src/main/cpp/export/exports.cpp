@@ -228,10 +228,10 @@ bool fexportscans(myfilep handle, int unit,CurData   (SensorGlucoseData::*proc)(
                  }
               float diff=calconvert-rawconvert;
               const int dec= getgludecimal(unit);
-              fprintf(fp,"%s\t%d\t%u\t%s\t%g\t%d\t%.*f\t%.*f\t%.*f\t%+g\t%s\n",sensorname ,index,scantime,buf,zone,scan->id,dec,calconvert,dec,rawconvert,2,diff,scan->ch,GlucoseNow::trendString[scan->tr]); 
+              fprintf(fp,"%s\t%d\t%u\t%s\t%g\t%d\t%.*f\t%.*f\t%.*f\t%+g\t%s\n",sensorname ,index,scantime,buf,zone,scan->id,dec,calconvert,dec,rawconvert,2,diff,scan->ch,GlucoseNow::trendString[scan->gettrend()]);
               return true;
                }
-			fprintf(fp,"%s\t%d\t%u\t%s\t%g\t%d\t%.*f\t%+g\t%s\n",sensorname ,index,scantime,buf,zone,scan->id,getgludecimal(unit),rawconvert,scan->ch,GlucoseNow::trendString[scan->tr]); 
+			fprintf(fp,"%s\t%d\t%u\t%s\t%g\t%d\t%.*f\t%+g\t%s\n",sensorname ,index,scantime,buf,zone,scan->id,getgludecimal(unit),rawconvert,scan->ch,GlucoseNow::trendString[scan->gettrend()]); 
 			return true;
 			}
 		return false;

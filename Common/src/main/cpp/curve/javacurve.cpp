@@ -836,7 +836,7 @@ extern "C" JNIEXPORT jlong JNICALL fromjava(saylastglucose)(JNIEnv *env, jclass 
  constexpr const int maxvalue=120;
  char value[maxvalue];
  //auto trend=usedtext->trends[poll->tr];
- const auto trend=usedtext->getTrendName(poll->tr);
+ const auto trend=usedtext->getTrendName(poll->gettrend());
  memcpy(value,trend.data(),trend.size());
  char *ptr=value+trend.size();
  *ptr++='\n';

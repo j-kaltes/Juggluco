@@ -1734,7 +1734,7 @@ void setnowmenu(time_t nu) {
                     else {
                         nonconvert= lastin->g;
                     }
-const int  trend=lastin->tr;
+const int  trend=lastin->gettrend();
 //const int  trend=5;
 
 constexpr const char arrows[][sizeof("→")]{"   ",
@@ -2590,7 +2590,7 @@ int getglucosestr(double nonconvert,char *glucosestr,int maxglucosestr,int gluco
             *ptr++='\n';
             }
 //        auto trend=usedtext->trends[last.tr];
-        const auto trend=usedtext->getTrendName(last.tr);
+        const auto trend=usedtext->getTrendName(last.gettrend());
         memcpy(ptr,trend.data(),trend.size());
         ptr+=trend.size();
         *ptr++='\n';

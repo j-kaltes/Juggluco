@@ -154,6 +154,9 @@ uint32_t gettime() const {
     return t;
     };
  uint32_t getid() const {return id;};
+ int gettrend() const { return tr&0xFFFF; };
+ int getquality() const { return (tr>>16)&0xFFFF; };
+ static int32_t encodetr(int trend, int quality) { return (quality<<16)|trend; };
 bool valid(int pos=1) const {
     if(pos&&!t) {
         ScanData *ht=const_cast<ScanData*>(this);
@@ -1626,7 +1629,7 @@ void saveglucose(const nfcdata*nfc,time_t tim,int id,int glu,int trend,float cha
     setlastscantime(tim);
     }
 
-bool savepoll(time_t tim,int id,int glu,int trend,float change) {
+bool savepoll(time_t tim,int id,int glu,int trend,float change,int quality=0) {
     if(getinfo()->pollcount) {
         int count=getinfo()->pollcount-1;
         int previd=polls[count].id;
@@ -1634,7 +1637,7 @@ bool savepoll(time_t tim,int id,int glu,int trend,float change) {
             LOGGER("GLU: duplicate id: previd=%d id=%d\n",previd,id);
             return false;
             }
-        uint32_t prevt=polls[count].t;        
+        uint32_t prevt=polls[count].t;
         uint32_t predict =prevt+(id-previd)*getinfo()->pollinterval;
         const int verschil=tim-predict;
         if(verschil>3*60)   {
@@ -1646,7 +1649,7 @@ bool savepoll(time_t tim,int id,int glu,int trend,float change) {
             getinfo()->pollinterval= weight*getinfo()->pollinterval+(1.0-weight)*af;
             }
         }
-    saveglucosedata(polls,getinfo()->pollcount,tim, id, glu, trend, change);
+    saveglucosedata(polls,getinfo()->pollcount,tim, id, glu, trend, change, quality);
     return true;
     }
 
@@ -1657,7 +1660,7 @@ bool savestreamonly(time_t tim,int id,int glu,int trend,float change) {
              if(polls[prev].id>=id)
                 return false;
              }
-     polls[count]={static_cast<uint32_t>(tim),id,glu,trend,change};
+     polls[count]={static_cast<uint32_t>(tim),id,glu,ScanData::encodetr(trend,0),change};
      ++getinfo()->pollcount;
      return true;
     }
@@ -1682,7 +1685,7 @@ bool saveStreamAgain(time_t tim,int id,int glu,int trend,float change) {
      while(index<getinfo()->pollcount&&polls[index].id<id) {
         ++index;
         }
-     polls[index]={static_cast<uint32_t>(tim),id,glu,trend,change};
+     polls[index]={static_cast<uint32_t>(tim),id,glu,ScanData::encodetr(trend,0),change};
      const int count=index+1;
      if(count<getinfo()->pollcount) {
         return true;
@@ -1690,8 +1693,8 @@ bool saveStreamAgain(time_t tim,int id,int glu,int trend,float change) {
     getinfo()->pollcount=count;
     return false;
     }
-void saveglucosedata(Mmap<ScanData> &streamscans,uint32_t &count,time_t tim,int id,int glu,int trend,float change) {
-     streamscans[count++]={static_cast<uint32_t>(tim),id,glu,trend,change};
+void saveglucosedata(Mmap<ScanData> &streamscans,uint32_t &count,time_t tim,int id,int glu,int trend,float change,int quality=0) {
+     streamscans[count++]={static_cast<uint32_t>(tim),id,glu,ScanData::encodetr(trend,quality),change};
     }
 bool hasStreamID(const int id,const uint32_t eventtime) const {
     return polls[id].id==id&&polls[id].g&&!isnan(polls[id].getchange())&&abs((int)(polls[id].gettime()-eventtime))<60;
@@ -1726,7 +1729,7 @@ template <int secs,bool libre3=true> int savepollallIDsonly(time_t tim,const int
           }
       }
     LOGGER("count=%d savepollallIDsonly(%lu,%d,%.1f,%d,%.1f) %s",count,tim,id,glu/convfactordL,trend,change,ctime(&tim));
-    polls[id]={static_cast<uint32_t>(tim),id,glu,trend,change};
+    polls[id]={static_cast<uint32_t>(tim),id,glu,ScanData::encodetr(trend,0),change};
     return count;
     }
 
@@ -1846,7 +1849,7 @@ static void exportscans(const char *file,int count,const ScanData *scans)  {
     std::ofstream uit(file);
     for(int i=0;i<count;i++) {
         const ScanData &scan=scans[i];    
-        uit<<scan.t<<"\t"<<scan.id<<'\t'<<scan.g<<'\t'<<scan.tr<<'\t'<<scan.ch<<std::endl;
+        uit<<scan.t<<"\t"<<scan.id<<'\t'<<scan.g<<'\t'<<scan.gettrend()<<'\t'<<scan.ch<<'\t'<<scan.getquality()<<std::endl;
         }
     uit.close();
     }

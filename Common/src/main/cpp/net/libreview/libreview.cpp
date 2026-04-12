@@ -162,7 +162,7 @@ static char *libreScanel(const ScanData &scanel,const int16_t  nr,char *ptr) {
     else
         addar(ptr,"false");
 
-    ptr+=sprintf(ptr,R"(","trendArrow":"%s","isActionable":true,"isFirstAfterTimeChange":false},"recordNumber":%hd,"timestamp":")",trendName[scanel.tr],id);
+    ptr+=sprintf(ptr,R"(","trendArrow":"%s","isActionable":true,"isFirstAfterTimeChange":false},"recordNumber":%hd,"timestamp":")",trendName[scanel.gettrend()],id);
     ptr+=Tdatestringlocal(scanel.gettime(),mil,ptr);
     addar(ptr,R"("})");
     return ptr;
@@ -422,7 +422,7 @@ static char *onecurrent(const ScanData &scanel,const int  nr,char *ptr,bool isvi
     ptr+=TdatestringGMT(wastime,mil,ptr);
     const char currentformat[]=R"(","isViewed":"%s","lowOutOfRange":"%s","highOutOfRange":"%s","trendArrow":"%s","isActionable":"true","isFirstAfterTimeChange":"false"},"recordNumber":%d,"timestamp":")";
     const int id=nr*256;
-    ptr+=sprintf(ptr,currentformat,isviewed?"true":"false",mgdL<40?"true":"false", mgdL>500?"true":"false", trendName[scanel.tr],id);
+    ptr+=sprintf(ptr,currentformat,isviewed?"true":"false",mgdL<40?"true":"false", mgdL>500?"true":"false", trendName[scanel.gettrend()],id);
     ptr+=Tdatestringlocal(scanel.gettime(),mil,ptr);
     addar(ptr,R"("})");
     return ptr;
