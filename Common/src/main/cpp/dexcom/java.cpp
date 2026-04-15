@@ -67,7 +67,11 @@ int rate2changeindex(float rate) {
         return 5;
     }
 
-  constexpr const int dexmaxtime=907500; //  907385
+
+static int getDexMaxSecs(const SensorGlucoseData *sens) {
+        return (sens->getinfo()->wearduration+12*60+5)*60;
+        }
+//  constexpr const int dexmaxtime=907500; //  907385
 constexpr const int DEXSECONDS=5*60;
 
 extern jlong glucoseback(uint32_t nu,uint32_t glval,float drate,SensorGlucoseData *hist) ;
@@ -142,6 +146,7 @@ void actual(SensorGlucoseData *sens,jlong *timeres,const int sensorindex) const 
    const auto wastime=nowsec-age;
 
    
+   const int dexmaxtime=getDexMaxSecs(sens);
    if(secsSinceStart<=dexmaxtime&&mgdL>=39&&mgdL<=501&&secsSinceStart>=sens->getWarmupSEC()&&index<sens->maxstreampos() ) {
      LOGAR("use value");
       save(sens,wastime,index);
@@ -164,7 +169,7 @@ void actual(SensorGlucoseData *sens,jlong *timeres,const int sensorindex) const 
          }
        }
     else {
-    	if(secsSinceStart>dexmaxtime&&sens->getinfo()->lastLifeCountReceived<maxdexcount ) {
+    	if(secsSinceStart>dexmaxtime&&sens->getinfo()->lastLifeCountReceived<sens->getmaxdexcount() ) {
             LOGGER("over endtime and only %d received\n", sens->getinfo()->lastLifeCountReceived);
              sensor *sensor=sensors->getsensor(sensorindex);
              sensor->endtime=nowsec;
@@ -292,8 +297,9 @@ extern "C" JNIEXPORT  jbyteArray  JNICALL   fromjava(getDexbackfillcmd)(JNIEnv *
          }
      else {
          auto now=time(nullptr);
+         const int dexmaxtime=getDexMaxSecs(sens);
          if((now-starttime)>dexmaxtime) {
-            if(was< maxdexcount ) {
+            if(was< sens->getmaxdexcount() ) {
                int start;
                if(was>0) {
                     time_t starts=sens->getstream(was)->gettime()+60;

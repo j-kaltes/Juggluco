@@ -68,7 +68,7 @@ inline int getpagesize(void) {
 inline constexpr const char sensorInfoStr[]="sensorInfo";
 inline constexpr const char generatedStr[]="generated";
 
-inline  constexpr const int maxdexcount=3025 ;
+//inline  constexpr const int maxdexcount=3025 ;
 inline constexpr const int youngsensorsecs=2*60*60;
 inline    constexpr const char rawstream[]="rawstream.dat";
 #include <string_view>
@@ -81,7 +81,7 @@ extern int writeStartime(crypt_t *pass,  Connect *connect, const int sensorindex
 constexpr const int maxcaliNr=50;
 constexpr int maxdays=46;
 
-constexpr const int maxdaysDex=12;
+//constexpr const int maxdaysDex=12;
 
 constexpr const int maxdaysAccu=15;
 constexpr const int maxdaysAir=16;
@@ -1334,7 +1334,7 @@ static bool mkdatabaseAccu(string_view sensordir,string_view sensorgegs,uint32_t
     };
 #endif
 #ifdef DEXCOM
-static bool mkdatabaseDex(string_view sensordir,string_view sensorgegs,uint32_t now) {
+static bool mkdatabaseDex(string_view sensordir,string_view sensorgegs,uint32_t now,uint8_t days) {
    LOGGER("mkdatabaseDex %s,%s\n",sensordir.data(),sensorgegs.data());
     mkdir(sensordir.data(),0700);
     pathconcat infoname(sensordir,infopdat);
@@ -1347,7 +1347,7 @@ static bool mkdatabaseDex(string_view sensordir,string_view sensorgegs,uint32_t 
             }
         }
     uint32_t start=now;
-    Info inf{.starttime=(uint32_t)now,.lastscantime=(uint32_t)start,.starthistory=0,.endhistory=0,.scancount=0,.startid=0,.interval=interval5,.dupl=3,.dexcom=true,.days=maxdaysDex ,.warmup=30,.wearduration=14400,.lastLifeCountReceived=1,.pollcount=0};
+    Info inf{.starttime=(uint32_t)now,.lastscantime=(uint32_t)start,.starthistory=0,.endhistory=0,.scancount=0,.startid=0,.interval=interval5,.dupl=3,.dexcom=true,.days=(uint8_t)(days+2),.warmup=30,.wearduration=(uint16_t)(days*24*60),.lastLifeCountReceived=1,.pollcount=0};
     inf.siIdlen=sensorgegs.size();
     memcpy(inf.siId,sensorgegs.data(),inf.siIdlen);
     writeall(infoname,&inf,sizeof(inf));
@@ -2528,7 +2528,9 @@ int getLastIndex() const {
         return -1;
         }
 
-
+int getmaxdexcount() const {
+     return (getinfo()->wearduration+12*60)/5+1;
+    }
 bool hasData(uint32_t nu) const {
 
     if((nu-getinfo()->lastscantime)<60*60*4)
@@ -2540,7 +2542,7 @@ bool hasData(uint32_t nu) const {
             }
        else {
         if(isDexcom()) {
-            if(pollcount()>=maxdexcount)
+            if(pollcount()>=getmaxdexcount())
                     return false;
             }
           else {
@@ -2577,7 +2579,6 @@ bool hasData(uint32_t nu) const {
     LOGGER("hasData nu=%d lastused=%d diff=%d return=%d\n",nu,lastused(),diff,res);
      return res;
     }
-//         return ((isAccuChek()&&pollcount()<4000)||(isDexcom()&&pollcount()<maxdexcount))&& (nu-lastused())< youngsensorsecs
 bool hasHistory() const {
      return hasRealHistory()||(isDexcom()&&settings->data()->dexcomPredict);
      };

@@ -22,6 +22,7 @@
 package tk.glucodata;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+import static tk.glucodata.MainActivity.REQ_SET_PUSHED_WATCH_FACE_ACTIVE;
 import static tk.glucodata.settings.Settings.removeContentView;
 
 import android.content.Context;
@@ -38,6 +39,13 @@ import androidx.core.splashscreen.SplashScreen;
 
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+
+import android.app.Activity;
+import android.content.pm.PackageManager;
+
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 public class Specific {
 final static private String LOG_ID="Specific";
 
@@ -114,9 +122,93 @@ private static void playGoogle(Context context,String packageName) {
 private static final String watchface="tk.glucodata.watchfacepush.watchface2";
 //private static final String watchface="au.gondwanasoftware.timeandtrack";
 static void installwatchface(Context context) {
-    if(Natives.getaskedWatchFace()) { return; }
     if(isPackageInstalled(context, watchface)) { return; }
     playGoogle(context,watchface); 
     Natives.setaskedWatchFace(true);
     }
+
+
+
+    public static final class WatchFaceActivation {
+
+        private static final String LOG_ID = "WfActivation";
+
+        private static String pendingActivationSlotId = null;
+
+        private WatchFaceActivation() {
+        }
+
+        public static void syncFromUi(@NonNull Activity activity) {
+           Log.i(LOG_ID,"syncFromUi");
+            WatchFacePushHelper.syncBundledWatchFace( activity, activity.getString(R.string.default_wf_token), new WatchFacePushHelper.SyncCallback() {
+                        @Override
+                        public void onComplete(@NonNull WatchFacePushHelper.SyncResult result) {
+                            if (result.getDetails() == null || !result.shouldOfferActivation()) {
+                                return;
+                            }
+
+                            // Ask only once ever.
+                            if (!WatchFacePushHelper.consumeActivationAsk(activity)) {
+                                Log.i(LOG_ID,"!consumeActivationAsk");
+                                return;
+                            }
+
+                            pendingActivationSlotId = result.getDetails().getSlotId();
+
+                            if (ContextCompat.checkSelfPermission( activity, WatchFacePushHelper.PERMISSION_SET_ACTIVE) == PackageManager.PERMISSION_GRANTED) {
+                                        activatePending(activity);
+                            } else {
+                                Log.i(LOG_ID,"requestPermissions "+ WatchFacePushHelper.PERMISSION_SET_ACTIVE);
+
+                                ActivityCompat.requestPermissions(
+                                        activity,
+                                        new String[]{WatchFacePushHelper.PERMISSION_SET_ACTIVE},
+                                        REQ_SET_PUSHED_WATCH_FACE_ACTIVE
+                                );
+                            }
+                        }
+
+                        @Override
+                        public void onError(@NonNull Throwable error) {
+                            Log.stack(LOG_ID, "syncFromUi", error);
+                        }
+                    }
+            );
+        }
+
+        public static void onRequestPermissionsResult( @NonNull Activity activity, boolean granted) {
+            if (granted) {
+                activatePending(activity);
+            } else {
+                Natives.setaskedWatchFace(true);
+                pendingActivationSlotId = null;
+                }
+        }
+
+        private static void activatePending(@NonNull Activity activity) {
+            final String slotId = pendingActivationSlotId;
+            pendingActivationSlotId = null;
+
+            if (slotId == null) {
+                Log.i(LOG_ID,"activatePending slotId==null");
+                return;
+            }
+            Log.i(LOG_ID,"activatePending");
+            WatchFacePushHelper.activateInstalledWatchFace( activity, slotId, new WatchFacePushHelper.SimpleCallback() { 
+                      @Override
+                        public void onSuccess() {
+                            Natives.setaskedWatchFace(true);
+                            Log.i(LOG_ID, "Watch face activated");
+                        }
+
+                        @Override
+                        public void onError(@NonNull Throwable error) {
+                            Log.stack(LOG_ID, "activatePending", error);
+                        }
+                    }
+            );
+        }
+    }
+
+
 };

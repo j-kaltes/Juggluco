@@ -32,10 +32,10 @@ public class  Libre3 {
 private static final String LOG_ID="Libre3";
 public static byte[] firstnfc(Tag tag) {
 	final byte[] firstcom={(byte)0x02,(byte)0xA1,(byte)0x7A};
-         var res=AlgNfcV.wholenfccmd(tag,firstcom );
-	 {if(doLog){showbytes("NFC res: ",res);};}
+    var res=AlgNfcV.wholenfccmd(tag,firstcom );
+	if(doLog){showbytes("NFC res: ",res);};
 	return res;
-	 }
+	}
 
 public static	long   	libre3NFC(Tag tag) {
 	byte[] res = firstnfc(tag);
@@ -43,6 +43,9 @@ public static	long   	libre3NFC(Tag tag) {
 		{if(doLog) {Log.i(LOG_ID,"firstnfc==null");};};
 		return 2L;
 		}
+    if(res.length<29)  {
+        return 2L;
+        }
 	if(libreVersion == 3) {
 		long streamptr=tk.glucodata.libre3.NFC.second(res,tag);
 //		SensorBluetooth.resetDevice(streamptr);

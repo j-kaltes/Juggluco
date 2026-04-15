@@ -136,10 +136,6 @@ private void startall() {
                if(!(unit==1||unit==2)) {
                       Applic.postDelayed(()->tk.glucodata.settings.Settings.set(this),1000L);
                       }
-               else  {
-                        if (android.os.Build.VERSION.SDK_INT >= 33) 
-                                   Above33.checkAndRestoreWatchFace(this);
-                       }
                 }
             else {
                Specific.initScreen(this);
@@ -668,12 +664,15 @@ static boolean tocalendarapp=false;
         }
      else {
             if(!showsdialog) {
-                        if(tryHealth==5) {
-                                if(Build.VERSION.SDK_INT >=33&&Build.VERSION.SDK_INT <16) {
-                                        Specific.installwatchface(this);
-                                        }
-                                 tryHealth=0;
-                                 }
+                        if(tryHealth>0) {
+                            Log.i(LOG_ID,"onStart tryHealth="+tryHealth);
+                            if(tryHealth--==4) {
+                                    if(android.os.Build.VERSION.SDK_INT >= 33)  {
+                                            Above33.checkAndRestoreWatchFace(this);
+                                            }
+                                      tryHealth=0;
+                                     }
+                           }
 
                 }
          }
@@ -1046,7 +1045,8 @@ static final int FLASH_PERMISSION_REQUEST_CODE=0x11224;
 static final int BLUETOOTH_PERMISSION_REQUEST_CODE=0x942365;
 private static final int NOTIFICATION_PERMISSION_REQUEST_CODE=0x8878;
 
-static final int WATCHFACE_PERMISSION_REQUEST_CODE=1001;
+static public final int REQ_SET_PUSHED_WATCH_FACE_ACTIVE = 1001;
+
 //private final int STORAGE_PERMISSION_REQUEST_CODE=0x445533;
 private void hasLocationContinue() {
       if(Natives.getusebluetooth())  {
@@ -1062,9 +1062,14 @@ public void onRequestPermissionsResult(int requestCode, String[] permissions, in
     var granted=grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED;
     Log.i(LOG_ID,"onRequestPermissionsResult("+requestCode+",["+String.join(",",permissions)+"],"+Arrays.toString(grantResults)+") "+(granted?"":"not ")+"granted");
     switch (requestCode) {
-         case WATCHFACE_PERMISSION_REQUEST_CODE:
+         case REQ_SET_PUSHED_WATCH_FACE_ACTIVE:
+                if(permissions.length==0&&grantResults.length==0) {
+                        Log.i(LOG_ID,"set watchface request cancelled");
+                        return;
+                        }
+                
                 if(isWearable&&android.os.Build.VERSION.SDK_INT >= 33) {
-                        Above33.setwatchface(this);
+                        Specific.WatchFaceActivation.onRequestPermissionsResult( this, granted);
                         };
                 break;
          case NOTIFICATION_PERMISSION_REQUEST_CODE: {
@@ -1126,8 +1131,6 @@ public void onRequestPermissionsResult(int requestCode, String[] permissions, in
                 }
             return;
     }
-    // Other 'case' lines to check for other
-    // permissions this app might request.
 }
 
 

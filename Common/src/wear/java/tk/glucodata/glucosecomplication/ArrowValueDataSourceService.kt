@@ -73,8 +73,9 @@ fun getview(type: ComplicationType):GlucoseValue {
       return glview as GlucoseValue;
       }
     override fun getPreviewData(type: ComplicationType): ComplicationData {
-
-	    val icon=Icon.createWithBitmap( getview(type).previewbitmap())
+       
+        val showtime=Natives.gettimeOnComplication( );
+	    val icon=Icon.createWithBitmap( getview(type).previewbitmap(showtime))
         return when (type) {
         
 /*         MONOCHROMATIC_IMAGE -> {
@@ -124,7 +125,8 @@ fun getview(type: ComplicationType):GlucoseValue {
          }
 	else {
          Log.i(LOG_ID,"glucose==${glucose.value}") 
-      getview(type).getArrowValueBitmap(glucose.value,glucose.time*1000L,glucose.index,glucose.rate)
+       val showtime=Natives.gettimeOnComplication( );
+      getview(type).getArrowValueBitmap(glucose.value,glucose.time*1000L,glucose.index,glucose.rate,showtime)
 	}
 
 	val image=Icon.createWithBitmap(bitmap)

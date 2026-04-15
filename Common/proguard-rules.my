@@ -30,6 +30,28 @@
 
 -keep class androidx.wear.watchface.complications.rendering.ComplicationDrawable
 
+
+
+#-keep class com.google.mlkit.common.** { *; }
+
+#-keep class com.google.mlkit.common.MlKit { *; }
+#-keep class com.google.mlkit.common.MlKitException { *; }
+
+-keep class com.google.mlkit.common.internal.** { *; }
+#-keep class com.google.mlkit.common.internal.MlKitInitProvider.** { *; }  wrong
+#-keep class com.google.mlkit.common.internal.CommonComponentRegistrar.** { *; }  wrong
+#-keep class com.google.mlkit.common.internal.model.** { *; }  wrong
+#-keep class com.google.mlkit.common.internal.MlKitComponentDiscoveryService { *; } wrong
+
+
+
+
+#-keep class com.google.mlkit.** { *; }
+#-keep class com.google.mlkit.vision.codescanner.** { *; }
+#-keep class com.google.mlkit.vision.barcode.common.** { *; }
+#-keep class com.google.android.gms.internal.mlkit_vision_barcode.** { *; }
+
+
 #-keep class tk.glucodata.watchface.WatchFaceService
 #-keep class tk.glucodata.watchface.WatchFaceService.editor.WatchFaceConfigActivity
 

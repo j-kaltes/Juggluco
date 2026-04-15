@@ -173,15 +173,7 @@ Bitmap getnovalue() {
     return glucoseBitmap;
     }
 
-    /*Bitmap getValueOnlyBitmap(String value,long time,int index) {
-        if(doLog) {Log.i(LOG_ID,"getValueOnlyBitmap "+value);};;
-        setbackground();
-        glucosePaint.setColor(getTextColor());
-        fontsize=drawcenter(value);
-        return glucoseBitmap;
-    }
-*/
-    void setNumberBitmap(String value,long time,int index) {
+    void setNumberBitmap(String value,long time,int index,boolean showtime) {
       {if(doLog) {Log.i(LOG_ID,"setNumberBitmap "+value);};};
       if(index>=0) {
               glucosePaint.setTextSize(timesize);
@@ -189,18 +181,20 @@ Bitmap getnovalue() {
                String instr=index+""; 
                canvas.drawText(instr,0,instr.length(),half,numoffy,glucosePaint);
                }
-            var timestr=tk.glucodata.NumberView.minhourstr(time);
-            canvas.drawText(timestr,0,timestr.length(),half,mapheight-timeoffy,glucosePaint);
+           if(showtime) {
+                var timestr=tk.glucodata.NumberView.minhourstr(time);
+                canvas.drawText(timestr,0,timestr.length(),half,mapheight-timeoffy,glucosePaint);
+                }
             }
    fontsize=drawcenter(value);
 	}
 
 
-Bitmap getNumberBitmap(String value,long time,int index,long now) {
+Bitmap getNumberBitmap(String value,long time,int index,long now,boolean showtime) {
     setbackground();
     glucosePaint.setColor(getTextColor());
     if((now-time)<tk.glucodata.Notify.glucosetimeout) {
-        setNumberBitmap(value, time, index);
+        setNumberBitmap(value, time, index,showtime);
        }
    else {
         mknovalue();
@@ -253,7 +247,7 @@ static int getTextBorderColor( ) {
    int col=Natives.getComplicationTextBorderColor( );
    return col==0?getBackgroundColor():col;
    } */
-Bitmap getArrowValueBitmap(String value,long time,int index,float rate) {
+Bitmap getArrowValueBitmap(String value,long time,int index,float rate,boolean showtime) {
    final var now = System.currentTimeMillis();
    if((now-time)>=tk.glucodata.Notify.glucosetimeout) {
        return getnovalue();
@@ -262,11 +256,11 @@ Bitmap getArrowValueBitmap(String value,long time,int index,float rate) {
 //   glucosePaint.setTypeface(Typeface.defaultFromStyle(BOLD));
    glucosePaint.setTypeface(boldtype);
    glucosePaint.setColor(getBackgroundColor( ));
-   setNumberBitmap(value,time, -1);
+   setNumberBitmap(value,time, -1,showtime);
    glucosePaint.setColor(getTextColor());
  //  glucosePaint.setTypeface(Typeface.defaultFromStyle(NORMAL));
    glucosePaint.setTypeface(normaltype);
-   setNumberBitmap(value,time, index);
+   setNumberBitmap(value,time, index,showtime);
    return glucoseBitmap;
    }
 Bitmap getArrowTimeBitmap(long time,float rate) {
@@ -301,7 +295,7 @@ Bitmap getArrowTimeBitmap(long time,float rate) {
    }
 
 
-Bitmap previewbitmap() {
+Bitmap previewbitmap(boolean showtime) {
         String value;
         float rate;
         int index;
@@ -318,7 +312,7 @@ Bitmap previewbitmap() {
             rate = 1.0f;
             index = 0;
         }
-	return getArrowValueBitmap( value, time, index, rate);
+	return getArrowValueBitmap( value, time, index, rate,showtime);
 	}
 
 
@@ -329,6 +323,7 @@ static public void updateall() {
     IconValueDataSourceService.Companion.update();
     IconArrowDataSourceService.Companion.update();
     ShortArrowValueDataSourceService.Companion.update();
+	TimeStampComplicationService.Companion.update();
     }
 
 }

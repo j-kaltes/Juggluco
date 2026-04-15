@@ -484,5 +484,6 @@
     <string name="messagewebserverneed">Go to left menu->Settings->Exchange data->Web server to activate webserver</string>
     <string name="nostreamvalues">No Stream values</string>
     <string name="nohistoryvalues">No History values</string>
+    <string name="jugglucoupdate">Update time</string>
 
 </resources>

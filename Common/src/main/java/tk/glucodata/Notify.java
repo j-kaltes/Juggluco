@@ -376,6 +376,7 @@ private static void showoldglucose() {
     }
 
     void normalglucose(notGlucose strgl,float gl,float rate,boolean waiting) {
+        stopGlucoseAlarm();
         MainActivity.showmessage=null;
         var act=MainActivity.thisone;
         if(act!=null)
@@ -385,7 +386,7 @@ private static void showoldglucose() {
             arrowglucosealarm(2,gl, format(usedlocale,glucoseformat, gl), strgl,GLUCOSENOTIFICATION ,true);
 
         else if(!isWearable){
-            {if(doLog) {Log.i(LOG_ID,"arrowglucosenotification  alertwatch="+alertwatch+" showalways="+showalways);};};
+            if(doLog) {Log.i(LOG_ID,"arrowglucosenotification  alertwatch="+alertwatch+" showalways="+showalways);};
             if(showalways||alertwatch) {
                 var message= format(usedlocale,glucoseformat,gl);
                 if(alertwatch)
@@ -486,7 +487,14 @@ static    void stoplossalarm(){
         }
     }
 
+static boolean isGlucoseAlarm() {
+   return  lastalarm<2||lastalarm>4;
+   }
 
+static void stopGlucoseAlarm() {
+        if(isGlucoseAlarm())
+                stopalarm();
+         }
     private synchronized void playringhier(Ringtone ring,int duration,boolean sound,boolean flash,boolean vibrate,boolean disturb,int kind) {
         notifyfocus=true;
         doTurnFocuson();

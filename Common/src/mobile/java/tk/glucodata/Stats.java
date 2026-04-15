@@ -137,7 +137,7 @@ private static void webPercentiles(Context context, int days,boolean history) {
 	final String key=Natives.getApiSecret();
     final String addkey=(key!=null&&!key.isEmpty())?key+"/":"";
     final String type=(Natives.getDoCalibrate()?"&calibrated":"&")+(history?"history":"stream");
-    final String url="http://127.0.0.1:17580/"+addkey+"x/report?amounts&days="+days+"&endtime="+endtime+type;
+    final String url="http://127.0.0.1:17580/"+addkey+"x/report?amounts&days="+days+"&endtime="+endtime+type+"&hl="+Applic.curlang;
     var intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
     context.startActivity(intent);
     }

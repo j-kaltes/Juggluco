@@ -1004,6 +1004,8 @@ public static native void aidexXclear(long dataptr);
 public static native void setaskedWatchFace(boolean val);
 public static native boolean getaskedWatchFace();
 
+public static native void settimeOnComplication(boolean val);
+public static native boolean gettimeOnComplication( );
 /*
 public static boolean setlabel(int pos,String label, float prec,float weight) {
     return setlabel(pos,RtlLabelConverter.visualForm(label), prec, weight);

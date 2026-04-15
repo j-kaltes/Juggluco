@@ -26,6 +26,11 @@ extern bool makepercetages() ;
 extern bool isRTL();
 extern bool hasnetwork();
 
+struct jugglucotext;
+extern jugglucotext artext;
+bool isRTL() {
+    return usedtext==&artext;
+}
 bool bluetoothEnabled();
 #include "numdisplay.hpp"
 extern vector<NumDisplay*> numdatas;
@@ -114,7 +119,6 @@ strsepconcat text;
     prevtouch.time = chrono::steady_clock::now();
     LOGGER("histgegs %s",ctime(&nu));
     } 
-
 strsepconcat  getsensorhelp(string_view starttext,string_view name1,string_view name2,string_view sep1,string_view sep2,string_view endstr="") {
     char starts[50],ends[50],pends[50];
 //   const sensor *sensor=sensors->getsensor(sensorindex);

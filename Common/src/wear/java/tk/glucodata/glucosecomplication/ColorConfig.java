@@ -63,6 +63,7 @@ import tk.glucodata.Applic;
 import tk.glucodata.GlucoseCurve;
 import tk.glucodata.Layout;
 import tk.glucodata.MainActivity;
+import tk.glucodata.Natives;
 import tk.glucodata.R;
 import yuku.ambilwarna.AmbilWarnaDialog;
 
@@ -158,17 +159,10 @@ static public   void show(MainActivity context, View view) {
             });
 
       var close=getbutton(context,R.string.closename);
-//   var density=tk.glucodata.GlucoseCurve.metrics.density;
-/*	allradio[1].setPadding(0,0,0,0);
-	allradio[2].setPadding(0,0,(int)(density*22.0),0);
-	allradio[3].setPadding(0,0,(int)(density*5.0),0);; */
-//	allradio[0].setPadding((int)(density*10.0),0,0,0); 
-//	allradio[1].setPadding(0,0,(int)(density*20.0f),0);
    var space1=new Space(context);
    var space2=new Space(context);
    var space3=new Space(context);
    var space4=new Space(context);
-//      Layout layout=new Layout(context,(l, w, h)-> { return new int[] {w,h}; },new View[]{head},new View[]{new Space(context),allradio[1],allradio[2]},new View[]{allradio[0],allradio[3]},new View[]{defaultbox,select},  new View[]{close});
 
 	if(!useclose) close.setVisibility(INVISIBLE);
       Layout layout=new Layout(context,(l, w, h)-> { return new int[] {w,h}; },new View[]{allradio[2]},new View[]{space1,allradio[0],allradio[1],space2},new View[]{space3,defaultbox,select,space4},  new View[]{close});
@@ -188,6 +182,7 @@ static public   void show(MainActivity context, View view) {
       };
 
 static public void showcolors(MainActivity act,CheckDirectionBox def) {
+    var showtime= Natives.gettimeOnComplication( );
       var glview=new GlucoseValue(150,150);
       int coltype=radiosel;
       int initialColor=getcolordef(coltype);
@@ -201,7 +196,8 @@ static public void showcolors(MainActivity act,CheckDirectionBox def) {
 	  if(coltype==2) {
 	     GlucoseValue.newbackground=c;
 	     }
-	 preview.setImageBitmap(glview.previewbitmap());
+
+	 preview.setImageBitmap(glview.previewbitmap(showtime));
        }, v-> {
             int h=v.getMeasuredHeight();
                 int w=v.getMeasuredWidth();
@@ -211,21 +207,24 @@ static public void showcolors(MainActivity act,CheckDirectionBox def) {
    final var head=getlabel(act,names[radiosel]);
    var close=getbutton(act,R.string.closename);
    View view=dialog.getview();
-   preview.setImageBitmap(glview.previewbitmap());
+   preview.setImageBitmap(glview.previewbitmap(showtime));
    view.setLayoutParams( new ViewGroup.LayoutParams((int)(width*0.72), (int)(height*0.72)));
    var density=tk.glucodata.GlucoseCurve.metrics.density;
    SeekBar fontsizeview;
+   CheckDirectionBox showtimeview;
    if(radiosel==1) {
+      showtimeview =getcheckbox(act,R.string.time, Natives.gettimeOnComplication());
+       showtimeview.setOnCheckedChangeListener( (buttonView,  isChecked) -> {
+        Natives.settimeOnComplication(isChecked);
+	    preview.setImageBitmap(glview.previewbitmap(isChecked));
+        });
       fontsizeview=new SeekBar(act);
-     Applic.ifRTLseekbar(fontsizeview);
-//      float maxfont=glview.fontsize;
-//      float currentfont= Math.min(maxfont, GlucoseValue.upperboundfontsize);
+      Applic.ifRTLseekbar(fontsizeview);
       int currentfont= (int)(GlucoseValue.fontFraction*1000);
       fontsizeview.setMax(1000);
       fontsizeview.setProgress(currentfont);
       final int fwidth=(int)(0.9f*width);
       fontsizeview.setPadding((int)(density*10),(int)(density*18.0),(int)(density*10),0);
-     // fontsizeview.setMinimumWidth(width);
       fontsizeview.setMinimumWidth(fwidth);
       fontsizeview.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 		@Override
@@ -243,7 +242,7 @@ static public void showcolors(MainActivity act,CheckDirectionBox def) {
 		public void onStopTrackingTouch(SeekBar seekBar) {
 			{if(doLog) {Log.i(LOG_ID,"onStopTrackingTouch");};};
 			glview.clear();
-			preview.setImageBitmap(glview.previewbitmap());
+			preview.setImageBitmap(glview.previewbitmap(showtime));
 			}
 		});
 
@@ -251,6 +250,7 @@ static public void showcolors(MainActivity act,CheckDirectionBox def) {
 else {
    preview.setPadding(0,(int)(density*18.0),0,0);
    fontsizeview=null;
+   showtimeview=null;
 	}
 
 	if(!useclose) close.setVisibility(GONE);
@@ -260,7 +260,7 @@ else {
         margins.bottomMargin= (int)(density*3.0);
         }
 
-      Layout layout=new Layout(act,(l, w, h)-> { return new int[] {w,h}; },new View[]{head},new View[]{view},fontsizeview==null?null:new View[]{fontsizeview},new View[]{preview},new View[]{close});
+      Layout layout=new Layout(act,(l, w, h)-> { return new int[] {w,h}; },new View[]{head},new View[]{view},fontsizeview==null?null:new View[]{fontsizeview},new View[]{preview},showtimeview==null?null:new View[]{showtimeview},new View[]{close});
 	var scroll=new ScrollView(act);
 	scroll.addView(layout);
 	scroll.setFillViewport(true);

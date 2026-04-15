@@ -63,8 +63,11 @@ private val glview= GlucoseValue(100,100)
             index = 0
 	        time=now
         }
+
+        val showtime=Natives.gettimeOnComplication( )
         return SmallImageComplicationData.Builder(
-            smallImage =  SmallImage.Builder( Icon.createWithBitmap(glview.getNumberBitmap(value,time,index,now)), SmallImageType.PHOTO).build(),
+
+            smallImage =  SmallImage.Builder( Icon.createWithBitmap(glview.getNumberBitmap(value,time,index,now,showtime)), SmallImageType.PHOTO).build(),
             contentDescription = PlainComplicationText.Builder(text = "Glucose Value").build() )
             .setTapAction(null)
             .build()
@@ -86,7 +89,8 @@ private val glview= GlucoseValue(100,100)
 	      else {
 		    Log.i(LOG_ID,"glucose==${glucose.value}") 
    		   val now = System.currentTimeMillis()
-		   glview.getNumberBitmap(glucose.value,glucose.time*1000L,glucose.index,now)
+           val showtime=Natives.gettimeOnComplication( )
+		   glview.getNumberBitmap(glucose.value,glucose.time*1000L,glucose.index,now,showtime)
 		  }
                 SmallImageComplicationData.Builder( SmallImage.Builder( Icon.createWithBitmap(image), SmallImageType.PHOTO).build(), contentDescription = PlainComplicationText.Builder("Glucose Number").build()).setTapAction(complicationPendingIntent).build()
 		}

@@ -54,4 +54,8 @@ static void wearnosensors(Object act) { };
 static void onCreate(Object act) { }
 
 static void installwatchface(Object context) { }
+
+public static final class WatchFaceActivation {
+    public static void onRequestPermissionsResult( Object obj, boolean granted) { }
+    }
 };

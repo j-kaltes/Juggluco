@@ -356,7 +356,9 @@ bool isSibionics(const int ind) const {
 
 bool needsScan(const int ind) const {
    const sensor *sens=getsensor(ind);
-   const auto res=sens->halfdays>=(stdMaxDaysSI*2)||sens->halfdays==(maxdaysDex*2);
+//   const auto res=sens->halfdays>=(stdMaxDaysSI*2)||sens->halfdays==(maxdaysDex*2);
+
+   const bool res=memcmp(sens->name,"E0",2);
    LOGGER("needsScan(%d,%s)=%d\n",ind,sens->name,res);
    return res;
    }
@@ -450,7 +452,40 @@ std::pair<int,SensorGlucoseData *> addSensorInitgetPair(const string_view name,i
    sen->halfdays=halfdays;
    return {ind,getSensorData(ind)} ;
    }
-std::pair<int,SensorGlucoseData *> makeDexComSensorindex(const char *pin,std::string_view gegs,uint32_t now) {
+
+std::pair<int,SensorGlucoseData *> newmakeDexComSensorindex(const std::string_view serial,const std::string_view pin,const std::string_view GTIN, const std::string_view gegs,uint32_t now) {
+   std::array<char,16> name;
+   std::copy_n(serial.data(),serial.size(),name.data());
+   if(serial.size()<12) {
+        int left=12-serial.size();
+        memcpy(&name[serial.size()],GTIN.end()-left,left);
+        }
+  std::copy_n(pin.data(),4,name.data()+12);
+  LOGGER("makeDexComSensorindex %s name=%.16s\n",pin.data(),name.data());
+  removeunused();
+  if(sensor *sensgegs = findsensorm(name.data()) ) {
+       LOGGER("known sensor %s\n",sensgegs->showsensorname());
+       const int   sensindex= sensgegs - sensorlist();
+       SensorGlucoseData *sens=getSensorData(sensindex) ;
+       sendKAuth(sens);
+        sendsiScan(sens);
+       setstreaming(sens);
+       sensgegs->finished=0;
+       auto *info= sens->getinfo();
+       info->lastscantime=now;
+       if(!info->pollcount) info->starttime=now; //Not needed
+      sendsiScan(sens);
+       void resensordata(int sensorindex) ;
+       resensordata(sensindex);
+       return {sensindex,sens};
+       }
+   const int days=GTIN.ends_with("4574"sv)?15:10;
+   const pathconcat sensordir(inbasedir,name);
+   SensorGlucoseData::mkdatabaseDex(sensordir,gegs,now,days);
+   return addSensorInitgetPair(std::string_view(name.data(),16),(days+2)*2);
+   }
+/*
+std::pair<int,SensorGlucoseData *> oldmakeDexComSensorindex(const char *pin,std::string_view gegs,uint32_t now) {
    std::array<char,16> name;
    if(gegs.size()==55) {
       std::copy_n(&gegs[19],12,name.data());
@@ -496,6 +531,7 @@ std::pair<int,SensorGlucoseData *> makeDexComSensorindex(const char *pin,std::st
    SensorGlucoseData::mkdatabaseDex(sensordir,gegs,now );
    return addSensorInitgetPair(std::string_view(name.data(),16),maxdaysDex*2);
    }
+   */
 private:
 static  bool dexcomEnd(const char *endcode) {
          if(!memcmp(endcode-7,"240",3)) {
@@ -707,7 +743,14 @@ std::pair<int,SensorGlucoseData *> makePhotoScanSensorIndex(std::string_view geg
       #endif
       {
      const  union {
-          const char buf[8]{"6958590"};
+          const char _[8]{"0386270"};
+          std::array<char,7> dexcom;
+          };
+      if(dexcom==barcode.getManifacturer()) {
+            return newmakeDexComSensorindex(barcode.Serial,barcode.PIN,barcode.GTIN,gegsSI,now);
+            }
+     const  union {
+          const char _[8]{"6958590"};
           std::array<char,7> aidexx;
           };
       if(aidexx==barcode.getManifacturer()) {
@@ -726,15 +769,17 @@ std::pair<int,SensorGlucoseData *> makePhotoScanSensorIndex(std::string_view geg
         return res;
         }
    bool hasnum=std::ranges::contains_subrange(gegsSI,sibionicsRecognition);
-   const auto *endcode=gegsSI.end();
+//   const auto *endcode=gegsSI.end();
 /*   bool hasnum=std::search(gegsSI.begin(),endcode,sibionicsRecognition.begin(),sibionicsRecognition.end())!=endcode;  */
    if(!hasnum) {   
      std::string_view si="(SI)";
      if(gegsSI.size()<36||!std::ranges::contains_subrange(gegsSI,si)) {
+     /*
         if(dexcomEnd(endcode)) {
-            if(const auto res=makeDexComSensorindex(endcode-4,gegsSI,now);res.first>=0)
+            if(const auto res=oldmakeDexComSensorindex(endcode-4,gegsSI,now);res.first>=0)
                 return res;
             }
+            */
          return makeAccuCheckSensorindex(gegsSI,now);
          }
       }

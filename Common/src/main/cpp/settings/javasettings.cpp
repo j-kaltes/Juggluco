@@ -1983,3 +1983,9 @@ extern "C" JNIEXPORT void  JNICALL   fromjava(setaskedWatchFace)(JNIEnv *env, jc
 extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getaskedWatchFace)(JNIEnv *env, jclass cl) {
     return settings->data()->askedWatchFace;
     }
+extern "C" JNIEXPORT void  JNICALL   fromjava(settimeOnComplication)(JNIEnv *env, jclass cl,jboolean val) {
+    settings->data()->timeOnComplication=val;
+    }
+extern "C" JNIEXPORT jboolean  JNICALL   fromjava(gettimeOnComplication)(JNIEnv *env, jclass cl) {
+    return settings->data()->timeOnComplication;
+    }

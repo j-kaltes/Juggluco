@@ -77,8 +77,9 @@ fun getview(type: ComplicationType):GlucoseValue {
             value = if (Applic.unit == 1) "5.6" else "101"
 	        time=now
         }
+        val showtime=Natives.gettimeOnComplication()
         return MonochromaticImageComplicationData.Builder(
-             MonochromaticImage.Builder( Icon.createWithBitmap(getview(type).getNumberBitmap(value,time,-1,now))).build(),
+             MonochromaticImage.Builder( Icon.createWithBitmap(getview(type).getNumberBitmap(value,time,-1,now,showtime))).build(),
             contentDescription = PlainComplicationText.Builder(text = "Glucose Value").build() )
             .setTapAction(null)
             .build()
@@ -95,7 +96,8 @@ fun getview(type: ComplicationType):GlucoseValue {
                  getview(type).getnovalue()
                  } else {
                      Log.i(LOG_ID,"MonochromaticImage ${glucose.value}")
-                    getview(type).getNumberBitmap(glucose.value,glucose.time*1000L,-1,now)
+                    val showtime=Natives.gettimeOnComplication()
+                    getview(type).getNumberBitmap(glucose.value,glucose.time*1000L,-1,now,showtime)
                      }
              val image=Icon.createWithBitmap(bitmap)
              val complicationPendingIntent = Notify.mkpending()

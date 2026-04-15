@@ -55,4 +55,8 @@ static void wearnosensors(MainActivity act) {
     Switch.wearnosensors(act);
     }
 static void installwatchface(Object context) { }
+
+public static final class WatchFaceActivation {
+    public static void onRequestPermissionsResult( Object obj, boolean granted) { }
+    }
 };

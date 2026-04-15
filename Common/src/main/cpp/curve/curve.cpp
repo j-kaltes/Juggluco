@@ -1632,7 +1632,6 @@ int JCurve::largedaystr(const time_t tim,char *buf) {
 
 
 
-extern bool isRTL();
 void       JCurve::showbluevalue(NVGcontext* avg,const time_t nu,const int xpos,std::vector<int> &used) {
 CURVELOGGER("showbluevalue %zd\n",used.size());
         nvgFontSize(avg, smallsize);
@@ -2686,10 +2685,6 @@ int    JCurve::showLargevalue(NVGcontext* avg, int index,float getx,float gety,f
     }
 
 
-extern jugglucotext artext; 
-bool isRTL() {
-    return usedtext==&artext;
-    }
 
 float                JCurve::getboxwidth(const float x) {
                     return std::max((float)(dwidth-x-smallsize),dwidth*.25f);
