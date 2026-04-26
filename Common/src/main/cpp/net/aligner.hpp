@@ -20,14 +20,17 @@
 
 
 #pragma once
+#include <stdint.h>
 #include <new>
-template <int nr,typename T>
+
+template <int nr, typename T>
 T aligner(T ptr) {
-	static constexpr uintptr_t mis=(nr-1);
-	static constexpr uintptr_t alignedon=~0-mis;
-//	return reinterpret_cast<T>(reinterpret_cast<uintptr_t>(ptr+mis)&alignedon);
-	return (T)(reinterpret_cast<uintptr_t>(ptr+mis)&alignedon);
-	}
+    static_assert((nr & (nr - 1)) == 0, "nr must be a power of two");
+    static constexpr uintptr_t mis = (nr - 1);
+    static constexpr uintptr_t alignedon = ~uintptr_t(0) - mis;
+    return (T)(((uintptr_t)(ptr) + mis) & alignedon);
+}
+
 template <int nr,typename  T>
 struct ardeleter { // deleter
     void operator() ( T ptr[]) {

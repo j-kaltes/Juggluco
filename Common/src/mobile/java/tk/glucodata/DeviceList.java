@@ -55,7 +55,7 @@ public class DeviceList {
              if(scan!=null) {
                  if(pos<scan.deviceNames.size()) {
                      String deviceName=scan.deviceNames.get(pos);
-                     if(AidexXGattCallback.hasDeviceName(deviceName)) {
+                     if(showAidexX) {
                        AidexXGattCallback.addbyDeviceName((MainActivity) view.getContext(),deviceName);
                         while(MainActivity.doonback())
                                 ;
@@ -108,7 +108,7 @@ private final SpannableString newcolor(String nameaddress) {
          return str;
          }
 static private int aidexXindex(String name) {
-    String serial="x"+name.substring(name.length()-10);
+    String serial= AidexXGattCallback.deviceName2name(name);
     return Natives.sensorIndex(serial);
     }
       @Override
@@ -119,7 +119,7 @@ static private int aidexXindex(String name) {
              var device=scan.devices.get(pos);
              var name=scan.deviceNames.get(pos);
              String nameaddress=name+"\n"+device.getAddress();
-             int index= AidexXGattCallback.hasDeviceName(name)?aidexXindex(name):GlucoseMeterHasIndex(name);
+             int index= showAidexX?aidexXindex(name):GlucoseMeterHasIndex(name);
                  if(index<0) {
                      text.setText(newcolor(nameaddress));
                      }
@@ -156,8 +156,9 @@ static public void show(MainActivity act, MeterList.MeterListViewAdapter meterad
     recycle.setAdapter(deviceadapt);
     startAdapterScanner(deviceadapt,showAidexX);
     aidex.setOnCheckedChangeListener((buttonView, isChecked) -> {
+//        if(!doLog)
         showAidexX=isChecked;
-        startAdapterScanner(deviceadapt,showAidexX);
+        startAdapterScanner(deviceadapt,isChecked);
         deviceadapt.notifyDataSetChanged();
         });
      help.setOnClickListener(v-> tk.glucodata.help.help(R.string.DeviceList,act));

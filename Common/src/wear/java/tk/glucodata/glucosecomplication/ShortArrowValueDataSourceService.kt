@@ -93,7 +93,7 @@ fun getview(type: ComplicationType):GlucoseValue {
 
     override suspend fun onComplicationRequest(request: ComplicationRequest): ComplicationData? {
         Log.d(LOG_ID, "onComplicationRequest() id: ${request.complicationInstanceId}")
-        val complicationPendingIntent = Notify.mkpending();
+        val complicationPendingIntent = Notify.mkpendingall(this,1002);
         val type=        request.complicationType
       val glucose = Natives.lastglucose()
    	 val now = System.currentTimeMillis()

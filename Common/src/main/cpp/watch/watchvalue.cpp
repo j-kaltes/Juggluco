@@ -106,7 +106,8 @@ extern "C" JNIEXPORT jlong  JNICALL   fromjava(lastglucosetime)(JNIEnv *env, jcl
 
 
 
-int getglucosestr(double nonconvert,char *glucosestr,int maxglucosestr,int glucosehighest) ;
+
+int getglucosestr(double nonconvert,char *glucosestr,int maxglucosestr,int glucoselowest,int glucosehighest) ;
 
 #include "calibrate/Calibrator.hpp"
 extern float threshold(float drate);
@@ -136,7 +137,7 @@ extern "C" JNIEXPORT jobject  JNICALL   fromjava(lastglucose)(JNIEnv *env, jclas
         }
     const int maxbuf=20;
     char buf[maxbuf];
-    getglucosestr(nonconvert,buf,maxbuf, hist->getmaxmgdL());
+    getglucosestr(nonconvert,buf,maxbuf,hist->getminmgdL(), hist->getmaxmgdL());
     static constexpr const char glucoseclass[]= javapackage "strGlucose";
     static  jclass  item=  (jclass) env->NewGlobalRef(env->FindClass(glucoseclass));
     if(!item) {
@@ -154,7 +155,7 @@ extern "C" JNIEXPORT jobject  JNICALL   fromjava(lastglucose)(JNIEnv *env, jclas
     const int sensorgen2=hist->getSensorgen2();
  
     LOGGERTAG("strGlucose(%lld,%s,%s,%.1f,%d,%d)\n",(long long)tim,buf,sensorid,poll->ch,index,sensorgen2);
-    const float rateofchange=( nonconvert<glucoselowest||nonconvert>hist->getmaxmgdL())?NAN:threshold(poll->ch);
+    const float rateofchange=( nonconvert<hist->getminmgdL()||nonconvert>hist->getmaxmgdL())?NAN:threshold(poll->ch);
     return env->NewObject(item,iconstruct,tim,env->NewStringUTF(buf),env->NewStringUTF(sensorid),rateofchange,index,sensorgen2);
        }
 

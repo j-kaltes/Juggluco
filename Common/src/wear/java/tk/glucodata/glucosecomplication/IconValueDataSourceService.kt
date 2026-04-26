@@ -100,7 +100,7 @@ fun getview(type: ComplicationType):GlucoseValue {
                     getview(type).getNumberBitmap(glucose.value,glucose.time*1000L,-1,now,showtime)
                      }
              val image=Icon.createWithBitmap(bitmap)
-             val complicationPendingIntent = Notify.mkpending()
+            val complicationPendingIntent = Notify.mkpendingall(this,1002);
             return MonochromaticImageComplicationData.Builder(
                     MonochromaticImage.Builder(image).build(), contentDescription = PlainComplicationText.Builder("Glucose Value").build()).setTapAction(complicationPendingIntent).build()
             } 

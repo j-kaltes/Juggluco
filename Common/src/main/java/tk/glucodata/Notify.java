@@ -871,15 +871,25 @@ static public boolean alertseparate=false;
     }
 @SuppressWarnings({"deprecation"})
 
-static public PendingIntent mkpending() {
+static public PendingIntent mkpendingall(Context context, int requestCode) {
    {if(doLog) {Log.i(LOG_ID,"mkpending");};};
-    Intent notifyIntent = new Intent(Applic.app,MainActivity.class);
-    notifyIntent.putExtra(fromnotification,true);
-    notifyIntent.addCategory(Intent. CATEGORY_LAUNCHER ) ;
-    notifyIntent.setAction(Intent. ACTION_MAIN ) ;
-    notifyIntent.setFlags(Intent. FLAG_ACTIVITY_CLEAR_TOP | Intent. FLAG_ACTIVITY_SINGLE_TOP );
-    return   PendingIntent.getActivity(Applic.app, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT|penmutable);
+
+    Intent notifyIntent = new Intent(Applic.app, MainActivity.class);
+    notifyIntent.putExtra(fromnotification, true);
+    notifyIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+    notifyIntent.setAction(Intent.ACTION_MAIN);
+    notifyIntent.setFlags(
+          Intent.FLAG_ACTIVITY_NEW_TASK
+        | Intent.FLAG_ACTIVITY_CLEAR_TOP
+        | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+    return PendingIntent.getActivity( context, requestCode, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT | penmutable);
     }
+
+
+static public PendingIntent mkpending() {
+    return mkpendingall(Applic.app,1001);
+    }
+
 private Notification.Builder   mkbuilderintent(String type,PendingIntent notifyPendingIntent) {
     Notification.Builder  GluNotBuilder;
      if(true) {

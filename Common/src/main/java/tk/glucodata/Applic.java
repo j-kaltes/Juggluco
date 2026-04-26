@@ -921,9 +921,12 @@ static public void startMain() {
     intent.addCategory(Intent. CATEGORY_LAUNCHER ) ;
     intent.setAction(Intent. ACTION_MAIN ) ;
     if(act!=null) {
-       intent.setFlags(Intent. FLAG_ACTIVITY_CLEAR_TOP | Intent. FLAG_ACTIVITY_SINGLE_TOP );
-        {if(doLog) {Log.i(LOG_ID,"startActivityIfNeeded( new Intent(Applic.app,MainActivity)). ");};};
-        act.startActivityIfNeeded( intent,0);
+       intent.setFlags(
+          Intent.FLAG_ACTIVITY_NEW_TASK 
+         | Intent. FLAG_ACTIVITY_CLEAR_TOP 
+         | Intent. FLAG_ACTIVITY_SINGLE_TOP );
+        if(doLog) {Log.i(LOG_ID,"startActivityIfNeeded( new Intent(Applic.app,MainActivity)). ");};
+        act.startActivityIfNeeded( intent,1003);
         }
     else {
         final var service=keeprunning.theservice;

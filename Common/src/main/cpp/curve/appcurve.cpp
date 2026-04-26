@@ -2470,10 +2470,9 @@ void JCurve::resizescreen(int widthin, int heightin,int initscreenwidth) {
 
     LOGGER("facetimey=%.1f\n",facetimey);
 }
-
-int getglucosestr(double nonconvert,char *glucosestr,int maxglucosestr,int glucosehighest) {
+int getglucosestr(double nonconvert,char *glucosestr,int maxglucosestr,int glucoselowest,int glucosehighest) {
     if(nonconvert<glucoselowest) {
-        return appcurve.mkshowlow(glucosestr, maxglucosestr) ;
+        return appcurve.mkshowlow(glucosestr, maxglucosestr,glucoselowest) ;
         }
     else {
         if(nonconvert> glucosehighest) {
@@ -2485,7 +2484,6 @@ int getglucosestr(double nonconvert,char *glucosestr,int maxglucosestr,int gluco
             }
         }
     }
-
 
  void       JCurve::showscanner(NVGcontext* avg,const SensorGlucoseData *hist,int scanident,time_t nu,bool calibrate) {
     const ScanData &last=*hist->getscan(scanident);
@@ -2515,9 +2513,9 @@ int getglucosestr(double nonconvert,char *glucosestr,int maxglucosestr,int gluco
 
     int len1;
     float endtime=x,sensleft=0.0f;
-
+    int glucoselowest=hist->getminmgdL();
     if(gluval<glucoselowest) {
-        len1=mkshowlow(buf1,maxbuf);
+        len1=mkshowlow(buf1,maxbuf,glucoselowest);
         endtime-=smallerlen;
         sensleft=smallerlen;
         }
@@ -2673,8 +2671,9 @@ int getglucosestr(double nonconvert,char *glucosestr,int maxglucosestr,int gluco
                         }
                     }
                }
-                return 0;
-                }
+               LOGGER("appcurve: errortext=%s\n",shownglucose[index].errortext);
+               return 0;
+               }
             }
     
         }

@@ -257,6 +257,15 @@ extern "C" JNIEXPORT jint  JNICALL   fromjava(GlucoseMeterGetIndex)(JNIEnv *env,
                 }
         return -1;
         }
+extern "C" JNIEXPORT jboolean  JNICALL   fromjava(GlucoseMeterRemove)(JNIEnv *env, jclass cl,jstring jdeviceName) {
+        unsigned len= env->GetStringUTFLength(jdeviceName );
+        jint jlen = env->GetStringLength( jdeviceName);
+        char buf[len+1];
+        env->GetStringUTFRegion(jdeviceName, 0,jlen, buf);
+        buf[len]='\0';
+        std::string_view deviceName{buf,len};
+        return settings->data()->removeGlucoseMeter(deviceName);
+        }
 extern "C" JNIEXPORT jint  JNICALL   fromjava(GlucoseMeterHasIndex)(JNIEnv *env, jclass cl,jstring jdeviceName) {
         unsigned len= env->GetStringUTFLength(jdeviceName );
         jint jlen = env->GetStringLength( jdeviceName);
@@ -271,6 +280,15 @@ extern "C" JNIEXPORT jint  JNICALL   fromjava(GlucoseMeterHasIndex)(JNIEnv *env,
         return -1;
         }
 
+static bool isAidexX(const char *name) {
+    const std::string_view names[]{"AiDEX X-"sv,"LinX-"sv,"Lumi-"sv};
+    for(auto &n:names) {
+        if(!memcmp(name,n.data(),n.size()))
+            return true;
+        }
+    return false;
+    }
+#if 0 
 extern "C" JNIEXPORT jintArray  JNICALL   fromjava(getActiveGlucoseMeters)(JNIEnv *env, jclass cl) {
         const uint32_t nr=settings->data()->glucoseMeterNR;
         jint meters[nr];
@@ -284,7 +302,33 @@ extern "C" JNIEXPORT jintArray  JNICALL   fromjava(getActiveGlucoseMeters)(JNIEn
 	env->SetIntArrayRegion(uit, 0,used, meters);
 	return uit;
 	}
-
+#else
+extern "C" JNIEXPORT jintArray  JNICALL   fromjava(getActiveGlucoseMeters)(JNIEnv *env, jclass cl) {
+    const uint32_t nr=settings->data()->glucoseMeterNR;
+    LOGGER("getActiveGlucoseMeters nr=%d\n",nr);
+    jint meters[nr];
+    int used=0;
+    for(int i=0;i<settings->data()->glucoseMeterNR;) {
+        GlucoseMeter &meter= settings->data()->glucosemeters[i];
+        if(isAidexX(meter.deviceName)) {
+            LOGGER("getActiveGlucoseMeters %s is AidexX()\n",meter.deviceName);
+            const int next=i+1;
+            const int left= settings->data()->glucoseMeterNR-next;
+            if(left>0)
+                memmove(settings->data()->glucosemeters+i,settings->data()->glucosemeters+next,left*sizeof(GlucoseMeter));
+            --settings->data()->glucoseMeterNR;
+            continue;
+            }
+        if(meter.active) {
+            meters[used++]=i;
+            }
+        ++i;
+        }
+	jintArray  uit=env->NewIntArray(used) ;
+	env->SetIntArrayRegion(uit, 0,used, meters);
+	return uit;
+	}
+#endif
 extern "C" JNIEXPORT jstring  JNICALL   fromjava(GlucoseMeterDeviceName)(JNIEnv *env, jclass cl,jint meterIndex) {
         if(GlucoseMeter *meter= settings->data()->getGlucoseMeter(meterIndex)) {
                 return env->NewStringUTF(meter->deviceName);

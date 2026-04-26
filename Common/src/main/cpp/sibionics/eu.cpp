@@ -78,19 +78,6 @@ extern "C" JNIEXPORT jbyteArray JNICALL   fromjava(getSIResetBytes)(JNIEnv *env,
     return uit;
     }
 
-/*
-But you must add reset memory (it can be button):
-byte[] bArr = new byte[1024];
-int V120Reset =    CGMDataHandle130.V120Reset(0, true, new byte[2], 0, bArr, 1024);
-         public static native int V120Reset(int i2, boolean z, byte[] bArr, int i3, byte[] bArr2, int i4);
-final byte[] bArr2 = new byte[V120Reset];
-System.arraycopy(bArr, 0, bArr2, 0, V120Reset);
-service2.setValue(bArr2);
-bluetoothGatt.writeCharacteristic(service2);
-
-    public static native int V120Activation(int i2, boolean z, byte[] bArr, long j, int i3, byte[] bArr2, int i4);
-*/
-
 
 
 
@@ -120,11 +107,13 @@ extern "C" JNIEXPORT jbyteArray JNICALL   fromjava(getSItimecmd)(JNIEnv *env, jc
     static constexpr const  struct {
           std::string_view appid;
           std::string_view key;
-          } appgegs[] 
-   {{"com.sisensing.sijoy"sv, "56CE249349040C94F8B4B2375A8752D5CBE7A17814B502D9132489C0BFDFC99F0CAC670E8CBB085AF1C780B3D282E3"sv},  //EU
-   {"com.sisensing.rusibionics"sv,"60B05FEB7C0A148DEED2B3375A8754D9D0E6A5751BCE02D9132489C0BFDFC99F0CAC670E8DA7115CEACF87B7DE8FD4612E1B7638C2"sv}, // Hematonix
+          } appgegs[] {
+   {"com.sisensing.sijoy"sv,      "56CE249349040C94F8B4B2375A8752D5CBE7A17814B502D9132489C0BFDFC99F0CAC670E8CBB085AF1C780B3D282E3"sv},  //EU
+   {"com.sisensing.rusibionics"sv, "60B05FEB7C0A148DEED2B3375A8754D9D0E6A5751BCE02D9132489C0BFDFC99F0CAC670E8DA7115CEACF87B7DE8FD4612E1B7638C2"sv}, // Hematonix
    {"com.sisensing.sisensingcgm"sv,"4E8E1CAF43051F97EEC9C1475A8752D5C387D17A65B002D9132489C0BFDFC99F0CAC670E8CBB1150E6D581B7D08FC03404052C57AD58"sv}, //Chinese
-   {"com.sisensing.eco"sv, "068449FA5C1B1F97EEC9C1475A8752D5C387D17A65B002D9132489C0BFDFC99F0CAC670E9AB10D62FDE0B2B1E7"sv}}; //Sibionics 2
+   {"com.sisensing.eco"sv,         "068449FA5C1B1F97EEC9C1475A8752D5C387D17A65B002D9132489C0BFDFC99F0CAC670E9AB10D62FDE0B2B1E7"sv}, //Sibionics 2
+   {"com.sisensing.gs3"sv,         "46C04E9267430C94F8B4B2375A8752D5CBE7A17814B502D9132489C0BFDFC99F0CAC670E98A1510AEA9186FAC6"sv}
+                }; 
    const auto &gegs=appgegs[hema]; 
 
    data_t *sijkey=data_t::newex(gegs.key);
@@ -133,7 +122,7 @@ extern "C" JNIEXPORT jbyteArray JNICALL   fromjava(getSItimecmd)(JNIEnv *env, jc
    LOGGER("v120RegisterKey %.*s %.*s size=%d \n",sijkey->size(),sijkey->data(),name->size(),name->data(),name->size());
 #endif
    v120RegisterKey(subenv,nullptr,(jbyteArray)sijkey, sijkey->size(), (jbyteArray)name);
-   LOGAR(" na v120RegisterKey");
+   LOGAR("na v120RegisterKey");
    data_t::deleteex(name);
    data_t::deleteex(sijkey);
    }
@@ -314,12 +303,14 @@ jlong SiContext::processData2(SensorGlucoseData *sens,time_t nowsecs,data_t *dat
    #endif
   jlong *basear=sprintargs;
   switch(idat[0]) {
-    case 49159: {
+    case  0xC007: { // 49159: 
       sensor *sensor=sensors->getsensor(sensorindex);
       for(int i=0;i<nritems;i++) {
         int maxid=sens->getSiIndex();
         int index=(int) basear[0];
         time_t eventTime=basear[10];
+        if(eventTime>nowsecs)
+            eventTime=nowsecs;
         if(index!=maxid)   {
                 if(index<maxid)   {
                    LOGGER("SIprocess index=%d<maxid=%d\n",index,maxid);
@@ -394,10 +385,6 @@ jlong SiContext::processData2(SensorGlucoseData *sens,time_t nowsecs,data_t *dat
                                 backup->resensordata(sensorindex);
                                 }
                          auto res=glucoseback(eventTime,mgdL,change,sens);
-    /*                     if(!(index%5))  {
-                            if(algcontext)
-                                savejson(sens,sens->statefile,index,algcontext,getjson2);
-                            } */
                          backup->wakebackup(wakestream);
                          extern void wakewithcurrent();
                          wakewithcurrent();
@@ -415,13 +402,7 @@ jlong SiContext::processData2(SensorGlucoseData *sens,time_t nowsecs,data_t *dat
                           }
                          }
                else {
-/*                   if(!(index%500)) {
-                        if(algcontext) {
-                           // savejson(sens,sens->statefile,index,algcontext,getjson2);
-                            backup->wakebackup(wakestream);
-                            }
-                        } */
-                      sens->receivehistory=nowsecs;
+                     sens->receivehistory=nowsecs;
                      }
                const int last=sens->pollcount()-1;
                if(last<sens->getbroadcastfrom()) sens->setbroadcastfrom(last);
@@ -439,24 +420,24 @@ jlong SiContext::processData2(SensorGlucoseData *sens,time_t nowsecs,data_t *dat
                 }//for loop
              return 1LL;
         };break;
-    case 49165: {
+    case 0xC00D: { //49165: 
         int type=(int) basear[0];
         switch(type) {
-           case 49161: return 9LL;
-           case 49156: return 7LL;
-           case 49153: return 4LL;
-           case 49154:  {
-               if(basear[1]!=1) {
-                  int error=(int)basear[2];
-                  if(error!=9&&error!=10) return 4LL; 
-              }
-            return 6LL;
-            };
-            case 49160: return 5LL;
+           case 0xC009 /*49161*/: return 9LL;
+           case 0xC004 /*49156*/: return 7LL;
+           case 0xC001 /*49153*/: return 4LL;
+           case 0xC002 /*49154*/:  {
+                   if(basear[1]!=1) {
+                      int error=(int)basear[2];
+                      if(error!=9&&error!=10) return 4LL; 
+                      }
+                    return 6LL;
+                    };
+            case 0xC008 /*49160*/: return 5LL;
            };
         
         };break;
-      case 49227: {
+    case 0xC04B /*49227*/: {
             if(sens->siSubtype()==3)  {
                 return 10LL;
                 }

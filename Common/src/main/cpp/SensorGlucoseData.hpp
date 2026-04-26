@@ -489,7 +489,8 @@ union {
         uint8_t key[16];
         uint8_t crc8;
         } keys[2];
-      uint8_t reserved5[29];
+      uint8_t reserved5[28];
+      uint8_t serialnr;
       uint8_t scanlen;
       uint8_t scan[56];
       uint8_t reserved6[12];
@@ -790,7 +791,10 @@ int expectedWearDuration() const {
             };
         return (maxSIhours*60-19)*60;
         }
-    if(isAidexX()||isLibre3()||isAccuChek()||isAir())
+    if(isLibre3())
+        return getweardurationSEC()+12*60;
+
+    if(isAidexX()||isAccuChek()||isAir())
         return getweardurationSEC();
     return getweardurationSEC()+12*60*60;
     }
@@ -1287,7 +1291,7 @@ static bool mkdatabaseAir(string_view sensordir,string_view sensorgegs,uint32_t 
 
     return true;
     }
-static bool mkdatabaseAidexX(string_view sensordir,string_view sensorgegs,std::string_view serial,uint32_t now) {
+static bool mkdatabaseAidexX(string_view sensordir,string_view sensorgegs,std::string_view serial,int days,uint32_t now) {
    LOGGER("mkdatabaseAidex %s,%s\n",sensordir.data(),sensorgegs.data());
     mkdir(sensordir.data(),0700);
     pathconcat infoname(sensordir,infopdat);
@@ -1300,10 +1304,11 @@ static bool mkdatabaseAidexX(string_view sensordir,string_view sensorgegs,std::s
             }
         }
     uint32_t start=now;
-    Info inf{.starttime=0,.lastscantime=(uint32_t)start,.starthistory=0,.endhistory=0,.scancount=0,.startid=0,.interval=interval5,.dupl=3,.days=maxdaysAidexX ,.warmup=60,.wearduration=21600,.lastLifeCountReceived=0,.pollcount=0,.lockcount=0, .manualwarmup=15,.isAidexX=true,.warmupstartpos=15};
+    Info inf{.starttime=0,.lastscantime=(uint32_t)start,.starthistory=0,.endhistory=0,.scancount=0,.startid=0,.interval=interval5,.dupl=3,.days=maxdaysAidexX ,.warmup=60,.wearduration=static_cast<uint16_t>(days*24*60),.lastLifeCountReceived=0,.pollcount=0,.lockcount=0, .manualwarmup=15,.isAidexX=true,.warmupstartpos=15};
     extern bool    mkAidexXiv(std::string_view serial,unsigned char iv[16]);
 
     mkAidexXiv(serial,inf.aidexXdat.iv);
+    inf.aidexXdat.serialnr=serial.size();
     inf.aidexXdat.scanlen=sensorgegs.size();
     memcpy(inf.aidexXdat.scan,sensorgegs.data(),sensorgegs.size());
 
@@ -2602,6 +2607,16 @@ void useAgain() {
        auto *info= getinfo();
        info->lastscantime=time(nullptr);
        }
+
+int getSerialLength() const {
+     if(isAidexX()) {
+        const int len=getinfo()->aidexXdat.serialnr;
+        if(len) 
+                return len;
+        return 10;
+        }
+     return 11;
+     }
 };
 struct lastscan_t {
     int sensorindex;

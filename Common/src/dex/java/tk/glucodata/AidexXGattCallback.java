@@ -574,10 +574,22 @@ if(retrywrite)  {
        // public boolean regionMatches(int toffset, String other, int ooffset, int len)
 private static final String  startAidexX="AiDEX X-";
 private static final String  startLinX="LinX-";
+private static final String  startLumi="Lumi-";
+private static final String  startSmart="Smart-";
 
 
 public static boolean hasDeviceName(String deviceName) {
-       return deviceName.startsWith(AidexXGattCallback.startLinX)||deviceName.startsWith(AidexXGattCallback.startAidexX) ;
+       return deviceName.startsWith(AidexXGattCallback.startLumi)|| deviceName.startsWith(AidexXGattCallback.startSmart) || deviceName.startsWith(AidexXGattCallback.startLinX)||deviceName.startsWith(AidexXGattCallback.startAidexX) ;
+       }
+public static String deviceName2name(String deviceName) {
+        final int namelen=deviceName.length();
+        if(deviceName.startsWith(AidexXGattCallback.startLumi)) {
+                return "i"+deviceName.substring(namelen-10);
+                }
+      if(deviceName.startsWith(AidexXGattCallback.startLinX)) {
+                return "L"+deviceName.substring(namelen-10);
+                 }
+        return "x"+deviceName.substring(namelen-10);
        }
 
     @Override
@@ -588,7 +600,8 @@ public static boolean hasDeviceName(String deviceName) {
             return false;
             }
             */
-        if(!nameDevice.regionMatches(nameDevice.length()-10,SerialNumber, SerialNumber.length()-10, 10)) {
+        int len=Natives.getSerialLength(dataptr);
+        if(!nameDevice.regionMatches(nameDevice.length()-len,SerialNumber, SerialNumber.length()-len, len)) {
             Log.i(LOG_ID,"Doesnt end with "+SerialNumber+" "+nameDevice);
             return false;
             }

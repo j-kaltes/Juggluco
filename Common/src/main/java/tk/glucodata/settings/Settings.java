@@ -926,12 +926,8 @@ new View[]{isvalue},new View[]{ringisvalue},new View[]{usealarm},new View[]{adva
 final private static String  codestr=String.valueOf(BuildConfig.VERSION_CODE);
 
 
-//static private final List<String> supportedlanguages= Arrays.asList("Language","be","de","en","fr","it","nl","pl","pt","sv","uk","zh");
-//  static private final List<String> supportedlanguages= Arrays.asList("Language","be","de","en","fr","it","nl","pl","pt","sv","uk");
-//static private final List<String> supportedlanguages= Arrays.asList("Language","be","de","en","fr","it","nl","pl","pt");
-static private final List<String> supportedlanguages= Arrays.asList("Language","ar","be","de","en","es","fr","it","nl","pl","pt","ru","sv","tr","uk","uz","zh");
+static private final List<String> supportedlanguages= Arrays.asList("Language","ar","be","de","en","es","fr","hi","it","nl","pl","pt","ru","sv","tr","uk","uz","zh");
 
-//static private final List<String> supportedlanguages= IWRU?Arrays.asList("Language","be","de","en","es","fr","it","iw","nl","pl","pt","ru","sv","uk"):Arrays.asList("Language","be","de","en","es","fr","it","nl","pl","pt","sv","uk");
 static public Spinner getGenSpin(Activity context) {
     var spin=  new Spinner(context,isWearable?MODE_DIALOG: MODE_DROPDOWN);
     avoidSpinnerDropdownFocus(spin);

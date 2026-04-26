@@ -99,8 +99,8 @@ static bool mkiv(const char *sensorname,int len,unsigned char out[16]) {
     snToBytes((uint8_t*)sensorname,len,bytes);
     Showhex hex0(bytes,len);
     LOGGER("snToBytes-> %s\n",hex0.data);
-    for(int i=0;i<10;++i)
-    bytes[i] = (bytes[i] * 17 + 0x13) & 0xFF;
+    for(int i=0;i<len;++i)
+        bytes[i] = (bytes[i] * 17 + 0x13) & 0xFF;
     Showhex hex1(bytes,len);
     LOGGER("converted %s\n",hex1.data);
     bool res=md5sum(bytes,len,out);

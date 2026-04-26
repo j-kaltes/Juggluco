@@ -93,9 +93,12 @@ static jlong saveGlucose(SensorGlucoseData *sens,bool valid,int id,int mgdL,int 
         }
     uint32_t now=nowmmsec/1000LL;
     uint32_t eventtime=id2time(sens,id);
-    if(eventtime>(now+30)) {
-          LOGGER("saveGlucose %d  %u too late, now %u\n",id,eventtime,now)
-          return 2LL;
+    if(eventtime>now) {
+        if(eventtime>(now+30)) {
+              LOGGER("saveGlucose %d  %u too late, now %u\n",id,eventtime,now)
+              return 2LL;
+              }
+          eventtime=now;
           }
     sens->timelastcurrent=eventtime;
     sens->lastlifecount=id;
@@ -1025,13 +1028,22 @@ extern "C" JNIEXPORT jint JNICALL   fromjava(getMinimalWarmup)(JNIEnv *env, jcla
 
 extern void    sendstreaming(SensorGlucoseData *hist);
 
+
+
+static Sensoren::MicroTech getMicroType(const char *deviceName) {
+   if(!memcmp(deviceName,Sensoren::nameLinX,sizeof(Sensoren::nameLinX)-1))
+        return Sensoren::LinX;
+   if(!memcmp(deviceName,Sensoren::nameLumiFlex,sizeof(Sensoren::nameLumiFlex)-1))
+        return Sensoren::LumiFlex;
+     return Sensoren::AidexX;
+     }
 extern "C" JNIEXPORT jstring JNICALL   fromjava(aidexXaddSensorByDeviceName)(JNIEnv *env, jclass cl,jstring jdeviceName) {
    const char *deviceName = env->GetStringUTFChars( jdeviceName, NULL);
    destruct   dest([jdeviceName,deviceName,env]() {env->ReleaseStringUTFChars(jdeviceName, deviceName);});
    const size_t deviceNamelen= env->GetStringUTFLength( jdeviceName);
    std::string_view scandeviceName{deviceName+deviceNamelen-10,10};
    const uint32_t now=time(nullptr);
-   auto [sensindex,sens]= sensors->makeAidexXSensorindex(scandeviceName,!memcmp(deviceName,Sensoren::nameLinX,sizeof(Sensoren::nameLinX)-1),""sv,now);
+   auto [sensindex,sens]= sensors->makeAidexXSensorindex(scandeviceName,getMicroType(deviceName),""sv,now);
    if(sens) {
       const char *name=sens->shortsensorname()->data();
       LOGGER("addSensorByDeviceName(%s)=%s\n",deviceName,name);

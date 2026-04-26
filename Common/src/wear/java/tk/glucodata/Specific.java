@@ -119,8 +119,8 @@ private static void playGoogle(Context context,String packageName) {
     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     context.startActivity(intent);
    }
-private static final String watchface="tk.glucodata.watchfacepush.watchface2";
-//private static final String watchface="au.gondwanasoftware.timeandtrack";
+//private static final String watchface="tk.glucodata.watchfacepush.watchface2";
+private static final String watchface="tk.glucodata.watchfacepush.watchface3";
 static void installwatchface(Context context) {
     if(isPackageInstalled(context, watchface)) { return; }
     playGoogle(context,watchface); 

@@ -489,6 +489,15 @@ extern "C" JNIEXPORT jlong JNICALL   fromjava(getSensorStartmsec)(JNIEnv *env, j
     const streamdata *sdata=reinterpret_cast<const streamdata *>(dataptr);
     return sdata->hist->getstarttime()*1000LL; 
     }
+
+extern "C" JNIEXPORT jint JNICALL   fromjava(getSerialLength)(JNIEnv *env, jclass cl,jlong dataptr) {
+    if(!dataptr)
+        return 0;
+    const streamdata *sdata=reinterpret_cast<const streamdata *>(dataptr);
+    return sdata->hist->getSerialLength(); 
+    }
+
+
 extern "C" JNIEXPORT void JNICALL   fromjava(updateUsedSensors)(JNIEnv *env, jclass cl) {
     setusedsensors();
     }
@@ -944,6 +953,7 @@ static void savestate(libre2stream *sdata) {
 
 
 static jlong getalarmonly(const uint32_t mgL,float drate,const SensorGlucoseData *hist) {
+    const int glucoselowestmgL=hist->getminmgdL()*10;
     auto res=mgL<glucoselowestmgL?isLowest:(mgL>(hist->getmaxmgdL()*10)?isHighest:
  (settings->veryhighAlarm(mgL)?isVeryHigh:(settings->highAlarm(mgL)?isHigh:(settings->verylowAlarm(mgL)?isVeryLow:(settings->lowAlarm(mgL)?isLow:(
 settings->prelowAlarm(mgL,drate)?isPreLow:

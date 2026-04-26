@@ -158,9 +158,13 @@ static bool loadScriptToContext(const FontUse& f, Script s) {
 
         case SCR_DEVANAGARI:
             return attachFallbacks(f,
-                { FC("NotoSansDevanagari-Regular.ttf"), FC("NotoSansDevanagariUI-Regular.ttf"),
+                { 
+                FC("NotoSansDevanagari-VF.ttf"), FC("NotoSansDevanagariUI-VF.ttf"), FC("NotoSerifDevanagari-VF.ttf"),
+                FC("NotoSansDevanagari-Regular.ttf"), FC("NotoSansDevanagariUI-Regular.ttf"),
                   FC("DroidSansFallback.ttf") },
-                { FC("NotoSansDevanagari-Bold.ttf"),    FC("NotoSansDevanagariUI-Bold.ttf"),
+                {
+                FC("NotoSerifDevanagari-VF.ttf"), FC("NotoSansDevanagari-VF.ttf"), FC("NotoSansDevanagariUI-VF.ttf"), 
+                FC("NotoSansDevanagari-Bold.ttf"),    FC("NotoSansDevanagariUI-Bold.ttf"),
                   FC("DroidSansFallback.ttf") });
 
         case SCR_BENGALI:

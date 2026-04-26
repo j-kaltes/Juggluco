@@ -251,6 +251,10 @@ public static void stopDevices() {
     meterGatts=null;
     devicesStarted=false;
     }
+public static void restartDevices() {
+    stopDevices();
+    startDevices();
+    };
 static MeterScanner scanner=null;
 public static void startScanner(long msec) {
     if(scanner==null) {

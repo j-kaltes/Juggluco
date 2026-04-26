@@ -136,7 +136,8 @@ private static void selectType(String name,long sensorptr,MainActivity act) {
     group.addView(getradiobuttonId(act,R.string.eusibionics,id++));
     group.addView(getradiobuttonId(act,R.string.hematonix,id++));
     group.addView(getradiobuttonId(act,R.string.chsibionics,id++));
-    group.addView(getradiobuttonId(act,R.string.sibionics2,id));
+    group.addView(getradiobuttonId(act,R.string.sibionics2,id++));
+    group.addView(getradiobuttonId(act,R.string.sibionics3,id));
     group.check(subtype);
    var ok=getbutton(act, R.string.ok);
     int height = GlucoseCurve.getheight();

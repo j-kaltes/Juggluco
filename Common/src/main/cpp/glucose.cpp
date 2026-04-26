@@ -273,8 +273,8 @@ int SensorGlucoseData::updatescan(crypt_t *pass,Connect *connect,int ind,int sen
                 vect.push_back({meminfo.data()+offmanualwarmup,offmanualwarmup,sizeof(uint16_t)});
                 constexpr const int ivoffset=offsetof(Info,aidexXdat.iv);
                 vect.push_back({meminfo.data()+ivoffset,ivoffset,16});
-                constexpr const int scanoffset=offsetof(Info,aidexXdat.scanlen);
-                vect.push_back({meminfo.data()+scanoffset,scanoffset,1+getinfo()->aidexXdat.scanlen});
+                constexpr const int serialnroffset=offsetof(Info,aidexXdat.serialnr);
+                vect.push_back({meminfo.data()+serialnroffset,serialnroffset,2+getinfo()->aidexXdat.scanlen});
                 constexpr const int offwarmupstartpos=offsetof(Info,warmupstartpos);
                 vect.push_back({meminfo.data()+offwarmupstartpos,offwarmupstartpos,sizeof(uint8_t)});
                 if(!connect->senddata(pass,vect, infopath)) {

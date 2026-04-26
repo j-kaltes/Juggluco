@@ -72,10 +72,14 @@ struct BarCode {
         };
     std::array<char,7> getManifacturer() const {
         GTINtype *gtin=(GTINtype*)GTIN.data();
+        if(!gtin)
+                return {}; 
         return gtin->manifacturer;
         }
     std::array<char,5> getSKU() const {
         GTINtype *gtin=(GTINtype*)GTIN.data();
+        if(!gtin)
+                return {}; 
         return gtin->SKU;
         }
 

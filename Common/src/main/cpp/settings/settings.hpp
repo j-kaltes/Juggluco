@@ -413,6 +413,23 @@ struct Tings {
 
 
 
+bool removeGlucoseMeter(const std::string_view deviceName)  {
+    const int len=std::min(static_cast<int>(deviceName.size())+1, maxDeviceName);
+    const int tot=glucoseMeterNR; 
+    for(int i=0;i<tot;++i) {
+        if(!memcmp(deviceName.data(),glucosemeters[i].deviceName,len)) {
+            const int next=i+1;
+            const int left=tot-next;
+            if(left>0) {
+                    memmove(glucosemeters+i,glucosemeters+next,left*sizeof(GlucoseMeter));
+                    }
+             --glucoseMeterNR;
+             return true;
+            }
+        }
+     return false;
+     }
+
 
 
 

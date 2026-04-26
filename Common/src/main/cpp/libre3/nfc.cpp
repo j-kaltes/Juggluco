@@ -54,6 +54,11 @@ struct nfc1 {
  		return std::string_view(nfcptr->serialnumber,9);
 		}
 	nfc1(JNIEnv *env,  jbyteArray jnfcout) {
+        if(!jnfcout) {
+			LOGAR("NFC: firstnfc==null");
+            error=true;
+            return;
+            }
         jsize lens=env->GetArrayLength(jnfcout);
 		if(lens<(sizeof(firstnfc)+3)) {
 			LOGGER("NFC: sizeof bytearray=%d sizeof(firstnfc)=%ld\n",lens,sizeof(firstnfc));
@@ -72,7 +77,13 @@ struct nfc1 {
            ;
         nfcptr=reinterpret_cast<firstnfc*>(iter);
 		nfcptr->crc16[0]=0;
-		LOGGER("serialnumber=%s state=%d warmup=%d*5 wearduration=%d\n",nfcptr->serialnumber,nfcptr->state,nfcptr->warmup,nfcptr->wearduration);
+		LOGGER("serialnumber=%s state=%d warmup=%d*5 wearduration=%d  sec_version=%hx localization=%hx puckgen=%hx firmwareversion=%x producttype=%hhx\n",nfcptr->serialnumber,nfcptr->state,nfcptr->warmup,nfcptr->wearduration,
+nfcptr->sec_version,
+nfcptr->localization,
+nfcptr->puckgen,
+nfcptr->firmwareversion,
+nfcptr->producttype
+        );
 		};
 	};
 
@@ -247,7 +258,7 @@ extern "C" JNIEXPORT jlong JNICALL fromjava(interpret3NFC2)(JNIEnv *env, jclass 
 		}
 #ifndef NOLOG	
 	hexstr pinhex((uint8_t*)&nfc->pin,4);
-	LOGGER("deviceaddress=%s pin=%s activation: %s",devaddress,pinhex.str(),ctime(&acttime));
+	LOGGER("deviceaddress=%s pin=%s response=%02hhx%02hhx activation: %s",devaddress,pinhex.str(),nfc->response[0],nfc->response[1],ctime(&acttime));
 #endif
   const auto pin=nfc->pin;
 #endif

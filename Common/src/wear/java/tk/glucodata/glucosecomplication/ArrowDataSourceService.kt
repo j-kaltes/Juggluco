@@ -61,7 +61,7 @@ private val glview= GlucoseValue(100,100)
     override suspend fun onComplicationRequest(request: ComplicationRequest): ComplicationData? {
         Log.d(LOG_ID, "onComplicationRequest() id: ${request.complicationInstanceId}")
 
-        val complicationPendingIntent = Notify.mkpending();
+        val complicationPendingIntent = Notify.mkpendingall(this,1002);
         return when (request.complicationType) {
             ComplicationType.SMALL_IMAGE-> {
                 SmallImageComplicationData.Builder( SmallImage.Builder( Icon.createWithBitmap(glview.getArrowBitmap()), SmallImageType.PHOTO).build(), contentDescription = PlainComplicationText.Builder("Glucose Arrow").build()).setTapAction(complicationPendingIntent).build()

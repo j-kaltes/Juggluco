@@ -131,10 +131,10 @@ static jugglucotext nltext {
 #else
  .amount="Hoeveelheid",
  .menustr0= {
-	"       Kloon",
+	"Kloon",
 	"Sensor",
 	"Toon",
-        "   Instellingen",
+        "Instellingen",
 	"Stop Alarm" },
 .menustr2= {"Datum",hourminstr, "Dag terug                    ",nltext.amount},
 #endif

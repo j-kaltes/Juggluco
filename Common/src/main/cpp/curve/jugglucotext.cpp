@@ -147,7 +147,7 @@ const jugglucotext engtext {
 #else
  .amount="Amount",
  .menustr0= {
-	"        Mirror",
+	"Mirror",
 	"Sensor",
 	"Display",
     "Settings",

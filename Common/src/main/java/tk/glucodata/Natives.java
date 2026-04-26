@@ -984,6 +984,8 @@ public static native void setManualWarmupMinutes(long sensorptr,int min);
 public static native int getMinimalWarmup(long dataptr);
 //s/^[	 ]*extern.*JNIEXPORT[         ]*\([a-zA-Z]*\)[ ]*JNICALL[      ]*fromjava(\([^)]*\)) *(JNIEnv[^,]*,[^,)]*[,)]\([^){]*\)[^a-zA-Z0-9]*$/public static native \1 \2(\3);/g
 
+public static native int getSerialLength(long dataptr);
+public static native boolean GlucoseMeterRemove(String deviceName);
 public static native boolean hasHistory(long sensorptr);
 
 public static native boolean hasAidexX();

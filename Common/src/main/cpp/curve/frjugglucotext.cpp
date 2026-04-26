@@ -136,10 +136,10 @@ jugglucotext frtext {
 #else
  .amount="Quantité",
  .menustr0= {
-	"        Miroir",
+	"Miroir",
 	"Capteur",
 	"Affichage",
-        "    Paramètres",
+        "Paramètres",
 	"Arrêt alarme" },
 .menustr2= {"Date",hourminstr,
 "Jour avant                    ",frtext.amount},

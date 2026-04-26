@@ -156,9 +156,10 @@ static public void show(MainActivity act, View parent) {
      if(Natives.staticnum()) {
             if(parent!=null)
                  EnableControls(parent,false);
-            help.help(R.string.staticnum,act,l->{if(parent!=null)
-                    EnableControls(parent,true);});
-;
+            help.help(R.string.staticnum,act,l-> {
+                if(parent!=null)
+                    EnableControls(parent,true);
+                  });
             return;
             }
      if(parent!=null) parent.setVisibility(GONE);
@@ -172,11 +173,11 @@ static public void show(MainActivity act, View parent) {
             MainActivity.doonback();
             });
       var devices=getbutton(act,R.string.finddevices);
-       var help=getbutton(act,R.string.helpname);
-        View[] firstrow=new View[]{help,devices,close};
+      var help=getbutton(act,R.string.helpname);
+      View[] firstrow=new View[]{help,devices,close};
       Layout layout=new Layout(act,(x,w,h)->{
              return new int[] {w,h};
-               },new View[]{recycle},firstrow); 
+             },new View[]{recycle},firstrow); 
       var meteradapt = new MeterListViewAdapter(layout);
       recycle.setAdapter(meteradapt);
       devices.setOnClickListener( v -> { 
@@ -197,10 +198,10 @@ static public void show(MainActivity act, View parent) {
     layout.setPadding((int)(density*addleft)+MainActivity.systembarLeft,MainActivity.systembarTop,MainActivity.systembarRight+(int)(density*addright),MainActivity.systembarBottom);
 
      act.addContentView(layout, new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
-      MainActivity.setonback(()-> {
+     MainActivity.setonback(()-> {
            BluetoothGlucoseMeter.zeroViews();
            removeContentView(layout);
-            parent.setVisibility(VISIBLE);
+           parent.setVisibility(VISIBLE);
         });
       }
 

@@ -158,6 +158,7 @@ static enum FontType {
     CHINESE,
     HEBREW,
     ARABIC,
+    HINDI,
     REST
     } chfontset=REST;
 //static bool chfontset=false;
@@ -280,14 +281,14 @@ static int getArabicBold(NVGcontext* avg) {
 #ifdef JUGGLUCO_APP
 static int getArabicMenu(NVGcontext* avg) {
         constexpr const char fonts[][sizeof(
-        #ifdef JUGGLUCO_APP
+#ifdef JUGGLUCO_APP
         fontpath "NotoNaskhArabicUI-Regular.ttf"
 #else
         "/usr/share/fonts/truetype/noto/NotoNaskhArabicUI-Regular.ttf"
 #endif
         )]
         {
-        #ifdef JUGGLUCO_APP
+#ifdef JUGGLUCO_APP
         fontpath "NotoNaskhArabicUI-Regular.ttf",
         fontpath "NotoNaskhUI-Regular.ttf",
         fontpath  "DroidSansArabic.ttf"
@@ -303,8 +304,41 @@ static int getArabicMenu(NVGcontext* avg) {
     }
 
 #endif 
+
+#ifdef JUGGLUCO_APP
+static int getHindiMenu(NVGcontext* avg) {
+        constexpr const char fonts[][sizeof(
+#ifdef JUGGLUCO_APP
+        fontpath "NotoSansDevanagariUI-Regular.ttf"
+#else
+        "/usr/share/fonts/truetype/noto/NotoSansDevanagariUI-Regular.ttf"
+#endif
+        )]
+        {
+        #ifdef JUGGLUCO_APP
+        fontpath "NotoSansDevanagariUI-VF.ttf",
+        fontpath "NotoSansDevanagariUI-Regular.ttf",
+        fontpath   "NotoSansDevanagari-VF.ttf",
+        fontpath "NotoSerifDevanagari-Regular.ttf",
+        fontpath "NotoSerifDevanagari-VF.ttf",
+        fontpath  "DroidSansDevanagari.ttf"
+#else
+        "/usr/share/fonts/truetype/noto/NotoSansDevanagariUI-Regular.ttf"
+#endif
+        };
+    for(const char *name:fonts)  {
+        if(int font = nvgCreateFont(avg, "regular", name);font!=-1) 
+                return font;
+        }
+    return  -1;
+    }
+
+#endif 
+
+
 bool usedScript[SCR_COUNT]{};
 
+extern const jugglucotext hitext;
 
 bool initScriptFonts(const FontUse &fontuse) {
    bool ret=false;
@@ -338,6 +372,18 @@ thevg=avg;
         whitefont=blackfont;
 #endif
 const FontUse fontuse{.vg=avg,.whitefont=whitefont,.blackfont=blackfont,.scriptEnabled=usedScript};
+if(usedtext==&hitext) {
+     enableScript(fontuse,SCR_DEVANAGARI);
+#ifdef JUGGLUCO_APP
+    menufont=nvgCreateFontMem(avg, "regular", (unsigned char *)fontfile, sizeof(fontfile), 0);
+    int fallback2 =getHindiMenu(avg);
+
+    nvgAddFallbackFontId(avg,menufont, getMenuFont(avg));
+    nvgAddFallbackFontId(avg, menufont,fallback2);
+#endif
+     chfontset=HINDI;
+      }
+else
 if(usedtext==&artext) {
 
 //    nvgAddFallbackFontId(avg, blackfont,getArabicBold(avg)); 
@@ -2420,7 +2466,7 @@ void    JCurve::startstepNVG(NVGcontext* avg,int width, int height) {
                             otherproblem=true;
                         }
                     };
-                CURVELOGAR("AFgter showerrorvalue(hist,nu,getx,gety)) ");
+                CURVELOGAR("After showerrorvalue(hist,nu,getx,gety)) ");
                 }
             }
         else {
@@ -2623,10 +2669,11 @@ int    JCurve::showLargevalue(NVGcontext* avg, int index,float getx,float gety,f
     shownglucose[index].glucosevaluey=sensory;
 #endif
 #endif
+    const int  glucoselowest=hist->getminmgdL();
     if(isnan(calibrated)) {
         if(nonconvert<glucoselowest) {
             const  float valuex=getx;
-            int gllen=mkshowlow(head, maxhead) ;
+            int gllen=mkshowlow(head, maxhead,glucoselowest) ;
             nvgText(avg,valuex,gety, head, head+gllen);
             return;
             }
@@ -2665,7 +2712,7 @@ int    JCurve::showLargevalue(NVGcontext* avg, int index,float getx,float gety,f
               nvgFontSize(avg,mediumfont );
                 float nextx=valuex+bounds.xmax-bounds.xmin+density*6;
                 if(nonconvert<glucoselowest) {
-                    int gllen=mkshowlow(head, maxhead) ;
+                    int gllen=mkshowlow(head, maxhead,glucoselowest) ;
                     nvgText(avg,nextx,gety, head, head+gllen);
                     }
                 else {

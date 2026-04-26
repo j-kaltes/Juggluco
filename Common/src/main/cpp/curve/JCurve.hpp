@@ -368,8 +368,8 @@ inline int datestr(const time_t tim,char *buf) {
 
 void leginterval(NVGcontext* vg,const float x,const float y, const int *between);
 
-inline int mkshowlow(char *buf, const int maxbuf) {
-    return snprintf(buf,maxbuf,"%.*f>",gludecimal,gconvert(glucoselowest*10));
+inline int mkshowlow(char *buf, const int maxbuf,int lowest) {
+    return snprintf(buf,maxbuf,"%.*f>",gludecimal,gconvert(lowest*10));
     }
 inline int mkshowhigh(char *buf, const int maxbuf,int glucosehighest) {
     return snprintf(buf,maxbuf,"%.*f<",gludecimal,gconvert(glucosehighest*10));

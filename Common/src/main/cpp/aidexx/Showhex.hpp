@@ -19,7 +19,11 @@ struct Showhex {
     int uitlen;
     char *data;    
     Showhex(const void *input,int len):uitlen(len*2),data(new char[uitlen+1]) {
-        uitlen=showhex((uint8_t*)input,len,data);
+         if(!len) { 
+                *data='\0';
+                }
+         else
+                uitlen=showhex((uint8_t*)input,len,data);
         }
     operator const char *() const {
         return data;

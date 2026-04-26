@@ -116,6 +116,15 @@ private boolean discover(BluetoothGatt bluetoothGatt) {
     var services=bluetoothGatt.getServices();
     boolean success=false;
     for(var ser:services) {
+        if(AidexXGattCallback.ScanServiceUUID.equals(ser.getUuid())) {
+             Log.i(LOG_ID,"Aidex X sensor, remove");
+                var devname= mActiveBluetoothDevice.getName();
+                if(devname!=null) {
+                    Natives.GlucoseMeterRemove(devname);
+                    }
+               BluetoothGlucoseMeter.restartDevices();
+               return false;
+               }
         if(doLog) Log.i(LOG_ID,"service: "+ser.getUuid().toString());
         var chars=ser.getCharacteristics();
         for(var s:chars) {

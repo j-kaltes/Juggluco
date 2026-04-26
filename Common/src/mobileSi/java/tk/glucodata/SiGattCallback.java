@@ -423,8 +423,11 @@ public void free() {
 	}
 
 
+private int tries=1;
 @Override
 public UUID getService() {
-   return serviceUUID ;
+   if(tries++%2==1)
+       return serviceUUID ;
+   return null;
    }
 }
