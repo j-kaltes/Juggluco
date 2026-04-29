@@ -1928,6 +1928,11 @@ void setfloatptr() {
     }
 
 //void setnewamount() { }
+
+void      removemenus(const jugglucotext* text) {
+       menuopt0[1]=nullptr;
+      const_cast<jugglucotext* >(text)->menustr0[1]=""sv;
+        }
 #endif
 
 

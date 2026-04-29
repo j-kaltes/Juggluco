@@ -75,7 +75,7 @@ public static native void startmeals();
 public static native void startsensors( );
 
 
-	public static native void setlocale(String loc);
+	public static native void setlocale(String loc,int sdk);
      public static native int step();
     public static native int badscan(int kind);
 //    public static native long lastpoll();
@@ -459,7 +459,7 @@ public static native boolean abbottinit();
 public static native boolean abbottreinit();
 public static native byte[] getstreamingAuthenticationData(long dataptr);
 public static native byte[] getsensorident(long dataptr);
-public static native int getsensorgen(long dataptr);
+public static native int getLibre2sensorgen(long dataptr);
 public static native int getLibreVersion(long dataptr);
 
 public static native void USenabledStreaming(byte[] sensorident,byte[] jauth,byte[] address);
@@ -984,6 +984,8 @@ public static native void setManualWarmupMinutes(long sensorptr,int min);
 public static native int getMinimalWarmup(long dataptr);
 //s/^[	 ]*extern.*JNIEXPORT[         ]*\([a-zA-Z]*\)[ ]*JNICALL[      ]*fromjava(\([^)]*\)) *(JNIEnv[^,]*,[^,)]*[,)]\([^){]*\)[^a-zA-Z0-9]*$/public static native \1 \2(\3);/g
 
+public static native int getmaxmgdL(int sensorgen);
+public static native int getminmgdL(int sensorgen);
 public static native int getSerialLength(long dataptr);
 public static native boolean GlucoseMeterRemove(String deviceName);
 public static native boolean hasHistory(long sensorptr);

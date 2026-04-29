@@ -70,7 +70,7 @@ public class Libre2GattCallback extends SuperGattCallback {
 	static private final String LOG_ID = "Libre2GattCallback";
 
 	public Libre2GattCallback(String SerialNumber, long dataptr) {
-		super(SerialNumber,dataptr,Natives.getsensorgen(dataptr));
+		super(SerialNumber,dataptr,Natives.getLibre2sensorgen(dataptr));
 		{if(doLog) {Log.d(LOG_ID, "Libre2GattCallback(..)");};};
 	}
 

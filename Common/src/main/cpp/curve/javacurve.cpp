@@ -391,17 +391,17 @@ extern "C" JNIEXPORT jint JNICALL fromjava(step)(JNIEnv* env, jclass obj) {
 extern char localestrbuf[15];
 
 
-void setlocale(NVGcontext* avg,const char *localestrbuf,const size_t len) ;
+void setlocale(NVGcontext* avg,const char *localestrbuf,const size_t len,int sdk) ;
 
 
-extern "C" JNIEXPORT void JNICALL fromjava(setlocale)(JNIEnv *env, jclass clazz,jstring jlocalestr) {
+extern "C" JNIEXPORT void JNICALL fromjava(setlocale)(JNIEnv *env, jclass clazz,jstring jlocalestr,int sdk) {
  if(jlocalestr) {
- size_t len=env->GetStringLength(jlocalestr);
- env->GetStringUTFRegion( jlocalestr, 0,len, localestrbuf);
- localestrbuf[2]='_';
- appcurve.setlocale(genVG,localestrbuf,5);
+     size_t len=env->GetStringLength(jlocalestr);
+     env->GetStringUTFRegion( jlocalestr, 0,len, localestrbuf);
+     localestrbuf[2]='_';
+     appcurve.setlocale(genVG,localestrbuf,5,sdk);
 
- }
+     }
  }
 
 extern uint32_t starttime;

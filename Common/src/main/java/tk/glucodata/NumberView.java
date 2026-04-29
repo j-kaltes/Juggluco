@@ -149,16 +149,20 @@ void closenumview() {
 Button mealbutton;
 CheckDirectionBox excludebox;
 public void  addnumberview(MainActivity activity, long hitptr) {
-    if(currentnum!=0L&&currentnum!=numio.newhit) 
+    final boolean oldnum=hitptr!=numio.newhit;
+    if(currentnum!=0L&&currentnum!=numio.newhit)  {
             Natives.freehitptr(currentnum);
+            }
     long time= Natives.hittime(hitptr)*1000L;
     lasttime=time;
     int bron= Natives.gethitindex(hitptr);
     var type=Natives.hittype(hitptr);
     var exclude=Natives.hitexclude(hitptr);
     addnumberview(activity, bron,time,Natives.hitvalue(hitptr),type,-1);
-    if(hitptr!=numio.newhit) {
-        if(!Natives.staticnum()) {
+    if(oldnum) {
+        boolean staticnum=Natives.staticnum();
+       // Log.i(LOG_ID,"addnumberview oldnum staticnum="+staticnum);
+        if(!staticnum) {
             seedelete();
             }
         else {
@@ -168,7 +172,7 @@ public void  addnumberview(MainActivity activity, long hitptr) {
         setmealbutton(type,bron, Natives.hitmeal(hitptr),exclude) ;
         }
     else {
-
+        //Log.i(LOG_ID,"addnumberview new num");
         nodelete();
         setmealbutton(type,bron, 0,shouldexclude) ;
         currentnum=0L;
@@ -258,7 +262,10 @@ public   View addnumberview(MainActivity context,final int bron,final long time,
         int width=GlucoseCurve.getwidth();
         int hormarg= (int)(width*0.08f);
         getMargins(timebutton).setMarginEnd(hormarg);
+       // getMargins(savebutton).setMarginStart(hormarg); 
         getMargins(datebutton).setMarginStart(hormarg); 
+//        getMargins(deletebutton).setMarginEnd(hormarg);
+        //Log.i(LOG_ID,"addNumberView width="+width+" hormarg="+hormarg);
       if(useclose)  {
           layout = new Layout(context, (lay,w,h) -> { 
           return new int[]{w,h}; }, new View[]{datebutton,timebutton} ,new View[]{getspinner(context), valueedit}, new View[]{excludebox},new View[]{messagetext,savebutton,deletebutton},new View[]{cancelbutton});
@@ -271,13 +278,12 @@ public   View addnumberview(MainActivity context,final int bron,final long time,
 
 
         if(true) {
-          layout.setPaddingRelative((int)(width*0.01f),(int)(height*.15f),(int)(width*0.01f),(int)(height*.01f));
+           layout.setPaddingRelative((int)(width*0.01f),(int)(height*.15f),(int)(width*0.01f),(int)(height*.01f));
            ScrollView scroll=new ScrollView(context);
            scroll.setFillViewport(true);
-        scroll.setSmoothScrollingEnabled(false);
-          scroll.setScrollbarFadingEnabled(true);
-          scroll.setVerticalScrollBarEnabled(true);
-//           scroll.addView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+           scroll.setSmoothScrollingEnabled(false);
+           scroll.setScrollbarFadingEnabled(true);
+           scroll.setVerticalScrollBarEnabled(true);
            scroll.addView(layout, new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
            newnumview=scroll;
            }
@@ -286,14 +292,6 @@ public   View addnumberview(MainActivity context,final int bron,final long time,
            frame.addView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
            newnumview=frame;
              }
-             /*
-      newnumview.measure(MATCH_PARENT, MATCH_PARENT);
-      var h=newnumview.getMeasuredHeight();
-      var w=newnumview.getMeasuredWidth();
-       if(height>h)
-               newnumview.setY((height-h)*.5f+GlucoseCurve.metrics.density*10.0f);
-        if(width>w)
-           newnumview.setX((width-w)*.5f);  */
       }
   else { 
    layout=new Layout(context, (lay, w, h) -> {
@@ -413,9 +411,9 @@ public   View addnumberview(MainActivity context,final int bron,final long time,
     context.addContentView(newnumview,isWearable? new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT):new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
         }
     else  {
-    numspinadapt.setarray(Natives.getLabels());
+        numspinadapt.setarray(Natives.getLabels());
         newnumview.setVisibility(VISIBLE);
-    }
+       }
     valueedit.requestFocus();
     editfocus.setedittext(valueedit);
 
@@ -598,20 +596,40 @@ void deletedialog(View v,int[] mealptr) {
         }).show().setCanceledOnTouchOutside(false);
     }
 
-
+static void setMarginStart(ViewGroup.MarginLayoutParams params,int start) {
+        if(MainActivity.rtl) 
+            params.rightMargin=start;
+        else
+            params.leftMargin=start;
+    }
+static void setMarginEnd(ViewGroup.MarginLayoutParams params,int end) {
+        if(MainActivity.rtl) 
+            params.leftMargin=end;
+        else
+            params.rightMargin=end;
+    }
 private void nodelete() {
     deletebutton.setVisibility(GONE);
-    if(isWearable)
-        getMargins(savebutton).setMarginStart(0);
+    if(isWearable) {
+//        Log.i(LOG_ID,"nodelete");
+        setMarginStart(getMargins(savebutton),0);
+
+       // getMargins(savebutton).setMarginStart(0); // works only the first time
+        }
     }
 
 private void seedelete() {
     deletebutton.setVisibility(VISIBLE);
     if(isWearable) {
+ //       Log.i(LOG_ID,"seedelete");
         int width=GlucoseCurve.getwidth();
         int hormarg=useclose?(int)(width*0.05f):(int)(width*0.12f);
-        getMargins(deletebutton).setMarginEnd(hormarg);
-        getMargins(savebutton).setMarginStart(hormarg);
+
+//        getMargins(deletebutton).setMarginEnd(hormarg);
+        setMarginEnd(getMargins(deletebutton),hormarg);
+       // getMargins(savebutton).setMarginStart(hormarg);
+
+        setMarginStart(getMargins(savebutton),hormarg);
         }
     }
 public void addnumberwithmenu(MainActivity context,int mealptr) {
@@ -636,12 +654,12 @@ public View addnumberview(MainActivity context) {
     View lay=  addnumberview(context,1,currentTimeMillis(),Float.MAX_VALUE,0,-1);
     setmealbutton(0,1, 0,shouldexclude) ;
     
-if(SmallShowKeyboard&&smallScreen) {
-    valueedit.requestFocus();
-    tk.glucodata.help.showkeyboard(context,valueedit);
-  }
-else
-    spinner.performClick();
+    if(SmallShowKeyboard&&smallScreen) {
+        valueedit.requestFocus();
+        tk.glucodata.help.showkeyboard(context,valueedit);
+      }
+    else
+        spinner.performClick();
     nodelete();
     thetime=-1;
     thedate=0L;
@@ -864,7 +882,8 @@ public void gettimepicker(MainActivity activity,int hourin, int minin, ObjIntCon
 final  boolean buttonsunder=false;
    settime=timeset;
     if(timepicker==null) {
-        Log.i(LOG_ID,"new gettimepicker");
+
+    //    Log.i(LOG_ID,"new gettimepicker");
         pick =new TimePicker(activity);
 //        pick.setIs24HourView( android.text.format.DateFormat.is24HourFormat(activity));
         Button cancel=new Button(activity);
@@ -955,7 +974,7 @@ else {
           layout.setPaddingRelative(0,(int)(GlucoseCurve.metrics.density*5.0),0,(int)(GlucoseCurve.metrics.density*2.0));
     }
     else {
-        Log.i(LOG_ID,"old gettimepicker");
+        //Log.i(LOG_ID,"old gettimepicker");
     timepicker.requestLayout();
     timepicker.setVisibility(VISIBLE);
     timepicker.bringToFront();
@@ -991,7 +1010,7 @@ pick.setCurrentMinute(minin);
 LabelAdapter<String> numspinadapt;
 
 void setmealbutton(int labelsel,int bron,int mealptr,boolean exclude) {
-       if(doLog) {Log.i(LOG_ID,"bron="+bron+" mealptr="+mealptr);};
+//       if(doLog) {Log.i(LOG_ID,"bron="+bron+" mealptr="+mealptr);};
         if(!isWearable&&labelsel==Natives.getmealvar() &&(bron==1|| mealptr>0)) {
             mealbutton.setVisibility(VISIBLE);
             source.setVisibility(GONE);

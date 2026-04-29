@@ -2455,6 +2455,19 @@ uint8_t siSubtype() const {
 int previousstream=-1;
 
 public:
+
+static int getmaxmgdL(int sensorgen)  {
+    switch(sensorgen) {
+        case 0x40:
+        case 0x20:
+                return 400;
+        case 0x10:
+        case 0x50:
+                return 450;
+        default:
+            return 500;
+        };
+    };
 int getmaxmgdL() const {
         if(isDexcom()||isAccuChek())
                 return 400;
@@ -2462,6 +2475,11 @@ int getmaxmgdL() const {
                 return 450;
          return 500;
         }
+static int getminmgdL(int sensorgen)  {
+   if(sensorgen==0x50)
+        return 36;
+   return 40;
+   }
 int getminmgdL() const {
    if(isAidexX())
         return 36;

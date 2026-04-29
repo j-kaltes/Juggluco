@@ -205,7 +205,7 @@ template <class TX,class TY> void    calihistcurve(NVGcontext* avg,const SensorG
      int    showoldscan(NVGcontext* avg,uint32_t nu);
      void    withredisplay(NVGcontext* avg,uint32_t nu);
     int    onestep(NVGcontext* avg);
-    void     setlocale(NVGcontext* avg,const char *localestrbuf,const size_t len);
+    void     setlocale(NVGcontext* avg,const char *localestrbuf,const size_t len,int sdk);
 
     void showButton(NVGcontext* avg,float xpos,float ypos,std::string_view str);
     void    showOK(NVGcontext* avg,float xpos,float ypos);

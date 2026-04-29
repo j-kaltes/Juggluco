@@ -807,31 +807,37 @@ windowManager.addView(ll, parameters);
 
 
 static int getgludraw(float val,int sensorgen) {
+   final var maxglucose=Natives.getmaxmgdL(sensorgen);
+   final var minglucose=Natives.getminmgdL(sensorgen);
 	if(unit==1) {
-		if(val<2.2f)
-			return R.drawable.alarm2_2;
-        if(sensorgen==0x40) {
-            if(val>(400.0/mgdLmult))
-                return R.drawable.alarm22_2;
-             }
-        else {
+        final var minmmolL=((double)minglucose)/Applic.mgdLmult;
+        if(val<minmmolL) {
+            if(val<2f)
+                return R.drawable.alarm2;
+            return R.drawable.alarm2_2;
+            }
+         final var maxmmolL=((double)maxglucose)/Applic.mgdLmult;
+         if(val> maxmmolL) {
             if(val>(500.0/mgdLmult))
                 return R.drawable.alarm27_8;
+            if(val>(450.0/mgdLmult))
+                return R.drawable.alarm25;
+            return R.drawable.alarm22_2;
             }
         int ind=Math.round(val*10)-22;
 		return mmolicon[ind];
 		}
 	else {
 		int intval=(int)Math.round(val);
-		if(intval<40)
+		if(intval<minglucose) {
+            if(intval<36)
+			    return R.drawable.alarm35;
 			return R.drawable.alarm39;
-        if(sensorgen==0x40) {
-            if(intval>400)
-                return R.drawable.alarm401;
-           }
-        else {
-            if(intval>500)
-                return R.drawable.alarm501;
+            }
+        if(intval>maxglucose) {
+            if(intval>500) return R.drawable.alarm501;
+            if(intval>450) return R.drawable.alarm451;
+            return R.drawable.alarm401;
             }
 		int ind=intval-40;
 		return mgicon[ind];

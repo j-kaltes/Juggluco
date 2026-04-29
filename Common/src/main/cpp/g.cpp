@@ -497,6 +497,14 @@ extern "C" JNIEXPORT jint JNICALL   fromjava(getSerialLength)(JNIEnv *env, jclas
     return sdata->hist->getSerialLength(); 
     }
 
+extern "C" JNIEXPORT jint JNICALL   fromjava(getmaxmgdL)(JNIEnv *env, jclass cl,jint sensorgen) {
+    return SensorGlucoseData::getmaxmgdL(sensorgen);
+    }
+extern "C" JNIEXPORT jint JNICALL   fromjava(getminmgdL)(JNIEnv *env, jclass cl,jint sensorgen) {
+    return SensorGlucoseData::getminmgdL(sensorgen);
+    }
+
+
 
 extern "C" JNIEXPORT void JNICALL   fromjava(updateUsedSensors)(JNIEnv *env, jclass cl) {
     setusedsensors();
@@ -876,7 +884,7 @@ extern "C" JNIEXPORT jbyteArray JNICALL   fromjava(getsensorident)(JNIEnv *envin
     envin->SetByteArrayRegion(uit, 0, 8, usedhist->getsensorident()->data());
     return uit;
     }
-extern "C" JNIEXPORT jint JNICALL   fromjava(getsensorgen)(JNIEnv *envin, jclass cl,jlong dataptr) { 
+extern "C" JNIEXPORT jint JNICALL   fromjava(getLibre2sensorgen)(JNIEnv *envin, jclass cl,jlong dataptr) { 
     streamdata * const streamptr=reinterpret_cast<streamdata *>(dataptr);
     if(!dataptr)
         return -1;

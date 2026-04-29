@@ -283,6 +283,7 @@ int rowgeo(final int start,final int row,int widthMeasureSpec, int heightMeasure
             rightmargin=margins.rightMargin;
             topmargin=margins.topMargin;
             bottommargin=margins.bottomMargin;
+//            if(child instanceof TextView) Log.i(LOG_ID,"rowgeo c="+c+" "+((TextView)child).getText()+" leftmargin="+leftmargin);
             }
           else {
             leftmargin=rightmargin=bottommargin=topmargin=0;

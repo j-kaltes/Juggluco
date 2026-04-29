@@ -238,7 +238,7 @@ private static void setlanguage() {
         else  {
             return;
             }
-        Natives.setlocale(lang);
+        Natives.setlocale(lang,Build.VERSION.SDK_INT);
      }
 
 @Override

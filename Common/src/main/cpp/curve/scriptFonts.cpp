@@ -279,8 +279,8 @@ static bool loadScriptToContext(const FontUse& f, Script s) {
                 { FC_CJK("NotoSansCJK-Bold.ttc"), FC_CJK("NotoSansCJK-Regular.ttc"),
                   FC_CJK("NotoSerifCJK-Bold.ttc"), FC_DJ("DejaVuSans-Bold.ttf") });
 #else
-                { FC_CJK("NotoSansCJK-Regular.ttc"), FC("DroidSansFallback.ttf") },
-                { FC_CJK("NotoSansCJK-Regular.ttc"), FC("DroidSansFallback.ttf") });
+                {FC_CJK("NotoSansCJK-Regular.ttc"),FC_CJK("NotoSerifCJK-Regular.ttc"), FC("DroidSansFallback.ttf") },
+                {FC_CJK("NotoSerifCJK-Regular.ttc"),  FC_CJK("NotoSansCJK-Regular.ttc"), FC("DroidSansFallback.ttf")});
 #endif
 
 

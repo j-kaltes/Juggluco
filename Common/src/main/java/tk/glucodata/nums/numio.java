@@ -126,7 +126,7 @@ if(true) {
       }
    int ret=130;
    final String nativedir=con.getApplicationInfo().nativeLibraryDir;
-   Natives.setlocale(locstr);
+   Natives.setlocale(locstr,Build.VERSION.SDK_INT);
    switch (ret=Natives.setfilesdir(filespath, country,nativedir)) {
       case 1:
          settingsnull();

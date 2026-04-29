@@ -155,7 +155,7 @@ extern bool fixatex,fixatey;
 int showui=false;
 
 static enum FontType {
-    CHINESE,
+    CJK,
     HEBREW,
     ARABIC,
     HINDI,
@@ -170,6 +170,7 @@ bool hebrew() ;
 #define fontpath "/home/jka/Android/Sdk/platforms/android-29/data/fonts/"
 #endif
 extern jugglucotext zhtext; 
+extern jugglucotext jatext; 
 extern jugglucotext artext; 
 
 
@@ -404,7 +405,7 @@ if(usedtext==&artext) {
 
 }
 else
-if(usedtext==&zhtext) {
+if(usedtext==&zhtext||usedtext==&jatext) {
      enableScript(fontuse, SCR_CJK);
 #ifdef JUGGLUCO_APP
     if(-1==(menufont = nvgCreateFont(avg, "regular",
@@ -441,7 +442,7 @@ if(usedtext==&zhtext) {
       }
 #endif
 //TODO free font ???
-    chfontset=CHINESE;
+    chfontset=CJK;
     }
 else  {
 
@@ -2259,11 +2260,18 @@ bool hebrew() {
 #endif
 
 #include "destruct.hpp"
-void     JCurve::setlocale(NVGcontext* avg,const char *localestrbuf,const size_t len) {
+extern void      removemenus(const jugglucotext* text);
+void     JCurve::setlocale(NVGcontext* avg,const char *localestrbuf,const size_t len,int sdk) {
     CURVELOGGER("locale=%s\n",localestrbuf);
     localestr={localestrbuf,len};
     uint16_t langid=mklanguagenumlow(localestrbuf);
-    const auto *text=language::gettext(langid);
+    auto *text=language::gettext(langid);
+#ifdef JUGGLUCO_APP
+    #ifndef WEAROS
+    if(sdk<24)
+          removemenus(text);
+    #endif
+#endif
     ::usedtext=usedtext=text;
     switch(langid) {
 #ifdef USE_HEBREW
@@ -2282,7 +2290,9 @@ void     JCurve::setlocale(NVGcontext* avg,const char *localestrbuf,const size_t
             return; 
         case mklanguagenum("ZH"):
         case mklanguagenum("zh"):
-            if(chfontset!=CHINESE) {
+        case mklanguagenum("JA"):
+        case mklanguagenum("ja"):
+            if(chfontset!=CJK) {
                 initfont(avg);
                 }
             return;

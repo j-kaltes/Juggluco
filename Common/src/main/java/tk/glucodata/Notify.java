@@ -737,32 +737,31 @@ void overwriteglucose(int kind) {
 
 private final boolean makeicon=!isWearable&&tk.glucodata.BuildConfig.minSDK>=23;
 private final StatusIcon icons=makeicon?new StatusIcon():null;
-static int getMaxGlucose(int sensorgen) {
-    if(sensorgen==0x40||sensorgen==0x20)
-        return 400;
-     return 500;
-    }
+
 static private String getglstring(float glvalue,int sensorgen2) {
-   var maxglucose=getMaxGlucose(sensorgen2);
+   final var maxglucose=Natives.getmaxmgdL(sensorgen2);
+   final var minglucose=Natives.getminmgdL(sensorgen2);
    if(Applic.unit==1) {
-      if(glvalue<2.2f) {
-          return "2.2>";
+      final var minmmolL=((double)minglucose)/Applic.mgdLmult;
+      if(glvalue<minmmolL) {
+          return String.format(Applic.usedlocale,"%.1f>",minmmolL);
          }
-      if(glvalue>(((double)maxglucose)/Applic.mgdLmult)) {
-         return "27.8<" ;
-         }
+       final var maxmmolL=((double)maxglucose)/Applic.mgdLmult;
+       if(glvalue>maxmmolL) {
+             return String.format(Applic.usedlocale,"%.1f<",maxmmolL);
+             }
        var glstr=format(Applic.usedlocale,Notify.pureglucoseformat, glvalue);
        final int len=glstr.length();
        if(glstr.charAt(len-1)=='0') 
-               glstr=glstr.substring(0, len-2);
-        return glstr;
+            glstr=glstr.substring(0, len-2);
+           return glstr;
        }
    else {
       int intval=(int)glvalue;
-      if(intval<40)
-         return "40>"; 
+      if(intval<minglucose)
+            return minglucose+">";
        if(intval>maxglucose)
-         return "500<";
+             return maxglucose+"<";
        return format(Applic.usedlocale,Notify.pureglucoseformat, glvalue);
         }
    }

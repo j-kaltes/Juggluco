@@ -245,7 +245,7 @@ private void startdisplay() {
     var lang=util.getlocale().getLanguage();
     if(doLog) {Log.i(LOG_ID,"curlang="+Applic.curlang+" newlang="+langstring+" locale="+lang);};
     if(!lang.equals(Applic.curlang)) {
-        Natives.setlocale(lang);
+        Natives.setlocale(lang,Build.VERSION.SDK_INT);
         Applic.curlang=lang;
         if(!DontTalk) {
             if(Talker.istalking())    
@@ -379,10 +379,10 @@ static public boolean  rtl;
          }
         super.onCreate(savedInstanceState);
         updateRtl(getResources().getConfiguration());
-        if(Build.VERSION.SDK_INT >= 30)  {
-           if(!isWearable) {
-                WindowCompat.enableEdgeToEdge(getWindow());  
-               //EdgeToEdge.enable(this);
+        if(!isWearable) {
+            if(Build.VERSION.SDK_INT >= 30)  {
+        //        WindowCompat.enableEdgeToEdge(getWindow());
+               EdgeToEdge.enable(this);
                }
            }
       thisone=this;
