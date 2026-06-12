@@ -186,6 +186,14 @@ public void onConnectionUpdated(BluetoothGatt gatt, int interval, int latency, i
     @Override 
     public void onCharacteristicWrite(BluetoothGatt bluetoothGatt, BluetoothGattCharacteristic bluetoothGattCharacteristic, int i2) {
         checkBluetoothGatt(bluetoothGatt);
+        if(i2 != GATT_SUCCESS) {
+            // A write the controller accepted-then-failed must NOT advance the security state
+            // machine (oncharwrite issues the next command), or the handshake desyncs and the
+            // sensor connects but never streams. Disconnect so the handshake cleanly restarts.
+            Log.e(LOG_ID, SerialNumber + " onCharacteristicWrite failed, status=" + i2);
+            dodisconnect(bluetoothGatt);
+            return;
+            }
         oncharwrite(bluetoothGattCharacteristic);
         var value = bluetoothGattCharacteristic.getValue();
         {if(doLog){showbytes(LOG_ID + " "+SerialNumber+" onCharacteristicWrite " + bluetoothGattCharacteristic.getUuid().toString(), value);};}
@@ -334,6 +342,13 @@ private    byte[] rdtData;
         }
         info("getsecdata num=" + i2 + " rdtSequence=" + rdtSequence);
         int length = value.length - 1;
+        if(rdtData == null || rdtBytes + length > rdtData.length) {
+            var message = "getsecdata overflow rdtBytes=" + rdtBytes + " length=" + length + " cap=" + (rdtData==null?-1:rdtData.length);
+            Log.e(LOG_ID, SerialNumber + ": " + message);
+            setfailure(message);
+            dodisconnect(mBluetoothGatt);
+            return rdtLength;
+            }
         arraycopy(value, 1, rdtData, rdtBytes, length);
         int i3 = rdtBytes + length;
         rdtBytes = i3;
@@ -507,7 +522,15 @@ private    void save_history(byte[] value) {
 public void onCharacteristicChanged(BluetoothGatt bluetoothGatt, BluetoothGattCharacteristic bluetoothGattCharacteristic) {
     if(doLog)
         checkBluetoothGatt(bluetoothGatt);
-    onCharacteristicChanged33(bluetoothGatt, bluetoothGattCharacteristic, bluetoothGattCharacteristic.getValue());
+    try {
+        onCharacteristicChanged33(bluetoothGatt, bluetoothGattCharacteristic, bluetoothGattCharacteristic.getValue());
+        }
+    catch(Throwable e) {
+        // Runs on the binder callback thread with no outer handler: a malformed/unexpected
+        // notification must not force-close the process. Tear down so the handshake restarts.
+        Log.stack(LOG_ID, SerialNumber + " onCharacteristicChanged", e);
+        dodisconnect(bluetoothGatt);
+        }
     }
 static final private String charglucosedata= "CHAR_GLUCOSE_DATA".intern();
         @SuppressLint("MissingPermission")
@@ -1039,7 +1062,14 @@ private long datatime=0L;
 private    void glucose_data(byte[] value,long timmsec) {
         if(doLog) {Log.i(LOG_ID, SerialNumber + ": "+"start glucose_data");};
         int len = value.length;
-
+        if(this.oneMinuteReadingSize + len > this.oneMinuteRawData.length) {
+            // The size check below runs only AFTER the copy, so an unexpected/duplicate/off-size
+            // notification would overrun the 35-byte buffer and throw, killing the stream. Drop
+            // the partial record and resync instead.
+            Log.e(LOG_ID, SerialNumber + ": glucose_data fragment overflow size=" + this.oneMinuteReadingSize + " len=" + len);
+            this.oneMinuteReadingSize = 0;
+            return;
+            }
         System.arraycopy(value, 0, this.oneMinuteRawData, this.oneMinuteReadingSize, len);
         oneMinuteReadingSize +=len;
         if(oneMinuteReadingSize >= oneMinuteRawData.length) {
