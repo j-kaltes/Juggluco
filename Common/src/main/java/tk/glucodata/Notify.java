@@ -1041,8 +1041,18 @@ private void novalue() {
     }
 public void foregroundno(Service service) {
     Notification not=getforgroundnotification();
-    service.startForeground(glucosenotificationid, not);
-    {if(doLog) {Log.i(LOG_ID,"startforeground");};};
+    try {
+        service.startForeground(glucosenotificationid, not);
+        {if(doLog) {Log.i(LOG_ID,"startforeground");};};
+        }
+    catch(Throwable e) {
+        // API 34+: a connectedDevice foreground service requires the BLUETOOTH_CONNECT/SCAN
+        // runtime permission. If it was revoked (e.g. One UI auto-reset of unused-app perms),
+        // startForeground throws. Surface it so the user can re-grant, instead of letting it
+        // bubble up to keeprunning's catch and silently stopSelf() with no clue.
+        Log.stack(LOG_ID,"startForeground",e);
+        Applic.Toaster(app.getString(R.string.turn_on_nearby_devices_permission));
+        }
     }
 static public void foregroundnot(Service service) {
 //    Application app=service.getApplication();

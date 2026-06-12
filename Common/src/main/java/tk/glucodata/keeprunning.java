@@ -27,6 +27,8 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.os.PowerManager;
 
+import androidx.core.content.ContextCompat;
+
 import static tk.glucodata.Applic.isWearable;
 import static tk.glucodata.Log.doLog;
 import static tk.glucodata.Log.stack;
@@ -85,6 +87,7 @@ static PowerManager.WakeLock wakeLock =null;
              }
              theservice=this;
              Notify.foregroundnot(this);
+             acquireWakelock();
              return Service.START_STICKY;
             } 
         catch(Throwable e) {
@@ -104,7 +107,11 @@ static boolean start(Context context) {
        if(!started||theservice==null) {
           {if(doLog) {Log.i(LOG_ID,"start keeprunning");};};
           Intent i = new Intent(context, keeprunning.class);
-           context.startService(i);
+           // targetSdk 35: a background-initiated startService() (boot/exact-alarm revive)
+           // throws and the catch below swallows it, so the service silently never starts.
+           // startForegroundService() is legal from those exempt entry points; onStartCommand
+           // then calls startForeground() within the allowed window.
+           ContextCompat.startForegroundService(context, i);
            if(theservice!=null)
                Notify.foregroundnot(theservice);
            return true;
@@ -115,10 +122,38 @@ static boolean start(Context context) {
       }
    return false;
    }
+// Lifetime PARTIAL_WAKE_LOCK, gated on the existing user "wakelock" preference, so the
+// streaming service keeps the CPU available for GATT callbacks while it runs. Reference
+// counting is off so a stray double-acquire/release cannot underflow.
+static void acquireWakelock() {
+   if(!Natives.getwakelock())
+      return;
+   try {
+      if(wakeLock==null) {
+         PowerManager powerManager=(PowerManager)Applic.app.getSystemService(Context.POWER_SERVICE);
+         wakeLock=powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Juggluco::keeprunning");
+         wakeLock.setReferenceCounted(false);
+         }
+      if(!wakeLock.isHeld())
+         wakeLock.acquire();
+      }
+   catch(Throwable e) {
+      stack(LOG_ID,e);
+      }
+   }
+static void releaseWakelock() {
+   try {
+      if(wakeLock!=null && wakeLock.isHeld())
+         wakeLock.release();
+      }
+   catch(Throwable e) {
+      stack(LOG_ID,e);
+      }
+   }
 void stopper() {
    stopForeground(true);
    stopSelf();
-//   turnoffwakelock();
+   releaseWakelock();
    {if(doLog) {Log.i(LOG_ID,"Stopped");};};
    }
 static void stop() {
