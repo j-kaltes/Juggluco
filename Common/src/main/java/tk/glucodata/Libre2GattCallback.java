@@ -156,6 +156,9 @@ private PendingIntent onalarm=null;
                connected=true;
 				if(!bluetoothGatt.discoverServices()) {
 					Log.e(LOG_ID,"bluetoothGatt.discoverServices()  failed");
+					// Don't sit idle in CONNECTED until the ~6-min loss watchdog: force a clean
+					// disconnect so the existing reconnect path re-drives a fresh connection.
+					bluetoothGatt.disconnect();
 					}
 				constatchange[0] = tim;
 				setpriority(bluetoothGatt);
