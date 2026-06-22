@@ -21,7 +21,6 @@
 
 package tk.glucodata;
 
-import static android.graphics.Color.WHITE;
 import static android.view.View.GONE;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
@@ -201,8 +200,9 @@ static public void show(MainActivity act,View parent) {
         backgroundbutton.setText(R.string.background);
     foregroundbutton.setChecked(!background);
     backgroundbutton.setChecked(background);
-    backgroundbutton.setTextColor(WHITE);
-    foregroundbutton.setTextColor(WHITE);
+    backgroundbutton.setTextColor(util.getColorFromTheme(act, android.R.attr.textColorPrimary));
+    foregroundbutton.setTextColor(util.getColorFromTheme(act, android.R.attr.textColorPrimary));
+
 
 
     var timeshow=getcheckbox(act,R.string.time,Floating.showtime);
@@ -282,7 +282,7 @@ static public void show(MainActivity act,View parent) {
 
 
 
-           act.addContentView(layout, new ViewGroup.LayoutParams(MATCH_PARENT,MATCH_PARENT));
+           act.addMyContentView(layout, new ViewGroup.LayoutParams(MATCH_PARENT,MATCH_PARENT));
     Button noclose= act.findViewById(R.id.closeambi);
      if(noclose!=null) {
         noclose.setVisibility(GONE);

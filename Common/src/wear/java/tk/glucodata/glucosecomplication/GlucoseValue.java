@@ -24,7 +24,6 @@ package tk.glucodata.glucosecomplication;
 import static android.graphics.Color.BLACK;
 import static android.graphics.Color.BLUE;
 import static android.graphics.Color.GREEN;
-import static android.graphics.Color.WHITE;
 import static android.graphics.Color.YELLOW;
 import static android.graphics.Color.LTGRAY;
 import static android.graphics.Color.DKGRAY;

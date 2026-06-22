@@ -21,7 +21,9 @@
 
 package tk.glucodata;
 
+import android.view.View;
+
 @FunctionalInterface
 public interface Placer {
-    int[] place(Layout  lay, int width,int height);
+    int[] place(View lay, int width,int height);
 }

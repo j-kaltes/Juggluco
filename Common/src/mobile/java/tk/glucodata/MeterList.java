@@ -197,7 +197,7 @@ static public void show(MainActivity act, View parent) {
                 }
     layout.setPadding((int)(density*addleft)+MainActivity.systembarLeft,MainActivity.systembarTop,MainActivity.systembarRight+(int)(density*addright),MainActivity.systembarBottom);
 
-     act.addContentView(layout, new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
+     act.addMyContentView(layout, new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
      MainActivity.setonback(()-> {
            BluetoothGlucoseMeter.zeroViews();
            removeContentView(layout);

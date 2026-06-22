@@ -61,7 +61,6 @@ import static android.graphics.Color.GREEN;
 import static android.graphics.Color.MAGENTA;
 import static android.graphics.Color.CYAN;
 import static android.graphics.Color.RED;
-import static android.graphics.Color.WHITE;
 import static android.graphics.Color.YELLOW;
 import static android.view.View.GONE;
 import static android.view.View.INVISIBLE;
@@ -170,7 +169,7 @@ static void showsensormessage(String text,MainActivity act) {
 
     var  params = new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.CENTER| Gravity.CENTER_HORIZONTAL);
 //    params.topMargin=MainActivity.systembarTop;
-    act.addContentView(layout, params);
+    act.addMyContentView(layout, params);
     }
 /*
 public static void showsensorinfo(String text,MainActivity act) {
@@ -261,7 +260,7 @@ void showinfo(final SuperGattCallback gatt,MainActivity act) {
 //        address.setBackgroundColor(BLUE); address.setTextColor(WHITE);
         if(gatt.sensorgen == 0x10)  {
             long dataptr=gatt.dataptr;
-            if(Natives.siNotchinese(dataptr)) {
+            if(Natives.siNewSI(dataptr)) {
                  switch(Natives.getSiSubtype(dataptr)) {
                     case 0:address.setTextColor(RED);break;
                     case 1: address.setTextColor(CYAN);break;
@@ -279,6 +278,7 @@ void showinfo(final SuperGattCallback gatt,MainActivity act) {
            //address.setTextColor(CYAN);
            // address.setTextColor(YELLOW);
         }
+    //address.setBackgroundColor(BLACK);
     constatus.setText(gatt.constatstatusstr);
     setrow(gatt.constatchange,contimes,constatus);
     keyinfo.setText(gatt.handshake);
@@ -400,7 +400,7 @@ help.setOnClickListener(v-> helplight(R.string.sensorhelp,act));
 
     var  params = new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.CENTER|Gravity.CENTER_HORIZONTAL);
 //    params.topMargin=MainActivity.systembarTop;
-    act.addContentView(layout, params);
+    act.addMyContentView(layout, params);
 
    }
    /*
@@ -443,7 +443,7 @@ void nogatts(MainActivity act) {
       if(!isWearable)
           bluestate.setPadding(pads,0,0,0);
       layout.setPadding(pads,pads,pads*3,pads);
-   act.addContentView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+   act.addMyContentView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
 
    }
    */
@@ -745,7 +745,7 @@ else {
 
       view.setBackgroundColor( Applic.backgroundcolor);
     show(act,showview);
-   // act.addContentView(showview, new ViewGroup.LayoutParams( WRAP_CONTENT, WRAP_CONTENT));
+   // act.addMyContentView(showview, new ViewGroup.LayoutParams( WRAP_CONTENT, WRAP_CONTENT));
 
 
 //    var  params = new FrameLayout.LayoutParams( MATCH_PARENT, MATCH_PARENT, Gravity.CENTER|Gravity.CENTER_HORIZONTAL);
@@ -754,7 +754,7 @@ else {
    params.bottomMargin=(int)(MainActivity.systembarBottom*.3f);
    params.leftMargin=(int)(MainActivity.systembarLeft*.3f);
    params.rightMargin=(int)(MainActivity.systembarRight*.3f);
-    act.addContentView(showview, params);
+    act.addMyContentView(showview, params);
 
     var scheduled=Applic.scheduler.scheduleAtFixedRate( ()-> {
        {if(doLog) {Log.i(LOG_ID,"scheduled");};};

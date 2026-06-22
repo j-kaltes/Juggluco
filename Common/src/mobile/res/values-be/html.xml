@@ -3,7 +3,7 @@ To modify, change the html files in https://github.com/j-kaltes/Jugglucohelp -->
 <resources>
 <string name="NightPost" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/be/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/NightPost.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/NightPost.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/NightPost.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/NightPost.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/NightPost.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/NightPost.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/NightPost.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/NightPost.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/NightPost.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/NightPost.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/sv/NightPost.html">sv</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/NightPost.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/NightPost.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/NightPost.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/NightPost.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/NightPost.html?lang=en">en</a>&emsp;&emsp;</p><p>Загрузіць на сервер
+<p><a href="https://www.juggluco.nl/Jugglucohelp/be/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/NightPost.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/NightPost.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/NightPost.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/NightPost.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/NightPost.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/NightPost.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/NightPost.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/NightPost.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/NightPost.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/NightPost.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/NightPost.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/sv/NightPost.html">sv</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/NightPost.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/NightPost.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/NightPost.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/NightPost.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/NightPost.html?lang=en">en</a>&emsp;&emsp;</p><p>Загрузіць на сервер
 Nightscout.</p>
 <p><span lang="be-BY">У большасці выпадкаў вы
 таксама можаце выкарыстоўваць вэб-сервер
@@ -56,7 +56,7 @@ https://myname.herokuapp.com:6789</span><span lang="en-US">)</span></p>
 </string>
 <string name="Nightscouthelp" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/be/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/Nightscouthelp.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/Nightscouthelp.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/Nightscouthelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/Nightscouthelp.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/Nightscouthelp.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/Nightscouthelp.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/Nightscouthelp.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/Nightscouthelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/Nightscouthelp.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/Nightscouthelp.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/sv/Nightscouthelp.html">sv</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/Nightscouthelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/Nightscouthelp.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/Nightscouthelp.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/Nightscouthelp.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/Nightscouthelp.html?lang=en">en</a>&emsp;&emsp;</p><h1 class="western">Вэб-сервер</h1>
+<p><a href="https://www.juggluco.nl/Jugglucohelp/be/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/Nightscouthelp.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/Nightscouthelp.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/Nightscouthelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/Nightscouthelp.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/Nightscouthelp.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/Nightscouthelp.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/Nightscouthelp.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/Nightscouthelp.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/Nightscouthelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/Nightscouthelp.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/Nightscouthelp.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/sv/Nightscouthelp.html">sv</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/Nightscouthelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/Nightscouthelp.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/Nightscouthelp.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/Nightscouthelp.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/Nightscouthelp.html?lang=en">en</a>&emsp;&emsp;</p><h1 class="western">Вэб-сервер</h1>
 <p style="line-height: 100%; margin-bottom: 0cm">Juggluco ўключае
 ў сябе вэб-сервер, з дапамогай якога
 іншыя праграмы могуць атрымліваць
@@ -750,7 +750,7 @@ Juggluco на эмулятары атрымлівае дадзеныя
 </string>
 <string name="disturbhelp" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/be/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/disturbhelp.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/disturbhelp.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/disturbhelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/disturbhelp.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/disturbhelp.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/disturbhelp.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/disturbhelp.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/disturbhelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/disturbhelp.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/disturbhelp.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/disturbhelp.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/disturbhelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/disturbhelp.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/disturbhelp.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/disturbhelp.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/disturbhelp.html?lang=en">en</a>&emsp;&emsp;</p><h1>Доступ &quot;<i>Не
+<p><a href="https://www.juggluco.nl/Jugglucohelp/be/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/disturbhelp.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/disturbhelp.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/disturbhelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/disturbhelp.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/disturbhelp.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/disturbhelp.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/disturbhelp.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/disturbhelp.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/disturbhelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/disturbhelp.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/disturbhelp.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/disturbhelp.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/disturbhelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/disturbhelp.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/disturbhelp.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/disturbhelp.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/disturbhelp.html?lang=en">en</a>&emsp;&emsp;</p><h1>Доступ &quot;<i>Не
 турбаваць</i>&quot;</h1>
 <p>На некаторых прыладах будзільнікі не
 працуюць у рэжыме &quot;Не турбаваць&quot;.
@@ -797,7 +797,7 @@ Flash, вы можаце паспрабаваць уключыць
 </string>
 <string name="floatingconfig" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/be/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/floatingconfig.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/floatingconfig.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/floatingconfig.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/floatingconfig.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/floatingconfig.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/floatingconfig.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/floatingconfig.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/floatingconfig.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/floatingconfig.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/floatingconfig.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/floatingconfig.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/floatingconfig.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/floatingconfig.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/floatingconfig.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/floatingconfig.html?lang=en">en</a>&emsp;&emsp;</p><h1 class="western">Плавучая
+<p><a href="https://www.juggluco.nl/Jugglucohelp/be/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/floatingconfig.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/floatingconfig.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/floatingconfig.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/floatingconfig.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/floatingconfig.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/floatingconfig.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/floatingconfig.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/floatingconfig.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/floatingconfig.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/floatingconfig.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/floatingconfig.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/floatingconfig.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/floatingconfig.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/floatingconfig.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/floatingconfig.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/floatingconfig.html?lang=en">en</a>&emsp;&emsp;</p><h1 class="western">Плавучая
 глюкоза</h1>
 <p>Тут вы можаце ўсталяваць памер шрыфта,
 а таксама колер пярэдняга і задняга
@@ -843,7 +843,7 @@ Android/WearOS-&gt;Прыкладанні і апавяшчэнні-&gt;Інфа
 </string>
 <string name="garminconfig" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/be/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/garminconfig.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/garminconfig.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/garminconfig.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/garminconfig.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/garminconfig.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/garminconfig.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/garminconfig.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/garminconfig.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/garminconfig.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/garminconfig.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/garminconfig.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/garminconfig.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/garminconfig.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/garminconfig.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/garminconfig.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/garminconfig.html?lang=en">en</a>&emsp;&emsp;</p><h1>Канфігурацыя Kerfstok</h1>
+<p><a href="https://www.juggluco.nl/Jugglucohelp/be/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/garminconfig.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/garminconfig.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/garminconfig.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/garminconfig.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/garminconfig.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/garminconfig.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/garminconfig.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/garminconfig.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/garminconfig.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/garminconfig.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/garminconfig.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/garminconfig.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/garminconfig.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/garminconfig.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/garminconfig.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/garminconfig.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/garminconfig.html?lang=en">en</a>&emsp;&emsp;</p><h1>Канфігурацыя Kerfstok</h1>
 <p style="line-height: 100%; margin-bottom: 0cm"><b>Зыходны
 код</b> Kerfstok можна загрузіць з
 <a href="https://www.juggluco.nl/Kerfstok/Kerfstok-source.html">https://www.juggluco.nl/Kerfstok/Kerfstok-source.html</a>).
@@ -875,7 +875,7 @@ Garmin Kerfstok, каб лёгка ўставіць пэўныя
 </string>
 <string name="getaccountidhelp" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/be/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/getaccountidhelp.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/getaccountidhelp.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/getaccountidhelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/getaccountidhelp.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/getaccountidhelp.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/getaccountidhelp.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/getaccountidhelp.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/getaccountidhelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/getaccountidhelp.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/getaccountidhelp.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/getaccountidhelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/getaccountidhelp.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/getaccountidhelp.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/getaccountidhelp.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/getaccountidhelp.html?lang=en">en</a>&emsp;&emsp;</p><h1 class="western">Атрымаць ID
+<p><a href="https://www.juggluco.nl/Jugglucohelp/be/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/getaccountidhelp.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/getaccountidhelp.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/getaccountidhelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/getaccountidhelp.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/getaccountidhelp.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/getaccountidhelp.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/getaccountidhelp.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/getaccountidhelp.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/getaccountidhelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/getaccountidhelp.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/getaccountidhelp.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/getaccountidhelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/getaccountidhelp.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/getaccountidhelp.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/getaccountidhelp.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/getaccountidhelp.html?lang=en">en</a>&emsp;&emsp;</p><h1 class="western">Атрымаць ID
 уліковага запісу</h1>
 <p style="line-height: 100%; margin-bottom: 0cm">Як атрымаць
 ідэнтыфікатар уліковага запісу Libreview,
@@ -951,7 +951,7 @@ Garmin Kerfstok. Націсніце <b>Без датчыка</b>, каб
 </string>
 <string name="helpexport" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/be/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/helpexport.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/helpexport.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/helpexport.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/helpexport.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/helpexport.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/helpexport.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/helpexport.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/helpexport.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/helpexport.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/helpexport.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/helpexport.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/helpexport.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/helpexport.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/helpexport.html?lang=en">en</a>&emsp;&emsp;</p><h1>Экспарт</h1>
+<p><a href="https://www.juggluco.nl/Jugglucohelp/be/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/helpexport.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/helpexport.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/helpexport.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/helpexport.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/helpexport.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/helpexport.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/helpexport.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/helpexport.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/helpexport.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/helpexport.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/helpexport.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/helpexport.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/helpexport.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/helpexport.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/helpexport.html?lang=en">en</a>&emsp;&emsp;</p><h1>Экспарт</h1>
 <p>Экспарт дадзеных з Juggluco ў файл.</p>
 <p>Стравы захоўваюцца ў html. Усе астатнія
 даныя захоўваюцца ў фармаце .tsv (<a href="https://en.wikipedia.org/wiki/Tab-separated_values">значэнні,
@@ -1014,42 +1014,13 @@ Bluetooth з датчыкамі Freestyle Libre 2 і кожную
 меню.</p>
 <p style="line-height: 100%; orphans: 0; widows: 0; margin-top: 0.2cm; margin-bottom: 0.2cm; background: transparent; page-break-after: avoid">
 <font size="3" style="font-size: 12pt"><i>Меню 4: Рух (справа)</i></font></p>
-<table width="118" cellpadding="0" cellspacing="0" style="background: transparent">
-	<col width="118"/>
-
-	<tr>
-		<td width="118" valign="top" style="border: none; padding: 0cm"><p>15:10&nbsp;&nbsp;&nbsp;↗&nbsp;6.1</p>
-		</td>
-	</tr>
-	<tr>
-		<td width="118" valign="top" style="border: none; padding: 0cm"><p>Пошук</p>
-		</td>
-	</tr>
-	<tr>
-		<td width="118" valign="top" style="border: none; padding: 0cm"><p>Дата</p>
-		</td>
-	</tr>
-	<tr>
-		<td width="118" valign="top" style="border: none; padding: 0cm"><p>Дзень
-			назад</p>
-		</td>
-	</tr>
-	<tr style="background: transparent">
-		<td width="118" valign="top" style="border: none; padding: 0cm"><p>Праз
-			дзень</p>
-		</td>
-	</tr>
-	<tr>
-		<td width="118" valign="top" style="border: none; padding: 0cm"><p>Тыдзень
-			таму</p>
-		</td>
-	</tr>
-	<tr>
-		<td width="118" valign="top" style="border: none; padding: 0cm"><p>Праз
-			тыдзень</p>
-		</td>
-	</tr>
-</table>
+<p><tt>15:10   ↗ 6.1<br><br>
+Пошук<br><br>
+Дата<br><br>
+Дзень назад<br><br>
+Праз дзень<br><br>
+Тыдзень таму<br><br>
+Праз тыдзень</tt></p>
 <p style="line-height: 115%; margin-bottom: 0cm">Рухаючыся
 налева і направа па экране, вы можаце
 перамяшчаць крывую налева і направа.
@@ -1073,39 +1044,13 @@ Bluetooth з датчыкамі Freestyle Libre 2 і кожную
 змяняючы адлегласць паміж двума пальцамі.</p>
 <p style="line-height: 100%; orphans: 0; widows: 0; margin-top: 0.2cm; margin-bottom: 0.2cm; background: transparent; page-break-after: avoid">
 <font size="3" style="font-size: 12pt"><i>Меню 3: Дысплей</i></font></p>
-<table width="161" cellpadding="0" cellspacing="0">
-	<col width="161"/>
-
-	<tr>
-		<td width="161" valign="top" style="border: none; padding: 0cm"><p>Апошняе
-			скан.</p>
-		</td>
-	</tr>
-	<tr>
-		<td width="161" valign="top" style="border: none; padding: 0cm"><p>Сканы &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[x]</p> </td>
-	</tr>
-	<tr>
-		<td width="161" valign="top" style="border: none; padding: 0cm"><p>Паток&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[x]</p>
-		</td>
-	</tr>
-	<tr>
-		<td width="161" valign="top" style="border: none; padding: 0cm"><p>Гісторыя&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[x]</p>
-		</td>
-	</tr>
-	<tr>
-		<td width="161" valign="top" style="border: none; padding: 0cm"><p>Сумы&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[x]</p>
-		</td>
-	</tr>
-	<tr>
-		<td width="161" valign="top" style="border: none; padding: 0cm"><p>Ежа&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;&nbsp;]</p>
-		</td>
-	</tr>
-	<tr>
-		<td width="161" height="41" valign="top" style="border: none; padding: 0cm"><p>
-			Dark mode&nbsp;&nbsp;[&nbsp;&nbsp;]</p>
-		</td>
-	</tr>
-</table>
+<p><tt>Апошняе скан.<br><br>
+Сканы&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[x]<br><br>
+Паток&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[x]<br><br>
+Гісторыя&nbsp;&nbsp;[x]<br><br>
+Сумы&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[x]<br><br>
+Ежа&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;]<br><br>
+Dark mode&nbsp;[&nbsp;]</tt></p>
 <p style="line-height: 115%; margin-bottom: 0cm"><font color="#4f81bd"><font face="Cambria, serif"><b>Справа
 ад сярэдняга меню</b></font></font> ўтрымліваюцца
 параметры адлюстравання. Каб праглядзець
@@ -1148,40 +1093,13 @@ Freestyle libre 2 на гэты аплет.<br/>
 <br/>
 
 </p>
-<table width="146" cellpadding="0" cellspacing="0">
-	<col width="146"/>
-
-	<tr>
-		<td width="146" height="41" valign="top" style="border: none; padding: 0cm"><p align="left">
-			Экспарт</p>
-		</td>
-	</tr>
-	<tr>
-		<td width="146" valign="top" style="border: none; padding: 0cm"><p>Клон</p>
-		</td>
-	</tr>
-	<tr>
-		<td width="146" valign="top" style="border: none; padding: 0cm"><p>Новая
-			сума</p>
-		</td>
-	</tr>
-	<tr>
-		<td width="146" valign="top" style="border: none; padding: 0cm"><p>Спіс</p>
-		</td>
-	</tr>
-	<tr>
-		<td width="146" valign="top" style="border: none; padding: 0cm"><p>Статыстыка</p>
-		</td>
-	</tr>
-	<tr>
-		<td width="146" valign="top" style="border: none; padding: 0cm"><p>Размаўляць</p>
-		</td>
-	</tr>
-	<tr>
-		<td width="146" valign="top" style="border: none; padding: 0cm"><p>Парыць<font color="#000000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;]</font></p>
-		</td>
-	</tr>
-</table>
+<p><tt>Экспарт<br><br>
+Клон<br><br>
+Новая сума<br><br>
+Спіс<br><br>
+Статыстыка<br><br>
+Размаўляць<br><br>
+Парыць&nbsp;[&nbsp;]</tt></p>
 <p style="line-height: 115%; margin-bottom: 0cm"><span lang="be-BY">Вы
 можаце ўвесці гэтыя лічбы, дакрануўшыся
 да </span><font color="#4f81bd"><font face="Cambria, serif"><span lang="be-BY"><b>Новая
@@ -1219,41 +1137,13 @@ Juggluco атрымаў дастаткова значэнняў
 </p>
 <p style="line-height: 100%; orphans: 0; widows: 0; margin-top: 0.2cm; margin-bottom: 0.2cm; background: transparent; page-break-after: avoid">
 <font size="3" style="font-size: 12pt"><i>Меню 1: злева</i></font></p>
-<table width="113" cellpadding="0" cellspacing="0">
-	<col width="113"/>
-
-	<tr>
-		<td width="113" valign="top" style="border: none; padding: 0cm"><p><font color="#000000">System
-			UI&nbsp;&nbsp;[&nbsp;]</font></p>
-		</td>
-	</tr>
-	<tr>
-		<td width="113" valign="top" style="border: none; padding: 0cm"><p><font color="#000000">Меню &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;]</font></p>
-		</td>
-	</tr>
-	<tr>
-		<td width="113" valign="top" style="border: none; padding: 0cm"><p>Глядзець</p>
-		</td>
-	</tr>
-	<tr>
-		<td width="113" valign="top" style="border: none; padding: 0cm"><p>Датчык</p>
-		</td>
-	</tr>
-	<tr>
-		<td width="113" height="26" valign="top" style="border: none; padding: 0cm"><p>
-			Налады</p>
-		</td>
-	</tr>
-	<tr>
-		<td width="113" height="26" valign="top" style="border: none; padding: 0cm"><p>
-			Аб Juggluco</p>
-		</td>
-	</tr>
-	<tr>
-		<td width="113" valign="top" style="border: none; padding: 0cm"><p>Зачыніць</p>
-		</td>
-	</tr>
-</table>
+<p><tt>System UI&nbsp;[&nbsp;]<br><br>
+Меню&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;]<br><br>
+Глядзець<br><br>
+Датчык<br><br>
+Налады<br><br>
+Аб Juggluco<br><br>
+Зачыніць</tt></p>
 <p style="line-height: 115%; margin-bottom: 0cm"><span lang="be-BY">У
 меню злева вы можаце знайсці </span><font color="#4f81bd"><font face="Cambria, serif"><span lang="be-BY"><b>Налады</b></span></font></font><span lang="be-BY">,
 каб усталяваць адзінку вымярэння глюкозы
@@ -1413,7 +1303,7 @@ Kerfstok усе нумары таксама будуць выдалены
 </string>
 <string name="librenumhelp" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/be/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/librenumhelp.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/librenumhelp.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/librenumhelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/librenumhelp.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/librenumhelp.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/librenumhelp.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/librenumhelp.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/librenumhelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/librenumhelp.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/librenumhelp.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/librenumhelp.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/librenumhelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/librenumhelp.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/librenumhelp.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/librenumhelp.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/librenumhelp.html?lang=en">en</a>&emsp;&emsp;</p><p>Усталюйце «<i>Адпраўляць
+<p><a href="https://www.juggluco.nl/Jugglucohelp/be/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/librenumhelp.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/librenumhelp.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/librenumhelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/librenumhelp.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/librenumhelp.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/librenumhelp.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/librenumhelp.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/librenumhelp.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/librenumhelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/librenumhelp.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/librenumhelp.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/librenumhelp.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/librenumhelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/librenumhelp.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/librenumhelp.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/librenumhelp.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/librenumhelp.html?lang=en">en</a>&emsp;&emsp;</p><p>Усталюйце «<i>Адпраўляць
 сумы</i>», каб адпраўляць сумы ў Libreview.
 Перш чым вы зможаце ўключыць «<i>Адпраўляць
 сумы</i>», вам трэба паказаць для кожнай
@@ -1440,7 +1330,7 @@ Cycling 25 прысутнічаць у Libreview. Адзінае, што
 </string>
 <string name="libreview" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/be/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/libreview.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/libreview.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/libreview.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/libreview.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/libreview.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/libreview.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/libreview.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/libreview.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/libreview.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/libreview.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/libreview.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/libreview.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/libreview.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/libreview.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/libreview.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/libreview.html?lang=en">en</a>&emsp;&emsp;</p><h1>Libreview</h1>
+<p><a href="https://www.juggluco.nl/Jugglucohelp/be/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/libreview.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/libreview.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/libreview.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/libreview.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/libreview.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/libreview.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/libreview.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/libreview.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/libreview.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/libreview.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/libreview.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/libreview.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/libreview.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/libreview.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/libreview.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/libreview.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/libreview.html?lang=en">en</a>&emsp;&emsp;</p><h1>Libreview</h1>
 <p>Juggluco можа адпраўляць даныя і аб\'ёмы
 глюкозы ў Libreview. Пры выкарыстанні датчыкаў
 Libre 0 або 3, датчыкаў Libre 2 для
@@ -1681,7 +1571,7 @@ Bluetooth ад датчыкаў Freestyle Libre 2. Але, магчыма,
 </string>
 <string name="nightnumhelp" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/be/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/nightnumhelp.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/nightnumhelp.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/nightnumhelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/nightnumhelp.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/nightnumhelp.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/nightnumhelp.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/nightnumhelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/nightnumhelp.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/nightnumhelp.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/nightnumhelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/nightnumhelp.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/nightnumhelp.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/nightnumhelp.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nightnumhelp.html?lang=en">en</a>&emsp;&emsp;</p><p>Усталюйце «Аддаць
+<p><a href="https://www.juggluco.nl/Jugglucohelp/be/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/nightnumhelp.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/nightnumhelp.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/nightnumhelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/nightnumhelp.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/nightnumhelp.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/nightnumhelp.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/nightnumhelp.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/nightnumhelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/nightnumhelp.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/nightnumhelp.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/nightnumhelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/nightnumhelp.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/nightnumhelp.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/nightnumhelp.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nightnumhelp.html?lang=en">en</a>&emsp;&emsp;</p><p>Усталюйце «Аддаць
 сумы», каб зрабіць сумы даступнымі праз
 вэб-сервер Nightscout у Juggluco. Перад тым, як
 вы зможаце ўключыць « Аддаць сумы», вы
@@ -1694,7 +1584,7 @@ Bluetooth ад датчыкаў Freestyle Libre 2. Але, магчыма,
 </string>
 <string name="notificationpermission" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/be/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/notificationpermission.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/notificationpermission.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/notificationpermission.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/notificationpermission.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/notificationpermission.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/notificationpermission.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/notificationpermission.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/notificationpermission.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/notificationpermission.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/notificationpermission.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/notificationpermission.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/notificationpermission.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/notificationpermission.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/notificationpermission.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/notificationpermission.html?lang=en">en</a>&emsp;&emsp;</p><p>Android 13 патрабуе, каб
+<p><a href="https://www.juggluco.nl/Jugglucohelp/be/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/notificationpermission.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/notificationpermission.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/notificationpermission.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/notificationpermission.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/notificationpermission.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/notificationpermission.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/notificationpermission.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/notificationpermission.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/notificationpermission.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/notificationpermission.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/notificationpermission.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/notificationpermission.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/notificationpermission.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/notificationpermission.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/notificationpermission.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/notificationpermission.html?lang=en">en</a>&emsp;&emsp;</p><p>Android 13 патрабуе, каб
 вы давалі дазвол на гэтыя апавяшчэнні,
 перш чым вы нават даведаецеся, якія
 апавяшчэнні адпраўляюцца. Juggluco мае
@@ -2036,7 +1926,7 @@ Juggluco (з уключаным датчыкам праз Bluetooth)
 </string>
 <string name="setlibrenumtype" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/be/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/setlibrenumtype.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/setlibrenumtype.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/setlibrenumtype.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/setlibrenumtype.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/setlibrenumtype.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/setlibrenumtype.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/setlibrenumtype.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/setlibrenumtype.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/setlibrenumtype.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/setlibrenumtype.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/setlibrenumtype.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/setlibrenumtype.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/setlibrenumtype.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/setlibrenumtype.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/setlibrenumtype.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/setlibrenumtype.html?lang=en">en</a>&emsp;&emsp;</p><p style="margin-bottom: 0cm">Такім
+<p><a href="https://www.juggluco.nl/Jugglucohelp/be/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/setlibrenumtype.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/setlibrenumtype.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/setlibrenumtype.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/setlibrenumtype.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/setlibrenumtype.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/setlibrenumtype.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/setlibrenumtype.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/setlibrenumtype.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/setlibrenumtype.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/setlibrenumtype.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/setlibrenumtype.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/setlibrenumtype.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/setlibrenumtype.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/setlibrenumtype.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/setlibrenumtype.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/setlibrenumtype.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/setlibrenumtype.html?lang=en">en</a>&emsp;&emsp;</p><p style="margin-bottom: 0cm">Такім
 жа чынам, як і для Libreview, вы таксама можаце
 вызначыць, як прадстаўляць сумы праз
 сервер Nightscout у Juggluco.</p>
@@ -2473,7 +2363,7 @@ Libre 2 ад Abbott. GMI з\'яўляецца заменай гэтага
 </string>
 <string name="staticnum" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/be/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/staticnum.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/staticnum.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/staticnum.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/staticnum.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/staticnum.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/staticnum.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/staticnum.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/staticnum.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/staticnum.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/staticnum.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/staticnum.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/staticnum.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/staticnum.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/staticnum.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/staticnum.html?lang=en">en</a>&emsp;&emsp;</p><h1 align="center">Заблакіраваны</h1>
+<p><a href="https://www.juggluco.nl/Jugglucohelp/be/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/staticnum.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/staticnum.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/staticnum.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/staticnum.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/staticnum.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/staticnum.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/staticnum.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/staticnum.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/staticnum.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/staticnum.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/staticnum.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/staticnum.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/staticnum.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/staticnum.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/staticnum.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/staticnum.html?lang=en">en</a>&emsp;&emsp;</p><h1 align="center">Заблакіраваны</h1>
 <p style="line-height: 100%; margin-bottom: 0cm"><b>Левае
 сярэдняе меню-&gt;</b><b>Клон</b><b>-&gt;&quot;Сумы,
 атрыманыя з </b><b>клона</b><b>&quot;</b> настроены
@@ -2487,7 +2377,7 @@ Libre 2 ад Abbott. GMI з\'яўляецца заменай гэтага
 </string>
 <string name="talkhelp" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/be/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/talkhelp.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/talkhelp.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/talkhelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/talkhelp.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/talkhelp.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/talkhelp.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/talkhelp.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/talkhelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/talkhelp.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/talkhelp.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/talkhelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/talkhelp.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/talkhelp.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/talkhelp.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/talkhelp.html?lang=en">en</a>&emsp;&emsp;</p><h1>Размаўляць</h1>
+<p><a href="https://www.juggluco.nl/Jugglucohelp/be/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/talkhelp.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/talkhelp.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/talkhelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/talkhelp.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/talkhelp.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/talkhelp.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/talkhelp.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/talkhelp.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/talkhelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/talkhelp.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/talkhelp.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/talkhelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/talkhelp.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/talkhelp.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/talkhelp.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/talkhelp.html?lang=en">en</a>&emsp;&emsp;</p><h1>Размаўляць</h1>
 <p><font size="4" style="font-size: 14pt"><span lang="be-BY"><b>Казаць
 глюкозу</b></span></font><span lang="be-BY"><br/>
 Прамаўляе

@@ -162,12 +162,13 @@ class GarminStatus {
 		layout.setPadding(laypad * 2, laypad * 2, laypad * 2, laypad);
 
 
-	layout.setBackgroundResource(R.drawable.dialogbackground);
+//	layout.setBackgroundResource(R.drawable.dialogbackground);
+   layout.setBackgroundResource(R.drawable.dialogbackground);
 
     var  params =    new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.CENTER_HORIZONTAL);
 
-    context.addContentView(layout, params);
-//		context.addContentView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+    context.addMyContentView(layout, params);
+//		context.addMyContentView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
 		context.setonback(() -> {
 			EnableControls(parent,true);
 			removeContentView(layout);
@@ -293,14 +294,15 @@ class GarminStatus {
 			return new int[]{w, h};
 		}, new View[]{spinner, refresh}, new View[]{sdkreadyview, registeredview,help}, new View[]{restview,glucose}, new View[]{sync, next, reinit, config, ok}
 		);
-	layout.setBackgroundResource(R.drawable.dialogbackground);
+//	layout.setBackgroundResource(R.drawable.dialogbackground);
+   layout.setBackgroundResource(R.drawable.dialogbackground);
 		int laypad = (int) (density * 4.0);
 		layout.setPadding(laypad * 2, laypad * 2, laypad * 2, laypad*2);
 
     var  params =    new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.CENTER|Gravity.CENTER_HORIZONTAL);
 
-    context.addContentView(layout, params);
-	//	context.addContentView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+    context.addMyContentView(layout, params);
+	//	context.addMyContentView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
 
 		ok.setOnClickListener(
 				v -> {
@@ -389,7 +391,7 @@ class GarminStatus {
 		});
 		var shortcuts = getbutton(context, R.string.shutcuts);
 		shortcuts.setOnClickListener(v -> {
-            context.lightBars(false);
+            context.themeLightBars();
 			hidekeyboard(context);
 			new Shortcuts().mkshortlistview(context);
 		});
@@ -422,8 +424,8 @@ class GarminStatus {
 
     var  params =    new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT,  Gravity.CENTER|Gravity.CENTER_HORIZONTAL);
 
-    context.addContentView(layout, params);
-	//	context.addContentView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+    context.addMyContentView(layout, params);
+	//	context.addMyContentView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
 		context.setonback(() -> {
 			EnableControls(parent,true);
 			removeContentView(layout);

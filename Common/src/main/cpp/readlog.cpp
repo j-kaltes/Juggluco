@@ -86,8 +86,8 @@ void retimelog(const char *name,bool logcat) {
 	}
 
 int main(int argc,char **argv) {
-if(argc<2) {
-	cerr<<"Usage: "<<argv[0]<<" file1 [file2...file-n]\nConverts unixtime to time string at start of line\n";
+if(argc<2||!memcmp(argv[1],"-h",3)) {
+	cerr<<"Usage: "<<argv[0]<<" [-l] file1 [file2...file-n]\nConverts unixtime to time string at start of line\n-l: use logcat time format\n";
 	exit(0);
 	}
 int starti;

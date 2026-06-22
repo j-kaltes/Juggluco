@@ -1298,8 +1298,12 @@ int updateproc(condvar_t *varsptr,uintptr_t cond,updateone &shost,int  (updateon
                 }
             res= (shost.*proc)();
             if(!res) {
+                savemessage(pass,"Send failed2");
                 LOGAR("updateproce !res");
                 shost.close();
+                }
+             else {
+                 *getmirrorerror(pass)='\0';
                 }
             }
         return res;

@@ -138,7 +138,7 @@ static void make(MainActivity act,View parent) {
 
 
    // params.topMargin=MainActivity.systembarTop;
-        act.addContentView(alllayout, params);
+        act.addMyContentView(alllayout, params);
         delete.setOnClickListener(v-> {
             Natives.zeroLog();
             MainActivity.poponback();

@@ -141,7 +141,9 @@ typedef slprint& (*proc_t)(slprint&);
 class slog: public slprint {
 public:
     slog() {
-	*this<<time(nullptr)<<" "<<syscall(SYS_gettid)<<" ";
+        struct timeval tv;
+        gettimeofday(&tv,nullptr);
+        *this<< tv.tv_sec<<"."<<(int)(tv.tv_usec/1000)<<" "<<syscall(SYS_gettid)<<" ";
         }
 
 };

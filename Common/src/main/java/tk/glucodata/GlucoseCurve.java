@@ -299,7 +299,7 @@ void getnumcontrol(MainActivity activity) {
           );
 
 //      numcontrol.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
-           activity.addContentView(numcontrol, new ViewGroup.LayoutParams(WRAP_CONTENT,MATCH_PARENT));
+           activity.addMyContentView(numcontrol, new ViewGroup.LayoutParams(WRAP_CONTENT,MATCH_PARENT));
         numcontrol.post(numcontrol::requestLayout);
        }
       else
@@ -316,7 +316,7 @@ void getnumcontrol(MainActivity activity) {
    {if(doLog) {Log.i(LOG_ID,"getnumcontrol end");};};
     }
 
-    void showkeyboard(Activity context) {
+    void showkeyboard(MainActivity context) {
        numberview.showkeyboard(context);
         }
     void hidekeyboard() {
@@ -530,7 +530,7 @@ void startlibrelink(String lang) {
                   if(isWearable)
                      Specific.blockedNum(activity);
                   else   {
-                           activity.lightBars(false);
+                           activity.themeLightBars();
                             help.help(R.string.staticnum,activity,l->activity.lightBars(!Natives.getInvertColors( ))); 
                             }
                         }
@@ -894,7 +894,7 @@ void search(boolean forward) {
           requestRender();
           return new int[] {w,h};
           },new View[]{prev},new View[] {closecontrol},new View[] {next});
-               activity.addContentView(searchcontrol, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+               activity.addMyContentView(searchcontrol, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
              
           searchcontrol.post(searchcontrol::requestLayout);
            }
@@ -1061,7 +1061,7 @@ void mkmealsearch(MainActivity act) {
 
 
         new View[] {inglabel,mealingredient,qualabel,mealquantity});
-        act.addContentView(meallayout, new ViewGroup.LayoutParams(MATCH_PARENT,WRAP_CONTENT));
+        act.addMyContentView(meallayout, new ViewGroup.LayoutParams(MATCH_PARENT,WRAP_CONTENT));
             meallayout.setBackgroundColor(Applic.backgroundcolor);
         }
     else {
@@ -1127,7 +1127,7 @@ else {
 
     helpbut.setContentDescription(getContext().getString(R.string.helpname));
         helpbut.setOnClickListener(v-> { 
-            context.lightBars(false);
+            context.themeLightBars();
             help.help(R.string.searchhelp,context,l->context.lightBars(!getInvertColors( ))); 
         });
 
@@ -1202,7 +1202,7 @@ if(!smallScreen) {
 
          mktimedialog( fromtime,0 ,layout);
       mktimedialog( totime,1 ,layout);
-    context.addContentView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+    context.addMyContentView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
         layout.setBackgroundColor(Applic.backgroundcolor);
 
             

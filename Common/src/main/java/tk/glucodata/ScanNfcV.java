@@ -33,10 +33,12 @@ import android.os.Vibrator;
 import android.os.VibratorManager;
 import android.provider.CalendarContract;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -219,7 +221,7 @@ static public synchronized void scan(GlucoseCurve curve,Tag tag) {
     if(!isWearable) {
         if (Menus.on) {
             Applic.RunOnUiThread(() -> {
-                main.doonback();
+                MainActivity.doonback();
                 Menus.on = true;
             });
         }
@@ -403,7 +405,7 @@ static public synchronized void scan(GlucoseCurve curve,Tag tag) {
         });
     }
 
-static private void newsensor(Activity act,String text,String name) {
+static private void newsensor(MainActivity act,String text,String name) {
     if(!isWearable) {
         XInfuus.sendSensorActivateBroadcast(act, name, Natives.laststarttime());
         }
@@ -443,6 +445,7 @@ static private void newsensor(Activity act,String text,String name) {
         Button ok=getbutton(act,R.string.ok);
 
         Layout lay=new Layout(act, (l, w, h) -> {
+        /*
            int wid=GlucoseCurve.getwidth()- systembarRight-systembarLeft;
             if(wid>w)
                 l.setX((wid-w)*.5f+systembarLeft);
@@ -450,7 +453,7 @@ static private void newsensor(Activity act,String text,String name) {
             if(hei>h) {
                 l.setY((hei-h)*.5f);
                 }
-
+*/
                 return new int[] {w,h};
             },new View[]{nameview},new View[]{tv},new View[]{calBox},new View[]{ok});
             ok.setOnClickListener(v->{
@@ -463,11 +466,12 @@ static private void newsensor(Activity act,String text,String name) {
                 });
         lay.setPadding(pad,pad,pad,pad);
         lay.setBackgroundColor(Applic.backgroundcolor);
-        act.addContentView(lay, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+       var params = new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.CENTER_HORIZONTAL| Gravity.CENTER);
+        act.addMyContentView(lay, params);
     });
     }
 static boolean askcalendar=true;
-static int calendar(Activity act,int ret,String name) {
+static int calendar(MainActivity act,int ret,String name) {
     if(askcalendar)  {
         int waitmin=(ret&0xff)==5?ret>>8:0;
         String mess=(waitmin>0) ?
@@ -478,7 +482,7 @@ static int calendar(Activity act,int ret,String name) {
     else
         return ret;
     }
-private static void insertcalendar(Activity act,String name,long endtime) {
+private static void insertcalendar(MainActivity act,String name,long endtime) {
 /*
     long endtime=Natives.sensorends()*1000L;
     if(endtime<= System.currentTimeMillis())

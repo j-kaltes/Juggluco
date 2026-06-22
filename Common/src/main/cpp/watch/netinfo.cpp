@@ -920,6 +920,8 @@ bool setBlueWatch(passhost_t *host,int sensor,int nums) {
              LOGGER("setBlueWatch( %s sensor=%d nums=%d)=true\n",name,sensor,nums);
              return true;
             }
+#else
+            return true;
 #endif
         }
 #ifdef WEAROS

@@ -84,7 +84,7 @@
 #endif
 
 //#define DONTTALK false 
-#define NOTCHINESE 1
+#define NEWSIBIONICS 1
 #define USE_PROCESS 1
 //#define ENCRYPTMESSAGES 1
 
@@ -98,3 +98,6 @@
 #define DONTTALK  
 #endif
 #define LOGALL
+#ifndef NOLOG
+//#define DOTESTS
+#endif

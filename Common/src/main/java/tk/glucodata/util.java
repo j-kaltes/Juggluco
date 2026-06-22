@@ -22,6 +22,19 @@
 package tk.glucodata;
 
 
+import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.LayerDrawable;
+import android.graphics.drawable.StateListDrawable;
+import android.util.TypedValue;
+import androidx.appcompat.widget.AppCompatRadioButton;
+import androidx.core.content.ContextCompat;
+
+import android.content.res.ColorStateList;
+import android.util.TypedValue;
+import android.view.View;
 import android.widget.RadioButton;
 import android.content.Context;
 import android.graphics.Color;
@@ -41,6 +54,7 @@ import static android.text.Html.fromHtml;
 import static tk.glucodata.Log.doLog;
 
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.content.ContextCompat;
 
 public class util {
 private	static DateFormat dformat;
@@ -88,8 +102,9 @@ static void sethtml(TextView view, String text) {
         view.setText(fromHtml(text,TO_HTML_PARAGRAPH_LINES_CONSECUTIVE));
     }
     else view.setText(fromHtml(text));
-      view.setTextIsSelectable(true);
-           view.setTextColor(Color.WHITE);
+    view.setTextIsSelectable(true);
+    view.setTextColor(util.getColorFromTheme(view.getContext(), android.R.attr.textColorPrimary));
+
 
 
 	view.setLinksClickable(true);
@@ -121,18 +136,121 @@ static public Locale getlocale() {
 
 	}
 
+
+    // Helper method to safely extract colors from the theme
+    public static int getColorFromTheme(Context context, int attributeResId) {
+        TypedValue typedValue = new TypedValue();
+        if (context.getTheme().resolveAttribute(attributeResId, typedValue, true)) {
+            if (typedValue.resourceId != 0) {
+                // It's a reference (e.g., @color/my_color)
+                return ContextCompat.getColor(context, typedValue.resourceId);
+            } else {
+                // It's a direct hex code (e.g., #1976D2)
+                return typedValue.data;
+            }
+        }
+        // Safe fallback if the attribute is missing entirely
+        return Color.BLACK; 
+    }
+
+public static int pxToDp(Context context,int px)  {
+    float dp = px / context.getResources().getDisplayMetrics().density;
+    return (int) dp;
+    }
+/*
+    // 2. Helper to convert DP to Pixels for drawing shapes
+    private static int dpToPx(Context context, int dp) {
+        return (int) (dp * context.getResources().getDisplayMetrics().density);
+    }
+
+    // 3. THE FIX: Create a custom graphic that is immune to OS rendering bugs
+    private static Drawable createRadioGraphic(Context context, int checkedColor, int uncheckedColor) {
+        int strokeWidth = dpToPx(context, 2);
+        int size = dpToPx(context, 20); // Standard radio button size
+        int innerPadding = dpToPx(context, 5); // Space between the outer ring and the inner dot
+
+        // Draw the Unchecked State (Hollow Ring)
+        GradientDrawable uncheckedRing = new GradientDrawable();
+        uncheckedRing.setShape(GradientDrawable.OVAL);
+        uncheckedRing.setSize(size, size);
+        uncheckedRing.setColor(Color.TRANSPARENT);
+        uncheckedRing.setStroke(strokeWidth, uncheckedColor);
+
+        // Draw the Checked State (Outer Ring + Solid Inner Dot)
+        GradientDrawable checkedRing = new GradientDrawable();
+        checkedRing.setShape(GradientDrawable.OVAL);
+        checkedRing.setSize(size, size);
+        checkedRing.setColor(Color.TRANSPARENT);
+        checkedRing.setStroke(strokeWidth, checkedColor);
+
+        GradientDrawable checkedDot = new GradientDrawable();
+        checkedDot.setShape(GradientDrawable.OVAL);
+        checkedDot.setSize(size, size);
+        checkedDot.setColor(checkedColor);
+
+        // Stack the dot inside the ring using a LayerDrawable
+        LayerDrawable checkedState = new LayerDrawable(new Drawable[]{checkedRing, checkedDot});
+        checkedState.setLayerInset(1, innerPadding, innerPadding, innerPadding, innerPadding);
+
+        // Combine them into a StateList
+        StateListDrawable stateList = new StateListDrawable();
+        stateList.addState(new int[]{android.R.attr.state_checked}, checkedState);
+        stateList.addState(new int[]{-android.R.attr.state_checked}, uncheckedRing);
+
+        return stateList;
+    }
+
+    // 4. Your updated creation method
+    public static CheckDirectionRadio getradiobutton(Context context, int res) {
+         var radio=new CheckDirectionRadio(context);
+       // var radio = new AppCompatRadioButton(context);
+        
+        // Fetch Colors
+        int textColor = getColorFromTheme(context, android.R.attr.textColorPrimary);
+        int checkedColor = getColorFromTheme(context, androidx.appcompat.R.attr.colorControlActivated);
+        int uncheckedColor = getColorFromTheme(context, androidx.appcompat.R.attr.colorControlNormal);
+        
+        // Set Text and Text Color
+        radio.setTextColor(textColor);
+        radio.setText(res);
+
+        // OVERRIDE THE OS BUG: Replace the default button graphic with our custom drawn graphic
+        radio.setButtonDrawable(createRadioGraphic(context, checkedColor, uncheckedColor));
+        
+        // Add a little padding between your new graphic and the text
+        radio.setPadding(dpToPx(context, 8), 0, 0, 0);
+        
+        return radio;
+    }
+*/
 public static  CheckDirectionRadio getradiobutton(Context context, int res) {
          var radio=new CheckDirectionRadio(context);
-         radio.setText(res);
-         return radio;
+/*
+        int textColor = getColorFromTheme(context, android.R.attr.textColorPrimary);
+        radio.setTextColor(textColor);
+        
+        int checkedColor = getColorFromTheme(context, androidx.appcompat.R.attr.colorControlActivated);
+        int uncheckedColor = getColorFromTheme(context, androidx.appcompat.R.attr.colorControlNormal);
+        
+        // 3. Apply the custom color state list
+        radio.setButtonTintList(new ColorStateList(
+            new int[][] {
+                new int[] { android.R.attr.state_checked },
+                new int[] { -android.R.attr.state_checked }
+            },
+            new int[] { checkedColor, uncheckedColor }
+        ));
+        */
+     //  radio.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        radio.setText(res);
+        return radio;
          }
 
 public static CheckDirectionRadio getradiobuttonId(Context context, int res, int id) {
-         var radio=new CheckDirectionRadio(context);
-         radio.setText(res);
-         radio.setId(id);
-         return radio;
-         }
+        var radio=getradiobutton( context,  res);
+        radio.setId(id);
+        return radio;
+        }
 	/*
 static public String getlanguage(Context context) {
 	return context.getString(R.string.language);

@@ -155,7 +155,7 @@ static void askround(MainActivity act,Runnable runner ,View parent) {
 
     var  params =    new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.CENTER_HORIZONTAL);
     params.topMargin=MainActivity.systembarTop;
-    act.addContentView(lay, params);
+    act.addMyContentView(lay, params);
     setonback(() -> {
         removeContentView(lay);
         help.hidekeyboard(act);
@@ -222,8 +222,8 @@ static Layout menuview(final NumberView numb, MainActivity act, int mealptr, Obj
     var  params =    new FrameLayout.LayoutParams( WRAP_CONTENT, MATCH_PARENT, Gravity.RIGHT);
     params.rightMargin=MainActivity.systembarRight;
     params.topMargin=MainActivity.systembarTop*3/4;
-    act.addContentView(lay, params);
-//    act.addContentView(lay, smallScreen?new ViewGroup.LayoutParams(  MATCH_PARENT, (height-MainActivity.systembarTop)):new ViewGroup.LayoutParams(WRAP_CONTENT, (height-MainActivity.systembarTop-MainActivity.systembarBottom)));
+    act.addMyContentView(lay, params);
+//    act.addMyContentView(lay, smallScreen?new ViewGroup.LayoutParams(  MATCH_PARENT, (height-MainActivity.systembarTop)):new ViewGroup.LayoutParams(WRAP_CONTENT, (height-MainActivity.systembarTop-MainActivity.systembarBottom)));
     repeat.setOnClickListener(v->{
          removeContentView(lay);
          act.hideSystemUI();
@@ -405,10 +405,9 @@ static void menuitem(MainActivity act, NumberView numb, int mealptr, int pos, In
             new View[] {Delete,Cancel,Save});
        int pad=(int)(tk.glucodata.GlucoseCurve.metrics.density*5.0);
        lay.setPadding(pad,0,pad,0);
-    act.addContentView(lay, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+    act.addMyContentView(lay, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
       lay.post(lay::requestLayout);
 
-//          lay.setBackgroundResource(R.drawable.dialogbackground);
         lay.setBackgroundColor(Applic.backgroundcolor);
 
     Delete.setOnClickListener(v-> {
@@ -537,13 +536,13 @@ static private void doSearchIngr(MainActivity act,View view,IngredientViewAdapte
         });
     cancel.setOnClickListener(v->  doonback());
 
-    //act.addContentView(lay, new ViewGroup.LayoutParams(width-MainActivity.systembarLeft-MainActivity.systembarRight ,WRAP_CONTENT));
+    //act.addMyContentView(lay, new ViewGroup.LayoutParams(width-MainActivity.systembarLeft-MainActivity.systembarRight ,WRAP_CONTENT));
 
     var  params = new FrameLayout.LayoutParams(  MATCH_PARENT,WRAP_CONTENT, Gravity.TOP|Gravity.START);
     params.topMargin=(int)(MainActivity.systembarTop*.75f);
     params.setMarginStart(0);
     params.setMarginEnd(MainActivity.systembarEnd);;
-   act.addContentView(lay, params);
+   act.addMyContentView(lay, params);
     Runnable searchrun=()-> {
                 int[] res=Natives.searchIngredient(searchstr.getText().toString());
                 if(res!=null) {
@@ -624,11 +623,11 @@ static private void selectingredient(MainActivity act,NumberView numb,IntConsume
 
     lay.setBackgroundResource(R.drawable.dialogbackground);
 
-//    act.addContentView(lay, new ViewGroup.LayoutParams(smallScreen?MATCH_PARENT:WRAP_CONTENT, height));
+//    act.addMyContentView(lay, new ViewGroup.LayoutParams(smallScreen?MATCH_PARENT:WRAP_CONTENT, height));
     var  params =    new FrameLayout.LayoutParams( smallScreen?MATCH_PARENT:WRAP_CONTENT, MATCH_PARENT, Gravity.TOP|Gravity.CENTER_HORIZONTAL); 
     params.topMargin=MainActivity.systembarTop*3/4;
 //    params.topMargin=0;
-    act.addContentView(lay, params);
+    act.addMyContentView(lay, params);
     lay.invalidate();
     lay.setVisibility(VISIBLE);
     lay.bringToFront();
@@ -750,12 +749,12 @@ static void    defineingredient(MainActivity act ,IngredientViewAdapter  foodada
        int pad=(int)(tk.glucodata.GlucoseCurve.metrics.density*5.0);
        lay.setPadding(pad,0,pad,pad/2);
       lay.setBackgroundResource(R.drawable.dialogbackground);
-   // act.addContentView(lay, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+   // act.addMyContentView(lay, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
     var  params =    new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.CENTER_HORIZONTAL|Gravity.TOP);
     params.topMargin=MainActivity.systembarTop;
     params.leftMargin=MainActivity.systembarLeft/2;
     params.rightMargin=MainActivity.systembarRight/2;
-     act.addContentView(lay, params);
+     act.addMyContentView(lay, params);
 
     name.requestFocus();
     Save.setOnClickListener(v-> {
@@ -836,7 +835,7 @@ static public class MealDatabaseViewAdapter extends RecyclerView.Adapter<MealDat
 }
 final static private Random random=new Random();
 static Layout  fooddatabase(MainActivity act, TriConsumer<String,Float,String> give) {
-    act.lightBars(false);
+    act.themeLightBars();
     RecyclerView recycle = new RecyclerView(act);
     LinearLayoutManager lin = new LinearLayoutManager(act);
     recycle.setLayoutManager(lin);
@@ -888,13 +887,13 @@ static Layout  fooddatabase(MainActivity act, TriConsumer<String,Float,String> g
     //   lay.setPadding(pad,0,pad,0);
       lay.setPadding(MainActivity.systembarLeft,MainActivity.systembarTop/2,MainActivity.systembarRight,MainActivity.systembarBottom);
         lay.setBackgroundColor(Applic.backgroundcolor);
-    //act.addContentView(lay, new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
+    //act.addMyContentView(lay, new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
 /*
     var  params =    new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.CENTER_HORIZONTAL);
     params.topMargin=MainActivity.systembarTop;
-   context.addContentView(layout, params);
+   context.addMyContentView(layout, params);
    */
-    act.addContentView(lay, new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
+    act.addMyContentView(lay, new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
     searchstr.requestFocus();
     Help.setOnClickListener(v-> { 
 //        act.hideSystemUI();
@@ -1034,7 +1033,7 @@ static void    shownutrients(MainActivity act,int id,boolean showzero,TriConsume
     GridLayout.LayoutParams closeparams = new GridLayout.LayoutParams();
     closeparams.columnSpec = GridLayout.spec(2, 2);
     grid.addView(Close,closeparams);
-//    act.addContentView(grid,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+//    act.addMyContentView(grid,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 //    scroll.setFillViewport(true);
        grid.setPadding(pad,0,0,0);
     scroll.addView(grid);
@@ -1043,11 +1042,11 @@ static void    shownutrients(MainActivity act,int id,boolean showzero,TriConsume
 
 
 
-    //act.addContentView(scroll,new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+    //act.addMyContentView(scroll,new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
 
     var  params2 =    new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.CENTER_HORIZONTAL);
     params2.topMargin=MainActivity.systembarTop;
-   act.addContentView(scroll, params2);
+   act.addMyContentView(scroll, params2);
     scroll.setBackgroundResource(R.drawable.dialogbackground);
     Close.setOnClickListener(v-> doonback());
     setonback(() -> {

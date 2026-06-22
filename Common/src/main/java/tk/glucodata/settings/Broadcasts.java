@@ -170,7 +170,7 @@ static private void  getselected(MainActivity context, View parent,String title,
 	    final var laysize=MATCH_PARENT;
         layparams=new ViewGroup.LayoutParams(laysize,laysize);
 	  	}
-    context.addContentView(theview, layparams);
+    context.addMyContentView(theview, layparams);
 	Runnable closerun=()-> {
 		if(!isWearable)	EnableControls(parent,true);
 		removeContentView(theview) ;

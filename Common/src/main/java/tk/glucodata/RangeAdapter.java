@@ -23,8 +23,6 @@ package tk.glucodata;
 
 import static android.graphics.Color.BLACK;
 import static android.graphics.Color.WHITE;
-import static android.graphics.Color.BLUE;
-import static android.graphics.Color.RED;
 import static tk.glucodata.Applic.isWearable;
 
 import android.content.Context;
@@ -56,7 +54,8 @@ public void    setarray(List<T> arin)  {
     @Override
     public View getDropDownView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = mInflater.inflate(android.R.layout.simple_spinner_dropdown_item, parent, false);
+        //    convertView = mInflater.inflate(android.R.layout.simple_spinner_dropdown_item, parent, false);
+           convertView = mInflater.inflate(R.layout.item_spinner_themed, parent, false);
            if(isWearable) convertView.setBackgroundColor(BLACK);
 //                convertView.setBackgroundColor(BLUE);
         }
@@ -65,7 +64,7 @@ public void    setarray(List<T> arin)  {
         T str=ar.get(position);
         var text=(TextView)(convertView.findViewById(android.R.id.text1));
         text.setText(dist.apply(str));
-        text.setTextColor(WHITE);
+        text.setTextColor(isWearable?WHITE:util.getColorFromTheme(text.getContext(), R.attr.colorSpinnerDropdownText));
         if(isWearable) {
             text.setGravity(Gravity.CENTER);
             }
@@ -111,7 +110,7 @@ public void    setarray(List<T> arin)  {
         if(ar!=null&&position>=0&&position<ar.size()) {
             T str=ar.get(position);
             TextView thetext=convertView.findViewById(android.R.id.text1);
-             thetext.setTextColor(WHITE);
+             thetext.setTextColor(isWearable?WHITE:util.getColorFromTheme(thetext.getContext(), android.R.attr.textColorPrimary));
             thetext.setText(dist.apply(str));
             }
         return convertView;

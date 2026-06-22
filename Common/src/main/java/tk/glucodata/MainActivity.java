@@ -71,13 +71,14 @@ import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Looper;
 import android.os.ParcelFileDescriptor;
 import android.provider.Settings;
 import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityManager;
 import android.widget.Toast;
 
@@ -104,12 +105,12 @@ import java.util.Locale;
 //import androidx.activity.OnBackPressedCallback;
 //import androidx.activity.OnBackPressedDispatcher;
 //import com.google.android.apps.auto.sdk.CarActivity;
-;
+import tk.glucodata.DynamicThemeUtils;
 
 //import static tk.glucodata.Natives.hidescanresults;
 
 
-//public class MainActivity extends ComponentActivity implements NfcAdapter.ReaderCallback  {
+//public class MainActivity extends ComponentActivity implements NfcAdapter.ReaderCallback  
 public class MainActivity extends AppCompatActivity implements NfcAdapter.ReaderCallback  {
 public MainActivity() {
     clearonback() ;
@@ -117,7 +118,7 @@ public MainActivity() {
 // Extending from AppCompatActivity requires to use an AppCompat theme for the Activity.
 // In the manifest, for the activity, use android:theme="@style/Theme.AppCompat"
 
-//public class MainActivity extends CarActivity implements NfcAdapter.ReaderCallback  {
+//public class MainActivity extends CarActivity implements NfcAdapter.ReaderCallback  
 //    boolean    hideSystem=true;
     LaunchShit  permHealth=isWearable?null:new LaunchShit(this);
     public GlucoseCurve curve=null;
@@ -147,9 +148,25 @@ private void startall() {
        }
    }
 
-static private boolean askedNotify=false;
+static private  int askedNotify=5;
+
+private  void               onceshowintro() {
+                 if(getlibrary.showintro) {
+                   getlibrary.showintro=false;
+                   MainActivity act=this;
+                   act.themeLightBars();
+                   help.help(R.string.introhelp,act,
+                       l->{ setShownintro(true);
+                           act.lightBars(!Natives.getInvertColors()); 
+                           final int unit=Natives.getunit();
+                           if(!(unit==1||unit==2)) {
+                                  tk.glucodata.settings.Settings.set(act);
+                                }
+                          }); 
+                   }
+                }
 boolean askNotify() {
-      askedNotify=true;
+      askedNotify=0;
       if(Build.VERSION.SDK_INT >=33)  {
         var perm= Manifest.permission.POST_NOTIFICATIONS;
         if(ContextCompat.checkSelfPermission(this, perm)!= PackageManager.PERMISSION_GRANTED)  {
@@ -188,44 +205,36 @@ private void startdisplay() {
    {if(doLog) {Log.i(LOG_ID,"After curve = new GlucoseCurve(this);");};};
    if(!isWearable) {
       if(Build.VERSION.SDK_INT >= 30) {
-         setOnApplyWindowInsetsListener(curve,(v, windowInsets) -> {
-         setsizes(this);
-         if(screenwidth>= screenheight) {
-             Insets  insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
-             {if(doLog) {Log.i(LOG_ID, "systemBars: left="+insets.left+ " right="+insets.right+ " bottom="+insets.bottom+ " top="+insets.top);};};
-             Natives.systembar(insets.left, insets.top, insets.right, insets.bottom);
+             setOnApplyWindowInsetsListener(curve,(v, windowInsets) -> {
+             setsizes(this);
+             if(screenwidth>= screenheight) {
+                 Insets  insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
+                 {if(doLog) {Log.i(LOG_ID, "systemBars: left="+insets.left+ " right="+insets.right+ " bottom="+insets.bottom+ " top="+insets.top);};};
+                 Natives.systembar(insets.left, insets.top, insets.right, insets.bottom);
 
-            systembarLeft=insets.left;
-            systembarTop=insets.top;
-            systembarRight=insets.right;
-            systembarBottom=insets.bottom;
-            if(rtl) {
-                systembarStart=systembarRight;
-                systembarEnd=systembarLeft;
-                }
-            else {
-                systembarStart=systembarLeft;
-                systembarEnd=systembarRight;
-                }
-             requestRender();
-             if(getlibrary.showintro) {
-               getlibrary.showintro=false;
-               MainActivity act=this;
-               act.lightBars(false);
-               help.help(R.string.introhelp,act,
-                   l->{ setShownintro(true);
-                       act.lightBars(!Natives.getInvertColors()); 
-                       final int unit=Natives.getunit();
-                       if(!(unit==1||unit==2)) {
-                              tk.glucodata.settings.Settings.set(act);
-                            }
-                      }); 
-               }
-               }
-            return windowInsets;
-      });
-    // showSystemBarsAppearance();
-      }
+                systembarLeft=insets.left;
+                systembarTop=insets.top;
+                systembarRight=insets.right;
+                systembarBottom=insets.bottom;
+                if(rtl) {
+                    systembarStart=systembarRight;
+                    systembarEnd=systembarLeft;
+                    }
+                else {
+                    systembarStart=systembarLeft;
+                    systembarEnd=systembarRight;
+                    }
+                 requestRender();
+                 onceshowintro();
+
+
+                 }
+                return windowInsets;
+          });
+          }
+    else {
+        }
+
       lightBars(!getInvertColors( ));
       }
     setContentView(curve);
@@ -240,6 +249,12 @@ private void startdisplay() {
           Log.stack(LOG_ID ,mess,error);
       }
     getlibrary.getlibrary(this);//after setfilesdir for settings
+   if(!isWearable) {
+      if(Build.VERSION.SDK_INT < 30) {
+         onceshowintro();
+         }
+      }
+
     handleIntent(getIntent());
     var langstring=getString(R.string.language);
     var lang=util.getlocale().getLanguage();
@@ -311,7 +326,7 @@ private void supportLTR() {
 private void supportRTL() {
     setDirection(new Locale("iw"));
     } */
-
+    // Returns true if the currently applied theme is a light theme
 private void reallightBars(boolean light) {
    Log.i(LOG_ID,"lightBars "+ light);
    if(Build.VERSION.SDK_INT >= 30) {
@@ -329,6 +344,10 @@ public void lightBars(boolean light) {
    waslight=light;
     reallightBars(light);
    }
+
+public void themeLightBars() {
+    lightBars(isLightTheme);
+    }
 private void waslightBars() {
     reallightBars(waslight);
     }
@@ -359,6 +378,19 @@ void showSystemBarsAppearance() {
     }
    } */
 static public boolean  rtl;
+
+private  boolean getIsLightTheme() {
+        TypedValue typedValue = new TypedValue();
+        boolean resolved = getTheme().resolveAttribute(R.attr.isAppLightTheme, typedValue, true);
+        
+        if (resolved) {
+            // typedValue.data will be non-zero (true) or 0 (false)
+            return typedValue.data != 0;
+        }
+        
+        return false; 
+      }
+private boolean isLightTheme=false;
   private void updateRtl(Configuration config) {
         rtl = config.getLayoutDirection() == View.LAYOUT_DIRECTION_RTL;
 
@@ -378,6 +410,11 @@ static public boolean  rtl;
            Specific.splash(this);
          }
         super.onCreate(savedInstanceState);
+       if(Applic.DynamicTheme)  {
+             DynamicThemeUtils.setTheme(this);
+             isLightTheme=getIsLightTheme();
+             }
+
         updateRtl(getResources().getConfiguration());
         if(!isWearable) {
             if(Build.VERSION.SDK_INT >= 30)  {
@@ -497,7 +534,8 @@ public static boolean hasnfc=false;
 
 private static boolean askNFC=true;
 
-private static    final int nfcflags=NfcAdapter.FLAG_READER_NFC_V | NfcAdapter.FLAG_READER_NFC_A|NfcAdapter.FLAG_READER_NFC_B|NfcAdapter.FLAG_READER_NFC_F|NfcAdapter.FLAG_READER_SKIP_NDEF_CHECK| NfcAdapter.FLAG_READER_NFC_BARCODE; //=415. Activation of sensor was only possible if app not at the foreground, so I add some flags
+//private static    final int nfcflags=NfcAdapter.FLAG_READER_NFC_V | NfcAdapter.FLAG_READER_NFC_A|NfcAdapter.FLAG_READER_NFC_B|NfcAdapter.FLAG_READER_NFC_F|NfcAdapter.FLAG_READER_SKIP_NDEF_CHECK| NfcAdapter.FLAG_READER_NFC_BARCODE; //=415. Activation of sensor was only possible if app not at the foreground, so I add some flags
+private static    final int nfcflags=NfcAdapter.FLAG_READER_NFC_V | NfcAdapter.FLAG_READER_NFC_A|NfcAdapter.FLAG_READER_NFC_B|NfcAdapter.FLAG_READER_NFC_F| NfcAdapter.FLAG_READER_NFC_BARCODE; // Activation of sensor was only possible if app not at the foreground, so I add some flags
 //private static    final int nfcflags=NfcAdapter.FLAG_READER_NFC_V |NfcAdapter.FLAG_READER_SKIP_NDEF_CHECK; 
 public void setnfc() {
 try {
@@ -582,9 +620,6 @@ static boolean tocalendarapp=false;
         else
             {if(doLog) {Log.d(LOG_ID,"onResume no setnfc");};};
         }
-     if(!askedNotify) {
-        askNotify();
-        }
 
      return;
     }
@@ -625,6 +660,15 @@ static boolean tocalendarapp=false;
     if(mess!=null) {
         showindialog(mess,true);
          showsdialog=true;
+        }
+     
+     if(!showsdialog) {
+         if(askedNotify>=0) {
+            if(askedNotify==0)
+                askNotify();
+            else
+                --askedNotify;
+            }
         }
     if(!isWearable) {
        waslightBars();
@@ -682,6 +726,10 @@ static boolean tocalendarapp=false;
 
 long nexttime= 0L;
 
+
+
+
+
 synchronized void   startnfc(Tag tag) {
     long nu=System.currentTimeMillis();
     if(nu<nexttime)
@@ -724,15 +772,26 @@ synchronized void   startnfc(Tag tag) {
         }
     else
         {if(doLog) {Log.i(LOG_ID,all);};};
-    if(Thread.currentThread().equals( Looper.getMainLooper().getThread() )) {
-        new Thread(()->
-                ScanNfcV.scan(curve,tag)
-            ).start();
+
+    if(hasTech(techs, "android.nfc.tech.NfcV")) {
+            runNfcV(tag);
+            return;
+            }
+
+   if(!isWearable) {
+        // Generic NDEF fallback (TagInfo-style readout)
+        if (Thread.currentThread().equals(Looper.getMainLooper().getThread())) {
+            new Thread(() -> Sib3Scan.readNdef(this,tag)).start();
+        } else {
+            Sib3Scan.readNdef(this,tag);
         }
-    else
-        ScanNfcV.scan(curve,tag);
+      }
     }
 
+static boolean hasTech(String[] techs, String want) {
+    for (String t : techs) if (want.equals(t)) return true;
+    return false;
+     }
 private void outofStorageSpace() {
     String message= "Not enough Storage Space!!";
     Applic.argToaster(this,message,Toast.LENGTH_SHORT);
@@ -1511,18 +1570,12 @@ void showindialog(String message,boolean cancel) {
         }).setTitle("  ").setMessage(message).create();;
        dialog.setCanceledOnTouchOutside(false);
         dialog.setOnShowListener(a ->  {
-//            final var colres= android.R.color.holo_red_light;
-            final var colres= android.R.color.holo_orange_light;
-//            final var colres= android.R.color.holo_blue_bright;
-//            final var colres= android.R.color.holo_blue_light; //Very infrequently button not shown. Maybe this helps.
+            final var colres= android.R.color.holo_orange_light; //Very infrequently button not shown. Maybe this helps.
         final var col=
            (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)?getResources().getColor(colres, getTheme()):
                 getResources().getColor(colres);
          var negbut=dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
         negbut.setTextColor(col);
-//        negbut.setAllCaps(false);
-//        var dens=GlucoseCurve.getDensity();
-//        negbut.setPadding((int)(dens*10),0,0,0);
         }    
             );
 
@@ -1743,6 +1796,32 @@ private    GestureDetector mGestureDetector;
 boolean sensorsVisible=false;
 UnpairOverlayHost unpairer=null;
 Runnable doswitch=null;
+
+
+
+private void runNfcV(Tag tag) {
+    if (Thread.currentThread().equals(Looper.getMainLooper().getThread())) {
+        new Thread(() -> ScanNfcV.scan(curve, tag)).start();
+    } else {
+        ScanNfcV.scan(curve, tag);
+    }
+}
+
+
+int mirrorlistcolor=-1;
+
+public static void addMyContentView(Activity context,View view, ViewGroup.LayoutParams params) {
+    context.addContentView(view,params);
+    if(Applic.DynamicTheme)
+            DynamicThemeUtils.applyTheme(view);
+    }
+
+public void addMyContentView(View view, ViewGroup.LayoutParams params) {
+    addContentView(view,params);
+    if(Applic.DynamicTheme)
+        DynamicThemeUtils.applyTheme(view);
+    }
+
 }
 
 

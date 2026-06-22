@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<inset xmlns:android="http://schemas.android.com/apk/res/android"
+    android:insetLeft="4dp"
+    android:insetRight="4dp"
+    android:insetTop="6dp"
+    android:insetBottom="6dp">
+
+    <ripple android:color="?attr/colorControlHighlight">
+
+        <item>
+            <selector>
+                <item android:state_enabled="false">
+                    <shape android:shape="oval">
+                        <solid android:color="?attr/colorControlNormal" />
+                    </shape>
+                </item>
+
+                <item>
+                    <shape android:shape="oval">
+                        <solid android:color="?attr/colorButtonBackground" />
+                    </shape>
+                </item>
+            </selector>
+        </item>
+
+        <item android:id="@android:id/mask">
+            <shape android:shape="oval">
+                <solid android:color="#FFFFFFFF" />
+            </shape>
+        </item>
+
+    </ripple>
+</inset>

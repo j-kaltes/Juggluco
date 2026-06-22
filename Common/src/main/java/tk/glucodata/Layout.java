@@ -124,7 +124,7 @@ private static final String LOG_ID="Layout";
    private int rownr=0;
    private  int[] baselines=null;
   private tk.glucodata.Placer placer;
-static int[]  noneplacer(Layout l,int w,int h) {
+static int[]  noneplacer(View l,int w,int h) {
      return new int[] {w,h};
     };
 

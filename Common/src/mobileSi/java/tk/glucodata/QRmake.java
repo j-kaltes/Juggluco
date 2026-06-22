@@ -96,7 +96,7 @@ public static void show(MainActivity act, String code) {
       var ver =(int)((width-qrWidth)*.4f);
 
       layout.setPadding(MainActivity.systembarLeft+ver,MainActivity.systembarTop+hor,MainActivity.systembarRight+ver,MainActivity.systembarBottom+hor);
-      act.addContentView(layout, new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
+      act.addMyContentView(layout, new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
       MainActivity.setonback(()-> removeContentView(layout));
       }
 

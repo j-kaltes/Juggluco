@@ -94,7 +94,7 @@ jlong SiContext::processData(SensorGlucoseData *sens,time_t nowsecs,int8_t *data
    if(data[2] != 9||data[0] != -86 || data[1] != 85) {
       static constexpr const int8_t  doauth[]={(int8_t)0x23,(int8_t)0xF7,(int8_t)0x6F,(int8_t)0xD9,(int8_t)0xF4};
       if(totlen==sizeof(doauth)&&!memcmp(data,doauth,sizeof(doauth))&&!sens->pollcount())  {
-          setNotchinese(sens);
+          setNewSI(sens);
           return 4LL;
          }
       LOGGER("wrong start %d %d %d\n",data[0],data[1],data[2]);
@@ -176,39 +176,36 @@ jlong SiContext::processData(SensorGlucoseData *sens,time_t nowsecs,int8_t *data
            sens->retried=0;
            saveSi3(sens,index,eventTime,!infuture,value,temp,!numOfUnreceived);
            if(!numOfUnreceived)  {
-                 sens->sensorerror=false;
-                 if(sensor->finished) {
-                        sensor->finished=0;
-                        LOGGER("SIprocess finished=%d\n", sensor->finished);
-                        backup->resensordata(sensorindex);
-                        }
-                    uint32_t starttime=sens->getinfo()->starttime;
-                    uint32_t warminutes=sens->getinfo()->manualwarmup;
-                    uint32_t endwarmup=starttime+warminutes*60;
-                    if(eventTime>endwarmup) {
-                           auto res=glucoseback(eventTime,mgdL,change,sens);
-        //                   if(!(index%5)) savejson(sens,sens->statefile,index,algcontext,getjson3);
-                            backup->wakebackup(wakestream);
-                          extern void wakewithcurrent();
-                             wakewithcurrent();
-
-        #ifdef OLDEVERSENSE 
-                             sendEverSenseold(sens,5);
-        #endif
-                             return res;
-                             }
-                     else {
-                            if(!sens->getinfo()->redoAll) {
-                                sens->getinfo()->warmupstartpos=std::min((int)sens->getinfo()->pollcount-1,0);
+                if((nowsecs-eventTime)< maxbluetoothage) {
+                         sens->sensorerror=false;
+                         if(sensor->finished) {
+                                sensor->finished=0;
+                                LOGGER("SIprocess finished=%d\n", sensor->finished);
+                                backup->resensordata(sensorindex);
                                 }
+                            uint32_t starttime=sens->getinfo()->starttime;
+                            uint32_t warminutes=sens->getinfo()->manualwarmup;
+                            uint32_t endwarmup=starttime+warminutes*60;
+                            if(eventTime>endwarmup) {
+                                  auto res=glucoseback(eventTime,mgdL,change,sens);
+                                  backup->wakebackup(wakestream);
+                                  extern void wakewithcurrent();
+                                   wakewithcurrent();
 
+                #ifdef OLDEVERSENSE 
+                                     sendEverSenseold(sens,5);
+                #endif
+                                     return res;
+                                  }
+                             else {
+                                    if(!sens->getinfo()->redoAll) {
+                                        sens->getinfo()->warmupstartpos=std::min((int)sens->getinfo()->pollcount-1,0);
+                                        }
+
+                                     }
                          }
                     }
                  else {
-/*                   if(!infuture&&!(index%500)) {
-                        savejson(sens,sens->statefile,index,algcontext,getjson3);
-                        backup->wakebackup(wakestream);
-                        } */
                       sens->receivehistory=nowsecs;
                      }
                   const int last=sens->pollcount()-1;

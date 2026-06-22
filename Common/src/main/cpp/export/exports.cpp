@@ -29,7 +29,7 @@ extern Sensoren *sensors;
 #define LOGGERTAG(...) LOGGER("export: " __VA_ARGS__)
 #define LOGGARTAG(...) LOGGAR("export: " __VA_ARGS__)
 
-#define DATESTRING "UnixTime\tYYYY-mm-dd-HH:MM:SS"
+#define DATESTRING "UnixTime\tYYYY-mm-ddTHH:MM:SS"
 constexpr int veilig=
 #ifdef NDEBUG
 		5;

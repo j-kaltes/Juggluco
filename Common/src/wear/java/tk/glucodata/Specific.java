@@ -22,6 +22,7 @@
 package tk.glucodata;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+import static tk.glucodata.Applic.RunOnUiThread;
 import static tk.glucodata.MainActivity.REQ_SET_PUSHED_WATCH_FACE_ACTIVE;
 import static tk.glucodata.settings.Settings.removeContentView;
 
@@ -67,20 +68,25 @@ static boolean settext(String str) {
     }
    return false;
    }
-static void rmlayout() {
+private static void rmlayoutUI() {
    var lay=layout;
    if(lay!=null) {
       text=null;
       layout=null;
       removeContentView(lay); 
+      tk.glucodata.glucosecomplication.GlucoseValue.updateall();
       }
    }
+
+static void rmlayout() {
+     RunOnUiThread(Specific::rmlayoutUI);
+     }
 static void initScreen(MainActivity act) {
     LayoutInflater flater= LayoutInflater.from(act);
     ViewGroup layout = (ViewGroup) flater.inflate(R.layout.startview ,null, false);
     text=layout.findViewById(R.id.text2);
     Specific.layout=layout;
-    act.addContentView(layout, new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
+    act.addMyContentView(layout, new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
    }
 
 static void   blockedNum(MainActivity  act) {

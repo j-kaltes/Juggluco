@@ -22,7 +22,7 @@
 package tk.glucodata;
 
 import static android.bluetooth.BluetoothGatt.GATT_SUCCESS;
-import static tk.glucodata.Applic.hasNotChinese;
+import static tk.glucodata.Applic.hasNewSibionics;
 import static tk.glucodata.Log.doLog;
 import static tk.glucodata.Libre2GattCallback.showCharacter;
 
@@ -68,7 +68,7 @@ static int siNR=0;
             {if(doLog){Log.showbytes("onDescriptorWrite char: " + characteristic.getUuid().toString() + " desc: " + bluetoothGattDescriptor.getUuid().toString()+" status="+status, value);};}
         }
         if (status == BluetoothGatt.GATT_SUCCESS) {
-            if(Natives.siNotchinese(dataptr))
+            if(Natives.siNewSI(dataptr))
                authenticate();
              else
                askvalues(bluetoothGatt);
@@ -249,7 +249,7 @@ private boolean write2(byte[] bytes) {
    }
 private void   authenticate() {
 //	justAuthenticated=true;
-   if(hasNotChinese) {
+   if(hasNewSibionics) {
       final var bytes=Natives.siAuthBytes(dataptr);
       if(bytes!=null)
           write2(bytes);
@@ -258,11 +258,11 @@ private void   authenticate() {
 
 
 private void   activate() {
-   if(hasNotChinese)
+   if(hasNewSibionics)
       write2(Natives.getSIActivation( ));
    }
 private boolean   writeReset() {
-   if(hasNotChinese) {
+   if(hasNewSibionics) {
        if(write2(Natives.getSIResetBytes())) {
            Log.i(LOG_ID,"writeReset successful");
            return true;
@@ -292,7 +292,7 @@ private boolean novalue=false;
 
 @SuppressLint("MissingPermission")
 private void  sendtime() {
-   if(hasNotChinese)
+   if(hasNewSibionics)
       write2(Natives.getSItimecmd());
    }
 

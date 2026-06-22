@@ -166,7 +166,7 @@ static public void show(MainActivity act, MeterList.MeterListViewAdapter meterad
      float density=GlucoseCurve.metrics.density;
     layout.setPadding((int)(density*5.0)+MainActivity.systembarLeft,MainActivity.systembarTop,MainActivity.systembarRight+(int)(density*8.0),MainActivity.systembarBottom);
 
-     act.addContentView(layout, new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
+     act.addMyContentView(layout, new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
       MainActivity.setonback(()-> {
             BluetoothGlucoseMeter.stopScanner();
            removeContentView(layout);

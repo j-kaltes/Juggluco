@@ -1,30 +1,1157 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-<style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
-       <item name="windowActionBar">false</item>
-    <item name="android:windowActionBar">false</item>
-    <item name="android:windowContentOverlay">@null</item>
-    <item name="android:textViewStyle">@style/MyTextViewStyle</item>
-     <item name="android:textAppearanceButton">@style/textAppearanceButton</item>
-      <item name="android:spinnerStyle">@android:style/Widget.Holo.Spinner</item>
-           <item name="android:windowSwipeToDismiss">false</item>
-    <!-- Set the navigation bar to 50% translucent white -->
-<!--    <item name="android:navigationBarColor">#80FFFFFF</item> -->
-<!--    <item name="android:navigationBarColor">@android:color/transparent</item> -->
-    <!-- Since the nav bar is white, we will use dark icons -->
-  <!--  <item name="android:windowLightNavigationBar">true</item> -->
-</style>
 
- <style name="textAppearanceButton" parent="@android:style/TextAppearance.Material.Widget.Button">
-        <item name="android:textAllCaps">false</item>
+    <style name="AppTheme.Base" parent="Theme.AppCompat.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowSwipeToDismiss">false</item>
+
+        <item name="android:textViewStyle">@style/MyTextViewStyle</item>
+        <item name="android:textAppearanceButton">@style/textAppearanceButton</item>
+        <item name="android:spinnerStyle">@android:style/Widget.Holo.Spinner</item>
+
+        <item name="android:spinnerDropDownItemStyle">@style/MySpinnerDropDownItemStyle</item>
+        <item name="android:checkboxStyle">@style/MyCheckBoxStyle</item>
+
+        <item name="android:radioButtonStyle">@style/MyRadioButtonStyle</item>
+
+        <item name="alertDialogTheme">@style/MyDarkAlertDialogTheme</item>
+        <item name="android:alertDialogTheme">@style/MyDarkAlertDialogTheme</item>
+
+        <item name="themedButtonBackground">@drawable/button_rectangle</item>
+        <item name="colorButtonBackground">#1E1E1E</item>
+        <item name="buttonCornerRadius">10dp</item>
+        <item name="colorButtonText">?android:attr/textColorPrimary</item>
+        <item name="colorSpinnerDropdownText">#E0E0E0</item>
+        <item name="colorControlHighlight">#33000000</item>
+        <item name="colorDialogBackground">?android:attr/windowBackground</item>
+        <item name="colorDialogBorder">#ecf018</item>
+        <item name="colorHelpBackground">?android:attr/windowBackground</item>
+        <item name="colorHelpBorder">#4c34eb</item>
+        <item name="colorMirrorConnection">@color/yellow</item>
+
     </style>
 
+    <!-- Base for all LIGHT themes -->
+    <style name="AppTheme.Base.Light" parent="AppTheme.Base">
+        <item name="android:buttonStyle">@style/mybuttonstyle</item>
+        <item name="isAppLightTheme">true</item>
+        <item name="alertDialogTheme">@style/MyLightAlertDialogTheme</item>
+        <item name="android:alertDialogTheme">@style/MyLightAlertDialogTheme</item>
 
-<style name="MyTextViewStyle" parent="android:Widget.TextView">
-    <item name="android:paddingRight">20dp</item>
+        <item name="colorMirrorConnection">@color/red</item>
+    </style>
+
+    <!-- Base for all DARK themes -->
+    <style name="AppTheme.Base.Dark" parent="AppTheme.Base">
+        <item name="android:buttonStyle">@style/mybuttonstyle</item>
+        <item name="isAppLightTheme">false</item>
+    </style>
+
+    <style name="MySpinnerDropDownItemStyle" parent="android:Widget.DropDownItem.Spinner">
+        <item name="android:gravity">left|center_vertical</item>
+        <item name="android:textAlignment">gravity</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">20dp</item>
+        <item name="android:textColor">?attr/colorSpinnerDropdownText</item>
+    </style>
+
+    <style name="textAppearanceButton" parent="@android:style/TextAppearance.Material.Widget.Button">
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">?attr/colorButtonText</item>
+    </style>
+
+    <style name="textAppearanceButtonDark" parent="@android:style/TextAppearance.Material.Widget.Button">
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">#07120A</item>
+    </style>
+
+    <style name="MyTextViewStyle" parent="android:Widget.TextView">
+        <item name="android:paddingRight">20dp</item>
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+    </style>
+
+    <style name="MyCheckBoxStyle" parent="android:Widget.CompoundButton.CheckBox">
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+    </style>
+
+    <style name="MyRadioButtonStyle" parent="android:Widget.CompoundButton.RadioButton">
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+    </style>
+
+    <style name="mybuttonstyle" parent="@android:style/Widget.Button">
+
+        <item name="android:background">?attr/themedButtonBackground</item>
+
+        <item name="android:textColor">?attr/colorButtonText</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:paddingBottom">10dp</item>
+        <item name="android:minWidth">88dp</item>
+        <item name="android:minHeight">48dp</item>
+    </style>
+
+    <style name="MyDarkAlertDialogTheme" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="android:textViewStyle">@style/MyDialogTextViewStyle</item>
+        <item name="android:buttonStyle">@style/Widget.AppCompat.Button.ButtonBar.AlertDialog</item>
+        <item name="android:textAppearanceButton">@style/TextAppearance.AppCompat.Button</item>
+    </style>
+
+    <style name="MyLightAlertDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:textViewStyle">@style/MyDialogTextViewStyle</item>
+        <item name="android:buttonStyle">@style/Widget.AppCompat.Button.ButtonBar.AlertDialog</item>
+        <item name="android:textAppearanceButton">@style/TextAppearance.AppCompat.Button</item>
+    </style>
+
+    <style name="MyDialogTextViewStyle" parent="android:Widget.TextView">
+        <item name="android:paddingLeft">0dp</item>
+        <item name="android:paddingRight">0dp</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingBottom">0dp</item>
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+    </style>
+
+    <!-- ========================================= -->
+    <!-- LIGHT THEMES                              -->
+    <!-- ========================================= -->
+
+    <style name="AppTheme.Light" parent="AppTheme.Base.Light">
+        <item name="android:windowBackground">#FFFFFF</item>
+        <item name="android:textColorPrimary">#1D1B20</item>
+        <item name="android:textColor">#1D1B20</item>
+        <item name="colorPrimary">#6750A4</item>
+        <item name="colorAccent">#0061A4</item>
+        <item name="android:colorAccent">#0061A4</item>
+        <item name="colorControlActivated">#6750A4</item>
+        <item name="android:colorControlActivated">#6750A4</item>
+        <item name="colorControlNormal">#6F6C75</item>
+        <item name="android:colorControlNormal">#6F6C75</item>
+        <item name="colorButtonBackground">#6750A4</item>
+        <item name="buttonCornerRadius">12dp</item>
+        <item name="colorButtonText">#FFFFFF</item>
+        <item name="colorButtonNormal">#F4F2FA</item>
+        <item name="colorControlHighlight">#336750A4</item>
+        <item name="colorSpinnerDropdownText">#6750A4</item>
+        <item name="colorDialogBorder">@color/black</item>
+    </style>
+
+    <style name="AppTheme.MaterialClassic" parent="AppTheme.Base.Light">
+        <item name="android:windowBackground">#FAFAFA</item>
+        <item name="android:textColorPrimary">#212121</item>
+        <item name="android:textColor">#212121</item>
+        <item name="colorPrimary">#6200EE</item>
+        <item name="colorAccent">#008577</item>
+        <item name="android:colorAccent">#008577</item>
+        <item name="colorControlActivated">#008577</item>
+        <item name="android:colorControlActivated">#008577</item>
+        <item name="colorControlNormal">#757575</item>
+        <item name="android:colorControlNormal">#757575</item>
+        <item name="colorButtonBackground">#00796B</item>
+        <item name="colorButtonText">#FFFFFF</item>
+        <item name="buttonCornerRadius">8dp</item>
+        <item name="colorControlHighlight">#3300796B</item>
+        <item name="colorSpinnerDropdownText">#6200EE</item>
+    </style>
+
+    <style name="AppTheme.ForestLight" parent="AppTheme.Base.Light">
+        <item name="android:windowBackground">#F0F5F1</item>
+        <item name="android:textColorPrimary">#172B1E</item>
+        <item name="android:textColor">#172B1E</item>
+        <item name="colorPrimary">#2E7D52</item>
+        <item name="colorAccent">#B85C2C</item>
+        <item name="android:colorAccent">#B85C2C</item>
+        <item name="colorControlActivated">#2E7D52</item>
+        <item name="android:colorControlActivated">#2E7D52</item>
+        <item name="colorControlNormal">#55745D</item>
+        <item name="android:colorControlNormal">#55745D</item>
+        <item name="colorButtonBackground">#2E7D52</item>
+        <item name="colorButtonText">#FFFFFF</item>
+        <item name="buttonCornerRadius">14dp</item>
+        <item name="colorControlHighlight">#332E7D52</item>
+        <item name="colorSpinnerDropdownText">#2E7D52</item>
+    </style>
+
+    <style name="AppTheme.NordicFrost" parent="AppTheme.Base.Light">
+        <item name="android:windowBackground">#F4F7FB</item>
+        <item name="android:textColorPrimary">#1B2B3A</item>
+        <item name="android:textColor">#1B2B3A</item>
+        <item name="colorPrimary">#2F6FA8</item>
+        <item name="colorAccent">#5BADDE</item>
+        <item name="android:colorAccent">#5BADDE</item>
+        <item name="colorControlActivated">#2F6FA8</item>
+        <item name="android:colorControlActivated">#2F6FA8</item>
+        <item name="colorControlNormal">#6D91B0</item>
+        <item name="android:colorControlNormal">#6D91B0</item>
+        <item name="colorButtonBackground">#2F6FA8</item>
+        <item name="colorButtonText">#FFFFFF</item>
+        <item name="buttonCornerRadius">16dp</item>
+        <item name="colorControlHighlight">#335BADDE</item>
+        <item name="colorSpinnerDropdownText">#1B2B3A</item>
+    </style>
+
+    <style name="AppTheme.LavenderDream" parent="AppTheme.Base.Light">
+        <item name="android:windowBackground">#F6F0FF</item>
+        <item name="android:textColorPrimary">#281D49</item>
+        <item name="android:textColor">#281D49</item>
+        <item name="colorPrimary">#7353A5</item>
+        <item name="colorAccent">#A96DFF</item>
+        <item name="android:colorAccent">#A96DFF</item>
+        <item name="colorControlActivated">#7353A5</item>
+        <item name="android:colorControlActivated">#7353A5</item>
+        <item name="colorControlNormal">#8E79B8</item>
+        <item name="android:colorControlNormal">#8E79B8</item>
+        <item name="colorButtonBackground">#7353A5</item>
+        <item name="colorButtonText">#FFFFFF</item>
+        <item name="buttonCornerRadius">25dp</item>
+        <item name="colorControlHighlight">#33A96DFF</item>
+        <item name="colorSpinnerDropdownText">#281D49</item>
+    </style>
+
+    <style name="AppTheme.MessagingEmerald" parent="AppTheme.Base.Light">
+        <item name="android:windowBackground">#F7FBF8</item>
+        <item name="android:textColorPrimary">#10231F</item>
+        <item name="android:textColor">#10231F</item>
+        <item name="colorPrimary">#075E54</item>
+        <item name="colorAccent">#25D366</item>
+        <item name="android:colorAccent">#25D366</item>
+        <item name="colorControlActivated">#075E54</item>
+        <item name="android:colorControlActivated">#075E54</item>
+        <item name="colorControlNormal">#5C827A</item>
+        <item name="android:colorControlNormal">#5C827A</item>
+        <item name="colorButtonBackground">#075E54</item>
+        <item name="colorButtonText">#FFFFFF</item>
+        <item name="buttonCornerRadius">18dp</item>
+        <item name="colorControlHighlight">#3325D366</item>
+        <item name="colorSpinnerDropdownText">#075E54</item>
+    </style>
+
+    <style name="AppTheme.VideoCrimson" parent="AppTheme.Base.Light">
+        <item name="android:windowBackground">#FFFFFF</item>
+        <item name="android:textColorPrimary">#202124</item>
+        <item name="android:textColor">#202124</item>
+        <item name="colorPrimary">#C62828</item>
+        <item name="colorAccent">#D93025</item>
+        <item name="android:colorAccent">#D93025</item>
+        <item name="colorControlActivated">#C62828</item>
+        <item name="android:colorControlActivated">#C62828</item>
+        <item name="colorControlNormal">#6F6F6F</item>
+        <item name="android:colorControlNormal">#6F6F6F</item>
+        <item name="colorButtonBackground">#C62828</item>
+        <item name="colorButtonText">#FFFFFF</item>
+        <item name="buttonCornerRadius">6dp</item>
+        <item name="colorControlHighlight">#33D93025</item>
+        <item name="colorSpinnerDropdownText">#C62828</item>
+    </style>
+
+    <style name="AppTheme.LearningLime" parent="AppTheme.Base.Light">
+        <item name="android:windowBackground">#F7FFE9</item>
+        <item name="android:textColorPrimary">#142000</item>
+        <item name="android:textColor">#142000</item>
+        <item name="colorPrimary">#58A700</item>
+        <item name="colorAccent">#FFC800</item>
+        <item name="android:colorAccent">#FFC800</item>
+        <item name="colorControlActivated">#58A700</item>
+        <item name="android:colorControlActivated">#58A700</item>
+        <item name="colorControlNormal">#668247</item>
+        <item name="android:colorControlNormal">#668247</item>
+        <item name="colorButtonBackground">#8CC63F</item>
+        <item name="colorButtonText">#142000</item>
+        <item name="buttonCornerRadius">25dp</item>
+        <!-- This theme overrides the default rectangle with an oval -->
+        <item name="themedButtonBackground">@drawable/button_oval</item>
+        <item name="colorControlHighlight">#3358A700</item>
+        <item name="colorSpinnerDropdownText">#58A700</item>
+    </style>
+
+    <style name="AppTheme.MinimalInk" parent="AppTheme.Base.Light">
+        <item name="android:windowBackground">#FAFAF8</item>
+        <item name="android:textColorPrimary">#111111</item>
+        <item name="android:textColor">#111111</item>
+        <item name="colorPrimary">#111111</item>
+        <item name="colorAccent">#444444</item>
+        <item name="android:colorAccent">#444444</item>
+        <item name="colorControlActivated">#111111</item>
+        <item name="android:colorControlActivated">#111111</item>
+        <item name="colorControlNormal">#666666</item>
+        <item name="android:colorControlNormal">#666666</item>
+        <item name="colorButtonBackground">#111111</item>
+        <item name="colorButtonText">#FFFFFF</item>
+        <item name="buttonCornerRadius">0dp</item>
+        <item name="colorControlHighlight">#22111111</item>
+        <item name="colorSpinnerDropdownText">#111111</item>
+    </style>
+
+    <style name="AppTheme.CoffeeCream" parent="AppTheme.Base.Light">
+        <item name="android:windowBackground">#FFF8ED</item>
+        <item name="android:textColorPrimary">#2D1D12</item>
+        <item name="android:textColor">#2D1D12</item>
+        <item name="colorPrimary">#6F4E37</item>
+        <item name="colorAccent">#A8754B</item>
+        <item name="android:colorAccent">#A8754B</item>
+        <item name="colorControlActivated">#6F4E37</item>
+        <item name="android:colorControlActivated">#6F4E37</item>
+        <item name="colorControlNormal">#806B5E</item>
+        <item name="android:colorControlNormal">#806B5E</item>
+        <item name="colorButtonBackground">#8B5E34</item>
+        <item name="colorButtonText">#FFFFFF</item>
+        <item name="buttonCornerRadius">12dp</item>
+        <item name="colorControlHighlight">#33A8754B</item>
+        <item name="colorSpinnerDropdownText">#6F4E37</item>
+    </style>
+
+    <style name="AppTheme.CloudBlue" parent="AppTheme.Base.Light">
+        <item name="android:windowBackground">#EFF6FF</item>
+        <item name="android:textColorPrimary">#0F172A</item>
+        <item name="android:textColor">#0F172A</item>
+        <item name="colorPrimary">#2563EB</item>
+        <item name="colorAccent">#0284C7</item>
+        <item name="android:colorAccent">#0284C7</item>
+        <item name="colorControlActivated">#2563EB</item>
+        <item name="android:colorControlActivated">#2563EB</item>
+        <item name="colorControlNormal">#64748B</item>
+        <item name="android:colorControlNormal">#64748B</item>
+        <item name="colorButtonBackground">#2563EB</item>
+        <item name="colorButtonText">#FFFFFF</item>
+        <item name="buttonCornerRadius">25dp</item>
+        <item name="colorControlHighlight">#332563EB</item>
+        <item name="colorSpinnerDropdownText">#2563EB</item>
+    </style>
+
+    <style name="AppTheme.RoseQuartz" parent="AppTheme.Base.Light">
+        <item name="android:windowBackground">#FFF4F7</item>
+        <item name="android:textColorPrimary">#3A1723</item>
+        <item name="android:textColor">#3A1723</item>
+        <item name="colorPrimary">#B23A63</item>
+        <item name="colorAccent">#E86A92</item>
+        <item name="android:colorAccent">#E86A92</item>
+        <item name="colorControlActivated">#B23A63</item>
+        <item name="android:colorControlActivated">#B23A63</item>
+        <item name="colorControlNormal">#9B6677</item>
+        <item name="android:colorControlNormal">#9B6677</item>
+        <item name="colorButtonBackground">#B23A63</item>
+        <item name="colorButtonText">#FFFFFF</item>
+        <item name="buttonCornerRadius">16dp</item>
+        <item name="colorControlHighlight">#33E86A92</item>
+        <item name="colorSpinnerDropdownText">#B23A63</item>
+    </style>
+
+    <!-- ========================================= -->
+    <!-- DARK THEMES                               -->
+    <!-- ========================================= -->
+
+    <style name="AppTheme.Dark" parent="AppTheme.Base.Dark">
+        <item name="android:windowBackground">#101114</item>
+        <item name="android:textColorPrimary">#E6E1E5</item>
+        <item name="android:textColor">#E6E1E5</item>
+        <item name="colorPrimary">#1D2028</item>
+        <item name="colorAccent">#9DB7FF</item>
+        <item name="android:colorAccent">#9DB7FF</item>
+        <item name="colorControlActivated">#9DB7FF</item>
+        <item name="android:colorControlActivated">#9DB7FF</item>
+        <item name="colorControlNormal">#BFC3CF</item>
+        <item name="android:colorControlNormal">#BFC3CF</item>
+        <item name="colorButtonBackground">#4169CC</item>
+        <item name="buttonCornerRadius">12dp</item>
+        <item name="colorButtonText">#FFFFFF</item>
+        <item name="colorButtonNormal">#252832</item>
+        <item name="colorControlHighlight">#334169CC</item>
+        <item name="colorSpinnerDropdownText">#E6E1E5</item>
+    </style>
+
+    <style name="AppTheme.OceanicDark" parent="AppTheme.Base.Dark">
+        <item name="android:windowBackground">#081827</item>
+        <item name="android:textColorPrimary">#DDEFFF</item>
+        <item name="android:textColor">#DDEFFF</item>
+        <item name="colorPrimary">#12314C</item>
+        <item name="colorAccent">#4DD5F0</item>
+        <item name="android:colorAccent">#4DD5F0</item>
+        <item name="colorControlActivated">#4DD5F0</item>
+        <item name="android:colorControlActivated">#4DD5F0</item>
+        <item name="colorControlNormal">#8ABBD6</item>
+        <item name="android:colorControlNormal">#8ABBD6</item>
+        <item name="colorButtonBackground">#147A99</item>
+        <item name="colorButtonText">#FFFFFF</item>
+        <item name="buttonCornerRadius">25dp</item>
+        <item name="colorControlHighlight">#334DD5F0</item>
+        <item name="colorSpinnerDropdownText">#DDEFFF</item>
+    </style>
+
+    <style name="AppTheme.SunsetElegance" parent="AppTheme.Base.Dark">
+        <item name="android:windowBackground">#221722</item>
+        <item name="android:textColorPrimary">#F9E7EA</item>
+        <item name="android:textColor">#F9E7EA</item>
+        <item name="colorPrimary">#7A3157</item>
+        <item name="colorAccent">#FF8A65</item>
+        <item name="android:colorAccent">#FF8A65</item>
+        <item name="colorControlActivated">#FF8A65</item>
+        <item name="android:colorControlActivated">#FF8A65</item>
+        <item name="colorControlNormal">#D4A7B8</item>
+        <item name="android:colorControlNormal">#D4A7B8</item>
+        <item name="colorButtonBackground">#A93E5C</item>
+        <item name="colorButtonText">#FFFFFF</item>
+        <item name="buttonCornerRadius">25dp</item>
+        <item name="colorControlHighlight">#33FF8A65</item>
+        <item name="colorSpinnerDropdownText">#F9E7EA</item>
+    </style>
+
+    <style name="AppTheme.DeveloperObsidian" parent="AppTheme.Base.Dark">
+        <item name="android:windowBackground">#0B0D0C</item>
+        <item name="android:textColorPrimary">#D8FFE6</item>
+        <item name="android:textColor">#D8FFE6</item>
+        <item name="colorPrimary">#111614</item>
+        <item name="colorAccent">#00FF9D</item>
+        <item name="android:colorAccent">#00FF9D</item>
+        <item name="colorControlActivated">#00FF9D</item>
+        <item name="android:colorControlActivated">#00FF9D</item>
+        <item name="colorControlNormal">#6B8A78</item>
+        <item name="android:colorControlNormal">#6B8A78</item>
+        <item name="colorButtonBackground">#00D084</item>
+        <item name="colorButtonText">#06130C</item>
+        <item name="buttonCornerRadius">3dp</item>
+        <item name="colorControlHighlight">#3300FF9D</item>
+        <item name="colorSpinnerDropdownText">#00FF9D</item>
+        <item name="android:textAppearanceButton">@style/textAppearanceButtonDark</item>
+    </style>
+
+    <style name="AppTheme.AmberDusk" parent="AppTheme.Base.Dark">
+        <item name="android:windowBackground">#1C1408</item>
+        <item name="android:textColorPrimary">#F8EBCB</item>
+        <item name="android:textColor">#F8EBCB</item>
+        <item name="colorPrimary">#302006</item>
+        <item name="colorAccent">#F6B23D</item>
+        <item name="android:colorAccent">#F6B23D</item>
+        <item name="colorControlActivated">#F6B23D</item>
+        <item name="android:colorControlActivated">#F6B23D</item>
+        <item name="colorControlNormal">#B98C45</item>
+        <item name="android:colorControlNormal">#B98C45</item>
+        <item name="colorButtonBackground">#F3B244</item>
+        <item name="colorButtonText">#241400</item>
+        <item name="buttonCornerRadius">10dp</item>
+        <item name="colorControlHighlight">#33F6B23D</item>
+        <item name="colorSpinnerDropdownText">#F8EBCB</item>
+    </style>
+
+    <style name="AppTheme.MusicNeon" parent="AppTheme.Base.Dark">
+        <item name="android:windowBackground">#080808</item>
+        <item name="android:textColorPrimary">#F2F7F2</item>
+        <item name="android:textColor">#F2F7F2</item>
+        <item name="colorPrimary">#121212</item>
+        <item name="colorAccent">#1ED760</item>
+        <item name="android:colorAccent">#1ED760</item>
+        <item name="colorControlActivated">#1ED760</item>
+        <item name="android:colorControlActivated">#1ED760</item>
+        <item name="colorControlNormal">#A4A9A4</item>
+        <item name="android:colorControlNormal">#A4A9A4</item>
+        <item name="colorButtonBackground">#1ED760</item>
+        <item name="colorButtonText">#07120A</item>
+        <item name="buttonCornerRadius">25dp</item>
+        <item name="colorControlHighlight">#331ED760</item>
+        <item name="colorSpinnerDropdownText">#1ED760</item>
+        <item name="android:textAppearanceButton">@style/textAppearanceButtonDark</item>
+    </style>
+
+    <style name="AppTheme.SocialSunset" parent="AppTheme.Base.Dark">
+        <item name="android:windowBackground">#1B1024</item>
+        <item name="android:textColorPrimary">#FFEAF5</item>
+        <item name="android:textColor">#FFEAF5</item>
+        <item name="colorPrimary">#833AB4</item>
+        <item name="colorAccent">#F77737</item>
+        <item name="android:colorAccent">#F77737</item>
+        <item name="colorControlActivated">#F77737</item>
+        <item name="android:colorControlActivated">#F77737</item>
+        <item name="colorControlNormal">#D4A6C8</item>
+        <item name="android:colorControlNormal">#D4A6C8</item>
+        <item name="colorButtonBackground">#C13584</item>
+        <item name="colorButtonText">#FFFFFF</item>
+        <item name="buttonCornerRadius">25dp</item>
+        <item name="colorControlHighlight">#33F77737</item>
+        <item name="colorSpinnerDropdownText">#FFEAF5</item>
+    </style>
+
+    <style name="AppTheme.RoyalNight" parent="AppTheme.Base.Dark">
+        <item name="android:windowBackground">#111226</item>
+        <item name="android:textColorPrimary">#EEEFFF</item>
+        <item name="android:textColor">#EEEFFF</item>
+        <item name="colorPrimary">#23244A</item>
+        <item name="colorAccent">#D6A84F</item>
+        <item name="android:colorAccent">#D6A84F</item>
+        <item name="colorControlActivated">#D6A84F</item>
+        <item name="android:colorControlActivated">#D6A84F</item>
+        <item name="colorControlNormal">#AAAAD0</item>
+        <item name="android:colorControlNormal">#AAAAD0</item>
+        <item name="colorButtonBackground">#D6A84F</item>
+        <item name="colorButtonText">#1B1206</item>
+        <item name="buttonCornerRadius">14dp</item>
+        <item name="colorControlHighlight">#33D6A84F</item>
+        <item name="colorSpinnerDropdownText">#EEEFFF</item>
+    </style>
+
+    <style name="AppTheme.OLEDBlack" parent="AppTheme.Base.Dark">
+        <item name="android:windowBackground">#000000</item>
+        <item name="android:textColorPrimary">#FFFFFF</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="colorPrimary">#000000</item>
+        <item name="colorAccent">#BB86FC</item>
+        <item name="android:colorAccent">#BB86FC</item>
+        <item name="colorControlActivated">#BB86FC</item>
+        <item name="android:colorControlActivated">#BB86FC</item>
+        <item name="colorControlNormal">#888888</item>
+        <item name="android:colorControlNormal">#888888</item>
+        <item name="colorButtonBackground">#BB86FC</item>
+        <item name="colorButtonText">#000000</item>
+        <item name="buttonCornerRadius">25dp</item>
+        <item name="colorControlHighlight">#33BB86FC</item>
+        <item name="colorSpinnerDropdownText">#FFFFFF</item>
+        <item name="android:textAppearanceButton">@style/textAppearanceButtonDark</item>
+    </style>
+
+    <style name="AppTheme.HighVisibility" parent="AppTheme.Base.Dark">
+        <item name="android:windowBackground">#121212</item>
+        <item name="android:textColorPrimary">#FFFFFF</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="colorPrimary">#121212</item>
+        <item name="colorAccent">#FFEA00</item>
+        <item name="android:colorAccent">#FFEA00</item>
+        <item name="colorControlActivated">#FFEA00</item>
+        <item name="android:colorControlActivated">#FFEA00</item>
+        <item name="colorControlNormal">#CCCCCC</item>
+        <item name="android:colorControlNormal">#CCCCCC</item>
+        <item name="colorButtonBackground">#FFEA00</item>
+        <item name="colorButtonText">#000000</item>
+        <item name="buttonCornerRadius">4dp</item>
+        <item name="colorControlHighlight">#44FFFFFF</item>
+        <item name="colorSpinnerDropdownText">#FFFFFF</item>
+        <item name="android:textAppearanceButton">@style/textAppearanceButtonDark</item>
+    </style>
+
+    <style name="AppTheme.SolarizedDark" parent="AppTheme.Base.Dark">
+        <item name="android:windowBackground">#002B36</item>
+        <item name="android:textColorPrimary">#839496</item>
+        <item name="android:textColor">#839496</item>
+        <item name="colorPrimary">#073642</item>
+        <item name="colorAccent">#268BD2</item>
+        <item name="android:colorAccent">#268BD2</item>
+        <item name="colorControlActivated">#268BD2</item>
+        <item name="android:colorControlActivated">#268BD2</item>
+        <item name="colorControlNormal">#586E75</item>
+        <item name="android:colorControlNormal">#586E75</item>
+        <item name="colorButtonBackground">#268BD2</item>
+        <item name="colorButtonText">#FDF6E3</item>
+        <item name="buttonCornerRadius">8dp</item>
+        <item name="colorControlHighlight">#33268BD2</item>
+        <item name="colorSpinnerDropdownText">#839496</item>
+    </style>
+
+<style name="AppTheme.CyberpunkNeon" parent="AppTheme.Base.Dark">
+        <item name="android:windowBackground">#0B041C</item> <item name="android:textColorPrimary">#E5D4FF</item>
+        <item name="android:textColor">#E5D4FF</item>
+
+        <item name="colorPrimary">#2A0A5E</item>
+        <item name="colorAccent">#00FFFF</item> <item name="android:colorAccent">#00FFFF</item>
+        <item name="colorControlActivated">#FF0055</item> <item name="android:colorControlActivated">#FF0055</item>
+        <item name="colorControlNormal">#7A52CC</item>
+        <item name="android:colorControlNormal">#7A52CC</item>
+
+        <item name="colorButtonBackground">#FF0055</item>
+        <item name="colorButtonText">#FFFFFF</item>
+        <item name="buttonCornerRadius">0dp</item> <item name="colorControlHighlight">#3300FFFF</item>
+        <item name="colorSpinnerDropdownText">#00FFFF</item>
+    </style>
+
+<style name="AppTheme.VintageParchment" parent="AppTheme.Base.Light">
+        <item name="android:windowBackground">#F4ECD8</item> <item name="android:textColorPrimary">#3E2A1E</item> <item name="android:textColor">#3E2A1E</item>
+
+        <item name="colorPrimary">#D9C5A8</item>
+        <item name="colorAccent">#8B3A2B</item> <item name="android:colorAccent">#8B3A2B</item>
+        <item name="colorControlActivated">#8B3A2B</item>
+        <item name="android:colorControlActivated">#8B3A2B</item>
+        <item name="colorControlNormal">#9C846A</item>
+        <item name="android:colorControlNormal">#9C846A</item>
+
+        <item name="colorButtonBackground">#5C4535</item>
+        <item name="colorButtonText">#F4ECD8</item>
+        <item name="buttonCornerRadius">4dp</item>
+
+        <item name="colorControlHighlight">#338B3A2B</item>
+        <item name="colorSpinnerDropdownText">#3E2A1E</item>
+    </style>
+
+<style name="AppTheme.MatchaMint" parent="AppTheme.Base.Light">
+        <item name="android:windowBackground">#F7FAF8</item>
+        <item name="android:textColorPrimary">#1A2E24</item>
+        <item name="android:textColor">#1A2E24</item>
+
+        <item name="colorPrimary">#D1E8D5</item>
+        <item name="colorAccent">#2C8A4A</item>
+        <item name="android:colorAccent">#2C8A4A</item>
+        <item name="colorControlActivated">#2C8A4A</item>
+        <item name="android:colorControlActivated">#2C8A4A</item>
+        <item name="colorControlNormal">#8BB098</item>
+        <item name="android:colorControlNormal">#8BB098</item>
+
+        <item name="colorButtonBackground">#2C8A4A</item>
+        <item name="colorButtonText">#FFFFFF</item>
+        <item name="buttonCornerRadius">24dp</item>
+        <item name="colorControlHighlight">#332C8A4A</item>
+        <item name="colorSpinnerDropdownText">#1A2E24</item>
+    </style>
+
+    <!-- ========================================= -->
+    <!-- DEFAULT/SYSTEM THEMES                     -->
+    <!-- ========================================= -->
+<style name="AppTheme.AndroidDefault" parent="AppTheme.Base.Dark">
+    <item name="colorMirrorConnection">@color/yellow</item>
+    <item name="android:buttonStyle">@android:style/Widget.DeviceDefault.Button</item>
+    <item name="android:textAppearanceButton">@style/textAppearanceButtonAndroidDefault</item>
+    <item name="android:textColorPrimary">#FFFFFFFF</item>
+    <item name="android:textColor">#FFFFFFFF</item>
+    <item name="colorButtonText">#FFFFFFFF</item>
+</style>    
+
+    <style name="ShapeOverride_Oval">
+        <item name="themedButtonBackground">@drawable/button_oval</item>
+    </style>
+    <style name="ShapeOverride_Rectangle">
+        <item name="themedButtonBackground">@drawable/button_rectangle</item>
+    </style>
+
+<style name="textAppearanceButtonAndroidDefault"
+    parent="@android:style/TextAppearance.Material.Widget.Button">
+    <item name="android:textAllCaps">false</item>
+    <item name="android:textColor">#FFFFFFFF</item>
+</style>
+<style name="AppTheme.CupertinoLight" parent="AppTheme.Base.Light">
+    <item name="android:windowBackground">#F2F2F7</item>
+    <item name="android:textColorPrimary">#1C1C1E</item>
+    <item name="android:textColor">#1C1C1E</item>
+    <item name="colorPrimary">#007AFF</item>
+    <item name="colorAccent">#007AFF</item>
+    <item name="android:colorAccent">#007AFF</item>
+    <item name="colorControlActivated">#007AFF</item>
+    <item name="android:colorControlActivated">#007AFF</item>
+    <item name="colorControlNormal">#8E8E93</item>
+    <item name="android:colorControlNormal">#8E8E93</item>
+    <item name="colorButtonBackground">#007AFF</item>
+    <item name="colorButtonText">#FFFFFF</item>
+    <item name="buttonCornerRadius">14dp</item>
+    <item name="colorControlHighlight">#33007AFF</item>
+    <item name="colorSpinnerDropdownText">#007AFF</item>
 </style>
 
+<style name="AppTheme.CupertinoDark" parent="AppTheme.Base.Dark">
+    <item name="android:windowBackground">#000000</item>
+    <item name="android:textColorPrimary">#F2F2F7</item>
+    <item name="android:textColor">#F2F2F7</item>
+    <item name="colorPrimary">#1C1C1E</item>
+    <item name="colorAccent">#0A84FF</item>
+    <item name="android:colorAccent">#0A84FF</item>
+    <item name="colorControlActivated">#0A84FF</item>
+    <item name="android:colorControlActivated">#0A84FF</item>
+    <item name="colorControlNormal">#8E8E93</item>
+    <item name="android:colorControlNormal">#8E8E93</item>
+    <item name="colorButtonBackground">#0A84FF</item>
+    <item name="colorButtonText">#FFFFFF</item>
+    <item name="buttonCornerRadius">14dp</item>
+    <item name="colorControlHighlight">#330A84FF</item>
+    <item name="colorSpinnerDropdownText">#0A84FF</item>
+</style>
+<style name="AppTheme.SagePaper" parent="AppTheme.Base.Light">
+    <item name="android:windowBackground">#EAF3EC</item>
+    <item name="android:textColorPrimary">#173322</item>
+    <item name="android:textColor">#173322</item>
+    <item name="colorPrimary">#2F6B46</item>
+    <item name="colorAccent">#7AA874</item>
+    <item name="android:colorAccent">#7AA874</item>
+    <item name="colorControlActivated">#2F6B46</item>
+    <item name="android:colorControlActivated">#2F6B46</item>
+    <item name="colorControlNormal">#6B8A75</item>
+    <item name="android:colorControlNormal">#6B8A75</item>
+    <item name="colorButtonBackground">#2F6B46</item>
+    <item name="colorButtonText">#FFFFFF</item>
+    <item name="buttonCornerRadius">18dp</item>
+    <item name="colorControlHighlight">#332F6B46</item>
+    <item name="colorSpinnerDropdownText">#2F6B46</item>
+</style>
 
+<style name="AppTheme.SkyMist" parent="AppTheme.Base.Light">
+    <item name="android:windowBackground">#EAF6FF</item>
+    <item name="android:textColorPrimary">#102A43</item>
+    <item name="android:textColor">#102A43</item>
+    <item name="colorPrimary">#2B6CB0</item>
+    <item name="colorAccent">#38BDF8</item>
+    <item name="android:colorAccent">#38BDF8</item>
+    <item name="colorControlActivated">#2B6CB0</item>
+    <item name="android:colorControlActivated">#2B6CB0</item>
+    <item name="colorControlNormal">#6B8BA4</item>
+    <item name="android:colorControlNormal">#6B8BA4</item>
+    <item name="colorButtonBackground">#2B6CB0</item>
+    <item name="colorButtonText">#FFFFFF</item>
+    <item name="buttonCornerRadius">20dp</item>
+    <item name="colorControlHighlight">#332B6CB0</item>
+    <item name="colorSpinnerDropdownText">#2B6CB0</item>
+</style>
+
+<style name="AppTheme.PeachSoft" parent="AppTheme.Base.Light">
+    <item name="android:windowBackground">#FFF0E6</item>
+    <item name="android:textColorPrimary">#3A2118</item>
+    <item name="android:textColor">#3A2118</item>
+    <item name="colorPrimary">#B4532A</item>
+    <item name="colorAccent">#F97316</item>
+    <item name="android:colorAccent">#F97316</item>
+    <item name="colorControlActivated">#B4532A</item>
+    <item name="android:colorControlActivated">#B4532A</item>
+    <item name="colorControlNormal">#9A7A68</item>
+    <item name="android:colorControlNormal">#9A7A68</item>
+    <item name="colorButtonBackground">#B4532A</item>
+    <item name="colorButtonText">#FFFFFF</item>
+    <item name="buttonCornerRadius">16dp</item>
+    <item name="colorControlHighlight">#33F97316</item>
+    <item name="colorSpinnerDropdownText">#B4532A</item>
+</style>
+<style name="AppTheme.MidnightIndigo" parent="AppTheme.Base.Dark">
+    <item name="android:windowBackground">#12142A</item>
+    <item name="android:textColorPrimary">#EEF0FF</item>
+    <item name="android:textColor">#EEF0FF</item>
+    <item name="colorPrimary">#25295A</item>
+    <item name="colorAccent">#8EA2FF</item>
+    <item name="android:colorAccent">#8EA2FF</item>
+    <item name="colorControlActivated">#8EA2FF</item>
+    <item name="android:colorControlActivated">#8EA2FF</item>
+    <item name="colorControlNormal">#A5A9D6</item>
+    <item name="android:colorControlNormal">#A5A9D6</item>
+    <item name="colorButtonBackground">#6675E8</item>
+    <item name="colorButtonText">#FFFFFF</item>
+    <item name="buttonCornerRadius">16dp</item>
+    <item name="colorControlHighlight">#338EA2FF</item>
+    <item name="colorSpinnerDropdownText">#EEF0FF</item>
+</style>
+
+<style name="AppTheme.DeepTeal" parent="AppTheme.Base.Dark">
+    <item name="android:windowBackground">#062321</item>
+    <item name="android:textColorPrimary">#DDFCF7</item>
+    <item name="android:textColor">#DDFCF7</item>
+    <item name="colorPrimary">#0B3A36</item>
+    <item name="colorAccent">#2DD4BF</item>
+    <item name="android:colorAccent">#2DD4BF</item>
+    <item name="colorControlActivated">#2DD4BF</item>
+    <item name="android:colorControlActivated">#2DD4BF</item>
+    <item name="colorControlNormal">#77AAA3</item>
+    <item name="android:colorControlNormal">#77AAA3</item>
+    <item name="colorButtonBackground">#14B8A6</item>
+    <item name="colorButtonText">#04201D</item>
+    <item name="buttonCornerRadius">25dp</item>
+    <item name="colorControlHighlight">#332DD4BF</item>
+    <item name="colorSpinnerDropdownText">#DDFCF7</item>
+    <item name="android:textAppearanceButton">@style/textAppearanceButtonDark</item>
+</style>
+
+<style name="AppTheme.PlumNight" parent="AppTheme.Base.Dark">
+    <item name="android:windowBackground">#241426</item>
+    <item name="android:textColorPrimary">#FBEAFF</item>
+    <item name="android:textColor">#FBEAFF</item>
+    <item name="colorPrimary">#3A1E3D</item>
+    <item name="colorAccent">#D946EF</item>
+    <item name="android:colorAccent">#D946EF</item>
+    <item name="colorControlActivated">#D946EF</item>
+    <item name="android:colorControlActivated">#D946EF</item>
+    <item name="colorControlNormal">#B98AC2</item>
+    <item name="android:colorControlNormal">#B98AC2</item>
+    <item name="colorButtonBackground">#A855F7</item>
+    <item name="colorButtonText">#FFFFFF</item>
+    <item name="buttonCornerRadius">20dp</item>
+    <item name="colorControlHighlight">#33D946EF</item>
+    <item name="colorSpinnerDropdownText">#FBEAFF</item>
+</style>
+<style name="AppTheme.TerminalGreen" parent="AppTheme.Base.Dark">
+    <item name="android:windowBackground">#020403</item>
+    <item name="android:textColorPrimary">#B7FFCB</item>
+    <item name="android:textColor">#B7FFCB</item>
+    <item name="colorPrimary">#07120A</item>
+    <item name="colorAccent">#00FF66</item>
+    <item name="android:colorAccent">#00FF66</item>
+    <item name="colorControlActivated">#00FF66</item>
+    <item name="android:colorControlActivated">#00FF66</item>
+    <item name="colorControlNormal">#4F8F63</item>
+    <item name="android:colorControlNormal">#4F8F63</item>
+    <item name="colorButtonBackground">#00FF66</item>
+    <item name="colorButtonText">#020403</item>
+    <item name="buttonCornerRadius">0dp</item>
+    <item name="colorControlHighlight">#3300FF66</item>
+    <item name="colorSpinnerDropdownText">#00FF66</item>
+    <item name="android:textAppearanceButton">@style/textAppearanceButtonDark</item>
+</style>
+
+<style name="AppTheme.CandyPastel" parent="AppTheme.Base.Light">
+    <item name="android:windowBackground">#FFF7FC</item>
+    <item name="android:textColorPrimary">#35243A</item>
+    <item name="android:textColor">#35243A</item>
+    <item name="colorPrimary">#FF70A6</item>
+    <item name="colorAccent">#70D6FF</item>
+    <item name="android:colorAccent">#70D6FF</item>
+    <item name="colorControlActivated">#FF70A6</item>
+    <item name="android:colorControlActivated">#FF70A6</item>
+    <item name="colorControlNormal">#A786A8</item>
+    <item name="android:colorControlNormal">#A786A8</item>
+    <item name="colorButtonBackground">#FF70A6</item>
+    <item name="colorButtonText">#351022</item>
+    <item name="buttonCornerRadius">25dp</item>
+    <item name="themedButtonBackground">@drawable/button_oval</item>
+    <item name="colorControlHighlight">#3370D6FF</item>
+    <item name="colorSpinnerDropdownText">#B83280</item>
+</style>
+
+    <!-- ========================================= -->
+    <!-- PAINTING + ERGONOMIC THEMES               -->
+    <!-- Appended; original theme ordinals preserved -->
+    <!-- ========================================= -->
+
+<style name="AppTheme.StarryNight" parent="AppTheme.Base.Dark">
+    <item name="android:windowBackground">#0B1A33</item>
+    <item name="android:textColorPrimary">#F7E7A1</item>
+    <item name="android:textColor">#F7E7A1</item>
+    <item name="colorPrimary">#183A5A</item>
+    <item name="colorAccent">#F6C85F</item>
+    <item name="android:colorAccent">#F6C85F</item>
+    <item name="colorControlActivated">#F6C85F</item>
+    <item name="android:colorControlActivated">#F6C85F</item>
+    <item name="colorControlNormal">#6D7FA3</item>
+    <item name="android:colorControlNormal">#6D7FA3</item>
+    <item name="colorButtonBackground">#2E5B88</item>
+    <item name="colorButtonText">#FFFFFF</item>
+    <item name="buttonCornerRadius">16dp</item>
+    <item name="colorControlHighlight">#33F6C85F</item>
+    <item name="colorSpinnerDropdownText">#F7E7A1</item>
+    <item name="colorDialogBorder">#F6C85F</item>
+    <item name="colorHelpBorder">#F6C85F</item>
+</style>
+<style name="AppTheme.GirlWithPearl" parent="AppTheme.Base.Dark">
+    <item name="android:windowBackground">#091018</item>
+    <item name="android:textColorPrimary">#F4EAD2</item>
+    <item name="android:textColor">#F4EAD2</item>
+    <item name="colorPrimary">#15314A</item>
+    <item name="colorAccent">#D8B15F</item>
+    <item name="android:colorAccent">#D8B15F</item>
+    <item name="colorControlActivated">#D8B15F</item>
+    <item name="android:colorControlActivated">#D8B15F</item>
+    <item name="colorControlNormal">#7B8794</item>
+    <item name="android:colorControlNormal">#7B8794</item>
+    <item name="colorButtonBackground">#15314A</item>
+    <item name="colorButtonText">#FFFFFF</item>
+    <item name="buttonCornerRadius">12dp</item>
+    <item name="colorControlHighlight">#33D8B15F</item>
+    <item name="colorSpinnerDropdownText">#F4EAD2</item>
+    <item name="colorDialogBorder">#D8B15F</item>
+    <item name="colorHelpBorder">#D8B15F</item>
+</style>
+<style name="AppTheme.NightWatch" parent="AppTheme.Base.Dark">
+    <item name="android:windowBackground">#120E0A</item>
+    <item name="android:textColorPrimary">#F2E6D0</item>
+    <item name="android:textColor">#F2E6D0</item>
+    <item name="colorPrimary">#3A2418</item>
+    <item name="colorAccent">#B6562A</item>
+    <item name="android:colorAccent">#B6562A</item>
+    <item name="colorControlActivated">#B6562A</item>
+    <item name="android:colorControlActivated">#B6562A</item>
+    <item name="colorControlNormal">#9E7C62</item>
+    <item name="android:colorControlNormal">#9E7C62</item>
+    <item name="colorButtonBackground">#6A3B1E</item>
+    <item name="colorButtonText">#FFFFFF</item>
+    <item name="buttonCornerRadius">8dp</item>
+    <item name="colorControlHighlight">#33B6562A</item>
+    <item name="colorSpinnerDropdownText">#F2E6D0</item>
+    <item name="colorDialogBorder">#B6562A</item>
+    <item name="colorHelpBorder">#B6562A</item>
+</style>
+<style name="AppTheme.RothkoDusk" parent="AppTheme.Base.Dark">
+    <item name="android:windowBackground">#1A0E14</item>
+    <item name="android:textColorPrimary">#F6D8BE</item>
+    <item name="android:textColor">#F6D8BE</item>
+    <item name="colorPrimary">#4B1823</item>
+    <item name="colorAccent">#D8703F</item>
+    <item name="android:colorAccent">#D8703F</item>
+    <item name="colorControlActivated">#D8703F</item>
+    <item name="android:colorControlActivated">#D8703F</item>
+    <item name="colorControlNormal">#A36C62</item>
+    <item name="android:colorControlNormal">#A36C62</item>
+    <item name="colorButtonBackground">#4B1823</item>
+    <item name="colorButtonText">#FFFFFF</item>
+    <item name="buttonCornerRadius">18dp</item>
+    <item name="colorControlHighlight">#33D8703F</item>
+    <item name="colorSpinnerDropdownText">#F6D8BE</item>
+    <item name="colorDialogBorder">#D8703F</item>
+    <item name="colorHelpBorder">#D8703F</item>
+</style>
+<style name="AppTheme.AlmondBlossom" parent="AppTheme.Base.Light">
+    <item name="android:windowBackground">#F7FBF5</item>
+    <item name="android:textColorPrimary">#18352F</item>
+    <item name="android:textColor">#18352F</item>
+    <item name="colorPrimary">#79A8C9</item>
+    <item name="colorAccent">#D986A5</item>
+    <item name="android:colorAccent">#D986A5</item>
+    <item name="colorControlActivated">#4C7F99</item>
+    <item name="android:colorControlActivated">#4C7F99</item>
+    <item name="colorControlNormal">#7D9C90</item>
+    <item name="android:colorControlNormal">#7D9C90</item>
+    <item name="colorButtonBackground">#4C7F99</item>
+    <item name="colorButtonText">#FFFFFF</item>
+    <item name="buttonCornerRadius">22dp</item>
+    <item name="colorControlHighlight">#33D986A5</item>
+    <item name="colorSpinnerDropdownText">#18352F</item>
+    <item name="colorDialogBorder">#79A8C9</item>
+    <item name="colorHelpBorder">#D986A5</item>
+</style>
+<style name="AppTheme.GreatWave" parent="AppTheme.Base.Light">
+    <item name="android:windowBackground">#F2F7FA</item>
+    <item name="android:textColorPrimary">#102A43</item>
+    <item name="android:textColor">#102A43</item>
+    <item name="colorPrimary">#1F6FA3</item>
+    <item name="colorAccent">#D9541E</item>
+    <item name="android:colorAccent">#D9541E</item>
+    <item name="colorControlActivated">#1F6FA3</item>
+    <item name="android:colorControlActivated">#1F6FA3</item>
+    <item name="colorControlNormal">#6B8CA3</item>
+    <item name="android:colorControlNormal">#6B8CA3</item>
+    <item name="colorButtonBackground">#1F6FA3</item>
+    <item name="colorButtonText">#FFFFFF</item>
+    <item name="buttonCornerRadius">14dp</item>
+    <item name="colorControlHighlight">#33D9541E</item>
+    <item name="colorSpinnerDropdownText">#102A43</item>
+    <item name="colorDialogBorder">#1F6FA3</item>
+    <item name="colorHelpBorder">#D9541E</item>
+</style>
+<style name="AppTheme.WaterLilies" parent="AppTheme.Base.Light">
+    <item name="android:windowBackground">#F4F7EE</item>
+    <item name="android:textColorPrimary">#22322D</item>
+    <item name="android:textColor">#22322D</item>
+    <item name="colorPrimary">#6D8B74</item>
+    <item name="colorAccent">#8C6BAE</item>
+    <item name="android:colorAccent">#8C6BAE</item>
+    <item name="colorControlActivated">#4F735B</item>
+    <item name="android:colorControlActivated">#4F735B</item>
+    <item name="colorControlNormal">#7F9A88</item>
+    <item name="android:colorControlNormal">#7F9A88</item>
+    <item name="colorButtonBackground">#4F735B</item>
+    <item name="colorButtonText">#FFFFFF</item>
+    <item name="buttonCornerRadius">20dp</item>
+    <item name="colorControlHighlight">#338C6BAE</item>
+    <item name="colorSpinnerDropdownText">#22322D</item>
+    <item name="colorDialogBorder">#6D8B74</item>
+    <item name="colorHelpBorder">#8C6BAE</item>
+</style>
+<style name="AppTheme.Sunflowers" parent="AppTheme.Base.Light">
+    <item name="android:windowBackground">#FFF8E1</item>
+    <item name="android:textColorPrimary">#33230A</item>
+    <item name="android:textColor">#33230A</item>
+    <item name="colorPrimary">#D49A00</item>
+    <item name="colorAccent">#2E7D32</item>
+    <item name="android:colorAccent">#2E7D32</item>
+    <item name="colorControlActivated">#D49A00</item>
+    <item name="android:colorControlActivated">#D49A00</item>
+    <item name="colorControlNormal">#8A6D1F</item>
+    <item name="android:colorControlNormal">#8A6D1F</item>
+    <item name="colorButtonBackground">#D49A00</item>
+    <item name="colorButtonText">#000000</item>
+    <item name="buttonCornerRadius">12dp</item>
+    <item name="colorControlHighlight">#332E7D32</item>
+    <item name="colorSpinnerDropdownText">#33230A</item>
+    <item name="colorDialogBorder">#D49A00</item>
+    <item name="colorHelpBorder">#2E7D32</item>
+    <item name="android:textAppearanceButton">@style/textAppearanceButtonDark</item>
+</style>
+<style name="AppTheme.MondrianGrid" parent="AppTheme.Base.Light">
+    <item name="android:windowBackground">#FAFAF5</item>
+    <item name="android:textColorPrimary">#111111</item>
+    <item name="android:textColor">#111111</item>
+    <item name="colorPrimary">#0057B8</item>
+    <item name="colorAccent">#D91E18</item>
+    <item name="android:colorAccent">#D91E18</item>
+    <item name="colorControlActivated">#0057B8</item>
+    <item name="android:colorControlActivated">#0057B8</item>
+    <item name="colorControlNormal">#666666</item>
+    <item name="android:colorControlNormal">#666666</item>
+    <item name="colorButtonBackground">#0057B8</item>
+    <item name="colorButtonText">#FFFFFF</item>
+    <item name="buttonCornerRadius">0dp</item>
+    <item name="colorControlHighlight">#33D91E18</item>
+    <item name="colorSpinnerDropdownText">#111111</item>
+    <item name="colorDialogBorder">#111111</item>
+    <item name="colorHelpBorder">#D91E18</item>
+</style>
+<style name="AppTheme.UkiyoeVermilion" parent="AppTheme.Base.Light">
+    <item name="android:windowBackground">#FFF3E0</item>
+    <item name="android:textColorPrimary">#2B1D14</item>
+    <item name="android:textColor">#2B1D14</item>
+    <item name="colorPrimary">#0E4D64</item>
+    <item name="colorAccent">#C44524</item>
+    <item name="android:colorAccent">#C44524</item>
+    <item name="colorControlActivated">#0E4D64</item>
+    <item name="android:colorControlActivated">#0E4D64</item>
+    <item name="colorControlNormal">#7D7A62</item>
+    <item name="android:colorControlNormal">#7D7A62</item>
+    <item name="colorButtonBackground">#0E4D64</item>
+    <item name="colorButtonText">#FFFFFF</item>
+    <item name="buttonCornerRadius">6dp</item>
+    <item name="colorControlHighlight">#33C44524</item>
+    <item name="colorSpinnerDropdownText">#2B1D14</item>
+    <item name="colorDialogBorder">#0E4D64</item>
+    <item name="colorHelpBorder">#C44524</item>
+</style>
+<style name="AppTheme.SunlightReadable" parent="AppTheme.Base.Light">
+    <item name="android:windowBackground">#FFFDF2</item>
+    <item name="android:textColorPrimary">#111827</item>
+    <item name="android:textColor">#111827</item>
+    <item name="colorPrimary">#005EA8</item>
+    <item name="colorAccent">#C2410C</item>
+    <item name="android:colorAccent">#C2410C</item>
+    <item name="colorControlActivated">#005EA8</item>
+    <item name="android:colorControlActivated">#005EA8</item>
+    <item name="colorControlNormal">#4B5563</item>
+    <item name="android:colorControlNormal">#4B5563</item>
+    <item name="colorButtonBackground">#005EA8</item>
+    <item name="colorButtonText">#FFFFFF</item>
+    <item name="buttonCornerRadius">8dp</item>
+    <item name="colorControlHighlight">#33005EA8</item>
+    <item name="colorSpinnerDropdownText">#111827</item>
+    <item name="colorDialogBorder">#005EA8</item>
+    <item name="colorHelpBorder">#C2410C</item>
+</style>
+<style name="AppTheme.PaperLowGlare" parent="AppTheme.Base.Light">
+    <item name="android:windowBackground">#F6F1E7</item>
+    <item name="android:textColorPrimary">#202124</item>
+    <item name="android:textColor">#202124</item>
+    <item name="colorPrimary">#3F5F73</item>
+    <item name="colorAccent">#8A5A44</item>
+    <item name="android:colorAccent">#8A5A44</item>
+    <item name="colorControlActivated">#3F5F73</item>
+    <item name="android:colorControlActivated">#3F5F73</item>
+    <item name="colorControlNormal">#766C61</item>
+    <item name="android:colorControlNormal">#766C61</item>
+    <item name="colorButtonBackground">#3F5F73</item>
+    <item name="colorButtonText">#FFFFFF</item>
+    <item name="buttonCornerRadius">12dp</item>
+    <item name="colorControlHighlight">#338A5A44</item>
+    <item name="colorSpinnerDropdownText">#202124</item>
+    <item name="colorDialogBorder">#766C61</item>
+    <item name="colorHelpBorder">#3F5F73</item>
+</style>
+<style name="AppTheme.DeuteranopiaSafe" parent="AppTheme.Base.Light">
+    <item name="android:windowBackground">#F8FAFC</item>
+    <item name="android:textColorPrimary">#0F172A</item>
+    <item name="android:textColor">#0F172A</item>
+    <item name="colorPrimary">#2563EB</item>
+    <item name="colorAccent">#F97316</item>
+    <item name="android:colorAccent">#F97316</item>
+    <item name="colorControlActivated">#2563EB</item>
+    <item name="android:colorControlActivated">#2563EB</item>
+    <item name="colorControlNormal">#64748B</item>
+    <item name="android:colorControlNormal">#64748B</item>
+    <item name="colorButtonBackground">#1D4ED8</item>
+    <item name="colorButtonText">#FFFFFF</item>
+    <item name="buttonCornerRadius">12dp</item>
+    <item name="colorControlHighlight">#33F97316</item>
+    <item name="colorSpinnerDropdownText">#0F172A</item>
+    <item name="colorDialogBorder">#2563EB</item>
+    <item name="colorHelpBorder">#F97316</item>
+</style>
+<style name="AppTheme.ProtanopiaSafeDark" parent="AppTheme.Base.Dark">
+    <item name="android:windowBackground">#07111F</item>
+    <item name="android:textColorPrimary">#E6F0FF</item>
+    <item name="android:textColor">#E6F0FF</item>
+    <item name="colorPrimary">#12395A</item>
+    <item name="colorAccent">#FFB000</item>
+    <item name="android:colorAccent">#FFB000</item>
+    <item name="colorControlActivated">#FFB000</item>
+    <item name="android:colorControlActivated">#FFB000</item>
+    <item name="colorControlNormal">#7A8CA8</item>
+    <item name="android:colorControlNormal">#7A8CA8</item>
+    <item name="colorButtonBackground">#0077B6</item>
+    <item name="colorButtonText">#FFFFFF</item>
+    <item name="buttonCornerRadius">12dp</item>
+    <item name="colorControlHighlight">#33FFB000</item>
+    <item name="colorSpinnerDropdownText">#E6F0FF</item>
+    <item name="colorDialogBorder">#0077B6</item>
+    <item name="colorHelpBorder">#FFB000</item>
+</style>
+<style name="AppTheme.TritanopiaSafe" parent="AppTheme.Base.Light">
+    <item name="android:windowBackground">#FAFAFA</item>
+    <item name="android:textColorPrimary">#1A1A1A</item>
+    <item name="android:textColor">#1A1A1A</item>
+    <item name="colorPrimary">#00796B</item>
+    <item name="colorAccent">#C2185B</item>
+    <item name="android:colorAccent">#C2185B</item>
+    <item name="colorControlActivated">#00796B</item>
+    <item name="android:colorControlActivated">#00796B</item>
+    <item name="colorControlNormal">#5F6F6B</item>
+    <item name="android:colorControlNormal">#5F6F6B</item>
+    <item name="colorButtonBackground">#00796B</item>
+    <item name="colorButtonText">#FFFFFF</item>
+    <item name="buttonCornerRadius">10dp</item>
+    <item name="colorControlHighlight">#33C2185B</item>
+    <item name="colorSpinnerDropdownText">#1A1A1A</item>
+    <item name="colorDialogBorder">#00796B</item>
+    <item name="colorHelpBorder">#C2185B</item>
+</style>
+<style name="AppTheme.SeniorContrast" parent="AppTheme.Base.Light">
+    <item name="android:windowBackground">#FFFFFF</item>
+    <item name="android:textColorPrimary">#000000</item>
+    <item name="android:textColor">#000000</item>
+    <item name="colorPrimary">#003B73</item>
+    <item name="colorAccent">#B35400</item>
+    <item name="android:colorAccent">#B35400</item>
+    <item name="colorControlActivated">#003B73</item>
+    <item name="android:colorControlActivated">#003B73</item>
+    <item name="colorControlNormal">#4B5563</item>
+    <item name="android:colorControlNormal">#4B5563</item>
+    <item name="colorButtonBackground">#003B73</item>
+    <item name="colorButtonText">#FFFFFF</item>
+    <item name="buttonCornerRadius">8dp</item>
+    <item name="colorControlHighlight">#33003B73</item>
+    <item name="colorSpinnerDropdownText">#000000</item>
+    <item name="colorDialogBorder">#000000</item>
+    <item name="colorHelpBorder">#003B73</item>
+</style>
+<style name="AppTheme.AlarmReserved" parent="AppTheme.Base.Dark">
+    <item name="android:windowBackground">#0E1116</item>
+    <item name="android:textColorPrimary">#E8EDF2</item>
+    <item name="android:textColor">#E8EDF2</item>
+    <item name="colorPrimary">#243447</item>
+    <item name="colorAccent">#4DA3FF</item>
+    <item name="android:colorAccent">#4DA3FF</item>
+    <item name="colorControlActivated">#4DA3FF</item>
+    <item name="android:colorControlActivated">#4DA3FF</item>
+    <item name="colorControlNormal">#7B8794</item>
+    <item name="android:colorControlNormal">#7B8794</item>
+    <item name="colorButtonBackground">#2F6FA8</item>
+    <item name="colorButtonText">#FFFFFF</item>
+    <item name="buttonCornerRadius">10dp</item>
+    <item name="colorControlHighlight">#334DA3FF</item>
+    <item name="colorSpinnerDropdownText">#E8EDF2</item>
+    <item name="colorDialogBorder">#4DA3FF</item>
+    <item name="colorHelpBorder">#4DA3FF</item>
+</style>
+<style name="AppTheme.PeripheralSalience" parent="AppTheme.Base.Dark">
+    <item name="android:windowBackground">#101014</item>
+    <item name="android:textColorPrimary">#F2F2F4</item>
+    <item name="android:textColor">#F2F2F4</item>
+    <item name="colorPrimary">#20202A</item>
+    <item name="colorAccent">#00C2A8</item>
+    <item name="android:colorAccent">#00C2A8</item>
+    <item name="colorControlActivated">#00C2A8</item>
+    <item name="android:colorControlActivated">#00C2A8</item>
+    <item name="colorControlNormal">#8D99A6</item>
+    <item name="android:colorControlNormal">#8D99A6</item>
+    <item name="colorButtonBackground">#00A88F</item>
+    <item name="colorButtonText">#001B17</item>
+    <item name="buttonCornerRadius">25dp</item>
+    <item name="colorControlHighlight">#3300C2A8</item>
+    <item name="colorSpinnerDropdownText">#F2F2F4</item>
+    <item name="colorDialogBorder">#00A88F</item>
+    <item name="colorHelpBorder">#00C2A8</item>
+    <item name="android:textAppearanceButton">@style/textAppearanceButtonDark</item>
+</style>
 
 </resources>
-

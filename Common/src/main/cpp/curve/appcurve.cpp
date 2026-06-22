@@ -124,7 +124,18 @@ strsepconcat  getsensorhelp(string_view starttext,string_view name1,string_view 
 //   const sensor *sensor=sensors->getsensor(sensorindex);
     time_t stime=hist->getstarttime(),etime= hist->officialendtime();
     //time_t reallends=hist->isLibre3()?etime:sensor->maxtime();
-    time_t reallends=hist->expectedEndTime();
+
+    uint32_t restarttime;
+   std::string_view lasttext;
+    time_t lasttime;
+   if(hist->isAidexX()&&(restarttime=hist->getRestartTime(),restarttime>stime)) {
+        lasttime=restarttime;
+        lasttext="Clear time: "sv ;
+        }
+    else {
+         lasttext= usedtext->sensorexpectedend;
+         lasttime=hist->expectedEndTime();
+         }
     char lastscanbuf[50],lastpollbuf[50];
     time_t lastscan=hist->getlastscantime();
     time_t lastpolltime=hist->getlastpolltime();
@@ -144,12 +155,12 @@ strsepconcat  getsensorhelp(string_view starttext,string_view name1,string_view 
                             ((nu<etime)?(strsepconcat(string_view(""),sep1,string_view(ends, appcurve.datestr(etime,ends)),sep2)):""),
            nu<etime?usedtext->sensorends:"", 
            sep1,
-           string_view(pends, appcurve.datestr(reallends,pends)),sep2, usedtext->sensorexpectedend,
+           string_view(pends, appcurve.datestr(lasttime,pends)),sep2,lasttext ,
            endstr);;
       }
 else  {
     return strsepconcat(string_view(""),starttext ,name1,hist->showsensorname(),name2,usedtext->sensorstarted,sep2,string_view(starts, appcurve.datestr(stime,starts)),!hist->isLibre2()?"":sep1,!hist->isLibre2()?"":usedtext->lastscanned,!hist->isLibre2()?"":sep2,!hist->isLibre2()?"":string_view(lastscanbuf,appcurve.datestr(lastscan,lastscanbuf)),lastpolltime>0?strsepconcat(string_view(""),sep1,usedtext->laststream,sep2):"",lastpolltime>0?string_view(lastpollbuf,appcurve.datestr(lastpolltime,lastpollbuf)):"",nu<etime?strsepconcat(string_view(""),sep1,usedtext->sensorends,sep2):"",
-nu<etime?string_view(ends, appcurve.datestr(etime,ends)):string_view("",0),sep1,usedtext->sensorexpectedend,sep2,string_view(pends, appcurve.datestr(reallends,pends)),endstr);;
+nu<etime?string_view(ends, appcurve.datestr(etime,ends)):string_view("",0),sep1,lasttext,sep2,string_view(pends, appcurve.datestr(lasttime,pends)),endstr);;
      }
     }
 #ifndef DONTTALK
@@ -236,7 +247,7 @@ int64_t JCurve::doehier(int menu,int item,bool right) {
             switch(item) {
                 case 0 :  nrmenu=0;return 1LL*0x10+1;                
                 case 1 : nrmenu=0;return 3LL*0x10;
-                case 2: //invertcolors=!invertcolors; setinvertcolors(invertcolors) ; return -1LL; break;
+                case 2: 
 
                     nrmenu=0;
                     return menuel(0,2);
@@ -702,7 +713,8 @@ strsepconcat getsensortext(const SensorGlucoseData *hist) {
             }
         else {
             histgegs gegs(hist);
-            return gegs.getsensorhelp("","<h1>","</h1>","<br><br>",
+            return gegs.getsensorhelp("","<h1>&nbsp;&nbsp;","</h1>","<br><br>",
+
             #ifdef WEAROS
             "<br>"
             #else
@@ -1775,7 +1787,8 @@ constexpr const int between=
     res=std::to_chars(ptr+trendlen+trendoff,hourminstr+hourminstrlen,value,std::chars_format::fixed,gludecimal);
     for(auto it=res.ptr;it<oldres;++it)
         *it=' ';
-                    LOGGER("new hourminstr=%s\n", hourminstr);
+    size_t totsize=res.ptr-hourminstr;
+    LOGGER("new hourminstr=%s size=%d hourminstrlen=%d last3=%s\n", hourminstr,totsize,hourminstrlen,hourminstr+totsize-3);
 #else
     static        int oldend=0;
 //    auto aftertime=hourminstr+;
@@ -1789,9 +1802,17 @@ constexpr const int between=
         aftertime[i]=' ';
     
     oldend=endpos;
+    size_t totsize=endpos+timelen;
 
-                    LOGGER("old hourminstr=%s\n", hourminstr);
+                    LOGGER("old hourminstr=%s size=%d hourminstrlen=%d\n", hourminstr,totsize,hourminstrlen);
 #endif
+        #ifdef WEAROS
+//            if(totsize) usedtext->menustr[1][1]={hourminstr,totsize+5};
+
+            if(totsize) usedtext->menustr[1][1]={hourminstr,totsize*2};
+        #else
+          //  usedtext->menustr[3][0]={hourminstr,timelen};
+        #endif
                     return ;
 
                     }
@@ -1873,7 +1894,7 @@ void initopengl(float small,float menu,float density,float headin) {
     if(!openglstarted||appcurve.headsize!=headin||appcurve.smallsize!=small||appcurve.menusize!=menu||appcurve.density!=density) {
             appcurve.setfontsize(small, menu, density, headin);
             }
-    appcurve.invertcolorsset(settings->data()->invertcolors);
+    appcurve.invertcolorsset(settings->data()->invertcolorsget());
     appcurve.showcalibratedscans=settings->data()->showcalibratedscans;
     appcurve.showcalibratedstream=settings->data()->showcalibratedstream;
     appcurve.showcalibratedhistories=settings->data()->showcalibratedhistories;
@@ -1891,6 +1912,7 @@ void initopengl(float small,float menu,float density,float headin) {
 
 const int *menuopt0[]={nullptr,nullptr,nullptr, nullptr,nullptr};
 const int **optionsmenu[]={menuopt0,nullptr};
+//const int **optionsmenu[]={nullptr,nullptr};
 
 const int **preoptionsmenu[]={nullptr,nullptr};
 constexpr const int menulen[]={arsizer(jugglucotext::menustr0),arsizer(jugglucotext::menustr2)};
@@ -2119,7 +2141,7 @@ void JCurve::showtext(NVGcontext* avg, time_t nu, int menu) {
         bounds.array);
 
     float maxtextwidth = bounds.xmax - bounds.xmin;
-
+    LOGGER("0: width=%.1f\n",maxtextwidth);
     for(int i = 1; i < nrmenu; i++) {
         y += menutextheight;
         nvgTextBounds(avg, 0, y,
@@ -2127,9 +2149,11 @@ void JCurve::showtext(NVGcontext* avg, time_t nu, int menu) {
             bounds.array);
 
         const float w = bounds.xmax - bounds.xmin;
+       LOGGER("%d: width=%.1f\n",i,w);
         if(w > maxtextwidth)
             maxtextwidth = w;
     }
+    LOGGER("maxtextwidth=%.1f\n",maxtextwidth);
 
     float contentwidth = maxtextwidth;
     if(preoptions)
@@ -2153,6 +2177,7 @@ void JCurve::showtext(NVGcontext* avg, time_t nu, int menu) {
         * density;
 
     const float maxmenuwidth = 280 * density;
+//    const float maxmenuwidth = 400 * density;
 
     if(mwidth < minmenu)
         mwidth = minmenu;
@@ -2161,6 +2186,7 @@ void JCurve::showtext(NVGcontext* avg, time_t nu, int menu) {
 
     x += (menuplace - mwidth) / 2;
 
+LOGGER("mwidth=%.1f x=%.1f\n",mwidth,x);
 #ifdef WEAROS
     if(menu == 0)
         x += xrand;
@@ -2198,21 +2224,24 @@ void JCurve::showtext(NVGcontext* avg, time_t nu, int menu) {
 
         float curLeftOfText = contentright - maxtextwidth;
 
-        if(options) {
+        //if(options)
+        {
             optalign = NVG_ALIGN_LEFT | NVG_ALIGN_TOP;
             optx = curLeftOfText - gap - append;
             curLeftOfText = optx;
         }
-
+/*
         if(preoptions) {
             prealign = NVG_ALIGN_LEFT | NVG_ALIGN_TOP;
             prex = curLeftOfText - gap - prepend;
         }
+*/
+
     } else {
         // Left-aligned toward screen center.
         textalign = NVG_ALIGN_LEFT | NVG_ALIGN_TOP;
         textx = contentleft;
-
+/*
         float curRightOfText = contentleft + maxtextwidth;
 
         if(options) {
@@ -2225,6 +2254,7 @@ void JCurve::showtext(NVGcontext* avg, time_t nu, int menu) {
             prealign = NVG_ALIGN_LEFT | NVG_ALIGN_TOP;
             prex = curRightOfText + gap;
         }
+*/
     }
 #else
 
@@ -2301,149 +2331,6 @@ void JCurve::showtext(NVGcontext* avg, time_t nu, int menu) {
 }
 
 
-/*
- void    JCurve::showtext(NVGcontext* avg ,time_t nu,int menu) {
-LOGAR("showtext");
-#ifdef WEAROS
-    if(menu==1) {
-        setnowmenu(nu);
-//        setnewamount();
-        }
-#else
-    if(menu==3)
-        setnowmenu(nu);
-//    if(menu==1) setnewamount();
-#endif
-    const string_view *menuitem=usedtext->menustr[menu];
-    nrmenu=getmenulen(menu);
-    constexpr const float randsize=
-    #ifdef WEAROS
-    10
-    #else
-    16
-    #endif
-    ;
-
-    bounds_t bounds;
-
-
-     float xrand=randsize*density;
-     float yrand=randsize*density;
-    float menuplace= dwidth/ maxmenu;
-    float x=xrand+menu*menuplace,starty=yrand+statusbarheight,y=starty;
-
-    nvgTextAlign(avg,NVG_ALIGN_LEFT|NVG_ALIGN_TOP);
-
-
-    nvgFontFaceId(avg,menufont);
-    nvgFontSize(avg, menusize);
-    constexpr    const char preset[]="✓  ";
-    constexpr        const char preunset[]="-     ";
-    constexpr int presetlen=sizeof(preset)-1;
-    static const float  prewidth=getsetlen(avg, 50,  50, preset,preset+presetlen, bounds);
-    const int **preoptions= hascalibrations?preoptionsmenu[menu]:nullptr;
-
-    const int prepend=preoptions?prewidth:0;
-     nvgTextBounds(avg, x,  y, menuitem[0].data(),menuitem[0].data()+menuitem[0].size(), bounds.array);
-     float maxx=bounds.xmax;
-     float maxwidth=bounds.xmax-bounds.xmin;
-     for(int i=1;i<nrmenu;i++) {
-        y+=menutextheight;
-         nvgTextBounds(avg, x,  y, menuitem[i].data(),menuitem[i].data()+menuitem[i].size(), bounds.array);
-         if(maxx<bounds.xmax)
-            maxx=bounds.xmax;
-         float maxwidthone=bounds.xmax-bounds.xmin;
-         if(maxwidthone>maxwidth)
-             maxwidth=maxwidthone;
-        }
-    maxwidth+=prepend;
-    maxx+=prepend;
-    float height=y+bounds.ymax-bounds.ymin;
-    nvgBeginPath(avg);
-     nvgFillColor(avg, *getmenucolor());
-     float mwidth=maxx-x+2*xrand;
-     float minmenu=
-#ifdef WEAROS
-     80
-#else
-    128
-#endif
-
-             *density;
-     float maxmenu=280*density;
-     if(mwidth<minmenu)
-         mwidth=minmenu;
-    else
-        if(mwidth>maxmenu)
-            mwidth=maxmenu;
-     x+=(menuplace-mwidth)/2;
-     #ifdef WEAROS
-     if(menu==0)
-         x+=xrand;
-     #endif
-     menupos={ x-xrand, starty-yrand,x-xrand+ mwidth, height+yrand};
-     logmenupos();
-     nvgRect(avg, x-xrand, starty-yrand, mwidth, height-starty+2*yrand);
-    nvgFill(avg);
-#ifdef WEAROS
-if(menu==0) {
-    nvgTextAlign(avg,NVG_ALIGN_RIGHT|NVG_ALIGN_TOP);
-    x+=maxwidth;
-    }
-#endif
-    y=starty;
-     nvgFillColor(avg, *getmenuforegroundcolor());
-    if(preoptions) {
-         for(int i=0;i<nrmenu;i++) {
-             if(const int *optr=preoptions[i]) {
-                const char *op=*optr?preset:preunset;
-                nvgText(avg, x ,y,op ,op+presetlen );
-                }
-            y+=menutextheight;
-            }
-        }
-     const float textx=x+prepend;
-     y=starty;
-     for(int i=0;i<nrmenu;i++) {
-        nvgText(avg, textx,y, menuitem[i].data(), menuitem[i].data()+menuitem[i].size());
-        y+=menutextheight;
-        }
-
-    if(const int **options=optionsmenu[menu]) {
-        y=starty;
-constexpr        const char setmark[]="[x] ";
-    constexpr    const char unsetmark[]="[  ]";
-//   constexpr     const char setmark[]="☑";
-//constexpr        const char unsetmark[]="☐";
-//        const char setmark[]="✅";
-      //  const char unsetmark[]="☐"; 
-  //      const char setmark[]="✔";
-   //     const char unsetmark[]="○";
-
-        constexpr int setmarklen=sizeof(unsetmark)-1;
-        float xpos;
-#ifdef WEAROS
-        if(menu==0) {
-            xpos=textx;
-            }
-        else 
-#endif
-        {
-        static const float  dlen=getsetlen(avg, x,  y, setmark,setmark+setmarklen, bounds);
-         xpos=x-2*xrand+mwidth-dlen;
-         }
-         for(int i=0;i<nrmenu;i++) {
-             if(const int *optr=options[i]) {
-                const char *op=*optr?setmark:unsetmark;
-                nvgText(avg, xpos ,y,op ,op+setmarklen );
-                }
-            y+=menutextheight;
-            }
-        }
-
-    LOGAR("end showtext");
-    }
-*/
 void JCurve::withbottom() {
     extern const int maxmenulen;
     dheight=height-dtop-dbottom;

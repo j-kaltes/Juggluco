@@ -65,7 +65,7 @@ static public  EditText getedit(Context act, String text) {
       label.setText(text);
       return label;
       }
-public static void show(Activity context,View parent) {
+public static void show(MainActivity context,View parent) {
    EnableControls(parent,false);
    var delete=getbutton(context,context.getString(R.string.delete));
    var save=getbutton(context,R.string.save);
@@ -131,7 +131,7 @@ public static void show(Activity context,View parent) {
 
    layout.setPadding(laypad*2,0,laypad*2,0);
     layout.setBackgroundResource(R.drawable.dialogbackground);
-    context.addContentView(layout, params);
+    context.addMyContentView(layout, params);
      MainActivity.setonback( () -> {
         EnableControls(parent,true);
         removeContentView(layout); 

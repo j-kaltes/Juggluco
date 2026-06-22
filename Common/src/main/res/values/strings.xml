@@ -79,7 +79,7 @@
  <string name="startsapp">Scanning starts app</string>
  <string name="patchedlibrebroadcast">Patched Libre</string>
  <string name="disablecamerakey">Disable camera key</string>
- <string name="invertscreen">Invert screen</string>
+ <string name="invertscreen">Rotate 180°</string>
  <string name="nfcsound">NFC sound</string>
  <string name="manuallyscale">Manually scale </string>
  <string name="time">Time</string>
@@ -161,7 +161,7 @@
  <string name="saved">"saved"</string>
  <string name="savefailed">Save failed</string>
  <string name="notsaved">Not saved</string>
- <string name="failedbyexception">Failed by exception</string>
+ <string name="failedbyexception">Failed (exception)</string>
  <string name="nodata">No data</string>
  <string name="addsensorenddate">Add sensor end date to calendar app</string>
  <string name="enddatesensor">"End date sensor "</string>
@@ -263,7 +263,7 @@
     <string name="wentwrong">Something went wrong</string>
     <string name="dosis">" dose "</string>
     <string name="doses">" doses "</string>
- <string name="penfailed">Reading insulin pen failed. Try again.</string>
+ <string name="penfailed">Failed to read insulin pen. Please try again.</string>
  <string name="changeinsulin">"Change insulin type to "</string>
     <string name="type">"Type: "</string>
     <string name="dosesprior">Only add doses from after:</string>
@@ -414,7 +414,7 @@
  <string name="valuenotification">Value notification</string>
  <string name="nothing"></string>
  <string name="scantranstitle">Scan TRANSMITTER data matrix</string>
- <string name="scantransmessage">Sibionics 2 sensor data matrix succesfully scanned. \nScan now the transmitter data matrix."</string>
+ <string name="scantransmessage">Sibionics 2 sensor data matrix successfully scanned. \nScan now the transmitter data matrix.</string>
  <string name="mirrorscansucces">Successfully added connection to left middle menu→Mirror.</string>
  <string name="resettitle">Reset</string>
  <string name="resetmessage">Clears transmitter memory. Should be pressed before using a new sensor in an already used transmitter.</string>
@@ -456,7 +456,7 @@
 <string name="icelabel">ICE label</string>
 <string name="username">Username</string>
 <string name="turnserver">Turn Server</string>
- <string name="ICElabeltooshort">ERROR: ICE label should be minimally 16 bytes</string>
+ <string name="ICElabeltooshort">ERROR: ICE label must be at least 16 bytes.</string>
  <string name="attr_ble_scan">Bluetooth glucose sensor scanning</string>
     <string name="divorcename">Unpair</string>
     <string name="divorcemessage">Allow sensor to connect to another phone or watch (instead of this one)?</string>
@@ -484,8 +484,22 @@
     <string name="messagewebserverneed">Go to left menu->Settings->Exchange data->Web server to activate webserver</string>
     <string name="nostreamvalues">No Stream values</string>
     <string name="nohistoryvalues">No History values</string>
-    <string name="jugglucoupdate">Update time</string>
+    <string name="jugglucoupdate">Reading age</string>
 
-    <string name="sibionics3">UNTESTED Sibionics 3 - com.sisensing.gs3</string>
+     <string name="retrieve">Retrieve from server</string>
+     <string name="wrongcode">Wrong QR code</string>
+     <string name="leave">Leave?</string>
+     <string name="id0message">ID should be different from 0</string>
+     <string name="emailnotused">Email password combination not used and will not be saved.</string>
+    <string name="connecttoserver">Connecting to server…</string>
+    <string name="retrievefailed">Retrieving account id failed</string>
+    <string name="themesname">Themes:</string>
+    <string name="buttonshape">Button shape</string>
+    <string name="radius">"Radius: "</string>
+    <string name="rectangle">Rectangle</string>
+    <string name="oval">Oval</string>
+    <string name="light">Light</string>
+    <string name="dark">Dark</string>
+    <string name="apply">Apply</string>
 
 </resources>

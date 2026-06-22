@@ -69,7 +69,7 @@ static void snToBytes(const uint8_t *buf,int len,uint8_t *out) {
     bool initAidexXcrypto() {return true;}
 #endif
 extern bool initAidexXcrypto();
-static bool md5sum(const unsigned char msg[],int msglen,unsigned char out[16]) {
+bool md5sum(const unsigned char msg[],int msglen,unsigned char out[16]) {
   static bool init=initAidexXcrypto();
   unsigned int out_len = 0;
   EVP_MD_CTX *ctx = EVP_MD_CTX_new();
@@ -146,3 +146,19 @@ int main() {
     aidexXaskKey(serial,md5b);
     } 
 #endif
+
+// g++ -std=c++26 md5demo.cpp -lcrypto
+/*
+#include <print>
+int main() {
+    constexpr std::string_view msg = "teststring";
+
+    unsigned char md5b[16];
+    int msglen=msg.size();
+    md5sum((const unsigned char *)msg.data(),msglen,md5b);
+
+    for (unsigned i = 0; i < 16; ++i) std::print("{:02x}", md5b[i]);
+    std::println("");
+}
+*/
+

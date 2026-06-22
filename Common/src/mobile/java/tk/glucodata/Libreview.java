@@ -633,7 +633,7 @@ private static void resendDateDialog(MainActivity context,View parent) {
                     WRAP_CONTENT,
                     Gravity.CENTER_HORIZONTAL);
     params.topMargin=MainActivity.systembarTop;
-   context.addContentView(layout, params);
+   context.addMyContentView(layout, params);
    }
 
 private static   void askclearlibreview(MainActivity context,long fromtime,Runnable r) {
@@ -716,19 +716,7 @@ private static void getAccountid(MainActivity context,    Predicate<Boolean> get
    );
   manual.setPadding(0,0,(int)(tk.glucodata.GlucoseCurve.metrics.density*10),0);
   final Layout layout=new Layout(context, (lay, w, h) -> {
-  /*
-      var height=GlucoseCurve.getheight();
-      var width=GlucoseCurve.getwidth();
-      if(w>=width||h>=height) {
-         lay.setX(0);
-         }
-      else {
-         lay.setX((width-w)/2); 
-         };
-      lay.setY(MainActivity.systembarTop);
-      */
-      return new int[] {w,h};}, 
-            new View[]{manual,editid,help},new View[]{writedown,fromlibreview,close,save});
+      return new int[] {w,h};}, new View[]{manual,editid,help},new View[]{writedown,fromlibreview,close,save});
 
       layout.setBackgroundResource(R.drawable.dialogbackground);
       int pad= (int)tk.glucodata.GlucoseCurve.metrics.density*7;
@@ -736,7 +724,7 @@ private static void getAccountid(MainActivity context,    Predicate<Boolean> get
     var  params =    new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.CENTER_HORIZONTAL);
     params.topMargin= MainActivity.systembarTop;
 
-    context.addContentView(layout, params);
+    context.addMyContentView(layout, params);
    Runnable closerun=()-> {
       layout.setVisibility(GONE);
       removeContentView(layout);
@@ -942,7 +930,7 @@ public static void  config(MainActivity act, View settingsview,CheckDirectionBox
                     WRAP_CONTENT,
                     Gravity.CENTER_HORIZONTAL);
     params.topMargin=MainActivity.systembarTop;
-   act.addContentView(layout, params);
+   act.addMyContentView(layout, params);
    
    }
 

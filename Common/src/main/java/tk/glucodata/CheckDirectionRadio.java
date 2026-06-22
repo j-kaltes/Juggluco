@@ -3,7 +3,8 @@ package tk.glucodata;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.RadioButton;
-public class CheckDirectionRadio extends RadioButton {
+import androidx.appcompat.widget.AppCompatRadioButton;
+public class CheckDirectionRadio extends AppCompatRadioButton {
     public CheckDirectionRadio(Context context) {
         super(context);
     }
@@ -16,7 +17,4 @@ public class CheckDirectionRadio extends RadioButton {
         super(context, attrs, defStyleAttr);
     }
 
-    public CheckDirectionRadio(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-    }
 }

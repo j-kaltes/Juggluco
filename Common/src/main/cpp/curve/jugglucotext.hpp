@@ -36,7 +36,7 @@ using namespace std::literals;
 
 #ifdef INJUGGLUCO
 struct Shortcut_t {const char name[12];const float value;} ;
-constexpr int hourminstrlen=25;
+constexpr int hourminstrlen=30;
 extern char hourminstr[hourminstrlen];
 typedef const char *charptr_t;
 typedef std::pair<std::string_view,std::string_view> errortype;

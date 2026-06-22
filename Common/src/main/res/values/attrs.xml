@@ -4,4 +4,17 @@
         <attr name="supportsAlpha"
               format="boolean"/>
     </declare-styleable>
+    <attr name="dialogbackground" format="reference" />
+    <attr name="helpbackground" format="reference" />
+    <attr name="colorSpinnerDropdownText" format="color|reference" />
+    <attr name="themedButtonBackground" format="reference" />
+
+    <attr name="colorDialogBackground" format="color|reference" />
+    <attr name="colorDialogBorder" format="color|reference" />
+
+    <attr name="colorHelpBackground" format="color|reference" />
+    <attr name="colorHelpBorder" format="color|reference" />
+
+    <attr name="colorMirrorConnection" format="color|reference" />
+     <attr name="isAppLightTheme" format="boolean" />
 </resources>

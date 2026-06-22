@@ -387,7 +387,6 @@
     <string name="chsibionics">Chinese Sibionics - com.sisensing.sisensingcgm</string>
     <string name="hematonix">Hematonix - com.sisensing.rusibionics</string>
     <string name="sibionics2">Sibionics 2/Split - com.sisensing.eco</string>
-    <string name="sibionics3">Sibionics 3 - com.sisensing.gs3</string>
     <string name="datapresent">"डेटा उपलब्ध: "</string>
     <string name="overwrite">ओवरराइट करें?</string>
     <string name="autoqr">ऑटो QR</string>

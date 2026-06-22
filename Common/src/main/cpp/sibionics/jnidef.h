@@ -14,10 +14,10 @@ typedef jbyteArray  JNICALL (*algtype(getBinaryStructAlgorithmContext))(JNIEnv *
 
 typedef jint  JNICALL (*algtype(setBinaryStructAlgorithmContext))(JNIEnv *env, jclass thiz,jobject algContext,jbyteArray bar );
 
+
+#ifdef JNI_HANDLE
  typedef   jint  JNICALL (*algtype(V120Activation))(JNIEnv *env, jclass thiz,jint i, jboolean z, jbyteArray bArr, jlong j, jint i2, jbyteArray bArr2, jint i3);
-
  typedef   jint  JNICALL (*algtype(V120Reset))(JNIEnv *env, jclass thiz,jint i2, jboolean z, jbyteArray  bArr, jint i3, jbyteArray bArr2, int i4);
-
 typedef jint JNICALL (*algtype(v120RegisterKey))(JNIEnv *env, jclass thiz,jbyteArray bArr, jint i, jbyteArray bArr2);
 typedef jint JNICALL (*algtype( V120ApplyAuthentication))(JNIEnv *env, jclass thiz, jint i, jboolean z, jint i2, jbyteArray bArr, jbyteArray bArr2, jint i3);
  typedef   jint  JNICALL (*algtype(V120IsecUpdate))(JNIEnv *env, jclass thiz,jint i, jboolean z, jbyteArray bArr, jlong j, jbyteArray bArr2, jint i3);
@@ -31,5 +31,6 @@ extern algtype(V120RawData) V120RawData;
 extern algtype(V120Activation) V120Activation;
 extern algtype(V120Reset) V120Reset;
 extern algtype(V120IsecUpdate) V120IsecUpdate;
+#endif
 };
 

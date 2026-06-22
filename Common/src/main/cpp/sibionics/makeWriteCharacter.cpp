@@ -94,15 +94,15 @@ int  main(int argc,char **argv) {
 
 
 extern Data_t askindexdata(jlong index) ;
-extern "C" JNIEXPORT jboolean JNICALL   fromjava(siNotchinese)(JNIEnv *env, jclass cl,jlong dataptr) {
+extern "C" JNIEXPORT jboolean JNICALL   fromjava(siNewSI)(JNIEnv *env, jclass cl,jlong dataptr) {
 	const SensorGlucoseData *usedhist=reinterpret_cast<streamdata *>(dataptr)->hist ; 
 	if(!usedhist)
 		return false;
    if(usedhist==Sensoren::isdeleted)  {
-        LOGAR("siNotchinese isdeleted");
+        LOGAR("siNewSI isdeleted");
         return false;
         }
-	return usedhist->notchinese();
+	return usedhist->newSI();
    }
    
 extern "C" JNIEXPORT jbyteArray JNICALL   fromjava(siAsknewdata)(JNIEnv *env, jclass cl,jlong dataptr) {
@@ -112,8 +112,8 @@ extern "C" JNIEXPORT jbyteArray JNICALL   fromjava(siAsknewdata)(JNIEnv *env, jc
 	if(!usedhist)
 		return nullptr;
 	const int index=usedhist->getSiIndex();
-#ifdef NOTCHINESE
-	if(usedhist->notchinese()) {
+#ifdef NEWSIBIONICS
+	if(usedhist->newSI()) {
 		auto dat=askindexdata(index);
 		int len=dat.used;
 		jbyte *data=(jbyte*)dat.data->data();

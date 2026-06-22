@@ -327,7 +327,7 @@ static final int offset=isWearable?2:0;
    }
 static void show(MainActivity act, long sensorptr,View parent) {
      if(parent!=null) parent.setVisibility(GONE);
-      act.lightBars(false);
+      act.themeLightBars();
       RecyclerView recycle = new RecyclerView(act);
       recycle.setHasFixedSize(true);
       recycle.setLayoutParams(new ViewGroup.LayoutParams(   ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
@@ -389,8 +389,8 @@ static void show(MainActivity act, long sensorptr,View parent) {
         float density=GlucoseCurve.metrics.density;
     layout.setPaddingRelative((int)(density*5.0)+MainActivity.systembarStart,MainActivity.systembarTop,MainActivity.systembarEnd+(int)(density*8.0),MainActivity.systembarBottom);
 
-     act.addContentView(layout, new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
-//      act.addContentView(layout, new ViewGroup.LayoutParams( WRAP_CONTENT, WRAP_CONTENT));
+     act.addMyContentView(layout, new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
+//      act.addMyContentView(layout, new ViewGroup.LayoutParams( WRAP_CONTENT, WRAP_CONTENT));
       MainActivity.setonback(()-> {
            act.lightBars(!getInvertColors( ));
            removeContentView(layout);

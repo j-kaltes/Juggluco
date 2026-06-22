@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 		
+        <color name="darkdialogbackground">#ff185ABC</color> 
         <color name="dialogbackground">#ff185ABC</color> 
+        <color name="lightdialogbackground">@android:color/white</color> 
     <color name="purple_500">#9C27B0</color>
     <color name="purple_200">#CE93D8</color>
     <color name="red">#FF0000</color>
     <color name="white">@android:color/white</color>
     <color name="black">@android:color/black</color>
+    <color name="yellow">#FFFF00</color>
     <color name="dark_blue">#1565C0</color>
+    <color name="blue">@color/dark_blue</color>
     <color name="light_blue">#4FC3F7</color>
 
 </resources>

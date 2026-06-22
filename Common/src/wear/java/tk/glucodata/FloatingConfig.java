@@ -21,7 +21,6 @@
 
 package tk.glucodata;
 
-import static android.graphics.Color.WHITE;
 import static android.view.View.GONE;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
@@ -239,7 +238,7 @@ static public void show(MainActivity act,View view) {
    scroll.setScrollbarFadingEnabled(true);
    scroll.setVerticalScrollBarEnabled(true);
    scroll.addView(layout);
-    act.addContentView(scroll, new ViewGroup.LayoutParams(MATCH_PARENT,MATCH_PARENT));
+    act.addMyContentView(scroll, new ViewGroup.LayoutParams(MATCH_PARENT,MATCH_PARENT));
 
 
     act.setonback(()-> {
@@ -276,16 +275,16 @@ static public void showcolors(MainActivity act) {
     View view=dialog.getview();
     var layout=new FrameLayout(act);
     layout.addView(view, new ViewGroup.LayoutParams((int)(width*0.72), (int)(height*0.72)));
-    act.addContentView(layout,  new ViewGroup.LayoutParams(MATCH_PARENT,MATCH_PARENT));
+    act.addMyContentView(layout,  new ViewGroup.LayoutParams(MATCH_PARENT,MATCH_PARENT));
     layout.setBackgroundColor(Applic.backgroundcolor);
     layout.setOnTouchListener(new BackGesture(act));
     var ok=useclose?getbutton(act,"Ok"):null;
     if(ok!=null) {
         ok.setOnClickListener(v->MainActivity.doonback());
-        //act.addContentView(ok, new ViewGroup.LayoutParams(WRAP_CONTENT,WRAP_CONTENT));
+        //act.addMyContentView(ok, new ViewGroup.LayoutParams(WRAP_CONTENT,WRAP_CONTENT));
 
         var okparams= new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.TOP|Gravity.CENTER_HORIZONTAL);
-        act.addContentView(ok, okparams);
+        act.addMyContentView(ok, okparams);
 
 
        // ok.setX((int)(width*.45));

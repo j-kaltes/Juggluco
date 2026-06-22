@@ -171,7 +171,7 @@ void mkchangelabel(MainActivity context,Runnable onsave,View parent) {
        editlabel.setPadding(pad,0,pad,0);
         var params= new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.CENTER_HORIZONTAL);
         params.topMargin=MainActivity.systembarTop;
-        context.addContentView(editlabel, params);
+        context.addMyContentView(editlabel, params);
 
 
 
@@ -325,7 +325,7 @@ void    mklabellayout(View parent ) {
     });
 
         labellayout.setBackgroundColor(Applic.backgroundcolor);
-        context.addContentView(labellayout, new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
+        context.addMyContentView(labellayout, new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
    /* }
     else {
         labellayout.setVisibility(VISIBLE); 

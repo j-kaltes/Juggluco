@@ -190,14 +190,12 @@ int SensorGlucoseData::updatescan(crypt_t *pass,Connect *connect,int ind,int sen
             std::vector<subdata> vect;
             vect.reserve(4);
             vect.push_back({meminfo.data(),0,offsetof(Info,pin)});
-            const int siBlueToothNumlen=
-              (siSubtype()==3?
-                (offsetof(Info,siDeviceName)+16):
-                offsetof(Info,siDeviceNamelen))
-                                                -offsetof(Info,siBlueToothNum);
+            const int siBlueToothNumlen= (siSubtype()==3?  (offsetof(Info,siDeviceName)+16): offsetof(Info,siDeviceNamelen))-offsetof(Info,siBlueToothNum);
             vect.push_back({meminfo.data()+offsetof(Info,siBlueToothNum),offsetof(Info,siBlueToothNum),siBlueToothNumlen});
             vect.push_back({meminfo.data()+offsetof(Info,lockcount),offsetof(Info,lockcount),sizeof(Info::lockcount)});
+            vect.push_back({meminfo.data()+offsetof(Info,manualwarmup),offsetof(Info,manualwarmup),sizeof(Info::manualwarmup)});
             vect.push_back({meminfo.data()+offsetof(Info,siIdlen),offsetof(Info,siIdlen),sizeof(Info::siIdlen)+ sizeof(Info::siId) });
+            vect.push_back({meminfo.data()+offsetof(Info,warmupstartpos),offsetof(Info,warmupstartpos),sizeof(Info::warmupstartpos)});
              if(!connect->senddata(pass,vect, infopath)) {
                 LOGSTRING("GLU: senddata info.data failed\n");
                 return 0;

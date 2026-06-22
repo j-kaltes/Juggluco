@@ -16,37 +16,18 @@
 /*      You should have received a copy of the GNU General Public License            */
 /*      along with Juggluco. If not, see <https://www.gnu.org/licenses/>.            */
 /*                                                                                   */
-/*      Fri Jan 27 15:22:01 CET 2023                                                 */
+/*      Thu Mar 28 20:14:36 CET 2024                                                 */
 
 
-#include <stdio.h>
-#include <stdint.h>
-struct RequestHistory {
-	int8_t kind[2];
-	int8_t arg;
-	int32_t from;
-	} __attribute__ ((packed));
-//com.adc.trident.app.frameworks.mobileservices.libre3.libre3DPCRLInterface::DPPatchControlHistoricalDataBackfillGreaterEqual
-int historyControl(int arg,int from,uint8_t *command) {
-	*reinterpret_cast<RequestHistory*>(command)={.kind={1,0},.arg=static_cast<int8_t>(arg),.from=from};
-	return 0;
-	}
 
 
-char *getbytestr(uint8_t *uit,int arlen) {
-  	char *strbuf=new char[arlen*3+1];
-           int uitlen=0;
-      for(int i=0;i<arlen;i++) {
-	       uitlen+=sprintf(strbuf+uitlen," %02X",uit[i]);
-	       }
-	     return strbuf;
-	     }
-int main() {
-	constexpr const	int arlen= sizeof(RequestHistory);
-	uint8_t uit[arlen];
-	historyControl(1,19640,uit);
-	char *strbuf=getbytestr(uit,arlen);
-	puts(strbuf);
-	delete[] strbuf;
-	
-	}
+package tk.glucodata;
+
+
+public class Si3GattCallback extends SuperGattCallback {
+
+	public Si3GattCallback(String SerialNumber, long dataptr) {
+		super(SerialNumber,dataptr,0x15);
+	   }
+
+}

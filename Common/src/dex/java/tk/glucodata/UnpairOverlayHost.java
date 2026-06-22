@@ -12,7 +12,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public final class UnpairOverlayHost {
-    private final Activity activity;
+    private final MainActivity activity;
 
     private View overlay;
     private TextView titleView;
@@ -21,13 +21,13 @@ public final class UnpairOverlayHost {
     private Button closeButton;
     private boolean destroyed;
  static private final String LOG_ID="UnpairOverlayHost";
-    public UnpairOverlayHost(Activity activity,String title) {
+    public UnpairOverlayHost(MainActivity activity,String title) {
         Log.i(LOG_ID,LOG_ID+"(act,"+title+")");
         this.activity = activity;
 
         activity.runOnUiThread(()-> ensureAdded(title));
     }
-    public UnpairOverlayHost(Activity activity,int res) {
+    public UnpairOverlayHost(MainActivity activity,int res) {
           this(activity,activity.getString(res)); 
         }
 
@@ -121,7 +121,7 @@ public final class UnpairOverlayHost {
               }
         });
 
-        activity.addContentView(
+        activity.addMyContentView(
                 overlay,
                 new ViewGroup.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT,

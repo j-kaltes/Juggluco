@@ -136,7 +136,8 @@ void settext(String text) {
 Button use;
 Sensors(MainActivity act,boolean givehelp,boolean select) {
        textview=new TextView(act);
-       textview.setTextColor(Color.WHITE);
+       textview.setTextColor(util.getColorFromTheme(act, android.R.attr.textColorPrimary));
+
        textview.setTextIsSelectable(true);
        var close=getbutton(act,R.string.closename);
        calview=getbutton(act,R.string.calibrations);
@@ -319,8 +320,8 @@ static    void show(MainActivity act,String text, long sensorptr) {
         scroll.setBackgroundColor(Applic.backgroundcolor);
         }
 
-   act.addContentView(scroll, params);
-//    act.addContentView(sensors.viewgroup, new ViewGroup.LayoutParams(param,param));
+   act.addMyContentView(scroll, params);
+//    act.addMyContentView(sensors.viewgroup, new ViewGroup.LayoutParams(param,param));
     MainActivity.setonback(() -> {
             removeContentView(sensors.viewgroup);
             act.sensorsVisible=false;

@@ -24,6 +24,7 @@ package tk.glucodata;
 import androidx.appcompat.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.TypedArray;
 import android.graphics.BlendMode;
 import android.graphics.BlendModeColorFilter;
 import android.graphics.Paint;
@@ -204,26 +205,26 @@ public class Backup {
     private CheckDirectionBox   visible;
       int hostindex=-1;
 
-   public    static void setradio(CheckDirectionRadio[] radios) {
-         for(CheckDirectionRadio but:radios) {
-         but.setOnCheckedChangeListener( (buttonView,  isChecked) -> {
-            if(isChecked) {
-            for(CheckDirectionRadio b:radios) 
-                if(b!=buttonView)
-               b.setChecked(false);
-               }
-            });
-         }
+   public    static void setradio(RadioButton[] radios) {
+         for(var but:radios) {
+             but.setOnCheckedChangeListener( (buttonView,  isChecked) -> {
+                if(isChecked) {
+                    for(var b:radios)
+                        if(b!=buttonView)
+                       b.setChecked(false);
+                       }
+                    });
+             }
         }
-      static void setradiotest(CheckDirectionRadio[] radios,Object[] ap) {
-         for(CheckDirectionRadio but:radios) {
+      static public void setradiotest(RadioButton[] radios,Object[] ap) {
+         for(var but:radios) {
          but.setOnCheckedChangeListener( (buttonView,  isChecked) -> {
             if(isChecked) {
                for(var o:ap) {
                  var a = (Consumer<View>) o;
                   a.accept(buttonView);
                }
-            for(CheckDirectionRadio b:radios) 
+            for(var b:radios)
                 if(b!=buttonView)
                b.setChecked(false);
                }
@@ -348,7 +349,7 @@ void makeAutoQR(MainActivity act,View parent) {
      // layout.setY( (GlucoseCurve.getheight()-layout.getMeasuredHeight() +MainActivity.systembarTop-MainActivity.systembarBottom)*.5f);
     var  params =    new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.CENTER|Gravity.CENTER_HORIZONTAL);
 
-      act.addContentView(layout, params);
+      act.addMyContentView(layout, params);
       layout.setBackgroundResource(R.drawable.dialogbackground);
       Runnable closerun=()->{
          removeContentView(layout);
@@ -547,14 +548,17 @@ CheckDirectionBox ICE;
            editpass.setMinEms(6);
           visible = new CheckDirectionBox(act);// visible.setText(R.string.visible);
           visible.setButtonDrawable(R.drawable.password_visible);
+//          visible.setButtonDrawable(R.drawable.visibility_toggle);
    //      visible.setMinimumWidth(0); visible.setMinWidth(0);
       visible.setOnCheckedChangeListener( (buttonView,  isChecked)-> {
-
+               var sel=editpass.getSelectionStart();
                editpass.setInputType(isChecked?InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD:InputType.TYPE_TEXT_VARIATION_PASSWORD);
                if(isChecked)
                   editpass.setTransformationMethod(null);
                else
                   editpass.setTransformationMethod(new PasswordTransformationMethod());
+               editpass.setSelection(sel);
+
             });
 
       Password.setOnCheckedChangeListener( (buttonView,  isChecked)-> {
@@ -704,7 +708,7 @@ CheckDirectionBox ICE;
       hostview.setSmoothScrollingEnabled(true);
        hostview.setVerticalScrollBarEnabled(Applic.scrollbar);
        hostview.setScrollbarFadingEnabled(true);
-       act.addContentView(hostview, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT));
+       act.addMyContentView(hostview, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT));
        hostview.setBackgroundColor(backgroundcolor);
     Consumer<Boolean> setICE=(isChecked) -> {
             final int vis=isChecked?VISIBLE:hide;
@@ -936,7 +940,7 @@ ViewGroup.LayoutParams params;
 
       modify.setOnClickListener(v->     changehostview(act,pos,layall));
 //      final var lpar=isWearable?MATCH_PARENT: WRAP_CONTENT;
-      act.addContentView(layall, params);
+      act.addMyContentView(layall, params);
       var margs=getMargins(layall);
       margs.topMargin=MainActivity.systembarTop*3/4;
       margs.leftMargin=MainActivity.systembarLeft*3/4;
@@ -961,7 +965,7 @@ ViewGroup.LayoutParams params;
    HostViewAdapter hostadapt;
 //   Button alarms;
    public  void mkbackupview(MainActivity act) {
-      act.lightBars(false);
+      act.themeLightBars();
       act.showui=true;
       if(!isWearable&&!Natives.getsystemUI()) {
          act.showSystemUI();
@@ -1152,8 +1156,8 @@ ViewGroup.LayoutParams params;
          battery.setVisibility(GONE);
       }
       lay.setBackgroundColor(Applic.backgroundcolor);
-   //   act.lightBars(false);
-      act.addContentView(lay, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT));
+   //   act.themeLightBars();
+      act.addMyContentView(lay, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT));
       }
 
 
@@ -1174,6 +1178,18 @@ ViewGroup.LayoutParams params;
          this.pview=parent;
          }
 
+
+private int getMirrorListColor(MainActivity act) {
+    if(act.mirrorlistcolor==-1) {
+        int[] attrs = new int[] { R.attr.colorMirrorConnection };
+
+        try(TypedArray typedArray = act.obtainStyledAttributes(attrs)) {
+            act.mirrorlistcolor = typedArray.getColor(0, android.graphics.Color.RED);
+ //           typedArray.recycle();
+            }
+        }
+    return act.mirrorlistcolor;
+    }
        @NonNull
       @Override
        public HostViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -1195,7 +1211,7 @@ ViewGroup.LayoutParams params;
              view.setGravity(Gravity.LEFT);
              view.setPaddingRelative((int)(GlucoseCurve.metrics.density*10.0),0,0,af);
              }
-            view.setTextColor(YELLOW);
+           view.setTextColor(getMirrorListColor((MainActivity)view.getContext()));
            return new HostViewHolder(view,pview);
 
        }

@@ -106,7 +106,7 @@ static public class LibreNumberAdapter extends RecyclerView.Adapter<LibreNumberH
 
 
 
-public static void    mklayout(Activity context, int night, CheckDirectionBox donum, int[] donothing, View parent) {
+public static void    mklayout(MainActivity context, int night, CheckDirectionBox donum, int[] donothing, View parent) {
 	parent.setVisibility(INVISIBLE);
 	Button close = new Button(context);
 	close.setText(R.string.closename);
@@ -146,7 +146,7 @@ public static void    mklayout(Activity context, int night, CheckDirectionBox do
     });
 
         librenumlayout.setBackgroundColor(Applic.backgroundcolor);
-        context.addContentView(librenumlayout, new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
+        context.addMyContentView(librenumlayout, new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
 	help.setOnClickListener(v->{
 		EnableControls(librenumlayout,false);
 		tk.glucodata.help.help(context.getString(night==1?R.string.nightnumhelp:R.string.librenumhelp),context,l-> {

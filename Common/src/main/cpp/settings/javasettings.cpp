@@ -299,6 +299,9 @@ extern bool wrongfiles() ;
 extern        std::vector<std::string_view> usedfiles;
 #include "curve/jugglucotext.hpp"
 extern bool rootcheck;
+extern bool magicmounts;
+extern const std::string_view selfmounts;
+
 extern "C" JNIEXPORT jstring  JNICALL   fromjava(advanced)(JNIEnv *env, jclass cl) {
     if(!rootcheck)
         return nullptr;
@@ -309,16 +312,24 @@ extern "C" JNIEXPORT jstring  JNICALL   fromjava(advanced)(JNIEnv *env, jclass c
         constexpr int tuslen=sizeof(tus)-1;
         for(auto el:usedfiles)
             totlen+=el.size()+tuslen;
+        if(magicmounts)
+            totlen+=selfmounts.size()+tuslen;
         char buf[totlen];
         int it=textlen;
         memcpy(buf,usedtext->advancedstart.data(),it);
-        if(usedfiles.size()>1&&usedtext->add_s)
+        if((usedfiles.size()+magicmounts)>1&&usedtext->add_s)
             buf[it++]='s';
         memcpy(buf+it,endstart,sizeof(endstart)-1);
         it+= sizeof(endstart)-1;
         for(auto el:usedfiles) {
             memcpy(buf+it,el.data(),el.size());
             it+=el.size();
+            memcpy(buf+it,tus,tuslen);
+            it+=tuslen;
+            }
+        if(magicmounts) {
+            memcpy(buf+it,selfmounts.data(),selfmounts.size());
+            it+=selfmounts.size();
             memcpy(buf+it,tus,tuslen);
             it+=tuslen;
             }
@@ -430,7 +441,7 @@ extern "C" JNIEXPORT void  JNICALL   fromjava(setScreenOrientation)(JNIEnv *env,
     settings->data()->orientation=val;
     }
 extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getInvertColors)(JNIEnv *env, jclass cl) {
-    return settings->data()->invertcolors;
+    return settings->data()->invertcolorsget();
     }
 
 
@@ -1988,4 +1999,26 @@ extern "C" JNIEXPORT void  JNICALL   fromjava(settimeOnComplication)(JNIEnv *env
     }
 extern "C" JNIEXPORT jboolean  JNICALL   fromjava(gettimeOnComplication)(JNIEnv *env, jclass cl) {
     return settings->data()->timeOnComplication;
+    }
+
+
+extern "C" JNIEXPORT void  JNICALL   fromjava(setTheme)(JNIEnv *env, jclass cl,jint val) {
+    settings->data()->ThemeGet()=val;
+    }
+extern "C" JNIEXPORT jint  JNICALL   fromjava(getTheme)(JNIEnv *env, jclass cl) {
+    return settings->data()->ThemeGet();
+    }
+
+extern "C" JNIEXPORT void  JNICALL   fromjava(setradius)(JNIEnv *env, jclass cl,jint val) {
+    settings->data()->radiusGet()=val;
+    }
+extern "C" JNIEXPORT jint  JNICALL   fromjava(getradius)(JNIEnv *env, jclass cl) {
+    return settings->data()->radiusGet();
+    }
+
+extern "C" JNIEXPORT void  JNICALL   fromjava(setisOval)(JNIEnv *env, jclass cl,jboolean val) {
+    settings->data()->isOvalset(val);
+    }
+extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getisOval)(JNIEnv *env, jclass cl) {
+    return settings->data()->isOvalget();
     }

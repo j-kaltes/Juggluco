@@ -124,7 +124,7 @@ public static void mkview(MainActivity act) {
                 }
             }
         ); 
-    act.addContentView(lay, new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
+    act.addMyContentView(lay, new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
    ok.setOnClickListener(v-> {
         MainActivity.doonback();
         });

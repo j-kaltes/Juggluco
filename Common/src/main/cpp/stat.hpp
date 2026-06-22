@@ -19,13 +19,18 @@
 /*      Fri Jan 27 12:35:09 CET 2023                                                 */
 ///data/dalvik-cache/i386/system@framework@XposedBridge.jar@classes.dex/.trdpx
 ///data/dalvik-cache/i386/system@framework@arm64@boot.oat@xposed
+
 constexpr const std::string_view statnames[] = {
-#if defined(__aarch64__) ||  defined(__i386__)
-	"/data/dalvik-cache/" archname "/system@framework@" archname "@boot.oat@xposed",
+#if defined(__aarch64__) || defined(__i386__)||defined(__arm__) 
+	"/data/dalvik-cache/" archname "/system@framework@arm64@boot.oat@xposed",
 	"/data/dalvik-cache/oat/" archname "/xposed_XTypedArraySuperClass.odex",
+#if defined(__arm__) 
+"/data/dalvik-cache/oat/thumbv7a/xposed_XTypedArraySuperClass.odex",
+"/data/dalvik-cache/thumbv7a/system@framework@arm64@boot.oat@xposed",
+#endif
 #else
 	"/data/dalvik-cache/oat/" archname "/xposed_XTypedArraySuperClass.odex",
-	"/data/dalvik-cache/" archname "/system@framework@" archname "@boot.oat@xposed",
+	"/data/dalvik-cache/" archname "/system@framework@arm64@boot.oat@xposed",
 #endif
 	"/data/dalvik-cache/xposed_XResourcesSuperClass.dex",
 	"/data/data/com.topjohnwu.magisk",

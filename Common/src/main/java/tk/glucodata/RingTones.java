@@ -347,7 +347,7 @@ View[] durviews;
 		 lay.setPadding(laypad,0,laypad,laypad);
           params =    new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.CENTER_HORIZONTAL);
 		 }
-	 context.addContentView(lay, params);
+	 context.addMyContentView(lay, params);
 		Save.setOnClickListener(v->{
 			Notify.stopalarm();
 			try {

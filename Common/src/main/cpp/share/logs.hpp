@@ -133,10 +133,10 @@ inline void flerror(const char* fmt, ...){
 
 #else
 #ifdef __cplusplus
-#define LOGGER(pformat,...) { struct timeval tv; gettimeofday(&tv,nullptr); logprint("%lu.%03d %d " pformat ,tv.tv_sec,(int)(tv.tv_usec/1000), getTid(), __VA_ARGS__ ); }
+#define LOGGER(pformat,...) { struct timeval tv; gettimeofday(&tv,nullptr); logprint("%lu.%03d %d " pformat ,tv.tv_sec,(int)(tv.tv_usec/1000), getTid(), ##__VA_ARGS__ ); }
 #define LOGSTRING(pformat) { struct timeval tv; gettimeofday(&tv,nullptr); logprint("%lu.%03d %d " pformat ,tv.tv_sec,(int)(tv.tv_usec/1000), getTid()); }
 #else
-#define LOGGER(pformat,...) { struct timeval tv; gettimeofday(&tv,NULL); logprint("%lu.%03d %d " pformat ,tv.tv_sec,(int)(tv.tv_usec/1000), getTid(), __VA_ARGS__ ); }
+#define LOGGER(pformat,...) { struct timeval tv; gettimeofday(&tv,NULL); logprint("%lu.%03d %d " pformat ,tv.tv_sec,(int)(tv.tv_usec/1000), getTid(), ##__VA_ARGS__ ); }
 #define LOGSTRING(pformat) { struct timeval tv; gettimeofday(&tv,NULL); logprint("%lu.%03d %d " pformat ,tv.tv_sec,(int)(tv.tv_usec/1000), getTid()); }
 #endif
 

@@ -144,11 +144,6 @@ static jlong saveGlucose(SensorGlucoseData *sens,bool valid,int id,int mgdL,int 
     return 0LL;
    }
 
-uint32_t getRestartTime(const SensorGlucoseData *sens) {
-    const uint32_t starttime=sens->getinfo()->starttime+sens->addToStartTime()+sens->siAddedIndex(0)*60;
-    LOGGER("getRestartTime()=%u\n",starttime);
-    return starttime;
-}
 extern "C" JNIEXPORT jlong JNICALL   fromjava(aidexXscanBytes)(JNIEnv *env, jclass cl,jlong dataptr,jbyteArray value,jlongArray jtimeres) {
     if(!value) {
         LOGAR("aidexXscanBytes value==null");
@@ -166,8 +161,10 @@ extern "C" JNIEXPORT jlong JNICALL   fromjava(aidexXscanBytes)(JNIEnv *env, jcla
             return 0LL;
             }
     const CritAr<>  bluedata(env,value);
+    #ifndef NOLOG
     Showhex hex(bluedata.data(),arlen);
     LOGGER("aidexXscanBytes %s\n",hex.data);
+    #endif
     if(!sens->getinfo()->aidexXdat.hasTime) {
         LOGAR("aidexXscanBytes !hasTime");
         return 2LL;
@@ -180,7 +177,7 @@ extern "C" JNIEXPORT jlong JNICALL   fromjava(aidexXscanBytes)(JNIEnv *env, jcla
         }
     LOGAR("after good crc");
     #ifndef NOLOG
-    const uint32_t start=getRestartTime(sens);
+    const uint32_t start=sens->getRestartTime();
     adv->log(start);
     #endif
     //TODO
@@ -394,7 +391,7 @@ static jbyteArray onceOld(JNIEnv *env, SensorGlucoseData *sens,const uint8_t *da
        jlong mmsec=time(nullptr)*1000LL;
        jlong res=saveGlucose(sens,cur->valid,minfromstart,cur->glucose,cur->trend,mmsec);
        #ifndef NOLOG
-       const uint32_t start=getRestartTime(sens);
+       const uint32_t start=sens->getRestartTime();
        cur->log("onceOld"sv,start);
        #endif
         sens->getinfo()->lastHistoricLifeCountReceivedPos=minfromstart;
@@ -518,7 +515,7 @@ static jbyteArray receiveLocalStarttime(JNIEnv *env, SensorGlucoseData *sens,aid
         return nullptr;
         }
      stream->time0=0;
-    int starttime=getRestartTime(sens);
+    int starttime=sens->getRestartTime();
     bool newtime=false;
     if(starttime!=newstarttime) {
          if(!sens->getinfo()->starttime||!sens->pollcount()) {
@@ -600,7 +597,8 @@ static jbyteArray getPastValues(JNIEnv *env, SensorGlucoseData *sens,const uint8
 
    const int lastreceived=sens->getinfo()->lastLifeCountReceived; 
    if(curID<=lastreceived) {
-       LOGGER("getPastValues startID=%d curID=%d <= lastreceived=%d\n",startID,curID,lastreceived);
+#ifndef NOLOG
+       LOGGER("getPastValues startID=%d curID=%d <= lastreceived=%d set hasTime=false\n",startID,curID,lastreceived);
        auto newel=histglus[0];
        const ScanData *savedel=sens->getstream(curID);
        auto oldglucose=savedel->getmgdL();
@@ -608,8 +606,15 @@ static jbyteArray getPastValues(JNIEnv *env, SensorGlucoseData *sens,const uint8
        if(newglucose!=oldglucose)  {
            LOGGER("getPastValues saved %d mg/dL %.1f mmol/L new %d mg/dL %.1f mmol/L\n", oldglucose, oldglucose/18.0 ,newglucose, newglucose/18.0);
            }
-        sens->getinfo()->aidexXdat.hasTime=false;
-       return nullptr;
+       // sens->getinfo()->aidexXdat.hasTime=false;
+#endif
+        if(startID) {
+           return  sizeZero(env);
+           }
+        else {
+            sens->getinfo()->aidexXdat.hasTime=false;
+            return nullptr;
+            }
        }
 
    int firstnew=-1;
@@ -682,7 +687,7 @@ void clearKey(SensorGlucoseData* sens) {
       memset(sens->getinfo()->aidexXdat.keys,'\0',16);
     }
  static   jbyteArray  clearSuccessful(JNIEnv *env,SensorGlucoseData *sens) {
-    LOGAR("clear successful");
+    LOGAR("clear successful set hasTime=false");
     clearKey(sens);
     sens->getinfo()->aidexXdat.hasTime=false;
     return sizeOne(env,2);
@@ -758,8 +763,10 @@ extern "C" JNIEXPORT jbyteArray  JNICALL   fromjava(aidexXprocessHistoryData)(JN
             return nullptr;
             }
     const uint8_t *deinput=decrypted.data();
+    #ifndef NOLOG
     Showhex hex(deinput,arlen);
    LOGGER("aidexXprocessHistoryData ptr=%p %s length=%d\n",sens,hex.data,arlen);
+   #endif
     const auto crc=crc16_ccitt_false(deinput,  arlen-2);
     const auto iscrc=*(uint16_t*)(deinput+arlen-2);
     if(crc!=iscrc) {
@@ -860,8 +867,10 @@ extern "C" JNIEXPORT jlong  JNICALL   fromjava(aidexXprocessCurrentData)(JNIEnv 
         LOGGER("aidexXprocessCurrentData wrong %x!=%x\n",crc,iscrc);
         return 1LL;
         }
+    #ifndef NOLOG
     Showhex hex(data,arlen);
     LOGGER("aidexXprocessCurrentData %s\n",hex.data);
+    #endif
      const int datalen=arlen-2;
     switch(data[0]) {
         case 3: 
@@ -895,8 +904,10 @@ extern "C" JNIEXPORT jboolean JNICALL   fromjava(aidexXSaveKey)(JNIEnv *env, jcl
             }
     const CritAr  bluedata(env,value);
     memcpy(sens->getinfo()->aidexXdat.keys[0].key,bluedata.data(),16);
+    #ifndef NOLOG
     Showhex hex(sens->getinfo()->aidexXdat.keys[0].key,16);
     LOGGER("aidexXSaveKey %s success\n",hex.data);
+    #endif
     return true; 
     } 
 extern "C" JNIEXPORT jboolean JNICALL   fromjava(aidexHasKey)(JNIEnv *env, jclass cl,jlong dataptr) {
@@ -947,9 +958,11 @@ extern "C" JNIEXPORT jbyteArray JNICALL fromjava(aidexXstartCommand)(JNIEnv* env
         clearKey(sens);
         return nullptr;
         }
-    Showhex hex(newkey.key,17);
     uint8_t crc8=crc8_maxim(newkey.key,16);
+    #ifndef NOLOG
+    Showhex hex(newkey.key,17);
     LOGGER("%s %s  crc8=%x endcrc=%x\n",logPrefix,hex.data,crc8,newkey.crc8);
+    #endif
     if(crc8!=newkey.crc8) {
         LOGGER("%s ERROR crc8 %x !=lastbyte %x\n",logPrefix,crc8,newkey.crc8);
         clearKey(sens);

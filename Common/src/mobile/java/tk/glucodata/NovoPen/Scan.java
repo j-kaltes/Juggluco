@@ -262,6 +262,6 @@ static void setInsulin(MainActivity context, OpContext op) {
             }
             );
     cancel.setOnClickListener(v -> context.doonback());
-    context.addContentView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+    context.addMyContentView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
     }
 }

@@ -3,7 +3,7 @@ To modify, change the html files in https://github.com/j-kaltes/Jugglucohelp -->
 <resources>
 <string name="NightPost" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/tr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/NightPost.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/NightPost.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/NightPost.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/NightPost.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/NightPost.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/NightPost.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/NightPost.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/NightPost.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/NightPost.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/NightPost.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/sv/NightPost.html">sv</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/NightPost.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/NightPost.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/NightPost.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/NightPost.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/NightPost.html?lang=en">en</a>&emsp;&emsp;</p><h1 class="western">Nightscout Sunucusuna Yükleme</h1>
+<p><a href="https://www.juggluco.nl/Jugglucohelp/tr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/NightPost.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/NightPost.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/NightPost.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/NightPost.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/NightPost.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/NightPost.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/NightPost.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/NightPost.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/NightPost.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/NightPost.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/NightPost.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/sv/NightPost.html">sv</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/NightPost.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/NightPost.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/NightPost.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/NightPost.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/NightPost.html?lang=en">en</a>&emsp;&emsp;</p><h1 class="western">Nightscout Sunucusuna Yükleme</h1>
 <p>Çoğu durumda şuraya da bakabilirsiniz: <a href="https://www.juggluco.nl/Jugglucohelp/tr/Nightscouthelp.html">web
 server in Juggluco</a> ya da <a href="https://www.juggluco.nl/Juggluco/cmdline">juggluco-server</a>
 </p>
@@ -99,7 +99,7 @@ aşağıdakilerden biri olabilir:</p>
 </string>
 <string name="Nightscouthelp" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/tr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/Nightscouthelp.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/Nightscouthelp.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/Nightscouthelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/Nightscouthelp.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/Nightscouthelp.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/Nightscouthelp.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/Nightscouthelp.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/Nightscouthelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/Nightscouthelp.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/Nightscouthelp.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/sv/Nightscouthelp.html">sv</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/Nightscouthelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/Nightscouthelp.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/Nightscouthelp.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/Nightscouthelp.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/Nightscouthelp.html?lang=en">en</a>&emsp;&emsp;</p><h1 class="western">Web server</h1>
+<p><a href="https://www.juggluco.nl/Jugglucohelp/tr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/Nightscouthelp.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/Nightscouthelp.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/Nightscouthelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/Nightscouthelp.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/Nightscouthelp.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/Nightscouthelp.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/Nightscouthelp.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/Nightscouthelp.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/Nightscouthelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/Nightscouthelp.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/Nightscouthelp.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/sv/Nightscouthelp.html">sv</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/Nightscouthelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/Nightscouthelp.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/Nightscouthelp.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/Nightscouthelp.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/Nightscouthelp.html?lang=en">en</a>&emsp;&emsp;</p><h1 class="western">Web server</h1>
 <p style="line-height: 100%; margin-bottom: 0cm">Juggluco diğer
 uygulamaların Juggluco\'dan glikoz değerlerini alabileceği bir web
 sunucusu içerir. xDrip saatleri ve bazı Nightscout uygulamaları
@@ -359,14 +359,8 @@ yanı sıra, aşağıdakiler kullanılır:</p>
 	uyarlamasıdır <a href="https://github.com/yukuku/ambilwarna">AmbilWarna</a>;</p>
 	<li><p align="left" style="margin-bottom: 0cm">NFC NovoPens Desteği,
 	xDrip\'ten alınan kodun bir modifikasyonudur.</p>
-	<li><p align="left" style="margin-bottom: 0cm"><a href="https://www.flaticon.com/free-icons/password"><font color="#000000"><span style="text-decoration: none">Şifre
-	simgeleri,</span></font><span style="text-decoration: none"> </span>th
-	studio – Flaticon <font color="#000000"><span style="text-decoration: none">tarafından
-	oluşturuldu.</span></font></a><span style="text-decoration: none"> </span>
-	</p>
 </ul>
-<p><br/>
-<br/>
+<p>
 
 </p>
 <p>Juggluco’yu İtalyanca’ya çeviren <a href="mailto:matteo.gabriele81@gmail.com">Matteo
@@ -724,7 +718,7 @@ Kontrol) basılarak simüle edilebilir.</p>
 </string>
 <string name="disturbhelp" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/tr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/disturbhelp.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/disturbhelp.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/disturbhelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/disturbhelp.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/disturbhelp.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/disturbhelp.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/disturbhelp.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/disturbhelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/disturbhelp.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/disturbhelp.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/disturbhelp.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/disturbhelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/disturbhelp.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/disturbhelp.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/disturbhelp.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/disturbhelp.html?lang=en">en</a>&emsp;&emsp;</p><h1 class="western">
+<p><a href="https://www.juggluco.nl/Jugglucohelp/tr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/disturbhelp.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/disturbhelp.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/disturbhelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/disturbhelp.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/disturbhelp.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/disturbhelp.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/disturbhelp.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/disturbhelp.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/disturbhelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/disturbhelp.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/disturbhelp.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/disturbhelp.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/disturbhelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/disturbhelp.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/disturbhelp.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/disturbhelp.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/disturbhelp.html?lang=en">en</a>&emsp;&emsp;</p><h1 class="western">
 &quot;<i>Rahatsız </i><i>E</i><i>tmeyin</i>&quot; Modu</h1>
 <p><meta name="created" content="00:00:00">Bazı cihazlarda, alarmlar
 &quot;<i>Rahatsız Etmeyin</i>&quot; modu sırasında çalışmaz.
@@ -764,7 +758,7 @@ daha sonra tekrar kamera iznini kapatabilirsiniz.</p>
 </string>
 <string name="floatingconfig" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/tr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/floatingconfig.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/floatingconfig.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/floatingconfig.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/floatingconfig.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/floatingconfig.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/floatingconfig.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/floatingconfig.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/floatingconfig.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/floatingconfig.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/floatingconfig.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/floatingconfig.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/floatingconfig.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/floatingconfig.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/floatingconfig.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/floatingconfig.html?lang=en">en</a>&emsp;&emsp;</p><h1 class="western">Yüzen Glikoz</h1>
+<p><a href="https://www.juggluco.nl/Jugglucohelp/tr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/floatingconfig.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/floatingconfig.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/floatingconfig.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/floatingconfig.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/floatingconfig.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/floatingconfig.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/floatingconfig.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/floatingconfig.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/floatingconfig.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/floatingconfig.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/floatingconfig.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/floatingconfig.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/floatingconfig.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/floatingconfig.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/floatingconfig.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/floatingconfig.html?lang=en">en</a>&emsp;&emsp;</p><h1 class="western">Yüzen Glikoz</h1>
 <p>Burada yüzen glikozun yazı tipi boyutunu,ön plan ve arka plan
 rengini ayarlayabilirsiniz. 
 </p>
@@ -807,7 +801,7 @@ Diğer uygulamaların üzerinde görüntüle.</p>
 </string>
 <string name="garminconfig" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/tr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/garminconfig.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/garminconfig.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/garminconfig.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/garminconfig.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/garminconfig.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/garminconfig.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/garminconfig.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/garminconfig.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/garminconfig.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/garminconfig.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/garminconfig.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/garminconfig.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/garminconfig.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/garminconfig.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/garminconfig.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/garminconfig.html?lang=en">en</a>&emsp;&emsp;</p><h1 class="western">Kerfstok yapılandırma</h1>
+<p><a href="https://www.juggluco.nl/Jugglucohelp/tr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/garminconfig.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/garminconfig.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/garminconfig.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/garminconfig.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/garminconfig.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/garminconfig.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/garminconfig.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/garminconfig.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/garminconfig.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/garminconfig.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/garminconfig.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/garminconfig.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/garminconfig.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/garminconfig.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/garminconfig.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/garminconfig.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/garminconfig.html?lang=en">en</a>&emsp;&emsp;</p><h1 class="western">Kerfstok yapılandırma</h1>
 <p style="line-height: 100%; margin-bottom: 0cm">Kerfstok\'un <b>kaynağı</b>
 şu adresten indirilebilir:
 <a href="https://www.juggluco.nl/Kerfstok/Kerfstok-source.html">https://www.juggluco.nl/Kerfstok/Kerfstok-source.html</a>)
@@ -833,7 +827,7 @@ gerekmediğini seçin.</p>
 </string>
 <string name="getaccountidhelp" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/tr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/getaccountidhelp.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/getaccountidhelp.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/getaccountidhelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/getaccountidhelp.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/getaccountidhelp.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/getaccountidhelp.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/getaccountidhelp.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/getaccountidhelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/getaccountidhelp.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/getaccountidhelp.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/getaccountidhelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/getaccountidhelp.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/getaccountidhelp.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/getaccountidhelp.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/getaccountidhelp.html?lang=en">en</a>&emsp;&emsp;</p><h1 class="western">Hesap Kimliği Al</h1>
+<p><a href="https://www.juggluco.nl/Jugglucohelp/tr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/getaccountidhelp.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/getaccountidhelp.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/getaccountidhelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/getaccountidhelp.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/getaccountidhelp.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/getaccountidhelp.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/getaccountidhelp.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/getaccountidhelp.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/getaccountidhelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/getaccountidhelp.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/getaccountidhelp.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/getaccountidhelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/getaccountidhelp.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/getaccountidhelp.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/getaccountidhelp.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/getaccountidhelp.html?lang=en">en</a>&emsp;&emsp;</p><h1 class="western">Hesap Kimliği Al</h1>
 <p style="line-height: 100%; margin-bottom: 0cm">Freestyle Libre 3
 sensörünü NFC aracılığıyla taramak için gereken Libreview
 Hesap Kimliği nasıl alınır? 
@@ -900,7 +894,7 @@ sınırlar.</span>
 </string>
 <string name="helpexport" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/tr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/helpexport.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/helpexport.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/helpexport.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/helpexport.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/helpexport.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/helpexport.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/helpexport.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/helpexport.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/helpexport.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/helpexport.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/helpexport.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/helpexport.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/helpexport.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/helpexport.html?lang=en">en</a>&emsp;&emsp;</p><h1 class="western">Dışa Aktar</h1>
+<p><a href="https://www.juggluco.nl/Jugglucohelp/tr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/helpexport.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/helpexport.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/helpexport.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/helpexport.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/helpexport.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/helpexport.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/helpexport.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/helpexport.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/helpexport.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/helpexport.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/helpexport.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/helpexport.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/helpexport.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/helpexport.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/helpexport.html?lang=en">en</a>&emsp;&emsp;</p><h1 class="western">Dışa Aktar</h1>
 <p>Verileri Juggluco\'dan bir dosyaya aktarın.</p>
 <p>Yemekler html\'de kaydedilir. Diğer tüm veriler .tsv
 (<a href="https://en.wikipedia.org/wiki/Tab-separated_values">Tab-separated
@@ -982,42 +976,13 @@ dokunarak</span> <span lang="tr-TR"><b>Orta Sol Menü</b></span><span lang="tr-T
 <p style="line-height: 100%; orphans: 0; widows: 0; margin-top: 0.2cm; margin-bottom: 0.2cm; background: transparent; page-break-after: avoid">
 <font color="#ffffff"><font size="3" style="font-size: 12pt"><i>Menü
 4: Sağ Menü</i></font></font></p>
-<table width="96" cellpadding="0" cellspacing="0">
-	<col width="96"/>
-
-	<tr>
-		<td width="96" valign="top" style="border: none; padding: 0cm"><p><font color="#ffff6d">15:10&nbsp;&nbsp;&nbsp;↗&nbsp;93</font></p>
-		</td>
-	</tr>
-	<tr>
-		<td width="96" valign="top" style="border: none; padding: 0cm"><p><a href="https://www.juggluco.nl/Jugglucohelp/tr/searchhelp.html"><font color="#ffff6d">Ara</font></a></p>
-		</td>
-	</tr>
-	<tr>
-		<td width="96" valign="top" style="border: none; padding: 0cm"><p><font color="#ffff6d">Tarih</font></p>
-		</td>
-	</tr>
-	<tr>
-		<td width="96" valign="top" style="border: none; padding: 0cm"><p><font color="#ffff6d">Önceki
-			Gün</font></p>
-		</td>
-	</tr>
-	<tr style="background: transparent">
-		<td width="96" valign="top" style="border: none; padding: 0cm"><p><font color="#ffff6d">Sonraki
-			Gün</font></p>
-		</td>
-	</tr>
-	<tr>
-		<td width="96" valign="top" style="border: none; padding: 0cm"><p><font color="#ffff6d">Önceki
-			Hafta</font></p>
-		</td>
-	</tr>
-	<tr>
-		<td width="96" valign="top" style="border: none; padding: 0cm"><p><font color="#ffff6d">Sonraki
-			Hafta</font></p>
-		</td>
-	</tr>
-</table>
+<p><font color="#ffff6d"><tt>15:10   ↗ 93<br><br>
+<a href="https://www.juggluco.nl/Jugglucohelp/tr/searchhelp.html">Ara</a><br><br>
+Tarih<br><br>
+Önceki Gün<br><br>
+Sonraki Gün<br><br>
+Önceki Hafta<br><br>
+Sonraki Hafta</tt></font></p>
 <p style="line-height: 115%; margin-bottom: 0cm"><font color="#ffffff"><span lang="tr-TR">Ekranda
 sola ve sağa hareket ederek eğriyi sola ve sağa hareket
 ettirebilirsiniz. Ayrıca sağdaki </span><font color="#4f81bd"><font face="Cambria, serif"><span lang="tr-TR"><b>hareket
@@ -1039,42 +1004,13 @@ zaman miktarını artırabilir veya azaltabilirsiniz.</font></p>
 <p style="line-height: 100%; orphans: 0; widows: 0; margin-top: 0.2cm; margin-bottom: 0.2cm; background: transparent; page-break-after: avoid">
 <font color="#ffffff"><font size="3" style="font-size: 12pt"><i>Menü
 3: Orta Sağ Menü</i></font></font></p>
-<table width="138" cellpadding="0" cellspacing="0">
-	<col width="138"/>
-
-	<tr>
-		<td width="138" valign="top" style="border: none; padding: 0cm"><p><font color="#ffff6d">Son
-			tarama</font></p>
-		</td>
-	</tr>
-	<tr>
-		<td width="138" valign="top" style="border: none; padding: 0cm"><p><font color="#ffff6d">Taramalar&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[x]</font></p>
-		</td>
-	</tr>
-	<tr>
-		<td width="138" valign="top" style="border: none; padding: 0cm"><p><font color="#ffff6d">Akış&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[x]</font></p>
-		</td>
-	</tr>
-	<tr>
-		<td width="138" valign="top" style="border: none; padding: 0cm"><p><font color="#ffff6d">Geçmis&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[x]</font></p>
-		</td>
-	</tr>
-	<tr>
-		<td width="138" valign="top" style="border: none; padding: 0cm"><p><font color="#ffff6d">Miktarlar&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[x]</font>
-						</p>
-		</td>
-	</tr>
-	<tr>
-		<td width="138" valign="top" style="border: none; padding: 0cm"><p><font color="#ffff6d"><a href="https://www.juggluco.nl/Jugglucohelp/tr/mealhelp.html">Yemekler</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			[&nbsp;&nbsp;]</font></p>
-		</td>
-	</tr>
-	<tr>
-		<td width="138" height="45" valign="top" style="border: none; padding: 0cm"><p>
-			<font color="#ffff6d">Koyu Mod&nbsp;&nbsp;&nbsp;&nbsp;[x]</font></p>
-		</td>
-	</tr>
-</table>
+<p><font color="#ffff6d"><tt>Son tarama<br><br>
+Taramalar&nbsp;[x]<br><br>
+Akış&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[x]<br><br>
+Geçmis&nbsp;&nbsp;&nbsp;&nbsp;[x]<br><br>
+Miktarlar&nbsp;[x]<br><br>
+<a href="https://www.juggluco.nl/Jugglucohelp/tr/mealhelp.html">Yemekler</a>&nbsp;&nbsp;[&nbsp;]<br><br>
+Koyu Mod&nbsp;&nbsp;[x]</tt></font></p>
 <p style="line-height: 115%; margin-bottom: 0cm"><font color="#ffffff"><font color="#4f81bd"><font face="Cambria, serif"><span lang="tr-TR"><b>Orta
 Sağ</b></span></font></font><font color="#4f81bd"> </font><font color="#4f81bd"><font face="Cambria, serif"><span lang="tr-TR"><b>Menüde</b></span></font></font>
 <span lang="tr-TR">görüntüleme seçenekleri bulunur. Son taramayı
@@ -1109,41 +1045,13 @@ kullanmak istediğinizi belirtebilirsiniz. Sayılardan birinin
 <p style="line-height: 100%; orphans: 0; widows: 0; margin-top: 0.2cm; margin-bottom: 0.2cm; background: transparent; page-break-after: avoid">
 <font color="#ffffff"><font size="3" style="font-size: 12pt"><i>Menü
 2: Orta Sol Menü</i></font></font></p>
-<table width="138" cellpadding="0" cellspacing="0">
-	<col width="138"/>
-
-	<tr>
-		<td width="96" valign="top" style="border: none; padding: 0cm"><p><a href="https://www.juggluco.nl/Jugglucohelp/tr/helpexport.html"><font color="#ffff6d">Dışa
-			Aktar</font></a></p>
-		</td>
-	</tr>
-	<tr>
-		<td width="96" valign="top" style="border: none; padding: 0cm"><p><a href="https://www.juggluco.nl/Jugglucohelp/tr/connectionoverview.html"><font color="#ffff6d">Klon</font></a></p>
-		</td>
-	</tr>
-	<tr>
-		<td width="96" valign="top" style="border: none; padding: 0cm"><p><a href="https://www.juggluco.nl/Jugglucohelp/tr/newamount.html" onclick="location.href=this.href+\'?unit=\'+unitstr;return false;"><font color="#ffff6d">Yeni
-			Miktar</font></a></p>
-		</td>
-	</tr>
-	<tr>
-		<td width="96" valign="top" style="border: none; padding: 0cm"><p><font color="#ffff6d">Liste</font></p>
-		</td>
-	</tr>
-	<tr>
-		<td width="96" valign="top" style="border: none; padding: 0cm"><p><a href="https://www.juggluco.nl/Jugglucohelp/tr/stathelp.html" onclick="location.href=this.href+\'?unit=\'+unitstr;return false;"><font color="#ffff6d">İstatistikler</font></a></p>
-		</td>
-	</tr>
-	<tr>
-		<td width="96" valign="top" style="border: none; padding: 0cm"><p><a href="https://www.juggluco.nl/Jugglucohelp/tr/talkhelp.html"><font color="#ffff6d">Seslendir</font></a></p>
-		</td>
-	</tr>
-	<tr>
-		<td width="96" valign="top" style="border: none; padding: 0cm"><p align="left">
-			<font color="#ffff6d">Yüzen Glikoz&nbsp;&nbsp;[&nbsp;]</font></p>
-		</td>
-	</tr>
-</table>
+<p><font color="#ffff6d"><tt><a href="https://www.juggluco.nl/Jugglucohelp/tr/helpexport.html">Dışa Aktar</a><br><br>
+<a href="https://www.juggluco.nl/Jugglucohelp/tr/connectionoverview.html">Klon</a><br><br>
+<a href="https://www.juggluco.nl/Jugglucohelp/tr/newamount.html" onclick="location.href=this.href+\'?unit=\'+unitstr;return false;">Yeni Miktar</a><br><br>
+Liste<br><br>
+<a href="https://www.juggluco.nl/Jugglucohelp/tr/stathelp.html" onclick="location.href=this.href+\'?unit=\'+unitstr;return false;">İstatistikler</a><br><br>
+<a href="https://www.juggluco.nl/Jugglucohelp/tr/talkhelp.html">Seslendir</a><br><br>
+Yüzen Glikoz&nbsp;[&nbsp;]</tt></font></p>
 <p style="line-height: 115%; margin-bottom: 0cm"><font color="#4f81bd"><font face="Cambria, serif"><span lang="tr-TR"><b>Sol
 Orta Menüde,</b></span></font></font><font color="#ffffff"> </font><font color="#4f81bd"><font face="Cambria, serif"><font size="3" style="font-size: 13pt"><span lang="tr-TR"><b>Yeni
 Miktar</b></span></font></font></font><font color="#ffffff"> </font><font color="#ffffff"><span lang="tr-TR">a
@@ -1177,41 +1085,13 @@ renk ve boyutunu değiştirebilirsiniz.</span></font></a></p>
 <p style="line-height: 100%; orphans: 0; widows: 0; margin-top: 0.2cm; margin-bottom: 0.2cm; background: transparent; page-break-after: avoid">
 <font color="#ffffff"><font size="3" style="font-size: 12pt"><i>Menü
 1: Sol Menü</i></font></font></p>
-<table width="140" cellpadding="0" cellspacing="0">
-	<col width="140"/>
-
-	<tr>
-		<td width="120" valign="top" style="border: none; padding: 0cm"><p><font color="#ffff6d">Sistem
-			Arayüzü&nbsp;&nbsp;[&nbsp;]</font></p>
-		</td>
-	</tr>
-	<tr>
-		<td width="120" valign="top" style="border: none; padding: 0cm"><p><font color="#ffff6d">Menüler&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;]</font></p>
-		</td>
-	</tr>
-	<tr>
-		<td width="120" valign="top" style="border: none; padding: 0cm"><p><a href="https://www.juggluco.nl/Jugglucohelp/tr/watchinfo.html"><font color="#ffff6d">Saat</font></a></p>
-		</td>
-	</tr>
-	<tr>
-		<td width="120" valign="top" style="border: none; padding: 0cm"><p><a href="https://www.juggluco.nl/Jugglucohelp/tr/sensorhelp.html"><font color="#ffff6d">Sensör</font></a></p>
-		</td>
-	</tr>
-	<tr>
-		<td width="120" height="26" valign="top" style="border: none; padding: 0cm"><p>
-			<a href="https://www.juggluco.nl/Jugglucohelp/tr/settinghelp.html" onclick="location.href=this.href+\'?unit=\'+unitstr;return false;"><font color="#ffff6d">Ayarlar</font></a></p>
-		</td>
-	</tr>
-	<tr>
-		<td width="120" height="26" valign="top" style="border: none; padding: 0cm"><p>
-			<font color="#ffff6d">Fotoğraf</font></p>
-		</td>
-	</tr>
-	<tr>
-		<td width="120" valign="top" style="border: none; padding: 0cm"><p><font color="#ffff6d">Kapat</font></p>
-		</td>
-	</tr>
-</table>
+<p><font color="#ffff6d"><tt>Sistem Arayüzü&nbsp;[&nbsp;]<br><br>
+Menüler&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;]<br><br>
+<a href="https://www.juggluco.nl/Jugglucohelp/tr/watchinfo.html">Saat</a><br><br>
+<a href="https://www.juggluco.nl/Jugglucohelp/tr/sensorhelp.html">Sensör</a><br><br>
+<a href="https://www.juggluco.nl/Jugglucohelp/tr/settinghelp.html" onclick="location.href=this.href+\'?unit=\'+unitstr;return false;">Ayarlar</a><br><br>
+Fotoğraf<br><br>
+Kapat</tt></font></p>
 <p style="line-height: 115%; margin-bottom: 0cm"><font color="#4f81bd"><font face="Cambria, serif"><span lang="tr-TR"><b>Sol
 Menüde</b></span></font></font><font color="#ffffff"><span lang="tr-TR">
 şunları</span></font><font color="#ffffff"> </font><font color="#ffffff"><span lang="tr-TR">bulabilirsiniz:
@@ -1369,7 +1249,7 @@ kaydedilir ve kaydedilmiş bir değerin öğününü seçerek bu
 </string>
 <string name="librenumhelp" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/tr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/librenumhelp.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/librenumhelp.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/librenumhelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/librenumhelp.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/librenumhelp.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/librenumhelp.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/librenumhelp.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/librenumhelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/librenumhelp.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/librenumhelp.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/librenumhelp.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/librenumhelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/librenumhelp.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/librenumhelp.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/librenumhelp.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/librenumhelp.html?lang=en">en</a>&emsp;&emsp;</p><p>Miktarları Libreview\'e göndermek için &quot;<i>Miktarları
+<p><a href="https://www.juggluco.nl/Jugglucohelp/tr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/librenumhelp.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/librenumhelp.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/librenumhelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/librenumhelp.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/librenumhelp.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/librenumhelp.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/librenumhelp.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/librenumhelp.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/librenumhelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/librenumhelp.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/librenumhelp.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/librenumhelp.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/librenumhelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/librenumhelp.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/librenumhelp.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/librenumhelp.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/librenumhelp.html?lang=en">en</a>&emsp;&emsp;</p><p>Miktarları Libreview\'e göndermek için &quot;<i>Miktarları
 </i><i>G</i><i>önder</i>&quot;i seçin. &quot;<i>Miktarları
 Gönder</i>&quot;i açmadan önce, <a href="https://www.juggluco.nl/Jugglucohelp/tr/setlibrenumtype.html">her
 etiket için</a> o etiket altında girilen miktarların Libreview\'e
@@ -1398,7 +1278,7 @@ basmaktır.</p>
 </string>
 <string name="libreview" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/tr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/libreview.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/libreview.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/libreview.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/libreview.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/libreview.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/libreview.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/libreview.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/libreview.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/libreview.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/libreview.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/libreview.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/libreview.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/libreview.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/libreview.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/libreview.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/libreview.html?lang=en">en</a>&emsp;&emsp;</p><h1 class="western">Libreview</h1>
+<p><a href="https://www.juggluco.nl/Jugglucohelp/tr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/libreview.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/libreview.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/libreview.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/libreview.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/libreview.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/libreview.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/libreview.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/libreview.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/libreview.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/libreview.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/libreview.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/libreview.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/libreview.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/libreview.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/libreview.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/libreview.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/libreview.html?lang=en">en</a>&emsp;&emsp;</p><h1 class="western">Libreview</h1>
 <p style="line-height: 100%; margin-bottom: 0cm">Juggluco, glikoz
 verilerini ve miktarlarını Libreview\'e gönderebilir. 
 </p>
@@ -1565,7 +1445,7 @@ saatlere bağlanmak için bu izne ihtiyaç duymaz.</p>
 </string>
 <string name="newamount" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/tr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/newamount.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/newamount.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/newamount.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/newamount.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/newamount.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/newamount.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/newamount.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/newamount.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/newamount.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/newamount.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/newamount.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/newamount.html?lang=en">en</a>&emsp;&emsp;</p><h1 class="western">Yeni Miktar</h1>
+<p><a href="https://www.juggluco.nl/Jugglucohelp/tr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/newamount.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/newamount.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/newamount.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/newamount.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/newamount.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/newamount.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/newamount.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/newamount.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/newamount.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/newamount.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/newamount.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/newamount.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/newamount.html?lang=en">en</a>&emsp;&emsp;</p><h1 class="western">Yeni Miktar</h1>
 <p><b>Yeni miktar</b> sayesinde bir etiket ile ilişkili sayıları
 girebilirsiniz. Etiketleri, <i>S</i><i>ol </i><i>M</i><i>enü→Ayarlar→</i><i><span style="text-decoration: none"><a href="https://www.juggluco.nl/Jugglucohelp/tr/labelhelp.html">Sayı
 Etiketleri</a> </span></i>altında ayarlayabilirsiniz. Etiketle
@@ -1619,7 +1499,7 @@ ağırlığı 1 olarak ayarlayabilirsiniz.</p>
 </string>
 <string name="nightnumhelp" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/tr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/nightnumhelp.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/nightnumhelp.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/nightnumhelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/nightnumhelp.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/nightnumhelp.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/nightnumhelp.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/nightnumhelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/nightnumhelp.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/nightnumhelp.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/nightnumhelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/nightnumhelp.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/nightnumhelp.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/nightnumhelp.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nightnumhelp.html?lang=en">en</a>&emsp;&emsp;</p><p>Juggluco\'daki
+<p><a href="https://www.juggluco.nl/Jugglucohelp/tr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/nightnumhelp.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/nightnumhelp.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/nightnumhelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/nightnumhelp.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/nightnumhelp.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/nightnumhelp.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/nightnumhelp.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/nightnumhelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/nightnumhelp.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/nightnumhelp.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/nightnumhelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/nightnumhelp.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/nightnumhelp.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/nightnumhelp.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nightnumhelp.html?lang=en">en</a>&emsp;&emsp;</p><p>Juggluco\'daki
 Nightscout web sunucusu üzerinden miktarları erişilebilir hale
 getirmek için &quot;<i>Miktarları Gir</i>&quot; i seçin.
 &quot;<i>Miktarları Gir</i>&quot;i açmadan önce, her etiket için
@@ -1635,7 +1515,7 @@ silinebilir.</p>
 </string>
 <string name="notificationpermission" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/tr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/notificationpermission.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/notificationpermission.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/notificationpermission.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/notificationpermission.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/notificationpermission.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/notificationpermission.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/notificationpermission.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/notificationpermission.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/notificationpermission.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/notificationpermission.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/notificationpermission.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/notificationpermission.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/notificationpermission.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/notificationpermission.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/notificationpermission.html?lang=en">en</a>&emsp;&emsp;</p><h1 class="western">
+<p><a href="https://www.juggluco.nl/Jugglucohelp/tr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/notificationpermission.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/notificationpermission.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/notificationpermission.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/notificationpermission.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/notificationpermission.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/notificationpermission.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/notificationpermission.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/notificationpermission.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/notificationpermission.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/notificationpermission.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/notificationpermission.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/notificationpermission.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/notificationpermission.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/notificationpermission.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/notificationpermission.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/notificationpermission.html?lang=en">en</a>&emsp;&emsp;</p><h1 class="western">
 Bildirimler</h1>
 <p>Juggluco, Freestyle Libre 0 sensörleriyle kullanılmadığı
 sürece, Juggluco her dakika doğrudan sensörden Bluetooth veya bir
@@ -1947,7 +1827,7 @@ ve arada tarama yaparak tekrar geri almak biraz zaman alabilir.</p>
 </string>
 <string name="setlibrenumtype" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/tr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/setlibrenumtype.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/setlibrenumtype.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/setlibrenumtype.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/setlibrenumtype.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/setlibrenumtype.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/setlibrenumtype.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/setlibrenumtype.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/setlibrenumtype.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/setlibrenumtype.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/setlibrenumtype.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/setlibrenumtype.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/setlibrenumtype.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/setlibrenumtype.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/setlibrenumtype.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/setlibrenumtype.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/setlibrenumtype.html?lang=en">en</a>&emsp;&emsp;</p><p>Libreview\'da olduğu gibi, Juggluco\'da da Nightscout sunucusu
+<p><a href="https://www.juggluco.nl/Jugglucohelp/tr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/setlibrenumtype.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/setlibrenumtype.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/setlibrenumtype.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/setlibrenumtype.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/setlibrenumtype.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/setlibrenumtype.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/setlibrenumtype.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/setlibrenumtype.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/setlibrenumtype.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/setlibrenumtype.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/setlibrenumtype.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/setlibrenumtype.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/setlibrenumtype.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/setlibrenumtype.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/setlibrenumtype.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/setlibrenumtype.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/setlibrenumtype.html?lang=en">en</a>&emsp;&emsp;</p><p>Libreview\'da olduğu gibi, Juggluco\'da da Nightscout sunucusu
 üzerinden miktarların nasıl temsil edileceğini
 belirleyebilirsiniz.</p>
 <p>Belirli bir etiket altında girilen Juggluco\'daki miktarların
@@ -2191,7 +2071,7 @@ değiştirilebilir.</p>
 </string>
 <string name="staticnum" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/tr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/staticnum.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/staticnum.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/staticnum.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/staticnum.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/staticnum.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/staticnum.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/staticnum.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/staticnum.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/staticnum.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/staticnum.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/staticnum.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/staticnum.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/staticnum.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/staticnum.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/staticnum.html?lang=en">en</a>&emsp;&emsp;</p><h1 class="western" align="left">
+<p><a href="https://www.juggluco.nl/Jugglucohelp/tr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/staticnum.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/staticnum.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/staticnum.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/staticnum.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/staticnum.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/staticnum.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/staticnum.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/staticnum.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/staticnum.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/staticnum.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/staticnum.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/staticnum.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/staticnum.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/staticnum.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/staticnum.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/staticnum.html?lang=en">en</a>&emsp;&emsp;</p><h1 class="western" align="left">
 Engellendi</h1>
 <p style="margin-bottom: 0cm"><i><b>O</b></i><i><b>rta </b></i><i><b>Sol</b></i><i><b>
 </b></i><i><b>M</b></i><i><b>enü → Klon → </b></i><em><i><b>Klon
@@ -2205,7 +2085,7 @@ bağlantısından miktar almıyorsa, bu seçeneği kaldırın.</p>
 </string>
 <string name="talkhelp" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/tr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/talkhelp.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/talkhelp.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/talkhelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/talkhelp.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/talkhelp.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/talkhelp.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/talkhelp.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/talkhelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/talkhelp.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/talkhelp.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/talkhelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/talkhelp.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/talkhelp.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/talkhelp.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/talkhelp.html?lang=en">en</a>&emsp;&emsp;</p><h1 class="western">Seslendirme</h1>
+<p><a href="https://www.juggluco.nl/Jugglucohelp/tr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/talkhelp.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/talkhelp.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/talkhelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/talkhelp.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/talkhelp.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/talkhelp.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/talkhelp.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/talkhelp.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/talkhelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/talkhelp.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/talkhelp.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/talkhelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/talkhelp.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/talkhelp.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/talkhelp.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/talkhelp.html?lang=en">en</a>&emsp;&emsp;</p><h1 class="western">Seslendirme</h1>
 <h2 class="western">Glikozu Oku</h2>
 <p>Glikoz değerleri geldiğinde okur.</p>
 <p><b>Ses arası boşluk</b>: Juggluco\'nun bir sonraki glikoz
@@ -2626,7 +2506,7 @@ gibi bir takipçi telefonuna bağlamak da mümkündür:
 </string>
 <string name="IOBhelp" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/tr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/IOBhelp.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/IOBhelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/IOBhelp.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/IOBhelp.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/IOBhelp.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/IOBhelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/IOBhelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/IOBhelp.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/IOBhelp.html?lang=en">en</a>&emsp;&emsp;</p><h1>Insulin onboard (IOB)</h1>
+<p><a href="https://www.juggluco.nl/Jugglucohelp/tr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/IOBhelp.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/IOBhelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/IOBhelp.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/IOBhelp.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/IOBhelp.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/IOBhelp.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/IOBhelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/IOBhelp.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/IOBhelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/IOBhelp.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/IOBhelp.html?lang=en">en</a>&emsp;&emsp;</p><h1>Insulin onboard (IOB)</h1>
 <p>IOB, önceki insülin dozlarından ne kadar insülin kaldığını gösteren bir ölçüdür. Juggluco 9.2.0\'dan önce, IOB\'yi tahmin etmek için İnsülin Aspart\'ın Kan İnsülin Konsantrasyonu eğrisi kullanılıyordu. Artık insülin türünü kendiniz belirleyebilirsiniz ve Juggluco o insülin türüne özgü bir Kan İnsülin Konsantrasyonu
 eğrisi kullanacaktır. Etiket hızlı etkili bir insülin anlamına gelmiyorsa <i>Hayır</i>\'ı belirtin, aksi takdirde insülin türünü belirtin. Seçenekler:</p>
 <ul>
@@ -2655,7 +2535,7 @@ eğrisi kullanacaktır. Etiket hızlı etkili bir insülin anlamına gelmiyorsa 
 </string>
 <string name="healthpermission" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/tr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/healthpermission.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/healthpermission.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/healthpermission.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/healthpermission.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/healthpermission.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/healthpermission.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/healthpermission.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/healthpermission.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/healthpermission.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/healthpermission.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/healthpermission.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/healthpermission.html?lang=en">en</a>&emsp;&emsp;</p><h1 class="western">
+<p><a href="https://www.juggluco.nl/Jugglucohelp/tr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/healthpermission.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/healthpermission.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/healthpermission.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/healthpermission.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/healthpermission.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/healthpermission.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/healthpermission.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/healthpermission.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/healthpermission.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/healthpermission.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/healthpermission.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/healthpermission.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/healthpermission.html?lang=en">en</a>&emsp;&emsp;</p><h1 class="western">
 <i>Yazma İzni</i></h1>
 <p><br/>
 <br/>
@@ -2671,7 +2551,7 @@ bu izin olmadan çalışabilir.</p>
 </string>
 <string name="changestart" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/tr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/changestart.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/changestart.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/changestart.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/changestart.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/changestart.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/changestart.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/changestart.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/changestart.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/sv/changestart.html">sv</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/changestart.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/changestart.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/changestart.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/changestart.html?lang=en">en</a>&emsp;&emsp;</p><h1 class="western">
+<p><a href="https://www.juggluco.nl/Jugglucohelp/tr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/changestart.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/changestart.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/changestart.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/changestart.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/changestart.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/changestart.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/changestart.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/changestart.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/changestart.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/sv/changestart.html">sv</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/changestart.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/changestart.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/changestart.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/changestart.html?lang=en">en</a>&emsp;&emsp;</p><h1 class="western">
 Başlangıcı Değiştir</h1>
 <p>Verilerin Libreview\'e gönderileceği tarihi ve saati değiştirin.
 Bu, verilerin bir kısmı Libreview\'de zaten mevcut olduğunda
@@ -2683,7 +2563,7 @@ kullanılabilir.</p>
 </string>
 <string name="exchangehelp" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/tr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/exchangehelp.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/exchangehelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/exchangehelp.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/exchangehelp.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/exchangehelp.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/exchangehelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/exchangehelp.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/exchangehelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/exchangehelp.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/exchangehelp.html?lang=en">en</a>&emsp;&emsp;</p><h1 class="western">Veri Değişimi</h1>
+<p><a href="https://www.juggluco.nl/Jugglucohelp/tr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/exchangehelp.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/exchangehelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/exchangehelp.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/exchangehelp.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/exchangehelp.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/exchangehelp.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/exchangehelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/exchangehelp.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/exchangehelp.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/exchangehelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/exchangehelp.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/exchangehelp.html?lang=en">en</a>&emsp;&emsp;</p><h1 class="western">Veri Değişimi</h1>
 <h2 class="western">Health Connect</h2>
 <p>Dakikalık glikoz değerlerini <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.healthdata">Health
 Connect</a>\'e gönderin. Diğer uygulamalara bu glikoz değerlerine
@@ -2779,7 +2659,7 @@ Aktar</a></h2>
 </string>
 <string name="displayhelp" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/tr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/displayhelp.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/displayhelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/displayhelp.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/displayhelp.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/displayhelp.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/displayhelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/displayhelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/displayhelp.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/displayhelp.html?lang=en">en</a>&emsp;&emsp;</p><h1 class="western">Görüntü Ayarları</h1>
+<p><a href="https://www.juggluco.nl/Jugglucohelp/tr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/displayhelp.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/displayhelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/displayhelp.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/displayhelp.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/displayhelp.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/displayhelp.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/displayhelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/displayhelp.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/displayhelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/displayhelp.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/displayhelp.html?lang=en">en</a>&emsp;&emsp;</p><h1 class="western">Görüntü Ayarları</h1>
 <h2 class="western"><a href="https://www.juggluco.nl/Jugglucohelp/tr/colorhelp.html"><span lang="tr-TR">Renkler</span></a></h2>
 <p style="margin-bottom: 0cm">Eğrilerin, taramaların ve sayıların
 renklerini değiştirin. <i>Koyu mod</i>\'a geçmek için, sağ orta
@@ -2870,7 +2750,7 @@ Herhangi bir dil kodu seçilmediğinde, sistem dili kullanılır.</p>
 </string>
 <string name="loghelp" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/tr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/loghelp.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/loghelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/loghelp.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/loghelp.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/loghelp.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/loghelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/loghelp.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/loghelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/loghelp.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/loghelp.html?lang=en">en</a>&emsp;&emsp;</p><h1 class="western">Log</h1>
+<p><a href="https://www.juggluco.nl/Jugglucohelp/tr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/loghelp.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/loghelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/loghelp.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/loghelp.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/loghelp.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/loghelp.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/loghelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/loghelp.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/loghelp.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/loghelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/loghelp.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/loghelp.html?lang=en">en</a>&emsp;&emsp;</p><h1 class="western">Log</h1>
 <p style="line-height: 100%; margin-bottom: 0cm">Juggluco\'nun günlük
 versiyonudur. Günlük dosyaları şu şekilde oluşturulabilir:
 /data/data/tk.glucodata/files/logs</p>
@@ -2918,7 +2798,7 @@ Görünümü kapatın.</p>
 </string>
 <string name="sensormirror" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/tr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/sensormirror.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/sensormirror.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/sensormirror.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/sensormirror.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/sensormirror.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/sensormirror.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/sensormirror.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/sensormirror.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/sensormirror.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/sensormirror.html?lang=en">en</a>&emsp;&emsp;</p><h1 class="western">Sensör Bilgisi</h1>
+<p><a href="https://www.juggluco.nl/Jugglucohelp/tr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/sensormirror.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/sensormirror.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/sensormirror.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/sensormirror.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/sensormirror.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/sensormirror.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/sensormirror.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/sensormirror.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/sensormirror.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/sensormirror.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/sensormirror.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/sensormirror.html?lang=en">en</a>&emsp;&emsp;</p><h1 class="western">Sensör Bilgisi</h1>
 <p><a href="https://www.juggluco.nl/">Juggluco</a> akış
 değerlerinin klonu olarak işlev gördüğünde sensörler hakkında
 bilgi verir.</p>
@@ -2969,7 +2849,7 @@ görüntüleneceğini seçebilirsiniz.</p>
 </string>
 <string name="QRmirror" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/tr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/QRmirror.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/QRmirror.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/QRmirror.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/QRmirror.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/QRmirror.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/QRmirror.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/QRmirror.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/QRmirror.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/QRmirror.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/QRmirror.html?lang=en">en</a>&emsp;&emsp;</p><h1>QR Klon</h1>
+<p><a href="https://www.juggluco.nl/Jugglucohelp/tr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/QRmirror.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/QRmirror.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/QRmirror.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/QRmirror.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/QRmirror.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/QRmirror.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/QRmirror.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/QRmirror.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/QRmirror.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/QRmirror.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/QRmirror.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/QRmirror.html?lang=en">en</a>&emsp;&emsp;</p><h1>QR Klon</h1>
 <p style="line-height: 100%; margin-bottom: 0cm">Diğer telefonda <i>S</i><i>ol
 </i><i>M</i><i>enü → Fotoğraf</i> ile QR kodunu tarayarak klon
 bağlantısının diğer tarafını yapılandırabilirsiniz.</p>
@@ -2993,7 +2873,7 @@ yapılandırın ve diğer tarafı QR kodunu tarayarak yapılandırın.</p>
 </string>
 <string name="autoqrmessage" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/tr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/autoqrmessage.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/autoqrmessage.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/autoqrmessage.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/autoqrmessage.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/autoqrmessage.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/autoqrmessage.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/autoqrmessage.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/autoqrmessage.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/autoqrmessage.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/autoqrmessage.html?lang=en">en</a>&emsp;&emsp;</p>Bu telefondan ev ağınızdaki başka bir telefona veri gönderebilirsiniz.
+<p><a href="https://www.juggluco.nl/Jugglucohelp/tr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/autoqrmessage.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/autoqrmessage.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/autoqrmessage.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/autoqrmessage.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/autoqrmessage.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/autoqrmessage.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/autoqrmessage.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/autoqrmessage.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/autoqrmessage.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/autoqrmessage.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/autoqrmessage.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/autoqrmessage.html?lang=en">en</a>&emsp;&emsp;</p>Bu telefondan ev ağınızdaki başka bir telefona veri gönderebilirsiniz.
 Tamam\\\'a basmak bağlantı için QR kod görüntüleyecektir. QR kodu diğer telefonda Sol Menü → Fotoğraf ile taradığınızda bağlantı kurulacak ve bu telefondan tüm verileri alacaktır.</p>
 
 

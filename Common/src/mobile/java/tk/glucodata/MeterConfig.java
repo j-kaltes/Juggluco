@@ -148,6 +148,6 @@ static void config(MainActivity context, int meterIndex, View parent, BluetoothD
            if(adapter!=null)
                adapter.notifyDataSetChanged();
            });
-   context.addContentView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+   context.addMyContentView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
    }
 }

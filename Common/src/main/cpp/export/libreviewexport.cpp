@@ -112,7 +112,6 @@ bool libreviewCGMexport(const uint32_t starttime,const uint32_t endtime,const bo
                 CalibrateForward<ScanData> cali(sens, CalibratePast);
                 const int librev=3;
                 libreVersion=librev;
-//                int mod=sens->isSibionics()?5:1;
                 const CurData  inper=sens->streamInperiod(nextstart, endtime); 
                 const ScanData *en=inper.end();
                 uint32_t prevtime=0;

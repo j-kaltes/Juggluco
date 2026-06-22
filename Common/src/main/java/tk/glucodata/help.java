@@ -26,6 +26,7 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.os.Build;
 import android.text.method.LinkMovementMethod;
+import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,8 +47,10 @@ import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static tk.glucodata.Applic.backgroundcolor;
 import static tk.glucodata.Applic.isWearable;
+import static tk.glucodata.GlucoseCurve.getheight;
 import static tk.glucodata.Layout.getMargins;
 import static tk.glucodata.Log.doLog;
+import static tk.glucodata.MainActivity.addMyContentView;
 import static tk.glucodata.MainActivity.doonback;
 import static tk.glucodata.MainActivity.poponback;
 import static tk.glucodata.MainActivity.setonback;
@@ -58,23 +61,34 @@ import static tk.glucodata.MainActivity.systembarTop;
 import static tk.glucodata.Specific.useclose;
 import static tk.glucodata.settings.Settings.removeContentView;
 
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.BackgroundColorSpan;
+import android.text.style.ForegroundColorSpan;
+import android.widget.TextView;
+
 
 public class help {
 static private final String LOG_ID="help";
 //tatic   Layout helplayout=null;
 static WeakReference<ViewGroup> whelplayout=null;
 static    WeakReference<TextView> whelpview=null;
-public static   void help(int res,Activity act,Consumer<ViewGroup> okproc) {
+public static void reset() {
+     whelplayout=null;
+     whelpview=null;
+     okbutton=null;
+    }
+public static   void help(int res, ContextThemeWrapper act,Consumer<ViewGroup> okproc) {
     help(act.getString(res),act,okproc);
     }
-public static   void help(int res,Activity act) {
+public static   void help(int res,ContextThemeWrapper act) {
     help(res,act,l->{});
     }
 public static   void helplight(int res,MainActivity act) {
-    act.lightBars(false);
+    act.themeLightBars();
     help(res,act, l->act.lightBars(!Natives.getInvertColors()));
     }
-static    WeakReference<Button> okbutton=null;
+public static    WeakReference<Button> okbutton=null;
 public static void hide() {
     if(whelplayout==null) 
         return;
@@ -91,26 +105,43 @@ public static void show() {
         return;
     lay.setVisibility(VISIBLE);
     }
-public static   void basehelp(int res,Activity act,Consumer<ViewGroup> okproc) {
+public static   void basehelp(int res,ContextThemeWrapper act,Consumer<ViewGroup> okproc) {
     basehelp(act.getString(res),act,okproc);
     }
 
-    public static   void  basehelp(String text,Activity act,Consumer<ViewGroup>  okproc) {
+    public static   void  basehelp(String text,ContextThemeWrapper act,Consumer<ViewGroup>  okproc) {
           basehelp(text,act,okproc,(v,w,h)-> new int[] {w,h},new ViewGroup.MarginLayoutParams(MATCH_PARENT, MATCH_PARENT)) ;
         }
+
+
+
+public static void setHtmlIgnoringHtmlColors(TextView textView, String html) {
+    Spanned spanned = Build.VERSION.SDK_INT >= Build.VERSION_CODES.N?fromHtml(html,TO_HTML_PARAGRAPH_LINES_CONSECUTIVE):fromHtml(html);
+    SpannableStringBuilder cleaned = new SpannableStringBuilder(spanned);
+
+    ForegroundColorSpan[] fgSpans =
+            cleaned.getSpans(0, cleaned.length(), ForegroundColorSpan.class);
+    for (ForegroundColorSpan span : fgSpans) {
+        cleaned.removeSpan(span);
+    }
+
+    // Optional: remove inline background colors too.
+    BackgroundColorSpan[] bgSpans =
+            cleaned.getSpans(0, cleaned.length(), BackgroundColorSpan.class);
+    for (BackgroundColorSpan span : bgSpans) {
+        cleaned.removeSpan(span);
+    }
+
+    textView.setText(cleaned);
+}
+
     @SuppressWarnings("deprecation")
-  public static   void  basehelp(String text,Activity act,Consumer<ViewGroup>  okproc,Placer place, ViewGroup.MarginLayoutParams params) {
-    hidekeyboard(act);
+  public static   void  basehelp(String text,ContextThemeWrapper act,Consumer<ViewGroup>  okproc,Placer place, ViewGroup.MarginLayoutParams params) {
+    hidekeyboard((MainActivity) getActivity(act));
     ScrollView       helpscroll=new ScrollView(act);
     TextView helpview=new TextView(act);
-
-    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-        helpview.setText(fromHtml(text,TO_HTML_PARAGRAPH_LINES_CONSECUTIVE));
-        }
-    else {
-        helpview.setText(fromHtml(text));
-        }
-     helpview.setTextColor(Color.WHITE);
+    setHtmlIgnoringHtmlColors(helpview,text);
+         helpview.setTextColor(util.getColorFromTheme(act, android.R.attr.textColorPrimary));
      helpview.setTextIsSelectable(true);
      helpview.setScroller(null);
      helpview.setMovementMethod(LinkMovementMethod.getInstance());
@@ -137,7 +168,7 @@ public static   void basehelp(int res,Activity act,Consumer<ViewGroup> okproc) {
               helpscroll.addView(layout,params);
               helpscroll.setBackgroundColor(backgroundcolor);
               helplayout=helpscroll; 
-              act.addContentView(helplayout,new ViewGroup.LayoutParams(MATCH_PARENT,MATCH_PARENT));
+              addMyContentView(getActivity(act),helplayout,new ViewGroup.LayoutParams(MATCH_PARENT,MATCH_PARENT));
             }
        else {
            ok.setText(R.string.ok);
@@ -163,7 +194,7 @@ public static   void basehelp(int res,Activity act,Consumer<ViewGroup> okproc) {
        helplayout.setLayoutParams(params);
        helplayout.requestLayout();
         helplayout.setBackgroundResource(R.drawable.helpbackground);
-           act.addContentView(helplayout, params);
+           addMyContentView(getActivity(act),helplayout, params);
 
           }
 final var helplayout2=helplayout;
@@ -184,18 +215,18 @@ final var helplayout2=helplayout;
 };
 
     @SuppressLint("deprecation")
-public static   void help(String text,Activity act,Consumer<ViewGroup>  okproc,Placer place, ViewGroup.MarginLayoutParams params) {
+public static   void help(String text,ContextThemeWrapper act,Consumer<ViewGroup>  okproc,Placer place, ViewGroup.MarginLayoutParams params) {
     if(doLog) {
           var len=text.length();
           if(doLog) {Log.i(LOG_ID,"help "+((len==0?"":text.substring(0,Math.min(20,len)))));};
           }
-      hidekeyboard(act);
+      hidekeyboard((MainActivity) getActivity(act));
       Button ok;
       ViewGroup helplayout;
       if(whelplayout==null||((helplayout=whelplayout.get())==null)||act!=helplayout.getContext()||( (ok=    okbutton.get())==null) ) {
          ScrollView       helpscroll=new ScrollView(act);
          TextView helpview=new TextView(act);
-         helpview.setTextColor(Color.WHITE);
+         helpview.setTextColor(util.getColorFromTheme(act, android.R.attr.textColorPrimary));
          helpview.setTextIsSelectable(true);
          whelpview=new WeakReference<TextView>(helpview);
          helpview.setMovementMethod(LinkMovementMethod.getInstance());
@@ -206,7 +237,7 @@ public static   void help(String text,Activity act,Consumer<ViewGroup>  okproc,P
          helpscroll.setVerticalScrollBarEnabled(Applic.scrollbar);
          helpscroll.setScrollbarFadingEnabled(false);
          ok=new Button(act);
-         okbutton=new WeakReference<Button>(ok);
+        okbutton=new WeakReference<Button>(ok);
        ok.setText(R.string.ok);
        if(isWearable) {
            // helpview.setPadding(pad,pad,pad,pad);
@@ -221,7 +252,7 @@ public static   void help(String text,Activity act,Consumer<ViewGroup>  okproc,P
               helpscroll.addView(layout,params);
               helpscroll.setBackgroundColor(backgroundcolor);
               helplayout=helpscroll; 
-              act.addContentView(helplayout,new ViewGroup.LayoutParams(MATCH_PARENT,MATCH_PARENT));
+              addMyContentView(getActivity(act),helplayout,new ViewGroup.LayoutParams(MATCH_PARENT,MATCH_PARENT));
              helplayout.setBackgroundColor(backgroundcolor);
             }
 
@@ -231,7 +262,8 @@ public static   void help(String text,Activity act,Consumer<ViewGroup>  okproc,P
          getMargins(ok).topMargin=systembarTop;
            int pad=(int)(GlucoseCurve.getDensity()*7.0);
            helpview.setPadding(pad,pad+systembarTop,pad,pad+systembarBottom);
-         helpview.setBackgroundResource(R.drawable.helpbackground);
+
+        helpscroll.setBackgroundResource(R.drawable.helpbackground);
 
 //           var marg=Layout.getMargins(helpview);
            ///marg.bottomMargin=(int)(GlucoseCurve.getheight()*.1f);
@@ -256,15 +288,16 @@ public static   void help(String text,Activity act,Consumer<ViewGroup>  okproc,P
         );
          helplayout.setLayoutParams(params);
         helplayout.requestLayout();
-        act.addContentView(helplayout, params);
+        var activity=getActivity(act);
+       activity.addContentView(helplayout, params);
 
 //       var okmarg=getMargins(ok);
        var  okparams =    new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, MainActivity.rtl?Gravity.LEFT:Gravity.RIGHT| Gravity.TOP);
        okparams.topMargin=(int)(MainActivity.systembarTop*.71f);
        okparams.rightMargin=MainActivity.systembarRight;
        okparams.leftMargin=MainActivity.systembarLeft;
-        act.addContentView(ok, okparams);
-//        ok.measure(WRAP_CONTENT, WRAP_CONTENT);
+           activity.addContentView(ok, okparams);
+          DynamicThemeUtils.applyTheme(ok);
           }
         whelplayout=new WeakReference<ViewGroup>(helplayout);
        }
@@ -294,6 +327,7 @@ public static   void help(String text,Activity act,Consumer<ViewGroup>  okproc,P
 //        float okx=width-okwidth-MainActivity.systembarRight - GlucoseCurve.getDensity();
  //       ok.setX(okx);
   //       {if(doLog) {Log.i(LOG_ID,"width="+width+" okx="+okx+" okwidth="+okwidth+" systembarRight="+ MainActivity.systembarRight );};};
+        place.place(ok,width,getheight());
          }
      //   ViewGroup.MarginLayoutParams marg = (ViewGroup.MarginLayoutParams) helplayout.getLayoutParams();
 //       whelpview.get().setText(Html.fromHtml(text));
@@ -302,13 +336,7 @@ public static   void help(String text,Activity act,Consumer<ViewGroup>  okproc,P
          textview.setGravity(Gravity.RIGHT);
          textview.setTextDirection(View.TEXT_DIRECTION_RTL);
          }
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-        textview.setText(fromHtml(text,TO_HTML_PARAGRAPH_LINES_CONSECUTIVE));
-    }
-    else {
-        textview.setText(fromHtml(text));
-    }
-
+    setHtmlIgnoringHtmlColors(textview,text);
      Runnable closerun=() -> {
          if (whelplayout != null) {
              ViewGroup helplayout2 = whelplayout.get();
@@ -331,15 +359,15 @@ public static   void help(String text,Activity act,Consumer<ViewGroup>  okproc,P
         });
 }
 
-    public static   void help(String text,Activity act,Consumer<ViewGroup>  okproc) {
+    public static   void help(String text,ContextThemeWrapper act,Consumer<ViewGroup>  okproc) {
      help( text, act, okproc,(v,w,h)-> {
          return new int[] {w,h};
         }, new ViewGroup.MarginLayoutParams(MATCH_PARENT, MATCH_PARENT));
     }
-public static   void help(String text,Activity act) {
+public static   void help(String text,ContextThemeWrapper act) {
     help(text,act,l->{});
     }
-public static void hidekeyboard(Activity activity) {
+public static void hidekeyboard(MainActivity activity) {
       if(activity==null)
             return;
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(INPUT_METHOD_SERVICE);
@@ -349,7 +377,15 @@ public static void hidekeyboard(Activity activity) {
            if(focus!=null)
             imm.hideSoftInputFromWindow(focus.getWindowToken(), 0);
         }
-public static void showkeyboard(Activity activity,View focus) {
+public static Activity getActivity(ContextThemeWrapper context) {
+    do {
+        if(context instanceof Activity)
+            return (Activity) context;
+        context=(ContextThemeWrapper)context.getBaseContext();
+        } while(context!=null);
+    return null;
+    }
+public static void showkeyboard(ContextThemeWrapper activity,View focus) {
         Log.i(LOG_ID,"showkeyboard");
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(INPUT_METHOD_SERVICE);
             imm.showSoftInput(focus, 0);

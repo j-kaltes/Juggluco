@@ -19,9 +19,13 @@
 /*      Fri Jan 27 12:35:09 CET 2023                                                 */
 ///data/dalvik-cache/thumbv7a/system@framework@XposedBridge.jar@classes.dex/.trdpx 
 constexpr const std::string_view accessnames[] = {
-#if defined(__aarch64__) || defined(__i386__)
+#if defined(__aarch64__) || defined(__i386__)||defined(__arm__) 
 R"(/data/dalvik-cache/)" archname R"(/system@framework@XposedBridge.jar@classes.dex)",
 R"(/data/dalvik-cache/oat/)" archname R"(/xposed_XResourcesSuperClass.odex)",
+#if defined(__arm__) 
+R"(/data/dalvik-cache/oat/thumbv7a/xposed_XResourcesSuperClass.odex)",
+R"(/data/dalvik-cache/thumbv7a/system@framework@XposedBridge.jar@classes.dex)",
+#endif
 #else
 R"(/data/dalvik-cache/oat/)" archname R"(/xposed_XResourcesSuperClass.odex)",
 R"(/data/dalvik-cache/)" archname R"(/system@framework@XposedBridge.jar@classes.dex)",

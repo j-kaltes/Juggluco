@@ -131,7 +131,7 @@ std::array<unsigned char,sizeof(sendmagic)>  sendmagicspec=getsendmagic();
    else
       magicptr=&sendmagicspec;
    if(s_sendni(magicptr->data(),magicptr->size())!=magicptr->size()) {
-      char *buf=getmirrorerror(pass);
+      char *buf=getmirrorerrorsettime(pass);
       int waser=errno;
       constexpr const char mess[]="testsendmagic: send magic failed: ";
       constexpr const int len=sizeof(mess)-1;
@@ -145,7 +145,7 @@ std::array<unsigned char,sizeof(sendmagic)>  sendmagicspec=getsendmagic();
    LOGARTAG("testsendmagic before recv magic");
    int gotlen;
    if((gotlen=s_recvni(buf,recsize))!=recsize) {
-      char *ptr=getmirrorerror(pass);
+      char *ptr=getmirrorerrorsettime(pass);
       int waser=errno;
       int len=snprintf(ptr,maxmirrortext,"testsendmagic: magic recv()=%d!=%d: ",gotlen,(int)recsize);
       strerror_r(waser, ptr+len, maxmirrortext-len);
@@ -155,7 +155,7 @@ std::array<unsigned char,sizeof(sendmagic)>  sendmagicspec=getsendmagic();
    LOGARTAG("testsendmagic: after recv magic");
    if(memcmp(buf,receivemagic,recsize-4)) {//4 less for version info
       char wrong[]="testsendmagic: Wrong magic";
-      char *buf=getmirrorerror(pass);
+      char *buf=getmirrorerrorsettime(pass);
       memcpy(buf,wrong,sizeof(wrong));
       LOGGERN(wrong,sizeof(wrong)-1);
       return 3;
@@ -212,6 +212,7 @@ bool Connect::sendtype(char type) {
 
 
 extern char *getmirrorerror(const passhost_t *pass);
+extern char *getmirrorerrorsettime(const passhost_t *pass);
 void settimeouts(int sock) {
    struct timeval tv;
    tv.tv_usec = 0;
@@ -342,7 +343,7 @@ bool activate=true;
              sprintf(port,"%d",pass->getport());
              LOGGERTAG("connect to %s %s\n",host,port);
              if(int error=getaddrinfo(host,port,&hints,&servinfo)) {
-                  char *buf=getmirrorerror(pass);
+                  char *buf=getmirrorerrorsettime(pass);
                   #ifndef NOLOG
                   int len=
                   #endif
@@ -533,7 +534,7 @@ int Connect::makeconnection(passhost_t *pass,crypt_t*ctx,char stype) {
    int res=makeconnection2(pass,stype);
    if(res>=0) {
       const auto tag=get_owner_tag(res);
-      *getmirrorerror(pass)='\0';
+      *getmirrorerrorsettime(pass)='\0';
       if(ctx)
          sendpassinit(pass,ctx);
       }

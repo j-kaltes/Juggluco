@@ -448,7 +448,14 @@
 
 <string name="messagewebserverneed">Ga naar het linkermenu -> Instellingen -> Deel gegevens -> Webserver om de webserver te activeren</string>
 <string name="nostreamvalues">Geen stream-waarden</string>
-
 <string name="nohistoryvalues">Geen history-waarden</string>
+<string name="jugglucoupdate">Updatetijd</string>
+<string name="retrieve">Ophalen van server</string>
+<string name="wrongcode">Verkeerde QR-code</string>
+<string name="leave">Vertrekken?</string>
+<string name="id0message">ID moet anders zijn dan 0</string>
+<string name="emailnotused">E-mailwachtwoordcombinatie niet gebruikt en wordt niet opgeslagen.</string>
+<string name="connecttoserver">Verbinding maken met server…</string>
+<string name="retrievefailed">Het ophalen van account-ID is mislukt</string>
 </resources>
 

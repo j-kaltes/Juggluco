@@ -39,7 +39,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
-import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -239,8 +238,8 @@ static public void show(MainActivity context,View parent) {
                     WRAP_CONTENT,
                     Gravity.CENTER_HORIZONTAL| Gravity.CENTER);
 
-    context.addContentView(layout, params);
-    //context.addContentView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+    context.addMyContentView(layout, params);
+    //context.addMyContentView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
 //    layout.post(layout::requestLayout);
     Ok.setOnClickListener(v -> {
         if(swatch.isEnabled()) {

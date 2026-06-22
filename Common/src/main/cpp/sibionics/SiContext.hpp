@@ -27,6 +27,7 @@
 #include "config.h"
 #include "scanstate.hpp"
 class SensorGlucoseData;
+struct sensor;
 #include "AlgorithmContext.hpp"
 template <typename T,int NR> struct gegs;
 typedef gegs<signed char> data_t;
@@ -34,15 +35,20 @@ class SiContext {
 private:
    multimmap binState;
    AlgorithmContext *algcontext;
-   bool notchinese;
+   bool newSI;
    double process2(int index,double value, double temp);
    double process3(int index,double value, double temp);
+ jlong     handleOneGlucose(SensorGlucoseData *sens,int sensorindex,uint32_t nowsecs,int index,int tempin,int current,int reindex,time_t eventTime);
+//   jlong     handleOneGlucose(SensorGlucoseData *sens,sensor *sensor,int sensorindex,uint32_t nowsecs,int index,int temp,int current,int reindex,int trend,time_t eventTime);
+   jlong handleGlucoses(SensorGlucoseData *sens,int sensorindex,uint32_t nowsecs,const std::uint8_t* decoded_records, std::size_t record_count);
+//   jlong interpret_data(SensorGlucoseData *sens,int sensorindex,const jbyte* data, jint datalen, jboolean doDecrypt);
+jlong interpret_data(SensorGlucoseData *sens,int sensorindex,uint32_t nowsecs,const uint8_t* data, jint datalen, jboolean doDecrypt) ;
    void release();
 public:
-   void  	setNotchinese(SensorGlucoseData *sens);
+   void  	setNewSI(SensorGlucoseData *sens);
    SiContext(SensorGlucoseData *sens);
     jlong processData(SensorGlucoseData *sens,time_t nowsecs,int8_t *data,int totlen,int sensorindex) ;
-#ifdef NOTCHINESE
+#ifdef NEWSIBIONICS
     jlong processData2(SensorGlucoseData *sens,time_t nowsecs,data_t *data,int sensorindex) ;
 #endif
    ~SiContext();

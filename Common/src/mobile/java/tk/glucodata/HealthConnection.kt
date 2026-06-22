@@ -72,8 +72,7 @@ private  fun writeAllIns(sensorptr:Long, sensorName:String) {
            if(start==end)
                return@launch
             Log.i(LOG_ID,"endstart=$endstart start=$start end=$end len=${end-start}")
-                  val meta=androidx.health.connect.client.records.metadata.Metadata.unknownRecordingMethod(device=Device(TYPE_UNKNOWN,"Libre", sensorName)
-                )
+           val meta=androidx.health.connect.client.records.metadata.Metadata.unknownRecordingMethod(device=Device(TYPE_UNKNOWN,"Libre", sensorName))
             while (start < end) {
                 val take = min(end - start, 500)
                 Log.i(LOG_ID,"start=$start take=$take")

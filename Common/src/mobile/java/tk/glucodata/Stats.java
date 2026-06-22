@@ -80,7 +80,7 @@ static private void askdays(MainActivity act,boolean history) {
       return new int[]{w, h};
       },new View[]{label,days},new View[]{Cancel,Ok});
         layout.setPadding(pad,pad,pad,pad);
-   act.addContentView(layout,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+   act.addMyContentView(layout,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
      layout.post(layout::requestLayout);
         layout.setBackgroundResource(R.drawable.dialogbackground);
    days.requestFocus();
@@ -174,8 +174,8 @@ static void mkstats(MainActivity act) {
     var  params =    new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.BOTTOM| Gravity.RIGHT);
     params.bottomMargin=MainActivity.systembarBottom;
     params.rightMargin=MainActivity.systembarRight;
-      act.addContentView(layout, params);
-    //  act.addContentView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+      act.addMyContentView(layout, params);
+    //  act.addMyContentView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
     final Runnable closeonback=()-> {
              act.curve.statspresent=false;
              act.curve.summarybutton=null;
@@ -195,7 +195,7 @@ static void mkstats(MainActivity act) {
        });
     act.setonback(closeonback);
       Help.setOnClickListener(v ->  {
-                    act.lightBars(false);
+                    act.themeLightBars();
                     help.help(R.string.stathelp, act,l->act.lightBars(!Natives.getInvertColors( ))); 
                     });
       Days.setOnClickListener(v -> {

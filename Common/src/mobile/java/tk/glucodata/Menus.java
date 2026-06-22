@@ -57,7 +57,7 @@ static public void show(MainActivity act) {
 
 	view.setAccessibilityDelegate(Layout.accessDeli);
         view.setBackgroundColor( Applic.backgroundcolor);
-      act.lightBars(false);
+      act.themeLightBars();
 	act.setonback(() -> {
    		act.lightBars(!getInvertColors( ));
 			   {if(doLog) {Log.i(LOG_ID,"onback");};};
@@ -302,7 +302,7 @@ static public void show(MainActivity act) {
 	  // view.setPadding(0,MainActivity.systembarTop,0,0);
   	view.setPadding(MainActivity.systembarLeft,MainActivity.systembarTop*3/4,MainActivity.systembarRight,MainActivity.systembarBottom);
 
-	act.addContentView(view, new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
+	act.addMyContentView(view, new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
 
     }
 

@@ -180,7 +180,7 @@ public void showexport(MainActivity activity,int width,int height,View parent) {
         ((Layout)exportscreen).useMatch=true;
         exportscreen.setPadding(rand,rand,rand,rand);
         exportscreen.setBackgroundColor( Applic.backgroundcolor);
-        activity.addContentView(exportscreen, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+        activity.addMyContentView(exportscreen, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
 //        exportlabel.requestFocus();
 
          exportscreen.post(exportscreen::requestLayout);
@@ -207,7 +207,7 @@ public void showexport(MainActivity activity,int width,int height,View parent) {
           activity.curve.numberview.hidekeyboard() ;
        exportscreen.setVisibility(GONE);
        if(parent!=null) {
-            activity.lightBars(false);
+            activity.themeLightBars();
             {if(doLog) {Log.i(LOG_ID, "parent.setVisibility(VISIBLE)");};};
             parent.setVisibility(VISIBLE);
           }

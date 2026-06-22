@@ -2,12 +2,12 @@
 #ifdef INJUGGLUCO
 #ifndef WEAROS
 constexpr static std::string_view rulabels[]={
-"Yглeвoд",
+"Угл.",
 "Сахар",
-"Kopoтkuй",
-"Дoлгuй",
-"Велик",
-"Хoдьбa",
+"Болус",
+"Базал",
+"Вело",
+"Шаги",
 "Кровь"};
 
 
@@ -15,22 +15,28 @@ constexpr static std::string_view rulabels[]={
 
 constexpr static Shortcut_t  rushortinit[]= { {"Хлеб",
         .48},
-        {"Яблoкo",
+        {"Изюм1",
+        .56f},
+        {"Изюм2",
+        .595f},
+        {"Виног",
         .165f},
-        {"Фрукт",
+        {"ЙогФр",
         .058f},
         {"Рис",
         .75f},
-        {"Makaрoны",
+        {"Макар",
         .65f},
         {"Томат",
         .03f},
-        {"Суп",
+        {"Мекс",
         .078f},
-        {"Сок",
+        {"АпСок",
         .109f},
         {"Спорт",
         .873f},
+        {"Моркв",
+        .07f},
         {"Грибы",
         .07300000f}};
 #endif
@@ -60,12 +66,12 @@ jugglucotext rutext {
       "Ноя",
       "Дек"},
 
-	.scanned="Сканирование",
-	.readysecEnable="Датчик будет готов через %d минут. Повторите сканирование, чтобы включить потоковую передачу.",
+	.scanned="Скан",
+	.readysecEnable="Датчик будет готов через %d минут. Отсканируйте еще раз, чтобы включить поток.",
 	.readysec="Датчик будет готов через %d минут.",
-.networkproblem="Нет данных глюкозы от зеркала",
-.enablebluetooth="Вкл Bluetooth",
-.useBluetoothOff="'Используйте Bluetooth' выкл.",
+.networkproblem="Нет глюкозы от зеркала",
+.enablebluetooth="Включить Bluetooth",
+.useBluetoothOff="'Использовать Bluetooth' выключено",
 .noconnectionerror=": Нет соединения",
 .stsensorerror=": Ошибка датчика",
 .streplacesensor=": Заменить датчик?",
@@ -73,28 +79,36 @@ jugglucotext rutext {
 .notreadyformat="%s не готов. Состояние=%d",
 #ifndef WEAROS
 	.median="Медиана",
-	.middle="Средний",
+	.middle="Среднее",
 #endif
 	.history="История",
 //	.historyinfo="Once per 15 minutes.\nRemembered on the sensor for 8 hours.\nScanning transfers them to this program.\nSensor: ", 
 //	.history3info="Once per 5 minutes.\nRemembered on the sensor for 14 days.\nTransferred by Bluetooth to this program.\nSensor: ",
-	.sensorstarted= "Начал работу:",
-	.lastscanned="Последний скан:",
-	.laststream="Последний поток:",
-	.sensorends="Официально заканчивается: ",
-    .sensorexpectedend="Ожидаемо заканчивается: ",
+#ifndef WEAROS
+	.sensorstarted= "Начало:\t\t\t\t\t\t",
+#else
+	.sensorstarted= "Начало:",
+#endif
+	.lastscanned="Посл. скан:",
+#ifndef WEAROS
+	.laststream="Посл. поток:\t",
+#else
+	.laststream="Посл. поток:",
+#endif
+	.sensorends="Официальное окончание: ",
+    .sensorexpectedend="Ожидаемое окончание: ",
 #endif //INJUGGLUCO
 #ifndef WEAROS
 #ifdef INJUGGLUCO
 	.newamount="Новая запись",
-	.averageglucose="Средняя ГК: ",
-	.duration="Продолжительность: %.1f день",
-	.timeactive="%.1f%% активного времени",
-	.nrmeasurement="Количество измерений: %d",
-	.EstimatedA1C="Предполагаемый A1C: %.1f%% (%d mmol/mol)",
-	.GMI="Индикатор уровня ГК: %.1f%% (%d mmol/mol)",
+	.averageglucose="Средняя глюкоза: ",
+	.duration="Продолжительность: %.1f дн.",
+	.timeactive="%.1f%% времени активно",
+	.nrmeasurement="Число измерений: %d",
+	.EstimatedA1C="Расчетный A1C: %.1f%% (%d ммоль/моль)",
+	.GMI="Индикатор управления глюкозой: %.1f%% (%d ммоль/моль)",
 	.SD="SD: %.2f",
-	.glucose_variability="Изменчивость уровня ГК: %.1f%%",
+	.glucose_variability="Вариабельность глюкозы: %.1f%%",
      .menustr0={
 		"System UI",
 		"Меню",
@@ -102,9 +116,9 @@ jugglucotext rutext {
 		"Датчик",
 		"Настройки",
 #if defined(SIBIONICS)
-"Photo",
+		"Фото",
 #else
-		"About",
+		"О программе",
 #endif
 		"Закрыть",
 		"Стоп тревога"
@@ -113,7 +127,7 @@ jugglucotext rutext {
 		"Экспорт",
 		"Зеркало",
 		 rutext.newamount,
-		"Все записи",
+		"Список",
 #else
        .statistics=
 #endif //INJUGGLUCO
@@ -122,8 +136,8 @@ jugglucotext rutext {
 		"Озвучка",
 		"Плав. глюк."
 		},
-	.menustr2= {"Последний скан",
-	"Сканирование",
+	.menustr2= {"Скан",
+	"Сканы",
 	"Поток",
 	"История",
 	"Записи",
@@ -131,21 +145,21 @@ jugglucotext rutext {
 	"Темная тема"},
 	.menustr3= {hourminstr,
 	"Поиск",
-	"К дате",
+	"Дата",
 	"День назад",
 	"День вперед",
 	"Неделя назад",
 	"Неделя вперед"},
 #endif //INJUGGLUCO
 #else
- .amount="Значение",
+ .amount="Запись",
  .menustr0= {
-	"Зеркало",
+	"        Зеркало",
 	"Датчик",
 	"Дисплей",
-        "Настройки",
+    "Настройки",
 	"Стоп тревога" },
-.menustr2= {"К дате",
+.menustr2= {"Дата",
 hourminstr,
 "День назад",
 rutext.amount},
@@ -153,94 +167,74 @@ rutext.amount},
 
 #ifdef INJUGGLUCO
 	.scanerrors={
-		{"Ошибка скана (%d)",
-			"Попробуйте еще"},
-		{"Ошибка установки",
-			"?"},
-		{"Ошибка при обработке данных",
-			"Попробуйте еще"},
-		{"Активированный датчик",
-			""},
-		{"Датчик определенно закончился",
-			""},
+		{"Ошибка скана (%d)", "Попробуйте еще"},
+		{"Ошибка установки", "?"},
+		{"Ошибка обработки данных", "Попробуйте еще"},
+		{"Активация датчика", ""},
+		{"Датчик точно завершился", ""},
+		{"Датчик будет готов через", "%d мин"},
+		{"Ошибка датчика (373)", "Попробуйте позже"},
+		{"Новый датчик инициализирован", "Отсканируйте еще раз, чтобы использовать"},
+		{"", "Блокирует касания во время сканирования"},
+		{"", ""},
+		{"Ошибка инициализации библиотеки", "Отсутствуют общие библиотеки?"},
+		{"Ошибка инициализации класса", "Сделайте что-нибудь"},
+		{"Процедура длится слишком долго", "Программа будет закрыта"},
+		{"Заменить датчик (365)", "Ваш датчик не работает. Снимите его и начните новый."},
+		{"Заменить датчик (368)", "Ваш датчик не работает. Снимите его и начните новый."},
+		{"", ""},
+		{"Ошибка скана", "Попробуйте еще"}},
 
-		{"Датчик готов к работе через",
-			"%d мин"},
-		{"Ошибка датчика (373)",
-			"Попробуйте позже"},
-		{"Инициализирован новый датчик",
-			"Скан еще раз, чтобы использовать его"},
-		{"",
-			"Блокирует касания во время скана"},
-		{"",
-			""},
-		{"Ошибка инициализации библиотеки",
-			"Отсутствуют общие библиотеки?"},
-		{"Ошибка инициализации класса",
-			"Сделай что-нибудь"},
-		{"Процедура занимает слишком много времени",
-			"Программа будет немеделено закрыта"},
-		{"Заменить датчик (365)",
-			"Ваш датчик не работает. Пожалуйста, снимите ваш датчик и установите новый."},
-		{"Заменить датчик (368)",
-			"Ваш датчик не работает. Пожалуйста, снимите ваш датчик и установите новый."},
-		{"",
-			""},
-		{"Ошибка сканирования",
-			"Попробуйте еще"}},
-
-.libre3scanerror={"FreeStyle Libre 3, Ошибка сканирования",
-
-			"Попробуйте еще"},
-.libre3wrongID={"Ошибка, неверный ID аккаунта?",
-	"Укажите в настройках -> Libreview ту же учетную запись, что использовалась для активации датчика"},
-.libre3scansuccess= {"FreeStyle Libre 3 датчик", 
-	"Значения уровня глюкозы теперь будет получать Juggluco"},
+.libre3scanerror={"FreeStyle Libre 3, ошибка скана", 
+	"Попробуйте еще"},
+.libre3wrongID={"Ошибка: неверный ID учетной записи?",
+	R"(Он должен совпадать с тем, который использовался при активации датчика. Чтобы получить его из LibreView, откройте левое меню→Настройки→Обмен данными→LibreView→"Получить Account ID")"},
+.libre3scansuccess= {"Датчик FreeStyle Libre 3", 
+	"Juggluco теперь будет получать значения глюкозы"},
 .unknownNFC={"Нераспознанная ошибка сканирования NFC", 
-
-			"Попробуйте еще"},
-.nolibre3={"FreeStyle Libre 3 датчик",
-	"Загрузите правильную версию с сайта https://www.juggluco.nl/download.html"},
-.libre3zeroID={"Error, zero account ID?",
-	R"(Use Left menu->Settings->Exchange data->Libreview->"Get Account ID" to set a non-zero account ID.)"},
-.needsandroid8="Needs minimally Android 8"sv,
+	"Попробуйте еще"},
+.nolibre3={"Датчик FreeStyle Libre 3",
+	"Загрузите правильную версию с https://www.juggluco.nl/download.html"},
+.libre3zeroID={"Ошибка: нулевой ID учетной записи?",
+	R"(Откройте левое меню→Настройки→Обмен данными→LibreView→"Получить Account ID", чтобы установить ненулевой Account ID.)"},
+.needsandroid8="Требуется как минимум Android 8"sv,
 #ifndef WEAROS
-	.advancedstart= R"(<h1>Модифицированное устройство, телефон с ROOT</h1>
-<p>В одной из библиотек, используемых этим приложением, есть ошибка, которая приводит
-к сбою при обнаружении определенных файлов. Некоторые из
-этих файлов содержатся на вашем устройстве. Эта программа содержит способ обойти эту ошибку, но
-, вероятно, лучше сделать эти файлы необнаруживаемыми каким-либо другим
-способом. У Magisk, например, есть возможность скрыть root для определенных
-приложений (Magisk hide или список запрещенных приложений) и изменить свое собственное имя,
-необходимы оба варианта. В вашем случае у него проблемы со следующим файлом)",
+	.advancedstart= R"(<h1>Модифицированное устройство</h1>
+<p>В одной из библиотек, используемых этим приложением, есть ошибка, из-за которой
+она аварийно завершается при обнаружении определенных файлов. На вашем устройстве
+есть некоторые из этих файлов. В программе есть обходной прием для этой ошибки, но,
+вероятно, лучше сделать эти файлы необнаружимыми другим способом. Например, в Magisk
+есть возможность скрыть root для отдельных приложений (MagiskHide или DenyList) и
+изменить собственное имя; нужны оба действия. В вашем случае проблема связана со
+следующим файлом)",
 	.add_s=true,
 .shortinit=rushortinit,
 .labels=rulabels,
 #endif
 #ifndef DONTTALK
-.checked="Проверен",
-.unchecked="Не проверен",
-.Undetermined="Не определен",
-.FallingQuickly="Быстро падает",
-.Falling="Падает",
-.Stable="Медленно меняется",
-.Rising="Поднимается",
-.RisingQuickly="Быстро растет",
+.checked="Отмечено",
+.unchecked="Не отмечено",
+.Undetermined=""sv,
+.FallingQuickly="Быстро падает"sv,
+.Falling="Падает"sv,
+.Stable="Медленно меняется"sv,
+.Rising="Растет"sv,
+.RisingQuickly="Быстро растет"sv,
 #endif
-.receivingpastvalues="Получение старых значений",
-.receivingdata="Receiving data",
-.unsupportedSibionics="Unsupported Sibionics Sensor"sv,
-.waitingforconnection="Waiting for connection"sv,
-.deleted="Deleted"sv,
-.nolocationpermission="Needs location permission"sv,
-.nonearbydevicespermission="Needs nearby devices permission"sv
+.receivingpastvalues="Получение старых значений"sv,
+.receivingdata="Получение данных"sv,
+.unsupportedSibionics="Датчик Sibionics не поддерживается"sv,
+.waitingforconnection="Ожидание соединения"sv,
+.deleted="Удалено"sv,
+.nolocationpermission="Требуется разрешение на местоположение"sv,
+.nonearbydevicespermission="Требуется разрешение на близлежащие устройства"sv
 
 #endif //INJUGGLUCO
- ,.summarygraph="Обзор графика"sv
+ ,.summarygraph="Сводный график"sv
 
 
-,.logdays="Дни"sv 
-,.unhide="Unhide"sv
+,.logdays="Дневной журнал"sv 
+,.unhide="Показать"sv
 
 		}
 
@@ -251,6 +245,6 @@ rutext.amount},
 extern void setuseru();
 addlang(ru);
 void setuseru() {
-LOGAR("Использование rus");
+LOGAR("Использование ru");
  usedtext= &rutext;
  }

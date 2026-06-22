@@ -64,43 +64,41 @@ static jugglucotext ittext {
 #ifdef INJUGGLUCO
 .speakdaylabel={
 "Domenica",
-"Lunedi",
+"Lunedì",
 "Martedì",
 "Mercoledì",
 "Giovedì",
 "Venerdì",
 "Sabato"},
 	.monthlabel={"gen", "feb", "mar", "apr", "mag", "giu", "lug", "ago", "set", "ott", "nov", "dic"}, 
-	.scanned="Scansione",
-	.readysecEnable="Sensor ready in %d minutes. Scan again to enable Streaming.",
-	.readysec="Sensor ready in %d minutes.",
-.networkproblem="Network problem?",
-.enablebluetooth="Enable Bluetooth",
-.useBluetoothOff="'Use Bluetooth' off",
-.noconnectionerror=": No Connection",
-.stsensorerror=": Sensor Error",
-.streplacesensor=": Replace Sensor?",
-.endedformat="Sensor %s not working anymore. state=%d",
-.notreadyformat="Sensor %s not ready. state=%d",
+	.scanned="Scansionato",
+	.readysecEnable="Sensore pronto tra %d minuti. Scansiona di nuovo per abilitare lo Streaming.",
+	.readysec="Sensore pronto tra %d minuti.",
+.networkproblem="Nessun glucosio dal mirror",
+.enablebluetooth="Abilita Bluetooth",
+.useBluetoothOff="'Usa Bluetooth' disattivato",
+.noconnectionerror=": Nessuna connessione",
+.stsensorerror=": Errore sensore",
+.streplacesensor=": Sostituire il sensore?",
+.endedformat="%s ha smesso di funzionare. stato=%d",
+.notreadyformat="%s non pronto. stato=%d",
 #ifndef WEAROS
 	.median="Mediana",
 	.middle="Centro",
 #endif
 	.history="Cronologia",
-	.historyinfo="Una volta per 15 minuti, Ricordarsi per 8 ore.\nScansionare li trasferirà al programma.\nSensore: ",
-	.history3info=engtext.history3info,
-	.sensorstarted= "Sensore avviato il:",
+	.sensorstarted= "Avviato:\t\t\t\t\t\t",
 	.lastscanned="Ultima scansione:",
-	.laststream="Ultima scansione:",
-	.sensorends="Il sensore teminerà il: ",
-	.sensorexpectedend="Expected to end: ",
+	.laststream="Ultimo flusso:\t\t",
+	.sensorends="Termina ufficialmente: ",
+	.sensorexpectedend="Fine prevista: ",
 #endif //INJUGGLUCO
 #ifndef WEAROS
 #ifdef INJUGGLUCO
 	.newamount="Nuovo valore",
-	.averageglucose="Media glicemica: ",
-	.duration="Duarata: %.1f giorni",
-	.timeactive="%.1f%% di tempo attivo",
+	.averageglucose="Glucosio medio: ",
+	.duration="Durata: %.1f giorni",
+	.timeactive="%.1f%% del tempo attivo",
 	.nrmeasurement="Numero di misure: %d",
 	.EstimatedA1C="A1C stimata: %.1f%% (%d mmol/mol)",
 	.GMI="Glucose Management Indicator: %.1f%% (%d mmol/mol)",
@@ -108,14 +106,14 @@ static jugglucotext ittext {
 	.glucose_variability="Variabilità glicemica: %.1f%%",
      .menustr0={
 		"UI di sistema",
-		"Menus",
+		"Menu",
 		"Orologio",
 		"Sensore",
 		"Impostazione",
 #if defined(SIBIONICS)
-"Photo",
+		"Foto",
 #else
-"About",
+		"About",
 #endif
 		"Chiudi",
 		"Stop Allarme"
@@ -130,8 +128,8 @@ static jugglucotext ittext {
 #endif //INJUGGLUCO
 		"Statistiche",
 #ifdef INJUGGLUCO
-		"Talk",
-		"Float"
+		"Pronuncia",
+		"Flottante"
 		},
 	.menustr2= {"Ultima scansione","Scansioni","Flusso","Cronologia","Valori","Pasti","Modalità scura"}, 
 	.menustr3= {hourminstr,"Cerca","Data","Giorno prima","Giorno dopo","Settimana prima","Settimana dopo"}, 
@@ -145,73 +143,74 @@ static jugglucotext ittext {
 	"Impostazione",
 	"Stop Allarme"
 	 },
-   .menustr2= {"Data",hourminstr,"Giorno dietro",ittext.amount},
+   .menustr2= {"Data",hourminstr,"Giorno prima",ittext.amount},
 #endif
 #ifdef INJUGGLUCO
 	.scanerrors={
-		{"Scan Error (%d)","Riprova"},
+		{"Errore di scansione (%d)","Riprova"},
 		{"Errore di installazione","?"},
 		{"Errore di analisi dei dati","Riprova"},
 		{"Attivazione sensore",""},
 		{"Sensore definitivamente scaduto",""},
-		{"Sensore pronto in","%d minuti"},
-		{"Errore del sensore (373)","Non contattare l'Abbotto subito, esiste la possibilità che riprenda a leggere dopo 10 minuti."},
-		{"Nuovo sensore inizializzato","Scansionare di nuovo per usarlo"},
-		{"","Bloccare il touch durante la scansione"},
+		{"Sensore pronto tra","%d minuti"},
+		{"Errore del sensore (373)","Riprova più tardi"},
+		{"Nuovo sensore inizializzato","Scansiona di nuovo per usarlo"},
+		{"","Blocca il touch durante la scansione"},
 		{"",""},
-		{"Errore di inizializzazione della libreria","Reinstallazione forzata per rimozione libreria"},
+		{"Errore di inizializzazione della libreria","Mancano librerie condivise?"},
 		{"Errore di inizializzazione della classe","Fai qualcosa"}, 
-		{"La procedura sta impiegando troppo tempo","Chiuderò il programma"},
-		{"Sostituire sensore (365)","Il tuo sensore non funziona. Rimuovilo e avviane un altro."},
-		{"Sostituire sensore (368)","Il tuo sensore non funziona. Rimuovilo e avviane un altro."},
+		{"La procedura sta impiegando troppo tempo","Chiudo il programma"},
+		{"Sostituire il sensore (365)","Il tuo sensore non funziona. Rimuovilo e avviane uno nuovo."},
+		{"Sostituire il sensore (368)","Il tuo sensore non funziona. Rimuovilo e avviane uno nuovo."},
 		{"",""},
 		{"Errore di scansione","Riprova"}},
 
-.libre3scanerror={"FreeStyle Libre 3, Scan error", "Try again"},
-.libre3wrongID={"Error, wrong account ID?","Specify in Settings->Libreview the same account used to activate the sensor"},
-.libre3scansuccess= {"FreeStyle Libre 3 sensor", "Glucose values will now be received by Juggluco"},
-.unknownNFC={"Unrecognized NFC scan Error", "Try again"},
-.nolibre3={"FreeStyle Libre 3 sensor","Not supported by this version of Juggluco"},
-.libre3zeroID={"Error, zero account ID?",
-	R"(Use Left menu->Settings->Exchange data->Libreview->"Get Account ID" to set a non-zero account ID.)"},
-.needsandroid8="Needs minimally Android 8"sv,
+.libre3scanerror={"FreeStyle Libre 3, errore di scansione", "Riprova"},
+.libre3wrongID={"Errore, account ID errato?",
+	R"(Deve essere lo stesso usato per attivare il sensore. Per recuperarlo da LibreView, vai in Menu sinistro→Impostazione→Scambio dati→LibreView→"Ottieni Account ID")"},
+.libre3scansuccess= {"Sensore FreeStyle Libre 3", "I valori del glucosio saranno ora ricevuti da Juggluco"},
+.unknownNFC={"Errore: scansione NFC non riconosciuta", "Riprova"},
+.nolibre3={"Sensore FreeStyle Libre 3","Scarica la versione corretta da https://www.juggluco.nl/download.html"},
+.libre3zeroID={"Errore, account ID a zero?",
+	R"(Usa Menu sinistro->Impostazione->Scambio dati->Libreview->"Ottieni Account ID" per impostare un account ID diverso da zero.)"},
+.needsandroid8="Richiede almeno Android 8"sv,
 #ifndef WEAROS
-	.advancedstart=R"(<H1>Dispositivi modificati</H1>
+	.advancedstart=R"(<H1>Dispositivo modificato</H1>
 <P>Una delle librerie usate dall'applicazione Juggluco ha un BUG che
 la fa crashare se vengono rilevati determinati file. Il tuo
-dispositivo potrebbe contenerli nella sua memoria. Questo programma
-contiene una peculiarit&agrave; tecnica che previene questo BUG, ma
-sarebbe comunque meglio rendere questi file non rilevabili in alcuni
-altri modi. Magisk, per esempio, ha l'opzione per nascondere la
-cartella radice ad alcune altre applicazioni (Magiskhide oppure
-Denylist) e cambia il suo stesso nome, entrambe queste attenzioni
-sono necessaire.<BR>Nel tuo caso c'&egrave; un problema con i
-seguenti file)",
+dispositivo contiene alcuni di questi file. Questo programma
+contiene un trucco per aggirare questo BUG, ma
+sarebbe comunque meglio rendere questi file non rilevabili in altri
+modi. Magisk, per esempio, ha l'opzione per nascondere root ad alcune
+applicazioni (Magiskhide oppure
+Denylist) e cambiare il proprio nome, entrambe queste attenzioni
+sono necessarie. Nel tuo caso c'&egrave; un problema con il
+seguente file</P>)",
 	.add_s=false,
 .shortinit=itshortinit,
 .labels=itlabels,
 #endif
 #ifndef DONTTALK
-.checked="checked",
-.unchecked="not checked",
-.Undetermined="",
-.FallingQuickly="In rapida diminuzione",
-.Falling="In diminuzione",
-.Stable="In lenta modifica",
-.Rising="In aumento",
-.RisingQuickly="In rapido aumento",
+.checked="selezionato",
+.unchecked="non selezionato",
+.Undetermined=""sv,
+.FallingQuickly="In rapida diminuzione"sv,
+.Falling="In diminuzione"sv,
+.Stable="In lenta modifica"sv,
+.Rising="In aumento"sv,
+.RisingQuickly="In rapido aumento"sv,
 #endif
-.receivingpastvalues="Receiving old values",
-.receivingdata="Receiving data",
-.unsupportedSibionics="Unsupported Sibionics Sensor"sv,
-.waitingforconnection="Waiting for connection"sv,
-.deleted="Deleted"sv,
-.nolocationpermission="Needs location permission"sv,
-.nonearbydevicespermission="Needs nearby devices permission"sv
+.receivingpastvalues="Ricezione vecchi valori"sv,
+.receivingdata="Ricezione dati"sv,
+.unsupportedSibionics="Sensore Sibionics non supportato"sv,
+.waitingforconnection="In attesa di connessione"sv,
+.deleted="Cancellato"sv,
+.nolocationpermission="Serve il permesso di posizione"sv,
+.nonearbydevicespermission="Serve il permesso dispositivi vicini"sv,
 #endif //INJUGGLUCO
-,.summarygraph="Grafico di sommario"sv
-,.logdays="Giorni"sv
-,.unhide="Unhide"sv
+.summarygraph="Grafico riassuntivo"sv
+,.logdays="Log giornaliero"sv
+,.unhide="Mostra"sv
 
 
 }

@@ -39,6 +39,7 @@ import static tk.glucodata.settings.Settings.getGenSpin;
 import static tk.glucodata.settings.Settings.getProfileSpinner;
 import static tk.glucodata.settings.Settings.removeContentView;
 import static tk.glucodata.settings.Settings.scheduleProfiles;
+import static tk.glucodata.settings.Settings.setProfile;
 import static tk.glucodata.settings.Settings.str2float;
 import static tk.glucodata.util.getbutton;
 import static tk.glucodata.util.getcheckbox;
@@ -455,8 +456,7 @@ public static void config(MainActivity context) {
         @Override
         public  void onItemSelected (AdapterView<?> parent, View view, int position, long id) {
             if(position!=curProfile) {
-               Natives.setProfile(position);
-               SuperGattCallback.initAlarmTalk();
+               setProfile(context,position);
                MainActivity.doonback();
                config(context);
                }
@@ -536,7 +536,7 @@ public static void config(MainActivity context) {
         });
           //layout.setBackgroundResource(R.drawable.dialogbackground);
         layout.setBackgroundColor( Applic.backgroundcolor);
-          context.lightBars(false);
+          context.themeLightBars();
         MainActivity.setonback(()-> {
             tk.glucodata.help.hidekeyboard(context);
             removeContentView(lay);
@@ -618,7 +618,7 @@ public static void config(MainActivity context) {
 
 
     //      layout.setPadding(MainActivity.systembarLeft,MainActivity.systembarTop/2,MainActivity.systembarRight,0);
-    //    context.addContentView(layout, new ViewGroup.LayoutParams(MATCH_PARENT, WRAP_CONTENT));
+    //    context.addMyContentView(layout, new ViewGroup.LayoutParams(MATCH_PARENT, WRAP_CONTENT));
         var top=MainActivity.systembarTop;
          
         var left=MainActivity.systembarStart;
@@ -626,7 +626,7 @@ public static void config(MainActivity context) {
     /*    var layheight=GlucoseCurve.getheight()-MainActivity.systembarBottom;
         var laywidth=GlucoseCurve.getwidth()-left-MainActivity.systembarRight;
         layout.setX(left); */
-        context.addContentView(layout, new ViewGroup.LayoutParams(MATCH_PARENT,MATCH_PARENT));
+        context.addMyContentView(layout, new ViewGroup.LayoutParams(MATCH_PARENT,MATCH_PARENT));
         }
   }
 static public void maketalk_audio() {

@@ -419,42 +419,13 @@ et le quart droit de l\'écran le quatrième menu.</span></p>
 <font size="3" style="font-size: 12pt"><i>Menu 4 : </i></font><font size="3" style="font-size: 12pt"><i>Déplacement
 </i></font><font size="3" style="font-size: 12pt"><i>(</i></font><font size="3" style="font-size: 12pt"><i>à
 </i></font><font size="3" style="font-size: 12pt"><i>droite)</i></font></p>
-<table width="140" cellpadding="0" cellspacing="0" style="background: transparent">
-	<col width="140"/>
-
-	<tr>
-		<td width="140" valign="top" style="border: none; padding: 0cm"><p>15:10&nbsp;&nbsp;↗&nbsp;104</p>
-		</td>
-	</tr>
-	<tr>
-		<td width="140" valign="top" style="border: none; padding: 0cm"><p>Rechercher</p>
-		</td>
-	</tr>
-	<tr>
-		<td width="140" valign="top" style="border: none; padding: 0cm"><p>Date</p>
-		</td>
-	</tr>
-	<tr>
-		<td width="140" valign="top" style="border: none; padding: 0cm"><p>Jour
-			avant</p>
-		</td>
-	</tr>
-	<tr style="background: transparent">
-		<td width="140" valign="top" style="border: none; padding: 0cm"><p>Jour
-			après</p>
-		</td>
-	</tr>
-	<tr>
-		<td width="140" valign="top" style="border: none; padding: 0cm"><p>Semaine
-			avant</p>
-		</td>
-	</tr>
-	<tr>
-		<td width="140" valign="top" style="border: none; padding: 0cm"><p>Semaine
-			après</p>
-		</td>
-	</tr>
-</table>
+<p><tt>15:10  ↗ 104<br><br>
+Rechercher<br><br>
+Date<br><br>
+Jour avant<br><br>
+Jour après<br><br>
+Semaine avant<br><br>
+Semaine après</tt></p>
 <p style="margin-bottom: 0cm; line-height: 115%"><span lang="en-US">En
 vous déplaçant à gauche et à droite sur l\'écran, vous pouvez
 déplacer la courbe à gauche et à droite. Vous pouvez également
@@ -477,41 +448,13 @@ modifiant la distance entre deux doigts.</p>
 <p style="margin-top: 0.2cm; margin-bottom: 0.2cm; line-height: 100%; orphans: 0; widows: 0; background: transparent; page-break-after: avoid">
 <font size="3" style="font-size: 12pt"><i>Menu 3 : Affichage (milieu
 droit)</i></font></p>
-<table width="138" cellpadding="0" cellspacing="0">
-	<col width="138"/>
-
-	<tr>
-		<td width="138" valign="top" style="border: none; padding: 0cm"><p>Dernier
-			Scan</p>
-		</td>
-	</tr>
-	<tr>
-		<td width="138" valign="top" style="border: none; padding: 0cm"><p>Scans&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[x]</p>
-		</td>
-	</tr>
-	<tr>
-		<td width="138" valign="top" style="border: none; padding: 0cm"><p>Flux&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[x]</p>
-		</td>
-	</tr>
-	<tr>
-
-		<td width="138" valign="top" style="border: none; padding: 0cm"><p>Historique&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[x]</p>
-		</td>
-	</tr>
-	<tr>
-		<td width="138" valign="top" style="border: none; padding: 0cm"><p>Quantités &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [x]</p>
-		</td>
-	</tr>
-	<tr>
-		<td width="138" valign="top" style="border: none; padding: 0cm"><p>Repas&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[ &nbsp;]</p>
-		</td>
-	</tr>
-	<tr>
-		<td width="138" height="39" valign="top" style="border: none; padding: 0cm"><p>
-			Mode sombre [ &nbsp;]</p>
-		</td>
-	</tr>
-</table>
+<p><tt>Dernier Scan<br><br>
+Scans&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[x]<br><br>
+Flux&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[x]<br><br>
+Historique&nbsp;&nbsp;[x]<br><br>
+Quantités&nbsp;&nbsp;&nbsp;[x]<br><br>
+Repas&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;]<br><br>
+Mode sombre&nbsp;[&nbsp;]</tt></p>
 <p style="margin-bottom: 0cm; line-height: 115%">Le<font color="#4f81bd">
 </font><font color="#4f81bd"><font face="Cambria, serif"><span lang="en-US"><b>menu
 du milieu</b></span></font></font> <font color="#4f81bd"><font face="Cambria, serif"><span lang="en-US"><b>à</b></span></font></font>
@@ -545,35 +488,13 @@ quantités, l\'étiquette correspondante est affichée.</p>
 <p style="margin-top: 0.2cm; margin-bottom: 0.2cm; line-height: 100%; orphans: 0; widows: 0; background: transparent; page-break-after: avoid">
 <font size="3" style="font-size: 12pt"><i>Menu 2 : </i></font><font size="3" style="font-size: 12pt"><i>Milieu
 gauche</i></font></p>
-<table width="125" cellpadding="0" cellspacing="0">
-	<col width="125"/>
-	<tr>
-		<td width="125" valign="top" style="border: none; padding: 0cm"><p>Exporter</p>
-		</td>
-	</tr>
-	<tr>
-		<td width="125" valign="top" style="border: none; padding: 0cm"><p>Miroir</p>
-		</td>
-	</tr>
-	<tr>
-		<td width="125" valign="top" style="border: none; padding: 0cm"><p>Nouvelle quantité</p>
-		</td>
-	</tr>
-	<tr>
-		<td width="125" valign="top" style="border: none; padding: 0cm"><p>Liste</p>
-		</td>
-	</tr>
-	<tr>
-		<td width="125" valign="top" style="border: none; padding: 0cm"><p>Statistiques</p>
-		</td>
-	<tr>
-		<td width="125" valign="top" style="border: none; padding: 0cm"><p>Parler</p>
-		</td>
-	<tr>
-		<td width="125" valign="top" style="border: none; padding: 0cm"><p>Flotter &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ ]</p>
-		</td>
-	</tr>
-</table>
+<p><tt>Exporter<br><br>
+Miroir<br><br>
+Nouvelle quantité<br><br>
+Liste<br><br>
+Statistiques<br><br>
+Parler<br><br>
+Flotter&nbsp;[&nbsp;]</tt></p>
 <p style="margin-bottom: 0cm; line-height: 115%">Vous pouvez saisir
 ces quantités en touchant <i><b>Nouve</b></i><i><b>lle</b></i><i><b>
 </b></i><i><b>quantité</b></i> <font color="#4f81bd"><font face="Cambria, serif"><span lang="en-US"><b>dans
@@ -610,37 +531,12 @@ montrant la valeur de glucose en dessous de laquelle 100&nbsp;%,
 situent à chaque instant de la journée.</span></p>
 <p style="margin-top: 0.2cm; margin-bottom: 0.2cm; line-height: 100%; orphans: 0; widows: 0; background: transparent; page-break-after: avoid">
 <font size="3" style="font-size: 12pt"><i>Menu 1 : Gauche</i></font></p>
-<table width="125" cellpadding="0" cellspacing="0">
-	<col width="125"/>
-
-	<tr>
-		<td width="125" valign="top" style="border: none; padding: 0cm"><p>Intf.
-			système [ ]</p>
-		</td>
-	</tr>
-	<tr>
-		<td width="125" valign="top" style="border: none; padding: 0cm"><p>Montre</p>
-		</td>
-	</tr>
-	<tr>
-		<td width="125" valign="top" style="border: none; padding: 0cm"><p>Capteur</p>
-		</td>
-	</tr>
-	<tr>
-		<td width="125" height="26" valign="top" style="border: none; padding: 0cm"><p>
-			Paramètres</p>
-		</td>
-	</tr>
-	<tr>
-		<td width="125" height="26" valign="top" style="border: none; padding: 0cm"><p>
-			À propos</p>
-		</td>
-	</tr>
-	<tr>
-		<td width="125" valign="top" style="border: none; padding: 0cm"><p>Fermer</p>
-		</td>
-	</tr>
-</table>
+<p><tt>Intf. système&nbsp;[&nbsp;]<br><br>
+Montre<br><br>
+Capteur<br><br>
+Paramètres<br><br>
+À propos<br><br>
+Fermer</tt></p>
 <p style="margin-bottom: 0cm; line-height: 115%"><span lang="en-US">Dans
 le </span><font color="#4f81bd"><font face="Cambria, serif"><span lang="en-US"><b>menu
 de gauche</b></span></font></font> <span lang="en-US">, vous pouvez
@@ -1896,7 +1792,7 @@ a été traduit en français par Fabrice Delfosse.</span></p>
 </string>
 <string name="disturbhelp" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/fr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/disturbhelp.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/disturbhelp.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/disturbhelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/disturbhelp.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/disturbhelp.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/disturbhelp.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/disturbhelp.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/disturbhelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/disturbhelp.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/disturbhelp.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/disturbhelp.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/disturbhelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/disturbhelp.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/disturbhelp.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/disturbhelp.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/disturbhelp.html?lang=en">en</a>&emsp;&emsp;</p><h1>Accès &quot; <i>Ne pas déranger &quot;</i></h1>
+<p><a href="https://www.juggluco.nl/Jugglucohelp/fr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/disturbhelp.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/disturbhelp.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/disturbhelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/disturbhelp.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/disturbhelp.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/disturbhelp.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/disturbhelp.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/disturbhelp.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/disturbhelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/disturbhelp.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/disturbhelp.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/disturbhelp.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/disturbhelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/disturbhelp.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/disturbhelp.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/disturbhelp.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/disturbhelp.html?lang=en">en</a>&emsp;&emsp;</p><h1>Accès &quot; <i>Ne pas déranger &quot;</i></h1>
 <p>Dans Juggluco, vous pouvez spécifier pour chaque type d\'alarme si
 elle doit être jouée pendant &quot; <i>Ne pas déranger</i> &quot;
 (sous Sonnerie de l\'alarme spécifique).</p>
@@ -1912,7 +1808,7 @@ se déclencher ou non pendant &quot; <i>Ne pas déranger &quot;.</i></p>
 </string>
 <string name="libreview" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/fr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/libreview.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/libreview.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/libreview.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/libreview.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/libreview.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/libreview.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/libreview.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/libreview.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/libreview.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/libreview.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/libreview.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/libreview.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/libreview.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/libreview.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/libreview.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/libreview.html?lang=en">en</a>&emsp;&emsp;</p><h1>Libreview</h1>
+<p><a href="https://www.juggluco.nl/Jugglucohelp/fr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/libreview.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/libreview.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/libreview.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/libreview.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/libreview.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/libreview.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/libreview.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/libreview.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/libreview.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/libreview.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/libreview.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/libreview.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/libreview.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/libreview.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/libreview.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/libreview.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/libreview.html?lang=en">en</a>&emsp;&emsp;</p><h1>Libreview</h1>
 <p style="margin-bottom: 0cm; line-height: 100%">Juggluco peut
 envoyer des données et des montants de glucose à Libreview.</p>
 <p style="margin-bottom: 0cm; line-height: 100%"><br/>
@@ -2055,7 +1951,7 @@ avec ce compte.</p>
 </string>
 <string name="garminconfig" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/fr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/garminconfig.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/garminconfig.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/garminconfig.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/garminconfig.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/garminconfig.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/garminconfig.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/garminconfig.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/garminconfig.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/garminconfig.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/garminconfig.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/garminconfig.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/garminconfig.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/garminconfig.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/garminconfig.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/garminconfig.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/garminconfig.html?lang=en">en</a>&emsp;&emsp;</p><h1>Configuration de Kerfstock</h1>
+<p><a href="https://www.juggluco.nl/Jugglucohelp/fr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/garminconfig.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/garminconfig.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/garminconfig.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/garminconfig.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/garminconfig.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/garminconfig.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/garminconfig.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/garminconfig.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/garminconfig.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/garminconfig.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/garminconfig.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/garminconfig.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/garminconfig.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/garminconfig.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/garminconfig.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/garminconfig.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/garminconfig.html?lang=en">en</a>&emsp;&emsp;</p><h1>Configuration de Kerfstock</h1>
 <p style="margin-bottom: 0cm; line-height: 100%">La <b>source</b> de
 Kerfstok peut être téléchargée à partir de
 <a href="https://www.juggluco.nl/Kerfstok/Kerfstok-source.html">https://www.juggluco.nl/Kerfstok/Kerfstok-source.html</a>
@@ -2082,7 +1978,7 @@ blanc.</p>
 </string>
 <string name="librenumhelp" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/fr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/librenumhelp.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/librenumhelp.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/librenumhelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/librenumhelp.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/librenumhelp.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/librenumhelp.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/librenumhelp.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/librenumhelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/librenumhelp.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/librenumhelp.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/librenumhelp.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/librenumhelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/librenumhelp.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/librenumhelp.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/librenumhelp.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/librenumhelp.html?lang=en">en</a>&emsp;&emsp;</p><p>Activez &quot; <i>Envoyer les
+<p><a href="https://www.juggluco.nl/Jugglucohelp/fr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/librenumhelp.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/librenumhelp.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/librenumhelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/librenumhelp.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/librenumhelp.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/librenumhelp.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/librenumhelp.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/librenumhelp.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/librenumhelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/librenumhelp.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/librenumhelp.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/librenumhelp.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/librenumhelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/librenumhelp.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/librenumhelp.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/librenumhelp.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/librenumhelp.html?lang=en">en</a>&emsp;&emsp;</p><p>Activez &quot; <i>Envoyer les
 montants</i> &quot;, pour envoyer les montants à Libreview. Avant
 cela, vous devez spécifier pour chaque étiquette comment les
 montants saisis sous cette étiquette doivent être envoyés à
@@ -2105,7 +2001,7 @@ données</i> dans Juggluco.</p>
 </string>
 <string name="setlibrenumtype" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/fr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/setlibrenumtype.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/setlibrenumtype.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/setlibrenumtype.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/setlibrenumtype.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/setlibrenumtype.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/setlibrenumtype.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/setlibrenumtype.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/setlibrenumtype.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/setlibrenumtype.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/setlibrenumtype.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/setlibrenumtype.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/setlibrenumtype.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/setlibrenumtype.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/setlibrenumtype.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/setlibrenumtype.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/setlibrenumtype.html?lang=en">en</a>&emsp;&emsp;</p><p>Sélectionnez comment les quantités
+<p><a href="https://www.juggluco.nl/Jugglucohelp/fr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/setlibrenumtype.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/setlibrenumtype.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/setlibrenumtype.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/setlibrenumtype.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/setlibrenumtype.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/setlibrenumtype.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/setlibrenumtype.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/setlibrenumtype.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/setlibrenumtype.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/setlibrenumtype.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/setlibrenumtype.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/setlibrenumtype.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/setlibrenumtype.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/setlibrenumtype.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/setlibrenumtype.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/setlibrenumtype.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/setlibrenumtype.html?lang=en">en</a>&emsp;&emsp;</p><p>Sélectionnez comment les quantités
 saisies dans Juggluco sous une étiquette particulière doivent être
 envoyées à Libreview. Il est possible d\'envoyer plus d\'un type de
 montant avec la même étiquette Libreview. Par exemple, si vous
@@ -2130,7 +2026,7 @@ l\'heure spécifiée.</p>
 </string>
 <string name="floatingconfig" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/fr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/floatingconfig.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/floatingconfig.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/floatingconfig.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/floatingconfig.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/floatingconfig.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/floatingconfig.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/floatingconfig.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/floatingconfig.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/floatingconfig.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/floatingconfig.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/floatingconfig.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/floatingconfig.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/floatingconfig.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/floatingconfig.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/floatingconfig.html?lang=en">en</a>&emsp;&emsp;</p><h1 class="western">Glucose flottant</h1>
+<p><a href="https://www.juggluco.nl/Jugglucohelp/fr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/floatingconfig.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/floatingconfig.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/floatingconfig.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/floatingconfig.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/floatingconfig.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/floatingconfig.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/floatingconfig.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/floatingconfig.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/floatingconfig.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/floatingconfig.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/floatingconfig.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/floatingconfig.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/floatingconfig.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/floatingconfig.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/floatingconfig.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/floatingconfig.html?lang=en">en</a>&emsp;&emsp;</p><h1 class="western">Glucose flottant</h1>
 <p>Ici, vous pouvez définir la taille de la police et la couleur de
 premier plan et d\'arrière-plan du glucose flottant. Vous pouvez
 également définir l\'arrière-plan sur <b>Transparent</b> , ce qui
@@ -2169,7 +2065,7 @@ Juggluco -&gt; Avancé -&gt; Afficher sur d\'autres applications.</p>
 </string>
 <string name="getaccountidhelp" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/fr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/getaccountidhelp.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/getaccountidhelp.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/getaccountidhelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/getaccountidhelp.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/getaccountidhelp.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/getaccountidhelp.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/getaccountidhelp.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/getaccountidhelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/getaccountidhelp.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/getaccountidhelp.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/getaccountidhelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/getaccountidhelp.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/getaccountidhelp.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/getaccountidhelp.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/getaccountidhelp.html?lang=en">en</a>&emsp;&emsp;</p><h1 class="western">Obtenir l\'ID de
+<p><a href="https://www.juggluco.nl/Jugglucohelp/fr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/getaccountidhelp.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/getaccountidhelp.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/getaccountidhelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/getaccountidhelp.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/getaccountidhelp.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/getaccountidhelp.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/getaccountidhelp.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/getaccountidhelp.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/getaccountidhelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/getaccountidhelp.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/getaccountidhelp.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/getaccountidhelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/getaccountidhelp.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/getaccountidhelp.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/getaccountidhelp.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/getaccountidhelp.html?lang=en">en</a>&emsp;&emsp;</p><h1 class="western">Obtenir l\'ID de
 compte</h1>
 <p style="margin-bottom: 0cm; line-height: 100%">Comment obtenir l\'ID
 de compte Libreview nécessaire pour scanner un capteur Freestyle
@@ -2205,7 +2101,7 @@ Libreview différent de celui utilisé par l\'application Abbott Libre
 </string>
 <string name="Nightscouthelp" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/fr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/Nightscouthelp.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/Nightscouthelp.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/Nightscouthelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/Nightscouthelp.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/Nightscouthelp.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/Nightscouthelp.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/Nightscouthelp.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/Nightscouthelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/Nightscouthelp.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/Nightscouthelp.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/sv/Nightscouthelp.html">sv</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/Nightscouthelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/Nightscouthelp.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/Nightscouthelp.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/Nightscouthelp.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/Nightscouthelp.html?lang=en">en</a>&emsp;&emsp;</p><h1 class="western">Serveur Web</h1>
+<p><a href="https://www.juggluco.nl/Jugglucohelp/fr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/Nightscouthelp.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/Nightscouthelp.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/Nightscouthelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/Nightscouthelp.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/Nightscouthelp.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/Nightscouthelp.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/Nightscouthelp.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/Nightscouthelp.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/Nightscouthelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/Nightscouthelp.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/Nightscouthelp.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/sv/Nightscouthelp.html">sv</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/Nightscouthelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/Nightscouthelp.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/Nightscouthelp.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/Nightscouthelp.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/Nightscouthelp.html?lang=en">en</a>&emsp;&emsp;</p><h1 class="western">Serveur Web</h1>
 <p><br/>
 <br/>
 
@@ -2451,7 +2347,7 @@ implémentées dans Juggluco, voir
 </string>
 <string name="NightPost" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/fr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/NightPost.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/NightPost.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/NightPost.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/NightPost.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/NightPost.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/NightPost.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/NightPost.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/NightPost.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/NightPost.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/NightPost.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/sv/NightPost.html">sv</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/NightPost.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/NightPost.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/NightPost.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/NightPost.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/NightPost.html?lang=en">en</a>&emsp;&emsp;</p><p><b>Téléchargez sur un serveur
+<p><a href="https://www.juggluco.nl/Jugglucohelp/fr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/NightPost.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/NightPost.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/NightPost.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/NightPost.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/NightPost.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/NightPost.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/NightPost.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/NightPost.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/NightPost.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/NightPost.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/NightPost.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/sv/NightPost.html">sv</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/NightPost.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/NightPost.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/NightPost.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/NightPost.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/NightPost.html?lang=en">en</a>&emsp;&emsp;</p><p><b>Téléchargez sur un serveur
 Nightscout.</b></p>
 <p>Dans la plupart des cas, vous pouvez également utiliser le
 serveur Web dans Juggluco ou <a href="https://www.juggluco.nl/Juggluco/cmdline">juggluco-server</a>
@@ -2492,7 +2388,7 @@ lorsqu\'il n\'y a pas de connexion fiable.</p>
 </string>
 <string name="notificationpermission" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/fr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/notificationpermission.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/notificationpermission.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/notificationpermission.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/notificationpermission.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/notificationpermission.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/notificationpermission.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/notificationpermission.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/notificationpermission.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/notificationpermission.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/notificationpermission.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/notificationpermission.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/notificationpermission.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/notificationpermission.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/notificationpermission.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/notificationpermission.html?lang=en">en</a>&emsp;&emsp;</p><p>Android 13 exige qu\'avant même de
+<p><a href="https://www.juggluco.nl/Jugglucohelp/fr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/notificationpermission.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/notificationpermission.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/notificationpermission.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/notificationpermission.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/notificationpermission.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/notificationpermission.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/notificationpermission.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/notificationpermission.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/notificationpermission.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/notificationpermission.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/notificationpermission.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/notificationpermission.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/notificationpermission.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/notificationpermission.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/notificationpermission.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/notificationpermission.html?lang=en">en</a>&emsp;&emsp;</p><p>Android 13 exige qu\'avant même de
 savoir quel type de notifications sont envoyées, vous donniez des
 autorisations pour ces notifications.</p>
 <p>Juggluco a des notifications contenant des valeurs de glucose et
@@ -2507,7 +2403,7 @@ Juggluco.</p>
 </string>
 <string name="staticnum" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/fr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/staticnum.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/staticnum.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/staticnum.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/staticnum.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/staticnum.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/staticnum.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/staticnum.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/staticnum.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/staticnum.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/staticnum.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/staticnum.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/staticnum.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/staticnum.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/staticnum.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/staticnum.html?lang=en">en</a>&emsp;&emsp;</p><h1 align="center">Bloqué</h1>
+<p><a href="https://www.juggluco.nl/Jugglucohelp/fr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/staticnum.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/staticnum.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/staticnum.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/staticnum.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/staticnum.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/staticnum.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/staticnum.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/staticnum.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/staticnum.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/staticnum.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/staticnum.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/staticnum.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/staticnum.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/staticnum.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/staticnum.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/staticnum.html?lang=en">en</a>&emsp;&emsp;</p><h1 align="center">Bloqué</h1>
 <p style="margin-bottom: 0cm; line-height: 100%"><b>Le menu central
 gauche</b><b> </b><b>-&gt; Miroir -&gt; &quot; </b><em><i><b>Qtés.</b></i></em><em><b>
 reçu</b></em><em><b>e</b></em><em><b>s du miroir</b></em><b>&quot;</b>
@@ -2521,7 +2417,7 @@ cette option.</p>
 </string>
 <string name="talkhelp" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/fr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/talkhelp.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/talkhelp.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/talkhelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/talkhelp.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/talkhelp.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/talkhelp.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/talkhelp.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/talkhelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/talkhelp.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/talkhelp.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/talkhelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/talkhelp.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/talkhelp.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/talkhelp.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/talkhelp.html?lang=en">en</a>&emsp;&emsp;</p><h1>Parler</h1>
+<p><a href="https://www.juggluco.nl/Jugglucohelp/fr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/talkhelp.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/talkhelp.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/talkhelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/talkhelp.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/talkhelp.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/talkhelp.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/talkhelp.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/talkhelp.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/talkhelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/talkhelp.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/talkhelp.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/talkhelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/talkhelp.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/talkhelp.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/talkhelp.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/talkhelp.html?lang=en">en</a>&emsp;&emsp;</p><h1>Parler</h1>
 <p>Juggluco peut énoncer les valeurs de glucose via le haut parleur
 de l’appareil lorsqu’elles arrivent.</p>
 <p><b>Intervalle (sec)</b>: spécifie combien de secondes Juggluco

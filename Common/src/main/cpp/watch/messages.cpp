@@ -357,8 +357,15 @@ static void messagereceivecommands(passhost_t *pass) {
         LOGGERTAG("%d message join\n",index);
         shutdown(messagereceiversockets[index],SHUT_RDWR);
         th.join();
+        connect=static_cast<TCPConnect *>(connections[index]);
+        if(!connect) {
+            LOGGER("not connection %d\n",index);
+            return;
+            }
+
         connect->closeReceiverConnection();
-        LOGSTRINGTAG("try again\n");
+
+        LOGARTAG("try again");
          }
     LOGGERTAG("messagereceivecommands wearmessages[%d]==false\n",index);
     return;

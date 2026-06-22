@@ -14,11 +14,13 @@
 
         <Button
             android:id="@+id/helpambi"
+            android:minWidth="88dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/helpname" />
         <Button
             android:id="@+id/closeambi"
+            android:minWidth="88dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/helpambi"

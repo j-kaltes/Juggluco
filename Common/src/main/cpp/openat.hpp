@@ -20,13 +20,16 @@
 
 //R"(/data/dalvik-cache/)" archname R"(/system@framework@)" archname R"(@boot-framework.oat@xposed)"
 constexpr const std::string_view opennames[] = { 
-#if defined(__aarch64__)  || defined(__i386__)
-R"(/data/dalvik-cache/)" archname R"(/system@framework@)" archname R"(@boot-framework.oat@xposed)",
+#if defined(__aarch64__) || defined(__i386__)||defined(__arm__) 
+R"(/data/dalvik-cache/)" archname R"(/system@framework@arm64@boot-framework.oat@xposed)",
 R"(/data/dalvik-cache/oat/)" archname R"(/xposed_XTypedArraySuperClass.odex)",
-
+#if defined(__arm__) 
+R"(/data/dalvik-cache/oat/thumbv7a/xposed_XTypedArraySuperClass.odex)",
+R"(/data/dalvik-cache/thumbv7a/system@framework@arm64@boot-framework.oat@xposed)",
+#endif
 #else
 R"(/data/dalvik-cache/oat/)" archname R"(/xposed_XTypedArraySuperClass.odex)",
-R"(/data/dalvik-cache/)" archname R"(/system@framework@)" archname R"(@boot-framework.oat@xposed)",
+R"(/data/dalvik-cache/)" archname R"(/system@framework@arm64@boot-framework.oat@xposed)",
 ///data/dalvik-cache/thumbv7a/system@framework@arm64@boot-framework.oat@xposed
 #endif
 R"(/data/dalvik-cache/xposed_XResourcesSuperClass.dex)",

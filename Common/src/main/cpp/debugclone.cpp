@@ -1,8 +1,12 @@
 
+#define DOTESTS
 #define SYSGOOD 1
+#define FIXED_URANDOM 1
 /*#ifndef NDEBUG
 #define TESTDEBUG 1
 #endif */
+
+
 /*      This file is part of Juggluco, an Android app to receive and display         */
 /*      glucose values from Freestyle Libre 2 and 3 sensors.                         */
 /*                                                                                   */
@@ -23,6 +27,7 @@
 /*                                                                                   */
 /*      Fri Jan 27 12:35:35 CET 2023                                                 */
 
+//WARNING: don't use snprintf in the debugclone, it hangs under Android 8. Use std::to_chars instead. slog for logging.
 
 
 /*
@@ -36,6 +41,12 @@ x86_64    rax        rax    rdi    rsi    rdx    r10    r8    r9
 #include <sys/mman.h>
 
 #include "config.h"
+
+#ifdef DOTESTS
+#define L3_ORACLE_DETERMINISTIC_GETRANDOM 1
+#define L3_ORACLE_NORMALIZE_PROC_TASK 1
+#define FIXED_URANDOM 1
+#endif
 #ifdef CARRY_LIBS 
 #define USEDIN 1
 #endif
@@ -51,8 +62,10 @@ x86_64    rax        rax    rdi    rsi    rdx    r10    r8    r9
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include  <sys/user.h>
 #include <string_view>
+#include <string>
 #include <string.h>
 #include <linux/elf.h>
 #ifndef INCLUDE_NR
@@ -86,6 +99,134 @@ x86_64    rax        rax    rdi    rsi    rdx    r10    r8    r9
 #include "debugclone.hpp"
 #include "maximum.hpp"
 #include "destruct.hpp"
+#ifdef FIXED_URANDOM
+static int openedurandom=-1;
+const char myurandom[]{"/etc/hosts"};
+#endif
+
+/* Deterministic oracle controls for Libre3 replay. */
+
+#ifndef NOLOG
+static void copyhexbytes(char *out,int outlen,const char *in,int inlen);
+#endif
+#ifndef TEST
+extern std::string_view globalbasedir;
+#endif
+
+static std::mutex oracle_ctl_mutex;
+static size_t oracle_getrandom_cursor=0;
+static std::string oracle_task_dir;
+static std::string oracle_task_comm_path;
+static bool oracle_proc_ready=false;
+
+static unsigned char oracle_byte_at(size_t pos) {
+    return static_cast<unsigned char>((0xA5u + 0x6Du * static_cast<unsigned>(pos) + (static_cast<unsigned>(pos >> 3) * 0x11u)) & 0xFFu);
+}
+
+static bool oracle_tracee_shares_vm(pid_t tid) {
+#define task "/proc/self/task/"
+    constexpr const int maxpath=64;
+    char path[maxpath]=task;
+    std::to_chars_result res=std::to_chars(path+sizeof(task)-1,path+maxpath,tid);
+    return faccessat(AT_FDCWD, path, F_OK, 0) == 0;
+    }
+
+static bool ptrace_write_bytes_fallback(pid_t pid, uintptr_t addr, const unsigned char *data, size_t len) {
+    if(!addr || !data || !len)
+        return true;
+
+    /*
+     * Fallback only: use this when the tracee is a different process without
+     * CLONE_VM.  It handles unaligned tracee addresses by preserving untouched
+     * bytes at the start/end of each ptrace word.
+     */
+    constexpr size_t word = sizeof(long);
+    const uintptr_t mask = static_cast<uintptr_t>(word - 1);
+    uintptr_t wordaddr = addr & ~mask;
+    size_t inpos = 0;
+    size_t byteoff = static_cast<size_t>(addr - wordaddr);
+
+    while(inpos < len) {
+        union { long val; unsigned char bytes[word]; } u{};
+        const size_t chunk = std::min(word - byteoff, len - inpos);
+
+        if(byteoff != 0 || chunk != word) {
+            errno=0;
+            u.val = ptrace(PTRACE_PEEKDATA, pid, wordaddr, nullptr);
+            if(errno)
+                return false;
+        }
+
+        memcpy(u.bytes + byteoff, data + inpos, chunk);
+        if(ptrace(PTRACE_POKEDATA, pid, wordaddr, u.val)==-1)
+            return false;
+
+        inpos += chunk;
+        wordaddr += word;
+        byteoff = 0;
+    }
+    return true;
+}
+
+static bool write_tracee_bytes(pid_t pid, uintptr_t addr, const unsigned char *data, size_t len) {
+    if(!addr || !data || !len)
+        return true;
+    if(oracle_tracee_shares_vm(pid)) {
+        memcpy(reinterpret_cast<void *>(addr), data, len);
+        return true;
+    }
+    return ptrace_write_bytes_fallback(pid, addr, data, len);
+}
+
+static bool fill_tracee_with_oracle_bytes(pid_t pid, uintptr_t addr, size_t len, char *hexout, int hexoutlen) {
+    if(!addr || !len)
+        return true;
+    std::vector<unsigned char> data(len);
+    {
+        std::lock_guard<std::mutex> lk(oracle_ctl_mutex);
+        for(size_t i=0;i<len;i++)
+            data[i]=oracle_byte_at(oracle_getrandom_cursor++);
+    }
+#ifndef NOLOG
+    if(hexout && hexoutlen>0)
+        copyhexbytes(hexout, hexoutlen, reinterpret_cast<const char *>(data.data()), static_cast<int>(std::min<size_t>(len, 32)));
+#else
+    (void)hexout;
+    (void)hexoutlen;
+#endif
+    return write_tracee_bytes(pid, addr, data.data(), len);
+}
+
+#ifndef TEST
+static bool ensure_oracle_proc_tree() {
+#if L3_ORACLE_NORMALIZE_PROC_TASK
+    std::lock_guard<std::mutex> lk(oracle_ctl_mutex);
+    if(oracle_proc_ready)
+        return true;
+    oracle_task_dir.assign(globalbasedir.data(), globalbasedir.size());
+    oracle_task_dir += "/oracle_proc_self_task";
+    std::string one = oracle_task_dir + "/1";
+    oracle_task_comm_path = one + "/comm";
+    mkdir(oracle_task_dir.c_str(), 0777);
+    mkdir(one.c_str(), 0777);
+    int fd = open(oracle_task_comm_path.c_str(), O_CREAT|O_TRUNC|O_WRONLY|O_CLOEXEC, 0666);
+    if(fd >= 0) {
+        static constexpr char comm[]="testlib\n";
+        write(fd, comm, sizeof(comm)-1);
+        close(fd);
+    }
+    oracle_proc_ready=true;
+#endif
+    return oracle_proc_ready;
+}
+
+static bool endswith_cstr(const char *str,const char *suffix) {
+    if(!str || !suffix)
+        return false;
+    const size_t slen=strlen(str), tlen=strlen(suffix);
+    return slen>=tlen && !memcmp(str+slen-tlen, suffix, tlen);
+}
+#endif
 extern bool libre3initialized;
 std::string_view syscallstr[callmax];
 #ifdef __ARM_NR_BASE
@@ -121,16 +262,29 @@ using namespace std;
 #include "stat.hpp"
 #include "slog.hpp"
 
+#ifndef NOLOG
+#define LOG_DO(statement) do { statement; } while(false)
+#define LOG_ARGPTR(value) (&(value))
+#define LOG_BUF(value) (value)
+#define LOG_BUFLEN(value) (value)
+#else
+#define LOG_DO(statement) do {} while(false)
+#define LOG_ARGPTR(value) nullptr
+#define LOG_BUF(value) nullptr
+#define LOG_BUFLEN(value) 0
+#endif
+
+static  char *newapkname;
 static bool seesnetunix=false;
 static constexpr const char netunix[]= R"(/proc/net/unix)";
 
 void uit(string_view el) {
-    LOGGER("%s#%d\n",el.data(),el.size());
+    LOG_DO(LOGGER("%s#%d\n",el.data(),el.size()));
 //    const char nl[]="\n"; write(STDOUT_FILENO,el.data(),el.size()); write(STDOUT_FILENO,nl,size(nl)-1);
     }
 template <int nr>
 void uit(const char (&name)[nr]) {
-    LOGGER("%s\n",name);
+    LOG_DO(LOGGER("%s\n",name));
 //    write(STDOUT_FILENO,name,nr-1);
     }
 
@@ -142,11 +296,11 @@ static span<const string_view> accessable(const string_view *names,const int *us
     for(int i=0;i<usedlen;i++) {
         int pos=used[i];
         if(!func(names[pos])) {
-            LOGGER("have %s\n", names[pos].data());
+            LOG_DO(LOGGER("have %s\n", names[pos].data()));
             ind.push_back(pos);
             }
         else {
-            LOGGER("don't have %s\n", names[pos].data());
+            LOG_DO(LOGGER("don't have %s\n", names[pos].data()));
             }
         }
     auto len=ind.size();
@@ -198,13 +352,13 @@ static bool mkmounts() {
     {struct stat stbuf;
     if(!stat(mymounts, &stbuf)) {
         if(stbuf.st_size==sizeof(mounts)) {
-            LOGGER("mymounts=%s already present\n",mymounts);
+            LOG_DO(LOGGER("mymounts=%s already present\n",mymounts));
             return true;
             }
         }
     }
     writeall(mymounts,mounts,sizeof(mounts));
-    LOGGER("mymounts=%s writeall\n",mymounts);
+    LOG_DO(LOGGER("mymounts=%s writeall\n",mymounts));
     return true;
 }
 
@@ -451,6 +605,34 @@ void setret(type val) {
  };
 #endif
 
+#ifndef TEST
+static bool redirect_oracle_proc_path(char *name, Register &regi, int regnr, const char **action, const char **replacement) {
+#if L3_ORACLE_NORMALIZE_PROC_TASK
+    if(!name)
+        return false;
+    static constexpr char taskdir[]="/proc/self/task";
+    static constexpr char taskprefix[]="/proc/self/task/";
+    if(!strcmp(name, taskdir)) {
+        ensure_oracle_proc_tree();
+        regi.set(regnr,(Register::type)oracle_task_dir.c_str());
+        regi.setall();
+        if(action) *action="redirect-proc-task";
+        if(replacement) *replacement=oracle_task_dir.c_str();
+        return true;
+    }
+    if(!strncmp(name, taskprefix, sizeof(taskprefix)-1) && endswith_cstr(name,"/comm")) {
+        ensure_oracle_proc_tree();
+        regi.set(regnr,(Register::type)oracle_task_comm_path.c_str());
+        regi.setall();
+        if(action) *action="redirect-proc-task-comm";
+        if(replacement) *replacement=oracle_task_comm_path.c_str();
+        return true;
+    }
+#endif
+    return false;
+}
+#endif
+
 struct redir {
     int (*func)(void *arg) ;
     void *arg;
@@ -480,12 +662,18 @@ int cloner(void *arg) {
     }
 
 
-bool    change(const char *ptr,const char *was,const char *becomes,Register &regi,Register::type reg) {
-      if(strcmp(ptr,was)) 
-          return false;
+static void    changeonly(const char *becomes,Register &regi,Register::type reg,const char **action=nullptr,const char **replacement=nullptr) {
     regi.set(reg,(Register::type)becomes);
     regi.setall();
-    LOGAR(" * ");
+    if(action)
+        *action="redirect";
+    if(replacement)
+        *replacement=becomes;
+    }
+bool    change(const char *ptr,const char *was,const char *becomes,Register &regi,Register::type reg,const char **action=nullptr,const char **replacement=nullptr) {
+    if(strcmp(ptr,was)) 
+          return false;
+    changeonly(becomes,regi,reg,action,replacement);
     return true;
     }
     /*
@@ -517,32 +705,527 @@ constexpr int binary_find(const T *start,size_t len, const T value, Compare comp
 
 
 //bool rewrong(span<string_view> files,char *name,pid_t pid,struct iovec *ioptr,struct user_pt_regs *regsptr) {
-bool rewrongval(span<const string_view> files,bool *useds,pid_t pid,Register &regi,char *name ,int regnr=1) {
+bool rewrongval(span<const string_view> files,bool *useds,pid_t pid,Register &regi,char *name ,int regnr=1,const char **action=nullptr) {
     const string_view *names=files.data(); 
     int len=files.size();
     string_view zoek{name,0};
     if(int pos=binary_find(names,len, zoek, verg);pos>=0) {
         useds[pos]=true;
-        {
-        slog log;
-
-        log <<names[pos].data()<<" blocked "<<endl;
-        }
+        if(action)
+            *action="blocked";
         *name='\0';
         return true;
         }
-    slog log;
-    log<<name<<" unblocked "<<endl;;
+    if(action)
+        *action="unblocked";
     return false;
     }
-bool rewrong(span<const string_view> files,bool *useds,pid_t pid,Register &regi,int regnr=1) {
+bool rewrong(span<const string_view> files,bool *useds,pid_t pid,Register &regi,int regnr=1,const char **action=nullptr) {
       const Register::type reg= regi.get(regnr);
     if(!reg) 
         return false;
-    return  rewrongval(files,useds,pid,regi,(char *) reg,regnr); 
+    return  rewrongval(files,useds,pid,regi,(char *) reg,regnr,action); 
     }
 #undef waitpid
 #define waitpid(pid,wstatus,options)   wait4(pid, wstatus, options, nullptr)
+
+#ifndef NOLOG
+static constexpr int syscall_path_loglen=192;
+static constexpr int syscall_bytes_loglen=200;
+
+static const char *validcallstr(const char *callstr) {
+    return callstr&&*callstr?callstr:"Unknown";
+    }
+
+static void copylogstr(char *out,int outlen,const char *in) {
+    if(outlen<=0)
+        return;
+    if(!in) {
+        out[0]='\0';
+        return;
+        }
+    int pos=0;
+    for(;pos+1<outlen&&in[pos];pos++) {
+        const unsigned char ch=in[pos];
+        out[pos]=(ch>=32&&ch<127)?static_cast<char>(ch):'?';
+        }
+    if(in[pos]&&outlen>4) {
+        out[outlen-4]='.';
+        out[outlen-3]='.';
+        out[outlen-2]='.';
+        out[outlen-1]='\0';
+        }
+    else
+        out[pos]='\0';
+    }
+
+static char hexdigit(unsigned val) {
+    val&=15;
+    return val<10?static_cast<char>('0'+val):static_cast<char>('a'+val-10);
+    }
+
+static void copyhexbytes(char *out,int outlen,const char *in,int inlen) {
+    if(outlen<=0)
+        return;
+    out[0]='\0';
+    if(!in||inlen<=0)
+        return;
+    const int maxbytes=(outlen-1)/2;
+    const int len=inlen<maxbytes?inlen:maxbytes;
+    for(int pos=0;pos<len;pos++) {
+        const unsigned char ch=static_cast<unsigned char>(in[pos]);
+        out[pos*2]=hexdigit(ch>>4);
+        out[pos*2+1]=hexdigit(ch);
+        }
+    out[len*2]='\0';
+    }
+
+static void logptr(slog &log,Register::type val) {
+    log<<"0x"<<slbase(16)<<(uintptr_t)val<<slbase(10);
+    }
+
+static void logsize(slog &log,Register::type val) {
+    log<<(uintptr_t)val;
+    }
+
+
+static bool syscallretiserror(Register::type ret) {
+    constexpr uintptr_t maxerrno=4095;
+    return (uintptr_t)ret >= ((uintptr_t)0 - maxerrno);
+    }
+
+static bool syscallretisptr(int syscallnr) {
+    switch(syscallnr) {
+#ifdef __NR_brk
+        case __NR_brk:
+            return true;
+#endif
+#if defined(__aarch64__) && defined(__NR_mmap)
+        case __NR_mmap:
+            return true;
+#endif
+#ifdef __NR_mmap2
+        case __NR_mmap2:
+            return true;
+#endif
+#ifdef __NR_mremap
+        case __NR_mremap:
+            return true;
+#endif
+#ifdef __NR_shmat
+        case __NR_shmat:
+            return true;
+#endif
+        default:
+            return false;
+        }
+    }
+
+static void logret(slog &log,int syscallnr,Register::type ret) {
+    if(syscallretisptr(syscallnr) && !syscallretiserror(ret))
+        logptr(log,ret);
+    else
+        log<<(intptr_t)ret;
+    }
+
+static bool ptrace_read_bytes(pid_t pid, uintptr_t addr, void *out, size_t len) {
+    if(!out)
+        return false;
+    if(!len)
+        return true;
+    if(!addr)
+        return false;
+
+    constexpr size_t word = sizeof(long);
+    const uintptr_t mask = static_cast<uintptr_t>(word - 1);
+    uintptr_t wordaddr = addr & ~mask;
+    size_t outpos = 0;
+    size_t byteoff = static_cast<size_t>(addr - wordaddr);
+    auto *dst = static_cast<unsigned char *>(out);
+
+    while(outpos < len) {
+        union { long val; unsigned char bytes[word]; } u{};
+        errno=0;
+        u.val = ptrace(PTRACE_PEEKDATA, pid, wordaddr, nullptr);
+        if(errno)
+            return false;
+
+        const size_t chunk = std::min(word - byteoff, len - outpos);
+        memcpy(dst + outpos, u.bytes + byteoff, chunk);
+        outpos += chunk;
+        wordaddr += word;
+        byteoff = 0;
+    }
+    return true;
+    }
+
+static void logiovecarray(slog &log,pid_t pid,const char *ptrname,const char *cntname,const char *listname,Register::type iovaddr,Register::type iovcnt) {
+    log<<ptrname<<"=";
+    logptr(log,iovaddr);
+    log<<", "<<cntname<<"=";
+    logsize(log,iovcnt);
+    log<<", "<<listname<<"=[";
+
+    if(!iovaddr||!iovcnt) {
+        log<<"]";
+        return;
+        }
+
+    constexpr uintptr_t maxlogged=4;
+    const uintptr_t count=std::min<uintptr_t>((uintptr_t)iovcnt,maxlogged);
+    for(uintptr_t pos=0;pos<count;pos++) {
+        if(pos)
+            log<<", ";
+        struct iovec vec{};
+        const uintptr_t addr=(uintptr_t)iovaddr + pos*sizeof(struct iovec);
+        if(!ptrace_read_bytes(pid,addr,&vec,sizeof(vec))) {
+            log<<"?";
+            break;
+            }
+        log<<"{base=";
+        logptr(log,(Register::type)(uintptr_t)vec.iov_base);
+        log<<", len=";
+        logsize(log,(Register::type)vec.iov_len);
+        log<<"}";
+        }
+    if((uintptr_t)iovcnt>maxlogged)
+        log<<", ...";
+    log<<"]";
+    }
+
+static void logloffptr(slog &log,pid_t pid,const char *name,Register::type addr) {
+    log<<name<<"=";
+    logptr(log,addr);
+    if(!addr)
+        return;
+    long long value=0;
+    if(ptrace_read_bytes(pid,(uintptr_t)addr,&value,sizeof(value)))
+        log<<"->"<<value;
+    }
+
+static void lograwargs(slog &log,const Register::type *args) {
+    for(int pos=0;pos<6;pos++) {
+        if(pos)
+            log<<", ";
+        log<<"arg"<<pos<<"=";
+        logptr(log,args[pos]);
+        }
+    }
+
+static bool lognamedargs(slog &log,pid_t pid,int syscallnr,const Register::type *args,const char *patharg,const char *path) {
+    switch(syscallnr) {
+        case __NR_read:
+            log<<"fd="<<(int)(intptr_t)args[0]<<", buf=";
+            logptr(log,args[1]);
+            log<<", len=";
+            logsize(log,args[2]);
+            return true;
+#ifdef __NR_write
+        case __NR_write:
+            log<<"fd="<<(int)(intptr_t)args[0]<<", buf=";
+            logptr(log,args[1]);
+            log<<", len=";
+            logsize(log,args[2]);
+            return true;
+#endif
+#ifdef __NR_pread64
+        case __NR_pread64:
+            log<<"fd="<<(int)(intptr_t)args[0]<<", buf=";
+            logptr(log,args[1]);
+            log<<", len=";
+            logsize(log,args[2]);
+            log<<", off="<<(uint64_t)args[3];
+            return true;
+#endif
+#ifdef __NR_pwrite64
+        case __NR_pwrite64:
+            log<<"fd="<<(int)(intptr_t)args[0]<<", buf=";
+            logptr(log,args[1]);
+            log<<", len=";
+            logsize(log,args[2]);
+            log<<", off="<<(uint64_t)args[3];
+            return true;
+#endif
+#ifdef __NR_readv
+        case __NR_readv:
+            log<<"fd="<<(int)(intptr_t)args[0]<<", ";
+            logiovecarray(log,pid,"iov","iovcnt","iov",args[1],args[2]);
+            return true;
+#endif
+#ifdef __NR_writev
+        case __NR_writev:
+            log<<"fd="<<(int)(intptr_t)args[0]<<", ";
+            logiovecarray(log,pid,"iov","iovcnt","iov",args[1],args[2]);
+            return true;
+#endif
+#ifdef __NR_preadv
+        case __NR_preadv:
+            log<<"fd="<<(int)(intptr_t)args[0]<<", ";
+            logiovecarray(log,pid,"iov","iovcnt","iov",args[1],args[2]);
+            log<<", pos_l="<<(uint64_t)args[3]<<", pos_h="<<(uint64_t)args[4];
+            return true;
+#endif
+#ifdef __NR_pwritev
+        case __NR_pwritev:
+            log<<"fd="<<(int)(intptr_t)args[0]<<", ";
+            logiovecarray(log,pid,"iov","iovcnt","iov",args[1],args[2]);
+            log<<", pos_l="<<(uint64_t)args[3]<<", pos_h="<<(uint64_t)args[4];
+            return true;
+#endif
+#ifdef __NR_preadv2
+        case __NR_preadv2:
+            log<<"fd="<<(int)(intptr_t)args[0]<<", ";
+            logiovecarray(log,pid,"iov","iovcnt","iov",args[1],args[2]);
+            log<<", pos_l="<<(uint64_t)args[3]<<", pos_h="<<(uint64_t)args[4]<<", flags=";
+            logptr(log,args[5]);
+            return true;
+#endif
+#ifdef __NR_pwritev2
+        case __NR_pwritev2:
+            log<<"fd="<<(int)(intptr_t)args[0]<<", ";
+            logiovecarray(log,pid,"iov","iovcnt","iov",args[1],args[2]);
+            log<<", pos_l="<<(uint64_t)args[3]<<", pos_h="<<(uint64_t)args[4]<<", flags=";
+            logptr(log,args[5]);
+            return true;
+#endif
+#ifdef __NR_process_vm_readv
+        case __NR_process_vm_readv:
+            log<<"pid="<<(int)(intptr_t)args[0]<<", ";
+            logiovecarray(log,pid,"local_iov","liovcnt","local",args[1],args[2]);
+            log<<", ";
+            logiovecarray(log,pid,"remote_iov","riovcnt","remote",args[3],args[4]);
+            log<<", flags=";
+            logptr(log,args[5]);
+            return true;
+#endif
+#ifdef __NR_process_vm_writev
+        case __NR_process_vm_writev:
+            log<<"pid="<<(int)(intptr_t)args[0]<<", ";
+            logiovecarray(log,pid,"local_iov","liovcnt","local",args[1],args[2]);
+            log<<", ";
+            logiovecarray(log,pid,"remote_iov","riovcnt","remote",args[3],args[4]);
+            log<<", flags=";
+            logptr(log,args[5]);
+            return true;
+#endif
+        case __NR_close:
+            log<<"fd="<<(int)(intptr_t)args[0];
+            return true;
+        case __NR_dup:
+            log<<"oldfd="<<(int)(intptr_t)args[0];
+            return true;
+#ifdef __NR_dup2
+        case __NR_dup2:
+            log<<"oldfd="<<(int)(intptr_t)args[0]<<", newfd="<<(int)(intptr_t)args[1];
+            return true;
+#endif
+#ifdef __NR_dup3
+        case __NR_dup3:
+            log<<"oldfd="<<(int)(intptr_t)args[0]<<", newfd="<<(int)(intptr_t)args[1]<<", flags=";
+            logptr(log,args[2]);
+            return true;
+#endif
+#ifdef __NR_lseek
+        case __NR_lseek:
+            log<<"fd="<<(int)(intptr_t)args[0]<<", off="<<(int64_t)args[1]<<", whence="<<(int)(intptr_t)args[2];
+            return true;
+#endif
+#ifdef __NR_copy_file_range
+        case __NR_copy_file_range:
+            log<<"fd_in="<<(int)(intptr_t)args[0]<<", ";
+            logloffptr(log,pid,"off_in",args[1]);
+            log<<", fd_out="<<(int)(intptr_t)args[2]<<", ";
+            logloffptr(log,pid,"off_out",args[3]);
+            log<<", len=";
+            logsize(log,args[4]);
+            log<<", flags=";
+            logptr(log,args[5]);
+            return true;
+#endif
+        case __NR_getsid:
+            log<<"pid="<<(int)(intptr_t)args[0];
+            return true;
+        case __NR_exit:
+            log<<"status="<<(int)(intptr_t)args[0];
+            return true;
+        case __NR_prctl:
+            log<<"option="<<(int)(intptr_t)args[0]<<", arg2=";
+            logptr(log,args[1]);
+            log<<", arg3=";
+            logptr(log,args[2]);
+            log<<", arg4=";
+            logptr(log,args[3]);
+            log<<", arg5=";
+            logptr(log,args[4]);
+            return true;
+#ifdef __NR_open
+        case __NR_open:
+            log<<"path=\""<<(patharg?path:"")<<"\", flags=";
+            logptr(log,args[1]);
+            log<<", mode=";
+            logptr(log,args[2]);
+            return true;
+#endif
+        case __NR_openat:
+            log<<"dirfd="<<(int)(intptr_t)args[0]<<", path=\""<<(patharg?path:"")<<"\", flags=";
+            logptr(log,args[2]);
+            log<<", mode=";
+            logptr(log,args[3]);
+            return true;
+        case __NR_faccessat:
+            log<<"dirfd="<<(int)(intptr_t)args[0]<<", path=\""<<(patharg?path:"")<<"\", mode=";
+            logptr(log,args[2]);
+            log<<", flags=";
+            logptr(log,args[3]);
+            return true;
+#ifdef __NR_access
+        case __NR_access:
+            log<<"path=\""<<(patharg?path:"")<<"\", mode=";
+            logptr(log,args[1]);
+            return true;
+#endif
+#ifdef __NR_statx
+        case __NR_statx:
+            log<<"dirfd="<<(int)(intptr_t)args[0]<<", path=\""<<(patharg?path:"")<<"\", flags=";
+            logptr(log,args[2]);
+            log<<", mask=";
+            logptr(log,args[3]);
+            log<<", statxbuf=";
+            logptr(log,args[4]);
+            return true;
+#endif
+#ifdef __NR_newfstatat
+        case __NR_newfstatat:
+#else
+        case __NR_fstatat64:
+#endif
+            log<<"dirfd="<<(int)(intptr_t)args[0]<<", path=\""<<(patharg?path:"")<<"\", statbuf=";
+            logptr(log,args[2]);
+            log<<", flags=";
+            logptr(log,args[3]);
+            return true;
+#ifdef __NR_stat
+        case __NR_stat:
+#endif
+#ifdef __NR_stat64
+        case __NR_stat64:
+#endif
+#if defined(__NR_stat) || defined(__NR_stat64)
+            log<<"path=\""<<(patharg?path:"")<<"\", statbuf=";
+            logptr(log,args[1]);
+            return true;
+#endif
+#ifdef __NR_ioprio_get
+        case __NR_ioprio_get:
+            log<<"which="<<(int)(intptr_t)args[0]<<", who="<<(int)(intptr_t)args[1];
+            return true;
+#endif
+#ifdef __NR_pipe2
+        case __NR_pipe2:
+            log<<"pipefd=";
+            logptr(log,args[0]);
+            log<<", flags=";
+            logptr(log,args[1]);
+            return true;
+#endif
+#ifdef __NR_getrandom
+        case __NR_getrandom:
+            log<<"buf=";
+            logptr(log,args[0]);
+            log<<", len=";
+            logsize(log,args[1]);
+            log<<", flags=";
+            logptr(log,args[2]);
+            return true;
+#endif
+        case __NR_munmap:
+            log<<"addr=";
+            logptr(log,args[0]);
+            log<<", len=";
+            logsize(log,args[1]);
+            return true;
+#ifdef __NR_mremap
+        case __NR_mremap:
+            log<<"old_addr=";
+            logptr(log,args[0]);
+            log<<", old_len=";
+            logsize(log,args[1]);
+            log<<", new_len=";
+            logsize(log,args[2]);
+            log<<", flags=";
+            logptr(log,args[3]);
+            log<<", new_addr=";
+            logptr(log,args[4]);
+            return true;
+#endif
+#if defined(__aarch64__)
+        case __NR_mmap:
+            log<<"addr=";
+            logptr(log,args[0]);
+            log<<", len=";
+            logsize(log,args[1]);
+            log<<", prot=";
+            logptr(log,args[2]);
+            log<<", flags=";
+            logptr(log,args[3]);
+            log<<", fd="<<(int)(intptr_t)args[4]<<", off="<<(uintptr_t)args[5];
+            return true;
+#endif
+#ifdef __NR_mmap2
+        case __NR_mmap2:
+            log<<"addr=";
+            logptr(log,args[0]);
+            log<<", len=";
+            logsize(log,args[1]);
+            log<<", prot=";
+            logptr(log,args[2]);
+            log<<", flags=";
+            logptr(log,args[3]);
+            log<<", fd="<<(int)(intptr_t)args[4]<<", pgoff="<<(uintptr_t)args[5];
+            return true;
+#endif
+#ifdef __NR_clone
+        case __NR_clone:
+            log<<"flags=";
+            logptr(log,args[0]);
+            log<<", stack=";
+            logptr(log,args[1]);
+            log<<", parent_tid=";
+            logptr(log,args[2]);
+            log<<", tls=";
+            logptr(log,args[3]);
+            log<<", child_tid=";
+            logptr(log,args[4]);
+            return true;
+#endif
+        default:
+            return false;
+        }
+    }
+
+static void logsyscall(pid_t pid,int syscallnr,const char *callstr,const Register::type *args,Register::type ret,bool hasret,const char *patharg,const char *path,const char *action,const char *replacement,const char *bytes) {
+    slog log;
+    log<<pid<<" syscallnr "<<syscallnr<<" "<<validcallstr(callstr)<<"(";
+    const bool namedargs=lognamedargs(log,pid,syscallnr,args,patharg,path);
+    if(!namedargs) {
+        lograwargs(log,args);
+        if(patharg)
+            log<<", "<<patharg<<"=\""<<path<<"\"";
+        }
+    if(replacement)
+        log<<", replacement=\""<<replacement<<"\"";
+    log<<")";
+    if(hasret) {
+        log<<"=";
+        logret(log,syscallnr,ret);
+        }
+    if(action)
+        log<<" "<<action;
+    if(bytes&&bytes[0])
+        log<<" data="<<bytes;
+    log<<endl;
+    }
+#endif
 
 char *getmem(int size) {
    void *stack = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS | MAP_STACK, -1, 0);
@@ -561,56 +1244,90 @@ void notify(commu *com) {
 }
 
 int syscallwait(pid_t pid,pid_t *has_debugger) {
+    int contsig=0;
     while(true) {
-        if(ptrace(PTRACE_SYSCALL, pid, 0, 0) == -1) {
+        if(ptrace(PTRACE_SYSCALL, pid, 0, contsig) == -1) {
+#ifndef NOLOG
             {int ern=errno;
             slog log;
             log<<"PTRACE_SYSCALL "<<pid<<" failed: "<<strerror(ern)<<endl;
             };
+#endif
 
 
 
         ptrace(PTRACE_DETACH, pid, 0, 0);
         return 5;
         }
+        contsig=0;
         int status;
         if(waitpid(pid, &status, 0) == -1) {
             int waserrno=errno;
+#ifndef NOLOG
         {
         slog log;
         log<<"2 waitpid "<<pid<<": "<<strerror(waserrno)<<endl;;
         };
+#endif
         if (waserrno != ECHILD) {
             ptrace(PTRACE_DETACH, pid, 0, 0);
             return 2;
         }
+        return 2;
         }
-    const auto sign=WSTOPSIG(status);
-    const bool stopped=WIFSTOPPED(status) ;
-#ifdef SYSGOOD 
-        if(stopped && (sign & 0x80))
-            return 0;
+#ifdef SYSGOOD
         if(WIFEXITED(status)) {
-         LOGAR("WIFEXITED(status))");
+         LOG_DO(LOGAR("WIFEXITED(status))"));
             return 1;
         }
-#else
-    return 0;
+        if(WIFSIGNALED(status)) {
+#ifndef NOLOG
+            slog log;
+            log<<"WIFSIGNALED "<<pid<<" "<<WTERMSIG(status)<<endl;
 #endif
+            return 1;
+        }
+        if(!WIFSTOPPED(status)) {
+#ifndef NOLOG
+            slog log;
+            log<<"unexpected wait status "<<pid<<" "<<status<<endl;
+#endif
+            return 1;
+        }
+        const auto sign=WSTOPSIG(status);
+        if(sign & 0x80)
+            return 0;
+#ifndef NOLOG
     {
     slog log;
-        log<<"stopped status "<<status<<" "<<stopped<<" "<<sign<< " debugs="<<*has_debugger<<endl;;
+        log<<"non-syscall stop status "<<status<<" signal "<<sign<< " debugs="<<*has_debugger<<endl;;
     }
-   if(sign==11) {
-     
+#endif
+   if(sign==SIGSEGV) {
+
      *has_debugger=0;
+#ifndef NOLOG
     {
     slog log;
         log<<"set has_debugger=0"<<endl;;
     }
+#endif
       return 11;
       }
-   return 0;
+    /*
+     * With PTRACE_O_TRACESYSGOOD set, syscall-stops are reported as
+     * SIGTRAP|0x80.  A plain signal-delivery stop (for example the
+     * SIGCHLD visible in strange.txt as status 4479 / signal 17) is not
+     * a syscall entry or exit.  Treating it as one desynchronizes the
+     * entry/exit pairing and makes later return values look like syscall
+     * arguments (read fd=4020, fd=379, close fd=0, ...).  Resume the
+     * tracee and wait for the next real syscall-stop instead.
+     */
+    contsig=sign;
+    continue;
+#else
+    return 0;
+#endif
     }
 }
 
@@ -620,18 +1337,22 @@ pid_t pid=com->tid;
 pid_t *has_debugger=com->has_debugger;
 //debugtid=pid;
 const pid_t ownpid= syscall(SYS_getpid);
+#ifndef NOLOG
 {slog log;
-log<<"pid="<<syscall(SYS_getpid)<<" tid="<<syscall(SYS_gettid)<<" debugs "<<pid<<endl;
+log<<"pid="<<ownpid<<" tid="<<syscall(SYS_gettid)<<" debugs "<<pid<<endl;
 }
+#endif
 
 //    signal(SIGUSR1,sighandler);
 //ptrace(PTRACE_SEIZE, pid, 0, 0);
 if(ptrace(PTRACE_ATTACH, pid, 0, 0)==-1) {
+#ifndef NOLOG
     {
     int waserrno=errno;
     slog log;
     log<<"PTRACE_ATTACH "<<pid<<" failed: "<<strerror(waserrno)<<endl;
     }
+#endif
     notify(com); //don't block, crash
     return 3;
     }
@@ -641,9 +1362,11 @@ if(ptrace(PTRACE_ATTACH, pid, 0, 0)==-1) {
 
 if(waitpid(pid, 0, 0)==-1) {
     int waserrno=errno;
+#ifndef NOLOG
     { slog log;
         log<<"1 waitpid "<<pid<< strerror(waserrno)<<endl;
     }
+#endif
     if(waserrno!= ECHILD ) {
         ptrace(PTRACE_DETACH, pid, 0, 0);
         pid_t thepid=com->pid;
@@ -659,9 +1382,9 @@ ptrace(PTRACE_SETOPTIONS, pid, 0, PTRACE_O_TRACESYSGOOD);
 #ifdef LIBRE3
 int version=com->version;
 #endif
-LOGAR("voor notify");
+LOG_DO(LOGAR("voor notify"));
 notify(com);
-LOGAR("na notify");
+LOG_DO(LOGAR("na notify"));
 #ifdef LIBRE3
 bool followthreads=version==3&&wrongfiles();
 #endif
@@ -683,26 +1406,39 @@ for (;;) {
 
 //    struct user_regs_struct regs;
     if (!regi.getall()) {
+#ifndef NOLOG
     {int waserrno=errno;
         slog log;
         log<<"PTRACE_GETREGSET "<<pid<<" to get registers: "<<strerror(waserrno)<<endl;
     };
+#endif
         ptrace(PTRACE_DETACH, pid, 0, 0);
         return 4;
     }
     int syscallnr = regi.callnr();
+    Register::type args[6];
+    for(int argpos=0;argpos<6;argpos++)
+        args[argpos]=regi.get(argpos);
+#ifndef NOLOG
+    char logpath[syscall_path_loglen];
+    logpath[0]='\0';
+    char logbytes[syscall_bytes_loglen];
+    logbytes[0]='\0';
+    const char *patharg=nullptr;
+    const char *action=nullptr;
+    const char *replacement=nullptr;
     const char *callstr = syscallnr < std::size(syscallstr) ? syscallstr[syscallnr].data() : (
 #ifdef __ARM_NR_BASE
             (syscallnr >= __ARM_NR_BASE && syscallnr < (__ARM_NR_BASE + std::size(armcallstr)))
             ? armcallstr[syscallnr - __ARM_NR_BASE].data() :
             #endif
             "Unknown");
-   {slog log;
-    log<<pid<<" syscallnr "<<syscallnr<<" "<<callstr<<endl;
-    }
+#endif
     bool askdump = false;
-    auto reg0 = regi.get(0);
-
+    const auto reg0 = args[0];
+#ifdef FIXED_URANDOM
+    bool openurandom=false;
+#endif
     switch (syscallnr) {
     #ifdef  __NR_mmap2
     case __NR_mmap2: {
@@ -715,27 +1451,30 @@ for (;;) {
 
 #ifdef LIBRE3
         case __NR_clone: {
-            unsigned long flags = regi.get(0);
-        {
-            slog log;
-                log<<"clone flags="<<flags<<endl;;
-        }
+            unsigned long flags = args[0];
             if (followthreads) {
                 if (flags & CLONE_THREAD) {
-                    unsigned long **stack = (unsigned long **) regi.get(1);
+                    unsigned long **stack = (unsigned long **) args[1];
                     redir *re = new redir{(int (*)(void *)) *stack, (void *) stack[1],
                                           static_cast<bool>(flags & CLONE_THREAD)};
                     *stack = (unsigned long *) cloner;
                     stack[1] = (unsigned long *) re;
+                    LOG_DO(action="clone-hooked");
                 };
             }
         }
             break;
 #endif
+#ifdef __NR_getrandom
+        case __NR_getrandom:
+#if L3_ORACLE_DETERMINISTIC_GETRANDOM
+            LOG_DO(action="getrandom-oracle-entry");
+#endif
+            break;
+#endif
         case __NR_prctl:
-            if (regi.get(0) == PR_GET_DUMPABLE) {
-        slog log;
-        log<<"ask PR_GET_DUMPABLE"<<endl;
+            if (args[0] == PR_GET_DUMPABLE) {
+                LOG_DO(action="PR_GET_DUMPABLE");
                 askdump = true;
             }
             break;
@@ -743,15 +1482,15 @@ for (;;) {
             pid_t thepid = reg0;
 //            LOGGER("getsid(%d) ownpid=%d\n", thepid, ownpid);
             if(thepid == ownpid) {
-                {
-                slog log;
-                log<<"STOPSIGNAL "<<pid<<endl;
-                }
+                LOG_DO(action="STOPSIGNAL");
+                LOG_DO(logsyscall(pid,syscallnr,callstr,args,0,false,patharg,logpath,action,replacement,logbytes));
                 if(istest)
                     saveused();
                 if (ptrace(PTRACE_DETACH, pid, 0, 0) == -1) {
+#ifndef NOLOG
                     slog log;
                     log<<"PTRACE_DETACH "<<pid<<" failed"<<endl;
+#endif
                 }
                 return 0;
             }
@@ -759,15 +1498,21 @@ for (;;) {
 
 
         case __NR_exit: {
+            LOG_DO(action="exit");
+            LOG_DO(logsyscall(pid,syscallnr,callstr,args,0,false,patharg,logpath,action,replacement,logbytes));
             if (ptrace(PTRACE_DETACH, pid, 0, 0) == -1) {
+#ifndef NOLOG
         slog log; log<<"PTRACE_DETACH "<<pid<<" failed\n";
+#endif
             }
 
             if (waitpid(pid, 0, 0) == -1) {
                 int waserrno = errno;
+#ifndef NOLOG
         {slog log;
         log <<"5 waitpid "<<pid<<endl;;
         }
+#endif
                 if (waserrno != ECHILD) {
                     return 12;
                 }
@@ -775,18 +1520,14 @@ for (;;) {
             return 14;
         };
             break;
-        case __NR_close: {slog log;
-        log<<(int)regi.get(0)<<endl;
-        };
+        case __NR_close:
             break;
 #ifdef LIBRE3
         case __NR_ioprio_get: { 
-       {slog log;
-            log<<"ioprio_get("<< (int) regi.get(0)<<","<< regi.get(1)<<")"<<endl;
-        }
-            if (regi.get(1) == ownpid) {
-                version = regi.get(0);
+            if (args[1] == ownpid) {
+                version = args[0];
                 followthreads = version == 3 && wrongfiles();
+                LOG_DO(action="libre3-version");
             }
         }
             break;
@@ -799,8 +1540,9 @@ for (;;) {
 #else
         case __NR_fstatat64:
 #endif
-
-            rewrong(hierstat, statused, pid, regi, 1);
+            LOG_DO(patharg="path");
+            LOG_DO(copylogstr(logpath,syscall_path_loglen,(const char *)args[1]));
+            rewrong(hierstat, statused, pid, regi, 1,LOG_ARGPTR(action));
             break;
 #ifdef __NR_stat
         case __NR_stat:
@@ -809,18 +1551,23 @@ for (;;) {
         case __NR_stat64:
 #endif
 #if defined( __NR_stat64) || defined( __NR_stat)
-
-            rewrong(hierstat, statused, pid, regi, 0);
+            LOG_DO(patharg="path");
+            LOG_DO(copylogstr(logpath,syscall_path_loglen,(const char *)args[0]));
+            rewrong(hierstat, statused, pid, regi, 0,LOG_ARGPTR(action));
             break;
 #endif
         case __NR_faccessat:
-            rewrong(hieraccess, accessused, pid, regi, 1);
+            LOG_DO(patharg="path");
+            LOG_DO(copylogstr(logpath,syscall_path_loglen,(const char *)args[1]));
+            rewrong(hieraccess, accessused, pid, regi, 1,LOG_ARGPTR(action));
             break;
 
 
 #ifdef __NR_access
         case __NR_access:
-            rewrong(hieraccess, accessused, pid, regi, 0);
+            LOG_DO(patharg="path");
+            LOG_DO(copylogstr(logpath,syscall_path_loglen,(const char *)args[0]));
+            rewrong(hieraccess, accessused, pid, regi, 0,LOG_ARGPTR(action));
             break;
 #endif
 #ifdef __NR_open
@@ -828,48 +1575,77 @@ for (;;) {
             openreg = 0;
 #endif
         case __NR_openat: {
-            const Register::type reg1 = regi.get(openreg);
+            const Register::type reg1 = args[openreg];
             if (reg1) {
                 static Register::type oldreg{};
                 char *name = (char *) reg1;
-                if (reg1 != oldreg) {
-                    constexpr char mounts[] = "/proc/self/mounts";
-                    if (change(name, mounts, mymounts, regi, openreg)) {
-                slog log;
-                        log<<name<<"->"<< mymounts<<endl;
-                    } else {
-#ifdef CHANGESTATUS
-                        constexpr char status[]="/proc/self/status";
-                        if(change(name,status,mystatus,regi,openreg)) {
-               slog log;
-               log<<name<<"->"<<mystatus<<endl;
-                          }
-                      else
+                LOG_DO(patharg="path");
+                LOG_DO(copylogstr(logpath,syscall_path_loglen,name));
+                bool oracle_proc_redirected=false;
+#ifndef TEST
+                oracle_proc_redirected=redirect_oracle_proc_path(name, regi, openreg, LOG_ARGPTR(action), LOG_ARGPTR(replacement));
 #endif
-
-                        {
-              if(seesnetunix&&!strcmp(name,netunix))  {
-                slog log;
-                LOGAR("block /proc/net/unix");
-                *name = '\0';
+                if(oracle_proc_redirected) {
                 }
-            else {
-                    if(rewrongval(hieropen, openused, pid, regi, name, openreg)) {
-                    oldreg = (uintptr_t) name;
-                    }
-                    }
-                        }
-                    }
-                } else {
-            slog log;
-            log<<name<<" old regi(1)  "<<endl;
+                else if (reg1 != oldreg) {
+#if LIBRE3 == 2
+                int len=strlen(name);
+                static  constexpr char apk[] = ".apk";
+                static constexpr const int apklen=sizeof(apk)-1;
+            if(version==3&&waspipe&&wasclone&&args[openreg+1]==0&&args[openreg+2]==0&&!memcmp(name+len-apklen,apk,apklen)) {
+                    wasclone=waspipe=false;
+                    changeonly(newapkname,regi, openreg);
+                    LOG_DO(action="make base.apk");
+                    libre3initialized=true;
+                    
+              }
+else 
+#endif
+{
+
+#ifdef FIXED_URANDOM
+                 static  constexpr char urandom[] = "/dev/urandom";
+                 if(change(name, urandom, myurandom, regi, openreg)) {
+//                 if(!memcmp(name, urandom,sizeof(urandom))) {
+                     openurandom=true;
+                     LOG_DO(action="urandom");
+                    } 
+                else 
+#endif
+                {
+                      static  constexpr char mounts[] = "/proc/self/mounts";
+                        if(change(name, mounts, mymounts, regi, openreg,LOG_ARGPTR(action),LOG_ARGPTR(replacement))) {
+                        } else {
+    #ifdef CHANGESTATUS
+                       static     constexpr char status[]="/proc/self/status";
+                            if(change(name,status,mystatus,regi,openreg,LOG_ARGPTR(action),LOG_ARGPTR(replacement))) {
+                              }
+                          else
+    #endif
+
+                            {
+                  if(seesnetunix&&!strcmp(name,netunix))  {
+                    LOG_DO(action="blocked");
                     *name = '\0';
+                    }
+                else {
+                        if(rewrongval(hieropen, openused, pid, regi, name, openreg,LOG_ARGPTR(action))) {
+                        oldreg = (uintptr_t) name;
+                        }
+                        }
+                            }
+                        }
+                    } 
+                   }
                 }
-
+                    else {
+                        LOG_DO(action="blocked-old");
+                        *name = '\0';
+                    }
             } else  {
-            slog log;
-            log<<"zero regi(1)\n";
+            LOG_DO(action="null-path");
             }
+
         };
 
 #ifdef __NR_open
@@ -877,30 +1653,23 @@ for (;;) {
 #endif
             break;
         case __NR_dup:
-        {
-        slprint log;
-        log<<regi.get(0);
-        }
             break;
 #if defined(__aarch64__) && defined(LIBRE3)
     case __NR_mmap: {
-        int len=regi.get(1);
+        int len=args[1];
         if(len==1089536) { //Otherwise crashes in munmap, but only when it is debugged. As you probably will understand later.
-            LOGGER("mmap %llx len=%d %lld %lld %lld %lld\n",regi.get(0),len,regi.get(2),regi.get(3),regi.get(4),regi.get(5));
+            LOG_DO(action="detach-on-mmap");
+            LOG_DO(logsyscall(pid,syscallnr,callstr,args,0,false,patharg,logpath,action,replacement,logbytes));
             if(version==3) {
                 if (ptrace(PTRACE_DETACH, pid, 0, 0) == -1) {
+#ifndef NOLOG
                     int waserrno=errno;
                     slog log;
                     log<<"PTRACE_DETACH "<<pid<<" failed "<<strerror(waserrno)<<endl;
+#endif
                     }
                 else {
-                    {slog log;
-                    log<<"PTRACE_DETACH "<<endl;
-                    };
                     *has_debugger=0;
-                    {slog log;
-                    log<<"after has_debugger "<<endl;
-                    };
                     }
                 return 0;
                 }
@@ -909,14 +1678,8 @@ for (;;) {
         };
 #endif
 
-        case __NR_munmap: {
-        void *addr= (void*)regi.get(0);
-            auto len = regi.get(1);
-        slog log;
-            log <<"munmap "<<slbase(16)<<(intptr_t)addr<<" "<<slbase(10)<< len<<endl;;
-        }; 
-
-        break;
+        case __NR_munmap:
+            break;
     default:;
     };
 
@@ -926,113 +1689,137 @@ for (;;) {
         }
     }
     if(!regi.getall()) {
+#ifndef NOLOG
         int waserrno=errno;
         {
         slog log;
         log<<"2 PTRACE_GETREGSET "<<pid<<" failed "<<strerror(waserrno)<<endl;
         };
+#endif
         ptrace(PTRACE_DETACH, pid, 0, 0);
         return 6;
        }
     switch(syscallnr) {
-        case  __NR_read:  
-#ifdef LIBRE3
-            if(version==3) {
-            if(waspipe&&wasclone) {
-            char *data=(char *)regi.get(1);
-            LOGGERN(data,25);
-             int siz=regi.ret();
-             int bufsize=regi.get(2);
- char *package=libre3lib.data();
- int packagelen=libre3lib.size();
-         { 
-        slog log;
-        log<<"len="<<packagelen<<" siz="<<siz<<" bufsize="<<bufsize<<" package="<<package;
-        }
-            if(bufsize>=packagelen&&!memcmp(data,"package",7)) {
-                memcpy(data,package,packagelen);
-                waspipe=false;
-                wasclone=false;
-                LOGAR("changed package");
-                regi.setret(packagelen);
-                regi.setall();
-                libre3initialized=true;
+#ifdef __NR_getrandom
+        case __NR_getrandom:
+#if L3_ORACLE_DETERMINISTIC_GETRANDOM
+        {
+            int siz=(int)(intptr_t)regi.ret();
+            if(siz>0) {
+                const uintptr_t outaddr=(uintptr_t)args[0];
+                if(fill_tracee_with_oracle_bytes(pid, outaddr, (size_t)siz, LOG_BUF(logbytes), LOG_BUFLEN(syscall_bytes_loglen))) {
+                    LOG_DO(action="getrandom-oracle");
+                } else {
+                    LOG_DO(action="getrandom-oracle-write-failed");
                 }
-              }
+            }
+        }
+#endif
+            break;
+#endif
+        case  __NR_read:  
+        {
+        char *data=(char *)args[1];
+        int siz=(int)(intptr_t)regi.ret();
+        int fp=(int)args[0];
+        constexpr const int readlen=80;
+        if(siz>0)
+            LOG_DO(copyhexbytes(logbytes,syscall_bytes_loglen,data,siz<readlen?siz:readlen));
+        
+#if LIBRE3 == 1
+            if(version==3) {
+                if(waspipe&&wasclone) {
+                    int bufsize=args[2];
+                    char *package=libre3lib.data();
+                    int packagelen=libre3lib.size();
+                    if(bufsize>=packagelen&&!memcmp(data,"package",7)) {
+                        memcpy(data,package,packagelen);
+                        waspipe=false;
+                        wasclone=false;
+                        LOG_DO(action="changed-package");
+                        regi.setret(packagelen);
+                        regi.setall();
+                        libre3initialized=true;
+                        }
+                      }
+#ifdef FIXED_URANDOM
+                 else {
+                    if(openedurandom==fp) {
+                        openedurandom=-1;
+                        LOG_DO(action="read-urandom");
+                        }
+                    }
+#endif
             }
 #endif
+    }
             break;    
 #ifdef LIBRE3
         case  __NR_clone: 
             if(version==3) {
-                if(!(reg0&CLONE_VM))  {
+                if(!(args[0]&CLONE_VM))  {
                 wasclone=true;
+                LOG_DO(action="clone-returned");
                 }
                 }
             break;
         case  __NR_pipe2:  {
             if(version==3) {
                 waspipe=true;
+                LOG_DO(action="pipe2-returned");
                 }
             };break;
 #endif
         case __NR_prctl:
             if(askdump) {
-                {slog log;
-                log<<"give PR_GET_DUMPABLE=0, real "<<(int)regi.ret()<<endl;
-                }
+                LOG_DO(action="PR_GET_DUMPABLE forced-return-0");
                 regi.setret(0);
                 regi.setall();
                 }
             break;
 
-    //    case  __NR_clone: LOGSTRING("clone returned\n");
+    //    case  __NR_clone: LOGAR("clone returned");
 
 #ifndef NOLOG
-#if defined(__aarch64__)
-    case __NR_mmap: 
-#endif
-    #ifdef  __NR_mmap2
-    case __NR_mmap2: 
-    #endif
-    case __NR_munmap:
-        {
-        slog log;
-        log<<callstr<<"="<<slbase(16)<<regi.ret()<<endl;
-        };break;
-    #ifdef __NR_newfstatat
-        case __NR_newfstatat:
-    #else
-        case __NR_fstatat64:
-    #endif
-        case  __NR_faccessat:
-        case __NR_dup:
 #ifdef __NR_open
         case __NR_open:
 #endif
+#ifdef FIXED_URANDOM
         case __NR_openat: 
-            {
-            slog log;
-            log<<callstr<<"="<<(int)regi.ret()<<endl;
-            }
+            if(openurandom) {
+                const intptr_t fp=(intptr_t)regi.ret();
+                if(fp>=0)
+                    openedurandom=(int)fp;
+                }
             break;
 #endif
+#endif
         };
+#ifndef NOLOG
+    LOG_DO(logsyscall(pid,syscallnr,callstr,args,regi.ret(),true,patharg,logpath,action,replacement,logbytes));
+#endif
    }
 
 }
 
 static bool beforedebug() {
-#ifdef LIBRE3
+#if LIBRE3 == 1
  libre3lib=strsepconcat("",R"(package:)",libdirname,"/libinit.so\n");
- LOGGER("libre3lib=%s",libre3lib.data());
+ LOG_DO(LOGGER("libre3lib=%s",libre3lib.data()));
+#elif LIBRE3 == 2
+int liblen=libdirname.size();
+const char libend[]="/libinit.so";
+newapkname=new char[liblen+sizeof(libend)];
+memcpy(newapkname,libdirname.data(),liblen);
+memcpy(newapkname+liblen,libend,sizeof(libend));
 #endif
+
        if(prctl(PR_SET_DUMPABLE, 1, 0, 0, 0) < 0)  {
-            LOGGER("could not set dumpable bit flag for pid %d: %s\n", getpid(), strerror(errno));
+            LOG_DO(LOGGER("could not set dumpable bit flag for pid %d: %s\n", getpid(), strerror(errno)));
         return false;
             }
         else {
-           LOGGER("dumpable bit flag set for pid %d\n", getpid());
+           LOG_DO(LOGGER("dumpable bit flag set for pid %d\n", getpid()));
            struct rlimit rl;
 #ifdef NDEBUG
            rl.rlim_cur = 0;
@@ -1041,19 +1828,20 @@ static bool beforedebug() {
 #endif
            rl.rlim_max = RLIM_INFINITY;
            if (setrlimit(RLIMIT_CORE, &rl) < 0) {
-           LOGGER("could not disable core file generation for pid %d: %s\n", getpid(),
-                  strerror(errno));
+           LOG_DO(LOGGER("could not disable core file generation for pid %d: %s\n", getpid(),
+                  strerror(errno)));
                }
             else {
-                LOGGER("Turned off core file generation for pid %d\n", getpid());
+                LOG_DO(LOGGER("Turned off core file generation for pid %d\n", getpid()));
                 }
             return true;
             }
     }
 
 
+static bool getstatus();
 pid_t getdebugclone(const int version) {
-LOGAR("getdebugclone");
+LOG_DO(LOGAR("getdebugclone"));
 #ifdef CHANGESTATUS
            __attribute__((used))  static bool hasstatus=getstatus();     
 #endif
@@ -1062,23 +1850,25 @@ LOGAR("getdebugclone");
     constexpr int STACK_SIZE (1024 * 1024);
     char *vstack=getmem(STACK_SIZE);
     if(!vstack) {
-        LOGAR("getmem(STACK_SIZE)==null");
+        LOG_DO(LOGAR("getmem(STACK_SIZE)==null"));
         return 0;
         }
     pid_t debugpid;
     pid_t mytid=syscall(SYS_gettid);
     commu com{.tid=mytid,.pid=static_cast<pid_t>(syscall(SYS_getpid)),.version=version,.has_debugger=&has_debugger};
     [[maybe_unused]] static bool isbeforedebug=beforedebug();
-    LOGAR("before clone");
+    LOG_DO(LOGAR("before clone"));
     if((debugpid=clone(debugger, vstack+STACK_SIZE, CLONE_VM|  CLONE_FILES | CLONE_FS | CLONE_IO|CLONE_UNTRACED , reinterpret_cast<void*>(&com))) == -1) { 
+#ifndef NOLOG
         int older=errno;
         slog log;
         log<<"failed to spawn child task "<<strerror(older)<<endl;
+#endif
         return 0;
         }
     std::unique_lock<std::mutex> lck(com.Mymutex);
     com.condVar.wait(lck, [&com]{ return com.debugReady; });
-    LOGGER(" got debugclone=%d\n",debugpid);
+    LOG_DO(LOGGER(" got debugclone=%d\n",debugpid));
     return debugpid;
     }
 
@@ -1089,10 +1879,12 @@ thedebugger(){
         }
 ~thedebugger() {
     const pid_t pid=has_debugger;
+#ifndef NOLOG
     {
     slog log;
     log<<"~thedebugger pid="<<pid<<endl;
     }
+#endif
      if(pid) {
         syscall(SYS_getsid,pid);
         }
@@ -1103,7 +1895,7 @@ thedebugger(){
 /*
 void logfiles(decltype(hieraccess) fil) {
     for(auto el:fil) 
-        LOGGER("%s\n",el.data());
+        LOG_DO(LOGGER("%s\n",el.data()));
     }
     */
 #ifndef USEDIN
@@ -1126,12 +1918,42 @@ const std::array<const int,sizeof(usopen)/sizeof(int)> *reuseopen=reinterpret_ca
 extern        std::vector<std::string_view> usedfiles;
 std::vector<std::string_view> usedfiles;
 
-    
+extern const std::string_view selfmounts;
+const std::string_view selfmounts{"/proc/self/mounts"};
+static bool mountsMagisk() {
+    int handle=open(selfmounts.data(),O_RDONLY);
+    if(handle<0) {
+        LOG_DO(LOGGER("open %s failed\n",selfmounts.data()));
+        return true;
+        }
+    constexpr const int maxbuf=4096;
+    constexpr const char zoek[]="magisk";
+    constexpr const int zoeklen=sizeof(zoek)-1;
+    constexpr const int overlap=zoeklen-1;
+    char buf[maxbuf+overlap];
+    int start=0;
+    int blnr=0;
+    while(true) {
+        int len=read(handle,buf+start,maxbuf);
+        if(len<=0)  {
+            LOG_DO(LOGGER("mountsMagisk read failed blnr=%d\n",blnr));
+            return false;
+            }
+        auto end=buf+start+len;
+        if(std::search(buf,end,zoek,zoek+zoeklen)!=end) {
+            return true;
+            }
+        memmove(buf,end-overlap,overlap);
+        start=overlap;
+        ++blnr;
+        } 
+    }
 extern int dodebug(); 
 static bool initialized=false;
+bool magicmounts=false;
 static bool needsdebug() {
     const int debug=dodebug();
-    LOGGER("dodebug()=%d\n",debug);
+    LOG_DO(LOGGER("dodebug()=%d\n",debug));
     if(debug>0) {
         istest=true;
         hieraccess={accessnames,std::size(accessnames)};
@@ -1139,7 +1961,7 @@ static bool needsdebug() {
         hieropen={opennames,std::size(opennames)};
     }
     else {
-    LOGSTRING("Access:\n");
+    LOG_DO(LOGAR("Access:"));
   hieraccess=accessable(accessnames,
 #ifndef USEDIN
       reuseaccess.fromfile(pathconcat(globalbasedir,"accessused")),reuseaccess.size()
@@ -1150,13 +1972,13 @@ static bool needsdebug() {
         ,[](const  string_view view){
         const char *name=view.data();
         if(!access(name,F_OK)) {
-            LOGGER("access: %s\n",name);
+            LOG_DO(LOGGER("access: %s\n",name));
             return 0;
             }
             /*
         int ern=errno;
         if(ern==EACCES)  {
-            LOGGER("access: %s: EACCES\n",name);
+            LOG_DO(LOGGER("access: %s: EACCES\n",name));
             return 0;
             } */
         const char ends[]="/.trdpx";
@@ -1165,18 +1987,18 @@ static bool needsdebug() {
         memcpy(buf,name,len);
         memcpy(buf+len,ends,sizeof(ends));
         if(!access(buf,F_OK)) {
-            LOGGER("access: %s\n",buf);
+            LOG_DO(LOGGER("access: %s\n",buf));
             return 0;
             }
 //        if(errno==EACCES||errno==ENOTDIR)
         if(errno==ENOTDIR) {
-            LOGGER("access: %s: ENOTDIR\n",buf);
+            LOG_DO(LOGGER("access: %s: ENOTDIR\n",buf));
             return 0;
             }
         return -1;
         });
         ;
-        LOGSTRING("Stat: \n");
+        LOG_DO(LOGAR("Stat: "));
      hierstat=accessable(statnames,
 
 #ifndef USEDIN
@@ -1189,18 +2011,18 @@ static bool needsdebug() {
      ,[](const string_view view){struct stat st;
         const char *name=view.data();
         if(!stat(name,&st)) {
-            LOGGER("stat %s\n",name);
+            LOG_DO(LOGGER("stat %s\n",name));
             return 0;
             };
         if(errno==EACCES) {
             if(!memcmp(name,"/data/",6)) {
-                LOGGER("stat %s EACCES\n",name);
+                LOG_DO(LOGGER("stat %s EACCES\n",name));
                 return 0;
                 }
             } 
         else {
             if(errno==ENOTDIR) {
-                LOGGER("stat %s ENOTDIR\n",name);
+                LOG_DO(LOGGER("stat %s ENOTDIR\n",name));
                 return 0;
                 }
             }
@@ -1210,16 +2032,16 @@ static bool needsdebug() {
         memcpy(buf,name,len);
         memcpy(buf+len,ends,sizeof(ends));
         if(!stat(buf,&st)) {
-            LOGGER("stat %s\n",buf);
+            LOG_DO(LOGGER("stat %s\n",buf));
             return 0;
             };
         if(errno==ENOTDIR) {
-            LOGGER("stat %s ENOTDIR\n",buf);
+            LOG_DO(LOGGER("stat %s ENOTDIR\n",buf));
             return 0;
             }
         return -1;
         });
-    LOGSTRING("Open:\n");    
+    LOG_DO(LOGAR("Open:"));    
      hieropen=accessable(opennames,
 
 #ifndef USEDIN
@@ -1233,7 +2055,7 @@ static bool needsdebug() {
         const char *name=view.data();
         int han= open(name,O_RDONLY);
         if(han>=0) {
-            LOGGER("open %s\n",name);
+            LOG_DO(LOGGER("open %s\n",name));
             close(han);
             return 0;
             }
@@ -1249,12 +2071,12 @@ static bool needsdebug() {
             memcpy(buf+len,ends,sizeof(ends));
             han= open(buf,O_RDONLY);
             if(han>=0) {
-                LOGGER("open %s\n",buf);
+                LOG_DO(LOGGER("open %s\n",buf));
                 close(han);
                 return 0;
                 }
             if(errno==ENOTDIR) {
-                LOGGER("open %s ENOTDIR\n",buf);
+                LOG_DO(LOGGER("open %s ENOTDIR\n",buf));
                 return 0;
                 }
             }
@@ -1284,24 +2106,24 @@ static bool needsdebug() {
 
     initialized=true;
     if(totaal) {
-        LOGGER("debug %d files\n",totaal);
+        LOG_DO(LOGGER("debug %d files\n",totaal));
         int han= open(netunix,O_RDONLY);
         if(han>=0) {
-            LOGGER("can open %s\n",    netunix);
+            LOG_DO(LOGGER("can open %s\n",    netunix));
             close(han);
             seesnetunix=true;
             }
         else  {
-            LOGGER("can not open %s\n",    netunix);
+            LOG_DO(LOGGER("can not open %s\n",    netunix));
             }
         if(!istest) {
             int firstlen=hieraccess.size()+hieropen.size();
             std::string_view tmp[firstlen];
             auto *endtmp=std::set_union(hieraccess.begin(),hieraccess.end(),hieropen.begin(),hieropen.end(),tmp);
-            LOGGER("tmp size=%zu\n",endtmp-tmp);
+            LOG_DO(LOGGER("tmp size=%zu\n",endtmp-tmp));
             usedfiles.clear();
             std::set_union(hierstat.begin(),hierstat.end(),tmp,endtmp,std::back_inserter(usedfiles));
-            LOGGER("usedfiles.size=%zu\n",usedfiles.size());
+            LOG_DO(LOGGER("usedfiles.size=%zu\n",usedfiles.size()));
             constexpr const bool blockall=true;
             if(blockall) { //block all files to be certain
                 hieraccess={accessnames,std::size(accessnames)};
@@ -1313,8 +2135,12 @@ static bool needsdebug() {
         openused=new bool[hieropen.size()]();
         statused=new bool[hierstat.size()]();
         return true;
-          }
-    LOGAR("nothing to debug");
+        }
+    if((magicmounts=mountsMagisk())) {
+        LOG_DO(LOGAR("mounts Magisk"));
+        return true;
+        }
+    LOG_DO(LOGAR("nothing to debug"));
     return false;
     }
 
@@ -1348,7 +2174,7 @@ static bool getstatus() {
     memcpy(str,globalbasedir.data(),fileslen);
     memcpy(str+fileslen,status+sizeof(status)-statuslen,statuslen);
     mystatus=str;
-    LOGGER("mystatus=%s\n",mystatus);
+    LOG_DO(LOGGER("mystatus=%s\n",mystatus));
         Create outh(mystatus);
       if(outh<=0)
               return false;
@@ -1380,10 +2206,10 @@ pid_t debugclone(bool doalways,const int version) {
 
 //    if(!realyneeds&&debug<0) return false;
    if(version==2&&(dodebug()<0)) {
-    LOGGER("debugclone(%d,%d)=1\n",doalways,version);
+    LOG_DO(LOGGER("debugclone(%d,%d)=1\n",doalways,version));
        return 1;
     }
-LOGGER("debugclone(%d,%d)\n",doalways,version);
+LOG_DO(LOGGER("debugclone(%d,%d)\n",doalways,version));
      if(wrongfiles()||doalways) {
 #ifdef LIBRE3
     static thread_local    int wasversion ;
@@ -1401,12 +2227,12 @@ LOGGER("debugclone(%d,%d)\n",doalways,version);
             int res=
         #endif
                       syscall( __NR_ioprio_get,3,has_debugger);
-            LOGGER("ioprio_get=%d\n",res);
+            LOG_DO(LOGGER("ioprio_get=%d\n",res));
             }
         }
 #endif
     static thread_local    thedebugger debugger;
-    LOGAR("end debugclone");
+    LOG_DO(LOGAR("end debugclone"));
     return has_debugger;
         }
 

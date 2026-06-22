@@ -410,14 +410,18 @@ bool    Connect::getcommandsnopass(passhost_t *host) {
     while(true) {
         LOGARTAG("voor recv");
         int len=r_recvni(com+start,maxcom-start);
-        LOGGERTAG("getReceiverIdent()=%d recv len=%d\n",getReceiverIdent(),len);
+        if(!connections[allindex]) {
+            LOGGER("getcommandsnopass no connection %d\n",allindex);
+            return false;
+            }
+        LOGGERTAG("getcommandsnopass allindex=%d recv len=%d\n",allindex,len);
         switch(len) { 
             case 0: {
-                LOGGERTAG("closed getReceiverIdent()=%d\n",getReceiverIdent());
+                LOGGERTAG("closed allindex=%d\n",allindex);
                 return false;
                 };
             case -1: {
-                flerrortag("recv getReceiverIdent()=%d\n",getReceiverIdent());
+                flerrortag("recv allindex=%d\n",allindex);
                 return false;
                 }
             default:

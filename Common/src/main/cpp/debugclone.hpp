@@ -39,7 +39,8 @@ pid_t pid;
 #if defined(__aarch64__) 
 #define archname "arm64"
 #elif defined(__arm__) 
-#define archname "thumbv7a"
+//#define archname "thumbv7a"
+#define archname "armv7a"
 #elif defined(__x86_64__) 
 #define archname R"(x86_64)"
 #elif defined(__i386__)

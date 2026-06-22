@@ -523,8 +523,6 @@ int fallback=getMenuFont(avg);
          duration=settings->data()->duration;
 #endif
     createcolors();
-    //invertcolors=settings->data()->invertcolors;
-    //startincolors=startbackground*invertcolors;
      }
 
 
@@ -2351,7 +2349,7 @@ int64_t openNums(std::string_view numpath,int64_t ident) {
     }
 
 #ifdef WEAROS
-#define hourtext "00:00                 "
+#define hourtext "00:00                        "
 #else
 #define hourtext "00:00                 "
 #endif
@@ -2482,8 +2480,8 @@ void    JCurve::startstepNVG(NVGcontext* avg,int width, int height) {
         else {
             CURVELOGAR("poll==null");
 
-#ifndef NOTCHINESE
-         if(hist->notchinese()) {
+#ifndef NEWSIBIONICS
+         if(hist->newSI()) {
              const auto eusibinics=usedtext->unsupportedSibionics;
              nvgText(avg,getx ,gety, eusibinics.data(), eusibinics.data()+eusibinics.size());
              otherproblem=true;

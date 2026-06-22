@@ -21,6 +21,8 @@
 
 #include <jni.h>
 #include <ctime>
+#include <stdint.h>
+#include <inttypes.h>
 #include <string.h>
 #include "fromjava.h"
 #include "logs.hpp"
@@ -270,7 +272,23 @@ extern "C" JNIEXPORT jlong JNICALL fromjava(interpret3NFC2)(JNIEnv *env, jclass 
 	}
 
 
+#include "dp_activation.hpp"
+#include "jniclass.hpp"
+extern "C" JNIEXPORT jint JNICALL fromjava(startTimeIDsum)(JNIEnv *env, jclass cl, jbyteArray bArr, jlong time, jlong account) {
 
+	LOGGER("startTimeIDsum(bArr,%" PRId64 ",%" PRId64 ")\n",time,account);
+
+    const auto arlen=env->GetArrayLength(bArr);
+    if(arlen!=10) {
+        LOGGER("DPGetActivationCommandData called with size=%d\n",arlen);
+        }
+    CritArSave<std::byte>  bluedata(env,bArr);
+    
+    dp::DPGetActivationCommandData(std::span<std::byte, 10>(bluedata.data(),10) , time, account);
+
+	return 0;
+	}
 
 
 #endif
+

@@ -108,13 +108,16 @@ static public void reconnectall() {
    }
 
 static void othersworking(SuperGattCallback current ,long timmsec) {
-   final var gatts=blueone.gattcallbacks;
-   if(gatts.size()>1) {
-       for(var g:gatts) {
-         if(g!=current)
-              g.shouldreconnect(timmsec);
+   final var blue=blueone;
+   if(blue!=null) {
+       final var gatts=blue.gattcallbacks;
+       if(gatts.size()>1) {
+           for(var g:gatts) {
+             if(g!=current)
+                  g.shouldreconnect(timmsec);
+             }
+           }
          }
-       }
   }
 
 private boolean connectToAllActiveDevices(long delayMillis) {
@@ -834,6 +837,9 @@ SuperGattCallback getGattCallback(String name, long dataptr) {
                 }
             }
         if(tk.glucodata.BuildConfig.SiBionics==1) {
+            if(vers==0x15) {
+                return new Si3GattCallback(name, dataptr);
+                }
             if(vers==0x10) {
                 return new SiGattCallback(name, dataptr);
                 }

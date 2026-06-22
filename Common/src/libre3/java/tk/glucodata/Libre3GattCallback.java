@@ -36,6 +36,7 @@ import android.os.Looper;
 import android.os.PowerManager;
 
 //import java.security.SecureRandom;
+import java.io.File;
 import java.lang.reflect.Method;
 import java.util.Queue;
 import java.util.UUID;
@@ -59,6 +60,7 @@ import static java.util.Objects.isNull;
 import static tk.glucodata.Applic.app;
 import static tk.glucodata.Applic.isWearable;
 import static tk.glucodata.DexGattCallback.setalarm;
+import static tk.glucodata.Libre2GattCallback.showCharacter;
 import static tk.glucodata.Log.doLog;
 import static tk.glucodata.LossOfSensorAlarm.cancelalarm;
 import static tk.glucodata.Natives.endcrypt;
@@ -173,22 +175,34 @@ public void onConnectionUpdated(BluetoothGatt gatt, int interval, int latency, i
     }
 
 
+    @Override 
+    public void onCharacteristicRead( @NonNull BluetoothGatt gatt, @NonNull BluetoothGattCharacteristic characteristic, @NonNull byte[] value, int status) {
+            checkBluetoothGatt(gatt);
+            if(doLog)
+                showbytes(LOG_ID + " "+SerialNumber+" onCharacteristicRead status="+status+" " + characteristic.getUuid().toString(), value);
+
+    }
+
 
     @Override 
-    public void onCharacteristicRead(BluetoothGatt bluetoothGatt, BluetoothGattCharacteristic bluetoothGattCharacteristic, int i2) {
+    public void onCharacteristicRead(BluetoothGatt bluetoothGatt, BluetoothGattCharacteristic bluetoothGattCharacteristic, int status) {
         checkBluetoothGatt(bluetoothGatt);
-        if (bluetoothGattCharacteristic.getUuid().equals(LIBRE3_CHAR_PATCH_STATUS)) {
-            //    libre3BLESensor.access$700(libre3BLESensor.this, bluetoothGattCharacteristic);
-            {if(doLog){showbytes(LOG_ID + " "+SerialNumber+" onCharacteristicRead " + bluetoothGattCharacteristic.getUuid().toString(), bluetoothGattCharacteristic.getValue());};}
-        }
+        if(doLog)
+            {showbytes(LOG_ID + " "+SerialNumber+" onCharacteristicRead status="+status+" " + bluetoothGattCharacteristic.getUuid().toString(), bluetoothGattCharacteristic.getValue());}
+
+       /* if(bluetoothGattCharacteristic.getUuid().equals(LIBRE3_CHAR_PATCH_STATUS)) {
+            } */
     }
 
     @Override 
     public void onCharacteristicWrite(BluetoothGatt bluetoothGatt, BluetoothGattCharacteristic bluetoothGattCharacteristic, int i2) {
         checkBluetoothGatt(bluetoothGatt);
+        if(doLog)
+            showCharacter(LOG_ID + " "+SerialNumber+" onCharacteristicWrite " , bluetoothGattCharacteristic);
+
         oncharwrite(bluetoothGattCharacteristic);
-        var value = bluetoothGattCharacteristic.getValue();
-        {if(doLog){showbytes(LOG_ID + " "+SerialNumber+" onCharacteristicWrite " + bluetoothGattCharacteristic.getUuid().toString(), value);};}
+//        var value = bluetoothGattCharacteristic.getValue();
+ //       {if(doLog){showbytes(LOG_ID + " "+SerialNumber+" onCharacteristicWrite " + bluetoothGattCharacteristic.getUuid().toString(), value);};}
     }
 
 //    private boolean wasConnected = false;
@@ -363,8 +377,16 @@ private void mknonceback() {
     arraycopy(r2,0,uit,16,16);
     byte[] pin=Natives.getpin(sensorptr);
     arraycopy(pin,0,uit,32,4);
-    var encrypted= Natives.processbar(7,nonce1,uit);
-    {if(doLog){showbytes(SerialNumber+" processbar(7,nonce1,uit)",encrypted);};}
+
+
+
+var encrypted = Natives.processbar(7, nonce1, uit);
+
+
+
+
+
+
     wrtData=encrypted;
     wrtOffset=0;
     writedata(gattCharChallengeData);
@@ -394,7 +416,7 @@ private void challenge67() {
         }
     var kEnc=copyOfRange(decr,32,48);
     var ivEnc=copyOfRange(decr,48,56);
-//    byte[] AuthKey=ECDHCrypto.exportAuthorizationKey();
+//    byte[] AuthKey=KEYSCrypto.exportAuthorizationKey();
     byte[] AuthKey=Natives.processbar(9,null,null);
     Log.showbytes("challenge67 AuthKey",AuthKey);
     //securityContext=new BCrypt(kEnc,ivEnc);
@@ -421,7 +443,7 @@ Waarschijnlijk wordt er ook iets opgeslagen
 
 //Libre3SKBCryptoLib cryptoLib;
 //BluetoothGattCharacteristic gattCharCommandResponse = null;
-//boolean sendSecurityCommand(1,null) after com.adc.trident.app.frameworks.mobileservices.libre3.security.Libre3SKBCryptoLib::initECDH=1
+//boolean sendSecurityCommand(1,null) after com.adc.trident.app.frameworks.mobileservices.libre3.security.Libre3SKBCryptoLib::initKEYS=1
 private boolean sendSecurityCommand(int b) {
         return sendSecurityCommand((byte)b);
     }
@@ -507,7 +529,7 @@ private    void save_history(byte[] value) {
 public void onCharacteristicChanged(BluetoothGatt bluetoothGatt, BluetoothGattCharacteristic bluetoothGattCharacteristic) {
     if(doLog)
         checkBluetoothGatt(bluetoothGatt);
-    onCharacteristicChanged33(bluetoothGatt, bluetoothGattCharacteristic, bluetoothGattCharacteristic.getValue());
+    onCharacteristicChanged(bluetoothGatt, bluetoothGattCharacteristic, bluetoothGattCharacteristic.getValue());
     }
 static final private String charglucosedata= "CHAR_GLUCOSE_DATA".intern();
         @SuppressLint("MissingPermission")
@@ -516,9 +538,11 @@ static final private String charglucosedata= "CHAR_GLUCOSE_DATA".intern();
 private  void logcharacter(UUID uuid,String str,byte[] value) {
         final long timmsec = System.currentTimeMillis();
        if(str!=charglucosedata) setsuccess(timmsec,str);
-       if(doLog){showbytes(LOG_ID+ " "+SerialNumber +" onCharacteristicChanged  "+uuid.toString()+" "+str, value);};}
+       if(doLog){showbytes(LOG_ID+ " "+SerialNumber +" onCharacteristicChanged  "+uuid.toString()+" "+str, value);};
+       }
 
-private void onCharacteristicChanged33(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, byte[] value) {
+@Override 
+public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, byte[] value) {
        final long nowmsec= System.currentTimeMillis();
        var wakelock=    Applic.usewakelock?(((PowerManager) app.getSystemService(POWER_SERVICE)).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Juggluco::Libre3")):null;
        if(wakelock!=null)
@@ -584,7 +608,7 @@ private    void fast_data(byte[] encryp) {
         }
     }
 
-private final ECDHCrypto cryptolib=new ECDHCrypto();
+private final KEYSCrypto cryptolib=new KEYSCrypto();
 //int    securityState=0;
 private boolean    isPreAuthorized=false;
 private void onConnectGatt() {
@@ -599,7 +623,7 @@ private void handleMSLibre3SecurityNotificationsEnabledEvent() {
     else {
 
             var exportedKAuth = Natives.getLibre3kAuth(sensorptr);
-        if(cryptolib.initECDH(exportedKAuth ,1)) {
+        if(cryptolib.initKEYS(exportedKAuth ,1)) {
             if(exportedKAuth==null) {
                 {if(doLog) {Log.i(LOG_ID, SerialNumber + ": "+"exportedKAuth==null");};};
                 sendSecurityCommand(1);
@@ -625,7 +649,7 @@ private void init() {
     var exportedKAuth = Natives.getLibre3kAuth(sensorptr);
     if(!isPreAuthorized) {
         if(exportedKAuth!=null) {
-            if(cryptolib.initECDH(exportedKAuth ,1)) {
+            if(cryptolib.initKEYS(exportedKAuth ,1)) {
                 isPreAuthorized=true;
                 commandphase = 5;
                 }
@@ -635,9 +659,9 @@ private void init() {
         else
             isPreAuthorized=false;
         }
-    }
 
 
+  }
 
 //private    boolean sendEphemeralKeys=false;
 @SuppressLint("MissingPermission")
@@ -921,7 +945,6 @@ private boolean sendSecurityCert(byte[] cert) {
 private boolean    lastphase5=false;
 
    private void oncharwrite(BluetoothGattCharacteristic bluetoothGattCharacteristic) {
-        info("oncharwrite access$800");
         UUID uuid = bluetoothGattCharacteristic.getUuid();
         if(uuid.equals(LIBRE3_CHAR_BLE_LOGIN)) {
             info("LIBRE3_CHAR_BLE_LOGIN");

@@ -178,7 +178,7 @@ static public   void show(MainActivity context, View view) {
       close.setOnClickListener(v->{
          MainActivity.doonback();
       });
-       context.addContentView(layout, new ViewGroup.LayoutParams(MATCH_PARENT,MATCH_PARENT));
+       context.addMyContentView(layout, new ViewGroup.LayoutParams(MATCH_PARENT,MATCH_PARENT));
       };
 
 static public void showcolors(MainActivity act,CheckDirectionBox def) {
@@ -267,7 +267,7 @@ else {
 	scroll.setSmoothScrollingEnabled(false);
    scroll.setScrollbarFadingEnabled(true);
    scroll.setVerticalScrollBarEnabled(true);
-   act.addContentView(scroll,  new ViewGroup.LayoutParams(MATCH_PARENT,MATCH_PARENT));
+   act.addMyContentView(scroll,  new ViewGroup.LayoutParams(MATCH_PARENT,MATCH_PARENT));
    scroll.setBackgroundColor(Applic.backgroundcolor);
 //        scroll.setOnTouchListener(new BackGesture(act));
       MainActivity.setonback(()-> { 

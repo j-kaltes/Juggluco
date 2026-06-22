@@ -786,7 +786,7 @@ public static native int getComplicationTextBorderColor( );
 public static native byte[] ingredientNameBytes(int index);
 public static native byte[] getSItimecmd( );
 public static native byte[] siAuthBytes(long dataptr);
-public static native boolean siNotchinese(long dataptr);
+public static native boolean siNewSI(long dataptr);
 public static native byte[] getSIActivation( );
 
 public static native boolean dexPutPubKey(long dataptr,int which ,byte[] input);
@@ -982,8 +982,13 @@ public static native int getManualWarmupMinutes(long sensorptr);
 public static native void setManualWarmupMinutes(long sensorptr,int min);
 
 public static native int getMinimalWarmup(long dataptr);
-//s/^[	 ]*extern.*JNIEXPORT[         ]*\([a-zA-Z]*\)[ ]*JNICALL[      ]*fromjava(\([^)]*\)) *(JNIEnv[^,]*,[^,)]*[,)]\([^){]*\)[^a-zA-Z0-9]*$/public static native \1 \2(\3);/g
 
+public static native GS3Data gs3Glucose(long dataptr, byte[] value,long mmsec);
+public static native String gs3nfc(byte[] scan);
+public static native String md5sum(String input);
+public static native void saveGS3id(long id);
+public static native long getGS3id();
+public static native byte[] gs3Glucose(long dataptr, byte[] value,long mmsec,long[] res);
 public static native int getmaxmgdL(int sensorgen);
 public static native int getminmgdL(int sensorgen);
 public static native int getSerialLength(long dataptr);
@@ -1023,6 +1028,18 @@ public static  ArrayList<String> getLabels() {
         }
      return uit;
     } */
+
+
+public static native void setTheme(int val);
+public static native int getTheme( );
+
+public static native void setisOval(boolean val);
+public static native boolean getisOval( );
+public static native void setradius(int val);
+public static native int getradius( );
+//s/^[	 ]*extern.*JNIEXPORT[         ]*\([a-zA-Z]*\)[ ]*JNICALL[      ]*fromjava(\([^)]*\)) *(JNIEnv[^,]*,[^,)]*[,)]\([^){]*\)[^a-zA-Z0-9]*$/public static native \1 \2(\3);/g
+
+public static native void testLibre3( );
 }
 
 

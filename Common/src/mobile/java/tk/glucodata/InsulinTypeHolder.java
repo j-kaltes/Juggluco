@@ -116,7 +116,7 @@ private static void settype(MainActivity act, IOB.InsulinTypeAdapter adapter, in
         });
    lay.setPadding(MainActivity.systembarLeft+(int)(15.0*density),MainActivity.systembarTop+(int)(4.0*density),MainActivity.systembarRight+(int)(18.0*density),(int)(4.0*density)+MainActivity.systembarBottom);
 
-    act.addContentView(lay, new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
+    act.addMyContentView(lay, new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
     }
 
 

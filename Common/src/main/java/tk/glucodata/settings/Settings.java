@@ -35,6 +35,7 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static android.widget.Spinner.MODE_DIALOG;
 import static android.widget.Spinner.MODE_DROPDOWN;
 import static androidx.core.os.LocaleListCompat.getEmptyLocaleList;
+import static tk.glucodata.Applic.DynamicTheme;
 import static tk.glucodata.Applic.isWearable;
 import static tk.glucodata.Applic.usedlocale;
 import static tk.glucodata.Backup.getnumedit;
@@ -173,7 +174,7 @@ void EnableIntentScanning(boolean val) {
     }
 static private Settings thisone=null;
 public static void set(MainActivity act) {
-    act.lightBars(false);
+    act.themeLightBars();
     thisone=new Settings();
 
     if(!isWearable&&!Natives.getsystemUI()) {
@@ -465,7 +466,7 @@ str2float(((EditText)prelowalarm[1]).getText().toString()), str2float(((EditText
 
 
     layout.setBackgroundColor(Applic.backgroundcolor);
-    context.addContentView(layout, new ViewGroup.LayoutParams( MATCH_PARENT ,MATCH_PARENT));
+    context.addMyContentView(layout, new ViewGroup.LayoutParams( MATCH_PARENT ,MATCH_PARENT));
     MainActivity.setonback(()-> {
         saver.run();
         removeContentView(layout);
@@ -614,7 +615,7 @@ static private void changeProfile(MainActivity act,int wasindex, ProfileSchedule
     	return ret;
     	},new View[]{cancel},new View[]{timebut,spin},new View[]{delete},new View[]{save});
         layout.setBackgroundColor(Applic.backgroundcolor);
-        act.addContentView(layout,new ViewGroup.LayoutParams( MATCH_PARENT, MATCH_PARENT));
+        act.addMyContentView(layout,new ViewGroup.LayoutParams( MATCH_PARENT, MATCH_PARENT));
         MainActivity.setonback( () -> {
                 removeContentView(layout);
                 });
@@ -633,8 +634,8 @@ static private void changeProfile(MainActivity act,int wasindex, ProfileSchedule
         var  params =    new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL);
         params.bottomMargin=MainActivity.systembarBottom;
 
-      act.addContentView(layout, params);
-    //    act.addContentView(layout,new ViewGroup.LayoutParams(  WRAP_CONTENT,  WRAP_CONTENT));
+      act.addMyContentView(layout, params);
+    //    act.addMyContentView(layout,new ViewGroup.LayoutParams(  WRAP_CONTENT,  WRAP_CONTENT));
         MainActivity.setonback( () -> {
                 removeContentView(layout);
                 EnableControls(parview,true);
@@ -691,7 +692,7 @@ static public void scheduleProfiles(MainActivity act,View parview) {
        final var type=MATCH_PARENT;
        params=new ViewGroup.LayoutParams( type,type);
        }
-     act.addContentView(layout,params);
+     act.addMyContentView(layout,params);
      if(isWearable)
         layout.setBackgroundColor(Applic.backgroundcolor);
     else
@@ -702,6 +703,18 @@ static public void scheduleProfiles(MainActivity act,View parview) {
                 EnableControls(parview,true);
             });
     }
+static public void setProfile(MainActivity act,int profile) {
+       int oldtheme=Natives.getTheme();
+       boolean oldisoval=Natives.getisOval();
+       int oldradius=Natives.getradius();
+       Natives.setProfile(profile);
+       SuperGattCallback.initAlarmTalk();
+       if(DynamicTheme) {
+           if(oldtheme!=Natives.getTheme()||oldisoval!=Natives.getisOval()||oldradius!=Natives.getradius()) {
+                act.recreate();
+                }
+           }
+       }
 static private void alarmsettings(MainActivity context,View parview) {
     parview.setVisibility(GONE);
     TextView alarmlow,alarmhigh;
@@ -829,7 +842,7 @@ new View[]{isvalue},new View[]{ringisvalue},new View[]{usealarm},new View[]{adva
         lay=layout; */
 //    schedules.setOnClickListener(v->scheduleProfiles(context,lay));
         lay.setBackgroundColor(Applic.backgroundcolor);
-    context.addContentView(lay, new ViewGroup.LayoutParams( MATCH_PARENT ,MATCH_PARENT));
+    context.addMyContentView(lay, new ViewGroup.LayoutParams( MATCH_PARENT ,MATCH_PARENT));
 
 
     lowalarm[2].setOnClickListener(v->{
@@ -898,8 +911,7 @@ new View[]{isvalue},new View[]{ringisvalue},new View[]{usealarm},new View[]{adva
                saver.getAsBoolean();
                removeContentView(lay) ;
                MainActivity.poponback();
-               Natives.setProfile(position);
-               SuperGattCallback.initAlarmTalk();
+               setProfile(context,position);
                alarmsettings(context,parview);
                }
             }
@@ -1118,11 +1130,17 @@ Scans.setOnCheckedChangeListener( (buttonView,  isChecked) -> { Natives.setshows
         var amarg=(int)( .15f*GlucoseCurve.getwidth());
 
         Layout.getMargins(colbut).setMarginStart(amarg);
+
         Layout.getMargins(close).setMarginEnd(amarg);
+        var themebut=getbutton(context,"Theme");
         lay = new Layout(context, (l, w, h) -> {
                   int[] ret={w,h};
                  return ret;
-               },graphrow,new View[]{scalelabel,fixatex, fixatey},targetrow,new View[]{threslabel,threshold,dexfuture},new View[] {levelleft,reverseorientation},new View[] {hour12,langspin,iob,fixed},new View[]{colbut,help,close});
+               },graphrow,new View[]{scalelabel,fixatex, fixatey},targetrow,new View[]{threslabel,threshold,dexfuture},new View[] {levelleft,reverseorientation},new View[] {hour12,langspin,iob,fixed},new View[]{colbut,themebut,help,close});
+
+       themebut.setOnClickListener(v-> {
+            SelectTheme.show(context,lay);
+            });
 /*
         iob.setOnCheckedChangeListener( (buttonView,  isChecked) -> {
                 if(!Natives.setIOB(isChecked)) {
@@ -1150,7 +1168,7 @@ Scans.setOnCheckedChangeListener( (buttonView,  isChecked) -> { Natives.setshows
     scroll.setSmoothScrollingEnabled(false);
    scroll.setScrollbarFadingEnabled(true);
    scroll.setVerticalScrollBarEnabled(Applic.scrollbar);
-   context.addContentView(scroll, new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
+   context.addMyContentView(scroll, new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
    colbut.setOnClickListener(v-> {
            MainActivity.doonback();
         settings.finish();
@@ -1382,13 +1400,15 @@ private    void mksettings(MainActivity context) {
         View[] row9;
         var about=getbutton(context,R.string.aboutname);
            about.setOnClickListener(v-> tk.glucodata.GlucoseCurve.doabout(context));
+        var intro=getbutton(context,"Intro");
+         intro.setOnClickListener(v-> help(R.string.introhelp,context));
         if(advhelp!=null) {
             advanced=new Button(context);
             advanced.setText(R.string.advanced);
-            row9= new View[]{help,advanced,about,close} ;
+            row9= new View[]{help,advanced,intro,about,close} ;
             }
         else {
-            row9= new View[]{help,about,close} ;
+            row9= new View[]{help,intro,about,close} ;
             }
 
 //      var oldxdrip=getbutton(context,"send old"); oldxdrip.setOnClickListener(v-> tk.glucodata.Natives.sendxdripold());
@@ -1471,7 +1491,7 @@ private    void mksettings(MainActivity context) {
       }
 
     final    int laywidth=MATCH_PARENT;
-     context.addContentView(settinglayout, new ViewGroup.LayoutParams( laywidth ,MATCH_PARENT));
+     context.addMyContentView(settinglayout, new ViewGroup.LayoutParams( laywidth ,MATCH_PARENT));
     numalarm.setOnClickListener(v-> {
         new tk.glucodata.setNumAlarm().mkviews(context,settinglayout);
         });
@@ -1649,7 +1669,7 @@ static private void exchanges(MainActivity context, View parent) {
 
     thelayout[0] = lay;
     lay.setBackgroundColor(Applic.backgroundcolor);
-       context.addContentView(lay, new ViewGroup.LayoutParams( MATCH_PARENT ,MATCH_PARENT));
+       context.addMyContentView(lay, new ViewGroup.LayoutParams( MATCH_PARENT ,MATCH_PARENT));
 
     context.setonback(() -> {
      parent.setVisibility(VISIBLE);

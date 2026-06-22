@@ -673,44 +673,53 @@ protected   boolean enableGattDescriptor(BluetoothGatt bluetoothGatt1, Bluetooth
     return enableGattDescriptornote(SerialNumber, bluetoothGatt1,  bluetoothGattCharacteristic, type);
     }
 @SuppressLint("MissingPermission")
-static   boolean enableGattDescriptornote(String note,BluetoothGatt bluetoothGatt1, BluetoothGattCharacteristic bluetoothGattCharacteristic,byte[] type) {
+static boolean enableGattDescriptornote(String note, BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, byte[] value) {
     try {
-         BluetoothGattDescriptor descriptor = bluetoothGattCharacteristic.getDescriptor(mCharacteristicConfigDescriptor);
-         final int originalWriteType = bluetoothGattCharacteristic.getWriteType();
-         bluetoothGattCharacteristic.setWriteType( BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT);
-        if(Build.VERSION.SDK_INT >= 33) {
-            int res= bluetoothGatt1.writeDescriptor(descriptor,type);
-             bluetoothGattCharacteristic.setWriteType(originalWriteType);
-            if(res!=BluetoothStatusCodes.SUCCESS) {
-                 Log.e(LOG_ID, note +" "+"bluetoothGatt1.writeDescriptor(descriptor))  failed "+res);
-                 return false;
-                 }
+        BluetoothGattDescriptor descriptor = characteristic.getDescriptor(mCharacteristicConfigDescriptor);
+        if(descriptor == null) {
+            Log.e(LOG_ID, note + " CCCD descriptor not found");
+            return false;
            }
-         else {
-             if(!descriptor.setValue(type)) {
-                 Log.e(LOG_ID, note +" "+"descriptor.setValue())  failed");
-                 return false;
-                 }
-            boolean success=bluetoothGatt1.writeDescriptor(descriptor);
-            bluetoothGattCharacteristic.setWriteType(originalWriteType);
-            if(!success) {
-                 Log.e(LOG_ID, note +" "+"bluetoothGatt1.writeDescriptor(descriptor))  failed");
-                 return false;
-                 }
- 
+
+        if(value == null || value.length < 2) {
+            Log.e(LOG_ID, note + " invalid CCCD value");
+            return false;
+           }
+
+        boolean enable = value[0] != 0;
+
+        if(!gatt.setCharacteristicNotification(characteristic, enable)) {
+            Log.e(LOG_ID, note + " setCharacteristicNotification("+ characteristic.getUuid() + "," + enable + ") failed");
+            return false;
             }
-          if(doLog){showbytes(LOG_ID+" "+note +" "+    "enableNotification ",type);};
-          if(!bluetoothGatt1.setCharacteristicNotification(bluetoothGattCharacteristic, type[0]!=0)) {
-             Log.e(LOG_ID, note +" "+"setCharacteristicNotification("+bluetoothGattCharacteristic.getUuid().toString()+",true) failed");
-             return false;
-             }
-         return true;
-         }
-      catch(Throwable th) {
-        Log.stack(LOG_ID,"enableGattDescriptor",th);
+
+        if(Build.VERSION.SDK_INT >= 33) {
+            int res = gatt.writeDescriptor(descriptor, value);
+            if(res != BluetoothStatusCodes.SUCCESS) {
+                Log.e(LOG_ID, note + " writeDescriptor failed " + res);
+                return false;
+                }
+            } 
+        else {
+            if(!descriptor.setValue(value)) {
+                Log.e(LOG_ID, note + " descriptor.setValue failed");
+                return false;
+                }
+            if (!gatt.writeDescriptor(descriptor)) {
+                Log.e(LOG_ID, note + " writeDescriptor failed");
+                return false;
+               }
+            }
+        if(doLog) {
+            showbytes(LOG_ID + " " + note + " enableNotification ", value);
+            }
+
+        return true;
+    } catch (Throwable th) {
+        Log.stack(LOG_ID, "enableGattDescriptor", th);
         return false;
-        }
-     }
+    }
+}
 
 protected final boolean asknotification(BluetoothGattCharacteristic charac) {
         return enableNotification(mBluetoothGatt, charac);

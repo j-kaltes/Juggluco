@@ -126,7 +126,7 @@ if(genlayout==null) {
               }
           var listlay= new Layout(act, (l, w, h) -> { int[] ret={w,h}; return ret; },new  View[]{listclose},new View[]{recycle});
            listlay.setPadding(0,(int)(tk.glucodata.GlucoseCurve.metrics.density*1.0f),0,0);
-           act.addContentView(listlay, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT));
+           act.addMyContentView(listlay, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT));
            listlay.setBackgroundColor(Applic.backgroundcolor);
             act.setonback( () -> {
     		         removeContentView(listlay);
@@ -191,7 +191,7 @@ if(genlayout==null) {
         ((FrameLayout.LayoutParams) layparm).bottomMargin=(int)(height*.1f);
     	}
 
-        act.addContentView(genlayout,layparm);
+        act.addMyContentView(genlayout,layparm);
 
         genlayout.setBackgroundColor(Applic.backgroundcolor);
     }
@@ -207,7 +207,7 @@ act.setonback( () -> {
     		}
     	removeContentView(genlayout);
     	NumAlarm.handlealarm(act.getApplication());
-       act.lightBars(false);
+       act.themeLightBars();
     	});
 }
 
@@ -219,7 +219,7 @@ public class NumAlarmHolder extends RecyclerView.ViewHolder {
        super(view);
        view.setOnClickListener(v -> {
             int pos=getAbsoluteAdapterPosition();
-            mkitemlayout((Activity)v.getContext(),ok);
+            mkitemlayout((MainActivity)v.getContext(),ok);
             fillitemlayout(pos) ;
             alarmpos=pos;
             });
@@ -283,14 +283,13 @@ static void settime(TextView but,int min) {
     but.setText(String.format(usedlocale,"%02d:%02d",min/60,min%60));
     }
 int[] minutes=new int[2];
-static Button gettimeview(Activity act,int[] minutes,int ind,View[] parent) {
+static Button gettimeview(MainActivity act,int[] minutes,int ind,View[] parent) {
     Button but=new Button(act);
     but.setOnClickListener(
             v->  {
                 parent[0].setVisibility(INVISIBLE);
                 hidekeyboard(act);
-                MainActivity main=(MainActivity) act;
-                main.getnumberview().gettimepicker(main,minutes[ind]/60, minutes[ind]%60,
+                act.getnumberview().gettimepicker(act,minutes[ind]/60, minutes[ind]%60,
                 (hour,min) -> {
                         minutes[ind]=hour*60+min;
 
@@ -345,7 +344,7 @@ private void askdelete( View parent,int alarmpos) {
         }).show().setCanceledOnTouchOutside(false);
     }
 
-void  mkitemlayout(Activity act,View parent) {
+void  mkitemlayout(MainActivity act,View parent) {
   if(itemlayout==null) {
         spinner=getGenSpin(act);
 //        if(isWearable) spinner.setDropDownVerticalOffset((int)(GlucoseCurve.getheight()*.54));
@@ -467,7 +466,7 @@ void  mkitemlayout(Activity act,View parent) {
     Save.setOnClickListener( v-> {
 
       issaved=true;
-       hidekeyboard((Activity)v.getContext());
+       hidekeyboard((MainActivity)v.getContext());
       if(labelsel<0) {
          Log.e(LOG_ID,"labelsel="+labelsel);
          return;
@@ -500,10 +499,10 @@ void  mkitemlayout(Activity act,View parent) {
       }
 
     );
-        //act.addContentView(itemlayout,isWearable?new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT):new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+        //act.addMyContentView(itemlayout,isWearable?new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT):new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
 
 
-        act.addContentView(itemlayout,layparm);
+        act.addMyContentView(itemlayout,layparm);
 ;
 
     }

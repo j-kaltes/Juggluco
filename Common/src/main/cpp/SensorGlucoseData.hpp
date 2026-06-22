@@ -109,6 +109,7 @@ maxdaysSI*24
 572
 #endif
 ; */
+constexpr const int maxdaysSI3=maxdaysSI;
 
 static_assert(maxdaysSI<maxdays);
 struct careSenseAirScan_t {
@@ -430,9 +431,9 @@ union { //28 bytes
          };
    struct { //Sibionics
        char siBlueToothNum[9];
-       bool notchinese:1;
-       uint8_t siType:2;  //0: EU, 1:HemaToxic
-       char siBetween:4;
+       bool newSI:1;
+       uint8_t siType:3;  //0: EU, 1:HemaToxic
+       char siBetween:3;
        bool reset:1;
        uint8_t siDeviceNamelen;
        char8_t siToken;
@@ -636,6 +637,8 @@ void setsensorgen() {
 int getSensorgen2() const {
         if(isDexcom())
                 return 0x40;
+        if(isSibionics3())
+                return 0x15;
         if(isSibionics())
                 return 0x10;
         if(isAccuChek())
@@ -673,7 +676,7 @@ const int32_t maxpos() const {
   }
 
  int streamperhour() const {
-      if(isAccuChek()||isDexcom()||isAir())
+      if(isSibionics3()||isAccuChek()||isDexcom()||isAir())
         return 12;
     else return 60;
      }
@@ -782,9 +785,10 @@ uint32_t officialendtime() const {
     }
 int expectedWearDuration() const {
     if(isSibionics()) {
-        if(getinfo()->notchinese) {
+        if(getinfo()->newSI) {
             switch(siSubtype()) {
                 case 1: return 1966080;
+                case 4: return getweardurationSEC()+3*12*60*60;
                 default: return 1972800;
                 }
 
@@ -1049,7 +1053,7 @@ bool canusestreaming() const {
     }
 const std::string_view othershortsensorname() const {
     if(isSibionics()) {
-       if(siSubtype()!=3) {
+       if(siSubtype()<3) {
            const char *name=(char *)&getinfo()->siToken;
            if(*name)
                  return {name,11};
@@ -1078,7 +1082,7 @@ typedef std::array<char,16>  longsensorname_t;
     }
 [[nodiscard]] std::string_view showsensorname() const {
     if(isSibionics()) {
-          if(siSubtype()!=3&&getinfo()->siDeviceName[0]) 
+          if(siSubtype()<3&&getinfo()->siDeviceName[0]) 
               return std::string_view((char *)getinfo()->siDeviceName,getinfo()->siDeviceNamelen);
           }
      else  {
@@ -1169,10 +1173,13 @@ E07A-000T3YL1R50
     return getinfo()->sibionics;
     }
  bool isSibionics1() const {
-    return isSibionics()&&!(getinfo()->notchinese&&siSubtype()==3);
+    return isSibionics()&&getinfo()->newSI&&siSubtype()<3;
     }
  bool isSibionics2() const {
-    return isSibionics()&&getinfo()->notchinese&&siSubtype()==3;
+    return isSibionics()&&getinfo()->newSI&&siSubtype()==3;
+    }
+ bool isSibionics3() const {
+    return isSibionics()&&getinfo()->newSI&&siSubtype()==4;
     }
  bool isDexcom() const {
     return getinfo()->dexcom;
@@ -1239,6 +1246,27 @@ static bool mkdatabase3(string_view sensordir,time_t start,uint32_t pin,const ch
     }
 #endif
 #ifdef SIBIONICS 
+static bool mkdatabaseSI3(string_view sensordir,string_view sensorgegs,uint32_t now) {
+    LOGGER("mkdatabaseSI3 %s,%s\n",sensordir.data(),sensorgegs.data());
+    mkdir(sensordir.data(),0700);
+    pathconcat infoname(sensordir,infopdat);
+    if(access(infoname,F_OK)!=-1)  {
+        Readall<uint8_t> inf(infoname);
+        if(inf.data()&&inf.size()>=sizeof(Info)) {
+            const Info *in=reinterpret_cast<const Info*>(inf.data());
+            if(in->pollcount&&in->starttime>1700000000&&in->dupl>0&&in->sibionics&&in->siType==4)
+                return false;
+            }
+        }
+    uint32_t start=now;
+  Info inf{.starttime=(uint32_t)start,.lastscantime=(uint32_t)start,.starthistory=0,.endhistory=0,.scancount=0,.startid=0,.interval=interval5,.dupl=3,.days=maxdaysSI3 ,.sibionics=true,.lastLifeCountReceived=0,.newSI=true,.siType=4,.pollcount=0,.pollinterval=88.0, .lockcount=1,.manualwarmup=45,.siIdlen=(uint32_t)sensorgegs.size(),.warmupstartpos=45};
+   memcpy(inf.siId,sensorgegs.data(),inf.siIdlen);
+        
+    writeall(infoname,&inf,sizeof(inf));
+
+    return true;
+    }
+
 static bool mkdatabaseSI(string_view sensordir,string_view sensorgegs,uint32_t now,bool hasnum) {
      LOGGER("mkdatabaseSI %s,%s\n",sensordir.data(),sensorgegs.data());
     mkdir(sensordir.data(),0700);
@@ -2440,14 +2468,14 @@ int getbroadcastfrom() const {
     }
 
 
-void setNotchinese() {
+void setNewSI() {
    if(isSibionics()) {
-        getinfo()->notchinese=true;
-        LOGAR("setNotchinese()");
+        getinfo()->newSI=true;
+        LOGAR("setNewSI()");
         }
     }
-bool notchinese() const {
-   return isSibionics()&&getinfo()->notchinese;
+bool newSI() const {
+   return isSibionics()&&getinfo()->newSI;
    }
 uint8_t siSubtype() const {
    return getinfo()->siType;
@@ -2462,6 +2490,7 @@ static int getmaxmgdL(int sensorgen)  {
         case 0x20:
                 return 400;
         case 0x10:
+        case 0x15:
         case 0x50:
                 return 450;
         default:
@@ -2503,7 +2532,7 @@ void resetSiIndex();
 
     void updateCaliTime(int ind, const uint32_t time) {
         for(int i=0;i<2;++i)
-                getinfo()->calis[0].updateCaliTime( ind, time);
+             getinfo()->calis[i].updateCaliTime( ind, time);
         }
 
 
@@ -2635,6 +2664,13 @@ int getSerialLength() const {
         }
      return 11;
      }
+
+uint32_t getRestartTime() const {
+    const SensorGlucoseData *sens=this;
+    const uint32_t starttime=sens->getinfo()->starttime+sens->addToStartTime()+sens->siAddedIndex(0)*60;
+    LOGGER("getRestartTime()=%u\n",starttime);
+    return starttime;
+    }
 };
 struct lastscan_t {
     int sensorindex;

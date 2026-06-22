@@ -113,7 +113,7 @@ static public void show(MainActivity act,View parent) {
        scroll.setVerticalScrollBarEnabled(Applic.scrollbar);
 
 
-    act.addContentView(scroll, new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
+    act.addMyContentView(scroll, new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
     layout=scroll;
 
   }
@@ -121,7 +121,7 @@ static public void show(MainActivity act,View parent) {
      layout.setBackgroundResource(R.drawable.dialogbackground);
     var  params =    new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.CENTER| Gravity.CENTER_HORIZONTAL);
 
-    act.addContentView(layout, params);
+    act.addMyContentView(layout, params);
     int pad=(int)(density*5.0f);
     layout.setPadding(pad,pad,pad,pad);
 
@@ -131,7 +131,7 @@ static public void show(MainActivity act,View parent) {
       if(parent!=null)  {
            parent.setVisibility(VISIBLE);
            if(!isWearable)
-                    act.lightBars(false);
+                    act.themeLightBars();
             }
         removeContentView(flayout);
         });

@@ -457,6 +457,21 @@
 <string name="nostreamvalues">Keine Stream-werte</string>
 
 <string name="nohistoryvalues">Keine History-werte</string>
+<string name="jugglucoupdate">Aktualisierungszeit</string>
+
+<string name="retrieve">Vom Server abrufen</string>
+
+<string name="wrongcode">Falscher QR-Code</string>
+
+<string name="leave">schließen?</string>
+
+<string name="id0message">Die ID muss ungleich 0 sein</string>
+
+<string name="emailnotused">E-Mail-Passwort-Kombination nicht verwendet und wird nicht gespeichert.</string>
+
+<string name="connecttoserver">Verbindung zum Server wird hergestellt…</string>
+
+<string name="retrievefailed">Abruf der Konto-ID fehlgeschlagen</string>
 </resources>
 
 

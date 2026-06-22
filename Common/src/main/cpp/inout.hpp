@@ -29,6 +29,7 @@
 #include <string_view>
 #include <vector>
 #include <new>
+#include <type_traits>
 #include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -315,7 +316,7 @@ void *buf;
 void *mopen(const char *filename,bool *created=nullptr) {
      if(!filename)
         return nullptr;
-     int    fp= open(filename,O_RDWR|O_CREAT,S_IRUSR |S_IWUSR);
+     int    fp= open(filename,(std::is_const_v<T>?O_RDONLY:O_RDWR)|O_CREAT,S_IRUSR |S_IWUSR);
      if(fp==-1) {
             lerror(filename);
                 return nullptr;
@@ -341,7 +342,7 @@ void *mopen(const char *filename,bool *created=nullptr) {
             *created=false;
         }
 //     posix_fallocate(fp,0,len);
-     void *mmapbuf=mmap(NULL, len, PROT_READ |PROT_WRITE,MAP_SHARED, fp, 0);
+     void *mmapbuf=mmap(NULL, len, PROT_READ | (std::is_const_v<T>?0:PROT_WRITE),MAP_SHARED, fp, 0);
      close(fp);
      if(mmapbuf== MAP_FAILED) {
          flerror("mmap(%s len=%zu,fp=%d)",filename,len,fp);

@@ -29,7 +29,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckedTextView;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
@@ -38,6 +37,7 @@ import java.util.List;
 import static android.graphics.Color.BLACK;
 import static android.graphics.Color.BLUE;
 import static android.graphics.Color.RED;
+import static tk.glucodata.Applic.DynamicTheme;
 import static tk.glucodata.Applic.isWearable;
 
 public class LabelAdapter<T> implements SpinnerAdapter {
@@ -60,16 +60,19 @@ public List<T>  getarray() {
 
 @Override
 public View getDropDownView(int position, View convertView, ViewGroup parent) {
-        CheckedTextView view;
+        View view;
         if (convertView == null) {
-            view = (CheckedTextView) mInflater.inflate(android.R.layout.simple_spinner_dropdown_item, parent, false);
+      //      view = (CheckedTextView) mInflater.inflate(android.R.layout.simple_spinner_dropdown_item, parent, false);
+           view =  mInflater.inflate(R.layout.item_spinner_themed, parent, false);
            if(isWearable)
                 view.setBackgroundColor(BLACK);
         }
         else
-               view = (CheckedTextView) convertView;
+               view = convertView;
 
     TextView text= ((TextView)(view.findViewById(android.R.id.text1)));
+     if(DynamicTheme)
+            text.setTextColor(util.getColorFromTheme(text.getContext(), R.attr.colorSpinnerDropdownText));
     if(position<ar.size()) {
         T str=ar.get(position);
         text.setText(str.toString());
@@ -79,9 +82,16 @@ public View getDropDownView(int position, View convertView, ViewGroup parent) {
 
     if(isWearable) {
         text.setGravity(Gravity.CENTER);
-        view.setGravity(Gravity.CENTER);
-        view.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        text.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         }
+    else {
+        // Forces all text (including RTL strings) to anchor to the left edge 
+        // with centered vertical alignment, restoring your exact original layout behavior.
+        text.setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
+        text.setTextAlignment(View.TEXT_ALIGNMENT_GRAVITY);
+        }
+
+
     return view;
     }
 
@@ -123,6 +133,8 @@ public View getView(int position, View convertView, ViewGroup parent) {
        }
     var text=((TextView)(convertView.findViewById(android.R.id.text1)));
 //    if(isWearable) { text.setGravity(Gravity.CENTER); }
+     if(DynamicTheme)
+             text.setTextColor(util.getColorFromTheme(text.getContext(), android.R.attr.textColorPrimary));
     if(position<ar.size()) {
         T str=ar.get(position);
         text.setText(str.toString());

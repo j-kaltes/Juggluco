@@ -51,6 +51,10 @@ struct sistream:streamdata {
     SiContext sicontext;
     sistream(int sensindex,SensorGlucoseData *sens): streamdata(0x10, sensindex,sens),sicontext(sens){ };
     };
+
+struct si3stream:streamdata {
+    si3stream(SensorGlucoseData *sens): streamdata(0x15, sens->sensorIndex,sens){ };
+    };
 #endif
 
 #ifdef DEXCOM

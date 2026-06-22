@@ -79,7 +79,7 @@ static void choice(MainActivity act) {
         
 
    layout.setBackgroundColor(Applic.backgroundcolor);
-   act.addContentView(layout, new ViewGroup.LayoutParams(MATCH_PARENT,MATCH_PARENT));
+   act.addMyContentView(layout, new ViewGroup.LayoutParams(MATCH_PARENT,MATCH_PARENT));
    act.setonback(() -> {
         removeContentView(layout);
         });
@@ -162,6 +162,6 @@ static void wearnosensors(MainActivity act) {
          });
 
    layout.setBackgroundColor(Applic.backgroundcolor);
-   act.addContentView(layout, new ViewGroup.LayoutParams(MATCH_PARENT,MATCH_PARENT));
+   act.addMyContentView(layout, new ViewGroup.LayoutParams(MATCH_PARENT,MATCH_PARENT));
    }
 }

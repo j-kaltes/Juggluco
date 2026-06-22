@@ -99,7 +99,7 @@ android {
         //compileSdk 36
         applicationId "tk.glucodata"
 
-         versionName '10.8.2'
+         versionName '10.9.3'
 //    multiDexEnabled true
 
         buildConfigField 'String', 'BUILD_TIME', 'new java.text.SimpleDateFormat("HH:mm:ss dd-MMM-yyyy").format(new java.util.Date(' + System.currentTimeMillis() + 'L))'
@@ -174,8 +174,8 @@ flavorDimensions = ['wearos','libreVersion','SiBionics', 'DexCom','Google']
         libreOld {
     //******  Zet op rollout op 100% ******
             dimension 'libreVersion'
-            versionCode 882 //LIBRE2ONLY
-         //    versionName '10.8.2-no3'
+            versionCode 887 //LIBRE2ONLY
+         //    versionName '10.9.3-no3'
             versionNameSuffix '-no3'
             buildConfigField 'int', 'libreVersion', '2'
             externalNativeBuild.cmake {
@@ -188,7 +188,7 @@ flavorDimensions = ['wearos','libreVersion','SiBionics', 'DexCom','Google']
 //       minSdk 23
             dimension 'libreVersion'
         versionNameSuffix '-li3'
-        versionCode 883 //LIBRE3
+        versionCode 887 //LIBRE3
     //******  Zet op rollout op 100% ******
 
                buildConfigField 'int', 'libreVersion', '3'
@@ -203,7 +203,7 @@ flavorDimensions = ['wearos','libreVersion','SiBionics', 'DexCom','Google']
         si {
       dimension 'SiBionics'
         versionNameSuffix '-si'
-        versionCode 883 
+        versionCode 887 
        buildConfigField 'int', 'SiBionics', '1'
        externalNativeBuild.cmake {
          cppFlags "   -DSIBIONICS=1 "
@@ -212,7 +212,7 @@ flavorDimensions = ['wearos','libreVersion','SiBionics', 'DexCom','Google']
         }
         nosi {
             dimension 'SiBionics'
-         versionCode 882 
+         versionCode 887 
          versionNameSuffix '-nosi'
           buildConfigField 'int', 'SiBionics', '0'
           externalNativeBuild.cmake {
@@ -229,9 +229,9 @@ flavorDimensions = ['wearos','libreVersion','SiBionics', 'DexCom','Google']
         minSdk = 26
         buildConfigField 'int', 'minSDK', '26'
         manifestPlaceholders["minSDK"] = '26'
-        versionCode 884 //WATCH
+        versionCode 888 //WATCH
     //******  Zet op rollout op 100% ******
-        //versionName '10.8.2-wear'
+        //versionName '10.9.3-wear'
         versionNameSuffix '-wear'
         signingConfig signingConfigs.alg
 
@@ -249,8 +249,8 @@ flavorDimensions = ['wearos','libreVersion','SiBionics', 'DexCom','Google']
 
 //        minSdk 19
             dimension 'wearos'
-        versionCode 884 //WATCH
-        //versionName '10.8.2-small'
+        versionCode 888 //WATCH
+        //versionName '10.9.3-small'
         versionNameSuffix '-small'
         signingConfig signingConfigs.alg
 
@@ -670,6 +670,7 @@ implementation "androidx.appcompat:appcompat:1.6.1"
 //    implementation("com.ibm.icu:icu4j:78.3")
 
 //    mobileImplementation "androidx.gridlayout:gridlayout:1.0.0"
+    wearImplementation("androidx.wear.protolayout:protolayout-expression:1.4.0")
     wearImplementation 'androidx.wear.watchface:watchface-style:1.2.1'
     wearImplementation 'androidx.wear.watchface:watchface-complications:1.3.0'
     wearImplementation 'androidx.wear.watchface:watchface-editor:1.2.1'

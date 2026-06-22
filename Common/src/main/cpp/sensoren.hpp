@@ -28,6 +28,8 @@
 #include <time.h>
 #include <limits.h>
 #include <array>
+#include <alloca.h>
+
 #include "inout.hpp"
 #include "SensorGlucoseData.hpp"
 #include "settings/settings.hpp"
@@ -574,9 +576,57 @@ std::pair<int,SensorGlucoseData *> getOldSensorPair(sensor *sensgegs,uint32_t no
        resensordata(sensindex);
        return {sensindex,sens};
        }
+/*
+std::pair<int,SensorGlucoseData *> makeSI3sensorIndex(const BarCode &barcode,std::string_view scanned,uint32_t now) {
+    const char *longname; 
+    const int slen= barcode.Serial.size();
+    const int left=16-slen;
+    if(left>0) {
+        char *newname=(char *)alloca(17);
+        memcpy(newname,barcode.Expiry.data(),left);
+        memcpy(newname+left,barcode.Serial.data(),slen);
+        newname[16]='\0';
+        longname=newname;
+        }
+    else {
+        longname=barcode.Serial.data()-left;
+        }
+   removeunused();
+   if(sensor *sensgegs = findsensorm(longname) ) {
+       LOGGER("makeSI3sensorIndex: known sensor %s\n",sensgegs->showsensorname());
+        return getOldSensorPair(sensgegs,now);
+       }
+   std::string_view name{longname,16};
+   const pathconcat sensordir(inbasedir,name);
+   SensorGlucoseData::mkdatabaseSI3(sensordir,scanned,now);
+   return addSensorInitgetPair(name,maxdaysSI3*2);
+   }
+   */
 
-
-
+std::pair<int,SensorGlucoseData *> makeSI3sensorIndex(const BarCode &barcode,std::string_view scanned,uint32_t now) {
+    if(barcode.Serial.size()<6) {
+        LOGGER("Wrong serial size=%d\n",barcode.Serial.size());
+        return {-1,nullptr};
+        }
+    return genMakeSI3sensorIndex(barcode.Serial.end()-10,scanned, now);
+    }
+public:
+//Sibioni3GS18AAFZ
+std::pair<int,SensorGlucoseData *> genMakeSI3sensorIndex(const char *blueToothNum,std::string_view scanned,uint32_t now) {
+   std::string longname;
+   longname.reserve(16);
+   longname.append("SibionGS3-",10);
+   longname.append(blueToothNum,6);
+   removeunused();
+   if(sensor *sensgegs = findsensorm(longname.data()) ) {
+       LOGGER("genmakeSI3sensorIndex: known sensor %s\n",sensgegs->showsensorname());
+        return getOldSensorPair(sensgegs,now);
+       }
+   const pathconcat sensordir(inbasedir,longname);
+   SensorGlucoseData::mkdatabaseSI3(sensordir,scanned,now);
+   return addSensorInitgetPair(longname,maxdaysSI3*2);
+   }
+private:
 std::pair<int,SensorGlucoseData *> makeAirSensorindex(const BarCode &barcode,std::string_view scanned,uint32_t now) {
         if(!barcode.Expiry.data()||barcode.Expiry.size()!=6) {
             LOGAR("makeAirSensorindex: wrong Expiry");
@@ -813,14 +863,25 @@ std::pair<int,SensorGlucoseData *> makePhotoScanSensorIndex(std::string_view geg
             std::array<char,7> sibionics;
             };
         if(sibionics==barcode.getManifacturer()) {
+             const auto &sku=barcode.getSKU();
              const union  {
                      const char  _[6]{"64148"};
                      std::array<char,5> transmitter;
                      };
-             if(transmitter==barcode.getSKU())  {
+             if(transmitter==sku)  {
                         LOGAR("Transmitter tag");
                          return {-1,nullptr};
                         }
+             const union  {
+                     const char  _[6]{"64221"};
+                     std::array<char,5> si3;
+                     };
+             if(si3==sku)  {
+                    return makeSI3sensorIndex(barcode,gegsSI,now);
+                    }
+             else {
+                LOGGER("si3=%.*s sku=%.*s\n",si3.size(),si3.data(),sku.size(),sku.data());
+                 }
              bool hasnum=std::ranges::contains_subrange(gegsSI,sibionicsRecognition);
              if(!hasnum) {   
                      std::string_view si="(SI)";

@@ -98,8 +98,8 @@ Layout lay=null;
 		lay=null;
 		openlib(context);});
 	lay.setBackgroundColor(backgroundcolor);
-//	context.addContentView(lay, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
-	context.addContentView(lay, new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
+//	context.addMyContentView(lay, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+	context.addMyContentView(lay, new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
 	Mirror.setOnClickListener(v-> {
 		lay.setVisibility(GONE);
 		if(getback) {

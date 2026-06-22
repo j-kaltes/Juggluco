@@ -120,14 +120,21 @@ constexpr static const int maxprofileMins=10;
 struct AlarmProfile {
     uint32_t alow,ahigh,averylow,averyhigh,aprelow,aprehigh;
     struct ring alarms[maxalarms+maxextraalarms];
-    uint32_t empty[4];
+    uint32_t empty[3];
+
+    uint16_t reserved16;
+    uint8_t  radius;
+    uint8_t  Theme;
+
     int32_t soundtype;
     float voicespeed;
     float voicepitch;
     uint16_t voicesep:15;
     bool voiceactive:1;
     uint8_t voicespeaker;
-    uint8_t restbits:4;
+    uint8_t restbits:2;
+    bool isOval:1;
+    bool invertcolors:1;
     bool speakmessages:1;
     bool speakalarms:1;
     bool talktouch:1;
@@ -375,7 +382,7 @@ struct Tings {
     uint32_t authstart;
     uint32_t authend;
     authpair authdata[AUTHMAX];
-    uint32_t reserved;
+    int32_t WasTheme;
     uint64_t jugglucoID;
     uint32_t startlibretime;
 
@@ -401,7 +408,11 @@ struct Tings {
 
     struct ring extraAlarms[maxextraalarms];
     int32_t soundtype;
-    int32_t reserved3:28;
+    int8_t reserved3;
+    uint8_t radius;
+    uint8_t Theme;
+    uint8_t reserved5:3;
+    bool isOval:1;
     bool timeOnComplication:1;
     bool askedWatchFace:1;
     bool   lossSignalOff:1;
@@ -410,7 +421,8 @@ struct Tings {
     uint32_t glucoseMeterNR;
     uint32_t reserved4;
     GlucoseMeter  glucosemeters[maxglucosemeters];
-
+    uint8_t gs3id[12];
+    uint32_t reserved32;
 
 
 bool removeGlucoseMeter(const std::string_view deviceName)  {
@@ -545,6 +557,8 @@ template <typename T>
   auto &type##Get() {  \
     return alarmget(type,&AlarmProfile::type);\
     }
+maketalk(Theme)
+maketalk(radius)
 maketalk(soundtype)
 maketalk(voicespeed)
 maketalk(voicepitch)
@@ -573,6 +587,9 @@ makebitvoice(speakmessages)
 makebitvoice(speakalarms)
 makebitvoice(talktouch)
 makebitvoice(USE_ALARMoff)
+
+makebitvoice(invertcolors)
+makebitvoice(isOval)
 
 #define mkhasalarm(type)\
 bool &has##type##alarm() {\
@@ -603,7 +620,7 @@ mkhasalarm(available)
 #define setproel(x)  prof.x=x;
 void newprofile(int nr) {
    for(int prnr=nrProfile;prnr<nr;++prnr) {
-         struct AlarmProfile  &prof=profiles[prnr];
+        struct AlarmProfile  &prof=profiles[prnr];
         memcpy(prof.alarms,alarms,maxalarms*sizeof(alarms[0]));
         memcpy(prof.alarms+maxalarms,extraAlarms,maxextraalarms*sizeof(extraAlarms[0]));
 
@@ -624,8 +641,30 @@ void newprofile(int nr) {
         setproel( speakalarms)
         setproel( talktouch)
         setproel( USE_ALARMoff)
+        setproel( invertcolors)
+        setproel( Theme)
+        setproel( isOval)
+        setproel( radius)
         }
      nrProfile=nr;
+    }
+static auto randomTheme() {
+    return arc4random_uniform(55); 
+    }
+static auto randomRadius() {
+    return arc4random_uniform(18); 
+    }
+void darkmode2profile() {
+   Theme=randomTheme();
+   radius=randomRadius();
+   
+   for(int prnr=0;prnr<nrProfile;++prnr) {
+        struct AlarmProfile  &prof=profiles[prnr];
+        setproel(invertcolors)
+        prof.isOval=false;
+        prof.Theme=randomTheme();
+        prof.radius=randomRadius();
+        }
     }
 bool setprofile() {
        const int nr=nrProfileMins;
@@ -811,126 +850,129 @@ Settings(const char *settingsname,const char *base,const char *country): Mmap(se
 //    if(data()->initVersion<30) 
    { 
     LOGGER("initVersion=%d\n",data()->initVersion);
-   if(data()->initVersion<35) { 
-   if(data()->initVersion<34) { 
-   if(data()->initVersion<33) { 
-    if(data()->initVersion<31) { 
-        if(data()->initVersion<26) { 
-          if(data()->initVersion<22) { 
-          if(data()->initVersion<20) {
-          if(data()->initVersion<18) { // set in Applic.initbroadcasts, startjuggluco and initinjuggluco 
-          if(data()->initVersion<17) { 
-               memcpy(data()->Nightnums,data()->librenums, sizeof(Tings::ToLibre)*data()->varcount);
-             if(data()->initVersion<16) { 
-             if(data()->initVersion<15) {
-                if(data()->initVersion<13) {
-                   if(data()->initVersion<12) {
-                   if(data()->initVersion<10) {
-                   if(data()->initVersion<9) {
-                      data()->sendtolibreview=data()->uselibre;
-                      if(data()->initVersion<8) {
-                         if(data()->initVersion<7) { 
-                            if(data()->initVersion<6) {
-                               if(data()->initVersion<4) {
-                                  if(data()->varcount==0) {
-                                     data()->roundto=1.0f;
-                                     data()->update=1;
-                                     mklabels();
-                                     mkalarms();
-                                     data()->logcat=true;
-                      #ifdef WEAROS
-                                     data()->orientation=1;
-                      #else
-                                     data()->orientation=8;
-                      #endif
+    if(data()->initVersion<37) {
+       if(data()->initVersion<35) { 
+       if(data()->initVersion<34) { 
+       if(data()->initVersion<33) { 
+        if(data()->initVersion<31) { 
+            if(data()->initVersion<26) { 
+              if(data()->initVersion<22) { 
+              if(data()->initVersion<20) {
+              if(data()->initVersion<18) { // set in Applic.initbroadcasts, startjuggluco and initinjuggluco 
+              if(data()->initVersion<17) { 
+                   memcpy(data()->Nightnums,data()->librenums, sizeof(Tings::ToLibre)*data()->varcount);
+                 if(data()->initVersion<16) { 
+                 if(data()->initVersion<15) {
+                    if(data()->initVersion<13) {
+                       if(data()->initVersion<12) {
+                       if(data()->initVersion<10) {
+                       if(data()->initVersion<9) {
+                          data()->sendtolibreview=data()->uselibre;
+                          if(data()->initVersion<8) {
+                             if(data()->initVersion<7) { 
+                                if(data()->initVersion<6) {
+                                   if(data()->initVersion<4) {
+                                      if(data()->varcount==0) {
+                                         data()->roundto=1.0f;
+                                         data()->update=1;
+                                         mklabels();
+                                         mkalarms();
+                                         data()->logcat=true;
+                          #ifdef WEAROS
+                                         data()->orientation=1;
+                          #else
+                                         data()->orientation=8;
+                          #endif
 
-                                     data()->fixatey=true;
-                                     data()->systemUI=true;
-                                     }
-                                  data()->setdefault();
-                                  data()->streamHistory=true;
-                                  };
-                               data()->flash=false;
-                               }
-                            data()->usexdripwebserver=false;
-                      #ifdef CARRY_LIBS
-                            data()->havelibrary=true;
-                      #endif
-                      #ifdef WEAROS
-                            data()->invertcolors=true;
-                            data()->usegarmin=false;
-                      #else
-                            data()->usegarmin=true;
-                      #endif
-                            }
+                                         data()->fixatey=true;
+                                         data()->systemUI=true;
+                                         }
+                                      data()->setdefault();
+                                      data()->streamHistory=true;
+                                      };
+                                   data()->flash=false;
+                                   }
+                                data()->usexdripwebserver=false;
+                          #ifdef CARRY_LIBS
+                                data()->havelibrary=true;
+                          #endif
+                          #ifdef WEAROS
+                                data()->invertcolors=true;
+                                data()->usegarmin=false;
+                          #else
+                                data()->usegarmin=true;
+                          #endif
+                                }
 
-                         data()->balanced_priority=true;
-                         }
+                             data()->balanced_priority=true;
+                             }
+                          }
+                          data()->triedasm=false;
+                          data()->asmworks=false;
+                          }
+
+                          if(data()->libre2NUMiter<1) data()->libre2NUMiter=1;
+                          if(data()->libre3NUMiter<1) data()->libre3NUMiter=1;
+                          }
+                       if(data()->xinfuus) {
+                          strcpy(data()->librelinkBroadcast.name[0], "com.eveningoutpost.dexdrip");
+                          data()->librelinkBroadcast.nr=1;
+                          }
+                       data()->xdripBroadcast.nr=data()->xdripbroadcast;
+                       data()->glucodataBroadcast.nr=data()->jugglucobroadcast;
+                       }
+
+                    data()->libreaccountIDnum=-1LL;
                       }
-                      data()->triedasm=false;
-                      data()->asmworks=false;
+                    data()->sslport=17581;
                       }
+                    }
 
-                      if(data()->libre2NUMiter<1) data()->libre2NUMiter=1;
-                      if(data()->libre3NUMiter<1) data()->libre3NUMiter=1;
-                      }
-                   if(data()->xinfuus) {
-                      strcpy(data()->librelinkBroadcast.name[0], "com.eveningoutpost.dexdrip");
-                      data()->librelinkBroadcast.nr=1;
-                      }
-                   data()->xdripBroadcast.nr=data()->xdripbroadcast;
-                   data()->glucodataBroadcast.nr=data()->jugglucobroadcast;
-                   }
+                  data()->libreinit=0; //reinit during switch to 2.10.1
+                    }
+                  if(country&&!strcasecmp(country,"RU")) {
+                    data()->librecountry=5;
+                    }
+                 else
+                     data()->librecountry = data()->libreunit;
+                 }
+                 data()->nightinterval=270;
+                 }
+                 movebroadcast();
+           
+                 }
+    #if defined(JUGGLUCO_APP)&& !defined(WEAROS)
+             setIOBtype();
+    #endif
+    #if !defined(__x86_64__) && defined(__i386__)
+            uint32_t  *startptr=&data()->startlibretime;
+            int32_t  *endptr=&data()->ComplicationBackgroundColor;
+            auto start=reinterpret_cast<uint8_t*>(startptr);
+            memmove(start,start-4,reinterpret_cast<uint8_t*>(endptr)-start+4);
+    #endif
+            }
+          else {
+    #if defined(__arm__) && !defined(WEAROS)
+    const time_t now=time(nullptr);
+    if(data()->startlibretime>now) {
+            uint32_t  *startptr=&data()->startlibretime;
+            auto start=reinterpret_cast<uint8_t*>(startptr);
+            memmove(start,start+4,4);
+            if(data()->startlibretime>now||data()->startlibretime<1741958880)
+                data()->startlibretime=1742218080;
+            }
 
-                data()->libreaccountIDnum=-1LL;
-                  }
-                data()->sslport=17581;
-                  }
-                }
-
-              data()->libreinit=0; //reinit during switch to 2.10.1
-                }
-              if(country&&!strcasecmp(country,"RU")) {
-                data()->librecountry=5;
-                }
-             else
-                 data()->librecountry = data()->libreunit;
-             }
-             data()->nightinterval=270;
-             }
-             movebroadcast();
-       
-             }
-#if defined(JUGGLUCO_APP)&& !defined(WEAROS)
-         setIOBtype();
-#endif
-#if !defined(__x86_64__) && defined(__i386__)
-        uint32_t  *startptr=&data()->startlibretime;
-        int32_t  *endptr=&data()->ComplicationBackgroundColor;
-        auto start=reinterpret_cast<uint8_t*>(startptr);
-        memmove(start,start-4,reinterpret_cast<uint8_t*>(endptr)-start+4);
-#endif
+    #endif
         }
-      else {
-#if defined(__arm__) && !defined(WEAROS)
-const time_t now=time(nullptr);
-if(data()->startlibretime>now) {
-        uint32_t  *startptr=&data()->startlibretime;
-        auto start=reinterpret_cast<uint8_t*>(startptr);
-        memmove(start,start+4,4);
-        if(data()->startlibretime>now||data()->startlibretime<1741958880)
-            data()->startlibretime=1742218080;
+        data()->mkadvancedalarms();
         }
 
-#endif
-    }
-    data()->mkadvancedalarms();
-    }
-
-    data()->loadtime=10.0/(3000.0*3000.0);
+        data()->loadtime=10.0/(3000.0*3000.0);
+          }
+         data()->defaultshows();
+         }
+      data()->darkmode2profile();
       }
-     data()->defaultshows();
-   }
    }
    
 #if 0&&defined(WEAROS)&&!defined(NOLOG)

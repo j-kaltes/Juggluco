@@ -47,7 +47,7 @@
         android:name=".Applic"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme.Base">
         <receiver
             android:name=".GlucoseWidget"
             android:exported="false">

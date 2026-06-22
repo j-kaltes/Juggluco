@@ -103,7 +103,7 @@ void sendoptions(View labelview,int pos) {
 
     var  params =    new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.CENTER_HORIZONTAL);
     params.topMargin=MainActivity.systembarTop;
-    context.addContentView(layout, params);
+    context.addMyContentView(layout, params);
     Button close=layout.findViewById(R.id.close);
     Button save=layout.findViewById(R.id.save);
     TextView label=layout.findViewById(R.id.label);
@@ -163,7 +163,7 @@ void sendoptions(View labelview,int pos) {
 
     Runnable closerun=()-> {
         EnableControls(parent,true);
-        hidekeyboard((Activity) context);
+        hidekeyboard((MainActivity) context);
         removeContentView(layout) ;
         if(!canSendNumbers(night)) {
             EnableControls(sendnumbers,false);

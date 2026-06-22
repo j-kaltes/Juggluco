@@ -176,7 +176,7 @@ public void mkshortlistview(MainActivity act) {
 			return new int[] {w,h}; },new View[]{scroll,butview});
    shortlistview.setPadding(MainActivity.systembarLeft,0,MainActivity.systembarRight,MainActivity.systembarBottom);
 		shortlistview.setBackgroundColor(tk.glucodata.Applic.backgroundcolor);
-		act.addContentView(shortlistview, new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
+		act.addMyContentView(shortlistview, new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
 		}
 	else {
         	shortlistview.setVisibility(VISIBLE);
@@ -203,7 +203,7 @@ void deleteshort(View v) {
 	}
 void endshortedit() {
 	shortedit.setVisibility(GONE);
-	hidekeyboard((Activity)shortedit.getContext()); //USE
+	hidekeyboard((MainActivity)shortedit.getContext()); //USE
 	}
 void saveshort(View v) {
 	String label=labedit.getText().toString();
@@ -279,7 +279,7 @@ if(shortedit==null) {
         var params= new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.TOP| Gravity.CENTER_HORIZONTAL);
         params.topMargin=MainActivity.systembarTop;
 //        params.leftMargin=MainActivity.systembarLeft;
-	act.addContentView(shortedit, params);
+	act.addMyContentView(shortedit, params);
     }
     else {
         shortedit.setVisibility(VISIBLE);

@@ -166,7 +166,7 @@ static public void show(MainActivity context) {
     var Ok=getbutton(context,R.string.ok);
     var Help=getbutton(context,R.string.helpname);
     Help.setOnClickListener(v-> {
-        context.lightBars(false);
+        context.themeLightBars();
         help.help(R.string.watchinfo,context,l->context.lightBars(!Natives.getInvertColors( ))); 
         });
 
@@ -190,7 +190,7 @@ static public void show(MainActivity context) {
                     WRAP_CONTENT,
                     Gravity.CENTER_HORIZONTAL| Gravity.CENTER);
 
-    context.addContentView(layout, params);
+    context.addMyContentView(layout, params);
     status.setOnClickListener(v->{
             new GarminStatus(context,Applic.app.numdata,layout);
             });

@@ -74,7 +74,7 @@ static private void openfile(Activity act,int requestid) {
     }
 
 static final private int MAXKEY=80;
-public static void show(Activity context,View parent) {
+public static void show(MainActivity context,View parent) {
    	EnableControls(parent,false);
 
 	var save=getbutton(context,R.string.save);
@@ -94,11 +94,13 @@ public static void show(Activity context,View parent) {
        visible.setButtonDrawable(R.drawable.password_visible);
 /*      visible.setMinimumWidth(0); visible.setMinWidth(0);*/
         visible.setOnCheckedChangeListener( (buttonView,  isChecked)-> {
+                        var sel=editkey.getSelectionStart();
                         editkey.setInputType(isChecked?InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD:InputType.TYPE_TEXT_VARIATION_PASSWORD);
                         if(isChecked)
                                         editkey.setTransformationMethod(null);
                         else
                                         editkey.setTransformationMethod(new PasswordTransformationMethod());
+                        editkey.setSelection(sel);
                         });
 	 var labport=getlabel(context,"SSL "+context.getString(R.string.port));
 	var oldport=Natives.getsslport();
@@ -254,8 +256,8 @@ public static void show(Activity context,View parent) {
                     WRAP_CONTENT,
                     Gravity.CENTER_HORIZONTAL);
 
-    context.addContentView(layout, params);
-//	context.addContentView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+    context.addMyContentView(layout, params);
+//	context.addMyContentView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
 	Runnable[] closeproc={null};
 
         closeproc[0]=()-> {

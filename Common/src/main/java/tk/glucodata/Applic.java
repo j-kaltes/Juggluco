@@ -93,7 +93,7 @@ public static void ifRTLseekbar(SeekBar seekbar) {
     }
 static final boolean TEST=doLog;
 static final boolean ALLGALAXY=true;
-static final boolean hasNotChinese=true;
+static final boolean hasNewSibionics=true;
 public static final  boolean scrollbar=true;
 public static final  boolean horiScrollbar=true;
 //static final float mgdLmult= doLog?18.0182f:18.0f;
@@ -104,6 +104,7 @@ static final float mgdLmult=18.0f;
 public static boolean hour24=true;
 static public final int TargetSDK=BuildConfig.targetSDK;
 static public final boolean isWearable= BuildConfig.isWear==1;
+static public final boolean DynamicTheme=!isWearable;
 //static final boolean DontTalk=isWearable;
 static public final boolean DontTalk=false;
 static public final boolean useZXing= BuildConfig.noZXing==0;
@@ -404,18 +405,18 @@ void initbluetooth(boolean usebluetooth,Context context,boolean frommain) {
         }
     
     if(!keeprunning.started) {
+        MainActivity act= frommain?((MainActivity)context):getActivity();
+        if(act!=null) {
+               act.askNotify();
+            }
+        else {
+            Log.i(LOG_ID,"can't askNotify, no MainActivity");
+            }
         if(usebluetooth||Natives.backuphostNr( )>0) {
             if(keeprunning.start(context))
                 {if(doLog) {Log.i(LOG_ID,"keeprunning started");};}
             else
                 {if(doLog) {Log.i(LOG_ID,"keeprunning not started="+keeprunning.started);};};
-            MainActivity act= frommain?((MainActivity)context):getActivity();
-            if(act!=null) {
-               act.askNotify();
-                }
-            else {
-                Log.i(LOG_ID,"can't askNotify, no MainActivity");
-                }
             }
         }
     SensorBluetooth.start(usebluetooth);
@@ -622,7 +623,7 @@ boolean initproc() {
         if(!numio.setlibrary(this))
             return false;
         needsnatives();
-        {if(doLog) {Log.i("Applic","initproc width="+initscreenwidth);};};
+        if(doLog) {Log.i("Applic","initproc width="+initscreenwidth);};
         libre3init.init();
         SuperGattCallback.initAlarmTalk();
        // initializeNet();
@@ -832,7 +833,7 @@ if(isWearable) {
 
     Floating.init(); 
    final var initversion=Natives.getinitVersion();
-    if(initversion<36) {
+    if(initversion<37) {
       if(initversion<29) {
          if(initversion<22) {
             if(initversion<14) {
@@ -847,7 +848,7 @@ if(isWearable) {
             }
          sethour24(DateFormat.is24HourFormat(app));
          }
-      Natives.setinitVersion(36);
+      Natives.setinitVersion(37);
       }
 
    setjavahour24(Natives.gethour24());
@@ -899,7 +900,7 @@ static void setinittext(String str) {
     }
 @Keep
 static void rminitlayout() {
-     RunOnUiThread(()-> {Specific.rmlayout();});
+     Specific.rmlayout();
     }
 @Keep
 static void toGarmin(int base) {
@@ -990,5 +991,13 @@ private static boolean isHarmonyOS() {
         }
     }
 
+
+/*
+public static int getResourceIdFromTheme(Context context, int attributeResId) {
+    var typedValue = new TypedValue();
+    context.getTheme().resolveAttribute(attributeResId, typedValue, true);
+    return typedValue.resourceId;
+    }
+*/
 }
 

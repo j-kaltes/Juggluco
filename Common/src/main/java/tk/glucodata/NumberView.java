@@ -408,7 +408,7 @@ public   View addnumberview(MainActivity context,final int bron,final long time,
             //            act.clearonback();
         });
 
-    context.addContentView(newnumview,isWearable? new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT):new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+    context.addMyContentView(newnumview,isWearable? new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT):new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
         }
     else  {
         numspinadapt.setarray(Natives.getLabels());
@@ -810,7 +810,7 @@ public Layout getdateviewal(MainActivity activity, long date, Dater erdate) {
         }
 
     datepicker.setBackgroundColor( Applic.app.backgroundcolor);
-    activity.addContentView(datepicker, datparams);
+    activity.addMyContentView(datepicker, datparams);
     }
     else {
     {if(doLog) {Log.i(LOG_ID, " old");};};
@@ -964,11 +964,11 @@ else {
 
 
         layout.setBackgroundColor( Applic.backgroundcolor);
-    //    activity.addContentView(layout,  new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+    //    activity.addMyContentView(layout,  new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
     var  params =    new FrameLayout.LayoutParams(layparwidth,layparwidth, Gravity.CENTER_HORIZONTAL);
 
-    //l act.addContentView(layout, params);
-        activity.addContentView(layout,  params);
+    //l act.addMyContentView(layout, params);
+        activity.addMyContentView(layout,  params);
         timepicker=layout;
    if(isWearable)
           layout.setPaddingRelative(0,(int)(GlucoseCurve.metrics.density*5.0),0,(int)(GlucoseCurve.metrics.density*2.0));
@@ -1211,11 +1211,11 @@ Layout getkeyboard(Context context) {
     return layout;
     }
 
-public    void showkeyboard(Activity context) {
+public    void showkeyboard(MainActivity context) {
 if(!isWearable) {
     if(keyboard==null) {
     keyboard=getkeyboard(context);
-    context.addContentView(keyboard, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+    context.addMyContentView(keyboard, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
     }
     else {
         keyboard.setVisibility(VISIBLE);

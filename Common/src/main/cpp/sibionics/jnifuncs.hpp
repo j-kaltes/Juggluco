@@ -89,8 +89,8 @@ double SiContext::vers(process)(int index,double value, double temp) {
        jnidata_t  hierjnidata={&envbuf,&binState};
        JNIEnv *hiersubenv=(JNIEnv *) &hierjnidata;
         jbyteArray bar=vers(getBinaryStructAlgorithmContext)(hiersubenv,nullptr,context);
-//        LOGAR("getBinaryStructAlgorithmContext");
         data_t *data=(data_t *)bar;
+        LOGGER("getBinaryStructAlgorithmContext=%p#%d\n",data->data(),data->length());
         binState.setpos(0,data);
         }
     else {
@@ -125,7 +125,7 @@ AlgorithmContext *vers(initAlgorithm)(SensorGlucoseData *sens,multimmap &binStat
     LOGGER("initAlgorithmContext%d(...%s)=%d\n",vers(0),shortname,res);
     if(res != 1) {
         const char *shortname;
-        if(sens->notchinese()) {
+        if(sens->newSI()) {
             const int sub=sens->siSubtype();
             if(sub==1) {
                  shortname="YMWD016F";
@@ -168,33 +168,5 @@ AlgorithmContext *vers(initAlgorithm)(SensorGlucoseData *sens,multimmap &binStat
 static bool vers(getNativefunctions)() {
     return true;
     }
-/*static bool vers(getNativefunctions)() {
-   if constexpr (vers(0)==02)   {
-        return true;
-        } 
-   else { 
-        std::string_view alglib=algLibName;
-        void *handle=openlib(alglib);
-        if(!handle) {
-            LOGGER("dlopen %s failed: %s\n",alglib.data(),dlerror());
-            return false;
-            }
-         const char *getjsonstr=jsonname(get,Ev);
-        vers(getjson)= (getjson_t)dlsym(handle,getjsonstr);
-         if(!vers(getjson)) {
-             LOGGER("dlsym %s failed\n",getjsonstr);
-            return false;
-             }
-         const char *setjsonstr=jsonname(set,EPc);
-        vers(setjson)= (setjson_t)dlsym(handle,setjsonstr);
-         if(!vers(setjson)) {
-             LOGGER("dlsym %s failed\n",setjsonstr);
-            return false;
-             }
-         LOGAR("found Nativefunctions");
-         return true;
-         }
-    } */
-
 
 

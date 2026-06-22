@@ -49,67 +49,30 @@ import static tk.glucodata.settings.Settings.removeContentView;
 
 public class SetColors {
 private static final String LOG_ID="SetColors";
-//   AmbilWarnaDialog(Context context, int color, boolean supportsAlpha, OnAmbilWarnaListener listener)
-/*
-static View theview=null;
-public static void endcolors(MainActivity act) {
-    View view=theview;
-    if(view!=null) {
-        theview=null;
-        removeContentView(view);
-        act.poponback();
-        }
-    } */
 static void show(MainActivity act) {
 
    act.lightBars(!Natives.getInvertColors( ));
     int initialColor= 0xfff7f022;
-//    Natives.getlastcolor();
     int width=GlucoseCurve.getwidth();
     int height=GlucoseCurve.getheight();
     AmbilWarnaDialog dialog = new AmbilWarnaDialog(act, initialColor,c-> {
         {if(doLog) {Log.i(LOG_ID,String.format(usedlocale,"col=%x",c));};};
             Natives.setlastcolor(c);
             tk.glucodata.Applic.app.redraw();
-        }, v-> {
-      /* 
-    int afx,afy;
-    if(Natives.getsystemUI()) {
-         afy= MainActivity.systembarTop;
-         afx= MainActivity.systembarLeft;
-         }
-     else {
-        afx=afy=0;
-         }
-     {if(doLog) {Log.i(LOG_ID, "Color systembarTop="+afy);};};
-     {if(doLog) {Log.i(LOG_ID, "Color systembarLeft="+afx);};};
-     if(isWearable) {
-         int h=v.getMeasuredHeight();    
-         int w=v.getMeasuredWidth();    
-         v.setX((int)(width*.97)-w);
-    //     v.setY((height-h)/2);
-        }
-      else  {
-           v.setY(afy);
-           v.setX(afx);
-         }
-         */
-        }
-    );
+        }, v-> { });
     View view=dialog.getview();
     view.setBackgroundColor(Applic.backgroundcolor);
 
     if(isWearable) {
         var params= new FrameLayout.LayoutParams((int)(width*0.65), (int)(height*0.65), Gravity.RIGHT| Gravity.CENTER);
         params.rightMargin=(int)(width*.03f);
-        act.addContentView(view, params);
-//        act.addContentView(view, new ViewGroup.LayoutParams((int)(width*0.65), (int)(height*0.75)));
+        act.addMyContentView(view, params);
         }
     else {
         var params= new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.LEFT|Gravity.TOP);
         params.topMargin=MainActivity.systembarTop;
         params.leftMargin=MainActivity.systembarLeft;
-        act.addContentView(view, params);
+        act.addMyContentView(view, params);
         Button close= act.findViewById(R.id.closeambi);
         Button help= act.findViewById(R.id.helpambi);
         if(close!=null) {
@@ -134,20 +97,4 @@ static void show(MainActivity act) {
     });
 }
 
-/*
-static void show(MainActivity act, int initialColor ) {
-    {if(doLog) {Log.i(LOG_ID,"show");};};
-    String mess="Hallo";
-        AlertDialog.Builder builder = new AlertDialog.Builder(act);
-        builder.setTitle("Niets?").
-     setMessage(mess).
-           setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                }
-                }) .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-            }
-        }).show();
-    }
-*/
 }

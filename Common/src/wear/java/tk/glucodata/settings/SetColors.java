@@ -75,18 +75,18 @@ static void show(MainActivity act) {
     );
     View view=dialog.getview();
     view.setBackgroundColor(Applic.backgroundcolor);
-  //  act.addContentView(view, new ViewGroup.LayoutParams((int)(width*0.65), (int)(height*0.65)));
+  //  act.addMyContentView(view, new ViewGroup.LayoutParams((int)(width*0.65), (int)(height*0.65)));
 
         var params= new FrameLayout.LayoutParams((int)(width*0.65), (int)(height*0.65), Gravity.RIGHT| Gravity.CENTER);
         params.rightMargin=(int)(width*.03f);
-        act.addContentView(view, params);
+        act.addMyContentView(view, params);
     var ok=useclose?getbutton(act,"Ok"):null;
     if(ok!=null) {
         ok.setOnClickListener(v->MainActivity.doonback());
         var okparams= new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.TOP|Gravity.CENTER_HORIZONTAL);
-        act.addContentView(ok, okparams);
+        act.addMyContentView(ok, okparams);
 
-//        act.addContentView(ok, new ViewGroup.LayoutParams(WRAP_CONTENT,WRAP_CONTENT));
+//        act.addMyContentView(ok, new ViewGroup.LayoutParams(WRAP_CONTENT,WRAP_CONTENT));
 
  //       ok.setX((int)(width*.45));
 

@@ -332,8 +332,8 @@ void invertcolorsset(bool val) {
 	 startincolors=val*startbackground;
          }
 void setinvertcolors(bool val) {
-        invertcolorsset(val);
-	settings->data()->invertcolors=val;
+     invertcolorsset(val);
+	 settings->data()->invertcolorsset(val);
 	 }
 int numfrompos(const float x,const float y) ;
 template <class TX,class TY> NumHit *nearbynum(const float tapx,const float tapy,const TX &transx,  const TY &transy) ;

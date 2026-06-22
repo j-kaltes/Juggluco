@@ -196,12 +196,11 @@ int updateone::update() {
         ret|=subdid;
         }
     const auto update= settings->getupdate();
-    static bool init=true;
-    if(update>updatesettings||init) {
-        init=false;
+    if(update>updatesettings) {
+        LOGGER("update=%d updatesettings=%d\n",update,updatesettings);
+        std::vector<subdata> vect;
         if(sendnums) {
-            std::vector<subdata> vect;
-            vect.reserve(3);
+            vect.reserve(4);
             bool nochangenum =true;
             vect.push_back({reinterpret_cast<const senddata_t *>(&nochangenum),offsetof(Tings,nochangenum),sizeof(nochangenum)});
             constexpr const int  bloodvaroff=offsetof(Tings, bloodvar);
@@ -209,9 +208,15 @@ int updateone::update() {
             constexpr const int  sharedstart=offsetof(Tings, update);
             constexpr const int len=offsetof(Tings,mealvar )+1-sharedstart;
             vect.push_back({reinterpret_cast<const senddata_t *>( settings->data())+sharedstart,sharedstart,len});
+            }
+        if(sendscans) {
+            constexpr const int  gs3idoff=offsetof(Tings, gs3id);
+            vect.push_back({reinterpret_cast<const senddata_t *>( settings->data())+gs3idoff,gs3idoff,sizeof(Tings::gs3id)});
+            }
+        if(vect.size()) {
             if(!connect->senddata(pass,vect,settingsdat) ) 
                 return 0;
-            }
+             }
         ret=1;
         }
     updatesettings=update;
@@ -762,17 +767,24 @@ void wakesender() {
      }
 #include "mirrorerror.h"
 char mirrorerrors[maxallhosts][maxmirrortext];
+time_t mirrorerrorstimes[maxallhosts];
 int getindex(const  passhost_t *host) {
     return host-backup->getupdatedata()->allhosts;
     }
 char *getmirrorerror(const passhost_t *pass) {
     int index=getindex(pass);
+
+    return mirrorerrors[index];
+    }
+char *getmirrorerrorsettime(const passhost_t *pass) {
+    int index=getindex(pass);
+    mirrorerrorstimes[index]=time(nullptr);
     return mirrorerrors[index];
     }
 int savemessage(const passhost_t *pass,const char* fmt, ...){
     va_list args;
     va_start(args, fmt);
-    char *buf=getmirrorerror(pass);
+    char *buf=getmirrorerrorsettime(pass);
     int len=vsnprintf(buf,maxmirrortext, fmt, args);
     va_end(args);
     return len;

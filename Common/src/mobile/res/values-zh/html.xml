@@ -143,47 +143,13 @@ To modify, change the html files in https://github.com/j-kaltes/Jugglucohelp -->
                    菜单，中间部分的右侧会打开第三个菜单，屏幕的右四分之一部分会打开第四个菜单。 </font> </p>
           <p style="line-height: 100%; orphans: 0; widows: 0; margin-top: 0.08in; margin-bottom: 0.08in; background: transparent; page-break-after: avoid">
           <font color="#ffffff"><font style="font-size: 12pt" size="3"><i>菜单4:移动选项</i></font></font></p>
-          <table cellspacing="0" cellpadding="0" width="96">
-          <colgroup><col width="96"> </colgroup>
-          <tbody>
-          <tr>
-          <td style="border: none; padding: 0in" width="96" valign="top">
-          <p> <font color="#ffff6d">15:10 ↗ 93</font></p>
-          </td>
-          </tr>
-          <tr>
-          <td style="border: none; padding: 0in" width="96" valign="top">
-          <p><font color="#ffff6d"><a href="https://www.juggluco.nl/Jugglucohelp/zh/searchhelp.html">搜索</a></font></p>
-          </td>
-          </tr>
-          <tr>
-          <td style="
-border: none; padding: 0in" width="96" valign="top">
-<p><font color="#ffff6d">日期</font></p>
-</td>
-</tr>
-<tr>
-<td style="border: none; padding: 0in" width="96" valign="top">
-<p><font color="#ffff6d">向前一天</font></p>
-</td>
-</tr>
-<tr style="background: transparent">
-<td style="border: none; padding: 0in" width="96" valign="top">
-<p><font color="#ffff6d">向后一天</font></p>
-</td>
-</tr>
-<tr>
-<td style="border: none; padding: 0in" width="96" valign="top">
-<p><font color="#ffff6d">向前一周</font></p>
-</td>
-</tr>
-<tr>
-<td style="border: none; padding: 0in" width="96" valign="top">
-<p><font color="#ffff6d">向后一周</font></p>
-</td>
-</tr>
-</tbody>
-</table>
+          <p><font color="#ffff6d"><tt>15:10 ↗ 93<br><br>
+<a href="https://www.juggluco.nl/Jugglucohelp/zh/searchhelp.html">搜索</a><br><br>
+日期<br><br>
+向前一天<br><br>
+向后一天<br><br>
+向前一周<br><br>
+向后一周</tt></font></p>
 <p style="line-height: 115%; margin-bottom: 0in"><font color="#ffffff"><span
        lang="en-US">通过在屏幕上左右移动，你可以左右移动曲线。你也可以使用</span><font color="#4f81bd"><font
          face="Cambria, serif"><span lang="en-US"><b>移动选项</b></span></font></font>
@@ -197,46 +163,13 @@ border: none; padding: 0in" width="96" valign="top">
 <p style="line-height: 100%; orphans: 0; widows: 0; margin-top: 0.08in; margin-bottom: 0.08in; background: transparent; page-break-after: avoid">
 <font color="#ffffff"><font style="font-size: 12pt" size="3"><i>菜单 3:
 显示选项</i></font></font></p>
-<table cellspacing="0" cellpadding="0" width="138">
-<colgroup><col width="138"> </colgroup>
-<tbody>
-<tr>
-<td style="border: none; padding: 0in" width="138" valign="top">
-<p><font color="#ffff6d">最后一次扫描</font></p>
-</td>
-</tr>
-<tr>
-<td style="border: none; padding: 0in" width="138" valign="top">
-<p><font color="#ffff6d">扫描数据            [x]</font></p>
-</td>
-</tr>
-<tr>
-<td style="border: none; padding: 0in" width="138" valign="top">
-<p><font color="#ffff6d">蓝牙数据          [x]</font></p>
-  </td>
-  </tr>
-  <tr>
-  <td style="border: none; padding: 0in" width="138" valign="top">
-  <p><font color="#ffff6d">历史数据         [x]</font></p>
-  </td>
-  </tr>
-  <tr>
-  <td style="border: none; padding: 0in" width="138" valign="top">
-  <p><font color="#ffff6d">标签数据      [x]</font></p>
-  </td>
-  </tr>
-  <tr>
-  <td style="border: none; padding: 0in" width="138" valign="top">
-  <p><font color="#ffff6d"><a href="https://www.juggluco.nl/Jugglucohelp/zh/mealhelp.html">餐饮</a>          [  ]</font></p>
-  </td>
-  </tr>
-  <tr>
-  <td style="border: none; padding: 0in" width="138" valign="top" height="42">
-  <p> <font color="#ffff6d">暗黑模式   [x]</font></p>
-  </td>
-  </tr>
-  </tbody>
-  </table>
+<p><font color="#ffff6d"><tt>最后一次扫描<br><br>
+扫描数据&nbsp;[x]<br><br>
+蓝牙数据&nbsp;[x]<br><br>
+历史数据&nbsp;[x]<br><br>
+标签数据&nbsp;[x]<br><br>
+<a href="https://www.juggluco.nl/Jugglucohelp/zh/mealhelp.html">餐饮</a>&nbsp;&nbsp;&nbsp;&nbsp;[&nbsp;]<br><br>
+暗黑模式&nbsp;[x]</tt></font></p>
   <p style="line-height: 115%; margin-bottom: 0in"><font color="#ffffff"><span
          lang="en-US">中间右侧的菜单</span> <font color="#4f81bd"><font face="Cambria, serif"><span
              lang="en-US"><b>包含显示选项</b></span></font></font>。<span lang="en-US">要查看最后一次扫描，请触摸第一项。</span>
@@ -245,45 +178,13 @@ border: none; padding: 0in" width="96" valign="top">
   <p style="line-height: 100%; orphans: 0; widows: 0; margin-top: 0.08in; margin-bottom: 0.08in; background: transparent; page-break-after: avoid">
   <font color="#ffffff"><font style="font-size: 12pt" size="3"><i>菜单 2:
   中间左侧</i></font></font></p>
-  <table style="width: 119px; height: 337px;" cellspacing="0" cellpadding="0">
-    <colgroup><col width="96"> </colgroup>
-    <tbody>
-    <tr>
-    <td style="border: none; padding: 0in" width="96" valign="top">
-    <p><font color="#ffff6d"><a href="https://www.juggluco.nl/Jugglucohelp/zh/helpexport.html">导出</a></font></p>
-    </td>
-    </tr>
-    <tr>
-    <td style="border: none; padding: 0in" width="96" valign="top">
-    <p><font color="#ffff6d"><a href="https://www.juggluco.nl/Jugglucohelp/zh/connectionoverview.html">镜像</a></font></p>
-    </td>
-    </tr>
-    <tr>
-    <td style="border: none; padding: 0in" width="96" valign="top">
-    <p><font color="#ffff6d"><a href="https://www.juggluco.nl/Jugglucohelp/zh/newamount.html" onclick= "location.href=this.href+\'?unit=\'+unitstr;return false;">新建标签</a></font></p>
-    </td>
-    </tr>
-    <tr>
-    <td style="border: none; padding: 0in" width="96" valign="top">
-    <p><font color="#ffff6d">列表</font></p>
-    </td>
-    </tr>
-    <tr><td style="border: none; padding: 0in" width="96" valign="top">
-      <p><font color="#ffff6d"><a href="https://www.juggluco.nl/Jugglucohelp/zh/stathelp.html" onclick= "location.href=this.href+\'?unit=\'+unitstr;return false;" >统计</a></font></p>
-      </td>
-      </tr>
-      <tr>
-      <td style="border: none; padding: 0in" width="96" valign="top">
-      <p><font color="#ffff6d"><a href="https://www.juggluco.nl/Jugglucohelp/zh/talkhelp.html">播报</a></font></p>
-      </td>
-      </tr>
-      <tr>
-      <td style="border: none; padding: 0in" width="96" valign="top">
-      <p align="left"><font color="#ffff6d">悬浮窗[ ]</font></p>
-      </td>
-      </tr>
-      </tbody>
-      </table>
+  <p><font color="#ffff6d"><tt><a href="https://www.juggluco.nl/Jugglucohelp/zh/helpexport.html">导出</a><br><br>
+<a href="https://www.juggluco.nl/Jugglucohelp/zh/connectionoverview.html">镜像</a><br><br>
+<a href="https://www.juggluco.nl/Jugglucohelp/zh/newamount.html" onclick="location.href=this.href+\'?unit=\'+unitstr;return false;">新建标签</a><br><br>
+列表<br><br>
+<a href="https://www.juggluco.nl/Jugglucohelp/zh/stathelp.html" onclick="location.href=this.href+\'?unit=\'+unitstr;return false;">统计</a><br><br>
+<a href="https://www.juggluco.nl/Jugglucohelp/zh/talkhelp.html">播报</a><br><br>
+悬浮窗&nbsp;[&nbsp;]</tt></font></p>
       <p style="line-height: 115%; margin-bottom: 0in"><font color="#ffffff">你可以通过点击中间左侧菜单中的<font color="#4f81bd"><font face="Cambria, serif"><font
                  style="font-size: 13pt" size="3"><span lang="en-US"><b>新建标签</b></span></font></font></font>来添加一些标注（例如胰岛素，运动量，食用的碳水化合物）。<font color="#4f81bd"><font
                face="Cambria, serif"><span lang="en-US"><b>导出</b></span></font></font><span lang="en-US">会将数据以.csv（制表符分隔值）格式保存到文件中。</span><font color="#4f81bd"><font face="Cambria, serif"><span
@@ -291,41 +192,12 @@ border: none; padding: 0in" width="96" valign="top">
                  lang="en-US"><b>统计</b></span></font></font><span lang="en-US">来查看一些统计数据。它显示了在某些血糖范围内的测量百分比、血糖管理指标（HbA1c的预测指标）、血糖波动性以及每天每个时刻低于100%、95%、75%、50%、25%和0%的血糖值的总结图。</span><span lang="en-US">在</span><font color="#4f81bd"><font face="Cambria, serif"><span lang="en-US"><b>播报</b></span></font></font><span lang="en-US">中，你可以让Juggluco朗读传入的血糖值、触摸的图表元素或消息。<b>悬浮窗</b>打开</span><font color="#4f81bd"><font face="Cambria, serif"><span lang="en-US"><b>悬浮血糖</b></span></font></font><span lang="en-US">。一个在其他应用上方屏幕上显示的血糖值。<a href="https://www.juggluco.nl/Jugglucohelp/zh/floatingconfig.html" onclick= "location.href=this.href+\'?unit=\'+unitstr;return false;"  >在设置中，你可以更改其颜色和大小。</a></span></font></p>
       <p style="line-height: 100%; orphans: 0; widows: 0; margin-top: 0.08in; margin-bottom: 0.08in; background: transparent; page-break-after: avoid">
       <font color="#ffffff"><font style="font-size: 12pt" size="3"><i>菜单 1: 左侧</i></font></font></p>
-<table cellspacing="0" cellpadding="0" width="120">
-<colgroup><col width="120"> </colgroup>
-<tbody>
-<tr>
-<td style="border: none; padding: 0in" width="120" valign="top">
-<p><font color="#ffff6d">主菜单        [ ]</font></p>
-</td>
-</tr>
-<tr>
-<td style="border: none; padding: 0in" width="120" valign="top">
-<p><font color="#ffff6d"><a href="https://www.juggluco.nl/Jugglucohelp/zh/watchinfo.html">手表</a></font></p>
-</td>
-</tr>
-<tr>
-<td style="border: none; padding: 0in" width="120" valign="top">
-<p><font color="#ffff6d"><a href="https://www.juggluco.nl/Jugglucohelp/zh/sensorhelp.html">传感器</a></font></p>
-</td>
-</tr>
-<tr>
-<td style="border: none; padding: 0in" width="120" valign="top" height="26">
-<p><font color="#ffff6d"><a href="https://www.juggluco.nl/Jugglucohelp/zh/settinghelp.html" onclick= "location.href=this.href+\'?unit=\'+unitstr;return false;" >设置</a></font></p>
-</td>
-</tr>
-<tr>
-<td style="border: none; padding: 0in" width="120" valign="top" height="26">
-<p> <font color="#ffff6d"><a href="https://www.juggluco.nl/Jugglucohelp/zh/about.html">关于</a></font></p>
-</td>
-</tr>
-<tr>
-<td style="border: none; padding: 0in" width="120" valign="top">
-<p><font color="#ffff6d">关闭应用</font></p>
-</td>
-</tr>
-</tbody>
-</table>
+<p><font color="#ffff6d"><tt>主菜单&nbsp;[&nbsp;]<br><br>
+<a href="https://www.juggluco.nl/Jugglucohelp/zh/watchinfo.html">手表</a><br><br>
+<a href="https://www.juggluco.nl/Jugglucohelp/zh/sensorhelp.html">传感器</a><br><br>
+<a href="https://www.juggluco.nl/Jugglucohelp/zh/settinghelp.html" onclick="location.href=this.href+\'?unit=\'+unitstr;return false;">设置</a><br><br>
+<a href="https://www.juggluco.nl/Jugglucohelp/zh/about.html">关于</a><br><br>
+关闭应用</tt></font></p>
 <p style="line-height: 115%; margin-bottom: 0in"><font color="#ffffff"><span
        lang="en-US">在</span><font color="#4f81bd"><font face="Cambria, serif"><span
            lang="en-US"><b>左侧菜单</b></span></font></font><span lang="en-US">中，
@@ -829,14 +701,14 @@ Deliś</a> 翻译成波兰语。</span></p>
 </string>
 <string name="disturbhelp" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/zh/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/disturbhelp.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/disturbhelp.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/disturbhelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/disturbhelp.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/disturbhelp.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/disturbhelp.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/disturbhelp.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/disturbhelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/disturbhelp.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/disturbhelp.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/disturbhelp.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/disturbhelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/disturbhelp.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/disturbhelp.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/disturbhelp.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/disturbhelp.html?lang=en">en</a>&emsp;&emsp;</p><h1>&quot;<i>勿扰模式</i>&quot;响铃</h1>
+<p><a href="https://www.juggluco.nl/Jugglucohelp/zh/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/disturbhelp.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/disturbhelp.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/disturbhelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/disturbhelp.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/disturbhelp.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/disturbhelp.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/disturbhelp.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/disturbhelp.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/disturbhelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/disturbhelp.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/disturbhelp.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/disturbhelp.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/disturbhelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/disturbhelp.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/disturbhelp.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/disturbhelp.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/disturbhelp.html?lang=en">en</a>&emsp;&emsp;</p><h1>&quot;<i>勿扰模式</i>&quot;响铃</h1>
 <p><meta name="created" content="00:00:00">在某些设备上，铃声在&quot;<i>勿扰模式</i>&quot;下不会响。通过&quot;<i>勿扰响铃</i>&quot;，您可以指定是否应在警报响起前关闭&quot;<i>勿扰模式</i>&quot;。</p>
 <p>警告：如果在<i>&quot;勿扰模式&quot;</i>下按<i>&quot;播放&quot;</i>时报警能正常响，则不要设置<i>&quot;勿扰响铃&quot;</i>。（勿扰响铃原理是关闭勿扰模式再响铃，"勿扰模式"无法自动关闭我也没能理解，应该是我翻译错了。）设置了&quot;勿扰响铃&quot;后，Juggluco在警报响起时会先关闭<i>&quot;勿扰模式&quot;</i>再播放闹钟。它不会再次打开<i>&quot;勿扰模式&quot;</i>，因为这样做会导致一个意外的副作用，即根据设定的时间表，&quot;<i>勿扰模式</i>&quot;无法自动关闭。</p>
 ]]>
 </string>
 <string name="libreview" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/zh/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/libreview.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/libreview.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/libreview.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/libreview.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/libreview.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/libreview.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/libreview.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/libreview.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/libreview.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/libreview.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/libreview.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/libreview.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/libreview.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/libreview.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/libreview.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/libreview.html?lang=en">en</a>&emsp;&emsp;</p><h1>Libreview（不确定中国大陆地区是否可用，自行测试）</h1>
+<p><a href="https://www.juggluco.nl/Jugglucohelp/zh/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/libreview.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/libreview.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/libreview.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/libreview.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/libreview.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/libreview.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/libreview.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/libreview.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/libreview.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/libreview.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/libreview.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/libreview.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/libreview.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/libreview.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/libreview.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/libreview.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/libreview.html?lang=en">en</a>&emsp;&emsp;</p><h1>Libreview（不确定中国大陆地区是否可用，自行测试）</h1>
 <p style="line-height: 100%; margin-bottom: 0in">Juggluco 可以将血糖数据和标签发送到 Libreview。当使用 Libre 0 或 3 传感器、美国/加拿大/澳大利亚 Libre 2 传感器或设置了<i>蓝牙历史记录</i>的其他 Libre 2 传感器时，Juggluco 将历史值发送到 Libreview。如果 Libre 2 传感器在没有“<i>蓝牙历史记录</i>”的情况下使用，Juggluco 将使用通过蓝牙接收的流数据来创建这些 15 分钟点，方法是对每个点周围的流值进行平均。</p>
 <p style="line-height: 100%; margin-bottom: 0in">与 Librelink 应用程序一样，它将过去 89 天的数据发送到 Libreview。</p>
 <p style="line-height: 100%; margin-bottom: 0in"><span lang="zh-CN">要使用此服务，您需要在<a class="western" href="https://libreview.com/">https://libreview.com</a> 创建一个 Libreview 账户，并在此处指定其电子邮件地址和密码。</span> <span lang="zh-CN">不要将相同时期的数据多次发送到同一个 Libreview 账户（例如从 Librelink 应用程序和 Juggluco）。您可以在 Libreview 中的账户设置-&gt;我的设备中删除现有设备，或者您可以使用一个新的 Libreview 账户。</span></p>
@@ -860,7 +732,7 @@ Deliś</a> 翻译成波兰语。</span></p>
 </string>
 <string name="garminconfig" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/zh/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/garminconfig.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/garminconfig.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/garminconfig.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/garminconfig.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/garminconfig.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/garminconfig.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/garminconfig.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/garminconfig.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/garminconfig.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/garminconfig.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/garminconfig.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/garminconfig.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/garminconfig.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/garminconfig.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/garminconfig.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/garminconfig.html?lang=en">en</a>&emsp;&emsp;</p><h1>Kerfstok配置</h1>
+<p><a href="https://www.juggluco.nl/Jugglucohelp/zh/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/garminconfig.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/garminconfig.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/garminconfig.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/garminconfig.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/garminconfig.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/garminconfig.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/garminconfig.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/garminconfig.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/garminconfig.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/garminconfig.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/garminconfig.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/garminconfig.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/garminconfig.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/garminconfig.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/garminconfig.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/garminconfig.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/garminconfig.html?lang=en">en</a>&emsp;&emsp;</p><h1>Kerfstok配置</h1>
 <p style="line-height: 100%; margin-bottom: 0in">Kerfstok的<b>源代码</b>可以从
 <a href="https://www.juggluco.nl/Kerfstok/Kerfstok-source.html">https://www.juggluco.nl/Kerfstok/Kerfstok-source.html</a>)下载。用户可以自由修改它。每个手表应用都有一个独特的标识符。如果标识符与默认值不同，Juggluco需要知道它以与手表应用通信。要指定不同的标识符，请按<b>ID</b>并输入32个字符的十六进制字符串。Juggluco在一个设备上只能连接到一个手表上的一个手表应用。更改将导致数据丢失。</p>
 <h2 class="western"><a href="https://www.juggluco.nl/Jugglucohelp/zh/shortcuthelp.html">快捷方式</a></h2>
@@ -874,7 +746,7 @@ Deliś</a> 翻译成波兰语。</span></p>
 </string>
 <string name="librenumhelp" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/zh/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/librenumhelp.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/librenumhelp.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/librenumhelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/librenumhelp.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/librenumhelp.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/librenumhelp.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/librenumhelp.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/librenumhelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/librenumhelp.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/librenumhelp.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/librenumhelp.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/librenumhelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/librenumhelp.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/librenumhelp.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/librenumhelp.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/librenumhelp.html?lang=en">en</a>&emsp;&emsp;</p><p>（其实就是能把你的标注胰岛素量，碳水等跟瞬感的官方app同步，设定一下最好）设置“<i>发送标签</i>”以将标签发送到 Libreview。在您可以打开“<i>发送标签</i>”之前，您需要为<a href="https://www.juggluco.nl/Jugglucohelp/zh/setlibrenumtype.html">每个标签</a>指定应如何将该标签下输入的量发送到 Libreview。标签本身可以在左侧菜单→设置→“<a href="https://www.juggluco.nl/Jugglucohelp/zh/labelhelp.html">数字标签</a>”中创建、修改和删除。</p>
+<p><a href="https://www.juggluco.nl/Jugglucohelp/zh/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/librenumhelp.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/librenumhelp.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/librenumhelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/librenumhelp.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/librenumhelp.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/librenumhelp.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/librenumhelp.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/librenumhelp.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/librenumhelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/librenumhelp.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/librenumhelp.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/librenumhelp.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/librenumhelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/librenumhelp.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/librenumhelp.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/librenumhelp.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/librenumhelp.html?lang=en">en</a>&emsp;&emsp;</p><p>（其实就是能把你的标注胰岛素量，碳水等跟瞬感的官方app同步，设定一下最好）设置“<i>发送标签</i>”以将标签发送到 Libreview。在您可以打开“<i>发送标签</i>”之前，您需要为<a href="https://www.juggluco.nl/Jugglucohelp/zh/setlibrenumtype.html">每个标签</a>指定应如何将该标签下输入的量发送到 Libreview。标签本身可以在左侧菜单→设置→“<a href="https://www.juggluco.nl/Jugglucohelp/zh/labelhelp.html">数字标签</a>”中创建、修改和删除。</p>
 <p>对于作为评论发送到 Libreview 的标签，适用以下限制：更改标签后，删除和更改先前标签下输入的量将不会导致 Libreview 中的修改。例如，如果您之前有标签“自行车”并输入 20，然后将“自行车”更改为“骑行”并将 20 修改为 25，这种更改将不会导致 Libreview 中的更改，但“自行车 20”和“骑行 25”都将出现在 Libreview 中。您唯一能做的是删除 Libreview 中的当前设备，并在 Juggluco 中按<i>重新发送数据（意思就是你同步再改名新旧同时存在，已经提交到官方app的无法撤销更改，会从新的开始计数）</i>。</p>
 <p>
 <br>
@@ -883,7 +755,7 @@ Deliś</a> 翻译成波兰语。</span></p>
 </string>
 <string name="setlibrenumtype" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/zh/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/setlibrenumtype.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/setlibrenumtype.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/setlibrenumtype.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/setlibrenumtype.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/setlibrenumtype.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/setlibrenumtype.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/setlibrenumtype.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/setlibrenumtype.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/setlibrenumtype.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/setlibrenumtype.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/setlibrenumtype.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/setlibrenumtype.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/setlibrenumtype.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/setlibrenumtype.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/setlibrenumtype.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/setlibrenumtype.html?lang=en">en</a>&emsp;&emsp;</p><p>与Libreview的方式相同，您也可以在Juggluco中通过Nightscout服务器指定如何表示数量。</p>
+<p><a href="https://www.juggluco.nl/Jugglucohelp/zh/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/setlibrenumtype.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/setlibrenumtype.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/setlibrenumtype.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/setlibrenumtype.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/setlibrenumtype.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/setlibrenumtype.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/setlibrenumtype.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/setlibrenumtype.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/setlibrenumtype.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/setlibrenumtype.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/setlibrenumtype.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/setlibrenumtype.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/setlibrenumtype.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/setlibrenumtype.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/setlibrenumtype.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/setlibrenumtype.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/setlibrenumtype.html?lang=en">en</a>&emsp;&emsp;</p><p>与Libreview的方式相同，您也可以在Juggluco中通过Nightscout服务器指定如何表示数量。</p>
 <p>选择在Juggluco中特定标签下输入的数量应如何发送到Libreview。可以使用相同的Libreview标签发送多种类型的数量。例如，如果您在Juggluco中分别用不同的标签记录碳水化合物和纯葡萄糖食物，您可以为两者指定它们应该作为<b>碳水化合物</b>发送到Libreview。</p>
 <p>对于碳水化合物，可以<b>乘以</b>Juggluco中给出的数量的某个数，以便您可以将其他单位转换为克。如果您在Juggluco中计算每份10克的食物，您可以在这里输入10，这样就会将克数发送到Libreview。</p>
 <p><b>评论</b>意味着标签会被发送到Libreview，就像您在Librelink中添加了评论一样。如果您在这里指定了评论，将发送该标签及其对应的数字。例如：“<i>自行车 50</i>”，如果您有一个标签“<i>自行车</i>”，并且在该标签下输入了“<i>50</i>”。“<i>自行车 50</i>”将在指定的时间显示在Libreview的“<i>日志</i>”图表下方。</p>
@@ -892,7 +764,7 @@ Deliś</a> 翻译成波兰语。</span></p>
 </string>
 <string name="floatingconfig" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/zh/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/floatingconfig.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/floatingconfig.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/floatingconfig.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/floatingconfig.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/floatingconfig.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/floatingconfig.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/floatingconfig.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/floatingconfig.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/floatingconfig.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/floatingconfig.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/floatingconfig.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/floatingconfig.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/floatingconfig.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/floatingconfig.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/floatingconfig.html?lang=en">en</a>&emsp;&emsp;</p><h1 class="western">悬浮窗</h1>
+<p><a href="https://www.juggluco.nl/Jugglucohelp/zh/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/floatingconfig.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/floatingconfig.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/floatingconfig.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/floatingconfig.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/floatingconfig.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/floatingconfig.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/floatingconfig.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/floatingconfig.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/floatingconfig.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/floatingconfig.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/floatingconfig.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/floatingconfig.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/floatingconfig.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/floatingconfig.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/floatingconfig.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/floatingconfig.html?lang=en">en</a>&emsp;&emsp;</p><h1 class="western">悬浮窗</h1>
 <p>在这里，您可以设置悬浮窗的字体大小、前景色和背景色。文字颜色和背景颜色选项切换可以更改对应的颜色。
 </p>
 <p><b>可触摸</b>：设置后，您可以用手指移动悬浮窗，并通过长按（不移动）来移除它。当未设置可触摸时，触摸输入会传递到悬浮窗下面的窗口，因此您可以使用悬浮窗下面的应用。您也可以通过<b>双击</b>悬浮窗来使其不可触摸。</p>
@@ -912,14 +784,14 @@ Deliś</a> 翻译成波兰语。</span></p>
 </string>
 <string name="getaccountidhelp" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/zh/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/getaccountidhelp.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/getaccountidhelp.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/getaccountidhelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/getaccountidhelp.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/getaccountidhelp.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/getaccountidhelp.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/getaccountidhelp.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/getaccountidhelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/getaccountidhelp.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/getaccountidhelp.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/getaccountidhelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/getaccountidhelp.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/getaccountidhelp.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/getaccountidhelp.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/getaccountidhelp.html?lang=en">en</a>&emsp;&emsp;</p><h1 class="western">获取账户ID</h1>
+<p><a href="https://www.juggluco.nl/Jugglucohelp/zh/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/getaccountidhelp.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/getaccountidhelp.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/getaccountidhelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/getaccountidhelp.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/getaccountidhelp.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/getaccountidhelp.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/getaccountidhelp.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/getaccountidhelp.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/getaccountidhelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/getaccountidhelp.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/getaccountidhelp.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/getaccountidhelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/getaccountidhelp.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/getaccountidhelp.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/getaccountidhelp.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/getaccountidhelp.html?lang=en">en</a>&emsp;&emsp;</p><h1 class="western">获取账户ID</h1>
 <p style="line-height: 100%; margin-bottom: 0in">如何获取扫描Freestyle Libre 3传感器所需的Libreview账户ID？如果你选择"手动"，你可以手动输入账户ID。你也可以取消选择“手动”并点击“从Libreview获取”来使用你的账户电子邮件地址和密码从Libreview接收它。</p>
 <p style="line-height: 100%; margin-bottom: 0in">（这里好像是可以实际传送数据和绑定血糖仪的账户可以不是一个，我不太理解这样的用途是什么，或者有人需要？）也可以从Libreview接收Libreview账户ID，然后设置“手动”并更改Libreview账户电子邮件地址和密码。当你之后设置“发送到Libreview”并点击“重新发送数据”时，数据将被发送到不同的Libreview账户，但之前的账户ID仍将被用于通过NFC扫描传感器。这样，Juggluco将数据发送到与Abbotts Libre 3应用使用的Libreview账户不同的账户。</p>
 ]]>
 </string>
 <string name="Nightscouthelp" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/zh/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/Nightscouthelp.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/Nightscouthelp.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/Nightscouthelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/Nightscouthelp.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/Nightscouthelp.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/Nightscouthelp.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/Nightscouthelp.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/Nightscouthelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/Nightscouthelp.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/Nightscouthelp.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/sv/Nightscouthelp.html">sv</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/Nightscouthelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/Nightscouthelp.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/Nightscouthelp.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/Nightscouthelp.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/Nightscouthelp.html?lang=en">en</a>&emsp;&emsp;</p><h1 class="western">网络服务器（这是一个本地服务器，跟隔壁Uploader的不一样，最好是用于本地使用ns同步数据的）</h1>
+<p><a href="https://www.juggluco.nl/Jugglucohelp/zh/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/Nightscouthelp.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/Nightscouthelp.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/Nightscouthelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/Nightscouthelp.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/Nightscouthelp.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/Nightscouthelp.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/Nightscouthelp.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/Nightscouthelp.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/Nightscouthelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/Nightscouthelp.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/Nightscouthelp.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/sv/Nightscouthelp.html">sv</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/Nightscouthelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/Nightscouthelp.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/Nightscouthelp.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/Nightscouthelp.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/Nightscouthelp.html?lang=en">en</a>&emsp;&emsp;</p><h1 class="western">网络服务器（这是一个本地服务器，跟隔壁Uploader的不一样，最好是用于本地使用ns同步数据的）</h1>
 <p style="line-height: 100%; margin-bottom: 0in">Juggluco 集成了一个 网络服务器，其他应用程序可以通过它从 Juggluco 接收血糖值。它可用于 xDrip 手表和一些 Nightscout 应用程序。</p>
 <p style="line-height: 100%; margin-bottom: 0in">使用为 xDrip Web 服务器制作的应用程序相对简单。只需检查激活。之后，他们可以从 127.0.0.1 的端口 17580 接收血糖值。Nightscout 服务器 URL：http://127.0.0.1:17580</p>
 <p style="line-height: 100%; margin-bottom: 0in">此外，一些 Nightscout 关注者也可以使用它。xDrip、Diabox、<a href="https://github.com/dabear/FloatingGlucose/releases">Windows Floating Glucose</a> 应用程序和 Windows、Linux 和 macOS 小部件（<a href="https://github.com/kashamalasha/nightscout-widget-electron">Owlet</a>）可以在“仅限本地”未设置时使用 http。在 macOS 上，对于 Nightscout Menu Bar、Gluco Status 和 Gluco Tracker（所有在 Apple Store 中）也是如此。对于 <a href="https://github.com/someoneAnyone/Nightscouter">Nightscouter</a> 和 <a href="https://github.com/jonfawcett/LoopFollow">LoopFollow</a>（IOS）以及 <a href="https://github.com/nightscout/nightguard">Nightguard</a>（IOS 和 WatchOS），您也只需要 http。</p>
@@ -980,7 +852,7 @@ Deliś</a> 翻译成波兰语。</span></p>
 </string>
 <string name="NightPost" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/zh/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/NightPost.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/NightPost.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/NightPost.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/NightPost.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/NightPost.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/NightPost.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/NightPost.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/NightPost.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/NightPost.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/NightPost.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/sv/NightPost.html">sv</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/NightPost.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/NightPost.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/NightPost.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/NightPost.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/NightPost.html?lang=en">en</a>&emsp;&emsp;</p><h1>上传到 Nightscout 服务器</h1>
+<p><a href="https://www.juggluco.nl/Jugglucohelp/zh/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/NightPost.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/NightPost.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/NightPost.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/NightPost.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/NightPost.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/NightPost.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/NightPost.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/NightPost.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/NightPost.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/NightPost.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/NightPost.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/sv/NightPost.html">sv</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/NightPost.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/NightPost.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/NightPost.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/NightPost.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/NightPost.html?lang=en">en</a>&emsp;&emsp;</p><h1>上传到 Nightscout 服务器</h1>
 <p>在大多数情况下，您也可以使用 <a href="https://www.juggluco.nl/Jugglucohelp/zh/Nightscouthelp.html">Juggluco 中的 Web 服务器</a> 或 <a href="https://www.juggluco.nl/Juggluco/cmdline">juggluco-server</a>。只有一些仅显示 Nightscout 网页的应用程序需要 <a href="https://github.com/nightscout/cgm-remote-monitor">cgm-remote-monitor</a>。您甚至可以在 Juggluco 7.4.1 中使用 AAPS 和 AAPSClient 与 Juggluco 中的 Web 服务器一起使用。</p>
 <p>所有蓝牙接收的值在到达时都会上传到 Nightscout 服务器。当使用多个传感器时，所有传感器的所有值都会被上传。一些 Garmin 手表应用/表盘/小部件假设值之间间隔 5 分钟。当它们接收到每分钟一个的血糖值时，它们只会显示曲线的最后五分之一。因此，Juggluco 中集成的 Web 服务器将值间隔 5 分钟，除非设置了“interval=secs”为较低的值。</p>
 <p><b>URL</b>：URL 应该是 https://hostname:port 的形式，例如，https://myname.herokuapp.com:6789</p>
@@ -995,7 +867,7 @@ Deliś</a> 翻译成波兰语。</span></p>
 </string>
 <string name="notificationpermission" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/zh/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/notificationpermission.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/notificationpermission.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/notificationpermission.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/notificationpermission.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/notificationpermission.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/notificationpermission.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/notificationpermission.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/notificationpermission.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/notificationpermission.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/notificationpermission.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/notificationpermission.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/notificationpermission.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/notificationpermission.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/notificationpermission.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/notificationpermission.html?lang=en">en</a>&emsp;&emsp;</p><h1>通知</h1>
+<p><a href="https://www.juggluco.nl/Jugglucohelp/zh/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/notificationpermission.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/notificationpermission.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/notificationpermission.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/notificationpermission.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/notificationpermission.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/notificationpermission.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/notificationpermission.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/notificationpermission.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/notificationpermission.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/notificationpermission.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/notificationpermission.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/notificationpermission.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/notificationpermission.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/notificationpermission.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/notificationpermission.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/notificationpermission.html?lang=en">en</a>&emsp;&emsp;</p><h1>通知</h1>
 <p>除非 Juggluco 与 Freestyle Libre 0 传感器一起使用，否则 Juggluco 必须在后台保持活动状态，以便每分钟通过蓝牙直接从传感器或通过网络连接接收一次血糖读数。为了防止应用程序被安卓杀死，安卓要求应用程序显示通知，以便用户知道应用程序在后台存在。文本“连接传感器”或“交换数据”描述了 Juggluco 为什么必须在后台保持活动状态。</p>
 <p>Juggluco 还使用通知来显示当前血糖值和变化方向箭头。</p>
 <p><br/>
@@ -1006,7 +878,7 @@ Deliś</a> 翻译成波兰语。</span></p>
 </string>
 <string name="staticnum" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/zh/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/staticnum.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/staticnum.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/staticnum.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/staticnum.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/staticnum.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/staticnum.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/staticnum.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/staticnum.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/staticnum.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/staticnum.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/staticnum.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/staticnum.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/staticnum.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/staticnum.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/staticnum.html?lang=en">en</a>&emsp;&emsp;</p>
+<p><a href="https://www.juggluco.nl/Jugglucohelp/zh/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/staticnum.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/staticnum.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/staticnum.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/staticnum.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/staticnum.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/staticnum.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/staticnum.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/staticnum.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/staticnum.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/staticnum.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/staticnum.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/staticnum.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/staticnum.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/staticnum.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/staticnum.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/staticnum.html?lang=en">en</a>&emsp;&emsp;</p>
 <h1 align="center">已禁止新建标签</h1>
 <p><b>左中菜单-><a href="https://www.juggluco.nl/Jugglucohelp/zh/connectionoverview.html">镜像</a>-"</b>禁止新建标签<em><b></b></em>，你设置了这个选项。<b>此设置为防止在此应用程序中输入标签，是为了防止标签在镜像连接接收时本机的标签记录会被覆盖。</b></p>
 <p>如果此应用程序没有从镜像接收标签，请取消设置此选项。</p>
@@ -1014,7 +886,7 @@ Deliś</a> 翻译成波兰语。</span></p>
 </string>
 <string name="talkhelp" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/zh/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/talkhelp.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/talkhelp.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/talkhelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/talkhelp.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/talkhelp.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/talkhelp.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/talkhelp.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/talkhelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/talkhelp.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/talkhelp.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/talkhelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/talkhelp.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/talkhelp.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/talkhelp.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/talkhelp.html?lang=en">en</a>&emsp;&emsp;</p>
+<p><a href="https://www.juggluco.nl/Jugglucohelp/zh/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/talkhelp.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/talkhelp.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/talkhelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/talkhelp.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/talkhelp.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/talkhelp.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/talkhelp.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/talkhelp.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/talkhelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/talkhelp.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/talkhelp.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/talkhelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/talkhelp.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/talkhelp.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/talkhelp.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/talkhelp.html?lang=en">en</a>&emsp;&emsp;</p>
 <h1>播报（好像是调用本地tts所以语言应该不是问题）</h1>
 <h2 class="western">播报血糖（其实就是总开关）</h2>
 <p>当葡萄糖值到达时会朗读出来。</p>
@@ -1054,7 +926,7 @@ Deliś</a> 翻译成波兰语。</span></p>
 </string>
 <string name="nightnumhelp" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/zh/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/nightnumhelp.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/nightnumhelp.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/nightnumhelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/nightnumhelp.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/nightnumhelp.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/nightnumhelp.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/nightnumhelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/nightnumhelp.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/nightnumhelp.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/nightnumhelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/nightnumhelp.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/nightnumhelp.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/nightnumhelp.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nightnumhelp.html?lang=en">en</a>&emsp;&emsp;</p><p>设置“发送<i>标签</i>”以通过 Juggluco 中的 Nightscout Web 服务器访问标签。在您可以打开“发送<i>标签</i>”之前，您需要为每个标签指定应如何提供在该标签下输入的量。标签本身可以在左侧菜单-&gt;设置-&gt;“<a href="https://www.juggluco.nl/Jugglucohelp/zh/labelhelp.html">编辑标签</a>”中创建、修改和删除。</p>
+<p><a href="https://www.juggluco.nl/Jugglucohelp/zh/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/nightnumhelp.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/nightnumhelp.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/nightnumhelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/nightnumhelp.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/nightnumhelp.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/nightnumhelp.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/nightnumhelp.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/nightnumhelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/nightnumhelp.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/nightnumhelp.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/nightnumhelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/nightnumhelp.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/nightnumhelp.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/nightnumhelp.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nightnumhelp.html?lang=en">en</a>&emsp;&emsp;</p><p>设置“发送<i>标签</i>”以通过 Juggluco 中的 Nightscout Web 服务器访问标签。在您可以打开“发送<i>标签</i>”之前，您需要为每个标签指定应如何提供在该标签下输入的量。标签本身可以在左侧菜单-&gt;设置-&gt;“<a href="https://www.juggluco.nl/Jugglucohelp/zh/labelhelp.html">编辑标签</a>”中创建、修改和删除。</p>
 <p><br/>
 <br/>
 
@@ -1063,7 +935,7 @@ Deliś</a> 翻译成波兰语。</span></p>
 </string>
 <string name="helpexport" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/zh/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/helpexport.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/helpexport.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/helpexport.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/helpexport.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/helpexport.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/helpexport.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/helpexport.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/helpexport.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/helpexport.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/helpexport.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/helpexport.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/helpexport.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/helpexport.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/helpexport.html?lang=en">en</a>&emsp;&emsp;</p><h1>导出</h1>
+<p><a href="https://www.juggluco.nl/Jugglucohelp/zh/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/helpexport.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/helpexport.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/helpexport.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/helpexport.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/helpexport.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/helpexport.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/helpexport.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/helpexport.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/helpexport.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/helpexport.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/helpexport.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/helpexport.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/helpexport.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/helpexport.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/helpexport.html?lang=en">en</a>&emsp;&emsp;</p><h1>导出</h1>
 <p>将Juggluco中的数据导出到文件。</p>
 <p>标签以html格式保存。所有其他数据以.csv格式保存
 (<a href="https://en.wikipedia.org/wiki/Tab-separated_values">制表符分隔</a>)。这可以加载到如LibreOffice Calc、
@@ -1080,7 +952,7 @@ Microsoft Excel、Mathematica或R等程序中。这是一种.csv格式，使用�
 </string>
 <string name="newamount" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/zh/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/newamount.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/newamount.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/newamount.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/newamount.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/newamount.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/newamount.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/newamount.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/newamount.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/newamount.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/newamount.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/newamount.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/newamount.html?lang=en">en</a>&emsp;&emsp;</p><h1>新标签</h1>
+<p><a href="https://www.juggluco.nl/Jugglucohelp/zh/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/newamount.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/newamount.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/newamount.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/newamount.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/newamount.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/newamount.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/newamount.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/newamount.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/newamount.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/newamount.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/newamount.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/newamount.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/newamount.html?lang=en">en</a>&emsp;&emsp;</p><h1>新标签</h1>
 <p>使用<b>新标签</b>，您可以输入与任意标签相关联的值。您可以在左侧菜单→设置→<a href="https://www.juggluco.nl/Jugglucohelp/zh/labelhelp.html">编辑标签</a>下设置标签。使用特定标签输入的<i>值</i>将根据标签在图表中的一定高度显示。</p>
 <p>您可以通过长按标签来更改值。您还可以从左侧中间菜单→列表中输入的量列表中选择它。</p>
 <p>也可以通过扫描 NFC 笔从<a href="https://www.juggluco.nl/Juggluco/index.html#novopens" onclick="location.href=\'https://www.juggluco.nl/Juggluco/index.html?unit=\'+unitstr+\'#novopens\';return false;">NovoPen® 6 或 NovoPen Echo® Plus</a>接收<b>胰岛素</b>剂量数据。扫描后，您可以更改在 Juggluco 中保存剂量的标签，并且可以设置只接收某个特定日期和时间之后的剂量数据。当笔的内存中存在数百个剂量时，Juggluco 通过 NFC 接收所有剂量可能需要超过 30 秒。</p>
@@ -1093,14 +965,14 @@ Microsoft Excel、Mathematica或R等程序中。这是一种.csv格式，使用�
 </string>
 <string name="healthpermission" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/zh/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/healthpermission.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/healthpermission.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/healthpermission.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/healthpermission.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/healthpermission.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/healthpermission.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/healthpermission.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/healthpermission.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/healthpermission.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/healthpermission.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/healthpermission.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/healthpermission.html?lang=en">en</a>&emsp;&emsp;</p><h1>写入<i>血糖</i>的权限</h1>
+<p><a href="https://www.juggluco.nl/Jugglucohelp/zh/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/healthpermission.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/healthpermission.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/healthpermission.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/healthpermission.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/healthpermission.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/healthpermission.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/healthpermission.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/healthpermission.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/healthpermission.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/healthpermission.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/healthpermission.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/healthpermission.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/healthpermission.html?lang=en">en</a>&emsp;&emsp;</p><h1>写入<i>血糖</i>的权限</h1>
 <p>（这个应该是健康授权，在较高的安卓版本写入读取健康数据需要授权，中国大陆的手机一般不涉及这个）为了能够将血糖值写入<b>健康连接(Health Connect)</b>，用户需要授予Juggluco权限将<b>血糖</b>写入健康连接。</p>
 <p>除了在健康连接中接收血糖值外，这个权限不需要用于其他任何方面。在所有其他方面，Juggluco可以在没有这个权限的情况下运行。</p>
 ]]>
 </string>
 <string name="changestart" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/zh/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/changestart.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/changestart.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/changestart.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/changestart.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/changestart.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/changestart.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/changestart.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/changestart.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/sv/changestart.html">sv</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/changestart.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/changestart.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/changestart.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/changestart.html?lang=en">en</a>&emsp;&emsp;</p><h1>选择数据发送</h1>
+<p><a href="https://www.juggluco.nl/Jugglucohelp/zh/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/changestart.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/changestart.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/changestart.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/changestart.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/changestart.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/changestart.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/changestart.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/changestart.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/changestart.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/sv/changestart.html">sv</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/changestart.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/changestart.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/changestart.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/changestart.html?lang=en">en</a>&emsp;&emsp;</p><h1>选择数据发送</h1>
 <p>（其实就是选择数据发送，选择一个时间开始往后的数据发送上去）选择数据发送到Libreview的日期和时间。当Libreview上已经存在一些数据时，这可能很有用。例如，在使用镜像连接将数据传输到另一部手机后，然后使用这部新手机将数据发送到Libreview。</p>
 ]]>
 </string>

@@ -45,7 +45,7 @@ extern "C" JNIEXPORT jstring JNICALL   fromjava(getSiBluetoothNum)(JNIEnv *envin
     const SensorGlucoseData *usedhist=reinterpret_cast<streamdata *>(dataptr)->hist ; 
     if(!usedhist)
         return nullptr;
-    if(!usedhist->isSibionics())
+    if(!usedhist->isSibionics()||usedhist->isSibionics3())
         return nullptr;
     const char *name=usedhist->getinfo()->siBlueToothNum;
     LOGGER("getSiBluetoothNum()=%s\n",name);
@@ -259,7 +259,7 @@ extern bool loadjson(SensorGlucoseData *sens, const char *statename,const Algori
 
 #undef targetlow 
 #undef targethigh
-#ifdef NOTCHINESE
+#ifdef NEWSIBIONICS
 #define targetlow 4.4
 #define targethigh 11.1
 //#define jniAlglib     "/libnative-algorithm-jni-v112.so";
@@ -312,9 +312,9 @@ extern bool loadjson(SensorGlucoseData *sens, const char *statename,const Algori
 #endif
 #endif
 
-#ifdef NOTCHINESE
+#ifdef NEWSIBIONICS
 #define datahandlestr(x) "Java_com_no_sisense_enanddecryption_CGMDataHandle130_" #x
-
+#ifdef JNI_HANDLE
 #define    algDatahandleName "/libdata-handle-lib.so";
 algtype(V120SpiltData) V120SpiltData;
 algtype(v120RegisterKey) v120RegisterKey;
@@ -384,21 +384,25 @@ static bool getDatahandle() {
      LOGAR("found datahandle functions");
      return true;
     }
-#endif
-#ifdef NOTCHINESE
 bool siInit2()  {
    static bool init=getNativefunctions2()&&getJNIfunctions2()&&getDatahandle();
    return init;
    }
+#else
+bool siInit2()  {
+   static bool init=getNativefunctions2()&&getJNIfunctions2();
+   return init;
+   }
+#endif
 #endif
 bool siInit3()  {
    static bool init=getNativefunctions3()&&getJNIfunctions3() ;
    return init;
    }
- bool siInit(bool notchinese) {
-#ifdef NOTCHINESE
+ bool siInit(bool newSI) {
+#ifdef NEWSIBIONICS
 
-   if(notchinese)
+   if(newSI)
       return siInit2();
 #endif
    return siInit3();
@@ -425,79 +429,36 @@ bool loadjson(SensorGlucoseData *sens, const char *statename,const AlgorithmCont
    LOGGER("setjson()=%d\n",res);
    return true;
    }
-/*
-bool savejson(SensorGlucoseData *sens,const string_view name,int index,const AlgorithmContext *alg,getjson_t getjson) {
-    if(!getjson) {
-        LOGAR("getjson==null");
-        return false;
-        }
-   auto *nati=reinterpret_cast<NativeAlgorithm*>(alg ->mNativeContext);
-   if(!nati) {
-      LOGAR("mNativeContext==null");
-      return false;
-      }
-    const char *json=getjson(nati);
-    LOGGER("getjson()=%p\n",json);
-    if(!json) {
-        return false;    
-        }
-    int jsonlen=strlen(json);
-    if(!json) {
-        LOGAR("jsonlen==0");
-        return false;
-        }
-    const int maxbuf=name.size()+6+2;
-    char buf[maxbuf];
-   memcpy(buf,name.data(),name.size());
-    char *startnum=buf+name.size();
-    auto [ptr,ec]  =std::to_chars(startnum,buf+maxbuf,index);
-   *ptr='\0';
-    bool success=writeall(buf,json,jsonlen);
-    if(!success) {
-        return false;
-        }
-    int res;
-    {
-    std::lock_guard<std::mutex> lock(sens->mutex);
-    res=rename(buf,name.data());
-    }
-    if(res) {
-        flerror("rename(%s,%s) failed",buf,name.data());
-        return false;
-        }
-    return true;
-    }
-    */
 #include "sibionics/SiContext.hpp"
 
-void      SiContext::setNotchinese(SensorGlucoseData *sens) {
-   sens->setNotchinese();
-#ifdef NOTCHINESE
+void      SiContext::setNewSI(SensorGlucoseData *sens) {
+   sens->setNewSI();
+#ifdef NEWSIBIONICS
    release();
    auto res= siInit2();
    algcontext=initAlgorithm2(sens,binState);
 #endif
-    notchinese=true;
+    newSI=true;
    }
 SiContext::SiContext(SensorGlucoseData *sens): binState(2,sens->binstatefile,4096),algcontext(
-#ifdef NOTCHINESE
-        sens->notchinese()?initAlgorithm2(sens,binState):
+#ifdef NEWSIBIONICS
+        sens->newSI()?initAlgorithm2(sens,binState):
 #endif
 
         initAlgorithm3(sens,binState)),
-        notchinese(sens->notchinese()) {
+        newSI(sens->newSI()) {
        };
 void SiContext::release() {
 #ifndef NOLOG
     int res=
 #endif
     (
-#ifdef NOTCHINESE
-            notchinese?releaseAlgorithmContext2:
+#ifdef NEWSIBIONICS
+            newSI?releaseAlgorithmContext2:
 #endif
 
     releaseAlgorithmContext3)(subenv,nullptr, reinterpret_cast<jobject>(algcontext));
-    LOGGER("releaseAlgorithmContext(%p)=%d notchinese=%d\n",algcontext,res,notchinese);
+    LOGGER("releaseAlgorithmContext(%p)=%d newSI=%d\n",algcontext,res,newSI);
    delete algcontext;
     }
 SiContext::~SiContext() {
@@ -525,15 +486,7 @@ if(!dataptr) {
   uint32_t timsec=mmsec/1000L;
  data_t *bluedata=fromjbyteArray(envin,bluetoothdata);
  destruct _destbluedata([bluedata]{data_t::deleteex(bluedata);});
-/*
-  if(sens->getinfo()->reset) {
-        if(!sens->getinfo()->notchinese||!V120Reset) {
-            sdata->sicontext.setNotchinese(sens);
-            }
-        LOGAR("SIprocessData reset");
-        return 10LL;
-        } */
-   if(sens->notchinese()) {
+   if(sens->newSI()) {
         if(sens->getinfo()->reset) {
             LOGAR("SIprocessData reset");
             return 10LL;

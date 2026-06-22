@@ -72,7 +72,7 @@ if(!isWearable) {
 		final PowerManager pm = (PowerManager)context.getSystemService(Activity.POWER_SERVICE);
 		boolean isIgnoringBatteryOptimizations = pm.isIgnoringBatteryOptimizations(context.getPackageName());
 		battery.setChecked(isIgnoringBatteryOptimizations);
-		context.lightBars(false);
+		context.themeLightBars();
                 final var hormarg=(int)(GlucoseCurve.getwidth()*.15f);
 
                 getMargins(battery).setMarginStart(hormarg);
@@ -110,8 +110,8 @@ if(!isWearable) {
 	  	scroll.setFillViewport(true);
 
 		scroll.addView(lay);
-//		context.addContentView(scroll, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT));
-		context.addContentView(scroll, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT));
+//		context.addMyContentView(scroll, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT));
+		context.addMyContentView(scroll, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT));
 		}
 		}
 	}

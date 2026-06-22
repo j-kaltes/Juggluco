@@ -24,25 +24,33 @@ package tk.glucodata;
 
 import static tk.glucodata.Applic.Toaster;
 import static tk.glucodata.Applic.isWearable;
+import static tk.glucodata.Applic.scheduler;
 import static tk.glucodata.Applic.useZXing;
+import static tk.glucodata.Backup.getedit;
+import static tk.glucodata.GS3ID.GS3IDstatus;
 import static tk.glucodata.Log.doLog;
 import static tk.glucodata.MainActivity.REQUEST_BARCODE;
 import static tk.glucodata.MainActivity.REQUEST_BARCODE_SIB2;
 import static tk.glucodata.ZXing.scanZXingAlg;
+import static tk.glucodata.settings.Settings.editoptions;
 import static tk.glucodata.settings.Settings.removeContentView;
 import static tk.glucodata.util.getbutton;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static tk.glucodata.util.getlabel;
-import static tk.glucodata.util.getbutton;
 import static tk.glucodata.util.getcheckbox;
 import static tk.glucodata.util.getradiobuttonId;
 
 
-
+import android.text.InputType;
+import android.text.method.PasswordTransformationMethod;
+import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.RadioGroup;
 import android.widget.Toast;
+
 
 //import com.google.mlkit.vision.barcode.BarcodeScannerOptions;
 //import com.google.mlkit.vision.barcode.common.Barcode;
@@ -57,7 +65,7 @@ private static final String LOG_ID="PhotoScan";
 
 
 private static void     wrongtag() {
-    Toaster("Wrong QR code") ;
+    Toaster(R.string.wrongcode) ;
     }
 
 
@@ -103,11 +111,7 @@ private static void asktransmitter(MainActivity act,String name,long sensorptr) 
     cancel.setOnClickListener(v-> {
         MainActivity.doonback();
         });
-    int height = GlucoseCurve.getheight();
-    int width = GlucoseCurve.getwidth();
     var layout=new Layout(act,(l,w,h)->{
-         l.setX((width-w)*.5f);
-         l.setY((height-h)*.3f);
          return new int[] {w,h};
            },new View[]{title},new View[]{message},new View[]{cancel,reset,ok});
     ok.setOnClickListener(v-> {
@@ -125,8 +129,11 @@ private static void asktransmitter(MainActivity act,String name,long sensorptr) 
    final int rand=(int)tk.glucodata.GlucoseCurve.metrics.density*10;
    final int siderand=(int)tk.glucodata.GlucoseCurve.metrics.density*20;
    layout.setPadding(siderand,rand,siderand,rand);
-   act.addContentView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT,WRAP_CONTENT));
+    var  params =    new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.CENTER_HORIZONTAL| Gravity.CENTER);
+
+   act.addMyContentView(layout, params);
     }
+
 
 private static void selectType(String name,long sensorptr,MainActivity act) {
     int subtype=Natives.getSensorptrSiSubtype(sensorptr);
@@ -137,7 +144,6 @@ private static void selectType(String name,long sensorptr,MainActivity act) {
     group.addView(getradiobuttonId(act,R.string.hematonix,id++));
     group.addView(getradiobuttonId(act,R.string.chsibionics,id++));
     group.addView(getradiobuttonId(act,R.string.sibionics2,id++));
-    group.addView(getradiobuttonId(act,R.string.sibionics3,id));
     group.check(subtype);
    var ok=getbutton(act, R.string.ok);
     int height = GlucoseCurve.getheight();
@@ -145,8 +151,8 @@ private static void selectType(String name,long sensorptr,MainActivity act) {
    final int rand=(int)tk.glucodata.GlucoseCurve.metrics.density*15;
    group.setPadding(rand,rand,(int)tk.glucodata.GlucoseCurve.metrics.density*25,(int)tk.glucodata.GlucoseCurve.metrics.density*20);
    var layout=new Layout(act,(l,w,h)->{
-         l.setX((width-w)*.5f);
-         l.setY((height-h)*.3f);
+//         l.setX((width-w)*.5f);
+ //        l.setY((height-h)*.3f);
          return new int[] {w,h};
            },new View[]{group},new View[]{ok});
    layout.setBackgroundColor(Applic.backgroundcolor);
@@ -160,6 +166,8 @@ private static void selectType(String name,long sensorptr,MainActivity act) {
           if(type==3) {
                 asktransmitter(act,name,sensorptr);
             }
+        else
+              deviceAdded(act);
             }
 
       });
@@ -167,9 +175,26 @@ private static void selectType(String name,long sensorptr,MainActivity act) {
         MainActivity.doonback();
         });
 
-    act.addContentView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT,WRAP_CONTENT));
+    var  params =    new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.CENTER_HORIZONTAL| Gravity.CENTER);
+    act.addMyContentView(layout, params);
     }
-
+static void deviceAdded(MainActivity act) {
+     Log.i(LOG_ID,"deviceAdded");
+       if(Natives.getusebluetooth()) {
+           var res=SensorBluetooth.updateDevices();
+           SuperGattCallback.glucosealarms.setLossAlarm();
+           if(res) {
+                act.finepermission(); 
+                }
+              else
+                act.systemlocation();
+            }
+        else {
+            Natives.updateUsedSensors();
+            }
+       Applic.wakemirrors();
+       MainActivity.tocalendarapp=true;
+       }
 static long wasdataptr=0L;
 static void connectSensor(final String scantag,MainActivity act,int request,long sensorptr2)  {
      if(!isWearable) {
@@ -183,26 +208,19 @@ static void connectSensor(final String scantag,MainActivity act,int request,long
                     int[] indexptr={-1};
                     String name=Natives.addSIscangetName(scantag,indexptr);
                     if(name!=null&&name.length()>0)  {
-                       MainActivity.tocalendarapp=true;
                        var sensorptr= Natives.str2sensorptr(name);
                        int type=Natives.getSensorptrLibreVersion(sensorptr);
                        {if(doLog) {Log.i(LOG_ID,"type="+type);};};
                        if(type== 0x10) {
                             selectType(name,sensorptr,act);
                             }
-                       if(Natives.getusebluetooth()) {
-                           var res=SensorBluetooth.updateDevices();
-                           SuperGattCallback.glucosealarms.setLossAlarm();
-                           if(res) {
-                                act.finepermission(); 
-                                }
-                              else
-                                act.systemlocation();
-                            }
                         else {
-                            Natives.updateUsedSensors();
+                           if(type== 0x15) {
+                               GetGS3ID.gs3Number(name,act);
+                               }
+                            else
+                                deviceAdded(act);
                             }
-                       Applic.wakemirrors();
                        return;
                        }
                   else {
@@ -220,6 +238,7 @@ static void connectSensor(final String scantag,MainActivity act,int request,long
                  }break;
                case REQUEST_BARCODE_SIB2: {
                     if(Natives.siSensorptrTransmitterScan(sensorptr2,scantag)) {
+                        deviceAdded(act);
                         return;
                         }
                     else {

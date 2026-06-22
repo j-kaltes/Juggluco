@@ -182,7 +182,7 @@ static private String token="";
 static JSONObject  readJSONObject(HttpURLConnection urlConnection)  throws IOException, JSONException {
     String ant=getstring(urlConnection);
     if(doLog) {
-        Log.format("%s: readJSONObject len=%d %s",LOG_ID,ant.length(),ant);
+        Log.format("%s: readJSONObject len=%d %s\n",LOG_ID,ant.length(),ant);
         }
      return new JSONObject(ant);
     }
@@ -324,11 +324,14 @@ public static void  config(MainActivity act, View settingsview) {
     int pad= (int)tk.glucodata.GlucoseCurve.metrics.density*7;
     visible.setPadding(0,0,pad,0);
         visible.setOnCheckedChangeListener( (buttonView,  isChecked)-> {
+
+                        var sel=editsecret.getSelectionStart();
                         editsecret.setInputType(isChecked?InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD:InputType.TYPE_TEXT_VARIATION_PASSWORD);
                         if(isChecked)
                                         editsecret.setTransformationMethod(null);
                         else
                                         editsecret.setTransformationMethod(new PasswordTransformationMethod());
+                        editsecret.setSelection(sel);
                         });
 
       var statusview=getlabel(act,datestr(uploadtime)+": "+uploadstatus);
@@ -399,7 +402,7 @@ public static void  config(MainActivity act, View settingsview) {
                 params =    new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.CENTER_HORIZONTAL);
                }
 
-        act.addContentView(allview, params);
+        act.addMyContentView(allview, params);
         getMargins(allview).topMargin= MainActivity.systembarTop;
     Runnable closerun=()-> {
         allview.setVisibility(GONE);

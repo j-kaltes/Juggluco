@@ -1,0 +1,7 @@
+<resources>
+    <attr name="colorButtonBackground" format="color|reference" />
+    <attr name="colorButtonText" format="color|reference" />
+    <attr name="colorButtonStroke" format="color|reference" />
+    <attr name="buttonCornerRadius" format="dimension" />
+    <attr name="buttonStrokeWidth" format="dimension" />
+</resources>
