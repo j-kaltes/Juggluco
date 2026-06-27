@@ -1,7 +1,7 @@
 
-#define DOTESTS
-#define SYSGOOD 1
-#define FIXED_URANDOM 1
+//#define DOTESTS
+//#define SYSGOOD 1
+//#define FIXED_URANDOM 1
 /*#ifndef NDEBUG
 #define TESTDEBUG 1
 #endif */

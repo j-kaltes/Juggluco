@@ -1,0 +1,728 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Juggluco Viewer</title>
+  <style>
+    :root {
+      --bg: #f6f7f9;
+      --panel: #ffffff;
+      --ink: #1b1f24;
+      --muted: #667085;
+      --border: #d0d5dd;
+      --accent: #2563eb;
+      --danger: #b42318;
+      --shadow: 0 10px 30px rgba(16, 24, 40, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      height: 100%;
+    }
+
+    @supports (height: 100dvh) {
+      html,
+      body {
+        height: 100dvh;
+      }
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      min-height: 100%;
+    }
+
+    header {
+      flex: 0 0 auto;
+      padding: 12px 20px 6px;
+    }
+
+    h1 {
+      margin: 0 0 4px;
+      font-size: 22px;
+      line-height: 1.2;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    main {
+      flex: 1 1 auto;
+      min-height: 0;
+      padding: 0;
+      display: grid;
+      grid-template-columns: minmax(250px, 320px) minmax(0, 1fr);
+      gap: 0;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 0;
+      box-shadow: none;
+    }
+
+    .controls {
+      padding: 12px;
+      align-self: stretch;
+      min-height: 0;
+      overflow: auto;
+      overscroll-behavior: contain;
+    }
+
+    .options-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .options-header strong {
+      font-size: 14px;
+    }
+
+    body.controls-collapsed main {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    body.controls-collapsed .controls {
+      display: none;
+    }
+
+    .chart-panel {
+      min-width: 0;
+      min-height: 0;
+      align-self: stretch;
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr) auto;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .chart-toolbar { grid-row: 1; }
+    .chart-wrap { grid-row: 2; }
+    .status { grid-row: 3; }
+
+    body.toolbar-collapsed .chart-panel {
+      grid-template-rows: minmax(0, 1fr) auto;
+    }
+
+    body.toolbar-collapsed .chart-wrap { grid-row: 1; }
+    body.toolbar-collapsed .status { grid-row: 2; }
+
+    .chart-toolbar {
+      position: relative;
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 6px;
+      border-bottom: 1px solid var(--border);
+      padding: 6px 8px 6px 34px;
+      min-width: 0;
+    }
+
+    .chart-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .graph-actions {
+      flex: 1 1 auto;
+      min-width: 0;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+
+    .graph-actions::-webkit-scrollbar {
+      display: none;
+    }
+
+    .graph-actions button {
+      flex: 0 0 auto;
+      white-space: nowrap;
+    }
+
+    #toggleOptionsBtn {
+      flex: 0 0 auto;
+      white-space: nowrap;
+    }
+
+    #toggleToolbarBtn {
+      position: absolute;
+      left: 0;
+      top: 8px;
+      z-index: 25;
+      width: 26px;
+      min-width: 0;
+      height: 34px;
+      padding: 0;
+      border-radius: 0 8px 8px 0;
+      background: rgba(255, 255, 255, 0.84);
+      backdrop-filter: blur(4px);
+      box-shadow: 0 4px 12px rgba(16, 24, 40, 0.12);
+      font-size: 16px;
+      line-height: 1;
+      text-align: center;
+      opacity: 0.88;
+    }
+
+    #toggleToolbarBtn:hover {
+      opacity: 1;
+    }
+
+    body.toolbar-collapsed .chart-toolbar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 20;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      box-shadow: none;
+      pointer-events: none;
+    }
+
+    body.toolbar-collapsed .graph-actions,
+    body.toolbar-collapsed .summary {
+      display: none;
+    }
+
+    body.toolbar-collapsed #toggleToolbarBtn {
+      pointer-events: auto;
+    }
+
+    .summary {
+      flex: 0 1 auto;
+      min-width: 8em;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .chart-wrap {
+      position: relative;
+      min-width: 0;
+      min-height: 0;
+      overflow: hidden;
+      background:
+        linear-gradient(180deg, rgba(37, 99, 235, 0.04), rgba(255, 255, 255, 0));
+    }
+
+    .chart-wrap canvas {
+      position: absolute;
+      inset: 0;
+      display: block;
+      width: 100%;
+      height: 100%;
+      touch-action: none;
+    }
+
+    .plot-clip {
+      position: absolute;
+      z-index: 1;
+      overflow: hidden;
+      pointer-events: none;
+      background: #ffffff;
+      contain: strict;
+    }
+
+    #glChart {
+      z-index: 1;
+      background: #ffffff;
+      will-change: transform;
+      transform: translate3d(0, 0, 0);
+      pointer-events: none;
+      inset: auto;
+    }
+
+    #amountChart {
+      z-index: 2;
+      background: transparent;
+      will-change: transform;
+      transform: translate3d(0, 0, 0);
+      pointer-events: none;
+      inset: auto;
+    }
+
+    #chart {
+      z-index: 3;
+      cursor: grab;
+      background: transparent;
+    }
+
+    #chart.dragging {
+      cursor: grabbing;
+    }
+
+    .tooltip {
+      position: absolute;
+      display: none;
+      pointer-events: none;
+      z-index: 5;
+      max-width: 280px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      background: rgba(17, 24, 39, 0.94);
+      color: white;
+      font-size: 12px;
+      line-height: 1.35;
+      box-shadow: 0 10px 20px rgba(0,0,0,.25);
+      white-space: normal;
+    }
+
+    .status {
+      display: none;
+      padding: 10px 14px;
+      min-height: 42px;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+      font-size: 13px;
+    }
+
+    .status.error {
+      display: block;
+      color: var(--danger);
+    }
+
+    fieldset {
+      margin: 0 0 16px;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+
+    legend {
+      padding: 0 6px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    label {
+      display: block;
+      margin: 0 0 10px;
+      font-size: 13px;
+      color: var(--ink);
+    }
+
+    label.inline {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="password"],
+    input[type="date"],
+    input[type="time"],
+    select {
+      width: 100%;
+      margin-top: 4px;
+      padding: 9px 10px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: white;
+      color: var(--ink);
+      font: inherit;
+      font-size: 14px;
+    }
+
+    input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      margin: 0;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    button {
+      appearance: none;
+      border: 1px solid var(--border);
+      background: white;
+      color: var(--ink);
+      padding: 7px 9px;
+      border-radius: 9px;
+      font-weight: 650;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    button:hover {
+      border-color: #98a2b3;
+      background: #f9fafb;
+    }
+
+    button.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: white;
+    }
+
+    button.primary:hover {
+      filter: brightness(.96);
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+      margin: 8px 0 0;
+    }
+
+    .legend-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .swatch {
+      display: inline-block;
+      width: 18px;
+      height: 3px;
+      border-radius: 4px;
+      background: #111;
+    }
+
+    .dashed-swatch {
+      background: repeating-linear-gradient(
+        90deg,
+        currentColor 0 5px,
+        transparent 5px 8px
+      ) !important;
+      color: #9333ea;
+    }
+
+    .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+    }
+
+    @media (max-width: 900px) {
+      main {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: auto minmax(0, 1fr);
+        padding: 0;
+        gap: 0;
+      }
+
+      body.controls-collapsed main {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: minmax(0, 1fr);
+      }
+
+      .controls {
+        max-height: min(42dvh, 360px);
+      }
+
+      .chart-panel {
+        min-height: 0;
+      }
+
+      .chart-toolbar {
+        padding: 5px 5px 5px 31px;
+      }
+
+      .summary {
+        display: none;
+      }
+    }
+
+    @media (max-width: 900px) and (orientation: landscape) and (min-width: 640px),
+           (max-height: 560px) and (min-width: 640px) {
+      main {
+        grid-template-columns: clamp(204px, 29vw, 276px) minmax(0, 1fr);
+        grid-template-rows: minmax(0, 1fr);
+      }
+
+      body.controls-collapsed main {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: minmax(0, 1fr);
+      }
+
+      .controls {
+        max-height: none;
+        padding: 8px;
+      }
+
+      fieldset {
+        margin-bottom: 8px;
+        padding: 8px;
+      }
+
+      label {
+        margin-bottom: 7px;
+      }
+
+      input[type="text"],
+      input[type="number"],
+      input[type="password"],
+      input[type="date"],
+      input[type="time"],
+      select {
+        padding: 6px 8px;
+        font-size: 13px;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .chart-toolbar {
+        gap: 4px;
+      }
+
+      .graph-actions {
+        gap: 4px;
+      }
+
+      .graph-actions button {
+        padding-left: 8px;
+        padding-right: 8px;
+      }
+    }
+
+    @media (max-height: 560px) {
+      main {
+        padding: 0;
+        gap: 0;
+      }
+
+      .panel {
+        border-radius: 5px;
+        box-shadow: none;
+      }
+
+      .chart-panel {
+        border-left-width: 0;
+        border-right-width: 0;
+      }
+
+      .chart-toolbar {
+        padding: 3px 4px 3px 30px;
+      }
+
+      #toggleToolbarBtn {
+        top: 4px;
+        width: 24px;
+        height: 30px;
+        border-radius: 0 7px 7px 0;
+        font-size: 14px;
+      }
+
+      button {
+        padding: 5px 7px;
+        border-radius: 7px;
+        font-size: 12px;
+      }
+
+      .summary {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="panel controls" aria-label="Controls">
+      <div class="options-header">
+        <strong class="options-title">Options</strong>
+      </div>
+      <fieldset>
+        <legend>Connection</legend>
+
+        <label>
+          Juggluco server URL
+          <input id="baseUrl" type="text" value="http://127.0.0.1:17580"
+                 placeholder="http://127.0.0.1:17580 or http://192.168.1.69:17580" />
+        </label>
+
+        <label>
+          API token / api_secret, optional
+          <input id="token" type="password" autocomplete="off"
+                 placeholder="Leave empty if not used" />
+        </label>
+        <label class="inline"><input id="showToken" type="checkbox" /> Show api_secret</label>
+
+        <div class="row">
+          <label>
+            Unit
+            <select id="unit">
+              <option value="mmol/L" selected>mmol/L</option>
+              <option value="mg/dL">mg/dL</option>
+            </select>
+          </label>
+
+          <label>
+            Window
+            <select id="windowHours">
+              <option value="3">3 hours</option>
+              <option value="6" selected>6 hours</option>
+              <option value="12">12 hours</option>
+              <option value="24">24 hours</option>
+              <option value="48">48 hours</option>
+              <option value="168">7 days</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="row">
+          <label>
+            Start date
+            <input id="dateToView" type="date" />
+          </label>
+
+          <label>
+            Start time
+            <input id="timeOnDate" type="time" value="00:00" />
+          </label>
+        </div>
+
+        <div class="chart-actions" style="margin-bottom:10px">
+          <button id="goDateBtn" type="button">Go to start</button>
+          <button id="todayDateBtn" type="button">Today 00:00</button>
+        </div>
+
+        <button id="loadBtn" class="primary" type="button">Load data</button>
+        <p class="hint">
+          The start date/time is the left edge of the graph. The Window setting determines
+          how much time is shown from that start. Use the buttons, mouse wheel, drag, or arrow keys to move through time.
+        </p>
+      </fieldset>
+
+      <fieldset>
+        <legend>Display</legend>
+
+        <label class="inline"><input id="showStream" type="checkbox" checked /> Stream curve</label>
+        <label class="inline"><input id="showScans" type="checkbox" checked /> Libre scans as dots</label>
+        <label class="inline"><input id="showHistory" type="checkbox" /> History values</label>
+        <label class="inline"><input id="showAmounts" type="checkbox" checked /> Entered amounts</label>
+        <label class="inline"><input id="useCalibrated" type="checkbox" checked /> Calibrated</label>
+        <label class="inline"><input id="autoRefresh" type="checkbox" checked /> Auto-refresh when viewing latest data</label>
+
+        <div class="row">
+          <label>
+            Low line
+            <input id="lowLimit" type="number" step="0.1" value="3.9" />
+          </label>
+          <label>
+            High line
+            <input id="highLimit" type="number" step="0.1" value="10.0" />
+          </label>
+        </div>
+
+        <div class="row">
+          <label>
+            Graph min
+            <input id="graphMin" type="number" step="0.5" value="2" />
+          </label>
+          <label>
+            Graph max
+            <input id="graphMax" type="number" step="0.5" value="11" />
+          </label>
+        </div>
+
+        <div class="row">
+          <label>
+            Curve thickness
+            <input id="curveThickness" type="number" min="1" max="12" step="0.5" value="2" />
+          </label>
+        </div>
+
+        <p class="hint">
+          The graph min/max is the normal vertical range. The graph expands only when
+          visible values or limit lines fall outside that range. The curve uses the sharp
+          WebGL render path and quietly prefetches neighboring time ranges while you scroll.
+        </p>
+      </fieldset>
+
+      <fieldset>
+        <legend>Legend</legend>
+        <p class="hint">
+          Colors identify sensors. Shape and line style identify the data source.
+        </p>
+        <div class="legend-list">
+          <span class="legend-item"><span class="swatch" style="background:#2563eb"></span>Stream: solid line</span>
+          <span class="legend-item"><span class="dot" style="background:#2563eb"></span>Scans: dots</span>
+          <span class="legend-item"><span class="swatch" style="background:#9333ea"></span>History: solid line</span>
+          <span class="legend-item"><span class="dot" style="background:#047857"></span>Amounts: green tags</span>
+        </div>
+        <p class="hint" style="margin-top:12px">Sensors in the loaded data:</p>
+        <div id="sensorLegend" class="legend-list">
+          <span class="legend-item">No sensors loaded yet.</span>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Keyboard</legend>
+        <p class="hint">
+          ← / → pan half a window. + / − zoom. Home jumps to now.
+        </p>
+      </fieldset>
+    </section>
+
+    <section class="panel chart-panel" aria-label="Glucose chart">
+      <div class="chart-toolbar">
+        <button id="toggleToolbarBtn" type="button" title="Hide buttons" aria-label="Hide buttons">▴</button>
+        <div class="chart-actions graph-actions">
+          <button id="toggleOptionsBtn" type="button">Hide options</button>
+          <button id="prevBtn" type="button" title="Back" aria-label="Back">◀</button>
+          <button id="nextBtn" type="button" title="Forward" aria-label="Forward">▶</button>
+          <button id="zoomInBtn" type="button" title="Zoom in" aria-label="Zoom in">+</button>
+          <button id="zoomOutBtn" type="button" title="Zoom out" aria-label="Zoom out">−</button>
+          <button id="nowBtn" type="button">Now</button>
+        </div>
+        <div id="summary" class="summary">No data loaded yet.</div>
+      </div>
+
+      <div class="chart-wrap" id="chartWrap">
+        <div id="plotClip" class="plot-clip" aria-hidden="true">
+          <canvas id="glChart"></canvas>
+          <canvas id="amountChart"></canvas>
+        </div>
+        <canvas id="chart" aria-label="Glucose graph"></canvas>
+        <div id="tooltip" class="tooltip"></div>
+      </div>
+
+      <div id="status" class="status" role="alert"></div>
+    </section>
+  </main>
+
+  <script type="text/javascript" src="https://www.juggluco.nl/Juggluco/viewer.js"></script>
+
+</body>
+</html>

@@ -206,11 +206,55 @@ if(HAVE_PTHREADARG)
 target_compile_options(juggluco PUBLIC $<$<COMPILE_LANGUAGE:CXX>:-pthread>)
 endif()
 if(static)
-target_link_libraries( juggluco     m crypto ssl zstd z juice)
-target_link_options(juggluco  PUBLIC -static  -Wl,--whole-archive -lpthread  -Wl,--no-whole-archive )
+
+set(OPENSSL_USE_STATIC_LIBS TRUE)
+find_package(OpenSSL REQUIRED)
+find_package(Threads REQUIRED)
+
+target_link_libraries(juggluco PRIVATE
+    m
+    zstd
+    z
+    juice
+    OpenSSL::SSL
+    OpenSSL::Crypto
+    Threads::Threads
+)
+
+if(OPENSSL_CRYPTO_LIBRARY MATCHES "\\.a$")
+    execute_process(
+        COMMAND ${CMAKE_NM} -u ${OPENSSL_CRYPTO_LIBRARY}
+        OUTPUT_VARIABLE LIBCRYPTO_UNDEF
+        ERROR_QUIET
+    )
+
+    if(LIBCRYPTO_UNDEF MATCHES "jent_")
+        find_library(JITTERENTROPY_LIBRARY
+            NAMES libjitterentropy.a
+            REQUIRED
+        )
+        message(STATUS "OpenSSL static archive needs jitterentropy: ${JITTERENTROPY_LIBRARY}")
+        target_link_libraries(juggluco PRIVATE ${JITTERENTROPY_LIBRARY})
+    endif()
+endif()
+
+
+target_link_options(juggluco  PUBLIC -static )
 target_compile_options(readlog PUBLIC  -fopenmp -static)
-target_link_options(readlog  PUBLIC   -fopenmp -static )
+target_link_options(readlog  PUBLIC   -fopenmp -static  )
+list(REMOVE_ITEM CMAKE_C_IMPLICIT_LINK_LIBRARIES
+    gcc_s_asneeded
+    atomic_asneeded
+)
+
+list(REMOVE_ITEM CMAKE_CXX_IMPLICIT_LINK_LIBRARIES
+    gcc_s_asneeded
+    atomic_asneeded
+)
 set(extradefs -DUSE_SSL=1 )
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
+target_link_libraries(juggluco PRIVATE Threads::Threads)
 else()
 message(" CMAKE_SYSTEM_NAME =${CMAKE_SYSTEM_NAME} ")
 

@@ -39,6 +39,8 @@ import static tk.glucodata.settings.Settings.removeContentView;
 import static tk.glucodata.util.getbutton;
 import static tk.glucodata.util.getlabel;
 
+import android.view.Gravity;
+import android.widget.FrameLayout;
 import androidx.appcompat.app.AlertDialog;
 import android.content.DialogInterface;
 import android.nfc.Tag;
@@ -142,8 +144,8 @@ static void setInsulin(MainActivity context, OpContext op) {
         }
 
     Spinner spinner=new Spinner(context);
-    final int minheight= GlucoseCurve.dpToPx(48);
-    spinner.setMinimumHeight(minheight);
+//    final int minheight= GlucoseCurve.dpToPx(48);
+//    spinner.setMinimumHeight(minheight);
     avoidSpinnerDropdownFocus(spinner);
     int[] selected={type<0?0:type};
     final var labels=Natives.getLabels();
@@ -196,12 +198,8 @@ static void setInsulin(MainActivity context, OpContext op) {
     int[] hour={cal.get(Calendar.HOUR_OF_DAY)};
     int[]  min={cal.get(Calendar.MINUTE)};
     var timebutton=getbutton(context,  String.format(Locale.US,"%02d:%02d",hour[0],min[0] ));
-    var  layout=new Layout(context,(x,w,h)->{
-            var width=GlucoseCurve.getwidth();
-            x.setX((width-w)/2);
-            x.setY(0);
-            return new int[] {w,h};
-                },new View[]{label},new View[]{after},new View[]{datebutton,timebutton},new View[]{typestr,spinner},new View[]{ok,cancel});
+    Layout.getMargins(ok).bottomMargin=Layout.getMargins(cancel).bottomMargin=(int)(density*18.0f);
+    var  layout=new Layout(context,new View[]{label},new View[]{after},new View[]{datebutton,timebutton},new View[]{typestr,spinner},new View[]{ok,cancel});
     timebutton.setOnClickListener(v-> {
         layout.setVisibility(INVISIBLE);
             context.getnumberview().gettimepicker(context,hour[0], min[0], (h,m) -> {
@@ -214,7 +212,7 @@ static void setInsulin(MainActivity context, OpContext op) {
                },()-> layout.setVisibility(View.VISIBLE));});
         layout.setBackgroundColor(Applic.backgroundcolor);
     int pad=(int)(10.0*density);
-    layout.setPadding(pad,pad,pad,(int)(density*14.0));
+    layout.setPadding(pad,pad,pad,0);
 
     context.setonback(() -> removeContentView(layout) );
     ok.setOnClickListener(v -> {
@@ -262,6 +260,9 @@ static void setInsulin(MainActivity context, OpContext op) {
             }
             );
     cancel.setOnClickListener(v -> context.doonback());
-    context.addMyContentView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+//    var  params =    new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.CENTER|Gravity.CENTER_HORIZONTAL);
+    var  params =    new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.CENTER_HORIZONTAL);
+    params.topMargin=MainActivity.systembarTop*4/5;
+    context.addMyContentView(layout, params);
     }
 }

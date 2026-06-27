@@ -328,13 +328,14 @@ extern void receivetimeout(int sock,int secs) ;
 
 void handlewatch(int sock) {
      const char threadname[]="watchconnect";
-     LOGGERWEB("handlewatch %d\n",sock);
+     LOGGERWEB("start handlewatch %d\n",sock);
 #ifndef HAVE_NOPRCTL
      prctl(PR_SET_NAME, threadname, 0, 0, 0);
 #endif
      receivetimeout(sock,60);
      sendtimeout(sock,5*60);
      plainwatchcommands(sock);
+     LOGGERWEB("end handlewatch %d\n",sock);
      close(sock);
      }
 
@@ -381,6 +382,7 @@ static bool plainwatchcommands(int sock) {
    char rbuf[RBUFSIZE];
    int len;
    if((len=recvni(sock,rbuf,RBUFSIZE))==-1) {
+      LOGARWEB("recvni==-1");
       servererror(sock);
       return false;
       }
@@ -390,11 +392,13 @@ static bool plainwatchcommands(int sock) {
       }
    struct recdata outdata;
 
-   if(stopconnection)
+   if(stopconnection) {
+      LOGARWEB("stopconnection");
       return false;
+      }
    bool res=watchcommands(rbuf, len,&outdata,false); 
    bool res2=sendall( sock ,outdata.data(),outdata.size()) ;
-   LOGGER("plainwatchcommands: delete outdata.allbuf=%p\n",outdata.allbuf);
+   LOGGERWEB("plainwatchcommands: delete outdata.allbuf=%p\n",outdata.allbuf);
    delete[] outdata.allbuf;
    return res&&res2&&!stopconnection;
    }
@@ -793,6 +797,19 @@ static bool givesite(recdata *outdata,std::string_view hostname,bool secure) {
     return mkhtml(outdata,"*"sv,{buf,totlen},""sv);
    }
 //{"settings":{"units":"mmol","thresholds":{"bgHigh":169,"bgLow":70}}}
+
+
+inline unsigned char viewerhtml[] = {
+#embed "viewer.html" prefix('H','T','T','P','/','1','.','1',' ','2','0','0',' ','O','K','\r','\n', 'A','c','c','e','s','s','-','C','o','n','t','r','o','l','-','A','l','l','o','w','-','O','r','i','g','i','n',':',' ','*','\r','\n', 'C','o','n','t','e','n','t','-','T','y','p','e',':',' ','t','e','x','t','/','h','t','m','l',';',' ','c','h','a','r','s','e','t','=','u','t','f','-','8','\r','\n', 'C','o','n','t','e','n','t','-','L','e','n','g','t','h',':',' ', '1','7','4','0','2', '\r','\n', '\r','\n',) 
+};
+static bool giveviewer(recdata *outdata) {
+  outdata->allbuf=nullptr;
+  outdata->start=(char *)viewerhtml;
+  outdata->len=sizeof(viewerhtml);
+  return true;
+  }
+
+
 static bool givedripstatus(std::string_view origin,recdata *outdata) {
    constexpr const char format[]= R"({"settings":{"units":"%s","thresholds":{"bgHigh":%.0f,"bgLow":%.0f}}})";
    constexpr const int len=sizeof(format)+6+2*12;
@@ -1311,7 +1328,7 @@ bool givestrange(const char *input,int inputlen,recdata *outdata) {
     } */
  
 static void nosecret(std::string_view secret, recdata *outdata) {
-   constexpr const char nosecrettxt[]="HTTP/1.1 403 Forbidden\r\nAccess-Control-Allow-Origin: *\r\nContent-Type: text/plain\r\nContent-Length: %d\r\n\r\nsecret_api wrong: %.*s\n";
+   constexpr const char nosecrettxt[]="HTTP/1.1 403 Forbidden\r\nAccess-Control-Allow-Origin: *\r\nContent-Type: text/plain\r\nContent-Length: %d\r\n\r\napi_secret wrong: %.*s\n";
    constexpr const int formatlen=sizeof(nosecrettxt)-1;
    const int buflen=formatlen+secret.size()+20;
    char *nosecret=outdata->allbuf=new char[buflen];
@@ -2238,6 +2255,16 @@ static bool jugglucos(const char * const input,int size, std::string_view hostna
 
 static bool       pebbleinterpret(const char *input,int inputlen,std::string_view origin,recdata *outdata);
 
+
+static bool showviewer(std::string_view toget,recdata *outdata) {
+    std::string_view viewer="viewer.html";
+    const auto viewersize= viewer.size();
+       if(toget.data()[0]==' '||!memcmp(viewer.data(),toget.data(),viewersize)) {
+          giveviewer(outdata);
+          return true;
+          }
+     return false;
+     }
 bool watchcommands(char *rbuf,int len,recdata *outdata,bool secure) {
    LOGGERWEB("watchcommands len=%d %.*s",len,len,rbuf);
    const char *start=rbuf;
@@ -2397,6 +2424,8 @@ extern uint16_t choose_language( std::string_view accept_language, const std::un
                                 givesite(outdata,hostname,secure);
                                 return true;
                                 }
+                            if(showviewer(toget,outdata))
+                                return true;
 
                             time_t tim=time(nullptr);
                                 struct tm stm;
@@ -2407,6 +2436,7 @@ extern uint16_t choose_language( std::string_view accept_language, const std::un
                                 snprintf( nighterrorbuf+it,maxnighterror-it,R"( "%.*s")",(int)foundsecret.size(),foundsecret.data());
 
                             nosecret(foundsecret, outdata) ;
+
                             return false;
                             }
                     }
@@ -2435,10 +2465,6 @@ std::string_view sgv="sgv.json";
       return sgvinterpret(toget.data()+sgv.size(),toget.size()-sgv.size(),behead,false,origin,outdata,false);
       }
 
-///api/v1/entries.json
-//https:///api/v1/entries?count=2
-///api/v1/entries/sgv.txt?c
-//https://dnarnianbg.herokuapp.com/api/v1/entries/sgv?count=4
    const char *posptr= toget.data();
    std::string_view api="api/v";
    if(!memcmp(api.data(),posptr,api.size())) {
@@ -2475,10 +2501,13 @@ const auto indexsize= index.size();
       }
 
 
+if(showviewer(toget,outdata))
+    return true;
+
+
    wrongpath(toget,outdata);
    return true;
    }
-
 
 
 void wrongpath(std::string_view toget, recdata *outdata) {

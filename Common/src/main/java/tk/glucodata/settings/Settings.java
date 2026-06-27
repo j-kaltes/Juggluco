@@ -1132,7 +1132,7 @@ Scans.setOnCheckedChangeListener( (buttonView,  isChecked) -> { Natives.setshows
         Layout.getMargins(colbut).setMarginStart(amarg);
 
         Layout.getMargins(close).setMarginEnd(amarg);
-        var themebut=getbutton(context,"Theme");
+        var themebut=getbutton(context,R.string.theme);
         lay = new Layout(context, (l, w, h) -> {
                   int[] ret={w,h};
                  return ret;

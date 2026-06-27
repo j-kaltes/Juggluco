@@ -457,5 +457,16 @@
 <string name="emailnotused">E-mailwachtwoordcombinatie niet gebruikt en wordt niet opgeslagen.</string>
 <string name="connecttoserver">Verbinding maken met server…</string>
 <string name="retrievefailed">Het ophalen van account-ID is mislukt</string>
+
+<string name="themesname">Thema\'s:</string>
+<string name="buttonshape">Knopvorm</string>
+<string name="radius">"Straal: "</string>
+<string name="rectangle">Rechthoek</string>
+<string name="oval">Ovaal</string>
+<string name="light">Licht</string>
+<string name="dark">Donker</string>
+<string name="apply">Toepassen</string>
+<string name="theme">Thema</string>
+
 </resources>
 

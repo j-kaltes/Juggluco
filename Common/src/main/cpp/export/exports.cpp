@@ -173,7 +173,9 @@ bool sensorexports(myfilep handle, const FG& proc,const FP& print,uint32_t start
 			}
 		}
 	
-	return exportdata(handle,iters,0,i,print,maxcount);
+	bool res= exportdata(handle,iters,0,i,print,maxcount);
+    LOGAR("end sensorexports");
+    return res;
 	}
 
 #ifdef NDEBUG

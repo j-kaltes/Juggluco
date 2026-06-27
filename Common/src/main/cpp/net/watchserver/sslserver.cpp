@@ -73,6 +73,9 @@ static void (*ERR_error_string_nptr)(unsigned long e, char *buf, size_t len);
 
 extern void (*ERR_print_errors_cbptr)(int (*cb)(const char *str, size_t len, void *u), void *u);
 
+
+extern int (*SSL_get_errorptr)(const SSL *ssl, int ret);
+
 #else
 #include <openssl/ssl.h>
 #include <openssl/err.h>
@@ -97,6 +100,7 @@ extern void (*ERR_print_errors_cbptr)(int (*cb)(const char *str, size_t len, voi
 #define SSL_shutdownptr  SSL_shutdown
 #define ERR_get_errorptr ERR_get_error
 #define ERR_error_string_nptr ERR_error_string_n
+#define SSL_get_errorptr SSL_get_error
 #endif
 
 void  sslerror(const char *format) {
@@ -206,7 +210,7 @@ std::string loadsslfunctions() {
    symtest(SSL_set_fd);
    symtest(SSL_CTX_free);
    symtest(SSL_shutdown);
-
+   symtest(SSL_get_error);
 #endif
    return "";
  }
@@ -295,7 +299,7 @@ void handlewatchsecure(int sock) {
        
         usleep(500000);
         }
-   for(int i=0;i<5;++i) {
+   /*for(int i=0;i<5;++i) {
        int res=SSL_shutdownptr(ssl);
        LOGGER("SSL_shutdown=%d\n",res);
        if(res) {
@@ -310,7 +314,25 @@ void handlewatchsecure(int sock) {
              break;
              }
          usleep(1000*500);
-         }
+         } */
+
+    int res = SSL_shutdownptr(ssl);
+    LOGGER("SSL_shutdown=%d\n", res);
+
+    if (res < 0) {
+    #ifndef NOLOG
+        int sslerr = SSL_get_errorptr(ssl, res);
+        LOGGER("SSL_shutdown SSL_get_error=%d\n", sslerr);
+        unsigned long err;
+        while ((err = ERR_get_errorptr()) != 0) {
+            char buf[256];
+            ERR_error_string_nptr(err, buf, sizeof(buf));
+            LOGGER("OpenSSL error: %s (0x%lx)\n", buf, err);
+            }
+#endif
+       }
+
+
 	}
 
  #include <openssl/err.h>

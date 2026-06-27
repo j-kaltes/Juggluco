@@ -1,23 +1,3 @@
-/*      This file is part of Juggluco, an Android app to receive and display         */
-/*      glucose values from Freestyle Libre 2, Libre 3, Dexcom G7/ONE+,              */
-/*      Sibionics GS1Sb and Accu-Chek SmartGuide sensors.                            */
-/*                                                                                   */
-/*      Copyright (C) 2021 Jaap Korthals Altes <jaapkorthalsaltes@gmail.com>         */
-/*                                                                                   */
-/*      Juggluco is free software: you can redistribute it and/or modify             */
-/*      it under the terms of the GNU General Public License as published            */
-/*      by the Free Software Foundation, either version 3 of the License, or         */
-/*      (at your option) any later version.                                          */
-/*                                                                                   */
-/*      Juggluco is distributed in the hope that it will be useful, but              */
-/*      WITHOUT ANY WARRANTY; without even the implied warranty of                   */
-/*      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                         */
-/*      See the GNU General Public License for more details.                         */
-/*                                                                                   */
-/*      You should have received a copy of the GNU General Public License            */
-/*      along with Juggluco. If not, see <https://www.gnu.org/licenses/>.            */
-/*                                                                                   */
-/*      Wed May 06 21:13:17 CEST 2026                                                */
 package tk.glucodata;
 
 import static tk.glucodata.Natives.gs3nfc;
@@ -43,13 +23,23 @@ import android.os.VibrationEffect;
 
 class Sib3Scan {
     private static final String LOG_ID="Sib3Scan";
+static boolean hasTech(String[] techs, String want) {
+    for (String t : techs) if (want.equals(t)) return true;
+    return false;
+}
 static  void readNdef(MainActivity act,Tag tag) {
     Ndef ndef = Ndef.get(tag);
-    if (ndef != null) { readViaNdef(act,ndef); return; }  
+    if (ndef != null) { readViaNdef(act,ndef); return; }   // works if flag is off
+
+    String[] techs = tag.getTechList();
+    if (hasTech(techs, "android.nfc.tech.MifareUltralight")) {
+        readNdefFromUltralight(act,tag);
+    } else if (hasTech(techs, "android.nfc.tech.NfcA")) {
+        readNdefFromNfcA(act,tag);
+    } else {
+        Log.d(LOG_ID, "No supported tech for manual NDEF: " + Arrays.toString(techs));
+    }
 }
-
-
-
 
 private static void readViaNdef(MainActivity act,Ndef ndef) {
     var vib= getvibrator(act);
@@ -102,4 +92,130 @@ private static void dumpRecord(MainActivity act,NdefRecord r) {
         Log.d(LOG_ID, "TNF=" + tnf + " type=" + new String(type, StandardCharsets.US_ASCII) + " payload=" + payload.length + " bytes");
         }
    }
+static private void readNdefFromUltralight(MainActivity act,Tag tag) {
+    var vib= getvibrator(act);
+    startvibration(vib);
+    MifareUltralight mfu = MifareUltralight.get(tag);
+    if(mfu == null) {
+        vib.cancel();
+        failure(vib);
+        return;
+        }
+    try {
+        mfu.connect();
+        // Capability Container lives in page 3; readPages returns 4 pages = 16 bytes
+        byte[] cc = mfu.readPages(3);
+        if ((cc[0] & 0xFF) != 0xE1) {
+            Log.d(LOG_ID, String.format("Not NDEF formatted (CC magic=0x%02X)", cc[0]));
+            return;
+        }
+        int capacity = (cc[2] & 0xFF) * 8;       // total user memory in bytes
+        Log.d(LOG_ID, "NDEF capacity=" + capacity + " bytes, RW=" 
+                + String.format("0x%02X", cc[3]));
+
+        ByteArrayOutputStream buf = new ByteArrayOutputStream();
+        int page = 4;
+        int remaining = capacity;
+        while (remaining > 0) {
+            byte[] chunk = mfu.readPages(page);  // 16 bytes per call
+            int take = Math.min(chunk.length, remaining);
+            buf.write(chunk, 0, take);
+            page += 4;
+            remaining -= take;
+        }
+        NdefMessage msg = parseNdefTlv(buf.toByteArray());
+        if (msg != null) {
+            for (NdefRecord r : msg.getRecords()) dumpRecord(act,r);
+            vib.cancel();
+            final long[] newsensorVib =  {50, 150,50,50,12,8,15,73};
+            if(android.os.Build.VERSION.SDK_INT < 26) 
+                vib.vibrate(newsensorVib, -1);
+            else
+                vib.vibrate(VibrationEffect.createWaveform(newsensorVib, -1));
+        } else {
+            vib.cancel();
+            failure(vib);
+            Log.d(LOG_ID, "No NDEF Message TLV found");
+        }
+    } catch (IOException | FormatException e) {
+        Log.stack(LOG_ID, "readNdefFromUltralight", e);
+        vib.cancel();
+        failure(vib);
+    } finally {
+        try { mfu.close(); } catch (IOException ignored) {}
+    }
+}
+
+// Same idea, but using raw NfcA READ command (0x30 + page) for tags that
+// don't expose MifareUltralight tech. Returns 16 bytes per command.
+static private void readNdefFromNfcA(MainActivity act,Tag tag) {
+    var vib= getvibrator(act);
+    startvibration(vib);
+    NfcA nfca = NfcA.get(tag);
+    if(nfca == null) {
+        vib.cancel();
+        failure(vib);
+        return;
+        }
+    try {
+        nfca.connect();
+        byte[] cc = nfca.transceive(new byte[]{(byte) 0x30, 0x03});
+        if ((cc[0] & 0xFF) != 0xE1) {
+            Log.d(LOG_ID, String.format("Not NDEF formatted (CC magic=0x%02X)", cc[0]));
+            vib.cancel();
+            failure(vib);
+            return;
+           }
+        int capacity = (cc[2] & 0xFF) * 8;
+        ByteArrayOutputStream buf = new ByteArrayOutputStream();
+        int page = 4;
+        int remaining = capacity;
+        while (remaining > 0) {
+            byte[] chunk = nfca.transceive(new byte[]{(byte) 0x30, (byte) page});
+            int take = Math.min(chunk.length, remaining);
+            buf.write(chunk, 0, take);
+            page += 4;
+            remaining -= take;
+        }
+        NdefMessage msg = parseNdefTlv(buf.toByteArray());
+        if (msg != null) for (NdefRecord r : msg.getRecords()) dumpRecord(act,r);
+            vib.cancel();
+            final long[] newsensorVib =  {50, 150,50,50,12,8,15,73};
+            if(android.os.Build.VERSION.SDK_INT < 26) 
+                vib.vibrate(newsensorVib, -1);
+            else
+                vib.vibrate(VibrationEffect.createWaveform(newsensorVib, -1));
+
+    } catch (IOException | FormatException e) {
+        Log.stack(LOG_ID, "readNdefFromNfcA", e);
+        vib.cancel();
+        failure(vib);
+    } finally {
+        try { nfca.close(); } catch (IOException ignored) {}
+    }
+}
+
+// User memory is a sequence of TLV blocks. We care about T=0x03 (NDEF Message).
+private static NdefMessage parseNdefTlv(byte[] data) throws FormatException {
+    int i = 0;
+    while (i < data.length) {
+        int t = data[i++] & 0xFF;
+        if (t == 0x00) continue;                 // NULL TLV — padding
+        if (t == 0xFE) return null;              // Terminator TLV — done
+        // Length: 1 byte, or 0xFF followed by 2-byte big-endian length
+        int len = data[i++] & 0xFF;
+        if (len == 0xFF) {
+            len = ((data[i++] & 0xFF) << 8) | (data[i++] & 0xFF);
+        }
+        if (t == 0x03) {                         // NDEF Message TLV
+            return new NdefMessage(Arrays.copyOfRange(data, i, i + len));
+        }
+        i += len;                                // skip Lock Control (0x01), Memory Control (0x02), unknown
+    }
+    return null;
+}
+
+
+
+
 }

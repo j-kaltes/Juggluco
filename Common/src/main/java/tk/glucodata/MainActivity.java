@@ -534,8 +534,8 @@ public static boolean hasnfc=false;
 
 private static boolean askNFC=true;
 
-//private static    final int nfcflags=NfcAdapter.FLAG_READER_NFC_V | NfcAdapter.FLAG_READER_NFC_A|NfcAdapter.FLAG_READER_NFC_B|NfcAdapter.FLAG_READER_NFC_F|NfcAdapter.FLAG_READER_SKIP_NDEF_CHECK| NfcAdapter.FLAG_READER_NFC_BARCODE; //=415. Activation of sensor was only possible if app not at the foreground, so I add some flags
-private static    final int nfcflags=NfcAdapter.FLAG_READER_NFC_V | NfcAdapter.FLAG_READER_NFC_A|NfcAdapter.FLAG_READER_NFC_B|NfcAdapter.FLAG_READER_NFC_F| NfcAdapter.FLAG_READER_NFC_BARCODE; // Activation of sensor was only possible if app not at the foreground, so I add some flags
+private static    final int nfcflags=NfcAdapter.FLAG_READER_NFC_V | NfcAdapter.FLAG_READER_NFC_A|NfcAdapter.FLAG_READER_NFC_B|NfcAdapter.FLAG_READER_NFC_F|NfcAdapter.FLAG_READER_SKIP_NDEF_CHECK| NfcAdapter.FLAG_READER_NFC_BARCODE; //=415. Activation of sensor was only possible if app not at the foreground, so I add some flags
+//private static    final int nfcflags=NfcAdapter.FLAG_READER_NFC_V | NfcAdapter.FLAG_READER_NFC_A|NfcAdapter.FLAG_READER_NFC_B|NfcAdapter.FLAG_READER_NFC_F| NfcAdapter.FLAG_READER_NFC_BARCODE; // Activation of sensor was only possible if app not at the foreground, so I add some flags
 //private static    final int nfcflags=NfcAdapter.FLAG_READER_NFC_V |NfcAdapter.FLAG_READER_SKIP_NDEF_CHECK; 
 public void setnfc() {
 try {
@@ -731,12 +731,13 @@ long nexttime= 0L;
 
 
 synchronized void   startnfc(Tag tag) {
+    
     long nu=System.currentTimeMillis();
     if(nu<nexttime)
         return;
     nexttime=nu+1000*5;
 
-        runOnUiThread( ()-> {
+    runOnUiThread( ()-> {
         if (curve != null) {
             curve.searchaway();
             if(curve.numberview!=null) {
@@ -750,33 +751,33 @@ synchronized void   startnfc(Tag tag) {
 
         );
     var techs = tag.getTechList();
-    String all="onTagDiscovered: ";
 
     if(techs!=null) {
-        for(var  t:techs) {
-            all+=t;
-            all+=" ";
+        if(doLog) {
+            String all="onTagDiscovered: ";
+            for(var  t:techs) {
+                all+=t;
+                all+=" ";
+                }
+            Log.i(LOG_ID,all);
             }
-        {if(doLog) {Log.i(LOG_ID,all);};};
 
         if(!isWearable) {
-            if(techs.length>0) {
-                switch(techs[0] ) {
-                    case "android.nfc.tech.IsoDep":
-                            {if(doLog){showbytes("tag", tag.getId());};}
-                            tk.glucodata.NovoPen.Scan.onTag(this,tag);
-                            return;
-                    }
+            if(hasTech(techs,"android.nfc.tech.IsoDep")) {
+               if(doLog){showbytes("tag", tag.getId());};
+               tk.glucodata.NovoPen.Scan.onTag(this,tag);
+               return;
+               }
+            }
+        if(hasTech(techs, "android.nfc.tech.NfcV")) {
+                runNfcV(tag);
+                return;
                 }
-            }
         }
-    else
-        {if(doLog) {Log.i(LOG_ID,all);};};
-
-    if(hasTech(techs, "android.nfc.tech.NfcV")) {
-            runNfcV(tag);
-            return;
-            }
+    else  {
+        if(doLog) 
+            Log.i(LOG_ID,"onTagDiscovered: ");
+        }
 
    if(!isWearable) {
         // Generic NDEF fallback (TagInfo-style readout)

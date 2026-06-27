@@ -1925,14 +1925,18 @@ void updateinit(const int ind) {
 
 
 static  const ScanData *firstnotless(std::span<const ScanData> dat,const uint32_t start) {
-    const ScanData *scan=&dat[0];
+       const ScanData *scan=&dat.begin()[0];
+       if(dat.size()<1)
+            return scan;
         const ScanData *endscan= &dat.end()[0];
         const ScanData scanst{.t=start};
         auto comp=[](const ScanData &el,const ScanData &se ){return el.t<se.t;};
         return std::lower_bound(scan,endscan, scanst,comp);
     }
 static CurData curInperiod(std::span<const ScanData> dat,const uint32_t starttime,const uint32_t endtime) {
-    const ScanData *scan=&dat[0];
+    const ScanData *scan=&dat.begin()[0];
+    if(dat.size()<1)
+        return {scan,scan,scan};
     const ScanData *endscan= &dat.end()[0];
     auto comp=[](const ScanData &el,const ScanData &se ){return el.t<se.t;};
     ScanData scanst{.t=starttime};
@@ -1946,7 +1950,8 @@ CurData  streamInperiod(const uint32_t starttime,const uint32_t endtime) const {
     return curInperiod(getPolldata() ,starttime,endtime);
     }
 CurData  scanInperiod(const uint32_t starttime,const uint32_t endtime) const {
-    return curInperiod(getScandata(),starttime,endtime);
+    auto dat=getScandata();
+    return curInperiod(dat,starttime,endtime);
     }
 
 

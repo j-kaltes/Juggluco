@@ -472,6 +472,16 @@
 <string name="connecttoserver">Verbindung zum Server wird hergestellt…</string>
 
 <string name="retrievefailed">Abruf der Konto-ID fehlgeschlagen</string>
+
+<string name="themesname">Designs:</string>
+<string name="buttonshape">Buttonform</string>
+<string name="radius">"Radius: "</string>
+<string name="rectangle">Rechteck</string>
+<string name="oval">Oval</string>
+<string name="light">Hell</string>
+<string name="dark">Dunkel</string>
+<string name="apply">Anwenden</string>
+<string name="theme">Design</string>
 </resources>
 
 
