@@ -486,4 +486,26 @@
     <string name="nohistoryvalues">कोई इतिहास मान नहीं</string>
     <string name="jugglucoupdate">समय अपडेट करें</string>
 
+    <string name="lockscreen_wallpaper">लॉक स्क्रीन वॉलपेपर</string>
+    <string name="alarm_lockscreen">लॉक स्क्रीन पर अलार्म</string>
+    <string name="widget_bg_alpha_title">विजेट पृष्ठभूमि</string>
+    <string name="widget_bg_alpha_none">कोई नहीं (पारदर्शी)</string>
+    <string name="widget_bg_alpha_light">हल्का (25%)</string>
+    <string name="widget_bg_alpha_medium">मध्यम (50%)</string>
+    <string name="widget_bg_alpha_dark">गहरा (75%)</string>
+    <string name="snooze_cancel">स्नूज़ रद्द करें</string>
+    <string name="snooze_30">30 मिनट</string>
+    <string name="snooze_60">60 मिनट</string>
+    <string name="snooze_90">90 मिनट</string>
+    <string name="snooze_120">120 मिनट</string>
+    <string name="snooze_max_3">अधिकतम 3 अवधि अनुमत</string>
+    <string name="snooze_cancelled">स्नूज़ रद्द किया गया</string>
+    <string name="snooze_not_active">कोई सक्रिय स्नूज़ नहीं</string>
+    <string name="snooze_buttons_title">स्नूज़ बटन</string>
+    <string name="snooze_buttons_summary">अलार्म स्क्रीन पर दिखाने के लिए 3 तक स्नूज़ अवधि चुनें</string>
+    <string name="notif_snooze_min">%1$d मिनट स्नूज़</string>
+    <string name="lockscreen_dismiss">अलार्म बंद करें</string>
+    <string name="lockscreen_dismiss_hold">बंद करने के लिए दबाए रखें</string>
+    <string name="lockscreen_snooze">स्नूज़</string>
+    <string name="lockscreen_snoozed_until">तक स्नूज़ किया</string>
 </resources>

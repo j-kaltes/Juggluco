@@ -3314,13 +3314,13 @@ Herstellers abrufen.</p>
 </string>
 <string name="themes" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/de/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/de/themes.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/themes.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/themes.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/themes.html?lang=en">en</a>&emsp;&emsp;</p><p align="center" style="margin-top: 0.43cm; margin-bottom: 0.2cm; line-height: 100%; page-break-after: avoid">
-<font face="Liberation Sans, sans-serif"><font size="6" style="font-size: 28pt"><b>Thema</b></font></font></p>
+<p><a href="https://www.juggluco.nl/Jugglucohelp/de/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/de/themes.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/themes.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/themes.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/themes.html?lang=en">en</a>&emsp;&emsp;</p><p align="center" style="line-height: 100%; margin-top: 0.43cm; margin-bottom: 0.2cm; page-break-after: avoid">
+<font face="Liberation Sans, sans-serif"><font size="6" style="font-size: 28pt"><b>Design</b></font></font></p>
 <p style="line-height: 100%; margin-bottom: 0cm">Ändern Sie die
 Farben und die Form der Schaltflächen in der Benutzeroberfläche von
 Juggluco. 
 </p>
-<p style="line-height: 100%; margin-bottom: 0cm"><b>Themen</b>:
+<p style="line-height: 100%; margin-bottom: 0cm"><b>Designs</b>:
 „<i><b>Hell</b></i>“ zeigt eine Liste von „Themen“ mit hellem
 Hintergrund, „<i><b>Dunkel</b></i>“ mit dunklem Hintergrund.</p>
 <p style="line-height: 100%; margin-bottom: 0cm">Die Knopfform kann

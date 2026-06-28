@@ -71,8 +71,12 @@ static PowerManager.WakeLock wakeLock =null;
        started=true;
        Applic app=(Applic) getApplicationContext();
        app.initproc();
-       if(Natives.getfloatglucose()&&!Natives.gethidefloatinJuggluco()) 
+       if(Natives.getfloatglucose()&&!Natives.gethidefloatinJuggluco())
                 Floating.makefloat();
+        // Restore lock-screen wallpaper state from SharedPreferences
+        if(!isWearable) LockScreenWallpaper.restoreOnBoot();
+        // Restore alarm snooze state
+        AlarmSnooze.init();
         try {
           if(intent==null) {
              if(!Applic.possiblybluetooth(this)) {

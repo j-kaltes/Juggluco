@@ -94,12 +94,13 @@ android {
   //      buildConfigField 'int', 'minSDK', "$minSdk"
         manifestPlaceholders["minSDK"] = MINSDK.toString()
         manifestPlaceholders["targetSDK"] = TARGETSDK.toString()
+        manifestPlaceholders["appLabel"] = "Juggluco"
 
     //    buildConfigField 'int', 'noZXing', '1'
         //compileSdk 36
         applicationId "tk.glucodata"
 
-         versionName '10.9.3'
+         versionName '10.9.5'
 //    multiDexEnabled true
 
         buildConfigField 'String', 'BUILD_TIME', 'new java.text.SimpleDateFormat("HH:mm:ss dd-MMM-yyyy").format(new java.util.Date(' + System.currentTimeMillis() + 'L))'
@@ -118,7 +119,9 @@ android {
         }
 //    resourceConfigurations += ["en", "nl", "fr","it", "de", "pl", "pt","be","uk"]
     //ndk { abiFilters  'armeabi-v7a' }
-      // ndk { abiFilters  'arm64-v8a' }
+        // Pass -PabiFilters=x86_64 on the command line to target the emulator.
+        // Default (no property) keeps arm64-v8a for real-device / release builds.
+        ndk { abiFilters  project.findProperty('abiFilters') ?: 'arm64-v8a' }
         signingConfig signingConfigs.alg
     //buildToolsVersion '33.0.0'
     }
@@ -174,8 +177,8 @@ flavorDimensions = ['wearos','libreVersion','SiBionics', 'DexCom','Google']
         libreOld {
     //******  Zet op rollout op 100% ******
             dimension 'libreVersion'
-            versionCode 887 //LIBRE2ONLY
-         //    versionName '10.9.3-no3'
+            versionCode 893 //LIBRE2ONLY
+         //    versionName '10.9.5-no3'
             versionNameSuffix '-no3'
             buildConfigField 'int', 'libreVersion', '2'
             externalNativeBuild.cmake {
@@ -188,7 +191,7 @@ flavorDimensions = ['wearos','libreVersion','SiBionics', 'DexCom','Google']
 //       minSdk 23
             dimension 'libreVersion'
         versionNameSuffix '-li3'
-        versionCode 887 //LIBRE3
+        versionCode 893 //LIBRE3
     //******  Zet op rollout op 100% ******
 
                buildConfigField 'int', 'libreVersion', '3'
@@ -203,7 +206,7 @@ flavorDimensions = ['wearos','libreVersion','SiBionics', 'DexCom','Google']
         si {
       dimension 'SiBionics'
         versionNameSuffix '-si'
-        versionCode 887 
+        versionCode 893 
        buildConfigField 'int', 'SiBionics', '1'
        externalNativeBuild.cmake {
          cppFlags "   -DSIBIONICS=1 "
@@ -212,7 +215,7 @@ flavorDimensions = ['wearos','libreVersion','SiBionics', 'DexCom','Google']
         }
         nosi {
             dimension 'SiBionics'
-         versionCode 887 
+         versionCode 893 
          versionNameSuffix '-nosi'
           buildConfigField 'int', 'SiBionics', '0'
           externalNativeBuild.cmake {
@@ -229,9 +232,9 @@ flavorDimensions = ['wearos','libreVersion','SiBionics', 'DexCom','Google']
         minSdk = 26
         buildConfigField 'int', 'minSDK', '26'
         manifestPlaceholders["minSDK"] = '26'
-        versionCode 888 //WATCH
+        versionCode 894 //WATCH
     //******  Zet op rollout op 100% ******
-        //versionName '10.9.3-wear'
+        //versionName '10.9.5-wear'
         versionNameSuffix '-wear'
         signingConfig signingConfigs.alg
 
@@ -249,8 +252,8 @@ flavorDimensions = ['wearos','libreVersion','SiBionics', 'DexCom','Google']
 
 //        minSdk 19
             dimension 'wearos'
-        versionCode 888 //WATCH
-        //versionName '10.9.3-small'
+        versionCode 894 //WATCH
+        //versionName '10.9.5-small'
         versionNameSuffix '-small'
         signingConfig signingConfigs.alg
 
@@ -275,8 +278,11 @@ buildTypes {
 
         release {
             signingConfig signingConfigs.alg
-            minifyEnabled true 
+            minifyEnabled true
         shrinkResources true
+            applicationIdSuffix ".dev"
+            versionNameSuffix "-dev"
+            manifestPlaceholders["appLabel"] = "Juggluco DEV"
 
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro', 'proguard-rules.my', 'proguard-rules.log'
 
@@ -287,8 +293,8 @@ buildTypes {
             jniDebuggable false
             debuggable false
             externalNativeBuild.cmake {
-                cppFlags "$CPPSTD","-DRELEASEID=1","-DRELEASE=1","-DNORAWSTREAM=1" , "-DRELEASEDIR=1", "-DNOLOG=1","-DMIRRORPORT=8795" //, "-DSCANLOG=1" , "-DNOLOG=1"
-                cFlags "-DRELEASEID=1","-DRELEASE=1","-DNORAWSTREAM=1" , "-DRELEASEDIR=1", "-DNOLOG=1" //, "-DSCANLOG=1" , "-DNOLOG=1"
+                cppFlags "$CPPSTD","-DRELEASEID=1","-DRELEASE=1","-DNORAWSTREAM=1" , "-DRELEASEDIR=1", "-DNOLOG=1","-DMIRRORPORT=8795"
+                cFlags "-DRELEASEID=1","-DRELEASE=1","-DNORAWSTREAM=1" , "-DRELEASEDIR=1", "-DNOLOG=1"
 
 
                 }
@@ -428,6 +434,7 @@ buildTypes {
         debug {
          manifestPlaceholders["requireWatch"] = "false"
          manifestPlaceholders["debuggable"] = "true"
+         manifestPlaceholders["appLabel"] = "Juggluco DEV"
         applicationIdSuffix ".debug"
             versionNameSuffix 'DEBUG'
 
@@ -540,6 +547,7 @@ buildTypes {
        }
     lint {
         abortOnError false
+        checkReleaseBuilds false
     }
     dependenciesInfo {
         includeInApk true
@@ -588,7 +596,7 @@ buildTypes {
             }
         })
     }
-    compileSdkMinor 0
+//    compileSdkMinor 0
 }
 
 allprojects {

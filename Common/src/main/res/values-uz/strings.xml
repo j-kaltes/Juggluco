@@ -465,4 +465,26 @@ Endi transmitter data matrixini skanerlang."</string>
     <string name="messagewebserverneed">Veb-serverni faollashtirish uchun chap menyu-&gt;Sozlamalar-&gt;Ma\'lumot almashish-&gt;Veb-server ga o\'ting</string>
     <string name="nostreamvalues">Oqim qiymatlari yo\'q</string>
     <string name="nohistoryvalues">Tarix qiymatlari yo\'q</string>
+    <string name="lockscreen_wallpaper">Qulf ekrani foni</string>
+    <string name="alarm_lockscreen">Qulf ekranida signal</string>
+    <string name="widget_bg_alpha_title">Vidjet foni</string>
+    <string name="widget_bg_alpha_none">Yo\'q (shaffof)</string>
+    <string name="widget_bg_alpha_light">Ochiq (25%)</string>
+    <string name="widget_bg_alpha_medium">O\'rta (50%)</string>
+    <string name="widget_bg_alpha_dark">To\'q (75%)</string>
+    <string name="snooze_cancel">Snouzni bekor qilish</string>
+    <string name="snooze_30">30 daqiqa</string>
+    <string name="snooze_60">60 daqiqa</string>
+    <string name="snooze_90">90 daqiqa</string>
+    <string name="snooze_120">120 daqiqa</string>
+    <string name="snooze_max_3">Maksimal 3 ta muddat ruxsat etiladi</string>
+    <string name="snooze_cancelled">Snouz bekor qilindi</string>
+    <string name="snooze_not_active">Faol snouz yo\'q</string>
+    <string name="snooze_buttons_title">Snouz tugmalari</string>
+    <string name="snooze_buttons_summary">Signal ekranida ko\'rsatish uchun 3 tagacha snouz muddatini tanlang</string>
+    <string name="notif_snooze_min">%1$d daq snouz</string>
+    <string name="lockscreen_dismiss">Signalni yopish</string>
+    <string name="lockscreen_dismiss_hold">Yopish uchun ushlab turing</string>
+    <string name="lockscreen_snooze">Snouz</string>
+    <string name="lockscreen_snoozed_until">gacha snouz</string>
 </resources>

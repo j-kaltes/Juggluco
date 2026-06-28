@@ -297,4 +297,26 @@
 <string name="enternums">Enter amounts on</string>
 <string name="directsensor">Connexion directe capteur-</string>
 <string name="connectionl"></string>
+    <string name="lockscreen_wallpaper">Fond d\'écran de verrouillage</string>
+    <string name="alarm_lockscreen">Alarme sur écran de verrouillage</string>
+    <string name="widget_bg_alpha_title">Arrière-plan du widget</string>
+    <string name="widget_bg_alpha_none">Aucun (transparent)</string>
+    <string name="widget_bg_alpha_light">Clair (25%)</string>
+    <string name="widget_bg_alpha_medium">Moyen (50%)</string>
+    <string name="widget_bg_alpha_dark">Sombre (75%)</string>
+    <string name="snooze_cancel">Annuler la mise en veille</string>
+    <string name="snooze_30">30 minutes</string>
+    <string name="snooze_60">60 minutes</string>
+    <string name="snooze_90">90 minutes</string>
+    <string name="snooze_120">120 minutes</string>
+    <string name="snooze_max_3">Maximum 3 durées autorisées</string>
+    <string name="snooze_cancelled">Mise en veille annulée</string>
+    <string name="snooze_not_active">Aucune mise en veille active</string>
+    <string name="snooze_buttons_title">Boutons de mise en veille</string>
+    <string name="snooze_buttons_summary">Choisissez jusqu\'à 3 durées de mise en veille à afficher sur l\'écran d\'alarme</string>
+    <string name="notif_snooze_min">Mettre en veille %1$d min</string>
+    <string name="lockscreen_dismiss">Ignorer l\'alarme</string>
+    <string name="lockscreen_dismiss_hold">Maintenir pour ignorer</string>
+    <string name="lockscreen_snooze">Mettre en veille</string>
+    <string name="lockscreen_snoozed_until">En veille jusqu\'à</string>
 </resources>

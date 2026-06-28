@@ -447,4 +447,26 @@
 <string name="enternums">Wpisuj wartości na</string>
 <string name="connectionl">połączenie</string>
 <string name="disconnectsensor">Błąd</string>
+    <string name="lockscreen_wallpaper">Tapeta ekranu blokady</string>
+    <string name="alarm_lockscreen">Alarm na ekranie blokady</string>
+    <string name="widget_bg_alpha_title">Tło widżetu</string>
+    <string name="widget_bg_alpha_none">Brak (przezroczyste)</string>
+    <string name="widget_bg_alpha_light">Jasne (25%)</string>
+    <string name="widget_bg_alpha_medium">Średnie (50%)</string>
+    <string name="widget_bg_alpha_dark">Ciemne (75%)</string>
+    <string name="snooze_cancel">Anuluj drzemkę</string>
+    <string name="snooze_30">30 minut</string>
+    <string name="snooze_60">60 minut</string>
+    <string name="snooze_90">90 minut</string>
+    <string name="snooze_120">120 minut</string>
+    <string name="snooze_max_3">Maksymalnie 3 czasy dozwolone</string>
+    <string name="snooze_cancelled">Drzemka anulowana</string>
+    <string name="snooze_not_active">Brak aktywnej drzemki</string>
+    <string name="snooze_buttons_title">Przyciski drzemki</string>
+    <string name="snooze_buttons_summary">Wybierz do 3 czasów drzemki do wyświetlenia na ekranie alarmu</string>
+    <string name="notif_snooze_min">Drzemka %1$d min</string>
+    <string name="lockscreen_dismiss">Odrzuć alarm</string>
+    <string name="lockscreen_dismiss_hold">Przytrzymaj, aby odrzucić</string>
+    <string name="lockscreen_snooze">Drzemka</string>
+    <string name="lockscreen_snoozed_until">Drzemka do</string>
 </resources>

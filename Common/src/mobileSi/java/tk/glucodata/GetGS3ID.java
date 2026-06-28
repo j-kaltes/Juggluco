@@ -259,11 +259,12 @@ static void gs3Number(String name, MainActivity act) {
    layout.setPadding(siderand,rand,siderand,rand);
 
     int width = GlucoseCurve.getwidth();
-   var  params =    new FrameLayout.LayoutParams((int)(width*.55f), WRAP_CONTENT, Gravity.CENTER_HORIZONTAL| Gravity.CENTER);
-   params.topMargin= MainActivity.systembarTop;
+   var  params =    new FrameLayout.LayoutParams((int)(width*.65f), WRAP_CONTENT, Gravity.CENTER_HORIZONTAL| Gravity.CENTER);
    act.addMyContentView(layout, params);
-   Runnable closer=() ->
+   Runnable closer=() -> {
       removeContentView(layout);
+      act.requestRender();
+      };
   Runnable[] back={null};
   back[0]=
 () -> {

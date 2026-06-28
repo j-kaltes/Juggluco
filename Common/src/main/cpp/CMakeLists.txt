@@ -89,7 +89,21 @@ include(ExternalProject)
 
 set(RTLPP_DEPENDS "${ARJUGGLUCO_INPUT}")
 
-if(CMAKE_CROSSCOMPILING)
+if(CMAKE_CROSSCOMPILING AND CMAKE_HOST_WIN32 AND EXISTS "${ARJUGGLUCO_OUTPUT}")
+    # On Windows cross-compilation the host rtlpp tool cannot be built without a
+    # full native toolchain in the environment.  The pre-generated output already
+    # exists in the source tree — use it as-is; do NOT overwrite it from the .in.cpp
+    # (the .in.cpp still contains unresolved RTL() macros).
+    # We use a touch command so CMake's dependency tracking is satisfied without
+    # clobbering the committed generated file.
+    add_custom_command(
+        OUTPUT "${ARJUGGLUCO_OUTPUT}"
+        COMMAND "${CMAKE_COMMAND}" -E touch_nocreate "${ARJUGGLUCO_OUTPUT}"
+        DEPENDS ${RTLPP_DEPENDS}
+        COMMENT "Using pre-generated ${ARJUGGLUCO_OUTPUT} (Windows cross-compile shortcut)"
+        VERBATIM
+    )
+elseif(CMAKE_CROSSCOMPILING)
     if(CMAKE_HOST_WIN32)
         set(RTLPP_HOST_EXE_SUFFIX ".exe")
     else()
@@ -110,9 +124,15 @@ if(CMAKE_CROSSCOMPILING)
         UPDATE_COMMAND ""
         PATCH_COMMAND ""
 
+        CMAKE_GENERATOR "Ninja"
         CMAKE_ARGS
             "-DCMAKE_BUILD_TYPE=Release"
             "-DCMAKE_RUNTIME_OUTPUT_DIRECTORY=${RTLPP_HOST_BIN_DIR}"
+            "-DCMAKE_MAKE_PROGRAM=${CMAKE_MAKE_PROGRAM}"
+            "-DCMAKE_TOOLCHAIN_FILE=C:/Data/Perso/Proyectos/Diabetes/vcpkg/scripts/buildsystems/vcpkg.cmake"
+            "-DVCPKG_TARGET_TRIPLET=x64-windows"
+            "-DCMAKE_CXX_COMPILER=C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/cl.exe"
+            "-DCMAKE_C_COMPILER=C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/cl.exe"
 
         BUILD_BYPRODUCTS
             "${RTLPP_EXECUTABLE}"
@@ -126,6 +146,14 @@ if(CMAKE_CROSSCOMPILING)
         rtlpp_host
         "${RTLPP_EXECUTABLE}"
         "${CMAKE_CURRENT_SOURCE_DIR}/rtlpp.cpp"
+    )
+
+    add_custom_command(
+        OUTPUT "${ARJUGGLUCO_OUTPUT}"
+        COMMAND "${RTLPP_COMMAND}" "${ARJUGGLUCO_INPUT}" "${ARJUGGLUCO_OUTPUT}"
+        DEPENDS ${RTLPP_DEPENDS}
+        COMMENT "Generating ${ARJUGGLUCO_OUTPUT} from ${ARJUGGLUCO_INPUT}"
+        VERBATIM
     )
 else()
     set(RTLPP_SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/rtlpp.cpp")
@@ -141,15 +169,15 @@ else()
         rtlpp
         "${RTLPP_SOURCE}"
     )
-endif()
 
-add_custom_command(
-    OUTPUT "${ARJUGGLUCO_OUTPUT}"
-    COMMAND "${RTLPP_COMMAND}" "${ARJUGGLUCO_INPUT}" "${ARJUGGLUCO_OUTPUT}"
-    DEPENDS ${RTLPP_DEPENDS}
-    COMMENT "Generating ${ARJUGGLUCO_OUTPUT} from ${ARJUGGLUCO_INPUT}"
-    VERBATIM
-)
+    add_custom_command(
+        OUTPUT "${ARJUGGLUCO_OUTPUT}"
+        COMMAND "${RTLPP_COMMAND}" "${ARJUGGLUCO_INPUT}" "${ARJUGGLUCO_OUTPUT}"
+        DEPENDS ${RTLPP_DEPENDS}
+        COMMENT "Generating ${ARJUGGLUCO_OUTPUT} from ${ARJUGGLUCO_INPUT}"
+        VERBATIM
+    )
+endif()
 
 
 
@@ -206,11 +234,55 @@ if(HAVE_PTHREADARG)
 target_compile_options(juggluco PUBLIC $<$<COMPILE_LANGUAGE:CXX>:-pthread>)
 endif()
 if(static)
-target_link_libraries( juggluco     m crypto ssl zstd z juice)
-target_link_options(juggluco  PUBLIC -static  -Wl,--whole-archive -lpthread  -Wl,--no-whole-archive )
+
+set(OPENSSL_USE_STATIC_LIBS TRUE)
+find_package(OpenSSL REQUIRED)
+find_package(Threads REQUIRED)
+
+target_link_libraries(juggluco PRIVATE
+    m
+    zstd
+    z
+    juice
+    OpenSSL::SSL
+    OpenSSL::Crypto
+    Threads::Threads
+)
+
+if(OPENSSL_CRYPTO_LIBRARY MATCHES "\\.a$")
+    execute_process(
+        COMMAND ${CMAKE_NM} -u ${OPENSSL_CRYPTO_LIBRARY}
+        OUTPUT_VARIABLE LIBCRYPTO_UNDEF
+        ERROR_QUIET
+    )
+
+    if(LIBCRYPTO_UNDEF MATCHES "jent_")
+        find_library(JITTERENTROPY_LIBRARY
+            NAMES libjitterentropy.a
+            REQUIRED
+        )
+        message(STATUS "OpenSSL static archive needs jitterentropy: ${JITTERENTROPY_LIBRARY}")
+        target_link_libraries(juggluco PRIVATE ${JITTERENTROPY_LIBRARY})
+    endif()
+endif()
+
+
+target_link_options(juggluco  PUBLIC -static )
 target_compile_options(readlog PUBLIC  -fopenmp -static)
-target_link_options(readlog  PUBLIC   -fopenmp -static )
+target_link_options(readlog  PUBLIC   -fopenmp -static  )
+list(REMOVE_ITEM CMAKE_C_IMPLICIT_LINK_LIBRARIES
+    gcc_s_asneeded
+    atomic_asneeded
+)
+
+list(REMOVE_ITEM CMAKE_CXX_IMPLICIT_LINK_LIBRARIES
+    gcc_s_asneeded
+    atomic_asneeded
+)
 set(extradefs -DUSE_SSL=1 )
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
+target_link_libraries(juggluco PRIVATE Threads::Threads)
 else()
 message(" CMAKE_SYSTEM_NAME =${CMAKE_SYSTEM_NAME} ")
 

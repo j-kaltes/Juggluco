@@ -808,66 +808,109 @@ private void  makeseparatenotification(float glvalue,String message,notGlucose g
     }
 static public boolean alertseparate=false;
     private Notification  makearrownotification(int kind,float glvalue,String message,notGlucose glucose,String type,boolean once) {
-
-        var intent =mkpending();
-        var GluNotBuilder=mkbuilderintent(type,intent);
-        if(!alertseparate) {
-            GluNotBuilder.setDeleteIntent(DeleteReceiver.getDeleteIntent());
-            }
-        {if(doLog) {Log.i(LOG_ID,"makearrownotification setOnlyAlertOnce("+once+") "+glucose.value);};};
-
-        //var draw= GlucoseDraw.getgludraw(glvalue);
-
-          setIcon(GluNotBuilder,glvalue,glucose.sensorgen2);
-//        GluNotBuilder.setSmallIcon(draw). 
-        GluNotBuilder.setContentTitle(message).setOnlyAlertOnce(once);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            GluNotBuilder.setVisibility(VISIBILITY_PUBLIC);
-            }
-        final boolean glucosealarm=kind<2||kind>4;
-        if(!isWearable) {
-              if(Build.VERSION.SDK_INT  >= 24) {
-                GluNotBuilder.setStyle(new Notification.DecoratedCustomViewStyle());
-        //    GluNotBuilder.setStyle( new Notification.DecoratedMediaCustomViewStyle());
-            }
-            GluNotBuilder.setShowWhen(true);
-            RemoteViews remoteViews=arrowNotify.arrowremote(kind,glucose,glucosealarm&&!once);
-            if(whiteonblack) {
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    GluNotBuilder.setColorized(true);
-                    GluNotBuilder.setColor(BLACK);
-                    }
-                else
-                    remoteViews.setInt(arrowandvalue, "setBackgroundColor", BLACK);
+    
+            // For active alarms on phone, tapping the notification opens AlarmLockScreenActivity
+            // (same screen as the full-screen intent) so the snooze buttons are always accessible.
+            final boolean glucosealarmForContent = (kind<2||kind>4);
+            final var intent = (!isWearable && !once && glucosealarmForContent && AlarmLockScreenActivity.isEnabled())
+                    ? mkAlarmLockScreenPending(kind)
+                    : mkpending();
+            var GluNotBuilder=mkbuilderintent(type,intent);
+            if(!alertseparate) {
+                GluNotBuilder.setDeleteIntent(DeleteReceiver.getDeleteIntent());
                 }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                GluNotBuilder.setCustomContentView(remoteViews);
-            } else
-                GluNotBuilder.setContent(remoteViews);
-            }
-    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        GluNotBuilder.setTimeoutAfter(glucosetimeout);
-    }
-    if(isWearable) {GluNotBuilder.setAutoCancel(true);}
-    if(once)
-        GluNotBuilder.setPriority(Notification.PRIORITY_DEFAULT);
-    else  {
-    //    GluNotBuilder.setPriority(Notification.PRIORITY_DEFAULT);
-        GluNotBuilder.setPriority(Notification.PRIORITY_HIGH);
-//        GluNotBuilder.setPriority(Notification.PRIORITY_MAX);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            GluNotBuilder.setCategory(Notification.CATEGORY_ALARM);
+            {if(doLog) {Log.i(LOG_ID,"makearrownotification setOnlyAlertOnce("+once+") "+glucose.value);};};
+    
+            //var draw= GlucoseDraw.getgludraw(glvalue);
+    
+              setIcon(GluNotBuilder,glvalue,glucose.sensorgen2);
+    //        GluNotBuilder.setSmallIcon(draw).
+            GluNotBuilder.setContentTitle(message).setOnlyAlertOnce(once);
+    
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                GluNotBuilder.setVisibility(VISIBILITY_PUBLIC);
+                }
+            final boolean glucosealarm=kind<2||kind>4;
+            if(!isWearable) {
+                  if(Build.VERSION.SDK_INT  >= 24) {
+                    GluNotBuilder.setStyle(new Notification.DecoratedCustomViewStyle());
+            //    GluNotBuilder.setStyle( new Notification.DecoratedMediaCustomViewStyle());
+                }
+                GluNotBuilder.setShowWhen(true);
+                RemoteViews remoteViews=arrowNotify.arrowremote(kind,glucose,glucosealarm&&!once);
+                if(whiteonblack) {
+                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        GluNotBuilder.setColorized(true);
+                        GluNotBuilder.setColor(BLACK);
+                        }
+                    else
+                        remoteViews.setInt(arrowandvalue, "setBackgroundColor", BLACK);
+                    }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    GluNotBuilder.setCustomContentView(remoteViews);
+                } else
+                    GluNotBuilder.setContent(remoteViews);
+                }
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            GluNotBuilder.setTimeoutAfter(glucosetimeout);
         }
-    }
+        if(isWearable) {GluNotBuilder.setAutoCancel(true);}
+        if(once)
+            GluNotBuilder.setPriority(Notification.PRIORITY_DEFAULT);
+        else  {
+        //    GluNotBuilder.setPriority(Notification.PRIORITY_DEFAULT);
+            GluNotBuilder.setPriority(Notification.PRIORITY_HIGH);
+    //        GluNotBuilder.setPriority(Notification.PRIORITY_MAX);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                GluNotBuilder.setCategory(Notification.CATEGORY_ALARM);
+            }
+            // ── Full-screen lock-screen intent for active alarms (phone only) ──
+                if (!isWearable && glucosealarm && AlarmLockScreenActivity.isEnabled()) {
+                    try {
+                        Intent fsIntent = new Intent(app, AlarmLockScreenActivity.class);
+                    fsIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                            | Intent.FLAG_ACTIVITY_CLEAR_TASK
+                            | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS
+                            | Intent.FLAG_ACTIVITY_NO_USER_ACTION);
+                    fsIntent.putExtra(AlarmLockScreenActivity.EXTRA_ALARM_KIND, kind);
+                    PendingIntent fsPendingIntent = PendingIntent.getActivity(
+                            app, 900, fsIntent,
+                            PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+                    GluNotBuilder.setFullScreenIntent(fsPendingIntent, true);
+                    {if(doLog) {Log.i(LOG_ID, "setFullScreenIntent for alarm kind=" + kind);};};
+                } catch (Throwable t) {
+                    Log.stack(LOG_ID, "setFullScreenIntent", t);
+                }
+            }
+            // ── Snooze notification actions (phone only, active alarms) ──────────
+            if (!isWearable && glucosealarm) {
+                try {
+                    final java.util.List<Long> snoozeDurations = AlarmSnooze.getSnoozeButtons();
+                    // request codes 910..912 — well away from other PendingIntents
+                    for (int si = 0; si < snoozeDurations.size(); si++) {
+                        final long mins = snoozeDurations.get(si);
+                        final PendingIntent snoozePi = SnoozeReceiver.pendingSnooze(mins, 910 + si);
+                        if (snoozePi != null) {
+                            final Notification.Action action = new Notification.Action.Builder(
+                                    android.R.drawable.ic_lock_silent_mode_off,
+                                    app.getString(R.string.notif_snooze_min, mins),
+                                    snoozePi).build();
+                            GluNotBuilder.addAction(action);
+                        }
+                    }
+                } catch (Throwable t) {
+                    Log.stack(LOG_ID, "addSnoozeActions", t);
+                }
+            }
+        }
 
-     {if(doLog) {Log.i(LOG_ID,(once?"":"not ")+"only once");};};
-
-     Notification notif= GluNotBuilder.build();
-    notif.when= glucose.time;
-     return notif;
-
-    }
+         {if(doLog) {Log.i(LOG_ID,(once?"":"not ")+"only once");};};
+    
+         Notification notif= GluNotBuilder.build();
+        notif.when= glucose.time;
+         return notif;
+    
+        }
 @SuppressWarnings({"deprecation"})
 
 static public PendingIntent mkpendingall(Context context, int requestCode) {
@@ -888,6 +931,20 @@ static public PendingIntent mkpendingall(Context context, int requestCode) {
 static public PendingIntent mkpending() {
     return mkpendingall(Applic.app,1001);
     }
+
+/** PendingIntent that opens AlarmLockScreenActivity — used as the notification contentIntent
+ *  so tapping the alarm notification always shows the snooze UI, not just the main app. */
+static private PendingIntent mkAlarmLockScreenPending(int kind) {
+    Intent intent = new Intent(Applic.app, AlarmLockScreenActivity.class);
+    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+            | Intent.FLAG_ACTIVITY_CLEAR_TASK
+            | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS
+            | Intent.FLAG_ACTIVITY_NO_USER_ACTION);
+    intent.putExtra(AlarmLockScreenActivity.EXTRA_ALARM_KIND, kind);
+    return PendingIntent.getActivity(Applic.app, 901, intent,
+            PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+
 
 private Notification.Builder   mkbuilderintent(String type,PendingIntent notifyPendingIntent) {
     Notification.Builder  GluNotBuilder;

@@ -483,5 +483,27 @@
     <string name="light">Светлая</string>
     <string name="dark">Темная</string>
     <string name="apply">Применить</string>
+    <string name="lockscreen_wallpaper">Обои экрана блокировки</string>
+    <string name="alarm_lockscreen">Будильник на экране блокировки</string>
+    <string name="widget_bg_alpha_title">Фон виджета</string>
+    <string name="widget_bg_alpha_none">Нет (прозрачный)</string>
+    <string name="widget_bg_alpha_light">Светлый (25%)</string>
+    <string name="widget_bg_alpha_medium">Средний (50%)</string>
+    <string name="widget_bg_alpha_dark">Тёмный (75%)</string>
+    <string name="snooze_cancel">Отменить отложить</string>
+    <string name="snooze_30">30 минут</string>
+    <string name="snooze_60">60 минут</string>
+    <string name="snooze_90">90 минут</string>
+    <string name="snooze_120">120 минут</string>
+    <string name="snooze_max_3">Максимум 3 продолжительности разрешено</string>
+    <string name="snooze_cancelled">Отложить отменено</string>
+    <string name="snooze_not_active">Нет активного откладывания</string>
+    <string name="snooze_buttons_title">Кнопки откладывания</string>
+    <string name="snooze_buttons_summary">Выберите до 3 продолжительностей для отображения на экране будильника</string>
+    <string name="notif_snooze_min">Отложить на %1$d мин</string>
+    <string name="lockscreen_dismiss">Закрыть будильник</string>
+    <string name="lockscreen_dismiss_hold">Удерживайте для закрытия</string>
+    <string name="lockscreen_snooze">Отложить</string>
+    <string name="lockscreen_snoozed_until">Отложено до</string>
 </resources>
 

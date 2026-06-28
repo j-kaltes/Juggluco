@@ -1048,6 +1048,7 @@ void mkmealsearch(MainActivity act) {
 //        mealquantity.setMinEms(2);
 //        mealingredient.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI| EditorInfo.IME_FLAG_NO_FULLSCREEN| EditorInfo.IME_ACTION_SEARCH);
 //        mealquantity.setOnEditorActionListener(actlist);
+      Log.i(LOG_ID,"systembarTop="+systembarTop);
         meallayout=new Layout(act,
 (lay, w, h)->{
             lay.setY(systembarTop*4/5);

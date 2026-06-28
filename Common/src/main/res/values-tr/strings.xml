@@ -384,4 +384,26 @@
  <string name="phone">telefon</string>
  <string name="directsensor">Doğrudan sensör-</string>
 <string name="connectionl">bağlantısı</string>
+    <string name="lockscreen_wallpaper">Kilit ekranı duvar kağıdı</string>
+    <string name="alarm_lockscreen">Kilit ekranında alarm</string>
+    <string name="widget_bg_alpha_title">Widget arka planı</string>
+    <string name="widget_bg_alpha_none">Yok (şeffaf)</string>
+    <string name="widget_bg_alpha_light">Açık (25%)</string>
+    <string name="widget_bg_alpha_medium">Orta (50%)</string>
+    <string name="widget_bg_alpha_dark">Koyu (75%)</string>
+    <string name="snooze_cancel">Ertelemeyi iptal et</string>
+    <string name="snooze_30">30 dakika</string>
+    <string name="snooze_60">60 dakika</string>
+    <string name="snooze_90">90 dakika</string>
+    <string name="snooze_120">120 dakika</string>
+    <string name="snooze_max_3">En fazla 3 süre izin verilir</string>
+    <string name="snooze_cancelled">Erteleme iptal edildi</string>
+    <string name="snooze_not_active">Aktif erteleme yok</string>
+    <string name="snooze_buttons_title">Erteleme düğmeleri</string>
+    <string name="snooze_buttons_summary">Alarm ekranında gösterilecek 3\'e kadar erteleme süresi seçin</string>
+    <string name="notif_snooze_min">%1$d dak ertele</string>
+    <string name="lockscreen_dismiss">Alarmı kapat</string>
+    <string name="lockscreen_dismiss_hold">Kapatmak için basılı tut</string>
+    <string name="lockscreen_snooze">Ertele</string>
+    <string name="lockscreen_snoozed_until">Ertelendi:</string>
 </resources>

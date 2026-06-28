@@ -232,6 +232,28 @@
 <string name="phone">telefone</string>
 <string name="directsensor">Conexão direta sensor-</string>
 <string name="connectionl"></string>
+    <string name="lockscreen_wallpaper">Papel de parede da tela de bloqueio</string>
+    <string name="alarm_lockscreen">Alarme na tela de bloqueio</string>
+    <string name="widget_bg_alpha_title">Fundo do widget</string>
+    <string name="widget_bg_alpha_none">Nenhum (transparente)</string>
+    <string name="widget_bg_alpha_light">Claro (25%)</string>
+    <string name="widget_bg_alpha_medium">Médio (50%)</string>
+    <string name="widget_bg_alpha_dark">Escuro (75%)</string>
+    <string name="snooze_cancel">Cancelar soneca</string>
+    <string name="snooze_30">30 minutos</string>
+    <string name="snooze_60">60 minutos</string>
+    <string name="snooze_90">90 minutos</string>
+    <string name="snooze_120">120 minutos</string>
+    <string name="snooze_max_3">Máximo de 3 durações permitidas</string>
+    <string name="snooze_cancelled">Soneca cancelada</string>
+    <string name="snooze_not_active">Sem soneca ativa</string>
+    <string name="snooze_buttons_title">Botões de soneca</string>
+    <string name="snooze_buttons_summary">Escolha até 3 durações de soneca para exibir na tela de alarme</string>
+    <string name="notif_snooze_min">Soneca %1$d min</string>
+    <string name="lockscreen_dismiss">Dispensar alarme</string>
+    <string name="lockscreen_dismiss_hold">Segure para dispensar</string>
+    <string name="lockscreen_snooze">Soneca</string>
+    <string name="lockscreen_snoozed_until">Soneca até</string>
 </resources>
 
 

@@ -211,7 +211,8 @@ static void endtalk() {
         }
     }
 static private int veryhigh(long tim,notGlucose sglucose,float gl,float rate,int alarm,boolean[] alarmspeak) {
-             final boolean alarmtime = tim > nextalarm[6];
+             // Suppress audible alarm (but not notification) while user has snoozed
+             final boolean alarmtime = !AlarmSnooze.isActive() && (tim > nextalarm[6]);
              Notify.onenot.veryhighglucose(sglucose,gl, rate,alarmtime);
              if(alarmtime) {
                     nextalarm[8]=nextalarm[6] = nextalarm[1] = tim + Natives.readalarmsuspension(6) * 60;
@@ -223,7 +224,7 @@ static private int veryhigh(long tim,notGlucose sglucose,float gl,float rate,int
               return alarm;
              }
 static private int high(long tim,notGlucose    sglucose,float gl,float rate,int alarm,boolean[] alarmspeak) {
-        final boolean alarmtime = tim > nextalarm[1];
+        final boolean alarmtime = !AlarmSnooze.isActive() && (tim > nextalarm[1]);
         Notify.onenot.highglucose(sglucose,gl, rate,alarmtime);
         if (alarmtime) {
             nextalarm[8] = nextalarm[1] = tim + Natives.readalarmsuspension(1) * 60;
@@ -236,7 +237,7 @@ static private int high(long tim,notGlucose    sglucose,float gl,float rate,int 
        }
 
 static private int verylow(long tim,notGlucose    sglucose,float gl,float rate,int alarm,boolean[] alarmspeak) {
-        final boolean alarmtime = tim > nextalarm[5];
+        final boolean alarmtime = !AlarmSnooze.isActive() && (tim > nextalarm[5]);
         Notify.onenot.verylowglucose(sglucose,gl, rate,alarmtime);
         if(alarmtime) {
             nextalarm[7] =nextalarm[5] =nextalarm[0]= tim + Natives.readalarmsuspension(5) * 60;
@@ -249,7 +250,7 @@ static private int verylow(long tim,notGlucose    sglucose,float gl,float rate,i
        return alarm;
       }
 static private int low(long tim,notGlucose    sglucose,float gl,float rate,int alarm,boolean[] alarmspeak) {
-        final boolean alarmtime = tim > nextalarm[0];
+        final boolean alarmtime = !AlarmSnooze.isActive() && (tim > nextalarm[0]);
         Notify.onenot.lowglucose(sglucose,gl, rate,alarmtime);
         if(alarmtime) {
             nextalarm[7] =nextalarm[0] = tim + Natives.readalarmsuspension(0) * 60;
@@ -296,7 +297,7 @@ static private int low(long tim,notGlucose    sglucose,float gl,float rate,int a
                     break;
                         }
                 case 18:  {
-                 final boolean alarmtime = tim > nextalarm[8];
+                 final boolean alarmtime = !AlarmSnooze.isActive() && (tim > nextalarm[8]);
                  Notify.onenot.prehighglucose(sglucose,gl, rate,alarmtime);
                  if(alarmtime) {
                         nextalarm[8]= tim + Natives.readalarmsuspension(8) * 60;
@@ -333,7 +334,7 @@ static private int low(long tim,notGlucose    sglucose,float gl,float rate,int a
                       alarm=low(tim,sglucose, gl, rate,alarm,alarmspeak) ;
                       break;
                 case 19:  {
-                 final boolean alarmtime = tim > nextalarm[7];
+                 final boolean alarmtime = !AlarmSnooze.isActive() && (tim > nextalarm[7]);
                  Notify.onenot.prelowglucose(sglucose,gl, rate,alarmtime);
                  if(alarmtime) {
                         nextalarm[7]= tim + Natives.readalarmsuspension(7) * 60;

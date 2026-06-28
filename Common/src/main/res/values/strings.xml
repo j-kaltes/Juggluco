@@ -392,6 +392,25 @@
     <string name="autoqr">Auto QR</string>
     
     <string name="googlescan">Google scan</string>
+    <string name="lockscreen_wallpaper">Lock screen wallpaper</string>
+    <string name="alarm_lockscreen">Alarm on lock screen</string>
+    <string name="widget_bg_alpha_title">Widget background</string>
+    <string name="widget_bg_alpha_none">None (transparent)</string>
+    <string name="widget_bg_alpha_light">Light (25%)</string>
+    <string name="widget_bg_alpha_medium">Medium (50%)</string>
+    <string name="widget_bg_alpha_dark">Dark (75%)</string>
+    <string name="snooze_cancel">Cancel snooze</string>
+    <string name="snooze_30">30 minutes</string>
+    <string name="snooze_60">60 minutes</string>
+    <string name="snooze_90">90 minutes</string>
+    <string name="snooze_120">120 minutes</string>
+    <string name="snooze_max_3">Maximum 3 durations allowed</string>
+    <string name="snooze_cancelled">Snooze cancelled</string>
+    <string name="snooze_not_active">No active snooze</string>
+    <string name="snooze_buttons_title">Snooze buttons</string>
+    <string name="snooze_buttons_summary">Choose up to 3 snooze durations to show on the alarm screen</string>
+    <!-- Notification action: "Snooze 60 min" — %1$d is the number of minutes -->
+    <string name="notif_snooze_min">Snooze %1$d min</string>
     <string name="usedweight">WARNING: weight (%.1f) not 0</string>
 
  <string name="verylowglucose">" Very LOW glucose!"</string>
@@ -502,4 +521,5 @@
     <string name="dark">Dark</string>
     <string name="apply">Apply</string>
 
+    <string name="theme">Theme</string>
 </resources>

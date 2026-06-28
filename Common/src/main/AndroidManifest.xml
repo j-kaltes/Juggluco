@@ -62,6 +62,8 @@
     <queries> <intent> <action android:name="glucodata.Minute" /> </intent> </queries>
 
     <uses-permission-sdk-23 android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+    <uses-permission android:name="android.permission.SET_WALLPAPER" />
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
 
 
 

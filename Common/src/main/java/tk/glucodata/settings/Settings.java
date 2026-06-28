@@ -62,6 +62,7 @@ import static tk.glucodata.util.getlocale;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import androidx.appcompat.app.AlertDialog;
 import android.app.Application;
 import android.content.ComponentName;
 import android.content.Context;
@@ -102,7 +103,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.DecimalFormatSymbols;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import tk.glucodata.Applic;
 import tk.glucodata.Backup;
@@ -123,6 +126,10 @@ import tk.glucodata.MeterList;
 import tk.glucodata.Natives;
 import tk.glucodata.Notify;
 import tk.glucodata.NumAlarm;
+import tk.glucodata.AlarmLockScreenActivity;
+import tk.glucodata.AlarmSnooze;
+import tk.glucodata.LockScreenWallpaper;
+import tk.glucodata.RemoteGlucose;
 import tk.glucodata.R;
 import tk.glucodata.Specific;
 import tk.glucodata.SuperGattCallback;
@@ -132,6 +139,130 @@ import java.util.Locale;
 
 public class Settings  {
 private final static String LOG_ID="Settings";
+
+/** Update the cancel-snooze button label to show snooze status. */
+private static void updateSnoozeBtnLabel(android.widget.Button btn, android.content.Context ctx) {
+    if (AlarmSnooze.isActive()) {
+        btn.setText(ctx.getString(R.string.snooze_cancel) + " (" + AlarmSnooze.snoozeUntilText() + ")");
+        btn.setAlpha(1.0f);
+    } else {
+        btn.setText(R.string.snooze_cancel);
+        btn.setAlpha(0.4f);   // dimmed — no active snooze to cancel
+    }
+}
+
+/** Update the snooze-button picker label to show the current selection. */
+private static void updateSnoozeBtnPickerLabel(android.widget.Button btn, android.content.Context ctx) {
+    final List<Long> vals = AlarmSnooze.getSnoozeButtons();
+    if (vals.isEmpty()) {
+        btn.setText(ctx.getString(R.string.snooze_buttons_title) + ": —");
+    } else {
+        final StringBuilder sb = new StringBuilder(ctx.getString(R.string.snooze_buttons_title) + ": ");
+        for (int i = 0; i < vals.size(); i++) {
+            if (i > 0) sb.append(", ");
+            sb.append(vals.get(i));
+        }
+        btn.setText(sb.toString());
+    }
+}
+
+/**
+ * Show a multi-choice AlertDialog for picking snooze durations (30/60/90/120 min,
+ * up to 3 selected). On confirm, saves to AlarmSnooze and refreshes the button label.
+ */
+private static void showSnoozeBtnDialog(android.content.Context ctx, android.widget.Button pickerBtn) {
+    final long[] all = AlarmSnooze.ALL_DURATIONS;  // {30, 60, 90, 120}
+    final int[] labelIds = {R.string.snooze_30, R.string.snooze_60, R.string.snooze_90, R.string.snooze_120};
+    // getSnoozeButtonsRaw() may return the live SharedPreferences set — copy it defensively
+    final Set<String> current = new HashSet<>(AlarmSnooze.getSnoozeButtonsRaw());
+    final boolean[] checked = new boolean[all.length];
+    final String[] labels = new String[all.length];
+    for (int i = 0; i < all.length; i++) {
+        labels[i] = ctx.getString(labelIds[i]);
+        checked[i] = current.contains(String.valueOf(all[i]));
+    }
+    // working copy so Cancel discards changes
+    final boolean[] working = checked.clone();
+
+    // NOTE: setMessage and setMultiChoiceItems compete for the same content area —
+    // do NOT use both. Title alone is sufficient; the items are self-explanatory.
+    // Wrap context with light dialog theme so list text is dark on the white background.
+    final android.view.ContextThemeWrapper themedCtx =
+            new android.view.ContextThemeWrapper(ctx, R.style.MyLightAlertDialogTheme);
+    new AlertDialog.Builder(themedCtx)
+        .setTitle(R.string.snooze_buttons_title)
+        .setMultiChoiceItems(labels, working, (dialog, which, isChecked) -> {
+            if (isChecked) {
+                // Count how many OTHER items are already checked (excluding this one)
+                int count = 0;
+                for (int i = 0; i < working.length; i++) if (i != which && working[i]) count++;
+                if (count >= 3) {
+                    // Already at limit — reject this check and uncheck it in the UI
+                    working[which] = false;
+                    ((AlertDialog) dialog).getListView()
+                            .setItemChecked(which, false);
+                    android.widget.Toast.makeText(ctx,
+                            R.string.snooze_max_3, android.widget.Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }
+            working[which] = isChecked;
+        })
+        .setPositiveButton(R.string.ok, (dialog, which) -> {
+            final Set<String> selected = new HashSet<>();
+            for (int i = 0; i < all.length; i++) {
+                if (working[i]) selected.add(String.valueOf(all[i]));
+            }
+            AlarmSnooze.setSnoozeButtons(selected);
+            updateSnoozeBtnPickerLabel(pickerBtn, ctx);
+        })
+        .setNegativeButton(R.string.cancel, null)
+        .show();
+}
+
+// ── Widget background alpha helpers ──────────────────────────────────────
+
+private static void updateWidgetBgBtnLabel(android.widget.Button btn, android.content.Context ctx) {
+    final int alpha = RemoteGlucose.getWidgetBgAlpha();
+    final String label;
+    if (alpha <= 0)       label = ctx.getString(R.string.widget_bg_alpha_none);
+    else if (alpha <= 64) label = ctx.getString(R.string.widget_bg_alpha_light);
+    else if (alpha <= 128)label = ctx.getString(R.string.widget_bg_alpha_medium);
+    else                  label = ctx.getString(R.string.widget_bg_alpha_dark);
+    btn.setText(ctx.getString(R.string.widget_bg_alpha_title) + ": " + label);
+}
+
+private static void showWidgetBgDialog(android.content.Context ctx, android.widget.Button btn) {
+    final int[] alphaValues = {0, 64, 128, 191};   // 0 / 25% / 50% / 75%
+    final int[] labelIds = {
+        R.string.widget_bg_alpha_none,
+        R.string.widget_bg_alpha_light,
+        R.string.widget_bg_alpha_medium,
+        R.string.widget_bg_alpha_dark
+    };
+    final int current = RemoteGlucose.getWidgetBgAlpha();
+    int checkedItem = 0;
+    final String[] labels = new String[alphaValues.length];
+    for (int i = 0; i < alphaValues.length; i++) {
+        labels[i] = ctx.getString(labelIds[i]);
+        if (current >= alphaValues[i] - 32 && current <= alphaValues[i] + 32) checkedItem = i;
+    }
+    final int[] selected = {checkedItem};
+    final android.view.ContextThemeWrapper themedCtx =
+            new android.view.ContextThemeWrapper(ctx, R.style.MyLightAlertDialogTheme);
+    new AlertDialog.Builder(themedCtx)
+        .setTitle(R.string.widget_bg_alpha_title)
+        .setSingleChoiceItems(labels, checkedItem, (dialog, which) -> selected[0] = which)
+        .setPositiveButton(R.string.ok, (dialog, which) -> {
+            RemoteGlucose.setWidgetBgAlpha(alphaValues[selected[0]]);
+            updateWidgetBgBtnLabel(btn, ctx);
+        })
+        .setNegativeButton(R.string.cancel, null)
+        .show();
+}
+
+
+
 MainActivity activity;
 
 /*
@@ -810,9 +941,28 @@ new View[]{isvalue},new View[]{ringisvalue},new View[]{usealarm},new View[]{adva
         getMargins(help).setMarginStart(marg);
         getMargins(Save).setMarginEnd(marg);
 
+        // ── Snooze controls (moved from main Settings) ──────────────────────
+        final android.widget.Button snoozeBtnsPicker = getbutton(context, R.string.snooze_buttons_title);
+        updateSnoozeBtnPickerLabel(snoozeBtnsPicker, context);
+        snoozeBtnsPicker.setOnClickListener(v -> showSnoozeBtnDialog(context, snoozeBtnsPicker));
 
-        views=new View[][]{lowalarm,highalarm,lostrow,row6,rowshow};
-        }    
+        android.widget.Button cancelSnoozeBtn = getbutton(context, R.string.snooze_cancel);
+        updateSnoozeBtnLabel(cancelSnoozeBtn, context);
+        cancelSnoozeBtn.setOnClickListener(v -> {
+            if (AlarmSnooze.isActive()) {
+                AlarmSnooze.set(0);
+                updateSnoozeBtnLabel(cancelSnoozeBtn, context);
+                android.widget.Toast.makeText(context,
+                        R.string.snooze_cancelled, android.widget.Toast.LENGTH_SHORT).show();
+            } else {
+                android.widget.Toast.makeText(context,
+                        R.string.snooze_not_active, android.widget.Toast.LENGTH_SHORT).show();
+            }
+        });
+        View[] rowSnooze = new View[]{snoozeBtnsPicker, cancelSnoozeBtn};
+
+        views=new View[][]{lowalarm,highalarm,lostrow,row6,rowSnooze,rowshow};
+        }
     View lay;
         Layout layout = new Layout(context, (l, w, h) -> {
             hideSystemUI();
@@ -1132,7 +1282,7 @@ Scans.setOnCheckedChangeListener( (buttonView,  isChecked) -> { Natives.setshows
         Layout.getMargins(colbut).setMarginStart(amarg);
 
         Layout.getMargins(close).setMarginEnd(amarg);
-        var themebut=getbutton(context,"Theme");
+        var themebut=getbutton(context,R.string.theme);
         lay = new Layout(context, (l, w, h) -> {
                   int[] ret={w,h};
                  return ret;
@@ -1432,9 +1582,29 @@ private    void mksettings(MainActivity context) {
                 }
         floatconfig.setOnClickListener(v-> tk.glucodata.FloatingConfig.show(context,thelayout[0]));
 
+        // ── Dev enhancements: Lock Screen Wallpaper + Alarm Lock Screen ───────
+        CheckDirectionBox lockscreenWp = new CheckDirectionBox(context);
+        lockscreenWp.setText(R.string.lockscreen_wallpaper);
+        lockscreenWp.setChecked(LockScreenWallpaper.isEnabled());
+        lockscreenWp.setOnCheckedChangeListener((buttonView, isChecked) ->
+                LockScreenWallpaper.setEnabled(isChecked));
+
+        CheckDirectionBox alarmLockscreen = new CheckDirectionBox(context);
+        alarmLockscreen.setText(R.string.alarm_lockscreen);
+        alarmLockscreen.setChecked(AlarmLockScreenActivity.isEnabled());
+        alarmLockscreen.setOnCheckedChangeListener((buttonView, isChecked) ->
+                AlarmLockScreenActivity.setEnabled(isChecked));
+
+        // ── Widget background alpha picker ────────────────────────────────────
+        Button widgetBgBtn = getbutton(context, R.string.widget_bg_alpha_title);
+        updateWidgetBgBtnLabel(widgetBgBtn, context);
+        widgetBgBtn.setOnClickListener(v -> showWidgetBgDialog(context, widgetBgBtn));
+
         View[] rowglu=new View[]{floatconfig,calibration,glucosenotify};
 //        View[] rowglu=new View[]{floatconfig,glucosenotify};
-        views=new View[][]{row0, hasnfc?new View[]{nfcsound, globalscan,camera}:null,rowglu,new View[]{exchanges,numalarm,alarmbut},numdis, row9};
+        View[] rowDevEnhancements  = new View[]{lockscreenWp, alarmLockscreen};
+        View[] rowDevEnhancements2 = new View[]{widgetBgBtn};
+        views=new View[][]{row0, hasnfc?new View[]{nfcsound, globalscan,camera}:null,rowglu,rowDevEnhancements,rowDevEnhancements2,new View[]{exchanges,numalarm,alarmbut},numdis, row9};
         }
 
     help.setFocusableInTouchMode(true);

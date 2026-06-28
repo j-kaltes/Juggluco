@@ -472,6 +472,38 @@
 <string name="connecttoserver">Verbindung zum Server wird hergestellt…</string>
 
 <string name="retrievefailed">Abruf der Konto-ID fehlgeschlagen</string>
+
+<string name="themesname">Designs:</string>
+<string name="buttonshape">Buttonform</string>
+<string name="radius">"Radius: "</string>
+<string name="rectangle">Rechteck</string>
+<string name="oval">Oval</string>
+<string name="light">Hell</string>
+<string name="dark">Dunkel</string>
+<string name="apply">Anwenden</string>
+<string name="theme">Design</string>
+    <string name="lockscreen_wallpaper">Sperrbildschirm-Hintergrundbild</string>
+    <string name="alarm_lockscreen">Alarm auf Sperrbildschirm</string>
+    <string name="widget_bg_alpha_title">Widget-Hintergrund</string>
+    <string name="widget_bg_alpha_none">Keiner (transparent)</string>
+    <string name="widget_bg_alpha_light">Hell (25%)</string>
+    <string name="widget_bg_alpha_medium">Mittel (50%)</string>
+    <string name="widget_bg_alpha_dark">Dunkel (75%)</string>
+    <string name="snooze_cancel">Schlummern abbrechen</string>
+    <string name="snooze_30">30 Minuten</string>
+    <string name="snooze_60">60 Minuten</string>
+    <string name="snooze_90">90 Minuten</string>
+    <string name="snooze_120">120 Minuten</string>
+    <string name="snooze_max_3">Maximal 3 Dauern erlaubt</string>
+    <string name="snooze_cancelled">Schlummern abgebrochen</string>
+    <string name="snooze_not_active">Kein aktives Schlummern</string>
+    <string name="snooze_buttons_title">Schlummertasten</string>
+    <string name="snooze_buttons_summary">Wähle bis zu 3 Schlummerdauern für den Alarmbildschirm</string>
+    <string name="notif_snooze_min">Schlummern %1$d Min.</string>
+    <string name="lockscreen_dismiss">Alarm schließen</string>
+    <string name="lockscreen_dismiss_hold">Gedrückt halten zum Schließen</string>
+    <string name="lockscreen_snooze">Schlummern</string>
+    <string name="lockscreen_snoozed_until">Schlummern bis</string>
 </resources>
 
 

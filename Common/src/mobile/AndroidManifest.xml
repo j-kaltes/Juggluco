@@ -46,10 +46,12 @@
     <application
         android:name=".Applic"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:theme="@style/AppTheme.Base">
+        android:label="${appLabel}"
+        android:theme="@style/AppTheme.Base"
+        tools:replace="android:label">
         <receiver
             android:name=".GlucoseWidget"
+            android:label="@string/widget_glucose"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -59,6 +61,68 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/glucose_widget_info" />
         </receiver>
+
+        <!-- Widget: glucose value + trend arrow -->
+        <receiver
+            android:name=".GlucoseTrendWidget"
+            android:label="@string/widget_glucose_trend"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/glucose_trend_widget_info" />
+        </receiver>
+
+        <!-- Widget: glucose value + trend arrow + Δ delta -->
+        <receiver
+            android:name=".GlucoseTrendDeltaWidget"
+            android:label="@string/widget_glucose_trend_delta"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/glucose_trend_delta_widget_info" />
+        </receiver>
+
+        <!-- Widget: glucose value + trend arrow + Δ delta + elapsed time -->
+        <receiver
+            android:name=".GlucoseDeltaTimeWidget"
+            android:label="@string/widget_glucose_trend_delta_time"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/glucose_delta_time_widget_info" />
+        </receiver>
+
+        <!-- BroadcastReceiver for snooze notification actions -->
+        <receiver
+            android:name=".SnoozeReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="tk.glucodata.SNOOZE_ALARM" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Full-screen lock-screen activity shown when a glucose alarm fires -->
+        <activity
+            android:name=".AlarmLockScreenActivity"
+            android:exported="false"
+            android:launchMode="singleInstance"
+            android:screenOrientation="portrait"
+            android:showWhenLocked="true"
+            android:turnScreenOn="true"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+            android:excludeFromRecents="true" />
 
         <activity
             android:name=".MainActivity"

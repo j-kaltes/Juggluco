@@ -1,4 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_widget_description">Glucose widget</string>
+    <string name="widget_glucose">Glucose</string>
+    <string name="widget_glucose_trend">Glucose + Trend</string>
+    <string name="widget_glucose_trend_delta">Glucose + Trend + Delta</string>
+    <string name="widget_glucose_trend_delta_time">Glucose + Trend + Delta + Time</string>
+    <string name="lockscreen_dismiss">Dismiss alarm</string>
+    <!-- Hold-to-dismiss button label (replaces simple tap dismiss) -->
+    <string name="lockscreen_dismiss_hold">Hold to dismiss</string>
+    <string name="lockscreen_snooze">Snooze</string>
+    <string name="lockscreen_snooze_for">Snooze for:</string>
+    <string name="lockscreen_snoozed_until">Snoozed until</string>
 </resources>

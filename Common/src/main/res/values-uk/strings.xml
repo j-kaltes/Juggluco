@@ -349,4 +349,26 @@
 <string name="watch">годинника</string>
 <string name="directsensor">Пряме підкл. датчика до</string>
 <string name="connectionl"></string>
+    <string name="lockscreen_wallpaper">Шпалери екрана блокування</string>
+    <string name="alarm_lockscreen">Будильник на екрані блокування</string>
+    <string name="widget_bg_alpha_title">Фон віджета</string>
+    <string name="widget_bg_alpha_none">Немає (прозорий)</string>
+    <string name="widget_bg_alpha_light">Світлий (25%)</string>
+    <string name="widget_bg_alpha_medium">Середній (50%)</string>
+    <string name="widget_bg_alpha_dark">Темний (75%)</string>
+    <string name="snooze_cancel">Скасувати відкладення</string>
+    <string name="snooze_30">30 хвилин</string>
+    <string name="snooze_60">60 хвилин</string>
+    <string name="snooze_90">90 хвилин</string>
+    <string name="snooze_120">120 хвилин</string>
+    <string name="snooze_max_3">Максимум 3 тривалості дозволено</string>
+    <string name="snooze_cancelled">Відкладення скасовано</string>
+    <string name="snooze_not_active">Немає активного відкладення</string>
+    <string name="snooze_buttons_title">Кнопки відкладення</string>
+    <string name="snooze_buttons_summary">Виберіть до 3 тривалостей відкладення для відображення на екрані будильника</string>
+    <string name="notif_snooze_min">Відкласти на %1$d хв</string>
+    <string name="lockscreen_dismiss">Закрити будильник</string>
+    <string name="lockscreen_dismiss_hold">Утримуйте для закриття</string>
+    <string name="lockscreen_snooze">Відкласти</string>
+    <string name="lockscreen_snoozed_until">Відкладено до</string>
 </resources>

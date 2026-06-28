@@ -493,4 +493,26 @@
      <string name="emailnotused">La combinazione email-password non viene usata e non sarà salvata.</string>
     <string name="connecttoserver">Connessione al server…</string>
     <string name="retrievefailed">Recupero account id fallito</string>
+    <string name="lockscreen_wallpaper">Sfondo schermata di blocco</string>
+    <string name="alarm_lockscreen">Allarme su schermata di blocco</string>
+    <string name="widget_bg_alpha_title">Sfondo widget</string>
+    <string name="widget_bg_alpha_none">Nessuno (trasparente)</string>
+    <string name="widget_bg_alpha_light">Chiaro (25%)</string>
+    <string name="widget_bg_alpha_medium">Medio (50%)</string>
+    <string name="widget_bg_alpha_dark">Scuro (75%)</string>
+    <string name="snooze_cancel">Annulla posticipo</string>
+    <string name="snooze_30">30 minuti</string>
+    <string name="snooze_60">60 minuti</string>
+    <string name="snooze_90">90 minuti</string>
+    <string name="snooze_120">120 minuti</string>
+    <string name="snooze_max_3">Massimo 3 durate consentite</string>
+    <string name="snooze_cancelled">Posticipo annullato</string>
+    <string name="snooze_not_active">Nessun posticipo attivo</string>
+    <string name="snooze_buttons_title">Pulsanti posticipo</string>
+    <string name="snooze_buttons_summary">Scegli fino a 3 durate di posticipo da mostrare nella schermata di allarme</string>
+    <string name="notif_snooze_min">Posticipa %1$d min</string>
+    <string name="lockscreen_dismiss">Ignora allarme</string>
+    <string name="lockscreen_dismiss_hold">Tieni premuto per ignorare</string>
+    <string name="lockscreen_snooze">Posticipa</string>
+    <string name="lockscreen_snoozed_until">Posticipato fino a</string>
 </resources>
