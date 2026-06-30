@@ -5,6 +5,7 @@
     <string name="widget_glucose_trend">Glucose + Trend</string>
     <string name="widget_glucose_trend_delta">Glucose + Trend + Delta</string>
     <string name="widget_glucose_trend_delta_time">Glucose + Trend + Delta + Time</string>
+    <string name="widget_glucose_chart">Glucose Chart</string>
     <string name="lockscreen_dismiss">Dismiss alarm</string>
     <!-- Hold-to-dismiss button label (replaces simple tap dismiss) -->
     <string name="lockscreen_dismiss_hold">Hold to dismiss</string>

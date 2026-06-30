@@ -366,9 +366,19 @@
     <string name="snooze_not_active">Немає активного відкладення</string>
     <string name="snooze_buttons_title">Кнопки відкладення</string>
     <string name="snooze_buttons_summary">Виберіть до 3 тривалостей відкладення для відображення на екрані будильника</string>
-    <string name="notif_snooze_min">Відкласти на %1$d хв</string>
+    <string name="notif_snooze_label">Відкласти</string>
+    <string name="notif_snooze_min">%1$d хв</string>
+    <string name="notif_stop_alarm">Зупинити будильник</string>
+    <string name="alarm_fullscreen_grant">Надати дозвіл на повноекранний будильник</string>
+
     <string name="lockscreen_dismiss">Закрити будильник</string>
     <string name="lockscreen_dismiss_hold">Утримуйте для закриття</string>
     <string name="lockscreen_snooze">Відкласти</string>
     <string name="lockscreen_snoozed_until">Відкладено до</string>
+    <string name="widget_glucose_chart">Графік глюкози</string>
+    <string name="permanent_glucose_notif">Глюкоза на екрані блокування</string>
+    <string name="permanent_notif_channel_name">Статус глюкози</string>
+    <string name="permanent_notif_channel_desc">Завжди видиме значення глюкози, тренд і час на екрані блокування</string>
+    <string name="trend_arrow_desc">Стрілка тренду</string>
+    <string name="glucose_graph_desc">Графік історії глюкози</string>
 </resources>

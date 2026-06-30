@@ -935,6 +935,7 @@ extern "C" JNIEXPORT void JNICALL fromjava(endstats) (JNIEnv *env, jclass clazz)
 	appcurve.begrenstijd() ;
 	}
 #include "net/watchserver/Getopts.hpp"
+#include "nanovg_rt.h"
 extern int getminutes(time_t tim);
 extern "C" JNIEXPORT jlong JNICALL fromjava(percentileEndtime) (JNIEnv *env, jclass clazz,jint days) {
  const uint32_t  endtime=appcurve.starttime+appcurve.duration;
@@ -945,6 +946,102 @@ extern "C" JNIEXPORT jlong JNICALL fromjava(percentileEndtime) (JNIEnv *env, jcl
  opts.start=endday-days*daysecs;
  return endtime;
  }
+
+/**
+ * Render an off-screen glucose curve for a home-screen widget using the
+ * NanoVG-RT (software raytracer) backend.
+ *
+ * Parameters (from Java):
+ *   widthPx    - pixel width of the target ImageView
+ *   heightPx   - pixel height of the target ImageView
+ *   durationSecs - how many seconds of history to show (e.g. 3*3600 = 3h)
+ *
+ * Returns a jintArray of ARGB pixels (widthPx * heightPx elements) ready for
+ * Bitmap.createBitmap(), or null if no data / not initialised.
+ *
+ * The returned array uses ARGB_8888 layout: each int = (A<<24)|(R<<16)|(G<<8)|B.
+ * NanoVG-RT writes RGBA bytes; we swap R and B to match Android's ARGB_8888.
+ */
+extern std::span<char> getCurveImage(int startpos, Getopts &opts);
+extern "C" JNIEXPORT jintArray JNICALL fromjava(getWidgetGraphBitmap)(
+        JNIEnv *env, jclass clazz,
+        jint widthPx, jint heightPx, jint durationSecs) {
+    if (!sensors || widthPx <= 0 || heightPx <= 0 || durationSecs <= 0)
+        return nullptr;
+
+    const uint32_t endtime = (uint32_t)time(nullptr);
+    Getopts opts;
+    opts.end   = endtime;
+    opts.start = endtime - (uint32_t)durationSecs;
+    opts.width  = widthPx;
+    opts.height = heightPx;
+    opts.darkmode = appcurve.invertcolors;
+    // Use the same display mode as the live graph
+    opts.streammode    = appcurve.showstream  != 0;
+    opts.scansmode     = appcurve.showscans   != 0;
+    opts.historymode   = appcurve.showhistories != 0;
+    opts.calibratedmode = appcurve.showcalibratedstream != 0;
+    opts.allvaluesmode  = appcurve.allvalues;
+
+    // getCurveImage encodes to PNG with a startpos prefix; we don't need the
+    // PNG — we only need raw pixels.  Use the RT path directly instead.
+    const double multiply = (double)heightPx / 800.0;
+    JCurve curveimage(settings->data()->unit);
+    curveimage.showstream  = appcurve.showstream;
+    curveimage.showscans   = appcurve.showscans;
+    curveimage.showhistories = appcurve.showhistories;
+    curveimage.showcalibratedstream = appcurve.showcalibratedstream;
+    curveimage.allvalues   = appcurve.allvalues;
+    curveimage.invertcolorsset(appcurve.invertcolors);
+    curveimage.dheight = heightPx;
+    curveimage.dwidth  = widthPx;
+    curveimage.setfontsize(
+        38.5 * multiply, 44.0 * multiply,
+        2.8  * multiply, 250.0 * multiply);
+
+    auto vg = nvgCreateRT(0, widthPx, heightPx);
+    if (!vg) return nullptr;
+    curveimage.initfont(vg);
+
+    const NVGcolor bgcol = *curveimage.getwhite();
+    nvgClearBackgroundRT(vg, bgcol.r, bgcol.g, bgcol.b, bgcol.a);
+    curveimage.startstepNVG(vg, widthPx, heightPx);
+
+    curveimage.starttime = opts.start;
+    curveimage.duration  = (uint32_t)durationSecs;
+    curveimage.displaycurve(vg, endtime);
+    nvgEndFrame(vg);
+
+    const unsigned char *rgba = nvgReadPixelsRT(vg);
+    if (!rgba) {
+        nvgDeleteRT(vg);
+        return nullptr;
+    }
+
+    // Convert RGBA8 → Android ARGB_8888 (swap R and B)
+    const int npixels = widthPx * heightPx;
+    jintArray result = env->NewIntArray(npixels);
+    if (!result) {
+        nvgDeleteRT(vg);
+        return nullptr;
+    }
+    jint *pixels = env->GetIntArrayElements(result, nullptr);
+    if (!pixels) {
+        nvgDeleteRT(vg);
+        return nullptr;
+    }
+    for (int i = 0; i < npixels; i++) {
+        const int base = i * 4;
+        const unsigned int r = rgba[base + 0];
+        const unsigned int g = rgba[base + 1];
+        const unsigned int b = rgba[base + 2];
+        const unsigned int a = rgba[base + 3];
+        pixels[i] = (int)((a << 24) | (r << 16) | (g << 8) | b);
+    }
+    env->ReleaseIntArrayElements(result, pixels, 0);
+    nvgDeleteRT(vg);
+    return result;
+}
 
 #endif
 extern "C" JNIEXPORT void  JNICALL   fromjava(setInvertColors)(JNIEnv *env, jclass cl,jboolean val) {

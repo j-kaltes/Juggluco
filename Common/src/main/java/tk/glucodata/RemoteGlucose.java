@@ -185,6 +185,19 @@ RemoteGlucose(float gl,float notwidth,float xper,int whiteonblack,boolean giveti
 }
 
 static final String stopalarmAction= "StopAlarm";
+
+/**
+ * Returns only the arrow+value Bitmap that arrowremote() paints into the shared canvas.
+ * Used by Notify.buildAlarmBigView() to populate alarm_big.xml without obtaining a
+ * full RemoteViews anchored to the wrong layout resource id.
+ */
+final Bitmap buildArrowValueBitmap(int kind, notGlucose glucose) {
+    // Run the full arrowremote paint path (alarm=true) — it populates glucoseBitmap
+    arrowremote(kind, glucose, true);
+    // Return a copy so the caller owns it independently of the shared canvas.
+    return glucoseBitmap.copy(glucoseBitmap.getConfig(), false);
+}
+
 final RemoteViews arrowremote(int kind, notGlucose glucose,final boolean alarm) {
    RemoteViews remoteViews= new RemoteViews(Applic.app.getPackageName(),alarm?R.layout.alarm:R.layout.arrowandvalue);
    if(alarm) {

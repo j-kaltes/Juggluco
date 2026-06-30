@@ -88,7 +88,14 @@ static PowerManager.WakeLock wakeLock =null;
                 }
              }
              theservice=this;
+             // Post the generic "Connecting" foreground notification first (satisfies Android's
+             // 5-second startForeground requirement), then immediately replace it with the
+             // glucose card (v7: foreground service notification cannot be grouped/collapsed).
              Notify.foregroundnot(this);
+             // Initialise persistent glucose notification channel (phone-only, no-op on wear).
+             // Called AFTER theservice is set so startForeground(NOTIF_ID) takes effect here
+             // and our glucose card becomes the foreground service notification immediately.
+             PermanentGlucoseNotification.init(this);
              return Service.START_STICKY;
             } 
         catch(Throwable e) {

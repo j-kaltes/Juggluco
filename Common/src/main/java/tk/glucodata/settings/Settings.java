@@ -129,6 +129,7 @@ import tk.glucodata.NumAlarm;
 import tk.glucodata.AlarmLockScreenActivity;
 import tk.glucodata.AlarmSnooze;
 import tk.glucodata.LockScreenWallpaper;
+import tk.glucodata.PermanentGlucoseNotification;
 import tk.glucodata.RemoteGlucose;
 import tk.glucodata.R;
 import tk.glucodata.Specific;
@@ -1595,15 +1596,36 @@ private    void mksettings(MainActivity context) {
         alarmLockscreen.setOnCheckedChangeListener((buttonView, isChecked) ->
                 AlarmLockScreenActivity.setEnabled(isChecked));
 
+        // ── Persistent glucose notification (lock-screen card) ────────────────
+        CheckDirectionBox permanentNotif = new CheckDirectionBox(context);
+        permanentNotif.setText(R.string.permanent_glucose_notif);
+        permanentNotif.setChecked(PermanentGlucoseNotification.isEnabled());
+        permanentNotif.setOnCheckedChangeListener((buttonView, isChecked) ->
+                PermanentGlucoseNotification.setEnabled(isChecked));
+
         // ── Widget background alpha picker ────────────────────────────────────
         Button widgetBgBtn = getbutton(context, R.string.widget_bg_alpha_title);
         updateWidgetBgBtnLabel(widgetBgBtn, context);
         widgetBgBtn.setOnClickListener(v -> showWidgetBgDialog(context, widgetBgBtn));
 
+        // ── Full-screen alarm permission button (Android 14+ only) ────────────
+        // On Android 14 (API 34) USE_FULL_SCREEN_INTENT requires explicit approval.
+        // Without it, AlarmLockScreenActivity never pops up during gaming / fullscreen
+        // apps.  Show a one-tap button that opens the system Settings page for it.
+        View[] rowDevEnhancements2;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE
+                && !AlarmLockScreenActivity.hasFullScreenIntentPermission()) {
+            Button fsPermBtn = getbutton(context, R.string.alarm_fullscreen_grant);
+            fsPermBtn.setOnClickListener(v ->
+                    AlarmLockScreenActivity.requestFullScreenIntentPermission(context));
+            rowDevEnhancements2 = new View[]{widgetBgBtn, fsPermBtn};
+        } else {
+            rowDevEnhancements2 = new View[]{widgetBgBtn};
+        }
+
         View[] rowglu=new View[]{floatconfig,calibration,glucosenotify};
 //        View[] rowglu=new View[]{floatconfig,glucosenotify};
-        View[] rowDevEnhancements  = new View[]{lockscreenWp, alarmLockscreen};
-        View[] rowDevEnhancements2 = new View[]{widgetBgBtn};
+        View[] rowDevEnhancements  = new View[]{lockscreenWp, alarmLockscreen, permanentNotif};
         views=new View[][]{row0, hasnfc?new View[]{nfcsound, globalscan,camera}:null,rowglu,rowDevEnhancements,rowDevEnhancements2,new View[]{exchanges,numalarm,alarmbut},numdis, row9};
         }
 

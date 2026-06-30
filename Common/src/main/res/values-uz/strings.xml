@@ -482,9 +482,19 @@ Endi transmitter data matrixini skanerlang."</string>
     <string name="snooze_not_active">Faol snouz yo\'q</string>
     <string name="snooze_buttons_title">Snouz tugmalari</string>
     <string name="snooze_buttons_summary">Signal ekranida ko\'rsatish uchun 3 tagacha snouz muddatini tanlang</string>
-    <string name="notif_snooze_min">%1$d daq snouz</string>
+    <string name="notif_snooze_label">Snouz</string>
+    <string name="notif_snooze_min">%1$d daq</string>
+    <string name="notif_stop_alarm">Signalni to\'xtatish</string>
+    <string name="alarm_fullscreen_grant">To\'liq ekran signal ruxsatini berish</string>
+
     <string name="lockscreen_dismiss">Signalni yopish</string>
     <string name="lockscreen_dismiss_hold">Yopish uchun ushlab turing</string>
     <string name="lockscreen_snooze">Snouz</string>
     <string name="lockscreen_snoozed_until">gacha snouz</string>
+    <string name="widget_glucose_chart">Glyukoza grafigi</string>
+    <string name="permanent_glucose_notif">Glyukoza qulf ekranida</string>
+    <string name="permanent_notif_channel_name">Glyukoza holati</string>
+    <string name="permanent_notif_channel_desc">Qulf ekranida doimo ko\'rinadigan glyukoza qiymati, trend va vaqt</string>
+    <string name="trend_arrow_desc">Trend o\'qi</string>
+    <string name="glucose_graph_desc">Glyukoza tarixi grafigi</string>
 </resources>

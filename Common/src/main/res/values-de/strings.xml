@@ -499,11 +499,21 @@
     <string name="snooze_not_active">Kein aktives Schlummern</string>
     <string name="snooze_buttons_title">Schlummertasten</string>
     <string name="snooze_buttons_summary">Wähle bis zu 3 Schlummerdauern für den Alarmbildschirm</string>
-    <string name="notif_snooze_min">Schlummern %1$d Min.</string>
+    <string name="notif_snooze_label">Schlummern</string>
+    <string name="notif_snooze_min">%1$d Min.</string>
+    <string name="notif_stop_alarm">Alarm stoppen</string>
+    <string name="alarm_fullscreen_grant">Vollbildberechtigung für Alarm erteilen</string>
+
     <string name="lockscreen_dismiss">Alarm schließen</string>
     <string name="lockscreen_dismiss_hold">Gedrückt halten zum Schließen</string>
     <string name="lockscreen_snooze">Schlummern</string>
     <string name="lockscreen_snoozed_until">Schlummern bis</string>
+    <string name="widget_glucose_chart">Glukose-Diagramm</string>
+    <string name="permanent_glucose_notif">Glukose auf Sperrbildschirm</string>
+    <string name="permanent_notif_channel_name">Glukosestatus</string>
+    <string name="permanent_notif_channel_desc">Immer sichtbarer Glukosewert, Trend und Zeit auf dem Sperrbildschirm</string>
+    <string name="trend_arrow_desc">Trendpfeil</string>
+    <string name="glucose_graph_desc">Glukose-Verlaufsgraph</string>
 </resources>
 
 

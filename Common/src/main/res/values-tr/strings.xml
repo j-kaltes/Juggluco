@@ -401,9 +401,19 @@
     <string name="snooze_not_active">Aktif erteleme yok</string>
     <string name="snooze_buttons_title">Erteleme düğmeleri</string>
     <string name="snooze_buttons_summary">Alarm ekranında gösterilecek 3\'e kadar erteleme süresi seçin</string>
-    <string name="notif_snooze_min">%1$d dak ertele</string>
+    <string name="notif_snooze_label">Ertele</string>
+    <string name="notif_snooze_min">%1$d dak</string>
+    <string name="notif_stop_alarm">Alarmı durdur</string>
+    <string name="alarm_fullscreen_grant">Tam ekran alarm izni ver</string>
+
     <string name="lockscreen_dismiss">Alarmı kapat</string>
     <string name="lockscreen_dismiss_hold">Kapatmak için basılı tut</string>
     <string name="lockscreen_snooze">Ertele</string>
     <string name="lockscreen_snoozed_until">Ertelendi:</string>
+    <string name="widget_glucose_chart">Glikoz Grafiği</string>
+    <string name="permanent_glucose_notif">Glikoz kilit ekranında</string>
+    <string name="permanent_notif_channel_name">Glikoz durumu</string>
+    <string name="permanent_notif_channel_desc">Kilit ekranında her zaman görünür glikoz değeri, trend ve zaman</string>
+    <string name="trend_arrow_desc">Trend oku</string>
+    <string name="glucose_graph_desc">Glikoz geçmiş grafiği</string>
 </resources>

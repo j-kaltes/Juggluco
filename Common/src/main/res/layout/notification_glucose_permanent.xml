@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Persistent glucose notification layout — always visible on lock screen.
+    Shows (collapsed): large glucose value (range-coloured) | trend arrow | Δ delta | elapsed time.
+    Shows (expanded / big content view): same top row + 3-hour glucose history graph below.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <!-- ── Top row: value | arrow | delta + time ── -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp">
+
+        <!-- Large glucose value -->
+        <TextView
+            android:id="@+id/pn_glucose"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:gravity="center_vertical"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="8sp"
+            android:autoSizeMaxTextSize="40sp"
+            android:autoSizeStepGranularity="1sp"
+            android:maxLines="1"
+            android:minWidth="48dp"
+            android:textStyle="bold"
+            android:shadowColor="#000000"
+            android:shadowRadius="3"
+            android:text="---" />
+
+        <!-- Trend arrow bitmap -->
+        <ImageView
+            android:id="@+id/pn_arrow"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/trend_arrow_desc" />
+
+        <!-- Right column: delta + elapsed time stacked -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center_vertical"
+            android:layout_marginStart="6dp">
+
+            <TextView
+                android:id="@+id/pn_delta"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:text="\u0394 --" />
+
+            <TextView
+                android:id="@+id/pn_time"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:textSize="14sp"
+                android:text="-- min" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- ── Graph row: 3-hour glucose history (shown only in the big/expanded view) ── -->
+    <ImageView
+        android:id="@+id/pn_graph"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:scaleType="fitXY"
+        android:adjustViewBounds="false"
+        android:visibility="gone"
+        android:contentDescription="@string/glucose_graph_desc" />
+
+</LinearLayout>

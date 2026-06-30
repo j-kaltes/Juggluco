@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Widget info for GlucoseTrendWidget: shows glucose value and trend arrow -->
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:description="@string/app_widget_description"
+    android:initialKeyguardLayout="@layout/glucose_trend_widget"
+    android:initialLayout="@layout/glucose_trend_widget"
+    android:minWidth="100dp"
+    android:minHeight="50dp"
+    android:minResizeWidth="60dp"
+    android:minResizeHeight="40dp"
+    android:previewImage="@drawable/widget"
+    android:resizeMode="horizontal|vertical"
+    android:targetCellWidth="2"
+    android:targetCellHeight="1"
+    android:updatePeriodMillis="200000"
+    android:widgetCategory="home_screen" />

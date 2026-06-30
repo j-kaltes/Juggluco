@@ -104,6 +104,20 @@
                 android:resource="@xml/glucose_delta_time_widget_info" />
         </receiver>
 
+        <!-- Widget: glucose value + trend arrow + Δ delta + elapsed time + 3h graph -->
+        <receiver
+            android:name=".ChartGlucoseWidget"
+            android:label="@string/widget_glucose_chart"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/chart_glucose_widget_info" />
+        </receiver>
+
         <!-- BroadcastReceiver for snooze notification actions -->
         <receiver
             android:name=".SnoozeReceiver"

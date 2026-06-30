@@ -192,8 +192,11 @@ public static void oldvalue(long time) {
     GlucoseTrendWidget.update();
     GlucoseTrendDeltaWidget.update();
     GlucoseDeltaTimeWidget.update();
+    ChartGlucoseWidget.update();
     // Push latest reading to lock-screen wallpaper (no-op when disabled)
     LockScreenWallpaper.update();
+    // Update persistent lock-screen glucose notification (no-op when disabled)
+    PermanentGlucoseNotification.update();
     }
 
 }

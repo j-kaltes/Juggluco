@@ -252,6 +252,17 @@ public static native void sethaslibrary(boolean val);
 public static native boolean gethaslibrary( );
 public static native int getScreenOrientation( );
 public static native void setScreenOrientation(int val);
+
+/**
+ * Render an off-screen glucose curve using the NanoVG-RT software backend.
+ * Returns a widthPx×heightPx ARGB_8888 int[] ready for Bitmap.createBitmap(),
+ * or null when no sensor data is available or the native library is not loaded.
+ *
+ * @param widthPx      pixel width of the destination ImageView
+ * @param heightPx     pixel height of the destination ImageView
+ * @param durationSecs seconds of history to show (e.g. 3*3600 for 3 hours)
+ */
+public static native int[] getWidgetGraphBitmap(int widthPx, int heightPx, int durationSecs);
 public static native boolean gethasgarmin( );
 public static native void sethasgarmin(boolean val);
 public static native void setusebluetooth(boolean val);

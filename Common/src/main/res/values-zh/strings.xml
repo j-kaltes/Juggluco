@@ -360,9 +360,19 @@
     <string name="snooze_not_active">没有活跃的贪睡</string>
     <string name="snooze_buttons_title">贪睡按钮</string>
     <string name="snooze_buttons_summary">选择最多3个贪睡时长显示在警报屏幕上</string>
-    <string name="notif_snooze_min">贪睡 %1$d 分钟</string>
+    <string name="notif_snooze_label">贪睡</string>
+    <string name="notif_snooze_min">%1$d 分钟</string>
+    <string name="notif_stop_alarm">停止警报</string>
+    <string name="alarm_fullscreen_grant">授予全屏警报权限</string>
+
     <string name="lockscreen_dismiss">关闭警报</string>
     <string name="lockscreen_dismiss_hold">长按关闭</string>
     <string name="lockscreen_snooze">贪睡</string>
     <string name="lockscreen_snoozed_until">贪睡至</string>
+    <string name="widget_glucose_chart">血糖图表</string>
+    <string name="permanent_glucose_notif">锁屏血糖显示</string>
+    <string name="permanent_notif_channel_name">血糖状态</string>
+    <string name="permanent_notif_channel_desc">锁屏上始终显示血糖值、趋势和时间</string>
+    <string name="trend_arrow_desc">趋势箭头</string>
+    <string name="glucose_graph_desc">血糖历史图表</string>
 </resources>

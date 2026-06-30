@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Widget info for ChartGlucoseWidget: shows glucose value, trend arrow, delta, time, and 3-hour history graph -->
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:description="@string/app_widget_description"
+    android:initialKeyguardLayout="@layout/chart_glucose_widget"
+    android:initialLayout="@layout/chart_glucose_widget"
+    android:minWidth="100dp"
+    android:minHeight="150dp"
+    android:minResizeWidth="60dp"
+    android:minResizeHeight="80dp"
+    android:previewImage="@drawable/widget"
+    android:resizeMode="horizontal|vertical"
+    android:targetCellWidth="2"
+    android:targetCellHeight="3"
+    android:updatePeriodMillis="200000"
+    android:widgetCategory="home_screen" />

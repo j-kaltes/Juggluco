@@ -484,10 +484,20 @@
     <string name="snooze_not_active">Geen actief sluimeren</string>
     <string name="snooze_buttons_title">Sluimerknoppen</string>
     <string name="snooze_buttons_summary">Kies tot 3 sluimerduren voor het alarmscherm</string>
-    <string name="notif_snooze_min">Sluimeren %1$d min</string>
+    <string name="notif_snooze_label">Sluimeren</string>
+    <string name="notif_snooze_min">%1$d min</string>
+    <string name="notif_stop_alarm">Alarm stoppen</string>
+    <string name="alarm_fullscreen_grant">Volledige scherm alarmmachtiging verlenen</string>
+
     <string name="lockscreen_dismiss">Alarm sluiten</string>
     <string name="lockscreen_dismiss_hold">Ingedrukt houden om te sluiten</string>
     <string name="lockscreen_snooze">Sluimeren</string>
     <string name="lockscreen_snoozed_until">Gesluimerd tot</string>
+    <string name="widget_glucose_chart">Glucose grafiek</string>
+    <string name="permanent_glucose_notif">Glucose op vergrendelscherm</string>
+    <string name="permanent_notif_channel_name">Glucosestatus</string>
+    <string name="permanent_notif_channel_desc">Altijd zichtbare glucosewaarde, trend en tijd op het vergrendelscherm</string>
+    <string name="trend_arrow_desc">Trendpijl</string>
+    <string name="glucose_graph_desc">Glucosegeschiedenisgraaf</string>
 </resources>
 

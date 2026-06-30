@@ -464,9 +464,19 @@
     <string name="snooze_not_active">Brak aktywnej drzemki</string>
     <string name="snooze_buttons_title">Przyciski drzemki</string>
     <string name="snooze_buttons_summary">Wybierz do 3 czasów drzemki do wyświetlenia na ekranie alarmu</string>
-    <string name="notif_snooze_min">Drzemka %1$d min</string>
+    <string name="notif_snooze_label">Drzemka</string>
+    <string name="notif_snooze_min">%1$d min</string>
+    <string name="notif_stop_alarm">Zatrzymaj alarm</string>
+    <string name="alarm_fullscreen_grant">Przyznaj uprawnienia do alarmu pełnoekranowego</string>
+
     <string name="lockscreen_dismiss">Odrzuć alarm</string>
     <string name="lockscreen_dismiss_hold">Przytrzymaj, aby odrzucić</string>
     <string name="lockscreen_snooze">Drzemka</string>
     <string name="lockscreen_snoozed_until">Drzemka do</string>
+    <string name="widget_glucose_chart">Wykres glukozy</string>
+    <string name="permanent_glucose_notif">Glukoza na ekranie blokady</string>
+    <string name="permanent_notif_channel_name">Status glukozy</string>
+    <string name="permanent_notif_channel_desc">Zawsze widoczna wartość glukozy, trend i czas na ekranie blokady</string>
+    <string name="trend_arrow_desc">Strzałka trendu</string>
+    <string name="glucose_graph_desc">Wykres historii glukozy</string>
 </resources>

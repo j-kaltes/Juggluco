@@ -352,9 +352,19 @@
     <string name="snooze_not_active">Ingen aktiv snooze</string>
     <string name="snooze_buttons_title">Snooze-knappar</string>
     <string name="snooze_buttons_summary">Välj upp till 3 snooze-varaktigheter att visa på larmskärmen</string>
-    <string name="notif_snooze_min">Snooze %1$d min</string>
+    <string name="notif_snooze_label">Snooze</string>
+    <string name="notif_snooze_min">%1$d min</string>
+    <string name="notif_stop_alarm">Stoppa larm</string>
+    <string name="alarm_fullscreen_grant">Bevilja helskärmslarmsbehörighet</string>
+
     <string name="lockscreen_dismiss">Stäng larm</string>
     <string name="lockscreen_dismiss_hold">Håll in för att stänga</string>
     <string name="lockscreen_snooze">Snooze</string>
     <string name="lockscreen_snoozed_until">Snooze till</string>
+    <string name="widget_glucose_chart">Glukosdiagram</string>
+    <string name="permanent_glucose_notif">Glukos på låsskärm</string>
+    <string name="permanent_notif_channel_name">Glukosstatus</string>
+    <string name="permanent_notif_channel_desc">Alltid synligt glukosvärde, trend och tid på låsskärmen</string>
+    <string name="trend_arrow_desc">Trendpil</string>
+    <string name="glucose_graph_desc">Graf över glukoshistorik</string>
 </resources>

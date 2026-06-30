@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Lock-screen wallpaper card layout.
+    Inspired by GDH wallpaper.xml + floating_widget.xml.
+
+    Dimensions:
+      500 x 480 dp (inflated/measured off-screen, then drawn to a bitmap).
+
+    Rows:
+      Row 1 (weight 3): glucose value (weight 3) | trend arrow (weight 2)
+      Row 2 (weight 1): elapsed time (left)       | Δ delta (right)
+      Row 3 (weight 2): 3-hour glucose history graph (hidden when not loaded)
+
+    Background: semi-transparent dark rounded rectangle so the user's wallpaper
+    photo shows through around the card  (#88000000 via lockscreen_wallpaper_bg).
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/lswp_root"
+    android:layout_width="500dp"
+    android:layout_height="480dp"
+    android:orientation="vertical"
+    android:background="@drawable/lockscreen_wallpaper_bg"
+    android:padding="12dp">
+
+    <!-- Row 1: glucose value + trend arrow -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/lswp_glucose"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:gravity="center"
+            android:maxLines="1"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="1sp"
+            android:autoSizeMaxTextSize="120sp"
+            android:autoSizeStepGranularity="1sp"
+            android:textStyle="bold"
+            android:text="---"
+            android:textColor="#FFFFFFFF" />
+
+        <ImageView
+            android:id="@+id/lswp_arrow"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:layout_marginStart="6dp"
+            android:scaleType="fitCenter"
+            android:contentDescription="Trend arrow" />
+
+    </LinearLayout>
+
+    <!-- Row 2: time (left) + delta (right) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/lswp_time"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:maxLines="1"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="1sp"
+            android:autoSizeMaxTextSize="28sp"
+            android:autoSizeStepGranularity="1sp"
+            android:textStyle="bold"
+            android:text="\uD83D\uDD52 0 min"
+            android:textColor="#FFFFFFFF" />
+
+        <TextView
+            android:id="@+id/lswp_delta"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:maxLines="1"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="1sp"
+            android:autoSizeMaxTextSize="28sp"
+            android:autoSizeStepGranularity="1sp"
+            android:textStyle="bold"
+            android:text="\u0394 +0.0"
+            android:textColor="#FFFFFFFF" />
+
+    </LinearLayout>
+
+    <!-- Row 3: 3-hour glucose history graph (shown only when native lib loaded) -->
+    <ImageView
+        android:id="@+id/lswp_graph"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:layout_marginTop="6dp"
+        android:scaleType="fitXY"
+        android:adjustViewBounds="false"
+        android:visibility="gone"
+        android:contentDescription="@string/glucose_graph_desc" />
+
+</LinearLayout>

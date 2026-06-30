@@ -503,9 +503,19 @@
     <string name="snooze_not_active">कोई सक्रिय स्नूज़ नहीं</string>
     <string name="snooze_buttons_title">स्नूज़ बटन</string>
     <string name="snooze_buttons_summary">अलार्म स्क्रीन पर दिखाने के लिए 3 तक स्नूज़ अवधि चुनें</string>
-    <string name="notif_snooze_min">%1$d मिनट स्नूज़</string>
+    <string name="notif_snooze_label">स्नूज़</string>
+    <string name="notif_snooze_min">%1$d मि.</string>
+    <string name="notif_stop_alarm">अलार्म बंद करें</string>
+    <string name="alarm_fullscreen_grant">पूर्ण-स्क्रीन अलार्म अनुमति दें</string>
+
     <string name="lockscreen_dismiss">अलार्म बंद करें</string>
     <string name="lockscreen_dismiss_hold">बंद करने के लिए दबाए रखें</string>
     <string name="lockscreen_snooze">स्नूज़</string>
     <string name="lockscreen_snoozed_until">तक स्नूज़ किया</string>
+    <string name="widget_glucose_chart">ग्लूकोज़ चार्ट</string>
+    <string name="permanent_glucose_notif">लॉक स्क्रीन पर ग्लूकोज़</string>
+    <string name="permanent_notif_channel_name">ग्लूकोज़ स्थिति</string>
+    <string name="permanent_notif_channel_desc">लॉक स्क्रीन पर हमेशा दिखने वाला ग्लूकोज़ मान, ट्रेंड और समय</string>
+    <string name="trend_arrow_desc">ट्रेंड तीर</string>
+    <string name="glucose_graph_desc">ग्लूकोज इतिहास ग्राफ</string>
 </resources>

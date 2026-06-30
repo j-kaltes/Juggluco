@@ -249,11 +249,21 @@
     <string name="snooze_not_active">Sem soneca ativa</string>
     <string name="snooze_buttons_title">Botões de soneca</string>
     <string name="snooze_buttons_summary">Escolha até 3 durações de soneca para exibir na tela de alarme</string>
-    <string name="notif_snooze_min">Soneca %1$d min</string>
+    <string name="notif_snooze_label">Soneca</string>
+    <string name="notif_snooze_min">%1$d min</string>
+    <string name="notif_stop_alarm">Parar alarme</string>
+    <string name="alarm_fullscreen_grant">Conceder permissão de alarme em tela cheia</string>
+
     <string name="lockscreen_dismiss">Dispensar alarme</string>
     <string name="lockscreen_dismiss_hold">Segure para dispensar</string>
     <string name="lockscreen_snooze">Soneca</string>
     <string name="lockscreen_snoozed_until">Soneca até</string>
+    <string name="widget_glucose_chart">Gráfico de glicose</string>
+    <string name="permanent_glucose_notif">Glicose na tela de bloqueio</string>
+    <string name="permanent_notif_channel_name">Status de glicose</string>
+    <string name="permanent_notif_channel_desc">Valor de glicose, tendência e tempo sempre visíveis na tela de bloqueio</string>
+    <string name="trend_arrow_desc">Seta de tendência</string>
+    <string name="glucose_graph_desc">Gráfico do histórico de glicose</string>
 </resources>
 
 
