@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Full-screen lock-screen alarm layout for Juggluco.
+    Modelled after GlucoDataHandler's activity_lockscreen.xml.
+
+    Structure:
+      · Top area  — alarm label, large glucose value + trend arrow, Δ delta, elapsed time
+      · Middle    — spacer
+      · Bottom    — Hold-to-dismiss button + Snooze-reveal button
+                    Snooze duration panel (hidden until "Snooze" is tapped):
+                    up to 3 configurable snooze buttons
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/alarm_lockscreen_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:background="#CC121212"
+    android:padding="20dp">
+
+    <!-- ── top data area ─────────────────────────────────────────────────── -->
+
+    <!-- Alarm type label  e.g. "⚠ HIGH" -->
+    <TextView
+        android:id="@+id/lockscreen_alarm_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:textSize="22sp"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        android:text="⚠ Alarm" />
+
+    <!-- Glucose value + trend arrow on the same row -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginTop="12dp">
+
+        <!-- Large glucose value, range-coloured -->
+        <TextView
+            android:id="@+id/lockscreen_glucose_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="80sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:text="---" />
+
+        <!-- Trend arrow — Unicode character, same colour as glucose value -->
+        <TextView
+            android:id="@+id/lockscreen_trend_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:textSize="48sp"
+            android:textColor="#FFFFFF"
+            android:text="→" />
+
+    </LinearLayout>
+
+    <!-- Δ delta — same colour as glucose value -->
+    <TextView
+        android:id="@+id/lockscreen_delta"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:textColor="#DDDDDD"
+        android:text="\u0394 --" />
+
+    <!-- Elapsed time — always bright/white and bold -->
+    <TextView
+        android:id="@+id/lockscreen_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        android:text="🕒 0 min" />
+
+    <!-- Active-snooze status line (hidden unless snooze is running) -->
+    <TextView
+        android:id="@+id/lockscreen_snooze_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textSize="16sp"
+        android:textColor="#80CCFF"
+        android:visibility="gone"
+        android:text="Snoozed until --:--" />
+
+    <!-- ── 3-hour glucose history graph ────────────────────────────────── -->
+    <ImageView
+        android:id="@+id/lockscreen_graph"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="12dp"
+        android:scaleType="fitXY"
+        android:visibility="gone" />
+
+
+    <!-- ── snooze duration panel (hidden; revealed by btnSnoozeReveal) ───── -->
+    <LinearLayout
+        android:id="@+id/lockscreen_snooze_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone"
+        android:layout_marginBottom="8dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="#CCCCCC"
+            android:layout_marginBottom="8dp"
+            android:text="@string/lockscreen_snooze" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <!-- Up to 3 snooze buttons — each takes an equal share of the full width
+                 so the label (e.g. "120 min") never overflows or gets clipped. -->
+            <Button
+                android:id="@+id/lockscreen_snooze_btn1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="#005CCC"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:visibility="gone"
+                android:layout_marginEnd="8dp" />
+
+            <Button
+                android:id="@+id/lockscreen_snooze_btn2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="#005CCC"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:visibility="gone"
+                android:layout_marginEnd="8dp" />
+
+            <Button
+                android:id="@+id/lockscreen_snooze_btn3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="#005CCC"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:visibility="gone" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- ── Snooze-reveal button ───────────────────────────────────────────── -->
+    <Button
+        android:id="@+id/lockscreen_snooze_reveal_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:textSize="18sp"
+        android:text="@string/lockscreen_snooze"
+        android:backgroundTint="#CC1A237E"
+        android:textColor="#FFFFFF" />
+
+    <!-- ── Hold-to-dismiss container ─────────────────────────────────────── -->
+    <!--
+        Press-and-hold gesture: the ProgressBar grows behind the button text
+        while the user holds down. Releasing before completion cancels.
+        Implemented entirely in AlarmLockScreenActivity without 3rd-party libs.
+    -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp">
+
+        <!-- Progress fill — grows left-to-right as the user holds -->
+        <ProgressBar
+            android:id="@+id/lockscreen_dismiss_progress"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:progressTint="#005CCC"
+            android:progressBackgroundTint="#00000000"
+            android:max="100"
+            android:progress="0" />
+
+        <!-- The button itself, transparent background so progress shows through -->
+        <Button
+            android:id="@+id/lockscreen_dismiss_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:text="@string/lockscreen_dismiss"
+            android:backgroundTint="#CC003388"
+            android:textColor="#FFFFFF" />
+
+    </FrameLayout>
+
+</LinearLayout>

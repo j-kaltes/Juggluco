@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Layout for ChartGlucoseWidget — "short" variant.
+    Used when cell is narrow (≤ 110 dp wide) or shallow (≤ 70 dp tall).
+    Shows only: glucose value (left) | trend arrow (right)
+    No graph, no time, no delta — same structure as GlucoseTrendWidget.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/cgw_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:background="@android:color/transparent">
+
+    <TextView
+        android:id="@+id/cgw_glucose"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="3"
+        android:layout_marginLeft="6dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:gravity="center"
+        android:maxLines="1"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="1sp"
+        android:autoSizeMaxTextSize="120sp"
+        android:autoSizeStepGranularity="1sp"
+        android:text="---" />
+
+    <ImageView
+        android:id="@+id/cgw_arrow"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:scaleType="fitCenter"
+        android:contentDescription="Trend" />
+
+</LinearLayout>

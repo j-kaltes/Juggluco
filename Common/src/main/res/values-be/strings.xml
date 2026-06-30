@@ -346,4 +346,36 @@
  <string name="phone">тэлефон</string>
  <string name="connectionl"></string>
 
+    <string name="lockscreen_wallpaper">Шпалеры экрана блакіроўкі</string>
+    <string name="alarm_lockscreen">Будзільнік на экране блакіроўкі</string>
+    <string name="widget_bg_alpha_title">Фон віджэта</string>
+    <string name="widget_bg_alpha_none">Няма (празрысты)</string>
+    <string name="widget_bg_alpha_light">Светлы (25%)</string>
+    <string name="widget_bg_alpha_medium">Сярэдні (50%)</string>
+    <string name="widget_bg_alpha_dark">Цёмны (75%)</string>
+    <string name="snooze_cancel">Адмяніць адкладанне</string>
+    <string name="snooze_30">30 хвілін</string>
+    <string name="snooze_60">60 хвілін</string>
+    <string name="snooze_90">90 хвілін</string>
+    <string name="snooze_120">120 хвілін</string>
+    <string name="snooze_max_3">Максімум 3 доўгасці дазволена</string>
+    <string name="snooze_cancelled">Адкладанне адменена</string>
+    <string name="snooze_not_active">Няма актыўнага адкладання</string>
+    <string name="snooze_buttons_title">Кнопкі адкладання</string>
+    <string name="snooze_buttons_summary">Выберыце да 3 доўгасцей адкладання для адлюстравання на экране будзільніка</string>
+    <string name="notif_snooze_label">Адкласці</string>
+    <string name="notif_snooze_min">%1$d хв</string>
+    <string name="notif_stop_alarm">Адкласці трывогу</string>
+    <string name="alarm_fullscreen_grant">Выдаць дазвол на паўнаэкранны будільнік</string>
+
+    <string name="lockscreen_dismiss">Закрыць будзільнік</string>
+    <string name="lockscreen_dismiss_hold">Утрымлівайце для закрыцця</string>
+    <string name="lockscreen_snooze">Адкласці</string>
+    <string name="lockscreen_snoozed_until">Адкладзена да</string>
+    <string name="widget_glucose_chart">Графік глюкозы</string>
+    <string name="permanent_glucose_notif">Глюкоза на экране блакіроўкі</string>
+    <string name="permanent_notif_channel_name">Статус глюкозы</string>
+    <string name="permanent_notif_channel_desc">Заўсёды бачнае значэнне глюкозы, трэнд і час на экране блакіроўкі</string>
+    <string name="trend_arrow_desc">Стрэлка трэнду</string>
+    <string name="glucose_graph_desc">Графік гісторыі глюкозы</string>
 </resources>

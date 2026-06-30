@@ -101,17 +101,19 @@ static private void updateAppWidget(Context context, AppWidgetManager appWidgetM
       final var now=System.currentTimeMillis();
       final var time=SuperGattCallback.previousglucose.time;
       if((now-time)>oldage) {
-         final String tformat= timef.format(time);
-         String message = "\n  "+context.getString(R.string.nonewvalue) + tformat;
-         views=remoteMessage(message);
-         id=R.id.content;
+         // Stale: show last value with a strikethrough instead of a plain text message
+         views = remote.staleRemote(SuperGattCallback.previousglucose);
+         // id stays R.id.arrowandvalue — tap still opens the app
       }
       else {
          views = remote.arrowremote(50,SuperGattCallback.previousglucose,false);
          }
       }
    else {
-         views=remoteMessage("\n  "+context.getString(R.string.novalue));
+         RemoteViews noDataViews = new RemoteViews(Applic.app.getPackageName(), R.layout.text);
+         noDataViews.setTextColor(R.id.content, android.graphics.Color.RED);
+         noDataViews.setTextViewText(R.id.content, "\n  - -");
+         views = noDataViews;
          id=R.id.content;
          }
 
@@ -154,11 +156,20 @@ public static void oldvalue(long time) {
    int ids[] = manage.getAppWidgetIds(new ComponentName(Applic.app, cl));
    if(ids.length>0) {
       {if(doLog) {Log.i(LOG_ID,"oldvalue widgets");};};
-      final String tformat= timef.format(time);
-      String message = Applic.getContext().getString(R.string.nonewvalue) + tformat;
-      var views=remoteMessage(message);
-      for(var id:ids) {
-         showviews(views,R.id.content,manage,id);
+      // Use strikethrough rendering for stale state
+      if(remote != null && SuperGattCallback.previousglucose != null) {
+         var views = remote.staleRemote(SuperGattCallback.previousglucose);
+         for(var id:ids) {
+            showviews(views, R.id.arrowandvalue, manage, id);
+            }
+         }
+      else {
+         final String tformat= timef.format(time);
+         String message = Applic.getContext().getString(R.string.nonewvalue) + tformat;
+         var views=remoteMessage(message);
+         for(var id:ids) {
+            showviews(views,R.id.content,manage,id);
+            }
          }
       }
    else {
@@ -177,6 +188,15 @@ public static void oldvalue(long time) {
       else
          used=false;
       }
+    // Update all additional widgets
+    GlucoseTrendWidget.update();
+    GlucoseTrendDeltaWidget.update();
+    GlucoseDeltaTimeWidget.update();
+    ChartGlucoseWidget.update();
+    // Push latest reading to lock-screen wallpaper (no-op when disabled)
+    LockScreenWallpaper.update();
+    // Update persistent lock-screen glucose notification (no-op when disabled)
+    PermanentGlucoseNotification.update();
     }
 
 }

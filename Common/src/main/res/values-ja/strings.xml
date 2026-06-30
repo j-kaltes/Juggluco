@@ -488,4 +488,36 @@
     <string name="jugglucoupdate">更新時刻</string>
 
 
+    <string name="lockscreen_wallpaper">ロック画面の壁紙</string>
+    <string name="alarm_lockscreen">ロック画面のアラーム</string>
+    <string name="widget_bg_alpha_title">ウィジェット背景</string>
+    <string name="widget_bg_alpha_none">なし（透明）</string>
+    <string name="widget_bg_alpha_light">薄い（25%）</string>
+    <string name="widget_bg_alpha_medium">中間（50%）</string>
+    <string name="widget_bg_alpha_dark">暗い（75%）</string>
+    <string name="snooze_cancel">スヌーズをキャンセル</string>
+    <string name="snooze_30">30分</string>
+    <string name="snooze_60">60分</string>
+    <string name="snooze_90">90分</string>
+    <string name="snooze_120">120分</string>
+    <string name="snooze_max_3">最大3つの期間が許可されます</string>
+    <string name="snooze_cancelled">スヌーズがキャンセルされました</string>
+    <string name="snooze_not_active">アクティブなスヌーズはありません</string>
+    <string name="snooze_buttons_title">スヌーズボタン</string>
+    <string name="snooze_buttons_summary">アラーム画面に表示するスヌーズ期間を最大3つ選択してください</string>
+    <string name="notif_snooze_label">スヌーズ</string>
+    <string name="notif_snooze_min">%1$d分</string>
+    <string name="notif_stop_alarm">アラームを止める</string>
+    <string name="alarm_fullscreen_grant">全画面アラームの許可を付与</string>
+
+    <string name="lockscreen_dismiss">アラームを閉じる</string>
+    <string name="lockscreen_dismiss_hold">押し続けて閉じる</string>
+    <string name="lockscreen_snooze">スヌーズ</string>
+    <string name="lockscreen_snoozed_until">までスヌーズ</string>
+    <string name="widget_glucose_chart">グルコースチャート</string>
+    <string name="permanent_glucose_notif">ロック画面に血糖値を表示</string>
+    <string name="permanent_notif_channel_name">血糖値状態</string>
+    <string name="permanent_notif_channel_desc">ロック画面に血糖値・トレンド・経過時間を常時表示</string>
+    <string name="trend_arrow_desc">トレンド矢印</string>
+    <string name="glucose_graph_desc">血糖値履歴グラフ</string>
 </resources>

@@ -297,4 +297,36 @@
 <string name="enternums">Enter amounts on</string>
 <string name="directsensor">Connexion directe capteur-</string>
 <string name="connectionl"></string>
+    <string name="lockscreen_wallpaper">Fond d\'écran de verrouillage</string>
+    <string name="alarm_lockscreen">Alarme sur écran de verrouillage</string>
+    <string name="widget_bg_alpha_title">Arrière-plan du widget</string>
+    <string name="widget_bg_alpha_none">Aucun (transparent)</string>
+    <string name="widget_bg_alpha_light">Clair (25%)</string>
+    <string name="widget_bg_alpha_medium">Moyen (50%)</string>
+    <string name="widget_bg_alpha_dark">Sombre (75%)</string>
+    <string name="snooze_cancel">Annuler la mise en veille</string>
+    <string name="snooze_30">30 minutes</string>
+    <string name="snooze_60">60 minutes</string>
+    <string name="snooze_90">90 minutes</string>
+    <string name="snooze_120">120 minutes</string>
+    <string name="snooze_max_3">Maximum 3 durées autorisées</string>
+    <string name="snooze_cancelled">Mise en veille annulée</string>
+    <string name="snooze_not_active">Aucune mise en veille active</string>
+    <string name="snooze_buttons_title">Boutons de mise en veille</string>
+    <string name="snooze_buttons_summary">Choisissez jusqu\'à 3 durées de mise en veille à afficher sur l\'écran d\'alarme</string>
+    <string name="notif_snooze_label">Veille</string>
+    <string name="notif_snooze_min">%1$d min</string>
+    <string name="notif_stop_alarm">Arrêter l\'alarme</string>
+    <string name="alarm_fullscreen_grant">Autoriser l\'alarme plein écran</string>
+
+    <string name="lockscreen_dismiss">Ignorer l\'alarme</string>
+    <string name="lockscreen_dismiss_hold">Maintenir pour ignorer</string>
+    <string name="lockscreen_snooze">Mettre en veille</string>
+    <string name="lockscreen_snoozed_until">En veille jusqu\'à</string>
+    <string name="widget_glucose_chart">Graphique glucose</string>
+    <string name="permanent_glucose_notif">Glucose sur écran verrouillé</string>
+    <string name="permanent_notif_channel_name">Statut glucose</string>
+    <string name="permanent_notif_channel_desc">Valeur de glucose, tendance et heure toujours visibles sur l\'écran verrouillé</string>
+    <string name="trend_arrow_desc">Flèche de tendance</string>
+    <string name="glucose_graph_desc">Graphique d\'historique de glycémie</string>
 </resources>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Expanded (big-content) view for the alarm notification.
+    Shows the same arrow+value row as alarm.xml, then a 3-hour glucose history
+    graph below it, and the snooze action buttons underneath (supplied as
+    Notification.Action entries by the builder, not in this layout).
+-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/notification"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <!-- ── Top row: arrow+value bitmap | Stop button ── -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/arrowandvalue"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@+id/stopalarm"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="0dp"
+            android:paddingTop="0dp"
+            android:paddingBottom="0dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="0dp" />
+
+        <Button
+            android:id="@+id/stopalarm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:text="@string/shortoff" />
+
+    </RelativeLayout>
+
+    <!-- ── Graph row: 3-hour glucose history (shown only in expanded view) ── -->
+    <ImageView
+        android:id="@+id/alarm_graph"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:scaleType="fitXY"
+        android:adjustViewBounds="false"
+        android:visibility="gone"
+        android:contentDescription="@string/glucose_graph_desc" />
+
+</LinearLayout>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Background drawable for the lock-screen wallpaper card.
+    Semi-transparent dark rounded rectangle so the user's lock-screen
+    photo remains visible around the card.
+
+    #88000000 = ~53 % alpha black (close to GDH's #55000000 but slightly more
+    opaque so the card is clearly readable against any wallpaper).
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="#88000000" />
+    <corners android:radius="24dp" />
+</shape>

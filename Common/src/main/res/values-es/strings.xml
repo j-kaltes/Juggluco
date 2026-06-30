@@ -448,4 +448,36 @@
     <string name="failed">falló</string>
     <string name="successful">exitoso</string>
     <string name="use">Activar</string>
+    <string name="lockscreen_wallpaper">Fondo de pantalla de bloqueo</string>
+    <string name="alarm_lockscreen">Alarma en pantalla de bloqueo</string>
+    <string name="widget_bg_alpha_title">Fondo del widget</string>
+    <string name="widget_bg_alpha_none">Ninguno (transparente)</string>
+    <string name="widget_bg_alpha_light">Claro (25%)</string>
+    <string name="widget_bg_alpha_medium">Medio (50%)</string>
+    <string name="widget_bg_alpha_dark">Oscuro (75%)</string>
+    <string name="snooze_cancel">Cancelar posponer</string>
+    <string name="snooze_30">30 minutos</string>
+    <string name="snooze_60">60 minutos</string>
+    <string name="snooze_90">90 minutos</string>
+    <string name="snooze_120">120 minutos</string>
+    <string name="snooze_max_3">Máximo 3 duraciones permitidas</string>
+    <string name="snooze_cancelled">Posponer cancelado</string>
+    <string name="snooze_not_active">Sin posponer activo</string>
+    <string name="snooze_buttons_title">Botones de posponer</string>
+    <string name="snooze_buttons_summary">Elige hasta 3 duraciones de posponer para mostrar en la pantalla de alarma</string>
+    <string name="notif_snooze_label">Posponer</string>
+    <string name="notif_snooze_min">%1$d min</string>
+    <string name="notif_stop_alarm">Detener alarma</string>
+    <string name="alarm_fullscreen_grant">Conceder permiso de alarma en pantalla completa</string>
+
+    <string name="lockscreen_dismiss">Descartar alarma</string>
+    <string name="lockscreen_dismiss_hold">Mantén para descartar</string>
+    <string name="lockscreen_snooze">Posponer</string>
+    <string name="lockscreen_snoozed_until">Pospuesto hasta</string>
+    <string name="widget_glucose_chart">Gráfico de glucosa</string>
+    <string name="permanent_glucose_notif">Glucosa en pantalla de bloqueo</string>
+    <string name="permanent_notif_channel_name">Estado de glucosa</string>
+    <string name="permanent_notif_channel_desc">Valor de glucosa, tendencia y tiempo siempre visibles en la pantalla de bloqueo</string>
+    <string name="trend_arrow_desc">Flecha de tendencia</string>
+    <string name="glucose_graph_desc">Gráfico de historial de glucosa</string>
 </resources>

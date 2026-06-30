@@ -392,6 +392,38 @@
     <string name="autoqr">Auto QR</string>
     
     <string name="googlescan">Google scan</string>
+    <string name="lockscreen_wallpaper">Lock screen wallpaper</string>
+    <string name="alarm_lockscreen">Alarm on lock screen</string>
+    <string name="widget_bg_alpha_title">Widget background</string>
+    <string name="widget_bg_alpha_none">None (transparent)</string>
+    <string name="widget_bg_alpha_light">Light (25%)</string>
+    <string name="widget_bg_alpha_medium">Medium (50%)</string>
+    <string name="widget_bg_alpha_dark">Dark (75%)</string>
+    <string name="snooze_cancel">Cancel snooze</string>
+    <string name="snooze_30">30 minutes</string>
+    <string name="snooze_60">60 minutes</string>
+    <string name="snooze_90">90 minutes</string>
+    <string name="snooze_120">120 minutes</string>
+    <string name="snooze_max_3">Maximum 3 durations allowed</string>
+    <string name="snooze_cancelled">Snooze cancelled</string>
+    <string name="snooze_not_active">No active snooze</string>
+    <string name="snooze_buttons_title">Snooze buttons</string>
+    <string name="snooze_buttons_summary">Choose up to 3 snooze durations to show on the alarm screen</string>
+    <!-- Notification sub-text label shown above the snooze minute buttons -->
+    <string name="notif_snooze_label">Snooze</string>
+    <!-- Notification action buttons: just the minute value, e.g. "30 min" -->
+    <string name="notif_snooze_min">%1$d min</string>
+    <!-- Notification action button: stop the alarm immediately (single tap) -->
+    <string name="notif_stop_alarm">Stop alarm</string>
+    <!-- Settings button: open system page to grant USE_FULL_SCREEN_INTENT (Android 14+) -->
+    <string name="alarm_fullscreen_grant">Grant full-screen alarm permission</string>
+
+    <!-- Persistent lock-screen glucose notification -->
+    <string name="permanent_glucose_notif">Glucose on lock screen</string>
+    <string name="permanent_notif_channel_name">Glucose status</string>
+    <string name="permanent_notif_channel_desc">Always-visible glucose value, trend and time on the lock screen</string>
+    <string name="trend_arrow_desc">Trend arrow</string>
+    <string name="glucose_graph_desc">Glucose history graph</string>
     <string name="usedweight">WARNING: weight (%.1f) not 0</string>
 
  <string name="verylowglucose">" Very LOW glucose!"</string>

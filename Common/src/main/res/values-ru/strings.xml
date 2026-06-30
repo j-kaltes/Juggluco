@@ -483,5 +483,37 @@
     <string name="light">Светлая</string>
     <string name="dark">Темная</string>
     <string name="apply">Применить</string>
+    <string name="lockscreen_wallpaper">Обои экрана блокировки</string>
+    <string name="alarm_lockscreen">Будильник на экране блокировки</string>
+    <string name="widget_bg_alpha_title">Фон виджета</string>
+    <string name="widget_bg_alpha_none">Нет (прозрачный)</string>
+    <string name="widget_bg_alpha_light">Светлый (25%)</string>
+    <string name="widget_bg_alpha_medium">Средний (50%)</string>
+    <string name="widget_bg_alpha_dark">Тёмный (75%)</string>
+    <string name="snooze_cancel">Отменить отложить</string>
+    <string name="snooze_30">30 минут</string>
+    <string name="snooze_60">60 минут</string>
+    <string name="snooze_90">90 минут</string>
+    <string name="snooze_120">120 минут</string>
+    <string name="snooze_max_3">Максимум 3 продолжительности разрешено</string>
+    <string name="snooze_cancelled">Отложить отменено</string>
+    <string name="snooze_not_active">Нет активного откладывания</string>
+    <string name="snooze_buttons_title">Кнопки откладывания</string>
+    <string name="snooze_buttons_summary">Выберите до 3 продолжительностей для отображения на экране будильника</string>
+    <string name="notif_snooze_label">Отложить</string>
+    <string name="notif_snooze_min">%1$d мин</string>
+    <string name="notif_stop_alarm">Остановить будильник</string>
+    <string name="alarm_fullscreen_grant">Разрешить полноэкранный будильник</string>
+
+    <string name="lockscreen_dismiss">Закрыть будильник</string>
+    <string name="lockscreen_dismiss_hold">Удерживайте для закрытия</string>
+    <string name="lockscreen_snooze">Отложить</string>
+    <string name="lockscreen_snoozed_until">Отложено до</string>
+    <string name="widget_glucose_chart">График глюкозы</string>
+    <string name="permanent_glucose_notif">Глюкоза на экране блокировки</string>
+    <string name="permanent_notif_channel_name">Статус глюкозы</string>
+    <string name="permanent_notif_channel_desc">Всегда видимое значение глюкозы, тренд и время на экране блокировки</string>
+    <string name="trend_arrow_desc">Стрелка тренда</string>
+    <string name="glucose_graph_desc">График истории глюкозы</string>
 </resources>
 

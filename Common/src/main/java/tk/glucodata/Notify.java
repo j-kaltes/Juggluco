@@ -27,6 +27,8 @@ import static android.content.Context.NOTIFICATION_SERVICE;
 import static android.content.Context.VIBRATOR_SERVICE;
 import static android.graphics.Color.BLACK;
 import static android.graphics.Color.WHITE;
+import android.graphics.Bitmap;
+import android.view.View;
 import static android.media.AudioAttributes.USAGE_NOTIFICATION;
 import static android.media.AudioAttributes.USAGE_ASSISTANCE_SONIFICATION;
 import static java.lang.String.format;
@@ -580,6 +582,11 @@ static void stopGlucoseAlarm() {
                 else
                     doTurnFocusoff();
 
+                // Cancel the separate alarm notification (posted on glucosealarmid to
+                // allow setFullScreenIntent to fire — see arrowplacelargenotification).
+                if (!isWearable && glucosealarm) {
+                    notificationManager.cancel(glucosealarmid);
+                }
                 if(glucosealarm) overwriteglucose(kind);
                 setisalarm(false);
 
@@ -807,67 +814,189 @@ private void  makeseparatenotification(float glvalue,String message,notGlucose g
         }
     }
 static public boolean alertseparate=false;
-    private Notification  makearrownotification(int kind,float glvalue,String message,notGlucose glucose,String type,boolean once) {
 
-        var intent =mkpending();
-        var GluNotBuilder=mkbuilderintent(type,intent);
-        if(!alertseparate) {
-            GluNotBuilder.setDeleteIntent(DeleteReceiver.getDeleteIntent());
-            }
-        {if(doLog) {Log.i(LOG_ID,"makearrownotification setOnlyAlertOnce("+once+") "+glucose.value);};};
-
-        //var draw= GlucoseDraw.getgludraw(glvalue);
-
-          setIcon(GluNotBuilder,glvalue,glucose.sensorgen2);
-//        GluNotBuilder.setSmallIcon(draw). 
-        GluNotBuilder.setContentTitle(message).setOnlyAlertOnce(once);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            GluNotBuilder.setVisibility(VISIBILITY_PUBLIC);
-            }
-        final boolean glucosealarm=kind<2||kind>4;
-        if(!isWearable) {
-              if(Build.VERSION.SDK_INT  >= 24) {
-                GluNotBuilder.setStyle(new Notification.DecoratedCustomViewStyle());
-        //    GluNotBuilder.setStyle( new Notification.DecoratedMediaCustomViewStyle());
-            }
-            GluNotBuilder.setShowWhen(true);
-            RemoteViews remoteViews=arrowNotify.arrowremote(kind,glucose,glucosealarm&&!once);
-            if(whiteonblack) {
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    GluNotBuilder.setColorized(true);
-                    GluNotBuilder.setColor(BLACK);
-                    }
-                else
-                    remoteViews.setInt(arrowandvalue, "setBackgroundColor", BLACK);
-                }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                GluNotBuilder.setCustomContentView(remoteViews);
-            } else
-                GluNotBuilder.setContent(remoteViews);
-            }
-    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        GluNotBuilder.setTimeoutAfter(glucosetimeout);
-    }
-    if(isWearable) {GluNotBuilder.setAutoCancel(true);}
-    if(once)
-        GluNotBuilder.setPriority(Notification.PRIORITY_DEFAULT);
-    else  {
-    //    GluNotBuilder.setPriority(Notification.PRIORITY_DEFAULT);
-        GluNotBuilder.setPriority(Notification.PRIORITY_HIGH);
-//        GluNotBuilder.setPriority(Notification.PRIORITY_MAX);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            GluNotBuilder.setCategory(Notification.CATEGORY_ALARM);
+    /**
+     * Builds the big (expanded) RemoteViews for an alarm notification:
+     * same arrow+value row as alarm.xml plus a 3-hour graph below.
+     * Snooze action buttons are added by the builder (Notification.Action),
+     * not inside this layout.
+     */
+    private RemoteViews buildAlarmBigView(int kind, notGlucose glucose) {
+        final RemoteViews rv = new RemoteViews(app.getPackageName(), R.layout.alarm_big);
+        // ── Stop-alarm button click intent (same as arrowremote for alarm layout) ──
+        android.content.Intent closeintent = new android.content.Intent(app, NumAlarm.class);
+        closeintent.setAction(RemoteGlucose.stopalarmAction);
+        android.app.PendingIntent closepending = android.app.PendingIntent.getBroadcast(
+                app, stopalarmrequest, closeintent,
+                android.app.PendingIntent.FLAG_UPDATE_CURRENT | penmutable);
+        rv.setOnClickPendingIntent(R.id.stopalarm, closepending);
+        // ── Arrow+value bitmap ──
+        // buildArrowValueBitmap() re-runs the paint path and returns a copy of the
+        // shared canvas bitmap.  We set it directly on alarm_big's arrowandvalue ImageView.
+        if (arrowNotify != null && glucose != null && glucose.value != null) {
+            rv.setImageViewBitmap(R.id.arrowandvalue,
+                    arrowNotify.buildArrowValueBitmap(kind, glucose));
         }
+        // ── Graph ──
+        if (Applic.Nativesloaded) {
+            try {
+                final DisplayMetrics dm = app.getResources().getDisplayMetrics();
+                final int wPx = Math.round(dm.widthPixels * 0.95f);
+                final int hPx = Math.round(100 * dm.density);
+                if (wPx >= 60 && hPx >= 40) {
+                    final int[] pixels = Natives.getWidgetGraphBitmap(wPx, hPx, 3 * 3600);
+                    if (pixels != null) {
+                        final Bitmap graphBmp = Bitmap.createBitmap(pixels, wPx, hPx,
+                                android.graphics.Bitmap.Config.ARGB_8888);
+                        rv.setImageViewBitmap(R.id.alarm_graph, graphBmp);
+                        rv.setViewVisibility(R.id.alarm_graph, View.VISIBLE);
+                    }
+                }
+            } catch (Throwable t) {
+                Log.stack(LOG_ID, "buildAlarmBigView graph", t);
+            }
+        }
+        return rv;
     }
 
-     {if(doLog) {Log.i(LOG_ID,(once?"":"not ")+"only once");};};
+    private Notification  makearrownotification(int kind,float glvalue,String message,notGlucose glucose,String type,boolean once) {
+    
+            // For active alarms on phone, tapping the notification opens AlarmLockScreenActivity
+            // (same screen as the full-screen intent) so the snooze buttons are always accessible.
+            final boolean glucosealarmForContent = (kind<2||kind>4);
+            final var intent = (!isWearable && !once && glucosealarmForContent && AlarmLockScreenActivity.isEnabled())
+                    ? mkAlarmLockScreenPending(kind)
+                    : mkpending();
+            var GluNotBuilder=mkbuilderintent(type,intent);
+            if(!alertseparate) {
+                GluNotBuilder.setDeleteIntent(DeleteReceiver.getDeleteIntent());
+                }
+            {if(doLog) {Log.i(LOG_ID,"makearrownotification setOnlyAlertOnce("+once+") "+glucose.value);};};
+    
+            //var draw= GlucoseDraw.getgludraw(glvalue);
+    
+              setIcon(GluNotBuilder,glvalue,glucose.sensorgen2);
+    //        GluNotBuilder.setSmallIcon(draw).
+            GluNotBuilder.setContentTitle(message).setOnlyAlertOnce(once);
+    
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                GluNotBuilder.setVisibility(VISIBILITY_PUBLIC);
+                }
+            final boolean glucosealarm=kind<2||kind>4;
+            if(!isWearable) {
+                // Do NOT wrap in DecoratedCustomViewStyle — that strips custom text colours
+                // on the collapsed row and adds unwanted system chrome.
+                GluNotBuilder.setShowWhen(true);
+                RemoteViews remoteViews=arrowNotify.arrowremote(kind,glucose,glucosealarm&&!once);
+                if(whiteonblack) {
+                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        GluNotBuilder.setColorized(true);
+                        GluNotBuilder.setColor(BLACK);
+                        }
+                    else
+                        remoteViews.setInt(arrowandvalue, "setBackgroundColor", BLACK);
+                    }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    GluNotBuilder.setCustomContentView(remoteViews);
+                    // Big (expanded) view: same row + 3-hour graph + snooze actions visible below
+                    if (glucosealarm && !once) {
+                        GluNotBuilder.setCustomBigContentView(
+                                buildAlarmBigView(kind, glucose));
+                    }
+                } else {
+                    GluNotBuilder.setContent(remoteViews);
+                }
+                }
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            GluNotBuilder.setTimeoutAfter(glucosetimeout);
+        }
+        if(isWearable) {GluNotBuilder.setAutoCancel(true);}
+        if(once)
+            GluNotBuilder.setPriority(Notification.PRIORITY_DEFAULT);
+        else  {
+            // MAX priority + CATEGORY_ALARM ensures the notification appears as a
+            // heads-up over other notifications and the full-screen intent fires
+            // reliably on the lock screen even when other notifications are present.
+            GluNotBuilder.setPriority(Notification.PRIORITY_MAX);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                GluNotBuilder.setCategory(Notification.CATEGORY_ALARM);
+            }
+            // Ongoing flag prevents the user from accidentally swiping the alarm
+            // notification away — they must use the hold-to-dismiss button.
+            if (!isWearable && glucosealarm) {
+                GluNotBuilder.setOngoing(true);
+            }
+            // ── Full-screen lock-screen intent for active alarms (phone only) ──
+            // Guarded by hasFullScreenIntentPermission(): on Android 14+ the user must
+            // explicitly grant USE_FULL_SCREEN_INTENT in Settings.  Without the grant,
+            // Android silently ignores setFullScreenIntent() so we skip it entirely and
+            // fall back to the heads-up notification + action buttons below.
+            if (!isWearable && glucosealarm && AlarmLockScreenActivity.isEnabled()
+                    && AlarmLockScreenActivity.hasFullScreenIntentPermission()) {
+                try {
+                    Intent fsIntent = new Intent(app, AlarmLockScreenActivity.class);
+                    fsIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                            | Intent.FLAG_ACTIVITY_CLEAR_TASK
+                            | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS
+                            | Intent.FLAG_ACTIVITY_NO_USER_ACTION);
+                    fsIntent.putExtra(AlarmLockScreenActivity.EXTRA_ALARM_KIND, kind);
+                    PendingIntent fsPendingIntent = PendingIntent.getActivity(
+                            app, 900, fsIntent,
+                            PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+                    GluNotBuilder.setFullScreenIntent(fsPendingIntent, true);
+                    {if(doLog) {Log.i(LOG_ID, "setFullScreenIntent for alarm kind=" + kind);};};
+                } catch (Throwable t) {
+                    Log.stack(LOG_ID, "setFullScreenIntent", t);
+                }
+            }
+            // ── Stop + Snooze notification actions (phone only, active alarms) ───
+            // These action buttons are visible without expanding the notification and
+            // work even when the full-screen intent cannot fire (e.g. permission not
+            // granted, or user is in a full-screen game that blocks heads-up pop-ups).
+            if (!isWearable && glucosealarm) {
+                try {
+                    // "Stop alarm" — single tap, stops sound immediately
+                    final Intent stopIntent = new Intent(app, NumAlarm.class);
+                    stopIntent.setAction(RemoteGlucose.stopalarmAction);
+                    final PendingIntent stopPi = PendingIntent.getBroadcast(
+                            app, stopalarmrequest,
+                            stopIntent,
+                            PendingIntent.FLAG_UPDATE_CURRENT | penmutable);
+                    GluNotBuilder.addAction(new Notification.Action.Builder(
+                            android.R.drawable.ic_delete,
+                            app.getString(R.string.notif_stop_alarm),
+                            stopPi).build());
 
-     Notification notif= GluNotBuilder.build();
-    notif.when= glucose.time;
-     return notif;
+                    // Snooze duration buttons
+                    final java.util.List<Long> snoozeDurations = AlarmSnooze.getSnoozeButtons();
+                    if (!snoozeDurations.isEmpty()) {
+                        GluNotBuilder.setSubText(app.getString(R.string.notif_snooze_label));
+                    }
+                    // request codes 910..912 — well away from other PendingIntents
+                    for (int si = 0; si < snoozeDurations.size(); si++) {
+                        final long mins = snoozeDurations.get(si);
+                        final PendingIntent snoozePi = SnoozeReceiver.pendingSnooze(mins, 910 + si);
+                        if (snoozePi != null) {
+                            final Notification.Action action = new Notification.Action.Builder(
+                                    android.R.drawable.ic_lock_silent_mode_off,
+                                    app.getString(R.string.notif_snooze_min, mins),
+                                    snoozePi).build();
+                            GluNotBuilder.addAction(action);
+                        }
+                    }
+                } catch (Throwable t) {
+                    Log.stack(LOG_ID, "addAlarmActions", t);
+                }
+            }
+        }
 
-    }
+         {if(doLog) {Log.i(LOG_ID,(once?"":"not ")+"only once");};};
+    
+         Notification notif= GluNotBuilder.build();
+        notif.when= glucose.time;
+         return notif;
+    
+        }
 @SuppressWarnings({"deprecation"})
 
 static public PendingIntent mkpendingall(Context context, int requestCode) {
@@ -888,6 +1017,20 @@ static public PendingIntent mkpendingall(Context context, int requestCode) {
 static public PendingIntent mkpending() {
     return mkpendingall(Applic.app,1001);
     }
+
+/** PendingIntent that opens AlarmLockScreenActivity — used as the notification contentIntent
+ *  so tapping the alarm notification always shows the snooze UI, not just the main app. */
+static private PendingIntent mkAlarmLockScreenPending(int kind) {
+    Intent intent = new Intent(Applic.app, AlarmLockScreenActivity.class);
+    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+            | Intent.FLAG_ACTIVITY_CLEAR_TASK
+            | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS
+            | Intent.FLAG_ACTIVITY_NO_USER_ACTION);
+    intent.putExtra(AlarmLockScreenActivity.EXTRA_ALARM_KIND, kind);
+    return PendingIntent.getActivity(Applic.app, 901, intent,
+            PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+
 
 private Notification.Builder   mkbuilderintent(String type,PendingIntent notifyPendingIntent) {
     Notification.Builder  GluNotBuilder;
@@ -1076,8 +1219,17 @@ static void test2() {
 
 private  void  arrowplacelargenotification(int kind,float glvalue,String message,notGlucose glucose,String type,boolean once) {
         hasvalue=true;
-    fornotify(makearrownotification(kind,glvalue,message,glucose,type,once));
-
+        final Notification notif = makearrownotification(kind,glvalue,message,glucose,type,once);
+        if (!once && !isWearable) {
+            // Active alarm notification: post on glucosealarmid via notificationManager.notify()
+            // so that setFullScreenIntent() is honoured by the OS.
+            // Android silently ignores setFullScreenIntent on foreground-service notifications
+            // (the startForeground() path in fornotify()), so we must bypass it here.
+            notificationManager.cancel(glucosealarmid);
+            notificationManager.notify(glucosealarmid, notif);
+        } else {
+            fornotify(notif);
+        }
     }
  public void  lossofsensornotification(int draw,String message,String type,boolean once) {
      {if(doLog) {Log.i(LOG_ID,"notify "+message);};};
