@@ -104,7 +104,7 @@ extern "C" JNIEXPORT jboolean JNICALL   fromjava(GlucoseMeterSave)(JNIEnv *env, 
         else
              value=std::roundf(mgdL);
         Numdata *numda=getherenums();
-        if(Num *num=numda->numsaveonly(timcorrected, value,bloodvar,0)) { 
+        if(Num *num=numda->numsaveonly(timcorrected, value,bloodvar,0,true)) { 
             uint32_t now=time(nullptr);
             if(abs((int)(now-timcorrected))<60)  {
                 addCalibration( timcorrected,bloodvar,num,numda);

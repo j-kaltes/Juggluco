@@ -63,9 +63,12 @@ private static int getBatteryLevel() {
 private static String getSource(int sensorgen) {
         return switch(sensorgen) {
             case 3 -> "Libre3";
-            case 0x40 -> "G7";
-            case 0x20 -> "AccuChek";
             case 0x10 -> "GS1Sb";
+            case 0x15 -> "GS3";
+            case 0x20 -> "AccuChek";
+            case 0x30 -> "CareSenseAir";
+            case 0x40 -> "G7";
+            case 0x50 -> "AidexX";
             default -> "Libre2";
             };
         }

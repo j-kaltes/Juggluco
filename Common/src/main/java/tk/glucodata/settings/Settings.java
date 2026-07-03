@@ -44,6 +44,7 @@ import static tk.glucodata.Log.doLog;
 import static tk.glucodata.Natives.getInvertColors;
 import static tk.glucodata.Natives.getRTL;
 import static tk.glucodata.Natives.getScheduleProfile;
+import static tk.glucodata.Natives.getalarmSoundType;
 import static tk.glucodata.Natives.getshowcalibratedstream;
 import static tk.glucodata.Natives.getshowhistories;
 import static tk.glucodata.Natives.getshownumbers;
@@ -59,6 +60,7 @@ import static tk.glucodata.util.getbutton;
 import static tk.glucodata.util.getcheckbox;
 import static tk.glucodata.util.getlabel;
 import static tk.glucodata.util.getlocale;
+import static tk.glucodata.util.getradiobuttonId;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -84,6 +86,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.Space;
 import android.widget.Spinner;
@@ -743,7 +746,17 @@ static private void alarmsettings(MainActivity context,View parview) {
             });
 
 
-    var usealarm=getcheckbox(context, R.string.USE_ALARM, Natives.getUSEALARM());
+//    var usealarm=getcheckbox(context, R.string.USE_ALARM, Natives.getUSEALARM());
+
+    var alarmis=getlabel(context,R.string.alarmis);
+    var alarmtype=new RadioGroup(context);
+
+    int id=0;
+    alarmtype.addView(getradiobuttonId(context,R.string.alarm,id++));
+    alarmtype.addView(getradiobuttonId(context,R.string.notification,id++));
+    alarmtype.addView(getradiobuttonId(context,R.string.media,id++));
+    alarmtype.check(getalarmSoundType());
+
     final boolean alarmloss= Natives.hasalarmloss();
         CheckDirectionBox lossalarm = new CheckDirectionBox(context);
         lossalarm.setChecked(alarmloss); //Value
@@ -799,11 +812,11 @@ static private void alarmsettings(MainActivity context,View parview) {
         getMargins(Save).topMargin=pad;
         views=new View[][]{new View[]{ala},new View[]{spin},new View[]{lowalarm[0]},new View[]{lowalarm[1],lowalarm[2]}, new View[]{highalarm[0]},new View[]{highalarm[1],highalarm[2]},
 new View[]{lossalarm},new View[]{losswait,min,ringlossalarm},
-new View[]{isvalue},new View[]{ringisvalue},new View[]{usealarm},new View[]{advanced},new View[]{Save}};
+new View[]{isvalue},new View[]{ringisvalue},new View[]{alarmis,alarmtype},new View[]{advanced},new View[]{Save}};
         }
     else {
          View[] lostrow={lossalarm,losswait,min,ringlossalarm};
-         View[] row6={usealarm,isvalue, ringisvalue};
+         View[] row6={isvalue, ringisvalue,alarmis,alarmtype};
          View[] rowshow={help,spin,advanced,Save};
          var marg=(int)(GlucoseCurve.getwidth()*.05f);
 
@@ -858,7 +871,11 @@ new View[]{isvalue},new View[]{ringisvalue},new View[]{usealarm},new View[]{adva
         removeContentView(lay) ;
         });
 */
-    usealarm.setOnCheckedChangeListener( (buttonView,  isChecked) -> Natives.setUSEALARM(isChecked));
+   // usealarm.setOnCheckedChangeListener( (buttonView,  isChecked) -> Natives.setUSEALARM(isChecked));
+      alarmtype.setOnCheckedChangeListener( (g,i)-> {
+            Natives.setalarmSoundType(i);
+         });
+
     BooleanSupplier saver=() -> {
       final boolean hasloss= lossalarm.isChecked();
         if(hasloss) {

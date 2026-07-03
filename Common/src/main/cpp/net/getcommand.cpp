@@ -485,8 +485,6 @@ constexpr int MAXDATA=1024*1024*256;
     status.running(true);
     destruct _dest([&status]{status.running(false);});
 
-
-
     while(true) {
         LOGAR("getcom");
         constexpr const int taglen=16;

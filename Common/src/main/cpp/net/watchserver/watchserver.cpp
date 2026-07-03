@@ -1754,7 +1754,7 @@ Getopts::Getopts(const char *posptr,int size,int defaultduration): unit(settings
                         iter += glowstr.length();
                         float tmpglow;
                         int res=sscanf(iter,"%f",&tmpglow);
-                        if(res<=0) {
+                        if(res<0) {
                                 flerror("sscan glow=%s failed",iter);
                                 continue;
                                }

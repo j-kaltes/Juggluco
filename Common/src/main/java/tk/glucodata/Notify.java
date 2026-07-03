@@ -148,13 +148,24 @@ static final private int[] defaults ={ R.raw.siren, R.raw.classic, R.raw.ghost, 
 //static AudioAttributes notification_audio=(android.os.Build.VERSION.SDK_INT >= 21)?new AudioAttributes.Builder().setUsage( USAGE_ASSISTANCE_SONIFICATION) .build():null;
 //static AudioAttributes notification_audio=(android.os.Build.VERSION.SDK_INT >= 21)?new AudioAttributes.Builder().setUsage(USAGE_NOTIFICATION) .build():null;
 
-static AudioAttributes notification_audio;
+static AudioAttributes notification_audio, media_audio;
+
+private static AudioAttributes getAlarmAttributes() {
+    return   switch(Natives.getalarmSoundType()) {
+        case 0-> ScanNfcV.audioattributes;
+        case 1-> notification_audio;
+        default -> media_audio;
+       };
+    }
+
 //static AudioAttributes notification_audio=(android.os.Build.VERSION.SDK_INT >= 21)?new AudioAttributes.Builder().setUsage(isWearable? USAGE_ASSISTANCE_SONIFICATION: AudioAttributes.USAGE_NOTIFICATION) .build():null;
 static AudioFocusRequest audiofocusrequest;
+
 static public void makenotification_audio() {
     if(android.os.Build.VERSION.SDK_INT >= 21) {
         var type=isWearable? USAGE_ASSISTANCE_SONIFICATION: AudioAttributes.USAGE_NOTIFICATION;
         notification_audio=new AudioAttributes.Builder().setUsage(type).build();
+        media_audio=new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_MEDIA).build();
         if(android.os.Build.VERSION.SDK_INT >= 26) {
                 audiofocusrequest = new AudioFocusRequest.Builder( AudioManager.AUDIOFOCUS_GAIN_TRANSIENT).setAudioAttributes( notification_audio ).build();
                 Log.i(LOG_ID, "audiofocusrequest  has value");
@@ -212,7 +223,7 @@ Ringtone mkring(String uristr,int kind) {
     var ring=setring(uristr,defaults[kind]);
     if(android.os.Build.VERSION.SDK_INT >= 21)  {
           try {
-            ring.setAudioAttributes((kind!=2&&getUSEALARM())?ScanNfcV.audioattributes:notification_audio);
+            ring.setAudioAttributes(kind!=2?getAlarmAttributes():notification_audio);
         }
         catch(Throwable e) {
             Log.stack(LOG_ID,"mkring",e);
@@ -505,7 +516,7 @@ static void stopGlucoseAlarm() {
               if(glucosealarm&&Natives.speakalarms()) {
                  final var  glu=SuperGattCallback.previousglucose;
                  if(glu!=null) {
-                           SuperGattCallback.talker.speak(glu.value, getUSEALARM()?ScanNfcV.audioattributes:notification_audio);
+                           SuperGattCallback.talker.speak(glu.value, getAlarmAttributes());
 //                            Applic.scheduler.schedule( () -> SuperGattCallback.talker.speak(glu.value, getUSEALARM()?ScanNfcV.audioattributes:notification_audio), 50, TimeUnit.MILLISECONDS);
                             }
                         }
@@ -568,7 +579,7 @@ static void stopGlucoseAlarm() {
                         final var  glu=SuperGattCallback.previousglucose;
                         if(glu!=null) {
                             Applic.scheduler.schedule(
-                            () -> SuperGattCallback.talker.speak(glu.value, getUSEALARM()?ScanNfcV.audioattributes:notification_audio), 300, TimeUnit.MILLISECONDS);
+                            () -> SuperGattCallback.talker.speak(glu.value,getAlarmAttributes()), 300, TimeUnit.MILLISECONDS);
                             }
                          else
                                 doTurnFocusoff();

@@ -29,12 +29,12 @@ static boolean hasTech(String[] techs, String want) {
 }
 static  void readNdef(MainActivity act,Tag tag) {
     Ndef ndef = Ndef.get(tag);
-    if (ndef != null) { readViaNdef(act,ndef); return; }   // works if flag is off
-
+    if(ndef != null) { 
+        readViaNdef(act,ndef); 
+        return; 
+        }  
     String[] techs = tag.getTechList();
-    if (hasTech(techs, "android.nfc.tech.MifareUltralight")) {
-        readNdefFromUltralight(act,tag);
-    } else if (hasTech(techs, "android.nfc.tech.NfcA")) {
+    if(hasTech(techs, "android.nfc.tech.NfcA")) {
         readNdefFromNfcA(act,tag);
     } else {
         Log.d(LOG_ID, "No supported tech for manual NDEF: " + Arrays.toString(techs));
@@ -92,6 +92,7 @@ private static void dumpRecord(MainActivity act,NdefRecord r) {
         Log.d(LOG_ID, "TNF=" + tnf + " type=" + new String(type, StandardCharsets.US_ASCII) + " payload=" + payload.length + " bytes");
         }
    }
+/*
 static private void readNdefFromUltralight(MainActivity act,Tag tag) {
     var vib= getvibrator(act);
     startvibration(vib);
@@ -145,7 +146,7 @@ static private void readNdefFromUltralight(MainActivity act,Tag tag) {
         try { mfu.close(); } catch (IOException ignored) {}
     }
 }
-
+*/
 // Same idea, but using raw NfcA READ command (0x30 + page) for tags that
 // don't expose MifareUltralight tech. Returns 16 bytes per command.
 static private void readNdefFromNfcA(MainActivity act,Tag tag) {
@@ -178,22 +179,37 @@ static private void readNdefFromNfcA(MainActivity act,Tag tag) {
             remaining -= take;
         }
         NdefMessage msg = parseNdefTlv(buf.toByteArray());
-        if (msg != null) for (NdefRecord r : msg.getRecords()) dumpRecord(act,r);
+        if(msg == null) {
+            Log.i(LOG_ID,"parseNdefTlv()==null");
+            vib.cancel();
+            failure(vib);
+            return;
+            }
+         else {
+            for (NdefRecord r : msg.getRecords()) dumpRecord(act,r);
             vib.cancel();
             final long[] newsensorVib =  {50, 150,50,50,12,8,15,73};
             if(android.os.Build.VERSION.SDK_INT < 26) 
                 vib.vibrate(newsensorVib, -1);
             else
                 vib.vibrate(VibrationEffect.createWaveform(newsensorVib, -1));
+            return;
+            }
 
-    } catch (IOException | FormatException e) {
+        } 
+    catch(Throwable e) {
         Log.stack(LOG_ID, "readNdefFromNfcA", e);
         vib.cancel();
         failure(vib);
-    } finally {
-        try { nfca.close(); } catch (IOException ignored) {}
+       } 
+    finally {
+        try { nfca.close(); 
+            } 
+        catch(Throwable th) {
+             Log.stack(LOG_ID,"close",th);
+            }
+        }
     }
-}
 
 // User memory is a sequence of TLV blocks. We care about T=0x03 (NDEF Message).
 private static NdefMessage parseNdefTlv(byte[] data) throws FormatException {

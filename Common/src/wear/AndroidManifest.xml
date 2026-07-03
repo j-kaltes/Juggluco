@@ -49,6 +49,36 @@
         <uses-library android:name="com.google.android.wearable" android:required="false" />
 
 
+        <service
+            android:name="tk.glucodata.watchface.WatchFaceService"
+            android:directBootAware="true"
+            android:exported="true"
+            android:label="@string/watch_face_name"
+            android:permission="android.permission.BIND_WALLPAPER"
+	    >
+            <intent-filter>
+                <action android:name="android.service.wallpaper.WallpaperService" />
+                <category android:name="com.google.android.wearable.watchface.category.WATCH_FACE" />
+            </intent-filter>
+		<meta-data android:name="android.service.wallpaper.square_mode" android:value="false" />
+            <meta-data
+                android:name="com.google.android.wearable.watchface.preview"
+                android:resource="@drawable/watch_preview" />
+            <meta-data
+                android:name="com.google.android.wearable.watchface.preview_circular"
+                android:resource="@drawable/watch_preview" />
+            <meta-data
+                android:name="android.service.wallpaper"
+                android:resource="@xml/watch_face" />
+            <meta-data
+                android:name="com.google.android.wearable.watchface.wearableConfigurationAction"
+                android:value="androidx.wear.watchface.editor.action.WATCH_FACE_EDITOR" />
+
+            <meta-data
+                android:name="com.google.android.wearable.watchface.companionBuiltinConfigurationEnabled"
+                android:value="true" />
+        </service>
+
         <activity
             android:name="tk.glucodata.watchface.editor.WatchFaceConfigActivity"
             android:exported="true"

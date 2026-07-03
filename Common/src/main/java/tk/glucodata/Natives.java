@@ -1040,6 +1040,8 @@ public static native int getradius( );
 //s/^[	 ]*extern.*JNIEXPORT[         ]*\([a-zA-Z]*\)[ ]*JNICALL[      ]*fromjava(\([^)]*\)) *(JNIEnv[^,]*,[^,)]*[,)]\([^){]*\)[^a-zA-Z0-9]*$/public static native \1 \2(\3);/g
 
 public static native void testLibre3( );
-}
 
+public static native void setalarmSoundType(int val);
+public static native int getalarmSoundType( );
+}
 

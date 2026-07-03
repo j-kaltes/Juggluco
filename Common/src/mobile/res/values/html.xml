@@ -1306,7 +1306,7 @@ touched of the alarm notification in Juggluco;</p>
 <p style="line-height: 100%; margin-bottom: 0cm">- The <i>Floating
 Glucose</i> is touched.</p>
 <h3 class="western">Value available:</h3>
-<p style="margin-bottom: 0cm; line-height: 100%">Sometimes the sensor
+<p style="line-height: 100%; margin-bottom: 0cm">Sometimes the sensor
 stops working temporarily. With this option on, you\'ll be notified
 when it works again — but only if you have actually opened Juggluco
 and seen the missing value yourself. If you only noticed the gap from
@@ -1315,15 +1315,21 @@ notification will not be triggered.</p>
 <p style="line-height: 100%; margin-bottom: 0cm">For each alarm you
 can specify which <a href="https://www.juggluco.nl/Jugglucohelp/ringtone.html">Ringtone</a>
 to play and for how long.</p>
-<h3 class="western">Alarm is alarm:</h3>
+<h3 class="western">Alarm is alarm/notification/media:</h3>
 <p>When “alarm is alarm” is checked, the <a href="https://www.juggluco.nl/Jugglucohelp/ringtone.html">Ringtone</a>
-played for low, high and loss of signal alarms is given <i>Alarms</i>
+played for low, high and loss of signal alarms is given the <i>Alarm</i>
 sound category. This means that in Android settings its volume is
-managed with the Alarms slider, and it isn\'t silenced when the phone
-is muted or set to vibrate. When <i>Alarm is alarm</i> is not
-checked, the notification-volume slider is used on phones, and the
-system-volume slider on Samsung Galaxy Watch 4 to 7. This is always
-the case for the value available notification.</p>
+managed with the Alarm slider, and it isn\'t silenced when the phone
+is muted or set to vibrate. When <i>Notification</i> is checked, the
+notification-volume slider is used on phones, and the system-volume
+slider on Samsung Galaxy Watch 4 to 7. This is always the case for
+the value available notification. When <i>Media</i> is checked the
+media-volume slider is used. On most phone <i>media</i> is audible
+during “do not disturb”, but when a headphone or earbuds are
+attached to the phone, the alarm sound is redirected through the
+headphone. The Alarm category is audible through both headphone and
+normal speaker. Notification is not audible at all during “<i>do
+not disturb</i>”.</p>
 <h3 class="western">Default:</h3>
 <p>Specify for which <b>profile</b> these settings are. This way you
 can change between settings for alarms and talk. You can specify a

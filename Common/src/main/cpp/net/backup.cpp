@@ -135,9 +135,14 @@ static bool startserver(char *port, passhost_t *hosts,int *hostlen,bool *shutdow
     const auto tag=get_owner_tag(sock);
     constexpr int const BACKLOG=5;
     if(listen(sock, BACKLOG) == -1) {
+        lerrortag("listen");
+        sockclose(sock);
         if(*shutdownreceiver) {
-            lerrortag("listen");
             return false;
+            }
+        else {
+            sleep(1);
+            goto RESTART;
             }
         }
     serverloop(sock,hosts,*hostlen);
@@ -149,7 +154,7 @@ static bool startserver(char *port, passhost_t *hosts,int *hostlen,bool *shutdow
     sleep(1);
     goto RESTART;
     }
-    }
+  }
 
 #include "netstuff.hpp"
 #include <thread>
@@ -541,8 +546,8 @@ globalsocket=serversock;
             continue;
             }
         int &sock=con->getReceiverSock();
-        int oldsock=sock;
-        sock=-1;
+        int oldsock=-1;
+        std::swap(oldsock,sock);
         con->setReceiverSock(new_fd);
         if(!con->testreceivemagic(hit)) {
             con->closeReceiverConnection();
@@ -583,7 +588,7 @@ globalsocket=serversock;
 
         shutdown(oldsock,SHUT_RDWR);
         sleep(1);
-        close(oldsock);
+        sockclose(oldsock);
         receiversockopt(new_fd) ;
         LOGGER("serverloop oldsock=%d newsock=%d\n",oldsock,new_fd);
         std::thread  handlecon(receiverthread,hit,allindex);

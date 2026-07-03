@@ -43,7 +43,7 @@ JCurve(int unit) {
         setunit(unit);
         CalibratePast=settings->data()->CalibratePast;
         }
-float glow=0.0f,ghigh=0.0f;
+float glow=-1.0f,ghigh=-1.0f;
 std::pair<const Num*,const Num*> extrums[maxnumsources];
 const char *gformat;
 int glunit;

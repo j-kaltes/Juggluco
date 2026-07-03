@@ -274,7 +274,6 @@
     <string name="notify">Notify</string>
  <string name="separate">Separate</string>
     <string name="librecurrent">Immediate</string>
-    <string name="USE_ALARM">Alarm is alarm</string>
     <string name="speed">Speed</string>
  <string name="pitch">Pitch</string>
  <string name="talker">Voice</string>
@@ -503,4 +502,8 @@
     <string name="apply">Apply</string>
 
     <string name="theme">Theme</string>
+    <string name="alarm">Alarm</string>
+    <string name="media">Media</string>
+    <string name="notification">Notification</string>
+    <string name="alarmis">Alarm is</string>
 </resources>

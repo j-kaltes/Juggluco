@@ -25,7 +25,7 @@ struct Getopts {
     bool exclusivemode=false;
     uint16_t lang=0;
     int width=0,height=0;
-    float glow=0.0f,ghigh=0.0f;
+    float glow=-1.0f,ghigh=-1.0f;
 int days() const {
         return (end-start+daysecs-1)/daysecs;
         }

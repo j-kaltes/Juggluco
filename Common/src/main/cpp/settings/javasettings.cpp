@@ -2022,3 +2022,11 @@ extern "C" JNIEXPORT void  JNICALL   fromjava(setisOval)(JNIEnv *env, jclass cl,
 extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getisOval)(JNIEnv *env, jclass cl) {
     return settings->data()->isOvalget();
     }
+
+extern "C" JNIEXPORT void  JNICALL   fromjava(setalarmSoundType)(JNIEnv *env, jclass cl,jint val) {
+    settings->data()->alarmSoundTypeset(val);
+    }
+extern "C" JNIEXPORT jint  JNICALL   fromjava(getalarmSoundType)(JNIEnv *env, jclass cl) {
+    return settings->data()->alarmSoundTypeget();
+    }
+

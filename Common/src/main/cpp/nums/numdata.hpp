@@ -595,10 +595,10 @@ bool nearnext(const Num *next,const uint32_t time, const float32_t value, const 
     return next->type==type&&next->value==value&&((next->time-time)<mindistancesecs);
     }
 std::mutex nummutex;
-Num * numsaveonly( const uint32_t time, const float32_t value, const uint32_t type,const uint32_t mealptrin) {
+Num * numsaveonly( const uint32_t time, const float32_t value, const uint32_t type,const uint32_t mealptrin,bool noprevious=false) {
     std::lock_guard<std::mutex> lck(nummutex);
     Num *num=firstAfter(time);
-    if(nearprevious(num,time,value,type)){
+    if(noprevious&&nearprevious(num,time,value,type)){
          return nullptr;
         }
     const int ind=index(num);

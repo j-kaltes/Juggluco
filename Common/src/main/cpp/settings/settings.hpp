@@ -122,7 +122,8 @@ struct AlarmProfile {
     struct ring alarms[maxalarms+maxextraalarms];
     uint32_t empty[3];
 
-    uint16_t reserved16;
+    uint8_t reserved8;
+    uint8_t alarmSoundType;
     uint8_t  radius;
     uint8_t  Theme;
 
@@ -408,7 +409,7 @@ struct Tings {
 
     struct ring extraAlarms[maxextraalarms];
     int32_t soundtype;
-    int8_t reserved3;
+    uint8_t alarmSoundType;
     uint8_t radius;
     uint8_t Theme;
     uint8_t reserved5:3;
@@ -588,6 +589,8 @@ makebitvoice(speakalarms)
 makebitvoice(talktouch)
 makebitvoice(USE_ALARMoff)
 
+makebitvoice(alarmSoundType)
+
 makebitvoice(invertcolors)
 makebitvoice(isOval)
 
@@ -664,6 +667,13 @@ void darkmode2profile() {
         prof.isOval=false;
         prof.Theme=randomTheme();
         prof.radius=randomRadius();
+        }
+    }
+void toAlarmType() {
+   alarmSoundType=USE_ALARMoff;
+   for(int prnr=0;prnr<nrProfile;++prnr) {
+        struct AlarmProfile  &prof=profiles[prnr];
+        prof.alarmSoundType=prof.USE_ALARMoff;
         }
     }
 bool setprofile() {
@@ -850,6 +860,7 @@ Settings(const char *settingsname,const char *base,const char *country): Mmap(se
 //    if(data()->initVersion<30) 
    { 
     LOGGER("initVersion=%d\n",data()->initVersion);
+    if(data()->initVersion<38) {
     if(data()->initVersion<37) {
        if(data()->initVersion<35) { 
        if(data()->initVersion<34) { 
@@ -972,6 +983,8 @@ Settings(const char *settingsname,const char *base,const char *country): Mmap(se
          data()->defaultshows();
          }
       data()->darkmode2profile();
+      }
+      data()->toAlarmType();
       }
    }
    
