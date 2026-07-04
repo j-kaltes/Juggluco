@@ -16,6 +16,13 @@ Wear OS version contains complications to display the glucose level on a watch f
 https://www.juggluco.nl/Jugglucohelp/introhelp.html
 
 ## BUILD Juggluco
+To download do:
+
+git clone --recurse-submodules  https://github.com/j-kaltes/Juggluco.git
+
+(If you have already done git clone without submodules, cd to the Juggluco root directory and execute: git submodule update --init)
+
+
 The following files need to be added to build Juggluco and can be found by unzipping an Arm/Arm64/x86/x86_64 Juggluco apk from
 https://www.juggluco.nl/Juggluco/download.html
 
@@ -35,4 +42,7 @@ libnative-algorithm-jni-v113B.so  libnative-encrypy-decrypt-v110.so  libnative-s
 ./Common/src/mobileSi/jniLibs/armeabi-v7a/   
 ./Common/src/mobileSi/jniLibs/arm64-v8a/
 
+To build a logging mobile phone release version, do the following from the Juggluco root directory:
+
+./gradlew assembleMobileLibre3SiDexNogoogleReleaseLog
 
