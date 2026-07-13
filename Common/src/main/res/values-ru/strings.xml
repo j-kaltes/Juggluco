@@ -440,7 +440,6 @@
     <string name="username">Имя пользователя</string>
     <string name="turnserver">TURN-сервер</string>
     <string name="ICElabeltooshort">ОШИБКА: метка ICE должна быть не короче 16 байтов.</string>
-    <string name="attr_ble_scan">Сканирование Bluetooth-датчика глюкозы</string>
     <string name="divorcename">Разорвать пару</string>
     <string name="divorcemessage">Разрешить датчику подключиться к другому телефону или часам (вместо этого устройства)?</string>
     <string name="unpairsuccess">&quot; Разрыв пары выполнен&quot;</string>

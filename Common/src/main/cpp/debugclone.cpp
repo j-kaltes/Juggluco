@@ -1936,7 +1936,7 @@ static bool mountsMagisk() {
     while(true) {
         int len=read(handle,buf+start,maxbuf);
         if(len<=0)  {
-            LOG_DO(LOGGER("mountsMagisk read failed blnr=%d\n",blnr));
+            LOG_DO(LOGGER("mountsMagisk read up to block %d\n",blnr));
             return false;
             }
         auto end=buf+start+len;

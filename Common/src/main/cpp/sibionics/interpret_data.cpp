@@ -401,6 +401,7 @@ static const uint8_t *getkey(int hema) {
         "GKSHGDU0TYA456G4",// com.sisensing.sisensingcgm 
         "GKSHGDU0TYA456G4",// com.sisensing.eco 
         "THE544U0TYITE461",// com.sisensing.gs3 
+        "GKSHGDU0TYA456G4",// com.sibionics.gstoc  Guess
         };
      return (const uint8_t*)keys[hema];
     }

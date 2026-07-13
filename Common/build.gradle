@@ -99,7 +99,7 @@ android {
         //compileSdk 36
         applicationId "tk.glucodata"
 
-         versionName '10.9.5'
+         versionName '10.9.6'
 //    multiDexEnabled true
 
         buildConfigField 'String', 'BUILD_TIME', 'new java.text.SimpleDateFormat("HH:mm:ss dd-MMM-yyyy").format(new java.util.Date(' + System.currentTimeMillis() + 'L))'

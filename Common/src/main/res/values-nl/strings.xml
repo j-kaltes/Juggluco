@@ -403,7 +403,6 @@
 <string name="enternums">Voer hoeveelheden in op</string>
  <string name="connectionl">verbinding</string>
  <string name="ICElabeltooshort">FOUT: ICE label moet minimaal 16 bytes groot zijn</string>
- <string name="attr_ble_scan">Bluetooth glucose sensor scannen</string>
 
 <string name="divorcename">Ontkoppelen</string>
 

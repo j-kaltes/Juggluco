@@ -2947,12 +2947,24 @@ gaan.</p>
 </string>
 <string name="GlucoseMeter" >
 <![CDATA[
-<p><a href="https://www.juggluco.nl/Jugglucohelp/nl/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/GlucoseMeter.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/GlucoseMeter.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/GlucoseMeter.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/GlucoseMeter.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/GlucoseMeter.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/GlucoseMeter.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/GlucoseMeter.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/GlucoseMeter.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/GlucoseMeter.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/GlucoseMeter.html?lang=en">en</a>&emsp;&emsp;</p><h1 class="western"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">Glucosemeter</font></font></h1>
-<p style="line-height: 100%; margin-bottom: 0cm"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">Juggluco voegt alleen glucosewaarden toe met een tijdstempel later dan de opgegeven datum en tijd. Wijzig de datum en tijd naar een latere datum en tijd als er al eerdere glucosewaarden in Juggluco aanwezig zijn.</font></font></p>
-<p style="line-height: 100%; margin-bottom: 0cm"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">Selecteer het label voor bloedglucose.</font></font></p>
-<p style="line-height: 100%; margin-bottom: 0cm"><font dir="auto" style="vertical-align: inherit;"><font dir="auto" style="vertical-align: inherit;">De eerste keer moet je de glucosemeter in de PAIRING modus zetten, bijvoorbeeld door lang op de knop van de uitgeschakelde meter te drukken totdat er een blauw lampje knippert.</font></font></p>
-<p><br></p>
-<p><br></p>
+<p><a href="https://www.juggluco.nl/Jugglucohelp/nl/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/GlucoseMeter.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/GlucoseMeter.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/GlucoseMeter.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/GlucoseMeter.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/GlucoseMeter.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/GlucoseMeter.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/GlucoseMeter.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/GlucoseMeter.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/GlucoseMeter.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/GlucoseMeter.html?lang=en">en</a>&emsp;&emsp;</p><h1 class="western">Glucosemeter</h1>
+<p style="line-height: 100%; margin-bottom: 0cm">Juggluco voegt
+alleen glucosewaarden toe met een tijdstempel later dan de opgegeven
+datum en tijd. Wijzig de datum en tijd naar een latere datum en tijd
+als er al eerdere glucosewaarden in Juggluco aanwezig zijn.</p>
+<p style="line-height: 100%; margin-bottom: 0cm">Selecteer het label
+voor bloedglucose.</p>
+<p style="line-height: 100%; margin-bottom: 0cm">De eerste keer moet
+je de glucosemeter in de PAIRING modus zetten, bijvoorbeeld door lang
+op de knop van de uitgeschakelde meter te drukken totdat er een blauw
+lampje knippert.</p>
+<p><b>Verwijderen</b>: Verwijder deze glucosemeter uit de lijst met
+glucose meters. Metingen ontvangen van deze meter worden niet
+verwijderd.</p>
+<p><br/>
+<br/>
+
+</p>
 ]]>
 </string>
 <string name="GlucoseMeterList" >

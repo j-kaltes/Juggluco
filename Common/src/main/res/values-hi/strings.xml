@@ -457,7 +457,6 @@
 <string name="username">उपयोगकर्ता नाम</string>
 <string name="turnserver">Turn सर्वर</string>
  <string name="ICElabeltooshort">त्रुटि: ICE लेबल कम से कम 16 बाइट्स का होना चाहिए</string>
- <string name="attr_ble_scan">ब्लूटूथ ग्लूकोज सेंसर स्कैनिंग</string>
     <string name="divorcename">अनपेयर</string>
     <string name="divorcemessage">सेंसर को किसी अन्य फोन या घड़ी से जुड़ने की अनुमति दें (इसके बजाय)?</string>
     <string name="unpairsuccess">" अनपेयर सफल"</string>

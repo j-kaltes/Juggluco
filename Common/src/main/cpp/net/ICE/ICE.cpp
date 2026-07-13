@@ -61,7 +61,8 @@ constexpr const std::string_view hostnames[]{
 //List of hostnames to Juggluco connect: https://github.com/j-kaltes/jugglucoconnect
 #include "jugglucoconnect.h"
 };
-constexpr int nrhostnames=std::size(hostnames);
+//constexpr int nrhostnames=std::size(hostnames);
+constexpr int nrhostnames=sizeof(hostnames)/sizeof(hostnames[0]);
 #include <zlib.h>
 constexpr const uLong hashfunc(const char *d, int len) {
     return crc32(0,(const unsigned char*)d,len);
@@ -568,6 +569,8 @@ juice_agent *createAgent(int allindex) {
     else {
         servercount=defaultservercount;
         turn_servers=default_turn_servers;
+
+#ifdef TWILIOACCOUNT 
         {
         static std::mutex mut;
         std::lock_guard<std::mutex> lck(mut);
@@ -593,6 +596,7 @@ juice_agent *createAgent(int allindex) {
                   }
                  }
            }
+#endif
         }
       juice_config_t config1{
             .concurrency_mode=JUICE_CONCURRENCY_MODE_THREAD,

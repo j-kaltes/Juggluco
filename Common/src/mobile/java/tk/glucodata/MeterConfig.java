@@ -64,6 +64,18 @@ static void config(MainActivity context, int meterIndex, View parent, BluetoothD
    var cal = Calendar.getInstance();
    var cancel=getbutton(context,R.string.cancel);
    var ok=getbutton(context, R.string.save);
+   var deletebutton=getbutton(context,R.string.delete);
+   deletebutton.setOnClickListener(
+                v -> { 
+                Confirm.ask(context,context.getString(R.string.delete),context.getString(R.string.deletemeter),()-> {
+                    Natives.GlucoseMeterRemoveIndex(meterIndex);
+                    MainActivity.doonback();
+                    MainActivity.doonback();
+                    if(adapter!=null)
+                           adapter.notifyDataSetChanged();
+                    BluetoothGlucoseMeter.restartDevices();
+                    });
+                });
    datebutton.setOnClickListener(
                 v -> { 
          context.getnumberview().getdateviewal(context,newtime[0], (year,month,day)-> {
@@ -106,7 +118,7 @@ static void config(MainActivity context, int meterIndex, View parent, BluetoothD
          x.setX((width-w)/2);
          x.setY(MainActivity.systembarTop);
          return new int[] {w,h};
-           },new View[]{namelabel},new View[]{bloodafter},new View[]{datebutton,timebutton},new View[]{bloodvar,spinner},new View[]{cancel,helpbutton,ok});
+           },new View[]{namelabel},new View[]{bloodafter},new View[]{datebutton,timebutton},new View[]{helpbutton,bloodvar,spinner},new View[]{cancel,deletebutton,ok});
    timebutton.setOnClickListener(v-> {
      layout.setVisibility(INVISIBLE);
      context.getnumberview().gettimepicker(context,hour[0], min[0], (h,m) -> {
@@ -147,6 +159,7 @@ static void config(MainActivity context, int meterIndex, View parent, BluetoothD
            Applic.argToaster(context,"Glucose meter will not be used", Toast.LENGTH_LONG);
            if(adapter!=null)
                adapter.notifyDataSetChanged();
+           BluetoothGlucoseMeter.restartDevices();
            });
    context.addMyContentView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
    }

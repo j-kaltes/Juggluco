@@ -277,18 +277,21 @@ Bitmap getArrowTimeBitmap(long time,float rate) {
    else {
       glucosePaint.setColor(getArrowColor());
       drawarrowcircle(canvas,glucosePaint,density,rate);
-      final var timestr=tk.glucodata.NumberView.minhourstr(time);
-      final var len= timestr.length();
-      final var h=mapheight-timeoffy;
-      glucosePaint.setTextSize(timesize*1.8f);
+      if(Natives.gettimeOnComplication()) {
+              final var timestr=tk.glucodata.NumberView.minhourstr(time);
+              final var len= timestr.length();
+              final var h=mapheight-timeoffy;
+              glucosePaint.setTextSize(timesize*1.8f);
 
-      glucosePaint.setTypeface(boldtype);
-      glucosePaint.setColor(getBackgroundColor( ));
-      canvas.drawText(timestr,0,len,half,h,glucosePaint);
+              glucosePaint.setTypeface(boldtype);
+              glucosePaint.setColor(getBackgroundColor( ));
+              canvas.drawText(timestr,0,len,half,h,glucosePaint);
 
-      glucosePaint.setColor(getTextColor());
-      glucosePaint.setTypeface(normaltype);
-      canvas.drawText(timestr,0,len,half,h,glucosePaint);
+              glucosePaint.setColor(getTextColor());
+              glucosePaint.setTypeface(normaltype);
+              canvas.drawText(timestr,0,len,half,h,glucosePaint);
+              }
+
       }
  return glucoseBitmap;
    }

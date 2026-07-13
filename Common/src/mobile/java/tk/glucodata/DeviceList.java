@@ -29,6 +29,8 @@ import static tk.glucodata.settings.Settings.removeContentView;
 import static tk.glucodata.util.getbutton;
 import static tk.glucodata.util.getcheckbox;
 
+import static tk.glucodata.MeterScanner.shouldUseDeviceAddress;
+
 import static tk.glucodata.Log.doLog;
 
 import android.graphics.Color;
@@ -62,7 +64,7 @@ public class DeviceList {
                         }
                      else {
                          var device=scan.devices.get(pos);
-                         int meterIndex=Natives.GlucoseMeterGetIndex(deviceName);
+                         int meterIndex=Natives.GlucoseMeterGetIndex(deviceName,shouldUseDeviceAddress(deviceName,device)?device.getAddress():null);
                          if(doLog)
                              Log.i(LOG_ID,deviceName+" getId()="+view.getId()+" pos="+pos+" meterIndex="+meterIndex);
                          if(meterIndex>=0) {
@@ -118,8 +120,9 @@ static private int aidexXindex(String name) {
              var scan=BluetoothGlucoseMeter.scanner;
              var device=scan.devices.get(pos);
              var name=scan.deviceNames.get(pos);
-             String nameaddress=name+"\n"+device.getAddress();
-             int index= showAidexX?aidexXindex(name):GlucoseMeterHasIndex(name);
+             var address=device.getAddress();
+             String nameaddress=name+"\n"+address;
+             int index= showAidexX?aidexXindex(name):GlucoseMeterHasIndex(name, shouldUseDeviceAddress(name,device)?address:null);
                  if(index<0) {
                      text.setText(newcolor(nameaddress));
                      }

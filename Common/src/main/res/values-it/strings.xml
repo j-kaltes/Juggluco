@@ -457,7 +457,6 @@
 <string name="username">Nome utente</string>
 <string name="turnserver">Turn Server</string>
  <string name="ICElabeltooshort">ERRORE: l\'etichetta ICE deve essere lunga almeno 16 byte.</string>
- <string name="attr_ble_scan">Scansione del sensore di glucosio Bluetooth</string>
     <string name="divorcename">Disaccoppia</string>
     <string name="divorcemessage">Permettere al sensore di connettersi a un altro telefono o orologio (invece di questo)?</string>
     <string name="unpairsuccess">" Disaccoppiamento riuscito"</string>

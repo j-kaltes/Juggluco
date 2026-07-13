@@ -26,19 +26,19 @@ git clone --recurse-submodules  https://github.com/j-kaltes/Juggluco.git
 The following files need to be added to build Juggluco and can be found by unzipping an Arm/Arm64/x86/x86_64 Juggluco apk from
 https://www.juggluco.nl/Juggluco/download.html
 
-libcalibrat2.so and libcalibrate.so in lib/* of the APK should be put in the corresponding directories (e.g. the libraries from armeabi-v7a of the apk should be put in armeabi-v7) in:    
+libcalibrat2.so and/or libcalibrate.so in lib/* of the APK should be put in the corresponding directories (e.g. the libraries from armeabi-v7a of the apk should be put in armeabi-v7) in:    
 ./Common/src/main/jniLibs/x86_64/    
 ./Common/src/main/jniLibs/armeabi-v7a/   
 ./Common/src/main/jniLibs/x86/   
 ./Common/src/main/jniLibs/arm64-v8a/   
    
-libcrl_dp.so  liblibre3extension.so  and libinit.so  in the corresponding directories of:   
+liblibre3extension.so  and libinit.so  in the corresponding directories of:   
 ./Common/src/libre3/jniLibs/x86_64/   
 ./Common/src/libre3/jniLibs/armeabi-v7a/   
 ./Common/src/libre3/jniLibs/x86/   
 ./Common/src/libre3/jniLibs/arm64-v8a/   
 
-libnative-algorithm-jni-v113B.so  libnative-encrypy-decrypt-v110.so  libnative-struct2json.so libnative-algorithm-v1_1_3_B.so   libnative-sensitivity-v110.so in   
+libCALCULATION.so libnative-algorithm-jni-v116A.so libnative-algorithm-v1_1_6A.so libnative-sensitivity-v110.so libnative-algorithm-jni-v115G.so libnative-algorithm-v1_1_5G.so libnative-encrypy-decrypt-v110.so libnative-struct2json.so in:
 ./Common/src/mobileSi/jniLibs/armeabi-v7a/   
 ./Common/src/mobileSi/jniLibs/arm64-v8a/
 

@@ -35,17 +35,13 @@
          You must add an attribute to this permission, or declare the
          ACCESS_FINE_LOCATION permission, depending on the results when you
          check location usage in your app.  -->
-   <attribution android:tag="ble_scan" android:label="@string/attr_ble_scan" /> 
+<!--   <attribution android:tag="ble_scan" android:label="@string/attr_ble_scan" />  -->
+
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" android:usesPermissionFlags="neverForLocation" />
     <!-- Needed only if your app makes the device discoverable to Bluetooth devices.  -->
     <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
     <!-- Needed only if your app communicates with already-paired Bluetooth devices.  -->
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
-<!--    <queries>
-        <intent>
-            <action android:name="android.intent.action.TTS_SERVICE"/>
-        </intent>
-    </queries> -->
 <queries> <package android:name="com.google.android.apps.healthdata" /> </queries>
 
     <queries>

@@ -302,7 +302,7 @@ public   View addnumberview(MainActivity context,final int bron,final long time,
                if(wid>hei) {
                   int minleft=systembarLeft*3/4;
                 if(hei>h)
-                    lay.setY((hei - h) / 2);
+                    lay.setY((int)((hei - h) *.65f));
                    else
                     lay.setY(MainActivity.systembarTop*3/4);
                  if(wid>w) {
@@ -1165,45 +1165,34 @@ Layout getkeyboard(Context context) {
     but.setContentDescription("Decimal point");
     but.setOnClickListener(click);
     Layout layout=new Layout(context, (lay, w, h)->{
-    int hei=GlucoseCurve.getheight();
-    int wid=GlucoseCurve.getwidth();
-    /*
-    if(curve!=null)  {
-        hei=curve.getHeight();
-        wid=curve.getWidth();
-        {if(doLog) {Log.i(LOG_ID,"height="+height+" hei="+hei);};};
-        }
-    else {
-        {if(doLog) {Log.i(LOG_ID,"only height="+height);};};
-        hei=height;
-        wid=width;
-        }*/
-    if(wid>hei) {
-        lay.setY((hei-h)/2);
-      int mostright=wid-w-systembarRight;
-        if(noroom)
-            lay.setX(mostright);
-        else {
-            int half= (wid-systembarRight)/2;
-            int bij=(half-w)/4;
-         int xpos=half+bij;
-         if(xpos>mostright)
-            xpos=mostright;
-         lay.setX(xpos);
+            int hei=GlucoseCurve.getheight();
+            int wid=GlucoseCurve.getwidth();
+            if(wid>hei) {
+              lay.setY((int)((hei-h)*.65f));
+              int mostright=wid-w-systembarRight;
+                if(noroom)
+                    lay.setX(mostright);
+                else {
+                    int half= (wid-systembarRight)/2;
+                    int bij=(half-w)/4;
+                 int xpos=half+bij;
+                 if(xpos>mostright)
+                    xpos=mostright;
+                 lay.setX(xpos);
 
-        }
+                }
 
-//        lay.setX(wid-w);
-        }
-    else {
-        int half=hei/2;
-        int bij=(half-h)/4;
-        lay.setY(half+bij);
-        lay.setX((wid-w)/2); 
+        //        lay.setX(wid-w);
+                }
+            else {
+                int half=hei/2;
+                int bij=(half-h)/4;
+                lay.setY(half+bij);
+                lay.setX((wid-w)/2); 
 
-    }
+            }
 
-            return new int[] {w,h};
+                    return new int[] {w,h};
         }, views) ;
         
     layout.setBackgroundColor( Applic.backgroundcolor);
@@ -1263,7 +1252,7 @@ public static void avoidSpinnerDropdownFocus(Spinner spinner) {
             }
         }
     } catch (Throwable e) {
-        Log.stack(LOG_ID,e);
+        Log.stack(LOG_ID,"avoidSpinnerDropdownFocus",e);
     }
 }
 

@@ -188,7 +188,7 @@ int newGlucoseMeter(std::string_view scangegs) {
         uit.reserve(19);
         uit.append("Contour");
         uit.append(scangegs);
-        if(GlucoseMeter *meter= settings->data()->giveGlucoseMeter(uit.data())) {
+        if(GlucoseMeter *meter= settings->data()->giveGlucoseMeter(uit.data(),nullptr)) {
             meter->active=true;
             int meterIndex=meter-settings->data()->glucosemeters;
             LOGGER("newGlucoseMeter %s index=%d\n",uit.data(),meterIndex);
@@ -244,39 +244,80 @@ extern "C" JNIEXPORT jboolean  JNICALL   fromjava(GlucoseMeterSetLastPos)(JNIEnv
          return false;
         }
 
-extern "C" JNIEXPORT jint  JNICALL   fromjava(GlucoseMeterGetIndex)(JNIEnv *env, jclass cl,jstring jdeviceName) {
+void deviceAddressBytes( const char *address, uint8_t*uit) {
+    sscanf(address,"%hhX:%hhX:%hhX:%hhX:%hhX:%hhX",uit,uit+1,uit+2,uit+3,uit+4,uit+5);
+    }
+extern "C" JNIEXPORT jint  JNICALL   fromjava(GlucoseMeterGetIndex)(JNIEnv *env, jclass cl,jstring jdeviceName,jstring jaddress) {
+        uint8_t address[8]{};
+        bool hasaddress=false;
+        if(jaddress) {
+            const char *in = env->GetStringUTFChars( jaddress, NULL);
+            if(in != nullptr) {
+                deviceAddressBytes(in,address);
+                env->ReleaseStringUTFChars(jaddress, in);
+                hasaddress=true;
+                }
+            }
         unsigned len= env->GetStringUTFLength(jdeviceName );
         jint jlen = env->GetStringLength( jdeviceName);
         char buf[len+1];
         env->GetStringUTFRegion(jdeviceName, 0,jlen, buf);
         buf[len]='\0';
         std::string_view deviceName{buf,len};
-        if(const GlucoseMeter *meter= settings->data()->giveGlucoseMeter(deviceName)) {
+        if(const GlucoseMeter *meter= settings->data()->giveGlucoseMeter(deviceName,hasaddress?address:nullptr)) {
                 int meterIndex=meter-settings->data()->glucosemeters;
+                LOGGER("GlucoseMeterGetIndex(%s,%lX)=%d hasaddress=%d\n",buf,*(uint64_t*)address,meterIndex,hasaddress)
                 return meterIndex;
                 }
+
+        LOGGER("GlucoseMeterGetIndex(%s,%lX)=-1 hasaddress=%d\n",buf,*(uint64_t*)address,hasaddress)
         return -1;
         }
-extern "C" JNIEXPORT jboolean  JNICALL   fromjava(GlucoseMeterRemove)(JNIEnv *env, jclass cl,jstring jdeviceName) {
-        unsigned len= env->GetStringUTFLength(jdeviceName );
-        jint jlen = env->GetStringLength( jdeviceName);
-        char buf[len+1];
-        env->GetStringUTFRegion(jdeviceName, 0,jlen, buf);
-        buf[len]='\0';
-        std::string_view deviceName{buf,len};
-        return settings->data()->removeGlucoseMeter(deviceName);
+extern "C" JNIEXPORT jboolean  JNICALL   fromjava(GlucoseMeterRemoveIndex)(JNIEnv *env, jclass cl,jint index) {
+        return settings->data()->removeGlucoseMeter(index);
         }
-extern "C" JNIEXPORT jint  JNICALL   fromjava(GlucoseMeterHasIndex)(JNIEnv *env, jclass cl,jstring jdeviceName) {
+extern "C" JNIEXPORT jboolean  JNICALL   fromjava(GlucoseMeterRemove)(JNIEnv *env, jclass cl,jstring jdeviceName,jstring jaddress) {
+        uint8_t address[6];
+        bool hasaddress=false;
+        if(jaddress) {
+            const char *in = env->GetStringUTFChars( jaddress, NULL);
+            if(in != nullptr) {
+                deviceAddressBytes(in,address);
+                env->ReleaseStringUTFChars(jaddress, in);
+                hasaddress=true;
+                }
+            }
         unsigned len= env->GetStringUTFLength(jdeviceName );
         jint jlen = env->GetStringLength( jdeviceName);
         char buf[len+1];
         env->GetStringUTFRegion(jdeviceName, 0,jlen, buf);
         buf[len]='\0';
         std::string_view deviceName{buf,len};
-        if(const GlucoseMeter *meter= settings->data()-> getGlucoseMeter(deviceName)) {
+        return settings->data()->removeGlucoseMeter(deviceName,hasaddress?address:nullptr);
+        }
+extern "C" JNIEXPORT jint  JNICALL   fromjava(GlucoseMeterHasIndex)(JNIEnv *env, jclass cl,jstring jdeviceName,jstring jaddress) {
+        uint8_t address[8]{};
+        bool hasaddress=false;
+        if(jaddress) {
+            const char *in = env->GetStringUTFChars( jaddress, NULL);
+            if(in != nullptr) {
+                deviceAddressBytes(in,address);
+                env->ReleaseStringUTFChars(jaddress, in);
+                hasaddress=true;
+                }
+            }
+        unsigned len= env->GetStringUTFLength(jdeviceName );
+        jint jlen = env->GetStringLength( jdeviceName);
+        char buf[len+1];
+        env->GetStringUTFRegion(jdeviceName, 0,jlen, buf);
+        buf[len]='\0';
+        std::string_view deviceName{buf,len};
+        if(const GlucoseMeter *meter= settings->data()-> getGlucoseMeter(deviceName,hasaddress?address:nullptr)) {
                 int meterIndex=meter-settings->data()->glucosemeters;
+                LOGGER("GlucoseMeterHasIndex(%s,%lX)=%d hasaddress=%d\n",buf,*(uint64_t*)address,meterIndex,hasaddress)
                 return meterIndex;
                 }
+        LOGGER("GlucoseMeterHasIndex(%s,%lX)=-1 hasaddress=%d\n",buf,*(uint64_t*)address,hasaddress)
         return -1;
         }
 
@@ -389,9 +430,6 @@ extern "C" JNIEXPORT jstring  JNICALL   fromjava(GlucoseMeterDeviceAddress)(JNIE
                 }
          return nullptr;
          }
-void deviceAddressBytes( const char *address, uint8_t*uit) {
-    sscanf(address,"%hhX:%hhX:%hhX:%hhX:%hhX:%hhX",uit,uit+1,uit+2,uit+3,uit+4,uit+5);
-    }
 extern "C" JNIEXPORT jboolean  JNICALL   fromjava(GlucoseMeterSetDeviceAddress)(JNIEnv *env, jclass cl,jint meterIndex,jstring jaddress) {
         if(GlucoseMeter *meter= settings->data()->getGlucoseMeter(meterIndex)) {
                 if(jaddress) {

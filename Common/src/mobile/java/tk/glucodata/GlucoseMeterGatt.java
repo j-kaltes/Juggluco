@@ -78,7 +78,7 @@ public GlucoseMeterGatt(String deviceName) {
 public String getDeviceAddress() {
         return Natives.GlucoseMeterDeviceAddress(meterIndex);
         }
-public boolean setDeviceAddress(String address) {
+private boolean setDeviceAddress(String address) {
         return Natives.GlucoseMeterSetDeviceAddress(meterIndex,address);
         }
 public String getDeviceName() {
@@ -97,9 +97,35 @@ long foundtime=0L;
  private static final String ContextCharUUID = "00002a34-0000-1000-8000-00805f9b34fb";
  private static final String RecordsCharUUID = "00002a52-0000-1000-8000-00805f9b34fb";
  private static final String DateTimeCharUUID = "00002a08-0000-1000-8000-00805f9b34fb";
+ private static final String SerialNumberCharUUID = "00002a25-0000-1000-8000-00805f9b34fb";
  private static final String IsensTimeCharUUID ="0000fff1-0000-1000-8000-00805f9b34fb";
 
 
+/*
+
+Accu-Chek Mobile
+service: 00001800-0000-1000-8000-00805f9b34fb
+Characteristic: 00002a00-0000-1000-8000-00805f9b34fb
+Characteristic: 00002a01-0000-1000-8000-00805f9b34fb
+Characteristic: 00002a04-0000-1000-8000-00805f9b34fb
+Characteristic: 00002aa6-0000-1000-8000-00805f9b34fb
+service: 00001801-0000-1000-8000-00805f9b34fb
+Characteristic: 00002a05-0000-1000-8000-00805f9b34fb
+service: 0000180a-0000-1000-8000-00805f9b34fb
+Characteristic: 00002a29-0000-1000-8000-00805f9b34fb
+Characteristic: 00002a24-0000-1000-8000-00805f9b34fb
+Characteristic: 00002a25-0000-1000-8000-00805f9b34fb
+Characteristic: 00002a27-0000-1000-8000-00805f9b34fb
+Characteristic: 00002a26-0000-1000-8000-00805f9b34fb
+Characteristic: 00002a28-0000-1000-8000-00805f9b34fb
+service: 00001808-0000-1000-8000-00805f9b34fb
+Characteristic: 00002a18-0000-1000-8000-00805f9b34fb
+Characteristic: 00002a34-0000-1000-8000-00805f9b34fb
+Characteristic: 00002a51-0000-1000-8000-00805f9b34fb
+Characteristic: 00002a52-0000-1000-8000-00805f9b34fb
+
+
+*/
 
 private  BluetoothGattCharacteristic TimeChar;
 private  BluetoothGattCharacteristic DateTimeChar;
@@ -108,19 +134,32 @@ private  BluetoothGattCharacteristic GlucoseChar;
 private  BluetoothGattCharacteristic ContextChar;
 private  BluetoothGattCharacteristic RecordsChar;
 private  BluetoothGattCharacteristic ManufacturerNameChar;
+private  BluetoothGattCharacteristic SerialNumberChar;
 
 
 
 private boolean discovered=false;
+private boolean accuChekMobile=false;
+private int recordsWriteAuthenticationRetries=0;
 private boolean discover(BluetoothGatt bluetoothGatt) {
     var services=bluetoothGatt.getServices();
     boolean success=false;
+    accuChekMobile=false;
+    recordsWriteAuthenticationRetries=0;
+    TimeChar=null;
+    DateTimeChar=null;
+    IsensTimeChar=null;
+    GlucoseChar=null;
+    ContextChar=null;
+    RecordsChar=null;
+    ManufacturerNameChar=null;
+    SerialNumberChar=null;
     for(var ser:services) {
         if(AidexXGattCallback.ScanServiceUUID.equals(ser.getUuid())) {
              Log.i(LOG_ID,"Aidex X sensor, remove");
                 var devname= mActiveBluetoothDevice.getName();
                 if(devname!=null) {
-                    Natives.GlucoseMeterRemove(devname);
+                    Natives.GlucoseMeterRemove(devname,null);
                     }
                BluetoothGlucoseMeter.restartDevices();
                return false;
@@ -138,15 +177,22 @@ private boolean discover(BluetoothGatt bluetoothGatt) {
                 case GlucoseCharUUID: GlucoseChar=s;success=true;break;
                 case ContextCharUUID: ContextChar=s;break;
                 case RecordsCharUUID: RecordsChar=s;break;
+                case SerialNumberCharUUID: SerialNumberChar=s;break;
                 }
             }
         }
     if(success)  {
         if(doLog) Log.i(LOG_ID,"discover successfull");
-        tryer( ()->
-            {
-            return bluetoothGatt.readCharacteristic(ManufacturerNameChar);
-            });
+        if(ManufacturerNameChar!=null) {
+            tryer( ()->
+                {
+                return bluetoothGatt.readCharacteristic(ManufacturerNameChar);
+                });
+            }
+        else if(TimeChar!=null)
+            tryer(()->bluetoothGatt.readCharacteristic(TimeChar));
+        else
+            startGlucoseService(bluetoothGatt);
         }
     else {
         if(doLog)
@@ -214,9 +260,15 @@ private void handleManufactory(BluetoothGatt gatt,String manufacturer) {
         if(doLog)
             Log.i(LOG_ID,"handleManufactory "+ manufacturer);
         if(manufacturer.startsWith("Roche")) {
-                if(doLog)
-                        Log.i(LOG_ID,"read DateTime");
-                tryer(()->gatt.readCharacteristic(DateTimeChar));
+                if(DateTimeChar==null)  {
+                    accuChekMobile=true;
+                    startGlucoseService(gatt);
+                    }
+                else {
+                    if(doLog)
+                            Log.i(LOG_ID,"read DateTime");
+                    tryer(()->gatt.readCharacteristic(DateTimeChar));
+                    }
                 return;
                 }
         if(manufacturer.startsWith("TaiDoc")) {
@@ -231,6 +283,42 @@ private void handleManufactory(BluetoothGatt gatt,String manufacturer) {
                 }
         tryer(()->gatt.readCharacteristic(TimeChar));
        }
+private void startGlucoseService(BluetoothGatt gatt) {
+        if(ContextChar!=null) {
+            tryer(()->enableNotification(gatt, ContextChar));
+            }
+        else {
+            tryer(()->enableNotification(gatt, GlucoseChar));
+            }
+        }
+private boolean writeRecordsRequest(BluetoothGatt gatt) {
+        if(firstRecordonly) {
+              byte[] cmd={1,(byte)0x5};
+              return writer(gatt, RecordsChar,cmd);
+              }
+              /*
+        if(accuChekMobile) {
+              byte[] cmd={1,(byte)0x1};
+              return writer(gatt, RecordsChar,cmd);
+              }
+              */
+        if(newerRecords) {
+            byte[] cmd=Natives.getGlucoseMeterNewCMD(meterIndex);
+            if(cmd!=null) {
+                return writer(gatt, RecordsChar,cmd);
+                }
+            disconnect();
+            return true;
+            }
+        byte[] cmd={1,(byte)0x1};
+        return writer(gatt, RecordsChar,cmd);
+        }
+
+
+private void requestRecords(BluetoothGatt gatt) {
+        recordsWriteAuthenticationRetries=0;
+        tryer(()->writeRecordsRequest(gatt));
+        }
     @Override
     public void onCharacteristicRead(@NonNull BluetoothGatt bluetoothGatt,@NonNull  BluetoothGattCharacteristic bluetoothGattCharacteristic, int status) {
         final var value=bluetoothGattCharacteristic.getValue();
@@ -252,15 +340,15 @@ private void handleManufactory(BluetoothGatt gatt,String manufacturer) {
             }
         switch(uuid) {
             case ManufacturerNameCharUUID: handleManufactory(bluetoothGatt,new String(value));break;
+            case SerialNumberCharUUID:
+                if(doLog)
+                    Log.i(LOG_ID,"Serial number "+new String(value));
+                requestRecords(bluetoothGatt);
+                break;
             case DateTimeCharUUID: 
             case TimeCharUUID: 
                 Natives.GlucoseMeterSaveTime(meterIndex,value);
-                if(ContextChar!=null) {
-                    tryer(()->enableNotification(bluetoothGatt, ContextChar));
-                    }
-                else {
-                    tryer(()->enableNotification(bluetoothGatt, GlucoseChar));break;
-                    }
+                startGlucoseService(bluetoothGatt);
                 break;
                  
             default: Log.e(LOG_ID,"onCharacteristicRead: Unknown UUID "+uuid);break;
@@ -274,8 +362,23 @@ private void handleManufactory(BluetoothGatt gatt,String manufacturer) {
         if(doLog) {
             showCharacter("onCharacteristicWrite",characteristic);
             }
+        if(status == GATT_INSUFFICIENT_AUTHENTICATION && RecordsCharUUID.equals(uuid) && recordsWriteAuthenticationRetries++ < 8) {
+            if(doLog)
+                Log.i(LOG_ID,"retry Record Access Control Point after authentication");
+            Applic.scheduler.schedule(() -> {
+                if(connected && mBluetoothGatt==gatt)
+                    writeRecordsRequest(gatt);
+                }, 2, TimeUnit.SECONDS);
+            return;
+            }
+        if(status!=GATT_SUCCESS) {
+            if(doLog)
+                Log.i(LOG_ID,"onCharacteristicWrite status="+status+" UUID:"+uuid);
+            return;
+            }
         switch(uuid) {
             case IsensTimeCharUUID: tryer(()->enableNotification(gatt, GlucoseChar));break;
+            case RecordsCharUUID: recordsWriteAuthenticationRetries=0;break;
 
             default:
             }
@@ -395,25 +498,11 @@ private void setCareSenseTime(BluetoothGatt bluetoothGatt) {
                     tryer(()->enableNotification(bluetoothGatt, GlucoseChar));
                     break;
            case RecordsCharUUID:
-                if(firstRecordonly) {
-                      byte[] cmd={1,(byte)0x5};
-                      tryer(()->writer(bluetoothGatt, RecordsChar,cmd));
-                      }
-                else {
-                    if(newerRecords) {
-                        byte[] cmd=Natives.getGlucoseMeterNewCMD(meterIndex);
-                        if(cmd!=null) {
-                            tryer(()->writer(bluetoothGatt, RecordsChar,cmd));
-                            }
-                        else {
-                              disconnect();
-                               }
-                        }
-                    else {
-                       byte[] cmd={1,(byte)0x1};
-                       tryer(()->writer(bluetoothGatt, RecordsChar,cmd));
+                if(accuChekMobile && SerialNumberChar!=null) {
+                    tryer(()->bluetoothGatt.readCharacteristic(SerialNumberChar));
                     }
-                    }
+                else
+                    requestRecords(bluetoothGatt);
                     break;
           case IsensTimeCharUUID:
                     setCareSenseTime(bluetoothGatt);
@@ -585,11 +674,11 @@ boolean askDevice() {
             if(doLog) {Log.i(LOG_ID,"getDevice "+ meterIndex+" checkBluetoothAddress(" +mActiveDeviceAddress +") succeeded");};
             mActiveBluetoothDevice = mBluetoothAdapter.getRemoteDevice(mActiveDeviceAddress);
             return true;
-             } 
-           if(doLog) {Log.i(LOG_ID, "getDevice "+ meterIndex+" checkBluetoothAddress(" +mActiveDeviceAddress +") failed");};
-           setDeviceAddress(null);
-           return false;
-           }
+            } 
+        if(doLog) {Log.i(LOG_ID, "getDevice "+ meterIndex+" checkBluetoothAddress(" +mActiveDeviceAddress +") failed");};
+        setDeviceAddress(null);
+        return false;
+        }
     if(doLog) {Log.i(LOG_ID,"getDevice no address "+meterIndex);};
     return false;
     }

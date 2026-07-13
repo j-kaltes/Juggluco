@@ -425,19 +425,41 @@ struct Tings {
     uint8_t gs3id[12];
     uint32_t reserved32;
 
-
-bool removeGlucoseMeter(const std::string_view deviceName)  {
+static bool meterMatch(const struct GlucoseMeter &meter,const std::string_view deviceName,uint8_t *address)  {
+    if(address) {
+        static constexpr const uint8_t zero[6]{};
+        if(memcmp(zero,meter.deviceAddress,6))
+            return !memcmp(address, meter.deviceAddress,6);
+        }
     const int len=std::min(static_cast<int>(deviceName.size())+1, maxDeviceName);
+    return !memcmp(deviceName.data(),meter.deviceName,len) ;
+    }
+
+
+void removeGlucoseMeterIntern(const int i)  {
+    const int next=i+1;
+    const int left=glucoseMeterNR-next;
+    if(left>0) {
+            memmove(glucosemeters+i,glucosemeters+next,left*sizeof(GlucoseMeter));
+            }
+     --glucoseMeterNR;
+     glucosemeters[glucoseMeterNR]={};
+     }
+
+bool removeGlucoseMeter(const int i)  {
+    if(i>=glucoseMeterNR)
+        return false;
+     removeGlucoseMeterIntern(i); 
+     return true;
+     }
+
+
+bool removeGlucoseMeter(const std::string_view deviceName,uint8_t *address)  {
     const int tot=glucoseMeterNR; 
     for(int i=0;i<tot;++i) {
-        if(!memcmp(deviceName.data(),glucosemeters[i].deviceName,len)) {
-            const int next=i+1;
-            const int left=tot-next;
-            if(left>0) {
-                    memmove(glucosemeters+i,glucosemeters+next,left*sizeof(GlucoseMeter));
-                    }
-             --glucoseMeterNR;
-             return true;
+        if(meterMatch(glucosemeters[i],deviceName,address)) {
+            removeGlucoseMeterIntern(i);
+            return true;
             }
         }
      return false;
@@ -455,32 +477,33 @@ auto *getGlucoseMeter(this Self&& self,int index)  {
     return meter;
     }
 template <typename Self>
-auto *getGlucoseMeter(this Self&& self,const std::string_view deviceName)  {
-    const int len=std::min(static_cast<int>(deviceName.size())+1, maxDeviceName);
+auto *getGlucoseMeter(this Self&& self,const std::string_view deviceName,uint8_t *address)  {
     const int tot=self.glucoseMeterNR; 
     for(int i=0;i<tot;++i) {
-        if(!memcmp(deviceName.data(),self.glucosemeters[i].deviceName,len)) {
+        if(meterMatch(self.glucosemeters[i],deviceName,address)) {
             return &self.glucosemeters[i];
             }
         }
     return static_cast<decltype(&self.glucosemeters[0])>(nullptr);
      }
 template <typename Self>
-auto *newGlucoseMeter(this Self&& self,std::string_view deviceName)  {
+auto *newGlucoseMeter(this Self&& self,std::string_view deviceName,uint8_t *address)  {
     const int len=std::min(static_cast<int>(deviceName.size())+1, maxDeviceName);
     const int nr=self.glucoseMeterNR;
     if(nr<maxglucosemeters) {
         memcpy(self.glucosemeters[nr].deviceName,deviceName.data(),len);
+        if(address)
+               memcpy(self.glucosemeters[nr].deviceAddress,address,6);
         self.glucoseMeterNR=nr+1;
         return &self.glucosemeters[nr];
         }
     return static_cast<decltype(&self.glucosemeters[0])>(nullptr);
     }
 template <typename Self>
-auto *giveGlucoseMeter(this Self&& self,std::string_view deviceName)  {
-     auto *meter=self.getGlucoseMeter(deviceName);
+auto *giveGlucoseMeter(this Self&& self,std::string_view deviceName,uint8_t *address)  {
+     auto *meter=self.getGlucoseMeter(deviceName,address);
      if(!meter)
-        meter=self.newGlucoseMeter(deviceName);
+        meter=self.newGlucoseMeter(deviceName,address);
      return meter;
      }
 void defaultshows() {

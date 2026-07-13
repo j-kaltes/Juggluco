@@ -433,7 +433,6 @@
     <string name="username">Nombre de usuario</string>
     <string name="turnserver">Servidor TURN</string>
     <string name="ICElabeltooshort">ERROR: la etiqueta ICE debe tener al menos 16 bytes</string>
-    <string name="attr_ble_scan">Escaneo Bluetooth del sensor de glucosa</string>
     <string name="divorcename">Desemparejar</string>
     <string name="divorcemessage">¿Permitir que el sensor se conecte a otro teléfono o reloj (en lugar de a este)?</string>
     <string name="unpairsuccess">" Desemparejado correctamente"</string>

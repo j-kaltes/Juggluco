@@ -243,7 +243,11 @@ private boolean getinfo=doLog;
             if(getinfo) {
                 BluetoothGattService dis  = g.getService(DEVICE_INFO_SERVICE);
                 if(dis!=null) {
-                    queueRead(dis.getCharacteristic(CHAR_MANUFACTURER), v -> info.manufacturer    = utf8(v));
+                    queueRead(dis.getCharacteristic(CHAR_MANUFACTURER), v -> {
+                        info.manufacturer    = utf8(v);
+                        if(info.manufacturer.endsWith("CN")) 
+                            Natives.isChinese(dataptr); 
+                        });
                     queueRead(dis.getCharacteristic(CHAR_MODEL_NUMBER), v -> info.modelNumber     = utf8(v));
                     queueRead(dis.getCharacteristic(CHAR_SYSTEM_ID),    v -> info.systemId        = v);
                     queueRead(dis.getCharacteristic(CHAR_FW_REVISION),  v -> info.firmwareRevision= utf8(v));

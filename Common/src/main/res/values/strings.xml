@@ -456,7 +456,6 @@
 <string name="username">Username</string>
 <string name="turnserver">Turn Server</string>
  <string name="ICElabeltooshort">ERROR: ICE label must be at least 16 bytes.</string>
- <string name="attr_ble_scan">Bluetooth glucose sensor scanning</string>
     <string name="divorcename">Unpair</string>
     <string name="divorcemessage">Allow sensor to connect to another phone or watch (instead of this one)?</string>
     <string name="unpairsuccess">" Unpair successful"</string>
@@ -506,4 +505,5 @@
     <string name="media">Media</string>
     <string name="notification">Notification</string>
     <string name="alarmis">Alarm is</string>
+    <string name="deletemeter">Remove meter information. Measurements will remain.</string>
 </resources>

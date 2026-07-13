@@ -3041,14 +3041,22 @@ all values.</p>
 <![CDATA[
 <p><a href="https://www.juggluco.nl/Jugglucohelp/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/GlucoseMeter.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/GlucoseMeter.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/GlucoseMeter.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/GlucoseMeter.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/GlucoseMeter.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/GlucoseMeter.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/GlucoseMeter.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/GlucoseMeter.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/GlucoseMeter.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/GlucoseMeter.html?lang=en">en</a>&emsp;&emsp;</p><h1 class="western">Glucose meter</h1>
 <p style="line-height: 100%; margin-bottom: 0cm">Juggluco will only
-add glucose values with a timestamp later than the specified date and
-time. Change to a later date and time if earlier glucose values are
-already present in Juggluco.</p>
+add glucose values with a timestamp later than the specified <b>date</b>
+and <b>time</b>. Change to a later date and time if earlier glucose
+values are already present in Juggluco.</p>
 <p style="line-height: 100%; margin-bottom: 0cm">Select the label for
-blood glucose.</p>
-<p style="line-height: 100%; margin-bottom: 0cm">The first time, you need to put the glucose meter into PAIRING mode — for example, by long-pressing the button on the powered-off meter until a blue light blinks.</p>
-<p><br></p>
-<p><br></p>
+<b>blood glucose</b>.</p>
+<p style="line-height: 100%; margin-bottom: 0cm">The first time, you
+need to put the glucose meter into PAIRING mode — for example, by
+long-pressing the button on the powered-off meter until a blue light
+blinks.</p>
+<p><b>Delete</b>: Removes knowledge of this glucose meter from
+Juggluco so that it is no longer shown in the glucose meter list. The
+data received from the glucose meter will remain.</p>
+<p><br/>
+<br/>
+
+</p>
 ]]>
 </string>
 <string name="GlucoseMeterList" >

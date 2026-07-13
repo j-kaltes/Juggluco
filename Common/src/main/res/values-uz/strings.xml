@@ -438,7 +438,6 @@ Endi transmitter data matrixini skanerlang."</string>
     <string name="username">Foydalanuvchi nomi</string>
     <string name="turnserver">TURN server</string>
     <string name="ICElabeltooshort">XATO: ICE yorlig\'i kamida 16 bayt bo\'lishi kerak</string>
-    <string name="attr_ble_scan">Bluetooth glyukoza sensorini skanerlash</string>
     <string name="divorcename">Juftlikni bekor qilish</string>
     <string name="divorcemessage">Sensor boshqa telefon yoki soatga ulanishiga ruxsat berilsinmi (buning o\'rniga bu qurilmaga emas)?</string>
     <string name="unpairsuccess">" Juftlikni bekor qilish muvaffaqiyatli"</string>

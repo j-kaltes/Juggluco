@@ -458,7 +458,6 @@
 <string name="username">ユーザー名</string>
 <string name="turnserver">Turnサーバー</string>
  <string name="ICElabeltooshort">エラー: ICEラベルは最低16バイト必要です</string>
- <string name="attr_ble_scan">Bluetooth血糖センサーのスキャン</string>
     <string name="divorcename">ペア解除</string>
     <string name="divorcemessage">このセンサーが他のスマートフォンやウォッチに接続できるようにしますか?</string>
     <string name="unpairsuccess">" ペア解除に成功"</string>

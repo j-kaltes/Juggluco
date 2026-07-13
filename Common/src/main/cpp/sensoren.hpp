@@ -136,7 +136,7 @@ public:
    Sensoren(string_view basedirin) : inbasedir(basedirin), mapfile{inbasedir, "sensors.dat"},
                              map(mapfile,1024), maxhist(map.data()?(last() + 3):100),
                              hist(new SensorGlucoseData *[maxhist]()) {
-        LOGGER("maxhist=%d\n",maxhist);
+        LOGGER("maxhist=%d pagesize=%d\n",maxhist,SensorGlucoseData::blocksize);
         setindices();
        }
    void setlibre3nums() {
@@ -213,7 +213,7 @@ public:
 //   constexpr int cap=2;
 
       const int cap = pagesize / sizeof(struct sensor);
-      LOGGER("map(%s,%d) getpagesize=%d\n", file.data(), cap, pagesize);
+      LOGGER("map(%s,%d)\n", file.data(), cap);
       MapType map(file, cap);
       auto dat = reinterpret_cast<infoblock *>(map.data());
       if (!dat)
@@ -608,11 +608,11 @@ std::pair<int,SensorGlucoseData *> makeSI3sensorIndex(const BarCode &barcode,std
         LOGGER("Wrong serial size=%d\n",barcode.Serial.size());
         return {-1,nullptr};
         }
-    return genMakeSI3sensorIndex(barcode.Serial.end()-10,scanned, now);
+    return genMakeSI3sensorIndex(barcode.Serial.end()-10,scanned, now,4);
     }
 public:
 //Sibioni3GS18AAFZ
-std::pair<int,SensorGlucoseData *> genMakeSI3sensorIndex(const char *blueToothNum,std::string_view scanned,uint32_t now) {
+std::pair<int,SensorGlucoseData *> genMakeSI3sensorIndex(const char *blueToothNum,std::string_view scanned,uint32_t now,uint8_t siType) {
    std::string longname;
    longname.reserve(16);
    longname.append("SibionGS3-",10);
@@ -623,7 +623,7 @@ std::pair<int,SensorGlucoseData *> genMakeSI3sensorIndex(const char *blueToothNu
         return getOldSensorPair(sensgegs,now);
        }
    const pathconcat sensordir(inbasedir,longname);
-   SensorGlucoseData::mkdatabaseSI3(sensordir,scanned,now);
+   SensorGlucoseData::mkdatabaseSI3(sensordir,scanned,now,siType);
    return addSensorInitgetPair(longname,maxdaysSI3*2);
    }
 private:
@@ -879,9 +879,19 @@ std::pair<int,SensorGlucoseData *> makePhotoScanSensorIndex(std::string_view geg
              if(si3==sku)  {
                     return makeSI3sensorIndex(barcode,gegsSI,now);
                     }
-             else {
-                LOGGER("si3=%.*s sku=%.*s\n",si3.size(),si3.data(),sku.size(),sku.data());
-                 }
+            LOGGER("si3=%.*s sku=%.*s\n",si3.size(),si3.data(),sku.size(),sku.data());
+            const union  {
+                     const char  _[6]{"64300"};
+                     std::array<char,5> si3zh;
+                     };
+            if(si3zh==sku) {
+                //Sibioni3GS18AAFZ
+                const auto pin=barcode.PIN;
+                if(pin.size()<6) {
+                    return {-1,nullptr};
+                    }
+                return genMakeSI3sensorIndex(pin.end()-6,gegsSI,now,5);
+                }
              bool hasnum=std::ranges::contains_subrange(gegsSI,sibionicsRecognition);
              if(!hasnum) {   
                      std::string_view si="(SI)";

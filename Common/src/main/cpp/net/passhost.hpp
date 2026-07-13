@@ -147,7 +147,7 @@ void setnameGen(const char *label,const void *padding)  {
 	char *name=reinterpret_cast<char *>(ips+maxip-1);
 	for(int i=0;i<maxnamelen;i++) {
 		if(!label[i]) {
-			memcpy(name+i,padding,maxnamelen-i);
+            memcpy(name+i,padding,maxnamelen-i);
 			LOGGER("setname(%s)\n",name);
 			return;
 			}

@@ -26,6 +26,8 @@ import static android.bluetooth.BluetoothDevice.EXTRA_BOND_STATE;
 
 import static tk.glucodata.Log.doLog;
 import static tk.glucodata.SuperGattCallback.bondString;
+import static tk.glucodata.util.sleep;
+
 
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
@@ -107,7 +109,7 @@ private static void removeReceivers() {
     }
 
 static  GlucoseMeterGatt[] meterGatts;
-public static void getDevices() {
+private static void getDevices() {
     final int[] devices=Natives.getActiveGlucoseMeters( );
     final int len=devices.length;
     meterGatts=new GlucoseMeterGatt[len];
@@ -234,25 +236,34 @@ public static void startDevices() {
     initBluetooth();
     connectAllDevices(0);
     }
-public static void stopDevices() {
+
+private static boolean removeDevices() {
+   var tmpgatt=meterGatts;
+   meterGatts=null;
+   if(tmpgatt!=null) {
+        for(var gatt:tmpgatt) {
+                gatt.stop=true;
+                gatt.view=null;
+                gatt.disconnect();
+                }
+         return true;
+        }
+   return false;
+   }
+public static boolean stopDevices() {
     if(doLog)
         Log.i(LOG_ID,"stopDevices");
 
     removeReceivers();
     stopScanner();
     scanner=null;
-    if(meterGatts != null) {
-        for(var gatt: meterGatts) {
-                gatt.stop=true;
-                gatt.view=null;
-                gatt.disconnect(); 
-                }
-        }
-    meterGatts=null;
+    var removed=removeDevices();
     devicesStarted=false;
+    return removed;
     }
 public static void restartDevices() {
-    stopDevices();
+    if(stopDevices())
+        sleep(40);
     startDevices();
     };
 static MeterScanner scanner=null;

@@ -44,10 +44,6 @@
 #include <climits>
 
 //#include "myArray.hpp"
-/*
-inline int getpagesize(void) {
-  return sysconf(_SC_PAGESIZE);
-} */
 #include "config.h"
 
 #include "inout.hpp"
@@ -788,6 +784,7 @@ int expectedWearDuration() const {
         if(getinfo()->newSI) {
             switch(siSubtype()) {
                 case 1: return 1966080;
+                case 5:
                 case 4: return getweardurationSEC()+3*12*60*60;
                 default: return 1972800;
                 }
@@ -1179,7 +1176,8 @@ E07A-000T3YL1R50
     return isSibionics()&&getinfo()->newSI&&siSubtype()==3;
     }
  bool isSibionics3() const {
-    return isSibionics()&&getinfo()->newSI&&siSubtype()==4;
+    const auto siType= siSubtype();
+    return isSibionics()&&getinfo()->newSI&&(siType==4||siType==5);
     }
  bool isDexcom() const {
     return getinfo()->dexcom;
@@ -1246,20 +1244,21 @@ static bool mkdatabase3(string_view sensordir,time_t start,uint32_t pin,const ch
     }
 #endif
 #ifdef SIBIONICS 
-static bool mkdatabaseSI3(string_view sensordir,string_view sensorgegs,uint32_t now) {
+static bool mkdatabaseSI3(string_view sensordir,string_view sensorgegs,uint32_t now,uint8_t siType) {
     LOGGER("mkdatabaseSI3 %s,%s\n",sensordir.data(),sensorgegs.data());
+
     mkdir(sensordir.data(),0700);
     pathconcat infoname(sensordir,infopdat);
     if(access(infoname,F_OK)!=-1)  {
         Readall<uint8_t> inf(infoname);
         if(inf.data()&&inf.size()>=sizeof(Info)) {
             const Info *in=reinterpret_cast<const Info*>(inf.data());
-            if(in->pollcount&&in->starttime>1700000000&&in->dupl>0&&in->sibionics&&in->siType==4)
+            if(in->pollcount&&in->starttime>1700000000&&in->dupl>0&&in->sibionics&&in->siType==siType) 
                 return false;
             }
         }
     uint32_t start=now;
-  Info inf{.starttime=(uint32_t)start,.lastscantime=(uint32_t)start,.starthistory=0,.endhistory=0,.scancount=0,.startid=0,.interval=interval5,.dupl=3,.days=maxdaysSI3 ,.sibionics=true,.lastLifeCountReceived=0,.newSI=true,.siType=4,.pollcount=0,.pollinterval=88.0, .lockcount=1,.manualwarmup=45,.siIdlen=(uint32_t)sensorgegs.size(),.warmupstartpos=45};
+  Info inf{.starttime=(uint32_t)start,.lastscantime=(uint32_t)start,.starthistory=0,.endhistory=0,.scancount=0,.startid=0,.interval=interval5,.dupl=3,.days=maxdaysSI3 ,.sibionics=true,.lastLifeCountReceived=0,.newSI=true,.siType=siType,.pollcount=0,.pollinterval=88.0, .lockcount=1,.manualwarmup=45,.siIdlen=(uint32_t)sensorgegs.size(),.warmupstartpos=45};
    memcpy(inf.siId,sensorgegs.data(),inf.siIdlen);
         
     writeall(infoname,&inf,sizeof(inf));

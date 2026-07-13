@@ -1,1 +1,1 @@
-/home/jka/extra/android/Juggluco/Glucodata/Common/src/mobileSi/java/tk/glucodata/Si3GattCallback.java
+../../../../mobileSi/java/tk/glucodata/Si3GattCallback.java

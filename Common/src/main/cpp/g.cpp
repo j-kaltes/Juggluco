@@ -599,10 +599,12 @@ extern "C" JNIEXPORT jlong JNICALL   fromjava(getdataptr)(JNIEnv *env, jclass cl
     jint getlen= env->GetStringUTFLength( jsensor);
     if(getlen!=shortsensorlen) {
         LOGGER("sensorlen=%d\n",getlen);
+        if(getlen>shortsensorlen)
+            getlen=shortsensorlen;
         }    
     char sensor[shortsensorlen+1];
-    env->GetStringUTFRegion( jsensor, 0,shortsensorlen, sensor);
-    sensor[sizeof(sensor)-1]='\0';
+    env->GetStringUTFRegion( jsensor, 0,getlen, sensor);
+    sensor[getlen]='\0';
 
     int sensorindex=sensors->sensorindexshort(sensor);
     if(sensorindex<0) {

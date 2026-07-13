@@ -35,6 +35,13 @@ extern jlong gs3Glucose(SensorGlucoseData *sens,std::vector<uint8_t> &vect,std::
 #define javapackage "tk/glucodata/"
 
 
+extern "C" JNIEXPORT void JNICALL   fromjava(isChinese)(JNIEnv *env, jclass cl,jlong dataptr) {
+      if(auto *sdata=reinterpret_cast<streamdata *>(dataptr)) {
+          if(SensorGlucoseData *sens=sdata->hist) {
+              sens->getinfo()->siType=5;
+             }
+          }
+    }
 extern "C" JNIEXPORT jobject JNICALL   fromjava(gs3Glucose)(JNIEnv *env, jclass cl,jlong dataptr, jbyteArray value,jlong mmsec) {
         if(!value) {
             LOGAR("gs3Glucose value==null");
@@ -86,6 +93,7 @@ extern "C" JNIEXPORT jstring JNICALL   fromjava(md5sum)(JNIEnv *env, jclass cl,j
    return env->NewStringUTF(uitstring);
    }
 //GJ,GS3*-BEABMA,GNL,AAC25B18AAFZ,E2AFF9F01F19,PG291,HT
+//GJ,04CS1260309004V,6,190SRN"
 #include <ranges>
 #include <string_view>
 
@@ -108,24 +116,29 @@ extern "C" JNIEXPORT jstring JNICALL   fromjava(gs3nfc)(JNIEnv *env, jclass cl, 
        const size_t len=env->GetArrayLength(jscan)-startpos;
        const char *start=buf+startpos;
        LOGGER("gs3nfc %.*s\n",len,start);
-       if(memcmp("GS3",start+3,3)) {
-          LOGAR("ns3nfc not GS3");
-          return nullptr;
-          }
      std::string_view scanview(start,len);
-     std::string_view deviceName=nth_field(scanview,3, ',');
-     int devlen=deviceName.size();
-     if(!devlen) {
-          LOGAR("ns3nfc no 3th ,");
-          return nullptr;
-          }
-     if(devlen<6) {
-        LOGGER("ns3nfc %d too small\n",devlen); 
-        return nullptr;
+     const char *blueToothNum;
+     int siType;
+     if(!memcmp("GS3",start+3,3)) {
+         std::string_view deviceName=nth_field(scanview,3, ',');
+         int devlen=deviceName.size();
+         if(!devlen) {
+              LOGAR("ns3nfc no 3th ,");
+              return nullptr;
+              }
+         if(devlen<6) {
+            LOGGER("ns3nfc %d too small\n",devlen); 
+            return nullptr;
+            }
+        blueToothNum=deviceName.end()-6;
+        siType=4;
+        LOGGER("device name %.*s blueToothNum %.*s\n",deviceName.size(),deviceName.data(),6,blueToothNum);
         }
-    const char *blueToothNum=deviceName.end()-6;
-    LOGGER("device name %.*s blueToothNum %.*s\n",deviceName.size(),deviceName.data(),6,blueToothNum);
-     auto [sensorindex,sensin]= sensors->genMakeSI3sensorIndex(blueToothNum,scanview,time(nullptr));
+     else {
+        siType=5;
+        blueToothNum=scanview.end()-6;
+        }
+     auto [sensorindex,sensin]= sensors->genMakeSI3sensorIndex(blueToothNum,scanview,time(nullptr),siType);
      sens=sensin;
     }
     if(sens) {

@@ -29,6 +29,9 @@ import static tk.glucodata.BluetoothGlucoseMeter.meterGatts;
 import static tk.glucodata.Log.doLog;
 import static tk.glucodata.SensorBluetooth.scanStarts;
 
+
+import android.os.Parcel;
+
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
@@ -144,6 +147,7 @@ class MeterScanner  {
             return true;
         }
     }
+
 private void addDevice(BluetoothDevice device) {
         var name=device.getName();
         if(name==null) {
@@ -152,7 +156,9 @@ private void addDevice(BluetoothDevice device) {
                 }
 
          {
-                if(deviceNames.contains(name)) {
+
+                if(devices.contains(device)) {
+              //  if(deviceNames.contains(name)) {
                         Log.i(LOG_ID,"device already present "+name);
                         return;
                         }
@@ -337,4 +343,91 @@ public     boolean scanStarter(long delayMillis) {
     scanFuture=Applic.scheduler.schedule(this::startScanGuarded, delayMillis, TimeUnit.MILLISECONDS);
     return false;
     }
+
+
+
+
+private static boolean isRocheAccuChekName(String name) {
+    if (name == null) return false;
+    return name.toUpperCase().startsWith("ACCU-CHEK");
+    }
+private static final int ADDRESS_TYPE_PUBLIC  = 0;
+private static final int ADDRESS_TYPE_RANDOM  = 1;
+private static final int ADDRESS_TYPE_UNKNOWN = 0xFFFF;
+
+
+
+private static int getAddressTypeFromParcel(BluetoothDevice device) {
+    Parcel p = Parcel.obtain();
+    try {
+        device.writeToParcel(p, 0);
+        p.setDataPosition(0);
+        String address = p.readString();
+        int type = p.readInt();
+        if(!device.getAddress().equals(address)) {
+            return ADDRESS_TYPE_UNKNOWN;
+            }
+
+        if(type == ADDRESS_TYPE_PUBLIC ||
+            type == ADDRESS_TYPE_RANDOM ||
+            type == ADDRESS_TYPE_UNKNOWN) {
+            return type;
+            }
+        return ADDRESS_TYPE_UNKNOWN;
+    } catch (Throwable t) {
+        return ADDRESS_TYPE_UNKNOWN;
+    } finally {
+        p.recycle();
+    }
+   }
+
+private static int getAddressTypeCompat(BluetoothDevice device) {
+    if(Build.VERSION.SDK_INT >= 35) {
+        try {
+            return device.getAddressType();
+        } catch (Throwable t) {
+            Log.stack(LOG_ID,"getAddressType",t);
+            return ADDRESS_TYPE_UNKNOWN;
+            }
+       }
+    return getAddressTypeFromParcel(device);
+   }
+private static int randomAddressSubtype(String address) {
+    int first = Integer.parseInt(address.substring(0, 2), 16);
+    return (first >>> 6) & 0x03;
+    }
+static boolean shouldUseDeviceAddress(String name, BluetoothDevice device) {
+    int type = getAddressTypeCompat(device);
+    if(type == ADDRESS_TYPE_PUBLIC) {
+        return true;
+        }
+    if(type == ADDRESS_TYPE_RANDOM && randomAddressSubtype(device.getAddress()) == 0b11) {
+        return true; // static random
+        }
+    if(isRocheAccuChekName(name)) {
+        return true; 
+       }
+    return false;
+    }
+
+/*
+String deviceType(BluetoothDevice device) {
+        if (Build.VERSION.SDK_INT >= 34) {
+            int type = getAddressTypeCompat(device);
+            return switch (type) {
+                case BluetoothDevice.ADDRESS_TYPE_PUBLIC -> "public";
+                case BluetoothDevice.ADDRESS_TYPE_RANDOM -> "random";
+                case BluetoothDevice.ADDRESS_TYPE_ANONYMOUS-> "anonymous";
+                case BluetoothDevice.ADDRESS_TYPE_UNKNOWN -> "unknown";
+                default -> "other";
+                    // Android does not know / does not expose it.
+                 };
+        }
+      else {
+        return "no info";
+        }
+   }
+   */
 }
+
+

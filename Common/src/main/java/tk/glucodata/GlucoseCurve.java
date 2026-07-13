@@ -1155,45 +1155,53 @@ else {
 
     Layout layout=new Layout(context,(lay, w, h)->{
     int width=GlucoseCurve.getwidth();
+
     int height=GlucoseCurve.getheight();
+    int ymax=height-MainActivity.systembarBottom-h;
+    int ypos=(int)((height - h) *.65f);
+    if(ypos>ymax) {
+        if(ymax<0)
+            ypos=0;
+        else
+            ypos=ymax;
+        }
 if(!smallScreen) {
 //    boolean rtl=Natives.getRTL();
     if(height>h&&width>w) {
+
+           lay.setY(ypos);
            if(width>height) {
-                lay.setY((height - h) / 2);
-                
+//                lay.setY((height - h) / 2);
                 int half= width / 2;
                 int af=(half-w)/4;
                 int posx= half - w-af;
                 if(posx<0) {
                     posx=0;
-                numberview.noroom=true;
-                }
+                    numberview.noroom=true;
+                    }
                 else
-                numberview.noroom=false;
+                    numberview.noroom=false;
                 lay.setX(posx);
                {if(doLog) {Log.i(LOG_ID,"search h="+h+" height="+height+" w="+w+" width="+width+" posx="+posx);};};
                 }
             else {
-
-            int half=height/2;
-            int af=(half-h)/4;
-             var xpos= (width - w)/2;
+                int half=height/2;
+                int af=(half-h)/4;
+                 var xpos= (width - w)/2;
                 lay.setX(xpos);
-                lay.setY(half - h-af);
-
-         {if(doLog) {Log.i(LOG_ID,"search h="+h+" height="+height+" w="+w+" width="+width+" posx="+xpos);};};
+        //        lay.setY(half - h-af);
+                {if(doLog) {Log.i(LOG_ID,"search h="+h+" height="+height+" w="+w+" width="+width+" posx="+xpos);};};
             }
         }
     else {
         w=width;h=height;
-            lay.setX(0);
-            lay.setY(0);
+        lay.setX(0);
+//        lay.setY(0);
         }
         }
     else {
-      final var ypos=(int)((height-h)/2.5f);
-        lay.setY(ypos);
+ //     final var ypos=(int)((height-h)/2.5f);
+  //      lay.setY(ypos);
       final var xpos=width>w?(width - w)/2:0;
         lay.setX(xpos);
       {if(doLog) {Log.i(LOG_ID,"smallScreen search h="+h+" height="+height+" w="+w+" width="+width+" posx="+xpos+" posy="+ypos);};};
