@@ -10,6 +10,7 @@ struct Getopts {
     int unit;
     int datnr=INT_MAX;
     bool headermode=false;
+    bool jsonmode=false;
 
     bool streammode=false;
     bool calibratedmode=false;

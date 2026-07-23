@@ -1564,6 +1564,8 @@ Getopts::Getopts(const char *posptr,int size,int defaultduration): unit(settings
          std::string_view header = "header"sv;
          if (setitervar(iter, header, headermode))
             continue;
+         if (setitervar(iter, "json"sv, jsonmode))
+            continue;
          std::string_view mmol = "mmol/L"sv;
          if (setitertrue(iter, mmol)) {
             unit=1;
@@ -2149,8 +2151,10 @@ sizear(afterstatistics)+
     <title>Juggluco Report</title>)"sv,{buf,wrotelen},darkmode);
     }
 
+
+extern bool givestatistics(Getopts &opts,std::string_view origin,recdata *outdata);
 extern bool isLargeCurve(Getopts &opts);
-static bool jugglucos(const char * const input,int size, std::string_view hostname,uint16_t lang, bool secure,std::string_view origin,recdata *outdata) {
+static bool jugglucos(const char * const input,int size, std::string_view hostname,uint16_t lang, bool secure,bool wantsjson,std::string_view origin,recdata *outdata) {
    const char *posptr=input;
     {constexpr const char summary[]="summarygraph";
     if(!strarcmp(summary,input)) {
@@ -2168,6 +2172,29 @@ static bool jugglucos(const char * const input,int size, std::string_view hostna
         return  givesummarygraph(opts,origin,outdata);
 //            return givereloadimage(outdata);
 //        return true;
+        }
+      }
+    {constexpr const char statistics[]="statistics";
+    if(!strarcmp(statistics,input)) {
+        constexpr const int namesize=sizeof(statistics)-1;
+        constexpr const char jsonextension[]=".json";
+        constexpr const int jsonextensionsize=sizeof(jsonextension)-1;
+        posptr=input+namesize;
+        int optionsize=size-namesize;
+        bool jsonextensionfound=false;
+        if(optionsize>=jsonextensionsize&&!memcmp(posptr,jsonextension,jsonextensionsize)) {
+            posptr+=jsonextensionsize;
+            optionsize-=jsonextensionsize;
+            jsonextensionfound=true;
+            }
+        Getopts opts(posptr,optionsize,60*60*24*20);
+        if(isLargeCurve(opts)) {
+            return toolarge(outdata);
+            }
+        if(!opts.lang)
+            opts.lang=lang;
+        opts.jsonmode=opts.jsonmode||wantsjson||jsonextensionfound;
+        return givestatistics(opts,origin,outdata);
         }
       }
     {constexpr const char stats[]="stats";
@@ -2483,7 +2510,7 @@ std::string_view sgv="sgv.json";
 
       }
 if(!memcmp(jugglucocommand.data(),posptr,jugglucocommand.size())) {
-   return jugglucos(posptr+jugglucocommand.size(),toget.size()-jugglucocommand.size(),hostname,lang,secure,origin,outdata);
+   return jugglucos(posptr+jugglucocommand.size(),toget.size()-jugglucocommand.size(),hostname,lang,secure,json,origin,outdata);
    }
 
 constexpr const std::string_view pebble="pebble";
@@ -3566,4 +3593,3 @@ bool getv3entries(const char *cmdstart,const char *cmdend,std::string_view origi
 
 
 #endif
-

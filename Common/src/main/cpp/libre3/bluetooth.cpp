@@ -57,10 +57,10 @@ extern "C" JNIEXPORT  void JNICALL fromjava(setLibre3kAuth)(JNIEnv *env, jclass 
     }
 
 extern "C" JNIEXPORT  jbyteArray JNICALL fromjava(getLibre3kAuth)(JNIEnv *env, jclass thiz, jlong sensorptr) {
-/*    #ifndef NOLOG
+    #ifndef NOLOG
     LOGAR("TESTING: getLibre3kAuth()==null");
     return nullptr;
-    #endif */
+    #endif 
     SensorGlucoseData *sens=reinterpret_cast<SensorGlucoseData *>(sensorptr);
     if(!sens) {
         LOGAR("getLibre3kAuth sensorptr==null");
@@ -72,6 +72,7 @@ extern "C" JNIEXPORT  jbyteArray JNICALL fromjava(getLibre3kAuth)(JNIEnv *env, j
         }
     constexpr const int kauthlen=149;
     jbyteArray uit=env->NewByteArray(kauthlen);
+    LOGGER("getLibre3kAuth()=%s\n",hexstr(sens->getinfo()->kAuth,kauthlen).str());;
     env->SetByteArrayRegion(uit, 0, kauthlen,(jbyte *)sens->getinfo()->kAuth);
     return uit;
     }

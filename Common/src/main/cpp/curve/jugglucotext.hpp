@@ -124,6 +124,7 @@ std::string_view statistics;
 std::string_view summarygraph;
 std::string_view logdays;
 std::string_view unhide;
+std::string_view mmolL="mmol/L";
 #ifdef INJUGGLUCO
 #ifndef DONTTALK
 std::string_view getTrendName(int type) const {

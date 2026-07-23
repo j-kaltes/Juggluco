@@ -173,7 +173,7 @@ inline void flerror(const char* fmt, ...){
 
 
 
-	#define LOGAR(arg)   
+#define LOGAR(arg)   donothing
 
 
 #else //!NOLOG

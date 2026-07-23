@@ -97,8 +97,14 @@ extern "C" JNIEXPORT jbyteArray JNICALL   fromjava(siAuthBytes)(JNIEnv *env, jcl
    auto rev=deviceArray(address);
    constexpr const int maxcmd=26;
    uint8_t cmd[maxcmd];
-   int len=v120_apply_authentication(usedhist->siSubtype(), (const uint8_t *)rev.data(), cmd, maxcmd);
-   logbytes("siAuthBytes",cmd,len);
+   const int siType= usedhist->siSubtype();
+   int len=v120_apply_authentication(siType, (const uint8_t *)rev.data(), cmd, maxcmd);
+#ifndef NOLOG
+   constexpr const int maxbuf=80;
+   char buf[maxbuf];
+   auto messlen=snprintf(buf,maxbuf,"siAuthBytes type=%d address=%s ",siType,address);
+   logbytes(std::string_view(buf,messlen),cmd,len);
+#endif
    jbyteArray uit=env->NewByteArray(len);
    env->SetByteArrayRegion(uit, 0, len,(const jbyte*)cmd);
    return uit;

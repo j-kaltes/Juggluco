@@ -22,6 +22,7 @@
 #ifndef WEAROS
 #include <string.h>
 #include <memory>
+#include <new>
 #include <thread>
 #include <time.h>
 #include <chrono>
@@ -460,8 +461,10 @@ void showpercentiles(NVGcontext* vg,JCurve &jcurve) {
         ++showids;
 
         const int endid=startid+showids;
+#ifndef NOLOG
         const float placeback2=(staridf-startid)*move;
         LOGGER("showpercentiles starttime=%zu startidtime=%zu duration=%zu endidtime=%zu startid=%d, endid=%d, showids=%d move=%.2f timeback=%d placeback=%2.f placeback2=%.2f\n",starttime,startidtime,jcurve.duration,endid*minperstep*60,startid,endid,showids,move,timeback,placeback,placeback2);
+#endif
         int pos= (this->*((settings->data()->levelleft)?&persgegs::isplacefromleft:&persgegs::isplace))(startid,std::min(endid,maxids),move,jcurve.density,jcurve.timelen,placeback);
 
         nvgFillColor(vg, lighttest);
@@ -821,7 +824,7 @@ void JCurve::leginterval(NVGcontext* vg,const float x,const float y, const int *
     int buflen=snprintf(buf,maxbuf,"%.*f-%.*f",gludecimal,::gconvert((between[1]+1)*10,glunit),gludecimal,::gconvert((between[0])*10,glunit));
     nvgText(vg, x,y,buf,buf+buflen);
     }
-void stats::showbar(NVGcontext* vg,JCurve &jcurve) {
+void stats::showbar(NVGcontext* vg,JCurve &jcurve,const jugglucotext *text) {
 
     int dwidth=jcurve.dwidth-jcurve.statusbarleft-jcurve.statusbarright;    
     int dheight=jcurve.dheight;
@@ -871,7 +874,7 @@ constexpr const NVGcolor cols[]={orange,yellow,mediumseagreen,redinit,brown};
     xleg+=afm*2;
     nvgTextAlign(vg,NVG_ALIGN_LEFT|NVG_ALIGN_TOP);
     yleg=starty+rowheight;
-    string_view unitstr=settings->getunitlabel();
+    const string_view unitstr=jcurve.glunit==1?text->mmolL:"mg/dL"sv;
     nvgText(vg, xleg,starty,unitstr.begin(),unitstr.end());
     const int *levels=stat->levels;
     int buflen=snprintf(perbuf,maxbuf,">%.*f",jcurve.gludecimal,::gconvert(*levels*10,jcurve.glunit));
@@ -950,7 +953,7 @@ void stats::otherstats(NVGcontext* vg,JCurve &jcurve,const jugglucotext *usedtex
     nvgText(vg, xpos,ypos,buf,buf+len);
     }
 void showstats(NVGcontext* vg,JCurve &jcurve,stats *stat,const jugglucotext *text) {
-    stat->showbar(vg,jcurve);
+    stat->showbar(vg,jcurve,text);
     stat->otherstats(vg,jcurve,text) ;
 }
 
@@ -1315,31 +1318,39 @@ template<> std::vector<GlucoseDataType<HistoryIterator>> getsensorrangesAlg<Hist
     return getsensorHistoryranges(start, endt,calibrated,calibratePast);
     } */
 template <typename DT>
-std::span<char> getStatImage(int startpos,Getopts &opts) {
-    JCurve statimage(opts.unit?opts.unit:settings->data()->unit);
-    uint32_t startsecs=opts.start;
-    uint32_t endsecs=opts.end;
-    statimage.invertcolorsset(opts.darkmode);
-    int duration=statimage.duration=24*60*60;
-    statimage.starttime=endsecs-duration;
-    int days=(endsecs-startsecs+duration-1)/duration;
-    const auto [start,endt]=percStartEnd<IterType<DT>>(endsecs,days);
-    LOGGER("getStatImage %d %d days=%d\n",start,endt,days);
+static std::unique_ptr<stats> calculateStatistics(Getopts &opts) {
+    if(opts.start>=opts.end)
+        return nullptr;
+    const int days=(static_cast<uint64_t>(opts.end)-opts.start+daysecs-1)/daysecs;
+    const auto [start,endt]=percStartEnd<IterType<DT>>(opts.end,days);
+    LOGGER("calculateStatistics %d %d days=%d\n",start,endt,days);
     if(start>=endt)
-        return {(char *)nullptr,0};
-    //bool calibratePast=settings->data()->CalibratePast;
-    bool calibratePast=opts.pastvaluesmode;
-    bool calibrated= opts.calibratedmode||opts.calibratedhistorymode;
+        return nullptr;
+    const bool calibratePast=opts.pastvaluesmode;
+    const bool calibrated=opts.calibratedmode||opts.calibratedhistorymode;
     std::vector<GlucoseDataType<DT>> stream;
     getsensorranges<DT>(start,endt,calibrated,calibratePast,&stream);
-    if(stream.size()<=0)
+    if(stream.empty())
+        return nullptr;
+    return std::make_unique<stats>(stream);
+    }
+
+template <typename DT>
+std::span<char> getStatImage(int startpos,Getopts &opts) {
+    auto statistics=calculateStatistics<DT>(opts);
+    if(!statistics)
         return {(char *)nullptr,0};
+    JCurve statimage(opts.unit?opts.unit:settings->data()->unit);
+    statimage.invertcolorsset(opts.darkmode);
+    constexpr int duration=24*60*60;
+    statimage.duration=duration;
+    statimage.starttime=opts.end-duration;
     const auto *text=language::gettext(opts.lang);
     statimage.usedtext=text;
     const int winHeight=opts.height?opts.height:256;
     const int winWidth=opts.width?opts.width:768;
     const double mult=winHeight/512.0;
-    LOGGER("getStatImage %d %d days=%d width=%d height=%d mult=%f\n",start,endt,days,winWidth,winHeight,mult);
+    LOGGER("getStatImage width=%d height=%d mult=%f\n",winWidth,winHeight,mult);
     auto vg = nvgCreateRT(vgnRTflags, winWidth, winHeight);
     destruct _{[vg]{nvgDeleteRT(vg);}};
     statimage.dheight=winHeight;
@@ -1349,8 +1360,7 @@ std::span<char> getStatImage(int startpos,Getopts &opts) {
     statimage.initfont(vg);
     backgroundcolor(vg,*statimage.getwhite());
     statimage.startstepNVG(vg,winWidth,winHeight);
-    struct stats st(stream);
-    showstats(vg,statimage,&st,text);
+    showstats(vg,statimage,statistics.get(),text);
     nvgEndFrame(vg);
     unsigned char *rgba = nvgReadPixelsRT(vg);
     int len=0;
@@ -1364,6 +1374,281 @@ std::span<char> getStatImageHistory(int startpos,Getopts &opts) {
 std::span<char> getStatImageStream(int startpos,Getopts &opts) {
         return getStatImage<const ScanData*>(startpos,opts);
         } 
+
+class StatisticsWriter {
+    char *position;
+    char * const limit;
+public:
+    StatisticsWriter(char *start,size_t capacity):position(start),limit(start+capacity) {}
+
+    bool append(std::string_view value) {
+        const size_t available=limit-position;
+        if(value.size()>available)
+            return false;
+        memcpy(position,value.data(),value.size());
+        position+=value.size();
+        return true;
+        }
+
+    bool appendJsonString(std::string_view value) {
+        if(!append("\""sv))
+            return false;
+        for(const unsigned char character:value) {
+            switch(character) {
+                case '\"':
+                    if(!append("\\\""sv)) return false;
+                    break;
+                case '\\':
+                    if(!append("\\\\"sv)) return false;
+                    break;
+                case '\b':
+                    if(!append("\\b"sv)) return false;
+                    break;
+                case '\f':
+                    if(!append("\\f"sv)) return false;
+                    break;
+                case '\n':
+                    if(!append("\\n"sv)) return false;
+                    break;
+                case '\r':
+                    if(!append("\\r"sv)) return false;
+                    break;
+                case '\t':
+                    if(!append("\\t"sv)) return false;
+                    break;
+                case '<':
+                    if(!append("\\u003c"sv)) return false;
+                    break;
+                default:
+                    if(character<0x20) {
+                        if(!appendformat("\\u%04x",character)) return false;
+                        }
+                    else {
+                        const char byte=static_cast<char>(character);
+                        if(!append(std::string_view(&byte,1))) return false;
+                        }
+                }
+            }
+        return append("\""sv);
+        }
+
+    template <typename... Args>
+    bool appendformat(const char *format,Args... args) {
+        const size_t available=limit-position;
+        if(!available)
+            return false;
+        const int len=snprintf(position,available,format,args...);
+        if(len<0||static_cast<size_t>(len)>=available)
+            return false;
+        position+=len;
+        return true;
+        }
+
+    char *end() const {
+        return position;
+        }
+    };
+
+static double statisticsGlucose(double mgdL,int unit) {
+    return unit==1?mgdL/18.0:mgdL;
+    }
+
+static bool writeStatisticsJson(StatisticsWriter &writer,const stats &stat,int unit,
+                                std::string_view source,bool calibrated) {
+    const double durationdays=static_cast<double>(stat.endtime-stat.starttime)/daysecs;
+    const int targetcount=static_cast<int>(std::lround(stat.pertarget*stat.count));
+    const double targetlow=statisticsGlucose(stat.border[1]+1,unit);
+    const double targethigh=statisticsGlucose(stat.border[0],unit);
+    const char *unitlabel=unit==1?"mmol/L":"mg/dL";
+    return writer.appendformat(R"JSON({"schemaVersion":1,"source":"%.*s","calibrated":%s,"startTime":%u,"endTime":%u,"durationDays":%.10g,"measurementCount":%d,"expectedMeasurementCount":%d,"timeActivePercent":%.10g,"glucoseUnit":"%s","meanGlucose":%.10g,"estimatedA1c":{"percent":%.10g,"mmolMol":%d},"gmi":{"percent":%.10g,"mmolMol":%d},"standardDeviation":%.10g,"coefficientOfVariationPercent":%.10g,"targetRange":{"minimum":%.10g,"maximum":%.10g,"measurementCount":%d,"percent":%.10g},"ranges":[{"name":"veryHigh","minimum":%.10g,"maximum":null,"measurementCount":%d,"percent":%.10g},{"name":"high","minimum":%.10g,"maximum":%.10g,"measurementCount":%d,"percent":%.10g},{"name":"standard","minimum":%.10g,"maximum":%.10g,"measurementCount":%d,"percent":%.10g},{"name":"low","minimum":%.10g,"maximum":%.10g,"measurementCount":%d,"percent":%.10g},{"name":"veryLow","minimum":null,"maximum":%.10g,"measurementCount":%d,"percent":%.10g}]})JSON",
+        static_cast<int>(source.size()),source.data(),calibrated?"true":"false",
+        stat.starttime,stat.endtime,durationdays,stat.count,stat.totid,stat.active*100.0,
+        unitlabel,statisticsGlucose(stat.mean,unit),stat.EA1Cper,stat.EA1Cmmol,
+        stat.GMIper,stat.GMImmol,statisticsGlucose(stat.sd,unit),stat.vc*100.0,
+        targetlow,targethigh,targetcount,stat.pertarget*100.0,
+        statisticsGlucose(stats::levels[0]+1,unit),stat.counts[0],stat.pers[0]*100.0,
+        statisticsGlucose(stats::levels[1]+1,unit),statisticsGlucose(stats::levels[0],unit),stat.counts[1],stat.pers[1]*100.0,
+        statisticsGlucose(stats::levels[2]+1,unit),statisticsGlucose(stats::levels[1],unit),stat.counts[2],stat.pers[2]*100.0,
+        statisticsGlucose(stats::levels[3]+1,unit),statisticsGlucose(stats::levels[2],unit),stat.counts[3],stat.pers[3]*100.0,
+        statisticsGlucose(stats::levels[3],unit),stat.counts[4],stat.pers[4]*100.0);
+    }
+
+static bool appendBrowserStatisticsText(StatisticsWriter &writer,std::string_view value,
+                                        bool visualrtl) {
+    if(!visualrtl)
+        return writer.appendJsonString(value);
+    constexpr size_t maxtext=512;
+    if(value.size()>=maxtext)
+        return false;
+    char visual[maxtext];
+    memcpy(visual,value.data(),value.size());
+    visual[value.size()]='\0';
+    char logical[maxtext];
+    const int32_t length=rtl_to_logical_utf8(visual,logical,sizeof(logical));
+    if(length<0||static_cast<size_t>(length)>=sizeof(logical))
+        return false;
+    return writer.appendJsonString({logical,static_cast<size_t>(length)});
+    }
+
+template <typename... Args>
+static bool appendBrowserStatisticsFormat(StatisticsWriter &writer,bool visualrtl,
+                                          const char *format,Args... args) {
+    char value[512];
+    const int length=snprintf(value,sizeof(value),format,args...);
+    if(length<0||static_cast<size_t>(length)>=sizeof(value))
+        return false;
+    return appendBrowserStatisticsText(writer,{value,static_cast<size_t>(length)},visualrtl);
+    }
+
+static bool writeStatisticsTextJson(StatisticsWriter &writer,const stats &stat,int unit,
+                                    std::string_view source,const jugglucotext *text,
+                                    bool visualrtl,std::string_view locale) {
+    const double durationdays=static_cast<double>(stat.endtime-stat.starttime)/daysecs;
+    const std::string_view sourcetext=text->menustr2[source=="history"sv?3:2];
+    if(!writer.append("{\"locale\":"sv)||!writer.appendJsonString(locale)||
+       !writer.append(",\"glucoseUnit\":"sv)||
+       !appendBrowserStatisticsText(writer,unit==1?text->mmolL:"mg/dL"sv,visualrtl)||
+       !writer.append(",\"title\":"sv)||
+       !appendBrowserStatisticsText(writer,text->statisticsName(),visualrtl)||
+       !writer.append(",\"source\":"sv)||
+       !appendBrowserStatisticsText(writer,sourcetext,visualrtl)||
+       !writer.append(",\"duration\":"sv)||
+       !appendBrowserStatisticsFormat(writer,visualrtl,text->duration,durationdays)||
+       !writer.append(",\"timeActive\":"sv)||
+       !appendBrowserStatisticsFormat(writer,visualrtl,text->timeactive,stat.active*100.0)||
+       !writer.append(",\"measurements\":"sv)||
+       !appendBrowserStatisticsFormat(writer,visualrtl,text->nrmeasurement,stat.count)||
+       !writer.append(",\"meanLabel\":"sv)||
+       !appendBrowserStatisticsText(writer,text->averageglucose,visualrtl)||
+       !writer.append(",\"estimatedA1c\":"sv)||
+       !appendBrowserStatisticsFormat(writer,visualrtl,text->EstimatedA1C,stat.EA1Cper,stat.EA1Cmmol)||
+       !writer.append(",\"gmi\":"sv)||
+       !appendBrowserStatisticsFormat(writer,visualrtl,text->GMI,stat.GMIper,stat.GMImmol)||
+       !writer.append(",\"standardDeviation\":"sv)||
+       !appendBrowserStatisticsFormat(writer,visualrtl,text->SD,statisticsGlucose(stat.sd,unit))||
+       !writer.append(",\"variability\":"sv)||
+       !appendBrowserStatisticsFormat(writer,visualrtl,text->glucose_variability,stat.vc*100.0))
+        return false;
+    return writer.append("}"sv);
+    }
+
+static bool writeStatisticsHtml(StatisticsWriter &writer,const stats &stat,int unit,
+                                std::string_view source,bool calibrated,bool darkmode,
+                                uint16_t lang) {
+    const auto *text=language::gettext(lang);
+    const bool visualrtl=text==&artext;
+    const bool righttoleft=visualrtl||lang==(mklanguagenum2('i','w'));
+    char localebuffer[3]={'e','n','\0'};
+    if(lang) {
+        localebuffer[0]=static_cast<char>(lang&0xFF);
+        localebuffer[1]=static_cast<char>((lang>>8)&0xFF);
+        }
+    const std::string_view locale(localebuffer,2);
+    if(!writer.append(R"HTML(<!doctype html><html lang=")HTML")||
+       !writer.append(locale)||
+       (righttoleft&&!writer.append("\" dir=\"rtl"sv))||
+       !writer.append(R"HTML("><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Juggluco</title><style>
+:root{color-scheme:light;--bg:#f4f7fb;--card:#fff;--text:#17202a;--muted:#667085;--line:#d9e0e8;--accent:#1565c0;--shadow:0 12px 32px rgba(15,23,42,.09)}
+body.dark{color-scheme:dark;--bg:#101419;--card:#1b222b;--text:#f5f7fa;--muted:#aeb8c5;--line:#35404d;--accent:#7db7ff;--shadow:none}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}main{width:min(68rem,calc(100% - 2rem));margin:0 auto;padding:2rem 0 3rem}header{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;margin-bottom:1.25rem}.eyebrow{margin:0 0 .2rem;color:var(--accent);font-size:.76rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase}h1{margin:0;font-size:clamp(1.8rem,5vw,2.7rem);line-height:1.05}#period{margin:.55rem 0 0;color:var(--muted)}.badge{margin:.2rem 0 0;padding:.42rem .7rem;border:1px solid var(--line);border-radius:999px;color:var(--muted);font-size:.85rem;white-space:nowrap}.overview{display:grid;grid-template-columns:minmax(18rem,.9fr) minmax(20rem,1.1fr);gap:1rem}.card{background:var(--card);border:1px solid var(--line);border-radius:1rem;box-shadow:var(--shadow)}.ranges-card{display:grid;grid-template-columns:5rem 1fr;gap:1.25rem;align-items:center;padding:1.25rem}.stacked{height:25rem;width:4.25rem;display:flex;flex-direction:column;overflow:hidden;border:1px solid var(--line);background:var(--bg)}.segment{min-height:0}.legend{list-style:none;margin:0;padding:0;display:grid;gap:.8rem}.legend li{display:grid;grid-template-columns:.8rem 1fr auto;align-items:center;gap:.55rem}.swatch{width:.72rem;height:.72rem;border-radius:.2rem}.legend-name{font-weight:700}.legend-range{display:block;color:var(--muted);font-size:.82rem;font-weight:400}.legend-percent{font-variant-numeric:tabular-nums}.metrics{margin:0;padding:1rem;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.75rem}.metric{padding:1rem;border:1px solid var(--line);border-radius:.75rem}.metric dd{margin:0;font-size:1.05rem;font-weight:700;font-variant-numeric:tabular-nums}.target{margin-top:1rem;padding:1.1rem 1.25rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}.target p{margin:0;color:var(--muted)}.target strong{font-size:1.45rem;font-variant-numeric:tabular-nums}.footer{margin:1rem .2rem 0;text-align:right}.footer a{color:var(--accent)}@media(max-width:760px){main{padding-top:1.25rem}.overview{grid-template-columns:1fr}.stacked{height:21rem}.metrics{grid-template-columns:1fr}header{display:block}.badge{display:inline-block}.target{align-items:flex-start;flex-direction:column}.footer{text-align:left}}
+</style></head><body)HTML"))
+        return false;
+    if(darkmode&&!writer.append(" class=\"dark\""sv))
+        return false;
+    if(!writer.append(R"HTML(><main><header><div><p class="eyebrow">Juggluco</p><h1 id="page-title"></h1><p id="period"></p></div><p class="badge" id="source"></p></header><section class="overview"><article class="card ranges-card"><div class="stacked" id="stacked"></div><ol class="legend" id="legend"></ol></article><dl class="card metrics" id="metrics"></dl></section><section class="card target"><p id="target-range"></p><strong id="target-percent"></strong></section><p class="footer"><a id="json-link" href="#">JSON</a></p></main><script id="statistics-data" type="application/json">)HTML"))
+        return false;
+    if(!writeStatisticsJson(writer,stat,unit,source,calibrated))
+        return false;
+    if(!writer.append(R"HTML(</script><script id="statistics-text" type="application/json">)HTML")||
+       !writeStatisticsTextJson(writer,stat,unit,source,text,visualrtl,locale)||
+       !writer.append(R"HTML(</script><script>
+const data=JSON.parse(document.getElementById('statistics-data').textContent);
+const text=JSON.parse(document.getElementById('statistics-text').textContent);
+const one=new Intl.NumberFormat(text.locale,{minimumFractionDigits:1,maximumFractionDigits:1});
+const whole=new Intl.NumberFormat(text.locale,{maximumFractionDigits:0});
+const glucose=value=>data.glucoseUnit==='mmol/L'?one.format(value):whole.format(value);
+const percent=value=>`${one.format(value)}%`;
+const date=value=>new Date(value*1000).toLocaleString(text.locale);
+document.title=`Juggluco · ${text.title}`;
+document.getElementById('page-title').textContent=text.title;
+document.getElementById('period').textContent=`${date(data.startTime)} – ${date(data.endTime)} · ${text.duration}`;
+document.getElementById('source').textContent=`${text.source}${data.calibrated?' ✓':''}`;
+const colors={veryHigh:'#f2994a',high:'#f2c94c',standard:'#3cb371',low:'#eb5757',veryLow:'#7b3f00'};
+const rangeText=range=>range.minimum===null?`≤ ${glucose(range.maximum)}`:range.maximum===null?`≥ ${glucose(range.minimum)}`:`${glucose(range.minimum)}–${glucose(range.maximum)}`;
+const stacked=document.getElementById('stacked');
+const legend=document.getElementById('legend');
+for(const range of data.ranges){
+  const segment=document.createElement('div');
+  segment.className='segment';segment.style.height=`${range.percent}%`;segment.style.background=colors[range.name];
+  segment.title=`${rangeText(range)} ${text.glucoseUnit}: ${percent(range.percent)}`;stacked.append(segment);
+  const item=document.createElement('li');
+  const swatch=document.createElement('span');swatch.className='swatch';swatch.style.background=colors[range.name];
+  const label=document.createElement('span');label.className='legend-name';label.textContent=`${rangeText(range)} ${text.glucoseUnit}`;
+  const limits=document.createElement('small');limits.className='legend-range';limits.textContent=`# ${whole.format(range.measurementCount)}`;label.append(limits);
+  const amount=document.createElement('span');amount.className='legend-percent';amount.textContent=percent(range.percent);
+  item.append(swatch,label,amount);legend.append(item);
+}
+const values=[
+  text.timeActive,
+  text.measurements,
+  `${text.meanLabel}${glucose(data.meanGlucose)} ${text.glucoseUnit}`,
+  text.estimatedA1c,
+  text.gmi,
+  text.standardDeviation,
+  text.variability
+];
+const metrics=document.getElementById('metrics');
+for(const value of values){const box=document.createElement('div');box.className='metric';const result=document.createElement('dd');result.textContent=value;box.append(result);metrics.append(box)}
+document.getElementById('target-range').textContent=`↔ ${glucose(data.targetRange.minimum)}–${glucose(data.targetRange.maximum)} ${text.glucoseUnit} · # ${whole.format(data.targetRange.measurementCount)}`;
+document.getElementById('target-percent').textContent=percent(data.targetRange.percent);
+const jsonUrl=new URL(location.href);if(!jsonUrl.pathname.endsWith('.json'))jsonUrl.pathname+='.json';document.getElementById('json-link').href=jsonUrl;
+</script></body></html>)HTML"))
+        return false;
+    return true;
+    }
+
+template <typename DT>
+static bool giveStatistics(Getopts &opts,std::string_view origin,recdata *outdata,
+                           std::string_view source) {
+    auto statistics=calculateStatistics<DT>(opts);
+    if(!statistics||statistics->count<2||statistics->starttime==UINT32_MAX||
+       statistics->endtime<statistics->starttime)
+        return false;
+    constexpr size_t bodycapacity=32*1024;
+    const size_t headercapacity=256+origin.size();
+    if(headercapacity<origin.size())
+        return false;
+    const size_t totalcapacity=headercapacity+bodycapacity+1;
+    if(totalcapacity<headercapacity)
+        return false;
+    char *allbuf=new(std::nothrow) char[totalcapacity];
+    if(!allbuf)
+        return false;
+    char *bodystart=allbuf+headercapacity;
+    StatisticsWriter writer(bodystart,bodycapacity);
+    const int requestedunit=opts.unit?opts.unit:settings->data()->unit;
+    const int unit=requestedunit==1?1:2;
+    const bool calibrated=opts.calibratedmode||opts.calibratedhistorymode;
+    const bool success=opts.jsonmode
+        ?writeStatisticsJson(writer,*statistics,unit,source,calibrated)
+        :writeStatisticsHtml(writer,*statistics,unit,source,calibrated,opts.darkmode,opts.lang);
+    if(!success) {
+        delete[] allbuf;
+        return false;
+        }
+    *writer.end()='\0';
+    outdata->allbuf=allbuf;
+    mktypeheader(bodystart,writer.end(),false,outdata,
+        opts.jsonmode?"application/json; charset=utf-8"sv:"text/html; charset=utf-8"sv,origin);
+    return true;
+    }
+
+bool givestatistics(Getopts &opts,std::string_view origin,recdata *outdata) {
+    const bool history=opts.historymode||opts.calibratedhistorymode;
+    return history
+        ?giveStatistics<HistoryIterator>(opts,origin,outdata,"history"sv)
+        :giveStatistics<const ScanData *>(opts,origin,outdata,"stream"sv);
+    }
 
 
 static NVGcontext* getfilevg(JCurve &curveimage,int width,int height) {
@@ -1531,4 +1816,3 @@ static  char * givepercentiles(Getopts &opts,uint32_t start, uint32_t endt,recda
 
 */
 #endif
-

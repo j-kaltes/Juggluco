@@ -30,7 +30,15 @@
 #include "showbarray.hpp"
 #include "logs.hpp"
 #include "settings/settings.hpp"
-
+#if !defined(__aarch64__) &&  defined(__arm__) 
+#define BYPASS
+#endif
+#ifdef BYPASS
+#include "libre3_old_policy_bypass.h"
+#if defined(POSTGEN_DUMP)
+#include "libre3_postgen_dump.h"
+#endif
+#endif
 static jclass      myFindClass(JNIEnv*, const char* name) {
 	LOGGER("FindClass %s\n",name);
 	return reinterpret_cast<jclass>(const_cast<char *>(name));
@@ -245,6 +253,9 @@ if(change)
 	}
 ////////////////extern "C" JNIEXPORT jboolean JNICALL fromjava(loadECDHCrypto)(JNIEnv *env, jclass thiz) {
 
+#ifdef BYPASS
+    uintptr_t process1_address = 0;
+#endif
 static bool loadECDHCrypto(const bool changelib) {
 	
 	if(process1) {
@@ -252,11 +263,35 @@ static bool loadECDHCrypto(const bool changelib) {
 		}
 	auto res= doOnLoad("/liblibre3extension.so",changelib);
 
+
+// After JNI_OnLoad/init finishes, before any process1/process2 call:
+
+// Immediately after the first successful process2(9):
+
+
+
+#ifdef BYPASS
+    static_assert(sizeof(process1_address) == sizeof(process1));
+    memcpy( &process1_address, &process1, sizeof(process1_address));
+
+#if defined(POSTGEN_DUMP)
+int rc1 = l3_dump_self_libre3("/data/user/0/tk.glucodata/files/l3dump_before", reinterpret_cast<uintptr_t>(process1_address), "after_JNI_OnLoad_before_calls");
+#endif
+
+    int rc = l3_old_policy_bypass_install(process1_address);
+    if(rc != L3_OLD_POLICY_BYPASS_OK || !l3_old_policy_bypass_is_installed()) {
+        LOGGER("policy_bypass failed %d\n",rc);
+       }
+    else
+        LOGAR("policy_bypass success");
+#endif
 	return res;
 	}
 //extern "C" JNIEXPORT jboolean JNICALL fromjava(loadNFC)(JNIEnv *env, jclass thiz) {
 
+#ifndef BYPASS
 #include "debugclone.hpp"
+#endif
 #ifdef NFCSHARED
 static bool loadNFC() {
 	if(DPGetActivationCommandData)
@@ -335,11 +370,15 @@ LOGGER("asmworks=%d settings->data()->triedasm=%d\n", settings->data()->asmworks
 	const bool changelib=false;
 	LOGSTRING("not __arch64__\n");
 #endif
+#ifndef BYPASS
 	LOGGER("setpathworks=%d libre3initialized=%d\n",globalsetpathworks,libre3initialized);
-static	const bool debug=!changelib&&!globalsetpathworks;
+static	const bool debug= !changelib&&!globalsetpathworks
+;
+
 
 	settings->setnodebug(false);
 	usedebug use(debug&&!libre3initialized,3);
+#endif
 #ifndef NOLOG
 	int load=
 #endif
@@ -356,13 +395,14 @@ jint res=process1(env,cl,i2,bArr,bArr2);
     LOGGER("processint(%d,%s#%d, %s#%d)=%d\n",i2 ,in1.str,in1.len,in2.str,in2.len,res);
 #endif
 
+#ifndef BYPASS
 	if(use.pid>=sizeof(long)&&!wrongfiles())  {
 		getsid(use.pid);
 		has_debugger=0;
 		}
 	if(changelib)
 		settings->data()->asmworks=true;
-
+#endif
 
 	return res;
 	}
@@ -376,11 +416,21 @@ extern "C" JNIEXPORT jbyteArray JNICALL fromjava(processbar)(JNIEnv *env, jclass
 #else
 	const bool changelib=false;
 #endif
-static	const bool debug=!changelib&&!globalsetpathworks;
+
+#ifndef BYPASS
+static	const bool debug= !changelib&&!globalsetpathworks ;
+
 	settings->setnodebug(false);
 	usedebug use(debug&&!libre3initialized,3);
+#endif
 	loadECDHCrypto(changelib);
 
+#ifndef NOLOG
+      showbarray in1(env,bArr);
+      showbarray in2(env,bArr2);
+
+LOGGER("Before processbar(%d,%s#%d,%s#%d)\n",i2,in1.str,in1.len,in2.str,in2.len);
+#endif
 
 
 auto res = process2(env, cl, i2, bArr, bArr2);
@@ -389,19 +439,26 @@ auto res = process2(env, cl, i2, bArr, bArr2);
 
 
 
+#ifndef BYPASS
 	if(use.pid>=sizeof(long)&&!wrongfiles()) {
 		getsid(use.pid);
 		has_debugger=0;
 		}
 	if(changelib)
 		settings->data()->asmworks=true;
-
+#endif
 #ifndef NOLOG
-      showbarray in1(env,bArr);
-      showbarray in2(env,bArr2);
       showbarray uit(env,res);
 //    hexstr in1(ba
 	LOGGER("processbar(%d,%s#%d,%s#%d)=%s#%d\n",i2,in1.str,in1.len,in2.str,in2.len,uit.str,uit.len);
+#endif
+
+#ifdef BYPASS
+#if defined(POSTGEN_DUMP)
+if(i2==9) {
+    int rc2 = l3_dump_self_libre3( "/data/user/0/tk.glucodata/files/l3dump_after", reinterpret_cast<uintptr_t>(process1_address), "after_process2_9");
+    }
+#endif
 #endif
 	return res;
 	}

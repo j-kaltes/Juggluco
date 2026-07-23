@@ -200,7 +200,7 @@ bool currentheader(FILE* handle,int unit,bool calibrated=false) {
         }
 	memcpy(header+pos,headend,sizeof(headend));
 	int tothead=pos+sizeof(headend)-1;
-	if(fwrite(header,1,tothead,handle)!=tothead) {
+	if(fwrite(header,tothead,1,handle)!=1) {
 		lerror("exportscans");
 		return false;
 		}
@@ -272,7 +272,7 @@ static bool writehistoryheader(FILE *handle,int unit,bool calibrated=false) {
 
 	memcpy(header+headstart+units.size(),calibrated?headcalibratedend:headend,headsize+1);
 	int tothead=headstart+units.size()+headsize;
-	if(fwrite(header,1,tothead,handle)!=tothead) {
+	if(fwrite(header,tothead,1,handle)!=1) {
 		lerror("exporthistory");
 		return false;
 		}
@@ -367,7 +367,7 @@ bool fexportnums(myfilep handle,int _unit,uint32_t starttime=0,uint32_t endtime=
 static bool writenumheader(FILE* handle,int,bool=false) {
 	constexpr const char header[]="Source\tnr\t" DATESTRING "\tTZ\tValue\tLabel\n";
 	constexpr int headlen=sizeof(header)-1;
-	if(fwrite(header,1,headlen,handle)!=headlen)
+	if(fwrite(header,headlen,1,handle)!=1)
 		return false;
 	return true;
 	}

@@ -32,21 +32,21 @@ struct JCurve;
 struct stats {
 	typedef unsigned tottype;
 static constexpr const	int levels[] {250,180,69,53};
-	int Nr;
-	int count;
-	int totid;
+	int Nr{};
+	int count{};
+	int totid{};
 	int counts[5]{};
-	double pers[5];
-	int border[2];
-	double pertarget;
-	double sd;
-	double mean;
-	double vc;
-	double GMIper; 
-	int GMImmol;
-	double EA1Cper;
-	int EA1Cmmol;
-	double active;
+	double pers[5]{};
+	int border[2]{};
+	double pertarget{};
+	double sd{};
+	double mean{};
+	double vc{};
+	double GMIper{};
+	int GMImmol{};
+	double EA1Cper{};
+	int EA1Cmmol{};
+	double active{};
 	uint32_t starttime=UINT32_MAX,endtime=0;
 
 template <typename GlucoseIterator> stats( std::vector<GlucoseDataType<GlucoseIterator>> &polldata) {
@@ -155,7 +155,7 @@ template <typename GlucoseIterator> stats( std::vector<GlucoseDataType<GlucoseIt
 		this->mean=mean;
 		LOGGER("stats::stats mean=%Lf, sd=%1f vc=%1f starttime=%u endtime=%u\n",mean,sd,vc,starttime,endtime);
 		}
-	void  showbar(NVGcontext* vg,JCurve &) ;
+	void  showbar(NVGcontext* vg,JCurve &,const jugglucotext *) ;
 	void otherstats(NVGcontext* vg,JCurve&) ;
         void otherstats(NVGcontext* vg,JCurve &jcurve,const jugglucotext *usedtext) ;
 	};

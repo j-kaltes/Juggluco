@@ -38,9 +38,9 @@ liblibre3extension.so  and libinit.so  in the corresponding directories of:
 ./Common/src/libre3/jniLibs/x86/   
 ./Common/src/libre3/jniLibs/arm64-v8a/   
 
-libCALCULATION.so libnative-algorithm-jni-v116A.so libnative-algorithm-v1_1_6A.so libnative-sensitivity-v110.so libnative-algorithm-jni-v115G.so libnative-algorithm-v1_1_5G.so libnative-encrypy-decrypt-v110.so libnative-struct2json.so in:
+libCALCULATION.so libnative-algorithm-jni-v116A.so libnative-algorithm-v1_1_6A.so libnative-sensitivity-v110.so libnative-algorithm-jni-v115G.so libnative-algorithm-v1_1_5G.so libnative-encrypy-decrypt-v110.so libnative-struct2json.so in:   
 ./Common/src/mobileSi/jniLibs/armeabi-v7a/   
-./Common/src/mobileSi/jniLibs/arm64-v8a/
+./Common/src/mobileSi/jniLibs/arm64-v8a/   
 
 To build a logging mobile phone release version, do the following from the Juggluco root directory:
 

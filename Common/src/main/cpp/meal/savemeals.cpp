@@ -104,12 +104,12 @@ constexpr const  std::string_view endhtml(R"(</div></body></html>)");
 
 
 bool dostarthtml(FILE * handle) {
-	return fwrite(starthtml,1,startlen,handle)==startlen;
+	return fwrite(starthtml,startlen,1,handle)==1;
 	}
 
 
 bool writeview(FILE * handle,std::string_view str) {
-	return fwrite(str.data(),1,str.size(),handle)==str.size();
+	return fwrite(str.data(),str.size(),1,handle)==1;
 	}
 #include "nums/num.h"
 bool MealSave::dostarttable(FILE * handle,const Num * num) {
@@ -130,7 +130,7 @@ bool MealSave::dostarttable(FILE * handle,const Num * num) {
 	was={tmbuf.tm_mday,tmbuf.tm_mon,tmbuf.tm_year};
       	  }
 
-	if(fwrite(starttable,1,starttablelen,handle)!=starttablelen)
+	if(fwrite(starttable,starttablelen,1,handle)!=1)
 		return false;
 		/*
 	constexpr const int buflen=60;
@@ -144,16 +144,16 @@ bool MealSave::dostarttable(FILE * handle,const Num * num) {
 
 	if(fwrite(buf,1,len,handle)!=len)
 		return false; */
-	return fwrite(endhead,1,endheadlen,handle)==endheadlen;
+	return fwrite(endhead,endheadlen,1,handle)==1;
 	}
-#define writef(handle,data,size) fwrite(data,1,size,handle)
+#define writef(handle,data,size) fwrite(data,size,1,handle)
 
 //std::string_view total2date=R"(</b></td></tr><tr><td><b>)";
 
 
 
 bool doendtable(FILE* handle,float total,time_t dat) {
-	if(writef(handle,startfoot.data(),startfoot.size())!=startfoot.size())
+	if(writef(handle,startfoot.data(),startfoot.size())!=1)
 		return false;
 
 {	constexpr const int buflen=60;
@@ -161,35 +161,35 @@ bool doendtable(FILE* handle,float total,time_t dat) {
       struct tm tmbuf;
       localtime_r(&dat, &tmbuf);
        int tlen=snprintf(buf,buflen,"%04d-%02d-%02d %02d:%02d",  tmbuf.tm_year+1900,tmbuf.tm_mon+1,tmbuf.tm_mday,tmbuf.tm_hour,tmbuf.tm_min); 
-       if(writef(handle,buf,tlen)!=tlen)
+       if(writef(handle,buf,tlen)!=1)
 		return false;
 }
-	if(writef(handle,datestr2unix.data(),datestr2unix.size())!=datestr2unix.size())
+	if(writef(handle,datestr2unix.data(),datestr2unix.size())!=1)
 		return false;
  	constexpr const int  buflen=14;
 	char buf[buflen];
 	int len=snprintf(buf,buflen,"%lu",dat);
-	if(writef(handle,buf,len)!=len)
+	if(writef(handle,buf,len)!=1)
 		return false;
-	if(writef(handle,unix2total.data(),unix2total.size())!=unix2total.size())
+	if(writef(handle,unix2total.data(),unix2total.size())!=1)
 		return false;
 	len=snprintf(buf,buflen,"%.1f",total);
-	if(writef(handle,buf,len)!=len)
+	if(writef(handle,buf,len)!=1)
 		return false;
-	if(writef(handle,endtable.data(),endtable.size())!=endtable.size())
+	if(writef(handle,endtable.data(),endtable.size())!=1)
 		return false;
 	return true;
 	}
 
 bool writetabitem(FILE* handle,std::string_view item,const std::string_view td=R"(<td>)") {
-	if(writef(handle,td.data(),td.size())!=td.size())
+	if(writef(handle,td.data(),td.size())!=1)
 		return false;
-	if(writef(handle,item.data(),item.size())!=item.size())
+	if(writef(handle,item.data(),item.size())!=1)
 		return false;
 
 	constexpr const char itemend[]="</td>\n";
 	constexpr const int itemendlen=sizeof(itemend)-1;
-	if(writef(handle,itemend,itemendlen)!=itemendlen)
+	if(writef(handle,itemend,itemendlen)!=1)
 		return false;
 	return true;
 	}
@@ -215,7 +215,7 @@ bool MealSave::savemeal(FILE* handle,const Num *num)  {
 	for(int i=0;i<nr;i++) {
 		if(!ameal.valid(i))
 			 continue;
-		if(writef(handle,rowstart,startlen)!=startlen)
+		if(writef(handle,rowstart,startlen)!=1)
 			return false;
 		 const ingredient_t *ingr=ameal.ingredient(i);
 		if(!writetabitem(handle, ingr->name.data()))
@@ -236,7 +236,7 @@ bool MealSave::savemeal(FILE* handle,const Num *num)  {
 		 len=snprintf(buf,buflen,"%.1f",carbitem);
 		if(!writetabnumitem(handle, std::string_view(buf,len)))
 			return false;
-		if(writef(handle,rowend,endlen)!=endlen)
+		if(writef(handle,rowend,endlen)!=1)
 			return false;
 		totmeal+=carbitem;
 		}
@@ -252,7 +252,7 @@ extern bool savemeals(FILE* handle,uint32_t starttime,uint32_t endtime);
 bool fallsavemeals(FILE *handle,int _unit,uint32_t starttime,uint32_t endtime,int maxcount,bool=false) {
 	if(!(dostarthtml(handle)&&savemeals(handle,starttime,endtime)))
 		return false;
-	if(fwrite(endhtml.data(),1,endhtml.size(),handle)!=endhtml.size())
+	if(fwrite(endhtml.data(),endhtml.size(),1,handle)!=1)
 		return false;
 	return true;
 	}

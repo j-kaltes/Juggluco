@@ -84,8 +84,10 @@ extern "C" JNIEXPORT jstring JNICALL   fromjava(addSIscangetName)(JNIEnv *env, j
    return nullptr;
    }
 extern "C" JNIEXPORT void JNICALL   fromjava(siSaveDeviceName)(JNIEnv *env, jclass cl,jlong dataptr,jstring jdeviceName) {
-    if(!dataptr)
+    if(!dataptr) {
+        LOGAR("siSaveDeviceName(0L)");
         return;
+        }
     streamdata *sdata=reinterpret_cast<streamdata *>(dataptr);
     jint getlen= env->GetStringUTFLength( jdeviceName);
     auto *sens= sdata->hist;
@@ -101,6 +103,7 @@ extern "C" JNIEXPORT void JNICALL   fromjava(siSaveDeviceName)(JNIEnv *env, jcla
    info->siDeviceNamelen=len;
 
   name[len]='\0';
+  LOGGER("siSaveDeviceName(%s)\n",name);
   sendstreaming(sens);  
   backup->resendResetDevices();
   backup->wakebackup(wakeall);

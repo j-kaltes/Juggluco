@@ -235,6 +235,7 @@ rutext.amount},
 
 ,.logdays="Дневной журнал"sv 
 ,.unhide="Показать"sv
+,.mmolL="ммоль/л"sv
 
 		}
 

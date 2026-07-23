@@ -1610,7 +1610,7 @@ extern "C" JNIEXPORT jlong  JNICALL   fromjava(novopentype)(JNIEnv *env, jclass 
     jint jlen = env->GetStringLength(jserial);
     env->GetStringUTFRegion(jserial, 0,jlen, serial);
     serial[jlen]='\0';
-        constexpr const auto comp=[](const NovoPen &el,const NovoPen &se ){
+    constexpr const auto comp=[](const NovoPen &el,const NovoPen &se ){
         return strcmp(el.serial,se.serial)<0;
         };
     auto *hit=std::upper_bound(start,end, zoek,comp); //first element larger than jserial
@@ -1619,7 +1619,7 @@ extern "C" JNIEXPORT jlong  JNICALL   fromjava(novopentype)(JNIEnv *env, jclass 
         if(!strcmp(prehit->serial,serial)) {
             time_t lasttime= prehit->lasttime;
             jlong uit= (((uint64_t)prehit->type<<32)|(uint64_t)(lasttime&0xFFFFFFFF));
-            LOGGER("uit=%llX   %d novopentype(%s) lasttime=%llu %s",uit,prehit-start,serial,lasttime,ctime(&lasttime));
+            LOGGER("uit=%llX   %d novopentype(%s) lasttime=%zu %s",uit,(int)(prehit-start),serial,lasttime,ctime(&lasttime));
             return uit;
             }
         }

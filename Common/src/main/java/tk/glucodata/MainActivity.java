@@ -50,6 +50,8 @@ import static tk.glucodata.Natives.wakelibreview;
 import static tk.glucodata.help.hidekeyboard;
 import static tk.glucodata.settings.Settings.removeContentView;
 
+import androidx.activity.OnBackPressedCallback;
+
 import java.util.Arrays;
 
 import android.Manifest;
@@ -398,6 +400,43 @@ private boolean isLightTheme=false;
        // rtl = TextUtilsCompat.getLayoutDirectionFromLocale(locale) == View.LAYOUT_DIRECTION_RTL;
         Log.i(LOG_ID,"rtl="+rtl);
        }
+
+
+
+private void setBackPress() {
+    getOnBackPressedDispatcher().addCallback(
+            this,
+            new OnBackPressedCallback(true) {
+                @Override
+                public void handleOnBackPressed() {
+                    if (doLog) {
+                        Log.d(LOG_ID, "handleOnBackPressed");
+                    }
+
+                    if (backinapp()) {
+                        return;
+                    }
+
+                    if (isWearable) {
+                        if (doLog) {
+                            Log.d(LOG_ID, "moveTaskToBack");
+                        }
+                        moveTaskToBack(true);
+                        return;
+                    }
+
+                    // Invoke the next callback or normal system Back behavior.
+                    setEnabled(false);
+                    try {
+                        MainActivity.this
+                                .getOnBackPressedDispatcher()
+                                .onBackPressed();
+                    } finally {
+                        setEnabled(true);
+                    }
+                }
+            });
+        }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         if(android.os.Build.VERSION.SDK_INT >= 21) {
@@ -410,6 +449,9 @@ private boolean isLightTheme=false;
            Specific.splash(this);
          }
         super.onCreate(savedInstanceState);
+        setBackPress();
+
+
        if(Applic.DynamicTheme)  {
              DynamicThemeUtils.setTheme(this);
              isLightTheme=getIsLightTheme();
@@ -1494,7 +1536,7 @@ boolean backinapp()  {
         return doonback();
         }
        }
-
+/*
     @Override
     public    void onBackPressed()   {
         {if(doLog) {Log.d(LOG_ID, "onBackPressed");};};
@@ -1504,6 +1546,7 @@ boolean backinapp()  {
             super.onBackPressed();
             }
     }
+    */
 void tonotaccesssettings() {
     {if(doLog) {Log.i(LOG_ID,"tonotaccesssettings()");};};
     try {

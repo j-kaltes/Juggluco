@@ -621,8 +621,7 @@ private void handleMSLibre3SecurityNotificationsEnabledEvent() {
         sendSecurityCommand(17);
         }
     else {
-
-            var exportedKAuth = Natives.getLibre3kAuth(sensorptr);
+        var exportedKAuth = Natives.getLibre3kAuth(sensorptr);
         if(cryptolib.initKEYS(exportedKAuth ,1)) {
             if(exportedKAuth==null) {
                 {if(doLog) {Log.i(LOG_ID, SerialNumber + ": "+"exportedKAuth==null");};};
