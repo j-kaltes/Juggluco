@@ -41,6 +41,7 @@ import static tk.glucodata.Applic.usedlocale;
 import static tk.glucodata.Backup.getnumedit;
 import static tk.glucodata.Layout.getMargins;
 import static tk.glucodata.Log.doLog;
+import static tk.glucodata.MainActivity.canRotate;
 import static tk.glucodata.Natives.getInvertColors;
 import static tk.glucodata.Natives.getRTL;
 import static tk.glucodata.Natives.getScheduleProfile;
@@ -255,17 +256,7 @@ static void hideSystemUI() {
 void finish() {
     layoutweg();
     settinglayout.setVisibility(GONE);
-    
-    try {
-        activity.setRequestedOrientation(Natives.getScreenOrientation());
-        }
-        catch(       Throwable  error) {
-        String mess=error!=null?error.getMessage():null;
-        if(mess==null) {
-            mess="error";
-            }
-           Log.e(LOG_ID ,mess);
-       }
+    activity.applyScreenOrientation(activity.getResources().getConfiguration());
 //    if(editlabel!=null) removeContentView(editlabel) ;
     removeContentView(settinglayout);
     thisone=null;
@@ -1130,11 +1121,17 @@ Scans.setOnCheckedChangeListener( (buttonView,  isChecked) -> { Natives.setshows
         });
         var dexfuture=getcheckbox(context,R.string.dexfuture,Natives.getdexcomPredict());
          dexfuture.setOnCheckedChangeListener( (buttonView,  isChecked) -> Natives.setdexcomPredict(isChecked) );
-          CheckDirectionBox reverseorientation =getcheckbox(context,R.string.invertscreen,(Natives.getScreenOrientation()&SCREEN_ORIENTATION_REVERSE_LANDSCAPE)!=0);
-         reverseorientation.setOnCheckedChangeListener( (buttonView,  isChecked) ->  {
-                int ori= (isChecked?SCREEN_ORIENTATION_REVERSE_LANDSCAPE:SCREEN_ORIENTATION_LANDSCAPE);
-                Natives.setScreenOrientation(ori);
-                });
+          CheckDirectionBox reverseorientation;
+          if(canRotate) {
+             reverseorientation=getcheckbox(context,R.string.invertscreen,(Natives.getScreenOrientation()&SCREEN_ORIENTATION_REVERSE_LANDSCAPE)!=0);
+             reverseorientation.setOnCheckedChangeListener( (buttonView,  isChecked) ->  {
+                    int ori= (isChecked?SCREEN_ORIENTATION_REVERSE_LANDSCAPE:SCREEN_ORIENTATION_LANDSCAPE);
+                    Natives.setScreenOrientation(ori);
+                    });
+              }
+          else {
+            reverseorientation=null;
+            }
 
     CheckDirectionBox levelleft= new CheckDirectionBox(context);
     levelleft.setText(R.string.glucoseaxisleft);

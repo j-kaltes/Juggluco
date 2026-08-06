@@ -103,7 +103,7 @@ void setSensorptr(long sensorptr) {
         }
     hide.setChecked(Natives.getHidefromSensorptr(sensorptr));
     minvalue=Natives.getMinimalWarmup(sensorptr);
-    if(minvalue==0) {
+    if(true) {
         warmupview.setVisibility(VISIBLE);
         minutes.setVisibility(VISIBLE);
         int currentwarmup= Natives.getManualWarmupMinutes(sensorptr);

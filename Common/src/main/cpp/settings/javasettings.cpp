@@ -647,19 +647,7 @@ extern "C" JNIEXPORT void  JNICALL   fromjava(writealarmsuspension)(JNIEnv *env,
     LOGGER("writealarmsuspension(%d,%hd)\n",type,sus);
     settings->data()->getalarmringtone(type).wait=sus;
     }
-extern bool fixatex,fixatey;
-bool fixatex=true,fixatey=true;
-extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getfixatex)(JNIEnv *env, jclass cl) {
-    return settings->data()->fixatex;
-    }
 
-extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getfixatey)(JNIEnv *env, jclass cl) {
-    return settings->data()->fixatey;
-    }
-extern "C" JNIEXPORT void  JNICALL   fromjava(setfixatey)(JNIEnv *env, jclass cl,jboolean val) {
-    settings->data()->fixatey=val;
-    fixatey=val;
-    }
 extern int carbotype;
 extern "C" JNIEXPORT void  JNICALL   fromjava(setmealvar)(JNIEnv *env, jclass cl,jbyte val) {
     const int count=settings->getlabelcount();
@@ -839,8 +827,11 @@ extern "C" JNIEXPORT void  JNICALL   fromjava(setlibreemail)(JNIEnv *env, jclass
     env->GetStringUTFRegion(jemail, 0,jlen, settings->data()->libreemail);
     jint len = env->GetStringUTFLength( jemail);
     settings->data()->libreemail[len]='\0';
+    settings->data()->libreinit=false;
+    settings->data()->libreinit3=false;
     if(jlen<3)
         settings->data()->uselibre=false;
+
      }
 extern "C" JNIEXPORT jstring  JNICALL   fromjava(getlibreemail)(JNIEnv *env, jclass cl) {
      return env->NewStringUTF(settings->data()->libreemail);
@@ -1688,6 +1679,8 @@ extern "C" JNIEXPORT jint  JNICALL   fromjava(getLibreCountry)(JNIEnv *env, jcla
     }
 extern "C" JNIEXPORT void  JNICALL   fromjava(setLibreCountry)(JNIEnv *env, jclass cl,int val) {
     settings->data()->librecountry=val+1;
+    settings->data()->libreinit=false;
+    //settings->data()->libreinit3=false;
     }
 
 

@@ -59,18 +59,25 @@ static private void askdays(MainActivity act,boolean history) {
    days.setMinEms(4);
    days.setText(""+Natives.getAnalysedays());
    Layout layout = new Layout(act, (l, w, h) -> {
-      int wid = GlucoseCurve.getwidth();
+      int wid = GlucoseCurve.getwidth(act);
       if(!smallScreen) {
-         int hei = GlucoseCurve.getheight();
+         int hei = GlucoseCurve.getheight(act);
          if(hei>h&&wid>w) {
-                int half= wid / 2;
+             if(GlucoseCurve.isLandscape(act)) {
+                int half=wid/2;
                 int af=(half-w)/4;
-             l.setX(half - w-af);
-             l.setY((hei - h) / 2);
+                l.setX(half-w-af);
+                l.setY((int)((hei-h)*.65f));
+                }
+             else {
+                int availableWidth=wid-MainActivity.systembarLeft-MainActivity.systembarRight;
+                l.setX(MainActivity.systembarLeft+Math.max(0,(availableWidth-w)/2));
+                l.setY(Math.max(MainActivity.systembarTop,(hei-h)/2));
+                }
              }
             else {
-             l.setX(0);
-             l.setY(0);
+             l.setX(MainActivity.systembarLeft);
+             l.setY(MainActivity.systembarTop);
                }
             }
       else {
@@ -85,7 +92,7 @@ static private void askdays(MainActivity act,boolean history) {
         layout.setBackgroundResource(R.drawable.dialogbackground);
    days.requestFocus();
    if(!smallScreen) {
-      act.curve.numberview.showkeyboard(act);
+      act.curve.numberview.showkeyboard(act,layout);
       }
    else  {
       help.showkeyboard(act,days);

@@ -60,6 +60,7 @@
                 android:resource="@xml/glucose_widget_info" />
         </receiver>
 
+        <!--    android:screenOrientation="reverseLandscape" -->
         <activity
             android:name=".MainActivity"
             android:allowEmbedded="true"
@@ -67,10 +68,10 @@
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:resizeableActivity="true"
-            android:screenOrientation="reverseLandscape"
+            android:screenOrientation="unspecified"
 	    >
-
-       <property android:name="android.window.PROPERTY_COMPAT_ALLOW_RESTRICTED_RESIZABILITY" android:value="true" />
+ 
+<!--       <property android:name="android.window.PROPERTY_COMPAT_ALLOW_RESTRICTED_RESIZABILITY" android:value="true" /> -->
 
             <intent-filter>
                 <action android:name="androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE" />

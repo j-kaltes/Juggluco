@@ -14,6 +14,8 @@ import static tk.glucodata.settings.Settings.removeContentView;
 import static tk.glucodata.util.getbutton;
 import static tk.glucodata.util.getcheckbox;
 import static tk.glucodata.util.getlabel;
+import static tk.glucodata.RingTones.EnableControls;
+
 
 import android.view.Gravity;
 import android.view.View;
@@ -36,9 +38,9 @@ public class Calibration  {
 
 static public void show(MainActivity act,View parent) {
     if(parent!=null)  {
-           parent.setVisibility(GONE);
-           if(!isWearable)
-                    act.lightBars(!Natives.getInvertColors());
+//           parent.setVisibility(GONE);
+           EnableControls(parent,false);
+//           if(!isWearable) act.lightBars(!Natives.getInvertColors());
             }
     Spinner spinner=new Spinner(act);
     avoidSpinnerDropdownFocus(spinner);
@@ -129,9 +131,10 @@ static public void show(MainActivity act,View parent) {
     final ViewGroup flayout=layout;
     MainActivity.setonback( () -> {
       if(parent!=null)  {
-           parent.setVisibility(VISIBLE);
-           if(!isWearable)
-                    act.themeLightBars();
+          // parent.setVisibility(VISIBLE);
+
+           EnableControls(parent,true);
+//           if(!isWearable) act.themeLightBars();
             }
         removeContentView(flayout);
         });

@@ -22,9 +22,11 @@
 package tk.glucodata;
 
 import android.os.Build;
+import android.graphics.Rect;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -38,6 +40,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.GridLayout;
 import android.widget.HorizontalScrollView;
+import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -47,6 +50,9 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import androidx.annotation.NonNull;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import tk.glucodata.nums.numio;
@@ -76,6 +82,150 @@ import static tk.glucodata.util.getlabel;
 
 class Meal {
 private static final String LOG_ID="Meal";
+
+private static int clamp(final int value,final int minimum,final int maximum) {
+    if(maximum<minimum)
+        return minimum;
+    return Math.max(minimum,Math.min(value,maximum));
+    }
+
+private static int safeWidth(final int screenWidth) {
+    return Math.max(0,screenWidth-MainActivity.systembarLeft-MainActivity.systembarRight);
+    }
+
+private static int safeHeight(final int screenHeight) {
+    return Math.max(0,screenHeight-MainActivity.systembarTop-MainActivity.systembarBottom);
+    }
+
+private static int centeredSafeX(final int screenWidth,final int viewWidth) {
+    return MainActivity.systembarLeft+Math.max(0,(safeWidth(screenWidth)-viewWidth)/2);
+    }
+
+private static int bottomOf(final View view) {
+    if(view==null)
+        return MainActivity.systembarTop;
+    return Math.round(view.getY())+view.getMeasuredHeight();
+    }
+
+private interface OrientationUpdater {
+    void update(View view);
+    }
+
+private static void updateOrientationLayout(final View view,final OrientationUpdater updater) {
+    if(view.getParent()==null)
+        return;
+    updater.update(view);
+    view.forceLayout();
+    view.requestLayout();
+    }
+
+private static void registerOrientationLayout(final MainActivity act,final View view,final OrientationUpdater updater) {
+    final View root=act.findViewById(android.R.id.content);
+    if(root==null)
+        return;
+    final View.OnLayoutChangeListener rootListener=(changed,left,top,right,bottom,oldLeft,oldTop,oldRight,oldBottom)-> {
+        if(right-left==oldRight-oldLeft&&bottom-top==oldBottom-oldTop)
+            return;
+        updateOrientationLayout(view,updater);
+        view.post(()->updateOrientationLayout(view,updater));
+        };
+    root.addOnLayoutChangeListener(rootListener);
+    view.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
+        @Override
+        public void onViewAttachedToWindow(View attached) { }
+
+        @Override
+        public void onViewDetachedFromWindow(View detached) {
+            root.removeOnLayoutChangeListener(rootListener);
+            detached.removeOnAttachStateChangeListener(this);
+            }
+        });
+    }
+
+private static void requestMenuItemLayout(final View view,final NumberView numb) {
+    view.requestLayout();
+    if(numb.keyboard!=null) {
+        numb.keyboard.forceLayout();
+        numb.keyboard.requestLayout();
+        }
+    }
+
+private static int menuViewWidth(final MainActivity act) {
+    int width;
+    int height;
+    if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.R) {
+        final Rect bounds=act.getWindowManager().getCurrentWindowMetrics().getBounds();
+        width=bounds.width();
+        height=bounds.height();
+        }
+    else {
+        final DisplayMetrics metrics=new DisplayMetrics();
+        act.getWindowManager().getDefaultDisplay().getRealMetrics(metrics);
+        width=metrics.widthPixels;
+        height=metrics.heightPixels;
+        }
+    if(width<=0||height<=0) {
+        width=GlucoseCurve.getwidth(act);
+        height=GlucoseCurve.getheight(act)+MainActivity.systembarTop+MainActivity.systembarBottom;
+        }
+
+    // Use stable system-bar insets rather than only the currently visible bars.
+    // This makes the fixed menu width identical before and after immersive mode
+    // is toggled, while still reserving the navigation-bar allocation.
+    int navigationInset=Math.max(MainActivity.systembarBottom,
+            Math.max(MainActivity.systembarLeft,MainActivity.systembarRight));
+    final View content=act.findViewById(android.R.id.content);
+    if(content!=null) {
+        final WindowInsetsCompat windowInsets=ViewCompat.getRootWindowInsets(content);
+        if(windowInsets!=null) {
+            final Insets stableBars=windowInsets.getInsetsIgnoringVisibility(
+                    WindowInsetsCompat.Type.systemBars());
+            navigationInset=Math.max(stableBars.bottom,
+                    Math.max(stableBars.left,stableBars.right));
+            }
+        }
+
+    final int shortSide=Math.min(width,height);
+    final int longSide=Math.max(width,height);
+    return Math.max(1,Math.min(shortSide,(longSide-navigationInset)/2));
+    }
+
+private static FrameLayout.LayoutParams menuViewParams(final Layout lay,final NumberView numb,final MainActivity act,final int viewWidth) {
+    final boolean landscape=GlucoseCurve.isLandscape(act);
+    lay.setMinimumWidth(viewWidth);
+    final FrameLayout.LayoutParams params;
+    if(landscape) {
+        params=new FrameLayout.LayoutParams(viewWidth,MATCH_PARENT,Gravity.TOP|Gravity.RIGHT);
+        params.topMargin=MainActivity.systembarTop;
+        params.bottomMargin=MainActivity.systembarBottom;
+        params.rightMargin=MainActivity.systembarRight;
+        }
+    else {
+        final int gap=GlucoseCurve.dpToPx(8);
+        final int top=Math.max(MainActivity.systembarTop,bottomOf(numb.newnumview)+gap);
+        params=new FrameLayout.LayoutParams(viewWidth,MATCH_PARENT,Gravity.TOP|Gravity.LEFT);
+        params.leftMargin=centeredSafeX(GlucoseCurve.getwidth(act),viewWidth);
+        params.topMargin=top;
+        params.bottomMargin=MainActivity.systembarBottom;
+        }
+    return params;
+    }
+
+private static FrameLayout.LayoutParams selectIngredientParams(final RecyclerView recycle,final MainActivity act) {
+    final int width=GlucoseCurve.getwidth(act);
+    final boolean landscape=GlucoseCurve.isLandscape(act);
+    recycle.setMinimumWidth((int)(safeWidth(width)*.56f));
+    final FrameLayout.LayoutParams params=new FrameLayout.LayoutParams(
+            smallScreen||!landscape?MATCH_PARENT:WRAP_CONTENT,
+            MATCH_PARENT,
+            Gravity.TOP|Gravity.CENTER_HORIZONTAL);
+    params.topMargin=MainActivity.systembarTop;
+    params.bottomMargin=MainActivity.systembarBottom;
+    params.leftMargin=MainActivity.systembarLeft;
+    params.rightMargin=MainActivity.systembarRight;
+    return params;
+    }
+
 static public class MealItemViewAdapter extends RecyclerView.Adapter<MealItemViewHolder> {
     Consptr ingrindex;
     final int[] mealptrar;
@@ -153,8 +303,11 @@ static void askround(MainActivity act,Runnable runner ,View parent) {
        lay.setPadding(pad,0,pad,0);
         lay.setBackgroundColor(Applic.backgroundcolor);
 
-    var  params =    new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.CENTER_HORIZONTAL);
+    var  params = new FrameLayout.LayoutParams(WRAP_CONTENT,WRAP_CONTENT,Gravity.CENTER_HORIZONTAL|Gravity.TOP);
     params.topMargin=MainActivity.systembarTop;
+    params.bottomMargin=MainActivity.systembarBottom;
+    params.leftMargin=MainActivity.systembarLeft;
+    params.rightMargin=MainActivity.systembarRight;
     act.addMyContentView(lay, params);
     setonback(() -> {
         removeContentView(lay);
@@ -192,9 +345,6 @@ static Layout menuview(final NumberView numb, MainActivity act, int mealptr, Obj
     give.accept(carb,mealptr);
     float[] carbar={carb};
     int[] mealptrar={mealptr};
-        int width=GlucoseCurve.getwidth();
-        int height=GlucoseCurve.getheight();
-
     Layout lay=new Layout(act,(l,w,h)-> {
     /*
         if(!smallScreen&&width>w) {
@@ -216,13 +366,11 @@ static Layout menuview(final NumberView numb, MainActivity act, int mealptr, Obj
         roundlabel.setText(act.getString(R.string.round)+Natives.getroundto());
         },lay));
         lay.setBackgroundColor(Applic.backgroundcolor);
-    lay.setMinimumWidth((width-MainActivity.systembarRight)/2);
-    //var  params =    new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.TOP|Gravity.RIGHT);
-//    var  params =    new FrameLayout.LayoutParams( WRAP_CONTENT, height-MainActivity.systembarTop-MainActivity.systembarBottom, Gravity.RIGHT);
-    var  params =    new FrameLayout.LayoutParams( WRAP_CONTENT, MATCH_PARENT, Gravity.RIGHT);
-    params.rightMargin=MainActivity.systembarRight;
-    params.topMargin=MainActivity.systembarTop*3/4;
-    act.addMyContentView(lay, params);
+    lay.useMatch=true;
+    final int viewWidth=menuViewWidth(act);
+    act.addMyContentView(lay,menuViewParams(lay,numb,act,viewWidth));
+    registerOrientationLayout(act,lay,view->
+            view.setLayoutParams(menuViewParams((Layout)view,numb,act,viewWidth)));
 //    act.addMyContentView(lay, smallScreen?new ViewGroup.LayoutParams(  MATCH_PARENT, (height-MainActivity.systembarTop)):new ViewGroup.LayoutParams(WRAP_CONTENT, (height-MainActivity.systembarTop-MainActivity.systembarBottom)));
     repeat.setOnClickListener(v->{
          removeContentView(lay);
@@ -258,7 +406,6 @@ static Layout menuview(final NumberView numb, MainActivity act, int mealptr, Obj
         };
     IntConsumer hiercons=i-> {
         lay.setVisibility(GONE);
-        numshowkeyboard(numb,act);
         menuitem(act,numb,mealptrar[0],i,onsave,carbar[0]);
         };
     consar.cons=hiercons;
@@ -266,7 +413,6 @@ static Layout menuview(final NumberView numb, MainActivity act, int mealptr, Obj
 
     add.setOnClickListener(v-> {
         lay.setVisibility(GONE);
-        numshowkeyboard(numb,act);
         menuitem(act,numb,mealptrar[0],-1,onsave,carbar[0]);
         });
     
@@ -280,8 +426,11 @@ static void  numhidekeyboard(NumberView numb,MainActivity act) {
         help.hidekeyboard(act);
     }
 static void  numshowkeyboard(NumberView numb,MainActivity act) {
+    numshowkeyboard(numb,act,numb.newnumview);
+    }
+static void  numshowkeyboard(NumberView numb,MainActivity act,View anchor) {
     if(!smallScreen)
-        numb.showkeyboard(act);
+        numb.showkeyboard(act,anchor);
     else
         help.showkeyboard(act,numb.valueedit);
     }
@@ -384,29 +533,32 @@ static void menuitem(MainActivity act, NumberView numb, int mealptr, int pos, In
            public void onTextChanged(CharSequence s, int start, int before, int count) { }
           });
     Layout lay=new Layout(act,(l,w,h)-> {
-        int width=GlucoseCurve.getwidth();
-        int hei=GlucoseCurve.getheight();
-        if(smallScreen) {
-            l.setX((width-w)/2);
+        int width=GlucoseCurve.getwidth(act);
+        int hei=GlucoseCurve.getheight(act);
+        Log.i(LOG_ID,"addcomponent width="+width+" height="+hei+" w="+w+" h="+h);
+        if(!smallScreen&&GlucoseCurve.isLandscape(act)) {
+            int leftHalf=MainActivity.systembarLeft+safeWidth(width)/2;
+            int xpos=leftHalf-w;
+            l.setX(Math.max(MainActivity.systembarLeft,xpos));
+            int maximumY=hei-MainActivity.systembarBottom-h;
+            int centered=MainActivity.systembarTop+(safeHeight(hei)-h)/2;
+            l.setY(clamp(centered,MainActivity.systembarTop,maximumY));
             }
         else {
-            var whalf=width/2;
-            if(whalf>w)
-                l.setX(whalf-w);
-            else
-                l.setX(0);
+            l.setX(centeredSafeX(width,w));
+            l.setY(MainActivity.systembarTop);
             }
-        if(!smallScreen&&hei>h)
-            l.setY((hei-h)*.5f);
-        else
-            l.setY(MainActivity.systembarTop*.75f);
         return new int[]{w,h};
         },new View[]{amountlabel,amount},new View[]{ingrlabel,Ingredient},new View[]{carblabel,carbos},new View[]{totallabel,total}, new View[]{mealtotallabel,mealtotal},
             new View[] {Delete,Cancel,Save});
        int pad=(int)(tk.glucodata.GlucoseCurve.metrics.density*5.0);
        lay.setPadding(pad,0,pad,0);
     act.addMyContentView(lay, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
-      lay.post(lay::requestLayout);
+    registerOrientationLayout(act,lay,view->requestMenuItemLayout(view,numb));
+      lay.post(() -> {
+          lay.requestLayout();
+          numshowkeyboard(numb,act,lay);
+          });
 
         lay.setBackgroundColor(Applic.backgroundcolor);
 
@@ -428,7 +580,7 @@ static void menuitem(MainActivity act, NumberView numb, int mealptr, int pos, In
          });
     Ingredient.setOnClickListener(v-> {
         
-        selectingredient(act,numb, i->{
+        selectingredient(act,numb,lay,i->{
     if(i<0) {
         if(ingred[0]>=0&&i==(-ingred[0]-1)) {
             ingred[0]=-1;
@@ -514,10 +666,13 @@ static private void doSearchIngr(MainActivity act,View view,IngredientViewAdapte
     int searchoptions=EditorInfo.IME_FLAG_NO_EXTRACT_UI| EditorInfo.IME_FLAG_NO_FULLSCREEN| EditorInfo.IME_ACTION_SEARCH;
     searchstr.setImeOptions(searchoptions);
     searchstr.setLayoutParams(new ViewGroup.LayoutParams(  MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-    int width=GlucoseCurve.getwidth();
     var cancel=getbutton(act,R.string.cancel);
     var search=getbutton(act,R.string.search);
     ingredient.setPaddingRelative((int)(tk.glucodata.GlucoseCurve.metrics.density*5.0),0,0,0);
+    boolean landscape=GlucoseCurve.isLandscape(act);
+    Object[][] searchRows=landscape?
+            new Object[][]{new View[]{ingredient,searchstr,search,cancel}}:
+            new Object[][]{new View[]{ingredient},new View[]{searchstr},new View[]{search,cancel}};
     var lay=new Layout(act,(l,w,h)-> {
     /*
         l.setY(MainActivity.systembarTop*.75f);
@@ -525,7 +680,8 @@ static private void doSearchIngr(MainActivity act,View view,IngredientViewAdapte
         w=width-MainActivity.systembarLeft-MainActivity.systembarRight;
         */
         return new int[]{w,h};
-        },new View[]{ingredient,searchstr,search,cancel});
+        },searchRows);
+    lay.useMatch=true;
     lay.setBackgroundResource(R.drawable.helpbackground);
 
     setonback(() -> {
@@ -538,10 +694,10 @@ static private void doSearchIngr(MainActivity act,View view,IngredientViewAdapte
 
     //act.addMyContentView(lay, new ViewGroup.LayoutParams(width-MainActivity.systembarLeft-MainActivity.systembarRight ,WRAP_CONTENT));
 
-    var  params = new FrameLayout.LayoutParams(  MATCH_PARENT,WRAP_CONTENT, Gravity.TOP|Gravity.START);
-    params.topMargin=(int)(MainActivity.systembarTop*.75f);
-    params.setMarginStart(0);
-    params.setMarginEnd(MainActivity.systembarEnd);;
+    var  params = new FrameLayout.LayoutParams(MATCH_PARENT,WRAP_CONTENT,Gravity.TOP|Gravity.START);
+    params.topMargin=MainActivity.systembarTop;
+    params.leftMargin=MainActivity.systembarLeft;
+    params.rightMargin=MainActivity.systembarRight;
    act.addMyContentView(lay, params);
     Runnable searchrun=()-> {
                 int[] res=Natives.searchIngredient(searchstr.getText().toString());
@@ -569,7 +725,7 @@ static private void doSearchIngr(MainActivity act,View view,IngredientViewAdapte
              searchrun.run()
             );
     }
-static private void selectingredient(MainActivity act,NumberView numb,IntConsumer setindex) {
+static private void selectingredient(MainActivity act,NumberView numb,View keyboardAnchor,IntConsumer setindex) {
     numhidekeyboard(numb,act);
     RecyclerView recycle = new RecyclerView(act);
     LinearLayoutManager lin = new LinearLayoutManager(act);
@@ -580,11 +736,11 @@ static private void selectingredient(MainActivity act,NumberView numb,IntConsume
     edit.setText(R.string.edit);
     var search=getbutton(act,R.string.search);
     recycle.setLayoutParams(new ViewGroup.LayoutParams(  MATCH_PARENT, MATCH_PARENT));
-    int height=GlucoseCurve.getheight();
-    int width=GlucoseCurve.getwidth();
-    int viewwidth=(int)(width*.56);
-    recycle.setMinimumWidth(viewwidth);
+    boolean landscape=GlucoseCurve.isLandscape(act);
 //    int ypos=MainActivity.systembarTop*3/4;
+    Object[][] ingredientRows=landscape?
+            new Object[][]{new View[]{recycle},new View[]{add,edit,search,close}}:
+            new Object[][]{new View[]{recycle},new View[]{add,edit},new View[]{search,close}};
     Layout lay=new Layout(act,(l,w,h)-> {
     /*
       var af=MainActivity.systembarTop*3/4;
@@ -593,7 +749,8 @@ static private void selectingredient(MainActivity act,NumberView numb,IntConsume
         return new int[]{w,h-af-MainActivity.systembarBottom};
        */
         return new int[]{w,h};
-        },new View[]{recycle},new View[] {add,edit,search,close});
+        },ingredientRows);
+    lay.useMatch=true;
 
 //    lay.setY(ypos);
 //    lay.setMinimumWidth(viewwidth);
@@ -624,16 +781,16 @@ static private void selectingredient(MainActivity act,NumberView numb,IntConsume
     lay.setBackgroundResource(R.drawable.dialogbackground);
 
 //    act.addMyContentView(lay, new ViewGroup.LayoutParams(smallScreen?MATCH_PARENT:WRAP_CONTENT, height));
-    var  params =    new FrameLayout.LayoutParams( smallScreen?MATCH_PARENT:WRAP_CONTENT, MATCH_PARENT, Gravity.TOP|Gravity.CENTER_HORIZONTAL); 
-    params.topMargin=MainActivity.systembarTop*3/4;
 //    params.topMargin=0;
-    act.addMyContentView(lay, params);
+    act.addMyContentView(lay,selectIngredientParams(recycle,act));
+    registerOrientationLayout(act,lay,view->
+            view.setLayoutParams(selectIngredientParams(recycle,act)));
     lay.invalidate();
     lay.setVisibility(VISIBLE);
     lay.bringToFront();
     close.setOnClickListener(v-> doonback());
     setonback(() -> {
-        numshowkeyboard(numb,act);
+        numshowkeyboard(numb,act,keyboardAnchor);
         lay.setVisibility(GONE);
         removeContentView(lay);
         act.hideSystemUI();
@@ -727,6 +884,17 @@ static void    defineingredient(MainActivity act ,IngredientViewAdapter  foodada
         }
     else
         spinner.setVisibility(GONE);
+    boolean landscape=GlucoseCurve.isLandscape(act);
+    Object[][] ingredientEditRows=landscape?
+            new Object[][]{
+                    new View[]{namelabel,name,unitlabel,unit,spinner},
+                    new View[]{Database,carblabel,carb},
+                    new View[]{Cancel,Delete,Save}}:
+            new Object[][]{
+                    new View[]{namelabel,name},
+                    new View[]{unitlabel,unit,spinner},
+                    new View[]{Database,carblabel,carb},
+                    new View[]{Cancel,Delete,Save}};
     Layout inlay=new Layout(act,(l,w,h)-> {
 //        int height=GlucoseCurve.getheight();
 /*
@@ -738,7 +906,7 @@ static void    defineingredient(MainActivity act ,IngredientViewAdapter  foodada
         l.setY(MainActivity.systembarTop);
         */
         return new int[]{w,h};
-        },new View[]{namelabel,name,unitlabel,unit,spinner},new View[]{Database,carblabel,carb},new View[] {Cancel,Delete,Save});
+        },ingredientEditRows);
     final var lay= new HorizontalScrollView(act);
     lay.addView(inlay, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT) );
         lay.setSmoothScrollingEnabled(false);
@@ -750,10 +918,14 @@ static void    defineingredient(MainActivity act ,IngredientViewAdapter  foodada
        lay.setPadding(pad,0,pad,pad/2);
       lay.setBackgroundResource(R.drawable.dialogbackground);
    // act.addMyContentView(lay, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
-    var  params =    new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.CENTER_HORIZONTAL|Gravity.TOP);
+    var  params = new FrameLayout.LayoutParams(
+            landscape?WRAP_CONTENT:MATCH_PARENT,
+            WRAP_CONTENT,
+            Gravity.CENTER_HORIZONTAL|Gravity.TOP);
     params.topMargin=MainActivity.systembarTop;
-    params.leftMargin=MainActivity.systembarLeft/2;
-    params.rightMargin=MainActivity.systembarRight/2;
+    params.bottomMargin=MainActivity.systembarBottom;
+    params.leftMargin=MainActivity.systembarLeft;
+    params.rightMargin=MainActivity.systembarRight;
      act.addMyContentView(lay, params);
 
     name.requestFocus();
@@ -869,6 +1041,64 @@ static Layout  fooddatabase(MainActivity act, TriConsumer<String,Float,String> g
 //    act.hideSystemUI();
     int fnr=Natives.foodnr();
     recycle.scrollToPosition(random.nextInt(fnr));
+    // The header is rebuilt when the orientation changes.  In landscape all
+    // controls fit on one line; in portrait the actions and search controls use
+    // two compact lines.  Reusing the same child hierarchy without rebuilding
+    // it left portrait measurements and widths behind after rotation.
+    final LinearLayout controls=new LinearLayout(act);
+    controls.setLayoutParams(new ViewGroup.LayoutParams(MATCH_PARENT,WRAP_CONTENT));
+
+    final LinearLayout actionRow=new LinearLayout(act);
+    actionRow.setOrientation(LinearLayout.HORIZONTAL);
+    actionRow.setGravity(Gravity.CENTER_VERTICAL);
+    actionRow.setLayoutParams(new LinearLayout.LayoutParams(MATCH_PARENT,WRAP_CONTENT));
+    final View actionSpacer=new View(act);
+
+    final LinearLayout searchRow=new LinearLayout(act);
+    searchRow.setOrientation(LinearLayout.HORIZONTAL);
+    searchRow.setGravity(Gravity.CENTER_VERTICAL);
+    searchRow.setLayoutParams(new LinearLayout.LayoutParams(MATCH_PARENT,WRAP_CONTENT));
+
+    final Runnable configureControls=()-> {
+        // Layout.useMatch replaces MATCH_PARENT with the measured pixel width.
+        // Restore it before every reconfiguration so the new orientation is
+        // measured from the current full screen rather than the previous one.
+        controls.setLayoutParams(new ViewGroup.LayoutParams(MATCH_PARENT,WRAP_CONTENT));
+
+        // Remove every control from its old parent before constructing the new
+        // orientation-specific hierarchy.
+        controls.removeAllViews();
+        actionRow.removeAllViews();
+        searchRow.removeAllViews();
+
+        if(GlucoseCurve.isLandscape(act)) {
+            controls.setOrientation(LinearLayout.HORIZONTAL);
+            controls.setGravity(Gravity.CENTER_VERTICAL);
+            controls.addView(Help,new LinearLayout.LayoutParams(WRAP_CONTENT,WRAP_CONTENT));
+            controls.addView(searchstr,new LinearLayout.LayoutParams(0,WRAP_CONTENT,1.0f));
+            controls.addView(searchbutton,new LinearLayout.LayoutParams(WRAP_CONTENT,WRAP_CONTENT));
+            controls.addView(Close,new LinearLayout.LayoutParams(WRAP_CONTENT,WRAP_CONTENT));
+            }
+        else {
+            controls.setOrientation(LinearLayout.VERTICAL);
+            controls.setGravity(Gravity.NO_GRAVITY);
+
+            actionRow.addView(Help,new LinearLayout.LayoutParams(WRAP_CONTENT,WRAP_CONTENT));
+            actionRow.addView(actionSpacer,new LinearLayout.LayoutParams(0,0,1.0f));
+            actionRow.addView(Close,new LinearLayout.LayoutParams(WRAP_CONTENT,WRAP_CONTENT));
+
+            searchRow.addView(searchstr,new LinearLayout.LayoutParams(0,WRAP_CONTENT,1.0f));
+            searchRow.addView(searchbutton,new LinearLayout.LayoutParams(WRAP_CONTENT,WRAP_CONTENT));
+
+            controls.addView(actionRow);
+            controls.addView(searchRow);
+            }
+        controls.forceLayout();
+        controls.requestLayout();
+        };
+    configureControls.run();
+
+    final Object[][] databaseRows={new View[]{controls},new View[]{recycle}};
     Layout lay=new Layout(act,(l,w,h)->{
     /*
         int width=GlucoseCurve.getwidth();
@@ -882,10 +1112,11 @@ static Layout  fooddatabase(MainActivity act, TriConsumer<String,Float,String> g
     //    return new int[]{w,h-MainActivity.systembarTop};
         return new int[]{w,h};
 
-        },new View[]{Help,searchstr,searchbutton,Close,}    ,new View[]{recycle});
+        },databaseRows);
+      lay.useMatch=true;
      //  int pad=(int)(tk.glucodata.GlucoseCurve.metrics.density*5.0);
     //   lay.setPadding(pad,0,pad,0);
-      lay.setPadding(MainActivity.systembarLeft,MainActivity.systembarTop/2,MainActivity.systembarRight,MainActivity.systembarBottom);
+      lay.setPadding(MainActivity.systembarLeft,MainActivity.systembarTop,MainActivity.systembarRight,MainActivity.systembarBottom);
         lay.setBackgroundColor(Applic.backgroundcolor);
     //act.addMyContentView(lay, new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
 /*
@@ -893,7 +1124,23 @@ static Layout  fooddatabase(MainActivity act, TriConsumer<String,Float,String> g
     params.topMargin=MainActivity.systembarTop;
    context.addMyContentView(layout, params);
    */
-    act.addMyContentView(lay, new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
+    act.addMyContentView(lay,new FrameLayout.LayoutParams(
+            MATCH_PARENT,MATCH_PARENT,Gravity.FILL));
+    registerOrientationLayout(act,lay,view-> {
+        configureControls.run();
+        // Replace any dimensions retained from the previous orientation.  In
+        // particular this prevents a portrait measurement becoming the dialog
+        // width after rotating to landscape.
+        view.setLayoutParams(new FrameLayout.LayoutParams(
+                MATCH_PARENT,MATCH_PARENT,Gravity.FILL));
+        view.setX(0.0f);
+        view.setY(0.0f);
+        view.setPadding(MainActivity.systembarLeft,MainActivity.systembarTop,
+                MainActivity.systembarRight,MainActivity.systembarBottom);
+        recycle.setLayoutParams(new ViewGroup.LayoutParams(MATCH_PARENT,WRAP_CONTENT));
+        recycle.forceLayout();
+        recycle.requestLayout();
+        });
     searchstr.requestFocus();
     Help.setOnClickListener(v-> { 
 //        act.hideSystemUI();
@@ -1044,8 +1291,11 @@ static void    shownutrients(MainActivity act,int id,boolean showzero,TriConsume
 
     //act.addMyContentView(scroll,new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
 
-    var  params2 =    new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.CENTER_HORIZONTAL);
+    var  params2 = new FrameLayout.LayoutParams(WRAP_CONTENT,WRAP_CONTENT,Gravity.CENTER_HORIZONTAL|Gravity.TOP);
     params2.topMargin=MainActivity.systembarTop;
+    params2.bottomMargin=MainActivity.systembarBottom;
+    params2.leftMargin=MainActivity.systembarLeft;
+    params2.rightMargin=MainActivity.systembarRight;
    act.addMyContentView(scroll, params2);
     scroll.setBackgroundResource(R.drawable.dialogbackground);
     Close.setOnClickListener(v-> doonback());

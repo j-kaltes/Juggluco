@@ -49,6 +49,10 @@ const char *gformat;
 int glunit;
 int gludecimal;
 double convertmult;
+
+
+bool fixatex=false,fixatey=false;
+
 void setunit(int unit) {
     glunit=unit;
     if(unit==1) {

@@ -54,6 +54,7 @@ import androidx.activity.OnBackPressedCallback;
 
 import java.util.Arrays;
 
+import android.database.ContentObserver;
 import android.Manifest;
 import android.accessibilityservice.AccessibilityServiceInfo;
 import android.app.Activity;
@@ -64,6 +65,7 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.ConfigurationInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
@@ -152,7 +154,7 @@ private void startall() {
 
 static private  int askedNotify=5;
 
-private  void               onceshowintro() {
+ void               onceshowintro() {
                  if(getlibrary.showintro) {
                    getlibrary.showintro=false;
                    MainActivity act=this;
@@ -208,30 +210,32 @@ private void startdisplay() {
    if(!isWearable) {
       if(Build.VERSION.SDK_INT >= 30) {
              setOnApplyWindowInsetsListener(curve,(v, windowInsets) -> {
+             int oldScreenWidth=screenwidth;
+             int oldScreenHeight=screenheight;
              setsizes(this);
-             if(screenwidth>= screenheight) {
-                 Insets  insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
-                 {if(doLog) {Log.i(LOG_ID, "systemBars: left="+insets.left+ " right="+insets.right+ " bottom="+insets.bottom+ " top="+insets.top);};};
-                 Natives.systembar(insets.left, insets.top, insets.right, insets.bottom);
+             Insets  insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
+             boolean geometryChanged=oldScreenWidth!=screenwidth||oldScreenHeight!=screenheight||
+                     systembarLeft!=insets.left||systembarTop!=insets.top||
+                     systembarRight!=insets.right||systembarBottom!=insets.bottom;
+             {if(doLog) {Log.i(LOG_ID, "systemBars: left="+insets.left+ " right="+insets.right+ " bottom="+insets.bottom+ " top="+insets.top);};};
+             Natives.systembar(insets.left, insets.top, insets.right, insets.bottom);
 
-                systembarLeft=insets.left;
-                systembarTop=insets.top;
-                systembarRight=insets.right;
-                systembarBottom=insets.bottom;
-                if(rtl) {
-                    systembarStart=systembarRight;
-                    systembarEnd=systembarLeft;
-                    }
-                else {
-                    systembarStart=systembarLeft;
-                    systembarEnd=systembarRight;
-                    }
-                 requestRender();
-                 onceshowintro();
-
-
-                 }
-                return windowInsets;
+            systembarLeft=insets.left;
+            systembarTop=insets.top;
+            systembarRight=insets.right;
+            systembarBottom=insets.bottom;
+            if(rtl) {
+                systembarStart=systembarRight;
+                systembarEnd=systembarLeft;
+                }
+            else {
+                systembarStart=systembarLeft;
+                systembarEnd=systembarRight;
+                }
+             requestRender();
+             if(geometryChanged)
+                curve.requestOverlayLayout();
+             return windowInsets;
           });
           }
     else {
@@ -240,22 +244,11 @@ private void startdisplay() {
       lightBars(!getInvertColors( ));
       }
     setContentView(curve);
-   try {
-      setRequestedOrientation(Natives.getScreenOrientation( ));
-       }
-   catch(       Throwable  error) {
-      String mess=error!=null?error.getMessage():null;
-      if(mess==null) {
-         mess="error";
-         }
-          Log.stack(LOG_ID ,mess,error);
-      }
+
+if(!isWearable) {
+    applyScreenOrientation(getResources().getConfiguration());
+    }
     getlibrary.getlibrary(this);//after setfilesdir for settings
-   if(!isWearable) {
-      if(Build.VERSION.SDK_INT < 30) {
-         onceshowintro();
-         }
-      }
 
     handleIntent(getIntent());
     var langstring=getString(R.string.language);
@@ -437,6 +430,105 @@ private void setBackPress() {
                 }
             });
         }
+
+static public boolean canRotate=true;
+
+private int lastOrientationRequest = Integer.MIN_VALUE;
+private void requestOrientationOnce(int orientation) {
+    if (lastOrientationRequest != orientation) {
+        lastOrientationRequest = orientation;
+        setRequestedOrientation(orientation);
+    }
+}
+private boolean hasAndroid16LargeScreenRestriction() {
+    return Build.VERSION.SDK_INT >= 36 && getApplicationInfo().targetSdkVersion >= 36;
+    }
+
+private static boolean getIsElongated(Configuration config) {
+    int width  = config.screenWidthDp;
+    int height = config.screenHeightDp;
+
+    int shortSide = Math.min(width, height);
+    int longSide  = Math.max(width, height);
+
+    if (shortSide <= 0)
+        return false;
+
+    float aspectRatio = (float) longSide / shortSide;
+    return aspectRatio >= 1.45f;
+  }
+private boolean isSystemAutoRotateEnabled() {
+    return Settings.System.getInt(getContentResolver(),Settings.System.ACCELEROMETER_ROTATION,1) != 0;
+    }
+
+private boolean observingAutoRotate = false;
+
+private final ContentObserver autoRotateObserver =isWearable?null:new ContentObserver(Applic.getHandler()) {
+    @Override
+    public void onChange(boolean selfChange) {
+        if (doLog) {
+            Log.i(LOG_ID, "Auto-rotate changed: "
+                    + isSystemAutoRotateEnabled());
+        }
+
+        applyScreenOrientation(getResources().getConfiguration());
+    }
+};
+
+private static final boolean testPortrait=false;
+public void applyScreenOrientation(Configuration config) {
+if(!isWearable) {
+     boolean largeScreen=testPortrait||config.smallestScreenWidthDp >=600;
+     canRotate=Build.VERSION.SDK_INT < 36||!largeScreen;
+     boolean isElongated=testPortrait||getIsElongated(config);
+    try {
+    int wanted;
+    if(!largeScreen) {
+         wanted = Natives.getScreenOrientation();
+         }
+    else {
+        if(!isElongated) {
+            wanted=ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
+            }
+        else {
+                if(testPortrait||hasAndroid16LargeScreenRestriction()) {
+                    if(!isSystemAutoRotateEnabled()) {
+                        if(config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                            wanted= ActivityInfo.SCREEN_ORIENTATION_LOCKED;
+                           // wanted=ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
+                            }
+                        else {
+                            wanted=ActivityInfo.SCREEN_ORIENTATION_SENSOR;
+                            }
+                         }
+                     else  {
+                        wanted= ActivityInfo.SCREEN_ORIENTATION_FULL_USER;
+                        }
+               }
+             else {
+                    wanted = Natives.getScreenOrientation();
+                    }
+
+            }
+        }
+    requestOrientationOnce(wanted);
+      }
+     catch(       Throwable  error) {
+          String mess=error!=null?error.getMessage():null;
+          if(mess==null) {
+             mess="error";
+             }
+              Log.stack(LOG_ID ,mess,error);
+          }
+    }
+   }
+
+
+
+
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         if(android.os.Build.VERSION.SDK_INT >= 21) {
@@ -477,6 +569,7 @@ private void setBackPress() {
       DisplayMetrics metrics= this.getResources().getDisplayMetrics();
       screenheight= metrics.heightPixels;
       screenwidth= metrics.widthPixels;
+
       {if(doLog) {Log.i(LOG_ID,"onCreate start target="+ TargetSDK);};};
       if(TargetSDK>30) {
          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -680,6 +773,14 @@ static boolean tocalendarapp=false;
         }
     if(!Applic.Nativesloaded)
         return;
+
+if(!isWearable) {
+    if(!observingAutoRotate) {
+        getContentResolver().registerContentObserver(Settings.System.getUriFor(Settings.System.ACCELEROMETER_ROTATION), false, autoRotateObserver);
+        observingAutoRotate = true;
+        }
+    applyScreenOrientation(getResources().getConfiguration());
+    }
      selectionSystemUI();
     hidekeyboard(this);
     active=true;
@@ -1045,8 +1146,18 @@ void removeconfig() {
 public void onConfigurationChanged(Configuration newConfig) {
     super.onConfigurationChanged(newConfig);
     if(doLog) {Log.i(LOG_ID,"onConfigurationChanged height=" +newConfig.screenHeightDp+" width=" +newConfig.screenWidthDp + " sw="+newConfig.smallestScreenWidthDp);};
+if(!isWearable) {
+    applyScreenOrientation(newConfig);
+    }
     removeconfig();
-   updateRtl(newConfig);
+    setsizes(this);
+    if(GlucoseCurve.height==0) 
+        GlucoseCurve.setgeo(screenwidth,screenheight);
+    updateRtl(newConfig);
+    if(curve!=null)
+          curve.configurationChanged(this);
+//        curve.requestOverlayLayout();
+
    }
 public void requestRender() {
     if(curve!=null)
@@ -1867,5 +1978,3 @@ public void addMyContentView(View view, ViewGroup.LayoutParams params) {
     }
 
 }
-
-

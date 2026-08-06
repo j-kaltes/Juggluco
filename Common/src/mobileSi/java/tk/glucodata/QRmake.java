@@ -32,6 +32,8 @@ import android.graphics.Bitmap;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.view.Gravity;
+import android.widget.FrameLayout;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
@@ -64,12 +66,17 @@ public static void show(MainActivity act, String code) {
      var image=new ImageView(act);
      int height= GlucoseCurve.getheight()-MainActivity.systembarTop-MainActivity.systembarBottom;
      int width=GlucoseCurve.getwidth()-MainActivity.systembarLeft-MainActivity.systembarRight;
-     int qrWidth=(int)(width*.7f);
-     int qrHeight=Math.min(qrWidth,height);
+     int smaller=Math.min(height,width);
+
+     int qrHeight=(int)(smaller*.95f);
+     int qrWidth=qrHeight;
+//     int qrWidth=(int)(width*.7f);
+ //    int qrHeight=Math.min(qrWidth,height);
 
 //     int qrWidth=(int)(width*.7f);
      try {
-         image.setImageBitmap(bitmap(code,qrHeight,qrHeight));
+          image.setImageBitmap(bitmap(code,qrWidth,qrHeight));
+//         image.setImageBitmap(bitmap(code,smaller,smaller));
          }
      catch(Throwable th) {
         Log.stack(LOG_ID,"setImageBitmap",th);
@@ -80,6 +87,7 @@ public static void show(MainActivity act, String code) {
         });
    final var help=getbutton(act,R.string.helpname);
    help.setOnClickListener(v-> help(R.string.QRmirror,act));
+   /*
    var buttonlayout=new Layout(act,(x, w, h)->{
          return new int[] {w,h};
            },new View[]{help},new View[]{close});
@@ -87,17 +95,21 @@ public static void show(MainActivity act, String code) {
      buttonlayout.setLayoutParams(new ViewGroup.LayoutParams(MATCH_PARENT , MATCH_PARENT));
      Layout.getMargins(close).bottomMargin=(int)(height*.35f);
      Layout.getMargins(help).topMargin=(int)(height*.15f);
+     */
      var layout=new Layout(act,(x, w, h)->{
          return new int[] {w,h};
-           },new View[]{image,buttonlayout});
-      layout.setBackgroundColor( Applic.backgroundcolor);
-    layout.usebaseline=false;
-      var hor=(int)((height-qrHeight)*.5f);
-      var ver =(int)((width-qrWidth)*.4f);
+           },new View[]{image},new View[] {help,close});
+   // layout.usebaseline=false;
+    ///  var hor=(int)((height-qrHeight)*.5f);
+     // var ver =(int)((width-qrWidth)*.4f);
 
-      layout.setPadding(MainActivity.systembarLeft+ver,MainActivity.systembarTop+hor,MainActivity.systembarRight+ver,MainActivity.systembarBottom+hor);
-      act.addMyContentView(layout, new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
-      MainActivity.setonback(()-> removeContentView(layout));
+ //     layout.setPadding(MainActivity.systembarLeft+ver,MainActivity.systembarTop+hor,MainActivity.systembarRight+ver,MainActivity.systembarBottom+hor);
+      var  params =    new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.CENTER_HORIZONTAL|Gravity.CENTER);
+      var frame=new FrameLayout (act);
+      frame.addView(layout,params);
+      frame.setBackgroundColor( Applic.backgroundcolor);
+      act.addMyContentView(frame, new FrameLayout.LayoutParams( MATCH_PARENT, MATCH_PARENT));
+      MainActivity.setonback(()-> removeContentView(frame));
       }
 
    }

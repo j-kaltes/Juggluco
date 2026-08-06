@@ -20,10 +20,26 @@
 
 
 #pragma once
+#include <string_view>
+
+struct Getopts;
+
+struct livecursor {
+	int sensorid=-1;
+	int recordid=-1;
+	};
+
+struct livestreamoptions {
+	livecursor lastevent;
+	bool calibrated=false;
+	};
+
 struct recdata {
 	char *allbuf=nullptr;
-	const char *start;
-	int len;
+	const char *start=nullptr;
+	int len=0;
+	bool livestream=false;
+	livestreamoptions streamoptions;
 /*	~recdata() {
                 LOGGER("~recdata() %p\n",allbuf);
 		delete[] allbuf;
@@ -36,3 +52,9 @@ struct recdata {
 		}
 		
 	};
+
+using livewritefunc=bool (*)(void *context,const char *data,int len);
+using livestopfunc=bool (*)(void *context);
+
+bool streamlive(void *context,livewritefunc write,livestopfunc stopped,const livestreamoptions &options);
+bool givestatistics(Getopts &opts,std::string_view origin,recdata *outdata);

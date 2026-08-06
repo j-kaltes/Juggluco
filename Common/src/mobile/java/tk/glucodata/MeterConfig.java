@@ -32,9 +32,11 @@ import static tk.glucodata.util.getbutton;
 import static tk.glucodata.util.getlabel;
 
 import android.bluetooth.BluetoothDevice;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -114,9 +116,9 @@ static void config(MainActivity context, int meterIndex, View parent, BluetoothD
    float density=GlucoseCurve.metrics.density;
    bloodvar.setPadding((int)(density*10),0,(int)(4*density),0);
    var layout=new Layout(context,(x,w,h)->{
-         var width=GlucoseCurve.getwidth();
-         x.setX((width-w)/2);
-         x.setY(MainActivity.systembarTop);
+//         var width=GlucoseCurve.getwidth();
+ //        x.setX((width-w)/2);
+  //       x.setY(MainActivity.systembarTop);
          return new int[] {w,h};
            },new View[]{namelabel},new View[]{bloodafter},new View[]{datebutton,timebutton},new View[]{helpbutton,bloodvar,spinner},new View[]{cancel,deletebutton,ok});
    timebutton.setOnClickListener(v-> {
@@ -161,6 +163,13 @@ static void config(MainActivity context, int meterIndex, View parent, BluetoothD
                adapter.notifyDataSetChanged();
            BluetoothGlucoseMeter.restartDevices();
            });
-   context.addMyContentView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
+
+    var  params =  new FrameLayout.LayoutParams(
+                    WRAP_CONTENT,
+                    WRAP_CONTENT,
+                    Gravity.CENTER_HORIZONTAL);
+
+    context.addMyContentView(layout, params);
+  // context.addMyContentView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
    }
 }

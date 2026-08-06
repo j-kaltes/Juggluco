@@ -201,7 +201,9 @@ static public void show(MainActivity act,View view) {
     var sidemargin=(int)(GlucoseCurve.getwidth()*0.015f);
     getMargins(foreground).setMarginStart(sidemargin);
     getMargins(backgroundview).setMarginEnd(sidemargin);
-    getMargins(timeshow).setMarginEnd((int)(GlucoseCurve.getwidth()*0.05f));
+    var largemargin=(int)(GlucoseCurve.getwidth()*0.05f);
+    getMargins(timeshow).setMarginEnd(largemargin);
+    getMargins(touchable).topMargin=largemargin;
 //    getMargins(hide).rightMargin=(int)(GlucoseCurve.getwidth()*0.08f);
    if(!useclose)
       close.setVisibility(GONE);

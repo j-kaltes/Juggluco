@@ -23,6 +23,8 @@
 package tk.glucodata;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.res.Configuration;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -128,13 +130,40 @@ static   public float smallfontsize;
     static final int STEPBACK = 1;
     boolean waitnfc = false;
     MyRenderer render = new MyRenderer();
-    static int height,width;
+    static int height=0,width=0;
 
 
 
 NumberView  numberview= new NumberView();
 
 Layout numcontrol=null;
+private void removeSearchEditor() {
+    numberview.hidekeyboard();
+    editfocus.clearedittext(under);
+    editfocus.clearedittext(above);
+    editfocus.clearedittext(mealquantity);
+    if(meallayout!=null) {
+        removeContentView(meallayout);
+        meallayout=null;
+        }
+    if(search!=null) {
+        removeContentView(search);
+        search=null;
+        }
+    under=null;
+    above=null;
+    mealingredient=null;
+    mealquantity=null;
+    searchspinner=null;
+    searchspinadap=null;
+    scansearch=null;
+    historysearch=null;
+    streamsearch=null;
+    streamcalibratedsearch=null;
+    historycalibratedsearch=null;
+    fromtime=null;
+    totime=null;
+    }
 void startsearch() {
 if(!isWearable) {
     MainActivity activity = (MainActivity) getContext();
@@ -142,29 +171,17 @@ if(!isWearable) {
     Natives.stopsearch();
     searchcontrol.setVisibility(View.GONE);
     }
-    if (search == null) {
+    removeSearchEditor();
     search = getsearchlayout(activity);
-    } else {
-    var labels=Natives.getLabels();
-    if(!searchspinadap.getarray().equals(labels))  {
-        searchspinadap.setarray(labels);
-        searchspinner.setAdapter(searchspinadap);
-        }
-    search.setVisibility(View.VISIBLE);
-     if(labelsel==Natives.getmealvar())
-        mkmealsearch(activity);
-    }
     if(!smallScreen)
-        showkeyboard(activity);
+        numberview.showsearchkeyboard(activity,search);
 
     activity.setonback(()-> {
         activity.showui=false;
           activity.hideSystemUI();
         tk.glucodata.help.hidekeyboard(activity);
-    search.setVisibility(View.GONE); 
-        hidemealsearch();
-
-    hidekeyboard(); reopener();
+        removeSearchEditor();
+        reopener();
     if(Menus.on)
         Menus.show(activity);
 
@@ -367,11 +384,44 @@ public static int getheight() {
 public static int getwidth() {
     return width;
     }
+public static int getheight(Context context) {
+    int current=context.getResources().getDisplayMetrics().heightPixels;
+    return current>0?current:height;
+    }
+public static int getwidth(Context context) {
+    int current=context.getResources().getDisplayMetrics().widthPixels;
+    return current>0?current:width;
+    }
+public static boolean isLandscape(Context context) {
+    int orientation=context.getResources().getConfiguration().orientation;
+    if(orientation==Configuration.ORIENTATION_LANDSCAPE)
+        return true;
+    if(orientation==Configuration.ORIENTATION_PORTRAIT)
+        return false;
+    return getwidth(context)>getheight(context);
+    }
 static void setgeo(int w,int h) {
-     if(smallScreen||w>=h) {
-        width=w;
-        height=h;
-        }
+    width=w;
+    height=h;
+    }
+private void requestOverlayLayoutNow() {
+    if(search!=null)
+        search.requestLayout();
+    if(meallayout!=null)
+        meallayout.requestLayout();
+    if(searchcontrol!=null)
+        searchcontrol.requestLayout();
+    numberview.requestOverlayLayout();
+    }
+private final Runnable overlayRelayout=this::requestOverlayLayoutNow;
+void requestOverlayLayout() {
+    requestOverlayLayoutNow();
+    removeCallbacks(overlayRelayout);
+    post(overlayRelayout);
+    }
+void configurationChanged(MainActivity activity) {
+    numberview.configurationChanged(activity);
+    requestOverlayLayout();
     }
 long multitime=0L;
     @Override
@@ -743,20 +793,19 @@ private void mktimedialog( Button but,final int num ,View parent) {
     EditText under,above;
     ImageButton prev=null,next=null;
    void searchaway() {
-       if(search!=null) {
-           search.setVisibility(GONE);
-       hidemealsearch();
-           hidekeyboard();
+       removeSearchEditor();
      if(searchcontrol!=null)
          searchcontrol.setVisibility(GONE);
-        reopener();
+       reopener();
        Natives.stopsearch();
        requestRender();
-       }
    }
 static void reopener() {
-    for(int i=0;i<reopennr;i++)
-        reopen[i].setVisibility(VISIBLE);
+    for(int i=0;i<reopennr;i++) {
+        if(reopen[i]!=null)
+            reopen[i].setVisibility(VISIBLE);
+        reopen[i]=null;
+        }
     reopennr=0;
     }
 int labelsel=-1;
@@ -828,9 +877,7 @@ void search(boolean forward) {
 
        if(Natives.search(glsearch==0?labelsel:glsearch,funder,fabove,minutes[0],minutes[1],forward,ingsearch,ingamount)==0) {
 
-           search.setVisibility(GONE);
-           hidemealsearch();
-           hidekeyboard();
+           removeSearchEditor();
            requestRender();
             MainActivity activity=(MainActivity)getContext();
         activity.poponback();
@@ -1154,9 +1201,9 @@ else {
 
 
     Layout layout=new Layout(context,(lay, w, h)->{
-    int width=GlucoseCurve.getwidth();
+    int width=GlucoseCurve.getwidth(context);
 
-    int height=GlucoseCurve.getheight();
+    int height=GlucoseCurve.getheight(context);
     int ymax=height-MainActivity.systembarBottom-h;
     int ypos=(int)((height - h) *.65f);
     if(ypos>ymax) {
@@ -1168,19 +1215,10 @@ else {
 if(!smallScreen) {
 //    boolean rtl=Natives.getRTL();
     if(height>h&&width>w) {
-
-           lay.setY(ypos);
-           if(width>height) {
+           if(GlucoseCurve.isLandscape(context)) {
+                lay.setY(ypos);
 //                lay.setY((height - h) / 2);
-                int half= width / 2;
-                int af=(half-w)/4;
-                int posx= half - w-af;
-                if(posx<0) {
-                    posx=0;
-                    numberview.noroom=true;
-                    }
-                else
-                    numberview.noroom=false;
+                int posx=numberview.searchLandscapeX(width,w);
                 lay.setX(posx);
                {if(doLog) {Log.i(LOG_ID,"search h="+h+" height="+height+" w="+w+" width="+width+" posx="+posx);};};
                 }
@@ -1189,7 +1227,7 @@ if(!smallScreen) {
                 int af=(half-h)/4;
                  var xpos= (width - w)/2;
                 lay.setX(xpos);
-        //        lay.setY(half - h-af);
+                lay.setY(Math.max(systembarTop,half-h-af));
                 {if(doLog) {Log.i(LOG_ID,"search h="+h+" height="+height+" w="+w+" width="+width+" posx="+xpos);};};
             }
         }
@@ -1266,12 +1304,15 @@ public void onPause() {
 @Override
 public void surfaceChanged(SurfaceHolder holder, int format, int w, int h) {
     {if(doLog) {Log.i(LOG_ID,"surfaceChanged format="+format+", width="+w+", height="+h);};};
+    setgeo(w,h);
     super.surfaceChanged(holder,format,w,h);
+    requestOverlayLayout();
     }
 @Override
 public void surfaceCreated(SurfaceHolder holder) {
     {if(doLog) {Log.i(LOG_ID,"surfaceCreated(SurfaceHolder holder)");};};
     super.surfaceCreated(holder);
+    ((MainActivity)getContext()).onceshowintro();
     }
 @Override
 public void surfaceDestroyed(SurfaceHolder holder) {
@@ -1288,11 +1329,7 @@ if(!isWearable) {
     }
 void removeviews() {
         numberview.deleteviews();    
-        searchspinner=null;
-        if(search!=null) {
-            removeContentView(search);
-            search=null;
-            }
+        removeSearchEditor();
         if(searchcontrol!=null) {
             removeContentView(searchcontrol);
             searchcontrol=null;

@@ -26,6 +26,7 @@ char privatekey[]="privkey.pem";
 
 #ifdef USE_SSL
 #include <stdlib.h>
+#include <errno.h>
 #include <dlfcn.h>
 #ifdef __ANDROID_API__
 #include <android/dlext.h>
@@ -224,6 +225,35 @@ void	sslservererror(SSL *ssl) {
 	}
 extern bool sslstopconnection;
 bool sslstopconnection=false;
+
+static bool sslwriteall(SSL *ssl,const char *data,int len) {
+	int left=len;
+	const char *iter=data;
+	while(left>0) {
+		const int wrote=SSL_writeptr(ssl,iter,left);
+		if(wrote<=0) {
+			const int error=SSL_get_errorptr(ssl,wrote);
+			if(error==SSL_ERROR_WANT_READ||error==SSL_ERROR_WANT_WRITE)
+				continue;
+			if(error==SSL_ERROR_SYSCALL&&errno==EINTR)
+				continue;
+			LOGGER("SSL_write failed error=%d\n",error);
+			return false;
+			}
+		iter+=wrote;
+		left-=wrote;
+		}
+	return true;
+	}
+
+static bool securelivewrite(void *context,const char *data,int len) {
+	return sslwriteall(static_cast<SSL *>(context),data,len);
+	}
+
+static bool securelivestopped(void *) {
+	return sslstopconnection;
+	}
+
 bool securewatchcommands(SSL *ssl) {
 	constexpr const int RBUFSIZE=4096;
 	char rbuf[RBUFSIZE];
@@ -240,9 +270,13 @@ bool securewatchcommands(SSL *ssl) {
         wakesender();
         bool watchcommands(char *rbuf,int len,recdata *outdata,bool secure) ;
 	bool res=watchcommands(rbuf, len,&outdata,true);
-	bool res2= SSL_writeptr(ssl,outdata.data(),outdata.size());
+	bool res2=sslwriteall(ssl,outdata.data(),outdata.size());
+	const bool livestream=outdata.livestream;
+	const livestreamoptions streamoptions=outdata.streamoptions;
    LOGGER("securewatchcommands: delete outdata.allbuf=%p\n",outdata.allbuf);
     delete[] outdata.allbuf;
+	if(res&&res2&&livestream)
+		res2=streamlive(ssl,securelivewrite,securelivestopped,streamoptions);
 	return res&&res2&&!sslstopconnection;
 	} 
 

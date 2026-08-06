@@ -151,18 +151,30 @@ public void showexport(MainActivity activity,int width,int height,View parent) {
             isCalibrated=isChecked; 
             });
         exportscreen=new Layout(activity, (l, w, h) -> {
-            int wid = GlucoseCurve.getwidth();
+            int wid = GlucoseCurve.getwidth(activity);
             if(!smallScreen) {
-                int hei = GlucoseCurve.getheight();
+                int hei = GlucoseCurve.getheight(activity);
                 if(hei>h&&wid>w) {
-                    int half= wid / 2;
-                    int af=(half-w)/4;
-                    l.setX(half - w-af +MainActivity.systembarLeft);
-                    l.setY((hei - h) / 2);
+                    if(GlucoseCurve.isLandscape(activity)) {
+                        int half=wid/2;
+                        int af=(half-w)/4;
+                        l.setX(half-w-af+MainActivity.systembarLeft);
+                        l.setY((int)((hei-h)*.65f));
+                        }
+                    else {
+                        int availableWidth=wid-MainActivity.systembarLeft-MainActivity.systembarRight;
+                        l.setX(MainActivity.systembarLeft+Math.max(0,(availableWidth-w)/2));
+                        int top=MainActivity.systembarTop;
+                        int bottom=hei-MainActivity.systembarBottom;
+                        int half=top+(bottom-top)/2;
+                        int af=((bottom-top)/2-h)/4;
+                        int ypos=half-h-af;
+                        l.setY(Math.max(top,Math.min(ypos,bottom-h)));
+                        }
                     }
                    else {
                     l.setX(MainActivity.systembarLeft);
-                    l.setY(MainActivity.systembarTop*3/4);
+                    l.setY(MainActivity.systembarTop);
                     }
                    }
             else {
@@ -193,7 +205,7 @@ public void showexport(MainActivity activity,int width,int height,View parent) {
     exportlabel.setText(R.string.exporthelp);
     days.requestFocus();
     if(!smallScreen) {
-        activity.curve.numberview.showkeyboard(activity);
+        activity.curve.numberview.showkeyboard(activity,exportscreen);
         }
     else  {
         help.showkeyboard(activity,days);

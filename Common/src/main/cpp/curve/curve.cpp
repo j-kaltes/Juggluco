@@ -151,7 +151,6 @@ void createcolors() {
 NVGcontext* genVG=nullptr;
 
 
-extern bool fixatex,fixatey;
 int showui=false;
 
 static enum FontType {
@@ -517,8 +516,6 @@ int fallback=getMenuFont(avg);
      CURVELOGGER("sensorbounds.left=%.1f\n",sensorbounds.left);
     valuesize=sensorbounds.right*2;
 #ifdef JUGGLUCO_APP
-     fixatex=settings->data()->fixatex;
-     fixatey=settings->data()->fixatey;
      if(fixatex)
          duration=settings->data()->duration;
 #endif

@@ -51,7 +51,6 @@ extern bool speakout;
 
 
 bool emptytap=false;
-extern bool fixatex,fixatey;
 extern std::vector<shownglucose_t> shownglucose;
 extern void setusedsensors(uint32_t nu) ;
 

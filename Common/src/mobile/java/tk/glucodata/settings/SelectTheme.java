@@ -331,7 +331,9 @@ private static class ReselectSpinner extends Spinner {
         radiusSeekBar.setMax(25);
         radiusSeekBar.setProgress(currentRadius);
         int width= GlucoseCurve.getwidth();
-        radiusSeekBar.setMinimumWidth((int)(width*.25f));
+        int height= GlucoseCurve.getheight();
+        int largest=Math.max(width,height);
+        radiusSeekBar.setMinimumWidth((int)(largest*.25f));
 
 
         var shapelabel=getlabel(context,R.string.buttonshape);
@@ -726,8 +728,16 @@ private static void styleSpinnerShell(Context themeContext, Spinner spinner) {
     public static void show(MainActivity act,View parent) {
         EnableControls(parent,false);
         int height= GlucoseCurve.getheight();
+        int width= GlucoseCurve.getwidth();
+        int smallest=Math.min(height,width);
         var layout = createThemeConfigurationPanel(act,parent);
-        var params = new FrameLayout.LayoutParams( WRAP_CONTENT, (int)(height*.8f), Gravity.CENTER_HORIZONTAL | Gravity.TOP);
+        var params = new FrameLayout.LayoutParams( WRAP_CONTENT,(int)(smallest*.8f), Gravity.CENTER_HORIZONTAL | Gravity.TOP);
+        /*
+        var params = new FrameLayout.LayoutParams( WRAP_CONTENT,MATCH_PARENT, Gravity.CENTER_HORIZONTAL | Gravity.TOP);
+        float density = act.getResources().getDisplayMetrics().density;
+        params.bottomMargin=(int)(density*150.0f);
+        */
+
 
     //    var params = new FrameLayout.LayoutParams( (int)(width*.5f), WRAP_CONTENT, Gravity.CENTER_HORIZONTAL | Gravity.TOP);
 

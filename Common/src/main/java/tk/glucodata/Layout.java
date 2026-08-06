@@ -580,6 +580,16 @@ public static ViewGroup.MarginLayoutParams getMargins(View view) {
    view.setLayoutParams(margins);
    return margins;
    }
+
+public static void addSystemMargins(View view) {
+        if(view==null)
+                return;
+        var marg=getMargins(view);
+        marg.topMargin= MainActivity.systembarTop;
+        marg.bottomMargin= MainActivity.systembarBottom;
+        marg.leftMargin= MainActivity.systembarLeft;
+        marg.rightMargin= MainActivity.systembarRight;
+        }
 /*
  @Override
     public int getBaseline() {

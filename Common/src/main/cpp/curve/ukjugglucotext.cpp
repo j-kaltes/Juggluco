@@ -1,7 +1,7 @@
 #include "jugglucotext.hpp"
 #ifdef INJUGGLUCO
 #ifndef WEAROS
-constexpr static std::string_view uklabels[]={"Вуглев","Дэкстр","Швидкий","Довгий","Велос","Прагул","Кров"};
+constexpr static std::string_view uklabels[]={"Вугл.","Дек.","Швидк.","Довг.","Велос","Прог.","Кров"};
 constexpr static Shortcut_t  ukshortinit[]= { {"Bread",
         .48},
         {"Currantbun1",
@@ -45,10 +45,10 @@ jugglucotext uktext {
 "субота"
 },
 .monthlabel={"Сiч","Лют","Бер","Квi","Тра","Чер","Лип","Сер","Вер","Жов","Лис","Гру"},
-.scanned="Сканувати",
+.scanned="Відскановано",
 .readysecEnable="Датчик готовий через %d хвилин. Скануйте знову, щоб увімкнути потокове передавання.",
 .readysec="Датчик готовий через %d хвилин.",
-.networkproblem="Проблема з мережею?",
+.networkproblem="Немає глюкози від дзеркала",
 .enablebluetooth="Увімкніть Bluetooth",
 .useBluetoothOff="'Використовуйте Bluetooth' вимк",
 .noconnectionerror=": Немає з'єднання",
@@ -87,7 +87,7 @@ jugglucotext uktext {
 		"Датчик",
 		"Налашт.",
 #if defined(SIBIONICS)
-"Photo",
+"Фото",
 #else
 		"Аб Juggluco",
 #endif
@@ -137,7 +137,7 @@ jugglucotext uktext {
 		{"Активація датчика",""},
 		{"Датчик точно закінчився",""},
 
-		{"Датчик готовий","%d хвилин"},
+		{"Датчик буде готовий через","%d хвилин"},
 		{"Помилка датчика (373)","Спробуйте ще раз пізніше"},
 		{"Новий датчик активовано","Відскануйте ще раз, щоб використати його"},
 		{"","Блокує дотик під час сканування"},
@@ -151,13 +151,15 @@ jugglucotext uktext {
 		{"Помилка сканування","Спробуйте знову"}},
 
 .libre3scanerror={"FreeStyle Libre 3, Помилка сканування", "Спробуйте знову"},
-.libre3wrongID={"Помилка, неправильный ID?","Вкажіть у Налашт.->Libreview той самий обліковий запис, який використовувався для активації датчика"},
+.libre3wrongID={"Помилка: неправильний ідентифікатор облікового запису?",
+	R"(Він має збігатися з ідентифікатором, використаним під час активації датчика. Щоб отримати його з LibreView, відкрийте Ліве меню→Налаштування→Обмін даними→LibreView→"Отримати ідентифікатор облікового запису")"},
 .libre3scansuccess= {"FreeStyle Libre 3 датчик", "Тепер Juggluco отримуватиме значення глюкози"},
 .unknownNFC={"Нерозпізнана помилка сканування NFC", "Спробуйте знову"},
-.nolibre3={"FreeStyle Libre 3 датчик","Не підтримується цією версією Juggluco"},
-.libre3zeroID={"Error, zero account ID?",
-	R"(Use Left menu->Settings->Exchange data->Libreview->"Get Account ID" to set a non-zero account ID.)"},
-.needsandroid8="Needs minimally Android 8"sv,
+.nolibre3={"Датчик FreeStyle Libre 3",
+	"Завантажте правильну версію з https://www.juggluco.nl/download.html"},
+.libre3zeroID={"Помилка: нульовий ідентифікатор облікового запису?",
+	R"(Відкрийте Ліве меню→Налаштування→Обмін даними→Libreview→"Отримати ідентифікатор облікового запису", щоб установити ненульовий ідентифікатор.)"},
+.needsandroid8="Потрібен щонайменше Android 8"sv,
 #ifndef WEAROS
 	.advancedstart= R"(<h1>Модифікований пристрій</h1>
 <p>Одна з бібліотек, які використовуються цією програмою,
@@ -182,16 +184,16 @@ jugglucotext uktext {
 .RisingQuickly="Швидко піднімається",
 #endif
 .receivingpastvalues="Отримання старих значень",
-.receivingdata="Receiving data",
-.unsupportedSibionics="Unsupported Sibionics Sensor"sv,
-.waitingforconnection="Waiting for connection"sv,
-.deleted="Deleted"sv,
-.nolocationpermission="Needs location permission"sv,
-.nonearbydevicespermission="Needs nearby devices permission"sv
+.receivingdata="Отримання даних",
+.unsupportedSibionics="Непідтримуваний датчик Sibionics"sv,
+.waitingforconnection="Очікування з’єднання"sv,
+.deleted="Видалено"sv,
+.nolocationpermission="Потрібен дозвіл на місцезнаходження"sv,
+.nonearbydevicespermission="Потрібен дозвіл «Пристрої поблизу»"sv
 #endif //INJUGGLUCO
 ,.summarygraph="Зведений графік"sv
-,.logdays="Днів"sv
-,.unhide="Unhide"sv
+,.logdays="Щоденний журнал"sv
+,.unhide="Показати"sv
 
 		}
 

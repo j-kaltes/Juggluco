@@ -22,7 +22,6 @@
 package tk.glucodata;
 
 import android.view.Gravity;
-import android.widget.LinearLayout;
 import android.app.Activity;
 import androidx.appcompat.app.AlertDialog;
 import android.content.Context;
@@ -62,7 +61,6 @@ import java.util.Locale;
 import tk.glucodata.nums.AllData;
 import tk.glucodata.nums.numio;
 
-import static android.widget.LinearLayout.VERTICAL;
 import static android.view.View.GONE;
 import static android.view.View.INVISIBLE;
 import static android.view.View.TEXT_ALIGNMENT_CENTER;
@@ -108,25 +106,79 @@ Button timebutton,datebutton;
 void deleteviews() {
     Log.i(LOG_ID,"deleteviews()");
     closenumview();
-    spinner=null;
-    if(newnumview!=null) {
-        removeContentView(newnumview);
-        newnumview=null;
-        }
     if(datepicker!=null) {
         removeContentView(datepicker);
         datepicker=null;
+        datepick=null;
         }
     if(timepicker!=null) {
         removeContentView(timepicker);
         timepicker=null;
+        pick=null;
         Log.i(LOG_ID,"timepicker=null");
         }
-    if(keyboard!=null) {
-        removeContentView(keyboard);
-        keyboard=null;
-        }
    cal = Calendar.getInstance();
+    }
+void requestOverlayLayout() {
+    if(newnumview!=null)
+        newnumview.requestLayout();
+    if(keyboard!=null)
+        keyboard.requestLayout();
+    if(datepicker!=null)
+        datepicker.requestLayout();
+    if(timepicker!=null)
+        timepicker.requestLayout();
+    }
+private static boolean replacePicker(Layout parent,View oldPicker,View newPicker) {
+    int index=parent.indexOfChild(oldPicker);
+    if(index<0)
+        return false;
+    Object row=oldPicker.getTag(R.id.layoutrow);
+    ViewGroup.LayoutParams params=oldPicker.getLayoutParams();
+    parent.removeViewAt(index);
+    if(params!=null)
+        newPicker.setLayoutParams(params);
+    newPicker.setTag(R.id.layoutrow,row);
+    parent.addView(newPicker,index);
+    return true;
+    }
+@SuppressWarnings("deprecation")
+void configurationChanged(MainActivity activity) {
+    if(datepicker!=null) {
+        if(datepicker.getVisibility()!=VISIBLE||datepick==null) {
+            removeContentView(datepicker);
+            datepicker=null;
+            datepick=null;
+            }
+        else {
+            int year=datepick.getYear();
+            int month=datepick.getMonth();
+            int day=datepick.getDayOfMonth();
+            DatePicker fresh=new DatePicker(activity);
+            fresh.setCalendarViewShown(false);
+            fresh.updateDate(year,month,day);
+            if(replacePicker(datepicker,datepick,fresh))
+                datepick=fresh;
+            }
+        }
+    if(timepicker!=null) {
+        if(timepicker.getVisibility()!=VISIBLE||pick==null) {
+            removeContentView(timepicker);
+            timepicker=null;
+            pick=null;
+            }
+        else {
+            int hour=Build.VERSION.SDK_INT<23?pick.getCurrentHour():pick.getHour();
+            int minute=Build.VERSION.SDK_INT<23?pick.getCurrentMinute():pick.getMinute();
+            TimePicker fresh=newTimePicker(activity);
+            fresh.setIs24HourView(Applic.hour24);
+            fresh.setCurrentHour(hour);
+            fresh.setCurrentMinute(minute);
+            if(replacePicker(timepicker,pick,fresh))
+                pick=fresh;
+            }
+        }
+    requestOverlayLayout();
     }
 /*
 /*
@@ -140,10 +192,30 @@ void rotatekey(float deg) {
     }*/
 int labelsel=-1;
 void closenumview() {
-    if (newnumview != null) { 
-        newnumview.setVisibility(GONE);
-        hidekeyboard();
-         }
+    hidekeyboard();
+    if(mealview[0]!=null) {
+        removeContentView(mealview[0]);
+        mealview[0]=null;
+        }
+    if (newnumview != null) {
+        removeContentView(newnumview);
+        newnumview=null;
+        }
+    editfocus.clearedittext(valueedit);
+    spinner=null;
+    numspinadapt=null;
+    valueedit=null;
+    source=null;
+    timebutton=null;
+    timeview=null;
+    datebutton=null;
+    dateview=null;
+    mealbutton=null;
+    excludebox=null;
+    messagetext=null;
+    deletebutton=null;
+    savebutton=null;
+    cancelbutton=null;
     }
 
 Button mealbutton;
@@ -212,7 +284,7 @@ public static String minhourstr(long mmsec) {
       }
    }
 public   View addnumberview(MainActivity context,final int bron,final long time,final float value,final int type,final int tmpmealptr) {
-    if(newnumview==null) {
+    closenumview();
        // var mat = new MaterialButton(context); mat.setCornerRadius(GlucoseCurve.dpToPx(30)); datebutton=mat; 
       datebutton = new Button(context);
         datebutton.setOnClickListener(
@@ -258,8 +330,8 @@ public   View addnumberview(MainActivity context,final int bron,final long time,
       Layout layout;
 
     if(isWearable) {
-        int height=GlucoseCurve.getheight();
-        int width=GlucoseCurve.getwidth();
+        int height=GlucoseCurve.getheight(context);
+        int width=GlucoseCurve.getwidth(context);
         int hormarg= (int)(width*0.08f);
         getMargins(timebutton).setMarginEnd(hormarg);
        // getMargins(savebutton).setMarginStart(hormarg); 
@@ -295,30 +367,15 @@ public   View addnumberview(MainActivity context,final int bron,final long time,
       }
   else { 
    layout=new Layout(context, (lay, w, h) -> {
-        int wid=GlucoseCurve.getwidth()- systembarRight;
+        int wid=GlucoseCurve.getwidth(context)- systembarRight;
         if(!smallScreen) {
             {if(doLog) {Log.i(LOG_ID,"no smallScreen");};};
-            int hei=GlucoseCurve.getheight();
-               if(wid>hei) {
-                  int minleft=systembarLeft*3/4;
-                if(hei>h)
-                    lay.setY((int)((hei - h) *.65f));
-                   else
-                    lay.setY(MainActivity.systembarTop*3/4);
-                 if(wid>w) {
-                    int half= wid / 2;
-                    int af=(half-w)/4;
-                    int posx=half - w-af;
-                    if(posx<minleft) {
-                    posx=minleft;
-                    noroom=true;
-                    }
-                    else
-                    noroom=false;
-                    lay.setX(posx);
-                  }
-                    else
-                        lay.setX(minleft);
+            int hei=GlucoseCurve.getheight(context);
+               if(GlucoseCurve.isLandscape(context)) {
+                int ypos=(int)((hei-h)*.65f);
+                int maxy=hei-MainActivity.systembarBottom-h;
+                lay.setY(Math.max(MainActivity.systembarTop,Math.min(ypos,maxy)));
+                lay.setX(numberLandscapeX(wid,w));
                 }
             else {
                 if(wid>w)
@@ -326,11 +383,11 @@ public   View addnumberview(MainActivity context,final int bron,final long time,
                   else {
                     lay.setX(0);
                       }
-                 if(hei>h) {
-                    int half=hei/2;
-                    int af=(half-h)/4;
-                    lay.setY(half - h-af);
-                    }
+	                 if(hei>h) {
+	                    int half=hei/2;
+	                    int af=(half-h)/4;
+	                    lay.setY(Math.max(MainActivity.systembarTop,half-h-af));
+	                    }
                    else
 
                     lay.setY(MainActivity.systembarTop*3/4);
@@ -388,32 +445,21 @@ public   View addnumberview(MainActivity context,final int bron,final long time,
                 }
                 newmealptr[0]=0;
         //        Natives.closemeal(newmealptr[0]);
-             final var nview=newnumview;
-             if(nview!=null)
-                nview.setVisibility(GONE);
-            if(!isWearable)
-                hidekeyboard();
+            final boolean showMenu=Menus.on&&deletebutton.getVisibility()==GONE;
+            closenumview();
             if(smallScreen)
                 help.hidekeyboard(act);
                 
             ((Applic) act.getApplication()). redraw();
               MainActivity.poponback();
 
-             if(Menus.on) {
-                if(deletebutton.getVisibility()==GONE) {
-                        Menus.show(context);
-                        }
-                }
+             if(showMenu)
+                Menus.show(context);
             } 
             //            act.clearonback();
         });
 
     context.addMyContentView(newnumview,isWearable? new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT):new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
-        }
-    else  {
-        numspinadapt.setarray(Natives.getLabels());
-        newnumview.setVisibility(VISIBLE);
-       }
     valueedit.requestFocus();
     editfocus.setedittext(valueedit);
 
@@ -508,14 +554,9 @@ public   View addnumberview(MainActivity context,final int bron,final long time,
             }
 
            GlucoseCurve.reopener();
-           final var nview=newnumview;
-           if(nview!=null)
-               nview.setVisibility(GONE);
-           if(!isWearable)  {
-               hidekeyboard();
-            if(smallScreen)
+           closenumview();
+           if(!isWearable&&smallScreen)
                 help.hidekeyboard(context);
-              }
             };
         cancelbutton.setOnClickListener(v -> {
             MainActivity.poponback();
@@ -542,8 +583,7 @@ public   View addnumberview(MainActivity context,final int bron,final long time,
     }
 void deletedialog(View v,int[] mealptr) {
     if(currentnum==0L) {
-        newnumview.setVisibility(GONE);
-        hidekeyboard();
+        closenumview();
         return;
         }
     MainActivity  context=  ((MainActivity) v.getContext());
@@ -583,9 +623,7 @@ void deletedialog(View v,int[] mealptr) {
                 Menus.show(context);
                 }
                 } */
-         newnumview.setVisibility(GONE);
-
-           hidekeyboard();
+        closenumview();
         GlucoseCurve.reopener();
         context.poponback();
 
@@ -807,6 +845,7 @@ public Layout getdateviewal(MainActivity activity, long date, Dater erdate) {
             return new int[] {w,h};
                 },new View[] {datepick},new View[] {cancel,ok});
         datparams =    new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.CENTER|Gravity.CENTER_HORIZONTAL);
+//        Layout.addSystemMargins(datepicker);
         }
 
     datepicker.setBackgroundColor( Applic.app.backgroundcolor);
@@ -844,6 +883,42 @@ return datepicker;
 Layout timepicker=null;
 TextView timeview=null;
 TimePicker pick=null;
+
+private static class ContentTimePicker extends TimePicker {
+    ContentTimePicker(Context context) {
+        super(context);
+        }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec,int heightMeasureSpec) {
+        if(!GlucoseCurve.isLandscape(getContext())) {
+            super.onMeasure(widthMeasureSpec,heightMeasureSpec);
+            return;
+            }
+        int widthMode=View.MeasureSpec.getMode(widthMeasureSpec);
+        if(widthMode==View.MeasureSpec.UNSPECIFIED) {
+            super.onMeasure(widthMeasureSpec,heightMeasureSpec);
+            return;
+            }
+        int available=View.MeasureSpec.getSize(widthMeasureSpec);
+        int safeWidth=GlucoseCurve.getwidth(getContext())-systembarLeft-systembarRight;
+        if(safeWidth>0)
+            available=Math.min(available,safeWidth);
+        if(available<=0) {
+            super.onMeasure(widthMeasureSpec,heightMeasureSpec);
+            return;
+            }
+        super.onMeasure(View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED),heightMeasureSpec);
+        int contentWidth=getMeasuredWidth();
+        if(contentWidth<=0||contentWidth>available)
+            contentWidth=available;
+        super.onMeasure(View.MeasureSpec.makeMeasureSpec(contentWidth,View.MeasureSpec.EXACTLY),heightMeasureSpec);
+        }
+    }
+
+private static TimePicker newTimePicker(Context context) {
+    return isWearable?new TimePicker(context):new ContentTimePicker(context);
+    }
 
 ObjIntConsumer<Integer> settime=null;
 ObjIntConsumer<Integer>  numsettime=(hour,min)-> {
@@ -884,7 +959,7 @@ final  boolean buttonsunder=false;
     if(timepicker==null) {
 
     //    Log.i(LOG_ID,"new gettimepicker");
-        pick =new TimePicker(activity);
+        pick =newTimePicker(activity);
 //        pick.setIs24HourView( android.text.format.DateFormat.is24HourFormat(activity));
         Button cancel=new Button(activity);
         cancel.setText(R.string.cancel);
@@ -916,72 +991,46 @@ if(isWearable) {
 
          }
 else {
-   layparheight=ViewGroup.LayoutParams.WRAP_CONTENT;
-       if(buttonsunder) {
-           views=new View[][]{new View[]{pick},new View[]{cancel,ok}};
-         layparwidth=WRAP_CONTENT;
-           }
-       else {
-         //layparwidth=MATCH_PARENT;
-         layparwidth=WRAP_CONTENT;
-        //  buttonlay=new Layout(activity,new View[] {cancel},new View[]{ok});
-        //buttonlay.usebaseline=false;
-         // buttonlay.setLayoutParams(new ViewGroup.LayoutParams(  WRAP_CONTENT , ViewGroup.LayoutParams.MATCH_PARENT));
-         var buttons=new LinearLayout(activity);
-         buttons.setOrientation(VERTICAL);
-         buttons.addView(cancel);
-         buttons.addView(ok);
-         views=new View[][] {new View[] {pick,buttons}};
-        };
+       layparheight=ViewGroup.LayoutParams.WRAP_CONTENT;
+       views=new View[][]{new View[]{pick},new View[]{cancel,ok}};
+       layparwidth=WRAP_CONTENT;
        };
-//        buttonlay.setBackgroundColor( RED);
-//     var laypar=smallScreen?WRAP_CONTENT:MATCH_PARENT;
     pick.setLayoutParams(new ViewGroup.LayoutParams(layparwidth ,ViewGroup.LayoutParams.WRAP_CONTENT ));
 //    pick.setLayoutParams(new ViewGroup.LayoutParams(WRAP_CONTENT , ViewGroup.LayoutParams.WRAP_CONTENT));
-        Layout layout=new Layout(activity,
-                (lay, w, h)-> {
-                    activity.hideSystemUI();
-                    /*
-                    int wid = GlucoseCurve.getwidth();
-                    if(w>=wid) {
-                        lay.setX(0);
-                        }
-                    else {
-                        int x=(wid-w)/2;
-                        lay.setX(x);
-                        {if(doLog) {Log.i(LOG_ID,"screen width="+wid+" w="+w+" x="+x);};};
-                        } 
-                    if(isWearable) {
-                        int height = GlucoseCurve.getheight();
-                        if(height>h) {
-                                lay.setY((height-h)/2);
-                        }
-    
-                    }
-                    */
-                    return new int[]{w, h};
-                }, views);
-
-
-        layout.setBackgroundColor( Applic.backgroundcolor);
-    //    activity.addMyContentView(layout,  new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
-    var  params =    new FrameLayout.LayoutParams(layparwidth,layparwidth, Gravity.CENTER_HORIZONTAL);
-
-    //l act.addMyContentView(layout, params);
-        activity.addMyContentView(layout,  params);
-        timepicker=layout;
+    Layout layout=new Layout(activity, (lay, w, h)-> {
+        activity.hideSystemUI();
+        if(!isWearable) {
+            int width=GlucoseCurve.getwidth(activity);
+            int left=systembarLeft;
+            int right=width-systembarRight;
+            int xpos=left;
+            if(right-left>w)
+                xpos=left+(right-left-w)/2;
+            else if(right<w)
+                xpos=Math.max(0,right-w);
+            lay.setX(xpos);
+            int maxy=GlucoseCurve.getheight(activity)-MainActivity.systembarBottom-h;
+            lay.setY(Math.max(0,Math.min(MainActivity.systembarTop,maxy)));
+            }
+        return new int[]{w,h};
+        }, views);
+    layout.setBackgroundColor( Applic.backgroundcolor);
+    var params=new FrameLayout.LayoutParams(layparwidth,layparheight,Gravity.TOP|Gravity.LEFT);
    if(isWearable)
           layout.setPaddingRelative(0,(int)(GlucoseCurve.metrics.density*5.0),0,(int)(GlucoseCurve.metrics.density*2.0));
+    activity.addMyContentView(layout,  params);
+    timepicker=layout;
     }
     else {
-        //Log.i(LOG_ID,"old gettimepicker");
-    timepicker.requestLayout();
-    timepicker.setVisibility(VISIBLE);
-    timepicker.bringToFront();
+        timepicker.requestLayout();
+        timepicker.setVisibility(VISIBLE);
+        timepicker.bringToFront();
     }
 
   //    timepicker.setPaddingRelative(systembarLeft,MainActivity.systembarTop, systembarRight,MainActivity.systembarBottom);
+  /*
 if(!isWearable) {
+
     if(buttonsunder) 
         timepicker.setPaddingRelative(systembarLeft,MainActivity.systembarTop, systembarRight,MainActivity.systembarBottom);
    else  {
@@ -989,7 +1038,7 @@ if(!isWearable) {
         //buttonlay.setPaddingRelative(0,MainActivity.systembarTop/2, systembarRight,MainActivity.systembarBottom);
         }
      }
-
+*/
      pick.setIs24HourView(Applic.hour24);
 activity.setonback(
         () -> {
@@ -1100,6 +1149,39 @@ static View.OnTouchListener ontouchedit= new View.OnTouchListener() {
     };
 */
     Layout keyboard;
+    private static final int KEYBOARD_GENERIC=0;
+    private static final int KEYBOARD_NUMBER=1;
+    private static final int KEYBOARD_SEARCH=2;
+    int activeKeyboardMode=KEYBOARD_GENERIC;
+    int landscapeNumberShift=0;
+    int landscapeSearchShift=0;
+
+private int landscapeEditorX(int rightEdge,int viewWidth,int shift) {
+    int minleft=systembarLeft+GlucoseCurve.dpToPx(8);
+    int mostright=rightEdge-viewWidth;
+    if(mostright<=minleft) {
+        noroom=true;
+        return Math.max(0,mostright);
+        }
+    int half=systembarLeft+(rightEdge-systembarLeft)/2;
+    int af=(half-systembarLeft-viewWidth)/4;
+    int xpos=half-viewWidth-af;
+    if(xpos<minleft) {
+        noroom=true;
+        return minleft;
+        }
+    noroom=false;
+    xpos+=shift;
+    return Math.min(mostright,xpos);
+    }
+int numberLandscapeX(int rightEdge,int viewWidth) {
+    int shift=activeKeyboardMode==KEYBOARD_NUMBER?landscapeNumberShift:0;
+    return landscapeEditorX(rightEdge,viewWidth,shift);
+    }
+int searchLandscapeX(int screenWidth,int viewWidth) {
+    int shift=activeKeyboardMode==KEYBOARD_SEARCH?landscapeSearchShift:0;
+    return landscapeEditorX(screenWidth-systembarRight,viewWidth,shift);
+    }
 
 static class numlisten implements View.OnClickListener {
 
@@ -1122,7 +1204,7 @@ static class numlisten implements View.OnClickListener {
     }
 }
 boolean noroom=false;
-Layout getkeyboard(Context context) {
+Layout getkeyboard(Context context,View anchor,int keyboardMode) {
 
    numlisten click=new numlisten();
 //    Layout layout=new Layout(context,row0,row1,row2,row3);
@@ -1149,36 +1231,74 @@ Layout getkeyboard(Context context) {
 
     but.setContentDescription("Backspace");
     but.setOnClickListener(v->{
-        int start= Selection.getSelectionStart(editfocus.getedit());
-        int end=Selection.getSelectionEnd(editfocus.getedit());
+        final Editable edit=editfocus.getedit();
+        if(edit==null)
+            return;
+        int start= Selection.getSelectionStart(edit);
+        int end=Selection.getSelectionEnd(edit);
+        if(start<0||end<0)
+            return;
         if(end>start) {
-            editfocus.getedit().replace(start, end, "");
+            edit.replace(start, end, "");
             }
         else {
             if(start>0)
-                editfocus.getedit().replace(--start, end, "");
+                edit.replace(--start, end, "");
             }
-        Selection.setSelection(editfocus.getedit(), start);
+        Selection.setSelection(edit, start);
     } );
     tmp[2]=but=new Button(context);
     but.setText(".");
     but.setContentDescription("Decimal point");
     but.setOnClickListener(click);
     Layout layout=new Layout(context, (lay, w, h)->{
-            int hei=GlucoseCurve.getheight();
-            int wid=GlucoseCurve.getwidth();
-            if(wid>hei) {
-              lay.setY((int)((hei-h)*.65f));
-              int mostright=wid-w-systembarRight;
-                if(noroom)
+            int hei=GlucoseCurve.getheight(context);
+            int wid=GlucoseCurve.getwidth(context);
+            if(GlucoseCurve.isLandscape(context)) {
+              boolean numberEditor=keyboardMode==KEYBOARD_NUMBER;
+              boolean searchEditor=keyboardMode==KEYBOARD_SEARCH;
+              if(numberEditor) {
+                  int ypos=(int)((hei-h)*.65f);
+                  int maxy=hei-MainActivity.systembarBottom-h;
+                  lay.setY(Math.max(MainActivity.systembarTop,Math.min(ypos,maxy)));
+                  }
+              else
+                  lay.setY((int)((hei-h)*.65f));
+              int rightEdge=wid-systembarRight;
+              int mostright=rightEdge-w;
+              boolean noRoom=numberEditor?noroom:
+                      searchEditor&&anchor!=null&&anchor.getMeasuredWidth()>=(rightEdge-systembarLeft)/2;
+                if(noRoom) {
+                    if(numberEditor)
+                        landscapeNumberShift=0;
+                    else if(searchEditor)
+                        landscapeSearchShift=0;
                     lay.setX(mostright);
+                    }
                 else {
-                    int half= (wid-systembarRight)/2;
-                    int bij=(half-w)/4;
-                 int xpos=half+bij;
-                 if(xpos>mostright)
-                    xpos=mostright;
-                 lay.setX(xpos);
+                    int half=numberEditor?systembarLeft+(rightEdge-systembarLeft)/2:rightEdge/2;
+                    int halfWidth=numberEditor?rightEdge-half:half;
+                    int bij=(halfWidth-w)/4;
+                    int xpos=Math.min(mostright,half+bij);
+                    if(numberEditor) {
+                        int rightGap=Math.max(0,mostright-xpos);
+                        landscapeNumberShift=rightGap/4;
+                        xpos+=rightGap/2;
+                        if(anchor!=null&&anchor.getMeasuredWidth()>0)
+                            anchor.setX(numberLandscapeX(rightEdge,anchor.getMeasuredWidth()));
+                        }
+                    else if(searchEditor) {
+                        int rightGap=Math.max(0,mostright-xpos);
+                        landscapeSearchShift=rightGap/4;
+                        if(anchor!=null&&anchor.getMeasuredWidth()>0)
+                            anchor.setX(searchLandscapeX(wid,anchor.getMeasuredWidth()));
+                        }
+                    if(!numberEditor) {
+                        int rightHalf=systembarLeft+(rightEdge-systembarLeft)/2;
+                        int centered=rightHalf+(rightEdge-rightHalf-w)/2;
+                        xpos=Math.min(mostright,centered);
+                        }
+                    lay.setX(xpos);
 
                 }
 
@@ -1187,8 +1307,18 @@ Layout getkeyboard(Context context) {
             else {
                 int half=hei/2;
                 int bij=(half-h)/4;
-                lay.setY(half+bij);
-                lay.setX((wid-w)/2); 
+                int ypos=half+bij;
+                if(anchor!=null&&anchor.getMeasuredHeight()>0)
+                    ypos=Math.round(anchor.getY())+anchor.getMeasuredHeight()+GlucoseCurve.dpToPx(8);
+                int maxy=hei-MainActivity.systembarBottom-h;
+                if(ypos>maxy)
+                    ypos=maxy;
+                lay.setY(Math.max(MainActivity.systembarTop,ypos));
+                int xpos=(wid-w)/2;
+                int maxx=wid-systembarRight-w;
+                if(xpos>maxx)
+                    xpos=maxx;
+                lay.setX(Math.max(systembarLeft,xpos));
 
             }
 
@@ -1201,21 +1331,31 @@ Layout getkeyboard(Context context) {
     }
 
 public    void showkeyboard(MainActivity context) {
+    showkeyboard(context,newnumview,KEYBOARD_NUMBER);
+    }
+public    void showkeyboard(MainActivity context,View anchor) {
+    showkeyboard(context,anchor,KEYBOARD_GENERIC);
+    }
+void showsearchkeyboard(MainActivity context,View anchor) {
+    showkeyboard(context,anchor,KEYBOARD_SEARCH);
+    }
+private void showkeyboard(MainActivity context,View anchor,int keyboardMode) {
 if(!isWearable) {
-    if(keyboard==null) {
-    keyboard=getkeyboard(context);
+    hidekeyboard();
+    activeKeyboardMode=keyboardMode;
+    keyboard=getkeyboard(context,anchor,keyboardMode);
     context.addMyContentView(keyboard, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
-    }
-    else {
-        keyboard.setVisibility(VISIBLE);
-    keyboard.bringToFront();
-    }
     }
     }
 public    void hidekeyboard() {
 if(!isWearable) {
-    if(keyboard!=null)
-        keyboard.setVisibility(GONE);
+    if(keyboard!=null) {
+        removeContentView(keyboard);
+        keyboard=null;
+        }
+    activeKeyboardMode=KEYBOARD_GENERIC;
+    landscapeNumberShift=0;
+    landscapeSearchShift=0;
         }
     }
     /*

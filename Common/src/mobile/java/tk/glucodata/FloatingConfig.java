@@ -49,6 +49,7 @@ import android.widget.Button;
 
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.SeekBar;
 import android.widget.Switch;
@@ -74,6 +75,70 @@ static public int    getcolor() {
         return background?Natives.getfloatingbackground( ):Natives.getfloatingforeground( );
         }
 
+private static class FloatingLayout extends LinearLayout {
+    private final MainActivity context;
+    private final View colorPicker;
+    private final View controls;
+    private final SeekBar fontSize;
+    private int currentOrientation=-1;
+    private int currentFontWidth=-1;
+    private int currentFontMax=-1;
+
+    FloatingLayout(MainActivity context,View colorPicker,View controls,SeekBar fontSize,int width,int height) {
+        super(context);
+        this.context=context;
+        this.colorPicker=colorPicker;
+        this.controls=controls;
+        this.fontSize=fontSize;
+        addView(colorPicker);
+        addView(controls);
+        updateLayout(width,height);
+        }
+
+    private void updateFontSize(int width,int height) {
+        int minimumWidth=width/2;
+        if(currentFontWidth!=minimumWidth) {
+            currentFontWidth=minimumWidth;
+            fontSize.setMinimumWidth(minimumWidth);
+            }
+        int maxFont=Math.max(5,height*7/10);
+        int maxProgress=(maxFont-5)*100;
+        if(currentFontMax!=maxProgress) {
+            currentFontMax=maxProgress;
+            fontSize.setMax(maxProgress);
+            }
+        int selectedFont=Natives.getfloatingFontsize();
+        if(selectedFont>maxFont) {
+            Natives.setfloatingFontsize(maxFont);
+            fontSize.setProgress(maxProgress);
+            rewritefloating(context);
+            }
+        }
+
+    private void updateLayout(int width,int height) {
+        updateFontSize(width,height);
+        int orientation=width>height?HORIZONTAL:VERTICAL;
+        if(currentOrientation==orientation)
+            return;
+        currentOrientation=orientation;
+        setOrientation(orientation);
+        if(orientation==VERTICAL) {
+            colorPicker.setLayoutParams(new LinearLayout.LayoutParams(MATCH_PARENT,WRAP_CONTENT));
+            controls.setLayoutParams(new LinearLayout.LayoutParams(MATCH_PARENT,WRAP_CONTENT));
+            }
+        else {
+            colorPicker.setLayoutParams(new LinearLayout.LayoutParams(0,MATCH_PARENT,1.0f));
+            controls.setLayoutParams(new LinearLayout.LayoutParams(WRAP_CONTENT,MATCH_PARENT));
+            }
+        }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec,int heightMeasureSpec) {
+        updateLayout(View.MeasureSpec.getSize(widthMeasureSpec),View.MeasureSpec.getSize(heightMeasureSpec));
+        super.onMeasure(widthMeasureSpec,heightMeasureSpec);
+        }
+    }
+
 
 
 static public void show(MainActivity act,View parent) {
@@ -96,7 +161,7 @@ static public void show(MainActivity act,View parent) {
     var  sizelabel=getlabel(act,fontstring);
 
 
-   final int maxfont=height*7/10;
+   final int maxfont=Math.max(5,height*7/10);
 
     int currentfont=Natives.getfloatingFontsize();
      if(currentfont<5||currentfont>(int)(screenheight*.8)) {
@@ -105,10 +170,10 @@ static public void show(MainActivity act,View parent) {
 
    SeekBar fontsizeview=new SeekBar(act);
      Applic.ifRTLseekbar(fontsizeview);
-      fontsizeview.setMax((int)((maxfont-5)*100.0));
+      fontsizeview.setMax((maxfont-5)*100);
       fontsizeview.setProgress((int)((currentfont-5)*100.0));
 //      var fwidth=(int)(width*0.8f);
-      fontsizeview.setMinimumWidth((int)(width*.5));
+      fontsizeview.setMinimumWidth(width/2);
 //      final int minimumvalue=500;
 /*    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         fontsizeview.setMin(minimumvalue);
@@ -116,6 +181,8 @@ static public void show(MainActivity act,View parent) {
     fontsizeview.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
         @Override
         public  void onProgressChanged (SeekBar seekBar, int progress, boolean fromUser) {
+            if(!fromUser)
+                return;
 //         int newprogress=progress+minimumvalue; 
             var siz=(int)Math.round(progress/100.0)+5;
 //         if(doLog) sizelabel.setText(fontstring+siz);
@@ -185,7 +252,6 @@ static public void show(MainActivity act,View parent) {
     var close=getbutton(act,R.string.closename);
 //    CompoundButton foregroundswitch;
 
-    Layout layout;
     CheckDirectionBox floatglucose=new CheckDirectionBox(act);
     floatglucose.setText(R.string.active);
     floatglucose.setChecked(Natives.getfloatglucose());
@@ -224,13 +290,11 @@ static public void show(MainActivity act,View parent) {
 
 
     var leftlayout=new Layout(act,new View[]{sizelabel},new View[]{fontsizeview},new View[]{foregroundbutton,touchable}, new View[]{backgroundbutton,transparant},new View[]{hide,timeshow,floatglucose},new View[]{Help,close});
-    leftlayout.setLayoutParams( new ViewGroup.LayoutParams(WRAP_CONTENT,MATCH_PARENT));
-    view.setLayoutParams( new ViewGroup.LayoutParams(MATCH_PARENT,MATCH_PARENT));
    final var density= tk.glucodata.GlucoseCurve.metrics.density;
    view.setPadding(0,MainActivity.systembarTop+ (int)(density*10) ,0,0);
    getMargins(close).setMarginEnd((int)(GlucoseCurve.metrics.density*20.0f));
    leftlayout.setPaddingRelative(0,MainActivity.systembarTop/2+ (int)(density*5) ,0,0);
-    layout=new Layout(act, new Object[]{new View[]{view,leftlayout}});
+    FloatingLayout layout=new FloatingLayout(act,view,leftlayout,fontsizeview,width,height);
     int addright,addleft;
     if(MainActivity.rtl&&Applic.supportsRtl) {
         addright=10;

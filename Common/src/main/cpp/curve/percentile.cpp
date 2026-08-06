@@ -182,8 +182,8 @@ void compare(const uint16_t *ar1,const uint16_t *ar2) {
 //        return (id+minutes)%idnr;
         }
 uint16_t    *mkpercentile(const float frac) const { 
-        uint16_t*ar    =new uint16_t[idnr];
-        for(int i=0;i<idnr;i++)
+        uint16_t *ar = new uint16_t[maxids]();
+        for(int i=0; i<idnr; ++i)
             ar[i]=percentile(i,frac);
         if(doSmooth) {
             uint16_t *res=bino.smoothar(ar,idnr);
@@ -388,8 +388,9 @@ void showround(NVGcontext* vg,JCurve &jcurve,roundtype dat,const int startid,con
             }
         }
 int effectmin(int min) const {
-    return (idnr*min)/(60*24);
+    return (maxids*min)/(60*24);
     }
+
     /*
 int gettimemin(time_t tim) const {
     return effectmin(getminutes(tim));
@@ -453,8 +454,8 @@ void showpercentiles(NVGcontext* vg,JCurve &jcurve) {
         const int timeback=starter-startidtime;
         const float placeback=jcurve.dwidth*timeback/jcurve.duration;
 
-        const double staridf=(idnr*starter)/(60.0*24.0*60.0);
-
+//        const double staridf=(idnr*starter)/(60.0*24.0*60.0);
+        const double staridf = (maxids*starter)/(60.0*24.0*60.0);
         int showids=globalperc.effectmin((jcurve.duration+timeback)/60+minperstep-1);
         const float move=(minperstep*60.0f*jcurve.dwidth/jcurve.duration);
 //        getidstep(jcurve.dwidth,showids);

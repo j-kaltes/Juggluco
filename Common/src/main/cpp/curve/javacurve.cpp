@@ -459,6 +459,8 @@ extern "C" JNIEXPORT int JNICALL fromjava(setfilesdir)(JNIEnv *env, jclass clazz
  appcurve.setunit(settings->data()->unit);
  appcurve.showcalibratedstream=settings->data()->DoCalibrate;
  appcurve.allvalues=settings->data()->AllValues;
+     appcurve.fixatex=settings->data()->fixatex;
+     appcurve.fixatey=settings->data()->fixatey;
  return res;
  }
 extern "C" JNIEXPORT void  JNICALL   fromjava(setAllValues)(JNIEnv *env, jclass cl,jboolean val) {
@@ -896,16 +898,15 @@ extern "C" JNIEXPORT void JNICALL fromjava(systembar)(JNIEnv *env, jclass thiz,j
 
 
 #include "fromjava.h"
-extern bool fixatey;
 
 extern bool showsummarygraph;
 extern "C" JNIEXPORT void JNICALL fromjava(summarygraph) (JNIEnv *env, jclass clazz,jboolean val) {
 	 showsummarygraph=val;
 	 if(val) {
-		 fixatey=false;
+		 appcurve.fixatey=false;
 		 }
 	else {
-	 fixatey=settings->data()->fixatey;
+                 appcurve.fixatey=settings->data()->fixatey;
 
 		}
 	}
@@ -958,10 +959,9 @@ extern "C" JNIEXPORT jboolean  JNICALL   fromjava(exportdata)(JNIEnv *env, jclas
  }
 #endif
 
-extern bool fixatex;
 extern "C" JNIEXPORT void  JNICALL   fromjava(setfixatex)(JNIEnv *env, jclass cl,jboolean val) {
 	settings->data()->fixatex=val;
-	fixatex=val;
+	appcurve.fixatex=val;
 	settings->data()->duration=appcurve.duration;
 	}
 void setallunit(int unit) {
@@ -971,3 +971,16 @@ void setallunit(int unit) {
 extern "C" JNIEXPORT void  JNICALL   fromjava(setunit)(JNIEnv *env, jclass cl,jint unit) {
  setallunit(unit);
 	}
+
+extern "C" JNIEXPORT void  JNICALL   fromjava(setfixatey)(JNIEnv *env, jclass cl,jboolean val) {
+    settings->data()->fixatey=val;
+    appcurve.fixatey=val;
+    }
+
+extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getfixatey)(JNIEnv *env, jclass cl) {
+    return settings->data()->fixatey;
+    }
+
+extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getfixatex)(JNIEnv *env, jclass cl) {
+    return settings->data()->fixatex;
+    }
