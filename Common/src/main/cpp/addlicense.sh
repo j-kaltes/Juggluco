@@ -20,8 +20,9 @@ mv "$inname" "$tmpname"
 
 (cat<<"!"
 /*      This file is part of Juggluco, an Android app to receive and display         */
-/*      glucose values from Freestyle Libre 2, Libre 3, Dexcom G7/ONE+,              */
-/*      Sibionics GS1Sb and Accu-Chek SmartGuide sensors.                            */
+/*      glucose values from Freestyle Libre 2(+), Libre 3(+), Dexcom G7/ONE+,        */
+/*      Sibionics GS1Sb and GS3, Accu-Chek SmartGuide, CareSens Air and              */
+/*      Aidex X sensors.                                                             */
 /*                                                                                   */
 /*      Copyright (C) 2021 Jaap Korthals Altes <jaapkorthalsaltes@gmail.com>         */
 /*                                                                                   */

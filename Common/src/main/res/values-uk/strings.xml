@@ -481,4 +481,25 @@
     <string name="notification">Сповіщення</string>
     <string name="alarmis">Тип сигналу:</string>
     <string name="deletemeter">Видалити відомості про глюкометр. Вимірювання залишаться.</string>
+
+    <!-- Web server additions file manager -->
+    <string name="webuploadpages">Завантажити вебсторінки</string>
+    <string name="webuploadfiles">Завантажити файли</string>
+    <string name="webuploaddirectory">Завантажити каталог</string>
+    <string name="webup">Вгору</string>
+    <string name="webcantaccessdirectory">Не вдалося отримати доступ до каталогу %1$s</string>
+    <string name="webcantcreatedirectory">Не вдалося створити %1$s</string>
+    <string name="webcantopenfileselector">Не вдалося відкрити вибір файлів</string>
+    <string name="webcantopendirectoryselector">Не вдалося відкрити вибір каталогів</string>
+    <string name="webinvaliddirectory">Недійсний каталог %1$s</string>
+    <string name="webuploadingfiles">Завантаження файлів…</string>
+    <string name="webuploadingdirectory">Завантаження каталогу…</string>
+    <string name="webuploadresult">Завантажено файлів: %1$d; каталогів: %2$d; помилок: %3$d</string>
+    <string name="webdeletefilequestion">Видалити файл «%1$s»?</string>
+    <string name="webdeletedirectoryquestion">Видалити каталог «%1$s» і весь його вміст?</string>
+    <string name="webdeleting">Видалення %1$s…</string>
+    <string name="webdeleted">%1$s видалено</string>
+    <string name="webdeletefailed">Не вдалося видалити %1$s</string>
+    <string name="webdirectoryempty">Цей каталог порожній</string>
+    <string name="webdirectoryentry">[каталог] %1$s</string>
 </resources>

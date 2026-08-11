@@ -3345,4 +3345,27 @@ auf die gesamte App aus.</p>
 </p>
 ]]>
 </string>
+<string name="webpageshelp" >
+<![CDATA[
+<p><a href="https://www.juggluco.nl/Jugglucohelp/de/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/webpageshelp.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/webpageshelp.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/webpageshelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/webpageshelp.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/webpageshelp.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/webpageshelp.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/webpageshelp.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/webpageshelp.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/webpageshelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/webpageshelp.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/webpageshelp.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/webpageshelp.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/sv/webpageshelp.html">sv</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/webpageshelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/webpageshelp.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/webpageshelp.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/webpageshelp.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/webpageshelp.html?lang=en">en</a>&emsp;&emsp;</p><h1>Webseiten</h1>
+<p>Hier können Sie Dateien und Verzeichnisse auf den Webserver in Juggluco hochladen. So können Sie eigenes oder fremdes html und JavaScript verwenden, das die Daten in Juggluco nutzt.</p>
+<p>Hier hochgeladene Dateien und Verzeichnisse sind unter <b>additions</b>
+auf dem Juggluco-Webserver verfügbar. Wenn Sie eine Datei mit dem Namen “<i>mypage.html</i>” hochladen, können Sie diese unter
+<a href="http://127.0.0.1:17580/additions/mypage.html">http://127.0.0.1:17580/additions/mypage.html</a>
+im Webbrowser auf diesem Telefon öffnen.<br/>
+<br/>
+<b>Dateien hochladen</b>
+kopiert eine oder mehrere ausgewählte Dateien in das aktuell angezeigte Verzeichnis.
+</p>
+<p><b>Verzeichnis hochladen</b> kopiert einen vollständigen Verzeichnisbaum. Vorhandene Dateien mit demselben Namen werden ersetzt.<br/>
+<br/>
+Tippen Sie auf ein Verzeichnis, um es zu öffnen.
+</p>
+<p><b>Nach oben</b> oder die Android-Zurück-Taste kehrt zum übergeordneten Verzeichnis zurück.
+</p>
+<p><b>Löschen</b> entfernt eine Datei oder ein Verzeichnis einschließlich seines gesamten Inhalts.
+</p>
+<p>Wenn Sie die Kommandozeilenversion des Juggluco-Servers verwenden, legen Sie die Dateien stattdessen im Verzeichnis additions unter jugglucodata ab.</p>
+]]>
+</string>
 </resources>

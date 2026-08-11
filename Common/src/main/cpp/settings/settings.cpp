@@ -326,7 +326,7 @@ void startthreads() {
 #ifndef WEAROS
 #ifdef ANDROID__APP
    if(settings->data()->usexdripwebserver) {
-        startwatchthread(defaulthttpport);
+        startwatchthread(settings->data()->httpport);
         }
 #ifndef DONT_USE_LIBREVIEW
     if(settings->data()->uselibre) {

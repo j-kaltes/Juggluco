@@ -67,7 +67,7 @@ static private RemoteViews remoteMessage(String message) {
     remoteViews.setTextViewText(R.id.content, message);
     return remoteViews;
     }
-static private long oldage=glucosetimeout;
+static private final long oldage=glucosetimeout;
 static private void showviews(RemoteViews views,int rId,AppWidgetManager appWidgetManager, int appWidgetId) {
     try {
         Intent intent = new Intent(Applic.app, MainActivity.class);

@@ -137,7 +137,7 @@ uint32_t calculateCRC() const {
         if(lastglucose.valid) {
                 int id=lastglucose.minfromstart;
                 time_t tim=starttime+id*60;
-                LOGGER("advertise %.18s\nid=%d glucose=%d %.1f mmol/L trend=%d quality=%d %s",deviceName,id,lastglucose.glucose, lastglucose.glucose/18.0f, lastglucose.trend,lastglucose.quality,ctime(&tim));
+                LOGGER("advertise %.*s\nid=%d glucose=%d %.1f mmol/L trend=%d quality=%d %s",name_len,deviceName,id,lastglucose.glucose, lastglucose.glucose/18.0f, lastglucose.trend,lastglucose.quality,ctime(&tim));
                 for(auto &el: prev) {
                         --id;
                         if(el.valid&&el.glucose) {
@@ -147,7 +147,7 @@ uint32_t calculateCRC() const {
                         }
                 }
         else {
-                LOGGER("\nadvertise %.18s error\n",deviceName);
+                LOGGER("\nadvertise %.*s error\n",name_len,deviceName);
                 }
 
         }

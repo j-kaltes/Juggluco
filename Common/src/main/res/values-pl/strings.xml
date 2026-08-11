@@ -447,4 +447,25 @@
 <string name="enternums">Wpisuj wartości na</string>
 <string name="connectionl">połączenie</string>
 <string name="disconnectsensor">Błąd</string>
+
+    <!-- Web server additions file manager -->
+    <string name="webuploadpages">Prześlij strony internetowe</string>
+    <string name="webuploadfiles">Prześlij pliki</string>
+    <string name="webuploaddirectory">Prześlij katalog</string>
+    <string name="webup">W górę</string>
+    <string name="webcantaccessdirectory">Nie można uzyskać dostępu do katalogu %1$s</string>
+    <string name="webcantcreatedirectory">Nie można utworzyć %1$s</string>
+    <string name="webcantopenfileselector">Nie można otworzyć wyboru plików</string>
+    <string name="webcantopendirectoryselector">Nie można otworzyć wyboru katalogów</string>
+    <string name="webinvaliddirectory">Nieprawidłowy katalog %1$s</string>
+    <string name="webuploadingfiles">Przesyłanie plików…</string>
+    <string name="webuploadingdirectory">Przesyłanie katalogu…</string>
+    <string name="webuploadresult">Przesłane pliki: %1$d; katalogi: %2$d; niepowodzenia: %3$d</string>
+    <string name="webdeletefilequestion">Usunąć plik „%1$s”?</string>
+    <string name="webdeletedirectoryquestion">Usunąć katalog „%1$s” i całą jego zawartość?</string>
+    <string name="webdeleting">Usuwanie %1$s…</string>
+    <string name="webdeleted">Usunięto %1$s</string>
+    <string name="webdeletefailed">Nie można usunąć %1$s</string>
+    <string name="webdirectoryempty">Ten katalog jest pusty</string>
+    <string name="webdirectoryentry">[katalog] %1$s</string>
 </resources>

@@ -1175,4 +1175,27 @@ belgisini olib tashlasangiz, Juggluco endi </span><span style="font-weight: norm
 <p><b>Faollashtirish</b>: tugagan sensorlar uchun <b>Faollashtirish</b> tugmasi ko‘rsatiladi. Uni bosib sensordan paketdagi Data Matrix kodini yana skan qilmasdan yana foydalanish mumkin. Libre 2 va 3 sensorlari bilan ham ishlaydi, lekin sensori boshqa telefonda Juggluco bilan skan qilingan bo‘lsa, sensorni qaytarib olish uchun uni NFC orqali yana skan qilish kerak bo‘ladi.</p>
 ]]>
 </string>
+<string name="webpageshelp" >
+<![CDATA[
+<p><a href="https://www.juggluco.nl/Jugglucohelp/uz/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/webpageshelp.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/webpageshelp.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/webpageshelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/webpageshelp.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/webpageshelp.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/webpageshelp.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/webpageshelp.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/webpageshelp.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/webpageshelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/webpageshelp.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/webpageshelp.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/webpageshelp.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/sv/webpageshelp.html">sv</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/webpageshelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/webpageshelp.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/webpageshelp.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/webpageshelp.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/webpageshelp.html?lang=en">en</a>&emsp;&emsp;</p><h1>Veb-sahifalar</h1>
+<p>Bu yerda Juggluco veb-serveriga fayllar va kataloglarni yuklashingiz mumkin. Shu tariqa Juggluco maʼlumotlaridan foydalanadigan o‘zingizning yoki uchinchi tomon html va JavaScript fayllaridan foydalanishingiz mumkin.</p>
+<p>Bu yerga yuklangan fayllar va kataloglar Juggluco veb-serveridagi <b>additions</b>
+ichida mavjud. “<i>mypage.html</i>” nomli faylni yuklasangiz, uni ushbu telefondagi veb-brauzerda
+<a href="http://127.0.0.1:17580/additions/mypage.html">http://127.0.0.1:17580/additions/mypage.html</a>
+orqali ko‘rishingiz mumkin.<br/>
+<br/>
+<b>Fayllarni yuklash</b>
+tanlangan bir yoki bir nechta faylni hozir ko‘rsatilayotgan katalogga nusxalaydi.
+</p>
+<p><b>Katalogni yuklash</b> to‘liq katalog daraxtini nusxalaydi. Xuddi shu nomdagi mavjud fayllar almashtiriladi.<br/>
+<br/>
+Katalogga kirish uchun unga teging.
+</p>
+<p><b>Yuqoriga</b> yoki Android Orqaga tugmasi yuqori katalogga qaytaradi.
+</p>
+<p><b>O‘chirish</b> faylni yoki katalogni ichidagi barcha narsalar bilan birga o‘chiradi.
+</p>
+<p>Juggluco serverining buyruq qatori versiyasidan foydalansangiz, fayllarni buning o‘rniga jugglucodata ichidagi additions katalogiga joylashtiring.</p>
+]]>
+</string>
 </resources>

@@ -343,4 +343,25 @@
     <string name="watch">手表</string>
     <string name="phone">手机</string>
  <string name="connectionl">直接连接传感器</string>
+
+    <!-- Web server additions file manager -->
+    <string name="webuploadpages">上传网页</string>
+    <string name="webuploadfiles">上传文件</string>
+    <string name="webuploaddirectory">上传目录</string>
+    <string name="webup">上一级</string>
+    <string name="webcantaccessdirectory">无法访问 %1$s 目录</string>
+    <string name="webcantcreatedirectory">无法创建 %1$s</string>
+    <string name="webcantopenfileselector">无法打开文件选择器</string>
+    <string name="webcantopendirectoryselector">无法打开目录选择器</string>
+    <string name="webinvaliddirectory">%1$s 目录无效</string>
+    <string name="webuploadingfiles">正在上传文件…</string>
+    <string name="webuploadingdirectory">正在上传目录…</string>
+    <string name="webuploadresult">已上传文件：%1$d；目录：%2$d；失败：%3$d</string>
+    <string name="webdeletefilequestion">删除文件“%1$s”吗？</string>
+    <string name="webdeletedirectoryquestion">删除目录“%1$s”及其中的所有内容吗？</string>
+    <string name="webdeleting">正在删除 %1$s…</string>
+    <string name="webdeleted">%1$s 已删除</string>
+    <string name="webdeletefailed">无法删除 %1$s</string>
+    <string name="webdirectoryempty">此目录为空</string>
+    <string name="webdirectoryentry">[目录] %1$s</string>
 </resources>

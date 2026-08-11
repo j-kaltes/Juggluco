@@ -2440,4 +2440,27 @@ valeur plus grande la rend plus aiguë)</p>
 </p>
 ]]>
 </string>
+<string name="webpageshelp" >
+<![CDATA[
+<p><a href="https://www.juggluco.nl/Jugglucohelp/fr/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/webpageshelp.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/webpageshelp.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/webpageshelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/webpageshelp.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/webpageshelp.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/webpageshelp.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/webpageshelp.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/webpageshelp.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/webpageshelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/webpageshelp.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/webpageshelp.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/webpageshelp.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/sv/webpageshelp.html">sv</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/webpageshelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/webpageshelp.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/webpageshelp.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/webpageshelp.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/webpageshelp.html?lang=en">en</a>&emsp;&emsp;</p><h1>Pages web</h1>
+<p>Vous pouvez ici téléverser des fichiers et des répertoires vers le serveur web de Juggluco. Vous pouvez ainsi utiliser vos propres html et JavaScript, ou ceux de tiers, qui utilisent les données de Juggluco.</p>
+<p>Les fichiers et répertoires téléversés ici sont disponibles sous <b>additions</b>
+sur le serveur web de Juggluco. Lorsque vous téléversez un fichier nommé “<i>mypage.html</i>” vous pouvez l’afficher avec
+<a href="http://127.0.0.1:17580/additions/mypage.html">http://127.0.0.1:17580/additions/mypage.html</a>
+dans le navigateur web de ce téléphone.<br/>
+<br/>
+<b>Téléverser des fichiers</b>
+copie un ou plusieurs fichiers sélectionnés dans le répertoire actuellement affiché.
+</p>
+<p><b>Téléverser un répertoire</b> copie une arborescence complète. Les fichiers existants portant le même nom sont remplacés.<br/>
+<br/>
+Touchez un répertoire pour y entrer.
+</p>
+<p><b>Remonter</b> ou le bouton Retour d’Android revient au répertoire parent.
+</p>
+<p><b>Supprimer</b> supprime un fichier, ou un répertoire avec tout son contenu.
+</p>
+<p>Si vous utilisez la version en ligne de commande du serveur Juggluco, placez plutôt les fichiers dans le répertoire additions sous jugglucodata.</p>
+]]>
+</string>
 </resources>

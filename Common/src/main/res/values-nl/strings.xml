@@ -467,5 +467,25 @@
 <string name="apply">Toepassen</string>
 <string name="theme">Thema</string>
 
+    <!-- Web server additions file manager -->
+    <string name="webuploadpages">Webpagina’s uploaden</string>
+    <string name="webuploadfiles">Bestanden uploaden</string>
+    <string name="webuploaddirectory">Map uploaden</string>
+    <string name="webup">Omhoog</string>
+    <string name="webcantaccessdirectory">Geen toegang tot map %1$s</string>
+    <string name="webcantcreatedirectory">Kan %1$s niet aanmaken</string>
+    <string name="webcantopenfileselector">Kan bestandskiezer niet openen</string>
+    <string name="webcantopendirectoryselector">Kan mapkiezer niet openen</string>
+    <string name="webinvaliddirectory">Ongeldige map %1$s</string>
+    <string name="webuploadingfiles">Bestanden worden geüpload…</string>
+    <string name="webuploadingdirectory">Map wordt geüpload…</string>
+    <string name="webuploadresult">Bestanden geüpload: %1$d; mappen: %2$d; mislukt: %3$d</string>
+    <string name="webdeletefilequestion">Bestand „%1$s“ verwijderen?</string>
+    <string name="webdeletedirectoryquestion">Map „%1$s“ en alles erin verwijderen?</string>
+    <string name="webdeleting">%1$s wordt verwijderd…</string>
+    <string name="webdeleted">%1$s verwijderd</string>
+    <string name="webdeletefailed">Kan %1$s niet verwijderen</string>
+    <string name="webdirectoryempty">Deze map is leeg</string>
+    <string name="webdirectoryentry">[map] %1$s</string>
 </resources>
 

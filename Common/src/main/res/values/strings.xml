@@ -320,6 +320,7 @@
  <string name="allsentnoreceive">When everything is sent to a host, \"Receive from\" should be turned off.</string>
  <string name="nomirrorport">The port number should be different from the mirror port</string>
  <string name="nohttpport">The port number should be different from the http port</string>
+ <string name="httpportxdripwarning">The web server only works with xDrip watch apps when the HTTP port is 17580.</string>
 <string name="ready_in">" ready in "</string>
 <string name="ready_for_use">Sensor ready for use</string>
 <string name="endstime">" ends at this time"</string>
@@ -506,4 +507,26 @@
     <string name="notification">Notification</string>
     <string name="alarmis">Alarm is</string>
     <string name="deletemeter">Remove meter information. Measurements will remain.</string>
+
+    <!-- Web server additions file manager -->
+    <string name="webuploadpages">Upload web pages</string>
+    <string name="webuploadfiles">Upload files</string>
+    <string name="webuploaddirectory">Upload directory</string>
+    <string name="webup">Up</string>
+    <string name="webcantaccessdirectory">"Can't access %1$s directory"</string>
+    <string name="webcantcreatedirectory">"Can't create %1$s"</string>
+    <string name="webcantopenfileselector">"Can't open file selector"</string>
+    <string name="webcantopendirectoryselector">"Can't open directory selector"</string>
+    <string name="webinvaliddirectory">Invalid %1$s directory</string>
+    <string name="webuploadingfiles">Uploading files…</string>
+    <string name="webuploadingdirectory">Uploading directory…</string>
+    <string name="webuploadresult">Files uploaded: %1$d; directories: %2$d; failed: %3$d</string>
+    <string name="webdeletefilequestion">Delete file \"%1$s\"?</string>
+    <string name="webdeletedirectoryquestion">Delete directory \"%1$s\" and everything in it?</string>
+    <string name="webdeleting">Deleting %1$s…</string>
+    <string name="webdeleted">%1$s deleted</string>
+    <string name="webdeletefailed">"Couldn't delete %1$s"</string>
+    <string name="webdirectoryempty">This directory is empty</string>
+    <string name="webdirectoryentry">[dir] %1$s</string>
+
 </resources>

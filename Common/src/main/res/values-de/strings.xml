@@ -60,12 +60,12 @@
   <string name="addconnectionbutton">Verbindung hinzufügen</string>
   <string name="offtouch">Off touch</string>
   <string name="glucosestatusbar">Glukosebenachrichtigung</string>
-  <string name="lowglucosealarm">Niedrigen Glukosewert</string>
+  <string name="lowglucosealarm">Niedriger Glukosewert</string>
   <string name="numlabel">"Etikett: "</string>
   <string name="roundto">"Runden auf: "</string>
   <string name="weight">"Gewicht: "</string>
   <string name="ringtonename">Klingelton</string>
-  <string name="highglucosealarm">Hohen Glukosewert</string>
+  <string name="highglucosealarm">Hoher Glukosewert</string>
   <string name="valueavailablenotification">Benachrichtigung über verfügbaren Wert</string>
   <string name="lossofsignalalarm">Signalverlustalarm nach</string>
  <string name="cantsetminutes">"Minuten können nicht eingestellt werden auf "</string>
@@ -229,7 +229,7 @@
   <string name="emailaddresstooshort">E-Mail-Adresse zu kurz </string>
   <string name="emailaddresstoolong">E-Mail-Adresse zu lang </string>
   <string name="password8">Passwort sollte mindestens 8 Zeichen lang sein </string>
-  <string name="password36">Die maximale Passwortlänge beträgt 36 Zeich en</string>
+  <string name="password36">Die maximale Passwortlänge beträgt 36 Zeichen</string>
   <string name="fromlibreview">Von Libreview</string>
   <string name="manual">Manuell</string>
 <string name="noaccountidspecified">Keine Konto-ID angegeben </string>
@@ -356,14 +356,14 @@
 <string name="overwrite">Überschreiben?</string>
 <string name="usedweight">WARNUNG: Gewicht (%.1f) größer als 0</string>
 
-<string name="verylowglucose">" Sehr niedriger Glukose!"</string>
-<string name="veryhighglucose">" Sehr hoher Glukose!"</string>
+<string name="verylowglucose">" Sehr niedrige Glukose!"</string>
+<string name="veryhighglucose">" Sehr hohe Glukose!"</string>
 
  <string name="verylowglucoseshort">" Sehr niedrig!"</string>
  <string name="veryhighglucoseshort">" Sehr hoch!"</string>
 
-<string name="prelowglucose">" Bald niedriger Glukose!"</string>
-<string name="prehighglucose">" Bald hoher Glukose!"</string>
+<string name="prelowglucose">" Bald niedrige Glukose!"</string>
+<string name="prehighglucose">" Bald hohe Glukose!"</string>
 
 <string name="verylowglucosealarm">Alarm für sehr niedrigen Glukosewert</string>
 <string name="veryhighglucosealarm">Alarm für sehr hohen Glukosewert</string>
@@ -481,6 +481,26 @@
 <string name="dark">Dunkel</string>
 <string name="apply">Anwenden</string>
 <string name="theme">Design</string>
+
+    <string name="webuploadpages">Webseiten hochladen</string>
+    <string name="webuploadfiles">Dateien hochladen</string>
+    <string name="webuploaddirectory">Verzeichnis hochladen</string>
+    <string name="webup">Nach oben</string>
+    <string name="webcantaccessdirectory">Auf das Verzeichnis %1$s kann nicht zugegriffen werden</string>
+    <string name="webcantcreatedirectory">%1$s kann nicht erstellt werden</string>
+    <string name="webcantopenfileselector">Dateiauswahl kann nicht geöffnet werden</string>
+    <string name="webcantopendirectoryselector">Verzeichnisauswahl kann nicht geöffnet werden</string>
+    <string name="webinvaliddirectory">Ungültiges Verzeichnis %1$s</string>
+    <string name="webuploadingfiles">Dateien werden hochgeladen…</string>
+    <string name="webuploadingdirectory">Verzeichnis wird hochgeladen…</string>
+    <string name="webuploadresult">Dateien hochgeladen: %1$d; Verzeichnisse: %2$d; fehlgeschlagen: %3$d</string>
+    <string name="webdeletefilequestion">Datei „%1$s“ löschen?</string>
+    <string name="webdeletedirectoryquestion">Verzeichnis „%1$s“ und seinen gesamten Inhalt löschen?</string>
+    <string name="webdeleting">%1$s wird gelöscht…</string>
+    <string name="webdeleted">%1$s gelöscht</string>
+    <string name="webdeletefailed">%1$s konnte nicht gelöscht werden</string>
+    <string name="webdirectoryempty">Dieses Verzeichnis ist leer</string>
+    <string name="webdirectoryentry">[Verzeichnis] %1$s</string>
 </resources>
 
 

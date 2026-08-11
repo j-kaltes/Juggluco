@@ -485,4 +485,24 @@
     <string name="nohistoryvalues">कोई इतिहास मान नहीं</string>
     <string name="jugglucoupdate">समय अपडेट करें</string>
 
+    <!-- Web server additions file manager -->
+    <string name="webuploadpages">वेब पेज अपलोड करें</string>
+    <string name="webuploadfiles">फ़ाइलें अपलोड करें</string>
+    <string name="webuploaddirectory">डायरेक्टरी अपलोड करें</string>
+    <string name="webup">ऊपर</string>
+    <string name="webcantaccessdirectory">%1$s डायरेक्टरी तक पहुँचा नहीं जा सका</string>
+    <string name="webcantcreatedirectory">%1$s बनाया नहीं जा सका</string>
+    <string name="webcantopenfileselector">फ़ाइल चयनकर्ता खोला नहीं जा सका</string>
+    <string name="webcantopendirectoryselector">डायरेक्टरी चयनकर्ता खोला नहीं जा सका</string>
+    <string name="webinvaliddirectory">%1$s डायरेक्टरी अमान्य है</string>
+    <string name="webuploadingfiles">फ़ाइलें अपलोड हो रही हैं…</string>
+    <string name="webuploadingdirectory">डायरेक्टरी अपलोड हो रही है…</string>
+    <string name="webuploadresult">अपलोड की गई फ़ाइलें: %1$d; डायरेक्टरियाँ: %2$d; विफल: %3$d</string>
+    <string name="webdeletefilequestion">फ़ाइल “%1$s” हटाएँ?</string>
+    <string name="webdeletedirectoryquestion">डायरेक्टरी “%1$s” और उसके अंदर की सभी चीज़ें हटाएँ?</string>
+    <string name="webdeleting">%1$s हटाया जा रहा है…</string>
+    <string name="webdeleted">%1$s हटा दिया गया</string>
+    <string name="webdeletefailed">%1$s हटाया नहीं जा सका</string>
+    <string name="webdirectoryempty">यह डायरेक्टरी खाली है</string>
+    <string name="webdirectoryentry">[डायरेक्टरी] %1$s</string>
 </resources>

@@ -335,4 +335,25 @@
 <string name="watch">klocka</string>
 <string name="directsensor">Direktanslutning mellan sensor och</string>
 <string name="connectionl"></string>
+
+    <!-- Web server additions file manager -->
+    <string name="webuploadpages">Ladda upp webbsidor</string>
+    <string name="webuploadfiles">Ladda upp filer</string>
+    <string name="webuploaddirectory">Ladda upp katalog</string>
+    <string name="webup">Upp</string>
+    <string name="webcantaccessdirectory">Kan inte komma åt katalogen %1$s</string>
+    <string name="webcantcreatedirectory">Kan inte skapa %1$s</string>
+    <string name="webcantopenfileselector">Kan inte öppna filväljaren</string>
+    <string name="webcantopendirectoryselector">Kan inte öppna katalogväljaren</string>
+    <string name="webinvaliddirectory">Ogiltig katalog %1$s</string>
+    <string name="webuploadingfiles">Laddar upp filer…</string>
+    <string name="webuploadingdirectory">Laddar upp katalog…</string>
+    <string name="webuploadresult">Uppladdade filer: %1$d; kataloger: %2$d; misslyckade: %3$d</string>
+    <string name="webdeletefilequestion">Ta bort filen ”%1$s”?</string>
+    <string name="webdeletedirectoryquestion">Ta bort katalogen ”%1$s” och allt innehåll?</string>
+    <string name="webdeleting">Tar bort %1$s…</string>
+    <string name="webdeleted">%1$s borttagen</string>
+    <string name="webdeletefailed">Det gick inte att ta bort %1$s</string>
+    <string name="webdirectoryempty">Den här katalogen är tom</string>
+    <string name="webdirectoryentry">[katalog] %1$s</string>
 </resources>

@@ -232,6 +232,27 @@
 <string name="phone">telefone</string>
 <string name="directsensor">Conexão direta sensor-</string>
 <string name="connectionl"></string>
+
+    <!-- Web server additions file manager -->
+    <string name="webuploadpages">Enviar páginas web</string>
+    <string name="webuploadfiles">Enviar arquivos</string>
+    <string name="webuploaddirectory">Enviar diretório</string>
+    <string name="webup">Acima</string>
+    <string name="webcantaccessdirectory">Não foi possível acessar o diretório %1$s</string>
+    <string name="webcantcreatedirectory">Não foi possível criar %1$s</string>
+    <string name="webcantopenfileselector">Não foi possível abrir o seletor de arquivos</string>
+    <string name="webcantopendirectoryselector">Não foi possível abrir o seletor de diretórios</string>
+    <string name="webinvaliddirectory">Diretório %1$s inválido</string>
+    <string name="webuploadingfiles">Enviando arquivos…</string>
+    <string name="webuploadingdirectory">Enviando diretório…</string>
+    <string name="webuploadresult">Arquivos enviados: %1$d; diretórios: %2$d; falhas: %3$d</string>
+    <string name="webdeletefilequestion">Excluir o arquivo “%1$s”?</string>
+    <string name="webdeletedirectoryquestion">Excluir o diretório “%1$s” e todo o seu conteúdo?</string>
+    <string name="webdeleting">Excluindo %1$s…</string>
+    <string name="webdeleted">%1$s excluído</string>
+    <string name="webdeletefailed">Não foi possível excluir %1$s</string>
+    <string name="webdirectoryempty">Este diretório está vazio</string>
+    <string name="webdirectoryentry">[diretório] %1$s</string>
 </resources>
 
 

@@ -1267,4 +1267,27 @@ readingNearTimeStamp(startTime, margin);<br/>
 </p>
 ]]>
 </string>
+<string name="webpageshelp" >
+<![CDATA[
+<p><a href="https://www.juggluco.nl/Jugglucohelp/ja/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/webpageshelp.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/webpageshelp.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/webpageshelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/webpageshelp.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/webpageshelp.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/webpageshelp.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/webpageshelp.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/webpageshelp.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/webpageshelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/webpageshelp.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/webpageshelp.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/webpageshelp.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/sv/webpageshelp.html">sv</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/webpageshelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/webpageshelp.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/webpageshelp.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/webpageshelp.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/webpageshelp.html?lang=en">en</a>&emsp;&emsp;</p><h1>ウェブページ</h1>
+<p>ここでは、Juggluco のウェブサーバーにファイルやディレクトリをアップロードできます。これにより、Juggluco のデータを利用する独自またはサードパーティ製の html や JavaScript を使用できます。</p>
+<p>ここにアップロードしたファイルとディレクトリは、Juggluco ウェブサーバーの <b>additions</b>
+以下で利用できます。 “<i>mypage.html</i>” というファイルをアップロードすると、この電話のウェブブラウザーで
+<a href="http://127.0.0.1:17580/additions/mypage.html">http://127.0.0.1:17580/additions/mypage.html</a>
+を使ってそのファイルを表示できます。<br/>
+<br/>
+<b>ファイルをアップロード</b>
+選択した1つ以上のファイルを、現在表示しているディレクトリにコピーします。
+</p>
+<p><b>ディレクトリをアップロード</b> ディレクトリツリー全体をコピーします。同じ名前の既存ファイルは置き換えられます。<br/>
+<br/>
+ディレクトリをタップすると、その中に移動します。
+</p>
+<p><b>上へ</b> または Android の戻るボタンで親ディレクトリに戻ります。
+</p>
+<p><b>削除</b> ファイル、またはディレクトリとその中のすべてを削除します。
+</p>
+<p>Juggluco サーバーのコマンドライン版を使用する場合は、代わりに jugglucodata の下にある additions ディレクトリにファイルを置いてください。</p>
+]]>
+</string>
 </resources>

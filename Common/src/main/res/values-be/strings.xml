@@ -346,4 +346,24 @@
  <string name="phone">тэлефон</string>
  <string name="connectionl"></string>
 
+    <!-- Web server additions file manager -->
+    <string name="webuploadpages">Загрузіць вэб-старонкі</string>
+    <string name="webuploadfiles">Загрузіць файлы</string>
+    <string name="webuploaddirectory">Загрузіць каталог</string>
+    <string name="webup">Уверх</string>
+    <string name="webcantaccessdirectory">Не ўдаецца атрымаць доступ да каталога %1$s</string>
+    <string name="webcantcreatedirectory">Не ўдаецца стварыць %1$s</string>
+    <string name="webcantopenfileselector">Не ўдаецца адкрыць выбар файлаў</string>
+    <string name="webcantopendirectoryselector">Не ўдаецца адкрыць выбар каталогаў</string>
+    <string name="webinvaliddirectory">Недапушчальны каталог %1$s</string>
+    <string name="webuploadingfiles">Загрузка файлаў…</string>
+    <string name="webuploadingdirectory">Загрузка каталога…</string>
+    <string name="webuploadresult">Загружана файлаў: %1$d; каталогаў: %2$d; памылак: %3$d</string>
+    <string name="webdeletefilequestion">Выдаліць файл «%1$s»?</string>
+    <string name="webdeletedirectoryquestion">Выдаліць каталог «%1$s» і ўсё яго змесціва?</string>
+    <string name="webdeleting">Выдаленне %1$s…</string>
+    <string name="webdeleted">%1$s выдалены</string>
+    <string name="webdeletefailed">Не ўдалося выдаліць %1$s</string>
+    <string name="webdirectoryempty">Гэты каталог пусты</string>
+    <string name="webdirectoryentry">[каталог] %1$s</string>
 </resources>

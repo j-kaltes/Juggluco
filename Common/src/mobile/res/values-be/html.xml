@@ -2823,4 +2823,27 @@ Juggluco меню злева -&gt; Налады -&gt; Плаваючая
 глюкоза -&gt; Даведка.</p>
 ]]>
 </string>
+<string name="webpageshelp" >
+<![CDATA[
+<p><a href="https://www.juggluco.nl/Jugglucohelp/be/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/webpageshelp.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/webpageshelp.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/webpageshelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/webpageshelp.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/webpageshelp.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/webpageshelp.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/webpageshelp.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/webpageshelp.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/webpageshelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/webpageshelp.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/webpageshelp.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/webpageshelp.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/sv/webpageshelp.html">sv</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/webpageshelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/webpageshelp.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/webpageshelp.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/webpageshelp.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/webpageshelp.html?lang=en">en</a>&emsp;&emsp;</p><h1>Вэб-старонкі</h1>
+<p>Тут можна загружаць файлы і каталогі на вэб-сервер Juggluco. Такім чынам можна выкарыстоўваць уласныя або староннія html і JavaScript, якія выкарыстоўваюць даныя Juggluco.</p>
+<p>Файлы і каталогі, загружаныя тут, даступныя ў <b>additions</b>
+на вэб-серверы Juggluco. Калі вы загрузіце файл з назвай “<i>mypage.html</i>” яго можна адкрыць па адрасе
+<a href="http://127.0.0.1:17580/additions/mypage.html">http://127.0.0.1:17580/additions/mypage.html</a>
+у вэб-браўзеры на гэтым тэлефоне.<br/>
+<br/>
+<b>Загрузіць файлы</b>
+капіруе адзін або некалькі выбраных файлаў у каталог, які зараз паказаны.
+</p>
+<p><b>Загрузіць каталог</b> капіруе ўсё дрэва каталогаў. Існыя файлы з такімі ж назвамі замяняюцца.<br/>
+<br/>
+Націсніце каталог, каб увайсці ў яго.
+</p>
+<p><b>Уверх</b> або кнопка «Назад» Android вяртае ў бацькоўскі каталог.
+</p>
+<p><b>Выдаліць</b> выдаляе файл або каталог разам з усім яго змесцівам.
+</p>
+<p>Калі вы карыстаецеся версіяй сервера Juggluco для каманднага радка, замест гэтага змяшчайце файлы ў каталог additions у jugglucodata.</p>
+]]>
+</string>
 </resources>

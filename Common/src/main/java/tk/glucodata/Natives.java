@@ -590,8 +590,19 @@ public static native void showbytes(String mess,byte[] ar);
 //public static native boolean loadNFC( );
 public static native int startTimeIDsum(byte[] uit, long time, long accountID);
 
-public static native int processint(int i2, byte[] bArr, byte[] bArr2);
-public static native byte[] processbar(int i2, byte[] bArr, byte[] bArr2);
+
+
+static native long libre3BeginSecurityHandshake(long securityContext);
+static native void libre3FreeSecurityContext(long securityContext);
+static native int libre3LoadAppKeyAndSavedAuthorization(long securityContext, byte[] appPrivateKey, byte[] savedAuthorization);
+static native int libre3AcceptPatchCertificate(long securityContext, byte[] patchCertificate);
+static native byte[] libre3CreateEphemeralPublicKey(long securityContext);
+static native int libre3DeriveAuthorizationRoot(long securityContext, byte[] patchEphemeralPublicKey);
+static native byte[] libre3EncryptChallengeReply(long securityContext, byte[] nonce, byte[] plaintext);
+static native byte[] libre3DecryptChallengeResponse(long securityContext, byte[] nonce, byte[] ciphertext);
+static native byte[] libre3ExportSavedAuthorization(long securityContext);
+
+
 public static native boolean getShownintro( );
 public static native void setShownintro(boolean val);
 public static native void setDevice(String mani,String model,int SDK_INT);
@@ -653,6 +664,9 @@ public static native boolean getuseSSL( );
 
 public static native void setsslport(int val);
 public static native int getsslport( );
+
+public static native void sethttpport(int val);
+public static native int gethttpport( );
 
 public static native void setsaytreatments(boolean val);
 public static native boolean getsaytreatments( );

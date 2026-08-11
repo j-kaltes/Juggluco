@@ -492,4 +492,25 @@
      <string name="emailnotused">La combinazione email-password non viene usata e non sarà salvata.</string>
     <string name="connecttoserver">Connessione al server…</string>
     <string name="retrievefailed">Recupero account id fallito</string>
+
+    <!-- Web server additions file manager -->
+    <string name="webuploadpages">Carica pagine web</string>
+    <string name="webuploadfiles">Carica file</string>
+    <string name="webuploaddirectory">Carica directory</string>
+    <string name="webup">Su</string>
+    <string name="webcantaccessdirectory">Impossibile accedere alla directory %1$s</string>
+    <string name="webcantcreatedirectory">Impossibile creare %1$s</string>
+    <string name="webcantopenfileselector">Impossibile aprire il selettore di file</string>
+    <string name="webcantopendirectoryselector">Impossibile aprire il selettore di directory</string>
+    <string name="webinvaliddirectory">Directory %1$s non valida</string>
+    <string name="webuploadingfiles">Caricamento file…</string>
+    <string name="webuploadingdirectory">Caricamento directory…</string>
+    <string name="webuploadresult">File caricati: %1$d; directory: %2$d; non riusciti: %3$d</string>
+    <string name="webdeletefilequestion">Eliminare il file «%1$s»?</string>
+    <string name="webdeletedirectoryquestion">Eliminare la directory «%1$s» e tutto il suo contenuto?</string>
+    <string name="webdeleting">Eliminazione di %1$s…</string>
+    <string name="webdeleted">%1$s eliminato</string>
+    <string name="webdeletefailed">Impossibile eliminare %1$s</string>
+    <string name="webdirectoryempty">Questa directory è vuota</string>
+    <string name="webdirectoryentry">[directory] %1$s</string>
 </resources>

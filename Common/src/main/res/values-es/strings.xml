@@ -447,4 +447,24 @@
     <string name="failed">falló</string>
     <string name="successful">exitoso</string>
     <string name="use">Activar</string>
+
+    <string name="webuploadpages">Subir páginas web</string>
+    <string name="webuploadfiles">Subir archivos</string>
+    <string name="webuploaddirectory">Subir directorio</string>
+    <string name="webup">Arriba</string>
+    <string name="webcantaccessdirectory">No se puede acceder al directorio %1$s</string>
+    <string name="webcantcreatedirectory">No se puede crear %1$s</string>
+    <string name="webcantopenfileselector">No se puede abrir el selector de archivos</string>
+    <string name="webcantopendirectoryselector">No se puede abrir el selector de directorios</string>
+    <string name="webinvaliddirectory">Directorio %1$s no válido</string>
+    <string name="webuploadingfiles">Subiendo archivos…</string>
+    <string name="webuploadingdirectory">Subiendo directorio…</string>
+    <string name="webuploadresult">Archivos subidos: %1$d; directorios: %2$d; fallidos: %3$d</string>
+    <string name="webdeletefilequestion">¿Eliminar el archivo «%1$s»?</string>
+    <string name="webdeletedirectoryquestion">¿Eliminar el directorio «%1$s» y todo su contenido?</string>
+    <string name="webdeleting">Eliminando %1$s…</string>
+    <string name="webdeleted">%1$s eliminado</string>
+    <string name="webdeletefailed">No se pudo eliminar %1$s</string>
+    <string name="webdirectoryempty">Este directorio está vacío</string>
+    <string name="webdirectoryentry">[directorio] %1$s</string>
 </resources>

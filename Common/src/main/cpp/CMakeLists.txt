@@ -65,7 +65,10 @@ set(BCRYPTFILES ${BCRYPTDIR}aes_encrypt.c ${BCRYPTDIR}bcrypt.cpp ${BCRYPTDIR}ccm
 
 set(EXTRAVIEW ${NETDIR}/libreview/putsensor.cpp ${NETDIR}/libreview/mkrealhistory.cpp ${NETDIR}/libreview/libreview.cpp ${NETDIR}/libreview/newlibre3.cpp ${NETDIR}/libreview/libreview.cpp )
 
-set(LIBRE3FILES ${INCLUDESELF}/libre3/loadlibs.cpp ${INCLUDESELF}/libre3/bluetooth.cpp ${INCLUDESELF}/libre3/nfc.cpp ${INCLUDESELF}/libre3/libre3_old_policy_bypass.c ) # ${INCLUDESELF}/libre3/libre3_postgen_dump.cpp )
+#set(LIBRE3FILES ${INCLUDESELF}/libre3/loadlibs.cpp ${INCLUDESELF}/libre3/bluetooth.cpp ${INCLUDESELF}/libre3/nfc.cpp ${INCLUDESELF}/libre3/libre3_old_policy_bypass.c ) # ${INCLUDESELF}/libre3/libre3_postgen_dump.cpp )
+if(libre3)
+    set(LIBRE3FILES ${INCLUDESELF}/libre3/loadlibs.cpp ${INCLUDESELF}/libre3/bluetooth.cpp ${INCLUDESELF}/libre3/nfc.cpp  ) # ${INCLUDESELF}/libre3/libre3_postgen_dump.cpp )
+endif()
 
 
 set(ASCONFILES ${LIBASCON}/src/ascon_permutations.c ${LIBASCON}/src/ascon_buffering.c ${LIBASCON}/src/ascon_aead_common.c ${LIBASCON}/src/ascon_aead128a.c)
@@ -162,7 +165,48 @@ set_source_files_properties( ${L3HOOK} PROPERTIES COMPILE_OPTIONS "-marm")
 
 
 #set(LIBRE3 libre3/process/cryptoextern.c libre3/process/f3f7_dispatch_deobfuscated.c libre3/process/f3f7_dispatch_execute_ref.c libre3/process/f3f7_dispatch_wrappers_ref.c libre3/process/f3f7_object_method_ref.c libre3/process/f3f7_outer_schedule_ref.c libre3/process/libre3_app_process.c libre3/process/libre3_native_export_ref.c libre3/process/libre3_native_export_wb_ref.c libre3/process/libre3_native_wb_primitives_ref.c libre3/process/libre3_object_export_frames_ref.c libre3/process/libre3_process_ref.c libre3/process/libre3_processint6_f3efd5bc_ref.c libre3/process/libre3_processint6_f3fbc5c0_f3fdd33c_bind_ref.c libre3/process/libre3_processint6_f3fbc5c0_live_fc3c70_bind_ref.c libre3/process/libre3_processint6_f3fbc5c0_ref.c libre3/process/libre3_processint6_f3fbc5c0_terminal_bound_ref.c libre3/process/libre3_processint6_f3fc2110_ref.c libre3/process/libre3_processint6_f3fc2304_ref.c libre3/process/libre3_processint6_f3fc3c70_ref.c libre3/process/libre3_processint6_f3fcc2d0_ref.c libre3/process/libre3_processint6_f3fdb57c_ref.c libre3/process/libre3_processint6_f3fdd33c_ref.c libre3/process/libre3_provider_soft.c libre3/process/object_method_known_vectors.c libre3/process/processint2_full_ref.c libre3/process/processint2_ref.c libre3/process/crypto_init.cpp libre3/process/libre3_bar7_fe_block.cpp libre3/process/libre3_bar7_generated_block.cpp)
-add_library( g SHARED  ${LIBRE3} sibionics3/interpretgs3.cpp sibionics3/java.cpp curve/scriptFonts.cpp settings/rtl_label_converter.cpp ${CHECKER_FILE} aidexx/crc.cpp aidexx/initcrypto.cpp  aidexx/java.cpp aidexx/decrypt.cpp aidexx/mkiv.cpp ${NETDIR}/ICE/ContextHTTPS.cpp  ${NETDIR}/ICE/ICE.cpp  ${NETDIR}/ICE/ICE_data.cpp ${NETDIR}/sendcommands.cpp ${NETDIR}/backup.cpp ${NETDIR}/getcommand.cpp ${BCRYPTFILES} meter/java.cpp calibrate/java.cpp  calibrate/calculate.cpp  air/java.cpp   accu/java.cpp  dexcom/java.cpp dexcom/ecJPake.cpp extra/bypassed_dlfcn.c extra/fake_dlfcn.c EverSense.cpp dofirst.cpp settings/exception.cpp prunestream.cpp ${EXTRAVIEW} watch/messages.cpp watch/netinfo.cpp watch/watchvalue.cpp removeoldstates.cpp  ${CURVEDIR}/trjugglucotext.cpp   ${CURVEDIR}/svjugglucotext.cpp    ${CURVEDIR}/zhjugglucotext.cpp  ${CURVEDIR}/ukjugglucotext.cpp  ${CURVEDIR}/bejugglucotext.cpp ${CURVEDIR}/frjugglucotext.cpp ${CURVEDIR}/pljugglucotext.cpp ${CURVEDIR}/ptjugglucotext.cpp  ${CURVEDIR}/jajugglucotext.cpp ${CURVEDIR}/hijugglucotext.cpp ${CURVEDIR}/esjugglucotext.cpp ${CURVEDIR}/uzjugglucotext.cpp ${CURVEDIR}/nljugglucotext.cpp ${CURVEDIR}/dejugglucotext.cpp  ${CURVEDIR}/jugglucotext.cpp  ${CURVEDIR}/itjugglucotext.cpp ${CURVEDIR}/percentile.cpp foods/javabase.cpp ${ASCONFILES} hostJson.cpp backupjava.cpp glucose.cpp ${CURVEDIR}/shownums.cpp g.cpp libre2.cpp jnisub.cpp share/getsockets.cpp share/hooks.cpp wearInt.cpp logjava.cpp share/logs.cpp share/nfcdata.cpp  share/serial.cpp scanstate.cpp statedata.cpp share/timestr.cpp share/savehistory.cpp  ${NANOVG}/nanovg.c  ${CURVEDIR}/search.cpp ${CURVEDIR}/appcurve.cpp ${CURVEDIR}/curve.cpp ${CURVEDIR}/javacurve.cpp export/libreviewexport.cpp export/exports.cpp settings/javasettings.cpp settings/settings.cpp debugclone.cpp ${NETDIR}/watchserver/common.cpp ${NETDIR}/watchserver/getlanguage.cpp ${NETDIR}/watchserver/uploader.cpp  ${NETDIR}/watchserver/uploadtreatment.cpp  ${NETDIR}/watchserver/iob.cpp   ${NETDIR}/watchserver/sslserver.cpp  ${NETDIR}/watchserver/cryptopen.cpp ${NETDIR}/watchserver/watchserver.cpp ${NETDIR}/netstuff.cpp ${NETDIR}/sender.cpp ICEstatus.cpp mirrorstatus.cpp backupinfo.cpp datbackup.cpp nums/numdata.cpp nums/numjava.cpp  meal/mealjava.cpp meal/savemeals.cpp  ${LIBRE3FILES}  ${CURVEDIR}/iwjugglucotext.cpp ${CURVEDIR}/rujugglucotext.cpp  sibionics/handleData.cpp  sibionics/interpret_data.cpp sibionics/eu.cpp sibionics/start.cpp sibionics/process.cpp sibionics/makeWriteCharacter.cpp  ) #  ${CURVEDIR}/iwjugglucotext.cpp 
+
+if(libre3)
+set(LIBRE3SRC
+    ${INCLUDESELF}/libre3/process/openssl_symbols.c
+    ${INCLUDESELF}/libre3/process/libre3_handshake.c
+    ${INCLUDESELF}/libre3/process/libre3_security_engine.c
+    ${INCLUDESELF}/libre3/process/saved_authorization_record.c
+    ${INCLUDESELF}/libre3/process/sensor_security_context.c
+    ${INCLUDESELF}/libre3/process/p256_private_scalar_codec.c
+    ${INCLUDESELF}/libre3/process/app_private_key_record_decoder.c
+    ${INCLUDESELF}/libre3/process/app_private_key_whitebox_machine.c
+    ${INCLUDESELF}/libre3/process/app_private_key_instruction_decoder.c
+    ${INCLUDESELF}/libre3/process/app_private_key_instruction_executor.c
+    ${INCLUDESELF}/libre3/process/app_private_key_instruction_set.c
+    ${INCLUDESELF}/libre3/process/app_private_key_decode_schedule.c
+    ${INCLUDESELF}/libre3/process/authorization_scalar_state_encoder.c
+    ${INCLUDESELF}/libre3/process/p256_scalar_multiply.c
+    ${INCLUDESELF}/libre3/process/authorization_round_feedback.c
+    ${INCLUDESELF}/libre3/process/authorization_round_tail.c
+    ${INCLUDESELF}/libre3/process/authorization_round_mixer.c
+    ${INCLUDESELF}/libre3/process/authorization_round_output.c
+    ${INCLUDESELF}/libre3/process/p256_coordinate_codec.c
+    ${INCLUDESELF}/libre3/process/p256_coordinate_reduction.c
+    ${INCLUDESELF}/libre3/process/authorization_round_primary.c
+    ${INCLUDESELF}/libre3/process/authorization_round_secondary.c
+    ${INCLUDESELF}/libre3/process/authorization_vector_reduction.c
+    ${INCLUDESELF}/libre3/process/authorization_vector_feedback.c
+    ${INCLUDESELF}/libre3/process/authorization_round_driver.c
+    ${INCLUDESELF}/libre3/process/challenge_whitebox_block_cipher.cpp
+    ${INCLUDESELF}/libre3/process/openssl_loader.cpp
+    ${INCLUDESELF}/libre3/process/authorization_shared_point_frames.c
+    ${INCLUDESELF}/libre3/process/authorization_shared_point_tail.c
+    ${INCLUDESELF}/libre3/process/authorization_frame_transform.c
+    ${INCLUDESELF}/libre3/process/authorization_digest.c
+    ${INCLUDESELF}/libre3/process/authorization_finalizer.c
+    ${INCLUDESELF}/libre3/process/p256_coordinate_extract.c
+    ${INCLUDESELF}/libre3/process/p256_private_scalar_decoder.c
+    ${INCLUDESELF}/libre3/process/p256_ephemeral_keypair.c
+    ${INCLUDESELF}/libre3/process/challenge_cipher_context.c
+)
+endif()
+add_library( g SHARED  ${LIBRE3SRC} sibionics3/interpretgs3.cpp sibionics3/java.cpp curve/scriptFonts.cpp settings/rtl_label_converter.cpp ${CHECKER_FILE} aidexx/crc.cpp aidexx/initcrypto.cpp  aidexx/java.cpp aidexx/decrypt.cpp aidexx/mkiv.cpp ${NETDIR}/ICE/ContextHTTPS.cpp  ${NETDIR}/ICE/ICE.cpp  ${NETDIR}/ICE/ICE_data.cpp ${NETDIR}/sendcommands.cpp ${NETDIR}/backup.cpp ${NETDIR}/getcommand.cpp ${BCRYPTFILES} meter/java.cpp calibrate/java.cpp  calibrate/calculate.cpp  air/java.cpp   accu/java.cpp  dexcom/java.cpp dexcom/ecJPake.cpp extra/bypassed_dlfcn.c extra/fake_dlfcn.c EverSense.cpp dofirst.cpp settings/exception.cpp prunestream.cpp ${EXTRAVIEW} watch/messages.cpp watch/netinfo.cpp watch/watchvalue.cpp removeoldstates.cpp  ${CURVEDIR}/trjugglucotext.cpp   ${CURVEDIR}/svjugglucotext.cpp    ${CURVEDIR}/zhjugglucotext.cpp  ${CURVEDIR}/ukjugglucotext.cpp  ${CURVEDIR}/bejugglucotext.cpp ${CURVEDIR}/frjugglucotext.cpp ${CURVEDIR}/pljugglucotext.cpp ${CURVEDIR}/ptjugglucotext.cpp  ${CURVEDIR}/jajugglucotext.cpp ${CURVEDIR}/hijugglucotext.cpp ${CURVEDIR}/esjugglucotext.cpp ${CURVEDIR}/uzjugglucotext.cpp ${CURVEDIR}/nljugglucotext.cpp ${CURVEDIR}/dejugglucotext.cpp  ${CURVEDIR}/jugglucotext.cpp  ${CURVEDIR}/itjugglucotext.cpp ${CURVEDIR}/percentile.cpp foods/javabase.cpp ${ASCONFILES} hostJson.cpp backupjava.cpp glucose.cpp ${CURVEDIR}/shownums.cpp g.cpp libre2.cpp jnisub.cpp share/getsockets.cpp share/hooks.cpp wearInt.cpp logjava.cpp share/logs.cpp share/nfcdata.cpp  share/serial.cpp scanstate.cpp statedata.cpp share/timestr.cpp share/savehistory.cpp  ${NANOVG}/nanovg.c  ${CURVEDIR}/search.cpp ${CURVEDIR}/appcurve.cpp ${CURVEDIR}/curve.cpp ${CURVEDIR}/javacurve.cpp export/libreviewexport.cpp export/exports.cpp settings/javasettings.cpp settings/settings.cpp debugclone.cpp ${NETDIR}/watchserver/common.cpp ${NETDIR}/watchserver/getlanguage.cpp ${NETDIR}/watchserver/uploader.cpp  ${NETDIR}/watchserver/uploadtreatment.cpp  ${NETDIR}/watchserver/iob.cpp   ${NETDIR}/watchserver/sslserver.cpp  ${NETDIR}/watchserver/cryptopen.cpp ${NETDIR}/watchserver/watchserver.cpp ${NETDIR}/netstuff.cpp ${NETDIR}/sender.cpp ICEstatus.cpp mirrorstatus.cpp backupinfo.cpp datbackup.cpp nums/numdata.cpp nums/numjava.cpp  meal/mealjava.cpp meal/savemeals.cpp  ${LIBRE3FILES}  ${CURVEDIR}/iwjugglucotext.cpp ${CURVEDIR}/rujugglucotext.cpp  sibionics/handleData.cpp  sibionics/interpret_data.cpp sibionics/eu.cpp sibionics/start.cpp sibionics/process.cpp sibionics/makeWriteCharacter.cpp  ) #  ${CURVEDIR}/iwjugglucotext.cpp 
 target_sources(g PRIVATE "${ARJUGGLUCO_OUTPUT}")
 add_dependencies(g generate_arjugglucotext)
 target_compile_definitions(g PRIVATE  -DUSE_SSL=1 -DANDROID__APP=1  -DJUGGLUCO_APP=1)

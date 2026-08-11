@@ -464,4 +464,25 @@ Endi transmitter data matrixini skanerlang."</string>
     <string name="messagewebserverneed">Veb-serverni faollashtirish uchun chap menyu-&gt;Sozlamalar-&gt;Ma\'lumot almashish-&gt;Veb-server ga o\'ting</string>
     <string name="nostreamvalues">Oqim qiymatlari yo\'q</string>
     <string name="nohistoryvalues">Tarix qiymatlari yo\'q</string>
+
+    <!-- Web server additions file manager -->
+    <string name="webuploadpages">Veb-sahifalarni yuklash</string>
+    <string name="webuploadfiles">Fayllarni yuklash</string>
+    <string name="webuploaddirectory">Katalogni yuklash</string>
+    <string name="webup">Yuqoriga</string>
+    <string name="webcantaccessdirectory">%1$s katalogiga kirib bo‘lmadi</string>
+    <string name="webcantcreatedirectory">%1$s yaratib bo‘lmadi</string>
+    <string name="webcantopenfileselector">Fayl tanlash oynasini ochib bo‘lmadi</string>
+    <string name="webcantopendirectoryselector">Katalog tanlash oynasini ochib bo‘lmadi</string>
+    <string name="webinvaliddirectory">%1$s katalogi yaroqsiz</string>
+    <string name="webuploadingfiles">Fayllar yuklanmoqda…</string>
+    <string name="webuploadingdirectory">Katalog yuklanmoqda…</string>
+    <string name="webuploadresult">Yuklangan fayllar: %1$d; kataloglar: %2$d; muvaffaqiyatsiz: %3$d</string>
+    <string name="webdeletefilequestion">“%1$s” fayli o‘chirilsinmi?</string>
+    <string name="webdeletedirectoryquestion">“%1$s” katalogi va uning ichidagi hamma narsa o‘chirilsinmi?</string>
+    <string name="webdeleting">%1$s o‘chirilmoqda…</string>
+    <string name="webdeleted">%1$s o‘chirildi</string>
+    <string name="webdeletefailed">%1$s ni o‘chirib bo‘lmadi</string>
+    <string name="webdirectoryempty">Bu katalog bo‘sh</string>
+    <string name="webdirectoryentry">[katalog] %1$s</string>
 </resources>

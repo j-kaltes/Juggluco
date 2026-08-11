@@ -487,4 +487,24 @@
     <string name="jugglucoupdate">更新時刻</string>
 
 
+    <!-- Web server additions file manager -->
+    <string name="webuploadpages">ウェブページをアップロード</string>
+    <string name="webuploadfiles">ファイルをアップロード</string>
+    <string name="webuploaddirectory">ディレクトリをアップロード</string>
+    <string name="webup">上へ</string>
+    <string name="webcantaccessdirectory">ディレクトリ %1$s にアクセスできません</string>
+    <string name="webcantcreatedirectory">%1$s を作成できません</string>
+    <string name="webcantopenfileselector">ファイル選択画面を開けません</string>
+    <string name="webcantopendirectoryselector">ディレクトリ選択画面を開けません</string>
+    <string name="webinvaliddirectory">ディレクトリ %1$s は無効です</string>
+    <string name="webuploadingfiles">ファイルをアップロード中…</string>
+    <string name="webuploadingdirectory">ディレクトリをアップロード中…</string>
+    <string name="webuploadresult">アップロードしたファイル: %1$d; ディレクトリ: %2$d; 失敗: %3$d</string>
+    <string name="webdeletefilequestion">ファイル「%1$s」を削除しますか？</string>
+    <string name="webdeletedirectoryquestion">ディレクトリ「%1$s」とその中のすべてを削除しますか？</string>
+    <string name="webdeleting">%1$s を削除中…</string>
+    <string name="webdeleted">%1$s を削除しました</string>
+    <string name="webdeletefailed">%1$s を削除できませんでした</string>
+    <string name="webdirectoryempty">このディレクトリは空です</string>
+    <string name="webdirectoryentry">[ディレクトリ] %1$s</string>
 </resources>

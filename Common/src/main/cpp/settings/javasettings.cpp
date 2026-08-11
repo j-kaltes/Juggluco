@@ -792,7 +792,7 @@ extern "C" JNIEXPORT void  JNICALL   fromjava(setusexdripwebserver)(JNIEnv *env,
 #ifndef WEAROS
     settings->data()->usexdripwebserver=val;
     if(val) {
-        startwatchthread(defaulthttpport);
+        startwatchthread(settings->data()->httpport);
         }
     else {
         stopwatchthread(); 
@@ -1357,6 +1357,13 @@ extern "C" JNIEXPORT void  JNICALL   fromjava(setsslport)(JNIEnv *env, jclass cl
     }
 extern "C" JNIEXPORT jint  JNICALL   fromjava(getsslport)(JNIEnv *env, jclass cl) {
     return settings->data()->sslport;
+    }
+
+extern "C" JNIEXPORT void  JNICALL   fromjava(sethttpport)(JNIEnv *env, jclass cl,jint val) {
+    settings->data()->httpport=val;
+    }
+extern "C" JNIEXPORT jint  JNICALL   fromjava(gethttpport)(JNIEnv *env, jclass cl) {
+    return settings->data()->httpport;
     }
 
 extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getuseuploader)(JNIEnv *env, jclass cl) {

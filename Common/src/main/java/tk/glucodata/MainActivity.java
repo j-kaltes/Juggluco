@@ -1362,6 +1362,8 @@ public static final int IGNORE_BATTERY_OPTIMIZATION_SETTINGS=0x100;
 static final int OVERLAY_PERMISSION_REQUEST_CODE=0x40;
 public static final int REQUEST_SAVE_LOG=0x300;
 public static final int REQUEST_SAVE_LOGCAT=0x301;
+public static final int REQUEST_WEBPAGES=0x302;
+public static final int REQUEST_WEBTREE=0x303;
 //static final private int REQUEST_CHECK_SETTINGS=0x20;
 //public static final int REQUEST_IGNORE_BATTERY_OPTIMIZATIONS=0x300;
 Openfile openfile=null;
@@ -1464,6 +1466,11 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
            ZXing.zXingResult(resultCode, data,this,requestCode);
            return;
            };break;
+    case REQUEST_WEBPAGES:
+    case REQUEST_WEBTREE: {
+            WebPageUpload.onActivityResult(this,requestCode,resultCode,data);
+            return;
+        }
     case REQUEST_SAVE_LOGCAT: 
     case REQUEST_SAVE_LOG: {
             if(resultCode == Activity.RESULT_OK) {

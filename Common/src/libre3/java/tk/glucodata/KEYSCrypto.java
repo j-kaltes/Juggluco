@@ -55,24 +55,22 @@ private final static byte[] dirpubkeyY={(byte)0x59,(byte)0x90,(byte)0xC4,(byte)0
 private static final String LOG_ID="KEYSCrypto";
 final private static int max_keys=2;
 private int securityVersion;
-public boolean initKEYS(byte[] op,int level) {
+public boolean initKEYS(long securityContext,byte[] op,int level) {
 	info(LOG_ID+"::initKEYS start");
 	if(level>= max_keys)
 		return true;
 	securityVersion=level;
-	int resp1=Natives.processint(1,null,null);
 	byte[] privatekey=LIBRE3_APP_PRIVATE_KEYS[level];
-	int resp2=Natives.processint(2,privatekey,op);
-	return true;
+	return Natives.libre3LoadAppKeyAndSavedAuthorization(securityContext,privatekey,op)==1;
 }
 
-public	boolean setPatchCertificate(byte[] input)  {
+public	boolean setPatchCertificate(long securityContext,byte[] input)  {
 	if(input==null) {
 		{if(doLog) {Log.i(LOG_ID,"setPatchCertificate input=null");};};
 		return false;
 		}
        {if(doLog){showbytes(LOG_ID+"setPatchCertificate#"+input.length,input);};}
-	int res= Natives.processint(4, input, null);
+	int res=Natives.libre3AcceptPatchCertificate(securityContext,input);
 	info("end setPatchCertificate "+res);
 	return res==1;
 	}

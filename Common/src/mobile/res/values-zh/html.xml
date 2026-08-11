@@ -976,4 +976,27 @@ Microsoft Excel、Mathematica或R等程序中。这是一种.csv格式，使用�
 <p>（其实就是选择数据发送，选择一个时间开始往后的数据发送上去）选择数据发送到Libreview的日期和时间。当Libreview上已经存在一些数据时，这可能很有用。例如，在使用镜像连接将数据传输到另一部手机后，然后使用这部新手机将数据发送到Libreview。</p>
 ]]>
 </string>
+<string name="webpageshelp" >
+<![CDATA[
+<p><a href="https://www.juggluco.nl/Jugglucohelp/zh/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/webpageshelp.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/webpageshelp.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/webpageshelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/webpageshelp.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/webpageshelp.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/webpageshelp.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/webpageshelp.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/webpageshelp.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/webpageshelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/webpageshelp.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/webpageshelp.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/webpageshelp.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/sv/webpageshelp.html">sv</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/webpageshelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/webpageshelp.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/webpageshelp.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/webpageshelp.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/webpageshelp.html?lang=en">en</a>&emsp;&emsp;</p><h1>网页</h1>
+<p>您可以在这里将文件和目录上传到 Juggluco 中的 Web 服务器。这样，您就可以使用自己或第三方的 html 和 JavaScript，并利用 Juggluco 中的数据。</p>
+<p>上传到这里的文件和目录可通过 Juggluco Web 服务器中的 <b>additions</b>
+访问。上传名为 “<i>mypage.html</i>” 的文件后，可以在此手机的 Web 浏览器中通过
+<a href="http://127.0.0.1:17580/additions/mypage.html">http://127.0.0.1:17580/additions/mypage.html</a>
+查看该文件。<br/>
+<br/>
+<b>上传文件</b>
+将一个或多个选定文件复制到当前显示的目录中。
+</p>
+<p><b>上传目录</b> 复制完整的目录树。同名的现有文件将被替换。<br/>
+<br/>
+点击目录可进入该目录。
+</p>
+<p><b>上一级</b> 或 Android 返回按钮可返回父目录。
+</p>
+<p><b>删除</b> 删除文件，或删除目录及其下面的所有内容。
+</p>
+<p>使用 Juggluco 服务器的命令行版本时，请改为将文件放在 jugglucodata 下的 additions 目录中。</p>
+]]>
+</string>
 </resources>

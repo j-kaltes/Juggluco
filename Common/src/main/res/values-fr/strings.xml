@@ -297,4 +297,25 @@
 <string name="enternums">Enter amounts on</string>
 <string name="directsensor">Connexion directe capteur-</string>
 <string name="connectionl"></string>
+
+    <!-- Web server additions file manager -->
+    <string name="webuploadpages">Téléverser des pages web</string>
+    <string name="webuploadfiles">Téléverser des fichiers</string>
+    <string name="webuploaddirectory">Téléverser un répertoire</string>
+    <string name="webup">Remonter</string>
+    <string name="webcantaccessdirectory">Impossible d’accéder au répertoire %1$s</string>
+    <string name="webcantcreatedirectory">Impossible de créer %1$s</string>
+    <string name="webcantopenfileselector">Impossible d’ouvrir le sélecteur de fichiers</string>
+    <string name="webcantopendirectoryselector">Impossible d’ouvrir le sélecteur de répertoires</string>
+    <string name="webinvaliddirectory">Répertoire %1$s non valide</string>
+    <string name="webuploadingfiles">Téléversement des fichiers…</string>
+    <string name="webuploadingdirectory">Téléversement du répertoire…</string>
+    <string name="webuploadresult">Fichiers téléversés : %1$d ; répertoires : %2$d ; échecs : %3$d</string>
+    <string name="webdeletefilequestion">Supprimer le fichier « %1$s » ?</string>
+    <string name="webdeletedirectoryquestion">Supprimer le répertoire « %1$s » et tout son contenu ?</string>
+    <string name="webdeleting">Suppression de %1$s…</string>
+    <string name="webdeleted">%1$s supprimé</string>
+    <string name="webdeletefailed">Impossible de supprimer %1$s</string>
+    <string name="webdirectoryempty">Ce répertoire est vide</string>
+    <string name="webdirectoryentry">[répertoire] %1$s</string>
 </resources>

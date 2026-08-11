@@ -80,6 +80,7 @@ public class Libre3GattCallback extends SuperGattCallback {
     private boolean shouldenablegattCharCommandResponse = false;
     private boolean isServicesDiscovered = false;
     private final long sensorptr;
+    private long securityContext=0L;
 private final Queue<byte[]> sendqueue = new ConcurrentLinkedQueue<byte[]>();
 private int    lastEventReceived=0;
     private BluetoothGattCharacteristic gattCharPatchDataControl = null;
@@ -100,6 +101,9 @@ void free() {
     super.free();
     {if(doLog) {Log.i(LOG_ID, SerialNumber + ": "+"free");};};
     cancelalarm();
+    var security=securityContext;
+    securityContext=0L;
+    Natives.libre3FreeSecurityContext(security);
     var tmp=cryptptr;
     cryptptr=0L;
     endcrypt(tmp);
@@ -380,7 +384,7 @@ private void mknonceback() {
 
 
 
-var encrypted = Natives.processbar(7, nonce1, uit);
+var encrypted = Natives.libre3EncryptChallengeReply(securityContext,nonce1,uit);
 
 
 
@@ -400,7 +404,7 @@ private void challenge67() {
     byte[] nonce=new byte[7];
     arraycopy(rdtData,0,first,0,60);
     arraycopy(rdtData,60,nonce,0,7);
-    byte[] decr=Natives.processbar(8,nonce,first);
+    byte[] decr=Natives.libre3DecryptChallengeResponse(securityContext,nonce,first);
     Log.showbytes("challenge67 decr",decr);
     var backr2=copyOfRange(decr,0,16);
     if(!java.util.Arrays.equals(r2,backr2)) {
@@ -417,11 +421,11 @@ private void challenge67() {
     var kEnc=copyOfRange(decr,32,48);
     var ivEnc=copyOfRange(decr,48,56);
 //    byte[] AuthKey=KEYSCrypto.exportAuthorizationKey();
-    byte[] AuthKey=Natives.processbar(9,null,null);
-    Log.showbytes("challenge67 AuthKey",AuthKey);
+    byte[] savedAuthorization=Natives.libre3ExportSavedAuthorization(securityContext);
+    Log.showbytes("challenge67 savedAuthorization",savedAuthorization);
     //securityContext=new BCrypt(kEnc,ivEnc);
     cryptptr=initcrypt(cryptptr,kEnc,ivEnc);
-    Natives.setLibre3kAuth(sensorptr,AuthKey);
+    Natives.setLibre3kAuth(sensorptr,savedAuthorization);
     enableNotification(mBluetoothGatt,gattCharPatchDataControl);
     }
 private void receivedCHALLENGE_DATA() {
@@ -474,7 +478,7 @@ private boolean sendSecurityCommand(byte b) {
 private int commandphase=1;
 private void setCertificate140() {
     {if(doLog) {Log.i(LOG_ID, SerialNumber + ": "+"setCertificate140");};};
-    cryptolib.setPatchCertificate(rdtData);
+    cryptolib.setPatchCertificate(securityContext,rdtData);
     if(sendSecurityCommand( (byte)0x0D)) {
         commandphase=4;
         }
@@ -482,7 +486,7 @@ private void setCertificate140() {
 private boolean    generateKAuth(byte[] input) {
     {if(doLog){showbytes(LOG_ID+ " "+SerialNumber +" generateKAuth",input);};}
     //Saves something?
-    return Natives.processint(6,input,null)!=0;
+    return Natives.libre3DeriveAuthorizationRoot(securityContext,input)!=0;
     }
 private boolean setCertificate65() {
     {if(doLog) {Log.i(LOG_ID, SerialNumber + ": "+"setCertificate65");};};
@@ -614,6 +618,15 @@ private boolean    isPreAuthorized=false;
 private void onConnectGatt() {
     isPreAuthorized=false;
     }
+private boolean initSecurityKeys(byte[] savedAuthorization,int level) {
+    long context=Natives.libre3BeginSecurityHandshake(securityContext);
+    if(context==0L) {
+        securityContext=0L;
+        return false;
+        }
+    securityContext=context;
+    return cryptolib.initKEYS(securityContext,savedAuthorization,level);
+    }
 private void handleMSLibre3SecurityNotificationsEnabledEvent() {
     {if(doLog) {Log.i(LOG_ID, SerialNumber + ": "+"handleMSLibre3SecurityNotificationsEnabledEvent");};};
     if(isPreAuthorized) {
@@ -622,7 +635,7 @@ private void handleMSLibre3SecurityNotificationsEnabledEvent() {
         }
     else {
         var exportedKAuth = Natives.getLibre3kAuth(sensorptr);
-        if(cryptolib.initKEYS(exportedKAuth ,1)) {
+        if(initSecurityKeys(exportedKAuth,1)) {
             if(exportedKAuth==null) {
                 {if(doLog) {Log.i(LOG_ID, SerialNumber + ": "+"exportedKAuth==null");};};
                 sendSecurityCommand(1);
@@ -648,7 +661,7 @@ private void init() {
     var exportedKAuth = Natives.getLibre3kAuth(sensorptr);
     if(!isPreAuthorized) {
         if(exportedKAuth!=null) {
-            if(cryptolib.initKEYS(exportedKAuth ,1)) {
+            if(initSecurityKeys(exportedKAuth,1)) {
                 isPreAuthorized=true;
                 commandphase = 5;
                 }
@@ -925,7 +938,7 @@ private int getcomphase() {
     }
 private  byte[]           generateEphemeralKeys() {
 
-    var evikeys=Natives.processbar(5,null,null);
+    var evikeys=Natives.libre3CreateEphemeralPublicKey(securityContext);
     var uit=new byte[evikeys.length+1];
     arraycopy(evikeys,0,uit,1,evikeys.length);
     uit[0]=(byte)0x4;

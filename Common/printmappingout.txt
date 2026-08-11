@@ -3,8 +3,8 @@
 # min_api: 21
 # common_typos_disable
 # {"id":"com.android.tools.r8.mapping","version":"2.2"}
-# pg_map_id: 1666f61af76d0e90ad91a255a28aa30c080265272d2fd935de5ef1c24033aadc
-# pg_map_hash: SHA-256 1666f61af76d0e90ad91a255a28aa30c080265272d2fd935de5ef1c24033aadc
+# pg_map_id: 0cd470a3cca0294343c35ab82a2cdd93d80c7d0050924a47345af0c4e2de866a
+# pg_map_hash: SHA-256 0cd470a3cca0294343c35ab82a2cdd93d80c7d0050924a47345af0c4e2de866a
 android.support.v4.app.RemoteActionCompatParcelizer -> android.support.v4.app.RemoteActionCompatParcelizer:
 # {"id":"sourceFile","fileName":"RemoteActionCompatParcelizer.java"}
     1:4:void <init>():8:8 -> <init>
@@ -7590,7 +7590,7 @@ androidx.appcompat.app.AppLocalesStorageHelper$SerialExecutor$$ExternalSynthetic
     89:92:void tk.glucodata.NightPost.lambda$config$8(android.view.View,android.view.View):410:410 -> run
     89:92:void AppLocalesStorageHelper$SerialExecutor$$ExternalSyntheticLambda0.run():0 -> run
     93:96:void AppLocalesStorageHelper$SerialExecutor$$ExternalSyntheticLambda0.run():0:0 -> run
-    97:102:void tk.glucodata.MainActivity.lambda$runNfcV$21(android.nfc.Tag):1959:1959 -> run
+    97:102:void tk.glucodata.MainActivity.lambda$runNfcV$21(android.nfc.Tag):1966:1966 -> run
     97:102:void AppLocalesStorageHelper$SerialExecutor$$ExternalSyntheticLambda0.run():0 -> run
     103:106:void AppLocalesStorageHelper$SerialExecutor$$ExternalSyntheticLambda0.run():0:0 -> run
     107:111:void tk.glucodata.Libre2GattCallback.lambda$phase2$0(byte[]):600:600 -> run
@@ -42405,7 +42405,7 @@ androidx.profileinstaller.BenchmarkOperation$Api24ContextHelper -> b8:
     147:149:void tk.glucodata.help.basehelp(java.lang.String,android.view.ContextThemeWrapper,tk.glucodata.Consumer,tk.glucodata.Placer,android.view.ViewGroup$MarginLayoutParams):168:168 -> a
     150:152:void tk.glucodata.help.basehelp(java.lang.String,android.view.ContextThemeWrapper,tk.glucodata.Consumer,tk.glucodata.Placer,android.view.ViewGroup$MarginLayoutParams):169:169 -> a
     153:162:void tk.glucodata.help.basehelp(java.lang.String,android.view.ContextThemeWrapper,tk.glucodata.Consumer,tk.glucodata.Placer,android.view.ViewGroup$MarginLayoutParams):171:171 -> a
-    163:165:void tk.glucodata.MainActivity.addMyContentView(android.app.Activity,android.view.View,android.view.ViewGroup$LayoutParams):1969:1969 -> a
+    163:165:void tk.glucodata.MainActivity.addMyContentView(android.app.Activity,android.view.View,android.view.ViewGroup$LayoutParams):1976:1976 -> a
     163:165:void tk.glucodata.help.basehelp(java.lang.String,android.view.ContextThemeWrapper,tk.glucodata.Consumer,tk.glucodata.Placer,android.view.ViewGroup$MarginLayoutParams):171 -> a
     166:175:void tk.glucodata.help.basehelp(java.lang.String,android.view.ContextThemeWrapper,tk.glucodata.Consumer,tk.glucodata.Placer,android.view.ViewGroup$MarginLayoutParams):202:202 -> a
     176:182:void tk.glucodata.help.basehelp(java.lang.String,android.view.ContextThemeWrapper,tk.glucodata.Consumer,tk.glucodata.Placer,android.view.ViewGroup$MarginLayoutParams):209:209 -> a
@@ -42472,7 +42472,7 @@ androidx.profileinstaller.BenchmarkOperation$Api24ContextHelper -> b8:
     197:199:void tk.glucodata.help.help(java.lang.String,android.view.ContextThemeWrapper,tk.glucodata.Consumer):363 -> f
     200:208:void tk.glucodata.help.help(java.lang.String,android.view.ContextThemeWrapper,tk.glucodata.Consumer,tk.glucodata.Placer,android.view.ViewGroup$MarginLayoutParams):255:255 -> f
     200:208:void tk.glucodata.help.help(java.lang.String,android.view.ContextThemeWrapper,tk.glucodata.Consumer):363 -> f
-    209:211:void tk.glucodata.MainActivity.addMyContentView(android.app.Activity,android.view.View,android.view.ViewGroup$LayoutParams):1969:1969 -> f
+    209:211:void tk.glucodata.MainActivity.addMyContentView(android.app.Activity,android.view.View,android.view.ViewGroup$LayoutParams):1976:1976 -> f
     209:211:void tk.glucodata.help.help(java.lang.String,android.view.ContextThemeWrapper,tk.glucodata.Consumer,tk.glucodata.Placer,android.view.ViewGroup$MarginLayoutParams):255 -> f
     209:211:void tk.glucodata.help.help(java.lang.String,android.view.ContextThemeWrapper,tk.glucodata.Consumer):363 -> f
     212:214:void tk.glucodata.help.help(java.lang.String,android.view.ContextThemeWrapper,tk.glucodata.Consumer,tk.glucodata.Placer,android.view.ViewGroup$MarginLayoutParams):256:256 -> f
@@ -74366,7 +74366,7 @@ kotlin.jvm.internal.TypeIntrinsics -> yz:
     246:248:void tk.glucodata.settings.Broadcasts.getselected(tk.glucodata.MainActivity,android.view.View,java.lang.String,java.lang.String[],java.util.ArrayList,tk.glucodata.Consumer):167:167 -> E
     249:251:void tk.glucodata.settings.Broadcasts.getselected(tk.glucodata.MainActivity,android.view.View,java.lang.String,java.lang.String[],java.util.ArrayList,tk.glucodata.Consumer):168:168 -> E
     252:257:void tk.glucodata.settings.Broadcasts.getselected(tk.glucodata.MainActivity,android.view.View,java.lang.String,java.lang.String[],java.util.ArrayList,tk.glucodata.Consumer):171:171 -> E
-    258:260:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1975:1975 -> E
+    258:260:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1982:1982 -> E
     258:260:void tk.glucodata.settings.Broadcasts.getselected(tk.glucodata.MainActivity,android.view.View,java.lang.String,java.lang.String[],java.util.ArrayList,tk.glucodata.Consumer):173 -> E
     261:268:void tk.glucodata.settings.Broadcasts.getselected(tk.glucodata.MainActivity,android.view.View,java.lang.String,java.lang.String[],java.util.ArrayList,tk.glucodata.Consumer):174:174 -> E
     269:271:void tk.glucodata.settings.Broadcasts.getselected(tk.glucodata.MainActivity,android.view.View,java.lang.String,java.lang.String[],java.util.ArrayList,tk.glucodata.Consumer):183:183 -> E
@@ -76342,7 +76342,7 @@ kotlinx.coroutines.DebugStringsKt -> yc:
     39:43:void tk.glucodata.FloatingConfig.showcolors(tk.glucodata.MainActivity):278:278 -> K
     44:66:void tk.glucodata.FloatingConfig.showcolors(tk.glucodata.MainActivity):279:279 -> K
     67:72:void tk.glucodata.FloatingConfig.showcolors(tk.glucodata.MainActivity):280:280 -> K
-    73:75:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1975:1975 -> K
+    73:75:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1982:1982 -> K
     73:75:void tk.glucodata.FloatingConfig.showcolors(tk.glucodata.MainActivity):280 -> K
       # {"id":"com.android.tools.r8.rewriteFrame","conditions":["throws(Ljava/lang/NullPointerException;)"],"actions":["removeInnerFrames(1)"]}
     76:80:void tk.glucodata.FloatingConfig.showcolors(tk.glucodata.MainActivity):281:281 -> K
@@ -76350,7 +76350,7 @@ kotlinx.coroutines.DebugStringsKt -> yc:
     89:102:void tk.glucodata.FloatingConfig.showcolors(tk.glucodata.MainActivity):283:283 -> K
     103:111:void tk.glucodata.FloatingConfig.showcolors(tk.glucodata.MainActivity):285:285 -> K
     112:119:void tk.glucodata.FloatingConfig.showcolors(tk.glucodata.MainActivity):288:288 -> K
-    120:135:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1975:1975 -> K
+    120:135:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1982:1982 -> K
     120:135:void tk.glucodata.FloatingConfig.showcolors(tk.glucodata.MainActivity):289 -> K
     136:138:void tk.glucodata.FloatingConfig.showcolors(tk.glucodata.MainActivity):295:295 -> K
     139:148:void tk.glucodata.FloatingConfig.showcolors(tk.glucodata.MainActivity):297:297 -> K
@@ -80929,45 +80929,45 @@ tk.glucodata.Applic$$ExternalSyntheticLambda3 -> z5:
     12:17:void tk.glucodata.bluediag.lambda$new$20(tk.glucodata.SuperGattCallback,tk.glucodata.MainActivity):599:599 -> run
     12:17:void Applic$$ExternalSyntheticLambda3.run():0 -> run
     18:20:void Applic$$ExternalSyntheticLambda3.run():0:0 -> run
-    21:24:void tk.glucodata.MainActivity.needsLocation():1801:1801 -> run
-    21:24:void tk.glucodata.MainActivity.lambda$systemlocation$19():1762 -> run
+    21:24:void tk.glucodata.MainActivity.needsLocation():1808:1808 -> run
+    21:24:void tk.glucodata.MainActivity.lambda$systemlocation$19():1769 -> run
     21:24:void Applic$$ExternalSyntheticLambda3.run():0 -> run
-    25:33:void tk.glucodata.MainActivity.needsLocation():1803:1803 -> run
-    25:33:void tk.glucodata.MainActivity.lambda$systemlocation$19():1762 -> run
+    25:33:void tk.glucodata.MainActivity.needsLocation():1810:1810 -> run
+    25:33:void tk.glucodata.MainActivity.lambda$systemlocation$19():1769 -> run
     25:33:void Applic$$ExternalSyntheticLambda3.run():0 -> run
-    34:35:void tk.glucodata.MainActivity.needsLocation():1804:1804 -> run
-    34:35:void tk.glucodata.MainActivity.lambda$systemlocation$19():1762 -> run
+    34:35:void tk.glucodata.MainActivity.needsLocation():1811:1811 -> run
+    34:35:void tk.glucodata.MainActivity.lambda$systemlocation$19():1769 -> run
     34:35:void Applic$$ExternalSyntheticLambda3.run():0 -> run
     36:37:androidx.appcompat.app.AlertDialog$Builder androidx.appcompat.app.AlertDialog$Builder.setTitle(java.lang.CharSequence):377:377 -> run
-    36:37:void tk.glucodata.MainActivity.needsLocation():1804 -> run
-    36:37:void tk.glucodata.MainActivity.lambda$systemlocation$19():1762 -> run
+    36:37:void tk.glucodata.MainActivity.needsLocation():1811 -> run
+    36:37:void tk.glucodata.MainActivity.lambda$systemlocation$19():1769 -> run
     36:37:void Applic$$ExternalSyntheticLambda3.run():0 -> run
-    38:39:void tk.glucodata.MainActivity.needsLocation():1804:1804 -> run
-    38:39:void tk.glucodata.MainActivity.lambda$systemlocation$19():1762 -> run
+    38:39:void tk.glucodata.MainActivity.needsLocation():1811:1811 -> run
+    38:39:void tk.glucodata.MainActivity.lambda$systemlocation$19():1769 -> run
     38:39:void Applic$$ExternalSyntheticLambda3.run():0 -> run
     40:41:androidx.appcompat.app.AlertDialog$Builder androidx.appcompat.app.AlertDialog$Builder.setMessage(java.lang.CharSequence):418:418 -> run
-    40:41:void tk.glucodata.MainActivity.needsLocation():1805 -> run
-    40:41:void tk.glucodata.MainActivity.lambda$systemlocation$19():1762 -> run
+    40:41:void tk.glucodata.MainActivity.needsLocation():1812 -> run
+    40:41:void tk.glucodata.MainActivity.lambda$systemlocation$19():1769 -> run
     40:41:void Applic$$ExternalSyntheticLambda3.run():0 -> run
-    42:44:void tk.glucodata.MainActivity.needsLocation():1805:1805 -> run
-    42:44:void tk.glucodata.MainActivity.lambda$systemlocation$19():1762 -> run
+    42:44:void tk.glucodata.MainActivity.needsLocation():1812:1812 -> run
+    42:44:void tk.glucodata.MainActivity.lambda$systemlocation$19():1769 -> run
     42:44:void Applic$$ExternalSyntheticLambda3.run():0 -> run
-    45:47:void tk.glucodata.MainActivity$3.<init>():1806:1806 -> run
-    45:47:void tk.glucodata.MainActivity.needsLocation():1805 -> run
-    45:47:void tk.glucodata.MainActivity.lambda$systemlocation$19():1762 -> run
+    45:47:void tk.glucodata.MainActivity$3.<init>():1813:1813 -> run
+    45:47:void tk.glucodata.MainActivity.needsLocation():1812 -> run
+    45:47:void tk.glucodata.MainActivity.lambda$systemlocation$19():1769 -> run
     45:47:void Applic$$ExternalSyntheticLambda3.run():0 -> run
-    48:55:void tk.glucodata.MainActivity.needsLocation():1806:1806 -> run
-    48:55:void tk.glucodata.MainActivity.lambda$systemlocation$19():1762 -> run
+    48:55:void tk.glucodata.MainActivity.needsLocation():1813:1813 -> run
+    48:55:void tk.glucodata.MainActivity.lambda$systemlocation$19():1769 -> run
     48:55:void Applic$$ExternalSyntheticLambda3.run():0 -> run
     56:57:androidx.appcompat.app.AlertDialog$Builder androidx.appcompat.app.AlertDialog$Builder.setOnCancelListener(android.content.DialogInterface$OnCancelListener):600:600 -> run
-    56:57:void tk.glucodata.MainActivity.needsLocation():1811 -> run
-    56:57:void tk.glucodata.MainActivity.lambda$systemlocation$19():1762 -> run
+    56:57:void tk.glucodata.MainActivity.needsLocation():1818 -> run
+    56:57:void tk.glucodata.MainActivity.lambda$systemlocation$19():1769 -> run
     56:57:void Applic$$ExternalSyntheticLambda3.run():0 -> run
-    58:66:void tk.glucodata.MainActivity.needsLocation():1811:1811 -> run
-    58:66:void tk.glucodata.MainActivity.lambda$systemlocation$19():1762 -> run
+    58:66:void tk.glucodata.MainActivity.needsLocation():1818:1818 -> run
+    58:66:void tk.glucodata.MainActivity.lambda$systemlocation$19():1769 -> run
     58:66:void Applic$$ExternalSyntheticLambda3.run():0 -> run
-    67:72:void tk.glucodata.MainActivity.needsLocation():1814:1814 -> run
-    67:72:void tk.glucodata.MainActivity.lambda$systemlocation$19():1762 -> run
+    67:72:void tk.glucodata.MainActivity.needsLocation():1821:1821 -> run
+    67:72:void tk.glucodata.MainActivity.lambda$systemlocation$19():1769 -> run
     67:72:void Applic$$ExternalSyntheticLambda3.run():0 -> run
     73:76:void tk.glucodata.Applic$1.lambda$onLost$1():535:535 -> run
     73:76:void Applic$$ExternalSyntheticLambda3.run():0 -> run
@@ -81314,7 +81314,7 @@ tk.glucodata.Backup -> v7:
     137:137:void changehostview(tk.glucodata.MainActivity,int,java.lang.String[],boolean,java.lang.String,java.lang.String,android.view.View):740 -> a
     138:144:void makehostview(tk.glucodata.MainActivity):705:711 -> a
     138:144:void changehostview(tk.glucodata.MainActivity,int,java.lang.String[],boolean,java.lang.String,java.lang.String,android.view.View):740 -> a
-    145:145:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1975:1975 -> a
+    145:145:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1982:1982 -> a
     145:145:void makehostview(tk.glucodata.MainActivity):711 -> a
     145:145:void changehostview(tk.glucodata.MainActivity,int,java.lang.String[],boolean,java.lang.String,java.lang.String,android.view.View):740 -> a
     146:147:void makehostview(tk.glucodata.MainActivity):712:713 -> a
@@ -81453,7 +81453,7 @@ tk.glucodata.Backup -> v7:
     636:638:void realmkbackupview(tk.glucodata.MainActivity,boolean):1156:1156 -> d
     639:643:void realmkbackupview(tk.glucodata.MainActivity,boolean):1158:1158 -> d
     644:648:void realmkbackupview(tk.glucodata.MainActivity,boolean):1160:1160 -> d
-    649:652:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1975:1975 -> d
+    649:652:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1982:1982 -> d
     649:652:void realmkbackupview(tk.glucodata.MainActivity,boolean):1160 -> d
 tk.glucodata.Backup$$ExternalSyntheticLambda0 -> v6:
 # {"id":"sourceFile","fileName":"R8$$SyntheticClass"}
@@ -82546,11 +82546,11 @@ tk.glucodata.Backup$$ExternalSyntheticLambda5 -> k7:
     196:199:void tk.glucodata.Switch.lambda$choice$3(tk.glucodata.CheckDirectionBox,tk.glucodata.CheckDirectionBox,tk.glucodata.MainActivity,android.view.View):98:98 -> onClick
     196:199:void Backup$$ExternalSyntheticLambda5.onClick(android.view.View):0 -> onClick
     200:203:void Backup$$ExternalSyntheticLambda5.onClick(android.view.View):0:0 -> onClick
-    204:207:tk.glucodata.NumberView tk.glucodata.MainActivity.getnumberview():1604:1604 -> onClick
+    204:207:tk.glucodata.NumberView tk.glucodata.MainActivity.getnumberview():1611:1611 -> onClick
     204:207:void tk.glucodata.settings.Settings.lambda$changeProfile$16(tk.glucodata.MainActivity,short[],android.widget.Button,android.view.View):560 -> onClick
       # {"id":"com.android.tools.r8.rewriteFrame","conditions":["throws(Ljava/lang/NullPointerException;)"],"actions":["removeInnerFrames(1)"]}
     204:207:void Backup$$ExternalSyntheticLambda5.onClick(android.view.View):0 -> onClick
-    208:209:tk.glucodata.NumberView tk.glucodata.MainActivity.getnumberview():1604:1604 -> onClick
+    208:209:tk.glucodata.NumberView tk.glucodata.MainActivity.getnumberview():1611:1611 -> onClick
     208:209:void tk.glucodata.settings.Settings.lambda$changeProfile$16(tk.glucodata.MainActivity,short[],android.widget.Button,android.view.View):560 -> onClick
     208:209:void Backup$$ExternalSyntheticLambda5.onClick(android.view.View):0 -> onClick
     210:230:void tk.glucodata.settings.Settings.lambda$changeProfile$16(tk.glucodata.MainActivity,short[],android.widget.Button,android.view.View):560:560 -> onClick
@@ -82618,7 +82618,7 @@ tk.glucodata.Backup$$ExternalSyntheticLambda5 -> k7:
     314:318:void tk.glucodata.CalibrateList.show(tk.glucodata.MainActivity,long,android.view.View):392:392 -> onClick
     314:318:void tk.glucodata.Sensors.lambda$new$6(tk.glucodata.MainActivity,android.widget.ScrollView,android.view.View):270 -> onClick
     314:318:void Backup$$ExternalSyntheticLambda5.onClick(android.view.View):0 -> onClick
-    319:321:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1975:1975 -> onClick
+    319:321:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1982:1982 -> onClick
     319:321:void tk.glucodata.CalibrateList.show(tk.glucodata.MainActivity,long,android.view.View):392 -> onClick
     319:321:void tk.glucodata.Sensors.lambda$new$6(tk.glucodata.MainActivity,android.widget.ScrollView,android.view.View):270 -> onClick
     319:321:void Backup$$ExternalSyntheticLambda5.onClick(android.view.View):0 -> onClick
@@ -82751,7 +82751,7 @@ tk.glucodata.Backup$$ExternalSyntheticLambda6 -> l7:
     454:459:void tk.glucodata.Backup.lambda$realmkbackupview$46(tk.glucodata.MainActivity,android.view.View,android.view.View):1118 -> onClick
     460:462:void tk.glucodata.TurnServer.show(tk.glucodata.MainActivity,android.view.View):133:133 -> onClick
     460:462:void tk.glucodata.Backup.lambda$realmkbackupview$46(tk.glucodata.MainActivity,android.view.View,android.view.View):1118 -> onClick
-    463:465:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1975:1975 -> onClick
+    463:465:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1982:1982 -> onClick
     463:465:void tk.glucodata.TurnServer.show(tk.glucodata.MainActivity,android.view.View):134 -> onClick
     463:465:void tk.glucodata.Backup.lambda$realmkbackupview$46(tk.glucodata.MainActivity,android.view.View,android.view.View):1118 -> onClick
     466:473:void tk.glucodata.TurnServer.show(tk.glucodata.MainActivity,android.view.View):135:135 -> onClick
@@ -82804,12 +82804,12 @@ tk.glucodata.Backup$1 -> n7:
     1:1:void tk.glucodata.NumberView$1.onClick(android.content.DialogInterface,int):633:633 -> e
     1:1:void tk.glucodata.setNumAlarm$1.onClick(android.content.DialogInterface,int):343:343 -> f
     7:10:void tk.glucodata.NightPost$2.onClick(android.content.DialogInterface,int):277:277 -> onClick
-    11:14:void tk.glucodata.MainActivity.enableLocationSettings():1819:1819 -> onClick
-    11:14:void tk.glucodata.MainActivity$3.onClick(android.content.DialogInterface,int):1809 -> onClick
-    15:21:void tk.glucodata.MainActivity.enableLocationSettings():1822:1822 -> onClick
-    15:21:void tk.glucodata.MainActivity$3.onClick(android.content.DialogInterface,int):1809 -> onClick
-    22:26:void tk.glucodata.MainActivity.enableLocationSettings():1823:1823 -> onClick
-    22:26:void tk.glucodata.MainActivity$3.onClick(android.content.DialogInterface,int):1809 -> onClick
+    11:14:void tk.glucodata.MainActivity.enableLocationSettings():1826:1826 -> onClick
+    11:14:void tk.glucodata.MainActivity$3.onClick(android.content.DialogInterface,int):1816 -> onClick
+    15:21:void tk.glucodata.MainActivity.enableLocationSettings():1829:1829 -> onClick
+    15:21:void tk.glucodata.MainActivity$3.onClick(android.content.DialogInterface,int):1816 -> onClick
+    22:26:void tk.glucodata.MainActivity.enableLocationSettings():1830:1830 -> onClick
+    22:26:void tk.glucodata.MainActivity$3.onClick(android.content.DialogInterface,int):1816 -> onClick
 tk.glucodata.Backup$2 -> o7:
 # {"id":"sourceFile","fileName":"Backup.java"}
     int Backup$2.$r8$classId -> a
@@ -83158,7 +83158,7 @@ tk.glucodata.Backup$HostViewHolder$$ExternalSyntheticLambda0 -> s7:
     446:451:void tk.glucodata.settings.Settings.exchanges(tk.glucodata.MainActivity,android.view.View):1686:1686 -> onClick
     446:451:void tk.glucodata.settings.Settings.lambda$mksettings$79(tk.glucodata.MainActivity,tk.glucodata.Layout,android.view.View):1466 -> onClick
     446:451:void Backup$HostViewHolder$$ExternalSyntheticLambda0.onClick(android.view.View):0 -> onClick
-    452:454:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1975:1975 -> onClick
+    452:454:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1982:1982 -> onClick
     452:454:void tk.glucodata.settings.Settings.exchanges(tk.glucodata.MainActivity,android.view.View):1686 -> onClick
     452:454:void tk.glucodata.settings.Settings.lambda$mksettings$79(tk.glucodata.MainActivity,tk.glucodata.Layout,android.view.View):1466 -> onClick
     452:454:void Backup$HostViewHolder$$ExternalSyntheticLambda0.onClick(android.view.View):0 -> onClick
@@ -83341,7 +83341,7 @@ tk.glucodata.Backup$HostViewHolder$$ExternalSyntheticLambda0 -> s7:
     881:888:void tk.glucodata.Backup.showhostinfo(tk.glucodata.MainActivity,android.view.View,int):941:941 -> onClick
     881:888:void tk.glucodata.Backup$HostViewHolder.lambda$new$0(android.view.View,android.view.View):1169 -> onClick
     881:888:void Backup$HostViewHolder$$ExternalSyntheticLambda0.onClick(android.view.View):0 -> onClick
-    889:891:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1975:1975 -> onClick
+    889:891:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1982:1982 -> onClick
     889:891:void tk.glucodata.Backup.showhostinfo(tk.glucodata.MainActivity,android.view.View,int):943 -> onClick
     889:891:void tk.glucodata.Backup$HostViewHolder.lambda$new$0(android.view.View,android.view.View):1169 -> onClick
     889:891:void Backup$HostViewHolder$$ExternalSyntheticLambda0.onClick(android.view.View):0 -> onClick
@@ -84800,7 +84800,7 @@ tk.glucodata.GlucoseCurve$GestureListener -> lj:
     590:591:boolean onSingleTapUp(android.view.MotionEvent):593 -> onSingleTapUp
     592:598:void tk.glucodata.GlucoseCurve.getnumcontrol(tk.glucodata.MainActivity):319:319 -> onSingleTapUp
     592:598:boolean onSingleTapUp(android.view.MotionEvent):593 -> onSingleTapUp
-    599:601:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1975:1975 -> onSingleTapUp
+    599:601:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1982:1982 -> onSingleTapUp
     599:601:void tk.glucodata.GlucoseCurve.getnumcontrol(tk.glucodata.MainActivity):319 -> onSingleTapUp
     599:601:boolean onSingleTapUp(android.view.MotionEvent):593 -> onSingleTapUp
     602:614:void tk.glucodata.GlucoseCurve.getnumcontrol(tk.glucodata.MainActivity):320:320 -> onSingleTapUp
@@ -84928,7 +84928,7 @@ tk.glucodata.GlucoseCurve$GestureListener -> lj:
     1237:1239:boolean onSingleTapUp(android.view.MotionEvent):542 -> onSingleTapUp
     1240:1245:void tk.glucodata.Display.show(tk.glucodata.MainActivity):75:75 -> onSingleTapUp
     1240:1245:boolean onSingleTapUp(android.view.MotionEvent):542 -> onSingleTapUp
-    1246:1248:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1975:1975 -> onSingleTapUp
+    1246:1248:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1982:1982 -> onSingleTapUp
     1246:1248:void tk.glucodata.Display.show(tk.glucodata.MainActivity):75 -> onSingleTapUp
     1246:1248:boolean onSingleTapUp(android.view.MotionEvent):542 -> onSingleTapUp
     1249:1257:void tk.glucodata.Display.show(tk.glucodata.MainActivity):76:76 -> onSingleTapUp
@@ -85909,7 +85909,7 @@ tk.glucodata.MainActivity -> tk.glucodata.MainActivity:
     12:14:void <clinit>():743:743 -> <clinit>
     15:16:void <clinit>():1112:1112 -> <clinit>
     17:18:void <clinit>():1113:1113 -> <clinit>
-    19:26:void <clinit>():1607:1607 -> <clinit>
+    19:26:void <clinit>():1614:1614 -> <clinit>
     1:4:void <init>():119:119 -> <init>
     5:6:void <init>():128:128 -> <init>
     7:9:void <init>():131:131 -> <init>
@@ -85918,11 +85918,11 @@ tk.glucodata.MainActivity -> tk.glucodata.MainActivity:
     16:17:void <init>():870:870 -> <init>
     18:19:void <init>():1087:1087 -> <init>
     20:21:void <init>():1184:1184 -> <init>
-    22:23:void <init>():1367:1367 -> <init>
-    24:25:void <init>():1695:1695 -> <init>
-    26:28:void <init>():1951:1951 -> <init>
-    29:30:void <init>():1966:1966 -> <init>
-    31:36:void clearonback():1629:1629 -> <init>
+    22:23:void <init>():1369:1369 -> <init>
+    24:25:void <init>():1702:1702 -> <init>
+    26:28:void <init>():1958:1958 -> <init>
+    29:30:void <init>():1973:1973 -> <init>
+    31:36:void clearonback():1636:1636 -> <init>
     31:36:void <init>():120 -> <init>
     5:11:void handleIntent(android.content.Intent):595:595 -> A
     12:19:void handleIntent(android.content.Intent):597:597 -> A
@@ -86022,17 +86022,17 @@ tk.glucodata.MainActivity -> tk.glucodata.MainActivity:
     32:33:androidx.appcompat.app.AlertDialog$Builder androidx.appcompat.app.AlertDialog$Builder.setMessage(java.lang.CharSequence):418:418 -> D
     32:33:void outofStorageSpace():947 -> D
     34:41:void outofStorageSpace():947:947 -> D
-    1:8:void poponback():1625:1625 -> E
-    9:12:void poponback():1626:1626 -> E
+    1:8:void poponback():1632:1632 -> E
+    9:12:void poponback():1633:1633 -> E
     1:4:void requestRender():1163:1163 -> F
     5:8:void requestRender():1164:1164 -> F
     1:14:void setSystemUI(boolean):1067:1067 -> G
     15:19:void setSystemUI(boolean):1074:1074 -> G
     20:27:void setSystemUI(boolean):1077:1077 -> G
-    3:5:void setbluetoothmain(boolean):1919:1919 -> H
-    6:21:void setbluetoothmain(boolean):1920:1920 -> H
-    22:28:void setbluetoothmain(boolean):1921:1921 -> H
-    29:32:void setbluetoothmain(boolean):1926:1926 -> H
+    3:5:void setbluetoothmain(boolean):1926:1926 -> H
+    6:21:void setbluetoothmain(boolean):1927:1927 -> H
+    22:28:void setbluetoothmain(boolean):1928:1928 -> H
+    29:32:void setbluetoothmain(boolean):1933:1933 -> H
     1:4:void setnfc():677:677 -> I
     5:13:void setnfc():678:678 -> I
     14:18:void setnfc():681:681 -> I
@@ -86047,26 +86047,26 @@ tk.glucodata.MainActivity -> tk.glucodata.MainActivity:
     67:72:void setnfc():729:729 -> I
     73:78:void tk.glucodata.Log.e(java.lang.String,java.lang.String):106:106 -> I
     73:78:void setnfc():729 -> I
-    1:6:void setonback(java.lang.Runnable):1613:1613 -> J
-    4:5:void cancelglucosedialog():1697:1697 -> K
-    4:5:void showindialog(java.lang.String,boolean):1714 -> K
-    6:9:void cancelglucosedialog():1698:1698 -> K
-    6:9:void showindialog(java.lang.String,boolean):1714 -> K
-    10:12:void cancelglucosedialog():1699:1699 -> K
-    10:12:void showindialog(java.lang.String,boolean):1714 -> K
-    13:14:void cancelglucosedialog():1700:1700 -> K
-    13:14:void showindialog(java.lang.String,boolean):1714 -> K
-    15:19:void showindialog(java.lang.String,boolean):1716:1716 -> K
-    20:30:void showindialog(java.lang.String,boolean):1717:1717 -> K
+    1:6:void setonback(java.lang.Runnable):1620:1620 -> J
+    4:5:void cancelglucosedialog():1704:1704 -> K
+    4:5:void showindialog(java.lang.String,boolean):1721 -> K
+    6:9:void cancelglucosedialog():1705:1705 -> K
+    6:9:void showindialog(java.lang.String,boolean):1721 -> K
+    10:12:void cancelglucosedialog():1706:1706 -> K
+    10:12:void showindialog(java.lang.String,boolean):1721 -> K
+    13:14:void cancelglucosedialog():1707:1707 -> K
+    13:14:void showindialog(java.lang.String,boolean):1721 -> K
+    15:19:void showindialog(java.lang.String,boolean):1723:1723 -> K
+    20:30:void showindialog(java.lang.String,boolean):1724:1724 -> K
     31:38:androidx.appcompat.app.AlertDialog$Builder androidx.appcompat.app.AlertDialog$Builder.setTitle(java.lang.CharSequence):377:377 -> K
-    31:38:void showindialog(java.lang.String,boolean):1725 -> K
+    31:38:void showindialog(java.lang.String,boolean):1732 -> K
     39:40:androidx.appcompat.app.AlertDialog$Builder androidx.appcompat.app.AlertDialog$Builder.setMessage(java.lang.CharSequence):418:418 -> K
-    39:40:void showindialog(java.lang.String,boolean):1725 -> K
-    41:45:void showindialog(java.lang.String,boolean):1725:1725 -> K
-    46:48:void showindialog(java.lang.String,boolean):1726:1726 -> K
-    49:56:void showindialog(java.lang.String,boolean):1727:1727 -> K
-    57:61:void showindialog(java.lang.String,boolean):1737:1737 -> K
-    62:64:void showindialog(java.lang.String,boolean):1739:1739 -> K
+    39:40:void showindialog(java.lang.String,boolean):1732 -> K
+    41:45:void showindialog(java.lang.String,boolean):1732:1732 -> K
+    46:48:void showindialog(java.lang.String,boolean):1733:1733 -> K
+    49:56:void showindialog(java.lang.String,boolean):1734:1734 -> K
+    57:61:void showindialog(java.lang.String,boolean):1744:1744 -> K
+    62:64:void showindialog(java.lang.String,boolean):1746:1746 -> K
     2:5:void startnfc(android.nfc.Tag):878:878 -> L
     6:11:void startnfc(android.nfc.Tag):879:879 -> L
     12:16:void startnfc(android.nfc.Tag):880:880 -> L
@@ -86076,109 +86076,109 @@ tk.glucodata.MainActivity -> tk.glucodata.MainActivity:
     34:35:void startnfc(android.nfc.Tag):915:915 -> L
     36:47:boolean hasTech(java.lang.String[],java.lang.String):936:936 -> L
     36:47:void startnfc(android.nfc.Tag):915 -> L
-    48:65:void runNfcV(android.nfc.Tag):1958:1958 -> L
+    48:65:void runNfcV(android.nfc.Tag):1965:1965 -> L
     48:65:void startnfc(android.nfc.Tag):916 -> L
-    66:80:void runNfcV(android.nfc.Tag):1959:1959 -> L
+    66:80:void runNfcV(android.nfc.Tag):1966:1966 -> L
     66:80:void startnfc(android.nfc.Tag):916 -> L
-    81:85:void runNfcV(android.nfc.Tag):1961:1961 -> L
+    81:85:void runNfcV(android.nfc.Tag):1968:1968 -> L
     81:85:void startnfc(android.nfc.Tag):916 -> L
     86:92:void startnfc(android.nfc.Tag):917:917 -> L
     93:96:void startnfc(android.nfc.Tag):933:933 -> L
-    1:23:boolean systemlocation():1755:1755 -> M
-    24:40:int getLocationMode(android.content.Context):1748:1748 -> M
-    24:40:boolean isLocationEnabled(android.content.Context):1751 -> M
-    24:40:boolean systemlocation():1760 -> M
-    41:53:boolean systemlocation():1762:1762 -> M
-    54:62:boolean systemlocation():1768:1768 -> M
-    1:6:void onActivityResult(int,int,android.content.Intent):1403:1403 -> onActivityResult
-    7:45:void onActivityResult(int,int,android.content.Intent):1405:1405 -> onActivityResult
-    46:53:void onActivityResult(int,int,android.content.Intent):1471:1471 -> onActivityResult
-    54:65:void onActivityResult(int,int,android.content.Intent):1477:1477 -> onActivityResult
-    66:71:void onActivityResult(int,int,android.content.Intent):1479:1479 -> onActivityResult
-    72:85:void onActivityResult(int,int,android.content.Intent):1477:1477 -> onActivityResult
-    86:90:void onActivityResult(int,int,android.content.Intent):1480:1480 -> onActivityResult
-    91:95:void onActivityResult(int,int,android.content.Intent):1485:1485 -> onActivityResult
-    96:100:void onActivityResult(int,int,android.content.Intent):1487:1487 -> onActivityResult
-    101:106:void onActivityResult(int,int,android.content.Intent):1481:1481 -> onActivityResult
-    107:110:void onActivityResult(int,int,android.content.Intent):1439:1439 -> onActivityResult
-    111:112:void tk.glucodata.Openfile.getlib(android.content.Intent,tk.glucodata.MainActivity):132:132 -> onActivityResult
-    111:112:void onActivityResult(int,int,android.content.Intent):1440 -> onActivityResult
+    1:23:boolean systemlocation():1762:1762 -> M
+    24:40:int getLocationMode(android.content.Context):1755:1755 -> M
+    24:40:boolean isLocationEnabled(android.content.Context):1758 -> M
+    24:40:boolean systemlocation():1767 -> M
+    41:53:boolean systemlocation():1769:1769 -> M
+    54:62:boolean systemlocation():1775:1775 -> M
+    1:6:void onActivityResult(int,int,android.content.Intent):1405:1405 -> onActivityResult
+    7:40:void onActivityResult(int,int,android.content.Intent):1407:1407 -> onActivityResult
+    41:48:void onActivityResult(int,int,android.content.Intent):1478:1478 -> onActivityResult
+    49:60:void onActivityResult(int,int,android.content.Intent):1484:1484 -> onActivityResult
+    61:66:void onActivityResult(int,int,android.content.Intent):1486:1486 -> onActivityResult
+    67:80:void onActivityResult(int,int,android.content.Intent):1484:1484 -> onActivityResult
+    81:87:void onActivityResult(int,int,android.content.Intent):1487:1487 -> onActivityResult
+    88:92:void onActivityResult(int,int,android.content.Intent):1492:1492 -> onActivityResult
+    93:97:void onActivityResult(int,int,android.content.Intent):1494:1494 -> onActivityResult
+    98:103:void onActivityResult(int,int,android.content.Intent):1488:1488 -> onActivityResult
+    104:107:void onActivityResult(int,int,android.content.Intent):1441:1441 -> onActivityResult
+    108:109:void tk.glucodata.Openfile.getlib(android.content.Intent,tk.glucodata.MainActivity):132:132 -> onActivityResult
+    108:109:void onActivityResult(int,int,android.content.Intent):1442 -> onActivityResult
       # {"id":"com.android.tools.r8.rewriteFrame","conditions":["throws(Ljava/lang/NullPointerException;)"],"actions":["removeInnerFrames(1)"]}
-    113:118:void tk.glucodata.Openfile.getlib(android.content.Intent,tk.glucodata.MainActivity):132:132 -> onActivityResult
-    113:118:void onActivityResult(int,int,android.content.Intent):1440 -> onActivityResult
-    119:126:void tk.glucodata.Openfile.getlib(android.content.Intent,tk.glucodata.MainActivity):134:134 -> onActivityResult
-    119:126:void onActivityResult(int,int,android.content.Intent):1440 -> onActivityResult
-    127:132:void tk.glucodata.Openfile.getlib(android.content.Intent,tk.glucodata.MainActivity):137:137 -> onActivityResult
-    127:132:void onActivityResult(int,int,android.content.Intent):1440 -> onActivityResult
-    133:142:void tk.glucodata.Openfile.getlib(android.content.Intent,tk.glucodata.MainActivity):139:139 -> onActivityResult
-    133:142:void onActivityResult(int,int,android.content.Intent):1440 -> onActivityResult
-    143:152:void tk.glucodata.Openfile.getlib(android.content.Intent,tk.glucodata.MainActivity):140:140 -> onActivityResult
-    143:152:void onActivityResult(int,int,android.content.Intent):1440 -> onActivityResult
-    153:169:void tk.glucodata.Openfile.getlib(android.content.Intent,tk.glucodata.MainActivity):142:142 -> onActivityResult
-    153:169:void onActivityResult(int,int,android.content.Intent):1440 -> onActivityResult
-    170:175:void tk.glucodata.Openfile.getlib(android.content.Intent,tk.glucodata.MainActivity):146:146 -> onActivityResult
-    170:175:void onActivityResult(int,int,android.content.Intent):1440 -> onActivityResult
-    176:179:void tk.glucodata.Openfile.getlib(android.content.Intent,tk.glucodata.MainActivity):148:148 -> onActivityResult
-    176:179:void onActivityResult(int,int,android.content.Intent):1440 -> onActivityResult
-    180:186:void tk.glucodata.Openfile.getlib(android.content.Intent,tk.glucodata.MainActivity):149:149 -> onActivityResult
-    180:186:void onActivityResult(int,int,android.content.Intent):1440 -> onActivityResult
-    187:189:void tk.glucodata.Openfile.getlib(android.content.Intent,tk.glucodata.MainActivity):150:150 -> onActivityResult
-    187:189:void onActivityResult(int,int,android.content.Intent):1440 -> onActivityResult
-    190:196:void tk.glucodata.Openfile.getlib(android.content.Intent,tk.glucodata.MainActivity):151:151 -> onActivityResult
-    190:196:void onActivityResult(int,int,android.content.Intent):1440 -> onActivityResult
-    197:200:void tk.glucodata.Openfile.getlib(android.content.Intent,tk.glucodata.MainActivity):152:152 -> onActivityResult
-    197:200:void onActivityResult(int,int,android.content.Intent):1440 -> onActivityResult
-    201:202:void tk.glucodata.Openfile.getlib(android.content.Intent,tk.glucodata.MainActivity):154:154 -> onActivityResult
-    201:202:void onActivityResult(int,int,android.content.Intent):1440 -> onActivityResult
-    203:206:void tk.glucodata.Openfile.getlib(android.content.Intent,tk.glucodata.MainActivity):156:156 -> onActivityResult
-    203:206:void onActivityResult(int,int,android.content.Intent):1440 -> onActivityResult
-    207:208:void tk.glucodata.Openfile.getlib(android.content.Intent,tk.glucodata.MainActivity):157:157 -> onActivityResult
-    207:208:void onActivityResult(int,int,android.content.Intent):1440 -> onActivityResult
-    209:212:void tk.glucodata.Openfile.getlib(android.content.Intent,tk.glucodata.MainActivity):158:158 -> onActivityResult
-    209:212:void onActivityResult(int,int,android.content.Intent):1440 -> onActivityResult
-    213:220:void tk.glucodata.help.help(int,android.view.ContextThemeWrapper):85:85 -> onActivityResult
-    213:220:void tk.glucodata.Openfile.getlib(android.content.Intent,tk.glucodata.MainActivity):162 -> onActivityResult
-    213:220:void onActivityResult(int,int,android.content.Intent):1440 -> onActivityResult
-    221:230:void tk.glucodata.help.help(int,android.view.ContextThemeWrapper,tk.glucodata.Consumer):82:82 -> onActivityResult
-    221:230:void tk.glucodata.help.help(int,android.view.ContextThemeWrapper):85 -> onActivityResult
-    221:230:void tk.glucodata.Openfile.getlib(android.content.Intent,tk.glucodata.MainActivity):162 -> onActivityResult
-    221:230:void onActivityResult(int,int,android.content.Intent):1440 -> onActivityResult
-    231:240:void tk.glucodata.Openfile.getlib(android.content.Intent,tk.glucodata.MainActivity):164:164 -> onActivityResult
-    231:240:void onActivityResult(int,int,android.content.Intent):1440 -> onActivityResult
-    241:246:void tk.glucodata.Openfile.getlib(android.content.Intent,tk.glucodata.MainActivity):167:167 -> onActivityResult
-    241:246:void onActivityResult(int,int,android.content.Intent):1440 -> onActivityResult
-    247:252:void tk.glucodata.Openfile.getlib(android.content.Intent,tk.glucodata.MainActivity):171:171 -> onActivityResult
-    247:252:void onActivityResult(int,int,android.content.Intent):1440 -> onActivityResult
-    253:261:void tk.glucodata.Openfile.getlib(android.content.Intent,tk.glucodata.MainActivity):175:175 -> onActivityResult
-    253:261:void onActivityResult(int,int,android.content.Intent):1440 -> onActivityResult
-    262:269:void tk.glucodata.Openfile.getlib(android.content.Intent,tk.glucodata.MainActivity):176:176 -> onActivityResult
-    262:269:void onActivityResult(int,int,android.content.Intent):1440 -> onActivityResult
-    270:273:void tk.glucodata.Openfile.getlib(android.content.Intent,tk.glucodata.MainActivity):178:178 -> onActivityResult
-    270:273:void onActivityResult(int,int,android.content.Intent):1440 -> onActivityResult
-    274:279:void tk.glucodata.Openfile.getlib(android.content.Intent,tk.glucodata.MainActivity):179:179 -> onActivityResult
-    274:279:void onActivityResult(int,int,android.content.Intent):1440 -> onActivityResult
-    280:283:void onActivityResult(int,int,android.content.Intent):1431:1431 -> onActivityResult
-    284:289:void onActivityResult(int,int,android.content.Intent):1423:1423 -> onActivityResult
-    290:293:void onActivityResult(int,int,android.content.Intent):1424:1424 -> onActivityResult
-    294:304:void onActivityResult(int,int,android.content.Intent):1427:1427 -> onActivityResult
-    305:315:void onActivityResult(int,int,android.content.Intent):1540:1540 -> onActivityResult
-    316:323:void onActivityResult(int,int,android.content.Intent):1545:1545 -> onActivityResult
-    324:327:void tk.glucodata.RingTones.setring(int,java.lang.String):86:86 -> onActivityResult
-    324:327:void onActivityResult(int,int,android.content.Intent):1548 -> onActivityResult
-    328:331:void tk.glucodata.RingTones.setringer(int,java.lang.String):101:101 -> onActivityResult
-    328:331:void tk.glucodata.RingTones.setring(int,java.lang.String):87 -> onActivityResult
+    110:115:void tk.glucodata.Openfile.getlib(android.content.Intent,tk.glucodata.MainActivity):132:132 -> onActivityResult
+    110:115:void onActivityResult(int,int,android.content.Intent):1442 -> onActivityResult
+    116:123:void tk.glucodata.Openfile.getlib(android.content.Intent,tk.glucodata.MainActivity):134:134 -> onActivityResult
+    116:123:void onActivityResult(int,int,android.content.Intent):1442 -> onActivityResult
+    124:129:void tk.glucodata.Openfile.getlib(android.content.Intent,tk.glucodata.MainActivity):137:137 -> onActivityResult
+    124:129:void onActivityResult(int,int,android.content.Intent):1442 -> onActivityResult
+    130:139:void tk.glucodata.Openfile.getlib(android.content.Intent,tk.glucodata.MainActivity):139:139 -> onActivityResult
+    130:139:void onActivityResult(int,int,android.content.Intent):1442 -> onActivityResult
+    140:149:void tk.glucodata.Openfile.getlib(android.content.Intent,tk.glucodata.MainActivity):140:140 -> onActivityResult
+    140:149:void onActivityResult(int,int,android.content.Intent):1442 -> onActivityResult
+    150:166:void tk.glucodata.Openfile.getlib(android.content.Intent,tk.glucodata.MainActivity):142:142 -> onActivityResult
+    150:166:void onActivityResult(int,int,android.content.Intent):1442 -> onActivityResult
+    167:172:void tk.glucodata.Openfile.getlib(android.content.Intent,tk.glucodata.MainActivity):146:146 -> onActivityResult
+    167:172:void onActivityResult(int,int,android.content.Intent):1442 -> onActivityResult
+    173:176:void tk.glucodata.Openfile.getlib(android.content.Intent,tk.glucodata.MainActivity):148:148 -> onActivityResult
+    173:176:void onActivityResult(int,int,android.content.Intent):1442 -> onActivityResult
+    177:183:void tk.glucodata.Openfile.getlib(android.content.Intent,tk.glucodata.MainActivity):149:149 -> onActivityResult
+    177:183:void onActivityResult(int,int,android.content.Intent):1442 -> onActivityResult
+    184:186:void tk.glucodata.Openfile.getlib(android.content.Intent,tk.glucodata.MainActivity):150:150 -> onActivityResult
+    184:186:void onActivityResult(int,int,android.content.Intent):1442 -> onActivityResult
+    187:193:void tk.glucodata.Openfile.getlib(android.content.Intent,tk.glucodata.MainActivity):151:151 -> onActivityResult
+    187:193:void onActivityResult(int,int,android.content.Intent):1442 -> onActivityResult
+    194:197:void tk.glucodata.Openfile.getlib(android.content.Intent,tk.glucodata.MainActivity):152:152 -> onActivityResult
+    194:197:void onActivityResult(int,int,android.content.Intent):1442 -> onActivityResult
+    198:199:void tk.glucodata.Openfile.getlib(android.content.Intent,tk.glucodata.MainActivity):154:154 -> onActivityResult
+    198:199:void onActivityResult(int,int,android.content.Intent):1442 -> onActivityResult
+    200:203:void tk.glucodata.Openfile.getlib(android.content.Intent,tk.glucodata.MainActivity):156:156 -> onActivityResult
+    200:203:void onActivityResult(int,int,android.content.Intent):1442 -> onActivityResult
+    204:205:void tk.glucodata.Openfile.getlib(android.content.Intent,tk.glucodata.MainActivity):157:157 -> onActivityResult
+    204:205:void onActivityResult(int,int,android.content.Intent):1442 -> onActivityResult
+    206:209:void tk.glucodata.Openfile.getlib(android.content.Intent,tk.glucodata.MainActivity):158:158 -> onActivityResult
+    206:209:void onActivityResult(int,int,android.content.Intent):1442 -> onActivityResult
+    210:217:void tk.glucodata.help.help(int,android.view.ContextThemeWrapper):85:85 -> onActivityResult
+    210:217:void tk.glucodata.Openfile.getlib(android.content.Intent,tk.glucodata.MainActivity):162 -> onActivityResult
+    210:217:void onActivityResult(int,int,android.content.Intent):1442 -> onActivityResult
+    218:227:void tk.glucodata.help.help(int,android.view.ContextThemeWrapper,tk.glucodata.Consumer):82:82 -> onActivityResult
+    218:227:void tk.glucodata.help.help(int,android.view.ContextThemeWrapper):85 -> onActivityResult
+    218:227:void tk.glucodata.Openfile.getlib(android.content.Intent,tk.glucodata.MainActivity):162 -> onActivityResult
+    218:227:void onActivityResult(int,int,android.content.Intent):1442 -> onActivityResult
+    228:237:void tk.glucodata.Openfile.getlib(android.content.Intent,tk.glucodata.MainActivity):164:164 -> onActivityResult
+    228:237:void onActivityResult(int,int,android.content.Intent):1442 -> onActivityResult
+    238:243:void tk.glucodata.Openfile.getlib(android.content.Intent,tk.glucodata.MainActivity):167:167 -> onActivityResult
+    238:243:void onActivityResult(int,int,android.content.Intent):1442 -> onActivityResult
+    244:249:void tk.glucodata.Openfile.getlib(android.content.Intent,tk.glucodata.MainActivity):171:171 -> onActivityResult
+    244:249:void onActivityResult(int,int,android.content.Intent):1442 -> onActivityResult
+    250:258:void tk.glucodata.Openfile.getlib(android.content.Intent,tk.glucodata.MainActivity):175:175 -> onActivityResult
+    250:258:void onActivityResult(int,int,android.content.Intent):1442 -> onActivityResult
+    259:266:void tk.glucodata.Openfile.getlib(android.content.Intent,tk.glucodata.MainActivity):176:176 -> onActivityResult
+    259:266:void onActivityResult(int,int,android.content.Intent):1442 -> onActivityResult
+    267:270:void tk.glucodata.Openfile.getlib(android.content.Intent,tk.glucodata.MainActivity):178:178 -> onActivityResult
+    267:270:void onActivityResult(int,int,android.content.Intent):1442 -> onActivityResult
+    271:276:void tk.glucodata.Openfile.getlib(android.content.Intent,tk.glucodata.MainActivity):179:179 -> onActivityResult
+    271:276:void onActivityResult(int,int,android.content.Intent):1442 -> onActivityResult
+    277:280:void onActivityResult(int,int,android.content.Intent):1433:1433 -> onActivityResult
+    281:286:void onActivityResult(int,int,android.content.Intent):1425:1425 -> onActivityResult
+    287:290:void onActivityResult(int,int,android.content.Intent):1426:1426 -> onActivityResult
+    291:301:void onActivityResult(int,int,android.content.Intent):1429:1429 -> onActivityResult
+    302:312:void onActivityResult(int,int,android.content.Intent):1547:1547 -> onActivityResult
+    313:320:void onActivityResult(int,int,android.content.Intent):1552:1552 -> onActivityResult
+    321:324:void tk.glucodata.RingTones.setring(int,java.lang.String):86:86 -> onActivityResult
+    321:324:void onActivityResult(int,int,android.content.Intent):1555 -> onActivityResult
+    325:328:void tk.glucodata.RingTones.setringer(int,java.lang.String):101:101 -> onActivityResult
+    325:328:void tk.glucodata.RingTones.setring(int,java.lang.String):87 -> onActivityResult
       # {"id":"com.android.tools.r8.rewriteFrame","conditions":["throws(Ljava/lang/NullPointerException;)"],"actions":["removeInnerFrames(1)"]}
-    328:331:void onActivityResult(int,int,android.content.Intent):1548 -> onActivityResult
-    332:333:void tk.glucodata.RingTones.setringer(int,java.lang.String):102:102 -> onActivityResult
-    332:333:void tk.glucodata.RingTones.setring(int,java.lang.String):87 -> onActivityResult
-    332:333:void onActivityResult(int,int,android.content.Intent):1548 -> onActivityResult
-    334:337:void tk.glucodata.RingTones.setringer(int,java.lang.String):103:103 -> onActivityResult
-    334:337:void tk.glucodata.RingTones.setring(int,java.lang.String):87 -> onActivityResult
-    334:337:void onActivityResult(int,int,android.content.Intent):1548 -> onActivityResult
-    338:352:void tk.glucodata.RingTones.setringer(int,java.lang.String):104:104 -> onActivityResult
-    338:352:void tk.glucodata.RingTones.setring(int,java.lang.String):87 -> onActivityResult
-    338:352:void onActivityResult(int,int,android.content.Intent):1548 -> onActivityResult
-    353:356:void onActivityResult(int,int,android.content.Intent):1552:1552 -> onActivityResult
+    325:328:void onActivityResult(int,int,android.content.Intent):1555 -> onActivityResult
+    329:330:void tk.glucodata.RingTones.setringer(int,java.lang.String):102:102 -> onActivityResult
+    329:330:void tk.glucodata.RingTones.setring(int,java.lang.String):87 -> onActivityResult
+    329:330:void onActivityResult(int,int,android.content.Intent):1555 -> onActivityResult
+    331:334:void tk.glucodata.RingTones.setringer(int,java.lang.String):103:103 -> onActivityResult
+    331:334:void tk.glucodata.RingTones.setring(int,java.lang.String):87 -> onActivityResult
+    331:334:void onActivityResult(int,int,android.content.Intent):1555 -> onActivityResult
+    335:349:void tk.glucodata.RingTones.setringer(int,java.lang.String):104:104 -> onActivityResult
+    335:349:void tk.glucodata.RingTones.setring(int,java.lang.String):87 -> onActivityResult
+    335:349:void onActivityResult(int,int,android.content.Intent):1555 -> onActivityResult
+    350:354:void onActivityResult(int,int,android.content.Intent):1559:1559 -> onActivityResult
     1:4:void onConfigurationChanged(android.content.res.Configuration):1147:1147 -> onConfigurationChanged
     5:6:void removeconfig():1134:1134 -> onConfigurationChanged
     5:6:void onConfigurationChanged(android.content.res.Configuration):1152 -> onConfigurationChanged
@@ -86376,14 +86376,14 @@ tk.glucodata.MainActivity -> tk.glucodata.MainActivity:
     386:389:void netinitstep():1173:1173 -> onCreate
     386:389:void startall():137 -> onCreate
     386:389:void onCreate(android.os.Bundle):582 -> onCreate
-    390:395:void useBluetooth(boolean):1911:1911 -> onCreate
+    390:395:void useBluetooth(boolean):1918:1918 -> onCreate
     390:395:void netinitstep():1173 -> onCreate
     390:395:void startall():137 -> onCreate
     390:395:void onCreate(android.os.Bundle):582 -> onCreate
     396:410:void netinitstep():1170:1170 -> onCreate
     396:410:void startall():137 -> onCreate
     396:410:void onCreate(android.os.Bundle):582 -> onCreate
-    411:415:void useBluetooth(boolean):1911:1911 -> onCreate
+    411:415:void useBluetooth(boolean):1918:1918 -> onCreate
     411:415:void netinitstep():1170 -> onCreate
     411:415:void startall():137 -> onCreate
     411:415:void onCreate(android.os.Bundle):582 -> onCreate
@@ -86409,12 +86409,12 @@ tk.glucodata.MainActivity -> tk.glucodata.MainActivity:
     9:10:void onDestroy():1047:1047 -> onDestroy
     11:12:void onDestroy():1049:1049 -> onDestroy
     13:16:void onDestroy():1050:1050 -> onDestroy
-    1:11:boolean onKeyDown(int,android.view.KeyEvent):1562:1562 -> onKeyDown
-    5:14:boolean onKeyLongPress(int,android.view.KeyEvent):1589:1589 -> onKeyLongPress
-    15:22:boolean onKeyLongPress(int,android.view.KeyEvent):1593:1593 -> onKeyLongPress
-    23:27:boolean onKeyLongPress(int,android.view.KeyEvent):1594:1594 -> onKeyLongPress
-    28:30:boolean onKeyLongPress(int,android.view.KeyEvent):1591:1591 -> onKeyLongPress
-    31:35:boolean onKeyLongPress(int,android.view.KeyEvent):1600:1600 -> onKeyLongPress
+    1:11:boolean onKeyDown(int,android.view.KeyEvent):1569:1569 -> onKeyDown
+    5:14:boolean onKeyLongPress(int,android.view.KeyEvent):1596:1596 -> onKeyLongPress
+    15:22:boolean onKeyLongPress(int,android.view.KeyEvent):1600:1600 -> onKeyLongPress
+    23:27:boolean onKeyLongPress(int,android.view.KeyEvent):1601:1601 -> onKeyLongPress
+    28:30:boolean onKeyLongPress(int,android.view.KeyEvent):1598:1598 -> onKeyLongPress
+    31:35:boolean onKeyLongPress(int,android.view.KeyEvent):1607:1607 -> onKeyLongPress
     1:3:void onNewIntent(android.content.Intent):664:664 -> onNewIntent
     4:7:void onNewIntent(android.content.Intent):665:665 -> onNewIntent
     1:7:void onPause():993:993 -> onPause
@@ -86448,7 +86448,7 @@ tk.glucodata.MainActivity -> tk.glucodata.MainActivity:
     102:105:void tk.glucodata.SensorBluetooth.goscan():940:940 -> onRequestPermissionsResult
     102:105:void hasLocationContinue():1269 -> onRequestPermissionsResult
     102:105:void onRequestPermissionsResult(int,java.lang.String[],int[]):1314 -> onRequestPermissionsResult
-    106:111:void useBluetooth(boolean):1911:1911 -> onRequestPermissionsResult
+    106:111:void useBluetooth(boolean):1918:1918 -> onRequestPermissionsResult
     106:111:void hasLocationContinue():1267 -> onRequestPermissionsResult
     106:111:void onRequestPermissionsResult(int,java.lang.String[],int[]):1314 -> onRequestPermissionsResult
     112:116:void onRequestPermissionsResult(int,java.lang.String[],int[]):1318:1318 -> onRequestPermissionsResult
@@ -86533,17 +86533,17 @@ tk.glucodata.MainActivity -> tk.glucodata.MainActivity:
     34:44:void tk.glucodata.help.help(int,android.view.ContextThemeWrapper,tk.glucodata.Consumer):82:82 -> t
     34:44:void lambda$finepermission$13(java.lang.String[],tk.glucodata.MainActivity):1199 -> t
     45:48:void lambda$finepermission$13(java.lang.String[],tk.glucodata.MainActivity):1209:1209 -> t
-    1:22:void lambda$showindialog$18(androidx.appcompat.app.AlertDialog,android.content.DialogInterface):1730:1730 -> u
+    1:22:void lambda$showindialog$18(androidx.appcompat.app.AlertDialog,android.content.DialogInterface):1737:1737 -> u
       # {"id":"com.android.tools.r8.residualsignature","signature":"(Ltk/glucodata/MainActivity;Ls1;)V"}
-    23:30:void lambda$showindialog$18(androidx.appcompat.app.AlertDialog,android.content.DialogInterface):1731:1731 -> u
+    23:30:void lambda$showindialog$18(androidx.appcompat.app.AlertDialog,android.content.DialogInterface):1738:1738 -> u
     31:32:android.widget.Button androidx.appcompat.app.AlertDialog.getButton(int):131:131 -> u
-    31:32:void lambda$showindialog$18(androidx.appcompat.app.AlertDialog,android.content.DialogInterface):1732 -> u
+    31:32:void lambda$showindialog$18(androidx.appcompat.app.AlertDialog,android.content.DialogInterface):1739 -> u
       # {"id":"com.android.tools.r8.rewriteFrame","conditions":["throws(Ljava/lang/NullPointerException;)"],"actions":["removeInnerFrames(1)"]}
     33:34:android.widget.Button androidx.appcompat.app.AlertController.getButton(int):412:412 -> u
     33:34:android.widget.Button androidx.appcompat.app.AlertDialog.getButton(int):131 -> u
       # {"id":"com.android.tools.r8.rewriteFrame","conditions":["throws(Ljava/lang/NullPointerException;)"],"actions":["removeInnerFrames(1)"]}
-    33:34:void lambda$showindialog$18(androidx.appcompat.app.AlertDialog,android.content.DialogInterface):1732 -> u
-    35:38:void lambda$showindialog$18(androidx.appcompat.app.AlertDialog,android.content.DialogInterface):1733:1733 -> u
+    33:34:void lambda$showindialog$18(androidx.appcompat.app.AlertDialog,android.content.DialogInterface):1739 -> u
+    35:38:void lambda$showindialog$18(androidx.appcompat.app.AlertDialog,android.content.DialogInterface):1740:1740 -> u
     1:10:void lambda$finepermission$12(java.lang.String[],android.view.ViewGroup):1200:1200 -> v
       # {"id":"com.android.tools.r8.residualsignature","signature":"(Ltk/glucodata/MainActivity;[Ljava/lang/String;)V"}
     11:22:void lambda$finepermission$12(java.lang.String[],android.view.ViewGroup):1201:1201 -> v
@@ -86560,16 +86560,16 @@ tk.glucodata.MainActivity -> tk.glucodata.MainActivity:
     36:46:boolean askNotify():180 -> w
     47:50:boolean askNotify():185:185 -> w
     51:54:boolean askNotify():191:191 -> w
-    1:12:boolean backinapp():1633:1633 -> x
-    13:15:boolean backinapp():1635:1635 -> x
-    16:22:boolean backinapp():1636:1636 -> x
-    23:24:boolean backinapp():1637:1637 -> x
-    25:27:boolean backinapp():1638:1638 -> x
-    28:33:boolean backinapp():1642:1642 -> x
-    34:38:boolean backinapp():1647:1647 -> x
-    1:8:boolean doonback():1617:1617 -> y
-    9:14:boolean doonback():1618:1618 -> y
-    15:21:boolean doonback():1619:1619 -> y
+    1:12:boolean backinapp():1640:1640 -> x
+    13:15:boolean backinapp():1642:1642 -> x
+    16:22:boolean backinapp():1643:1643 -> x
+    23:24:boolean backinapp():1644:1644 -> x
+    25:27:boolean backinapp():1645:1645 -> x
+    28:33:boolean backinapp():1649:1649 -> x
+    34:38:boolean backinapp():1654:1654 -> x
+    1:8:boolean doonback():1624:1624 -> y
+    9:14:boolean doonback():1625:1625 -> y
+    15:21:boolean doonback():1626:1626 -> y
     1:7:boolean finepermission():1190:1190 -> z
     8:13:boolean finepermission():1191:1191 -> z
     14:16:boolean finepermission():1192:1192 -> z
@@ -86707,22 +86707,22 @@ tk.glucodata.MainActivity$$ExternalSyntheticLambda11 -> sn:
     23:26:void tk.glucodata.MainActivity.lambda$glversion$4(android.view.ViewGroup):275:275 -> accept
     23:26:void MainActivity$$ExternalSyntheticLambda11.accept(java.lang.Object):0 -> accept
     27:28:void MainActivity$$ExternalSyntheticLambda11.accept(java.lang.Object):0:0 -> accept
-    29:34:void tk.glucodata.MainActivity.useBluetooth(boolean):1911:1911 -> accept
+    29:34:void tk.glucodata.MainActivity.useBluetooth(boolean):1918:1918 -> accept
     29:34:void tk.glucodata.MainActivity.lambda$onRequestPermissionsResult$15(android.view.ViewGroup):1332 -> accept
     29:34:void MainActivity$$ExternalSyntheticLambda11.accept(java.lang.Object):0 -> accept
     35:36:void MainActivity$$ExternalSyntheticLambda11.accept(java.lang.Object):0:0 -> accept
-    37:42:void tk.glucodata.MainActivity.useBluetooth(boolean):1911:1911 -> accept
+    37:42:void tk.glucodata.MainActivity.useBluetooth(boolean):1918:1918 -> accept
     37:42:void tk.glucodata.MainActivity.lambda$onRequestPermissionsResult$14(android.view.ViewGroup):1325 -> accept
     37:42:void MainActivity$$ExternalSyntheticLambda11.accept(java.lang.Object):0 -> accept
 tk.glucodata.MainActivity$$ExternalSyntheticLambda16 -> tn:
 # {"id":"sourceFile","fileName":"R8$$SyntheticClass"}
 # {"id":"com.android.tools.r8.synthesized"}
-    1:4:void tk.glucodata.MainActivity.enableLocationSettings():1819:1819 -> onCancel
-    1:4:void tk.glucodata.MainActivity.lambda$needsLocation$20(android.content.DialogInterface):1811 -> onCancel
-    5:11:void tk.glucodata.MainActivity.enableLocationSettings():1822:1822 -> onCancel
-    5:11:void tk.glucodata.MainActivity.lambda$needsLocation$20(android.content.DialogInterface):1811 -> onCancel
-    12:15:void tk.glucodata.MainActivity.enableLocationSettings():1823:1823 -> onCancel
-    12:15:void tk.glucodata.MainActivity.lambda$needsLocation$20(android.content.DialogInterface):1811 -> onCancel
+    1:4:void tk.glucodata.MainActivity.enableLocationSettings():1826:1826 -> onCancel
+    1:4:void tk.glucodata.MainActivity.lambda$needsLocation$20(android.content.DialogInterface):1818 -> onCancel
+    5:11:void tk.glucodata.MainActivity.enableLocationSettings():1829:1829 -> onCancel
+    5:11:void tk.glucodata.MainActivity.lambda$needsLocation$20(android.content.DialogInterface):1818 -> onCancel
+    12:15:void tk.glucodata.MainActivity.enableLocationSettings():1830:1830 -> onCancel
+    12:15:void tk.glucodata.MainActivity.lambda$needsLocation$20(android.content.DialogInterface):1818 -> onCancel
 tk.glucodata.MainActivity$$ExternalSyntheticLambda17 -> un:
 # {"id":"sourceFile","fileName":"R8$$SyntheticClass"}
 # {"id":"com.android.tools.r8.synthesized"}
@@ -86755,11 +86755,11 @@ tk.glucodata.MainActivity$$ExternalSyntheticLambda2 -> vn:
       # {"id":"com.android.tools.r8.synthesized"}
     1:1:void MainActivity$$ExternalSyntheticLambda2.<init>(tk.glucodata.MainActivity,boolean):0:0 -> <init>
       # {"id":"com.android.tools.r8.synthesized"}
-    6:10:void tk.glucodata.MainActivity.lambda$showindialog$17(boolean,android.content.DialogInterface,int):1719:1719 -> onClick
+    6:10:void tk.glucodata.MainActivity.lambda$showindialog$17(boolean,android.content.DialogInterface,int):1726:1726 -> onClick
     6:10:void MainActivity$$ExternalSyntheticLambda2.onClick(android.content.DialogInterface,int):0 -> onClick
       # {"id":"com.android.tools.r8.synthesized"}
     11:12:void MainActivity$$ExternalSyntheticLambda2.onClick(android.content.DialogInterface,int):0:0 -> onClick
-    13:16:void tk.glucodata.MainActivity.lambda$showindialog$17(boolean,android.content.DialogInterface,int):1721:1721 -> onClick
+    13:16:void tk.glucodata.MainActivity.lambda$showindialog$17(boolean,android.content.DialogInterface,int):1728:1728 -> onClick
     13:16:void MainActivity$$ExternalSyntheticLambda2.onClick(android.content.DialogInterface,int):0 -> onClick
 tk.glucodata.MainActivity$$ExternalSyntheticLambda3 -> wn:
 # {"id":"sourceFile","fileName":"R8$$SyntheticClass"}
@@ -88090,26 +88090,26 @@ tk.glucodata.Notify -> lq:
     6:11:void arrowglucosealarm(int,float,java.lang.String,tk.glucodata.notGlucose,java.lang.String,boolean):709:709 -> a
       # {"id":"com.android.tools.r8.residualsignature","signature":"(IFLjava/lang/String;Ld40;Ljava/lang/String;Z)V"}
     12:15:void arrowglucosealarm(int,float,java.lang.String,tk.glucodata.notGlucose,java.lang.String,boolean):712:712 -> a
-    16:20:void tk.glucodata.MainActivity.replaceDialogMessage(java.lang.String):1704:1704 -> a
+    16:20:void tk.glucodata.MainActivity.replaceDialogMessage(java.lang.String):1711:1711 -> a
     16:20:void arrowglucosealarm(int,float,java.lang.String,tk.glucodata.notGlucose,java.lang.String,boolean):715 -> a
-    21:22:void tk.glucodata.MainActivity.replaceDialogMessage(java.lang.String):1705:1705 -> a
+    21:22:void tk.glucodata.MainActivity.replaceDialogMessage(java.lang.String):1712:1712 -> a
     21:22:void arrowglucosealarm(int,float,java.lang.String,tk.glucodata.notGlucose,java.lang.String,boolean):715 -> a
     23:24:void androidx.appcompat.app.AlertDialog.setMessage(java.lang.CharSequence):164:164 -> a
-    23:24:void tk.glucodata.MainActivity.replaceDialogMessage(java.lang.String):1706 -> a
+    23:24:void tk.glucodata.MainActivity.replaceDialogMessage(java.lang.String):1713 -> a
       # {"id":"com.android.tools.r8.rewriteFrame","conditions":["throws(Ljava/lang/NullPointerException;)"],"actions":["removeInnerFrames(1)"]}
     23:24:void arrowglucosealarm(int,float,java.lang.String,tk.glucodata.notGlucose,java.lang.String,boolean):715 -> a
     25:26:void androidx.appcompat.app.AlertController.setMessage(java.lang.CharSequence):261:261 -> a
     25:26:void androidx.appcompat.app.AlertDialog.setMessage(java.lang.CharSequence):164 -> a
-    25:26:void tk.glucodata.MainActivity.replaceDialogMessage(java.lang.String):1706 -> a
+    25:26:void tk.glucodata.MainActivity.replaceDialogMessage(java.lang.String):1713 -> a
       # {"id":"com.android.tools.r8.rewriteFrame","conditions":["throws(Ljava/lang/NullPointerException;)"],"actions":["removeInnerFrames(2)"]}
     25:26:void arrowglucosealarm(int,float,java.lang.String,tk.glucodata.notGlucose,java.lang.String,boolean):715 -> a
     27:30:void androidx.appcompat.app.AlertController.setMessage(java.lang.CharSequence):262:262 -> a
     27:30:void androidx.appcompat.app.AlertDialog.setMessage(java.lang.CharSequence):164 -> a
-    27:30:void tk.glucodata.MainActivity.replaceDialogMessage(java.lang.String):1706 -> a
+    27:30:void tk.glucodata.MainActivity.replaceDialogMessage(java.lang.String):1713 -> a
     27:30:void arrowglucosealarm(int,float,java.lang.String,tk.glucodata.notGlucose,java.lang.String,boolean):715 -> a
     31:33:void androidx.appcompat.app.AlertController.setMessage(java.lang.CharSequence):263:263 -> a
     31:33:void androidx.appcompat.app.AlertDialog.setMessage(java.lang.CharSequence):164 -> a
-    31:33:void tk.glucodata.MainActivity.replaceDialogMessage(java.lang.String):1706 -> a
+    31:33:void tk.glucodata.MainActivity.replaceDialogMessage(java.lang.String):1713 -> a
     31:33:void arrowglucosealarm(int,float,java.lang.String,tk.glucodata.notGlucose,java.lang.String,boolean):715 -> a
     34:37:void arrowglucosealarm(int,float,java.lang.String,tk.glucodata.notGlucose,java.lang.String,boolean):717:717 -> a
     38:41:void arrowglucosealarm(int,float,java.lang.String,tk.glucodata.notGlucose,java.lang.String,boolean):719:719 -> a
@@ -88300,13 +88300,13 @@ tk.glucodata.Notify -> lq:
     9:12:void normalglucose(tk.glucodata.notGlucose,float,float,boolean):390 -> l
     13:14:void normalglucose(tk.glucodata.notGlucose,float,float,boolean):391:391 -> l
     15:18:void normalglucose(tk.glucodata.notGlucose,float,float,boolean):392:392 -> l
-    19:20:void tk.glucodata.MainActivity.cancelglucosedialog():1697:1697 -> l
+    19:20:void tk.glucodata.MainActivity.cancelglucosedialog():1704:1704 -> l
     19:20:void normalglucose(tk.glucodata.notGlucose,float,float,boolean):394 -> l
-    21:24:void tk.glucodata.MainActivity.cancelglucosedialog():1698:1698 -> l
+    21:24:void tk.glucodata.MainActivity.cancelglucosedialog():1705:1705 -> l
     21:24:void normalglucose(tk.glucodata.notGlucose,float,float,boolean):394 -> l
-    25:27:void tk.glucodata.MainActivity.cancelglucosedialog():1699:1699 -> l
+    25:27:void tk.glucodata.MainActivity.cancelglucosedialog():1706:1706 -> l
     25:27:void normalglucose(tk.glucodata.notGlucose,float,float,boolean):394 -> l
-    28:31:void tk.glucodata.MainActivity.cancelglucosedialog():1700:1700 -> l
+    28:31:void tk.glucodata.MainActivity.cancelglucosedialog():1707:1707 -> l
     28:31:void normalglucose(tk.glucodata.notGlucose,float,float,boolean):394 -> l
     32:60:void normalglucose(tk.glucodata.notGlucose,float,float,boolean):397:397 -> l
     61:69:void normalglucose(tk.glucodata.notGlucose,float,float,boolean):417:417 -> l
@@ -88696,7 +88696,7 @@ tk.glucodata.NumberView -> qq:
     543:549:android.view.View addnumberview(tk.glucodata.MainActivity,int,long,float,int,int):436:436 -> b
     550:559:android.view.View addnumberview(tk.glucodata.MainActivity,int,long,float,int,int):437:437 -> b
     560:566:android.view.View addnumberview(tk.glucodata.MainActivity,int,long,float,int,int):462:462 -> b
-    567:569:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1975:1975 -> b
+    567:569:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1982:1982 -> b
     567:569:android.view.View addnumberview(tk.glucodata.MainActivity,int,long,float,int,int):462 -> b
     570:574:android.view.View addnumberview(tk.glucodata.MainActivity,int,long,float,int,int):463:463 -> b
     575:576:android.view.View addnumberview(tk.glucodata.MainActivity,int,long,float,int,int):464:464 -> b
@@ -88877,7 +88877,7 @@ tk.glucodata.NumberView -> qq:
     124:129:tk.glucodata.Layout getdateviewal(tk.glucodata.MainActivity,long,tk.glucodata.Dater):828:828 -> g
     130:136:tk.glucodata.Layout getdateviewal(tk.glucodata.MainActivity,long,tk.glucodata.Dater):851:851 -> g
     137:138:tk.glucodata.Layout getdateviewal(tk.glucodata.MainActivity,long,tk.glucodata.Dater):852:852 -> g
-    139:142:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1975:1975 -> g
+    139:142:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1982:1982 -> g
     139:142:tk.glucodata.Layout getdateviewal(tk.glucodata.MainActivity,long,tk.glucodata.Dater):852 -> g
       # {"id":"com.android.tools.r8.rewriteFrame","conditions":["throws(Ljava/lang/NullPointerException;)"],"actions":["removeInnerFrames(1)"]}
     143:145:tk.glucodata.Layout getdateviewal(tk.glucodata.MainActivity,long,tk.glucodata.Dater):856:856 -> g
@@ -88921,7 +88921,7 @@ tk.glucodata.NumberView -> qq:
     109:113:void gettimepicker(tk.glucodata.MainActivity,int,int,tk.glucodata.ObjIntConsumer,java.lang.Runnable):1017:1017 -> i
     114:120:void gettimepicker(tk.glucodata.MainActivity,int,int,tk.glucodata.ObjIntConsumer,java.lang.Runnable):1018:1018 -> i
     121:138:void gettimepicker(tk.glucodata.MainActivity,int,int,tk.glucodata.ObjIntConsumer,java.lang.Runnable):1020:1020 -> i
-    139:141:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1975:1975 -> i
+    139:141:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1982:1982 -> i
     139:141:void gettimepicker(tk.glucodata.MainActivity,int,int,tk.glucodata.ObjIntConsumer,java.lang.Runnable):1021 -> i
       # {"id":"com.android.tools.r8.rewriteFrame","conditions":["throws(Ljava/lang/NullPointerException;)"],"actions":["removeInnerFrames(1)"]}
     142:144:void gettimepicker(tk.glucodata.MainActivity,int,int,tk.glucodata.ObjIntConsumer,java.lang.Runnable):1022:1022 -> i
@@ -89279,7 +89279,7 @@ tk.glucodata.Openfile -> er:
     174:181:void showchoice(tk.glucodata.MainActivity,boolean):94:94 -> a
     182:188:void showchoice(tk.glucodata.MainActivity,boolean):100:100 -> a
     189:196:void showchoice(tk.glucodata.MainActivity,boolean):102:102 -> a
-    197:199:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1975:1975 -> a
+    197:199:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1982:1982 -> a
     197:199:void showchoice(tk.glucodata.MainActivity,boolean):102 -> a
       # {"id":"com.android.tools.r8.rewriteFrame","conditions":["throws(Ljava/lang/NullPointerException;)"],"actions":["removeInnerFrames(1)"]}
     200:208:void showchoice(tk.glucodata.MainActivity,boolean):103:103 -> a
@@ -89450,7 +89450,7 @@ tk.glucodata.RingTones -> ou:
     598:616:void mkviews(tk.glucodata.MainActivity,java.lang.String,android.view.View):339:339 -> c
     617:619:void mkviews(tk.glucodata.MainActivity,java.lang.String,android.view.View):341:341 -> c
     620:625:void mkviews(tk.glucodata.MainActivity,java.lang.String,android.view.View):342:342 -> c
-    626:628:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1975:1975 -> c
+    626:628:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1982:1982 -> c
     626:628:void mkviews(tk.glucodata.MainActivity,java.lang.String,android.view.View):350 -> c
     629:647:void mkviews(tk.glucodata.MainActivity,java.lang.String,android.view.View):351:351 -> c
     648:657:void mkviews(tk.glucodata.MainActivity,java.lang.String,android.view.View):406:406 -> c
@@ -89907,7 +89907,7 @@ tk.glucodata.ScanNfcV$$ExternalSyntheticLambda4 -> hv:
     151:153:void tk.glucodata.ScanNfcV.lambda$newsensor$7(tk.glucodata.MainActivity,java.lang.String,java.lang.String,int):467:467 -> run
     154:158:void tk.glucodata.ScanNfcV.lambda$newsensor$7(tk.glucodata.MainActivity,java.lang.String,java.lang.String,int):468:468 -> run
     159:166:void tk.glucodata.ScanNfcV.lambda$newsensor$7(tk.glucodata.MainActivity,java.lang.String,java.lang.String,int):469:469 -> run
-    167:170:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1975:1975 -> run
+    167:170:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1982:1982 -> run
     167:170:void tk.glucodata.ScanNfcV.lambda$newsensor$7(tk.glucodata.MainActivity,java.lang.String,java.lang.String,int):470 -> run
 tk.glucodata.ScanNfcV$$ExternalSyntheticLambda5 -> iv:
 # {"id":"sourceFile","fileName":"R8$$SyntheticClass"}
@@ -90763,7 +90763,7 @@ tk.glucodata.Sensors -> bw:
     478:485:void tk.glucodata.bluediag.nosensors(tk.glucodata.MainActivity):401:401 -> c
     478:485:void <init>(tk.glucodata.MainActivity,boolean,boolean):205 -> c
     478:485:void show(tk.glucodata.MainActivity,java.lang.String,long):291 -> c
-    486:490:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1975:1975 -> c
+    486:490:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1982:1982 -> c
     486:490:void tk.glucodata.bluediag.nosensors(tk.glucodata.MainActivity):403 -> c
     486:490:void <init>(tk.glucodata.MainActivity,boolean,boolean):205 -> c
     486:490:void show(tk.glucodata.MainActivity,java.lang.String,long):291 -> c
@@ -90844,7 +90844,7 @@ tk.glucodata.Sensors -> bw:
     804:805:void show(tk.glucodata.MainActivity,java.lang.String,long):304:304 -> c
     806:811:void show(tk.glucodata.MainActivity,java.lang.String,long):319:319 -> c
     812:816:void show(tk.glucodata.MainActivity,java.lang.String,long):320:320 -> c
-    817:819:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1975:1975 -> c
+    817:819:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1982:1982 -> c
     817:819:void show(tk.glucodata.MainActivity,java.lang.String,long):323 -> c
     820:830:void show(tk.glucodata.MainActivity,java.lang.String,long):325:325 -> c
     20:42:int valueToProgress(double,int):85:85 -> d
@@ -91456,7 +91456,7 @@ tk.glucodata.Talker -> iy:
     707:726:void config(tk.glucodata.MainActivity):602:602 -> a
     727:729:void config(tk.glucodata.MainActivity):625:625 -> a
     730:734:void config(tk.glucodata.MainActivity):629:629 -> a
-    735:738:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1975:1975 -> a
+    735:738:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1982:1982 -> a
     735:738:void config(tk.glucodata.MainActivity):629 -> a
     1:6:void doTurnFocusoff():657:657 -> b
     7:9:void doTurnFocusoff():658:658 -> b
@@ -91770,7 +91770,7 @@ tk.glucodata.bluediag -> b40:
     94:103:void showsensormessage(java.lang.String,tk.glucodata.MainActivity):156:156 -> c
     104:111:void showsensormessage(java.lang.String,tk.glucodata.MainActivity):159:159 -> c
     112:119:void showsensormessage(java.lang.String,tk.glucodata.MainActivity):170:170 -> c
-    120:123:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1975:1975 -> c
+    120:123:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1982:1982 -> c
     120:123:void showsensormessage(java.lang.String,tk.glucodata.MainActivity):172 -> c
     3:6:void start(tk.glucodata.MainActivity):916:916 -> d
     7:13:void start(tk.glucodata.MainActivity):917:917 -> d
@@ -92203,7 +92203,7 @@ tk.glucodata.bluediag -> b40:
     1087:1088:void start(tk.glucodata.MainActivity):946 -> d
     1089:1090:void <init>(tk.glucodata.MainActivity,java.util.ArrayList):756:756 -> d
     1089:1090:void start(tk.glucodata.MainActivity):946 -> d
-    1091:1093:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1975:1975 -> d
+    1091:1093:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1982:1982 -> d
     1091:1093:void <init>(tk.glucodata.MainActivity,java.util.ArrayList):757 -> d
     1091:1093:void start(tk.glucodata.MainActivity):946 -> d
     1094:1112:void <init>(tk.glucodata.MainActivity,java.util.ArrayList):759:759 -> d
@@ -92587,7 +92587,7 @@ tk.glucodata.setNumAlarm -> k40:
     391:401:void mkitemlayout(tk.glucodata.MainActivity,android.view.View):459:459 -> a
     402:411:void mkitemlayout(tk.glucodata.MainActivity,android.view.View):466:466 -> a
     412:413:void mkitemlayout(tk.glucodata.MainActivity,android.view.View):505:505 -> a
-    414:418:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1975:1975 -> a
+    414:418:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1982:1982 -> a
     414:418:void mkitemlayout(tk.glucodata.MainActivity,android.view.View):505 -> a
     419:421:void mkitemlayout(tk.glucodata.MainActivity,android.view.View):510:510 -> a
     422:426:void mkitemlayout(tk.glucodata.MainActivity,android.view.View):511:511 -> a
@@ -92641,7 +92641,7 @@ tk.glucodata.setNumAlarm$$ExternalSyntheticLambda1 -> g40:
     167:169:void tk.glucodata.setNumAlarm.lambda$mkviews$4(tk.glucodata.MainActivity,android.view.View):127 -> onClick
     170:181:void tk.glucodata.setNumAlarm.lambda$mkviews$4(tk.glucodata.MainActivity,android.view.View):128:128 -> onClick
     182:186:void tk.glucodata.setNumAlarm.lambda$mkviews$4(tk.glucodata.MainActivity,android.view.View):129:129 -> onClick
-    187:189:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1975:1975 -> onClick
+    187:189:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1982:1982 -> onClick
     187:189:void tk.glucodata.setNumAlarm.lambda$mkviews$4(tk.glucodata.MainActivity,android.view.View):129 -> onClick
     190:194:void tk.glucodata.setNumAlarm.lambda$mkviews$4(tk.glucodata.MainActivity,android.view.View):130:130 -> onClick
     195:202:void tk.glucodata.setNumAlarm.lambda$mkviews$4(tk.glucodata.MainActivity,android.view.View):131:131 -> onClick
@@ -92941,11 +92941,11 @@ tk.glucodata.settings.Broadcasts$$ExternalSyntheticLambda4 -> g8:
       # {"id":"com.android.tools.r8.synthesized"}
     32:34:void tk.glucodata.setNumAlarm.lambda$gettimeview$13(android.view.View[],tk.glucodata.MainActivity,int[],int,android.widget.Button,android.view.View):291:291 -> onClick
     32:34:void Broadcasts$$ExternalSyntheticLambda4.onClick(android.view.View):0 -> onClick
-    35:36:tk.glucodata.NumberView tk.glucodata.MainActivity.getnumberview():1604:1604 -> onClick
+    35:36:tk.glucodata.NumberView tk.glucodata.MainActivity.getnumberview():1611:1611 -> onClick
     35:36:void tk.glucodata.setNumAlarm.lambda$gettimeview$13(android.view.View[],tk.glucodata.MainActivity,int[],int,android.widget.Button,android.view.View):292 -> onClick
       # {"id":"com.android.tools.r8.rewriteFrame","conditions":["throws(Ljava/lang/NullPointerException;)"],"actions":["removeInnerFrames(1)"]}
     35:36:void Broadcasts$$ExternalSyntheticLambda4.onClick(android.view.View):0 -> onClick
-    37:38:tk.glucodata.NumberView tk.glucodata.MainActivity.getnumberview():1604:1604 -> onClick
+    37:38:tk.glucodata.NumberView tk.glucodata.MainActivity.getnumberview():1611:1611 -> onClick
     37:38:void tk.glucodata.setNumAlarm.lambda$gettimeview$13(android.view.View[],tk.glucodata.MainActivity,int[],int,android.widget.Button,android.view.View):292 -> onClick
     37:38:void Broadcasts$$ExternalSyntheticLambda4.onClick(android.view.View):0 -> onClick
     39:60:void tk.glucodata.setNumAlarm.lambda$gettimeview$13(android.view.View[],tk.glucodata.MainActivity,int[],int,android.widget.Button,android.view.View):292:292 -> onClick
@@ -93157,7 +93157,7 @@ tk.glucodata.settings.Settings -> uw:
     661:663:void alarmsettings(tk.glucodata.MainActivity,android.view.View):840:840 -> a
     664:668:void alarmsettings(tk.glucodata.MainActivity,android.view.View):848:848 -> a
     669:674:void alarmsettings(tk.glucodata.MainActivity,android.view.View):849:849 -> a
-    675:679:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1975:1975 -> a
+    675:679:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1982:1982 -> a
     675:679:void alarmsettings(tk.glucodata.MainActivity,android.view.View):849 -> a
     680:690:void alarmsettings(tk.glucodata.MainActivity,android.view.View):852:852 -> a
     691:701:void alarmsettings(tk.glucodata.MainActivity,android.view.View):855:855 -> a
@@ -93199,7 +93199,7 @@ tk.glucodata.settings.Settings -> uw:
     244:246:void changeProfile(tk.glucodata.MainActivity,int,tk.glucodata.settings.Settings$ProfileScheduleAdapter,android.view.View):607 -> b
     247:251:void changeProfile(tk.glucodata.MainActivity,int,tk.glucodata.settings.Settings$ProfileScheduleAdapter,android.view.View):611:611 -> b
     252:257:void changeProfile(tk.glucodata.MainActivity,int,tk.glucodata.settings.Settings$ProfileScheduleAdapter,android.view.View):612:612 -> b
-    258:260:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1975:1975 -> b
+    258:260:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1982:1982 -> b
     258:260:void changeProfile(tk.glucodata.MainActivity,int,tk.glucodata.settings.Settings$ProfileScheduleAdapter,android.view.View):612 -> b
     261:269:void changeProfile(tk.glucodata.MainActivity,int,tk.glucodata.settings.Settings$ProfileScheduleAdapter,android.view.View):613:613 -> b
     1:7:void finish():258:258 -> c
@@ -93332,7 +93332,7 @@ tk.glucodata.settings.Settings -> uw:
     660:684:void mksettings(tk.glucodata.MainActivity):1498:1498 -> f
     685:687:void mksettings(tk.glucodata.MainActivity):1501:1501 -> f
     688:695:void mksettings(tk.glucodata.MainActivity):1508:1508 -> f
-    696:698:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1975:1975 -> f
+    696:698:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1982:1982 -> f
     696:698:void mksettings(tk.glucodata.MainActivity):1508 -> f
     699:707:void mksettings(tk.glucodata.MainActivity):1509:1509 -> f
     708:718:void mksettings(tk.glucodata.MainActivity):1512:1512 -> f
@@ -93367,7 +93367,7 @@ tk.glucodata.settings.Settings -> uw:
     87:96:void scheduleProfiles(tk.glucodata.MainActivity,android.view.View):668:668 -> h
     97:104:void scheduleProfiles(tk.glucodata.MainActivity,android.view.View):671:671 -> h
     105:110:void scheduleProfiles(tk.glucodata.MainActivity,android.view.View):687:687 -> h
-    111:113:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1975:1975 -> h
+    111:113:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1982:1982 -> h
     111:113:void scheduleProfiles(tk.glucodata.MainActivity,android.view.View):689 -> h
     114:118:void scheduleProfiles(tk.glucodata.MainActivity,android.view.View):691:691 -> h
     119:127:void scheduleProfiles(tk.glucodata.MainActivity,android.view.View):694:694 -> h
@@ -93641,7 +93641,7 @@ tk.glucodata.settings.Settings$$ExternalSyntheticLambda0 -> hw:
     801:803:void tk.glucodata.settings.Settings.lambda$mksettings$83(tk.glucodata.MainActivity,android.view.View):1518 -> onClick
     804:809:void tk.glucodata.settings.Settings.displaysettings(tk.glucodata.MainActivity,tk.glucodata.settings.Settings):1185:1185 -> onClick
     804:809:void tk.glucodata.settings.Settings.lambda$mksettings$83(tk.glucodata.MainActivity,android.view.View):1518 -> onClick
-    810:812:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1975:1975 -> onClick
+    810:812:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1982:1982 -> onClick
     810:812:void tk.glucodata.settings.Settings.displaysettings(tk.glucodata.MainActivity,tk.glucodata.settings.Settings):1185 -> onClick
     810:812:void tk.glucodata.settings.Settings.lambda$mksettings$83(tk.glucodata.MainActivity,android.view.View):1518 -> onClick
     813:821:void tk.glucodata.settings.Settings.displaysettings(tk.glucodata.MainActivity,tk.glucodata.settings.Settings):1186:1186 -> onClick
@@ -93717,7 +93717,7 @@ tk.glucodata.settings.Settings$$ExternalSyntheticLambda0 -> hw:
     1062:1067:void tk.glucodata.settings.Settings.lambda$mksettings$82(tk.glucodata.MainActivity,android.view.View):1510 -> onClick
     1068:1069:void tk.glucodata.setNumAlarm.mkviews(tk.glucodata.MainActivity,android.view.View):194:194 -> onClick
     1068:1069:void tk.glucodata.settings.Settings.lambda$mksettings$82(tk.glucodata.MainActivity,android.view.View):1510 -> onClick
-    1070:1072:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1975:1975 -> onClick
+    1070:1072:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1982:1982 -> onClick
     1070:1072:void tk.glucodata.setNumAlarm.mkviews(tk.glucodata.MainActivity,android.view.View):194 -> onClick
     1070:1072:void tk.glucodata.settings.Settings.lambda$mksettings$82(tk.glucodata.MainActivity,android.view.View):1510 -> onClick
     1073:1081:void tk.glucodata.setNumAlarm.mkviews(tk.glucodata.MainActivity,android.view.View):196:196 -> onClick
@@ -93744,7 +93744,7 @@ tk.glucodata.settings.Settings$$ExternalSyntheticLambda0 -> hw:
     1151:1177:void tk.glucodata.settings.Settings.lambda$displaysettings$54(tk.glucodata.settings.Settings,tk.glucodata.MainActivity,android.view.View):1189 -> onClick
     1178:1179:void tk.glucodata.settings.SetColors.show(tk.glucodata.MainActivity):81:81 -> onClick
     1178:1179:void tk.glucodata.settings.Settings.lambda$displaysettings$54(tk.glucodata.settings.Settings,tk.glucodata.MainActivity,android.view.View):1189 -> onClick
-    1180:1182:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1975:1975 -> onClick
+    1180:1182:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1982:1982 -> onClick
     1180:1182:void tk.glucodata.settings.SetColors.show(tk.glucodata.MainActivity):82 -> onClick
     1180:1182:void tk.glucodata.settings.Settings.lambda$displaysettings$54(tk.glucodata.settings.Settings,tk.glucodata.MainActivity,android.view.View):1189 -> onClick
     1183:1194:void tk.glucodata.settings.SetColors.show(tk.glucodata.MainActivity):83:83 -> onClick
@@ -93753,7 +93753,7 @@ tk.glucodata.settings.Settings$$ExternalSyntheticLambda0 -> hw:
     1195:1204:void tk.glucodata.settings.Settings.lambda$displaysettings$54(tk.glucodata.settings.Settings,tk.glucodata.MainActivity,android.view.View):1189 -> onClick
     1205:1212:void tk.glucodata.settings.SetColors.show(tk.glucodata.MainActivity):86:86 -> onClick
     1205:1212:void tk.glucodata.settings.Settings.lambda$displaysettings$54(tk.glucodata.settings.Settings,tk.glucodata.MainActivity,android.view.View):1189 -> onClick
-    1213:1227:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1975:1975 -> onClick
+    1213:1227:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1982:1982 -> onClick
     1213:1227:void tk.glucodata.settings.SetColors.show(tk.glucodata.MainActivity):87 -> onClick
     1213:1227:void tk.glucodata.settings.Settings.lambda$displaysettings$54(tk.glucodata.settings.Settings,tk.glucodata.MainActivity,android.view.View):1189 -> onClick
     1228:1230:void tk.glucodata.settings.SetColors.show(tk.glucodata.MainActivity):95:95 -> onClick
@@ -93916,7 +93916,7 @@ tk.glucodata.settings.Settings$$ExternalSyntheticLambda12 -> iw:
     477:479:void tk.glucodata.settings.Settings.lambda$exchanges$88(tk.glucodata.MainActivity,tk.glucodata.Layout[],android.view.View):1577 -> onClick
     480:487:void tk.glucodata.NightPost.config(tk.glucodata.MainActivity,android.view.View):375:375 -> onClick
     480:487:void tk.glucodata.settings.Settings.lambda$exchanges$88(tk.glucodata.MainActivity,tk.glucodata.Layout[],android.view.View):1577 -> onClick
-    488:490:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1975:1975 -> onClick
+    488:490:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1982:1982 -> onClick
     488:490:void tk.glucodata.NightPost.config(tk.glucodata.MainActivity,android.view.View):405 -> onClick
     488:490:void tk.glucodata.settings.Settings.lambda$exchanges$88(tk.glucodata.MainActivity,tk.glucodata.Layout[],android.view.View):1577 -> onClick
     491:499:void tk.glucodata.NightPost.config(tk.glucodata.MainActivity,android.view.View):406:406 -> onClick
@@ -94076,7 +94076,7 @@ tk.glucodata.settings.Settings$$ExternalSyntheticLambda12 -> iw:
     1076:1078:void tk.glucodata.settings.Settings.lambda$mksettings$69(tk.glucodata.MainActivity,tk.glucodata.Layout[],android.view.View):1384 -> onClick
     1079:1084:void tk.glucodata.FloatingConfig.show(tk.glucodata.MainActivity,android.view.View):243:243 -> onClick
     1079:1084:void tk.glucodata.settings.Settings.lambda$mksettings$69(tk.glucodata.MainActivity,tk.glucodata.Layout[],android.view.View):1384 -> onClick
-    1085:1087:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1975:1975 -> onClick
+    1085:1087:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1982:1982 -> onClick
     1085:1087:void tk.glucodata.FloatingConfig.show(tk.glucodata.MainActivity,android.view.View):243 -> onClick
     1085:1087:void tk.glucodata.settings.Settings.lambda$mksettings$69(tk.glucodata.MainActivity,tk.glucodata.Layout[],android.view.View):1384 -> onClick
     1088:1101:void tk.glucodata.FloatingConfig.show(tk.glucodata.MainActivity,android.view.View):246:246 -> onClick
@@ -94164,7 +94164,7 @@ tk.glucodata.settings.Settings$$ExternalSyntheticLambda12 -> iw:
     1399:1401:void tk.glucodata.settings.Settings.lambda$mksettings$66(tk.glucodata.MainActivity,tk.glucodata.Layout[],android.view.View):1355 -> onClick
     1402:1407:void tk.glucodata.settings.Calibration.show(tk.glucodata.MainActivity,android.view.View):118:118 -> onClick
     1402:1407:void tk.glucodata.settings.Settings.lambda$mksettings$66(tk.glucodata.MainActivity,tk.glucodata.Layout[],android.view.View):1355 -> onClick
-    1408:1410:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1975:1975 -> onClick
+    1408:1410:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1982:1982 -> onClick
     1408:1410:void tk.glucodata.settings.Calibration.show(tk.glucodata.MainActivity,android.view.View):118 -> onClick
     1408:1410:void tk.glucodata.settings.Settings.lambda$mksettings$66(tk.glucodata.MainActivity,tk.glucodata.Layout[],android.view.View):1355 -> onClick
     1411:1418:void tk.glucodata.settings.Calibration.show(tk.glucodata.MainActivity,android.view.View):132:132 -> onClick
@@ -94336,7 +94336,7 @@ tk.glucodata.settings.Settings$$ExternalSyntheticLambda23 -> kw:
     494:498:void tk.glucodata.settings.Settings.lambda$alarmsettings$39(tk.glucodata.BooleanSupplier,tk.glucodata.MainActivity,android.view.View,android.view.View,android.view.View):935 -> onClick
     499:504:void tk.glucodata.settings.Settings.advancedalarm(tk.glucodata.MainActivity,android.view.View):463:463 -> onClick
     499:504:void tk.glucodata.settings.Settings.lambda$alarmsettings$39(tk.glucodata.BooleanSupplier,tk.glucodata.MainActivity,android.view.View,android.view.View,android.view.View):935 -> onClick
-    505:507:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1975:1975 -> onClick
+    505:507:void tk.glucodata.MainActivity.addMyContentView(android.view.View,android.view.ViewGroup$LayoutParams):1982:1982 -> onClick
     505:507:void tk.glucodata.settings.Settings.advancedalarm(tk.glucodata.MainActivity,android.view.View):463 -> onClick
     505:507:void tk.glucodata.settings.Settings.lambda$alarmsettings$39(tk.glucodata.BooleanSupplier,tk.glucodata.MainActivity,android.view.View,android.view.View,android.view.View):935 -> onClick
     508:515:void tk.glucodata.settings.Settings.advancedalarm(tk.glucodata.MainActivity,android.view.View):464:464 -> onClick

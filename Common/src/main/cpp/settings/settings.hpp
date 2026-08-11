@@ -1017,7 +1017,8 @@ Settings(const char *settingsname,const char *base,const char *country): Mmap(se
     setconvert(country);
 
      showui=getui();
-
+    if(!data()->httpport)
+        data()->httpport=defaulthttpport;
 }
 
 

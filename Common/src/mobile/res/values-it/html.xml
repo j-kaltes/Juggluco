@@ -3296,4 +3296,27 @@ utilizzato in precedenza. Se il sensore è stato usato con l\'app
 Sibionics GS3, puoi recuperare l\'ID dal loro server.</p>
 ]]>
 </string>
+<string name="webpageshelp" >
+<![CDATA[
+<p><a href="https://www.juggluco.nl/Jugglucohelp/it/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/webpageshelp.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/webpageshelp.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/webpageshelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/webpageshelp.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/webpageshelp.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/webpageshelp.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/webpageshelp.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/webpageshelp.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/webpageshelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/webpageshelp.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/webpageshelp.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/webpageshelp.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/sv/webpageshelp.html">sv</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/webpageshelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/webpageshelp.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/webpageshelp.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/webpageshelp.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/webpageshelp.html?lang=en">en</a>&emsp;&emsp;</p><h1>Pagine web</h1>
+<p>Qui è possibile caricare file e directory sul server web di Juggluco. In questo modo è possibile utilizzare html e JavaScript propri o di terze parti che usano i dati di Juggluco.</p>
+<p>I file e le directory caricati qui sono disponibili in <b>additions</b>
+sul server web di Juggluco. Quando si carica un file chiamato “<i>mypage.html</i>” è possibile visualizzarlo tramite
+<a href="http://127.0.0.1:17580/additions/mypage.html">http://127.0.0.1:17580/additions/mypage.html</a>
+nel browser web di questo telefono.<br/>
+<br/>
+<b>Carica file</b>
+copia uno o più file selezionati nella directory attualmente visualizzata.
+</p>
+<p><b>Carica directory</b> copia un intero albero di directory. I file esistenti con lo stesso nome vengono sostituiti.<br/>
+<br/>
+Toccare una directory per entrarvi.
+</p>
+<p><b>Su</b> o il pulsante Indietro di Android torna alla directory superiore.
+</p>
+<p><b>Elimina</b> rimuove un file oppure una directory insieme a tutto il suo contenuto.
+</p>
+<p>Quando si utilizza la versione a riga di comando del server Juggluco, inserire invece i file nella directory additions sotto jugglucodata.</p>
+]]>
+</string>
 </resources>

@@ -105,6 +105,10 @@ public static void show(MainActivity context,View parent) {
 	 var labport=getlabel(context,"SSL "+context.getString(R.string.port));
 	var oldport=Natives.getsslport();
   	var portview=getnumedit(context, ""+oldport);
+
+	 var labhttpport=getlabel(context,"HTTP "+context.getString(R.string.port));
+	int oldhttpport=Natives.gethttpport();
+  	var httpportview=getnumedit(context, ""+oldhttpport);
                         
 	 var labinterval=getlabel(context,R.string.interval);
 	int interval=Natives.getinterval();
@@ -127,15 +131,26 @@ public static void show(MainActivity context,View parent) {
 			Applic.argToaster(context,portstr+context.getString(R.string.invalidport), Toast.LENGTH_LONG);
 			return;
                         };
-		if(portstr.equals(getreceiveport())) {
+
+		 var httpportstr=httpportview.getText().toString();
+		 int httpportnum=0;
+		 try {
+                        httpportnum=Integer.parseInt(httpportstr);
+                        }
+                catch(Throwable e) {
+                        Log.stack(LOG_ID,"parseInt HTTP", e);
+			Applic.argToaster(context,httpportstr+context.getString(R.string.invalidport), Toast.LENGTH_LONG);
+			return;
+                        };
+		if(portstr.equals(getreceiveport())||httpportstr.equals(getreceiveport())) {
 			Applic.argToaster(context,R.string.nomirrorport,Toast.LENGTH_LONG);
 			return;
 			}
-		if(portnum==17580) {
+		if(portnum==httpportnum) {
 			Applic.argToaster(context,R.string.nohttpport,Toast.LENGTH_LONG);
 			return;
 			}	
-		if(portnum<1024||portnum> 65535) {
+		if(portnum<1024||portnum>65535||httpportnum<1024||httpportnum>65535) {
 			Applic.argToaster(context,R.string.portrange,Toast.LENGTH_LONG);
 			return;
 			}
@@ -151,6 +166,19 @@ public static void show(MainActivity context,View parent) {
 				Natives.setuseSSL(true);
 			}
 
+		boolean warnhttpport=false;
+		if(httpportnum!=Natives.gethttpport()) {
+			boolean serveractive=Natives.getusexdripwebserver();
+			Natives.sethttpport(httpportnum);
+			Applic.argToaster(context,context.getString(R.string.newport)+httpportstr, Toast.LENGTH_LONG);
+			if(serveractive) {
+				Natives.setusexdripwebserver(false);
+                util.sleep(1000);
+				Natives.setusexdripwebserver(true);
+				}
+			warnhttpport=httpportnum!=17580;
+			}
+
 		 var intervalstr=intervalview.getText().toString();
 		 int intervalnum=0;
 		 try {
@@ -163,7 +191,10 @@ public static void show(MainActivity context,View parent) {
                         };
 		Natives.setinterval(intervalnum);
 		tk.glucodata.help.hidekeyboard(context);
-		Applic.argToaster(context, R.string.saved,Toast.LENGTH_SHORT);
+		if(warnhttpport)
+			Applic.argToaster(context,R.string.httpportxdripwarning,Toast.LENGTH_LONG);
+		else
+			Applic.argToaster(context, R.string.saved,Toast.LENGTH_SHORT);
 		});
 	var chain=getbutton(context,R.string.fullchain);
 	chain.setOnClickListener(
@@ -174,8 +205,6 @@ public static void show(MainActivity context,View parent) {
 	var local=getcheckbox(context,R.string.localonly,Natives.getXdripServerLocal( ));
 	float density=GlucoseCurve.metrics.density;
 	int laypad=(int)(density*4.0);
-	var httpport=getlabel(context,"http "+context.getString(R.string.port)+"=17580");
-	httpport.setPadding(laypad*3,0,0,0);
 	local.setOnCheckedChangeListener(
 			 (buttonView,  isChecked) -> {
 				Natives.setXdripServerLocal(isChecked);
@@ -195,6 +224,10 @@ public static void show(MainActivity context,View parent) {
                 help.help(R.string.Nightscouthelp,context);
 		});
 		
+
+	var UploadWeb=new android.widget.Button(context);
+	UploadWeb.setText(R.string.webuploadpages);
+	UploadWeb.setOnClickListener(v->WebPageUpload.show(context));
 
 	var Close=getbutton(context,R.string.closename);
 
@@ -234,7 +267,7 @@ public static void show(MainActivity context,View parent) {
 			l.setX((width-w)/2);
 		l.setY(MainActivity.systembarTop); */
 		return new int[] {w,h};
-		},new View[]{secret,editkey,visible},new View[]{labport,portview,labinterval,intervalview} , new View[]{sslbox,privkey,chain,save},new View[]{local,httpport,treatments},errorrow,new View[]{Help,server,Close} );
+		},new View[]{secret,editkey,visible},new View[]{labhttpport,httpportview,labport,portview},new View[]{local,labinterval,intervalview,save},new View[]{sslbox,privkey,chain},new View[]{treatments,UploadWeb},errorrow,new View[]{Help,server,Close} );
 	treatments.setOnCheckedChangeListener( (buttonView,  isChecked) -> {
 		switch(nochangeamounts[0])  {
 			case 0: {
@@ -279,17 +312,27 @@ public static void show(MainActivity context,View parent) {
                                         Log.stack(LOG_ID,"parseInt", e);
                                         };
                                 if(portnum== Natives.getsslport()) {
-                                         var intervalstr=intervalview.getText().toString();
-                                         int intervalnum=0;
+                                         var httpportstr=httpportview.getText().toString();
+                                         int httpportnum=0;
                                          try {
-                                                intervalnum=Integer.parseInt(intervalstr);
+                                                httpportnum=Integer.parseInt(httpportstr);
                                                 }
                                         catch(Throwable e) {
-                                                Log.stack(LOG_ID,"parseInt", e);
+                                                Log.stack(LOG_ID,"parseInt HTTP", e);
                                                 };
-                                        if(intervalnum==Natives.getinterval())  {
-                                                okproc.run();
-                                                return;
+                                         if(httpportnum==Natives.gethttpport()) {
+                                                 var intervalstr=intervalview.getText().toString();
+                                                 int intervalnum=0;
+                                                 try {
+                                                        intervalnum=Integer.parseInt(intervalstr);
+                                                        }
+                                                catch(Throwable e) {
+                                                        Log.stack(LOG_ID,"parseInt", e);
+                                                        };
+                                                if(intervalnum==Natives.getinterval())  {
+                                                        okproc.run();
+                                                        return;
+                                                        }
                                                 }
                                         }
                                 }

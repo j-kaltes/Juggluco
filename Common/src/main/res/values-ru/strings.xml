@@ -482,5 +482,25 @@
     <string name="light">Светлая</string>
     <string name="dark">Темная</string>
     <string name="apply">Применить</string>
+    <!-- Web server additions file manager -->
+    <string name="webuploadpages">Загрузить веб-страницы</string>
+    <string name="webuploadfiles">Загрузить файлы</string>
+    <string name="webuploaddirectory">Загрузить каталог</string>
+    <string name="webup">Вверх</string>
+    <string name="webcantaccessdirectory">Не удалось получить доступ к каталогу %1$s</string>
+    <string name="webcantcreatedirectory">Не удалось создать %1$s</string>
+    <string name="webcantopenfileselector">Не удалось открыть выбор файлов</string>
+    <string name="webcantopendirectoryselector">Не удалось открыть выбор каталогов</string>
+    <string name="webinvaliddirectory">Недопустимый каталог %1$s</string>
+    <string name="webuploadingfiles">Загрузка файлов…</string>
+    <string name="webuploadingdirectory">Загрузка каталога…</string>
+    <string name="webuploadresult">Загружено файлов: %1$d; каталогов: %2$d; ошибок: %3$d</string>
+    <string name="webdeletefilequestion">Удалить файл «%1$s»?</string>
+    <string name="webdeletedirectoryquestion">Удалить каталог «%1$s» и всё его содержимое?</string>
+    <string name="webdeleting">Удаление %1$s…</string>
+    <string name="webdeleted">%1$s удалён</string>
+    <string name="webdeletefailed">Не удалось удалить %1$s</string>
+    <string name="webdirectoryempty">Этот каталог пуст</string>
+    <string name="webdirectoryentry">[каталог] %1$s</string>
 </resources>
 

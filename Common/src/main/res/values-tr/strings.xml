@@ -384,4 +384,25 @@
  <string name="phone">telefon</string>
  <string name="directsensor">Doğrudan sensör-</string>
 <string name="connectionl">bağlantısı</string>
+
+    <!-- Web server additions file manager -->
+    <string name="webuploadpages">Web sayfalarını yükle</string>
+    <string name="webuploadfiles">Dosyaları yükle</string>
+    <string name="webuploaddirectory">Dizin yükle</string>
+    <string name="webup">Yukarı</string>
+    <string name="webcantaccessdirectory">%1$s dizinine erişilemiyor</string>
+    <string name="webcantcreatedirectory">%1$s oluşturulamıyor</string>
+    <string name="webcantopenfileselector">Dosya seçici açılamıyor</string>
+    <string name="webcantopendirectoryselector">Dizin seçici açılamıyor</string>
+    <string name="webinvaliddirectory">Geçersiz %1$s dizini</string>
+    <string name="webuploadingfiles">Dosyalar yükleniyor…</string>
+    <string name="webuploadingdirectory">Dizin yükleniyor…</string>
+    <string name="webuploadresult">Yüklenen dosyalar: %1$d; dizinler: %2$d; başarısız: %3$d</string>
+    <string name="webdeletefilequestion">“%1$s” dosyası silinsin mi?</string>
+    <string name="webdeletedirectoryquestion">“%1$s” dizini ve içindeki her şey silinsin mi?</string>
+    <string name="webdeleting">%1$s siliniyor…</string>
+    <string name="webdeleted">%1$s silindi</string>
+    <string name="webdeletefailed">%1$s silinemedi</string>
+    <string name="webdirectoryempty">Bu dizin boş</string>
+    <string name="webdirectoryentry">[dizin] %1$s</string>
 </resources>

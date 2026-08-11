@@ -3177,4 +3177,27 @@ Sibionics और Linx/Lumiflex/Aidex X सेंसरों के लिए �
 </p>
 ]]>
 </string>
+<string name="webpageshelp" >
+<![CDATA[
+<p><a href="https://www.juggluco.nl/Jugglucohelp/hi/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/webpageshelp.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/webpageshelp.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/webpageshelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/webpageshelp.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/webpageshelp.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/webpageshelp.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/webpageshelp.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/webpageshelp.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/webpageshelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/webpageshelp.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/webpageshelp.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/webpageshelp.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/sv/webpageshelp.html">sv</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/webpageshelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/webpageshelp.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/webpageshelp.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/webpageshelp.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/webpageshelp.html?lang=en">en</a>&emsp;&emsp;</p><h1>वेब पेज</h1>
+<p>यहाँ आप Juggluco के वेब सर्वर पर फ़ाइलें और डायरेक्टरियाँ अपलोड कर सकते हैं। इस तरह आप अपने या किसी तृतीय पक्ष के html और JavaScript का उपयोग कर सकते हैं, जो Juggluco के डेटा का उपयोग करते हैं।</p>
+<p>यहाँ अपलोड की गई फ़ाइलें और डायरेक्टरियाँ Juggluco वेब सर्वर में <b>additions</b>
+के अंतर्गत उपलब्ध हैं। जब आप “<i>mypage.html</i>” नाम की फ़ाइल अपलोड करते हैं, तो इस फ़ाइल को
+<a href="http://127.0.0.1:17580/additions/mypage.html">http://127.0.0.1:17580/additions/mypage.html</a>
+के माध्यम से इस फ़ोन के वेब ब्राउज़र में देख सकते हैं।<br/>
+<br/>
+<b>फ़ाइलें अपलोड करें</b>
+एक या अधिक चुनी गई फ़ाइलों को वर्तमान में दिखाई गई डायरेक्टरी में कॉपी करता है।
+</p>
+<p><b>डायरेक्टरी अपलोड करें</b> पूरी डायरेक्टरी ट्री को कॉपी करता है। समान नाम वाली मौजूदा फ़ाइलें बदल दी जाती हैं।<br/>
+<br/>
+किसी डायरेक्टरी में जाने के लिए उस पर टैप करें।
+</p>
+<p><b>ऊपर</b> या Android का Back बटन उसकी पैरेंट डायरेक्टरी में वापस ले जाता है।
+</p>
+<p><b>हटाएँ</b> किसी फ़ाइल या डायरेक्टरी को उसके अंदर की सभी चीज़ों सहित हटा देता है।
+</p>
+<p>Juggluco सर्वर के कमांड लाइन संस्करण का उपयोग करते समय, फ़ाइलों को इसके बजाय jugglucodata के अंदर additions डायरेक्टरी में रखें।</p>
+]]>
+</string>
 </resources>

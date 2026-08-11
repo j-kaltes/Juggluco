@@ -960,4 +960,27 @@ i zawartość węglowodanów do definicji składnika.</p>
 </p>
 ]]>
 </string>
+<string name="webpageshelp" >
+<![CDATA[
+<p><a href="https://www.juggluco.nl/Jugglucohelp/pl/index.html">index</a></p><p><a href="https://www.juggluco.nl/Jugglucohelp/ar/webpageshelp.html">ar</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/be/webpageshelp.html">be</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/de/webpageshelp.html">de</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/es/webpageshelp.html">es</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/fr/webpageshelp.html">fr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/hi/webpageshelp.html">hi</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/it/webpageshelp.html">it</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ja/webpageshelp.html">ja</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/nl/webpageshelp.html">nl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pl/webpageshelp.html">pl</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/pt/webpageshelp.html">pt</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/ru/webpageshelp.html">ru</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/sv/webpageshelp.html">sv</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/tr/webpageshelp.html">tr</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uk/webpageshelp.html">uk</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/uz/webpageshelp.html">uz</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/zh/webpageshelp.html">zh</a>&emsp;&emsp;<a href="https://www.juggluco.nl/Jugglucohelp/webpageshelp.html?lang=en">en</a>&emsp;&emsp;</p><h1>Strony internetowe</h1>
+<p>Tutaj można przesyłać pliki i katalogi na serwer WWW w Juggluco. Pozwala to korzystać z własnych lub zewnętrznych html i JavaScript, które używają danych z Juggluco.</p>
+<p>Pliki i katalogi przesłane tutaj są dostępne w <b>additions</b>
+na serwerze WWW Juggluco. Po przesłaniu pliku o nazwie “<i>mypage.html</i>” można go otworzyć pod adresem
+<a href="http://127.0.0.1:17580/additions/mypage.html">http://127.0.0.1:17580/additions/mypage.html</a>
+w przeglądarce internetowej na tym telefonie.<br/>
+<br/>
+<b>Prześlij pliki</b>
+kopiuje jeden lub więcej wybranych plików do aktualnie wyświetlanego katalogu.
+</p>
+<p><b>Prześlij katalog</b> kopiuje całe drzewo katalogów. Istniejące pliki o tej samej nazwie są zastępowane.<br/>
+<br/>
+Dotknij katalogu, aby do niego wejść.
+</p>
+<p><b>W górę</b> lub przycisk Wstecz systemu Android wraca do katalogu nadrzędnego.
+</p>
+<p><b>Usuń</b> usuwa plik albo katalog wraz z całą jego zawartością.
+</p>
+<p>Jeśli używasz wersji serwera Juggluco działającej z wiersza poleceń, umieść pliki w katalogu additions pod jugglucodata.</p>
+]]>
+</string>
 </resources>
