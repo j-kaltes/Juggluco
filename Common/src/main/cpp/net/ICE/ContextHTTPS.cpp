@@ -152,6 +152,11 @@ std::string get_openssl_error_string() {
     return uit;
     }
 // Load Android system CA certs (DER format) into the given X509_STORE
+// Also loads user-installed CA certs from /data/misc/user/0/cacerts-added/
+// so that CAs installed via Settings > Security > Install certificate are trusted.
+// This is necessary because Android 7+ apps with targetSdkVersion>=24 do not
+// trust user CAs by default; the network_security_config handles the Java layer,
+// but the native OpenSSL path must load them explicitly.
 static bool load_android_cacerts(SSL_CTX* ctx) {
 #ifndef READ_CACERTS
      if(SSL_CTX_set_default_verify_paths(ctx)) {
@@ -165,16 +170,16 @@ static bool load_android_cacerts(SSL_CTX* ctx) {
         }
 #else
    constexpr const char ca_dir[] = "/system/etc/security/cacerts";
-//    constexpr const char ca_dir[] = "/data/local/tmp/cacerts";
-    if(SSL_CTX_load_verify_locations(ctx, NULL, ca_dir)) {
-        LOGARHTTPS("SSL_CTX_load_verify_locations Succeeded");
-        return true;
-        }
-     else {
+   constexpr const char user_ca_dir[] = "/data/misc/user/0/cacerts-added";
+    if(!SSL_CTX_load_verify_locations(ctx, NULL, ca_dir)) {
         std::string er=get_openssl_error_string();
-        LOGGERHTTPS("SSL_CTX_load_verify_locations failed: %s\n",er.data());
+        LOGGERHTTPS("SSL_CTX_load_verify_locations(%s) failed: %s\n",ca_dir,er.data());
         return false;
         }
+    LOGARHTTPS("SSL_CTX_load_verify_locations system Succeeded");
+    // User-installed CAs (optional — directory may not exist or be unreadable)
+    SSL_CTX_load_verify_locations(ctx, NULL, user_ca_dir);
+    return true;
 #endif
 }
 /*
