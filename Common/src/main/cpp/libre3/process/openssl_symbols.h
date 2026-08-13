@@ -1,24 +1,3 @@
-/*      This file is part of Juggluco, an Android app to receive and display         */
-/*      glucose values from Freestyle Libre 2(+), Libre 3(+), Dexcom G7/ONE+,        */
-/*      Sibionics GS1Sb and GS3, Accu-Chek SmartGuide, CareSens Air and              */
-/*      Aidex X sensors.                                                             */
-/*                                                                                   */
-/*      Copyright (C) 2021 Jaap Korthals Altes <jaapkorthalsaltes@gmail.com>         */
-/*                                                                                   */
-/*      Juggluco is free software: you can redistribute it and/or modify             */
-/*      it under the terms of the GNU General Public License as published            */
-/*      by the Free Software Foundation, either version 3 of the License, or         */
-/*      (at your option) any later version.                                          */
-/*                                                                                   */
-/*      Juggluco is distributed in the hope that it will be useful, but              */
-/*      WITHOUT ANY WARRANTY; without even the implied warranty of                   */
-/*      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                         */
-/*      See the GNU General Public License for more details.                         */
-/*                                                                                   */
-/*      You should have received a copy of the GNU General Public License            */
-/*      along with Juggluco. If not, see <https://www.gnu.org/licenses/>.            */
-/*                                                                                   */
-/*      Tue Aug 11 16:33:40 CEST 2026                                                */
 #ifndef L3_OPENSSL_SYMBOLS_H
 #define L3_OPENSSL_SYMBOLS_H
 
@@ -61,7 +40,6 @@ L3_CRYPTO_DECS_EXTERN int (*EVP_DigestFinal_exptr)(EVP_MD_CTX *ctx, unsigned cha
 L3_CRYPTO_DECS_EXTERN EVP_MD_CTX *(*EVP_MD_CTX_newptr)(void) L3_CRYPTO_DECS_INIT;
 L3_CRYPTO_DECS_EXTERN void (*EVP_MD_CTX_freeptr)(EVP_MD_CTX *ctx) L3_CRYPTO_DECS_INIT;
 L3_CRYPTO_DECS_EXTERN const EVP_MD *(*EVP_sha256ptr)(void) L3_CRYPTO_DECS_INIT;
-L3_CRYPTO_DECS_EXTERN const EVP_MD *(*EVP_sha512ptr)(void) L3_CRYPTO_DECS_INIT;
 L3_CRYPTO_DECS_EXTERN EC_KEY *(*EC_KEY_new_by_curve_nameptr)(int nid) L3_CRYPTO_DECS_INIT;
 L3_CRYPTO_DECS_EXTERN int (*EC_KEY_generate_keyptr)(EC_KEY *key) L3_CRYPTO_DECS_INIT;
 L3_CRYPTO_DECS_EXTERN const BIGNUM *(*EC_KEY_get0_private_keyptr)(const EC_KEY *key) L3_CRYPTO_DECS_INIT;
@@ -90,6 +68,7 @@ L3_CRYPTO_DECS_EXTERN void (*AES_encryptptr)(const unsigned char *in, unsigned c
 #define L3_CRYPTO_PROJECT_INIT
 #endif
 
+L3_CRYPTO_PROJECT_EXTERN const EVP_MD *(*EVP_sha512ptr)(void) L3_CRYPTO_PROJECT_INIT;
 L3_CRYPTO_PROJECT_EXTERN const EVP_MD *(*EVP_sha1ptr)(void) L3_CRYPTO_PROJECT_INIT;
 L3_CRYPTO_PROJECT_EXTERN unsigned char *(*HMACptr)(const EVP_MD *evp_md, const void *key, int key_len, const unsigned char *d, size_t n, unsigned char *md, unsigned int *md_len) L3_CRYPTO_PROJECT_INIT;
 L3_CRYPTO_PROJECT_EXTERN HMAC_CTX *(*HMAC_CTX_newptr)(void) L3_CRYPTO_PROJECT_INIT;
