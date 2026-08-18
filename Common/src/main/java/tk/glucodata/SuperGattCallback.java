@@ -95,7 +95,7 @@ public static boolean doGadgetbridge=false;
     long dataptr = 0L;
     public BluetoothDevice mActiveBluetoothDevice;
     long foundtime = 0L;
-    protected BluetoothGatt mBluetoothGatt;
+    protected volatile BluetoothGatt mBluetoothGatt;
     boolean superseded=false;
     public final int sensorgen;
     int readrssi=9999;
@@ -121,7 +121,10 @@ public void disconnect() {
     }
 public boolean reconnect(long now) {
     final var old=now-showtime+20;
-    if(charcha[1]<old&&connectTime<(now-60*1000))  {
+    // Gate on the most recent BLE frame activity (last good reading OR last failed decode),
+    // not only charcha[1]: in a healthy stream charcha[1] never advances, so testing it alone
+    // made this branch fire on a spurious/late loss alarm and drop a live connection.
+    if(Math.max(charcha[0],charcha[1])<old&&connectTime<(now-60*1000))  {
         try {
             if(doLog) {Log.i(LOG_ID,"reconnect "+SerialNumber);};
             constatstatusstr = "Loss of signal";
@@ -550,10 +553,16 @@ public void searchforDeviceAddress() {
                 return;
                 }
         
+            // Serialize the null-check + connectGatt + field assignment. Connect Runnables can be
+            // posted from several threads (BLE scan binder thread, GATT-callback thread, loss-of-signal
+            // alarm); without this two of them could both pass the guard and the second connectGatt
+            // would overwrite mBluetoothGatt without close()ing the first -> a leaked GATT client
+            // interface each time, eventually exhausting the ~30-client limit (permanent status 133).
+            synchronized(cb) {
             if (cb.mBluetoothGatt != null) {
                 {if(doLog) {Log.d(LOG_ID, SerialNumber + " cb.mBluetoothGatt!=null");};};
                 return;
-                } 
+                }
             var devname=device.getName();
             if(devname!=null)
                 mDeviceName=devname;
@@ -588,6 +597,7 @@ public void searchforDeviceAddress() {
                     Log.stack(LOG_ID, SerialNumber +" "+ "connectGatt", e);
 
                     }
+            }
         };
     }
 

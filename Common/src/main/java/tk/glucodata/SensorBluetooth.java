@@ -279,6 +279,9 @@ private static final  boolean alwaysfilter=true;
     Scanner21() {
         ScanSettings.Builder builder = new ScanSettings.Builder();
         builder.setReportDelay(0);
+        // Low-power (the default) delivers scan results slowly with the screen off; the reconnect
+        // scan is a short-lived fallback, so low-latency rediscovers the sensor much faster.
+        builder.setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY);
         mScanSettings = builder.build();
         {if(doLog) {Log.i(LOG_ID,"Scanner21");};};
         }
@@ -470,13 +473,21 @@ static  final ArrayDeque<Long> scanStarts = new ArrayDeque<>();
 
 
 static long delayUntilScanAllowed() {
-    long now = SystemClock.elapsedRealtime();
-    while(!scanStarts.isEmpty() && (now - scanStarts.peekFirst()) >= WINDOW_MS) {
-        scanStarts.removeFirst();
-    }
-    if (scanStarts.size() < MAX_SCAN_STARTS) return 0L;
-
-    return WINDOW_MS - (now - scanStarts.peekFirst());
+    // Prune the sliding window, check the Samsung ~5-starts/31s budget, and record this start
+    // atomically under the scanStarts monitor. Without the lock the scheduler-thread prune/peek
+    // races the main-thread clear() in the BT-state receiver, mis-counting the window and either
+    // over-delaying reconnect or tripping Samsung's silent scan throttle (~30s of no results).
+    synchronized(scanStarts) {
+        long now = SystemClock.elapsedRealtime();
+        while(!scanStarts.isEmpty() && (now - scanStarts.peekFirst()) >= WINDOW_MS) {
+            scanStarts.removeFirst();
+        }
+        if (scanStarts.size() < MAX_SCAN_STARTS) {
+            scanStarts.addLast(now);
+            return 0L;
+            }
+        return WINDOW_MS - (now - scanStarts.peekFirst());
+        }
 }
 
 private void startScanGuarded() {
@@ -491,9 +502,7 @@ private void startScanGuarded() {
             }
         return;
         }
-     final  long elapsed= SystemClock.elapsedRealtime();
-    scanStarts.addLast(elapsed);
-
+    // This scan start was already recorded atomically inside delayUntilScanAllowed() above.
     scanRunnable.run();
    // bluetoothLeScanner.startScan(scanCallback);
    }
@@ -1002,7 +1011,7 @@ private void addBluetoothStateReceiver() {
                         }
                     cb.close();
                     }
-                 scanStarts.clear();
+                 synchronized(scanStarts) { scanStarts.clear(); }
                 if(keepBluetooth) mBluetoothAdapter.enable();
                 } 
             else if (intExtra == BluetoothAdapter.STATE_ON) {
@@ -1105,11 +1114,16 @@ private void addReceivers() {
 private void removeReceivers() {
    removeBluetoothStateReceiver();
    removeBondStateReceiver() ;
-   if(Build.VERSION.SDK_INT <26)
-        removePairingRequestReceiver();
+   // addReceivers() registers the pairing receiver on every API level, so always unregister it.
+   // The old SDK<26 guard leaked one registration per teardown on API >= 26 (the S24 FE).
+   removePairingRequestReceiver();
     }
 private BroadcastReceiver bondStateReceiver =null;
 private void addBondStateReceiver() {
+    // Idempotent: addReceivers() can run more than once; without this each call leaked a
+    // BroadcastReceiver registration (removeBondStateReceiver can only drop the latest one).
+    if(bondStateReceiver!=null)
+        removeBondStateReceiver();
     bondStateReceiver=new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -1164,7 +1178,12 @@ private void addBondStateReceiver() {
         {if(doLog) {Log.i(LOG_ID,"Bond Broadcast: no sensor matches address "+address);};};
         }
     };
-    Applic.app.registerReceiver(bondStateReceiver, new IntentFilter(ACTION_BOND_STATE_CHANGED));
+    try {
+        Applic.app.registerReceiver(bondStateReceiver, new IntentFilter(ACTION_BOND_STATE_CHANGED));
+        }
+    catch(Throwable th) {
+        Log.stack(LOG_ID, "addBondStateReceiver", th);
+        }
     }
 
 private void removeBondStateReceiver() {
