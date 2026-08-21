@@ -79,10 +79,19 @@ extern uint32_t makestarttime(int index,uint32_t eventTime);
 extern jlong glucoseback(uint32_t nu,uint32_t glval,float drate,SensorGlucoseData *hist) ;
 
 jlong     SiContext::handleOneGlucose(SensorGlucoseData *sens,int sensorindex,uint32_t nowsecs,int index,int tempin,int current,int reindex,time_t eventTime) {
+        if(!sens || !sensors || sensorindex < 0 || sensorindex > sensors->last()) {
+            LOGGER("SIprocess invalid state sens=%p sensors=%p sensorindex=%d\n", sens, sensors, sensorindex);
+            return 8LL;
+            }
         sensor *sensor=sensors->getsensor(sensorindex);
+        auto *info=sens->getinfo();
+        if(!info) {
+            LOGAR("SIprocess getinfo()==null");
+            return 8LL;
+            }
         double temp=tempin/10.0;
         double value=current/10.0;
-        LOGGER("current=%" PRId64 " %.1f mmol/L\n",current,value);
+        LOGGER("current=%d %.1f mmol/L\n",current,value);
         if(eventTime>nowsecs)
             eventTime=nowsecs;
         int maxid=sens->getSiIndex();
@@ -114,26 +123,26 @@ jlong     SiContext::handleOneGlucose(SensorGlucoseData *sens,int sensorindex,ui
                }
         if(maxid<10) {
                const auto starttime=makestarttime(index,eventTime);
-               sens->getinfo()->starttime=starttime;
+               info->starttime=starttime;
                sensor->starttime=starttime;
                sensors->setindices();
-               backup->resendResetDevices(&updateone::sendstream);
+               if(backup)
+                   backup->resendResetDevices(&updateone::sendstream);
                }
 
 
-       double newvalue;
+       double newvalue=value;
        if(algcontext) {
            if(current>1&&value<3000.0&&(newvalue= process2(index,value,temp))>1.8&&(index%5==0)) {
-                sens->getinfo()->pollinterval=newvalue-value;
+                info->pollinterval=newvalue-value;
                 }
            else {
-             if(sens->getinfo()->pollinterval<40) 
-                    newvalue=value+sens->getinfo()->pollinterval;
+             if(info->pollinterval<40) 
+                    newvalue=value+info->pollinterval;
                  }
              }
        else   {
             LOGAR("algcontext==null");
-            newvalue=value;
             }
        const int mgdL=std::round(newvalue*convfactordL);
        const int trend2=algcontext?algcontext->ig_trend:0;
@@ -142,14 +151,14 @@ jlong     SiContext::handleOneGlucose(SensorGlucoseData *sens,int sensorindex,ui
 
        const int totalIndex=sens->siAddedIndex(index);
 
-       LOGGER("SIprocess totalIndex=%d index=%d temp=%f value=%f newvalue=%f trend=%d %d %1.f itime=%" PRIu64 " %s" ,totalIndex,index,temp,value,newvalue,trend2,abbottrend,change,eventTime,ctime(&eventTime));
+       LOGGER("SIprocess totalIndex=%d index=%d temp=%f value=%f newvalue=%f trend=%d %d %1.f itime=%" PRId64 " %s" ,totalIndex,index,temp,value,newvalue,trend2,abbottrend,change,static_cast<int64_t>(eventTime),ctime(&eventTime));
       if(newvalue>1.8&&newvalue<30) {
            sens->savestream(eventTime,totalIndex,mgdL,abbottrend,change);
            sens->setSiIndex(index+1);
            sens->retried=0;
            if(!reindex)  {
-                uint32_t starttime=sens->getinfo()->starttime;
-                uint32_t warminutes=sens->getinfo()->manualwarmup;
+                uint32_t starttime=info->starttime;
+                uint32_t warminutes=info->manualwarmup;
                 uint32_t endwarmup=starttime+warminutes*60;
                if((nowsecs-eventTime)< maxbluetoothage) {
                    if(eventTime>endwarmup) {
@@ -157,10 +166,12 @@ jlong     SiContext::handleOneGlucose(SensorGlucoseData *sens,int sensorindex,ui
                              if(sensor->finished) {
                                     sensor->finished=0;
                                     LOGGER("SIprocess finished=%d\n", sensor->finished);
-                                    backup->resensordata(sensorindex);
+                                    if(backup)
+                                        backup->resensordata(sensorindex);
                                     }
                              auto res=glucoseback(eventTime,mgdL,change,sens);
-                             backup->wakebackup(wakestream);
+                             if(backup)
+                                 backup->wakebackup(wakestream);
                              extern void wakewithcurrent();
                              wakewithcurrent();
 
@@ -170,8 +181,8 @@ jlong     SiContext::handleOneGlucose(SensorGlucoseData *sens,int sensorindex,ui
                                return res;
                                }
                           else {
-                                if(!sens->getinfo()->redoAll) {
-                                    sens->getinfo()->warmupstartpos=std::min((int)sens->getinfo()->pollcount-1,0);
+                                if(!info->redoAll) {
+                                    info->warmupstartpos=std::min((int)info->pollcount-1,0);
                                     }
                                
                               }

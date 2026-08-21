@@ -221,6 +221,8 @@ extern JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* reserved) ;
 #define getdynsym(name) getdynsymname(name,name)
 //#define getdynsym(name)  ( *(void **) (&name)=usedlsym(dynlibhandle, "Java_com_abbottdiabetescare_flashglucose_sensorabstractionservice_dataprocessing_DataProcessingNative_" #name))
 #define ds(name) && getdynsym(name)
+
+//#include "calibrat2_runtime_patch_v3.hpp"
 static void *dynlibhandle=nullptr;
 bool linklib(const char *filename) {
 LOGGER("linklib %s %p\n",filename,dynlibhandle);
@@ -270,7 +272,9 @@ if((dynlibhandle=dlopen(filename,RTLD_LAZY))) {
         typedef   jint (*OnLoadtype)(JavaVM* vm, void* reserved) ;
         OnLoadtype OnLoad=(OnLoadtype)usedlsym(dynlibhandle,"JNI_OnLoad");
         if(OnLoad!=JNI_OnLoad) {
-             LOGAR("OnLoad exists");
+            LOGAR("OnLoad exists");
+//            auto pr = patchCalibrat2AfterDlopen((void *)OnLoad); LOGGER("calibrat2 runtime patch v3: %s\n", calibrat2PatchResultName(pr));
+
             extern bool globalsetpathworks;
             if(globalsetpathworks) {
                 extern pathconcat mkbindir(std::string_view subdir,std::string_view libname );
@@ -865,7 +869,7 @@ unlink(libpath);
         return -1;    
 #else
     bool gen2= 
-#ifdef GEN2ROOTSHECK
+#if defined(GEN2ROOTSHECK) && !defined(__x86_64__)
    settings->data()->streamHistory||userver2();
 #else
    true;
@@ -1632,3 +1636,49 @@ extern "C" JNIEXPORT void  JNICALL   fromjava(closedynlib)(JNIEnv *env, jclass _
     }
 
 
+/*
+#ifndef NOLOG
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/syscall.h>
+#include <sys/stat.h>
+
+static void debug_gate() {
+    const pid_t tid = static_cast<pid_t>(syscall(__NR_gettid));
+
+    LOGGER("CAL debug gate: tid=%d\n", tid);
+
+    constexpr const char *path = "/data/local/tmp/cal-gate";
+
+    // Opening the FIFO for reading blocks until somebody opens it for writing.
+    int fd = open(path, O_RDONLY);
+    if (fd < 0) {
+        LOGGER("debug gate open failed: %d\n", errno);
+        return;
+    }
+
+    char byte;
+    (void)read(fd, &byte, 1);
+    close(fd);
+
+    LOGGER("CAL debug gate released: tid=%d\n", tid);
+  }
+
+static void libre2testthread() {
+    //debugclone();
+    //resetwrong();
+//    debug_gate();
+    abbottreinit();
+//    jint res=abbottcall(P1)(env,obj,0,0,nullptr,nullptr,getjtoken(env));
+    }
+
+#include <thread>
+
+extern void libre2tester();
+extern void libre2tester() ;
+void libre2tester() {
+    std::thread th(libre2testthread);
+    th.detach();
+    }
+#endif
+*/

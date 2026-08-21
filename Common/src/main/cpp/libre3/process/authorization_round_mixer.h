@@ -1,24 +1,3 @@
-/*      This file is part of Juggluco, an Android app to receive and display         */
-/*      glucose values from Freestyle Libre 2(+), Libre 3(+), Dexcom G7/ONE+,        */
-/*      Sibionics GS1Sb and GS3, Accu-Chek SmartGuide, CareSens Air and              */
-/*      Aidex X sensors.                                                             */
-/*                                                                                   */
-/*      Copyright (C) 2021 Jaap Korthals Altes <jaapkorthalsaltes@gmail.com>         */
-/*                                                                                   */
-/*      Juggluco is free software: you can redistribute it and/or modify             */
-/*      it under the terms of the GNU General Public License as published            */
-/*      by the Free Software Foundation, either version 3 of the License, or         */
-/*      (at your option) any later version.                                          */
-/*                                                                                   */
-/*      Juggluco is distributed in the hope that it will be useful, but              */
-/*      WITHOUT ANY WARRANTY; without even the implied warranty of                   */
-/*      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                         */
-/*      See the GNU General Public License for more details.                         */
-/*                                                                                   */
-/*      You should have received a copy of the GNU General Public License            */
-/*      along with Juggluco. If not, see <https://www.gnu.org/licenses/>.            */
-/*                                                                                   */
-/*      Tue Aug 11 16:33:40 CEST 2026                                                */
 #ifndef L3_AUTHORIZATION_MATERIAL_MIXER_H
 #define L3_AUTHORIZATION_MATERIAL_MIXER_H
 
@@ -36,12 +15,6 @@ extern "C" {
 #define L3_AUTH_ROUND_CORE_VEC_WORDS 13u
 #define L3_AUTH_ROUND_CORE_PAIRS13 13u
 #define L3_AUTH_ROUND_CORE_CONV_PAIRS26 26u
-
-typedef struct {
-    uint64_t high_halves2[2];
-    uint64_t low_halves2[2];
-    uint64_t middle_low_halves2[2];
-} l3_authorization_vector_seed;
 
 /* v207: exact affine output setup after the two FUN_f3fc2304 calls in
  * FUN_f3fbc5c0.  The left13/right13 inputs correspond to the native local_4ac
@@ -93,9 +66,7 @@ int l3_authorization_core_pair_reduce_pair_affine_native(
  * frames and the 35-byte scalar through point multiplication, both
  * FUN_f3fc2110 conversions, both native-order FUN_f3fc2304 calls, and the
  * initial param_5/param_6/param_7 affine writes.  All shared inputs are read
- * from their native full-parent offsets; there is no hidden register state.
- * The returned initial_param5_seed is the three-vector state consumed by the
- * first round's param_5 materializer. */
+ * from their native full-parent offsets; there is no hidden register state. */
 int l3_authorization_prepare_round_pipeline(
     const uint8_t *full_parent_ctx,
     const uint8_t left66[0x42],
@@ -105,8 +76,7 @@ int l3_authorization_prepare_round_pipeline(
     int32_t out_second_words13[L3_AUTH_ROUND_CORE_FC2304_WORDS],
     uint32_t out_param5_words13[L3_AUTH_ROUND_CORE_VEC_WORDS],
     uint32_t out_param6_words13[L3_AUTH_ROUND_CORE_VEC_WORDS],
-    uint32_t out_param7_words13[L3_AUTH_ROUND_CORE_VEC_WORDS],
-    l3_authorization_vector_seed *out_initial_param5_seed);
+    uint32_t out_param7_words13[L3_AUTH_ROUND_CORE_VEC_WORDS]);
 
 
 
@@ -242,16 +212,6 @@ int l3_authorization_stage1_stage_accumulate_and_convolve26(
     l3_authorization_stage1_stage_convolution_trace *trace);
 
 
-typedef struct {
-    uint64_t input_low_halves13[13][2];
-    uint64_t input_high_halves13[13][2];
-    uint64_t side_from_high13[13][2];
-    uint64_t side_from_low13[13][2];
-    uint64_t bias13[13][2];
-    uint64_t output_halves13[13][2];
-    uint32_t vector_feedback_scalar_arg;
-} l3_authorization_stage1_stage_vector_reduction_trace;
-
 /* v303: vector materialization after the v302 low local_370[0..0x33]
  * convolution image.  The native block combines that low 26-pair image with
  * the carried high 26-pair image in local_370[0x34..0x67] and three
@@ -262,25 +222,7 @@ typedef struct {
 int l3_authorization_stage1_stage_vector_reduction13(
     const l3_authorization_word_pair low_pairs26[L3_AUTH_ROUND_CORE_CONV_PAIRS26],
     const l3_authorization_word_pair high_pairs26[L3_AUTH_ROUND_CORE_CONV_PAIRS26],
-    const uint64_t local4c0_halves2[2],
-    const uint64_t local4d0_halves2[2],
-    const uint64_t auvar98_halves2[2],
-    uint64_t out_halves13[13][2],
-    uint32_t *out_vector_feedback_scalar_arg,
-    l3_authorization_stage1_stage_vector_reduction_trace *trace);
-
-int l3_authorization_stage1_stage_convolve_and_reduce_vectors13(
-    const l3_authorization_word_pair high_pairs26[L3_AUTH_ROUND_CORE_CONV_PAIRS26],
-    const int32_t local5b0[13],
-    const int32_t round_words13[13],
-    const uint64_t local4c0_halves2[2],
-    const uint64_t local4d0_halves2[2],
-    const uint64_t auvar98_halves2[2],
-    uint64_t out_halves13[13][2],
-    uint32_t *out_vector_feedback_scalar_arg,
-    l3_authorization_stage1_stage_convolution_trace *conv_trace,
-    l3_authorization_stage1_stage_vector_reduction_trace *vec_trace);
-
+    uint64_t out_halves13[13][2]);
 
 typedef struct {
     l3_authorization_word_pair local548_raw2ab0[13];
@@ -346,39 +288,10 @@ int l3_authorization_stage2_stage_accumulate_and_convolve26(
  * convolution image.  This is the same native rolling 13-lane shape as V303,
  * but with the second constant family and scalar argument used by the next
  * FUN_f3fdd33c call before the immediate param_6 export. */
-typedef struct {
-    uint64_t input_low_halves13[13][2];
-    uint64_t input_high_halves13[13][2];
-    uint64_t side_from_high13[13][2];
-    uint64_t side_from_low13[13][2];
-    uint64_t bias13[13][2];
-    uint64_t output_halves13[13][2];
-    uint32_t vector_feedback_scalar_arg;
-} l3_authorization_stage2_stage_vector_reduction_trace;
-
 int l3_authorization_stage2_stage_vector_reduction13(
     const l3_authorization_word_pair low_pairs26[26],
     const l3_authorization_word_pair high_pairs26[26],
-    const uint64_t high_seed_halves2[2],
-    const uint64_t low_seed_halves2[2],
-    const uint64_t middle_low_seed_halves2[2],
-    uint64_t out_halves13[13][2],
-    uint32_t *out_vector_feedback_scalar_arg,
-    l3_authorization_stage2_stage_vector_reduction_trace *trace);
-
-int l3_authorization_stage2_stage_convolve_and_reduce_vectors13(
-    const l3_authorization_word_pair high_pairs26[26],
-    const int32_t local548[13],
-    const int32_t round_mixed13[13],
-    const uint64_t high_seed_halves2[2],
-    const uint64_t low_seed_halves2[2],
-    const uint64_t middle_low_seed_halves2[2],
-    uint64_t out_halves13[13][2],
-    uint32_t *out_vector_feedback_scalar_arg,
-    l3_authorization_stage2_stage_convolution_trace *conv_trace,
-    l3_authorization_stage2_stage_vector_reduction_trace *vec_trace);
-
-
+    uint64_t out_halves13[13][2]);
 
 typedef struct {
     l3_authorization_word_pair local5e4_raw2bb0[13];
@@ -443,37 +356,10 @@ int l3_authorization_stage3_stage_accumulate_and_convolve26(
 /* v313: third post-FUN_f3fdd33c vector materialization after the V312
  * convolution image.  Same rolling 13-lane local_478-style shape as V303/V310,
  * but with the third constant family before the immediate param_7 export. */
-typedef struct {
-    uint64_t input_low_halves13[13][2];
-    uint64_t input_high_halves13[13][2];
-    uint64_t side_from_high13[13][2];
-    uint64_t side_from_low13[13][2];
-    uint64_t bias13[13][2];
-    uint64_t output_halves13[13][2];
-    uint32_t vector_feedback_scalar_arg;
-} l3_authorization_stage3_stage_vector_reduction_trace;
-
 int l3_authorization_stage3_stage_vector_reduction13(
     const l3_authorization_word_pair low_pairs26[26],
     const l3_authorization_word_pair high_pairs26[26],
-    const uint64_t high_seed_halves2[2],
-    const uint64_t low_seed_halves2[2],
-    const uint64_t middle_low_seed_halves2[2],
-    uint64_t out_halves13[13][2],
-    uint32_t *out_vector_feedback_scalar_arg,
-    l3_authorization_stage3_stage_vector_reduction_trace *trace);
-
-int l3_authorization_stage3_stage_convolve_and_reduce_vectors13(
-    const l3_authorization_word_pair high_pairs26[26],
-    const int32_t local5e4[13],
-    const int32_t mixed_round13[13],
-    const uint64_t high_seed_halves2[2],
-    const uint64_t low_seed_halves2[2],
-    const uint64_t middle_low_seed_halves2[2],
-    uint64_t out_halves13[13][2],
-    uint32_t *out_vector_feedback_scalar_arg,
-    l3_authorization_stage3_stage_convolution_trace *conv_trace,
-    l3_authorization_stage3_stage_vector_reduction_trace *vec_trace);
+    uint64_t out_halves13[13][2]);
 
 /* Native high convolution image for the param_7 FUN_f3fdd33c call. */
 int l3_authorization_core_param7_high_accum_convolution26(

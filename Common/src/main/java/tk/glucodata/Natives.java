@@ -67,6 +67,11 @@ public static native boolean hasBluetooth(byte[] sensorident,byte[] patchinfo);
 //    public static native void showlast();
 //    public static native void hidescanresults();
     public static native void resize(int width, int height,int initscreenwidth);
+//public static native void setDisplayRotation(int rotation,boolean reverseDefaultRotation);
+//public static native void setDisplayRotation(int rotation,boolean reverseDefaultRotation,boolean graphLockedToFirstLandscape);
+ public static native void setDisplayRotation(int rotation,boolean reverseDefaultRotation,boolean graphLockedToFirstLandscape,boolean graphUsesCurrentOrientationAsLandscape);
+
+public static native int getGraphRotationMode();
      public static native void initopengl(float small,float menu,float density,float head);
      public static native int setfilesdir(String dir,String country,String nativedir);
 //     public static native void calccurvegegs();
@@ -592,9 +597,10 @@ public static native int startTimeIDsum(byte[] uit, long time, long accountID);
 
 
 
+
 static native long libre3BeginSecurityHandshake(long securityContext);
 static native void libre3FreeSecurityContext(long securityContext);
-static native int libre3LoadAppKeyAndSavedAuthorization(long securityContext, byte[] appPrivateKey, byte[] savedAuthorization);
+static native int libre3SelectAppKeyAndSavedAuthorization(long securityContext, int securityVersion, byte[] savedAuthorization);
 static native int libre3AcceptPatchCertificate(long securityContext, byte[] patchCertificate);
 static native byte[] libre3CreateEphemeralPublicKey(long securityContext);
 static native int libre3DeriveAuthorizationRoot(long securityContext, byte[] patchEphemeralPublicKey);
@@ -1062,5 +1068,11 @@ public static native void testLibre3( );
 
 public static native void setalarmSoundType(int val);
 public static native int getalarmSoundType( );
+public static native void setRotate(boolean val);
+public static native boolean getRotate( );
+
+
+public static native void setRotateText(boolean val);
+public static native boolean getRotateText( );
 }
 

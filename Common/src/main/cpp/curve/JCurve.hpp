@@ -2,6 +2,7 @@
 #include <string_view>
 #include <array>
 #include <vector>
+#include <atomic>
 #include <time.h>
 #include <stdint.h>
 #include <math.h>
@@ -126,7 +127,106 @@ int menufont=-1;
 #endif
 int font=0,monofont=0,whitefont=-1,blackfont=0;
 float headheight;
+/*
+ * width/height are the logical dimensions used by the curve code.  On a
+ * portrait phone the curve keeps a landscape coordinate system so that time
+ * remains on the long axis.  surfacewidth/surfaceheight are the actual EGL
+ * surface dimensions.
+ */
 int width=-1,height=-1;
+int surfacewidth=-1,surfaceheight=-1;
+bool portrait=false;
+int physicalbarleft=0,physicalbartop=0,physicalbarright=0,physicalbarbottom=0;
+
+/*
+ * Android Surface.ROTATION_* value (0..3), updated by MyRenderer before each
+ * frame. In rotateText=false mode it is used to keep the graph fixed to one
+ * physical landscape orientation even while Android rotates the surface.
+ */
+std::atomic<int> displayRotationState{0}; // low 2 bits: Surface rotation; bit 2: config_reverseDefaultRotation; bit 3: graph locked to first landscape; bit 4: current surface is landscape-style
+int systemBarsGraphRotation=-1;
+
+/*
+ * Non-graph NanoVG screens (statistics and the separate entered-value list)
+ * must follow Android rotation normally. Their RAII layout sets this while
+ * they are being rendered so startstep() does not apply the fixed graph turn.
+ */
+bool physicalNanoVG=false;
+
+/*
+ * There are two deliberately different graph modes:
+ *
+ *  rotateText == true:
+ *      Keep the long time axis in physical portrait and use the portrait-
+ *      specific readable text/menu/annotation layout. Landscape follows
+ *      Android normally.
+ *
+ *  rotateText == false:
+ *      Keep the complete graph fixed to exactly one physical landscape
+ *      orientation, selected by settings->data()->orientation. Android may
+ *      rotate the EGL surface, but the NanoVG graph compensates for that
+ *      rotation just as if auto-rotate were off for the graph alone.
+ *
+ * Statistics and the separate entered-value list never use this fixed graph
+ * transform; they continue to follow the Android surface orientation.
+ */
+inline bool currentOrientationAsLandscape() const {
+#ifdef WEAROS
+    return false;
+#else
+    return (displayRotationState.load(std::memory_order_relaxed)&16)!=0;
+#endif
+    }
+inline bool portraitReadable() const {
+#ifdef WEAROS
+    return false;
+#else
+    return portrait && !currentOrientationAsLandscape() && settings->data()->rotateText;
+#endif
+    }
+
+/*
+ * Logical-graph -> physical-surface transform:
+ *   0 identity
+ *   1 counter-clockwise quarter turn
+ *   2 half turn
+ *   3 clockwise quarter turn
+ */
+inline int graphRotationMode() const {
+#ifdef WEAROS
+    return 0;
+#else
+    if(physicalNanoVG)
+        return 0;
+    const int rotationState=displayRotationState.load(std::memory_order_relaxed);
+    /* In either special large-screen mode the graph uses the current Android
+     * surface directly as a landscape-style canvas.  For the elongated case
+     * Android itself is already locked to the first landscape side.  On a
+     * nearly-square display Android is free to rotate when auto-rotate is on
+     * and locked in its current orientation when auto-rotate is off. */
+    if((rotationState&(8|16))!=0)
+        return 0;
+    if(settings->data()->rotateText)
+        return portrait ? 1 : 0;
+
+    const int current=rotationState&3;
+    const bool reverseDefaultRotation=(rotationState&4)!=0;
+    const bool physicalLandscape=surfacewidth>=surfaceheight;
+    /* Surface.ROTATION_1/3 swaps the natural width/height axes. */
+    const bool naturalLandscape=(current&1) ? !physicalLandscape : physicalLandscape;
+
+    const bool reverse=settings->data()->orientation==8; // SCREEN_ORIENTATION_REVERSE_LANDSCAPE
+    int normalLandscape;
+    if(naturalLandscape)
+        normalLandscape=0;
+    else
+        /* Android framework config_reverseDefaultRotation chooses whether the
+         * device's normal landscape is Surface.ROTATION_90 or ROTATION_270. */
+        normalLandscape=reverseDefaultRotation?3:1;
+    const int wanted=reverse ? ((normalLandscape+2)&3) : normalLandscape;
+    return (current-wanted+4)&3;
+#endif
+    }
 
 float dleft=0,dtop=0,dbottom{0},dright=0,dheight,dwidth;
 float smallsize=300,menusize=smallsize,headsize=900,midsize, mediumfont,timefontsize=smallsize;
@@ -203,6 +303,7 @@ template <class TX,class TY> void    calihistcurve(NVGcontext* avg,const SensorG
     void    startstepNVG(NVGcontext* avg,int width, int height);
     void    startstep(NVGcontext* avg,const NVGcolor &col);
     void    endstep(NVGcontext* avg);
+    float   drawText(NVGcontext* avg,float x,float y,const char *start,const char *end);
      void    defaulterror(NVGcontext* avg,int scerror);
      bool    errorpair(NVGcontext* avg,const errortype &error);
     int    badscanMessage(NVGcontext* avg,int kind);
@@ -216,6 +317,7 @@ template <class TX,class TY> void    calihistcurve(NVGcontext* avg,const SensorG
     template <typename  TI,typename TE> void    textbox(NVGcontext* avg,const TI &title,const TE &text);
      const float     getsetlen(NVGcontext* avg,float x, float  y,const char * set,const char *setend,bounds_t &bounds);
      void    showtext(NVGcontext* avg ,time_t nu,int menu);
+     void    showtextPortrait(NVGcontext* avg,time_t nu,int menu);
     void    showfromend(NVGcontext* avg);
     void    showfromstart(NVGcontext* avg);
      void    shownumlist(NVGcontext* avg);
@@ -223,6 +325,7 @@ template <class TX,class TY> void    calihistcurve(NVGcontext* avg,const SensorG
     template <class TX,class TY> void showlineScan(NVGcontext* avg,const ScanData *low,const ScanData *high,  const TX &transx,  const TY &transy,const int colorindex,bool search); 
 void setfontsize(float small,float menu,float density,float headin);
 void resizescreen(int widthin, int heightin,int initscreenwidth);
+void setSystemBars(int left,int top,int right,int bottom);
 void withbottom();
 void setextremes(std::pair<int,int> extr);
 //auto gettrans(uint32_t starttime,uint32_t endtime);
@@ -401,6 +504,10 @@ struct shownglucose_t {
     int glucosetrend;
     float glucosevalue=0;
     float glucosevaluex=-1,glucosevaluey=-1;
+    /* Physical-screen bounds of the readable portrait current-value block.
+     * screentap() receives graph coordinates, so it converts the tap back to
+     * physical coordinates before testing these bounds. */
+    float touchleft=-1,touchtop=-1,touchright=-1,touchbottom=-1;
     } ;
 
 

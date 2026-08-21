@@ -501,6 +501,9 @@
     <string name="webdeletefailed">%1$s konnte nicht gelöscht werden</string>
     <string name="webdirectoryempty">Dieses Verzeichnis ist leer</string>
     <string name="webdirectoryentry">[Verzeichnis] %1$s</string>
+
+<string name="autorotate">Automa. drehen</string>
+<string name="rotateText">Text drehen</string>
 </resources>
 
 

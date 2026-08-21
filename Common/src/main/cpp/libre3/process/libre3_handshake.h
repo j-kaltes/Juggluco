@@ -1,24 +1,3 @@
-/*      This file is part of Juggluco, an Android app to receive and display         */
-/*      glucose values from Freestyle Libre 2(+), Libre 3(+), Dexcom G7/ONE+,        */
-/*      Sibionics GS1Sb and GS3, Accu-Chek SmartGuide, CareSens Air and              */
-/*      Aidex X sensors.                                                             */
-/*                                                                                   */
-/*      Copyright (C) 2021 Jaap Korthals Altes <jaapkorthalsaltes@gmail.com>         */
-/*                                                                                   */
-/*      Juggluco is free software: you can redistribute it and/or modify             */
-/*      it under the terms of the GNU General Public License as published            */
-/*      by the Free Software Foundation, either version 3 of the License, or         */
-/*      (at your option) any later version.                                          */
-/*                                                                                   */
-/*      Juggluco is distributed in the hope that it will be useful, but              */
-/*      WITHOUT ANY WARRANTY; without even the implied warranty of                   */
-/*      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                         */
-/*      See the GNU General Public License for more details.                         */
-/*                                                                                   */
-/*      You should have received a copy of the GNU General Public License            */
-/*      along with Juggluco. If not, see <https://www.gnu.org/licenses/>.            */
-/*                                                                                   */
-/*      Tue Aug 11 16:33:40 CEST 2026                                                */
 #ifndef L3_LIBRE3_HANDSHAKE_H
 #define L3_LIBRE3_HANDSHAKE_H
 
@@ -40,7 +19,6 @@ extern "C" {
 
 /* Sizes of values exchanged by KEYSCrypto and Libre3GattCallback. */
 enum {
-    L3_LEN_APP_PRIVATE_KEY = 165,
     L3_LEN_SAVED_AUTHORIZATION = 149,
     L3_LEN_PATCH_CERTIFICATE = 140,
     L3_LEN_PATCH_PUBLIC_KEY = 65,
@@ -73,9 +51,8 @@ typedef struct l3_handshake_operations {
 
     int (*begin_session)(void *user);
 
-    int (*decode_app_private_key)(void *user,
-                                  const uint8_t *record,
-                                  size_t record_len,
+    int (*select_app_private_key)(void *user,
+                                  unsigned security_version,
                                   l3_security_material **out_private_key);
 
     int (*restore_authorization_record)(void *user,
@@ -108,28 +85,36 @@ typedef struct l3_handshake_operations {
                                       const l3_security_material *digest_material,
                                       l3_security_material **out_root);
 
+    /* App path: derive the authorization root directly from the selected app
+     * private key, current ephemeral keypair, patch certificate public key and
+     * patch ephemeral public key.  This avoids the staged replay path that now
+     * returns L3_SECURITY_ERR_ENGINE on live no-KAuth handshakes. */
+    int (*derive_authorization_root_direct)(void *user,
+                                      const l3_security_material *app_private_key,
+                                      const l3_security_material *ephemeral_keypair,
+                                      const uint8_t patch_certificate_public65[L3_LEN_PATCH_PUBLIC_KEY],
+                                      const uint8_t patch_ephemeral_public65[L3_LEN_PATCH_PUBLIC_KEY],
+                                      l3_security_material **out_root);
+
     int (*copy_ephemeral_public_key)(void *user,
                                      const l3_security_material *keypair,
                                      uint8_t out_public_xy64[L3_LEN_EPHEMERAL_PUBLIC_KEY]);
 
-    int (*encrypt_challenge_reply)(void *user,
-                                   const uint8_t nonce7[L3_LEN_CHALLENGE_NONCE],
-                                   const uint8_t plain36[L3_LEN_CHALLENGE_REPLY_PLAIN],
-                                   const l3_security_material *authorization_root,
-                                   uint8_t **out,
-                                   size_t *out_len);
+    int (*encrypt_challenge_reply_into)(void *user,
+                                        const uint8_t nonce7[L3_LEN_CHALLENGE_NONCE],
+                                        const uint8_t plain36[L3_LEN_CHALLENGE_REPLY_PLAIN],
+                                        const l3_security_material *authorization_root,
+                                        uint8_t out40[L3_LEN_CHALLENGE_REPLY_CRYPT]);
 
-    int (*decrypt_challenge_response)(void *user,
-                                      const uint8_t nonce7[L3_LEN_CHALLENGE_NONCE],
-                                      const uint8_t cipher60[L3_LEN_CHALLENGE_RESPONSE_CRYPT],
-                                      const l3_security_material *authorization_root,
-                                      uint8_t **out,
-                                      size_t *out_len);
+    int (*decrypt_challenge_response_into)(void *user,
+                                           const uint8_t nonce7[L3_LEN_CHALLENGE_NONCE],
+                                           const uint8_t cipher60[L3_LEN_CHALLENGE_RESPONSE_CRYPT],
+                                           const l3_security_material *authorization_root,
+                                           uint8_t out56[L3_LEN_CHALLENGE_RESPONSE_PLAIN]);
 
-    int (*export_authorization_record)(void *user,
-                                       const l3_security_material *authorization_root,
-                                       uint8_t **out,
-                                       size_t *out_len);
+    int (*export_authorization_record_into)(void *user,
+                                            const l3_security_material *authorization_root,
+                                            uint8_t out149[L3_LEN_SAVED_AUTHORIZATION]);
 
     void (*release_material)(void *user, l3_security_material *object);
 } l3_handshake_operations;
@@ -149,37 +134,32 @@ void l3_handshake_state_init(l3_handshake_state *state, const l3_handshake_opera
 void l3_handshake_state_clear(l3_handshake_state *state);
 
 int l3_handshake_begin(l3_handshake_state *state);
-int l3_handshake_load_app_key_and_saved_authorization(l3_handshake_state *state,
-                                     const uint8_t *app_private_key,
-                                     size_t app_private_key_len,
+int l3_handshake_select_app_key_and_saved_authorization(l3_handshake_state *state,
+                                     unsigned security_version,
                                      const uint8_t *saved_authorization,
                                      size_t saved_authorization_len);
 int l3_handshake_set_patch_certificate(l3_handshake_state *state,
                                          const uint8_t *patch_certificate,
                                          size_t patch_certificate_len);
-int l3_handshake_generate_ephemeral_public_key(l3_handshake_state *state,
-                                              uint8_t **out,
-                                              size_t *out_len);
+int l3_handshake_generate_ephemeral_public_key_into(l3_handshake_state *state,
+                                              uint8_t out64[L3_LEN_EPHEMERAL_PUBLIC_KEY]);
 int l3_handshake_derive_authorization_root(l3_handshake_state *state,
                                          const uint8_t *patch_ephemeral_public_key,
                                          size_t patch_ephemeral_public_key_len);
-int l3_handshake_encrypt_challenge_reply(l3_handshake_state *state,
+int l3_handshake_encrypt_challenge_reply_into(l3_handshake_state *state,
                                         const uint8_t *nonce7,
                                         size_t nonce7_len,
                                         const uint8_t *plain36,
                                         size_t plain36_len,
-                                        uint8_t **out,
-                                        size_t *out_len);
-int l3_handshake_decrypt_challenge_response(l3_handshake_state *state,
+                                        uint8_t out40[L3_LEN_CHALLENGE_REPLY_CRYPT]);
+int l3_handshake_decrypt_challenge_response_into(l3_handshake_state *state,
                                            const uint8_t *nonce7,
                                            size_t nonce7_len,
                                            const uint8_t *cipher60,
                                            size_t cipher60_len,
-                                           uint8_t **out,
-                                           size_t *out_len);
-int l3_handshake_export_saved_authorization(l3_handshake_state *state,
-                                         uint8_t **out,
-                                         size_t *out_len);
+                                           uint8_t out56[L3_LEN_CHALLENGE_RESPONSE_PLAIN]);
+int l3_handshake_export_saved_authorization_into(l3_handshake_state *state,
+                                         uint8_t out149[L3_LEN_SAVED_AUTHORIZATION]);
 
 l3_security_material *l3_security_material_new_copy(uint32_t kind,
                                                 uint32_t origin_tag,

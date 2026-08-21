@@ -529,4 +529,7 @@
     <string name="webdirectoryempty">This directory is empty</string>
     <string name="webdirectoryentry">[dir] %1$s</string>
 
+    <string name="autorotate">Auto-rotate</string>
+    <string name="rotateText">Rotate text</string>
+
 </resources>

@@ -148,19 +148,13 @@ class GarminStatus {
 		var Cancel = getbutton(context, R.string.cancel);
 
 		var layout = new Layout(context, (l, w, h) -> {
-        /*
-			var width = GlucoseCurve.getwidth();
-			if (width > w)
-				l.setX((width - w) / 2);
-			l.setY(0);
-            */
 			return new int[]{w, h};
 		}, new View[]{idlabel, defaultapp}, new View[]{editid}, new View[]{Cancel, Save});
 
 		float density = GlucoseCurve.metrics.density;
 		int laypad = (int) (density * 4.0);
 		layout.setPadding(laypad * 2, laypad * 2, laypad * 2, laypad);
-
+        layout.systembarMargins();
 
 //	layout.setBackgroundResource(R.drawable.dialogbackground);
    layout.setBackgroundResource(R.drawable.dialogbackground);
@@ -283,17 +277,9 @@ class GarminStatus {
 		config.setOnClickListener(v -> kerfstokconfig(context,alldata,layout,parentlayout));
 //		restview.setPadding(0,0,0,0);
 		layout = new Layout(context, (l, w, h) -> {
-        /*
-			var width = GlucoseCurve.getwidth();
-			var height = GlucoseCurve.getheight();
-			if (width > w && height > h) {
-				l.setX((width - w) / 2);
-				l.setY((height - h) / 2);
-			}
-            */
 			return new int[]{w, h};
 		}, new View[]{spinner, refresh}, new View[]{sdkreadyview, registeredview,help}, new View[]{restview,glucose}, new View[]{sync, next, reinit, config, ok}
-		);
+		).portraitLayout(new View[]{spinner}, new View[]{sdkreadyview, registeredview},new View[]{restview},new View[]{glucose,refresh},new View[]{help,sync, next}, new View[]{reinit, config, ok});
 //	layout.setBackgroundResource(R.drawable.dialogbackground);
    layout.setBackgroundResource(R.drawable.dialogbackground);
 		int laypad = (int) (density * 4.0);
@@ -404,14 +390,6 @@ class GarminStatus {
 		Help.setOnClickListener(v-> helplight(tk.glucodata.R.string.garminconfig,context));
 		var Close = getbutton(context, R.string.closename);
 		var layout = new Layout(context, (l, w, h) -> {
-        /*
-			var width = GlucoseCurve.getwidth();
-			var height = GlucoseCurve.getheight();
-			if (width > w)
-				l.setX((width - w) / 2);
-			if (height > h)
-				l.setY((height - h) / 2);
-                */
 			return new int[]{w, h};
 		},new View[]{apppresent,setid}, new View[]{shortcuts, blackmode}, new View[]{Help, Close});
 

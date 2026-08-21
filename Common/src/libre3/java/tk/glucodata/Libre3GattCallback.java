@@ -486,7 +486,7 @@ private void setCertificate140() {
 private boolean    generateKAuth(byte[] input) {
     {if(doLog){showbytes(LOG_ID+ " "+SerialNumber +" generateKAuth",input);};}
     //Saves something?
-    return Natives.libre3DeriveAuthorizationRoot(securityContext,input)!=0;
+    return Natives.libre3DeriveAuthorizationRoot(securityContext,input)==1;
     }
 private boolean setCertificate65() {
     {if(doLog) {Log.i(LOG_ID, SerialNumber + ": "+"setCertificate65");};};
@@ -939,6 +939,10 @@ private int getcomphase() {
 private  byte[]           generateEphemeralKeys() {
 
     var evikeys=Natives.libre3CreateEphemeralPublicKey(securityContext);
+    if(evikeys==null || evikeys.length!=64) {
+        Log.e(LOG_ID, SerialNumber + ": libre3CreateEphemeralPublicKey failed");
+        return null;
+        }
     var uit=new byte[evikeys.length+1];
     arraycopy(evikeys,0,uit,1,evikeys.length);
     uit[0]=(byte)0x4;
@@ -1297,4 +1301,3 @@ void doSomething() {
         }
         */
 }
-

@@ -34,10 +34,16 @@ import javax.microedition.khronos.opengles.GL10;
 
 public class MyRenderer implements GLSurfaceView.Renderer {
 //       boolean started=false;
+        private final GlucoseCurve curve;
+        MyRenderer(GlucoseCurve curve) {
+            this.curve=curve;
+            }
         int stepresult = 0;
         int badscan = 0;
 
         public void onDrawFrame(GL10 gl) {
+            if(Applic.Nativesloaded)
+                curve.syncNativeDisplayRotation();
             if(badscan!=0) {
                 if((stepresult = Natives.badscan(badscan))!=STEPBACK)
                         badscan=0;
@@ -51,6 +57,7 @@ public void onSurfaceChanged(GL10 gl, int w, int h) {
 //    eglSurfaceAttrib(eglGetCurrentDisplay(), eglGetCurrentSurface(EGL_DRAW), EGL_SWAP_BEHAVIOR , EGL_BUFFER_PRESERVED);
     if(Applic.Nativesloaded) {
            // Natives.resize(w, h-MainActivity.systembarBottom,Applic.initscreenwidth);
+            curve.syncNativeDisplayRotation();
             Natives.resize(w, h,Applic.initscreenwidth);
             widthdiff=w-Applic.initscreenwidth;
         }

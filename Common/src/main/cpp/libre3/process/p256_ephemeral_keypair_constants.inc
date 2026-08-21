@@ -1,24 +1,3 @@
-/*      This file is part of Juggluco, an Android app to receive and display         */
-/*      glucose values from Freestyle Libre 2(+), Libre 3(+), Dexcom G7/ONE+,        */
-/*      Sibionics GS1Sb and GS3, Accu-Chek SmartGuide, CareSens Air and              */
-/*      Aidex X sensors.                                                             */
-/*                                                                                   */
-/*      Copyright (C) 2021 Jaap Korthals Altes <jaapkorthalsaltes@gmail.com>         */
-/*                                                                                   */
-/*      Juggluco is free software: you can redistribute it and/or modify             */
-/*      it under the terms of the GNU General Public License as published            */
-/*      by the Free Software Foundation, either version 3 of the License, or         */
-/*      (at your option) any later version.                                          */
-/*                                                                                   */
-/*      Juggluco is distributed in the hope that it will be useful, but              */
-/*      WITHOUT ANY WARRANTY; without even the implied warranty of                   */
-/*      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                         */
-/*      See the GNU General Public License for more details.                         */
-/*                                                                                   */
-/*      You should have received a copy of the GNU General Public License            */
-/*      along with Juggluco. If not, see <https://www.gnu.org/licenses/>.            */
-/*                                                                                   */
-/*      Tue Aug 11 16:33:40 CEST 2026                                                */
 /* Original-library constant bytes at Ghidra 0xf4137c47..0xf4138046. */
 static const unsigned char k_bar5_generator_const_4137c47[1024] = {
     0x3a,0x34,0x07,0x08,0x29,0x2c,0x02,0x02,0x29,0x31,0x29,0x3d,0x3f,0x2c,0x0c,0x1e,

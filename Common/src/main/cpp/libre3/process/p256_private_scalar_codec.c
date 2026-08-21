@@ -1,24 +1,3 @@
-/*      This file is part of Juggluco, an Android app to receive and display         */
-/*      glucose values from Freestyle Libre 2(+), Libre 3(+), Dexcom G7/ONE+,        */
-/*      Sibionics GS1Sb and GS3, Accu-Chek SmartGuide, CareSens Air and              */
-/*      Aidex X sensors.                                                             */
-/*                                                                                   */
-/*      Copyright (C) 2021 Jaap Korthals Altes <jaapkorthalsaltes@gmail.com>         */
-/*                                                                                   */
-/*      Juggluco is free software: you can redistribute it and/or modify             */
-/*      it under the terms of the GNU General Public License as published            */
-/*      by the Free Software Foundation, either version 3 of the License, or         */
-/*      (at your option) any later version.                                          */
-/*                                                                                   */
-/*      Juggluco is distributed in the hope that it will be useful, but              */
-/*      WITHOUT ANY WARRANTY; without even the implied warranty of                   */
-/*      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                         */
-/*      See the GNU General Public License for more details.                         */
-/*                                                                                   */
-/*      You should have received a copy of the GNU General Public License            */
-/*      along with Juggluco. If not, see <https://www.gnu.org/licenses/>.            */
-/*                                                                                   */
-/*      Tue Aug 11 16:33:40 CEST 2026                                                */
 #include "p256_private_scalar_codec.h"
 
 #include <stddef.h>
@@ -45,12 +24,6 @@ static const uint32_t k_order[8] = {
 static const uint32_t k_tail_multiplier[8] = {
     0xd2bd727bu, 0x00bcd12eu, 0xac4dbc14u, 0xd0ea04c3u,
     0x7fe4d559u, 0x54f1b8f9u, 0xc923ab21u, 0x0c42b581u
-};
-
-/* Multiplicative inverse of k_tail_multiplier modulo n. */
-static const uint32_t k_tail_multiplier_inverse[8] = {
-    0xf6a07e88u, 0x7c360056u, 0x289a6139u, 0x0e3b56d1u,
-    0x03fccb5au, 0xfd930d54u, 0x2eaad48du, 0xa565f983u
 };
 
 static int words_compare(const uint32_t a[8], const uint32_t b[8]) {
@@ -128,26 +101,6 @@ static void scalar_be_to_words(const uint8_t bytes[32], uint32_t words[8]) {
     }
 }
 
-static void words_to_scalar_be(const uint32_t words[8], uint8_t bytes[32]) {
-    for (size_t i = 0; i < 8; ++i) {
-        const size_t off = 28u - i * 4u;
-        bytes[off] = (uint8_t)(words[i] >> 24);
-        bytes[off + 1u] = (uint8_t)(words[i] >> 16);
-        bytes[off + 2u] = (uint8_t)(words[i] >> 8);
-        bytes[off + 3u] = (uint8_t)words[i];
-    }
-}
-
-static void tail_le_to_words(const uint8_t bytes[35], uint32_t words[8]) {
-    for (size_t i = 0; i < 8; ++i) {
-        const size_t off = i * 4u;
-        words[i] = (uint32_t)bytes[off] |
-                   ((uint32_t)bytes[off + 1u] << 8) |
-                   ((uint32_t)bytes[off + 2u] << 16) |
-                   ((uint32_t)bytes[off + 3u] << 24);
-    }
-}
-
 static void words_to_tail_le(const uint32_t words[8], uint8_t bytes[35]) {
     for (size_t i = 0; i < 8; ++i) {
         const size_t off = i * 4u;
@@ -168,20 +121,5 @@ int l3_p256_encode_private_scalar_to_native35(const uint8_t scalar32_be[32],
     if (words_is_zero(scalar)) return L3_PRIVATE_SCALAR_CODEC_ERR_ZERO;
     words_mul_constant_mod(scalar, k_tail_multiplier, tail);
     words_to_tail_le(tail, tail35_le);
-    return L3_PRIVATE_SCALAR_CODEC_OK;
-}
-
-int l3_p256_decode_private_scalar_from_native35(const uint8_t tail35_le[35],
-                                    uint8_t scalar32_be[32]) {
-    uint32_t tail[8], scalar[8];
-    if (!tail35_le || !scalar32_be) return L3_PRIVATE_SCALAR_CODEC_ERR_ARGUMENT;
-    if (tail35_le[32] || tail35_le[33] || tail35_le[34]) {
-        return L3_PRIVATE_SCALAR_CODEC_ERR_ARGUMENT;
-    }
-    tail_le_to_words(tail35_le, tail);
-    words_reduce_once(tail);
-    if (words_is_zero(tail)) return L3_PRIVATE_SCALAR_CODEC_ERR_ZERO;
-    words_mul_constant_mod(tail, k_tail_multiplier_inverse, scalar);
-    words_to_scalar_be(scalar, scalar32_be);
     return L3_PRIVATE_SCALAR_CODEC_OK;
 }

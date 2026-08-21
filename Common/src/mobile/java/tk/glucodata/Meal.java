@@ -346,19 +346,8 @@ static Layout menuview(final NumberView numb, MainActivity act, int mealptr, Obj
     float[] carbar={carb};
     int[] mealptrar={mealptr};
     Layout lay=new Layout(act,(l,w,h)-> {
-    /*
-        if(!smallScreen&&width>w) {
-            if(numb.noroom)
-                l.setX(width-w);
-            else {
-                int half= (width-MainActivity.systembarRight)/2;
-                int bij=(half-w)/4;
-                l.setX(half+bij );
-                }
-               }
-*/
         return new int[]{w,h};
-        },new View[]{roundlabel,repeat},new View[]{recycle},new View[] {add,Help,close});
+        },new View[]{roundlabel,Help,repeat},new View[]{recycle},new View[] {add,close});
     //    lay.setY(MainActivity.systembarTop);
     roundlabel.setOnClickListener(v-> 
         askround(act,()->{

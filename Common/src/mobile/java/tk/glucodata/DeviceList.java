@@ -167,7 +167,8 @@ static public void show(MainActivity act, MeterList.MeterListViewAdapter meterad
      help.setOnClickListener(v-> tk.glucodata.help.help(R.string.DeviceList,act));
      layout.setBackgroundColor(backgroundcolor);
      float density=GlucoseCurve.metrics.density;
-    layout.setPadding((int)(density*5.0)+MainActivity.systembarLeft,MainActivity.systembarTop,MainActivity.systembarRight+(int)(density*8.0),MainActivity.systembarBottom);
+
+    layout.systembarPadding((left,top,right,bottom)->new int[]{(int)(density*5.0)+left,top,right+(int)(density*8.0),bottom});
 
      act.addMyContentView(layout, new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
       MainActivity.setonback(()-> {

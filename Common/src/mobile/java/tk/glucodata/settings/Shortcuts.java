@@ -63,7 +63,7 @@ import static tk.glucodata.util.getlabel;
 public class Shortcuts {
 public void hideSystemUI(Context cont) {}
 
-ViewGroup shortlistview=null;
+Layout shortlistview=null;
 Layout shortlist=null;
 
 ArrayList<ArrayList<Object>> shortcuts;
@@ -75,215 +75,215 @@ String chars2str(ArrayList<Byte> chars) {
         for (byte ch: chars) {
             sb.append(ch);
         }
-	return sb.toString();
-	}
+    return sb.toString();
+    }
 */ 
 /*
 String chars2str(ArrayList<Byte> chars) {
-	final int len= chars.size();
-	byte[] byt=new byte[len];
-	for(int i=0;i<len;i++)
-		byt[i]=chars.get(i);
-	return 	new String(byt, StandardCharsets.UTF_8);
-	}
-	*/
+    final int len= chars.size();
+    byte[] byt=new byte[len];
+    for(int i=0;i<len;i++)
+        byt[i]=chars.get(i);
+    return     new String(byt, StandardCharsets.UTF_8);
+    }
+    */
 void addrow(Context act,int index) {
-		ArrayList<Object>  el=shortcuts.get(index); 
-	 	Button lab=getbutton(act,(String)el.get(0));
-		lab.setTransformationMethod(null);
-           	lab.setOnClickListener(v->{
-			current=el;
-			mkshort((MainActivity)v.getContext());
-			setvalues((String)el.get(0),(String)el.get(1));
-			delete.setVisibility(VISIBLE);
-		});
+        ArrayList<Object>  el=shortcuts.get(index); 
+         Button lab=getbutton(act,(String)el.get(0));
+        lab.setTransformationMethod(null);
+               lab.setOnClickListener(v->{
+            current=el;
+            mkshort((MainActivity)v.getContext());
+            setvalues((String)el.get(0),(String)el.get(1));
+            delete.setVisibility(VISIBLE);
+        });
 
-		lab.setMinEms(10);
-		String values =  (String)el.get(1);
-		TextView value=getlabel(act,values);
-		value.setMinEms(4);
-		shortlist.addrow(false,new View[]{lab,value});
-		}
+        lab.setMinEms(10);
+        String values =  (String)el.get(1);
+        TextView value=getlabel(act,values);
+        value.setMinEms(4);
+        shortlist.addrow(false,new View[]{lab,value});
+        }
 private static final String LOG_ID="Shortcuts";
 void mkshortlist(Context act) {
 
-	shortcuts= Natives.getShortcuts();
-	 int len=shortcuts.size();
-	 {if(doLog) {Log.i(LOG_ID,"mkshortlist "+len);};};
-	 shortlist= new Layout(act,(l, w, h)->{ return new int[] {w,h}; }, len);
-	 for(int i=0;i<len;i++) {
-	 	addrow(act,i);
-	 	}
-	}
+    shortcuts= Natives.getShortcuts();
+     int len=shortcuts.size();
+     {if(doLog) {Log.i(LOG_ID,"mkshortlist "+len);};};
+     shortlist= new Layout(act,(l, w, h)->{ return new int[] {w,h}; }, len);
+     for(int i=0;i<len;i++) {
+         addrow(act,i);
+         }
+    }
 void saveall(View v) {
-	MainActivity main=(MainActivity) v.getContext();
-	 if(shortedit!=null)  {
-		final int nr= shortcuts.size();
-		for(int i=0;i<nr;i++) {
-			ArrayList<Object> el=shortcuts.get(i);
-			int ret;
-			if((ret=Natives.setShortcut(i,(String)el.get(0),(String)el.get(1)))!=-1) {
-				if(ret==-5)
-					Applic.argToaster(v.getContext(), "index "+i+" too large", Toast.LENGTH_SHORT);
-				else
-					Applic.argToaster(v.getContext(), (String)el.get(ret)+" too long", Toast.LENGTH_SHORT);
-				return;
-				}
-			}
-		Natives.setnrshortcuts(nr);
-		if(!isWearable) {
-			((Applic)(((Activity)v.getContext()).getApplication())).numdata.sendshortcuts(shortcuts);
-			}
-		 Applic.wakemirrors();
-		 removeContentView(shortedit);
-		 }
-	 removeContentView(shortlistview);
-	main.poponback();
-	}
+    MainActivity main=(MainActivity) v.getContext();
+     if(shortedit!=null)  {
+        final int nr= shortcuts.size();
+        for(int i=0;i<nr;i++) {
+            ArrayList<Object> el=shortcuts.get(i);
+            int ret;
+            if((ret=Natives.setShortcut(i,(String)el.get(0),(String)el.get(1)))!=-1) {
+                if(ret==-5)
+                    Applic.argToaster(v.getContext(), "index "+i+" too large", Toast.LENGTH_SHORT);
+                else
+                    Applic.argToaster(v.getContext(), (String)el.get(ret)+" too long", Toast.LENGTH_SHORT);
+                return;
+                }
+            }
+        Natives.setnrshortcuts(nr);
+        if(!isWearable) {
+            ((Applic)(((Activity)v.getContext()).getApplication())).numdata.sendshortcuts(shortcuts);
+            }
+         Applic.wakemirrors();
+         removeContentView(shortedit);
+         }
+     removeContentView(shortlistview);
+    main.poponback();
+    }
 public void mkshortlistview(MainActivity act) {
-	if(shortlistview==null) {
-		Button add=new Button(act),ok=new Button(act);
-		add.setText(R.string.newname);
-           	add.setOnClickListener(v->{
-			current=null;
-			mkshort(act);
-			setvalues("","");
-			delete.setVisibility(INVISIBLE);
-			});
-		ok.setText(R.string.save);
-           	ok.setOnClickListener(this::saveall);
-		Button cancel=getbutton(act,R.string.cancel);
-           	cancel.setOnClickListener(v->{
-				act.doonback();
-			});
-		Button help=getbutton(act,R.string.helpname);
-		help.setOnClickListener(v->{tk.glucodata.help.help(R.string.shortcuthelp,act); });
-		ScrollView scroll=new ScrollView(act);
-		scroll.setSmoothScrollingEnabled(false);
-		scroll.setVerticalScrollBarEnabled(Applic.scrollbar);
-		scroll.setHorizontalScrollBarEnabled(Applic.horiScrollbar);
-		
-		scroll.setLayoutParams(new ViewGroup.LayoutParams(   ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
-		mkshortlist(act);
-     var top= MainActivity.systembarTop*3/4;
-     shortlist.setPadding(0,top,0,0);
-		scroll.addView(shortlist);
-		Layout butview= new Layout(act,false,new View[]{add},new View[]{help},new View[]{cancel},new View[]{ok});
-		butview.setLayoutParams(new ViewGroup.LayoutParams(   ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
-   butview.setPadding(0,top,0,0);
-		shortlistview= new Layout(act,false,(a,w,h)->{
-			hideSystemUI(act);
-			return new int[] {w,h}; },new View[]{scroll,butview});
-   shortlistview.setPadding(MainActivity.systembarLeft,0,MainActivity.systembarRight,MainActivity.systembarBottom);
-		shortlistview.setBackgroundColor(tk.glucodata.Applic.backgroundcolor);
-		act.addMyContentView(shortlistview, new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
-		}
-	else {
-        	shortlistview.setVisibility(VISIBLE);
-		}
-	Runnable closerun=() -> {
-		shortlistview.setVisibility(GONE);
-		if(shortedit!=null)
-			removeContentView(shortedit);
-		removeContentView(shortlistview);
+    if(shortlistview==null) {
+        Button add=new Button(act),ok=new Button(act);
+        add.setText(R.string.newname);
+               add.setOnClickListener(v->{
+            current=null;
+            mkshort(act);
+            setvalues("","");
+            delete.setVisibility(INVISIBLE);
+            });
+        ok.setText(R.string.save);
+               ok.setOnClickListener(this::saveall);
+        Button cancel=getbutton(act,R.string.cancel);
+               cancel.setOnClickListener(v->{
+                act.doonback();
+            });
+        Button help=getbutton(act,R.string.helpname);
+        help.setOnClickListener(v->{tk.glucodata.help.help(R.string.shortcuthelp,act); });
+        ScrollView scroll=new ScrollView(act);
+        scroll.setSmoothScrollingEnabled(false);
+        scroll.setVerticalScrollBarEnabled(Applic.scrollbar);
+        scroll.setHorizontalScrollBarEnabled(Applic.horiScrollbar);
+        
+        scroll.setLayoutParams(new ViewGroup.LayoutParams(   ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        mkshortlist(act);
+        shortlist.systembarPadding((left,top,right,bottom)->new int[]{0,top*3/4,0,0});
+        scroll.addView(shortlist); 
+        Layout butview= new Layout(act,false,new View[]{add},new View[]{help},new View[]{cancel},new View[]{ok}).portraitLayout()  ;
+         butview.setLayoutParams(new ViewGroup.LayoutParams(   ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT)); 
+
+        butview.systembarPadding((left,top,right,bottom)->new int[]{0,top*3/4,0,0});
+        shortlistview= new Layout(act,false,(a,w,h)->{
+             hideSystemUI(act);
+            return new int[] {w,h}; },new View[]{scroll,butview}).portraitLayout(new View[]{scroll},new View[]{add,help,cancel,ok});
+        shortlistview.systembarPadding((left,top,right,bottom)->new int[]{left,0,right,bottom});
+        shortlistview.setBackgroundColor(tk.glucodata.Applic.backgroundcolor);
+        act.addMyContentView(shortlistview, new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
+        }
+    else {
+            shortlistview.setVisibility(VISIBLE);
+        }
+    Runnable closerun=() -> {
+        shortlistview.setVisibility(GONE);
+        if(shortedit!=null)
+            removeContentView(shortedit);
+        removeContentView(shortlistview);
                 act.lightBars(!Natives.getInvertColors());
-		};
-	act.setonback(closerun);
-	}
+        };
+    act.setonback(closerun);
+    }
 ViewGroup shortedit=null;
 EditText labedit=null, valedit=null;
 void deleteshort(View v) {
-	int index=shortcuts.indexOf(current);
-	if(index>=0) {
-		shortcuts.remove(index);
-		shortlist.delrow(index);
-		}
-	 endshortedit() ;
-	 ((MainActivity)v.getContext()).poponback();
-	}
+    int index=shortcuts.indexOf(current);
+    if(index>=0) {
+        shortcuts.remove(index);
+        shortlist.delrow(index);
+        }
+     endshortedit() ;
+     ((MainActivity)v.getContext()).poponback();
+    }
 void endshortedit() {
-	shortedit.setVisibility(GONE);
-	hidekeyboard((MainActivity)shortedit.getContext()); //USE
-	}
+    shortedit.setVisibility(GONE);
+    hidekeyboard((MainActivity)shortedit.getContext()); //USE
+    }
 void saveshort(View v) {
-	String label=labedit.getText().toString();
-	String values=valedit.getText().toString();
-	if(current==null) {
-		ArrayList<Object> el=new ArrayList<>();
-		el.add(label);
-		el.add(values);
-		shortcuts.add(el);
-		addrow(v.getContext(),shortcuts.size()-1);
-		current=el;
-		}
-	else {
-		int index=shortcuts.indexOf(current);
-		if(index>=0) {
-			current.set(0,label);
-			current.set(1,values);
-			View[] views=shortlist.getrow(index);
-			((TextView)views[0]).setText(label);
-			((TextView)views[1]).setText(values);
-			}
-		}
-	
-	 endshortedit() ;
-	 ((MainActivity)v.getContext()).poponback();
-	}
+    String label=labedit.getText().toString();
+    String values=valedit.getText().toString();
+    if(current==null) {
+        ArrayList<Object> el=new ArrayList<>();
+        el.add(label);
+        el.add(values);
+        shortcuts.add(el);
+        addrow(v.getContext(),shortcuts.size()-1);
+        current=el;
+        }
+    else {
+        int index=shortcuts.indexOf(current);
+        if(index>=0) {
+            current.set(0,label);
+            current.set(1,values);
+            View[] views=shortlist.getrow(index);
+            ((TextView)views[0]).setText(label);
+            ((TextView)views[1]).setText(values);
+            }
+        }
+    
+     endshortedit() ;
+     ((MainActivity)v.getContext()).poponback();
+    }
 void setvalues(String name,String value) {
-	labedit.setText(name);
-	valedit.setText(value);
-	}
+    labedit.setText(name);
+    valedit.setText(value);
+    }
 Button delete=null;
 void mkshort(MainActivity act) {
 if(shortedit==null) {
-	TextView label=getlabel(act,R.string.shortcut);
-	labedit=new EditText(act);
-	labedit.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+    TextView label=getlabel(act,R.string.shortcut);
+    labedit=new EditText(act);
+    labedit.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
 
-	labedit.setImeOptions( EditorInfo.IME_FLAG_NO_EXTRACT_UI| EditorInfo.IME_FLAG_NO_FULLSCREEN| EditorInfo.IME_ACTION_DONE);
-	labedit.setMinEms(7);
-	TextView value=getlabel(act,R.string.value);
-	valedit=new EditText(act);
-	valedit.setMinEms(3);
-	valedit.setInputType(InputType.TYPE_CLASS_NUMBER |InputType.TYPE_NUMBER_FLAG_DECIMAL);//| InputType.IME_FLAG_NO_FULLSCREEN);
+    labedit.setImeOptions( EditorInfo.IME_FLAG_NO_EXTRACT_UI| EditorInfo.IME_FLAG_NO_FULLSCREEN| EditorInfo.IME_ACTION_DONE);
+    labedit.setMinEms(7);
+    TextView value=getlabel(act,R.string.value);
+    valedit=new EditText(act);
+    valedit.setMinEms(3);
+    valedit.setInputType(InputType.TYPE_CLASS_NUMBER |InputType.TYPE_NUMBER_FLAG_DECIMAL);//| InputType.IME_FLAG_NO_FULLSCREEN);
 
         valedit.setImeOptions(editoptions);
-//	valedit.setKeyListener(DigitsKeyListener.getInstance("^*/+-().0123456789"));
-//	valedit.setImeOptions( EditorInfo.IME_FLAG_NO_EXTRACT_UI| EditorInfo.IME_FLAG_NO_FULLSCREEN| EditorInfo.IME_ACTION_DONE);
-	Button save=getbutton(act,R.string.ok);
-	save.setOnClickListener(this::saveshort);
-	delete=getbutton(act,R.string.delete);
-	delete.setOnClickListener(this::deleteshort);
-	Button cancel=getbutton(act,R.string.cancel);
-	cancel.setOnClickListener(v->{ 
-			act.doonback();
-			 }); 
-	shortedit=new Layout(act, false,(l, w, h) -> {
-			hideSystemUI(act);
+//    valedit.setKeyListener(DigitsKeyListener.getInstance("^*/+-().0123456789"));
+//    valedit.setImeOptions( EditorInfo.IME_FLAG_NO_EXTRACT_UI| EditorInfo.IME_FLAG_NO_FULLSCREEN| EditorInfo.IME_ACTION_DONE);
+    Button save=getbutton(act,R.string.ok);
+    save.setOnClickListener(this::saveshort);
+    delete=getbutton(act,R.string.delete);
+    delete.setOnClickListener(this::deleteshort);
+    Button cancel=getbutton(act,R.string.cancel);
+    cancel.setOnClickListener(v->{ 
+            act.doonback();
+             }); 
+    shortedit=new Layout(act, false,(l, w, h) -> {
+            hideSystemUI(act);
                         /*
-			var width= getscreenwidth(act);
-			if(width>w)
-			    l.setX(( width- w)* 0.7f);
+            var width= getscreenwidth(act);
+            if(width>w)
+                l.setX(( width- w)* 0.7f);
                          l.setY(MainActivity.systembarTop);
 */
-			return new int[] {w,h};
-			    }, new View[] {label,labedit},new View[] {value,valedit},new View[] {delete,cancel,save});
-//	shortedit.setBackgroundColor(tk.glucodata.Applic.backgroundcolor);
+            return new int[] {w,h};
+                }, new View[] {label,labedit},new View[] {value,valedit},new View[] {delete,cancel,save});
+//    shortedit.setBackgroundColor(tk.glucodata.Applic.backgroundcolor);
 
-	      shortedit.setBackgroundResource(R.drawable.dialogbackground);
-	   int pad=(int)(tk.glucodata.GlucoseCurve.metrics.density*5.0);
-	   shortedit.setPadding(pad,0,pad,0);
+          shortedit.setBackgroundResource(R.drawable.dialogbackground);
+       int pad=(int)(tk.glucodata.GlucoseCurve.metrics.density*5.0);
+       shortedit.setPadding(pad,0,pad,0);
 
     //var  params =    new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.CENTER|Gravity.CENTER_HORIZONTAL);
         var params= new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.TOP| Gravity.CENTER_HORIZONTAL);
         params.topMargin=MainActivity.systembarTop;
 //        params.leftMargin=MainActivity.systembarLeft;
-	act.addMyContentView(shortedit, params);
+    act.addMyContentView(shortedit, params);
     }
     else {
         shortedit.setVisibility(VISIBLE);
-	}
+    }
    act.setonback(() -> endshortedit() );
    }
    }

@@ -1278,7 +1278,7 @@ static bool mkdatabaseSI3(string_view sensordir,string_view sensorgegs,uint32_t 
     return true;
     }
 
-static bool mkdatabaseSI(string_view sensordir,string_view sensorgegs,uint32_t now,bool hasnum) {
+static bool mkdatabaseSI(string_view sensordir,string_view sensorgegs,uint32_t now,bool hasnum,uint8_t maxdays) {
      LOGGER("mkdatabaseSI %s,%s\n",sensordir.data(),sensorgegs.data());
     mkdir(sensordir.data(),0700);
     pathconcat infoname(sensordir,infopdat);
@@ -1295,7 +1295,7 @@ static bool mkdatabaseSI(string_view sensordir,string_view sensorgegs,uint32_t n
   //  const bool sib2=sensorgegs.size()==59;
         
 
-       Info inf{.starttime=(uint32_t)start,.lastscantime=(uint32_t)start,.starthistory=0,.endhistory=0,.scancount=0,.startid=0,.interval=interval5,.dupl=3,.days=maxdaysSI ,.sibionics=true,.lastLifeCountReceived=0,.siType=0,.pollcount=0,.pollinterval=88.0, .lockcount=1};
+       Info inf{.starttime=(uint32_t)start,.lastscantime=(uint32_t)start,.starthistory=0,.endhistory=0,.scancount=0,.startid=0,.interval=interval5,.dupl=3,.days=maxdays ,.sibionics=true,.lastLifeCountReceived=0,.siType=0,.pollcount=0,.pollinterval=88.0, .lockcount=1};
        inf.siIdlen=sensorgegs.size();
        memcpy(inf.siId,sensorgegs.data(),inf.siIdlen);
        if(hasnum) {
@@ -1734,9 +1734,19 @@ bool saveStreamAgain(time_t tim,int id,int glu,int trend,float change) {
     getinfo()->pollcount=count;
     return false;
     }
-void saveglucosedata(Mmap<ScanData> &streamscans,uint32_t &count,time_t tim,int id,int glu,int trend,float change) {
+
+
+ void saveglucosedata(Mmap<ScanData> &streamscans,uint32_t &count,time_t tim,int id,int glu,int trend,float change) {
+     const auto capacity=streamscans.count();
+     if(count>=capacity) {
+        LOGGER("saveglucosedata: full count=%u capacity=%zu id=%d time=%lld\n",
+               count,capacity,id,static_cast<long long>(tim));
+        return;
+        }
      streamscans[count++]={static_cast<uint32_t>(tim),id,glu,trend,change};
-    }
+     }
+
+
 bool hasStreamID(const int id,const uint32_t eventtime) const {
     return polls[id].id==id&&polls[id].g&&!isnan(polls[id].getchange())&&abs((int)(polls[id].gettime()-eventtime))<60;
     }

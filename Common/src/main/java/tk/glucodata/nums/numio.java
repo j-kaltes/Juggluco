@@ -203,7 +203,7 @@ if(true) {
           }
           build.append('\n');
           Natives.log(build.toString());
-           final String version= BuildConfig.VERSION_CODE+" "+ BuildConfig.VERSION_NAME +" "+ BuildConfig.BUILD_TIME+"\n";
+           final String version= BuildConfig.VERSION_CODE+" "+ BuildConfig.VERSION_NAME +" "+ tk.glucodata.BuildTime.TIME+"\n";
           if(doLog) {Log.i(LOG_ID,version+locstr+" "+country+" nativeDir="+nativedir);};
       }
 

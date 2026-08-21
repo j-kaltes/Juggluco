@@ -36,6 +36,33 @@ if(false) {
 }
 
 def CMAKEVERSION = "4.1.2"
+
+// BUILD_TIME FIX: generated through AGP Variant Sources API (2026-08-17)
+// Generate the build timestamp during task execution, rather than during
+// Gradle configuration. The output is registered below through AGP's Sources
+// API, so configuration-cache reuse cannot freeze the timestamp.
+abstract class GenerateBuildTimeTask extends org.gradle.api.DefaultTask {
+    @org.gradle.api.tasks.OutputDirectory
+    abstract org.gradle.api.file.DirectoryProperty getOutputDirectory()
+
+    @org.gradle.api.tasks.TaskAction
+    void generate() {
+        def packageDir = outputDirectory.dir("tk/glucodata").get().asFile
+        packageDir.mkdirs()
+
+        def time = new java.text.SimpleDateFormat("HH:mm:ss dd-MMM-yyyy")
+                .format(new java.util.Date())
+        new File(packageDir, "BuildTime.java").text = """\
+package tk.glucodata;
+
+public final class BuildTime {
+    private BuildTime() {}
+    public static final String TIME = "${time}";
+}
+"""
+    }
+}
+
 android {
     namespace = "tk.glucodata"
 
@@ -102,7 +129,6 @@ android {
          versionName '10.10.0'
 //    multiDexEnabled true
 
-        buildConfigField 'String', 'BUILD_TIME', 'new java.text.SimpleDateFormat("HH:mm:ss dd-MMM-yyyy").format(new java.util.Date(' + System.currentTimeMillis() + 'L))'
         buildConfigField 'int', 'isRelease', '0'
         buildConfigField 'int', 'isReleaseID', '0'
 
@@ -119,6 +145,7 @@ android {
 //    resourceConfigurations += ["en", "nl", "fr","it", "de", "pl", "pt","be","uk"]
     //ndk { abiFilters  'armeabi-v7a' }
       // ndk { abiFilters  'arm64-v8a' }
+      ndk { abiFilters  'armeabi-v7a',   'arm64-v8a' }
         signingConfig signingConfigs.alg
     //buildToolsVersion '33.0.0'
     }
@@ -587,6 +614,20 @@ buildTypes {
             ) {
                 variant.enable = false
             }
+        })
+
+        // Register BuildTime.java as generated Java source for every enabled variant.
+        // addGeneratedSourceDirectory() assigns outputDirectory and carries the task
+        // dependency automatically; no java.srcDir Provider or JavaCompile hook is needed.
+        onVariants(selector().all(), { variant ->
+            def taskName = "generate${variant.name.capitalize()}BuildTime"
+            def buildTimeTask = tasks.register(taskName, GenerateBuildTimeTask) {
+                // BUILD_TIME is deliberately different for every actual build invocation.
+                outputs.upToDateWhen { false }
+            }
+            variant.sources.java.addGeneratedSourceDirectory(
+                    buildTimeTask,
+                    GenerateBuildTimeTask::getOutputDirectory)
         })
     }
     compileSdkMinor 0

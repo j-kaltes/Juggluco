@@ -46,16 +46,6 @@ import android.widget.Toast;
 public class TurnServer {
 static final private String LOG_ID="TurnServer";
 
-/*
-public static EditText getEditText(Context context, String key) {
-    var editkey= new EditText(context);
-    editkey.setImeOptions(editoptions);
-    editkey.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
-    editkey.setTransformationMethod(new PasswordTransformationMethod());
-    editkey.setMinEms(12);
-    editkey.setText(key);
-    return editkey;
-    } */
 
 static public  EditText getedit(Context act, String text) {
       EditText label=new EditText(act);
@@ -73,12 +63,14 @@ public static void show(MainActivity context,View parent) {
    var password = getlabel(context,R.string.password);
    var laypad=(int)(GlucoseCurve.getDensity()*4.0f);
    var absent=Natives.TurnServerNR()==0;
-   password.setPaddingRelative(laypad*2,0,laypad,0);
+//   password.setPaddingRelative(laypad*2,0,laypad,0);
    var username = getlabel(context,R.string.username);
    var hostname = getlabel(context,R.string.hostname);
    var portname = getlabel(context,R.string.port);
    var passedit=getedit(context,absent?"":Natives.getTurnPassword(0));
    var useredit=getedit(context,absent?"":Natives.getTurnUser(0));
+   Layout.getMargins(useredit).setMarginEnd(laypad);
+   Layout.getMargins(passedit).setMarginStart(laypad);
    var hostedit=getedit(context,absent?"":Natives.getTurnHost(0));
   var portedit=getnumedit(context,absent?"":(""+Natives.getTurnPort(0)));
 
@@ -120,14 +112,9 @@ public static void show(MainActivity context,View parent) {
 
     var layout=new Layout(context,(l,w,h)-> {
         return new int[] {w,h};
-        },new View[]{hostname,hostedit,portname,portedit},new View[]{username,useredit,password,passedit} ,new View[]{cancel,Help,delete,save} );
+        },new View[]{hostname,hostedit,portname,portedit},new View[]{username,useredit,password,passedit} ,new View[]{cancel,Help,delete,save} ).portraitLayout(new View[]{hostname,hostedit},new View[]{portname,portedit},new View[]{username,useredit},new View[]{password,passedit} ,new View[]{Help,delete},new View[]{cancel,save} ).systembarMargins((left,top,right,bottom)->new int[]{left,5*top/6,right,bottom});
 
     var params =new ViewGroup.MarginLayoutParams(MATCH_PARENT, WRAP_CONTENT);
-//    var laypad=(int)(GlucoseCurve.metrics.density*4.0);
-    params.leftMargin= MainActivity.systembarLeft;
-    params.topMargin= MainActivity.systembarTop*3/4;
-    params.rightMargin=MainActivity.systembarRight;
-    params.bottomMargin=MainActivity.systembarBottom;
 
    layout.setPadding(laypad*2,0,laypad*2,0);
     layout.setBackgroundResource(R.drawable.dialogbackground);

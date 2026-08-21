@@ -361,6 +361,7 @@ private static class ReselectSpinner extends Spinner {
         var root=new Layout(context,new View[]{themeName},new View[]{themesLabel,lightSpinner,darkSpinner},new View[]{shapelabel,rectButton,ovalButton},new View[]{radiusLabel,radiusSeekBar});
 
         root.setPadding(p12, p12, p12, p8);
+        root.systembarMargins();
 
         AdapterView.OnItemSelectedListener lightListener = new AdapterView.OnItemSelectedListener() {
                 @Override

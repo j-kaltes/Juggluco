@@ -1,25 +1,5 @@
-/*      This file is part of Juggluco, an Android app to receive and display         */
-/*      glucose values from Freestyle Libre 2(+), Libre 3(+), Dexcom G7/ONE+,        */
-/*      Sibionics GS1Sb and GS3, Accu-Chek SmartGuide, CareSens Air and              */
-/*      Aidex X sensors.                                                             */
-/*                                                                                   */
-/*      Copyright (C) 2021 Jaap Korthals Altes <jaapkorthalsaltes@gmail.com>         */
-/*                                                                                   */
-/*      Juggluco is free software: you can redistribute it and/or modify             */
-/*      it under the terms of the GNU General Public License as published            */
-/*      by the Free Software Foundation, either version 3 of the License, or         */
-/*      (at your option) any later version.                                          */
-/*                                                                                   */
-/*      Juggluco is distributed in the hope that it will be useful, but              */
-/*      WITHOUT ANY WARRANTY; without even the implied warranty of                   */
-/*      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                         */
-/*      See the GNU General Public License for more details.                         */
-/*                                                                                   */
-/*      You should have received a copy of the GNU General Public License            */
-/*      along with Juggluco. If not, see <https://www.gnu.org/licenses/>.            */
-/*                                                                                   */
-/*      Tue Aug 11 16:33:40 CEST 2026                                                */
 #include "authorization_frame_transform.h"
+#include "whitebox_lookup_table.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -53,11 +33,54 @@ static const uint8_t k_norm_dat40c69d2[128] = {
 };
 
 static int check_transform_tables(const l3_authorization_frame_transform_tables *t) {
-    if (!t || !t->dat_f4295564 || !t->dat_f40c6a52) return L3_AUTH_ERR_ARGUMENT;
-    if (t->dat_f4295564_len < 0x20000u) return L3_AUTH_ERR_TABLE_SIZE;
+    if (!t || !t->dat_f40c6a52) return L3_AUTH_ERR_ARGUMENT;
     /* processint(6) output_bit_len=0x20 uses selectors within the extracted 0x1300-byte table.
        Partial-bit paths may require a larger contiguous DAT_f40c6a52-family dump. */
     if (t->dat_f40c6a52_len < 0x1300u) return L3_AUTH_ERR_TABLE_SIZE;
+    return L3_AUTH_OK;
+}
+
+static int table_transform_core(const l3_authorization_frame_transform_tables *t,
+                                  uint32_t param1, uint32_t param2,
+                                  const uint8_t *p3, const uint8_t *p4,
+                                  uint8_t *out, size_t out_len,
+                                  uint32_t skip,
+                                  int skip_mode) {
+    const uint32_t whole = ((param2 << 14) & 0xffffffffu) >> 18;
+    const uint32_t rem = param2 >> 18;
+    const uint32_t base = param1 & 0x3fffffu;
+    const size_t need = (size_t)whole + (size_t)rem;
+    uint8_t state = 0;
+    if (!p3 || !p4 || !out) return L3_AUTH_ERR_ARGUMENT;
+    if (out_len < need) return L3_AUTH_ERR_ARGUMENT;
+    if (t->dat_f40c6a52_len < (size_t)base + (size_t)skip + need) {
+        return L3_AUTH_ERR_TABLE_SIZE;
+    }
+
+    for (uint32_t i = 0; i < skip; ++i) {
+        uint32_t idx = (((uint32_t)(state & 0xf8u) ^ (uint32_t)p3[i]) |
+                        ((uint32_t)p4[i] << 8)) ^
+                       ((uint32_t)l3_auth_table_read_byte(t->dat_f40c6a52, t->dat_f40c6a52_format, base + i) << 11);
+        state = l3_whitebox_lookup_byte(idx);
+    }
+    for (uint32_t i = 0; i < whole; ++i) {
+        uint32_t src = skip + i;
+        uint32_t idx = (((uint32_t)(state & 0xf8u) ^ (uint32_t)p3[src]) |
+                        ((uint32_t)p4[src] << 8)) ^
+                       ((uint32_t)l3_auth_table_read_byte(t->dat_f40c6a52, t->dat_f40c6a52_format, base + src) << 11);
+        state = l3_whitebox_lookup_byte(idx);
+        out[i] = (uint8_t)(state & 7u);
+    }
+    for (uint32_t i = 0; i < rem; ++i) {
+        uint32_t src = skip + whole + i;
+        uint32_t idx = skip_mode
+            ? ((uint32_t)(state & 0xf8u) ^
+               ((uint32_t)l3_auth_table_read_byte(t->dat_f40c6a52, t->dat_f40c6a52_format, base + src) << 11))
+            : (((uint32_t)(state & 0xf8u) | ((uint32_t)p4[src] << 8)) ^
+               ((uint32_t)l3_auth_table_read_byte(t->dat_f40c6a52, t->dat_f40c6a52_format, base + src) << 11));
+        state = l3_whitebox_lookup_byte(idx);
+        out[whole + i] = (uint8_t)(state & 7u);
+    }
     return L3_AUTH_OK;
 }
 
@@ -65,64 +88,15 @@ static int table_transform_emit(const l3_authorization_frame_transform_tables *t
                                   uint32_t param1, uint32_t param2,
                                   const uint8_t *p3, const uint8_t *p4,
                                   uint8_t *out, size_t out_len) {
-    uint32_t whole = ((param2 << 14) & 0xffffffffu) >> 18;
-    uint32_t rem = param2 >> 18;
-    uint32_t base = param1 & 0x3fffffu;
-    size_t need = (size_t)whole + (size_t)rem;
-    uint8_t state = 0;
-    if (!p3 || !p4 || !out) return L3_AUTH_ERR_ARGUMENT;
-    if (out_len < need) return L3_AUTH_ERR_ARGUMENT;
-    if (t->dat_f40c6a52_len < (size_t)base + need) return L3_AUTH_ERR_TABLE_SIZE;
-    for (uint32_t i = 0; i < whole; ++i) {
-        uint32_t idx = (((uint32_t)(state & 0xf8u) ^ (uint32_t)p3[i]) |
-                        ((uint32_t)p4[i] << 8)) ^
-                       ((uint32_t)t->dat_f40c6a52[base + i] << 11);
-        state = t->dat_f4295564[idx];
-        out[i] = (uint8_t)(state & 7u);
-    }
-    for (uint32_t i = 0; i < rem; ++i) {
-        uint32_t idx = ((uint32_t)(state & 0xf8u) |
-                        ((uint32_t)p4[whole + i] << 8)) ^
-                       ((uint32_t)t->dat_f40c6a52[base + whole + i] << 11);
-        state = t->dat_f4295564[idx];
-        out[whole + i] = (uint8_t)(state & 7u);
-    }
-    return L3_AUTH_OK;
+    return table_transform_core(t, param1, param2, p3, p4, out, out_len, 0u, 0);
 }
 
 static int table_transform_skip_emit(const l3_authorization_frame_transform_tables *t,
                                   uint32_t param1, uint32_t param2,
                                   const uint8_t *p3, const uint8_t *p4,
                                   uint8_t *out, size_t out_len) {
-    uint32_t whole = ((param2 << 14) & 0xffffffffu) >> 18;
-    uint32_t rem = param2 >> 18;
-    uint32_t skip = (param1 >> 22) | ((param2 & 0xfu) << 10);
-    uint32_t base = param1 & 0x3fffffu;
-    size_t need = (size_t)whole + (size_t)rem;
-    uint8_t state = 0;
-    if (!p3 || !p4 || !out) return L3_AUTH_ERR_ARGUMENT;
-    if (out_len < need) return L3_AUTH_ERR_ARGUMENT;
-    if (t->dat_f40c6a52_len < (size_t)base + skip + need) return L3_AUTH_ERR_TABLE_SIZE;
-    for (uint32_t i = 0; i < skip; ++i) {
-        uint32_t idx = (((uint32_t)(state & 0xf8u) ^ (uint32_t)p3[i]) |
-                        ((uint32_t)p4[i] << 8)) ^
-                       ((uint32_t)t->dat_f40c6a52[base + i] << 11);
-        state = t->dat_f4295564[idx];
-    }
-    for (uint32_t i = 0; i < whole; ++i) {
-        uint32_t idx = (((uint32_t)(state & 0xf8u) ^ (uint32_t)p3[skip + i]) |
-                        ((uint32_t)p4[skip + i] << 8)) ^
-                       ((uint32_t)t->dat_f40c6a52[base + skip + i] << 11);
-        state = t->dat_f4295564[idx];
-        out[i] = (uint8_t)(state & 7u);
-    }
-    for (uint32_t i = 0; i < rem; ++i) {
-        uint32_t idx = ((uint32_t)(state & 0xf8u)) ^
-                       ((uint32_t)t->dat_f40c6a52[base + skip + whole + i] << 11);
-        state = t->dat_f4295564[idx];
-        out[whole + i] = (uint8_t)(state & 7u);
-    }
-    return L3_AUTH_OK;
+    const uint32_t skip = (param1 >> 22) | ((param2 & 0xfu) << 10);
+    return table_transform_core(t, param1, param2, p3, p4, out, out_len, skip, 1);
 }
 
 uint32_t l3_encoded_frame_count_for_bits(uint32_t bit_len) {

@@ -143,8 +143,9 @@ private static void webPercentiles(Context context, int days,boolean history) {
     final long endtime=Natives.percentileEndtime(days);
 	final String key=Natives.getApiSecret();
     final String addkey=(key!=null&&!key.isEmpty())?key+"/":"";
-    final String type=(Natives.getDoCalibrate()?"&calibrated":"&")+(history?"history":"stream");
-    final String url="http://127.0.0.1:17580/"+addkey+"x/report?amounts&days="+days+"&endtime="+endtime+type+"&hl="+Applic.curlang;
+    final String type=(Natives.getDoCalibrate()?(
+    (Natives.getCalibratePast()?"&pastvalues":"")+"&calibrated"):"&")+(history?"history":"stream");
+    final String url="http://127.0.0.1:"+Natives.gethttpport()+"/"+addkey+"x/report?amounts&days="+days+"&endtime="+endtime+type+"&hl="+Applic.curlang;
     var intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
     context.startActivity(intent);
     }
@@ -163,13 +164,6 @@ static void mkstats(MainActivity act) {
       getMargins(history).rightMargin=(int)(GlucoseCurve.metrics.density*5.0);
       Button Curve = getbutton(act, R.string.summarygraph);
       Layout layout = new Layout(act, (l, w, h) -> {
-      /*
-         int height = GlucoseCurve.getheight();
-         int width = GlucoseCurve.getwidth();
-         if(width>w) l.setX(width - w-MainActivity.systembarRight);
-
-         if(height>h) l.setY((height - h -MainActivity. systembarBottom));
-         */
          return new int[]{w, h};
       }, new View[]{history,Days, Help},new View[]{Close,stats, Curve});
 
@@ -179,8 +173,10 @@ static void mkstats(MainActivity act) {
       act.curve.summarybutton=Curve;
 
     var  params =    new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.BOTTOM| Gravity.RIGHT);
-    params.bottomMargin=MainActivity.systembarBottom;
-    params.rightMargin=MainActivity.systembarRight;
+    //params.bottomMargin=MainActivity.systembarBottom;
+   // params.rightMargin=MainActivity.systembarRight;
+    layout.systembarMargins((left,top,right,bottom)->new int[]{0,0,right,bottom});
+
       act.addMyContentView(layout, params);
     //  act.addMyContentView(layout, new ViewGroup.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
     final Runnable closeonback=()-> {

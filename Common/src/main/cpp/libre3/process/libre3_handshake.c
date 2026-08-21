@@ -1,24 +1,3 @@
-/*      This file is part of Juggluco, an Android app to receive and display         */
-/*      glucose values from Freestyle Libre 2(+), Libre 3(+), Dexcom G7/ONE+,        */
-/*      Sibionics GS1Sb and GS3, Accu-Chek SmartGuide, CareSens Air and              */
-/*      Aidex X sensors.                                                             */
-/*                                                                                   */
-/*      Copyright (C) 2021 Jaap Korthals Altes <jaapkorthalsaltes@gmail.com>         */
-/*                                                                                   */
-/*      Juggluco is free software: you can redistribute it and/or modify             */
-/*      it under the terms of the GNU General Public License as published            */
-/*      by the Free Software Foundation, either version 3 of the License, or         */
-/*      (at your option) any later version.                                          */
-/*                                                                                   */
-/*      Juggluco is distributed in the hope that it will be useful, but              */
-/*      WITHOUT ANY WARRANTY; without even the implied warranty of                   */
-/*      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                         */
-/*      See the GNU General Public License for more details.                         */
-/*                                                                                   */
-/*      You should have received a copy of the GNU General Public License            */
-/*      along with Juggluco. If not, see <https://www.gnu.org/licenses/>.            */
-/*                                                                                   */
-/*      Tue Aug 11 16:33:40 CEST 2026                                                */
 #include "libre3_handshake.h"
 
 #include <stdlib.h>
@@ -109,20 +88,15 @@ int l3_handshake_begin(l3_handshake_state *state) {
     return 1;
 }
 
-int l3_handshake_load_app_key_and_saved_authorization(l3_handshake_state *state,
-                                     const uint8_t *app_private_key_record,
-                                     size_t app_private_key_record_len,
+int l3_handshake_select_app_key_and_saved_authorization(l3_handshake_state *state,
+                                     unsigned security_version,
                                      const uint8_t *saved_authorization_record,
                                      size_t saved_authorization_record_len) {
     int rc = validate_operations(state);
     if (rc) return rc;
-    if (!state->operations->decode_app_private_key ||
+    if (!state->operations->select_app_private_key ||
         !state->operations->restore_authorization_record) {
         return L3_SECURITY_ERR_UNSUPPORTED;
-    }
-    if (!app_private_key_record ||
-        validate_exact_length(app_private_key_record_len, L3_LEN_APP_PRIVATE_KEY)) {
-        return L3_SECURITY_ERR_ARGUMENT;
     }
     if ((saved_authorization_record == NULL) != (saved_authorization_record_len == 0)) {
         return L3_SECURITY_ERR_ARGUMENT;
@@ -135,9 +109,8 @@ int l3_handshake_load_app_key_and_saved_authorization(l3_handshake_state *state,
     release_security_object(state->operations, &state->authorization_root);
     release_security_object(state->operations, &state->app_private_key);
 
-    rc = state->operations->decode_app_private_key(state->operations->user,
-                                                app_private_key_record,
-                                                app_private_key_record_len,
+    rc = state->operations->select_app_private_key(state->operations->user,
+                                                security_version,
                                                 &state->app_private_key);
     if (!engine_operation_succeeded(rc) || !state->app_private_key) return L3_SECURITY_ERR_ENGINE;
 
@@ -166,14 +139,11 @@ int l3_handshake_set_patch_certificate(l3_handshake_state *state,
     return 1;
 }
 
-int l3_handshake_generate_ephemeral_public_key(l3_handshake_state *state,
-                                              uint8_t **out,
-                                              size_t *out_len) {
+int l3_handshake_generate_ephemeral_public_key_into(l3_handshake_state *state,
+                                              uint8_t out64[L3_LEN_EPHEMERAL_PUBLIC_KEY]) {
     int rc = validate_operations(state);
     if (rc) return rc;
-    if (!out || !out_len) return L3_SECURITY_ERR_ARGUMENT;
-    *out = NULL;
-    *out_len = 0;
+    if (!out64) return L3_SECURITY_ERR_ARGUMENT;
     if (!state->operations->generate_ephemeral_keypair ||
         !state->operations->copy_ephemeral_public_key) {
         return L3_SECURITY_ERR_UNSUPPORTED;
@@ -186,18 +156,10 @@ int l3_handshake_generate_ephemeral_public_key(l3_handshake_state *state,
         return L3_SECURITY_ERR_ENGINE;
     }
 
-    uint8_t *public_xy = (uint8_t *)malloc(L3_LEN_EPHEMERAL_PUBLIC_KEY);
-    if (!public_xy) return L3_SECURITY_ERR_NOMEM;
     rc = state->operations->copy_ephemeral_public_key(state->operations->user,
                                                    state->ephemeral_keypair,
-                                                   public_xy);
-    if (!engine_operation_succeeded(rc)) {
-        free(public_xy);
-        return L3_SECURITY_ERR_ENGINE;
-    }
-    *out = public_xy;
-    *out_len = L3_LEN_EPHEMERAL_PUBLIC_KEY;
-    return 1;
+                                                   out64);
+    return engine_operation_succeeded(rc) ? 1 : L3_SECURITY_ERR_ENGINE;
 }
 
 int l3_handshake_derive_authorization_root(l3_handshake_state *state,
@@ -213,6 +175,19 @@ int l3_handshake_derive_authorization_root(l3_handshake_state *state,
         return L3_SECURITY_ERR_STATE;
     }
     const l3_handshake_operations *operations = state->operations;
+    if (operations->derive_authorization_root_direct) {
+        release_security_object(operations, &state->authorization_root);
+        rc = operations->derive_authorization_root_direct(operations->user,
+                                      state->app_private_key,
+                                      state->ephemeral_keypair,
+                                      state->patch_public_key,
+                                      patch_ephemeral_public_key,
+                                      &state->authorization_root);
+        release_security_object(operations, &state->ephemeral_keypair);
+        return (engine_operation_succeeded(rc) && state->authorization_root)
+                   ? 1 : L3_SECURITY_ERR_ENGINE;
+    }
+
     if (!operations->prepare_app_private_key ||
         !operations->derive_shared_point ||
         !operations->concatenate_shared_points ||
@@ -281,73 +256,62 @@ fail:
     return L3_SECURITY_ERR_ENGINE;
 }
 
-int l3_handshake_encrypt_challenge_reply(l3_handshake_state *state,
+int l3_handshake_encrypt_challenge_reply_into(l3_handshake_state *state,
                                         const uint8_t *nonce7,
                                         size_t nonce7_len,
                                         const uint8_t *plain36,
                                         size_t plain36_len,
-                                        uint8_t **out,
-                                        size_t *out_len) {
+                                        uint8_t out40[L3_LEN_CHALLENGE_REPLY_CRYPT]) {
     int rc = validate_operations(state);
     if (rc) return rc;
-    if (!nonce7 || !plain36 || !out || !out_len) return L3_SECURITY_ERR_ARGUMENT;
+    if (!nonce7 || !plain36 || !out40) return L3_SECURITY_ERR_ARGUMENT;
     if (validate_exact_length(nonce7_len, L3_LEN_CHALLENGE_NONCE) ||
         validate_exact_length(plain36_len, L3_LEN_CHALLENGE_REPLY_PLAIN)) {
         return L3_SECURITY_ERR_ARGUMENT;
     }
     if (!state->authorization_root) return L3_SECURITY_ERR_STATE;
-    if (!state->operations->encrypt_challenge_reply) return L3_SECURITY_ERR_UNSUPPORTED;
-    *out = NULL;
-    *out_len = 0;
-    rc = state->operations->encrypt_challenge_reply(state->operations->user,
-                                                  nonce7,
-                                                  plain36,
-                                                  state->authorization_root,
-                                                  out,
-                                                  out_len);
+    if (!state->operations->encrypt_challenge_reply_into) return L3_SECURITY_ERR_UNSUPPORTED;
+    rc = state->operations->encrypt_challenge_reply_into(state->operations->user,
+                                                       nonce7,
+                                                       plain36,
+                                                       state->authorization_root,
+                                                       out40);
     return engine_operation_succeeded(rc) ? 1 : L3_SECURITY_ERR_ENGINE;
 }
 
-int l3_handshake_decrypt_challenge_response(l3_handshake_state *state,
+int l3_handshake_decrypt_challenge_response_into(l3_handshake_state *state,
                                            const uint8_t *nonce7,
                                            size_t nonce7_len,
                                            const uint8_t *cipher60,
                                            size_t cipher60_len,
-                                           uint8_t **out,
-                                           size_t *out_len) {
+                                           uint8_t out56[L3_LEN_CHALLENGE_RESPONSE_PLAIN]) {
     int rc = validate_operations(state);
     if (rc) return rc;
-    if (!nonce7 || !cipher60 || !out || !out_len) return L3_SECURITY_ERR_ARGUMENT;
+    if (!nonce7 || !cipher60 || !out56) return L3_SECURITY_ERR_ARGUMENT;
     if (validate_exact_length(nonce7_len, L3_LEN_CHALLENGE_NONCE) ||
         validate_exact_length(cipher60_len, L3_LEN_CHALLENGE_RESPONSE_CRYPT)) {
         return L3_SECURITY_ERR_ARGUMENT;
     }
     if (!state->authorization_root) return L3_SECURITY_ERR_STATE;
-    if (!state->operations->decrypt_challenge_response) return L3_SECURITY_ERR_UNSUPPORTED;
-    *out = NULL;
-    *out_len = 0;
-    rc = state->operations->decrypt_challenge_response(state->operations->user,
-                                                     nonce7,
-                                                     cipher60,
-                                                     state->authorization_root,
-                                                     out,
-                                                     out_len);
+    if (!state->operations->decrypt_challenge_response_into) return L3_SECURITY_ERR_UNSUPPORTED;
+    rc = state->operations->decrypt_challenge_response_into(state->operations->user,
+                                                          nonce7,
+                                                          cipher60,
+                                                          state->authorization_root,
+                                                          out56);
     return engine_operation_succeeded(rc) ? 1 : L3_SECURITY_ERR_ENGINE;
 }
 
-int l3_handshake_export_saved_authorization(l3_handshake_state *state,
-                                         uint8_t **out,
-                                         size_t *out_len) {
+int l3_handshake_export_saved_authorization_into(l3_handshake_state *state,
+                                         uint8_t out149[L3_LEN_SAVED_AUTHORIZATION]) {
     int rc = validate_operations(state);
     if (rc) return rc;
-    if (!out || !out_len) return L3_SECURITY_ERR_ARGUMENT;
+    if (!out149) return L3_SECURITY_ERR_ARGUMENT;
     if (!state->authorization_root) return L3_SECURITY_ERR_STATE;
-    if (!state->operations->export_authorization_record) return L3_SECURITY_ERR_UNSUPPORTED;
-    *out = NULL;
-    *out_len = 0;
-    rc = state->operations->export_authorization_record(state->operations->user,
-                                                      state->authorization_root,
-                                                      out,
-                                                      out_len);
+    if (!state->operations->export_authorization_record_into) return L3_SECURITY_ERR_UNSUPPORTED;
+    rc = state->operations->export_authorization_record_into(state->operations->user,
+                                                           state->authorization_root,
+                                                           out149);
     return engine_operation_succeeded(rc) ? 1 : L3_SECURITY_ERR_ENGINE;
 }
+

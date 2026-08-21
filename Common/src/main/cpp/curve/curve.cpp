@@ -171,6 +171,7 @@ bool hebrew() ;
 extern jugglucotext zhtext; 
 extern jugglucotext jatext; 
 extern jugglucotext artext; 
+extern jugglucotext kotext; 
 
 
 #ifdef JUGGLUCO_APP
@@ -404,7 +405,7 @@ if(usedtext==&artext) {
 
 }
 else
-if(usedtext==&zhtext||usedtext==&jatext) {
+if(usedtext==&zhtext||usedtext==&jatext||usedtext==&kotext) {
      enableScript(fontuse, SCR_CJK);
 #ifdef JUGGLUCO_APP
     if(-1==(menufont = nvgCreateFont(avg, "regular",
@@ -758,9 +759,38 @@ pair<const ScanData*,const ScanData*> getScanRangeRuim(const ScanData *scan,cons
 
  void           JCurve::sidenum(NVGcontext* avg,const float posx,const float posy,const char *buf,const int len,const bool hit) {
         int align= NVG_ALIGN_MIDDLE;
+        const float afw=hit?1.14f:0.64f;
+        if(portraitReadable()) {
+            // drawText() makes the glyphs upright.  Logical Y is physical X,
+            // so moving Y places the value to the left/right of the point.
+            // Choose the side using the real portrait free space and the
+            // actual text width rather than merely the half-screen position.
+            float bounds[4];
+            const float textwidth=nvgTextBounds(avg,0.0f,0.0f,buf,buf+len,bounds);
+            const float physicalx=posy;
+            const float leftedge=(float)physicalbarleft+density*2.0f;
+            const float rightedge=(float)surfacewidth-physicalbarright-density*2.0f;
+            const float gap=smallsize*afw;
+            const float leftspace=physicalx-leftedge;
+            const float rightspace=rightedge-physicalx;
+            const float needed=textwidth+gap;
+            const bool putright=(rightspace>=needed) ||
+                                (leftspace<needed && rightspace>=leftspace);
+            float valy=posy;
+            if(putright) {
+                align|=NVG_ALIGN_LEFT;
+                valy+=gap;
+                }
+            else {
+                align|=NVG_ALIGN_RIGHT;
+                valy-=gap;
+                }
+            nvgTextAlign(avg,align);
+            drawText(avg,posx,valy,buf,buf+len);
+            return;
+            }
         float valx=posx;
-        const float afw=hit?1.14:0.64;;
-         if((posx-dleft)>(dwidth/2)) {
+        if((posx-dleft)>(dwidth/2)) {
             align|=NVG_ALIGN_RIGHT;
             valx-=smallsize*afw;
             }
@@ -769,7 +799,7 @@ pair<const ScanData*,const ScanData*> getScanRangeRuim(const ScanData *scan,cons
             valx+=smallsize*afw;
             }
         nvgTextAlign(avg,align);
-        nvgText(avg, valx,posy, buf, buf+len);
+        drawText(avg, valx,posy, buf, buf+len);
         }
 
 
@@ -798,8 +828,19 @@ extern vector<NumDisplay*> numdatas;
       int len=mktime(tms->tm_hour,mktmmin(tms),buf);
         nvgFontSize(avg, smallsize);
         nvgTextAlign(avg,NVG_ALIGN_CENTER|NVG_ALIGN_MIDDLE);
-        float cor=((posy-dtop)<(dheight/2))?smallsize:-smallsize;
-        nvgText(avg, posx,posy+cor*.92, buf, buf+len);
+        if(portraitReadable()) {
+            /*
+             * drawText() maps logical (x,y) to physical (y,H-x).
+             * Therefore move logical X to put the time physically ABOVE the
+             * touched point.  Moving logical Y would put it beside the point,
+             * where it collides with the glucose value.
+             */
+            drawText(avg,posx+smallsize*.92f,posy,buf,buf+len);
+            }
+        else {
+            float cor=((posy-dtop)<(dheight/2))?smallsize:-smallsize;
+            drawText(avg,posx,posy+cor*.92f,buf,buf+len);
+            }
         char *buf2=buf+len;
         *buf2++='\n';
          len=snprintf(buf2,maxbuf-len-1,gformat, ::gconvert(value,glunit));
@@ -1434,7 +1475,7 @@ template <class LT> void    JCurve::glucoselines(NVGcontext* avg,const float las
 #endif
             if(len>bufsize)
                 len=bufsize;
-            nvgText(avg, startld,dy, buf, buf+len);
+            drawText(avg, startld,dy, buf, buf+len);
             }
 
         }
@@ -1492,7 +1533,15 @@ if(nocutoff) {
 #endif
       }
    else {
-       nvgTextAlign(avg,NVG_ALIGN_CENTER|NVG_ALIGN_TOP);
+       if(portraitReadable()) {
+           // drawText() maps logical Y directly to physical X.  Keep the
+           // hour labels just inside the physical left edge; RIGHT alignment
+           // put them outside the portrait surface.
+           nvgTextAlign(avg,NVG_ALIGN_LEFT|NVG_ALIGN_MIDDLE);
+           timeY=(float)physicalbarleft+density*4.0f;
+           }
+       else {
+           nvgTextAlign(avg,NVG_ALIGN_CENTER|NVG_ALIGN_TOP);
     timeY=
     #ifdef WEAROS
         smallfontlineheight*1.45f + //MODIFIED
@@ -1500,6 +1549,7 @@ if(nocutoff) {
     #endif
    statusbarheight
       ;
+           }
 #ifdef NOCUTOFF
    if(nocutoff) {
          float straal=dwidth*.5f;
@@ -1541,7 +1591,7 @@ if(nocutoff) {
     #endif
          {
         int len=mktime(stm->tm_hour,mktmmin(stm),buf);
-            nvgText(avg, dtim,timeY, buf, buf+len);
+            drawText(avg, dtim,timeY, buf, buf+len);
             }
         nvgBeginPath(avg);
         nvgMoveTo(avg,dtim ,0) ;
@@ -1685,19 +1735,55 @@ CURVELOGGER("showbluevalue %zd\n",used.size());
         nvgMoveTo(avg,xpos ,dtop) ;
         nvgLineTo( avg, xpos,dheight+dtop+dbottom);
         nvgStroke(avg);
+
 #ifndef WEAROS
+        /*
+         * In portrait the current-value block itself is deliberately allowed
+         * to inherit the global quarter-turn.  The auxiliary current-status
+         * strings are different: keep them readable and stack them at the
+         * physical top-left, in this order:
+         *     expected sensor end
+         *     current time/date
+         *     IOB
+         * This avoids the old portrait mapping where their logical Y offsets
+         * became physical X offsets and made the strings overlap each other.
+         */
+        float portraitInfoY=(float)physicalbartop+density*4.0f;
+        const float portraitInfoX=(float)physicalbarleft+timelen+density*10.0f;
+        const auto portraitInfo=[&](const char *begin,const char *end) {
+            nvgSave(avg);
+            nvgResetTransform(avg);
+            nvgTextAlign(avg,NVG_ALIGN_LEFT|NVG_ALIGN_TOP);
+
+            // Keep the complete top status line inside the physical portrait
+            // surface.  This matters especially when system UI is hidden and
+            // all physical insets are zero.
+            float textx=portraitInfoX;
+            bounds_t infobounds;
+            nvgTextBounds(avg,textx,portraitInfoY,begin,end,infobounds.array);
+            const float minx=(float)physicalbarleft+density*2.0f;
+            const float maxx=(float)surfacewidth-physicalbarright-density*2.0f;
+            if(infobounds.xmax>maxx)
+                textx-=infobounds.xmax-maxx;
+            if(textx<minx)
+                textx=minx;
+
+            nvgText(avg,textx,portraitInfoY,begin,end);
+            nvgRestore(avg);
+            portraitInfoY+=smallfontlineheight;
+            };
+
         if(const auto *sens=sensors->getSensorData()) {
             if(!(sens->isDexcom()||sens->isSibionics())||!sens->unused()) {
                 if(time_t enddate=sens->expectedEndTime()) {
-                    float down=0;
-
+                    const float down=0;
                     const float timex=xpos+nowLineStrokeWidth;
                     constexpr int maxhead=80;
                     char head[maxhead];
                     int tstart,end;
 
                     if(isRTL()) {
-                            end= datestr(enddate,head); 
+                            end= datestr(enddate,head);
                             memcpy(head+end,usedtext->sensorexpectedend.data(),usedtext->sensorexpectedend.size());
                             tstart=usedtext->sensorexpectedend.size();
                         }
@@ -1705,13 +1791,40 @@ CURVELOGGER("showbluevalue %zd\n",used.size());
                             memcpy(head,usedtext->sensorexpectedend.data(),usedtext->sensorexpectedend.size());
                             tstart=usedtext->sensorexpectedend.size();
                             char *endstr=head+tstart;
-                            end= datestr(enddate,endstr); 
+                            end= datestr(enddate,endstr);
                             }
-                    nvgTranslate(avg, timex,down);
-                    nvgRotate(avg,-NVG_PI/2.0);
-                    nvgTextAlign(avg,NVG_ALIGN_CENTER|NVG_ALIGN_BOTTOM);
-                    nvgText(avg, -dheight/2+down-smallfontlineheight,dwidth-timex, std::begin(head), head+end+tstart);
-                    nvgResetTransform(avg);
+                    if(portraitReadable()) {
+                        /* Move expected-end half a line upward when possible,
+                         * but never let it start above the physical display. */
+                        const float normalInfoY=portraitInfoY;
+                        portraitInfoY=std::max(density*2.0f,
+                                               normalInfoY-smallfontlineheight*.5f);
+                        portraitInfo(std::begin(head),head+end+tstart);
+                        // Keep the following date/IOB stack on its normal grid.
+                        portraitInfoY=normalInfoY+smallfontlineheight;
+                        }
+                    else {
+                        /*
+                         * Reverse the old vertical expected-end label by 180
+                         * degrees without moving its anchor: +90 degrees and
+                         * negated local coordinates are geometrically the same
+                         * placement as the old -90 degree form.
+                         */
+                        nvgSave(avg);
+                        nvgTranslate(avg,timex,down);
+                        nvgRotate(avg,NVG_PI/2.0f);
+                        /*
+                         * With the +90 degree orientation the glyph body must
+                         * extend toward the inside (left) of the landscape
+                         * surface.  TOP does that; BOTTOM put the complete label
+                         * beyond the right edge, making it appear missing.
+                         */
+                        nvgTextAlign(avg,NVG_ALIGN_CENTER|NVG_ALIGN_TOP);
+                        nvgText(avg,dheight/2-down+smallfontlineheight,
+                                timex-dwidth,
+                                std::begin(head),head+end+tstart);
+                        nvgRestore(avg);
+                        }
                     }
                 }
             }
@@ -1719,6 +1832,7 @@ CURVELOGGER("showbluevalue %zd\n",used.size());
     if( settings->data()->IOB) {
         float down=0;
         const float timex=xpos+nowLineStrokeWidth;
+        nvgSave(avg);
         nvgTranslate(avg, timex,down);
         nvgRotate(avg,-NVG_PI/2.0);
         double getiob(uint32_t);
@@ -1727,7 +1841,7 @@ CURVELOGGER("showbluevalue %zd\n",used.size());
         int len=snprintf(tbuf,maxbuf,"IOB: %.1f",getiob(nu));
         nvgTextAlign(avg,NVG_ALIGN_CENTER|NVG_ALIGN_BOTTOM);
         nvgText(avg, -dheight*.40f+down-smallfontlineheight,dwidth*.984f-timex, tbuf,tbuf+len);
-        nvgResetTransform(avg);
+        nvgRestore(avg);
         }
 #endif
         const float getx= xpos+headsize*.9f+8*dwidth/headsize;
@@ -1736,35 +1850,47 @@ constexpr const bool showcurrentdate=true;
 
 if(showcurrentdate) {
         const float datehigh=smallfontlineheight*.72;
-        
+
         nvgTextAlign(avg,NVG_ALIGN_LEFT|NVG_ALIGN_TOP);
         {
         constexpr int maxbuf=120;
         char tbuf[maxbuf];
-         const int datlen=largedaystr(nu,tbuf) ;
-        const float timex =
-            getx
-        #ifdef WEAROS
-            -timelen*.85f
-        #endif
-        ;
-        const float timey = (datehigh+statusbarheight)
-        #ifdef WEAROS
-        *(used.size()<2?2.5f:1.0f);
-        #endif
-        ;
+        int datlen;
+#ifndef WEAROS
+        /*
+         * A past visible-end date is an edge annotation and is drawn by
+         * showdates().  showbluevalue() is not called at all when the visible
+         * range ends before "nu", so it must not be responsible for that
+         * date.  Whenever this function is reached, this is the actual current
+         * date/status line.
+         */
+#endif
+        datlen=largedaystr(nu,tbuf);
+#ifdef WEAROS
+        const float timex=getx-timelen*.85f;
+        const float timey=(datehigh+statusbarheight)*(used.size()<2?2.5f:1.0f);
+        drawText(avg,timex,timey,tbuf,tbuf+datlen);
+#else
+        if(portraitReadable()) {
+            portraitInfo(tbuf,tbuf+datlen);
+            }
+        else {
+            const float timex=getx;
+            const float timey=datehigh+statusbarheight;
+            drawText(avg,timex,timey,tbuf,tbuf+datlen);
+            }
 
-        nvgText(avg, timex,timey, tbuf, tbuf+datlen);
-
-#ifndef WEAROS    
-    if( settings->data()->IOB) {
-        double getiob(uint32_t);
-        int len=snprintf(tbuf,maxbuf,"IOB: %.2f",getiob(nu));
-        nvgText(avg, timex,2*smallfontlineheight+statusbarheight, tbuf,tbuf+len);
-        }
+        if(settings->data()->IOB) {
+            double getiob(uint32_t);
+            const int len=snprintf(tbuf,maxbuf,"IOB: %.2f",getiob(nu));
+            if(portraitReadable())
+                portraitInfo(tbuf,tbuf+len);
+            else
+                drawText(avg,getx,2*smallfontlineheight+statusbarheight,tbuf,tbuf+len);
+            }
 #endif
 
-        CURVELOGGER("xpos=%d dwidth=%.1f headsize=%.1f density=%.1f getx=%.1f timex=%.1f\n",xpos,dwidth,headsize, density,getx,timex);
+        CURVELOGGER("xpos=%d dwidth=%.1f headsize=%.1f density=%.1f getx=%.1f\n",xpos,dwidth,headsize,density,getx);
         }
       }
     showlastsstream(avg,nu, getx,used) ;
@@ -1853,9 +1979,30 @@ if(timdis>0&&((duration/timdis)<grens)) {
         localtime_r(&showstarttime,&tmbufstart);
         timelen=sprintf(tbuf,"%s %02d-%02d-%d",usedtext->daylabel[tmbufstart.tm_wday],tmbufstart.tm_mday,tmbufstart.tm_mon+1,1900+tmbufstart.tm_year);
 //        timelen=daystr(showstarttime,tbuf);
+        /* Keep the original start-date calculation and landscape drawing
+         * unchanged.  Portrait changes only where/how that same string is drawn. */
         xpos= getLevelLeft()?timelen*.75:0;
         nvgTextAlign(avg,NVG_ALIGN_LEFT|NVG_ALIGN_TOP);
-        nvgText(avg,xpos ,datehigh+statusbarheight, tbuf, tbuf+timelen);
+        if(!portraitReadable()) {
+            nvgText(avg,xpos ,datehigh+statusbarheight, tbuf, tbuf+timelen);
+            }
+        else {
+            nvgSave(avg);
+            nvgResetTransform(avg);
+            nvgTextAlign(avg,NVG_ALIGN_LEFT|NVG_ALIGN_BOTTOM);
+            float datex=(float)physicalbarleft+this->timelen+density*8.0f;
+            const float datey=(float)surfaceheight-density*2.0f;
+            bounds_t datebounds;
+            nvgTextBounds(avg,datex,datey,tbuf,tbuf+timelen,datebounds.array);
+            const float maxx=(float)surfacewidth-physicalbarright-density*2.0f;
+            if(datebounds.xmax>maxx)
+                datex-=datebounds.xmax-maxx;
+            const float minx=(float)physicalbarleft+density*2.0f;
+            if(datex<minx)
+                datex=minx;
+            nvgText(avg,datex,datey,tbuf,tbuf+timelen);
+            nvgRestore(avg);
+            }
 #endif
 
         CURVELOGGER("displaytime %s\n",tbuf);
@@ -1867,8 +2014,29 @@ if(timdis>0&&((duration/timdis)<grens)) {
  #define equalday(x) (tmbufend.x==tmbufstart.x)
             if(!(equalday(tm_wday)&& equalday(tm_mday)&& equalday(tm_mon)&& equalday(tm_year))) {
                 timelen=sprintf(tbuf,"%s %02d-%02d-%d",usedtext->daylabel[tmbufend.tm_wday],tmbufend.tm_mday,tmbufend.tm_mon+1,1900+tmbufend.tm_year);
-                nvgTextAlign(avg,NVG_ALIGN_RIGHT|NVG_ALIGN_TOP);
-                nvgText(avg, dwidth+dleft,datehigh+statusbarheight, tbuf, NULL);
+                /* Same visibility rule and same end-date string as landscape;
+                 * portrait changes only the rendering position/orientation. */
+                if(!portraitReadable()) {
+                    nvgTextAlign(avg,NVG_ALIGN_RIGHT|NVG_ALIGN_TOP);
+                    nvgText(avg, dwidth+dleft,datehigh+statusbarheight, tbuf, NULL);
+                    }
+                else {
+                    nvgSave(avg);
+                    nvgResetTransform(avg);
+                    nvgTextAlign(avg,NVG_ALIGN_LEFT|NVG_ALIGN_TOP);
+                    float datex=(float)physicalbarleft+this->timelen+density*8.0f;
+                    const float datey=(float)physicalbartop+density*2.0f;
+                    bounds_t datebounds;
+                    nvgTextBounds(avg,datex,datey,tbuf,tbuf+timelen,datebounds.array);
+                    const float maxx=(float)surfacewidth-physicalbarright-density*2.0f;
+                    if(datebounds.xmax>maxx)
+                        datex-=datebounds.xmax-maxx;
+                    const float minx=(float)physicalbarleft+density*2.0f;
+                    if(datex<minx)
+                        datex=minx;
+                    nvgText(avg,datex,datey,tbuf,tbuf+timelen);
+                    nvgRestore(avg);
+                    }
                 }
 #undef equalday
             }
@@ -2287,6 +2455,8 @@ void     JCurve::setlocale(NVGcontext* avg,const char *localestrbuf,const size_t
         case mklanguagenum("zh"):
         case mklanguagenum("JA"):
         case mklanguagenum("ja"):
+        case mklanguagenum("KO"):
+        case mklanguagenum("ko"):
             if(chfontset!=CJK) {
                 initfont(avg);
                 }
@@ -2381,6 +2551,7 @@ void    JCurve::startstepNVG(NVGcontext* avg,int width, int height) {
 #ifdef JUGGLUCO_APP
 #ifndef DONTTALK
         shownglucose[i].glucosevaluex=-1;
+        shownglucose[i].touchleft=-1;
 #endif
 #endif
 
@@ -2425,13 +2596,73 @@ void    JCurve::startstepNVG(NVGcontext* avg,int width, int height) {
 #ifdef JUGGLUCO_APP
                 failures=0;
 #endif
+                /*
+                 * In portrait the curve coordinate system is quarter-turned,
+                 * but the complete current-glucose/status block should remain
+                 * normally readable.  Counter-rotate the block once around its
+                 * common anchor instead of counter-rotating individual strings.
+                 * This preserves the landscape relative geometry of trend arrow,
+                 * calibrated/raw value, sensor id, and sensor-age fill.
+                 */
+                /*
+                 * For one sensor the ordinary landscape Y anchor is one
+                 * small-font height to the right of the usable-height centre.
+                 * Once the block is made upright in portrait that becomes a
+                 * physical horizontal offset.  Remove that offset so the whole
+                 * current-value/status block is horizontally centred.
+                 */
+                // After the two quarter-turns cancel, valuey is the physical
+                // horizontal anchor of this normally-readable block.  The
+                // block extends much farther to the right of that anchor than
+                // to the left (value/raw value/sensor id versus the arrow), so
+                // move the complete unit left to centre its visible contents.
+                const float valuey=portraitReadable() ? gety-smallsize-headsize*.35f : gety;
+                /*
+                 * With the global portrait quarter-turn, increasing logical X
+                 * moves this counter-rotated block upward on the physical
+                 * screen.  The large glucose font is headsize*.8, so .45 of
+                 * headsize is a little more than half that font size.
+                 */
+                const float valuex=portraitReadable() ? getx+headsize*.45f : getx;
+                if(portraitReadable()) {
+                    nvgSave(avg);
+                    nvgTranslate(avg,valuex,valuey);
+                    nvgRotate(avg,NVG_PI/2.0f);
+                    nvgTranslate(avg,-valuex,-valuey);
+                    }
                 nvgBeginPath(avg);
-                 nvgFillColor(avg,getoldcolor());
-                float relage=(float)age/(float)maxbluetoothage;
-                float sensory= gety+headsize/3.1f;
-                nvgRect(avg, getx+sensorbounds.left, sensorbounds.top+sensory, relage*sensorbounds.width, sensorbounds.height);
+                nvgFillColor(avg,getoldcolor());
+                const float relage=(float)age/(float)maxbluetoothage;
+                const float sensory=valuey+headsize/3.1f;
+                nvgRect(avg,valuex+sensorbounds.left,sensorbounds.top+sensory,
+                        relage*sensorbounds.width,sensorbounds.height);
                 nvgFill(avg);
-                showvalue(avg,poll,hist,getx,gety,i,nu);
+                showvalue(avg,poll,hist,valuex,valuey,i,nu);
+#ifndef DONTTALK
+                if(portraitReadable()) {
+                    /*
+                     * The current-value block is counter-rotated after the
+                     * graph is quarter-turned, so its visible rectangle is not
+                     * the old landscape hit rectangle.  Store a physical-screen
+                     * rectangle around arrow, calibrated/raw value and sensor id
+                     * and let screentap() test it in the same coordinate system.
+                     */
+                    auto &shown=shownglucose[i];
+                    const float localleft=valuex-density*60.0f;
+                    const float localright=valuex+std::max(headsize*1.35f,
+                                                           sensorbounds.width+density*10.0f);
+                    const float localtop=valuey-headsize*.48f;
+                    const float localbottom=valuey+headsize*.55f;
+                    const float movex=valuey-valuex;
+                    const float movey=(float)surfaceheight-valuex-valuey;
+                    shown.touchleft=localleft+movex;
+                    shown.touchright=localright+movex;
+                    shown.touchtop=localtop+movey;
+                    shown.touchbottom=localbottom+movey;
+                    }
+#endif
+                if(portraitReadable())
+                    nvgRestore(avg);
 #ifdef JUGGLUCO_APP
                 success=true;
                 if(hist->isLibre2()) {
@@ -2480,7 +2711,7 @@ void    JCurve::startstepNVG(NVGcontext* avg,int width, int height) {
 #ifndef NEWSIBIONICS
          if(hist->newSI()) {
              const auto eusibinics=usedtext->unsupportedSibionics;
-             nvgText(avg,getx ,gety, eusibinics.data(), eusibinics.data()+eusibinics.size());
+             drawText(avg,getx ,gety, eusibinics.data(), eusibinics.data()+eusibinics.size());
              otherproblem=true;
             }
        else 
@@ -2645,7 +2876,7 @@ int    JCurve::showLargevalue(NVGcontext* avg, int index,float getx,float gety,f
             *value=' ';
             ++gllen;
             }
-        nvgText(avg,valuex ,gety, value, value+gllen);
+        drawText(avg,valuex ,gety, value, value+gllen);
         const float rate=poll->ch;
         drawarrow(avg,rate,valuex-10*density,gety);
         return valuex;

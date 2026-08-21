@@ -73,17 +73,14 @@ if(!isWearable) {
 		boolean isIgnoringBatteryOptimizations = pm.isIgnoringBatteryOptimizations(context.getPackageName());
 		battery.setChecked(isIgnoringBatteryOptimizations);
 		context.themeLightBars();
-                final var hormarg=(int)(GlucoseCurve.getwidth()*.15f);
+                final var hormarg=(int)(GlucoseCurve.metrics.density*32.0);
 
                 getMargins(battery).setMarginStart(hormarg);
                 getMargins(Close).setMarginEnd(hormarg);
                final Layout lay=new Layout(context, (l, w, h) -> {
-/*			l.setY(MainActivity.systembarTop);
-			var newh=h-MainActivity.systembarTop; */
-			return new int[] {w,h}; }
-				, new View[]{info}
-			,isWearable?new View[]{Close}:new View[]{battery,Close});
-		lay.setPadding(MainActivity.systembarLeft,MainActivity.systembarTop,MainActivity.systembarRight,MainActivity.systembarBottom);
+			return new int[] {w,h}; } , new View[]{info}
+			,isWearable?new View[]{Close}:new View[]{battery,Close}). systembarPadding();
+
 
 
 		Runnable closerun=()-> {

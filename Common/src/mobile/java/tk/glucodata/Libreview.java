@@ -878,6 +878,9 @@ public static void  config(MainActivity act, View settingsview,CheckDirectionBox
        */
        return new int[] {w,h};}, 
                 new View[]{emaillabel,email},new View[]{passlabel,editpass,russia},new View[]{clear,accountid,getaccountid},new View[]{statusview},new View[]{ librecurrent,libreisviewed}, new View[]{sendtolibreview,numbers},new View[]{send,help,cancel,ok});
+    layout.portraitLayout(new View[]{emaillabel,email},new View[]{passlabel,editpass},new View[]{accountid,getaccountid},new View[]{statusview},new View[]{ librecurrent,libreisviewed}, new View[]{sendtolibreview,numbers},
+new View[]{russia,clear,help},
+    new View[]{send,cancel,ok});
 
     clear.setOnClickListener(v->  {
          resendDateDialog(act,layout);

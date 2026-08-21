@@ -1,24 +1,3 @@
-/*      This file is part of Juggluco, an Android app to receive and display         */
-/*      glucose values from Freestyle Libre 2(+), Libre 3(+), Dexcom G7/ONE+,        */
-/*      Sibionics GS1Sb and GS3, Accu-Chek SmartGuide, CareSens Air and              */
-/*      Aidex X sensors.                                                             */
-/*                                                                                   */
-/*      Copyright (C) 2021 Jaap Korthals Altes <jaapkorthalsaltes@gmail.com>         */
-/*                                                                                   */
-/*      Juggluco is free software: you can redistribute it and/or modify             */
-/*      it under the terms of the GNU General Public License as published            */
-/*      by the Free Software Foundation, either version 3 of the License, or         */
-/*      (at your option) any later version.                                          */
-/*                                                                                   */
-/*      Juggluco is distributed in the hope that it will be useful, but              */
-/*      WITHOUT ANY WARRANTY; without even the implied warranty of                   */
-/*      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                         */
-/*      See the GNU General Public License for more details.                         */
-/*                                                                                   */
-/*      You should have received a copy of the GNU General Public License            */
-/*      along with Juggluco. If not, see <https://www.gnu.org/licenses/>.            */
-/*                                                                                   */
-/*      Tue Aug 11 16:33:40 CEST 2026                                                */
 #include "authorization_round_secondary.h"
 
 #include <stddef.h>
@@ -621,476 +600,177 @@ static l3_authorization_secondary_pair32 fold_rounds(l3_authorization_secondary_
     return seed;
 }
 
-static l3_authorization_secondary_pair32 make_15f0_pair(uint32_t x, uint32_t *fold8_low) {
-    const uint32_t lo_mul0 = u32_mullo(x, 0x8b2a6e39u);
-    l3_authorization_secondary_pair32 seed = {
-        lo_mul0 + 0x3f0d2391u,
-        (uint32_t)(x * 0xc15768dau + u32_mulhi(x, 0x8b2a6e39u) +
-                   0x9c0a83b4u + u32_add_carry(lo_mul0, 0x3f0d2391u))
-    };
-    const uint32_t folded_low = fold_rounds(seed, k_f41a15f0, 8u).lo;
-    if (fold8_low) *fold8_low = folded_low;
 
-    const uint32_t lo_mul1 = u32_mullo(x, 0xf118792du);
-    l3_authorization_secondary_pair32 out = {
-        lo_mul1 + 0x26005d44u,
-        (uint32_t)(x * 0x15e3df18u + u32_mulhi(x, 0xf118792du) +
-                   folded_low * 0xa3271d6bu + 0x00ceef33u +
-                   u32_add_carry(lo_mul1, 0x26005d44u))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+typedef struct {
+    uint32_t seed_mul_lo, seed_add_lo, seed_mul_hi, seed_add_hi;
+    const l3_authorization_secondary_pair32 *fold_table;
+    uint32_t output_mul_lo, output_add_lo, output_mul_hi;
+    uint32_t folded_low_mul, output_add_hi;
+} secondary_pair_recipe;
+
+static l3_authorization_secondary_pair32 make_secondary_pair(
+    uint32_t x, uint32_t *fold8_low, const secondary_pair_recipe *r) {
+    const uint32_t seed_low = u32_mullo(x, r->seed_mul_lo);
+    l3_authorization_secondary_pair32 seed = {
+        seed_low + r->seed_add_lo,
+        (uint32_t)(x * r->seed_mul_hi + u32_mulhi(x, r->seed_mul_lo) +
+                   r->seed_add_hi + u32_add_carry(seed_low, r->seed_add_lo))
     };
-    return out;
+    const uint32_t folded_low = fold_rounds(seed, r->fold_table, 8u).lo;
+    if (fold8_low) *fold8_low = folded_low;
+    const uint32_t output_low = u32_mullo(x, r->output_mul_lo);
+    return (l3_authorization_secondary_pair32){
+        output_low + r->output_add_lo,
+        (uint32_t)(x * r->output_mul_hi + u32_mulhi(x, r->output_mul_lo) +
+                   folded_low * r->folded_low_mul + r->output_add_hi +
+                   u32_add_carry(output_low, r->output_add_lo))
+    };
 }
 
-static l3_authorization_secondary_pair32 make_1670_pair(uint32_t x, uint32_t *fold8_low) {
-    const uint32_t lo_mul0 = u32_mullo(x, 0xefd4ed73u);
-    l3_authorization_secondary_pair32 seed = {
-        lo_mul0 + 0xa348fe85u,
-        (uint32_t)(x * 0x978ae60fu + u32_mulhi(x, 0xefd4ed73u) +
-                   0x699aafecu + u32_add_carry(lo_mul0, 0xa348fe85u))
-    };
-    const uint32_t folded_low = fold_rounds(seed, k_f41a1670, 8u).lo;
-    if (fold8_low) *fold8_low = folded_low;
-
-    const uint32_t lo_mul1 = u32_mullo(x, 0x1a2252c7u);
-    l3_authorization_secondary_pair32 out = {
-        lo_mul1 + 0x047455a7u,
-        (uint32_t)(x * 0x07705e94u + u32_mulhi(x, 0x1a2252c7u) +
-                   folded_low * 0x92ec4fa3u + 0x13363c4du +
-                   u32_add_carry(lo_mul1, 0x047455a7u))
-    };
-    return out;
-}
-
-
-static l3_authorization_secondary_pair32 make_1970_pair(uint32_t x, uint32_t *fold8_low) {
-    const uint32_t lo_mul0 = u32_mullo(x, 0x172fcd11u);
-    l3_authorization_secondary_pair32 seed = {
-        lo_mul0 + 0x1458f204u,
-        (uint32_t)(x * 0x58128a00u + u32_mulhi(x, 0x172fcd11u) +
-                   0x1a8090dcu + u32_add_carry(lo_mul0, 0x1458f204u))
-    };
-    const uint32_t folded_low = fold_rounds(seed, k_f41a1970, 8u).lo;
-    if (fold8_low) *fold8_low = folded_low;
-
-    const uint32_t lo_mul1 = u32_mullo(x, 0x57bb4967u);
-    l3_authorization_secondary_pair32 out = {
-        lo_mul1 + 0xfd754d91u,
-        (uint32_t)(x * 0xea41ba7au + u32_mulhi(x, 0x57bb4967u) +
-                   folded_low * 0xa4f27109u + 0x5ee25f71u +
-                   u32_add_carry(lo_mul1, 0xfd754d91u))
-    };
-    return out;
-}
-
-static l3_authorization_secondary_pair32 make_19f0_pair(uint32_t x, uint32_t *fold8_low) {
-    const uint32_t lo_mul0 = u32_mullo(x, 0x2354809du);
-    l3_authorization_secondary_pair32 seed = {
-        lo_mul0 + 0x82fc41f5u,
-        (uint32_t)(x * 0x79e68e0fu + u32_mulhi(x, 0x2354809du) +
-                   0x8fe27365u + u32_add_carry(lo_mul0, 0x82fc41f5u))
-    };
-    const uint32_t folded_low = fold_rounds(seed, k_f41a19f0, 8u).lo;
-    if (fold8_low) *fold8_low = folded_low;
-
-    const uint32_t lo_mul1 = u32_mullo(x, 0xb7e4ddd1u);
-    l3_authorization_secondary_pair32 out = {
-        lo_mul1 + 0xcfcae893u,
-        (uint32_t)(x * 0xb4f9838du + u32_mulhi(x, 0xb7e4ddd1u) +
-                   folded_low * 0xaca4163bu + 0x23359017u +
-                   u32_add_carry(lo_mul1, 0xcfcae893u))
-    };
-    return out;
-}
-
-static l3_authorization_secondary_pair32 make_1ab0_pair(uint32_t x, uint32_t *fold8_low) {
-    const uint32_t lo_mul0 = u32_mullo(x, 0x1e60763fu);
-    l3_authorization_secondary_pair32 seed = {
-        lo_mul0 + 0xc244847au,
-        (uint32_t)(x * 0x8c2dd594u + u32_mulhi(x, 0x1e60763fu) +
-                   0x97658790u + u32_add_carry(lo_mul0, 0xc244847au))
-    };
-    const uint32_t folded_low = fold_rounds(seed, k_f41a1ab0, 8u).lo;
-    if (fold8_low) *fold8_low = folded_low;
-
-    const uint32_t lo_mul1 = u32_mullo(x, 0x9c8e6ddbu);
-    l3_authorization_secondary_pair32 out = {
-        lo_mul1 + 0x1b18d6d2u,
-        (uint32_t)(x * 0xb9689594u + u32_mulhi(x, 0x9c8e6ddbu) +
-                   folded_low * 0xd79b869bu + 0x68d8b14cu +
-                   u32_add_carry(lo_mul1, 0x1b18d6d2u))
-    };
-    return out;
-}
-
-static l3_authorization_secondary_pair32 make_1b30_pair(uint32_t x, uint32_t *fold8_low) {
-    const uint32_t lo_mul0 = u32_mullo(x, 0x3d7983a1u);
-    l3_authorization_secondary_pair32 seed = {
-        lo_mul0 + 0x1b726f71u,
-        (uint32_t)(x * 0x9c4b0281u + u32_mulhi(x, 0x3d7983a1u) +
-                   0x9566813cu + u32_add_carry(lo_mul0, 0x1b726f71u))
-    };
-    const uint32_t folded_low = fold_rounds(seed, k_f41a1b30, 8u).lo;
-    if (fold8_low) *fold8_low = folded_low;
-
-    const uint32_t lo_mul1 = u32_mullo(x, 0x25b8c31fu);
-    l3_authorization_secondary_pair32 out = {
-        lo_mul1 + 0x70b042d6u,
-        (uint32_t)(x * 0x8fa40b8bu + u32_mulhi(x, 0x25b8c31fu) +
-                   folded_low * 0xf25b3141u + 0x02f0ebf7u +
-                   u32_add_carry(lo_mul1, 0x70b042d6u))
-    };
-    return out;
-}
-
-static l3_authorization_secondary_pair32 make_1cf0_pair(uint32_t x, uint32_t *fold8_low) {
-    const uint32_t lo_mul0 = u32_mullo(x, 0xeabad461u);
-    l3_authorization_secondary_pair32 seed = {
-        lo_mul0 + 0xc3eb233du,
-        (uint32_t)(x * 0xfe2f1990u + u32_mulhi(x, 0xeabad461u) +
-                   0xf11bf09bu + u32_add_carry(lo_mul0, 0xc3eb233du))
-    };
-    const uint32_t folded_low = fold_rounds(seed, k_f41a1cf0, 8u).lo;
-    if (fold8_low) *fold8_low = folded_low;
-
-    const uint32_t lo_mul1 = u32_mullo(x, 0xb47c84e7u);
-    l3_authorization_secondary_pair32 out = {
-        lo_mul1 + 0xe6186359u,
-        (uint32_t)(x * 0x1e86c5d2u + u32_mulhi(x, 0xb47c84e7u) +
-                   folded_low * 0x414fa1b9u + 0xae58011fu +
-                   u32_add_carry(lo_mul1, 0xe6186359u))
-    };
-    return out;
-}
-
-static l3_authorization_secondary_pair32 make_1d70_pair(uint32_t x, uint32_t *fold8_low) {
-    const uint32_t lo_mul0 = u32_mullo(x, 0x6d7b0ac7u);
-    l3_authorization_secondary_pair32 seed = {
-        lo_mul0 + 0x02a75a29u,
-        (uint32_t)(x * 0xcfbe6ef8u + u32_mulhi(x, 0x6d7b0ac7u) +
-                   0x91b6ad6eu + u32_add_carry(lo_mul0, 0x02a75a29u))
-    };
-    const uint32_t folded_low = fold_rounds(seed, k_f41a1d70, 8u).lo;
-    if (fold8_low) *fold8_low = folded_low;
-
-    const uint32_t lo_mul1 = u32_mullo(x, 0x69ca541fu);
-    l3_authorization_secondary_pair32 out = {
-        lo_mul1 + 0x30f32c1eu,
-        (uint32_t)(x * 0xf4b8d9e2u + u32_mulhi(x, 0x69ca541fu) +
-                   folded_low * 0x49c6ac17u + 0x901c0a1du +
-                   u32_add_carry(lo_mul1, 0x30f32c1eu))
-    };
-    return out;
-}
-
-static l3_authorization_secondary_pair32 make_1bb0_pair(
-    uint32_t x, uint32_t *fold8_low) {
-    const uint32_t lo_mul0 = u32_mullo(x, 0xe66e766fu);
-    l3_authorization_secondary_pair32 seed = {
-        lo_mul0 + 0x04e52a30u,
-        (uint32_t)(x * 0x811a9afcu + u32_mulhi(x, 0xe66e766fu) +
-                   0x0ba56751u + u32_add_carry(lo_mul0, 0x04e52a30u))
-    };
-    const uint32_t folded_low =
-        fold_rounds(seed, k_f41a1bb0, 8u).lo;
-    if (fold8_low) *fold8_low = folded_low;
-
-    const uint32_t lo_mul1 = u32_mullo(x, 0xc7b2f29du);
-    l3_authorization_secondary_pair32 out = {
-        lo_mul1 + 0xead5aa6eu,
-        (uint32_t)(x * 0xa9a99ecbu + u32_mulhi(x, 0xc7b2f29du) +
-                   folded_low * 0x680a724du + 0x5bbd9e57u +
-                   u32_add_carry(lo_mul1, 0xead5aa6eu))
-    };
-    return out;
-}
-
-static l3_authorization_secondary_pair32 make_1c30_pair(
-    uint32_t x, uint32_t *fold8_low) {
-    const uint32_t lo_mul0 = u32_mullo(x, 0xc7ad30a5u);
-    l3_authorization_secondary_pair32 seed = {
-        lo_mul0 + 0x6530b13bu,
-        (uint32_t)(x * 0xe401dad7u + u32_mulhi(x, 0xc7ad30a5u) +
-                   0x985cc198u + u32_add_carry(lo_mul0, 0x6530b13bu))
-    };
-    const uint32_t folded_low =
-        fold_rounds(seed, k_f41a1c30, 8u).lo;
-    if (fold8_low) *fold8_low = folded_low;
-
-    const uint32_t lo_mul1 = u32_mullo(x, 0xb9633237u);
-    l3_authorization_secondary_pair32 out = {
-        lo_mul1 + 0xc4c6771du,
-        (uint32_t)(x * 0xf8ee4330u + u32_mulhi(x, 0xb9633237u) +
-                   folded_low * 0x80bd5b55u + 0x04b3b44fu +
-                   u32_add_carry(lo_mul1, 0xc4c6771du))
-    };
-    return out;
-}
-
-
-static l3_authorization_secondary_pair32 make_1df0_pair(uint32_t x, uint32_t *fold8_low) {
-    const uint32_t lo_mul0 = u32_mullo(x, 0x8df61709u);
-    l3_authorization_secondary_pair32 seed = {
-        lo_mul0 + 0xaba42e63u,
-        (uint32_t)(x * 0x7b2208ceu + u32_mulhi(x, 0x8df61709u) +
-                   0xabe74f92u + u32_add_carry(lo_mul0, 0xaba42e63u))
-    };
-    const uint32_t folded_low = fold_rounds(seed, k_f41a1df0, 8u).lo;
-    if (fold8_low) *fold8_low = folded_low;
-
-    const uint32_t lo_mul1 = u32_mullo(x, 0x73118a8fu);
-    l3_authorization_secondary_pair32 out = {
-        lo_mul1 + 0xd165f84fu,
-        (uint32_t)(x * 0xfc1a3a86u + u32_mulhi(x, 0x73118a8fu) +
-                   folded_low * 0xc012dd29u + 0x85765455u +
-                   u32_add_carry(lo_mul1, 0xd165f84fu))
-    };
-    return out;
-}
-
-static l3_authorization_secondary_pair32 make_1e70_pair(uint32_t x, uint32_t *fold8_low) {
-    const uint32_t lo_mul0 = u32_mullo(x, 0x09a5a7fdu);
-    l3_authorization_secondary_pair32 seed = {
-        lo_mul0 + 0xdb691cb9u,
-        (uint32_t)(x * 0x11714fb4u + u32_mulhi(x, 0x09a5a7fdu) +
-                   0xc55b20aau + u32_add_carry(lo_mul0, 0xdb691cb9u))
-    };
-    const uint32_t folded_low = fold_rounds(seed, k_f41a1e70, 8u).lo;
-    if (fold8_low) *fold8_low = folded_low;
-
-    const uint32_t lo_mul1 = u32_mullo(x, 0x69316553u);
-    l3_authorization_secondary_pair32 out = {
-        lo_mul1 + 0x2a18dc52u,
-        (uint32_t)(x * 0x449efe33u + u32_mulhi(x, 0x69316553u) +
-                   folded_low * 0x74a58471u + 0x7ceae7c5u +
-                   u32_add_carry(lo_mul1, 0x2a18dc52u))
-    };
-    return out;
-}
-
-
-static l3_authorization_secondary_pair32 make_1ef0_pair(uint32_t x, uint32_t *fold8_low) {
-    const uint32_t lo_mul0 = u32_mullo(x, 0x4fed7f55u);
-    l3_authorization_secondary_pair32 seed = {
-        lo_mul0 + 0xbd3b401eu,
-        (uint32_t)(x * 0x1dd5c836u + u32_mulhi(x, 0x4fed7f55u) +
-                   0x24d59ce5u + u32_add_carry(lo_mul0, 0xbd3b401eu))
-    };
-    const uint32_t folded_low = fold_rounds(seed, k_f41a1ef0, 8u).lo;
-    if (fold8_low) *fold8_low = folded_low;
-
-    const uint32_t lo_mul1 = u32_mullo(x, 0xd79ff45bu);
-    l3_authorization_secondary_pair32 out = {
-        lo_mul1 + 0xcb0f806du,
-        (uint32_t)(x * 0x7e4768e1u + u32_mulhi(x, 0xd79ff45bu) +
-                   folded_low * 0x343a3b11u + 0xfa81954cu +
-                   u32_add_carry(lo_mul1, 0xcb0f806du))
-    };
-    return out;
-}
-
-static l3_authorization_secondary_pair32 make_1f70_pair(uint32_t x, uint32_t *fold8_low) {
-    const uint32_t lo_mul0 = u32_mullo(x, 0x90a2435bu);
-    l3_authorization_secondary_pair32 seed = {
-        lo_mul0 + 0xb53b2209u,
-        (uint32_t)(x * 0xf9f84fe3u + u32_mulhi(x, 0x90a2435bu) +
-                   0xbf0562b6u + u32_add_carry(lo_mul0, 0xb53b2209u))
-    };
-    const uint32_t folded_low = fold_rounds(seed, k_f41a1f70, 8u).lo;
-    if (fold8_low) *fold8_low = folded_low;
-
-    const uint32_t lo_mul1 = u32_mullo(x, 0x2e1548d9u);
-    l3_authorization_secondary_pair32 out = {
-        lo_mul1 + 0x32d3e9b9u,
-        (uint32_t)(x * 0xfb03cea4u + u32_mulhi(x, 0x2e1548d9u) +
-                   folded_low * 0x7f0ce125u + 0x5388c1ddu +
-                   u32_add_carry(lo_mul1, 0x32d3e9b9u))
-    };
-    return out;
-}
-
-
-static l3_authorization_secondary_pair32 make_1ff0_pair(uint32_t x, uint32_t *fold8_low) {
-    const uint32_t lo_mul0 = u32_mullo(x, 0xacdf8b5fu);
-    l3_authorization_secondary_pair32 seed = {
-        lo_mul0 + 0x8bcf77b6u,
-        (uint32_t)(x * 0xe84f87bau + u32_mulhi(x, 0xacdf8b5fu) +
-                   0xa8068fa3u + u32_add_carry(lo_mul0, 0x8bcf77b6u))
-    };
-    const uint32_t folded_low = fold_rounds(seed, k_f41a1ff0, 8u).lo;
-    if (fold8_low) *fold8_low = folded_low;
-
-    const uint32_t lo_mul1 = u32_mullo(x, 0x88b93e4fu);
-    l3_authorization_secondary_pair32 out = {
-        lo_mul1 + 0x2be35d3bu,
-        (uint32_t)(x * 0x225ae2d2u + u32_mulhi(x, 0x88b93e4fu) +
-                   folded_low * 0x29f2dcefu + 0xad952681u +
-                   u32_add_carry(lo_mul1, 0x2be35d3bu))
-    };
-    return out;
-}
-
-
-static l3_authorization_secondary_pair32 make_22f0_pair(uint32_t x, uint32_t *fold8_low) {
-    const uint32_t lo_mul0 = u32_mullo(x, 0x153f9addu);
-    l3_authorization_secondary_pair32 seed = {
-        lo_mul0 + 0xe7576e4au,
-        (uint32_t)(x * 0x909ea467u + u32_mulhi(x, 0x153f9addu) +
-                   0x01bdaa7au + u32_add_carry(lo_mul0, 0xe7576e4au))
-    };
-    const uint32_t folded_low = fold_rounds(seed, k_f41a22f0, 8u).lo;
-    if (fold8_low) *fold8_low = folded_low;
-
-    const uint32_t lo_mul1 = u32_mullo(x, 0x0cd827f5u);
-    l3_authorization_secondary_pair32 out = {
-        lo_mul1 + 0x6fa79717u,
-        (uint32_t)(x * 0x79a82e21u + u32_mulhi(x, 0x0cd827f5u) +
-                   folded_low * 0x9ca54c07u + 0x544a4cfdu +
-                   u32_add_carry(lo_mul1, 0x6fa79717u))
-    };
-    return out;
-}
-
-static l3_authorization_secondary_pair32 make_2370_pair(uint32_t x, uint32_t *fold8_low) {
-    const uint32_t lo_mul0 = u32_mullo(x, 0x5d7baf51u);
-    l3_authorization_secondary_pair32 seed = {
-        lo_mul0 + 0x42e0315fu,
-        (uint32_t)(x * 0x0de8d349u + u32_mulhi(x, 0x5d7baf51u) +
-                   0x5e1a911cu + u32_add_carry(lo_mul0, 0x42e0315fu))
-    };
-    const uint32_t folded_low = fold_rounds(seed, k_f41a2370, 8u).lo;
-    if (fold8_low) *fold8_low = folded_low;
-
-    const uint32_t lo_mul1 = u32_mullo(x, 0x2585877du);
-    l3_authorization_secondary_pair32 out = {
-        lo_mul1 + 0xaa83f1dfu,
-        (uint32_t)(x * 0x648a7c29u + u32_mulhi(x, 0x2585877du) +
-                   folded_low * 0xf626bd93u + 0xde04dc75u +
-                   u32_add_carry(lo_mul1, 0xaa83f1dfu))
-    };
-    return out;
-}
-
-static l3_authorization_secondary_pair32 make_2070_pair(uint32_t x, uint32_t *fold8_low) {
-    const uint32_t lo_mul0 = u32_mullo(x, 0x52e6243fu);
-    l3_authorization_secondary_pair32 seed = {
-        lo_mul0 + 0x35692a46u,
-        (uint32_t)(x * 0xd2d169abu + u32_mulhi(x, 0x52e6243fu) +
-                   0xd3178ad5u + u32_add_carry(lo_mul0, 0x35692a46u))
-    };
-    const uint32_t folded_low = fold_rounds(seed, k_f41a2070, 8u).lo;
-    if (fold8_low) *fold8_low = folded_low;
-
-    const uint32_t lo_mul1 = u32_mullo(x, 0xa7837953u);
-    l3_authorization_secondary_pair32 out = {
-        lo_mul1 + 0x771357d3u,
-        (uint32_t)(x * 0x1f507bb4u + u32_mulhi(x, 0xa7837953u) +
-                   folded_low * 0xd52aaa13u + 0xdb242426u +
-                   u32_add_carry(lo_mul1, 0x771357d3u))
-    };
-    return out;
-}
-
-
-static l3_authorization_secondary_pair32 make_2170_pair(uint32_t x, uint32_t *fold8_low) {
-    const uint32_t lo_mul0 = u32_mullo(x, 0xef73849du);
-    l3_authorization_secondary_pair32 seed = {
-        lo_mul0 + 0x99ed4eb4u,
-        (uint32_t)(x * 0x680558a0u + u32_mulhi(x, 0xef73849du) +
-                   0xca92d3d3u + u32_add_carry(lo_mul0, 0x99ed4eb4u))
-    };
-    const uint32_t folded_low = fold_rounds(seed, k_f41a2170, 8u).lo;
-    if (fold8_low) *fold8_low = folded_low;
-
-    const uint32_t lo_mul1 = u32_mullo(x, 0x063d56dfu);
-    l3_authorization_secondary_pair32 out = {
-        lo_mul1 + 0xcaaa982cu,
-        (uint32_t)(x * 0x51370f06u + u32_mulhi(x, 0x063d56dfu) +
-                   folded_low * 0x9405d555u + 0x06fb4520u +
-                   u32_add_carry(lo_mul1, 0xcaaa982cu))
-    };
-    return out;
-}
-
-static l3_authorization_secondary_pair32 make_21f0_pair(uint32_t x, uint32_t *fold8_low) {
-    const uint32_t lo_mul0 = u32_mullo(x, 0x916ba08bu);
-    l3_authorization_secondary_pair32 seed = {
-        lo_mul0 + 0x4917267bu,
-        (uint32_t)(x * 0xe6cfff98u + u32_mulhi(x, 0x916ba08bu) +
-                   0x1dd53fb9u + u32_add_carry(lo_mul0, 0x4917267bu))
-    };
-    const uint32_t folded_low = fold_rounds(seed, k_f41a21f0, 8u).lo;
-    if (fold8_low) *fold8_low = folded_low;
-
-    const uint32_t lo_mul1 = u32_mullo(x, 0xc2243445u);
-    l3_authorization_secondary_pair32 out = {
-        lo_mul1 + 0x2d16c1fau,
-        (uint32_t)(x * 0xce0c9a40u + u32_mulhi(x, 0xc2243445u) +
-                   folded_low * 0x26383791u + 0xbacb5a53u +
-                   u32_add_carry(lo_mul1, 0x2d16c1fau))
-    };
-    return out;
-}
-
-
-static l3_authorization_secondary_pair32 make_24b0_pair(uint32_t x, uint32_t *fold8_low) {
-    const uint32_t lo_mul0 = u32_mullo(x, 0x1d86a409u);
-    l3_authorization_secondary_pair32 seed = {
-        lo_mul0 + 0xad30fb7fu,
-        (uint32_t)(x * 0x278a2de8u + u32_mulhi(x, 0x1d86a409u) +
-                   0xff28517bu + u32_add_carry(lo_mul0, 0xad30fb7fu))
-    };
-    const uint32_t folded_low = fold_rounds(seed, k_f41a24b0, 8u).lo;
-    if (fold8_low) *fold8_low = folded_low;
-
-    const uint32_t lo_mul1 = u32_mullo(x, 0x4102159du);
-    l3_authorization_secondary_pair32 out = {
-        lo_mul1 + 0x1d3cc9dfu,
-        (uint32_t)(x * 0x1a9d299fu + u32_mulhi(x, 0x4102159du) +
-                   folded_low * 0xea316e0bu + 0xbba3dea2u +
-                   u32_add_carry(lo_mul1, 0x1d3cc9dfu))
-    };
-    return out;
-}
-
-static l3_authorization_secondary_pair32 make_2530_pair(uint32_t x, uint32_t *fold8_low) {
-    const uint32_t lo_mul0 = u32_mullo(x, 0x466ed31du);
-    l3_authorization_secondary_pair32 seed = {
-        lo_mul0 + 0x3d42730cu,
-        (uint32_t)(x * 0x1277b2d7u + u32_mulhi(x, 0x466ed31du) +
-                   0x7a5630a8u + u32_add_carry(lo_mul0, 0x3d42730cu))
-    };
-    const uint32_t folded_low = fold_rounds(seed, k_f41a2530, 8u).lo;
-    if (fold8_low) *fold8_low = folded_low;
-
-    const uint32_t lo_mul1 = u32_mullo(x, 0xef73dd91u);
-    l3_authorization_secondary_pair32 out = {
-        lo_mul1 + 0xbbe5c77du,
-        (uint32_t)(x * 0x5e110204u + u32_mulhi(x, 0xef73dd91u) +
-                   folded_low * 0xf689a9fbu + 0x7e69b068u +
-                   u32_add_carry(lo_mul1, 0xbbe5c77du))
-    };
-    return out;
-}
-
-static l3_authorization_secondary_pair32 make_25b0_pair(uint32_t x, uint32_t *fold8_low) {
-    const uint32_t lo_mul0 = u32_mullo(x, 0x8a8c7ba1u);
-    l3_authorization_secondary_pair32 seed = {
-        lo_mul0 + 0x0125fdd6u,
-        (uint32_t)(x * 0xd1818d7du + u32_mulhi(x, 0x8a8c7ba1u) +
-                   0x7d6be4e0u + u32_add_carry(lo_mul0, 0x0125fdd6u))
-    };
-    const uint32_t folded_low = fold_rounds(seed, k_f41a25b0, 8u).lo;
-    if (fold8_low) *fold8_low = folded_low;
-
-    const uint32_t lo_mul1 = u32_mullo(x, 0xc0d0f1bdu);
-    l3_authorization_secondary_pair32 out = {
-        lo_mul1 + 0x8937f0f5u,
-        (uint32_t)(x * 0x34345ea0u + u32_mulhi(x, 0xc0d0f1bdu) +
-                   folded_low * 0x0aeadf63u + 0xdf97db68u +
-                   u32_add_carry(lo_mul1, 0x8937f0f5u))
-    };
-    return out;
-}
+static const secondary_pair_recipe k_pair_recipe_15f0 = {
+    0x8b2a6e39u, 0x3f0d2391u, 0xc15768dau, 0x9c0a83b4u, k_f41a15f0,
+    0xf118792du, 0x26005d44u, 0x15e3df18u, 0xa3271d6bu, 0x00ceef33u
+};
+static const secondary_pair_recipe k_pair_recipe_1670 = {
+    0xefd4ed73u, 0xa348fe85u, 0x978ae60fu, 0x699aafecu, k_f41a1670,
+    0x1a2252c7u, 0x047455a7u, 0x07705e94u, 0x92ec4fa3u, 0x13363c4du
+};
+static const secondary_pair_recipe k_pair_recipe_1970 = {
+    0x172fcd11u, 0x1458f204u, 0x58128a00u, 0x1a8090dcu, k_f41a1970,
+    0x57bb4967u, 0xfd754d91u, 0xea41ba7au, 0xa4f27109u, 0x5ee25f71u
+};
+static const secondary_pair_recipe k_pair_recipe_19f0 = {
+    0x2354809du, 0x82fc41f5u, 0x79e68e0fu, 0x8fe27365u, k_f41a19f0,
+    0xb7e4ddd1u, 0xcfcae893u, 0xb4f9838du, 0xaca4163bu, 0x23359017u
+};
+static const secondary_pair_recipe k_pair_recipe_1ab0 = {
+    0x1e60763fu, 0xc244847au, 0x8c2dd594u, 0x97658790u, k_f41a1ab0,
+    0x9c8e6ddbu, 0x1b18d6d2u, 0xb9689594u, 0xd79b869bu, 0x68d8b14cu
+};
+static const secondary_pair_recipe k_pair_recipe_1b30 = {
+    0x3d7983a1u, 0x1b726f71u, 0x9c4b0281u, 0x9566813cu, k_f41a1b30,
+    0x25b8c31fu, 0x70b042d6u, 0x8fa40b8bu, 0xf25b3141u, 0x02f0ebf7u
+};
+static const secondary_pair_recipe k_pair_recipe_1bb0 = {
+    0xe66e766fu, 0x04e52a30u, 0x811a9afcu, 0x0ba56751u, k_f41a1bb0,
+    0xc7b2f29du, 0xead5aa6eu, 0xa9a99ecbu, 0x680a724du, 0x5bbd9e57u
+};
+static const secondary_pair_recipe k_pair_recipe_1c30 = {
+    0xc7ad30a5u, 0x6530b13bu, 0xe401dad7u, 0x985cc198u, k_f41a1c30,
+    0xb9633237u, 0xc4c6771du, 0xf8ee4330u, 0x80bd5b55u, 0x04b3b44fu
+};
+static const secondary_pair_recipe k_pair_recipe_1cf0 = {
+    0xeabad461u, 0xc3eb233du, 0xfe2f1990u, 0xf11bf09bu, k_f41a1cf0,
+    0xb47c84e7u, 0xe6186359u, 0x1e86c5d2u, 0x414fa1b9u, 0xae58011fu
+};
+static const secondary_pair_recipe k_pair_recipe_1d70 = {
+    0x6d7b0ac7u, 0x02a75a29u, 0xcfbe6ef8u, 0x91b6ad6eu, k_f41a1d70,
+    0x69ca541fu, 0x30f32c1eu, 0xf4b8d9e2u, 0x49c6ac17u, 0x901c0a1du
+};
+static const secondary_pair_recipe k_pair_recipe_1df0 = {
+    0x8df61709u, 0xaba42e63u, 0x7b2208ceu, 0xabe74f92u, k_f41a1df0,
+    0x73118a8fu, 0xd165f84fu, 0xfc1a3a86u, 0xc012dd29u, 0x85765455u
+};
+static const secondary_pair_recipe k_pair_recipe_1e70 = {
+    0x09a5a7fdu, 0xdb691cb9u, 0x11714fb4u, 0xc55b20aau, k_f41a1e70,
+    0x69316553u, 0x2a18dc52u, 0x449efe33u, 0x74a58471u, 0x7ceae7c5u
+};
+static const secondary_pair_recipe k_pair_recipe_1ef0 = {
+    0x4fed7f55u, 0xbd3b401eu, 0x1dd5c836u, 0x24d59ce5u, k_f41a1ef0,
+    0xd79ff45bu, 0xcb0f806du, 0x7e4768e1u, 0x343a3b11u, 0xfa81954cu
+};
+static const secondary_pair_recipe k_pair_recipe_1f70 = {
+    0x90a2435bu, 0xb53b2209u, 0xf9f84fe3u, 0xbf0562b6u, k_f41a1f70,
+    0x2e1548d9u, 0x32d3e9b9u, 0xfb03cea4u, 0x7f0ce125u, 0x5388c1ddu
+};
+static const secondary_pair_recipe k_pair_recipe_1ff0 = {
+    0xacdf8b5fu, 0x8bcf77b6u, 0xe84f87bau, 0xa8068fa3u, k_f41a1ff0,
+    0x88b93e4fu, 0x2be35d3bu, 0x225ae2d2u, 0x29f2dcefu, 0xad952681u
+};
+static const secondary_pair_recipe k_pair_recipe_22f0 = {
+    0x153f9addu, 0xe7576e4au, 0x909ea467u, 0x01bdaa7au, k_f41a22f0,
+    0x0cd827f5u, 0x6fa79717u, 0x79a82e21u, 0x9ca54c07u, 0x544a4cfdu
+};
+static const secondary_pair_recipe k_pair_recipe_2370 = {
+    0x5d7baf51u, 0x42e0315fu, 0x0de8d349u, 0x5e1a911cu, k_f41a2370,
+    0x2585877du, 0xaa83f1dfu, 0x648a7c29u, 0xf626bd93u, 0xde04dc75u
+};
+static const secondary_pair_recipe k_pair_recipe_2070 = {
+    0x52e6243fu, 0x35692a46u, 0xd2d169abu, 0xd3178ad5u, k_f41a2070,
+    0xa7837953u, 0x771357d3u, 0x1f507bb4u, 0xd52aaa13u, 0xdb242426u
+};
+static const secondary_pair_recipe k_pair_recipe_2170 = {
+    0xef73849du, 0x99ed4eb4u, 0x680558a0u, 0xca92d3d3u, k_f41a2170,
+    0x063d56dfu, 0xcaaa982cu, 0x51370f06u, 0x9405d555u, 0x06fb4520u
+};
+static const secondary_pair_recipe k_pair_recipe_21f0 = {
+    0x916ba08bu, 0x4917267bu, 0xe6cfff98u, 0x1dd53fb9u, k_f41a21f0,
+    0xc2243445u, 0x2d16c1fau, 0xce0c9a40u, 0x26383791u, 0xbacb5a53u
+};
+static const secondary_pair_recipe k_pair_recipe_24b0 = {
+    0x1d86a409u, 0xad30fb7fu, 0x278a2de8u, 0xff28517bu, k_f41a24b0,
+    0x4102159du, 0x1d3cc9dfu, 0x1a9d299fu, 0xea316e0bu, 0xbba3dea2u
+};
+static const secondary_pair_recipe k_pair_recipe_2530 = {
+    0x466ed31du, 0x3d42730cu, 0x1277b2d7u, 0x7a5630a8u, k_f41a2530,
+    0xef73dd91u, 0xbbe5c77du, 0x5e110204u, 0xf689a9fbu, 0x7e69b068u
+};
+static const secondary_pair_recipe k_pair_recipe_25b0 = {
+    0x8a8c7ba1u, 0x0125fdd6u, 0xd1818d7du, 0x7d6be4e0u, k_f41a25b0,
+    0xc0d0f1bdu, 0x8937f0f5u, 0x34345ea0u, 0x0aeadf63u, 0xdf97db68u
+};
 
 int l3_authorization_secondary_param3_accum15_pairs13(
     const int32_t param3_words13[L3_AUTH_ROUND_SECONDARY_WORDS13],
@@ -1105,7 +785,7 @@ int l3_authorization_secondary_param3_accum15_pairs13(
 
     uint32_t x = u32_mla((uint32_t)param3_words13[0], 0xbf82a11fu, 0x8827b29eu);
     dst->transformed_words13[0] = x;
-    out_pairs13[0] = make_15f0_pair(x, &dst->final_fold_lows13[0]);
+    out_pairs13[0] = make_secondary_pair(x, &dst->final_fold_lows13[0], &k_pair_recipe_15f0);
     out_cumulative13[0] = out_pairs13[0];
     dst->generated_pairs13[0] = out_pairs13[0];
     dst->cumulative_pairs13[0] = out_cumulative13[0];
@@ -1115,7 +795,7 @@ int l3_authorization_secondary_param3_accum15_pairs13(
         uint32_t pre = u32_mla((uint32_t)param3_words13[i], k_f4190bb0[j], k_f4190bd0[j]);
         x = u32_mla(pre, 0x1498dffbu, 0x37d17222u);
         dst->transformed_words13[i] = x;
-        out_pairs13[i] = make_15f0_pair(x, &dst->final_fold_lows13[i]);
+        out_pairs13[i] = make_secondary_pair(x, &dst->final_fold_lows13[i], &k_pair_recipe_15f0);
         out_cumulative13[i].lo = out_cumulative13[i - 1u].lo + out_pairs13[i].lo;
         out_cumulative13[i].hi = out_cumulative13[i - 1u].hi + out_pairs13[i].hi +
                                  u32_add_carry(out_cumulative13[i - 1u].lo, out_pairs13[i].lo);
@@ -1140,7 +820,7 @@ int l3_authorization_secondary_param3_accum1670_pairs13(
 
     uint32_t x = u32_mla((uint32_t)param3_words13[0], 0xab8ae253u, 0xdf349417u);
     dst->transformed_words13[0] = x;
-    out_pairs13[0] = make_1670_pair(x, &dst->final_fold_lows13[0]);
+    out_pairs13[0] = make_secondary_pair(x, &dst->final_fold_lows13[0], &k_pair_recipe_1670);
     out_cumulative13[0] = out_pairs13[0];
     dst->generated_pairs13[0] = out_pairs13[0];
     dst->cumulative_pairs13[0] = out_cumulative13[0];
@@ -1150,7 +830,7 @@ int l3_authorization_secondary_param3_accum1670_pairs13(
         uint32_t pre = u32_mla((uint32_t)param3_words13[i], k_f4190bf0[j], k_f4190c10[j]);
         x = u32_mla(pre, 0x7e88b7ebu, 0xf540d2a6u);
         dst->transformed_words13[i] = x;
-        out_pairs13[i] = make_1670_pair(x, &dst->final_fold_lows13[i]);
+        out_pairs13[i] = make_secondary_pair(x, &dst->final_fold_lows13[i], &k_pair_recipe_1670);
         out_cumulative13[i].lo = out_cumulative13[i - 1u].lo + out_pairs13[i].lo;
         out_cumulative13[i].hi = out_cumulative13[i - 1u].hi + out_pairs13[i].hi +
                                  u32_add_carry(out_cumulative13[i - 1u].lo, out_pairs13[i].lo);
@@ -1888,7 +1568,7 @@ int l3_authorization_secondary_param5_accum1970_pairs13(
 
     uint32_t x = u32_mla((uint32_t)param5_words13[0], 0x2a8401b3u, 0x0971606bu);
     dst->transformed_words13[0] = x;
-    out_pairs13[0] = make_1970_pair(x, &dst->final_fold_lows13[0]);
+    out_pairs13[0] = make_secondary_pair(x, &dst->final_fold_lows13[0], &k_pair_recipe_1970);
     out_cumulative13[0] = out_pairs13[0];
     dst->generated_pairs13[0] = out_pairs13[0];
     dst->cumulative_pairs13[0] = out_cumulative13[0];
@@ -1898,7 +1578,7 @@ int l3_authorization_secondary_param5_accum1970_pairs13(
         uint32_t pre = u32_mla((uint32_t)param5_words13[i], k_f4190cb0[j], k_f4190cd0[j]);
         x = u32_mla(pre, 0xa23a6dabu, 0x760da515u);
         dst->transformed_words13[i] = x;
-        out_pairs13[i] = make_1970_pair(x, &dst->final_fold_lows13[i]);
+        out_pairs13[i] = make_secondary_pair(x, &dst->final_fold_lows13[i], &k_pair_recipe_1970);
         out_cumulative13[i].lo = out_cumulative13[i - 1u].lo + out_pairs13[i].lo;
         out_cumulative13[i].hi = out_cumulative13[i - 1u].hi + out_pairs13[i].hi +
                                  u32_add_carry(out_cumulative13[i - 1u].lo, out_pairs13[i].lo);
@@ -1921,7 +1601,7 @@ int l3_authorization_secondary_affine_accum19f0_pairs13(
 
     uint32_t x = u32_mla(affine_words13[0], 0x878fe3a3u, 0xcb9d3754u);
     dst->transformed_words13[0] = x;
-    out_pairs13[0] = make_19f0_pair(x, &dst->final_fold_lows13[0]);
+    out_pairs13[0] = make_secondary_pair(x, &dst->final_fold_lows13[0], &k_pair_recipe_19f0);
     out_cumulative13[0] = out_pairs13[0];
     dst->generated_pairs13[0] = out_pairs13[0];
     dst->cumulative_pairs13[0] = out_cumulative13[0];
@@ -1931,7 +1611,7 @@ int l3_authorization_secondary_affine_accum19f0_pairs13(
         uint32_t pre = u32_mla(affine_words13[i], k_f4190cf0[j], k_f4190d10[j]);
         x = u32_mla(pre, 0xd2ac4603u, 0xc9dfbb7eu);
         dst->transformed_words13[i] = x;
-        out_pairs13[i] = make_19f0_pair(x, &dst->final_fold_lows13[i]);
+        out_pairs13[i] = make_secondary_pair(x, &dst->final_fold_lows13[i], &k_pair_recipe_19f0);
         out_cumulative13[i].lo = out_cumulative13[i - 1u].lo + out_pairs13[i].lo;
         out_cumulative13[i].hi = out_cumulative13[i - 1u].hi + out_pairs13[i].hi +
                                  u32_add_carry(out_cumulative13[i - 1u].lo, out_pairs13[i].lo);
@@ -2241,7 +1921,7 @@ int l3_authorization_secondary_param3_accum1ab0_pairs13(
 
     uint32_t x = u32_mla((uint32_t)param3_words13[0], 0x5da09da7u, 0x19781a4du);
     dst->transformed_words13[0] = x;
-    out_pairs13[0] = make_1ab0_pair(x, &dst->final_fold_lows13[0]);
+    out_pairs13[0] = make_secondary_pair(x, &dst->final_fold_lows13[0], &k_pair_recipe_1ab0);
     out_cumulative13[0] = out_pairs13[0];
     dst->generated_pairs13[0] = out_pairs13[0];
     dst->cumulative_pairs13[0] = out_cumulative13[0];
@@ -2251,7 +1931,7 @@ int l3_authorization_secondary_param3_accum1ab0_pairs13(
         uint32_t pre = u32_mla((uint32_t)param3_words13[i], k_f4190d70[j], k_f4190d90[j]);
         x = u32_mla(pre, 0xec59bd97u, 0x1e28670cu);
         dst->transformed_words13[i] = x;
-        out_pairs13[i] = make_1ab0_pair(x, &dst->final_fold_lows13[i]);
+        out_pairs13[i] = make_secondary_pair(x, &dst->final_fold_lows13[i], &k_pair_recipe_1ab0);
         out_cumulative13[i].lo = out_cumulative13[i - 1u].lo + out_pairs13[i].lo;
         out_cumulative13[i].hi = out_cumulative13[i - 1u].hi + out_pairs13[i].hi +
                                  u32_add_carry(out_cumulative13[i - 1u].lo, out_pairs13[i].lo);
@@ -2274,7 +1954,7 @@ int l3_authorization_secondary_affine_accum1b30_pairs13(
 
     uint32_t x = u32_mla(affine_words13[0], 0x60965acbu, 0xe2552458u);
     dst->transformed_words13[0] = x;
-    out_pairs13[0] = make_1b30_pair(x, &dst->final_fold_lows13[0]);
+    out_pairs13[0] = make_secondary_pair(x, &dst->final_fold_lows13[0], &k_pair_recipe_1b30);
     out_cumulative13[0] = out_pairs13[0];
     dst->generated_pairs13[0] = out_pairs13[0];
     dst->cumulative_pairs13[0] = out_cumulative13[0];
@@ -2284,7 +1964,7 @@ int l3_authorization_secondary_affine_accum1b30_pairs13(
         uint32_t pre = u32_mla(affine_words13[i], k_f4190db0[j], k_f4190dd0[j]);
         x = u32_mla(pre, 0x7e4e513du, 0xa5c539f5u);
         dst->transformed_words13[i] = x;
-        out_pairs13[i] = make_1b30_pair(x, &dst->final_fold_lows13[i]);
+        out_pairs13[i] = make_secondary_pair(x, &dst->final_fold_lows13[i], &k_pair_recipe_1b30);
         out_cumulative13[i].lo = out_cumulative13[i - 1u].lo + out_pairs13[i].lo;
         out_cumulative13[i].hi = out_cumulative13[i - 1u].hi + out_pairs13[i].hi +
                                  u32_add_carry(out_cumulative13[i - 1u].lo, out_pairs13[i].lo);
@@ -2628,8 +2308,8 @@ int l3_authorization_secondary_param6_third_export_convolution26(
             x_export = pre_export * 0x06cf672fu + 0xbec643cdu;
         }
 
-        raw_param6[lane] = make_1bb0_pair(x_param6, NULL);
-        raw_export[lane] = make_1c30_pair(x_export, NULL);
+        raw_param6[lane] = make_secondary_pair(x_param6, NULL, &k_pair_recipe_1bb0);
+        raw_export[lane] = make_secondary_pair(x_export, NULL, &k_pair_recipe_1c30);
         if (lane == 0u) {
             prefix_param6[lane] = raw_param6[lane];
             prefix_export[lane] = raw_export[lane];
@@ -2748,7 +2428,7 @@ int l3_authorization_secondary_local390_accum1cf0_pairs13(
 
     uint32_t x = u32_mla(local390_words13[0], 0xa0afecbfu, 0x5710f441u);
     dst->transformed_words13[0] = x;
-    out_pairs13[0] = make_1cf0_pair(x, &dst->final_fold_lows13[0]);
+    out_pairs13[0] = make_secondary_pair(x, &dst->final_fold_lows13[0], &k_pair_recipe_1cf0);
     out_cumulative13[0] = out_pairs13[0];
     dst->generated_pairs13[0] = out_pairs13[0];
     dst->cumulative_pairs13[0] = out_cumulative13[0];
@@ -2758,7 +2438,7 @@ int l3_authorization_secondary_local390_accum1cf0_pairs13(
         uint32_t pre = u32_mla(local390_words13[i], k_f4190eb0[j], k_f4190ed0[j]);
         x = u32_mla(pre, 0x6f28ab8bu, 0xe0505ceau);
         dst->transformed_words13[i] = x;
-        out_pairs13[i] = make_1cf0_pair(x, &dst->final_fold_lows13[i]);
+        out_pairs13[i] = make_secondary_pair(x, &dst->final_fold_lows13[i], &k_pair_recipe_1cf0);
         out_cumulative13[i].lo = out_cumulative13[i - 1u].lo + out_pairs13[i].lo;
         out_cumulative13[i].hi = out_cumulative13[i - 1u].hi + out_pairs13[i].hi +
                                  u32_add_carry(out_cumulative13[i - 1u].lo, out_pairs13[i].lo);
@@ -2781,7 +2461,7 @@ int l3_authorization_secondary_local390_accum1d70_pairs13(
 
     uint32_t x = u32_mla(local390_words13[0], 0x13a70e07u, 0x8caa29e1u);
     dst->transformed_words13[0] = x;
-    out_pairs13[0] = make_1d70_pair(x, &dst->final_fold_lows13[0]);
+    out_pairs13[0] = make_secondary_pair(x, &dst->final_fold_lows13[0], &k_pair_recipe_1d70);
     out_cumulative13[0] = out_pairs13[0];
     dst->generated_pairs13[0] = out_pairs13[0];
     dst->cumulative_pairs13[0] = out_cumulative13[0];
@@ -2791,7 +2471,7 @@ int l3_authorization_secondary_local390_accum1d70_pairs13(
         uint32_t pre = u32_mla(local390_words13[i], k_f4190ef0[j], k_f4190f10[j]);
         x = u32_mla(pre, 0x18592f91u, 0x3788ef09u);
         dst->transformed_words13[i] = x;
-        out_pairs13[i] = make_1d70_pair(x, &dst->final_fold_lows13[i]);
+        out_pairs13[i] = make_secondary_pair(x, &dst->final_fold_lows13[i], &k_pair_recipe_1d70);
         out_cumulative13[i].lo = out_cumulative13[i - 1u].lo + out_pairs13[i].lo;
         out_cumulative13[i].hi = out_cumulative13[i - 1u].hi + out_pairs13[i].hi +
                                  u32_add_carry(out_cumulative13[i - 1u].lo, out_pairs13[i].lo);
@@ -3029,7 +2709,7 @@ int l3_authorization_secondary_local3f8_accum1df0_pairs13(
 
     uint32_t x = u32_mla(local3f8_words13[0], 0x9b89907bu, 0x9a232f4fu);
     dst->transformed_words13[0] = x;
-    out_pairs13[0] = make_1df0_pair(x, &dst->final_fold_lows13[0]);
+    out_pairs13[0] = make_secondary_pair(x, &dst->final_fold_lows13[0], &k_pair_recipe_1df0);
     out_cumulative13[0] = out_pairs13[0];
     dst->generated_pairs13[0] = out_pairs13[0];
     dst->cumulative_pairs13[0] = out_cumulative13[0];
@@ -3039,7 +2719,7 @@ int l3_authorization_secondary_local3f8_accum1df0_pairs13(
         uint32_t pre = u32_mla(local3f8_words13[i], k_f4190f30[j], k_f4190f50[j]);
         x = u32_mla(pre, 0x4e68febbu, 0x0dc73610u);
         dst->transformed_words13[i] = x;
-        out_pairs13[i] = make_1df0_pair(x, &dst->final_fold_lows13[i]);
+        out_pairs13[i] = make_secondary_pair(x, &dst->final_fold_lows13[i], &k_pair_recipe_1df0);
         out_cumulative13[i].lo = out_cumulative13[i - 1u].lo + out_pairs13[i].lo;
         out_cumulative13[i].hi = out_cumulative13[i - 1u].hi + out_pairs13[i].hi +
                                  u32_add_carry(out_cumulative13[i - 1u].lo, out_pairs13[i].lo);
@@ -3063,7 +2743,7 @@ int l3_authorization_secondary_local390_accum1e70_pairs13(
 
     uint32_t x = u32_mla(caller_scalar1, 0x5d7a9b6fu, 0xde0d550fu);
     dst->transformed_words13[0] = x;
-    out_pairs13[0] = make_1e70_pair(x, &dst->final_fold_lows13[0]);
+    out_pairs13[0] = make_secondary_pair(x, &dst->final_fold_lows13[0], &k_pair_recipe_1e70);
     out_cumulative13[0] = out_pairs13[0];
     dst->generated_pairs13[0] = out_pairs13[0];
     dst->cumulative_pairs13[0] = out_cumulative13[0];
@@ -3073,7 +2753,7 @@ int l3_authorization_secondary_local390_accum1e70_pairs13(
         uint32_t pre = u32_mla(local390_words13[i], k_f4190f70[j], k_f4190f90[j]);
         x = u32_mla(pre, 0x0986d021u, 0x654d99f3u);
         dst->transformed_words13[i] = x;
-        out_pairs13[i] = make_1e70_pair(x, &dst->final_fold_lows13[i]);
+        out_pairs13[i] = make_secondary_pair(x, &dst->final_fold_lows13[i], &k_pair_recipe_1e70);
         out_cumulative13[i].lo = out_cumulative13[i - 1u].lo + out_pairs13[i].lo;
         out_cumulative13[i].hi = out_cumulative13[i - 1u].hi + out_pairs13[i].hi +
                                  u32_add_carry(out_cumulative13[i - 1u].lo, out_pairs13[i].lo);
@@ -3324,7 +3004,7 @@ int l3_authorization_secondary_param1_accum1ef0_pairs13(
 
     uint32_t x = u32_mla((uint32_t)param1_words13[0], 0xd0cca515u, 0x482d494bu);
     dst->transformed_words13[0] = x;
-    out_pairs13[0] = make_1ef0_pair(x, &dst->final_fold_lows13[0]);
+    out_pairs13[0] = make_secondary_pair(x, &dst->final_fold_lows13[0], &k_pair_recipe_1ef0);
     out_cumulative13[0] = out_pairs13[0];
     dst->generated_pairs13[0] = out_pairs13[0];
     dst->cumulative_pairs13[0] = out_cumulative13[0];
@@ -3334,7 +3014,7 @@ int l3_authorization_secondary_param1_accum1ef0_pairs13(
         uint32_t pre = u32_mla((uint32_t)param1_words13[i], k_f4190fb0[j], k_f4190fd0[j]);
         x = u32_mla(pre, 0x18f05a49u, 0xce5c97c0u);
         dst->transformed_words13[i] = x;
-        out_pairs13[i] = make_1ef0_pair(x, &dst->final_fold_lows13[i]);
+        out_pairs13[i] = make_secondary_pair(x, &dst->final_fold_lows13[i], &k_pair_recipe_1ef0);
         out_cumulative13[i].lo = out_cumulative13[i - 1u].lo + out_pairs13[i].lo;
         out_cumulative13[i].hi = out_cumulative13[i - 1u].hi + out_pairs13[i].hi +
                                  u32_add_carry(out_cumulative13[i - 1u].lo, out_pairs13[i].lo);
@@ -3357,7 +3037,7 @@ int l3_authorization_secondary_local3f8_accum1f70_pairs13(
 
     uint32_t x = u32_mla(local3f8_words13[0], 0xa3394861u, 0x50e665f1u);
     dst->transformed_words13[0] = x;
-    out_pairs13[0] = make_1f70_pair(x, &dst->final_fold_lows13[0]);
+    out_pairs13[0] = make_secondary_pair(x, &dst->final_fold_lows13[0], &k_pair_recipe_1f70);
     out_cumulative13[0] = out_pairs13[0];
     dst->generated_pairs13[0] = out_pairs13[0];
     dst->cumulative_pairs13[0] = out_cumulative13[0];
@@ -3367,7 +3047,7 @@ int l3_authorization_secondary_local3f8_accum1f70_pairs13(
         uint32_t pre = u32_mla(local3f8_words13[i], k_f4190ff0[j], k_f4191010[j]);
         x = u32_mla(pre, 0x56c4df01u, 0xa03cad7fu);
         dst->transformed_words13[i] = x;
-        out_pairs13[i] = make_1f70_pair(x, &dst->final_fold_lows13[i]);
+        out_pairs13[i] = make_secondary_pair(x, &dst->final_fold_lows13[i], &k_pair_recipe_1f70);
         out_cumulative13[i].lo = out_cumulative13[i - 1u].lo + out_pairs13[i].lo;
         out_cumulative13[i].hi = out_cumulative13[i - 1u].hi + out_pairs13[i].hi +
                                  u32_add_carry(out_cumulative13[i - 1u].lo, out_pairs13[i].lo);
@@ -3563,7 +3243,7 @@ int l3_authorization_secondary_local3c4_accum2070_pairs13(
 
     uint32_t x = u32_mla(local3c4_words13[0], 0xa43fbd01u, 0x1b0c0277u);
     dst->transformed_words13[0] = x;
-    out_pairs13[0] = make_2070_pair(x, &dst->final_fold_lows13[0]);
+    out_pairs13[0] = make_secondary_pair(x, &dst->final_fold_lows13[0], &k_pair_recipe_2070);
     out_cumulative13[0] = out_pairs13[0];
     dst->generated_pairs13[0] = out_pairs13[0];
     dst->cumulative_pairs13[0] = out_cumulative13[0];
@@ -3573,7 +3253,7 @@ int l3_authorization_secondary_local3c4_accum2070_pairs13(
         uint32_t pre = u32_mla(local3c4_words13[i], k_f4191070[j], k_f4191090[j]);
         x = u32_mla(pre, 0x899a4967u, 0xb634e55cu);
         dst->transformed_words13[i] = x;
-        out_pairs13[i] = make_2070_pair(x, &dst->final_fold_lows13[i]);
+        out_pairs13[i] = make_secondary_pair(x, &dst->final_fold_lows13[i], &k_pair_recipe_2070);
         out_cumulative13[i].lo = out_cumulative13[i - 1u].lo + out_pairs13[i].lo;
         out_cumulative13[i].hi = out_cumulative13[i - 1u].hi + out_pairs13[i].hi +
                                  u32_add_carry(out_cumulative13[i - 1u].lo, out_pairs13[i].lo);
@@ -3596,7 +3276,7 @@ int l3_authorization_secondary_local3c4_accum1ff0_pairs13(
 
     uint32_t x = u32_mla(local3c4_words13[0], 0x6660896bu, 0xb41083b6u);
     dst->transformed_words13[0] = x;
-    out_pairs13[0] = make_1ff0_pair(x, &dst->final_fold_lows13[0]);
+    out_pairs13[0] = make_secondary_pair(x, &dst->final_fold_lows13[0], &k_pair_recipe_1ff0);
     out_cumulative13[0] = out_pairs13[0];
     dst->generated_pairs13[0] = out_pairs13[0];
     dst->cumulative_pairs13[0] = out_cumulative13[0];
@@ -3606,7 +3286,7 @@ int l3_authorization_secondary_local3c4_accum1ff0_pairs13(
         uint32_t pre = u32_mla(local3c4_words13[i], k_f4191030[j], k_f4191050[j]);
         x = u32_mla(pre, 0x97d15a47u, 0x854296edu);
         dst->transformed_words13[i] = x;
-        out_pairs13[i] = make_1ff0_pair(x, &dst->final_fold_lows13[i]);
+        out_pairs13[i] = make_secondary_pair(x, &dst->final_fold_lows13[i], &k_pair_recipe_1ff0);
         out_cumulative13[i].lo = out_cumulative13[i - 1u].lo + out_pairs13[i].lo;
         out_cumulative13[i].hi = out_cumulative13[i - 1u].hi + out_pairs13[i].hi +
                                  u32_add_carry(out_cumulative13[i - 1u].lo, out_pairs13[i].lo);
@@ -4053,7 +3733,7 @@ int l3_authorization_secondary_local3c4_accum2170_pairs13(
         uint32_t pre = u32_mla(local3c4_words13[i], k_f4191130[j], k_f4191150[j]);
         uint32_t x = u32_mla(pre, 0xada1bc41u, 0x64a94915u);
         dst->transformed_words13[i] = x;
-        out_pairs13[i] = make_2170_pair(x, &dst->final_fold_lows13[i]);
+        out_pairs13[i] = make_secondary_pair(x, &dst->final_fold_lows13[i], &k_pair_recipe_2170);
         if (i == 0u) {
             out_cumulative13[i] = out_pairs13[i];
         } else {
@@ -4083,7 +3763,7 @@ int l3_authorization_secondary_local460_accum21f0_pairs13(
         uint32_t pre = u32_mla(local460_words13[i], k_f4191170[j], k_f4191190[j]);
         uint32_t x = u32_mla(pre, 0x0484f291u, 0xfa2b116bu);
         dst->transformed_words13[i] = x;
-        out_pairs13[i] = make_21f0_pair(x, &dst->final_fold_lows13[i]);
+        out_pairs13[i] = make_secondary_pair(x, &dst->final_fold_lows13[i], &k_pair_recipe_21f0);
         if (i == 0u) {
             out_cumulative13[i] = out_pairs13[i];
         } else {
@@ -4285,7 +3965,7 @@ int l3_authorization_secondary_param2_accum22f0_pairs13(
         const uint32_t pre = (uint32_t)param2_words13[i] * k_f41911f0[j] + k_f4191210[j];
         const uint32_t x = pre * 0x0b73db43u + 0x00f6503bu;
         dst->transformed_words13[i] = x;
-        out_pairs13[i] = make_22f0_pair(x, &dst->final_fold_lows13[i]);
+        out_pairs13[i] = make_secondary_pair(x, &dst->final_fold_lows13[i], &k_pair_recipe_22f0);
         if (i == 0u) out_cumulative13[i] = out_pairs13[i];
         else {
             out_cumulative13[i].lo = out_cumulative13[i - 1u].lo + out_pairs13[i].lo;
@@ -4314,7 +3994,7 @@ int l3_authorization_secondary_local42c_accum2370_pairs13(
         const uint32_t pre = local42c_words13[i] * k_f4191230[j] + k_f4191250[j];
         const uint32_t x = pre * 0x1449c9c7u + 0x492e8f8au;
         dst->transformed_words13[i] = x;
-        out_pairs13[i] = make_2370_pair(x, &dst->final_fold_lows13[i]);
+        out_pairs13[i] = make_secondary_pair(x, &dst->final_fold_lows13[i], &k_pair_recipe_2370);
         if (i == 0u) out_cumulative13[i] = out_pairs13[i];
         else {
             out_cumulative13[i].lo = out_cumulative13[i - 1u].lo + out_pairs13[i].lo;
@@ -4579,7 +4259,7 @@ int l3_authorization_secondary_local598_transform24b0_pairs26(
             (local598_words26[i] * k_f4191350[j] + k_f4191370[j]) * 0xbec7a6edu +
             0xe4aeb4c4u;
         uint32_t fold_low = 0u;
-        out_pairs26[i] = make_24b0_pair(transformed, &fold_low);
+        out_pairs26[i] = make_secondary_pair(transformed, &fold_low, &k_pair_recipe_24b0);
         dst->transformed_words26[i] = transformed;
         dst->final_fold_lows26[i] = fold_low;
         dst->output_pairs26[i] = out_pairs26[i];
@@ -4727,7 +4407,7 @@ int l3_authorization_secondary_param3_accum2530_pairs13(
             x = pre * 0x491ad6edu + 0xa84209c3u;
         }
         dst->transformed_words13[i] = x;
-        out_pairs13[i] = make_2530_pair(x, &dst->final_fold_lows13[i]);
+        out_pairs13[i] = make_secondary_pair(x, &dst->final_fold_lows13[i], &k_pair_recipe_2530);
         if (i == 0u) out_cumulative13[i] = out_pairs13[i];
         else {
             out_cumulative13[i].lo = out_cumulative13[i - 1u].lo + out_pairs13[i].lo;
@@ -4761,7 +4441,7 @@ int l3_authorization_secondary_local390_accum25b0_pairs13(
             x = pre * 0xd2d97dadu + 0xb7e5690cu;
         }
         dst->transformed_words13[i] = x;
-        out_pairs13[i] = make_25b0_pair(x, &dst->final_fold_lows13[i]);
+        out_pairs13[i] = make_secondary_pair(x, &dst->final_fold_lows13[i], &k_pair_recipe_25b0);
         if (i == 0u) out_cumulative13[i] = out_pairs13[i];
         else {
             out_cumulative13[i].lo = out_cumulative13[i - 1u].lo + out_pairs13[i].lo;
@@ -5017,23 +4697,26 @@ int l3_authorization_secondary_build_terminal_outputs(
         return -1;
     }
 
-    l3_authorization_secondary_terminal_param8_param9_trace tmp;
-    l3_authorization_secondary_terminal_param8_param9_trace *dst = out ? out : &tmp;
-    memset(dst, 0, sizeof(*dst));
+    if (out) memset(out, 0, sizeof(*out));
 
     int rc = l3_authorization_secondary_build_terminal_output_a(
         local4c8_words26, param4_194_words26, local530_words26, carry_seed_words26,
         caller_seed_words13, caller_scalar0, caller_scalar1,
-        out_param8_words13, &dst->param8_tail);
+        out_param8_words13, out ? &out->param8_tail : NULL);
     if (rc != 0) return rc;
 
     rc = l3_authorization_secondary_build_terminal_output_b(
         param3_words13, local390_words13, caller_seed_words13,
-        caller_scalar0, caller_scalar1, out_param9_words13, &dst->param9_tail);
+        caller_scalar0, caller_scalar1, out_param9_words13,
+        out ? &out->param9_tail : NULL);
     if (rc != 0) return rc;
 
-    memcpy(dst->param8_words13, out_param8_words13, sizeof(dst->param8_words13));
-    memcpy(dst->param9_words13, out_param9_words13, sizeof(dst->param9_words13));
+    if (out) {
+        memcpy(out->param8_words13, out_param8_words13,
+               sizeof(out->param8_words13));
+        memcpy(out->param9_words13, out_param9_words13,
+               sizeof(out->param9_words13));
+    }
     return 0;
 }
 
@@ -5060,16 +4743,18 @@ int l3_authorization_secondary_local3f8_bound_sixth_local42c_preimage_param7_loc
         return -1;
     }
 
-    l3_authorization_secondary_local3f8_bound_sixth_local42c_preimage_trace tmp;
-    l3_authorization_secondary_local3f8_bound_sixth_local42c_preimage_trace *dst = out ? out : &tmp;
-    memset(dst, 0, sizeof(*dst));
-
-    memcpy(dst->local3f8_words13, local3f8_words13, sizeof(dst->local3f8_words13));
-    memcpy(dst->local390_words13, local390_words13, sizeof(dst->local390_words13));
-    for (unsigned i = 0; i < L3_AUTH_ROUND_SECONDARY_WORDS13; ++i) {
-        dst->param1_words13[i] = (uint32_t)param1_words13[i];
+    if (out) {
+        memset(out, 0, sizeof(*out));
+        memcpy(out->local3f8_words13, local3f8_words13,
+               sizeof(out->local3f8_words13));
+        memcpy(out->local390_words13, local390_words13,
+               sizeof(out->local390_words13));
+        for (unsigned i = 0; i < L3_AUTH_ROUND_SECONDARY_WORDS13; ++i) {
+            out->param1_words13[i] = (uint32_t)param1_words13[i];
+        }
+        memcpy(out->local3c4_words13, local3c4_words13,
+               sizeof(out->local3c4_words13));
     }
-    memcpy(dst->local3c4_words13, local3c4_words13, sizeof(dst->local3c4_words13));
 
     int rc = l3_authorization_secondary_derive_state_stage4(
         local3f8_words13,
@@ -5079,9 +4764,12 @@ int l3_authorization_secondary_local3f8_bound_sixth_local42c_preimage_param7_loc
         caller_scalar0,
         caller_scalar1,
         out_local42c_words13,
-        &dst->local42c_trace);
+        out ? &out->local42c_trace : NULL);
     if (rc != 0) return rc;
-    memcpy(dst->local42c_words13, out_local42c_words13, sizeof(dst->local42c_words13));
+    if (out) {
+        memcpy(out->local42c_words13, out_local42c_words13,
+               sizeof(out->local42c_words13));
+    }
 
     rc = l3_authorization_secondary_derive_feedback_state(
         param1_words13,
@@ -5090,10 +4778,13 @@ int l3_authorization_secondary_local3f8_bound_sixth_local42c_preimage_param7_loc
         caller_scalar0,
         caller_scalar1,
         out_sixth_secondary_vector_reduce_words13,
-        &dst->sixth_trace);
+        out ? &out->sixth_trace : NULL);
     if (rc != 0) return rc;
-    memcpy(dst->sixth_secondary_vector_reduce_words13, out_sixth_secondary_vector_reduce_words13,
-           sizeof(dst->sixth_secondary_vector_reduce_words13));
+    if (out) {
+        memcpy(out->sixth_secondary_vector_reduce_words13,
+               out_sixth_secondary_vector_reduce_words13,
+               sizeof(out->sixth_secondary_vector_reduce_words13));
+    }
 
     rc = l3_authorization_secondary_vector_preimage_param7_local460_words13(
         out_sixth_secondary_vector_reduce_words13,
@@ -5105,11 +4796,15 @@ int l3_authorization_secondary_local3f8_bound_sixth_local42c_preimage_param7_loc
         caller_scalar1,
         out_local5b0_words13,
         out_local460_words13,
-        &dst->preimage_trace);
+        out ? &out->preimage_trace : NULL);
     if (rc != 0) return rc;
 
-    memcpy(dst->local5b0_words13, out_local5b0_words13, sizeof(dst->local5b0_words13));
-    memcpy(dst->local460_words13, out_local460_words13, sizeof(dst->local460_words13));
+    if (out) {
+        memcpy(out->local5b0_words13, out_local5b0_words13,
+               sizeof(out->local5b0_words13));
+        memcpy(out->local460_words13, out_local460_words13,
+               sizeof(out->local460_words13));
+    }
     return 0;
 }
 

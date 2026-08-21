@@ -1,26 +1,6 @@
-/*      This file is part of Juggluco, an Android app to receive and display         */
-/*      glucose values from Freestyle Libre 2(+), Libre 3(+), Dexcom G7/ONE+,        */
-/*      Sibionics GS1Sb and GS3, Accu-Chek SmartGuide, CareSens Air and              */
-/*      Aidex X sensors.                                                             */
-/*                                                                                   */
-/*      Copyright (C) 2021 Jaap Korthals Altes <jaapkorthalsaltes@gmail.com>         */
-/*                                                                                   */
-/*      Juggluco is free software: you can redistribute it and/or modify             */
-/*      it under the terms of the GNU General Public License as published            */
-/*      by the Free Software Foundation, either version 3 of the License, or         */
-/*      (at your option) any later version.                                          */
-/*                                                                                   */
-/*      Juggluco is distributed in the hope that it will be useful, but              */
-/*      WITHOUT ANY WARRANTY; without even the implied warranty of                   */
-/*      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                         */
-/*      See the GNU General Public License for more details.                         */
-/*                                                                                   */
-/*      You should have received a copy of the GNU General Public License            */
-/*      along with Juggluco. If not, see <https://www.gnu.org/licenses/>.            */
-/*                                                                                   */
-/*      Tue Aug 11 16:33:40 CEST 2026                                                */
 #include "authorization_finalizer.h"
 
+#include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -130,6 +110,53 @@ static uint32_t l3_auth_mullo_u32(uint32_t a, uint32_t b) {
 }
 
 typedef struct { uint32_t lo; uint32_t hi; } l3_auth_pair64;
+
+/* Common generated reduction primitives.  The recovered finalizer emitted many
+ * byte-for-byte identical reducers that differed only in their 16-entry fold
+ * table.  Keep that distinction in data instead of duplicated code. */
+static uint32_t l3_auth_reduce_nibbles(const uint32_t fold[16],
+                                       uint32_t value,
+                                       unsigned rounds) {
+    for (unsigned i = 0; i < rounds; ++i) {
+        value = fold[value & 0x0fu] + (value >> 4);
+    }
+    return value;
+}
+
+static void l3_auth_fold_pair64_step(const l3_auth_pair64 fold[16],
+                                     uint32_t lo, uint32_t hi,
+                                     uint32_t *out_lo, uint32_t *out_hi) {
+    const unsigned idx = lo & 0x0fu;
+    const uint32_t shifted_lo = (lo >> 4) | (hi << 28);
+    const uint32_t shifted_hi = hi >> 4;
+    const uint32_t new_lo = shifted_lo + fold[idx].lo;
+    const uint32_t new_hi = shifted_hi + fold[idx].hi +
+                            l3_auth_carry32(shifted_lo, fold[idx].lo);
+    *out_lo = new_lo;
+    *out_hi = new_hi;
+}
+
+static uint32_t l3_auth_fold_pair64_low_word(const l3_auth_pair64 fold[16],
+                                             uint32_t lo, uint32_t hi) {
+    const unsigned idx = lo & 0x0fu;
+    const uint32_t shifted_lo = (lo >> 4) | (hi << 28);
+    return shifted_lo + fold[idx].lo;
+}
+
+static void l3_auth_make_reduction_state13(
+    const uint32_t au[L3_AUTH_FINAL_STATE_FIRST_LOOP_PAIRS],
+    uint32_t tail_accum,
+    const uint32_t add_a[4], const uint32_t add_b[4], const uint32_t add_c[4],
+    const uint32_t mul_a[4], const uint32_t mul_b[4],
+    uint32_t tail_mul, uint32_t tail_add,
+    uint32_t out[L3_AUTH_FINAL_STATE_FIRST_LOOP_PAIRS]) {
+    for (unsigned i = 0; i < 4u; ++i) {
+        out[i] = add_a[i] + au[i] * mul_a[i];
+        out[4u + i] = add_b[i] + au[4u + i] * mul_b[i];
+        out[8u + i] = add_c[i] + au[8u + i] * mul_a[i];
+    }
+    out[12] = au[12] * tail_mul + tail_accum + tail_add;
+}
 
 static const uint32_t k_final_state_param2_mul[8] = {
     0x180f2107u, 0x980be129u, 0x8bad4a09u, 0x64c30a11u,
@@ -876,27 +903,6 @@ static const uint32_t k_final_state_reduce3130_add[8] = {
     0xbb1550a1u, 0x9b715da2u, 0x4dd5518cu, 0x718bb512u
 };
 
-static void l3_authorization_finalizer_fold_first_loop_step(uint32_t lo,
-                                       uint32_t hi,
-                                       uint32_t *out_lo,
-                                       uint32_t *out_hi) {
-    const unsigned idx = lo & 0x0fu;
-    const uint32_t shifted_lo = (lo >> 4) | (hi << 28);
-    const uint32_t shifted_hi = hi >> 4;
-    const uint32_t new_lo = shifted_lo + k_final_state_fold_3130[idx].lo;
-    const uint32_t new_hi = shifted_hi + k_final_state_fold_3130[idx].hi +
-                            l3_auth_carry32(shifted_lo, k_final_state_fold_3130[idx].lo);
-    *out_lo = new_lo;
-    *out_hi = new_hi;
-}
-
-static uint32_t l3_authorization_finalizer_reduce_first_loop_low_word(uint32_t lo,
-                                                          uint32_t hi) {
-    const unsigned idx = lo & 0x0fu;
-    const uint32_t shifted_lo = (lo >> 4) | (hi << 28);
-    return shifted_lo + k_final_state_fold_3130[idx].lo;
-}
-
 static void l3_authorization_finalizer_reduce_workspace_first_impl(
     const l3_auth_pair32 auStack_2c8_window[L3_AUTH_FINAL_STATE_FIRST_LOOP_WINDOW_PAIRS],
     l3_authorization_finalizer_reduce3130_state *out,
@@ -947,7 +953,7 @@ static void l3_authorization_finalizer_reduce_workspace_first_impl(
         uint32_t lo = fold_seed_lo;
         uint32_t hi = fold_seed_hi;
         for (unsigned r = 0; r < 7u; ++r) {
-            l3_authorization_finalizer_fold_first_loop_step(lo, hi, &lo, &hi);
+            l3_auth_fold_pair64_step(k_final_state_fold_3130, lo, hi, &lo, &hi);
         }
 
         const uint32_t fold7_lo = lo; /* uVar68 */
@@ -956,12 +962,12 @@ static void l3_authorization_finalizer_reduce_workspace_first_impl(
         const uint32_t fold7_mul_hi = l3_auth_mulhi_u32(fold7_lo, 0x9476e43fu);
 
         for (unsigned r = 0; r < 8u; ++r) {
-            l3_authorization_finalizer_fold_first_loop_step(lo, hi, &lo, &hi);
+            l3_auth_fold_pair64_step(k_final_state_fold_3130, lo, hi, &lo, &hi);
         }
 
         /* Native performs eight complete folds after fold7, then one
            low-word-only follow-on fold for the carried high-state term. */
-        const uint32_t partial_low = l3_authorization_finalizer_reduce_first_loop_low_word(lo, hi);
+        const uint32_t partial_low = l3_auth_fold_pair64_low_word(k_final_state_fold_3130, lo, hi);
         const uint32_t partial_product =
             l3_auth_mullo_u32(partial_low, 0xb891bc10u);
         const uint32_t state_hi_base =
@@ -1105,20 +1111,6 @@ void l3_authorization_finalizer_seed_param1_second_pairs(
 
 /* ---- v109: DAT_f41a32b0 coefficient head after second parent reseed ----- */
 
-static void l3_authorization_finalizer_fold_second_loop_step(uint32_t lo,
-                                       uint32_t hi,
-                                       uint32_t *out_lo,
-                                       uint32_t *out_hi) {
-    const unsigned idx = lo & 0x0fu;
-    const uint32_t shifted_lo = (lo >> 4) | (hi << 28);
-    const uint32_t shifted_hi = hi >> 4;
-    const uint32_t new_lo = shifted_lo + k_final_state_fold_32b0[idx].lo;
-    const uint32_t new_hi = shifted_hi + k_final_state_fold_32b0[idx].hi +
-                            l3_auth_carry32(shifted_lo, k_final_state_fold_32b0[idx].lo);
-    *out_lo = new_lo;
-    *out_hi = new_hi;
-}
-
 void l3_authorization_finalizer_second_loop_coeffs_from_head_trace(
     uint32_t parent_lo, uint32_t parent_hi,
     uint32_t current_lo, uint32_t current_hi,
@@ -1179,7 +1171,7 @@ void l3_authorization_finalizer_second_loop_coeffs_from_head_trace(
     }
 
     for (unsigned r = 0; r < 7u; ++r) {
-        l3_authorization_finalizer_fold_second_loop_step(fold_lo, fold_hi, &fold_lo, &fold_hi);
+        l3_auth_fold_pair64_step(k_final_state_fold_32b0, fold_lo, fold_hi, &fold_lo, &fold_hi);
     }
 
     if (trace) {
@@ -1541,26 +1533,6 @@ static const uint32_t k_final_state_reduce3430_add[8] = {
     0x5f90b173u, 0x3e9ee9d1u, 0x79d01fc4u, 0x82ffd7ccu
 };
 
-static void l3_authorization_finalizer_fold_second_loop_tail_step(uint32_t lo,
-                                       uint32_t hi,
-                                       uint32_t *out_lo,
-                                       uint32_t *out_hi) {
-    const unsigned idx = lo & 0x0fu;
-    const uint32_t shifted_lo = (lo >> 4) | (hi << 28);
-    const uint32_t shifted_hi = hi >> 4;
-    const uint32_t new_lo = shifted_lo + k_final_state_fold_3430[idx].lo;
-    const uint32_t new_hi = shifted_hi + k_final_state_fold_3430[idx].hi +
-                            l3_auth_carry32(shifted_lo, k_final_state_fold_3430[idx].lo);
-    *out_lo = new_lo;
-    *out_hi = new_hi;
-}
-
-static uint32_t l3_authorization_finalizer_fold_second_loop_tail_low_word(uint32_t lo, uint32_t hi) {
-    const unsigned idx = lo & 0x0fu;
-    const uint32_t shifted_lo = (lo >> 4) | (hi << 28);
-    return shifted_lo + k_final_state_fold_3430[idx].lo;
-}
-
 void l3_authorization_finalizer_reduce_workspace_second(
     const l3_auth_pair32 auStack_2c8_window[L3_AUTH_FINAL_STATE_FIRST_LOOP_WINDOW_PAIRS],
     l3_authorization_finalizer_reduce3430_state *out) {
@@ -1604,7 +1576,7 @@ void l3_authorization_finalizer_reduce_workspace_second(
         uint32_t lo = fold_seed_lo;
         uint32_t hi = fold_seed_hi;
         for (unsigned r = 0; r < 7u; ++r) {
-            l3_authorization_finalizer_fold_second_loop_tail_step(lo, hi, &lo, &hi);
+            l3_auth_fold_pair64_step(k_final_state_fold_3430, lo, hi, &lo, &hi);
         }
 
         const uint32_t fold7_lo = lo; /* native uVar28 */
@@ -1616,11 +1588,11 @@ void l3_authorization_finalizer_reduce_workspace_second(
            full folds, one extra full fold used only through its low word and
            high carry, and one additional low-only table lookup. */
         for (unsigned r = 0; r < 6u; ++r) {
-            l3_authorization_finalizer_fold_second_loop_tail_step(lo, hi, &lo, &hi);
+            l3_auth_fold_pair64_step(k_final_state_fold_3430, lo, hi, &lo, &hi);
         }
         uint32_t tail_lo, tail_hi;
-        l3_authorization_finalizer_fold_second_loop_tail_step(lo, hi, &tail_lo, &tail_hi);
-        const uint32_t partial_low = l3_authorization_finalizer_fold_second_loop_tail_low_word(tail_lo, tail_hi);
+        l3_auth_fold_pair64_step(k_final_state_fold_3430, lo, hi, &tail_lo, &tail_hi);
+        const uint32_t partial_low = l3_auth_fold_pair64_low_word(k_final_state_fold_3430, tail_lo, tail_hi);
         const uint32_t partial_low2 = (partial_low >> 4) +
             k_final_state_fold_3430[partial_low & 0x0fu].lo;
 
@@ -2225,26 +2197,6 @@ static const uint32_t k_final_state_reduce37b0_add[8] = {
     0x458cfa6bu, 0x6542b407u, 0xf1edc2fau, 0xf490414fu
 };
 
-static void l3_authorization_finalizer_fold_post_convolution_step(uint32_t lo,
-                                       uint32_t hi,
-                                       uint32_t *out_lo,
-                                       uint32_t *out_hi) {
-    const unsigned idx = lo & 0x0fu;
-    const uint32_t shifted_lo = (lo >> 4) | (hi << 28);
-    const uint32_t shifted_hi = hi >> 4;
-    const uint32_t new_lo = shifted_lo + k_final_state_fold_37b0[idx].lo;
-    const uint32_t new_hi = shifted_hi + k_final_state_fold_37b0[idx].hi +
-                            l3_auth_carry32(shifted_lo, k_final_state_fold_37b0[idx].lo);
-    *out_lo = new_lo;
-    *out_hi = new_hi;
-}
-
-static uint32_t l3_authorization_finalizer_fold_post_convolution_low_word(uint32_t lo, uint32_t hi) {
-    const unsigned idx = lo & 0x0fu;
-    const uint32_t shifted_lo = (lo >> 4) | (hi << 28);
-    return shifted_lo + k_final_state_fold_37b0[idx].lo;
-}
-
 void l3_authorization_finalizer_reduce_workspace_post_convolution(
     const l3_auth_pair32 auStack_2c8_window[L3_AUTH_FINAL_STATE_FIRST_LOOP_WINDOW_PAIRS],
     l3_authorization_finalizer_reduce37b0_state *out) {
@@ -2288,7 +2240,7 @@ void l3_authorization_finalizer_reduce_workspace_post_convolution(
         uint32_t lo = fold_seed_lo;
         uint32_t hi = fold_seed_hi;
         for (unsigned r = 0; r < 7u; ++r) {
-            l3_authorization_finalizer_fold_post_convolution_step(lo, hi, &lo, &hi);
+            l3_auth_fold_pair64_step(k_final_state_fold_37b0, lo, hi, &lo, &hi);
         }
 
         const uint32_t fold7_lo = lo;
@@ -2297,9 +2249,9 @@ void l3_authorization_finalizer_reduce_workspace_post_convolution(
         const uint32_t fold7_mul_hi = l3_auth_mulhi_u32(fold7_lo, 0xc9c0715du);
 
         for (unsigned r = 0; r < 7u; ++r) {
-            l3_authorization_finalizer_fold_post_convolution_step(lo, hi, &lo, &hi);
+            l3_auth_fold_pair64_step(k_final_state_fold_37b0, lo, hi, &lo, &hi);
         }
-        const uint32_t partial_low = l3_authorization_finalizer_fold_post_convolution_low_word(lo, hi);
+        const uint32_t partial_low = l3_auth_fold_pair64_low_word(k_final_state_fold_37b0, lo, hi);
         const uint32_t partial_low2 = (partial_low >> 4) +
             k_final_state_fold_37b0[partial_low & 0x0fu].lo;
 
@@ -2431,13 +2383,6 @@ static const uint32_t k_final_state_parent_1a90[8] = {
     0x08ac257cu, 0xb091da35u, 0xbaeaa0efu, 0xb6c8b46cu
 };
 
-uint32_t l3_authorization_finalizer_reduce_vector_stage01(uint32_t value, unsigned rounds) {
-    for (unsigned i = 0; i < rounds; ++i) {
-        value = k_final_state_fold_3898[value & 0x0fu] + (value >> 4);
-    }
-    return value;
-}
-
 void l3_authorization_finalizer_parent_context_stage01_seed(
     const uint32_t parent_words[L3_AUTH_FINAL_STATE_FIRST_LOOP_PAIRS],
     l3_authorization_finalizer_parent_context_stage01_state *out) {
@@ -2448,7 +2393,7 @@ void l3_authorization_finalizer_parent_context_stage01_seed(
     const uint32_t first_mix = parent_words[0] * 0x792effe5u + 0xd90c4f2fu;
     uint32_t driver = (first_mix >> 1) * 0xcc4a0aedu +
                       k_final_state_parent_parity_75c[first_mix & 1u];
-    uint32_t red = l3_authorization_finalizer_reduce_vector_stage01(driver * 0x961141c1u + 0x22bdd73bu, 7u);
+    uint32_t red = l3_auth_reduce_nibbles(k_final_state_fold_3898, driver * 0x961141c1u + 0x22bdd73bu, 7u);
     driver = driver * 0xe0c15715u +
              (k_final_state_parent_1a10[red & 7u] - (red >> 3)) * 0x80000000u +
              0x8516d849u;
@@ -2467,7 +2412,7 @@ void l3_authorization_finalizer_parent_context_stage01_seed(
                                       k_final_state_parent_1a50[j];
             const uint32_t lane_affine = (lane_mix >> 1) * 0xcc4a0aedu +
                                          k_final_state_parent_parity_75c[lane_mix & 1u];
-            red = l3_authorization_finalizer_reduce_vector_stage01(lane_affine * 0x961141c1u + 0x22bdd73bu, 7u);
+            red = l3_auth_reduce_nibbles(k_final_state_fold_3898, lane_affine * 0x961141c1u + 0x22bdd73bu, 7u);
             const uint32_t next_driver_base = lane_affine * 0xe0c15715u + 0x8516d849u;
             const uint32_t next_driver = next_driver_base +
                 ((red >> 3) * 0x4499u + k_final_state_parent_1a10[red & 7u]) * 0x80000000u;
@@ -2527,13 +2472,6 @@ static const uint32_t k_final_state_local_b8_add_1ad0[8] = {
     0xe0f87c9fu, 0x69b94f67u, 0xe450c14eu, 0xf323070au
 };
 
-uint32_t l3_authorization_finalizer_reduce_vector_stage02(uint32_t value, unsigned rounds) {
-    for (unsigned i = 0; i < rounds; ++i) {
-        value = k_final_state_fold_38d8[value & 0x0fu] + (value >> 4);
-    }
-    return value;
-}
-
 static void l3_authorization_finalizer_make_reduction_state_from_reduced_words(
     const uint32_t au[L3_AUTH_FINAL_STATE_FIRST_LOOP_PAIRS],
     uint32_t out[L3_AUTH_FINAL_STATE_FIRST_LOOP_PAIRS]) {
@@ -2574,7 +2512,7 @@ void l3_authorization_finalizer_seed_state_stage02_seed(
     uint32_t driver = 0x087e0c41u;
     for (unsigned lane = 0; lane < L3_AUTH_FINAL_STATE_FIRST_LOOP_PAIRS; ++lane) {
         const uint32_t cur = driver * 0x4b5e8c61u + next_stream_word;
-        const uint32_t reduced = l3_authorization_finalizer_reduce_vector_stage02(
+        const uint32_t reduced = l3_auth_reduce_nibbles(k_final_state_fold_38d8, 
             cur * 0x8c9a3f73u + 0x23183003u, 7u);
 
         out->driver38d8[lane] = cur;
@@ -2589,7 +2527,7 @@ void l3_authorization_finalizer_seed_state_stage02_seed(
             break;
         }
 
-        const uint32_t reduced_next = l3_authorization_finalizer_reduce_vector_stage02(reduced, 1u);
+        const uint32_t reduced_next = l3_auth_reduce_nibbles(k_final_state_fold_38d8, reduced, 1u);
         next_stream_word = out->local_328_stream[lane + 1u];
         driver = reduced * 0xb72f5f9bu +
                  reduced_next * 0x8d0a0650u +
@@ -2733,13 +2671,6 @@ static const uint32_t k_final_state_pred_1bd0[8] = {
     0xfca16617u, 0xeea32bbbu, 0x327096ebu, 0x8b6cc2a6u
 };
 
-uint32_t l3_authorization_finalizer_reduce_vector_stage03(uint32_t value, unsigned rounds) {
-    for (unsigned i = 0; i < rounds; ++i) {
-        value = k_final_state_fold_3918[value & 0x0fu] + (value >> 4);
-    }
-    return value;
-}
-
 void l3_authorization_finalizer_scan_reduction_predicate(
     const uint32_t local_1f0_words[L3_AUTH_FINAL_STATE_FIRST_LOOP_PAIRS],
     l3_authorization_finalizer_predicate_terminal_gate_state *out) {
@@ -2767,7 +2698,7 @@ static uint32_t l3_authorization_finalizer_predicate_stage03_lane_driver(uint32_
                                                    uint32_t *reduced_out) {
     const uint32_t affine = (word >> 1) * 0xa7236b17u +
                             k_final_state_pred_parity_764[word & 1u];
-    const uint32_t reduced = l3_authorization_finalizer_reduce_vector_stage03(
+    const uint32_t reduced = l3_auth_reduce_nibbles(k_final_state_fold_3918, 
         affine * 0x45579f27u + 0x742df06bu, 7u);
     if (affine_out) *affine_out = affine;
     if (reduced_out) *reduced_out = reduced;
@@ -2905,27 +2836,13 @@ static const uint32_t k_final_state_pred_1d10[8] = {
     0xa56fa05fu, 0x0fb05c9au, 0x71e9b7f6u, 0xd7b2f391u
 };
 
-uint32_t l3_authorization_finalizer_reduce_vector_stage04(uint32_t value, unsigned rounds) {
-    for (unsigned i = 0; i < rounds; ++i) {
-        value = k_final_state_fold_3958[value & 0x0fu] + (value >> 4);
-    }
-    return value;
-}
-
-uint32_t l3_authorization_finalizer_reduce_vector_stage05(uint32_t value, unsigned rounds) {
-    for (unsigned i = 0; i < rounds; ++i) {
-        value = k_final_state_fold_3998[value & 0x0fu] + (value >> 4);
-    }
-    return value;
-}
-
 static uint32_t l3_authorization_finalizer_predicate_stage04_lane_driver(uint32_t word,
                                                    uint32_t *affine_out,
                                                    uint32_t *reduced_out,
                                                    uint32_t *base_out) {
     const uint32_t affine = (word >> 1) * 0x6c7c4715u +
                             k_final_state_pred_parity_76c[word & 1u];
-    const uint32_t reduced = l3_authorization_finalizer_reduce_vector_stage04(
+    const uint32_t reduced = l3_auth_reduce_nibbles(k_final_state_fold_3958, 
         affine * 0xc88ae421u + 0x521e55e2u, 7u);
     const uint32_t base = affine * 0x7b4bfb3fu + 0x1ee4924fu;
     if (affine_out) *affine_out = affine;
@@ -2941,7 +2858,7 @@ static uint32_t l3_authorization_finalizer_predicate_stage05_lane_driver(uint32_
                                                    uint32_t *base_out) {
     const uint32_t affine = (word >> 1) * 0x048c31b9u +
                             k_final_state_pred_parity_774[word & 1u];
-    const uint32_t reduced = l3_authorization_finalizer_reduce_vector_stage05(
+    const uint32_t reduced = l3_auth_reduce_nibbles(k_final_state_fold_3998, 
         affine * 0xc828c513u + 0xf498d176u, 7u);
     const uint32_t base = affine * 0xcb1d32d5u - 0x0856a877u;
     if (affine_out) *affine_out = affine;
@@ -3081,34 +2998,12 @@ static const uint32_t k_final_state_add_39d8_b_default[4] = {
 static const uint32_t k_final_state_add_39d8_c_default[4] = {
     0xf4df1139u, 0xbd60be9cu, 0xb2ce365eu, 0x8e3bfa02u
 };
-
-uint32_t l3_authorization_finalizer_reduce_vector_stage06(uint32_t value, unsigned rounds) {
-    for (unsigned i = 0; i < rounds; ++i) {
-        value = k_final_state_fold_39d8[value & 0x0fu] + (value >> 4);
-    }
-    return value;
-}
-
-static void l3_authorization_finalizer_make_reduction_state_from_stage05_reduced_words(
-    const uint32_t au[L3_AUTH_FINAL_STATE_FIRST_LOOP_PAIRS],
-    uint32_t tail_accum,
-    const uint32_t add_a[4],
-    const uint32_t add_b[4],
-    const uint32_t add_c[4],
-    uint32_t out[L3_AUTH_FINAL_STATE_FIRST_LOOP_PAIRS]) {
-    static const uint32_t mul_a[4] = {
-        0x53149187u, 0xc2833a6fu, 0x14b0f18bu, 0xfd816061u
-    };
-    static const uint32_t mul_b[4] = {
-        0x7a01a4c3u, 0xde4a21b1u, 0x9d800529u, 0x967f2c55u
-    };
-    for (unsigned i = 0; i < 4u; ++i) {
-        out[i] = add_a[i] + au[i] * mul_a[i];
-        out[4u + i] = add_b[i] + au[4u + i] * mul_b[i];
-        out[8u + i] = add_c[i] + au[8u + i] * mul_a[i];
-    }
-    out[12] = au[12] * 0x7a01a4c3u + tail_accum + 0x0de239f5u;
-}
+static const uint32_t k_final_state_mul_39d8_a[4] = {
+    0x53149187u, 0xc2833a6fu, 0x14b0f18bu, 0xfd816061u
+};
+static const uint32_t k_final_state_mul_39d8_b[4] = {
+    0x7a01a4c3u, 0xde4a21b1u, 0x9d800529u, 0x967f2c55u
+};
 
 void l3_authorization_finalizer_feedback_state_a_stage06_regenerate_with_adds(
     const uint32_t auStack_128_words[L3_AUTH_FINAL_STATE_FIRST_LOOP_PAIRS],
@@ -3122,14 +3017,15 @@ void l3_authorization_finalizer_feedback_state_a_stage06_regenerate_with_adds(
     memcpy(out->auStack_128_words, auStack_128_words, sizeof(out->auStack_128_words));
     out->tail_accum = tail_accum;
 
-    l3_authorization_finalizer_make_reduction_state_from_stage05_reduced_words(
+    l3_auth_make_reduction_state13(
         auStack_128_words, tail_accum, add_a, add_b, add_c,
-        out->local_328_stream);
+        k_final_state_mul_39d8_a, k_final_state_mul_39d8_b,
+        0x7a01a4c3u, 0x0de239f5u, out->local_328_stream);
 
     uint32_t driver = 0x33ae498fu;
     for (unsigned lane = 0; lane < L3_AUTH_FINAL_STATE_FIRST_LOOP_PAIRS; ++lane) {
         const uint32_t cur = driver * 0x7fbc57a9u + out->local_328_stream[lane];
-        const uint32_t reduced = l3_authorization_finalizer_reduce_vector_stage06(
+        const uint32_t reduced = l3_auth_reduce_nibbles(k_final_state_fold_39d8, 
             cur * 0x391b2111u + 0xe0f03a67u, 7u);
 
         out->driver39d8[lane] = cur;
@@ -3144,7 +3040,7 @@ void l3_authorization_finalizer_feedback_state_a_stage06_regenerate_with_adds(
             break;
         }
 
-        const uint32_t reduced_next = l3_authorization_finalizer_reduce_vector_stage06(reduced, 1u);
+        const uint32_t reduced_next = l3_auth_reduce_nibbles(k_final_state_fold_39d8, reduced, 1u);
         driver = reduced * 0x231ee309u +
                  reduced_next * 0xce11cf70u +
                  0x3758a166u;
@@ -3203,20 +3099,13 @@ static const uint32_t k_final_state_pred_1df0[8] = {
     0x3ed17c83u, 0x7f6aa3a1u, 0x6fb282a0u, 0x4bd460beu
 };
 
-uint32_t l3_authorization_finalizer_reduce_vector_stage07(uint32_t value, unsigned rounds) {
-    for (unsigned i = 0; i < rounds; ++i) {
-        value = k_final_state_fold_3a18[value & 0x0fu] + (value >> 4);
-    }
-    return value;
-}
-
 static uint32_t l3_authorization_finalizer_predicate_stage07_lane_driver(uint32_t word,
                                                    uint32_t *affine_out,
                                                    uint32_t *reduced_out,
                                                    uint32_t *base_out) {
     const uint32_t affine = (word >> 1) * 0x989c2a47u +
                             k_final_state_pred_parity_77c[word & 1u];
-    const uint32_t reduced = l3_authorization_finalizer_reduce_vector_stage07(
+    const uint32_t reduced = l3_auth_reduce_nibbles(k_final_state_fold_3a18, 
         affine * 0x6ef68f3fu + 0x2536884eu, 7u);
     const uint32_t base = affine * 0xcd5651dbu + 0x66d8bd2fu;
     if (affine_out) *affine_out = affine;
@@ -3352,27 +3241,13 @@ static const uint32_t k_final_state_pred_1f30[8] = {
     0xb8cd659bu, 0x377c3a83u, 0x38e0a7b3u, 0x25cc3e97u
 };
 
-uint32_t l3_authorization_finalizer_reduce_vector_stage08(uint32_t value, unsigned rounds) {
-    for (unsigned i = 0; i < rounds; ++i) {
-        value = k_final_state_fold_3a58[value & 0x0fu] + (value >> 4);
-    }
-    return value;
-}
-
-uint32_t l3_authorization_finalizer_reduce_vector_stage09(uint32_t value, unsigned rounds) {
-    for (unsigned i = 0; i < rounds; ++i) {
-        value = k_final_state_fold_3a98[value & 0x0fu] + (value >> 4);
-    }
-    return value;
-}
-
 static uint32_t l3_authorization_finalizer_predicate_stage08_lane_driver(uint32_t word,
                                                    uint32_t *affine_out,
                                                    uint32_t *reduced_out,
                                                    uint32_t *base_out) {
     const uint32_t affine = (word >> 1) * 0x388f985fu +
                             k_final_state_pred_parity_784[word & 1u];
-    const uint32_t reduced = l3_authorization_finalizer_reduce_vector_stage08(
+    const uint32_t reduced = l3_auth_reduce_nibbles(k_final_state_fold_3a58, 
         affine * 0x5af7d965u + 0x3aa689c6u, 7u);
     const uint32_t base = affine * 0x09bcae2du - 0x63a058bdu;
     if (affine_out) *affine_out = affine;
@@ -3388,7 +3263,7 @@ static uint32_t l3_authorization_finalizer_predicate_stage09_lane_driver(uint32_
                                                    uint32_t *base_out) {
     const uint32_t affine = (word >> 1) * 0xa3defe3bu +
                             k_final_state_pred_parity_78c[word & 1u];
-    const uint32_t reduced = l3_authorization_finalizer_reduce_vector_stage09(
+    const uint32_t reduced = l3_auth_reduce_nibbles(k_final_state_fold_3a98, 
         affine * 0x07a985f1u + 0x24a748e6u, 7u);
     const uint32_t base = affine * 0x5f0f34b1u + 0x4eed977du;
     if (affine_out) *affine_out = affine;
@@ -3530,34 +3405,12 @@ static const uint32_t k_final_state_add_3ad8_b_default[4] = {
 static const uint32_t k_final_state_add_3ad8_c_default[4] = {
     0x882957a4u, 0xb9bdfb49u, 0x0aaaed1cu, 0xdfad5836u
 };
-
-uint32_t l3_authorization_finalizer_reduce_vector_stage10(uint32_t value, unsigned rounds) {
-    for (unsigned i = 0; i < rounds; ++i) {
-        value = k_final_state_fold_3ad8[value & 0x0fu] + (value >> 4);
-    }
-    return value;
-}
-
-static void l3_authorization_finalizer_make_reduction_state_from_stage09_reduced_words(
-    const uint32_t au[L3_AUTH_FINAL_STATE_FIRST_LOOP_PAIRS],
-    uint32_t tail_accum,
-    const uint32_t add_a[4],
-    const uint32_t add_b[4],
-    const uint32_t add_c[4],
-    uint32_t out[L3_AUTH_FINAL_STATE_FIRST_LOOP_PAIRS]) {
-    static const uint32_t mul_a[4] = {
-        0x56283e59u, 0xed67371bu, 0xf18f50bbu, 0x3781f8d7u
-    };
-    static const uint32_t mul_b[4] = {
-        0x1ccdb6b9u, 0x32ff5493u, 0x42b63d6du, 0x39dbdc49u
-    };
-    for (unsigned i = 0; i < 4u; ++i) {
-        out[i] = add_a[i] + au[i] * mul_a[i];
-        out[4u + i] = add_b[i] + au[4u + i] * mul_b[i];
-        out[8u + i] = add_c[i] + au[8u + i] * mul_a[i];
-    }
-    out[12] = au[12] * 0x1ccdb6b9u + tail_accum + 0x74abc977u;
-}
+static const uint32_t k_final_state_mul_3ad8_a[4] = {
+    0x56283e59u, 0xed67371bu, 0xf18f50bbu, 0x3781f8d7u
+};
+static const uint32_t k_final_state_mul_3ad8_b[4] = {
+    0x1ccdb6b9u, 0x32ff5493u, 0x42b63d6du, 0x39dbdc49u
+};
 
 void l3_authorization_finalizer_feedback_state_b_stage10_regenerate_with_adds(
     const uint32_t auStack_128_words[L3_AUTH_FINAL_STATE_FIRST_LOOP_PAIRS],
@@ -3571,14 +3424,15 @@ void l3_authorization_finalizer_feedback_state_b_stage10_regenerate_with_adds(
     memcpy(out->auStack_128_words, auStack_128_words, sizeof(out->auStack_128_words));
     out->tail_accum = tail_accum;
 
-    l3_authorization_finalizer_make_reduction_state_from_stage09_reduced_words(
+    l3_auth_make_reduction_state13(
         auStack_128_words, tail_accum, add_a, add_b, add_c,
-        out->local_328_stream);
+        k_final_state_mul_3ad8_a, k_final_state_mul_3ad8_b,
+        0x1ccdb6b9u, 0x74abc977u, out->local_328_stream);
 
     uint32_t driver = 0x9259fe39u; /* native -0x6da601c7 */
     for (unsigned lane = 0; lane < L3_AUTH_FINAL_STATE_FIRST_LOOP_PAIRS; ++lane) {
         const uint32_t cur = driver * 0x6ff16b3du + out->local_328_stream[lane];
-        const uint32_t reduced = l3_authorization_finalizer_reduce_vector_stage10(
+        const uint32_t reduced = l3_auth_reduce_nibbles(k_final_state_fold_3ad8, 
             cur * 0x5457cb13u + 0x56616a83u, 7u);
 
         out->driver3ad8[lane] = cur;
@@ -3593,7 +3447,7 @@ void l3_authorization_finalizer_feedback_state_b_stage10_regenerate_with_adds(
             break;
         }
 
-        const uint32_t reduced_next = l3_authorization_finalizer_reduce_vector_stage10(reduced, 1u);
+        const uint32_t reduced_next = l3_auth_reduce_nibbles(k_final_state_fold_3ad8, reduced, 1u);
         driver = reduced * 0x28613137u +
                  reduced_next * 0x79ecec90u +
                  0x172f69b3u;
@@ -3654,20 +3508,6 @@ static const uint32_t k_final_state_pred_2010[8] = {
     0x720dc992u, 0xafdfb18au, 0x773e7a36u, 0xa75d4e57u
 };
 
-uint32_t l3_authorization_finalizer_reduce_vector_stage11(uint32_t value, unsigned rounds) {
-    for (unsigned i = 0; i < rounds; ++i) {
-        value = k_final_state_fold_3b18[value & 0x0fu] + (value >> 4);
-    }
-    return value;
-}
-
-uint32_t l3_authorization_finalizer_reduce_vector_stage12(uint32_t value, unsigned rounds) {
-    for (unsigned i = 0; i < rounds; ++i) {
-        value = k_final_state_fold_3b58[value & 0x0fu] + (value >> 4);
-    }
-    return value;
-}
-
 void l3_authorization_finalizer_predicate_stage11_scan(
     const uint32_t local_1bc_words[L3_AUTH_FINAL_STATE_FIRST_LOOP_PAIRS],
     const uint32_t local_1f0_words[L3_AUTH_FINAL_STATE_FIRST_LOOP_PAIRS],
@@ -3691,7 +3531,7 @@ void l3_authorization_finalizer_predicate_stage11_scan(
             out->sentinel_mask |= 1u << (unsigned)lane;
             continue;
         }
-        const uint32_t reduced = l3_authorization_finalizer_reduce_vector_stage11(mix, 7u);
+        const uint32_t reduced = l3_auth_reduce_nibbles(k_final_state_fold_3b18, mix, 7u);
         out->lane_reduced[lane] = reduced;
         out->selected_index = (uint32_t)lane;
         out->selected_mix = mix;
@@ -3760,7 +3600,7 @@ void l3_authorization_finalizer_lane_state_a_stage12_rewrite(
     uint32_t scalar = 0x125e3effu;
     for (unsigned lane = 0; lane < L3_AUTH_FINAL_STATE_FIRST_LOOP_PAIRS; ++lane) {
         const uint32_t cur = scalar * 0xab827e93u + driver;
-        const uint32_t reduced = l3_authorization_finalizer_reduce_vector_stage12(
+        const uint32_t reduced = l3_auth_reduce_nibbles(k_final_state_fold_3b58, 
             cur * 0x94259d35u + 0x77ab6286u, 7u);
         out->driver3b58[lane] = cur;
         out->reduced3b58[lane] = reduced;
@@ -3773,7 +3613,7 @@ void l3_authorization_finalizer_lane_state_a_stage12_rewrite(
             driver = cur;
             break;
         }
-        const uint32_t reduced_next = l3_authorization_finalizer_reduce_vector_stage12(reduced, 1u);
+        const uint32_t reduced_next = l3_auth_reduce_nibbles(k_final_state_fold_3b58, reduced, 1u);
         driver = out->local_328_stream[lane + 1u];
         scalar = reduced * 0xa39c638fu +
                  reduced_next * 0xc639c710u +
@@ -3800,13 +3640,6 @@ static const uint32_t k_final_state_pred_2130[8] = {
     0xb3c188c2u, 0xc9623d61u, 0x337016e3u, 0xc76cd56au,
     0xb03d860du, 0x68bf8953u, 0x24c97cdau, 0x484a18dcu
 };
-
-uint32_t l3_authorization_finalizer_reduce_vector_stage15(uint32_t value, unsigned rounds) {
-    for (unsigned i = 0; i < rounds; ++i) {
-        value = k_final_state_fold_3c58[value & 0x0fu] + (value >> 4);
-    }
-    return value;
-}
 
 static void l3_authorization_finalizer_make_reduction_state_from_1bc_1f0_stage15(
     const uint32_t local_1bc[L3_AUTH_FINAL_STATE_FIRST_LOOP_PAIRS],
@@ -3865,7 +3698,7 @@ void l3_authorization_finalizer_lane_state_b_stage15_rewrite(
     uint32_t scalar = 0x1d09933du;
     for (unsigned lane = 0; lane < L3_AUTH_FINAL_STATE_FIRST_LOOP_PAIRS; ++lane) {
         const uint32_t cur = scalar * 0xfb7da4d9u + driver;
-        const uint32_t reduced = l3_authorization_finalizer_reduce_vector_stage15(
+        const uint32_t reduced = l3_auth_reduce_nibbles(k_final_state_fold_3c58, 
             cur * 0xbe4ecd97u + 0x0b7a10ad3u, 7u);
 
         out->driver3c58[lane] = cur;
@@ -3879,7 +3712,7 @@ void l3_authorization_finalizer_lane_state_b_stage15_rewrite(
             driver = cur;
             break;
         }
-        const uint32_t reduced_next = l3_authorization_finalizer_reduce_vector_stage15(reduced, 1u);
+        const uint32_t reduced_next = l3_auth_reduce_nibbles(k_final_state_fold_3c58, reduced, 1u);
         driver = out->local_328_stream[lane + 1u];
         scalar = reduced * 0x4ac2feffu +
                  reduced_next * 0x53d01010u +
@@ -3925,20 +3758,6 @@ static const uint32_t k_final_state_pred_21b0[8] = {
     0x068f2d6eu, 0x3feba745u, 0xc278deb8u, 0x00ea1e75u
 };
 
-uint32_t l3_authorization_finalizer_reduce_vector_stage16(uint32_t value, unsigned rounds) {
-    for (unsigned i = 0; i < rounds; ++i) {
-        value = k_final_state_fold_3c98[value & 0x0fu] + (value >> 4);
-    }
-    return value;
-}
-
-uint32_t l3_authorization_finalizer_reduce_vector_stage17(uint32_t value, unsigned rounds) {
-    for (unsigned i = 0; i < rounds; ++i) {
-        value = k_final_state_fold_3cd8[value & 0x0fu] + (value >> 4);
-    }
-    return value;
-}
-
 void l3_authorization_finalizer_feedback_state_b_stage16_optional_rewrite_from_stream(
     const uint32_t local_188_words[L3_AUTH_FINAL_STATE_FIRST_LOOP_PAIRS],
     const uint32_t local_258_in[L3_AUTH_FINAL_STATE_FIRST_LOOP_PAIRS],
@@ -3959,7 +3778,7 @@ void l3_authorization_finalizer_feedback_state_b_stage16_optional_rewrite_from_s
     uint32_t scalar = 0x4d27f55bu;
     for (unsigned lane = 0; lane < L3_AUTH_FINAL_STATE_FIRST_LOOP_PAIRS; ++lane) {
         const uint32_t cur = scalar * 0xfc566671u + driver;
-        const uint32_t reduced = l3_authorization_finalizer_reduce_vector_stage16(
+        const uint32_t reduced = l3_auth_reduce_nibbles(k_final_state_fold_3c98, 
             cur * 0xe9e17f37u + 0xb50a7050u, 7u);
 
         out->driver3c98[lane] = cur;
@@ -3973,7 +3792,7 @@ void l3_authorization_finalizer_feedback_state_b_stage16_optional_rewrite_from_s
             driver = cur;
             break;
         }
-        const uint32_t reduced_next = l3_authorization_finalizer_reduce_vector_stage16(reduced, 1u);
+        const uint32_t reduced_next = l3_auth_reduce_nibbles(k_final_state_fold_3c98, reduced, 1u);
         driver = local_328_stream[lane + 1u];
         scalar = reduced * 0x97614877u +
                  reduced_next * 0x89eb7890u +
@@ -3997,7 +3816,7 @@ void l3_authorization_finalizer_feedback_state_b_stage17_rewrite_from_stream(
     uint32_t scalar = 0x4edfac3cu;
     for (unsigned lane = 0; lane < L3_AUTH_FINAL_STATE_FIRST_LOOP_PAIRS; ++lane) {
         const uint32_t cur = scalar * 0x10b16cb3u + driver;
-        const uint32_t reduced = l3_authorization_finalizer_reduce_vector_stage17(
+        const uint32_t reduced = l3_auth_reduce_nibbles(k_final_state_fold_3cd8, 
             cur * 0xba6394e5u + 0x9535053du, 7u);
 
         out->driver3cd8[lane] = cur;
@@ -4011,7 +3830,7 @@ void l3_authorization_finalizer_feedback_state_b_stage17_rewrite_from_stream(
             driver = cur;
             break;
         }
-        const uint32_t reduced_next = l3_authorization_finalizer_reduce_vector_stage17(reduced, 1u);
+        const uint32_t reduced_next = l3_auth_reduce_nibbles(k_final_state_fold_3cd8, reduced, 1u);
         driver = local_328_stream[lane + 1u];
         scalar = reduced * 0xf69ac3dfu +
                  reduced_next * 0x9653c210u +
@@ -4197,20 +4016,6 @@ static const uint32_t k_final_state_pred_20f0[8] = {
     0xadfc558au, 0x9900eeb3u, 0xdc0ed192u, 0x520acb1au
 };
 
-uint32_t l3_authorization_finalizer_reduce_vector_stage13(uint32_t value, unsigned rounds) {
-    for (unsigned i = 0; i < rounds; ++i) {
-        value = k_final_state_fold_3bd8[value & 0x0fu] + (value >> 4);
-    }
-    return value;
-}
-
-uint32_t l3_authorization_finalizer_reduce_vector_stage14(uint32_t value, unsigned rounds) {
-    for (unsigned i = 0; i < rounds; ++i) {
-        value = k_final_state_fold_3c18[value & 0x0fu] + (value >> 4);
-    }
-    return value;
-}
-
 void l3_authorization_finalizer_feedback_state_a_stage13_optional_rewrite_from_stream(
     const uint32_t local_188_words[L3_AUTH_FINAL_STATE_FIRST_LOOP_PAIRS],
     const uint32_t local_258_words[L3_AUTH_FINAL_STATE_FIRST_LOOP_PAIRS],
@@ -4231,7 +4036,7 @@ void l3_authorization_finalizer_feedback_state_a_stage13_optional_rewrite_from_s
     uint32_t scalar = 0u - 0x0e075f76u;
     for (unsigned lane = 0; lane < L3_AUTH_FINAL_STATE_FIRST_LOOP_PAIRS; ++lane) {
         const uint32_t cur = scalar * (0u - 0x051c4877u) + driver;
-        const uint32_t reduced = l3_authorization_finalizer_reduce_vector_stage13(
+        const uint32_t reduced = l3_auth_reduce_nibbles(k_final_state_fold_3bd8, 
             cur * (0u - 0x72c02333u) + 0x0c004d07u, 7u);
 
         out->driver3bd8[lane] = cur;
@@ -4245,7 +4050,7 @@ void l3_authorization_finalizer_feedback_state_a_stage13_optional_rewrite_from_s
             driver = cur;
             break;
         }
-        const uint32_t reduced_next = l3_authorization_finalizer_reduce_vector_stage13(reduced, 1u);
+        const uint32_t reduced_next = l3_auth_reduce_nibbles(k_final_state_fold_3bd8, reduced, 1u);
         driver = local_328_stream[lane + 1u];
         scalar = reduced * (0u - 0x35ac6663u) +
                  reduced_next * 0x5ac66630u +
@@ -4269,7 +4074,7 @@ void l3_authorization_finalizer_feedback_state_a_stage14_rewrite_from_stream(
     uint32_t scalar = 0x0910f816u;
     for (unsigned lane = 0; lane < L3_AUTH_FINAL_STATE_FIRST_LOOP_PAIRS; ++lane) {
         const uint32_t cur = scalar * 0x65dee01bu + driver;
-        const uint32_t reduced = l3_authorization_finalizer_reduce_vector_stage14(
+        const uint32_t reduced = l3_auth_reduce_nibbles(k_final_state_fold_3c18, 
             cur * (0u - 0x461801d5u) + 0x54e7d96fu, 7u);
 
         out->driver3c18[lane] = cur;
@@ -4283,7 +4088,7 @@ void l3_authorization_finalizer_feedback_state_a_stage14_rewrite_from_stream(
             driver = cur;
             break;
         }
-        const uint32_t reduced_next = l3_authorization_finalizer_reduce_vector_stage14(reduced, 1u);
+        const uint32_t reduced_next = l3_auth_reduce_nibbles(k_final_state_fold_3c18, reduced, 1u);
         driver = local_328_stream[lane + 1u];
         scalar = reduced * (0u - 0x46379847u) +
                  reduced_next * 0x63798470u +
@@ -4973,11 +4778,19 @@ void l3_authorization_finalizer_predicate_run_from_constructor_derived(
     l3_authorization_finalizer_predicate_run_from_constructor_state *out) {
     l3_authorization_finalizer_live_context live;
     if (!local_35c || !local_3c4 || !parent_words || !out) return;
-    memset(out, 0, sizeof(*out));
     memset(&live, 0, sizeof(live));
 
+    /* Construct the initial state before clearing the following run storage.
+     * Besides avoiding a redundant clear of initial, this permits inputs to
+     * reside in later bytes of the same lifetime-reused workspace. */
     l3_authorization_finalizer_predicate_initial_state_construct(
         local_35c, local_3c4, parent_words, &out->initial);
+    memset((uint8_t *)out + offsetof(
+               l3_authorization_finalizer_predicate_run_from_constructor_state,
+               run),
+           0, sizeof(*out) - offsetof(
+               l3_authorization_finalizer_predicate_run_from_constructor_state,
+               run));
     l3_authorization_finalizer_live_context_derive(
         parent_words, out->initial.local_b8_words,
         out->initial.local_188_words, &live);
@@ -5246,9 +5059,370 @@ typedef struct {
     l3_authorization_finalizer_pair_array13 postconv_sources;
     l3_authorization_finalizer_postconv_loop_run13_state postconv_loop;
     l3_authorization_finalizer_reduce37b0_state reduce37b0;
+} l3_authorization_finalizer_prefix_workspace;
 
+/* The trace-preserving entry retains the complete materialized predicate
+ * snapshot for host probes. */
+typedef union {
+    l3_authorization_finalizer_prefix_workspace prefix;
     l3_authorization_finalizer_predicate_run_from_constructor_state predicate;
-} l3_authorization_finalizer_derived_workspace;
+} l3_authorization_finalizer_full_workspace;
+
+/* The production entry keeps only live state.  Each generated stage still
+ * executes through the exact recovered helper, but mutually exclusive stage
+ * snapshots share this one region and trace-only input/output copies do not
+ * survive the call. */
+typedef union {
+    l3_authorization_finalizer_predicate_initial_state initial;
+    l3_authorization_finalizer_terminal_gate_raw40_state terminal;
+    l3_authorization_finalizer_lane_state_a_stage03_state stage03;
+    l3_authorization_finalizer_feedback_state_a_stage04_state stage04;
+    l3_authorization_finalizer_feedback_state_a_stage05_state stage05;
+    l3_authorization_finalizer_feedback_state_a_stage06_state stage06;
+    l3_authorization_finalizer_lane_state_b_stage07_state stage07;
+    l3_authorization_finalizer_feedback_state_b_stage08_state stage08;
+    l3_authorization_finalizer_feedback_state_b_stage09_state stage09;
+    l3_authorization_finalizer_feedback_state_b_stage10_state stage10;
+    l3_authorization_finalizer_lane_state_a_stage12_state stage12;
+    l3_authorization_finalizer_feedback_state_a_stage13_stage14_affine_state
+        stage13_14;
+    l3_authorization_finalizer_lane_state_b_stage15_state stage15;
+    l3_authorization_finalizer_feedback_state_b_stage16_stage17_affine_state
+        stage16_17;
+} l3_authorization_finalizer_compact_step_workspace;
+
+typedef struct {
+    l3_authorization_finalizer_compact_step_workspace step;
+    l3_authorization_finalizer_live_context live;
+    uint32_t current_1bc[L3_AUTH_FINAL_STATE_FIRST_LOOP_PAIRS];
+    uint32_t current_1f0[L3_AUTH_FINAL_STATE_FIRST_LOOP_PAIRS];
+    uint32_t current_188[L3_AUTH_FINAL_STATE_FIRST_LOOP_PAIRS];
+    uint32_t current_258[L3_AUTH_FINAL_STATE_FIRST_LOOP_PAIRS];
+    uint32_t final_stop_reason;
+    uint32_t terminal_taken;
+    uint32_t predicate_cycles;
+    uint8_t raw40[L3_AUTH_FINAL_STATE_RAW40_LEN];
+} l3_authorization_finalizer_compact_predicate_workspace;
+
+typedef union {
+    l3_authorization_finalizer_prefix_workspace prefix;
+    l3_authorization_finalizer_compact_predicate_workspace predicate;
+} l3_authorization_finalizer_compact_workspace;
+
+_Static_assert(
+    offsetof(l3_authorization_finalizer_prefix_workspace, reduce3130) +
+            offsetof(l3_authorization_finalizer_reduce3130_state, local_35c) >=
+        sizeof(l3_authorization_finalizer_predicate_initial_state),
+    "prefix local_35c must survive predicate-initial construction");
+_Static_assert(
+    offsetof(l3_authorization_finalizer_prefix_workspace, reduce37b0) +
+            offsetof(l3_authorization_finalizer_reduce37b0_state, local_3c4) >=
+        sizeof(l3_authorization_finalizer_predicate_initial_state),
+    "prefix local_3c4 must survive predicate-initial construction");
+
+_Static_assert(
+    sizeof(l3_authorization_finalizer_compact_predicate_workspace) <=
+        sizeof(l3_authorization_finalizer_prefix_workspace),
+    "compact predicate state must fit the prefix lifetime");
+
+static void l3_authorization_finalizer_run_prefix(
+    const uint32_t param2_words[L3_AUTH_FINAL_STATE_FIRST_LOOP_PAIRS],
+    const uint32_t param3_words[L3_AUTH_FINAL_STATE_FIRST_LOOP_PAIRS],
+    const uint32_t parent_words[L3_AUTH_FINAL_STATE_FIRST_LOOP_PAIRS],
+    uint32_t parent_pair_lo,
+    uint32_t parent_pair_hi,
+    l3_authorization_finalizer_prefix_workspace *prefix) {
+    l3_authorization_finalizer_seed_param2_pairs26(param2_words, prefix->param2_seed26);
+    l3_authorization_finalizer_param2_seed26_to_first_loop_windows(
+        prefix->param2_seed26, &prefix->first_initial);
+    l3_authorization_finalizer_first_loop_sources_from_parent(
+        parent_words, &prefix->first_sources);
+    l3_authorization_finalizer_first_loop_run13_exact_sources(
+        parent_pair_lo, parent_pair_hi,
+        &prefix->first_sources, &prefix->first_initial, &prefix->first_loop);
+    l3_authorization_finalizer_reduce_workspace_first(
+        prefix->first_loop.arrays.auStack_2c8, &prefix->reduce3130);
+
+    l3_authorization_finalizer_seed_param3_pairs26(param3_words, prefix->param3_seed26);
+    l3_authorization_finalizer_param3_seed26_to_second_loop_windows(
+        prefix->param3_seed26, &prefix->second_initial);
+    l3_authorization_finalizer_second_loop_sources_from_parent(
+        parent_words, &prefix->second_sources);
+    l3_authorization_finalizer_second_loop_run13_exact_sources(
+        parent_pair_lo, parent_pair_hi,
+        &prefix->second_sources, &prefix->second_initial, &prefix->second_loop);
+    l3_authorization_finalizer_reduce_workspace_second(
+        prefix->second_loop.arrays.auStack_2c8, &prefix->reduce3430);
+
+    l3_authorization_finalizer_post_convolution_seed_staging(
+        param3_words, prefix->reduce3430.local_390,
+        &prefix->post_convolution_seed);
+    l3_authorization_finalizer_post_convolution_convolution_range_correct(
+        &prefix->post_convolution_seed, &prefix->post_convolution_conv);
+    l3_authorization_finalizer_post_convolution_convolution_to_windows(
+        &prefix->post_convolution_conv, &prefix->postconv_windows);
+    l3_authorization_finalizer_make_postconv_sources_from_parent(
+        parent_words, &prefix->postconv_sources);
+    l3_authorization_finalizer_postconv_loop_run13_exact_sources(
+        parent_pair_lo, parent_pair_hi,
+        &prefix->postconv_sources, &prefix->postconv_windows.arrays,
+        &prefix->postconv_loop);
+    l3_authorization_finalizer_reduce_workspace_post_convolution(
+        prefix->postconv_loop.arrays.auStack_2c8, &prefix->reduce37b0);
+}
+
+static uint32_t l3_authorization_finalizer_compact_preloop(
+    l3_authorization_finalizer_compact_predicate_workspace *ws,
+    uint32_t max_1bc188_cycles,
+    uint32_t max_1f0258_cycles) {
+    l3_authorization_finalizer_terminal_gate_raw40(
+        ws->current_1f0, ws->current_188, &ws->step.terminal);
+    if (ws->step.terminal.terminal_taken) {
+        memcpy(ws->raw40, ws->step.terminal.raw40, sizeof(ws->raw40));
+        return L3_AUTH_FINAL_STATE_PRELOOP_TERMINAL_RAW40;
+    }
+
+    uint32_t cycles = 0u;
+    while (((ws->current_1bc[0] * 0x00005785u) & 1u) == 0u) {
+        if (cycles >= max_1bc188_cycles) {
+            return L3_AUTH_FINAL_STATE_PRELOOP_CYCLE_LIMIT;
+        }
+
+        l3_authorization_finalizer_lane_state_a_even_stage03_refresh(
+            ws->current_1bc, &ws->step.stage03);
+        if (!ws->step.stage03.branch_applicable) break;
+        memcpy(ws->current_1bc, ws->step.stage03.output_words,
+               sizeof(ws->current_1bc));
+
+        if (ws->current_188[0] & 1u) {
+            l3_authorization_finalizer_feedback_state_a_odd_stage04_refresh(
+                ws->current_188, &ws->step.stage04);
+            if (ws->step.stage04.branch_applicable) {
+                memcpy(ws->current_188, ws->step.stage04.output_words,
+                       sizeof(ws->current_188));
+            }
+        } else {
+            uint32_t reduced_words[L3_AUTH_FINAL_STATE_FIRST_LOOP_PAIRS];
+            l3_authorization_finalizer_feedback_state_a_even_stage05_refresh_reduced_words(
+                ws->current_188, &ws->step.stage05);
+            if (ws->step.stage05.branch_applicable) {
+                memcpy(reduced_words, ws->step.stage05.auStack_128_words,
+                       sizeof(reduced_words));
+                l3_authorization_finalizer_feedback_state_a_stage06_regenerate_with_adds(
+                    reduced_words, ws->live.tail_accum_39d8,
+                    ws->live.add_39d8_a, ws->live.add_39d8_b,
+                    ws->live.add_39d8_c, &ws->step.stage06);
+                memcpy(ws->current_188, ws->step.stage06.local_188_words,
+                       sizeof(ws->current_188));
+            }
+        }
+        ++cycles;
+    }
+
+    cycles = 0u;
+    while (((ws->current_1f0[0] * 0x0000c665u) & 1u) != 0u) {
+        if (cycles >= max_1f0258_cycles) {
+            return L3_AUTH_FINAL_STATE_PRELOOP_CYCLE_LIMIT;
+        }
+
+        l3_authorization_finalizer_lane_state_b_odd_stage07_refresh(
+            ws->current_1f0, &ws->step.stage07);
+        if (ws->step.stage07.branch_applicable) {
+            memcpy(ws->current_1f0, ws->step.stage07.output_words,
+                   sizeof(ws->current_1f0));
+        }
+
+        if (ws->current_258[0] & 1u) {
+            l3_authorization_finalizer_feedback_state_b_odd_stage08_refresh(
+                ws->current_258, &ws->step.stage08);
+            if (ws->step.stage08.branch_applicable) {
+                memcpy(ws->current_258, ws->step.stage08.output_words,
+                       sizeof(ws->current_258));
+            }
+        } else {
+            uint32_t reduced_words[L3_AUTH_FINAL_STATE_FIRST_LOOP_PAIRS];
+            l3_authorization_finalizer_feedback_state_b_even_stage09_refresh_reduced_words(
+                ws->current_258, &ws->step.stage09);
+            if (ws->step.stage09.branch_applicable) {
+                memcpy(reduced_words, ws->step.stage09.auStack_128_words,
+                       sizeof(reduced_words));
+                l3_authorization_finalizer_feedback_state_b_stage10_regenerate_with_adds(
+                    reduced_words, ws->live.tail_accum_3ad8,
+                    ws->live.add_3ad8_a, ws->live.add_3ad8_b,
+                    ws->live.add_3ad8_c, &ws->step.stage10);
+                memcpy(ws->current_258, ws->step.stage10.local_258_words,
+                       sizeof(ws->current_258));
+            }
+        }
+        ++cycles;
+    }
+
+    return L3_AUTH_FINAL_STATE_PRELOOP_READY_FOR_DRIVER;
+}
+
+static uint32_t l3_authorization_finalizer_compact_predicate_cycle(
+    l3_authorization_finalizer_compact_predicate_workspace *ws,
+    const uint32_t parent_words[L3_AUTH_FINAL_STATE_FIRST_LOOP_PAIRS]) {
+    l3_authorization_finalizer_terminal_gate_raw40(
+        ws->current_1f0, ws->current_188, &ws->step.terminal);
+    if (ws->step.terminal.terminal_taken) {
+        memcpy(ws->raw40, ws->step.terminal.raw40, sizeof(ws->raw40));
+        return L3_AUTH_FINAL_STATE_CYCLE_TERMINAL_RAW40;
+    }
+
+    l3_authorization_finalizer_lane_state_a_stage12_rewrite(
+        ws->current_1bc, ws->current_1f0, &ws->step.stage12);
+    if (ws->step.stage12.scan.branch_applicable &&
+        !ws->step.stage12.scan.goes_to_c58_final_path &&
+        ws->step.stage12.branch_applicable) {
+        memcpy(ws->current_1bc, ws->step.stage12.output_1bc_words,
+               sizeof(ws->current_1bc));
+        l3_authorization_finalizer_feedback_state_a_stage13_stage14_rewrite_materialized(
+            ws->current_188, ws->current_258, parent_words,
+            ws->live.late_parent_q_3b58_words,
+            ws->live.preserved_tail12_3b58,
+            &ws->step.stage13_14);
+        memcpy(ws->current_188,
+               ws->step.stage13_14.after_3c18.output_188_words,
+               sizeof(ws->current_188));
+        return L3_AUTH_FINAL_STATE_CYCLE_3B58_STEP;
+    }
+
+    l3_authorization_finalizer_lane_state_b_stage15_rewrite(
+        ws->current_1bc, ws->current_1f0, &ws->step.stage15);
+    if (ws->step.stage15.scan.branch_applicable &&
+        !ws->step.stage15.scan.goes_to_3b58_rewrite &&
+        ws->step.stage15.branch_applicable) {
+        memcpy(ws->current_1f0, ws->step.stage15.output_1f0_words,
+               sizeof(ws->current_1f0));
+        l3_authorization_finalizer_feedback_state_b_stage16_stage17_rewrite_materialized(
+            ws->current_188, ws->current_258, parent_words,
+            ws->live.late_parent_q5_3c58_words,
+            &ws->step.stage16_17);
+        memcpy(ws->current_258,
+               ws->step.stage16_17.after_3cd8.output_258_words,
+               sizeof(ws->current_258));
+        return L3_AUTH_FINAL_STATE_CYCLE_3C58_STEP;
+    }
+
+    return L3_AUTH_FINAL_STATE_CYCLE_NO_PROGRESS;
+}
+
+static void l3_authorization_finalizer_compact_predicate_run(
+    const uint32_t local_35c[L3_AUTH_FINAL_STATE_FIRST_LOOP_PAIRS],
+    const uint32_t local_3c4[L3_AUTH_FINAL_STATE_FIRST_LOOP_PAIRS],
+    const uint32_t parent_words[L3_AUTH_FINAL_STATE_FIRST_LOOP_PAIRS],
+    uint32_t max_1bc188_cycles,
+    uint32_t max_1f0258_cycles,
+    uint32_t max_predicate_cycles,
+    l3_authorization_finalizer_compact_predicate_workspace *ws) {
+    l3_authorization_finalizer_predicate_initial_state_construct(
+        local_35c, local_3c4, parent_words, &ws->step.initial);
+    l3_authorization_finalizer_live_context_derive(
+        parent_words, ws->step.initial.local_b8_words,
+        ws->step.initial.local_188_words, &ws->live);
+    memcpy(ws->current_1bc, ws->step.initial.local_1bc_words,
+           sizeof(ws->current_1bc));
+    memcpy(ws->current_1f0, ws->step.initial.local_1f0_words,
+           sizeof(ws->current_1f0));
+    memcpy(ws->current_188, ws->step.initial.local_188_words,
+           sizeof(ws->current_188));
+    memcpy(ws->current_258, ws->step.initial.local_258_words,
+           sizeof(ws->current_258));
+    ws->final_stop_reason = 0u;
+    ws->terminal_taken = 0u;
+    ws->predicate_cycles = 0u;
+    memset(ws->raw40, 0, sizeof(ws->raw40));
+
+    for (uint32_t cycle_idx = 0u;; ++cycle_idx) {
+        const uint32_t preloop_stop = l3_authorization_finalizer_compact_preloop(
+            ws, max_1bc188_cycles, max_1f0258_cycles);
+        if (preloop_stop == L3_AUTH_FINAL_STATE_PRELOOP_TERMINAL_RAW40) {
+            ws->final_stop_reason = L3_AUTH_FINAL_STATE_PRELOOP_TERMINAL_RAW40;
+            ws->terminal_taken = 1u;
+            return;
+        }
+        if (preloop_stop != L3_AUTH_FINAL_STATE_PRELOOP_READY_FOR_DRIVER) {
+            ws->final_stop_reason = preloop_stop;
+            return;
+        }
+        if (cycle_idx >= max_predicate_cycles) {
+            ws->final_stop_reason =
+                0x100u + L3_AUTH_FINAL_STATE_LOOP_CYCLE_LIMIT;
+            return;
+        }
+
+        const uint32_t path = l3_authorization_finalizer_compact_predicate_cycle(
+            ws, parent_words);
+        ws->predicate_cycles = cycle_idx + 1u;
+        if (path == L3_AUTH_FINAL_STATE_CYCLE_TERMINAL_RAW40) {
+            ws->final_stop_reason =
+                0x100u + L3_AUTH_FINAL_STATE_LOOP_TERMINAL_RAW40;
+            ws->terminal_taken = 1u;
+            return;
+        }
+        if (path != L3_AUTH_FINAL_STATE_CYCLE_3B58_STEP &&
+            path != L3_AUTH_FINAL_STATE_CYCLE_3C58_STEP) {
+            ws->final_stop_reason =
+                0x100u + L3_AUTH_FINAL_STATE_LOOP_NO_PROGRESS;
+            return;
+        }
+    }
+}
+
+size_t l3_authorization_finalizer_compact_workspace_size(void) {
+    return sizeof(l3_authorization_finalizer_compact_workspace);
+}
+
+size_t l3_authorization_finalizer_compact_workspace_alignment(void) {
+    return _Alignof(l3_authorization_finalizer_compact_workspace);
+}
+
+int l3_authorization_finalize_round_result_compact_with_workspace(
+    const uint32_t param2_words[L3_AUTH_FINAL_STATE_FIRST_LOOP_PAIRS],
+    const uint32_t param3_words[L3_AUTH_FINAL_STATE_FIRST_LOOP_PAIRS],
+    const uint32_t parent_words[L3_AUTH_FINAL_STATE_FIRST_LOOP_PAIRS],
+    uint32_t parent_pair_lo,
+    uint32_t parent_pair_hi,
+    uint32_t max_1bc188_cycles,
+    uint32_t max_1f0258_cycles,
+    uint32_t max_predicate_cycles,
+    void *workspace,
+    size_t workspace_size,
+    l3_authorization_final_compact_result *out) {
+    const size_t alignment =
+        l3_authorization_finalizer_compact_workspace_alignment();
+    if (!param2_words || !param3_words || !parent_words || !workspace || !out ||
+        workspace_size < sizeof(l3_authorization_finalizer_compact_workspace) ||
+        (uintptr_t)workspace % alignment != 0u) {
+        return -1;
+    }
+    memset(out, 0, sizeof(*out));
+
+    l3_authorization_finalizer_compact_workspace *ws =
+        (l3_authorization_finalizer_compact_workspace *)workspace;
+    /* Every exact prefix stage initializes its complete typed output.  Avoid
+       clearing the lifetime union here: on the fixed path it still contains
+       the just-consumed round result, and none of those bytes are live. */
+    l3_authorization_finalizer_run_prefix(
+        param2_words, param3_words, parent_words,
+        parent_pair_lo, parent_pair_hi, &ws->prefix);
+
+    l3_authorization_finalizer_compact_predicate_run(
+        ws->prefix.reduce3130.local_35c,
+        ws->prefix.reduce37b0.local_3c4,
+        parent_words,
+        max_1bc188_cycles,
+        max_1f0258_cycles,
+        max_predicate_cycles,
+        &ws->predicate);
+
+    out->final_stop_reason = ws->predicate.final_stop_reason;
+    out->terminal_taken = ws->predicate.terminal_taken;
+    out->predicate_cycles = ws->predicate.predicate_cycles;
+    memcpy(out->raw40, ws->predicate.raw40, sizeof(out->raw40));
+    return out->terminal_taken ? 0 : -3;
+}
 
 int l3_authorization_finalize_round_result(
     const uint32_t param2_words[L3_AUTH_FINAL_STATE_FIRST_LOOP_PAIRS],
@@ -5263,50 +5437,18 @@ int l3_authorization_finalize_round_result(
     if (!param2_words || !param3_words || !parent_words || !out) return -1;
     memset(out, 0, sizeof(*out));
 
-    l3_authorization_finalizer_derived_workspace *ws =
-        (l3_authorization_finalizer_derived_workspace *)calloc(1u, sizeof(*ws));
+    l3_authorization_finalizer_full_workspace *ws =
+        (l3_authorization_finalizer_full_workspace *)calloc(1u, sizeof(*ws));
     if (!ws) return -2;
 
-    l3_authorization_finalizer_seed_param2_pairs26(param2_words, ws->param2_seed26);
-    l3_authorization_finalizer_param2_seed26_to_first_loop_windows(
-        ws->param2_seed26, &ws->first_initial);
-    l3_authorization_finalizer_first_loop_sources_from_parent(
-        parent_words, &ws->first_sources);
-    l3_authorization_finalizer_first_loop_run13_exact_sources(
-        parent_pair_lo, parent_pair_hi,
-        &ws->first_sources, &ws->first_initial, &ws->first_loop);
-    l3_authorization_finalizer_reduce_workspace_first(
-        ws->first_loop.arrays.auStack_2c8, &ws->reduce3130);
-
-    l3_authorization_finalizer_seed_param3_pairs26(param3_words, ws->param3_seed26);
-    l3_authorization_finalizer_param3_seed26_to_second_loop_windows(
-        ws->param3_seed26, &ws->second_initial);
-    l3_authorization_finalizer_second_loop_sources_from_parent(
-        parent_words, &ws->second_sources);
-    l3_authorization_finalizer_second_loop_run13_exact_sources(
-        parent_pair_lo, parent_pair_hi,
-        &ws->second_sources, &ws->second_initial, &ws->second_loop);
-    l3_authorization_finalizer_reduce_workspace_second(
-        ws->second_loop.arrays.auStack_2c8, &ws->reduce3430);
-
-    l3_authorization_finalizer_post_convolution_seed_staging(
-        param3_words, ws->reduce3430.local_390, &ws->post_convolution_seed);
-    l3_authorization_finalizer_post_convolution_convolution_range_correct(
-        &ws->post_convolution_seed, &ws->post_convolution_conv);
-    l3_authorization_finalizer_post_convolution_convolution_to_windows(
-        &ws->post_convolution_conv, &ws->postconv_windows);
-    l3_authorization_finalizer_make_postconv_sources_from_parent(
-        parent_words, &ws->postconv_sources);
-    l3_authorization_finalizer_postconv_loop_run13_exact_sources(
-        parent_pair_lo, parent_pair_hi,
-        &ws->postconv_sources, &ws->postconv_windows.arrays,
-        &ws->postconv_loop);
-    l3_authorization_finalizer_reduce_workspace_post_convolution(
-        ws->postconv_loop.arrays.auStack_2c8, &ws->reduce37b0);
+    l3_authorization_finalizer_prefix_workspace *prefix = &ws->prefix;
+    l3_authorization_finalizer_run_prefix(
+        param2_words, param3_words, parent_words,
+        parent_pair_lo, parent_pair_hi, prefix);
 
     l3_authorization_finalizer_predicate_run_from_constructor_derived(
-        ws->reduce3130.local_35c,
-        ws->reduce37b0.local_3c4,
+        prefix->reduce3130.local_35c,
+        prefix->reduce37b0.local_3c4,
         parent_words,
         max_1bc188_cycles,
         max_1f0258_cycles,

@@ -507,6 +507,10 @@ public static void config(MainActivity context) {
            scroll.setScrollbarFadingEnabled(true);
            scroll.setVerticalScrollBarEnabled(Applic.scrollbar);
             layout=scroll;
+        var top=MainActivity.systembarTop;
+         
+        var left=MainActivity.systembarStart;
+        layout.setPaddingRelative(left+(int)(density*5.0),top,MainActivity.systembarEnd+(int)(density*8.0),MainActivity.systembarBottom);
            }
         else {
             View[]  firstrow; 
@@ -527,7 +531,9 @@ public static void config(MainActivity context) {
             helpview.setOnClickListener(v-> help.help(R.string.talkhelp,context));
             layout= new Layout(context,(l,w,h)-> {
                 return new int[] {w,h};
-                },firstrow,secondrow,new View[]{speedlabel,speeds[1],speeds[0],pro},new View[]{pitchlabel,pitchs[1],pitchs[0],mediasound}, new View[]{cancel,helpview,schedules,test,save});
+                },firstrow,secondrow,new View[]{speedlabel,speeds[1],speeds[0],pro},new View[]{pitchlabel,pitchs[1],pitchs[0],mediasound}, new View[]{cancel,helpview,schedules,test,save}).portraitLayout( new View[]{active},new View[]{seplabel,separation},
+android.os.Build.VERSION.SDK_INT >= minandroid?new View[]{voicelabel,spin}:null, new View[]{touchtalk, speakmessages}, new View[]{speakalarms,mediasound},new View[]{speedlabel,speeds[1],speeds[0]},new View[]{pitchlabel,pitchs[1],pitchs[0]},  new View[]{pro,schedules},new View[]{helpview,test},new View[]{cancel,save}).systembarPadding((left,top,right,bottom)->new int[]{left+(int)(density*5.0),top,right+(int)(density*8.0),bottom});
+
             }
 
         final var lay=layout;
@@ -619,10 +625,11 @@ public static void config(MainActivity context) {
 
     //      layout.setPadding(MainActivity.systembarLeft,MainActivity.systembarTop/2,MainActivity.systembarRight,0);
     //    context.addMyContentView(layout, new ViewGroup.LayoutParams(MATCH_PARENT, WRAP_CONTENT));
-        var top=MainActivity.systembarTop;
+
+        //var top=MainActivity.systembarTop;
          
-        var left=MainActivity.systembarStart;
-          layout.setPaddingRelative(left+(int)(density*5.0),top,MainActivity.systembarEnd+(int)(density*8.0),MainActivity.systembarBottom);
+        //var left=MainActivity.systembarStart;
+      //  layout.setPaddingRelative(left+(int)(density*5.0),top,MainActivity.systembarEnd+(int)(density*8.0),MainActivity.systembarBottom);
     /*    var layheight=GlucoseCurve.getheight()-MainActivity.systembarBottom;
         var laywidth=GlucoseCurve.getwidth()-left-MainActivity.systembarRight;
         layout.setX(left); */

@@ -151,6 +151,12 @@ bool MealSave::dostarttable(FILE * handle,const Num * num) {
 //std::string_view total2date=R"(</b></td></tr><tr><td><b>)";
 
 
+//extern int datetimestr(char *buf,int buflen,time_t dat);
+static int datetimestr(char *buf,int buflen,time_t dat) {
+      struct tm tmbuf;
+      localtime_r(&dat, &tmbuf);
+       return snprintf(buf,buflen,"%04d-%02d-%02d %02d:%02d",  tmbuf.tm_year+1900,tmbuf.tm_mon+1,tmbuf.tm_mday,tmbuf.tm_hour,tmbuf.tm_min); 
+       }
 
 bool doendtable(FILE* handle,float total,time_t dat) {
 	if(writef(handle,startfoot.data(),startfoot.size())!=1)
@@ -158,10 +164,8 @@ bool doendtable(FILE* handle,float total,time_t dat) {
 
 {	constexpr const int buflen=60;
 	char buf[buflen];
-      struct tm tmbuf;
-      localtime_r(&dat, &tmbuf);
-       int tlen=snprintf(buf,buflen,"%04d-%02d-%02d %02d:%02d",  tmbuf.tm_year+1900,tmbuf.tm_mon+1,tmbuf.tm_mday,tmbuf.tm_hour,tmbuf.tm_min); 
-       if(writef(handle,buf,tlen)!=1)
+    int tlen=datetimestr(buf,buflen,dat);
+    if(writef(handle,buf,tlen)!=1)
 		return false;
 }
 	if(writef(handle,datestr2unix.data(),datestr2unix.size())!=1)

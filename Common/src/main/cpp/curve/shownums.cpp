@@ -186,7 +186,10 @@ extern float listitemlen;
 extern void numiterinit() ;
 extern int numlist;
 int getcolumns(jint width) {
-	return ((appcurve.listitemlen*2+width)>appcurve.dwidth)?1:2;
+    const float usedwidth=appcurve.portrait
+        ? (float)appcurve.surfacewidth-appcurve.dleft-appcurve.dright
+        : appcurve.dwidth;
+	return ((appcurve.listitemlen*2+width)>usedwidth)?1:2;
 	}
 extern "C" JNIEXPORT jint JNICALL fromjava(getcolumns)(JNIEnv *env, jclass thiz,jint width) {
 	if(!numlist)

@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/hori"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/bluesensorouter"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent"
+    android:fillViewport="true">
 
 <GridLayout 
     android:id="@+id/grid"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:columnCount="21"
-    android:rowCount="8"
+    android:rowCount="5"
     android:paddingEnd="2dp" 
     android:paddingStart="15dp"
     android:paddingTop="9dp"
@@ -134,39 +135,52 @@
             android:layout_height="wrap_content"
             android:text="@string/clear" />
 
-        <TextView android:id="@+id/stage" android:layout_column="0" android:layout_row="3" android:layout_columnSpan="4" android:text="@string/stage" />
-        <TextView android:id="@+id/textView2" android:layout_column="4" android:layout_row="3" android:layout_columnSpan="3" android:text="@string/last_success" />
-        <TextView android:id="@+id/textView3" android:layout_column="7" android:layout_row="3" android:layout_columnSpan="5" android:text="@string/last_failure" />
-        <TextView android:id="@+id/textView4" android:layout_column="12" android:layout_row="3" android:layout_columnSpan="8" android:text="@string/failure_info" />
+        <HorizontalScrollView
+            android:id="@+id/diagnosticscroll"
+            android:layout_column="0"
+            android:layout_row="3"
+            android:layout_columnSpan="20"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fillViewport="false"
+            android:scrollbars="horizontal">
 
-        <TextView android:id="@+id/connection" android:layout_column="0" android:layout_row="4" android:layout_columnSpan="4" android:text="@string/connection" />
-        <TextView android:id="@+id/consuccess" android:layout_column="4" android:layout_row="4" android:layout_columnSpan="3" />
-        <TextView android:id="@+id/confail" android:layout_column="7" android:layout_row="4" android:layout_columnSpan="5" />
+            <GridLayout
+                android:id="@+id/diagnosticgrid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:columnCount="4"
+                android:rowCount="4"
+                android:useDefaultMargins="false">
 
-        <TextView
-    android:id="@+id/constatus"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_column="12"
-    android:layout_columnSpan="7"
-    android:layout_row="4" />
+                <TextView android:id="@+id/stage" android:layout_column="0" android:layout_row="0" android:text="@string/stage" />
+                <TextView android:id="@+id/textView2" android:layout_column="1" android:layout_row="0" android:text="@string/last_success" />
+                <TextView android:id="@+id/textView3" android:layout_column="2" android:layout_row="0" android:text="@string/last_failure" />
+                <TextView android:id="@+id/textView4" android:layout_column="3" android:layout_row="0" android:text="@string/failure_info" />
 
-        <TextView  android:id="@+id/disconnectsensor" android:layout_column="0" android:layout_row="5" android:layout_columnSpan="4" android:text="@string/unlock_key" />
-        <TextView android:id="@+id/keysuccess" android:layout_column="4" android:layout_row="5" android:layout_columnSpan="3" />
-        <TextView android:id="@+id/keyfailure" android:layout_column="7" android:layout_row="5" android:layout_columnSpan="5" />
-        <TextView android:id="@+id/keyinfo" android:layout_column="12" android:layout_row="5" android:layout_columnSpan="8" android:layout_width="wrap_content" android:layout_gravity="fill_horizontal" />
+                <TextView android:id="@+id/connection" android:layout_column="0" android:layout_row="1" android:text="@string/connection" />
+                <TextView android:id="@+id/consuccess" android:layout_column="1" android:layout_row="1" />
+                <TextView android:id="@+id/confail" android:layout_column="2" android:layout_row="1" />
+                <TextView android:id="@+id/constatus" android:layout_column="3" android:layout_row="1" android:layout_width="wrap_content" android:layout_height="wrap_content" />
 
-        <TextView android:layout_column="0" android:layout_row="6" android:layout_columnSpan="4" android:text="@string/glucose_value" />
-        <TextView android:id="@+id/glucosesuccess" android:layout_column="4" android:layout_row="6" android:layout_columnSpan="3" />
-        <TextView android:id="@+id/glucosefailure" android:layout_column="7" android:layout_row="6" android:layout_columnSpan="5" />
-        <TextView android:id="@+id/glucoseinfo" android:layout_column="12" android:layout_row="6" android:layout_columnSpan="8" android:layout_width="wrap_content" android:layout_gravity="fill_horizontal" />
+                <TextView android:id="@+id/disconnectsensor" android:layout_column="0" android:layout_row="2" android:text="@string/unlock_key" />
+                <TextView android:id="@+id/keysuccess" android:layout_column="1" android:layout_row="2" />
+                <TextView android:id="@+id/keyfailure" android:layout_column="2" android:layout_row="2" />
+                <TextView android:id="@+id/keyinfo" android:layout_column="3" android:layout_row="2" android:layout_width="wrap_content" android:layout_height="wrap_content" />
 
-        <Button android:id="@+id/help" android:layout_column="0" android:layout_row="7" android:layout_columnSpan="4" android:text="@string/helpname" />
-        <tk.glucodata.CheckDirectionBox android:id="@+id/usebluetooth" android:layout_column="4" android:layout_row="7" android:layout_columnSpan="3" android:text="@string/use_bluetooth" />
-        <Button android:id="@+id/background" android:layout_column="7" android:layout_row="7" android:layout_columnSpan="3" android:text="@string/dozemode" />
-        <tk.glucodata.CheckDirectionBox android:id="@+id/priority" android:layout_column="10" android:layout_row="7" android:layout_columnSpan="3" android:text="@string/high_priority" />
-        <tk.glucodata.CheckDirectionBox android:id="@+id/android13" android:layout_column="13" android:layout_row="7" android:layout_columnSpan="2" android:text="@string/android13" />
-        <Button android:id="@+id/close" android:layout_column="15" android:layout_row="7" android:layout_columnSpan="5" android:text="@string/closename"
+                <TextView android:tag="bluesensor_glucose_label" android:layout_column="0" android:layout_row="3" android:text="@string/glucose_value" />
+                <TextView android:id="@+id/glucosesuccess" android:layout_column="1" android:layout_row="3" />
+                <TextView android:id="@+id/glucosefailure" android:layout_column="2" android:layout_row="3" />
+                <TextView android:id="@+id/glucoseinfo" android:layout_column="3" android:layout_row="3" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+            </GridLayout>
+        </HorizontalScrollView>
+
+        <Button android:id="@+id/help" android:layout_column="0" android:layout_row="4" android:layout_columnSpan="4" android:text="@string/helpname" />
+        <tk.glucodata.CheckDirectionBox android:id="@+id/usebluetooth" android:layout_column="4" android:layout_row="4" android:layout_columnSpan="3" android:text="@string/use_bluetooth" />
+        <Button android:id="@+id/background" android:layout_column="7" android:layout_row="4" android:layout_columnSpan="3" android:text="@string/dozemode" />
+        <tk.glucodata.CheckDirectionBox android:id="@+id/priority" android:layout_column="10" android:layout_row="4" android:layout_columnSpan="3" android:text="@string/high_priority" />
+        <tk.glucodata.CheckDirectionBox android:id="@+id/android13" android:layout_column="13" android:layout_row="4" android:layout_columnSpan="2" android:text="@string/android13" />
+        <Button android:id="@+id/close" android:layout_column="15" android:layout_row="4" android:layout_columnSpan="5" android:text="@string/closename"
 
         />
 
@@ -180,7 +194,7 @@
     android:layout_height="wrap_content"
     android:layout_column="20"
     android:layout_row="0"
-    android:layout_rowSpan="8"
+    android:layout_rowSpan="5"
     android:layout_gravity="center_vertical|end"
     android:rotation="-90"
     android:padding="0dp"
@@ -190,5 +204,4 @@
 
     </GridLayout>
 
-
-</HorizontalScrollView>
+</ScrollView>

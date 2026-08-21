@@ -51,15 +51,24 @@ bool showpers=false;
 #define PERSlogprint(...)
 
 
-void datainterval(JCurve &jcurve,NVGcontext* vg,float x, float y,uint32_t start,uint32_t end) {
+//extern int    timestr(char *buf,time_t tim);
+//extern int showtime(time_t *tim,char *buf);
+static int datetimestr(char *buf,int buflen,time_t dat) {
+      struct tm tmbuf;
+      localtime_r(&dat, &tmbuf);
+       return snprintf(buf,buflen,"%02d-%02d-%04d %02d:%02d",tmbuf.tm_mday,tmbuf.tm_mon+1, tmbuf.tm_year+1900,tmbuf.tm_hour,tmbuf.tm_min);
+       }
+
+
+static void datainterval(JCurve &jcurve,NVGcontext* vg,float x, float y,time_t start,time_t end,const bool portrait) {
         constexpr const int  maxbuf=100;
         char buf[maxbuf];
-        int len=jcurve.datestr(start,buf);
+        int len=portrait?datetimestr(buf,maxbuf,start):jcurve.datestr(start,buf);
         const char tus[]=" - ";
         constexpr const int tuslen=sizeof(tus)-1;
         memcpy(buf+len,tus,tuslen);
         len+=tuslen;
-        len+=jcurve.datestr(end,buf+len);
+        len+=portrait?datetimestr(buf+len,maxbuf-len,end):jcurve.datestr(end,buf+len);
         nvgText(vg, x,y,buf,buf+len);
         }
 
@@ -426,6 +435,7 @@ smallsize
 */
 void showpercentiles(NVGcontext* vg,JCurve &jcurve) {
    auto starttime=jcurve.starttime;
+   const bool portrait=jcurve.dheight>jcurve.dwidth;
     if((jcurve.setend<starttime||jcurve.settime>=(starttime+jcurve.duration))) {
             defaultextreme();
             jcurve.gmin=min;
@@ -507,7 +517,7 @@ void showpercentiles(NVGcontext* vg,JCurve &jcurve) {
         jcurve.showlines(vg,jcurve.gmin,gmax);
         nvgTextAlign(vg,NVG_ALIGN_LEFT|NVG_ALIGN_TOP);
         const float datehigh=smallfontlineheight*1.2;
-        datainterval(jcurve,vg,density+jcurve.statusbarleft, datehigh+statusbarheight,pollstart,polllast);
+        datainterval(jcurve,vg,density+jcurve.statusbarleft, datehigh+statusbarheight,pollstart,polllast,portrait);
         nvgTextAlign(vg,NVG_ALIGN_RIGHT|NVG_ALIGN_TOP);
 
         startpos-=5*density;
@@ -825,13 +835,18 @@ void JCurve::leginterval(NVGcontext* vg,const float x,const float y, const int *
     int buflen=snprintf(buf,maxbuf,"%.*f-%.*f",gludecimal,::gconvert((between[1]+1)*10,glunit),gludecimal,::gconvert((between[0])*10,glunit));
     nvgText(vg, x,y,buf,buf+buflen);
     }
-void stats::showbar(NVGcontext* vg,JCurve &jcurve,const jugglucotext *text) {
+void stats::showbar(NVGcontext* vg,JCurve &jcurve,const jugglucotext *text,int yposstart) {
 
     int dwidth=jcurve.dwidth-jcurve.statusbarleft-jcurve.statusbarright;    
     int dheight=jcurve.dheight;
+    const bool portrait=dheight>dwidth;
     auto stat=this;
     float rowheight=jcurve.smallfontlineheight*1.5;
-    float useh=dheight*.8f,starty=(dheight-useh)/2.0f,startx=dwidth*.01f+jcurve.statusbarleft,usewidth=dwidth*.04f;
+    float useh=portrait?(dheight-yposstart)*.6f:dheight*.8f;
+    float starty=portrait?
+            yposstart
+    :(dheight-useh)/2.0f;
+    float startx=dwidth*.02f+jcurve.statusbarleft,usewidth=(portrait?dheight:dwidth)*.04f;
     float xleg=startx+ dwidth*.01f+usewidth+jcurve.timelen+jcurve.smallsize;
      
     const char perform[]="%.1f%%";
@@ -852,7 +867,7 @@ constexpr const NVGcolor cols[]={orange,yellow,mediumseagreen,redinit,brown};
         yleg+=rowheight;
         pery+=h;
         }
-    nvgFontSize(vg, jcurve.smallsize);
+//    nvgFontSize(vg, jcurve.smallsize);
     nvgTextAlign(vg,NVG_ALIGN_RIGHT|NVG_ALIGN_TOP);
     nvgFillColor(vg, *jcurve.getblack());
     yleg=starty+rowheight;
@@ -899,18 +914,25 @@ constexpr const NVGcolor cols[]={orange,yellow,mediumseagreen,redinit,brown};
     }
 
 
-void stats::otherstats(NVGcontext* vg,JCurve &jcurve,const jugglucotext *usedtext) {
+int stats::otherstats(NVGcontext* vg,JCurve &jcurve,const jugglucotext *usedtext) {
      auto  statusbarleft=  jcurve.statusbarleft;
      auto  statusbarright=  jcurve.statusbarright;
 
     int dwidth=jcurve.dwidth-statusbarleft-statusbarright;    
     int dheight=jcurve.dheight;
 //    auto starttime=jcurve.starttime;
+    const bool portrait=dheight>dwidth;
+    nvgFillColor(vg, *jcurve.getblack());
     nvgTextAlign(vg,NVG_ALIGN_CENTER|NVG_ALIGN_TOP);
-    datainterval(jcurve,vg,dwidth/2, 0,starttime,endtime);
+     
+    datainterval(jcurve,vg,dwidth/2, portrait?(jcurve.statusbarheight*1.4f):0,starttime,endtime,portrait);
     float rowheight=jcurve.smallfontlineheight*1.5;
-    float xpos=dwidth/3+jcurve.dleft+statusbarleft;
-    float ypos=0.1*dheight+jcurve.dtop;
+    float xpos=portrait?
+        (dwidth*.02f+jcurve.statusbarleft)
+        :(dwidth/3+jcurve.dleft+statusbarleft);
+    float ypos=portrait?
+    (jcurve.statusbarheight*1.4f+rowheight*1.2)
+    :(0.1*dheight+jcurve.dtop);
     constexpr int maxbuf=70;
     char buf[maxbuf];
 
@@ -944,7 +966,7 @@ void stats::otherstats(NVGcontext* vg,JCurve &jcurve,const jugglucotext *usedtex
     len=snprintf(buf,maxbuf,usedtext->EstimatedA1C, EA1Cper, EA1Cmmol);
     nvgText(vg, xpos,ypos,buf,buf+len);
     ypos+=rowheight;
-    len=snprintf(buf,maxbuf,usedtext->GMI, GMIper, GMImmol);
+    len=snprintf(buf,maxbuf,portrait?"GMI: %.1f%% (%d mmol/mol)":usedtext->GMI,GMIper, GMImmol);
     nvgText(vg, xpos,ypos,buf,buf+len);
     ypos+=rowheight;
     len=snprintf(buf,maxbuf,usedtext->SD,jcurve.gconvert(sd*10));
@@ -952,10 +974,12 @@ void stats::otherstats(NVGcontext* vg,JCurve &jcurve,const jugglucotext *usedtex
     ypos+=rowheight;
     len=snprintf(buf,maxbuf,usedtext->glucose_variability,vc*100);
     nvgText(vg, xpos,ypos,buf,buf+len);
+    return ypos+rowheight*2;
     }
 void showstats(NVGcontext* vg,JCurve &jcurve,stats *stat,const jugglucotext *text) {
-    stat->showbar(vg,jcurve,text);
-    stat->otherstats(vg,jcurve,text) ;
+    nvgFontSize(vg, jcurve.smallsize);
+    const auto ypos=stat->otherstats(vg,jcurve,text) ;
+    stat->showbar(vg,jcurve,text,ypos);
 }
 
 

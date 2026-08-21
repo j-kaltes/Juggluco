@@ -44,6 +44,44 @@ extern "C" JNIEXPORT void JNICALL fromjava(resize)(JNIEnv* env, jclass obj, jint
  appcurve.resizescreen(widthin,heightin,initscreenwidth);
  }
 
+/*
+ * Android Surface.getRotation() value (Surface.ROTATION_0..ROTATION_270).
+ * MyRenderer refreshes it before every frame; GlucoseCurve also refreshes it
+ * before converting touch coordinates.
+ */
+extern "C" JNIEXPORT void JNICALL fromjava(setDisplayRotation)(JNIEnv* env, jclass obj,jint rotation,jboolean reverseDefaultRotation,jboolean graphLockedToFirstLandscape,jboolean graphUsesCurrentOrientationAsLandscape) {
+#ifndef WEAROS
+ const int state=(rotation&3)|(reverseDefaultRotation?4:0)|
+        (graphLockedToFirstLandscape?8:0)|(graphUsesCurrentOrientationAsLandscape?16:0);
+ appcurve.displayRotationState.store(state,std::memory_order_relaxed);
+#endif
+ }
+
+/*
+ * Java touch handling must use exactly the same transform as NanoVG:
+ *   0 identity
+ *   1 counter-clockwise quarter turn
+ *   2 half turn
+ *   3 clockwise quarter turn
+ *
+ * Statistics (except the summary graph) and the separate entered-value list
+ * are not graph displays and always use the Android surface coordinates.
+ */
+#ifndef WEAROS
+extern int numlist;
+extern bool showpers;
+extern bool showsummarygraph;
+#endif
+extern "C" JNIEXPORT jint JNICALL fromjava(getGraphRotationMode)(JNIEnv* env, jclass obj) {
+#ifdef WEAROS
+ return 0;
+#else
+ if(numlist || (showpers && !showsummarygraph))
+  return 0;
+ return appcurve.graphRotationMode();
+#endif
+ }
+
 
 
 extern "C" JNIEXPORT jfloat JNICALL fromjava(freey) (JNIEnv *env, jclass clazz) {
@@ -887,12 +925,7 @@ extern "C" JNIEXPORT jboolean JNICALL fromjava(showlastscan)(JNIEnv *env, jclass
 extern int statusbarheight;
 extern int statusbarleft,statusbarright;
 extern "C" JNIEXPORT void JNICALL fromjava(systembar)(JNIEnv *env, jclass thiz,jint left,jint top,jint right,jint bottom) {
- appcurve.statusbarheight=top*4/5;
- appcurve.statusbarleft=left;
- appcurve.statusbarright=right;
- appcurve.dbottom=bottom;
-// resizescreen(width, height,width);
- appcurve.withbottom();
+ appcurve.setSystemBars(left,top,right,bottom);
  }
 
 

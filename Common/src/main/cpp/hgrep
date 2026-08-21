@@ -1,1 +1,2 @@
-grep "$@" *.cpp *.c *.hpp *.h */*.cpp */*.hpp */*.h */*.c net/ICE/*.hpp net/ICE/*.h net/ICE/*.cpp net/watchserver/*.cpp net/watchserver/*.hpp net/watchserver/*.h net/watchserver/*.c net/libreview/*.cpp net/libreview/*.hpp net/libreview/*.h net/libreview/*.c #sibionics/*.hpp sibionics/*.cpp dexcom/*.hpp dexcom/*.cpp
+grep "$@" *.cpp *.c *.hpp *.h */*.cpp */*.hpp */*.h */*.c net/ICE/*.hpp net/ICE/*.h net/ICE/*.cpp net/watchserver/*.cpp net/watchserver/*.hpp net/watchserver/*.h  net/libreview/*.cpp net/libreview/*.hpp net/libreview/*.h  sibionics/*.hpp sibionics/*.cpp dexcom/*.hpp dexcom/*.cpp libre3/*.cpp libre3/*.hpp libre3/*.c libre3/*.h libre3/process/*.cpp libre3/process/*.hpp libre3/process/*.h libre3/process/*.c dexcom/*.h dexcom/*.c 
+

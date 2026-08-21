@@ -487,5 +487,9 @@
     <string name="webdeletefailed">Kan %1$s niet verwijderen</string>
     <string name="webdirectoryempty">Deze map is leeg</string>
     <string name="webdirectoryentry">[map] %1$s</string>
+
+  <string name="autorotate">Autom. draaien</string>
+
+<string name="rotateText">Tekst draaien</string>
 </resources>
 

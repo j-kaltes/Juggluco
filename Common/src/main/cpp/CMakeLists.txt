@@ -167,54 +167,171 @@ set_source_files_properties( ${L3HOOK} PROPERTIES COMPILE_OPTIONS "-marm")
 #set(LIBRE3 libre3/process/cryptoextern.c libre3/process/f3f7_dispatch_deobfuscated.c libre3/process/f3f7_dispatch_execute_ref.c libre3/process/f3f7_dispatch_wrappers_ref.c libre3/process/f3f7_object_method_ref.c libre3/process/f3f7_outer_schedule_ref.c libre3/process/libre3_app_process.c libre3/process/libre3_native_export_ref.c libre3/process/libre3_native_export_wb_ref.c libre3/process/libre3_native_wb_primitives_ref.c libre3/process/libre3_object_export_frames_ref.c libre3/process/libre3_process_ref.c libre3/process/libre3_processint6_f3efd5bc_ref.c libre3/process/libre3_processint6_f3fbc5c0_f3fdd33c_bind_ref.c libre3/process/libre3_processint6_f3fbc5c0_live_fc3c70_bind_ref.c libre3/process/libre3_processint6_f3fbc5c0_ref.c libre3/process/libre3_processint6_f3fbc5c0_terminal_bound_ref.c libre3/process/libre3_processint6_f3fc2110_ref.c libre3/process/libre3_processint6_f3fc2304_ref.c libre3/process/libre3_processint6_f3fc3c70_ref.c libre3/process/libre3_processint6_f3fcc2d0_ref.c libre3/process/libre3_processint6_f3fdb57c_ref.c libre3/process/libre3_processint6_f3fdd33c_ref.c libre3/process/libre3_provider_soft.c libre3/process/object_method_known_vectors.c libre3/process/processint2_full_ref.c libre3/process/processint2_ref.c libre3/process/crypto_init.cpp libre3/process/libre3_bar7_fe_block.cpp libre3/process/libre3_bar7_generated_block.cpp)
 
 if(libre3)
+
+
 set(LIBRE3SRC
+    ${INCLUDESELF}/libre3/process/whitebox_lookup_table.c
     ${INCLUDESELF}/libre3/process/openssl_symbols.c
     ${INCLUDESELF}/libre3/process/libre3_handshake.c
     ${INCLUDESELF}/libre3/process/libre3_security_engine.c
     ${INCLUDESELF}/libre3/process/saved_authorization_record.c
     ${INCLUDESELF}/libre3/process/sensor_security_context.c
     ${INCLUDESELF}/libre3/process/p256_private_scalar_codec.c
-    ${INCLUDESELF}/libre3/process/app_private_key_record_decoder.c
-    ${INCLUDESELF}/libre3/process/app_private_key_whitebox_machine.c
-    ${INCLUDESELF}/libre3/process/app_private_key_instruction_decoder.c
-    ${INCLUDESELF}/libre3/process/app_private_key_instruction_executor.c
-    ${INCLUDESELF}/libre3/process/app_private_key_instruction_set.c
-    ${INCLUDESELF}/libre3/process/app_private_key_decode_schedule.c
-    ${INCLUDESELF}/libre3/process/authorization_scalar_state_encoder.c
+    ${INCLUDESELF}/libre3/process/fixed_app_private_keys.c
     ${INCLUDESELF}/libre3/process/p256_scalar_multiply.c
     ${INCLUDESELF}/libre3/process/authorization_round_feedback.c
-    ${INCLUDESELF}/libre3/process/authorization_round_tail.c
     ${INCLUDESELF}/libre3/process/authorization_round_mixer.c
-    ${INCLUDESELF}/libre3/process/authorization_round_output.c
-    ${INCLUDESELF}/libre3/process/p256_coordinate_codec.c
     ${INCLUDESELF}/libre3/process/p256_coordinate_reduction.c
     ${INCLUDESELF}/libre3/process/authorization_round_primary.c
     ${INCLUDESELF}/libre3/process/authorization_round_secondary.c
     ${INCLUDESELF}/libre3/process/authorization_vector_reduction.c
     ${INCLUDESELF}/libre3/process/authorization_vector_feedback.c
     ${INCLUDESELF}/libre3/process/authorization_round_driver.c
-    ${INCLUDESELF}/libre3/process/challenge_whitebox_block_cipher.cpp
+    ${INCLUDESELF}/libre3/process/authorization_shared_point_core.c
     ${INCLUDESELF}/libre3/process/openssl_loader.cpp
     ${INCLUDESELF}/libre3/process/authorization_shared_point_frames.c
     ${INCLUDESELF}/libre3/process/authorization_shared_point_tail.c
     ${INCLUDESELF}/libre3/process/authorization_frame_transform.c
     ${INCLUDESELF}/libre3/process/authorization_digest.c
     ${INCLUDESELF}/libre3/process/authorization_finalizer.c
-    ${INCLUDESELF}/libre3/process/p256_coordinate_extract.c
-    ${INCLUDESELF}/libre3/process/p256_private_scalar_decoder.c
-    ${INCLUDESELF}/libre3/process/p256_ephemeral_keypair.c
     ${INCLUDESELF}/libre3/process/challenge_cipher_context.c
 )
+
+
+# OpenSSL/JNI-free fixed shared-point leaf.  This is the minimal native source
+# boundary to translate for a constrained target; it exposes a fixed 35+64 ->
+# 132-byte operation with one caller-owned reusable workspace.
+set(LIBRE3_PORTABLE_AUTHORIZATION_CORE
+    ${INCLUDESELF}/libre3/process/whitebox_lookup_table.c
+    ${INCLUDESELF}/libre3/process/authorization_shared_point_core.c
+    ${INCLUDESELF}/libre3/process/p256_scalar_multiply.c
+    ${INCLUDESELF}/libre3/process/p256_coordinate_reduction.c
+    ${INCLUDESELF}/libre3/process/authorization_round_feedback.c
+    ${INCLUDESELF}/libre3/process/authorization_round_mixer.c
+    ${INCLUDESELF}/libre3/process/authorization_round_primary.c
+    ${INCLUDESELF}/libre3/process/authorization_round_secondary.c
+    ${INCLUDESELF}/libre3/process/authorization_vector_reduction.c
+    ${INCLUDESELF}/libre3/process/authorization_vector_feedback.c
+    ${INCLUDESELF}/libre3/process/authorization_round_driver.c
+    ${INCLUDESELF}/libre3/process/authorization_shared_point_tail.c
+    ${INCLUDESELF}/libre3/process/authorization_frame_transform.c
+    ${INCLUDESELF}/libre3/process/authorization_finalizer.c
+)
+
+
+# Keep the size-oriented flags local to the Libre 3 process sources.  The
+# shared target contains most of Juggluco, so enabling LTO through the global
+# CMAKE_* flags would also rebuild and optimize unrelated code.
+option(LIBRE3_ENABLE_IPO
+       "Use ThinLTO/LTO for the isolated Libre 3 process sources" ON)
+
+option(LIBRE3_ENABLE_SAFE_ICF
+       "Fold identical Libre 3 functions with Android lld" ON)
+
+option(LIBRE3_MINIMAL_UNWIND
+       "Omit unwind metadata from Libre 3 process sources (watch builds only)" OFF)
+
+set(_LIBRE3_PROCESS_COMPILE_OPTIONS
+    -ffunction-sections
+    -fdata-sections
+    -fvisibility=hidden
+)
+set(LIBRE3_LINK_OPTIONS -Wl,--gc-sections)
+set(_LIBRE3_IPO_FLAG "")
+set(_LIBRE3_SAFE_ICF_ACTIVE OFF)
+
+if(LIBRE3_ENABLE_IPO)
+    if(CMAKE_C_COMPILER_ID MATCHES "Clang")
+        set(_LIBRE3_IPO_FLAG -flto=thin)
+    elseif(CMAKE_C_COMPILER_ID STREQUAL "GNU")
+        set(_LIBRE3_IPO_FLAG -flto)
+    endif()
+
+    if(_LIBRE3_IPO_FLAG)
+        list(APPEND _LIBRE3_PROCESS_COMPILE_OPTIONS ${_LIBRE3_IPO_FLAG})
+        list(APPEND LIBRE3_LINK_OPTIONS ${_LIBRE3_IPO_FLAG})
+    else()
+        message(WARNING
+            "LIBRE3_ENABLE_IPO requested, but ${CMAKE_C_COMPILER_ID} has no configured Libre 3 IPO flag")
+    endif()
 endif()
-add_library( g SHARED  ${LIBRE3SRC} sibionics3/interpretgs3.cpp sibionics3/java.cpp curve/scriptFonts.cpp settings/rtl_label_converter.cpp ${CHECKER_FILE} aidexx/crc.cpp aidexx/initcrypto.cpp  aidexx/java.cpp aidexx/decrypt.cpp aidexx/mkiv.cpp ${NETDIR}/ICE/ContextHTTPS.cpp  ${NETDIR}/ICE/ICE.cpp  ${NETDIR}/ICE/ICE_data.cpp ${NETDIR}/sendcommands.cpp ${NETDIR}/backup.cpp ${NETDIR}/getcommand.cpp ${BCRYPTFILES} meter/java.cpp calibrate/java.cpp  calibrate/calculate.cpp  air/java.cpp   accu/java.cpp  dexcom/java.cpp dexcom/ecJPake.cpp extra/bypassed_dlfcn.c extra/fake_dlfcn.c EverSense.cpp dofirst.cpp settings/exception.cpp prunestream.cpp ${EXTRAVIEW} watch/messages.cpp watch/netinfo.cpp watch/watchvalue.cpp removeoldstates.cpp  ${CURVEDIR}/trjugglucotext.cpp   ${CURVEDIR}/svjugglucotext.cpp    ${CURVEDIR}/zhjugglucotext.cpp  ${CURVEDIR}/ukjugglucotext.cpp  ${CURVEDIR}/bejugglucotext.cpp ${CURVEDIR}/frjugglucotext.cpp ${CURVEDIR}/pljugglucotext.cpp ${CURVEDIR}/ptjugglucotext.cpp  ${CURVEDIR}/jajugglucotext.cpp ${CURVEDIR}/hijugglucotext.cpp ${CURVEDIR}/esjugglucotext.cpp ${CURVEDIR}/uzjugglucotext.cpp ${CURVEDIR}/nljugglucotext.cpp ${CURVEDIR}/dejugglucotext.cpp  ${CURVEDIR}/jugglucotext.cpp  ${CURVEDIR}/itjugglucotext.cpp ${CURVEDIR}/percentile.cpp foods/javabase.cpp ${ASCONFILES} hostJson.cpp backupjava.cpp glucose.cpp ${CURVEDIR}/shownums.cpp g.cpp libre2.cpp jnisub.cpp share/getsockets.cpp share/hooks.cpp wearInt.cpp logjava.cpp share/logs.cpp share/nfcdata.cpp  share/serial.cpp scanstate.cpp statedata.cpp share/timestr.cpp share/savehistory.cpp  ${NANOVG}/nanovg.c  ${CURVEDIR}/search.cpp ${CURVEDIR}/appcurve.cpp ${CURVEDIR}/curve.cpp ${CURVEDIR}/javacurve.cpp export/libreviewexport.cpp export/exports.cpp settings/javasettings.cpp settings/settings.cpp debugclone.cpp ${NETDIR}/watchserver/common.cpp ${NETDIR}/watchserver/getlanguage.cpp ${NETDIR}/watchserver/uploader.cpp  ${NETDIR}/watchserver/uploadtreatment.cpp  ${NETDIR}/watchserver/iob.cpp   ${NETDIR}/watchserver/sslserver.cpp  ${NETDIR}/watchserver/cryptopen.cpp ${NETDIR}/watchserver/watchserver.cpp ${NETDIR}/netstuff.cpp ${NETDIR}/sender.cpp ICEstatus.cpp mirrorstatus.cpp backupinfo.cpp datbackup.cpp nums/numdata.cpp nums/numjava.cpp  meal/mealjava.cpp meal/savemeals.cpp  ${LIBRE3FILES}  ${CURVEDIR}/iwjugglucotext.cpp ${CURVEDIR}/rujugglucotext.cpp  sibionics/handleData.cpp  sibionics/interpret_data.cpp sibionics/eu.cpp sibionics/start.cpp sibionics/process.cpp sibionics/makeWriteCharacter.cpp  ) #  ${CURVEDIR}/iwjugglucotext.cpp 
+
+# Android NDK Clang links with lld.  Safe ICF merges only sections whose
+# address identity cannot be observed, complementing per-function GC without
+# weakening the recovered protocol checks.
+if(LIBRE3_ENABLE_SAFE_ICF AND ANDROID AND CMAKE_C_COMPILER_ID MATCHES "Clang")
+    list(APPEND LIBRE3_LINK_OPTIONS -Wl,--icf=safe)
+    set(_LIBRE3_SAFE_ICF_ACTIVE ON)
+endif()
+
+if(LIBRE3_MINIMAL_UNWIND)
+    list(APPEND _LIBRE3_PROCESS_COMPILE_OPTIONS
+        -fno-unwind-tables
+        -fno-asynchronous-unwind-tables
+    )
+endif()
+
+
+set_property(SOURCE ${LIBRE3SRC} APPEND PROPERTY COMPILE_OPTIONS
+    ${_LIBRE3_PROCESS_COMPILE_OPTIONS}
+)
+
+# The JNI boundary is the only production caller of the process API.  Compile
+# it with the same LTO mode so the optimizer can see the fixed-size calls while
+# retaining the JNIEXPORT/default-visible entry points.
+if(_LIBRE3_IPO_FLAG)
+    set_property(SOURCE ${INCLUDESELF}/libre3/loadlibs.cpp APPEND PROPERTY
+        COMPILE_OPTIONS
+        -ffunction-sections
+        -fdata-sections
+        ${_LIBRE3_IPO_FLAG}
+    )
+endif()
+
+# Apply the matching link flag only after the containing target has been
+# created.  Keeping this explicit prevents accidental use on other targets.
+function(libre3_apply_link_optimization target_name)
+    if(NOT TARGET "${target_name}")
+        message(FATAL_ERROR
+            "libre3_apply_link_optimization: '${target_name}' is not a CMake target")
+    endif()
+
+    target_link_options("${target_name}" PRIVATE ${LIBRE3_LINK_OPTIONS})
+    if(_LIBRE3_IPO_FLAG)
+        target_compile_definitions("${target_name}" PRIVATE
+            L3_LIBRE3_SIZE3_IPO=1)
+    endif()
+
+    if(_LIBRE3_SAFE_ICF_ACTIVE)
+        target_compile_definitions("${target_name}" PRIVATE
+            L3_LIBRE3_SIZE7_SAFE_ICF=1)
+    endif()
+
+    if(LIBRE3_MINIMAL_UNWIND)
+        target_compile_definitions("${target_name}" PRIVATE
+            L3_LIBRE3_SIZE3_MINIMAL_UNWIND=1)
+    endif()
+
+endfunction()
+
+
+
+endif()
+add_library( g SHARED  ${LIBRE3SRC} sibionics3/interpretgs3.cpp sibionics3/java.cpp curve/scriptFonts.cpp settings/rtl_label_converter.cpp ${CHECKER_FILE} aidexx/crc.cpp aidexx/initcrypto.cpp  aidexx/java.cpp aidexx/decrypt.cpp aidexx/mkiv.cpp ${NETDIR}/ICE/ContextHTTPS.cpp  ${NETDIR}/ICE/ICE.cpp  ${NETDIR}/ICE/ICE_data.cpp ${NETDIR}/sendcommands.cpp ${NETDIR}/backup.cpp ${NETDIR}/getcommand.cpp ${BCRYPTFILES} meter/java.cpp calibrate/java.cpp  calibrate/calculate.cpp  air/java.cpp   accu/java.cpp  dexcom/java.cpp dexcom/ecJPake.cpp extra/bypassed_dlfcn.c extra/fake_dlfcn.c EverSense.cpp dofirst.cpp settings/exception.cpp prunestream.cpp ${EXTRAVIEW} watch/messages.cpp watch/netinfo.cpp watch/watchvalue.cpp removeoldstates.cpp  ${CURVEDIR}/trjugglucotext.cpp   ${CURVEDIR}/svjugglucotext.cpp    ${CURVEDIR}/zhjugglucotext.cpp  ${CURVEDIR}/ukjugglucotext.cpp  ${CURVEDIR}/bejugglucotext.cpp ${CURVEDIR}/frjugglucotext.cpp ${CURVEDIR}/pljugglucotext.cpp ${CURVEDIR}/ptjugglucotext.cpp  ${CURVEDIR}/jajugglucotext.cpp ${CURVEDIR}/hijugglucotext.cpp ${CURVEDIR}/esjugglucotext.cpp ${CURVEDIR}/kojugglucotext.cpp ${CURVEDIR}/uzjugglucotext.cpp ${CURVEDIR}/nljugglucotext.cpp ${CURVEDIR}/dejugglucotext.cpp  ${CURVEDIR}/jugglucotext.cpp  ${CURVEDIR}/itjugglucotext.cpp ${CURVEDIR}/percentile.cpp foods/javabase.cpp ${ASCONFILES} hostJson.cpp backupjava.cpp glucose.cpp ${CURVEDIR}/shownums.cpp g.cpp libre2.cpp jnisub.cpp share/getsockets.cpp share/hooks.cpp wearInt.cpp logjava.cpp share/logs.cpp share/nfcdata.cpp  share/serial.cpp scanstate.cpp statedata.cpp share/timestr.cpp share/savehistory.cpp  ${NANOVG}/nanovg.c  ${CURVEDIR}/search.cpp ${CURVEDIR}/appcurve.cpp ${CURVEDIR}/curve.cpp ${CURVEDIR}/javacurve.cpp export/libreviewexport.cpp export/exports.cpp settings/javasettings.cpp settings/settings.cpp debugclone.cpp ${NETDIR}/watchserver/common.cpp ${NETDIR}/watchserver/getlanguage.cpp ${NETDIR}/watchserver/uploader.cpp  ${NETDIR}/watchserver/uploadtreatment.cpp  ${NETDIR}/watchserver/iob.cpp   ${NETDIR}/watchserver/sslserver.cpp  ${NETDIR}/watchserver/cryptopen.cpp ${NETDIR}/watchserver/watchserver.cpp ${NETDIR}/netstuff.cpp ${NETDIR}/sender.cpp ICEstatus.cpp mirrorstatus.cpp backupinfo.cpp datbackup.cpp nums/numdata.cpp nums/numjava.cpp  meal/mealjava.cpp meal/savemeals.cpp  ${LIBRE3FILES}  ${CURVEDIR}/iwjugglucotext.cpp ${CURVEDIR}/rujugglucotext.cpp  sibionics/handleData.cpp  sibionics/interpret_data.cpp sibionics/eu.cpp sibionics/start.cpp sibionics/process.cpp sibionics/makeWriteCharacter.cpp  ) #  ${CURVEDIR}/iwjugglucotext.cpp 
 target_sources(g PRIVATE "${ARJUGGLUCO_OUTPUT}")
+if(libre3)
+    libre3_apply_link_optimization(g)
+endif()
 add_dependencies(g generate_arjugglucotext)
 target_compile_definitions(g PRIVATE  -DUSE_SSL=1 -DANDROID__APP=1  -DJUGGLUCO_APP=1)
 target_include_directories(g PRIVATE ${NANOVG}  ${INCLUDESELF} ${INCLUDESELF}/share ${INCLUDESELF}/LibAscon/inc ${INCLUDESELF}/include ${INCLUDESELF}/bcrypt)
 target_compile_definitions( g  PRIVATE  -DWEAROS_MESSAGES=1 -DDONTSCALESTROKEWIDTH  -DLIBRENUMBERS=1 )
 
 add_link_options(-g  )
-target_link_options(g PRIVATE "-Wl,-z,max-page-size=16384")
+#target_link_options(g PRIVATE "-Wl,-z,max-page-size=16384")
+target_link_options(g PRIVATE "-Wl,-z,max-page-size=16384" "-Wl,-z,common-page-size=16384")
+
+
 #target_link_options(${CMAKE_PROJECT_NAME} PRIVATE "-Wl,-z,max-page-size=16384")
 
 set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared libraries" FORCE)
@@ -231,6 +348,7 @@ export(TARGETS g ANDROID_MK Android.mk)
 add_executable(libnative.so    abbotttest.cpp )
 target_include_directories( libnative.so PRIVATE  ${INCLUDESELF} ${INCLUDESELF}/share  LibAscon/inc)
 target_link_libraries( libnative.so    ${log-lib} ${OPENGL_LIB} android EGL m g )
+target_link_options(libnative.so PRIVATE "-Wl,-z,max-page-size=16384" "-Wl,-z,common-page-size=16384") 
 target_compile_definitions(libnative.so PUBLIC -DANDROID__APP )
 
 
@@ -239,7 +357,7 @@ add_library(native SHARED IMPORTED)
 if(JUGGLUCO_APP)
 else()
 option(static "compile static" OFF)
-add_executable(juggluco ${NETDIR}/watchserver/getlanguage.cpp ${CURVEDIR}/scriptFonts.cpp settings/rtl_label_converter.cpp ${NETDIR}/ICE/ContextHTTPS.cpp  ${NETDIR}/ICE/ICE.cpp  ${NETDIR}/ICE/ICE_data.cpp calibrate/calculate.cpp ${ASCONFILES} hostJson.cpp backupinfo.cpp export/libreviewexport.cpp  ${NETDIR}/watchserver/common.cpp  ${NETDIR}/watchserver/iob.cpp    ${NETDIR}/watchserver/watchserver.cpp  ${NETDIR}/watchserver/sslserver.cpp ${NETDIR}/watchserver/cryptopen.cpp   removeoldstates.cpp nums/numdata.cpp settings/settings.cpp  ${INCLUDESELF}/cmdline/qr.cpp  cmdline/main.cpp share/logs.cpp  ${NETDIR}/netstuff.cpp  ${NETDIR}/sender.cpp ${NETDIR}/sendcommands.cpp ${NETDIR}/backup.cpp ${NETDIR}/getcommand.cpp ${NETDIR}/myip.cpp  datbackup.cpp glucose.cpp ${CURVEDIR}/trjugglucotext.cpp ${ARJUGGLUCO_OUTPUT} ${CURVEDIR}/svjugglucotext.cpp    ${CURVEDIR}/zhjugglucotext.cpp  ${CURVEDIR}/ukjugglucotext.cpp  ${CURVEDIR}/bejugglucotext.cpp ${CURVEDIR}/frjugglucotext.cpp ${CURVEDIR}/pljugglucotext.cpp ${CURVEDIR}/ptjugglucotext.cpp ${CURVEDIR}/uzjugglucotext.cpp  ${CURVEDIR}/jajugglucotext.cpp ${CURVEDIR}/hijugglucotext.cpp ${CURVEDIR}/esjugglucotext.cpp ${CURVEDIR}/nljugglucotext.cpp ${CURVEDIR}/dejugglucotext.cpp  ${CURVEDIR}/jugglucotext.cpp  ${CURVEDIR}/itjugglucotext.cpp ${CURVEDIR}/rujugglucotext.cpp ${CURVEDIR}/curve.cpp ${CURVEDIR}/percentile.cpp  ${NANOVG}/nanovg.c export/exports.cpp settings/getcountry.cpp  meal/savemeals.cpp share/serial.cpp prunestream.cpp ${EXTRACMD}  )
+add_executable(juggluco ${NETDIR}/watchserver/getlanguage.cpp ${CURVEDIR}/scriptFonts.cpp settings/rtl_label_converter.cpp ${NETDIR}/ICE/ContextHTTPS.cpp  ${NETDIR}/ICE/ICE.cpp  ${NETDIR}/ICE/ICE_data.cpp calibrate/calculate.cpp ${ASCONFILES} hostJson.cpp backupinfo.cpp export/libreviewexport.cpp  ${NETDIR}/watchserver/common.cpp  ${NETDIR}/watchserver/iob.cpp    ${NETDIR}/watchserver/watchserver.cpp  ${NETDIR}/watchserver/sslserver.cpp ${NETDIR}/watchserver/cryptopen.cpp   removeoldstates.cpp nums/numdata.cpp settings/settings.cpp  ${INCLUDESELF}/cmdline/qr.cpp  cmdline/main.cpp share/logs.cpp  ${NETDIR}/netstuff.cpp  ${NETDIR}/sender.cpp ${NETDIR}/sendcommands.cpp ${NETDIR}/backup.cpp ${NETDIR}/getcommand.cpp ${NETDIR}/myip.cpp  datbackup.cpp glucose.cpp ${CURVEDIR}/trjugglucotext.cpp ${ARJUGGLUCO_OUTPUT} ${CURVEDIR}/svjugglucotext.cpp    ${CURVEDIR}/zhjugglucotext.cpp  ${CURVEDIR}/ukjugglucotext.cpp  ${CURVEDIR}/bejugglucotext.cpp ${CURVEDIR}/frjugglucotext.cpp ${CURVEDIR}/pljugglucotext.cpp ${CURVEDIR}/ptjugglucotext.cpp ${CURVEDIR}/kojugglucotext.cpp ${CURVEDIR}/uzjugglucotext.cpp  ${CURVEDIR}/jajugglucotext.cpp ${CURVEDIR}/hijugglucotext.cpp ${CURVEDIR}/esjugglucotext.cpp ${CURVEDIR}/nljugglucotext.cpp ${CURVEDIR}/dejugglucotext.cpp  ${CURVEDIR}/jugglucotext.cpp  ${CURVEDIR}/itjugglucotext.cpp ${CURVEDIR}/rujugglucotext.cpp ${CURVEDIR}/curve.cpp ${CURVEDIR}/percentile.cpp  ${NANOVG}/nanovg.c export/exports.cpp settings/getcountry.cpp  meal/savemeals.cpp share/serial.cpp prunestream.cpp ${EXTRACMD}  )
 target_sources(juggluco PRIVATE "${ARJUGGLUCO_OUTPUT}")
 add_dependencies(juggluco generate_arjugglucotext)
 target_include_directories( juggluco PRIVATE ${INCLUDESELF} ${INCLUDESELF}/cmdline ${INCLUDESELF}/share  ${INCLUDESELF}/LibAscon/inc ${NANOVG}  )
@@ -329,9 +447,8 @@ get_target_property(sourjug juggluco SOURCE)
 message(STATUS  ${sourjug})
 set(NETPATH ${INCLUDESELF}/${NETDIR})
 set(CURVEPATH ${INCLUDESELF}/${CURVEDIR})
-set(depfiles ${RTLPP_SOURCE} ${NETPATH}/watchserver/getlanguage.cpp ${INCLUDESELF}/curve/scriptFonts.cpp ${INCLUDESELF}/settings/rtl_label_converter.cpp "${ARJUGGLUCO_OUTPUT}" "${ARJUGGLUCO_INPUT}" ${INCLUDESELF}/libjuice/src/addr.c ${INCLUDESELF}/libjuice/src/agent.c ${INCLUDESELF}/libjuice/src/base64.c ${INCLUDESELF}/libjuice/src/conn.c ${INCLUDESELF}/libjuice/src/conn_mux.c ${INCLUDESELF}/libjuice/src/conn_poll.c ${INCLUDESELF}/libjuice/src/conn_thread.c ${INCLUDESELF}/libjuice/src/const_time.c ${INCLUDESELF}/libjuice/src/crc32.c ${INCLUDESELF}/libjuice/src/hash.c ${INCLUDESELF}/libjuice/src/hmac.c ${INCLUDESELF}/libjuice/src/ice.c ${INCLUDESELF}/libjuice/src/juice.c ${INCLUDESELF}/libjuice/src/log.c ${INCLUDESELF}/libjuice/src/random.c ${INCLUDESELF}/libjuice/src/server.c ${INCLUDESELF}/libjuice/src/stun.c ${INCLUDESELF}/libjuice/src/tcp.c ${INCLUDESELF}/libjuice/src/timestamp.c ${INCLUDESELF}/libjuice/src/turn.c ${INCLUDESELF}/libjuice/src/udp.c ${NETPATH}/ICE/ContextHTTPS.cpp  ${NETPATH}/ICE/ICE.cpp  ${NETPATH}/ICE/ICE_data.cpp ${INCLUDESELF}/calibrate/calculate.cpp ${INCLUDESELF}/hostJson.cpp ${INCLUDESELF}/export/libreviewexport.cpp ${INCLUDESELF}/curve/trjugglucotext.cpp   ${INCLUDESELF}/curve/svjugglucotext.cpp    ${INCLUDESELF}/curve/zhjugglucotext.cpp  ${INCLUDESELF}/curve/ukjugglucotext.cpp  ${INCLUDESELF}/curve/bejugglucotext.cpp ${INCLUDESELF}/curve/frjugglucotext.cpp ${INCLUDESELF}/curve/pljugglucotext.cpp ${INCLUDESELF}/curve/ptjugglucotext.cpp ${INCLUDESELF}/curve/uzjugglucotext.cpp  ${INCLUDESELF}/curve/jajugglucotext.cpp  ${INCLUDESELF}/curve/hijugglucotext.cpp ${INCLUDESELF}/curve/esjugglucotext.cpp ${INCLUDESELF}/curve/nljugglucotext.cpp ${INCLUDESELF}/curve/dejugglucotext.cpp  ${INCLUDESELF}/curve/jugglucotext.cpp  ${INCLUDESELF}/curve/itjugglucotext.cpp ${INCLUDESELF}/curve/rujugglucotext.cpp ${INCLUDESELF}/curve/curve.cpp ${INCLUDESELF}/curve/percentile.cpp  ${INCLUDESELF}/curve/nanovg/src/nanovg.c ${INCLUDESELF}/backupinfo.cpp ${INCLUDESELF}/prunestream.cpp ${INCLUDESELF}/readlog.cpp ${ASCONFILES} ${INCLUDESELF}/removeoldstates.cpp  ${INCLUDESELF}/nums/numdata.cpp ${INCLUDESELF}/settings/settings.cpp  ${INCLUDESELF}/cmdline/qr.cpp   ${INCLUDESELF}/cmdline/main.cpp ${INCLUDESELF}/share/logs.cpp ${NETPATH}/watchserver/common.cpp  ${NETPATH}/watchserver/watchserver.cpp ${NETPATH}/watchserver/iob.cpp ${NETPATH}/watchserver/cryptopen.cpp    ${NETPATH}/watchserver/sslserver.cpp  ${NETPATH}/netstuff.cpp  ${NETPATH}/sender.cpp ${NETPATH}/sendcommands.cpp ${NETPATH}/backup.cpp ${NETPATH}/getcommand.cpp ${NETPATH}/myip.cpp ${INCLUDESELF}/datbackup.cpp ${INCLUDESELF}/glucose.cpp ${INCLUDESELF}/export/exports.cpp ${INCLUDESELF}/settings/getcountry.cpp  ${INCLUDESELF}/meal/savemeals.cpp ${INCLUDESELF}/share/serial.cpp  )
+set(depfiles ${RTLPP_SOURCE} ${NETPATH}/watchserver/getlanguage.cpp ${INCLUDESELF}/curve/scriptFonts.cpp ${INCLUDESELF}/settings/rtl_label_converter.cpp "${ARJUGGLUCO_OUTPUT}" "${ARJUGGLUCO_INPUT}" ${INCLUDESELF}/libjuice/src/addr.c ${INCLUDESELF}/libjuice/src/agent.c ${INCLUDESELF}/libjuice/src/base64.c ${INCLUDESELF}/libjuice/src/conn.c ${INCLUDESELF}/libjuice/src/conn_mux.c ${INCLUDESELF}/libjuice/src/conn_poll.c ${INCLUDESELF}/libjuice/src/conn_thread.c ${INCLUDESELF}/libjuice/src/const_time.c ${INCLUDESELF}/libjuice/src/crc32.c ${INCLUDESELF}/libjuice/src/hash.c ${INCLUDESELF}/libjuice/src/hmac.c ${INCLUDESELF}/libjuice/src/ice.c ${INCLUDESELF}/libjuice/src/juice.c ${INCLUDESELF}/libjuice/src/log.c ${INCLUDESELF}/libjuice/src/random.c ${INCLUDESELF}/libjuice/src/server.c ${INCLUDESELF}/libjuice/src/stun.c ${INCLUDESELF}/libjuice/src/tcp.c ${INCLUDESELF}/libjuice/src/timestamp.c ${INCLUDESELF}/libjuice/src/turn.c ${INCLUDESELF}/libjuice/src/udp.c ${NETPATH}/ICE/ContextHTTPS.cpp  ${NETPATH}/ICE/ICE.cpp  ${NETPATH}/ICE/ICE_data.cpp ${INCLUDESELF}/calibrate/calculate.cpp ${INCLUDESELF}/hostJson.cpp ${INCLUDESELF}/export/libreviewexport.cpp ${INCLUDESELF}/curve/trjugglucotext.cpp   ${INCLUDESELF}/curve/svjugglucotext.cpp    ${INCLUDESELF}/curve/zhjugglucotext.cpp  ${INCLUDESELF}/curve/ukjugglucotext.cpp  ${INCLUDESELF}/curve/bejugglucotext.cpp ${INCLUDESELF}/curve/frjugglucotext.cpp ${INCLUDESELF}/curve/pljugglucotext.cpp ${INCLUDESELF}/curve/ptjugglucotext.cpp ${INCLUDESELF}/curve/kojugglucotext.cpp ${INCLUDESELF}/curve/uzjugglucotext.cpp  ${INCLUDESELF}/curve/jajugglucotext.cpp  ${INCLUDESELF}/curve/hijugglucotext.cpp ${INCLUDESELF}/curve/esjugglucotext.cpp ${INCLUDESELF}/curve/nljugglucotext.cpp ${INCLUDESELF}/curve/dejugglucotext.cpp  ${INCLUDESELF}/curve/jugglucotext.cpp  ${INCLUDESELF}/curve/itjugglucotext.cpp ${INCLUDESELF}/curve/rujugglucotext.cpp ${INCLUDESELF}/curve/curve.cpp ${INCLUDESELF}/curve/percentile.cpp  ${INCLUDESELF}/curve/nanovg/src/nanovg.c ${INCLUDESELF}/backupinfo.cpp ${INCLUDESELF}/prunestream.cpp ${INCLUDESELF}/readlog.cpp ${ASCONFILES} ${INCLUDESELF}/removeoldstates.cpp  ${INCLUDESELF}/nums/numdata.cpp ${INCLUDESELF}/settings/settings.cpp  ${INCLUDESELF}/cmdline/qr.cpp   ${INCLUDESELF}/cmdline/main.cpp ${INCLUDESELF}/share/logs.cpp ${NETPATH}/watchserver/common.cpp  ${NETPATH}/watchserver/watchserver.cpp ${NETPATH}/watchserver/iob.cpp ${NETPATH}/watchserver/cryptopen.cpp    ${NETPATH}/watchserver/sslserver.cpp  ${NETPATH}/netstuff.cpp  ${NETPATH}/sender.cpp ${NETPATH}/sendcommands.cpp ${NETPATH}/backup.cpp ${NETPATH}/getcommand.cpp ${NETPATH}/myip.cpp ${INCLUDESELF}/datbackup.cpp ${INCLUDESELF}/glucose.cpp ${INCLUDESELF}/export/exports.cpp ${INCLUDESELF}/settings/getcountry.cpp  ${INCLUDESELF}/meal/savemeals.cpp ${INCLUDESELF}/share/serial.cpp  )
 #add_custom_target(juggluco-dep g++ -MF juggluco-dep -MM -I${INCLUDESELF}/${NANOVG} -I${INCLUDESELF} -I${INCLUDESELF}/share  -I${INCLUDESELF}/LibAscon/inc ${depfiles} DEPENDS ${depfiles}) 
 add_custom_target(juggluco-dep /usr/bin/echo -n doel:>juggluco-dep\;g++  ${jugglucodef} -MM -I${INCLUDESELF}/libjuice/include/juice -I${INCLUDESELF}/cmdline -I${INCLUDESELF}/curve -I${INCLUDESELF}/${NANOVG} -I${INCLUDESELF} -I${INCLUDESELF}/share  -I${INCLUDESELF}/LibAscon/inc ${depfiles}|sed "\'s/^.*\.o:.*$$//g;s/\\([^\\]\\)$$/&\\\\/g'" | head -c-2 | grep -v '^$$' >> juggluco-dep\;echo "doel:" >> juggluco-dep\; /usr/bin/echo -e \"\\ttar -chf cmdlinesrc.tar  \"  $$^ ${depfiles} >> juggluco-dep DEPENDS ${depfiles}) 
 add_custom_target(cmdlinesrc.tar make -f ${CMAKE_CURRENT_BINARY_DIR}/juggluco-dep doel DEPENDS juggluco-dep)
 endif()
-

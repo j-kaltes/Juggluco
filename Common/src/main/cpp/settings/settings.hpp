@@ -412,7 +412,9 @@ struct Tings {
     uint8_t alarmSoundType;
     uint8_t radius;
     uint8_t Theme;
-    uint8_t reserved5:3;
+    uint8_t reserved5:1;
+    bool rotateText:1;
+    bool Rotate:1;
     bool isOval:1;
     bool timeOnComplication:1;
     bool askedWatchFace:1;

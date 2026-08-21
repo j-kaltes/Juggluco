@@ -1,85 +1,13 @@
-/*      This file is part of Juggluco, an Android app to receive and display         */
-/*      glucose values from Freestyle Libre 2(+), Libre 3(+), Dexcom G7/ONE+,        */
-/*      Sibionics GS1Sb and GS3, Accu-Chek SmartGuide, CareSens Air and              */
-/*      Aidex X sensors.                                                             */
-/*                                                                                   */
-/*      Copyright (C) 2021 Jaap Korthals Altes <jaapkorthalsaltes@gmail.com>         */
-/*                                                                                   */
-/*      Juggluco is free software: you can redistribute it and/or modify             */
-/*      it under the terms of the GNU General Public License as published            */
-/*      by the Free Software Foundation, either version 3 of the License, or         */
-/*      (at your option) any later version.                                          */
-/*                                                                                   */
-/*      Juggluco is distributed in the hope that it will be useful, but              */
-/*      WITHOUT ANY WARRANTY; without even the implied warranty of                   */
-/*      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                         */
-/*      See the GNU General Public License for more details.                         */
-/*                                                                                   */
-/*      You should have received a copy of the GNU General Public License            */
-/*      along with Juggluco. If not, see <https://www.gnu.org/licenses/>.            */
-/*                                                                                   */
-/*      Tue Aug 11 16:33:40 CEST 2026                                                */
 #include "authorization_round_driver.h"
 
 #include <stdint.h>
-#include <stdlib.h>
 #include <string.h>
 
-#include "authorization_round_internal.h"
-
-typedef l3_authorization_round_finish_trace l3_authorization_round_workspace;
-
-typedef struct {
-    const int32_t *param1_words;
-    uint32_t round_index;
-    const uint32_t *live_q6_words4;
-    const uint32_t *live_q5_words4;
-    const uint32_t *live_q4_words4;
-    const uint32_t *sixth_words13;
-    const uint32_t *param4_param5_words13;
-    const uint32_t *param4_staging_words13;
-    const uint32_t *affine_words13;
-    const uint32_t *param4_mix_words26;
-    const uint32_t *local3a0_words26;
-    const int32_t *vector_reduce_param1_words13;
-    uint32_t scalar0;
-    uint32_t scalar1;
-    const int32_t *eighth_local5e0_words13;
-    const int32_t *eighth_param3_words13;
-    const int32_t *secondary_state_a_words13;
-    const int32_t *secondary_context_mix_words26;
-    const uint32_t *secondary_carry_seed_words26;
-    const int32_t *secondary_state_b_words13;
-    const uint32_t *secondary_mix_a_words13;
-} l3_authorization_round_terminal_args;
-
-static uint32_t inverse_odd_u32(uint32_t x) {
-    uint32_t inverse = 1u;
-    for (unsigned i = 0; i < 5u; ++i) inverse *= 2u - x * inverse;
-    return inverse;
-}
-
-static uint64_t words2_u64(const uint32_t words[2]) {
-    return (uint64_t)words[0] | (uint64_t)words[1] << 32;
-}
-
-static void derive_following_seed(
-    const uint32_t affine_words13[13],
-    const uint32_t middle_mul4[4],
-    const uint32_t middle_add4[4],
-    l3_authorization_vector_seed *out) {
-    uint32_t raw_middle4[4];
-    for (unsigned i = 0; i < 4u; ++i) {
-        raw_middle4[i] = (affine_words13[4u + i] - middle_add4[i]) *
-                         inverse_odd_u32(middle_mul4[i]);
-    }
-    out->high_halves2[0] = words2_u64(affine_words13 + 8u);
-    out->high_halves2[1] = words2_u64(affine_words13 + 10u);
-    out->low_halves2[0] = words2_u64(raw_middle4);
-    out->low_halves2[1] = words2_u64(raw_middle4 + 2u);
-    out->middle_low_halves2[0] = words2_u64(affine_words13 + 4u);
-    out->middle_low_halves2[1] = words2_u64(affine_words13 + 6u);
-}
+#include "authorization_round_feedback.h"
+#include "authorization_round_mixer.h"
+#include "authorization_round_primary.h"
+#include "authorization_round_secondary.h"
+#include "authorization_vector_feedback.h"
 
 typedef int (*l3_authorization_round_post_vector_feedback_fn)(
     const uint32_t vector_feedback_words13[13],
@@ -88,22 +16,14 @@ typedef int (*l3_authorization_round_post_vector_feedback_fn)(
 static int run_vector_feedback_export(
     const int32_t seed_words13[13],
     uint32_t native_param2_unused,
-    uint32_t scalar0,
     uint32_t scalar1,
     const uint64_t local478_halves13[13][2],
     l3_authorization_round_post_vector_feedback_fn post_export,
-    uint32_t out_words13[13],
-    l3_authorization_feedback_observation *observation) {
+    uint32_t out_words13[13]) {
     if (!seed_words13 || !local478_halves13 || !post_export ||
-        !out_words13 || !observation) {
+        !out_words13) {
         return -1;
     }
-
-    observation->arguments3[0] = scalar0;
-    observation->arguments3[1] = native_param2_unused;
-    observation->arguments3[2] = scalar1;
-    memcpy(observation->seed_words13, seed_words13,
-           sizeof(observation->seed_words13));
 
     l3_authorization_vector_feedback_pair32 state26[26];
     for (unsigned lane = 0; lane < 13u; ++lane) {
@@ -115,23 +35,15 @@ static int run_vector_feedback_export(
         state26[2u * lane + 1u].hi =
             (uint32_t)(local478_halves13[lane][1] >> 32);
     }
-    memcpy(observation->state_before26, state26,
-           sizeof(observation->state_before26));
-
+    uint32_t feedback_words13[13];
     int rc = l3_authorization_vector_feedback_run13_update_export(
         seed_words13, native_param2_unused, scalar1, state26,
-        observation->output_words13, NULL);
+        feedback_words13, NULL);
     if (rc != 0) return rc;
-    memcpy(observation->state_after26, state26,
-           sizeof(observation->state_after26));
-    return post_export(observation->output_words13, out_words13);
+    return post_export(feedback_words13, out_words13);
 }
 
-/* Native FUN_f3fbc5c0 does not receive nine independent seed vectors.  It
- * materializes param_5 first, derives param_6's vector seed from that export,
- * then derives param_7's seed from param_6.  This helper follows that order
- * directly and uses the post-local_618 low image for the final param_7 path.
- * It therefore evaluates each convolution/materializer exactly once. */
+/* Native terminal path, evaluating each convolution/materializer once. */
 static int call_native_terminal_dynamic(
     const int32_t seed_words13[13],
     uint32_t native_param2_unused,
@@ -144,30 +56,13 @@ static int call_native_terminal_dynamic(
     const uint32_t local57c_words13[13],
     const uint32_t local5e4_words13[13],
     const uint32_t local618_words13[13],
-    const l3_authorization_vector_seed *param5_seed,
     uint32_t out_param5_words13[13],
     uint32_t out_param6_words13[13],
-    uint32_t out_param7_words13[13],
-    l3_authorization_vector_seed *out_next_param5_seed,
-    l3_authorization_feedback_observation observations3[3]) {
-    static const uint32_t p5_middle_mul[4] = {
-        0x1bcf873du, 0xdfdfee13u, 0xd6b5eeb1u, 0xfe48f001u
-    };
-    static const uint32_t p5_middle_add[4] = {
-        0x9758affau, 0xf437a370u, 0xb90730b2u, 0x0bcaeb52u
-    };
-    static const uint32_t p6_middle_mul[4] = {
-        0x46b3c5e5u, 0x0f36e889u, 0x5ab50ec3u, 0xdb02388du
-    };
-    static const uint32_t p6_middle_add[4] = {
-        0x97cd793fu, 0xbc0dc7e7u, 0x3d316219u, 0x716e7356u
-    };
+    uint32_t out_param7_words13[13]) {
     if (!seed_words13 || !round_2cc_words13 || !round_ec8_words13 ||
         !local514_words13 || !local5b0_words13 || !local548_words13 ||
         !local57c_words13 || !local5e4_words13 || !local618_words13 ||
-        !param5_seed ||
-        !out_param5_words13 || !out_param6_words13 || !out_param7_words13 ||
-        !out_next_param5_seed || !observations3) {
+        !out_param5_words13 || !out_param6_words13 || !out_param7_words13) {
         return -1;
     }
 
@@ -184,126 +79,52 @@ static int call_native_terminal_dynamic(
     l3_authorization_word_pair low_pairs26[26];
     l3_authorization_word_pair param6_low_pairs26[26];
     uint64_t local478_halves13[13][2];
-    uint32_t vector_scalar0;
-    l3_authorization_vector_seed param6_seed, param7_seed;
-
     int rc = l3_authorization_core_post_secondary_mix_accum_convolution26(
         local514, round_2cc_words13, high_pairs26, NULL);
     if (rc != 0) return rc;
     rc = l3_authorization_stage1_stage_accumulate_and_convolve26(
         local5b0, round_ec8_words13, low_pairs26, NULL);
     if (rc != 0) return rc;
-    memcpy(observations3[0].vector_input_a13, local5b0,
-           sizeof(observations3[0].vector_input_a13));
-    memcpy(observations3[0].vector_input_b13, round_ec8_words13,
-           sizeof(observations3[0].vector_input_b13));
-    memcpy(observations3[0].vector_high_pairs26, high_pairs26,
-           sizeof(observations3[0].vector_high_pairs26));
-    memcpy(observations3[0].vector_low_pairs26, low_pairs26,
-           sizeof(observations3[0].vector_low_pairs26));
     rc = l3_authorization_stage1_stage_vector_reduction13(
-        low_pairs26, high_pairs26,
-        param5_seed->high_halves2, param5_seed->low_halves2,
-        param5_seed->middle_low_halves2, local478_halves13,
-        &vector_scalar0, NULL);
+        low_pairs26, high_pairs26, local478_halves13);
     if (rc != 0) return rc;
     rc = run_vector_feedback_export(
-        seed_words13, native_param2_unused, vector_scalar0, scalar1_unused,
+        seed_words13, native_param2_unused, scalar1_unused,
         local478_halves13, l3_authorization_materialize_round_output_a,
-        out_param5_words13, &observations3[0]);
+        out_param5_words13);
     if (rc != 0) return rc;
 
-    derive_following_seed(out_param5_words13, p5_middle_mul, p5_middle_add,
-                          &param6_seed);
     rc = l3_authorization_stage2_stage_accumulate_and_convolve26(
         local548, round_2cc_words13, high_pairs26, NULL);
     if (rc != 0) return rc;
     rc = l3_authorization_stage3_stage_accumulate_and_convolve26(
         local5e4, round_ec8_words13, param6_low_pairs26, NULL);
     if (rc != 0) return rc;
-    memcpy(observations3[1].vector_input_a13, local548,
-           sizeof(observations3[1].vector_input_a13));
-    memcpy(observations3[1].vector_input_b13, round_2cc_words13,
-           sizeof(observations3[1].vector_input_b13));
-    memcpy(observations3[1].vector_high_pairs26, high_pairs26,
-           sizeof(observations3[1].vector_high_pairs26));
-    memcpy(observations3[1].vector_low_pairs26, param6_low_pairs26,
-           sizeof(observations3[1].vector_low_pairs26));
     rc = l3_authorization_stage2_stage_vector_reduction13(
-        param6_low_pairs26, high_pairs26,
-        param6_seed.high_halves2, param6_seed.low_halves2,
-        param6_seed.middle_low_halves2, local478_halves13,
-        &vector_scalar0, NULL);
+        param6_low_pairs26, high_pairs26, local478_halves13);
     if (rc != 0) return rc;
     rc = run_vector_feedback_export(
-        seed_words13, native_param2_unused, vector_scalar0, scalar1_unused,
+        seed_words13, native_param2_unused, scalar1_unused,
         local478_halves13, l3_authorization_materialize_round_output_b,
-        out_param6_words13, &observations3[1]);
+        out_param6_words13);
     if (rc != 0) return rc;
 
-    derive_following_seed(out_param6_words13, p6_middle_mul, p6_middle_add,
-                          &param7_seed);
     rc = l3_authorization_core_param7_high_accum_convolution26(
         local57c, round_2cc_words13, high_pairs26);
     if (rc != 0) return rc;
     rc = l3_authorization_stage4_stage_accumulate_and_convolve26(
         local618, round_ec8_words13, low_pairs26, NULL);
     if (rc != 0) return rc;
-    memcpy(observations3[2].vector_input_a13, local618,
-           sizeof(observations3[2].vector_input_a13));
-    memcpy(observations3[2].vector_input_b13, round_ec8_words13,
-           sizeof(observations3[2].vector_input_b13));
-    memcpy(observations3[2].vector_high_pairs26, high_pairs26,
-           sizeof(observations3[2].vector_high_pairs26));
-    memcpy(observations3[2].vector_low_pairs26, low_pairs26,
-           sizeof(observations3[2].vector_low_pairs26));
     rc = l3_authorization_stage3_stage_vector_reduction13(
-        low_pairs26, high_pairs26,
-        param7_seed.high_halves2, param7_seed.low_halves2,
-        param7_seed.middle_low_halves2, local478_halves13,
-        &vector_scalar0, NULL);
+        low_pairs26, high_pairs26, local478_halves13);
     if (rc != 0) return rc;
     rc = run_vector_feedback_export(
-        seed_words13, native_param2_unused, vector_scalar0, scalar1_unused,
+        seed_words13, native_param2_unused, scalar1_unused,
         local478_halves13, l3_authorization_materialize_round_output_c,
-        out_param7_words13, &observations3[2]);
+        out_param7_words13);
     if (rc != 0) return rc;
 
-    derive_following_seed(out_param7_words13, p5_middle_mul, p5_middle_add,
-                          out_next_param5_seed);
     return 0;
-}
-
-static int call_terminal(
-    const l3_authorization_round_terminal_args *a,
-    const l3_authorization_vector_seed *param5_seed,
-    const l3_authorization_vector_seed *param6_seed,
-    const l3_authorization_vector_seed *param7_seed,
-    uint32_t out_param5_words13[13],
-    uint32_t out_param6_words13[13],
-    uint32_t out_param7_words13[13],
-    l3_authorization_round_workspace *workspace) {
-    memset(workspace, 0, sizeof(*workspace));
-    return l3_authorization_round_finish(
-        a->param1_words, a->round_index,
-        a->live_q6_words4, a->live_q5_words4, a->live_q4_words4,
-        a->sixth_words13, a->param4_param5_words13,
-        a->param4_staging_words13, a->affine_words13,
-        a->param4_mix_words26, a->local3a0_words26,
-        a->vector_reduce_param1_words13, a->scalar0, a->scalar1,
-        a->eighth_local5e0_words13, a->eighth_param3_words13,
-        a->vector_reduce_param1_words13, a->scalar0, a->scalar1,
-        a->secondary_state_a_words13, a->secondary_context_mix_words26,
-        a->secondary_carry_seed_words26, a->secondary_state_b_words13,
-        a->secondary_mix_a_words13,
-        param5_seed->high_halves2, param5_seed->low_halves2,
-        param5_seed->middle_low_halves2,
-        param6_seed->high_halves2, param6_seed->low_halves2,
-        param6_seed->middle_low_halves2,
-        param7_seed->high_halves2, param7_seed->low_halves2,
-        param7_seed->middle_low_halves2,
-        out_param5_words13, out_param6_words13, out_param7_words13,
-        workspace);
 }
 
 static void copy_i32_words(const int32_t *ctx, size_t byte_offset,
@@ -325,10 +146,12 @@ static uint32_t load_u32(const int32_t *ctx, size_t byte_offset) {
 static int context_covers_round(size_t word_count, uint32_t round_index) {
     if (word_count > SIZE_MAX / sizeof(int32_t)) return 0;
     const size_t context_bytes = word_count * sizeof(int32_t);
+    /* The +0xec8 round window is above both the +0x2cc window and every
+     * fixed preamble read (whose highest end is +0x2a4), so this one exact
+     * bound covers the complete production read closure. */
     const uint64_t last_window_end64 = UINT64_C(0xec8) +
         (uint64_t)round_index * UINT64_C(0x34) +
         UINT64_C(13) * sizeof(int32_t);
-    if (word_count < L3_AUTH_ROUND_DRIVER_MIN_CONTEXT_WORDS) return 0;
     if (last_window_end64 > (uint64_t)SIZE_MAX) return 0;
     return (size_t)last_window_end64 <= context_bytes;
 }
@@ -349,19 +172,12 @@ static int round_step_with_workspace(
     const int32_t *param1_words,
     size_t param1_word_count,
     const l3_authorization_round_handoff *previous_tail,
-    const l3_authorization_round_seed *legacy_seeds,
-    const l3_authorization_vector_seed *native_param5_seed,
     const int32_t native_secondary_caller_state_a_words13[13],
     const int32_t native_secondary_caller_state_b_words13[13],
-    l3_authorization_vector_seed *out_next_param5_seed,
-    l3_authorization_round_observation *out,
-    l3_authorization_round_workspace *workspace) {
+    l3_authorization_round_observation *out) {
     if (!param1_words || !previous_tail || !out ||
-        (legacy_seeds && !workspace) ||
-        ((!legacy_seeds) == (!native_param5_seed)) ||
         ((native_secondary_caller_state_a_words13 == NULL) !=
-         (native_secondary_caller_state_b_words13 == NULL)) ||
-        (native_param5_seed && !out_next_param5_seed)) {
+         (native_secondary_caller_state_b_words13 == NULL))) {
         return L3_AUTH_ROUND_DRIVER_INVALID;
     }
     memset(out, 0, sizeof(*out));
@@ -374,11 +190,6 @@ static int round_step_with_workspace(
     }
 
     out->round_index = previous_tail->next_round_index;
-    for (unsigned i = 0; i < 4u; ++i) {
-        out->live_q6_words4[i] = previous_tail->param5_words13[i];
-        out->live_q5_words4[i] = previous_tail->param6_words13[i];
-        out->live_q4_words4[i] = previous_tail->param7_words13[i];
-    }
     for (unsigned i = 0; i < 13u; ++i) {
         out->fifth_words13[i] = (uint32_t)previous_tail->next_round_2cc_words13[i];
         out->sixth_seed_words13[i] = previous_tail->next_round_ec8_words13[i];
@@ -410,58 +221,14 @@ static int round_step_with_workspace(
     copy_u32_words(param1_words, 0x194u, 26u, local3a0_words26);
     copy_i32_words(param1_words, 0x090u, 13u, vector_reduce_param1_words13);
 
-    int32_t previous_param6_words13[13];
-    int32_t eighth_local5e0_words13[13];
-    int32_t eighth_param3_words13[13];
-    if (native_param5_seed) {
-        rc = l3_authorization_primary_run(
-            previous_tail->param5_words13,
-            previous_tail->param6_words13,
-            previous_tail->param7_words13,
-            param1_words,
-            out->primary_state_a_words13,
-            out->primary_state_b_words13,
-            out->primary_state_c_words13);
-    } else {
-        uint32_t seed_raw1[13][2], seed_prefix1[13][2];
-        uint32_t seed_raw2[13][2], seed_prefix2[13][2];
-        memcpy(previous_param6_words13, previous_tail->param6_words13,
-               sizeof(previous_param6_words13));
-        memcpy(eighth_param3_words13, previous_tail->param7_words13,
-               sizeof(eighth_param3_words13));
-        rc = l3_authorization_primary_param6_seed_prefixes13(
-            previous_param6_words13,
-            eighth_local5e0_words13,
-            seed_raw1,
-            seed_prefix1,
-            seed_raw2,
-            seed_prefix2);
-        if (rc == 0) {
-            rc = l3_authorization_primary_post_sixth_terminal_words13(
-                out->live_q6_words4,
-                out->live_q5_words4,
-                out->live_q4_words4,
-                out->sixth_words13,
-                param4_param5_words13,
-                param4_staging_words13,
-                affine_words13,
-                param4_mix_words26,
-                local3a0_words26,
-                vector_reduce_param1_words13,
-                scalar0,
-                scalar1,
-                eighth_local5e0_words13,
-                eighth_param3_words13,
-                vector_reduce_param1_words13,
-                scalar0,
-                scalar1,
-                out->primary_state_a_words13,
-                out->primary_state_b_words13,
-                out->primary_intermediate_words13,
-                out->primary_state_c_words13,
-                NULL);
-        }
-    }
+    rc = l3_authorization_primary_run(
+        previous_tail->param5_words13,
+        previous_tail->param6_words13,
+        previous_tail->param7_words13,
+        param1_words,
+        out->primary_state_a_words13,
+        out->primary_state_b_words13,
+        out->primary_state_c_words13);
     if (rc != 0) return L3_AUTH_ROUND_DRIVER_NATIVE_ERROR;
 
     int32_t secondary_input_words13[13];
@@ -558,48 +325,7 @@ static int round_step_with_workspace(
 
     int32_t secondary_context_mix_words26[26];
     copy_i32_words(param1_words, 0x194u, 26u, secondary_context_mix_words26);
-    if (legacy_seeds) {
-        const l3_authorization_round_terminal_args terminal = {
-            param1_words, out->round_index,
-            out->live_q6_words4, out->live_q5_words4, out->live_q4_words4,
-            out->sixth_words13, param4_param5_words13, param4_staging_words13,
-            affine_words13, param4_mix_words26, local3a0_words26,
-            vector_reduce_param1_words13, scalar0, scalar1,
-            eighth_local5e0_words13, eighth_param3_words13,
-            out->secondary_state_a_words13, secondary_context_mix_words26,
-            out->secondary_carry_seed_words26, out->secondary_state_b_words13,
-            out->secondary_mix_a_words13
-        };
-        const l3_authorization_vector_seed p5 = {
-            {legacy_seeds->param5_local4c0_halves2[0], legacy_seeds->param5_local4c0_halves2[1]},
-            {legacy_seeds->param5_local4d0_halves2[0], legacy_seeds->param5_local4d0_halves2[1]},
-            {legacy_seeds->param5_auvar98_halves2[0], legacy_seeds->param5_auvar98_halves2[1]}
-        };
-        const l3_authorization_vector_seed p6 = {
-            {legacy_seeds->param6_high_seed_halves2[0], legacy_seeds->param6_high_seed_halves2[1]},
-            {legacy_seeds->param6_low_seed_halves2[0], legacy_seeds->param6_low_seed_halves2[1]},
-            {legacy_seeds->param6_middle_low_seed_halves2[0], legacy_seeds->param6_middle_low_seed_halves2[1]}
-        };
-        const l3_authorization_vector_seed p7 = {
-            {legacy_seeds->param7_high_seed_halves2[0], legacy_seeds->param7_high_seed_halves2[1]},
-            {legacy_seeds->param7_low_seed_halves2[0], legacy_seeds->param7_low_seed_halves2[1]},
-            {legacy_seeds->param7_middle_low_seed_halves2[0], legacy_seeds->param7_middle_low_seed_halves2[1]}
-        };
-        rc = call_terminal(
-            &terminal, &p5, &p6, &p7,
-            out->tail.param5_words13, out->tail.param6_words13,
-            out->tail.param7_words13, workspace);
-        if (rc == 0) {
-            out->tail.has_next_round = workspace->has_next_round;
-            out->tail.next_round_index = workspace->next_round_index;
-            memcpy(out->tail.next_round_2cc_words13,
-                   workspace->next_round_2cc_words13,
-                   sizeof(out->tail.next_round_2cc_words13));
-            memcpy(out->tail.next_round_ec8_words13,
-                   workspace->next_round_ec8_words13,
-                   sizeof(out->tail.next_round_ec8_words13));
-        }
-    } else {
+    {
         uint32_t local4c8_words26[26], local530_words26[26];
         uint32_t local5e4_words13[13], local618_words13[13];
         rc = l3_authorization_secondary_local3c4_local460_accum_convolution26_materialize4c8(
@@ -635,10 +361,9 @@ static int round_step_with_workspace(
                 out->primary_state_a_words13, local5b0_words13,
                 out->primary_state_b_words13,
                 out->primary_state_c_words13, local5e4_words13,
-                local618_words13, native_param5_seed,
+                local618_words13,
                 out->tail.param5_words13, out->tail.param6_words13,
-                out->tail.param7_words13, out_next_param5_seed,
-                out->vector_feedback_calls3);
+                out->tail.param7_words13);
         }
         if (rc == 0 && out->round_index != 0u) {
             out->tail.has_next_round = 1u;
@@ -663,10 +388,9 @@ int l3_authorization_round_state_init(
     const uint32_t param5_words13[13],
     const uint32_t param6_words13[13],
     const uint32_t param7_words13[13],
-    const l3_authorization_vector_seed *param5_seed,
     l3_authorization_round_state *out) {
     if (!param1_words || !param5_words13 || !param6_words13 ||
-        !param7_words13 || !param5_seed || !out) {
+        !param7_words13 || !out) {
         return L3_AUTH_ROUND_DRIVER_INVALID;
     }
     memset(out, 0, sizeof(*out));
@@ -686,7 +410,6 @@ int l3_authorization_round_state_init(
                    out->round.next_round_2cc_words13);
     copy_i32_words(param1_words, 0xec8u + cursor, 13u,
                    out->round.next_round_ec8_words13);
-    out->param5_seed = *param5_seed;
     return L3_AUTH_ROUND_DRIVER_OK;
 }
 
@@ -712,16 +435,13 @@ int l3_authorization_run_rounds(
         memset(&current, 0, sizeof(current));
         rc = round_step_with_workspace(
             param1_words, param1_word_count, &cursor.round,
-            NULL, &cursor.param5_seed,
             cursor.has_secondary_caller_words
                 ? cursor.secondary_caller_state_a_words13 : NULL,
             cursor.has_secondary_caller_words
                 ? cursor.secondary_caller_state_b_words13 : NULL,
-            &current.next_param5_seed,
-            &current.round, NULL);
+            &current.round);
         if (rc != L3_AUTH_ROUND_DRIVER_OK) break;
         cursor.round = current.round.tail;
-        cursor.param5_seed = current.next_param5_seed;
         *inout_state = cursor;
         if (last_result) *last_result = current;
         ++count;
@@ -748,28 +468,33 @@ int l3_authorization_run_round_pipeline(
         return L3_AUTH_ROUND_DRIVER_BOUNDS;
     }
 
+    int32_t preamble_first_words13[13];
+    int32_t preamble_second_words13[13];
+    uint32_t initial_param5_words13[13];
+    uint32_t initial_param6_words13[13];
+    uint32_t initial_param7_words13[13];
     int rc = l3_authorization_prepare_round_pipeline(
         (const uint8_t *)parent_context_words, left66, right66, scalar35,
-        out->preamble_first_words13, out->preamble_second_words13,
-        out->initial_param5_words13, out->initial_param6_words13,
-        out->initial_param7_words13, &out->initial_param5_seed);
+        preamble_first_words13, preamble_second_words13,
+        initial_param5_words13, initial_param6_words13,
+        initial_param7_words13);
     if (rc != 0) return L3_AUTH_ROUND_DRIVER_NATIVE_ERROR;
 
     l3_authorization_round_state cursor;
     rc = l3_authorization_round_state_init(
         parent_context_words, parent_context_word_count, 58u,
-        out->initial_param5_words13, out->initial_param6_words13,
-        out->initial_param7_words13, &out->initial_param5_seed, &cursor);
+        initial_param5_words13, initial_param6_words13,
+        initial_param7_words13, &cursor);
     if (rc != L3_AUTH_ROUND_DRIVER_OK) return rc;
     cursor.has_secondary_caller_words = 1u;
-    memcpy(cursor.secondary_caller_state_a_words13, out->preamble_first_words13,
+    memcpy(cursor.secondary_caller_state_a_words13, preamble_first_words13,
            sizeof(cursor.secondary_caller_state_a_words13));
-    memcpy(cursor.secondary_caller_state_b_words13, out->preamble_second_words13,
+    memcpy(cursor.secondary_caller_state_b_words13, preamble_second_words13,
            sizeof(cursor.secondary_caller_state_b_words13));
 
     rc = l3_authorization_run_rounds(
         parent_context_words, parent_context_word_count, &cursor, max_rounds,
-        &out->rounds_run, &out->last_round);
+        &out->rounds_run, NULL);
     out->final_state = cursor;
     return rc;
 }

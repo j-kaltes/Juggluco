@@ -2030,3 +2030,19 @@ extern "C" JNIEXPORT jint  JNICALL   fromjava(getalarmSoundType)(JNIEnv *env, jc
     return settings->data()->alarmSoundTypeget();
     }
 
+
+extern "C" JNIEXPORT void  JNICALL   fromjava(setRotate)(JNIEnv *env, jclass cl,jboolean val) {
+    settings->data()->Rotate=val;
+    }
+extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getRotate)(JNIEnv *env, jclass cl) {
+    return settings->data()->Rotate;
+    }
+
+
+extern "C" JNIEXPORT void  JNICALL   fromjava(setRotateText)(JNIEnv *env, jclass cl,jboolean val) {
+    settings->data()->rotateText=val;
+    }
+extern "C" JNIEXPORT jboolean  JNICALL   fromjava(getRotateText)(JNIEnv *env, jclass cl) {
+    return settings->data()->rotateText;
+    }
+

@@ -481,6 +481,14 @@ if(!dataptr) {
       LOGAR("SIprocessData SensorGlucoseData==null");
       return 0LL;
      }
+  if(!sensors || sdata->sensorindex < 0 || sdata->sensorindex > sensors->last()) {
+      LOGGER("SIprocessData invalid sensorindex=%d sensors=%p\n",sdata->sensorindex,sensors);
+      return 0LL;
+     }
+  if(sens==Sensoren::isdeleted || sensors->getSensorData(sdata->sensorindex)!=sens) {
+      LOGGER("SIprocessData stale SensorGlucoseData=%p index=%d\n",sens,sdata->sensorindex);
+      return 0LL;
+     }
     if(sens->processing.test_and_set()) {
         LOGAR("SIprocessData is processing");
         return 0LL;

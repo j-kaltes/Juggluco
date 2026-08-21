@@ -116,11 +116,10 @@ static void config(MainActivity context, int meterIndex, View parent, BluetoothD
    float density=GlucoseCurve.metrics.density;
    bloodvar.setPadding((int)(density*10),0,(int)(4*density),0);
    var layout=new Layout(context,(x,w,h)->{
-//         var width=GlucoseCurve.getwidth();
- //        x.setX((width-w)/2);
-  //       x.setY(MainActivity.systembarTop);
          return new int[] {w,h};
-           },new View[]{namelabel},new View[]{bloodafter},new View[]{datebutton,timebutton},new View[]{helpbutton,bloodvar,spinner},new View[]{cancel,deletebutton,ok});
+           },new View[]{namelabel},new View[]{bloodafter},new View[]{helpbutton,datebutton,timebutton},new View[]{bloodvar,spinner},new View[]{cancel,deletebutton,ok});
+
+    layout.systembarMargins();
    timebutton.setOnClickListener(v-> {
      layout.setVisibility(INVISIBLE);
      context.getnumberview().gettimepicker(context,hour[0], min[0], (h,m) -> {

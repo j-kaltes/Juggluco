@@ -321,18 +321,10 @@ View[] durviews;
 	View lay;
 	ScrollView scroll=new ScrollView(context);
 	lay=scroll;
-		Layout layout = new Layout(context, (l, w, h) -> {
-        /*
-		if(!isWearable) {
-			final var width=GlucoseCurve.getwidth();
-			if(width>w) {
-				lay.setX((width-w)/2);
-				}
-			}
-            */
+        Layout layout = new Layout(context, (l, w, h) -> {
 			return new int[]{w,h};}, views);
-		scroll.addView(layout);
-    ViewGroup.LayoutParams params;
+        scroll.addView(layout);
+        ViewGroup.LayoutParams params;
 	if(isWearable)  {
 		lay.setBackgroundColor(tk.glucodata.Applic.backgroundcolor);
 //		 int laypad=(int)(GlucoseCurve.metrics.density*(hasname==1?20.0f:35.0f));
@@ -342,10 +334,16 @@ View[] durviews;
         params=new ViewGroup.LayoutParams(MATCH_PARENT,MATCH_PARENT);
 		 }
 	else {
-		lay.setBackgroundResource(R.drawable.dialogbackground);
+		layout.setBackgroundResource(R.drawable.dialogbackground);
 		 int laypad=(int)(GlucoseCurve.metrics.density*4.0f);
 		 lay.setPadding(laypad,0,laypad,laypad);
-          params =    new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.CENTER_HORIZONTAL);
+//                Layout.getMargins(lay).topMargin=MainActivity.systembarTop*5/6;
+                 //layout.systembarMargins();
+                 params =    new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.CENTER_HORIZONTAL);
+
+                // fparams.topMargin=MainActivity.systembarTop*5/6;
+                 //params =fparams;
+            layout.systembarMargins((left,top,right,bottom)->new int[]{0,top*5/6,0,0});
 		 }
 	 context.addMyContentView(lay, params);
 		Save.setOnClickListener(v->{

@@ -1,24 +1,3 @@
-/*      This file is part of Juggluco, an Android app to receive and display         */
-/*      glucose values from Freestyle Libre 2(+), Libre 3(+), Dexcom G7/ONE+,        */
-/*      Sibionics GS1Sb and GS3, Accu-Chek SmartGuide, CareSens Air and              */
-/*      Aidex X sensors.                                                             */
-/*                                                                                   */
-/*      Copyright (C) 2021 Jaap Korthals Altes <jaapkorthalsaltes@gmail.com>         */
-/*                                                                                   */
-/*      Juggluco is free software: you can redistribute it and/or modify             */
-/*      it under the terms of the GNU General Public License as published            */
-/*      by the Free Software Foundation, either version 3 of the License, or         */
-/*      (at your option) any later version.                                          */
-/*                                                                                   */
-/*      Juggluco is distributed in the hope that it will be useful, but              */
-/*      WITHOUT ANY WARRANTY; without even the implied warranty of                   */
-/*      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                         */
-/*      See the GNU General Public License for more details.                         */
-/*                                                                                   */
-/*      You should have received a copy of the GNU General Public License            */
-/*      along with Juggluco. If not, see <https://www.gnu.org/licenses/>.            */
-/*                                                                                   */
-/*      Tue Aug 11 16:33:40 CEST 2026                                                */
 #ifndef L3_AUTHORIZATION_MATERIAL_ROUNDS_H
 #define L3_AUTHORIZATION_MATERIAL_ROUNDS_H
 
@@ -39,10 +18,7 @@ enum {
     L3_AUTH_ROUND_DRIVER_BOUNDS = -2,
     L3_AUTH_ROUND_DRIVER_STATE_MISMATCH = -3,
     L3_AUTH_ROUND_DRIVER_NO_MEMORY = -4,
-    L3_AUTH_ROUND_DRIVER_NATIVE_ERROR = -5,
-    /* Rounded-up end of the highest fixed preamble read (+0x1d96).  The
-     * round-dependent +0x2cc/+0xec8 windows are checked separately. */
-    L3_AUTH_ROUND_DRIVER_MIN_CONTEXT_WORDS = 0x1d98u / 4u
+    L3_AUTH_ROUND_DRIVER_NATIVE_ERROR = -5
 };
 
 /* Historical V542 oracle ABI.  The V331-era reconstruction supplied all nine
@@ -74,36 +50,16 @@ typedef struct {
     int32_t next_round_ec8_words13[13];
 } l3_authorization_round_handoff;
 
-/* Compact call-boundary observation for the three vector-feedback transformations
- * in one native round.  arguments3 follows the actual ARM register order:
- * r1 (per-call vector scalar), r2 (shared context scalar), r3 (shared
- * context scalar). */
-typedef struct {
-    uint32_t arguments3[3];
-    int32_t seed_words13[13];
-    int32_t vector_input_a13[13];
-    int32_t vector_input_b13[13];
-    uint32_t vector_high_pairs26[26][2];
-    uint32_t vector_low_pairs26[26][2];
-    uint32_t state_before26[26][2];
-    uint32_t state_after26[26][2];
-    uint32_t output_words13[13];
-} l3_authorization_feedback_observation;
-
-/* Lean observability record for one completed round.  It contains the
- * boundaries useful for differential tests without recursively embedding
- * every prior round. */
+/* Working values retained by the compact round driver.  Trace-only copies of
+ * live registers, feedback inputs and before/after states are deliberately
+ * omitted from the production path. */
 typedef struct {
     uint32_t round_index;
-    uint32_t live_q6_words4[4];
-    uint32_t live_q5_words4[4];
-    uint32_t live_q4_words4[4];
     uint32_t fifth_words13[13];
     int32_t sixth_seed_words13[13];
     uint32_t sixth_words13[13];
     uint32_t primary_state_a_words13[13];
     uint32_t primary_state_b_words13[13];
-    uint32_t primary_intermediate_words13[13];
     uint32_t primary_state_c_words13[13];
     int32_t secondary_state_a_words13[13];
     int32_t secondary_state_b_words13[13];
@@ -113,15 +69,12 @@ typedef struct {
     uint32_t secondary_mix_d_words13[13];
     uint32_t secondary_mix_e_words13[13];
     uint32_t secondary_carry_seed_words26[26];
-    l3_authorization_feedback_observation vector_feedback_calls3[3];
     l3_authorization_round_handoff tail;
 } l3_authorization_round_observation;
 
-/* Native loop state: the ordinary round handoff plus the three-vector seed
- * consumed by the pending round's param_5 materializer. */
+/* Native loop state plus the two caller-state vectors carried across rounds. */
 typedef struct {
     l3_authorization_round_handoff round;
-    l3_authorization_vector_seed param5_seed;
     uint32_t has_secondary_caller_words;
     int32_t secondary_caller_state_a_words13[13];
     int32_t secondary_caller_state_b_words13[13];
@@ -129,23 +82,14 @@ typedef struct {
 
 typedef struct {
     l3_authorization_round_observation round;
-    l3_authorization_vector_seed next_param5_seed;
 } l3_authorization_round_step_result;
 
-/* Complete statically reconstructed FUN_f3fbc5c0 core result.  The caller
- * supplies the parent context, both generated 0x42-byte frames, and the
- * 35-byte scalar; this record exposes the preamble boundary and the final
- * compact round state without requiring callers to reproduce handoffs. */
+/* Compact statically reconstructed FUN_f3fbc5c0 core result.  Intermediate
+ * preamble material is private to the driver; callers only need the final
+ * state and the number of completed rounds. */
 typedef struct {
-    int32_t preamble_first_words13[13];
-    int32_t preamble_second_words13[13];
-    uint32_t initial_param5_words13[13];
-    uint32_t initial_param6_words13[13];
-    uint32_t initial_param7_words13[13];
-    l3_authorization_vector_seed initial_param5_seed;
     uint32_t rounds_run;
     l3_authorization_round_state final_state;
-    l3_authorization_round_step_result last_round;
 } l3_authorization_round_pipeline_result;
 
 /* Initialize a pending native round directly.  Unlike
@@ -158,7 +102,6 @@ int l3_authorization_round_state_init(
     const uint32_t param5_words13[13],
     const uint32_t param6_words13[13],
     const uint32_t param7_words13[13],
-    const l3_authorization_vector_seed *param5_seed,
     l3_authorization_round_state *out);
 
 

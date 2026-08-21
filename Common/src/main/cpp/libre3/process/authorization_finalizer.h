@@ -1,24 +1,3 @@
-/*      This file is part of Juggluco, an Android app to receive and display         */
-/*      glucose values from Freestyle Libre 2(+), Libre 3(+), Dexcom G7/ONE+,        */
-/*      Sibionics GS1Sb and GS3, Accu-Chek SmartGuide, CareSens Air and              */
-/*      Aidex X sensors.                                                             */
-/*                                                                                   */
-/*      Copyright (C) 2021 Jaap Korthals Altes <jaapkorthalsaltes@gmail.com>         */
-/*                                                                                   */
-/*      Juggluco is free software: you can redistribute it and/or modify             */
-/*      it under the terms of the GNU General Public License as published            */
-/*      by the Free Software Foundation, either version 3 of the License, or         */
-/*      (at your option) any later version.                                          */
-/*                                                                                   */
-/*      Juggluco is distributed in the hope that it will be useful, but              */
-/*      WITHOUT ANY WARRANTY; without even the implied warranty of                   */
-/*      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                         */
-/*      See the GNU General Public License for more details.                         */
-/*                                                                                   */
-/*      You should have received a copy of the GNU General Public License            */
-/*      along with Juggluco. If not, see <https://www.gnu.org/licenses/>.            */
-/*                                                                                   */
-/*      Tue Aug 11 16:33:40 CEST 2026                                                */
 #ifndef L3_AUTHORIZATION_MATERIAL_FINALIZER_H
 #define L3_AUTHORIZATION_MATERIAL_FINALIZER_H
 
@@ -771,7 +750,6 @@ typedef struct {
     uint32_t final_driver;
 } l3_authorization_finalizer_parent_context_stage01_state;
 
-uint32_t l3_authorization_finalizer_reduce_vector_stage01(uint32_t value, unsigned rounds);
 
 void l3_authorization_finalizer_parent_context_stage01_seed(
     const uint32_t parent_words[L3_AUTH_FINAL_STATE_FIRST_LOOP_PAIRS],
@@ -816,7 +794,6 @@ void l3_authorization_finalizer_live_context_derive(
     const uint32_t initial_local_188_words[L3_AUTH_FINAL_STATE_FIRST_LOOP_PAIRS],
     l3_authorization_finalizer_live_context *out);
 
-uint32_t l3_authorization_finalizer_reduce_vector_stage02(uint32_t value, unsigned rounds);
 
 void l3_authorization_finalizer_seed_state_stage02_seed(
     const uint32_t auStack_128_words[L3_AUTH_FINAL_STATE_FIRST_LOOP_PAIRS],
@@ -841,7 +818,6 @@ void l3_authorization_finalizer_scan_reduction_predicate(
     const uint32_t local_1f0_words[L3_AUTH_FINAL_STATE_FIRST_LOOP_PAIRS],
     l3_authorization_finalizer_predicate_terminal_gate_state *out);
 
-uint32_t l3_authorization_finalizer_reduce_vector_stage03(uint32_t value, unsigned rounds);
 
 typedef struct {
     uint32_t input_words[L3_AUTH_FINAL_STATE_FIRST_LOOP_PAIRS];
@@ -868,8 +844,6 @@ void l3_authorization_finalizer_lane_state_a_even_stage03_refresh(
    DAT_f41a3958 reducer and rewrite local_188[0..12].  Even values run the
    DAT_f41a3998 reducer and seed auStack_128[2..14] for the following
    DAT_f41a39d8 local_188 regeneration block. */
-uint32_t l3_authorization_finalizer_reduce_vector_stage04(uint32_t value, unsigned rounds);
-uint32_t l3_authorization_finalizer_reduce_vector_stage05(uint32_t value, unsigned rounds);
 
 typedef struct {
     uint32_t input_words[L3_AUTH_FINAL_STATE_FIRST_LOOP_PAIRS];
@@ -920,7 +894,6 @@ typedef struct {
     uint32_t final_driver;
 } l3_authorization_finalizer_feedback_state_a_stage06_state;
 
-uint32_t l3_authorization_finalizer_reduce_vector_stage06(uint32_t value, unsigned rounds);
 
 void l3_authorization_finalizer_feedback_state_a_stage06_regenerate_from_reduced_words(
     const uint32_t auStack_128_words[L3_AUTH_FINAL_STATE_FIRST_LOOP_PAIRS],
@@ -942,7 +915,6 @@ void l3_authorization_finalizer_feedback_state_a_stage06_regenerate_with_adds(
    the local_1bc predicate check, an odd local_1f0[0] enters the DAT_f41a3a18
    reducer and rewrites local_1f0[0..12].  The following local_258 parity
    branches are intentionally left as the next bounded slice. */
-uint32_t l3_authorization_finalizer_reduce_vector_stage07(uint32_t value, unsigned rounds);
 
 typedef struct {
     uint32_t input_words[L3_AUTH_FINAL_STATE_FIRST_LOOP_PAIRS];
@@ -968,8 +940,6 @@ void l3_authorization_finalizer_lane_state_b_odd_stage07_refresh(
    local_258[0] enters UNK_f41a3a58 and rewrites local_258[0..12]; even
    local_258[0] enters UNK_f41a3a98 and writes auStack_128[2..14] for the
    following DAT_f41a3ad8 regeneration block. */
-uint32_t l3_authorization_finalizer_reduce_vector_stage08(uint32_t value, unsigned rounds);
-uint32_t l3_authorization_finalizer_reduce_vector_stage09(uint32_t value, unsigned rounds);
 
 typedef struct {
     uint32_t input_words[L3_AUTH_FINAL_STATE_FIRST_LOOP_PAIRS];
@@ -1020,7 +990,6 @@ typedef struct {
     uint32_t final_driver;
 } l3_authorization_finalizer_feedback_state_b_stage10_state;
 
-uint32_t l3_authorization_finalizer_reduce_vector_stage10(uint32_t value, unsigned rounds);
 
 void l3_authorization_finalizer_feedback_state_b_stage10_regenerate_from_reduced_words(
     const uint32_t auStack_128_words[L3_AUTH_FINAL_STATE_FIRST_LOOP_PAIRS],
@@ -1044,8 +1013,6 @@ void l3_authorization_finalizer_feedback_state_b_stage10_regenerate_with_adds(
    selected lane does not send control to the later DAT_f41a3c58/final path,
    a vector-affine backing stream is materialized and DAT_f41a3b58 rewrites
    local_1bc[0..12]. */
-uint32_t l3_authorization_finalizer_reduce_vector_stage11(uint32_t value, unsigned rounds);
-uint32_t l3_authorization_finalizer_reduce_vector_stage12(uint32_t value, unsigned rounds);
 
 typedef struct {
     uint32_t local_1bc_words[L3_AUTH_FINAL_STATE_FIRST_LOOP_PAIRS];
@@ -1092,7 +1059,6 @@ void l3_authorization_finalizer_lane_state_a_stage12_rewrite(
    local_1f0, then rewrites local_1f0[0..12] through the DAT_f41a3c58 seven-
    round reducer.  The later FUN_f3fde21c-dependent final branches are kept as
    separate follow-on increments. */
-uint32_t l3_authorization_finalizer_reduce_vector_stage15(uint32_t value, unsigned rounds);
 
 typedef struct {
     uint32_t input_1bc_words[L3_AUTH_FINAL_STATE_FIRST_LOOP_PAIRS];
@@ -1123,8 +1089,6 @@ void l3_authorization_finalizer_lane_state_b_stage15_rewrite(
    local_328 backing stream explicitly, so the next increment can attach the
    surrounding parent-context vector-affine setup without changing the reducer
    semantics. */
-uint32_t l3_authorization_finalizer_reduce_vector_stage16(uint32_t value, unsigned rounds);
-uint32_t l3_authorization_finalizer_reduce_vector_stage17(uint32_t value, unsigned rounds);
 
 typedef struct {
     uint32_t input_188_words[L3_AUTH_FINAL_STATE_FIRST_LOOP_PAIRS];
@@ -1224,8 +1188,6 @@ void l3_authorization_finalizer_terminal_gate_raw40(
    local_188 through DAT_f41a3c18.  The helpers take the already-materialized
    native local_328 backing streams explicitly, matching the v133 staging for
    local_258. */
-uint32_t l3_authorization_finalizer_reduce_vector_stage13(uint32_t value, unsigned rounds);
-uint32_t l3_authorization_finalizer_reduce_vector_stage14(uint32_t value, unsigned rounds);
 
 typedef struct {
     uint32_t input_188_words[L3_AUTH_FINAL_STATE_FIRST_LOOP_PAIRS];
@@ -1607,6 +1569,34 @@ typedef struct {
     uint32_t predicate_cycles;
     uint8_t raw40[L3_AUTH_FINAL_STATE_RAW40_LEN];
 } l3_authorization_final_result;
+
+/* Production/portable result.  The recovered live-lane snapshot above is
+   useful for reverse-engineering probes, but the authorization-root path only
+   consumes these four fields. */
+typedef struct {
+    uint32_t final_stop_reason;
+    uint32_t terminal_taken;
+    uint32_t predicate_cycles;
+    uint8_t raw40[L3_AUTH_FINAL_STATE_RAW40_LEN];
+} l3_authorization_final_compact_result;
+
+/* Exact allocator-free entry used by the fixed shared-point core.  Scratch is
+   caller-owned, reusable after return, and must meet both query results. */
+size_t l3_authorization_finalizer_compact_workspace_size(void);
+size_t l3_authorization_finalizer_compact_workspace_alignment(void);
+
+int l3_authorization_finalize_round_result_compact_with_workspace(
+    const uint32_t param2_words[L3_AUTH_FINAL_STATE_FIRST_LOOP_PAIRS],
+    const uint32_t param3_words[L3_AUTH_FINAL_STATE_FIRST_LOOP_PAIRS],
+    const uint32_t parent_words[L3_AUTH_FINAL_STATE_FIRST_LOOP_PAIRS],
+    uint32_t parent_pair_lo,
+    uint32_t parent_pair_hi,
+    uint32_t max_1bc188_cycles,
+    uint32_t max_1f0258_cycles,
+    uint32_t max_predicate_cycles,
+    void *workspace,
+    size_t workspace_size,
+    l3_authorization_final_compact_result *out);
 
 /* Exact standalone FUN_f3fd4a60 entry.  param2 is aux48 padded to 13 words;
    param3 is vec_b13; parent_pair is param1[0x1c7]+{8,12}. */

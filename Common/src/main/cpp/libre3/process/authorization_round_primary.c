@@ -1,24 +1,3 @@
-/*      This file is part of Juggluco, an Android app to receive and display         */
-/*      glucose values from Freestyle Libre 2(+), Libre 3(+), Dexcom G7/ONE+,        */
-/*      Sibionics GS1Sb and GS3, Accu-Chek SmartGuide, CareSens Air and              */
-/*      Aidex X sensors.                                                             */
-/*                                                                                   */
-/*      Copyright (C) 2021 Jaap Korthals Altes <jaapkorthalsaltes@gmail.com>         */
-/*                                                                                   */
-/*      Juggluco is free software: you can redistribute it and/or modify             */
-/*      it under the terms of the GNU General Public License as published            */
-/*      by the Free Software Foundation, either version 3 of the License, or         */
-/*      (at your option) any later version.                                          */
-/*                                                                                   */
-/*      Juggluco is distributed in the hope that it will be useful, but              */
-/*      WITHOUT ANY WARRANTY; without even the implied warranty of                   */
-/*      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                         */
-/*      See the GNU General Public License for more details.                         */
-/*                                                                                   */
-/*      You should have received a copy of the GNU General Public License            */
-/*      along with Juggluco. If not, see <https://www.gnu.org/licenses/>.            */
-/*                                                                                   */
-/*      Tue Aug 11 16:33:40 CEST 2026                                                */
 #include "authorization_round_primary.h"
 
 #include <string.h>
@@ -65,6 +44,47 @@ static uint32_t nibble_ladder64_run8_low(const uint32_t tab[16][2], uint32_t lo,
     }
     return lo;
 }
+
+
+typedef struct primary_pair_transform_spec {
+    const uint32_t (*ladder_table)[2];
+    uint32_t first_low_mul;
+    uint32_t first_high_mul;
+    uint32_t first_low_add;
+    uint32_t first_high_add;
+    uint32_t second_low_mul;
+    uint32_t second_high_mul;
+    uint32_t second_low_add;
+    uint32_t ladder_mul;
+    uint32_t second_high_add;
+} primary_pair_transform_spec;
+
+static void primary_pair_from_transform(uint32_t token,
+                                        const primary_pair_transform_spec *spec,
+                                        uint32_t out_pair[2]) {
+    uint32_t lo0 = multiply_low_u32(token, spec->first_low_mul);
+    uint32_t lo = lo0 + spec->first_low_add;
+    uint32_t hi = multiply_low_u32(token, spec->first_high_mul) +
+                  multiply_high_u32(token, spec->first_low_mul) +
+                  spec->first_high_add + add_carry_u32(lo0, spec->first_low_add);
+    uint32_t ladder = nibble_ladder64_run8_low(spec->ladder_table, lo, hi);
+
+    uint32_t lo1 = multiply_low_u32(token, spec->second_low_mul);
+    out_pair[0] = lo1 + spec->second_low_add;
+    out_pair[1] = multiply_low_u32(token, spec->second_high_mul) +
+                  multiply_high_u32(token, spec->second_low_mul) +
+                  multiply_low_u32(ladder, spec->ladder_mul) +
+                  spec->second_high_add + add_carry_u32(lo1, spec->second_low_add);
+}
+
+#define DEFINE_PRIMARY_PAIR_TRANSFORM(name, table, first_low_mul, first_high_mul, first_low_add, first_high_add, second_low_mul, second_high_mul, second_low_add, ladder_mul, second_high_add) \
+    static const primary_pair_transform_spec name##_spec = { \
+        (table), (first_low_mul), (first_high_mul), (first_low_add), (first_high_add), \
+        (second_low_mul), (second_high_mul), (second_low_add), (ladder_mul), (second_high_add) \
+    }; \
+    static void name(uint32_t token, uint32_t out_pair[2]) { \
+        primary_pair_from_transform(token, &name##_spec, out_pair); \
+    }
 
 static const uint32_t k_f4190310[8] = {
     0x167b401bu, 0xf16ffbbfu, 0x5ad44907u, 0xe9b8ff5fu,
@@ -186,33 +206,13 @@ static const uint32_t k_f41a0ab0[16][2] = {
     {0xc053bf1fu,0xceaf034du}, {0x8728b5e1u,0x99797e45u}
 };
 
-static void param6_pair_from_token(uint32_t token, uint32_t out_pair[2]) {
-    uint32_t lo0 = multiply_low_u32(token, 0xfd97b913u);
-    uint32_t lo = lo0 + 0x76efc4b0u;
-    uint32_t hi = multiply_low_u32(token, 0x477fc4a7u) + multiply_high_u32(token, 0xfd97b913u) +
-                  0xa6f4af7du + (uint32_t)(0x89103b4fu < lo0);
-    uint32_t ladder = nibble_ladder64_run8_low(k_f41a0670, lo, hi);
+DEFINE_PRIMARY_PAIR_TRANSFORM(param6_pair_from_token, k_f41a0670,
+    0xfd97b913u, 0x477fc4a7u, 0x76efc4b0u, 0xa6f4af7du,
+    0x42795131u, 0x1e7f054au, 0x6b15a228u, 0xa7e7c6d5u, 0xa74b9d3eu)
 
-    uint32_t lo1 = multiply_low_u32(token, 0x42795131u);
-    out_pair[0] = lo1 + 0x6b15a228u;
-    out_pair[1] = multiply_low_u32(token, 0x1e7f054au) + multiply_high_u32(token, 0x42795131u) +
-                  multiply_low_u32(ladder, 0xa7e7c6d5u) + 0xa74b9d3eu +
-                  (uint32_t)(0x94ea5dd7u < lo1);
-}
-
-static void local5e0_pair_from_token(uint32_t token, uint32_t out_pair[2]) {
-    uint32_t lo0 = multiply_low_u32(token, 0xc40302a7u);
-    uint32_t lo = lo0 + 0xa9673191u;
-    uint32_t hi = multiply_low_u32(token, 0x0a4c30b6u) + multiply_high_u32(token, 0xc40302a7u) +
-                  0xf9124313u + (uint32_t)(0x5698ce6eu < lo0);
-    uint32_t ladder = nibble_ladder64_run8_low(k_f41a06f0, lo, hi);
-
-    uint32_t lo1 = multiply_low_u32(token, 0x161c832bu);
-    out_pair[0] = lo1 + 0x80607861u;
-    out_pair[1] = multiply_low_u32(token, 0xf02bc3fcu) + multiply_high_u32(token, 0x161c832bu) +
-                  multiply_low_u32(ladder, 0xd898e023u) + 0xc5ca8832u +
-                  (uint32_t)(0x7f9f879eu < lo1);
-}
+DEFINE_PRIMARY_PAIR_TRANSFORM(local5e0_pair_from_token, k_f41a06f0,
+    0xc40302a7u, 0x0a4c30b6u, 0xa9673191u, 0xf9124313u,
+    0x161c832bu, 0xf02bc3fcu, 0x80607861u, 0xd898e023u, 0xc5ca8832u)
 
 int l3_authorization_primary_param6_seed_prefixes13(
     const int32_t param6_13[L3_AUTH_ROUND_PRIMARY_SEED_WORDS],
@@ -433,33 +433,13 @@ int l3_authorization_primary_first_vector_reduce_update_export(
         out_state26, out_words13, out ? &out->f3fdb57c : NULL);
 }
 
-static void post_first_affine_pair_from_token(uint32_t token, uint32_t out_pair[2]) {
-    uint32_t lo0 = multiply_low_u32(token, 0x895bb759u);
-    uint32_t lo = lo0 + 0x9aa021f6u;
-    uint32_t hi = multiply_low_u32(token, 0xb89cf533u) + multiply_high_u32(token, 0x895bb759u) +
-                  0xa4d5ea9fu + (uint32_t)(0x655fde09u < lo0);
-    uint32_t ladder = nibble_ladder64_run8_low(k_f41a0ab0, lo, hi);
+DEFINE_PRIMARY_PAIR_TRANSFORM(post_first_affine_pair_from_token, k_f41a0ab0,
+    0x895bb759u, 0xb89cf533u, 0x9aa021f6u, 0xa4d5ea9fu,
+    0x771ad095u, 0x8bcff545u, 0x484507d5u, 0xde768863u, 0xdffd9606u)
 
-    uint32_t lo1 = multiply_low_u32(token, 0x771ad095u);
-    out_pair[0] = lo1 + 0x484507d5u;
-    out_pair[1] = multiply_low_u32(token, 0x8bcff545u) + multiply_high_u32(token, 0x771ad095u) +
-                  multiply_low_u32(ladder, 0xde768863u) + 0xdffd9606u +
-                  (uint32_t)(0xb7baf82au < lo1);
-}
-
-static void post_first_local614_pair_from_token(uint32_t token, uint32_t out_pair[2]) {
-    uint32_t lo0 = multiply_low_u32(token, 0xc3652dfbu);
-    uint32_t lo = lo0 + 0xcae1a358u;
-    uint32_t hi = multiply_low_u32(token, 0x98c15f87u) + multiply_high_u32(token, 0xc3652dfbu) +
-                  0xb72e7030u + (uint32_t)(0x351e5ca7u < lo0);
-    uint32_t ladder = nibble_ladder64_run8_low(k_f41a0a30, lo, hi);
-
-    uint32_t lo1 = multiply_low_u32(token, 0x427d9297u);
-    out_pair[0] = lo1 + 0x17762cabu;
-    out_pair[1] = multiply_low_u32(token, 0x6f66f2ffu) + multiply_high_u32(token, 0x427d9297u) +
-                  multiply_low_u32(ladder, 0xa0b628ebu) + 0x80e656d0u +
-                  (uint32_t)(0xe889d354u < lo1);
-}
+DEFINE_PRIMARY_PAIR_TRANSFORM(post_first_local614_pair_from_token, k_f41a0a30,
+    0xc3652dfbu, 0x98c15f87u, 0xcae1a358u, 0xb72e7030u,
+    0x427d9297u, 0x6f66f2ffu, 0x17762cabu, 0xa0b628ebu, 0x80e656d0u)
 
 static void post_first_make_affine_words(
     const uint32_t first_words13[L3_AUTH_ROUND_PRIMARY_SEED_WORDS],
@@ -795,31 +775,13 @@ static void post_second_make_affine_words(
     out_affine13[12] = second_words13[12] * 0x52d94cf1u + 0x2bd3b4b2u;
 }
 
-static void post_second_param3a_pair_from_token(uint32_t token, uint32_t out_pair[2]) {
-    uint32_t lo0 = token * 0xea345d83u;
-    uint32_t lo = lo0 + 0x03f5a7e7u;
-    uint32_t hi = token * 0x41a0cea4u + multiply_high_u32(token, 0xea345d83u) +
-                  0xc4fc37c8u + add_carry_u32(lo0, 0x03f5a7e7u);
-    uint32_t ladder = nibble_ladder64_run8_low(k_f41a0b30, lo, hi);
-    uint32_t lo1 = token * 0xecc8234du;
-    out_pair[0] = lo1 + 0xf31044c5u;
-    out_pair[1] = token * 0xd74e7b4fu + multiply_high_u32(token, 0xecc8234du) +
-                  ladder * 0xecaa0d11u + 0x71094967u +
-                  add_carry_u32(lo1, 0xf31044c5u);
-}
+DEFINE_PRIMARY_PAIR_TRANSFORM(post_second_param3a_pair_from_token, k_f41a0b30,
+    0xea345d83u, 0x41a0cea4u, 0x03f5a7e7u, 0xc4fc37c8u,
+    0xecc8234du, 0xd74e7b4fu, 0xf31044c5u, 0xecaa0d11u, 0x71094967u)
 
-static void post_second_param3b_pair_from_token(uint32_t token, uint32_t out_pair[2]) {
-    uint32_t lo0 = token * 0xe710656bu;
-    uint32_t lo = lo0 + 0xf936fd9bu;
-    uint32_t hi = token * 0xfa1333a5u + multiply_high_u32(token, 0xe710656bu) +
-                  0x1f6b9cd8u + add_carry_u32(lo0, 0xf936fd9bu);
-    uint32_t ladder = nibble_ladder64_run8_low(k_f41a0bb0, lo, hi);
-    uint32_t lo1 = token * 0x8f0bcb4bu;
-    out_pair[0] = lo1 + 0x0235c205u;
-    out_pair[1] = token * 0xcca33ceeu + multiply_high_u32(token, 0x8f0bcb4bu) +
-                  ladder * 0x99ee365fu + 0xfc9827d5u +
-                  add_carry_u32(lo1, 0x0235c205u);
-}
+DEFINE_PRIMARY_PAIR_TRANSFORM(post_second_param3b_pair_from_token, k_f41a0bb0,
+    0xe710656bu, 0xfa1333a5u, 0xf936fd9bu, 0x1f6b9cd8u,
+    0x8f0bcb4bu, 0xcca33ceeu, 0x0235c205u, 0x99ee365fu, 0xfc9827d5u)
 
 int l3_authorization_primary_post_second_seed_prefixes13(
     const uint32_t second_words13[L3_AUTH_ROUND_PRIMARY_SEED_WORDS],
@@ -1076,31 +1038,13 @@ static void post_third_make_affine_words(
     out_affine13[12] = third_words13[12] * 0x590ec40fu + 0xff280527u;
 }
 
-static void post_third_c30_pair_from_token(uint32_t token, uint32_t out_pair[2]) {
-    uint32_t lo0 = token * 0xbe2fd295u;
-    uint32_t lo = lo0 + 0x7937de1bu;
-    uint32_t hi = token * 0xeeb19525u + multiply_high_u32(token, 0xbe2fd295u) +
-                  0x88f4d528u + add_carry_u32(lo0, 0x7937de1bu);
-    uint32_t ladder = nibble_ladder64_run8_low(k_f41a0c30, lo, hi);
-    uint32_t lo1 = token * 0x30f445e9u;
-    out_pair[0] = lo1 + 0xf60b4fd4u;
-    out_pair[1] = token * 0x7e0f5616u + multiply_high_u32(token, 0x30f445e9u) +
-                  ladder * 0xd888bafbu + 0x2d552151u +
-                  add_carry_u32(lo1, 0xf60b4fd4u);
-}
+DEFINE_PRIMARY_PAIR_TRANSFORM(post_third_c30_pair_from_token, k_f41a0c30,
+    0xbe2fd295u, 0xeeb19525u, 0x7937de1bu, 0x88f4d528u,
+    0x30f445e9u, 0x7e0f5616u, 0xf60b4fd4u, 0xd888bafbu, 0x2d552151u)
 
-static void post_third_cb0_pair_from_token(uint32_t token, uint32_t out_pair[2]) {
-    uint32_t lo0 = token * 0x6c49500du;
-    uint32_t lo = lo0 + 0x5750f8eau;
-    uint32_t hi = token * 0x9da5f811u + multiply_high_u32(token, 0x6c49500du) +
-                  0x182b8f9cu + add_carry_u32(lo0, 0x5750f8eau);
-    uint32_t ladder = nibble_ladder64_run8_low(k_f41a0cb0, lo, hi);
-    uint32_t lo1 = token * 0x53d0aae5u;
-    out_pair[0] = lo1 + 0x8f4aa8d2u;
-    out_pair[1] = token * 0x024ddc28u + multiply_high_u32(token, 0x53d0aae5u) +
-                  ladder * 0x13d8c7c7u + 0x39afd5feu +
-                  add_carry_u32(lo1, 0x8f4aa8d2u);
-}
+DEFINE_PRIMARY_PAIR_TRANSFORM(post_third_cb0_pair_from_token, k_f41a0cb0,
+    0x6c49500du, 0x9da5f811u, 0x5750f8eau, 0x182b8f9cu,
+    0x53d0aae5u, 0x024ddc28u, 0x8f4aa8d2u, 0x13d8c7c7u, 0x39afd5feu)
 
 int l3_authorization_primary_post_third_seed_prefixes13(
     const uint32_t third_words13[L3_AUTH_ROUND_PRIMARY_SEED_WORDS],
@@ -1324,18 +1268,9 @@ static void post_fourth_make_affine_words(
     out_affine13[12] = fourth_words13[12] * 0x0126070fu + 0x57a1f5e9u;
 }
 
-static void post_fourth_param1_pair_from_token(uint32_t token, uint32_t out_pair[2]) {
-    uint32_t lo0 = token * 0x0f94ee3du;
-    uint32_t lo = lo0 + 0xd9a16ce7u;
-    uint32_t hi = token * 0x60e35950u + multiply_high_u32(token, 0x0f94ee3du) +
-                  0x5891d4aeu + add_carry_u32(lo0, 0xd9a16ce7u);
-    uint32_t ladder = nibble_ladder64_run8_low(k_f41a0d30, lo, hi);
-    uint32_t lo1 = token * 0xc8104ab3u;
-    out_pair[0] = lo1 + 0x012ce2a9u;
-    out_pair[1] = token * 0x0b45c13bu + multiply_high_u32(token, 0xc8104ab3u) +
-                  ladder * 0x684ae451u + 0x5b426d5eu +
-                  add_carry_u32(lo1, 0x012ce2a9u);
-}
+DEFINE_PRIMARY_PAIR_TRANSFORM(post_fourth_param1_pair_from_token, k_f41a0d30,
+    0x0f94ee3du, 0x60e35950u, 0xd9a16ce7u, 0x5891d4aeu,
+    0xc8104ab3u, 0x0b45c13bu, 0x012ce2a9u, 0x684ae451u, 0x5b426d5eu)
 
 int l3_authorization_primary_post_fourth_affine_param1_frontend13(
     const uint32_t fourth_words13[L3_AUTH_ROUND_PRIMARY_SEED_WORDS],
@@ -1594,31 +1529,13 @@ static const uint32_t k_f41a0eb0[16][2] = {
     {0x8e6fc5acu,0xb250b315u}, {0x5973c9c6u,0x6ecdfbaeu}
 };
 
-static void post_fourth_e30_pair_from_token(uint32_t token, uint32_t out_pair[2]) {
-    uint32_t lo0 = token * 0x29e4d07fu;
-    uint32_t lo = lo0 + 0x0ecb55abu;
-    uint32_t hi = token * 0x05582afeu + multiply_high_u32(token, 0x29e4d07fu) +
-                  0xe9d53fa0u + add_carry_u32(lo0, 0x0ecb55abu);
-    uint32_t ladder = nibble_ladder64_run8_low(k_f41a0e30, lo, hi);
-    uint32_t lo1 = token * 0xc9837a39u;
-    out_pair[0] = lo1 + 0x238ff7bfu;
-    out_pair[1] = token * 0x96956989u + multiply_high_u32(token, 0xc9837a39u) +
-                  ladder * 0x7f5126b9u + 0xd6b6641cu +
-                  add_carry_u32(lo1, 0x238ff7bfu);
-}
+DEFINE_PRIMARY_PAIR_TRANSFORM(post_fourth_e30_pair_from_token, k_f41a0e30,
+    0x29e4d07fu, 0x05582afeu, 0x0ecb55abu, 0xe9d53fa0u,
+    0xc9837a39u, 0x96956989u, 0x238ff7bfu, 0x7f5126b9u, 0xd6b6641cu)
 
-static void post_fourth_eb0_pair_from_token(uint32_t token, uint32_t out_pair[2]) {
-    uint32_t lo0 = token * 0xbb3cd999u;
-    uint32_t lo = lo0 + 0xd2f0ae99u;
-    uint32_t hi = token * 0xaddeec05u + multiply_high_u32(token, 0xbb3cd999u) +
-                  0xc6885a0bu + add_carry_u32(lo0, 0xd2f0ae99u);
-    uint32_t ladder = nibble_ladder64_run8_low(k_f41a0eb0, lo, hi);
-    uint32_t lo1 = token * 0x9c595be9u;
-    out_pair[0] = lo1 + 0x223cf40eu;
-    out_pair[1] = token * 0xcdcff8f6u + multiply_high_u32(token, 0x9c595be9u) +
-                  ladder * 0x9c48d92fu + 0xf4fe2325u +
-                  add_carry_u32(lo1, 0x223cf40eu);
-}
+DEFINE_PRIMARY_PAIR_TRANSFORM(post_fourth_eb0_pair_from_token, k_f41a0eb0,
+    0xbb3cd999u, 0xaddeec05u, 0xd2f0ae99u, 0xc6885a0bu,
+    0x9c595be9u, 0xcdcff8f6u, 0x223cf40eu, 0x9c48d92fu, 0xf4fe2325u)
 
 int l3_authorization_primary_post_fourth_staging_pair_streams13(
     const uint32_t affine_words13[L3_AUTH_ROUND_PRIMARY_SEED_WORDS],
@@ -1832,31 +1749,13 @@ static const uint32_t k_f41a0fb0[16][2] = {
     {0x7c1d3106u,0xf6dfea6du}, {0xdc23eb50u,0x0cb294d3u}
 };
 
-static void post_fourth_local718_pair_from_token(uint32_t token, uint32_t out_pair[2]) {
-    uint32_t lo0 = token * 0x90ab3f03u;
-    uint32_t lo = lo0 + 0x7e1dbf3fu;
-    uint32_t hi = token * 0x8d68000du + multiply_high_u32(token, 0x90ab3f03u) +
-                  0x0fb10f23u + add_carry_u32(lo0, 0x7e1dbf3fu);
-    uint32_t ladder = nibble_ladder64_run8_low(k_f41a0f30, lo, hi);
-    uint32_t lo1 = token * 0xc8250415u;
-    out_pair[0] = lo1 + 0x54aa3f41u;
-    out_pair[1] = token * 0x18264730u + multiply_high_u32(token, 0xc8250415u) +
-                  ladder * 0x203ae6f9u + 0x6ab014fbu +
-                  add_carry_u32(lo1, 0x54aa3f41u);
-}
+DEFINE_PRIMARY_PAIR_TRANSFORM(post_fourth_local718_pair_from_token, k_f41a0f30,
+    0x90ab3f03u, 0x8d68000du, 0x7e1dbf3fu, 0x0fb10f23u,
+    0xc8250415u, 0x18264730u, 0x54aa3f41u, 0x203ae6f9u, 0x6ab014fbu)
 
-static void post_fourth_fixed_pair_from_token(uint32_t token, uint32_t out_pair[2]) {
-    uint32_t lo0 = token * 0x7ed57c85u;
-    uint32_t lo = lo0 + 0x0391298bu;
-    uint32_t hi = token * 0x17145189u + multiply_high_u32(token, 0x7ed57c85u) +
-                  0x62b28a7au + add_carry_u32(lo0, 0x0391298bu);
-    uint32_t ladder = nibble_ladder64_run8_low(k_f41a0fb0, lo, hi);
-    uint32_t lo1 = token * 0x3f7b6b91u;
-    out_pair[0] = lo1 + 0x62a14739u;
-    out_pair[1] = token * 0xec38d551u + multiply_high_u32(token, 0x3f7b6b91u) +
-                  ladder * 0xbbbdc963u + 0x0c7634f9u +
-                  add_carry_u32(lo1, 0x62a14739u);
-}
+DEFINE_PRIMARY_PAIR_TRANSFORM(post_fourth_fixed_pair_from_token, k_f41a0fb0,
+    0x7ed57c85u, 0x17145189u, 0x0391298bu, 0x62b28a7au,
+    0x3f7b6b91u, 0xec38d551u, 0x62a14739u, 0xbbbdc963u, 0x0c7634f9u)
 
 
 int l3_authorization_primary_post_fourth_local718_staging_pair_streams(
@@ -2229,31 +2128,13 @@ static const uint32_t k_f41a10b0[16][2] = {
     {0xee96013bu,0xfa2d41e8u}, {0xf5b0bc8bu,0x0903787eu}
 };
 
-static void post_fifth_f1030_pair_from_token(uint32_t token, uint32_t out_pair[2]) {
-    uint32_t lo0 = token * 0x92813615u;
-    uint32_t lo = lo0 + 0x9a8ab70bu;
-    uint32_t hi = token * 0x034250f3u + multiply_high_u32(token, 0x92813615u) +
-                  0x6096566au + add_carry_u32(lo0, 0x9a8ab70bu);
-    uint32_t ladder = nibble_ladder64_run8_low(k_f41a1030, lo, hi);
-    uint32_t lo1 = token * 0xd85671b9u;
-    out_pair[0] = lo1 + 0x27eb9420u;
-    out_pair[1] = token * 0x51eeae36u + multiply_high_u32(token, 0xd85671b9u) +
-                  ladder * 0xf32485ebu + 0x8ee7d1d5u +
-                  add_carry_u32(lo1, 0x27eb9420u);
-}
+DEFINE_PRIMARY_PAIR_TRANSFORM(post_fifth_f1030_pair_from_token, k_f41a1030,
+    0x92813615u, 0x034250f3u, 0x9a8ab70bu, 0x6096566au,
+    0xd85671b9u, 0x51eeae36u, 0x27eb9420u, 0xf32485ebu, 0x8ee7d1d5u)
 
-static void post_fifth_f10b0_pair_from_token(uint32_t token, uint32_t out_pair[2]) {
-    uint32_t lo0 = token * 0xe3ae092bu;
-    uint32_t lo = lo0 + 0x9b74680fu;
-    uint32_t hi = token * 0x93fa9377u + multiply_high_u32(token, 0xe3ae092bu) +
-                  0xd15e6c3eu + add_carry_u32(lo0, 0x9b74680fu);
-    uint32_t ladder = nibble_ladder64_run8_low(k_f41a10b0, lo, hi);
-    uint32_t lo1 = token * 0xce95b50du;
-    out_pair[0] = lo1 + 0x26838630u;
-    out_pair[1] = token * 0xd087f9e7u + multiply_high_u32(token, 0xce95b50du) +
-                  ladder * 0x7cc7d159u + 0xce3af3d6u +
-                  add_carry_u32(lo1, 0x26838630u);
-}
+DEFINE_PRIMARY_PAIR_TRANSFORM(post_fifth_f10b0_pair_from_token, k_f41a10b0,
+    0xe3ae092bu, 0x93fa9377u, 0x9b74680fu, 0xd15e6c3eu,
+    0xce95b50du, 0xd087f9e7u, 0x26838630u, 0x7cc7d159u, 0xce3af3d6u)
 
 int l3_authorization_primary_post_fifth_staging_pair_streams13(
     const uint32_t affine_words13[L3_AUTH_ROUND_PRIMARY_SEED_WORDS],
@@ -2678,19 +2559,9 @@ static const uint32_t k_f41a11b0[16][2] = {
     {0x8904536au,0xc52db606u}, {0xaea0c2bdu,0x901bf6c7u}
 };
 
-static void post_sixth_f11b0_pair_from_token(uint32_t token, uint32_t out_pair[2]) {
-    uint32_t lo0 = token * 0xb714cad3u;
-    uint32_t lo = lo0 + 0x262c62ecu;
-    uint32_t hi = token * 0x2e3d3f04u + multiply_high_u32(token, 0xb714cad3u) +
-                  0x07f583a5u + add_carry_u32(lo0, 0x262c62ecu);
-    uint32_t ladder = nibble_ladder64_run8_low(k_f41a11b0, lo, hi);
-
-    uint32_t lo1 = token * 0xc92bc3f7u;
-    out_pair[0] = lo1 + 0x227c913fu;
-    out_pair[1] = token * 0x30d6c7cfu + multiply_high_u32(token, 0xc92bc3f7u) +
-                  ladder * 0x90845c33u + 0x455a57e6u +
-                  add_carry_u32(lo1, 0x227c913fu);
-}
+DEFINE_PRIMARY_PAIR_TRANSFORM(post_sixth_f11b0_pair_from_token, k_f41a11b0,
+    0xb714cad3u, 0x2e3d3f04u, 0x262c62ecu, 0x07f583a5u,
+    0xc92bc3f7u, 0x30d6c7cfu, 0x227c913fu, 0x90845c33u, 0x455a57e6u)
 
 int l3_authorization_primary_post_sixth_f1170_ladder_words13(
     const uint32_t source_words13[L3_AUTH_ROUND_PRIMARY_SEED_WORDS],
@@ -2919,19 +2790,9 @@ static const uint32_t k_f41a1230[16][2] = {
     {0x92b7c2ddu,0xbd62dca6u}, {0x206133e8u,0xa65a8319u}
 };
 
-static void post_sixth_f1230_pair_from_token(uint32_t token, uint32_t out_pair[2]) {
-    uint32_t lo0 = token * 0x5a51d6cfu;
-    uint32_t lo = lo0 + 0x126910e6u;
-    uint32_t hi = token * 0x213903fau + multiply_high_u32(token, 0x5a51d6cfu) +
-                  0xc1928010u + add_carry_u32(lo0, 0x126910e6u);
-    uint32_t ladder = nibble_ladder64_run8_low(k_f41a1230, lo, hi);
-
-    uint32_t lo1 = token * 0x3e28fb9du;
-    out_pair[0] = lo1 + 0x30e0e845u;
-    out_pair[1] = token * 0xc31f9a4du + multiply_high_u32(token, 0x3e28fb9du) +
-                  ladder * 0x23381e2du + 0x44546ca4u +
-                  add_carry_u32(lo1, 0x30e0e845u);
-}
+DEFINE_PRIMARY_PAIR_TRANSFORM(post_sixth_f1230_pair_from_token, k_f41a1230,
+    0x5a51d6cfu, 0x213903fau, 0x126910e6u, 0xc1928010u,
+    0x3e28fb9du, 0xc31f9a4du, 0x30e0e845u, 0x23381e2du, 0x44546ca4u)
 
 int l3_authorization_primary_post_sixth_f1230_pair_streams13(
     const uint32_t f1170_words13[L3_AUTH_ROUND_PRIMARY_SEED_WORDS],
@@ -3810,9 +3671,7 @@ int l3_authorization_primary_post_sixth_composed_seventh_update_export(
         return -1;
     }
 
-    l3_authorization_primary_post_sixth_composed_seventh_trace tmp;
-    l3_authorization_primary_post_sixth_composed_seventh_trace *dst = out ? out : &tmp;
-    memset(dst, 0, sizeof(*dst));
+    if (out) memset(out, 0, sizeof(*out));
 
     /* local_75c is no longer the original F3FDB param_3 here.  Native
      * replaces it after the second call with the invariant exported tail
@@ -3826,7 +3685,7 @@ int l3_authorization_primary_post_sixth_composed_seventh_update_export(
     int rc = l3_authorization_primary_post_sixth_param5_source_ladder_words13(
         live_q6_words4, live_q5_words4, live_q4_words4, sixth_words13,
         param4_param5_words13, post_sixth_tail_scalar, param5_source13,
-        out_param5_words13, &dst->param5);
+        out_param5_words13, out ? &out->param5 : NULL);
     if (rc != 0) {
         return rc;
     }
@@ -3838,7 +3697,7 @@ int l3_authorization_primary_post_sixth_composed_seventh_update_export(
         live_q6_words4, live_q5_words4, live_q4_words4, out_param5_words13,
         param4_staging_words13, post_sixth_tail_scalar, affine_words13,
         out_staging_source_words13, f1170_words13, f11b0_raw13,
-        f11b0_prefix13, &dst->staging);
+        f11b0_prefix13, out ? &out->staging : NULL);
     if (rc != 0) {
         return rc;
     }
@@ -3849,20 +3708,25 @@ int l3_authorization_primary_post_sixth_composed_seventh_update_export(
     rc = l3_authorization_primary_post_sixth_companion_output_words26(
         out_staging_source_words13, affine_words13, f1170_words13,
         f11b0_raw13, f11b0_prefix13, f1230_raw13, f1230_prefix13,
-        companion_pairs26, out_f12b0_words26, &dst->companion_output);
+        companion_pairs26, out_f12b0_words26,
+        out ? &out->companion_output : NULL);
     if (rc != 0) {
         return rc;
     }
 
-    memset(dst->local130_initial26, 0, sizeof(dst->local130_initial26));
-    memcpy(dst->local130_initial26, out_staging_source_words13,
+    uint32_t local130_initial26[L3_AUTH_ROUND_PRIMARY_CONV_PAIRS] = {0};
+    memcpy(local130_initial26, out_staging_source_words13,
            L3_AUTH_ROUND_PRIMARY_SEED_WORDS * sizeof(uint32_t));
+    if (out) {
+        memcpy(out->local130_initial26, local130_initial26,
+               sizeof(out->local130_initial26));
+    }
 
     return l3_authorization_primary_seventh_vector_reduce_update_export(
-        dst->local130_initial26, out_f12b0_words26, param4_mix_words26,
+        local130_initial26, out_f12b0_words26, param4_mix_words26,
         local3a0_words26, vector_reduce_param1_13, vector_reduce_param3,
         vector_reduce_param4, out_mixed_words26, out_local718_words26,
-        out_state26, out_words13, &dst->seventh);
+        out_state26, out_words13, out ? &out->seventh : NULL);
 }
 
 
@@ -3947,37 +3811,13 @@ static const uint32_t k_f41a1570[16][2] = {
     {0xdcafed3bu,0x00f97adcu}, {0x873ecea9u,0xbfa1f005u}
 };
 
-static void post_seventh_local5e0_pair(uint32_t token, uint32_t out_pair[2]) {
-    uint32_t lo0 = multiply_low_u32(token, 0x2b34f99bu);
-    uint32_t lo = lo0 + 0x3f92000du;
-    uint32_t hi = multiply_low_u32(token, 0x06a1f70ccu) +
-                  multiply_high_u32(token, 0x2b34f99bu) +
-                  0xc91844d7u + (uint32_t)(0xc06dfff2u < lo0);
-    uint32_t ladder = nibble_ladder64_run8_low(k_f41a14f0, lo, hi);
+DEFINE_PRIMARY_PAIR_TRANSFORM(post_seventh_local5e0_pair, k_f41a14f0,
+    0x2b34f99bu, 0x06a1f70ccu, 0x3f92000du, 0xc91844d7u,
+    0xe140f80bu, 0x93240f42u, 0x2f4b34e1u, 0xee2f25afu, 0x72ddbbffu)
 
-    uint32_t lo1 = multiply_low_u32(token, 0xe140f80bu);
-    out_pair[0] = lo1 + 0x2f4b34e1u;
-    out_pair[1] = multiply_low_u32(token, 0x93240f42u) +
-                  multiply_high_u32(token, 0xe140f80bu) +
-                  ladder * 0xee2f25afu +
-                  0x72ddbbffu + (uint32_t)(0xd0b4cb1eu < lo1);
-}
-
-static void post_seventh_param3_pair(uint32_t token, uint32_t out_pair[2]) {
-    uint32_t lo0 = multiply_low_u32(token, 0x3244e655u);
-    uint32_t lo = lo0 + 0x4d103538u;
-    uint32_t hi = multiply_low_u32(token, 0x91479103u) +
-                  multiply_high_u32(token, 0x3244e655u) +
-                  0x29f1b628u + (uint32_t)(0xb2efcac7u < lo0);
-    uint32_t ladder = nibble_ladder64_run8_low(k_f41a1570, lo, hi);
-
-    uint32_t lo1 = multiply_low_u32(token, 0x7c6fe227u);
-    out_pair[0] = lo1 + 0xdc38b21au;
-    out_pair[1] = multiply_low_u32(token, 0x840fc1d4u) +
-                  multiply_high_u32(token, 0x7c6fe227u) +
-                  ladder * 0xbb967575u +
-                  0x899b606cu + (uint32_t)(0x23c74de5u < lo1);
-}
+DEFINE_PRIMARY_PAIR_TRANSFORM(post_seventh_param3_pair, k_f41a1570,
+    0x3244e655u, 0x91479103u, 0x4d103538u, 0x29f1b628u,
+    0x7c6fe227u, 0x840fc1d4u, 0xdc38b21au, 0xbb967575u, 0x899b606cu)
 
 int l3_authorization_primary_post_seventh_staging_pair_streams13(
     const int32_t local5e0_words13[L3_AUTH_ROUND_PRIMARY_SEED_WORDS],
@@ -4225,12 +4065,10 @@ int l3_authorization_primary_terminal_param6_param7_words13(
         return -1;
     }
 
-    l3_authorization_primary_terminal_param6_param7_trace tmp;
-    l3_authorization_primary_terminal_param6_param7_trace *dst = out ? out : &tmp;
-    memset(dst, 0, sizeof(*dst));
+    if (out) memset(out, 0, sizeof(*out));
 
     int rc = l3_authorization_primary_post_seventh_param6_words13(
-        seventh_words13, out_param6_words13, &dst->param6);
+        seventh_words13, out_param6_words13, out ? &out->param6 : NULL);
     if (rc != 0) return rc;
 
     uint32_t pre_state26[L3_AUTH_ROUND_PRIMARY_CONV_PAIRS][2];
@@ -4238,11 +4076,13 @@ int l3_authorization_primary_terminal_param6_param7_words13(
     rc = l3_authorization_primary_eighth_vector_reduce_update_export(
         local5e0_words13, param3_words13, vector_reduce_param1_13,
         vector_reduce_param3, vector_reduce_param4,
-        pre_state26, state26, out_eighth_words13, &dst->eighth);
+        pre_state26, state26, out_eighth_words13,
+        out ? &out->eighth : NULL);
     if (rc != 0) return rc;
 
     return l3_authorization_primary_post_eighth_param7_words13(
-        out_eighth_words13, out_param7_words13, &dst->param7);
+        out_eighth_words13, out_param7_words13,
+        out ? &out->param7 : NULL);
 }
 
 
@@ -4281,9 +4121,7 @@ int l3_authorization_primary_post_sixth_terminal_words13(
         return -1;
     }
 
-    l3_authorization_primary_post_sixth_terminal_trace tmp;
-    l3_authorization_primary_post_sixth_terminal_trace *dst = out ? out : &tmp;
-    memset(dst, 0, sizeof(*dst));
+    if (out) memset(out, 0, sizeof(*out));
 
     uint32_t staging_source13[L3_AUTH_ROUND_PRIMARY_SEED_WORDS];
     uint32_t f12b0_words26[L3_AUTH_ROUND_PRIMARY_CONV_PAIRS];
@@ -4298,7 +4136,8 @@ int l3_authorization_primary_post_sixth_terminal_words13(
         param4_mix_words26, local3a0_words26, seventh_vector_reduce_param1_13,
         seventh_vector_reduce_param3, seventh_vector_reduce_param4,
         out_param5_words13, staging_source13, f12b0_words26, mixed_words26,
-        local718_words26, state26, seventh_words13, &dst->post_sixth);
+        local718_words26, state26, seventh_words13,
+        out ? &out->post_sixth : NULL);
     if (rc != 0) {
         return rc;
     }
@@ -4307,7 +4146,7 @@ int l3_authorization_primary_post_sixth_terminal_words13(
         seventh_words13, eighth_local5e0_words13, eighth_param3_words13,
         eighth_vector_reduce_param1_13, eighth_vector_reduce_param3,
         eighth_vector_reduce_param4, out_param6_words13, out_eighth_words13,
-        out_param7_words13, &dst->terminal);
+        out_param7_words13, out ? &out->terminal : NULL);
 }
 
 int l3_authorization_primary_run(

@@ -435,7 +435,7 @@ static public boolean canRotate=true;
 
 private int lastOrientationRequest = Integer.MIN_VALUE;
 private void requestOrientationOnce(int orientation) {
-    if (lastOrientationRequest != orientation) {
+   if (lastOrientationRequest != orientation) {
         lastOrientationRequest = orientation;
         setRequestedOrientation(orientation);
     }
@@ -476,41 +476,94 @@ private final ContentObserver autoRotateObserver =isWearable?null:new ContentObs
 };
 
 private static final boolean testPortrait=false;
+/*
+ * Large-screen graph orientation modes.
+ *
+ * graphLockedToFirstLandscape:
+ *   Android 16+ elongated screen with rotation disabled. Android is allowed to
+ *   find either landscape side and that first landscape side is then locked.
+ *
+ * graphUsesCurrentOrientationAsLandscape:
+ *   Nearly-square large screen. The graph treats the current surface as an
+ *   ordinary landscape-style canvas (menus left-to-right over the current
+ *   width). Android remains free to rotate while auto-rotate is enabled and is
+ *   locked in its current orientation while auto-rotate is disabled.
+ */
+public static volatile boolean graphLockedToFirstLandscape=false;
+public static volatile boolean graphUsesCurrentOrientationAsLandscape=false;
+
+private void setGraphOrientationModes(boolean locked,boolean currentAsLandscape) {
+    final boolean geometryChanged=graphUsesCurrentOrientationAsLandscape!=currentAsLandscape;
+    if(graphLockedToFirstLandscape==locked && !geometryChanged)
+        return;
+    graphLockedToFirstLandscape=locked;
+    graphUsesCurrentOrientationAsLandscape=currentAsLandscape;
+    if(curve!=null) {
+        curve.syncNativeDisplayRotation();
+        if(geometryChanged)
+            curve.refreshNativeGeometry();
+        else
+            curve.requestRender();
+        }
+    }
+
 public void applyScreenOrientation(Configuration config) {
 if(!isWearable) {
-     boolean largeScreen=testPortrait||config.smallestScreenWidthDp >=600;
-     canRotate=Build.VERSION.SDK_INT < 36||!largeScreen;
-     boolean isElongated=testPortrait||getIsElongated(config);
     try {
     int wanted;
-    if(!largeScreen) {
-         wanted = Natives.getScreenOrientation();
-         }
+    final boolean dorotate=Natives.getRotate()&&isSystemAutoRotateEnabled();
+    final boolean largeScreen=testPortrait||config.smallestScreenWidthDp >=600;
+    final boolean isElongated=testPortrait||getIsElongated(config);
+    final boolean android16LargeScreen=testPortrait||hasAndroid16LargeScreenRestriction();
+
+    /*
+     * Elongated Android-16 large screen with rotation disabled:
+     * use SENSOR until either landscape side is reached, then lock exactly
+     * that first landscape side.
+     *
+     * Nearly-square large screen:
+     * the graph always treats the current Android surface as an ordinary
+     * landscape-style canvas.  With auto-rotate enabled Android stays
+     * FULL_USER.  With auto-rotate disabled the Activity is LOCKED in the
+     * exact orientation it currently has (also at first startup), so both the
+     * Android GUI and the graph remain in that orientation.
+     */
+    final boolean lockFirstLandscape=largeScreen && isElongated &&
+            android16LargeScreen && !dorotate;
+    final boolean lockNow=lockFirstLandscape &&
+            config.orientation==Configuration.ORIENTATION_LANDSCAPE;
+    final boolean nearlySquare=largeScreen && !isElongated;
+    final boolean currentAsLandscape=nearlySquare;
+
+    setGraphOrientationModes(lockNow,currentAsLandscape);
+
+    if(lockFirstLandscape) {
+        if(lockNow)
+            wanted=ActivityInfo.SCREEN_ORIENTATION_LOCKED;
+        else
+            wanted=ActivityInfo.SCREEN_ORIENTATION_SENSOR;
+        }
+    else if(nearlySquare) {
+        wanted=dorotate ? ActivityInfo.SCREEN_ORIENTATION_FULL_USER
+                        : ActivityInfo.SCREEN_ORIENTATION_LOCKED;
+        }
+    else if(dorotate) {
+        wanted=ActivityInfo.SCREEN_ORIENTATION_FULL_USER;
+        }
     else {
-        if(!isElongated) {
-            wanted=ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
+        canRotate=Build.VERSION.SDK_INT < 36||!largeScreen;
+        if(!largeScreen) {
+            wanted=Natives.getScreenOrientation();
+            }
+        else if(android16LargeScreen) {
+            /* Normally covered by lockFirstLandscape above. */
+            wanted=ActivityInfo.SCREEN_ORIENTATION_SENSOR;
             }
         else {
-                if(testPortrait||hasAndroid16LargeScreenRestriction()) {
-                    if(!isSystemAutoRotateEnabled()) {
-                        if(config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                            wanted= ActivityInfo.SCREEN_ORIENTATION_LOCKED;
-                           // wanted=ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
-                            }
-                        else {
-                            wanted=ActivityInfo.SCREEN_ORIENTATION_SENSOR;
-                            }
-                         }
-                     else  {
-                        wanted= ActivityInfo.SCREEN_ORIENTATION_FULL_USER;
-                        }
-               }
-             else {
-                    wanted = Natives.getScreenOrientation();
-                    }
-
+            wanted=Natives.getScreenOrientation();
             }
         }
+
     requestOrientationOnce(wanted);
       }
      catch(       Throwable  error) {

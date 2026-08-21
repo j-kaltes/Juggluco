@@ -1,5 +1,6 @@
 package tk.glucodata;
 
+import androidx.core.content.ContextCompat;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.ColorStateList;
@@ -18,25 +19,28 @@ import tk.glucodata.settings.AppTheme;
 
 public class DynamicThemeUtils {
 private static final String LOG_ID="DynamicThemeUtils";
+
     public static int resolveAttributeColor(Context ctx, int attrId, int defaultColor) {
         if (attrId == 0) return defaultColor;
+
         TypedValue val = new TypedValue();
-        
+
         if (ctx.getTheme().resolveAttribute(attrId, val, true)) {
             try {
                 if (val.resourceId != 0) {
-                    return ctx.getResources().getColor(val.resourceId, ctx.getTheme());
+                    return ContextCompat.getColor(ctx, val.resourceId);
                 }
-                if (val.type >= TypedValue.TYPE_FIRST_COLOR_INT && val.type <= TypedValue.TYPE_LAST_COLOR_INT) {
+
+                if (val.type >= TypedValue.TYPE_FIRST_COLOR_INT &&
+                        val.type <= TypedValue.TYPE_LAST_COLOR_INT) {
                     return val.data;
                 }
-            } catch (Exception e) {
-                // Fall back
+            } catch (Throwable e) {
+                Log.stack(LOG_ID, "resolveAttributeColor", e);
             }
         }
         return defaultColor;
     }
-
     public static InsetDrawable createDynamicButton(Context ctx, int radiusDp, boolean isOval) {
         String pkg = ctx.getPackageName();
         

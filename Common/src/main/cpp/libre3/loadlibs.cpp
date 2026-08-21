@@ -1,33 +1,39 @@
-/*      This file is part of Juggluco, an Android app to receive and display         */
-/*      glucose values from Freestyle Libre 2, Libre 3, Dexcom G7/ONE+,              */
-/*      Sibionics GS1Sb and Accu-Chek SmartGuide sensors.                            */
-/*                                                                                   */
-/*      Copyright (C) 2021 Jaap Korthals Altes <jaapkorthalsaltes@gmail.com>         */
-/*                                                                                   */
-/*      Juggluco is free software: you can redistribute it and/or modify             */
-/*      it under the terms of the GNU General Public License as published            */
-/*      by the Free Software Foundation, either version 3 of the License, or         */
-/*      (at your option) any later version.                                          */
-/*                                                                                   */
-/*      Juggluco is distributed in the hope that it will be useful, but              */
-/*      WITHOUT ANY WARRANTY; without even the implied warranty of                   */
-/*      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                         */
-/*      See the GNU General Public License for more details.                         */
-/*                                                                                   */
-/*      You should have received a copy of the GNU General Public License            */
-/*      along with Juggluco. If not, see <https://www.gnu.org/licenses/>.            */
-/*                                                                                   */
-/*      Tue Aug 11 16:28:40 CEST 2026                                                */
 #include "config.h"
 #include "share/logs.hpp"
 #include "fromjava.h"
 #include "process/sensor_security_context.h"
+#include "share/hexstr.hpp"
 
 #include <jni.h>
+#include <algorithm>
 #include <cstddef>
 #include <cstdint>
-#include <cstdlib>
 #include <memory>
+
+extern "C" __attribute__((used, visibility("default")))
+const char L3_PROCESS_BUILD_ID[] =
+    "L3_PROCESS_BUILD_ID=libre3_process_app_garmin_final_size7_2026-08-15 "
+    "features=mont32,r3_import,a_minus3,round_notrace,parent_live6860,"
+    "final_ws_live7756,shared_scratch1,fixed_core132,hidden_gc"
+#if defined(L3_LIBRE3_SIZE3_IPO)
+    ",ipo_lto"
+#else
+    ",ipo_not_linked"
+#endif
+#if defined(L3_LIBRE3_SIZE7_SAFE_ICF)
+    ",icf_safe"
+#else
+    ",icf_not_linked"
+#endif
+#if defined(L3_LIBRE3_SIZE3_MINIMAL_UNWIND)
+    ",minimal_unwind"
+#else
+    ",unwind_kept"
+#endif
+    ",direct_authroot,digest_safe,f407_words176,lazy_f407_output"
+    ",f407_direct_byte,ccm60_scratch "
+    "base=size6_sensor_ok";
+
 
 namespace {
 
@@ -72,8 +78,6 @@ private:
     bool valid_{};
 };
 
-using NativeBytes = std::unique_ptr<std::uint8_t, decltype(&std::free)>;
-
 [[nodiscard]] l3_sensor_security_context *security_context_from_handle(jlong handle) noexcept {
     return reinterpret_cast<l3_sensor_security_context *>(static_cast<std::uintptr_t>(handle));
 }
@@ -82,16 +86,29 @@ using NativeBytes = std::unique_ptr<std::uint8_t, decltype(&std::free)>;
     return static_cast<jlong>(reinterpret_cast<std::uintptr_t>(context));
 }
 
-template<std::size_t ExpectedSize, class Producer>
-[[nodiscard]] jbyteArray make_byte_array(JNIEnv *env, Producer &&producer) {
-    std::uint8_t *raw = nullptr;
-    std::size_t size = 0;
-    const int rc = producer(&raw, &size);
-    NativeBytes bytes{raw, &std::free};
 
-    if (rc != 1 || !bytes || size != ExpectedSize) {
+
+
+template<std::size_t ExpectedSize, class Producer>
+[[nodiscard]] jbyteArray make_fixed_byte_array(JNIEnv *env, Producer &&producer) {
+    constexpr std::size_t GuardSize = 64;
+    auto bytes = std::make_unique<std::uint8_t[]>(ExpectedSize + GuardSize);
+    std::fill(bytes.get(), bytes.get() + ExpectedSize + GuardSize, 0xA5u);
+
+    const int rc = producer(bytes.get());
+    if (rc != 1) {
         return nullptr;
     }
+
+#ifndef NOLOG
+    for (std::size_t i = ExpectedSize; i < ExpectedSize + GuardSize; ++i) {
+        if (bytes[i] != 0xA5u) {
+            LOGGER("L3BUG fixed output overflow size=%zu guard_offset=%zu\n",
+                   ExpectedSize, i - ExpectedSize);
+            return nullptr;
+        }
+    }
+#endif
 
     jbyteArray result = env->NewByteArray(static_cast<jsize>(ExpectedSize));
     if (!result) {
@@ -103,6 +120,57 @@ template<std::size_t ExpectedSize, class Producer>
     return env->ExceptionCheck() ? nullptr : result;
 }
 
+void log_l3_process_build_once() noexcept {
+#ifndef NOLOG
+    static bool logged = false;
+    if (!logged) {
+        logged = true;
+        LOGGER("L3BUILD %s\n", L3_PROCESS_BUILD_ID);
+    }
+#endif
+}
+
+
+#ifndef NOLOG
+void log_hex_bytes(const char *label, const std::uint8_t *data, std::size_t len) noexcept {
+    static constexpr char hex[] = "0123456789ABCDEF";
+    if (!label) return;
+    if (!data && len) {
+        LOGGER("%s <null len=%zu>\n", label, len);
+        return;
+    }
+    char buf[2 * 96 + 1];
+    std::size_t off = 0;
+    while (off < len) {
+        const std::size_t n = std::min<std::size_t>(96, len - off);
+        for (std::size_t i = 0; i < n; ++i) {
+            const std::uint8_t b = data[off + i];
+            buf[2 * i] = hex[b >> 4];
+            buf[2 * i + 1] = hex[b & 0x0f];
+        }
+        buf[2 * n] = '\0';
+        LOGGER("%s[%zu..%zu)#%zu %s\n", label, off, off + n, len, buf);
+        off += n;
+    }
+    if (len == 0) {
+        LOGGER("%s#0\n", label);
+    }
+}
+
+void log_authorization_root(const char *stage, const l3_sensor_security_context *security) noexcept {
+    if (!stage || !security) return;
+    uint32_t meta[4] = {0, 0, 0, 0};
+    std::uint8_t bytes[256];
+    std::size_t len = 0;
+    const int rc = l3_sensor_security_debug_copy_authorization_root(security, meta, bytes, sizeof(bytes), &len);
+    LOGGER("L3AUTH %s root rc=%d len=%zu kind=%08X tag=%08X meta0=%08X meta1=%08X\n",
+           stage, rc, len, meta[0], meta[1], meta[2], meta[3]);
+    if (rc == 1 && len <= sizeof(bytes)) {
+        log_hex_bytes("L3AUTH root", bytes, len);
+    }
+}
+#endif
+
 } // namespace
 
 /* Allocate the per-Libre3GattCallback security state on first use.  On a
@@ -110,6 +178,7 @@ template<std::size_t ExpectedSize, class Producer>
  * object.  Returning 0 means creation/reset failed. */
 extern "C" JNIEXPORT jlong JNICALL
 fromjava(libre3BeginSecurityHandshake)(JNIEnv *, jclass, jlong context) {
+    log_l3_process_build_once();
     l3_sensor_security_context *security = security_context_from_handle(context);
     if (!security) {
         security = l3_sensor_security_context_create(nullptr);
@@ -142,29 +211,34 @@ extern "C" JNIEXPORT void JNICALL
 fromjava(libre3FreeSecurityContext)(JNIEnv *, jclass, jlong context) {
     l3_sensor_security_context *security = security_context_from_handle(context);
 #ifndef NOLOG
-    LOGGER("libre3FreeSecurityContext(%p)\n", static_cast<void *>(security));
+    LOGGER("libre3FreeSecurityContext(%p) delayed/no-op\n", static_cast<void *>(security));
 #endif
-    l3_sensor_security_context_destroy(security);
+    /* The full 2026-08-14 log showed a SIGBUS immediately at sensor termination
+     * with x0 equal to this context pointer.  Java can still receive queued BLE
+     * callbacks while free() is unwinding, so destroying the native object here
+     * creates a race/use-after-free window.  Keep the small context allocation
+     * alive until process exit for this stability build. */
+    (void)security;
 }
 
 extern "C" JNIEXPORT jint JNICALL
-fromjava(libre3LoadAppKeyAndSavedAuthorization)(JNIEnv *env, jclass, jlong context,
-                                  jbyteArray appPrivateKey,
+fromjava(libre3SelectAppKeyAndSavedAuthorization)(JNIEnv *env, jclass, jlong context,
+                                  jint securityVersion,
                                   jbyteArray savedAuthorization) {
     l3_sensor_security_context *security = security_context_from_handle(context);
     if (!security) return static_cast<jint>(L3_SECURITY_ERR_ARGUMENT);
 
-    ByteArrayView key{env, appPrivateKey, L3_LEN_APP_PRIVATE_KEY};
     ByteArrayView saved{env, savedAuthorization, L3_LEN_SAVED_AUTHORIZATION, true};
-    if (!key.valid() || !saved.valid()) {
+    if (!saved.valid() || securityVersion < 0) {
         return static_cast<jint>(L3_SECURITY_ERR_ARGUMENT);
     }
 
-    const int rc = l3_sensor_security_load_app_key_and_saved_authorization(
-        security, key.data(), key.size(), saved.data(), saved.size());
+    const int rc = l3_sensor_security_select_app_key_and_saved_authorization(
+        security, static_cast<unsigned>(securityVersion), saved.data(), saved.size());
 #ifndef NOLOG
-    LOGGER("libre3LoadAppKeyAndSavedAuthorization(%p,key#%zu,saved#%zu)=%d\n",
-           static_cast<void *>(security), key.size(), saved.size(), rc);
+    LOGGER("libre3SelectAppKeyAndSavedAuthorization(%p,version=%d,saved#%zu)=%d\n",
+           static_cast<void *>(security), static_cast<int>(securityVersion), saved.size(), rc);
+    log_authorization_root(saved.size() ? "after_saved_import" : "after_no_saved_select", security);
 #endif
     return static_cast<jint>(rc);
 }
@@ -185,6 +259,7 @@ fromjava(libre3AcceptPatchCertificate)(JNIEnv *env, jclass, jlong context,
 #ifndef NOLOG
     LOGGER("libre3AcceptPatchCertificate(%p,cert#%zu)=%d\n",
            static_cast<void *>(security), certificate.size(), rc);
+    log_hex_bytes("L3AUTH patch_cert", certificate.data(), certificate.size());
 #endif
     return static_cast<jint>(rc);
 }
@@ -193,10 +268,17 @@ extern "C" JNIEXPORT jbyteArray JNICALL
 fromjava(libre3CreateEphemeralPublicKey)(JNIEnv *env, jclass, jlong context) {
     l3_sensor_security_context *security = security_context_from_handle(context);
     if (!security) return nullptr;
-
-    return make_byte_array<L3_LEN_EPHEMERAL_PUBLIC_KEY>(env,
-        [security](std::uint8_t **out, std::size_t *size) {
-            return l3_sensor_security_create_ephemeral_public_key(security, out, size);
+#ifndef NOLOG
+    LOGGER("libre3CreateEphemeralPublicKey(%p) begin\n", static_cast<void *>(security));
+#endif
+    return make_fixed_byte_array<L3_LEN_EPHEMERAL_PUBLIC_KEY>(env,
+        [security](std::uint8_t *out) {
+            const int rc = l3_sensor_security_create_ephemeral_public_key_into(security, out);
+#ifndef NOLOG
+            LOGGER("libre3CreateEphemeralPublicKey(%p) rc=%d\n", static_cast<void *>(security), rc);
+            if (rc == 1) log_hex_bytes("L3AUTH app_ephemeral_public64", out, L3_LEN_EPHEMERAL_PUBLIC_KEY);
+#endif
+            return rc;
         });
 }
 
@@ -214,8 +296,11 @@ fromjava(libre3DeriveAuthorizationRoot)(JNIEnv *env, jclass, jlong context,
     const int rc = l3_sensor_security_derive_authorization_root(
         security, publicKey.data(), publicKey.size());
 #ifndef NOLOG
-    LOGGER("libre3DeriveAuthorizationRoot(%p,publicKey#%zu)=%d\n",
-           static_cast<void *>(security), publicKey.size(), rc);
+    LOGGER("libre3DeriveAuthorizationRoot(%p,publicKey#%zu)=%d stage=%u\n",
+           static_cast<void *>(security), publicKey.size(), rc,
+           security->engine.authorization_root_stage);
+    log_hex_bytes("L3AUTH patch_ephemeral_public65", publicKey.data(), publicKey.size());
+    log_authorization_root("after_fresh_derive", security);
 #endif
     return static_cast<jint>(rc);
 }
@@ -233,12 +318,21 @@ fromjava(libre3EncryptChallengeReply)(JNIEnv *env, jclass, jlong context,
         return nullptr;
     }
 
-    return make_byte_array<L3_LEN_CHALLENGE_REPLY_CRYPT>(env,
-        [&](std::uint8_t **out, std::size_t *size) {
-            return l3_sensor_security_encrypt_challenge_reply(
+#ifndef NOLOG
+    LOGGER("libre3EncryptChallengeReply(%p,nonce#%zu,plain#%zu) begin\n",
+           static_cast<void *>(security), nonceView.size(), plainView.size());
+#endif
+    return make_fixed_byte_array<L3_LEN_CHALLENGE_REPLY_CRYPT>(env,
+        [&](std::uint8_t *out) {
+            const int rc = l3_sensor_security_encrypt_challenge_reply_into(
                 security,
                 nonceView.data(), nonceView.size(),
-                plainView.data(), plainView.size(), out, size);
+                plainView.data(), plainView.size(), out);
+#ifndef NOLOG
+            LOGGER("libre3EncryptChallengeReply(%p) rc=%d\n", static_cast<void *>(security), rc);
+            if (rc == 1) log_hex_bytes("L3AUTH challenge_reply40", out, L3_LEN_CHALLENGE_REPLY_CRYPT);
+#endif
+            return rc;
         });
 }
 
@@ -255,12 +349,12 @@ fromjava(libre3DecryptChallengeResponse)(JNIEnv *env, jclass, jlong context,
         return nullptr;
     }
 
-    return make_byte_array<L3_LEN_CHALLENGE_RESPONSE_PLAIN>(env,
-        [&](std::uint8_t **out, std::size_t *size) {
-            return l3_sensor_security_decrypt_challenge_response(
+    return make_fixed_byte_array<L3_LEN_CHALLENGE_RESPONSE_PLAIN>(env,
+        [&](std::uint8_t *out) {
+            return l3_sensor_security_decrypt_challenge_response_into(
                 security,
                 nonceView.data(), nonceView.size(),
-                cipherView.data(), cipherView.size(), out, size);
+                cipherView.data(), cipherView.size(), out);
         });
 }
 
@@ -269,9 +363,14 @@ fromjava(libre3ExportSavedAuthorization)(JNIEnv *env, jclass, jlong context) {
     l3_sensor_security_context *security = security_context_from_handle(context);
     if (!security) return nullptr;
 
-    return make_byte_array<L3_LEN_SAVED_AUTHORIZATION>(env,
-        [security](std::uint8_t **out, std::size_t *size) {
-            return l3_sensor_security_export_saved_authorization(security, out, size);
+    return make_fixed_byte_array<L3_LEN_SAVED_AUTHORIZATION>(env,
+        [security](std::uint8_t *out) {
+            const int rc = l3_sensor_security_export_saved_authorization_into(security, out);
+#ifndef NOLOG
+            LOGGER("libre3ExportSavedAuthorization(%p) rc=%d\n", static_cast<void *>(security), rc);
+            if (rc == 1) log_hex_bytes("L3AUTH exported149", out, L3_LEN_SAVED_AUTHORIZATION);
+#endif
+            return rc;
         });
 }
 

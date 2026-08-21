@@ -777,7 +777,7 @@ std::pair<int,SensorGlucoseData *> makeAccuCheckSensorindex(std::string_view sca
    sen->halfdays=maxdaysAccu*2;
    return {ind,getSensorData(ind)} ;
     }
-std::pair<int,SensorGlucoseData *> makeSIsensorIndex(std::string_view gegsSI,uint32_t now,bool hasnum) {
+std::pair<int,SensorGlucoseData *> makeSIsensorIndex(std::string_view gegsSI,uint32_t now,bool hasnum,uint8_t maxdays) {
    const auto name=namefromSIgegs(gegsSI.data(),gegsSI.size(),hasnum);
    removeunused();
    if(sensor *sensgegs = findsensorm(name.data()) ) {
@@ -789,6 +789,7 @@ std::pair<int,SensorGlucoseData *> makeSIsensorIndex(std::string_view gegsSI,uin
       sensgegs->finished=0;
       auto *info= sens->getinfo();
       info->lastscantime=now;
+      info->days=maxdays;
       if(!info->pollcount) info->starttime=now; //Not needed
       sendsiScan(sens);
    void resensordata(int sensorindex) ;
@@ -796,11 +797,11 @@ std::pair<int,SensorGlucoseData *> makeSIsensorIndex(std::string_view gegsSI,uin
       return {sensindex,sens};
       }
    const pathconcat sensordir(inbasedir,name);
-   SensorGlucoseData::mkdatabaseSI(sensordir,gegsSI,now,hasnum );
+   SensorGlucoseData::mkdatabaseSI(sensordir,gegsSI,now,hasnum,maxdays );
    const int ind=addsensor(static_cast<std::string_view>(name));
    sensor *sen=getsensor(ind);
    sen->initialized=true;
-   sen->halfdays=maxdaysSI*2;
+   sen->halfdays=maxdays*2;
    return {ind,getSensorData(ind)} ;
    }
 public:
@@ -910,7 +911,13 @@ std::pair<int,SensorGlucoseData *> makePhotoScanSensorIndex(std::string_view geg
                         return {-1,nullptr};
                         }
                      }
-               return makeSIsensorIndex(gegsSI,now,hasnum);
+
+             const union  {
+                     const char  _[6]{"64016"};
+                     std::array<char,5> gs1;
+                     };
+               const uint8_t maxdays=gs1==sku?maxdaysSI:45;
+               return makeSIsensorIndex(gegsSI,now,hasnum,maxdays);
 
                }
 

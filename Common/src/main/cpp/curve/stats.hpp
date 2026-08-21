@@ -155,7 +155,7 @@ template <typename GlucoseIterator> stats( std::vector<GlucoseDataType<GlucoseIt
 		this->mean=mean;
 		LOGGER("stats::stats mean=%Lf, sd=%1f vc=%1f starttime=%u endtime=%u\n",mean,sd,vc,starttime,endtime);
 		}
-	void  showbar(NVGcontext* vg,JCurve &,const jugglucotext *) ;
-	void otherstats(NVGcontext* vg,JCurve&) ;
-        void otherstats(NVGcontext* vg,JCurve &jcurve,const jugglucotext *usedtext) ;
+	void  showbar(NVGcontext* vg,JCurve &,const jugglucotext *,int ystart) ;
+//	void otherstats(NVGcontext* vg,JCurve&) ;
+        int otherstats(NVGcontext* vg,JCurve &jcurve,const jugglucotext *usedtext) ;
 	};

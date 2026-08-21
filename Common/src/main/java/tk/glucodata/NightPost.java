@@ -359,7 +359,10 @@ public static void  config(MainActivity act, View settingsview) {
 
             lay.setY(MainActivity.systembarTop);
 */
-                        return new int[] {w,h};}, new View[]{urllabel,url},new View[]{secretlabel,editsecret,visible},new View[]{statusview},new View[]{activebox,v3box,clear,wake},new View[]{treatments,help,cancel,save});
+                        return new int[] {w,h};}, new View[]{urllabel,url},new View[]{secretlabel,editsecret,visible},new View[]{statusview},new View[]{activebox,v3box,clear,wake},new View[]{treatments,help,cancel,save})
+            .portraitLayout(new View[]{urllabel},new View[]{url},new View[]{secretlabel,visible},new View[]{editsecret},new View[]{statusview},
+                    new View[]{activebox,v3box},new View[]{clear,wake},new View[]{treatments},new View[]{help,cancel,save})
+            .systembarMargins((left,top,right,bottom)->new int[]{0,top,0,0});
 
       }
         final View allview=isWearable?new ScrollView(act):layout;
@@ -403,7 +406,8 @@ public static void  config(MainActivity act, View settingsview) {
                }
 
         act.addMyContentView(allview, params);
-        getMargins(allview).topMargin= MainActivity.systembarTop;
+        if(isWearable)
+            getMargins(allview).topMargin= MainActivity.systembarTop;
     Runnable closerun=()-> {
         allview.setVisibility(GONE);
         removeContentView(allview);

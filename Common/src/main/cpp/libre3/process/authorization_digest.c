@@ -1,25 +1,5 @@
-/*      This file is part of Juggluco, an Android app to receive and display         */
-/*      glucose values from Freestyle Libre 2(+), Libre 3(+), Dexcom G7/ONE+,        */
-/*      Sibionics GS1Sb and GS3, Accu-Chek SmartGuide, CareSens Air and              */
-/*      Aidex X sensors.                                                             */
-/*                                                                                   */
-/*      Copyright (C) 2021 Jaap Korthals Altes <jaapkorthalsaltes@gmail.com>         */
-/*                                                                                   */
-/*      Juggluco is free software: you can redistribute it and/or modify             */
-/*      it under the terms of the GNU General Public License as published            */
-/*      by the Free Software Foundation, either version 3 of the License, or         */
-/*      (at your option) any later version.                                          */
-/*                                                                                   */
-/*      Juggluco is distributed in the hope that it will be useful, but              */
-/*      WITHOUT ANY WARRANTY; without even the implied warranty of                   */
-/*      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                         */
-/*      See the GNU General Public License for more details.                         */
-/*                                                                                   */
-/*      You should have received a copy of the GNU General Public License            */
-/*      along with Juggluco. If not, see <https://www.gnu.org/licenses/>.            */
-/*                                                                                   */
-/*      Tue Aug 11 16:33:40 CEST 2026                                                */
 #include "authorization_digest.h"
+#include "whitebox_lookup_table.h"
 
 #include <string.h>
 #ifdef L3_AUTHORIZATION_DIGEST_DEBUG_TRACE
@@ -56,14 +36,30 @@ static void wr32le(uint8_t *p, uint32_t value) {
 }
 
 static int validate_digest_tables(const l3_authorization_digest_tables *t) {
-    if (!t || !t->state_transition_table || !t->digest_update_program ||
-        !t->digest_initialization_program) {
+    if (!t || !t->digest_update_program || !t->digest_initialization_program) {
         return L3_AUTHORIZATION_DIGEST_ERR_ARGUMENT;
     }
-    if (t->state_transition_table_len < 0x20000u ||
-        t->digest_update_program_len < 0x1d60u ||
+    if (t->digest_update_program_len < 0x1d60u ||
         t->digest_initialization_program_len < 0x120u) {
         return L3_AUTHORIZATION_DIGEST_ERR_TABLE_SIZE;
+    }
+    return L3_AUTHORIZATION_DIGEST_OK;
+}
+
+static int digest_copy_update_program_slice(
+    const l3_authorization_digest_tables *t,
+    size_t logical_offset,
+    uint8_t *out,
+    size_t len) {
+    if (!t || !t->digest_update_program || !out ||
+        logical_offset > t->digest_update_program_len ||
+        len > t->digest_update_program_len - logical_offset) {
+        return L3_AUTHORIZATION_DIGEST_ERR_ARGUMENT;
+    }
+    for (size_t i = 0; i < len; ++i) {
+        out[i] = l3_auth_table_read_byte(t->digest_update_program,
+                                        t->digest_update_program_format,
+                                        logical_offset + i);
     }
     return L3_AUTHORIZATION_DIGEST_OK;
 }
@@ -82,17 +78,17 @@ static int digest_table_transform(const l3_authorization_digest_tables *t,
     for (uint32_t i = 0; i < whole; ++i) {
         uint32_t index = (((state & 0xf8u) ^ p3[i]) |
                           ((uint32_t)p4[i] << 8)) ^
-                         ((uint32_t)t->digest_update_program[base + i] << 11);
-        if (index >= t->state_transition_table_len) return L3_AUTHORIZATION_DIGEST_ERR_TABLE_SIZE;
-        state = t->state_transition_table[index];
+                         ((uint32_t)l3_auth_table_read_byte(t->digest_update_program, t->digest_update_program_format, base + i) << 11);
+        if (index >= L3_WHITEBOX_LOOKUP_TABLE_LEN) return L3_AUTHORIZATION_DIGEST_ERR_TABLE_SIZE;
+        state = l3_whitebox_lookup_byte(index);
         p5[i] = (uint8_t)(state & 7u);
     }
     for (uint32_t i = 0; i < rem; ++i) {
         uint32_t index = ((state & 0xf8u) |
                           ((uint32_t)p4[whole + i] << 8)) ^
-                         ((uint32_t)t->digest_update_program[base + whole + i] << 11);
-        if (index >= t->state_transition_table_len) return L3_AUTHORIZATION_DIGEST_ERR_TABLE_SIZE;
-        state = t->state_transition_table[index];
+                         ((uint32_t)l3_auth_table_read_byte(t->digest_update_program, t->digest_update_program_format, base + whole + i) << 11);
+        if (index >= L3_WHITEBOX_LOOKUP_TABLE_LEN) return L3_AUTHORIZATION_DIGEST_ERR_TABLE_SIZE;
+        state = l3_whitebox_lookup_byte(index);
         p5[whole + i] = (uint8_t)(state & 7u);
     }
     return L3_AUTHORIZATION_DIGEST_OK;
@@ -114,25 +110,25 @@ static int digest_table_transform_with_skip(const l3_authorization_digest_tables
     for (uint32_t i = 0; i < skip; ++i) {
         uint32_t index = (((state & 0xf8u) ^ p3[i]) |
                           ((uint32_t)p4[i] << 8)) ^
-                         ((uint32_t)t->digest_update_program[base + i] << 11);
-        if (index >= t->state_transition_table_len) return L3_AUTHORIZATION_DIGEST_ERR_TABLE_SIZE;
-        state = t->state_transition_table[index];
+                         ((uint32_t)l3_auth_table_read_byte(t->digest_update_program, t->digest_update_program_format, base + i) << 11);
+        if (index >= L3_WHITEBOX_LOOKUP_TABLE_LEN) return L3_AUTHORIZATION_DIGEST_ERR_TABLE_SIZE;
+        state = l3_whitebox_lookup_byte(index);
     }
     for (uint32_t i = 0; i < out_count; ++i) {
         uint32_t pos = skip + i;
         uint32_t index = (((state & 0xf8u) ^ p3[pos]) |
                           ((uint32_t)p4[pos] << 8)) ^
-                         ((uint32_t)t->digest_update_program[base + pos] << 11);
-        if (index >= t->state_transition_table_len) return L3_AUTHORIZATION_DIGEST_ERR_TABLE_SIZE;
-        state = t->state_transition_table[index];
+                         ((uint32_t)l3_auth_table_read_byte(t->digest_update_program, t->digest_update_program_format, base + pos) << 11);
+        if (index >= L3_WHITEBOX_LOOKUP_TABLE_LEN) return L3_AUTHORIZATION_DIGEST_ERR_TABLE_SIZE;
+        state = l3_whitebox_lookup_byte(index);
         p5[i] = (uint8_t)(state & 7u);
     }
     for (uint32_t i = 0; i < rem; ++i) {
         uint32_t pos = skip + out_count + i;
         uint32_t index = (state & 0xf8u) |
-                         ((uint32_t)t->digest_update_program[base + pos] << 11);
-        if (index >= t->state_transition_table_len) return L3_AUTHORIZATION_DIGEST_ERR_TABLE_SIZE;
-        state = t->state_transition_table[index];
+                         ((uint32_t)l3_auth_table_read_byte(t->digest_update_program, t->digest_update_program_format, base + pos) << 11);
+        if (index >= L3_WHITEBOX_LOOKUP_TABLE_LEN) return L3_AUTHORIZATION_DIGEST_ERR_TABLE_SIZE;
+        state = l3_whitebox_lookup_byte(index);
         p5[out_count + i] = (uint8_t)(state & 7u);
     }
     return L3_AUTHORIZATION_DIGEST_OK;
@@ -317,8 +313,11 @@ static int digest_absorb_encoded_block(l3_authorization_digest_context *ctx,
                         shifted, shifted, shifted);
             if (rc) return rc;
         }
-        const uint8_t *padding = ctx->tables.digest_update_program +
-                                 0x1070u + ((mod ^ 0x0fu) * 66u);
+        uint8_t padding[66];
+        rc = digest_copy_update_program_slice(
+            &ctx->tables, 0x1070u + ((mod ^ 0x0fu) * 66u),
+            padding, sizeof(padding));
+        if (rc) return rc;
         rc = digest_table_transform(&ctx->tables, 0x0b5u, 0x420u,
                     current, padding, combined);
         if (rc) return rc;
@@ -541,8 +540,19 @@ static int digest_compress_generated_state(l3_authorization_digest_context *ctx)
     L3_B(0x59eu, lanes + 0x6cu, lanes + 0x6cu, s5bc);
     L3_B(0x5fdu, lanes + 0x7eu, lanes + 0x7eu, s5ce);
 
-    /* The 64 generated-domain SHA-256 rounds. */
+    /* The 64 generated-domain SHA-256 rounds.  These operands are logical
+     * slices of the packed digest program; never address the packed storage as
+     * though it were the old unpacked 8192-byte array. */
+    uint8_t round_constant[18];
+    uint8_t e93_constant[18];
+    rc = digest_copy_update_program_slice(&ctx->tables, 0x18ceu,
+                                          e93_constant, sizeof(e93_constant));
+    if (rc) return rc;
     for (unsigned round = 0; round < 0x480u; round += 0x12u) {
+        rc = digest_copy_update_program_slice(&ctx->tables, 0x144eu + round,
+                                              round_constant,
+                                              sizeof(round_constant));
+        if (rc) return rc;
         L3_C(0x00c00ec9u, 0xc00f0u, s598, s598, s9a);
         memset(s78, 0, 13u);
         s78[13] = s598[0];
@@ -578,11 +588,10 @@ static int digest_compress_generated_state(l3_authorization_digest_context *ctx)
         L3_B(0x91bu, s5f2, s604, s9a);
         L3_B(0x973u, s78, s9a, s5e0);
         L3_B(0xd2bu, s5ce, s5e0, s5f2);
-        L3_B(0x813u, ctx->tables.digest_update_program + 0x144eu + round,
-             s53e + round, s604);
+        L3_B(0x813u, round_constant, s53e + round, s604);
         L3_B(0x3b8u, s5f2, s604, s616);
         L3_B(0x30au, s598, s5aa, s78);
-        L3_B(0xe93u, ctx->tables.digest_update_program + 0x18ceu, s598, s9a);
+        L3_B(0xe93u, e93_constant, s598, s9a);
         L3_B(0x825u, s9a, s5bc, s3e);
         L3_B(0xbbcu, s78, s3e, s628);
         L3_B(0x86du, s616, s628, sac);
@@ -738,10 +747,20 @@ int l3_authorization_digest_finalize_frame82(l3_authorization_digest_context *ct
     }
     uint8_t temp[66];
     uint8_t *blocks = ctx->state + ST_BLOCKS;
-    const uint8_t *padding_left = ctx->tables.digest_update_program +
-                                  0x1070u + ((4u ^ 15u) * 66u);
-    const uint8_t *padding_right = ctx->tables.digest_update_program +
-                                   0x1922u + ((4u ^ 15u) * 66u);
+    uint8_t padding_left[66];
+    uint8_t padding_right[66];
+    uint8_t zero_block[66];
+    rc = digest_copy_update_program_slice(
+        &ctx->tables, 0x1070u + ((4u ^ 15u) * 66u),
+        padding_left, sizeof(padding_left));
+    if (rc) return rc;
+    rc = digest_copy_update_program_slice(
+        &ctx->tables, 0x1922u + ((4u ^ 15u) * 66u),
+        padding_right, sizeof(padding_right));
+    if (rc) return rc;
+    rc = digest_copy_update_program_slice(&ctx->tables, 0x1d00u,
+                                          zero_block, sizeof(zero_block));
+    if (rc) return rc;
     rc = digest_table_transform(&ctx->tables, 0x3cau, 0x420u,
                 blocks, padding_left, temp);
     if (rc) return rc;
@@ -749,7 +768,6 @@ int l3_authorization_digest_finalize_frame82(l3_authorization_digest_context *ct
                 temp, padding_right, blocks);
     if (rc) return rc;
     for (unsigned i = 1u; i < 4u; ++i) {
-        const uint8_t *zero_block = ctx->tables.digest_update_program + 0x1d00u;
         rc = digest_table_transform(&ctx->tables, 0x54au, 0x420u,
                     zero_block, zero_block, blocks + i * 66u);
         if (rc) return rc;

@@ -16,9 +16,6 @@
 #include <openssl/evp.h>
 #include <openssl/hmac.h>
 #include <openssl/rand.h>
-#include <openssl/ec.h>
-#include <openssl/bn.h>
-#include <openssl/aes.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -40,21 +37,7 @@ L3_CRYPTO_DECS_EXTERN int (*EVP_DigestFinal_exptr)(EVP_MD_CTX *ctx, unsigned cha
 L3_CRYPTO_DECS_EXTERN EVP_MD_CTX *(*EVP_MD_CTX_newptr)(void) L3_CRYPTO_DECS_INIT;
 L3_CRYPTO_DECS_EXTERN void (*EVP_MD_CTX_freeptr)(EVP_MD_CTX *ctx) L3_CRYPTO_DECS_INIT;
 L3_CRYPTO_DECS_EXTERN const EVP_MD *(*EVP_sha256ptr)(void) L3_CRYPTO_DECS_INIT;
-L3_CRYPTO_DECS_EXTERN EC_KEY *(*EC_KEY_new_by_curve_nameptr)(int nid) L3_CRYPTO_DECS_INIT;
-L3_CRYPTO_DECS_EXTERN int (*EC_KEY_generate_keyptr)(EC_KEY *key) L3_CRYPTO_DECS_INIT;
-L3_CRYPTO_DECS_EXTERN const BIGNUM *(*EC_KEY_get0_private_keyptr)(const EC_KEY *key) L3_CRYPTO_DECS_INIT;
-L3_CRYPTO_DECS_EXTERN const EC_POINT *(*EC_KEY_get0_public_keyptr)(const EC_KEY *key) L3_CRYPTO_DECS_INIT;
-L3_CRYPTO_DECS_EXTERN void (*EC_KEY_freeptr)(EC_KEY *key) L3_CRYPTO_DECS_INIT;
-L3_CRYPTO_DECS_EXTERN size_t (*EC_POINT_point2octptr)(const EC_GROUP *group, const EC_POINT *p, point_conversion_form_t form, unsigned char *buf, size_t len, BN_CTX *ctx) L3_CRYPTO_DECS_INIT;
-L3_CRYPTO_DECS_EXTERN int (*BN_bn2binpadptr)(const BIGNUM *a, unsigned char *to, int tolen) L3_CRYPTO_DECS_INIT;
-L3_CRYPTO_DECS_EXTERN BIGNUM *(*BN_bin2bnptr)(const unsigned char *s, int len, BIGNUM *ret) L3_CRYPTO_DECS_INIT;
-L3_CRYPTO_DECS_EXTERN void (*BN_freeptr)(BIGNUM *a) L3_CRYPTO_DECS_INIT;
-L3_CRYPTO_DECS_EXTERN EC_POINT *(*EC_POINT_newptr)(const EC_GROUP *group) L3_CRYPTO_DECS_INIT;
-L3_CRYPTO_DECS_EXTERN void (*EC_POINT_freeptr)(EC_POINT *point) L3_CRYPTO_DECS_INIT;
-L3_CRYPTO_DECS_EXTERN int (*EC_POINT_oct2pointptr)(const EC_GROUP *group, EC_POINT *p, const unsigned char *buf, size_t len, BN_CTX *ctx) L3_CRYPTO_DECS_INIT;
-L3_CRYPTO_DECS_EXTERN int (*EC_POINT_mulptr)(const EC_GROUP *group, EC_POINT *r, const BIGNUM *n, const EC_POINT *q, const BIGNUM *m, BN_CTX *ctx) L3_CRYPTO_DECS_INIT;
-L3_CRYPTO_DECS_EXTERN int (*AES_set_encrypt_keyptr)(const unsigned char *userKey, const int bits, AES_KEY *key) L3_CRYPTO_DECS_INIT;
-L3_CRYPTO_DECS_EXTERN void (*AES_encryptptr)(const unsigned char *in, unsigned char *out, const AES_KEY *key) L3_CRYPTO_DECS_INIT;
+L3_CRYPTO_DECS_EXTERN const EVP_MD *(*EVP_sha512ptr)(void) L3_CRYPTO_DECS_INIT;
 
 #undef L3_CRYPTO_DECS_EXTERN
 #undef L3_CRYPTO_DECS_INIT
@@ -68,25 +51,15 @@ L3_CRYPTO_DECS_EXTERN void (*AES_encryptptr)(const unsigned char *in, unsigned c
 #define L3_CRYPTO_PROJECT_INIT
 #endif
 
-L3_CRYPTO_PROJECT_EXTERN const EVP_MD *(*EVP_sha512ptr)(void) L3_CRYPTO_PROJECT_INIT;
 L3_CRYPTO_PROJECT_EXTERN const EVP_MD *(*EVP_sha1ptr)(void) L3_CRYPTO_PROJECT_INIT;
 L3_CRYPTO_PROJECT_EXTERN unsigned char *(*HMACptr)(const EVP_MD *evp_md, const void *key, int key_len, const unsigned char *d, size_t n, unsigned char *md, unsigned int *md_len) L3_CRYPTO_PROJECT_INIT;
-L3_CRYPTO_PROJECT_EXTERN HMAC_CTX *(*HMAC_CTX_newptr)(void) L3_CRYPTO_PROJECT_INIT;
-L3_CRYPTO_PROJECT_EXTERN void (*HMAC_CTX_freeptr)(HMAC_CTX *ctx) L3_CRYPTO_PROJECT_INIT;
-L3_CRYPTO_PROJECT_EXTERN int (*HMAC_Init_exptr)(HMAC_CTX *ctx, const void *key, int len, const EVP_MD *md, ENGINE *impl) L3_CRYPTO_PROJECT_INIT;
-L3_CRYPTO_PROJECT_EXTERN int (*HMAC_Updateptr)(HMAC_CTX *ctx, const unsigned char *data, size_t len) L3_CRYPTO_PROJECT_INIT;
-L3_CRYPTO_PROJECT_EXTERN int (*HMAC_Finalptr)(HMAC_CTX *ctx, unsigned char *md, unsigned int *len) L3_CRYPTO_PROJECT_INIT;
 L3_CRYPTO_PROJECT_EXTERN int (*RAND_bytesptr)(unsigned char *buf, int num) L3_CRYPTO_PROJECT_INIT;
 L3_CRYPTO_PROJECT_EXTERN EVP_CIPHER_CTX *(*EVP_CIPHER_CTX_newptr)(void) L3_CRYPTO_PROJECT_INIT;
 L3_CRYPTO_PROJECT_EXTERN void (*EVP_CIPHER_CTX_freeptr)(EVP_CIPHER_CTX *c) L3_CRYPTO_PROJECT_INIT;
-L3_CRYPTO_PROJECT_EXTERN int (*EVP_CIPHER_CTX_set_paddingptr)(EVP_CIPHER_CTX *c, int pad) L3_CRYPTO_PROJECT_INIT;
-L3_CRYPTO_PROJECT_EXTERN const EVP_CIPHER *(*EVP_aes_128_ecbptr)(void) L3_CRYPTO_PROJECT_INIT;
 L3_CRYPTO_PROJECT_EXTERN const EVP_CIPHER *(*EVP_aes_256_ctrptr)(void) L3_CRYPTO_PROJECT_INIT;
 L3_CRYPTO_PROJECT_EXTERN int (*EVP_EncryptInit_exptr)(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *cipher, ENGINE *impl, const unsigned char *key, const unsigned char *iv) L3_CRYPTO_PROJECT_INIT;
 L3_CRYPTO_PROJECT_EXTERN int (*EVP_EncryptUpdateptr)(EVP_CIPHER_CTX *ctx, unsigned char *out, int *outl, const unsigned char *in, int inl) L3_CRYPTO_PROJECT_INIT;
 L3_CRYPTO_PROJECT_EXTERN int (*EVP_EncryptFinal_exptr)(EVP_CIPHER_CTX *ctx, unsigned char *out, int *outl) L3_CRYPTO_PROJECT_INIT;
-L3_CRYPTO_PROJECT_EXTERN const EC_GROUP *(*EC_KEY_get0_groupptr)(const EC_KEY *key) L3_CRYPTO_PROJECT_INIT;
-
 #undef L3_CRYPTO_PROJECT_EXTERN
 #undef L3_CRYPTO_PROJECT_INIT
 

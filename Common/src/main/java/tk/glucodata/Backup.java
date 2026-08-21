@@ -690,16 +690,24 @@ CheckDirectionBox ICE;
          getMargins(delete).setMarginStart(hormargin);
          getMargins(save).setMarginEnd(hormargin);;
         var withqr=BuildConfig.minSDK>=20?new View[]{Password, editpass, visible}:new View[]{Password, editpass, visible};
+         var sidepad=(int)(GlucoseCurve.metrics.density*8.0);
          layout = new Layout(act, (l, w, h) -> {
             hideSystemUI(act);
             final int[] ret = {w, h};
             return ret;
 
          }, firstrow,new View[]{ICE,ICElabellabel,ICElabel,zero,one},editIPs, new View[]{testip, haslabel, label},
-               directions, new View[]{receive, Sendlabel, Amounts, Scans, Stream, restore}, fromrow, withqr, new View[]{delete, Close, reset, Help, save});
-
-         var sidepad=(int)(GlucoseCurve.metrics.density*8.0);
-         layout.setPadding(MainActivity.systembarLeft+sidepad,MainActivity.systembarTop/2,sidepad+MainActivity.systembarRight,MainActivity.systembarBottom);
+               directions, new View[]{receive, Sendlabel, Amounts, Scans, Stream, restore}, fromrow, withqr, new View[]{delete, Close, reset, Help, save})
+            .portraitLayout(
+               new View[]{Portlabel,portedit,checkhostname},new View[]{IPslabel,detect},
+               new View[]{ICE,ICElabellabel},new View[]{ICElabel},new View[]{zero,one},
+               new View[]{editIPs[0],editIPs[1]},new View[]{editIPs[2],editIPs[3]},
+               new View[]{testip,haslabel},new View[]{label},directions,
+               new View[]{receive,Sendlabel},new View[]{Amounts,Scans,Stream},new View[]{restore},
+               new View[]{startlabel},new View[]{alldata,fromnow,screenpos},
+               withqr,new View[]{Close,Help},new View[]{reset},new View[]{delete,save})
+            .systembarPadding((left,top,right,bottom)->
+               new int[]{left+sidepad,top/2,sidepad+right,bottom});
 
          }
       Close.setOnClickListener(v-> act.doonback());
@@ -930,7 +938,9 @@ ViewGroup.LayoutParams params;
                 */
                 final int[] lret={w,h};
                 return lret;
-                },firstrow , new View[]{info});
+                },firstrow , new View[]{info})
+                .systembarMargins((left,top,right,bottom)->
+                    new int[]{left*3/4,top*3/4,right*3/4,0});
           // info.setPadding(pad,0,pad,0);
             layout.setBackgroundResource(R.drawable.dialogbackground);
    //          layout.setRotation(90);
@@ -941,10 +951,12 @@ ViewGroup.LayoutParams params;
       modify.setOnClickListener(v->     changehostview(act,pos,layall));
 //      final var lpar=isWearable?MATCH_PARENT: WRAP_CONTENT;
       act.addMyContentView(layall, params);
-      var margs=getMargins(layall);
-      margs.topMargin=MainActivity.systembarTop*3/4;
-      margs.leftMargin=MainActivity.systembarLeft*3/4;
-      margs.rightMargin=MainActivity.systembarRight*3/4;
+      if(isWearable) {
+         var margs=getMargins(layall);
+         margs.topMargin=MainActivity.systembarTop*3/4;
+         margs.leftMargin=MainActivity.systembarLeft*3/4;
+         margs.rightMargin=MainActivity.systembarRight*3/4;
+         }
       Runnable closerun= ()-> {
          removeContentView(layall);
 
@@ -1094,7 +1106,11 @@ ViewGroup.LayoutParams params;
          getMargins(Help).setMarginStart(hormarg);
          getMargins(Cancel).setMarginEnd(hormarg);
          var withqr=BuildConfig.minSDK>=20?new View[]{Help,autoqr,hosts,Cancel}:new View[]{Help,hosts,Cancel};
-         var layout=new Layout(act, new View[]{ip,blpan,p2p,labport,portview,Save,turnserver},new View[]{recycle},new View[] {battery,Sync,reinit,staticnum},errorrow,withqr);
+         var layout=new Layout(act, new View[]{ip,blpan,p2p,labport,portview,Save,turnserver},new View[]{recycle},errorrow,new View[] {battery,Sync,reinit,staticnum},withqr)
+            .portraitLayout(new View[]{ip},new View[]{blpan},new View[]{p2p},
+               new View[]{labport,portview,Save},new View[]{turnserver},new View[]{recycle},errorrow,
+               new View[]{battery,staticnum},BuildConfig.minSDK>=20?new View[]{autoqr,reinit}:new View[]{reinit},
+               new View[]{hosts,Sync},new View[]{Help,Cancel});
         if(BuildConfig.minSDK>=20) {
             autoqr.setOnClickListener(v -> {
                 makeAutoQR(act, layout);
@@ -1102,7 +1118,8 @@ ViewGroup.LayoutParams params;
           };
 
        var density=GlucoseCurve.metrics.density;
-      layout.setPadding(MainActivity.systembarLeft+(int)(density*10),MainActivity.systembarTop/2,MainActivity.systembarRight+(int)(density*10),MainActivity.systembarBottom+(int)(density*3));
+      layout.systembarPadding((left,top,right,bottom)->new int[]{
+         left+(int)(density*10),top*5/6,right+(int)(density*10),bottom+(int)(density*3)});
 
           {if(doLog) {Log.i(LOG_ID,"density="+GlucoseCurve.metrics.density+" systembarTop="+ MainActivity.systembarTop+" systembarLeft="+ MainActivity.systembarLeft);};};
          lay=layout;

@@ -1,24 +1,3 @@
-/*      This file is part of Juggluco, an Android app to receive and display         */
-/*      glucose values from Freestyle Libre 2(+), Libre 3(+), Dexcom G7/ONE+,        */
-/*      Sibionics GS1Sb and GS3, Accu-Chek SmartGuide, CareSens Air and              */
-/*      Aidex X sensors.                                                             */
-/*                                                                                   */
-/*      Copyright (C) 2021 Jaap Korthals Altes <jaapkorthalsaltes@gmail.com>         */
-/*                                                                                   */
-/*      Juggluco is free software: you can redistribute it and/or modify             */
-/*      it under the terms of the GNU General Public License as published            */
-/*      by the Free Software Foundation, either version 3 of the License, or         */
-/*      (at your option) any later version.                                          */
-/*                                                                                   */
-/*      Juggluco is distributed in the hope that it will be useful, but              */
-/*      WITHOUT ANY WARRANTY; without even the implied warranty of                   */
-/*      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                         */
-/*      See the GNU General Public License for more details.                         */
-/*                                                                                   */
-/*      You should have received a copy of the GNU General Public License            */
-/*      along with Juggluco. If not, see <https://www.gnu.org/licenses/>.            */
-/*                                                                                   */
-/*      Tue Aug 11 16:33:40 CEST 2026                                                */
 #include "authorization_round_mixer.h"
 
 #include "p256_scalar_multiply.h"
@@ -40,11 +19,6 @@ static void store_le32(uint8_t *p, uint32_t v) {
 
 static uint32_t mla32(int32_t x, uint32_t mul, uint32_t add) {
     return (uint32_t)((uint32_t)x * mul + add);
-}
-
-static uint64_t pair_words_to_u64(const int32_t words[2]) {
-    return (uint64_t)(uint32_t)words[0] |
-           (uint64_t)(uint32_t)words[1] << 32;
 }
 
 static uint32_t add_carry_u32(uint32_t a, uint32_t b) {
@@ -159,12 +133,10 @@ int l3_authorization_prepare_round_pipeline(
     int32_t out_second_words13[L3_AUTH_ROUND_CORE_FC2304_WORDS],
     uint32_t out_param5_words13[L3_AUTH_ROUND_CORE_VEC_WORDS],
     uint32_t out_param6_words13[L3_AUTH_ROUND_CORE_VEC_WORDS],
-    uint32_t out_param7_words13[L3_AUTH_ROUND_CORE_VEC_WORDS],
-    l3_authorization_vector_seed *out_initial_param5_seed) {
+    uint32_t out_param7_words13[L3_AUTH_ROUND_CORE_VEC_WORDS]) {
     if (!full_parent_ctx || !left66 || !right66 || !scalar35 ||
         !out_first_words13 || !out_second_words13 || !out_param5_words13 ||
-        !out_param6_words13 || !out_param7_words13 ||
-        !out_initial_param5_seed) {
+        !out_param6_words13 || !out_param7_words13) {
         return -1;
     }
 
@@ -173,7 +145,7 @@ int l3_authorization_prepare_round_pipeline(
     int32_t shared_right13[L3_AUTH_PAIR_REDUCE_RIGHT_WORDS];
     int32_t shared_param3[L3_AUTH_PAIR_REDUCE_PARAM3_WORDS];
     if (l3_authorization_core_initial_lanes10(
-            full_parent_ctx, left66, right66, scalar35,
+            left66, right66, scalar35,
             first_lanes10, second_lanes10) != 0) {
         return -1;
     }
@@ -206,23 +178,6 @@ int l3_authorization_prepare_round_pipeline(
         out_param7_words13[i] = (uint32_t)vec_b13[i];
     }
 
-    /* At the first loop entry local_4c0/local_4d0 still contain the raw
-     * second FUN_f3fc2304 vector groups, while auVar98 contains the affine
-     * param_6 middle vector. */
-    out_initial_param5_seed->high_halves2[0] =
-        pair_words_to_u64(out_second_words13 + 8u);
-    out_initial_param5_seed->high_halves2[1] =
-        pair_words_to_u64(out_second_words13 + 10u);
-    out_initial_param5_seed->low_halves2[0] =
-        pair_words_to_u64(out_second_words13 + 4u);
-    out_initial_param5_seed->low_halves2[1] =
-        pair_words_to_u64(out_second_words13 + 6u);
-    out_initial_param5_seed->middle_low_halves2[0] =
-        (uint64_t)out_param6_words13[4] |
-        (uint64_t)out_param6_words13[5] << 32;
-    out_initial_param5_seed->middle_low_halves2[1] =
-        (uint64_t)out_param6_words13[6] |
-        (uint64_t)out_param6_words13[7] << 32;
     return 0;
 }
 
@@ -284,40 +239,62 @@ static l3_authorization_word_pair mixer_core_fold_rounds(l3_authorization_word_p
     return v;
 }
 
-static l3_authorization_word_pair mixer_core_make_2630_pair(uint32_t x) {
-    const uint32_t lo0 = multiply_low_u32(x, 0x43fb4a2bu);
+#if defined(__GNUC__) || defined(__clang__)
+#define L3_AUTH_NOINLINE __attribute__((noinline))
+#else
+#define L3_AUTH_NOINLINE
+#endif
+
+typedef struct mixer_pair_transform_spec {
+    uint32_t lo0_mul;
+    uint32_t lo0_add;
+    uint32_t hi0_mul;
+    uint32_t hi0_add;
+    const l3_authorization_word_pair *fold_table16;
+    uint32_t lo1_mul;
+    uint32_t lo1_add;
+    uint32_t hi1_mul;
+    uint32_t hi1_add;
+    uint32_t folded_low_mul;
+} mixer_pair_transform_spec;
+
+static L3_AUTH_NOINLINE l3_authorization_word_pair mixer_core_make_pair_from_spec(
+    uint32_t x,
+    const mixer_pair_transform_spec *spec) {
+    const uint32_t lo0 = multiply_low_u32(x, spec->lo0_mul);
     l3_authorization_word_pair seed = {
-        lo0 + 0xc27df65cu,
-        (uint32_t)(x * 0x44387bc7u + multiply_high_u32(x, 0x43fb4a2bu) +
-                   0x48f5f11du + add_carry_u32(lo0, 0xc27df65cu))
+        lo0 + spec->lo0_add,
+        (uint32_t)(x * spec->hi0_mul + multiply_high_u32(x, spec->lo0_mul) +
+                   spec->hi0_add + add_carry_u32(lo0, spec->lo0_add))
     };
-    const uint32_t folded_low = mixer_core_fold_rounds(seed, k_mixer_core_f41a2630, 8u).lo;
-    const uint32_t lo1 = multiply_low_u32(x, 0xb9a810f3u);
+    const uint32_t folded_low =
+        mixer_core_fold_rounds(seed, spec->fold_table16, 8u).lo;
+    const uint32_t lo1 = multiply_low_u32(x, spec->lo1_mul);
     l3_authorization_word_pair out = {
-        lo1 + 0x6b36f33bu,
-        (uint32_t)(x * 0xf6611835u + multiply_high_u32(x, 0xb9a810f3u) +
-                   0x49db7f20u + add_carry_u32(lo1, 0x6b36f33bu) +
-                   folded_low * 0xb65a27a7u)
+        lo1 + spec->lo1_add,
+        (uint32_t)(x * spec->hi1_mul + multiply_high_u32(x, spec->lo1_mul) +
+                   spec->hi1_add + add_carry_u32(lo1, spec->lo1_add) +
+                   folded_low * spec->folded_low_mul)
     };
     return out;
 }
 
+static const mixer_pair_transform_spec k_mixer_pair_spec_2630 = {
+    0x43fb4a2bu, 0xc27df65cu, 0x44387bc7u, 0x48f5f11du, k_mixer_core_f41a2630,
+    0xb9a810f3u, 0x6b36f33bu, 0xf6611835u, 0x49db7f20u, 0xb65a27a7u
+};
+
+static l3_authorization_word_pair mixer_core_make_2630_pair(uint32_t x) {
+    return mixer_core_make_pair_from_spec(x, &k_mixer_pair_spec_2630);
+}
+
+static const mixer_pair_transform_spec k_mixer_pair_spec_26b0 = {
+    0x9156d639u, 0xb7a8c6dau, 0xe8e893dfu, 0xe46ac0cau, k_mixer_core_f41a26b0,
+    0x90233bcdu, 0x370f35d4u, 0x02f8bf79u, 0xbac8c1f7u, 0x00200dcbu
+};
+
 static l3_authorization_word_pair mixer_core_make_26b0_pair(uint32_t x) {
-    const uint32_t lo0 = multiply_low_u32(x, 0x9156d639u);
-    l3_authorization_word_pair seed = {
-        lo0 + 0xb7a8c6dau,
-        (uint32_t)(x * 0xe8e893dfu + multiply_high_u32(x, 0x9156d639u) +
-                   0xe46ac0cau + add_carry_u32(lo0, 0xb7a8c6dau))
-    };
-    const uint32_t folded_low = mixer_core_fold_rounds(seed, k_mixer_core_f41a26b0, 8u).lo;
-    const uint32_t lo1 = multiply_low_u32(x, 0x90233bcdu);
-    l3_authorization_word_pair out = {
-        lo1 + 0x370f35d4u,
-        (uint32_t)(x * 0x02f8bf79u + multiply_high_u32(x, 0x90233bcdu) +
-                   0xbac8c1f7u + add_carry_u32(lo1, 0x370f35d4u) +
-                   folded_low * 0x00200dcbu)
-    };
-    return out;
+    return mixer_core_make_pair_from_spec(x, &k_mixer_pair_spec_26b0);
 }
 
 static l3_authorization_word_pair mixer_core_pair_add(l3_authorization_word_pair a,
@@ -552,40 +529,22 @@ static const uint32_t k_mixer_core_f41914f0[8] = {
     0xc493269du, 0xb0fbb6a8u, 0x8b129b53u, 0xd1e08b0du
 };
 
+static const mixer_pair_transform_spec k_mixer_pair_spec_2730 = {
+    0xc16485fdu, 0x2c6e224bu, 0x7ad4d490u, 0x49006ba8u, k_mixer_core_f41a2730,
+    0xa2699f1bu, 0xc9b66549u, 0x7f04b253u, 0xfd1f1761u, 0x425ec709u
+};
+
 static l3_authorization_word_pair mixer_core_make_2730_pair(uint32_t x) {
-    const uint32_t lo0 = multiply_low_u32(x, 0xc16485fdu);
-    l3_authorization_word_pair seed = {
-        lo0 + 0x2c6e224bu,
-        (uint32_t)(x * 0x7ad4d490u + multiply_high_u32(x, 0xc16485fdu) +
-                   0x49006ba8u + add_carry_u32(lo0, 0x2c6e224bu))
-    };
-    const uint32_t folded_low = mixer_core_fold_rounds(seed, k_mixer_core_f41a2730, 8u).lo;
-    const uint32_t lo1 = multiply_low_u32(x, 0xa2699f1bu);
-    l3_authorization_word_pair out = {
-        lo1 + 0xc9b66549u,
-        (uint32_t)(x * 0x7f04b253u + multiply_high_u32(x, 0xa2699f1bu) +
-                   0xfd1f1761u + add_carry_u32(lo1, 0xc9b66549u) +
-                   folded_low * 0x425ec709u)
-    };
-    return out;
+    return mixer_core_make_pair_from_spec(x, &k_mixer_pair_spec_2730);
 }
 
+static const mixer_pair_transform_spec k_mixer_pair_spec_27b0 = {
+    0x7ebeb9d5u, 0x83a9a888u, 0xba5ecacfu, 0xd284686eu, k_mixer_core_f41a27b0,
+    0x8938b6d3u, 0x6488cca5u, 0x3acdf727u, 0x84fc4503u, 0x3a65e5f9u
+};
+
 static l3_authorization_word_pair mixer_core_make_27b0_pair(uint32_t x) {
-    const uint32_t lo0 = multiply_low_u32(x, 0x7ebeb9d5u);
-    l3_authorization_word_pair seed = {
-        lo0 + 0x83a9a888u,
-        (uint32_t)(x * 0xba5ecacfu + multiply_high_u32(x, 0x7ebeb9d5u) +
-                   0xd284686eu + add_carry_u32(lo0, 0x83a9a888u))
-    };
-    const uint32_t folded_low = mixer_core_fold_rounds(seed, k_mixer_core_f41a27b0, 8u).lo;
-    const uint32_t lo1 = multiply_low_u32(x, 0x8938b6d3u);
-    l3_authorization_word_pair out = {
-        lo1 + 0x6488cca5u,
-        (uint32_t)(x * 0x3acdf727u + multiply_high_u32(x, 0x8938b6d3u) +
-                   0x84fc4503u + add_carry_u32(lo1, 0x6488cca5u) +
-                   folded_low * 0x3a65e5f9u)
-    };
-    return out;
+    return mixer_core_make_pair_from_spec(x, &k_mixer_pair_spec_27b0);
 }
 
 int l3_authorization_core_local5b0_accum2730_pairs13(
@@ -767,20 +726,9 @@ static uint64_t mixer_core_vec478_bias_half(void) {
 int l3_authorization_stage1_stage_vector_reduction13(
     const l3_authorization_word_pair low_pairs26[L3_AUTH_ROUND_CORE_CONV_PAIRS26],
     const l3_authorization_word_pair high_pairs26[L3_AUTH_ROUND_CORE_CONV_PAIRS26],
-    const uint64_t local4c0_halves2[2],
-    const uint64_t local4d0_halves2[2],
-    const uint64_t auvar98_halves2[2],
-    uint64_t out_halves13[13][2],
-    uint32_t *out_vector_feedback_scalar_arg,
-    l3_authorization_stage1_stage_vector_reduction_trace *out) {
-    if (!low_pairs26 || !high_pairs26 || !local4c0_halves2 || !local4d0_halves2 ||
-        !auvar98_halves2 || !out_halves13) return -1;
+    uint64_t out_halves13[13][2]) {
+    if (!low_pairs26 || !high_pairs26 || !out_halves13) return -1;
 
-    l3_authorization_stage1_stage_vector_reduction_trace tmp;
-    l3_authorization_stage1_stage_vector_reduction_trace *dst = out ? out : &tmp;
-    memset(dst, 0, sizeof(*dst));
-
-    const uint32_t mul_low = 0x7e5908b1u;
     const uint64_t mul_low64 = UINT64_C(0x7bb0e96d7e5908b1);
     const uint64_t mul_high64 = UINT64_C(0x07eb30e45bebcb4d);
     const uint64_t bias = mixer_core_vec478_bias_half();
@@ -807,55 +755,8 @@ int l3_authorization_stage1_stage_vector_reduction13(
 
         out_halves13[lane][0] = side_high0 + side_low0 + bias;
         out_halves13[lane][1] = side_high1 + side_low1 + bias;
-
-        dst->input_low_halves13[lane][0] = ((uint64_t)low_pairs26[p0].hi << 32) | low_pairs26[p0].lo;
-        dst->input_low_halves13[lane][1] = ((uint64_t)low_pairs26[p1].hi << 32) | low_pairs26[p1].lo;
-        dst->input_high_halves13[lane][0] = ((uint64_t)high_pairs26[p0].hi << 32) | high_pairs26[p0].lo;
-        dst->input_high_halves13[lane][1] = ((uint64_t)high_pairs26[p1].hi << 32) | high_pairs26[p1].lo;
-        dst->side_from_high13[lane][0] = side_high0;
-        dst->side_from_high13[lane][1] = side_high1;
-        dst->side_from_low13[lane][0] = side_low0;
-        dst->side_from_low13[lane][1] = side_low1;
-        dst->bias13[lane][0] = bias;
-        dst->bias13[lane][1] = bias;
-        dst->output_halves13[lane][0] = out_halves13[lane][0];
-        dst->output_halves13[lane][1] = out_halves13[lane][1];
     }
-
-    const uint64_t scalar_mul = (uint64_t)low_pairs26[24].lo * (uint64_t)mul_low;
-    const uint32_t scalar_arg =
-        low_pairs26[24].hi * mul_low +
-        low_pairs26[24].lo * 0x7bb0e96du +
-        (uint32_t)(scalar_mul >> 32);
-    if (out_vector_feedback_scalar_arg) *out_vector_feedback_scalar_arg = scalar_arg;
-    dst->vector_feedback_scalar_arg = scalar_arg;
-    (void)local4c0_halves2;
-    (void)local4d0_halves2;
-    (void)auvar98_halves2;
     return 0;
-}
-
-int l3_authorization_stage1_stage_convolve_and_reduce_vectors13(
-    const l3_authorization_word_pair high_pairs26[L3_AUTH_ROUND_CORE_CONV_PAIRS26],
-    const int32_t local5b0[13],
-    const int32_t round_words13[13],
-    const uint64_t local4c0_halves2[2],
-    const uint64_t local4d0_halves2[2],
-    const uint64_t auvar98_halves2[2],
-    uint64_t out_halves13[13][2],
-    uint32_t *out_vector_feedback_scalar_arg,
-    l3_authorization_stage1_stage_convolution_trace *conv_trace,
-    l3_authorization_stage1_stage_vector_reduction_trace *vec_trace) {
-    if (!high_pairs26 || !local5b0 || !round_words13 || !local4c0_halves2 ||
-        !local4d0_halves2 || !auvar98_halves2 || !out_halves13) return -1;
-
-    l3_authorization_word_pair low_pairs26[L3_AUTH_ROUND_CORE_CONV_PAIRS26];
-    int rc = l3_authorization_stage1_stage_accumulate_and_convolve26(local5b0, round_words13,
-                                                           low_pairs26, conv_trace);
-    if (rc != 0) return rc;
-    return l3_authorization_stage1_stage_vector_reduction13(
-        low_pairs26, high_pairs26, local4c0_halves2, local4d0_halves2, auvar98_halves2,
-        out_halves13, out_vector_feedback_scalar_arg, vec_trace);
 }
 
 /* ---- v308: FUN_f3fbc5c0 post-V307 local_548/round-context accumulator seam ---- */
@@ -898,40 +799,22 @@ static const uint32_t k_mixer_core_f41915f0[8] = {
     0x519f4829u, 0x6c3307afu, 0x6abc5405u, 0x36c3111au
 };
 
+static const mixer_pair_transform_spec k_mixer_pair_spec_2ab0 = {
+    0x0beb3bcfu, 0xc4e6ccc3u, 0x1e440053u, 0x06b5b484u, k_mixer_core_f41a2ab0,
+    0x929c7ac7u, 0x7459312cu, 0xbdb64878u, 0x11363d9au, 0x8ddfc877u
+};
+
 static l3_authorization_word_pair mixer_core_make_2ab0_pair(uint32_t x) {
-    const uint32_t lo0 = multiply_low_u32(x, 0x0beb3bcfu);
-    l3_authorization_word_pair seed = {
-        lo0 + 0xc4e6ccc3u,
-        (uint32_t)(x * 0x1e440053u + multiply_high_u32(x, 0x0beb3bcfu) +
-                   0x06b5b484u + add_carry_u32(lo0, 0xc4e6ccc3u))
-    };
-    const uint32_t folded_low = mixer_core_fold_rounds(seed, k_mixer_core_f41a2ab0, 8u).lo;
-    const uint32_t lo1 = multiply_low_u32(x, 0x929c7ac7u);
-    l3_authorization_word_pair out = {
-        lo1 + 0x7459312cu,
-        (uint32_t)(x * 0xbdb64878u + multiply_high_u32(x, 0x929c7ac7u) +
-                   0x11363d9au + add_carry_u32(lo1, 0x7459312cu) +
-                   folded_low * 0x8ddfc877u)
-    };
-    return out;
+    return mixer_core_make_pair_from_spec(x, &k_mixer_pair_spec_2ab0);
 }
 
+static const mixer_pair_transform_spec k_mixer_pair_spec_2b30 = {
+    0x9371a44du, 0x7cb7aa30u, 0x7fc4919eu, 0xb68a990cu, k_mixer_core_f41a2b30,
+    0x410aaaa5u, 0xf71dd5e4u, 0xfae543cdu, 0xae70d906u, 0x9c65d447u
+};
+
 static l3_authorization_word_pair mixer_core_make_2b30_pair(uint32_t x) {
-    const uint32_t lo0 = multiply_low_u32(x, 0x9371a44du);
-    l3_authorization_word_pair seed = {
-        lo0 + 0x7cb7aa30u,
-        (uint32_t)(x * 0x7fc4919eu + multiply_high_u32(x, 0x9371a44du) +
-                   0xb68a990cu + add_carry_u32(lo0, 0x7cb7aa30u))
-    };
-    const uint32_t folded_low = mixer_core_fold_rounds(seed, k_mixer_core_f41a2b30, 8u).lo;
-    const uint32_t lo1 = multiply_low_u32(x, 0x410aaaa5u);
-    l3_authorization_word_pair out = {
-        lo1 + 0xf71dd5e4u,
-        (uint32_t)(x * 0xfae543cdu + multiply_high_u32(x, 0x410aaaa5u) +
-                   0xae70d906u + add_carry_u32(lo1, 0xf71dd5e4u) +
-                   folded_low * 0x9c65d447u)
-    };
-    return out;
+    return mixer_core_make_pair_from_spec(x, &k_mixer_pair_spec_2b30);
 }
 
 int l3_authorization_core_local548_accum2ab0_pairs13(
@@ -1113,20 +996,9 @@ static uint64_t third_stage_vector_bias_half(void) {
 int l3_authorization_stage2_stage_vector_reduction13(
     const l3_authorization_word_pair low_pairs26[L3_AUTH_ROUND_CORE_CONV_PAIRS26],
     const l3_authorization_word_pair high_pairs26[L3_AUTH_ROUND_CORE_CONV_PAIRS26],
-    const uint64_t high_seed_halves2[2],
-    const uint64_t low_seed_halves2[2],
-    const uint64_t middle_low_seed_halves2[2],
-    uint64_t out_halves13[13][2],
-    uint32_t *out_vector_feedback_scalar_arg,
-    l3_authorization_stage2_stage_vector_reduction_trace *out) {
-    if (!low_pairs26 || !high_pairs26 || !high_seed_halves2 || !low_seed_halves2 ||
-        !middle_low_seed_halves2 || !out_halves13) return -1;
+    uint64_t out_halves13[13][2]) {
+    if (!low_pairs26 || !high_pairs26 || !out_halves13) return -1;
 
-    l3_authorization_stage2_stage_vector_reduction_trace tmp;
-    l3_authorization_stage2_stage_vector_reduction_trace *dst = out ? out : &tmp;
-    memset(dst, 0, sizeof(*dst));
-
-    const uint32_t mul_low = 0x33a8ae13u;
     const uint64_t mul_low64 = UINT64_C(0x6559320433a8ae13);
     const uint64_t mul_high64 = UINT64_C(0x42051227d794c51b);
     const uint64_t bias = third_stage_vector_bias_half();
@@ -1154,55 +1026,8 @@ int l3_authorization_stage2_stage_vector_reduction13(
 
         out_halves13[lane][0] = side_high0 + side_low0 + bias;
         out_halves13[lane][1] = side_high1 + side_low1 + bias;
-
-        dst->input_low_halves13[lane][0] = ((uint64_t)low_pairs26[p0].hi << 32) | low_pairs26[p0].lo;
-        dst->input_low_halves13[lane][1] = ((uint64_t)low_pairs26[p1].hi << 32) | low_pairs26[p1].lo;
-        dst->input_high_halves13[lane][0] = ((uint64_t)high_pairs26[p0].hi << 32) | high_pairs26[p0].lo;
-        dst->input_high_halves13[lane][1] = ((uint64_t)high_pairs26[p1].hi << 32) | high_pairs26[p1].lo;
-        dst->side_from_high13[lane][0] = side_high0;
-        dst->side_from_high13[lane][1] = side_high1;
-        dst->side_from_low13[lane][0] = side_low0;
-        dst->side_from_low13[lane][1] = side_low1;
-        dst->bias13[lane][0] = bias;
-        dst->bias13[lane][1] = bias;
-        dst->output_halves13[lane][0] = out_halves13[lane][0];
-        dst->output_halves13[lane][1] = out_halves13[lane][1];
     }
-
-    const uint64_t scalar_mul = (uint64_t)low_pairs26[24].lo * (uint64_t)mul_low;
-    const uint32_t scalar_arg =
-        low_pairs26[24].hi * mul_low +
-        low_pairs26[24].lo * 0x65593204u +
-        (uint32_t)(scalar_mul >> 32);
-    if (out_vector_feedback_scalar_arg) *out_vector_feedback_scalar_arg = scalar_arg;
-    dst->vector_feedback_scalar_arg = scalar_arg;
-    (void)high_seed_halves2;
-    (void)low_seed_halves2;
-    (void)middle_low_seed_halves2;
     return 0;
-}
-
-int l3_authorization_stage2_stage_convolve_and_reduce_vectors13(
-    const l3_authorization_word_pair high_pairs26[L3_AUTH_ROUND_CORE_CONV_PAIRS26],
-    const int32_t local548[13],
-    const int32_t round_mixed13[13],
-    const uint64_t high_seed_halves2[2],
-    const uint64_t low_seed_halves2[2],
-    const uint64_t middle_low_seed_halves2[2],
-    uint64_t out_halves13[13][2],
-    uint32_t *out_vector_feedback_scalar_arg,
-    l3_authorization_stage2_stage_convolution_trace *conv_trace,
-    l3_authorization_stage2_stage_vector_reduction_trace *vec_trace) {
-    if (!high_pairs26 || !local548 || !round_mixed13 || !high_seed_halves2 ||
-        !low_seed_halves2 || !middle_low_seed_halves2 || !out_halves13) return -1;
-
-    l3_authorization_word_pair low_pairs26[L3_AUTH_ROUND_CORE_CONV_PAIRS26];
-    int rc = l3_authorization_stage2_stage_accumulate_and_convolve26(local548, round_mixed13,
-                                                           low_pairs26, conv_trace);
-    if (rc != 0) return rc;
-    return l3_authorization_stage2_stage_vector_reduction13(
-        low_pairs26, high_pairs26, high_seed_halves2, low_seed_halves2, middle_low_seed_halves2,
-        out_halves13, out_vector_feedback_scalar_arg, vec_trace);
 }
 
 /* ---- v311: FUN_f3fbc5c0 post-V310 local_5e4/mixed-round accumulator seam ---- */
@@ -1245,40 +1070,22 @@ static const uint32_t k_mixer_core_f4191670[8] = {
     0xe5e48371u, 0x312293e6u, 0xc37f3fbbu, 0x04eac701u
 };
 
+static const mixer_pair_transform_spec k_mixer_pair_spec_2bb0 = {
+    0xc3d374c1u, 0x24a02001u, 0xed7f1276u, 0x0cac9ed4u, k_mixer_core_f41a2bb0,
+    0x0aa7bf13u, 0x465f2c76u, 0x16fcb37eu, 0x3bcc0eb5u, 0x11147b2du
+};
+
 static l3_authorization_word_pair mixer_core_make_2bb0_pair(uint32_t x) {
-    const uint32_t lo0 = multiply_low_u32(x, 0xc3d374c1u);
-    l3_authorization_word_pair seed = {
-        lo0 + 0x24a02001u,
-        (uint32_t)(x * 0xed7f1276u + multiply_high_u32(x, 0xc3d374c1u) +
-                   0x0cac9ed4u + add_carry_u32(lo0, 0x24a02001u))
-    };
-    const uint32_t folded_low = mixer_core_fold_rounds(seed, k_mixer_core_f41a2bb0, 8u).lo;
-    const uint32_t lo1 = multiply_low_u32(x, 0x0aa7bf13u);
-    l3_authorization_word_pair out = {
-        lo1 + 0x465f2c76u,
-        (uint32_t)(x * 0x16fcb37eu + multiply_high_u32(x, 0x0aa7bf13u) +
-                   0x3bcc0eb5u + add_carry_u32(lo1, 0x465f2c76u) +
-                   folded_low * 0x11147b2du)
-    };
-    return out;
+    return mixer_core_make_pair_from_spec(x, &k_mixer_pair_spec_2bb0);
 }
 
+static const mixer_pair_transform_spec k_mixer_pair_spec_2c30 = {
+    0x25d42083u, 0xd864a4f7u, 0xc805bd46u, 0x400fa5deu, k_mixer_core_f41a2c30,
+    0x9ab8030fu, 0xfc787256u, 0x4901d17bu, 0x9e3f79c6u, 0x9667ca7bu
+};
+
 static l3_authorization_word_pair mixer_core_make_2c30_pair(uint32_t x) {
-    const uint32_t lo0 = multiply_low_u32(x, 0x25d42083u);
-    l3_authorization_word_pair seed = {
-        lo0 + 0xd864a4f7u,
-        (uint32_t)(x * 0xc805bd46u + multiply_high_u32(x, 0x25d42083u) +
-                   0x400fa5deu + add_carry_u32(lo0, 0xd864a4f7u))
-    };
-    const uint32_t folded_low = mixer_core_fold_rounds(seed, k_mixer_core_f41a2c30, 8u).lo;
-    const uint32_t lo1 = multiply_low_u32(x, 0x9ab8030fu);
-    l3_authorization_word_pair out = {
-        lo1 + 0xfc787256u,
-        (uint32_t)(x * 0x4901d17bu + multiply_high_u32(x, 0x9ab8030fu) +
-                   0x9e3f79c6u + add_carry_u32(lo1, 0xfc787256u) +
-                   folded_low * 0x9667ca7bu)
-    };
-    return out;
+    return mixer_core_make_pair_from_spec(x, &k_mixer_pair_spec_2c30);
 }
 
 int l3_authorization_core_local5e4_accum2bb0_pairs13(
@@ -1460,20 +1267,9 @@ static uint64_t fourth_stage_vector_bias_half(void) {
 int l3_authorization_stage3_stage_vector_reduction13(
     const l3_authorization_word_pair low_pairs26[L3_AUTH_ROUND_CORE_CONV_PAIRS26],
     const l3_authorization_word_pair high_pairs26[L3_AUTH_ROUND_CORE_CONV_PAIRS26],
-    const uint64_t high_seed_halves2[2],
-    const uint64_t low_seed_halves2[2],
-    const uint64_t middle_low_seed_halves2[2],
-    uint64_t out_halves13[13][2],
-    uint32_t *out_vector_feedback_scalar_arg,
-    l3_authorization_stage3_stage_vector_reduction_trace *out) {
-    if (!low_pairs26 || !high_pairs26 || !high_seed_halves2 || !low_seed_halves2 ||
-        !middle_low_seed_halves2 || !out_halves13) return -1;
+    uint64_t out_halves13[13][2]) {
+    if (!low_pairs26 || !high_pairs26 || !out_halves13) return -1;
 
-    l3_authorization_stage3_stage_vector_reduction_trace tmp;
-    l3_authorization_stage3_stage_vector_reduction_trace *dst = out ? out : &tmp;
-    memset(dst, 0, sizeof(*dst));
-
-    const uint32_t mul_low = 0x52acb075u;
     const uint64_t mul_low64 = UINT64_C(0x90b3c2f252acb075);
     const uint64_t mul_high64 = UINT64_C(0x1a757ec319f63d8b);
     const uint64_t bias = fourth_stage_vector_bias_half();
@@ -1501,55 +1297,8 @@ int l3_authorization_stage3_stage_vector_reduction13(
 
         out_halves13[lane][0] = side_high0 + side_low0 + bias;
         out_halves13[lane][1] = side_high1 + side_low1 + bias;
-
-        dst->input_low_halves13[lane][0] = ((uint64_t)low_pairs26[p0].hi << 32) | low_pairs26[p0].lo;
-        dst->input_low_halves13[lane][1] = ((uint64_t)low_pairs26[p1].hi << 32) | low_pairs26[p1].lo;
-        dst->input_high_halves13[lane][0] = ((uint64_t)high_pairs26[p0].hi << 32) | high_pairs26[p0].lo;
-        dst->input_high_halves13[lane][1] = ((uint64_t)high_pairs26[p1].hi << 32) | high_pairs26[p1].lo;
-        dst->side_from_high13[lane][0] = side_high0;
-        dst->side_from_high13[lane][1] = side_high1;
-        dst->side_from_low13[lane][0] = side_low0;
-        dst->side_from_low13[lane][1] = side_low1;
-        dst->bias13[lane][0] = bias;
-        dst->bias13[lane][1] = bias;
-        dst->output_halves13[lane][0] = out_halves13[lane][0];
-        dst->output_halves13[lane][1] = out_halves13[lane][1];
     }
-
-    const uint64_t scalar_mul = (uint64_t)low_pairs26[24].lo * (uint64_t)mul_low;
-    const uint32_t scalar_arg =
-        low_pairs26[24].hi * mul_low +
-        low_pairs26[24].lo * 0x90b3c2f2u +
-        (uint32_t)(scalar_mul >> 32);
-    if (out_vector_feedback_scalar_arg) *out_vector_feedback_scalar_arg = scalar_arg;
-    dst->vector_feedback_scalar_arg = scalar_arg;
-    (void)high_seed_halves2;
-    (void)low_seed_halves2;
-    (void)middle_low_seed_halves2;
     return 0;
-}
-
-int l3_authorization_stage3_stage_convolve_and_reduce_vectors13(
-    const l3_authorization_word_pair high_pairs26[L3_AUTH_ROUND_CORE_CONV_PAIRS26],
-    const int32_t local5e4[13],
-    const int32_t mixed_round13[13],
-    const uint64_t high_seed_halves2[2],
-    const uint64_t low_seed_halves2[2],
-    const uint64_t middle_low_seed_halves2[2],
-    uint64_t out_halves13[13][2],
-    uint32_t *out_vector_feedback_scalar_arg,
-    l3_authorization_stage3_stage_convolution_trace *conv_trace,
-    l3_authorization_stage3_stage_vector_reduction_trace *vec_trace) {
-    if (!high_pairs26 || !local5e4 || !mixed_round13 || !high_seed_halves2 ||
-        !low_seed_halves2 || !middle_low_seed_halves2 || !out_halves13) return -1;
-
-    l3_authorization_word_pair low_pairs26[L3_AUTH_ROUND_CORE_CONV_PAIRS26];
-    int rc = l3_authorization_stage3_stage_accumulate_and_convolve26(local5e4, mixed_round13,
-                                                           low_pairs26, conv_trace);
-    if (rc != 0) return rc;
-    return l3_authorization_stage3_stage_vector_reduction13(
-        low_pairs26, high_pairs26, high_seed_halves2, low_seed_halves2, middle_low_seed_halves2,
-        out_halves13, out_vector_feedback_scalar_arg, vec_trace);
 }
 
 /* ---- native param_7 high stream: local_57c/current +0x2cc round window ---- */
@@ -1592,50 +1341,22 @@ static const uint32_t k_mixer_core_f41916f0[8] = {
     0x87a830edu, 0x7f186d2bu, 0x94826479u, 0x29e34512u
 };
 
+static const mixer_pair_transform_spec k_mixer_pair_spec_2cb0 = {
+    0x328ce74fu, 0xf055731fu, 0x850ff4ceu, 0xf0b0c911u, k_mixer_core_f41a2cb0,
+    0xe97ff137u, 0x796d5d68u, 0x9f5ef305u, 0x6948a07du, 0xe7e1a267u
+};
+
 static l3_authorization_word_pair mixer_core_make_2cb0_pair(uint32_t x) {
-    const uint32_t lo0 = multiply_low_u32(x, 0x328ce74fu);
-    l3_authorization_word_pair seed = {
-        lo0 + 0xf055731fu,
-        (uint32_t)(x * 0x850ff4ceu +
-                   multiply_high_u32(x, 0x328ce74fu) +
-                   0xf0b0c911u +
-                   add_carry_u32(lo0, 0xf055731fu))
-    };
-    const uint32_t folded_low =
-        mixer_core_fold_rounds(seed, k_mixer_core_f41a2cb0, 8u).lo;
-    const uint32_t lo1 = multiply_low_u32(x, 0xe97ff137u);
-    l3_authorization_word_pair out = {
-        lo1 + 0x796d5d68u,
-        (uint32_t)(x * 0x9f5ef305u +
-                   multiply_high_u32(x, 0xe97ff137u) +
-                   0x6948a07du +
-                   add_carry_u32(lo1, 0x796d5d68u) +
-                   folded_low * 0xe7e1a267u)
-    };
-    return out;
+    return mixer_core_make_pair_from_spec(x, &k_mixer_pair_spec_2cb0);
 }
 
+static const mixer_pair_transform_spec k_mixer_pair_spec_2d30 = {
+    0xaa67b40du, 0xf7b97885u, 0x5f983888u, 0x9a177b36u, k_mixer_core_f41a2d30,
+    0x55da8ddbu, 0x1a346d1cu, 0x482c70d2u, 0x62cb47ffu, 0xe698b879u
+};
+
 static l3_authorization_word_pair mixer_core_make_2d30_pair(uint32_t x) {
-    const uint32_t lo0 = multiply_low_u32(x, 0xaa67b40du);
-    l3_authorization_word_pair seed = {
-        lo0 + 0xf7b97885u,
-        (uint32_t)(x * 0x5f983888u +
-                   multiply_high_u32(x, 0xaa67b40du) +
-                   0x9a177b36u +
-                   add_carry_u32(lo0, 0xf7b97885u))
-    };
-    const uint32_t folded_low =
-        mixer_core_fold_rounds(seed, k_mixer_core_f41a2d30, 8u).lo;
-    const uint32_t lo1 = multiply_low_u32(x, 0x55da8ddbu);
-    l3_authorization_word_pair out = {
-        lo1 + 0x1a346d1cu,
-        (uint32_t)(x * 0x482c70d2u +
-                   multiply_high_u32(x, 0x55da8ddbu) +
-                   0x62cb47ffu +
-                   add_carry_u32(lo1, 0x1a346d1cu) +
-                   folded_low * 0xe698b879u)
-    };
-    return out;
+    return mixer_core_make_pair_from_spec(x, &k_mixer_pair_spec_2d30);
 }
 
 static int mixer_core_param7_high_accum_pairs13(
@@ -1812,40 +1533,22 @@ static const uint32_t k_mixer_core_f4191770[8] = {
     0xb99bb171u, 0xd46af158u, 0x6937425fu, 0xd1149ea1u
 };
 
+static const mixer_pair_transform_spec k_mixer_pair_spec_2db0 = {
+    0x6b91e853u, 0xb7ac9a3bu, 0x55e62117u, 0x78482dabu, k_mixer_core_f41a2db0,
+    0xdbdccc47u, 0xc47e12b1u, 0xe08b306eu, 0xefc3c1cau, 0xcafa4243u
+};
+
 static l3_authorization_word_pair mixer_core_make_2db0_pair(uint32_t x) {
-    const uint32_t lo0 = multiply_low_u32(x, 0x6b91e853u);
-    l3_authorization_word_pair seed = {
-        lo0 + 0xb7ac9a3bu,
-        (uint32_t)(x * 0x55e62117u + multiply_high_u32(x, 0x6b91e853u) +
-                   0x78482dabu + add_carry_u32(lo0, 0xb7ac9a3bu))
-    };
-    const uint32_t folded_low = mixer_core_fold_rounds(seed, k_mixer_core_f41a2db0, 8u).lo;
-    const uint32_t lo1 = multiply_low_u32(x, 0xdbdccc47u);
-    l3_authorization_word_pair out = {
-        lo1 + 0xc47e12b1u,
-        (uint32_t)(x * 0xe08b306eu + multiply_high_u32(x, 0xdbdccc47u) +
-                   0xefc3c1cau + add_carry_u32(lo1, 0xc47e12b1u) +
-                   folded_low * 0xcafa4243u)
-    };
-    return out;
+    return mixer_core_make_pair_from_spec(x, &k_mixer_pair_spec_2db0);
 }
 
+static const mixer_pair_transform_spec k_mixer_pair_spec_2e30 = {
+    0xb49ee07du, 0xe044db07u, 0x24516004u, 0xd2638d16u, k_mixer_core_f41a2e30,
+    0x040b3dafu, 0x24466032u, 0x4afad824u, 0x6e1ae599u, 0x2d7ec565u
+};
+
 static l3_authorization_word_pair mixer_core_make_2e30_pair(uint32_t x) {
-    const uint32_t lo0 = multiply_low_u32(x, 0xb49ee07du);
-    l3_authorization_word_pair seed = {
-        lo0 + 0xe044db07u,
-        (uint32_t)(x * 0x24516004u + multiply_high_u32(x, 0xb49ee07du) +
-                   0xd2638d16u + add_carry_u32(lo0, 0xe044db07u))
-    };
-    const uint32_t folded_low = mixer_core_fold_rounds(seed, k_mixer_core_f41a2e30, 8u).lo;
-    const uint32_t lo1 = multiply_low_u32(x, 0x040b3dafu);
-    l3_authorization_word_pair out = {
-        lo1 + 0x24466032u,
-        (uint32_t)(x * 0x4afad824u + multiply_high_u32(x, 0x040b3dafu) +
-                   0x6e1ae599u + add_carry_u32(lo1, 0x24466032u) +
-                   folded_low * 0x2d7ec565u)
-    };
-    return out;
+    return mixer_core_make_pair_from_spec(x, &k_mixer_pair_spec_2e30);
 }
 
 int l3_authorization_core_local618_accum2db0_pairs13(

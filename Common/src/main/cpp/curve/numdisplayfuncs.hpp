@@ -87,7 +87,7 @@ void	NumDisplay::mealdisplay(JCurve &jcurve,float x,float y,const Num *num) cons
 	
 	y+=smallfontlineheight;
 	for(int i=start;i<mealptr;i++) {
-		nvgText(jcurve.thevg, x,y,meals->datameal()->ingredients[m[i].ingr].name.data(),NULL );
+		jcurve.drawText(jcurve.thevg, x,y,meals->datameal()->ingredients[m[i].ingr].name.data(),NULL );
 		y+=smallfontlineheight;
 		}
 	jcurve.mealpos.emplace_back(mealposition{x, mealstarty, y, (int)(num-startdata()), getindex()});
@@ -115,7 +115,8 @@ template <class TX,class TY> void NumDisplay::showNums(JCurve&jcurve, const TX &
 			nvgTextAlign(vg,NVG_ALIGN_CENTER|NVG_ALIGN_MIDDLE);
 			float xpos= transx(it->time);
 			float ypos;
-			if(settings->getlabelweightmgperL(it->type)) {
+			const bool weighted=settings->getlabelweightmgperL(it->type);
+			if(weighted) {
 				ypos= transy(it->value*settings->getlabelweightmgperL(it->type));
 				nvgBeginPath(vg);
 				standout(jcurve, xpos,ypos);
@@ -125,7 +126,7 @@ template <class TX,class TY> void NumDisplay::showNums(JCurve&jcurve, const TX &
 				ypos=jcurve.numtypeheight(it->type);
 				constexpr int maxbuf=20;
 				char buf[maxbuf];	
-				nvgText(vg, xpos,ypos, buf, buf+ snprintf(buf,maxbuf,"%g",it->value));
+				jcurve.drawText(vg, xpos,ypos, buf, buf+ snprintf(buf,maxbuf,"%g",it->value));
 				if(jcurve.showmeals&&it->type==carbotype) {
 					mealdisplay(jcurve,xpos,ypos,it);	
 					}
@@ -145,47 +146,82 @@ template <class TX,class TY> void NumDisplay::showNums(JCurve&jcurve, const TX &
 #else
         constexpr const bool hit=false;
 #endif
-				if(nearby(xpos-tapx,ypos-tapy,jcurve.density)) {
-						{
-					if(selshown)
-						continue;
-					 constexpr int maxbuf=50;
-					 char buf[maxbuf];
-					 const time_t tim= it->time;
-					 struct tm *tms=localtime(&tim);
-					jcurve.lasttouchedcolor=colorindex;
-					buflen=mktime(tms->tm_hour, mktmmin(tms),buf);
-					char *buf2=buf+buflen;
-					if(settings->getlabelweightmgperL(it->type))  {
+			if(nearby(xpos-tapx,ypos-tapy,jcurve.density)) {
+				if(selshown)
+					continue;
+				constexpr int maxbuf=50;
+				char buf[maxbuf];
+				const time_t tim= it->time;
+				struct tm *tms=localtime(&tim);
+				jcurve.lasttouchedcolor=colorindex;
+				buflen=mktime(tms->tm_hour, mktmmin(tms),buf);
+				char *buf2=buf+buflen;
+
+				if(jcurve.portraitReadable()) {
+					/*
+					 * In portrait, keep the complete touched-number annotation in
+					 * normal reading orientation and stack it like the landscape
+					 * presentation reads visually:
+					 *
+					 *       time
+					 *       label        (drawn below, after this block)
+					 *       value
+					 *
+					 * Logical +X is physical upward after the portrait graph turn,
+					 * hence the positive X offsets for label/time.
+					 */
+					const float linegap=jcurve.smallfontlineheight*.95f;
+					nvgTextAlign(vg,NVG_ALIGN_CENTER|NVG_ALIGN_MIDDLE);
+					jcurve.drawText(vg,xpos+2.0f*linegap,ypos,buf,buf+buflen);
+					if(weighted) {
 						constexpr const int maxbuf2=10;
-						nvgText(vg, xpos,ypos+(((ypos-jcurve.dtop)<(jcurve.dheight/2))?1:-1)*(hit?2.4:2)*jcurve.smallsize, buf, buf+buflen);
 						const int len=snprintf(buf2,maxbuf2,"%.1f", it->value);
-						jcurve.sidenum(vg,xpos,ypos,buf2,len,hit);
-						nvgTextAlign(vg,NVG_ALIGN_CENTER|NVG_ALIGN_MIDDLE);
+						jcurve.drawText(vg,xpos,ypos,buf2,buf2+len);
 						}
-					else
-						nvgText(vg, xpos,ypos-(hit?2.4:2)*jcurve.smallsize, buf, buf+buflen);
+					}
+				else if(weighted)  {
+					constexpr const int maxbuf2=10;
+					jcurve.drawText(vg, xpos,ypos+(((ypos-jcurve.dtop)<(jcurve.dheight/2))?1:-1)*(hit?2.4:2)*jcurve.smallsize, buf, buf+buflen);
+					const int len=snprintf(buf2,maxbuf2,"%.1f", it->value);
+					jcurve.sidenum(vg,xpos,ypos,buf2,len,hit);
+					nvgTextAlign(vg,NVG_ALIGN_CENTER|NVG_ALIGN_MIDDLE);
+					}
+				else
+					jcurve.drawText(vg, xpos,ypos-(hit?2.4:2)*jcurve.smallsize, buf, buf+buflen);
 
 #ifndef DONTTALK
-					if(speakout) {
+				if(speakout) {
                         std::string_view label=settings->getlabel(it->type);
                         const int maxbuf= label.size()+5;
                         char rtllabel[maxbuf];
                         rtl_to_logical_utf8(label.data(), rtllabel,maxbuf) ;
-						sprintf(buf2,"\n%s\n%g",rtllabel,it->value);
-						speak(buf);
-						}
+					sprintf(buf2,"\n%s\n%g",rtllabel,it->value);
+					speak(buf);
+					}
 #endif
 
-					}
 				selshown=true;
 				}
-			if((!was[it->type] &&(!jcurve.showmeals||it->type!=carbotype)) ||buflen) {
+
+			/*
+			 * Landscape keeps the old behaviour: show one label per type even
+			 * when nothing is selected.  In portrait labels are useful only as
+			 * part of a selected value's annotation, where the narrow screen has
+			 * enough structure to keep time/label/value from colliding.
+			 */
+			if((jcurve.portraitReadable()&&buflen)||
+			   (!jcurve.portraitReadable()&&((!was[it->type] &&(!jcurve.showmeals||it->type!=carbotype)) ||buflen))) {
 				was[it->type]=true;
 				string_view label=settings->getlabel(it->type);
 				//TODO remove:
 				if(const char *name=label.data()) {
-					nvgText(vg, xpos,ypos+((settings->getlabelweightmgperL(it->type)&&((ypos-jcurve.dtop)<(jcurve.dheight/2)))?1:-1)*(hit?jcurve.smallsize*1.4:jcurve.smallsize),name,name+label.size());
+					if(jcurve.portraitReadable()) {
+						const float linegap=jcurve.smallfontlineheight*.95f;
+						nvgTextAlign(vg,NVG_ALIGN_CENTER|NVG_ALIGN_MIDDLE);
+						jcurve.drawText(vg,xpos+linegap,ypos,name,name+label.size());
+						}
+					else
+						jcurve.drawText(vg, xpos,ypos+((settings->getlabelweightmgperL(it->type)&&((ypos-jcurve.dtop)<(jcurve.dheight/2)))?1:-1)*(hit?jcurve.smallsize*1.4:jcurve.smallsize),name,name+label.size());
 					}
 				else {
                 #ifndef NOLOG
@@ -198,7 +234,6 @@ template <class TX,class TY> void NumDisplay::showNums(JCurve&jcurve, const TX &
 			}
 		}
 	}
-
 
 
 

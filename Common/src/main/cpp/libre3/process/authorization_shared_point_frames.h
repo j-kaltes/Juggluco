@@ -1,29 +1,10 @@
-/*      This file is part of Juggluco, an Android app to receive and display         */
-/*      glucose values from Freestyle Libre 2(+), Libre 3(+), Dexcom G7/ONE+,        */
-/*      Sibionics GS1Sb and GS3, Accu-Chek SmartGuide, CareSens Air and              */
-/*      Aidex X sensors.                                                             */
-/*                                                                                   */
-/*      Copyright (C) 2021 Jaap Korthals Altes <jaapkorthalsaltes@gmail.com>         */
-/*                                                                                   */
-/*      Juggluco is free software: you can redistribute it and/or modify             */
-/*      it under the terms of the GNU General Public License as published            */
-/*      by the Free Software Foundation, either version 3 of the License, or         */
-/*      (at your option) any later version.                                          */
-/*                                                                                   */
-/*      Juggluco is distributed in the hope that it will be useful, but              */
-/*      WITHOUT ANY WARRANTY; without even the implied warranty of                   */
-/*      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                         */
-/*      See the GNU General Public License for more details.                         */
-/*                                                                                   */
-/*      You should have received a copy of the GNU General Public License            */
-/*      along with Juggluco. If not, see <https://www.gnu.org/licenses/>.            */
-/*                                                                                   */
-/*      Tue Aug 11 16:33:40 CEST 2026                                                */
 #ifndef L3_DERIVED_POINT_FRAME_H
 #define L3_DERIVED_POINT_FRAME_H
 
 #include <stddef.h>
 #include <stdint.h>
+#include "authorization_packed_tables.h"
+#include "authorization_digest.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -37,6 +18,7 @@ extern "C" {
 #define L3_AUTH_ERR_CALLBACK   -5
 
 #define L3_AUTH_FRAME_LEN 0x42u
+#define L3_AUTH_FRAME_STREAM_INLINE_FRAMES 4u
 
 /*
  * Native FUN_f3f88a20 object shape, lifted into a normal C struct:
@@ -50,15 +32,16 @@ typedef struct {
     uint32_t byte_len;
     uint32_t frame_count;
     uint8_t *frames;
+    uint8_t inline_frames[L3_AUTH_FRAME_STREAM_INLINE_FRAMES * L3_AUTH_FRAME_LEN];
 } l3_authorization_frame_stream;
 
 typedef struct {
-    const uint8_t *state_transition_table;
-    size_t state_transition_table_len;      /* >= 0x20000 */
-    const uint8_t *digest_frame_program;  /* contiguous table used by FUN_f3f05ab8/FUN_f3f05ba4 */
-    size_t digest_frame_program_len;      /* >= 0x186 */
-    const uint8_t *range_extract_program;  /* contiguous table used by FUN_f3f06080/FUN_f3f06178 */
-    size_t range_extract_program_len;      /* >= 0x14a */
+    const uint8_t *digest_frame_program;  /* logical table used by FUN_f3f05ab8/FUN_f3f05ba4 */
+    size_t digest_frame_program_len;      /* logical length >= 0x186 */
+    uint32_t digest_frame_program_format;
+    const uint8_t *range_extract_program;  /* logical table used by FUN_f3f06080/FUN_f3f06178 */
+    size_t range_extract_program_len;      /* logical length >= 0x14a */
+    uint32_t range_extract_program_format;
 } l3_authorization_frame_tables;
 
 typedef struct {
@@ -88,6 +71,20 @@ int l3_authorization_frames_digest(const l3_authorization_frame_tables *tables,
                         const uint8_t *suffix, size_t suffix_len,
                         const l3_authorization_digest_callbacks *digest,
                         l3_authorization_frame_stream *out);
+
+
+/* Compact app path: digest four 0x42-byte shared-point frames and directly
+ * extract the 16-byte visible authorization root plus the 0x42-byte challenge
+ * constructor frame.  This replaces the older staged digest-object ->
+ * encoded-two-frame -> range-extract object sequence. */
+int l3_authorization_frames_digest_extract_root16(
+                        const l3_authorization_frame_tables *tables,
+                        const l3_authorization_digest_tables *digest_tables,
+                        const uint8_t *frames,
+                        uint32_t frame_count,
+                        uint32_t byte_len,
+                        const uint8_t *prefix, size_t prefix_len,
+                        uint8_t out_root16_plus_frame66[16u + L3_AUTH_FRAME_LEN]);
 
 /* Exposed for tests/reuse: the native digest32 -> two-frame wrapper part. */
 int l3_authorization_encode_digest_result_frames(const l3_authorization_frame_tables *tables,

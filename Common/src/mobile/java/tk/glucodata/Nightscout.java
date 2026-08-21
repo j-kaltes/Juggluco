@@ -111,6 +111,8 @@ public static void show(MainActivity context,View parent) {
   	var httpportview=getnumedit(context, ""+oldhttpport);
                         
 	 var labinterval=getlabel(context,R.string.interval);
+	float density=GlucoseCurve.metrics.density;
+     Layout.getMargins(labinterval).leftMargin=(int)(density*5.0f);
 	int interval=Natives.getinterval();
   	var intervalview=getnumedit(context, ""+interval);
    
@@ -203,7 +205,6 @@ public static void show(MainActivity context,View parent) {
 		});
 
 	var local=getcheckbox(context,R.string.localonly,Natives.getXdripServerLocal( ));
-	float density=GlucoseCurve.metrics.density;
 	int laypad=(int)(density*4.0);
 	local.setOnCheckedChangeListener(
 			 (buttonView,  isChecked) -> {
@@ -261,13 +262,9 @@ public static void show(MainActivity context,View parent) {
 	var errstr=Natives.nightError();
 	var errorrow=errstr.length()>0?new View[]{getlabel(context,errstr)}:null;
 	var layout=new Layout(context,(l,w,h)-> {
-        /*
-		var width= GlucoseCurve.getwidth();
-		if(width>w)
-			l.setX((width-w)/2);
-		l.setY(MainActivity.systembarTop); */
 		return new int[] {w,h};
-		},new View[]{secret,editkey,visible},new View[]{labhttpport,httpportview,labport,portview},new View[]{local,labinterval,intervalview,save},new View[]{sslbox,privkey,chain},new View[]{treatments,UploadWeb},errorrow,new View[]{Help,server,Close} );
+		},new View[]{secret,visible},new View[]{editkey},new View[]{labhttpport,httpportview,labport,portview},new View[]{local,save,labinterval,intervalview},new View[]{sslbox,privkey,chain},new View[]{treatments,UploadWeb},errorrow,new View[]{Help,server,Close} );
+
 	treatments.setOnCheckedChangeListener( (buttonView,  isChecked) -> {
 		switch(nochangeamounts[0])  {
 			case 0: {
@@ -282,6 +279,7 @@ public static void show(MainActivity context,View parent) {
 	layout.setPadding(laypad*2,laypad,laypad*2,laypad);
 
 	layout.setBackgroundResource(R.drawable.dialogbackground);
+    layout.systembarMargins();
 
     var  params =    
             new FrameLayout.LayoutParams(

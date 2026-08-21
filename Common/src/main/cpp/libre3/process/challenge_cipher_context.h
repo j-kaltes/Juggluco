@@ -1,24 +1,3 @@
-/*      This file is part of Juggluco, an Android app to receive and display         */
-/*      glucose values from Freestyle Libre 2(+), Libre 3(+), Dexcom G7/ONE+,        */
-/*      Sibionics GS1Sb and GS3, Accu-Chek SmartGuide, CareSens Air and              */
-/*      Aidex X sensors.                                                             */
-/*                                                                                   */
-/*      Copyright (C) 2021 Jaap Korthals Altes <jaapkorthalsaltes@gmail.com>         */
-/*                                                                                   */
-/*      Juggluco is free software: you can redistribute it and/or modify             */
-/*      it under the terms of the GNU General Public License as published            */
-/*      by the Free Software Foundation, either version 3 of the License, or         */
-/*      (at your option) any later version.                                          */
-/*                                                                                   */
-/*      Juggluco is distributed in the hope that it will be useful, but              */
-/*      WITHOUT ANY WARRANTY; without even the implied warranty of                   */
-/*      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                         */
-/*      See the GNU General Public License for more details.                         */
-/*                                                                                   */
-/*      You should have received a copy of the GNU General Public License            */
-/*      along with Juggluco. If not, see <https://www.gnu.org/licenses/>.            */
-/*                                                                                   */
-/*      Tue Aug 11 16:33:40 CEST 2026                                                */
 #ifndef L3_CHALLENGE_CIPHER_CONTEXT_H
 #define L3_CHALLENGE_CIPHER_CONTEXT_H
 
@@ -30,8 +9,8 @@ extern "C" {
 #endif
 
 enum {
-    L3_CHALLENGE_BLOCK_CONTEXT_PAYLOAD_LEN = 0x10b0u,
-    L3_CHALLENGE_BLOCK_CONTEXT_ENCODED_LEN = 0x42u
+    L3_CHALLENGE_BLOCK_CONTEXT_ENCODED_LEN = 0x42u,
+    L3_CHALLENGE_BLOCK_CONTEXT_WORDS = 0x2cu
 };
 
 /* Static lookup material used to build and execute the generated challenge
@@ -44,16 +23,32 @@ typedef struct l3_challenge_block_tables {
     size_t state_transition_table_len;
 } l3_challenge_block_tables;
 
+/* Compact generated block context.  The recovered object stored 44 words plus
+ * sixteen eagerly generated 256-byte output tables.  The tables are derived
+ * from these words and static F407 data, so the portable implementation
+ * computes their sixteen actually used bytes while encrypting a block. */
+typedef struct l3_challenge_block_context {
+    uint32_t words[L3_CHALLENGE_BLOCK_CONTEXT_WORDS];
+} l3_challenge_block_context;
+
 int l3_challenge_cipher_context_encrypt(
     const l3_challenge_block_tables *tables,
-    const uint8_t payload[L3_CHALLENGE_BLOCK_CONTEXT_PAYLOAD_LEN],
+    const l3_challenge_block_context *context,
     const uint8_t input[16],
     uint8_t output[16]);
 
-int l3_challenge_build_context_payload(
+int l3_challenge_block_context_init(
     const l3_challenge_block_tables *tables,
     const uint8_t encoded_frame[L3_CHALLENGE_BLOCK_CONTEXT_ENCODED_LEN],
-    uint8_t payload[L3_CHALLENGE_BLOCK_CONTEXT_PAYLOAD_LEN]);
+    l3_challenge_block_context *context);
+
+#ifdef L3_CHALLENGE_CONTEXT_TEST_HOOKS
+uint8_t l3_challenge_context_test_output_byte(
+    const l3_challenge_block_tables *tables,
+    const l3_challenge_block_context *context,
+    unsigned lane,
+    uint8_t value);
+#endif
 
 #ifdef __cplusplus
 }

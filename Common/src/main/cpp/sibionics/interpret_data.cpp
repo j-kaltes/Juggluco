@@ -108,25 +108,26 @@ struct PacketBuf {
 }
 
 // Validate a fixed-length 5-byte ACK packet.
-[[nodiscard]] bool ack_packet_is_valid(const PacketBuf& pkt) {
-    if (pkt.length() != kAckPacketLen) return false;
+[[nodiscard]] bool ack_packet_is_valid(const PacketBuf& pkt, std::size_t received_size) {
+    if (pkt.length() != kAckPacketLen || received_size <= kAckPacketLen) return false;
     const std::uint8_t expected =
         std::uint8_t(-(pkt.cmd_id() + pkt.status() + pkt.aux() + kAckPacketLen));
     return pkt.checksum() == expected;
 }
 
 // Validate a variable-length packet whose length field is in raw[0].
-[[nodiscard]] bool var_packet_is_valid(const PacketBuf& pkt) {
+[[nodiscard]] bool var_packet_is_valid(const PacketBuf& pkt, std::size_t received_size) {
     const std::size_t n = pkt.length();
-    if (n == 0 || n >= kPacketBufSize) return false;
+    // n is the checksum offset, so the received packet must contain byte n.
+    if (n < 3 || n >= kPacketBufSize || n >= received_size) return false;
     return pkt.checksum() == packet_checksum(pkt.raw.data(), n);
 }
 
 
 
 // Emit a generic CMD_ACK reply for a single ACK-shaped packet.
-[[nodiscard]] jlong emit_cmd_ack(const PacketBuf& pkt) {
-    if(!ack_packet_is_valid(pkt)) return 8LL;
+[[nodiscard]] jlong emit_cmd_ack(const PacketBuf& pkt, std::size_t received_size) {
+    if(!ack_packet_is_valid(pkt, received_size)) return 8LL;
     auto type =(pkt.cmd_id() | 0xC000u) + 1u;
     switch(type) {
            case 0xC009 /*49161*/: return 9LL;
@@ -200,6 +201,11 @@ jlong SiContext::handleGlucoses(SensorGlucoseData *sens,int sensorindex,uint32_t
 
 
 jlong SiContext::interpret_data(SensorGlucoseData *sens,int sensorindex,uint32_t nowsecs,const uint8_t* data, jint datalen, jboolean doDecrypt) {
+    if (!data || datalen <= 0 || static_cast<std::size_t>(datalen) > kPacketBufSize) {
+        LOGGER("interpret_data invalid input data=%p datalen=%d\n", data, datalen);
+        return kStatusBadArgs;
+    }
+    const std::size_t received_size = static_cast<std::size_t>(datalen);
     const std::uint8_t param_lo = std::uint8_t(datalen & 0xFFu);
     PacketBuf pkt{};
     const bool magic_bypass =
@@ -213,7 +219,7 @@ jlong SiContext::interpret_data(SensorGlucoseData *sens,int sensorindex,uint32_t
         hexstr hex(pkt.raw.data(),datalen);
         LOGGER("interpret_data decrypted %s\n",hex.str());
     } else {
-        std::memcpy(pkt.raw.data(), data, kPacketBufSize);
+        std::memcpy(pkt.raw.data(), data, received_size);
     }
 
 
@@ -239,7 +245,7 @@ jlong SiContext::interpret_data(SensorGlucoseData *sens,int sensorindex,uint32_t
     case 0x06: case 0x07: case 0x0B:
     case 0x10: case 0x11: case 0x12: case 0x16:
     case kCmdAckExt:                                   // 0xE3
-        return emit_cmd_ack(pkt);
+        return emit_cmd_ack(pkt, received_size);
 
     // -------- Group B: ACK-or-data commands --------------------------------
     // For length==4 they behave like a Group A ACK; for length>4 they parse
@@ -248,15 +254,24 @@ jlong SiContext::interpret_data(SensorGlucoseData *sens,int sensorindex,uint32_t
     // (local_690 is uint16_t*, so each pointer-step advances by N * 2 bytes).
     case 0x08: {
         if(pkt.length() == kAckPacketLen)
-            return emit_cmd_ack(pkt);
+            return emit_cmd_ack(pkt, received_size);
 
-        if (!var_packet_is_valid(pkt)) return kStatusBadPacket;
+        if (!var_packet_is_valid(pkt, received_size)) return kStatusBadPacket;
         if(pkt.status() == 0) {
             return kStatusEmpty;
            }
+        const std::size_t record_count = pkt.status();
+        const std::size_t decoded_size = std::size_t(pkt.length()) - 3u;
+        const std::size_t required_size = sizeof(glucoseRecordsStart) +
+                record_count * sizeof(glucoseItem) + sizeof(glucoseRecordsEnd);
+        if (required_size > decoded_size) {
+            LOGGER("glucose packet too short: length=%u records=%zu decoded=%zu required=%zu\n",
+                   pkt.length(), record_count, decoded_size, required_size);
+            return kStatusBadPacket;
+        }
         // glouse_info_t is 20 bytes (uint16 index, temp, current, dump,
         // reindex, glouse + 4 packed warning flags + 4-byte itime).
-        return handleGlucoses(sens,sensorindex, nowsecs,pkt.raw.data() + 3,pkt.status());
+        return handleGlucoses(sens,sensorindex, nowsecs,pkt.raw.data() + 3,record_count);
     }
 
     case 0x0A:  
@@ -268,21 +283,21 @@ jlong SiContext::interpret_data(SensorGlucoseData *sens,int sensorindex,uint32_t
     case kCmdErrorInfo:
     // ACK or only_glouse_info_t array (16 bytes/record)
         if (pkt.length() == kAckPacketLen)
-            return emit_cmd_ack(pkt);
-        if (!var_packet_is_valid(pkt)) return kStatusBadPacket;
+            return emit_cmd_ack(pkt, received_size);
+        if (!var_packet_is_valid(pkt, received_size)) return kStatusBadPacket;
         if (pkt.status() == 0) { return kStatusEmpty; }
         return 8LL;
 
     case 0x17:   
     case 0x18:   
     // algoVersion_ack_t  (single object, variable length)
-        if (!var_packet_is_valid(pkt)) return kStatusBadPacket;
+        if (!var_packet_is_valid(pkt, received_size)) return kStatusBadPacket;
         return 8LL ;
 
     // -------- Extended cmd: 0xF2  (error info / ACK) -----------------------
     // -------- Extended cmd: 0xF0  (device-config sub-switch) ---------------
     case kCmdDeviceConfig: {
-        if (!var_packet_is_valid(pkt)) return kStatusBadPacket;
+        if (!var_packet_is_valid(pkt, received_size)) return kStatusBadPacket;
         const std::uint8_t  sub  = pkt.status();
         if(sub==4) {
             return 10LL;

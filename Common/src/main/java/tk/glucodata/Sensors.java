@@ -250,7 +250,8 @@ Sensors(MainActivity act,boolean givehelp,boolean select) {
        scroll.setScrollbarFadingEnabled(true);
        scroll.setVerticalScrollBarEnabled(Applic.scrollbar);
         if(!isWearable) {
-            layout.setPadding((int)(GlucoseCurve.metrics.density*10),0,(int)(GlucoseCurve.metrics.density*5),(int)(GlucoseCurve.metrics.density*5.0));
+          layout.setPadding((int)(GlucoseCurve.metrics.density*10),0,(int)(GlucoseCurve.metrics.density*5),(int)(GlucoseCurve.metrics.density*5.0));
+         
             }
          else {
 
@@ -312,8 +313,9 @@ static    void show(MainActivity act,String text, long sensorptr) {
             new FrameLayout.LayoutParams(
                     WRAP_CONTENT,
                     WRAP_CONTENT,
-                    Gravity.CENTER_HORIZONTAL);
+                    Gravity.CENTER|Gravity.CENTER_HORIZONTAL);
         }
+           // Layout.getMargins(scroll).topMargin=MainActivity.systembarTop;
     else {
          int param=isWearable?MATCH_PARENT:WRAP_CONTENT;
          params=new ViewGroup.LayoutParams(param,param);

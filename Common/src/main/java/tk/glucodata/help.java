@@ -66,6 +66,17 @@ import android.text.Spanned;
 import android.text.style.BackgroundColorSpan;
 import android.text.style.ForegroundColorSpan;
 import android.widget.TextView;
+import android.view.WindowInsets;
+import android.text.Html;
+//import android.text.Layout;
+import android.text.Spanned;
+import android.text.SpannableStringBuilder;
+import android.text.style.BackgroundColorSpan;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.TabStopSpan;
+import android.text.style.TypefaceSpan;
+
+import java.util.ArrayList;
 
 
 public class help {
@@ -113,8 +124,240 @@ public static   void basehelp(int res,ContextThemeWrapper act,Consumer<ViewGroup
           basehelp(text,act,okproc,(v,w,h)-> new int[] {w,h},new ViewGroup.MarginLayoutParams(MATCH_PARENT, MATCH_PARENT)) ;
         }
 
+public static void setHtmlIgnoringHtmlColors(TextView textView, String html) {
+    Spanned spanned =
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+            ? fromHtml(html, TO_HTML_PARAGRAPH_LINES_CONSECUTIVE)
+            : fromHtml(html);
+
+    SpannableStringBuilder cleaned = new SpannableStringBuilder(spanned);
+
+    ForegroundColorSpan[] fgSpans =
+            cleaned.getSpans(0, cleaned.length(), ForegroundColorSpan.class);
+    for (ForegroundColorSpan span : fgSpans) {
+        cleaned.removeSpan(span);
+    }
+
+    BackgroundColorSpan[] bgSpans =
+            cleaned.getSpans(0, cleaned.length(), BackgroundColorSpan.class);
+    for (BackgroundColorSpan span : bgSpans) {
+        cleaned.removeSpan(span);
+    }
+
+    textView.setText(cleaned);
+}
+/*
+public static void setHtmlIgnoringHtmlColors(TextView textView, String html) {
+    Spanned spanned =
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+            ? Html.fromHtml(html, Html.FROM_HTML_MODE_COMPACT)
+            : Html.fromHtml(html);
+
+    SpannableStringBuilder cleaned = new SpannableStringBuilder(spanned);
+
+    ForegroundColorSpan[] fgSpans =
+            cleaned.getSpans(0, cleaned.length(), ForegroundColorSpan.class);
+    for (ForegroundColorSpan span : fgSpans) {
+        cleaned.removeSpan(span);
+    }
+
+    BackgroundColorSpan[] bgSpans =
+            cleaned.getSpans(0, cleaned.length(), BackgroundColorSpan.class);
+    for (BackgroundColorSpan span : bgSpans) {
+        cleaned.removeSpan(span);
+    }
+
+    alignMenuTabs(textView, cleaned);
+
+    textView.setText(cleaned);
+}
 
 
+private static void alignMenuTabs(TextView textView,
+                                  SpannableStringBuilder text) {
+    float widest = 0.0f;
+    boolean found = false;
+
+    int lineStart = 0;
+
+    for (int i = 0; i <= text.length(); ++i) {
+        if (i == text.length() || text.charAt(i) == '\n') {
+            int tab = -1;
+
+            for (int j = lineStart; j < i; ++j) {
+                if (text.charAt(j) == '\t') {
+                    tab = j;
+                    break;
+                }
+            }
+
+            if (tab >= 0) {
+                float width = android.text.Layout.getDesiredWidth(
+                        text,
+                        lineStart,
+                        tab,
+                        textView.getPaint());
+
+                if (width > widest)
+                    widest = width;
+
+                found = true;
+            }
+
+            lineStart = i + 1;
+        }
+    }
+
+    if (!found)
+        return;
+
+    // Distance between longest label and [x]/[ ].
+    int gap = Math.round(textView.getTextSize() * 0.6f);
+
+    int checkX = Math.round(widest) + gap;
+
+    text.setSpan(
+            new TabStopSpan.Standard(checkX),
+            0,
+            text.length(),
+            Spanned.SPAN_PARAGRAPH);
+}
+
+private static void alignMenuChecks(TextView textView,
+                                    SpannableStringBuilder text) {
+
+    ArrayList<int[]> replacements = new ArrayList<>();
+
+    String str = text.toString();
+    int pos = 0;
+
+    while (pos < str.length()) {
+        int newline = str.indexOf('\n', pos);
+        int end = newline < 0 ? str.length() : newline;
+
+        int realEnd = end;
+
+        // Ignore whitespace at end of line.
+        while (realEnd > pos && isMenuSpace(str.charAt(realEnd - 1))) {
+            --realEnd;
+        }
+
+        if (realEnd - pos >= 3) {
+            int check = realEnd - 3;
+
+            boolean isCheck =
+                    str.charAt(check) == '[' &&
+                    (str.charAt(check + 1) == 'x' ||
+                     str.charAt(check + 1) == 'X' ||
+                     str.charAt(check + 1) == ' ') &&
+                    str.charAt(check + 2) == ']';
+
+            if (isCheck) {
+                int begin = check;
+
+                while (begin > pos &&
+                       isMenuSpace(str.charAt(begin - 1))) {
+                    --begin;
+                }
+
+                replacements.add(new int[]{begin, check});
+            }
+        }
+
+        if (newline < 0)
+            break;
+
+        pos = newline + 1;
+    }
+
+    for (int i = replacements.size() - 1; i >= 0; --i) {
+        int[] r = replacements.get(i);
+
+        // If there were no spaces this inserts a TAB.
+        text.replace(r[0], r[1], "\t");
+    }
+
+
+    str = text.toString();
+
+    ArrayList<int[]> checkLines = new ArrayList<>();
+    float widest = 0.0f;
+
+    pos = 0;
+
+    while (pos < str.length()) {
+        int newline = str.indexOf('\n', pos);
+        int end = newline < 0 ? str.length() : newline;
+
+        int tab = str.lastIndexOf('\t', end - 1);
+
+        if (tab >= pos && tab + 3 < str.length()) {
+            int check = tab + 1;
+
+            if (check + 2 < end &&
+                str.charAt(check) == '[' &&
+                (str.charAt(check + 1) == 'x' ||
+                 str.charAt(check + 1) == 'X' ||
+                 str.charAt(check + 1) == ' ') &&
+                str.charAt(check + 2) == ']') {
+
+                float width = android.text.Layout.getDesiredWidth(
+                        text, pos, tab, textView.getPaint());
+
+                if (width > widest)
+                    widest = width;
+
+                checkLines.add(new int[]{
+                        pos,
+                        newline < 0 ? end : end + 1,
+                        check
+                });
+            }
+        }
+
+        if (newline < 0)
+            break;
+
+        pos = newline + 1;
+    }
+
+    if (checkLines.isEmpty())
+        return;
+
+
+    int gap = Math.round(textView.getTextSize() * 0.6f);
+    int tabPosition = Math.round(widest) + gap;
+
+
+    for (int[] line : checkLines) {
+        int begin = line[0];
+        int end   = line[1];
+        int check = line[2];
+
+        text.setSpan(
+                new TabStopSpan.Standard(tabPosition),
+                begin,
+                end,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        text.setSpan(
+                new TypefaceSpan("monospace"),
+                check,
+                check + 3,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+    }
+}
+
+
+private static boolean isMenuSpace(char c) {
+    return c == ' '       ||
+           c == '\t'      ||
+           c == '\u00A0'  ||  // &nbsp;
+           c == '\u2007'  ||
+           c == '\u202F';
+}
+*/
+/*
 public static void setHtmlIgnoringHtmlColors(TextView textView, String html) {
     Spanned spanned = Build.VERSION.SDK_INT >= Build.VERSION_CODES.N?fromHtml(html,TO_HTML_PARAGRAPH_LINES_CONSECUTIVE):fromHtml(html);
     SpannableStringBuilder cleaned = new SpannableStringBuilder(spanned);
@@ -134,7 +377,7 @@ public static void setHtmlIgnoringHtmlColors(TextView textView, String html) {
 
     textView.setText(cleaned);
 }
-
+*/
     @SuppressWarnings("deprecation")
   public static   void  basehelp(String text,ContextThemeWrapper act,Consumer<ViewGroup>  okproc,Placer place, ViewGroup.MarginLayoutParams params) {
     hidekeyboard((MainActivity) getActivity(act));
@@ -145,7 +388,6 @@ public static void setHtmlIgnoringHtmlColors(TextView textView, String html) {
      helpview.setTextIsSelectable(true);
      helpview.setScroller(null);
      helpview.setMovementMethod(LinkMovementMethod.getInstance());
-//     helpview.setMovementMethod(null);
          helpview.setLinksClickable(true);
        helpscroll.setVerticalScrollBarEnabled(Applic.scrollbar);
       helpscroll.setScrollbarFadingEnabled(true);
@@ -172,29 +414,28 @@ public static void setHtmlIgnoringHtmlColors(TextView textView, String html) {
             }
        else {
            ok.setText(R.string.ok);
- //          var marg=Layout.getMargins(ok);
-  //         marg.leftMargin=marg.rightMargin=marg.topMargin=marg.bottomMargin=0;
          int pad=(int)(GlucoseCurve.getDensity()*7.0);
          helpview.setPadding(pad,pad,pad,pad);
            helpscroll.addView(helpview);
           
-           helplayout=new Layout(act, (l,w,h)-> {
-                var af=MainActivity.systembarTop*3/4;
-                l.setY(af);
+           Layout layouttmp=new Layout(act/*, (l,w,h)-> {
+                var af=MainActivity.systembarTop*3/4; l.setY(af);
                 return place.place(l,w,h -af); 
-            } ,new View[]{helpscroll},new View[]{ok});
+            }*/ ,new View[]{helpscroll},new View[]{ok});
+            helplayout=layouttmp;
 
-        params.setMargins(
+/*        params.setMargins(
             MainActivity.systembarLeft,
             0,
             MainActivity.systembarRight,
 
            MainActivity.systembarBottom*3/4
-        );
-       helplayout.setLayoutParams(params);
-       helplayout.requestLayout();
-        helplayout.setBackgroundResource(R.drawable.helpbackground);
-           addMyContentView(getActivity(act),helplayout, params);
+        ); */
+       layouttmp.setLayoutParams(params);
+          layouttmp.systembarMargins((left,top,right,bottom)->new int[]{left,top*3/4,right,bottom*3/4});
+       layouttmp.requestLayout();
+        layouttmp.setBackgroundResource(R.drawable.helpbackground);
+           addMyContentView(getActivity(act),layouttmp, params);
 
           }
 final var helplayout2=helplayout;
@@ -232,7 +473,6 @@ public static   void help(String text,ContextThemeWrapper act,Consumer<ViewGroup
          helpview.setMovementMethod(LinkMovementMethod.getInstance());
 
         helpscroll.setFillViewport(true);
-     //helpview.setMovementMethod(null);
          helpview.setLinksClickable(true);
          helpscroll.setVerticalScrollBarEnabled(Applic.scrollbar);
          helpscroll.setScrollbarFadingEnabled(false);
@@ -240,7 +480,6 @@ public static   void help(String text,ContextThemeWrapper act,Consumer<ViewGroup
         okbutton=new WeakReference<Button>(ok);
        ok.setText(R.string.ok);
        if(isWearable) {
-           // helpview.setPadding(pad,pad,pad,pad);
               helpview.setPadding(0,0,0,(int)(MainActivity.screenheight*.20));
               ViewGroup  layout=new Layout(act, place::place,new View[]{ok}, new View[]{helpview});
 
@@ -257,47 +496,49 @@ public static   void help(String text,ContextThemeWrapper act,Consumer<ViewGroup
             }
 
     else  {
-//           var marg=Layout.getMargins(ok);
- //          marg.leftMargin=marg.rightMargin=marg.topMargin=marg.bottomMargin=0;
-         getMargins(ok).topMargin=systembarTop;
-           int pad=(int)(GlucoseCurve.getDensity()*7.0);
-           helpview.setPadding(pad,pad+systembarTop,pad,pad+systembarBottom);
+       //  getMargins(ok).topMargin=systembarTop;
+         final int pad=(int)(GlucoseCurve.getDensity()*7.0);
+         helpview.setPadding(pad,pad+systembarTop,pad,pad+systembarBottom);
 
         helpscroll.setBackgroundResource(R.drawable.helpbackground);
 
-//           var marg=Layout.getMargins(helpview);
-           ///marg.bottomMargin=(int)(GlucoseCurve.getheight()*.1f);
-//          helpscroll.setFillViewport(true);
          helpscroll.addView(helpview, new ViewGroup.LayoutParams( MATCH_PARENT,MATCH_PARENT));
-         //helpscroll.setLayoutParams( new ViewGroup.LayoutParams( MATCH_PARENT,MATCH_PARENT));
          helplayout=helpscroll;
-/*
-         helplayout=new Layout(act, (l,w,h)-> {
-//             var af=MainActivity.systembarTop*3/4;
- //              l.setY(af);
-             return place.place(l,w,h );
-            },new View[]{helpscroll});//,new View[]{ok}); */
- //         helplayout.setBackgroundResource(R.drawable.helpbackground);
-//           helplayout.setBackgroundColor(backgroundcolor);
 
-        params.setMargins(
-            MainActivity.systembarLeft,
-        0,//    MainActivity.systembarTop*3/4,
-            MainActivity.systembarRight,
-         0//  MainActivity.systembarBottom*3/4
-        );
+//        params.setMargins( MainActivity.systembarLeft, 0,//    MainActivity.systembarTop*3/4, MainActivity.systembarRight, 0//  MainActivity.systembarBottom*3/4);
          helplayout.setLayoutParams(params);
         helplayout.requestLayout();
         var activity=getActivity(act);
        activity.addContentView(helplayout, params);
 
-//       var okmarg=getMargins(ok);
        var  okparams =    new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, MainActivity.rtl?Gravity.LEFT:Gravity.RIGHT| Gravity.TOP);
-       okparams.topMargin=(int)(MainActivity.systembarTop*.71f);
+/*       okparams.topMargin=(int)(MainActivity.systembarTop*.71f);
        okparams.rightMargin=MainActivity.systembarRight;
-       okparams.leftMargin=MainActivity.systembarLeft;
+       okparams.leftMargin=MainActivity.systembarLeft; */
            activity.addContentView(ok, okparams);
           DynamicThemeUtils.applyTheme(ok);
+        var tmpok=ok;
+    helplayout.setOnApplyWindowInsetsListener((v, insets) -> { int left, top, right, bottom;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            var bars = insets.getInsets(WindowInsets.Type.systemBars());
+            left   = bars.left;
+            top    = bars.top;
+            right  = bars.right;
+            bottom = bars.bottom;
+        }
+        else {
+            left   = insets.getSystemWindowInsetLeft();
+            top    = insets.getSystemWindowInsetTop();
+            right  = insets.getSystemWindowInsetRight();
+            bottom = insets.getSystemWindowInsetBottom();
+        }
+
+        setHelpInsets( helpscroll, helpview, tmpok, pad, left, top, right, bottom);
+        return insets;
+    });
+
+helplayout.requestApplyInsets();
+
           }
         whelplayout=new WeakReference<ViewGroup>(helplayout);
        }
@@ -307,30 +548,25 @@ public static   void help(String text,ContextThemeWrapper act,Consumer<ViewGroup
            if(!isWearable) {
                ok.setVisibility(VISIBLE);
                ok.bringToFront();
+               /*
                ViewGroup.MarginLayoutParams marg = (ViewGroup.MarginLayoutParams) helplayout.getLayoutParams();
                  marg.width=params.width; 
                  marg.height=params.height; 
                 marg.setMargins( MainActivity.systembarLeft, 0, MainActivity.systembarRight, 0 );
                  helplayout.setLayoutParams(marg);
                 helplayout.requestLayout();
+                */
                 }
        }
 
      if(isWearable)
              ok.setVisibility(useclose?View.VISIBLE:View.INVISIBLE);
      else {
-       //  ok.setY(MainActivity.systembarTop*.71f);
          var width=GlucoseCurve.getwidth();
          if(width<=10)
               width=MainActivity.screenwidth;
-//         int okwidth=ok.getMeasuredWidth();
-//        float okx=width-okwidth-MainActivity.systembarRight - GlucoseCurve.getDensity();
- //       ok.setX(okx);
-  //       {if(doLog) {Log.i(LOG_ID,"width="+width+" okx="+okx+" okwidth="+okwidth+" systembarRight="+ MainActivity.systembarRight );};};
         place.place(ok,width,getheight());
          }
-     //   ViewGroup.MarginLayoutParams marg = (ViewGroup.MarginLayoutParams) helplayout.getLayoutParams();
-//       whelpview.get().setText(Html.fromHtml(text));
     TextView textview=whelpview.get();
     if(MainActivity.rtl) {
          textview.setGravity(Gravity.RIGHT);
@@ -400,7 +636,39 @@ if(useclose)
         }
     }
     }
-   }
+
+private static void setHelpInsets(ViewGroup helplayout, TextView helpview, Button ok, int pad, int left, int top, int right, int bottom) {
+    ViewGroup.LayoutParams lp = helplayout.getLayoutParams();
+    if (lp instanceof ViewGroup.MarginLayoutParams marg) {
+        if (marg.leftMargin != left ||
+                marg.topMargin != 0 ||
+                marg.rightMargin != right ||
+                marg.bottomMargin != 0) {
+            marg.setMargins(left, 0, right, 0);
+            helplayout.setLayoutParams(marg);
+        }
+    }
+
+    helpview.setPadding(
+            pad,
+            pad + top,
+            pad,
+            pad + bottom);
+
+    ViewGroup.LayoutParams op = ok.getLayoutParams();
+    if (op instanceof ViewGroup.MarginLayoutParams marg) {
+        if (marg.topMargin != top ||
+                marg.leftMargin != left ||
+                marg.rightMargin != right) {
+            marg.topMargin = top;
+            marg.leftMargin = left;
+            marg.rightMargin = right;
+            ok.setLayoutParams(marg);
+        }
+    }
+    }
+
+}
 
 
 

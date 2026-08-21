@@ -195,7 +195,8 @@ static public void show(MainActivity act, View parent) {
                 addleft=5.0f;
                 addright=8.0f;
                 }
-    layout.setPadding((int)(density*addleft)+MainActivity.systembarLeft,MainActivity.systembarTop,MainActivity.systembarRight+(int)(density*addright),MainActivity.systembarBottom);
+    layout.systembarPadding((left,top,right,bottom)->new int[]{(int)(density*addleft)+left,top,right+(int)(density*addright),bottom});
+//    layout.setPadding((int)(density*addleft)+MainActivity.systembarLeft,MainActivity.systembarTop,MainActivity.systembarRight+(int)(density*addright),MainActivity.systembarBottom);
 
      act.addMyContentView(layout, new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
      MainActivity.setonback(()-> {

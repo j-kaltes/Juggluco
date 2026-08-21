@@ -148,26 +148,28 @@ static void show(MainActivity act) {
 
         } });
     int pads=(int)(GlucoseCurve.metrics.density*20);
-     getMargins(usebluetooth).topMargin=(int)(GlucoseCurve.metrics.density*15);
+/*     getMargins(usebluetooth).topMargin=(int)(GlucoseCurve.metrics.density*15);
      var spinmar= getMargins(spin);
      spinmar.topMargin=pads;
      spinmar.bottomMargin=pads;
+     */
 
     var buttons=new Layout(act, (x,w,h)->{ 
          return new int[] {w,h};
            } 
                    , new View[]{finish},new View[]{help},new View[]{usebluetooth},new View[]{spin}
-          );
-     buttons.usebaseline=false;
+          ).portraitLayout();
+//     buttons.usebaseline=false;
     var width=GlucoseCurve.getwidth(); 
     var height=GlucoseCurve.getheight(); 
-    getMargins(finish).topMargin=(int)(MainActivity.systembarTop);
+ //   getMargins(finish).topMargin=(int)(MainActivity.systembarTop);
+    buttons.setLayoutParams( new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.MATCH_PARENT));
     var layout=new Layout(act, (x,w,h)->{ 
 //        x.setX((width-w+MainActivity.systembarLeft-MainActivity.systembarRight)*.5f);
          return new int[] {w,h};
            },
-          new View[]{sensors.viewgroup,buttons});
-     layout.usebaseline=false;
+          new View[]{sensors.viewgroup,buttons}).portraitLayout(new View[]{spin,usebluetooth},new View[]{help,finish},new View[]{sensors.viewgroup});
+ //    layout.usebaseline=false;
     layout.setBackgroundResource(R.drawable.dialogbackground);
     //layout.setPadding((int)(GlucoseCurve.metrics.density*10),0,(int)(GlucoseCurve.metrics.density*5),0);
     layout.setPadding(0,0,(int)(GlucoseCurve.metrics.density*5),0);
@@ -175,7 +177,7 @@ static void show(MainActivity act) {
     var  params =  new FrameLayout.LayoutParams(
                     WRAP_CONTENT,
                     WRAP_CONTENT,
-                    Gravity.CENTER_HORIZONTAL);
+                    Gravity.CENTER_HORIZONTAL|Gravity.CENTER);
 
     act.addMyContentView(layout, params);
     MainActivity.setonback(() -> {
