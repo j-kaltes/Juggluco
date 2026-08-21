@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <item name="bluesensorouter" type="id"/>
+    <item name="diagnosticgrid" type="id"/>
+    <item name="diagnosticscroll" type="id"/>
+    <item name="grid" type="id"/>
+    <item name="textView2" type="id"/>
+    <item name="textView3" type="id"/>
+    <item name="textView4" type="id"/>
+
+
+</resources>
