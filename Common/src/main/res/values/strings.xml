@@ -532,4 +532,6 @@
     <string name="autorotate">Auto-rotate</string>
     <string name="rotateText">Rotate text</string>
 
+    <string name="ble_mirror">BLE GATT mirror</string>
+
 </resources>

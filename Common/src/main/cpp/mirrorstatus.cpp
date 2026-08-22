@@ -26,9 +26,9 @@
 #include "mirrorerror.h"
 #include "net/Connect.hpp"
 extern Connect *connections[];
-extern std::array<int,maxallhosts>   messagesendersockets;
-extern std::array<int,maxallhosts>   messagereceiversockets;
-extern std::array<int,maxallhosts>             us2peers;
+extern std::array<std::atomic_int,maxallhosts> messagesendersockets;
+extern std::array<std::atomic_int,maxallhosts> messagereceiversockets;
+extern std::array<std::atomic_int,maxallhosts> us2peers;
 extern mirrorstatus_t mirrorstatus[maxallhosts];
 #include "deleter.hpp"
 //constexpr const int maxmirrortext=200;
@@ -118,13 +118,13 @@ extern bool getactive(int pos);
 
 		boolstr[receives],status.receive.tid,receivethread,receivesock,boolstr[status.receive.ingetcom()],boolstr[status.receive.ininterpret],
 
-		boolstr[wearmessages[allindex]],
-		status.toblue[true].runs, boolstr[status.toblue[true].recv], sendptr[status.toblue[true].sendmessage], messagesendersockets[allindex],
+		boolstr[wearmessages[allindex].load()],
+		status.toblue[true].runs, boolstr[status.toblue[true].recv], sendptr[status.toblue[true].sendmessage], messagesendersockets[allindex].load(),
 
 		status.toblue[false].runs, boolstr[status.toblue[false].recv], sendptr[status.toblue[false].sendmessage],
 
-messagereceiversockets[allindex],
-            us2peers[allindex]
+messagereceiversockets[allindex].load(),
+            us2peers[allindex].load()
 		);
 		}
 	else {

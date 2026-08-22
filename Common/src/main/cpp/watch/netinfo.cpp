@@ -32,7 +32,9 @@
 #define iswatchapp() 0
 #endif
 #include <array>
-std::array<int,maxallhosts>        peers2us,us2peers;
+#include <atomic>
+std::array<std::atomic_int,maxallhosts> peers2us,us2peers;
+std::atomic_bool messagephonepeer[maxallhosts]={};
 //void setall(std::array<int<maxallhosts>&ar,const int ini) {    
 //      s/LOGSTRINGTAG("\([^"]*\)\\n")/LOGARTAG("\1")
 #define LOGGERTAG(...) LOGGER("netinfo: " __VA_ARGS__)
@@ -83,11 +85,11 @@ extern std::mutex change_host_mutex;
 //static bool remakewearhost=false;
 static bool newlycreated=false;
 int makeversion=0;
-passhost_t * getwearoshost(const bool create,const char *label,bool galaxy,bool remake=false) {
+passhost_t * getwearoshost(const bool create,const char *label,bool galaxy,bool remake=false,bool phonepeer=false) {
   const std::lock_guard<std::mutex> lock(change_host_mutex);
     struct updatedata *update=backup->getupdatedata();
      int nrhost=update->hostnr;
-    LOGGER("getwearoshost(create=%d,%s,galaxy=%d, remake=%d) usedversion=%d nrhost=%d \n",create,label,galaxy,remake,usedversion,nrhost);
+    LOGGER("getwearoshost(create=%d,%s,galaxy=%d, remake=%d, phonepeer=%d) usedversion=%d nrhost=%d \n",create,label,galaxy,remake,phonepeer,usedversion,nrhost);
     passhost_t *hosts=update->allhosts;
     passhost_t *endhosts=update->allhosts+nrhost;
     passhost_t *found= std::find_if(hosts,endhosts,[label](const passhost_t &host){
@@ -165,8 +167,11 @@ passhost_t * getwearoshost(const bool create,const char *label,bool galaxy,bool 
         sendstream=true;
         sendscans=true;
         sendnums=true;
-        receive=false;
-        if(galaxy) {
+        receive=phonepeer;
+        if(phonepeer) {
+            LOGARTAG("BLE phone peer: send and receive");
+            }
+        else if(galaxy) {
             LOGARTAG("connected to galaxy");
             //activeonly=false;
             if(onedirection) {
@@ -360,7 +365,17 @@ static void        setsendinfo(struct netinfo1 &info,passhost_t *wearhost) {
 
 #ifdef WEAROS_MESSAGES
 static uLong crcs[maxallhosts]={};
-bool wearmessages[maxallhosts]={};
+static bool previoushaswlan[maxallhosts]={};
+static bool networkstateknown[maxallhosts]={};
+static std::mutex networkstatemutex;
+std::atomic_bool wearmessages[maxallhosts]={};
+
+bool messagehaswlan(int index) {
+    if(index<0||index>=maxallhosts)
+        return false;
+    const std::lock_guard<std::mutex> lock(networkstatemutex);
+    return networkstateknown[index]&&previoushaswlan[index];
+    }
 #endif
 
 
@@ -368,21 +383,22 @@ extern void makepass(char *pass,int len);
 static bool sendpass=false;
 
 
-static int getmynetinfo(const char *id,jboolean create,jint watchHasSensor,jboolean galaxy,jint setnums,struct netinfo2 &info) {
+static int getmynetinfo(const char *id,jboolean create,jint watchHasSensor,jboolean galaxy,jint setnums,struct netinfo2 &info,bool phonepeer) {
     if(!backup) {
         LOGARTAG("getmynetinfo backup=null");
         return 0;
         }
 
     auto myport=atoi(backup->getmyport());
-    LOGGERTAG("getmynetinfo(%s,%d,%d,%d) port=%d\n", id,create,watchHasSensor,galaxy,myport);
-    passhost_t *wearhost=getwearoshost(create,id,galaxy);
+    LOGGERTAG("getmynetinfo(%s,%d,%d,%d,phonepeer=%d) port=%d\n", id,create,watchHasSensor,galaxy,phonepeer,myport);
+    passhost_t *wearhost=getwearoshost(create,id,galaxy,false,phonepeer);
     if(!wearhost)  {
         LOGARTAG("wearhost==null");
         return 0;
         }
     struct updatedata *update=backup->getupdatedata();
     int index=wearhost-update->allhosts;
+   messagephonepeer[index]=phonepeer;
    connectionbusy[index]=true;
    destruct _{[index]{ connectionbusy[index]=false;}};
     info.index=index;
@@ -402,19 +418,34 @@ static int getmynetinfo(const char *id,jboolean create,jint watchHasSensor,jbool
 
 #ifdef WEAROS_MESSAGES
         auto newcrc=crc32(0,reinterpret_cast<const Bytef*>(info.ips),info.nr*sizeof(info.ips[0]));
-        if(newcrc!=crcs[index]) {
-            LOGARTAG("crc different");
-        const bool setmess=!haswlan;
-        #ifndef WEAROS
-            if(setmess)
-        #endif
-                setBlueMessage(index,setmess);
-        crcs[index]=newcrc;
+        bool networkchanged;
+        uLong oldcrc;
+        bool oldhaswlan;
+        {
+            const std::lock_guard<std::mutex> lock(networkstatemutex);
+            oldcrc=crcs[index];
+            oldhaswlan=previoushaswlan[index];
+            networkchanged=!networkstateknown[index]||newcrc!=oldcrc||haswlan!=oldhaswlan;
+            crcs[index]=newcrc;
+            previoushaswlan[index]=haswlan;
+            networkstateknown[index]=true;
+        }
+        if(networkchanged) {
+            LOGGERTAG("network changed: crc=%lu->%lu wlan=%d->%d\n",oldcrc,newcrc,oldhaswlan,haswlan);
+            const bool setmess=!haswlan;
+            // Phone-to-phone BLE has no Wear MessageClient fallback. Its
+            // carrier is selected explicitly after the GATT consent flow.
+            if(!phonepeer) {
+            #ifndef WEAROS
+                if(setmess)
+            #endif
+                    setBlueMessage(index,setmess);
+                }
         }
     else  {
             LOGARTAG("crc the same");
         }
-    info.blue=wearmessages[index];
+    info.blue=wearmessages[index].load();
 #endif
         }
     else  {
@@ -425,7 +456,20 @@ static int getmynetinfo(const char *id,jboolean create,jint watchHasSensor,jbool
         info.ip.sin6_port= htons(myport);
         }
     if constexpr(!iswatchapp()) {
-        if(usedversion>=4&&sendpass) {
+        if(phonepeer) {
+            if(wearhost->haspass()) {
+                memcpy(info.pass.data(),wearhost->pass.data(),info.pass.size());
+                }
+            else {
+                char pass[17];
+                makepass(pass,16);
+                pass[16]='\0';
+                backup->setpass(info.pass,std::string_view(pass,16));
+                }
+            info.setpass=true;
+            sendpass=false;
+            }
+        else if(usedversion>=4&&sendpass) {
             LOGARTAG("sendpass");
             memcpy(info.pass.data(),wearhost->pass.data(),info.pass.size());
             info.setpass=true;
@@ -526,7 +570,7 @@ static int getmynetinfo(const char *id,jboolean create,jint watchHasSensor,jbool
     }
 
 
-extern "C" JNIEXPORT  jbyteArray  JNICALL   fromjava(getmynetinfo)(JNIEnv *env, jclass cl,jstring jident,jboolean create,jint watchHasSensor,jboolean galaxy,jint setnums) {
+extern "C" JNIEXPORT  jbyteArray  JNICALL   fromjava(getmynetinfo)(JNIEnv *env, jclass cl,jstring jident,jboolean create,jint watchHasSensor,jboolean galaxy,jint setnums,jboolean phonepeer) {
 
     if(!jident) {
         LOGARTAG("jident=null");
@@ -539,16 +583,26 @@ extern "C" JNIEXPORT  jbyteArray  JNICALL   fromjava(getmynetinfo)(JNIEnv *env, 
         }
     destruct   dest([jident,id,env]() {env->ReleaseStringUTFChars(jident, id);});
 
-    struct netinfo2 info;
+    struct netinfo2 info{};
     int len;
-     if(!(len=getmynetinfo(id, create, watchHasSensor, galaxy, setnums,info)))
+     if(!(len=getmynetinfo(id,create,watchHasSensor,galaxy,setnums,info,phonepeer)))
         return nullptr;
     jbyteArray uit = env->NewByteArray(len);
+    if(!uit) {
+        if(env->ExceptionCheck())
+            env->ExceptionClear();
+        return nullptr;
+        }
     env->SetByteArrayRegion(uit, 0, len, reinterpret_cast<const jbyte *>(&info));
+    if(env->ExceptionCheck()) {
+        env->ExceptionClear();
+        env->DeleteLocalRef(uit);
+        return nullptr;
+        }
     return uit;
     }
 
-extern "C" JNIEXPORT jboolean  JNICALL   fromjava(setmynetinfo)(JNIEnv *env, jclass cl,  jstring jident, jbyteArray jar,jboolean galaxy) {
+extern "C" JNIEXPORT jboolean  JNICALL   fromjava(setmynetinfo)(JNIEnv *env, jclass cl,  jstring jident, jbyteArray jar,jboolean galaxy,jboolean phonepeer) {
    if(!jar) return false;
    if(!backup) return false;
     if(!jident) return false;
@@ -557,26 +611,43 @@ extern "C" JNIEXPORT jboolean  JNICALL   fromjava(setmynetinfo)(JNIEnv *env, jcl
     destruct   dest([jident,id,env]() {env->ReleaseStringUTFChars(jident, id);});
 
     const jsize lens=env->GetArrayLength(jar);
+    if(lens<17||lens>4096)
+        return false;
 
     usedversion=(lens==sizeof(netinfo))?0:(lens==sizeof(netinfo1)?3:(lens>=sizeof(netinfo2)?4:1));
     if(usedversion==1) {
         LOGGER("lens=%d sizeof(netinfo)==%d sizeof(netinfo1)==%d sizeof(netinfo2)==%d\n",lens,sizeof(netinfo),sizeof(netinfo1),sizeof(netinfo2));
         }
-    jbyte data[lens];
-    env->GetByteArrayRegion(jar, 0, lens,data);
-    const netinfo2 *info=reinterpret_cast<const netinfo2*>(data);
-    passhost_t *host=getwearoshost(true,id,galaxy);
+    struct netinfo2 received{};
+    const jsize copylen=std::min<jsize>(lens,sizeof(received));
+    env->GetByteArrayRegion(jar,0,copylen,reinterpret_cast<jbyte*>(&received));
+    if(env->ExceptionCheck()) {
+        env->ExceptionClear();
+        return false;
+        }
+    const netinfo2 *info=&received;
+    constexpr int maxreceivedips=sizeof(info->ips)/sizeof(info->ips[0]);
+    if(usedversion&&(info->nr<0||info->nr>maxreceivedips))
+        return false;
+    const char *receivedlabel=usedversion?info->newlabel:reinterpret_cast<const netinfo *>(info)->label;
+    constexpr size_t receivedlabelsize=sizeof(info->newlabel);
+    if(!memchr(receivedlabel,'\0',receivedlabelsize))
+        return false;
+    if(usedversion>=3&&(info->index<0||info->index>=maxallhosts))
+        return false;
+    passhost_t *host=getwearoshost(true,id,galaxy,false,phonepeer);
     if(!host) return false;
    networkpresent=false;
     destruct _niets {[]() { networkpresent=true;}};
    struct updatedata *update=backup->getupdatedata();
     passhost_t *allhosts=update->allhosts;
    int index=host-allhosts;
+   messagephonepeer[index]=phonepeer;
    connectionbusy[index]=true;
    destruct _{[index]{ connectionbusy[index]=false;}};
 //   std::jthread th{Backup::closesocksone,backup,index};
    backup->closesocksone(index);
-   const char *infolabel=usedversion?info->newlabel:reinterpret_cast<const netinfo *>(info)->label;
+   const char *infolabel=receivedlabel;
    LOGGERTAG("setmynetinfo %s usedversion=%d infolabel=%s galaxy=%d watchsensor=%d\n",id,usedversion,infolabel,galaxy,info->watchsensor);
     host->setname(infolabel);
    if(!usedversion) {
@@ -630,6 +701,10 @@ extern "C" JNIEXPORT jboolean  JNICALL   fromjava(setmynetinfo)(JNIEnv *env, jcl
        }
     const uint16_t port=host->getport();
     LOGGERTAG("setmynetinfo port=%d nr=%d watchsensor=%d\n",port,host->nr,info->watchsensor);
+    if(phonepeer) {
+        LOGARTAG("BLE phone peer keeps bidirectional mirror settings");
+        return true;
+        }
     if constexpr(iswatchapp()) {
         LOGARTAG("is watch");
     
@@ -856,7 +931,7 @@ extern "C" JNIEXPORT jint  JNICALL   fromjava(hasWatchNums)(JNIEnv *env, jclass 
        }
 
 int getwearindex(JNIEnv *env, jstring jident) {
-   if(!jident) 
+   if(!backup||!jident)
        return -1;
    const char *id = env->GetStringUTFChars( jident, NULL);
    if (id == nullptr) 
@@ -901,8 +976,8 @@ bool setBlueWatch(passhost_t *host,int sensor,int nums) {
             return false;
             }
        const char *name= host->getname();
-       struct netinfo2 info;
-       const int len=getmynetinfo(name,false, sensor,true, nums,info);
+       struct netinfo2 info{};
+       const int len=getmynetinfo(name,false,sensor,true,nums,info,false);
        if(len<0) {
             LOGGER("setBlueWatch(%s sensor=%d nums=%d)=false\n",name,sensor,nums);
             return false;

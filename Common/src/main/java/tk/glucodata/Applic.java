@@ -475,6 +475,7 @@ static public boolean useWearos() {
     }
 private void initializeNet() {
       Natives.startthreads();
+      BleMirror.init(this);
       if(doLog) {Log.i(LOG_ID,"after startthreads");};
         if(isWearable) {
             if(Natives.getWifi())
@@ -1000,4 +1001,3 @@ public static int getResourceIdFromTheme(Context context, int attributeResId) {
     }
 */
 }
-

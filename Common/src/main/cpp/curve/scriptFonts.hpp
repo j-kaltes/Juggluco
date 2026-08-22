@@ -31,6 +31,7 @@ enum Script {
     SCR_ETHIOPIC,
     SCR_CJK,
     SCR_GENERIC_FALLBACK,
+    SCR_HANGUL,
     SCR_COUNT
 };
 

@@ -1017,6 +1017,8 @@ ViewGroup.LayoutParams params;
       MessageSender.reinit();
       }
       );
+     Button bleMirror=getbutton(act,R.string.ble_mirror);
+     bleMirror.setOnClickListener(v -> BleMirror.showDialog(act));
 //     boolean[] issaved={false};
       //alarms=getbutton(act,R.string.alarms);
    //      if(!Natives.isreceiving( )) { alarms.setEnabled(false); }
@@ -1078,7 +1080,7 @@ ViewGroup.LayoutParams params;
          margIP.setMarginStart((int)(width*0.01));
    //      if(doLog) ip.setText("2a01:59f:a075:b0d1:a4ef:afff:fec4:59f2");
          //final Layout layout=new Layout(act, new View[]{getlabel(act,act.getString(R.string.thishost))},new View[]{blpan},new View[]{p2p},new View[]{ip},new View[]{new Space(act),labport,portview,Save,new Space(act)},new View[]{recycle},new View[] {hosts},new View[]{staticnum},new View[]{Sync,reinit},new View[]{space1,wifi,alarms,space2},errorrow,new View[]{Cancel});
-         final Layout layout=new Layout(act, new View[]{getlabel(act,act.getString(R.string.thishost))},new View[]{labport,portview,Save},new View[]{ip},new View[]{blpan},new View[]{p2p},new View[]{recycle},new View[] {hosts},new View[]{staticnum},new View[]{Sync,reinit},new View[]{wifi},errorrow,new View[]{Cancel});
+         final Layout layout=new Layout(act, new View[]{getlabel(act,act.getString(R.string.thishost))},new View[]{labport,portview,Save},new View[]{ip},new View[]{blpan},new View[]{p2p},new View[]{recycle},new View[] {hosts},new View[]{bleMirror},new View[]{staticnum},new View[]{Sync,reinit},new View[]{wifi},errorrow,new View[]{Cancel});
    //        var hori=new NestedScrollView(act);
          var hori=new ScrollView(act);
          hori.setFillViewport(true);
@@ -1105,12 +1107,12 @@ ViewGroup.LayoutParams params;
          var hormarg=(int)(GlucoseCurve.metrics.density*20.0f);
          getMargins(Help).setMarginStart(hormarg);
          getMargins(Cancel).setMarginEnd(hormarg);
-         var withqr=BuildConfig.minSDK>=20?new View[]{Help,autoqr,hosts,Cancel}:new View[]{Help,hosts,Cancel};
-         var layout=new Layout(act, new View[]{ip,blpan,p2p,labport,portview,Save,turnserver},new View[]{recycle},errorrow,new View[] {battery,Sync,reinit,staticnum},withqr)
+         var withqr=BuildConfig.minSDK>=20?new View[]{bleMirror,autoqr,hosts,Cancel}:new View[]{bleMirror,hosts,Cancel};
+         var layout=new Layout(act, new View[]{ip,blpan,p2p,labport,portview,Save,turnserver},new View[]{recycle},new View[] {battery,Help,Sync,reinit,staticnum},errorrow,withqr)
             .portraitLayout(new View[]{ip},new View[]{blpan},new View[]{p2p},
                new View[]{labport,portview,Save},new View[]{turnserver},new View[]{recycle},errorrow,
-               new View[]{battery,staticnum},BuildConfig.minSDK>=20?new View[]{autoqr,reinit}:new View[]{reinit},
-               new View[]{hosts,Sync},new View[]{Help,Cancel});
+               new View[]{battery,staticnum},BuildConfig.minSDK>=20?new View[]{autoqr,Sync,reinit}:new View[]{Sync,reinit},
+               new View[]{hosts,bleMirror},new View[]{Help,Cancel});
         if(BuildConfig.minSDK>=20) {
             autoqr.setOnClickListener(v -> {
                 makeAutoQR(act, layout);

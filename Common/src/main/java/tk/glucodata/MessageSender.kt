@@ -36,7 +36,13 @@ import kotlinx.coroutines.tasks.await
 import tk.glucodata.Applic.JUGGLUCOIDENT;
 import tk.glucodata.Applic.isWearable
 import tk.glucodata.Log.doLog
+import java.nio.ByteBuffer
+import java.nio.ByteOrder
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicLong
 
 //import tk.glucodata.Applic.messagesender
 
@@ -50,24 +56,22 @@ class MessageSender(val activity: Context):CapabilityClient.OnCapabilityChangedL
     public val galaxywatch by lazy {
         isGalaxy(localnodeall) }
 
-    var nodes: Set<Node>? = null
-    private var nexttimes:LongArray?=null
+    @Volatile var nodes: Set<Node>? = null
+    private val nexttimes=ConcurrentHashMap<String,Long>()
 
     private fun setnodes(ns:Set<Node>) {
         nodes = ns
-        val len: Int = nodes?.size ?: 0
-        nexttimes = LongArray(len)
+        nexttimes.keys.retainAll(ns.mapTo(HashSet<String>()) { it.id })
         sendnetinfo();
     }
     public fun nulltimes() {
-        nexttimes?.fill(0L)
+        nexttimes.clear()
     }
-var nodesbusy=false
+private val nodesbusy=AtomicBoolean(false)
 suspend fun findWearDevicesWithApp() {
-    Log.i(LOG_ID,"start findWearDevicesWithApp nodesbusy=$nodesbusy")
-    if(nodesbusy)        
+    Log.i(LOG_ID,"start findWearDevicesWithApp nodesbusy=${nodesbusy.get()}")
+    if(!nodesbusy.compareAndSet(false,true))
         return;
-    nodesbusy=true;
     try {
         val capabilityInfo = capabilityClient.getCapability( JUGGLUCOIDENT, CapabilityClient.FILTER_REACHABLE).await()
         setnodes(capabilityInfo.nodes)
@@ -82,7 +86,7 @@ suspend fun findWearDevicesWithApp() {
     }
     finally {
         Log.i(LOG_ID,"end findWearDevicesWithApp nodesbusy=false")
-        nodesbusy=false
+        nodesbusy.set(false)
     }
     }
 
@@ -131,6 +135,11 @@ override fun onCapabilityChanged(cap: CapabilityInfo) {
     private fun sendmessage(path:String,data:ByteArray) {
 
             try {
+        val bleId=BleMirror.getLinkId()
+        if(bleId!=null&&BleMirror.isPreferred()) {
+            nameSendMessage(bleId,path,data)
+            return
+        }
         when {
             nodes == null -> {
                 Log.d(LOG_ID, "sendmessage nodes=null")
@@ -142,15 +151,8 @@ override fun onCapabilityChanged(cap: CapabilityInfo) {
                 Log.d(LOG_ID, "sendmessage nodes.isEmpty")
             }
             else -> {
-                    nodes?.map { node ->
-                        scope.launch {
-                            Log.i(LOG_ID, "sendMessage(${node.id} ${node.displayName}, $path,)")
-                            try {
-                                messageClient.sendMessage(node.id, path, data)
-                            } catch (th: Throwable) {
-                                Log.stack(LOG_ID, th);
-                            }
-                           }
+                    nodes?.forEach { node ->
+                        nameSendMessage(node.id,path,data)
                         }
                     Log.d(LOG_ID, "Starting requests sent successfully")
                 }
@@ -162,26 +164,26 @@ override fun onCapabilityChanged(cap: CapabilityInfo) {
 private fun nameSendMessage(name:String, path:String, data:ByteArray) {
     scope.launch {
         Log.i(LOG_ID, "start sendNameMessage($name $path,... )")
-        try {
-            messageClient.sendMessage(name, path, data)
-             }
-        catch (th: Throwable) { Log.stack(LOG_ID, th); }
-        finally{
-            Log.i(LOG_ID,"after sendNameMessage($name $path,... )")
-            }
+        nameSendMessageResult(name,path,data)
+        Log.i(LOG_ID,"after sendNameMessage($name $path,... )")
         }
     }
-private fun nameSendMessageResult(name:String, path:String, data:ByteArray):Boolean {
+    private fun nameSendMessageResult(name:String, path:String, data:ByteArray):Boolean {
+        if(BleMirror.shouldUse(name))
+            return BleMirror.send(name,path,data)
         try {
 //            val len=data.size
 //            val timeout:Long= (len / 20L).coerceAtMost(1L)
-            val timeout:Long= 60L
+            val timeout:Long=MESSAGE_TASK_SECONDS
         val res=Tasks.await(messageClient.sendMessage(name, path, data),timeout,TimeUnit.SECONDS)
         Log.i(LOG_ID,"nameSendMessageResult "+res)
         return true
         }
         catch (th: Throwable) {
-                Log.stack(LOG_ID, th)
+            if(th is InterruptedException) {
+                Thread.currentThread().interrupt()
+            }
+            Log.stack(LOG_ID, th)
             return false
         }
 
@@ -217,10 +219,6 @@ private fun nodeSendmessage(node:Node,path:String,data:ByteArray) {
     public fun sendunpair( name:String,on:Boolean) {
         sendbool(UNPAIR_PATH,name,on)
      }
-    private fun sendOnmessages( node:String,on:Boolean) {
-        if(doLog) {Log.i(LOG_ID,"sendNameMessageOn($node,$on)");}
-        sendbool(MESSAGES_PATH,node,on)
-        }
      /*
     public fun sendbluetooth(on:Boolean) {
     sendbool(BLUETOOTH_PATH,on)
@@ -270,8 +268,20 @@ companion object {
     const val UNPAIR_PATH = "/unpair"
     const val DATA_PATH = "/data"
     const val MESSAGES_PATH = "/messages"
+    const val MESSAGES_ACK_PATH = "/messagesack"
     val scope = CoroutineScope(Dispatchers.IO+SupervisorJob()  )
-    private var messagesender: MessageSender? = null
+    private const val CONTROL_ACK_SECONDS=8L
+    private const val MESSAGE_TASK_SECONDS=30L
+    private const val TCP_RETRY_MILLIS=5L*60L*1000L
+    private val controlSequence=AtomicLong(System.currentTimeMillis())
+    private class ControlAck {
+        val latch=CountDownLatch(1)
+        @Volatile var value=false
+    }
+    private val controlAcks=ConcurrentHashMap<Long,ControlAck>()
+    private val bleNetInfoNext=ConcurrentHashMap<String,Long>()
+    private var retryJob:Job?=null
+    @Volatile private var messagesender: MessageSender? = null
     @JvmStatic
     public fun getMessageSender(): MessageSender? {
         return messagesender
@@ -292,6 +302,20 @@ companion object {
       }
 
     @JvmStatic
+    fun sendStartBle(nodeName:String) {
+        if(BleMirror.isPeer(nodeName))
+            BleMirror.sendAsync(START_PATH,Natives.bytesettings())
+    }
+
+    @JvmStatic
+    fun sendAskForStart(nodeName:String) {
+        if(BleMirror.isPeer(nodeName))
+            BleMirror.sendAsync(ASKFORSTART_PATH,byteArrayOf(0))
+        else
+            messagesender?.nameSendMessage(nodeName,ASKFORSTART_PATH,byteArrayOf(0))
+    }
+
+    @JvmStatic
     public fun sendwake() {
         val sender = messagesender ?: return
         val ar = byteArrayOf(0);
@@ -308,6 +332,8 @@ companion object {
     @Keep
     @JvmStatic
     public fun sendDatawithName(ident: String, data: ByteArray): Boolean {
+        if(BleMirror.shouldUse(ident))
+            return BleMirror.send(ident,DATA_PATH,data)
         val sender = messagesender ?: return false
     if(doLog) {Log.i(LOG_ID,"start sendDatawithName $ident");}
         val res=sender.nameSendMessageResult(ident, DATA_PATH, data)
@@ -332,6 +358,9 @@ companion object {
     @Keep
     @JvmStatic
     public fun sendData(data: ByteArray): Boolean {
+        val bleId=BleMirror.getLinkId()
+        if(bleId!=null&&BleMirror.isPreferred())
+            return BleMirror.send(bleId,DATA_PATH,data)
         val sender = messagesender
         if (sender == null) {
             Log.e(LOG_ID, "sendData messagesender==null")
@@ -357,22 +386,20 @@ companion object {
 
     @Keep
     @JvmStatic
-    public fun sendNameMessageOn(ident: String, on: Boolean) {
-        val sender = messagesender
-        if (sender == null) {
-            Log.e(LOG_ID, "messagesender==null")
-            return
-        }
-        return sender.sendOnmessages(ident, on);
+    public fun sendNameMessageOn(ident: String, on: Boolean):Boolean {
+        return sendMessagesControl(ident,on)
     }
 
     @Keep
     @JvmStatic
-    public fun sendMessageOn(on: Boolean) {
+    public fun sendMessageOn(on: Boolean):Boolean {
+        val bleId=BleMirror.getLinkId()
+        if(bleId!=null&&BleMirror.isPreferred())
+            return sendNameMessageOn(bleId,on)
         val sender = messagesender
         if (sender == null) {
             Log.e(LOG_ID, "sendMessageOn messagesender==null")
-            return
+            return false
         }
         val nodes = sender.nodes
         if (nodes == null) {
@@ -380,14 +407,74 @@ companion object {
                 scope.launch {
                 sender.findWearDevicesWithApp()
                 }
-            return
+            return false
         }
         if (nodes.isEmpty()) {
             Log.e(LOG_ID, "sendMessageOn nodes.isEmpty()")
-            return
+            return false
         }
 
         return sendNameMessageOn(nodes.elementAt(0).id, on)
+    }
+
+    @JvmStatic
+    fun receiveMessagesAck(data:ByteArray) {
+        if(data.size<9)
+            return
+        val input=ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN)
+        val value=input.get().toInt()!=0
+        val request=input.getLong()
+        controlAcks[request]?.let { ack ->
+            ack.value=value
+            ack.latch.countDown()
+        }
+    }
+
+    private fun sendMessagesControl(nodeName:String,on:Boolean):Boolean {
+        val request=controlSequence.incrementAndGet()
+        val data=ByteBuffer.allocate(9).order(ByteOrder.LITTLE_ENDIAN)
+            .put(if(on) 1.toByte() else 0.toByte()).putLong(request).array()
+        val acknowledged=ControlAck()
+        val viaBle=BleMirror.shouldUse(nodeName)
+        controlAcks[request]=acknowledged
+        return try {
+            val delivered=if(viaBle) BleMirror.send(nodeName,MESSAGES_PATH,data)
+                else messagesender?.nameSendMessageResult(nodeName,MESSAGES_PATH,data)?:false
+            if(!delivered)
+                false
+            else {
+                val gotAck=acknowledged.latch.await(CONTROL_ACK_SECONDS,TimeUnit.SECONDS)
+                if(gotAck)
+                    acknowledged.value==on
+                else if(viaBle) {
+                    Log.e(LOG_ID,"No BLE /messagesack from $nodeName")
+                    false
+                }
+                else {
+                    // Older Juggluco versions understand the first byte but do
+                    // not return /messagesack. Task completion is the backwards-
+                    // compatible fallback; mirror command ACKs detect failure.
+                    Log.i(LOG_ID,"No /messagesack from $nodeName; using MessageClient task result")
+                    true
+                }
+            }
+        }
+        catch(th:Throwable) {
+            if(th is InterruptedException)
+                Thread.currentThread().interrupt()
+            Log.stack(LOG_ID,"sendMessagesControl",th)
+            false
+        }
+        finally {
+            controlAcks.remove(request)
+        }
+    }
+
+    @JvmStatic
+    fun sendMessagesAck(node:String,data:ByteArray) {
+        if(data.size<9)
+            return
+        messagesender?.nameSendMessage(node,MESSAGES_ACK_PATH,data.copyOf(9))
     }
 /*
 @Keep
@@ -404,12 +491,38 @@ public fun sendDatawithInt(ident: Int, data: ByteArray) {
     public fun initwearos(app: Context) {
         if(doLog) {Log.i(LOG_ID, "before new MessageSender");}
         messagesender = MessageSender(app)
+        BleMirror.init(app)
+        if(isWearable) {
+            scope.launch {
+                try {
+                    BleMirror.suggestLinkId(messagesender?.localnode)
+                }
+                catch(th:Throwable) {
+                    Log.stack(LOG_ID,"BLE identity",th)
+                }
+            }
+        }
+        if(retryJob==null) {
+            retryJob=scope.launch {
+                while(isActive) {
+                    delay(TCP_RETRY_MILLIS)
+                    try {
+                        Natives.retryMessageConnections(BleMirror.getPreferredPeer())
+                    }
+                    catch(th:Throwable) {
+                        Log.stack(LOG_ID,"retryMessageConnections",th)
+                    }
+                }
+            }
+        }
 //    {if(doLog) {Log.i(LOG_ID,"before sendnetinfo");};};
 //    sendnetinfo();
     }
 
     @JvmStatic
     public fun cansend(): Boolean {
+        if(BleMirror.isReady())
+            return true
         val sender: MessageSender? = messagesender
         if (sender == null) {
             Log.e(LOG_ID, "messagesender==null");
@@ -425,8 +538,32 @@ public fun sendDatawithInt(ident: Int, data: ByteArray) {
 
     private const val netwait = (1000).toLong()
 
+    private fun sendBleNetInfo(id:String,now:Long):Boolean {
+        val deadline=now+netwait
+        synchronized(bleNetInfoNext) {
+            if((bleNetInfoNext[id]?:0L)>now)
+                return false
+            bleNetInfoNext[id]=deadline
+        }
+        val create=isWearable||BleMirror.localCreatesHost()
+        val peerWearable=BleMirror.peerIsWearable()
+        val phonePeer=!isWearable&&!peerWearable
+        val netinfo=Natives.getmynetinfo(id,create,0,peerWearable,0,phonePeer)
+        if(netinfo!=null&&BleMirror.sendAsync(NET_PATH,netinfo))
+            return true
+        bleNetInfoNext.remove(id,deadline)
+        return false
+    }
+
     private fun inargsendnetinfo(id: String) {
         if(doLog) {Log.i(LOG_ID,"sendnetinfo($id)");}
+        if(BleMirror.isPeer(id)) {
+            val nu=System.currentTimeMillis()
+            if(!sendBleNetInfo(id,nu)) {
+                Log.i(LOG_ID,"BLE netinfo for $id was just sent")
+            }
+            return
+        }
         if(!cansend()) {
             Log.i(LOG_ID, "!cansend()")
                 return
@@ -445,17 +582,9 @@ public fun sendDatawithInt(ident: Int, data: ByteArray) {
                 }
             return
         }
-            val times = sender.nexttimes
-            if(times==null) {
-                Log.e(LOG_ID,"times=null")
-                scope.launch {
-                    sender.findWearDevicesWithApp()
-                }
-                return;
-            }
             val it= sender.findnodeid(id)
-            if(it<0||it>=times.size) {
-                  Log.e(LOG_ID,"nodenum ($it) >= times.size || >0 (${times.size})");
+            if(it<0) {
+                  Log.e(LOG_ID,"nodenum ($it) < 0");
                   scope.launch {
                       sender.findWearDevicesWithApp()
                    }
@@ -463,8 +592,8 @@ public fun sendDatawithInt(ident: Int, data: ByteArray) {
                 }
             var  othernode=nodes.elementAt(it)
             val nu = System.currentTimeMillis()
-            if(times!![it] > nu) {
-                Log.i(LOG_ID,"times!![it] > nu) it=$id times!![it]=${times!![it]} nu=$nu ")
+            if((sender.nexttimes[id]?:0L) > nu) {
+                Log.i(LOG_ID,"nexttimes[$id] > nu")
                 return
                 }
             if(sender.localnode==null) {
@@ -472,14 +601,14 @@ public fun sendDatawithInt(ident: Int, data: ByteArray) {
                     return
                 }
             val netinfo: ByteArray?
-            netinfo = if(isWearable) { Natives.getmynetinfo(sender.localnode, true, 0,true,0) } else { Natives.getmynetinfo(id, false, 0, isGalaxy(othernode),0) }
+            netinfo = if(isWearable) { Natives.getmynetinfo(sender.localnode, true, 0,true,0,false) } else { Natives.getmynetinfo(id, false, 0, isGalaxy(othernode),0,false) }
             if(netinfo == null) {
                 Log.e(LOG_ID,"netinfo=null")
                 return
                 }
             if(doLog) {Log.i(LOG_ID, "sender.sendnetinfo($id, netinfo)");};
             sender.sendnetinfo(id, netinfo)
-            times[it] = nu + netwait
+            sender.nexttimes[id] = nu + netwait
         }
 
         @JvmStatic     public fun sendnetinfo(id: String) {
@@ -491,6 +620,12 @@ public fun sendDatawithInt(ident: Int, data: ByteArray) {
         Log.i(LOG_ID,"sendnetinfo()")
 
             val nu = System.currentTimeMillis()
+            val bleId=BleMirror.getLinkId()
+            if(bleId!=null) {
+                sendBleNetInfo(bleId,nu)
+                if(BleMirror.isPreferred())
+                    return
+            }
             if (!cansend()) {
                 Log.i(LOG_ID, "!cansend()")
                 return
@@ -503,24 +638,19 @@ public fun sendDatawithInt(ident: Int, data: ByteArray) {
                 }
                 return
             }
-            val times = sender.nexttimes
-            if(times==null) {
-                Log.e(LOG_ID,"insendnetinfo: times==null");
-                return;
-                }
             val nextnetinfo = nu + netwait
             val num = nodes.size
             for(i in 0 until num) {
                 val node: Node = nodes.elementAt(i)
-                if(times!![i] < nu) {
+                if((sender.nexttimes[node.id]?:0L) < nu) {
                     val name = if (isWearable) sender.localnode else node.id
                     if(name==null) {
                         Log.d(LOG_ID,"name=null")
                         continue
                         }
-                    val netinfo = Natives.getmynetinfo(name, isWearable, 0, isGalaxy(node),0) ?: continue
+                    val netinfo = Natives.getmynetinfo(name, isWearable, 0, isGalaxy(node),0,false) ?: continue
                     sender.sendnetinfo(node, netinfo)
-                    times[i] = nextnetinfo
+                    sender.nexttimes[node.id] = nextnetinfo
                 } else {
                     Log.i(LOG_ID, "sendnetinfo already done " + node.id)
                   }
@@ -545,6 +675,7 @@ public fun sendDatawithInt(ident: Int, data: ByteArray) {
      public fun reinit() {
         Log.i(LOG_ID,"reinit")
         Natives.resetnetwork()
+        bleNetInfoNext.clear()
         getMessageSender()?.nulltimes()
         sendnetinfo()
         }

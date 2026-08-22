@@ -254,7 +254,7 @@ static public void show(MainActivity context,View parent) {
                         var name=makenodename(node);
                         final boolean wasdirect=watchsensor[0]; 
                         {if(doLog) {Log.i(LOG_ID,"watch "+name+" "+"nums "+watchnums+" direct "+watchdirect+ " was "+wasdirect);};};
-                        byte[] netinfo=Natives.getmynetinfo(name,true,watchdirect?1:-1,isGalaxy(node),watchnums?1:-1);
+                        byte[] netinfo=Natives.getmynetinfo(name,true,watchdirect?1:-1,isGalaxy(node),watchnums?1:-1,false);
                         Runnable doswitch=()-> {
                             Applic.switchbluetooth(name,netinfo,watchdirect);
                             };
@@ -359,7 +359,6 @@ static void sendinitwatchapp(Node nod) {
       sender.startWearOSActivity(nodeName);
       }
 }
-
 
 
 

@@ -22,6 +22,8 @@
 #pragma once 
 #include <string_view>
 #include <condition_variable>
+#include <chrono>
+#include <atomic>
 #include <thread>
 //#include <pthread.h>
 #include <vector>
@@ -69,7 +71,7 @@ xquotes(MIRRORPORT)
 #include "mirrorstatus.hpp"
 #include "mirrorerror.h"
 #ifdef WEAROS_MESSAGES
-extern bool wearmessages[];
+extern std::atomic_bool wearmessages[];
 #endif
 #ifndef TESTMENU
 #include <mutex>
@@ -247,6 +249,31 @@ struct  condvar_t {
     uintptr_t dobackup=0;
     std::mutex backupmutex;
     std::condition_variable backupcond; 
+
+    bool pending() {
+         const std::lock_guard<std::mutex> lck(backupmutex);
+         return dobackup!=0;
+         }
+    bool contains(uintptr_t kind) {
+         const std::lock_guard<std::mutex> lck(backupmutex);
+         return (dobackup&kind)!=0;
+         }
+    uintptr_t waittake() {
+         std::unique_lock<std::mutex> lck(backupmutex);
+         backupcond.wait(lck,[this] {return dobackup!=0;});
+         const uintptr_t current=dobackup;
+         dobackup=0;
+         return current;
+         }
+    template<class Rep,class Period>
+    uintptr_t waittakefor(const std::chrono::duration<Rep,Period> &duration) {
+         std::unique_lock<std::mutex> lck(backupmutex);
+         if(!dobackup)
+             backupcond.wait_for(lck,duration,[this] {return dobackup!=0;});
+         const uintptr_t current=dobackup;
+         dobackup=0;
+         return current;
+         }
 
     void wakebackuponly(uintptr_t kind){
          std::lock_guard<std::mutex> lck(backupmutex);
@@ -1220,22 +1247,18 @@ void backupthread(int allindex,int sendindex) {
 #endif
        }
     uintptr_t current=0;
-       while(true) {
-          if(doend(sendindex)) 
-            return;
-        if(!con_vars[sendindex]) { 
+	       while(true) {
+	        if(!con_vars[sendindex]) {
                 LOGGER("con_vars[%d]==null\n",sendindex);
                 return;
                 }
-         if(!con_vars[sendindex]->dobackup) {
-            status.locked=true;
-            lockwait(current,sendindex);
-            status.locked=false;
-            }
-          if(doend(sendindex))
-            return;
-         current=con_vars[sendindex]->dobackup;
-         con_vars[sendindex]->dobackup=0;
+	         status.locked=!con_vars[sendindex]->pending();
+	         current=con_vars[sendindex]->waittake();
+	         status.locked=false;
+	         if(current&wakeend) {
+	            endbackupthread(sendindex);
+	            return;
+	            }
          if(!passive) {
             notpassive(current,sendindex);
             }
@@ -1262,8 +1285,8 @@ void        notpassive(uintptr_t current,int sendindex) {
             }
     }
 bool doend(int sendindex) {
-    const condvar_t* var=con_vars[sendindex];
-      if(!var||(var->dobackup&wakeend))  {
+    condvar_t* var=con_vars[sendindex];
+      if(!var||var->contains(wakeend))  {
          LOGGER("doend: con_vars=%p end\n",var);
         endbackupthread(sendindex);
         return true;
@@ -1273,7 +1296,7 @@ bool doend(int sendindex) {
     }
 
 int updateproc(condvar_t *varsptr,uintptr_t cond,updateone &shost,int  (updateone::*proc)( )) {
-      if(varsptr->dobackup&wakestop)  
+      if(varsptr->contains(wakestop))
           return 0;
     if(cond) {
         int res= (shost.*proc)();
@@ -1288,10 +1311,10 @@ int updateproc(condvar_t *varsptr,uintptr_t cond,updateone &shost,int  (updateon
 #endif
             pass->sendpassive)
                 return 0;
-              if(varsptr->dobackup&wakestop)  
+	      if(varsptr->contains(wakestop))
                 return 0;
             shost.open();
-              if(varsptr->dobackup&wakestop)   {
+	      if(varsptr->contains(wakestop))   {
                 LOGAR("updateproce wakestop");
                 shost.close();
                 return 0;
@@ -1352,14 +1375,9 @@ void        doupdates(const uintptr_t current,const int h) {
             }
         }
 void lockwait(uintptr_t &current,int h) {
-    LOGGER("%d before lock\n",h)    ;
-    std::unique_lock<std::mutex> lck(con_vars[h]->backupmutex);
-    LOGGER("%d after lock\n",h)    ;
-    con_vars[h]->dobackup=con_vars[h]->dobackup&~current;
-    LOGGER("%d dobackup=%lu\n",h,con_vars[h]->dobackup)    ;
-    con_vars[h]->backupcond.wait(lck, [h] {return backup->con_vars[h]->dobackup; });   
-    LOGGER("%d afterwait\n",h)    ;
-    current=con_vars[h]->dobackup;
+    LOGGER("%d before waittake\n",h)    ;
+    current=con_vars[h]->waittake();
+    LOGGER("%d after waittake current=%lu\n",h,current)    ;
     #ifndef NOLOG
     LOGGER("%d after current=%lu\n",h,current)    ;
     int allindex=getupdatedata()->tosend[h].allindex;
@@ -1508,6 +1526,3 @@ inline int gethostindex(const passhost_t *host) {
 
 
 extern void startbackup(std::string_view globalbasedir) ;
-
-
-

@@ -323,7 +323,7 @@ int TCPConnect::makeconnection2(passhost_t *pass,char stype) {
 destruct dest([pass]() {
    if(pass->wearos) {
 
-      extern void sendMessagesON(passhost_t *pass, bool val);
+      extern bool sendMessagesON(passhost_t *pass, bool val);
       sendMessagesON(pass,true);
       }
    });

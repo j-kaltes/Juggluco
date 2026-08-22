@@ -335,7 +335,7 @@ static int saysender(const passhost_t *host) {
     return 0;
     }
 #ifdef WEAROS_MESSAGES
-extern bool wearmessages[];
+extern std::atomic_bool wearmessages[];
 extern int messagemakeconnection(passhost_t *pass,int &sock,crypt_t*ctx,char stype);
 #endif
 static int sayactivereceive(const passhost_t *host) {
@@ -459,7 +459,7 @@ void activereceivethread(int allindex,passhost_t *pass) {
         }
     const bool haspas = pass->haspass();
     crypt_t ctx, *ctxptr = haspas ? &ctx : nullptr;
-    decltype(active_receive[h]->dobackup) current{};
+    uintptr_t current{};
 {
     constexpr const int maxbuf = 50;
     char buf[maxbuf];
@@ -473,11 +473,7 @@ void activereceivethread(int allindex,passhost_t *pass) {
 #endif
 }
     while(true) {
-          active_receive[h]->dobackup=active_receive[h]->dobackup&(~current);
-          if(!active_receive[h]->dobackup) {
-            std::unique_lock<std::mutex> lck(active_receive[h]->backupmutex);
-            LOGAR("R-active before lock");
-    constexpr const int waitsec=
+	constexpr const int waitsec=
 #if defined(JUGGLUCO_APP) && !defined(WEAROS)
     70
 #else
@@ -485,29 +481,23 @@ void activereceivethread(int allindex,passhost_t *pass) {
 #endif
 ;
 #ifdef WEAROS_MESSAGES
-    if(pass->wearos&&wearmessages[allindex]) {
-        active_receive[h]->backupcond.wait(lck, [h] {return active_receive[h]->dobackup; });   
-        LOGAR("R-active after wait");
-        }
-   else   
+	if(pass->wearos&&wearmessages[allindex]) {
+	    current=active_receive[h]->waittake();
+	    LOGAR("R-active after wait");
+	    }
+	else
 #endif  
-        {
-           LOGGER("activereceivethread before wait_for %d %p\n",h ,active_receive[h]);
-
-#ifndef NOLOG
-            auto status=
-#endif
-                active_receive[h]->backupcond.wait_for(lck,std::chrono::seconds(waitsec));    //In reality much longer if phone is in doze mode.
-            LOGGER("R-active after lock %stimeout\n",(status==std::cv_status::no_timeout)?"no-":"");
-            }
-            }
+	    {
+	       LOGGER("activereceivethread before wait_for %d %p\n",h ,active_receive[h]);
+		current=active_receive[h]->waittakefor(std::chrono::seconds(waitsec)); //In reality much longer if phone is in doze mode.
+		LOGGER("R-active after lock current=%lu\n",current);
+		}
        LOGGER("before if(!active_receive[%d]) %p \n",h,active_receive[h]);
        if(h>=active_receivenr||!active_receive[h]) {
             LOGGER("active_receive[%d]==0, return\n",h);
             return;
           }
-       current=active_receive[h]->dobackup;
-       LOGAR("after current=active_receive[h]->dobackup;");
+	   LOGAR("after current received");
        TCPConnect *con=static_cast<TCPConnect*>(connections[allindex]);
        LOGAR("after TCPConnect *con=static_cast<TCPConnect*>(connections[allindex]);");
         if(!con||current&wakeend) {

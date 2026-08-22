@@ -458,9 +458,21 @@ private static boolean getIsElongated(Configuration config) {
     return aspectRatio >= 1.45f;
   }
 private boolean isSystemAutoRotateEnabled() {
+    /*
+     * ACCELEROMETER_ROTATION is stored per Android user.  In a managed/work
+     * profile that row can differ from the parent user's display setting,
+     * while orientation of the physical display is still governed by the
+     * parent/current display policy.  In that case do not veto Juggluco's
+     * Auto-rotate option here: SCREEN_ORIENTATION_FULL_USER lets WindowManager
+     * apply the real user rotation policy.
+     */
+    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        android.os.UserManager userManager=(android.os.UserManager)getSystemService(Context.USER_SERVICE);
+        if(userManager!=null&&userManager.isManagedProfile())
+            return true;
+        }
     return Settings.System.getInt(getContentResolver(),Settings.System.ACCELEROMETER_ROTATION,1) != 0;
     }
-
 private boolean observingAutoRotate = false;
 
 private final ContentObserver autoRotateObserver =isWearable?null:new ContentObserver(Applic.getHandler()) {
@@ -1363,6 +1375,7 @@ public void onRequestPermissionsResult(int requestCode, String[] permissions, in
         case BLUETOOTH_PERMISSION_REQUEST_CODE:
             {if(doLog) {Log.i(LOG_ID,"onRequestPermissionsResult(BLUETOOTH_PERMISSION_REQUEST_CODE) "+granted);};};
             if(granted) {
+                BleMirror.permissionsChanged();
                 if(systemlocation())
                    hasLocationContinue();
             } else {

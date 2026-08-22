@@ -381,7 +381,7 @@ static public synchronized void scan(GlucoseCurve curve,Tag tag) {
             String mess=error.getMessage();
             if(mess==null)
                 mess="unknown error";
-                   Log.stack(LOG_ID,mess,error);
+           Log.stack(LOG_ID,mess,error);
 
             failure(vibrator);
 
@@ -397,8 +397,8 @@ static public synchronized void scan(GlucoseCurve curve,Tag tag) {
       ((MainActivity) curve.getContext()).setnfc();
         }
     main.runOnUiThread(() -> {
-    if(main.curve.numcontrol!=null) 
-        main.curve.numcontrol.setVisibility(GONE);
+        if(main.curve.numcontrol!=null)
+            main.curve.numcontrol.setVisibility(GONE);
         main.curve.numberview.closenumview(); Settings.closeview();
         if(askpermission)
             main.finepermission();

@@ -282,6 +282,10 @@ static bool loadScriptToContext(const FontUse& f, Script s) {
                 {FC_CJK("NotoSansCJK-Regular.ttc"),FC_CJK("NotoSerifCJK-Regular.ttc"), FC("DroidSansFallback.ttf") },
                 {FC_CJK("NotoSerifCJK-Regular.ttc"),  FC_CJK("NotoSansCJK-Regular.ttc"), FC("DroidSansFallback.ttf")});
 #endif
+        case SCR_HANGUL:
+            return attachFallbacks(f,
+    {FC_CJK("NotoSansCJK-Regular.ttc"), FC("NanumGothic.ttf"), FC("NotoSansKR-Regular.otf") , FC_CJK("NotoSerifCJK-Regular.ttc")},
+    {FC_CJK("NotoSerifCJK-Regular.ttc"), FC("NotoSansKR-Regular.otf"), FC("NanumGothic.ttf"), FC_CJK("NotoSansCJK-Regular.ttc")});
 
 
         case SCR_GENERIC_FALLBACK:
@@ -489,10 +493,12 @@ void useFontsForName(const FontUse& f, const char* name) {
         }
     }
 
-    if (hasHangul||hasKana||hasBopomofo||hasHan) {
+    if (hasKana||hasBopomofo||hasHan) {
          enableScript(f, SCR_CJK);
         }
-
+    if(hasHangul) {
+        enableScript(f,SCR_HANGUL);
+        }
 
     if (needGenericFallback) {
         enableScript(f, SCR_GENERIC_FALLBACK);

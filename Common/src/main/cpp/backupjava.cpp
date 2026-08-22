@@ -122,7 +122,8 @@ extern "C" JNIEXPORT jboolean JNICALL   fromjava(removebylabel)(JNIEnv *env, jcl
     } */
 
 #ifndef ABBOTT
-passhost_t * getwearoshost(const bool create,const char *label,bool,bool=false);
+
+passhost_t * getwearoshost(const bool create,const char *label,bool,bool=false,bool=false);
 bool resetbylabel(const char *label,bool galaxy) {
     
     int pos=getposbylabel(label);

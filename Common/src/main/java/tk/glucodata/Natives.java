@@ -470,8 +470,6 @@ public static native int getLibreVersion(long dataptr);
 public static native void USenabledStreaming(byte[] sensorident,byte[] jauth,byte[] address);
 public static native void closedynlib( );
 public static native strGlucose lastglucose();
-public static native byte[] getmynetinfo(String name,boolean create,int watchhassensor,boolean galaxy,int setnums);
-public static native boolean setmynetinfo(String name,byte[] jar,boolean galaxy);
 
 public static native long lastglucosetime( );
 public static native byte[] bytesettings();
@@ -1074,5 +1072,13 @@ public static native boolean getRotate( );
 
 public static native void setRotateText(boolean val);
 public static native boolean getRotateText( );
+
+
+public static native byte[] getmynetinfo(String name,boolean create,int watchhassensor,boolean galaxy,int setnums,boolean phonepeer);
+public static native boolean setmynetinfo(String name,byte[] jar,boolean galaxy,boolean phonepeer);
+public static native void retryMessageConnections(String skipName);
+public static native void resetMessageConnection(String name);
+
+
 }
 

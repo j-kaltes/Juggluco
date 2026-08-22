@@ -1154,6 +1154,19 @@ Scans.setOnCheckedChangeListener( (buttonView,  isChecked) -> { Natives.setshows
         var rotateText=getcheckbox(context,R.string.rotateText,Natives.getRotateText());
         var autorotate=getcheckbox(context,R.string.autorotate,didautorotate);
 
+        /* A managed/work profile can have its own ACCELEROMETER_ROTATION row,
+         * different from the parent user's physical-display rotation policy.
+         * When Juggluco Auto-rotate is enabled, MainActivity therefore lets
+         * SCREEN_ORIENTATION_FULL_USER defer to WindowManager.  Use the same
+         * rule here, otherwise the Work Profile incorrectly hides Rotate text. */
+        final boolean managedProfile;
+        if(android.os.Build.VERSION.SDK_INT>=android.os.Build.VERSION_CODES.N) {
+            var userManager=(android.os.UserManager)context.getSystemService(android.content.Context.USER_SERVICE);
+            managedProfile=userManager!=null&&userManager.isManagedProfile();
+            }
+        else
+            managedProfile=false;
+
         /* These controls are local to displaysettings(): whether they have an
          * effect is a property of the current display/orientation policy, not
          * persistent Settings object state. */
@@ -1164,7 +1177,7 @@ Scans.setOnCheckedChangeListener( (buttonView,  isChecked) -> { Natives.setshows
             final int longSide=Math.max(config.screenWidthDp,config.screenHeightDp);
             final boolean elongated=shortSide>0&&((float)longSide/shortSide)>=1.45f;
             final boolean nearlySquare=largeScreen&&!elongated;
-            final boolean systemAutoRotate=android.provider.Settings.System.getInt(
+            final boolean systemAutoRotate=managedProfile||android.provider.Settings.System.getInt(
                     context.getContentResolver(),
                     android.provider.Settings.System.ACCELEROMETER_ROTATION,1)!=0;
             final boolean effectiveAutoRotate=Natives.getRotate()&&systemAutoRotate;

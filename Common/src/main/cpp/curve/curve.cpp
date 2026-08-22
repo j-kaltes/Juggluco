@@ -158,6 +158,7 @@ static enum FontType {
     HEBREW,
     ARABIC,
     HINDI,
+    HANGUL,
     REST
     } chfontset=REST;
 //static bool chfontset=false;
@@ -336,6 +337,35 @@ static int getHindiMenu(NVGcontext* avg) {
 
 #endif 
 
+#ifdef JUGGLUCO_APP
+static int getHangulMenu(NVGcontext* avg) {
+        constexpr const char fonts[][sizeof(
+#ifdef JUGGLUCO_APP
+        fontpath "NotoSerifCJK-Regular.ttc"
+#else
+        "/usr/share/fonts/opentype/noto/NotoSerifCJK-Regular.ttc"
+#endif
+        )]
+        {
+#ifdef JUGGLUCO_APP
+
+     fontpath "NanumGothic.ttf",
+     fontpath "NotoSansKR-Regular.otf",
+     fontpath "NotoSerifCJK-Regular.ttc",
+     fontpath "NotoSansCJK-Regular.ttc"
+#else
+
+        "/usr/share/fonts/opentype/noto/NotoSerifCJK-Regular.ttc"
+#endif
+        };
+    for(const char *name:fonts)  {
+        if(int font = nvgCreateFont(avg, "regular", name);font!=-1) 
+                return font;
+        }
+    return  -1;
+    }
+
+#endif 
 
 bool usedScript[SCR_COUNT]{};
 
@@ -373,6 +403,18 @@ thevg=avg;
         whitefont=blackfont;
 #endif
 const FontUse fontuse{.vg=avg,.whitefont=whitefont,.blackfont=blackfont,.scriptEnabled=usedScript};
+
+if(usedtext==&kotext) {
+     enableScript(fontuse,SCR_HANGUL);
+#ifdef JUGGLUCO_APP
+    menufont=nvgCreateFontMem(avg, "regular", (unsigned char *)fontfile, sizeof(fontfile), 0);
+    int fallback2 =getHangulMenu(avg);
+    nvgAddFallbackFontId(avg,menufont, getMenuFont(avg));
+    nvgAddFallbackFontId(avg, menufont,fallback2);
+#endif
+     chfontset=HANGUL;
+      }
+else
 if(usedtext==&hitext) {
      enableScript(fontuse,SCR_DEVANAGARI);
 #ifdef JUGGLUCO_APP
