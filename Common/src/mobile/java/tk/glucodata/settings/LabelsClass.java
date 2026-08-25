@@ -242,10 +242,29 @@ void    mklabellayout(View parent ) {
         public  void onNothingSelected (AdapterView<?> parent) {
 
         } });
+
+    Spinner notespinner=new Spinner(context);
+    notespinner.setMinimumHeight(minheight);
+    avoidSpinnerDropdownFocus(notespinner);
+    LabelAdapter<String> notespinadapt=new LabelAdapter<String>(context,Natives.getLabels(),0);
+    notespinner.setAdapter(notespinadapt);
+    notespinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        @Override
+        public  void onItemSelected (AdapterView<?> parent, View view, int position, long id) {
+            Natives.setnotevar((byte)position);
+            }
+        @Override
+        public  void onNothingSelected (AdapterView<?> parent) {
+
+        } });
+
     final Runnable onsave= ()->  {
                 numspinadapt.setarray(Natives.getLabels());
                 spinner.setAdapter(numspinadapt);
                 spinner.setSelection(Natives.getmealvar());
+                notespinadapt.setarray(Natives.getLabels());
+                notespinner.setAdapter(notespinadapt);
+                notespinner.setSelection(Natives.getnotevar());
                 if((labels.size()-1)>=40)
                     addnew.setVisibility(INVISIBLE);
                 };
@@ -255,10 +274,13 @@ void    mklabellayout(View parent ) {
 //    spinner.clearAnimation();
     spinner.setSelection(Natives.getmealvar());
     Layout.getMargins(spinner).setMarginEnd((int)(tk.glucodata.GlucoseCurve.metrics.density*8.0));
+    TextView notelabel=getlabel(context,"Note");
+    notespinner.setSelection(Natives.getnotevar());
+    Layout.getMargins(notespinner).setMarginEnd((int)(tk.glucodata.GlucoseCurve.metrics.density*8.0));
     Button help=new Button(context);
     help.setOnClickListener(v->{help(R.string.labelhelp,context); });
     help.setText(R.string.helpname);
-    Layout butlay=new Layout(context,new View[]{menulabel,spinner},new View[] {delete},new View[]{help},new View[]{addnew},new View[]{ok});
+    Layout butlay=new Layout(context,new View[]{menulabel,spinner},new View[]{notelabel,notespinner},new View[] {delete},new View[]{help},new View[]{addnew},new View[]{ok});
     butlay.setLayoutParams(new ViewGroup.LayoutParams(   ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
         recycle.setLayoutParams(new ViewGroup.LayoutParams(   ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
 

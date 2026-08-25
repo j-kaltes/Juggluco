@@ -22,6 +22,7 @@
 package tk.glucodata;
 
 public class AccuGattCallback extends SuperGattCallback {
+    static final String ManufacturerNameCharUUID = "00002a29-0000-1000-8000-00805f9b34fb";
     public AccuGattCallback(String SerialNumber, long dataptr) {
         super(SerialNumber, dataptr, 0x20);
         }

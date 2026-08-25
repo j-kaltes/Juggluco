@@ -21,8 +21,7 @@ inline float carboWeight(uint32_t type) {
 		return settings->data()->librenums[type].weight;
 	return 0.0f;
 	}
+extern int notetype;
 inline bool isNote(uint32_t type) { 
-	if(type>=settings->varcount())
-		return false;
-	return settings->data()->librenums[type].kind==4;
+	return (int)type==notetype;
 	}

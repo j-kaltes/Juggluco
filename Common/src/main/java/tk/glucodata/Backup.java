@@ -190,6 +190,7 @@ public class Backup {
       private    CheckDirectionBox Amounts =null;
       private CheckDirectionBox Scans =null;
       private CheckDirectionBox Stream =null,receive=null,detect=null,checkhostname;
+      private CheckDirectionBox Notes =null;
       private CheckDirectionRadio activeonly=null,passiveonly=null,both=null;
       private final EditText[] editIPs={null,null,null,null};
       private EditText editpass=null;
@@ -520,6 +521,7 @@ CheckDirectionBox ICE;
          Amounts = new CheckDirectionBox(act); Amounts.setText(R.string.amountsname);
          Scans = new CheckDirectionBox(act); Scans.setText(R.string.scansname);
          Stream = new CheckDirectionBox(act); Stream.setText(R.string.streamname);
+         Notes = new CheckDirectionBox(act); Notes.setText(R.string.notesname);
       CheckDirectionRadio fromnow=new CheckDirectionRadio(act);
       CheckDirectionRadio alldata=new CheckDirectionRadio(act);
       CheckDirectionRadio screenpos=new CheckDirectionRadio(act);
@@ -614,7 +616,7 @@ CheckDirectionBox ICE;
 
 
          long starttime=(alldata.getVisibility()!=VISIBLE||alldata.isChecked())?0L:(fromnow.isChecked()? System.currentTimeMillis():Natives.getstarttime())/1000L;
-         int pos=Natives.changebackuphost(hostindex,names,struse,dodetect,portedit.getText().toString(), Amounts.isChecked(),Stream.isChecked(),Scans.isChecked(),restore.isChecked(),receiver,activeonly.isChecked(),passiveonly.isChecked(),Password.isChecked()?editpass.getText().toString():null,starttime,haslabel.isChecked()?label.getText().toString():null,testip.isChecked(),checkhostname.isChecked(), ice?ICEstring:null,one.isChecked());
+         int pos=Natives.changebackuphost(hostindex,names,struse,dodetect,portedit.getText().toString(), Amounts.isChecked(),Stream.isChecked(),Scans.isChecked(),restore.isChecked(),receiver,activeonly.isChecked(),passiveonly.isChecked(),Password.isChecked()?editpass.getText().toString():null,starttime,haslabel.isChecked()?label.getText().toString():null,testip.isChecked(),checkhostname.isChecked(), ice?ICEstring:null,one.isChecked(),Notes.isChecked());
 
          if(pos<0) {
             String mess=changehostError(act, pos);
@@ -648,7 +650,7 @@ CheckDirectionBox ICE;
             resentconfirmation(act,hostindex);
             }
          });
-      CheckDirectionBox[] boxes={Amounts,Scans,Stream,restore};
+      CheckDirectionBox[] boxes={Amounts,Scans,Stream,Notes,restore};
        CompoundButton.OnCheckedChangeListener needport =(buttonView, isChecked)-> {
          if(sendchecked==null)
             return;
@@ -680,7 +682,7 @@ CheckDirectionBox ICE;
             return ret;
 
          }, new View[]{ICE},new View[]{ Portlabel},new View[] {portedit},new View[]{checkhostname},new View[]{new Space(act),IPslabel,detect,new Space(act)},new View[]{ICElabellabel},new View[]{ICElabel},sides, new View[]{editIPs[0]},new View[]{editIPs[1]},editIPs.length>=3?new View[]{editIPs[2]}:null,editIPs.length>=4?new View[]{editIPs[3]}:null ,new View[] {testip},new View[] {haslabel},new View[]{label},
-               new View[]{passiveonly},new View[]{activeonly},new View[]{both},new View[] {receive},new View[] {Sendlabel,Stream},new View[]{Scans,Amounts},new View[]{startlabel},new View[]{alldata,fromnow},new View[]{screenpos} ,new View[]{Password },new View[]{editpass,visible},new View[]{delete,Close},new View[] {reset},new View[]{save});
+               new View[]{passiveonly},new View[]{activeonly},new View[]{both},new View[] {receive},new View[] {Sendlabel,Stream},new View[]{Scans,Amounts},new View[]{Notes},new View[]{startlabel},new View[]{alldata,fromnow},new View[]{screenpos} ,new View[]{Password },new View[]{editpass,visible},new View[]{delete,Close},new View[] {reset},new View[]{save});
 
       layout.setPaddingRelative((int)(GlucoseCurve.metrics.density*4.0),0,(int)(GlucoseCurve.metrics.density*10.0),(int)(GlucoseCurve.metrics.density*4));
          }
@@ -696,7 +698,7 @@ CheckDirectionBox ICE;
             return ret;
 
          }, firstrow,new View[]{ICE,ICElabellabel,ICElabel,zero,one},editIPs, new View[]{testip, haslabel, label},
-               directions, new View[]{receive, Sendlabel, Amounts, Scans, Stream, restore}, fromrow, withqr, new View[]{delete, Close, reset, Help, save});
+               directions, new View[]{receive, Sendlabel, Amounts, Scans, Stream, Notes, restore}, fromrow, withqr, new View[]{delete, Close, reset, Help, save});
 
          var sidepad=(int)(GlucoseCurve.metrics.density*8.0);
          layout.setPadding(MainActivity.systembarLeft+sidepad,MainActivity.systembarTop/2,sidepad+MainActivity.systembarRight,MainActivity.systembarBottom);
@@ -803,6 +805,7 @@ CheckDirectionBox ICE;
           }
       else {
          stream=false;scans=false;amounts=false;
+         Notes.setChecked(true);
          haslabel.setChecked(false);
          receive.setChecked(false);
          label.setVisibility(hide);
@@ -815,7 +818,7 @@ CheckDirectionBox ICE;
          testip.setChecked(true);
           } 
 
-      Stream.setChecked(stream); Scans.setChecked(scans); Amounts.setChecked(amounts);
+         Stream.setChecked(stream); Scans.setChecked(scans); Amounts.setChecked(amounts); Notes.setChecked(Natives.getbackuphostnotes(index));
       isasender=stream||scans||amounts;
       sendchecked=new boolean[]{amounts,scans,stream};
       sendfrom[2].setText( tk.glucodata.util.timestring(Natives.getstarttime()));

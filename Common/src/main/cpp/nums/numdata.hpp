@@ -41,6 +41,7 @@
 #include "datbackup.hpp"
 #include "meal/Meal.hpp"
 #include "num.h"
+#include "net/libreview/numcategories.hpp"
 //extern void wakeaftermin(const int waitmin) ;
 //extern void wakeuploader();
 
@@ -1324,13 +1325,13 @@ uint32_t findEarlymeal(int pos) const {
     }
 public:
 static inline constexpr const int intinnum=(sizeof(Num)/sizeof(uint32_t));
-int update(crypt_t*pass,Connect *connect,struct changednums *nuall,int ind) {
+int update(crypt_t*pass,Connect *connect,struct changednums *nuall,int ind,bool sendnotes=true) {
 //     NUMLOCKGUARD
     nummutexupdate.lock();
     updatebusy[ind]=false; //Otherwise it has lock in network operation and which can lead to an ANR kill off app.
     const int  dbindex=getindex();
     struct changednums *nu=nuall+dbindex;    
-    LOGGER("numdata: update ind=%d dbindex=%d nu->len=%d\n",ind,dbindex,nu->len);
+    LOGGER("numdata: update ind=%d dbindex=%d nu->len=%d sendnotes=%d\n",ind,dbindex,nu->len,sendnotes);
     struct numspan *ch=nu->changed;
     int endpos=getlastpos();
 
@@ -1374,20 +1375,62 @@ int update(crypt_t*pass,Connect *connect,struct changednums *nuall,int ind) {
         LOGGERTAG("update numsend dbase=%d nr=%d totlen=%d last=%d\n",dbase,offoutnr,totlen,endpos);
         uint32_t *numsar=uitnums->nums;
         const Num *start=startdata();
-        for(int i=nu->len-1;i>=0;i--) {
-            const int chend=ch[i].end==0?endpos:ch[i].end;
-            const int chstart=ch[i].start;
-            if(chstart<chend) {    
-                *numsar++=chstart;
-                const int nr=chend-chstart;
-                LOGGERTAG("NUM SN%d: %d (%d)\n",dbase,chstart,nr);
-                *numsar++=nr;
-                const int datlen=nr*sizeof(Num);
-
-                memcpy(numsar,start+chstart,datlen);
-
-                numsar+=nr*intinnum;
+        if(sendnotes) {
+            for(int i=nu->len-1;i>=0;i--) {
+                const int chend=ch[i].end==0?endpos:ch[i].end;
+                const int chstart=ch[i].start;
+                if(chstart<chend) {    
+                    *numsar++=chstart;
+                    const int nr=chend-chstart;
+                    LOGGERTAG("NUM SN%d: %d (%d)\n",dbase,chstart,nr);
+                    *numsar++=nr;
+                    const int datlen=nr*sizeof(Num);
+                    memcpy(numsar,start+chstart,datlen);
+                    numsar+=nr*intinnum;
+                    }
                 }
+            }
+        else {
+            int actualnr=0;
+            int actualtotlen=sizeof(numsend);
+            for(int i=nu->len-1;i>=0;i--) {
+                const int chend=ch[i].end==0?endpos:ch[i].end;
+                const int chstart=ch[i].start;
+                if(chstart<chend) {
+                    int runstart=-1;
+                    int runcount=0;
+                    for(int j=chstart;j<chend;j++) {
+                        if(!isNote(start[j].type)) {
+                            if(runstart<0) runstart=j;
+                            runcount++;
+                            }
+                        else {
+                            if(runstart>=0) {
+                                *numsar++=runstart;
+                                LOGGERTAG("NUM SN%d: %d (%d)\n",dbase,runstart,runcount);
+                                *numsar++=runcount;
+                                memcpy(numsar,start+runstart,runcount*sizeof(Num));
+                                numsar+=runcount*intinnum;
+                                actualnr++;
+                                actualtotlen+=runcount*sizeof(Num)+8;
+                                runstart=-1;
+                                runcount=0;
+                                }
+                            }
+                        }
+                    if(runstart>=0) {
+                        *numsar++=runstart;
+                        LOGGERTAG("NUM SN%d: %d (%d)\n",dbase,runstart,runcount);
+                        *numsar++=runcount;
+                        memcpy(numsar,start+runstart,runcount*sizeof(Num));
+                        numsar+=runcount*intinnum;
+                        actualnr++;
+                        actualtotlen+=runcount*sizeof(Num)+8;
+                        }
+                    }
+                }
+            uitnums->nr=actualnr;
+            uitnums->totlen=actualtotlen;
             }
         nummutexupdate.unlock();
          if(!connect->sendcommand(pass, destructptr.get(),totlen)) {

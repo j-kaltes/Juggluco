@@ -30,6 +30,11 @@ extern float tapx,tapy;
 #include "meal/Meal.hpp"
 #include "searchgegs.hpp"
 extern Meal *meals;
+#ifdef USE_FREETEXT_NOTE
+#include "../notes/Notes.hpp"
+#include "../net/libreview/numcategories.hpp"
+extern Notes *notes;
+#endif
 extern int carbotype;
 extern int *numheights;
 extern int shownumbers;
@@ -124,8 +129,25 @@ template <class TX,class TY> void NumDisplay::showNums(JCurve&jcurve, const TX &
 			else {
 				ypos=jcurve.numtypeheight(it->type);
 				constexpr int maxbuf=20;
-				char buf[maxbuf];	
+				char buf[maxbuf];
+#ifdef USE_FREETEXT_NOTE
+				if(isNote(it->type) && notes && it->mealptr >= 0) {
+					const char* text = notes->gettext(it->mealptr);
+					int tlen = strlen(text);
+					if(tlen > 10) {
+						memcpy(buf, text, 10);
+						buf[10]='.'; buf[11]='.'; buf[12]='.';
+						nvgText(vg, xpos, ypos, buf, buf+13);
+					} else if(tlen > 0) {
+						nvgText(vg, xpos, ypos, text, text+tlen);
+					} else {
+						nvgText(vg, xpos,ypos, buf, buf+ snprintf(buf,maxbuf,"%g",it->value));
+					}
+				} else
+#endif
+				{
 				nvgText(vg, xpos,ypos, buf, buf+ snprintf(buf,maxbuf,"%g",it->value));
+				}
 				if(jcurve.showmeals&&it->type==carbotype) {
 					mealdisplay(jcurve,xpos,ypos,it);	
 					}

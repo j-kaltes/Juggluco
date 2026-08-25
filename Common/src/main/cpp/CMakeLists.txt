@@ -91,9 +91,13 @@ set_source_files_properties("${ARJUGGLUCO_OUTPUT}" PROPERTIES GENERATED TRUE)
 
 include(ExternalProject)
 
+option(SKIP_RTLPP "Skip building rtlpp_host and use pre-generated arjugglucotextgen.cpp" OFF)
+
 set(RTLPP_DEPENDS "${ARJUGGLUCO_INPUT}")
 
-if(CMAKE_CROSSCOMPILING)
+if(SKIP_RTLPP)
+    message(STATUS "SKIP_RTLPP enabled: using pre-generated ${ARJUGGLUCO_OUTPUT}")
+elseif(CMAKE_CROSSCOMPILING)
     if(CMAKE_HOST_WIN32)
         set(RTLPP_HOST_EXE_SUFFIX ".exe")
     else()
@@ -147,13 +151,23 @@ else()
     )
 endif()
 
-add_custom_command(
-    OUTPUT "${ARJUGGLUCO_OUTPUT}"
-    COMMAND "${RTLPP_COMMAND}" "${ARJUGGLUCO_INPUT}" "${ARJUGGLUCO_OUTPUT}"
-    DEPENDS ${RTLPP_DEPENDS}
-    COMMENT "Generating ${ARJUGGLUCO_OUTPUT} from ${ARJUGGLUCO_INPUT}"
-    VERBATIM
-)
+if(SKIP_RTLPP)
+    add_custom_command(
+        OUTPUT "${ARJUGGLUCO_OUTPUT}"
+        COMMAND ${CMAKE_COMMAND} -E true
+        DEPENDS "${ARJUGGLUCO_INPUT}"
+        COMMENT "Using pre-generated ${ARJUGGLUCO_OUTPUT}"
+        VERBATIM
+    )
+else()
+    add_custom_command(
+        OUTPUT "${ARJUGGLUCO_OUTPUT}"
+        COMMAND "${RTLPP_COMMAND}" "${ARJUGGLUCO_INPUT}" "${ARJUGGLUCO_OUTPUT}"
+        DEPENDS ${RTLPP_DEPENDS}
+        COMMENT "Generating ${ARJUGGLUCO_OUTPUT} from ${ARJUGGLUCO_INPUT}"
+        VERBATIM
+    )
+endif()
 
 
 
@@ -206,10 +220,10 @@ set(LIBRE3SRC
     ${INCLUDESELF}/libre3/process/challenge_cipher_context.c
 )
 endif()
-add_library( g SHARED  ${LIBRE3SRC} sibionics3/interpretgs3.cpp sibionics3/java.cpp curve/scriptFonts.cpp settings/rtl_label_converter.cpp ${CHECKER_FILE} aidexx/crc.cpp aidexx/initcrypto.cpp  aidexx/java.cpp aidexx/decrypt.cpp aidexx/mkiv.cpp ${NETDIR}/ICE/ContextHTTPS.cpp  ${NETDIR}/ICE/ICE.cpp  ${NETDIR}/ICE/ICE_data.cpp ${NETDIR}/sendcommands.cpp ${NETDIR}/backup.cpp ${NETDIR}/getcommand.cpp ${BCRYPTFILES} meter/java.cpp calibrate/java.cpp  calibrate/calculate.cpp  air/java.cpp   accu/java.cpp  dexcom/java.cpp dexcom/ecJPake.cpp extra/bypassed_dlfcn.c extra/fake_dlfcn.c EverSense.cpp dofirst.cpp settings/exception.cpp prunestream.cpp ${EXTRAVIEW} watch/messages.cpp watch/netinfo.cpp watch/watchvalue.cpp removeoldstates.cpp  ${CURVEDIR}/trjugglucotext.cpp   ${CURVEDIR}/svjugglucotext.cpp    ${CURVEDIR}/zhjugglucotext.cpp  ${CURVEDIR}/ukjugglucotext.cpp  ${CURVEDIR}/bejugglucotext.cpp ${CURVEDIR}/frjugglucotext.cpp ${CURVEDIR}/pljugglucotext.cpp ${CURVEDIR}/ptjugglucotext.cpp  ${CURVEDIR}/jajugglucotext.cpp ${CURVEDIR}/hijugglucotext.cpp ${CURVEDIR}/esjugglucotext.cpp ${CURVEDIR}/uzjugglucotext.cpp ${CURVEDIR}/nljugglucotext.cpp ${CURVEDIR}/dejugglucotext.cpp  ${CURVEDIR}/jugglucotext.cpp  ${CURVEDIR}/itjugglucotext.cpp ${CURVEDIR}/percentile.cpp foods/javabase.cpp ${ASCONFILES} hostJson.cpp backupjava.cpp glucose.cpp ${CURVEDIR}/shownums.cpp g.cpp libre2.cpp jnisub.cpp share/getsockets.cpp share/hooks.cpp wearInt.cpp logjava.cpp share/logs.cpp share/nfcdata.cpp  share/serial.cpp scanstate.cpp statedata.cpp share/timestr.cpp share/savehistory.cpp  ${NANOVG}/nanovg.c  ${CURVEDIR}/search.cpp ${CURVEDIR}/appcurve.cpp ${CURVEDIR}/curve.cpp ${CURVEDIR}/javacurve.cpp export/libreviewexport.cpp export/exports.cpp settings/javasettings.cpp settings/settings.cpp debugclone.cpp ${NETDIR}/watchserver/common.cpp ${NETDIR}/watchserver/getlanguage.cpp ${NETDIR}/watchserver/uploader.cpp  ${NETDIR}/watchserver/uploadtreatment.cpp  ${NETDIR}/watchserver/iob.cpp   ${NETDIR}/watchserver/sslserver.cpp  ${NETDIR}/watchserver/cryptopen.cpp ${NETDIR}/watchserver/watchserver.cpp ${NETDIR}/netstuff.cpp ${NETDIR}/sender.cpp ICEstatus.cpp mirrorstatus.cpp backupinfo.cpp datbackup.cpp nums/numdata.cpp nums/numjava.cpp  meal/mealjava.cpp meal/savemeals.cpp  ${LIBRE3FILES}  ${CURVEDIR}/iwjugglucotext.cpp ${CURVEDIR}/rujugglucotext.cpp  sibionics/handleData.cpp  sibionics/interpret_data.cpp sibionics/eu.cpp sibionics/start.cpp sibionics/process.cpp sibionics/makeWriteCharacter.cpp  ) #  ${CURVEDIR}/iwjugglucotext.cpp 
+add_library( g SHARED  ${LIBRE3SRC} sibionics3/interpretgs3.cpp sibionics3/java.cpp curve/scriptFonts.cpp settings/rtl_label_converter.cpp ${CHECKER_FILE} aidexx/crc.cpp aidexx/initcrypto.cpp  aidexx/java.cpp aidexx/decrypt.cpp aidexx/mkiv.cpp ${NETDIR}/ICE/ContextHTTPS.cpp  ${NETDIR}/ICE/ICE.cpp  ${NETDIR}/ICE/ICE_data.cpp ${NETDIR}/sendcommands.cpp ${NETDIR}/backup.cpp ${NETDIR}/getcommand.cpp ${BCRYPTFILES} meter/java.cpp calibrate/java.cpp  calibrate/calculate.cpp  air/java.cpp   accu/java.cpp  dexcom/java.cpp dexcom/ecJPake.cpp extra/bypassed_dlfcn.c extra/fake_dlfcn.c EverSense.cpp dofirst.cpp settings/exception.cpp prunestream.cpp ${EXTRAVIEW} watch/messages.cpp watch/netinfo.cpp watch/watchvalue.cpp removeoldstates.cpp  ${CURVEDIR}/trjugglucotext.cpp   ${CURVEDIR}/svjugglucotext.cpp    ${CURVEDIR}/zhjugglucotext.cpp  ${CURVEDIR}/ukjugglucotext.cpp  ${CURVEDIR}/bejugglucotext.cpp ${CURVEDIR}/frjugglucotext.cpp ${CURVEDIR}/pljugglucotext.cpp ${CURVEDIR}/ptjugglucotext.cpp  ${CURVEDIR}/jajugglucotext.cpp ${CURVEDIR}/hijugglucotext.cpp ${CURVEDIR}/esjugglucotext.cpp ${CURVEDIR}/uzjugglucotext.cpp ${CURVEDIR}/nljugglucotext.cpp ${CURVEDIR}/dejugglucotext.cpp  ${CURVEDIR}/jugglucotext.cpp  ${CURVEDIR}/itjugglucotext.cpp ${CURVEDIR}/percentile.cpp foods/javabase.cpp ${ASCONFILES} hostJson.cpp backupjava.cpp glucose.cpp ${CURVEDIR}/shownums.cpp g.cpp libre2.cpp jnisub.cpp share/getsockets.cpp share/hooks.cpp wearInt.cpp logjava.cpp share/logs.cpp share/nfcdata.cpp  share/serial.cpp scanstate.cpp statedata.cpp share/timestr.cpp share/savehistory.cpp  ${NANOVG}/nanovg.c  ${CURVEDIR}/search.cpp ${CURVEDIR}/appcurve.cpp ${CURVEDIR}/curve.cpp ${CURVEDIR}/javacurve.cpp export/libreviewexport.cpp export/exports.cpp settings/javasettings.cpp settings/settings.cpp debugclone.cpp ${NETDIR}/watchserver/common.cpp ${NETDIR}/watchserver/getlanguage.cpp ${NETDIR}/watchserver/uploader.cpp  ${NETDIR}/watchserver/uploadtreatment.cpp  ${NETDIR}/watchserver/iob.cpp   ${NETDIR}/watchserver/sslserver.cpp  ${NETDIR}/watchserver/cryptopen.cpp ${NETDIR}/watchserver/watchserver.cpp ${NETDIR}/netstuff.cpp ${NETDIR}/sender.cpp ICEstatus.cpp mirrorstatus.cpp backupinfo.cpp datbackup.cpp nums/numdata.cpp nums/numjava.cpp  meal/mealjava.cpp meal/savemeals.cpp  notes/notesjava.cpp  ${LIBRE3FILES}  ${CURVEDIR}/iwjugglucotext.cpp ${CURVEDIR}/rujugglucotext.cpp  sibionics/handleData.cpp  sibionics/interpret_data.cpp sibionics/eu.cpp sibionics/start.cpp sibionics/process.cpp sibionics/makeWriteCharacter.cpp  ) #  ${CURVEDIR}/iwjugglucotext.cpp 
 target_sources(g PRIVATE "${ARJUGGLUCO_OUTPUT}")
 add_dependencies(g generate_arjugglucotext)
-target_compile_definitions(g PRIVATE  -DUSE_SSL=1 -DANDROID__APP=1  -DJUGGLUCO_APP=1)
+target_compile_definitions(g PRIVATE  -DUSE_SSL=1 -DANDROID__APP=1  -DJUGGLUCO_APP=1 -DUSE_FREETEXT_NOTE=1)
 target_include_directories(g PRIVATE ${NANOVG}  ${INCLUDESELF} ${INCLUDESELF}/share ${INCLUDESELF}/LibAscon/inc ${INCLUDESELF}/include ${INCLUDESELF}/bcrypt)
 target_compile_definitions( g  PRIVATE  -DWEAROS_MESSAGES=1 -DDONTSCALESTROKEWIDTH  -DLIBRENUMBERS=1 )
 

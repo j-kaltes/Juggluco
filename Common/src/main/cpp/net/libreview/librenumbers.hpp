@@ -33,6 +33,10 @@
 #include "../../inout.hpp"
 #include "../../nums/numdata.hpp"
 #include "librelog.hpp"
+#ifdef USE_FREETEXT_NOTE
+#include "../../notes/Notes.hpp"
+extern Notes *notes;
+#endif
 /*
 inline  int loggert( const char* fmt, ...) {
         va_list args;
@@ -82,6 +86,7 @@ inline void	addstrview(char *&uitptr,const std::string_view indata) {
 	uitptr+=indata.size();
 	} */
 
+#include "numcategories.hpp"
 #include "../../nums/libreids.h"
 
 class Libregeg {
@@ -185,7 +190,6 @@ class Numbers: public LibreType {
 	static int writenote(char *buf,std::string_view label,long long recordnum,uint32_t tim,bool del=false) {
 		return writeentry(buf, "type", "com.abbottdiabetescare.informatics.customnote",label,0.0f,recordnum,tim,del);
 		}
-#include "numcategories.hpp"
 static std::string_view getmealtype(const Num &num) {
 	if(num.value>50.0f) {
 		time_t tim=num.time;
@@ -223,12 +227,22 @@ public:
 
  void restel(char *&ptr,const Num &n,Libregeg *ids,bool del=false) {
 	if(isNote(n.type)) {
+		auto recordnum=mkid<note>(del?n.librenr:ids->addnum(n,nextlibrenr()));
+#ifdef USE_FREETEXT_NOTE
+		if(notes && n.mealptr >= 0) {
+			const char* text = notes->gettext(n.mealptr);
+			if(text && *text) {
+				int len= writenote(ptr,std::string_view(text),recordnum,n.time, del);
+				ptr+=len;
+				return;
+			}
+		}
+#endif
 #ifdef NDEBUG
 #define EXTRALABEL 10
 #else
 #define EXTRALABEL 0
 #endif
-		auto recordnum=mkid<note>(del?n.librenr:ids->addnum(n,nextlibrenr()));
 		constexpr const int buflen=12+13+EXTRALABEL;
 		char label[buflen],*labelptr=label;
 		std::string_view typestr=getlabel(n.type);

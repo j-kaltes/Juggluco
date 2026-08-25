@@ -111,7 +111,7 @@ android {
                 version "$CMAKEVERSION"
                 cppFlags  " -DAPPID=\"quotes($applicationId)\"   -DAPPVERSION=\"quotes($versionName)\" "
                 cFlags  " -DAPPID=\"quotes($applicationId)\"   -DAPPVERSION=\"quotes($versionName)\" "
-                arguments "-DJUGGLUCO_APP=TRUE -DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=TRUE   -DCMAKE_EXPORT_COMPILE_COMMANDS=ON "
+                arguments '-DJUGGLUCO_APP=TRUE', '-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=TRUE', '-DCMAKE_EXPORT_COMPILE_COMMANDS=ON', '-DSKIP_RTLPP=TRUE'
 
 
             }

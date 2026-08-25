@@ -982,7 +982,12 @@ extern "C" JNIEXPORT jbyteArray JNICALL fromjava(aidexXstartCommand)(JNIEnv* env
 //21 b3 d5
 
 
+#endif
 
+#include <jni.h>
+#include "fromjava.h"
+#include "logs.hpp"
+#include "streamdata.hpp"
 
 extern "C" JNIEXPORT jint JNICALL   fromjava(getManualWarmupMinutes)(JNIEnv *env, jclass cl,jlong dataptr) {
      if(!dataptr) {
@@ -1036,6 +1041,8 @@ extern "C" JNIEXPORT jint JNICALL   fromjava(getMinimalWarmup)(JNIEnv *env, jcla
      const SensorGlucoseData *sens=reinterpret_cast<const SensorGlucoseData *>(dataptr);
      return sens->getMinimalWarmup();
      }
+
+#ifdef DEXCOM
 
 //AiDEX X-22222A2WC8
 
