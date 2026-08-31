@@ -33,6 +33,8 @@
 #include "../../inout.hpp"
 #include "../../nums/numdata.hpp"
 #include "librelog.hpp"
+#include "../../notes/Notes.hpp"
+extern Notes *notes;
 /*
 inline  int loggert( const char* fmt, ...) {
         va_list args;
@@ -229,6 +231,14 @@ public:
 #define EXTRALABEL 0
 #endif
 		auto recordnum=mkid<note>(del?n.librenr:ids->addnum(n,nextlibrenr()));
+		if(notes) {
+			const char* text = notes->gettext(n.mealptr);
+			if(text && *text) {
+				int len= writenote(ptr,std::string_view(text),recordnum,n.time, del);
+				ptr+=len;
+				return;
+			}
+		}
 		constexpr const int buflen=12+13+EXTRALABEL;
 		char label[buflen],*labelptr=label;
 		std::string_view typestr=getlabel(n.type);

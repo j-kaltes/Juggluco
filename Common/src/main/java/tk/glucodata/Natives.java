@@ -270,7 +270,7 @@ public static native String getbackuphostport(int pos);
 public static native String getbackuppassword(int pos);
 public static native boolean isWearOS(int pos);
 
-public static native int changebackuphost(int pos,String[] names,int nr,boolean detect,String port,boolean nums,boolean stream,boolean scans,boolean recover,boolean receive,boolean activeonly,boolean passiveonly,String pass,long starttime,String label,boolean testip,boolean hasname,String ICElabel,boolean side);
+public static native int changebackuphost(int pos,String[] names,int nr,boolean detect,String port,boolean nums,boolean stream,boolean scans,boolean recover,boolean receive,boolean activeonly,boolean passiveonly,String pass,long starttime,String label,boolean testip,boolean hasname,String ICElabel,boolean side,boolean notes);
 
 
 public static native boolean detectIP(int pos);
@@ -280,6 +280,7 @@ public static native long lastuptodate(int pos);
 public static native boolean getbackuphostnums(int pos);
 public static native boolean getbackuphoststream(int pos);
 public static native boolean getbackuphostscans(int pos);
+public static native boolean getbackuphostnotes(int pos);
 public static native int getbackuphostreceive(int pos);
 public static native boolean getbackuphostactive(int pos);
 public static native boolean getbackuphostpassive(int pos);
@@ -387,6 +388,8 @@ public static native void hitsetmealptr(long ptr,int mealptr);
 
 public static native void setmealvar(byte val);
 public static native byte getmealvar( );
+public static native void setnotevar(byte val);
+public static native byte getnotevar( );
 public static native ArrayList<String> getunits();
 public static native float getroundto( );
 public static native void setroundto(float val);
@@ -719,6 +722,10 @@ public static native void setlibrenum(int night,int index,int kind, float weight
 public static native int getlibrenumkind(int night,int index);
 public static native float getlibrefoodweight(int night,int index);
 public static native boolean canSendNumbers(int night);
+public static native int addNote(int time, String text);
+public static native String getNoteText(int offset);
+public static native void deleteNote(int offset);
+public static native int updateNote(int offset, int time, String text);
 public static native int getinfogen(byte[] info);
 public static native void setStreamHistory(boolean val);
 public static native boolean getStreamHistory( );

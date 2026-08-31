@@ -102,7 +102,7 @@ struct changednums {
         lastlastpos=0;
         }
     };
-int  updatenums(crypt_t *,Connect *connect,struct changednums *nums);
+int  updatenums(crypt_t *,Connect *connect,struct changednums *nums,bool=true);
 inline static constexpr const char backupdat[]="backup.dat";
 inline static constexpr const char orbackup[] ="orbackup.dat";
 //extern int hostsocks[];
@@ -138,7 +138,9 @@ struct updateone {
     bool sendLibre:1;
     bool sendjugglucoid:1;
     uint16_t startSendCalibrate;
-    uint8_t NotUsed[14];
+    bool sendnotes:1;
+    bool NotUsedBits:7;
+    uint8_t NotUsed[13];
     struct changednums nums[2];
     void setCalibrate(uint16_t sensorindex) {
         if(sensorindex<startSendCalibrate)
@@ -593,8 +595,8 @@ void resetall()  {
         }
 //    fill(crypts.begin(),crypts.end(),nullptr);
     }
-void changereceiver(int allindex,int index,const bool sendnums,const bool sendstream,const bool sendscans,const bool restore,const bool haspass,const uint32_t starttime) {
-    LOGGER("changereceiver(allindex=%d,index=%d,sendnums=%d,sendstream=%d,sendscans=%d,haspass=%d,starttime=%u) sendnr=%d\n",allindex,index,sendnums,sendstream,sendscans,haspass,starttime,getupdatedata()->sendnr);
+void changereceiver(int allindex,int index,const bool sendnums,const bool sendstream,const bool sendscans,const bool restore,const bool haspass,const uint32_t starttime,const bool sendnotes=true) {
+    LOGGER("changereceiver(allindex=%d,index=%d,sendnums=%d,sendstream=%d,sendscans=%d,haspass=%d,starttime=%u,sendnotes=%d) sendnr=%d\n",allindex,index,sendnums,sendstream,sendscans,haspass,starttime,sendnotes,getupdatedata()->sendnr);
     if(index==getupdatedata()->sendnr) {
         addsize();
       //  sendsocks.resize(getupdatedata()->sendnr+1,-1);
@@ -621,6 +623,7 @@ void changereceiver(int allindex,int index,const bool sendnums,const bool sendst
     host.sendnums=sendnums;
     host.sendstream=sendstream;
     host.sendscans=sendscans;
+    host.sendnotes=sendnotes;
     host.restore=restore;
 /*
     if(int so=host.getsock();so!=-1) {
@@ -796,10 +799,10 @@ void setactivereceive(int allindex,passhost_t *ph,bool startthread=true) {
        }
 
 
-int changeICEhost(const char *ICElabel,int index,const bool sendnums,const bool sendstream,const bool sendscans,const bool receive,string_view pass,uint32_t starttime,const char *label,bool side,bool startthreads=true);
-int changehost(int index,JNIEnv *env,jobjectArray jnames,int nr,bool detect,string_view port,const bool sendnums,const bool sendstream,const bool sendscans,const bool restore,const bool receive,const bool activeonly,string_view pass,uint32_t starttime,bool passiveonly,const char *label=nullptr,const bool testip=true,bool startthreads=true,bool hashostname=false) {
+int changeICEhost(const char *ICElabel,int index,const bool sendnums,const bool sendstream,const bool sendscans,const bool receive,string_view pass,uint32_t starttime,const char *label,bool side,bool startthreads=true,const bool sendnotes=true);
+int changehost(int index,JNIEnv *env,jobjectArray jnames,int nr,bool detect,string_view port,const bool sendnums,const bool sendstream,const bool sendscans,const bool restore,const bool receive,const bool activeonly,string_view pass,uint32_t starttime,bool passiveonly,const char *label=nullptr,const bool testip=true,bool startthreads=true,bool hashostname=false,const bool sendnotes=true) {
     const int hostnr=getupdatedata()->hostnr;
-    LOGGER("hostnr=%d changehost(%d,sendnums=%d,sendstream=%d,sendscans=%d,receive=%d,activeonly=%d,passiveonly=%d,label=%s port=%s nr=%d hashostname=%d\n",hostnr,index,sendnums,sendstream,sendscans,receive,activeonly,passiveonly,label,port.data(),nr,hashostname);
+    LOGGER("hostnr=%d changehost(%d,sendnums=%d,sendstream=%d,sendscans=%d,receive=%d,activeonly=%d,passiveonly=%d,label=%s port=%s nr=%d hashostname=%d,sendnotes=%d)\n",hostnr,index,sendnums,sendstream,sendscans,receive,activeonly,passiveonly,label,port.data(),nr,hashostname,sendnotes);
     if(index<0) 
         index=hostnr;
     if(index>=maxallhosts)  {
@@ -856,7 +859,7 @@ int changehost(int index,JNIEnv *env,jobjectArray jnames,int nr,bool detect,stri
             tohost=thehost.index;
             }
 
-        changereceiver(index,tohost,sendnums,sendstream,sendscans,restore,pass.size(),starttime);
+        changereceiver(index,tohost,sendnums,sendstream,sendscans,restore,pass.size(),starttime,sendnotes);
         thehost.sendpassive=dontopen;
         }
     else {

@@ -30,6 +30,9 @@ extern float tapx,tapy;
 #include "meal/Meal.hpp"
 #include "searchgegs.hpp"
 extern Meal *meals;
+#include "../notes/Notes.hpp"
+#include "../net/libreview/numcategories.hpp"
+extern Notes *notes;
 extern int carbotype;
 extern int *numheights;
 extern int shownumbers;
@@ -124,8 +127,20 @@ template <class TX,class TY> void NumDisplay::showNums(JCurve&jcurve, const TX &
 			else {
 				ypos=jcurve.numtypeheight(it->type);
 				constexpr int maxbuf=20;
-				char buf[maxbuf];	
-				nvgText(vg, xpos,ypos, buf, buf+ snprintf(buf,maxbuf,"%g",it->value));
+				char buf[maxbuf];
+				if(isNote(it->type) && notes) {
+					const char* text = notes->gettext(it->mealptr);
+					if(*text) {
+						shortnotetext(text, buf);
+						nvgText(vg, xpos, ypos, buf, buf+strlen(buf));
+					} else {
+						nvgText(vg, xpos,ypos, buf, buf+ snprintf(buf,maxbuf,"%g",it->value));
+					}
+				}
+				else
+				{
+					nvgText(vg, xpos,ypos, buf, buf+ snprintf(buf,maxbuf,"%g",it->value));
+				}
 				if(jcurve.showmeals&&it->type==carbotype) {
 					mealdisplay(jcurve,xpos,ypos,it);	
 					}
@@ -149,8 +164,8 @@ template <class TX,class TY> void NumDisplay::showNums(JCurve&jcurve, const TX &
 						{
 					if(selshown)
 						continue;
-					 constexpr int maxbuf=50;
-					 char buf[maxbuf];
+ 					 constexpr int maxbuf=64;
+ 					 char buf[maxbuf];
 					 const time_t tim= it->time;
 					 struct tm *tms=localtime(&tim);
 					jcurve.lasttouchedcolor=colorindex;
@@ -167,14 +182,24 @@ template <class TX,class TY> void NumDisplay::showNums(JCurve&jcurve, const TX &
 						nvgText(vg, xpos,ypos-(hit?2.4:2)*jcurve.smallsize, buf, buf+buflen);
 
 #ifndef DONTTALK
-					if(speakout) {
+ 					if(speakout) {
                         std::string_view label=settings->getlabel(it->type);
                         const int maxbuf= label.size()+5;
                         char rtllabel[maxbuf];
                         rtl_to_logical_utf8(label.data(), rtllabel,maxbuf) ;
-						sprintf(buf2,"\n%s\n%g",rtllabel,it->value);
-						speak(buf);
-						}
+ 						char valbuf[notemaxdisplay+4];
+ 						if(isNote(it->type)&&notes) {
+ 							const char *text=notes->gettext(it->mealptr);
+ 							if(*text)
+ 								shortnotetext(text,valbuf);
+ 							else
+ 								snprintf(valbuf,sizeof(valbuf),"%g",it->value);
+ 							}
+ 						else
+ 							snprintf(valbuf,sizeof(valbuf),"%g",it->value);
+ 						sprintf(buf2,"\n%s\n%s",rtllabel,valbuf);
+ 						speak(buf);
+ 						}
 #endif
 
 					}

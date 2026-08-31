@@ -2487,6 +2487,15 @@ menu→Settings→Exchange data→ <b><a href="https://www.juggluco.nl/Jugglucoh
 Labels</a> is also specified under which label you enter the
 carbohydrates of a meal. In <i>New amount</i>, a <b>Meal</b> button
 is displayed for this label. Tapping this <a href="https://www.juggluco.nl/Jugglucohelp/mealhelp.html"><i>Meal</i></a> button brings up a screen where you build the meal from its ingredients. The total carbohydrate content is then calculated for you. Alternatively, you can give the desired carbohydrate amount, and Juggluco will calculate how much of one ingredient you need.</p>
+<p>Under Left menu-&gt;Settings-&gt;<a href="https://www.juggluco.nl/Jugglucohelp/labelhelp.html">Number
+Labels</a> is also specified under which label you enter free text
+<b>Notes</b>. When this label is selected in <i>New amount</i>, a
+<b>Notes</b> button appears, just like the <i>Meal</i> button.
+Tapping this button opens a text editor in which you can enter a
+short note. The note is displayed (shortened) in the graph and in
+the list of amounts, and is uploaded to LibreView as a note. In the
+settings of a mirror connection, the <b>Notes</b> checkbox
+determines whether notes are transferred to the other device.</p>
 <p><b>Exclude</b>: Exclude a blood glucose measurement from <a href="https://www.juggluco.nl/Jugglucohelp/calibrationhelp.html">calibrations</a>,
 because the glucose level is rising or falling or the sensor is still
 warming up.

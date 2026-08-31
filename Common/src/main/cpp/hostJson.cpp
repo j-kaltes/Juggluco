@@ -108,6 +108,7 @@ std::string mkbackjson(int pos) {
             inserter=insertbool(inserter, "nums",!send.sendnums);
             inserter=insertbool(inserter, "scans",!send.sendscans);
             inserter=insertbool(inserter, "stream",!send.sendstream);
+            inserter=insertbool(inserter, "notes",!send.sendnotes);
             const bool receives=!(send.sendnums&& send.sendscans&&send.sendstream);
             inserter=insertbool(inserter, "receive",receives);
             }
@@ -115,6 +116,7 @@ std::string mkbackjson(int pos) {
             inserter=insertbool(inserter, "nums",true);
             inserter=insertbool(inserter, "scans",true);
             inserter=insertbool(inserter, "stream",true);
+            inserter=insertbool(inserter, "notes",true);
              }
          }
      else {

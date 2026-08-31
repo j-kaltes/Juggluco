@@ -32,6 +32,8 @@
      <string name="bluetoothenabled">Bluetooth aktiviert</string>
      <string name="bluetoothdisabled">Bluetooth deaktiviert</string>
      <string name="amountsname">Mengen</string>
+     <string name="notesname">Notizen</string>
+     <string name="notename">Notiz</string>
      <string name="mealsname">Mahlzeiten</string>
      <string name="closename">Schließen</string>
      <string name="exporthelp">Speichert bis zum letzten auf dem Bildschirm angezeigten Wert. Der Anfang ist die Anzahl der angegebenen Tage zurück in der Zeit.</string>

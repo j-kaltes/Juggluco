@@ -41,6 +41,7 @@
 #include "datbackup.hpp"
 #include "meal/Meal.hpp"
 #include "num.h"
+#include "net/libreview/numcategories.hpp"
 //extern void wakeaftermin(const int waitmin) ;
 //extern void wakeuploader();
 
@@ -619,7 +620,7 @@ Num * numsaveonly( const uint32_t time, const float32_t value, const uint32_t ty
         *num={.time=time,.exclude=(bool)mealptrin,.value=value,.type=type};
         }
     else {
-        uint32_t mealptr=meals->datameal()->endmeal(mealptrin);
+        uint32_t mealptr=isNote(type)?(uint32_t)mealptrin:meals->datameal()->endmeal(mealptrin);
         *num={.time=time,.mealptr=mealptr,.value=value,.type=type};
         }
     inclastpos();
@@ -651,7 +652,7 @@ void numsavepos(int pos, uint32_t time, float32_t value, uint32_t type,uint32_t 
     else {
         std::lock_guard<std::mutex> lck(nummutex);
         LOGGERTAG("numsavepos %d %d %f %s\n",pos,mealptr,value,settings->getlabel(type).data());
-        if(mealptr&&type!=settings->data()->bloodvar&&!meals->datameal()->goodmeal(mealptr)) {
+        if(mealptr&&type!=settings->data()->bloodvar&&!isNote(type)&&!meals->datameal()->goodmeal(mealptr)) {
             mealptr=0;
             }
         Num &num=at(pos);
@@ -933,7 +934,7 @@ void numchange(const Num *hit, uint32_t time, float32_t value, uint32_t type,uin
     LOGGERTAG("Start numchange oldpos=%d\n",oldpos);
     addlibrenumsdeleted(hit,oldpos);
    // if(mealptr==0&&type!=settings->data()->bloodvar)
-    if(mealptr==0&&type!=settings->data()->bloodvar&&hit->type!=settings->data()->bloodvar)
+    if(mealptr==0&&type!=settings->data()->bloodvar&&hit->type!=settings->data()->bloodvar&&!isNote(type))
         mealptr=hit->mealptr;
 
     Num *num;
@@ -989,7 +990,8 @@ void numchange(const Num *hit, uint32_t time, float32_t value, uint32_t type,uin
         *num={.time=time,.exclude=(bool)mealptr,.value=value,.type=type};
         }
     else {
-        mealptr=meals->datameal()->endmeal(mealptr);
+        if(!isNote(type))
+            mealptr=meals->datameal()->endmeal(mealptr);
         *num={.time=time,.mealptr=mealptr,.value=value,.type=type};
         }
 
@@ -1324,13 +1326,13 @@ uint32_t findEarlymeal(int pos) const {
     }
 public:
 static inline constexpr const int intinnum=(sizeof(Num)/sizeof(uint32_t));
-int update(crypt_t*pass,Connect *connect,struct changednums *nuall,int ind) {
+int update(crypt_t*pass,Connect *connect,struct changednums *nuall,int ind,bool sendnotes=true) {
 //     NUMLOCKGUARD
     nummutexupdate.lock();
     updatebusy[ind]=false; //Otherwise it has lock in network operation and which can lead to an ANR kill off app.
     const int  dbindex=getindex();
     struct changednums *nu=nuall+dbindex;    
-    LOGGER("numdata: update ind=%d dbindex=%d nu->len=%d\n",ind,dbindex,nu->len);
+    LOGGER("numdata: update ind=%d dbindex=%d nu->len=%d sendnotes=%d\n",ind,dbindex,nu->len,sendnotes);
     struct numspan *ch=nu->changed;
     int endpos=getlastpos();
 
@@ -1374,24 +1376,51 @@ int update(crypt_t*pass,Connect *connect,struct changednums *nuall,int ind) {
         LOGGERTAG("update numsend dbase=%d nr=%d totlen=%d last=%d\n",dbase,offoutnr,totlen,endpos);
         uint32_t *numsar=uitnums->nums;
         const Num *start=startdata();
-        for(int i=nu->len-1;i>=0;i--) {
-            const int chend=ch[i].end==0?endpos:ch[i].end;
-            const int chstart=ch[i].start;
-            if(chstart<chend) {    
-                *numsar++=chstart;
-                const int nr=chend-chstart;
-                LOGGERTAG("NUM SN%d: %d (%d)\n",dbase,chstart,nr);
-                *numsar++=nr;
-                const int datlen=nr*sizeof(Num);
-
-                memcpy(numsar,start+chstart,datlen);
-
-                numsar+=nr*intinnum;
+        uint32_t actualnr=0;
+        uint32_t actualtotlen=sizeof(numsend);
+        auto emitrange=[&](int chstart,int nr) {
+            *numsar++=chstart;
+            LOGGERTAG("NUM SN%d: %d (%d)\n",dbase,chstart,nr);
+            *numsar++=nr;
+            memcpy(numsar,start+chstart,nr*sizeof(Num));
+            numsar+=nr*intinnum;
+            ++actualnr;
+            actualtotlen+=nr*sizeof(Num)+2*sizeof(uint32_t);
+            };
+        if(sendnotes) {
+            for(int i=nu->len-1;i>=0;i--) {
+                const int chend=ch[i].end==0?endpos:ch[i].end;
+                const int chstart=ch[i].start;
+                if(chstart<chend)
+                    emitrange(chstart,chend-chstart);
                 }
             }
+        else {
+            for(int i=nu->len-1;i>=0;i--) {
+                const int chend=ch[i].end==0?endpos:ch[i].end;
+                const int chstart=ch[i].start;
+                if(chstart<chend) {
+                    int runstart=-1;
+                    for(int j=chstart;j<chend;j++) {
+                        if(isNote(start[j].type)) {
+                            if(runstart>=0) {
+                                emitrange(runstart,j-runstart);
+                                runstart=-1;
+                                }
+                            }
+                        else if(runstart<0)
+                            runstart=j;
+                        }
+                    if(runstart>=0)
+                        emitrange(runstart,chend-runstart);
+                    }
+                }
+            uitnums->nr=actualnr;
+            uitnums->totlen=actualtotlen;
+            }
         nummutexupdate.unlock();
-         if(!connect->sendcommand(pass, destructptr.get(),totlen)) {
-            LOGGERTAG("update sendcommand failed dbase=%d totlen=%d\n",dbase,totlen);
+         if(!connect->sendcommand(pass, destructptr.get(),uitnums->totlen)) {
+            LOGGERTAG("update sendcommand failed dbase=%d totlen=%d\n",dbase,uitnums->totlen);
              return 0;
              }
         ret=1;

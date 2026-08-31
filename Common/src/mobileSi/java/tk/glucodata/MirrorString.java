@@ -77,6 +77,7 @@ static String makestring(String[] names,int nr,boolean detect,String port,boolea
             boolean nums=json.optBoolean("nums",false);
             boolean stream=json.optBoolean("stream",false);
             boolean scans=json.optBoolean("scans",false);
+            boolean notes=json.optBoolean("notes",true);
             boolean receive=json.optBoolean("receive",false);
             boolean activeonly=json.optBoolean("activeonly",false);
             boolean passiveonly=json.optBoolean("passiveonly",false);
@@ -86,7 +87,7 @@ static String makestring(String[] names,int nr,boolean detect,String port,boolea
             boolean testip=json.optBoolean("testip",false);
             boolean hasname=json.optBoolean("hasname",false);
             Runnable save=()-> {
-               int pos=Natives.changebackuphost(-1,names,nr,detect,port, nums,stream,scans,false,receive,activeonly,passiveonly,pass,starttime,label,testip,hasname,ICElabel,side);
+               int pos=Natives.changebackuphost(-1,names,nr,detect,port, nums,stream,scans,false,receive,activeonly,passiveonly,pass,starttime,label,testip,hasname,ICElabel,side,notes);
                if(pos<0) {
                       String mess=changehostError(act,pos);
                       Log.i(LOG_ID,mess);

@@ -34,6 +34,8 @@ bool isRTL() {
 bool bluetoothEnabled();
 #include "numdisplay.hpp"
 extern vector<NumDisplay*> numdatas;
+#include "../notes/Notes.hpp"
+extern Notes *notes;
 #include "numiter.hpp"
 NumIter<Num> *numiters=nullptr;
 int basecount;
@@ -825,7 +827,15 @@ static void speaknum(const Num *num) {
     memcpy(ptr,label.data(),label.size());
     ptr+= label.size();
     *ptr++='\n';
-    ptr+=sprintf(ptr,"%g",num->value);
+    if(isNote(num->type)&&notes) {
+        const char *text=notes->gettext(num->mealptr);
+        if(*text)
+            ptr+=sprintf(ptr,"%s",text);
+        else
+            ptr+=sprintf(ptr,"%g",num->value);
+        }
+    else
+        ptr+=sprintf(ptr,"%g",num->value);
     *ptr++='\n';
     *ptr++='\n';
 #ifndef NOLOG

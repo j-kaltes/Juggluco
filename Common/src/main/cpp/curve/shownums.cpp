@@ -26,6 +26,9 @@
 #include "settings/settings.hpp"
 #include "curve.hpp"
 #include "JCurve.hpp"
+#include "../notes/Notes.hpp"
+#include "../net/libreview/numcategories.hpp"
+extern Notes *notes;
 
  //statusbarleft=left;
  //statusbarright=right;
@@ -151,8 +154,18 @@ void	JCurve::shower(NVGcontext* vg,const Num *num,const float xpos,const float x
 	nvgTextAlign(vg,NVG_ALIGN_LEFT|NVG_ALIGN_TOP);
 	item[itemlen]='\0';
 	nvgText(vg, xpos,ypos,item,item+itemlen);
-	itemlen=snprintf(item,maxitem, "%.1f",num->value); 
-	nvgTextAlign(vg,NVG_ALIGN_RIGHT|NVG_ALIGN_TOP); 
+	if(isNote(num->type)&&notes) {
+		const char *text=notes->gettext(num->mealptr);
+		if(*text) {
+			char notebuf[notemaxdisplay+4];
+			shortnotetext(text,notebuf);
+			nvgTextAlign(vg,NVG_ALIGN_RIGHT|NVG_ALIGN_TOP);
+			nvgText(vg, xend,ypos,notebuf,notebuf+strlen(notebuf));
+			return;
+			}
+		}
+	itemlen=snprintf(item,maxitem, "%.1f",num->value);
+	nvgTextAlign(vg,NVG_ALIGN_RIGHT|NVG_ALIGN_TOP);
 	nvgText(vg, xend,ypos,item,item+itemlen);
 	}
 

@@ -254,6 +254,14 @@ extern "C" JNIEXPORT jboolean JNICALL   fromjava(getbackuphostscans)(JNIEnv *env
         }
     return false;
     }
+extern "C" JNIEXPORT jboolean JNICALL   fromjava(getbackuphostnotes)(JNIEnv *envin, jclass cl,jint pos) {
+    if(pos<backup->getupdatedata()->hostnr) {
+        int index=backup->getupdatedata()->allhosts[pos].index;
+        if(index>=0)
+            return  backup->getupdatedata()->tosend[index].sendnotes;
+        }
+    return true;
+    }
 extern "C" JNIEXPORT void JNICALL   fromjava(setreceiveport)(JNIEnv *env, jclass cl,jstring jport) {
     jint portlen= env->GetStringUTFLength( jport);
     if(portlen<6) {
@@ -304,12 +312,12 @@ extern "C" JNIEXPORT jboolean JNICALL   fromjava(stringarray)(JNIEnv *env, jclas
 #include <mutex>
 extern std::mutex change_host_mutex;
 #endif
-extern "C" JNIEXPORT jint JNICALL   fromjava(changebackuphost)(JNIEnv *env, jclass cl,jint pos,jobjectArray jnames,jint nr,jboolean detect,jstring jport,jboolean nums,jboolean stream,jboolean scans,jboolean recover,jboolean receive,jboolean activeonly,jboolean passiveonly,jstring jpass,jlong starttime,jstring jlabel,jboolean testip,jboolean hashostname,jstring jICElabel,jboolean side) {
+extern "C" JNIEXPORT jint JNICALL   fromjava(changebackuphost)(JNIEnv *env, jclass cl,jint pos,jobjectArray jnames,jint nr,jboolean detect,jstring jport,jboolean nums,jboolean stream,jboolean scans,jboolean recover,jboolean receive,jboolean activeonly,jboolean passiveonly,jstring jpass,jlong starttime,jstring jlabel,jboolean testip,jboolean hashostname,jstring jICElabel,jboolean side,jboolean notes) {
 #ifndef TESTMENU
     LOGAR("changebackuphost const std::lock_guard<std::mutex> lock(change_host_mutex)");
   const std::lock_guard<std::mutex> lock(change_host_mutex);
 #endif
-LOGGER("changebackuphost(%d,%p,%d,%d,%p,%d,%d,%d,%d%,%d,%d,%d,%p,%ld,%p,%d,%d)\n", pos, jnames, nr, detect, jport, nums, stream, scans, recover, receive, activeonly, passiveonly, jpass, starttime, jlabel, testip, hashostname);
+LOGGER("changebackuphost(%d,%p,%d,%d,%p,%d,%d,%d,%d%,%d,%d,%d,%p,%ld,%p,%d,%d,%d)\n", pos, jnames, nr, detect, jport, nums, stream, scans, recover, receive, activeonly, passiveonly, jpass, starttime, jlabel, testip, hashostname, notes);
     char *passptr=nullptr;
     jint passlen=0;
     if(jpass) {
@@ -322,7 +330,7 @@ LOGGER("changebackuphost(%d,%p,%d,%d,%p,%d,%d,%d,%d%,%d,%d,%d,%p,%ld,%p,%d,%d)\n
      jint res;
      if(jICElabel) {
         const char *ICElabel=env->GetStringUTFChars( jICElabel, NULL);
-        res=backup->changeICEhost(ICElabel,pos,nums,stream,scans,receive,std::string_view(passptr,passlen),starttime,label,side,true);
+        res=backup->changeICEhost(ICElabel,pos,nums,stream,scans,receive,std::string_view(passptr,passlen),starttime,label,side,true,notes);
         env->ReleaseStringUTFChars(jICElabel, ICElabel);
         }
      else {
@@ -331,7 +339,7 @@ LOGGER("changebackuphost(%d,%p,%d,%d,%p,%d,%d,%d,%d%,%d,%d,%d,%p,%ld,%p,%d,%d)\n
         char port[portlen+1]; 
         env->GetStringUTFRegion( jport, 0,jlen, port); port[portlen]='\0';
         const int arlen=jnames?std::min(env->GetArrayLength(jnames),nr):0;
-        res=backup->changehost(pos,env,jnames,arlen,detect,std::string_view(port,portlen),nums,stream,scans,recover,receive,activeonly,std::string_view(passptr,passlen),starttime,passiveonly,label,testip,true,hashostname);
+        res=backup->changehost(pos,env,jnames,arlen,detect,std::string_view(port,portlen),nums,stream,scans,recover,receive,activeonly,std::string_view(passptr,passlen),starttime,passiveonly,label,testip,true,hashostname,notes);
         }
     if(jlabel)
         env->ReleaseStringUTFChars(jlabel, label);
