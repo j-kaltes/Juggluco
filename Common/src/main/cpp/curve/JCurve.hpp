@@ -27,6 +27,9 @@ struct displaytime;
 struct ScanData;
 struct NumHit;
 struct Num;
+
+struct ScanData;
+struct Glucose;
 template <class T> struct NumIter;
 class SensorGlucoseData; 
 union bounds_t ;
@@ -492,6 +495,13 @@ bool allvalues=false;
 bool CalibratePast=false;
 
 void setsearchshow(int type);
+
+const ScanData * findCalibratedScan(const SensorGlucoseData  *sens,const ScanData *start,const ScanData *en) const ;
+const Glucose * findCalibratedHistory(const SensorGlucoseData  * sens, const uint32_t firstpos, const uint32_t lastpos)  const ;
+const ScanData * findforwardCalibratedScan(const SensorGlucoseData  *sens, const ScanData *start,const ScanData *en)  const ;
+const Glucose * findforwardCalibratedHistory(const SensorGlucoseData  * hist, const uint32_t firstpos, const uint32_t lastpos)  const ;
+
+
 };
 struct AppCurve:JCurve {
     AppCurve() { }

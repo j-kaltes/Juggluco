@@ -388,6 +388,8 @@ int64_t JCurve::doehier(int menu,int item,bool right) {
     return -1LL;
     }
 #else
+
+extern int androidSDK; 
 int64_t JCurve::doehier(int menu,int item,bool right) {
     switch(menu) {
         case 0: 
@@ -396,6 +398,11 @@ int64_t JCurve::doehier(int menu,int item,bool right) {
                     showui=!showui;
                     settings->setui(showui);
                     break;
+                case 1:
+                     if(androidSDK<24) 
+                        return -1LL;
+                        
+                      break;
 #if 0
               case 1:
                 extern void libre2tester() ;
@@ -629,7 +636,10 @@ int64_t JCurve::screentap(float x,float y) {
         if(showmeals) {
             const float crit= (density*10);
             for(mealposition &p:mealpos) {
-                if((y>=p.mealstarty&&y<p.mealendy)&&abs(x-p.mealx)<crit)
+                const bool mealhit=portraitReadable()
+                    ? ((x>=p.mealstarty&&x<p.mealendy)&&abs(y-p.mealx)<crit)
+                    : ((y>=p.mealstarty&&y<p.mealendy)&&abs(x-p.mealx)<crit);
+                if(mealhit)
                     return (static_cast<int64_t>(p.mealpos)<<16)|((static_cast<int64_t> (p.mealbase)&0xf)<<8)|0xe;
                 }
 
@@ -2802,7 +2812,7 @@ int getglucosestr(double nonconvert,char *glucosestr,int maxglucosestr,int gluco
    int32_t  gluval=last.getmgdL() ;
    if(calibrate) {
         auto cali= make_calibrator<ScanData>(hist);
-        if(double calibrated=cali.calibrateONE(last.t,gluval);!isnan(calibrated)) { 
+        if(double calibrated=cali.calibrateONE(last.t,gluval,CalibratePast);!isnan(calibrated)) { 
               gluval=std::round(calibrated);
               }
         }
@@ -3016,24 +3026,6 @@ void    JCurve::startstep(NVGcontext* avg,const NVGcolor &col) {
             }
         }
 
-float JCurve::drawText(NVGcontext* avg,float x,float y,const char *start,const char *end) {
-    if(!portraitReadable())
-        return nvgText(avg,x,y,start,end);
-
-    /*
-     * Geometry is rotated in portrait mode, but labels should remain readable.
-     * Convert the logical anchor point to physical portrait coordinates and
-     * draw the glyphs with an identity transform.  Text alignment/font state is
-     * deliberately preserved by nvgSave/nvgRestore.
-     */
-    const float physicalx=y;
-    const float physicaly=(float)surfaceheight-x;
-    nvgSave(avg);
-    nvgResetTransform(avg);
-    const float result=nvgText(avg,physicalx,physicaly,start,end);
-    nvgRestore(avg);
-    return result;
-    }
 
 void    JCurve::endstep(NVGcontext* avg) {
     nvgEndFrame(avg);

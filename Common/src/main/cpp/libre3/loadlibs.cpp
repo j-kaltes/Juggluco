@@ -12,9 +12,22 @@
 
 extern "C" __attribute__((used, visibility("default")))
 const char L3_PROCESS_BUILD_ID[] =
-    "L3_PROCESS_BUILD_ID=libre3_process_app_garmin_final_size7_2026-08-15 "
+    "L3_PROCESS_BUILD_ID=libre3_process_app_flat_core_size8_2026-08-29 "
     "features=mont32,r3_import,a_minus3,round_notrace,parent_live6860,"
-    "final_ws_live7756,shared_scratch1,fixed_core132,hidden_gc"
+    "final_ws_live7756,shared_scratch1,fixed_core132,flat_core,"
+    "fixed_materials,phase_union,root_frame66,challenge_ctx_cached,"
+    "portable_hmac_sha1,ccm_fixed,ccm_decrypt_single_pass,hidden_gc"
+    ",digest_ws3200,root_stack_reuse"
+#if defined(L3_SAVED_AUTH_ONLY)
+    ",saved_auth_only"
+#else
+    ",fresh_auth_enabled"
+#endif
+#if defined(L3_EXTERNAL_ENTROPY_ONLY)
+    ",external_entropy"
+#else
+    ",libcrypto_rand"
+#endif
 #if defined(L3_LIBRE3_SIZE3_IPO)
     ",ipo_lto"
 #else
@@ -32,7 +45,7 @@ const char L3_PROCESS_BUILD_ID[] =
 #endif
     ",direct_authroot,digest_safe,f407_words176,lazy_f407_output"
     ",f407_direct_byte,ccm60_scratch "
-    "base=size6_sensor_ok";
+    "base=size7_sensor_ok_2weeks";
 
 
 namespace {
@@ -298,7 +311,7 @@ fromjava(libre3DeriveAuthorizationRoot)(JNIEnv *env, jclass, jlong context,
 #ifndef NOLOG
     LOGGER("libre3DeriveAuthorizationRoot(%p,publicKey#%zu)=%d stage=%u\n",
            static_cast<void *>(security), publicKey.size(), rc,
-           security->engine.authorization_root_stage);
+           security->core.authorization_root_stage);
     log_hex_bytes("L3AUTH patch_ephemeral_public65", publicKey.data(), publicKey.size());
     log_authorization_root("after_fresh_derive", security);
 #endif

@@ -371,19 +371,23 @@ bool usedScript[SCR_COUNT]{};
 
 extern const jugglucotext hitext;
 
+
+static bool didinitScriptFonts=false;
 bool initScriptFonts(const FontUse &fontuse) {
-   bool ret=false;
-   auto doinit{[](const FontUse &fontuse,bool&ret){
-            LOGAR("initScriptFonts");
-            int len=settings->getlabelcount();
-            for(int i=0;i<len;i++) {
-                   useFontsForName(fontuse, settings->getlabel(i).data());
-                   }
-            ret=true;
-            return true;
-            }};
-   const static bool init=doinit(fontuse,ret);;
-   return ret;
+   if(didinitScriptFonts)
+        return false;
+    LOGAR("initScriptFonts");
+    int len=settings->getlabelcount();
+    for(int i=0;i<len;i++) {
+           useFontsForName(fontuse, settings->getlabel(i).data());
+           }
+   didinitScriptFonts=true;
+   return true;
+   }
+extern void askReinitScriptFonts();
+void askReinitScriptFonts() {
+   didinitScriptFonts=false;
+   LOGAR("askReinitScriptFonts()");
    }
 void    JCurve::initfont(NVGcontext* avg) { 
 CURVELOGAR("initfont");
@@ -447,7 +451,7 @@ if(usedtext==&artext) {
 
 }
 else
-if(usedtext==&zhtext||usedtext==&jatext||usedtext==&kotext) {
+if(usedtext==&zhtext||usedtext==&jatext) {
      enableScript(fontuse, SCR_CJK);
 #ifdef JUGGLUCO_APP
     if(-1==(menufont = nvgCreateFont(avg, "regular",
@@ -2183,7 +2187,7 @@ int    JCurve::displaycurve(NVGcontext* avg,time_t nu) {
     std::pair<const ScanData*,const ScanData*> caliStreamSpans[histlen];
     if(showcalibratedstream)   {
         typedef decltype(make_calibrator<ScanData>( (const SensorGlucoseData*)nullptr)) CaliType;
-        auto califunc=settings->data()->CalibratePast?(&CaliType::makecalibratedback):(&CaliType::makecalibrated);
+        auto califunc=CalibratePast?(&CaliType::makecalibratedback):(&CaliType::makecalibrated);
         for(int i=histlen-1;i>=0;i--) {
             const int index= hists[i];
             const auto *sens=sensors->getSensorData(index);
@@ -2208,7 +2212,7 @@ int    JCurve::displaycurve(NVGcontext* avg,time_t nu) {
     std::pair<const ScanData*,const ScanData*> caliScansSpans[histlen];
     if(showcalibratedscans)   {
         typedef decltype(make_calibrator<ScanData>( (const SensorGlucoseData*)nullptr)) CaliType;
-        auto califunc=settings->data()->CalibratePast?(&CaliType::makecalibratedback):(&CaliType::makecalibrated);
+        auto califunc=CalibratePast?(&CaliType::makecalibratedback):(&CaliType::makecalibrated);
         for(int i=histlen-1;i>=0;i--) {
             const int index= hists[i];
             const auto *sens=sensors->getSensorData(index);
@@ -2466,11 +2470,14 @@ bool hebrew() {
 
 #include "destruct.hpp"
 extern void      removemenus(const jugglucotext* text);
+extern int androidSDK; 
+int androidSDK=-1; 
 void     JCurve::setlocale(NVGcontext* avg,const char *localestrbuf,const size_t len,int sdk) {
     CURVELOGGER("locale=%s\n",localestrbuf);
     localestr={localestrbuf,len};
     uint16_t langid=mklanguagenumlow(localestrbuf);
     auto *text=language::gettext(langid);
+    androidSDK=sdk;
 #ifdef JUGGLUCO_APP
     #ifndef WEAROS
     if(sdk<24)
@@ -3014,3 +3021,33 @@ int    JCurve::showLargevalue(NVGcontext* avg, int index,float getx,float gety,f
 float                JCurve::getboxwidth(const float x) {
                     return std::max((float)(dwidth-x-smallsize),dwidth*.25f);
                     }
+
+
+
+
+    extern int updateMirrorSides();
+    int updateMirrorSides();
+
+float JCurve::drawText(NVGcontext* avg,float x,float y,const char *start,const char *end) {
+
+    #ifdef JUGGLUCO_APP
+    if(!portraitReadable())
+    #endif
+        return nvgText(avg,x,y,start,end);
+
+    /*
+     * Geometry is rotated in portrait mode, but labels should remain readable.
+     * Convert the logical anchor point to physical portrait coordinates and
+     * draw the glyphs with an identity transform.  Text alignment/font state is
+     * deliberately preserved by nvgSave/nvgRestore.
+     */
+    #ifdef JUGGLUCO_APP
+    const float physicalx=y;
+    const float physicaly=(float)surfaceheight-x;
+    nvgSave(avg);
+    nvgResetTransform(avg);
+    const float result=nvgText(avg,physicalx,physicaly,start,end);
+    nvgRestore(avg);
+    return result;
+    #endif
+    }

@@ -169,13 +169,21 @@ set_source_files_properties( ${L3HOOK} PROPERTIES COMPILE_OPTIONS "-marm")
 if(libre3)
 
 
-set(LIBRE3SRC
+option(LIBRE3_SAVED_AUTH_ONLY
+       "Build only saved-KAuth import/export and challenge operations" OFF)
+option(LIBRE3_EXTERNAL_ENTROPY_ONLY
+       "Require caller entropy instead of libcrypto RAND_bytes" OFF)
+
+set(LIBRE3_COMMON
     ${INCLUDESELF}/libre3/process/whitebox_lookup_table.c
-    ${INCLUDESELF}/libre3/process/openssl_symbols.c
-    ${INCLUDESELF}/libre3/process/libre3_handshake.c
-    ${INCLUDESELF}/libre3/process/libre3_security_engine.c
+    ${INCLUDESELF}/libre3/process/hmac_sha1_portable.c
+    ${INCLUDESELF}/libre3/process/libre3_app_core.c
     ${INCLUDESELF}/libre3/process/saved_authorization_record.c
     ${INCLUDESELF}/libre3/process/sensor_security_context.c
+    ${INCLUDESELF}/libre3/process/challenge_cipher_context.c
+)
+
+set(LIBRE3_FRESH_AUTHORIZATION
     ${INCLUDESELF}/libre3/process/p256_private_scalar_codec.c
     ${INCLUDESELF}/libre3/process/fixed_app_private_keys.c
     ${INCLUDESELF}/libre3/process/p256_scalar_multiply.c
@@ -188,14 +196,23 @@ set(LIBRE3SRC
     ${INCLUDESELF}/libre3/process/authorization_vector_feedback.c
     ${INCLUDESELF}/libre3/process/authorization_round_driver.c
     ${INCLUDESELF}/libre3/process/authorization_shared_point_core.c
-    ${INCLUDESELF}/libre3/process/openssl_loader.cpp
     ${INCLUDESELF}/libre3/process/authorization_shared_point_frames.c
     ${INCLUDESELF}/libre3/process/authorization_shared_point_tail.c
     ${INCLUDESELF}/libre3/process/authorization_frame_transform.c
     ${INCLUDESELF}/libre3/process/authorization_digest.c
     ${INCLUDESELF}/libre3/process/authorization_finalizer.c
-    ${INCLUDESELF}/libre3/process/challenge_cipher_context.c
 )
+
+set(LIBRE3SRC ${LIBRE3_COMMON})
+if(NOT LIBRE3_SAVED_AUTH_ONLY)
+    list(APPEND LIBRE3SRC ${LIBRE3_FRESH_AUTHORIZATION})
+    if(NOT LIBRE3_EXTERNAL_ENTROPY_ONLY)
+        list(APPEND LIBRE3SRC
+            ${INCLUDESELF}/libre3/process/openssl_symbols.c
+            ${INCLUDESELF}/libre3/process/openssl_loader.cpp
+        )
+    endif()
+endif()
 
 
 # OpenSSL/JNI-free fixed shared-point leaf.  This is the minimal native source
@@ -236,6 +253,13 @@ set(_LIBRE3_PROCESS_COMPILE_OPTIONS
     -fdata-sections
     -fvisibility=hidden
 )
+set(_LIBRE3_PROCESS_DEFINITIONS "")
+if(LIBRE3_SAVED_AUTH_ONLY)
+    list(APPEND _LIBRE3_PROCESS_DEFINITIONS L3_SAVED_AUTH_ONLY=1)
+endif()
+if(LIBRE3_EXTERNAL_ENTROPY_ONLY)
+    list(APPEND _LIBRE3_PROCESS_DEFINITIONS L3_EXTERNAL_ENTROPY_ONLY=1)
+endif()
 set(LIBRE3_LINK_OPTIONS -Wl,--gc-sections)
 set(_LIBRE3_IPO_FLAG "")
 set(_LIBRE3_SAFE_ICF_ACTIVE OFF)
@@ -275,6 +299,14 @@ endif()
 set_property(SOURCE ${LIBRE3SRC} APPEND PROPERTY COMPILE_OPTIONS
     ${_LIBRE3_PROCESS_COMPILE_OPTIONS}
 )
+if(_LIBRE3_PROCESS_DEFINITIONS)
+    set_property(SOURCE ${LIBRE3SRC} APPEND PROPERTY COMPILE_DEFINITIONS
+        ${_LIBRE3_PROCESS_DEFINITIONS}
+    )
+    set_property(SOURCE ${INCLUDESELF}/libre3/loadlibs.cpp APPEND PROPERTY
+        COMPILE_DEFINITIONS ${_LIBRE3_PROCESS_DEFINITIONS}
+    )
+endif()
 
 # The JNI boundary is the only production caller of the process API.  Compile
 # it with the same LTO mode so the optimizer can see the fixed-size calls while

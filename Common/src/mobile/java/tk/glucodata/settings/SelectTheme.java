@@ -565,27 +565,63 @@ private static class ReselectSpinner extends Spinner {
                 Color.BLACK
         );
 
+        int disabledControlAttr = themeContext.getResources().getIdentifier(
+                "colorDisabledControl", "attr", themeContext.getPackageName());
+        int disabledTextAttr = themeContext.getResources().getIdentifier(
+                "colorDisabledText", "attr", themeContext.getPackageName());
+
+        int disabledControl = DynamicThemeUtils.resolveAttributeColor(
+                themeContext, disabledControlAttr, normal);
+        int disabledText = DynamicThemeUtils.resolveAttributeColor(
+                themeContext, disabledTextAttr, textColor);
+
         ColorStateList compoundTint = new ColorStateList(
                 new int[][] {
-                        new int[] { android.R.attr.state_checked },
                         new int[] { -android.R.attr.state_enabled },
+                        new int[] { android.R.attr.state_checked },
                         new int[] {}
                 },
                 new int[] {
+                        disabledControl,
                         activated,
-                        normal,
                         normal
                 }
         );
+
+        ColorStateList compoundText = new ColorStateList(
+                new int[][] {
+                        new int[] { -android.R.attr.state_enabled },
+                        new int[] {}
+                },
+                new int[] { disabledText, textColor }
+        );
+
+        rectButton.setTextColor(compoundText);
+        ovalButton.setTextColor(compoundText);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             rectButton.setButtonTintList(compoundTint);
             ovalButton.setButtonTintList(compoundTint);
 
-            seekBar.setProgressTintList(ColorStateList.valueOf(activated));
-            seekBar.setProgressBackgroundTintList(ColorStateList.valueOf(normal));
-            seekBar.setThumbTintList(ColorStateList.valueOf(activated));
-            seekBar.setSecondaryProgressTintList(ColorStateList.valueOf(normal));
+            ColorStateList seekActivatedTint = new ColorStateList(
+                    new int[][] {
+                            new int[] {-android.R.attr.state_enabled},
+                            new int[] {}
+                    },
+                    new int[] {disabledControl, activated}
+            );
+            ColorStateList seekNormalTint = new ColorStateList(
+                    new int[][] {
+                            new int[] {-android.R.attr.state_enabled},
+                            new int[] {}
+                    },
+                    new int[] {disabledControl, normal}
+            );
+
+            seekBar.setProgressTintList(seekActivatedTint);
+            seekBar.setProgressBackgroundTintList(seekNormalTint);
+            seekBar.setThumbTintList(seekActivatedTint);
+            seekBar.setSecondaryProgressTintList(seekNormalTint);
 
             // Do not tint the native spinner shell with textColor. When AndroidDefault
             // is the active app theme, that can leave the closed/unselected spinner
@@ -681,7 +717,17 @@ private static void styleSpinnerShell(Context themeContext, Spinner spinner) {
 
         int textAttrId = themeContext.getResources().getIdentifier("colorButtonText", "attr", pkg);
         int btnTextColor = DynamicThemeUtils.resolveAttributeColor(themeContext, textAttrId, Color.WHITE);
-        button.setTextColor(btnTextColor);
+        int disabledTextAttr = themeContext.getResources().getIdentifier(
+                "colorDisabledText", "attr", pkg);
+        int disabledTextColor = DynamicThemeUtils.resolveAttributeColor(
+                themeContext, disabledTextAttr, btnTextColor);
+        button.setTextColor(new ColorStateList(
+                new int[][] {
+                        new int[] {-android.R.attr.state_enabled},
+                        new int[] {}
+                },
+                new int[] {disabledTextColor, btnTextColor}
+        ));
     }
 
     private static void applySelectedTheme(MainActivity act) {

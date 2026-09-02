@@ -145,19 +145,9 @@ if(genlayout==null) {
             recycle.setLayoutManager(lin);
      views=new View[][]{new View[]{recycle},new View[]{ring,help,newone,ok}};
     genlayout= new Layout(act, (l, w, h) -> {
-    /*
-    	if(!isWearable) {
-    		var height=GlucoseCurve.getheight();
-    		if(height>h)
-    			l.setY(height*.9f-h);
-    		var width=GlucoseCurve.getwidth();
-    		if(width>w)
-    			l.setX((width-w)/2);
-    		}
-            */
     	int[] ret={w,h};
     	return ret;
-    	},views);
+    	},views).portraitLayout(new View[]{recycle},new View[]{ring,help},new View[]{newone,ok});
          numadapt = new NumAlarmAdapter(genlayout); //USE recycle.setAdapter(numadapt);
          recycle.setAdapter(numadapt);
     }
@@ -180,9 +170,6 @@ if(genlayout==null) {
          final int pad=(int)(tk.glucodata.GlucoseCurve.metrics.density*2.0f);
          genlayout.setPadding(pad,pad,pad,pad);
     	layparm = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-/*        var  gestureListener= new ScrollListener();
-        var mGestureDetector = new GestureDetector(act, gestureListener);
-        genlayout.setOnTouchListener((v,e) -> mGestureDetector.onTouchEvent(e)); */
 
     	}
     else {
@@ -394,20 +381,6 @@ void  mkitemlayout(MainActivity act,View parent) {
     else
     	views=new View[][] {new View[] {spinner,value},new View[]{startbut,alarmbut},new View[]{Delete,Cancel,Save}};
     itemlayout= new Layout(act, (l, w, h) -> {
-    /*
-    	var height=GlucoseCurve.getheight();
-    	if(!isWearable)  {
-         l.setY(MainActivity.systembarTop);
-         }
-       else {
-            if(!useclose) {
-               if(height>h)
-                  l.setY((height-h)/2);
-               }
-         }
-    	var width=GlucoseCurve.getwidth();
-    	if(width>w) l.setX((width-w)/2);
-        */
     	int[] ret={w,h};
     	return ret;
     	}, views);

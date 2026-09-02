@@ -57,7 +57,10 @@ static String makestring(String[] names,int nr,boolean detect,String port,boolea
         try {
             JSONObject json =new JSONObject(jsonstr);
             String ICElabel=json.isNull("ICElabel")?null:json.getString("ICElabel");
-            boolean side=json.optBoolean("side",false);
+            // New QR codes explicitly carry the opposite permanent side.
+            // For an older QR, infer the same migration rule once from Scans.
+            boolean side=json.has("side")?json.optBoolean("side",false):
+                    json.optBoolean("scans",false);
             String[] names;
             int nr;
             boolean detect;
@@ -85,15 +88,46 @@ static String makestring(String[] names,int nr,boolean detect,String port,boolea
             String label=json.isNull("label")?null:json.getString("label");
             boolean testip=json.optBoolean("testip",false);
             boolean hasname=json.optBoolean("hasname",false);
+            // QR codes from current releases do not contain this field.  They
+            // retain the established TCP-to-MessageClient automatic behaviour.
+            int requestedTransport=json.optInt("transport",BleMirror.TRANSPORT_AUTOMATIC);
+            final int transport=requestedTransport>=BleMirror.TRANSPORT_AUTOMATIC&&
+                    requestedTransport<=BleMirror.TRANSPORT_BLUETOOTH?
+                    requestedTransport:BleMirror.TRANSPORT_AUTOMATIC;
+            boolean bleclient=json.has("bleclient")?
+                    json.optBoolean("bleclient",false):
+                    (ICElabel==null?!side:(activeonly||(!passiveonly&&receive)));
+            final boolean bleReverse=ICElabel==null?
+                    (json.has("blereverse")?json.optBoolean("blereverse",false):
+                            (bleclient!=(!side))):false;
             Runnable save=()-> {
-               int pos=Natives.changebackuphost(-1,names,nr,detect,port, nums,stream,scans,false,receive,activeonly,passiveonly,pass,starttime,label,testip,hasname,ICElabel,side);
+               int pos=Natives.changebackuphost(-1,names,nr,detect,port, nums,stream,scans,false,receive,activeonly,passiveonly,pass,starttime,label,testip,hasname,ICElabel,side,transport,bleclient);
                if(pos<0) {
                       String mess=changehostError(act,pos);
                       Log.i(LOG_ID,mess);
                       Applic.argToaster(Applic.getContext(),mess, Toast.LENGTH_SHORT);
                       }
                else   {
+                  if(ICElabel==null)
+                      Natives.setbackupblereverse(pos,bleReverse);
+                  final boolean qrClient=ICElabel==null?
+                          ((!Natives.getbackupside(pos))^Natives.getbackupblereverse(pos)):
+                          Natives.getbackupbleclient(pos);
+                  Log.i(LOG_ID,"QR mirror saved index="+pos+" label="+label+
+                          " transport="+BleMirror.transportName(Natives.getbackuptransport(pos))+
+                          "("+Natives.getbackuptransport(pos)+") bleRole="+
+                          (qrClient?"client":"server")+
+                          (ICElabel==null?" direction="+(Natives.getbackupblereverse(pos)?"reversed":"normal"):""));
                   Applic.argToaster(Applic.getContext(),R.string.mirrorscansucces, Toast.LENGTH_SHORT);
+                  BleMirror.configurationChanged(pos,true);
+                  if(transport==BleMirror.TRANSPORT_BLUETOOTH||
+                          (transport==BleMirror.TRANSPORT_AUTOMATIC&&!Applic.isWearable&&
+                                  !Natives.isWearOS(pos))) {
+                     act.finepermission();
+                     final String blocker=BleMirror.blockingStatusForConnection(pos);
+                     if(blocker!=null)
+                        Applic.argToaster(Applic.getContext(),blocker,Toast.LENGTH_LONG);
+                     }
                   Applic.wakemirrors();
                   }
                    };

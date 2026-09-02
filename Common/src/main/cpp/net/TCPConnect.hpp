@@ -45,12 +45,15 @@ template <typename Self>
 auto &getSenderSock( this Self&& self) {
         return self.senderSock;
         }
-int connectone( const struct sockaddr_in6  *sin, int &sock,char stype,passhost_t *pass,struct pollfd    *cons,int&use
+int connectone( const struct sockaddr_in6  *sin, int &sock,char stype,passhost_t *pass,struct pollfd    *cons,int&use,int ioTimeoutSeconds
 #if defined(WEAROS_MESSAGES)
       ,bool &activate
 #endif
             );
-virtual int makeconnection2(passhost_t *pass,char stype) override;
+int makeconnection2withoptions(passhost_t *pass,char stype,bool allowAlternate,int timeoutMillis);
+virtual int makeconnection2(passhost_t *pass,char stype) override {
+        return makeconnection2withoptions(pass,stype,true,60000);
+        }
 
 virtual ssize_t  r_sendni(const void *buf, size_t len) override{
         return sendni(getReceiverSock(),buf,len);

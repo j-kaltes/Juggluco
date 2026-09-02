@@ -791,9 +791,9 @@ public Layout getdateviewal(MainActivity activity, long date, Dater erdate) {
 {if(doLog) {Log.i(LOG_ID, "getdateviewal");};};
     dater=erdate;
     if(datepicker==null) {
-    {if(doLog) {Log.i(LOG_ID, " new");};};
-    datepick =new DatePicker(activity);
-    datepick.setCalendarViewShown(false);
+        {if(doLog) {Log.i(LOG_ID, " new");};};
+        datepick =new DatePicker(activity);
+        datepick.setCalendarViewShown(false);
         Button cancel=new Button(activity);
 
         cancel.setText(R.string.cancel);
@@ -807,7 +807,8 @@ public Layout getdateviewal(MainActivity activity, long date, Dater erdate) {
         activity.doonback();
         if(keyboard!=null)
             EnableControls(keyboard,true);
-        datepicker.setVisibility(GONE);
+        if(datepicker!=null)
+            datepicker.setVisibility(GONE);
         if(newnumview!=null) EnableControls(newnumview,true);
         int day=datepick.getDayOfMonth();
         int month=datepick.getMonth();
@@ -830,22 +831,9 @@ public Layout getdateviewal(MainActivity activity, long date, Dater erdate) {
     else {
         datepicker=new Layout(activity,
                 (lay, w, h)->{
-/*
-            int height=GlucoseCurve.getheight();
-            int width=GlucoseCurve.getwidth();
-        if(w>width||h>height) {
-            lay.setX(0);
-            lay.setY(0);
-            }
-        else {
-                    lay.setX((width-w)/2);
-                    lay.setY((height-h)/2);
-            }
-*/
             return new int[] {w,h};
                 },new View[] {datepick},new View[] {cancel,ok});
         datparams =    new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.CENTER|Gravity.CENTER_HORIZONTAL);
-//        Layout.addSystemMargins(datepicker);
         }
 
     datepicker.setBackgroundColor( Applic.app.backgroundcolor);
@@ -861,16 +849,15 @@ cal.setTimeInMillis(date);
 
 datepick.updateDate( cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
 activity.setonback(()->{ 
-    if(keyboard!=null)
-        EnableControls(keyboard,true);
-    datepicker.setVisibility(GONE);
-
-    if(newnumview!=null)
+    if(keyboard!=null) EnableControls(keyboard,true);
+    if(datepicker!=null) datepicker.setVisibility(GONE);
+    if(newnumview!=null) 
         EnableControls(newnumview,true);
     else {
         if(Menus.on)
-                    Menus.show(activity);
-        }
+              Menus.show(activity);
+      
+         }
         });
 
 if(newnumview!=null)
@@ -1207,7 +1194,6 @@ boolean noroom=false;
 Layout getkeyboard(Context context,View anchor,int keyboardMode) {
 
    numlisten click=new numlisten();
-//    Layout layout=new Layout(context,row0,row1,row2,row3);
     View [][] views=new View[4][];
     for(int i=2,num=1;i>=0;i--) {
         views[i]=new View[3];
@@ -1224,10 +1210,7 @@ Layout getkeyboard(Context context,View anchor,int keyboardMode) {
     tmp[0]=but;
     but.setText("0");
     tmp[1]=but=new Button(context);
-//    but.setText(Build.VERSION.SDK_INT>=22?"⌫":"Del");
     but.setText(Build.VERSION.SDK_INT>=22?"\u232B":"\u2190");
-//    but.setText(Build.VERSION.SDK_INT>=22?"\u232B":"\u21e6");
-//    but.setText(Build.VERSION.SDK_INT>=22?"\u232B":"\u27f5");
 
     but.setContentDescription("Backspace");
     but.setOnClickListener(v->{
@@ -1305,11 +1288,17 @@ Layout getkeyboard(Context context,View anchor,int keyboardMode) {
         //        lay.setX(wid-w);
                 }
             else {
-                int half=hei/2;
-                int bij=(half-h)/4;
-                int ypos=half+bij;
-                if(anchor!=null&&anchor.getMeasuredHeight()>0)
-                    ypos=Math.round(anchor.getY())+anchor.getMeasuredHeight()+GlucoseCurve.dpToPx(8);
+                int ypos;
+                if(anchor!=null&&anchor.getMeasuredHeight()>0) {
+                    var below=Math.round(anchor.getY())+anchor.getMeasuredHeight();
+                    var left=hei-below-h; 
+                    ypos=below+left/2;
+                    }
+                else {
+                    int half=hei/2;
+                    int bij=(half-h)/4;
+                    ypos=half+bij;
+                    }
                 int maxy=hei-MainActivity.systembarBottom-h;
                 if(ypos>maxy)
                     ypos=maxy;
@@ -1358,20 +1347,6 @@ if(!isWearable) {
     landscapeSearchShift=0;
         }
     }
-    /*
-private static void setMode(TimePicker timepicker,int mode) {
-        try {
-        Field mModeField = timepicker.getClass().getDeclaredField("mMode");
-//        Field mModeField = timepicker.getClass().getField("mMode");
-        mModeField.setAccessible(true);
-          Field modifiersField = Field.class.getDeclaredField("modifiers");
-          modifiersField.setAccessible(true);
-          modifiersField.setInt(mModeField, mModeField.getModifiers() & ~Modifier.FINAL);
-        mModeField.setInt(timepicker, mode);
-        } catch (Throwable e) {
-        Log.stack(LOG_ID,e);
-        }
-     } */
 
 public static void avoidSpinnerDropdownFocus(Spinner spinner) {
     try {
@@ -1379,15 +1354,12 @@ public static void avoidSpinnerDropdownFocus(Spinner spinner) {
         listPopupField.setAccessible(true);
         Object listPopup = listPopupField.get(spinner);
         if (listPopup instanceof ListPopupWindow) {
-    /*        {if(doLog) {Log.i("SPINNER","listpopupwin="+ ((ListPopupWindow) listPopup).getAnimationStyle());};};
-            ((ListPopupWindow) listPopup).setAnimationStyle(0);*/
             Field popupField = ListPopupWindow.class.getDeclaredField("mPopup");
             popupField.setAccessible(true);
             Object popup = popupField.get((ListPopupWindow) listPopup);
             if (popup instanceof PopupWindow) { {
           PopupWindow popupwin=(PopupWindow) popup;
                   popupwin.setFocusable(false);
-//          {if(doLog) {Log.i("SPINNER","popanim="+popupwin.getAnimationStyle());};};
         }
             }
         }

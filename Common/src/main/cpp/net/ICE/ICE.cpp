@@ -81,7 +81,7 @@ int port{6789};
 #define JUICE_ERR_SUCCESS 0
 
 static bool stillworking(int allindex)  {
-    ICEConnect *con=static_cast<ICEConnect *>(connections[allindex]);
+    auto con=getconnectionas<ICEConnect>(allindex);
     bool res=con&&!con->finish&&con->allindex==allindex;
     if(!res)  {
         LOGGERICE("stillworking(%d)=%d\n",allindex,res);
@@ -184,7 +184,7 @@ static void getAddressesThread(juice_agent *agent,std::string_view commonLabel,b
 
 static void on_candidate1(juice_agent_t *agent, const char *sdp, void *user_ptr) {
    const int allindex=(int)(long)user_ptr;
-    ICEConnect *con=static_cast<ICEConnect *>(connections[allindex]);
+    auto con=getconnectionas<ICEConnect>(allindex);
 
    const passhost_t &host= getBackupHosts()[allindex];
    static std::string_view address{"/address"};
@@ -212,7 +212,7 @@ static void on_gathering_done1(juice_agent_t *agent, void *user_ptr) {
     std::thread th{[allindex] {
         const passhost_t &host= getBackupHosts()[allindex];
         LOGGERICE("Gathering done %s %d\n",host.getICEname().data(),host.side);
-        ICEConnect *con=static_cast<ICEConnect*>(connections[allindex]);
+        auto con=getconnectionas<ICEConnect>(allindex);
         if(!con) {
             LOGGERICE("connection[%d]==NULL\n",allindex);
             return;
@@ -252,7 +252,7 @@ static void on_recv1(juice_agent_t *agent, const char *data, size_t size, void *
             LOGGERICE("ERROR: on_recv1 called on non-ICE host allindex=%d name=%s\n",allindex, host.getICEname());
             return;
             }
-    ICEConnect *con=static_cast<ICEConnect *>(connections[allindex]);
+    auto con=getconnectionas<ICEConnect>(allindex);
     ICE_data *userdata=con->icedata;
     udp_header  *head=const_cast<udp_header *>(reinterpret_cast<const udp_header *>(data));
     userdata[head->side!=host.side].on_recv(agent,data,size,allindex);
@@ -306,7 +306,7 @@ static void on_state_changed1(juice_agent_t *agent, juice_state_t state, void *u
         return;
     const passhost_t &host= getBackupHosts()[allindex];
     LOGGERICE("%s %d State: %s\n", host.getICEname().data(),host.side,juice_state_to_string(state));
-    ICEConnect *con=static_cast<ICEConnect*>(connections[allindex]);
+    auto con=getconnectionas<ICEConnect>(allindex);
     con->state=state;
     switch(state) {
         case	JUICE_STATE_GATHERING:
@@ -322,7 +322,7 @@ static void on_state_changed1(juice_agent_t *agent, juice_state_t state, void *u
                 static void thread( juice_agent_t *agent, int allindex) {
                    LOGGERICE("start CONNECT::thread allindex=%d\n",allindex);
                     passhost_t &host= getBackupHosts()[allindex];
-                    ICEConnect *con=static_cast<ICEConnect*>(connections[allindex]);
+                    auto con=getconnectionas<ICEConnect>(allindex);
                     if(!con) {
                         LOGGERICE("connection[%d]==NULL\n",allindex);
                         return;
@@ -332,7 +332,7 @@ static void on_state_changed1(juice_agent_t *agent, juice_state_t state, void *u
                         return;
                         }
 
-                   con->icedata[host.side].sendStart(agent,con);
+                   con->icedata[host.side].sendStart(agent,con.get());
                    con->startSending.wait(true);
                    LOGGERICE("allindex=%d After con->startSending.wait(true)\n",allindex);
                    {
@@ -353,7 +353,7 @@ static void on_state_changed1(juice_agent_t *agent, juice_state_t state, void *u
             struct Failure {
                 static void thread( juice_agent_t *agent, int allindex) {
                     const passhost_t &host= getBackupHosts()[allindex];
-                    ICEConnect *con=static_cast<ICEConnect*>(connections[allindex]);
+                    auto con=getconnectionas<ICEConnect>(allindex);
                     if(!con) {
                         LOGGERICE("connections[%d]==NULL\n",allindex);
                         return;
@@ -476,7 +476,7 @@ void ICEConnect::receiverThread(int argindex) {
     };
 
 void startReceiverThread(int allindex) {
-    if(ICEConnect *con=static_cast<ICEConnect *>(connections[allindex])) {
+    if(auto con=getconnectionas<ICEConnect>(allindex)) {
         LOGGER("startReceiverThread(%d)\n",allindex);
         std::thread th{&ICEConnect::receiverThread,con,allindex};
         th.detach();
@@ -622,7 +622,7 @@ void   recreateAgents() {
     for(int index=0;index<hostnr;++index) {
         const passhost_t &host= getBackupHosts()[index];
         if(host.ICE) {
-            if(ICEConnect *con=static_cast<ICEConnect *>(connections[index]))
+            if(auto con=getconnectionas<ICEConnect>(index))
                        con->recreateAgent=true;
             }
         }
@@ -663,7 +663,7 @@ static bool waitonDescription(juice_agent *agent,int allindex,std::string_view c
 //    return false;
     }
 static  bool putDescription(int allindex,juice_agent *agent,std::string_view commonLabel,bool side,std::string_view hostname)  {
-    ICEConnect *con=static_cast<ICEConnect *>(connections[allindex]);
+    auto con=getconnectionas<ICEConnect>(allindex);
     if(const int error=juice_get_local_description(agent, con->sdp, JUICE_MAX_SDP_STRING_LEN);JUICE_ERR_SUCCESS!=error) {
         LOGGERICE("%s %d: juice_get_local_description failed: %s (%d)\n",commonLabel.data(),side,juiceErrorString(error),error);
         return  false;
@@ -709,7 +709,7 @@ bool initAgent(juice_agent *agent,int allindex) {
         return false;
     const passhost_t &host= getBackupHosts()[allindex];
     std::string_view commonLabel=host.getICEname();
-    ICEConnect *con=static_cast<ICEConnect *>(connections[allindex]);
+    auto con=getconnectionas<ICEConnect>(allindex);
     std::string_view hostname=hostnames[con->hostindex];
     LOGGER("initAgent %s allindex=%d side=%d\n",commonLabel.data(),allindex,host.side);
     int32_t firstfailed=getConnectTime(allindex);

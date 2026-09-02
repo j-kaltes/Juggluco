@@ -1,22 +1,33 @@
+/*      This file is part of Juggluco, an Android app to receive and display         */
+/*      glucose values from Freestyle Libre 2(+), Libre 3(+), Dexcom G7/ONE+,        */
+/*      Sibionics GS1Sb and GS3, Accu-Chek SmartGuide, CareSens Air and              */
+/*      Aidex X sensors.                                                             */
+/*                                                                                   */
+/*      Copyright (C) 2021 Jaap Korthals Altes <jaapkorthalsaltes@gmail.com>         */
+/*                                                                                   */
+/*      Juggluco is free software: you can redistribute it and/or modify             */
+/*      it under the terms of the GNU General Public License as published            */
+/*      by the Free Software Foundation, either version 3 of the License, or         */
+/*      (at your option) any later version.                                          */
+/*                                                                                   */
+/*      Juggluco is distributed in the hope that it will be useful, but              */
+/*      WITHOUT ANY WARRANTY; without even the implied warranty of                   */
+/*      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                         */
+/*      See the GNU General Public License for more details.                         */
+/*                                                                                   */
+/*      You should have received a copy of the GNU General Public License            */
+/*      along with Juggluco. If not, see <https://www.gnu.org/licenses/>.            */
+/*                                                                                   */
+/*      Sun Aug 30 10:21:11 CEST 2026                                                */
+
 #include "sensor_security_context.h"
-#ifdef L3_USE_CRYPTO_DLSYM
+#if defined(L3_USE_CRYPTO_DLSYM) && \
+    !defined(L3_SAVED_AUTH_ONLY) && !defined(L3_EXTERNAL_ENTROPY_ONLY)
 #include "openssl_loader.h"
 #endif
 
 #include <stdlib.h>
 #include <string.h>
-
-static void make_default_config(l3_security_engine_config *dst,
-                                const l3_security_engine_config *src) {
-    memset(dst, 0, sizeof(*dst));
-    if (src) {
-        *dst = *src;
-    }
-    /* Juggluco stores the native-shaped 149-byte authorization export. */
-    if (!src || src->export_format == 0u) {
-        dst->export_format = L3_SECURITY_ENGINE_EXPORT_NATIVE149;
-    }
-}
 
 l3_sensor_security_context *l3_sensor_security_context_create(const l3_security_engine_config *config) {
     l3_sensor_security_context *context = (l3_sensor_security_context *)malloc(sizeof(*context));
@@ -37,29 +48,25 @@ void l3_sensor_security_context_destroy(l3_sensor_security_context *context) {
 int l3_sensor_security_context_init(l3_sensor_security_context *context,
                         const l3_security_engine_config *config) {
     if (!context) return L3_SENSOR_SECURITY_ERR_ARGUMENT;
-#ifdef L3_USE_CRYPTO_DLSYM
+#if defined(L3_USE_CRYPTO_DLSYM) && \
+    !defined(L3_SAVED_AUTH_ONLY) && !defined(L3_EXTERNAL_ENTROPY_ONLY)
     if (!l3_openssl_symbols_init()) return L3_SENSOR_SECURITY_ERR_INIT;
 #endif
     memset(context, 0, sizeof(*context));
 
-    l3_security_engine_config effective;
-    make_default_config(&effective, config);
-    int rc = l3_security_engine_init(&context->engine, &effective);
+    int rc = l3_app_core_init(&context->core, config);
     if (rc != L3_SECURITY_ENGINE_OK) {
         memset(context, 0, sizeof(*context));
         return L3_SENSOR_SECURITY_ERR_INIT;
     }
-    l3_handshake_state_init(&context->handshake, l3_security_engine_handshake_operations(&context->engine));
     context->ready = 1;
     return L3_SENSOR_SECURITY_OK;
 }
 
 void l3_sensor_security_context_clear(l3_sensor_security_context *context) {
     if (!context) return;
-    if (context->ready) {
-        l3_handshake_state_clear(&context->handshake);
-    }
-    memset(context, 0, sizeof(*context));
+    l3_app_core_clear(&context->core);
+    context->ready = 0;
 }
 
 static int context_ready(const l3_sensor_security_context *context) {
@@ -69,7 +76,25 @@ static int context_ready(const l3_sensor_security_context *context) {
 int l3_sensor_security_begin_handshake(l3_sensor_security_context *context) {
     int rc = context_ready(context);
     if (rc != L3_SENSOR_SECURITY_OK) return rc;
-    return l3_handshake_begin(&context->handshake);
+    return l3_app_core_begin(&context->core);
+}
+
+size_t l3_sensor_security_authorization_scratch_size(void) {
+    return l3_app_core_authorization_scratch_size();
+}
+
+size_t l3_sensor_security_authorization_scratch_alignment(void) {
+    return l3_app_core_authorization_scratch_alignment();
+}
+
+int l3_sensor_security_set_authorization_scratch(
+    l3_sensor_security_context *context,
+    void *workspace,
+    size_t workspace_size) {
+    int rc = context_ready(context);
+    if (rc != L3_SENSOR_SECURITY_OK) return rc;
+    return l3_app_core_set_authorization_scratch(
+        &context->core, workspace, workspace_size);
 }
 
 int l3_sensor_security_select_app_key_and_saved_authorization(l3_sensor_security_context *context,
@@ -78,10 +103,9 @@ int l3_sensor_security_select_app_key_and_saved_authorization(l3_sensor_security
                                 size_t saved_authorization_len) {
     int rc = context_ready(context);
     if (rc != L3_SENSOR_SECURITY_OK) return rc;
-    return l3_handshake_select_app_key_and_saved_authorization(&context->handshake,
-                                            security_version,
-                                            saved_authorization,
-                                            saved_authorization_len);
+    return l3_app_core_select_app_key_and_saved_authorization(
+        &context->core, security_version,
+        saved_authorization, saved_authorization_len);
 }
 
 int l3_sensor_security_set_patch_certificate(l3_sensor_security_context *context,
@@ -89,16 +113,15 @@ int l3_sensor_security_set_patch_certificate(l3_sensor_security_context *context
                                     size_t patch_certificate_len) {
     int rc = context_ready(context);
     if (rc != L3_SENSOR_SECURITY_OK) return rc;
-    return l3_handshake_set_patch_certificate(&context->handshake,
-                                                patch_certificate,
-                                                patch_certificate_len);
+    return l3_app_core_set_patch_certificate(
+        &context->core, patch_certificate, patch_certificate_len);
 }
 
 int l3_sensor_security_create_ephemeral_public_key_into(l3_sensor_security_context *context,
                                        uint8_t out64[L3_LEN_EPHEMERAL_PUBLIC_KEY]) {
     int rc = context_ready(context);
     if (rc != L3_SENSOR_SECURITY_OK) return rc;
-    return l3_handshake_generate_ephemeral_public_key_into(&context->handshake, out64);
+    return l3_app_core_create_ephemeral_public_key_into(&context->core, out64);
 }
 
 int l3_sensor_security_derive_authorization_root(l3_sensor_security_context *context,
@@ -106,9 +129,9 @@ int l3_sensor_security_derive_authorization_root(l3_sensor_security_context *con
                                      size_t patch_ephemeral_public_key_len) {
     int rc = context_ready(context);
     if (rc != L3_SENSOR_SECURITY_OK) return rc;
-    return l3_handshake_derive_authorization_root(&context->handshake,
-                                                 patch_ephemeral_public_key,
-                                                 patch_ephemeral_public_key_len);
+    return l3_app_core_derive_authorization_root(
+        &context->core, patch_ephemeral_public_key,
+        patch_ephemeral_public_key_len);
 }
 
 int l3_sensor_security_encrypt_challenge_reply_into(l3_sensor_security_context *context,
@@ -119,12 +142,9 @@ int l3_sensor_security_encrypt_challenge_reply_into(l3_sensor_security_context *
                                    uint8_t out40[L3_LEN_CHALLENGE_REPLY_CRYPT]) {
     int rc = context_ready(context);
     if (rc != L3_SENSOR_SECURITY_OK) return rc;
-    return l3_handshake_encrypt_challenge_reply_into(&context->handshake,
-                                                    nonce7,
-                                                    nonce7_len,
-                                                    plain36,
-                                                    plain36_len,
-                                                    out40);
+    return l3_app_core_encrypt_challenge_reply_into(
+        &context->core, nonce7, nonce7_len,
+        plain36, plain36_len, out40);
 }
 
 int l3_sensor_security_decrypt_challenge_response_into(l3_sensor_security_context *context,
@@ -135,19 +155,16 @@ int l3_sensor_security_decrypt_challenge_response_into(l3_sensor_security_contex
                                       uint8_t out56[L3_LEN_CHALLENGE_RESPONSE_PLAIN]) {
     int rc = context_ready(context);
     if (rc != L3_SENSOR_SECURITY_OK) return rc;
-    return l3_handshake_decrypt_challenge_response_into(&context->handshake,
-                                                       nonce7,
-                                                       nonce7_len,
-                                                       cipher60,
-                                                       cipher60_len,
-                                                       out56);
+    return l3_app_core_decrypt_challenge_response_into(
+        &context->core, nonce7, nonce7_len,
+        cipher60, cipher60_len, out56);
 }
 
 int l3_sensor_security_export_saved_authorization_into(l3_sensor_security_context *context,
                                     uint8_t out149[L3_LEN_SAVED_AUTHORIZATION]) {
     int rc = context_ready(context);
     if (rc != L3_SENSOR_SECURITY_OK) return rc;
-    return l3_handshake_export_saved_authorization_into(&context->handshake, out149);
+    return l3_app_core_export_saved_authorization_into(&context->core, out149);
 }
 
 int l3_sensor_security_debug_copy_authorization_root(
@@ -157,24 +174,6 @@ int l3_sensor_security_debug_copy_authorization_root(
     size_t out_cap,
     size_t *out_len) {
     if (!context || !context->ready || !out_len) return L3_SENSOR_SECURITY_ERR_ARGUMENT;
-    const l3_security_material *root = context->handshake.authorization_root;
-    *out_len = 0;
-    if (meta4) {
-        meta4[0] = meta4[1] = meta4[2] = meta4[3] = 0u;
-    }
-    if (!root) return 0;
-    if (meta4) {
-        meta4[0] = root->kind;
-        meta4[1] = root->origin_tag;
-        meta4[2] = root->metadata0;
-        meta4[3] = root->metadata1;
-    }
-    *out_len = root->len;
-    if (root->len && (!out || out_cap < root->len)) {
-        return L3_SENSOR_SECURITY_ERR_ARGUMENT;
-    }
-    if (root->len) {
-        memcpy(out, root->bytes, root->len);
-    }
-    return 1;
+    return l3_app_core_debug_copy_authorization_root(
+        &context->core, meta4, out, out_cap, out_len);
 }

@@ -82,7 +82,8 @@ int updateone::updateiob() {
 
 
 int updateone::sendCalibrate() {
-    return sensors->sendCalibrates(getcrypt(), getConnect(),ind,startSendCalibrate);
+    auto connect=getConnect();
+    return sensors->sendCalibrates(getcrypt(),connect.get(),ind,startSendCalibrate);
     }
 
 
@@ -120,7 +121,7 @@ int updateone::numbertypes() {
 #endif
 
 int updateone::update() {
-    Connect *connect=getConnect();    
+    auto connect=getConnect();    
     if(!connect->isConnectedSender())
         return 0;
     crypt_t *pass=getcrypt();
@@ -142,12 +143,12 @@ int updateone::update() {
                 LOGAR("sendnums==true 2*lastlastpos==0");
                 if(starttime==1)  {
                     for(auto el:numdatas)
-                        if(! el->sendbackupinit(pass,connect,nums) )
+                        if(! el->sendbackupinit(pass,connect.get(),nums) )
                             return 0;
                     }
                 else   {
                     bool numsbackupsendinit(crypt_t*pass,Connect *,struct changednums *nuall,uint32_t starttime) ;
-                    if(!numsbackupsendinit(pass,connect,nums, starttime) )
+                    if(!numsbackupsendinit(pass,connect.get(),nums, starttime) )
                         return 0;
                     startSendCalibrate=sensors->firstafter(starttime);
                     const int last=sensors->last();
@@ -167,7 +168,7 @@ int updateone::update() {
 
         if(starttime!=1)  {
             if(sendsensors) {
-                if( !sensors->setbackuptime(pass, connect,ind,starttime,starttimeindex))  {
+                if( !sensors->setbackuptime(pass, connect.get(),ind,starttime,starttimeindex))  {
                     LOGAR("updateone::update failed");
                     return 0;
                     }
@@ -186,7 +187,7 @@ int updateone::update() {
         return 0;
     ret|=subdid;
     if(sendsensors) {
-        subdid=sensors->update(pass,connect,ind,startsensors,firstsensor,sendstream,sendscans,restore,resetdevices);
+        subdid=sensors->update(pass,connect.get(),ind,startsensors,firstsensor,sendstream,sendscans,restore,resetdevices);
         if(subdid&4) {
             resetdevices=true;
             subdid&=3;
@@ -253,7 +254,7 @@ int     updateone::updatenums() {
     if(starttime) {
         return update();
         }
-    Connect *connect=getConnect();
+    auto connect=getConnect();
     if(!connect->isConnectedSender())
         return 0;
     if(!sendjugglucoid) {
@@ -267,7 +268,7 @@ int     updateone::updatenums() {
             }
         sendjugglucoid=true;
         }
-    if(int did= ::updatenums(getcrypt(),connect,nums,ind))  {
+    if(int did= ::updatenums(getcrypt(),connect.get(),nums,ind))  {
         return sendCalibrate()|did;
         }
     return 0; 
@@ -279,10 +280,10 @@ int  updateone::updatestreamu() {
     if(starttime) {
         return update();
         }
-    Connect *connect=getConnect();
+    auto connect=getConnect();
     if(!connect->isConnectedSender())
         return 0;
-    return sensors->updatestreams(getcrypt(),connect,ind,firstsensor,sendscans?2:1);
+    return sensors->updatestreams(getcrypt(),connect.get(),ind,firstsensor,sendscans?2:1);
      } 
 int updateone::updatescansu() {
     if(!sendscans)
@@ -290,13 +291,13 @@ int updateone::updatescansu() {
     if(starttime) {
         return update();
         }
-    Connect *connect=getConnect();
+    auto connect=getConnect();
     if(!connect->isConnectedSender())
         return 0;
-    return sensors->updatescanss(getcrypt(),connect,ind,firstsensor,sendstream);
+    return sensors->updatescanss(getcrypt(),connect.get(),ind,firstsensor,sendstream);
      } 
 int updateone::updateBeforeSwitch() {
-     Connect *connect=getConnect();
+     auto connect=getConnect();
      if(!connect)
             return 0;
 
@@ -305,7 +306,7 @@ int updateone::updateBeforeSwitch() {
       LOGGER("ind=%d allindex=%d updateBeforeSwitch()\n",ind,allindex);
       if(!sendstream)
         return connect->sendrender(getcrypt(),wakeUpSwitch|wakeall);
-      return sensors->updateBeforeSwitch(getcrypt(), connect, ind, firstsensor,sendstream);
+      return sensors->updateBeforeSwitch(getcrypt(), connect.get(), ind, firstsensor,sendstream);
      } 
 void wakeupall(){
     if(backup) {
@@ -347,14 +348,10 @@ static int sayactivereceive(const passhost_t *host) {
 
     crypt_t * updateone::getcrypt() const {
 #if defined(WEAROS_MESSAGES)&&!defined(ENCRYPTMESSAGES)
-        if(wearmessages[allindex]) {
-            if(backup) {
-                 const auto &host= backup->getHosts()[allindex]; //WHY???
-                if(host.wearos)  {
-                    LOGGER("getcrypt allindex=%d wearos\n",allindex);
-                    return nullptr; //WHY
-                    }
-                }
+        const auto &host=backup->getupdatedata()->allhosts[allindex];
+        if(usemessagecarrier(allindex,host)) {
+            LOGGER("getcrypt allindex=%d message carrier\n",allindex);
+            return nullptr;
             }
 #endif 
         if(crypts.size()>ind&&ind>=0)
@@ -369,23 +366,25 @@ void    updateone::open() {
           }
 
 #ifdef WEAROS_MESSAGES
-    if(host->wearos&&wearmessages[allindex]) {
-         messagemakeconnection(host,getsock(),getcrypt(),saysender(host));
+    if(usemessagecarrier(allindex,*host)) {
+         auto con=getconnectionas<TCPConnect>(allindex);
+         if(con)
+             messagemakeconnection(host,con->getSenderSock(),getcrypt(),saysender(host));
         
      }   else 
 #endif
     {
         if(host->sendpassive) 
             return;
-       auto *con=connections[allindex];
+       auto con=getconnection(allindex);
        if(con)
            con->makeconnection(host,getcrypt(),saysender(host));
 
     }
    ;
-   if(auto *con=connections[allindex]) {
+   if(auto con=getconnection(allindex)) {
         con->setSenderTimeouts();
-        LOGGER("updateone::open()=%d\n",connections[allindex]->getSenderIdent());
+        LOGGER("updateone::open()=%d\n",con->getSenderIdent());
         }
    else {
       LOGGER("updateone::open() connections[%d]==null\n",allindex);
@@ -406,7 +405,7 @@ static void sendup(passhost_t *hostptr) {
 #endif
      int allindex=hostptr-backup->getupdatedata()->allhosts;
 
-     Connect *connect=connections[allindex];
+     auto connect=getconnection(allindex);
      if(connect) {
         destruct _{[connect] {
            connect->senduprunning.clear();
@@ -417,19 +416,19 @@ static void sendup(passhost_t *hostptr) {
          sleep(1);
         if(connect->makeconnection(hostptr,ctxptr,saysender(hostptr))>=0) {
             if(!hostptr->ICE) {
-                int sock=static_cast<TCPConnect*>(connect)->getSenderSock();
+                int sock=static_cast<TCPConnect*>(connect.get())->getSenderSock();
                 sendtimeout(sock,60*5);
                 receivetimeout(sock,0);
                 }
             if(connect->sendbackup(ctxptr)) {
-                connect=connections[allindex];
+                connect=getconnection(allindex);
                 LOGGER("sendup success %d\n",connect?connect->getSenderIdent():-1);    
                 }
             else {
-                connect=connections[allindex];
+                connect=getconnection(allindex);
                 LOGGER("%d: failure %d\n",agettid(),connect?connect->getSenderIdent():-1);    
                 }
-            if(!hostptr->ICE&&(connect=connections[allindex]))
+            if(!hostptr->ICE&&(connect=getconnection(allindex)))
                 connect->closeSenderConnection();
             }
             }
@@ -459,7 +458,7 @@ void activereceivethread(int allindex,passhost_t *pass) {
         }
     const bool haspas = pass->haspass();
     crypt_t ctx, *ctxptr = haspas ? &ctx : nullptr;
-    uintptr_t current{};
+    decltype(active_receive[h]->dobackup) current{};
 {
     constexpr const int maxbuf = 50;
     char buf[maxbuf];
@@ -473,7 +472,11 @@ void activereceivethread(int allindex,passhost_t *pass) {
 #endif
 }
     while(true) {
-	constexpr const int waitsec=
+          active_receive[h]->dobackup=active_receive[h]->dobackup&(~current);
+          if(!active_receive[h]->dobackup) {
+            std::unique_lock<std::mutex> lck(active_receive[h]->backupmutex);
+            LOGAR("R-active before lock");
+    constexpr const int waitsec=
 #if defined(JUGGLUCO_APP) && !defined(WEAROS)
     70
 #else
@@ -481,24 +484,30 @@ void activereceivethread(int allindex,passhost_t *pass) {
 #endif
 ;
 #ifdef WEAROS_MESSAGES
-	if(pass->wearos&&wearmessages[allindex]) {
-	    current=active_receive[h]->waittake();
-	    LOGAR("R-active after wait");
-	    }
-	else
+    if(usemessagecarrier(allindex,*pass)) {
+        active_receive[h]->backupcond.wait(lck, [h] {return active_receive[h]->dobackup; });
+        LOGAR("R-active after wait");
+        }
+   else
 #endif  
-	    {
-	       LOGGER("activereceivethread before wait_for %d %p\n",h ,active_receive[h]);
-		current=active_receive[h]->waittakefor(std::chrono::seconds(waitsec)); //In reality much longer if phone is in doze mode.
-		LOGGER("R-active after lock current=%lu\n",current);
-		}
+        {
+           LOGGER("activereceivethread before wait_for %d %p\n",h ,active_receive[h]);
+
+#ifndef NOLOG
+            auto status=
+#endif
+                active_receive[h]->backupcond.wait_for(lck,std::chrono::seconds(waitsec)); //In reality much longer if phone is in doze mode.
+            LOGGER("R-active after lock %stimeout\n",(status==std::cv_status::no_timeout)?"no-":"");
+            }
+            }
        LOGGER("before if(!active_receive[%d]) %p \n",h,active_receive[h]);
        if(h>=active_receivenr||!active_receive[h]) {
             LOGGER("active_receive[%d]==0, return\n",h);
             return;
           }
-	   LOGAR("after current received");
-       TCPConnect *con=static_cast<TCPConnect*>(connections[allindex]);
+       current=active_receive[h]->dobackup;
+       LOGAR("after current=active_receive[h]->dobackup;");
+       auto con=getconnectionas<TCPConnect>(allindex);
        LOGAR("after TCPConnect *con=static_cast<TCPConnect*>(connections[allindex]);");
         if(!con||current&wakeend) {
             if(con) {
@@ -522,10 +531,10 @@ void activereceivethread(int allindex,passhost_t *pass) {
         int wassock=sock;
         sock=-1;
 #ifdef WEAROS_MESSAGES
-    if(!pass->wearos||!wearmessages[allindex])  //TODO use it?
+    if(!usemessagecarrier(allindex,*pass))
 #endif  
     {
-        auto *con=static_cast<TCPConnect*>(connections[allindex]);
+        auto con=getconnectionas<TCPConnect>(allindex);
         if(!con) {
             return;
             }
@@ -539,12 +548,12 @@ void activereceivethread(int allindex,passhost_t *pass) {
         void    receiversockopt(int sock) ;
         receiversockopt(sock) ;
         LOGAR("before activegetcommands");
-        auto *con2=connections[allindex];
+        auto con2=getconnection(allindex);
         if(!con2) {
             return;
             }
         con2->activegetcommands(pass,ctxptr);
-        if(connections[allindex]) {
+        if(getconnection(allindex)) {
             LOGGER("after activegetcommands close(%d)\n",sock);
             sockclose(sock);
             }
@@ -561,7 +570,7 @@ bool hasnetwork() {
 
 
 void       makeWakeThread(int allindex,passhost_t *hostptr) {
-    auto *con=connections[allindex];
+    auto con=getconnection(allindex);
     if(!con)  {
         LOGGER("makeWakeThread: connections[%d]==NULL\n",allindex);
         return;
@@ -586,7 +595,7 @@ void updatedata::wakesender(uintptr_t kind) {
         else {
         if(
     #ifdef WEAROS_MESSAGES
-        !(wearmessages[i]&&host.wearos)&&
+        !usemessagecarrier(i,host)&&
     #endif
         host.activereceive) {
             auto ind=host.activereceive-1;
@@ -598,8 +607,8 @@ void updatedata::wakesender(uintptr_t kind) {
         else {
                 if(host.receivefrom==3&&host.index<0) {
     #ifdef WEAROS_MESSAGES
-                if(host.wearos&&wearmessages[i]) { //TODO
-                LOGAR("wearos messages");
+                if(usemessagecarrier(i,host)) {
+                LOGAR("message/Bluetooth mirror carrier");
                 }  else
     #endif
                 {    
@@ -636,7 +645,7 @@ void updatedata::wakestreamsender() {
     else {
     if(
 #ifdef WEAROS_MESSAGES
-    !(wearmessages[i]&&host.wearos)&&
+    !usemessagecarrier(i,host)&&
 #endif
     host.activereceive) {
             auto ind=host.activereceive-1;
@@ -646,6 +655,12 @@ void updatedata::wakestreamsender() {
             }
         else {
             if(host.receivefrom==3&&host.index<0) {
+        #ifdef WEAROS_MESSAGES
+                if(usemessagecarrier(i,host)) {
+                    LOGAR("message/Bluetooth mirror stream carrier");
+                    }
+                else
+        #endif
                 makeWakeThread(i,&host);
                 }
             else {
@@ -830,7 +845,7 @@ void setCalibrates(uint16_t sensorindex) {
         }
     }
 
-Connect *connections[maxallhosts];
+std::shared_ptr<Connect> connections[maxallhosts];
 
 
 #include "net/ICE/ICEConnect.hpp"
@@ -840,9 +855,9 @@ Backup::Backup(std::string_view base): mapdata(base,backupdat,sizeof(struct upda
    for(int i=0;i<len;++i) {
      auto *host= allhosts+i;
       if(host->ICE)
-          connections[i]=new ICEConnect(i,*host);
+          setconnection(i,std::make_shared<ICEConnect>(i,*host));
       else
-          connections[i]=new TCPConnect(i);
+          setconnection(i,std::make_shared<TCPConnect>(i));
       }
   // sendsocks.reserve(getupdatedata()->sendnr);
    crypts.reserve(getupdatedata()->sendnr);
@@ -881,7 +896,8 @@ Backup::Backup(std::string_view base): mapdata(base,backupdat,sizeof(struct upda
    void    backupbase(string_view basedir);
    backupbase(globalbasedir);
    for(int i=0;i<len;i++) {
-       if(!getupdatedata()->allhosts[i].ICE&&getupdatedata()->allhosts[i].passive()) {
+       if(getupdatedata()->allhosts[i].usesnetworktransport()&&
+               !getupdatedata()->allhosts[i].ICE&&getupdatedata()->allhosts[i].passive()) {
            startreceiver(false);
            break;
            }
@@ -892,7 +908,7 @@ Backup::Backup(std::string_view base): mapdata(base,backupdat,sizeof(struct upda
    }
 
 extern void startICEReceiver(passhost_t *host,ICEConnect *con);
-int Backup::changeICEhost(const char *ICElabel,int index,const bool sendnums,const bool sendstream,const bool sendscans,const bool receive,string_view pass,uint32_t starttime,const char *label,bool side,bool startthreads) {
+int Backup::changeICEhost(const char *ICElabel,int index,const bool sendnums,const bool sendstream,const bool sendscans,const bool receive,string_view pass,uint32_t starttime,const char *label,bool side,bool startthreads,int transport,int bleclient) {
     const int hostnr=getupdatedata()->hostnr;
     LOGGER("hostnr=%d changeICEhost(%d,sendnums=%d,sendstream=%d,sendscans=%d,receive=%d,label=%s \n",hostnr,index,sendnums,sendstream,sendscans,receive,label);
     if(index<0) 
@@ -956,24 +972,31 @@ int Backup::changeICEhost(const char *ICElabel,int index,const bool sendnums,con
     thehost.receivefrom=receive?3:1;
     thehost.deactivated=false;
     thehost.wearos=false;
+    const int selectedtransport=transport==passhost_t::transport_tcp?
+            passhost_t::transport_tcp:passhost_t::transport_automatic;
+    thehost.settransport(selectedtransport);
+    if(newhost)
+        thehost.blereverse=false;
+    thehost.bleclient=bleclient;
+    LOGGER("changeICEhost saved %s(%d): transport=%d bleclient=%d\n",
+            thehost.getnameif(),index,thehost.gettransport(),thehost.bleclient);
     thehost.activereceive=0;
 
     setpass( thehost.pass,pass);
 
     LOGGER("changeICEhost receivefrom=%d\n", thehost.receivefrom);
-    ICEConnect  *con;
+    std::shared_ptr<ICEConnect> con;
     if(!newhost) {  
         if(thehost.ICE) {
-            con=static_cast<ICEConnect*>(connections[index]);
+            con=getconnectionas<ICEConnect>(index);
             con->setindex(index);
             con->side=side;
             goto keepICE;
             }
-        delete connections[index];
         }
     thehost.ICE=true;
-    con= new ICEConnect(index,thehost);
-    connections[index]=con;
+    con=std::make_shared<ICEConnect>(index,thehost);
+    setconnection(index,con);
     keepICE:
     lastuptodate[index]=0;
     setConnectTime(index,0);
@@ -1000,4 +1023,36 @@ int Backup::changeICEhost(const char *ICElabel,int index,const bool sendnums,con
     startReceiverThread(index);
     LOGGER("changeICEhost=%d\n",index);
     return index;
+    }
+
+extern int updateMirrorSides();
+int updateMirrorSides() { 
+    if(!backup)
+        return 0;
+#ifndef TESTMENU
+    const std::lock_guard<std::mutex> lock(change_host_mutex);
+#endif
+    auto *data=backup->getupdatedata();
+    int changed=0;
+    for(int pos=0;pos<data->hostnr;++pos) {
+        passhost_t &host=data->allhosts[pos];
+        if(host.ICE||host.wearos)
+            continue;
+        const bool sendscans=host.index>=0&&host.index<data->sendnr&&
+                data->tosend[host.index].sendscans;
+        const bool oldclient=host.bleclient;
+        const bool newside=sendscans;
+        const bool newreverse=(oldclient==newside);
+        if(host.side!=newside||host.blereverse!=newreverse)
+            ++changed;
+        LOGGER("updateMirrorSides %s(%d): scans=%d side %d->%d preserveRole=%s blereverse %d->%d bleclient=%d\n",
+                host.getnameif(),pos,sendscans,host.side,newside,
+                oldclient?"client":"server",host.blereverse,newreverse,host.bleclient);
+        host.side=newside;
+        host.blereverse=newreverse;
+        // Deliberately do not modify host.bleclient: it is the proven local
+        // role from the pre-migration implementation and is also kept coherent
+        // after later successful direction learning.
+    }
+    return changed;
     }

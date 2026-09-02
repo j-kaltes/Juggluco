@@ -76,7 +76,7 @@ uint32_t getitems(char *&outiter,const int  datnr,uint32_t newer,uint32_t older,
                         ScanData calitem;
                         const ScanData *itemptr;
                         double calibrated;
-                        if(settings->data()->DoCalibrate&&(calibrated=cali.calibrateONE(*iter),!isnan(calibrated))) {
+                        if(settings->data()->DoCalibrate&&(calibrated=cali.calibrateONE(*iter,settings->data()->CalibratePast),!isnan(calibrated))) {
                                 calitem=*iter;
                                 calitem.g=round(calibrated);
                                 itemptr=&calitem;

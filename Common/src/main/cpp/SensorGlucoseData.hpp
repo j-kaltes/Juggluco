@@ -578,6 +578,15 @@ std::span<const uint8_t> getauth() const {
 int getStreamStart() const {
     return std::max(pollstart,(uint16_t)warmupstartpos);
     }
+
+
+
+bool unused() const {
+    const auto *info=this;
+    const int un=(info->pollcount==0&&info->scancount==0&&info->endhistory==0);
+    LOGGER("unused()=%d\n",un);
+    return un;
+    }
 } ;
 //pathconcat sensordir;
 //pathconcat scanfile;
@@ -1145,7 +1154,7 @@ static bool mkdatabase(string_view sensordir,time_t start,const  char *uid,const
         Readall<uint8_t> inf(infoname);
         if(inf.data()&&inf.size()>=sizeof(Info)) {
             const Info *in=reinterpret_cast<const Info*>(inf.data());
-            if(in->starttime>1590000000&&in->dupl>0&&in->info.len==6)
+            if(!in->unused()&&in->starttime>1590000000&&in->dupl>0&&in->info.len==6)
                 return false;
             }
         }
@@ -1235,7 +1244,7 @@ static bool mkdatabase3(string_view sensordir,time_t start,uint32_t pin,const ch
         Readall<uint8_t> inf(infoname);
         if(inf.data()&&inf.size()>=sizeof(Info)) {
             const Info *in=reinterpret_cast<const Info*>(inf.data());
-            if(in->starttime>1590000000&&in->dupl>0&&in->interval==interval5)
+            if(!in->unused()&&in->starttime>1590000000&&in->dupl>0&&in->interval==interval5)
                 return false;
             }
         }
@@ -1440,9 +1449,7 @@ bool bluetoothback() {
 bool unused() const {
     const auto *info=getinfo();
     if(info)  {
-        const int un=(info->pollcount==0&&info->scancount==0&&info->endhistory==0);
-        LOGGER("unused()=%d\n",un);
-        return un;
+        return info->unused();
         }
     LOGGER("unused %p->getinfo()==null\n",this);
     return false;
@@ -1947,16 +1954,18 @@ void updateinit(const int ind) {
 
 static  const ScanData *firstnotless(std::span<const ScanData> dat,const uint32_t start) {
        const ScanData *scan=&dat.begin()[0];
-       if(dat.size()<1)
+       if(dat.empty())
             return scan;
-        const ScanData *endscan= &dat.end()[0];
+
+//        const ScanData *endscan= &dat.end()[0];
+        const ScanData *endscan = scan + dat.size();
         const ScanData scanst{.t=start};
         auto comp=[](const ScanData &el,const ScanData &se ){return el.t<se.t;};
         return std::lower_bound(scan,endscan, scanst,comp);
     }
 static CurData curInperiod(std::span<const ScanData> dat,const uint32_t starttime,const uint32_t endtime) {
     const ScanData *scan=&dat.begin()[0];
-    if(dat.size()<1)
+    if(dat.empty())
         return {scan,scan,scan};
     const ScanData *endscan= &dat.end()[0];
     auto comp=[](const ScanData &el,const ScanData &se ){return el.t<se.t;};

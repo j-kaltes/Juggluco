@@ -1,33 +1,3 @@
-
-
-address 9113 already in use under WearOS, but no other juggluco running with that port. 
-Doesn't recognise already running.
-
-Te vaak verbinden met server als het niet werkt?
-What is this in jugglucoconnect?:
-1765921227.228 2139747 before SSL_shutdown rbio fd=12
-1765921227.228 2139747 SIOCOUTQ = 0 bytes
-1765921227.228 2139747 SSL_shutdown=-1
-1765921227.228 2139747 OpenSSL error: error:0A00010F:SSL routines::bad length (0xa00010f)
-1765921227.228 2139747 OpenSSL error: error:0A000197:SSL routines::shutdown while in init (0xa000197)
-
-Naar horloge wordt gezonden, maar niet van.
-Nums worden ook niet naar horloge gezonden, glucose wel.
-Bij eerst initialisatie watch, staat some messages aan en werkt het niet. Na restart van beide apps, werkt het.
-Always gen2 with Libre2Plus?
-
-Talk->Test on WearOS is terrible slow
-Kijk naar logs Sibionics 2
-Als iemand een oude sensor met zelfde pin heeft liggen leidt dit tot problemen.
-Die sensor kan geaccepteerd worden. Daarna neemt Juggluco nog alleen maar die sensor. Als het niet zo was zouden data door elkaar raken.
-Oplossingen:
-- Mogelijkheid toevoegen alle data van sensor te wissen;
-
-Creates second connection?
-
-Complications:
-        - press large image complication no effect;
-
 Bij kleine help tekst scrolled tekst toch.
 Zeg waiting for connection, inplaats van ready in .. seconds
 In the google Play version when a new language is selected that isn't used before, so has to be downloaded, the menu stays in the previous language until the users leaves Juggluco and returns.

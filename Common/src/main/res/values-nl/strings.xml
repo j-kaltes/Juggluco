@@ -491,5 +491,16 @@
   <string name="autorotate">Autom. draaien</string>
 
 <string name="rotateText">Tekst draaien</string>
+
+   <string name="homenet">Lokaal</string>
+    <string name="mirror_transport">Verbindingsmethode:</string>
+    <string name="transport_automatic">Automatisch</string>
+    <string name="transport_tcp">TCP/IP</string>
+    <string name="transport_bluetooth">Directe Bluetooth</string>
+    <string name="transport_messages">Messages</string>
+    <string name="transport_needs_label">Label noodzakelijk bij directe Bluetooth en messages</string>
+
+<string name="transport_needs_password">Watchwoord noodzakelijk bij directe Bluetooth</string>
+
 </resources>
 

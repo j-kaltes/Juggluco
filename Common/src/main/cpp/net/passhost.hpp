@@ -44,6 +44,13 @@ extern bool sameaddress(const  struct sockaddr *addr, const struct sockaddr_in6 
 //union { struct sockaddr_in6 ips[passhost_t::maxip];
 struct passhost_t {
 inline static constexpr const int maxip=4;
+// Zero deliberately means the legacy behaviour: existing databases used zero
+// in these reserved bits.  Keeping that value as Automatic makes an upgraded
+// phone/watch continue to use TCP with the established MessageClient fallback.
+inline static constexpr uint8_t transport_automatic=0;
+inline static constexpr uint8_t transport_tcp=1;
+inline static constexpr uint8_t transport_messages=2;
+inline static constexpr uint8_t transport_bluetooth=3;
 struct hostnamedata {
     static constexpr const int maxhostname=sizeof(sockaddr_in6)*(passhost_t::maxip-1)-sizeof(uint16_t);
     uint16_t port; //host byte order
@@ -74,10 +81,43 @@ false	  	false	  	0
 	bool sendpassive:1;  // send to named host passive only
 	bool hasname:1;
 	bool noip:1;
-	uint16_t reserved:13;
+	uint16_t reserved:8;
+    // Existing rows have this previously-reserved bit clear and are therefore
+    // treated as proven. New nearby mirror rows set it until one authenticated
+    // BLE direction succeeds. A proven direction must never be reversed merely
+    // because Android reports a transient GATT/advertising failure.
+    bool bleunproven:1;
+    // Pair-wide BLE direction preference for ordinary nearby mirrors. Both
+    // peers store the SAME value; side then guarantees complementary roles:
+    // client = (!side) XOR blereverse. This avoids two independently persisted
+    // local roles drifting into client/client or server/server.
+    bool blereverse:1;
+	uint16_t mirrortransport:2;
+	// Legacy/local physical BLE role used by Wear OS and older configuration
+	// paths. Ordinary phone/tablet mirrors derive their role from side+blereverse.
+	bool bleclient:1;
+    // Permanent non-ICE pair identity: r1=false, r2=true. QR creation sends
+    // the opposite value. For migrated rows r2 is the side that sends Scans.
     bool side:1;
     bool ICE:1;
 	bool deactivated:1;
+	uint8_t gettransport() const {
+		return mirrortransport<=transport_bluetooth?mirrortransport:transport_automatic;
+		}
+	void settransport(int value) {
+		mirrortransport=value>=transport_automatic&&value<=transport_bluetooth?value:transport_automatic;
+		}
+	bool automatictransport() const {
+		return gettransport()==transport_automatic;
+		}
+	bool usesnetworktransport() const {
+		const auto transport=gettransport();
+		return transport==transport_automatic||transport==transport_tcp;
+		}
+	bool forcedmessagecarrier() const {
+		const auto transport=gettransport();
+		return transport==transport_messages||transport==transport_bluetooth;
+		}
 	bool hashostname() const {
 		return hostname;
 		}
@@ -197,8 +237,9 @@ bool putip(const sockaddr_in6  *addrptr) {
 	return true;
 	}
 void putips(const sockaddr_in6  *addrptr,int nrin) {
-	const int usenr=std::min(nrin,maxip);
-	memcpy(ips,addrptr,usenr*sizeof(ips[0]));
+	const int usenr=std::max(0,std::min(nrin,maxip));
+	if(usenr>0&&addrptr)
+		memcpy(ips,addrptr,usenr*sizeof(ips[0]));
 	nr=usenr;
 	detect=false;
 	}

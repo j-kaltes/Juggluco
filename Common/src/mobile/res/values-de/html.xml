@@ -455,6 +455,23 @@ Fall sollten Sie in Ihrem Modem-Handbuch nachlesen, wie Sie einen
 externen Anschluss an eine IP und einen Anschluss in Ihrem
 Heimnetzwerk weiterleiten können. 
 </p>
+<p style="line-height: 100%; margin-bottom: 0cm"><b>Verbindungsmethode</b>:
+Für das Heimnetzwerk stehen Ihnen verschiedene Verbindungsmethoden
+zur Auswahl: 
+</p>
+<ul>
+	<li><p style="margin-bottom: 0cm">TCP/IP; 
+	</p></li>
+	<li><p style="margin-bottom: 0cm">Messages; 
+	</p></li>
+	<li><p>Direkte Bluetooth. 
+	</p></li>
+</ul>
+<p>Die Messages-funktion ist speziell für die Verbindung zwischen
+Smartphone und WearOS ausgelegt und nutzt Bluetooth indirekt über
+Google Play Services und die zugehörige App der Smartwatch. Bei
+Auswahl von „<b>Automatisch</b>“ werden die Verbindungen in der
+Reihenfolge TCP/IP, Messages und direkte Bluetooth ausprobiert.</p>
 <p><a href="https://www.juggluco.nl/Jugglucohelp/de/QRmirror.html"><b>QR</b></a>:
 Erstellen Sie die andere Seite der Verbindung, indem Sie einen
 QR-Code scannen. 
@@ -514,9 +531,9 @@ benötigt, um die beiden Telefone miteinander zu verbinden. Hierfür
 muss ein „<b>ICE-Label</b>“ festgelegt werden, das nur von beiden
 Seiten der Verbindung verwendet wird und nicht von anderen
 Juggluco-Nutzern genutzt wird. Eine Seite der Verbindung sollte den
-Wert <b>0,</b> die andere den <span style="font-weight: normal">Wert</span><b>
-1</b> angeben. Zusätzlich wird ein <b>Label</b> benötigt, das von
-beiden Seiten der Verbindung verwendet wird und nur auf diesen
+Wert <b>0,</b> die andere den <span style="font-weight: normal">Wert</span>
+<b>1</b> angeben. Zusätzlich wird ein <b>Label</b> benötigt, das
+von beiden Seiten der Verbindung verwendet wird und nur auf diesen
 Telefonen eindeutig sein darf. Anstatt hier alles anzugeben, können
 Sie über das linke mittlere Menü → Klon → <a href="https://www.juggluco.nl/Jugglucohelp/autoqrmessage.html">AutoQR</a>
 eine Verbindung automatisch herstellen und mit dem Telefon auf der

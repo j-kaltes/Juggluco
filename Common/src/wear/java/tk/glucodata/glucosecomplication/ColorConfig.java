@@ -269,7 +269,6 @@ else {
    scroll.setVerticalScrollBarEnabled(true);
    act.addMyContentView(scroll,  new ViewGroup.LayoutParams(MATCH_PARENT,MATCH_PARENT));
    scroll.setBackgroundColor(Applic.backgroundcolor);
-//        scroll.setOnTouchListener(new BackGesture(act));
       MainActivity.setonback(()-> { 
          removeContentView(scroll); 
 

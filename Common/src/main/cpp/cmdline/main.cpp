@@ -66,14 +66,14 @@ bool  exportdata(const char *filename,P proc,Ts... args)  {
     return true;
     }
 
-extern bool libreviewexport(int handle,uint32_t starttime,uint32_t endtime,const bool calibrate);
+extern bool libreviewexport(int handle,uint32_t starttime,uint32_t endtime,const bool calibrate,bool calibratePast)  ;
 bool  libreviewexporter(const char *filename,uint32_t starttime,uint32_t endtime,const bool calibrate) {
     int han=creat(filename, S_IRUSR| S_IWUSR);
     if(han<0) {
        cerr<<"Can't open "<<filename<<endl;
         return false;
     }
-     return  libreviewexport(han,starttime,endtime,calibrate);
+     return  libreviewexport(han,starttime,endtime,calibrate,false);
     }
 
 extern bool allsavemeals(int handle,uint32_t starttime=0,uint32_t endtime=UINT32_MAX,int maxcount=INT_MAX);
@@ -83,33 +83,6 @@ extern bool exportnums(int handle,uint32_t starttime=0,uint32_t endtime=UINT32_M
 bool exportnummer(const char *filename,uint32_t starttime=0,uint32_t endtime=UINT32_MAX,int maxcount=INT_MAX) {
     return exportdata(filename,exportnums,starttime,endtime,maxcount);
     }
-/*
-bool exportnums(const char *filename) {
-    int han=creat(filename, S_IRUSR| S_IWUSR);
-    if(han<0) {
-        cerr<<"Can't open "<<filename<<endl;
-        return false;
-        }
-    if(!exportnums(han)) {
-        cerr<<"Export failed"<<endl;
-        return false;
-        }
-    
-    cerr<<"Amounts exported to "<<filename<<endl;
-    return true;
-    }
-bool exporthistory(int handle) {
-
-
-    }
-        case 3: return exporthistory(fd);
-bool exportnums(int handle) {
-
-        case 0: return exportnums(fd);    ;
-        case 1: return exportscans(fd, &SensorGlucoseData::getScandata);
-        case 2: return exportscans(fd, &SensorGlucoseData::getPolldata);
-        case 3: return exporthistory(fd);
-*/
 
 void help(const char *progname) {
 auto aip=myip();
@@ -308,8 +281,8 @@ const char dirconf[]=".jugglucorc";
 //bool exportscans(int handle, const std::span<const ScanData>  (SensorGlucoseData::*proc)(void) const) ;
 
 template <bool repeatids>
-bool exportscans(int handle,  CurData  (SensorGlucoseData::*proc)(const uint32_t,const uint32_t) const,uint32_t starttime=0,uint32_t endtime=UINT32_MAX,int maxcount=INT_MAX,bool calibrated=false) ;
-bool exporthistory(int handle,uint32_t starttime=0,uint32_t endtime=UINT32_MAX,int maxcount=INT_MAX,bool calibrated=false) ;
+bool exportscans(int handle,  CurData  (SensorGlucoseData::*proc)(const uint32_t,const uint32_t) const,uint32_t starttime=0,uint32_t endtime=UINT32_MAX,int maxcount=INT_MAX,bool calibrated=false,bool=false) ;
+bool exporthistory(int handle,uint32_t starttime=0,uint32_t endtime=UINT32_MAX,int maxcount=INT_MAX,bool calibrated=false,bool=false) ;
 void showversion() {
 #include "version.h"
     cout<<"Version "<< APPVERSION <<endl;
@@ -811,7 +784,7 @@ extern void setDeactivated(int index,bool deactive) ;
             did=true;
             }
         if(historyexport)  {
-             if(!exportdata(historyexport,exporthistory,starttime,endtime,maxcount,calibrated))
+             if(!exportdata(historyexport,exporthistory,starttime,endtime,maxcount,calibrated,false))
                 return 13;
             did=true;
 
@@ -822,12 +795,12 @@ extern void setDeactivated(int index,bool deactive) ;
             did=true;
             }
         if(scanexport) {
-            if(!exportdata(scanexport,exportscans<true>, &SensorGlucoseData::scanInperiod,starttime,endtime,maxcount,calibrated))
+            if(!exportdata(scanexport,exportscans<true>, &SensorGlucoseData::scanInperiod,starttime,endtime,maxcount,calibrated,false))
                 return 13;
             did=true;
             }
         if(pollexport) {
-            if(!exportdata(pollexport,exportscans<false>, &SensorGlucoseData::streamInperiod,starttime,endtime,maxcount,calibrated))
+            if(!exportdata(pollexport,exportscans<false>, &SensorGlucoseData::streamInperiod,starttime,endtime,maxcount,calibrated,false))
                 return 13;
             did=true;
             }

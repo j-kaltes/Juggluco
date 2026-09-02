@@ -140,6 +140,8 @@ private PendingIntent onalarm=null;
 	@SuppressLint("MissingPermission")
 	@Override
 	public void onConnectionStateChange(BluetoothGatt bluetoothGatt, int status, int newState) {
+        if(!acceptConnectionStateChange(bluetoothGatt,newState))
+            return;
 		endBLEHandler();
 		if(stop) {
 			{if(doLog) {Log.i(LOG_ID,"onConnectionStateChange stop==true");};};
@@ -173,8 +175,8 @@ private PendingIntent onalarm=null;
 					    }
 					;
 					if(!autoconnect) {
-						bluetoothGatt.close();
-						mBluetoothGatt = null;
+						if(!closeCurrentGatt(bluetoothGatt))
+						    return;
 						if(!stop) {
 							var sensorbluetooth=SensorBluetooth.blueone;
 							if(sensorbluetooth!=null)  {
@@ -199,8 +201,8 @@ private PendingIntent onalarm=null;
 							bluetoothGatt.connect();
 							}
 						else {
-							bluetoothGatt.close();
-							mBluetoothGatt = null;
+							if(!closeCurrentGatt(bluetoothGatt))
+							    return;
 							}
 						}
 					conphase = 0;

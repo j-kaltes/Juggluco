@@ -538,6 +538,7 @@ private float graphDistanceY(float physicalDistanceX,float physicalDistanceY) {
         }
     }
 private void requestOverlayLayoutNow() {
+if(!isWearable) {
     if(search!=null)
         search.requestLayout();
     if(meallayout!=null)
@@ -548,16 +549,21 @@ private void requestOverlayLayoutNow() {
         numcontrol.requestLayout();
     numberview.requestOverlayLayout();
     }
+    }
 private final Runnable overlayRelayout=this::requestOverlayLayoutNow;
 void requestOverlayLayout() {
-    requestOverlayLayoutNow();
-    removeCallbacks(overlayRelayout);
-    post(overlayRelayout);
+        if(!isWearable) {
+            requestOverlayLayoutNow();
+            removeCallbacks(overlayRelayout);
+            post(overlayRelayout);
+            }
     }
 void configurationChanged(MainActivity activity) {
+if(!isWearable) {
     numberview.configurationChanged(activity);
     updateDisplayRotation(true);
     requestOverlayLayout();
+    }
     }
 long multitime=0L;
     @Override

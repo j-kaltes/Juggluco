@@ -769,14 +769,14 @@ const CaliPara *getCaliBefore(const CaliPara *first,const CaliPara *end,uint32_t
     }
 
 template <typename DT,typename Sens,typename Cali>
-double     Calibrator<DT,Sens,Cali>::calibrateONE(const uint32_t time, const double value) {
+double     Calibrator<DT,Sens,Cali>::calibrateONE(const uint32_t time, const double value,bool CalibratePast) {
     const uint32_t nr=cali.caliNr;
     if(!nr)  {
         LOGGER("calibrateONE(%s,%u,%.1f) no calibrators\n",sens->shortsensorname()->data(),time,value);
         return NAN;
         }
     const CaliPara *first = cali.caliPara;
-    if(settings->data()->CalibratePast) 
+    if(CalibratePast) 
         return calibrateValue(first[nr-1],time,value);
         
     if(const CaliPara *cali=getCaliBefore( first,first+nr,time)) {
@@ -785,8 +785,8 @@ double     Calibrator<DT,Sens,Cali>::calibrateONE(const uint32_t time, const dou
     LOGGER("calibrateONE(%s,%u,%.1f) no calibrator before time\n",sens->shortsensorname()->data(),time,value);
     return NAN;
     }
-template double    Calibrator<ScanData, SensorGlucoseData, Calibraties>::calibrateONE(const uint32_t time, double);
-template double Calibrator<ScanData, SensorGlucoseData const, Calibraties const>::calibrateONE(unsigned int, double);
+template double    Calibrator<ScanData, SensorGlucoseData, Calibraties>::calibrateONE(const uint32_t time, double,bool);
+template double Calibrator<ScanData, SensorGlucoseData const, Calibraties const>::calibrateONE(unsigned int, double,bool);
 #ifndef NOLOG
 void showCalis(const char *name,const CaliPara *first,const uint32_t nr) {
     const int totlen=25+(24+12+2*8+10)*nr;
@@ -932,4 +932,4 @@ int     Calibrator<DT,Sens,Cali>::caliPosAfter(const uint32_t time) {
     }
 
 
-template double Calibrator<Glucose, SensorGlucoseData const, Calibraties const>::calibrateONE(unsigned int, double);
+template double Calibrator<Glucose, SensorGlucoseData const, Calibraties const>::calibrateONE(unsigned int, double,bool);

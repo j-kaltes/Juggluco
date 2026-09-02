@@ -251,6 +251,8 @@ private boolean connected=false;
 @SuppressLint("MissingPermission")
 @Override
 public void onConnectionStateChange(BluetoothGatt bluetoothGatt, int status, int newState) {
+        if(!acceptConnectionStateChange(bluetoothGatt,newState))
+            return;
     long tim = System.currentTimeMillis();
     if(stop) {
         constatchange[1] = tim; //Needed? ever displayed?
@@ -287,8 +289,8 @@ public void onConnectionStateChange(BluetoothGatt bluetoothGatt, int status, int
           connected=false;
         if(newState == BluetoothProfile.STATE_DISCONNECTED) {
 		   if(!autoconnect) {
-			   bluetoothGatt.close();
-			   mBluetoothGatt = null;
+			   if(!closeCurrentGatt(bluetoothGatt))
+			       return;
 			   if(!stop) {
 				   var sensorbluetooth=SensorBluetooth.blueone;
 				   if(sensorbluetooth!=null)
@@ -300,8 +302,8 @@ public void onConnectionStateChange(BluetoothGatt bluetoothGatt, int status, int
 				   bluetoothGatt.connect();
 				   }
 			   else {
-				   bluetoothGatt.close();
-				   mBluetoothGatt = null;
+				   if(!closeCurrentGatt(bluetoothGatt))
+				       return;
 				   }
 			   }
           }

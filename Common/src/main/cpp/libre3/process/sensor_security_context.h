@@ -1,8 +1,29 @@
+/*      This file is part of Juggluco, an Android app to receive and display         */
+/*      glucose values from Freestyle Libre 2(+), Libre 3(+), Dexcom G7/ONE+,        */
+/*      Sibionics GS1Sb and GS3, Accu-Chek SmartGuide, CareSens Air and              */
+/*      Aidex X sensors.                                                             */
+/*                                                                                   */
+/*      Copyright (C) 2021 Jaap Korthals Altes <jaapkorthalsaltes@gmail.com>         */
+/*                                                                                   */
+/*      Juggluco is free software: you can redistribute it and/or modify             */
+/*      it under the terms of the GNU General Public License as published            */
+/*      by the Free Software Foundation, either version 3 of the License, or         */
+/*      (at your option) any later version.                                          */
+/*                                                                                   */
+/*      Juggluco is distributed in the hope that it will be useful, but              */
+/*      WITHOUT ANY WARRANTY; without even the implied warranty of                   */
+/*      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                         */
+/*      See the GNU General Public License for more details.                         */
+/*                                                                                   */
+/*      You should have received a copy of the GNU General Public License            */
+/*      along with Juggluco. If not, see <https://www.gnu.org/licenses/>.            */
+/*                                                                                   */
+/*      Sun Aug 30 10:21:11 CEST 2026                                                */
+
 #ifndef L3_SENSOR_SECURITY_CONTEXT_H
 #define L3_SENSOR_SECURITY_CONTEXT_H
 
-#include "libre3_handshake.h"
-#include "libre3_security_engine.h"
+#include "libre3_app_core.h"
 
 #include <stddef.h>
 #include <stdint.h>
@@ -16,8 +37,7 @@ extern "C" {
  * All mutable handshake material lives here; no sensor-dependent state is global.
  */
 typedef struct l3_sensor_security_context {
-    l3_security_engine engine;
-    l3_handshake_state handshake;
+    l3_app_core core;
     int ready;
 } l3_sensor_security_context;
 
@@ -37,6 +57,14 @@ int l3_sensor_security_context_init(
     l3_sensor_security_context *context,
     const l3_security_engine_config *config);
 void l3_sensor_security_context_clear(l3_sensor_security_context *context);
+
+/* Optional caller-owned scratch makes fresh authorization allocation-free. */
+size_t l3_sensor_security_authorization_scratch_size(void);
+size_t l3_sensor_security_authorization_scratch_alignment(void);
+int l3_sensor_security_set_authorization_scratch(
+    l3_sensor_security_context *context,
+    void *workspace,
+    size_t workspace_size);
 
 /* Libre 3 handshake operations used by KEYSCrypto / Libre3GattCallback. */
 int l3_sensor_security_begin_handshake(l3_sensor_security_context *context);

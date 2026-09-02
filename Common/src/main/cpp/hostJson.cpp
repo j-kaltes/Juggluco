@@ -121,6 +121,15 @@ std::string mkbackjson(int pos) {
             inserter=insertbool(inserter, "receive",true);
             } 
       if(!host.ICE) { 
+        inserter=std::format_to(inserter,R"(,"transport":{})",host.gettransport());
+        // side is permanent pair identity; the peer must always receive the
+        // opposite side. For ordinary mirrors blereverse is pair-wide and is
+        // copied unchanged to the peer. bleclient remains for compatibility
+        // with older/Wear-aware readers and therefore stays inverted.
+        inserter=insertbool(inserter,"side",!host.side);
+        inserter=insertbool(inserter,"bleclient",!host.bleclient);
+        if(!host.wearos)
+            inserter=insertbool(inserter,"blereverse",host.blereverse);
         LOGGER("getActive=%d getPassive=%d\n",host.getActive(),host.getPassive());
         inserter=insertbool(inserter,"activeonly",!host.getActive()&&host.getPassive());
         inserter=insertbool(inserter,"passiveonly",host.getActive());
@@ -152,10 +161,18 @@ int makeHomeBackupSender() {
     passstr[passlen]='\0';
     uint32_t  starttime=0L;
     bool testip=false,hashostname=false;
-    char label[10]="auto";
-    makepass(label+4,5);
+    constexpr const int lastchar=9;
+    char label[lastchar+1];
+    makepass(label,lastchar);
+    label[lastchar]='\0';
     constexpr const bool detect=true;
-     jint res=backup->changehost(pos,nullptr,nullptr,0,detect,std::string_view(nullptr,0),nums,stream,scans,false,receiver,activeonly,std::string_view(passstr,passlen),starttime,passiveonly,label,testip,true,hashostname);
+     jint res=backup->changehost(pos,nullptr,nullptr,0,detect,std::string_view(nullptr,0),nums,stream,scans,false,receiver,activeonly,std::string_view(passstr,passlen),starttime,passiveonly,label,testip,true,hashostname,passhost_t::transport_automatic,false);
+     if(res>=0) {
+         auto &host=backup->getupdatedata()->allhosts[res];
+         host.side=true;       // r2: sends Scans, offers
+         host.bleclient=false;
+         host.bleunproven=true; // new pair may learn the opposite role once
+         }
      return res;
      }
 int makeHomeBackupReceiver() {
@@ -168,10 +185,21 @@ int makeHomeBackupReceiver() {
     passstr[passlen]='\0';
     uint32_t  starttime=0L;
     bool testip=false,hashostname=false;
-    char label[10]="auto";
-    makepass(label+4,5);
+    constexpr const int lastchar=9;
+    char label[lastchar+1];
+    makepass(label,lastchar);
+    label[lastchar]='\0';
     constexpr const bool detect=true;
-     jint res=backup->changehost(pos,nullptr,nullptr,0,detect,std::string_view(nullptr,0),nums,stream,scans,false,receiver,activeonly,std::string_view(passstr,passlen),starttime,passiveonly,label,testip,true,hashostname);
+     // One-way phone mirrors use a deterministic GATT role: the receive-only
+     // side scans/connects, and the send-only side advertises/accepts. mkbackjson
+     // reverses this bit for the QR peer together with the data direction.
+     jint res=backup->changehost(pos,nullptr,nullptr,0,detect,std::string_view(nullptr,0),nums,stream,scans,false,receiver,activeonly,std::string_view(passstr,passlen),starttime,passiveonly,label,testip,true,hashostname,passhost_t::transport_automatic,true);
+     if(res>=0) {
+         auto &host=backup->getupdatedata()->allhosts[res];
+         host.side=false;      // r1: no Scans, connects
+         host.bleclient=true;
+         host.bleunproven=true; // new pair may learn the opposite role once
+         }
      return res;
      }
 

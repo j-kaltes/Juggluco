@@ -23,6 +23,8 @@
 #include <stdint.h>
 #include <vector>
 #include <atomic>
+#include <memory>
+#include <utility>
 #include <string_view>
 #include "passhost.hpp"
 #include "crypt.h"
@@ -81,7 +83,7 @@ virtual int setindex(int index) {
 
  bool senddata(crypt_t *pass,const std::vector<subdata>&data,const std::string_view naar,uint16_t dowith=0,const uint8_t *extra=nullptr, int extralen=0) ;
     bool senddata(crypt_t *pass,const int offset,const senddata_t *data,const int datalen,const std::string_view naar,uint16_t dowith=0,const uint8_t *extra=nullptr,int extralen=0) ;
-    void   sendpassinit(passhost_t *host,crypt_t *ctx);
+    bool   sendpassinit(passhost_t *host,crypt_t *ctx);
     int testsendmagic(passhost_t *pass);
     int shakehands(passhost_t *pass,char stype);
     int makeconnection(passhost_t *pass,crypt_t*ctx,char stype);
@@ -159,3 +161,21 @@ template<recvni_type recvni,getIdent_type getIdent> unique_al<4> receivedatanopa
 
 virtual ~Connect() = default;
 };
+
+// connections[] is shared between UI, sender/receiver and ICE threads.
+// Always acquire a shared_ptr before dereferencing a connection: replacing or
+// removing the slot can then not destroy the object while a caller is using it.
+extern std::shared_ptr<Connect> connections[];
+
+inline std::shared_ptr<Connect> getconnection(int index) noexcept {
+    return std::atomic_load_explicit(connections + index, std::memory_order_acquire);
+}
+
+inline void setconnection(int index, std::shared_ptr<Connect> connection) noexcept {
+    std::atomic_store_explicit(connections + index, std::move(connection), std::memory_order_release);
+}
+
+template <typename T>
+inline std::shared_ptr<T> getconnectionas(int index) noexcept {
+    return std::static_pointer_cast<T>(getconnection(index));
+}

@@ -32,6 +32,7 @@ struct livecursor {
 struct livestreamoptions {
 	livecursor lastevent;
 	bool calibrated=false;
+	bool calibratePast=false;
 	};
 
 struct recdata {

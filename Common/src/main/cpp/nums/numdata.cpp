@@ -34,30 +34,31 @@ void prunenums() {
     }
 void makenightswitch() {
   LOGAR("makenightswitch");
-   if(settings->data()->initVersion<28) {
-      if(settings->data()->initVersion<26) {
-         if(settings->data()->initVersion<25) {
-            if(settings->data()->initVersion<24) {
-               if(settings->data()->initVersion<23) {
-      //            LOGAR("makenightswitch");
-                  settings->data()->postTreatments=false;
-                  for(auto *num:numdatas) {
-                     num->getnightSwitch() =num->getlastpos();
-                     }
-                  }
-               makerandom(&settings->data()->jugglucoID,sizeof(settings->data()->jugglucoID));
-               for(auto *num:numdatas) {
-                  num->getnightIDstart() =num->getlastpos();
-                  }
+       if(settings->data()->initVersion<28) {
+          if(settings->data()->initVersion<26) {
+             if(settings->data()->initVersion<25) {
+                if(settings->data()->initVersion<24) {
+                   if(settings->data()->initVersion<23) {
+          //            LOGAR("makenightswitch");
+                      settings->data()->postTreatments=false;
+                      for(auto *num:numdatas) {
+                         num->getnightSwitch() =num->getlastpos();
+                         }
+                      }
+                   makerandom(&settings->data()->jugglucoID,sizeof(settings->data()->jugglucoID));
+                   for(auto *num:numdatas) {
+                      num->getnightIDstart() =num->getlastpos();
+                      }
 
-               }
-              }
-//           settings->data()->threshold=0.8f;
+                   }
+                  }
+    //           settings->data()->threshold=0.8f;
+                }
+           extern         void resensordata(int sensorindex);
+            resensordata(0);
+    //     settings->data()->initVersion=28;
             }
-       extern         void resensordata(int sensorindex);
-        resensordata(0);
-//     settings->data()->initVersion=28;
-        }
+
      //prunenums();
 #if !defined(NOLOG) && defined( __ANDROID_API__)
 extern void checker();

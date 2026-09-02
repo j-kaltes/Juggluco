@@ -49,7 +49,22 @@ import static tk.glucodata.Natives.setShownintro;
 import static tk.glucodata.Natives.wakelibreview;
 import static tk.glucodata.help.hidekeyboard;
 import static tk.glucodata.settings.Settings.removeContentView;
+import android.widget.TextView;
+import android.widget.EditText;
 
+
+import android.app.Activity;
+import android.view.MotionEvent;
+import android.view.Surface;
+import android.view.View;
+import android.view.ViewConfiguration;
+import android.view.ViewGroup;
+
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.Collections;
+import java.util.Set;
+import java.util.WeakHashMap;
 import androidx.activity.OnBackPressedCallback;
 
 import java.util.Arrays;
@@ -57,7 +72,6 @@ import java.util.Arrays;
 import android.database.ContentObserver;
 import android.Manifest;
 import android.accessibilityservice.AccessibilityServiceInfo;
-import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.AlarmManager;
 //import androidx.appcompat.app.AlertDialog;
@@ -81,8 +95,6 @@ import android.provider.Settings;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.KeyEvent;
-import android.view.View;
-import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityManager;
 import android.widget.Toast;
 
@@ -519,11 +531,88 @@ private void setGraphOrientationModes(boolean locked,boolean currentAsLandscape)
         }
     }
 
+private boolean menuForcesLandscape=false;
+
+/*
+ * Do not use requestOrientationOnce() while Menus owns the orientation.
+ * A preceding FULL_USER request can still have a portrait configuration
+ * queued even though lastOrientationRequest already says landscape.  In
+ * that case the landscape request has to be reasserted.
+ */
+/*
+private void forceMenuLandscape() {
+    final int wanted=Natives.getScreenOrientation();
+    lastOrientationRequest=wanted;
+    setRequestedOrientation(wanted);
+    } */
+
+public void setMenuForcesLandscape(boolean force) {
+    if(isWearable)
+        return;
+/*
+    if(force) {
+        menuForcesLandscape=true;
+        forceMenuLandscape();
+        return;
+        }
+    if(!menuForcesLandscape)
+        return; */
+    menuForcesLandscape=force;
+    applyScreenOrientation(getResources().getConfiguration());
+    }
+
+/*
+ * With RotateText enabled the portrait graph is the landscape graph rotated
+ * so that its top is at the left and its bottom at the right.  Menus should
+ * use that same landscape side.  In an existing landscape orientation keep
+ * the side that is already on screen.
+ */
+@SuppressWarnings("deprecation")
+private int getMenuLandscapeOrientation(Configuration config) {
+    if(!menuForcesLandscape || !Natives.getRotateText())
+        return Natives.getScreenOrientation();
+
+    final int rotation=getWindowManager().getDefaultDisplay().getRotation();
+
+    if(config.orientation==Configuration.ORIENTATION_PORTRAIT) {
+        /*
+         * Choose the landscape whose top is at the current portrait left and
+         * bottom at the current portrait right.  ROTATION_90/270 also cover
+         * devices whose natural orientation is landscape.
+         */
+        switch(rotation) {
+            case Surface.ROTATION_0:
+            case Surface.ROTATION_270:
+                return ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE;
+            case Surface.ROTATION_90:
+            case Surface.ROTATION_180:
+                return ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+            }
+        }
+    else if(config.orientation==Configuration.ORIENTATION_LANDSCAPE) {
+        /* RotateText uses whichever landscape side is already on screen. */
+        return ActivityInfo.SCREEN_ORIENTATION_LOCKED;
+        }
+
+    return Natives.getScreenOrientation();
+    }
+
+private boolean handlingConfigurationChange=false;
+
+public boolean isHandlingConfigurationChange() {
+    return handlingConfigurationChange;
+    }
 public void applyScreenOrientation(Configuration config) {
 if(!isWearable) {
     try {
+    /*
+    if(menuForcesLandscape) {
+        forceMenuLandscape();
+        return;
+        } */
+
     int wanted;
-    final boolean dorotate=Natives.getRotate()&&isSystemAutoRotateEnabled();
+    final boolean dorotate=!menuForcesLandscape&&Natives.getRotate()&&isSystemAutoRotateEnabled();
     final boolean largeScreen=testPortrait||config.smallestScreenWidthDp >=600;
     final boolean isElongated=testPortrait||getIsElongated(config);
     final boolean android16LargeScreen=testPortrait||hasAndroid16LargeScreenRestriction();
@@ -565,14 +654,14 @@ if(!isWearable) {
     else {
         canRotate=Build.VERSION.SDK_INT < 36||!largeScreen;
         if(!largeScreen) {
-            wanted=Natives.getScreenOrientation();
+            wanted=getMenuLandscapeOrientation(config);
             }
         else if(android16LargeScreen) {
             /* Normally covered by lockFirstLandscape above. */
             wanted=ActivityInfo.SCREEN_ORIENTATION_SENSOR;
             }
         else {
-            wanted=Natives.getScreenOrientation();
+            wanted=getMenuLandscapeOrientation(config);
             }
         }
 
@@ -608,6 +697,13 @@ if(!isWearable) {
         super.onCreate(savedInstanceState);
         setBackPress();
 
+        /*
+         * Menus is a transient overlay. Its static state is useful while the
+         * same task handles configuration changes, but it must not leak into
+         * a newly created task after the old task was removed from Recents.
+         */
+        if(!isWearable && savedInstanceState==null)
+            Menus.newTask();
 
        if(Applic.DynamicTheme)  {
              DynamicThemeUtils.setTheme(this);
@@ -646,7 +742,7 @@ if(!isWearable) {
          return;
       startall();
       Natives.onCreate();
-      if(Menus.on)
+     if(!isWearable&&Menus.on)
            Menus.show(this);
 
 //        var gestureListener= new Layout.ScrollListener(); mGestureDetector = new GestureDetector(this, gestureListener);
@@ -905,7 +1001,7 @@ if(!isWearable) {
                 if(!DontTalk) {
                     talkbackon(this);
                     }
-                if(!Menus.on)
+                if(!isWearable&&!Menus.on)
                     Menus.show(this);
             }
         else {
@@ -1207,23 +1303,43 @@ void removeconfig() {
           }
       }
     }
+
+
 @Override
 public void onConfigurationChanged(Configuration newConfig) {
     super.onConfigurationChanged(newConfig);
     if(doLog) {Log.i(LOG_ID,"onConfigurationChanged height=" +newConfig.screenHeightDp+" width=" +newConfig.screenWidthDp + " sw="+newConfig.smallestScreenWidthDp);};
-if(!isWearable) {
-    applyScreenOrientation(newConfig);
-    }
-    removeconfig();
-    setsizes(this);
-    if(GlucoseCurve.height==0) 
-        GlucoseCurve.setgeo(screenwidth,screenheight);
-    updateRtl(newConfig);
-    if(curve!=null)
-          curve.configurationChanged(this);
+    if(!isWearable)
+        handlingConfigurationChange=true;
+    try {
+        if(!isWearable) {
+            applyScreenOrientation(newConfig);
+            }
+        removeconfig();
+        setsizes(this);
+        if(GlucoseCurve.height==0)
+            GlucoseCurve.setgeo(screenwidth,screenheight);
+        updateRtl(newConfig);
+        if(!isWearable) {
+                if(curve!=null)
+                    curve.configurationChanged(this);
+                }
+        }
+    finally {
+    if(!isWearable)
+                handlingConfigurationChange=false;
+        }
+
+    /* Recreate Menus only after all configuration-dependent geometry above
+     * has been updated. Menus.show() may have been requested while
+     * removeconfig() was unwinding Settings/Display. */
+    if(!isWearable)
+        Menus.configurationChanged(this,newConfig);
 //        curve.requestOverlayLayout();
 
    }
+
+
 public void requestRender() {
     if(curve!=null)
         curve.requestRender();
@@ -1253,7 +1369,7 @@ boolean finepermission() {
     MainActivity act=this;
     {if(doLog) {Log.i(LOG_ID,"finepermission");};};
     if(Build.VERSION.SDK_INT >= 23) {
-        var noperm=Applic.hasPermissions( act, scanpermissions);
+        var noperm=Applic.refreshBluetoothPermissions(act);
         if(noperm.length==0) {
            return systemlocation() ;
            }
@@ -1374,8 +1490,10 @@ public void onRequestPermissionsResult(int requestCode, String[] permissions, in
             } return; */
         case BLUETOOTH_PERMISSION_REQUEST_CODE:
             {if(doLog) {Log.i(LOG_ID,"onRequestPermissionsResult(BLUETOOTH_PERMISSION_REQUEST_CODE) "+granted);};};
+            // Permission callbacks are a deliberate refresh boundary. Re-read the
+            // permission state once here; BLE operations use only the cached result.
+            BleMirror.permissionsChanged();
             if(granted) {
-                BleMirror.permissionsChanged();
                 if(systemlocation())
                    hasLocationContinue();
             } else {
@@ -1709,7 +1827,7 @@ boolean backinapp()  {
          curve.render.stepresult = 0;
          curve.render.badscan=0;
          hideSystemUI();
-         if(Menus.on)
+         if(!isWearable&&Menus.on)
             Menus.show(this);
          else
             curve.requestRender(); 
@@ -2038,16 +2156,121 @@ private void runNfcV(Tag tag) {
 
 int mirrorlistcolor=-1;
 
+private static final Set<TextView> selectableViews =
+        Collections.newSetFromMap(new WeakHashMap<>());
+private static final Set<RecyclerView> selectableRecyclerViews =
+        Collections.newSetFromMap(new WeakHashMap<>());
+
+/*
+ * setTextIsSelectable(true) is the only Android-supported way to obtain the
+ * normal selection handles and framework Copy action on a TextView.  Do this
+ * once for each TextView.  For controls that were already clickable, keep a
+ * short tap reliable by translating ACTION_UP into performClick(); long press
+ * remains entirely with TextView's native selection implementation.
+ */
+private static void keepNormalClick(TextView text) {
+    final int touchSlop =
+            ViewConfiguration.get(text.getContext()).getScaledTouchSlop();
+    final int longPressTimeout = ViewConfiguration.getLongPressTimeout();
+
+    text.setOnTouchListener(new View.OnTouchListener() {
+        float downX, downY;
+        boolean moved;
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            switch (event.getActionMasked()) {
+                case MotionEvent.ACTION_DOWN:
+                    downX = event.getX();
+                    downY = event.getY();
+                    moved = false;
+                    return false;
+
+                case MotionEvent.ACTION_MOVE: {
+                    float dx = event.getX() - downX;
+                    float dy = event.getY() - downY;
+                    if (dx * dx + dy * dy > (float) touchSlop * touchSlop)
+                        moved = true;
+                    return false;
+                }
+
+                case MotionEvent.ACTION_UP:
+                    if (!moved &&
+                        event.getEventTime() - event.getDownTime() < longPressTimeout) {
+                        v.cancelLongPress();
+                        v.setPressed(false);
+                        if (v.isEnabled())
+                            v.performClick();
+                        return true;
+                    }
+                    return false;
+
+                case MotionEvent.ACTION_CANCEL:
+                    moved = true;
+                    return false;
+            }
+            return false;
+        }
+    });
+}
+
+private static void makeTextSelectable(View view) {
+    if (view instanceof TextView && !(view instanceof EditText)) {
+        TextView text = (TextView) view;
+
+        if (selectableViews.add(text)) {
+            /* Read before setTextIsSelectable(), because that method itself
+             * makes a TextView clickable. */
+            boolean wasClickable = text.isClickable();
+
+            text.setTextIsSelectable(true);
+
+            if (wasClickable)
+                keepNormalClick(text);
+        }
+        return;
+    }
+
+    if (view instanceof RecyclerView) {
+        RecyclerView recycler = (RecyclerView) view;
+        if (selectableRecyclerViews.add(recycler)) {
+            recycler.addOnChildAttachStateChangeListener(
+                    new RecyclerView.OnChildAttachStateChangeListener() {
+                @Override
+                public void onChildViewAttachedToWindow(View child) {
+                    if(Applic.DynamicTheme)
+                        DynamicThemeUtils.applyTheme(child);
+                    makeTextSelectable(child);
+                }
+
+                @Override
+                public void onChildViewDetachedFromWindow(View child) {
+                }
+            });
+        }
+    }
+
+    if (view instanceof ViewGroup) {
+        ViewGroup group = (ViewGroup) view;
+        for (int i = 0; i < group.getChildCount(); ++i)
+            makeTextSelectable(group.getChildAt(i));
+    }
+}
+
 public static void addMyContentView(Activity context,View view, ViewGroup.LayoutParams params) {
     context.addContentView(view,params);
     if(Applic.DynamicTheme)
             DynamicThemeUtils.applyTheme(view);
+    makeTextSelectable(view);
     }
 
 public void addMyContentView(View view, ViewGroup.LayoutParams params) {
-    addContentView(view,params);
-    if(Applic.DynamicTheme)
-        DynamicThemeUtils.applyTheme(view);
+    addMyContentView(this, view,  params);
     }
 
+public boolean canForceMenuLandscape(Configuration config) {
+    final boolean largeScreen=testPortrait || config.smallestScreenWidthDp >= 600;
+    final boolean android16LargeScreen=testPortrait || hasAndroid16LargeScreenRestriction();
+    return !(largeScreen && android16LargeScreen);
+    }
 }

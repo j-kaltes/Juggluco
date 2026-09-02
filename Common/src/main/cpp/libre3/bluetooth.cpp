@@ -68,6 +68,7 @@ extern "C" JNIEXPORT  jbyteArray JNICALL fromjava(getLibre3kAuth)(JNIEnv *env, j
         LOGAR("getLibre3kAuth sensorptr==null");
         return nullptr;
         }
+    LOGGER("getLibre3kAuth(%p)\n",sens);
     if(!sens->getinfo()->haskAuth) {
         LOGAR("getLibre3kAuth !haskAuth");
         return nullptr;

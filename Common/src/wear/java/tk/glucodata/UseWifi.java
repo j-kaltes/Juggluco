@@ -38,25 +38,33 @@ private static UseWifi thisone=null;
 	final static private String LOG_ID="UseWifi";
 private	final ConnectivityManager connectivityManager = (ConnectivityManager) Applic.app.getSystemService(Context.CONNECTIVITY_SERVICE);
 private ScheduledFuture<?> wifinotused=null;
+
 private void disusewifi() {
-	{if(doLog) {Log.i(LOG_ID,"disusewifi");};};
+    var wifnot=wifinotused;
+    if (wifnot != null) {
+        wifnot.cancel(false);
+        wifinotused = null;
+    }
+
+    if (doLog) Log.i(LOG_ID, "disusewifi");
     try {
         connectivityManager.bindProcessToNetwork(null);
         connectivityManager.unregisterNetworkCallback(WiFiCallback);
-        }
-     catch(Throwable th) {
-        Log.stack(LOG_ID,"disusewifi",th);
-        }
-	}
+    } catch (Throwable th) {
+        Log.stack(LOG_ID, "disusewifi", th);
+    }
+}
+
 private	final ConnectivityManager.NetworkCallback WiFiCallback = new ConnectivityManager.NetworkCallback() {
 		public void onAvailable(Network network) {
 			super.onAvailable(network);
    			Natives.resetnetwork();
 			{if(doLog) {Log.i(LOG_ID," WiFiCallback onAvailable(network) ");};};
-			if(wifinotused!=null) {
-				wifinotused.cancel(false);
-				wifinotused=null;
-				}
+            var wifnot=wifinotused;
+            if(wifnot != null) {
+                wifnot.cancel(false);
+                wifinotused = null;
+               }
 			connectivityManager.bindProcessToNetwork(network);
    			Applic.wakemirrors();
 //			Applic.scheduler.schedule(()-> { disusewifi(); }, 120, TimeUnit.MINUTES);

@@ -82,15 +82,38 @@ void	NumDisplay::mealdisplay(JCurve &jcurve,float x,float y,const Num *num) cons
 	if(!nr)
 		return;
 	int start=mealptr-nr;
-        auto smallfontlineheight=jcurve.smallfontlineheight;
-	float mealstarty=y-3*smallfontlineheight;
-	
-	y+=smallfontlineheight;
-	for(int i=start;i<mealptr;i++) {
-		jcurve.drawText(jcurve.thevg, x,y,meals->datameal()->ingredients[m[i].ingr].name.data(),NULL );
-		y+=smallfontlineheight;
+	auto smallfontlineheight=jcurve.smallfontlineheight;
+	if(jcurve.portraitReadable()) {
+		/*
+		 * In readable portrait, drawText() keeps the glyphs upright while the
+		 * graph itself is quarter-turned. Logical -X is therefore physical down.
+		 * Advancing logical Y, as landscape does, puts meal elements beside and
+		 * over the meal amount. Advance -X instead so they form a vertical list.
+		 */
+		const float mealstartx=x-(nr+1)*smallfontlineheight;
+		const float mealendx=x+3*smallfontlineheight;
+		float textx=x-smallfontlineheight;
+		for(int i=start;i<mealptr;i++) {
+			jcurve.drawText(jcurve.thevg,textx,y,
+				meals->datameal()->ingredients[m[i].ingr].name.data(),NULL);
+			textx-=smallfontlineheight;
+			}
+
+		/* Rotated equivalent of the landscape meal hit strip. */
+		jcurve.mealpos.emplace_back(mealposition{y,mealstartx,mealendx,
+			(int)(num-startdata()),getindex()});
 		}
-	jcurve.mealpos.emplace_back(mealposition{x, mealstarty, y, (int)(num-startdata()), getindex()});
+	else {
+		float mealstarty=y-3*smallfontlineheight;
+		y+=smallfontlineheight;
+		for(int i=start;i<mealptr;i++) {
+			jcurve.drawText(jcurve.thevg,x,y,
+				meals->datameal()->ingredients[m[i].ingr].name.data(),NULL);
+			y+=smallfontlineheight;
+			}
+		jcurve.mealpos.emplace_back(mealposition{x,mealstarty,y,
+			(int)(num-startdata()),getindex()});
+		}
 	}
 /*
 static inline int mktmmin(const struct tm *tmptr) {

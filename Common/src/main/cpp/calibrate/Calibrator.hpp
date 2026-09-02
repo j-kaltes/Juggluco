@@ -73,15 +73,15 @@ struct Calibrator {
         return calibrateNow(value.gettime(),value.getmgdL());
         }
 
-double     calibrateONE(const uint32_t time, const double value);
-double     calibrateONE(const DT &value) {
-    return calibrateONE(value.gettime(),value.getmgdL());
+double     calibrateONE(const uint32_t time, const double value,bool);
+double     calibrateONE(const DT &value,bool calibratePast) {
+    return calibrateONE(value.gettime(),value.getmgdL(),calibratePast);
     }
 
 double     calibrateONEtest(const DT &value) {
     if(!settings->data()->DoCalibrate)
         return NAN;
-     return calibrateONE(value);
+     return calibrateONE(value,settings->data()->CalibratePast);
      }
 
     std::pair<const DT*,const DT*> makecalibrated(const DT *input,DT *calibrated,int nr,bool allvalues) ;
@@ -101,4 +101,4 @@ extern template std::pair<const ScanData*,const ScanData*> Calibrator<ScanData, 
 
 extern template std::pair<const ScanData*,const ScanData*> Calibrator<ScanData, const SensorGlucoseData, const Calibraties>::makecalibratedback(ScanData const*, ScanData*, int, bool);
 
-extern template double    Calibrator<ScanData, SensorGlucoseData, Calibraties>::calibrateONE(const uint32_t time, double);
+extern template double    Calibrator<ScanData, SensorGlucoseData, Calibraties>::calibrateONE(const uint32_t time, double,bool);

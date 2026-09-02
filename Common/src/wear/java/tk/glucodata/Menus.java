@@ -27,10 +27,9 @@ package tk.glucodata;
 
 public class Menus {
 static public  boolean on=false;
-static public final void show(Object act) {
-    }
-
-
+static public final void show(Object act) { }
+static void configurationChanged(Object act, Object config){}
+static void newTask() {}
 };
 
 

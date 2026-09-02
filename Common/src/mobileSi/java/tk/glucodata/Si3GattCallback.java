@@ -335,6 +335,8 @@ private boolean getinfo=doLog;
     @SuppressLint("MissingPermission")
     @Override
     public void onConnectionStateChange(BluetoothGatt bluetoothGatt, int status, int newState) {
+        if(!acceptConnectionStateChange(bluetoothGatt,newState))
+            return;
 		if(stop) {
 			{if(doLog) {Log.i(LOG_ID,"onConnectionStateChange stop==true");};};
 			return;
@@ -353,8 +355,8 @@ private boolean getinfo=doLog;
             connected=false;
             if (newState == BluetoothProfile.STATE_DISCONNECTED) {
 		   if(!autoconnect) {
-			   bluetoothGatt.close();
-			   mBluetoothGatt = null;
+			   if(!closeCurrentGatt(bluetoothGatt))
+			       return;
 			   if(!stop) {
 				   var sensorbluetooth=SensorBluetooth.blueone;
 				   if(sensorbluetooth!=null)
@@ -366,8 +368,8 @@ private boolean getinfo=doLog;
 				   bluetoothGatt.connect();
 				   }
 			   else {
-				   bluetoothGatt.close();
-				   mBluetoothGatt = null;
+				   if(!closeCurrentGatt(bluetoothGatt))
+				       return;
 				   }
 			   }
 	 	}

@@ -20,7 +20,7 @@ inline void    addstrview(char *&uitptr,const std::string_view indata) {
     memcpy(uitptr,indata.data(),indata.size());
     uitptr+=indata.size();
     }
-extern std::unique_ptr<const char[],deleter> ICEstatus(int allindex);
+extern std::pair<std::unique_ptr<const char[],deleter>,int> ICEstatus(int allindex) ;
 
 #define  phasesel(x,str) case x: {\
         char name[]=str;\
@@ -38,11 +38,11 @@ int addphase( enum Phase_t phase,char *buf) {
             phasesel(SameConnection, "Same Connection");
         }
    };
-std::unique_ptr<const char[],deleter> ICEstatus(int allindex) {
-         ICEConnect *con=static_cast<ICEConnect *>(connections[allindex]);
+std::pair<std::unique_ptr<const char[],deleter>,int> ICEstatus(int allindex) {
+         auto con=getconnectionas<ICEConnect>(allindex);
          if(!con)  {
                 constexpr const char errormessage[]=R"(<h1>System ERROR, restart Juggluco</h1>)";
-        return std::unique_ptr<const char[],deleter>(errormessage,deleter(errormessage));
+                return {std::unique_ptr<const char[],deleter>(errormessage,deleter(errormessage)),(int)sizeof(errormessage)-1};
                 }
         passhost_t &host= getBackupHosts()[allindex];
         mirrorstatus_t &status=mirrorstatus[allindex];
@@ -60,7 +60,8 @@ std::unique_ptr<const char[],deleter> ICEstatus(int allindex) {
     char *buf=new(nothrow) char[maxbuf];
         if(!buf)  {
          constexpr const char errormessage[]=R"(<h1>Error</h1>)";
-         return std::unique_ptr<const char[],deleter>((char *)errormessage,deleter(errormessage));
+//         return std::unique_ptr<const char[],deleter>((char *)errormessage,deleter(errormessage));
+                return {std::unique_ptr<const char[],deleter>(errormessage,deleter(errormessage)),(int)sizeof(errormessage)-1};
              }
 
     static char format[]=R"(<h1>ICE Connection %d: %s</h1><p><b>ICElabel</b>: "%s" <b>Side</b>=%d<br><b>Send to</b>: %s%s%s <b>Running</b>=%s <b>Locked</b>=%s  %s<br><b>Receive from</b>: %s    %d wait for commands: %s    <b>interpret</b>: %s %s</p><p><b>Phase</b>: )";
@@ -93,34 +94,8 @@ std::unique_ptr<const char[],deleter> ICEstatus(int allindex) {
        }
    else
        *bufptr++='\0';
-/*
- ICEConnect:
-bool wakeReceiver=false;
-std::mutex receiveThreadMutex;
-std::condition_variable receiveThreadCon;
-std::atomic_flag startSending{};
-std::atomic_flag startDone{};
-bool start_ack;
-bool other_started;
-std::atomic_flag initrunning{};
-ICE_data
- bool shutdown=false;
-    bool sendShutdown=false;
-    bool  sendStop=false;
-        bool askedData=false;
-    std::mutex  receiveMutex;
-    std::condition_variable receiveCond;
-    bool sentAck=false;
-    bool lastAcked=false;
-    std::mutex  sendMutex;
-    std::condition_variable sendCond;
-    std::mutex  doSendMutex;
-    std::condition_variable doSendCond;
-    bool doSend=false;
-    */
 
-
-
-   LOGGER("ICEstatus size=%d\n",bufptr-buf);
-   return std::unique_ptr<const char[],deleter> (buf,deleter(nullptr));
+   int buflen=bufptr-buf;
+   LOGGER("ICEstatus size=%d\n",buflen);
+   return {std::unique_ptr<const char[],deleter> (buf,deleter(nullptr)),buflen-1};
    }

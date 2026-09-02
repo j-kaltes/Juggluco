@@ -118,8 +118,8 @@ static const ScanData * findScan(const ScanData *start,const ScanData *en) {
     return nullptr;
  }
 
-static const ScanData * findCalibratedScan(const SensorGlucoseData  *sens,const ScanData *start,const ScanData *en) {
-  CalibrateBackward<ScanData>  cali(sens,settings->data()->CalibratePast); 
+ const ScanData * JCurve::findCalibratedScan(const SensorGlucoseData  *sens,const ScanData *start,const ScanData *en) const {
+  CalibrateBackward<ScanData>  cali(sens,CalibratePast); 
   if(!cali.size())
       return nullptr;
   for(const ScanData *it=en-1;it>=start;--it) {
@@ -142,8 +142,8 @@ static const Glucose * findhistory(const SensorGlucoseData  * hist, const uint32
         }
     return nullptr;
     }
-static const Glucose * findCalibratedHistory(const SensorGlucoseData  * sens, const uint32_t firstpos, const uint32_t lastpos) {
-    CalibrateBackward<Glucose>  cali(sens,settings->data()->CalibratePast); 
+const Glucose * JCurve::findCalibratedHistory(const SensorGlucoseData  * sens, const uint32_t firstpos, const uint32_t lastpos) const {
+    CalibrateBackward<Glucose>  cali(sens,CalibratePast); 
 
     if(!cali.size())
               return nullptr;
@@ -305,8 +305,8 @@ uint32_t JCurve::glucosesearch(uint32_t starttime,uint32_t endtime) {
     return 0;
     }
 
-static const ScanData * findforwardCalibratedScan(const SensorGlucoseData  *sens, const ScanData *start,const ScanData *en) {
-  CalibrateForward<ScanData>  cali(sens,settings->data()->CalibratePast); 
+const ScanData * JCurve::findforwardCalibratedScan(const SensorGlucoseData  *sens, const ScanData *start,const ScanData *en) const {
+  CalibrateForward<ScanData>  cali(sens,CalibratePast); 
   if(!cali.size())
      return nullptr;
   for(const ScanData *it=start;it<en;++it) {
@@ -336,8 +336,8 @@ static const Glucose * findforwardhistory(const SensorGlucoseData  * hist, const
     return nullptr;
     }
 
-static const Glucose * findforwardCalibratedHistory(const SensorGlucoseData  * hist, const uint32_t firstpos, const uint32_t lastpos) {
-    CalibrateForward<Glucose>  cali(hist,settings->data()->CalibratePast); 
+const Glucose * JCurve::findforwardCalibratedHistory(const SensorGlucoseData  * hist, const uint32_t firstpos, const uint32_t lastpos) const {
+    CalibrateForward<Glucose>  cali(hist,CalibratePast); 
 
     if(!cali.size())
          return nullptr;

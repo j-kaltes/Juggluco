@@ -1247,6 +1247,7 @@ static  char * givepercentiles(Getopts &opts,uint32_t start, uint32_t endt,recda
     perscurve.dheight=height;
     perscurve.dwidth=width;
     perscurve.invertcolorsset(darkmode);
+    perscurve.CalibratePast=calibratePast;
 
     perscurve.usedtext=text;
     percptr->startday=startday;
@@ -1731,6 +1732,7 @@ std::span<char> getCurveImage(int startpos,Getopts &opts) {
     curveimage.shownumbers=opts.amountsmode;
     curveimage.invertcolorsset(opts.darkmode);
     curveimage.allvalues=opts.allvaluesmode;
+    curveimage.CalibratePast=opts.pastvaluesmode;
     curveimage.showcalibratedstream=opts.calibratedmode;
     curveimage.showcalibratedhistories=opts.calibratedhistorymode;
     curveimage.showcalibratedscans=opts.calibratedscansmode;

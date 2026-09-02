@@ -89,7 +89,7 @@ std::string_view getUserName() {
     }
 static int libreVersion=2;
 template <typename Printer>
-bool libreviewCGMexport(const uint32_t starttime,const uint32_t endtime,const bool header,const int unit,const bool overlap,const bool calibrate,const Printer &printer) {    
+bool libreviewCGMexport(const uint32_t starttime,const uint32_t endtime,const bool header,const int unit,const bool overlap,const bool calibrate,bool calibratePast,const Printer &printer) {    
 
     if(header) {
         const auto name=getUserName();
@@ -103,13 +103,12 @@ bool libreviewCGMexport(const uint32_t starttime,const uint32_t endtime,const bo
     const int decimal=unit==1;
     uint32_t nextstart=starttime;
 
-    const bool CalibratePast=settings->data()->CalibratePast;
     for(int id=totsen-1;id>=0;--id) {
         const int index=indices[id];
         if(SensorGlucoseData *sens=sensors->getSensorData(index)) {
             const char *deviceID=getDeviceID(!sens->isLibre2()).data();
             if(!sens->hasRealHistory()) {
-                CalibrateForward<ScanData> cali(sens, CalibratePast);
+                CalibrateForward<ScanData> cali(sens, calibratePast);
                 const int librev=3;
                 libreVersion=librev;
                 const CurData  inper=sens->streamInperiod(nextstart, endtime); 
@@ -137,7 +136,7 @@ bool libreviewCGMexport(const uint32_t starttime,const uint32_t endtime,const bo
                           nextstart=prevtime;
                  }
             else {
-                CalibrateForward<Glucose> cali(sens, CalibratePast);
+                CalibrateForward<Glucose> cali(sens, calibratePast);
                  bool isLibre3=(sens->getinfo()->interval==SensorGlucoseData::interval5);
                 const int librev=isLibre3?3:(sens->shortsensorname()->data()[0]=='0'?1:2);
                 libreVersion=librev;
@@ -227,12 +226,12 @@ bool librenumexport(uint32_t starttime,uint32_t endtime,const Printer &printer) 
     }
 
 template <typename Printer>
-bool libreviewexport(uint32_t starttime,uint32_t endtime,bool header,int unit,bool overlap,const bool calibrate,const Printer &printer) {    
-        return libreviewCGMexport(starttime,endtime,header,unit,overlap,calibrate,printer)&&
+bool libreviewexport(uint32_t starttime,uint32_t endtime,bool header,int unit,bool overlap,const bool calibrate,bool calibratePast,const Printer &printer) {    
+        return libreviewCGMexport(starttime,endtime,header,unit,overlap,calibrate,calibratePast,printer)&&
             librenumexport(starttime,endtime,printer) ;   
         }
 
-bool libreviewexport(int handle,uint32_t starttime,uint32_t endtime,const bool calibrate) {    
+bool libreviewexport(int handle,uint32_t starttime,uint32_t endtime,const bool calibrate,bool calibratePast) {    
         FILE *fp=fdopen(handle,"w");
         if(!fp) {
             LOGAR("libreviewexport: fdopen failed");
@@ -241,12 +240,12 @@ bool libreviewexport(int handle,uint32_t starttime,uint32_t endtime,const bool c
             }
         destruct _{[fp]{fclose(fp);}};
         const int unit=settings->data()->unit;
-        return libreviewexport(starttime,endtime,true,unit,false,calibrate,[fp](auto ...args) {
+        return libreviewexport(starttime,endtime,true,unit,false,calibrate,calibratePast,[fp](auto ...args) {
                 return fprintf(fp,args...)>0;
                 });
          }
 
-std::span<char> libreviewweb(int startpos, int startlen, uint32_t starttime, uint32_t endtime,bool header,int unit,bool overlap,int maxcount=INT_MAX,bool calibrate=false) {
+std::span<char> libreviewweb(int startpos, int startlen, uint32_t starttime, uint32_t endtime,bool header,int unit,bool overlap,int maxcount=INT_MAX,bool calibrate=false,bool calibratePast=false) {
     struct {
         char *buf;
         int max;
@@ -254,7 +253,7 @@ std::span<char> libreviewweb(int startpos, int startlen, uint32_t starttime, uin
         } printdata{new(std::nothrow) char [startlen],startlen,startpos};
     if(!printdata.buf)
         return {(char *)nullptr,(size_t)0};
-     if(!libreviewexport(starttime,endtime,header,unit,overlap,calibrate,[&printdata](auto ...args) {
+     if(!libreviewexport(starttime,endtime,header,unit,overlap,calibrate,calibratePast,[&printdata](auto ...args) {
             while(true) {
                 int left=printdata.max-printdata.iter; 
                 int wrote=snprintf(printdata.buf+printdata.iter,left,args...);

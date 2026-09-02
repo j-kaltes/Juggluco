@@ -253,8 +253,18 @@ determines the Amounts to send.
 are connected via an insecure connection, data can be signed and
 encrypted by specifying the same (maximal) 16-character <b>password</b>
 on both sides of the connection. Select <b>Save</b> to save what you
-have specified. <b>Delete</b> will delete this connection
-specification.</p>
+have specified.</p>
+<p style="line-height: 100%; margin-bottom: 0in">
+<b>Connection method</b>: For the home net you can choose from different connection methods:
+<ul>
+	<li>TCP/IP;</li>
+	<li>Messages;</li>
+	<li>Direct Bluetooth.</li>
+</ul>
+Messages is specific for the phone-WearOS connection and indirectly uses Bluetooth via
+Google Play Services and the companion app of the watch. When you select “<b>automatic</b>” they will be tried in the order TCP/IP,
+messages, Direct Bluetooth.</p>
+<p><b>Delete</b>will delete this connection specification.</p>
 <p><a href="https://www.juggluco.nl/Jugglucohelp/QRmirror.html"><b>QR</b></a>:
 Create the other side of the connection by scanning a QR code.</p>
 <p style="margin-bottom: 0cm; line-height: 100%">In the simplest
@@ -3183,9 +3193,13 @@ phone that scans the QR will receive the data via this connection.</p>
 <p style="line-height: 100%; margin-bottom: 0cm"><b>Receive from</b>:
 The current phone receives the data from the other phone that scans
 the QR code.</p>
-<p style="line-height: 100%; margin-bottom: 0cm"><b>Home net</b>:
+<p style="line-height: 100%; margin-bottom: 0cm"><b>Local</b> <b>net</b>:
 Generate a connection that is only usable when both phones are
-connected to the current modem.</p>
+nearby. When both are connected to the same home net or a portable
+hotspot, TCP/IP is used, which is also needed when scanning the QR
+code, because then a lot of data has to be sent and TCP/IP is faster.
+When no TCP/IP is available Juggluco 11.0.0 and higher will use
+Bluetooth.</p>
 <p style="line-height: 100%; margin-bottom: 0cm"><span lang="en-US"><b>Internet</b></span><span lang="en-US">:
 Generate a connection that is also usable over the internet. This
 makes use of ICE (Interactive Connectivity Establishment). Sometimes

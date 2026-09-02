@@ -41,6 +41,7 @@ mv "$inname" "$tmpname"
 /*                                                                                   */
 !
 echo "$newdate"
+echo 
 cat "$tmpname") > "$inname"
 rm "$tmpname"
 done

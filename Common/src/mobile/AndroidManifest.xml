@@ -97,6 +97,7 @@
                 <data android:host="*" android:pathPrefix="/data" android:scheme="wear" />
                 <data android:host="*" android:pathPrefix="/messages" android:scheme="wear" />
                 <data android:host="*" android:pathPrefix="/messagesack" android:scheme="wear" />
+                <data android:host="*" android:pathPrefix="/mirrortransport" android:scheme="wear" />
                 <data android:host="*" android:pathPrefix="/netinfo" android:scheme="wear" />
                 <data android:host="*" android:pathPrefix="/wake" android:scheme="wear" />
                 <data android:host="*" android:pathPrefix="/wakestream" android:scheme="wear" />

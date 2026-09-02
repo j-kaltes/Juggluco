@@ -1,5 +1,7 @@
 /*      This file is part of Juggluco, an Android app to receive and display         */
-/*      glucose values from Freestyle Libre 2 and 3 sensors.                         */
+/*      glucose values from Freestyle Libre 2(+), Libre 3(+), Dexcom G7/ONE+,        */
+/*      Sibionics GS1Sb and GS3, Accu-Chek SmartGuide, CareSens Air and              */
+/*      Aidex X sensors.                                                             */
 /*                                                                                   */
 /*      Copyright (C) 2021 Jaap Korthals Altes <jaapkorthalsaltes@gmail.com>         */
 /*                                                                                   */
@@ -16,27 +18,28 @@
 /*      You should have received a copy of the GNU General Public License            */
 /*      along with Juggluco. If not, see <https://www.gnu.org/licenses/>.            */
 /*                                                                                   */
-/*      Fri Jan 27 15:22:01 CET 2023                                                 */
+/*      Sun Aug 30 10:21:11 CEST 2026                                                */
 
+#ifndef L3_HMAC_SHA1_PORTABLE_H
+#define L3_HMAC_SHA1_PORTABLE_H
 
-#pragma once
-#include <unistd.h>
-#include <sys/mman.h>
+#include <stddef.h>
+#include <stdint.h>
 
-class Unprotect {
-inline static const	auto pagesize=sysconf(_SC_PAGE_SIZE);
-inline static const 	unsigned long above=~(pagesize-1);
-void * const start;
-const size_t psize ;
-public:
-template <class T>
- Unprotect(T *addre,int size=pagesize): Unprotect((void *)addre,size) {}
- Unprotect(void *addre,int size=pagesize): start((void *) ( (unsigned long)addre & above)), psize(((int8_t*)addre-(int8_t*)start+size+pagesize-1)&above) {
-	mprotect(start, psize, PROT_READ | PROT_WRITE);
-	}
-bool destruct=true;
- ~Unprotect() {
- 	if(destruct)
-		mprotect(start, psize, PROT_READ|PROT_EXEC);
-	}
-};
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/* Small standalone HMAC-SHA1 used only by the native 149-byte saved-KAuth
+ * envelope.  This removes the saved/reconnect profile's OpenSSL dependency. */
+int l3_hmac_sha1(const uint8_t *key,
+                 size_t key_len,
+                 const uint8_t *data,
+                 size_t data_len,
+                 uint8_t out20[20]);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* L3_HMAC_SHA1_PORTABLE_H */

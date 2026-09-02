@@ -11,7 +11,7 @@
             <selector>
                 <item android:state_enabled="false">
                     <shape android:shape="rectangle">
-                        <solid android:color="?attr/colorControlNormal" />
+                        <solid android:color="?attr/colorButtonDisabledBackground" />
                         <corners android:radius="?attr/buttonCornerRadius" />
                     </shape>
                 </item>

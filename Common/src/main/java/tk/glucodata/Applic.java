@@ -297,18 +297,98 @@ static String[] hasPermissions(Context context, String[] perms) {
     for(var p:perms) {
         if(ContextCompat.checkSelfPermission(context, p)!= PackageManager.PERMISSION_GRANTED) {
             over.add(p);
-            Log.i(LOG_ID,p+" not granted");    
+            Log.i(LOG_ID,p+" not granted");
             }
         else  {
-            Log.i(LOG_ID,p+" granted");    
-                }
+            Log.i(LOG_ID,p+" granted");
+            }
         }
     var uit=new String[over.size()];
     {if(doLog) {Log.i(LOG_ID,"no perm="+over.size());};};
     return over.toArray(uit);
     }
+
+/*
+ * Permission checks are deliberately kept out of the BLE hot paths. Android's
+ * checkSelfPermission() is useful before Bluetooth work begins and after an
+ * explicit permission result, but calling it for every scan result/reconcile
+ * can generate hundreds of checks per second on busy radios (and has caused an
+ * ANR on XA1).  Keep one process-wide snapshot and let Bluetooth operations
+ * consult only these cached booleans.
+ */
+private static volatile boolean bluetoothPermissionSnapshotValid=false;
+private static volatile boolean cachedMayScan=Build.VERSION.SDK_INT<23;
+private static volatile boolean cachedBluetoothScan=Build.VERSION.SDK_INT<31;
+private static volatile boolean cachedBluetoothAdvertise=Build.VERSION.SDK_INT<31;
+private static volatile boolean cachedBluetoothConnect=Build.VERSION.SDK_INT<31;
+
+static String[] refreshBluetoothPermissions(Context context) {
+    final String[] missing;
+    if(Build.VERSION.SDK_INT>=23)
+        missing=hasPermissions(context,scanpermissions);
+    else
+        missing=new String[0];
+
+    boolean mayScan=missing.length==0;
+    boolean scan=true;
+    boolean advertise=true;
+    boolean connect=true;
+    if(Build.VERSION.SDK_INT>=31) {
+        scan=true;
+        advertise=true;
+        connect=true;
+        for(String permission:missing) {
+            if(Manifest.permission.BLUETOOTH_SCAN.equals(permission))
+                scan=false;
+            else if(Manifest.permission.BLUETOOTH_ADVERTISE.equals(permission))
+                advertise=false;
+            else if(Manifest.permission.BLUETOOTH_CONNECT.equals(permission))
+                connect=false;
+            }
+        // Preserve the old Android-12+ policy: the generic Bluetooth path was
+        // considered usable only when all three Nearby Devices permissions were
+        // present. Individual BleMirror operations can still query their specific
+        // cached permission below.
+        mayScan=scan&&advertise&&connect;
+        }
+    synchronized(Applic.class) {
+        cachedMayScan=mayScan;
+        cachedBluetoothScan=scan;
+        cachedBluetoothAdvertise=advertise;
+        cachedBluetoothConnect=connect;
+        bluetoothPermissionSnapshotValid=true;
+        }
+    if(doLog)
+        Log.i(LOG_ID,"Bluetooth permission snapshot: scan="+cachedBluetoothScan+
+                " advertise="+cachedBluetoothAdvertise+" connect="+cachedBluetoothConnect+
+                " mayScan="+cachedMayScan);
+    return missing;
+    }
+
+static void ensureBluetoothPermissions(Context context) {
+    if(bluetoothPermissionSnapshotValid)
+        return;
+    synchronized(Applic.class) {
+        if(!bluetoothPermissionSnapshotValid)
+            refreshBluetoothPermissions(context);
+        }
+    }
+
+static boolean bluetoothPermissionGranted(String permission) {
+    ensureBluetoothPermissions(app);
+    if(Build.VERSION.SDK_INT<31)
+        return true;
+    if(Manifest.permission.BLUETOOTH_SCAN.equals(permission))
+        return cachedBluetoothScan;
+    if(Manifest.permission.BLUETOOTH_ADVERTISE.equals(permission))
+        return cachedBluetoothAdvertise;
+    if(Manifest.permission.BLUETOOTH_CONNECT.equals(permission))
+        return cachedBluetoothConnect;
+    return false;
+    }
+
 static String[] noPermissions(Context context) {
-    String[] noperms=  hasPermissions(context, scanpermissions) ;
+    String[] noperms=refreshBluetoothPermissions(context);
     if(doLog) {
         {if(doLog) {Log.i(LOG_ID,"nopermissions:");};};
         for(var el:noperms) {
@@ -318,25 +398,30 @@ static String[] noPermissions(Context context) {
     return noperms;
     }
 static boolean mayscan() {
-     if(Build.VERSION.SDK_INT >= 23) {
-       return Applic.hasPermissions(app, scanpermissions).length==0 ;
-       }
+    if(Build.VERSION.SDK_INT>=23) {
+        ensureBluetoothPermissions(app);
+        return cachedMayScan;
+        }
     return true;
     }
 static boolean canBluetooth() {
-    if(Build.VERSION.SDK_INT > 30) {
-       return Applic.hasPermissions(app, scanpermissions).length==0 ;
-       }
+    if(Build.VERSION.SDK_INT>30) {
+        ensureBluetoothPermissions(app);
+        return cachedBluetoothScan&&cachedBluetoothAdvertise&&cachedBluetoothConnect;
+        }
     return true;
     }
 @Keep
 static int bluePermission() {
-    if(Build.VERSION.SDK_INT > 23) {
-        if(Applic.hasPermissions(app, scanpermissions).length==0)
-               return 2;
-        if(Build.VERSION.SDK_INT > 30) {
-           return 0;
-           }
+    if(Build.VERSION.SDK_INT>23) {
+        ensureBluetoothPermissions(app);
+        if(Build.VERSION.SDK_INT>30) {
+            if(cachedBluetoothScan&&cachedBluetoothAdvertise&&cachedBluetoothConnect)
+                return 2;
+            return 0;
+            }
+        if(cachedMayScan)
+            return 2;
         return 1;
         }
     return 2;
@@ -393,6 +478,14 @@ static     void explicit(Context context) {
     }
 private boolean netstarted=false;
 void initbluetooth(boolean usebluetooth,Context context,boolean frommain) {
+    // Establish the permission snapshot before BleMirror.init()/SensorBluetooth
+    // can start Bluetooth work. Normally finepermission() already populated it,
+    // so the first call is only a cached read. If Bluetooth is explicitly started
+    // later in this process after having been off, refresh once at that boundary.
+    if(netstarted&&usebluetooth&&!usingbluetooth)
+        refreshBluetoothPermissions(context);
+    else
+        ensureBluetoothPermissions(context);
     if(!netstarted) {
         initializeNet(); 
         netstarted=true;
@@ -491,6 +584,7 @@ private void initializeNet() {
         public void onAvailable(@NonNull Network network) {
            hasonAvailable=true;
            {if(doLog) {Log.i(LOG_ID, "network: onAvailable(" + network+")");};};
+           BleMirror.networkChanged();
            if(useWearos()||hasip()) {
              Natives.networkpresent();
              MessageSender.reinit();
@@ -524,10 +618,17 @@ private void initializeNet() {
         @Override
         public void onLinkPropertiesChanged (Network network, LinkProperties linkProperties) {
             {if(doLog) {Log.i(LOG_ID, "network: onLinkPropertiesChanged("+network+", LinkProperties linkProperties) ");};};
+            // DHCP/address changes do not necessarily produce a new onAvailable().
+            // Refresh both authenticated BLE endpoint exchange and Wear /netinfo,
+            // otherwise peers can retain the previous private IP indefinitely.
+            BleMirror.networkChanged();
+            if(useWearos())
+                MessageSender.networkChanged();
             }
         @Override
         public void onLost(Network network) {
               {if(doLog) {Log.i(LOG_ID, "onLost(" + network+")");};};
+            BleMirror.networkChanged();
             Natives.networkabsent();
                  MessageSender.reinit();
 //           if(hasonAvailable) 
@@ -834,23 +935,23 @@ if(isWearable) {
 
     Floating.init(); 
    final var initversion=Natives.getinitVersion();
-    if(initversion<38) {
-      if(initversion<29) {
-         if(initversion<22) {
-            if(initversion<14) {
-               if(initversion<13) {
-                  Broadcasts.updateall();
-                  }
-               if(Notify.arrowNotify!=null)
-                  Natives.setfloatingFontsize((int) Notify.glucosesize);
-               Natives.setfloatingbackground(WHITE);
-                Natives.setfloatingforeground(BLACK);
-               }
-            }
-         sethour24(DateFormat.is24HourFormat(app));
-         }
-      Natives.setinitVersion(38);
-      }
+    if(initversion<39) {
+          if(initversion<29) {
+             if(initversion<22) {
+                if(initversion<14) {
+                   if(initversion<13) {
+                      Broadcasts.updateall();
+                      }
+                   if(Notify.arrowNotify!=null)
+                      Natives.setfloatingFontsize((int) Notify.glucosesize);
+                   Natives.setfloatingbackground(WHITE);
+                    Natives.setfloatingforeground(BLACK);
+                   }
+                }
+             sethour24(DateFormat.is24HourFormat(app));
+             }
+          Natives.setinitVersion(39);
+          }
 
    setjavahour24(Natives.gethour24());
     XInfuus.setlibrenames();
@@ -950,8 +1051,7 @@ static boolean sendbluetooth(String name,byte[] netinfo,boolean watchBluetooth) 
             if(netinfo!=null) {
                 var sender=tk.glucodata.MessageSender.getMessageSender();
                 if(sender!=null) {
-                    sender.sendnetinfo(name,netinfo);
-                    sender.sendbluetooth(name,watchBluetooth);
+                    sender.sendBluetoothHandoff(name,netinfo,watchBluetooth);
                     return true;
                     }
                 }

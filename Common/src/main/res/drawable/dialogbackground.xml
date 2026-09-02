@@ -1,4 +1,4 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle" >
    <solid android:color="?attr/colorDialogBackground" />
-   <stroke android:width="1dip" android:color="?attr/colorDialogBorder"/>
+   <stroke android:width="2dip" android:color="?attr/colorDialogBorder"/>
 </shape>

@@ -1,9 +1,27 @@
-#include "saved_authorization_record.h"
+/*      This file is part of Juggluco, an Android app to receive and display         */
+/*      glucose values from Freestyle Libre 2(+), Libre 3(+), Dexcom G7/ONE+,        */
+/*      Sibionics GS1Sb and GS3, Accu-Chek SmartGuide, CareSens Air and              */
+/*      Aidex X sensors.                                                             */
+/*                                                                                   */
+/*      Copyright (C) 2021 Jaap Korthals Altes <jaapkorthalsaltes@gmail.com>         */
+/*                                                                                   */
+/*      Juggluco is free software: you can redistribute it and/or modify             */
+/*      it under the terms of the GNU General Public License as published            */
+/*      by the Free Software Foundation, either version 3 of the License, or         */
+/*      (at your option) any later version.                                          */
+/*                                                                                   */
+/*      Juggluco is distributed in the hope that it will be useful, but              */
+/*      WITHOUT ANY WARRANTY; without even the implied warranty of                   */
+/*      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                         */
+/*      See the GNU General Public License for more details.                         */
+/*                                                                                   */
+/*      You should have received a copy of the GNU General Public License            */
+/*      along with Juggluco. If not, see <https://www.gnu.org/licenses/>.            */
+/*                                                                                   */
+/*      Sun Aug 30 10:21:11 CEST 2026                                                */
 
-#include <openssl/evp.h>
-#include <openssl/hmac.h>
-#include "openssl_symbols.h"
-#include "openssl_function_redirects.h"
+#include "saved_authorization_record.h"
+#include "hmac_sha1_portable.h"
 
 #include <string.h>
 
@@ -33,12 +51,9 @@ int l3_saved_authorization_record_make_header_mac(const uint8_t nonce16[16],
                                         const uint8_t header_prefix[0x45],
                                         uint8_t out20[20]) {
     if (!nonce16 || !header_prefix || !out20) return L3_SAVED_AUTHORIZATION_ERR_ARGUMENT;
-    unsigned int n = 0;
-    uint8_t tmp[EVP_MAX_MD_SIZE];
-    if (!HMAC(EVP_sha1(), nonce16, 16, header_prefix, 0x45u, tmp, &n) || n != 20u) {
+    if (l3_hmac_sha1(nonce16, 16u, header_prefix, 0x45u, out20) != 0) {
         return L3_SAVED_AUTHORIZATION_ERR_CRYPTO;
     }
-    memcpy(out20, tmp, 20u);
     return L3_SAVED_AUTHORIZATION_OK;
 }
 
@@ -124,6 +139,5 @@ int l3_saved_authorization_record_verify_header_mac(const uint8_t *bytes, size_t
     return memcmp(mac, bytes + L3_SAVED_AUTHORIZATION_HEADER_MAC_OFFSET, 20u) == 0
         ? L3_SAVED_AUTHORIZATION_OK : L3_SAVED_AUTHORIZATION_ERR_FORMAT;
 }
-
 
 

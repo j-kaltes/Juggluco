@@ -1,8 +1,43 @@
+/*      This file is part of Juggluco, an Android app to receive and display         */
+/*      glucose values from Freestyle Libre 2(+), Libre 3(+), Dexcom G7/ONE+,        */
+/*      Sibionics GS1Sb and GS3, Accu-Chek SmartGuide, CareSens Air and              */
+/*      Aidex X sensors.                                                             */
+/*                                                                                   */
+/*      Copyright (C) 2021 Jaap Korthals Altes <jaapkorthalsaltes@gmail.com>         */
+/*                                                                                   */
+/*      Juggluco is free software: you can redistribute it and/or modify             */
+/*      it under the terms of the GNU General Public License as published            */
+/*      by the Free Software Foundation, either version 3 of the License, or         */
+/*      (at your option) any later version.                                          */
+/*                                                                                   */
+/*      Juggluco is distributed in the hope that it will be useful, but              */
+/*      WITHOUT ANY WARRANTY; without even the implied warranty of                   */
+/*      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.                         */
+/*      See the GNU General Public License for more details.                         */
+/*                                                                                   */
+/*      You should have received a copy of the GNU General Public License            */
+/*      along with Juggluco. If not, see <https://www.gnu.org/licenses/>.            */
+/*                                                                                   */
+/*      Sun Aug 30 10:21:11 CEST 2026                                                */
+
 #include "authorization_shared_point_frames.h"
 #include "whitebox_lookup_table.h"
 
 #include <stdlib.h>
 #include <string.h>
+
+typedef struct l3_authorization_root_digest_workspace {
+    l3_authorization_digest_context digest;
+    uint8_t finalize[L3_AUTHORIZATION_DIGEST_FINALIZE_WORKSPACE_SIZE];
+    uint8_t final82[0x82];
+    uint8_t digest_frames[2u * L3_AUTH_FRAME_LEN];
+    uint8_t encode_state[0x82];
+    uint8_t encode_tmp[0x82];
+    uint8_t extract_zero_and_current[0x82];
+    uint8_t extract_state[0x82];
+    uint8_t extract_tmp[0x82];
+    uint8_t root_frame[L3_AUTH_FRAME_LEN];
+} l3_authorization_root_digest_workspace;
 
 static int validate_frame_tables(const l3_authorization_frame_tables *t) {
     if (!t) return L3_AUTH_ERR_ARGUMENT;
@@ -140,16 +175,17 @@ static void digest_frame_second_half_transform(const l3_authorization_frame_tabl
     }
 }
 
-int l3_authorization_encode_digest_result_frames(const l3_authorization_frame_tables *tables,
+static int encode_digest_result_frames_with_scratch(
+                                          const l3_authorization_frame_tables *tables,
                                           const uint8_t final82[0x82],
-                                          uint8_t out_two_frames[2 * L3_AUTH_FRAME_LEN]) {
+                                          uint8_t out_two_frames[2 * L3_AUTH_FRAME_LEN],
+                                          uint8_t state[0x82],
+                                          uint8_t tmp[0x82]) {
     int rc = validate_digest_frame_program(tables);
     if (rc) return rc;
     if (!final82 || !out_two_frames) return L3_AUTH_ERR_ARGUMENT;
-    uint8_t state[0x82];
-    uint8_t tmp[0x82];
     rc = table_state_transform(tables->digest_frame_program, tables->digest_frame_program_format,
-                         0u, 0x820u, final82, final82, state, sizeof(state));
+                         0u, 0x820u, final82, final82, state, 0x82u);
     if (rc) return rc;
     rc = table_state_transform(tables->digest_frame_program, tables->digest_frame_program_format,
                          0x82u, 0x420u, state, state, out_two_frames, L3_AUTH_FRAME_LEN);
@@ -163,6 +199,16 @@ int l3_authorization_encode_digest_result_frames(const l3_authorization_frame_ta
     memcpy(out_two_frames, out_two_frames + L3_AUTH_FRAME_LEN, L3_AUTH_FRAME_LEN);
     memcpy(out_two_frames + L3_AUTH_FRAME_LEN, tmp, L3_AUTH_FRAME_LEN);
     return L3_AUTH_OK;
+}
+
+int l3_authorization_encode_digest_result_frames(
+                                          const l3_authorization_frame_tables *tables,
+                                          const uint8_t final82[0x82],
+                                          uint8_t out_two_frames[2 * L3_AUTH_FRAME_LEN]) {
+    uint8_t state[0x82];
+    uint8_t tmp[0x82];
+    return encode_digest_result_frames_with_scratch(
+        tables, final82, out_two_frames, state, tmp);
 }
 
 int l3_authorization_frames_digest(const l3_authorization_frame_tables *tables,
@@ -231,28 +277,41 @@ static void range_extract_shift_transform(const l3_authorization_frame_tables *t
 }
 
 
-static int extract_first_root_frame_from_digest_frames(const l3_authorization_frame_tables *tables,
+static int extract_first_root_frame_from_digest_frames_with_scratch(
+                                                       const l3_authorization_frame_tables *tables,
                                                        const uint8_t digest_frames[2 * L3_AUTH_FRAME_LEN],
-                                                       uint8_t out_frame66[L3_AUTH_FRAME_LEN]) {
-    uint8_t zero_and_current[0x82];
-    uint8_t state[0x82];
+                                                       uint8_t out_frame66[L3_AUTH_FRAME_LEN],
+                                                       uint8_t zero_and_current[0x82],
+                                                       uint8_t state[0x82],
+                                                       uint8_t tmp[0x82]) {
     memset(zero_and_current, 0, 0x40u);
     memcpy(zero_and_current + 0x40u, digest_frames, L3_AUTH_FRAME_LEN);
-    memset(state, 0, sizeof(state));
+    memset(state, 0, 0x82u);
     int rc = table_state_transform(tables->range_extract_program, tables->range_extract_program_format,
                              0x86u, 0x1000420u,
                              digest_frames + L3_AUTH_FRAME_LEN,
-                             zero_and_current, state, sizeof(state));
+                             zero_and_current, state, 0x82u);
     if (rc) return rc;
     for (uint32_t i = 0; i < 0x10u; ++i) {
-        uint8_t tmp[0x82];
-        memset(tmp, 0, sizeof(tmp));
+        memset(tmp, 0, 0x82u);
         range_extract_shift_transform(tables, state, state, tmp);
-        memcpy(state, tmp, sizeof(state));
+        memcpy(state, tmp, 0x82u);
     }
     return table_state_transform(tables->range_extract_program, tables->range_extract_program_format,
                              0x108u, 0x420u, state, state,
                              out_frame66, L3_AUTH_FRAME_LEN);
+}
+
+static int extract_first_root_frame_from_digest_frames(
+                                                       const l3_authorization_frame_tables *tables,
+                                                       const uint8_t digest_frames[2 * L3_AUTH_FRAME_LEN],
+                                                       uint8_t out_frame66[L3_AUTH_FRAME_LEN]) {
+    uint8_t zero_and_current[0x82];
+    uint8_t state[0x82];
+    uint8_t tmp[0x82];
+    return extract_first_root_frame_from_digest_frames_with_scratch(
+        tables, digest_frames, out_frame66,
+        zero_and_current, state, tmp);
 }
 
 int l3_authorization_frames_digest_extract_root16(
@@ -296,6 +355,80 @@ int l3_authorization_frames_digest_extract_root16(
     if (rc) return rc;
     memcpy(out_root16_plus_frame66, root_frame, 16u);
     memcpy(out_root16_plus_frame66 + 16u, root_frame, L3_AUTH_FRAME_LEN);
+    return L3_AUTH_OK;
+}
+
+size_t l3_authorization_root_digest_workspace_size(void) {
+    return sizeof(l3_authorization_root_digest_workspace);
+}
+
+size_t l3_authorization_root_digest_workspace_alignment(void) {
+    return _Alignof(l3_authorization_root_digest_workspace);
+}
+
+int l3_authorization_frame_pairs_digest_extract_root16_with_workspace(
+                        const l3_authorization_frame_tables *tables,
+                        const l3_authorization_digest_tables *digest_tables,
+                        const uint8_t first_two_frames[2u * L3_AUTH_FRAME_LEN],
+                        const uint8_t second_two_frames[2u * L3_AUTH_FRAME_LEN],
+                        const uint8_t *prefix, size_t prefix_len,
+                        void *workspace, size_t workspace_size,
+                        uint8_t out_root16_plus_frame66[16u + L3_AUTH_FRAME_LEN]) {
+    int rc = validate_digest_frame_program(tables);
+    if (!rc) rc = validate_range_extract_program(tables);
+    if (rc) return rc;
+    if (!digest_tables || !first_two_frames || !second_two_frames ||
+        !out_root16_plus_frame66 || (prefix_len && !prefix) || !workspace ||
+        workspace_size < sizeof(l3_authorization_root_digest_workspace) ||
+        (uintptr_t)workspace %
+                _Alignof(l3_authorization_root_digest_workspace) != 0u) {
+        return L3_AUTH_ERR_ARGUMENT;
+    }
+
+    l3_authorization_root_digest_workspace *ws =
+        (l3_authorization_root_digest_workspace *)workspace;
+    rc = l3_authorization_digest_init(&ws->digest, digest_tables, 0x20u);
+    if (rc) return L3_AUTH_ERR_CALLBACK;
+    ws->digest.compression_workspace = ws->finalize;
+    ws->digest.compression_workspace_size = sizeof(ws->finalize);
+    if (prefix_len &&
+        l3_authorization_digest_update(
+            &ws->digest, prefix, prefix_len) != 0) {
+        return L3_AUTH_ERR_CALLBACK;
+    }
+    for (unsigned i = 0u; i < 2u; ++i) {
+        if (l3_authorization_digest_update_frame(
+                &ws->digest,
+                first_two_frames + i * L3_AUTH_FRAME_LEN,
+                16u) != 0) {
+            return L3_AUTH_ERR_CALLBACK;
+        }
+    }
+    for (unsigned i = 0u; i < 2u; ++i) {
+        if (l3_authorization_digest_update_frame(
+                &ws->digest,
+                second_two_frames + i * L3_AUTH_FRAME_LEN,
+                16u) != 0) {
+            return L3_AUTH_ERR_CALLBACK;
+        }
+    }
+    if (l3_authorization_digest_finalize_frame82_with_workspace(
+            &ws->digest, ws->final82,
+            ws->finalize, sizeof(ws->finalize)) != 0) {
+        return L3_AUTH_ERR_CALLBACK;
+    }
+    rc = encode_digest_result_frames_with_scratch(
+        tables, ws->final82, ws->digest_frames,
+        ws->encode_state, ws->encode_tmp);
+    if (rc) return rc;
+    rc = extract_first_root_frame_from_digest_frames_with_scratch(
+        tables, ws->digest_frames, ws->root_frame,
+        ws->extract_zero_and_current, ws->extract_state,
+        ws->extract_tmp);
+    if (rc) return rc;
+    memcpy(out_root16_plus_frame66, ws->root_frame, 16u);
+    memcpy(out_root16_plus_frame66 + 16u, ws->root_frame,
+           L3_AUTH_FRAME_LEN);
     return L3_AUTH_OK;
 }
 

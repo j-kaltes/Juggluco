@@ -42,12 +42,14 @@
         <item name="android:alertDialogTheme">@style/MyLightAlertDialogTheme</item>
 
         <item name="colorMirrorConnection">@color/red</item>
+        <item name="android:disabledAlpha">0.35</item>
     </style>
 
     <!-- Base for all DARK themes -->
     <style name="AppTheme.Base.Dark" parent="AppTheme.Base">
         <item name="android:buttonStyle">@style/mybuttonstyle</item>
         <item name="isAppLightTheme">false</item>
+        <item name="android:disabledAlpha">0.35</item>
     </style>
 
     <style name="MySpinnerDropDownItemStyle" parent="android:Widget.DropDownItem.Spinner">
@@ -136,7 +138,10 @@
         <item name="colorButtonNormal">#F4F2FA</item>
         <item name="colorControlHighlight">#336750A4</item>
         <item name="colorSpinnerDropdownText">#6750A4</item>
-        <item name="colorDialogBorder">@color/black</item>
+        <item name="colorDialogBorder">#6750A4</item>
+        <item name="colorDisabledText">#AFAEB0</item>
+        <item name="colorDisabledControl">#DEDDDF</item>
+        <item name="colorButtonDisabledBackground">#E4E0EF</item>
     </style>
 
     <style name="AppTheme.MaterialClassic" parent="AppTheme.Base.Light">
@@ -155,6 +160,10 @@
         <item name="buttonCornerRadius">8dp</item>
         <item name="colorControlHighlight">#3300796B</item>
         <item name="colorSpinnerDropdownText">#6200EE</item>
+        <item name="colorDisabledText">#ABABAB</item>
+        <item name="colorDisabledControl">#D9D9D9</item>
+        <item name="colorButtonDisabledBackground">#CBE2DF</item>
+        <item name="colorDialogBorder">#008275</item>
     </style>
 
     <style name="AppTheme.ForestLight" parent="AppTheme.Base.Light">
@@ -173,6 +182,10 @@
         <item name="buttonCornerRadius">14dp</item>
         <item name="colorControlHighlight">#332E7D52</item>
         <item name="colorSpinnerDropdownText">#2E7D52</item>
+        <item name="colorDisabledText">#9EA9A2</item>
+        <item name="colorDisabledControl">#CBD6CE</item>
+        <item name="colorButtonDisabledBackground">#C8DCD0</item>
+        <item name="colorDialogBorder">#2E7D52</item>
     </style>
 
     <style name="AppTheme.NordicFrost" parent="AppTheme.Base.Light">
@@ -191,6 +204,10 @@
         <item name="buttonCornerRadius">16dp</item>
         <item name="colorControlHighlight">#335BADDE</item>
         <item name="colorSpinnerDropdownText">#1B2B3A</item>
+        <item name="colorDisabledText">#A2AAB2</item>
+        <item name="colorDisabledControl">#CBD8E4</item>
+        <item name="colorButtonDisabledBackground">#CDDCEB</item>
+        <item name="colorDialogBorder">#2F6FA8</item>
     </style>
 
     <style name="AppTheme.LavenderDream" parent="AppTheme.Base.Light">
@@ -209,6 +226,10 @@
         <item name="buttonCornerRadius">25dp</item>
         <item name="colorControlHighlight">#33A96DFF</item>
         <item name="colorSpinnerDropdownText">#281D49</item>
+        <item name="colorDisabledText">#A9A2BB</item>
+        <item name="colorDisabledControl">#D8CEEB</item>
+        <item name="colorButtonDisabledBackground">#DDD2EE</item>
+        <item name="colorDialogBorder">#7353A5</item>
     </style>
 
     <style name="AppTheme.MessagingEmerald" parent="AppTheme.Base.Light">
@@ -227,6 +248,10 @@
         <item name="buttonCornerRadius">18dp</item>
         <item name="colorControlHighlight">#3325D366</item>
         <item name="colorSpinnerDropdownText">#075E54</item>
+        <item name="colorDisabledText">#A4ADAA</item>
+        <item name="colorDisabledControl">#CFDCD8</item>
+        <item name="colorButtonDisabledBackground">#CFE1DD</item>
+        <item name="colorDialogBorder">#075E54</item>
     </style>
 
     <style name="AppTheme.VideoCrimson" parent="AppTheme.Base.Light">
@@ -245,6 +270,10 @@
         <item name="buttonCornerRadius">6dp</item>
         <item name="colorControlHighlight">#33D93025</item>
         <item name="colorSpinnerDropdownText">#C62828</item>
+        <item name="colorDisabledText">#AEAFB0</item>
+        <item name="colorDisabledControl">#DEDEDE</item>
+        <item name="colorButtonDisabledBackground">#F6DCDC</item>
+        <item name="colorDialogBorder">#C62828</item>
     </style>
 
     <style name="AppTheme.LearningLime" parent="AppTheme.Base.Light">
@@ -265,6 +294,10 @@
         <item name="themedButtonBackground">@drawable/button_oval</item>
         <item name="colorControlHighlight">#3358A700</item>
         <item name="colorSpinnerDropdownText">#58A700</item>
+        <item name="colorDisabledText">#A7B096</item>
+        <item name="colorDisabledControl">#D3E0C0</item>
+        <item name="colorButtonDisabledBackground">#CDE8A6</item>
+        <item name="colorDialogBorder">#458400</item>
     </style>
 
     <style name="AppTheme.MinimalInk" parent="AppTheme.Base.Light">
@@ -283,6 +316,10 @@
         <item name="buttonCornerRadius">0dp</item>
         <item name="colorControlHighlight">#22111111</item>
         <item name="colorSpinnerDropdownText">#111111</item>
+        <item name="colorDisabledText">#ABABAA</item>
+        <item name="colorDisabledControl">#D9D9D8</item>
+        <item name="colorButtonDisabledBackground">#DDDDDB</item>
+        <item name="colorDialogBorder">#111111</item>
     </style>
 
     <style name="AppTheme.CoffeeCream" parent="AppTheme.Base.Light">
@@ -301,6 +338,10 @@
         <item name="buttonCornerRadius">12dp</item>
         <item name="colorControlHighlight">#33A8754B</item>
         <item name="colorSpinnerDropdownText">#6F4E37</item>
+        <item name="colorDisabledText">#B3A99E</item>
+        <item name="colorDisabledControl">#E1D7CB</item>
+        <item name="colorButtonDisabledBackground">#E8DAC9</item>
+        <item name="colorDialogBorder">#6F4E37</item>
     </style>
 
     <style name="AppTheme.CloudBlue" parent="AppTheme.Base.Light">
@@ -319,6 +360,10 @@
         <item name="buttonCornerRadius">25dp</item>
         <item name="colorControlHighlight">#332563EB</item>
         <item name="colorSpinnerDropdownText">#2563EB</item>
+        <item name="colorDisabledText">#A1A8B4</item>
+        <item name="colorDisabledControl">#CDD6E2</item>
+        <item name="colorButtonDisabledBackground">#C8DAFB</item>
+        <item name="colorDialogBorder">#2563EB</item>
     </style>
 
     <style name="AppTheme.RoseQuartz" parent="AppTheme.Base.Light">
@@ -337,6 +382,10 @@
         <item name="buttonCornerRadius">16dp</item>
         <item name="colorControlHighlight">#33E86A92</item>
         <item name="colorSpinnerDropdownText">#B23A63</item>
+        <item name="colorDisabledText">#B7A4AA</item>
+        <item name="colorDisabledControl">#E6D1D7</item>
+        <item name="colorButtonDisabledBackground">#F1D2DC</item>
+        <item name="colorDialogBorder">#B23A63</item>
     </style>
 
     <!-- ========================================= -->
@@ -360,6 +409,10 @@
         <item name="colorButtonNormal">#252832</item>
         <item name="colorControlHighlight">#334169CC</item>
         <item name="colorSpinnerDropdownText">#E6E1E5</item>
+        <item name="colorDisabledText">#4C4C4F</item>
+        <item name="colorDisabledControl">#2A2C30</item>
+        <item name="colorButtonDisabledBackground">#1D2845</item>
+        <item name="colorDialogBorder">#9DB7FF</item>
     </style>
 
     <style name="AppTheme.OceanicDark" parent="AppTheme.Base.Dark">
@@ -378,6 +431,10 @@
         <item name="buttonCornerRadius">25dp</item>
         <item name="colorControlHighlight">#334DD5F0</item>
         <item name="colorSpinnerDropdownText">#DDEFFF</item>
+        <item name="colorDisabledText">#415160</item>
+        <item name="colorDisabledControl">#1C3242</item>
+        <item name="colorButtonDisabledBackground">#0B3043</item>
+        <item name="colorDialogBorder">#4DD5F0</item>
     </style>
 
     <style name="AppTheme.SunsetElegance" parent="AppTheme.Base.Dark">
@@ -396,6 +453,10 @@
         <item name="buttonCornerRadius">25dp</item>
         <item name="colorControlHighlight">#33FF8A65</item>
         <item name="colorSpinnerDropdownText">#F9E7EA</item>
+        <item name="colorDisabledText">#5B4E57</item>
+        <item name="colorDisabledControl">#3D2D39</item>
+        <item name="colorButtonDisabledBackground">#4A2333</item>
+        <item name="colorDialogBorder">#FF8A65</item>
     </style>
 
     <style name="AppTheme.DeveloperObsidian" parent="AppTheme.Base.Dark">
@@ -415,6 +476,10 @@
         <item name="colorControlHighlight">#3300FF9D</item>
         <item name="colorSpinnerDropdownText">#00FF9D</item>
         <item name="android:textAppearanceButton">@style/textAppearanceButtonDark</item>
+        <item name="colorDisabledText">#414D46</item>
+        <item name="colorDisabledControl">#232C27</item>
+        <item name="colorButtonDisabledBackground">#092D1F</item>
+        <item name="colorDialogBorder">#00FF9D</item>
     </style>
 
     <style name="AppTheme.AmberDusk" parent="AppTheme.Base.Dark">
@@ -433,6 +498,10 @@
         <item name="buttonCornerRadius">10dp</item>
         <item name="colorControlHighlight">#33F6B23D</item>
         <item name="colorSpinnerDropdownText">#F8EBCB</item>
+        <item name="colorDisabledText">#574D3C</item>
+        <item name="colorDisabledControl">#3B2C14</item>
+        <item name="colorButtonDisabledBackground">#392910</item>
+        <item name="colorDialogBorder">#F6B23D</item>
     </style>
 
     <style name="AppTheme.MusicNeon" parent="AppTheme.Base.Dark">
@@ -452,6 +521,10 @@
         <item name="colorControlHighlight">#331ED760</item>
         <item name="colorSpinnerDropdownText">#1ED760</item>
         <item name="android:textAppearanceButton">@style/textAppearanceButtonDark</item>
+        <item name="colorDisabledText">#474947</item>
+        <item name="colorDisabledControl">#272827</item>
+        <item name="colorButtonDisabledBackground">#0C2A17</item>
+        <item name="colorDialogBorder">#1ED760</item>
     </style>
 
     <style name="AppTheme.SocialSunset" parent="AppTheme.Base.Dark">
@@ -470,6 +543,10 @@
         <item name="buttonCornerRadius">25dp</item>
         <item name="colorControlHighlight">#33F77737</item>
         <item name="colorSpinnerDropdownText">#FFEAF5</item>
+        <item name="colorDisabledText">#57495B</item>
+        <item name="colorDisabledControl">#39283E</item>
+        <item name="colorButtonDisabledBackground">#481A3E</item>
+        <item name="colorDialogBorder">#F77737</item>
     </style>
 
     <style name="AppTheme.RoyalNight" parent="AppTheme.Base.Dark">
@@ -488,6 +565,10 @@
         <item name="buttonCornerRadius">14dp</item>
         <item name="colorControlHighlight">#33D6A84F</item>
         <item name="colorSpinnerDropdownText">#EEEFFF</item>
+        <item name="colorDisabledText">#4B4C5F</item>
+        <item name="colorDisabledControl">#2B2C43</item>
+        <item name="colorButtonDisabledBackground">#2F292C</item>
+        <item name="colorDialogBorder">#D6A84F</item>
     </style>
 
     <style name="AppTheme.OLEDBlack" parent="AppTheme.Base.Dark">
@@ -507,6 +588,10 @@
         <item name="colorControlHighlight">#33BB86FC</item>
         <item name="colorSpinnerDropdownText">#FFFFFF</item>
         <item name="android:textAppearanceButton">@style/textAppearanceButtonDark</item>
+        <item name="colorDisabledText">#454545</item>
+        <item name="colorDisabledControl">#242424</item>
+        <item name="colorButtonDisabledBackground">#271C34</item>
+        <item name="colorDialogBorder">#BB86FC</item>
     </style>
 
     <style name="AppTheme.HighVisibility" parent="AppTheme.Base.Dark">
@@ -526,6 +611,10 @@
         <item name="colorControlHighlight">#44FFFFFF</item>
         <item name="colorSpinnerDropdownText">#FFFFFF</item>
         <item name="android:textAppearanceButton">@style/textAppearanceButtonDark</item>
+        <item name="colorDisabledText">#4D4D4D</item>
+        <item name="colorDisabledControl">#2C2C2C</item>
+        <item name="colorButtonDisabledBackground">#2D2B10</item>
+        <item name="colorDialogBorder">#FFEA00</item>
     </style>
 
     <style name="AppTheme.SolarizedDark" parent="AppTheme.Base.Dark">
@@ -544,6 +633,10 @@
         <item name="buttonCornerRadius">8dp</item>
         <item name="colorControlHighlight">#33268BD2</item>
         <item name="colorSpinnerDropdownText">#839496</item>
+        <item name="colorDisabledText">#426066</item>
+        <item name="colorDisabledControl">#1C404A</item>
+        <item name="colorButtonDisabledBackground">#073E54</item>
+        <item name="colorDialogBorder">#3593D5</item>
     </style>
 
 <style name="AppTheme.CyberpunkNeon" parent="AppTheme.Base.Dark">
@@ -560,7 +653,11 @@
         <item name="colorButtonText">#FFFFFF</item>
         <item name="buttonCornerRadius">0dp</item> <item name="colorControlHighlight">#3300FFFF</item>
         <item name="colorSpinnerDropdownText">#00FFFF</item>
-    </style>
+        <item name="colorDisabledText">#4D4361</item>
+        <item name="colorDisabledControl">#2E1D54</item>
+        <item name="colorButtonDisabledBackground">#4D032B</item>
+        <item name="colorDialogBorder">#FF0055</item>
+</style>
 
 <style name="AppTheme.VintageParchment" parent="AppTheme.Base.Light">
         <item name="android:windowBackground">#F4ECD8</item> <item name="android:textColorPrimary">#3E2A1E</item> <item name="android:textColor">#3E2A1E</item>
@@ -578,7 +675,11 @@
 
         <item name="colorControlHighlight">#338B3A2B</item>
         <item name="colorSpinnerDropdownText">#3E2A1E</item>
-    </style>
+        <item name="colorDisabledText">#AC9F8E</item>
+        <item name="colorDisabledControl">#D9CCB6</item>
+        <item name="colorButtonDisabledBackground">#DAD0BC</item>
+        <item name="colorDialogBorder">#8B3A2B</item>
+</style>
 
 <style name="AppTheme.MatchaMint" parent="AppTheme.Base.Light">
         <item name="android:windowBackground">#F7FAF8</item>
@@ -598,7 +699,11 @@
         <item name="buttonCornerRadius">24dp</item>
         <item name="colorControlHighlight">#332C8A4A</item>
         <item name="colorSpinnerDropdownText">#1A2E24</item>
-    </style>
+        <item name="colorDisabledText">#A3ADA8</item>
+        <item name="colorDisabledControl">#CCDDD2</item>
+        <item name="colorButtonDisabledBackground">#CCE2D3</item>
+        <item name="colorDialogBorder">#2A8346</item>
+</style>
 
     <!-- ========================================= -->
     <!-- DEFAULT/SYSTEM THEMES                     -->
@@ -610,6 +715,10 @@
     <item name="android:textColorPrimary">#FFFFFFFF</item>
     <item name="android:textColor">#FFFFFFFF</item>
     <item name="colorButtonText">#FFFFFFFF</item>
+    <item name="colorDisabledText">#4A4A4D</item>
+    <item name="colorDisabledControl">#242426</item>
+    <item name="colorButtonDisabledBackground">#1F1F21</item>
+    <item name="colorDialogBorder">#FFEA00</item>
 </style>    
 
     <style name="ShapeOverride_Oval">
@@ -640,6 +749,10 @@
     <item name="buttonCornerRadius">14dp</item>
     <item name="colorControlHighlight">#33007AFF</item>
     <item name="colorSpinnerDropdownText">#007AFF</item>
+    <item name="colorDisabledText">#A5A5A9</item>
+    <item name="colorDisabledControl">#D2D2D7</item>
+    <item name="colorButtonDisabledBackground">#BFD9F9</item>
+    <item name="colorDialogBorder">#006BE0</item>
 </style>
 
 <style name="AppTheme.CupertinoDark" parent="AppTheme.Base.Dark">
@@ -658,6 +771,10 @@
     <item name="buttonCornerRadius">14dp</item>
     <item name="colorControlHighlight">#330A84FF</item>
     <item name="colorSpinnerDropdownText">#0A84FF</item>
+    <item name="colorDisabledText">#454547</item>
+    <item name="colorDisabledControl">#242425</item>
+    <item name="colorButtonDisabledBackground">#032140</item>
+    <item name="colorDialogBorder">#0A84FF</item>
 </style>
 <style name="AppTheme.SagePaper" parent="AppTheme.Base.Light">
     <item name="android:windowBackground">#EAF3EC</item>
@@ -675,6 +792,10 @@
     <item name="buttonCornerRadius">18dp</item>
     <item name="colorControlHighlight">#332F6B46</item>
     <item name="colorSpinnerDropdownText">#2F6B46</item>
+    <item name="colorDisabledText">#98A89D</item>
+    <item name="colorDisabledControl">#C5D5CA</item>
+    <item name="colorButtonDisabledBackground">#C7D9CD</item>
+    <item name="colorDialogBorder">#2F6B46</item>
 </style>
 
 <style name="AppTheme.SkyMist" parent="AppTheme.Base.Light">
@@ -693,6 +814,10 @@
     <item name="buttonCornerRadius">20dp</item>
     <item name="colorControlHighlight">#332B6CB0</item>
     <item name="colorSpinnerDropdownText">#2B6CB0</item>
+    <item name="colorDisabledText">#98A9B8</item>
+    <item name="colorDisabledControl">#C5D7E4</item>
+    <item name="colorButtonDisabledBackground">#C4DBEF</item>
+    <item name="colorDialogBorder">#2B6CB0</item>
 </style>
 
 <style name="AppTheme.PeachSoft" parent="AppTheme.Base.Light">
@@ -711,6 +836,10 @@
     <item name="buttonCornerRadius">16dp</item>
     <item name="colorControlHighlight">#33F97316</item>
     <item name="colorSpinnerDropdownText">#B4532A</item>
+    <item name="colorDisabledText">#B5A298</item>
+    <item name="colorDisabledControl">#E3CFC3</item>
+    <item name="colorButtonDisabledBackground">#F0D0C0</item>
+    <item name="colorDialogBorder">#B3532A</item>
 </style>
 <style name="AppTheme.MidnightIndigo" parent="AppTheme.Base.Dark">
     <item name="android:windowBackground">#12142A</item>
@@ -728,6 +857,10 @@
     <item name="buttonCornerRadius">16dp</item>
     <item name="colorControlHighlight">#338EA2FF</item>
     <item name="colorSpinnerDropdownText">#EEF0FF</item>
+    <item name="colorDisabledText">#4B4D62</item>
+    <item name="colorDisabledControl">#2B2D47</item>
+    <item name="colorButtonDisabledBackground">#242952</item>
+    <item name="colorDialogBorder">#8EA2FF</item>
 </style>
 
 <style name="AppTheme.DeepTeal" parent="AppTheme.Base.Dark">
@@ -747,6 +880,10 @@
     <item name="colorControlHighlight">#332DD4BF</item>
     <item name="colorSpinnerDropdownText">#DDFCF7</item>
     <item name="android:textAppearanceButton">@style/textAppearanceButtonDark</item>
+    <item name="colorDisabledText">#3C5A57</item>
+    <item name="colorDisabledControl">#1A3A38</item>
+    <item name="colorButtonDisabledBackground">#083935</item>
+    <item name="colorDialogBorder">#2DD4BF</item>
 </style>
 
 <style name="AppTheme.PlumNight" parent="AppTheme.Base.Dark">
@@ -765,6 +902,10 @@
     <item name="buttonCornerRadius">20dp</item>
     <item name="colorControlHighlight">#33D946EF</item>
     <item name="colorSpinnerDropdownText">#FBEAFF</item>
+    <item name="colorDisabledText">#5C4C5F</item>
+    <item name="colorDisabledControl">#402A43</item>
+    <item name="colorButtonDisabledBackground">#402252</item>
+    <item name="colorDialogBorder">#D946EF</item>
 </style>
 <style name="AppTheme.TerminalGreen" parent="AppTheme.Base.Dark">
     <item name="android:windowBackground">#020403</item>
@@ -783,6 +924,10 @@
     <item name="colorControlHighlight">#3300FF66</item>
     <item name="colorSpinnerDropdownText">#00FF66</item>
     <item name="android:textAppearanceButton">@style/textAppearanceButtonDark</item>
+    <item name="colorDisabledText">#364C3C</item>
+    <item name="colorDisabledControl">#172A1D</item>
+    <item name="colorButtonDisabledBackground">#022912</item>
+    <item name="colorDialogBorder">#00FF66</item>
 </style>
 
 <style name="AppTheme.CandyPastel" parent="AppTheme.Base.Light">
@@ -802,6 +947,10 @@
     <item name="themedButtonBackground">@drawable/button_oval</item>
     <item name="colorControlHighlight">#3370D6FF</item>
     <item name="colorSpinnerDropdownText">#B83280</item>
+    <item name="colorDisabledText">#B2A7B2</item>
+    <item name="colorDisabledControl">#E4D4E2</item>
+    <item name="colorButtonDisabledBackground">#FFD0E3</item>
+    <item name="colorDialogBorder">#B75077</item>
 </style>
 
     <!-- ========================================= -->
@@ -827,6 +976,9 @@
     <item name="colorSpinnerDropdownText">#F7E7A1</item>
     <item name="colorDialogBorder">#F6C85F</item>
     <item name="colorHelpBorder">#F6C85F</item>
+    <item name="colorDisabledText">#4C5351</item>
+    <item name="colorDisabledControl">#22324E</item>
+    <item name="colorButtonDisabledBackground">#173050</item>
 </style>
 <style name="AppTheme.GirlWithPearl" parent="AppTheme.Base.Dark">
     <item name="android:windowBackground">#091018</item>
@@ -846,6 +998,9 @@
     <item name="colorSpinnerDropdownText">#F4EAD2</item>
     <item name="colorDialogBorder">#D8B15F</item>
     <item name="colorHelpBorder">#D8B15F</item>
+    <item name="colorDisabledText">#494C4B</item>
+    <item name="colorDisabledControl">#242C35</item>
+    <item name="colorButtonDisabledBackground">#122A3F</item>
 </style>
 <style name="AppTheme.NightWatch" parent="AppTheme.Base.Dark">
     <item name="android:windowBackground">#120E0A</item>
@@ -863,8 +1018,11 @@
     <item name="buttonCornerRadius">8dp</item>
     <item name="colorControlHighlight">#33B6562A</item>
     <item name="colorSpinnerDropdownText">#F2E6D0</item>
-    <item name="colorDialogBorder">#B6562A</item>
+    <item name="colorDialogBorder">#BB6239</item>
     <item name="colorHelpBorder">#B6562A</item>
+    <item name="colorDisabledText">#504A41</item>
+    <item name="colorDisabledControl">#34291F</item>
+    <item name="colorButtonDisabledBackground">#3A2213</item>
 </style>
 <style name="AppTheme.RothkoDusk" parent="AppTheme.Base.Dark">
     <item name="android:windowBackground">#1A0E14</item>
@@ -884,6 +1042,9 @@
     <item name="colorSpinnerDropdownText">#F6D8BE</item>
     <item name="colorDialogBorder">#D8703F</item>
     <item name="colorHelpBorder">#D8703F</item>
+    <item name="colorDisabledText">#5A4845</item>
+    <item name="colorDisabledControl">#3D2628</item>
+    <item name="colorButtonDisabledBackground">#4B1823</item>
 </style>
 <style name="AppTheme.AlmondBlossom" parent="AppTheme.Base.Light">
     <item name="android:windowBackground">#F7FBF5</item>
@@ -901,8 +1062,11 @@
     <item name="buttonCornerRadius">22dp</item>
     <item name="colorControlHighlight">#33D986A5</item>
     <item name="colorSpinnerDropdownText">#18352F</item>
-    <item name="colorDialogBorder">#79A8C9</item>
+    <item name="colorDialogBorder">#56788F</item>
     <item name="colorHelpBorder">#D986A5</item>
+    <item name="colorDisabledText">#A0AEA8</item>
+    <item name="colorDisabledControl">#CFDCD4</item>
+    <item name="colorButtonDisabledBackground">#D1E0E1</item>
 </style>
 <style name="AppTheme.GreatWave" parent="AppTheme.Base.Light">
     <item name="android:windowBackground">#F2F7FA</item>
@@ -922,6 +1086,9 @@
     <item name="colorSpinnerDropdownText">#102A43</item>
     <item name="colorDialogBorder">#1F6FA3</item>
     <item name="colorHelpBorder">#D9541E</item>
+    <item name="colorDisabledText">#9DAAB5</item>
+    <item name="colorDisabledControl">#CBD8E1</item>
+    <item name="colorButtonDisabledBackground">#C9DDE9</item>
 </style>
 <style name="AppTheme.WaterLilies" parent="AppTheme.Base.Light">
     <item name="android:windowBackground">#F4F7EE</item>
@@ -939,8 +1106,11 @@
     <item name="buttonCornerRadius">20dp</item>
     <item name="colorControlHighlight">#338C6BAE</item>
     <item name="colorSpinnerDropdownText">#22322D</item>
-    <item name="colorDialogBorder">#6D8B74</item>
+    <item name="colorDialogBorder">#5E7764</item>
     <item name="colorHelpBorder">#8C6BAE</item>
+    <item name="colorDisabledText">#A2AAA3</item>
+    <item name="colorDisabledControl">#CED8CD</item>
+    <item name="colorButtonDisabledBackground">#D2DCD0</item>
 </style>
 <style name="AppTheme.Sunflowers" parent="AppTheme.Base.Light">
     <item name="android:windowBackground">#FFF8E1</item>
@@ -958,9 +1128,12 @@
     <item name="buttonCornerRadius">12dp</item>
     <item name="colorControlHighlight">#332E7D32</item>
     <item name="colorSpinnerDropdownText">#33230A</item>
-    <item name="colorDialogBorder">#D49A00</item>
+    <item name="colorDialogBorder">#946C00</item>
     <item name="colorHelpBorder">#2E7D32</item>
     <item name="android:textAppearanceButton">@style/textAppearanceButtonDark</item>
+    <item name="colorDisabledText">#B3A991</item>
+    <item name="colorDisabledControl">#E3D7B3</item>
+    <item name="colorButtonDisabledBackground">#F1DA99</item>
 </style>
 <style name="AppTheme.MondrianGrid" parent="AppTheme.Base.Light">
     <item name="android:windowBackground">#FAFAF5</item>
@@ -980,6 +1153,9 @@
     <item name="colorSpinnerDropdownText">#111111</item>
     <item name="colorDialogBorder">#111111</item>
     <item name="colorHelpBorder">#D91E18</item>
+    <item name="colorDisabledText">#ABABA8</item>
+    <item name="colorDisabledControl">#D9D9D5</item>
+    <item name="colorButtonDisabledBackground">#D0DFEB</item>
 </style>
 <style name="AppTheme.UkiyoeVermilion" parent="AppTheme.Base.Light">
     <item name="android:windowBackground">#FFF3E0</item>
@@ -999,6 +1175,9 @@
     <item name="colorSpinnerDropdownText">#2B1D14</item>
     <item name="colorDialogBorder">#0E4D64</item>
     <item name="colorHelpBorder">#C44524</item>
+    <item name="colorDisabledText">#B2A596</item>
+    <item name="colorDisabledControl">#DDD3BF</item>
+    <item name="colorButtonDisabledBackground">#D9D9CC</item>
 </style>
 <style name="AppTheme.SunlightReadable" parent="AppTheme.Base.Light">
     <item name="android:windowBackground">#FFFDF2</item>
@@ -1018,6 +1197,9 @@
     <item name="colorSpinnerDropdownText">#111827</item>
     <item name="colorDialogBorder">#005EA8</item>
     <item name="colorHelpBorder">#C2410C</item>
+    <item name="colorDisabledText">#ACADAB</item>
+    <item name="colorDisabledControl">#DCDCD6</item>
+    <item name="colorButtonDisabledBackground">#D4E2E6</item>
 </style>
 <style name="AppTheme.PaperLowGlare" parent="AppTheme.Base.Light">
     <item name="android:windowBackground">#F6F1E7</item>
@@ -1037,6 +1219,9 @@
     <item name="colorSpinnerDropdownText">#202124</item>
     <item name="colorDialogBorder">#766C61</item>
     <item name="colorHelpBorder">#3F5F73</item>
+    <item name="colorDisabledText">#A7A49F</item>
+    <item name="colorDisabledControl">#D7D1C7</item>
+    <item name="colorButtonDisabledBackground">#D4D6D2</item>
 </style>
 <style name="AppTheme.DeuteranopiaSafe" parent="AppTheme.Base.Light">
     <item name="android:windowBackground">#F8FAFC</item>
@@ -1056,6 +1241,9 @@
     <item name="colorSpinnerDropdownText">#0F172A</item>
     <item name="colorDialogBorder">#2563EB</item>
     <item name="colorHelpBorder">#F97316</item>
+    <item name="colorDisabledText">#A7ABB3</item>
+    <item name="colorDisabledControl">#D4DAE1</item>
+    <item name="colorButtonDisabledBackground">#D3DDF6</item>
 </style>
 <style name="AppTheme.ProtanopiaSafeDark" parent="AppTheme.Base.Dark">
     <item name="android:windowBackground">#07111F</item>
@@ -1073,8 +1261,11 @@
     <item name="buttonCornerRadius">12dp</item>
     <item name="colorControlHighlight">#33FFB000</item>
     <item name="colorSpinnerDropdownText">#E6F0FF</item>
-    <item name="colorDialogBorder">#0077B6</item>
+    <item name="colorDialogBorder">#1683BC</item>
     <item name="colorHelpBorder">#FFB000</item>
+    <item name="colorDisabledText">#434D5B</item>
+    <item name="colorDisabledControl">#212C3D</item>
+    <item name="colorButtonDisabledBackground">#052B46</item>
 </style>
 <style name="AppTheme.TritanopiaSafe" parent="AppTheme.Base.Light">
     <item name="android:windowBackground">#FAFAFA</item>
@@ -1094,6 +1285,9 @@
     <item name="colorSpinnerDropdownText">#1A1A1A</item>
     <item name="colorDialogBorder">#00796B</item>
     <item name="colorHelpBorder">#C2185B</item>
+    <item name="colorDisabledText">#ABABAB</item>
+    <item name="colorDisabledControl">#D6DAD9</item>
+    <item name="colorButtonDisabledBackground">#CBE2DF</item>
 </style>
 <style name="AppTheme.SeniorContrast" parent="AppTheme.Base.Light">
     <item name="android:windowBackground">#FFFFFF</item>
@@ -1113,6 +1307,9 @@
     <item name="colorSpinnerDropdownText">#000000</item>
     <item name="colorDialogBorder">#000000</item>
     <item name="colorHelpBorder">#003B73</item>
+    <item name="colorDisabledText">#AFAFAF</item>
+    <item name="colorDisabledControl">#DCDEE1</item>
+    <item name="colorButtonDisabledBackground">#DAE3EB</item>
 </style>
 <style name="AppTheme.AlarmReserved" parent="AppTheme.Base.Dark">
     <item name="android:windowBackground">#0E1116</item>
@@ -1132,6 +1329,9 @@
     <item name="colorSpinnerDropdownText">#E8EDF2</item>
     <item name="colorDialogBorder">#4DA3FF</item>
     <item name="colorHelpBorder">#4DA3FF</item>
+    <item name="colorDisabledText">#494C51</item>
+    <item name="colorDisabledControl">#272C33</item>
+    <item name="colorButtonDisabledBackground">#172B3E</item>
 </style>
 <style name="AppTheme.PeripheralSalience" parent="AppTheme.Base.Dark">
     <item name="android:windowBackground">#101014</item>
@@ -1152,6 +1352,9 @@
     <item name="colorDialogBorder">#00A88F</item>
     <item name="colorHelpBorder">#00C2A8</item>
     <item name="android:textAppearanceButton">@style/textAppearanceButtonDark</item>
+    <item name="colorDisabledText">#4B4B4F</item>
+    <item name="colorDisabledControl">#292C31</item>
+    <item name="colorButtonDisabledBackground">#0D2E2C</item>
 </style>
 
 </resources>

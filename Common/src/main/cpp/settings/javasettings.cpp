@@ -245,8 +245,6 @@ extern "C" JNIEXPORT jboolean  JNICALL   fromjava(setlabel)(JNIEnv *env, jclass 
     env->GetStringUTFRegion(jlabel, 0,jlen, label);
     label[len]='\0';
     rtl_to_visual_utf8(label,settings->data()->vars[index].name,12);
-//    env->GetStringUTFRegion(jlabel, 0,jlen, settings->data()->vars[index].name);
-//    settings->data()->vars[index].name[reslen]='\0';
     settings->data()->vars[index].prec=prec;
     settings->data()->vars[index].weight=settings->tomgperL(weight);
     if(index>=settings->varcount()||index<0)  {
@@ -839,19 +837,37 @@ extern "C" JNIEXPORT jstring  JNICALL   fromjava(getlibreemail)(JNIEnv *env, jcl
 #include "mixpass.hpp"
 extern "C" JNIEXPORT void  JNICALL   fromjava(setlibrepass)(JNIEnv *env, jclass cl,jstring jpass) {
     const jint jlen = env->GetStringLength(jpass);
-    char tmp[36*2+1];
+    char tmp[36*2+1+30];
     env->GetStringUTFRegion(jpass, 0,jlen, tmp);
     jint len = env->GetStringUTFLength( jpass);
     for(int i=0;i<len;++i) {
-        if(tmp[i]=='"') {
-            memmove(tmp+1,tmp,len-i);
-            tmp[i]='\\';
-            ++i;
-            ++len;
-            }
-        }
+        switch(tmp[i]) {
+            case '\'': {
+                constexpr const char replace[]=R"(\u0027)";//not needed but Abbotts Libre 3 app does do it.
+                constexpr const int replen=sizeof(replace)-1;
+                const int leftlen=len-i-1;
+                if(leftlen>0)
+                    memmove(tmp+i+replen,tmp+1+i,leftlen);
+                memcpy(tmp+i,replace,replen);
+                constexpr const int increase=replen-1;
+                i+=increase;
+                len+=increase;
+                break;
+                };
+            case '"':
+            case '\\': {
+                memmove(tmp+1+i,tmp+i,len-i);
+                tmp[i]='\\';
+                ++i;
+                ++len;
+                break;
+                }
+           };
+        };
     if(len>36)
         len=36;
+    tmp[len]='\0';
+    LOGGER("setlibrepass %s\n",tmp);
     mix(mixpass, reinterpret_cast<uint8_t *>(tmp), reinterpret_cast<uint8_t *>(settings->data()->librepass), len);
     settings->data()->librepasslen=len;
      }
@@ -1238,7 +1254,11 @@ extern "C" JNIEXPORT void  JNICALL   fromjava(setJugglucobroadcast)(JNIEnv *env,
     settings->data()->jugglucobroadcast=val;
     }*/
 
+        extern int updateMirrorSides();
 extern "C" JNIEXPORT void  JNICALL   fromjava(setinitVersion)(JNIEnv *env, jclass cl,jint val) {
+    if(settings->data()->initVersion<39)
+          updateMirrorSides();
+
     settings->data()->initVersion=val;
     }
 extern "C" JNIEXPORT jint  JNICALL   fromjava(getinitVersion)(JNIEnv *env, jclass cl) {

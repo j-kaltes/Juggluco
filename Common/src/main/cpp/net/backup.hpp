@@ -85,7 +85,8 @@ unique_al<4> receivedata(int sock, crypt_t *ctx,const int len) ;
 
 dataonlyptr receivedataonly(int sock, crypt_t *ctx,const int len) ;
 */
-bool receiveractive();
+
+bool receiveractive(bool alwaysstart);
 constexpr const int streamupdatebit=1<<15;
 constexpr const int starthistoryupdate=1<<14;
 constexpr const int startcalibratedupdate=3<<14;

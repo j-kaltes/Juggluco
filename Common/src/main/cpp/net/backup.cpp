@@ -43,11 +43,12 @@
 
 #include <sys/wait.h>
 #include <unistd.h>
+#include <atomic>
+
 #include "destruct.hpp"
 #include "logs.hpp"
 #include "myfdsan.h"
 #include "TCPConnect.hpp"
-extern Connect *connections[];
 #ifndef LOGGER
 #define LOGGER(...) fprintf(stderr,__VA_ARGS__)
 #endif
@@ -71,6 +72,20 @@ char servererrorbuf[maxservererror]="";
 #define serverprint(...) snprintf( servererrorbuf,maxservererror,__VA_ARGS__)
 #define servererror(...) savebuferror(servererrorbuf,maxservererror,__VA_ARGS__)
 static bool serverloop(int sock, passhost_t *hosts,int &hostlen)  ;
+
+static std::atomic_bool receiverRunning{false},receiverStarting{false};
+bool receiveractive(bool alwaysstart) {
+    receiverStarting.store(true);
+    bool wasrunning=receiverRunning.exchange(true);
+    if(wasrunning&&!alwaysstart) {
+        receiverStarting.store(false);
+        return true;
+        }
+    return false;
+    }
+static void receiverEnded() {
+    receiverRunning.store(false);
+    }
 static bool startserver(char *port, passhost_t *hosts,int *hostlen,bool *shutdownreceiver) {
     constexpr const char receiver[]{"RECEIVER"};
 #ifndef HAVE_NOPRCTL
@@ -83,7 +98,8 @@ static bool startserver(char *port, passhost_t *hosts,int *hostlen,bool *shutdow
                 ::shutdownreceiver=nullptr;
                 delete[] shutdownreceiver;
                 }
-
+            if(!receiverStarting.load())
+                    receiverEnded();
             ;});
     struct addrinfo hints{.ai_flags=AI_PASSIVE,.ai_family=AF_INET6,.ai_socktype=SOCK_STREAM};
 
@@ -161,9 +177,6 @@ static bool startserver(char *port, passhost_t *hosts,int *hostlen,bool *shutdow
 #include "passhost.hpp"
 static int globalsocket=-1;
 //get_in_addr((struct sockaddr *)&their_addr)
-bool receiveractive() {
-    return globalsocket!=-1;
-    }
 void stopreceiver() {
     LOGGERTAG("stopreceiver %d\n",globalsocket);
     if(shutdownreceiver) {
@@ -402,7 +415,7 @@ void receiverthread(passhost_t *host,const int allindex) {
 #endif
 
 
-    Connect *con=connections[allindex];
+    auto con=getconnection(allindex);
     con->receiving=true;
     destruct _{[con]{ con->receiving=false;}};
     LOGGERTAG("receiverthread %d %s\n",con->getReceiverIdent(),buf);
@@ -540,7 +553,7 @@ globalsocket=serversock;
          {
 //           const int keepidle = 10*60;
         int allindex=hit-hosts;
-        TCPConnect *con=(TCPConnect *)connections[allindex];
+        auto con=getconnectionas<TCPConnect>(allindex);
         if(!con) {
             sockclose(new_fd);
             continue;
@@ -597,6 +610,7 @@ globalsocket=serversock;
         }
     }
 void startreceiver(const char *port,passhost_t *hosts,int &hostlen) {
+    LOGGER("Start receiver globalsocket=%d\n",globalsocket);
     if(globalsocket!=-1) {
         sleep(2);
         globalsocket=-1;
@@ -604,6 +618,7 @@ void startreceiver(const char *port,passhost_t *hosts,int &hostlen) {
     int len=strlen(port)+1;
     char *portcp=new char[len];
     memcpy(portcp,port,len);
+    receiverStarting.store(false);
     std::thread backup(startserver,portcp,hosts,&hostlen,shutdownreceiver=new bool[1]());
     backup.detach(); 
     }

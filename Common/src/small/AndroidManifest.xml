@@ -42,6 +42,7 @@
                 <data android:host="*" android:pathPrefix="/defaults" android:scheme="wear" />
                 <data android:host="*" android:pathPrefix="/messages" android:scheme="wear" />
                 <data android:host="*" android:pathPrefix="/messagesack" android:scheme="wear" />
+                <data android:host="*" android:pathPrefix="/mirrortransport" android:scheme="wear" />
                 <data android:host="*" android:pathPrefix="/netinfo" android:scheme="wear" />
                 <data android:host="*" android:pathPrefix="/settings" android:scheme="wear" />
                 <data android:host="*" android:pathPrefix="/start" android:scheme="wear" />

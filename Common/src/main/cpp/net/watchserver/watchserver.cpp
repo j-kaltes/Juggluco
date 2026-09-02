@@ -1550,12 +1550,12 @@ static bool setitervar(const char *&iter,std::string_view cond,bool &var) {
       }
    return false;
    }
-extern   std::span<char> gethistory(int startpos, int len, uint32_t starttime, uint32_t endtime,bool,int,bool,int,bool);
-extern   std::span<char> getstream(int startpos, int len, uint32_t starttime, uint32_t endtime,bool,int,bool,int,bool);
-extern   std::span<char> getscans(int startpos, int len, uint32_t starttime, uint32_t endtime,bool,int,bool,int,bool);
-extern   std::span<char> getamounts(int startpos, int len, uint32_t starttime, uint32_t endtime,bool,int,bool,int,bool);
-extern std::span<char> getmeals(int startpos, int len, uint32_t starttime, uint32_t endtime,bool header,int,bool,int,bool);
-extern std::span<char> libreviewweb(int startpos, int startlen, uint32_t starttime, uint32_t endtime,bool header,int unit,bool,int maxcount,bool) ;
+extern   std::span<char> gethistory(int startpos, int len, uint32_t starttime, uint32_t endtime,bool,int,bool,int,bool,bool);
+extern   std::span<char> getstream(int startpos, int len, uint32_t starttime, uint32_t endtime,bool,int,bool,int,bool,bool);
+extern   std::span<char> getscans(int startpos, int len, uint32_t starttime, uint32_t endtime,bool,int,bool,int,bool,bool);
+extern   std::span<char> getamounts(int startpos, int len, uint32_t starttime, uint32_t endtime,bool,int,bool,int,bool,bool);
+extern std::span<char> getmeals(int startpos, int len, uint32_t starttime, uint32_t endtime,bool header,int,bool,int,bool,bool);
+extern std::span<char> libreviewweb(int startpos, int startlen, uint32_t starttime, uint32_t endtime,bool header,int unit,bool,int maxcount,bool,bool) ;
 
 
 static time_t readtime(const char *&input) {
@@ -1847,7 +1847,7 @@ static bool readlivecursor(std::string_view value,livecursor &cursor) {
    const size_t colon=value.find(':');
    if(colon==std::string_view::npos||!colon||colon==(value.size()-1))
       return false;
-   int sensorid;
+   int sensorid=-1;
    int recordid;
    const char * const begin=value.data();
    const char * const split=begin+colon;
@@ -1866,7 +1866,7 @@ struct livereading {
    bool calibrated;
    };
 
-static bool getlatestlivereading(bool calibrate,livereading &out) {
+static bool getlatestlivereading(bool calibrate,bool calibratePast,livereading &out) {
    if(!sensors)
       return false;
    const SensorGlucoseData *latestsensor=nullptr;
@@ -1890,7 +1890,7 @@ static bool getlatestlivereading(bool calibrate,livereading &out) {
    out={*latestdata,latestsensorid,false};
    if(calibrate) {
       auto cali=make_calibrator<ScanData>(latestsensor);
-      const double calibrated=cali.calibrateONE(out.data);
+      const double calibrated=cali.calibrateONE(out.data,calibratePast);
       if(!std::isnan(calibrated)) {
          out.data.g=std::round(calibrated);
          out.calibrated=true;
@@ -1939,7 +1939,7 @@ bool streamlive(void *context,livewritefunc write,livestopfunc stopped,const liv
    auto nextheartbeat=std::chrono::steady_clock::now()+heartbeatinterval;
    while(!stopped(context)) {
       livereading reading;
-      if(getlatestlivereading(options.calibrated,reading)) {
+      if(getlatestlivereading(options.calibrated,options.calibratePast,reading)) {
          const livecursor current{reading.sensorid,reading.data.id};
          if(!samelivecursor(last,current)) {
             char event[768];
@@ -1962,7 +1962,7 @@ bool streamlive(void *context,livewritefunc write,livestopfunc stopped,const liv
    return true;
    }
 
-typedef      std::span<char> (*getdata_t)(int startpos, int len, uint32_t starttime, uint32_t endtime,bool,int,bool,int,bool calibrated);
+typedef      std::span<char> (*getdata_t)(int startpos, int len, uint32_t starttime, uint32_t endtime,bool,int,bool,int,bool calibrated,bool);
 
 
 template <typename T,int N,typename T1> 
@@ -2340,6 +2340,7 @@ static bool givelive(Getopts &opts,bool headonly,std::string_view origin,recdata
    outdata->len=outiter-start;
    outdata->livestream=!headonly;
    outdata->streamoptions.calibrated=opts.calibratedmode||opts.calibratedhistorymode||opts.calibratedscansmode;
+   outdata->streamoptions.calibratePast=opts.pastvaluesmode;
    return true;
    }
 
@@ -2553,7 +2554,7 @@ static bool jugglucos(const char * const input,int size, std::string_view hostna
          bool calibrated=opts.calibratedmode||opts.calibratedhistorymode||opts.calibratedscansmode;
 
 
-         std::span<char> res=procs[i](startpos,startlen,opts.start,opts.end,opts.headermode,opts.unit,!opts.exclusivemode,opts.datnr,calibrated);
+         std::span<char> res=procs[i](startpos,startlen,opts.start,opts.end,opts.headermode,opts.unit,!opts.exclusivemode,opts.datnr,calibrated,opts.pastvaluesmode);
           if(!res.data()) {
                 return outofmemory(outdata);
                 }

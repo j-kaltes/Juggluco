@@ -11,7 +11,7 @@
             <selector>
                 <item android:state_enabled="false">
                     <shape android:shape="oval">
-                        <solid android:color="?attr/colorControlNormal" />
+                        <solid android:color="?attr/colorButtonDisabledBackground" />
                     </shape>
                 </item>
 

@@ -410,7 +410,7 @@ bool    Connect::getcommandsnopass(passhost_t *host) {
     while(true) {
         LOGARTAG("voor recv");
         int len=r_recvni(com+start,maxcom-start);
-        if(!connections[allindex]) {
+        if(!getconnection(allindex)) {
             LOGGER("getcommandsnopass no connection %d\n",allindex);
             return false;
             }
@@ -813,34 +813,33 @@ static bool savefileonce(const struct fileonce_t *gegs) {
             }
         start+=gegs->gegs[i].len;
         }
-//    fdatasync(fp);
     }
-    if((gegs->dowith&startcalibratedupdate)==startcalibratedupdate) {
-        const auto [sendindex,startpos,history]= getcaliinfo(gegs,start);
-        setcalibratedstart(sendindex,startpos,history);
-/*
-        int namelen=gegs->namelen-1;
-        pathconcat fullpathin{filedata.getbase(),std::string_view(name,namelen)};
-        strsepconcat fullpathout{"",fullpathin,"tmp"};
-        const auto copyOptions = std::filesystem::copy_options::overwrite_existing;
-        std::error_code errorcode;
-        std::filesystem::path in(fullpathin.begin(),fullpathin.end());
-        std::filesystem::path out(fullpathout.begin(),fullpathout.end());
-        std::filesystem::copy_file(in,out,copyOptions,errorcode );
-        LOGGER("copy_file %s %s\n",fullpathin.data(),fullpathout.data()); */
-        }
-     else {
-        if((gegs->dowith&streamupdatebit)==streamupdatebit) {
-                const auto [sendindex,startpos]=getstartinfo(gegs,start);
-                processglucosevalue(sendindex,startpos);
+    if(const auto dowith=gegs->dowith) {
+        if((dowith&startcalibratedupdate)==startcalibratedupdate) {
+            const auto [sendindex,startpos,history]= getcaliinfo(gegs,start);
+            setcalibratedstart(sendindex,startpos,history);
+            }
+         else {
+            if((dowith&streamupdatebit)==streamupdatebit) {
+                    const auto [sendindex,startpos]=getstartinfo(gegs,start);
+                    processglucosevalue(sendindex,startpos);
 
-                }
-        else {
-                if((gegs->dowith&starthistoryupdate)==starthistoryupdate) {
-                        const auto [sendindex,startpos]=getstartinfo(gegs,start);
-                        sethistorystart(sendindex,startpos);
-                        }
-             }
+                    }
+            else {
+                    if((dowith&starthistoryupdate)==starthistoryupdate) {
+                            const auto [sendindex,startpos]=getstartinfo(gegs,start);
+                            sethistorystart(sendindex,startpos);
+                            }
+                 }
+            
+           }
+        }
+    else {
+        if(nr==4&&!memcmp(name,settingsdat,sizeof(settingsdat)-1)) {
+            extern void askReinitScriptFonts();
+            askReinitScriptFonts();
+             
+            }
         }
     LOGARTAG("savedata success");
 #ifdef WEAROS

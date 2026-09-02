@@ -32,7 +32,9 @@
 #include <string.h>
 #include <atomic>
 #include <thread>
+#include <chrono>
 #include <algorithm>
+#include <array>
 //#include <latch>
 #include <poll.h>
 #include <alloca.h>
@@ -48,6 +50,12 @@
 #include "makerandom.hpp"
 #include "myfdsan.h"
 #include "TCPConnect.hpp"
+#include "datbackup.hpp"
+#include "comtypes.hpp"
+#ifdef WEAROS_MESSAGES
+extern std::atomic_bool wearmessages[];
+extern bool sendMessagesON(passhost_t *pass,bool val);
+#endif
 #define lerrortag(...) lerror("sender: " __VA_ARGS__)
 #define LOGGERTAG(...) LOGGER("sender: " __VA_ARGS__)
 #define LOGARTAG(...) LOGAR("sender: " __VA_ARGS__)
@@ -57,23 +65,26 @@
 using namespace std;
 #include "mirrorerror.h"
 
-void   Connect::sendpassinit(passhost_t *host,crypt_t *ctx) {
+bool Connect::sendpassinit(passhost_t *host,crypt_t *ctx) {
+   if(!host||!ctx)
+      return false;
    constexpr int makelen=8;
    uint8_t nonce[ASCON_AEAD_NONCE_LEN];
    constexpr int takelen=ASCON_AEAD_NONCE_LEN-makelen;
    uint8_t *takestart=nonce+makelen;
-       makerandom(nonce, makelen);
+   makerandom(nonce,makelen);
    if(int didsend=s_sendni(nonce,makelen);didsend!=makelen) {
       flerrortag("sendpassinit send getSenderIdent()=%d ret=%d\n",getSenderIdent(),didsend);
-      return;
+      return false;
       }
-   int len=s_recvni(takestart,takelen);
+   const int len=s_recvni(takestart,takelen);
    if(len!=takelen) {
       flerrortag("sendpassinit getSenderIdent()=%d recv len=%d\n",getSenderIdent(),len);
-      return;
+      return false;
       }
-        ascon_aead128a_init(ctx, host->pass.data(),nonce);   
+   ascon_aead128a_init(ctx,host->pass.data(),nonce);
    LOGARTAG("end sendpassinit");
+   return true;
    }
 bool unblock(int sock) {
   if( int val = fcntl(sock, F_GETFL, NULL);val >=0) {
@@ -213,10 +224,10 @@ bool Connect::sendtype(char type) {
 
 extern char *getmirrorerror(const passhost_t *pass);
 extern char *getmirrorerrorsettime(const passhost_t *pass);
-void settimeouts(int sock) {
+void settimeouts(int sock,int seconds=60*3) {
    struct timeval tv;
    tv.tv_usec = 0;
-   tv.tv_sec = 60*3;
+   tv.tv_sec = seconds;
    setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv, sizeof tv);
    setsockopt(sock, SOL_SOCKET, SO_SNDTIMEO , (const char*)&tv, sizeof tv);
    }
@@ -268,7 +279,7 @@ void getmyname(int sock) {
    } 
    */
 
-int TCPConnect::connectone( const struct sockaddr_in6  *sin, int &sock,char stype,passhost_t *pass,struct pollfd    *cons,int&use
+int TCPConnect::connectone( const struct sockaddr_in6  *sin, int &sock,char stype,passhost_t *pass,struct pollfd    *cons,int&use,int ioTimeoutSeconds
 #if defined(WEAROS_MESSAGES)
       ,bool &activate
 #endif
@@ -303,7 +314,7 @@ int TCPConnect::connectone( const struct sockaddr_in6  *sin, int &sock,char styp
 #endif
       block(so);
       sock=so;
-      settimeouts(sock);
+      settimeouts(sock,ioTimeoutSeconds);
       if(shakehands(pass,stype)>=0) {
          LOGGERTAG("before poll %d\n",sock);
          for(int w=0;w<use;w++) {
@@ -318,22 +329,82 @@ int TCPConnect::connectone( const struct sockaddr_in6  *sin, int &sock,char styp
    return -1;
    }
 
-int TCPConnect::makeconnection2(passhost_t *pass,char stype) {
+extern int getMirrorCurrentPeerAddresses(int index,sockaddr_in6 *out,int max);
+int TCPConnect::makeconnection2withoptions(passhost_t *pass,char stype,bool allowAlternate,int timeoutMillis) {
 #ifdef WEAROS_MESSAGES
-destruct dest([pass]() {
-   if(pass->wearos) {
-
-      extern bool sendMessagesON(passhost_t *pass, bool val);
+extern bool mirrorLocalTcpAvailable();
+if(allowAlternate&&pass->automatictransport()&&!mirrorLocalTcpAvailable()) {
+   closeSenderConnection();
+   LOGGER("Automatic mirror %s: no local TCP/IP endpoint; requesting %s fallback without TCP attempt\n",
+         pass->getnameif(),pass->wearos?"Google Messages":"Direct Bluetooth");
+   sendMessagesON(pass,true);
+   return -1;
+   }
+destruct dest([pass,allowAlternate]() {
+   if(allowAlternate&&pass->automatictransport()) {
+      LOGGER("Automatic mirror %s: TCP/IP failed, requesting %s fallback\n",pass->getnameif(),
+            pass->wearos?"Google Messages":"Direct Bluetooth");
       sendMessagesON(pass,true);
       }
+   else {   
+    if(pass->automatictransport()) {
+          LOGGER("TCP/IP probe failed for Automatic mirror %s; current carrier unchanged\n",pass->getnameif());
+          }
+       else
+          LOGGER("TCP connection failed for %s; forced transport remains TCP/IP\n",pass->getnameif());
+      }
    });
-dest.active=false;
 bool activate=true;
+// Keep fallback armed for early failures too (no saved IP, DNS failure, or no
+// route). connectone clears activate after a synchronous TCP connection.
+dest.active=activate;
 #endif
    int use=0;
+   const int ioTimeoutSeconds=allowAlternate?60*3:std::max(1,(timeoutMillis+999)/1000);
     closeSenderConnection(); 
     int   &sock=getSenderSock();
-   struct pollfd    cons[10];
+   struct pollfd    cons[16];
+#ifdef JUGGLUCO_APP
+   // Authenticated BLE /bleips data is kept in a transient cache so current
+   // LAN addresses can be tried without replacing deliberately configured
+   // Internet/global passhost_t::ips[] entries.  Automatic transport tries
+   // these current endpoints first, then falls back to its persisted/DNS
+   // bootstrap candidates in the same nonblocking poll.
+   std::array<sockaddr_in6,passhost_t::maxip-1> currentPeerIps{};
+   const int currentPeerNr=pass->automatictransport()?
+         getMirrorCurrentPeerAddresses(allindex,currentPeerIps.data(),
+               static_cast<int>(currentPeerIps.size())):0;
+   if(currentPeerNr>0)  {
+      LOGGERTAG("Automatic mirror %s: trying %d authenticated current peer endpoint(s) before configured endpoints\n", pass->getnameif(),currentPeerNr);
+       for(int i=0;i<currentPeerNr;++i) {
+          if(int ret=connectone(&currentPeerIps[i],sock,stype,pass,cons,use,ioTimeoutSeconds
+    #if defined(WEAROS_MESSAGES)
+                                ,activate
+    #endif
+                  );ret>=0) {
+    #ifdef WEAROS_MESSAGES
+             dest.active=activate;
+    #endif
+             LOGGERTAG("Automatic mirror %s: connected through current peer endpoint %d\n",
+                   pass->getnameif(),i);
+             return ret;
+             }
+          }
+       }
+   auto isCurrentPeer=[&](const sockaddr_in6 &candidate) {
+      for(int i=0;i<currentPeerNr;++i)
+         if(candidate.sin6_family==currentPeerIps[i].sin6_family&&
+               candidate.sin6_port==currentPeerIps[i].sin6_port&&
+               candidate.sin6_scope_id==currentPeerIps[i].sin6_scope_id&&
+               !memcmp(&candidate.sin6_addr,&currentPeerIps[i].sin6_addr,sizeof(candidate.sin6_addr)))
+            return true;
+      return false;
+      };
+#else
+   int currentPeerNr=0;
+   auto isCurrentPeer=[](const sockaddr_in6 &candidate) {return false;};
+#endif
+
    if(pass->hashostname()) { 
              struct addrinfo hints{.ai_flags=AI_ADDRCONFIG,.ai_family=AF_UNSPEC,.ai_socktype=SOCK_STREAM};
              struct addrinfo *servinfo=nullptr;
@@ -371,13 +442,16 @@ bool activate=true;
                                   }
                                   };
 
-                  if(int ret=connectone(sin,sock, stype,pass,cons,use
+                  if(int ret=connectone(sin,sock, stype,pass,cons,use,ioTimeoutSeconds
   #if defined(WEAROS_MESSAGES)
                                                             ,activate
   #endif
           );ret>=0) {
 
                           LOGGERTAG("found %s:%s sock=%d\n",host,port,ret);
+#ifdef WEAROS_MESSAGES
+                          dest.active=activate;
+#endif
                           return ret;
                           }
 
@@ -387,19 +461,23 @@ bool activate=true;
                   }
      } else {
              const int nr=pass->nr;
-             LOGGERTAG("makeconnection nr=%d\n",nr);
-             if(nr<=0) {
-                     savemessage(pass,"connection has on %d ips\n",nr);
+             LOGGERTAG("makeconnection configured=%d current=%d\n",nr,currentPeerNr);
+             if(nr<=0&&currentPeerNr<=0) {
+                     savemessage(pass,"connection has no IPs\n");
                      return -1;
                      }
-             if(nr>=passhost_t::maxip) {
+             const int validnr=(nr>=0&&nr<passhost_t::maxip)?nr:0;
+             if(nr!=validnr) {
                      pass->nr=0;
-                     savemessage(pass,"connection has on %d ips\n",nr);
-                     return -1;
+                     savemessage(pass,"connection has invalid configured IP count %d\n",nr);
                      }
-             for(int i=0;i<nr;i++) {
+             for(int i=0;i<validnr;i++) {
                      const struct sockaddr_in6  *sin=&pass->ips[i];
-                     if(int ret=connectone(sin,sock, stype,pass,cons,use
+                     if(isCurrentPeer(*sin)) {
+                             LOGGERTAG("configured endpoint %d duplicates authenticated current endpoint; skipping duplicate connect\n",i);
+                             continue;
+                             }
+                     if(int ret=connectone(sin,sock, stype,pass,cons,use,ioTimeoutSeconds
      #if defined(WEAROS_MESSAGES)
                                                                ,activate
      #endif
@@ -408,6 +486,9 @@ bool activate=true;
 
                      ) ;ret>=0)  {
                              LOGGERTAG("%d: found %d\n",i,ret);
+#ifdef WEAROS_MESSAGES
+                             dest.active=activate;
+#endif
                              return ret;
                              }
 
@@ -418,8 +499,42 @@ bool activate=true;
    dest.active=activate;
 #endif
    LOGGERTAG("use=%d\n",use);
-   while(use) {   
-      constexpr const int   timeout= 60000;
+#ifdef WEAROS_MESSAGES
+   // Keep the existing parallel nonblocking TCP attempts, but do not make an
+   // Automatic mirror wait for the full 60-second poll before even starting
+   // its alternate carrier.  After three seconds request Messages/Direct BLE
+   // while these same sockets continue connecting in the kernel.  Non-Bluetooth
+   // peers simply ignore/fail that optional request and retain the old TCP path.
+   const int automaticIndex=allindex;
+   const auto tcpPollStarted=std::chrono::steady_clock::now();
+   const auto tcpPollDeadline=tcpPollStarted+std::chrono::milliseconds(timeoutMillis);
+   const auto automaticFallbackAt=tcpPollStarted+std::chrono::seconds(3);
+   bool automaticFallbackRequested=false;
+   auto closePending=[&]() {
+       for(int i=0;i<use;++i)
+           sockclose(cons[i].fd);
+       use=0;
+       };
+#endif
+   while(use) {
+      int timeout=timeoutMillis;
+#ifdef WEAROS_MESSAGES
+      if(allowAlternate&&pass->automatictransport()) {
+          if(automaticFallbackRequested&&automaticIndex>=0&&
+                  wearmessages[automaticIndex].load()) {
+              LOGGERTAG("Automatic mirror %s: alternate carrier became ready during TCP poll\n",pass->getnameif());
+              closePending();
+              dest.active=false;
+              return -1;
+              }
+          const auto now=std::chrono::steady_clock::now();
+          const auto nextWake=automaticFallbackRequested?
+                  std::min(tcpPollDeadline,now+std::chrono::seconds(1)):
+                  std::min(tcpPollDeadline,automaticFallbackAt);
+          timeout=static_cast<int>(std::max<int64_t>(1,
+                  std::chrono::duration_cast<std::chrono::milliseconds>(nextWake-now).count()));
+          }
+#endif
       int errcode=poll(cons, use, timeout);
       switch(errcode) {
          case -1: {
@@ -434,6 +549,27 @@ bool activate=true;
             return -1;
             };
          case 0: {
+#ifdef WEAROS_MESSAGES
+            if(allowAlternate&&pass->automatictransport()) {
+                const auto now=std::chrono::steady_clock::now();
+                if(!automaticFallbackRequested&&now>=automaticFallbackAt) {
+                    automaticFallbackRequested=true;
+                    LOGGER("Automatic mirror %s: TCP/IP not connected after 3 seconds; starting alternate carrier in parallel\n",pass->getnameif());
+                    if(sendMessagesON(pass,true)) {
+                        LOGGERTAG("Automatic mirror %s: alternate carrier selected during TCP poll\n",pass->getnameif());
+                        closePending();
+                        dest.active=false;
+                        return -1;
+                        }
+                    // Direct BLE may still be discovering/authenticating. Wake
+                    // every second so a successful asynchronous switch is seen
+                    // without disturbing the pending TCP sockets.
+                    continue;
+                    }
+                if(now<tcpPollDeadline)
+                    continue;
+                }
+#endif
             savemessage(pass,"poll timeout");
             #ifndef NOLOG
             char *ptr=getmirrorerror(pass);
@@ -492,7 +628,7 @@ bool activate=true;
          if(cons[i].revents & POLLOUT){
             sock=cons[i].fd;
             block(sock);
-            settimeouts(sock);
+            settimeouts(sock,ioTimeoutSeconds);
             int ret;
             if((ret=shakehands(pass,stype))>=0) {
                for(int w=0;w<newuse;w++) {
@@ -503,6 +639,11 @@ bool activate=true;
                   }
                LOGGERTAG("via poll %d\n",sock);
 #ifdef WEAROS_MESSAGES
+               if(pass->automatictransport()&&automaticFallbackRequested) {
+                  LOGGERTAG("Automatic mirror %s: TCP/IP connected; cancelling pending alternate carrier\n",
+                        pass->getnameif());
+                  sendMessagesON(pass,false);
+                  }
                dest.active=false;
 #endif
                return sock;   
@@ -530,13 +671,52 @@ bool activate=true;
    return -1;
    }
 
+// Test the currently cached TCP endpoints without changing an Automatic mirror's
+// active Messages/Direct-BLE carrier. makeconnection2withoptions() proves only
+// that a Juggluco TCP listener answered the label/magic preamble; private IPv4
+// collisions can therefore reach a different configured device. Complete the
+// password-derived ASCON setup and send an encrypted sack command which requires
+// a valid acknowledgement. Only that proves this endpoint owns this mirror row's
+// password before Java is allowed to disable the working alternate carrier.
+bool probeMirrorTcp(passhost_t *pass,int timeoutMillis) {
+   if(!pass||timeoutMillis<=0||!pass->haspass())
+      return false;
+   const auto hosts=getBackupHosts();
+   const int index=pass-hosts.data();
+#ifdef WEAROS_MESSAGES
+   // Never probe through the normal receiver path while an alternate
+   // Messages/Direct-BLE bridge is selected. The peer's serverloop() uses the
+   // same TCPConnect receiver slot and such a probe can tear down that bridge.
+   if(index>=0&&static_cast<size_t>(index)<hosts.size()&&index<maxallhosts&&
+         wearmessages[index].load()) {
+      LOGGERTAG("refusing destructive TCP probe for %s while alternate carrier is active\n",
+            pass->getnameif());
+      return false;
+      }
+#endif
+   TCPConnect probe(index);
+   const int sock=probe.makeconnection2withoptions(pass,0,false,timeoutMillis);
+   bool ok=false;
+   if(sock>=0) {
+      crypt_t ctx{};
+      const sendack command;
+      ok=probe.sendpassinit(pass,&ctx)&&
+            probe.s_noacksendcommand(&ctx,reinterpret_cast<const uint8_t*>(&command),sizeof(command))&&
+            probe.getack();
+      }
+   probe.closeSenderConnection();
+   LOGGERTAG("TCP password-identity probe for %s: %s\n",pass->getnameif(),
+         ok?"authenticated":"not reachable or wrong mirror password");
+   return ok;
+   }
+
 int Connect::makeconnection(passhost_t *pass,crypt_t*ctx,char stype) {
    int res=makeconnection2(pass,stype);
    if(res>=0) {
       const auto tag=get_owner_tag(res);
       *getmirrorerrorsettime(pass)='\0';
       if(ctx)
-         sendpassinit(pass,ctx);
+         (void)sendpassinit(pass,ctx);
       }
    return res;
    }

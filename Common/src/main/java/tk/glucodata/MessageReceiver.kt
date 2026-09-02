@@ -41,7 +41,25 @@ class MessageReceiver: WearableListenerService() {
         val sender=MessageSender.getMessageSender()
         val sourceNode=sender?.nodes?.firstOrNull { it.id==sourceId }
         val galaxy=if(isWearable) true else sourceNode?.let(::isGalaxy)?:Applic.ALLGALAXY
-        val connectionName=if(isWearable) sender?.localnode?:sourceId else sourceId
+        val connectionName=if(isWearable) {
+            val localMirror=try {
+                sender?.localnode
+            }
+            catch(th:Throwable) {
+                Log.stack(LOG_ID,"Cannot resolve the local Wear node for $path from $sourceId",th)
+                null
+            }
+            if(localMirror==null&&path==MessageSender.NET_PATH) {
+                // The phone's node ID is not a valid mirror label on a watch.
+                // Waiting for local-node discovery is safer than creating a
+                // row named after the phone and mutating it with this payload.
+                Log.e(LOG_ID,"Ignoring Wear /netinfo from $sourceId until the local watch node is available")
+                MessageSender.sendnetinfo()
+                return
+            }
+            localMirror?:sourceId
+        }
+        else sourceId
         receiveMessage(sourceId,connectionName,path,data,galaxy,false)
       }
 
@@ -57,13 +75,17 @@ class MessageReceiver: WearableListenerService() {
 
    private fun receiveMessage(sourceId:String,connectionName:String,path:String,data:ByteArray,galaxy:Boolean,fromBle:Boolean) {
         Log.i(LOG_ID,"receiveMessage start $path via ${if(fromBle) "BLE" else "MessageClient"}")
+        if(fromBle&&MessageSender.isWearControlPath(path)&&!BleMirror.canSendWearControl(connectionName)) {
+            Log.e(LOG_ID,"Rejected Wear control $path outside an authenticated Wear mirror: $connectionName")
+            return
+        }
         when(path) {
             MessageSender.DEFAULTS_PATH ->  {
                 val sender = tk.glucodata.MessageSender.getMessageSender()
                  if(doLog) {Log.i(LOG_ID,"path==MessageSender.DEFAULTS_PATH $connectionName" );}
                   setWearosdefaults(connectionName,true);
                    val context=if(MainActivity.thisone==null)Applic.app;else MainActivity.thisone;
-                   if(!fromBle&&Natives.hasAidexX()) {
+                   if(Natives.hasAidexX()) {
                         if(sender==null) {
                             Log.d(LOG_ID,"messagesender==null")
                             return
@@ -78,22 +100,60 @@ class MessageReceiver: WearableListenerService() {
                 }
             MessageSender.WAKESTREAM_PATH -> {
                 Natives.wakestreamhereonly()
-                }
+            }
             MessageSender.DATA_PATH   -> {
-                Natives.message(data);
+                if(fromBle) {
+                    val localIndex=BleMirror.hostIndex(connectionName)
+                    if(localIndex<0)
+                        Log.e(LOG_ID,"No local mirror row for authenticated BLE link $connectionName")
+                    else if(!Natives.messageForMirror(localIndex,data))
+                        Log.e(LOG_ID,"Native mirror bridge rejected BLE data for $connectionName ($localIndex)")
+                }
+                else if(!Natives.message(data)) {
+                    Log.e(LOG_ID,"Native MessageClient bridge rejected /data from $connectionName")
+                    if(isWearable) {
+                        // A BLE->MessageClient fallback can leave the native
+                        // peer-index mapping stale. /netinfo is the authoritative
+                        // Wear mapping exchange, so repair it immediately instead
+                        // of waiting for a manual Reinit.
+                        Log.i(LOG_ID,"Requesting /netinfo after rejected Wear MessageClient data")
+                        sendnetinfo(sourceId)
+                    }
+                }
             }
             MessageSender.NET_PATH   -> {
-                if(!fromBle&&tk.glucodata.MessageSender.getMessageSender()==null) {
-                    Log.d(LOG_ID, "messagesender==null")
-                    return
+                if(fromBle&&!BleMirror.canSendWearControl(connectionName)) {
+                    // Phone-to-phone mirrors keep their explicitly configured
+                    // direction. BLE may only update an existing Wear row.
+                    Log.e(LOG_ID,"Rejected BLE /netinfo outside an authenticated Wear mirror: $connectionName")
                 }
-                val phonePeer=fromBle&&!isWearable&&!galaxy
-                if(Natives.setmynetinfo(connectionName,data,galaxy,phonePeer)) {
-                    sendnetinfo(sourceId)
-                    if(fromBle) {
-                        Natives.resetMessageConnection(connectionName)
-                        BleMirror.restorePreferredTransport(connectionName)
+                else {
+                    Log.i(LOG_ID,"Accepting Wear /netinfo through ${if(fromBle) "BLE" else "MessageClient"}: source=$sourceId mirror=$connectionName")
+                    // On a phone the source Wear node ID is the mirror label;
+                    // on a watch the mirror label is that watch's local node
+                    // ID. For BLE, connectionName is the authenticated label.
+                    // Native code verifies the embedded label before mutation.
+                    val mirrorLabel=Natives.setmynetinfo(connectionName,data,galaxy,false)
+                    if(mirrorLabel!=null) {
+                        if(mirrorLabel!=connectionName) {
+                            Log.e(LOG_ID,"Native /netinfo result mismatch: expected=$connectionName returned=$mirrorLabel source=$sourceId")
                         }
+                        else {
+                            Log.i(LOG_ID,"Wear mirror created or updated from /netinfo: label=$mirrorLabel source=$sourceId")
+                            if(fromBle) {
+                                // A BLE label is not a MessageClient node ID.
+                                // Never replace the watch -> phone node mapping.
+                                MessageSender.sendBleNetInfo(connectionName)
+                            }
+                            else {
+                                MessageSender.rememberMirrorNode(connectionName,sourceId)
+                                sendnetinfo(sourceId)
+                            }
+                            MessageSender.peerNetworkInfoChanged()
+                        }
+                    }
+                    else
+                        Log.e(LOG_ID,"Wear /netinfo was rejected: source=$sourceId bytes=${data.size}")
                 }
             }
             MessageSender.START_PATH ->  {
@@ -103,7 +163,10 @@ class MessageReceiver: WearableListenerService() {
                Applic.setinittext(context.getString(R.string.connected));
                Applic.initStarted=Natives.ontbytesettings(data)
                Notify.mkunitstr(context,Natives.getunit())
-               sendnetinfo(sourceId)
+               if(fromBle)
+                   MessageSender.sendBleNetInfo(connectionName)
+               else
+                   sendnetinfo(sourceId)
             }
              MessageSender.SETTINGS_PATH   -> { //Never used
                  Natives.ontbytesettings(data)
@@ -111,26 +174,47 @@ class MessageReceiver: WearableListenerService() {
                 }
              MessageSender.MESSAGES_PATH -> {
                 val on=booldata(data)
-                if(fromBle)
-                    BleMirror.setPreferred(on)
-                Natives.setBlueMessage(connectionName,on)
+                val automaticBle=fromBle&&BleMirror.isAutomaticPhonePeer(connectionName)
+                val accepted=if(automaticBle)
+                    BleMirror.canSetAutomaticCarrier(connectionName,on)
+                else {
+                    Natives.setBlueMessage(connectionName,on)
+                    true
+                }
                 if(fromBle) {
-                    BleMirror.sendAsync(MessageSender.MESSAGES_ACK_PATH,data.copyOf(9.coerceAtMost(data.size)))
-                    if(on)
-                        Natives.resetMessageConnection(connectionName)
-                    }
+                    val ack=data.copyOf(9.coerceAtMost(data.size))
+                    if(ack.isNotEmpty()&&!accepted)
+                        ack[0]=if(on) 0.toByte() else 1.toByte()
+                    // Queue /messagesack before enabling the native BLE bridge.
+                    // The old order could let /data overtake the ACK and get
+                    // rejected by the requesting peer before it selected BLE.
+                    val ackQueued=BleMirror.sendAsync(connectionName,MessageSender.MESSAGES_ACK_PATH,ack)
+                    val activated=if(automaticBle&&accepted&&ackQueued)
+                        BleMirror.setAutomaticCarrier(connectionName,on)
+                    else
+                        !automaticBle||!accepted
+                    Log.i(LOG_ID,"BLE carrier request for $connectionName: requested="+
+                            "${if(on) "Bluetooth" else "TCP/IP"} accepted=$accepted ackQueued=$ackQueued activated=$activated")
+                }
                 else
                     MessageSender.sendMessagesAck(sourceId,data)
                 }
+             MessageSender.MIRROR_TRANSPORT_PATH -> {
+                MessageSender.receiveMirrorTransport(sourceId,connectionName,data,fromBle)
+             }
+             MessageSender.MIRROR_TRANSPORT_ACK_PATH -> {
+                if(fromBle)
+                    MessageSender.receiveMirrorTransportAck(connectionName,data)
+             }
              MessageSender.MESSAGES_ACK_PATH -> {
-                MessageSender.receiveMessagesAck(data)
+                MessageSender.receiveMessagesAck(connectionName,data,fromBle)
                 }
              MessageSender.BLUETOOTH_PATH -> {
                if(isWearable) {
                     val context=if(MainActivity.thisone==null)Applic.app;else MainActivity.thisone;
                     val on=booldata(data)
                     if(tk.glucodata.Log.doLog) {Log.i(LOG_ID,"set bluetooth $on");}
-                    if(!on&&!fromBle&&Natives.hasAidexX()) {
+                    if(!on&&Natives.hasAidexX()) {
                             val sender = tk.glucodata.MessageSender.getMessageSender()
                             if (sender == null) {
                                 Log.d(LOG_ID, "5: messagesender==null")

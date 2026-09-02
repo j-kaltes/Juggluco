@@ -33,6 +33,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.text.Editable;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
 import android.util.TypedValue;
@@ -191,6 +192,8 @@ public class Backup {
       private CheckDirectionBox Scans =null;
       private CheckDirectionBox Stream =null,receive=null,detect=null,checkhostname;
       private CheckDirectionRadio activeonly=null,passiveonly=null,both=null;
+      private CheckDirectionRadio transportAutomatic=null,transportTcp=null,transportBluetooth=null,transportMessages=null;
+      private boolean transportMessagesAllowed=isWearable;
       private final EditText[] editIPs={null,null,null,null};
       private EditText editpass=null;
       private EditText portedit=null;
@@ -201,6 +204,7 @@ public class Backup {
       private   EditText label;
    private CheckDirectionRadio[] sendfrom;
    private View[] fromrow;
+   private Runnable refreshTransportUI;
 
     private CheckDirectionBox   visible;
       int hostindex=-1;
@@ -271,6 +275,7 @@ public class Backup {
             if(hostindex>=0) {
                Natives.deletebackuphost(hostindex);
                hostadapt.notifyItemRemoved(hostindex);
+               BleMirror.configurationChanged();
                }
    //            hostview.setVisibility(GONE);
    //            hidekeyboard(act); 
@@ -291,7 +296,8 @@ static public String changehostError(MainActivity act,int pos) {
                case -3 : yield act.getString(R.string.toomanyhosts);
                case -4 : yield act.getString(R.string.senthosts);
                case -5 : yield "Hostname too long";
-               case -6 : yield "Database busy, try again";
+            case -6 : yield "Database busy, try again";
+               case -7 : yield "Invalid mirror transport or missing connection label";
                default : yield "Error";
             };
             return mess;
@@ -321,6 +327,13 @@ boolean makeQR(MainActivity act,int pos) {
                 }
           else {
                 hostadapt.notifyItemInserted(pos);
+                final int transport=Natives.getbackuptransport(pos);
+                if(transport==BleMirror.TRANSPORT_BLUETOOTH||
+                        (transport==BleMirror.TRANSPORT_AUTOMATIC&&!isWearable&&!Natives.isWearOS(pos)))
+                   // Refresh/cache permission state before configurationChanged()
+                   // is allowed to start BLE scanning or advertising.
+                   act.finepermission();
+                BleMirror.configurationChanged(pos,true);
                 var jsonstr= getbackJson(pos);
                 QRmake.show(act,jsonstr);
                 return true;
@@ -392,6 +405,16 @@ EditText ICElabel;
 CheckDirectionBox ICE;
    void makehostview(MainActivity act) {
       ICE=getcheckbox(act,R.string.ICE, true);
+      TextView transportLabel=getlabel(act,R.string.mirror_transport);
+      transportAutomatic=getradiobutton(act,R.string.transport_automatic);
+      transportTcp=getradiobutton(act,R.string.transport_tcp);
+      transportBluetooth=getradiobutton(act,R.string.transport_bluetooth);
+      transportMessages=getradiobutton(act,R.string.transport_messages);
+      CheckDirectionRadio[] transportRadios={transportAutomatic,transportTcp,transportBluetooth,transportMessages};
+      setradio(transportRadios);
+      transportAutomatic.setChecked(true);
+      transportMessagesAllowed=isWearable;
+      transportMessages.setVisibility(transportMessagesAllowed?VISIBLE:GONE);
       for(int i=0;i<editIPs.length;i++) {
          editIPs[i]=new EditText(act);
          editIPs[i].setMinEms(6);
@@ -580,18 +603,34 @@ CheckDirectionBox ICE;
             }        
          hidekeyboard(act); //USE
          int hostnr=Natives.backuphostNr( );
-         boolean ice=ICE.isChecked();
+         final int selectedTransport=transportBluetooth.isChecked()?BleMirror.TRANSPORT_BLUETOOTH:
+                 (transportMessages.isChecked()?BleMirror.TRANSPORT_MESSAGES:
+                 (transportTcp.isChecked()?BleMirror.TRANSPORT_TCP:BleMirror.TRANSPORT_AUTOMATIC));
+         final boolean usesNetwork=selectedTransport==BleMirror.TRANSPORT_AUTOMATIC||
+                 selectedTransport==BleMirror.TRANSPORT_TCP;
+         boolean ice=usesNetwork&&ICE.isChecked();
          int struse=0;
          String[] names=null;
-         final boolean dodetect= detect.isChecked()&&!activeonly.isChecked();
+         final boolean dodetect=usesNetwork&&detect.isChecked()&&!activeonly.isChecked();
          final var ICEstring=ICElabel.getText().toString();
-         if(ice) {
+         final String selectedLabel=haslabel.isChecked()?label.getText().toString():null;
+         if((selectedTransport==BleMirror.TRANSPORT_MESSAGES||selectedTransport==BleMirror.TRANSPORT_BLUETOOTH)&&
+                 (selectedLabel==null||selectedLabel.trim().isEmpty())) {
+            Applic.argToaster(act,R.string.transport_needs_label,Toast.LENGTH_LONG);
+            return -15;
+            }
+         if(selectedTransport==BleMirror.TRANSPORT_BLUETOOTH&&
+                 (!Password.isChecked()||editpass.getText().length()==0)) {
+            Applic.argToaster(act,R.string.transport_needs_password,Toast.LENGTH_LONG);
+            return -15;
+            }
+         if(usesNetwork&&ice) {
             if(ICEstring.length()<16) {
                 Applic.argToaster(act,R.string.ICElabeltooshort,Toast.LENGTH_LONG);
                 return -16;
                 }
             }
-         else {
+         else if(usesNetwork) {
              names=new String[editIPs.length];
              if(testip.isChecked()||!passiveonly.isChecked()) {
                 for (EditText editText : editIPs) {
@@ -614,7 +653,25 @@ CheckDirectionBox ICE;
 
 
          long starttime=(alldata.getVisibility()!=VISIBLE||alldata.isChecked())?0L:(fromnow.isChecked()? System.currentTimeMillis():Natives.getstarttime())/1000L;
-         int pos=Natives.changebackuphost(hostindex,names,struse,dodetect,portedit.getText().toString(), Amounts.isChecked(),Stream.isChecked(),Scans.isChecked(),restore.isChecked(),receiver,activeonly.isChecked(),passiveonly.isChecked(),Password.isChecked()?editpass.getText().toString():null,starttime,haslabel.isChecked()?label.getText().toString():null,testip.isChecked(),checkhostname.isChecked(), ice?ICEstring:null,one.isChecked());
+         final boolean mirrorSide=ice?one.isChecked():
+                 (hostindex>=0?Natives.getbackupside(hostindex):Scans.isChecked());
+         final boolean ordinaryNearby=!ice&&!isWearable&&!(hostindex>=0&&isWearOS(hostindex));
+         final boolean bleReverse=ordinaryNearby&&hostindex>=0?
+                 Natives.getbackupblereverse(hostindex):false;
+         final boolean bleclient;
+         if(isWearable)
+            bleclient=true;
+         else if(hostindex>=0&&isWearOS(hostindex))
+            bleclient=false;
+         else if(ordinaryNearby)
+            // Legacy compatibility field. The real ordinary-mirror role is
+            // derived from immutable side plus pair-wide bleReverse.
+            bleclient=(!mirrorSide)^bleReverse;
+         else if(hostindex>=0)
+            bleclient=Natives.getbackupbleclient(hostindex);
+         else
+            bleclient=!Scans.isChecked();
+         int pos=Natives.changebackuphost(hostindex,names,struse,dodetect,usesNetwork?portedit.getText().toString():"0", Amounts.isChecked(),Stream.isChecked(),Scans.isChecked(),restore.isChecked(),receiver,activeonly.isChecked(),passiveonly.isChecked(),Password.isChecked()?editpass.getText().toString():null,starttime,selectedLabel,usesNetwork&&testip.isChecked(),usesNetwork&&checkhostname.isChecked(), ice?ICEstring:null,mirrorSide,selectedTransport,bleclient);
 
          if(pos<0) {
             String mess=changehostError(act, pos);
@@ -622,10 +679,34 @@ CheckDirectionBox ICE;
             return pos;
             }    
 
+         if(pos>=0&&ordinaryNearby)
+             Natives.setbackupblereverse(pos,bleReverse);
+         final boolean storedClient=pos>=0&&ordinaryNearby?
+                 ((!Natives.getbackupside(pos))^Natives.getbackupblereverse(pos)):
+                 (pos>=0&&Natives.getbackupbleclient(pos));
+         Log.i(LOG_ID,"saved mirror index="+pos+" label="+selectedLabel+
+                 " requestedTransport="+BleMirror.transportName(selectedTransport)+"("+selectedTransport+")"+
+                 " storedTransport="+BleMirror.transportName(Natives.getbackuptransport(pos))+
+                 "("+Natives.getbackuptransport(pos)+")"+
+                 " bleRole="+(storedClient?"client":"server")+
+                 (ordinaryNearby?" direction="+(Natives.getbackupblereverse(pos)?"reversed":"normal"):""));
+
          if(!receiver&& !(Amounts.isChecked()&& Stream.isChecked()&& Scans.isChecked())) {
             Applic.argToaster(act,R.string.notalldata ,Toast.LENGTH_LONG);
             }        
          configchanged=true;
+         final boolean needsBlePermission=selectedTransport==BleMirror.TRANSPORT_BLUETOOTH||
+                 (selectedTransport==BleMirror.TRANSPORT_AUTOMATIC&&!isWearable&&!Natives.isWearOS(pos));
+         if(needsBlePermission)
+            // Refresh/cache permission state before configurationChanged() can
+            // start BLE work for a newly enabled mirror.
+            act.finepermission();
+         BleMirror.configurationChanged(pos,true);
+         if(needsBlePermission) {
+            final String blocker=BleMirror.blockingStatusForConnection(pos);
+            if(blocker!=null)
+               Applic.argToaster(act,blocker,Toast.LENGTH_LONG);
+            }
          if(pos==hostnr)  {
             delete.setVisibility(VISIBLE);
             hostadapt.notifyItemInserted(pos);
@@ -679,8 +760,8 @@ CheckDirectionBox ICE;
             final int[] ret={w,h};
             return ret;
 
-         }, new View[]{ICE},new View[]{ Portlabel},new View[] {portedit},new View[]{checkhostname},new View[]{new Space(act),IPslabel,detect,new Space(act)},new View[]{ICElabellabel},new View[]{ICElabel},sides, new View[]{editIPs[0]},new View[]{editIPs[1]},editIPs.length>=3?new View[]{editIPs[2]}:null,editIPs.length>=4?new View[]{editIPs[3]}:null ,new View[] {testip},new View[] {haslabel},new View[]{label},
-               new View[]{passiveonly},new View[]{activeonly},new View[]{both},new View[] {receive},new View[] {Sendlabel,Stream},new View[]{Scans,Amounts},new View[]{startlabel},new View[]{alldata,fromnow},new View[]{screenpos} ,new View[]{Password },new View[]{editpass,visible},new View[]{delete,Close},new View[] {reset},new View[]{save});
+         },new View[]{ICE},new View[]{ Portlabel},new View[] {portedit},new View[]{checkhostname},new View[]{new Space(act),IPslabel,detect,new Space(act)},new View[]{ICElabellabel},new View[]{ICElabel},sides, new View[]{editIPs[0]},new View[]{editIPs[1]},editIPs.length>=3?new View[]{editIPs[2]}:null,editIPs.length>=4?new View[]{editIPs[3]}:null ,new View[] {testip},new View[] {haslabel},new View[]{label},
+               new View[]{passiveonly},new View[]{activeonly},new View[]{both},new View[] {receive},new View[] {Sendlabel,Stream},new View[]{Scans,Amounts},new View[]{startlabel},new View[]{alldata,fromnow},new View[]{screenpos} ,new View[]{Password },new View[]{editpass,visible}, new View[]{transportLabel},new View[]{transportAutomatic},new View[]{transportTcp},new View[]{transportBluetooth},new View[]{transportMessages},new View[]{delete,Close},new View[] {reset},new View[]{save});
 
       layout.setPaddingRelative((int)(GlucoseCurve.metrics.density*4.0),0,(int)(GlucoseCurve.metrics.density*10.0),(int)(GlucoseCurve.metrics.density*4));
          }
@@ -697,15 +778,18 @@ CheckDirectionBox ICE;
             return ret;
 
          }, firstrow,new View[]{ICE,ICElabellabel,ICElabel,zero,one},editIPs, new View[]{testip, haslabel, label},
-               directions, new View[]{receive, Sendlabel, Amounts, Scans, Stream, restore}, fromrow, withqr, new View[]{delete, Close, reset, Help, save})
+               directions, new View[]{receive, Sendlabel, Amounts, Scans, Stream, restore}, fromrow, withqr,new View[]{transportLabel,transportAutomatic,transportTcp,transportBluetooth,transportMessages}, new View[]{delete, Close, reset, Help, save})
             .portraitLayout(
-               new View[]{Portlabel,portedit,checkhostname},new View[]{IPslabel,detect},
+new View[]{Portlabel,portedit,checkhostname},new View[]{IPslabel,detect},
                new View[]{ICE,ICElabellabel},new View[]{ICElabel},new View[]{zero,one},
                new View[]{editIPs[0],editIPs[1]},new View[]{editIPs[2],editIPs[3]},
                new View[]{testip,haslabel},new View[]{label},directions,
                new View[]{receive,Sendlabel},new View[]{Amounts,Scans,Stream},new View[]{restore},
                new View[]{startlabel},new View[]{alldata,fromnow,screenpos},
-               withqr,new View[]{Close,Help},new View[]{reset},new View[]{delete,save})
+               withqr,
+               new View[]{transportLabel,transportAutomatic},new View[]{transportTcp,transportBluetooth,transportMessages},
+
+               new View[]{Close,Help},new View[]{reset},new View[]{delete,save})
             .systembarPadding((left,top,right,bottom)->
                new int[]{left+sidepad,top/2,sidepad+right,bottom});
 
@@ -719,6 +803,21 @@ CheckDirectionBox ICE;
        act.addMyContentView(hostview, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT));
        hostview.setBackgroundColor(backgroundcolor);
     Consumer<Boolean> setICE=(isChecked) -> {
+            // ICE is always a network/TURN connection. Automatic and TCP/IP are
+            // therefore equivalent for ICE, while Bluetooth/Messages cannot be
+            // used at all. There is no meaningful transport choice: hide the
+            // complete transport section while ICE is selected. Keep the checked
+            // network radio internally so existing stored connections keep their
+            // transport value.
+            if(isChecked&&(transportBluetooth.isChecked()||transportMessages.isChecked()))
+               transportAutomatic.setChecked(true);
+            final int transportVisibility=isChecked?GONE:VISIBLE;
+            transportLabel.setVisibility(transportVisibility);
+            transportAutomatic.setVisibility(transportVisibility);
+            transportTcp.setVisibility(transportVisibility);
+            transportBluetooth.setVisibility(transportVisibility);
+            transportMessages.setVisibility(!isChecked&&transportMessagesAllowed?VISIBLE:GONE);
+
             final int vis=isChecked?VISIBLE:hide;
             for(int i=1;i<iceviews.length;++i) {
                 iceviews[i].setVisibility(vis);
@@ -736,10 +835,46 @@ CheckDirectionBox ICE;
             testip.setVisibility(notvis);
             };
 
+      refreshTransportUI=()-> {
+         final boolean network=transportAutomatic.isChecked()||transportTcp.isChecked();
+         if(network) {
+            ICE.setEnabled(true);
+            haslabel.setEnabled(true);
+            ICE.setVisibility(VISIBLE);
+            setICE.accept(ICE.isChecked());
+            if(!ICE.isChecked()) {
+               final View selected=activeonly.isChecked()?activeonly:(passiveonly.isChecked()?passiveonly:both);
+               test1.accept(selected);
+               if(checkhostname.isChecked())
+                  doHasName.run();
+               label.setVisibility(haslabel.isChecked()?VISIBLE:hide);
+               }
+            }
+         else {
+            ICE.setChecked(false);
+            ICE.setEnabled(false);
+            for(var view:firstrow)
+               view.setVisibility(hide);
+            for(var view:iceviews)
+               view.setVisibility(hide);
+            for(var view:editIPs)
+               view.setVisibility(hide);
+            for(var view:directions)
+               view.setVisibility(hide);
+            testip.setVisibility(hide);
+            haslabel.setChecked(true);
+            haslabel.setEnabled(false);
+            label.setVisibility(VISIBLE);
+            }
+         };
+      Consumer<View> transportChange=view->refreshTransportUI.run();
+      setradiotest(transportRadios,new Object[]{transportChange});
+
       ICE.setOnCheckedChangeListener( (buttonView,  isChecked)-> {
             setICE.accept(isChecked);
             });
      ICE.setChecked(false);
+     refreshTransportUI.run();
       // setICE.accept(false);
       }
    void changehostview(MainActivity act,final int index,String[] names,boolean dodetect,String port,String pass,View parent) {
@@ -760,7 +895,11 @@ CheckDirectionBox ICE;
       String ICElabelstr=Natives.getICElabel(index);
       boolean hasICE=ICElabelstr!=null;
 
-      boolean isnew=names==null&&!hasICE;
+      boolean isnew=index<0;
+      final int savedTransport=isnew?BleMirror.TRANSPORT_AUTOMATIC:Natives.getbackuptransport(index);
+      transportMessagesAllowed=isWearable||(!isnew&&isWearOS(index))||
+              savedTransport==BleMirror.TRANSPORT_MESSAGES;
+      transportMessages.setVisibility(transportMessagesAllowed?VISIBLE:GONE);
       String labelstr=null;
       if(!isnew) {
          stream=Natives.getbackuphoststream(index);
@@ -779,7 +918,7 @@ CheckDirectionBox ICE;
             haslabel.setChecked(false); 
             label.setVisibility(hide);
             }
-          if(!isnew&&!hasICE) {
+          if((savedTransport==BleMirror.TRANSPORT_AUTOMATIC||savedTransport==BleMirror.TRANSPORT_TCP)&&!hasICE) {
              final boolean dotestip=Natives.getbackuptestip(index);
              final boolean ispassive=Natives.getbackuphostpassive(index);
              testip.setChecked(dotestip);
@@ -807,6 +946,23 @@ CheckDirectionBox ICE;
              {if(doLog) {Log.i(LOG_ID,(labelstr!=null?labelstr:"")+" Iswearos("+index+")="+iswearos);};};
 
              checkhostname.setChecked(hasHostname);
+             }
+          else if(!hasICE) {
+             testip.setChecked(Natives.getbackuptestip(index));
+             if(names!=null) {
+                for(int i=0;i<Math.min(names.length,editIPs.length);++i)
+                   editIPs[i].setText(names[i]);
+                }
+             final boolean ispassive=Natives.getbackuphostpassive(index);
+             final boolean isactiveonly=Natives.getbackuphostactive(index);
+             if(isactiveonly)
+                activeonly.setChecked(true);
+             else if(ispassive)
+                passiveonly.setChecked(true);
+             else
+                both.setChecked(true);
+             checkhostname.setChecked(false);
+             detect.setChecked(false);
              }
           }
       else {
@@ -859,6 +1015,16 @@ CheckDirectionBox ICE;
          editpass.setVisibility(hide);
          }
 
+      if(savedTransport==BleMirror.TRANSPORT_BLUETOOTH)
+         transportBluetooth.setChecked(true);
+      else if(savedTransport==BleMirror.TRANSPORT_MESSAGES)
+         transportMessages.setChecked(true);
+      else if(savedTransport==BleMirror.TRANSPORT_TCP)
+         transportTcp.setChecked(true);
+      else
+         transportAutomatic.setChecked(true);
+      refreshTransportUI.run();
+
       hostindex=index;
       }
    void changehostview(MainActivity act,int index,View parent) {
@@ -883,9 +1049,14 @@ CheckDirectionBox ICE;
       deactive.setOnCheckedChangeListener( (buttonView,  isChecked)->  {
                 Natives.setHostDeactivated(pos,isChecked);
                 hostadapt.notifyItemChanged(pos);
+                BleMirror.configurationChanged();
                }
                 );
-      sethtml(info, mirrorStatus(pos));
+      String mirrorInfo=mirrorStatus(pos);
+      final String bluetoothStatus=BleMirror.statusForConnection(pos);
+      if(bluetoothStatus!=null)
+         mirrorInfo+="<p><b>Bluetooth mirror:</b> "+TextUtils.htmlEncode(bluetoothStatus)+"</p>";
+      sethtml(info,mirrorInfo);
 
       ViewGroup layall;
 ViewGroup.LayoutParams params;
@@ -929,27 +1100,17 @@ ViewGroup.LayoutParams params;
                     }
                                                                                                 
            Layout layout=new Layout(act, (l, w, h) -> {
-           /*
-                var x=GlucoseCurve.getwidth()-MainActivity.systembarRight-w;
-                if(x<MainActivity.systembarLeft)
-                   x=MainActivity.systembarLeft;
-                l.setX(GlucoseCurve.getwidth()-MainActivity.systembarRight-w);
-                l.setY(MainActivity.systembarTop);
-                */
                 final int[] lret={w,h};
                 return lret;
                 },firstrow , new View[]{info})
                 .systembarMargins((left,top,right,bottom)->
-                    new int[]{left*3/4,top*3/4,right*3/4,0});
-          // info.setPadding(pad,0,pad,0);
+                    new int[]{left*7/8,top*7/8,right*7/8,0});
             layout.setBackgroundResource(R.drawable.dialogbackground);
-   //          layout.setRotation(90);
-         layall=layout;
+            layall=layout;
            params =    new FrameLayout.LayoutParams( WRAP_CONTENT, WRAP_CONTENT, Gravity.RIGHT);
             }
 
       modify.setOnClickListener(v->     changehostview(act,pos,layall));
-//      final var lpar=isWearable?MATCH_PARENT: WRAP_CONTENT;
       act.addMyContentView(layall, params);
       if(isWearable) {
          var margs=getMargins(layall);
@@ -995,8 +1156,10 @@ ViewGroup.LayoutParams params;
     if(thishost[3]!=null)
      Natives.networkpresent();
      TextView ip= isWearable? getlabel(act,thishost[1]==null?"wlan: null":thishost[1]): getlabel(act,"wlan: "+thishost[1]);
-     View p2p= (thishost[0]==null)?new Space(act):getlabel(act,"p2p: "+thishost[0]);
-     View blpan= (thishost[2]==null)?new Space(act):getlabel(act,"bt-pan: "+thishost[2]);
+//     View p2p= (thishost[0]==null)?new Space(act):getlabel(act,"p2p: "+thishost[0]);
+ //    View blpan= (thishost[2]==null)?new Space(act):getlabel(act,"bt-pan: "+thishost[2]);
+     View p2p= (thishost[0]==null)?null:getlabel(act,"p2p: "+thishost[0]);
+     View blpan= (thishost[2]==null)?null:getlabel(act,"bt-pan: "+thishost[2]);
      String port=Natives.getreceiveport();
      TextView labport=getlabel(act,R.string.port);
      EditText portview=getnumedit(act, port);
@@ -1017,11 +1180,6 @@ ViewGroup.LayoutParams params;
       MessageSender.reinit();
       }
       );
-     Button bleMirror=getbutton(act,R.string.ble_mirror);
-     bleMirror.setOnClickListener(v -> BleMirror.showDialog(act));
-//     boolean[] issaved={false};
-      //alarms=getbutton(act,R.string.alarms);
-   //      if(!Natives.isreceiving( )) { alarms.setEnabled(false); }
 
      final Button battery = new Button(act);
 
@@ -1078,15 +1236,10 @@ ViewGroup.LayoutParams params;
          getMargins(Save).setMarginEnd((int)(width*0.12));
          var margIP=getMargins(ip);
          margIP.setMarginStart((int)(width*0.01));
-   //      if(doLog) ip.setText("2a01:59f:a075:b0d1:a4ef:afff:fec4:59f2");
-         //final Layout layout=new Layout(act, new View[]{getlabel(act,act.getString(R.string.thishost))},new View[]{blpan},new View[]{p2p},new View[]{ip},new View[]{new Space(act),labport,portview,Save,new Space(act)},new View[]{recycle},new View[] {hosts},new View[]{staticnum},new View[]{Sync,reinit},new View[]{space1,wifi,alarms,space2},errorrow,new View[]{Cancel});
-         final Layout layout=new Layout(act, new View[]{getlabel(act,act.getString(R.string.thishost))},new View[]{labport,portview,Save},new View[]{ip},new View[]{blpan},new View[]{p2p},new View[]{recycle},new View[] {hosts},new View[]{bleMirror},new View[]{staticnum},new View[]{Sync,reinit},new View[]{wifi},errorrow,new View[]{Cancel});
-   //        var hori=new NestedScrollView(act);
+         final Layout layout=new Layout(act, new View[]{getlabel(act,act.getString(R.string.thishost))},new View[]{labport,portview,Save},new View[]{ip},new View[]{blpan},new View[]{p2p},new View[]{recycle},new View[] {hosts},new View[]{staticnum},new View[]{Sync,reinit},new View[]{wifi},errorrow,new View[]{Cancel});
          var hori=new ScrollView(act);
          hori.setFillViewport(true);
-   //        hori.setSmoothScrollingEnabled(false);
-          hori.setVerticalScrollBarEnabled(Applic.scrollbar);
-   //       hori.setHorizontalScrollBarEnabled(Applic.horiScrollbar);
+         hori.setVerticalScrollBarEnabled(Applic.scrollbar);
          hori.setScrollbarFadingEnabled(true);
          hori.setSmoothScrollingEnabled(true);
          int height=GlucoseCurve.getheight();
@@ -1107,12 +1260,12 @@ ViewGroup.LayoutParams params;
          var hormarg=(int)(GlucoseCurve.metrics.density*20.0f);
          getMargins(Help).setMarginStart(hormarg);
          getMargins(Cancel).setMarginEnd(hormarg);
-         var withqr=BuildConfig.minSDK>=20?new View[]{bleMirror,autoqr,hosts,Cancel}:new View[]{bleMirror,hosts,Cancel};
+         var withqr=BuildConfig.minSDK>=20?new View[]{autoqr,hosts,Cancel}:new View[]{hosts,Cancel};
          var layout=new Layout(act, new View[]{ip,blpan,p2p,labport,portview,Save,turnserver},new View[]{recycle},new View[] {battery,Help,Sync,reinit,staticnum},errorrow,withqr)
             .portraitLayout(new View[]{ip},new View[]{blpan},new View[]{p2p},
                new View[]{labport,portview,Save},new View[]{turnserver},new View[]{recycle},errorrow,
                new View[]{battery,staticnum},BuildConfig.minSDK>=20?new View[]{autoqr,Sync,reinit}:new View[]{Sync,reinit},
-               new View[]{hosts,bleMirror},new View[]{Help,Cancel});
+               new View[]{hosts},new View[]{Help,Cancel});
         if(BuildConfig.minSDK>=20) {
             autoqr.setOnClickListener(v -> {
                 makeAutoQR(act, layout);
@@ -1250,6 +1403,7 @@ private int getMirrorListColor(MainActivity act) {
          boolean amounts=Natives.getbackuphostnums(pos);
          int recnum=Natives.getbackuphostreceive(pos);
          boolean off=Natives.getHostDeactivated(pos);
+         int transport=Natives.getbackuptransport(pos);
          boolean doreceive= (recnum&2)!=0;
          String ICElabelstr=Natives.getICElabel(pos);
       if(ICElabelstr!=null&&ICElabelstr.length()<16) {
@@ -1264,18 +1418,34 @@ private int getMirrorListColor(MainActivity act) {
             sb.append(label);
             sb.append(" ");
             }
+       if(isWearable&&transport==BleMirror.TRANSPORT_BLUETOOTH)
+          sb.append("[Bluetooth] ");
+       else if(isWearable&&transport==BleMirror.TRANSPORT_MESSAGES)
+          sb.append("[Messages] ");
+       else if(isWearable&&transport==BleMirror.TRANSPORT_TCP)
+          sb.append("[TCP only] ");
        if(!isWearable) {
-          if(ICElabelstr==null) {
-               sb.append((names!=null&&names.length!=0)?names[0]:(Natives.detectIP(pos)?"Detect":"---"));
-               if(!passive) {
-                  sb.append(" ");
-                  sb.append(port);
-                  }
-               sb.append(' ');
+          if(transport==BleMirror.TRANSPORT_BLUETOOTH) {
+               sb.append("[Bluetooth] ");
                }
-            else {
+          else if(transport==BleMirror.TRANSPORT_MESSAGES) {
+               sb.append("[Messages] ");
+               }
+          else if(transport==BleMirror.TRANSPORT_TCP) {
+               sb.append("[TCP only] ");
+               }
+          if(transport==BleMirror.TRANSPORT_AUTOMATIC||transport==BleMirror.TRANSPORT_TCP) {
+             if(ICElabelstr==null) {
+                  sb.append((names!=null&&names.length!=0)?names[0]:(Natives.detectIP(pos)?"Detect":"---"));
+                  if(!passive) {
+                     sb.append(" ");
+                     sb.append(port);
+                     }
+                  sb.append(' ');
+                  }
+             else
                   sb.append(" ICE ");
-                }
+             }
            }
           if(amounts) {
               sb.append("n");

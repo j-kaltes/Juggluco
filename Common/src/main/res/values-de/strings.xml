@@ -409,7 +409,7 @@
   <string name="connectionl">Verbindung</string>
 <string name="disconnectsensor">Bug</string>
 <string name="internet">Internet</string>
-<string name="homenet">Heimnetz</string>
+<string name="homenet">Lokal</string>
 <string name="ICE">ICE</string>
 <string name="zero">0</string>
 <string name="one">1</string>
@@ -504,6 +504,16 @@
 
 <string name="autorotate">Automa. drehen</string>
 <string name="rotateText">Text drehen</string>
+
+
+    <string name="mirror_transport">Verbindungsmethode:</string>
+    <string name="transport_automatic">Automatisch</string>
+    <string name="transport_tcp">TCP/IP</string>
+    <string name="transport_bluetooth">Direkte Bluetooth</string>
+    <string name="transport_messages">Messages</string>
+<string name="transport_needs_label">Direktes Bluetooth und Messages benötigen ein Etikett</string>
+
+<string name="transport_needs_password">Direktes Bluetooth benötigt ein passwort</string>
 </resources>
 
 

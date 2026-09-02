@@ -20,6 +20,8 @@
 
 #include <string.h>
 #include <algorithm>
+#include <string>
+#include <unordered_map>
 #ifdef WEAROS_MESSAGES
 #include <zlib.h>
 #endif
@@ -85,6 +87,15 @@ extern std::mutex change_host_mutex;
 //static bool remakewearhost=false;
 static bool newlycreated=false;
 int makeversion=0;
+// usedversion/newlycreated are legacy protocol-negotiation state. JNI may
+// dispatch /netinfo for different watches concurrently, so serialize netinfo
+// operations and retain the negotiated wire version by mirror label.
+static std::mutex netinfomutex;
+static std::unordered_map<std::string,uint8_t> peerversions;
+static uint8_t peerversion(const char *label) {
+    const auto found=peerversions.find(label);
+    return found==peerversions.end()?thisversion:found->second;
+    }
 passhost_t * getwearoshost(const bool create,const char *label,bool galaxy,bool remake=false,bool phonepeer=false) {
   const std::lock_guard<std::mutex> lock(change_host_mutex);
     struct updatedata *update=backup->getupdatedata();
@@ -167,9 +178,9 @@ passhost_t * getwearoshost(const bool create,const char *label,bool galaxy,bool 
         sendstream=true;
         sendscans=true;
         sendnums=true;
-        receive=phonepeer;
+        receive=false;
         if(phonepeer) {
-            LOGARTAG("BLE phone peer: send and receive");
+            LOGARTAG("phone peer: keep mirror data one-way; carrier is configured separately");
             }
         else if(galaxy) {
             LOGARTAG("connected to galaxy");
@@ -200,6 +211,8 @@ passhost_t * getwearoshost(const bool create,const char *label,bool galaxy,bool 
     return found;
     }
 static void setdefaults(const char *infolabel,bool galaxy) {
+   const std::lock_guard<std::mutex> netinfolock(netinfomutex);
+   usedversion=peerversion(infolabel);
    passhost_t *host=getwearoshost(false,infolabel,galaxy);
    if(host) {
         LOGGERTAG("setdefaults(%s,%d)\n",infolabel,galaxy);
@@ -305,16 +318,16 @@ static bool hasWatchNums(const passhost_t *wearhost) {
     if(!wearhost)
         return false;
        if constexpr(iswatchapp()) {
-            LOGGERTAG("is watch isSensor=%d\n",wearhost->isSender());
+            LOGGERTAG("is watch isSender=%d\n",wearhost->isSender());
             if(wearhost->isSender()&&getsendto(wearhost).sendnums)  {
                   LOGARTAG("watch nums sender");
             return true;
-            }
-        else  {
-              LOGARTAG("watch no nums sender");
-            return false;
-            }
-               }
+                }
+            else  {
+                LOGARTAG("watch no nums sender");
+                return false;
+                }
+             }
     else {
         LOGGERTAG("is no watch isSender=%d\n",wearhost->isSender());
         if(wearhost->isSender()&&getsendto(wearhost).sendnums) {
@@ -380,10 +393,23 @@ bool messagehaswlan(int index) {
 
 
 extern void makepass(char *pass,int len);
-static bool sendpass=false;
+// Password acknowledgements belong to one mirror row. A single global flag
+// allowed watch A's acknowledgement to be consumed while constructing the
+// /netinfo reply for watch B.
+static std::array<std::atomic_bool,maxallhosts> sendpass{};
+
+// Runtime current-peer endpoint cache is defined below together with the BLE
+// /bleips helpers. Wear /netinfo feeds the same cache so Automatic transport
+// has one authoritative "peer is reachable here now" source independent of
+// persistent bootstrap addresses.
+static bool setMirrorCurrentPeerAddresses(int index,const sockaddr_in6 *ips,int nr);
+bool mirrorPeerCurrentTcpAvailable(int index);
+static void updateMirrorLocalTcpAvailability(bool present);
 
 
 static int getmynetinfo(const char *id,jboolean create,jint watchHasSensor,jboolean galaxy,jint setnums,struct netinfo2 &info,bool phonepeer) {
+    const std::lock_guard<std::mutex> netinfolock(netinfomutex);
+    usedversion=peerversion(id);
     if(!backup) {
         LOGARTAG("getmynetinfo backup=null");
         return 0;
@@ -406,6 +432,11 @@ static int getmynetinfo(const char *id,jboolean create,jint watchHasSensor,jbool
     if(usedversion) {
         bool haswlan;
         info.nr=getownips(info.ips,passhost_t::maxip-1,haswlan);
+        // Wear /netinfo is often the first network enumeration after install.
+        // Feed the same cache used by Automatic transport so the initial
+        // TCP-vs-Message/BLE decision is based on an actual local address
+        // snapshot rather than the conservative "unknown means available".
+        updateMirrorLocalTcpAvailability(info.nr>0);
 
         LOGGERTAG("send %d ips:\n",info.nr);
         for(int i=0;i<info.nr;i++) {
@@ -432,20 +463,29 @@ static int getmynetinfo(const char *id,jboolean create,jint watchHasSensor,jbool
         }
         if(networkchanged) {
             LOGGERTAG("network changed: crc=%lu->%lu wlan=%d->%d\n",oldcrc,newcrc,oldhaswlan,haswlan);
-            const bool setmess=!haswlan;
-            // Phone-to-phone BLE has no Wear MessageClient fallback. Its
-            // carrier is selected explicitly after the GATT consent flow.
-            if(!phonepeer) {
-            #ifndef WEAROS
-                if(setmess)
-            #endif
-                    setBlueMessage(index,setmess);
+            if(wearhost->automatictransport()) {
+                const bool setmess=!haswlan;
+                LOGGERTAG("automatic mirror %s(%d): network selects %s\n",wearhost->getnameif(),index,
+                        setmess?"Messages":"TCP/IP");
+                // Retain the established asymmetry: a phone changes to
+                // Messages immediately when WLAN disappears and uses the
+                // retry timer to return; a watch can switch in either
+                // direction as its network state changes.
+                if(!phonepeer) {
+                #ifndef WEAROS
+                    if(setmess)
+                #endif
+                        setBlueMessage(index,setmess);
+                    }
                 }
-        }
+            else
+                LOGGERTAG("forced mirror %s(%d): ignoring network carrier change\n",wearhost->getnameif(),index);
+            }
     else  {
             LOGARTAG("crc the same");
         }
-    info.blue=wearmessages[index].load();
+    info.blue=wearhost->gettransport()==passhost_t::transport_messages||
+            (wearhost->automatictransport()&&wearmessages[index].load());
 #endif
         }
     else  {
@@ -467,13 +507,12 @@ static int getmynetinfo(const char *id,jboolean create,jint watchHasSensor,jbool
                 backup->setpass(info.pass,std::string_view(pass,16));
                 }
             info.setpass=true;
-            sendpass=false;
+            sendpass[index].store(false);
             }
-        else if(usedversion>=4&&sendpass) {
+        else if(usedversion>=4&&sendpass[index].exchange(false)) {
             LOGARTAG("sendpass");
             memcpy(info.pass.data(),wearhost->pass.data(),info.pass.size());
             info.setpass=true;
-            sendpass=false;
            }
         if(usedversion&&setnums) {
             if(wearhost->index>=0) {
@@ -557,8 +596,14 @@ static int getmynetinfo(const char *id,jboolean create,jint watchHasSensor,jbool
                  pass[16]='\0';
                  LOGGER("created pass %.16s\n",pass);
                  backup->setpass(info.pass,std::string_view(pass,16));
-                 info.setpass=true;
                  }
+            else
+                memcpy(info.pass.data(),wearhost->pass.data(),info.pass.size());
+            // The watch owns the password for its Wear mirror. Sending it on
+            // every version-4 Data Layer bootstrap also repairs a phone
+            // row that an older multi-watch build accidentally overwrote.
+            info.setpass=true;
+            LOGARTAG("watch sends authoritative mirror password");
               }
         }
     LOGGER("getmynetinfo info.watchsensor=%d\n",info.watchsensor);
@@ -571,7 +616,6 @@ static int getmynetinfo(const char *id,jboolean create,jint watchHasSensor,jbool
 
 
 extern "C" JNIEXPORT  jbyteArray  JNICALL   fromjava(getmynetinfo)(JNIEnv *env, jclass cl,jstring jident,jboolean create,jint watchHasSensor,jboolean galaxy,jint setnums,jboolean phonepeer) {
-
     if(!jident) {
         LOGARTAG("jident=null");
         return nullptr;
@@ -602,20 +646,21 @@ extern "C" JNIEXPORT  jbyteArray  JNICALL   fromjava(getmynetinfo)(JNIEnv *env, 
     return uit;
     }
 
-extern "C" JNIEXPORT jboolean  JNICALL   fromjava(setmynetinfo)(JNIEnv *env, jclass cl,  jstring jident, jbyteArray jar,jboolean galaxy,jboolean phonepeer) {
-   if(!jar) return false;
-   if(!backup) return false;
-    if(!jident) return false;
+extern "C" JNIEXPORT jstring JNICALL fromjava(setmynetinfo)(JNIEnv *env,jclass cl,jstring jident,jbyteArray jar,jboolean galaxy,jboolean phonepeer) {
+    const std::lock_guard<std::mutex> netinfolock(netinfomutex);
+   if(!jar) return nullptr;
+   if(!backup) return nullptr;
+    if(!jident) return nullptr;
    const char *id = env->GetStringUTFChars( jident, NULL);
-   if (id == nullptr) return false;
+   if (id == nullptr) return nullptr;
     destruct   dest([jident,id,env]() {env->ReleaseStringUTFChars(jident, id);});
 
     const jsize lens=env->GetArrayLength(jar);
     if(lens<17||lens>4096)
-        return false;
+        return nullptr;
 
-    usedversion=(lens==sizeof(netinfo))?0:(lens==sizeof(netinfo1)?3:(lens>=sizeof(netinfo2)?4:1));
-    if(usedversion==1) {
+    const uint8_t incomingversion=(lens==sizeof(netinfo))?0:(lens==sizeof(netinfo1)?3:(lens>=sizeof(netinfo2)?4:1));
+    if(incomingversion==1) {
         LOGGER("lens=%d sizeof(netinfo)==%d sizeof(netinfo1)==%d sizeof(netinfo2)==%d\n",lens,sizeof(netinfo),sizeof(netinfo1),sizeof(netinfo2));
         }
     struct netinfo2 received{};
@@ -623,20 +668,31 @@ extern "C" JNIEXPORT jboolean  JNICALL   fromjava(setmynetinfo)(JNIEnv *env, jcl
     env->GetByteArrayRegion(jar,0,copylen,reinterpret_cast<jbyte*>(&received));
     if(env->ExceptionCheck()) {
         env->ExceptionClear();
-        return false;
+        return nullptr;
         }
     const netinfo2 *info=&received;
     constexpr int maxreceivedips=sizeof(info->ips)/sizeof(info->ips[0]);
-    if(usedversion&&(info->nr<0||info->nr>maxreceivedips))
-        return false;
-    const char *receivedlabel=usedversion?info->newlabel:reinterpret_cast<const netinfo *>(info)->label;
+    if(incomingversion&&(info->nr<0||info->nr>maxreceivedips))
+        return nullptr;
+    const char *receivedlabel=incomingversion?info->newlabel:reinterpret_cast<const netinfo *>(info)->label;
     constexpr size_t receivedlabelsize=sizeof(info->newlabel);
     if(!memchr(receivedlabel,'\0',receivedlabelsize))
-        return false;
-    if(usedversion>=3&&(info->index<0||info->index>=maxallhosts))
-        return false;
+        return nullptr;
+    if(incomingversion>=3&&(info->index<0||info->index>=maxallhosts))
+        return nullptr;
+    // The Java boundary supplies the label expected for this exact Wear node:
+    // the source node ID on a phone and the local watch node ID on a watch.
+    // Never trust a different embedded label. Otherwise a stale Data Layer
+    // mapping can overwrite another watch's IP addresses and password.
+    if(!*receivedlabel||strcmp(receivedlabel,id)) {
+        LOGGERTAG("reject /netinfo label mismatch expected=%s received=%s; no mirror data changed\n",id,receivedlabel);
+        return nullptr;
+        }
+    usedversion=incomingversion;
+    peerversions[std::string(id)]=incomingversion;
     passhost_t *host=getwearoshost(true,id,galaxy,false,phonepeer);
-    if(!host) return false;
+    if(!host) return nullptr;
+    host->wearos=true;
    networkpresent=false;
     destruct _niets {[]() { networkpresent=true;}};
    struct updatedata *update=backup->getupdatedata();
@@ -647,7 +703,7 @@ extern "C" JNIEXPORT jboolean  JNICALL   fromjava(setmynetinfo)(JNIEnv *env, jcl
    destruct _{[index]{ connectionbusy[index]=false;}};
 //   std::jthread th{Backup::closesocksone,backup,index};
    backup->closesocksone(index);
-   const char *infolabel=receivedlabel;
+    const char *infolabel=id;
    LOGGERTAG("setmynetinfo %s usedversion=%d infolabel=%s galaxy=%d watchsensor=%d\n",id,usedversion,infolabel,galaxy,info->watchsensor);
     host->setname(infolabel);
    if(!usedversion) {
@@ -665,14 +721,26 @@ extern "C" JNIEXPORT jboolean  JNICALL   fromjava(setmynetinfo)(JNIEnv *env, jcl
             us2peers[index]=otherindex;
             if(usedversion>=4) {
                 if(info->setpass) {
-                    if constexpr(!iswatchapp()) { 
-                       sendpass=true;
+                    bool acceptpass=true;
+                    if constexpr(iswatchapp()) {
+                        // A phone only echoes the password originated by this
+                        // watch. Do not let an unsolicited/stale phone payload
+                        // replace an already established watch password.
+                        if(host->haspass()&&memcmp(host->pass.data(),info->pass.data(),info->pass.size())) {
+                            LOGARTAG("ignored conflicting password received by watch");
+                            acceptpass=false;
+                            }
+                        }
+                    else {
+                        sendpass[index].store(true);
                        }
-                    //remakewearhost=true;
-                    memcpy(host->pass.data(),info->pass.data(),info->pass.size());
-                    LOGARTAG("setpass");
-                    backup->setcrypt(host);
-                    backup->closesocksone(index);
+                    if(acceptpass) {
+                        //remakewearhost=true;
+                        memcpy(host->pass.data(),info->pass.data(),info->pass.size());
+                        LOGARTAG("setpass");
+                        backup->setcrypt(host);
+                        backup->closesocksone(index);
+                        }
                     }
                 }
 //             if(info->version>=3) usedversion=4;
@@ -680,31 +748,50 @@ extern "C" JNIEXPORT jboolean  JNICALL   fromjava(setmynetinfo)(JNIEnv *env, jcl
 
        namehost oldname(host->ips);
        LOGGERTAG("hostname %s->new names:\n",oldname.data());
-       if(info->nr) {
-           #ifndef NOLOG
+       #ifndef NOLOG
         for(int i=0;i<info->nr;i++) {
             namehost name(info->ips+i);
             LOGGERTAG("%s port=%d\n",name.data(), ntohs( info->ips[i].sin6_port));
             }
         #endif
+       // A non-empty /netinfo update refreshes the remembered TCP candidates.
+       // A zero-address update only says that the peer has no usable network
+       // endpoint *right now*.  Keep the last learned addresses so they remain
+       // available as TCP bootstrap candidates when Wi-Fi comes back.  The
+       // normal password-authenticated mirror handshake verifies the peer before
+       // any remembered address can become the active TCP carrier.
+       // /netinfo is authenticated by the Wear transport relationship and
+       // describes the peer's current network endpoints. Feed the same runtime
+       // cache used by /bleips so carrier promotion never has to infer current
+       // reachability from stale persisted addresses.
+       setMirrorCurrentPeerAddresses(index,info->nr>0?info->ips:nullptr,info->nr);
+       if(info->nr>0)
            host->putips(info->ips,info->nr);
-           }
+       else
+           LOGGERTAG("setmynetinfo %s(%d): peer has no current TCP endpoint; cleared transient endpoints and keeping %d remembered IP(s)\n",
+                   host->getnameif(),index,host->nr);
 
 #ifdef WEAROS_MESSAGES
     if(usedversion>=3) {
+        if(host->automatictransport()) {
         #ifndef WEAROS
-            setBlueMessage(index,info->blue);
-        //if(info->blue)
+            // Remote /netinfo may request a non-TCP carrier immediately when
+            // its network is gone, but it is not proof that TCP is safe when
+            // info->blue is false. The Java/native password-authenticated TCP
+            // probe performs that promotion separately.
+            if(info->blue)
+                setBlueMessage(index,true);
         #endif
+            }
+        else
+            setBlueMessage(index,host->forcedmessagecarrier());
         }
 #endif
        }
     const uint16_t port=host->getport();
     LOGGERTAG("setmynetinfo port=%d nr=%d watchsensor=%d\n",port,host->nr,info->watchsensor);
-    if(phonepeer) {
-        LOGARTAG("BLE phone peer keeps bidirectional mirror settings");
-        return true;
-        }
+    if(phonepeer)
+        LOGARTAG("phone peer keeps the explicitly configured one-way mirror settings");
     if constexpr(iswatchapp()) {
         LOGARTAG("is watch");
     
@@ -744,17 +831,17 @@ extern "C" JNIEXPORT jboolean  JNICALL   fromjava(setmynetinfo)(JNIEnv *env, jcl
              const updateone &updat=getsendto(host);
              if(updat.blueWatch) {
                 LOGAR("setmynetinfo  blueWatch=true");
-                return true;
+                return env->NewStringUTF(host->getname());
                 }
              if(!updat.sendstream&&updat.sendnums==sendnums) {
                     LOGAR("setmynetinfo no need");
-                    return true;
+                    return env->NewStringUTF(host->getname());
                     }
             }
         else {
             if(!sendnums)  {
                 LOGAR("setmynetinfo no send stream or nums");
-                return true;
+                return env->NewStringUTF(host->getname());
                 }
             }
         char portstr[7];
@@ -791,7 +878,7 @@ extern "C" JNIEXPORT jboolean  JNICALL   fromjava(setmynetinfo)(JNIEnv *env, jcl
             LOGGER("sendstream(%d)=false\n",index);
             }
         }
-    return true;
+    return env->NewStringUTF(host->getname());
     }
 
 
@@ -1053,3 +1140,373 @@ extern "C" JNIEXPORT void  JNICALL   fromjava(watchBluetooth)(JNIEnv *env, jclas
         return ;
        }
 #endif
+
+
+/*
+ * Authenticated BLE endpoint exchange.
+ *
+ * QR-provided addresses remain the universal bootstrap and are stored in the
+ * same passhost_t::ips[] array.  BLE is only an optional authenticated update
+ * channel: it sends the current addresses after the existing BLE handshake and
+ * when Android reports a network change.  Non-Bluetooth peers (including the
+ * command-line server) never use these functions and continue to work solely
+ * from the QR/cached addresses.
+ *
+ * Wire format v1:
+ *   byte 0      version (=1)
+ *   byte 1      number of sockaddr_in6 records
+ *   remaining   exactly nr * sizeof(sockaddr_in6) bytes
+ *
+ * getownips() already canonicalises IPv4 into IPv4-mapped sockaddr_in6 values,
+ * and the port is stored in every record, exactly as /netinfo has done for
+ * Wear OS.  sockaddr_in6 is a fixed Linux/Bionic socket ABI structure and this
+ * packet is only exchanged between Android Juggluco BLE peers.
+ */
+static constexpr uint8_t bleaddressversion=1;
+
+// Current local network reachability, deliberately independent of remembered
+// peer addresses.  Probe it only at explicit configuration/network-address
+// boundaries (getMirrorAddresses()); sender hot paths read this cached state.
+// Unknown is treated as potentially available so startup cannot suppress TCP
+// before the first authoritative address snapshot has been taken.
+static std::atomic_bool mirrorLocalTcpKnown{false};
+static std::atomic_bool mirrorLocalTcpPresent{false};
+bool mirrorLocalTcpAvailable() {
+    return !mirrorLocalTcpKnown.load()||mirrorLocalTcpPresent.load();
+    }
+static void updateMirrorLocalTcpAvailability(bool present) {
+    mirrorLocalTcpPresent.store(present);
+    mirrorLocalTcpKnown.store(true);
+    }
+
+// Authenticated /bleips data describes where this peer is reachable *now*.
+// Keep that information separately from passhost_t::ips[].  The latter also
+// contains deliberately configured Internet/global bootstrap addresses and
+// must not be destroyed merely because the phones temporarily share a LAN.
+//
+// This transient cache solves the "all saved slots are non-local" case: an
+// Automatic mirror can try the freshly authenticated LAN address first while
+// still retaining every configured address unchanged on disk.
+static std::mutex mirrorCurrentPeerMutex;
+static std::array<std::array<sockaddr_in6,passhost_t::maxip-1>,maxallhosts> mirrorCurrentPeerIps{};
+static std::array<int,maxallhosts> mirrorCurrentPeerNr{};
+
+static bool mirrorCurrentSame(const sockaddr_in6 &one,const sockaddr_in6 &other) {
+    return one.sin6_family==other.sin6_family&&
+            one.sin6_port==other.sin6_port&&
+            one.sin6_scope_id==other.sin6_scope_id&&
+            !memcmp(&one.sin6_addr,&other.sin6_addr,sizeof(one.sin6_addr));
+    }
+
+static bool setMirrorCurrentPeerAddresses(int index,const sockaddr_in6 *ips,int nr) {
+    if(index<0||index>=maxallhosts)
+        return false;
+    nr=std::max(0,std::min(nr,passhost_t::maxip-1));
+    const std::lock_guard<std::mutex> lock(mirrorCurrentPeerMutex);
+    bool changed=mirrorCurrentPeerNr[index]!=nr;
+    if(!changed)
+        for(int i=0;i<nr;++i)
+            if(!mirrorCurrentSame(mirrorCurrentPeerIps[index][i],ips[i])) {
+                changed=true;
+                break;
+                }
+    if(changed) {
+        mirrorCurrentPeerNr[index]=nr;
+        for(int i=0;i<nr;++i)
+            mirrorCurrentPeerIps[index][i]=ips[i];
+        for(int i=nr;i<passhost_t::maxip-1;++i)
+            mirrorCurrentPeerIps[index][i]={};
+        }
+    return changed;
+    }
+
+// Used by the TCP sender.  These addresses are runtime hints only; callers must
+// still perform Juggluco's normal label/password authentication.
+int getMirrorCurrentPeerAddresses(int index,sockaddr_in6 *out,int max) {
+    if(!out||max<=0||index<0||index>=maxallhosts)
+        return 0;
+    const std::lock_guard<std::mutex> lock(mirrorCurrentPeerMutex);
+    const int nr=std::min(max,mirrorCurrentPeerNr[index]);
+    for(int i=0;i<nr;++i)
+        out[i]=mirrorCurrentPeerIps[index][i];
+    return nr;
+    }
+
+bool mirrorPeerCurrentTcpAvailable(int index) {
+    if(index<0||index>=maxallhosts)
+        return false;
+    const std::lock_guard<std::mutex> lock(mirrorCurrentPeerMutex);
+    return mirrorCurrentPeerNr[index]>0;
+    }
+
+extern "C" JNIEXPORT jbyteArray JNICALL fromjava(getMirrorAddresses)(JNIEnv *env,jclass,jint localIndex) {
+    if(!backup||localIndex<0||localIndex>=backup->gethostnr()||localIndex>=maxallhosts)
+        return nullptr;
+    const auto &host=getBackupHosts()[localIndex];
+    if(host.deactivated||host.ICE)
+        return nullptr;
+
+    std::array<sockaddr_in6,passhost_t::maxip-1> ips{};
+    bool haswlan=false;
+    int nr=getownips(ips.data(),static_cast<int>(ips.size()),haswlan);
+    updateMirrorLocalTcpAvailability(nr>0);
+    if(nr<=0) {
+        // Send an authenticated zero-record status update.  The receiver uses
+        // this to select the non-TCP carrier while the network is unavailable,
+        // but deliberately retains its last learned IPs for later TCP recovery.
+        const jbyte header[2]={static_cast<jbyte>(bleaddressversion),0};
+        jbyteArray out=env->NewByteArray(2);
+        if(!out)
+            return nullptr;
+        env->SetByteArrayRegion(out,0,2,header);
+#ifndef NOLOG
+        LOGGERTAG("BLE endpoint update for %s(%d): no current IPs; peer should keep remembered endpoints\n",
+                host.getnameif(),localIndex);
+#endif
+        return out;
+        }
+    nr=std::min<int>(nr,static_cast<int>(ips.size()));
+    const uint16_t port=htons(static_cast<uint16_t>(atoi(backup->getmyport())));
+    for(int i=0;i<nr;++i)
+        ips[i].sin6_port=port;
+
+    const jsize len=2+nr*static_cast<int>(sizeof(sockaddr_in6));
+    jbyteArray out=env->NewByteArray(len);
+    if(!out)
+        return nullptr;
+    const jbyte header[2]={static_cast<jbyte>(bleaddressversion),static_cast<jbyte>(nr)};
+    env->SetByteArrayRegion(out,0,2,header);
+    env->SetByteArrayRegion(out,2,nr*sizeof(sockaddr_in6),reinterpret_cast<const jbyte*>(ips.data()));
+    if(env->ExceptionCheck()) {
+        env->ExceptionClear();
+        env->DeleteLocalRef(out);
+        return nullptr;
+        }
+#ifndef NOLOG
+    LOGGERTAG("BLE endpoint update for %s(%d): %d current IP(s), wlan=%d\n",
+            host.getnameif(),localIndex,nr,haswlan);
+    for(int i=0;i<nr;++i) {
+        namehost name(ips.data()+i);
+        LOGGERTAG("BLE endpoint %d: %s port=%d\n",i,name.data(),ntohs(ips[i].sin6_port));
+        }
+#endif
+    return out;
+    }
+
+static bool bleClearlyLocalAddress(const sockaddr_in6 &address) {
+    if(address.sin6_family!=AF_INET6)
+        return false;
+    const uint8_t *bytes=address.sin6_addr.s6_addr;
+
+    // getownips() represents IPv4 as IPv4-mapped IPv6 (::ffff:a.b.c.d).
+    bool mapped=true;
+    for(int i=0;i<10;++i)
+        if(bytes[i]!=0) {
+            mapped=false;
+            break;
+            }
+    mapped=mapped&&bytes[10]==0xff&&bytes[11]==0xff;
+    if(mapped) {
+        const uint8_t first=bytes[12];
+        const uint8_t second=bytes[13];
+        return first==10||                                      // RFC1918 10/8
+                (first==172&&second>=16&&second<=31)||          // RFC1918 172.16/12
+                (first==192&&second==168)||                     // RFC1918 192.168/16
+                (first==169&&second==254)||                     // IPv4 link-local
+                first==127;                                    // loopback
+        }
+
+    // For IPv6, replace only addresses that are unambiguously local.  In
+    // particular, a global IPv6 address is retained even if it was learned on
+    // some earlier network: it may have been deliberately configured.
+    if((bytes[0]&0xfe)==0xfc)                                  // ULA fc00::/7
+        return true;
+    if(bytes[0]==0xfe&&(bytes[1]&0xc0)==0x80)                  // link-local fe80::/10
+        return true;
+    bool loopback=true;
+    for(int i=0;i<15;++i)
+        if(bytes[i]!=0) {
+            loopback=false;
+            break;
+            }
+    return loopback&&bytes[15]==1;                             // ::1
+    }
+
+static bool bleSameAddress(const sockaddr_in6 &one,const sockaddr_in6 &other) {
+    return one.sin6_family==other.sin6_family&&
+            !memcmp(&one.sin6_addr,&other.sin6_addr,sizeof(one.sin6_addr));
+    }
+
+extern "C" JNIEXPORT jboolean JNICALL fromjava(setMirrorAddresses)(JNIEnv *env,jclass,jint localIndex,jbyteArray jar) {
+    if(!backup||!jar||localIndex<0||localIndex>=backup->gethostnr()||localIndex>=maxallhosts)
+        return false;
+    const jsize len=env->GetArrayLength(jar);
+    if(len<2)
+        return false;
+    jbyte header[2]{};
+    env->GetByteArrayRegion(jar,0,2,header);
+    if(env->ExceptionCheck()) {
+        env->ExceptionClear();
+        return false;
+        }
+    const int version=static_cast<uint8_t>(header[0]);
+    const int nr=static_cast<uint8_t>(header[1]);
+    if(version!=bleaddressversion||nr>=passhost_t::maxip||
+            len!=2+nr*static_cast<int>(sizeof(sockaddr_in6)))
+        return false;
+
+    std::array<sockaddr_in6,passhost_t::maxip> incoming{};
+    if(nr>0)
+        env->GetByteArrayRegion(jar,2,nr*sizeof(sockaddr_in6),reinterpret_cast<jbyte*>(incoming.data()));
+    if(env->ExceptionCheck()) {
+        env->ExceptionClear();
+        return false;
+        }
+    for(int i=0;i<nr;++i) {
+        if(incoming[i].sin6_family!=AF_INET6||incoming[i].sin6_port==0)
+            return false;
+        }
+
+    bool changed=false;
+    {
+        const std::lock_guard<std::mutex> hostlock(change_host_mutex);
+        if(!backup||localIndex<0||localIndex>=backup->gethostnr())
+            return false;
+        auto &host=backup->getupdatedata()->allhosts[localIndex];
+        if(host.deactivated||host.ICE) {
+            setMirrorCurrentPeerAddresses(localIndex,nullptr,0);
+            return false;
+            }
+
+        // Bluetooth endpoint discovery is meaningful only for Automatic rows.
+        // A TCP/IP-only row is explicitly user-managed, and a Direct-Bluetooth
+        // row has no reason to maintain TCP reachability hints.
+        if(!host.automatictransport()) {
+            setMirrorCurrentPeerAddresses(localIndex,nullptr,0);
+#ifndef NOLOG
+            LOGGERTAG("BLE endpoint update ignored for non-Automatic %s(%d); keeping %d configured IP(s)\n",
+                    host.getnameif(),localIndex,host.nr);
+#endif
+            return false;
+            }
+
+        // Always remember the authenticated *current* peer endpoints in a
+        // transient cache, even when every persistent slot is occupied by
+        // deliberately configured Internet/global addresses.  sender.cpp tries
+        // these runtime endpoints first but never writes them to passhost_t.
+        const bool currentChanged=setMirrorCurrentPeerAddresses(localIndex,
+                nr>0?incoming.data():nullptr,nr);
+        changed=currentChanged;
+        if(nr==0) {
+#ifndef NOLOG
+            LOGGERTAG("BLE peer %s(%d) has no current TCP endpoint; cleared transient endpoints and keeping %d remembered IP(s)\n",
+                    host.getnameif(),localIndex,host.nr);
+#endif
+            return currentChanged;
+            }
+
+        if(host.hashostname()) {
+#ifndef NOLOG
+            LOGGERTAG("BLE endpoint update cached %d current endpoint(s) for hostname-backed %s(%d); keeping configured hostname\n",
+                    nr,host.getnameif(),localIndex);
+#endif
+            return currentChanged;
+            }
+
+        // Mirror rows reserve the final sockaddr_in6 storage slot for their
+        // label.  /bleips already has the same maxip-1 wire limit.
+        const int capacity=host.hasname?passhost_t::maxip-1:passhost_t::maxip;
+        const int oldnr=std::max(0,std::min(host.nr,capacity));
+        std::array<sockaddr_in6,passhost_t::maxip> merged{};
+        std::array<bool,passhost_t::maxip> receivedNow{};
+        if(oldnr>0)
+            std::copy_n(host.ips,oldnr,merged.begin());
+        int mergednr=oldnr;
+        bool persistentChanged=false;
+
+#ifndef NOLOG
+        for(int i=0;i<nr;++i) {
+            namehost name(incoming.data()+i);
+            LOGGERTAG("received BLE endpoint %d: %s port=%d local=%d\n",i,name.data(),
+                    ntohs(incoming[i].sin6_port),bleClearlyLocalAddress(incoming[i]));
+            }
+#endif
+
+        for(int incomingIndex=0;incomingIndex<nr;++incomingIndex) {
+            const auto &candidate=incoming[incomingIndex];
+            // BLE may expose globally scoped IPv6 addresses too.  Do not let
+            // automatic discovery manage them: only clearly local addresses
+            // are added/replaced.
+            if(!bleClearlyLocalAddress(candidate))
+                continue;
+
+            int duplicate=-1;
+            for(int i=0;i<mergednr;++i)
+                if(bleSameAddress(merged[i],candidate)) {
+                    duplicate=i;
+                    break;
+                    }
+            if(duplicate>=0) {
+                // Refresh port/scope information for an already-known local IP.
+                if(memcmp(&merged[duplicate],&candidate,sizeof(candidate))) {
+                    merged[duplicate]=candidate;
+                    persistentChanged=true;
+                    }
+                receivedNow[duplicate]=true;
+                continue;
+                }
+
+            // Preserve everything already configured while there is unused room.
+            if(mergednr<capacity) {
+                merged[mergednr]=candidate;
+                receivedNow[mergednr]=true;
+                ++mergednr;
+                persistentChanged=true;
+                continue;
+                }
+
+            // Once full, only an old, clearly-local address may be replaced.
+            // Never replace a non-local IPv4 or an IPv6 address that is not
+            // unambiguously local.  Also do not replace an address already
+            // supplied in this same update merely to fit another one.
+            int replace=-1;
+            for(int i=0;i<mergednr;++i)
+                if(!receivedNow[i]&&bleClearlyLocalAddress(merged[i])) {
+                    replace=i;
+                    break;
+                    }
+            if(replace>=0) {
+                merged[replace]=candidate;
+                receivedNow[replace]=true;
+                persistentChanged=true;
+                }
+#ifndef NOLOG
+            else {
+                namehost name(&candidate);
+                LOGGERTAG("no replaceable local slot for BLE endpoint %s on %s(%d); preserving configured endpoints\n",
+                        name.data(),host.getnameif(),localIndex);
+                }
+#endif
+            }
+
+        if(!persistentChanged)
+            return changed;
+#ifndef NOLOG
+        LOGGERTAG("BLE merged local endpoints for %s(%d): %d -> %d IP(s)\n",
+                host.getnameif(),localIndex,oldnr,mergednr);
+        for(int i=0;i<mergednr;++i) {
+            namehost name(merged.data()+i);
+            LOGGERTAG("remembered endpoint %d: %s port=%d local=%d\n",i,name.data(),
+                    ntohs(merged[i].sin6_port),bleClearlyLocalAddress(merged[i]));
+            }
+#endif
+        host.putips(merged.data(),mergednr);
+        changed=true;
+        }
+
+    // Persistent address changes remain conservative, while the transient
+    // current-peer cache may also have changed even when no saved slot could be
+    // replaced. Java uses the true return value to request an orderly
+    // BLE -> TCP handoff; sender.cpp then tries the transient endpoints first.
+    return changed;
+    }
