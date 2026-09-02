@@ -262,11 +262,26 @@ public:
 			const char* text = notes->gettext(n.mealptr);
 			if(text && *text) {
 				int len= writenote(ptr,std::string_view(text),recordnum,n.time, del);
+				LIBRELOGGERN(ptr,len);
 				ptr+=len;
 				return;
 			}
 		}
 		constexpr const int buflen=12+13+EXTRALABEL;
+		char label[buflen],*labelptr=label;
+		std::string_view typestr=getlabel(n.type);
+		addstrview(labelptr,typestr);
+		int startlen=labelptr-label;
+		int over=buflen-startlen;
+		int getlen=snprintf(labelptr,over,R"( %g)",n.value);
+		const int totlen= getlen+startlen;
+		int len= writenote(ptr,std::string_view(label,totlen),recordnum,n.time, del);
+		LIBRELOGGERN(label,totlen);
+		ptr+=len;
+		}
+	else if(isComment(n.type)) {
+		auto recordnum=mkid<note>(del?n.librenr:ids->addnum(n,nextlibrenr()));
+		constexpr const int buflen=12+13;
 		char label[buflen],*labelptr=label;
 		std::string_view typestr=getlabel(n.type);
 		addstrview(labelptr,typestr);

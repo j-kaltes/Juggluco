@@ -23,6 +23,16 @@ inline float carboWeight(uint32_t type) {
 	}
 
 extern int notetype;
-inline bool isNote(uint32_t type) { 
+inline bool isNote(uint32_t type) {
 	return (int)type==notetype;
+	}
+// Labels configured as Comments (kind 4) in the LibreView settings are
+// uploaded as label-comment entries ("Label value"). This excludes the
+// note label itself, which is sent with its full text instead.
+inline bool isComment(uint32_t type) {
+	if((int)type==notetype)
+		return false;
+	if(type>=settings->varcount())
+		return false;
+	return settings->data()->librenums[type].kind==4;
 	}
