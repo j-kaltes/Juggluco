@@ -94,7 +94,7 @@ GlucoseValue(int w,int h) {
   glucosePaint.setTextSize(usefontsize);
   //agePaint.setARGB(0xFF,0xFF,0,0xFF);
   timesize=mapwidth*0.15f;
-  numoffy=mapwidth*0.12f;
+  numoffy=mapheight*0.20f;
      if(Applic.hour24) {
         timeoffy=mapwidth*0.036f;
       }

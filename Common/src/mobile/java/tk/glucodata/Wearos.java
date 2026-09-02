@@ -47,27 +47,52 @@ import androidx.appcompat.app.AlertDialog;
 import com.google.android.gms.wearable.Node;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 
 class Wearos {
 static private final String LOG_ID="Wearos";
 
 
-private static    ArrayList<Node> getnodeslist() {
+private static final class WatchTarget {
+    final String label;
+    final String displayName;
+    final boolean galaxy;
+
+    WatchTarget(Node node) {
+        label=node.getId();
+        displayName=node.getDisplayName();
+        galaxy=isGalaxy(node);
+    }
+
+    WatchTarget(String label) {
+        this.label=label;
+        displayName=label;
+        galaxy=Applic.ALLGALAXY;
+    }
+}
+
+private static ArrayList<WatchTarget> getnodeslist() {
+    var targets=new LinkedHashMap<String,WatchTarget>();
     var send=tk.glucodata.MessageSender.getMessageSender();
     if(send!=null) {
         var nodes=send.getNodes();
         if(nodes!=null) {
-            return new ArrayList<>(nodes);
+            for(var node:nodes)
+                targets.put(node.getId(),new WatchTarget(node));
         }
      }
-   return null;
+    // An authenticated BLE watch remains controllable when Google discovery
+    // is unavailable. Merge by the exact mirror label to keep watches distinct.
+    for(var label:BleMirror.wearControlLabels())
+        targets.putIfAbsent(label,new WatchTarget(label));
+    return new ArrayList<>(targets.values());
    }
-static Spinner mkspinner(MainActivity context, ArrayList<Node> nodeslist,IntConsumer setpos) {
+static Spinner mkspinner(MainActivity context, ArrayList<WatchTarget> nodeslist,IntConsumer setpos) {
     var spin=new Spinner(context);
-    var adap = new RangeAdapter<com.google.android.gms.wearable.Node>(nodeslist, context, node -> {
+    var adap = new RangeAdapter<WatchTarget>(nodeslist, context, node -> {
         if (node != null)
-            return node.getDisplayName()+" - "+node.getId();
+            return node.displayName.equals(node.label)?node.label:node.displayName+" - "+node.label;
         return "Error";
         });
     spin.setAdapter(adap);
@@ -87,7 +112,7 @@ static Spinner mkspinner(MainActivity context, ArrayList<Node> nodeslist,IntCons
     }
 
 
-static void remake(CheckDirectionRadio[] sensordirect, CheckDirectionRadio[] nswitch,  Node node,boolean[] direct) {
+static void remake(CheckDirectionRadio[] sensordirect, CheckDirectionRadio[] nswitch,  WatchTarget node,boolean[] direct) {
     int dirval,numsval;
     if(node==null) {
         dirval=-1;
@@ -182,7 +207,7 @@ static public void show(MainActivity context,View parent) {
             try {
                 nodenumptr[0]=pos;
                 if(nodeslist!=null&&nodeslist.size()>pos) {
-                    Node node=pos<0?null:nodeslist.get(pos);
+                    WatchTarget node=pos<0?null:nodeslist.get(pos);
                     remake(sswitch, nswitch,   node,watchsensor);
                     defaults.setEnabled(true);
                     if(node!=null) {  
@@ -254,7 +279,7 @@ static public void show(MainActivity context,View parent) {
                         var name=makenodename(node);
                         final boolean wasdirect=watchsensor[0]; 
                         {if(doLog) {Log.i(LOG_ID,"watch "+name+" "+"nums "+watchnums+" direct "+watchdirect+ " was "+wasdirect);};};
-                        byte[] netinfo=Natives.getmynetinfo(name,true,watchdirect?1:-1,isGalaxy(node),watchnums?1:-1,false);
+                        byte[] netinfo=Natives.getmynetinfo(name,true,watchdirect?1:-1,node.galaxy,watchnums?1:-1,false);
                         Runnable doswitch=()-> {
                             Applic.switchbluetooth(name,netinfo,watchdirect);
                             };
@@ -264,12 +289,7 @@ static public void show(MainActivity context,View parent) {
                                 }
                             else {
                                 if(wasdirect&&!watchdirect)  {
-                                   if(sendbluetooth( name,netinfo,false)) {
-                                        var unpair=new UnpairOverlayHost(context,R.string.releasingsensor);
-                                        unpair.postMessage(context.getString(R.string.unpairingwatch));
-                                        context.unpairer=unpair;
-                                        context.doswitch=()->Applic.setbluetooth(context,true);
-                                        }
+                                    returnSensorToPhone(context,name,netinfo);
                                     }
                                 else
                                     doswitch.run();
@@ -298,9 +318,9 @@ static public void show(MainActivity context,View parent) {
                 var nod=nodeslist.get(nodenumptr[0]);
                 String name=makenodename(nod);
                 Runnable setdef=()-> {
-                    sender.toDefaults(nod);
+                    sender.toDefaults(name);
                     {if(doLog) {Log.i(LOG_ID,"set to default "+name);};};
-                    Natives.setWearosdefaults(name,isGalaxy(nod));
+                    Natives.setWearosdefaults(name,nod.galaxy);
                     var main=MainActivity.thisone;
                     Applic.setbluetooth(main==null?Applic.app:main,true);
                     context.doonback();
@@ -331,6 +351,25 @@ static String makenodename(Node node) {
     return node.getId();
     }
 
+static String makenodename(WatchTarget target) {
+    return target.label;
+    }
+
+private static void returnSensorToPhone(MainActivity context,String name,byte[] netinfo) {
+    // Install the reply handler before sending: an authenticated BLE peer can
+    // answer immediately, before sendbluetooth() returns to this UI thread.
+    var unpair=new UnpairOverlayHost(context,R.string.releasingsensor);
+    unpair.postMessage(context.getString(R.string.unpairingwatch));
+    context.unpairer=unpair;
+    context.doswitch=()->Applic.setbluetooth(context,true);
+    if(!sendbluetooth(name,netinfo,false)) {
+        context.unpairer=null;
+        context.doswitch=null;
+        unpair.postFinished(context.getString(R.string.failed),false);
+        unpair.postCloser();
+    }
+}
+
 
 
 private static void confirmunsynced(MainActivity act,Runnable save) {
@@ -359,6 +398,4 @@ static void sendinitwatchapp(Node nod) {
       sender.startWearOSActivity(nodeName);
       }
 }
-
-
 
