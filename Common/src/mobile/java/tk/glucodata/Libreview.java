@@ -437,7 +437,7 @@ static boolean postmeasurements(boolean libre3,byte[] measurementdata) {
          JSONObject object = readJSONObject(urlConnection);
          int status=object.getInt("status");
          if(status!=0) {
-            Log.e(LOG_ID,"Post with status "+status);
+            Log.e(LOG_ID,"Post with status "+status+" full="+object.toString());
             String reason=object.getString("reason");
             if(status==20) {
                if(reason.contains("wrongDeviceInToken")) {
