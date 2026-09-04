@@ -977,6 +977,7 @@ int64_t JCurve::longpress(float x,float y) {
         newnum.time=starttime+duration*(x-dleft)/dwidth;
         newnum.type=type;
         newnum.value=NAN;
+        newnum.mealptr=UINT32_MAX;
         return reinterpret_cast<int64_t>(&newhit);
         }
 

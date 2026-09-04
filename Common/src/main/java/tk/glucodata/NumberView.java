@@ -372,6 +372,8 @@ public void  addnumberview(MainActivity activity, long hitptr) {
                 noteTextValue=txt;
                 noteOffset=mealOff;
             }
+        } else {
+            noteOffset=-1;
         }
     } else {
         noteOffset=-1;
