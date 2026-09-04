@@ -244,20 +244,16 @@ public:
 		if(notes) {
 			const char* text = notes->gettext(n.mealptr);
 			if(text && *text) {
-				LOGGER("restel: note text=\"%s\" rec=%lld del=%d\n",text,recordnum,del);
 				int len= writenote(ptr,std::string_view(text),recordnum,n.time, del);
-				LOGGER("restel: note entry len=%d\n",len);
 				LIBRELOGGERN(ptr,len);
 				ptr+=len;
 				return;
 			}
 		}
-		LOGGER("restel: note fallback label rec=%lld del=%d\n",recordnum,del);
 		writeLabelNote(ptr,recordnum,n,del);
 		}
 	else if(isComment(n.type)) {
 		auto recordnum=mkid<note>(del?n.librenr:ids->addnum(n,nextlibrenr()));
-		LOGGER("restel: comment label rec=%lld del=%d\n",recordnum,del);
 		writeLabelNote(ptr,recordnum,n,del);
 		}
 	}
