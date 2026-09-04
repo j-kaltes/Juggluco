@@ -117,34 +117,6 @@ class Numbers: public LibreType {
 	using  LibreType::delextra;
 	public:
 
-	// Writes text as a JSON string literal, including the surrounding
-	// quotes, escaping the characters that would otherwise terminate or
-	// corrupt the string (quote, backslash and control characters).
-	static int addquotedstr(char *ptr,std::string_view text) {
-		char *start=ptr;
-		*ptr++='"';
-		for(char c:text) {
-			switch(c) {
-				case '"':  *ptr++='\\'; *ptr++='"'; break;
-				case '\\': *ptr++='\\'; *ptr++='\\'; break;
-				case '\n': *ptr++='\\'; *ptr++='n'; break;
-				case '\r': *ptr++='\\'; *ptr++='r'; break;
-				case '\t': *ptr++='\\'; *ptr++='t'; break;
-				default:
-					if((unsigned char)c<0x20) {
-						static constexpr const char hex[]="0123456789abcdef";
-						*ptr++='\\'; *ptr++='u'; *ptr++='0'; *ptr++='0';
-						*ptr++=hex[(c>>4)&0xF]; *ptr++=hex[c&0xF];
-						}
-					else
-						*ptr++=c;
-				}
-			}
-		*ptr++='"';
-		return ptr-start;
-		}
-
-
 	static int writeentry(char *buf,const std::string_view category,const std::string_view instance,const std::string_view unitname,float units,long long recordnum,uint32_t tim,bool del,int decimal=1) {
 		char *ptr=buf;
 		startentry(ptr);
@@ -178,7 +150,7 @@ class Numbers: public LibreType {
 			spacenr(ptr,12);
 			addar(ptr, R"("text":)");
 			space(ptr);
-			ptr+=addquotedstr(ptr,unitname);
+			ptr+=addjsonstring(ptr,unitname);
 			}
 		if(del) {
 			*ptr++=',';
@@ -250,48 +222,43 @@ public:
 
 
 
+// Writes a label-value note entry (e.g. "Breakfast 12") for comment and
+// note-fallback cases where full note text is not available.
+ void writeLabelNote(char *&ptr,long long recordnum,const Num &n,bool del) {
+	constexpr const int buflen=12+13;
+	char label[buflen],*labelptr=label;
+	std::string_view typestr=getlabel(n.type);
+	addstrview(labelptr,typestr);
+	int startlen=labelptr-label;
+	int over=buflen-startlen;
+	int getlen=snprintf(labelptr,over,R"( %g)",n.value);
+	const int totlen= getlen+startlen;
+	int len= writenote(ptr,std::string_view(label,totlen),recordnum,n.time, del);
+	LIBRELOGGERN(label,totlen);
+	ptr+=len;
+	}
+
  void restel(char *&ptr,const Num &n,Libregeg *ids,bool del=false) {
 	if(isNote(n.type)) {
-#ifdef NDEBUG
-#define EXTRALABEL 10
-#else
-#define EXTRALABEL 0
-#endif
 		auto recordnum=mkid<note>(del?n.librenr:ids->addnum(n,nextlibrenr()));
 		if(notes) {
 			const char* text = notes->gettext(n.mealptr);
 			if(text && *text) {
+				LOGGER("restel: note text=\"%s\" rec=%lld del=%d\n",text,recordnum,del);
 				int len= writenote(ptr,std::string_view(text),recordnum,n.time, del);
+				LOGGER("restel: note entry len=%d\n",len);
 				LIBRELOGGERN(ptr,len);
 				ptr+=len;
 				return;
 			}
 		}
-		constexpr const int buflen=12+13+EXTRALABEL;
-		char label[buflen],*labelptr=label;
-		std::string_view typestr=getlabel(n.type);
-		addstrview(labelptr,typestr);
-		int startlen=labelptr-label;
-		int over=buflen-startlen;
-		int getlen=snprintf(labelptr,over,R"( %g)",n.value);
-		const int totlen= getlen+startlen;
-		int len= writenote(ptr,std::string_view(label,totlen),recordnum,n.time, del);
-		LIBRELOGGERN(label,totlen);
-		ptr+=len;
+		LOGGER("restel: note fallback label rec=%lld del=%d\n",recordnum,del);
+		writeLabelNote(ptr,recordnum,n,del);
 		}
 	else if(isComment(n.type)) {
 		auto recordnum=mkid<note>(del?n.librenr:ids->addnum(n,nextlibrenr()));
-		constexpr const int buflen=12+13;
-		char label[buflen],*labelptr=label;
-		std::string_view typestr=getlabel(n.type);
-		addstrview(labelptr,typestr);
-		int startlen=labelptr-label;
-		int over=buflen-startlen;
-		int getlen=snprintf(labelptr,over,R"( %g)",n.value);
-		const int totlen= getlen+startlen;
-		int len= writenote(ptr,std::string_view(label,totlen),recordnum,n.time, del);
-		LIBRELOGGERN(label,totlen);
-		ptr+=len;
+		LOGGER("restel: comment label rec=%lld del=%d\n",recordnum,del);
+		writeLabelNote(ptr,recordnum,n,del);
 		}
 	}
 
