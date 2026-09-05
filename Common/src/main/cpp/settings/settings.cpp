@@ -49,6 +49,7 @@ Sensoren *sensors=nullptr;
 unique_ptr<Sensoren> destructsensors;
 extern int carbotype;
 int carbotype;
+int notetype;
 
 //extern bool iswatch;
 //bool iswatch=false;
@@ -56,6 +57,8 @@ int carbotype;
 #ifdef USE_MEAL
 Meal *meals=nullptr;
 #endif
+#include "notes/Notes.hpp"
+Notes *notes=nullptr;
 
   #include <signal.h>
 
@@ -258,6 +261,7 @@ int startmeals() {
         return 2;
         }
     carbotype=settings->data()->mealvar;
+    notetype=settings->data()->notevar;
 #ifndef NOLOG 
     dolog=!settings->data()->nolog;
 #endif
@@ -265,6 +269,8 @@ int startmeals() {
     if(meals==nullptr)
         meals= new(std::nothrow) Meal();
 #endif
+    if(notes==nullptr)
+        notes= new(std::nothrow) Notes();
     return 0;
     }
 

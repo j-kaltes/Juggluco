@@ -32,6 +32,8 @@
     <string name="bluetoothenabled">蓝牙已启用</string>
     <string name="bluetoothdisabled">蓝牙已禁用</string>
     <string name="amountsname">标签</string>
+    <string name="notesname">笔记</string>
+    <string name="notename">笔记</string>
     <string name="amountshort">@string/amountsname</string>
     <string name="mealsname">餐</string>
     <string name="closename">关闭</string>

@@ -246,8 +246,6 @@ int updateone::update() {
     return ret;
     }
     
-extern int  updatenums(crypt_t *,Connect *,struct changednums *nums,int);
-
 int     updateone::updatenums() {
     if(!sendnums)
         return 2;
@@ -268,7 +266,7 @@ int     updateone::updatenums() {
             }
         sendjugglucoid=true;
         }
-    if(int did= ::updatenums(getcrypt(),connect.get(),nums,ind))  {
+    if(int did= ::updatenums(getcrypt(),connect.get(),nums,ind,sendnotes))  {
         return sendCalibrate()|did;
         }
     return 0; 
@@ -908,9 +906,9 @@ Backup::Backup(std::string_view base): mapdata(base,backupdat,sizeof(struct upda
    }
 
 extern void startICEReceiver(passhost_t *host,ICEConnect *con);
-int Backup::changeICEhost(const char *ICElabel,int index,const bool sendnums,const bool sendstream,const bool sendscans,const bool receive,string_view pass,uint32_t starttime,const char *label,bool side,bool startthreads,int transport,int bleclient) {
+int Backup::changeICEhost(const char *ICElabel,int index,const bool sendnums,const bool sendstream,const bool sendscans,const bool receive,string_view pass,uint32_t starttime,const char *label,bool side,bool startthreads,const bool sendnotes,int transport,int bleclient) {
     const int hostnr=getupdatedata()->hostnr;
-    LOGGER("hostnr=%d changeICEhost(%d,sendnums=%d,sendstream=%d,sendscans=%d,receive=%d,label=%s \n",hostnr,index,sendnums,sendstream,sendscans,receive,label);
+    LOGGER("hostnr=%d changeICEhost(%d,sendnums=%d,sendstream=%d,sendscans=%d,receive=%d,label=%s,sendnotes=%d)\n",hostnr,index,sendnums,sendstream,sendscans,receive,label,sendnotes);
     if(index<0) 
         index=hostnr;
     if(index>=maxallhosts)  {
@@ -950,7 +948,7 @@ int Backup::changeICEhost(const char *ICElabel,int index,const bool sendnums,con
             tohost=thehost.index;
             }
 
-        changereceiver(index,tohost,sendnums,sendstream,sendscans,false,pass.size(),starttime);
+        changereceiver(index,tohost,sendnums,sendstream,sendscans,false,pass.size(),starttime,sendnotes);
         }
     else {
         tohost=0;

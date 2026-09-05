@@ -53,6 +53,33 @@ inline static constexpr void addint(char *&uitptr,const int get) {
         uitptr+=len;
         }
 
+// Writes text as a JSON string literal, including the surrounding
+// quotes, escaping the characters that would otherwise terminate or
+// corrupt the string (quote, backslash and control characters).
+inline int addjsonstring(char *ptr,std::string_view text) {
+	char *start=ptr;
+	*ptr++='"';
+	for(char c:text) {
+		switch(c) {
+			case '"':  *ptr++='\\'; *ptr++='"'; break;
+			case '\\': *ptr++='\\'; *ptr++='\\'; break;
+			case '\n': *ptr++='\\'; *ptr++='n'; break;
+			case '\r': *ptr++='\\'; *ptr++='r'; break;
+			case '\t': *ptr++='\\'; *ptr++='t'; break;
+			default:
+				if((unsigned char)c<0x20) {
+					static constexpr const char hex[]="0123456789abcdef";
+					*ptr++='\\'; *ptr++='u'; *ptr++='0'; *ptr++='0';
+					*ptr++=hex[(c>>4)&0xF]; *ptr++=hex[c&0xF];
+					}
+				else
+					*ptr++=c;
+			}
+		}
+	*ptr++='"';
+	return ptr-start;
+	}
+
 inline  void submsec(time_t *tim,int mil) {
 	if(mil>=500) {
 		--*tim;

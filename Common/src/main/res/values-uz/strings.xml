@@ -26,6 +26,8 @@
     <string name="bluetoothenabled">Bluetooth yoqilgan</string>
     <string name="bluetoothdisabled">Bluetooth o\'chirilgan</string>
     <string name="amountsname">Miqdorlar</string>
+    <string name="notesname">Eslatmalar</string>
+    <string name="notename">Eslatma</string>
     <string name="amountshort">@string/amountsname</string>
     <string name="mealsname">Ovqatlar</string>
     <string name="closename">Yopish</string>

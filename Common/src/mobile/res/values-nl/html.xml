@@ -2097,6 +2097,15 @@ een <b>Maaltijd</b>-knop weergegeven. Als je op deze <a href="https://www.jugglu
 koolhydraatgehalte wordt vervolgens berekend of je kunt het
 koolhydraatgehalte opgeven en vervolgens wordt de benodigde
 hoeveelheid van één ingrediënt berekend.</p>
+<p>Onder Linkermenu -&gt; Instellingen -&gt; <a href="https://www.juggluco.nl/Jugglucohelp/nl/labelhelp.html">Nummer
+labels</a> staat ook aangegeven onder welk label je vrije tekst als
+<b>Notitie</b> invoert. Wanneer dit label in <i>Hoeveelheid</i> is gekozen,
+wordt een <b>Notities</b>-knop weergegeven, net als de <b>Maaltijd</b>-knop.
+Als je op deze knop tikt, opent een teksteditor waarin je een korte notitie
+kunt invoeren. De notitie wordt (ingekort) weergegeven in de grafiek en in de
+lijst met hoeveelheden en wordt als notitie naar LibreView geüpload. In de
+instellingen van een spiegelverbinding bepaalt het selectievakje
+<b>Notities</b> of notities naar het andere apparaat worden verstuurd.</p>
 <p>
 <b>Sluit uit</b>: Sluit een bloedglucosemeting uit van <a href="https://www.juggluco.nl/Jugglucohelp/nl/calibrationhelp.html">kalibraties</a>, omdat het glucoseniveau stijgt of daalt of omdat de sensor nog aan het opwarmen is.
 </p>

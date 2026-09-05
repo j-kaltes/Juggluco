@@ -31,6 +31,7 @@ import android.os.Build;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.Selection;
+import android.view.inputmethod.EditorInfo;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -191,8 +192,132 @@ void rotatekey(float deg) {
 
     }*/
 int labelsel=-1;
+private int noteOffset=-1;
+private String noteTextValue=null;
+Layout noteview=null;
+EditText notefield=null;
+boolean isNoteLabel(int position) {
+    if(position < 0) return false;
+    return position == Natives.getnotevar();
+}
+private void shownoteoverlay(MainActivity act) {
+    if(noteview!=null) return;
+    hidekeyboard();
+    EnableControls(newnumview,false);
+    notefield=new EditText(act);
+    notefield.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+    notefield.setMinLines(3);
+    notefield.setMaxLines(6);
+    notefield.setImeOptions(EditorInfo.IME_ACTION_DONE);
+    notefield.setGravity(android.view.Gravity.TOP|android.view.Gravity.START);
+    final int existingOffset=(currentnum!=0&&currentnum!=numio.newhit&&isNoteLabel(Natives.hittype(currentnum)))?Natives.hitmeal(currentnum):-1;
+    int prefill=existingOffset;
+    if(prefill<0&&noteOffset>=0) prefill=noteOffset;
+    if(prefill>=0) {
+        String existing=Natives.getNoteText(prefill);
+        if(existing!=null) notefield.setText(existing);
+    } else if(noteTextValue!=null) {
+        notefield.setText(noteTextValue);
+    }
+    Runnable saveAndClose=() -> {
+        String text=notefield.getText().toString();
+        int timeSec=(int)(lasttime/1000L);
+        if(text.length()>0) {
+            int off=(existingOffset>=0)?existingOffset:noteOffset;
+            if(off>=0) off=Natives.updateNote(off,timeSec,text);
+            else off=Natives.addNote(timeSec,text);
+            noteOffset=off;
+            notesaved=true;
+        } else {
+            int off=(existingOffset>=0)?existingOffset:noteOffset;
+            if(off>=0) Natives.deleteNote(off);
+            noteOffset=-1;
+            notesaved=false;
+        }
+        EnableControls(newnumview,true);
+        help.hidekeyboard(act);
+        removeContentView(noteview);
+        noteview=null;
+        notefield=null;
+        valueedit.setText(text.length()>0?util.shortnote(text):"");
+        };
+    notefield.setOnEditorActionListener((v, actionId, event) -> {
+        if(actionId==EditorInfo.IME_ACTION_DONE) {
+            saveAndClose.run();
+            return true;
+        }
+        return false;
+    });
+    noteview=new Layout(act,(lay,w,h)->{
+        int top=(int)(h*0.05f);
+        lay.setPaddingRelative((int)(w*0.05f),top,(int)(w*0.05f),0);
+        return new int[]{w,(int)(h*0.45f)};
+    },new View[]{notefield});
+    act.addMyContentView(noteview,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT));
+    notefield.requestFocus();
+    tk.glucodata.help.showkeyboard(act,notefield);
+}
+private void hidenoteoverlay(MainActivity act) {
+    if(noteview==null) return;
+    EnableControls(newnumview,true);
+    help.hidekeyboard(act);
+    removeContentView(noteview);
+    noteview=null;
+    notefield=null;
+}
+void setnoteui(boolean isNote) {
+    if(valueedit == null) return;
+    if(isWearable) {
+        if(isNote) {
+            valueedit.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+            valueedit.setMinEms(8);
+        } else {
+            valueedit.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+            valueedit.setMinEms(2);
+        }
+        notemode=isNote;
+        return;
+        }
+    if(isNote) {
+        hidekeyboard();
+        if(origKeyListener==null) origKeyListener=valueedit.getKeyListener();
+        valueedit.setKeyListener(null);
+        valueedit.setCursorVisible(false);
+        valueedit.setOnClickListener(v->{
+            shownoteoverlay((MainActivity)valueedit.getContext());
+            });
+        String txt=(noteOffset>=0)?Natives.getNoteText(noteOffset):null;
+        if((txt==null||txt.length()==0)&&noteTextValue!=null) txt=noteTextValue;
+        valueedit.setText((txt==null||txt.length()==0)?"":util.shortnote(txt));
+        editfocus.clearedittext(valueedit);
+        }
+    else {
+        valueedit.setOnClickListener(null);
+        if(origKeyListener!=null) valueedit.setKeyListener(origKeyListener);
+        valueedit.setCursorVisible(true);
+        editfocus.setedittext(valueedit);
+        if(notemode) {
+            if(currentnum!=0&&currentnum!=numio.newhit) {
+                float v=Natives.hitvalue(currentnum);
+                valueedit.setText(v<Float.MAX_VALUE?String.valueOf(v):"");
+                }
+            else
+                valueedit.setText("");
+            valueedit.requestFocus();
+            showkeyboard((MainActivity)valueedit.getContext());
+            }
+        }
+    notemode=isNote;
+    }
 void closenumview() {
     hidekeyboard();
+    noteOffset=-1;
+    noteTextValue=null;
+    if(noteview!=null) {
+        removeContentView(noteview);
+        noteview=null;
+        notefield=null;
+    }
     if(mealview[0]!=null) {
         removeContentView(mealview[0]);
         mealview[0]=null;
@@ -205,6 +330,10 @@ void closenumview() {
     spinner=null;
     numspinadapt=null;
     valueedit=null;
+    notebutton=null;
+    notesaved=false;
+    notemode=false;
+    origKeyListener=null;
     source=null;
     timebutton=null;
     timeview=null;
@@ -219,6 +348,10 @@ void closenumview() {
     }
 
 Button mealbutton;
+Button notebutton;
+boolean notesaved=false;
+boolean notemode=false;
+android.text.method.KeyListener origKeyListener=null;
 CheckDirectionBox excludebox;
 public void  addnumberview(MainActivity activity, long hitptr) {
     final boolean oldnum=hitptr!=numio.newhit;
@@ -230,6 +363,21 @@ public void  addnumberview(MainActivity activity, long hitptr) {
     int bron= Natives.gethitindex(hitptr);
     var type=Natives.hittype(hitptr);
     var exclude=Natives.hitexclude(hitptr);
+    noteTextValue=null;
+    if(isNoteLabel(type)) {
+        int mealOff=Natives.hitmeal(hitptr);
+        if(mealOff >= 0) {
+            String txt=Natives.getNoteText(mealOff);
+            if(txt != null && txt.length() > 0) {
+                noteTextValue=txt;
+                noteOffset=mealOff;
+            }
+        } else {
+            noteOffset=-1;
+        }
+    } else {
+        noteOffset=-1;
+    }
     addnumberview(activity, bron,time,Natives.hitvalue(hitptr),type,-1);
     if(oldnum) {
         boolean staticnum=Natives.staticnum();
@@ -284,7 +432,11 @@ public static String minhourstr(long mmsec) {
       }
    }
 public   View addnumberview(MainActivity context,final int bron,final long time,final float value,final int type,final int tmpmealptr) {
+    int savednoteOffset=noteOffset;
+    String savednoteTextValue=noteTextValue;
     closenumview();
+    noteOffset=savednoteOffset;
+    noteTextValue=savednoteTextValue;
        // var mat = new MaterialButton(context); mat.setCornerRadius(GlucoseCurve.dpToPx(30)); datebutton=mat; 
       datebutton = new Button(context);
         datebutton.setOnClickListener(
@@ -297,6 +449,8 @@ public   View addnumberview(MainActivity context,final int bron,final long time,
 
         timeview=timebutton;
     mealbutton=getbutton(context,R.string.mealname);
+    notebutton=getbutton(context,R.string.notesname);
+    notebutton.setVisibility(GONE);
     excludebox=getcheckbox(context,R.string.exclude,true);
     source.setMinWidth(mealbutton.getMinWidth());
     messagetext=getlabel(context,R.string.dontchangeamounts);
@@ -401,7 +555,7 @@ public   View addnumberview(MainActivity context,final int bron,final long time,
               lay.setY(MainActivity.systembarTop*3/4);
             }
 
-            return new int[] {w,h}; },new View[]{helpbutton,getspinner(context), valueedit},new View[]{datebutton, excludebox,mealbutton,source,timebutton},new View[]{cancelbutton,messagetext,deletebutton, savebutton});
+            return new int[] {w,h}; },new View[]{helpbutton,getspinner(context), valueedit},new View[]{datebutton, excludebox,mealbutton,notebutton,source,timebutton},new View[]{cancelbutton,messagetext,deletebutton, savebutton});
          }
 
         timebutton.setOnClickListener(
@@ -502,6 +656,11 @@ public   View addnumberview(MainActivity context,final int bron,final long time,
 
     };
     mealbutton.setOnClickListener(menucall);
+    notebutton.setOnClickListener(v->{
+        if(!isWearable) {
+            shownoteoverlay((MainActivity)v.getContext());
+            }
+        });
     lasttime=time;
     Date dat = new Date(time);
    if(isWearable)
@@ -509,12 +668,25 @@ public   View addnumberview(MainActivity context,final int bron,final long time,
    else
        datebutton.setText(DateFormat.getDateInstance(DateFormat.DEFAULT).format(dat));
     timebutton.setText(minhourstr(time));
+    spinner.setSelection(type);
     if(value< Float.MAX_VALUE)
         valueedit.setText(String.valueOf(value));
     else
         valueedit.setText("");
-    spinner.setSelection(type);
     editfocus.setedittext(valueedit);
+    if(isNoteLabel(type)) {
+        if(!isWearable) {
+            setnoteui(true);
+            notesaved=(noteOffset>=0);
+            }
+        else {
+            valueedit.setText(noteTextValue!=null?noteTextValue:"");
+            notesaved=false;
+            }
+        }
+    else
+        notesaved=false;
+    noteTextValue=null;
     source.setText( bron==1?"      ":"           \u231A         ");
     source.setTextAlignment( TEXT_ALIGNMENT_CENTER);
     int pads=(int)(GlucoseCurve.metrics.density*10);
@@ -592,11 +764,29 @@ void deletedialog(View v,int[] mealptr) {
     float value=Natives.hitvalue(currentnum);
     int type=Natives.hittype(currentnum);
     ArrayList<String> labels= ((Applic)context.getApplication()).getlabels();
-    String mess= DateFormat.getDateTimeInstance(DateFormat.DEFAULT,DateFormat.DEFAULT).format(time)+" "+ labels.get(type)+" "+value;
+    String valuetext;
+    if(isNoteLabel(type)) {
+        String txt=null;
+        if(noteOffset>=0)
+            txt=Natives.getNoteText(noteOffset);
+        if(txt==null||txt.length()==0) {
+            int mealOff=Natives.hitmeal(currentnum);
+            if(mealOff>=0)
+                txt=Natives.getNoteText(mealOff);
+            }
+        valuetext=(txt==null||txt.length()==0)?String.valueOf(value):util.shortnote(txt);
+        }
+    else
+        valuetext=String.valueOf(value);
+    String mess= DateFormat.getDateTimeInstance(DateFormat.DEFAULT,DateFormat.DEFAULT).format(time)+" "+ labels.get(type)+" "+valuetext;
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(R.string.deletequestion).setMessage(mess).
            setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+            if(noteOffset >= 0) {
+                Natives.deleteNote(noteOffset);
+                noteOffset=-1;
+            }
             if(mealptr[0]!=0)
                  Natives.deletemeal(mealptr[0]);
                  mealptr[0]=0;
@@ -715,15 +905,36 @@ int thetime=-1;
 private boolean saveamount(Activity activity,TextView timeview,TextView value,int mealptr,long lasttime) {
     final String strval= value.getText().toString();
     float val=0.0f;
-    try {
-        val=(strval.length()==0)?0:Float.parseFloat(strval);
+    int noteOff=mealptr;
+    if(isNoteLabel(labelsel)) {
+        noteOff=noteOffset;
+        if(noteOff >= 0) {
+            if(notesaved) {
+                if(strval.length()==0) { Natives.deleteNote(noteOff); noteOffset=-1; noteOff=-1; }
+                }
+            else {
+                if(strval.length()>0) noteOff=Natives.updateNote(noteOff, (int)(lasttime/1000L), strval);
+                }
+            val=0;
+        } else if(strval.length()>0) {
+            noteOff=Natives.addNote((int)(lasttime/1000L), strval);
+            noteOffset=noteOff;
+            val=0;
+        } else {
+            val=0;
         }
-    catch(Throwable e) {
-        Log.stack(LOG_ID,"parseFloat "+strval,e);
-        };
+    } else {
+        try {
+            val=(strval.length()==0)?0:Float.parseFloat(strval);
+        }
+        catch(Throwable e) {
+            Log.stack(LOG_ID,"parseFloat "+strval,e);
+        }
+    }
 
-    if(labelsel==Natives.getbloodvar()) { 
+    if(labelsel==Natives.getbloodvar()) {
         mealptr=excludebox.isChecked()?1:0;
+        noteOff=mealptr;
         }
     if(currentnum!=0&&currentnum!=numio.newhit) {
 //        long dat=thedate==0L?Natives.hittime(currentnum)*1000L:thedate;
@@ -738,7 +949,7 @@ private boolean saveamount(Activity activity,TextView timeview,TextView value,in
                 }
             dat= cal.getTimeInMillis();
             } */
-        Natives.hitchange(currentnum,dat/1000L,val,labelsel,mealptr);
+        Natives.hitchange(currentnum,dat/1000L,val,labelsel,noteOff);
         int index=Natives.gethitindex(currentnum);
         if(!isWearable) {
             tk.glucodata.nums.AllData  alldata=Applic.app.numdata;
@@ -760,7 +971,7 @@ private boolean saveamount(Activity activity,TextView timeview,TextView value,in
             }
         dat= cal.getTimeInMillis(); */
         final int index=1;
-        Natives.saveNum(numio.numptrs[index],dat/1000,val,labelsel,mealptr);
+        Natives.saveNum(numio.numptrs[index],dat/1000,val,labelsel,noteOff);
         if(!isWearable) {
            tk.glucodata.nums.AllData  alldata=Applic.app.numdata;
             alldata.changedback(index);
@@ -1047,14 +1258,22 @@ LabelAdapter<String> numspinadapt;
 
 void setmealbutton(int labelsel,int bron,int mealptr,boolean exclude) {
 //       if(doLog) {Log.i(LOG_ID,"bron="+bron+" mealptr="+mealptr);};
-        if(!isWearable&&labelsel==Natives.getmealvar() &&(bron==1|| mealptr>0)) {
+        if(!isWearable&&isNoteLabel(labelsel)) {
+            mealbutton.setVisibility(GONE);
+            notebutton.setVisibility(VISIBLE);
+            source.setVisibility(GONE);
+            excludebox.setVisibility(GONE);
+            }
+        else if(!isWearable&&labelsel==Natives.getmealvar() &&(bron==1|| mealptr>0)) {
             mealbutton.setVisibility(VISIBLE);
+            notebutton.setVisibility(GONE);
             source.setVisibility(GONE);
             excludebox.setVisibility(GONE);
             }
 
     else {
-       if(labelsel==Natives.getbloodvar()) {
+        notebutton.setVisibility(GONE);
+        if(labelsel==Natives.getbloodvar()) {
             mealbutton.setVisibility(GONE);
             source.setVisibility(GONE);
             excludebox.setVisibility(VISIBLE);
@@ -1085,6 +1304,11 @@ if(spinner==null) {
         public  void onItemSelected (AdapterView<?> parent, View view, int position, long id) {
             labelsel=position;
             setmealbutton(position,currentnum);
+            setnoteui(isNoteLabel(position));
+            if(!isWearable&&!isNoteLabel(position)&&noteview!=null) {
+                MainActivity act=(MainActivity)parent.getContext();
+                hidenoteoverlay(act);
+                }
             }
         @Override
         public  void onNothingSelected (AdapterView<?> parent) {

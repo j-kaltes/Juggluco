@@ -100,8 +100,9 @@ static String makestring(String[] names,int nr,boolean detect,String port,boolea
             final boolean bleReverse=ICElabel==null?
                     (json.has("blereverse")?json.optBoolean("blereverse",false):
                             (bleclient!=(!side))):false;
+            boolean notes=json.optBoolean("notes",true);
             Runnable save=()-> {
-               int pos=Natives.changebackuphost(-1,names,nr,detect,port, nums,stream,scans,false,receive,activeonly,passiveonly,pass,starttime,label,testip,hasname,ICElabel,side,transport,bleclient);
+               int pos=Natives.changebackuphost(-1,names,nr,detect,port, nums,stream,scans,false,receive,activeonly,passiveonly,pass,starttime,label,testip,hasname,ICElabel,side,notes,transport,bleclient);
                if(pos<0) {
                       String mess=changehostError(act,pos);
                       Log.i(LOG_ID,mess);
