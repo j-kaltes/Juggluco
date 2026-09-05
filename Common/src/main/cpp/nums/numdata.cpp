@@ -66,10 +66,10 @@ extern void checker();
 #endif
    }
 //bool update(int sock,int &len, struct numspan *ch) 
-int updatenums(crypt_t*pass,Connect *connect,struct changednums *nums,int ind) {
+int updatenums(crypt_t*pass,Connect *connect,struct changednums *nums,int ind,bool sendnotes) {
    int ret=0;
    for(int i=0;i<numdatas.size();i++) {
-      if(int subret=numdatas[i]->update(pass,connect,nums,ind)) 
+      if(int subret=numdatas[i]->update(pass,connect,nums,ind,sendnotes)) 
          ret|=subret;
       else
          return 0;

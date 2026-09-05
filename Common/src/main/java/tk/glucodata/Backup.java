@@ -191,6 +191,7 @@ public class Backup {
       private    CheckDirectionBox Amounts =null;
       private CheckDirectionBox Scans =null;
       private CheckDirectionBox Stream =null,receive=null,detect=null,checkhostname;
+      private CheckDirectionBox Notes =null;
       private CheckDirectionRadio activeonly=null,passiveonly=null,both=null;
       private CheckDirectionRadio transportAutomatic=null,transportTcp=null,transportBluetooth=null,transportMessages=null;
       private boolean transportMessagesAllowed=isWearable;
@@ -543,6 +544,7 @@ CheckDirectionBox ICE;
          Amounts = new CheckDirectionBox(act); Amounts.setText(R.string.amountsname);
          Scans = new CheckDirectionBox(act); Scans.setText(R.string.scansname);
          Stream = new CheckDirectionBox(act); Stream.setText(R.string.streamname);
+         Notes = new CheckDirectionBox(act); Notes.setText(R.string.notesname);
       CheckDirectionRadio fromnow=new CheckDirectionRadio(act);
       CheckDirectionRadio alldata=new CheckDirectionRadio(act);
       CheckDirectionRadio screenpos=new CheckDirectionRadio(act);
@@ -671,7 +673,7 @@ CheckDirectionBox ICE;
             bleclient=Natives.getbackupbleclient(hostindex);
          else
             bleclient=!Scans.isChecked();
-         int pos=Natives.changebackuphost(hostindex,names,struse,dodetect,usesNetwork?portedit.getText().toString():"0", Amounts.isChecked(),Stream.isChecked(),Scans.isChecked(),restore.isChecked(),receiver,activeonly.isChecked(),passiveonly.isChecked(),Password.isChecked()?editpass.getText().toString():null,starttime,selectedLabel,usesNetwork&&testip.isChecked(),usesNetwork&&checkhostname.isChecked(), ice?ICEstring:null,mirrorSide,selectedTransport,bleclient);
+         int pos=Natives.changebackuphost(hostindex,names,struse,dodetect,usesNetwork?portedit.getText().toString():"0", Amounts.isChecked(),Stream.isChecked(),Scans.isChecked(),restore.isChecked(),receiver,activeonly.isChecked(),passiveonly.isChecked(),Password.isChecked()?editpass.getText().toString():null,starttime,selectedLabel,usesNetwork&&testip.isChecked(),usesNetwork&&checkhostname.isChecked(), ice?ICEstring:null,mirrorSide,Notes.isChecked(),selectedTransport,bleclient);
 
          if(pos<0) {
             String mess=changehostError(act, pos);
@@ -729,7 +731,7 @@ CheckDirectionBox ICE;
             resentconfirmation(act,hostindex);
             }
          });
-      CheckDirectionBox[] boxes={Amounts,Scans,Stream,restore};
+      CheckDirectionBox[] boxes={Amounts,Scans,Stream,Notes,restore};
        CompoundButton.OnCheckedChangeListener needport =(buttonView, isChecked)-> {
          if(sendchecked==null)
             return;
@@ -778,13 +780,13 @@ CheckDirectionBox ICE;
             return ret;
 
          }, firstrow,new View[]{ICE,ICElabellabel,ICElabel,zero,one},editIPs, new View[]{testip, haslabel, label},
-               directions, new View[]{receive, Sendlabel, Amounts, Scans, Stream, restore}, fromrow, withqr,new View[]{transportLabel,transportAutomatic,transportTcp,transportBluetooth,transportMessages}, new View[]{delete, Close, reset, Help, save})
+               directions, new View[]{receive, Sendlabel, Amounts, Scans, Stream, Notes, restore}, fromrow, withqr,new View[]{transportLabel,transportAutomatic,transportTcp,transportBluetooth,transportMessages}, new View[]{delete, Close, reset, Help, save})
             .portraitLayout(
 new View[]{Portlabel,portedit,checkhostname},new View[]{IPslabel,detect},
                new View[]{ICE,ICElabellabel},new View[]{ICElabel},new View[]{zero,one},
                new View[]{editIPs[0],editIPs[1]},new View[]{editIPs[2],editIPs[3]},
                new View[]{testip,haslabel},new View[]{label},directions,
-               new View[]{receive,Sendlabel},new View[]{Amounts,Scans,Stream},new View[]{restore},
+               new View[]{receive,Sendlabel},new View[]{Amounts,Scans,Stream,Notes},new View[]{restore},
                new View[]{startlabel},new View[]{alldata,fromnow,screenpos},
                withqr,
                new View[]{transportLabel,transportAutomatic},new View[]{transportTcp,transportBluetooth,transportMessages},
@@ -979,7 +981,7 @@ new View[]{Portlabel,portedit,checkhostname},new View[]{IPslabel,detect},
          testip.setChecked(true);
           } 
 
-      Stream.setChecked(stream); Scans.setChecked(scans); Amounts.setChecked(amounts);
+      Stream.setChecked(stream); Scans.setChecked(scans); Amounts.setChecked(amounts); Notes.setChecked(Natives.getbackuphostnotes(index));
       isasender=stream||scans||amounts;
       sendchecked=new boolean[]{amounts,scans,stream};
       sendfrom[2].setText( tk.glucodata.util.timestring(Natives.getstarttime()));

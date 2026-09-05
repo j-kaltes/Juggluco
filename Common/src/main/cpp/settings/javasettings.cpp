@@ -647,6 +647,7 @@ extern "C" JNIEXPORT void  JNICALL   fromjava(writealarmsuspension)(JNIEnv *env,
     }
 
 extern int carbotype;
+extern int notetype;
 extern "C" JNIEXPORT void  JNICALL   fromjava(setmealvar)(JNIEnv *env, jclass cl,jbyte val) {
     const int count=settings->getlabelcount();
     if(val>=count)
@@ -662,6 +663,23 @@ extern "C" JNIEXPORT jbyte  JNICALL   fromjava(getmealvar)(JNIEnv *env, jclass c
     if(mealvar<0|| mealvar>count)
         return count;
     return mealvar;
+    }
+
+extern "C" JNIEXPORT void  JNICALL   fromjava(setnotevar)(JNIEnv *env, jclass cl,jbyte val) {
+    const int count=settings->getlabelcount();
+    if(val>=count)
+        val=-1;
+    notetype=val;
+    settings->data()->notevar=val;
+    settings->updated();
+    }
+
+extern "C" JNIEXPORT jbyte  JNICALL   fromjava(getnotevar)(JNIEnv *env, jclass cl) {
+    const int count=settings->getlabelcount();
+    jbyte notevar=settings->data()->notevar;
+    if(notevar<0|| notevar>count)
+        return count;
+    return notevar;
     }
 
 

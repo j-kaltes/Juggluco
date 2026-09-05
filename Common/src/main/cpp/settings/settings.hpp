@@ -422,7 +422,8 @@ struct Tings {
     bool  showcalibratedscans:1;
     float64_t loadtime;
     uint32_t glucoseMeterNR;
-    uint32_t reserved4;
+    int8_t notevar;
+    int8_t reserved4[3];
     GlucoseMeter  glucosemeters[maxglucosemeters];
     uint8_t gs3id[12];
     uint32_t reserved32;

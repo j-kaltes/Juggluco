@@ -67,6 +67,12 @@ static {
 static public String timestring(long tim) {
 		return dformat.format(new Date(tim));
 		}
+static public final int notemaxdisplay=10;
+static public String shortnote(String text) {
+	if(text==null||text.length()<=notemaxdisplay)
+		return text;
+	return text.substring(0,notemaxdisplay)+"...";
+	}
 public static CheckDirectionBox getcheckbox(Context context, String label, boolean val) {
 	var check=new CheckDirectionBox(context);
 	check.setText(label);

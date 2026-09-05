@@ -24,6 +24,11 @@
 #include "SensorGlucoseData.hpp"
 #include "sensoren.hpp"
 #include "curve/numiter.hpp"
+#include "../notes/Notes.hpp"
+#include "../net/libreview/numcategories.hpp"
+#include <ctype.h>
+
+extern Notes *notes;
 
 extern Sensoren *sensors;
 #define LOGGERTAG(...) LOGGER("export: " __VA_ARGS__)
@@ -358,7 +363,26 @@ bool fexportnums(myfilep handle,int _unit,uint32_t starttime=0,uint32_t endtime=
 	return exportdata(handle,numiters,0,basecount, [](myfilep fp,const int index,const Num *num,const int oldest,const Num *beg) {
 			const char *label=settings->getlabel(num->type).data();
 			const auto [buf,zone]=timedata(num->gettime());
-			fprintf(fp,"%d\t%d\t%u\t%s\t%g\t%g\t%s\n",oldest,index+numdatas[oldest]->getfirstpos(),num->gettime(),buf,zone,num->value,label);
+			char valbuf[notemaxlen+1];
+			const char *valuetext=nullptr;
+			if(isNote(num->type)&&notes) {
+				// The value column holds the note text: export is TSV,
+				// so all whitespace (tabs, newlines, ...) becomes a
+				// space. The full text is exported, not the shortened
+				// display form.
+				const char *text=notes->gettext(num->mealptr);
+				if(text&&*text) {
+					size_t i=0;
+					for(;text[i]&&i<sizeof(valbuf)-1;++i)
+						valbuf[i]=isspace((unsigned char)text[i])?' ':text[i];
+					valbuf[i]='\0';
+					valuetext=valbuf;
+					}
+				}
+			if(valuetext)
+				fprintf(fp,"%d\t%d\t%u\t%s\t%s\t%g\t%s\n",oldest,index+numdatas[oldest]->getfirstpos(),num->gettime(),buf,zone,valuetext,label);
+			else
+				fprintf(fp,"%d\t%d\t%u\t%s\t%g\t%g\t%s\n",oldest,index+numdatas[oldest]->getfirstpos(),num->gettime(),buf,zone,num->value,label);
 			return true;
 		},maxcount);
 

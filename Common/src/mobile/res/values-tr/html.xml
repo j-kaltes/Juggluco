@@ -1470,6 +1470,15 @@ düğmesine dokunduğunuzda, bir öğünü bileşenlerine göre
 belirleyebileceğiniz bir ekrana gelirsiniz. Burada karbonhidrat
 içeriğini belirtebilir ve ardından bir bileşenin ihtiyaç duyulan
 miktarını hesaplayabilirsiniz.</p>
+<p>Sol menü &gt; Ayarlar &gt; <a href="https://www.juggluco.nl/Jugglucohelp/tr/labelhelp.html">Sayı
+Etiketleri</a> altında serbest metni hangi etiketle <b>Not</b> olarak
+gireceğiniz de belirtilir. <i>Yeni miktar</i> bölümünde bu etiket
+seçildiğinde, <b>Yemek</b> düğmesi gibi bir <b>Notlar</b> düğmesi
+görüntülenir. Bu düğmeye dokunduğunuzda kısa bir not girebileceğiniz
+bir metin düzenleyici açılır. Not, grafikte ve miktar listesinde
+(kısaltılmış) gösterilir ve LibreView&#39;a not olarak yüklenir. Bir
+yansıtma bağlantısının ayarlarında <b>Notlar</b> onay kutusu,
+notların diğer cihaza aktarılıp aktarılmayacağını belirler.</p>
 <p><br/>
 <br/>
 

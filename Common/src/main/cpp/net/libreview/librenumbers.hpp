@@ -33,6 +33,8 @@
 #include "../../inout.hpp"
 #include "../../nums/numdata.hpp"
 #include "librelog.hpp"
+#include "../../notes/Notes.hpp"
+extern Notes *notes;
 /*
 inline  int loggert( const char* fmt, ...) {
         va_list args;
@@ -115,7 +117,6 @@ class Numbers: public LibreType {
 	using  LibreType::delextra;
 	public:
 
-
 	static int writeentry(char *buf,const std::string_view category,const std::string_view instance,const std::string_view unitname,float units,long long recordnum,uint32_t tim,bool del,int decimal=1) {
 		char *ptr=buf;
 		startentry(ptr);
@@ -149,7 +150,7 @@ class Numbers: public LibreType {
 			spacenr(ptr,12);
 			addar(ptr, R"("text":)");
 			space(ptr);
-			addstrview(ptr,unitname);
+			ptr+=addjsonstring(ptr,unitname);
 			}
 		if(del) {
 			*ptr++=',';
@@ -221,26 +222,39 @@ public:
 
 
 
+// Writes a label-value note entry (e.g. "Breakfast 12") for comment and
+// note-fallback cases where full note text is not available.
+ void writeLabelNote(char *&ptr,long long recordnum,const Num &n,bool del) {
+	constexpr const int buflen=12+13;
+	char label[buflen],*labelptr=label;
+	std::string_view typestr=getlabel(n.type);
+	addstrview(labelptr,typestr);
+	int startlen=labelptr-label;
+	int over=buflen-startlen;
+	int getlen=snprintf(labelptr,over,R"( %g)",n.value);
+	const int totlen= getlen+startlen;
+	int len= writenote(ptr,std::string_view(label,totlen),recordnum,n.time, del);
+	LIBRELOGGERN(label,totlen);
+	ptr+=len;
+	}
+
  void restel(char *&ptr,const Num &n,Libregeg *ids,bool del=false) {
 	if(isNote(n.type)) {
-#ifdef NDEBUG
-#define EXTRALABEL 10
-#else
-#define EXTRALABEL 0
-#endif
 		auto recordnum=mkid<note>(del?n.librenr:ids->addnum(n,nextlibrenr()));
-		constexpr const int buflen=12+13+EXTRALABEL;
-		char label[buflen],*labelptr=label;
-		std::string_view typestr=getlabel(n.type);
-		*labelptr++='"';
-		addstrview(labelptr,typestr);
-		int startlen=labelptr-label;
-		int over=buflen-startlen;
-		int getlen=snprintf(labelptr,over,R"( %g")",n.value);
-		const int totlen= getlen+startlen;
-		int len= writenote(ptr,std::string_view(label,totlen),recordnum,n.time, del);
-		LIBRELOGGERN(label,totlen);
-		ptr+=len;
+		if(notes) {
+			const char* text = notes->gettext(n.mealptr);
+			if(text && *text) {
+				int len= writenote(ptr,std::string_view(text),recordnum,n.time, del);
+				LIBRELOGGERN(ptr,len);
+				ptr+=len;
+				return;
+			}
+		}
+		writeLabelNote(ptr,recordnum,n,del);
+		}
+	else if(isComment(n.type)) {
+		auto recordnum=mkid<note>(del?n.librenr:ids->addnum(n,nextlibrenr()));
+		writeLabelNote(ptr,recordnum,n,del);
 		}
 	}
 
@@ -485,7 +499,7 @@ static bool dontSendNumbers() {
 	return settings->data()->libre3NUMiter;
 	}
 
-inline static constexpr const int maxitemsize=400;
+inline static constexpr const int maxitemsize=1200;
 inline static constexpr const int delextra=50;
 
 };
@@ -523,7 +537,7 @@ static bool dontSendNumbers() {
  static int32_t & librenr() {
 	return settings->data()->libre2NUMiter;
 	}
-inline static constexpr const int maxitemsize=315;
+inline static constexpr const int maxitemsize=1200;
 inline static constexpr const  int delextra=34;
 	};
 
