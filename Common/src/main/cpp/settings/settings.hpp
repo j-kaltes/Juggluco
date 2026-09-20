@@ -122,7 +122,7 @@ struct AlarmProfile {
     struct ring alarms[maxalarms+maxextraalarms];
     uint32_t empty[3];
 
-    uint8_t reserved8;
+    uint8_t alarmVolumeRampSec;
     uint8_t alarmSoundType;
     uint8_t  radius;
     uint8_t  Theme;
@@ -422,7 +422,8 @@ struct Tings {
     bool  showcalibratedscans:1;
     float64_t loadtime;
     uint32_t glucoseMeterNR;
-    uint32_t reserved4;
+    uint8_t alarmVolumeRampSec;
+    uint8_t reserved4bytes[3];
     GlucoseMeter  glucosemeters[maxglucosemeters];
     uint8_t gs3id[12];
     uint32_t reserved32;
@@ -615,6 +616,7 @@ makebitvoice(talktouch)
 makebitvoice(USE_ALARMoff)
 
 makebitvoice(alarmSoundType)
+makebitvoice(alarmVolumeRampSec)
 
 makebitvoice(invertcolors)
 makebitvoice(isOval)
@@ -669,6 +671,7 @@ void newprofile(int nr) {
         setproel( speakalarms)
         setproel( talktouch)
         setproel( USE_ALARMoff)
+        setproel( alarmVolumeRampSec)
         setproel( invertcolors)
         setproel( Theme)
         setproel( isOval)

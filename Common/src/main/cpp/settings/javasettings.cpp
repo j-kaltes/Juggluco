@@ -2050,6 +2050,13 @@ extern "C" JNIEXPORT jint  JNICALL   fromjava(getalarmSoundType)(JNIEnv *env, jc
     return settings->data()->alarmSoundTypeget();
     }
 
+extern "C" JNIEXPORT void  JNICALL   fromjava(setalarmVolumeRampSec)(JNIEnv *env, jclass cl,jint val) {
+    settings->data()->alarmVolumeRampSecset(static_cast<uint8_t>(val));
+    }
+extern "C" JNIEXPORT jint  JNICALL   fromjava(getalarmVolumeRampSec)(JNIEnv *env, jclass cl) {
+    return settings->data()->alarmVolumeRampSecget();
+    }
+
 
 extern "C" JNIEXPORT void  JNICALL   fromjava(setRotate)(JNIEnv *env, jclass cl,jboolean val) {
     settings->data()->Rotate=val;

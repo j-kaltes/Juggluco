@@ -763,6 +763,13 @@ static private void alarmsettings(MainActivity context,View parview) {
     alarmtype.addView(getradiobuttonId(context,R.string.media,id++));
     alarmtype.check(getalarmSoundType());
 
+    EditText volumeRamp = new EditText(context);
+    volumeRamp.setInputType(InputType.TYPE_CLASS_NUMBER);
+    volumeRamp.setImeOptions(editoptions);
+    volumeRamp.setMinEms(3);
+    volumeRamp.setText(String.valueOf(Natives.getalarmVolumeRampSec()));
+    var volumeRampLabel=getlabel(context,R.string.alarmvolumeramp);
+
     final boolean alarmloss= Natives.hasalarmloss();
         CheckDirectionBox lossalarm = new CheckDirectionBox(context);
         lossalarm.setChecked(alarmloss); //Value
@@ -817,10 +824,11 @@ static private void alarmsettings(MainActivity context,View parview) {
         getMargins(Save).topMargin=pad;
         views=new View[][]{new View[]{ala},new View[]{spin},new View[]{lowalarm[0]},new View[]{lowalarm[1],lowalarm[2]}, new View[]{highalarm[0]},new View[]{highalarm[1],highalarm[2]},
 new View[]{lossalarm},new View[]{losswait,min,ringlossalarm},
-new View[]{isvalue},new View[]{ringisvalue},new View[]{alarmis,alarmtype},new View[]{advanced},new View[]{Save}};
+new View[]{isvalue},new View[]{ringisvalue},new View[]{volumeRampLabel,volumeRamp},new View[]{alarmis,alarmtype},new View[]{advanced},new View[]{Save}};
         }
     else {
          View[] lostrow={lossalarm,losswait,min,ringlossalarm};
+         View[] rowRamp={volumeRampLabel,volumeRamp};
          View[] row6={isvalue, ringisvalue,alarmis,alarmtype};
          View[] rowshow={help,spin,advanced,Save};
          var marg=(int)(tk.glucodata.GlucoseCurve.metrics.density*40.0);
@@ -830,11 +838,12 @@ new View[]{isvalue},new View[]{ringisvalue},new View[]{alarmis,alarmtype},new Vi
 
         getMargins(lowalarm[0]).topMargin=(int)(tk.glucodata.GlucoseCurve.metrics.density*8.0);
 
-        views=new View[][]{lowalarm,highalarm,lostrow,row6,rowshow};
+        views=new View[][]{lowalarm,highalarm,lostrow,rowRamp,row6,rowshow};
         portraitViews=new View[][]{
             new View[]{lowalarm[0]},new View[]{lowalarm[1],lowalarm[2]},
             new View[]{highalarm[0]},new View[]{highalarm[1],highalarm[2]},
             new View[]{lossalarm},new View[]{losswait,min,ringlossalarm},
+            new View[]{volumeRampLabel,volumeRamp},
             new View[]{isvalue,ringisvalue},new View[]{alarmis,alarmtype},
             new View[]{advanced,spin},new View[]{help,Save}};
         }    
@@ -905,6 +914,19 @@ new View[]{isvalue},new View[]{ringisvalue},new View[]{alarmis,alarmtype},new Vi
          Natives.setalarms(str2float(((EditText)lowalarm[1]).getText().toString()),
                     str2float(((EditText)highalarm[1]).getText().toString()),
                      haslow, hashigh, isvalue.isChecked(),hasloss);
+         try {
+            int ramp=Integer.parseInt(volumeRamp.getText().toString());
+            if(ramp<0)
+                ramp=0;
+            if(ramp>255)
+                ramp=255;
+            Natives.setalarmVolumeRampSec(ramp);
+            }
+         catch(Throwable e) {
+            Log.stack(LOG_ID,"parseInt volumeRamp",e);
+            Applic.argToaster(context,context.getString(R.string.cantsetminutes)+volumeRamp.getText(),Toast.LENGTH_SHORT);
+            return false;
+            }
          return true;
          };
     Save.setOnClickListener(v->{

@@ -1092,6 +1092,8 @@ public static native void testLibre3( );
 
 public static native void setalarmSoundType(int val);
 public static native int getalarmSoundType( );
+public static native void setalarmVolumeRampSec(int val);
+public static native int getalarmVolumeRampSec( );
 public static native void setRotate(boolean val);
 public static native boolean getRotate( );
 

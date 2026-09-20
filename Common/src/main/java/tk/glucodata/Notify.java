@@ -425,10 +425,54 @@ private static void showoldglucose() {
     //private static boolean isalarm=false;
     private  static Runnable runstopalarm=null;
     private static ScheduledFuture<?> stopschedule=null;
+    private static ScheduledFuture<?> volumeRampSchedule=null;
+    private static final long VOLUME_RAMP_STEP_MS=100L;
+
+    private static void cancelVolumeRamp() {
+        final var ramp=volumeRampSchedule;
+        if(ramp!=null) {
+            ramp.cancel(false);
+            volumeRampSchedule=null;
+        }
+        }
+
+    private static void startVolumeRamp(Ringtone ring,int rampSec) {
+        cancelVolumeRamp();
+        if(rampSec<=0||Build.VERSION.SDK_INT<Build.VERSION_CODES.Q)
+            return;
+        final long rampMs=rampSec*1000L;
+        final long startMs=System.currentTimeMillis();
+        volumeRampSchedule=Applic.scheduler.scheduleAtFixedRate(() -> {
+            final long elapsed=System.currentTimeMillis()-startMs;
+            final float vol=elapsed>=rampMs?1f:elapsed/(float)rampMs;
+            try {
+                ring.setVolume(vol);
+                }
+            catch(Throwable th) {
+                Log.stack(LOG_ID,"volume ramp",th);
+                cancelVolumeRamp();
+                }
+            if(elapsed>=rampMs)
+                cancelVolumeRamp();
+            }, 0, VOLUME_RAMP_STEP_MS, TimeUnit.MILLISECONDS);
+        }
+
+    private static void resetRingVolume(Ringtone ring) {
+        if(Build.VERSION.SDK_INT<Build.VERSION_CODES.Q)
+            return;
+        try {
+            ring.setVolume(1f);
+            }
+        catch(Throwable th) {
+            Log.stack(LOG_ID,"resetRingVolume",th);
+            }
+        }
+
     static public void stopalarm() {
         stopalarmnotsend(true);
         }
     static public void stopalarmnotsend(boolean send) {
+        cancelVolumeRamp();
         if(!getisalarm()) {
             {if(doLog) {Log.d(LOG_ID,"stopalarm not is alarm");};};
             return;
@@ -540,6 +584,16 @@ static void stopGlucoseAlarm() {
                 {if(doLog) {Log.d(LOG_ID,"play "+ring.getTitle(app));};};
             }
             if(doplaysound[0]) {
+                final int rampSec=Natives.getalarmVolumeRampSec();
+                if(rampSec>0&&Build.VERSION.SDK_INT>=Build.VERSION_CODES.Q) {
+                    try {
+                        ring.setVolume(0f);
+                        }
+                    catch(Throwable th) {
+                        Log.stack(LOG_ID,"setVolume",th);
+                        }
+                    startVolumeRamp(ring,rampSec);
+                    }
                 ring.play();
                 }
         }
@@ -560,6 +614,8 @@ static void stopGlucoseAlarm() {
                             if(doLog) {
                                 {if(doLog) {Log.d(LOG_ID,"stop sound "+ring.getTitle(app));};};
                                 }
+                            cancelVolumeRamp();
+                            resetRingVolume(ring);
                             ring.stop();
                             }
                          catch(Throwable th) {

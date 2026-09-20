@@ -506,6 +506,7 @@
     <string name="media">Media</string>
     <string name="notification">Notification</string>
     <string name="alarmis">Alarm is</string>
+    <string name="alarmvolumeramp">Seconds until full volume</string>
     <string name="deletemeter">Remove meter information. Measurements will remain.</string>
 
     <!-- Web server additions file manager -->

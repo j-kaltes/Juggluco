@@ -502,5 +502,7 @@
 
 <string name="transport_needs_password">Watchwoord noodzakelijk bij directe Bluetooth</string>
 
+    <string name="alarmvolumeramp">Seconden tot vol volume</string>
+
 </resources>
 
