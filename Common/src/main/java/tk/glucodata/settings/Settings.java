@@ -764,6 +764,20 @@ static private void alarmsettings(MainActivity context,View parview) {
 
 //    var usealarm=getcheckbox(context, R.string.USE_ALARM, Natives.getUSEALARM());
 
+    final Spinner lockscreenalarmspin;
+    if(!isWearable) {
+        lockscreenalarmspin=getGenSpin(context);
+        final var alarmbehaviorlabels=Arrays.asList(
+            context.getString(R.string.alarmbehavior_wait),
+            context.getString(R.string.alarmbehavior_lockui),
+            context.getString(R.string.alarmbehavior_unlock));
+        lockscreenalarmspin.setAdapter(new LabelAdapter<>(context,alarmbehaviorlabels,0));
+        final int sel=Natives.getlockscreenalarm();
+        lockscreenalarmspin.setSelection(sel>=0&&sel<alarmbehaviorlabels.size()?sel:Natives.lockscreenalarm_wait);
+        }
+    else
+        lockscreenalarmspin=null;
+    var alarmbehaviorlabel=isWearable?null:getlabel(context,R.string.alarmbehavior);
     var alarmis=getlabel(context,R.string.alarmis);
     var alarmtype=new RadioGroup(context);
 
@@ -831,7 +845,9 @@ new View[]{isvalue},new View[]{ringisvalue},new View[]{alarmis,alarmtype},new Vi
         }
     else {
          View[] lostrow={lossalarm,losswait,min,ringlossalarm};
-         View[] row6={isvalue, ringisvalue,alarmis,alarmtype};
+         View[] valuerow={isvalue, ringisvalue};
+         View[] alarmbehaviorrow={alarmbehaviorlabel,lockscreenalarmspin};
+         View[] alarmtyperow={alarmis,alarmtype};
          View[] rowshow={help,spin,advanced,Save};
          var marg=(int)(tk.glucodata.GlucoseCurve.metrics.density*40.0);
 
@@ -840,12 +856,12 @@ new View[]{isvalue},new View[]{ringisvalue},new View[]{alarmis,alarmtype},new Vi
 
         getMargins(lowalarm[0]).topMargin=(int)(tk.glucodata.GlucoseCurve.metrics.density*8.0);
 
-        views=new View[][]{lowalarm,highalarm,lostrow,row6,rowshow};
+        views=new View[][]{lowalarm,highalarm,lostrow,valuerow,alarmbehaviorrow,alarmtyperow,rowshow};
         portraitViews=new View[][]{
             new View[]{lowalarm[0]},new View[]{lowalarm[1],lowalarm[2]},
             new View[]{highalarm[0]},new View[]{highalarm[1],highalarm[2]},
             new View[]{lossalarm},new View[]{losswait,min,ringlossalarm},
-            new View[]{isvalue,ringisvalue},new View[]{alarmis,alarmtype},
+            new View[]{isvalue,ringisvalue},new View[]{alarmbehaviorlabel},new View[]{lockscreenalarmspin},new View[]{alarmis,alarmtype},
             new View[]{advanced,spin},new View[]{help,Save}};
         }    
     View lay;
@@ -915,6 +931,8 @@ new View[]{isvalue},new View[]{ringisvalue},new View[]{alarmis,alarmtype},new Vi
          Natives.setalarms(str2float(((EditText)lowalarm[1]).getText().toString()),
                     str2float(((EditText)highalarm[1]).getText().toString()),
                      haslow, hashigh, isvalue.isChecked(),hasloss);
+         if(lockscreenalarmspin!=null)
+            Natives.setlockscreenalarm(lockscreenalarmspin.getSelectedItemPosition());
          return true;
          };
     Save.setOnClickListener(v->{

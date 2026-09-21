@@ -54,7 +54,9 @@ import android.widget.EditText;
 
 
 import android.app.Activity;
+import android.app.KeyguardManager;
 import android.view.MotionEvent;
+import android.view.WindowManager;
 import android.view.Surface;
 import android.view.View;
 import android.view.ViewConfiguration;
@@ -766,10 +768,12 @@ void handleIntent(Intent intent) {
                 Applic.setbluetooth(this,extras.getBoolean(setbluetoothon,false) );
                 return;
               }
-            var message=extras.getString("alarmMessage");
+            var message=extras.getString(alarmMessageExtra);
                 if(message!=null) {
-                var cancel=extras.getBoolean("Cancel",false);
+                var cancel=extras.getBoolean(alarmCancelExtra,false);
                 {if(doLog) {Log.i(LOG_ID,"alarmMessage "+message+" cancel="+cancel);};};
+                if(cancel&&Natives.alarmOnLockScreen())
+                    enableAlarmLockScreen();
                 showindialog(message,cancel);
                 return;
                 }
@@ -892,6 +896,48 @@ try {
 }
 
 boolean active=false;
+boolean alarmLockScreenActive=false;
+static final String alarmMessageExtra="alarmMessage";
+static final String alarmCancelExtra="Cancel";
+
+void enableAlarmLockScreen() {
+    if(isWearable||alarmLockScreenActive||!Natives.alarmOnLockScreen())
+        return;
+    alarmLockScreenActive=true;
+    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+        setShowWhenLocked(true);
+        setTurnScreenOn(true);
+        }
+    getWindow().addFlags(
+        WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
+        | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
+        | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    if(Natives.getlockscreenalarm()==Natives.lockscreenalarm_unlock&&Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        KeyguardManager km=(KeyguardManager)getSystemService(Context.KEYGUARD_SERVICE);
+        if(km!=null&&km.isKeyguardLocked())
+            km.requestDismissKeyguard(this,null);
+        }
+    }
+
+void disableAlarmLockScreen() {
+    if(!alarmLockScreenActive)
+        return;
+    alarmLockScreenActive=false;
+    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+        setShowWhenLocked(false);
+        setTurnScreenOn(false);
+        }
+    getWindow().clearFlags(
+        WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
+        | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
+        | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    }
+
+static void clearAlarmLockScreen() {
+    var act=thisone;
+    if(act!=null)
+        RunOnUiThread(act::disableAlarmLockScreen);
+    }
 /*
 static final class ShowMessage {
     public String mess;
@@ -954,6 +1000,8 @@ if(!isWearable) {
         }
     if(Natives.gethidefloatinJuggluco())
         Floating.removeFloating();
+    if(shownglucosealert!=null&&shownglucosealert.isShowing()&&Natives.alarmOnLockScreen())
+        enableAlarmLockScreen();
     boolean showsdialog=false;
     for(var el:shownummessage) {
         showindialog(el,false);
@@ -1886,6 +1934,7 @@ void tonotaccesssettings() {
 AlertDialog shownglucosealert=null;
 void  cancelglucosedialog() {
     showmessage=null;
+    disableAlarmLockScreen();
     if(shownglucosealert!=null) {
         shownglucosealert.dismiss();
         shownglucosealert=null;
@@ -1903,11 +1952,14 @@ void showindialog(String message,boolean cancel) {
     var cont=this;
     if(cancel) {
         cancelglucosedialog();
+        if(Natives.alarmOnLockScreen())
+            enableAlarmLockScreen();
         }
     final AlertDialog.Builder builder = new AlertDialog.Builder(cont);
     final var dialog=builder.setNegativeButton(R.string.cancel, (dia, id) -> {
         if(cancel) {
             shownglucosealert=null;
+            disableAlarmLockScreen();
             }
         Notify.stopalarmnotsend(false);
         if(!isWearable) {
@@ -1922,8 +1974,20 @@ void showindialog(String message,boolean cancel) {
                 getResources().getColor(colres);
          var negbut=dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
         negbut.setTextColor(col);
+        if(cancel&&Natives.alarmOnLockScreen()) {
+            final var win=dialog.getWindow();
+            if(win!=null) {
+                win.addFlags(
+                    WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
+                    | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
+                    | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                }
+            }
         }    
             );
+    if(cancel) {
+        dialog.setOnDismissListener(d -> disableAlarmLockScreen());
+        }
 
     dialog.show();
 

@@ -1767,6 +1767,18 @@ extern "C" JNIEXPORT jboolean  JNICALL   fromjava(gethealthConnect)(JNIEnv *env,
     return settings->data()->healthConnect;
     }
 
+extern "C" JNIEXPORT void  JNICALL   fromjava(setlockscreenalarm)(JNIEnv *env, jclass cl,jint val) {
+    if(val<0)
+        val=0;
+    else if(val>2)
+        val=2;
+    auto *d=settings->data();
+    d->reserved32=(d->reserved32&~3u)|static_cast<uint32_t>(val);
+    }
+extern "C" JNIEXPORT jint  JNICALL   fromjava(getlockscreenalarm)(JNIEnv *env, jclass cl) {
+    return settings->data()->reserved32&3u;
+    }
+
 static bool hasRapidInsulin() {
     const int nr=settings->getlabelcount();
     for(int i=0;i<nr;i++) {

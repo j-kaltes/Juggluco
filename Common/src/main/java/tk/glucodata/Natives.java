@@ -790,6 +790,14 @@ public static native void healthConnectWritten(long sensorptr,int pos);
 public static native void sethealthConnect(boolean val);
 public static native boolean gethealthConnect( );
 public static native void healthConnectReset();
+public static final int lockscreenalarm_wait=0;
+public static final int lockscreenalarm_lockui=1;
+public static final int lockscreenalarm_unlock=2;
+public static native void setlockscreenalarm(int val);
+public static native int getlockscreenalarm();
+public static boolean alarmOnLockScreen() {
+    return getlockscreenalarm()!=lockscreenalarm_wait;
+    }
 public static native boolean setIOB(boolean val);
 public static native boolean getIOB( );
 public static native float getIOBvalue(long time);

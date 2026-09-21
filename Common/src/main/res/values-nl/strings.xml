@@ -71,6 +71,10 @@
  <string name="highglucosealarm">Hoog glucose alarm</string>
  <string name="valueavailablenotification">Waarde aanwezig melding</string>
  <string name="lossofsignalalarm">Signaal verlies alarm</string>
+ <string name="alarmbehavior">Alarmgedrag:</string>
+ <string name="alarmbehavior_unlock">Telefoon ontgrendelen</string>
+ <string name="alarmbehavior_lockui">Op vergrendelscherm (uitschakelen via melding)</string>
+ <string name="alarmbehavior_wait">Wachten tot ontgrendeld</string>
  <string name="cantsetminutes">"Minuten kunnen die waarden niet krijgen "</string>
  <string name="minutes">minuten</string>
  <string name="toolarg"> is te lang</string>

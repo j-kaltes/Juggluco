@@ -434,6 +434,7 @@ private static void showoldglucose() {
             return;
         }
         {if(doLog) {Log.d(LOG_ID,"stopalarm is alarm");};};
+        MainActivity.clearAlarmLockScreen();
         final var stopper=stopschedule;
         if(stopper!=null) {
             stopper.cancel(false);
@@ -629,23 +630,75 @@ private static void setmessage(String message,Boolean cancel) {
         MainActivity.shownummessage.push(message);
         }
     }
-private static void showpopupalarm(String message,Boolean cancel) {
+private static Intent mkAlarmActivityIntent(String message,boolean cancel,int flags) {
+    var intent=new Intent(Applic.app,MainActivity.class);
+    intent.putExtra(MainActivity.alarmMessageExtra,message);
+    intent.putExtra(MainActivity.alarmCancelExtra,cancel);
+    intent.addFlags(flags);
+    return intent;
+    }
+private static PendingIntent mkAlarmActivityPending(int requestCode,String message,boolean cancel) {
+    return PendingIntent.getActivity(Applic.app,requestCode,
+        mkAlarmActivityIntent(message,cancel,Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP),
+        PendingIntent.FLAG_UPDATE_CURRENT|penmutable);
+    }
+private static void addActiveAlarmExtras(Notification.Builder builder,String message) {
+    if(isWearable||message==null||!Natives.alarmOnLockScreen())
+        return;
+    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+        builder.setFullScreenIntent(mkAlarmActivityPending(1002,message,true),true);
+    var stopintent=new Intent(Applic.app,NumAlarm.class);
+    stopintent.setAction(RemoteGlucose.stopalarmAction);
+    var stoppending=PendingIntent.getBroadcast(Applic.app,stopalarmrequest,stopintent,PendingIntent.FLAG_UPDATE_CURRENT|penmutable);
+    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+        builder.addAction(R.drawable.numalarm,Applic.app.getString(R.string.shortoff),stoppending);
+    }
+private static void showpopupalarm(String message,Boolean cancel,boolean glucoseAlarm) {
     var act=MainActivity.thisone;
-    if(act!=null&&act.active) {
-        if(cancel)
-            MainActivity.showmessage=null;
-        {if(doLog) {Log.i(LOG_ID,"showpopupalarm direct "+message);};};
+    if(!glucoseAlarm||Natives.getlockscreenalarm()==Natives.lockscreenalarm_wait) {
+        if(act!=null&&act.active) {
+            if(cancel)
+                MainActivity.showmessage=null;
+            {if(doLog) {Log.i(LOG_ID,"showpopupalarm direct "+message);};};
+            act.runOnUiThread(() ->  {
+                if(act.isFinishing()||act.isDestroyed()||!act.active) {
+                    setmessage(message,cancel);
+                    return;
+                    }
+                act.showindialog(message,cancel);
+                }
+                );
+            }
+        else {
+            setmessage(message,cancel);
+            }
+        return;
+        }
+    if(cancel) {
+        MainActivity.showmessage=null;
+        if(act!=null)
+            act.runOnUiThread(act::enableAlarmLockScreen);
+        }
+    if(act!=null) {
+        {if(doLog) {Log.i(LOG_ID,"showpopupalarm "+message+" active="+act.active);};};
         act.runOnUiThread(() ->  {
-            if(act.isFinishing()||act.isDestroyed()||!act.active) {
+            if(act.isFinishing()||act.isDestroyed()) {
                 setmessage(message,cancel);
+                Applic.app.startActivity(mkAlarmActivityIntent(message,cancel,Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP));
                 return;
                 }
-            act.showindialog( message,cancel);
+            if(act.active) {
+                act.showindialog(message,cancel);
+                }
+            else {
+                act.startActivity(mkAlarmActivityIntent(message,cancel,Intent.FLAG_ACTIVITY_REORDER_TO_FRONT|Intent.FLAG_ACTIVITY_SINGLE_TOP));
+                }
             }
             );
         }
     else {
-        setmessage(message,cancel);
+        {if(doLog) {Log.i(LOG_ID,"showpopupalarm no activity "+message);};};
+        Applic.app.startActivity(mkAlarmActivityIntent(message,cancel,Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP));
         }
     }
     private void soundalarm(int kind,int draw,String message,String type,boolean alarm) {
@@ -653,7 +706,7 @@ private static void showpopupalarm(String message,Boolean cancel) {
             {if(doLog) {Log.d(LOG_ID,"soundalarm "+kind);};};
             mksound(kind);
         }
-        placelargenotification(draw,message,type,!alarm);
+        placelargenotification(draw,message,type,!alarm,true);
     }
 //private int wasdraw=-1;
 private float wasvalue=0.0f;
@@ -685,7 +738,7 @@ void overwriteglucose(int kind) {
         {if(doLog) {Log.i(LOG_ID,"glucose alarm kind="+kind+" "+message+" alarm="+alarm);};};
         if(alarm) {
             if(kind!=2)
-                showpopupalarm(message,true);
+                showpopupalarm(message,true,true);
         }
         else {
             final var act=MainActivity.thisone;
@@ -706,7 +759,7 @@ void overwriteglucose(int kind) {
         {if(doLog) {Log.i(LOG_ID,"arrowglucosealarm kind="+kind+" "+ message+" alarm="+alarm);};};
         if(alarm) {
             if(kind!=2)
-                showpopupalarm(message,true);
+                showpopupalarm(message,true,true);
             }
         else {
             final var act=MainActivity.thisone;
@@ -865,6 +918,8 @@ static public boolean alertseparate=false;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             GluNotBuilder.setCategory(Notification.CATEGORY_ALARM);
         }
+        if(glucosealarm)
+            addActiveAlarmExtras(GluNotBuilder,message);
     }
 
      {if(doLog) {Log.i(LOG_ID,(once?"":"not ")+"only once");};};
@@ -974,10 +1029,10 @@ void oldnotification(long time) {
 void oldnotification(long time) {
     final String tformat= timef.format(time);
     String message = Applic.getContext().getString(R.string.nonewvalue) + tformat;
-     placelargenotification(R.drawable.novalue, message,GLUCOSENOTIFICATION,true);
+     placelargenotification(R.drawable.novalue, message,GLUCOSENOTIFICATION,true,false);
     }
     @SuppressWarnings("deprecation")
-private Notification  makenotification(int draw,String message,String type,boolean once) {
+private Notification  makenotification(int draw,String message,String type,boolean once,boolean glucoseAlarm) {
     var GluNotBuilder=mkbuilder(type);
 
     if(TargetSDK<31||Build.VERSION.SDK_INT < 31) {
@@ -1015,6 +1070,8 @@ private Notification  makenotification(int draw,String message,String type,boole
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             GluNotBuilder.setCategory(Notification.CATEGORY_ALARM);
         }
+        if(glucoseAlarm)
+            addActiveAlarmExtras(GluNotBuilder,message);
     }
 
      {if(doLog) {Log.i(LOG_ID,(once?"":"not ")+"only once");};};
@@ -1030,7 +1087,7 @@ private Notification  makenotification(int draw,String message,String type,boole
 
 Notification getforgroundnotification() {
     final String mess= app.getString(SensorBluetooth.blueone!=null?R.string.connectwithsensor:R.string.exchangedata);
-    Notification not=makenotification(R.drawable.novalue,mess,GLUCOSENOTIFICATION,true);
+    Notification not=makenotification(R.drawable.novalue,mess,GLUCOSENOTIFICATION,true,false);
     not.flags|= FLAG_ONGOING_EVENT;
     return not;
     }
@@ -1055,9 +1112,9 @@ static public void foregroundnot(Service service) {
     init(service);
     onenot.foregroundno(service);
     }    
- public void  placelargenotification(int draw,String message,String type,boolean once) {
+ public void  placelargenotification(int draw,String message,String type,boolean once,boolean glucoseAlarm) {
         hasvalue=true;
-    fornotify(makenotification(draw,message,type,once));
+    fornotify(makenotification(draw,message,type,once,glucoseAlarm));
 
     }
 static int testtimes=1;
@@ -1087,7 +1144,7 @@ private  void  arrowplacelargenotification(int kind,float glvalue,String message
     }
  public void  lossofsensornotification(int draw,String message,String type,boolean once) {
      {if(doLog) {Log.i(LOG_ID,"notify "+message);};};
-    fornotify(makenotification(draw,message,type,once));
+    fornotify(makenotification(draw,message,type,once,true));
     }
  public void  arrowglucosenotification(int kind,float glvalue,String message,notGlucose glucose,String type,boolean once) {
      {if(doLog) {Log.i(LOG_ID,"notify "+message);};};
@@ -1121,7 +1178,7 @@ setDeleteIntent(DeleteReceiver.getDeleteIntent()) .setContentTitle(message);
             NumNotBuilder.setCategory(Notification.CATEGORY_ALARM);
         }
     var timemess=            timef.format(System.currentTimeMillis()) + ": " + message;
-    showpopupalarm(timemess,false);
+    showpopupalarm(timemess,false,false);
     if(!isWearable) {
         RemoteViews NumRemoteViewss = new RemoteViews(Applic.app.getPackageName(), R.layout.numalarm);
         NumRemoteViewss.setInt(R.id.text, "setBackgroundColor", WHITE);

@@ -257,6 +257,10 @@
  <string name="separate">Separat</string>
     <string name="librecurrent">Sofort</string>
     <string name="USE_ALARM">Alarm ist alarm</string>
+    <string name="alarmbehavior">Alarmverhalten:</string>
+    <string name="alarmbehavior_unlock">Telefon entsperren</string>
+    <string name="alarmbehavior_lockui">Auf Sperrbildschirm (über Benachrichtigung ausschalten)</string>
+    <string name="alarmbehavior_wait">Warten bis entsperrt</string>
     <string name="speed">Geschwindigkeit</string>
     <string name="pitch">Tonhöhe</string>
   <string name="talker">Sprecher</string>

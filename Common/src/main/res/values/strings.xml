@@ -506,6 +506,10 @@
     <string name="media">Media</string>
     <string name="notification">Notification</string>
     <string name="alarmis">Alarm is</string>
+    <string name="alarmbehavior">Alarm behavior:</string>
+    <string name="alarmbehavior_unlock">Unlock phone</string>
+    <string name="alarmbehavior_lockui">Show on lock screen (dismiss via notification)</string>
+    <string name="alarmbehavior_wait">Wait until unlocked</string>
     <string name="deletemeter">Remove meter information. Measurements will remain.</string>
 
     <!-- Web server additions file manager -->

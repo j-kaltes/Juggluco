@@ -425,7 +425,7 @@ struct Tings {
     uint32_t reserved4;
     GlucoseMeter  glucosemeters[maxglucosemeters];
     uint8_t gs3id[12];
-    uint32_t reserved32;
+    uint32_t reserved32; // bits 0-1: lock screen alarm mode (0=wait, 1=lock UI, 2=unlock)
 
 static bool meterMatch(const struct GlucoseMeter &meter,const std::string_view deviceName,uint8_t *address)  {
     if(address) {
